@@ -7,7 +7,7 @@
 	require('config/base.php');
 
 	## First we ensure that dispatcher is not being called directly
-	//require('startup/file_access_check.php');
+	require('startup/file_access_check.php');
 	
 	## Check host for redirection ##	
 	require('startup/url_check.php');
