@@ -1,0 +1,17 @@
+RewriteEngine On
+
+RewriteRule ^\-/(.[^\/]+)$ index.php?cID=1&task=$1 [QSA]
+RewriteRule ^\-/(.[^\/]+)/$ index.php?cID=1&task=$1 [QSA]
+RewriteRule ^\-/(.[^\/]+)/(.+)$ index.php?cID=1&task=$1&params=$2 [QSA]
+
+RewriteRule ^([^\.]+)/-/(.[^\/]+)/(.+)$ index.php?cPath=$1&task=$2&params=$3 [QSA]
+RewriteRule ^([^\.]+)/-/(.[^\/]+)/$ index.php?cPath=$1&task=$2 [QSA]
+RewriteRule ^([^\.]+)/-/(.[^\/]+)$ index.php?cPath=$1&task=$2 [QSA]
+
+RewriteRule ^([^\.]+)/$ index.php?cPath=$1 [QSA]
+RewriteRule ^([^\.]+)$ index.php?cPath=$1 [QSA]
+
+php_flag magic_quotes_gpc off
+RewriteRule ^tools/required/(.*)$ index.php?task=include_frontend&fType=TOOL&filename=$1 [QSA]
+RewriteRule ^tools/([^/]*)$ index.php?task=include_frontend&fType=SITE_TOOL&filename=$1 [QSA]
+RewriteRule ^tools/blocks/([^/]*)/([^/]*)$ index.php?task=include_frontend&fType=BLOCKTOOL&block=$1&filename=$2 [QSA]
