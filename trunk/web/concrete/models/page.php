@@ -546,6 +546,16 @@ class Page extends Collection {
 	function getCollectionParentID() {
 		return $this->cParentID;
 	}
+	
+	//returns an array of this cParentID and aliased parentIDs
+	function getCollectionParentIDs(){
+		$cIDs=array($this->cParentID);
+		$db = Loader::db(); 
+		$aliasedParents=$db->getAll('SELECT cParentID FROM Pages WHERE cPointerID='.intval($this->cID).' ');
+		foreach($aliasedParents as $aliasedParent)
+			$cIDs[]=$aliasedParent['cParentID'];
+		return $cIDs;
+	}
 
 	function isMasterCollection() {
 		return $this->isMasterCollection;
@@ -1551,14 +1561,13 @@ class Page extends Collection {
 		}
 		
 		$data['handle'] = $handle;
-		
-		$cobj = parent::add($data);		
-		$cID = $cobj->getCollectionID();
-		
-		$ctID = $ct->getCollectionTypeID();
 		$dh = Loader::helper('date');
 		$cDate = $dh->getLocalDateTime();
-		$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;
+		$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;		
+		
+		$cobj = parent::add($data);		
+		$cID = $cobj->getCollectionID();		
+		$ctID = $ct->getCollectionTypeID();
 
 		$q = "select cID from Pages where ctID = '$ctID' and cIsTemplate = '1'";
 		$masterCID = $db->getOne($q);
