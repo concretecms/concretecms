@@ -363,7 +363,8 @@
 		public function add($data) {
 			$db = Loader::db();
 			$dh = Loader::helper('date');
-			$cDate = $dh->getLocalDateTime();
+			$cDate = $dh->getLocalDateTime(); 
+			$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : $cDate;
 			
 			if (isset($data['cID'])) {
 				$res = $db->query("insert into Collections (cID, cHandle, cDateAdded, cDateModified) values (?, ?, ?, ?)", array($data['cID'], $data['handle'], $cDate, $cDate));
@@ -376,7 +377,7 @@
 			
 			if ($res) {
 				// now we add a pending version to the collectionversions table
-				$v2 = array($newCID, 1, $data['name'], $data['handle'], $data['cDescription'], $cDate, $cDate, VERSION_INITIAL_COMMENT, $data['uID'], 1);
+				$v2 = array($newCID, 1, $data['name'], $data['handle'], $data['cDescription'], $cDatePublic, $cDate, VERSION_INITIAL_COMMENT, $data['uID'], 1);
 				$q2 = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				$r2 = $db->prepare($q2);
 				$res2 = $db->execute($r2, $v2);
