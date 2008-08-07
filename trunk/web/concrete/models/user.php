@@ -233,20 +233,13 @@
 			if (is_object($g)) {
 				$gID = $g->getGroupID();
 				$db = Loader::db();
-				
-				$q = "select count(*) as total from UserGroups where gID = ? and uID = ?";
-				$inGroup = $db->getOne($q, array($gID, $this->uID));
-				
-				if ($inGroup == '0') {
-					// we're not already in this group. If we're already in the group, we do nothing.
-					
-					$dh = Loader::helper('date');
-					$datetime = $dh->getLocalDateTime();
-					
-					$q = "insert into UserGroups (uID, gID, type, ugEntered) values (?, ?, ?, ?)";
-					$r = $db->query($q, array($this->uID, $gID, $joinType, $datetime));
-				}				
-			}		
+				$db->Replace('UserGroups', array(
+					'uID' => $this->getUserID(),
+					'gID' => $g->getGroupID(),
+					'type' => $joinType
+				),
+				array('uID', 'gID'), true);
+			}
 		}
 		
 		public function updateGroupMemberType($g, $joinType) {
