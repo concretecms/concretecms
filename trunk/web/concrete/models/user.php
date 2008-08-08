@@ -260,6 +260,12 @@
 			}		
 		}
 		
+		function getGroupMemberType($g) {
+			$db = Loader::db();
+			$r = $db->GetOne("select type from UserGroups where uID = ? and gID = ?", array($this->getUserID(), $g->getGroupID()));
+			return $r;
+		}
+		
 		function inGroup($g, $joinType = null) {
 			$db = Loader::db();
 			if ($joinType != null && is_object($g)) {
