@@ -279,11 +279,7 @@
 		public function renderError($title, $error) {
 			$innerContent = $error;
 			$titleContent = $title; 
-			if (file_exists(DIR_FILES_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . FILENAME_THEMES_ERROR . '.php')) {
-				$this->theme = DIR_FILES_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . FILENAME_THEMES_ERROR . '.php';
-			} else {
-				$this->theme = DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . FILENAME_THEMES_ERROR . '.php';
-			}
+			$this->setThemeForView(DIRNAME_THEMES_CORE, FILENAME_THEMES_ERROR . '.php', true);
 			include($this->theme);	
 		}
 		

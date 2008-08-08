@@ -90,7 +90,9 @@ define('DIRNAME_DASHBOARD', 'dashboard');
 define('DIRNAME_DASHBOARD_MODULES', 'modules');
 define('DIRNAME_MAIL_TEMPLATES', 'mail');
 define('DIRNAME_THEMES', 'themes');
-define('DIRNAME_THEMES_CORE', 'core');
+if (!defined('DIRNAME_THEMES_CORE')) {
+	define('DIRNAME_THEMES_CORE', 'core');
+}
 define('DIRNAME_BLOCK_TOOLS', 'tools');
 define('DIRNAME_BLOCK_TEMPLATES', 'templates');
 define('DIRNAME_CSS', 'css');
