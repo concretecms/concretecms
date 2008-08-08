@@ -70,8 +70,14 @@
 				$uIsValidated = -1;
 			}
 			
-			$v = array($data['uName'], $data['uEmail'], User::encryptPassword($data['uPassword']), $uIsValidated, $uDateAdded, 1);
-			$r = $db->prepare("insert into Users (uName, uEmail, uPassword, uIsValidated, uDateAdded, uIsActive) values (?, ?, ?, ?, ?, ?)");
+			if (isset($data['uIsFullRecord']) && $data['uIsFullRecord'] == 0) {
+				$uIsFullRecord = 0;
+			} else {
+				$uIsFullRecord = 1;
+			}
+			
+			$v = array($data['uName'], $data['uEmail'], User::encryptPassword($data['uPassword']), $uIsValidated, $uDateAdded, $uIsFullRecord, 1);
+			$r = $db->prepare("insert into Users (uName, uEmail, uPassword, uIsValidated, uDateAdded, uIsFullRecord, uIsActive) values (?, ?, ?, ?, ?, ?, ?)");
 			$res = $db->execute($r, $v);
 			if ($res) {
 				$newUID = $db->Insert_ID();
