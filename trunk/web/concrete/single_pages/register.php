@@ -61,10 +61,12 @@
 		<? } ?>
 	<? } ?>
 
-<div class="ccm-button">
-	<?=$form->submit('register', 'Register &gt;')?>
-	<?=$form->hidden('rcURL')?>
-</div>
+	<div class="ccm-button">
+		<?=$form->submit('register', 'Register &gt;')?>
+		<?=$form->hidden('rcURL')?>
+	</div>
+
+</form>
 
 <? } ?>
 
