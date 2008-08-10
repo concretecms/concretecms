@@ -228,7 +228,7 @@
 			return $ug;
 		}
 		
-		function enterGroup($g, $joinType = null) {
+		function enterGroup($g, $joinType = "") {
 			// takes a group object, and, if the user is not already in the group, it puts them into it
 			if (is_object($g)) {
 				$gID = $g->getGroupID();
@@ -268,7 +268,7 @@
 		
 		function inGroup($g, $joinType = null) {
 			$db = Loader::db();
-			if ($joinType != null && is_object($g)) {
+			if (isset($joinType) && is_object($g)) {
 				$v = array($this->uID, $g->getGroupID(), $joinType);
 				$cnt = $db->GetOne("select gID from UserGroups where uID = ? and gID = ? and type = ?", $v);
 			} else if (is_object($g)) {

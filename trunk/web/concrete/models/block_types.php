@@ -66,7 +66,7 @@
 				while(($file = readdir($handle)) !== false) {
 					if (strpos($file, '.') === false) {
 						$fdir = $dir . '/' . $file;
-						if (is_dir($fdir) && !in_array($file, $btHandles)) {
+						if (is_dir($fdir) && !in_array($file, $btHandles) && file_exists($fdir . '/' . FILENAME_BLOCK_CONTROLLER)) {
 							$bt = new BlockType;
 							$bt->btHandle = $file;
 							$class = $bt->getBlockTypeClassFromHandle($file);

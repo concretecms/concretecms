@@ -28,9 +28,13 @@
 			return UserInfo::get('where uEmail = ?', $uEmail, $userPermissionsArray);
 		}
 		
-		public static function getByValidationHash($uHash) {
+		public static function getByValidationHash($uHash, $unredeemedHashesOnly = true) {
 			$db = Loader::db();
-			$uID = $db->GetOne("select uID from UserValidationHashes where uHash = ?", array($uHash));
+			if ($unredeemedHashesOnly) {
+				$uID = $db->GetOne("select uID from UserValidationHashes where uHash = ? and uDateRedeemed = 0", array($uHash));
+			} else {
+				$uID = $db->GetOne("select uID from UserValidationHashes where uHash = ?", array($uHash));
+			}
 			if ($uID) {
 				$ui = UserInfo::getByID($uID);
 				return $ui;
@@ -39,7 +43,7 @@
 		
 		private function get($where, $var, $userPermissionsArray = null) {
 			$db = Loader::db();
-			$q = "select Users.uID, Users.uLastLogin, Users.uIsValidated, Users.uPreviousLogin, Users.uNumLogins, Users.uDateAdded, Users.uIsActive, Users.uLastOnline, Users.uHasAvatar, Users.uName, Users.uEmail, Users.uPassword from Users " . $where;
+			$q = "select Users.uID, Users.uLastLogin, Users.uIsValidated, Users.uPreviousLogin, Users.uIsFullRecord, Users.uNumLogins, Users.uDateAdded, Users.uIsActive, Users.uLastOnline, Users.uHasAvatar, Users.uName, Users.uEmail, Users.uPassword from Users " . $where;
 			$r = $db->query($q, array($var));
 			if ($r && $r->numRows() > 0) {
 				$ui = new UserInfo;
@@ -229,17 +233,22 @@
 
 		
 		public function setupValidation() {
-			$h = Loader::helper('validation/identifier');
-			$hash = $h->generate('UserValidationHashes', 'uHash');
 			$db = Loader::db();
-			$db->Execute("insert into UserValidationHashes (uID, uHash, uDateGenerated) values (?, ?, ?)", array($this->uID, $hash, time()));
-			return $hash;
+			$hash = $db->GetOne("select uHash from UserValidationHashes where uID = ? order by uDateGenerated desc", array($this->uID));
+			if ($hash) {
+				return $hash;
+			} else {
+				$h = Loader::helper('validation/identifier');
+				$hash = $h->generate('UserValidationHashes', 'uHash');
+				$db->Execute("insert into UserValidationHashes (uID, uHash, uDateGenerated) values (?, ?, ?)", array($this->uID, $hash, time()));
+				return $hash;
+			}
 		}
 		
 		function markValidated() {
 			$db = Loader::db();
 			$v = array($this->uID);
-			$db->query("update Users set uIsValidated = 1 where uID = ?", $v);
+			$db->query("update Users set uIsValidated = 1, uIsFullRecord = 1 where uID = ?", $v);
 			$db->query("update UserValidationHashes set uDateRedeemed = " . time() . " where uID = ?", $v);
 			return true;
 		}
@@ -304,6 +313,10 @@
 		
 		public function isValidated() {
 			return $this->uIsValidated;
+		}
+		
+		public function isFullRecord() {
+			return $this->uIsFullRecord;
 		}
 		
 		function getNumLogins() {
