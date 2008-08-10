@@ -23,6 +23,7 @@ class MailHelper {
 	private $data = array();
 	private $subject = '';
 	private $body = '';
+	private $template;
 	
 	/** 
 	 * Adds a parameter to a mail template
@@ -55,7 +56,7 @@ class MailHelper {
 		if (isset($from)) {
 			$this->from($from[0], $from[1]);
 		}
-
+		$this->template = $template;
 		$this->subject = $subject;
 		$this->body = $body;
 	}
@@ -110,7 +111,24 @@ class MailHelper {
 	public function sendMail() {
 		$from = $this->generateEmailStrings($this->from);
 		$to = $this->generateEmailStrings($this->to);
-		mail($to, $this->subject, $this->body, "From: {$from}\n");
+		if (ENABLE_EMAILS) {
+			mail($to, $this->subject, $this->body, "From: {$from}\n");
+		}
+		
+		// add email to log
+		$l = new Log(FILENAME_LOG_EMAILS);
+		if (ENABLE_EMAILS) {
+			$l->write('**EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()**');
+		} else {
+			$l->write('**EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT**');
+		}
+		$l->write('Template Used: ' . $this->template);
+		$l->write('To: ' . $to);
+		$l->write('From : ' . $from);
+		$l->write('Subject : ' . $this->subject);
+		$l->write('Body: ' . $this->body);
+		$l->close();
+		
 	}
 	
 }

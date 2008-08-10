@@ -27,7 +27,8 @@ class FileHelper {
 	 * @param string $directory
 	 * @return array
 	 */
-	public function getDirectoryContents($dir) {
+	public function getDirectoryContents($dir, $ignoreFilesArray = array()) {
+		$this->ignoreFiles = array_merge($this->ignoreFiles, $ignoreFilesArray);
 		$aDir = array();
 		if (is_dir($dir)) {
 			$handle = opendir($dir);
@@ -51,6 +52,32 @@ class FileHelper {
 		return substr($txt->uncamelcase($filename), 0, strrpos($filename, '.'));
 	}
 	
+	
+	/**
+	 * Adds content to a new line in a file. If a file is not there it will be created
+	 * @param string $filename
+	 * @param string $content
+	 */
+	public function append($filename, $content) {
+		file_put_contents($filename, $content, FILE_APPEND);
+	}
+	
+	
+	/**
+	 * Just a consistency wrapper for file_get_contents
+	 * @param $filename
+	 */
+	public function getContents($file) {
+		return file_get_contents($file);
+	}
+	
+	/** 
+	 * Removes contents of the file
+	 * @param $filenamee
+	 */
+	public function clear($file) {
+		file_put_contents($file, '');
+	}
 }
 
 ?>

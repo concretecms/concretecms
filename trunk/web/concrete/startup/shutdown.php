@@ -4,7 +4,7 @@ if (is_object($db)) {
 	
 	$debug_level = Config::get('SITE_DEBUG_LEVEL');
 	if ($debug_level == DEBUG_DISPLAY_ERRORS_SQL) {
-		$l = Log::getInstance();
+		$l = DBLog::getInstance();
 		foreach($l->getQueries() as $lq) {
 			print $lq;
 		}

@@ -22,7 +22,7 @@ class NavigationHelper {
 	 * @param Page $cObj
 	 * @return string $link
 	 */
-	public function getLinkToCollection(&$cObj) {
+	public function getLinkToCollection(&$cObj, $appendBaseURL = false) {
 		// basically returns a link to a collection, based on whether or we have 
 		// mod_rewrite enabled, and the collection has a path
 		$dispatcher = '';
@@ -30,12 +30,16 @@ class NavigationHelper {
 			$dispatcher = '/index.php';
 		}
 		if ($cObj->getCollectionPath() != null) {
-			return DIR_REL . $dispatcher . $cObj->getCollectionPath();
+			$link = DIR_REL . $dispatcher . $cObj->getCollectionPath();
 		} else {
 			$_cID = ($cObj->getCollectionPointerID() > 0) ? $cObj->getCollectionPointerOriginalID() : $cObj->getCollectionID();
 			$link = DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_cID;
-			return $link;
 		}
+		
+		if ($appendBaseURL) {
+			$link = BASE_URL . $link;
+		}
+		return $link;
 	}
 	
 	/** 
@@ -62,6 +66,15 @@ class NavigationHelper {
 		}
 
 		return $cArray;
+	}
+	
+	/**
+	 * Returns the URL of a collection so that it can be clicked on
+	 * @param Page $cObj
+	 * @return string $link
+	 */
+	public function getCollectionURL($cObj) {
+		return $this->getLinkToCollection($cObj, true);
 	}
 
 }

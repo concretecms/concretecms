@@ -1,6 +1,6 @@
 <?
 
-$from = array('info@concretecms.com', 'Forgot Password');
+$from = array('info@concrete5.org', 'Forgot Password');
 $subject = "Forgot Password";
 $body = "
 

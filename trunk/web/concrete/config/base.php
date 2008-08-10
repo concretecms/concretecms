@@ -27,6 +27,10 @@ if (!defined('ENABLE_APPLICATION_EVENTS')) {
 	define('ENABLE_APPLICATION_EVENTS', false);
 }
 
+if (!defined('ENABLE_EMAILS')) {
+	define('ENABLE_EMAILS', true);
+}
+
 # Debug Menu - Determines whether a "Submit Feedback/Bug/Question" is active */
 # Currently Concrete5 does not include this capability but it will likely come back.
 define('MENU_FEEDBACK_DISPLAY', 1);
@@ -277,6 +281,10 @@ define('BLOCK_NOT_AVAILABLE_TEXT', 'This block is no longer available.');
 define('DEBUG_DISPLAY_PRODUCTION', 0);
 define('DEBUG_DISPLAY_ERRORS', 1);
 define('DEBUG_DISPLAY_ERRORS_SQL', 2);
+define('DIRNAME_LOGS', 'logs'); // found in the files/ directory
+define('DIRNAME_LOGS_ARCHIVE', 'archive');
+define('FILENAME_LOG_EMAILS', 'sent_emails.log');
+define('DIR_FILES_LOGS', DIR_FILES_UPLOADED . '/' . DIRNAME_LOGS);
 
 # The name of the session cookie used.
 define('SESSION', 'CONCRETE5');
