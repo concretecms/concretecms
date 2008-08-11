@@ -109,6 +109,16 @@
 			return $members;			
 		}
 		
+		public function getGroupMembersNum($type = null) {
+			$db = Loader::db();
+			if ($type != null) {
+				$cnt = $db->GetOne("select count(uID) from UserGroups where gID = ? and type = ?", array($this->gID, $type));
+			} else {
+				$cnt = $db->GetOne("select count(uID) from UserGroups where gID = ?", array($this->gID));
+			}
+			return $cnt;
+		}
+		
 		public function setPermissionsForObject($obj) {
 		
 			$this->pObj = $obj;
