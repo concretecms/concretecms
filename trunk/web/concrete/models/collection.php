@@ -101,6 +101,24 @@
 			return $value;
 		}
 		
+		public function getAttribute($akHandle) {
+			return $this->getCollectionAttributeValue($akHandle);
+		}
+		
+		public function setAttribute($akHandle, $value) {
+			$db = Loader::db();
+			$akID = $db->GetOne("select akID from CollectionAttributeKeys where akHandle = ?", array($akHandle));
+			if ($akID > 1) {
+				$db->Replace('CollectionAttributeValues', array(
+					'cID' => $this->cID,
+					'cvID' => $this->getVersionID(),
+					'akID' => $akID,
+					'value' => $value
+				),
+				array('cID', 'cvID', 'akID'), true);
+			}
+		}
+		
 		// get's an array of collection attribute objects that are attached to this collection. Does not get values
 		public function getSetCollectionAttributes() {
 			$db = Loader::db();
