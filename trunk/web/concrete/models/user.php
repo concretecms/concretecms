@@ -230,13 +230,16 @@
 		
 		function enterGroup($g, $joinType = "") {
 			// takes a group object, and, if the user is not already in the group, it puts them into it
+			$dt = Loader::helper('date');
+			
 			if (is_object($g)) {
 				$gID = $g->getGroupID();
 				$db = Loader::db();
 				$db->Replace('UserGroups', array(
 					'uID' => $this->getUserID(),
 					'gID' => $g->getGroupID(),
-					'type' => $joinType
+					'type' => $joinType,
+					'ugEntered' => $dt->getLocalDateTime()
 				),
 				array('uID', 'gID'), true);
 			}
@@ -245,7 +248,8 @@
 		public function updateGroupMemberType($g, $joinType) {
 			if ($g instanceof Group) {
 				$db = Loader::db();
-				$db->Execute('update UserGroups set type = ? where uID = ? and gID = ?', array($joinType,$this->uID, $g->getGroupID()));
+				$dt = Loader::helper('date');
+				$db->Execute('update UserGroups set type = ?, ugEntered = ? where uID = ? and gID = ?', array($joinType, $dt->getLocalDateTime(), $this->uID, $g->getGroupID()));
 			}
 		}
 		

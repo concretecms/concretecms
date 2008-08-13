@@ -536,7 +536,7 @@ class Page extends Collection {
 	}
 
 	function getCollectionDatePublic($dateFormat = null) {
-		return ($dateFormat) ? date($dateFormat, strtotime($this->vObj->cDatePublic)) : $this->vObj->cvDatePublic;
+		return ($dateFormat) ? date($dateFormat, strtotime($this->vObj->cvDatePublic)) : $this->vObj->cvDatePublic;
 	}
 
 	function getCollectionDescription() {
