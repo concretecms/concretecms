@@ -77,10 +77,13 @@ class IndexedSearch {
 				$doc->addField(Zend_Search_Lucene_Field::Keyword('cIDhash', $pageID));
 				$doc->addField(Zend_Search_Lucene_Field::Unindexed('cID', $row['cID']));
 				$doc->addField(Zend_Search_Lucene_Field::Text('cName', $c->getCollectionName()));
+				$doc->addField(Zend_Search_Lucene_Field::Keyword('ctHandle', $c->getCollectionTypeHandle()));
 				$doc->addField(Zend_Search_Lucene_Field::Text('cDescription', $c->getCollectionDescription()));
 				$doc->addField(Zend_Search_Lucene_Field::Text('cBody', $this->getBodyContentFromPage($c)));
 				
-				$doc->addField(Zend_Search_Lucene_Field::Text('cTheme', $themeObject->getThemeHandle()));
+				if (is_object($themeObject)) {
+					$doc->addField(Zend_Search_Lucene_Field::Text('cTheme', $themeObject->getThemeHandle()));
+				}
 				$doc->addField(Zend_Search_Lucene_Field::Keyword( 'cPath', $nh->getLinkToCollection($c))); 
 				
 				if (count($this->cPathSections) > 0) {

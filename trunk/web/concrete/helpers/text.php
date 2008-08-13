@@ -72,6 +72,28 @@ class TextHelper {
 		return Object::camelcase($string);
 	}
 	
+	/** 
+	 * Scans passed text and automatically hyperlinks any URL inside it
+	 * @param string $input
+	 * @return string $output
+	 */
+	public function autolink($input) {
+		$output = preg_replace("/(http:\/\/|https:\/\/|(www\.))(([^\s<]{4,68})[^\s<]*)/", '<a href="http://$2$3" rel="nofollow">http://$2$4</a>', $input);
+		return ($output);
+	}
+	
+	/**
+	 * Runs a number of text functions, including autolink, nl2br, strip_tags. Assumes that you want simple
+	 * text comments but witih a few niceties.
+	 * @param string $input
+	 * @return string $output
+	 */
+	public function textcomment($input) {
+		$output = strip_tags($input);
+		$output = $this->autolink($output);
+		$output = nl2br($output);
+		return $output;
+	}
 	
 	/**
 	 * Takes a camel-cased string like FooBarSoft and returns foo_bar_soft
