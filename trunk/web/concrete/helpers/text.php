@@ -88,7 +88,7 @@ class TextHelper {
 	 * @param string $input
 	 * @return string $output
 	 */
-	public function textcomment($input) {
+	public function makenice($input) {
 		$output = strip_tags($input);
 		$output = $this->autolink($output);
 		$output = nl2br($output);
