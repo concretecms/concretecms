@@ -84,12 +84,22 @@
 		public function helper($file) {
 			// loads and instantiates the object
 			if (file_exists(DIR_HELPERS . '/' . $file . '.php')) {
-				require_once(DIR_HELPERS . '/' . $file . '.php');
+				// first we check if there's an object of the SAME kind in the core. If so, then we load the core first, then, we load the second one (site)
+				// and we hope the second one EXTENDS the first
+				if (file_exists(DIR_HELPERS_CORE . '/' . $file . '.php')) {
+					require_once(DIR_HELPERS_CORE . '/' . $file . '.php');
+					require_once(DIR_HELPERS . '/' . $file . '.php');
+					$class = "Site" . Object::camelcase($file) . "Helper";
+				} else {
+					require_once(DIR_HELPERS . '/' . $file . '.php');
+					$class = Object::camelcase($file) . "Helper";
+				}
 			} else {
 				require_once(DIR_HELPERS_CORE . '/' . $file . '.php');
+				$class = Object::camelcase($file) . "Helper";
+				
 			}
 			
-			$class = Object::camelcase($file) . "Helper";
 			$cl = new $class;
 			return $cl;
 		}
