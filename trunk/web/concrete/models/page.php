@@ -1023,80 +1023,62 @@ class Page extends Collection {
 		}
 	}
 
-	function delete($cObj = null) {
-		$cObj = ($cObj) ? $cObj : $this;
+	function delete() {
 
-		if ($cObj->getCollectionID() <= 1) {
+		$cID = $this->getCollectionID();
+
+		if ($cID <= 1) {
 			return false;
 		}
 
-		$this->_doDelete($cObj);
-
 		$db = Loader::db();
-		$cID = $cObj->getCollectionID();
 
-		
-		if ($cID <= 1) {
+		$controller = Loader::controller($this);
+		$ret = $controller->runTask('on_page_delete', array($this));
+		if ($ret < 0) {
 			return false;
-		}		
+		}
+		
+		parent::delete();
+		
+		$cID = $this->getCollectionID();
+		$cParentID = $this->getCollectionParentID();
 
+		// Now that all versions are gone, we can delete the collection information
+		$q = "delete from PagePaths where cID = '{$cID}'";
+		$r = $db->query($q);
+		
+		// remove all pages where the pointer is this cID
+		$r = $db->query("select cParentID from Pages where cPointerID = ?", array($cID));
+		while ($row = $r->fetchRow()) {
+			$db->query("update Pages set cChildren = cChildren - 1 where cID = ?", $row['cParentID']);
+		}
+		
+		$q = "delete from PagePermissions where cID = '{$cID}'";
+		$r = $db->query($q);
+
+		$q = "delete from Pages where cID = '{$cID}'";
+		$r = $db->query($q);
+
+		$q = "delete from Pages where cPointerID = '{$cID}'";
+		$r = $db->query($q);
+		
+		// Update cChildren for cParentID
+		$q = "update Pages set cChildren=cChildren-1 where cID='$cParentID'";
+		$r = $db->query($q);
+		
 		$q = "select cID from Pages where cParentID = '{$cID}'";
 		$r = $db->query($q);
 		if ($r) {
 			while ($row = $r->fetchRow()) {
 				if ($row['cID'] > 0) {
 					$nc = Page::getByID($row['cID']);
-					$this->delete($nc);
+					$nc->delete();
 				}
 			}
 		}
 	}
 	
-	/**
-	* @access private
-	**/
-	function _doDelete(&$cObj) {
-		$db = Loader::db();
-		
-		if ($cObj->getCollectionID() > 1) {
-
-			// Finally, we check to see if there's a delete method in this page type controller
-			$controller = Loader::controller($cObj);
-			$ret = $controller->runTask('on_page_delete', array($cObj));
-			if ($ret < 0) {
-				return false;
-			}
-			
-			parent::delete();
-			
-			$cID = $cObj->getCollectionID();
-			$cParentID = $cObj->getCollectionParentID();
-	
-			// Now that all versions are gone, we can delete the collection information
-			$q = "delete from PagePaths where cID = '{$cID}'";
-			$r = $db->query($q);
-			
-			// remove all pages where the pointer is this cID
-			$r = $db->query("select cParentID from Pages where cPointerID = ?", array($cID));
-			while ($row = $r->fetchRow()) {
-				$db->query("update Pages set cChildren = cChildren - 1 where cID = ?", $row['cParentID']);
-			}
-			
-			$q = "delete from PagePermissions where cID = '{$cID}'";
-			$r = $db->query($q);
-	
-			$q = "delete from Pages where cID = '{$cID}'";
-			$r = $db->query($q);
-	
-			$q = "delete from Pages where cPointerID = '{$cID}'";
-			$r = $db->query($q);
-			
-			// Update cChildren for cParentID
-			$q = "update Pages set cChildren=cChildren-1 where cID='$cParentID'";
-			$r = $db->query($q);
-		}
-	}
-
 	function markPendingAction($action, $targetC = null) {
 		// delete() and move() and copy() do the dirty work - this is what is called when a user tries to
 		// perform an action - this marks it pending
@@ -1571,7 +1553,7 @@ class Page extends Collection {
 
 		$q = "select cID from Pages where ctID = '$ctID' and cIsTemplate = '1'";
 		$masterCID = $db->getOne($q);
-		$this->rescanChildrenDisplayOrder();
+		//$this->rescanChildrenDisplayOrder();
 		$cDisplayOrder = $this->getNextSubPageDisplayOrder();
 
 		$cInheritPermissionsFromCID = ($this->overrideTemplatePermissions()) ? $this->getPermissionsCollectionID() : $masterCID;
