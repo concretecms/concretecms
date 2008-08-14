@@ -330,9 +330,11 @@
 		}
 		
 		public function config($cfKey) {
-			$db = Loader::db();
-			$val = $db->GetOne("select cfValue from Config where uID = ? and cfKey = ?", array($this->getUserID(), $cfKey));
-			return $val;
+			if ($this->isRegistered()) {
+				$db = Loader::db();
+				$val = $db->GetOne("select cfValue from Config where uID = ? and cfKey = ?", array($this->getUserID(), $cfKey));
+				return $val;
+			}
 		}
 		
 		public function saveConfig($cfKey, $cfValue) {
