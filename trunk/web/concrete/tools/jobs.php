@@ -1,5 +1,5 @@
 <?
-
+set_time_limit(0);
 $jobObj = Loader::model("job");
 $outputDisabled=0;
 

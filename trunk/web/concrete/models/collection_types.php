@@ -28,15 +28,18 @@
 		
 		public static function getByHandle($ctHandle) {
 			$db = Loader::db();
-			$q = "SELECT PageTypes.ctID, ctHandle, ctName, ctIcon, Pages.cID as mcID, PageTypes.pkgID from PageTypes left join Pages on (Pages.ctID = PageTypes.ctID and Pages.cIsTemplate = 1) where PageTypes.ctHandle = ?";
+			$q = "SELECT ctID, ctHandle, ctName, ctIcon, pkgID from PageTypes where ctHandle = ?";
 			$r = $db->query($q, array($ctHandle));
 			if ($r) {
 				$row = $r->fetchRow();
 				$r->free();
+				if (is_array($row)) {
+					$ct = new CollectionType; 
+					$row['mcID'] = $db->GetOne("select cID from Pages where ctID = ? and cIsTemplate = 1", array($row['ctID']));
+					$ct = new CollectionType; 
+					$ct->setPropertiesFromArray($row);
+				}					
 			}
-
-			$ct = new CollectionType; 
-			$ct->setPropertiesFromArray($row);
 
 			return $ct;
 		}
@@ -56,19 +59,21 @@
 
 		public static function getByID($ctID, $obj = null) {
 			$db = Loader::db();
-			$q = "SELECT PageTypes.ctID, ctHandle, ctName, ctIcon, Pages.cID as mcID, PageTypes.pkgID from PageTypes left join Pages on (Pages.ctID = PageTypes.ctID and Pages.cIsTemplate = 1) where PageTypes.ctID = ?";
+			$q = "SELECT ctID, ctHandle, ctName, ctIcon, pkgID from PageTypes where PageTypes.ctID = ?";
 			$r = $db->query($q, array($ctID));
 			if ($r) {
 				$row = $r->fetchRow();
 				$r->free();
+				if (is_array($row)) {
+					$row['mcID'] = $db->GetOne("select cID from Pages where ctID = ? and cIsTemplate = 1", array($row['ctID']));
+					$ct = new CollectionType; 
+					$ct->setPropertiesFromArray($row);
+					if ($obj) {
+						$ct->limit($obj);
+					}
+				}
 			}
 
-			$ct = new CollectionType; 
-			$ct->setPropertiesFromArray($row);
-
-			if ($obj) {
-				$ct->limit($obj);
-			}
 			
 			return $ct;
 		}
