@@ -700,6 +700,18 @@
     <index name="cParentID">
       <col>cParentID</col>
     </index>
+    <index name="cPointerID">
+      <col>cIsTemplate</col>
+    </index>
+    <index name="uID">
+      <col>uID</col>
+    </index>
+    <index name="ctID">
+      <col>ctID</col>
+    </index>
+    <index name="cPointerID">
+      <col>cPointerID</col>
+    </index>
   </table>
   <table name="PileContents">
     <field name="pcID" type="I" size="10">

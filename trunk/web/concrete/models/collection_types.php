@@ -97,13 +97,19 @@
 			$db = Loader::db();
 
 			// the purpose for this class? Well, we get an array of collection type objects,
-
-			$q = "select PageTypes.ctID, ctHandle, ctIcon, ctName, Pages.cID as mcID, PageTypes.pkgID from PageTypes left join Pages on (Pages.ctID = PageTypes.ctID and Pages.cIsTemplate = 1) order by ctName asc";
+			// we don't do a join because on big sites it's actually slower
+			$mcIDs = $db->GetAll("select cID, ctID from Pages where cIsTemplate = 1");
+			$masterCollectionIDs = array();
+			foreach($mcIDs as $mc) {
+				$masterCollectionIDs[$mc['ctID']] = $mc['cID'];
+			}
+			$q = "select ctID, ctHandle, ctIcon, ctName, pkgID from PageTypes order by ctName asc";
 			$r = $db->query($q);
 
 			if ($r) {
 				while ($row = $r->fetchRow()) {
 					$ct = new CollectionType;
+					$row['mcID'] = $masterCollectionIDs[$row['ctID']];
 					$ct->setPropertiesFromArray($row);
 					
 					if (is_array($limiterType)) {
