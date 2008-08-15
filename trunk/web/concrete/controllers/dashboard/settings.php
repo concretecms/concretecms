@@ -118,7 +118,11 @@ class DashboardSettingsController extends Controller {
 		$this->set('subnav', $subnav);
 	}
 	
-	protected function set_groups_and_home() {		
+	protected function set_groups_and_home() {
+		if (PERMISSIONS_MODEL != 'simple') {
+			return;
+		}
+		
 		$home = Page::getByID(1, "RECENT");
 		$gl = new GroupList($home);
 		$gArrayTmp = $gl->getGroupList();

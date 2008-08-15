@@ -23,22 +23,10 @@
 		var $gArray = array();
 		
 		function GroupList($obj, $omitRequiredGroups = false) {
-			$db = Loader::db();
-			$q = "select gID from Groups ";
-			$q .= ($omitRequiredGroups) ? "where gID > 2 " : "";
-			$q .= "order by gID asc";
-			$r = $db->query($q);
-
-			// If allowedBlocks is null, that means everything is allowed. But if it's not, then we have to see 
-			// the btHandle exists within the allowedBlocks array. If it does, we don't return it
-	
-			if ($r) {
-				while ($row = $r->fetchRow()) {
-					$g = Group::getByID($row['gID']);
-					$g->setPermissionsForObject($obj);
-					$this->gArray[] = $g;
-				}
-				$r->free();
+			$groups = $this->getRelevantGroups($obj, $omitRequiredGroups);
+			foreach($groups as $g) {
+				$g->setPermissionsForObject($obj);
+				$this->gArray[] = $g;
 			}
 			
 			return $this;
@@ -46,6 +34,52 @@
 		
 		function getGroupList() {
 			return $this->gArray;
+		}
+		
+		/** 
+		 * @todo Make this entire thing less repetive and make it jive with the function below so we're not repeating ourselves
+		 */
+		private function getRelevantGroups($obj) {
+			$db = Loader::db();
+			switch(strtolower(get_class($obj))) {
+				case 'block':
+					$table = 'CollectionVersionBlockPermissions';
+					$c = $obj->getBlockCollectionObject();
+					$cID = $c->getCollectionID();
+					$cvID = $c->getVersionID();
+					$bID = $obj->getBlockID();
+					$where = "cID = '{$cID}' and cvID = '{$cvID}' and bID = '{$bID}'";
+					break;
+				case 'page':
+					$table = 'PagePermissions';
+					$cID = $obj->getPermissionsCollectionID();
+					$where = "cID = '{$cID}'";
+					break;
+				case 'area':
+					$table = 'AreaGroups';
+					$c = $obj->getAreaCollectionObject();
+					$cID = ($obj->getAreaCollectionInheritID() > 0) ? $obj->getAreaCollectionInheritID() : $c->getCollectionID();
+					$where = "cID = " . $cID . " and arHandle = " . $db->quote($obj->getAreaHandle());
+					break;
+				case 'userinfo':
+					$table = 'UserGroups';
+					$uID = $this->pObj->getUserID();						
+					if ($uID) {
+						$where = "uID = {$uID}";
+					}
+					break;
+			}
+			$minGID .= ($omitRequiredGroups) ? 2 : 0;
+			$groups = array();
+			if ($where) {
+				$q = "select gID from $table where gID > $minGID and {$where} order by gID asc";
+				$r = $db->query($q);
+				while ($row = $r->fetchRow()) {
+					$g = Group::getByID($row['gID']);
+					$groups[] = $g;
+				}
+			}
+			return $groups;
 		}
 		
 		function getGroupUpdateAction($obj) {
