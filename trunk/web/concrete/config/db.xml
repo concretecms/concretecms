@@ -278,6 +278,9 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <index name="cbIncludeAll">
+      <col>cbIncludeAll</col>
+    </index>
   </table>
   <table name="CollectionVersions">
     <field name="cID" type="I" size="10">
