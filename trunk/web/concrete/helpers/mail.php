@@ -92,6 +92,7 @@ class MailHelper {
 	 * @return void
 	 */
 	public function from($email, $name = null) {
+		$this->from=array();
 		$this->from[] = array($email, $name);
 	}
 	
