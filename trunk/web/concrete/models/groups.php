@@ -63,7 +63,7 @@
 					break;
 				case 'userinfo':
 					$table = 'UserGroups';
-					$uID = $this->pObj->getUserID();						
+					$uID = $obj->getUserID();						
 					if ($uID) {
 						$where = "uID = {$uID}";
 					}
