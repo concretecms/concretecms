@@ -296,7 +296,7 @@ define('MULTI_SITE', 0);
 $ADODB_ASSOC_CASE =  2;
 $ADODB_ACTIVE_CACHESECS = 300;
 $ADODB_CACHE_DIR = DIR_FILES_CACHE;
-define('ADODB_OUTP', 'concrete_log_query');
+//define('ADODB_OUTP', 'concrete_log_query');
 define('APP_VERSION', '5.0.0b3');
 
 require_once(DIR_LIBRARIES_CORE . '/loader.php');
