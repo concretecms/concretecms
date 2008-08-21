@@ -44,7 +44,7 @@ div.ccm-menu li.header {font-size: 0px; height: 1px; background-color: #afafaf !
 
 div.ccm-menu ul {margin: 0px 12px 0px 12px; padding: 0px !important; background-color: #ededed}
 div.ccm-menu ul li {line-height: 16px; margin: 0px !important; background-color: #ededed !important; display: block; text-align: left; list-style-type: none; font-size: 10px; padding: 0px !important}
-div.ccm-menu ul li a.ccm-icon span {display: block; background-color: transparent; background-repeat: no-repeat; background-position: 8px 5px; padding: 3px 10px 3px 30px !important;}
+div.ccm-menu ul li a.ccm-icon span {display: block; background-color: transparent; background-repeat: no-repeat; background-position: 9px 4px; padding: 3px 10px 3px 30px !important;}
 
 div.ccm-page-type-icon {white-space: nowrap; width: auto; float: left; margin-right: 5px; min-width: 130px}
 div.ccm-dialog-content div.ccm-pane-bc {display: none}
