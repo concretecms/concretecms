@@ -14,7 +14,7 @@ html, body {
 body {
 	padding: 0px;
 	margin: 0px;
-	background: #fff url(images/footer_grass.jpg) bottom repeat-x fixed;
+	background: #fff url(images/footer_grass.jpg) repeat-x fixed left bottom;
 }
 img {
 	border: 0px

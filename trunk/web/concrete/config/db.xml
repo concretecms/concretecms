@@ -703,6 +703,9 @@
     <index name="cParentID">
       <col>cParentID</col>
     </index>
+     <index name="cCheckedOutUID">
+      <col>cCheckedOutUID</col>
+    </index>
     <index name="cPointerID">
       <col>cIsTemplate</col>
     </index>
