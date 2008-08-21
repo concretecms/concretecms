@@ -124,14 +124,20 @@ class DashboardSettingsController extends Controller {
 		}
 		
 		$home = Page::getByID(1, "RECENT");
-		$gl = new GroupList($home);
+		$gl = new GroupList($home, false, true);
 		$gArrayTmp = $gl->getGroupList();
 		$gArray = array();
 		foreach($gArrayTmp as $gi) {
 			if ($gi->getGroupID() == GUEST_GROUP_ID) {
 				$ggu = $gi;
+				if ($ggu->canRead()) {
+					$this->set('guestCanRead', true);
+				}
 			} else if ($gi->getGroupID() == REGISTERED_GROUP_ID) {
 				$gru = $gi;
+				if ($gru->canRead()) {
+					$this->set('registeredCanRead', true);
+				}
 			} else {
 				$gArray[] = $gi;
 			}
@@ -146,8 +152,8 @@ class DashboardSettingsController extends Controller {
 	public function update_permissions() {
 
 		$home = $this->get('home');
-		$gru = $this->get('gru');
-		$ggu = $this->get('ggu');
+		$gru = Group::getByID(REGISTERED_GROUP_ID);
+		$ggu = Group::getByID(GUEST_GROUP_ID);
 
 		$args = array();
 		switch($_POST['view']) {

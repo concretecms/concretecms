@@ -173,13 +173,13 @@ saveMaintenanceMode = function() {
 
 <h2>Viewing Permissions</h2>
 
-<div class="ccm-dashboard-radio"><input type="radio" name="view" value="ANYONE" style="vertical-align: middle" <? if ($ggu->canRead()) { ?> checked <? } ?> /> Public</div>
+<div class="ccm-dashboard-radio"><input type="radio" name="view" value="ANYONE" style="vertical-align: middle" <? if ($guestCanRead) { ?> checked <? } ?> /> Public</div>
 <div class="ccm-dashboard-description">Anyone may view the website.</div>
 
-<div class="ccm-dashboard-radio"><input type="radio" name="view" value="USERS" style="vertical-align: middle" <? if ($gru->canRead()) { ?> checked <? } ?> /> Members Only</div>
+<div class="ccm-dashboard-radio"><input type="radio" name="view" value="USERS" style="vertical-align: middle" <? if ($registeredCanRead) { ?> checked <? } ?> /> Members Only</div>
 <div class="ccm-dashboard-description">Only registered users may view the website.</div>
 
-<div class="ccm-dashboard-radio"><input type="radio" name="view" value="PRIVATE" style="vertical-align: middle" <? if ((!$ggu->canRead()) && (!$gru->canRead())) { ?> checked <? } ?> /> Private.</div>
+<div class="ccm-dashboard-radio"><input type="radio" name="view" value="PRIVATE" style="vertical-align: middle" <? if ((!$guestCanRead) && (!$registeredCanRead)) { ?> checked <? } ?> /> Private.</div>
 <div class="ccm-dashboard-description">Only the administrative user (admin) may view the website.</div>
 
 <br/><br/>
