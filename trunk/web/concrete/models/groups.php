@@ -22,14 +22,24 @@
 	
 		var $gArray = array();
 		
-		function GroupList($obj, $omitRequiredGroups = false) {
-			$groups = $this->getRelevantGroups($obj, $omitRequiredGroups);
-			foreach($groups as $g) {
-				$g->setPermissionsForObject($obj);
-				$this->gArray[] = $g;
+		function GroupList($obj, $omitRequiredGroups = false, $getAllGroups = false) {
+			if ($getAllGroups) {
+				$db = Loader::db();
+				$minGID = ($omitRequiredGroups) ? 2 : 0;
+				$q = "select gID from Groups where gID > $minGID order by gID asc";	
+				$r = $db->Execute($q);
+				while ($row = $r->FetchRow()) {
+					$g = Group::getByID($row['gID']);
+					$g->setPermissionsForObject($obj);
+					$this->gArray[] = $g;
+				}
+			} else {
+				$groups = $this->getRelevantGroups($obj, $omitRequiredGroups);
+				foreach($groups as $g) {
+					$g->setPermissionsForObject($obj);
+					$this->gArray[] = $g;
+				}
 			}
-			
-			return $this;
 		}
 		
 		function getGroupList() {
@@ -39,7 +49,7 @@
 		/** 
 		 * @todo Make this entire thing less repetive and make it jive with the function below so we're not repeating ourselves
 		 */
-		private function getRelevantGroups($obj) {
+		private function getRelevantGroups($obj, $omitRequiredGroups = false) {
 			$db = Loader::db();
 			switch(strtolower(get_class($obj))) {
 				case 'block':
