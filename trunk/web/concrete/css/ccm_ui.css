@@ -1,5 +1,5 @@
 /* make up for the new bar on the top of the screen */
-body {margin: 49px 0px 0px 0px !important; background-position: 0px 49px !important}
+body {margin: 49px 0px 0px 0px !important; }
 div#ccm-page-controls img {border: 0px}
 img {border: 0px}
 
