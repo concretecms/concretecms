@@ -850,6 +850,12 @@
       <DEFAULT value="0000-00-00 00:00:00"/>
     </field>
     <field name="type" type="C" size="64" />
+    <index name="uID">
+      <col>uID</col>
+    </index>
+    <index name="gID">
+      <col>gID</col>
+    </index>
     
   </table>
   <table name="UserValidationHashes">

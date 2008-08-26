@@ -31,6 +31,12 @@ if ($_GET['uID']) {
 			$uo = UserInfo::getByID($_GET['uID']);
 			$message = "User activated.";
 		}
+
+		if ($_GET['task'] == 'validate_email') {
+			$uo->markValidated();
+			$uo = UserInfo::getByID($_GET['uID']);
+			$message = "Email marked as valid.";
+		}
 		
 		
 		if ($_GET['task'] == 'remove-avatar') {
@@ -323,19 +329,6 @@ if (is_object($uo)) {
 			<td><input type="password" name="uPasswordConfirm" autocomplete="off" value="" style="width: 100%"></td>
 			<td>(Leave these fields blank to keep the same password)</td>
 		</tr>
-		<? if (USER_VALIDATE_EMAIL) { ?>
-		<tr>
-			<td class="subheader">Record Type</td>
-			<td class="subheader" colspan="2">Validated?</td>
-		</tr>	
-		<tr>
-			<td><?=$form->radio('uIsFullRecord', 1, $uo->isFullRecord())?> Full Record 
-			<?=$form->radio('uIsFullRecord', 0, $uo->isFullRecord())?> Email Only 
-			</td>
-			<td><input type="password" name="uPasswordConfirm" autocomplete="off" value="" style="width: 100%"></td>
-			<td>(Leave these fields blank to keep the same password)</td>
-		</tr>
-		<? } ?>
 		<tr>
 			<td colspan="3" class="header">Other Information (Click the checkbox to modify existing values)</td>
 		</tr>
@@ -409,6 +402,12 @@ if (is_object($uo)) {
 	
 	<div class="ccm-dashboard-inner">
 		<div class="actions" >
+			<? if (VALIDATE_USER_EMAIL) { ?>
+				<? if ($uo->isValidated() < 1) { ?>
+					<a href="<?=$this->url('/dashboard/users?uID=' . $_REQUEST['uID'] . '&task=validate_email')?>">Mark Email as Valid</a>
+					&nbsp;|&nbsp;
+					<? } ?>
+			<? } ?>
 			<? if ($uo->isActive()) { ?>
 				<a href="<?=$this->url('/dashboard/users?uID=' . $_REQUEST['uID'] . '&task=deactivate')?>">Deactivate User</a>
 			<? } else { ?>
@@ -426,7 +425,24 @@ if (is_object($uo)) {
 			<td><?=$uh->outputUserAvatar($uo)?></td>
 			<td><?=$uo->getUserName()?><br/>
 			<a href="mailto:<?=$uo->getUserEmail()?>"><?=$uo->getUserEmail()?></a><br/>
-			<?=$uo->getUserDateAdded()?></td>
+			<?=$uo->getUserDateAdded()?>
+			<? if (VALIDATE_USER_EMAIL) { ?><br/>
+				Full Record: <strong><?= ($uo->isFullRecord()) ? "Yes" : "No" ?></strong>
+				&nbsp;&nbsp;
+				Email Validated: <strong><?
+					switch($uo->isValidated()) {
+						case '-1':
+							print 'Unknown';
+							break;
+						case '0':
+							print 'No';
+							break;
+						case '1':
+							print 'Yes';
+							break;
+					}?>
+					</strong>
+			<? } ?></td>
 		</tr>
 		</table>
 		</div>
@@ -556,6 +572,20 @@ if (is_object($uo)) {
 		<td class="subheader">and: </td>
 		<td><? print $dtt->datetime('uDateAddedEnd', $dtt->translate('uDateAddedEnd', $_GET), true)?></td>
 	</tr>
+	<? if (VALIDATE_USER_EMAIL) { ?>
+	<tr>
+		<td class="subheader">Email Validation</td>
+		<td>
+			<?=$form->checkbox('uIsValidated[]', 0, true)?> Non-Validated
+			<?=$form->checkbox('uIsValidated[]', 1, true)?> Validated		
+		</td>	
+		<td class="subheader">Record Types</td>
+		<td>
+			<?=$form->checkbox('uIsFullRecord[]', 1, true)?> Full
+			<?=$form->checkbox('uIsFullRecord[]', 0, true)?> Email Only 
+		</td>	
+	</tr>
+	<? } ?>
 	<? /*
 	<tr>
 		<td class="subheader">Logged in between:</td>

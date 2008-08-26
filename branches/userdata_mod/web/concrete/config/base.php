@@ -35,6 +35,9 @@ if (!defined('ENABLE_DEFINABLE_USER_ATTRIBUTES')) {
 	define('ENABLE_DEFINABLE_USER_ATTRIBUTES', true);
 }
 
+if (!defined('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL')) {
+	define('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL', false);
+}
 
 # Debug Menu - Determines whether a "Submit Feedback/Bug/Question" is active */
 # Currently Concrete5 does not include this capability but it will likely come back.
