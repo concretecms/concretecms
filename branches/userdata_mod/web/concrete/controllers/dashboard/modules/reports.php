@@ -1,0 +1,6 @@
+<?
+
+class ReportsDashboardModuleController extends Controller {
+
+
+}
