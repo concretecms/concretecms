@@ -1,0 +1,28 @@
+/* asset library */
+div#ccm-al-add-asset { margin-top: 8px; width:50% } 
+
+div#ccm-al-add-asset embed, div#ccm-al-add-asset object {background-color: #d1e7ec}
+img.ccm-al-icon {margin-top: 28px; margin-bottom: 28px}
+div.ccm-al-title {font-size: 10px; color: #555;}
+
+div#ccm-al-info-detail {background: #fff; display: none; position: absolute; line-height: 18px; width: 200px; z-index: 400; border: 1px solid black; padding: 10px}
+div#ccm-al-info-detail * {font-size: 11px}
+div#ccm-al-info-detail a {color: #336690}
+
+div.ccm-al-actions {float: right; width: 500px; text-align: right;}
+div.ccm-al-details {padding: 10px; line-height: 18px; font-size: 11px}
+div.ccm-al-details div.ccm-al-item {float: left; width: 100px; margin-right: 40px}
+div.ccm-al-inner {line-height: 0px; font-size: 0px}
+div.ccm-al-inner div.ccm-al-controls a {text-decoration: none}
+
+div.ccm-al-metadata {display: none}
+div.ccm-al-gallery {background: #fff; width:100%}
+div.ccm-al-image, div.ccm-al-image-selected {float: left; border: 2px solid #efefef; clear: top; text-align: center; background: #E7FFF6; padding: 13px; height: 90px; margin: 0px 12px 12px 0px; cursor: pointer; cursor: hand}
+div.ccm-al-image div.ccm-al-inner {border: 2px solid #a3a4a5}
+div.ccm-al-image-selected div.ccm-al-inner {background-color: #fff}
+div.ccm-al-image-selected {border: 2px solid #A2DAFD}
+
+div#ccm-al-upload-complete {padding: 10px; border: 1px solid #94a7c7; background: #eee; margin-bottom: 10px; font-size: 13px; font-weight: bold;}
+
+table.ccm-al-search-form {width: auto !important}
+table.ccm-al-search-form td {background: none; font-size: 11px; color: #333; font-weight: bold; padding: 3px; height: auto}

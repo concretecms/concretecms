@@ -1,0 +1,19 @@
+<refentry id="{@id}">
+ <refnamediv>
+  <refname>Pages in Concrete5</refname>
+  <refpurpose>Learn how to manipulate pages in your site programmatically.</refpurpose>
+ </refnamediv>
+ <refsynopsisdiv>
+  <author>
+	Andrew Embler
+   <authorblurb>
+    {@link mailto:andrew@concrete5.org andrew@concrete5.org}
+   </authorblurb>
+  </author>
+ </refsynopsisdiv>
+ <refsect1 id="{@id intro}">
+  <title>Concrete5 Pages</title>
+  <para>Derp de derp</para>
+  <para>A teetley tum</para>
+ </refsect1>
+</refentry>
