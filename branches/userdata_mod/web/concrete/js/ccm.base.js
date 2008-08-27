@@ -381,7 +381,7 @@ ccm_setupUserSearch = function() {
 	});
 	
 	/* setup paging */
-	$("div.ccm-paging a").click(function() {
+	$("div#ccm-user-paging a").click(function() {
 		$("#ccm-user-search-wrapper").html("");	
 		$.ajax({
 			type: "GET",
@@ -395,6 +395,44 @@ ccm_setupUserSearch = function() {
 	});
 }
 
+ccm_triggerSelectGroup = function(gID, gName) {
+	alert(gID);
+	alert(gName);
+}
+
+
+ccm_setupGroupSearch = function() {
+	$('div.ccm-group a').each(function(i) {
+		var gla = $(this);
+		$(this).click(function() {
+			ccm_triggerSelectGroup(gla.attr('group-id'), gla.attr('group-name'));
+			$.fn.dialog.closeTop();
+			return false;
+		});
+	});	
+	$("#ccm-group-search").ajaxForm({
+		beforeSubmit: function() {
+			$("#ccm-group-search-wrapper").html("");	
+		},
+		success: function(resp) {
+			$("#ccm-group-search-wrapper").html(resp);	
+		}
+	});
+	
+	/* setup paging */
+	$("div#ccm-group-paging a").click(function() {
+		$("#ccm-group-search-wrapper").html("");	
+		$.ajax({
+			type: "GET",
+			url: $(this).attr('href'),
+			success: function(resp) {
+				//$("#ccm-dialog-throbber").css('visibility','hidden');
+				$("#ccm-group-search-wrapper").html(resp);
+			}
+		});
+		return false;
+	});
+}
 
 ccm_saveArrangement = function() {
 //	ccm_showTopbarLoader();

@@ -10,7 +10,8 @@
  */
 
 /**
- * The group list object takes care of presenting the groups in the system, and can be used to filter out internal groups.
+ * The group list object takes care of presenting the groups in the system as they apply to various objects. If you need to just display/filter
+ * all groups in the system you should probably use Group Search
  * @package Users
  * @author Andrew Embler <andrew@concrete5.org>
  * @category Concrete
@@ -22,6 +23,9 @@
 	
 		var $gArray = array();
 		
+		/**
+		 * Get all groups should only really be run when you're sure there aren't a million groups in the system
+		 */
 		function GroupList($obj, $omitRequiredGroups = false, $getAllGroups = false) {
 			if ($getAllGroups) {
 				$db = Loader::db();

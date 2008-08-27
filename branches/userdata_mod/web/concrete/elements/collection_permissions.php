@@ -73,7 +73,7 @@ $ctArray = CollectionType::getList($c);
 			}
 		}
 		
-		function ccm_addGroup(gID, gName) {
+		function ccm_triggerSelectGroup(gID, gName) {
 			togglePermissionsGrid('permissions', true);
 			// we add a row for the selected group
 			rowValue = 'gID:' + gID;

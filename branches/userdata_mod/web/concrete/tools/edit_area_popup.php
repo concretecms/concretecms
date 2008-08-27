@@ -203,7 +203,7 @@ if ($cp->canAdminPage() && is_object($a)) {
 			tbl.appendChild(row3);
 		}
 		
-		function ccm_addGroup(gID, gName) {
+		function ccm_triggerSelectGroup(gID, gName) {
 			// we add a row for the selected group
 			var rowText = gName;
 			var rowValue = "gID:" + gID;

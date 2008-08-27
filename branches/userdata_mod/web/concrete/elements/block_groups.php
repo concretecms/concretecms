@@ -64,7 +64,7 @@
             }
 		}
 		
-		function ccm_addGroup(gID, gName) {
+		function ccm_triggerSelectGroup(gID, gName) {
 	      // we add a row for the selected group
 	      rowValue = "gID:" + gID;
 	      rowText = gName;
