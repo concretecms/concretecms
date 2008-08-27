@@ -1,4 +1,8 @@
 <?
+if (!ENABLE_DEFINABLE_USER_ATTRIBUTES) {
+	$this->controller->redirect('/dashboard');
+}
+
 $section = 'user_attributes';
 Loader::model('user_attributes');
 if ($_REQUEST['task'] == 'edit') {

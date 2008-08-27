@@ -73,7 +73,7 @@ $ctArray = CollectionType::getList($c);
 			}
 		}
 		
-		function ccm_addGroup(gID, gName) {
+		function ccm_triggerSelectGroup(gID, gName) {
 			togglePermissionsGrid('permissions', true);
 			// we add a row for the selected group
 			rowValue = 'gID:' + gID;
@@ -147,7 +147,7 @@ $ctArray = CollectionType::getList($c);
 		<h1 style="margin-bottom: 0px">Page Permissions</h1>
 
 		<div class="ccm-buttons" style="width: 140px; float: right"> 
-		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-modal="false" dialog-width="600" dialog-title="Choose User/Group"  dialog-height="400" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add">Add Group or User</em></span></a>
+		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-modal="false" dialog-width="600" dialog-title="Choose User/Group"  dialog-height="400" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add">Add User/Group</em></span></a>
 		</div>		
 
 		<div style="float: left; width: 450px; padding-top: 15px">

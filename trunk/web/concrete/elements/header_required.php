@@ -74,6 +74,7 @@ var CCM_REL = "<?=DIR_REL?>";
 
 </script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery1.2.4b.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/swfobject.js"></script>
 <!-- <script src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.json.min.js"></script> -->
 
 <? 
