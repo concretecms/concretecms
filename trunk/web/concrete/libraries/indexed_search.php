@@ -11,7 +11,7 @@ class IndexedSearchResult {
 	public function __construct($id, $name, $description, $score, $cPath) {
 		$this->cID = $id;
 		$this->cName = $name;
-		$this->cDescription = $description;
+		$this->cDescription = $description;		
 		$this->score = $score;
 		$this->cPath = $cPath;
 	}
@@ -68,6 +68,7 @@ class IndexedSearch {
 		$nh = Loader::helper('navigation');
 		
 		while ($row = $r->fetchRow()) {
+			echo $row['cID']."<br/>";
 			$c = Page::getByID($row['cID'], 'ACTIVE');
 			$themeObject = $c->getCollectionThemeObject();
 			$g->setPermissionsForObject($c);
