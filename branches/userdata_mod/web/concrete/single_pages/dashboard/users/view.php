@@ -26,6 +26,7 @@ if ($_REQUEST['attribute_deleted']) {
 if ($_GET['uID']) {
 	$uo = UserInfo::getByID($_GET['uID']);
 	if (is_object($uo)) {
+		$uID = $_REQUEST['uID'];
 		if ($_GET['task'] == 'activate') {
 			$uo->activate();
 			$uo = UserInfo::getByID($_GET['uID']);
@@ -195,7 +196,8 @@ if ($_POST['create']) {
 			
 			$uo->updateSelectedUserAttributes($data['editAKID'], $_POST);
 			$uo->updateGroups($_POST['gID']);
-	
+			$uID = $uo->getUserID();
+
 			$message = "User created successfully. ";
 		} else {
 			$error[] = 'An error occurred while trying to create the account.';
@@ -313,7 +315,7 @@ if (is_object($uo)) {
 			<td><input type="file" name="uAvatar" style="width: 100%" /> <input type="hidden" name="uHasAvatar" value="<?=$uo->hasAvatar()?>" />
 			
 			<? if ($uo->hasAvatar()) { ?>
-			<input type="button" onclick="location.href='<?=$this->url('/dashboard/users?uID=' . $_REQUEST['uID'] . '&task=remove-avatar')?>'" value="Remove Avatar" />
+			<input type="button" onclick="location.href='<?=$this->url('/dashboard/users?uID=' . $uID . '&task=remove-avatar')?>'" value="Remove Avatar" />
 			<? } ?>
 			</td>
 		</tr>
@@ -359,16 +361,13 @@ if (is_object($uo)) {
 		<? } ?>
 		
 		<tr>
-			<td colspan="3" class="header">Groups</td>
+			<td colspan="3" class="header">
+						<a id="groupSelector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups" dialog-title="Add Groups" dialog-modal="false" style="float: right">Add Group</a>
+Groups</td>
 		</tr>
 		<? $gArray = $gl->getGroupList(); ?>
 		<tr>
 			<td colspan="3">
-			
-			<div class="ccm-buttons" style="margin-bottom: 10px"> 
-			<a id="groupSelector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups&cID=<?=$_REQUEST['cID']?>" dialog-width="600" dialog-title="Choose User/Group"  dialog-height="400" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add">Add Group or User</em></span></a>
-			</div>
-			
 			<? foreach ($gArray as $g) { ?>
 				<input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" style="vertical-align: middle" <? 
 					if (is_array($_POST['gID'])) {
@@ -382,6 +381,9 @@ if (is_object($uo)) {
 					}
 				?> /> <?=$g->getGroupName()?><br>
 			<? } ?>
+			
+			<div id="ccm-additional-groups"></div>
+			
 			</td>
 		</tr>
 		</table>
@@ -404,17 +406,17 @@ if (is_object($uo)) {
 		<div class="actions" >
 			<? if (VALIDATE_USER_EMAIL) { ?>
 				<? if ($uo->isValidated() < 1) { ?>
-					<a href="<?=$this->url('/dashboard/users?uID=' . $_REQUEST['uID'] . '&task=validate_email')?>">Mark Email as Valid</a>
+					<a href="<?=$this->url('/dashboard/users?uID=' . $uID . '&task=validate_email')?>">Mark Email as Valid</a>
 					&nbsp;|&nbsp;
 					<? } ?>
 			<? } ?>
 			<? if ($uo->isActive()) { ?>
-				<a href="<?=$this->url('/dashboard/users?uID=' . $_REQUEST['uID'] . '&task=deactivate')?>">Deactivate User</a>
+				<a href="<?=$this->url('/dashboard/users?uID=' . $uID . '&task=deactivate')?>">Deactivate User</a>
 			<? } else { ?>
-				<a href="<?=$this->url('/dashboard/users?uID=' . $_REQUEST['uID'] . '&task=activate')?>">Activate User</a>
+				<a href="<?=$this->url('/dashboard/users?uID=' . $uID . '&task=activate')?>">Activate User</a>
 			<? } ?>
 			&nbsp;|&nbsp;		
-			<a href="<?=$this->url('/dashboard/users?uID=' . $_REQUEST['uID'])?>&task=edit">Edit User</a>		
+			<a href="<?=$this->url('/dashboard/users?uID=' . $uID)?>&task=edit">Edit User</a>		
 		</div>
 		
 		<h2>Required Information</h2>
@@ -779,6 +781,10 @@ if (is_object($uo)) {
 $(function() {
 
 	$("#groupSelector").dialog();
+	ccm_triggerSelectGroup = function(gID, gName) {
+		var html = '<input type="checkbox" name="gID[]" value="' + gID + '" style="vertical-align: middle" checked /> ' + gName + '<br/>';
+		$("#ccm-additional-groups").append(html);
+	}
 	$("#ccm-user-search-advanced-control").click(function() {
 		$("#ccm-user-search-simple").hide();
 		$("#ccm-user-search-simple-control").show();

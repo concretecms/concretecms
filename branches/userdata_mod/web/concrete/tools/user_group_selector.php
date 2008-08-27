@@ -9,14 +9,12 @@ if ($_REQUEST['mode'] == 'users') {
 	$displayUsers = false;
 }
 
-$c = Page::getByID($_REQUEST['cID']);
+$c = Page::getByPath('/dashboard/users');
 $cp = new Permissions($c);
-if (!$cp->canAdminPage()) {
+if (!$cp->canRead()) {
 	exit;
 }
 
-$gl = new GroupList(null, true);
-$gArray = $gl->getGroupList();
 
 ?>
 
@@ -29,11 +27,6 @@ $("#ccm-ug-tabs a").click(function() {
 	ccm_areaActiveTab = $(this).attr('id');
 	$(this).parent().addClass("ccm-nav-active");
 	$("#" + ccm_areaActiveTab + "-tab").show();
-});
-
-$("a.ccm-group-inner").click(function() {
-	ccm_addGroup($(this).attr('group-id'), $(this).attr('group-name'));
-	jQuery.fn.dialog.closeTop();
 });
 
 </script>
@@ -53,14 +46,8 @@ $("a.ccm-group-inner").click(function() {
 
 <h1>Select Group</h1>
 
-<? foreach ($gArray as $g) { ?>
+<? include(DIR_FILES_TOOLS_REQUIRED . '/select_group.php'); ?>
 
-	<div class="ccm-group">
-		<a class="ccm-group-inner" id="g<?=$g->getGroupID()?>" group-id="<?=$g->getGroupID()?>" group-name="<?=$g->getGroupName()?>" href="javascript:void(0)" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$g->getGroupName()?></a>
-	</div>
-
-
-<? } ?>
 </div>
 
 <? } ?>
