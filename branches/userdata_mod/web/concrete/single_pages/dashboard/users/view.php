@@ -404,7 +404,7 @@ Groups</td>
 	
 	<div class="ccm-dashboard-inner">
 		<div class="actions" >
-			<? if (VALIDATE_USER_EMAIL) { ?>
+			<? if (USER_VALIDATE_EMAIL) { ?>
 				<? if ($uo->isValidated() < 1) { ?>
 					<a href="<?=$this->url('/dashboard/users?uID=' . $uID . '&task=validate_email')?>">Mark Email as Valid</a>
 					&nbsp;|&nbsp;
@@ -428,7 +428,7 @@ Groups</td>
 			<td><?=$uo->getUserName()?><br/>
 			<a href="mailto:<?=$uo->getUserEmail()?>"><?=$uo->getUserEmail()?></a><br/>
 			<?=$uo->getUserDateAdded()?>
-			<? if (VALIDATE_USER_EMAIL) { ?><br/>
+			<? if (USER_VALIDATE_EMAIL) { ?><br/>
 				Full Record: <strong><?= ($uo->isFullRecord()) ? "Yes" : "No" ?></strong>
 				&nbsp;&nbsp;
 				Email Validated: <strong><?
@@ -574,7 +574,7 @@ Groups</td>
 		<td class="subheader">and: </td>
 		<td><? print $dtt->datetime('uDateAddedEnd', $dtt->translate('uDateAddedEnd', $_GET), true)?></td>
 	</tr>
-	<? if (VALIDATE_USER_EMAIL) { ?>
+	<? if (USER_VALIDATE_EMAIL) { ?>
 	<tr>
 		<td class="subheader">Email Validation</td>
 		<td>

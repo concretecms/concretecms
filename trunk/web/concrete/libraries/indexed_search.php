@@ -68,7 +68,6 @@ class IndexedSearch {
 		$nh = Loader::helper('navigation');
 		
 		while ($row = $r->fetchRow()) {
-			echo $row['cID']."<br/>";
 			$c = Page::getByID($row['cID'], 'ACTIVE');
 			$themeObject = $c->getCollectionThemeObject();
 			$g->setPermissionsForObject($c);
