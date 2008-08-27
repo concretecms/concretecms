@@ -59,7 +59,7 @@ class PageStatistics {
 	 */
 	public static function getTotalPageVersions() {
 		$db = Loader::db();
-		return $db->GetOne("select count(cvID) from CollectionVersions inner join Pages on CollectionVersions.cID = Pages.cID");
+		return $db->GetOne("select count(cvID) from CollectionVersions");
 	}
 	
 	/**
@@ -68,7 +68,7 @@ class PageStatistics {
 	 */
 	public static function getSiteLastEdit() {
 		$db = Loader::db();
-		return $db->GetOne("select max(Collections.cDateModified) from Collections inner join Pages on Collections.cID = Pages.cID");
+		return $db->GetOne("select max(Collections.cDateModified) from Collections");
 	}
 	
 	/**

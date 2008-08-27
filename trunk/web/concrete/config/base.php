@@ -31,6 +31,14 @@ if (!defined('ENABLE_EMAILS')) {
 	define('ENABLE_EMAILS', true);
 }
 
+if (!defined('ENABLE_DEFINABLE_USER_ATTRIBUTES')) {
+	define('ENABLE_DEFINABLE_USER_ATTRIBUTES', true);
+}
+
+if (!defined('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL')) {
+	define('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL', false);
+}
+
 # Debug Menu - Determines whether a "Submit Feedback/Bug/Question" is active */
 # Currently Concrete5 does not include this capability but it will likely come back.
 define('MENU_FEEDBACK_DISPLAY', 1);
@@ -60,9 +68,10 @@ define('DISPATCHER_FILENAME_CORE', 'dispatcher.php');
 # Used by the loader to load core libraries
 define('DIR_LIBRARIES', DIR_BASE . '/libraries'); // front-end
 define('DIR_LIBRARIES_CORE', DIR_BASE_CORE . '/libraries'); // front-end
-define('DIR_LIBRARIES_3RDPARTY', DIR_LIBRARIES_CORE . '/3rdparty');
+define('DIR_LIBRARIES_3RDPARTY', DIR_LIBRARIES . '/3rdparty');
+define('DIR_LIBRARIES_3RDPARTY_CORE', DIR_LIBRARIES_CORE . '/3rdparty');
 
-ini_set('include_path', get_include_path() . PATH_SEPARATOR . DIR_LIBRARIES_3RDPARTY);
+ini_set('include_path', get_include_path() . PATH_SEPARATOR . DIR_LIBRARIES_3RDPARTY . PATH_SEPARATOR . DIR_LIBRARIES_3RDPARTY_CORE);
 
 # Models are explicit things - concrete-related or not - that deal with the db
 define('DIR_MODELS', DIR_BASE . '/models'); // front-end
@@ -196,7 +205,7 @@ define('DIR_FILES_CACHE_PAGES', DIR_FILES_CACHE . '/lucene.pages');
 # Binaries used by the system
 # Currently unused
 # define('DIR_FILES_BIN', DIR_BASE_CORE . '/bin');
-define('DIR_FILES_BIN_HTMLDIFF', DIR_LIBRARIES_3RDPARTY . '/htmldiff.py');
+define('DIR_FILES_BIN_HTMLDIFF', DIR_LIBRARIES_3RDPARTY_CORE . '/htmldiff.py');
 define('DIR_FILES_BIN_UNZIP', '/usr/bin/unzip');
 
 # Asset library constants 

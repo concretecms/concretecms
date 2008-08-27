@@ -98,11 +98,11 @@ class FormHelper {
 			$_array = true;
 		}
 
-		if ($isChecked && $_SERVER['REQUEST_METHOD'] != 'POST') {
+		if ($isChecked && (!isset($_REQUEST[$_field]))) {
 			$checked = true;
-		} else if ($_POST[$_field] == $value) {
+		} else if ($_REQUEST[$_field] == $value) {
 			$checked = true;
-		} else if (is_array($_POST[$_field]) && in_array($value, $_POST[$_field])) {
+		} else if (is_array($_REQUEST[$_field]) && in_array($value, $_REQUEST[$_field])) {
 			$checked = true;
 		}
 			
@@ -130,11 +130,11 @@ class FormHelper {
 			}
 		} else {
 			if (is_array($a[1])) {
-				$innerValue .= $_POST[$a[0]];
+				$innerValue .= $_REQUEST[$a[0]];
 				$miscFields = $a[1];
 			} else {
 				// we ignore this second value if a post is set with this guy in it
-				$innerValue = (isset($_POST[$a[0]])) ? $_POST[$a[0]] : $a[1];
+				$innerValue = (isset($_REQUEST[$a[0]])) ? $_REQUEST[$a[0]] : $a[1];
 			}
 		}
 		
@@ -151,9 +151,10 @@ class FormHelper {
 	/**
 	 * Generates a radio button
 	 * @param string $key
-	 * @param string $value
+	 * @param string $valueOfButton
+	 * @param string $valueOfSelectedOption
 	 */
-	public function radio($key, $value, $isCheckedOrArray = false, $miscFields = array()) {
+	public function radio($key, $value, $valueOrArray = false, $miscFields = array()) {
 		$str = '<input type="radio" class="ccm-input-radio" name="' . $key . '" id="' . $key . $this->radioIndex . '" value="' . $value . '" ';
 		
 		if (!is_array($isCheckedOrArray)) {
@@ -163,12 +164,12 @@ class FormHelper {
 		}
 
 		if (is_array($miscFields)) {
-			foreach($miscFields as $key => $value) {
-				$str .= $key . '="' . $value . '" ';
+			foreach($miscFields as $k => $value) {
+				$str .= $k . '="' . $value . '" ';
 			}
 		}
 		
-		if ($_POST[$key] == $value || ($isChecked && !isset($_POST[$key]))) {
+		if ($valueOrArray == $value && !isset($_REQUEST[$key]) || (isset($_REQUEST[$key]) && $_REQUEST[$key] == $value)) {
 			$str .= 'checked="checked" ';
 		}
 		
@@ -201,11 +202,11 @@ class FormHelper {
 			}
 		} else {
 			if (is_array($a[1])) {
-				$str .= 'value="' . $_POST[$a[0]] . '" ';
+				$str .= 'value="' . $_REQUEST[$a[0]] . '" ';
 				$miscFields = $a[1];
 			} else {
 				// we ignore this second value if a post is set with this guy in it
-				$val = (isset($_POST[$a[0]])) ? $_POST[$a[0]] : $a[1];
+				$val = (isset($_REQUEST[$a[0]])) ? $_REQUEST[$a[0]] : $a[1];
 				$str .= 'value="' . $val . '" ';
 			}
 		}
@@ -245,11 +246,11 @@ class FormHelper {
 			}
 		} else {
 			if (is_array($a[1])) {
-				$str .= 'value="' . $_POST[$a[0]] . '" ';
+				$str .= 'value="' . $_REQUEST[$a[0]] . '" ';
 				$miscFields = $a[1];
 			} else {
 				// we ignore this second value if a post is set with this guy in it
-				$val = (isset($_POST[$a[0]])) ? $_POST[$a[0]] : $a[1];
+				$val = (isset($_REQUEST[$a[0]])) ? $_REQUEST[$a[0]] : $a[1];
 				$str .= 'value="' . $val . '" ';
 			}
 		}
