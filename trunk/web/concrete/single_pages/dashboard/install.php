@@ -5,7 +5,7 @@ $ih = Loader::helper('concrete/interface');
 
 /*
 // manually install core level block
-$resp = BlockType::installBlockType('external_form');
+$resp = BlockType::installBlockType('search');
 exit;
 */
 if (isset($_POST['task'])) {

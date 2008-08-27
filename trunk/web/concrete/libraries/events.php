@@ -18,7 +18,7 @@ class ConcreteEvents {
 
 	private $registeredEvents = array();
 	
-	public static function extend($event, $class, $method, $filename, $params) {
+	public static function extend($event, $class, $method, $filename, $params=array()) {
 		$ce = ConcreteEvents::getInstance();
 		$ce->registeredEvents[$event][] = array(
 			$class,
