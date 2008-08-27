@@ -3,11 +3,6 @@ $btArray = BlockTypeList::getInstalledList();
 $btArray2 = BlockTypeList::getAvailableList();
 $ih = Loader::helper('concrete/interface');
 
-/*
-// manually install core level block
-$resp = BlockType::installBlockType('search');
-exit;
-*/
 if (isset($_POST['task'])) {
 	if ($_POST['task'] == 'install_blocktype') { 
 		if (isset($_POST['btID']) && $_POST['btID'] > 0) {
