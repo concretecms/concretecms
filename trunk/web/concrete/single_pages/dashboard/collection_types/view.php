@@ -308,7 +308,7 @@ if ($ctEditMode) {
 			?></td>
 		<td>
 		<? if ($ct->getMasterCollectionID()) {?>
-			<? print $ih->button('Defaults', "javascript:window.open('" . $this->url('/dashboard/collection_types?cID=' . $ct->getMasterCollectionID() . '&task=load_master')."');", 'left', false, array('title'=>'Lets you set default permissions and blocks for a particular page type.'));?>
+			<? print $ih->button_js('Defaults', "window.open('" . $this->url('/dashboard/collection_types?cID=' . $ct->getMasterCollectionID() . '&task=load_master')."')", 'left', false, array('title'=>'Lets you set default permissions and blocks for a particular page type.'));?>
 		<? } ?>
 	
 		</td>
