@@ -69,9 +69,10 @@
 				}
 				
 				$password = User::encryptPassword($password, PASSWORD_SALT);
-				$q = "select uID, uName, uIsActive, uIsValidated from Users where uName = '$username' and uPassword = '$password'";
+				$v = array($username, $password);
+				$q = "select uID, uName, uIsActive, uIsValidated from Users where uName = ? and uPassword = ?";
 				
-				$r = $db->query($q);
+				$r = $db->query($q, $v);
 				if ($r) {
 					$row = $r->fetchRow(); 
 					if ($row['uID'] && $row['uIsValidated'] < 1 && USER_VALIDATE_EMAIL_REQUIRED) {
