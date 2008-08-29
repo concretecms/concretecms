@@ -37,7 +37,6 @@ ccm_alSelectItem = function(obj, e) {
 	ccm_hideMenus();
 	
 	var bID = $(obj).attr('id').substring(7);
-	e.stopPropagation();
 	$(obj).addClass('ccm-al-image-selected');
 	ccm_alSelectedItem = obj;
 

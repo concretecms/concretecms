@@ -85,21 +85,13 @@ if ($s->getTotal() > 0) { ?>
 var ccm_al_img_dblClkTmr = null;
 var ccm_al_img_clkObj = null;
 if($("div.ccm-al-image")) {
+	// double click behavior is super buggy
 	$("div.ccm-al-image").click( function(e) {
 		if (ccm_alSelectedItem != false) {
 			ccm_alDeselectItem(ccm_alSelectedItem);
 		}
-		ccm_al_img_clkObj = this;
-		if( ccm_al_img_dblClkTmr ){
-			clearTimeout( ccm_al_img_dblClkTmr );
-			ccm_al_img_dblClkTmr=null; 
-			ccm_priSelectAssetAuto(this.id);
-		}else{
-			ccm_al_img_dblClkTmr = setTimeout( function() {
-				ccm_al_img_dblClkTmr=null;
-				ccm_alSelectItem(ccm_al_img_clkObj, e);
-			},350);
-		}
+		e.stopPropagation();
+		ccm_alSelectItem(this, e);
 	});
 }
 /*
