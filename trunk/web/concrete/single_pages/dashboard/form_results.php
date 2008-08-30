@@ -37,7 +37,7 @@ You have not created any forms.
 			<tr>
 				<td><?=$survey['surveyName']?></td>
 				<td>
-					<a href="<?=DIR_REL?>/index.php?cID=<?=$c->getCollectionId()?>&qsid=<?=$questionSetId?>">View Responses</a>
+					<a href="<?=DIR_REL?>/index.php?cID=<?=$c->getCollectionId()?>&qsid=<?=$thisQuestionSetId?>">View Responses</a>
 					|
 					<a href="<?=DIR_REL?>/index.php?cID=<?=$ocID?>">Open Page</a>	
 				</td>

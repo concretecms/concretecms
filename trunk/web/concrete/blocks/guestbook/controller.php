@@ -228,9 +228,11 @@
 		 * @param string $email
 		*/
  		function addEntry($comment, $name, $email, $approved, $cID) {
+			$txt = Loader::helper('text');
+ 		
 			$db = Loader::db();
 			$query = "INSERT INTO btGuestBookEntries (bID, cID, user_name, user_email, commentText, approved) VALUES (?, ?, ?, ?, ?, ?)";
-			$res = $db->query($query, array($this->bID, $cID, $name,$email,$comment,$approved) );
+			$res = $db->query($query, array($this->bID, $cID, $txt->sanitize($name), $txt->sanitize($email), $txt->sanitize($comment),$approved) );
 		}
 		
 		
@@ -243,11 +245,9 @@
 		*/
 	 	function updateEntry($entryID, $comment, $name, $email) {
 			$db = Loader::db();
+			$txt = Loader::helper('text');
 			$query = "UPDATE btGuestBookEntries SET user_name=?, user_email=?, commentText=? WHERE entryID=? AND bID=?";
-			$res = $db->query($query, array($name,$email,$comment,$entryID,$this->bID));
-			if($res) {
-				die($res->getMessage());
-			}
+			$res = $db->query($query, array($txt->sanitize($name),$txt->sanitize($email),$txt->sanitize($comment),$entryID,$this->bID));
 		}
  		
 		/** 

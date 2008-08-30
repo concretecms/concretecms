@@ -4,6 +4,9 @@ table#searchBlockSetup td{ font-size:12px; vertical-align:top }
 table#searchBlockSetup .note{ font-size:10px; color:#999999; font-weight:normal }
 </style> 
 
+<? if (!$controller->indexExists()) { ?>
+	<div class="ccm-error">The search index does not appear to exist. This block will not function until the reindex job has been run at least once in the dashboard.<br/><br/></div>
+<? } ?>
 <table id="searchBlockSetup" width="100%"> 
 	<tr>
 		<th>Search Title:</th>

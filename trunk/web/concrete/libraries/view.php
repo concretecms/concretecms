@@ -31,9 +31,9 @@
 		/**
 		 * themePaths holds the various hard coded paths to themes
 		 * @access private
-	     * @var object
+	     * @var array
 		*/
-		private $themePaths;		
+		private $themePaths = array();	
 	
 		/**
 		 * editing mode is enabled or not

@@ -24,8 +24,8 @@
 		 */
 		function isUniqueUsername($uName) {
 			$db = Loader::db();
-			$q = "select uID from Users where uName = '{$uName}'";
-			$r = $db->getOne($q);
+			$q = "select uID from Users where uName = ?";
+			$r = $db->getOne($q, array($uName));
 			if ($r) {
 				return false;
 			} else {
@@ -41,8 +41,8 @@
 		 */
 		function isUniqueEmail($uEmail) {
 			$db = Loader::db();
-			$q = "select uID from Users where uEmail = '{$uEmail}'";
-			$r = $db->getOne($q);
+			$q = "select uID from Users where uEmail = ?";
+			$r = $db->getOne($q, array($uEmail));
 			if ($r) {
 				return false;
 			} else {

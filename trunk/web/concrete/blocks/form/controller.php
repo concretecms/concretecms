@@ -63,6 +63,7 @@ class FormBlockController extends BlockController {
 	
 	//users submits the completed survey
 	function action_submit_form() {
+		$txt = Loader::helper('text');
 		$db = Loader::db();
 		//question set id
 		$qsID=intval($_POST['qsID']);	
@@ -75,7 +76,7 @@ class FormBlockController extends BlockController {
 		$answerSetID=$db->Insert_ID();
 		
 		//get all questions for this question set
-		$rs=$db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$qsID");
+		$rs=$db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=?", array($qsID));
 		
 		$questionAnswerPairs=array();
 		
@@ -83,15 +84,15 @@ class FormBlockController extends BlockController {
 		while( $row=$rs->fetchRow() ){	
 			//save each answer
 			if($row['inputType']=='text'){
-				$answerLong=$_POST['Question'.$row['msqID']];
+				$answerLong=$txt->sanitize($_POST['Question'.$row['msqID']]);
 				$answer='';
 			}else{
 				$answerLong="";
-				$answer=$_POST['Question'.$row['msqID']];
+				$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
 			}
 			
 			$questionAnswerPairs[$row['msqID']]['question']=$row['question'];
-			$questionAnswerPairs[$row['msqID']]['answer']=$_POST['Question'.$row['msqID']];
+			$questionAnswerPairs[$row['msqID']]['answer']=$txt->sanitize($_POST['Question'.$row['msqID']]);
 			
 			if( is_array($answer) ) 
 				$answer=join(',',$answer);
