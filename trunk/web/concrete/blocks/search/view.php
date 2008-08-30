@@ -5,6 +5,10 @@
 #searchResults .searchResult p{margin-top:4px}
 </style>
 
+<? if (isset($error)) { ?>
+	<?=$error?><br/><br/>
+<? } ?>
+
 <form action="<?=$this->url( $resultTargetURL )?>" method="post">
 
 	<? if( strlen($title)>0){ ?><h3><?=$title?></h3><? } ?>

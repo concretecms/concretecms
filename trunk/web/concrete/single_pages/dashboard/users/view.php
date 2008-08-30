@@ -60,9 +60,9 @@ if ($_GET['uID']) {
 				$_POST['uName'] = $_POST['uEmail'];
 			}
 			
-			$username = $txt->sanitize($_POST['uName']);
-			$password = $txt->sanitize($_POST['uPassword']);
-			$passwordConfirm = $txt->sanitize($_POST['uPasswordConfirm']);
+			$username = $_POST['uName'];
+			$password = $_POST['uPassword'];
+			$passwordConfirm = $_POST['uPasswordConfirm'];
 			
 			if ($password) {
 				if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
@@ -93,8 +93,8 @@ if ($_GET['uID']) {
 				}		
 			}
 			
-			if (strlen($password) >= USER_PASSWORD_MINIMUM && !$vals->alphanum($password)) {
-				$error[] = 'A password may only contain letters or numbers.';
+			if (strlen($password) >= USER_PASSWORD_MINIMUM && !$vals->password($password)) {
+				$error[] = 'A password may not contain ", \', >, <, or any spaces.';
 			}
 			
 			if ($password) {
@@ -144,8 +144,8 @@ if ($_POST['create']) {
 	}
 	
 
-	$username = $txt->sanitize($_POST['uName']);
-	$password = $txt->sanitize($_POST['uPassword']);
+	$username = $_POST['uName'];
+	$password = $_POST['uPassword'];
 	
 	if (!$vals->email($_POST['uEmail'])) {
 		$error[] = 'Invalid email address provided.';
@@ -179,13 +179,14 @@ if ($_POST['create']) {
 		$error[] = 'A password must be between ' . USER_PASSWORD_MINIMUM . ' and ' . USER_PASSWORD_MAXIMUM . ' characters';
 	}
 		
-	if (strlen($password) >= USER_PASSWORD_MINIMUM && !$vals->alphanum($password)) {
-		$error[] = 'A password may only contain letters or numbers.';
+	if (strlen($password) >= USER_PASSWORD_MINIMUM && !$vals->password($password)) {
+		$error[] = 'A password may not contain ", \', >, <, or any spaces.';
 	}
 
 	if (!$error) {
 		// do the registration
-		$uo = UserInfo::add($_POST);
+		$data = array('uName' => $username, 'uPassword' => $password, 'uEmail' => $_POST['uEmail']);
+		$uo = UserInfo::add($data);
 		
 		if (is_object($uo)) {
 

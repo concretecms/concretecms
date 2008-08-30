@@ -27,9 +27,9 @@ class RegisterController extends Controller {
 		$vals = Loader::helper('validation/strings');
 		$valc = Loader::helper('concrete/validation');
 
-		$username = $txt->sanitize($_POST['uName']);
-		$password = $txt->sanitize($_POST['uPassword']);
-		$passwordConfirm = $txt->sanitize($_POST['uPasswordConfirm']);
+		$username = $_POST['uName'];
+		$password = $_POST['uPassword'];
+		$passwordConfirm = $_POST['uPasswordConfirm'];
 		
 		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
 			$_POST['uName'] = $_POST['uEmail'];
@@ -66,8 +66,8 @@ class RegisterController extends Controller {
 			$e->add('A password must be between ' . USER_PASSWORD_MINIMUM . ' and ' . USER_PASSWORD_MAXIMUM . ' characters');
 		}
 			
-		if (strlen($password) >= USER_PASSWORD_MINIMUM && !$vals->alphanum($password)) {
-			$e->add('A password may only contain letters or numbers.');
+		if (strlen($password) >= USER_PASSWORD_MINIMUM && !$vals->password($password)) {
+			$e->add('A password may not contain ", \', >, <, or any spaces.');
 		}
 
 		if ($password) {
@@ -84,7 +84,12 @@ class RegisterController extends Controller {
 		if (!$e->has()) {
 			
 			// do the registration
-			$process = UserInfo::register($_POST);
+			$data = $_POST;
+			$data['uName'] = $username;
+			$data['uPassword'] = $password;
+			$data['uPasswordConfirm'] = $passwordConfirm;
+			
+			$process = UserInfo::register($data);
 			if (is_object($process)) {
 				// now we log the user in
 

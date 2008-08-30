@@ -42,6 +42,12 @@
 	Loader::model('version');
 
 	## Startup check, install ##	
+	require('startup/magic_quotes_gpc_check.php');
+
+	## Default routes for various content items ##
+	require('config/theme_paths.php');
+
+	## Startup check, install ##	
 	require('startup/config_check_complete.php');
 	
 	## Load the site's database connection and library
@@ -52,9 +58,6 @@
 
 	## User level config ##	
 	require('config/app.php');
-
-	## Default routes for various content items ##
-	require('config/theme_paths.php');
 
 	## Specific site routes for various content items (if they exist) ##
 	@include('config/site_theme_paths.php');
