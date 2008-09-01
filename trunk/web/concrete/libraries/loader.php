@@ -1,6 +1,27 @@
 <?
-	class Loader {
+/*
+ * @package Core
+ * @category Concrete
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 
+/**
+ * A wrapper for loading core files, libraries, applications and models. Whenever possible the loader class should be used because it will always know where to look for the proper files, in the proper order.
+ * @package Core
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ */
+ 
+ class Loader {
+		
+		/** 
+		 * Loads a library file, either from the site's files or from Concrete's
+		 */
 		public function library($lib, $pkgHandle = null) {
 			if ($pkgHandle) {
 				require_once(DIR_LIBRARIES . '/' . $pkgHandle . '/' . DIRNAME_LIBRARIES . '/' . $lib . '.php');
@@ -10,7 +31,10 @@
 				require_once(DIR_LIBRARIES_CORE . '/' . $lib . '.php');
 			}
 		}
-		
+
+		/** 
+		 * Loads a model from either an application, the site, or the core Concrete directory
+		 */
 		public function model($mod, $pkgHandle = null) {
 			if ($pkgHandle) {
 				require_once(DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . $mod . '.php');
@@ -21,6 +45,9 @@
 			}
 		}
 		
+		/** 
+		 * @access private
+		 */
 		public function packageElement($file, $pkgHandle, $args = null) {
 			if (is_array($args)) {
 				extract($args);
@@ -28,6 +55,9 @@
 			include(DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . $file . '.php');
 		}
 
+		/** 
+		 * Loads an element from C5 or the site
+		 */
 		public function element($file, $args = null) {
 			if (is_array($args)) {
 				extract($args);
@@ -38,7 +68,13 @@
 				include(DIR_FILES_ELEMENTS . '/' . $file . '.php');
 			}
 		}
-		
+
+		/** 
+		 * Loads a block's controller/class into memory. 
+		 * <code>
+		 * <?php Loader::block('autonav'); ?>
+		 * </code>
+		 */
 		public function block($bl) {
 			if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER)) {
 				require_once(DIR_FILES_BLOCK_TYPES . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER);
@@ -47,7 +83,9 @@
 			}
 		}
 		
-		/* database loads the libraries needed to connect. DB Instantiates the object */
+		/** 
+		 * Loads the various files for the database abstraction layer.
+		 */
 		public function database() {
 			Loader::library('3rdparty/adodb/adodb.inc');
 			//Loader::library('3rdparty/adodb/adodb-pear.inc');
@@ -57,6 +95,14 @@
 			Loader::library('database');
 		}
 		
+		/** 
+		 * Returns the database object, or loads it if not yet created
+		 * <code>
+		 * <?php
+		 * $db = Loader::db();
+		 * $db->query($sql);
+		 * </code>
+		 */
 		public function db($server = null, $username = null, $password = null, $database = null) {
 			static $_db;
 			if (!isset($_db)) {
@@ -81,6 +127,9 @@
 			return $_db;
 		}
 		
+		/** 
+		 * Loads a helper file. If the same helper file is contained in both the core concrete directory and the site's directory, it will load the site's first, which could then extend the core.
+		 */
 		public function helper($file) {
 			// loads and instantiates the object
 			if (file_exists(DIR_HELPERS . '/' . $file . '.php')) {
@@ -104,6 +153,9 @@
 			return $cl;
 		}
 		
+		/**
+		 * @access private
+		 */
 		public function package($file) {
 			// loads and instantiates the object
 			if (file_exists(DIR_PACKAGES . '/' . $file . '/' . FILENAME_PACKAGE_CONTROLLER)) {
@@ -113,7 +165,10 @@
 				return $cl;
 			}
 		}
-
+		
+		/**
+		 * @access private
+		 */
 		public function dashboardModuleController($dbhHandle, $pkg = null) {
 			$class = Object::camelcase($dbhHandle . 'DashboardModuleController');
 			if (!class_exists($class)) {
@@ -136,6 +191,9 @@
 			return $controller;
 		}
 		
+		/** 
+		 * @access private
+		 */		
 		public function dashboardModule($dbhHandle, $pkg = null) {
 			$controller = Loader::dashboardModuleController($dbhHandle, $pkg);
 			extract($controller->getSets());
@@ -158,6 +216,9 @@
 			}
 		}
 		
+		/** 
+		 * Loads a controller for either a page or view
+		 */
 		public function controller($item) {
 			if ($item instanceof Page) {
 				$c = $item;
