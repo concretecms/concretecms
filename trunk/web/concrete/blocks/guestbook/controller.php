@@ -1,11 +1,27 @@
 <?
-/** 
- * GuestBookBlockController 
- * classes for managing the guestbook block
+/**
+ * @package Blocks
+ * @subpackage BlockTypes
+ * @category Concrete
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
  *
- * @package blocks
- * @subpackage guestbook 
  */
+
+/**
+ * Controller for the guestbook block, which allows site owners to add comments onto any concrete page.
+ *
+ * @package Blocks
+ * @subpackage BlockTypes
+ * @author Ryan Tyler <ryan@concrete5.org>
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
+
 	class GuestBookBlockController extends BlockController {
 		
 		/** 

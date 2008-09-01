@@ -1,5 +1,8 @@
 <?
 
+/**
+ * @access private
+ */
 function concrete_log_query($q) { 
 	$l = DBLog::getInstance();
 	$l->addQuery($q);

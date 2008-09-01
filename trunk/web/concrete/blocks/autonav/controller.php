@@ -134,10 +134,19 @@
 			return $this->_c;
 		}
 	}
-
-	/** 
-	 * @access private
+	
+	/**
+	 * The controller for the autonav block, which makes navigation lists and menus from C5 pages.
+	 *
+	 * @package Blocks
+	 * @subpackage BlockTypes
+	 * @author Andrew Embler <andrew@concrete5.org>
+	 * @category Concrete
+	 * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+	 * @license    http://www.concrete5.org/license/     MIT License
+	 *
 	 */
+	 
 	class AutonavBlockController extends BlockController {
 
 		protected $btDescription = "Creates navigation trees and sitemaps";
