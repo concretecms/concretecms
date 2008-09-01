@@ -6,7 +6,6 @@ passthru("svn export --force ../web/concrete/helpers/ ./source/helpers");
 passthru("svn export --force ../web/concrete/jobs/ ./source/jobs");
 passthru("svn export --force -N ../web/concrete/libraries/ ./source/libraries");
 passthru("svn export --force ../web/concrete/models/ ./source/models");
-passthru("svn export --force ../web/concrete/tutorials/ ./source/tutorials");
 
 passthru("rsync -ave ssh ./source/ andrew@concrete5.org:/home/andrew/generate_api/source/");
 
