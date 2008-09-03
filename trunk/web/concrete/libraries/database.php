@@ -48,6 +48,10 @@ class Database {
 		$this->db = $db;
 	}
 	
+	public function getDatabaseObject() {
+		return $this->db;
+	}
+	
 	/** 
 	 * Any item that isn't found in our wrapper class gets automatically sent our database object.
 	 */
@@ -61,6 +65,14 @@ class Database {
 	 */ 
 	public function setDebug($_debug) {
 		$this->db->debug = $_debug;
+	}
+
+	/** 
+	 * Sets logging to true or false.
+	 * @param bool $log
+	 */ 
+	public function setLogging($log) {
+		$this->db->LogSQL($log);
 	}
 
 

@@ -1,34 +1,59 @@
 <?
 
-/**
- * @access private
- */
-function concrete_log_query($q) { 
-	$l = DBLog::getInstance();
-	$l->addQuery($q);
+class DatabaseLogEntry extends LogEntry {
+	
+	public function getQuery() {return $this->query;}
+	public function getParameters() {return $this->params;}
+	public function getTrace() {return $this->tracer;}
+	
+	public static function getTotal() {
+		$db = Loader::db();
+		return $db->GetOne("select count(created) from adodb_logsql");
+	}
+	
+	public static function clear() {
+		$db = Loader::db();
+		$db->Execute("delete from adodb_logsql");
+	}
+	
+	public static function getList($limit) {
+		$entries = array();
+		$db = Loader::db();
+		$r = $db->GetAll("select sql1 as query, created, params, tracer from adodb_logsql order by created desc limit " . $limit);
+		foreach($r as $row) {
+			$dle = new DatabaseLogEntry();
+			$dle->setPropertiesFromArray($row);
+			$entries[] = $dle;
+		}
+		
+		return $entries;
+	}
+	
 }
 
-class DBLog {
+class LogEntry extends Object {
+	
+	public function getType() {return $this->logType;}
+	public function getText() {return $this->logText;}
+	public function getID() {return $this->logID;}
+	
+	public function getTimestamp() {return $this->timestamp;}
 
-	public function getInstance() {
-		static $instance;
-		if (!isset($instance)) {
-			$v = __CLASS__;
-			$instance = new $v;
+	/** 
+	 * Returns a log entry by ID
+	 */
+	public static function getByID($logID) {
+		$db = Loader::db();
+		$r = $db->Execute("select * from Logs where logID = ?", array($logID));
+		if ($r) {
+			$row = $r->FetchRow();
+			$obj = new LogEntry();
+			$obj->setPropertiesFromArray($row);
+			return $obj;
 		}
-		return $instance;
-	}	
-	
-	protected $queries = array();
-	
-	public function addQuery($q) {
-		$this->queries[] = $q;
 	}
 	
-	public function getQueries() {
-		return $this->queries;
-	}
-
+	
 }
 
 class Log {
@@ -36,75 +61,83 @@ class Log {
 	private $log;
 	private $logfile;
 	private $name;
-	private $sessionStarted = false;
-	private $logDelimiter = "\n-------------------------------\n";
+	private $session = false;
+	private $isClosed = false;
+	private $sessionText = null;
+	private $isInternal = false;
 	
-	public function __construct($log, $createIfNotFound = true) {
-		if (!file_exists(DIR_FILES_LOGS)) {
-			if (!mkdir(DIR_FILES_LOGS)) {
-				throw new Exception('Unable to create logs directory');
-			}
+	public function __construct($log = null, $session = false, $internal = false) {
+		$th = Loader::helper('text');
+		if ($log == null) {
+			$log = '';
 		}
-		if (file_exists(DIR_FILES_LOGS . '/' . $log) || $createIfNotFound) {
-			$th = Loader::helper('text');
-			$this->log = $log;
-			$this->name = $th->uncamelcase(substr($log, 0, strpos($log, '.log')));
-			$this->logfile = DIR_FILES_LOGS . '/' . $log;
-		}
+		$this->log = $log;
+		$this->name = $th->uncamelcase($log);
+		$this->session = $session;
+		$this->isInternal = $internal;
 	}
 	
 	public function write($message) {
-		$fh = Loader::helper('file');
-		if (!$this->sessionStarted) {
-			$fh->append($this->logfile, $this->logDelimiter . "\n");
-			$this->sessionStarted = true;
+		$this->sessionText .= $message . "\n";
+		if (!$this->session) {
+			$this->close();
 		}
-		$message = date('Y-m-d H:i:s') . ' ' . $message . "\n";
-		$fh->append($this->logfile, $message);
 	}
 	
 	public function close() {
-		$this->sessionStarted = false;
-	}
-	
-	public function getContents() {
-		$fh = Loader::helper('file');
-		$contents = $fh->getContents($this->logfile);
-		return $contents;
+		if ($this->isClosed) {
+			throw new Exception("This logging session has already been closed.");
+		}
+		$this->isClosed = true;
+		$v = array($this->log, $this->sessionText, $this->isInternal);
+		$db = Loader::db();
+		$db->Execute("insert into Logs (logType, logText, logIsInternal) values (?, ?, ?)", $v);
 	}
 	
 	/** 
 	 * Renames a log file and moves it to the log archive.
 	 */
 	public function archive() {
-		if (!file_exists(DIR_FILES_LOGS . '/' . DIRNAME_LOGS_ARCHIVE)) {
-			if (!mkdir(DIR_FILES_LOGS . '/' . DIRNAME_LOGS_ARCHIVE)) {
-				throw new Exception('Unable to create logs archive directory');
-			}
+
+	}
+	
+	/** 
+	 * Returns the total number of entries matching this type 
+	 */
+	public static function getTotal($type, $isInternal) {
+		$db = Loader::db();
+		$v = array($type, $isInternal);
+		return $db->GetOne("select count(logID) from Logs where logType = ? and logIsInternal = ?", $v);
+	}
+	
+	/** 
+	 * Returns a list of log entries
+	 */
+	public static function getList($type, $isInternal, $limit) {
+		$db = Loader::db();
+		if ($type != false) {
+			$v = array($type, $isInternal);
+			$r = $db->Execute('select logID from Logs where logType = ? and logIsInternal = ? order by timestamp desc limit ' . $limit, $v);
+		} else {
+			$v = array($isInternal);
+			$r = $db->Execute('select logID from Logs where logIsInternal = ? order by timestamp desc limit ' . $limit, $v);
 		}
-		$archiveFilename = $this->log . '.' . time();
-		copy($this->logfile, DIR_FILES_LOGS . '/' . DIRNAME_LOGS_ARCHIVE . '/' . $archiveFilename);
-		$fh = Loader::helper('file');
-		$fh->clear($this->logfile);
-		$this->write('File archived to ' . $archiveFilename);
+		$entries = array();
+		while ($row = $r->FetchRow()) {
+			$entries[] = LogEntry::getByID($row['logID']);
+		}
+		return $entries;
 	}
 	
 	public function getName() { return $this->name;}
-	public function getFileName() {return $this->log;}
 	
 	/** 
 	 * Returns all the log files in the directory
 	 */
 	public static function getLogs() {
-		$fh = Loader::helper('file');
-		$logs = $fh->getDirectoryContents(DIR_FILES_LOGS, array(DIRNAME_LOGS_ARCHIVE));
-		
-		$loglist = array();
-		foreach($logs as $logfile) {
-			$l = new Log($logfile);
-			$loglist[] = $l;
-		}
-		return $loglist;
+		$db = Loader::db();
+		$r = $db->GetCol('select distinct logType from Logs order by logType asc');
+		return $r;
 	}
 
 }

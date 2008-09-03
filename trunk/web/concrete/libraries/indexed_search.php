@@ -54,6 +54,9 @@ class IndexedSearch {
 		return $text;
 	}
 	
+	/** 
+	 * Reindexes the search engine.
+	 */
 	public function reindex() {
 
 		Loader::library('3rdparty/Zend/Search/Lucene');

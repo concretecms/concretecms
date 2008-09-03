@@ -117,7 +117,7 @@ class MailHelper {
 		}
 		
 		// add email to log
-		$l = new Log(FILENAME_LOG_EMAILS);
+		$l = new Log(LOG_EMAILS, true, true);
 		if (ENABLE_EMAILS) {
 			$l->write('**EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()**');
 		} else {

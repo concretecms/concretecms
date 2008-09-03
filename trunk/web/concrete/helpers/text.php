@@ -97,6 +97,7 @@ class TextHelper {
 	
 	/**
 	 * Takes a camel-cased string like FooBarSoft and returns foo_bar_soft
+	 * @todo THIS FUNCTION IS TOTALLY MISNAMED
 	 * @param string $string
 	 * @return string
 	 */

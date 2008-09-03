@@ -16,9 +16,9 @@
 	Loader::database();
 
 	## Load required libraries ##
+	Loader::library('object');
 	Loader::library('log');
 	Loader::library('request');
-	Loader::library('object');
 	Loader::library('events');
 	Loader::library('model');
 	Loader::library('view');
@@ -50,11 +50,11 @@
 	## Startup check, install ##	
 	require('startup/config_check_complete.php');
 	
-	## Set debug-related and logging activities
-	require('startup/debug_logging.php');
-
 	## User level config ##	
 	require('config/app.php');
+
+	## Set debug-related and logging activities
+	require('startup/debug_logging.php');
 
 	## Specific site routes for various content items (if they exist) ##
 	@include('config/site_theme_paths.php');
@@ -75,7 +75,7 @@
 	require('startup/tools.php');
 	
 	// figure out where we need to go
-	$req = ConcreteRequest::get();
+	$req = Request::get();
 	if ($req->getRequestCollectionPath() != '') {
 		$c = Page::getByPath($req->getRequestCollectionPath(), false);		
 	} else {

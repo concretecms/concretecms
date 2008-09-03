@@ -878,6 +878,51 @@
       <UNSIGNED/>
     </field>  
   </table>
+  <table name="Logs">
+  	<field name="logID" type="I" size="10">
+		<key />
+		<autoincrement />
+  		<unsigned />
+  	</field>
+  	<field name="logType" type="C" size="64">
+  		<notnull />
+  	</field>
+    <field name="timestamp" type="T">
+      <NOTNULL/>
+      <DEFTIMESTAMP/>
+    </field>
+  	<field name="logText" type="X2" />
+    <field name="logIsInternal" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="logType">
+      <col>logType</col>
+    </index>
+    <index name="logIsInternal">
+      <col>logIsInternal</col>
+    </index>
+  </table>
+  <table name="adodb_logsql">
+	<field name="created" type="T">
+		<notnull />
+	</field>
+	<field name="sql0" type="C" size="250">
+		<notnull />
+	</field>
+	<field name="sql1" type="X">
+		<notnull />
+	</field>
+	<field name="params" type="X">
+		<notnull />
+	</field>
+	<field name="tracer" type="X">
+		<notnull />
+	</field>
+	<field name="timer" type="N">
+		<notnull />
+	</field>
+  </table>
   <table name="Users">
     <field name="uID" type="I" size="10">
       <KEY/>
