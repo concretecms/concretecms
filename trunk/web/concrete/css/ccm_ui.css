@@ -185,7 +185,15 @@ div.ccm-theme-selector a.ccm-theme-thumbnail-selected img {border: 2px solid #00
 
 div.ccm-paging-top {background: #A7C5DA; padding: 4px}
 
-/* autonav preview */
+/* preview */
+.ccm-preview-pane {
+	padding: 3px 3px 3px 3px;
+	height: 250px;
+	background-color: white;
+	border: 2px groove #c0c0c0;
+	overflow: auto;
+}
+
 ul#autonav-preview {margin-left: 20px; padding: 0px}
 ul#autonav-preview, ul#autonav-preview li {list-style-type: disc}
 ul#autonav-preview li {margin-left: 10px; padding: 0px; }
