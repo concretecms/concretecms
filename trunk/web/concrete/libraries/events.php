@@ -19,8 +19,11 @@
  *
  */
 
-class ConcreteEvents {
+class Events {
 	
+	/** 
+	 * Returns an instance of the systemwide Events object.
+	 */
 	public function getInstance() {
 		static $instance;
 		if (!isset($instance)) {
@@ -32,6 +35,19 @@ class ConcreteEvents {
 
 	private $registeredEvents = array();
 	
+	/**
+	 * When passed an "event" as a string (e.g. "on_user_add"), a user-defined method can be run whenever this event
+	 * takes place.
+	 * <code>
+	 * Events::extend('on_user_add', 'MySpecialClass', 'createSpecialUserInfo', 'models/my_special_class.php', array('foo' => 'bar'))
+	 * </code>
+	 * @param string $event
+	 * @param string $class
+	 * @param string $method
+	 * @param string $filename
+	 * @param array $params
+	 * @return void
+	 */
 	public static function extend($event, $class, $method, $filename, $params = array()) {
 		$ce = ConcreteEvents::getInstance();
 		$ce->registeredEvents[$event][] = array(
@@ -42,6 +58,12 @@ class ConcreteEvents {
 		);	
 	}
 	
+	/** 
+	 * An internal function used by Concrete to "fire" a system-wide event. Any time this happens, events that 
+	 * a developer has hooked into will be run.
+	 * @param string $event
+	 * @return void
+	 */
 	public static function fire($event) {
 		if (ENABLE_APPLICATION_EVENTS == false) {
 			return;
@@ -56,7 +78,7 @@ class ConcreteEvents {
 			$args = false;
 		}
 
-		$ce = ConcreteEvents::getInstance();
+		$ce = Events::getInstance();
 		$events = $ce->registeredEvents[$event];
 		if (is_array($events)) {
 			foreach($events as $ev) {

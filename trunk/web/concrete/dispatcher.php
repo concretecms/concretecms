@@ -50,9 +50,6 @@
 	## Startup check, install ##	
 	require('startup/config_check_complete.php');
 	
-	## Load the site's database connection and library
-	require('startup/database.php');
-
 	## Set debug-related and logging activities
 	require('startup/debug_logging.php');
 

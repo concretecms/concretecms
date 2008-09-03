@@ -17,7 +17,7 @@
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-class ConcreteDB {
+class Database {
 
 	protected $db;
 	
