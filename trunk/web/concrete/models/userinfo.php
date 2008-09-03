@@ -89,7 +89,7 @@
 				
 				if (is_object($ui)) {
 					// run any internal event we have for user add
-					ConcreteEvents::fire('on_user_add', $ui);
+					Events::fire('on_user_add', $ui);
 				}
 				
 				return $ui;

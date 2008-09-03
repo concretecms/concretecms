@@ -49,7 +49,7 @@ class Events {
 	 * @return void
 	 */
 	public static function extend($event, $class, $method, $filename, $params = array()) {
-		$ce = ConcreteEvents::getInstance();
+		$ce = Events::getInstance();
 		$ce->registeredEvents[$event][] = array(
 			$class,
 			$method,
@@ -70,7 +70,7 @@ class Events {
 		}
 		
 		// any additional arguments passed to the fire function will get passed FIRST to the method, with the method's own registered
-		// params coming at the end. e.g. if I fire ConcreteEvents::fire('on_login', $userObject) it will come in with user object first
+		// params coming at the end. e.g. if I fire Events::fire('on_login', $userObject) it will come in with user object first
 		$args = func_get_args();
 		if (count($args) > 1) {
 			array_shift($args);
