@@ -1,25 +1,3 @@
-<style>
-div#pagelist-preview-content {
-	font-size:10px;
-	line-height:11px;
-	padding:6px;
-	margin: 6px;
-}
-div#pagelist-preview-content div.ccm-page-list h3 {
-	font-size:10px;
-	line-height:11px;
-	padding:0;
-	margin-top:2px;
-	margin:1px;
-}
-div#pagelist-preview-content div.ccm-page-list-description {
-	line-height:9px;
-	padding:0;
-	margin:2px;
-	font-size:8px;
-}
-</style>
-
 <ul id="ccm-pagelist-tabs" class="ccm-dialog-tabs">
 	<li class="ccm-nav-active"><a id="ccm-pagelist-tab-add" href="javascript:void(0);"><?=($bID>0)?'Edit':'Add'?></a></li>
 	<li class=""><a id="ccm-pagelist-tab-preview"  href="javascript:void(0);">Preview</a></li>
@@ -101,6 +79,6 @@ div#pagelist-preview-content div.ccm-page-list-description {
 	</div>
 </div>
 
-<div id="ccm-pagelistPane-preview" style="display:none" class="ccm-pagelistPane">
+<div id="ccm-pagelistPane-preview" style="display:none" class="ccm-preview-pane ccm-pagelistPane">
 	<div id="pagelist-preview-content">Preview Pane</div>
 </div>

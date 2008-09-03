@@ -1,28 +1,23 @@
 <?
 $info = $controller->getContent();
 ?>
-<style type="text/css">
-.autoPreview {
-	padding: 3px 3px 3px 3px;
-	width: 250px;
-	margin-left: 10px;
-	height: 250px;
-	background-color: white;
-	border: 2px groove #c0c0c0;
-	float: right;
-	overflow: auto;
-}
-.loadingText {
-	color: gray;
-	font-size: 18pt;
-	font-weight: bold
-	align: center;
-}
-</style>
-<div id="ccm-auto-nav">
-<div class="autoPreview" id="autoPreview">
+
+<ul id="ccm-autonav-tabs" class="ccm-dialog-tabs">
+	<li class="ccm-nav-active"><a id="ccm-autonav-tab-add" href="javascript:void(0);">Edit</a></li>
+	<li class=""><a id="ccm-autonav-tab-preview"  href="javascript:void(0);">Preview</a></li>
+</ul>
+
+<div style="padding: 10px">
+
+
+<div class="ccm-autonavPane ccm-preview-pane" id="ccm-autonavPane-preview" style="display: none">
+
 <center>Auto-Nav Preview</center>
+
 </div>
+<div class="ccm-autonavPane" id="ccm-autonavPane-add">
+
+
 
 <input type="hidden" name="autonavCurrentCID" value="<?=$c->getCollectionID()?>" />
 <input type="hidden" name="autonavPreviewPane" value="<?=REL_DIR_FILES_TOOLS_BLOCKS?>/<?=$b->getBlockTypeHandle()?>/preview_pane.php" />
@@ -31,7 +26,7 @@ $info = $controller->getContent();
 <select name="orderBy" onchange="reloadPreview(this.form)">
 	<option value="display_asc" <? if ($info['orderBy'] == 'display_asc') { ?> selected<? } ?>>in their sitemap order</option>
 	<option value="chrono_desc" <? if ($info['orderBy'] == 'chrono_desc') { ?> selected<? } ?>>with the most recent first</option>
-    <option value="chrono_asc" <? if ($info['orderBy'] == 'chrono_asc') { ?> selected<? } ?>>with the earlist first.</option>
+    <option value="chrono_asc" <? if ($info['orderBy'] == 'chrono_asc') { ?> selected<? } ?>>with the earliest first.</option>
     <option value="alpha_asc" <? if ($info['orderBy'] == 'alpha_asc') { ?> selected<? } ?>>in alphabetical order.</option>
     <option value="alpha_desc" <? if ($info['orderBy'] == 'alpha_desc') { ?> selected<? } ?>>in reverse alphabetical order.</option>
     <? /* <option value="display_desc">Display Order (Desc)</option> */ ?>
@@ -51,10 +46,6 @@ Display pages to users even when<br/> those users cannot access those pages.
 	<option value="below"<? if ($info['displayPages'] == 'below') { ?> selected<? } ?>>At the level below</option>
 	<!--<option value="custom"<? if ($info['displayPages'] == 'custom') { ?> selected<? } ?>>Beneath a particular page</option>//-->
 </select>
-<br/>
-<br/>
-<input type="checkbox" name="displayPagesIncludeSelf" onclick="reloadPreview(this.form);" value="1"<? if ($info['displayPagesIncludeSelf']) { ?> checked<? } ?> style="vertical-align: middle">
-Include selected page as top node.
 
 <!--
 <div id="divInclude"<? if ($info['displayPages'] != 'custom') { ?> style="display: none"<? } ?>>
@@ -94,5 +85,6 @@ Include selected page as top node.
 	<br>
 	<input type="text" name="displaySubPageLevelsNum" onchange="reloadPreview(this.form)" value="<?=$info['displaySubPageLevelsNum']?>" style="width: 30px; vertical-align: middle">
 	&nbsp;Levels to traverse.
+</div>
 </div>
 </div>

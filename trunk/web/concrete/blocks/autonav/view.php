@@ -1,6 +1,8 @@
 <?
 	$aBlocks = $controller->generateNav();
-	$c = $b->getBlockCollectionObject();
+	if (!is_object($c)) {
+		$c = $b->getBlockCollectionObject();
+	}
 	echo("<ul class=\"nav\">");
 	foreach($aBlocks as $ni) {
 		$_c = $ni->getCollectionObject();
