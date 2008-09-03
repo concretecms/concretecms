@@ -84,11 +84,11 @@
 		}
 		
 		/** 
-		 * Loads the various files for the database abstraction layer.
+		 * Loads the various files for the database abstraction layer. We would bundle these in with the db() method below but
+		 * these need to be loaded before the models which need to be loaded before db() 
 		 */
 		public function database() {
 			Loader::library('3rdparty/adodb/adodb.inc');
-			//Loader::library('3rdparty/adodb/adodb-pear.inc');
 			Loader::library('3rdparty/adodb/adodb-exceptions.inc');
 			Loader::library('3rdparty/adodb/adodb-active-record.inc');
 			Loader::library('3rdparty/adodb/adodb-xmlschema03.inc');
@@ -116,7 +116,7 @@
 					$_dba = @NewADOConnection($dsn);
 					if (is_object($_dba)) {
 						ADOdb_Active_Record::SetDatabaseAdapter($_dba);
-						$_db = new ConcreteDB();
+						$_db = new Database();
 						$_db->setDatabaseObject($_dba);
 					}
 				} else {

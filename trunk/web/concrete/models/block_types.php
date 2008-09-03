@@ -72,6 +72,9 @@
 							$class = $bt->getBlockTypeClassFromHandle($file);
 							
 							require_once($fdir . '/' . FILENAME_BLOCK_CONTROLLER);
+							if (!class_exists($class)) {
+								throw new Exception($class . ' not found. Please check to ensure the block\'s controller.php file contains the correct class name.');
+							}
 							$bta = new $class;
 							$bt->btName = $bta->getBlockTypeName();
 							$bt->btDescription = $bta->getBlockTypeDescription();
