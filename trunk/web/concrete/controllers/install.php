@@ -16,34 +16,7 @@ class InstallController extends Controller {
 		}
 		
 		$db = Loader::db();
-		$err = Package::installDB($file);
-	
-		/*
-		$lines = file($file);
-		if (!$lines) {
-			throw new Exception('Unable to open database import file for reading.');
-		}
-		$importFile = false;
-		foreach($lines as $l) {
-			$l = trim($l);
-			if (!ereg('^--', $l)) {
-				$importFile .= ' ' . $l;
-			}
-		}
-		if (!$importFile) {
-			throw new Exception('Unable to create import file from SQL source.');
-		}
-		$queries = explode(';', $importFile);
-		$db = Loader::db();
-		foreach($queries as $q) {
-			$q = trim($q);
-			if ($q == '') { 
-				continue;
-			}
-			$db->query($q);
-		}	*/
-		
-		
+		$err = Package::installDB($file);		
 	}
 	
 	public function configure() {
@@ -243,7 +216,8 @@ class InstallController extends Controller {
 						$d9b = SinglePage::add('/dashboard/themes/inspect');
 						$d10 = SinglePage::add('/dashboard/install');
 						$d11 = SinglePage::add('/dashboard/jobs');
-						$d12 = SinglePage::add('/dashboard/settings');
+						$d12 = SinglePage::add('/dashboard/logs');
+						$d13 = SinglePage::add('/dashboard/settings');
 						
 						$d1->update(array('cName'=>'Sitemap', 'cDescription'=>'Whole world at a glance.'));
 						$d2->update(array('cName'=>'File Manager', 'cDescription'=>'All documents and images.'));
@@ -256,7 +230,8 @@ class InstallController extends Controller {
 						$d9->update(array('cName'=>'Themes', 'cDescription'=>'Reskin your site.'));		
 						$d10->update(array('cName'=>'Add Functionality', 'cDescription'=>'Block and Package install.'));
 						$d11->update(array('cName'=>'Maintenance', 'cDescription'=>'Run common cleanup tasks.'));
-						$d12->update(array('cName'=>'Sitewide Settings', 'cDescription'=>'Secure your whole site.'));
+						$d12->update(array('cName'=>'Logging', 'cDescription'=>'Keep tabs on your site.'));
+						$d13->update(array('cName'=>'Sitewide Settings', 'cDescription'=>'Secure and setup your site.'));
 				
 						// dashboard homepage
 						$dh2 = new DashboardHomepageView();
@@ -607,6 +582,7 @@ class InstallController extends Controller {
 						// add the current app version as our site's app version
 						Config::save('SITE_APP_VERSION', APP_VERSION);
 						Config::save('SITE_DEBUG_LEVEL', DEBUG_DISPLAY_ERRORS);
+						Config::save('ENABLE_LOGGING', 1);
 						
 						// login 
 						define('PASSWORD_SALT', $salt);

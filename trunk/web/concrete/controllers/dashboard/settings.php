@@ -4,45 +4,36 @@ class DashboardSettingsController extends Controller {
 
 	var $helpers = array('form');
 	
-	public function set_personal($saved = false) {
+	public function view($updated = false) {
 		$u = new User();
-		$this->set('ui_breadcrumb', $u->config('UI_BREADCRUMB'));
-		if ($saved) {
-			$this->set('message', 'Settings configuration saved.');
-		}
-
-	}
-
-	public function set_global($updated = false) {
-		$debug_level = Config::get('SITE_DEBUG_LEVEL');
-		if ($debug_level < 1) {
-			$debug_level = DEBUG_DISPLAY_PRODUCTION;
-		}
 		$site_maintenance_mode = Config::get('SITE_MAINTENANCE_MODE');
 		if ($site_maintenance_mode < 1) {
 			$site_maintenance_mode = 0;
 		}
 		
-		$this->set('debug_level', $debug_level);		
 		$this->set('site_maintenance_mode', $site_maintenance_mode);
 		$this->set('url_rewriting', URL_REWRITING);
 		$this->set('site', SITE);
+		$this->set('ui_breadcrumb', $u->config('UI_BREADCRUMB'));
 		
 		if ($updated) {
 			switch($updated) {
 				case "maintenance_enabled";
 					$this->set('message', 'Maintenance Mode turned on. Your site is <b>now private</b>.');	
 					break;
-				case "maintenance_disabled";
+				case "maintenance_disabled":
 					$this->set('message', 'Maintenance Mode turned off. Your site is <b>public</b>.');	
 					break;
-				case "sitename_saved";
+				case "editing_preferences_saved":
+					$this->set('message', 'Editing preferences saved.');	
+					break;
+				case "sitename_saved":
 					$this->set('message', 'Your site\'s name has been saved.');	
 					break;
-				case "debug_saved";
+				case "debug_saved":
 					$this->set('message', 'Debug configuration saved.');	
 					break;
-				case "rewriting_saved";
+				case "rewriting_saved":
 					if (URL_REWRITING) {
 						$this->set('message', 'URL rewriting enabled. Make sure you copy the lines below these URL Rewriting settings area and place them in your .htaccess or web server configuration file.');
 					} else {
@@ -57,9 +48,9 @@ class DashboardSettingsController extends Controller {
 		if ($this->isPost()) {
 			Config::save('SITE_MAINTENANCE_MODE', $this->post('site_maintenance_mode'));
 			if ($this->post('site_maintenance_mode') == 1) { 
-				$this->redirect('/dashboard/settings','set_global','maintenance_enabled');
+				$this->redirect('/dashboard/settings','maintenance_enabled');
 			} else {
-				$this->redirect('/dashboard/settings','set_global','maintenance_disabled');
+				$this->redirect('/dashboard/settings','maintenance_disabled');
 			}
 		}
 	}
@@ -67,7 +58,7 @@ class DashboardSettingsController extends Controller {
 	public function update_sitename() {
 		if ($this->isPost()) {
 			Config::save('SITE', $this->post('SITE'));
-			$this->redirect('/dashboard/settings','set_global','sitename_saved');
+			$this->redirect('/dashboard/settings','sitename_saved');
 		}
 	}
 
@@ -75,50 +66,79 @@ class DashboardSettingsController extends Controller {
 		if ($this->isPost()) {
 			$u = new User();
 			$u->saveConfig('UI_BREADCRUMB', $this->post('ui_breadcrumb'));
-			$this->redirect('/dashboard/settings','set_personal', true);
+			$this->redirect('/dashboard/settings','editing_preferences_saved');
 		}
 	}
 
 	public function update_debug() {
 		if ($this->isPost()) {
 			Config::save('SITE_DEBUG_LEVEL', $this->post('debug_level'));
-			$this->redirect('/dashboard/settings','set_global','debug_saved');
+			$this->redirect('/dashboard/settings','set_developer','debug_saved');
+		}
+	}
+
+	public function update_logging() {
+		if ($this->isPost()) {
+			Config::save('ENABLE_LOG_DATABASE_QUERIES', $this->post('ENABLE_LOG_DATABASE_QUERIES'));
+			Config::save('ENABLE_LOGGING', $this->post('ENABLE_LOGGING'));
+			$this->redirect('/dashboard/settings','set_developer','logging_saved');
 		}
 	}
 
 	public function update_rewriting() {
 		if ($this->isPost()) {
 			Config::save('URL_REWRITING', $this->post('URL_REWRITING'));
-			$this->redirect('/dashboard/settings','set_global','rewriting_saved');
+			$this->redirect('/dashboard/settings','rewriting_saved');
+		}
+	}
+	
+	public function set_developer($updated = false) {
+		$debug_level = Config::get('SITE_DEBUG_LEVEL');
+		$enable_logging = Config::get('ENABLE_LOGGING');
+		$enable_log_database_queries = Config::get('ENABLE_LOG_DATABASE_QUERIES');
+		if ($debug_level < 1) {
+			$debug_level = DEBUG_DISPLAY_PRODUCTION;
+		}
+		$this->set('debug_level', $debug_level);		
+		$this->set('enable_log_database_queries', $enable_log_database_queries);		
+		$this->set('enable_logging', $enable_logging);		
+		if ($updated) {
+			switch($updated) {
+				case "debug_saved":
+					$this->set('message', 'Debug configuration saved.');	
+					break;
+				case "logging_saved":
+					$this->set('message', 'Logging configuration saved.');	
+					break;
+			}
 		}
 	}
 	
 	
 	public function on_start() {
-		$this->set_groups_and_home();
 		$prefsSelected = false;
 		$globalSelected = false;
 		$permsSelected = false;				
 		switch($this->getTask()) {
-			case "set_personal":
-				$prefsSelected = true;
+			case "set_developer":
+				$devSelected = true;
 				break;
-			case "set_global":
-				$globalSelected = true;
+			case "set_permissions":
+				$permsSelected = true;
 				break;
 			default:
-				$permsSelected = true;
+				$globalSelected = true;
 				break;
 		}					
 		$subnav = array(
-			array(View::url('/dashboard/settings'), 'Permissions and Access', $permsSelected),
-			array(View::url('/dashboard/settings', 'set_personal'), 'Personal Editing Preferences', $prefsSelected),
-			array(View::url('/dashboard/settings', 'set_global'), 'Global Settings', $globalSelected)
+			array(View::url('/dashboard/settings'), 'General', $globalSelected),
+			array(View::url('/dashboard/settings', 'set_permissions'), 'Access', $permsSelected),
+			array(View::url('/dashboard/settings', 'set_developer'), 'Developer/Advanced', $devSelected)
 		);
 		$this->set('subnav', $subnav);
 	}
 	
-	protected function set_groups_and_home() {
+	protected function set_permissions($saved = false) {
 		if (PERMISSIONS_MODEL != 'simple') {
 			return;
 		}
@@ -147,10 +167,14 @@ class DashboardSettingsController extends Controller {
 		$this->set('gru', $gru);
 		$this->set('gArray', $gArray);
 		$this->set('home', $home);
+		
+		if ($saved) {
+			$this->set('message', 'Permissions saved.');	
+		}
 	}
 	
 	public function update_permissions() {
-
+		$this->set_permissions();
 		$home = $this->get('home');
 		$gru = Group::getByID(REGISTERED_GROUP_ID);
 		$ggu = Group::getByID(GUEST_GROUP_ID);
@@ -183,11 +207,7 @@ class DashboardSettingsController extends Controller {
 		
 		$home->updatePermissions($args);
 		
-		$this->redirect('/dashboard/settings/', 'permissions_updated');
+		$this->redirect('/dashboard/settings/', 'set_permissions', 'permissions_saved');
 	}
 	
-	public function permissions_updated() {
-		$this->set('message', 'Permissions saved.');
-	}
-
 }

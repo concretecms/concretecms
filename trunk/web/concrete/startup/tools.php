@@ -1,5 +1,5 @@
 <?
-	$co = ConcreteRequest::get();
+	$co = Request::get();
 	if ($co->isIncludeRequest()) {
 		switch($co->getIncludeType()) {
 			case "CONCRETE_TOOL":

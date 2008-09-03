@@ -85,7 +85,7 @@ class Controller {
 	 * @return void
 	 */	
 	public function setupAndRun() {
-		$req = ConcreteRequest::get();
+		$req = Request::get();
 		$data = $this->setupQueryParameters($req->getRequestTask(), $req->getRequestTaskParameters());
 		$method = $this->setupRequestTask($req->getRequestTask());
 

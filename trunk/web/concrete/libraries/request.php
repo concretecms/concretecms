@@ -17,7 +17,7 @@
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-class ConcreteRequest {
+class Request {
 
 	private $requestPath;
 	private $task;
@@ -49,17 +49,17 @@ class ConcreteRequest {
 	
 	/** 
 	 * Gets a request object for the current request. Parses PATH_INFO as necessary.
-	 * @return ConcreteRequest
+	 * @return Request
 	 */
 	public static function get() {
 		static $req;
 		if (!isset($req)) {
-			$path = ConcreteRequest::parsePathFromRequest('PATH_INFO');
+			$path = Request::parsePathFromRequest('PATH_INFO');
 			if (!$path) {
-				$path = ConcreteRequest::parsePathFromRequest('ORIG_PATH_INFO');
+				$path = Request::parsePathFromRequest('ORIG_PATH_INFO');
 			}
 			
-			$req = new ConcreteRequest($path);
+			$req = new Request($path);
 		}
 		return $req;
 	}
