@@ -1,17 +1,6 @@
 <? if ($cp->canAdminPage()) {
 $home = Page::getByID($_REQUEST['cID']);
-$gl = new GroupList($home);
-$gArrayTmp = $gl->getGroupList();
 $gArray = array();
-foreach($gArrayTmp as $gi) {
-	if ($gi->getGroupID() == GUEST_GROUP_ID) {
-		$ggu = $gi;
-	} else if ($gi->getGroupID() == REGISTERED_GROUP_ID) {
-		$gru = $gi;
-	} else {
-		$gArray[] = $gi;
-	}
-}
 ?>
 
 <div class="ccm-pane-controls">
@@ -26,12 +15,6 @@ foreach($gArrayTmp as $gi) {
 
 <h2>Who can view this page?</h2>
 
-<input type="radio" name="view" value="ANYONE" style="vertical-align: middle" <? if ($ggu->canRead()) { ?> checked <? } ?> /> Anyone
-&nbsp;&nbsp;
-<input type="radio" name="view" value="USERS" style="vertical-align: middle" <? if ($gru->canRead()) { ?> checked <? } ?> /> Registered users
-&nbsp;&nbsp;
-<input type="radio" name="view" value="PRIVATE" style="vertical-align: middle" <? if ((!$ggu->canRead()) && (!$gru->canRead())) { ?> checked <? } ?> /> Only the administrator
-&nbsp;&nbsp;
 
 </div>
 

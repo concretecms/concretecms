@@ -34,7 +34,7 @@ $info = $controller->getContent();
 <br><br>
 <strong>Viewing Permissions</strong><br/>
 <input type="checkbox" name="displayUnavailablePages" onclick="reloadPreview(this.form)" value="1" <? if ($info['displayUnavailablePages'] == 1) { ?> checked <? } ?> style="vertical-align: middle" />
-Display pages to users even when<br/> those users cannot access those pages.
+Display pages to users even when those users cannot access those pages.
 <br/><br/>
 <strong>Display Pages</strong><br>
 <select name="displayPages" onchange="toggleCustomPage(this.value); reloadPreview(this.form);">

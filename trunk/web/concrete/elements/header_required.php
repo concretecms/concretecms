@@ -73,9 +73,8 @@ var CCM_TOOLS_PATH = "<?=REL_DIR_FILES_TOOLS_REQUIRED?>";
 var CCM_REL = "<?=DIR_REL?>";
 
 </script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery1.2.4b.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/swfobject.js"></script>
-<!-- <script src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.json.min.js"></script> -->
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery1.2.6.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/swfobject2.1.js"></script>
 
 <? 
 	if (is_object($cp)) {
