@@ -249,6 +249,9 @@
 				// then we know we got a value; we increment it and return
 				$res = $r->fetchRow();
 				$displayOrder = $res['cbdis'];
+				if (is_null($displayOrder)) {
+					return 0;
+				}
 				$displayOrder++;
 				return $displayOrder;
 			} else {

@@ -108,21 +108,25 @@ class Page extends Collection {
 		return false;
 	}
 	
-	public function processArrangement($arr) {
+	/** 
+	 * Takes an array of area/block values and makes that the arrangement for this page's version
+	 * Format is like: $area[10][0] = 2, $area[10][1] = 8, $area[15][0] = 27, with the area ID being the 
+	 * key and the block IDs being 1-n values inside it
+	 */
+	public function processArrangement($areas) {
 		// this function is called via ajax, so it's a bit wonky, but the format is generally
 		// a{areaID} = array(b1, b2, b3) (where b1, etc... are blocks with ids appended.)
-		
+		$l = new Log();
+		$l->write('Inside Areas: ' . print_r($areas, true));
 		$db = Loader::db();
-		$startDO = 0;
-		foreach($_POST as $key=>$value) {
-			if (preg_match('/a[0-9]/', $key)) {
+		foreach($areas as $arID => $blocks) {
+			if (intval($arID) > 0) {
 				// this is a serialized area;
-				$arID = substr($key, 1);
 				$arHandle = $db->getOne("select arHandle from Areas where arID = ?", array($arID));
+				$startDO = 0;
 				
-				foreach($value as $bbID) {
-					if (preg_match('/b[0-9]/', $bbID)) {
-						$bID = substr($bbID, 1);
+				foreach($blocks as $bID) {
+					if (intval($bID) > 0) {
 						$v = array($startDO, $arHandle, $bID, $this->getCollectionID(), $this->getVersionID());
 						$db->query("update CollectionVersionBlocks set cbDisplayOrder = ?, arHandle = ? where bID = ? and cID = ? and cvID = ?", $v);							
 						$startDO++;

@@ -466,6 +466,16 @@ class CollectionPermissions extends Permissions {
 			$r->free();
 		}
 		
+		if ($cObj->isExternalLink()) {
+			// then whether the person can delete/write to this page ACTUALLY dependent on whether the PARENT collection
+			// is writable
+			$cParentCollection = Page::getByID($cObj->getCollectionParentID(), "RECENT");
+			$cp2 = new Permissions($cParentCollection);
+			if ($cp2->canWrite()) {
+				$permissions[] = 'dc:wa';
+			}
+		}
+		
 		if ($canWriteToPage) {
 			if (PERMISSIONS_MODEL == 'simple') { 
 				// we allow all pages to be added as subpages
