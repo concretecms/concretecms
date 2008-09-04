@@ -107,7 +107,7 @@ class FormDateTimeHelper {
 		$html .= '>PM</option>';
 		$html .= '</select>';
 		$html .= '</span>';
-		$html .= '<script type="text/javascript">$(function() { $("#' . $id . '_dt").datepicker(); });</script>';
+		$html .= '<script type="text/javascript">$(function() { $("#' . $id . '_dt").datepicker({ showAnim: \'fadeIn\' }); });</script>';
 		// first we add a calendar input
 		
 		if ($includeActivation) {

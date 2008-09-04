@@ -471,8 +471,12 @@ setupSearch = function() {
 	
 	});
 	
-	$("input[name=cStartDate]").datepicker();
-	$("input[name=cEndDate]").datepicker();
+	$("input[name=cStartDate]").datepicker({
+		showAnim: 'fadeIn'
+	});
+	$("input[name=cEndDate]").datepicker({
+		showAnim: 'fadeIn'
+	});
 }
 
 parseResults = function(node) {

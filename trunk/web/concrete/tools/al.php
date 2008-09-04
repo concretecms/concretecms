@@ -196,7 +196,9 @@ $(function() {
 	});
 	
 	$('#ccm-al-search-button').get(0).click();	
-	$("#bDateAdded").datepicker();
+	$("#fileSearch_bDateAdded").datepicker({
+		showAnim: "fadeIn"
+	});
 	$("#ccm-button-browse").dialog();
 });
 
