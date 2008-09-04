@@ -106,8 +106,15 @@ class Log {
 	 */
 	public static function getTotal($type, $isInternal) {
 		$db = Loader::db();
-		$v = array($type, $isInternal);
-		return $db->GetOne("select count(logID) from Logs where logType = ? and logIsInternal = ?", $v);
+		if ($type != false) {
+			$v = array($type, $isInternal);
+			$r = $db->GetOne('select count(logID)  from Logs where logType = ? and logIsInternal = ?', $v);
+		} else {
+			$v = array($isInternal);
+			$r = $db->GetOne('select count(logID)  from Logs where logIsInternal = ?', $v);
+		}
+		return $r;
+
 	}
 	
 	/** 

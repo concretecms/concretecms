@@ -41,10 +41,12 @@ class DashboardLogsController extends Controller {
 		$this->set('paginator', $paginator);
 	}
 	
-	public function view($type = null, $page = 0) {
-
+	public function view($type = 'none', $page = 0) {
 		$this->set('title', 'Concrete5 Logs');
 		$pageBase = View::url('/dashboard/logs', $type);
+		if ($type == 'none') {
+			$type = null;
+		}
 		$paginator = Loader::helper('pagination');
 		$total = Log::getTotal($type, 1);
 
