@@ -435,23 +435,24 @@ ccm_setupGroupSearch = function() {
 }
 
 ccm_saveArrangement = function() {
-//	ccm_showTopbarLoader();
+	
 	var serial = '';
-	var oldserial = '';
 	$('div.ccm-area').each(function() {
-		oldserial = serial;
-		serial += $(this).sortable('serialize', {
-			key: $(this).attr('id')
-		});
-		if (serial != oldserial) {
-			serial += '&';
+		areaStr = '&area[' + $(this).attr('id').substring(1) + '][]=';
+		
+		bArray = $(this).sortable('toArray');
+		for (i = 0; i < bArray.length; i++ ) {
+			if (bArray[i] != '' && bArray[i].substring(0, 1) == 'b') {
+				// make sure to only go from b to -, meaning b28-9 becomes "28"
+				serial += areaStr + bArray[i].substring(1, bArray[i].indexOf('-'));
+			}
 		}
 	});
 	
  	$.ajax({
  		type: 'POST',
  		url: CCM_DISPATCHER_FILENAME,
- 		data: 'cID=' + CCM_CID + '&btask=ajax_do_arrange&' + serial,
+ 		data: 'cID=' + CCM_CID + '&btask=ajax_do_arrange' + serial,
  		success: function(msg) {
 			location.href= CCM_DISPATCHER_FILENAME + "?cID=" + CCM_CID;
  		}});

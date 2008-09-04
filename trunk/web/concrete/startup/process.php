@@ -21,7 +21,7 @@
 			case 'ajax_do_arrange': /* called via ajax */
 				if ($cp->canWrite()) {
 					$nvc = $c->getVersionToModify();
-					$nvc->processArrangement($_POST);
+					$nvc->processArrangement($_POST['area']);
 				}
 				
 				exit;
@@ -598,9 +598,7 @@
 				}
 			}	
 		} else if ($_POST['update_external']) {
-			$cParentCollection = Page::getByID($c->getCollectionParentID(), "RECENT");
-			$cp2 = new Permissions($cParentCollection);
-			if ($cp2->canWrite()) {
+			if ($cp->canWrite()) {
 				$ncID = $c->updateCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink']);						
 				header('Location: ' . URL_SITEMAP);
 				exit;
