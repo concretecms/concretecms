@@ -14,23 +14,13 @@ require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); ?>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_dialog.css";</style>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_asset_library.css";</style>
 
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery1.2.4b.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.form.js"></script>
-
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/ui.core.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/ui.draggable.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/ui.droppable.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/ui.sortable.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/ui.datepicker.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/effects.core.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/effects.fade.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/effects.slide.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/effects.highlight.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery1.2.6.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.form.2.0.2.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.1.6b.js"></script>
 
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.dialog.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.base.js"></script>
-
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/swfobject.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/swfobject2.1.js"></script>
 
 <script type="text/javascript">
 $(function() {

@@ -59,22 +59,11 @@ if (isset($cp)) {
 
 	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage()) { ?>
 
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.form.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.easing.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.dimensions.js"></script>
-
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/ui.core.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/ui.draggable.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/ui.droppable.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/ui.sortable.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/ui.datepicker.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/effects.core.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/effects.fade.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery_ui/effects.highlight.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.form.2.0.2.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.1.6b.js"></script>
 
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.dialog.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.base.js"></script>
-
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/tiny_mce_309/tiny_mce.js"></script>
 
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_dialog.css";</style>
