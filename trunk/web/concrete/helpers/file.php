@@ -65,10 +65,23 @@ class FileHelper {
 	
 	/**
 	 * Just a consistency wrapper for file_get_contents
+	 * Should use curl if it exists and fopen isn't allowed (thanks Remo)
 	 * @param $filename
 	 */
 	public function getContents($file) {
-		return file_get_contents($file);
+		if (ini_get('allow_url_fopen')) {
+			$contents = file_get_contents($file);
+		} else if (function_exists('curl_init')) {
+			$curl_handle = curl_init();
+			curl_setopt($curl_handle, CURLOPT_URL, $file);
+			curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 3);
+			curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+			$contents = curl_exec($curl_handle);
+			curl_close($curl_handle);
+		} else {
+			throw new Exception("Unable to retrieve remote file contents.");
+		}
+		return $contents;
 	}
 	
 	/** 

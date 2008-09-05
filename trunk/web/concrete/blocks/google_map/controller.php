@@ -68,9 +68,10 @@
 		
 		//region string is something like "portland, OR"
 		public function loadGeoCodeData($regionString){
+			$fh = Loader::helper('file');
 			$url = 'http://maps.google.com/maps/geo?q='.urlencode($regionString).'&output=xml&key='.$this->key;
 			// Retrieve the URL contents 
-			$xml = file_get_contents($url);
+			$xml = $fh->getContents($url);
 			// Parse the returned XML file
 			//echo htmlspecialchars($xml); 
 			$enc = mb_detect_encoding($xml);
