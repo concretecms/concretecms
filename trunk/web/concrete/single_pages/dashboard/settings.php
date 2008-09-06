@@ -66,6 +66,7 @@ print $h->buttons($b1);
 
 <h2>Viewing Permissions</h2>
 
+
 <div class="ccm-dashboard-radio"><input type="radio" name="view" value="ANYONE" style="vertical-align: middle" <? if ($guestCanRead) { ?> checked <? } ?> /> Public</div>
 <div class="ccm-dashboard-description">Anyone may view the website.</div>
 
@@ -73,7 +74,8 @@ print $h->buttons($b1);
 <div class="ccm-dashboard-description">Only registered users may view the website.</div>
 
 <div class="ccm-dashboard-radio"><input type="radio" name="view" value="PRIVATE" style="vertical-align: middle" <? if ((!$guestCanRead) && (!$registeredCanRead)) { ?> checked <? } ?> /> Private.</div>
-<div class="ccm-dashboard-description">Only the administrative user (admin) may view the website.</div>
+<div class="ccm-dashboard-description">Only the administrative group may view the website.</div>
+
 
 <br/><br/>
 
@@ -231,3 +233,7 @@ saveMaintenanceMode = function() {
 </script>
 
 <? } ?>
+
+<style type="Text/css">
+div.ccm-dashboard-inner {margin-bottom: 10px !important}
+</style>

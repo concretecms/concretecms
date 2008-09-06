@@ -326,6 +326,10 @@ class Permissions extends Object {
 		if ($ar['canDelete'] == 1) {
 			$str .= 'dc:';
 		}
+		if ($ar['canAdmin'] == 1) {
+			$str .= 'adm:';
+		}
+		
 		
 		if ($str != '') {
 			// chop off the trailing colon

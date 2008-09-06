@@ -610,22 +610,15 @@
 					$args['cInheritPermissionsFrom'] = 'OVERRIDE';
 					$args['cOverrideTemplatePermissions'] = 1;
 
-					switch($_POST['view']) {
-						case "ANYONE":
-							$args['collectionRead'][] = 'gID:' . GUEST_GROUP_ID;
-							break;
-						case "USERS":
-							$args['collectionRead'][] = 'gID:' . REGISTERED_GROUP_ID;
-							break;
-						case "PRIVATE":
-							$args['collectionRead'] = array(); // no one can view it (except the super admin, who can always view)
-							break;
-						
-					}
-					
+					if (is_array($_POST['readGID'])) {
+						foreach($_POST['readGID'] as $gID) {
+							$args['collectionRead'][] = 'gID:' . $gID;
+						}
+					}				
+
 					$args['collectionWrite'] = array();
-					if (is_array($_POST['gID'])) {
-						foreach($_POST['gID'] as $gID) {
+					if (is_array($_POST['editGID'])) {
+						foreach($_POST['editGID'] as $gID) {
 							$args['collectionWrite'][] = 'gID:' . $gID;
 							$args['collectionAdmin'][] = 'gID:' . $gID;
 							$args['collectionDelete'][] = 'gID:' . $gID;

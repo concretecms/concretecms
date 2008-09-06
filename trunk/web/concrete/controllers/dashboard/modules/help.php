@@ -7,8 +7,7 @@ class HelpDashboardModuleController extends Controller {
 	public function __construct() {
 		$fp = Loader::helper("feed");
 		$feed = $fp->load(HelpDashboardModuleController::FEED);
-		$feed->set_item_limit(1);
-		$posts = $feed->get_items();
+		$posts = $feed->get_items(0, 2);
 		$this->set('posts', $posts);
 	}
 }
