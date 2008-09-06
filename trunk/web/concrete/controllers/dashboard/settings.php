@@ -178,17 +178,18 @@ class DashboardSettingsController extends Controller {
 		$home = $this->get('home');
 		$gru = Group::getByID(REGISTERED_GROUP_ID);
 		$ggu = Group::getByID(GUEST_GROUP_ID);
-
+		$gau = Group::getByID(ADMIN_GROUP_ID);
+		
 		$args = array();
 		switch($_POST['view']) {
 			case "ANYONE":
-				$args['collectionRead'][] = 'gID:' . $ggu->getGroupId(); // this API is pretty crappy. TODO: clean this up in a nice object oriented fashion
+				$args['collectionRead'][] = 'gID:' . $ggu->getGroupID(); // this API is pretty crappy. TODO: clean this up in a nice object oriented fashion
 				break;
 			case "USERS":
-				$args['collectionRead'][] = 'gID:' . $gru->getGroupId(); // this API is pretty crappy. TODO: clean this up in a nice object oriented fashion
+				$args['collectionRead'][] = 'gID:' . $gru->getGroupID(); // this API is pretty crappy. TODO: clean this up in a nice object oriented fashion
 				break;
 			case "PRIVATE":
-				$args['collectionRead'] = array(); // no one can view it (except the super admin, who can always view)
+				$args['collectionRead'][] = 'gID:' . $gau->getGroupID();
 				break;
 			
 		}

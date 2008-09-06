@@ -133,6 +133,7 @@ ul.ccm-dashboard-list li {list-style-type: none; padding-top: 10px; padding-bott
 div#ccm-module-wrapper {min-width: 778px}
 div#ccm-module-row1 div.ccm-module {width: 375px; min-height: 300px; }
 div#ccm-module-row2 div.ccm-module {width: 247px; min-height: 220px}
+div.ccm-module div.ccm-dashboard-inner {margin-bottom: 0px}
 div.ccm-module {margin-bottom: 10px; margin-right: 10px; float: left; font-size: 12px}
 div#ccm-module-row2 {clear: both}
 

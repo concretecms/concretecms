@@ -1,6 +1,7 @@
 <? if ($cp->canAdminPage()) {
-$home = Page::getByID($_REQUEST['cID']);
 $gArray = array();
+$gl = new GroupList($c, false, true);
+$gArray = $gl->getGroupList();
 ?>
 
 <div class="ccm-pane-controls">
@@ -15,6 +16,14 @@ $gArray = array();
 
 <h2>Who can view this page?</h2>
 
+<?
+
+foreach ($gArray as $g) {
+?>
+
+<input type="checkbox" name="readGID[]" value="<?=$g->getGroupID()?>" <? if ($g->canRead()) { ?> checked <? } ?> /> <?=$g->getGroupName()?><br/>
+
+<? } ?>
 
 </div>
 
@@ -27,7 +36,7 @@ $gArray = array();
 foreach ($gArray as $g) {
 ?>
 
-<input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <? if ($g->canWrite()) { ?> checked <? } ?> /> <?=$g->getGroupName()?><br/>
+<input type="checkbox" name="editGID[]" value="<?=$g->getGroupID()?>" <? if ($g->canWrite()) { ?> checked <? } ?> /> <?=$g->getGroupName()?><br/>
 
 <? } ?>
 
