@@ -1,5 +1,30 @@
 <?
 
+class LogEntry extends Object {
+	
+	public function getType() {return $this->logType;}
+	public function getText() {return $this->logText;}
+	public function getID() {return $this->logID;}
+	
+	public function getTimestamp() {return $this->timestamp;}
+
+	/** 
+	 * Returns a log entry by ID
+	 */
+	public static function getByID($logID) {
+		$db = Loader::db();
+		$r = $db->Execute("select * from Logs where logID = ?", array($logID));
+		if ($r) {
+			$row = $r->FetchRow();
+			$obj = new LogEntry();
+			$obj->setPropertiesFromArray($row);
+			return $obj;
+		}
+	}
+	
+	
+}
+
 class DatabaseLogEntry extends LogEntry {
 	
 	public function getQuery() {return $this->query;}
@@ -31,30 +56,6 @@ class DatabaseLogEntry extends LogEntry {
 	
 }
 
-class LogEntry extends Object {
-	
-	public function getType() {return $this->logType;}
-	public function getText() {return $this->logText;}
-	public function getID() {return $this->logID;}
-	
-	public function getTimestamp() {return $this->timestamp;}
-
-	/** 
-	 * Returns a log entry by ID
-	 */
-	public static function getByID($logID) {
-		$db = Loader::db();
-		$r = $db->Execute("select * from Logs where logID = ?", array($logID));
-		if ($r) {
-			$row = $r->FetchRow();
-			$obj = new LogEntry();
-			$obj->setPropertiesFromArray($row);
-			return $obj;
-		}
-	}
-	
-	
-}
 
 class Log {
 
