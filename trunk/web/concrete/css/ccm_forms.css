@@ -16,6 +16,7 @@ div.ccm-field-meta a.ccm-meta-close {position: absolute; top: 0px; right: 0px; f
 div.ccm-pane-controls label {display: block; color: #000; margin-bottom: 3px; font-weight: bold !important}
 div.ccm-pane-controls div.ccm-field-one {width: 280px; float: left; margin-right: 12px; padding-bottom: 8px}
 div.ccm-pane-controls div.ccm-field-two {width: 280px; float: left; padding-bottom: 8px}
+div.ccm-note { font-size:10px; color:#999999; font-weight:normal }
 
 
 /* meta dropdown */

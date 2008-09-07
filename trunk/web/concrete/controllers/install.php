@@ -219,6 +219,10 @@ class InstallController extends Controller {
 						$d12 = SinglePage::add('/dashboard/logs');
 						$d13 = SinglePage::add('/dashboard/settings');
 						
+						// add home page
+						$dl1 = SinglePage::add('/download_file');
+						$dl1->update(array('cName' => 'Download File'));
+						
 						$d1->update(array('cName'=>'Sitemap', 'cDescription'=>'Whole world at a glance.'));
 						$d2->update(array('cName'=>'File Manager', 'cDescription'=>'All documents and images.'));
 						$d3->update(array('cName'=>'Form Results', 'cDescription'=>'Get submission data.'));

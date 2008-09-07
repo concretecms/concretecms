@@ -790,9 +790,7 @@ $(function() {
 		$("#ccm-user-search-simple").hide();
 		$("#ccm-user-search-simple-control").show();
 		$(this).hide();
-		$("#ccm-user-search-advanced").show('slide', {
-			direction: 'up'
-		});
+		$("#ccm-user-search-advanced").show();
 	});
 
 	$("#ccm-user-search-simple-control").click(function() {

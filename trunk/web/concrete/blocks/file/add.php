@@ -7,4 +7,8 @@ $al = Loader::helper('concrete/asset_library');
 
 <br/>
 <h2>Link Text</h2>
-<input type="text" style="width: 200px" name="fileLinkText" /><br /><br />
+<input type="text" style="width: 200px" name="fileLinkText" /><br />
+
+<h2>Password Required for Downloading</h2>
+<input type="text" style="width: 200px" name="filePassword" />
+<div class="ccm-note">A password is not required.</div>
