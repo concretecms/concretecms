@@ -6,14 +6,18 @@
 		protected $btDescription = "Creates links to files";
 		protected $btName = "File";
 		protected $btInterfaceWidth = 300;
-		protected $btInterfaceHeight = 200;
+		protected $btInterfaceHeight = 250;
 		protected $btTable = 'btContentFile';
 
 		function getFileID() {return $this->fID;}
+		
 		function getFileObject() {
 			return LibraryFileBlockController::getFile($this->fID);
-		}		
+		}
+		
 		function getLinkText() {return $this->fileLinkText;}
+		
+		function getPassword() {return $this->filePassword;}
 		
 		function delete() {
 			LibraryFileBlockController::delete($this->fID);

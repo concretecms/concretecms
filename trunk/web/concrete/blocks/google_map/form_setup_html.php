@@ -1,7 +1,6 @@
 <style>
 table#googleMapBlockSetup th {font-weight: bold; text-style: normal; padding-right: 8px; white-space: nowrap; vertical-align:top ; padding-bottom:8px}
 table#googleMapBlockSetup td{ font-size:12px; vertical-align:top; padding-bottom:8px;}
-table#googleMapBlockSetup .note{ font-size:10px; color:#999999; font-weight:normal }
 </style> 
 
 <table id="googleMapBlockSetup" width="100%"> 
@@ -27,7 +26,7 @@ table#googleMapBlockSetup .note{ font-size:10px; color:#999999; font-weight:norm
 		<th>Zoom:</th>
 		<td>
 		<input id="ccm_googlemap_block_zoom" name="zoom" value="<?=$mapObj->zoom?>" maxlength="255" type="text" style="width:100%">
-		<div class="note">Enter a number from 0 to 17, with 17 being the most zoomed in. </div>
+		<div class="ccm-note">Enter a number from 0 to 17, with 17 being the most zoomed in. </div>
 		</td>
 	</tr>			
 </table>

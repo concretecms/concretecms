@@ -29,6 +29,8 @@ if ($_REQUEST['bt_installed']) {
 	$message = 'Block Type Installed';
 }
 
+$ci = Loader::helper('concrete/urls');
+
 ?>
 
 	<h1><span>Block Types</span></h1>
@@ -41,35 +43,14 @@ if ($_REQUEST['bt_installed']) {
 	<? } else { ?>
 	
 	<div style="margin:0px; padding:0px; height:auto" >	
-	<table border="0" cellspacing="1" cellpadding="0" class="grid-list" >
-	<tr>
-		<td colspan="4" class="header">Installed Block Types</td>
-	</tr>
-	<tr>
-		<td class="subheader">Name</td>
-		<td class="subheader">Handle</td>
-		<td class="subheader">Description</td>
-		<td class="subheader">&nbsp;</td>
-	</tr>
+
 	<?	foreach ($btArray as $bt) { ?>
-		<tr>
-			<td style="white-space: nowrap"><?=$bt->getBlockTypeName()?></td>
-			<td><?=$bt->getBlockTypeHandle()?></td>
-			<td><?=$bt->getBlockTypeDescription()?></td>
-			<td style="width:70px;">
-				<form method="post" id="install_blocktype_<?=$bt->getBlockTypeHandle()?>" action="<?=$this->url('/dashboard/install/')?>">
-					<input type="hidden" name="task" value="install_blocktype" />
-					<input type="hidden" name="pkgID" value="<?=$bt->getPackageID()?>" />
-					<? print $ih->submit('Refresh', 'install_blocktype_' . $bt->getBlockTypeHandle(), 'left', false, array('title'=>'Grabs the latest name and database file from the block.'));?>
-					<input type="hidden" name="btHandle" value="<?=$bt->getBlockTypeHandle()?>" />
-					<input type="hidden" name="btID" value="<?=$bt->getBlockTypeID()?>" />
-				</form>
-			</td>
-		</tr>
-		<? } ?>
+		<div class="ccm-block-type">
+			<a class="ccm-block-type-inner" style="background-image: url(<?=$ci->getBlockTypeIconURL($bt)?>)" dialog-title="Add <?=$bt->getBlockTypeName()?>" href="<?=$this->url('/dashboard/install', 'inspect_block_type', $bt->getBlockTypeID())?>"><?=$bt->getBlockTypeName()?></a>
+			<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>" style="display: block"><?=$bt->getBlockTypeDescription()?></div>
+		</div>
+	<? } ?>
 		
-	</table>
-	</div>
 	<? } ?>
 	
 	<br/>

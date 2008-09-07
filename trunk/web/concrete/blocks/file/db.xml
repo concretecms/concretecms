@@ -8,7 +8,7 @@
 		<field name="fID" type="I">
 			<unsigned />
 		</field>
-		<field name="fileLinkText" type="C" size="255">
-		</field>
+		<field name="fileLinkText" type="C" size="255"></field>
+		<field name="filePassword" type="C" size="255"></field>
 	</table>
 </schema>
