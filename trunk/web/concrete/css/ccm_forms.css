@@ -49,7 +49,7 @@ div.ccm-buttons .cancel {float: left}
 div.ccm-buttons .accept {float: right}
 
 a.ccm-button-left {float: left; }
-a.ccm-button {float: left}
+a.ccm-button {float: left; margin-right: 10px}
 a.ccm-button-right {float: right}
 
 div.ccm-button, a.ccm-button-right, a.ccm-button-left, a.ccm-button {display: block; text-decoration: none !important; height: 38px; background: transparent url(../images/button_l.png) no-repeat;}

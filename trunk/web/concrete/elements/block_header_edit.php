@@ -6,7 +6,10 @@
 
 <? $ci = Loader::helper("concrete/urls"); ?>
 <? $bt = $b->getBlockTypeObject(); ?>
-<script type="text/javascript" src="<?=$ci->getBlockTypeJavaScriptURL($bt)?>"></script>
+<? $url = $ci->getBlockTypeJavaScriptURL($bt); 
+if ($url != '') { ?>
+	<script type="text/javascript" src="<?=$url?>"></script>
+<? } ?>
 <form method="post" id="ccm-block-form" class="validate" action="<?=$b->getBlockEditAction()?>">
 
 

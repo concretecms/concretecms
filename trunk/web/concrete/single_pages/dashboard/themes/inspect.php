@@ -1,10 +1,12 @@
-
+<?
+$ci = Loader::helper('concrete/interface');
+?>
 	<h1><span>Inspect Theme</span></h1>
 	<div class="ccm-dashboard-inner">
 	
 
 	
-	<form method="post" action="<?=$this->url('/dashboard/themes/inspect/', 'activate_files', $ptID)?>">
+	<form method="post" id="ccm-inspect-form" action="<?=$this->url('/dashboard/themes/inspect/', 'activate_files', $ptID)?>">
 	
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
 	<table border="0" cellspacing="1" cellpadding="0" class="grid-list" id="ccm-template-list">
@@ -76,11 +78,16 @@
 	</div>
 	
 	<Br/>
-	<div class="ccm-buttons">
-	<input type="button" name="cancel" class="cancel" value="&lt; Return to Themes" onclick="location.href='<?=$this->url('/dashboard/themes/')?>'" />
-	<input type="submit" name="submit" class="accept" <? if ($pf == 0 ) { ?> disabled <? } ?> value="Activate File(s) &gt;" />
-	</div>
-	<div class="ccm-spacer">&nbsp;</div>
+	
+	
+	<?
+	$b1 = $ci->button('Return to Themes', $this->url('/dashboard/themes'), 'left');
+	if ($pf > 0) { 
+		$b2 = $ci->submit('Activate Files', 'ccm-inspect-form'); ?>
+		<?=$ci->buttons($b1, $b2); ?>
+	<? } else { ?>
+		<?=$ci->buttons($b1); ?>
+	<? } ?>
 	</form>
 	
 	<br/><br/>

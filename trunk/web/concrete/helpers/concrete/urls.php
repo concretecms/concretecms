@@ -23,7 +23,11 @@ class ConcreteUrlsHelper {
 	 * @return string
 	 */
 	public function getBlockTypeIconURL($bt) {
-		return $this->getBlockTypeAssetsURL($bt) . '/' . FILENAME_BLOCK_ICON;		
+		if (file_exists($bt->getBlockTypePath() . '/' . FILENAME_BLOCK_ICON)) {
+			return $this->getBlockTypeAssetsURL($bt) . '/' . FILENAME_BLOCK_ICON;		
+		} else {
+			return BLOCK_TYPE_GENERIC_ICON;
+		}
 	}
 	
 	/** 
@@ -51,7 +55,9 @@ class ConcreteUrlsHelper {
 	 * @return string $url
 	 */
 	public function getBlockTypeJavaScriptURL($bt) {
-		return $this->getBlockTypeAssetsURL($bt) . '/auto.js';
+		if (file_exists($bt->getBlockTypePath() . '/auto.js')) {
+			return $this->getBlockTypeAssetsURL($bt) . '/auto.js';
+		}
 	}
 
 	/** 

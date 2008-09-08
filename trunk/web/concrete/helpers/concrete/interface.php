@@ -98,8 +98,10 @@ class ConcreteInterfaceHelper {
 	 * @param string $buttonHTML
 	 * @return string
 	 */	
-	public function buttons() {
-		$buttons = func_get_args();
+	public function buttons($buttons = null) {
+		if (!is_array($buttons)) {
+			$buttons = func_get_args();
+		}
 		$html = '<div class="ccm-buttons">';
 		foreach($buttons as $_html) {
 			$html .= $_html;

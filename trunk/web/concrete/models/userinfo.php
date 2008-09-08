@@ -179,6 +179,11 @@
 					$r = $db->prepare("update Users set uName = ?, uEmail = ?, uHasAvatar = ? where uID = '{$this->uID}'");
 					$res = $db->execute($r, $v);
 				}
+
+				// now we check to see if the user is updated his or her own logged in record
+				if (isset($_SESSION['uID']) && $_SESSION['uID'] == $this->uID) {
+					$_SESSION['uName'] = $data['uName']; // make sure to keep the new uName in there
+				}
 				
 				return $res;
 			}
