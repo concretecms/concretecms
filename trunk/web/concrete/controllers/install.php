@@ -349,7 +349,7 @@ class InstallController extends Controller {
 						$bt = BlockType::getByHandle('content');
 						$data = array();
 						$data['uID'] = USER_SUPER_ID;
-						$data['content'] = '<h1>Welcome to Concrete.</h1><p>You are currently viewing the front page of your website. This is an example of a content block - rich text that can be added through a WYSIWYG editor.</p><p>Get started by putting the page in edit mode, adding sub-pages, or checking out the <a href="' . BASE_URL . '/dashboard/">Dashboard</a>.</p>
+						$data['content'] = '<h1>Welcome to Concrete.</h1><p>You are currently viewing the front page of your website. This is an example of a content block - rich text that can be added through a WYSIWYG editor.</p><p>Get started by putting the page in edit mode, adding sub-pages, or checking out the <a href="' . BASE_URL . '/index.php/dashboard/">Dashboard</a>.</p>
 						<h3>Examples of Blocks</h3>
 						Listed below are some of the more interesting blocks that Concrete5 ships with, installed and ready to use. Click through to explore the blocks on their own page.
 						</p>
@@ -562,6 +562,7 @@ class InstallController extends Controller {
 					
 						// Install & Run Jobs  
 						Job::installByHandle('index_search');
+						Job::installByHandle('generate_sitemap');
 						// NOTE: This is too memory intensive to run during initial install. Let's not run it and just give nicer feedback
 						//Job::runAllJobs();
 
