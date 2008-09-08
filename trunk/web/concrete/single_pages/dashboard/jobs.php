@@ -27,7 +27,7 @@ var Jobs = {
 		var jID=this.pendingJobs.shift();
 		$('#jobItemRow'+jID).addClass('running');
 		$.ajax({ 
-			url: CCM_TOOLS_PATH+'/jobs.php?auth=<?=$auth?>&jID='+jID,
+			url: CCM_TOOLS_PATH+'/jobs?auth=<?=$auth?>&jID='+jID,
 			success: function(json){
 				eval('var jObj='+json);
 				$('#jLastStatusText'+jObj.jID).html(jObj.message);
@@ -46,7 +46,7 @@ var Jobs = {
 	changeStatus:function(cb){
 		if(cb.checked) var jStatus='ENABLED';
 		else var jStatus='DISABLED';
-		$.ajax({  url: CCM_TOOLS_PATH+'/tools/required/jobs.php?auth=<?=$auth?>&jID='+cb.value+'&jStatus='+jStatus  });
+		$.ajax({  url: CCM_TOOLS_PATH+'/tools/required/jobs?auth=<?=$auth?>&jID='+cb.value+'&jStatus='+jStatus  });
 	},
 	
 	confirmUninstall:function(){
@@ -207,5 +207,5 @@ $ih = Loader::helper('concrete/interface');
 If you wish to run these jobs in the background, automate access to the following URL:
 <br/><br/>
 <code>
-<?=BASE_URL . $this->url('/tools/required/jobs.php?auth=' . $auth)?>
+<?=BASE_URL . $this->url('/tools/required/jobs?auth=' . $auth)?>
 </div>
