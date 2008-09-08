@@ -232,7 +232,7 @@ class InstallController extends Controller {
 						$d7->update(array('cName'=>'Page Types', 'cDescription'=>'What goes in your site.'));
 						$d8->update(array('cName'=>'Custom Page Attributes', 'cDescription'=>'Setup Special Metadata for Pages'));
 						$d9->update(array('cName'=>'Themes', 'cDescription'=>'Reskin your site.'));		
-						$d10->update(array('cName'=>'Add Functionality', 'cDescription'=>'Block and Package install.'));
+						$d10->update(array('cName'=>'Add Functionality', 'cDescription'=>'Install blocks to extend your site.'));
 						$d11->update(array('cName'=>'Maintenance', 'cDescription'=>'Run common cleanup tasks.'));
 						$d12->update(array('cName'=>'Logging', 'cDescription'=>'Keep tabs on your site.'));
 						$d13->update(array('cName'=>'Sitewide Settings', 'cDescription'=>'Secure and setup your site.'));

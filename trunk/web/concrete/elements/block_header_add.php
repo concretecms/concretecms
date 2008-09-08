@@ -9,7 +9,10 @@
 <? include(DIR_FILES_ELEMENTS_CORE . '/block_al.php'); ?>
 
 <? $ci = Loader::helper("concrete/urls"); ?>
-<script type="text/javascript" src="<?=$ci->getBlockTypeJavaScriptURL($bt)?>"></script>
+<? $url = $ci->getBlockTypeJavaScriptURL($bt); 
+if ($url != '') { ?>
+	<script type="text/javascript" src="<?=$url?>"></script>
+<? } ?>
 
 <input type="hidden" name="ccm-block-pane-action" value="<?=$_SERVER['REQUEST_URI']?>" />
 

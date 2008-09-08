@@ -30,61 +30,89 @@ if ($_REQUEST['bt_installed']) {
 }
 
 $ci = Loader::helper('concrete/urls');
-
+$ch = Loader::helper('concrete/interface');
 ?>
 
-	<h1><span>Block Types</span></h1>
-	<div class="ccm-dashboard-inner">
-	
-	<h2>Installed Block Types</h2>
-	<? 
-	if (count($btArray) == 0) { ?>
-		<p>No block types have been installed.</p>
-	<? } else { ?>
-	
-	<div style="margin:0px; padding:0px; height:auto" >	
 
-	<?	foreach ($btArray as $bt) { ?>
-		<div class="ccm-block-type">
-			<a class="ccm-block-type-inner" style="background-image: url(<?=$ci->getBlockTypeIconURL($bt)?>)" dialog-title="Add <?=$bt->getBlockTypeName()?>" href="<?=$this->url('/dashboard/install', 'inspect_block_type', $bt->getBlockTypeID())?>"><?=$bt->getBlockTypeName()?></a>
-			<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>" style="display: block"><?=$bt->getBlockTypeDescription()?></div>
-		</div>
-	<? } ?>
+<? if (is_object($bt)) { ?>
+		<h1><span><?=$bt->getBlockTypeName()?></span></h1>
+		<div class="ccm-dashboard-inner">
+		<img src="<?=$ci->getBlockTypeIconURL($bt)?>" style="float: right" />
+		<div><a href="<?=$this->url('/dashboard/install')?>">&lt; Return to Block Types</a></div><br/>
 		
-	<? } ?>
-	
-	<br/>
-	<h2>Block Types Available for Installation</h2>
-	
-	<? 
-	if (count($btArray2) == 0) { ?>
-		No local block types available.
-	<? 	
-	} else { ?>
-		<div style="margin:0px; padding:0px;  height:auto" >	
-		<table border="0" cellspacing="1" cellpadding="0" class="grid-list">
+		<h2>Description</h2>
+		<p><?=$bt->getBlockTypeDescription()?></p>
+
+		<h2>Usage Count</h2>
+		<p><?=$num?></p>
+		
+		<? if ($bt->isBlockTypeInternal()) { ?>
+		<h2>Internal</h2>
+		<p>This is an internal block type.</p>
+		<? } ?>
+
 		<?
-		foreach ($btArray2 as $bt) { ?>
-		<tr>
-			<td style="white-space: nowrap"><?=$bt->getBlockTypeName()?></td>
-			<td><?=$bt->getBlockTypeHandle()?></td>
-			<td><?=$bt->getBlockTypeDescription()?></td>
-			<td  style="width:70px;"><? if ($bt->isInstalled()) { ?>
-				<form method="post" action="<?=$this->url('/dashboard/install/')?>" id="install_blocktype_<?=$bt->getBlockTypeHandle()?>"><input type="hidden" name="task" value="install_blocktype" /><input type="hidden" name="type" value="LOCAL" /><?=$ih->submit('Refresh', 'install_blocktype_' . $bt->getBlockTypeHandle(), 'left')?><input type="submit" value="Refresh" /><input type="hidden" name="btHandle" value="<?=$bt->getBlockTypeHandle()?>" /><input type="hidden" name="btID" value="<?=$bt->getBlockTypeID()?>" /></form>
-			<? } else { ?>
-				<form method="post" action="<?=$this->url('/dashboard/install/')?>" id="install_blocktype_<?=$bt->getBlockTypeHandle()?>"><input type="hidden" name="task" value="install_blocktype" /><input type="hidden" name="type" value="LOCAL" /><?=$ih->submit('Install', 'install_blocktype_' . $bt->getBlockTypeHandle(), 'left')?><input type="hidden" name="btHandle" value="<?=$bt->getBlockTypeHandle()?>" />
-				</form>
-			<? } ?>
-			</td>
-		</tr>
+		$buttons[] = $ch->button("Refresh", $this->url('/dashboard/install','refresh_block_type', $bt->getBlockTypeID()), "left");
+		if ($bt->canUnInstall()) {
+			$buttons[] = $ch->button("Remove", $this->url('/dashboard/install', 'uninstall_block_type', $bt->getBlockTypeID()), "left");
+		}
+
+		print $ch->buttons($buttons); ?>
+	
+	</div>
+		
+		
+	
+	
+	<? } else { ?>
+		<h1><span>Block Types</span></h1>
+		<div class="ccm-dashboard-inner">
+	
+		<h2>Installed Block Types</h2>
+		<? 
+		if (count($btArray) == 0) { ?>
+			<p>No block types have been installed.</p>
+		<? } else { ?>
+		
+		<div style="margin:0px; padding:0px; height:auto" >	
+	
+		<?	foreach ($btArray as $bt) { ?>
+			<div class="ccm-block-type">
+				<a class="ccm-block-type-inner" style="background-image: url(<?=$ci->getBlockTypeIconURL($bt)?>)" href="<?=$this->url('/dashboard/install', 'inspect_block_type', $bt->getBlockTypeID())?>"><?=$bt->getBlockTypeName()?></a>
+				<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>" style="display: block"><?=$bt->getBlockTypeDescription()?></div>
+			</div>
+		<? } ?>
+			
 		<? } ?>
 		
-	</table>
-	</div>
+		<br/>
+		<h2>Block Types Available for Installation. Click to Install.</h2>
+		
+		<? 
+		if (count($btArray2) == 0) { ?>
+			No local block types available.
+		<? 	
+		} else { ?>
+			<div style="margin:0px; padding:0px;  height:auto" >	
+			<table border="0" cellspacing="0" cellpadding="0">
+			<?
+			foreach ($btArray2 as $bt) { ?>
+			<div class="ccm-block-type">
+				<a class="ccm-block-type-inner" style="background-image: url(<?=$ci->getBlockTypeIconURL($bt)?>)" href="<?=$this->url('/dashboard/install', 'install_block_type', $bt->getBlockTypeHandle())?>"><?=$bt->getBlockTypeName()?></a>
+				<div class="ccm-block-type-description"  style="display: block"><?=$bt->getBlockTypeDescription()?></div>
+			</div>
+			<? } ?>
+			
+		</table>
+		</div>
+		</div>
+		
+		<? } ?>
 	
-	<? } ?>
-	</div>
-	
+	<? } ?>	
+<? /*
+// These are not quite ready yet.
+
 <h1><span>Packages</span></h1>
 <div class="ccm-dashboard-inner">
 
@@ -133,3 +161,4 @@ $ci = Loader::helper('concrete/urls');
 </form>
 
 </div>
+*/ ?>

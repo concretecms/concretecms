@@ -112,7 +112,7 @@
 		
 		function getBlockTypeArray() {
 			$db = Loader::db();
-			$q = "select btID, pkgID, btHandle, btCopyWhenPropagate, btName, btActiveWhenAdded, btIncludeAll, btInterfaceWidth, btInterfaceHeight from BlockTypes order by btID asc";
+			$q = "select btID, pkgID, btHandle, btCopyWhenPropagate, btName, btActiveWhenAdded, btIncludeAll, btIsInternal, btInterfaceWidth, btInterfaceHeight from BlockTypes order by btID asc";
 			$r = $db->query($q);
 	
 			if ($r) {
@@ -193,7 +193,7 @@
 		private static function get($where, $properties) {
 			$db = Loader::db();
 			
-			$q = "SELECT btID, btName, btHandle, pkgID, btActiveWhenAdded, btCopyWhenPropagate, btIncludeAll, btInterfaceWidth, btInterfaceHeight from BlockTypes where {$where}";
+			$q = "SELECT btID, btName, btDescription, btHandle, pkgID, btActiveWhenAdded, btIsInternal, btCopyWhenPropagate, btIncludeAll, btInterfaceWidth, btInterfaceHeight from BlockTypes where {$where}";
 			$r = $db->query($q, $properties);
 			
 			if ($r->numRows() > 0) {
@@ -203,6 +203,8 @@
 				return $bt;
 			}			
 		}
+		
+		function isBlockTypeInternal() {return $this->btIsInternal;}
 		
 		function getBlockTypeInterfaceWidth() {return $this->btInterfaceWidth;}
 		function getBlockTypeInterfaceHeight() {return $this->btInterfaceHeight;}
@@ -220,6 +222,27 @@
 					return in_array($obj->getUserID(), $this->addBTUArray);
 					break;
 			}
+		}
+		
+		/** 
+		 * Returns the number of unique instances of this block
+		 */
+		public function getCount() {
+			$db = Loader::db();
+			$count = $db->GetOne("select count(btID) from Blocks where btID = ?", array($this->btID));
+			return $count;
+		}
+		
+		/**
+		 * Not a permissions call. Actually checks to see whether there are 0 instances of this block, AS well as
+		 * that this block is not an internal one.
+		 */
+		public function canUnInstall() {
+			$cnt = $this->getCount();
+			if ($cnt > 0 || $this->isBlockTypeInternal()) {
+				return false;
+			}
+			return true;
 		}
 		
 		function getBlockTypeDescription() {
@@ -305,7 +328,7 @@
 			$bt->btHandle = $btHandle;
 			$bt->pkgHandle = $pkg->getPackageHandle();
 			$bt->pkgID = $pkg->getPackageID();
-			BlockType::doInstallBlockType($btHandle, $bt, $dir, $btID);
+			return BlockType::doInstallBlockType($btHandle, $bt, $dir, $btID);
 		}
 		
 		function installBlockType($btHandle, $btID = 0) {
@@ -329,7 +352,7 @@
 			$bt->btHandle = $btHandle;
 			$bt->pkgHandle = null;
 			$bt->pkgID = 0;
-			BlockType::doInstallBlockType($btHandle, $bt, $dir, $btID);
+			return BlockType::doInstallBlockType($btHandle, $bt, $dir, $btID);
 		}	
 		
 		private function doInstallBlockType($btHandle, $bt, $dir, $btID = 0) {
@@ -454,6 +477,15 @@
 		
 		public function getBlockTypeClassFromHandle() {
 			return $this->_getClass();
+		}
+		
+		/** 
+		 * Removes the block type. ONLY removes the block type from the blocktypes table - doesn't do any kind of 
+		 * content deactivation. The frontend ensures that only blocks with no instances are removed.
+		 */
+		public function delete() {
+			$db = Loader::db();
+			$db->Execute("delete from BlockTypes where btID = ?", array($this->btID));
 		}
 		
 		/** 

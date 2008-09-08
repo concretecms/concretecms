@@ -1,16 +1,22 @@
-	<h1><span>Themes</span></1>
+<?
+$bt = Loader::helper('concrete/interface');
+?>
+<h1><span>Themes</span></h1>
 	<div class="ccm-dashboard-inner">
 	
 	
 	<? if (isset($activate_confirm)) { ?>
 	<strong>Are you sure you wish to activate this theme? Any custom theme selections across your site will be reset.</strong>
 	<br/><br/>
-	<input type="button" onclick="location.href='<?=$activate_confirm?>'" value="Yes, Activate this Theme &gt;" />
+	<?=$bt->button("Yes, activate this theme.", $activate_confirm, "left");?>
 	or <a href="<?=$this->url('/dashboard/themes/')?>">Cancel</a>
+	
+	<div class="ccm-spacer">&nbsp;</div>
+	
 	<? } else { ?>
 	
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
-	<table border="0" cellspacing="1" cellpadding="0" id="ccm-template-list">
+	<table border="0" cellspacing="0" cellpadding="0" id="ccm-template-list">
 	<?
 	if (count($tArray) == 0) { ?>
 	<tr>
@@ -18,17 +24,17 @@
 	</tr>
 	<? } else {
 		foreach ($tArray as $t) { ?>
-		<tr>
+		<tr <? if ($siteTheme->getThemeID() == $t->getThemeID()) { ?> class="ccm-theme-active" <? } ?>>
 			<td><?=$t->getThemeThumbnail()?></td>
-			<td><strong><?=$t->getThemeHandle()?></strong> <? if ($siteTheme == $t->getThemeID()) { ?>Active Theme<? } ?><br/>
-			<?=$t->getThemeName()?><br/>
+			<td class="ccm-template-content">
+			<h2><?=$t->getThemeName()?></h2>
 			<?=$t->getThemeDescription()?>
 			<br/><br/>
+			<?=$bt->button("Activate", $this->url('/dashboard/themes','activate', $t->getThemeID()), "left");?>
+			<?=$bt->button("Inspect", $this->url('/dashboard/themes/inspect', $t->getThemeID()), "left");?>
 			
-			<input type="button" value="Activate" onclick="location.href='<?=$this->url('/dashboard/themes','activate', $t->getThemeID())?>'" />
-			<input type="button" value="Inspect" onclick="location.href='<?=$this->url('/dashboard/themes/inspect', $t->getThemeID())?>'" />
 			<? if ($t->isUninstallable()) { ?>
-				<input type="button" value="Remove" onclick="location.href='<?=$this->url('/dashboard/themes','remove', $t->getThemeID())?>'" />
+				<?=$bt->button("Remove", $this->url('/dashboard/themes/inspect', 'remove', $t->getThemeID()), "left");?>
 			<? } ?>
 			</td>
 		</tr>
@@ -43,13 +49,12 @@
 	<? foreach ($tArray2 as $t) { ?>
 		<tr>
 			<td><?=$t->getThemeThumbnail()?></td>
-			<td><strong><?=$t->getThemeHandle()?></strong> <? if ($siteTheme == $t->getThemeID()) { ?>Active Theme<? } ?><br/>
-			<?=$t->getThemeName()?><br/>
+			<td class="ccm-template-content">
+			<h3><?=$t->getThemeName()?></h3>
 			<?=$t->getThemeDescription()?>
 			<br/><br/>
+			<?=$bt->button("Install", $this->url('/dashboard/themes','install', $t->getThemeHandle()), "left");?>
 			
-				<input type="button" value="Install" onclick="location.href='<?=$this->url('/dashboard/themes','install', $t->getThemeHandle())?>'" />
-
 		</tr>
 		<? }
 	} ?>

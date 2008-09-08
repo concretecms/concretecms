@@ -44,8 +44,12 @@ class DashboardThemesController extends Controller {
 		$this->set('activate_confirm', View::url('/dashboard/themes', 'activate_confirm', $ptID));	
 	}
 
-	public function install($ptHandle) {
+	public function install($ptHandle = null) {
 		$th = PageTheme::getByFileHandle($ptHandle);
+		if ($ptHandle == null) {
+			$this->redirect('/dashboard/themes');
+		}
+		
 		$v = Loader::helper('validation/error');
 		try {
 			if (is_object($th)) {

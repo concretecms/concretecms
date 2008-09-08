@@ -148,6 +148,9 @@ define('REL_DIR_FILES_COLLECTION_TYPE_ICONS', ASSETS_URL_IMAGES . '/icons/page_t
 define('DIR_FILES_CONTENT', DIR_BASE . '/single_pages');
 define('DIR_FILES_CONTENT_REQUIRED', DIR_BASE_CORE . '/single_pages');
 
+# Block Types
+define('BLOCK_TYPE_GENERIC_ICON', ASSETS_URL_IMAGES . '/icons/icon_block_type_generic.png');
+
 # Controllers
 define('DIR_FILES_CONTROLLERS', DIR_BASE . '/controllers');
 define('FILENAME_COLLECTION_CONTROLLER', 'controller.php');

@@ -2,10 +2,13 @@
 
 class DownloadFileController extends Controller {
 
+	/** 
+	 * Automatically loads the file block class
+	 */
 	public function on_start() {
 		Loader::block('file');
 	}
-	
+
 	public function view($bID = 0) {
 		// get the block
 		$block = $this->getBlock($bID);
