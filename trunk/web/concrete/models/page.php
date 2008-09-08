@@ -1067,6 +1067,9 @@ class Page extends Collection {
 		$q = "delete from Pages where cPointerID = '{$cID}'";
 		$r = $db->query($q);
 		
+		$q = "delete from Areas WHERE cID = '{$cID}'";
+		$r = $db->query($q);
+		
 		// Update cChildren for cParentID
 		$q = "update Pages set cChildren=cChildren-1 where cID='$cParentID'";
 		$r = $db->query($q);

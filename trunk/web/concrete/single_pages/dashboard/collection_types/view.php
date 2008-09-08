@@ -186,9 +186,13 @@ if ($ctEditMode) {
 	?></tr>
 	<? } ?>
 	<tr>
-		<td colspan="3" class="header"><input type="submit" value="Update Page Type" /> <input type="button" name="cancel" value="Cancel" onclick="location.href='<?=$this->url('/dashboard/collection_types/')?>'" />
+		<td colspan="3" class="header"><input type="submit" value="Update Page Type" /> <input type="button" name="cancel" value="Cancel" onclick="location.href='<?=$this->url('/dashboard/collection_types/')?>'" /></td>
 	</tr>
-	</table>
+    <tr><td colspan="3">&nbsp;</td></tr>
+	<tr>
+		<td colspan="3" class="header"><input type="button" name="delete" value="Delete Page Type" onclick="if(confirm('Are you sure?')){ location.href='<?=$this->url('/dashboard/collection_types/','delete',$_REQUEST['ctID'])?>';}" /></td>
+	</tr>
+    </table>
 	</div>
 	
 	<br>
@@ -312,7 +316,7 @@ if ($ctEditMode) {
 		<? } ?>
 	
 		</td>
-		<td><? print $ih->button('Properties', $this->url('/dashboard/collection_types?ctID=' . $ct->getCollectionTypeID() . '&task=edit'))?></td>
+		<td><? print $ih->button('Edit', $this->url('/dashboard/collection_types?ctID=' . $ct->getCollectionTypeID() . '&task=edit'))?></td>
 
 	</tr>
 	<? } ?>
