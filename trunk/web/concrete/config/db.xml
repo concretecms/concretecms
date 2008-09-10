@@ -341,6 +341,10 @@
     <field name="cfKey" type="C" size="64">
       <KEY/>
     </field>
+    <field name="timestamp" type="T">
+      <NOTNULL/>
+      <DEFTIMESTAMP/>
+    </field>
     <field name="cfValue" type="X2"/>
     <field name="uID" type="I" size="10">
       <KEY/>

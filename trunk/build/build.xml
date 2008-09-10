@@ -47,4 +47,6 @@
 
         <echo msg="Files archived in build directory OK!" />
     </target>
+    
+    <echo msg="MAKE SURE TO UPDATE THE VERSION NUMBER FILE ON CONCRETE5.ORG" />
 </project>

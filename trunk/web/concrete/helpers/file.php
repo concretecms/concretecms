@@ -68,13 +68,16 @@ class FileHelper {
 	 * Should use curl if it exists and fopen isn't allowed (thanks Remo)
 	 * @param $filename
 	 */
-	public function getContents($file) {
+	public function getContents($file, $timeout = 5) {
 		if (ini_get('allow_url_fopen')) {
-			$contents = file_get_contents($file);
+			$ctx = stream_context_create(array( 
+				'http' => array( 'timeout' => $timeout ) 
+			)); 
+			$contents = file_get_contents($file, 0, $ctx);
 		} else if (function_exists('curl_init')) {
 			$curl_handle = curl_init();
 			curl_setopt($curl_handle, CURLOPT_URL, $file);
-			curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 3);
+			curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, $timeout);
 			curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
 			$contents = curl_exec($curl_handle);
 			curl_close($curl_handle);

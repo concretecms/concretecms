@@ -35,7 +35,7 @@ if ($_REQUEST['task'] == 'edit') {
 	}
 }
 
-if ($_POST['add'] || $_POST['update']) {
+if ($_POST['task'] == 'add' || $_POST['update']) {
 	$ctName = $_POST['ctName'];
 	$ctHandle = $_POST['ctHandle'];
 	
@@ -120,7 +120,7 @@ if ($ctEditMode) {
 	
 	<div class="ccm-dashboard-inner">
 	
-	<form method="post" action="<?=$this->url('/dashboard/collection_types/')?>">
+	<form method="post" id="update_page_type" action="<?=$this->url('/dashboard/collection_types/')?>">
 	<input type="hidden" name="ctID" value="<?=$_REQUEST['ctID']?>" />
 	<input type="hidden" name="task" value="edit" />
 	<input type="hidden" name="update" value="1" />
@@ -186,17 +186,36 @@ if ($ctEditMode) {
 	?></tr>
 	<? } ?>
 	<tr>
-		<td colspan="3" class="header"><input type="submit" value="Update Page Type" /> <input type="button" name="cancel" value="Cancel" onclick="location.href='<?=$this->url('/dashboard/collection_types/')?>'" /></td>
-	</tr>
-    <tr><td colspan="3">&nbsp;</td></tr>
-	<tr>
-		<td colspan="3" class="header"><input type="button" name="delete" value="Delete Page Type" onclick="if(confirm('Are you sure?')){ location.href='<?=$this->url('/dashboard/collection_types/','delete',$_REQUEST['ctID'])?>';}" /></td>
+		<td colspan="3" class="header">
+		<? print $ih->submit('Update Page Type', 'update_page_type', 'right');?>
+		<? print $ih->button('Cancel', $this->url('/dashboard/collection_types'), 'left');?>
+		</td>
 	</tr>
     </table>
 	</div>
 	
 	<br>
 	</form>	
+	</div>
+	
+	<h1><span>Delete Page Type</span></h1>
+	<div class="ccm-dashboard-inner">
+
+
+	<p>Click below to remove this page type entirely. <strong>Note:</strong> you may only remove page types which are not being used on your site. If a page type is being used, delete all instances of its pages first.
+	<div class="ccm-spacer">&nbsp;</div>
+	
+	<? print $ih->button_js('Delete Page Type', "deletePageType", 'left');?>
+	
+	<div class="ccm-spacer">&nbsp;</div>
+	
+	<script type="text/javascript">
+	deletePageType = function() {
+		if(confirm('Are you sure?')){ 
+			location.href="<?=$this->url('/dashboard/collection_types/','delete',$_REQUEST['ctID'])?>";
+		}	
+	}
+	</script>
 	</div>
 	
 <? 
@@ -206,7 +225,7 @@ if ($ctEditMode) {
 	
 	<div class="ccm-dashboard-inner">
 	
-	<form method="post" action="<?=$this->url('/dashboard/collection_types/')?>">
+	<form method="post" id="add_page_type" action="<?=$this->url('/dashboard/collection_types/')?>">
 	<input type="hidden" name="task" value="add" />
 	
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
@@ -270,7 +289,10 @@ if ($ctEditMode) {
 	?></tr>
 	<? } ?>
 	<tr>
-		<td colspan="3" class="header"><input type="submit" name="add" value="Add Page Type" /> <input type="button" name="cancel" value="Cancel" onclick="location.href='<?=$this->url('/dashboard/collection_types/')?>'" />
+		<td colspan="3" class="header">
+		<? print $ih->submit('Add Page Type', 'add_page_type', 'right');?>
+		<? print $ih->button('Cancel', $this->url('/dashboard/collection_types'), 'left');?>
+		</td>
 	</tr>
 	</table>
 	</div>

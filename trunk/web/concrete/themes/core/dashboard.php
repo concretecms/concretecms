@@ -83,6 +83,12 @@ foreach($nav as $n2) {
 </div>
 <? } ?>
 
+<?
+	if (isset($latest_version)){ 
+		print Loader::element('dashboard/notification_update', array('latest_version' => $latest_version));
+	}
+?>
+
 <div id="ccm-dashboard-content">
 
 	<div style="margin:0px; padding:0px; width:100%; ">
