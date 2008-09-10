@@ -102,6 +102,16 @@ div.ccm-paging-top {margin: 0px 0px 10px 0px}
 img.u-avatar {margin: 0px 10px 10px 0px; border: 2px solid #eaeaea}
 div.ccm-dashboard-inner div.ccm-buttons {padding-top: 0px !important}
 
+/* notification */
+div#ccm-dashboard-notification {
+	background: #D4DFCE;
+	border-bottom: 1px solid #afafaf;
+	margin: 46px 0px -48px 201px;
+	padding: 5px;
+	font-size: 12px;
+	color: #888;
+}
+
 /* subnav */
 
 div#ccm-dashboard-subnav {

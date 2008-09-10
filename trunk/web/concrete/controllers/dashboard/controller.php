@@ -3,6 +3,9 @@
 class DashboardController extends Controller {
 
 	public function view() {
+		Loader::library('update');
+		$lv = Update::getLatestAvailableVersionNumber();
+		$this->set('latest_version', $lv);
 		Loader::model('dashboard/homepage');
 		$dh = new DashboardHomepageView();
 		$modules = $dh->getModules();

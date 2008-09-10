@@ -20,11 +20,18 @@
  *
  */
 
+class ConfigValue extends Object {
+	
+	public $value;
+	public $timestamp; // datetime value was set
+
+}
+
 class Config extends Object {
 	
 	private $props = array();
 	
-	public function get($cfKey) {
+	public function get($cfKey, $getFullObject = false) {
 		static $instance;
 		if (!isset($instance)) {
 			$v = __CLASS__;
@@ -34,13 +41,20 @@ class Config extends Object {
 		if (!isset($instance->props[$cfKey])) {
 			$instance->props[$cfKey] = false;
 			$db = Loader::db();
-			$val = $db->GetOne("select cfValue from Config where cfKey = ?", array($cfKey));
+			$val = $db->GetRow("select timestamp, cfValue from Config where cfKey = ?", array($cfKey));
 			if ($val != null) {
-				$instance->props[$cfKey] = $val;
+				$v = new ConfigValue();
+				$v->value = $val['cfValue'];
+				$v->timestamp = $val['timestamp'];
+				$instance->props[$cfKey] = $v;
 			}
 		}
-			
-		return $instance->props[$cfKey];
+		
+		if (!$getFullObject) {
+			return $instance->props[$cfKey]->value;
+		} else {
+			return $instance->props[$cfKey];
+		}
 	}
 	
 	public function getOrDefine($key, $defaultValue) {
