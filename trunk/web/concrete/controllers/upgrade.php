@@ -89,14 +89,20 @@ class UpgradeController extends Controller {
 		This typically shouldn't include schema changes which will be picked up by refresh_schema
 		*/
 		
-		switch($this->site_version) {
+		switch(strtolower($this->site_version)) {
 			case "5.0.0a1":
 				$ugvs[] = "version_500a1";
 				$ugvs[] = "version_500b1";
+				$ugvs[] = "version_500b2";
 				break;
 			case "5.0.0b1":
 				$ugvs[] = "version_500b1";
+				$ugvs[] = "version_500b2";
 				break;
+			case "5.0.0b2":
+				$ugvs[] = "version_500b2";
+				break;
+
 		}
 		
 		foreach($ugvs as $ugh) {
