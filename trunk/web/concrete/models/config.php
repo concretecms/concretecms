@@ -41,9 +41,8 @@ class Config extends Object {
 		if (!isset($instance->props[$cfKey])) {
 			$instance->props[$cfKey] = false;
 			$db = Loader::db();
-			try {
-				$val = $db->GetRow("select timestamp, cfValue from Config where cfKey = ?", array($cfKey));
-			} catch(Exception $e) {
+			$val = @$db->GetRow("select timestamp, cfValue from Config where cfKey = ?", array($cfKey));
+			if (!$val) {
 				$val = $db->GetRow("select cfValue from Config where cfKey = ?", array($cfKey));
 			}
 			if ($val != null) {
