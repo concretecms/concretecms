@@ -1,7 +1,8 @@
 <?
 
 class DashboardLogsController extends Controller {
-
+	
+	public $helpers = array('form', 'html');
 	public function on_start() {
 		$c5selected = false;
 		$dbSelected = false;
@@ -41,35 +42,45 @@ class DashboardLogsController extends Controller {
 		$this->set('paginator', $paginator);
 	}
 	
-	public function view($type = 'none', $page = 0) {
+	public function view($type = 'none', $page = 0, $keywords = '') {
 		$this->set('title', 'Concrete5 Logs');
 		$pageBase = View::url('/dashboard/logs', $type);
 		if ($type == 'none') {
 			$type = null;
 		}
 		$paginator = Loader::helper('pagination');
-		$total = Log::getTotal($type, 1);
-
-		$paginator->init(intval($page), $total, $pageBase . '/%pageNum%', 10);
+		if ($keywords == '') {
+			$keywords = $_POST['keywords'];
+		}
+		$total = Log::getTotal($keywords, $type, 1);
+		$paginator->init(intval($page), $total, $pageBase . '/%pageNum%/' . $keywords, 10);
 		$limit=$paginator->getLIMIT();
 
-		$entries = Log::getList($type, 1, $limit);
+		$entries = Log::getList($keywords, $type, 1, $limit);
+		$this->set('keywords', $keywords);
+		$this->set('pageBase', $pageBase);
 		$this->set('entries', $entries);
 		$this->set('paginator', $paginator);
 
 	}
 	
-	public function custom($page = 0) {
+	public function custom($page = 0, $keywords = '') {
 		$this->set('title', 'Custom Logs Defined by Your Application');
 		$pageBase = View::url('/dashboard/logs', 'custom');
 		$paginator = Loader::helper('pagination');
-		$total = Log::getTotal(false, 0);
+		
+		if ($keywords == '') {
+			$keywords = $_POST['keywords'];
+		}
+		$total = Log::getTotal($keywords, false, 0);
 
-		$paginator->init(intval($page), $total, $pageBase . '/%pageNum%', 10);
+		$paginator->init(intval($page), $total, $pageBase . '/%pageNum%/' . $keywords, 10);
 		$limit=$paginator->getLIMIT();
 
-		$entries = Log::getList(false, 0, $limit);
+		$entries = Log::getList($keywords, false, 0, $limit);
+		$this->set('keywords', $keywords);
 		$this->set('entries', $entries);
+		$this->set('pageBase', $pageBase);
 		$this->set('paginator', $paginator);
 	}
 }
