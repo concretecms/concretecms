@@ -105,14 +105,17 @@ class Log {
 	/** 
 	 * Returns the total number of entries matching this type 
 	 */
-	public static function getTotal($type, $isInternal) {
+	public static function getTotal($keywords, $type, $isInternal) {
 		$db = Loader::db();
+		if ($keywords != '') {
+			$kw = 'and logText like ' . $db->quote('%' . $keywords . '%');
+		}
 		if ($type != false) {
 			$v = array($type, $isInternal);
-			$r = $db->GetOne('select count(logID)  from Logs where logType = ? and logIsInternal = ?', $v);
+			$r = $db->GetOne('select count(logID)  from Logs where logType = ? and logIsInternal = ? ' . $kw, $v);
 		} else {
 			$v = array($isInternal);
-			$r = $db->GetOne('select count(logID)  from Logs where logIsInternal = ?', $v);
+			$r = $db->GetOne('select count(logID)  from Logs where logIsInternal = ? ' . $kw, $v);
 		}
 		return $r;
 
@@ -121,14 +124,17 @@ class Log {
 	/** 
 	 * Returns a list of log entries
 	 */
-	public static function getList($type, $isInternal, $limit) {
+	public static function getList($keywords, $type, $isInternal, $limit) {
 		$db = Loader::db();
+		if ($keywords != '') {
+			$kw = 'and logText like ' . $db->quote('%' . $keywords . '%');
+		}
 		if ($type != false) {
 			$v = array($type, $isInternal);
-			$r = $db->Execute('select logID from Logs where logType = ? and logIsInternal = ? order by timestamp desc limit ' . $limit, $v);
+			$r = $db->Execute('select logID from Logs where logType = ? and logIsInternal = ? ' . $kw . ' order by timestamp desc limit ' . $limit, $v);
 		} else {
 			$v = array($isInternal);
-			$r = $db->Execute('select logID from Logs where logIsInternal = ? order by timestamp desc limit ' . $limit, $v);
+			$r = $db->Execute('select logID from Logs where logIsInternal = ? ' . $kw . ' order by timestamp desc limit ' . $limit, $v);
 		}
 		$entries = array();
 		while ($row = $r->FetchRow()) {

@@ -4,8 +4,10 @@
 	<h1><span>Database Logs</span></h1>
 	<div class="ccm-dashboard-inner">
 	<? if (count($entries) > 0) { ?>
-
-		<input type="button" onclick="location.href='<?=$this->url('/dashboard/logs', 'clear_database_log')?>'" style="position: absolute; top: -20px; font-size: 10px; right: 10px" value="Clear Log" />
+		
+		<form id="ccm-log-search">
+		<input type="button" onclick="location.href='<?=$this->url('/dashboard/logs', 'clear_database_log')?>'" value="Clear Log" />
+		</form>
 		
 		<table border="0" cellspacing="1" cellpadding="0" class="grid-list">
 		<tr>
@@ -49,6 +51,11 @@
 
 	<h1><span><?=$title?></span></h1>
 	<div class="ccm-dashboard-inner">
+	
+		<form method="post" id="ccm-log-search"  action="<?=$pageBase?>">
+		<?=$form->text('keywords', $keywords)?>
+		<?=$form->submit('search','Search')?>
+		</form>
 
 		<table border="0" cellspacing="1" cellpadding="0" class="grid-list">
 		<tr>
