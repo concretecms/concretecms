@@ -1,0 +1,26 @@
+body {padding: 0px; margin: 0px; background-color: #fff; line-height: 24px}
+body, div, td, input {font-family: "Helvetica Neue", Arial, Helvetica, sans-serif; }
+
+h1, h2 {color: #303030; margin: 0px 0px 10px 0px; font-size: 24px}
+h2 {font-size: 18px}
+
+div#ccm-logo {border-top: 3px solid #222; background: url(../images/bg_header.png) repeat-x; }
+div#ccm-theme-wrapper {width: 300px; margin: 0px auto 0px auto; background: #fff; padding: 20px; }
+
+a {color: #538AC4}
+p {color: #333}
+div.ccm-spacer {clear: both; line-height: 0px; margin-right: 0px}
+
+
+.ccm-error {color: #f00; font-weight: bold}
+ul.ccm-error {font-size: 12px; list-style-type: none; padding: 0px; margin: 0px 0px 30px 0px}
+ul.ccm-error li {border-bottom: 1px dotted #afafaf; padding-bottom: 4px; margin-bottom: 8px}
+
+div.ccm-form {width: 300px;}
+div.ccm-form {font-size: 12px; font-weight: bold}
+
+div.ccm-form label {font-size: 14px; color: #333}
+div.ccm-form-sub {color: #888; font-size: 12px}
+div.ccm-form input.ccm-input-text, div.ccm-form input.uak-text, div.ccm-form input.ccm-input-password {width: 300px; font-size: 18px; border: 1px solid #aaa; color: #444; padding: 4px}
+div.ccm-form input.ccm-input-submit {font-size: 18px;}
+div.ccm-button {margin-top: 12px; text-align: right}
