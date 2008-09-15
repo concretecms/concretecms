@@ -9,7 +9,7 @@
 
 <div class="ccm-autonavPane ccm-preview-pane" id="ccm-autonavPane-preview" style="display: none">
 
-<center>Auto-Nav Preview</center>
+<center><?=_('Auto-Nav Preview')?></center>
 
 </div>
 <div class="ccm-autonavPane" id="ccm-autonavPane-add">
@@ -19,7 +19,7 @@
 <input type="hidden" name="autonavCurrentCID" value="<?=$c->getCollectionID()?>" />
 <input type="hidden" name="autonavPreviewPane" value="<?=REL_DIR_FILES_TOOLS_BLOCKS?>/<?=$bt->getBlockTypeHandle()?>/preview_pane.php" />
 
-<strong>Nav elements should appear</strong><br>
+<strong><?=_('Auto-Nav elements should appear')?></strong><br>
 <select name="orderBy" onchange="reloadPreview(this.form)">
 	<option value="display_asc" selected>in their sitemap order</option>
 	<option value="chrono_desc">with the most recent first</option>

@@ -251,16 +251,10 @@
 					}
 				}
 			} else if ($item instanceof Block || $item instanceof BlockType) {
-				if ($item->getPackageID() > 0) {
-					require_once(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $item->getBlockTypeHandle() . '/' . FILENAME_BLOCK_CONTROLLER);
-				} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $item->getBlockTypeHandle() . '/' . FILENAME_BLOCK_CONTROLLER)) {
-					require_once(DIR_FILES_BLOCK_TYPES . "/" . $item->getBlockTypeHandle() . "/" . FILENAME_BLOCK_CONTROLLER);
-				} else {
-					require_once(DIR_FILES_BLOCK_TYPES_CORE . "/" . $item->getBlockTypeHandle() . "/" . FILENAME_BLOCK_CONTROLLER);
-				}
-				$class = Object::camelcase($item->getBlockTypeHandle()) . 'BlockController';
 				if ($item instanceof BlockType) {
 					$controller = new $class($item);
+				} else {
+					return $item->getInstance();
 				}
 			} else {
 				$path = $item;

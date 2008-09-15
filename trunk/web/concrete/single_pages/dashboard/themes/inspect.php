@@ -60,14 +60,14 @@ $ci = Loader::helper('concrete/interface');
 						print '<span class="deem">None. This file will automatically be used for pages without a template.</span>';
 						break;
 					case PageThemeFile::TFTYPE_SINGLE_PAGE:
-						print '<span class="deem">None. This file will automatically be used by the <strong>' . $txt->uncamelcase($f->getHandle()) . '</strong> page.';
+						print '<span class="deem">None. This file will automatically be used by the <strong>' . $txt->unhandle($f->getHandle()) . '</strong> page.';
 						break;
 					case PageThemeFile::TFTYPE_PAGE_TYPE_NEW:
 						$pf++;
 						print '<input type="checkbox" value="' . $f->getHandle() . '" name="pageTypes[]" checked /> Create page type.';
 						break;
 					case PageThemeFile::TFTYPE_PAGE_TYPE_EXISTING:
-						print '<span class="deem">None. This file will automatically be used by the <strong>' . $txt->uncamelcase($f->getHandle()) . '</strong> page type.';
+						print '<span class="deem">None. This file will automatically be used by the <strong>' . $txt->unhandle($f->getHandle()) . '</strong> page type.';
 						break;
 				}
 			?></td>
