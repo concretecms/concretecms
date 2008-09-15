@@ -29,6 +29,12 @@
 			</fileset>
 		</reflexive>
 	</target>
+	
+	 <target name="localize">
+    	<echo msg="Generating Translation Files" />
+    	<touch file="messages.po" />
+		<exec command="find export/ -iname '*.php' -exec xgettext -l PHP -j {} \;" />
+	</target>
     
     <!--
     <target name="dist" depends="export,prepare_short_tags">

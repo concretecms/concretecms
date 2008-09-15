@@ -16,17 +16,9 @@ class Page extends Collection {
 	}
 	
 	public static function getByID($cID, $version = 'RECENT') {
-		$ca = new Cache();
-		$c = $ca->get('page', $cID . ':' . $version);
-		if ($c instanceof Page) {
-			return $c;
-		}
-		
 		$where = "where Pages.cID = ?";
 		$c = new Page;
 		$c->populatePage($cID, $where, $version);
-		$ca = new Cache();
-		$ca->set('page', $c->getCollectionID() . ':' . $version, $c);
 		return $c;
 	}
 	

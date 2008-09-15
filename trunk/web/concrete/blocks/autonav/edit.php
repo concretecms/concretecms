@@ -12,7 +12,7 @@ $info = $controller->getContent();
 
 <div class="ccm-autonavPane ccm-preview-pane" id="ccm-autonavPane-preview" style="display: none">
 
-<center><?=_('Auto-Nav Preview')?></center>
+<center>Auto-Nav Preview</center>
 
 </div>
 <div class="ccm-autonavPane" id="ccm-autonavPane-add">
@@ -22,7 +22,7 @@ $info = $controller->getContent();
 <input type="hidden" name="autonavCurrentCID" value="<?=$c->getCollectionID()?>" />
 <input type="hidden" name="autonavPreviewPane" value="<?=REL_DIR_FILES_TOOLS_BLOCKS?>/<?=$b->getBlockTypeHandle()?>/preview_pane.php" />
 
-<strong><?=_('Auto-Nav elements should appear')?></strong><br>
+<strong>Nav elements should appear</strong><br>
 <select name="orderBy" onchange="reloadPreview(this.form)">
 	<option value="display_asc" <? if ($info['orderBy'] == 'display_asc') { ?> selected<? } ?>>in their sitemap order</option>
 	<option value="chrono_desc" <? if ($info['orderBy'] == 'chrono_desc') { ?> selected<? } ?>>with the most recent first</option>

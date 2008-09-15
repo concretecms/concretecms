@@ -79,7 +79,7 @@ class SinglePage extends Page {
 		$txt = Loader::helper('text');
 
 		$data = array();
-		$data['cName'] = $txt->unhandle($this->getCollectionHandle());
+		$data['cName'] = $txt->uncamelcase($this->getCollectionHandle());
 		$data['cFilename'] = $pathToFile;
 		
 		$this->update($data);	
@@ -128,7 +128,7 @@ class SinglePage extends Page {
 			
 				$data = array();
 				$data['handle'] = $pages[$i];
-				$data['name'] = $txt->unhandle($data['handle']);
+				$data['name'] = $txt->uncamelcase($data['handle']);
 				$data['filename'] = $pathToFile;
 				$data['uID'] = USER_SUPER_ID;
 				if ($pkg != null) {

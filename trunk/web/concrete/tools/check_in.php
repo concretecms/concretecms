@@ -1,6 +1,6 @@
 <?
 $c = Page::getByID($_REQUEST['cID']);
-$v = CollectionVersion::get($c, "RECENT", true);
+$v = new Version($c, "RECENT", true);
 
 $cp = new Permissions($c);
 

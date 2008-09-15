@@ -95,27 +95,13 @@ class TextHelper {
 		return $output;
 	}
 	
-	/** 
-	 * Takes a CamelCase string and turns it into camel_case
-	 */
-	public function uncamelcase($string) {
-		$v = preg_split('/([A-Z])/', $string, false, PREG_SPLIT_DELIM_CAPTURE);
-		$a = array();
-		array_shift($v);
-		for($i = 0; $i < count($v); $i++) {
-			if ($i % 2) {
-				$a[] = strtolower($v[$i - 1] . $v[$i]);
-			}
-		}
-		return implode('_', $a);
-	}
-	
 	/**
-	 * Takes a handle-based string like "blah_blah" and turns it into "Blah Blah"
+	 * Takes a camel-cased string like FooBarSoft and returns foo_bar_soft
+	 * @todo THIS FUNCTION IS TOTALLY MISNAMED
 	 * @param string $string
 	 * @return string
 	 */
-	public function unhandle($string) {
+	public function uncamelcase($string) {
 		// takes something like collection_types and turns it into "Collection Types"
 		$r1 = ucwords(str_replace(array('_', '/'), ' ', $string));
 		return $r1;

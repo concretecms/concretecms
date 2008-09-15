@@ -80,8 +80,10 @@ class InstallController extends Controller {
 				
 				$this->installDB();
 
+				$vh = Loader::helper('validation/identifier');
+				
 				// insert admin user into the user table
-				$salt = ( defined('MANUAL_PASSWORD_SALT') ) ? MANUAL_PASSWORD_SALT : rand(100000, 999999);
+				$salt = ( defined('MANUAL_PASSWORD_SALT') ) ? MANUAL_PASSWORD_SALT : $vh->getString(64);
 				$uPassword = rand(100000, 999999);
 				$uEmail = $_POST['uEmail'];
 				$uPasswordEncrypted = User::encryptPassword($uPassword, $salt);
