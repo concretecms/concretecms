@@ -1,13 +1,14 @@
 <? if ($validated) { ?>
 
-<h1>Email Address Verified</h1>
+<h1><?=$_('Email Address Verified')?></h1>
 
-<p>The email address <b><?=$uEmail?></b> has been verified and you are now a fully validated member of this website.</p>
+<?=t('The email address <b>%1</b> has been verified and you are now a fully validated member of this website.', $uEmail)?>
+
 <p><a href="<?=$this->url('/')?>">Return to Home &gt;</a></p>
 
 <? } else { ?>
 
-<h1>Sign In to Concrete5</h1>
+<h1><?=t('Sign In To Edit %s', SITE)?></h1>
 
 <? if (isset($intro_msg)) { ?>
 <h2><?=$intro_msg?></h2>

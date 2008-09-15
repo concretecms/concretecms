@@ -49,7 +49,7 @@ class FileHelper {
 	public function unfilename($filename) {
 		// removes the extension and makes it look nice
 		$txt = Loader::helper('text');
-		return substr($txt->uncamelcase($filename), 0, strrpos($filename, '.'));
+		return substr($txt->unhandle($filename), 0, strrpos($filename, '.'));
 	}
 	
 	

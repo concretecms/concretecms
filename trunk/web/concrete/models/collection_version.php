@@ -1,12 +1,18 @@
 <?
-	class Version extends Object {
+	class CollectionVersion extends Object {
 	
-		var $vcID;
 		var $cvIsApproved;
-		var $cObj;
+		var $cID;
+		protected $attributes = array();
 		
-		function Version(&$c, $cvID = "ACTIVE", $extended = false) {
-
+		public function get(&$c, $cvID = "ACTIVE", $extended = false) {
+			$ca = new Cache();
+			$cv = $ca->get('collection_version', $c->getCollectionID() . ':' . $cvID);
+			if ($cv instanceof CollectionVersion) {
+				return $cv;
+			}
+			
+			$cv = new CollectionVersion();
 			$db = Loader::db();
 			
 			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, cvAuthorUID, cvApproverUID, cvComments from CollectionVersions where ";			
@@ -28,29 +34,47 @@
 			if ($r) {
 				$row = $r->fetchRow();					
 				if ($row) {
-					foreach ($row as $key => $value) {
-						$this->{$key} = $value;
-					}
+					$cv->setPropertiesFromArray($row);
 				}
 			}
 			
 			if ($extended) {
-				if ($this->cvAuthorUID > 0) {
-					$uAuthor = UserInfo::getByID($this->cvAuthorUID);
-					$this->cvAuthorUname = $uAuthor->getUserName();
+				if ($cv->cvAuthorUID > 0) {
+					$uAuthor = UserInfo::getByID($cv->cvAuthorUID);
+					$cv->cvAuthorUname = $uAuthor->getUserName();
 				}
-				if ($this->cvApproverUID > 0) {
-					$uApprover = UserInfo::getByID($this->cvApproverUID);
-					$this->cvApproverUname = $uApprover->getUserName();
+				if ($cv->cvApproverUID > 0) {
+					$uApprover = UserInfo::getByID($cv->cvApproverUID);
+					$cv->cvApproverUname = $uApprover->getUserName();
 				}
 			}
 			
-			$this->cObj = &$c;			
-			$this->cvIsMostRecent = $this->_checkRecent();
+			// load the attributes for a particular version object
+			$db = Loader::db();
+			$v = array($c->getCollectionID(), $cv->getVersionID());
+			$r = $db->Execute('select akHandle, value from CollectionAttributeValues inner join CollectionAttributeKeys on CollectionAttributeKeys.akID = CollectionAttributeValues.akID where cID = ? and cvID = ?', $v);
+			while ($row = $r->fetchRow()) {
+				$attributes[$row['akHandle']] = $row['value'];
+			}
+			$cv->setAttributeArray($attributes);
+
+			$cv->cID = $c->getCollectionID();			
+			$cv->cvIsMostRecent = $cv->_checkRecent();
 			
-			return $this;
+			$ca = new Cache();
+			$ca->set('collection_version', $c->getCollectionID() . ':' . $cvID, $cv);
+			
+			return $cv;
+		}
+
+		public function setAttributeArray($arr) {
+			$this->attributes = $arr;
 		}
 		
+		public function getAttribute($ak) {
+			return $this->attributes[$ak];
+		}
+
 		function isApproved() {return $this->cvIsApproved;}
 		function isMostRecent() {return $this->cvIsMostRecent;}
 		function isNew() {return $this->cvIsNew;}
@@ -66,10 +90,9 @@
 		function canWrite() {return $this->cvCanWrite;}
 		
 		function setComment($comment) {
-			$c = $this->cObj;
 			$thisCVID = $this->getVersionID();
 			$comment = ($comment != null) ? $comment : "Version {$thisCVID}";
-			$v = array($comment, $thisCVID, $c->getCollectionID());
+			$v = array($comment, $thisCVID, $this->cID);
 			$db = Loader::db();
 			$q = "update CollectionVersions set cvComments = ? where cvID = ? and cID = ?";
 			$r = $db->query($q, $v);
@@ -80,13 +103,13 @@
 		function createNew($versionComments) {
 			$db = Loader::db();
 			$newVID = $this->getVersionID() + 1;
-			$c = $this->cObj;
+			$c = Page::getByID($this->cID, $this->cvID);
 
 			$u = new User();
 			$versionComments = (!$versionComments) ? "New Version {$newVID}" : $versionComments;
 			
 			$dh = Loader::helper('date');
-			$v = array($c->getCollectionID(), $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getLocalDateTime(), $versionComments, $u->getUserID(), 1);
+			$v = array($cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getLocalDateTime(), $versionComments, $u->getUserID(), 1);
 			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew)
 				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				
@@ -102,7 +125,7 @@
 			$r = $db->prepare($q);
 			$res = $db->execute($r, $v);
 			
-			$nv = new Version($c, $newVID);
+			$nv = CollectionVersion::get($c, $newVID);
 			// now we return it
 			return $nv;
 		}
@@ -111,8 +134,7 @@
 			// basically checks to see if this version is the most recent version. You're not allowed to edit
 			// versions that are not the most recent.
 			
-			$c = $this->cObj;
-			$cID = $c->getCollectionID();
+			$cID = $this->cID;
 			
 			$db = Loader::db();
 			$q = "select cvDateCreated from CollectionVersions where cID = '{$cID}' order by cvDateCreated desc";
@@ -125,9 +147,8 @@
 			$u = new User();
 			$uID = $u->getUserID();
 			$cvID = $this->cvID;
-			$c = $this->cObj;
-			$cID = $c->getCollectionID();
-			
+			$cID = $this->cID;
+			$c = Page::getByID($cID, $this->cvID);
 			// first we remove approval for all versions of this collection
 			$v = array($cID);
 			$q = "update CollectionVersions set cvIsApproved = 0 where cID = ?";
@@ -160,8 +181,7 @@
 		function deny() {
 			$db = Loader::db();
 			$cvID = $this->cvID;
-			$c = $this->cObj;
-			$cID = $c->getCollectionID();
+			$cID = $this->cID;
 			
 			// first we remove approval for all versions of this collection
 			$v = array($cID);
@@ -178,8 +198,7 @@
 			$db = Loader::db();
 			
 			$cvID = $this->cvID;
-			$c = $this->cObj;
-			$c->vObj = $this; // slightly recursive;
+			$c = Page::getByID($this->cID, $cvID);
 			$cID = $c->getCollectionID();
 			
 			$q = "select bID, arHandle from CollectionVersionBlocks where cID = '{$cID}' and cvID='{$cvID}'";
@@ -215,7 +234,7 @@
 	
 			if ($r) {
 				while ($row = $r->fetchRow()) {
-					$this->vArray[] = new Version($c, $row['cvID'], true);
+					$this->vArray[] = CollectionVersion::get($c, $row['cvID'], true);
 				}
 				$r->free();
 			}

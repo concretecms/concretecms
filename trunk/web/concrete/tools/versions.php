@@ -81,7 +81,7 @@
 					$cvIDs = explode('_', $_REQUEST['cvIDs']);
 					if (is_array($cvIDs)) {
 						foreach($cvIDs as $cvID) {
-							$v = new Version($c, $cvID);
+							$v = CollectionVersion::get($c, $cvID);
 							if (!$v->isApproved()) {
 								$v->delete();							
 							}
@@ -93,7 +93,7 @@
 				break;
 			case 'approve':
 				if ($cp->canApproveCollection() && !$isCheckedOut) {
-					$v = new Version($c, $_GET['cvID']);
+					$v = CollectionVersion::get($c, $_GET['cvID']);
 					$v->approve();
 					header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&cID=" . $cID . "&cvID=" . $_GET['cvID']);
 					exit;
@@ -101,7 +101,7 @@
 				break;
 			case 'deny':
 				if ($cp->canApproveCollection() && !$isCheckedOut) {
-					$v = new Version($c, $_GET['cvID']);
+					$v = CollectionVersion::get($c, $_GET['cvID']);
 					if ($v->isApproved()) {
 						$v->deny();
 						header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&cID=" . $cID . "&cvID=" . $_GET['cvID']);
@@ -111,7 +111,7 @@
 				break;
 			case 'remove':
 				if ($cp->canApproveCollection() && $cp->canWrite() && !$isCheckedOut) {
-					$v = new Version($c, $_GET['cvID']);
+					$v = CollectionVersion::get($c, $_GET['cvID']);
 					if (!$v->isApproved()) {
 						$v->delete();
 						header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&cID=" . $cID . "&cvID=" . $_GET['cvID']);
