@@ -24,10 +24,12 @@ class ConfigValue extends Object {
 	
 	public $value;
 	public $timestamp; // datetime value was set
-	public $key;
+
 }
 
 class Config extends Object {
+	
+	private $props = array();
 	
 	public function get($cfKey, $getFullObject = false) {
 		static $instance;
@@ -36,28 +38,25 @@ class Config extends Object {
 			$instance = new $v;
 		}
 
-		$ca = new Cache();
-		$cv = $ca->get('config_option', $cfKey);
-		if (!($cv instanceof ConfigValue)) {
+		if (!isset($instance->props[$cfKey])) {
+			$instance->props[$cfKey] = false;
 			$db = Loader::db();
-			try {
-				$val = @$db->GetRow("select timestamp, cfValue from Config where cfKey = ?", array($cfKey));
-			} catch(Exception $e) {
+			$val = @$db->GetRow("select timestamp, cfValue from Config where cfKey = ?", array($cfKey));
+			if (!$val) {
 				$val = $db->GetRow("select cfValue from Config where cfKey = ?", array($cfKey));
 			}
-			
-			$cv = new ConfigValue();
-			$cv->value = $val['cfValue'];
-			$cv->key = $cfKey;
-			$cv->timestamp = $val['timestamp'];
-
-			$ca->set('config_option', $cfKey, $cv);		
+			if ($val != null) {
+				$v = new ConfigValue();
+				$v->value = $val['cfValue'];
+				$v->timestamp = $val['timestamp'];
+				$instance->props[$cfKey] = $v;
+			}
 		}
-
+		
 		if (!$getFullObject) {
-			return $cv->value;
+			return $instance->props[$cfKey]->value;
 		} else {
-			return $cv;
+			return $instance->props[$cfKey];
 		}
 	}
 	

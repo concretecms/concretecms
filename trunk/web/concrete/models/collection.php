@@ -22,12 +22,11 @@
 	class Collection extends Object {
 		
 		var $cID;
-		protected $attributes = array();
 		/* version specific stuff */
 
 		function loadVersionObject($cvID = "ACTIVE") {
-			$this->vObj = CollectionVersion::get($this, $cvID);
-			$vp = new Permissions($this->vObj);			
+			$this->vObj = new Version($this, $cvID);
+			$vp = new Permissions($this->vObj);
 			return $vp;
 		}
 		
@@ -87,22 +86,7 @@
 		
 		/* attribute stuff */
 		
-		public function getAttribute($akHandle) {
-			return $this->vObj->getAttribute($akHandle);
-		}
-		
-		public function getCollectionAttributeValue($ak) {
-			if (is_object($ak)) {
-				return $this->vObj->getAttribute($ak->getCollectionAttributeHandle());
-			} else {
-				return $this->vObj->getAttribute($ak);
-			}
-		}
-		
-		/*
-		
 		function getCollectionAttributeValue($ak) {
-			/*
 			$db = Loader::db();
 			if (is_object($ak)) {
 				$v = array($this->getCollectionID(), $this->getVersionID(), $ak->getCollectionAttributeKeyID());
@@ -119,8 +103,6 @@
 		public function getAttribute($akHandle) {
 			return $this->getCollectionAttributeValue($akHandle);
 		}
-		*/
-		
 		
 		public function setAttribute($akHandle, $value) {
 			$db = Loader::db();
@@ -228,9 +210,6 @@
 
 
 		function getVersionObject() {
-			if (!is_object($this->vObj)) {
-				$this->loadVersionObject();
-			}
 			return $this->vObj;
 		}
 
@@ -357,13 +336,14 @@
 			$db = Loader::db();
 			
 			$v = array($arHandle, $this->getCollectionID(), $this->getVersionID());
-			$q = "select Blocks.bID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? ";
+			$q = "select Blocks.bID, Blocks.btID, BlockTypes.btHandle, BlockTypes.pkgID, Blocks.bIsActive, bName, bDateAdded, bDateModified, bFilename, Blocks.uID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.isOriginal ";
+			$q .= "from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? ";
 			$q .= "and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) order by CollectionVersionBlocks.cbDisplayOrder asc";
 
 			$r = $db->query($q, $v);
 			$blocks = array();
 			while ($row = $r->fetchRow()) {
-				$ab = Block::getByID($row['bID'], $this, $arHandle);
+				$ab = Block::populateManually($row, $this, $arHandle);
 				$btHandle = $ab->getBlockTypeHandle();
 				$blocks[] = $ab;
 			}

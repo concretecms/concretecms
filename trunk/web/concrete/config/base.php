@@ -39,14 +39,6 @@ if (!defined('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL')) {
 	define('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL', false);
 }
 
-if (!defined('ENABLE_CACHE')) {
-	define('ENABLE_CACHE', true);
-}
-
-if (!defined('CACHE_LIBRARY')) {
-	define('CACHE_LIBRARY', 'eaccelerator');
-}
-
 # Debug Menu - Determines whether a "Submit Feedback/Bug/Question" is active */
 # Currently Concrete5 does not include this capability but it will likely come back.
 define('MENU_FEEDBACK_DISPLAY', 1);
