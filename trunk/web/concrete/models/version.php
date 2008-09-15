@@ -18,7 +18,7 @@
 			} else if ($cvID == "RECENT") {
 				//$this->cvCanWrite = true;
 				// we're getting the most recent
-				$q .= "cID = '{$cID}' order by cvDateCreated desc limit 1";
+				$q .= "cID = '{$cID}' order by cvID desc limit 1";
 			} else {
 				// we get whatever's active
 				$q .= "cID = '{$cID}' and cvIsApproved = 1";
@@ -115,9 +115,9 @@
 			$cID = $c->getCollectionID();
 			
 			$db = Loader::db();
-			$q = "select cvDateCreated from CollectionVersions where cID = '{$cID}' order by cvDateCreated desc";
-			$cvDateCreated = $db->getOne($q);
-			return ($cvDateCreated == $this->cvDateCreated);
+			$q = "select cvID from CollectionVersions where cID = '{$cID}' order by cvID desc";
+			$cvID = $db->getOne($q);
+			return ($cvID == $this->cvID);
 		}
 		
 		function approve() {
@@ -210,7 +210,7 @@
 			$db = Loader::db();
 			
 			$cID = $c->getCollectionID();		
-			$q = "select cvID from CollectionVersions where cID = '$cID' order by cvDateCreated desc";
+			$q = "select cvID from CollectionVersions where cID = '$cID' order by cvID desc";
 			$r = $db->query($q);
 	
 			if ($r) {

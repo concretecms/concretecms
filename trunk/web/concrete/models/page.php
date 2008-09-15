@@ -165,7 +165,7 @@ class Page extends Collection {
 	}
 
 	function isCheckedOutByMe() {
-		global $u;
+		$u = new User();
 		return ($this->getCollectionCheckedOutUserID() > 0 && $this->getCollectionCheckedOutUserID() == $u->getUserID());
 	}
 
