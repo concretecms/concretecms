@@ -141,7 +141,7 @@
 					$this->set('results', $limitedResults);				
 				}			
 						
-				$this->set('query', $q);
+				$this->set('query', htmlentities($q));
 				$this->set('paginator', $pagination);
 			
 			} catch(Zend_Search_Lucene_Exception $e) {
