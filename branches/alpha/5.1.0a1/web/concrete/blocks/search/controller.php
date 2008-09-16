@@ -1,8 +1,6 @@
 <?
 	class SearchBlockController extends BlockController {
 		
-		var $pobj;
-		
 		protected $btDescription = "Add a search box to your site.";
 		protected $btName = "Search";
 		protected $btTable = 'btSearch';

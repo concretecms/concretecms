@@ -2,7 +2,6 @@
 
 	class ExternalFormBlockController extends BlockController {
 		
-		var $pobj;
 		protected $btDescription = "Include external forms in the filesystem and place them on pages.";
 		protected $btName = "External Form";
 		protected $btTable = 'btExternalForm';
@@ -39,8 +38,8 @@
 			if (isset($filename)) {
 				require_once($filename);
 				$class .= 'ExternalFormBlockController';
-				$fp = new $class($this->pobj);
-
+				$b = Block::getByID($this->bID);
+				$fp = new $class($b);
 				return $fp;
 			}
 		}

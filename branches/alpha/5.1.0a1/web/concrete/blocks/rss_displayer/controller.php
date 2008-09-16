@@ -1,8 +1,6 @@
 <?
 	class RssDisplayerBlockController extends BlockController {
 		
-		var $pobj;
-		
 		protected $btDescription = "Fetch, parse and display the contents of an RSS or Atom feed.";
 		protected $btName = "RSS Displayer";
 		protected $btTable = 'btRssDisplay';

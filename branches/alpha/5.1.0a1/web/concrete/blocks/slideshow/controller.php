@@ -2,8 +2,6 @@
 
 class SlideshowBlockController extends BlockController {
 	
-	var $pobj;
-	
 	protected $btDescription = "Add a javascript slideshow of images.";
 	protected $btName = "Slideshow";
 	protected $btTable = 'btSlideshow';

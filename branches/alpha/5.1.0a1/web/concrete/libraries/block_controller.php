@@ -27,6 +27,7 @@
 		
 		protected $btDescription = "";
 		protected $btName = "";
+		protected $btHandle = "";
 		protected $btIsInternal = 0;
 		protected $btActiveWhenAdded = 1;
 		protected $btCopyWhenPropagate = 0;
@@ -122,7 +123,7 @@
 		 *
 		 */
 		public function getPermissionsObject() {
-			$bp = new Permissions($this->pobj);
+			$bp = new Permissions(Block::getByID($this->bID));
 			return $bp;
 		}
 		
@@ -137,6 +138,11 @@
 			$newInstance->Insert();
 			return $newInstance;
 		}
+		
+		public function __wakeup() {
+			$this->__construct();
+		}
+		
 		
 		/**
 		 * Automatically run when a block is deleted. This removes the special data from the block's specific database table. If a block needs to do more than this this method should be overridden.
@@ -167,12 +173,12 @@
 		public function __construct($obj = null) {
 			if ($obj instanceof BlockType) {
 				$this->identifier = 'BLOCKTYPE:' . $obj->getBlockTypeID();
+				$this->btHandle = $obj->getBlockTypeHandle();
 			} else if ($obj instanceof Block) {
 				$b = $obj;
 				$this->identifier = 'BLOCK:' . $obj->getBlockID();
 			
 				// we either have a blockID passed, or nothing passed, if we're adding a block type				
-				$this->pobj = $b;
 				$this->bID = $b->getBlockID();
 				if ($this->btTable) {
 					$this->record = new BlockRecord($this->btTable);
@@ -180,6 +186,7 @@
 					$this->record->Load('bID=' . $this->bID);
 					$this->load();
 				}
+				$this->btHandle = $obj->getBlockTypeHandle();
 			}
 			parent::__construct();
 			$this->set('controller', $this);		
@@ -190,7 +197,7 @@
 		 * @return Block $b
 		 */
 		public function getBlockObject() {
-			return $this->pobj;
+			return Block::getByID($this->bID);
 		}
 
 		/**

@@ -39,7 +39,7 @@ class DashboardThemesInspectController extends Controller {
 			}
 			
 			foreach($this->post('pageTypes') as $ptHandle) {
-				$data['ctName'] = $txt->uncamelcase($ptHandle);
+				$data['ctName'] = $txt->unhandle($ptHandle);
 				$data['ctHandle'] = $ptHandle;
 				$ct = CollectionType::add($data);
 			}
