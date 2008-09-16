@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<project name="Concrete5" default="prepare_short_tags" basedir=".">
+    <target name="export">
+        <echo msg="Exporting C5" />
+		<svnexport
+		   svnpath="/usr/bin/svn"
+		   username="andrew"
+		   password="botw8bal"
+		   force="true"
+		   nocache="true"
+		   repositoryurl="http://concrete5.svnrepository.com/svn/concrete5/trunk/web"
+		   todir="./export"/>
+    </target>
+
+	
+    <target name="prepare_short_tags" depends="export">
+    	<echo msg="Replacing Short Tags" />
+		<reflexive>
+			<filterchain>
+			  <replaceregexp>
+				<regexp pattern='&lt;\?' replace='&lt;?php ' ignoreCase="true"/>
+				<regexp pattern="&lt;\?php php" replace="&lt;?php " ignoreCase="true"/>
+				<regexp pattern="&lt;\?php =" replace="&lt;?php echo " ignoreCase="true"/>
+			  </replaceregexp>
+			</filterchain>
+			<fileset dir="./export">
+				<include name="**/**.php" />
+			</fileset>
+		</reflexive>
+	</target>
+	
+	 <target name="localize">
+    	<echo msg="Generating Translation Files" />
+    	<touch file="messages.po" />
+		<exec command="find export/ -iname '*.php' -exec xgettext -l PHP -j {} \;" />
+	</target>
+    
+    <!--
+    <target name="dist" depends="export,prepare_short_tags">
+        <echo msg="Creating archive..." />
+
+        <tar destfile="build.tar.gz" compression="gzip">
+            <fileset dir="./export">
+                <include name="*" />
+            </fileset>
+        </tar>
+
+		<zip destfile="build.zip">
+		 <fileset dir="./export">
+			 <include name="**/**" />
+		 </fileset>
+		</zip>
+
+        <echo msg="Files archived in build directory OK!" />
+    </target>
+    //-->
+    <echo msg="MAKE SURE TO REMOVE ALL THE BLOCKS AND SINGLE PAGES AND SHIT AND UPDATE THE VERSION NUMBER FILE ON CONCRETE5.ORG" />
+</project>
