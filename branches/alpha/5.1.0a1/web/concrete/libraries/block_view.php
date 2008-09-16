@@ -22,9 +22,11 @@
  */
 	class BlockRecord extends ADOdb_Active_Record {
 		
-		public function __construct($tbl) {
-			$this->_table = $tbl;
-			parent::__construct();
+		public function __construct($tbl = null) {
+			if ($tbl) {
+				$this->_table = $tbl;
+				parent::__construct();
+			}
 		}
 		
 	}
@@ -173,10 +175,14 @@
 			}
 			
 			$this->controller->runTask($view, array());
-			extract($this->controller->getSets());
-			extract($this->controller->getHelperObjects());
+			if (is_array($this->controller->getSets())) {
+				extract($this->controller->getSets());
+			}
+			if (is_array($this->controller->getHelperObjects())) {
+				extract($this->controller->getHelperObjects());
+			}
 			extract($args);
-			
+			$controller = $this->controller;
 			if ($this->controller->getRenderOverride() != '') { 
 				$_filename = $this->controller->getRenderOverride() . '.php';
 			}

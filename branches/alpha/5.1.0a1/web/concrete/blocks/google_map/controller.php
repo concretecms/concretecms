@@ -1,8 +1,6 @@
 <?
 	class GoogleMapBlockController extends BlockController {
 		
-		var $pobj;
-		
 		protected $btDescription = "Enter an address and a Google Map of that location will be placed in your page.";
 		protected $btName = "Google Map";
 		protected $btTable = 'btGoogleMap';

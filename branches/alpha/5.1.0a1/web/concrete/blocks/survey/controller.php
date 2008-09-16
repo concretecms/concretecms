@@ -24,8 +24,6 @@ class SurveyBlockController extends BlockController {
 	/** 
 	* @var object
 	*/
-	var $pobj;
-	
 	protected $btDescription = "Survey block";
 	protected $btName = "Survey";
 	protected $btTable = 'btSurvey';
@@ -93,7 +91,7 @@ class SurveyBlockController extends BlockController {
 	function action_form_save_vote() {
 		$u = new User();
 		$db = Loader::db();
-		$c = $this->pobj->getBlockCollectionObject();
+		global $c;
 		if ($this->requiresRegistration()) {
 			if (!$u->isRegistered()) {
 				$this->redirect('/login');

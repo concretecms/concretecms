@@ -41,24 +41,39 @@
 			}
 
 			$b->cID = $c->getCollectionID();
-			$b->c = $c;
 			
 			return $b;
 		}
 		
 		public static function getByID($bID, $c = null, $a = null) {
+			if ($c == null && $a == null) {
+				$cID = 0;
+				$arHandle = "";
+			} else {
+				if (is_object($a)) {
+					$arHandle = $a->getAreaHandle();
+				} else if ($a != null) {
+					$arHandle = $a;
+				}
+				$cID = $c->getCollectionID();
+			}
+
+			$ca = new Cache();
+			$b = $ca->get('block', $bID . ':' . $cID . ':' . $arHandle);
+			if ($b instanceof Block) {
+				return $b;
+			}
+
 			$db = Loader::db();
 
 			$b = new Block;
-
+			
 			if ($c == null && $a == null) {
 				// just grab really specific block stuff
 				$q = "select bID, bIsActive, BlockTypes.btID, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
 				$b->isOriginal = 1;
-				$v = array($bID);
-				
+				$v = array($bID);				
 			} else {
-
 				if (is_object($a)) {
 					$b->a = $a;
 					$b->arHandle = $a->getAreaHandle();
@@ -66,9 +81,7 @@
 					$b->arHandle = $a; // passing the area name. We only pass the object when we're adding from the front-end
 				}
 	
-				$cID = $c->getCollectionID();
 				$b->cID = $cID;
-				$b->c = ($c) ? $c : '';
 
 				$vo = $c->getVersionObject();
 				$cvID = $vo->getVersionID();
@@ -77,7 +90,6 @@
 				$q = "select CollectionVersionBlocks.isOriginal, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbDisplayOrder,
 				Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID)
 				inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
-			
 			}
 
 			$r = $db->query($q, $v);
@@ -86,8 +98,14 @@
 			if (is_array($row)) {
 				$b->setPropertiesFromArray($row);
 				$r->free();
-				return $b;
+				
+				$bt = BlockType::getByID($b->getBlockTypeID());
+				$class = $bt->getBlockTypeClass();
+				$b->instance = new $class($b);
 
+				$ca = new Cache();
+				$ca->set('block', $bID . ':' . $cID . ':' . $arHandle, $b);
+				return $b;				
 			}
 		}
 
@@ -121,7 +139,7 @@
 		}		
 
 		function loadNewCollection(&$c) {
-			$this->c = $c;
+			$this->cID = $c->getCollectionID();
 		}
 
 		function setBlockAreaObject(&$a) {
@@ -171,10 +189,7 @@
 		}
 		
 		public function getInstance() {
-			$bt = BlockType::getByID($this->btID);
-			$class = $bt->getBlockTypeClass();
-			$bc = new $class($this);
-			return $bc;
+			return $this->instance;
 		}
 
 		function getCollectionList() {
@@ -354,8 +369,8 @@
 		}
 
 		function getBlockCollectionObject() {
-			if (is_object($this->c)) {
-				return $this->c;
+			if ($this->cID) {
+				return Page::getByID($this->cID);
 			} else {
 				return $this->getOriginalCollection();
 			}

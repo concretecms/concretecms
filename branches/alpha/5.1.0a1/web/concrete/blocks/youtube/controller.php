@@ -1,8 +1,6 @@
 <?
 	class YoutubeBlockController extends BlockController {
 		
-		var $pobj;
-		
 		protected $btDescription = "Embeds a Youtube Video in your web page.";
 		protected $btName = "Youtube Video";
 		protected $btTable = 'btYouTube';

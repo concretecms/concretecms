@@ -73,7 +73,7 @@ class Log {
 			$log = '';
 		}
 		$this->log = $log;
-		$this->name = $th->uncamelcase($log);
+		$this->name = $th->unhandle($log);
 		$this->session = $session;
 		$this->isInternal = $internal;
 	}

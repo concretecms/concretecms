@@ -22,13 +22,11 @@
  *
  */
 
-	class GuestBookBlockController extends BlockController {
+	class GuestbookBlockController extends BlockController {
 		
 		/** 
 		* @var object
 		*/
-		var $pobj;
-		
 		protected $btDescription = "Adds blog-style comments (a guestbook) to your page.";
 		protected $btName = "Guestbook";
 		protected $btTable = 'btGuestBook';

@@ -18,7 +18,7 @@ $txt = Loader::helper('text');
 	<select name="bFilename">
 		<option value="">(None selected)</option>
 		<? foreach($templates as $tpl) { ?>
-			<option value="<?=$tpl?>" <? if ($b->getBlockFilename() == $tpl) { ?> selected <? } ?>><?=substr($txt->uncamelcase($tpl), 0, strrpos($tpl, '.'))?></option>		
+			<option value="<?=$tpl?>" <? if ($b->getBlockFilename() == $tpl) { ?> selected <? } ?>><?=substr($txt->unhandle($tpl), 0, strrpos($tpl, '.'))?></option>		
 		<? } ?>
 	</select>
 	<div class="ccm-buttons">

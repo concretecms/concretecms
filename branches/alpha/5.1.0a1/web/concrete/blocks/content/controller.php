@@ -1,8 +1,6 @@
 <?
 	class ContentBlockController extends BlockController {
 		
-		var $pobj;
-		
 		protected $btDescription = "HTML/WYSIWYG Editor Content";
 		protected $btName = "Content";
 		protected $btTable = 'btContentLocal';
