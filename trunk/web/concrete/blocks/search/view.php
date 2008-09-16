@@ -15,13 +15,13 @@
 	
 	<? if(strlen($query)==0){ ?>
 	<input name="search_paths[]" type="hidden" value="<?=$baseSearchPath?>" />
-	<? } else{
+	<? } else if (is_array($_REQUEST['search_paths'])) { 
 		foreach($_REQUEST['search_paths'] as $search_path){ ?>
 			<input name="search_paths[]" type="hidden" value="<?=$search_path?>" />
 	<?  }
 	} ?>
 	
-	<input name="query" type="text" value="<?=$_REQUEST['query']?>" />
+	<input name="query" type="text" value="<?=$query?>" />
 	
 	<input name="submit" type="submit" value="<?=$buttonText?>" />
 
