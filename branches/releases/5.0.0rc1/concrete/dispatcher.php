@@ -47,6 +47,9 @@
 	## Default routes for various content items ##
 	require('config/theme_paths.php');
 
+	## Load session handlers
+	require('startup/session.php');
+
 	## Startup check, install ##	
 	require('startup/config_check_complete.php');
 	
@@ -64,9 +67,6 @@
 		include('config/site_events.php');
 	}
 	
-	## Load session handlers
-	require('startup/session.php');
-
 	## Check online, user-related startup routines
 	require('startup/user.php');
 

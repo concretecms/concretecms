@@ -54,9 +54,9 @@ class Request {
 	public static function get() {
 		static $req;
 		if (!isset($req)) {
-			$path = Request::parsePathFromRequest('PATH_INFO');
+			$path = Request::parsePathFromRequest('ORIG_PATH_INFO');
 			if (!$path) {
-				$path = Request::parsePathFromRequest('ORIG_PATH_INFO');
+				$path = Request::parsePathFromRequest('PATH_INFO');
 			}
 			
 			$req = new Request($path);

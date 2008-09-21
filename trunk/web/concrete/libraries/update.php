@@ -25,7 +25,10 @@ class Update {
 			$version = $f->getContents(APP_VERSION_LATEST_WS, 3);
 			if ($version) {
 				Config::save('APP_VERSION_LATEST', $version);
-			}
+			} else {
+				// we don't know so we're going to assume we're it
+				Config::save('APP_VERSION_LATEST', APP_VERSION);
+			}		
 		}
 		
 		return $version;
