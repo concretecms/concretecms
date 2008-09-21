@@ -22,6 +22,10 @@ class Page extends Collection {
 			return $c;
 		}
 		
+		if ($version) {
+			$version = CollectionVersion::getNumericalVersionID($cID, $version);
+		}
+		
 		$where = "where Pages.cID = ?";
 		$c = new Page;
 		$c->populatePage($cID, $where, $version);

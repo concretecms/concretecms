@@ -252,6 +252,7 @@
 				}
 			} else if ($item instanceof Block || $item instanceof BlockType) {
 				if ($item instanceof BlockType) {
+					$class = Object::camelcase($item->getBlockTypeHandle()) . 'BlockController';
 					$controller = new $class($item);
 				} else {
 					return $item->getInstance();

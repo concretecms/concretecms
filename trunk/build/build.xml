@@ -14,7 +14,7 @@
     </target>
 
 	
-    <target name="prepare_short_tags" depends="export">
+    <target name="prepare_short_tags">
     	<echo msg="Replacing Short Tags" />
 		<reflexive>
 			<filterchain>

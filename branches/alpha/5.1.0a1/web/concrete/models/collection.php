@@ -26,6 +26,7 @@
 		/* version specific stuff */
 
 		function loadVersionObject($cvID = "ACTIVE") {
+			$cvID = CollectionVersion::getNumericalVersionID($this->getCollectionID(), $cvID);
 			$this->vObj = CollectionVersion::get($this, $cvID);
 			$vp = new Permissions($this->vObj);			
 			return $vp;
@@ -228,9 +229,6 @@
 
 
 		function getVersionObject() {
-			if (!is_object($this->vObj)) {
-				$this->loadVersionObject();
-			}
 			return $this->vObj;
 		}
 

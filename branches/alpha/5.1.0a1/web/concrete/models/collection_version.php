@@ -5,7 +5,38 @@
 		var $cID;
 		protected $attributes = array();
 		
-		public function get(&$c, $cvID = "ACTIVE", $extended = false) {
+		/** 
+		 * Returns the actual cvID numerical value for a particular cID/cvID combo
+		 */
+		public static function getNumericalVersionID($cID, $cvID) {
+			if ($cvID == 'RECENT' || $cvID == 'ACTIVE') {
+				$ca = new Cache();
+				$cv = $ca->get('collection_version_id', $cID . ':' . $cvID);
+				if (is_integer($cv)) {
+					return $cv;
+				}
+				$db = Loader::db();
+				$v = array($cID);
+				switch($cvID) {
+					case 'RECENT':
+						$cvID = $db->GetOne("select cvID from CollectionVersions where cID = ? order by cvID desc", $v);
+						break;
+					case 'ACTIVE':
+						$cvID = $db->GetOne("select cvID from CollectionVersions where cID = ? and cvIsApproved = 1", $v);
+						break;
+				}
+				
+				if (is_integer($cvID)) {
+					$ca->set('collection_version_id', $cID . ':' . $cvID);
+				}
+				return $cvID;
+			} else {
+				// cvID IS numerical
+				return $cvID;
+			}
+		}
+
+		public function get(&$c, $cvID, $extended = false) {
 			$ca = new Cache();
 			$cv = $ca->get('collection_version', $c->getCollectionID() . ':' . $cvID);
 			if ($cv instanceof CollectionVersion) {
@@ -15,22 +46,9 @@
 			$cv = new CollectionVersion();
 			$db = Loader::db();
 			
-			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, cvAuthorUID, cvApproverUID, cvComments from CollectionVersions where ";			
-			$cID = $c->getCollectionID();			
-			if (is_numeric($cvID)) {
-				//$this->cvCanWrite = true;
-				// instead of getting the active version, we're getting a specific version that's been passed
-				$q .= "cID = '{$cID}' and cvID = '{$cvID}'";
-			} else if ($cvID == "RECENT") {
-				//$this->cvCanWrite = true;
-				// we're getting the most recent
-				$q .= "cID = '{$cID}' order by cvID desc limit 1";
-			} else {
-				// we get whatever's active
-				$q .= "cID = '{$cID}' and cvIsApproved = 1";
-			}
+			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, cvAuthorUID, cvApproverUID, cvComments from CollectionVersions where cID = ? and cvID = ?";
 
-			$r = $db->query($q);
+			$r = $db->query($q, array($c->getCollectionID(), $cvID));
 			if ($r) {
 				$row = $r->fetchRow();					
 				if ($row) {
@@ -109,7 +127,7 @@
 			$versionComments = (!$versionComments) ? "New Version {$newVID}" : $versionComments;
 			
 			$dh = Loader::helper('date');
-			$v = array($cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getLocalDateTime(), $versionComments, $u->getUserID(), 1);
+			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getLocalDateTime(), $versionComments, $u->getUserID(), 1);
 			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew)
 				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				
