@@ -1,5 +1,6 @@
 <?
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
 class DashboardThemesController extends Controller {
 
 	protected $helpers = array('html');

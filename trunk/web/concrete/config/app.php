@@ -7,7 +7,7 @@
  * 2. Item saved in database? Then it will be used.
  * 3. Otherwise, we setup the defaults below.
  **/
- 
+defined('C5_EXECUTE') or die(_("Access Denied.")); 
 # permissions model - valid options are 'advanced' or 'simple'
 if (!defined('PERMISSIONS_MODEL')) {
 	Config::getOrDefine('PERMISSIONS_MODEL', 'simple');

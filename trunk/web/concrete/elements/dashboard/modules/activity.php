@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 You are logged in as <b><?=$uName?></b>. You logged in on <b><?=$uLastLogin?></b>. 
 <ul class="ccm-dashboard-list">
 <li>Number of visits since your previous login: <b><?=$uLastActivity?></b></li>

@@ -1,4 +1,6 @@
-<? global $c;?>
+<?
+defined('C5_EXECUTE') or die(_("Access Denied."));
+global $c;?>
 <?
 $bt = BlockType::getByID($b->getBlockTypeID());
 $templates = $bt->getBlockTypeCustomTemplates();

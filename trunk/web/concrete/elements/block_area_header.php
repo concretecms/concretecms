@@ -1,4 +1,5 @@
 <? 
+defined('C5_EXECUTE') or die(_("Access Denied."));
 //$arHandle = strtolower(preg_replace("/[^0-9A-Za-z]/", "", $a->getAreaHandle()));
 // add in a check to see if we're in move mode
 $moveModeClass = "";
