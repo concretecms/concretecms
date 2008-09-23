@@ -1,5 +1,7 @@
 <?
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 $c = Page::getByID($_GET['cID'], 'RECENT');
 $cp = new Permissions($c);
 

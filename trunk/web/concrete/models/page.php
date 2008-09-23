@@ -1,4 +1,7 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
 *
 * The page object in Concrete encapsulates all the functionality used by a typical page and their contents

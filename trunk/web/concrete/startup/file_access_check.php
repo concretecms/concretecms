@@ -1,5 +1,7 @@
 <?
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 if ($config_check_failed) {
 	$sp = preg_replace('/[^A-Za-z(\.)]/i', '', $_SERVER['PHP_SELF']);
 	

@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 require(DIR_FILES_TOOLS_REQUIRED . '/layout/header.php');
 
 if (MENU_FEEDBACK_DISPLAY && defined('MENU_FEEDBACK_URL')) { ?>

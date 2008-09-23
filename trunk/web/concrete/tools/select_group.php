@@ -1,4 +1,8 @@
-<? if (!$_REQUEST['group_submit_search']) { ?>
+<?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
+if (!$_REQUEST['group_submit_search']) { ?>
 <div id="ccm-group-search-wrapper">
 <? } ?>
 

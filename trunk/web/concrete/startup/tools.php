@@ -1,4 +1,6 @@
 <?
+	defined('C5_EXECUTE') or die(_("Access Denied."));
+	
 	$co = Request::get();
 	if ($co->isIncludeRequest()) {
 		switch($co->getIncludeType()) {

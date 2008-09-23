@@ -1,4 +1,7 @@
-<? $h = Loader::helper('concrete/interface'); ?>
+<?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+$h = Loader::helper('concrete/interface'); ?>
 
 <? if ($this->controller->getTask() == 'set_developer') { ?>
 

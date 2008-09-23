@@ -1,4 +1,7 @@
 <? 
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 Loader::block('library_file');
 $ImageExts = array("jpg", "jpeg", "png", "gif");
 

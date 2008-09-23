@@ -1,5 +1,5 @@
 <?
-
+defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::library('search');
 Loader::model('search/collection');
 Loader::helper('concrete/dashboard/sitemap');

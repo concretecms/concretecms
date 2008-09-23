@@ -1,5 +1,6 @@
 <?
-// this should be cleaned up.... yeah
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('collection_types');
 
 $error = "An unspecified error has occurred.";

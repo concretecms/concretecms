@@ -1,4 +1,7 @@
 <?php 
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 // Block ID = $bID
 // get the block and 
 

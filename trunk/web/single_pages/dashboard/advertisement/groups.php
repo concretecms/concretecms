@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('single_page');
 Loader::model("advertisement/advertisement_group");
 $ih = Loader::helper('concrete/interface');

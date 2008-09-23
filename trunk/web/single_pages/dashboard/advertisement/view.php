@@ -1,4 +1,6 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('single_page');
 $ih = Loader::helper('concrete/interface');
 

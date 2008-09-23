@@ -1,4 +1,6 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('/advertisement/advertisement_details');
 
 class DashboardAdvertisementDetailsController extends Controller {

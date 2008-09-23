@@ -1,5 +1,6 @@
-
-<? if ($this->controller->getTask() == 'database') { ?>
+<? 
+defined('C5_EXECUTE') or die(_("Access Denied."));
+if ($this->controller->getTask() == 'database') { ?>
 
 	<h1><span>Database Logs</span></h1>
 	<div class="ccm-dashboard-inner">
