@@ -1,4 +1,7 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
 *
 * SinglePage extends the page class for those instances of pages that have no type, and are special "single pages"
