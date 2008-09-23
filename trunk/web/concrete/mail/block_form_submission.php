@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 
 There has been a submission of the form "<?=$formName?>" on through your Concrete5 website.
 

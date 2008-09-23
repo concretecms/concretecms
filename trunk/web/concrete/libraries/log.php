@@ -1,5 +1,7 @@
 <?
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 class LogEntry extends Object {
 	
 	public function getType() {return $this->logType;}

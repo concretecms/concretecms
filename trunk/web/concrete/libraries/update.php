@@ -1,5 +1,6 @@
 <?
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
 class Update {
 	
 	public function getLatestAvailableVersionNumber() {

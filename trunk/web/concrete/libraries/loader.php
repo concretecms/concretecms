@@ -1,5 +1,8 @@
 <?
-/*
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
+/**
  * @package Core
  * @category Concrete
  * @author Andrew Embler <andrew@concrete5.org>
