@@ -1,3 +1,6 @@
+<?
+defined('C5_EXECUTE') or die(_("Access Denied."));
+?>
 <br />
 <strong>Give this ad a name</strong><br/>
 <input type="text" style="width: 90%" value="<?=$ad->name?>" name="name" id="ccm-ad-name" />

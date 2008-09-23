@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 
 <ul id="ccm-autonav-tabs" class="ccm-dialog-tabs">
 	<li class="ccm-nav-active"><a id="ccm-autonav-tab-add" href="javascript:void(0);">Add</a></li>

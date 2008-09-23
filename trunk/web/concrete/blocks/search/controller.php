@@ -1,4 +1,5 @@
 <?
+	defined('C5_EXECUTE') or die(_("Access Denied."));
 	class SearchBlockController extends BlockController {
 		
 		var $pobj;

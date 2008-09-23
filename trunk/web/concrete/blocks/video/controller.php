@@ -8,6 +8,7 @@
 	 */
 	 
 	Loader::block('library_file');	
+	defined('C5_EXECUTE') or die(_("Access Denied."));
 	class VideoBlockController extends BlockController {
 
 		protected $btDescription = "Embeds Uploaded Video into a web page. Supports AVI, WMV, Quicktime/MPEG4 and FLV formats.";

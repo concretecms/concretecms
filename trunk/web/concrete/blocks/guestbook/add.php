@@ -1,3 +1,5 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+
 Title<br />
 <input type="text" name="title" value="Comments:" /><br /><br />
 

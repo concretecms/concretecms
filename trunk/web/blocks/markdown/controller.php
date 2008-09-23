@@ -1,5 +1,6 @@
 <?
-	class MarkdownBlockController extends BlockController {
+defined('C5_EXECUTE') or die(_("Access Denied."));
+class MarkdownBlockController extends BlockController {
 		
 		var $pobj;
 		

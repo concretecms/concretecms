@@ -39,6 +39,9 @@ if (!defined('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL')) {
 	define('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL', false);
 }
 
+// If this constant doesn't exist then we're not going to execute the majority of the files in C5
+define('C5_EXECUTE', true);
+
 # Debug Menu - Determines whether a "Submit Feedback/Bug/Question" is active */
 # Currently Concrete5 does not include this capability but it will likely come back.
 define('MENU_FEEDBACK_DISPLAY', 1);
