@@ -1,4 +1,5 @@
 <? 
+	defined('C5_EXECUTE') or die(_("Access Denied."));
 	$cID = $b->getBlockCollectionID();
 	$c = $b->getBlockCollectionObject();
 	$btw = BlockType::getByID($b->getBlockTypeID());

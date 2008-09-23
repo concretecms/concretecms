@@ -1,4 +1,6 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::block('form');
 
 class DashboardFormResultsController extends Controller {

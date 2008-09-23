@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
 <div class="ccm-editor-controls">
 <ul>
 <li><a class="ccm-launch-al" onclick="ccm_editorCurrentAuxTool='image'; setBookMark();" href="#">Add Image</a></li>

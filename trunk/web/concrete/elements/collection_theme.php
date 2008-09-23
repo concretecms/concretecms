@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('collection_types');
 $tArray = PageTheme::getGlobalList();
 $tArray2 = PageTheme::getLocalList();

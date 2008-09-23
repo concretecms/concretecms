@@ -1,4 +1,6 @@
-<? $step = ($_REQUEST['step']) ? "&step={$_REQUEST['step']}" : ""; ?>
+<?
+defined('C5_EXECUTE') or die(_("Access Denied."));
+$step = ($_REQUEST['step']) ? "&step={$_REQUEST['step']}" : ""; ?>
 
 <? global $c; ?>
 	
