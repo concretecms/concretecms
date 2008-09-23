@@ -119,19 +119,20 @@ class MailHelper {
 		}
 		
 		// add email to log
-		$l = new Log(LOG_EMAILS, true, true);
-		if (ENABLE_EMAILS) {
-			$l->write('**EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()**');
-		} else {
-			$l->write('**EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT**');
-		}
-		$l->write('Template Used: ' . $this->template);
-		$l->write('To: ' . $to);
-		$l->write('From : ' . $from);
-		$l->write('Subject : ' . $this->subject);
-		$l->write('Body: ' . $this->body);
-		$l->close();
-		
+		if (ENABLE_LOG_EMAILS) {
+			$l = new Log(LOG_TYPE_EMAILS, true, true);
+			if (ENABLE_EMAILS) {
+				$l->write('**EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()**');
+			} else {
+				$l->write('**EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT**');
+			}
+			$l->write('Template Used: ' . $this->template);
+			$l->write('To: ' . $to);
+			$l->write('From : ' . $from);
+			$l->write('Subject : ' . $this->subject);
+			$l->write('Body: ' . $this->body);
+			$l->close();
+		}		
 	}
 	
 }

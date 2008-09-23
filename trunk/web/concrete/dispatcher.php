@@ -158,9 +158,5 @@
 	## now we display (provided we've gotten this far)
 
 	$v = View::getInstance();
-	try {
-		$v->render($c);
-	} catch (Exception $e) {
-		$v->renderError('An unexpected error occurred.', $e->getMessage());
-	}
+	$v->render($c);
 ?>
