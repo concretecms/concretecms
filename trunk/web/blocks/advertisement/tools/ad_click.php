@@ -1,4 +1,7 @@
 <?php
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 Loader::model("advertisement/advertisement_details");
 //Permissions Check
 if($_GET['aID']) {

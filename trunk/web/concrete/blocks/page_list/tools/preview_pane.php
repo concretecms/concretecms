@@ -1,4 +1,5 @@
 <?php
+defined('C5_EXECUTE') or die(_("Access Denied."));
 require(dirname(__FILE__) . '/../controller.php');
 
 $previewMode = true;

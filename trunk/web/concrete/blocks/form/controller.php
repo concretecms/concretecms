@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 class FormBlockController extends BlockController {
 
 	protected $btDescription = "Build simple forms and surveys.";

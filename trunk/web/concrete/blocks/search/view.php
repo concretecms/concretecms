@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
 <style>
 #searchResults .pageLink{ font-size:12px; color:#999; margin:2px 0px 8px 0px; padding:0px; display:block }
 #searchResults .searchResult{ margin-bottom:16px; margin-top:24px }

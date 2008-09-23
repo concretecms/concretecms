@@ -1,4 +1,6 @@
 <? 
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 $bObj=$controller;
 $includeAssetLibrary = true;
 $al = Loader::helper('concrete/asset_library');

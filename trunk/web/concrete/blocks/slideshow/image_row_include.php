@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
 <div id="ccm-slideshowBlock-imgRow<?=$imgInfo['slideshowImgId']?>" class="ccm-slideshowBlock-imgRow" >
 	<div class="backgroundRow" style="background: url(<?=$imgInfo['thumbPath']?>) no-repeat left top; padding-left: 100px">
 		<div class="cm-slideshowBlock-imgRowIcons" >

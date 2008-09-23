@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <script language="javascript">
 tinyMCE.init({
 	mode : "textareas",

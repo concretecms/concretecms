@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <style>
 div.fieldRow{ border-top: 1px solid #ccc; padding:8px; margin:8px; clear:left}
 div.fieldRow div.fieldLabel{ float: left; width:20%; text-align:right; padding-top: 6px; padding-right:8px}
