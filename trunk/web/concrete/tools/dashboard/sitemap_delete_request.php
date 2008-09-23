@@ -1,5 +1,6 @@
 <?
-// this should be cleaned up.... yeah
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
 
 $u = new User();
 

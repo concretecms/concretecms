@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 $btArray = BlockTypeList::getInstalledList();
 $btArray2 = BlockTypeList::getAvailableList();
 $ih = Loader::helper('concrete/interface');

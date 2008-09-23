@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::library('search');
 Loader::model('search/file');
 Loader::model('collection_types');

@@ -1,4 +1,4 @@
-
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 	<div id="footer">
 			&copy; <?=date('Y')?> <a href="<?=DIR_REL?>/"><?=SITE?></a>.
 			&nbsp;&nbsp;

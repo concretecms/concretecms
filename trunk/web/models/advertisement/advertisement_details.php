@@ -1,4 +1,6 @@
 <?php
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::block('library_file');
 Loader::model("advertisement/advertisement_group");
 

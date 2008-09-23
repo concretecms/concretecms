@@ -1,5 +1,6 @@
 <?
-
+	defined('C5_EXECUTE') or die(_("Access Denied."));
+	
 	$c = Page::getByID($_REQUEST['cID']);
 	$cID = $c->getCollectionID();
 	$cp = new Permissions($c);

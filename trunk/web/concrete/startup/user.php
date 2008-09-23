@@ -1,4 +1,5 @@
 <?
+	defined('C5_EXECUTE') or die(_("Access Denied."));
 	if (User::isLoggedIn()) {
 		
 		// check to see if this is a valid user account

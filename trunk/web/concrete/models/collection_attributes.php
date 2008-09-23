@@ -1,4 +1,7 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
  * Contains the collection attribute key and value objects.
  * @package Pages

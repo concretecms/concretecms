@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 if (!ENABLE_DEFINABLE_USER_ATTRIBUTES) {
 	$this->controller->redirect('/dashboard');
 }

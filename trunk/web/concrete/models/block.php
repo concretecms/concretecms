@@ -1,4 +1,7 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
  * Contains the block object, which is an atomic unit of content on a Concrete page.
  * @package Blocks

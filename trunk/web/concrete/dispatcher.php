@@ -1,5 +1,8 @@
 <?
 
+	## This constant ensures that we're operating inside dispatcher.php. There is a LATER check to ensure that dispatcher.php is being called correctly. ##
+	define('C5_EXECUTE', true);
+	
 	## Startup check ##	
 	require('startup/config_check.php');
 

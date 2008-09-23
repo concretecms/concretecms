@@ -1,4 +1,6 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
 $c = Page::getByID($_REQUEST['cID']);
 $v = new Version($c, "RECENT", true);
 

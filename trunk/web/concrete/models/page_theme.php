@@ -1,4 +1,6 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
 *
 * When activating a theme, any file within the theme is loaded into the system as a Page Theme File. At that point

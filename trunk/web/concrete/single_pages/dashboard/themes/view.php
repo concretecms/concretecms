@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 $bt = Loader::helper('concrete/interface');
 ?>
 <h1><span>Themes</span></h1>

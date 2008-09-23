@@ -1,5 +1,7 @@
 <?php
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 Loader::library('3rdparty/open_flash_chart' );
 Loader::model('page_statistics');
 $daysRow = array();

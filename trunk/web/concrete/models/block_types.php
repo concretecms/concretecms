@@ -1,4 +1,7 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
  * Contains the blocktype object, the block type list (which is just a wrapper for querying the system for block types, and the block type
  * DB wrapper for ADODB.

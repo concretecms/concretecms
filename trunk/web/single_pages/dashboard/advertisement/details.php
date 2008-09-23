@@ -1,4 +1,6 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
 $includeAssetLibrary = true; 
 
 $txt = Loader::helper('text');

@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 
 # These items should be set by site.php in config/ but if they're not that means we're installing and we need something there
 if (!defined('BASE_URL')) {
@@ -38,9 +39,6 @@ if (!defined('ENABLE_DEFINABLE_USER_ATTRIBUTES')) {
 if (!defined('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL')) {
 	define('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL', false);
 }
-
-// If this constant doesn't exist then we're not going to execute the majority of the files in C5
-define('C5_EXECUTE', true);
 
 # Debug Menu - Determines whether a "Submit Feedback/Bug/Question" is active */
 # Currently Concrete5 does not include this capability but it will likely come back.
