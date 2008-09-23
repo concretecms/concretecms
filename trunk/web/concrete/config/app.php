@@ -17,8 +17,12 @@ if (!defined('SITE')) {
 	Config::getOrDefine('SITE', 'Concrete5');
 }
 
-if (!defined('ENABLE_LOGGING')) {
-	Config::getOrDefine('ENABLE_LOGGING', true);
+if (!defined('ENABLE_LOG_EMAILS')) {
+	Config::getOrDefine('ENABLE_LOG_EMAILS', true);
+}
+
+if (!defined('ENABLE_LOG_ERRORS')) {
+	Config::getOrDefine('ENABLE_LOG_ERRORS', true);
 }
 
 if (!defined('ENABLE_LOG_DATABASE_QUERIES')) {

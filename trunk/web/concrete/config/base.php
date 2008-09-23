@@ -295,7 +295,8 @@ define('DEBUG_DISPLAY_PRODUCTION', 0);
 define('DEBUG_DISPLAY_ERRORS', 1);
 define('DEBUG_DISPLAY_ERRORS_SQL', 2); // not used
 define('DIRNAME_LOGS', 'logs'); // logs archive
-define('LOG_EMAILS', 'sent_emails');
+define('LOG_TYPE_EMAILS', 'sent_emails');
+define('LOG_TYPE_EXCEPTIONS', 'exceptions');
 
 # The name of the session cookie used.
 define('SESSION', 'CONCRETE5');

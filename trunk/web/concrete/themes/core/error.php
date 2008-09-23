@@ -12,11 +12,9 @@
 <div id="ccm-logo"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" width="49" height="49" alt="Concrete CMS" /></div>
 
 <div id="ccm-theme-wrapper">
-
-<h1><?=$titleContent?></h1>
-
-<div class="ccm-error"><?php print $innerContent ?></div>
-
+<?				Loader::element('error_fatal', array('innerContent' => $innerContent, 
+					'titleContent' => $titleContent));
+?>
 </div>
 
 </body>

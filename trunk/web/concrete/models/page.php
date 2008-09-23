@@ -119,8 +119,6 @@ class Page extends Collection {
 	public function processArrangement($areas) {
 		// this function is called via ajax, so it's a bit wonky, but the format is generally
 		// a{areaID} = array(b1, b2, b3) (where b1, etc... are blocks with ids appended.)
-		$l = new Log();
-		$l->write('Inside Areas: ' . print_r($areas, true));
 		$db = Loader::db();
 		foreach($areas as $arID => $blocks) {
 			if (intval($arID) > 0) {

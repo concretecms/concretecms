@@ -589,7 +589,8 @@ class InstallController extends Controller {
 						// add the current app version as our site's app version
 						Config::save('SITE_APP_VERSION', APP_VERSION);
 						Config::save('SITE_DEBUG_LEVEL', DEBUG_DISPLAY_ERRORS);
-						Config::save('ENABLE_LOGGING', 1);
+						Config::save('ENABLE_LOG_EMAILS', 1);
+						Config::save('ENABLE_LOG_ERRORS', 1);
 						
 						// login 
 						define('PASSWORD_SALT', $salt);

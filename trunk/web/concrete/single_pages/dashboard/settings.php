@@ -16,10 +16,10 @@ $h = Loader::helper('concrete/interface'); ?>
 <p>Note: these are global settings. If enabled, PHP errors will be displayed to all visitors of the site.</p>
 
 <div class="ccm-dashboard-radio"><input type="radio" name="debug_level" value="<?=DEBUG_DISPLAY_PRODUCTION?>" <? if ($debug_level == DEBUG_DISPLAY_PRODUCTION) { ?> checked <? } ?> /> Production </div>
-<div class="ccm-dashboard-description">PHP errors will be suppressed.</div>
+<div class="ccm-dashboard-description">PHP errors and database exceptions will be suppressed.</div>
 
 <div class="ccm-dashboard-radio"><input type="radio" name="debug_level" value="<?=DEBUG_DISPLAY_ERRORS?>" <? if ($debug_level == DEBUG_DISPLAY_ERRORS) { ?> checked <? } ?> /> Development </div>
-<div class="ccm-dashboard-description">PHP errors are displayed.</div>
+<div class="ccm-dashboard-description">PHP errors and database exceptions will be displayed.</div>
 
 <?
 $b1 = $h->submit('Set Debug Level', 'debug-form');
@@ -35,11 +35,12 @@ print $h->buttons($b1);
 <form method="post" id="logging-form" action="<?=$this->url('/dashboard/settings', 'update_logging')?>">
 <h1><span>Logging</span></h1>
 <div class="ccm-dashboard-inner">
-
+<div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOG_ERRORS', 1, $enable_log_errors)?> Log Application Exceptions</div>
+<div class="ccm-dashboard-description">Saves application exceptions to logs.</div>
 <div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOG_DATABASE_QUERIES', 1, $enable_log_database_queries)?> Log Database Activity</div>
 <div class="ccm-dashboard-description">Logs SQL queries for application profiling.</div>
-<div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOGGING', 1, $enable_logging)?> Log Concrete Activity</div>
-<div class="ccm-dashboard-description">Enables C5 logging (e.g. saving records of emails being sent out, etc...)</div>
+<div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOG_EMAILS', 1, $enable_log_emails)?> Log Emails Sent</div>
+<div class="ccm-dashboard-description">Enables saving records of emails being sent out. This will save records even if actual email delivery is disabled on your site.</div>
 
 <?
 $b1 = $h->submit('Save Logging Settings', 'logging-form');
