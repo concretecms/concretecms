@@ -32,6 +32,20 @@ class DashboardLogsController extends Controller {
 		$this->redirect('/dashboard/logs/', 'database');
 	}
 	
+	public function clear_log($type) {
+		switch($type) {
+			case "custom":
+				Log::clearCustom();				
+				$this->redirect("/dashboard/logs", "custom");
+				break;
+			default:
+				Log::clearInternal();				
+				$this->redirect("/dashboard/logs");
+				break;
+		}
+	}
+	
+
 	public function database($page = 0) {
 		$total = DatabaseLogEntry::getTotal();
 		$pageBase = View::url('/dashboard/logs', 'database');

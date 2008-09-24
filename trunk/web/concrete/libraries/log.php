@@ -87,6 +87,19 @@ class Log {
 		}
 	}
 	
+	/** 
+	 * Removes all "custom" log entries - these are entries that an app owner has written and don't have a builtin C5 type
+	 */
+	public function clearCustom() {
+		$db = Loader::db();
+		$db->Execute("delete from Logs where logIsInternal = 0");
+	}
+	
+	public function clearInternal() {
+		$db = Loader::db();
+		$db->Execute("delete from Logs where logIsInternal = 1");
+	}
+	
 	public function close() {
 		if ($this->isClosed) {
 			throw new Exception("This logging session has already been closed.");

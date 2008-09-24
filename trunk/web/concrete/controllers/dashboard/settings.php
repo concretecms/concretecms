@@ -80,9 +80,9 @@ class DashboardSettingsController extends Controller {
 
 	public function update_logging() {
 		if ($this->isPost()) {
-			$eldq = $this->post('ENABLE_LOG_DATABASE_QUERIES' == 1) ? 1 : 0;
-			$elem = $this->post('ENABLE_LOG_EMAILS' == 1) ? 1 : 0;
-			$eler = $this->post('ENABLE_LOG_ERRORS' == 1) ? 1 : 0;
+			$eldq = $this->post('ENABLE_LOG_DATABASE_QUERIES') == 1 ? 1 : 0;
+			$elem = $this->post('ENABLE_LOG_EMAILS') == 1 ? 1 : 0;
+			$eler = $this->post('ENABLE_LOG_ERRORS') == 1 ? 1 : 0;
 			
 			Config::save('ENABLE_LOG_DATABASE_QUERIES', $eldq);
 			Config::save('ENABLE_LOG_EMAILS', $elem);
