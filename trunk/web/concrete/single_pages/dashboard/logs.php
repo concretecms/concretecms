@@ -56,6 +56,7 @@ if ($this->controller->getTask() == 'database') { ?>
 		<form method="post" id="ccm-log-search"  action="<?=$pageBase?>">
 		<?=$form->text('keywords', $keywords)?>
 		<?=$form->submit('search','Search')?>
+		<input type="button" onclick="if (confirm('Are you sure you want to clear this log?')) { location.href='<?=$this->url('/dashboard/logs', 'clear_log', $this->controller->getTask())?>'}" value="Clear Log" />
 		</form>
 
 		<table border="0" cellspacing="1" cellpadding="0" class="grid-list">
