@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 $c = Page::getByID($_GET['cID'], 'RECENT');
 $cp = new Permissions($c);
+$canViewPane = false;
 
 switch($_GET['ctask']) {
 	case 'edit_metadata':
@@ -52,6 +53,10 @@ if (!isset($divID)) {
 	$divID = 'ccm-edit-collection';
 }
 
+if (!$canViewPane) {
+	die(_("Access Denied."));
+}
+
 ?>
 
 <? Loader::element('pane_header', array('c'=>$c)); ?>
@@ -60,22 +65,20 @@ if (!isset($divID)) {
 
 <? if (!$_GET['close']) {
 
-	if ($canViewPane) {
-	
-		if (!$c->isEditMode() && ($_GET['ctask'] != 'add')) {
-			// first, we attempt to check the user in as editing the collection
-			$u = new User();
-			if ($u->isRegistered()) {
-				$u->loadCollectionEdit($c);
-			}
-		}
-		
-		if (($c->isEditMode() || ($_GET['ctask'] == 'add')) && $toolSection) {
-			require_once(DIR_FILES_ELEMENTS_CORE . '/' . $toolSection . '.php');
-		} else {
-			$error = "Someone has already checked out this page for editing.";
+	if (!$c->isEditMode() && ($_GET['ctask'] != 'add')) {
+		// first, we attempt to check the user in as editing the collection
+		$u = new User();
+		if ($u->isRegistered()) {
+			$u->loadCollectionEdit($c);
 		}
 	}
+	
+	if (($c->isEditMode() || ($_GET['ctask'] == 'add')) && $toolSection) {
+		require_once(DIR_FILES_ELEMENTS_CORE . '/' . $toolSection . '.php');
+	} else {
+		$error = "Someone has already checked out this page for editing.";
+	}
+
 }
 
 if ($error) {

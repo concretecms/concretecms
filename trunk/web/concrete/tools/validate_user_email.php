@@ -7,9 +7,9 @@ if ($_REQUEST['uEmail'] && $_REQUEST['uHash']) {
 
 if ($res) {
 
-	header('Location: ' . BASE_URL . DIR_REL . '/register?register_success=1');
+	header('Location: ' . View::url('/register', 'register_success'));
 	exit;
-
+	
 }
 
 ?>

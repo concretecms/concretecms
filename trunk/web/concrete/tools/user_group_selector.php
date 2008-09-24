@@ -9,10 +9,12 @@ if ($_REQUEST['mode'] == 'users') {
 	$displayUsers = false;
 }
 
-$c = Page::getByPath('/dashboard/users');
-$cp = new Permissions($c);
-if (!$cp->canRead()) {
-	exit;
+$c1 = Page::getByPath('/dashboard/users');
+$cp1 = new Permissions($c1);
+$c2 = Page::getByPath('/dashboard/groups');
+$cp2 = new Permissions($c2);
+if ((!$cp1->canRead()) && (!$cp2->canRead())) {
+	die(_("Access Denied."));
 }
 
 
