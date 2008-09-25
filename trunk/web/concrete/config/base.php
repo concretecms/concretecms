@@ -88,7 +88,8 @@ define('DIR_FILES_TOOLS', DIR_BASE . '/tools'); // front-end
 define('DIR_FILES_TOOLS_REQUIRED', DIR_BASE_CORE . '/tools'); // global
 
 # Packages 
-define('DIR_PACKAGES', DIR_BASE_CORE . '/packages');
+define('DIR_PACKAGES', DIR_BASE . '/packages');
+define('DIR_PACKAGES_CORE', DIR_BASE_CORE . '/packages');
 define('DIRNAME_PACKAGE_CORE', 'core');
 define('DIR_PACKAGE_CORE', DIR_BASE_CORE . '/packages/' . DIRNAME_PACKAGE_CORE);
 

@@ -18,9 +18,12 @@
 				if ($co->getBlock() != '') {
 					$bt = BlockType::getByHandle($co->getBlock());
 					if ($bt->getPackageID() > 0) {
-						$file = DIR_PACKAGES . '/' . $bt->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TOOLS . '/' . $co->getFilename();
-						if (file_exists($file)) {
-							include($file);
+						$file1 = DIR_PACKAGES . '/' . $bt->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TOOLS . '/' . $co->getFilename();
+						$file2 = DIR_PACKAGES_CORE . '/' . $bt->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TOOLS . '/' . $co->getFilename();
+						if (file_exists($file1)) {
+							include($file1);
+						} else if (file_exists($file2)) {
+							include($file2);
 						}
 					} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $co->getBlock() . '/' . DIRNAME_BLOCK_TOOLS . '/' . $co->getFilename())) {
 						include(DIR_FILES_BLOCK_TYPES . '/' . $co->getBlock()  . '/' . DIRNAME_BLOCK_TOOLS .'/' . $co->getFilename());
