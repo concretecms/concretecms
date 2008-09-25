@@ -39,8 +39,14 @@ class SinglePage extends Page {
 		// first, we look to see if the exact path exists (plus .php)
 		$pathToFile = null;
 		if (is_object($pkg)) {
-			$file1 = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_PAGES . '/' . $node . '/' . FILENAME_COLLECTION_VIEW;
-			$file2 = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_PAGES . '/' . $node . '.php';
+			if (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) {
+				$dirp = DIR_PACKAGES . '/' . $pkg->getPackageHandle();
+			} else {
+				$dirp = DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle();
+			}
+			
+			$file1 = $dirp . '/' . DIRNAME_PAGES . '/' . $node . '/' . FILENAME_COLLECTION_VIEW;
+			$file2 = $dirp . '/' . DIRNAME_PAGES . '/' . $node . '.php';
 		} else {
 			$file1 = DIR_FILES_CONTENT . '/' . $node . '/' . FILENAME_COLLECTION_VIEW;
 			$file2 = DIR_FILES_CONTENT . '/' . $node . '.php';
@@ -220,13 +226,19 @@ class SinglePage extends Page {
 
 		} else {
 		
-			$file1 = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_PAGES . '/' . $node . '/' . FILENAME_COLLECTION_VIEW;
-			$file2 = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_PAGES . '/' . $node . '.php';
+			if (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) 
+				$dirp = DIR_PACKAGES;			
+			} else {
+				$dirp = DIR_PACKAGES_CORE;
+			}
+
+			$file1 = $dirp . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_PAGES . '/' . $node . '/' . FILENAME_COLLECTION_VIEW;
+			$file2 = $dirp . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_PAGES . '/' . $node . '.php';
 			if (file_exists($file1)) {
-				$pathToPerms = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . '/' . $node;
+				$pathToPerms = $dirp . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . '/' . $node;
 			} else if (file_exists($file2)) {
 				$pathNode = '/' . substr($node, 0, strrpos($node, '/'));
-				$pathToPerms = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $pathNode;
+				$pathToPerms = $dirp . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $pathNode;
 			}
 			
 			if (file_exists($pathToPerms . '/' . FILENAME_COLLECTION_ACCESS)) {
