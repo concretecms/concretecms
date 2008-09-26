@@ -27,7 +27,7 @@
     <option value="chrono_asc">with the earliest first.</option>
     <option value="alpha_asc">in alphabetical order.</option>
     <option value="alpha_desc">in reverse alphabetical order.</option>
-    <? /* <option value="display_desc">Display Order (Desc)</option> */ ?>
+	<option value="display_desc" selected>in reverse sitemap order</option>
 </select>
 
 <br><br>

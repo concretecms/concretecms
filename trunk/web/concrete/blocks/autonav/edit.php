@@ -30,7 +30,7 @@ $info = $controller->getContent();
     <option value="chrono_asc" <? if ($info['orderBy'] == 'chrono_asc') { ?> selected<? } ?>>with the earliest first.</option>
     <option value="alpha_asc" <? if ($info['orderBy'] == 'alpha_asc') { ?> selected<? } ?>>in alphabetical order.</option>
     <option value="alpha_desc" <? if ($info['orderBy'] == 'alpha_desc') { ?> selected<? } ?>>in reverse alphabetical order.</option>
-    <? /* <option value="display_desc">Display Order (Desc)</option> */ ?>
+    <option value="display_desc" <? if ($info['orderBy'] == 'display_desc') { ?> selected<? } ?>>in reverse sitemap order.</option>
 </select>
 <br><br>
 <strong>Viewing Permissions</strong><br/>
