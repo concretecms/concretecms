@@ -226,7 +226,7 @@ class SinglePage extends Page {
 
 		} else {
 		
-			if (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) 
+			if (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) {
 				$dirp = DIR_PACKAGES;			
 			} else {
 				$dirp = DIR_PACKAGES_CORE;

@@ -7,6 +7,11 @@ class PageForbiddenController extends Controller {
 	
 	public function view() {
 		$this->set('intro_msg', 'You must sign in order to access this page!');
+		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
+			$this->set('uNameLabel', 'Email Address');
+		} else {
+			$this->set('uNameLabel', 'Username');
+		}
 		$this->render('/login');
 	}
 	

@@ -50,7 +50,11 @@ class MailHelper {
 		if (file_exists(DIR_FILES_EMAIL_TEMPLATES . "/{$template}.php")) {			
 			include(DIR_FILES_EMAIL_TEMPLATES . "/{$template}.php");
 		} else if ($pkgHandle != null) {
-			include(DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MAIL_TEMPLATES . "/{$template}.php");
+			if (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) {
+				include(DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MAIL_TEMPLATES . "/{$template}.php");
+			} else {
+				include(DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_MAIL_TEMPLATES . "/{$template}.php");
+			}
 		} else {
 			include(DIR_FILES_EMAIL_TEMPLATES_CORE . "/{$template}.php");
 		}

@@ -318,15 +318,20 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$pkgID = 0;
 			if ($pl instanceof PageTheme) {
 				if ($pl->getPackageID() > 0) {
-					$theme = DIR_PACKAGES . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . $filename;
+					if (is_dir(DIR_PACKAGES . '/' . $pl->getPackageHandle())) {
+						$dirp = DIR_PACKAGES;
+					} else {
+						$dirp = DIR_PACKAGES_CORE;
+					}
+					$theme = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . $filename;
 					if (!file_exists($theme)) {
 						if ($singlePage) {
-							$theme = DIR_PACKAGES . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_VIEW;
+							$theme = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_VIEW;
 						} else {
-							$theme = DIR_PACKAGES . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_DEFAULT;
+							$theme = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_DEFAULT;
 						}
 					}
-					$themeDir = DIR_PACKAGES . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle();
+					$themeDir = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle();
 					$themePath = ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle();
 					$pkgID = $pl->getPackageID();
 				} else {
@@ -430,9 +435,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						if (file_exists(DIR_FILES_CONTENT. "{$cFilename}")) {
 							include(DIR_FILES_CONTENT. "{$cFilename}");
 						} else if ($view->getPackageID() > 0) {
-							$file = DIR_PACKAGES . '/' . $view->getPackageHandle() . '/'. DIRNAME_PAGES . $cFilename;
-							if (file_exists($file)) {
-								include($file);
+							$file1 = DIR_PACKAGES . '/' . $view->getPackageHandle() . '/'. DIRNAME_PAGES . $cFilename;
+							$file2 = DIR_PACKAGES_CORE . '/' . $view->getPackageHandle() . '/'. DIRNAME_PAGES . $cFilename;
+							if (file_exists($file1)) {
+								include($file1);
+							} else if (file_exists($file2)) {
+								include($file2);
 							}
 						} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "{$cFilename}")) {
 							include(DIR_FILES_CONTENT_REQUIRED. "{$cFilename}");
