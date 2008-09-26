@@ -423,7 +423,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function getBlockTypePath() {
 			if ($this->getPackageID() > 0) {
 				$pkgHandle = $this->getPackageHandle();
-				$dir = DIR_FILES_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle();
+				$dirp = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+				$dir = $dirp . '/' . $pkgHandle . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle();
 			} else {
 				if (is_dir(DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle())) {
 					$dir = DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle();
