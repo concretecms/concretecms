@@ -4,9 +4,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('single_page');
 $ih = Loader::helper('concrete/interface');
 
-Loader::model('search/advertisement');
-Loader::model('/advertisement/advertisement_group');
-Loader::model('/advertisement/advertisement_details');
+Loader::model('advertisement_search', 'advertisement');
+Loader::model('advertisement_group', 'advertisement');
+Loader::model('advertisement_details', 'advertisement');
 
 ?>
 <h1><span>Ad Listings</span></h1>

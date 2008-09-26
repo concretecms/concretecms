@@ -5,7 +5,7 @@ $includeAssetLibrary = true;
 
 $txt = Loader::helper('text');
 $ih = Loader::helper('concrete/interface');
-Loader::model('/advertisement/advertisement_details');
+Loader::model('advertisement_details', 'advertisement');
 
 $al = Loader::helper('concrete/asset_library');
 
