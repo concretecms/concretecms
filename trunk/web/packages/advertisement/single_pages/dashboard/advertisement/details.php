@@ -5,6 +5,7 @@ $includeAssetLibrary = true;
 
 $txt = Loader::helper('text');
 $ih = Loader::helper('concrete/interface');
+$bt = BlockType::getByHandle('advertisement');
 Loader::model('advertisement_details', 'advertisement');
 
 $al = Loader::helper('concrete/asset_library');
@@ -23,7 +24,7 @@ Loader::element("block_al");
 <h1><span>Advertisement Details</span></h1>
 <div class="ccm-dashboard-inner">
     <form action="<?=$this->url('/dashboard/advertisement/details','save_details',$ad->aID)?>" method="post" id="update-ads-form">
-    <? include(DIR_FILES_BLOCK_TYPES."/advertisement/ad_form.php"); ?>
+    <? $bt->inc('ad_form.php', array('ad' => $ad, 'bf' => $bf, 'al' => $al)); ?>
     <div style="margin-top:6px;">
     <?
     if($ad->aID) {
