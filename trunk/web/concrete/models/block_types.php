@@ -475,7 +475,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 		
-		public function inc($file) {
+		public function inc($file, $args = array()) {
+			extract($args);
 			$bt = $this;
 			global $c;
 			if ($this->getPackageID() > 0) {
