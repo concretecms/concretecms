@@ -411,7 +411,12 @@ class Page extends Collection {
 		$icon = '';
 		if ($this->isGeneratedCollection()) {
 			if ($this->getPackageID() > 0) {
-				$file = DIR_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
+				if (is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) {
+					$dirp = DIR_PACKAGES;
+				} else {
+					$dirp = DIR_PACKAGES_CORE;
+				}
+				$file = $dirp . '/' . $this->getPackageHandle() . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
 				if (file_exists($file)) {
 					$icon = ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
 				}

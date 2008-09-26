@@ -27,7 +27,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 */
 		public function library($lib, $pkgHandle = null) {
 			if ($pkgHandle) {
-				require_once(DIR_LIBRARIES . '/' . $pkgHandle . '/' . DIRNAME_LIBRARIES . '/' . $lib . '.php');
+				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+				require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_LIBRARIES . '/' . $lib . '.php');
 			} else if (file_exists(DIR_LIBRARIES . '/' . $lib . '.php')) {
 				require_once(DIR_LIBRARIES . '/' . $lib . '.php');
 			} else {
@@ -40,7 +41,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 */
 		public function model($mod, $pkgHandle = null) {
 			if ($pkgHandle) {
-				require_once(DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . $mod . '.php');
+				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+				require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . $mod . '.php');
 			} else if (file_exists(DIR_MODELS . '/' . $mod . '.php')) {
 				require_once(DIR_MODELS . '/' . $mod . '.php');
 			} else {
@@ -55,7 +57,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (is_array($args)) {
 				extract($args);
 			}
-			include(DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . $file . '.php');
+			$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+			include($dir . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . $file . '.php');
 		}
 
 		/** 
@@ -159,11 +162,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		/**
 		 * @access private
 		 */
-		public function package($file) {
+		public function package($pkgHandle) {
 			// loads and instantiates the object
-			if (file_exists(DIR_PACKAGES . '/' . $file . '/' . FILENAME_PACKAGE_CONTROLLER)) {
-				require_once(DIR_PACKAGES . '/' . $file . '/' . FILENAME_PACKAGE_CONTROLLER);
-				$class = Object::camelcase($file) . "Package";
+			$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+			if (file_exists(DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER)) {
+				require_once(DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER);
+				$class = Object::camelcase($pkgHandle) . "Package";
 				$cl = new $class;
 				return $cl;
 			}
@@ -178,7 +182,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$file1 = DIR_FILES_CONTROLLERS . '/' . DIRNAME_DASHBOARD . '/' . DIRNAME_DASHBOARD_MODULES . '/' . $dbhHandle . '.php';
 				if (is_object($pkg)) {
 					$pkgHandle = $pkg->getPackageHandle();
-					$file2 = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_DASHBOARD . '/' . DIRNAME_DASHBOARD_MODULES . '/' . $dbhHandle . '.php';
+					$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+					$file2 = $dir . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_DASHBOARD . '/' . DIRNAME_DASHBOARD_MODULES . '/' . $dbhHandle . '.php';
 				}
 				$file3 = DIR_FILES_CONTROLLERS_REQUIRED . '/' . DIRNAME_DASHBOARD . '/' . DIRNAME_DASHBOARD_MODULES . '/' . $dbhHandle . '.php';
 				if (file_exists($file1)) {

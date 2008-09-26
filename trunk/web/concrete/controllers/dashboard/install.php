@@ -11,6 +11,12 @@ class DashboardInstallController extends Controller {
 		$this->error = Loader::helper('validation/error');
 	}
 	
+	public function packages() {
+		$this->set('nav', 'packages');
+		$this->set('pkgArray', Package::getInstalledList());
+		$this->set('pkgAvailableArray', Package::getAvailablePackages());
+	}
+	
 	private function mapError($testResults) {
 		$testResultsText = array();
 		foreach($testResults as $result) {
@@ -20,8 +26,7 @@ class DashboardInstallController extends Controller {
 	}
 	
 	public function view() {
-		$this->set('pkgArray', Package::getInstalledList());
-		$this->set('pkgAvailableArray', Package::getAvailablePackages());
+
 	}
 	
 	public function refresh_block_type($btID = 0) {
@@ -69,6 +74,21 @@ class DashboardInstallController extends Controller {
 	}
 
 	public function on_before_render() {
+		$btSelected = false;
+		$pkgsSelected = false;			
+		switch($this->get('nav')) {
+			case "packages":
+			$pkgsSelected = true;
+			break;
+		default:
+			$btSelected = true;
+			break;
+		}		
+		$subnav = array(
+			array(View::url('/dashboard/install'), 'Block Types', $btSelected),
+			array(View::url('/dashboard/install', 'packages'), 'Applications', $pkgsSelected)
+		);
+		$this->set('subnav', $subnav);
 		if ($this->error->has()) {
 			$this->set('error', $this->error);	
 		}
@@ -101,7 +121,7 @@ class DashboardInstallController extends Controller {
 				$this->set('error', $e);
 			}
 		}
-		$this->view();
+		$this->packages();
 	}
 	
 

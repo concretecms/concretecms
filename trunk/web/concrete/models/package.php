@@ -138,6 +138,7 @@ class Package extends Object {
 		return $result;
 	
 	}
+
 	
 	public function testForInstall($package) {
 		// this is the pre-test routine that packages run through before they are installed. Any errors that come here
@@ -146,7 +147,7 @@ class Package extends Object {
 		$errors = array();
 		
 		// Step 1 does that package exist ?
-		if (!is_dir(DIR_PACKAGES . '/' . $package) || $package == '') {
+		if ((!is_dir(DIR_PACKAGES . '/' . $package) && (!is_dir(DIR_PACKAGES_CORE . '/' . $package))) || $package == '') {
 			$errors[] = E_PACKAGE_NOT_FOUND;
 		}
 		
@@ -162,6 +163,19 @@ class Package extends Object {
 			return true;
 		}
 	}
+
+	/*
+	 * Returns a path to where the packages files are located.
+	 * @access public
+	 * @return string $path
+	 */
+	 
+	public function getPackagePath() {
+		$dirp = (is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+		$path = $dirp . '/' . $this->getPackageHandle();
+		return $path;
+	}
+	
 	
 	public function getByID($pkgID) {
 		$db = Loader::db();

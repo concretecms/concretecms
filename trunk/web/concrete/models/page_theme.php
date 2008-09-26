@@ -192,7 +192,11 @@ class PageTheme extends Object {
 			$pkgHandle = $pl->getPackageHandle();
 			
 			if ($row['pkgID'] > 0) {
-				$pl->ptDirectory = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
+				if (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) {
+					$pl->ptDirectory = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
+				} else {
+					$pl->ptDirectory = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
+				}
 				$pl->ptURL = ASSETS_URL . '/' . DIRNAME_PACKAGES  . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
 			} else if (is_dir(DIR_FILES_THEMES . '/' . $row['ptHandle'])) {
 				$pl->ptDirectory = DIR_FILES_THEMES . '/' . $row['ptHandle'];
@@ -207,7 +211,11 @@ class PageTheme extends Object {
 	
 	public function add($ptHandle, $pkg = null) {
 		if (is_object($pkg)) {
-			$dir = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $ptHandle;
+			if (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) {
+				$dir = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $ptHandle;
+			} else {
+				$dir = DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $ptHandle;
+			}
 			$pkgID = $pkg->getPackageID();
 		} else if (is_dir(DIR_FILES_THEMES . '/' . $ptHandle)) {
 			$dir = DIR_FILES_THEMES . '/' . $ptHandle;

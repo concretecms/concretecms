@@ -18,6 +18,24 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class ConcreteUrlsHelper {
 
+	/** 
+	 * Gets a full URL to an icon for a particular application
+	 */
+	public function getPackageIconURL($pkg) {
+		if (file_exists($pkg->getPackagePath() . '/' . FILENAME_BLOCK_ICON)) {
+			return $this->getPackageURL($pkg) . '/' . FILENAME_BLOCK_ICON;
+		} else {
+			return BLOCK_TYPE_GENERIC_ICON;
+		}
+	}
+	
+	public function getPackageURL($pkg) {
+		if (is_dir(DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle())) {
+			return ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pkg->getPackageHandle();
+		} else {
+			return BASE_URL . DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $pkg->getPackageHandle();
+		}
+	}
 	
 	/** 
 	 * Gets a full URL to an icon for a particular block type
