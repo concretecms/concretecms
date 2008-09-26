@@ -10,8 +10,10 @@ class AdvertisementPackage extends Package {
 	
 	public function install() {
 		$pkg = parent::install();
-		$db = Loader::db();		
-	}
+		$db = Loader::db();
+		
+		BlockType::installBlockTypeFromPackage('advertisement', $pkg);
+}
 
 
 
