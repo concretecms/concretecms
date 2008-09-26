@@ -58,8 +58,9 @@ class ConcreteUrlsHelper {
 	public function getBlockTypeAssetsURL($bt) {
 		if ($bt->getPackageID() > 0) {
 			$db = Loader::db();
-			$h = $db->GetOne("select pkgHandle from Packages where pkgID = ?", $bt->getPackageID());
-			$url = ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $h . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle();		
+			$h = $bt->getPackageHandle();
+			$url = (is_dir(DIR_PACKAGES . '/' . $h)) ? BASE_URL . DIR_REL : ASSETS_URL; 
+			$url = $url . '/' . DIRNAME_PACKAGES . '/' . $h . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle();		
 		} else if (is_dir(DIR_FILES_BLOCK_TYPES_CORE . '/' . $bt->getBlockTypeHandle())) {
 			$url = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle();
 		} else {
