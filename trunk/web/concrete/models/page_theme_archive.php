@@ -36,9 +36,11 @@ class PageThemeArchive extends Archive {
 					throw new Exception('Unable to uninstall "' . $theme . '" theme by moving it to the trash.');
 					return false;
 				}
-			} else {
-				throw new Exception('You may only remove themes that are contained within your website\'s /themes directory.');
 			}
+			/* else {
+				throw new Exception('You may only remove themes that are contained within your website\'s /themes directory.');
+			}*/
+			
 		}
 	}
 	

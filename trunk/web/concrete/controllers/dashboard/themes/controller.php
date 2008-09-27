@@ -15,8 +15,12 @@ class DashboardThemesController extends Controller {
 		
 		$this->set('tArray', $tArray);
 		$this->set('tArray2', $tArray2);
-		
-		$this->set('siteTheme', PageTheme::getSiteTheme());
+		$siteThemeID = 0;
+		$obj = PageTheme::getSiteTheme();
+		if (is_object($obj)) {
+			$siteThemeID = $obj->getThemeID();
+		}
+		$this->set('siteThemeID', $siteThemeID);
 		$this->set('activate', View::url('/dashboard/themes', 'activate'));		
 		$this->set('install', View::url('/dashboard/themes', 'install'));		
 	}
@@ -28,9 +32,11 @@ class DashboardThemesController extends Controller {
 			if (!is_object($pl)) {
 				throw new Exception('Invalid theme.');
 			}
+			/*
 			if ($pl->getPackageID() > 0) {
 				throw new Exception('You may not uninstall a packaged theme.');
 			}
+			*/
 			
 			$pl->uninstall();
 			$this->set('message', 'Theme uninstalled.');
