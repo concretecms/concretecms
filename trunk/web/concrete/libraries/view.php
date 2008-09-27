@@ -320,8 +320,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				if ($pl->getPackageID() > 0) {
 					if (is_dir(DIR_PACKAGES . '/' . $pl->getPackageHandle())) {
 						$dirp = DIR_PACKAGES;
+						$url = BASE_URL . DIR_REL;
 					} else {
 						$dirp = DIR_PACKAGES_CORE;
+						$url = ASSETS_URL;
 					}
 					$theme = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . $filename;
 					if (!file_exists($theme)) {
@@ -332,7 +334,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						}
 					}
 					$themeDir = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle();
-					$themePath = ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle();
+					$themePath = $url . '/' . DIRNAME_PACKAGES . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle();
 					$pkgID = $pl->getPackageID();
 				} else {
 					if (is_dir(DIR_FILES_THEMES . '/' . $pl->getThemeHandle())) {

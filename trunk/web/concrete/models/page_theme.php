@@ -194,10 +194,12 @@ class PageTheme extends Object {
 			if ($row['pkgID'] > 0) {
 				if (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) {
 					$pl->ptDirectory = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
+					$url = BASE_URL . DIR_REL;
 				} else {
 					$pl->ptDirectory = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
+					$url = ASSETS_URL;
 				}
-				$pl->ptURL = ASSETS_URL . '/' . DIRNAME_PACKAGES  . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
+				$pl->ptURL = $url . '/' . DIRNAME_PACKAGES  . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
 			} else if (is_dir(DIR_FILES_THEMES . '/' . $row['ptHandle'])) {
 				$pl->ptDirectory = DIR_FILES_THEMES . '/' . $row['ptHandle'];
 				$pl->ptURL = BASE_URL . DIR_REL . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
@@ -308,7 +310,7 @@ class PageTheme extends Object {
 	public function getThemeURL() {return $this->ptURL;}
 	public function getThemeEditorCSS() {return $this->ptURL . '/' . PageTheme::FILENAME_TYPOGRAPHY_CSS;}
 	public function isUninstallable() {
-		return ($this->pkgID < 1 && ($this->ptDirectory != DIR_FILES_THEMES_CORE . '/' . $this->getThemeHandle()));
+		return ($this->ptDirectory != DIR_FILES_THEMES_CORE . '/' . $this->getThemeHandle());
 	}
 	public function getThemeThumbnail() {
 		if (file_exists($this->ptDirectory . '/' . FILENAME_THEMES_THUMBNAIL)) {

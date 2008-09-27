@@ -19,6 +19,9 @@ class AdvertisementPackage extends Package {
 		$d2 = SinglePage::add('/dashboard/advertisement/groups', $pkg);
 		$d3 = SinglePage::add('/dashboard/advertisement/details', $pkg);
 		$d1->update(array('cName' => 'Advertisements', 'cDescription' => 'Add banner ads to your site.'));		
+		
+		$pl = PageTheme::add('decayed', $pkg);
+
 }
 
 

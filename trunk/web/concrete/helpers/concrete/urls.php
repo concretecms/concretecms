@@ -38,6 +38,25 @@ class ConcreteUrlsHelper {
 	}
 	
 	/** 
+	 * Gets a URL to reference a script in the tools directory
+	 * @param $string $tool
+	 * @param $string $pkgHandle
+	 */
+	public function getToolsURL($tool, $pkgHandle = null) {
+		if ($pkgHandle != null) {
+			$url = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? BASE_URL . DIR_REL : ASSETS_URL; 
+			$url = REL_DIR_FILES_TOOLS_PACKAGES . '/' . $pkgHandle . '/' . $tool;
+			return $url;
+		} else {
+			if (file_exists(DIR_BASE . '/' . DIRNAME_TOOLS . '/' . $tool . '.php')) {
+				return REL_DIR_FILES_TOOLS . '/' . $tool;
+			} else {
+				return REL_DIR_FILES_TOOLS_REQUIRED . '/' . $tool;
+			}
+		}
+	}
+	
+	/** 
 	 * Gets a full URL to an icon for a particular block type
 	 * @param BlockType $bt
 	 * @return string

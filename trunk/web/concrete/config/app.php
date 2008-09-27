@@ -38,8 +38,6 @@ if (URL_REWRITING == true) {
 	define('URL_SITEMAP', BASE_URL . DIR_REL . '/dashboard/sitemap');
 	define('REL_DIR_FILES_TOOLS', DIR_REL . '/tools');
 	define('REL_DIR_FILES_TOOLS_REQUIRED', DIR_REL . '/tools/required'); // front-end
-	define('REL_DIR_FILES_TOOLS_BLOCKS', REL_DIR_FILES_TOOLS . '/blocks'); // this maps to the /tools/ directory in the blocks subdir
-	define('REL_DIR_FILES_TOOLS_BLOCKS_REQUIRED', REL_DIR_FILES_TOOLS_REQUIRED . '/blocks'); // this maps to the /tools/ directory in the blocks subdir
 } else {
 	define('URL_SITEMAP', BASE_URL . DIR_REL . '/index.php/dashboard/sitemap');
 	define('REL_DIR_FILES_TOOLS', DIR_REL . '/index.php/tools');
@@ -47,4 +45,4 @@ if (URL_REWRITING == true) {
 }
 
 define('REL_DIR_FILES_TOOLS_BLOCKS', REL_DIR_FILES_TOOLS . '/blocks'); // this maps to the /tools/ directory in the blocks subdir
-define('REL_DIR_FILES_TOOLS_BLOCKS_REQUIRED', REL_DIR_FILES_TOOLS_REQUIRED . '/blocks'); // this maps to the /tools/ directory in the blocks subdir
+define('REL_DIR_FILES_TOOLS_PACKAGES', REL_DIR_FILES_TOOLS . '/packages'); 

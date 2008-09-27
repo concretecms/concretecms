@@ -108,6 +108,7 @@ define('DIRNAME_THEMES', 'themes');
 if (!defined('DIRNAME_THEMES_CORE')) {
 	define('DIRNAME_THEMES_CORE', 'core');
 }
+define('DIRNAME_TOOLS', 'tools');
 define('DIRNAME_BLOCK_TOOLS', 'tools');
 define('DIRNAME_BLOCK_TEMPLATES', 'templates');
 define('DIRNAME_CSS', 'css');

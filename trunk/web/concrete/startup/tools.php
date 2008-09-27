@@ -14,6 +14,18 @@
 					include(DIR_FILES_TOOLS . '/' . $co->getFilename());
 				}
 				break;
+			case 'PACKAGE_TOOL':
+				if ($co->getPackageHandle() != '') {
+					$file1 = DIR_PACKAGES . '/' . $co->getPackageHandle() . '/' . DIRNAME_TOOLS . '/' . $co->getFilename();
+					$file2 = DIR_PACKAGES_CORE . '/' . $co->getPackageHandle() . '/' . DIRNAME_TOOLS . '/' . $co->getFilename();
+					if (file_exists($file1)) {
+						include($file1);
+					} else if (file_exists($file2)) {
+						include($file2);
+					}
+
+				}
+				break;
 			case "BLOCK_TOOL":
 				if ($co->getBlock() != '') {
 					$bt = BlockType::getByHandle($co->getBlock());
