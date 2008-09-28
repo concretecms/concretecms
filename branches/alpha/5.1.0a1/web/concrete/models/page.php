@@ -9,27 +9,32 @@
 class Page extends Collection {
 
 	public static function getByPath($path, $version = 'RECENT') {
+		$ca = new Cache();
+		$c = $ca->get('page', $path . ':' . $version);
+		if ($c instanceof Page) {
+			return $c;
+		}
+
 		$where = "where PagePaths.cPath = ?";
 		$c = new Page;
 		$c->populatePage($path, $where, $version);
+		$ca->set('page', $c->getCollectionPath() . ':' . $version, $c);
 		return $c;
 	}
 	
 	public static function getByID($cID, $version = 'RECENT') {
+		if ($version) {
+			$version = CollectionVersion::getNumericalVersionID($cID, $version);
+		}
 		$ca = new Cache();
 		$c = $ca->get('page', $cID . ':' . $version);
 		if ($c instanceof Page) {
 			return $c;
 		}
 		
-		if ($version) {
-			$version = CollectionVersion::getNumericalVersionID($cID, $version);
-		}
-		
 		$where = "where Pages.cID = ?";
 		$c = new Page;
 		$c->populatePage($cID, $where, $version);
-		$ca = new Cache();
 		$ca->set('page', $c->getCollectionID() . ':' . $version, $c);
 		return $c;
 	}
@@ -93,6 +98,14 @@ class Page extends Collection {
 		}
 	}		
 
+	/** 
+	 * Refreshes a cached entry by removing it from cache
+	 */
+	public function refreshCache() {
+		$ca = new Cache();
+		$vo = $this->getVersionObject();
+		$ca->delete('page', $this->getCollectionID() . ':' . $vo->getVersionID());
+	}
 	
 	public function isEditMode() {
 		$v = View::getInstance();

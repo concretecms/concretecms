@@ -31,7 +31,7 @@ class DownloadFileController extends Controller {
 		if ($block->getPassword() == $_POST['password'])
 			return $this->download($file);
 		
-		$this->set('error', "The entered password was incorrect. Please try again.");
+		$this->set('error', t("Incorrect password. Please try again."));
 		$this->view($bID);
 	}
 	

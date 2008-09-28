@@ -320,6 +320,9 @@
 					$c->cCheckedOutDatetimeLastEdit = $datetime;
 				}
 			}
+			
+			// now we remove the cached item
+			$c->refreshCache();
 		}
 			
 		function unloadCollectionEdit() {		

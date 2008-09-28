@@ -19,9 +19,9 @@ class DashboardLogsController extends Controller {
 				break;
 		}					
 		$subnav = array(
-			array(View::url('/dashboard/logs'), 'Concrete5', $c5selected),
-			array(View::url('/dashboard/logs', 'database'), 'Database', $dbSelected),
-			array(View::url('/dashboard/logs', 'custom'), 'Custom', $custSelected)
+			array(View::url('/dashboard/logs'), t('Concrete5'), $c5selected),
+			array(View::url('/dashboard/logs', 'database'), t('Database'), $dbSelected),
+			array(View::url('/dashboard/logs', 'custom'), t('Custom'), $custSelected)
 		);
 		$this->set('subnav', $subnav);
 	}
@@ -43,7 +43,7 @@ class DashboardLogsController extends Controller {
 	}
 	
 	public function view($type = 'none', $page = 0, $keywords = '') {
-		$this->set('title', 'Concrete5 Logs');
+		$this->set('title', t('Concrete5 Logs'));
 		$pageBase = View::url('/dashboard/logs', $type);
 		if ($type == 'none') {
 			$type = null;
@@ -65,7 +65,7 @@ class DashboardLogsController extends Controller {
 	}
 	
 	public function custom($page = 0, $keywords = '') {
-		$this->set('title', 'Custom Logs Defined by Your Application');
+		$this->set('title', t('Custom Application Logs'));
 		$pageBase = View::url('/dashboard/logs', 'custom');
 		$paginator = Loader::helper('pagination');
 		
