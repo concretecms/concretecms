@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-20 08:50-0700\n"
+"POT-Creation-Date: 2008-09-28 08:38-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,3 +63,33 @@ msgstr "Benutzername"
 #: ../web//concrete/single_pages/login.php:36
 msgid "Sign In"
 msgstr "Anmelden"
+
+#: ../web//concrete/controllers/dashboard/collection_types/controller.php:29
+msgid "You must delete all pages of this type before deleting this page type."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/install.php:8
+msgid "You've already installed that package."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/install.php:9
+msgid "Invalid Package."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/install.php:32
+msgid "Block Type Refreshed. Any database schema changes have been applied."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/install.php:47
+msgid "Block Type Installed."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/install.php:61
+msgid ""
+"This block type is either internal, or is being used in your website. It "
+"cannot be uninstalled."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/install.php:98
+msgid "The package has been installed."
+msgstr ""

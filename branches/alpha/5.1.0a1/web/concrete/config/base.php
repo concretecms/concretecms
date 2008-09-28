@@ -40,7 +40,7 @@ if (!defined('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL')) {
 }
 
 if (!defined('ENABLE_CACHE')) {
-	define('ENABLE_CACHE', false);
+	define('ENABLE_CACHE', true);
 }
 
 if (!defined('LANGUAGE')) {

@@ -21,7 +21,7 @@ class DashboardThemesInspectController extends Controller {
 		}	
 		
 		if ($isOnInstall) {
-			$this->set('message', "Theme installed. You may automatically create page types from template files contained in your theme using the form below, or click \"return to themes\" to return to your theme list.");
+			$this->set('message', t("Theme installed. You may automatically create page types from template files contained in your theme using the form below, or return to your theme list."));
 		}
 		
 		if ($v->has()) {
@@ -35,7 +35,7 @@ class DashboardThemesInspectController extends Controller {
 			$pt = PageTheme::getByID($ptID);
 			$txt = Loader::helper('text');
 			if (!is_array($this->post('pageTypes'))) {
-				throw new Exception("You must specify at least one template to make into a page type.");
+				throw new Exception(t("You must specify at least one template to make into a page type."));
 			}
 			
 			foreach($this->post('pageTypes') as $ptHandle) {
@@ -43,7 +43,7 @@ class DashboardThemesInspectController extends Controller {
 				$data['ctHandle'] = $ptHandle;
 				$ct = CollectionType::add($data);
 			}
-			$this->set('message', 'Files in the theme were activated successfully. <a href="' . View::url('/dashboard/themes/') . '">Click here to return to your list of themes.</a>');
+			$this->set('message', t('Files in the theme were activated successfully.'));
 		} catch(Exception $e) {
 			$this->set('error', $e);
 		}

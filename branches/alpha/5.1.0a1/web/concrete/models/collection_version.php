@@ -193,7 +193,7 @@
 		
 		public function removeNewStatus() {
 			$db = Loader::db();
-			$db->query("update CollectionVersions set cvIsNew = 0 where cID = ? and cvID = ?", array($this->cObj->getCollectionID(), $this->cvID));
+			$db->query("update CollectionVersions set cvIsNew = 0 where cID = ? and cvID = ?", array($this->cID, $this->cvID));
 		}
 		
 		function deny() {

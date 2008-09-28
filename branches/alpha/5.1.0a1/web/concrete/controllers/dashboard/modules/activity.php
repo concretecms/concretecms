@@ -20,7 +20,7 @@ class ActivityDashboardModuleController extends Controller {
 		
 		$llu = UserStatistics::getLastLoggedInUser();
 		if ($llu->getUserID() == $u->getUserID()) {
-			$this->set('lastLoginSite', 'Your login is the most recent.');		
+			$this->set('lastLoginSite', t('Your login is the most recent.'));		
 		} else { 
 			$this->set('lastLoginSite', date('F d, Y', $llu->getLastLogin()) . ' at ' . date('g:i A', $llu->getLastLogin()));
 		}

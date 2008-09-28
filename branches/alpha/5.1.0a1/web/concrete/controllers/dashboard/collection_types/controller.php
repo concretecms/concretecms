@@ -26,7 +26,7 @@ public function delete($ctID) {
 		$db->query("DELETE FROM PageTypeAttributes WHERE ctID = ?",array($ctID));
 		$this->redirect("/dashboard/collection_types");
 	} else {
-		$this->set("message","The page type could not be deleted because pages of that type exist in the system.<br/>You must delete all pages of this type before deleting this page type.");
+		$this->set("message", t("You must delete all pages of this type before deleting this page type."));
 	}
 	
 
