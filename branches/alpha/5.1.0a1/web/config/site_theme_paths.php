@@ -1,5 +1,7 @@
 <?
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 //$v = View::getInstance();
 
 // you can override system layouts here  - but we're not going to by default */

@@ -1,6 +1,8 @@
 <?php
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::block('library_file');
-Loader::model("advertisement/advertisement_group");
+Loader::model("advertisement_group", "advertisement");
 
 class AdvertisementDetails extends Model {
 	var $_table = 'btAdvertisementDetails';

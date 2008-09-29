@@ -1,5 +1,7 @@
 <?
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 $b = $controller->getBlockObject();
 $btID = $b->getBlockTypeID();
 $bt = BlockType::getByID($btID);
