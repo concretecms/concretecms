@@ -1,4 +1,6 @@
-<? Loader::model('collection_types'); ?>
+<?
+defined('C5_EXECUTE') or die(_("Access Denied."));
+Loader::model('collection_types'); ?>
 
 <div id="ccm-sitemap-search">
 <form method=get id="ccm-dashboard-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/dashboard/sitemap_data.php">

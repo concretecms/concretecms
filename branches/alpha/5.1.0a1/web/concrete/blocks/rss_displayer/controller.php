@@ -1,4 +1,5 @@
 <?
+	defined('C5_EXECUTE') or die(_("Access Denied."));
 	class RssDisplayerBlockController extends BlockController {
 		
 		protected $btDescription = "Fetch, parse and display the contents of an RSS or Atom feed.";

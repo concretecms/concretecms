@@ -1,5 +1,5 @@
 <?
-
+defined('C5_EXECUTE') or die(_("Access Denied."));
 $b = Block::getByID($_REQUEST['bID']);
 $bc = $b->getInstance();
 

@@ -1,5 +1,6 @@
 <?
 
+	defined('C5_EXECUTE') or die(_("Access Denied."));
 	class PageListBlockController extends BlockController {
 
 		protected $btDescription = "List pages based on type, area";

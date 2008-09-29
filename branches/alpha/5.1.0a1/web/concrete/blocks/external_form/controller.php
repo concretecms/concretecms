@@ -1,5 +1,5 @@
 <?
-
+	defined('C5_EXECUTE') or die(_("Access Denied."));
 	class ExternalFormBlockController extends BlockController {
 		
 		protected $btDescription = "Include external forms in the filesystem and place them on pages.";

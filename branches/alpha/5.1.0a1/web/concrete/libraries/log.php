@@ -1,5 +1,7 @@
 <?
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 class LogEntry extends Object {
 	
 	public function getType() {return $this->logType;}
@@ -83,6 +85,19 @@ class Log {
 		if (!$this->session) {
 			$this->close();
 		}
+	}
+	
+	/** 
+	 * Removes all "custom" log entries - these are entries that an app owner has written and don't have a builtin C5 type
+	 */
+	public function clearCustom() {
+		$db = Loader::db();
+		$db->Execute("delete from Logs where logIsInternal = 0");
+	}
+	
+	public function clearInternal() {
+		$db = Loader::db();
+		$db->Execute("delete from Logs where logIsInternal = 1");
 	}
 	
 	public function close() {

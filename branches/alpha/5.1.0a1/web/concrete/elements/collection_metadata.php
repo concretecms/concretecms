@@ -1,8 +1,10 @@
-<? global $c;
-	Loader::model('collection_types');
-	Loader::model('collection_attributes');
+<?
+defined('C5_EXECUTE') or die(_("Access Denied."));
+global $c;
+Loader::model('collection_types');
+Loader::model('collection_attributes');
 
- if ($cp->canAdminPage()) {
+if ($cp->canAdminPage()) {
 	$ctArray = CollectionType::getList();
 }
 ?>

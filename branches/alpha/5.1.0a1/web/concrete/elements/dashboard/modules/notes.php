@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 Write notes to yourself using the textarea below.
 
 <br/><br/>

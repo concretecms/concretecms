@@ -1,4 +1,5 @@
 <?
+	defined('C5_EXECUTE') or die(_("Access Denied."));
 	$aBlocks = $controller->generateNav();
 	if (!is_object($c)) {
 		$c = $b->getBlockCollectionObject();

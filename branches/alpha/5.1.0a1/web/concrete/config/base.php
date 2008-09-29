@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 
 # These items should be set by site.php in config/ but if they're not that means we're installing and we need something there
 if (!defined('BASE_URL')) {
@@ -99,7 +100,8 @@ define('DIR_FILES_TOOLS', DIR_BASE . '/tools'); // front-end
 define('DIR_FILES_TOOLS_REQUIRED', DIR_BASE_CORE . '/tools'); // global
 
 # Packages 
-define('DIR_PACKAGES', DIR_BASE_CORE . '/packages');
+define('DIR_PACKAGES', DIR_BASE . '/packages');
+define('DIR_PACKAGES_CORE', DIR_BASE_CORE . '/packages');
 define('DIRNAME_PACKAGE_CORE', 'core');
 define('DIR_PACKAGE_CORE', DIR_BASE_CORE . '/packages/' . DIRNAME_PACKAGE_CORE);
 
@@ -118,6 +120,7 @@ define('DIRNAME_THEMES', 'themes');
 if (!defined('DIRNAME_THEMES_CORE')) {
 	define('DIRNAME_THEMES_CORE', 'core');
 }
+define('DIRNAME_TOOLS', 'tools');
 define('DIRNAME_BLOCK_TOOLS', 'tools');
 define('DIRNAME_BLOCK_TEMPLATES', 'templates');
 define('DIRNAME_CSS', 'css');
@@ -306,7 +309,8 @@ define('DEBUG_DISPLAY_PRODUCTION', 0);
 define('DEBUG_DISPLAY_ERRORS', 1);
 define('DEBUG_DISPLAY_ERRORS_SQL', 2); // not used
 define('DIRNAME_LOGS', 'logs'); // logs archive
-define('LOG_EMAILS', 'sent_emails');
+define('LOG_TYPE_EMAILS', 'sent_emails');
+define('LOG_TYPE_EXCEPTIONS', 'exceptions');
 
 # The name of the session cookie used.
 define('SESSION', 'CONCRETE5');

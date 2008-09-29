@@ -1,5 +1,5 @@
 <?
-
+defined('C5_EXECUTE') or die(_("Access Denied."));
 function admin_children_rebuild($cID) {
 	$db = Loader::db();
 	$children_array = array();

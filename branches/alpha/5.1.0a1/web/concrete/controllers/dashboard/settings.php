@@ -1,5 +1,6 @@
 <?
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
 class DashboardSettingsController extends Controller {
 
 	var $helpers = array('form');
@@ -79,8 +80,13 @@ class DashboardSettingsController extends Controller {
 
 	public function update_logging() {
 		if ($this->isPost()) {
-			Config::save('ENABLE_LOG_DATABASE_QUERIES', $this->post('ENABLE_LOG_DATABASE_QUERIES'));
-			Config::save('ENABLE_LOGGING', $this->post('ENABLE_LOGGING'));
+			$eldq = $this->post('ENABLE_LOG_DATABASE_QUERIES') == 1 ? 1 : 0;
+			$elem = $this->post('ENABLE_LOG_EMAILS') == 1 ? 1 : 0;
+			$eler = $this->post('ENABLE_LOG_ERRORS') == 1 ? 1 : 0;
+			
+			Config::save('ENABLE_LOG_DATABASE_QUERIES', $eldq);
+			Config::save('ENABLE_LOG_EMAILS', $elem);
+			Config::save('ENABLE_LOG_ERRORS', $eler);
 			$this->redirect('/dashboard/settings','set_developer','logging_saved');
 		}
 	}
@@ -94,14 +100,16 @@ class DashboardSettingsController extends Controller {
 	
 	public function set_developer($updated = false) {
 		$debug_level = Config::get('SITE_DEBUG_LEVEL');
-		$enable_logging = Config::get('ENABLE_LOGGING');
+		$enable_log_emails = Config::get('ENABLE_LOG_EMAILS');
 		$enable_log_database_queries = Config::get('ENABLE_LOG_DATABASE_QUERIES');
+		$enable_log_errors = Config::get('ENABLE_LOG_ERRORS');
 		if ($debug_level < 1) {
 			$debug_level = DEBUG_DISPLAY_PRODUCTION;
 		}
 		$this->set('debug_level', $debug_level);		
 		$this->set('enable_log_database_queries', $enable_log_database_queries);		
-		$this->set('enable_logging', $enable_logging);		
+		$this->set('enable_log_emails', $enable_log_emails);		
+		$this->set('enable_log_errors', $enable_log_errors);		
 		if ($updated) {
 			switch($updated) {
 				case "debug_saved":

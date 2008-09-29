@@ -1,4 +1,13 @@
-<? if (!$_REQUEST['group_submit_search']) { ?>
+<?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+$uc = Page::getByPath("/dashboard/groups");
+$ucp = new Permissions($uc);
+if (!$ucp->canRead()) {
+	die(_("You have no access to groups."));
+}
+
+if (!$_REQUEST['group_submit_search']) { ?>
 <div id="ccm-group-search-wrapper">
 <? } ?>
 

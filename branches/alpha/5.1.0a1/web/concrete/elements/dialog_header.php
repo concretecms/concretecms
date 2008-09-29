@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <script type="text/javascript">
 var ccm_currentDialog = "<?=$_SERVER['REQUEST_URI']?>";
 // add validation submit to any forms w/validation

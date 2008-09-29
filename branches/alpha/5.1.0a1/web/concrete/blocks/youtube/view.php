@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 $url = parse_url($videoURL);
 parse_str($url['query'], $query);
 ?>

@@ -1,4 +1,5 @@
 <?
+	defined('C5_EXECUTE') or die(_("Access Denied."));
 	class GoogleMapBlockController extends BlockController {
 		
 		protected $btDescription = "Enter an address and a Google Map of that location will be placed in your page.";

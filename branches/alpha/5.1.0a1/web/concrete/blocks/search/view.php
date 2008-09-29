@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
 <style>
 #searchResults .pageLink{ font-size:12px; color:#999; margin:2px 0px 8px 0px; padding:0px; display:block }
 #searchResults .searchResult{ margin-bottom:16px; margin-top:24px }
@@ -15,13 +16,13 @@
 	
 	<? if(strlen($query)==0){ ?>
 	<input name="search_paths[]" type="hidden" value="<?=$baseSearchPath?>" />
-	<? } else{
+	<? } else if (is_array($_REQUEST['search_paths'])) { 
 		foreach($_REQUEST['search_paths'] as $search_path){ ?>
 			<input name="search_paths[]" type="hidden" value="<?=$search_path?>" />
 	<?  }
 	} ?>
 	
-	<input name="query" type="text" value="<?=$_REQUEST['query']?>" />
+	<input name="query" type="text" value="<?=$query?>" />
 	
 	<input name="submit" type="submit" value="<?=$buttonText?>" />
 

@@ -1,6 +1,6 @@
 <?
 	Loader::block('library_file');
-	
+	defined('C5_EXECUTE') or die(_("Access Denied."));	
 	class ImageBlockController extends BlockController {
 
 		protected $btDescription = "Adds images and onstates from the library to pages.";

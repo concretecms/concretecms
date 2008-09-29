@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <h1><span>Add a Template</span></h1>
 <div class="ccm-dashboard-inner">
 

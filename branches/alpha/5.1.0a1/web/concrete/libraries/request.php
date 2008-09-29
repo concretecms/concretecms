@@ -1,4 +1,6 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
  * @package Core
  * @category Concrete
@@ -114,6 +116,18 @@ class Request {
 				$this->btHandle = $matches[1];
 			}
 			$this->includeType = 'BLOCK_TOOL';
+			return;
+		}
+
+		if (preg_match("/^tools\/packages\/(.[^\/]*)\/(.[^\.]*).php|^tools\/packages\/(.[^\/]*)\/(.[^\.]*)/i", $path, $matches)) {
+			if (isset($matches[4])) {
+				$this->filename = $matches[4] . '.php';
+				$this->pkgHandle = $matches[3];
+			} else {
+				$this->filename = $matches[2] . '.php';
+				$this->pkgHandle = $matches[1];
+			}
+			$this->includeType = 'PACKAGE_TOOL';
 			return;
 		}
 
@@ -246,5 +260,12 @@ class Request {
 	 */
 	public function getBlock() {
 		return $this->btHandle;
+	}
+	
+	/** 
+	 * Gets the package requested by the current request
+	 */
+	public function getPackageHandle() {
+		return $this->pkgHandle;
 	}
 }

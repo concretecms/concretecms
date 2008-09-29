@@ -1,4 +1,7 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
  * @package Core
  * @category Concrete
@@ -279,8 +282,13 @@
 		public function renderError($title, $error) {
 			$innerContent = $error;
 			$titleContent = $title; 
-			$this->setThemeForView(DIRNAME_THEMES_CORE, FILENAME_THEMES_ERROR . '.php', true);
-			include($this->theme);	
+			if (!$this->theme) {
+				$this->setThemeForView(DIRNAME_THEMES_CORE, FILENAME_THEMES_ERROR . '.php', true);
+				include($this->theme);	
+			} else {
+				Loader::element('error_fatal', array('innerContent' => $innerContent, 
+					'titleContent' => $titleContent));
+			}
 		}
 		
 
@@ -310,16 +318,23 @@
 			$pkgID = 0;
 			if ($pl instanceof PageTheme) {
 				if ($pl->getPackageID() > 0) {
-					$theme = DIR_PACKAGES . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . $filename;
+					if (is_dir(DIR_PACKAGES . '/' . $pl->getPackageHandle())) {
+						$dirp = DIR_PACKAGES;
+						$url = BASE_URL . DIR_REL;
+					} else {
+						$dirp = DIR_PACKAGES_CORE;
+						$url = ASSETS_URL;
+					}
+					$theme = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . $filename;
 					if (!file_exists($theme)) {
 						if ($singlePage) {
-							$theme = DIR_PACKAGES . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_VIEW;
+							$theme = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_VIEW;
 						} else {
-							$theme = DIR_PACKAGES . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_DEFAULT;
+							$theme = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_DEFAULT;
 						}
 					}
-					$themeDir = DIR_PACKAGES . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle();
-					$themePath = ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle();
+					$themeDir = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle();
+					$themePath = $url . '/' . DIRNAME_PACKAGES . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle();
 					$pkgID = $pl->getPackageID();
 				} else {
 					if (is_dir(DIR_FILES_THEMES . '/' . $pl->getThemeHandle())) {
@@ -380,122 +395,151 @@
 		 * @return void
 		*/	
 		public function render($view, $args = null) {
-			
-			if (is_array($args)) {
-				extract($args);
-			}
 
-			// strip off a slash if there is one at the end
-			if (is_string($view)) {
-				if (substr($view, strlen($view) - 1) == '/') {
-					$view = substr($view, 0, strlen($view) - 1);
+			try {			
+				if (is_array($args)) {
+					extract($args);
 				}
-			}
-			
-			$singlePage = false;
-			
-			// Extract controller information from the view, and put it in the current context
-			if (!isset($this->controller)) {
-				$this->controller = Loader::controller($view);
-				$this->controller->setupAndRun();
-			}
-			extract($this->controller->getSets());
-			extract($this->controller->getHelperObjects());
-			
-			// Determine which inner item to load, load it, and stick it in $innerContent
-			ob_start();			
-			if ($view instanceof Page) {
+	
+				// strip off a slash if there is one at the end
+				if (is_string($view)) {
+					if (substr($view, strlen($view) - 1) == '/') {
+						$view = substr($view, 0, strlen($view) - 1);
+					}
+				}
 				
-				$viewPath = $view->getCollectionPath();
-				$this->viewPath = $viewPath;
+				$singlePage = false;
 				
-				$cFilename = $view->getCollectionFilename();
-				$ctHandle = $view->getCollectionTypeHandle();
-				$editMode = $view->isEditMode();
-				$c = $view;
-				$this->c = $c;
+				// Extract controller information from the view, and put it in the current context
+				if (!isset($this->controller)) {
+					$this->controller = Loader::controller($view);
+					$this->controller->setupAndRun();
+				}
+				extract($this->controller->getSets());
+				extract($this->controller->getHelperObjects());
 				
-				// $view is a page. It can either be a SinglePage or just a Page, but we're not sure at this point, unfortunately
-				if ($view->getCollectionTypeID() == 0 && $cFilename) {
-					$singlePage = true;
-					if (file_exists(DIR_FILES_CONTENT. "{$cFilename}")) {
-						include(DIR_FILES_CONTENT. "{$cFilename}");
-					} else if ($view->getPackageID() > 0) {
-						$file = DIR_PACKAGES . '/' . $view->getPackageHandle() . '/'. DIRNAME_PAGES . $cFilename;
-						if (file_exists($file)) {
-							include($file);
+				// Determine which inner item to load, load it, and stick it in $innerContent
+				ob_start();			
+				if ($view instanceof Page) {
+					
+					$viewPath = $view->getCollectionPath();
+					$this->viewPath = $viewPath;
+					
+					$cFilename = $view->getCollectionFilename();
+					$ctHandle = $view->getCollectionTypeHandle();
+					$editMode = $view->isEditMode();
+					$c = $view;
+					$this->c = $c;
+					
+					// $view is a page. It can either be a SinglePage or just a Page, but we're not sure at this point, unfortunately
+					if ($view->getCollectionTypeID() == 0 && $cFilename) {
+						$singlePage = true;
+						if (file_exists(DIR_FILES_CONTENT. "{$cFilename}")) {
+							include(DIR_FILES_CONTENT. "{$cFilename}");
+						} else if ($view->getPackageID() > 0) {
+							$file1 = DIR_PACKAGES . '/' . $view->getPackageHandle() . '/'. DIRNAME_PAGES . $cFilename;
+							$file2 = DIR_PACKAGES_CORE . '/' . $view->getPackageHandle() . '/'. DIRNAME_PAGES . $cFilename;
+							if (file_exists($file1)) {
+								include($file1);
+							} else if (file_exists($file2)) {
+								include($file2);
+							}
+						} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "{$cFilename}")) {
+							include(DIR_FILES_CONTENT_REQUIRED. "{$cFilename}");
 						}
-					} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "{$cFilename}")) {
-						include(DIR_FILES_CONTENT_REQUIRED. "{$cFilename}");
+						
+						$themeFilename = $c->getCollectionHandle() . '.php';
+						
+					} else {
+	
+						$themeFilename = $ctHandle . '.php';
 					}
 					
-					$themeFilename = $c->getCollectionHandle() . '.php';
 					
+				} else if (is_string($view)) {
+					$viewPath = $view;
+					$this->viewPath = $viewPath;
+					// we're just passing something like "/login" or whatever. This will typically just be 
+					// internal Concrete stuff, but we also prepare for potentially having something in DIR_FILES_CONTENT (ie: the webroot)
+					if (file_exists(DIR_FILES_CONTENT . "/{$view}/" . FILENAME_COLLECTION_VIEW)) {
+						include(DIR_FILES_CONTENT . "/{$view}/" . FILENAME_COLLECTION_VIEW);
+					} else if (file_exists(DIR_FILES_CONTENT . "/{$view}.php")) {
+						include(DIR_FILES_CONTENT . "/{$view}.php");
+					} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "/{$view}/" . FILENAME_COLLECTION_VIEW)) {
+						include(DIR_FILES_CONTENT_REQUIRED . "/{$view}/" . FILENAME_COLLECTION_VIEW);
+					} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "/{$view}.php")) {
+						include(DIR_FILES_CONTENT_REQUIRED . "/{$view}.php");
+					}
+					
+					$themeFilename = $view . '.php';
+				}
+	
+				
+				$innerContent = ob_get_contents();
+				
+				if (ob_get_level() == (OB_INITIAL_LEVEL + 1)) {
+					ob_end_clean();
+				}
+				
+				if (is_object($this->c)) {
+					$c = $this->c;
+				}
+				
+				// Determine which outer item/theme to load
+				// obtain theme information for this collection
+				if (isset($this->themeOverride)) {
+					$theme = $this->themeOverride;
+				} else if (isset($controller->theme)) {
+					$theme = $controller->theme;
+				} else if (($tmpTheme = $this->getThemeFromPath($viewPath)) != false) {
+					$theme = $tmpTheme;
+				} else if (is_object($this->c) && ($tmpTheme = $this->c->getCollectionThemeObject()) != false) {
+					$theme = $tmpTheme;
 				} else {
-
-					$themeFilename = $ctHandle . '.php';
+					$theme = FILENAME_COLLECTION_DEFAULT_THEME;
+				}		
+	
+				$this->setThemeForView($theme, $themeFilename, $singlePage);
+	
+				// finally, we include the theme (which was set by setTheme and will automatically include innerContent)
+				// disconnect from our db and exit
+				include($this->theme);
+				
+				$this->controller->runTask('on_render_complete', $this->controller->getTask());
+	
+				if (ob_get_level() == OB_INITIAL_LEVEL) {
+	
+					require(DIR_BASE_CORE . '/startup/shutdown.php');
+					exit;
+					
 				}
 				
-				
-			} else if (is_string($view)) {
-				$viewPath = $view;
-				$this->viewPath = $viewPath;
-				// we're just passing something like "/login" or whatever. This will typically just be 
-				// internal Concrete stuff, but we also prepare for potentially having something in DIR_FILES_CONTENT (ie: the webroot)
-				if (file_exists(DIR_FILES_CONTENT . "/{$view}/" . FILENAME_COLLECTION_VIEW)) {
-					include(DIR_FILES_CONTENT . "/{$view}/" . FILENAME_COLLECTION_VIEW);
-				} else if (file_exists(DIR_FILES_CONTENT . "/{$view}.php")) {
-					include(DIR_FILES_CONTENT . "/{$view}.php");
-				} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "/{$view}/" . FILENAME_COLLECTION_VIEW)) {
-					include(DIR_FILES_CONTENT_REQUIRED . "/{$view}/" . FILENAME_COLLECTION_VIEW);
-				} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "/{$view}.php")) {
-					include(DIR_FILES_CONTENT_REQUIRED . "/{$view}.php");
+			} catch(ADODB_Exception $e) {
+				// if it's a database exception we go here.
+				if (Config::get('SITE_DEBUG_LEVEL') == DEBUG_DISPLAY_ERRORS) {
+					$this->renderError('An unexpected error occurred.', $e->getMessage());		
+				} else {
+					$this->renderError('An unexpected error occurred.', 'A database error occurred while processing this request.');
 				}
 				
-				$themeFilename = $view . '.php';
+				// log if setup to do so
+				if (ENABLE_LOG_ERRORS) {
+					$l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
+					$l->write('Exception Occurred: ' . $e->getMessage());
+					$l->write($e->getTraceAsString());
+					$l->close();
+				}
+			} catch (Exception $e) {
+				$this->renderError('An unexpected error occurred.', $e->getMessage());
+				// log if setup to do so
+				if (ENABLE_LOG_ERRORS) {
+					$l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
+					$l->write('Exception Occurred: ' . $e->getMessage());
+					$l->write($e->getTraceAsString());
+					$l->close();
+				}
 			}
 
-			
-			$innerContent = ob_get_contents();
-			
-			if (ob_get_level() == (OB_INITIAL_LEVEL + 1)) {
-				ob_end_clean();
-			}
-			
-			if (is_object($this->c)) {
-				$c = $this->c;
-			}
-			
-			// Determine which outer item/theme to load
-			// obtain theme information for this collection
-			if (isset($this->themeOverride)) {
-				$theme = $this->themeOverride;
-			} else if (isset($controller->theme)) {
-				$theme = $controller->theme;
-			} else if (($tmpTheme = $this->getThemeFromPath($viewPath)) != false) {
-				$theme = $tmpTheme;
-			} else if (is_object($this->c) && ($tmpTheme = $this->c->getCollectionThemeObject()) != false) {
-				$theme = $tmpTheme;
-			} else {
-				$theme = FILENAME_COLLECTION_DEFAULT_THEME;
-			}		
-
-			$this->setThemeForView($theme, $themeFilename, $singlePage);
-
-			// finally, we include the theme (which was set by setTheme and will automatically include innerContent)
-			// disconnect from our db and exit
-			include($this->theme);
-			
-			$this->controller->runTask('on_render_complete', $this->controller->getTask());
-
-			if (ob_get_level() == OB_INITIAL_LEVEL) {
-
-				require(DIR_BASE_CORE . '/startup/shutdown.php');
-				exit;
-				
-			}
 		}
-		
-
 		
 	}

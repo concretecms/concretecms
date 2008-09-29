@@ -1,5 +1,6 @@
 <?
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
 class NewsDashboardModuleController extends Controller {
 	
 	const FEED = 'http://www.concrete5.org/blog/category/news/feed/';

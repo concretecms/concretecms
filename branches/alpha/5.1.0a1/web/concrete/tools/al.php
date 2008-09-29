@@ -1,8 +1,17 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+$c = Page::getByPath("/dashboard/mediabrowser");
+$cp = new Permissions($c);
+$u = new User();
+if (!$cp->canRead()) {
+	die(_("Unable to access the file manager."));
+}
 Loader::library('search');
 Loader::model('search/file');
 
-$uploadURL = REL_DIR_FILES_TOOLS_REQUIRED . '/al_upload.php';
+$ci = Loader::helper('concrete/urls');
+$uploadURL = $ci->getToolsURL('al_upload');
 
 if(!isset($_REQUEST['sort'])) $_REQUEST['sort'] = 'bDateAdded desc';
 ?>

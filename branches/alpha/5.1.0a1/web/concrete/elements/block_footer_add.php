@@ -1,3 +1,5 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+
 </div>
 
 	<? if (is_array($extraParams)) { // defined within the area/content classes 

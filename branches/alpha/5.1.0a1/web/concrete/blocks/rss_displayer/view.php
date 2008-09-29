@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <style>
 .rssSummaryList .rssItem{ margin-bottom:16px }
 .rssSummaryList .rssItem .rssItemTitle{ font-weight:bold }

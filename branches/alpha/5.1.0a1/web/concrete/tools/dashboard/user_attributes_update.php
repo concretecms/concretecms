@@ -1,4 +1,11 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
+$ch = Page::getByPath("/dashboard/users");
+$chp = new Permissions($ch);
+if (!$chp->canRead()) {
+	die(_("Access Denied."));
+}
+
 // this should be cleaned up.... yeah
 $db = Loader::db();
 // update order of collections

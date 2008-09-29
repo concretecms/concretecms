@@ -1,4 +1,5 @@
 <?
+	defined('C5_EXECUTE') or die(_("Access Denied."));
 	$file = $controller->getFileObject();
 	$dimensions = $file->getDimensions();
 	if (is_array($dimensions)) {

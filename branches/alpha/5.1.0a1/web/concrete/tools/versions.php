@@ -1,12 +1,13 @@
 <?
-
+	defined('C5_EXECUTE') or die(_("Access Denied."));
+	
 	$c = Page::getByID($_REQUEST['cID']);
 	$cID = $c->getCollectionID();
 	$cp = new Permissions($c);
 	$isCheckedOut = $c->isCheckedOut() && !$c->isEditMode();
 	
 	if (!$cp->canReadVersions() && !$cp->canApproveCollection()) {
-		exit;
+		die(_("Access Denied."));
 	}
 	
 	if ($_GET['vtask'] == 'view_version') { ?>

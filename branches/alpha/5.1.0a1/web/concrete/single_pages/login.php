@@ -1,3 +1,5 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+
 <? if ($validated) { ?>
 
 <h1>Email Address Verified</h1>

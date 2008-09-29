@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 $ci = Loader::helper('concrete/interface');
 ?>
 	<h1><span>Inspect Theme</span></h1>

@@ -1,4 +1,7 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
  * Contains the blocktype object, the block type list (which is just a wrapper for querying the system for block types, and the block type
  * DB wrapper for ADODB.
@@ -260,7 +263,11 @@
 				$templates = array_merge($templates, $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES));
 			}
 			if ($pkgHandle != null) {
-				$templates = array_merge($templates, $fh->getDirectoryContents(DIR_PACKAGES . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES));
+				if (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) {
+					$templates = array_merge($templates, $fh->getDirectoryContents(DIR_PACKAGES . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES));
+				} else {
+					$templates = array_merge($templates, $fh->getDirectoryContents(DIR_PACKAGES_CORE . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES));
+				}
 			}
 			if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES)) {
 				$templates = array_merge($templates, $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES));
@@ -322,7 +329,14 @@
 		}
 
 		function installBlockTypeFromPackage($btHandle, $pkg, $btID = 0) {
-			$dir = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS;
+			$dir1 = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS;
+			$dir2 = DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS;
+			
+			if (file_exists($dir1)) {
+				$dir = $dir1;
+			} else {
+				$dir = $dir2;
+			}
 			
 			$bt = new BlockType;
 			$bt->btHandle = $btHandle;
@@ -409,7 +423,8 @@
 		public function getBlockTypePath() {
 			if ($this->getPackageID() > 0) {
 				$pkgHandle = $this->getPackageHandle();
-				$dir = DIR_FILES_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle();
+				$dirp = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+				$dir = $dirp . '/' . $pkgHandle . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle();
 			} else {
 				if (is_dir(DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle())) {
 					$dir = DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle();
@@ -438,6 +453,8 @@
 			} else {
 				if (file_exists(DIR_PACKAGES . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER)) {
 					$classfile = DIR_PACKAGES . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER;
+				} else if (file_exists(DIR_PACKAGES_CORE . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER)) {
+					$classfile = DIR_PACKAGES_CORE . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER;
 				}
 			}
 			
@@ -458,11 +475,16 @@
 			}
 		}
 		
-		public function inc($file) {
+		public function inc($file, $args = array()) {
+			extract($args);
 			$bt = $this;
 			global $c;
 			if ($this->getPackageID() > 0) {
-				include(DIR_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle() . '/' . $file);			
+				if (is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) {
+					include(DIR_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle() . '/' . $file);
+				} else {
+					include(DIR_PACKAGES_CORE . '/' . $this->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle() . '/' . $file);
+				}
 			} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle() . '/' . $file)) {
 				include(DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle() . '/' . $file);
 			} else {

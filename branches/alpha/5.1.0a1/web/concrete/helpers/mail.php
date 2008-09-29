@@ -15,6 +15,8 @@
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
+ 
+defined('C5_EXECUTE') or die(_("Access Denied."));
 class MailHelper {
 
 	private $headers = array();
@@ -48,7 +50,11 @@ class MailHelper {
 		if (file_exists(DIR_FILES_EMAIL_TEMPLATES . "/{$template}.php")) {			
 			include(DIR_FILES_EMAIL_TEMPLATES . "/{$template}.php");
 		} else if ($pkgHandle != null) {
-			include(DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MAIL_TEMPLATES . "/{$template}.php");
+			if (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) {
+				include(DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MAIL_TEMPLATES . "/{$template}.php");
+			} else {
+				include(DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_MAIL_TEMPLATES . "/{$template}.php");
+			}
 		} else {
 			include(DIR_FILES_EMAIL_TEMPLATES_CORE . "/{$template}.php");
 		}
@@ -117,19 +123,20 @@ class MailHelper {
 		}
 		
 		// add email to log
-		$l = new Log(LOG_EMAILS, true, true);
-		if (ENABLE_EMAILS) {
-			$l->write('**EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()**');
-		} else {
-			$l->write('**EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT**');
-		}
-		$l->write('Template Used: ' . $this->template);
-		$l->write('To: ' . $to);
-		$l->write('From : ' . $from);
-		$l->write('Subject : ' . $this->subject);
-		$l->write('Body: ' . $this->body);
-		$l->close();
-		
+		if (ENABLE_LOG_EMAILS) {
+			$l = new Log(LOG_TYPE_EMAILS, true, true);
+			if (ENABLE_EMAILS) {
+				$l->write('**EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()**');
+			} else {
+				$l->write('**EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT**');
+			}
+			$l->write('Template Used: ' . $this->template);
+			$l->write('To: ' . $to);
+			$l->write('From : ' . $from);
+			$l->write('Subject : ' . $this->subject);
+			$l->write('Body: ' . $this->body);
+			$l->close();
+		}		
 	}
 	
 }

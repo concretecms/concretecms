@@ -1,1 +1,2 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <div class="ccm-paging-top">Viewing <b><?=$pOptions['currentRangeStart']?></b> to <b><span id="pagingPageResults"><?=$pOptions['currentRangeEnd']?></span></b> (<b><span id="pagingTotalResults"><?=$pOptions['total']?></span></b> Total)</div>

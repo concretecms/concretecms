@@ -1,4 +1,5 @@
 <?
+	defined('C5_EXECUTE') or die(_("Access Denied."));
 	$ba = new AutonavBlockController($b);
 	$aBlocks = $ba->generateNav();
 	$c = $b->getBlockCollectionObject();

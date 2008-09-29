@@ -1,4 +1,7 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 $resp = array();
 if (isset($_REQUEST['bID'])) {
 	$c = Page::getByPath('/dashboard/mediabrowser');

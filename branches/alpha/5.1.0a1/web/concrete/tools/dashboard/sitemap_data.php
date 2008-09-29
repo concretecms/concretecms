@@ -1,5 +1,11 @@
 <?
-// this should be cleaned up.... yeah
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+$ch = Page::getByPath("/dashboard/sitemap");
+$chp = new Permissions($ch);
+if (!$chp->canRead()) {
+	die(_("Access Denied."));
+}
 
 $dh = Loader::helper('concrete/dashboard/sitemap');
 
