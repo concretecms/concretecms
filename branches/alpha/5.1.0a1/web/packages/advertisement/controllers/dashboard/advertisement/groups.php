@@ -1,5 +1,7 @@
 <?
-Loader::model("advertisement/advertisement_group");
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+Loader::model("advertisement_group", "advertisement");
 
 class DashboardAdvertisementGroupsController extends Controller {
 
