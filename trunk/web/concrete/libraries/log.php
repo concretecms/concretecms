@@ -1,7 +1,25 @@
 <?
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
+/**
+ * A library for dealing with searchable logs.
+ * @package Utilities
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 
+/**
+ * An object that represents a log entry.
+ * @package Utilities
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 class LogEntry extends Object {
 	
 	public function getType() {return $this->logType;}
@@ -27,6 +45,16 @@ class LogEntry extends Object {
 	
 }
 
+/**
+ * An object that represents a log entry dealing specifically with a database query. This item is populated by ADODB.
+ * @package Utilities
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
+ 
 class DatabaseLogEntry extends LogEntry {
 	
 	public function getQuery() {return $this->query;}
@@ -59,6 +87,16 @@ class DatabaseLogEntry extends LogEntry {
 }
 
 
+/**
+ * A library for dealing with searchable logs.
+ * @package Utilities
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
+ 
 class Log {
 
 	private $log;
