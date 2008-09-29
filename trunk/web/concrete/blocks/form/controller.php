@@ -152,6 +152,16 @@ class FormBlockController extends BlockController {
 	}
 }
 
+/**
+ * Namespace for statistics-related functions used by the form block.
+ *
+ * @package Blocks
+ * @subpackage BlockTypes
+ * @author Tony Trupp <tony@concrete5.org>
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 class FormBlockStatistics {
 
 	public static function getTotalSubmissions($date = null) {
@@ -207,6 +217,16 @@ class FormBlockStatistics {
 	}
 }
 
+/**
+ * Namespace for other functions used by the form block.
+ *
+ * @package Blocks
+ * @subpackage BlockTypes
+ * @author Tony Trupp <tony@concrete5.org>
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 class MiniSurvey{
 
 		public $btTable = 'btForm';
