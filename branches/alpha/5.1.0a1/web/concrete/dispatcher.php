@@ -1,4 +1,7 @@
 <?
+	## This constant ensures that we're operating inside dispatcher.php. There is a LATER check to ensure that dispatcher.php is being called correctly. ##
+	define('C5_EXECUTE', true);
+	
 	## Startup check ##	
 	require('startup/config_check.php');
 
@@ -54,6 +57,9 @@
 	## Default routes for various content items ##
 	require('config/theme_paths.php');
 
+	## Load session handlers
+	require('startup/session.php');
+
 	## Startup check, install ##	
 	require('startup/config_check_complete.php');
 	
@@ -71,9 +77,6 @@
 		include('config/site_events.php');
 	}
 	
-	## Load session handlers
-	require('startup/session.php');
-
 	## Check online, user-related startup routines
 	require('startup/user.php');
 
@@ -162,9 +165,5 @@
 	## now we display (provided we've gotten this far)
 
 	$v = View::getInstance();
-	try {
-		$v->render($c);
-	} catch (Exception $e) {
-		$v->renderError('An unexpected error occurred.', $e->getMessage());
-	}
+	$v->render($c);
 ?>

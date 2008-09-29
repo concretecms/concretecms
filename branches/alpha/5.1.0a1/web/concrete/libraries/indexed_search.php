@@ -5,6 +5,8 @@
 * @package Utilities
 * @subpackage Search
 */
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 class IndexedSearchResult {
 
 
@@ -87,7 +89,7 @@ class IndexedSearch {
 				if (is_object($themeObject)) {
 					$doc->addField(Zend_Search_Lucene_Field::Text('cTheme', $themeObject->getThemeHandle()));
 				}
-				$doc->addField(Zend_Search_Lucene_Field::Keyword( 'cPath', $nh->getLinkToCollection($c))); 
+				$doc->addField(Zend_Search_Lucene_Field::Text( 'cPath', $c->getCollectionPath())); 
 				
 				if (count($this->cPathSections) > 0) {
 					foreach($this->cPathSections as $var => $cPath) {

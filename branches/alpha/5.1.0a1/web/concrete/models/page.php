@@ -1,4 +1,7 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
 *
 * The page object in Concrete encapsulates all the functionality used by a typical page and their contents
@@ -141,8 +144,6 @@ class Page extends Collection {
 	public function processArrangement($areas) {
 		// this function is called via ajax, so it's a bit wonky, but the format is generally
 		// a{areaID} = array(b1, b2, b3) (where b1, etc... are blocks with ids appended.)
-		$l = new Log();
-		$l->write('Inside Areas: ' . print_r($areas, true));
 		$db = Loader::db();
 		foreach($areas as $arID => $blocks) {
 			if (intval($arID) > 0) {
@@ -435,9 +436,16 @@ class Page extends Collection {
 		$icon = '';
 		if ($this->isGeneratedCollection()) {
 			if ($this->getPackageID() > 0) {
-				$file = DIR_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
+				if (is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) {
+					$dirp = DIR_PACKAGES;
+					$url = BASE_URL . DIR_REL;
+				} else {
+					$dirp = DIR_PACKAGES_CORE;
+					$url = ASSETS_URL;
+				}
+				$file = $dirp . '/' . $this->getPackageHandle() . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
 				if (file_exists($file)) {
-					$icon = ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
+					$icon = $url . '/' . DIRNAME_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
 				}
 			} else if (file_exists(DIR_FILES_CONTENT . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON)) {
 				$icon = BASE_URL . DIR_REL . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;

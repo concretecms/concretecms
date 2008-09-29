@@ -1,5 +1,5 @@
 <?
-
+defined('C5_EXECUTE') or die(_("Access Denied."));
 $debug_level = Config::get('SITE_DEBUG_LEVEL');
 switch($debug_level) {
 	case DEBUG_DISPLAY_ERRORS:

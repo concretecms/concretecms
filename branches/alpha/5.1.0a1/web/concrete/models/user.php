@@ -1,4 +1,5 @@
 <?
+	defined('C5_EXECUTE') or die(_("Access Denied."));
 	class User extends Object {
 	
 		var $uID = '';
@@ -292,6 +293,8 @@
 		}
 		
 		function loadCollectionEdit(&$c) {
+			$c->refreshCache();
+
 			// can only load one page into edit mode at a time.
 			if ($c->isCheckedOut()) {
 				return false;
@@ -321,8 +324,6 @@
 				}
 			}
 			
-			// now we remove the cached item
-			$c->refreshCache();
 		}
 			
 		function unloadCollectionEdit() {		

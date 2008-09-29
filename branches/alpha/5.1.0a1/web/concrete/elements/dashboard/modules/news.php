@@ -1,5 +1,6 @@
-
-<? foreach($posts as $item) { ?>
+<?
+defined('C5_EXECUTE') or die(_("Access Denied."));
+foreach($posts as $item) { ?>
 	
 	<div class="post">
 	<h4><a href="<?php echo $item->get_permalink(); ?>"><?php echo $item->get_title(); ?></a></h4>

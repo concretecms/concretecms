@@ -1,5 +1,5 @@
 <?
-
+defined('C5_EXECUTE') or die(_("Access Denied."));
 class SlideshowBlockController extends BlockController {
 	
 	protected $btDescription = "Add a javascript slideshow of images.";

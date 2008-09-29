@@ -1,5 +1,7 @@
 <?
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 $c = Page::getByID($_REQUEST['cID']);
 $cp = new Permissions($c);
 $bt = BlockType::getByID($_REQUEST['btID']);

@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <div id="dashboard-reports">You must install Adobe Flash to view this report.</div>
 
 <script type="text/javascript">

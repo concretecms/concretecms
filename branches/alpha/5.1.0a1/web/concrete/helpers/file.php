@@ -15,6 +15,8 @@
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
 class FileHelper {
 
 	/**
@@ -73,18 +75,21 @@ class FileHelper {
 			$ctx = stream_context_create(array( 
 				'http' => array( 'timeout' => $timeout ) 
 			)); 
-			$contents = file_get_contents($file, 0, $ctx);
-		} else if (function_exists('curl_init')) {
+			if ($contents = @file_get_contents($file, 0, $ctx)) {
+				return $contents;
+			}
+		}
+		
+		if (function_exists('curl_init')) {
 			$curl_handle = curl_init();
 			curl_setopt($curl_handle, CURLOPT_URL, $file);
 			curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, $timeout);
 			curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
 			$contents = curl_exec($curl_handle);
-			curl_close($curl_handle);
-		} else {
-			throw new Exception("Unable to retrieve remote file contents.");
+			return $contents;
 		}
-		return $contents;
+		
+		return false;
 	}
 	
 	/** 

@@ -1,4 +1,6 @@
 <?  
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 $width = 425;
 $height = 350;
 if (isset($_GET['swfWidth']) || isset($_GET['swfHeight'])) {

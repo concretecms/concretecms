@@ -1,8 +1,13 @@
 <?
-$c = Page::getByID($_REQUEST['cID']);
-$v = CollectionVersion::get($c, "RECENT", true);
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
+$c = Page::getByID($_REQUEST['cID']);
 $cp = new Permissions($c);
+if (!$cp->canWrite()) {
+	die(_("Access Denied"));
+}
+
+$v = CollectionVersion::get($c, "RECENT", true);
 
 if ($cp->canApproveCollection()) {
 	$approveChecked = "";

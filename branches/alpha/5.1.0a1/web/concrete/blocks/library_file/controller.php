@@ -18,7 +18,7 @@
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-
+	defined('C5_EXECUTE') or die(_("Access Denied."));
 	class LibraryFileBlockController extends BlockController {
 	
 		protected $btDescription = "Files added to the asset library";

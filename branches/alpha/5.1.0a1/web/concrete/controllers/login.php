@@ -1,4 +1,6 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
 class LoginController extends Controller {
 	
 	public $helpers = array('form');

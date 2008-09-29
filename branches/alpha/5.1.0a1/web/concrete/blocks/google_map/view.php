@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <style>
 .googleMapCanvas{ width:100%; border:0px none; height: 400px;}
 </style>

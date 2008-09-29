@@ -1,4 +1,4 @@
-<? //echo var_dump($controller) ?>
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
 Title<br />
 <input type="text" name="title" value="<?=$title?>" /><br /><br />
 

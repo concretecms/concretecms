@@ -1,5 +1,5 @@
 <?
-
+defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::helper('concrete/dashboard/sitemap');
 
 if (isset($reveal)) {

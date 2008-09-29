@@ -1,5 +1,10 @@
 <?
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
+$u = new User();
+if (!$u->isRegistered()) {
+	die(_("Access Denied."));
+}
 Loader::model('pile');
 
 if ($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') {

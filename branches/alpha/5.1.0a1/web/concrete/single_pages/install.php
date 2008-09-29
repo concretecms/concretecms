@@ -1,3 +1,5 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
+
 <? if (isset($message)) { ?>
 
 <h1>Install Concrete</h1>

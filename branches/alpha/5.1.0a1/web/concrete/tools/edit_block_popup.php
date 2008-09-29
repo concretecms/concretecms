@@ -1,9 +1,15 @@
 <?
 
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 $c = Page::getByID($_REQUEST['cID']);
 $a = Area::get($c, $_REQUEST['arHandle']);
 $b = Block::getByID($_REQUEST['bID'], $c, $a);
 $bp = new Permissions($b);
+if (!$bp->canWrite()) {
+	die(_("Access Denied."));
+}
+
 include(DIR_FILES_ELEMENTS_CORE . '/dialog_header.php');
 $bv = new BlockView();
 

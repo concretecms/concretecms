@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 $filename = $controller->getFilename(); ?>
 
 <h2>External form file to include:</h2>

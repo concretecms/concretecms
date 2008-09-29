@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model("collection_types");
 
 if ($c->getCollectionID() != $cParentID && (!$cThis) && ($cParentID != 0)) { 

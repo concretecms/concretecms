@@ -1,4 +1,11 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
+$uc = Page::getByPath("/dashboard/users");
+$ucp = new Permissions($uc);
+if (!$ucp->canRead()) {
+	die(_("You have no access to users."));
+}
+
 Loader::library('search');
 Loader::model('search/user');
 

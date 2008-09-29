@@ -1,13 +1,9 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <div class="ccm-pane-controls">
-
 <?
-
 $children = $c->getCollectionChildrenArray();
-
 $numChildren = count($children);
-
 ?>
-
 <script type="text/javascript">
 	var childPages = new Array();
 	<? foreach($children as $cID) { ?>

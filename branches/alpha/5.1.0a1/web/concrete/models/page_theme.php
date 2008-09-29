@@ -1,4 +1,6 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
 *
 * When activating a theme, any file within the theme is loaded into the system as a Page Theme File. At that point
@@ -190,8 +192,14 @@ class PageTheme extends Object {
 			$pkgHandle = $pl->getPackageHandle();
 			
 			if ($row['pkgID'] > 0) {
-				$pl->ptDirectory = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
-				$pl->ptURL = ASSETS_URL . '/' . DIRNAME_PACKAGES  . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
+				if (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) {
+					$pl->ptDirectory = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
+					$url = BASE_URL . DIR_REL;
+				} else {
+					$pl->ptDirectory = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
+					$url = ASSETS_URL;
+				}
+				$pl->ptURL = $url . '/' . DIRNAME_PACKAGES  . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
 			} else if (is_dir(DIR_FILES_THEMES . '/' . $row['ptHandle'])) {
 				$pl->ptDirectory = DIR_FILES_THEMES . '/' . $row['ptHandle'];
 				$pl->ptURL = BASE_URL . DIR_REL . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
@@ -205,7 +213,11 @@ class PageTheme extends Object {
 	
 	public function add($ptHandle, $pkg = null) {
 		if (is_object($pkg)) {
-			$dir = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $ptHandle;
+			if (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) {
+				$dir = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $ptHandle;
+			} else {
+				$dir = DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $ptHandle;
+			}
 			$pkgID = $pkg->getPackageID();
 		} else if (is_dir(DIR_FILES_THEMES . '/' . $ptHandle)) {
 			$dir = DIR_FILES_THEMES . '/' . $ptHandle;
@@ -298,7 +310,7 @@ class PageTheme extends Object {
 	public function getThemeURL() {return $this->ptURL;}
 	public function getThemeEditorCSS() {return $this->ptURL . '/' . PageTheme::FILENAME_TYPOGRAPHY_CSS;}
 	public function isUninstallable() {
-		return ($this->pkgID < 1 && ($this->ptDirectory != DIR_FILES_THEMES_CORE . '/' . $this->getThemeHandle()));
+		return ($this->ptDirectory != DIR_FILES_THEMES_CORE . '/' . $this->getThemeHandle());
 	}
 	public function getThemeThumbnail() {
 		if (file_exists($this->ptDirectory . '/' . FILENAME_THEMES_THUMBNAIL)) {

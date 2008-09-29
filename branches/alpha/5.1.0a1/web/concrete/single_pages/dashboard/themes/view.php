@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 $bt = Loader::helper('concrete/interface');
 ?>
 <h1><span>Themes</span></h1>
@@ -24,7 +25,7 @@ $bt = Loader::helper('concrete/interface');
 	</tr>
 	<? } else {
 		foreach ($tArray as $t) { ?>
-		<tr <? if ($siteTheme->getThemeID() == $t->getThemeID()) { ?> class="ccm-theme-active" <? } ?>>
+		<tr <? if ($siteThemeID == $t->getThemeID()) { ?> class="ccm-theme-active" <? } ?>>
 			<td><?=$t->getThemeThumbnail()?></td>
 			<td class="ccm-template-content">
 			<h2><?=$t->getThemeName()?></h2>
@@ -34,7 +35,7 @@ $bt = Loader::helper('concrete/interface');
 			<?=$bt->button("Inspect", $this->url('/dashboard/themes/inspect', $t->getThemeID()), "left");?>
 			
 			<? if ($t->isUninstallable()) { ?>
-				<?=$bt->button("Remove", $this->url('/dashboard/themes/inspect', 'remove', $t->getThemeID()), "left");?>
+				<?=$bt->button("Remove", $this->url('/dashboard/themes', 'remove', $t->getThemeID()), "left");?>
 			<? } ?>
 			</td>
 		</tr>

@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <script type="text/javascript">
 var ccm_activeAssetField = "";
 ccm_chooseAsset = function(obj, activeField) {

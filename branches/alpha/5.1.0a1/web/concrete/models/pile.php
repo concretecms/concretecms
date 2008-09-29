@@ -1,4 +1,7 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
 *
 * Essentially a user's scrapbook, a pile is an object used for clumping bits of content together around a user account.

@@ -1,4 +1,7 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
  * Contains the block object, which is an atomic unit of content on a Concrete page.
  * @package Blocks
@@ -130,13 +133,17 @@
 			$b = $this;
 			global $c;
 			if ($this->getPackageID() > 0) {
-				include(DIR_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle() . '/' . $file);			
+				if (is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) {
+					include(DIR_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle() . '/' . $file);			
+				} else {
+					include(DIR_PACKAGES_CORE . '/' . $this->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle() . '/' . $file);			
+				}
 			} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle() . '/' . $file)) {
 				include(DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle() . '/' . $file);
 			} else {
 				include(DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle() . '/' . $file);
 			}
-		}		
+		}
 
 		function loadNewCollection(&$c) {
 			$this->cID = $c->getCollectionID();

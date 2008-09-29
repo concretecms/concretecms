@@ -1,4 +1,7 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 /**
 * Concrete Model Class
 * The model class extends the ADOdb active record class, allowing items that inherit from it to use the automatic create, updating, read and delete functionality it provides.

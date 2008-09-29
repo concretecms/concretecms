@@ -1,10 +1,13 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 set_time_limit(0);
 $jobObj = Loader::model("job");
 $outputDisabled=0;
 
 if (!Job::authenticateRequest($_REQUEST['auth'])) {
-	exit;
+	die(_("Access Denied."));
 } 
 
 //JSON vars

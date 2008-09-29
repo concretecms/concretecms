@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <script>
 <? $toggleQuestionsShowText='View all fields &raquo;' ?>
 var toggleQuestionsShowText='<?=$toggleQuestionsShowText?>';
