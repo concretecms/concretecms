@@ -57,10 +57,12 @@ class Request {
 		static $req;
 		if (!isset($req)) {
 			$path = Request::parsePathFromRequest('ORIG_PATH_INFO');
-			if (!$path) {
+			if ($path) {
+				$path = str_replace($_SERVER['SCRIPT_NAME'], '', '/' . $path);
+			} else {
 				$path = Request::parsePathFromRequest('PATH_INFO');
 			}
-			
+			$path = trim($path, '/');			
 			$req = new Request($path);
 		}
 		return $req;

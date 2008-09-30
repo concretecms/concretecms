@@ -30,6 +30,7 @@
 		</reflexive>
 	</target>
     
+    <!--
     <target name="archive">
         <echo msg="Creating archive..." />
 
@@ -47,6 +48,6 @@
 
         <echo msg="Files archived in build directory OK!" />
     </target>
-
+	//-->
     <echo msg="MAKE SURE TO REMOVE ALL THE BLOCKS AND SINGLE PAGES AND SHIT AND UPDATE THE VERSION NUMBER FILE ON CONCRETE5.ORG" />
 </project>
