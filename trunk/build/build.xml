@@ -29,15 +29,8 @@
 			</fileset>
 		</reflexive>
 	</target>
-	
-	 <target name="localize">
-    	<echo msg="Generating Translation Files" />
-    	<touch file="messages.po" />
-		<exec command="find export/ -iname '*.php' -exec xgettext -l PHP -j {} \;" />
-	</target>
     
-    <!--
-    <target name="dist" depends="export,prepare_short_tags">
+    <target name="archive">
         <echo msg="Creating archive..." />
 
         <tar destfile="build.tar.gz" compression="gzip">
@@ -54,6 +47,6 @@
 
         <echo msg="Files archived in build directory OK!" />
     </target>
-    //-->
+
     <echo msg="MAKE SURE TO REMOVE ALL THE BLOCKS AND SINGLE PAGES AND SHIT AND UPDATE THE VERSION NUMBER FILE ON CONCRETE5.ORG" />
 </project>
