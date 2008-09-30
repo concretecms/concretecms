@@ -1,5 +1,24 @@
 <?
+
 defined('C5_EXECUTE') or die(_("Access Denied."));
+/**
+ * @package Users
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
+
+/**
+ * The user attribute key object represents a metadata key for a user, like "birth date" or "user." Administrators can create any number of these keys and apply them to user accounts, and can do so graphically.
+ *
+ * @package Users
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
+
 class UserAttributeKey extends Object {
 	
 	

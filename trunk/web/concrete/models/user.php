@@ -1,5 +1,25 @@
 <?
-	defined('C5_EXECUTE') or die(_("Access Denied."));
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
+/**
+ * @package Users
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
+
+/**
+ * The user object deals primarily with logging users in and session-related activities.
+ *
+ * @package Users
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
+
 	class User extends Object {
 	
 		var $uID = '';
@@ -368,5 +388,3 @@
 		}
 				
 	}
-
-?>

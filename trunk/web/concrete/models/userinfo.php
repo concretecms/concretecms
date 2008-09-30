@@ -1,5 +1,24 @@
 <?
-	defined('C5_EXECUTE') or die(_("Access Denied."));
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+/**
+ * @package Users
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
+
+/**
+ * While the User object deals more with logging users in and relating them to core Concrete items, like Groups, the UserInfo object is made to grab auxiliary data about a user, including their user attributes. Additionally, the UserInfo object is the object responsible for adding/registering users in the system.
+ *
+ * @package Users
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
+
 	class UserInfo extends Object {
 	
 		/* magic method for user attributes. This is db expensive but pretty damn cool */
