@@ -1,5 +1,24 @@
 <?
 	defined('C5_EXECUTE') or die(_("Access Denied."));
+/**
+ * Contains the collection version object.
+ * @package Pages
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
+
+/**
+ * An object that maps to versions of collections. Each page in concrete is a _collection_ of blocks, each of which has different versions (for version control.)
+ * @package Pages
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 	class Version extends Object {
 	
 		var $vcID;
@@ -203,6 +222,15 @@
 		}
 	}
 
+/**
+ * An object that holds a list of versions for a particular collection.
+ * @package Pages
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 	class VersionList extends Object {
 	
 		var $vArray = array();

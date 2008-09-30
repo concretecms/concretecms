@@ -1,8 +1,7 @@
 <?
 /**
  * @package Helpers
- * @category Concrete
- * @subpackage Error
+ * @subpackage Validation
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
@@ -11,8 +10,7 @@
 /**
  * Helper elements for dealing with errors in Concrete
  * @package Helpers
- * @category Concrete
- * @subpackage Error
+ * @subpackage Validation
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
