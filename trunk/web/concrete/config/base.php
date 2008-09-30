@@ -311,7 +311,7 @@ $ADODB_ASSOC_CASE =  2;
 $ADODB_ACTIVE_CACHESECS = 300;
 $ADODB_CACHE_DIR = DIR_FILES_CACHE;
 define('ADODB_OUTP', 'concrete_log_query');
-define('APP_VERSION', '5.0.0RC1');
+define('APP_VERSION', '5.0');
 define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the latest version (this is seconds)
 define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_version_number.php');
 define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
