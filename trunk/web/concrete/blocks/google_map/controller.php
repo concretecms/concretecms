@@ -57,7 +57,9 @@
 	}
 	
 	
-
+	/** 
+	 * @access private
+	 */
 	class GoogleGeoCodeHelper{
 	
 		private $key;
