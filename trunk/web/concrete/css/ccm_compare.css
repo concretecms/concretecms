@@ -1,4 +1,4 @@
-ins, ins * {background: #bfb !important}
-del, del * {background: #fcc !important}
+ins, ins * {background: #42A500 !important; color: #000 !important; text-decoration: none}
+del, del * {background: #f22 !important; color: #000 !important; text-decoration: strike-through}
 
 div.ccm-error {font: "Arial MT Rounded", "Arial", color: #f00}
