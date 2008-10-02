@@ -12,4 +12,15 @@ class DiscussionPageTypeController extends Controller {
 		$posts = $dm->getPosts();
 	}
 	
+	/** 
+	 * Creates a top level post in a discussion
+	 */
+	public function post() {
+		if ($this->isPost()) {
+		
+		} else {
+			// we are viewing the page
+		}
+	}
+	
 }
