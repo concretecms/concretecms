@@ -24,6 +24,11 @@ class Cache extends CacheTemplate {
 			return false;
 		}
 		
+		/*
+		$l = new Log();
+		$l->write('Deleting Cache for ' . $type . ' ' . $id);
+		*/
+		
 		$k = $this->key($type, $id);
 		$result = eaccelerator_rm($k);
 		if ($result) {
@@ -39,6 +44,11 @@ class Cache extends CacheTemplate {
 		if (ENABLE_CACHE == false) {
 			return false;
 		}
+		
+		/*
+		$l = new Log();
+		$l->write('Setting Cache for ' . $type . ' ' . $id);
+		*/
 		
 		$k = $this->key($type, $id);
 		$s = serialize($obj);
@@ -64,7 +74,12 @@ class Cache extends CacheTemplate {
 			$s = eaccelerator_get($k);
 			$value = unserialize($s);
 		}
-
+		
+		/*
+		$l = new Log();
+		$l->write('Getting Cache for ' . $type . ' ' . $id);
+		*/
+		
 		if ($value === NULL) {
 			$value = false;
 		}

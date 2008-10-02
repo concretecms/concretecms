@@ -326,7 +326,11 @@
 			
 		}
 			
-		function unloadCollectionEdit() {		
+		function unloadCollectionEdit($c = null) {		
+			if (is_object($c)) {
+				$c->refreshCache();
+			}
+			
 			$db = Loader::db();
 			if ($this->getUserID() > 0) { 
 				$q = "update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cCheckedOutUID = " . $this->getUserID();

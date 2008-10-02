@@ -403,8 +403,10 @@
 						}
 						
 						$tcv = $tc->getVersionObject();
-						if (!$tcv->isApproved() && !$this->displayUnapproved) {
-							$displayPage = false;
+						if (is_object($tcv)) {
+							if (!$tcv->isApproved() && !$this->displayUnapproved) {
+								$displayPage = false;
+							}
 						}
 						
 						if ($this->displayUnavailablePages == false) {

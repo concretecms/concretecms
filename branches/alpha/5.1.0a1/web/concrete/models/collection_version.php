@@ -37,6 +37,10 @@
 		}
 
 		public function get(&$c, $cvID, $extended = false) {
+			if (is_string($cvID)) {
+				$cvID = CollectionVersion::getNumericalVersionID($c->getCollectionID(), $cvID);
+			}
+			
 			$ca = new Cache();
 			$cv = $ca->get('collection_version', $c->getCollectionID() . ':' . $cvID);
 			if ($cv instanceof CollectionVersion) {

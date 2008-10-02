@@ -92,14 +92,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		/* attribute stuff */
 		
 		public function getAttribute($akHandle) {
-			return $this->vObj->getAttribute($akHandle);
+			if (is_object($this->vObj)) {
+				return $this->vObj->getAttribute($akHandle);
+			}
 		}
 		
 		public function getCollectionAttributeValue($ak) {
-			if (is_object($ak)) {
-				return $this->vObj->getAttribute($ak->getCollectionAttributeHandle());
-			} else {
-				return $this->vObj->getAttribute($ak);
+			if (is_object($this->vObj)) {
+				if (is_object($ak)) {
+					return $this->vObj->getAttribute($ak->getCollectionAttributeHandle());
+				} else {
+					return $this->vObj->getAttribute($ak);
+				}
 			}
 		}
 		
