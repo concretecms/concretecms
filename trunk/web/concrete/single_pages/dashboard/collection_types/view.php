@@ -49,7 +49,7 @@ if ($_POST['task'] == 'add' || $_POST['update']) {
 	}
 	
 	if (count($error) == 0) {
-		if ($_POST['add']) {
+		if ($_POST['task'] == 'add') {
 			$nCT = CollectionType::add($_POST);
 			$this->controller->redirect('/dashboard/collection_types?created=1');
 		} else if (is_object($ct)) {
