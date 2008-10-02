@@ -65,7 +65,7 @@ class Log {
 	private $logfile;
 	private $name;
 	private $session = false;
-	private $isClosed = false;
+	//private $isClosed = false;
 	private $sessionText = null;
 	private $isInternal = false;
 	
@@ -101,10 +101,12 @@ class Log {
 	}
 	
 	public function close() {
+		/*
 		if ($this->isClosed) {
 			throw new Exception("This logging session has already been closed.");
 		}
 		$this->isClosed = true;
+		*/
 		$v = array($this->log, $this->sessionText, $this->isInternal);
 		$db = Loader::db();
 		$db->Execute("insert into Logs (logType, logText, logIsInternal) values (?, ?, ?)", $v);

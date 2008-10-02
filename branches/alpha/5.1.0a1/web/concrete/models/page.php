@@ -30,7 +30,8 @@ class Page extends Collection {
 			$version = CollectionVersion::getNumericalVersionID($cID, $version);
 		}
 		$ca = new Cache();
-		$c = $ca->get('page', $cID . ':' . $version);
+		$c = ($version > 0) ? $ca->get('page', $cID . ':' . $version) : $ca->get('page', $cID);
+
 		if ($c instanceof Page) {
 			return $c;
 		}
@@ -38,7 +39,11 @@ class Page extends Collection {
 		$where = "where Pages.cID = ?";
 		$c = new Page;
 		$c->populatePage($cID, $where, $version);
-		$ca->set('page', $c->getCollectionID() . ':' . $version, $c);
+		if ($version > 0) {
+			$ca->set('page', $c->getCollectionID() . ':' . $version, $c);
+		} else {
+			$ca->set('page', $c->getCollectionID(), $c);
+		}
 		return $c;
 	}
 	
@@ -107,6 +112,7 @@ class Page extends Collection {
 	public function refreshCache() {
 		$ca = new Cache();
 		$vo = $this->getVersionObject();
+		$ca->delete('page', $this->getCollectionID());
 		$ca->delete('page', $this->getCollectionID() . ':' . $vo->getVersionID());
 	}
 	
