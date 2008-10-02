@@ -310,11 +310,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * @access public
 		 * @param PageTheme object $pl
 		 * @param string $filename
-		 * @param boolean $singlePage
+		 * @param boolean $wrapTemplateInTheme
 		 * @return void
 		*/	
-		private function setThemeForView($pl, $filename, $singlePage = false) {
-			// singlePage gets set to true if we're passing the filename of a single page through 
+		private function setThemeForView($pl, $filename, $wrapTemplateInTheme = false) {
+			// wrapTemplateInTheme gets set to true if we're passing the filename of a single page or page type file through 
 			$pkgID = 0;
 			if ($pl instanceof PageTheme) {
 				if ($pl->getPackageID() > 0) {
@@ -327,7 +327,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					}
 					$theme = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . $filename;
 					if (!file_exists($theme)) {
-						if ($singlePage) {
+						if ($wrapTemplateInTheme) {
 							$theme = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_VIEW;
 						} else {
 							$theme = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_DEFAULT;
@@ -346,7 +346,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					}
 					$theme = $dir . '/' . $pl->getThemeHandle() . '/' . $filename;
 					if (!file_exists($theme)) {
-						if ($singlePage) {
+						if ($wrapTemplateInTheme) {
 							$theme = $dir . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_VIEW;
 						} else {
 							$theme = $dir . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_DEFAULT;
@@ -408,7 +408,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					}
 				}
 				
-				$singlePage = false;
+				$wrapTemplateInTheme = false;
 				
 				// Extract controller information from the view, and put it in the current context
 				if (!isset($this->controller)) {
@@ -433,7 +433,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					
 					// $view is a page. It can either be a SinglePage or just a Page, but we're not sure at this point, unfortunately
 					if ($view->getCollectionTypeID() == 0 && $cFilename) {
-						$singlePage = true;
+						$wrapTemplateInTheme = true;
 						if (file_exists(DIR_FILES_CONTENT. "{$cFilename}")) {
 							include(DIR_FILES_CONTENT. "{$cFilename}");
 						} else if ($view->getPackageID() > 0) {
@@ -451,7 +451,15 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						$themeFilename = $c->getCollectionHandle() . '.php';
 						
 					} else {
-	
+
+						if (file_exists(DIR_BASE . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php')) {
+							include(DIR_BASE . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php');
+							$wrapTemplateInTheme = true;
+						} else if (file_exists(DIR_BASE_CORE. '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php')) {
+							include(DIR_BASE_CORE . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php');
+							$wrapTemplateInTheme = true;
+						}					
+						
 						$themeFilename = $ctHandle . '.php';
 					}
 					
@@ -499,7 +507,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$theme = FILENAME_COLLECTION_DEFAULT_THEME;
 				}		
 	
-				$this->setThemeForView($theme, $themeFilename, $singlePage);
+				$this->setThemeForView($theme, $themeFilename, $wrapTemplateInTheme);
 	
 				// finally, we include the theme (which was set by setTheme and will automatically include innerContent)
 				// disconnect from our db and exit
