@@ -30,6 +30,7 @@ class Controller {
 	private $headerItems = array();
 	private $theme = null;
 	private $c; // collection
+
 	
 	/**
 	 * Items in here CANNOT be called through the URL
@@ -47,6 +48,14 @@ class Controller {
 		}
 		
 	}	
+
+	/**
+	 * @access private
+	 */
+	public function getRenderOverride() {
+		return $this->renderOverride;
+	}
+	
 	
 	private function setupQueryParameters($task, $params) {
 		$tmpArray = explode('/', $params);
@@ -218,8 +227,12 @@ class Controller {
 	 */
 	public function render($view) {
 		$v = View::getInstance();
+		$this->renderOverride = $view;
 		$v->setCollectionObject($this->getCollectionObject());
 		$v->setController($this);
+		if (method_exists($this, 'on_before_render')) {
+			call_user_func_array(array($this, 'on_before_render'), array($method));
+		}
 		$v->render($view);
 	}
 	
