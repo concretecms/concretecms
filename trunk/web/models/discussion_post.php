@@ -9,7 +9,13 @@ class DiscussionPostModel extends Page {
 	
 	public function getSubject() { return $this->getCollectionName(); }
 	public function getBody() { return $this->getCollectionDescription(); }
-	public function getUserName() { return $this->userinfo->getUserName();}
+	public function getUserName() {
+		if (is_object($this->userinfo)) {
+			return  $this->userinfo->getUserName();
+		} else {
+			return "Anonymous";
+		}
+	}
 	
 	private function setUser($uID) {
 		$this->userinfo = UserInfo::getByID($uID);
