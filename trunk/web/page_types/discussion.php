@@ -13,10 +13,10 @@ foreach($posts as $p) {
 		by
 		<span class="discussion-author"><?=$p->getUserName()?></span>
 	</div>
-</div>
-		
+	
 		
 <? } ?>
+</div>
 
 <br/><br/>
 
