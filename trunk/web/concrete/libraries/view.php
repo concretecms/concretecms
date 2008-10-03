@@ -465,8 +465,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					
 					
 				} else if (is_string($view)) {
+					
+					// if we're passing a view but our render override is not null, that means that we're passing 
+					// a new view from within a controller. If that's the case, then we DON'T override the viewPath, we want to keep it
+					
 					$viewPath = $view;
-					$this->viewPath = $viewPath;
+					if ($this->controller->getRenderOverride() != '' && $this->getCollectionObject() != null) {
+						// we are INSIDE a collection renderring a view. Which means we want to keep the viewPath that of the collection
+						$this->viewPath = $this->getCollectionObject()->getCollectionPath();
+					}
+					
 					// we're just passing something like "/login" or whatever. This will typically just be 
 					// internal Concrete stuff, but we also prepare for potentially having something in DIR_FILES_CONTENT (ie: the webroot)
 					if (file_exists(DIR_FILES_CONTENT . "/{$view}/" . FILENAME_COLLECTION_VIEW)) {
@@ -478,10 +486,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "/{$view}.php")) {
 						include(DIR_FILES_CONTENT_REQUIRED . "/{$view}.php");
 					}
-					
+					$wrapTemplateInTheme = true;
 					$themeFilename = $view . '.php';
 				}
-	
 				
 				$innerContent = ob_get_contents();
 				

@@ -4,15 +4,16 @@ Loader::model('discussion');
 class DiscussionPageTypeController extends Controller {
 
 	public $helpers = array('form', 'html'); 
-	
+	private $error = false;
+	private $discussion;
+
 	/** 
 	 * Returns all the posts beneath a given discussion
 	 */
 	public function on_start() {
-		$c = $this->getCollectionObject();
-		$dm = DiscussionModel::load($c);
-		$posts = $dm->getPosts();
-		$this->set('posts', $posts);
+		$this->error = Loader::helper('validation/error');
+		$this->discussion = DiscussionModel::load($this->getCollectionObject());
+		$this->set('posts', $this->discussion->getPosts());
 	}
 	
 	/** 
@@ -20,11 +21,24 @@ class DiscussionPageTypeController extends Controller {
 	 */
 	public function add() {
 		if ($this->isPost()) {
-			print 'add to db';
-		
+			$v = Loader::helper('validation/strings');
+			if (!$v->notempty($this->post('subject'))) {
+				$this->error->add('Your subject cannot be empty.');
+			}			
+			if (!$v->notempty($this->post('message'))) {
+				$this->error->add('Your message cannot be empty.');
+			}			
+			if (!$this->error->has()) {
+				$dpm = $this->discussion->addPost($this->post('subject'), $this->post('message'));
+			}
 		} else {
-			// we are viewing the page
+
 		}
+		$this->render('/add_discussion');
+	}
+	
+	public function on_before_render() {
+		$this->set('error', $this->error);
 	}
 	
 }

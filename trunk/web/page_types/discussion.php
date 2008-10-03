@@ -20,22 +20,4 @@ foreach($posts as $p) {
 
 <br/><br/>
 
-<? if ($this->controller->getTask() == 'add') { ?>
-
-	<form method="post" action="<?=$this->action('add')?>">
-	<div>
-	<?= $form->label('subject', 'Topic'); ?>
-	<?= $form->text('subject') ?>
-	</div>
-	
-	<div>
-	<?= $form->label('message', 'Message'); ?>
-	<?= $form->textarea('Message') ?>
-	</div>
-	
-	<?=$form->submit('post', 'Post Message') ?>
-	
-	</form>
-<? } else { ?>
-	<a href="<?=$this->action('add')?>">Add Discussion</a>
-<? } ?>
+<a href="<?=$this->action('add')?>">Add Discussion</a>

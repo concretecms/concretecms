@@ -41,13 +41,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		protected $identifier;
 		
 		/**
-		 * @access private
-		 */
-		public function getRenderOverride() {
-			return $this->renderOverride;
-		}
-		
-		/**
 		 * Sets a value used by a particular block. These variables will automatically be present in the corresponding views used by the block.
 		 * @param string $key
 		 * @param string $value
