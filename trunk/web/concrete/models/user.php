@@ -152,6 +152,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$cID = $c->getCollectionID();
 			$v = array($cID, $uID);
 			$db->query("insert into PageStatistics (cID, uID) values (?, ?)", $v);
+			$db->Replace('PageStatisticsSummary', array('cID' => $c->getCollectionID(), 'cViews' => 'cViews + 1'), 'cID', false);
 		}
 		
 		public function encryptPassword($uPassword, $salt = PASSWORD_SALT) {
