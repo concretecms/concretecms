@@ -36,7 +36,7 @@ class DiscussionPageTypeController extends Controller {
 		} else {
 
 		}
-		$this->render('/add_discussion');
+		$this->render('/add_discussion_post');
 	}
 	
 	public function on_before_render() {
