@@ -1,22 +1,26 @@
 <?
 
-class DiscussionPostModel {
+class DiscussionPostModel extends Page {
 	
 	private $body = false;
+	private $userinfo = false;
+
+	const CTHANDLE = 'discussion_post';
 	
-	public function getSubject() {
-		return $this->cvName;
+	public function getSubject() { return $this->getCollectionName(); }
+	public function getBody() { return $this->getCollectionDescription(); }
+	public function getUserName() { return $this->userinfo->getUserName();}
+	
+	private function setUser($uID) {
+		$this->userinfo = UserInfo::getByID($uID);
 	}
 	
-	public function getBody() {
-		if ($this->body == false) {
-			$a = new Area('Main');
-			$b = $a->getAreaBlocksArray($this);
-			$b1 = $b[0];
-			$bi = $b1->getInstance();
-			$this->content = $bi->content;
-		}		
-		return $this->body;
+	public static function getByID($cID, $cvID = 'ACTIVE') {
+		$where = "where Pages.cID = ?";
+		$c = new DiscussionPostModel;
+		$c->populatePage($cID, $where, $cvID);		
+		$c->setUser($c->getCollectionUserID());
+		return $c;
 	}
-	
+
 }
