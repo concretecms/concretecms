@@ -1,5 +1,4 @@
 <?
-
 Loader::model('discussion');
 class DiscussionPageTypeController extends Controller {
 
