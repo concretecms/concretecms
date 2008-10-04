@@ -7,6 +7,13 @@ class DiscussionPostModel extends Page {
 
 	const CTHANDLE = 'discussion_post';
 	
+	public function load($obj) {
+		if ($obj instanceof Page) {
+			$dpm = DiscussionPostModel::getByID($obj->getCollectionID(), $obj->getVersionID());
+			return $dpm;
+		}
+	}
+	
 	public function getSubject() { return $this->getCollectionName(); }
 	public function getBody() { return $this->getCollectionDescription(); }
 	public function getUserName() {
