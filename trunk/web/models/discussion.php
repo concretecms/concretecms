@@ -14,6 +14,11 @@ class DiscussionModel extends Page {
 		$where = "where Pages.cID = ?";
 		$c = new DiscussionModel;
 		$c->populatePage($cID, $where, $cvID);	
+		
+		Loader::model('page_statistics');
+		$c->setTotalViews(PageStatistics::getTotalViews($cID));
+		$c->setTotalTopics($c->getNumChildren());
+		$c->setTotalMessages(PageStatistics::getTotalChildren($cID));
 		return $c;
 	}
 
@@ -51,4 +56,13 @@ class DiscussionModel extends Page {
 		$n->addBlock($b1, "Main", array('content' => $message));
 		return DiscussionPostModel::getByID($n->getCollectionID(), 'ACTIVE');
 	}
+	
+	public function setTotalViews($cViews) {$this->cViews = $cViews;}
+	public function setTotalTopics($cTotalTopics) {$this->cTotalTopics = $cTotalTopics;}
+	public function setTotalMessages($cTotalChildren) {$this->cTotalChildren = $cTotalChildren;}
+	
+	public function getTotalViews() {return $this->cViews;}
+	public function getTotalTopics() {return $this->cTotalTopics;}
+	public function getTotalMessages() {return $this->cTotalChildren;}
+	
 }

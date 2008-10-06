@@ -5,6 +5,15 @@
 			<key />
 			<unsigned />
 		</field>
-		<field name="mode" type="C" size="100"></field>
+		<field name="cParentID" type="I">
+			<unsigned />
+			<notnull />
+			<default value="1" />
+		</field>
+		<field name="cThis" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="0" />
+		</field>
 	</table>
 </schema>

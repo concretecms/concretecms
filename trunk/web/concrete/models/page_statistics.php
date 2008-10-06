@@ -107,6 +107,25 @@ class PageStatistics {
 			$cParentID = $db->GetOne("select cParentID from Pages where cID = ?", array($cParentID));
 		}
 	}
+	
+	
+	/** 
+	 * For a particular $cID, return the total views
+	 */
+	public function getTotalViews($cID) {
+		$db = Loader::db();
+		$r = $db->GetOne("select cViews from PageStatisticsSummary where cID = ?", array($cID));
+		return $r;
+	}
+
+	/** 
+	 * For a particular $cID, return the total children
+	 */
+	public function getTotalChildren($cID) {
+		$db = Loader::db();
+		$r = $db->GetOne("select cTotalChildren from PageStatisticsSummary where cID = ?", array($cID));
+		return $r;
+	}
 
 
 }

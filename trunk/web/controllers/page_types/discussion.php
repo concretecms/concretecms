@@ -30,7 +30,7 @@ class DiscussionPageTypeController extends Controller {
 			if (!$this->error->has()) {
 				$dpm = $this->discussion->addPost($this->post('subject'), $this->post('message'));
 				$nh = Loader::helper('navigation');
-				$this->redirect($nh->getCollectionURL($dpm));
+				$this->redirect($dpm->getCollectionPath());
 			}
 		} else {
 
