@@ -340,8 +340,9 @@ class Page extends Collection {
 		$res = $db->execute($r, $v);
 		$newCID = $db->Insert_ID();
 
-		$q = "update Pages set cChildren=cChildren+1 where cID='{$cParentID}'";
-		$r = $db->query($q);
+		Loader::model('page_statistics');		
+		PageStatistics::incrementParents($newCID);
+
 		
 		if ($cPath) {
 			$q2 = "insert into PagePaths (cID, cPath) values (?, ?)";
@@ -391,8 +392,8 @@ class Page extends Collection {
 		$res = $db->execute($r, $v);
 		$newCID = $db->Insert_ID();
 
-		$q = "update Pages set cChildren=cChildren+1 where cID='{$cParentID}'";
-		$r = $db->query($q);
+		Loader::model('page_statistics');		
+		PageStatistics::incrementParents($newCID);
 
 		return $newCID;
 
@@ -445,6 +446,10 @@ class Page extends Collection {
 			$this->delete();
 		} else if ($cIDRedir > 0) {
 			$db = Loader::db();
+
+			Loader::model('page_statistics');		
+			PageStatistics::decrementParents($this->getCollectionPointerOriginalID());
+
 			$args = array($this->getCollectionPointerOriginalID());
 			$q = "delete from Pages where cID = ?";
 			$r = $db->query($q, $args);
@@ -455,11 +460,9 @@ class Page extends Collection {
 			$q = "delete from CollectionVersions where cID = ?";
 			$r = $db->query($q, $args);
 			
-			$q = "update Pages set cChildren=cChildren-1 where cID='{$this->cParentID}'";
-			$r = $db->query($q);
-
 			$q = "delete from PagePaths where cID = ?";
 			$r = $db->query($q, $args);
+
 			return $cIDRedir;
 		}
 	}
@@ -907,7 +910,10 @@ class Page extends Collection {
 		$db = Loader::db();
 		$newCParentID = $nc->getCollectionID();
 		$dh = Loader::helper('date');
-				
+
+		Loader::model('page_statistics');		
+		PageStatistics::decrementParents($this->cID);
+
 		$cDateModified = $dh->getLocalDateTime();
 		if ($this->getPermissionsCollectionID() != $this->getCollectionID() && $this->getPermissionsCollectionID() != $this->getMasterCollectionID()) {
 			// implicitly, we're set to inherit the permissions of wherever we are in the site.
@@ -930,11 +936,7 @@ class Page extends Collection {
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 
-		// update cChildren to reflect changes
-		$q = "update Pages set cChildren=cChildren-1 where cID='{$this->cParentID}'";
-		$r = $db->query($q);
-		$q = "update Pages set cChildren=cChildren+1 where cID='{$newCParentID}'";
-		$r = $db->query($q);
+		PageStatistics::incrementParents($this->cID);
 
 		// now that we've moved the collection, we rescan its path
 		$this->rescanCollectionPath();
@@ -983,10 +985,9 @@ class Page extends Collection {
 		$q = "insert into Pages (cID, ctID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$res = $db->query($q, $v);
 	
-		// Update cChildren
-		$q = "update Pages set cChildren=cChildren+1 where cID='$cParentID'";
-		$r = $db->query($q);
-
+		Loader::model('page_statistics');
+		PageStatistics::incrementParents($newCID);
+		
 		// now with any specific permissions - but only if this collection is set to override
 		if ($this->getCollectionInheritance() == 'OVERRIDE') {
 			$q = "select cID, gID, uID, cgPermissions, cgStartDate, cgEndDate from PagePermissions where cID = '{$this->cID}'";
@@ -1036,7 +1037,7 @@ class Page extends Collection {
 	}
 
 	function delete() {
-
+		Loader::model('page_statistics');
 		$cID = $this->getCollectionID();
 
 		if ($cID <= 1) {
@@ -1061,9 +1062,9 @@ class Page extends Collection {
 		$r = $db->query($q);
 		
 		// remove all pages where the pointer is this cID
-		$r = $db->query("select cParentID from Pages where cPointerID = ?", array($cID));
+		$r = $db->query("select cID from Pages where cPointerID = ?", array($cID));
 		while ($row = $r->fetchRow()) {
-			$db->query("update Pages set cChildren = cChildren - 1 where cID = ?", $row['cParentID']);
+			PageStatistics::decrementParents($row['cID']);
 		}
 		
 		$q = "delete from PagePermissions where cID = '{$cID}'";
@@ -1079,8 +1080,7 @@ class Page extends Collection {
 		$r = $db->query($q);
 		
 		// Update cChildren for cParentID
-		$q = "update Pages set cChildren=cChildren-1 where cID='$cParentID'";
-		$r = $db->query($q);
+		PageStatistics::decrementParents($cID);
 		
 		$q = "select cID from Pages where cParentID = '{$cID}'";
 		$r = $db->query($q);
@@ -1583,8 +1583,8 @@ class Page extends Collection {
 
 		if ($res) {
 			// Collection added with no problem -- update cChildren on parrent
-			$q = "update Pages set cChildren=cChildren+1 where cID='$cParentID'";
-			$r = $db->query($q);
+			Loader::model('page_statistics');
+			PageStatistics::incrementParents($newCID);
 			
 			if ($r) {
 				// now that we know the insert operation was a success, we need to see if the collection type we're adding has a master collection associated with it
@@ -1638,8 +1638,8 @@ class Page extends Collection {
 
 		if ($res) {
 			// Collection added with no problem -- update cChildren on parrent
-			$q = "update Pages set cChildren=cChildren+1 where cID='$cParentID'";
-			$r = $db->query($q);
+			Loader::model('page_statistics');
+			PageStatistics::incrementParents($cID);
 		}
 			
 

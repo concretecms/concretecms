@@ -87,9 +87,13 @@ class PageStatistics {
 	/** 
 	 * For a particular page ID, grabs all the pages of this page, and increments the cTotalChildren number for them
 	 */
-	public static function incrementViewsForParents($cID) {
+	public static function incrementParents($cID) {
 		$db = Loader::db();
 		$cParentID = $db->GetOne("select cParentID from Pages where cID = ?", array($cID));
+
+		$q = "update Pages set cChildren = cChildren+1 where cID = ?";
+		$r = $db->query($q, array($cParentID));
+
 		while ($cParentID > 0) {
 			$db->Replace('PageStatisticsSummary', array('cID' => $cParentID, 'cTotalChildren' => 'cTotalChildren + 1'), 'cID', false);
 			$cParentID = $db->GetOne("select cParentID from Pages where cID = ?", array($cParentID));
@@ -99,9 +103,13 @@ class PageStatistics {
 	/** 
 	 * For a particular page ID, grabs all the pages of this page, and decrements the cTotalChildren number for them
 	 */
-	public static function decrementViewsForParents($cID) {
+	public static function decrementParents($cID) {
 		$db = Loader::db();
 		$cParentID = $db->GetOne("select cParentID from Pages where cID = ?", array($cID));
+
+		$q = "update Pages set cChildren = cChildren - 1 where cID = ?";
+		$r = $db->query($q, array($cParentID));
+
 		while ($cParentID > 0) {
 			$db->Replace('PageStatisticsSummary', array('cID' => $cParentID, 'cTotalChildren' => 'cTotalChildren - 1'), 'cID', false);
 			$cParentID = $db->GetOne("select cParentID from Pages where cID = ?", array($cParentID));
