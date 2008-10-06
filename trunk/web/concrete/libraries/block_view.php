@@ -191,7 +191,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 			switch($view) {
 				case 'view':
-					$_filename = FILENAME_BLOCK_VIEW;
+					if (!isset($_filename)) {
+						$_filename = FILENAME_BLOCK_VIEW;
+					}
 					if ($bFilename) {
 						if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
 							$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
