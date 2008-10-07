@@ -21,11 +21,16 @@ class DiscussionPageTypeController extends Controller {
 	public function add() {
 		if ($this->isPost()) {
 			$v = Loader::helper('validation/strings');
+			$wordFilter = Loader::helper('validation/banned_words');
 			if (!$v->notempty($this->post('subject'))) {
 				$this->error->add('Your subject cannot be empty.');
-			}			
+			}elseif( $wordFilter->hasBannedWords($this->post('subject')) ){
+				$this->error->add('Your subject contains inappropriate content.');
+			}
 			if (!$v->notempty($this->post('message'))) {
 				$this->error->add('Your message cannot be empty.');
+			}elseif( $wordFilter->hasBannedWords($this->post('message')) ){
+				$this->error->add('Your message contains inappropriate content.');
 			}			
 			if (!$this->error->has()) {
 				$dpm = $this->discussion->addPost($this->post('subject'), $this->post('message'));
