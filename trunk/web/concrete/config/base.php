@@ -25,7 +25,7 @@ if (!defined('REDIRECT_TO_BASE_URL')) {
 }
 
 if (!defined('ENABLE_APPLICATION_EVENTS')) {
-	define('ENABLE_APPLICATION_EVENTS', false);
+	define('ENABLE_APPLICATION_EVENTS', true);
 }
 
 if (!defined('ENABLE_EMAILS')) {

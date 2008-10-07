@@ -10,15 +10,18 @@ class DiscussionModel extends Page {
 		}
 	}
 	
-	public static function getByID($cID, $cvID) {
+	public static function getByID($cID, $cvID = 'ACTIVE') {
 		$where = "where Pages.cID = ?";
 		$c = new DiscussionModel;
 		$c->populatePage($cID, $where, $cvID);	
 		
-		Loader::model('page_statistics');
-		$c->setTotalViews(PageStatistics::getTotalViews($cID));
-		$c->setTotalTopics($c->getNumChildren());
-		$c->setTotalMessages(PageStatistics::getTotalChildren($cID));
+		$db = Loader::db();
+		$row = $db->GetRow("select totalViews, lastPostCID, totalTopics, totalPosts, lastPostCID from DiscussionSummary where cID = ?", array($cID));
+		
+		$c->setTotalViews($row['totalViews']);
+		$c->setTotalTopics($row['totalTopics']);
+		$c->setTotalPosts($row['totalPosts']);
+		$c->setLastPostCollectionID($row['lastPostCID']);
 		return $c;
 	}
 
@@ -57,12 +60,55 @@ class DiscussionModel extends Page {
 		return DiscussionPostModel::getByID($n->getCollectionID(), 'ACTIVE');
 	}
 	
-	public function setTotalViews($cViews) {$this->cViews = $cViews;}
-	public function setTotalTopics($cTotalTopics) {$this->cTotalTopics = $cTotalTopics;}
-	public function setTotalMessages($cTotalChildren) {$this->cTotalChildren = $cTotalChildren;}
+	/** 
+	 * Records the discussion as having been views
+	 */
+	public function recordView() {
+		$db = Loader::db();
+		$db->Replace('DiscussionSummary', array('cID' => $this->getCollectionID(), 'totalViews' => 'totalViews + 1'), 'cID', false);
+	}
 	
-	public function getTotalViews() {return $this->cViews;}
-	public function getTotalTopics() {return $this->cTotalTopics;}
-	public function getTotalMessages() {return $this->cTotalChildren;}
+	public function incrementTotalPosts($num = 1) {
+		$db = Loader::db();
+		$db->Replace('DiscussionSummary', array('cID' => $this->getCollectionID(), 'totalPosts' => 'totalPosts + ' . $num), 'cID', false);
+	}
+
+	public function incrementTotalTopics($num = 1) {
+		$db = Loader::db();
+		$db->Replace('DiscussionSummary', array('cID' => $this->getCollectionID(), 'totalTopics' => 'totalTopics + ' . $num), 'cID', false);
+	}
+
+	public function decrementTotalPosts($num = 1) {
+		$db = Loader::db();
+		$db->Replace('DiscussionSummary', array('cID' => $this->getCollectionID(), 'totalPosts' => 'totalPosts - ' . $num), 'cID', false);
+	}
+
+	public function decrementTotalTopics($num = 1) {
+		$db = Loader::db();
+		$db->Replace('DiscussionSummary', array('cID' => $this->getCollectionID(), 'totalTopics' => 'totalTopics - '  . $num), 'cID', false);
+	}
+	
+	public function updateLastPost($dpm) {
+		$db = Loader::db();
+		$db->Replace('DiscussionSummary', array('cID' => $this->getCollectionID(), 'lastPostCID' => $dpm->getCollectionID()), 'cID', false);
+	}
+	
+	private function setTotalViews($totalViews) {$this->totalViews = $totalViews;}
+	private function setTotalTopics($totalTopics) {$this->totalTopics = $totalTopics;}
+	private function setTotalPosts($totalPosts) {$this->totalPosts = $totalPosts;}
+	private function setLastPostCollectionID($lastPostCID) {$this->lastPostCID = $lastPostCID;}
+	
+	public function getTotalViews() {return $this->totalViews;}
+	public function getTotalTopics() {return $this->totalTopics;}
+	public function getTotalPosts() {return $this->totalPosts;}
+	public function getLastPost() {
+		if ($this->lastPostCID == 0) {
+			return false;
+		}
+		$dpm = DiscussionPostModel::getByID($this->lastPostCID);
+		if (!$dpm->isError()) {
+			return $dpm;
+		}
+	}
 	
 }

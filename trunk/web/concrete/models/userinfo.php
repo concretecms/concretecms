@@ -204,6 +204,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				if (isset($_SESSION['uID']) && $_SESSION['uID'] == $this->uID) {
 					$_SESSION['uName'] = $data['uName']; // make sure to keep the new uName in there
 				}
+
+				// run any internal event we have for user update
+				Events::fire('on_user_update', $this);
 				
 				return $res;
 			}

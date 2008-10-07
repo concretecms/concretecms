@@ -94,10 +94,6 @@ class PageStatistics {
 		$q = "update Pages set cChildren = cChildren+1 where cID = ?";
 		$r = $db->query($q, array($cParentID));
 
-		while ($cParentID > 0) {
-			$db->Replace('PageStatisticsSummary', array('cID' => $cParentID, 'cTotalChildren' => 'cTotalChildren + 1'), 'cID', false);
-			$cParentID = $db->GetOne("select cParentID from Pages where cID = ?", array($cParentID));
-		}
 	}
 
 	/** 
@@ -110,30 +106,5 @@ class PageStatistics {
 		$q = "update Pages set cChildren = cChildren - 1 where cID = ?";
 		$r = $db->query($q, array($cParentID));
 
-		while ($cParentID > 0) {
-			$db->Replace('PageStatisticsSummary', array('cID' => $cParentID, 'cTotalChildren' => 'cTotalChildren - 1'), 'cID', false);
-			$cParentID = $db->GetOne("select cParentID from Pages where cID = ?", array($cParentID));
-		}
 	}
-	
-	
-	/** 
-	 * For a particular $cID, return the total views
-	 */
-	public function getTotalViews($cID) {
-		$db = Loader::db();
-		$r = $db->GetOne("select cViews from PageStatisticsSummary where cID = ?", array($cID));
-		return $r;
-	}
-
-	/** 
-	 * For a particular $cID, return the total children
-	 */
-	public function getTotalChildren($cID) {
-		$db = Loader::db();
-		$r = $db->GetOne("select cTotalChildren from PageStatisticsSummary where cID = ?", array($cID));
-		return $r;
-	}
-
-
 }

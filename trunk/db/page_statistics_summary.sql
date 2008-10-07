@@ -1,1 +1,0 @@
-create table PageStatisticsSummary ( cID int unsigned not null default 0, cViews int unsigned not null default 0, cTotalChildren int unsigned not null default 0, primary key (cID));

@@ -152,7 +152,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$cID = $c->getCollectionID();
 			$v = array($cID, $uID);
 			$db->query("insert into PageStatistics (cID, uID) values (?, ?)", $v);
-			$db->Replace('PageStatisticsSummary', array('cID' => $c->getCollectionID(), 'cViews' => 'cViews + 1'), 'cID', false);
+			
+			// record a view, arguments are
+			// 1. page being viewed
+			// 2. user viewing page
+			Events::fire('on_page_view', $c, $this);
 		}
 		
 		public function encryptPassword($uPassword, $salt = PASSWORD_SALT) {
