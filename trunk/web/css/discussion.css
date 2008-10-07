@@ -1,0 +1,12 @@
+table.discussion-category-list {
+	border: 1px solid #AEAEAE;
+	width: 100%;
+}
+
+table.discussion-category-list th {white-space: nowrap; font-weight: bold; text-align: left; background-color: #DAE6D9; border-bottom: 1px solid #cecece; padding: 12px}
+table.discussion-category-list td {white-space: nowrap; padding: 12px; text-align: center; border-bottom: 1px solid #dedede}
+table.discussion-category-list td.discussion-category-name {width: 100%; text-align: left; white-space: normal}
+table.discussion-category-list td.discussion-category-last-post {text-align: left}
+table.discussion-category-list h2 {font-size: 14px; font-weight: bold; line-height: 14px; margin: 0px}
+table.discussion-category-list h2 a {text-decoration: none}
+table.discussion-category-list p {margin: 0px}

@@ -22,6 +22,9 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class Events {
 	
+	const EVENT_TYPE_PAGETYPE = "page_type";
+	const EVENT_TYPE_GLOBAL = "global";
+	
 	/** 
 	 * Returns an instance of the systemwide Events object.
 	 */
@@ -36,6 +39,35 @@ class Events {
 
 	private $registeredEvents = array();
 	
+	
+	/** 
+	 * When passed an "event" as a string, a user-defined method will be run INSIDE this page's controller
+	 * whenever an event takes place. The name/location of this event is not customizable. If you want more
+	 * customization, used extend() below.
+	 */
+	public static function extendPageType($ctHandle, $event = false, $pkgHandle = null, $params = array()) {
+		if ($event == false) {
+			// then we're registering ALL the page type events for this particular page type
+			Events::extendPageType($ctHandle, 'on_page_add', $pkgHandle, $params);
+			Events::extendPageType($ctHandle, 'on_page_update', $pkgHandle, $params);
+			Events::extendPageType($ctHandle, 'on_page_duplicate', $pkgHandle, $params);
+			Events::extendPageType($ctHandle, 'on_page_move', $pkgHandle, $params);
+			Events::extendPageType($ctHandle, 'on_page_view', $pkgHandle, $params);
+			Events::extendPageType($ctHandle, 'on_page_delete', $pkgHandle, $params);
+		} else {
+			$ce = Events::getInstance();
+			$class = Object::camelcase($ctHandle) . 'PageTypeController';
+			$method = $event;
+			$filename = Loader::pageTypeControllerPath($ctHandle, $pkgHandle);
+			$ce->registeredEvents[$event][] = array(
+				Events::EVENT_TYPE_PAGETYPE,
+				$class,
+				$method,
+				$filename,
+				$params
+			);
+		}
+	}
 	/**
 	 * When passed an "event" as a string (e.g. "on_user_add"), a user-defined method can be run whenever this event
 	 * takes place.
@@ -52,6 +84,7 @@ class Events {
 	public static function extend($event, $class, $method, $filename, $params = array()) {
 		$ce = Events::getInstance();
 		$ce->registeredEvents[$event][] = array(
+			Events::EVENT_TYPE_GLOBAL,
 			$class,
 			$method,
 			$filename,
@@ -83,16 +116,36 @@ class Events {
 		$events = $ce->registeredEvents[$event];
 		if (is_array($events)) {
 			foreach($events as $ev) {
-				require_once(DIR_BASE . '/' . $ev[2]);
-				$params = (is_array($ev[3])) ? $ev[3] : array();
+				$type = $ev[0];
+				if ($type == Events::EVENT_TYPE_PAGETYPE) {
+					// then the first argument in the event fire() method will be the page
+					// that this applies to. We check to see if the page type is the right type
+					if (is_object($args[0]) && $args[0] instanceof Page) {
+						if ($ev[3] != Loader::pageTypeControllerPath($args[0]->getCollectionTypeHandle())) {
+							return false;
+						}
+					}
+				}
+				if (strpos($ev[3], DIR_BASE) === 0) {	
+					// then this means that our path ALREADY has DIR_BASE in it
+					require_once($ev[3]);
+				} else {
+					require_once(DIR_BASE . '/' . $ev[3]);
+				}
+				$params = (is_array($ev[4])) ? $ev[4] : array();
 				
 				// now if args has any values we put them FIRST
 				$params = array_merge($args, $params);
 
-				if (method_exists($ev[0], $ev[1])) {
-					call_user_func_array(array($ev[0], $ev[1]), $params);
+				if (method_exists($ev[1], $ev[2])) {
+					call_user_func_array(array($ev[1], $ev[2]), $params);
 				}				
 			}
 		}
 	}
 }
+
+
+
+	//	$controller = Loader::controller($this);
+//		$ret = $controller->runTask('on_page_delete', array($this));

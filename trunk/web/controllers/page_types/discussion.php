@@ -42,4 +42,9 @@ class DiscussionPageTypeController extends Controller {
 		$this->set('error', $this->error);
 	}
 	
+	public static function on_page_view($c) {
+		$db = Loader::db();
+		$dm = DiscussionModel::load($c);
+		$dm->recordView();
+	}
 }

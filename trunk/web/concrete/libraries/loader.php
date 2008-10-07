@@ -225,6 +225,23 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		/** 
+		 * Gets the path to a particular page type controller
+		 */
+		public function pageTypeControllerPath($ctHandle, $pkgHandle = null) {
+			if ($pkgHandle != '') {
+				$packageDir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+			}
+			if (file_exists(DIR_FILES_CONTROLLERS . "/" . DIRNAME_PAGE_TYPES . "/{$ctHandle}.php")) {
+				$path = DIR_FILES_CONTROLLERS . "/" . DIRNAME_PAGE_TYPES . "/{$ctHandle}.php";
+			} else if (isset($packageDir) && (file_exists($packageDir . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php'))) {
+				$path = $packageDir . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php';
+			} else if (file_exists(DIR_FILES_CONTROLLERS_REQUIRED . "/" . DIRNAME_PAGE_TYPES . "/{$ctHandle}.php")) {
+				$path = DIR_FILES_CONTROLLERS_REQUIRED . "/" . DIRNAME_PAGE_TYPES . "/{$ctHandle}.php";
+			}
+			
+			return $path;
+		}
+		/** 
 		 * Loads a controller for either a page or view
 		 */
 		public function controller($item) {
@@ -232,19 +249,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$c = $item;
 				if ($c->getCollectionTypeID() > 0) {					
 					$ctHandle = $c->getCollectionTypeHandle();
-					
-					if (file_exists(DIR_FILES_CONTROLLERS . "/" . DIRNAME_PAGE_TYPES . "/{$ctHandle}.php")) {
-						require_once(DIR_FILES_CONTROLLERS . "/" . DIRNAME_PAGE_TYPES . "/{$ctHandle}.php");
-						$include = true;
-					} else if ($item->getPackageID() > 0 && (file_exists(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php'))) {
-						require_once(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php');
-						$include = true;
-					} else if (file_exists(DIR_FILES_CONTROLLERS_REQUIRED . "/" . DIRNAME_PAGE_TYPES . "/{$ctHandle}.php")) {
-						require_once(DIR_FILES_CONTROLLERS_REQUIRED . "/" . DIRNAME_PAGE_TYPES . "/{$ctHandle}.php");
-						$include = true;
-					}
-					
-					if ($include) {
+					$path = Loader::pageTypeControllerPath($ctHandle, $item->getPackageHandle());
+					if ($path != false) {
+						require_once($path);
 						$class = Object::camelcase($ctHandle) . 'PageTypeController';
 					}
 				} else if ($c->isGeneratedCollection()) {

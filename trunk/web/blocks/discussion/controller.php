@@ -60,6 +60,8 @@
 			Loader::model('discussion');
 			Loader::model('discussion_post');
 			$nav = Loader::helper('navigation');
+			$this->set('html', Loader::helper('html'));
+
 			$db = Loader::db();
 			$ctHandle = $db->GetOne("select ctHandle from PageTypes inner join Pages on Pages.ctID = PageTypes.ctID where Pages.cID = ?", $this->getDiscussionCollectionID());
 			switch($ctHandle) {

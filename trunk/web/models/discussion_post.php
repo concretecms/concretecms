@@ -35,5 +35,25 @@ class DiscussionPostModel extends Page {
 		$c->setUser($c->getCollectionUserID());
 		return $c;
 	}
+	
+	/** 
+	 * Goes up the tree until it finds the "discussion" this post lives under
+	 */
+	public function getDiscussion() {
+		$db = Loader::db();
+		$cParentID = $db->GetOne("select cParentID from Pages where cID = ?", array($this->getCollectionID()));
+		$discussionID = 0;
+		while ($cParentID > 0) {
+			$ctHandle = $db->GetOne("select ctHandle from Pages inner join PageTypes on Pages.ctID = PageTypes.ctID where Pages.cID = ?", array($cParentID));
+			if ($ctHandle == DiscussionModel::CTHANDLE) {
+				$discussionID = $cParentID;
+				$cParentID = 0;
+			}	
+			$cParentID = $db->GetOne("select cParentID from Pages where cID = ?", array($cParentID));
+		}
+		if ($discussionID > 0) {
+			return DiscussionModel::getByID($discussionID);
+		}
+	}
 
 }

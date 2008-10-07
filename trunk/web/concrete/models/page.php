@@ -781,6 +781,8 @@ class Page extends Collection {
 
 		$db->query("update Pages set uID = ?, ctID = ?, pkgID = ?, cFilename = ? where cID = ?", array($uID, $ctID, $pkgID, $cFilename, $this->cID));
 
+		// run any internal event we have for page update
+		$ret = Events::fire('on_page_update', $this);
 	}
 	
 	// remove the collection attributes for this version of a page
@@ -911,7 +913,7 @@ class Page extends Collection {
 		$newCParentID = $nc->getCollectionID();
 		$dh = Loader::helper('date');
 
-		Loader::model('page_statistics');		
+		Loader::model('page_statistics');	
 		PageStatistics::decrementParents($this->cID);
 
 		$cDateModified = $dh->getLocalDateTime();
@@ -937,6 +939,14 @@ class Page extends Collection {
 		$res = $db->execute($r, $v);
 
 		PageStatistics::incrementParents($this->cID);
+		
+		// run any event we have for page move. Arguments are
+		// 1. current page being moved
+		// 2. former parent
+		// 3. new parent
+		$oldParent = Page::getByID($this->getCollectionParentID(), 'RECENT');
+		$newParent = Page::getByID($newCParentID, 'RECENT');
+		$ret = Events::fire('on_page_move', $this, $oldParent, $newParent);
 
 		// now that we've moved the collection, we rescan its path
 		$this->rescanCollectionPath();
@@ -1030,6 +1040,12 @@ class Page extends Collection {
 			
 			// rescan the collection path
 			$nc2 = Page::getByID($newCID);
+			
+			// arguments for event
+			// 1. new page
+			// 2. old page
+			$ret = Events::fire('on_page_duplicate', $nc2, $this);
+			
 			$nc2->rescanCollectionPath();
 
 			return $nc2;
@@ -1046,8 +1062,9 @@ class Page extends Collection {
 
 		$db = Loader::db();
 
-		$controller = Loader::controller($this);
-		$ret = $controller->runTask('on_page_delete', array($this));
+		// run any internal event we have for page deletion
+		$ret = Events::fire('on_page_delete', $this);
+
 		if ($ret < 0) {
 			return false;
 		}
@@ -1066,6 +1083,9 @@ class Page extends Collection {
 		while ($row = $r->fetchRow()) {
 			PageStatistics::decrementParents($row['cID']);
 		}
+
+		// Update cChildren for cParentID
+		PageStatistics::decrementParents($cID);
 		
 		$q = "delete from PagePermissions where cID = '{$cID}'";
 		$r = $db->query($q);
@@ -1078,9 +1098,6 @@ class Page extends Collection {
 		
 		$q = "delete from Areas WHERE cID = '{$cID}'";
 		$r = $db->query($q);
-		
-		// Update cChildren for cParentID
-		PageStatistics::decrementParents($cID);
 		
 		$q = "select cID from Pages where cParentID = '{$cID}'";
 		$r = $db->query($q);
@@ -1585,7 +1602,7 @@ class Page extends Collection {
 			// Collection added with no problem -- update cChildren on parrent
 			Loader::model('page_statistics');
 			PageStatistics::incrementParents($newCID);
-			
+
 			if ($r) {
 				// now that we know the insert operation was a success, we need to see if the collection type we're adding has a master collection associated with it
 				if ($masterCID) {
@@ -1593,9 +1610,14 @@ class Page extends Collection {
 				}
 			}
 			
+			$pc = Page::getByID($newCID, 'RECENT');
+
+			// run any internal event we have for page addition
+			Events::fire('on_page_add', $pc);
+
 			// if there is a path specified, we create a new collection object of the one we just made
 			// and rescan its path, to grab the path of its parent
-			$pc = Page::getByID($newCID, 'RECENT');
+
 			if ($handle) {
 				$pc->rescanCollectionPath();
 			}
