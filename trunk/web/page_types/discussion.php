@@ -1,3 +1,5 @@
+
+
 <div class="discussion">
 <?
 $nav = Loader::helper('navigation');
