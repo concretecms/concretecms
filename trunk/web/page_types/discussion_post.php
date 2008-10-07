@@ -31,7 +31,11 @@ label{float:left; width:25%; display:block}
 		<?= $form->label('message', 'Message'); ?>
 		<div class="fieldWrap">
 			<?= $form->textarea('message') ?>
-			<div class="checkSpellingTrigger" style="float:right"><a onClick="SpellChecker.checkField('message',this)">Check Spelling</a></div>
+			<?
+			$spellChecker=Loader::helper('spellchecker');
+			if($spellChecker->enabled() ){ ?>			
+				<div class="checkSpellingTrigger" style="float:right"><a onClick="SpellChecker.checkField('message',this)">Check Spelling</a></div>
+			<? } ?>
 		</div>
 		<div class="spacer"></div>
     </div>
