@@ -1,21 +1,14 @@
-
-
 <div class="discussion">
 <?
-$nav = Loader::helper('navigation');
-foreach($posts as $p) { 
-	
-	$title = $p->getSubject();
-	?>
-	<h3><a href="<?=$nav->getLinkToCollection($p)?>"><?=$title?></a></h3>
-	<div class="discussion-info">
-		by
-		<span class="discussion-author"><?=$p->getUserName()?></span>
-	</div>
-		
-<? } ?>
+	$bv = new BlockView();
+	$bt = BlockType::getByHandle('discussion');
+	$controller = Loader::controller($bt);
+	$controller->cParentID = $c->getCollectionID();
+	$bv->setController($controller);
+	$bv->render($bt, 'view');
+?>
 </div>
 
-<br/><br/>
+<br/>
 
 <a href="<?=$this->action('add')?>">Add Discussion</a>

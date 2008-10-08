@@ -66,7 +66,7 @@
 			$ctHandle = $db->GetOne("select ctHandle from PageTypes inner join Pages on Pages.ctID = PageTypes.ctID where Pages.cID = ?", $this->getDiscussionCollectionID());
 			switch($ctHandle) {
 				case DiscussionModel::CTHANDLE:
-					$this->mode = "discussion_list";
+					$this->mode = "topics";
 					break;
 				default: // if it's not one of these, then we're in category mode
 					$this->mode = 'category';
@@ -75,14 +75,17 @@
 			
 			switch($this->mode) {
 				case "category":
-					$categories = array();
-					$v = array(DiscussionModel::CTHANDLE, $this->getDiscussionCollectionID());
-					$r = $db->Execute("select cID from Pages inner join PageTypes on Pages.ctID = PageTypes.ctID where PageTypes.ctHandle = ? and Pages.cParentID = ? order by Pages.cDisplayOrder asc", $v);				
-					while ($row = $r->fetchRow()) {
-						$categories[] = DiscussionModel::getByID($row['cID'], 'ACTIVE');
-					}
+					$categories = DiscussionModel::getDiscussions($this->getDiscussionCollectionID());
 					$this->set('categories', $categories);
 					$this->render('view_categories');
+					break;
+				case "topics":
+					$categories = array();
+					$dm = DiscussionModel::getByID($this->getDiscussionCollectionID());
+					$topics = $dm->getPosts();
+					$this->set('topics', $topics);
+					$this->render('view_topics');
+					$this->set('av', Loader::helper('concrete/avatar'));
 					break;
 			}
 			$this->set('nav', $nav);

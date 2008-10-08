@@ -12,6 +12,7 @@ $vals = Loader::helper('validation/strings');
 $valc = Loader::helper('concrete/validation');
 $dtt = Loader::helper('form/date_time');
 $form = Loader::helper('form');
+$av = Loader::helper('concrete/avatar');
 
 if ($_REQUEST['updated_attribute']) {
 	$message = 'User Attribute Updated.';
@@ -41,7 +42,6 @@ if ($_GET['uID']) {
 		
 		
 		if ($_GET['task'] == 'remove-avatar') {
-			$av = Loader::helper('concrete/avatar');
 			$av->removeAvatar($uo->getUserID());
 			$this->controller->redirect('/dashboard/users?uID=' . $_GET['uID'] . '&task=edit');
 
@@ -111,9 +111,6 @@ if ($_GET['uID']) {
 				
 				//$db = Loader::db();
 				if ($process) {
-	
-					$av = Loader::helper('concrete/avatar');
-					
 					if ( is_uploaded_file($_FILES['uAvatar']['tmp_name']) ) {
 						$uHasAvatar = $av->updateUserAvatar($_FILES['uAvatar']['tmp_name'], $uo->getUserID());
 					}
@@ -190,7 +187,6 @@ if ($_POST['create']) {
 		
 		if (is_object($uo)) {
 
-			$av = Loader::helper('concrete/avatar');
 			if (is_uploaded_file($_FILES['uAvatar']['tmp_name'])) {
 				$uHasAvatar = $av->updateUserAvatar($_FILES['uAvatar']['tmp_name'], $uo->getUserID());
 			}
@@ -425,7 +421,7 @@ Groups</td>
 		<div style="margin:0px; padding:0px; width:100%; height:auto" >
 		<table border="0" cellspacing="1" cellpadding="0">
 		<tr>
-			<td><?=$uh->outputUserAvatar($uo)?></td>
+			<td><?=$av->outputUserAvatar($uo)?></td>
 			<td><?=$uo->getUserName()?><br/>
 			<a href="mailto:<?=$uo->getUserEmail()?>"><?=$uo->getUserEmail()?></a><br/>
 			<?=$uo->getUserDateAdded()?>

@@ -12,7 +12,7 @@ class DiscussionPageTypeController extends Controller {
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
 		$this->discussion = DiscussionModel::load($this->getCollectionObject());
-		$this->set('posts', $this->discussion->getPosts());
+		//$this->set('posts', $this->discussion->getPosts());
 	}
 	
 	/** 

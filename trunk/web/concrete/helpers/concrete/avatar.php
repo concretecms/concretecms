@@ -26,6 +26,26 @@ class ConcreteAvatarHelper {
 		return $aDir;			
 	}
 
+	function outputUserAvatar($uo, $suppressNone = false, $aspectRatio = 1.0) {			
+		if ($uo->hasAvatar()) {
+			$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
+			$isize = getimagesize($size);
+			$isize[0] = round($isize[0]*$aspectRatio);
+			$isize[1] = round($isize[1]*$aspectRatio);
+			
+			$str = '<img class="u-avatar" src="' . REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif" width="' . $isize[0] . '" height="' . $isize[1] . '" alt="' . $uo->getUserName() . '" />';
+			return $str;
+		} else if (!$suppressNone) {
+			return $this->outputNoAvatar($aspectRatio);
+		}
+	}
+	
+	function outputNoAvatar($aspectRatio = 1.0) {
+		$str = '<img class="u-avatar" src="' . AVATAR_NONE . '" width="' . AVATAR_WIDTH*$aspectRatio . '" height="' . AVATAR_HEIGHT*$aspectRatio . '" alt="" />';
+		return $str;
+	}
+	
+
 	function processUploadedAvatar($pointer, $uID) {
 		$uHasAvatar = 0;
 		$imageSize = getimagesize($pointer);
