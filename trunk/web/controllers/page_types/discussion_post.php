@@ -47,8 +47,15 @@ class DiscussionPostPageTypeController extends Controller {
 				}
 				
 				if (is_object($dpm)) {
-					$this->redirect($this->post->getCollectionPath() . '#' . $dpm->getCollectionID());
+					$resp['redirect'] = BASE_URL . DIR_REL . $this->post->getCollectionPath();
+					print json_encode($resp);
+					exit;
 				}
+			} else {
+				$e = $this->error->getList();
+				$resp['errors'] = $e;
+				print json_encode($resp);
+				exit;
 			}
 		}
 	}
@@ -64,11 +71,6 @@ class DiscussionPostPageTypeController extends Controller {
 		$d = $dpm->getDiscussion();
 		$d->updateLastPost($dpm);		
 		$dpm->updateParentCounts(1);
-	}
-
-
-	public function on_before_render() {
-		$this->set('error', $this->error);
 	}
 
 	/* TESTED */
