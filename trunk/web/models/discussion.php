@@ -3,6 +3,8 @@
 class DiscussionModel extends Page {
 	
 	const CTHANDLE = 'discussion';
+	const ATTRIBUTE_DISCUSSION_IS_POST_PINNED = "discussion_post_is_pinned";
+	
 	public function load($obj) {
 		if ($obj instanceof Page) {
 			$dm = DiscussionModel::getByID($obj->getCollectionID(), $obj->getVersionID());
@@ -24,6 +26,17 @@ class DiscussionModel extends Page {
 		$c->setLastPostCollectionID($row['lastPostCID']);
 		return $c;
 	}
+	
+	public function getDiscussions($cParentID) {
+		$db = Loader::db();
+		$discussions = array();
+		$v = array(DiscussionModel::CTHANDLE, $this->getDiscussionCollectionID());
+		$r = $db->Execute("select cID from Pages inner join PageTypes on Pages.ctID = PageTypes.ctID where PageTypes.ctHandle = ? and Pages.cParentID = ? order by Pages.cDisplayOrder asc", $v);				
+		while ($row = $r->fetchRow()) {
+			$discussions[] = DiscussionModel::getByID($row['cID'], 'ACTIVE');
+		}
+		return $discussions;
+	}
 
 	/** 
 	 * Returns posts below this particular discussion
@@ -32,9 +45,29 @@ class DiscussionModel extends Page {
 	public function getPosts() {
 		Loader::model('discussion_post');
 		$db = Loader::db();
-		$v = array(DiscussionPostModel::CTHANDLE, $this->getCollectionID());
-		$r = $db->Execute("select Pages.cID from Pages inner join Collections on Collections.cID = Pages.cID inner join PageTypes on Pages.ctID = PageTypes.ctID where PageTypes.ctHandle = ? and cParentID = ? order by cDateAdded desc", $v);
+
 		$posts = array();
+		
+		// first, we grab all "pinned" discussions
+		$pinned = $db->GetCol("select p.cID from Pages p
+			inner join Collections c on c.cID = p.cID
+			inner join CollectionVersions cv on (p.cID = cv.cID and cv.cvIsApproved = 1)
+			inner join CollectionAttributeValues cav on (p.cID = cav.cID and cav.cvID = cv.cvID)
+			inner join CollectionAttributeKeys cak on (cak.akID = cav.akID)
+			where cParentID = ? and cak.akHandle = ? and cav.value = 1 order by cDateAdded asc", array($this->getCollectionID(), DiscussionModel::ATTRIBUTE_DISCUSSION_IS_POST_PINNED));
+		
+		foreach($pinned as $o) {
+			$posts[] = DiscussionPostModel::getByID($o);
+		}
+		
+		$pinned[] = -1;
+		$notin = implode(',', $pinned);
+
+		// now we retrieve the posts, taking care not to include the pinned
+		
+		$v = array($notin, DiscussionPostModel::CTHANDLE, $this->getCollectionID());
+		$r = $db->Execute("select Pages.cID from Pages inner join Collections on Collections.cID = Pages.cID inner join PageTypes on Pages.ctID = PageTypes.ctID where Pages.cID not in (?) and PageTypes.ctHandle = ? and cParentID = ? order by cDateAdded desc", $v);
+
 		while ($row = $r->fetchRow()) {
 			$posts[] = DiscussionPostModel::getByID($row['cID']);
 		}

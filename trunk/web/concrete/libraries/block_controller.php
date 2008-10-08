@@ -90,8 +90,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$bv = new BlockView();
 			$bv->setController($this);
 			// sometimes we need the block type available in here
-			$bt = BlockType::getByID($this->getBlockObject()->getBlockTypeID());
-			$a = $this->getBlockObject()->getBlockAreaObject();
+			if (is_object($this->getBlockObject())) {
+				$bt = BlockType::getByID($this->getBlockObject()->getBlockTypeID());
+				$a = $this->getBlockObject()->getBlockAreaObject();
+			}
 			$this->renderOverride = $view;
 		}
 		
