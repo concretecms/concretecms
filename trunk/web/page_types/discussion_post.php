@@ -51,14 +51,19 @@ label{float:left; width:25%; display:block}
 <? } ?>
 </div>
 
-<a href="#" onclick="ccmDiscussion.reply()">Reply</a>
-	
+<div class="discussion-reply">
+	<a href="javascript:void(0)" onclick="ccmDiscussion.reply()">Reply to this Post</a>
+</div>
+
 <div id="discussion-post-reply-form" style="display:none;">
-<form method="post" action="<?=$this->action('reply')?>" onsubmit="return ccmDiscussion.validate()">
+<form method="post" action="<?=$this->action('reply')?>" onsubmit="return ccmDiscussion.submit(this)">
 	<?=$form->hidden('cDiscussionPostParentID', '0'); ?>
+	<div class="ccm-error" id="discussion-post-errors">
+	
+	</div>
     <div>
 		<?= $form->label('subject', 'Subject'); ?>
-		<?= $form->text('subject',"RE: ".$post->getSubject()) ?>
+		<?= $form->text('subject')?>
     </div>
     
     <div>
@@ -71,7 +76,9 @@ label{float:left; width:25%; display:block}
 		<? } ?>
     </div>
     
-    <?=$form->submit('post', 'Reply') ?>
+   <?=$form->submit('post', 'Reply') ?>
+   <div class="discussion-post-loader"><img src="<?=ASSETS_URL?>/images/icons/icon_header_loading.gif" /></div>
+
     <div class="ccm-spacer">&nbsp;</div>
 </form>
 </div>

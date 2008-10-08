@@ -27,3 +27,7 @@ div#facebox label {font-weight: bold; font-size: 12px; display: block; padding: 
 div#facebox input.ccm-input-submit {float: right; margin: 3px 0px 3px 0px; font-size: 12px}
 
 div.discussion-threaded-comment-poster div.discussion-threaded-comment-reply {float: right; text-align: right; width: 50px}
+
+div.discussion-reply {border: 1px solid #ccc; padding: 3px}
+div#discussion-post-errors {color: #f00; padding-bottom: 10px}
+div.discussion-post-loader {padding: 5px 8px 3px 0px; display: none; float: right}
