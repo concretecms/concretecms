@@ -24,6 +24,7 @@ label{float:left; width:25%; display:block}
 
 	foreach($replies as $r) { ?>
 	
+	<a name="<?=$r->getCollectionID()?>"></a>
 	<table class="discussion-threaded-comment discussion-comment-level-<?=$r->getReplyLevel()?>">
 	<tr>
 		<td valign="top" class="discussion-threaded-comment-avatar"><?
@@ -31,6 +32,7 @@ label{float:left; width:25%; display:block}
 			print $av->outputUserAvatar($ru);
 		?></td>
 		<td>
+		<h3><?=$r->getSubject()?></h3>
 		<?=$r->getBody(); ?>
 		<div class="discussion-threaded-comment-nickname">Posted by <strong><?=$r->getUserName()?></strong> on <?=date("M d, Y", strtotime($r->getCollectionDateAdded()))?> at <?=date("g:i A", strtotime($r->getCollectionDateAdded()))?></div>
 		</td>
