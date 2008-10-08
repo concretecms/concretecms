@@ -38,15 +38,7 @@ if ($akk) { ?>
 	<meta name="keywords" content="<?=htmlspecialchars($akk)?>" />
 <? } ?>
 
-<? 
-
-// output header items
-print $this->controller->outputHeaderItems();
-
-?>
-
 <? $u = new User(); ?>
-
 <script type="text/javascript">
 <?
 	if ($u->config('UI_BREADCRUMB')) { 
@@ -75,6 +67,11 @@ var CCM_REL = "<?=DIR_REL?>";
 </script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery1.2.6.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/swfobject2.1.js"></script>
+
+<? 
+// output header items
+print $this->controller->outputHeaderItems();
+?>
 
 <? 
 	if (is_object($cp)) {

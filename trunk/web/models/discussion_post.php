@@ -26,18 +26,29 @@ class DiscussionPostModel extends Page {
 	public function getReplies() { return $this->replies;}
 	
 	public function addPostReply($subject, $message) {
-		Loader::model('discussion_post');
-		Loader::model('collection_types');
-		$n1 = Loader::helper('text');
+		$u = new User();
+		if ($this->canBePostedToBy($u)) {
+			Loader::model('discussion_post');
+			Loader::model('collection_types');
+			$n1 = Loader::helper('text');
+			
+			$postType = CollectionType::getByHandle(DiscussionPostModel::CTHANDLE);
+			$message = $n1->makenice($message);
+			$data = array('cName' => $subject, 'cDescription' => $message);	
+			$n = $this->add($postType, $data);
+			// also add message to main content area
+			$b1 = BlockType::getByHandle('content');
+			$n->addBlock($b1, "Main", array('content' => $message));
+			return DiscussionPostModel::getByID($n->getCollectionID(), 'ACTIVE');
+		}
+	}
+	
+	private function canBePostedToBy($u) {
+		if (!$u->isRegistered()) {
+			return false;
+		}
 		
-		$postType = CollectionType::getByHandle(DiscussionPostModel::CTHANDLE);
-		$message = $n1->makenice($message);
-		$data = array('cName' => $subject, 'cDescription' => $message);	
-		$n = $this->add($postType, $data);
-		// also add message to main content area
-		$b1 = BlockType::getByHandle('content');
-		$n->addBlock($b1, "Main", array('content' => $message));
-		return DiscussionPostModel::getByID($n->getCollectionID(), 'ACTIVE');
+		return true;
 	}
 
 	public function getUserName() {
@@ -74,8 +85,8 @@ class DiscussionPostModel extends Page {
 		while ($row = $r->fetchRow()) {
 			$dpm = DiscussionPostModel::getByID($row['cID']);
 			$dpm->setReplyLevel($level);
-			$this->populateThreadedReplies($level + 1, $row['cID']);
 			$this->replies[] = $dpm;
+			$this->populateThreadedReplies($level + 1, $row['cID']);
 		}
 	}
 	
