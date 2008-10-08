@@ -34,7 +34,11 @@ label{float:left; width:25%; display:block}
 		<td>
 		<h3><?=$r->getSubject()?></h3>
 		<?=$r->getBody(); ?>
-		<div class="discussion-threaded-comment-nickname">Posted by <strong><?=$r->getUserName()?></strong> on <?=date("M d, Y", strtotime($r->getCollectionDateAdded()))?> at <?=date("g:i A", strtotime($r->getCollectionDateAdded()))?></div>
+		<div class="discussion-threaded-comment-poster">
+			<div class="discussion-threaded-comment-reply"><a href="javascript:void(0)" onclick="ccmDiscussion.reply(<?=$r->getCollectionID()?>)">Reply</a></div>
+			Posted by <strong><?=$r->getUserName()?></strong> on <?=date("M d, Y", strtotime($r->getCollectionDateAdded()))?> at <?=date("g:i A", strtotime($r->getCollectionDateAdded()))?>
+		
+		</div>
 		</td>
 	</tr>
 	</table>
@@ -47,30 +51,27 @@ label{float:left; width:25%; display:block}
 <? } ?>
 </div>
 
-<a href="#" onclick="$('#discussion-post-reply-form').toggle(); return false;">Reply</a>
+<a href="#" onclick="ccmDiscussion.reply()">Reply</a>
+	
 <div id="discussion-post-reply-form" style="display:none;">
-<form method="post" action="<?=$this->action('reply')?>">
+<form method="post" action="<?=$this->action('reply')?>" onsubmit="return ccmDiscussion.validate()">
+	<?=$form->hidden('cDiscussionPostParentID', '0'); ?>
     <div>
 		<?= $form->label('subject', 'Subject'); ?>
-		<div class="fieldWrap">
-			<?= $form->text('subject',"RE: ".$post->getSubject()) ?>
-		</div>
-		<div class="spacer"></div>
+		<?= $form->text('subject',"RE: ".$post->getSubject()) ?>
     </div>
     
     <div>
 		<?= $form->label('message', 'Message'); ?>
-		<div class="fieldWrap">
-			<?= $form->textarea('message') ?>
-			<?
-			$spellChecker=Loader::helper('spellchecker');
-			if($spellChecker->enabled() ){ ?>			
-				<div class="checkSpellingTrigger" style="float:right"><a onClick="SpellChecker.checkField('message',this)">Check Spelling</a></div>
-			<? } ?>
-		</div>
-		<div class="spacer"></div>
+		<?= $form->textarea('message') ?>
+		<?
+		$spellChecker=Loader::helper('spellchecker');
+		if($spellChecker->enabled() ){ ?>			
+			<div class="checkSpellingTrigger" style="float:right"><a onClick="SpellChecker.checkField('message',this)">Check Spelling</a></div>
+		<? } ?>
     </div>
     
-    <?=$form->submit('post', 'Post Reply') ?>
+    <?=$form->submit('post', 'Reply') ?>
+    <div class="ccm-spacer">&nbsp;</div>
 </form>
 </div>

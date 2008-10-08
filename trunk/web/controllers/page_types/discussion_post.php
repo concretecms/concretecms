@@ -11,7 +11,9 @@ class DiscussionPostPageTypeController extends Controller {
 		$this->error = Loader::helper('validation/error');
 		$html = Loader::helper('html');
 		$this->addHeaderItem($html->css('discussion'));
-
+		$this->addHeaderItem($html->javascript('discussion'));
+		$this->addHeaderItem($html->javascript('facebox/facebox'));
+		$this->addHeaderItem('<style type="text/css">@import "' . BASE_URL . DIR_REL . '/js/facebox/facebox.css";</style>');
 		$this->post->populateThreadedReplies();
 		$replies = $this->post->getReplies();
 
@@ -37,8 +39,16 @@ class DiscussionPostPageTypeController extends Controller {
 				$this->error->add('Your message contains inappropriate content.');
 			}			
 			if (!$this->error->has()) {
-				$dpm = $this->post->addPostReply($this->post('subject'), $this->post('message'));
-				$this->redirect($this->post->getCollectionPath() . '#' . $dpm->getCollectionID());
+				if ($this->post('cDiscussionPostParentID') > 0) {
+					$dpm2 = DiscussionPostModel::getByID($this->post('cDiscussionPostParentID'));
+					$dpm = $dpm2->addPostReply($this->post('subject'), $this->post('message'));
+				} else {
+					$dpm = $this->post->addPostReply($this->post('subject'), $this->post('message'));
+				}
+				
+				if (is_object($dpm)) {
+					$this->redirect($this->post->getCollectionPath() . '#' . $dpm->getCollectionID());
+				}
 			}
 		}
 	}
