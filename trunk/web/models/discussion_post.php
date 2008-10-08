@@ -25,6 +25,21 @@ class DiscussionPostModel extends Page {
 	public function isPostPinned() { return $this->getAttribute('discussion_post_is_pinned'); }
 	public function getReplies() { return $this->replies;}
 	
+	public function addPostReply($subject, $message) {
+		Loader::model('discussion_post');
+		Loader::model('collection_types');
+		$n1 = Loader::helper('text');
+		
+		$postType = CollectionType::getByHandle(DiscussionPostModel::CTHANDLE);
+		$message = $n1->makenice($message);
+		$data = array('cName' => $subject, 'cDescription' => $message);	
+		$n = $this->add($postType, $data);
+		// also add message to main content area
+		$b1 = BlockType::getByHandle('content');
+		$n->addBlock($b1, "Main", array('content' => $message));
+		return DiscussionPostModel::getByID($n->getCollectionID(), 'ACTIVE');
+	}
+
 	public function getUserName() {
 		if (is_object($this->userinfo)) {
 			return  $this->userinfo->getUserName();

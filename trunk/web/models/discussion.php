@@ -85,7 +85,7 @@ class DiscussionModel extends Page {
 		
 		$postType = CollectionType::getByHandle(DiscussionPostModel::CTHANDLE);
 		$message = $n1->makenice($message);
-		$data = array('name' => $subject, 'description' => $message);	
+		$data = array('cName' => $subject, 'cDescription' => $message);	
 		$n = $this->add($postType, $data);
 		// also add message to main content area
 		$b1 = BlockType::getByHandle('content');

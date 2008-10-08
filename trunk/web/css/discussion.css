@@ -13,6 +13,7 @@ table.discussion-category-list p {margin: 0px}
 table tr.discussion-post-pinned td {background-color: #EDF7F8}
 
 table.discussion-threaded-comment {margin-bottom: 30px; margin-left: 120px; width: 100%}
+table.discussion-threaded-comment h3 {font-size: 12px; font-weight: bold; margin: 0px 0px 2px 0px; padding: 0px}
 table.discussion-threaded-comment td {vertical-align: top}
 table.discussion-comment-level-0 {margin-left: 0px}
 table.discussion-comment-level-1 {margin-left: 30px}

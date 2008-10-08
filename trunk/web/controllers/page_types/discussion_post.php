@@ -8,16 +8,7 @@ class DiscussionPostPageTypeController extends Controller {
 
 	public function on_start() {
 		$this->post = DiscussionPostModel::load($this->getCollectionObject());
-	}
-
-	/** 
-	 * Replies to a given discussion or reply
-	 */
-	public function reply() {
-	
-	}
-	
-	public function view() {
+		$this->error = Loader::helper('validation/error');
 		$html = Loader::helper('html');
 		$this->addHeaderItem($html->css('discussion'));
 
@@ -27,6 +18,31 @@ class DiscussionPostPageTypeController extends Controller {
 		$this->set('replies', $replies);
 		$this->set("post",$this->post);	
 	}
+
+	/** 
+	 * Replies to a given discussion or reply
+	 */
+	public function reply() {
+		if ($this->isPost()) {
+			$v = Loader::helper('validation/strings');
+			$wordFilter = Loader::helper('validation/banned_words');
+			if (!$v->notempty($this->post('subject'))) {
+				$this->error->add('Your subject cannot be empty.');
+			}elseif( $wordFilter->hasBannedWords($this->post('subject')) ){
+				$this->error->add('Your subject contains inappropriate content.');
+			}
+			if (!$v->notempty($this->post('message'))) {
+				$this->error->add('Your message cannot be empty.');
+			}elseif( $wordFilter->hasBannedWords($this->post('message')) ){
+				$this->error->add('Your message contains inappropriate content.');
+			}			
+			if (!$this->error->has()) {
+				$dpm = $this->post->addPostReply($this->post('subject'), $this->post('message'));
+				$this->redirect($this->post->getCollectionPath() . '#' . $dpm->getCollectionID());
+			}
+		}
+	}
+	
 	
 	/** 
 	 * The following methods automatically get run and populate the discussionsummary table so that we 
@@ -39,7 +55,12 @@ class DiscussionPostPageTypeController extends Controller {
 		$d->updateLastPost($dpm);		
 		$dpm->updateParentCounts(1);
 	}
-	
+
+
+	public function on_before_render() {
+		$this->set('error', $this->error);
+	}
+
 	/* TESTED */
 	public function on_page_move($c, $op, $np) {
 		$dpm = DiscussionPostModel::load($c);
