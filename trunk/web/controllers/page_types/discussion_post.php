@@ -43,17 +43,34 @@ class DiscussionPostPageTypeController extends Controller {
 
 			if (isset($_FILES['attachments']) && is_array($_FILES['attachments']['tmp_name'])) {
 				foreach($_FILES['attachments']['name'] as $fa) {
-					if (!$vf->filetype($fa)) {
-						$this->error->add("File {$fa} has an invalid extension.");
+					if ($fa != '') {
+						if (!$vf->filetype($fa)) {
+							$this->error->add("File {$fa} has an invalid extension.");
+						}
 					}
 				}
 			}
 			if (!$this->error->has()) {
+				// iterate through valid attachments and create files for them
+				$files = array();
+				if (isset($_FILES['attachments']) && is_array($_FILES['attachments']['tmp_name'])) {
+					for ($i = 0; $i < count($_FILES['attachments']['tmp_name']); $i++) {
+						if (is_uploaded_file($_FILES['attachments']['tmp_name'][$i])) {
+							$bt = BlockType::getByHandle('library_file');
+							$data = array();
+							$data['file'] = $_FILES['attachments']['tmp_name'][$i];
+							$data['name'] = $_FILES['attachments']['name'][$i];
+							$nb = $bt->add($data);
+							$files[] = $nb;
+						}
+					}
+				}					
+					
 				if ($this->post('cDiscussionPostParentID') > 0) {
 					$dpm2 = DiscussionPostModel::getByID($this->post('cDiscussionPostParentID'));
-					$dpm = $dpm2->addPostReply($this->post('subject'), $this->post('message'), $fo);
+					$dpm = $dpm2->addPostReply($this->post('subject'), $this->post('message'), $files);
 				} else {
-					$dpm = $this->post->addPostReply($this->post('subject'), $this->post('message'), $fo);
+					$dpm = $this->post->addPostReply($this->post('subject'), $this->post('message'), $files);
 				}
 				
 				if (is_object($dpm)) {

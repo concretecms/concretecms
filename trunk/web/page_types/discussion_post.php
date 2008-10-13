@@ -11,6 +11,7 @@
 	</div>
 	<div class="content">
     	<? $a = new Area("Main"); $a->display($c); ?>
+    	<? $a = new Area("Attachments"); $a->display($c); ?>
     </div>
 </div>
 
@@ -52,7 +53,7 @@
 </div>
 
 <div id="discussion-post-reply-form" style="display:none;">
-<form method="post" action="<?=$this->action('reply')?>" target="discussion-frame" onsubmit="ccmDiscussion.submit(this)">
+<form method="post" action="<?=$this->action('reply')?>" enctype="multipart/form-data" target="discussion-frame" onsubmit="ccmDiscussion.submit(this)">
 	<?=$form->hidden('cDiscussionPostParentID', '0'); ?>
 	<div class="ccm-error" id="discussion-post-errors">
 	
@@ -72,10 +73,15 @@
 		<? } ?>
     </div>
     
-    <div>
-    	<?= $form->label('attachments', 'Attachments'); ?>
-    	<?= $form->file('attachments[]', 'attachments'); ?>
+
+   	<?= $form->label('attachments', 'Attachments'); ?>
+    <div class="discussion-attachments-wrapper">
     </div>
+    <div class="discussion-attachments-selector">
+    	<div><?= $form->file('attachments[]', 'attachments'); ?> <a href="javascript:void(0)" class="discussion-remove-attachment" onclick="ccmDiscussion.removeAttachment(this)">remove</a></div>
+    </div>
+
+   	<div><a href="javascript:void(0)" class="discussion-add-attachment" onclick="ccmDiscussion.addAttachment()">Attach a file</a></div>
     
    <?=$form->submit('post', 'Reply') ?>
    <div class="discussion-post-loader"><img src="<?=ASSETS_URL?>/images/icons/icon_header_loading.gif" /></div>
@@ -84,4 +90,4 @@
 </form>
 </div>
 
-<iframe src="" style="display: none" border="0" id="discussion-frame" />
+<iframe src="" style="display: none" border="0" id="discussion-frame"></iframe>
