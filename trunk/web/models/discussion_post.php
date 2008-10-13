@@ -25,7 +25,7 @@ class DiscussionPostModel extends Page {
 	public function isPostPinned() { return $this->getAttribute('discussion_post_is_pinned'); }
 	public function getReplies() { return $this->replies;}
 	
-	public function addPostReply($subject, $message) {
+	public function addPostReply($subject, $message, $attachments = array()) {
 		$u = new User();
 		if ($this->canBePostedToBy($u)) {
 			Loader::model('discussion_post');
@@ -39,6 +39,17 @@ class DiscussionPostModel extends Page {
 			// also add message to main content area
 			$b1 = BlockType::getByHandle('content');
 			$n->addBlock($b1, "Main", array('content' => $message));
+
+			// add attachments if they're there
+			foreach($attachments as $nb) {
+				$nbi = $nb->getInstance();
+				$data = array();
+				$data['fileLinkText'] = $nbi->getOriginalFilename();
+				$data['fID'] = $nb->getBlockID();
+				$b2 = BlockType::getByHandle('file');
+				$n->addBlock($b2, 'Attachments', $data);
+			}
+
 			return DiscussionPostModel::getByID($n->getCollectionID(), 'ACTIVE');
 		}
 	}

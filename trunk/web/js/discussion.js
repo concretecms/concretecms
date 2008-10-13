@@ -1,6 +1,7 @@
 ccmDiscussion = {
 
 	canSubmit: true,
+	totalAttachments: 0,
 	
 	submit: function(form) {
 		if (!ccmDiscussion.canSubmit) {
@@ -39,6 +40,23 @@ ccmDiscussion = {
 		ccmDiscussion.canSubmit = false;
 		$("div#facebox input[@name=post]").get(0).disabled = true;
 		$("div#facebox div.discussion-post-loader").show();
+	},
+	
+	addAttachment: function() {
+		ccmDiscussion.totalAttachments++;
+		$("div#facebox .discussion-add-attachment").html("Attach another file");
+		var html = $("div#facebox div.discussion-attachments-selector").html();
+		$("div#facebox div.discussion-attachments-wrapper").append(html);
+	},
+	
+	removeAttachment: function(link) {
+		ccmDiscussion.totalAttachments--;
+		var p = $(link).parent();
+		p.remove();	
+		
+		if (ccmDiscussion.totalAttachments == 0) {
+			$("div#facebox .discussion-add-attachment").html("Attach a file");
+		}
 	},
 	
 	hideLoading: function() {
