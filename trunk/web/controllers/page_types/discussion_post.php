@@ -27,6 +27,8 @@ class DiscussionPostPageTypeController extends Controller {
 	public function reply() {
 		if ($this->isPost()) {
 			$v = Loader::helper('validation/strings');
+			$vf = Loader::helper('validation/file');
+			
 			$wordFilter = Loader::helper('validation/banned_words');
 			if (!$v->notempty($this->post('subject'))) {
 				$this->error->add('Your subject cannot be empty.');
@@ -37,29 +39,42 @@ class DiscussionPostPageTypeController extends Controller {
 				$this->error->add('Your message cannot be empty.');
 			}elseif( $wordFilter->hasBannedWords($this->post('message')) ){
 				$this->error->add('Your message contains inappropriate content.');
-			}			
+			}
+
+			if (isset($_FILES['attachments']) && is_array($_FILES['attachments']['tmp_name'])) {
+				foreach($_FILES['attachments']['name'] as $fa) {
+					if (!$vf->filetype($fa)) {
+						$this->error->add("File {$fa} has an invalid extension.");
+					}
+				}
+			}
 			if (!$this->error->has()) {
 				if ($this->post('cDiscussionPostParentID') > 0) {
 					$dpm2 = DiscussionPostModel::getByID($this->post('cDiscussionPostParentID'));
-					$dpm = $dpm2->addPostReply($this->post('subject'), $this->post('message'));
+					$dpm = $dpm2->addPostReply($this->post('subject'), $this->post('message'), $fo);
 				} else {
-					$dpm = $this->post->addPostReply($this->post('subject'), $this->post('message'));
+					$dpm = $this->post->addPostReply($this->post('subject'), $this->post('message'), $fo);
 				}
 				
 				if (is_object($dpm)) {
-					$resp['redirect'] = BASE_URL . DIR_REL . $this->post->getCollectionPath();
-					print json_encode($resp);
-					exit;
+					$resp['redirect'] = BASE_URL . DIR_REL . '/index.php?cID=' . $this->post->getCollectionID();
+					$this->set('json', json_encode($resp));
 				}
 			} else {
 				$e = $this->error->getList();
 				$resp['errors'] = $e;
-				print json_encode($resp);
-				exit;
+				$this->set('json', json_encode($resp));
 			}
 		}
 	}
 	
+	public function on_before_render() {
+		$json = $this->get('json');
+		if (isset($json)) {
+			print '<script type="text/javascript">parent.ccmDiscussion.response(\'' . $json . '\');</script>';
+			exit;
+		}
+	}
 	
 	/** 
 	 * The following methods automatically get run and populate the discussionsummary table so that we 

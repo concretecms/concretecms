@@ -1,9 +1,5 @@
 <script src="<?=ASSETS_URL_JAVASCRIPT?>/ccm_spellchecker.js"></script>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_spellchecker.css";</style>
-<style>
-label{float:left; width:25%; display:block}
-.fieldWrap{float:left; width:70%}
-</style>
 
 <? $av = Loader::helper('concrete/avatar'); ?>
 
@@ -56,7 +52,7 @@ label{float:left; width:25%; display:block}
 </div>
 
 <div id="discussion-post-reply-form" style="display:none;">
-<form method="post" action="<?=$this->action('reply')?>" onsubmit="return ccmDiscussion.submit(this)">
+<form method="post" action="<?=$this->action('reply')?>" target="discussion-frame" onsubmit="ccmDiscussion.submit(this)">
 	<?=$form->hidden('cDiscussionPostParentID', '0'); ?>
 	<div class="ccm-error" id="discussion-post-errors">
 	
@@ -76,9 +72,16 @@ label{float:left; width:25%; display:block}
 		<? } ?>
     </div>
     
+    <div>
+    	<?= $form->label('attachments', 'Attachments'); ?>
+    	<?= $form->file('attachments[]', 'attachments'); ?>
+    </div>
+    
    <?=$form->submit('post', 'Reply') ?>
    <div class="discussion-post-loader"><img src="<?=ASSETS_URL?>/images/icons/icon_header_loading.gif" /></div>
 
     <div class="ccm-spacer">&nbsp;</div>
 </form>
 </div>
+
+<iframe src="" style="display: none" border="0" id="discussion-frame" />

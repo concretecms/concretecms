@@ -48,4 +48,16 @@ class ValidationFileHelper {
 		return file_exists($pathToFile);
 	}
 	
+	
+	/** 
+	 * Tests whether the passed filename has a valid file extension
+	 */
+	public function filetype($file) {
+		$ext = str_replace('*.', '', UPLOAD_FILE_EXTENSIONS_ALLOWED);
+		$ext = strtolower($ext);
+		$exta = explode(';', $ext);
+		
+		$ext = strtolower(strrchr($file, '.'));
+		return in_array(substr($ext, 1), $exta);
+	}
 }

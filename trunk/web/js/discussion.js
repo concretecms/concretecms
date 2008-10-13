@@ -8,25 +8,18 @@ ccmDiscussion = {
 		}
 		ccmDiscussion.showLoading();
 		$("div#facebox div.ccm-error").html("");
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			url: $(form).attr('action'),
-			data: "subject=" + $("div#facebox input[@name=subject]").val() + "&message=" + $("div#facebox textarea[@name=message]").val() + "&cDiscussionPostParentID=" + $("div#facebox input[@name=cDiscussionPostParentID]").val(),
-			success: function(resp) {
-
-				if (resp.errors) {
-					ccmDiscussion.hideLoading();
-					for(i = 0; i < resp.errors.length; i++) {
-						$("div#facebox div.ccm-error").append(resp.errors[i] + '<br>');
-					}
-				} else if (resp.redirect) {
-					ccmDiscussion.redirect(resp.redirect);
-				}
+	},
+	
+	response: function(data) {
+		resp = eval("(" + data + ")");
+		if (resp.errors) {
+			ccmDiscussion.hideLoading();
+			for(i = 0; i < resp.errors.length; i++) {
+				$("div#facebox div.ccm-error").append(resp.errors[i] + '<br>');
 			}
-		});
-		
-		return false;
+		} else if (resp.redirect) {
+			ccmDiscussion.redirect(resp.redirect);
+		}
 	},
 	
 	redirect: function(redir) {
