@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btAdvertisement">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="aID" type="I">
+			<unsigned />
+			<default value="0"/>
+		</field>
+		<field name="agID" type="I">
+			<unsigned />
+			<default value="0"/>
+		</field>
+		<field name="numAds" type="i">
+			<default value="0"/>
+		</field>
+	</table>
+	<table name="btAdvertisementDetails">
+		<field name="aID" type="I">
+			<key />
+			<unsigned />
+			<autoincrement/>
+		</field>
+		<field name="name" type="C" size="255">
+			<default value=""/>
+		</field>
+		<field name="fID" type="I">
+			<default value="0"/>
+		</field>
+		<field name="url" type="C" size="255">
+			<default value=""/>
+		</field>
+		<field name="html" type="X2">
+			<default value=""/>
+		</field>
+		<field name="targetImpressions" type="I">
+			<default value="0"/>
+		</field>
+		<field name="targetClickThrus" type="I">
+			<default value="0"/>
+		</field>
+		<field name="lastIndexed" type="T">
+		</field>
+		<field name="impressions" type="I">
+			<default value="0"/>
+		</field>
+		<field name="clickThrus" type="I">
+			<default value="0"/>
+		</field>
+	</table>
+	<table name="btAdvertisementToGroups">
+		<field name="aID" type="I">
+			<unsigned />
+		</field>
+		<field name="agID" type="I">
+			<unsigned />
+		</field>
+	</table>
+	<table name="btAdvertisementGroups">
+		<field name="agID" type="I">
+			<key />
+			<unsigned />
+			<autoincrement/>
+		</field>
+		<field name="agName" type="C" size="255">
+		</field>
+	</table>
+</schema>
+
+
+

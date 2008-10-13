@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<project name="Concrete5" default="localize" basedir=".">
+	
+	 <target name="localize_de_DE">
+    	<echo msg="Generating Translation Files" />
+    	<touch file="messages_de_DE.po" />
+		<exec command="find ../web/ -iname '*.php' -exec xgettext --default-domain=messages_de_DE --keyword=t -l PHP -j {} \;" />
+	</target>
+
+	 <target name="localize_output_de_DE">
+    	<echo msg="Moving German Files" />
+		<exec command="msgfmt -o ../web/concrete/locale/de_DE/LC_MESSAGES/messages.mo messages_de_DE.po" />
+	</target>
+</project>
