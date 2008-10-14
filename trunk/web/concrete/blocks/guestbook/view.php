@@ -53,18 +53,18 @@ foreach($posts as $p) { ?>
     <div class="guestBook-entry">
     	<? if($bp->canWrite()) { ?> 
 				<div class="guestBook-manage-links">
-                	<a href="<?=$this->action('loadEntry')."&entryID=".$p['entryID'];?>#guestBookForm">Edit</a> | 
-					<a href="<?=$this->action('removeEntry')."&entryID=".$p['entryID'];?>" onclick="return confirm('Are you sure you would like to remove this comment?');">Remove</a> |
+                	<a href="<?=$this->action('loadEntry')."&entryID=".$p['entryID'];?>#guestBookForm"><?=t('Edit')?></a> | 
+					<a href="<?=$this->action('removeEntry')."&entryID=".$p['entryID'];?>" onclick="return confirm('<?=t("Are you sure you would like to remove this comment?")?>');"><?=t('Remove')?></a> |
                 	<? if($p['approved']) { ?>
- 	                   	<a href="<?=$this->action('unApproveEntry')."&entryID=".$p['entryID'];?>">Un-Approve</a>
+ 	                   	<a href="<?=$this->action('unApproveEntry')."&entryID=".$p['entryID'];?>"><?=t('Un-Approve')?></a>
                     <? } else { ?>
-	                    <a href="<?=$this->action('approveEntry')."&entryID=".$p['entryID'];?>">Approve</a>
+	                    <a href="<?=$this->action('approveEntry')."&entryID=".$p['entryID'];?>"><?=t('Approve')?></a>
 					<? } ?>
                 </div>
 			<? } ?>
-			<div class="contentByLine">Posted by
+			<div class="contentByLine"><?=t('Posted by')?>
 				<span class="userName"><?=$p['user_name']?></span> 
-				on
+				<?=t('on')?>
 				<span class="contentDate"><?=date("M dS, Y",strtotime($p['entryDate']));?></span>
 			</div>
 			<?=nl2br($p['commentText'])?>
@@ -83,13 +83,13 @@ foreach($posts as $p) { ?>
 		<? if(isset($Entry->entryID)) { ?>
         	<input type="hidden" name="entryID" value="<?=$Entry->entryID?>" />
         <? } ?>
-        <label for="name">Name:</label><?=(isset($errors['name'])?"<span class=\"error\">".$errors['name']."</span>":"")?><br />
+        <label for="name"><?=t('Name')?>:</label><?=(isset($errors['name'])?"<span class=\"error\">".$errors['name']."</span>":"")?><br />
 		<input type="text" name="name" value="<?=$Entry->user_name ?>" /> <br />
-        <label for="email">Email:</label><?=(isset($errors['email'])?"<span class=\"error\">".$errors['email']."</span>":"")?><br />
-		<input type="text" name="email" value="<?=$Entry->user_email ?>" /> <span class="note">(your email will not be publicly displayed)</span> <br />
+        <label for="email"><?=t('Email')?>:</label><?=(isset($errors['email'])?"<span class=\"error\">".$errors['email']."</span>":"")?><br />
+		<input type="text" name="email" value="<?=$Entry->user_email ?>" /> <span class="note">(<?=t('your email will not be publicly displayed')?>)</span> <br />
         <?=(isset($errors['commentText'])?"<br /><span class=\"error\">".$errors['commentText']."</span>":"")?>
         <textarea name="commentText"><?=$Entry->commentText ?></textarea><br />
-        <input type="submit" name="Post Comment" value="Post Comment" class="button"/>
+        <input type="submit" name="Post Comment" value="<?=t('Post Comment')?>" class="button"/>
         </form>
     </div>
 <? } ?>

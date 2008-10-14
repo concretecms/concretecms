@@ -21,7 +21,7 @@ if($_GET['cID'] && $_GET['arHandle']){
 	}
 }else $badPermissions=true;
 if($badPermissions){
-	echo 'Invalid Permissions';
+	echo t('Invalid Permissions');
 	die;
 } 
 

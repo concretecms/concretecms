@@ -29,7 +29,7 @@
 <? 
 if (strlen($query)) { 
 	if(count($results)==0){ ?>
-		<h4 style="margin-top:32px">There were no results found. &nbsp;Please try another keyword or phrase.</h4>	
+		<h4 style="margin-top:32px"><?=t('There were no results found. &nbsp;Please try another keyword or phrase.')?></h4>	
 	<? }else{ ?>
 		<div id="searchResults">
 		<? foreach($results as $r) { ?>

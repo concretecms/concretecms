@@ -19,7 +19,7 @@
 <div class="poll">
 <?  
 if ($controller->hasVoted()) { ?>
-		<h3>You've voted on this survey.</h3>
+		<h3><?=t("You've voted on this survey.")?></h3>
 		<br/>	
 	<div style="">		
 		<? 
@@ -40,7 +40,7 @@ if ($controller->hasVoted()) { ?>
 		}
 		?>
 		
-		<strong>Question: <?=$controller->getQuestion()?></strong>
+		<strong><?=t("Question")?>: <?=$controller->getQuestion()?></strong>
 		
 		<div id="surveyResults" style=" <?=(!$_GET['dontGraphPoll'] && $totalVotes>0)?'float:left; width:45%':''?>">
 			<table style="width:98%">
@@ -57,8 +57,8 @@ if ($controller->hasVoted()) { ?>
 					<? $i++; ?>
 			<? } ?>
 			</table>
-			<div class="note" style="margin-top:8px"><?=intval($totalVotes)?> Vote<?=(intval($totalVotes)==1)?'':'s'?></div>
-			<div class="small faint">Results may not be statistically valid.</div>
+			<div class="note" style="margin-top:8px"><?=intval($totalVotes)?> <?=(intval($totalVotes)==1)?t('Vote'):t('Votes')?></div>
+			<div class="small faint"><?=t("Results may not be statistically valid.")?></div>
 		</div>
 		<?
 		//&chl= join('|',$optionNamesAbbrev) 
@@ -71,7 +71,7 @@ if ($controller->hasVoted()) { ?>
 	</div>
 	
 	<? if($_GET['dontGraphPoll']){ ?>
-		<div class="small right" style="margin-top:8px"><a class="arrow" href="<?=DIR_REL?>/?cID=<?=$b->getBlockCollectionID() ?>">View Full Results</a></div>
+		<div class="small right" style="margin-top:8px"><a class="arrow" href="<?=DIR_REL?>/?cID=<?=$b->getBlockCollectionID() ?>"><?=t('View Full Results')?></a></div>
 	<? } ?>
 	
 	<div class="spacer">&nbsp;</div>
@@ -92,9 +92,9 @@ if ($controller->hasVoted()) { ?>
 	<? } ?>
 	
 	<? if(!$controller->requiresRegistration() || intval($uID) > 0) { ?>
-	<div class="buttons" style="text-align: left !important"><input type="submit" name="submit" value="Vote" /></div>
+	<div class="buttons" style="text-align: left !important"><input type="submit" name="submit" value="<?=t('Vote')?>" /></div>
 	<? }else{ ?>
-		<div class="faint" style="margin-top:8px">Please Login to Vote</div>
+		<div class="faint" style="margin-top:8px"><?=t('Please Login to Vote')?></div>
 	<? } ?>
 
 	<? if(intval($uID)>0){ ?>

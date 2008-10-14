@@ -29,7 +29,7 @@ if( strstr(strtolower($file->getFilename()),'.flv') ){   ?>
 	</script>
 	
 	<div class="ccm-flv-player" id="flv_player_<?=$bID?>">
-	Loading Video... If you're seeing this message you may not have Flash installed.
+	<?=t("Loading Video... If you're seeing this message you may not have Flash installed.")?>
 	</div>
 
 <? }elseif(  strstr(strtolower($file->getFilename()),'.wmv') || strstr(strtolower($file->getFilename()),'.mpg') ||  strstr(strtolower($file->getFilename()),'.mpeg')  ){ ?> 

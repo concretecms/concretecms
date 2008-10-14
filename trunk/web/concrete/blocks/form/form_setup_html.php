@@ -3,10 +3,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $uh = Loader::helper('concrete/urls'); ?>
 
 <ul class="ccm-dialog-tabs" id="ccm-formblock-tabs">
-	<li class="<?=(intval($miniSurveyInfo['bID'])==0)?'ccm-nav-active':''?>"><a href="javascript:void(0)" id="ccm-formblock-tab-add">Add</a></li>
-	<li class="<?=(intval($miniSurveyInfo['bID'])>0)?'ccm-nav-active':''?>"><a href="javascript:void(0)" id="ccm-formblock-tab-edit">Edit</a></li>
-	<li><a href="javascript:void(0)" id="ccm-formblock-tab-preview">Preview</a></li>
-	<li><a href="javascript:void(0)" id="ccm-formblock-tab-options">Options</a></li>
+	<li class="<?=(intval($miniSurveyInfo['bID'])==0)?'ccm-nav-active':''?>"><a href="javascript:void(0)" id="ccm-formblock-tab-add"><?=t('Add')?></a></li>
+	<li class="<?=(intval($miniSurveyInfo['bID'])>0)?'ccm-nav-active':''?>"><a href="javascript:void(0)" id="ccm-formblock-tab-edit"><?=t('Edit')?></a></li>
+	<li><a href="javascript:void(0)" id="ccm-formblock-tab-preview"><?=t('Preview')?></a></li>
+	<li><a href="javascript:void(0)" id="ccm-formblock-tab-options"><?=t('Options')?></a></li>
 </ul>
 
 <input type="hidden" name="miniSurveyServices" value="<?=$uh->getBlockTypeToolsURL($bt)?>/services.php" />
@@ -18,13 +18,13 @@ $uh = Loader::helper('concrete/urls'); ?>
 	if(strlen($miniSurveyInfo['surveyName'])==0)
 		$miniSurveyInfo['surveyName']=$c->getCollectionName();
 	?>
-	<strong>Form Name: <input id="ccmSurveyName" name="surveyName" style="width: 95%" type="text" class="ccm-input-text" value="<?=$miniSurveyInfo['surveyName']?>" /></strong>
+	<strong><?=t('Form Name')?>: <input id="ccmSurveyName" name="surveyName" style="width: 95%" type="text" class="ccm-input-text" value="<?=$miniSurveyInfo['surveyName']?>" /></strong>
 	
 	<div style="margin-top:16px">
-		Notify me by email when people submit this form: 
+		<?=t('Notify me by email when people submit this form')?>: 
 		<input name="notifyMeOnSubmission" type="checkbox" value="1" <?=(intval($miniSurveyInfo['notifyMeOnSubmission'])>=1)?'checked':''?> onchange="miniSurvey.showRecipient(this)" onclick="miniSurvey.showRecipient(this)" />
 		<div id="recipientEmailWrap" style=" <?=(intval($miniSurveyInfo['notifyMeOnSubmission'])==0)?'display:none':''?>">
-			Recipient Email: <input name="recipientEmail" value="<?=$miniSurveyInfo['recipientEmail']?>" type="text" size="20" maxlength="128" />
+			<?=t('Recipient Email')?>: <input name="recipientEmail" value="<?=$miniSurveyInfo['recipientEmail']?>" type="text" size="20" maxlength="128" />
 		</div>
 	</div> 
 </div> 
@@ -36,12 +36,12 @@ $uh = Loader::helper('concrete/urls'); ?>
 <div id="ccm-formBlockPane-add" class="ccm-formBlockPane" style=" <?=(intval($miniSurveyInfo['bID'])==0)?'display:block':''?> ">
 	<div id="newQuestionBox">
 	
-		<div id="addNewQuestionTitle"><strong>Add a New Question:</strong></div>		
+		<div id="addNewQuestionTitle"><strong><?=t('Add a New Question')?>:</strong></div>		
 		
-		<div id="questionAddedMsg" class="formBlockQuestionMsg">Your question has been added. To view it click the preview tab.</div>
+		<div id="questionAddedMsg" class="formBlockQuestionMsg"><?=t('Your question has been added. To view it click the preview tab.')?></div>
 		
 		<div class="fieldRow">
-			<div class="fieldLabel">Question:</div>
+			<div class="fieldLabel"><?=t('Question')?>:</div>
 			<div class="fieldValues">
 				<input id="question" name="question" type="text" style="width: 265px" class="ccm-input-text" />
 			</div>
@@ -49,22 +49,22 @@ $uh = Loader::helper('concrete/urls'); ?>
 		</div>	
 		
 		<div class="fieldRow">
-			<div class="fieldLabel">Answer Type: </div>
+			<div class="fieldLabel"><?=t('Answer Type')?>: </div>
 			<div class="fieldValues">
-				<input name="answerType" type="radio" value="field" /> Text Field &nbsp; <br>
-				<input name="answerType" type="radio" value="text" /> Text Area &nbsp; <br>
-				<input name="answerType" type="radio" value="radios" /> Radio Buttons &nbsp; <br>
-				<input name="answerType" type="radio" value="select" /> Select Box &nbsp; <Br>
-				<input name="answerType" type="radio" value="list" /> List Box &nbsp; 				
+				<input name="answerType" type="radio" value="field" /> <?=t('Text Field')?> &nbsp; <br>
+				<input name="answerType" type="radio" value="text" /> <?=t('Text Area')?> &nbsp; <br>
+				<input name="answerType" type="radio" value="radios" /> <?=t('Radio Buttons ')?> &nbsp; <br>
+				<input name="answerType" type="radio" value="select" /> <?=t('Select Box')?> &nbsp; <Br>
+				<input name="answerType" type="radio" value="list" /> <?=t('List Box')?> &nbsp; 				
 			</div>
 			<div class="spacer"></div>
 		</div>
 		
 		<div class="fieldRow" id="answerOptionsArea">
-			<div class="fieldLabel">Answer Options: </div>
+			<div class="fieldLabel"><?=t('Answer Options')?>: </div>
 			<div class="fieldValues">
 				<textarea id="answerOptions" name="answerOptions" cols="50" rows="4" style="width:90%"></textarea><br />
-				Put each answer options on a new line			
+				<?=t('Put each answer options on a new line')?>
 			</div>
 			<div class="spacer"></div>
 		</div>	
@@ -84,13 +84,13 @@ $uh = Loader::helper('concrete/urls'); ?>
 	
 <div id="ccm-formBlockPane-edit" class="ccm-formBlockPane" style=" <?=(intval($miniSurveyInfo['bID'])>0)?'display:block':''?> ">
 	
-	<div id="questionEditedMsg" class="formBlockQuestionMsg">Your question has been edited.</div>
+	<div id="questionEditedMsg" class="formBlockQuestionMsg"><?=t('Your question has been edited.')?></div>
 	
 	<div id="editQuestionForm" style="display:none">
-		<div id="editQuestionTitle" ><strong>Edit Question:</strong></div>
+		<div id="editQuestionTitle" ><strong><?=t('Edit Question')?>:</strong></div>
 		
 		<div class="fieldRow">
-			<div class="fieldLabel">Question:</div>
+			<div class="fieldLabel"><?=t('Question')?>:</div>
 			<div class="fieldValues">
 				<input id="questionEdit" name="question" type="text" style="width: 265px" class="ccm-input-text" />
 			</div>
@@ -98,22 +98,22 @@ $uh = Loader::helper('concrete/urls'); ?>
 		</div>	
 		
 		<div class="fieldRow">
-			<div class="fieldLabel">Answer Type: </div>
+			<div class="fieldLabel"><?=t('Answer Type')?>: </div>
 			<div class="fieldValues">
-				<input name="answerTypeEdit" type="radio" value="field" /> Text Field &nbsp; <br>
-				<input name="answerTypeEdit" type="radio" value="text" /> Text Area &nbsp; <br>
-				<input name="answerTypeEdit" type="radio" value="radios" /> Radio Buttons &nbsp; <br>
-				<input name="answerTypeEdit" type="radio" value="select" /> Select Box &nbsp; <Br>
-				<input name="answerTypeEdit" type="radio" value="list" /> List Box &nbsp; 				
+				<input name="answerTypeEdit" type="radio" value="field" /> <?=t('Text Field')?> &nbsp; <br>
+				<input name="answerTypeEdit" type="radio" value="text" /> <?=t('Text Area')?> &nbsp; <br>
+				<input name="answerTypeEdit" type="radio" value="radios" /> <?=t('Radio Buttons')?> &nbsp; <br>
+				<input name="answerTypeEdit" type="radio" value="select" /> <?=t('Select Box')?> &nbsp; <Br>
+				<input name="answerTypeEdit" type="radio" value="list" /> <?=t('List Box')?> &nbsp; 				
 			</div>
 			<div class="spacer"></div>
 		</div>
 		
 		<div class="fieldRow" id="answerOptionsAreaEdit">
-			<div class="fieldLabel">Answer Options: </div>
+			<div class="fieldLabel"><?=t('Answer Options')?>: </div>
 			<div class="fieldValues">
 				<textarea id="answerOptionsEdit" name="answerOptionsEdit" cols="50" rows="4" style="width:90%"></textarea><br />
-				Put each answer options on a new line			
+				<?=t('Put each answer options on a new line')?>			
 			</div>
 			<div class="spacer"></div>
 		</div>
@@ -123,14 +123,14 @@ $uh = Loader::helper('concrete/urls'); ?>
 	</div>
 
 	<div id="miniSurvey">
-		<div style="margin-bottom:16px"><strong>Edit:</strong>	</div>
+		<div style="margin-bottom:16px"><strong><?=t('Edit')?>:</strong>	</div>
 		<div id="miniSurveyWrap"></div>
 	</div>
 </div>	
 	
 <div id="ccm-formBlockPane-preview" class="ccm-formBlockPane">
 	<div id="miniSurvey">
-		<div style="margin-bottom:16px"><strong>Preview:</strong></div>	
+		<div style="margin-bottom:16px"><strong><?=t('Preview')?>:</strong></div>	
 		<div id="miniSurveyPreviewWrap"></div>
 	</div>
 </div>
