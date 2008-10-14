@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="Concrete5" default="prepare_short_tags" basedir=".">
+<project name="Concrete5" default="export" basedir=".">
     <target name="export">
         <echo msg="Exporting C5" />
 		<svnexport
@@ -29,25 +29,18 @@
 			</fileset>
 		</reflexive>
 	</target>
+
+	 <target name="localize_de_DE">
+    	<echo msg="Generating Translation Files" />
+    	<touch file="messages_de_DE.po" />
+		<exec command="find ../web/ -iname '*.php' -exec xgettext --default-domain=messages_de_DE --keyword=t -l PHP -j {} \;" />
+	</target>
+
+	 <target name="localize_output_de_DE">
+    	<echo msg="Moving German Files" />
+		<exec command="msgfmt -o ../web/concrete/locale/de_DE/LC_MESSAGES/messages.mo messages_de_DE.po" />
+	</target>
+
     
-    <!--
-    <target name="archive">
-        <echo msg="Creating archive..." />
-
-        <tar destfile="build.tar.gz" compression="gzip">
-            <fileset dir="./export">
-                <include name="*" />
-            </fileset>
-        </tar>
-
-		<zip destfile="build.zip">
-		 <fileset dir="./export">
-			 <include name="**/**" />
-		 </fileset>
-		</zip>
-
-        <echo msg="Files archived in build directory OK!" />
-    </target>
-	//-->
     <echo msg="MAKE SURE TO REMOVE ALL THE BLOCKS AND SINGLE PAGES AND SHIT AND UPDATE THE VERSION NUMBER FILE ON CONCRETE5.ORG" />
 </project>

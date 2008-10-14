@@ -21,6 +21,7 @@
 	## Load required libraries ##
 	Loader::library('object');
 	Loader::library('log');
+	Loader::library('localization');
 	Loader::library('request');
 	Loader::library('events');
 	Loader::library('model');
