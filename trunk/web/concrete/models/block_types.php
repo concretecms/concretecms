@@ -379,6 +379,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				if (!class_exists($class)) {
 					require_once($dir . '/' . $btHandle . '/' . FILENAME_BLOCK_CONTROLLER);
 				}
+				
+				Localization::setDomain($dir . '/' . $btHandle);
+
 				$bta = new $class;
 				
 				// first run the subclass methods. If they work then we install the block
