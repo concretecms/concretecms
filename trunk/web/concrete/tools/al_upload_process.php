@@ -5,7 +5,7 @@ $c = Page::getByPath("/dashboard/mediabrowser");
 $cp = new Permissions($c);
 $u = new User();
 if (!$cp->canRead()) {
-	die(_("Access Denied"));
+	die(_("Access Denied."));
 }
 
 require_once(DIR_FILES_BLOCK_TYPES_CORE . '/library_file/controller.php');

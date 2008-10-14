@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $c = Page::getByPath('/dashboard/mediabrowser');
 $cp = new Permissions($c);
 if (!$cp->canRead()) {
-	die(_("Access Denied"));
+	die(_("Access Denied."));
 }
 
 Loader::block('library_file');
