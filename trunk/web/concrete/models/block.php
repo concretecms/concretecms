@@ -113,18 +113,29 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 		public function inc($file) {
 			$b = $this;
-			global $c;
-			if ($this->getPackageID() > 0) {
-				if (is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) {
-					include(DIR_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle() . '/' . $file);			
-				} else {
-					include(DIR_PACKAGES_CORE . '/' . $this->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle() . '/' . $file);			
-				}
-			} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle() . '/' . $file)) {
-				include(DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle() . '/' . $file);
-			} else {
-				include(DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle() . '/' . $file);
+			if (file_exists($this->getBlockPath() . '/' . $file)) {
+				include($this->getBlockPath() . '/' . $file);
 			}
+		}
+		/*
+		 * Returns a path to where the block type's files are located.
+		 * @access public
+		 * @return string $path
+		 */
+		 
+		public function getBlockPath() {
+			if ($this->getPackageID() > 0) {
+				$pkgHandle = $this->getPackageHandle();
+				$dirp = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+				$dir = $dirp . '/' . $pkgHandle . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle();
+			} else {
+				if (is_dir(DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle())) {
+					$dir = DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle();
+				} else {
+					$dir = DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle();
+				}
+			}
+			return $dir;	
 		}
 
 		function loadNewCollection(&$c) {

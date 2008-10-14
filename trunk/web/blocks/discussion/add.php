@@ -2,7 +2,7 @@
 
 
 <div class="ccm-block-field-group">
-  <h2>Location in Website</h2>
+  <h2><?=t('Location in Website')?></h2>
   Display discussions that are located:<br/>
   <br/>
   <div>
