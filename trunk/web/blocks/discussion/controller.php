@@ -24,12 +24,21 @@
 	defined('C5_EXECUTE') or die(_("Access Denied."));
 	class DiscussionBlockController extends BlockController {
 		
-		protected $btDescription = "Adds a forum to a particular area of your site.";
-		protected $btName = "Discussion";
 		protected $btTable = 'btDiscussion';
 		protected $btInterfaceWidth = "400";
 		protected $btInterfaceHeight = "300";	
 		private $mode;
+
+		/** 
+		 * Used for localization. If we want to localize the name/description we have to include this
+		 */
+		public function getBlockTypeDescription() {
+			return t("Adds a forum to a particular area of your site.");
+		}
+		
+		public function getBlockTypeName() {
+			return t("Discussion");
+		}
 		
 		public function getMode() {return $this->mode;}
 		
