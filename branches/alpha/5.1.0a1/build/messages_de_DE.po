@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-28 08:38-0700\n"
+"POT-Creation-Date: 2008-10-13 21:09-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,32 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../web//concrete/single_pages/login.php:10
+#: ../web//concrete/single_pages/login.php:12
 #, php-format
 msgid "Sign in to %s"
 msgstr "Melden Sie sich an, um %s"
 
 #: ../web//concrete/single_pages/login.php:25
 #: ../web//concrete/single_pages/login.php:29
+#: ../web//concrete/single_pages/login.php:31
 msgid "Password"
 msgstr "Passwort"
 
 #: ../web//concrete/single_pages/login.php:29
 #: ../web//concrete/single_pages/login.php:33
+#: ../web//concrete/single_pages/login.php:35
 msgid "Remember Me"
 msgstr "Halten Sie mich in"
 
 #: ../web//concrete/single_pages/login.php:41
 #: ../web//concrete/single_pages/login.php:45
+#: ../web//concrete/single_pages/login.php:47
 msgid "Forgot Password?"
 msgstr "Haben Sie Ihr Passwort vergessen?"
 
 #: ../web//concrete/single_pages/login.php:43
 #: ../web//concrete/single_pages/login.php:47
+#: ../web//concrete/single_pages/login.php:49
 msgid ""
 "If you've forgotten your password, enter your email address below. We will "
 "reset it to a new password, and send the new one to you."
@@ -49,47 +54,520 @@ msgstr ""
 #: ../web//concrete/single_pages/login.php:51
 #: ../web//concrete/single_pages/login.php:21
 #: ../web//concrete/single_pages/login.php:55
+#: ../web//concrete/single_pages/login.php:23
+#: ../web//concrete/single_pages/login.php:57
 msgid "Email Address"
 msgstr "E-Mail Addresse"
 
 #: ../web//concrete/single_pages/login.php:60
+#: ../web//concrete/single_pages/login.php:62
 msgid "Reset and Email Password"
 msgstr "Reset und E-Mail Passwort"
 
 #: ../web//concrete/single_pages/login.php:23
+#: ../web//concrete/single_pages/login.php:25
 msgid "Username"
 msgstr "Benutzername"
 
 #: ../web//concrete/single_pages/login.php:36
+#: ../web//concrete/single_pages/login.php:38
 msgid "Sign In"
 msgstr "Anmelden"
 
 #: ../web//concrete/controllers/dashboard/collection_types/controller.php:29
+#: ../web//concrete/controllers/dashboard/collection_types/controller.php:31
 msgid "You must delete all pages of this type before deleting this page type."
 msgstr ""
 
 #: ../web//concrete/controllers/dashboard/install.php:8
+#: ../web//concrete/controllers/dashboard/install.php:9
 msgid "You've already installed that package."
 msgstr ""
 
 #: ../web//concrete/controllers/dashboard/install.php:9
+#: ../web//concrete/controllers/dashboard/install.php:10
 msgid "Invalid Package."
 msgstr ""
 
 #: ../web//concrete/controllers/dashboard/install.php:32
+#: ../web//concrete/controllers/dashboard/install.php:38
 msgid "Block Type Refreshed. Any database schema changes have been applied."
 msgstr ""
 
 #: ../web//concrete/controllers/dashboard/install.php:47
+#: ../web//concrete/controllers/dashboard/install.php:53
 msgid "Block Type Installed."
 msgstr ""
 
 #: ../web//concrete/controllers/dashboard/install.php:61
+#: ../web//concrete/controllers/dashboard/install.php:67
 msgid ""
 "This block type is either internal, or is being used in your website. It "
 "cannot be uninstalled."
 msgstr ""
 
 #: ../web//concrete/controllers/dashboard/install.php:98
+#: ../web//concrete/controllers/dashboard/install.php:119
 msgid "The package has been installed."
+msgstr ""
+
+#: ../web//blocks/markdown/add.php:1 ../web//blocks/markdown/controller.php:2
+#: ../web//blocks/markdown/edit.php:1 ../web//blocks/markdown/view.php:3
+#: ../web//concrete/blocks/autonav/add.php:1
+#: ../web//concrete/blocks/autonav/controller.php:23
+#: ../web//concrete/blocks/autonav/edit.php:2
+#: ../web//concrete/blocks/autonav/templates/header_menu.php:2
+#: ../web//concrete/blocks/autonav/tools/preview_pane.php:2
+#: ../web//concrete/blocks/autonav/view.php:2
+#: ../web//concrete/blocks/content/add.php:2
+#: ../web//concrete/blocks/content/controller.php:2
+#: ../web//concrete/blocks/content/edit.php:2
+#: ../web//concrete/blocks/content/editor_init.php:1
+#: ../web//concrete/blocks/content/view.php:2
+#: ../web//concrete/blocks/external_form/add.php:1
+#: ../web//concrete/blocks/external_form/controller.php:2
+#: ../web//concrete/blocks/external_form/edit.php:2
+#: ../web//concrete/blocks/external_form/forms/controllers/test_form.php:2
+#: ../web//concrete/blocks/external_form/forms/test_form.php:2
+#: ../web//concrete/blocks/external_form/view.php:2
+#: ../web//concrete/blocks/file/add.php:2
+#: ../web//concrete/blocks/file/controller.php:2
+#: ../web//concrete/blocks/file/edit.php:2
+#: ../web//concrete/blocks/file/view.php:2
+#: ../web//concrete/blocks/flash_content/add.php:2
+#: ../web//concrete/blocks/flash_content/controller.php:2
+#: ../web//concrete/blocks/flash_content/edit.php:2
+#: ../web//concrete/blocks/flash_content/view.php:2
+#: ../web//concrete/blocks/form/add.php:2
+#: ../web//concrete/blocks/form/controller.php:2
+#: ../web//concrete/blocks/form/edit.php:2
+#: ../web//concrete/blocks/form/form_setup_html.php:2
+#: ../web//concrete/blocks/form/styles_include.php:1
+#: ../web//concrete/blocks/form/tools/services.php:2
+#: ../web//concrete/blocks/form/view.php:2
+#: ../web//concrete/blocks/google_map/add.php:2
+#: ../web//concrete/blocks/google_map/controller.php:2
+#: ../web//concrete/blocks/google_map/edit.php:2
+#: ../web//concrete/blocks/google_map/form_setup_html.php:1
+#: ../web//concrete/blocks/google_map/view.php:1
+#: ../web//concrete/blocks/guestbook/add.php:1
+#: ../web//concrete/blocks/guestbook/controller.php:24
+#: ../web//concrete/blocks/guestbook/edit.php:1
+#: ../web//concrete/blocks/guestbook/view.php:1
+#: ../web//concrete/blocks/image/add.php:3
+#: ../web//concrete/blocks/image/controller.php:3
+#: ../web//concrete/blocks/image/edit.php:2
+#: ../web//concrete/blocks/image/view.php:2
+#: ../web//concrete/blocks/library_file/controller.php:21
+#: ../web//concrete/blocks/library_file/tools/properties.php:2
+#: ../web//concrete/blocks/page_list/add.php:2
+#: ../web//concrete/blocks/page_list/controller.php:3
+#: ../web//concrete/blocks/page_list/edit.php:2
+#: ../web//concrete/blocks/page_list/page_list_form.php:1
+#: ../web//concrete/blocks/page_list/tools/preview_pane.php:2
+#: ../web//concrete/blocks/page_list/tools/rss.php:2
+#: ../web//concrete/blocks/page_list/view.php:2
+#: ../web//concrete/blocks/rss_displayer/add.php:2
+#: ../web//concrete/blocks/rss_displayer/controller.php:2
+#: ../web//concrete/blocks/rss_displayer/edit.php:2
+#: ../web//concrete/blocks/rss_displayer/form_setup_html.php:1
+#: ../web//concrete/blocks/rss_displayer/view.php:1
+#: ../web//concrete/blocks/search/add.php:2
+#: ../web//concrete/blocks/search/controller.php:2
+#: ../web//concrete/blocks/search/edit.php:2
+#: ../web//concrete/blocks/search/form_setup_html.php:1
+#: ../web//concrete/blocks/search/view.php:1
+#: ../web//concrete/blocks/slideshow/add.php:2
+#: ../web//concrete/blocks/slideshow/controller.php:2
+#: ../web//concrete/blocks/slideshow/edit.php:2
+#: ../web//concrete/blocks/slideshow/form_setup_html.php:2
+#: ../web//concrete/blocks/slideshow/image_row_include.php:1
+#: ../web//concrete/blocks/slideshow/view.php:1
+#: ../web//concrete/blocks/survey/add.php:1
+#: ../web//concrete/blocks/survey/controller.php:23
+#: ../web//concrete/blocks/survey/edit.php:1
+#: ../web//concrete/blocks/survey/poll_view.php:2
+#: ../web//concrete/blocks/survey/view.php:2
+#: ../web//concrete/blocks/video/add.php:2
+#: ../web//concrete/blocks/video/controller.php:11
+#: ../web//concrete/blocks/video/edit.php:2
+#: ../web//concrete/blocks/video/form_setup_html.php:1
+#: ../web//concrete/blocks/video/view.php:2
+#: ../web//concrete/blocks/youtube/add.php:2
+#: ../web//concrete/blocks/youtube/controller.php:2
+#: ../web//concrete/blocks/youtube/edit.php:2
+#: ../web//concrete/blocks/youtube/form_setup_html.php:1
+#: ../web//concrete/blocks/youtube/tools/video_popup.php:2
+#: ../web//concrete/blocks/youtube/view.php:2
+#: ../web//concrete/config/app.php:10 ../web//concrete/config/base.php:2
+#: ../web//concrete/config/theme_paths.php:2
+#: ../web//concrete/controllers/dashboard/block_types.php:3
+#: ../web//concrete/controllers/dashboard/collection_types/controller.php:3
+#: ../web//concrete/controllers/dashboard/controller.php:2
+#: ../web//concrete/controllers/dashboard/form_results.php:3
+#: ../web//concrete/controllers/dashboard/install.php:3
+#: ../web//concrete/controllers/dashboard/jobs.php:3
+#: ../web//concrete/controllers/dashboard/logs.php:3
+#: ../web//concrete/controllers/dashboard/modules/activity.php:3
+#: ../web//concrete/controllers/dashboard/modules/help.php:3
+#: ../web//concrete/controllers/dashboard/modules/news.php:3
+#: ../web//concrete/controllers/dashboard/modules/notes.php:3
+#: ../web//concrete/controllers/dashboard/modules/reports.php:3
+#: ../web//concrete/controllers/dashboard/settings.php:3
+#: ../web//concrete/controllers/dashboard/themes/add.php:3
+#: ../web//concrete/controllers/dashboard/themes/controller.php:3
+#: ../web//concrete/controllers/dashboard/themes/inspect.php:3
+#: ../web//concrete/controllers/download_file.php:3
+#: ../web//concrete/controllers/install.php:2
+#: ../web//concrete/controllers/login.php:3
+#: ../web//concrete/controllers/page_forbidden.php:3
+#: ../web//concrete/controllers/register.php:2
+#: ../web//concrete/controllers/upgrade.php:2
+#: ../web//concrete/elements/block_al.php:1
+#: ../web//concrete/elements/block_area_footer.php:2
+#: ../web//concrete/elements/block_area_header.php:2
+#: ../web//concrete/elements/block_controls.php:2
+#: ../web//concrete/elements/block_custom_template.php:2
+#: ../web//concrete/elements/block_footer.php:2
+#: ../web//concrete/elements/block_footer_add.php:1
+#: ../web//concrete/elements/block_footer_edit.php:2
+#: ../web//concrete/elements/block_groups.php:2
+#: ../web//concrete/elements/block_header.php:2
+#: ../web//concrete/elements/block_header_add.php:2
+#: ../web//concrete/elements/block_header_edit.php:2
+#: ../web//concrete/elements/block_master_collection_alias.php:2
+#: ../web//concrete/elements/collection_add.php:1
+#: ../web//concrete/elements/collection_add_external.php:1
+#: ../web//concrete/elements/collection_edit_external.php:1
+#: ../web//concrete/elements/collection_mcd.php:1
+#: ../web//concrete/elements/collection_metadata.php:2
+#: ../web//concrete/elements/collection_permissions.php:2
+#: ../web//concrete/elements/collection_permissions_simple.php:2
+#: ../web//concrete/elements/collection_theme.php:2
+#: ../web//concrete/elements/dashboard/modules/activity.php:1
+#: ../web//concrete/elements/dashboard/modules/help.php:2
+#: ../web//concrete/elements/dashboard/modules/news.php:2
+#: ../web//concrete/elements/dashboard/modules/notes.php:1
+#: ../web//concrete/elements/dashboard/modules/reports.php:1
+#: ../web//concrete/elements/dashboard/notification_update.php:1
+#: ../web//concrete/elements/dashboard/sitemap.php:2
+#: ../web//concrete/elements/dashboard/sitemap_search.php:2
+#: ../web//concrete/elements/dashboard/sitemap_search_results.php:1
+#: ../web//concrete/elements/dialog_header.php:1
+#: ../web//concrete/elements/editor_controls.php:1
+#: ../web//concrete/elements/error_fatal.php:1
+#: ../web//concrete/elements/header_required.php:2
+#: ../web//concrete/elements/page_controls.php:2
+#: ../web//concrete/elements/pane_header.php:1
+#: ../web//concrete/elements/search_results_paging.php:1
+#: ../web//concrete/elements/search_results_top.php:1
+#: ../web//concrete/helpers/concrete/asset_library.php:19
+#: ../web//concrete/helpers/concrete/avatar.php:20
+#: ../web//concrete/helpers/concrete/dashboard/sitemap.php:20
+#: ../web//concrete/helpers/concrete/interface.php:21
+#: ../web//concrete/helpers/concrete/upgrade/version_500a1.php:20
+#: ../web//concrete/helpers/concrete/upgrade/version_500b1.php:20
+#: ../web//concrete/helpers/concrete/upgrade/version_500b2.php:20
+#: ../web//concrete/helpers/concrete/urls.php:18
+#: ../web//concrete/helpers/concrete/user.php:20
+#: ../web//concrete/helpers/concrete/validation.php:18
+#: ../web//concrete/helpers/date.php:19 ../web//concrete/helpers/feed.php:19
+#: ../web//concrete/helpers/file.php:19
+#: ../web//concrete/helpers/form/date_time.php:21
+#: ../web//concrete/helpers/form.php:19 ../web//concrete/helpers/html.php:19
+#: ../web//concrete/helpers/lists/countries.php:19
+#: ../web//concrete/helpers/lists/states_provinces.php:19
+#: ../web//concrete/helpers/mail.php:19
+#: ../web//concrete/helpers/navigation.php:19
+#: ../web//concrete/helpers/pagination.php:19
+#: ../web//concrete/helpers/text.php:19
+#: ../web//concrete/helpers/validation/error.php:20
+#: ../web//concrete/helpers/validation/file.php:2
+#: ../web//concrete/helpers/validation/form.php:20
+#: ../web//concrete/helpers/validation/identifier.php:2
+#: ../web//concrete/helpers/validation/numbers.php:2
+#: ../web//concrete/helpers/validation/strings.php:21
+#: ../web//concrete/jobs/generate_sitemap.php:8
+#: ../web//concrete/jobs/index_search.php:8
+#: ../web//concrete/libraries/archive.php:2
+#: ../web//concrete/libraries/block_controller.php:2
+#: ../web//concrete/libraries/block_view.php:2
+#: ../web//concrete/libraries/controller.php:3
+#: ../web//concrete/libraries/database.php:3
+#: ../web//concrete/libraries/events.php:22
+#: ../web//concrete/libraries/indexed_search.php:8
+#: ../web//concrete/libraries/loader.php:3
+#: ../web//concrete/libraries/log.php:3 ../web//concrete/libraries/model.php:3
+#: ../web//concrete/libraries/object.php:3
+#: ../web//concrete/libraries/request.php:2
+#: ../web//concrete/libraries/search.php:3
+#: ../web//concrete/libraries/update.php:3
+#: ../web//concrete/libraries/view.php:3
+#: ../web//concrete/mail/block_form_submission.php:1
+#: ../web//concrete/mail/forgot_password.php:2
+#: ../web//concrete/mail/validate_user_email.php:3
+#: ../web//concrete/models/area.php:3 ../web//concrete/models/block.php:3
+#: ../web//concrete/models/block_types.php:3
+#: ../web//concrete/models/collection.php:3
+#: ../web//concrete/models/collection_attributes.php:3
+#: ../web//concrete/models/collection_types.php:3
+#: ../web//concrete/models/config.php:3
+#: ../web//concrete/models/dashboard/homepage.php:3
+#: ../web//concrete/models/job.php:3 ../web//concrete/models/package.php:3
+#: ../web//concrete/models/page.php:3
+#: ../web//concrete/models/page_statistics.php:3
+#: ../web//concrete/models/page_theme.php:2
+#: ../web//concrete/models/page_theme_archive.php:2
+#: ../web//concrete/models/permissions.php:3
+#: ../web//concrete/models/pile.php:3
+#: ../web//concrete/models/search/collection.php:3
+#: ../web//concrete/models/search/file.php:3
+#: ../web//concrete/models/search/group.php:1
+#: ../web//concrete/models/search/user.php:1
+#: ../web//concrete/models/single_page.php:3
+#: ../web//concrete/models/user.php:2
+#: ../web//concrete/models/user_attributes.php:2
+#: ../web//concrete/models/user_statistics.php:2
+#: ../web//concrete/models/userinfo.php:2
+#: ../web//concrete/single_pages/dashboard/collection_types/attributes.php:2
+#: ../web//concrete/single_pages/dashboard/collection_types/view.php:2
+#: ../web//concrete/single_pages/dashboard/form_results.php:1
+#: ../web//concrete/single_pages/dashboard/groups.php:2
+#: ../web//concrete/single_pages/dashboard/install.php:2
+#: ../web//concrete/single_pages/dashboard/jobs.php:1
+#: ../web//concrete/single_pages/dashboard/logs.php:2
+#: ../web//concrete/single_pages/dashboard/mediabrowser.php:2
+#: ../web//concrete/single_pages/dashboard/rescan_pagecount.php:2
+#: ../web//concrete/single_pages/dashboard/settings.php:3
+#: ../web//concrete/single_pages/dashboard/sitemap.php:2
+#: ../web//concrete/single_pages/dashboard/themes/add.php:1
+#: ../web//concrete/single_pages/dashboard/themes/inspect.php:2
+#: ../web//concrete/single_pages/dashboard/themes/view.php:2
+#: ../web//concrete/single_pages/dashboard/users/attributes.php:2
+#: ../web//concrete/single_pages/dashboard/users/view.php:2
+#: ../web//concrete/single_pages/dashboard/view.php:1
+#: ../web//concrete/single_pages/download_file.php:3
+#: ../web//concrete/single_pages/install.php:1
+#: ../web//concrete/single_pages/login.php:1
+#: ../web//concrete/single_pages/maintenance_mode.php:1
+#: ../web//concrete/single_pages/page_not_found.php:1
+#: ../web//concrete/single_pages/register.php:1
+#: ../web//concrete/single_pages/upgrade.php:1
+#: ../web//concrete/single_pages/user_error.php:1
+#: ../web//concrete/startup/config_check.php:2
+#: ../web//concrete/startup/config_check_complete.php:2
+#: ../web//concrete/startup/debug_logging.php:2
+#: ../web//concrete/startup/external_link.php:2
+#: ../web//concrete/startup/file_access_check.php:3
+#: ../web//concrete/startup/magic_quotes_gpc_check.php:3
+#: ../web//concrete/startup/maintenance_mode_check.php:2
+#: ../web//concrete/startup/process.php:2
+#: ../web//concrete/startup/session.php:2
+#: ../web//concrete/startup/shutdown.php:2
+#: ../web//concrete/startup/tools.php:2
+#: ../web//concrete/startup/url_check.php:3
+#: ../web//concrete/startup/user.php:2
+#: ../web//concrete/themes/core/concrete.php:1
+#: ../web//concrete/themes/core/dashboard.php:1
+#: ../web//concrete/themes/core/error.php:1
+#: ../web//concrete/themes/default/default.php:2
+#: ../web//concrete/themes/default/elements/footer.php:1
+#: ../web//concrete/themes/default/elements/header.php:1
+#: ../web//concrete/themes/default/full.php:2
+#: ../web//concrete/themes/default/left_sidebar.php:2
+#: ../web//concrete/themes/default/view.php:2
+#: ../web//concrete/themes/greensalad/default.php:2
+#: ../web//concrete/themes/greensalad/elements/footer.php:1
+#: ../web//concrete/themes/greensalad/elements/header.php:1
+#: ../web//concrete/themes/greensalad/full.php:2
+#: ../web//concrete/themes/greensalad/home.php:2
+#: ../web//concrete/themes/greensalad/view.php:2
+#: ../web//concrete/tools/add_block_popup.php:3
+#: ../web//concrete/tools/al.php:3 ../web//concrete/tools/al_delete.php:3
+#: ../web//concrete/tools/al_search_results.php:3
+#: ../web//concrete/tools/al_upload.php:3
+#: ../web//concrete/tools/al_upload_process.php:3
+#: ../web//concrete/tools/check_in.php:3
+#: ../web//concrete/tools/dashboard/chart_handler.php:3
+#: ../web//concrete/tools/dashboard/chart_handler.php:8
+#: ../web//concrete/tools/dashboard/sitemap_data.php:3
+#: ../web//concrete/tools/dashboard/sitemap_data.php:7
+#: ../web//concrete/tools/dashboard/sitemap_delete_request.php:3
+#: ../web//concrete/tools/dashboard/sitemap_delete_request.php:7
+#: ../web//concrete/tools/dashboard/sitemap_drag_request.php:3
+#: ../web//concrete/tools/dashboard/sitemap_drag_request.php:7
+#: ../web//concrete/tools/dashboard/sitemap_update.php:2
+#: ../web//concrete/tools/dashboard/sitemap_update.php:6
+#: ../web//concrete/tools/dashboard/user_attributes_update.php:2
+#: ../web//concrete/tools/dashboard/user_attributes_update.php:6
+#: ../web//concrete/tools/edit_area_popup.php:2
+#: ../web//concrete/tools/edit_area_popup.php:6
+#: ../web//concrete/tools/edit_block_popup.php:3
+#: ../web//concrete/tools/edit_block_popup.php:10
+#: ../web//concrete/tools/edit_collection_popup.php:3
+#: ../web//concrete/tools/edit_collection_popup.php:57
+#: ../web//concrete/tools/jobs.php:3 ../web//concrete/tools/jobs.php:10
+#: ../web//concrete/tools/pile_manager.php:3
+#: ../web//concrete/tools/pile_manager.php:6
+#: ../web//concrete/tools/select_group.php:3
+#: ../web//concrete/tools/select_user.php:2
+#: ../web//concrete/tools/sitemap_overlay.php:2
+#: ../web//concrete/tools/upgrade.php:2
+#: ../web//concrete/tools/user_group_selector.php:2
+#: ../web//concrete/tools/user_group_selector.php:17
+#: ../web//concrete/tools/validate_user_email.php:2
+#: ../web//concrete/tools/versions.php:2
+#: ../web//concrete/tools/versions.php:10
+#: ../web//config/site_theme_paths.php:3
+#: ../web//packages/advertisement/blocks/advertisement/ad_form.php:2
+#: ../web//packages/advertisement/blocks/advertisement/add.php:2
+#: ../web//packages/advertisement/blocks/advertisement/block_form.php:1
+#: ../web//packages/advertisement/blocks/advertisement/controller.php:10
+#: ../web//packages/advertisement/blocks/advertisement/edit.php:3
+#: ../web//packages/advertisement/blocks/advertisement/tools/ad_click.php:3
+#: ../web//packages/advertisement/blocks/advertisement/view.php:3
+#: ../web//packages/advertisement/controller.php:3
+#: ../web//packages/advertisement/controllers/dashboard/advertisement/controller.php:2
+#: ../web//packages/advertisement/controllers/dashboard/advertisement/details.php:3
+#: ../web//packages/advertisement/controllers/dashboard/advertisement/groups.php:3
+#: ../web//packages/advertisement/models/advertisement_details.php:3
+#: ../web//packages/advertisement/models/advertisement_group.php:3
+#: ../web//packages/advertisement/models/advertisement_search.php:3
+#: ../web//packages/advertisement/single_pages/dashboard/advertisement/details.php:3
+#: ../web//packages/advertisement/single_pages/dashboard/advertisement/groups.php:2
+#: ../web//packages/advertisement/single_pages/dashboard/advertisement/view.php:3
+msgid "Access Denied."
+msgstr "Zugriff verweigert."
+
+#: ../web//concrete/controllers/dashboard/logs.php:23
+msgid "Concrete5"
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/logs.php:24
+msgid "Database"
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/logs.php:25
+msgid "Custom"
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/logs.php:61
+msgid "Concrete5 Logs"
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/logs.php:83
+msgid "Custom Application Logs"
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/modules/activity.php:24
+msgid "Your login is the most recent."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/modules/notes.php:32
+msgid "Your dashboard notes were saved."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/settings.php:23
+msgid "Maintenance Mode turned on. Your site is now private."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/settings.php:26
+msgid "Maintenance Mode turned off. Your site is public."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/settings.php:29
+msgid "Editing preferences saved."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/settings.php:32
+msgid "Your site's name has been saved."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/settings.php:35
+#: ../web//concrete/controllers/dashboard/settings.php:116
+msgid "Debug configuration saved."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/settings.php:39
+msgid ""
+"URL rewriting enabled. Make sure you copy the lines below these URL "
+"Rewriting settings area and place them in your .htaccess or web server "
+"configuration file."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/settings.php:41
+msgid "URL rewriting disabled."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/settings.php:119
+msgid "Logging configuration saved."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/settings.php:142
+msgid "General"
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/settings.php:143
+msgid "Access"
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/settings.php:144
+msgid "Developer/Advanced"
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/settings.php:180
+msgid "Permissions saved."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/themes/controller.php:42
+msgid "Theme uninstalled."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/themes/controller.php:67
+msgid "Invalid Theme"
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/themes/controller.php:72
+msgid "That theme has already been installed."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/themes/controller.php:94
+msgid "Theme activated"
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/themes/inspect.php:25
+msgid ""
+"Theme installed. You may automatically create page types from template files "
+"contained in your theme using the form below, or return to your theme list."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/themes/inspect.php:39
+msgid "You must specify at least one template to make into a page type."
+msgstr ""
+
+#: ../web//concrete/controllers/dashboard/themes/inspect.php:47
+msgid "Files in the theme were activated successfully."
+msgstr ""
+
+#: ../web//concrete/controllers/download_file.php:35
+msgid "Incorrect password. Please try again."
+msgstr ""
+
+#: ../web//concrete/tools/al.php:8
+msgid "Unable to access the file manager."
+msgstr ""
+
+#: ../web//concrete/tools/al_search_results.php:8
+#: ../web//concrete/tools/al_upload.php:8
+#: ../web//concrete/tools/al_upload_process.php:8
+#: ../web//concrete/tools/check_in.php:7
+msgid "Access Denied"
+msgstr ""
+
+#: ../web//concrete/tools/select_group.php:7
+msgid "You have no access to groups."
+msgstr ""
+
+#: ../web//concrete/tools/select_user.php:6
+msgid "You have no access to users."
 msgstr ""

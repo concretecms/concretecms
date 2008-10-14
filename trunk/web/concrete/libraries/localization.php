@@ -12,7 +12,27 @@
 	    return vsprintf(gettext($text), $arg);
 	}
 	
-	setlocale(LC_ALL, LANGUAGE);
-	putenv('LC_ALL=' . LANGUAGE);
-	bindtextdomain("messages", DIR_BASE_CORE . '/locale');
-	textdomain('messages');
+	
+	class Localization {
+	
+	
+		public function setDomain($path) {
+			bindtextdomain(LANGUAGE_DOMAIN_CORE, $path . '/' . DIRNAME_LANGUAGES);
+			textdomain(LANGUAGE_DOMAIN_CORE);
+		}
+		
+		/** 
+		 * Resets the text domain to the default localization. This should be called after we branch out to any blocks, etc...
+		 */
+		public function reset() {
+			Localization::setDomain(DIR_BASE);
+		}
+		
+		public function init() {
+			setlocale(LC_ALL, LANGUAGE);
+			putenv('LC_ALL=' . LANGUAGE);
+			Localization::reset();		
+		}
+	}
+	
+	Localization::init();

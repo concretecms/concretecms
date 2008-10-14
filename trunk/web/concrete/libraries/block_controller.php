@@ -179,7 +179,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				}
 			}
 			parent::__construct();
-			$this->set('controller', $this);		
+			$this->set('controller', $this);
 		}
 		
 		/**

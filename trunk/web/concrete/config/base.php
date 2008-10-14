@@ -41,8 +41,10 @@ if (!defined('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL')) {
 }
 
 if (!defined('LANGUAGE')) {
-	define("LANGUAGE", 'en');
+	define("LANGUAGE", 'de_DE');
 }
+
+define("LANGUAGE_DOMAIN_CORE", "messages");
 
 # Debug Menu - Determines whether a "Submit Feedback/Bug/Question" is active */
 # Currently Concrete5 does not include this capability but it will likely come back.
@@ -104,6 +106,7 @@ define('DIRNAME_MODELS', 'models');
 define('DIRNAME_LIBRARIES', 'libraries');
 define('DIRNAME_PAGE_TYPES', 'page_types');
 define('DIRNAME_ELEMENTS', 'elements');
+define('DIRNAME_LANGUAGES', 'languages');
 define('DIRNAME_JOBS', 'jobs');
 define('DIRNAME_DASHBOARD', 'dashboard');
 define('DIRNAME_DASHBOARD_MODULES', 'modules');

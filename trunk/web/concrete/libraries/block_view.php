@@ -148,9 +148,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 			if ($obj instanceof BlockType) {
 				$bt = $obj;
+				$base = $obj->getBlockTypePath();
 			} else {
 				$bFilename = $obj->getBlockFilename();
 				$b = $obj;
+				$base = $b->getBlockPath();
 				$this->block = $b;
 				$this->c = $b->getBlockCollectionObject();
 				if ($bFilename == '' && is_object($this->area)) {
@@ -164,18 +166,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}				
 
 			$btHandle = $obj->getBlockTypeHandle();
-
-			if ($obj->getPackageID() > 0) {
-				if (is_dir(DIR_PACKAGES . '/' . $obj->getPackageHandle())) {
-					$base = DIR_PACKAGES . '/' . $obj->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
-				} else {
-					$base = DIR_PACKAGES_CORE . '/' . $obj->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
-				}
-			} else if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle())) {
-				$base = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle();
-			} else {
-				$base = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle();
-			}
+			Localization::setDomain($base);
 			
 			if (!isset($this->controller)) {
 				$this->controller = Loader::controller($obj);
@@ -237,6 +228,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (isset($footer)) {
 				include($footer);
 			}
+
+			Localization::reset();
+			
 		}
 	}
 	

@@ -33,7 +33,7 @@
 	 <target name="localize_de_DE">
     	<echo msg="Generating Translation Files" />
     	<touch file="messages_de_DE.po" />
-		<exec command="find ../web/ -iname '*.php' -exec xgettext --default-domain=messages_de_DE --keyword=t -l PHP -j {} \;" />
+		<exec command="find ../web/concrete/ -iname '*.php' -exec xgettext --default-domain=messages_de_DE --keyword=t -l PHP -j {} \;" />
 	</target>
 
 	 <target name="localize_output_de_DE">
