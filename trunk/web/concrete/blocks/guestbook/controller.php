@@ -28,14 +28,23 @@
 		* @var object
 		*/
 		var $pobj;
-		
-		protected $btDescription = "Adds blog-style comments (a guestbook) to your page.";
-		protected $btName = "Guestbook";
+		  
 		protected $btTable = 'btGuestBook';
 		protected $btInterfaceWidth = "300";
 		protected $btInterfaceHeight = "260";	
 		
 		protected $btIncludeAll = 1;
+		
+		/** 
+		 * Used for localization. If we want to localize the name/description we have to include this
+		 */
+		public function getBlockTypeDescription() {
+			return t("Adds blog-style comments (a guestbook) to your page.");
+		}
+		
+		public function getBlockTypeName() {
+			return t("Guestbook");
+		}			
 			
 		function delete() {
 			$E = new GuestBookBlockEntry($this->bID);
@@ -81,13 +90,13 @@
 			$errors = array();
 			
 			if(!$v->email($_POST['email'])) {
-				$errors['email'] = "- invalid email address";
+				$errors['email'] = '- '.t("invalid email address");
 			}
 			if(!$v->notempty($_POST['name'])) {
-				$errors['name'] = "- name is required";
+				$errors['name'] = '- '.t("name is required");
 			}
 			if(!$v->notempty($_POST['commentText'])) {
-				$errors['commentText'] = "- a comment is required";
+				$errors['commentText'] = '- '.t("a comment is required");
 			}
 			
 			if(count($errors)) {
@@ -98,7 +107,7 @@
 				
 				$E->entryID = ($_POST['entryID']?$_POST['entryID']:NULL);
 				
-				$this->set('response', 'Please correct the following errors:');
+				$this->set('response', t('Please correct the following errors:') );
 				$this->set('errors',$errors);
 				$this->set('Entry',$E);	
 			} else {
@@ -107,14 +116,14 @@
 					$bp = $this->getPermissionsObject(); 
 					if($bp->canWrite()) {
 						$E->updateEntry($_POST['entryID'], $_POST['commentText'], $_POST['name'], $_POST['email']);
-						$this->set('response', 'The comment has been saved');
+						$this->set('response', t('The comment has been saved') );
 					} else {
-						$this->set('response', 'An Error occured while saving the comment');
+						$this->set('response', t('An Error occured while saving the comment') );
 						return true;
 					}
 				} else { // add			
 					$E->addEntry($_POST['commentText'], $_POST['name'], $_POST['email'], (!$this->requireApproval), $cID);	
-					$this->set('response', 'Thanks! Your comment has been posted.');
+					$this->set('response', t('Thanks! Your comment has been posted.') );
 				}
 			}
 			return true;
@@ -153,7 +162,7 @@
 			if($bp->canWrite()) {
 				$Entry = new GuestBookBlockEntry($this->bID);
 				$Entry->removeEntry($_GET['entryID']);
-				$this->set('response', 'The comment has been removed');
+				$this->set('response', t('The comment has been removed') );
 			}
 		}
 	
@@ -168,7 +177,7 @@
 			if($bp->canWrite()) {
 				$Entry = new GuestBookBlockEntry($this->bID);
 				$Entry->approveEntry($_GET['entryID']);
-				$this->set('response', 'The comment has been approved');
+				$this->set('response', t('The comment has been approved') );
 			}
 		}
 		
@@ -181,7 +190,7 @@
 			if($bp->canWrite()) {
 				$Entry = new GuestBookBlockEntry($this->bID);
 				$Entry->unApproveEntry($_GET['entryID']);
-				$this->set('response', 'The comment has been set to not approved');
+				$this->set('response', t('The comment has been set to not approved') );
 			}
 		}
 	

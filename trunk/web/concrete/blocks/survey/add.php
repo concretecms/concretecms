@@ -14,20 +14,20 @@ div.survey-block-option img {
 var currentOption = 0;
 </script>
 
-<strong>Question</strong><br/>
+<strong><?=t('Question')?></strong><br/>
 <input type="text" style="width: 350px" name="question" value="" />
 <br><br>
-<strong>Open to all site visitors?</strong><br/>
-<input type="radio" value="0" name="requiresRegistration" style="vertical-align: middle" checked />&nbsp;Yes
+<strong><?=t('Open to all site visitors?')?></strong><br/>
+<input type="radio" value="0" name="requiresRegistration" style="vertical-align: middle" checked />&nbsp;<?=t('Yes')?>
 &nbsp;&nbsp;
-<input type="radio" value="1" name="requiresRegistration" style="vertical-align: middle" />&nbsp;No (requires registration to answer)
+<input type="radio" value="1" name="requiresRegistration" style="vertical-align: middle" />&nbsp;<?=t('No')?> (<?=t('requires registration to answer')?>)
 <br><br>
-<strong>Options</strong>
+<strong><?=t('Options')?></strong>
 <div id="pollOptions">
-None
+<?=t('None')?>
 </div>
 
 <br/><br/>
-<strong>Add option</strong><br/>
+<strong><?=t('Add option')?></strong><br/>
 <input type="text" name="optionValue" id="ccm-survey-optionValue" style="width: 350px" />
 <input type="button" onclick="addOption()" value="Add" />

@@ -3,11 +3,20 @@
 	defined('C5_EXECUTE') or die(_("Access Denied."));
 	class PageListBlockController extends BlockController {
 
-		protected $btDescription = "List pages based on type, area";
-		protected $btName = "Page List";
 		protected $btTable = 'btPageList';
 		protected $btInterfaceWidth = "430";
 		protected $btInterfaceHeight = "300";
+		
+		/** 
+		 * Used for localization. If we want to localize the name/description we have to include this
+		 */
+		public function getBlockTypeDescription() {
+			return t("List pages based on type, area");
+		}
+		
+		public function getBlockTypeName() {
+			return t("Page List");
+		}		
 		
 		function getPages($query = null) {
 			$db = Loader::db();

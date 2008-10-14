@@ -3,9 +3,7 @@
 	class RssDisplayerBlockController extends BlockController {
 		
 		var $pobj;
-		
-		protected $btDescription = "Fetch, parse and display the contents of an RSS or Atom feed.";
-		protected $btName = "RSS Displayer";
+
 		protected $btTable = 'btRssDisplay';
 		protected $btInterfaceWidth = "400";
 		protected $btInterfaceHeight = "170";
@@ -14,6 +12,17 @@
 		public $showSummary = "1"; 
 		public $launchInNewWindow = "1"; 
 		public $title = "";		
+		
+		/** 
+		 * Used for localization. If we want to localize the name/description we have to include this
+		 */
+		public function getBlockTypeDescription() {
+			return t("Fetch, parse and display the contents of an RSS or Atom feed.");
+		}
+		
+		public function getBlockTypeName() {
+			return t("RSS Displayer");
+		}		
 		
 		function __construct($obj = null) {		
 			parent::__construct($obj);
@@ -28,7 +37,7 @@
 			$posts = $feed->get_items();
 			
 			if( $feed->error() )
-				$this->set('errorMsg', "Oops, it looks like you've entered an invalid feed address!");
+				$this->set('errorMsg', t("Oops, it looks like you've entered an invalid feed address!") );
 			$this->set('posts', $posts);
 			$this->set('title', $this->title);
 		}

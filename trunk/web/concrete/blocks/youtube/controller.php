@@ -3,16 +3,30 @@
 	class YoutubeBlockController extends BlockController {
 		
 		var $pobj;
-		
-		protected $btDescription = "Embeds a Youtube Video in your web page.";
-		protected $btName = "Youtube Video";
+		 
 		protected $btTable = 'btYouTube';
 		protected $btInterfaceWidth = "400";
 		protected $btInterfaceHeight = "170";
 		
-		public $title = "My Video";
+		public $title = '';
 		public $videoURL = "";
 		public $mode = "youtube";
+		
+		/** 
+		 * Used for localization. If we want to localize the name/description we have to include this
+		 */
+		public function getBlockTypeDescription() {
+			return t("Embeds a Youtube Video in your web page.");
+		}
+		
+		public function getBlockTypeName() {
+			return t("Youtube Video");
+		}
+		
+		function __construct($obj = null) {		
+			parent::__construct($obj);	
+			$this->title=t("My Video");
+		}
 		
 		function view(){ 
 			$this->set('bID', $this->bID);	

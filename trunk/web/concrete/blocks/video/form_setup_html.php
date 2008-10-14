@@ -8,11 +8,11 @@ table#videoBlockSetup .note{ font-size:10px; color:#999999; font-weight:normal }
 
 <table id="videoBlockSetup"> 
 	<tr>
-		<th>Width</th>
+		<th><?=t("Width")?></th>
 		<td><input type="text" style="width: 40px" name="width" value="<?=$bObj->width?>"/></td>
 	</tr>	
 	<tr>
-		<th>Height</th>
+		<th><?=t("Height")?></th>
 		<td>
 			<input type="text" style="width: 40px" name="height" value="<?=$bObj->height?>" />
 		</td>

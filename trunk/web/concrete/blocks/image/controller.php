@@ -3,11 +3,20 @@
 	defined('C5_EXECUTE') or die(_("Access Denied."));	
 	class ImageBlockController extends BlockController {
 
-		protected $btDescription = "Adds images and onstates from the library to pages.";
-		protected $btName = "Image";
 		protected $btInterfaceWidth = 300;
 		protected $btInterfaceHeight = 250;
 		protected $btTable = 'btContentImage';
+	
+		/** 
+		 * Used for localization. If we want to localize the name/description we have to include this
+		 */
+		public function getBlockTypeDescription() {
+			return t("Adds images and onstates from the library to pages.");
+		}
+		
+		public function getBlockTypeName() {
+			return t("Image");
+		}		
 	
 		function getFileID() {return $this->fID;}
 		function getFileOnstateID() {return $this->fOnstateID;}

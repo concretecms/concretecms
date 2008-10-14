@@ -2,8 +2,6 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class FormBlockController extends BlockController {
 
-	protected $btDescription = "Build simple forms and surveys.";
-	public $btName = "Form";
 	public $btTable = 'btForm';
 	public $btQuestionsTablename = 'btFormQuestions';
 	public $btAnswerSetTablename = 'btFormAnswerSet';
@@ -11,7 +9,18 @@ class FormBlockController extends BlockController {
 	public $btInterfaceWidth = '420';
 	public $btInterfaceHeight = '430';
 		
-	public function __construct($b = null){
+	/** 
+	 * Used for localization. If we want to localize the name/description we have to include this
+	 */
+	public function getBlockTypeDescription() {
+		return t("Build simple forms and surveys.");
+	}
+	
+	public function getBlockTypeName() {
+		return t("Form");
+	}
+		
+	public function __construct($b = null){ 
 		parent::__construct($b);
 		//$this->bID = intval($this->_bID);
 	}
@@ -69,7 +78,7 @@ class FormBlockController extends BlockController {
 		//question set id
 		$qsID=intval($_POST['qsID']);	
 		if($qsID==0)
-			throw new Exception("Oops, something is wrong with the form you posted (it doesn't have a question set id).");
+			throw new Exception(t("Oops, something is wrong with the form you posted (it doesn't have a question set id)."));
 		
 		//save main survey record	
 		$q="insert into {$this->btAnswerSetTablename} (questionSetId) values (?)";
@@ -114,7 +123,7 @@ class FormBlockController extends BlockController {
 			$mh->load('block_form_submission');
 			$mh->setBody(ob_get_contents());
 			ob_end_clean();
-			$mh->setSubject($this->surveyName.' Form Submission');
+			$mh->setSubject($this->surveyName.' '.t('Form Submission') );
 			//echo $mh->body.'<br>';
 			@$mh->sendMail(); 
 		} 
@@ -324,8 +333,8 @@ class MiniSurvey{
 								<a href="#" onclick="miniSurvey.moveUp(this,<?=$questionRow['msqID']?>);return false" class="moveUpLink"></a> 
 								<a href="#" onclick="miniSurvey.moveDown(this,<?=$questionRow['msqID']?>);return false" class="moveDownLink"></a>						  
 							</div>						
-							<a href="#" onclick="miniSurvey.reloadQuestion(<?=$questionRow['msqID']?>);return false">edit</a> &nbsp;&nbsp; 
-							<a href="#" onclick="miniSurvey.deleteQuestion(this,<?=$questionRow['msqID']?>);return false">remove</a>
+							<a href="#" onclick="miniSurvey.reloadQuestion(<?=$questionRow['msqID']?>);return false"><?=t('edit')?></a> &nbsp;&nbsp; 
+							<a href="#" onclick="miniSurvey.deleteQuestion(this,<?=$questionRow['msqID']?>);return false"><?=t('remove')?></a>
 						</div>
 						<div class="miniSurveySpacer"></div>
 					</div>

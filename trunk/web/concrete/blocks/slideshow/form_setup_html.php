@@ -17,15 +17,15 @@ $ah = Loader::helper('concrete/interface');
 	<table cellspacing="0" cellpadding="0" border="0" width="100%">
 	<tr>
 	<td>
-	<strong>Playback</strong>
+	<strong><?=t('Playback')?></strong>
 	<select name="playback" style="vertical-align: middle">
-		<option value="ORDER"<? if ($playback == 'ORDER') { ?> selected<? } ?>>Display Order</option>
-		<option value="RANDOM-SET"<? if ($playback == 'RANDOM-SET') { ?> selected<? } ?>>Random (But keep sets together)</option>
-		<option value="RANDOM"<? if ($playback == 'RANDOM') { ?> selected<? } ?>>Completely Random</option>
+		<option value="ORDER"<? if ($playback == 'ORDER') { ?> selected<? } ?>><?=t('Display Order')?></option>
+		<option value="RANDOM-SET"<? if ($playback == 'RANDOM-SET') { ?> selected<? } ?>><?=t('Random (But keep sets together)')?></option>
+		<option value="RANDOM"<? if ($playback == 'RANDOM') { ?> selected<? } ?>><?=t('Completely Random')?></option>
 	</select>
 	</td>
 	<td style="text-align: right">
-	<?=$ah->button_js('Add Image', 'SlideshowBlock.chooseImg()');?>
+	<?=$ah->button_js(t('Add Image'), 'SlideshowBlock.chooseImg()');?>
 	</td>
 	</tr>
 	</table>

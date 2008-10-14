@@ -26,16 +26,24 @@ class SurveyBlockController extends BlockController {
 	* @var object
 	*/
 	var $pobj;
-	
-	protected $btDescription = "Survey block";
-	protected $btName = "Survey";
+	 
 	protected $btTable = 'btSurvey';
 	protected $btInterfaceWidth = "420";
 	protected $btInterfaceHeight = "300";	
 	protected $btIncludeAll = 1;
 	
 	var $options = array();
+
+	/** 
+	 * Used for localization. If we want to localize the name/description we have to include this
+	 */
+	public function getBlockTypeDescription() {
+		return t("Survey block");
+	}
 	
+	public function getBlockTypeName() {
+		return t("Survey");
+	} 
 	
 	function __construct($obj = NULL) {
 		parent::__construct($obj);

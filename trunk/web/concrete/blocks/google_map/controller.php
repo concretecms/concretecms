@@ -4,19 +4,32 @@
 		
 		var $pobj;
 		
-		protected $btDescription = "Enter an address and a Google Map of that location will be placed in your page.";
-		protected $btName = "Google Map";
 		protected $btTable = 'btGoogleMap';
 		protected $btInterfaceWidth = "400";
 		protected $btInterfaceHeight = "220";
 		
-		public $title = "My Map";
+		public $title = "";
 		public $api_key = "";
 		public $location = "";
 		public $latitude = "";
 		public $longitude = "";
 		public $zoom = 14;								
 		
+		/** 
+		 * Used for localization. If we want to localize the name/description we have to include this
+		 */
+		public function getBlockTypeDescription() {
+			return t("Enter an address and a Google Map of that location will be placed in your page.");
+		}
+		
+		public function getBlockTypeName() {
+			return t("Google Map");
+		}				
+		
+		function __construct($obj = null) {		
+			parent::__construct($obj);	
+			$this->title=t("My Map");
+		}		
 		
 		public function add() {
 			$db = Loader::db();		

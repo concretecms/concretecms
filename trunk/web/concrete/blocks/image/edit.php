@@ -17,13 +17,13 @@ if ($controller->getFileOnstateID() > 0) {
 }
 
 ?>
-<h2>Image</h2>
-<?=$al->image('ccm-b-image', 'fID', 'Choose Image', $bf);?>
+<h2><?=t('Image')?></h2>
+<?=$al->image('ccm-b-image', 'fID', t('Choose Image'), $bf);?>
 
 <br/><br/><br/>
-<h2>Image On-State (Optional)</h2>
-<?=$al->image('ccm-b-image-onstate', 'fOnstateID', 'Choose Image On-State', $bfo);?>
+<h2><?=t('Image On-State')?> (<?=t('Optional')?>)</h2>
+<?=$al->image('ccm-b-image-onstate', 'fOnstateID', t('Choose Image On-State'), $bfo);?>
 
 <br/><br/><br/>
-<h2>Alt Text/Caption</h2>
+<h2><?=t('Alt Text/Caption')?></h2>
 <input type="text" style="width: 200px" name="altText" value="<?=$controller->getAltText()?>" />

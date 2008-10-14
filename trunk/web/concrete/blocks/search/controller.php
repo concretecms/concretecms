@@ -3,21 +3,30 @@
 	class SearchBlockController extends BlockController {
 		
 		var $pobj;
-		
-		protected $btDescription = "Add a search box to your site.";
-		protected $btName = "Search";
+		  
 		protected $btTable = 'btSearch';
 		protected $btInterfaceWidth = "400";
 		protected $btInterfaceHeight = "170";
 		
-		public $title = "Search";
+		public $title = "";
 		public $buttonText = ">"; 
 		public $baseSearchPath = "";
 		public $resultsURL = "";
 		
+		/** 
+		 * Used for localization. If we want to localize the name/description we have to include this
+		 */
+		public function getBlockTypeDescription() {
+			return t("Add a search box to your site.");
+		}
+		
+		public function getBlockTypeName() {
+			return t("Search");
+		}		
 		
 		function __construct($obj = null) {		
 			parent::__construct($obj);
+			$this->title=t("Search");
 		}
 		
 		public function indexExists() {
@@ -146,7 +155,7 @@
 				$this->set('paginator', $pagination);
 			
 			} catch(Zend_Search_Lucene_Exception $e) {
-				$this->set('error', 'Unable to complete search: ' . $e->getMessage());
+				$this->set('error', t('Unable to complete search: ') . $e->getMessage());
 			}
 		}		
 		

@@ -20,11 +20,20 @@
  */
 	defined('C5_EXECUTE') or die(_("Access Denied."));
 	class LibraryFileBlockController extends BlockController {
-	
-		protected $btDescription = "Files added to the asset library";
-		protected $btName = "Library File";
+	 
 		protected $btIsInternal = 1;
 		protected $btTable = 'btFile';
+		
+		/** 
+		 * Used for localization. If we want to localize the name/description we have to include this
+		 */
+		public function getBlockTypeDescription() {
+			return t("Files added to the asset library");
+		}
+		
+		public function getBlockTypeName() {
+			return t("Library File");
+		}		
 		
 		function getFile($fID) {
 			$db = Loader::db();

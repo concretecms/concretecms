@@ -7,11 +7,11 @@ table#videoBlockSetup .note{ font-size:10px; color:#999999; font-weight:normal }
 
 <table id="videoBlockSetup" style="width:100%"> 
 	<tr>
-		<th>YouTube Video Title</th>
+		<th><?=t('YouTube Video Title')?></th>
 		<td><input type="text" style="width: 230px" name="title" value="<?=$bObj->title?>"/></td>
 	</tr>	
 	<tr>
-		<th>Video URL</th>
+		<th><?=t('Video URL')?></th>
 		<td>
 			<input type="text" style="width: 230px" id="YouTubeVideoURL" name="videoURL" value="<?=$bObj->videoURL?>" />
 		</td>

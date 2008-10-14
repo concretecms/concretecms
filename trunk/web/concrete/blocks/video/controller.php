@@ -10,9 +10,7 @@
 	Loader::block('library_file');	
 	defined('C5_EXECUTE') or die(_("Access Denied."));
 	class VideoBlockController extends BlockController {
-
-		protected $btDescription = "Embeds Uploaded Video into a web page. Supports AVI, WMV, Quicktime/MPEG4 and FLV formats.";
-		protected $btName = "Video Player";
+ 
 		protected $btInterfaceWidth = 300;
 		protected $btInterfaceHeight = 200;
 		protected $btTable = 'btVideo';
@@ -21,6 +19,16 @@
 		public $height = '';
 		public $fID = 0;
 		
+		/** 
+		 * Used for localization. If we want to localize the name/description we have to include this
+		 */
+		public function getBlockTypeDescription() {
+			return t("Embeds Uploaded Video into a web page. Supports AVI, WMV, Quicktime/MPEG4 and FLV formats.");
+		}
+		
+		public function getBlockTypeName() {
+			return t("Video Player");
+		}
 
 		function getFileID() {return $this->fID;}
 		function getFileObject() {
