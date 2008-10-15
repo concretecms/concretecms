@@ -6,11 +6,11 @@ class PageForbiddenController extends Controller {
 	public $helpers = array('form');
 	
 	public function view() {
-		$this->set('intro_msg', 'You must sign in order to access this page!');
+		$this->set('intro_msg', t('You must sign in order to access this page!'));
 		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
-			$this->set('uNameLabel', 'Email Address');
+			$this->set('uNameLabel', t('Email Address'));
 		} else {
-			$this->set('uNameLabel', 'Username');
+			$this->set('uNameLabel', t('Username'));
 		}
 		$this->render('/login');
 	}

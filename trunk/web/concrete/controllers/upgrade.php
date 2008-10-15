@@ -17,15 +17,15 @@ class UpgradeController extends Controller {
 		$sav = $this->site_version;
 
 		if (!$sav) {
-			$message = 'Unable to determine your current version of Concrete. Upgrading cannot continue.';
+			$message = t('Unable to determine your current version of Concrete. Upgrading cannot continue.');
 		} else 	if (version_compare($sav, APP_VERSION, '>')) {
-			$message = 'Upgrading from <b>' . $sav . '</b><br/>';
-			$message .= 'Upgrading to <b>' . APP_VERSION . '</b><br/><br/>';
-			$message .= 'Your current website uses a version of Concrete5 greater than this one. You cannot upgrade.';
+			$message = t('Upgrading from <b>%s</b>', $sav) . '<br/>';
+			$message .= t('Upgrading to <b>%s</b>', APP_VERSION) . '<br/><br/>';
+			$message .= t('Your current website uses a version of Concrete5 greater than this one. You cannot upgrade.');
 			
 			$this->set('message', $message);
 		} else if (version_compare($sav, APP_VERSION, '=')) {
-			$this->set('message', 'Your site is already up to date! The current version of Concrete5 is <b>' . $sav . '</b><br/><br/>You should remove this file for security.');
+			$this->set('message', t('Your site is already up to date! The current version of Concrete5 is <b>%s</b>. You should remove this file for security.'));
 		} else {
 			
 			if ($this->post('do_upgrade')) {
@@ -49,8 +49,8 @@ class UpgradeController extends Controller {
 				}
 				
 				$message = '';
-				$message = 'Upgrading from <b>' . $sav . '</b><br/>';
-				$message .= 'Upgrading to <b>' . APP_VERSION . '</b><br/><br/>';
+				$message = t('Upgrading from <b>%s</b>', $sav) . '<br/>';
+				$message .= t('Upgrading to <b>%s</b>', APP_VERSION) . '<br/><br/>';
 
 				if (count($allnotes) > 0) { 
 					$message .= '<ul>';
@@ -115,7 +115,7 @@ class UpgradeController extends Controller {
 		$installDirectory = DIR_BASE_CORE . '/config';
 		$file = $installDirectory . '/db.xml';
 		if (!file_exists($file)) {
-			throw new Exception('Unable to locate database import file.');
+			throw new Exception(t('Unable to locate database import file.'));
 		}		
 		$err = Package::installDB($file);
 		
@@ -141,11 +141,11 @@ class UpgradeController extends Controller {
 			$upgrade = true;
 		} catch(Exception $e) {
 			$upgrade = false;
-			$message = 'Error occurred while upgrading: ' . $e->getMessage();
+			$message = t('Error occurred while upgrading: %s', $e->getMessage());
 		}
 		
 		if ($upgrade) { 
-			$message .= 'Upgrade to <b>' . APP_VERSION . '</b> complete!<br/><br/>';
+			$message .= t('Upgrade to <b>%s</b> complete!', APP_VERSION) . '<br/><br/>';
 			Config::save('SITE_APP_VERSION', APP_VERSION);
 		}
 		

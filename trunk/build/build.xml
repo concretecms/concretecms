@@ -30,10 +30,10 @@
 		</reflexive>
 	</target>
 
-	 <target name="localize_de_DE">
+	 <target name="generate_po">
     	<echo msg="Generating Translation Files" />
-    	<touch file="messages_de_DE.po" />
-		<exec command="find ../web/concrete/ -iname '*.php' -exec xgettext --default-domain=messages_de_DE --keyword=t -l PHP -j {} \;" />
+    	<touch file="messages.po" />
+		<exec command="find ../web/concrete/ -iname '*.php' -exec xgettext --default-domain=messages --keyword=t -l PHP -j {} \;" />
 	</target>
 
 	 <target name="localize_output_de_DE">
