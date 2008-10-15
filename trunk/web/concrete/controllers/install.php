@@ -12,7 +12,7 @@ class InstallController extends Controller {
 		$installDirectory = DIR_BASE_CORE . '/config';
 		$file = $installDirectory . '/db.xml';
 		if (!file_exists($file)) {
-			throw new Exception('Unable to locate database import file.');
+			throw new Exception(t('Unable to locate database import file.'));
 		}
 		
 		$db = Loader::db();
@@ -25,40 +25,40 @@ class InstallController extends Controller {
 
 			$val = Loader::helper('validation/form');
 			$val->setData($this->post());
-			$val->addRequired("BASE_URL", 'Base URL is invalid');
-			$val->addRequired("SITE", 'Please specify your site\'s name');
-			$val->addRequiredEmail("uEmail", 'Please specify a valid email address');
-			$val->addRequired("DB_DATABASE", 'You must specify a valid database name');
-			$val->addRequired("DB_SERVER", 'You must specify a valid database server');
+			$val->addRequired("BASE_URL", t('Base URL is invalid'));
+			$val->addRequired("SITE", t("Please specify your site's name"));
+			$val->addRequiredEmail("uEmail", t('Please specify a valid email address'));
+			$val->addRequired("DB_DATABASE", t('You must specify a valid database name'));
+			$val->addRequired("DB_SERVER", t('You must specify a valid database server'));
 			
 			$e = Loader::helper('validation/error');
 			
 			if (!is_writable(DIR_BASE . '/config')) {
-				$e->add('Your configuration directory web/config/ does not appear to be writable by the web server.');
+				$e->add(t('Your configuration directory config/ does not appear to be writable by the web server.'));
 			}
 
 			if (!is_writable(DIR_FILES_UPLOADED)) {
-				$e->add('Your files directory ' . REL_DIR_FILES_UPLOADED . ' does not appear to be writable by the web server.');
+				$e->add(t('Your files directory files/ does not appear to be writable by the web server.'));
 			}
 
 			if (!is_writable(DIR_FILES_UPLOADED_THUMBNAILS)) {
-				$e->add('Your files directory ' . REL_DIR_FILES_UPLOADED_THUMBNAILS . ' does not appear to be writable by the web server.');
+				$e->add(t('Your files directory files/thumbnails does not appear to be writable by the web server.'));
 			}
 
 			if (!is_writable(DIR_FILES_UPLOADED_ONSTATES)) {
-				$e->add('Your files directory ' . REL_DIR_FILES_UPLOADED_ONSTATES . ' does not appear to be writable by the web server.');
+				$e->add(t('Your files directory files/onstates does not appear to be writable by the web server.'));
 			}
 
 			if (!is_writable(DIR_FILES_TRASH)) {
-				$e->add('Your files directory files/trash does not appear to be writable by the web server.');
+				$e->add(t('Your files directory files/trash does not appear to be writable by the web server.'));
 			}
 
 			if (!is_writable(DIR_FILES_CACHE)) {
-				$e->add('Your files directory files/cache does not appear to be writable by the web server.');
+				$e->add(t('Your files directory files/cache does not appear to be writable by the web server.'));
 			}
 
 			if (!is_writable(DIR_FILES_AVATARS)) {
-				$e->add('Your files directory files/avatars does not appear to be writable by the web server.');
+				$e->add(t('Your files directory files/avatars does not appear to be writable by the web server.'));
 			}
 			
 			// attempt to connect to the database
@@ -66,12 +66,12 @@ class InstallController extends Controller {
 			
 			if ($_POST['DB_SERVER'] && $_POST['DB_DATABASE']) {
 				if (!$db) {
-					$e->add('Unable to connect to a database using those credentials.');
+					$e->add(t('Unable to connect to database.'));
 				} else {
 					
 					$num = $db->GetCol("show tables");
 					if (count($num) > 0) {
-						$e->add('There are already ' . count($num) . ' tables in this database. Concrete must be installed in an empty database.');
+						$e->add(t('There are already %s tables in this database. Concrete must be installed in an empty database.', count($num)));
 					}
 				}
 			}
@@ -111,15 +111,15 @@ class InstallController extends Controller {
 						// create the groups our site users
 						// have to add these in the right order so their IDs get set
 						// starting at 1 w/autoincrement
-						Group::add("Guest", "All unregistered visitors to your site.");
-						Group::add("Registered Users", "All registered user accounts are in this group.");
-						Group::add("Administrators", "");
+						Group::add(t("Guest"), t("The guest group represents unregistered visitors to your site."));
+						Group::add(t("Registered Users"), t("The registered users group represents all user accounts."));
+						Group::add(t("Administrators"), "");
 						
 						// Now the default site!
 						// Add our right nav page type
 						$data = array();
 						$data['ctHandle'] = 'right_sidebar';
-						$data['ctName'] = 'Right Sidebar';
+						$data['ctName'] = t('Right Sidebar');
 						$data['ctIcon'] = 'template3.png'; 
 						$data['uID'] = USER_SUPER_ID;
 						$rst = CollectionType::add($data);
@@ -127,7 +127,7 @@ class InstallController extends Controller {
 						// Add our left nav page type
 						$data = array();
 						$data['ctHandle'] = 'left_sidebar';
-						$data['ctName'] = 'Left Sidebar';
+						$data['ctName'] = t('Left Sidebar');
 						$data['ctIcon'] = 'template1.png';
 						$data['uID'] = USER_SUPER_ID;
 						$dt = CollectionType::add($data);	
@@ -135,7 +135,7 @@ class InstallController extends Controller {
 						// Add our no side nav page type
 						$data = array();
 						$data['ctHandle'] = 'full';
-						$data['ctName'] = 'Full Width';
+						$data['ctName'] = t('Full Width');
 						$data['ctIcon'] = 'main.png'; 
 						$data['uID'] = USER_SUPER_ID;
 						$nst = CollectionType::add($data);		
@@ -148,10 +148,10 @@ class InstallController extends Controller {
 						// install everything into db
 
 						// Add default page attributes
-						$cab1 = CollectionAttributeKey::add('meta_title', 'Meta Title', true, null, 'TEXT');
-						$cab2 = CollectionAttributeKey::add('meta_description', 'Meta Description', true, null, 'TEXT');
-						$cab3 = CollectionAttributeKey::add('meta_keywords', 'Meta Keywords', true, null, 'TEXT');
-						$cab4 = CollectionAttributeKey::add('exclude_nav', 'Exclude from Nav', true, null, 'BOOLEAN');
+						$cab1 = CollectionAttributeKey::add('meta_title', t('Meta Title'), true, null, 'TEXT');
+						$cab2 = CollectionAttributeKey::add('meta_description', t('Meta Description'), true, null, 'TEXT');
+						$cab3 = CollectionAttributeKey::add('meta_keywords', t('Meta Keywords'), true, null, 'TEXT');
+						$cab4 = CollectionAttributeKey::add('exclude_nav', t('Exclude from Nav'), true, null, 'BOOLEAN');
 						
 						$dt->assignCollectionAttribute($cab1);
 						$dt->assignCollectionAttribute($cab2);
@@ -169,8 +169,8 @@ class InstallController extends Controller {
 						$nst->assignCollectionAttribute($cab4);
 						
 						// Add default user attributes
-						UserAttributeKey::add('date_of_birth', 'Date of Birth', 0, 1, 1, 0, null, "TEXT");
-						UserAttributeKey::add('gender', 'Gender', 0, 1, 1, 0, "Male\nFemale", "RADIO");
+						UserAttributeKey::add('date_of_birth', t('Date of Birth'), 0, 1, 1, 0, null, "TEXT");
+						UserAttributeKey::add('gender', t('Gender'), 0, 1, 1, 0, t("Male\nFemale"), "RADIO");
 						
 						// Add our core views
 						SinglePage::add('/login');
@@ -223,29 +223,29 @@ class InstallController extends Controller {
 						
 						// add home page
 						$dl1 = SinglePage::add('/download_file');
-						$dl1->update(array('cName' => 'Download File'));
+						$dl1->update(array('cName' => t('Download File')));
 						
-						$d1->update(array('cName'=>'Sitemap', 'cDescription'=>'Whole world at a glance.'));
-						$d2->update(array('cName'=>'File Manager', 'cDescription'=>'All documents and images.'));
-						$d3->update(array('cName'=>'Form Results', 'cDescription'=>'Get submission data.'));
-						$d4->update(array('cName'=>'Users', 'cDescription'=>'Add and manage people.'));
-						$d5->update(array('cName'=>'User Attributes'));
-						$d6->update(array('cName'=>'Groups', 'cDescription'=>'Permission levels for users.'));
-						$d7->update(array('cName'=>'Page Types', 'cDescription'=>'What goes in your site.'));
-						$d8->update(array('cName'=>'Custom Page Attributes', 'cDescription'=>'Setup Special Metadata for Pages'));
-						$d9->update(array('cName'=>'Themes', 'cDescription'=>'Reskin your site.'));		
-						$d10->update(array('cName'=>'Add Functionality', 'cDescription'=>'Install blocks to extend your site.'));
-						$d11->update(array('cName'=>'Maintenance', 'cDescription'=>'Run common cleanup tasks.'));
-						$d12->update(array('cName'=>'Logging', 'cDescription'=>'Keep tabs on your site.'));
-						$d13->update(array('cName'=>'Sitewide Settings', 'cDescription'=>'Secure and setup your site.'));
+						$d1->update(array('cName'=>t('Sitemap'), 'cDescription'=>t('Whole world at a glance.')));
+						$d2->update(array('cName'=>t('File Manager'), 'cDescription'=>t('All documents and images.')));
+						$d3->update(array('cName'=>t('Form Results'), 'cDescription'=>t('Get submission data.')));
+						$d4->update(array('cName'=>t('Users'), 'cDescription'=>t('Add and manage people.')));
+						$d5->update(array('cName'=>t('User Attributes')));
+						$d6->update(array('cName'=>t('Groups'), 'cDescription'=>t('Permission levels for users.')));
+						$d7->update(array('cName'=>t('Page Types'), 'cDescription'=>t('What goes in your site.')));
+						$d8->update(array('cName'=>t('Custom Page Attributes'), 'cDescription'=>t('Setup Special Metadata for Pages')));
+						$d9->update(array('cName'=>t('Themes'), 'cDescription'=>t('Reskin your site.')));	
+						$d10->update(array('cName'=>t('Add Functionality'), 'cDescription'=>t('Install blocks to extend your site.')));
+						$d11->update(array('cName'=>t('Maintenance'), 'cDescription'=>t('Run common cleanup tasks.')));
+						$d12->update(array('cName'=>t('Logging'), 'cDescription'=>t('Keep tabs on your site.')));
+						$d13->update(array('cName'=>t('Sitewide Settings'), 'cDescription'=>t('Secure and setup your site.')));
 				
 						// dashboard homepage
 						$dh2 = new DashboardHomepageView();
-						$dh2->add('activity', 'Site Activity');
-						$dh2->add('reports', 'Statistics');
-						$dh2->add('help', 'Help');
-						$dh2->add('news', 'Latest News');
-						$dh2->add('notes', 'Notes');
+						$dh2->add('activity', t('Site Activity'));
+						$dh2->add('reports', t('Statistics'));
+						$dh2->add('help', t('Help'));
+						$dh2->add('news', t('Latest News'));
+						$dh2->add('notes', t('Notes'));
 						
 						// setup header autonav block we're going to add
 						$data = array();
@@ -340,22 +340,18 @@ class InstallController extends Controller {
 						// add two subpages
 						$data = array();
 						$data['uID'] = USER_SUPER_ID;
-						$data['name'] = 'About';
+						$data['name'] = t('About');
 						$aboutPage = $home->add($dt, $data);
-						$data['name'] = 'Examples';
+						$data['name'] = t('Examples');
 						$examplesPage = $home->add($dt, $data);
-						$data['name'] = 'Contact';
+						$data['name'] = t('Contact');
 						$contactPage = $home->add($dt, $data);
 						
 						// Add Content to Home page
 						$bt = BlockType::getByHandle('content');
 						$data = array();
 						$data['uID'] = USER_SUPER_ID;
-						$data['content'] = '<h1>Welcome to Concrete.</h1><p>You are currently viewing the front page of your website. This is an example of a content block - rich text that can be added through a WYSIWYG editor.</p><p>Get started by putting the page in edit mode, adding sub-pages, or checking out the <a href="' . BASE_URL . '/index.php/dashboard/">Dashboard</a>.</p>
-						<h3>Examples of Blocks</h3>
-						Listed below are some of the more interesting blocks that Concrete5 ships with, installed and ready to use. Click through to explore the blocks on their own page.
-						</p>
-						<p>These pages are actually listed using the <b>page list</b> block. To check it out, put the page in edit mode, mouse over the list of pages below, click, and then select edit.</p>';
+						$data['content'] = t('<h1>Welcome to Concrete.</h1><p>You are currently viewing the front page of your website. This is an example of a content block - rich text that can be added through a WYSIWYG editor.</p><p>Get started by putting the page in edit mode, adding sub-pages, or checking out the dashboard.</p><h3>Examples of Blocks</h3>Listed below are some of the more interesting blocks that Concrete5 ships with, installed and ready to use. Click through to explore the blocks on their own page.</p><p>These pages are actually listed using the <b>page list</b> block. To check it out, put the page in edit mode, mouse over the list of pages below, click, and then select edit.</p>');
 
 						$home->addBlock($bt, "Main", $data);
 
@@ -368,26 +364,17 @@ class InstallController extends Controller {
 						$home->addBlock($pageListBT, "Main", $plData);
 
 						
-						$data['content']  = '<h3>Learn More</h3><p>
-						There are many more blocks installed with Concrete5 than these. Start editing to check them out!</p>';
+						$data['content']  = t('<h3>Learn More</h3><p>There are many more blocks installed with Concrete5 than these. Start editing to check them out!</p>');
 						$home->addBlock($bt, "Main", $data);
 
 
-						$data['content'] = '<h2>Sidebar</h2><p>Everything about Concrete is completely customizable through the CMS. This is a separate area from the main content on the homepage.</p><p>We\'ve named this area the "sidebar" (pretty imaginative, eh?)</p>';
+						$data['content'] = t('<h2>Sidebar</h2><p>Everything about Concrete is completely customizable through the CMS. This is a separate area from the main content on the homepage.</p><p>We\'ve named this area the "sidebar" (pretty imaginative, eh?)</p>');
 						$home->addBlock($bt, "Sidebar", $data);
-						
 				
-						$data['content']  = '<h1 class="noTopSpace">Sed ut perspiciatis unde omnis iste natus error (H1)</h1><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>';
-						$data['content'] .= '<h2 class="noTopSpace">Sed ut perspiciatis unde omnis iste natus error (H2)</h2><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>';
-						$data['content'] .= '<h3 class="noTopSpace">Sed ut perspiciatis unde omnis iste natus error (H3)</h3><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>';
-						$data['content'] .= '<h4 class="noTopSpace">Sed ut perspiciatis unde omnis iste natus error (H4)</h4><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>';
-						$data['content'] .= '<h5 class="noTopSpace">Sed ut perspiciatis unde omnis iste natus error (H5)</h5><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>';
+						$data['content']  = t('<h1 class="noTopSpace">Sed ut perspiciatis unde omnis iste natus error (H1)</h1><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>');
 						$aboutPage->addBlock($bt, "Main", $data);
 						
-						$data['content']  = '<h1 class="noTopSpace">Examples of Blocks</h1><p>
-						Listed below are some of the more interesting blocks that Concrete5 ships with, installed and ready to use. Click through to explore the blocks on their own page.
-						</p>
-						<p>These pages are actually listed using the <b>page list</b> block. To check it out, put the page in edit mode, mouse over the list of pages below, click, and then select edit.</p>';
+						$data['content']  = t('<h1 class="noTopSpace">Examples of Blocks</h1><p>Listed below are some of the more interesting blocks that Concrete5 ships with, installed and ready to use. Click through to explore the blocks on their own page.</p><p>These pages are actually listed using the <b>page list</b> block. To check it out, put the page in edit mode, mouse over the list of pages below, click, and then select edit.</p>');
 						$examplesPage->addBlock($bt, "Main", $data);
 						
 						// add page list block below the examples intro text
@@ -398,16 +385,13 @@ class InstallController extends Controller {
 						$plData['cThis'] = 1;
 						$examplesPage->addBlock($pageListBT, "Main", $plData);
 						
-						$data['content']  = '<h3>Learn More</h3><p>
-						There are many more blocks installed with Concrete5 than these. Start editing to check them out!</p>';
+						$data['content']  = t('<h3>Learn More</h3><p>Concrete5 ships with more blocks than these. Start editing to check them out!</p>');
 						$examplesPage->addBlock($bt, "Main", $data);
 						
 						// add javascript slideshow page beneath examples
 						$data['name'] = 'Image Slideshow';
 						$example0Page = $examplesPage->add($dt, $data);
-						$data['content']  = '<h1 class="noTopSpace">Image Slideshow</h1><p>
-						Check out the image block above. It\'s actually multiple images setup as a JavaScript slideshow.
-						</p>';
+						$data['content']  = t("<h1 class='noTopSpace'>Image Slideshow</h1><p>Check out the image block above. It's actually multiple images setup as a JavaScript slideshow.");
 						$example0Page->addBlock($bt, "Main", $data);
 						
 						// remove image block from header
@@ -458,11 +442,9 @@ class InstallController extends Controller {
 
 
 						// add sitemap page beneath examples page
-						$data['name'] = 'Sitemap';
+						$data['name'] = t('Sitemap');
 						$example1Page = $examplesPage->add($dt, $data);
-						$data['content']  = '<h1 class="noTopSpace">Sitemap Example</h1><p>
-						Below we\'re using the autonav block to build a nested sitemap of the whole site. When pages are added to the site this will automatically update.
-						</p>';
+						$data['content']  = t("<h1 class='noTopSpace'>Sitemap Example</h1><p>Below we're using the autonav block to build a nested sitemap of the whole site. When pages are added to the site this will automatically update.</p>");
 						$example1Page->addBlock($bt, "Main", $data);
 						
 						// add sitemap block to example 1 page
@@ -474,77 +456,77 @@ class InstallController extends Controller {
 						$example1Page->addBlock($autonavBT, "Main", $autonavData);
 						
 						// add youtube video
-						$data['name'] = 'YouTube Video';
+						$data['name'] = t('YouTube Video');
 						$data['handle'] = 'youtube';
 						$example2Page = $examplesPage->add($dt, $data);
-						$data['content']  = '<h1 class="noTopSpace">Youtube Video Example</h1>';
+						$data['content']  = t('<h1 class="noTopSpace">Youtube Video Example</h1>');
 						$example2Page->addBlock($bt, "Main", $data);
 						
 						// add youtube block to example 2 page
 						$ytBT = BlockType::getByHandle('youtube');
 						$ytData['videoURL'] = 'http://youtube.com/watch?v=CewglxElBK0';
-						$ytData['title'] = 'Step Brothers Trailer';
+						$ytData['title'] = t('Movie Trailer');
 						$example2Page->addBlock($ytBT, "Main", $ytData);
 
 						// add search page
-						$data['name'] = 'Search';
+						$data['name'] = t('Search');
 						$example3Page = $examplesPage->add($dt, $data);
-						$data['content']  = '<h1 class="noTopSpace">Search Block Example</h1>';
+						$data['content']  = t('<h1 class="noTopSpace">Search Example</h1>');
 						$example3Page->addBlock($bt, "Main", $data);
 						
 						// add search block to example 3 page
 						$searchBT = BlockType::getByHandle('search');
-						$searchData['title'] = 'Search Your Site';
-						$searchData['buttonText'] = 'Search';
+						$searchData['title'] = t('Search Your Site');
+						$searchData['buttonText'] = t('Search');
 						$searchData['resultsURL'] = '/examples/search';
 						$example3Page->addBlock($searchBT, "Main", $searchData);
 
 						// add form block page
-						$data['name'] = 'Interactive Form';
+						$data['name'] = t('Interactive Form');
 						$data['cHandle'] = 'form';
 						$example4Page = $examplesPage->add($dt, $data);
 						$nh = Loader::helper('navigation');
 						$formURL = $nh->getLinkToCollection($contactPage);
-						$data['content']  = '<h1 class="noTopSpace">Interactive Form Block</h1><p>An example of our interactive form block can be found on the <a href="' . $formURL . '">Contact Page</a>.';
+						$data['content']  = t('<h1 class="noTopSpace">Interactive Form Block</h1><p>An example of our interactive form block can be found on the <a href="' . $formURL . '">Contact Page</a>.');
 						$example4Page->addBlock($bt, "Main", $data);					
 
 						// add survey page
-						$data['name'] = 'Survey';
+						$data['name'] = t('Survey');
 						$example5Page = $examplesPage->add($dt, $data);
-						$data['content']  = '<h1 class="noTopSpace">Survey Example</h1>';
+						$data['content']  = t('<h1 class="noTopSpace">Survey Example</h1>');
 						$example5Page->addBlock($bt, "Main", $data);
 						
 						// add survey to example 3 page
 						$surveyBT = BlockType::getByHandle('survey');
-						$surveyData['title'] = 'Search Your Site';
-						$surveyData['question'] = 'What is your favorite color?';
-						$surveyData['pollOption'] = array("Red", "White", "Green", "Blue", "Yellow", "Black", "Purple", "Orange");
+						$surveyData['title'] = t('Example Survey');
+						$surveyData['question'] = t('What is your favorite color?');
+						$surveyData['pollOption'] = array(t("Red"), t("White"), t("Green"), t("Blue"), t("Yellow"), t("Black"), t("Purple"), t("Orange"));
 						$example5Page->addBlock($surveyBT, "Main", $surveyData);
 
 
 						// add guestbook page
-						$data['name'] = 'Guestbook/Comments';
+						$data['name'] = t('Guestbook/Comments');
 						$data['cHandle'] = 'guestbook';
 						$example6Page = $examplesPage->add($dt, $data);
-						$data['content']  = '<h1 class="noTopSpace">Guestbook/Comments Example</h1><p>Using Concrete5 you can add blog-style comments to any page easily, using the guestbook block below.</p>';
+						$data['content']  = t('<h1 class="noTopSpace">Guestbook/Comments Example</h1><p>Using Concrete5 you can add blog-style comments to any page easily, using the guestbook block below.</p>');
 						$example6Page->addBlock($bt, "Main", $data);
 						
 						// add guestbook to example page
 						$gbBT = BlockType::getByHandle('guestbook');
 						$gbData['requireApproval'] = 0;
-						$gbData['title'] = 'Comments';
+						$gbData['title'] = t('Comments');
 						$gbData['displayGuestBookForm'] = 1;
 						$example6Page->addBlock($gbBT, "Main", $gbData);
 						
 						// Add a Contact Form to the Contact page
 						$bt = BlockType::getByHandle('form');	
 						$data['qsID']=1;
-						$data['surveyName'] = 'Contact Form';	
+						$data['surveyName'] = t('Contact Form');
 						$data['notifyMeOnSubmission'] = 1;
 						$data['recipientEmail'] = $uEmail;
-						$data['questions'][] = array( 'qsID'=>$data['qsID'], 'question'=>'Name', 'inputType'=>'field', 'options'=>'', 'position'=>1 );
-						$data['questions'][] = array( 'qsID'=>$data['qsID'], 'question'=>'Email', 'inputType'=>'field', 'options'=>'', 'position'=>2 );
-						$data['questions'][] = array( 'qsID'=>$data['qsID'], 'question'=>'Comments/Questions?', 'inputType'=>'text', 'options'=>'', 'position'=>3 );
+						$data['questions'][] = array( 'qsID'=>$data['qsID'], 'question'=>t('Name'), 'inputType'=>'field', 'options'=>'', 'position'=>1 );
+						$data['questions'][] = array( 'qsID'=>$data['qsID'], 'question'=>t('Email'), 'inputType'=>'field', 'options'=>'', 'position'=>2 );
+						$data['questions'][] = array( 'qsID'=>$data['qsID'], 'question'=>t('Comments/Questions?'), 'inputType'=>'text', 'options'=>'', 'position'=>3 );
 						$contactPage->addBlock($bt, "Main", $data);	
 						
 						/* set it so anyone can read the site */
@@ -594,17 +576,17 @@ class InstallController extends Controller {
 						
 						// login 
 						define('PASSWORD_SALT', $salt);
-						$u = new User(USER_SUPER, $uPassword);						
-						$this->set('message', 'Congratulations. Concrete has been installed. You have been logged in as <b>' . USER_SUPER . '</b> with the password <b>' . $uPassword . '</b>.<br/><br/>If you wish to change this password, you may do so from the users area of the dashboard.');
+						$u = new User(USER_SUPER, $uPassword);
+						$this->set('message', t('Congratulations. Concrete has been installed. You have been logged in as <b>%s</b> with the password <b>%s</b>.<br/><br/>If you wish to change this password, you may do so from the users area of the dashboard.', USER_SUPER, $uPassword));
 						
 						
 					} else {
-						throw new Exception('Unable to open config/site.php for writing.');
+						throw new Exception(t('Unable to open config/site.php for writing.'));
 					}
 				
 	
 				} else {
-					throw new Exception('Unable to locate config directory.');
+					throw new Exception(t('Unable to locate config directory.'));
 				}
 			
 			} else {

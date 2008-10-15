@@ -36,49 +36,49 @@ class RegisterController extends Controller {
 		}
 		
 		if (!$vals->email($_POST['uEmail'])) {
-			$e->add('Invalid email address provided.');
+			$e->add(t('Invalid email address provided.'));
 		} else if (!$valc->isUniqueEmail($_POST['uEmail'])) {
-			$e->add("The email address '{$_POST['uEmail']}' is already in use. Please choose another.");
+			$e->add(t("The email address %s is already in use. Please choose another.", $_POST['uEmail']));
 		}
 		
 		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) {
 			if (strlen($username) < USER_USERNAME_MINIMUM) {
-				$e->add('A username must be between at least ' . USER_USERNAME_MINIMUM . ' characters long.');
+				$e->add(t('A username must be between at least %s characters long.', USER_USERNAME_MINIMUM));
 			}
 	
 			if (strlen($username) > USER_USERNAME_MAXIMUM) {
-				$e->add('A username cannot be more than ' . USER_USERNAME_MAXIMUM . ' characters long.');
+				$e->add(t('A username cannot be more than %s characters long.', USER_USERNAME_MAXIMUM));
 			}
 	
 			if (strlen($username) >= USER_USERNAME_MINIMUM && !$vals->alphanum($username)) {
-				$e->add('A username may only contain letters or numbers.');
+				$e->add(t('A username may only contain letters or numbers.'));
 			}
 			if (!$valc->isUniqueUsername($username)) {
-				$e->add("The username '{$username}' already exists. Please choose another");
+				$e->add(t("The username %s already exists. Please choose another", $username));
 			}		
 		}
 		
 		if ($username == USER_SUPER) {
-			$e->add('Invalid Username');
+			$e->add(t('Invalid Username'));
 		}
 		
 		if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
-			$e->add('A password must be between ' . USER_PASSWORD_MINIMUM . ' and ' . USER_PASSWORD_MAXIMUM . ' characters');
+			$e->add(t('A password must be between %s and %s characters', USER_PASSWORD_MINIMUM, USER_PASSWORD_MAXIMUM));
 		}
 			
 		if (strlen($password) >= USER_PASSWORD_MINIMUM && !$vals->password($password)) {
-			$e->add('A password may not contain ", \', >, <, or any spaces.');
+			$e->add(t('A password may not contain ", \', >, <, or any spaces.'));
 		}
 
 		if ($password) {
 			if ($password != $passwordConfirm) {
-				$e->add('The two passwords provided do not match.');
+				$e->add(t('The two passwords provided do not match.'));
 			}
 		}
 	
 		$invalidFields = UserAttributeKey::validateSubmittedRequest();
 		foreach($invalidFields as $field) {
-			$e->add("The field '{$field}' is required.");
+			$e->add(t("The field %s is required.", $field));
 		}
 
 		if (!$e->has()) {
