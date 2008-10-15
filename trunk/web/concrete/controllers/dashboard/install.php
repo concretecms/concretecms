@@ -6,8 +6,8 @@ class DashboardInstallController extends Controller {
 	protected $errorText = array();
 	
 	public function __construct() {
-		$this->errorText[E_PACKAGE_INSTALLED] = 'You\'ve already installed that package.';		
-		$this->errorText[E_PACKAGE_NOT_FOUND] = 'This is not a valid package.';		
+		$this->errorText[E_PACKAGE_INSTALLED] = t("You've already installed that package.");		
+		$this->errorText[E_PACKAGE_NOT_FOUND] = t("Invalid Package.");		
 		$this->error = Loader::helper('validation/error');
 	}
 	
@@ -35,7 +35,7 @@ class DashboardInstallController extends Controller {
 		}
 		
 		if (isset($bt) && ($bt instanceof BlockType)) {
-			$this->set('message', 'Block Type Refreshed. Any database schema changes have been applied.');
+			$this->set('message', t('Block Type Refreshed. Any database schema changes have been applied.'));
 			try {
 				BlockType::installBlockType($bt->getBlockTypeHandle(), $btID);			
 			} catch(Exception $e) {
@@ -50,7 +50,7 @@ class DashboardInstallController extends Controller {
 		if ($resp != '') {
 			$this->error->add($resp);
 		} else {
-			$this->set('message', 'Block Type Installed!');
+			$this->set('message', t('Block Type Installed.'));
 		}
 	}
 	
@@ -64,7 +64,7 @@ class DashboardInstallController extends Controller {
 				$bt->delete();
 				$this->redirect('/dashboard/install', 'block_type_deleted');
 			} else {
-				$this->error->add('This block type is either internal, or is being used in your website. It cannot be uninstalled.');
+				$this->error->add(t('This block type is either internal, or is being used in your website. It cannot be uninstalled.'));
 			}
 		} else {
 			$this->error->add('Invalid block type.');
@@ -116,7 +116,7 @@ class DashboardInstallController extends Controller {
 			$p = Loader::package($package);
 			try {
 				$p->install();
-				$this->set('message', 'The package has been installed');
+				$this->set('message', t('The package has been installed.'));
 			} catch(Exception $e) {
 				$this->set('error', $e);
 			}
