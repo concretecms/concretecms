@@ -29,7 +29,7 @@ class NotesDashboardModuleController extends DashboardController {
 	}
 	
 	public function notes_saved() {
-		return 'Your dashboard notes were saved.';
+		return t('Your dashboard notes were saved.');
 	}
 	
 }

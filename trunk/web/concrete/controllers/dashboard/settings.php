@@ -20,25 +20,25 @@ class DashboardSettingsController extends Controller {
 		if ($updated) {
 			switch($updated) {
 				case "maintenance_enabled";
-					$this->set('message', 'Maintenance Mode turned on. Your site is <b>now private</b>.');	
+					$this->set('message', t('Maintenance Mode turned on. Your site is now private.'));	
 					break;
 				case "maintenance_disabled":
-					$this->set('message', 'Maintenance Mode turned off. Your site is <b>public</b>.');	
+					$this->set('message', t('Maintenance Mode turned off. Your site is public.'));	
 					break;
 				case "editing_preferences_saved":
-					$this->set('message', 'Editing preferences saved.');	
+					$this->set('message', t('Editing preferences saved.'));	
 					break;
 				case "sitename_saved":
-					$this->set('message', 'Your site\'s name has been saved.');	
+					$this->set('message', t("Your site's name has been saved."));	
 					break;
 				case "debug_saved":
-					$this->set('message', 'Debug configuration saved.');	
+					$this->set('message', t('Debug configuration saved.'));
 					break;
 				case "rewriting_saved":
 					if (URL_REWRITING) {
-						$this->set('message', 'URL rewriting enabled. Make sure you copy the lines below these URL Rewriting settings area and place them in your .htaccess or web server configuration file.');
+						$this->set('message', t('URL rewriting enabled. Make sure you copy the lines below these URL Rewriting settings area and place them in your .htaccess or web server configuration file.'));
 					} else {
-						$this->set('message', 'URL rewriting disabled.');
+						$this->set('message', t('URL rewriting disabled.'));
 					}
 					break;		
 			}
@@ -113,10 +113,10 @@ class DashboardSettingsController extends Controller {
 		if ($updated) {
 			switch($updated) {
 				case "debug_saved":
-					$this->set('message', 'Debug configuration saved.');	
+					$this->set('message', t('Debug configuration saved.'));
 					break;
 				case "logging_saved":
-					$this->set('message', 'Logging configuration saved.');	
+					$this->set('message', t('Logging configuration saved.'));	
 					break;
 			}
 		}
@@ -139,9 +139,9 @@ class DashboardSettingsController extends Controller {
 				break;
 		}					
 		$subnav = array(
-			array(View::url('/dashboard/settings'), 'General', $globalSelected),
-			array(View::url('/dashboard/settings', 'set_permissions'), 'Access', $permsSelected),
-			array(View::url('/dashboard/settings', 'set_developer'), 'Developer/Advanced', $devSelected)
+			array(View::url('/dashboard/settings'), t('General'), $globalSelected),
+			array(View::url('/dashboard/settings', 'set_permissions'), t('Access'), $permsSelected),
+			array(View::url('/dashboard/settings', 'set_developer'), t('Developer/Advanced'), $devSelected)
 		);
 		$this->set('subnav', $subnav);
 	}
@@ -177,7 +177,7 @@ class DashboardSettingsController extends Controller {
 		$this->set('home', $home);
 		
 		if ($saved) {
-			$this->set('message', 'Permissions saved.');	
+			$this->set('message', t('Permissions saved.'));	
 		}
 	}
 	

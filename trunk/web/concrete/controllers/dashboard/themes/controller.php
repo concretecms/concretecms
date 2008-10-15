@@ -30,7 +30,7 @@ class DashboardThemesController extends Controller {
 		try {
 			$pl = PageTheme::getByID($ptID);
 			if (!is_object($pl)) {
-				throw new Exception('Invalid theme.');
+				throw new Exception(t('Invalid theme.'));
 			}
 			/*
 			if ($pl->getPackageID() > 0) {
@@ -39,7 +39,7 @@ class DashboardThemesController extends Controller {
 			*/
 			
 			$pl->uninstall();
-			$this->set('message', 'Theme uninstalled.');
+			$this->set('message', t('Theme uninstalled.'));
 		} catch (Exception $e) {
 			$v->add($e);
 			$this->set('error', $v);
@@ -69,7 +69,7 @@ class DashboardThemesController extends Controller {
 		} catch(Exception $e) {
 			switch($e->getMessage()) {
 				case PageTheme::E_THEME_INSTALLED:
-					$v->add('That theme has already been installed.');
+					$v->add(t('That theme has already been installed.'));
 					break;
 				default:
 					$v->add($e->getMessage());
@@ -91,7 +91,7 @@ class DashboardThemesController extends Controller {
 			$this->set('error', $val);
 		} else {
 			$l->applyToSite();
-			$this->set('message', 'Theme activated');
+			$this->set('message', t('Theme activated'));
 		}
 		$this->view();
 	}
