@@ -5,7 +5,7 @@ if (isset($response)) { ?>
 <? } ?>
 <form method="post" action="<?=$this->action('test_search')?>">
 
-<p>This is just a test example of how a custom form works. You submit the url as in the action above (in the PHP source) and it's automatically handled by the controller.</p>
+<p><?=t("This is just an example of how a custom form works.")?></p>
 
 <input type="text" name="test_text_field" value="<?=$_GET['test_text_field']?>" />
 

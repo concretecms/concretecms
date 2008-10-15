@@ -260,5 +260,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return $this->btIsInternal;
 		}
 		
+		/** 
+		 * Returns a key/value array of strings that is used to translate items when used in javascript
+		 */
+		public function getJavaScriptStrings() {
+			return array();
+		}
+		
 	}
 	

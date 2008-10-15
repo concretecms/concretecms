@@ -24,7 +24,14 @@
 		
 		public function getBlockTypeName() {
 			return t("Google Map");
-		}				
+		}		
+		
+		public function getJavaScriptStrings() {
+			return array(
+				'maps-api-key' => t('Please enter a valid Google Maps API key.'),
+				'maps-zoom' => t('Please enter a zoom number from 0 to 17.')
+			);
+		}
 		
 		function __construct($obj = null) {		
 			parent::__construct($obj);	

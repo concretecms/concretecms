@@ -58,7 +58,6 @@ if ($controller->hasVoted()) { ?>
 			<? } ?>
 			</table>
 			<div class="note" style="margin-top:8px"><?=intval($totalVotes)?> <?=(intval($totalVotes)==1)?t('Vote'):t('Votes')?></div>
-			<div class="small faint"><?=t("Results may not be statistically valid.")?></div>
 		</div>
 		<?
 		//&chl= join('|',$optionNamesAbbrev) 

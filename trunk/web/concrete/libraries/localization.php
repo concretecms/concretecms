@@ -12,13 +12,14 @@
 	    return vsprintf(gettext($text), $arg);
 	}
 	
-	
 	class Localization {
 	
 	
 		public function setDomain($path) {
-			bindtextdomain(LANGUAGE_DOMAIN_CORE, $path . '/' . DIRNAME_LANGUAGES);
-			textdomain(LANGUAGE_DOMAIN_CORE);
+			if (is_dir($path . '/' . DIRNAME_LANGUAGES)) {
+				bindtextdomain(LANGUAGE_DOMAIN_CORE, $path . '/' . DIRNAME_LANGUAGES);
+				textdomain(LANGUAGE_DOMAIN_CORE);
+			}
 		}
 		
 		/** 

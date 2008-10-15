@@ -12,7 +12,7 @@ var searchBlock ={
 		var titleF=$('#ccm_search_block_title');
 		var titleV=titleF.val();
 		if(!titleV || titleV.length==0 ){
-			alert('Please enter a valid search title.');
+			alert(ccm_t('search-title'));
 			titleF.focus();
 			failed=1;
 		}

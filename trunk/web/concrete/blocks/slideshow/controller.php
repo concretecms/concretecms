@@ -17,13 +17,20 @@ class SlideshowBlockController extends BlockController {
 	 * Used for localization. If we want to localize the name/description we have to include this
 	 */
 	public function getBlockTypeDescription() {
-		return t("Add a javascript slideshow of images.");
+		return t("Display a running loop of images.");
 	}
 	
 	public function getBlockTypeName() {
 		return t("Slideshow");
 	}
-
+	
+	public function getJavaScriptStrings() {
+		return array(
+			'choose-file' => t('Choose Image/File'),
+			'choose-min-2' => t('Please choose at least two images.')
+		);
+	}
+	
 	function __construct($obj = null) {		
 		parent::__construct($obj);
 		$this->db = Loader::db();

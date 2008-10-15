@@ -24,6 +24,13 @@
 			return t("RSS Displayer");
 		}		
 		
+		public function getJavaScriptStrings() {
+			return array(
+				'feed-address' => t('Please enter a valid feed address.'),
+				'feed-num-items' => t('Please enter the number of items to display.')
+			);
+		}
+		
 		function __construct($obj = null) {		
 			parent::__construct($obj);
 		}

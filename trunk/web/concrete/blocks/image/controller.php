@@ -17,6 +17,12 @@
 		public function getBlockTypeName() {
 			return t("Image");
 		}		
+		
+		public function getJavaScriptStrings() {
+			return array(
+				'image-required' => t('You must select an image.')
+			);
+		}
 	
 		function getFileID() {return $this->fID;}
 		function getFileOnstateID() {return $this->fOnstateID;}

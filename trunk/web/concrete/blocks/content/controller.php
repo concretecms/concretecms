@@ -4,11 +4,17 @@
 		
 		var $pobj;
 		
-		protected $btDescription = "HTML/WYSIWYG Editor Content";
-		protected $btName = "Content";
 		protected $btTable = 'btContentLocal';
 		protected $btInterfaceWidth = "600";
 		protected $btInterfaceHeight = "465";
+		
+		public function getBlockTypeDescription() {
+			return t("HTML/WYSIWYG Editor Content.");
+		}
+		
+		public function getBlockTypeName() {
+			return t("Content");
+		}
 		
 		function getContent() {
 			$content = $this->translateFrom($this->content);

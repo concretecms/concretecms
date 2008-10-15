@@ -14,6 +14,9 @@ if ($url != '') { ?>
 <? } ?>
 <form method="post" id="ccm-block-form" class="validate" action="<?=$b->getBlockEditAction()?>">
 
+<? foreach($this->controller->getJavaScriptStrings() as $key => $val) { ?>
+	<input type="hidden" name="ccm-string-<?=$key?>" value="<?=$val?>" />
+<? } ?>
 
 
 <div id="ccm-block-fields">

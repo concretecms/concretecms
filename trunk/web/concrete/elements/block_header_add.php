@@ -20,4 +20,8 @@ if ($url != '') { ?>
 
 <form method="post" action="<?=$action?>" class="validate" id="ccm-block-form">
 
+<? foreach($this->controller->getJavaScriptStrings() as $key => $val) { ?>
+	<input type="hidden" name="ccm-string-<?=$key?>" value="<?=$val?>" />
+<? } ?>
+
 <div id="ccm-block-fields">

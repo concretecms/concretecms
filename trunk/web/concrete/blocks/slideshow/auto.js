@@ -9,7 +9,7 @@ var SlideshowBlock = {
 			height: 450,
 			modal: false,
 			href: CCM_TOOLS_PATH + "/al.php?launch_in_page=1&cID="+0,
-			title: "Choose File/Image"
+			title: ccm_t('choose-file')
 		});
 	},
 	
@@ -84,7 +84,7 @@ var SlideshowBlock = {
 		
 		qIDs=this.serialize();
 		if( qIDs.length<2 ){
-			alert('Please add at least two images.');
+			alert(ccm_t('choose-min-2'));
 			$('#ccm-slideshowBlock-AddImg').focus();
 			failed=1;
 		}	
