@@ -4,12 +4,25 @@
 	
 	class FlashContentBlockController extends BlockController {
 
-		protected $btDescription = "Embeds Flash (swf) files, including flash detection.";
-		protected $btName = "Flash Content";
 		protected $btInterfaceWidth = 300;
 		protected $btInterfaceHeight = 240;
 		protected $btTable = 'btFlashContent';
+		
+		/** 
+		 * Used for localization. If we want to localize the name/description we have to include this
+		 */
+		public function getBlockTypeDescription() {
+			return t("Embeds SWF files, including flash detection.");
+		}
+		
+		public function getBlockTypeName() {
+			return t("Flash Content");
+		}
 
+		public function getJavaScriptStrings() {
+			return array('file-required' => t('You must select a file.'));	
+		}
+		
 		function getFileID() {return $this->fID;}
 		function getFileObject() {
 			return LibraryFileBlockController::getFile($this->fID);

@@ -8,7 +8,7 @@ var googleMapBlock ={
 		var api_keyF=$('#ccm_googlemap_block_api_key');
 		var api_keyV=api_keyF.val();
 		if(!api_keyV || api_keyV.length==0 ){
-			alert('Please enter a valid google maps api key.');
+			alert(ccm_t('maps-api-key'));
 			api_keyF.focus();
 			failed=1;
 		}
@@ -16,7 +16,7 @@ var googleMapBlock ={
 		var zoomF=$('#ccm_googlemap_block_zoom');
 		var zoomV=zoomF.val();
 		if(!zoomV || parseInt(zoomV)<0 || parseInt(zoomV)>17 ){
-			alert('Please enter a zoom number from 0 to 17.');
+			alert(ccm_t('maps-zoom'));
 			zoomF.focus();
 			failed=1;
 		} 		

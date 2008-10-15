@@ -30,6 +30,10 @@
 			return t("Video Player");
 		}
 
+		public function getJavaScriptStrings() {
+			return array('flv-required' => t('You must select a valid FLV file.'));
+		}
+
 		function getFileID() {return $this->fID;}
 		function getFileObject() {
 			return LibraryFileBlockController::getFile($this->fID);

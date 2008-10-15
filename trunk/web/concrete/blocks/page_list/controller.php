@@ -16,7 +16,13 @@
 		
 		public function getBlockTypeName() {
 			return t("Page List");
-		}		
+		}
+		
+		public function getJavaScriptStrings() {
+			return array(
+				'feed-name' => t('Please give your RSS Feed a name.')
+			);
+		}
 		
 		function getPages($query = null) {
 			$db = Loader::db();

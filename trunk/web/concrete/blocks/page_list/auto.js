@@ -65,7 +65,7 @@ var pageList ={
 			var rssOn=$('#ccm-pagelist-rssSelectorOn');
 			var rssTitle=$('#ccm-pagelist-rssTitle');
 			if( rssOn && rssOn.attr('checked') && rssTitle && rssTitle.val().length==0 ){
-				alert('Please give your RSS Feed a name.');
+				alert(ccm_t('feed-name'));
 				rssTitle.focus();
 				failed=1;
 			}

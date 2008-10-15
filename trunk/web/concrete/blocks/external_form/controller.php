@@ -3,12 +3,26 @@
 	class ExternalFormBlockController extends BlockController {
 		
 		var $pobj;
-		protected $btDescription = "Include external forms in the filesystem and place them on pages.";
-		protected $btName = "External Form";
 		protected $btTable = 'btExternalForm';
 		protected $btInterfaceWidth = "300";
 		protected $btInterfaceHeight = "200";
 		public $helpers = array('file');
+		
+		/** 
+		 * Used for localization. If we want to localize the name/description we have to include this
+		 */
+		public function getBlockTypeDescription() {
+			return t("Include external forms in the filesystem and place them on pages.");
+		}
+		
+		public function getBlockTypeName() {
+			return t("External Form");
+		}
+
+		public function getJavaScriptStrings() {
+			return array('form-required' => t('You must select a form.'));	
+		}
+		
 		
 		function getFilename() {return $this->filename;}
 		

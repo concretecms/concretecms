@@ -19,7 +19,16 @@ class FormBlockController extends BlockController {
 	public function getBlockTypeName() {
 		return t("Form");
 	}
-		
+	
+	public function getJavaScriptStrings() {
+		return array(
+			'delete-question' => t('Are you sure you want to delete this question?'),
+			'form-name' => t('Your form must have a name.'),
+			'form-min-1' => t('Please add at least one question to your form.')
+			
+		);
+	}
+	
 	public function __construct($b = null){ 
 		parent::__construct($b);
 		//$this->bID = intval($this->_bID);

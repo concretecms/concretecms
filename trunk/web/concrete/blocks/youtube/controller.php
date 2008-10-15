@@ -23,6 +23,10 @@
 			return t("Youtube Video");
 		}
 		
+		public function getJavaScriptStrings() {
+			return array('youtube-required' => t('Please enter a valid Youtube URL.'));
+		}
+		
 		function __construct($obj = null) {		
 			parent::__construct($obj);	
 			$this->title=t("My Video");

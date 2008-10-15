@@ -13,7 +13,7 @@
 ?>
 
 <div id="swfcontent<?=$bID?>">
-You must download <a href="http://www.adobe.com">Adobe Flash</a> to view this animation.
+<?=t('You must download Adobe Flash to view this animation.')?>
 </div>
 
 <script type="text/javascript">

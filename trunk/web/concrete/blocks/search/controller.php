@@ -24,6 +24,10 @@
 			return t("Search");
 		}		
 		
+		public function getJavaScriptStrings() {
+			return array('search-title' => t('Please enter a valid search title.'));
+		}
+		
 		function __construct($obj = null) {		
 			parent::__construct($obj);
 			$this->title=t("Search");

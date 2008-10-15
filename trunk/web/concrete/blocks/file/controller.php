@@ -4,11 +4,25 @@
 	
 	class FileBlockController extends BlockController {
 
-		protected $btDescription = "Creates links to files";
-		protected $btName = "File";
 		protected $btInterfaceWidth = 300;
 		protected $btInterfaceHeight = 250;
 		protected $btTable = 'btContentFile';
+
+		/** 
+		 * Used for localization. If we want to localize the name/description we have to include this
+		 */
+		public function getBlockTypeDescription() {
+			return t("Link to files stored in the asset library.");
+		}
+		
+		public function getBlockTypeName() {
+			return t("File");
+		}
+
+		public function getJavaScriptStrings() {
+			return array('file-required' => t('You must select a file.'));	
+		}
+		
 
 		function getFileID() {return $this->fID;}
 		

@@ -8,7 +8,7 @@ var rssDisplayer ={
 			var urlF=$('#ccm_rss_displayer_url');
 			var urlV=urlF.val();
 			if(!urlV || urlV.length==0 || urlV.indexOf('://')==-1 ){
-				alert('Please enter a valid feed address.');
+				alert(ccm_t('feed-address'));
 				urlF.focus();
 				failed=1;
 			}
@@ -16,7 +16,7 @@ var rssDisplayer ={
 			var itemsF=$('#ccm_rss_displayer_itemsToDisplay');
 			var itemsV=itemsF.val();
 			if( !itemsV || itemsV.length==0 || parseInt(itemsV)<1 ){
-				alert('Please enter a valid number of items to display.');
+				alert(ccm_t('feed-num-items'));
 				itemsF.focus();
 				failed=1;
 			}
