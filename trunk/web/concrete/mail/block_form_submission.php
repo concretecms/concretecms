@@ -12,7 +12,7 @@ There has been a submission of the form %s on through your Concrete5 website.
 
 %s
 
-To view all of this form's submissions, visit %s
+To view all of this form's submissions, visit %s 
 
 ", $formName, $submittedData, $formDisplayUrl);
 ?>
