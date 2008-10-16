@@ -178,7 +178,10 @@ ccm_alSetupPaging = function() {
 }
 
 $(function() {
-	$.ajaxSetup({async:false});
+	/*
+	 * pretty sure this is screwing up the throbber
+	 $.ajaxSetup({async:false});
+	*/
 	
 	$("#ccm-add-asset-link").click(function() { 
 		$("#ccm-al-add-asset").show()
