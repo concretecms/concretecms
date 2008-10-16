@@ -115,6 +115,7 @@ if ($editMode) { ?>
 			<option value="SELECT"<? if ($akType == 'SELECT') { ?> selected<? } ?>>Select Menu</option>
 			<option value="SELECT_ADD"<? if ($akType == 'SELECT_ADD') { ?> selected<? } ?>>Select Menu + Add Option</option>
 			<option value="DATE"<? if ($akType == 'DATE') { ?> selected <? } ?>>Date</option>
+			<option value="IMAGE_FILE"<? if ($akType == 'IMAGE_FILE') { ?> selected <? } ?>>Image/File</option>
 		</select></td>
 		<td style="width: 33%"><input type="checkbox" name="akSearchable" style="vertical-align: middle" <? if ($akSearchable) { ?> checked <? } ?> /> Yes, include this field in the search index.</td>
 	</tr>
@@ -171,6 +172,7 @@ if ($editMode) { ?>
 		<option value="SELECT"<? if ($_POST['akType'] == 'SELECT') { ?> selected<? } ?>>Select Menu</option>
 		<option value="SELECT_ADD"<? if ($_POST['akType'] == 'SELECT_ADD') { ?> selected<? } ?>>Select Menu + Add Option</option>
 		<option value="DATE"<? if ($_POST['akType'] == 'DATE') { ?> selected <? } ?>>Date</option>
+		<option value="IMAGE_FILE"<? if ($_POST['akType'] == 'IMAGE_FILE') { ?> selected <? } ?>>Image/File</option>
 	</select></td>
 	<td style="width: 33%"><input type="checkbox" name="akSearchable" style="vertical-align: middle" <? if ($_POST['akSearchable']) { ?> checked <? } ?> /> Yes, include this field in the search index.</td>
 </tr>

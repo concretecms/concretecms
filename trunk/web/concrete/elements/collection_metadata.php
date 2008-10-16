@@ -137,6 +137,8 @@ if ($cp->canAdminPage()) {
 	</select></h2><br/>
 	
 	<? 
+		$al = Loader::helper('concrete/asset_library');
+
 
 		foreach($cAttributes as $ak) {
 			$caValue = $c->getCollectionAttributeValue($ak); ?>
@@ -187,6 +189,14 @@ if ($cp->canAdminPage()) {
 						</div>
 						<?
 						break;
+				case "IMAGE_FILE": 
+					$bf = null; 
+					if (is_object($caValue)) {
+						$bf = $caValue;
+					}
+					print $al->file('ccm-file-akID-' . $ak->getCollectionAttributeKeyID(), 'akID_' . $ak->getCollectionAttributeKeyID(), t('Choose File'), $bf);?>
+				<?
+					break;
 				case "BOOLEAN":?>
 					<input type="checkbox" <? if ($caValue == 1) { ?> checked <? } ?> name="akID_<?=$ak->getCollectionAttributeKeyID()?>" value="1" /> Yes
 					<?
@@ -215,3 +225,5 @@ if ($cp->canAdminPage()) {
 <!--	<a href="javascript:void(0)" onclick="ccm_hidePane()" class="ccm-button-left cancel"><span><em class="ccm-button-close">Cancel</em></span></a>//-->
 	<a href="javascript:void(0)" onclick="$('#ccmMetadataForm').get(0).submit()" class="ccm-button-right accept"><span><?=t('Save')?></span></a>
 	</div>	
+
+<? Loader::element('block_al'); ?>
