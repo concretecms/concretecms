@@ -76,7 +76,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 							
 							require_once($fdir . '/' . FILENAME_BLOCK_CONTROLLER);
 							if (!class_exists($class)) {
-								throw new Exception($class . ' not found. Please check to ensure the block\'s controller.php file contains the correct class name.');
+								throw new Exception(t("%s not found. Please check to ensure the block\'s controller.php file contains the correct class name.", $class));
 							}
 							$bta = new $class;
 							$bt->btName = $bta->getBlockTypeName();
@@ -413,7 +413,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					return $db->ErrorMsg();
 				}
 			} else {
-				return "No block found by that name in the core blocks directory.";
+				return t("No block found by that name in the core blocks directory.");
 			}
 		}
 		

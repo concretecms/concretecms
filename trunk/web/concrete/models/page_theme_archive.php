@@ -33,7 +33,7 @@ class PageThemeArchive extends Archive {
 			if (file_exists(DIR_FILES_THEMES . '/' . $theme) && $theme != '') {
 				$r = @rename(DIR_FILES_THEMES . '/' . $theme, DIR_FILES_TRASH . '/' . $theme  . time());
 				if (!$r) {
-					throw new Exception('Unable to uninstall "' . $theme . '" theme by moving it to the trash.');
+					throw new Exception(t('Unable to uninstall %s theme by moving it to the trash.', $theme));
 					return false;
 				}
 			}

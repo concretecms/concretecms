@@ -2,22 +2,22 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 $from = array('info@concrete5.org', 'Forgot Password');
-$subject = "Forgot Password";
-$body = "
+$subject = t("Forgot Password");
+$body = t("
 
-Dear {$uName},
+Dear %s,
 
 Here is your information:
 
-Your username: {$uName}
-Your password: {$uPassword}
+Your username: %s
+Your password: %s
 
 To login, head here:
 
-" . BASE_URL . DIR_REL . "/index.php/login/
+%s
 
 Thanks for browsing the site!
 
-";
+", $uName, $uName, $uPassword, BASE_URL . DIR_REL . "/index.php/login/");
 
 ?>

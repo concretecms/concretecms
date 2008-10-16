@@ -2,16 +2,16 @@
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
-$from = array('info@concrete5.org', 'Validate Email Address');
-$subject = SITE . " Registration - Validate Email Address";
-$body = "
+$from = array('info@concrete5.org', t('Validate Email Address'));
+$subject = SITE . " " . t("Registration - Validate Email Address");
+$body = t("
 
-You must click the following URL in order to activate your account for " . SITE . ":
+You must click the following URL in order to activate your account for %s:
 
-" . BASE_URL . DIR_REL . View::url('/login', 'v', $uHash) . " 
+%s 
 
-Thanks for your interest in " . SITE . "
+Thanks for your interest in %s
 
-";
+", SITE, BASE_URL . DIR_REL . View::url('/login', 'v', $uHash), SITE);
 
 ?>
