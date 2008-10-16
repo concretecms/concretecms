@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class ConcreteUpgradeVersion500a1Helper {
 	
 	public function notes() {
-		return 'Make sure your web root contains a jobs/ directory, or upgrading will not go smoothly.';
+		return t('Make sure your web root contains a jobs/ directory, or upgrading will not go smoothly.');
 	}
 	
 	public function run() {
@@ -34,10 +34,9 @@ class ConcreteUpgradeVersion500a1Helper {
 		Job::installByHandle('index_search');
 		$d11 = SinglePage::add('/dashboard/jobs');
 		if (is_object($d11)) {
-			$d11->update(array('cName'=>'Maintenance', 'cDescription'=>'Run common cleanup tasks.'));
+			$d11->update(array('cName'=>t('Maintenance'), 'cDescription'=>t('Run common cleanup tasks.')));
 		}
 	}
 	
 }
-		
 	

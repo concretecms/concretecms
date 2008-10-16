@@ -39,7 +39,7 @@ class Archive {
 	 */
 	protected function uploadZipToTemp($file) {
 		if (!file_exists($file)) {
-			throw new Exception('Could not transfer to temp directory - file not found.');
+			throw new Exception(t('Could not transfer to temp directory - file not found.'));
 		} else {
 			$dir = time();
 			copy($_FILES['archive']['tmp_name'], DIR_TMP . '/' . $dir . '.zip');
@@ -60,7 +60,7 @@ class Archive {
 		$ret = @shell_exec(DIR_FILES_BIN_UNZIP . ' ' . DIR_TMP . '/' . $file . ' -d ' . DIR_TMP . '/' . $directory . '/');
 		$files = $this->f->getDirectoryContents(DIR_TMP . '/' . $directory);
 		if (count($files) == 0) {
-			throw new Exception('There was an error unpacking your theme. Perhaps you have not uploaded a valid zip file, or you do not have zip installed?');
+			throw new Exception(t('There was an error unpacking your theme. Perhaps you have not uploaded a valid zip file, or you do not have zip installed.'));
 		} else {
 			return DIR_TMP . '/' . $directory;
 		}
@@ -98,7 +98,7 @@ class Archive {
 		$themeDirFull = $this->getArchiveDirectory($dir);
 		$themeDir = substr(strrchr($themeDirFull, '/'), 1);
 		if (file_exists($this->targetDirectory . '/' . $themeDir)) {
-			throw new Exception('The directory ' . $this->targetDirectory . '/' . $themeDir . ' already exists. Perhaps this item has already been installed.');
+			throw new Exception(t('The directory %s already exists. Perhaps this item has already been installed.', $this->targetDirectory . '/' . $themeDir));
 		} else {
 			$r = @rename($themeDirFull, $this->targetDirectory . '/' . $themeDir);
 			if (!$r) {

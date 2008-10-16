@@ -186,8 +186,8 @@ $ih = Loader::helper('concrete/interface');
 		
 		<? foreach( $availableJobs as $availableJobName=>$availableJobObj ){ ?>
 		<tr> 
-			<td><?=$availableJobObj->jName ?></td>
-			<td><?=$availableJobObj->jDescription ?></td> 
+			<td><?=$availableJobObj->getJobName() ?></td>
+			<td><?=$availableJobObj->getJobDescription() ?></td> 
 			<td class="center">
 				<? if(!$availableJobObj->invalid){ ?>
 				<form method="post" action="<?=$this->url('/dashboard/jobs', 'install')?>">
