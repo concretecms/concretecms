@@ -128,10 +128,7 @@ class FormBlockController extends BlockController {
 			$mh->addParameter('formName', $this->surveyName);
 			$mh->addParameter('questionSetId', $this->questionSetId);
 			$mh->addParameter('questionAnswerPairs', $questionAnswerPairs); 
-			ob_start();
 			$mh->load('block_form_submission');
-			$mh->setBody(ob_get_contents());
-			ob_end_clean();
 			$mh->setSubject($this->surveyName.' '.t('Form Submission') );
 			//echo $mh->body.'<br>';
 			@$mh->sendMail(); 

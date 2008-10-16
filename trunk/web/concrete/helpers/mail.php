@@ -24,7 +24,7 @@ class MailHelper {
 	private $from = array();
 	private $data = array();
 	private $subject = '';
-	private $body = '';
+	public $body = '';
 	private $template;
 	
 	/** 
