@@ -31,7 +31,7 @@ class Job extends Object {
 
 	//you must override this method
 	function run(){
-		throw new Exception('the Job::run() method must be overridden by your child Job class.');
+		throw new Exception(t('the Job::run() method must be overridden by your child Job class.'));
 	}	
 	
 	public function getJobName() {return $this->jName;}
@@ -168,21 +168,21 @@ class Job extends Object {
 							$jobObjs[$jHandle]=new $className();
 							$jobObjs[$jHandle]->jHandle=$jHandle;
 							if(!$jobObjs[$jHandle] instanceof Job){
-								$jobObjs[$jHandle]->jDescription='Error: the job class "'.$className.'" must be a child class of Job'; 
+								$jobObjs[$jHandle]->jDescription= t('Error: the job class must be a child class of Job');
 								$jobObjs[$jHandle]->invalid=1;
 							}
 						  }else{	
 						  	$invalidJob = new Job();
 							$invalidJob->jName = $className;
 							$invalidJob->jHandle=$jHandle;
-							$invalidJob->jDescription = 'Error: invalid job file. The class '.$className.' was not found in '.$path; 
+							$invalidJob->jDescription = t('Error: invalid job file. The class %s was not found in %s', $className, $path); 
 							$invalidJob->invalid=1;
 							$jobObjs[$jHandle] = $invalidJob;
 						}					
 					}
 					closedir($dh);
 				}
-			}else throw new Exception( 'Invalid Jobs Directory: '.$jobClassLocation );
+			}else throw new Exception( t('Invalid Jobs Directory: %s', $jobClassLocation) );
 		}
 		
 		return $jobObjs;
@@ -211,7 +211,7 @@ class Job extends Object {
 		try{ 
 			$resultMsg=$this->run();
 			if(strlen($resultMsg)==0) 
-				$resultMsg='Job Run Successfully';
+				$resultMsg= t('Job Run Successfully');
 		}catch(Exception $e){
 			$resultMsg=$e->getMessage();
 			$this->loadError(2);
