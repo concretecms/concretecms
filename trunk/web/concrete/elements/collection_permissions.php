@@ -11,6 +11,8 @@ $ul = new UserInfoList($c);
 $ulArray = $ul->getUserInfoList();
 $ctArray = CollectionType::getList($c);
 }
+
+$saveMsg = t('Save permissions first.');
 ?>
 <div class="ccm-pane-controls">
 
@@ -69,8 +71,8 @@ $ctArray = CollectionType::getList($c);
 					cells[7].innerHTML += '<div style="white-space: nowrap; width: auto; float: left; margin-right: 5px; min-width: 90px"><input type="checkbox" name="collectionAddSubCollection[<?=$ct->getCollectionTypeID()?>][]" value="' + rowValue + '">&nbsp;<?=$ct->getCollectionTypeName()?></div>';
 				<? } ?>
 				cells[7].innerHTML += '<div class="ccm-spacer">&nbsp;</div>';
-				cells[8].innerHTML = '<div style="text-align: center; color: #aaa">Save permissions first.</div>';
-				cells[9].innerHTML = '<div style="text-align: center; color: #aaa">Save permissions first.</div>';
+				cells[8].innerHTML = '<div style="text-align: center; color: #aaa"><?=$saveMsg?></div>';
+				cells[9].innerHTML = '<div style="text-align: center; color: #aaa"><?=$saveMsg?></div>';
 			}
 		}
 		
@@ -115,8 +117,8 @@ $ctArray = CollectionType::getList($c);
 					cells[7].innerHTML += '<div style="white-space: nowrap; width: auto; float: left; margin-right: 5px; min-width: 90px"><input type="checkbox" name="collectionAddSubCollection[<?=$ct->getCollectionTypeID()?>][]" value="' + rowValue + '">&nbsp;<?=$ct->getCollectionTypeName()?></div>';
 				<? } ?>
 				cells[7].innerHTML += '<div class="ccm-spacer">&nbsp;</div>';
-				cells[8].innerHTML = '<div style="text-align: center; color: #aaa">Save permissions first.</div>';
-				cells[9].innerHTML = '<div style="text-align: center; color: #aaa">Save permissions first.</div>';
+				cells[8].innerHTML = '<div style="text-align: center; color: #aaa"><?=$saveMsg?></div>';
+				cells[9].innerHTML = '<div style="text-align: center; color: #aaa"><?=$saveMsg?></div>';
 				
 			}            
 		}
@@ -148,24 +150,24 @@ $ctArray = CollectionType::getList($c);
 		<h1 style="margin-bottom: 0px">Page Permissions</h1>
 
 		<div class="ccm-buttons" style="width: 140px; float: right"> 
-		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-modal="false" dialog-width="600" dialog-title="Choose User/Group"  dialog-height="400" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add">Add User/Group</em></span></a>
+		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-modal="false" dialog-width="600" dialog-title="Choose User/Group"  dialog-height="400" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add"><?=t('Add User/Group')?></em></span></a>
 		</div>		
 
 		<div style="float: left; width: 450px; padding-top: 15px">
-		  <strong>Set By:</strong>
+		  <strong><?=t('Set')?></strong>&nbsp;
 		   <select id="ccmToggleInheritance" style="width: 130px" name="cInheritPermissionsFrom">
-			<? if ($c->getCollectionID() > 1) { ?><option value="PARENT" <? if ($c->getCollectionInheritance() == "PARENT") { ?> selected<? } ?>>Area of Site (Hierarchy)</option><? } ?>
-			<? if ($c->getMasterCollectionID() > 1) { ?><option value="TEMPLATE"  <? if ($c->getCollectionInheritance() == "TEMPLATE") { ?> selected<? } ?>>Page Type (Master Collection)</option><? } ?>
-			<option value="OVERRIDE" <? if ($c->getCollectionInheritance() == "OVERRIDE") { ?> selected<? } ?>>Manual Override</option>
+			<? if ($c->getCollectionID() > 1) { ?><option value="PARENT" <? if ($c->getCollectionInheritance() == "PARENT") { ?> selected<? } ?>><?=t('By Area of Site (Hierarchy)')?></option><? } ?>
+			<? if ($c->getMasterCollectionID() > 1) { ?><option value="TEMPLATE"  <? if ($c->getCollectionInheritance() == "TEMPLATE") { ?> selected<? } ?>><?=t('By Page Type Defaults (in Dashboard)')?></option><? } ?>
+			<option value="OVERRIDE" <? if ($c->getCollectionInheritance() == "OVERRIDE") { ?> selected<? } ?>><?=t('Manually')?></option>
 		  </select>
 		  
 		  &nbsp;&nbsp;&nbsp;
 
-		  <strong>Currently Viewing</strong>
+		  <strong><?=t('Currently Viewing')?></strong>&nbsp;
 		  <select id="toggleGrid" style="width: 130px" onchange="togglePermissionsGrid(this.value)">
-			<option value="permissions" selected>Page Permissions</option>
-			<option value="subpage">Sub-Page Permissions</option>
-			<option value="datetime">Timed Release Settings</option>
+			<option value="permissions" selected><?=t('Page Permissions')?></option>
+			<option value="subpage"><?=t('Sub-Page Permissions')?></option>
+			<option value="datetime"><?=t('Timed Release Settings')?></option>
 		  </select>
 		</div>
 		
@@ -176,21 +178,21 @@ $ctArray = CollectionType::getList($c);
 		  $cpc = $c->getPermissionsCollectionObject();
 		  $isManual = ($c->getCollectionInheritance() == "OVERRIDE");
 	  		if ($c->getCollectionInheritance() == "PARENT") { ?>
-			<strong>This page inherits its permissions from: <a target="_blank" href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$cpc->getCollectionID()?>"><?=$cpc->getCollectionName()?></a></strong><br/><br/>
+			<strong><?=t('This page inherits its permissions from:');?> <a target="_blank" href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$cpc->getCollectionID()?>"><?=$cpc->getCollectionName()?></a></strong><br/><br/>
 			<? } ?>		
 				
             <table id="ccmPermissionsTable" width="100%" class="ccm-grid" border="0" cellspacing="0" cellpadding="0">
             <tr>
               <th><div style="width: 200px">&nbsp;</div></th>
-              <th class="permissions">Read</th>
-              <th class="permissions">Versions</th>
-              <th class="permissions">Write</th>
-              <th class="permissions">Approve</th>
-              <th class="permissions">Delete</th>
-              <th class="permissions">Admin</th>
-              <th class="subpage">User/Group May Add the Following Pages:</th>
-              <th class="datetime">Start Date/Time</th>
-              <th class="datetime">End Date/Time</th>              	
+              <th class="permissions"><?=t('Read')?></th>
+              <th class="permissions"><?=t('Versions')?></th>
+              <th class="permissions"><?=t('Write')?></th>
+              <th class="permissions"><?=t('Approve')?></th>
+              <th class="permissions"><?=t('Delete')?></th>
+              <th class="permissions"><?=t('Admin')?></th>
+              <th class="subpage"><?=t('User/Group May Add the Following Pages')?>:</th>
+              <th class="datetime"><?=t('Start Date/Time')?></th>
+              <th class="datetime"><?=t('End Date/Time')?></th>              	
             </tr>
             <? 
             $rowNum = 1;
@@ -257,15 +259,15 @@ $ctArray = CollectionType::getList($c);
             <? if (!$c->isMasterCollection()) { ?>
 				<b>Sub-pages added to this page</b>: 
 				<select id="templatePermissionsSelect" name="cOverrideTemplatePermissions">
-					<option value="0"<? if (!$c->overrideTemplatePermissions()) { ?>selected<? } ?>>Inherit master collection permissions.</option>
-					<option value="1"<? if ($c->overrideTemplatePermissions()) { ?>selected<? } ?>>Inherit the permissions of this page.</option>
+					<option value="0"<? if (!$c->overrideTemplatePermissions()) { ?>selected<? } ?>><?=t('Inherit page type default permissions.')?></option>
+					<option value="1"<? if ($c->overrideTemplatePermissions()) { ?>selected<? } ?>><?=t('Inherit the permissions of this page.')?></option>
 				</select>
 				<br><br>
 				<? } ?>
 				
 			<div class="ccm-buttons">
 <!--				<a href="javascript:void(0)" onclick="ccm_hidePane()" class="ccm-button-left cancel"><span><em class="ccm-button-close">Cancel</em></span></a>//-->
-				<a href="javascript:void(0)" onclick="ccm_submit()" class="ccm-button-right accept"><span>Save</span></a>
+				<a href="javascript:void(0)" onclick="ccm_submit()" class="ccm-button-right accept"><span><?=t('Save')?></span></a>
 			</div>	
 			<input type="hidden" name="update_permissions" value="1" class="accept">
 			<input type="hidden" name="processCollection" value="1">

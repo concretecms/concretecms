@@ -35,14 +35,14 @@ $dh = Loader::helper('date');
 $ctArray = CollectionType::getList($c->getAllowedSubCollections());
 	?>
 	
-	<h1>Add Page</h1>
+	<h1><?=t('Add Page')?></h1>
 
 	<form method="post" action="<?=$c->getCollectionAction()?>" id="ccmAddPage">		
 	<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 	<input type="hidden" name="ctID" value="0" />
 	
 	<div class="ccm-form-area">
-	<h2>Choose a Page Type</h2>
+	<h2><?=t('Choose a Page Type')?></h2>
 	
 	<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil(count($ctArray)/4)?>">
 	<a href="javascript:void(0)" class="ccm-scroller-l"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_l.png" width="28" height="79" alt="l" /></a>
@@ -69,16 +69,16 @@ $ctArray = CollectionType::getList($c->getAllowedSubCollections());
 	
 	</div>
 
-	<h2>Information about this Page</h2></td>
+	<h2><?=t('Page Information')?></h2></td>
 
 	<div class="ccm-field">
 	
 	<div class="ccm-field-one" style="width: 400px">
-	<label>Page Name</label> <input type="text" name="cName" value="" class="text" style="width: 100%" onBlur="makeAlias(this.value, 'cHandle')">
+	<label><?=t('Name')?></label> <input type="text" name="cName" value="" class="text" style="width: 100%" onBlur="makeAlias(this.value, 'cHandle')">
 	</div>
 		
 	<div class="ccm-field-two" style="width: 200px"	>
-	<label>Page Alias</label> <input type="text" name="cHandle" style="width: 100%" value="" id="cHandle">
+	<label><?=t('Alias')?></label> <input type="text" name="cHandle" style="width: 100%" value="" id="cHandle">
 	</div>
 	
 	<div class="ccm-spacer">&nbsp;</div>
@@ -86,20 +86,22 @@ $ctArray = CollectionType::getList($c->getAllowedSubCollections());
 
 	
 	<div class="ccm-field">
-	<label>Page Description</label> <textarea name="cDescription" style="width: 100%; height: 80px"></textarea>
+	<label><?=t('Description')?></label> <textarea name="cDescription" style="width: 100%; height: 80px"></textarea>
 	</div>
 	
 	</div>
 
 	<div class="ccm-buttons">
 <!--	<a href="javascript:void(0)" onclick="ccm_hidePane()" class="ccm-button-left cancel"><span><em class="ccm-button-close">Cancel</em></span></a>//-->
-	<a href="javascript:void(0)" onclick="ccm_doAddSubmit()" class="ccm-button-right accept"><span>Add Page</span></a>
+	<a href="javascript:void(0)" onclick="ccm_doAddSubmit()" class="ccm-button-right accept"><span><?=t('Add')?></span></a>
 	</div>	
 	<input type="hidden" name="add" value="1" />
 	<input type="hidden" name="processCollection" value="1">
 	<div class="ccm-spacer">&nbsp;</div>
 </form>
 </div>
+
+<? $pageTypeMSG = t('You must choose a page type.'); ?>
 
 <script type="text/javascript">
 $(function() {
@@ -149,7 +151,7 @@ $(function() {
 	
 	ccm_testAddSubmit = function() {
 		if ($("input[name=ctID]").val() < 1) {
-			alert("You must choose a page type.");
+			alert("<?=$pageTypeMSG?>");
 			return false;
 		}
 		return true;

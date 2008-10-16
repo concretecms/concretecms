@@ -1,4 +1,6 @@
 <? 
+	$applyMSG = t('Apply these changes to all blocks aliased to this block? Note: This may take some time.');
+	
 	defined('C5_EXECUTE') or die(_("Access Denied."));
 	global $c;
 	global $a;
@@ -21,7 +23,7 @@
 			ff = document.getElementById('cbOverrideAreaPermissions');
 			ff.value = '0';
 			<? if ($numChildren) { ?>
-			if (confirm("Apply these changes to all blocks aliased to this block?\n\nNote: This may take some time.")) {
+			if (confirm("<?=$applyMSG?>")) {
 				document.forms['permissionForm'].action = document.forms['permissionForm'].action + "&applyToAll=1";
 			}
 			<? } ?>
@@ -31,7 +33,7 @@
 		
 		<? if ($numChildren) { ?>
 		function applyToAll() {
-			if (confirm("Apply these changes to all blocks aliased to this block?\n\nNote: This may take some time.")) {
+			if (confirm("<?=$applyMSG?>")) {
 				document.forms['permissionForm'].action = document.forms['permissionForm'].action + "&applyToAll=1";
 				document.forms['permissionForm'].submit();
 			} else {
@@ -111,17 +113,17 @@
 	</script>
 	
 <? global $c;?>
-<h1>Block Permissions</h1>
+<h1><?=t('Block Permissions')?></h1>
 <form method="post" name="permissionForm" action="<?=$gl->getGroupUpdateAction($b)?>">
 	<span class="ccm-important">
 	<? if (!$b->overrideAreaPermissions()) { ?>
-		Permissions for this block are currently dependent on the area containing this block. If you override those permissions here, they will not match those of the area.<br/><br/>
+		<?=t('Permissions for this block are currently dependent on the area containing this block. If you override those permissions here, they will not match those of the area.')?><br/><br/>
 	<? } else { ?>
-		Permissions for this block currently override those of the parent area. To revert to the area's permissions, click <strong>revert to area permissions</strong> below.<br/><br/>
+		<?=t("Permissions for this block currently override those of the parent area. To revert to the area's permissions, click the button below.")?><br/><br/>
 	<? } ?>	
 	</span>
 		<div class="ccm-buttons" style="margin-bottom: 10px"> 
-		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-width="600" dialog-title="Choose User/Group"  dialog-height="400" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add">Add Group or User</em></span></a>
+		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-width="600" dialog-title="Choose User/Group"  dialog-height="400" dialog-modal="false" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add"><?=t('Add Group or User')?></em></span></a>
 		</div>
 
 		<div class="ccm-spacer">&nbsp;</div>
@@ -129,9 +131,9 @@
             <table id="ccmPermissionsTable" border="0" cellspacing="0" cellpadding="0" class="ccm-grid" style="width: 100%">
             <tr>
                <th style="width: 100%">&nbsp;</th>
-              <th>Read</th>
-              <th>Write</th>
-              <th>Delete</th>
+              <th><?=t('Read')?></th>
+              <th><?=t('Write')?></th>
+              <th><?=t('Delete')?></th>
                      
             </tr>
             <? 
@@ -179,8 +181,8 @@
 		<input type="hidden" name="cbOverrideAreaPermissions" value="1" id="cbOverrideAreaPermissions">
 
 		<div class="ccm-buttons">
-		<a href="javascript:void(0)" onclick="<? if ($numChildren) { ?>applyToAll();<? } ?> $('form[name=permissionForm]').get(0).submit()" class="ccm-button-right accept"><span>Update</span></a>
-		<a href="javascript:void(0)" class="ccm-button-left cancel ccm-dialog-close"><span><em class="ccm-button-close">Cancel</em></span></a>
+		<a href="javascript:void(0)" onclick="<? if ($numChildren) { ?>applyToAll();<? } ?> $('form[name=permissionForm]').get(0).submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
+		<a href="javascript:void(0)" class="ccm-button-left cancel ccm-dialog-close"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
 		</div>
 		
 </form>

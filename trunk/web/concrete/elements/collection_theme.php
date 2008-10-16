@@ -25,11 +25,11 @@ if ($plID == 0) {
 
 <div class="ccm-form-area">
 
-<h2>Choose a Page Type</h2>
+<h2><?=t('Choose a Page Type')?></h2>
 
 <? if ($c->isGeneratedCollection()) { ?>
 
-This page is a "single page," which means it doesn't have a page type associated with it.
+<?=t("This page is a single page, which means it doesn't have a page type associated with it."); ?>
 
 <? } else { ?>
 
@@ -61,7 +61,7 @@ This page is a "single page," which means it doesn't have a page type associated
 
 <? } ?>
 
-<h2>Choose a Theme</h2>
+<h2><?=t('Choose a Theme')?></h2>
 
 <div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil(count($tArray)/4)?>">
 <a href="javascript:void(0)" class="ccm-scroller-l"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_l.png" width="28" height="79" alt="l" /></a>
@@ -85,7 +85,7 @@ This page is a "single page," which means it doesn't have a page type associated
 
 <div class="ccm-buttons">
 <!--	<a href="javascript:void(0)" onclick="ccm_hidePane()" class="ccm-button-left cancel"><span><em class="ccm-button-close">Cancel</em></span></a>//-->
-	<a href="javascript:void(0)" onclick="ccm_submit()" class="ccm-button-right accept"><span>Save</span></a>
+	<a href="javascript:void(0)" onclick="ccm_submit()" class="ccm-button-right accept"><span><?=t('Save')?></span></a>
 </div>	
 <input type="hidden" name="update_theme" value="1" class="accept">
 <input type="hidden" name="processCollection" value="1">

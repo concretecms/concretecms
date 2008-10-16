@@ -10,24 +10,24 @@ if (isset($cp)) {
 	if ($c->isCheckedOut()) {
 		if (!$c->isCheckedOutByMe()) {
 			$cantCheckOut = true;
-			$statusMessage .= "Another user is currently editing this page.";
+			$statusMessage .= t("Another user is currently editing this page.");
 		}
 	}
 	
 	if ($c->getCollectionPointerID() > 0) {
-		$statusMessage .= "This page is an alias of one that actually appears elsewhere. ";
-		$statusMessage .= "<a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent'>View/Edit Original</a>";
+		$statusMessage .= t("This page is an alias of one that actually appears elsewhere. ");
+		$statusMessage .= "<a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent'>" . t('View/Edit Original') . "</a>";
 		if ($cp->canApproveCollection()) {
 			$statusMessage .= "&nbsp;|&nbsp;";
-			$statusMessage .= "<a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionPointerOriginalID() . "&ctask=remove-alias'>Remove Alias</a>";
+			$statusMessage .= "<a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionPointerOriginalID() . "&ctask=remove-alias'>" . t('Remove Alias') . "</a>";
 		}
 	} else {
 	
 		if (is_object($vo)) {
 			if (!$vo->isApproved() && !$c->isEditMode()) {
-				$statusMessage .= "This page is pending approval. ";
+				$statusMessage .= t("This page is pending approval.");
 				if ($cp->canApproveCollection() && !$c->isCheckedOut()) {
-					$statusMessage .= " <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent'>Approve Version</a>";
+					$statusMessage .= " <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent'>" . t('Approve Version') . "</a>";
 				}
 			}
 		}
@@ -35,24 +35,24 @@ if (isset($cp)) {
 		$pendingAction = $c->getPendingAction();
 		if ($pendingAction == 'MOVE') {
 			$statusMessage .= $statusMessage ? "&nbsp;|&nbsp;" : "";
-			$statusMessage .= "This page is being moved. ";
+			$statusMessage .= t("This page is being moved.");
 			if ($cp->canApproveCollection() && (!$c->isCheckedOut() || ($c->isCheckedOut() && $c->isEditMode()))) {
-				$statusMessage .= "<a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action'>Approve Move</a>";
+				$statusMessage .= "<a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action'>" . t('Approve Move') . "</a>";
 			}
 		} else if ($pendingAction == 'DELETE') {
 			$statusMessage .= $statusMessage ? "<br/>" : "";
-			$statusMessage .= "Page marked for removal. ";
+			$statusMessage .= t("This page is marked for removal.");
 			$children = $c->getNumChildren();
 			if ($children > 0) {
 				$pages = $children + 1;
-				$statusMessage .= " This will remove " . $pages . " pages.";
+				$statusMessage .= " " . t('This will remove %s pages.', $pages);
 				if ($cp->canAdminPage()) {
-					$statusMessage .= " <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action'>Approve Delete</a>";
+					$statusMessage .= " <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action'>" . t('Approve Delete') . "</a>";
 				} else {
-					$statusMessage .= " Only the super-user may approve a multi-page delete operation.";
+					$statusMessage .= " " . t('Only administrators can approve a multi-page delete operation.');
 				}
 			} else if ($children == 0 && $cp->canApproveCollection() && (!$c->isCheckedOut() || ($c->isCheckedOut() && $c->isEditMode()))) {
-				$statusMessage .= " <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action'>Approve Delete</a>";
+				$statusMessage .= " <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action'>" . t('Approve Delete') . "</a>";
 			}
 		}
 	
@@ -83,15 +83,9 @@ if (isset($cp)) {
 <div id="ccm-system-nav-wrapper1">
 <div id="ccm-system-nav-wrapper2">
 <ul id="ccm-system-nav">
-<li><a id="ccm-nav-dashboard" href="<?=$this->url('/dashboard')?>">Dashboard</a></li>
-<?/*
-<li><? if ($c->isEditMode()) { ?><span id="ccm-nav-dashboard">Dashboard</span><? } else { ?><a id="ccm-nav-dashboard" href="<?=DIR_REL?>/dashboard/">Dashboard</a><? } ?></li>
-*/?>
-<li><a id="ccm-nav-help" helpurl="<?=MENU_HELP_URL?>" href="javascript:void(0)" >Help</a></li>
-<? /*
-<li class="ccm-last"><? if ($c->isEditMode()) { ?><span id="ccm-nav-logout">Logout</span><? } else { ?><a id="ccm-nav-logout" href="<?=DIR_REL?>/login/-/logout/">Logout</a><? } ?></li>
-*/ ?>
-<li class="ccm-last"><a id="ccm-nav-logout" href="<?=$this->url('/login', 'logout')?>">Logout</a></li>
+<li><a id="ccm-nav-dashboard" href="<?=$this->url('/dashboard')?>"><?=t('Dashboard')?></a></li>
+<li><a id="ccm-nav-help" helpurl="<?=MENU_HELP_URL?>" href="javascript:void(0)" ><?=t('Help')?></a></li>
+<li class="ccm-last"><a id="ccm-nav-logout" href="<?=$this->url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>
 </ul>
 </div>
 </div>
@@ -102,17 +96,17 @@ if (isset($cp)) {
 
 <ul id="ccm-main-nav">
 <? if ($c->isArrangeMode()) { ?>
-<li><a href="#" id="ccm-nav-save-arrange">Save Positioning</a></li>
+<li><a href="#" id="ccm-nav-save-arrange"><?=t('Save Positioning')?></a></li>
 <? } else if ($c->isEditMode()) { ?>
-<li><a href="javascript:void(0)" id="ccm-nav-exit-edit">Exit Edit Mode</a></li>
-<li><a href="javascript:void(0)" id="ccm-nav-properties">Properties</a></li>
-<li><a href="javascript:void(0)" id="ccm-nav-design">Design</a></li>
-<? if ($cp->canAdminPage()) { ?><li><a href="javascript:void(0)" id="ccm-nav-permissions">Permissions</a></li><? } ?>
-<li><a href="javascript:void(0)" id="ccm-nav-versions">Versions</a></li>
-<li><a href="javascript:void(0)" id="ccm-nav-mcd">Move/Delete</a></li>
+<li><a href="javascript:void(0)" id="ccm-nav-exit-edit"><?=t('Exit Edit Mode')?></a></li>
+<li><a href="javascript:void(0)" id="ccm-nav-properties"><?=t('Properties')?></a></li>
+<li><a href="javascript:void(0)" id="ccm-nav-design"><?=t('Design')?></a></li>
+<? if ($cp->canAdminPage()) { ?><li><a href="javascript:void(0)" id="ccm-nav-permissions"><?=t('Permissions')?></a></li><? } ?>
+<li><a href="javascript:void(0)" id="ccm-nav-versions"><?=t('Versions')?></a></li>
+<li><a href="javascript:void(0)" id="ccm-nav-mcd"><?=t('Move/Delete')?></a></li>
 <? } else { ?>
-<li><? if ($cantCheckOut) { ?><span id="ccm-nav-edit">Edit Page</span><? } else { ?><a href="javascript:void(0)" id="ccm-nav-edit">Edit Page</a><? } ?></li>
-<li><a href="javascript:void(0)" id="ccm-nav-add">Add Page</a></li>
+<li><? if ($cantCheckOut) { ?><span id="ccm-nav-edit"><?=t('Edit Page')?></span><? } else { ?><a href="javascript:void(0)" id="ccm-nav-edit"><?=t('Edit Page')?></a><? } ?></li>
+<li><a href="javascript:void(0)" id="ccm-nav-add"><?=t('Add Page')?></a></li>
 <? } ?>
 </ul>
 </div>

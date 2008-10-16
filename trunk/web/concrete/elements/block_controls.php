@@ -10,12 +10,12 @@
 	$numChildren = (!$isAlias) ? $b->getNumChildren() : 0;
 	if ($isAlias) {
 		//$message = 'This item is an alias. Editing it will create a new instance of this block.';
-		$deleteMessage = 'Do you want to delete this block?';
+		$deleteMessage = t('Do you want to delete this block?');
 	} else if ($numChildren) {
-		$editMessage = 'This block is aliased by other blocks.\nIf you edit this block, your changes will effect those other blocks.\n\nAre you sure you want to edit this block?';
-		$deleteMessage = 'Do you want to delete this block? This item is an original. If you delete it, you will delete all blocks aliased to it';
+		$editMessage =  t('This block is aliased by other blocks. If you edit this block, your changes will effect those other blocks. Are you sure you want to edit this block?');
+		$deleteMessage = t('Do you want to delete this block? This item is an original. If you delete it, you will delete all blocks aliased to it');
 	} else {
-		$deleteMessage = 'Do you want to delete this block?';
+		$deleteMessage = t('Do you want to delete this block?');
 	}
 	if ($_GET['step']) {
 		$step = "&step={$_GET['step']}";

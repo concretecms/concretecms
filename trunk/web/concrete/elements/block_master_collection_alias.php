@@ -14,20 +14,20 @@ $cList = $ct->getPages();
 
 	<? if (count($cList) == 0) { ?>
 	
-	There are no pages of this type added to your website. If there were, you'd be able to choose which of those pages this block appears on.
+	<?=t("There are no pages of this type added to your website. If there were, you'd be able to choose which of those pages this block appears on.")?>
 	
 	<? } else { ?>
 	
-	<p>Choose which pages below this particular block should appear on. Any previously selected blocks may also be removed using the checkbox. Click the checkbox in the header to select/deselect all pages.</p>
+	<p><?=t("Choose which pages below this particular block should appear on. Any previously selected blocks may also be removed using the checkbox. Click the checkbox in the header to select/deselect all pages.")?></p>
 	<br/>
 		
 		<table border="0" cellspacing="0" width="100%" class="ccm-grid" cellpadding="0">
 		<tr>
 			<th>ID</th>
-			<th style="width: 100%">Name</th>
-			<th style="white-space: nowrap">Page Created</th>
-			<th style="white-space: nowrap">Page Modified</th>			
-			<th style="white-space: nowrap">Block Added <input type="checkbox" id="mc-cb-all" /></th>			
+			<th style="width: 100%"><?=t('Name')?></th>
+			<th style="white-space: nowrap"><?=t('Date Created')?></th>
+			<th style="white-space: nowrap"><?=t('Date Modified')?></th>			
+			<th style="white-space: nowrap"><input type="checkbox" id="mc-cb-all" /></th>			
 		</tr>
 	
 	<?
@@ -48,8 +48,8 @@ $cList = $ct->getPages();
 	<? } ?>
 	
 	<div class="ccm-buttons">
-	<a href="#" class="ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close">Cancel</em></span></a>
-	<a href="javascript:$('#ccmBlockMasterCollectionForm').get(0).submit()" class="ccm-button-right accept"><span>Update</span></a>
+	<a href="#" class="ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
+	<a href="javascript:$('#ccmBlockMasterCollectionForm').get(0).submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
 	</div>
 
 <script type="text/javascript">

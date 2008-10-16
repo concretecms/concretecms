@@ -13,8 +13,8 @@
 	<? } ?>
 
 	<div class="ccm-buttons">
-	<a href="javascript:void(0)" <? if ($replaceOnUnload) { ?>onclick="location.href='<?=DIR_REL?>/index.php?cID=<?=$c->getCollectionID()?>'; return true" class="ccm-button-left cancel" <? } else { ?> class="ccm-dialog-close ccm-button-left cancel"<? } ?>><span><em class="ccm-button-close">Cancel</em></span></a>
-	<a href="javascript:$('#ccm-form-submit-button').get(0).click()" class="ccm-button-right accept"><span><em class="ccm-button-add">Add</em></span></a>
+	<a href="javascript:void(0)" <? if ($replaceOnUnload) { ?>onclick="location.href='<?=DIR_REL?>/index.php?cID=<?=$c->getCollectionID()?>'; return true" class="ccm-button-left cancel" <? } else { ?> class="ccm-dialog-close ccm-button-left cancel"<? } ?>><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
+	<a href="javascript:$('#ccm-form-submit-button').get(0).click()" class="ccm-button-right accept"><span><em class="ccm-button-add"><?=t('Add')?></em></span></a>
 	
 	<!-- we do it this way so we still trip javascript validation. stupid javascript. //-->
 	
