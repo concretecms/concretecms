@@ -15,11 +15,11 @@ $numChildren = count($children);
 div#ccm-mc-page h1#ccm-sitemap-title {display: none}
 </style>
 
-<h1>Move, Copy or Delete this Page</h1>
+<h1><?=t('Move, Copy or Delete this Page')?></h1>
 
 <div class="ccm-form-area" id="ccm-mc-page">	
-	<h2>Move/Copy Page</h2>
-	<p>Using the buttons below, you may either Move/Copy this page and remain here, or jump completely to your dashboard sitemap, where you'll be able to drag and drop pages and change your entire site's hierarchy.</p>
+	<h2><?=t('Move/Copy Page')?></h2>
+	<p><?=t("Click below to move or copy the current page to a particular spot in your site.")?></p>
 		
 <? /*
 		<br/>
@@ -46,16 +46,15 @@ div#ccm-mc-page h1#ccm-sitemap-title {display: none}
 
 <div class="ccm-form-area" style="margin-top: 10px">
 			<? if (!$cp->canDeleteCollection()) { ?>
-				<h2>Delete Page</h2>
-			
-				You may not delete this page.
+				<h2><?=t('Delete Page')?></h2>
+				<?=t('You may not delete this page.');?>
 			<? } else if ($c->getCollectionID() == 1) {  ?>
-				<h2>Delete Page</h2>
-				You may not delete the home page.
+				<h2><?=t('Delete Page')?></h2>
+				<?=t('You may not delete the home page.');?>
 			<? } else {	?>
 				<? if ($c->isPendingDelete()) { ?>
-					<h2>Delete Page</h2>
-					<span class="important">This page has been marked for deletion.</span>
+					<h2><?=t('Delete Page')?></h2>
+					<span class="important"><?=t('This page has been marked for deletion.')?></span>
 					<?
 					
 					$u = new User();
@@ -63,29 +62,28 @@ div#ccm-mc-page h1#ccm-sitemap-title {display: none}
 					
 					if ($puID == $c->getPendingActionUserID()) { ?>
 						<br><br>
-						You marked this page for deletion on <strong><?=$c->getPendingActionDateTime()?></strong>.<br><br>
+						<?=t('You marked this page for deletion on <strong>%s</strong>', $c->getPendingActionDateTime())?><br><br>
 						<form method="get" id="ccmDeletePageForm" action="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>">
-							<a href="javascript:void(0)" onclick="$('#ccmDeletePageForm').get(0).submit()" class="ccm-button-left"><span>Cancel</span></a>
+							<a href="javascript:void(0)" onclick="$('#ccmDeletePageForm').get(0).submit()" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
 							<input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
 							<input type="hidden" name="ctask" value="clear_pending_action">
 						</form>
 					<? } ?>
 				<? } else if ($c->isPendingMove() || $c->isPendingCopy()) { ?>
-					<h2>Delete Page</h2>
-					Since this page is being moved or copied, it cannot be deleted.
+					<h2><?=t('Delete Page')?></h2>
+					<?=t('Since this page is being moved or copied, it cannot be deleted.')?>
 				<? } else if ($numChildren > 0 && !$cp->canAdminPage()) { ?>
-					<h2>Delete Page</h2>
-					Before you can delete this page, you must delete all of its child pages.
+					<h2><?=t('Delete Page')?></h2>
+					<?=t('Before you can delete this page, you must delete all of its child pages.')?>
 				<? } else { ?>
 					
 					<div class="ccm-buttons">
 
 					<form method="get" id="ccmDeletePageForm" action="<?=$c->getCollectionAction()?>">		
-						<a href="javascript:void(0)" onclick="if (confirm('Are you sure you wish to delete this page?')) { $('#ccmDeletePageForm').get(0).submit()}" class="ccm-button-right accept"><span>Delete Page</span></a>
-					<h2>Delete Page</h2>
-					Click "Delete" to delete this page. 
+						<a href="javascript:void(0)" onclick="if (confirm('Are you sure you wish to delete this page?')) { $('#ccmDeletePageForm').get(0).submit()}" class="ccm-button-right accept"><span><?=t('Delete Page')?></span></a>
+					<h2><?=t('Delete Page')?></h2>
 					<? if ($cp->canAdminPage() && $numChildren > 0) { ?>
-						<br><br><span class="important">This will remove <?=$numChildren?> child page(s).</span>
+						<span class="important"><?=t('This will remove %s child page(s).', $numChildren)?></span>
 					<? } ?>
 						<input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
 						<input type="hidden" name="ctask" value="delete">

@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
-<div id="dashboard-reports">You must install Adobe Flash to view this report.</div>
+<div id="dashboard-reports"><?=t('You must install Adobe Flash to view this content.')?></div>
 
 <script type="text/javascript">
 params = {

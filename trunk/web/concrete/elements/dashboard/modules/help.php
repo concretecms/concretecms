@@ -9,7 +9,7 @@ foreach($posts as $item) { ?>
 	</div>
 <? } ?>
 
-<h2>Search Documentation</h2>
+<h2><?=t('Search Documentation')?></h2>
 <form method="post" action="http://www.concrete5.org/search/">
 <input type="text" name="query" style="width: 130px" />
 <input name="search_paths[]" type="hidden" value="/documentation" />
@@ -18,5 +18,5 @@ foreach($posts as $item) { ?>
 </form>
 <br/>
 
-<h2>Full Documentation</h2>
-<div>Full documentation is available <a href="http://www.concrete5.org/documentation/">at Concrete5.org</a>.</div><br/>
+<h2><?=t('Full Documentation')?></h2>
+<div><?=t('Full documentation is available <a href="%s">at Concrete5.org</a>', 'http://www.concrete5.org/documentation/')?>.</div><br/>

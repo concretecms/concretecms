@@ -10,13 +10,13 @@ $gArray = $gl->getGroupList();
 <form method="post" name="ccmPermissionsForm" action="<?=$c->getCollectionAction()?>">
 <input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 
-<h1>Page Access</h1>
+<h1><?=t('Page Access')?></h1>
 
 <div class="ccm-form-area">
 
 <div class="ccm-field">
 
-<h2>Who can view this page?</h2>
+<h2><?=t('Who can view this page?')?></h2>
 
 <?
 
@@ -31,7 +31,7 @@ foreach ($gArray as $g) {
 
 <div class="ccm-field">
 
-<h2>Who can edit this page?</h2>
+<h2><?=t('Who can edit this page?')?></h2>
 
 <?
 
@@ -48,7 +48,7 @@ foreach ($gArray as $g) {
 
 <div class="ccm-buttons">
 <!--	<a href="javascript:void(0)" onclick="ccm_hidePane()" class="ccm-button-left cancel"><span><em class="ccm-button-close">Cancel</em></span></a>//-->
-	<a href="javascript:void(0)" onclick="ccm_submit()" class="ccm-button-right accept"><span>Save</span></a>
+	<a href="javascript:void(0)" onclick="ccm_submit()" class="ccm-button-right accept"><span><?=t('Save')?></span></a>
 </div>	
 <input type="hidden" name="update_permissions" value="1" class="accept">
 <input type="hidden" name="processCollection" value="1">

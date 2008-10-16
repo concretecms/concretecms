@@ -1,4 +1,7 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+<? $chooseMSG = t('Choose File/Image'); ?>
+<? $noneMSG = t('None selected.'); ?>
+
 <script type="text/javascript">
 var ccm_activeAssetField = "";
 ccm_chooseAsset = function(obj, activeField) {
@@ -21,7 +24,7 @@ ccm_resetAsset = function(id) {
 	var id = id.substring(0, id.indexOf('-reset'));
 	$("#" + id + '-reset').hide();
 	$("#" + id).show();
-	$("#" + id + "-display").html('None selected.');
+	$("#" + id + "-display").html('<?=$noneMSG?>');
 	$("#" + id + "-value").attr('value',0);
 }
 
@@ -38,7 +41,7 @@ $(function() {
 			height: 450,
 			modal: false,
 			href: CCM_TOOLS_PATH + "/al.php?launch_in_page=1<?= (is_object($c)?"&cID=".$c->getCollectionID():"") ?>",
-			title: "Choose File/Image"
+			title: "<?=$chooseMSG?>"
 	});
 });
 

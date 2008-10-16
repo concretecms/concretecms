@@ -13,29 +13,6 @@ if ($cp->canAdminPage()) {
 			<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 
 	<script type="text/javascript">
-		/*
-		function makeAlias(value, formInputID) {
-			alias = value.replace(/[&]/gi, "and");
-			alias = alias.replace(/[\s|.]+/gi, "-");
-			alias = alias.replace(/[^0-9A-Za-z-]/gi, "");
-			alias = alias.replace(/--/gi, '-');
-			alias = alias.toLowerCase();
-			
-			formObj = document.getElementById(formInputID);
-			formObj.value = alias;
-		}
-		*/
-		
-		function checkHandle() {
-			// checks to see if the handle you're submitting is different than original. If it is, we warn
-			// that, if you're changing a high-level page, you're going to be waiting a little while while 
-			// we re-gen the collection paths for all pages underneath
-			
-			if (document.forms['permissionForm'].cHandle.value != document.forms['permissionForm'].oldCHandle.value) {
-				return (confirm('You have changed the alias for this page. This update may take awhile, while we re-generate paths.'));
-			}
-		}
-		
 
 		function addOption(akID) {
 			akOptions = document.getElementById("akID" + akID);
@@ -81,31 +58,31 @@ if ($cp->canAdminPage()) {
 		
 	</script>
 	
-	<h1>Page Properties</h1>
+	<h1><?=t('Page Properties')?></h1>
 	
 	<div id="ccm-required-meta">
-	<h2>Standard Information</h2></td>
+	<h2><?=t('Standard Information')?></h2></td>
 
 	
 	<div class="ccm-field-one">
-	<label>Page Name</label> <input type="text" name="cName" value="<?=$c->getCollectionName()?>" class="ccm-input-text">
+	<label><?=t('Name')?></label> <input type="text" name="cName" value="<?=$c->getCollectionName()?>" class="ccm-input-text">
 	</div>
 	
 	<div class="ccm-field-two">
-	<label>Page Alias</label> <? if (!$c->isGeneratedCollection()) { ?><input s type="text" name="cHandle" class="ccm-input-text" value="<?=$c->getCollectionHandle()?>" id="cHandle"><input type="hidden" name="oldCHandle" value="<?=$c->getCollectionHandle()?>"><? } else { ?><?=$c->getCollectionHandle()?><? } ?>
+	<label><?=t('Alias')?></label> <? if (!$c->isGeneratedCollection()) { ?><input s type="text" name="cHandle" class="ccm-input-text" value="<?=$c->getCollectionHandle()?>" id="cHandle"><input type="hidden" name="oldCHandle" value="<?=$c->getCollectionHandle()?>"><? } else { ?><?=$c->getCollectionHandle()?><? } ?>
 	</div>
 	
 	
 	<div class="ccm-field-one">
 	
-	<label>Public Date/Time</label> 
+	<label><?=t('Public Date/Time')?></label> 
 	<? 
 	$dt = Loader::helper('form/date_time');
 	print $dt->datetime('cDatePublic', $c->getCollectionDatePublic()); ?>
 	</div>
 	
 	<div class="ccm-field-two">
-	<label>Owned By</label>
+	<label><?=t('Owner')?></label>
 		<? 
 		$ui = UserInfo::getByID($c->getCollectionUserID());
 		if (is_object($ui)) {
@@ -115,7 +92,7 @@ if ($cp->canAdminPage()) {
 		}
 		print '<div style="padding-top: 4px;font-size: 12px"><span id="ccm-uName">' . $currentUName . '</span>';
 		if ($cp->canAdminPage()) { ?>
-		(<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_user.php" id="ccm-edit-page-user" dialog-modal="false" dialog-width="600" dialog-height="400" dialog-title="Choose User">edit</a>)
+		(<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_user.php" id="ccm-edit-page-user" dialog-modal="false" dialog-width="600" dialog-height="400" dialog-title="Choose User"><?=t('Edit')?></a>)
 		<input type="hidden" name="uID" value="<?=$c->getCollectionUserID()?>" id="ccm-uID" />
 		
 		<script type="text/javascript">$(function() {
@@ -128,7 +105,7 @@ if ($cp->canAdminPage()) {
 		
 	
 	<div class="ccm-field">
-	<label>Page Description</label> <textarea name="cDescription" class="ccm-input-text" style="width: 570px; height: 50px"><?=$c->getCollectionDescription()?></textarea>
+	<label><?=t('Description')?></label> <textarea name="cDescription" class="ccm-input-text" style="width: 570px; height: 50px"><?=$c->getCollectionDescription()?></textarea>
 	</div>
 	
 <?
@@ -148,8 +125,8 @@ if ($cp->canAdminPage()) {
 	$usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	
 	?>
-	<h2>Custom Fields <select id="ccm-meta-custom-fields">
-		<option value="">** Add Field</option>
+	<h2><?=t('Custom Fields')?> <select id="ccm-meta-custom-fields">
+		<option value="">** <?=t('Add Field')?></option>
 		<? $cAttributes = CollectionAttributeKey::getList(); 
 		foreach($cAttributes as $ck) { 
 			if (!in_array($ck->getCollectionAttributeKeyID(), $usedKeysCombined)) {?>
@@ -168,7 +145,7 @@ if ($cp->canAdminPage()) {
 		<input type="hidden" id="ccm-meta-field-selected<?=$ak->getCollectionAttributeKeyID()?>" name="selectedAKIDs[]" value="<? if (!in_array($ak->getCollectionAttributeKeyID(), $usedKeysCombined)) { ?>0<? } else { ?><?=$ak->getCollectionAttributeKeyID()?><? } ?>" />
 		
 		<? if (!in_array($ak->getCollectionAttributeKeyID(), $requiredKeys)) { ?>
-			<a href="javascript:void(0)" class="ccm-meta-close" ccm-meta-name="<?=$ak->getCollectionAttributeKeyName()?>" id="ccm-remove-field-ak<?=$ak->getCollectionAttributeKeyID()?>">Remove Field</a>
+			<a href="javascript:void(0)" class="ccm-meta-close" ccm-meta-name="<?=$ak->getCollectionAttributeKeyName()?>" id="ccm-remove-field-ak<?=$ak->getCollectionAttributeKeyID()?>"><?=t('Remove Field')?></a>
 		<? } ?>
 		<label><?=$ak->getCollectionAttributeKeyName()?></label>
 			<? switch($ak->getCollectionAttributeKeyType()) {
@@ -236,5 +213,5 @@ if ($cp->canAdminPage()) {
 </div>
 	<div class="ccm-buttons">
 <!--	<a href="javascript:void(0)" onclick="ccm_hidePane()" class="ccm-button-left cancel"><span><em class="ccm-button-close">Cancel</em></span></a>//-->
-	<a href="javascript:void(0)" onclick="$('#ccmMetadataForm').get(0).submit()" class="ccm-button-right accept"><span>Save</span></a>
+	<a href="javascript:void(0)" onclick="$('#ccmMetadataForm').get(0).submit()" class="ccm-button-right accept"><span><?=t('Save')?></span></a>
 	</div>	

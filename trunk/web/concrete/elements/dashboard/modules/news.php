@@ -9,6 +9,6 @@ foreach($posts as $item) { ?>
 	</div>
 <? } ?>
 
-<h2>Read More</h2>
+<h2><?=t('Read More')?></h2>
 
-<p>Read more C5 news <a href="<?=$feed_read_more?>">at the official C5 developer blog</a>.</p>
+<p><?=t('Read more C5 news <a href="%s">at the C5 Developer Center</a>', $feed_read_more)?>.</p>

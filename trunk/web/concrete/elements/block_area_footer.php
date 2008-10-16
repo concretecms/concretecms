@@ -31,6 +31,6 @@ if (($a->areaAcceptsBlocks()) || $cp->canAdminPage()) { ?>
 
 	$(function() {ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>)});
 	</script>
-	<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block">Add To <?=$arHandle?></div>
+	<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To %s', $arHandle)?></div>
 	<? } ?>
 <? } ?>

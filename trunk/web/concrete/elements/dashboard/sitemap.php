@@ -23,7 +23,7 @@ var CCM_NODE_ACTION = "<?=node_action?>";
 </script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.sitemap.js"></script>
 
-<h1 id="ccm-sitemap-title">Sitemap</h1>
+<h1 id="ccm-sitemap-title"><?=t('Sitemap')?></h1>
 
 
 <table border="0" cellspacing="0" cellpadding="0">
