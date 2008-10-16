@@ -8,11 +8,16 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class IndexSearch extends Job {
 
-	public $jName="Index Search Engine";
-	public $jDescription="Index the site to allow searching to work quickly and accurately.";
 	public $jNotUninstallable=1;
 	
-
+	function getJobName() {
+		return t("Index Search Engine");
+	}
+	
+	function getJobDescription() {
+		return t("Index the site to allow searching to work quickly and accurately.");
+	}
+	
 	function run() {
 		Loader::library('indexed_search');
 		$is = new IndexedSearch();

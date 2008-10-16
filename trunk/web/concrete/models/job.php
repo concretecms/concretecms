@@ -34,7 +34,8 @@ class Job extends Object {
 		throw new Exception('the Job::run() method must be overridden by your child Job class.');
 	}	
 	
-	
+	public function getJobName() {return $this->jName;}
+	public function getJobDescription() {return $this->jDescription;}	
 	
 	//==========================================================
 	// JOB MANAGEMENT - do not override anything below this line 
@@ -245,7 +246,7 @@ class Job extends Object {
 	final public function install(){
 		$db = Loader::db();
 		$jobExists=$db->getOne( 'SELECT count(*) FROM Jobs WHERE jHandle=?', array($this->jHandle) );
-		$vals=array($this->jName,$this->jDescription,  date('Y-m-d H:i:s A'), $this->jNotUninstallable, $this->jHandle);
+		$vals=array($this->getJobName(),$this->getJobDescription(),  date('Y-m-d H:i:s A'), $this->jNotUninstallable, $this->jHandle);
 		if($jobExists){
 			$db->query('UPDATE Jobs SET jName=?, jDescription=?, jDateInstalled=?, jNotUninstallable=? WHERE jHandle=?',$vals);
 		}else{

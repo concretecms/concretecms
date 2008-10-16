@@ -8,9 +8,14 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class GenerateSitemap extends Job {
 
-	public $jName="Generate Sitemap File";
-	public $jDescription="Generate the sitemap.xml file that search engines use to crawl your site.";
-
+	public function getJobName() {
+		return t('Generate Sitemap File');
+	}
+	
+	public function getJobDescription() {
+		return t("Generate the sitemap.xml file that search engines use to crawl your site.");
+	}
+	
 	function run() {
 	
 		$ni = Loader::helper('navigation');
@@ -41,7 +46,7 @@ class GenerateSitemap extends Job {
 		
 		if (is_writable($xmlFile)) {
 			if (!$handle = fopen($xmlFile, 'w')) {
-				 throw new Exception("Cannot open $xmlFile");
+				 throw new Exception(t("Cannot open file %s", $xmlFile));
 			}
 			
 			fwrite($handle, $xmlHead);
@@ -89,10 +94,10 @@ class GenerateSitemap extends Job {
 			fflush($handle);
 			fclose($handle);
 			
-			return "Sitemap XML File Saved.";
+			return t("Sitemap XML File Saved.");
 			
 		} else {
-			throw new Exception("The file $xmlFile is not writable");
+			throw new Exception(t("The file %s is not writable", $xmlFile));
 		}
 	}
 

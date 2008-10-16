@@ -33,7 +33,7 @@
 			// postname = the name your script expects to carry the filename
 			
 			$fileID = "";
-			$filename = "None selected";
+			$filename = t("None selected.");
 			$filedisplay = 'inline';
 			$resetdisplay = 'none';
 			

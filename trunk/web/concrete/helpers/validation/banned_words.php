@@ -46,11 +46,11 @@ class ValidationBannedWordsHelper{
 		if(!file_exists($file)) 
 			$file = DIR_BASE_CORE."/config/banned_words.txt";
 		if (!file_exists($file)) {
-			$this->errorMsg="Banned words list not found.";
+			$this->errorMsg= t("Banned words list not found.");
 			return $this->errorMsg;
 		}
 		if (!is_readable($file)) {
-			$this->errorMsg="Banned words list has improper permissions.";
+			$this->errorMsg = t("Banned words list has improper permissions.");
 			return $this->errorMsg;
 		}
 		$wb = ValidationBannedWordsHelper::getCSV_simple($file);
