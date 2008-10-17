@@ -155,7 +155,7 @@
 			
 			// now we approve our version
 			$v2 = array($uID, $cID, $cvID);
-			$q2 = "update CollectionVersions set cvIsApproved = 1, cvApproverUID = ? where cID = ? and cvID = ?";
+			$q2 = "update CollectionVersions set cvIsNew = 0, cvIsApproved = 1, cvApproverUID = ? where cID = ? and cvID = ?";
 			$r = $db->query($q2, $v2);
 			
 			// next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection

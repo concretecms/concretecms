@@ -4,10 +4,10 @@ var SpellChecker={
 		var f = $('#'+field); 
 		
 		//determine and display mode
-		if(!editingTxt) editingTxt='resume editing'; //'<img src="'+CCM_REL+'/images/btn_resume_editing.gif" />';
+		if(!editingTxt) editingTxt= ccmi18n_spellchecker.resumeEditing; //'<img src="'+CCM_REL+'/images/btn_resume_editing.gif" />';
 		
 		//second click - switch back to edit mode 
-		if( trigger.innerHTML.indexOf('resume editing')>=0 ){
+		if( trigger.innerHTML.indexOf(ccmi18n_spellchecker.resumeEditing)>=0 ){
 			trigger.innerHTML=trigger.initTxt;
 			f.css('display','block');
 			$('#'+field+'SuggestBox').css('display','none');
@@ -84,7 +84,7 @@ var SpellChecker={
 			html=html+newhtml; 
 			if(i>8) break;			
 		}
-		if(html=='') html='<div>No suggestions</div>'; 
+		if(html=='') html='<div>' + ccmi18n_spellchecker.noSuggestions + '</div>'; 
 		popup.html(html);
 		popup.css('display','block');
 		setTimeout( 'document.getElementById("'+el.parentNode.parentNode.id+'").popupShown=true;',5 );
