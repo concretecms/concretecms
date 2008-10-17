@@ -1,9 +1,6 @@
-<script src="<?=ASSETS_URL_JAVASCRIPT?>/ccm_spellchecker.js"></script>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_spellchecker.css";</style>
-<style>
-label{float:left; width:25%; display:block}
-.fieldWrap{float:left; width:70%}
-</style>
+<? $spellChecker=Loader::helper('spellchecker'); ?>
+<? $spellChecker->init(); ?>
+
 
 <? if ($error->has()) { ?>
 	<ul class="ccm-error">
@@ -30,7 +27,6 @@ label{float:left; width:25%; display:block}
 		<div class="fieldWrap">
 			<?= $form->textarea('message') ?>
 			<?
-			$spellChecker=Loader::helper('spellchecker');
 			if($spellChecker->enabled() ){ ?>
 				<div class="checkSpellingTrigger" style="float:right"><a onClick="SpellChecker.checkField('message',this)">Check Spelling</a></div>
 			<? } ?>

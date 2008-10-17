@@ -19,6 +19,14 @@ class SpellcheckerHelper{
 		$mistakes = `echo "norzbibbit flagnbaggel koolalalooper" | aspell list`;
 		return (strlen($mistakes)>0)?1:0;
 	}
+	
+	/** 
+	 * Returns a link to the js library, as well as actual strings that can be used
+	 */
+	public function init() {
+		print '<script src="' . ASSETS_URL_JAVASCRIPT . '/ccm_spellchecker.js"></script>';
+		print '<style type="text/css">@import "' . ASSETS_URL_CSS . '/ccm_spellchecker.css";</style>';
+	}
 
 	public function findMisspellings($string){  
 		  

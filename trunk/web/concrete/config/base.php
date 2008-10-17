@@ -40,8 +40,19 @@ if (!defined('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL')) {
 	define('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL', false);
 }
 
-if (!defined('LANGUAGE')) {
-	define("LANGUAGE", 'de_DE');
+if (!defined('LOCALE')) {
+	define("LOCALE", 'de_DE');
+}
+
+if (strpos(LOCALE, '_') > -1) {
+	$loc = explode('_', LOCALE);
+	if (is_array($loc) && count($loc) == 2) {
+		define('LANGUAGE', $loc[0]);
+	}
+}
+
+if (!defined("LANGUAGE")) {
+	define("LANGUAGE", LOCALE);
 }
 
 define("LANGUAGE_DOMAIN_CORE", "messages");
@@ -312,7 +323,9 @@ define('SESSION', 'CONCRETE5');
 
 # Variables/constants necessary for ADODB
 define('DB_TYPE', 'mysql');
-define('DB_USE_CACHE', true);
+if (!defined('DB_USE_CACHE')) {
+	define('DB_USE_CACHE', true);
+}
 define('MULTI_SITE', 0);
 $ADODB_ASSOC_CASE =  2;
 $ADODB_ACTIVE_CACHESECS = 300;

@@ -30,8 +30,8 @@
 		}
 		
 		public function init() {
-			setlocale(LC_ALL, LANGUAGE);
-			putenv('LC_ALL=' . LANGUAGE);
+			setlocale(LC_ALL, LOCALE);
+			putenv('LC_ALL=' . LOCALE);
 			Localization::reset();		
 		}
 	}
