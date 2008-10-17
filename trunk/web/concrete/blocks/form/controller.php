@@ -24,8 +24,7 @@ class FormBlockController extends BlockController {
 		return array(
 			'delete-question' => t('Are you sure you want to delete this question?'),
 			'form-name' => t('Your form must have a name.'),
-			'form-min-1' => t('Please add at least one question to your form.')
-			
+			'form-min-1' => t('Please add at least one question to your form.')			
 		);
 	}
 	
