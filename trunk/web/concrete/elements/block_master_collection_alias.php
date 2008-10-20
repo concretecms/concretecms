@@ -24,7 +24,7 @@ $cList = $ct->getPages();
 		<table border="0" cellspacing="0" width="100%" class="ccm-grid" cellpadding="0">
 		<tr>
 			<th>ID</th>
-			<th style="width: 100%"><?=t('Name')?></th>
+			<th><?=t('Name')?></th>
 			<th style="white-space: nowrap"><?=t('Date Created')?></th>
 			<th style="white-space: nowrap"><?=t('Date Modified')?></th>			
 			<th style="white-space: nowrap"><input type="checkbox" id="mc-cb-all" /></th>			

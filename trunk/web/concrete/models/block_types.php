@@ -182,6 +182,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		var $addBTUArray = array();
 		var $addBTGArray = array();
+		public $controller;
 		
 		public static function getByHandle($handle) {
 			$where = 'btHandle = ?';
@@ -203,8 +204,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$row = $r->fetchRow();
 				$bt = new BlockType;
 				$bt->setPropertiesFromArray($row);
+				$bt->controller = Loader::controller($bt);
 				return $bt;
-			}			
+			}
+			
 		}
 		
 		function isBlockTypeInternal() {return $this->btIsInternal;}
@@ -367,7 +370,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$bt->pkgHandle = null;
 			$bt->pkgID = 0;
 			return BlockType::doInstallBlockType($btHandle, $bt, $dir, $btID);
-		}	
+		}
+		
+		/** 
+		 * Renders a particular view of a block type, using the public $controller variable as the block type's controller
+		 */
+		public function render($view) {
+			$bv = new BlockView();
+			$bv->setController($this->controller);
+			$bv->render($this, $view);
+		}			
 		
 		private function doInstallBlockType($btHandle, $bt, $dir, $btID = 0) {
 			$db = Loader::db();

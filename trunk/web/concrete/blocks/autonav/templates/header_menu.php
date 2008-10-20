@@ -2,7 +2,7 @@
 	defined('C5_EXECUTE') or die(_("Access Denied."));
 	$ba = new AutonavBlockController($b);
 	$aBlocks = $ba->generateNav();
-	$c = $b->getBlockCollectionObject();
+	global $c;
 	echo("<ul class=\"nav-header\">");
 	$isFirst = true;
 	foreach($aBlocks as $ni) {

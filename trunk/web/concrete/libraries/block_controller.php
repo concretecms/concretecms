@@ -182,6 +182,23 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$this->set('controller', $this);
 		}
 		
+		public function setupAndRun($method) {
+			if ($method) {
+				$this->task = $method;
+			}
+			if (method_exists($this, 'on_start')) {
+				call_user_func_array(array($this, 'on_start'), array($method));
+			}
+			if ($method) {
+				$this->runTask($method, array());
+			}
+			
+			if (method_exists($this, 'on_before_render')) {
+				call_user_func_array(array($this, 'on_before_render'), array($method));
+			}
+		}
+
+		
 		/**
 		 * Gets the generic Block object attached to this controller's instance
 		 * @return Block $b
