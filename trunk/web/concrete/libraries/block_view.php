@@ -172,13 +172,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$this->controller = Loader::controller($obj);
 			}
 			
-			$this->controller->runTask($view, array());
+			$this->controller->setupAndRun($view);
 			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
 			extract($args);
 			
 			if ($this->controller->getRenderOverride() != '') { 
 				$_filename = $this->controller->getRenderOverride() . '.php';
+			}
+			if (!in_array($view, array('view', 'add', 'edit'))) {
+				// then we're trying to render a custom view file, which we'll pass to the bottom functions as $_filename
+				$_filename = $view . '.php';
+				$view = 'view';
 			}
 			switch($view) {
 				case 'view':

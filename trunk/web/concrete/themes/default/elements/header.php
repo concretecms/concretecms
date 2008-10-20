@@ -18,6 +18,11 @@
 <div id="page">
 	<div id="headerSpacer"></div>
 	<div id="header">
+		
+		<? if ($c->isEditMode()) { ?>
+		<div style="min-height: 80px">
+		<? } ?>
+		
 		<div id="headerNav">
 			<?
 			$a = new Area('Header Nav');
@@ -30,11 +35,13 @@
 		// we use the "is edit mode" check because, in edit mode, the bottom of the area overlaps the item below it, because
 		// we're using absolute positioning. So in edit mode we add a bit of space so everything looks nice.
 		?>
+
+		<div class="spacer"></div>
+
 		<? if ($c->isEditMode()) { ?>
-			<div class="spacer" style="min-height: 40px"></div>
-		<? } else { ?>
-			<div class="spacer"></div>
+		</div>
 		<? } ?>
+
 
 		
 		<div id="header-area">

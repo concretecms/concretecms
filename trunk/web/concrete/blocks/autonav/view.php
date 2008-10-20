@@ -1,9 +1,7 @@
 <?
 	defined('C5_EXECUTE') or die(_("Access Denied."));
 	$aBlocks = $controller->generateNav();
-	if (!is_object($c)) {
-		$c = $b->getBlockCollectionObject();
-	}
+	global $c;
 	echo("<ul class=\"nav\">");
 	foreach($aBlocks as $ni) {
 		$_c = $ni->getCollectionObject();
