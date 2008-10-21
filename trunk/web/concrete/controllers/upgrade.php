@@ -25,7 +25,7 @@ class UpgradeController extends Controller {
 			
 			$this->set('message', $message);
 		} else if (version_compare($sav, APP_VERSION, '=')) {
-			$this->set('message', t('Your site is already up to date! The current version of Concrete5 is <b>%s</b>. You should remove this file for security.'));
+			$this->set('message', t('Your site is already up to date! The current version of Concrete5 is <b>%s</b>. You should remove this file for security.', APP_VERSION));
 		} else {
 			
 			if ($this->post('do_upgrade')) {
