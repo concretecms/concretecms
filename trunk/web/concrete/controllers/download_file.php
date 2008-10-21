@@ -13,16 +13,23 @@ class DownloadFileController extends Controller {
 	public function view($bID = 0) {
 		// get the block
 		$block = $this->getBlock($bID);
-		$file = $block->getFileObject();
-		
-		// if block password is blank download
-		if (!$block->getPassword())
-			return $this->download($file);
-		
-		// otherwise show the form
-		$this->set('bID', $bID);
-		$this->set('filename', $file->getFilename());
-		$this->set('filesize', filesize(DIR_FILES_UPLOADED."/".$file->getFilename()));
+		if (is_object($block)) {
+			$file = $block->getFileObject();
+			
+			if ($file) {
+				
+				// if block password is blank download
+				if (!$block->getPassword())
+					return $this->download($file);			
+			
+				// otherwise show the form
+				$this->set('bID', $bID);
+				$this->set('filename', $file->getFilename());
+				$this->set('filesize', filesize(DIR_FILES_UPLOADED."/".$file->getFilename()));
+			}
+			
+		}
+
 	}
 	
 	public function submit_password($bID = 0) {
@@ -60,7 +67,9 @@ class DownloadFileController extends Controller {
 	
 	private function getBlock($bID) {
 		$b = Block::getByID($bID);
-		return $b->getInstance();
+		if (is_object($b)) {
+			return $b->getInstance();
+		}
 	}
 }
 
