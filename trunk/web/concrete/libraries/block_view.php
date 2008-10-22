@@ -198,8 +198,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 							$template = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
 						}
 					} else {
+					
 						if (strpos($_filename, 'templates/') === 0) {
-							
 							if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $_filename)) {
 								$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $_filename;
 							} else if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . $_filename)) {
