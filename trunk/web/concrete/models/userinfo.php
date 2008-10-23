@@ -183,20 +183,46 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 		
+		/** 
+		 * Sets the attribute of a user info object to the specified value, and saves it in the database 
+		 */
+		public function setAttribute($attributeHandle, $value) {
+			Loader::model('user_attributes');
+			$uk = UserAttributeKey::getByHandle($attributeHandle);
+			if (is_object($uk)) {
+				$uk->saveValue($this->getUserID(), $value);
+			} else {
+				throw new Exception(t('Invalid user attribute key.'));
+			}
+		}
+		
 		public function update($data) {
 			$db = Loader::db();
 			if ($this->uID) {
+				$uName = $this->getUserName();
+				$uEmail = $this->getUserEmail();
+				$uHasAvatar = $this->hasAvatar();
+				if (isset($data['uName'])) {
+					$uName = $data['uName'];
+				}
+				if (isset($data['uEmail'])) {
+					$uEmail = $data['uEmail'];
+				}
+				if (isset($data['uHasAvatar'])) {
+					$uHasAvatar = $data['uHasAvatar'];
+				}
+				
 				if ($data['uPassword'] != null) {
 					if (User::encryptPassword($data['uPassword']) == User::encryptPassword($data['uPasswordConfirm'])) {
-						$v = array($data['uName'], $data['uEmail'], User::encryptPassword($data['uPassword']), $data['uHasAvatar']);
-						$r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ? where uID = '{$this->uID}'");
+						$v = array($uName, $uEmail, User::encryptPassword($data['uPassword']), $uHasAvatar, $this->uID);
+						$r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ? where uID = ?");
 						$res = $db->execute($r, $v);
 					} else {
 						$updateGroups = false;
 					}
 				} else {
-					$v = array($data['uName'], $data['uEmail'], $data['uHasAvatar']);
-					$r = $db->prepare("update Users set uName = ?, uEmail = ?, uHasAvatar = ? where uID = '{$this->uID}'");
+					$v = array($uName, $uEmail, $uHasAvatar, $this->uID);
+					$r = $db->prepare("update Users set uName = ?, uEmail = ?, uHasAvatar = ? where uID = ?");
 					$res = $db->execute($r, $v);
 				}
 
