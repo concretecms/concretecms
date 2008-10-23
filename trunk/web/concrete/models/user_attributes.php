@@ -56,8 +56,8 @@ class UserAttributeKey extends Object {
 				foreach($row as $k => $v) {
 					$cak->{$k} = $v;
 				}
+				return $cak;
 			}
-			return $cak;
 		}
 	}
 	

@@ -28,17 +28,48 @@ class ConcreteAvatarHelper {
 
 	function outputUserAvatar($uo, $suppressNone = false, $aspectRatio = 1.0) {			
 		if ($uo->hasAvatar()) {
-			$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
+			if (file_exists(DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif')) {
+				$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
+				$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
+			} else {
+				//jpeg
+				$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
+				$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
+			}
+			
 			$isize = getimagesize($size);
 			$isize[0] = round($isize[0]*$aspectRatio);
 			$isize[1] = round($isize[1]*$aspectRatio);
 			
-			$str = '<img class="u-avatar" src="' . REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif" width="' . $isize[0] . '" height="' . $isize[1] . '" alt="' . $uo->getUserName() . '" />';
+			$str = '<img class="u-avatar" src="' . $src . '" width="' . $isize[0] . '" height="' . $isize[1] . '" alt="' . $uo->getUserName() . '" />';
 			return $str;
 		} else if (!$suppressNone) {
 			return $this->outputNoAvatar($aspectRatio);
 		}
 	}
+	
+	public function getImagePath($uo) {
+		if (!$uo->hasAvatar()) {
+			return false;
+		}
+		
+		$cacheStr = "?" . time();
+		if (file_exists(DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif')) {
+			$base = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
+			$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
+		} else {
+			//jpeg
+			$base = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
+			$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
+		}
+		$src .= $cacheStr;
+		if (!file_exists($base)) {
+			return "";
+		} else {
+			return $src;
+		}
+	}
+
 	
 	function outputNoAvatar($aspectRatio = 1.0) {
 		$str = '<img class="u-avatar" src="' . AVATAR_NONE . '" width="' . AVATAR_WIDTH*$aspectRatio . '" height="' . AVATAR_HEIGHT*$aspectRatio . '" alt="" />';

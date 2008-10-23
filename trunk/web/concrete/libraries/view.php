@@ -159,6 +159,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (isset($this->c)) {
 				$c = $this->c;
 			}
+			extract($this->controller->getSets());
+			extract($this->controller->getHelperObjects());
 			include($this->themeDir . '/' . $file);
 		}
 
