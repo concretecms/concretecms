@@ -194,13 +194,13 @@ class UserAttributeKey extends Object {
 		$db = Loader::db();
 		$v = array($this->getKeyID(), $uID);
 		$cnt = $db->getOne("select count(ukID) from UserAttributeValues where ukID = ? and uID = ?", $v);
-		if ($cnt) {
-			array_unshift($v, $value);
-			if ($cnt > 0) {
-				$db->query("update UserAttributeValues set value = ? where ukID = ? and uID = ?", $v);
-			} else {
-				$db->query("insert into UserAttributeValues (value, ukID, uID) values (?, ?, ?)", $v);
-			}
+	
+		array_unshift($v, $value);
+
+		if ($cnt > 0) {
+			$db->query("update UserAttributeValues set value = ? where ukID = ? and uID = ?", $v);
+		} else {
+			$db->query("insert into UserAttributeValues (value, ukID, uID) values (?, ?, ?)", $v);
 		}
 	}
 	
