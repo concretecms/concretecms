@@ -289,8 +289,11 @@ define('HOME_UID', USER_SUPER_ID);
 define('HOME_HANDLE', "home");
 
 # User avatar constants - should probably be moved into the avatar helper class as avatar constants
-define('AVATAR_WIDTH', 80);
-define('AVATAR_HEIGHT', 80);
+if (!defined('AVATAR_WIDTH') && !defined('AVATAR_HEIGHT')) {
+	define('AVATAR_WIDTH', 80);
+	define('AVATAR_HEIGHT', 80);
+}
+
 define('DIR_FILES_AVATARS', DIR_FILES_UPLOADED . '/avatars');
 define('REL_DIR_FILES_AVATARS', REL_DIR_FILES_UPLOADED . '/avatars');
 define('AVATAR_NONE', ASSETS_URL_IMAGES . '/spacer.gif');

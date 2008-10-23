@@ -139,7 +139,12 @@ class ConcreteAvatarHelper {
 		return $uHasAvatar;
 	}
 	
-	function removeAvatar($uID) { 
+	function removeAvatar($ui) {
+		if (is_object($ui)) {
+			$uID = $ui->getUserID();
+		} else {
+			$uID = $ui;
+		}
 		$db = Loader::db();
 		$db->query("update Users set uHasAvatar = 0 where uID = ?", array($uID));
 	}
