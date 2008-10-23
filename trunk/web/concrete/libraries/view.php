@@ -415,10 +415,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$this->controller = Loader::controller($view);
 					$this->controller->setupAndRun();
 				}
+				
 				extract($this->controller->getSets());
 				extract($this->controller->getHelperObjects());
 				
 				// Determine which inner item to load, load it, and stick it in $innerContent
+				$content = false;
+				
 				ob_start();			
 				if ($view instanceof Page) {
 					
@@ -435,17 +438,17 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					if ($view->getCollectionTypeID() == 0 && $cFilename) {
 						$wrapTemplateInTheme = true;
 						if (file_exists(DIR_FILES_CONTENT. "{$cFilename}")) {
-							include(DIR_FILES_CONTENT. "{$cFilename}");
+							$content = DIR_FILES_CONTENT. "{$cFilename}";
 						} else if ($view->getPackageID() > 0) {
 							$file1 = DIR_PACKAGES . '/' . $view->getPackageHandle() . '/'. DIRNAME_PAGES . $cFilename;
 							$file2 = DIR_PACKAGES_CORE . '/' . $view->getPackageHandle() . '/'. DIRNAME_PAGES . $cFilename;
 							if (file_exists($file1)) {
-								include($file1);
+								$content = $file1;
 							} else if (file_exists($file2)) {
-								include($file2);
+								$content = $file2;
 							}
 						} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "{$cFilename}")) {
-							include(DIR_FILES_CONTENT_REQUIRED. "{$cFilename}");
+							$content = DIR_FILES_CONTENT_REQUIRED. "{$cFilename}";
 						}
 						
 						$themeFilename = $c->getCollectionHandle() . '.php';
@@ -453,10 +456,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					} else {
 
 						if (file_exists(DIR_BASE . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php')) {
-							include(DIR_BASE . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php');
+							$content = DIR_BASE . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php';
 							$wrapTemplateInTheme = true;
 						} else if (file_exists(DIR_BASE_CORE. '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php')) {
-							include(DIR_BASE_CORE . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php');
+							$content = DIR_BASE_CORE . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php';
 							$wrapTemplateInTheme = true;
 						}					
 						
@@ -478,23 +481,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					// we're just passing something like "/login" or whatever. This will typically just be 
 					// internal Concrete stuff, but we also prepare for potentially having something in DIR_FILES_CONTENT (ie: the webroot)
 					if (file_exists(DIR_FILES_CONTENT . "/{$view}/" . FILENAME_COLLECTION_VIEW)) {
-						include(DIR_FILES_CONTENT . "/{$view}/" . FILENAME_COLLECTION_VIEW);
+						$content = DIR_FILES_CONTENT . "/{$view}/" . FILENAME_COLLECTION_VIEW;
 					} else if (file_exists(DIR_FILES_CONTENT . "/{$view}.php")) {
-						include(DIR_FILES_CONTENT . "/{$view}.php");
+						$content = DIR_FILES_CONTENT . "/{$view}.php";
 					} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "/{$view}/" . FILENAME_COLLECTION_VIEW)) {
-						include(DIR_FILES_CONTENT_REQUIRED . "/{$view}/" . FILENAME_COLLECTION_VIEW);
+						$content = DIR_FILES_CONTENT_REQUIRED . "/{$view}/" . FILENAME_COLLECTION_VIEW;
 					} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "/{$view}.php")) {
-						include(DIR_FILES_CONTENT_REQUIRED . "/{$view}.php");
+						$content = DIR_FILES_CONTENT_REQUIRED . "/{$view}.php";
 					}
 					$wrapTemplateInTheme = true;
 					$themeFilename = $view . '.php';
 				}
 				
-				$innerContent = ob_get_contents();
-				
-				if (ob_get_level() == (OB_INITIAL_LEVEL + 1)) {
-					ob_end_clean();
-				}
 				
 				if (is_object($this->c)) {
 					$c = $this->c;
@@ -504,8 +502,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				// obtain theme information for this collection
 				if (isset($this->themeOverride)) {
 					$theme = $this->themeOverride;
-				} else if (isset($controller->theme)) {
-					$theme = $controller->theme;
+				} else if (isset($this->controller->theme)) {
+					$theme = $this->controller->theme;
 				} else if (($tmpTheme = $this->getThemeFromPath($viewPath)) != false) {
 					$theme = $tmpTheme;
 				} else if (is_object($this->c) && ($tmpTheme = $this->c->getCollectionThemeObject()) != false) {
@@ -518,6 +516,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	
 				// finally, we include the theme (which was set by setTheme and will automatically include innerContent)
 				// disconnect from our db and exit
+				if (isset($content)) {
+					include($content);
+				}
+
+				$innerContent = ob_get_contents();
+				
+				if (ob_get_level() == (OB_INITIAL_LEVEL + 1)) {
+					ob_end_clean();
+				}
+				
 				include($this->theme);
 				
 				$this->controller->runTask('on_render_complete', $this->controller->getTask());
