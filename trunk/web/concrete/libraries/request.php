@@ -62,7 +62,14 @@ class Request {
 			} else {
 				$path = Request::parsePathFromRequest('PATH_INFO');
 			}
-			$path = trim($path, '/');			
+			
+			// now, in the case of godaddy's weird host path_info screwiness.
+			if (strpos('/' . $path, DIR_REL . '/index.php/') === 0) {
+				$path = substr('/' . $path, strlen(DIR_REL . '/index.php'));
+			}
+
+			$path = trim($path, '/');
+
 			$req = new Request($path);
 		}
 		return $req;
