@@ -28,15 +28,14 @@ class ConcreteAvatarHelper {
 
 	function outputUserAvatar($uo, $suppressNone = false, $aspectRatio = 1.0) {			
 		if ($uo->hasAvatar()) {
-			if (file_exists(DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif')) {
-				$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
-				$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
-			} else {
-				//jpeg
+			if (file_exists(DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg')) {
 				$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
 				$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
+			} else {
+				// legacy
+				$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
+				$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
 			}
-			
 			$isize = getimagesize($size);
 			$isize[0] = round($isize[0]*$aspectRatio);
 			$isize[1] = round($isize[1]*$aspectRatio);
@@ -54,13 +53,12 @@ class ConcreteAvatarHelper {
 		}
 		
 		$cacheStr = "?" . time();
-		if (file_exists(DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif')) {
-			$base = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
-			$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
-		} else {
-			//jpeg
+		if (file_exists(DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg')) {
 			$base = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
 			$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
+		} else {
+			$base = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
+			$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
 		}
 		$src .= $cacheStr;
 		if (!file_exists($base)) {
@@ -124,12 +122,12 @@ class ConcreteAvatarHelper {
 		}
 		
 		
-		$newPath = DIR_FILES_AVATARS . '/' . $uID . '.gif';
+		$newPath = DIR_FILES_AVATARS . '/' . $uID . '.jpg';
 		
 		if ($im) {
 			$res = imageCopyResampled($image, $im, 0, 0, 0, 0, $finalWidth, $finalHeight, $oWidth, $oHeight);
 			if ($res) {
-				$res2 = imageGIF($image, $newPath);
+				$res2 = imageJPEG($image, $newPath);
 				if ($res2) {
 					$uHasAvatar = 1;
 				}
