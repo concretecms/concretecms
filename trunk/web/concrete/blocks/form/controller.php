@@ -325,7 +325,7 @@ class MiniSurvey{
 							<td valign="top">'.$this->loadInputType($questionRow,$showEdit).'</td>';
 					echo '</tr>';
 				}			
-				echo '<tr><td>&nbsp;</td><td><input class="formBlockSubmitButton" name="Submit" type="submit" value="Submit" /></td></tr>';
+				echo '<tr><td>&nbsp;</td><td><input class="formBlockSubmitButton" name="Submit" type="submit" value="'.t('Submit').'" /></td></tr>';
 				echo '</table>';
 			}else{
 				echo '<div id="miniSurveyTableWrap"><div id="miniSurveyPreviewTable" class="miniSurveyTable">';					

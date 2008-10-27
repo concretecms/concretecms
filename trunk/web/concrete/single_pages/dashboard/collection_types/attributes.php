@@ -134,8 +134,8 @@ if ($editMode) { ?>
 	<tr>
 		<td colspan="3" class="header">
 
-		<a href="<?=$this->url('/dashboard/collection_types')?>" class="ccm-button-left"><span>Cancel</span></a>
-		<a href="javascript:void(0)" onclick="$('#ccm-attribute-update').get(0).submit()" class="ccm-button-right"><span>Update</span></a>
+		<a href="<?=$this->url('/dashboard/collection_types')?>" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
+		<a href="javascript:void(0)" onclick="$('#ccm-attribute-update').get(0).submit()" class="ccm-button-right"><span><?=t('Update')?></span></a>
 		
 		</td>
 	</tr>

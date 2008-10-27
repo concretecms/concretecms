@@ -42,10 +42,10 @@ if ($_POST['task'] == 'add' || $_POST['update']) {
 	
 	$error = array();
 	if (!$ctHandle) {
-		$error[] = "Handle required.";
+		$error[] = t("Handle required.");
 	}
 	if (!$ctName) {
-		$error[] = "Name required.";
+		$error[] = t("Name required.");
 	}
 	
 	if (count($error) == 0) {
@@ -78,10 +78,10 @@ if ($_POST['task'] == 'add' || $_POST['update']) {
 				SinglePage::add($_POST['pageURL']);
 				$this->controller->redirect('/dashboard/collection_types?page_created=1');
 			} else {
-				$error[] = "That page has already been added.";
+				$error[] = t("That page has already been added.");
 			}
 		} else {
-			$error[] = 'That specified path doesn\'t appear to be a valid static page.';
+			$error[] = t('That specified path doesn\'t appear to be a valid static page.');
 		}
 		
 		
@@ -91,23 +91,23 @@ if ($_POST['task'] == 'add' || $_POST['update']) {
 }
 
 if ($_REQUEST['created']) { 
-	$message = 'Page Type added.';
+	$message = t('Page Type added.');
 } else if ($_REQUEST['updated']) {
-	$message = 'Page Type updated.';
+	$message = t('Page Type updated.');
 } else if ($_REQUEST['refreshed']) {
-	$message = 'Page refreshed.';
+	$message = t('Page refreshed.');
 } else if ($_REQUEST['page_created']) {
-	$message = 'Static page created.';
+	$message = t('Static page created.');
 }
 
 if ($_REQUEST['attribute_updated']) {
-	$message = 'User Attribute Updated.';
+	$message = t('User Attribute Updated.');
 }
 if ($_REQUEST['attribute_created']) {
-	$message = 'User Attribute Created.';
+	$message = t('User Attribute Created.');
 }
 if ($_REQUEST['attribute_deleted']) {
-	$message = 'User Attribute Deleted.';
+	$message = t('User Attribute Deleted.');
 }
 
 ?>
@@ -117,7 +117,7 @@ if ($ctEditMode) {
 	$ct->populateAvailableAttributeKeys();
 	?>	
 
-	<h1><span>Edit Page Type (<em class="required">*</em> - required field)</span></h1>
+	<h1><span><?=t('Edit Page Type')?> (<em class="required">*</em> - <?=t('required field')?>)</span></h1>
 	
 	<div class="ccm-dashboard-inner">
 	
@@ -129,15 +129,15 @@ if ($ctEditMode) {
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
 	<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 	<tr>
-		<td class="subheader" colspan="2">Name <span class="required">*</span></td>
-		<td class="subheader">Handle <span class="required">*</span></td>
+		<td class="subheader" colspan="2"><?=t('Name')?> <span class="required">*</span></td>
+		<td class="subheader"><?=t('Handle')?> <span class="required">*</span></td>
 	</tr>
 	<tr>
 		<td style="width: 65%" colspan="2"><input type="text" name="ctName" style="width: 100%" value="<?=$ctName?>" /></td>
 		<td style="width: 35%"><input type="text" name="ctHandle" style="width: 100%" value="<?=$ctHandle?>" /></td>
 	</tr>
 	<tr>
-		<td colspan="3" class="subheader">Icon</td>
+		<td colspan="3" class="subheader"><?=t('Icon')?></td>
 	</tr>
 	<tr>
 		<td colspan="3">
@@ -158,7 +158,7 @@ if ($ctEditMode) {
 		</td>
 	</tr>
 	<tr>
-		<td colspan="3" class="header">Available Metadata Attributes</td>
+		<td colspan="3" class="header"><?=t('Available Metadata Attributes')?></td>
 	</tr>
 	<?
 		$attribs = CollectionAttributeKey::getList();
@@ -188,8 +188,8 @@ if ($ctEditMode) {
 	<? } ?>
 	<tr>
 		<td colspan="3" class="header">
-		<? print $ih->submit('Update Page Type', 'update_page_type', 'right');?>
-		<? print $ih->button('Cancel', $this->url('/dashboard/collection_types'), 'left');?>
+		<? print $ih->submit(t('Update Page Type'), 'update_page_type', 'right');?>
+		<? print $ih->button(t('Cancel'), $this->url('/dashboard/collection_types'), 'left');?>
 		</td>
 	</tr>
     </table>
@@ -199,14 +199,14 @@ if ($ctEditMode) {
 	</form>	
 	</div>
 	
-	<h1><span>Delete Page Type</span></h1>
+	<h1><span><?=t('Delete Page Type')?></span></h1>
 	<div class="ccm-dashboard-inner">
 
 
-	<p>Click below to remove this page type entirely. <strong>Note:</strong> you may only remove page types which are not being used on your site. If a page type is being used, delete all instances of its pages first.
+	<p><?=t('Click below to remove this page type entirely. <strong>Note:</strong> you may only remove page types which are not being used on your site. If a page type is being used, delete all instances of its pages first.')?> 
 	<div class="ccm-spacer">&nbsp;</div>
 	
-	<? print $ih->button_js('Delete Page Type', "deletePageType", 'left');?>
+	<? print $ih->button_js(t('Delete Page Type'), "deletePageType", 'left');?>
 	
 	<div class="ccm-spacer">&nbsp;</div>
 	
@@ -222,7 +222,7 @@ if ($ctEditMode) {
 <? 
 } else if ($_REQUEST['task'] == 'add') {  ?>
 	
-	<h1><span>Add Page Type (<em class="required">*</em> - required field)</span></h1>
+	<h1><span><?=t('Add Page Type')?> (<em class="required">*</em> - <?=t('required field')?>)</span></h1>
 	
 	<div class="ccm-dashboard-inner">
 	
@@ -232,15 +232,15 @@ if ($ctEditMode) {
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
 	<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 	<tr>
-		<td class="subheader" colspan="2">Name <span class="required">*</span></td>
-		<td class="subheader">Handle <span class="required">*</span></td>
+		<td class="subheader" colspan="2"><?=t('Name')?> <span class="required">*</span></td>
+		<td class="subheader"><?=t('Handle')?> <span class="required">*</span></td>
 	</tr>	
 	<tr>
 		<td style="width: 65%"  colspan="2"><input type="text" name="ctName" style="width: 100%" value="<?=$_POST['ctName']?>" /></td>
 		<td style="width: 35%"><input type="text" name="ctHandle" style="width: 100%" value="<?=$_POST['ctHandle']?>" /></td>
 	</tr>
 	<tr>
-		<td colspan="3" class="subheader">Icon</td>
+		<td colspan="3" class="subheader"><?=t('Icon')?></td>
 	</tr>
 	<tr>
 		<td colspan="3">
@@ -261,7 +261,7 @@ if ($ctEditMode) {
 		</td>
 	</tr>
 	<tr>
-		<td colspan="3">Available Metadata Attributes</td>
+		<td colspan="3"><?=t('Available Metadata Attributes')?></td>
 	</tr>
 	<?
 		$attribs = CollectionAttributeKey::getList();
@@ -291,8 +291,8 @@ if ($ctEditMode) {
 	<? } ?>
 	<tr>
 		<td colspan="3" class="header">
-		<? print $ih->submit('Add Page Type', 'add_page_type', 'right');?>
-		<? print $ih->button('Cancel', $this->url('/dashboard/collection_types'), 'left');?>
+		<? print $ih->submit(t('Add Page Type'), 'add_page_type', 'right');?>
+		<? print $ih->button(t('Cancel'), $this->url('/dashboard/collection_types'), 'left');?>
 		</td>
 	</tr>
 	</table>
@@ -305,21 +305,21 @@ if ($ctEditMode) {
 <?
 } else { ?>
 
-	<h1><span>Page Types</span></h1>
+	<h1><span><?=t('Page Types')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
 
 	<? if (count($ctArray) == 0) { ?>
-		<br/><strong>No page types found.</strong><br/><br>
+		<br/><strong><?=t('No page types found.')?></strong><br/><br>
 	<? } else { ?>
 	
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
 	<table border="0" cellspacing="1" cellpadding="0" class="grid-list" width="600">
 	<tr>
-		<td class="subheader" width="100%">Name</td>
-		<td class="subheader">Handle</td>
-		<td class="subheader">Package</td>
-		<td class="subheader" colspan="2">Edit</td>
+		<td class="subheader" width="100%"><?=t('Name')?></td>
+		<td class="subheader"><?=t('Handle')?></td>
+		<td class="subheader"><?=t('Package')?></td>
+		<td class="subheader" colspan="2"><?=t('Edit')?></td>
 	</tr>
 	<? foreach ($ctArray as $ct) { ?>
 	<tr>
@@ -330,16 +330,16 @@ if ($ctEditMode) {
 				$package = Package::getByID($ct->getPackageID());
 				print $package->getPackageName(); 
 			} else {
-				print '(None)';
+				print t('(None)');
 			}
 			?></td>
 		<td>
 		<? if ($ct->getMasterCollectionID()) {?>
-			<? print $ih->button_js('Defaults', "window.open('" . $this->url('/dashboard/collection_types?cID=' . $ct->getMasterCollectionID() . '&task=load_master')."')", 'left', false, array('title'=>'Lets you set default permissions and blocks for a particular page type.'));?>
+			<? print $ih->button_js(t('Defaults'), "window.open('" . $this->url('/dashboard/collection_types?cID=' . $ct->getMasterCollectionID() . '&task=load_master')."')", 'left', false, array('title'=>t('Lets you set default permissions and blocks for a particular page type.')) );?>
 		<? } ?>
 	
 		</td>
-		<td><? print $ih->button('Edit', $this->url('/dashboard/collection_types?ctID=' . $ct->getCollectionTypeID() . '&task=edit'))?></td>
+		<td><? print $ih->button(t('Edit'), $this->url('/dashboard/collection_types?ctID=' . $ct->getCollectionTypeID() . '&task=edit'))?></td>
 
 	</tr>
 	<? } ?>
@@ -351,14 +351,14 @@ if ($ctEditMode) {
 	
 	<br/>
 	<div class="ccm-buttons">
-		<a class="ccm-button" href="<?=$this->url('/dashboard/collection_types?task=add')?>"><span><em class="ccm-button-add">Add a Page Type</em></span></a>	
+		<a class="ccm-button" href="<?=$this->url('/dashboard/collection_types?task=add')?>"><span><em class="ccm-button-add"><?=t('Add a Page Type')?></em></span></a>	
 	</div>
 	<div class="ccm-spacer">&nbsp;</div>
 
 	</div>
 	
 	
-	<h1><span>Page Attributes</span></h1>
+	<h1><span><?=t('Page Attributes')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
 	<? if (count($attribs) > 0) { ?>
@@ -366,8 +366,8 @@ if ($ctEditMode) {
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
 	<table border="0" cellspacing="1" cellpadding="0" class="grid-list">
 	<tr>
-		<td class="subheader" width="100%">Name</td>
-		<td class="subheader">Handle</td>
+		<td class="subheader" width="100%"><?=t('Name')?></td>
+		<td class="subheader"><?=t('Handle')?></td>
 		<td class="subheader">&nbsp;</td>
 		<td class="subheader">&nbsp;</td>
 	</tr>
@@ -376,8 +376,8 @@ if ($ctEditMode) {
 	<tr>
 		<td><?=$ak->getCollectionAttributeKeyName()?></td>
 		<td style="white-space: nowrap"><?=$ak->getCollectionAttributeKeyHandle()?></td>
-		<td><? print $ih->button('Edit', $this->url('/dashboard/collection_types/attributes?akID=' . $ak->getCollectionAttributeKeyID() . '&task=edit'))?></td>
-		<td><? print $ih->button('Delete', "javascript:if (confirm('Are you sure you wish to delete this attribute?')) { location.href='" . $this->url('/dashboard/collection_types/attributes?akID=' . $ak->getCollectionAttributeKeyID() . '&task=delete') . "' }")?></td>
+		<td><? print $ih->button(t('Edit'), $this->url('/dashboard/collection_types/attributes?akID=' . $ak->getCollectionAttributeKeyID() . '&task=edit'))?></td>
+		<td><? print $ih->button(t('Delete'), "javascript:if (confirm('".t('Are you sure you wish to delete this attribute?')."')) { location.href='" . $this->url('/dashboard/collection_types/attributes?akID=' . $ak->getCollectionAttributeKeyID() . '&task=delete') . "' }")?></td>
 	</tr>
 	<? } ?>
 	</table>
@@ -385,13 +385,13 @@ if ($ctEditMode) {
 	
 	<? } else { ?>
 		
-	<br/><strong>No page attributes defined.</strong><br/><br/>
+	<br/><strong><?=t('No page attributes defined.')?></strong><br/><br/>
 		
 	<? } ?>
 	
 	<br/>
 	<div class="ccm-buttons">
-		<a class="ccm-button" href="<?=$this->url('/dashboard/collection_types/attributes')?>"><span>Add Page Attribute</span></a>	
+		<a class="ccm-button" href="<?=$this->url('/dashboard/collection_types/attributes')?>"><span><?=t('Add Page Attribute')?></span></a>	
 	</div>
 	<div class="ccm-spacer">&nbsp;</div>
 
@@ -399,22 +399,22 @@ if ($ctEditMode) {
 	
 	
 
-	<h1><span>Single Pages</span></h1>
+	<h1><span><?=t('Single Pages')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
 	<table border="0" cellspacing="1" cellpadding="0" class="grid-list" width="600">
 	<tr>
-		<td colspan="4" class="header">Already Installed</td>
+		<td colspan="4" class="header"><?=t('Already Installed')?></td>
 	</tr>
 	<tr>
-		<td class="subheader" width="100%">Name</td>
-		<td class="subheader">Path</td>
-		<td class="subheader">Package</td>
+		<td class="subheader" width="100%"><?=t('Name')?></td>
+		<td class="subheader"><?=t('Path')?></td>
+		<td class="subheader"><?=t('Package')?></td>
 		<td class="subheader">&nbsp;</td>
 	</tr>
 	<? if (count($generated) == 0) { ?>
-		<td colspan="4">No pages found.</td>
+		<td colspan="4"><?=t('No pages found.')?></td>
 	<? } else { ?>
 	
 	<? foreach ($generated as $p) { ?>
@@ -424,7 +424,7 @@ if ($ctEditMode) {
 			$packageHandle = $package->getPackageHandle();
 			$packageName = $package->getPackageName();
 		} else {
-			$packageName = '(None)';
+			$packageName = t('(None)');
 		}
 		
 	?>
@@ -433,17 +433,17 @@ if ($ctEditMode) {
 		<td><?=$p->getCollectionPath()?></td>
 		<td><? print $packageName; ?></td>
 		<td>
-			<? print $ih->button('Refresh',$this->url('/dashboard/collection_types/?p=' . $p->getCollectionID() . '&task=refresh'), 'left', false, array('title'=>'Regenerates the page title and permissions based on their filesystem settings.'));?>
+			<? print $ih->button(t('Refresh'),$this->url('/dashboard/collection_types/?p=' . $p->getCollectionID() . '&task=refresh'), 'left', false, array('title'=>'Regenerates the page title and permissions based on their filesystem settings.'));?>
 		</td>
 	</tr>
 	<? }
 	
 	} ?>
 	<tr>
-		<td colspan="4" class="header">Add Single Page</td>
+		<td colspan="4" class="header"><?=t('Add Single Page')?></td>
 	</tr>
 	<tr>
-		<td colspan="4">The page you want to add is available at:
+		<td colspan="4"><?=t('The page you want to add is available at:')?>
 		<br>
 		<form method="post" id="add_static_page_form" action="<?=$this->url('/dashboard/collection_types/')?>">
 		<table border="0" cellspacing="0" cellpadding="0">
@@ -451,7 +451,7 @@ if ($ctEditMode) {
 		<td>
 		<?=BASE_URL?>/<input type="text" name="pageURL" value="<?=$_POST['pageURL']?>" style="width: 200px" /></td>
 		<td>
-		<? print $ih->submit('Add', 'add_static_page_form', 'left');?></td>
+		<? print $ih->submit(t('Add'), 'add_static_page_form', 'left');?></td>
 		</tr>
 		</table>
 		

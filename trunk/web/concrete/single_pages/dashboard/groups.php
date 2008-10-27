@@ -31,7 +31,7 @@ if ($_POST['add'] || $_POST['update']) {
 	
 	$error = array();
 	if (!$gName) {
-		$error[] = "Name required.";
+		$error[] = t("Name required.");
 	}
 
 	if (count($error) == 0) {
@@ -47,9 +47,9 @@ if ($_POST['add'] || $_POST['update']) {
 }
 
 if ($_GET['created']) {
-	$message = "Group Created.";
+	$message = t("Group Created.");
 } else if ($_GET['updated']) {
-	$message = "Group Updated.";
+	$message = t("Group Updated.");
 }
 
 if (!$editMode) {
@@ -63,13 +63,13 @@ if ($gl->getTotal() > 0) {
 
 ?>
 
-<h1><span>Groups</span></h1>
+<h1><span><?=t('Groups')?></span></h1>
 <div class="ccm-dashboard-inner">
 
 <form id="ccm-group-search" method="get" style="top: -30px; left: 10px" action="<?=$this->url('/dashboard/groups')?>">
 <div id="ccm-group-search-fields">
 <input type="text" id="ccm-group-search-keywords" name="gKeywords" value="<?=$_REQUEST['gKeywords']?>" class="ccm-text" style="width: 100px" />
-<input type="submit" value="Search" />
+<input type="submit" value="<?=t('Search')?>" />
 <input type="hidden" name="group_submit_search" value="1" />
 </div>
 </form>
@@ -89,7 +89,7 @@ if ($gl->getTotal() > 0) {
 <? }
 
 if ($pOptions['needPaging']) { ?>
-<div id="ccm-group-paging">
+	<div id="ccm-group-paging">
 	<? include(DIR_FILES_ELEMENTS_CORE . '/search_results_paging.php'); ?>
 	</div>
 <? }
@@ -97,13 +97,13 @@ if ($pOptions['needPaging']) { ?>
 
 } else { ?>
 
-	<p>No groups found.</p>
+	<p><?=t('No groups found.')?></p>
 	
 <? } ?>
 
 </div>
 
-<h1><span>Add Group (<em class="required">*</em> - required field)</span></h1>
+<h1><span><?=t('Add Group')?> (<em class="required">*</em> - <?=t('required field')?>)</span></h1>
 
 <div class="ccm-dashboard-inner">
 
@@ -111,19 +111,19 @@ if ($pOptions['needPaging']) { ?>
 <div style="margin:0px; padding:0px; width:100%; height:auto" >	
 <table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="subheader" colspan="3">Name <span class="required">*</span></td>
+	<td class="subheader" colspan="3"><?=t('Name')?> <span class="required">*</span></td>
 </tr>
 <tr>
 	<td colspan="3"><input type="text" name="gName" style="width: 100%" value="<?=$_POST['gName']?>" /></td>
 </tr>
 <tr>
-	<td class="subheader" colspan="3">Description</td>
+	<td class="subheader" colspan="3"><?=t('Description')?></td>
 </tr>
 <tr>
 	<td colspan="3"><textarea name="gDescription" style="width: 100%; height: 120px"><?=$_POST['gDescription']?></textarea></td>
 </tr>
 <tr>
-	<td colspan="3" class="header"><input type="hidden" name="add" value="1" /><?=$ih->submit('Add', 'add-group-form')?></td>
+	<td colspan="3" class="header"><input type="hidden" name="add" value="1" /><?=$ih->submit(t('Add'), 'add-group-form')?></td>
 </tr>
 </table>
 </div>
@@ -134,7 +134,7 @@ if ($pOptions['needPaging']) { ?>
 
 
 <? } else { ?>
-	<h1><span>Edit Group</span></h1>
+	<h1><span><?=t('Edit Group')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
 		<form method="post" id="update-group-form" action="<?=$this->url('/dashboard/groups/')?>">
@@ -144,13 +144,13 @@ if ($pOptions['needPaging']) { ?>
 		<div style="margin:0px; padding:0px; width:100%; height:auto" >	
 		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 		<tr>
-			<td class="subheader" colspan="3">Name <span class="required">*</span></td>
+			<td class="subheader" colspan="3"><?=t('Name')?> <span class="required">*</span></td>
 		</tr>
 		<tr>
 			<td colspan="3"><input type="text" name="gName" style="width: 100%" value="<?=$gName?>" /></td>
 		</tr>
 		<tr>
-			<td class="subheader" colspan="3">Description</td>
+			<td class="subheader" colspan="3"><?=t('Description')?></td>
 		</tr>
 		<tr>
 			<td colspan="3"><textarea name="gDescription" style="width: 100%; height: 120px"><?=$gDescription?></textarea></td>
@@ -158,8 +158,8 @@ if ($pOptions['needPaging']) { ?>
 		<tr>
 			<td colspan="3" class="header">
 			<input type="hidden" name="update" value="1" />
-			<?=$ih->submit('Add', 'update-group-form')?>
-			<?=$ih->button('Cancel', $this->url('/dashboard/groups'), 'left')?>
+			<?=$ih->submit(t('Add'), 'update-group-form')?>
+			<?=$ih->button(t('Cancel'), $this->url('/dashboard/groups'), 'left')?>
 			</td>
 		</tr>
 		</table>
@@ -168,5 +168,5 @@ if ($pOptions['needPaging']) { ?>
 		<br>
 		</form>	
 	</div>
-	<? 
+	<?  
 }

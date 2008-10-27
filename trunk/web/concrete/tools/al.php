@@ -69,12 +69,12 @@ ccm_alSelectItem = function(obj, e) {
 		var html = '<div class="ccm-menu-tl"><div class="ccm-menu-tr"><div class="ccm-menu-t"></div></div></div>';
 		html += '<div class="ccm-menu-l"><div class="ccm-menu-r">';
 		html += '<ul>';
-		html += '<li><a class="ccm-icon" id="menuVisit' + bID + '" href="' + filepath + '" target="_blank"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">View/Download<\/span><\/a><\/li>';
-		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="350" dialog-height="350" dialog-title="File Properties" id="menuProperties' + bID + '" href="<?=REL_DIR_FILES_TOOLS_BLOCKS?>/library_file/properties.php?bID=' + bID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/edit_small.png)">Properties<\/span><\/a><\/li>';
+		html += '<li><a class="ccm-icon" id="menuVisit' + bID + '" href="' + filepath + '" target="_blank"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)"><?=t('View/Download')?><\/span><\/a><\/li>';
+		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="350" dialog-height="350" dialog-title="<?=t('File Properties')?>" id="menuProperties' + bID + '" href="<?=REL_DIR_FILES_TOOLS_BLOCKS?>/library_file/properties.php?bID=' + bID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/edit_small.png)"><?=t('Properties')?><\/span><\/a><\/li>';
 		<? if ($viewType == 'popup') { ?>
-			html += '<li><a id="" class="ccm-icon" href="javascript:void(0)" onclick="ccm_priSelectAssetAuto(\'' + $(obj).attr('id') + '\')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">Select<\/span><\/a><\/li>';
+			html += '<li><a id="" class="ccm-icon" href="javascript:void(0)" onclick="ccm_priSelectAssetAuto(\'' + $(obj).attr('id') + '\')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)"><?=t('Select')?><\/span><\/a><\/li>';
 		<? } else { ?>
-			html += '<li><a class="ccm-icon" href="javascript:void(0)" id="menuDelete' + bID +'"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">Delete File<\/span><\/a><\/li>';
+			html += '<li><a class="ccm-icon" href="javascript:void(0)" id="menuDelete' + bID +'"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)"><?=t('Delete File')?><\/span><\/a><\/li>';
 		<? } ?>
 		html += '</ul>';
 		html += '</div></div>';
@@ -83,7 +83,7 @@ ccm_alSelectItem = function(obj, e) {
 		
 		$('a#menuProperties' + bID).dialog();
 		$('a#menuDelete' + bID).click(function() {
-			if (confirm('Are you sure you want to delete this file?')) {
+			if (confirm('<?=t('Are you sure you want to delete this file?')?>')) {
 				$.getJSON('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_delete.php', {'bID': bID}, function(resp) {
 					parseJSON(resp, function() {
 						if(resp.error==1) alert(resp.message);
@@ -228,7 +228,7 @@ if (is_array($assetLibraryPassThru)) {
 ?>
 
 <div id="ccm-al-add-asset">
-<a id="ccm-button-browse" class="ccm-button" dialog-width="600" dialog-height="525" dialog-modal="false" dialog-title="Add File" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_upload.php?cID=<?=$_REQUEST['cID']?>"><span><em class="ccm-button-add">Add File</em></span></a>
+<a id="ccm-button-browse" class="ccm-button" dialog-width="600" dialog-height="525" dialog-modal="false" dialog-title="<?=t('Add File')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_upload.php?cID=<?=$_REQUEST['cID']?>"><span><em class="ccm-button-add"><?=t('Add File')?></em></span></a>
 </div>
 
 <div class="ccm-spacer">&nbsp;</div>
@@ -240,27 +240,27 @@ if (is_array($assetLibraryPassThru)) {
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >
 	<table class="ccm-al-search-form" border="0" cellspacing="1" cellpadding="0">
 	<tr>
-		<td class="header">Filename</td>
-		<td class="header">Added on or after:</td>
-		<td class="header">Type</td>
-		<td class="header">Sort By</td>
-		<td class="header">View</td>
+		<td class="header"><?=t('Filename')?></td>
+		<td class="header"><?=t('Added on or after:')?></td>
+		<td class="header"><?=t('Type')?></td>
+		<td class="header"><?=t('Sort By')?></td>
+		<td class="header"><?=t('View')?></td>
 		<td class="header">&nbsp;</td>
 	</tr>
 	<tr>
 		<td><input id="fileSearch_bFile" type="text" name="bFile" style="width: 100px" value="<?=$_REQUEST['bFile']?>"></td>
 		<td style="white-space: nowrap"><input id="fileSearch_bDateAdded" type="text" style="width: 100px" name="bDateAdded" id="bDateAdded" value="<?=$_REQUEST['bDateAdded']?>">
 		<td><select name="type">
-				<option value="">* All</option>
+				<option value="">* <?=t('All')?></option>
 			<? foreach($fileTypes as $ft) { ?>
 				<option value="<?=$ft?>"<? if ($_REQUEST['type'] == $ft) { ?> selected <? } ?>><?=$ft?></option>
 			<? } ?>
 		</select></td>
 		<td><select id="fileSearchSorting" name="sort">
-			<option value="origfilename"<? if ($_REQUEST['sort'] == 'filename') { ?> selected <? } ?>>Filename</option>
-			<option value="bDateAdded desc"<? if ($_REQUEST['sort'] == 'bDateAdded desc') { ?> selected <? } ?>>Most Recent Files First</option>
-			<option value="origfilename desc"<? if ($_REQUEST['sort'] == 'filename desc') { ?> selected <? } ?>>Filename descending</option>
-			<option value="bDateAdded"<? if ($_REQUEST['sort'] == 'bDateAdded') { ?> selected <? } ?>>Earliest First</option>
+			<option value="origfilename"<? if ($_REQUEST['sort'] == 'filename') { ?> selected <? } ?>><?=t('Filename')?></option>
+			<option value="bDateAdded desc"<? if ($_REQUEST['sort'] == 'bDateAdded desc') { ?> selected <? } ?>><?=t('Most Recent Files First')?></option>
+			<option value="origfilename desc"<? if ($_REQUEST['sort'] == 'filename desc') { ?> selected <? } ?>><?=t('Filename descending')?></option>
+			<option value="bDateAdded"<? if ($_REQUEST['sort'] == 'bDateAdded') { ?> selected <? } ?>><?=t('Earliest First')?></option>
 		</select></td>		
 
 		<td><select id="search_page_size" name="view">
@@ -273,7 +273,7 @@ if (is_array($assetLibraryPassThru)) {
 
 		<td style="text-align: center">
 		<input type="submit" style="display: none" id="ccm-al-search-button" name="submit" />
-		<a class="ccm-button-right accept" onclick="$('#ccm-al-search-button').get(0).click()" href="javascript:void(0)"><span>Search</span></a>
+		<a class="ccm-button-right accept" onclick="$('#ccm-al-search-button').get(0).click()" href="javascript:void(0)"><span><?=t('Search')?></span></a>
 		</td>
 	</tr>
 	</table>

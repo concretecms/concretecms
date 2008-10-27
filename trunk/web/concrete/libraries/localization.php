@@ -1,6 +1,7 @@
 <?
 
 	function t($text) {
+		return 'X'.$text.'X';
 		if (func_num_args() == 1) {
 			return gettext($text);
 		}

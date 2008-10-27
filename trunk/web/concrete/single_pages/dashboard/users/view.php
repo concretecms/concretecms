@@ -15,13 +15,13 @@ $form = Loader::helper('form');
 $av = Loader::helper('concrete/avatar');
 
 if ($_REQUEST['updated_attribute']) {
-	$message = 'User Attribute Updated.';
+	$message = t('User Attribute Updated.');
 }
 if ($_REQUEST['created_attribute']) {
-	$message = 'User Attribute Created.';
+	$message = t('User Attribute Created.');
 }
 if ($_REQUEST['attribute_deleted']) {
-	$message = 'User Attribute Deleted.';
+	$message = t('User Attribute Deleted.');
 }
 
 if ($_GET['uID']) {
@@ -31,13 +31,13 @@ if ($_GET['uID']) {
 		if ($_GET['task'] == 'activate') {
 			$uo->activate();
 			$uo = UserInfo::getByID($_GET['uID']);
-			$message = "User activated.";
+			$message = t("User activated.");
 		}
 
 		if ($_GET['task'] == 'validate_email') {
 			$uo->markValidated();
 			$uo = UserInfo::getByID($_GET['uID']);
-			$message = "Email marked as valid.";
+			$message = t("Email marked as valid.");
 		}
 		
 		
@@ -50,7 +50,7 @@ if ($_GET['uID']) {
 		if ($_GET['task'] == 'deactivate') {
 			$uo->deactivate();
 			$uo = UserInfo::getByID($_GET['uID']);
-			$message = "User deactivated.";
+			$message = t("User deactivated.");
 		}
 		
 		
@@ -66,40 +66,40 @@ if ($_GET['uID']) {
 			
 			if ($password) {
 				if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
-					$error[] = 'A password must be between ' . USER_PASSWORD_MINIMUM . ' and ' . USER_PASSWORD_MAXIMUM . ' characters';
+					$error[] = t('A password must be between %s and %s characters',USER_PASSWORD_MINIMUM,USER_PASSWORD_MAXIMUM);
 				}
 			}
 			
 			if (!$vals->email($_POST['uEmail'])) {
-				$error[] = 'Invalid email address provided.';
+				$error[] = t('Invalid email address provided.');
 			} else if (!$valc->isUniqueEmail($_POST['uEmail']) && $uo->getUserEmail() != $_POST['uEmail']) {
-				$error[] = "The email address '{$_POST['uEmail']}' is already in use. Please choose another.";
+				$error[] = t("The email address '%s' is already in use. Please choose another.",$_POST['uEmail']);
 			}
 			
 			if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) {
 				if (strlen($username) < USER_USERNAME_MINIMUM) {
-					$error[] = 'A username must be between at least ' . USER_USERNAME_MINIMUM . ' characters long.';
+					$error[] = t('A username must be between at least %s characters long.',USER_USERNAME_MINIMUM);
 				}
 	
 				if (strlen($username) > USER_USERNAME_MAXIMUM) {
-					$error[] = 'A username cannot be more than ' . USER_USERNAME_MAXIMUM . ' characters long.';
+					$error[] = t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM);
 				}
 
 				if (strlen($username) >= USER_USERNAME_MINIMUM && !$vals->alphanum($username)) {
-					$error[] = 'A username may only contain letters or numbers.';
+					$error[] = t('A username may only contain letters or numbers.');
 				}
 				if (!$valc->isUniqueUsername($username) && $uo->getUserName() != $username) {
-					$error[] = "The username '{$username}' already exists. Please choose another";
+					$error[] = t("The username '%s' already exists. Please choose another",$username);
 				}		
 			}
 			
 			if (strlen($password) >= USER_PASSWORD_MINIMUM && !$vals->password($password)) {
-				$error[] = 'A password may not contain ", \', >, <, or any spaces.';
+				$error[] = t('A password may not contain ", \', >, <, or any spaces.');
 			}
 			
 			if ($password) {
 				if ($password != $passwordConfirm) {
-					$error[] = 'The two passwords provided do not match.';
+					$error[] = t('The two passwords provided do not match.');
 				}
 			}
 					
@@ -118,9 +118,9 @@ if ($_GET['uID']) {
 					$uo->updateSelectedUserAttributes($data['editAKID'], $_POST);
 					$uo->updateGroups($_POST['gID']);
 
-					$message = "User updated successfully. ";
+					$message = t("User updated successfully. ");
 					if ($password) {
-						$message .= "Password changed.";
+						$message .= t("Password changed.");
 					}
 					$editComplete = true;
 					// reload user object
@@ -145,39 +145,39 @@ if ($_POST['create']) {
 	$password = $_POST['uPassword'];
 	
 	if (!$vals->email($_POST['uEmail'])) {
-		$error[] = 'Invalid email address provided.';
+		$error[] = t('Invalid email address provided.');
 	} else if (!$valc->isUniqueEmail($_POST['uEmail'])) {
-		$error[] = "The email address '{$_POST['uEmail']}' is already in use. Please choose another.";
+		$error[] = t("The email address '%s' is already in use. Please choose another.",$_POST['uEmail']);
 	}
 	
 	if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) {
 		if (strlen($username) < USER_USERNAME_MINIMUM) {
-			$error[] = 'A username must be between at least ' . USER_USERNAME_MINIMUM . ' characters long.';
+			$error[] = t('A username must be between at least %s characters long.',USER_USERNAME_MINIMUM);
 		}
 
 		if (strlen($username) > USER_USERNAME_MAXIMUM) {
-			$error[] = 'A username cannot be more than ' . USER_USERNAME_MAXIMUM . ' characters long.';
+			$error[] = t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM);
 		}
 
 		if (strlen($username) >= USER_USERNAME_MINIMUM && !$vals->alphanum($username)) {
-			$error[] = 'A username may only contain letters or numbers.';
+			$error[] = t('A username may only contain letters or numbers.');
 		}
 		if (!$valc->isUniqueUsername($username)) {
-			$error[] = "The username '{$username}' already exists. Please choose another";
+			$error[] = t("The username '%s' already exists. Please choose another",$username);
 		}		
 	}
 	
 	if ($username == USER_SUPER) {
-		$error[] = 'Invalid Username';
+		$error[] = t('Invalid Username');
 	}
 
 	
 	if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
-		$error[] = 'A password must be between ' . USER_PASSWORD_MINIMUM . ' and ' . USER_PASSWORD_MAXIMUM . ' characters';
+		$error[] = t('A password must be between %s and %s characters',USER_PASSWORD_MINIMUM,USER_PASSWORD_MAXIMUM);
 	}
 		
 	if (strlen($password) >= USER_PASSWORD_MINIMUM && !$vals->password($password)) {
-		$error[] = 'A password may not contain ", \', >, <, or any spaces.';
+		$error[] = t('A password may not contain ", \', >, <, or any spaces.');
 	}
 
 	if (!$error) {
@@ -195,9 +195,9 @@ if ($_POST['create']) {
 			$uo->updateGroups($_POST['gID']);
 			$uID = $uo->getUserID();
 
-			$message = "User created successfully. ";
+			$message = t("User created successfully. ");
 		} else {
-			$error[] = 'An error occurred while trying to create the account.';
+			$error[] = t('An error occurred while trying to create the account.');
 		}
 		
 	}		
@@ -232,10 +232,10 @@ if ((!is_object($uo))) {
 			header("Content-Title: User Report - Run on {$date}");
 			
 			echo("<table><tr>");
-			echo("<td><b>Username</b></td>");
-			echo("<td><b>Email Address</b></td>");
-			echo("<td><b>Registered</b></td>");
-			echo("<td><b># Logins</b></td>");
+			echo("<td><b>".t('Username')."</b></td>");
+			echo("<td><b>".t('Email Address')."</b></td>");
+			echo("<td><b>".t('Registered')."</b></td>");
+			echo("<td><b>".t('# Logins')."</b></td>");
 			$attribs = UserAttributeKey::getList();
 			foreach($attribs as $ak) {
 				echo("<td><b>" . $ak->getKeyName() . "</b></td>");
@@ -266,7 +266,7 @@ if (is_object($uo)) {
 
 		<div class="wrapper">
 		<div class="actions">
-		<span class="required">*</span> - required field
+		<span class="required">*</span> - <?=t('required field')?>
 		</div>
 		
 		<?
@@ -289,7 +289,7 @@ if (is_object($uo)) {
 	</script>
 		
 		
-	<h1><span>Edit Account</span></h1>
+	<h1><span><?=t('Edit Account')?></span></h1>
 	
 	<div class="ccm-dashboard-inner">
 
@@ -299,12 +299,12 @@ if (is_object($uo)) {
 		<div style="margin:0px; padding:0px; width:100%; height:auto" >
 		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 		<tr>
-			<td colspan="3" class="header">Core Information</td>
+			<td colspan="3" class="header"><?=t('Core Information')?></td>
 		</tr>
 		<tr>
-			<td class="subheader">Username <span class="required">*</span></td>
-			<td class="subheader">Email Address <span class="required">*</span></td>
-			<td class="subheader">User Avatar</td>
+			<td class="subheader"><?=t('Username')?> <span class="required">*</span></td>
+			<td class="subheader"><?=t('Email Address')?> <span class="required">*</span></td>
+			<td class="subheader"><?=t('User Avatar')?></td>
 		</tr>	
 		<tr>
 			<td><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?><?=$uo->getUserName()?><? } else { ?><input type="text" name="uName" autocomplete="off" value="<?=$uName?>" style="width: 100%"><? } ?></td>
@@ -312,24 +312,24 @@ if (is_object($uo)) {
 			<td><input type="file" name="uAvatar" style="width: 100%" /> <input type="hidden" name="uHasAvatar" value="<?=$uo->hasAvatar()?>" />
 			
 			<? if ($uo->hasAvatar()) { ?>
-			<input type="button" onclick="location.href='<?=$this->url('/dashboard/users?uID=' . $uID . '&task=remove-avatar')?>'" value="Remove Avatar" />
+			<input type="button" onclick="location.href='<?=$this->url('/dashboard/users?uID=' . $uID . '&task=remove-avatar')?>'" value="<?=t('Remove Avatar')?>" />
 			<? } ?>
 			</td>
 		</tr>
 		<tr>
-			<td colspan="3" class="header">Change Password</td>
+			<td colspan="3" class="header"><?=t('Change Password')?></td>
 		</tr>
 		<tr>
-			<td class="subheader">Password</td>
-			<td class="subheader" colspan="2">Password (Confirm)</td>
+			<td class="subheader"><?=t('Password')?></td>
+			<td class="subheader" colspan="2"><?=t('Password (Confirm)')?></td>
 		</tr>	
 		<tr>
 			<td><input type="password" name="uPassword" autocomplete="off" value="" style="width: 100%"></td>
 			<td><input type="password" name="uPasswordConfirm" autocomplete="off" value="" style="width: 100%"></td>
-			<td>(Leave these fields blank to keep the same password)</td>
+			<td><?=t('(Leave these fields blank to keep the same password)')?></td>
 		</tr>
 		<tr>
-			<td colspan="3" class="header">Other Information (Click the checkbox to modify existing values)</td>
+			<td colspan="3" class="header"><?=t('Other Information (Click the checkbox to modify existing values)')?></td>
 		</tr>
 		<?
 	
@@ -350,8 +350,8 @@ if (is_object($uo)) {
 					<? if( strlen($attrVal) ){ ?>
 						<div id="attEditWrap<?=$ak->getKeyID()?>"><?=$ak->outputHTML($uo->getUserID())?>&nbsp;</div>
 					<? }else{ ?>
-						<div id="attEditWrap<?=$ak->getKeyID()?>" style="display:none"><?=$ak->outputHTML($uo->getUserID())?> <a onclick="editAttrVal(<?=$ak->getKeyID()?>,1)">Cancel</a></div>
-						<div id="attUnknownWrap<?=$ak->getKeyID()?>">Unknown <a onclick="editAttrVal(<?=$ak->getKeyID()?>)">Edit</a></div>
+						<div id="attEditWrap<?=$ak->getKeyID()?>" style="display:none"><?=$ak->outputHTML($uo->getUserID())?> <a onclick="editAttrVal(<?=$ak->getKeyID()?>,1)"><?=t('Cancel')?></a></div>
+						<div id="attUnknownWrap<?=$ak->getKeyID()?>">Unknown <a onclick="editAttrVal(<?=$ak->getKeyID()?>)"><?=t('Edit')?></a></div>
 					<? } ?>
 				</td>
 			</tr>	
@@ -359,8 +359,9 @@ if (is_object($uo)) {
 		
 		<tr>
 			<td colspan="3" class="header">
-						<a id="groupSelector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups" dialog-title="Add Groups" dialog-modal="false" style="float: right">Add Group</a>
-Groups</td>
+				<a id="groupSelector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups" dialog-title="<?=t('Add Groups')?>" dialog-modal="false" style="float: right"><?=t('Add Group')?></a>
+				<?=t('Groups')?>
+			</td>
 		</tr>
 		<? $gArray = $gl->getGroupList(); ?>
 		<tr>
@@ -388,8 +389,8 @@ Groups</td>
 		
 		<div class="ccm-buttons">
 		<input type="hidden" name="edit" value="1" />
-		<a href="<?=$this->url('/dashboard/users?uID=' . $_GET['uID'])?>" class="ccm-button-left cancel"><span>Cancel</span></a>
-		<a href="javascript:void(0)" onclick="$('#ccm-user-form').get(0).submit()" class="ccm-button-right accept"><span>Update User</span></a>
+		<a href="<?=$this->url('/dashboard/users?uID=' . $_GET['uID'])?>" class="ccm-button-left cancel"><span><?=t('Cancel')?></span></a>
+		<a href="javascript:void(0)" onclick="$('#ccm-user-form').get(0).submit()" class="ccm-button-right accept"><span><?=t('Update User')?></span></a>
 		</div>	
 		
 		<div class="ccm-spacer">&nbsp;</div>
@@ -397,26 +398,26 @@ Groups</td>
 	</div>
 	
 	<? } else { ?>
-	<h1><span>View User</span></h1>
+	<h1><span><?=t('View User')?></span></h1>
 	
 	<div class="ccm-dashboard-inner">
 		<div class="actions" >
 			<? if (USER_VALIDATE_EMAIL) { ?>
 				<? if ($uo->isValidated() < 1) { ?>
-					<a href="<?=$this->url('/dashboard/users?uID=' . $uID . '&task=validate_email')?>">Mark Email as Valid</a>
+					<a href="<?=$this->url('/dashboard/users?uID=' . $uID . '&task=validate_email')?>"><?=t('Mark Email as Valid')?></a>
 					&nbsp;|&nbsp;
 					<? } ?>
 			<? } ?>
 			<? if ($uo->isActive()) { ?>
-				<a href="<?=$this->url('/dashboard/users?uID=' . $uID . '&task=deactivate')?>">Deactivate User</a>
+				<a href="<?=$this->url('/dashboard/users?uID=' . $uID . '&task=deactivate')?>"><?=t('Deactivate User')?></a>
 			<? } else { ?>
-				<a href="<?=$this->url('/dashboard/users?uID=' . $uID . '&task=activate')?>">Activate User</a>
+				<a href="<?=$this->url('/dashboard/users?uID=' . $uID . '&task=activate')?>"><?=t('Activate User')?></a>
 			<? } ?>
 			&nbsp;|&nbsp;		
-			<a href="<?=$this->url('/dashboard/users?uID=' . $uID)?>&task=edit">Edit User</a>		
+			<a href="<?=$this->url('/dashboard/users?uID=' . $uID)?>&task=edit"><?=t('Edit User')?></a>		
 		</div>
 		
-		<h2>Required Information</h2>
+		<h2><?=t('Required Information')?></h2>
 		
 		<div style="margin:0px; padding:0px; width:100%; height:auto" >
 		<table border="0" cellspacing="1" cellpadding="0">
@@ -426,18 +427,18 @@ Groups</td>
 			<a href="mailto:<?=$uo->getUserEmail()?>"><?=$uo->getUserEmail()?></a><br/>
 			<?=$uo->getUserDateAdded()?>
 			<? if (USER_VALIDATE_EMAIL) { ?><br/>
-				Full Record: <strong><?= ($uo->isFullRecord()) ? "Yes" : "No" ?></strong>
+				<?=t('Full Record')?>: <strong><?= ($uo->isFullRecord()) ? "Yes" : "No" ?></strong>
 				&nbsp;&nbsp;
-				Email Validated: <strong><?
+				<?=t('Email Validated')?>: <strong><?
 					switch($uo->isValidated()) {
 						case '-1':
-							print 'Unknown';
+							print t('Unknown');
 							break;
 						case '0':
-							print 'No';
+							print t('No');
 							break;
 						case '1':
-							print 'Yes';
+							print t('Yes');
 							break;
 					}?>
 					</strong>
@@ -450,7 +451,7 @@ Groups</td>
 		<?
 		$attribs = UserAttributeKey::getList(true);
 		if (count($attribs) > 0) { ?>
-		<h2>Other Information</h2>
+		<h2><?=t('Other Information')?></h2>
 
 		<div style="margin:0px; padding:0px; width:100%; height:auto" >
 		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
@@ -481,13 +482,13 @@ Groups</td>
 		
 		<? }  ?>
 		
-				<h2>Groups</h2>
+		<h2><?=t('Groups')?></h2>
 
 		<div style="margin:0px; padding:0px; width:100%; height:auto" >
 		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 		<tr>
-			<td colspan="2" class="header">Group</td>
-			<td class="header">Date Entered</td>
+			<td colspan="2" class="header"><?=t('Group')?></td>
+			<td class="header"><?=t('Date Entered')?></td>
 		</tr>
 		<? $gArray = $gl->getGroupList(); ?>
 		<tr>
@@ -521,18 +522,18 @@ Groups</td>
 
 } else { ?>
 
-	<h1><span>Search User Accounts</span></h1>
+	<h1><span><?=t('Search User Accounts')?></span></h1>
 	
 	<div class="ccm-dashboard-inner">
 
 	<div id="ccm-user-search">
 	
-	<a href="javascript:void(0)" id="ccm-user-search-advanced-control" <? if ($_REQUEST['task'] == 'search') { ?> style="display: none" <? } ?>>Advanced Search &gt;</a>
+	<a href="javascript:void(0)" id="ccm-user-search-advanced-control" <? if ($_REQUEST['task'] == 'search') { ?> style="display: none" <? } ?>><?=t('Advanced Search')?> &gt;</a>
 	
 	<div id="ccm-user-search-simple" <? if ($_REQUEST['task'] == 'search') { ?> style="display: none" <? } ?>>
 	<br/>
 	
-	<h3>Username or Email Address Contains:</h3>
+	<h3><?=t('Username or Email Address Contains:')?></h3>
 	<form method="get" id="ccm-user-search-simple-form" action="<?=$this->url('/dashboard/users')?>">
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >
 	<table border="0" cellspacing="0" cellpadding="0">
@@ -542,7 +543,7 @@ Groups</td>
 	<input type="text" name="uVal" value="<?=$_REQUEST['uVal']?>" style="width: 200px" />
 	</td>
 	<td style="padding-left: 10px">
-	<a href="javascript:void(0)" onclick="$('#ccm-user-search-simple-form').get(0).submit()" class="ccm-button"><span>Search Users</span></a>
+	<a href="javascript:void(0)" onclick="$('#ccm-user-search-simple-form').get(0).submit()" class="ccm-button"><span><?=t('Search Users')?></span></a>
 	</td>
 	</tr>
 	</table>
@@ -551,7 +552,7 @@ Groups</td>
 	
 	</div>
 	
-	<a href="javascript:void(0)" id="ccm-user-search-simple-control" <? if ($_REQUEST['task'] != 'search') { ?> style="display: none" <? } ?>>&lt; Back to Simple Search</a>
+	<a href="javascript:void(0)" id="ccm-user-search-simple-control" <? if ($_REQUEST['task'] != 'search') { ?> style="display: none" <? } ?>>&lt; <?=t('Back to Simple Search')?></a>
 
 	<div id="ccm-user-search-advanced" <? if ($_REQUEST['task'] == 'search') { ?> style="display: block" <? } ?>>
 	
@@ -560,28 +561,28 @@ Groups</td>
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >
 	<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 	<tr>
-		<td class="subheader">Username</td>
+		<td class="subheader"><?=t('Username')?></td>
 		<td><input type="text" name="uName" autocomplete="off" value="<?=$_GET['uName']?>" style="width: 100%"></td>
-		<td class="subheader">Email Address</td>
+		<td class="subheader"><?=t('Email Address')?></td>
 		<td><input type="text" name="uEmail" autocomplete="off" value="<?=$_GET['uEmail']?>" style="width: 100%"></td>
 	</tr>
 	<tr>
-		<td class="subheader">Registered between:</td>
+		<td class="subheader"><?=t('Registered between:')?></td>
 		<td><? print $dtt->datetime('uDateAddedStart', $dtt->translate('uDateAddedStart', $_GET), true)?></td>
-		<td class="subheader">and: </td>
+		<td class="subheader"><?=t('and:')?> </td>
 		<td><? print $dtt->datetime('uDateAddedEnd', $dtt->translate('uDateAddedEnd', $_GET), true)?></td>
 	</tr>
 	<? if (USER_VALIDATE_EMAIL) { ?>
 	<tr>
-		<td class="subheader">Email Validation</td>
+		<td class="subheader"><?=t('Email Validation')?></td>
 		<td>
-			<?=$form->checkbox('uIsValidated[]', 0, true)?> Non-Validated
-			<?=$form->checkbox('uIsValidated[]', 1, true)?> Validated		
+			<?=$form->checkbox('uIsValidated[]', 0, true)?> <?=t('Non-Validated')?>
+			<?=$form->checkbox('uIsValidated[]', 1, true)?> <?=t('Validated')?>	
 		</td>	
-		<td class="subheader">Record Types</td>
+		<td class="subheader"><?=t('Record Types')?></td>
 		<td>
-			<?=$form->checkbox('uIsFullRecord[]', 1, true)?> Full
-			<?=$form->checkbox('uIsFullRecord[]', 0, true)?> Email Only 
+			<?=$form->checkbox('uIsFullRecord[]', 1, true)?> <?=t('Full')?>	
+			<?=$form->checkbox('uIsFullRecord[]', 0, true)?> <?=t('Email Only ')?>
 		</td>	
 	</tr>
 	<? } ?>
@@ -617,7 +618,7 @@ Groups</td>
 	<? } ?>
 	<tr>
 		<td colspan="4" class="header" style="text-align: right">
-			<a href="javascript:void(0)" onclick="$('#ccm-user-search-advanced-form').get(0).submit()" class="ccm-button-right"><span>Search Users</span></a>
+			<a href="javascript:void(0)" onclick="$('#ccm-user-search-advanced-form').get(0).submit()" class="ccm-button-right"><span><?=t('Search Users')?></span></a>
 		</td>
 	</tr>
 	</table>
@@ -630,7 +631,7 @@ Groups</td>
 	
 	<? if ($_REQUEST['task'] == 'search' || $_REQUEST['task'] == 'simple_search') { ?>
 	
-	<h2>Results</h2>
+	<h2><?=t('Results')?></h2>
 	
 		<? if ($s->getTotal() > 0) { ?>
 	
@@ -639,16 +640,16 @@ Groups</td>
 		$variables['output'] = 'excel';
 		$url = Search::qsReplace($variables);
 	?>
-	<a href="<?=$url?>" style="float: right; line-height: 18px; padding-left: 20px; background: transparent url(<?=ASSETS_URL_IMAGES?>/icons/excel.png) no-repeat">Export to Excel</a>
+	<a href="<?=$url?>" style="float: right; line-height: 18px; padding-left: 20px; background: transparent url(<?=ASSETS_URL_IMAGES?>/icons/excel.png) no-repeat"><?=t('Export to Excel')?></a>
 
 	<? include(DIR_FILES_ELEMENTS_CORE . '/search_results_top.php'); ?>
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >
 	<table border="0" cellspacing="1" cellpadding="0" class="grid-list">
 	<tr>
-		<?=$s->printHeader('User Name','uName',1)?>
-		<?=$s->printHeader('Email Address','uEmail',1)?>
-		<?=$s->printHeader('Date Added','uDateAdded',1)?>
-		<?=$s->printHeader('# Logins', 'uNumLogins',1)?>
+		<?=$s->printHeader(t('User Name'),'uName',1)?>
+		<?=$s->printHeader(t('Email Address'),'uEmail',1)?>
+		<?=$s->printHeader(t('Date Added'),'uDateAdded',1)?>
+		<?=$s->printHeader(t('# Logins'), 'uNumLogins',1)?>
 	</tr>
 	<? if ($s->getTotal() > 0) { 
 		while ($row = $res->fetchRow()) { ?>
@@ -670,7 +671,7 @@ Groups</td>
 	
 	<? } else { ?>
 		
-		<strong>No users found.</strong>
+		<strong><?=t('No users found.')?></strong>
 		
 	<? } ?>
 	
@@ -679,32 +680,32 @@ Groups</td>
 	</div>
 	
 	
-	<h1><span>Create Account</span></h1>
+	<h1><span><?=t('Create Account')?></span></h1>
 	
-	<div class="ccm-dashboard-inner">
+	<div class="ccm-dashboard-inner"> 
 	
 	<div class="actions">
-	<span class="required">*</span> - required field
+	<span class="required">*</span> - <?=t('required field')?>
 	</div>
 	
 	<form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$this->url('/dashboard/users?task=create')?>">
 	<input type="hidden" name="_disableLogin" value="1">
 
-	<h2>Required Information</h2>
+	<h2><?=t('Required Information')?></h2>
 	
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >
 	<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 	<tr>
-		<td class="subheader" width="50%"><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) { ?>Username <span class="required">*</span><? } else { ?>Email Address <span class="required">*</span><? } ?></td>
-		<td class="subheader" width="50%">Password <span class="required">*</span></td>
+		<td class="subheader" width="50%"><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) { ?><?=t('Username')?> <span class="required">*</span><? } else { ?><?=t('Email Address')?> <span class="required">*</span><? } ?></td>
+		<td class="subheader" width="50%"><?=t('Password')?> <span class="required">*</span></td>
 	</tr>
 	<tr>
 		<td><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) { ?><input type="text" name="uName" autocomplete="off" value="<?=$_POST['uName']?>" style="width: 100%"><? } else { ?><input type="text" name="uEmail" autocomplete="off" value="<?=$_POST['uEmail']?>" style="width: 100%"><? } ?></td>
 		<td><input type="password" autocomplete="off" name="uPassword" value="" style="width: 100%"></td>
 	</tr>
 	<tr>
-		<td class="subheader"><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?>&nbsp;<? } else { ?>Email Address <span class="required">*</span><? } ?></td>
-		<td class="subheader">User Avatar</td>
+		<td class="subheader"><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?>&nbsp;<? } else { ?><?=t('Email Address')?> <span class="required">*</span><? } ?></td>
+		<td class="subheader"><?=t('User Avatar')?></td>
 	</tr>	
 	<tr>
 		<td><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?>&nbsp;<? } else { ?><input type="text" name="uEmail" autocomplete="off" value="<?=$_POST['uEmail']?>" style="width: 100%"><? } ?></td>
@@ -713,14 +714,14 @@ Groups</td>
 	</table>
 	</div>
 	
-	<h2>Groups</h2>
+	<h2><?=t('Groups')?></h2>
 	
-	<p>Once you create the account you may assign it to groups.</p>
+	<p><?=t('Once you create the account you may assign it to groups.')?></p>
 	
 
 	<div class="ccm-buttons">
 		<input type="hidden" name="create" value="1" />
-		<a href="javascript:void(0)" onclick="$('#ccm-user-form').get(0).submit()" class="ccm-button-right accept"><span>Create User</span></a>
+		<a href="javascript:void(0)" onclick="$('#ccm-user-form').get(0).submit()" class="ccm-button-right accept"><span><?=t('Create User')?></span></a>
 	</div>	
 
 	<div class="ccm-spacer">&nbsp;</div>
@@ -733,13 +734,13 @@ Groups</td>
 	<a name="attributes"></a>
 
 	
-	<h1><span>User Attributes</span></h1>
+	<h1><span><?=t('User Attributes')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
 	
 	<? if (count($attribs) > 0) { ?>
 
-	<p>To set the order for these items on the registration form, click and drag the graphic next to the attribute's name.</p>
+	<p><?=t("To set the order for these items on the registration form, click and drag the graphic next to the attribute's name.")?></p>
 	
 	<div id="user-attributes-list">
 	
@@ -755,11 +756,11 @@ Groups</td>
 	
 	<? } else { ?>
 		
-	<br/><strong>No user attributes defined.</strong><br/><br/>
+	<br/><strong><?=t('No user attributes defined.')?></strong><br/><br/>
 		
 	<? } ?>
 
-	<a href="<?=$this->url('/dashboard/users/attributes')?>" class="ccm-button-right"><span>Add User Attribute</span></a>
+	<a href="<?=$this->url('/dashboard/users/attributes')?>" class="ccm-button-right"><span><?=t('Add User Attribute')?></span></a>
 	<div class="ccm-spacer">&nbsp;</div>
 	
 	</div>

@@ -1,18 +1,18 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
-<h1>Site Registration</h1>
+<h1><?=t('Site Registration')?></h1>
 <div class="ccm-form">
 
 <? if ($registered) { ?>
 	
-	<p><strong>Your account has been created, and you are now logged in.</strong><br/><br/>
-	<a href="<?=$this->url('/')?>">Return to Home</a>
+	<p><strong><?=t('Your account has been created, and you are now logged in.')?></strong><br/><br/>
+	<a href="<?=$this->url('/')?>"><?=t('Return to Home')?></a>
 	
 
 <? } else if ($validate) { ?>
 
-	<p>You are registered but you need to validate your email address. Some or all functionality on this site will be limited until you do so.</p>
-	<p>An email has been sent to your email address. Click on the URL contained in the email to validate your email address.</p>
-	<p><a href="<?=$this->url('/')?>">Return to Home</a></p>
+	<p><?=t('You are registered but you need to validate your email address. Some or all functionality on this site will be limited until you do so.')?></p>
+	<p><?=t('An email has been sent to your email address. Click on the URL contained in the email to validate your email address.')?></p>
+	<p><a href="<?=$this->url('/')?>"><?=t('Return to Home')?></a></p>
 
 
 <? } else { ?>
@@ -22,26 +22,26 @@
 
 	<? if ($displayUserName) { ?>
 		<div>
-		<?=$form->label('uName', 'Username')?>
+		<?=$form->label('uName', t('Username') )?>
 		<?=$form->text('uName')?>
 		</div>
 		<br/>
 	<? } ?>
 	
 	<div>
-	<?=$form->label('uEmail', 'Email Address')?>
+	<?=$form->label('uEmail', t('Email Address') )?>
 	<?=$form->text('uEmail')?>
 	</div>
 	<br/>
 	
 	<div>
-	<?=$form->label('uPassword', 'Password')?>
+	<?=$form->label('uPassword', t('Password') )?>
 	<?=$form->password('uPassword')?>
 	</div>
 	<br/>
 	
 	<div>
-	<?=$form->label('uPasswordConfirm', 'Confirm Password')?>
+	<?=$form->label('uPasswordConfirm', t('Confirm Password') )?>
 	<?=$form->password('uPasswordConfirm')?>
 	</div>
 	<br/>

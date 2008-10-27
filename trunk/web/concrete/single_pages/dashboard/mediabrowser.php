@@ -16,7 +16,7 @@ if ($_GET['task'] == 'delete') {
 		if($orgCID == $cID) {
 			$c->approvePendingAction();
 		}
-		$message = "File Deleted.";
+		$message = t("File Deleted.");
 	}
 }
 
@@ -71,7 +71,7 @@ $s = new FileSearch($searchArray);
 
 ?>
 
-<h1><span>Images and Files</span></h1>
+<h1><span><?=t('Images and Files')?></span></h1>
 
 <div class="ccm-dashboard-inner">
 

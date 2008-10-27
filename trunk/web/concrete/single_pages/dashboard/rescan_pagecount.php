@@ -8,7 +8,7 @@ function admin_children_rebuild($cID) {
 	$children_array = $c->getCollectionChildrenArray();
 	// store count($children_array) in cParent's cChildren
 	$current_count = count($children_array);
-	print "Rebuilding children for: " . $cID . '(' . $current_count . ' found)<br/>';
+	print t('Rebuilding children for: %s (%s found)<br/>', $cID, $current_count);
 
 	$q = "update Pages set cChildren='$current_count' where cID='$cID'";
 	$r = $db->query($q);
@@ -19,7 +19,7 @@ function admin_children_rebuild($cID) {
 
 ?>
 
-<h1>Rescan Page Count</h1>
+<h1><?=t('Rescan Page Count')?></h1>
 
 <?
 admin_children_rebuild(1);

@@ -15,7 +15,7 @@ var Jobs = {
 			this.pendingJobs.push( jobsCBs[i].value ); 
 		}
 		if( this.pendingJobs.length==0 )
-			alert('Please first check jobs you want to run.');
+			alert('<?=t("Please first check jobs you want to run.")?>');
 		this.runNextPending();
 	},
 	
@@ -51,7 +51,7 @@ var Jobs = {
 	},
 	
 	confirmUninstall:function(){
-		if( confirm('Are you sure you want to uninstall this job?') )
+		if( confirm('<?=t("Are you sure you want to uninstall this job?")?>') )
 			return true;
 		else return false;
 	},
@@ -86,14 +86,14 @@ div.ccm-button{ float:right}
 div.ccm-buttons{ position:absolute; right:8px; top:8px; }
 </style>
 
-<h1><span>Scheduled Jobs</span></h1>
+<h1><span><?=t('Scheduled Jobs')?></span></h1>
 
 <div class="ccm-dashboard-inner">
 
 
 <? if(  $jobListRS->numRows() == 0 ){ ?>
 	
-	<div style="margin:16px 0px"><strong>You currently have no jobs installed.</strong></div>
+	<div style="margin:16px 0px"><strong><?=t('You currently have no jobs installed.')?></strong></div>
 
 <? }else{
 
@@ -102,12 +102,12 @@ $ih = Loader::helper('concrete/interface');
 ?>
 
 	<?
-		$b1 = $ih->button_js('Run Checked', 'Jobs.runChecked');
+		$b1 = $ih->button_js(t('Run Checked'), 'Jobs.runChecked');
 		//print $ih->buttons($b1);
-		print '<div class="ccm-buttons"><a onclick="Jobs.runChecked()" href="javascript:void(0)"><div class="ccm-button"><span>Run Checked</span></div></a></div>';
+		print '<div class="ccm-buttons"><a onclick="Jobs.runChecked()" href="javascript:void(0)"><div class="ccm-button"><span>'.t('Run Checked').'</span></div></a></div>';
 	?>
 
-	<h2 style="padding-bottom:8px; padding-top:16px">Installed Jobs</h2>
+	<h2 style="padding-bottom:8px; padding-top:16px"><?=t('Installed Jobs')?></h2>
 	
 	<div class="ccm-spacer">&nbsp;</div>
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
@@ -115,12 +115,12 @@ $ih = Loader::helper('concrete/interface');
 	
 		<tr>
 			<td class="subheader center" >
-				<a onclick="Jobs.selectAll()">All</a> | <a onclick="Jobs.selectNone()">None</a>
+				<a onclick="Jobs.selectAll()"><?=t('All')?></a> | <a onclick="Jobs.selectNone()"><?=t('None')?></a>
 			</td>
-			<td class="subheader">Name</td>
-			<td class="subheader">Description</td>
-			<td class="subheader">Last Run</td>
-			<td class="subheader">Results of Last Run</td>
+			<td class="subheader"><?=t('Name')?></td>
+			<td class="subheader"><?=t('Description')?></td>
+			<td class="subheader"><?=t('Last Run')?></td>
+			<td class="subheader"><?=t('Results of Last Run')?></td>
 			<td class="subheader" >&nbsp;</td>
 		</tr>
 		
@@ -142,9 +142,9 @@ $ih = Loader::helper('concrete/interface');
 				<?
 				if($jobItem['jStatus']=='RUNNING'){
 					$runtime=date('H:i:s A', strtotime($jobItem['jDateLastRun']) );
-					echo "<strong>Currently Running </strong>(Since $runtime)";					
+					echo t("<strong>Currently Running </strong>(Since %s)",$runtime);					
 				}elseif(substr($jobItem['jDateLastRun'],0,4)=='0000'){
-					echo 'Never';
+					echo t('Never');
 				}else{
 					$runtime=date('n/j/y \a\t g:i A', strtotime($jobItem['jDateLastRun']) );
 					echo $runtime;
@@ -156,7 +156,7 @@ $ih = Loader::helper('concrete/interface');
 				<? if(!$jobItem['jNotUninstallable']){ ?>
 				<form method="post" action="<?=$this->url('/dashboard/jobs', 'uninstall')?>" onsubmit="return Jobs.confirmUninstall();">
 					<input name="jID" type="hidden" value="<?=$jobItem['jID'] ?>" />
-					<input name="Remove" type="Submit" value="Remove" />
+					<input name="Remove" type="Submit" value="<?=t('Remove')?>" />
 				</form>
 				<? } ?>
 			</td>
@@ -174,13 +174,13 @@ $ih = Loader::helper('concrete/interface');
 
 	<br/>
 	
-	<h2>Jobs Available for Installation</h2>
+	<h2><?=t('Jobs Available for Installation')?></h2>
 	
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
 	<table class="grid-list" width="100%" cellspacing="1" cellpadding="0">
 		<tr> 
-			<td class="subheader">Name</td>
-			<td class="subheader">Description</td> 
+			<td class="subheader"><?=t('Name')?></td>
+			<td class="subheader"><?=t('Description')?></td> 
 			<td class="subheader" width="10%">&nbsp;</td>
 		</tr>
 		
@@ -205,7 +205,7 @@ $ih = Loader::helper('concrete/interface');
 <? } ?>
 
 <br/><br/>
-If you wish to run these jobs in the background, automate access to the following URL:
+<?=t('If you wish to run these jobs in the background, automate access to the following URL:')?>
 <br/><br/>
 <code>
 <?=BASE_URL . $this->url('/tools/required/jobs?auth=' . $auth)?>
