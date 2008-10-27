@@ -1,5 +1,6 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
+define('DISPATCHER_FILENAME', 'index.php');
 
 # These items should be set by site.php in config/ but if they're not that means we're installing and we need something there
 if (!defined('BASE_URL')) {
@@ -7,7 +8,7 @@ if (!defined('BASE_URL')) {
 }
 
 if (!defined('DIR_REL')) {
-	$uri = substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRIPT_NAME'], '/'));
+	$uri = substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], DISPATCHER_FILENAME) - 1);
 	define('DIR_REL', $uri);
 }
 
@@ -80,7 +81,6 @@ define('OB_INITIAL_LEVEL', ob_get_level());
 # Sessions/TMP directories
 define('DIR_SESSIONS', '/tmp');
 define('DIR_TMP', '/tmp');
-define('DISPATCHER_FILENAME', 'index.php');
 define('DISPATCHER_FILENAME_CORE', 'dispatcher.php');
 
 # Used by the loader to load core libraries
