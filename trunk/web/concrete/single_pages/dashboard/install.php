@@ -27,7 +27,7 @@ if (isset($_POST['task'])) {
 }
 
 if ($_REQUEST['bt_installed']) {
-	$message = 'Block Type Installed';
+	$message = t('Block Type Installed');
 }
 
 $ci = Loader::helper('concrete/urls');
@@ -38,13 +38,13 @@ $ch = Loader::helper('concrete/interface');
 <? if ($this->controller->get('nav') == 'packages') { ?>
 
 	
-	<h1><span>Applications and Packages</span></h1>
+	<h1><span><?=t('Applications and Packages')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
-	<h2>Installed Applications</h2>
+	<h2><?=t('Installed Applications')?></h2>
 		<? 
 		if (count($pkgArray) == 0) { ?>
-		<p>No packages have been installed.</p>
+		<p><?=t('No packages have been installed.')?></p>
 		<? } else { ?>
 		
 		<div style="margin:0px; padding:0px; height:auto" >	
@@ -59,9 +59,9 @@ $ch = Loader::helper('concrete/interface');
 	<? } ?>
 	
 	<br/>
-	<h2>Available Applications. Click to Install.</h2>
+	<h2><?=t('Available Applications. Click to Install.')?></h2>
 		<? if (count($pkgAvailableArray) == 0) { ?>
-		No packages are available.
+		<?=t('No packages are available.')?>
 	
 		<? } else { ?>
 		<div style="margin:0px; padding:0px;  height:auto" >	
@@ -84,23 +84,23 @@ $ch = Loader::helper('concrete/interface');
 			<h1><span><?=$bt->getBlockTypeName()?></span></h1>
 			<div class="ccm-dashboard-inner">
 			<img src="<?=$ci->getBlockTypeIconURL($bt)?>" style="float: right" />
-			<div><a href="<?=$this->url('/dashboard/install')?>">&lt; Return to Block Types</a></div><br/>
+			<div><a href="<?=$this->url('/dashboard/install')?>">&lt; <?=t('Return to Block Types')?></a></div><br/>
 			
-			<h2>Description</h2>
+			<h2><?=t('Description')?></h2>
 			<p><?=$bt->getBlockTypeDescription()?></p>
 	
-			<h2>Usage Count</h2>
+			<h2><?=t('Usage Count')?></h2>
 			<p><?=$num?></p>
 			
 			<? if ($bt->isBlockTypeInternal()) { ?>
-			<h2>Internal</h2>
-			<p>This is an internal block type.</p>
+			<h2><?=t('Internal')?></h2>
+			<p><?=t('This is an internal block type.')?></p>
 			<? } ?>
 	
 			<?
-			$buttons[] = $ch->button("Refresh", $this->url('/dashboard/install','refresh_block_type', $bt->getBlockTypeID()), "left");
+			$buttons[] = $ch->button(t("Refresh"), $this->url('/dashboard/install','refresh_block_type', $bt->getBlockTypeID()), "left");
 			if ($bt->canUnInstall()) {
-				$buttons[] = $ch->button("Remove", $this->url('/dashboard/install', 'uninstall_block_type', $bt->getBlockTypeID()), "left");
+				$buttons[] = $ch->button(t("Remove"), $this->url('/dashboard/install', 'uninstall_block_type', $bt->getBlockTypeID()), "left");
 			}
 	
 			print $ch->buttons($buttons); ?>
@@ -111,13 +111,13 @@ $ch = Loader::helper('concrete/interface');
 		
 		
 		<? } else { ?>
-			<h1><span>Block Types</span></h1>
+			<h1><span><?=t('Block Types')?></span></h1>
 			<div class="ccm-dashboard-inner">
 		
-			<h2>Installed Block Types</h2>
+			<h2><?=t('Installed Block Types')?></h2>
 			<? 
 			if (count($btArray) == 0) { ?>
-				<p>No block types have been installed.</p>
+				<p><?=t('No block types have been installed.')?></p>
 			<? } else { ?>
 			
 			<div style="margin:0px; padding:0px; height:auto" >	
@@ -132,11 +132,11 @@ $ch = Loader::helper('concrete/interface');
 			<? } ?>
 			
 			<br/>
-			<h2>Available Block Types. Click to Install.</h2>
+			<h2><?=t('Available Block Types. Click to Install.')?></h2>
 			
 			<? 
 			if (count($btArray2) == 0) { ?>
-				No local block types available.
+				<?=t('No local block types available.')?>
 			<? 	
 			} else { ?>
 				<table border="0" cellspacing="0" cellpadding="0">

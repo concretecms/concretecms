@@ -29,7 +29,7 @@ $pOptions = $s->paging($_REQUEST['start'], $_REQUEST['order'], $_REQUEST['view']
 
 ?>
 
-<h2>View Files </h2>
+<h2><?=t('View Files')?> </h2>
 <div class="ccm-al-actions">
 <? if ($pOptions['needPaging']) {
 	include(DIR_FILES_ELEMENTS_CORE . '/search_results_paging.php');
@@ -84,7 +84,7 @@ if ($s->getTotal() > 0) { ?>
 	</div>
 	<?
 } else {
-	echo('<strong>No files found.</strong><br/><br/>');
+	echo(t('<strong>No files found.</strong><br/><br/>'));
 }
 ?>
 

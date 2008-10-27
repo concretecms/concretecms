@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <script>
-<? $toggleQuestionsShowText='View all fields &raquo;' ?>
+<? $toggleQuestionsShowText=t('View all fields').' &raquo;' ?>
 var toggleQuestionsShowText='<?=$toggleQuestionsShowText?>';
 var toggleQuestionsHideText='Hide fields &raquo;';
 function toggleQuestions(qsID,trigger){
@@ -15,19 +15,19 @@ function toggleQuestions(qsID,trigger){
 }
 </script> 
 
-<h1><span>Form Results</span></h1>
+<h1><span><?=t('Form Results')?></span></h1>
 
 <div class="ccm-dashboard-inner">
 
 <? if (count($surveys) == 0) { ?>
-You have not created any forms.
+<?=t('You have not created any forms.')?>
 <? } else { ?>
 
 <div style="margin:0px; padding:0px; width:100%; height:auto" >
 <table class="entry-form" >
 	<tr>
-		<td class="header">Survey</td>
-		<td class="header">Options</td>
+		<td class="header"><?=t('Survey')?></td>
+		<td class="header"><?=t('Options')?></td>
 	</tr>
 	<? foreach($surveys as $thisQuestionSetId=>$survey){
 		$b=Block::getByID( intval($survey['bID']) );
@@ -38,9 +38,9 @@ You have not created any forms.
 			<tr>
 				<td><?=$survey['surveyName']?></td>
 				<td>
-					<a href="<?=DIR_REL?>/index.php?cID=<?=$c->getCollectionId()?>&qsid=<?=$thisQuestionSetId?>">View Responses</a>
+					<a href="<?=DIR_REL?>/index.php?cID=<?=$c->getCollectionId()?>&qsid=<?=$thisQuestionSetId?>"><?=t('View Responses')?></a>
 					|
-					<a href="<?=DIR_REL?>/index.php?cID=<?=$ocID?>">Open Page</a>	
+					<a href="<?=DIR_REL?>/index.php?cID=<?=$ocID?>"><?=t('Open Page')?></a>	
 				</td>
 			</tr>
 		<? }
@@ -58,30 +58,30 @@ You have not created any forms.
 <? if( strlen($questionSet)>0 ){ ?>
 
 	<a name="responses" id="responses"></a>	
-	<h1><span>Responses to "<?=$surveys[$questionSet]['surveyName']?>"</span></h1>
+	<h1><span><?=t('Responses to')?> "<?=$surveys[$questionSet]['surveyName']?>"</span></h1>
 	<div class="ccm-dashboard-inner">
 	
 	<? if( count($answerSets)==0 ){ ?>
-		<div>No one has yet submitted this form.</div>
+		<div><?=t('No one has yet submitted this form.')?></div>
 	<? }else{ ?>
 	
 		<div style="margin-bottom:8px">
 			<div style="float:right; margin-bottom:8px">
-			<a href="<?=$this->url('/dashboard/form_results/', 'excel', '?qsid=' . $questionSet)?>">Export to Excel &raquo;</a>
+			<a href="<?=$this->url('/dashboard/form_results/', 'excel', '?qsid=' . $questionSet)?>"><?=t('Export to Excel')?> &raquo;</a>
 			</div>
 			
 			<? if($_REQUEST['all']!=1){ ?>
-				<a href="<?=$this->url('/dashboard/form_results/', 'view', '?all=1&sortBy='.$_REQUEST['sortBy'].'&qsid='.$questionSet)?>">Show All</a>
+				<a href="<?=$this->url('/dashboard/form_results/', 'view', '?all=1&sortBy='.$_REQUEST['sortBy'].'&qsid='.$questionSet)?>"><?=t('Show All')?></a>
 			<? }else{ ?>
-				<a href="<?=$this->url('/dashboard/form_results/', 'view', '?all=0&sortBy='.$_REQUEST['sortBy'].'&qsid='.$questionSet)?>">Show Paging</a>
+				<a href="<?=$this->url('/dashboard/form_results/', 'view', '?all=0&sortBy='.$_REQUEST['sortBy'].'&qsid='.$questionSet)?>"><?=t('Show Paging')?></a>
 			<? } ?>
 			
 			&nbsp;|&nbsp;
 			 
 			<? if($_REQUEST['sortBy']=='chrono'){ ?>
-				<a href="<?=$this->url('/dashboard/form_results/', 'view', '?all=1&sortBy=newest&qsid='.$questionSet)?>">Sort by Newest</a>
+				<a href="<?=$this->url('/dashboard/form_results/', 'view', '?all=1&sortBy=newest&qsid='.$questionSet)?>"><?=t('Sort by Newest')?></a>
 			<? }else{ ?>
-				<a href="<?=$this->url('/dashboard/form_results/', 'view', '?all=0&sortBy=chrono&qsid='.$questionSet)?>">Sort Chronologically</a>
+				<a href="<?=$this->url('/dashboard/form_results/', 'view', '?all=0&sortBy=chrono&qsid='.$questionSet)?>"><?=t('Sort Chronologically')?></a>
 			<? } ?>			
 			<div class="spacer"></div>
 		</div>
@@ -91,7 +91,7 @@ You have not created any forms.
 			<div style="margin:0px; padding:0px; width:100%; height:auto" >
 			<table class="entry-form" width="100%" style="margin-bottom:2px">
 				<tr>
-					<td class="header">Submitted Date</td>
+					<td class="header"><?=t('Submitted Date')?></td>
 					<td class="header"><?=$answerSet['created']?></td>
 				</tr>
 				<? 

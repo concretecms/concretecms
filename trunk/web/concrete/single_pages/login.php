@@ -2,10 +2,12 @@
 
 <? if ($validated) { ?>
 
-<h1>Email Address Verified</h1>
+<h1><?=t('Email Address Verified')?></h1>
 
-<p>The email address <b><?=$uEmail?></b> has been verified and you are now a fully validated member of this website.</p>
-<p><a href="<?=$this->url('/')?>">Return to Home &gt;</a></p>
+<p>
+<?=t('The email address <b>%s</b> has been verified and you are now a fully validated member of this website.', $uEmail)?>
+</p>
+<p><a href="<?=$this->url('/')?>"><?=t('Return to Home')?> &gt;</a></p>
 
 <? } else { ?>
 

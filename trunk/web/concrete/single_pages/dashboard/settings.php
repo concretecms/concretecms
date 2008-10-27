@@ -10,19 +10,19 @@ $h = Loader::helper('concrete/interface'); ?>
 
 <form method="post" id="debug-form" action="<?=$this->url('/dashboard/settings', 'update_debug')?>">
 
-<h1><span>Debug Level</span></h1>
+<h1><span><?=t('Debug Level')?></span></h1>
 
 <div class="ccm-dashboard-inner">
-<p>Note: these are global settings. If enabled, PHP errors will be displayed to all visitors of the site.</p>
+<p><?=t('Note: these are global settings. If enabled, PHP errors will be displayed to all visitors of the site.')?></p>
 
-<div class="ccm-dashboard-radio"><input type="radio" name="debug_level" value="<?=DEBUG_DISPLAY_PRODUCTION?>" <? if ($debug_level == DEBUG_DISPLAY_PRODUCTION) { ?> checked <? } ?> /> Production </div>
-<div class="ccm-dashboard-description">PHP errors and database exceptions will be suppressed.</div>
+<div class="ccm-dashboard-radio"><input type="radio" name="debug_level" value="<?=DEBUG_DISPLAY_PRODUCTION?>" <? if ($debug_level == DEBUG_DISPLAY_PRODUCTION) { ?> checked <? } ?> /> <?=t('Production')?> </div>
+<div class="ccm-dashboard-description"><?=t('PHP errors and database exceptions will be suppressed.')?></div>
 
-<div class="ccm-dashboard-radio"><input type="radio" name="debug_level" value="<?=DEBUG_DISPLAY_ERRORS?>" <? if ($debug_level == DEBUG_DISPLAY_ERRORS) { ?> checked <? } ?> /> Development </div>
-<div class="ccm-dashboard-description">PHP errors and database exceptions will be displayed.</div>
+<div class="ccm-dashboard-radio"><input type="radio" name="debug_level" value="<?=DEBUG_DISPLAY_ERRORS?>" <? if ($debug_level == DEBUG_DISPLAY_ERRORS) { ?> checked <? } ?> /> <?=t('Development')?> </div>
+<div class="ccm-dashboard-description"><?=t('PHP errors and database exceptions will be displayed.')?></div>
 
 <?
-$b1 = $h->submit('Set Debug Level', 'debug-form');
+$b1 = $h->submit(t('Set Debug Level'), 'debug-form');
 print $h->buttons($b1);
 ?>
 <br class="clear" />
@@ -33,17 +33,19 @@ print $h->buttons($b1);
 </div>
 <div class="ccm-module">
 <form method="post" id="logging-form" action="<?=$this->url('/dashboard/settings', 'update_logging')?>">
-<h1><span>Logging</span></h1>
+<h1><span><?=t('Logging')?></span></h1>
 <div class="ccm-dashboard-inner">
-<div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOG_ERRORS', 1, $enable_log_errors)?> Log Application Exceptions</div>
+<div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOG_ERRORS', 1, $enable_log_errors)?> <?=t('Log Application Exceptions')?></div>
 <div class="ccm-dashboard-description">Saves application exceptions to logs.</div>
-<div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOG_DATABASE_QUERIES', 1, $enable_log_database_queries)?> Log Database Activity</div>
+<div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOG_DATABASE_QUERIES', 1, $enable_log_database_queries)?> <?=t('Log Database Activity')?></div>
 <div class="ccm-dashboard-description">Logs SQL queries for application profiling.</div>
-<div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOG_EMAILS', 1, $enable_log_emails)?> Log Emails Sent</div>
-<div class="ccm-dashboard-description">Enables saving records of emails being sent out. This will save records even if actual email delivery is disabled on your site.</div>
+<div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOG_EMAILS', 1, $enable_log_emails)?> <?=t('Log Emails Sent')?></div>
+<div class="ccm-dashboard-description">
+	<?=t('Enables saving records of emails being sent out. This will save records even if actual email delivery is disabled on your site.')?>
+</div>
 
 <?
-$b1 = $h->submit('Save Logging Settings', 'logging-form');
+$b1 = $h->submit(t('Save Logging Settings'), 'logging-form');
 print $h->buttons($b1);
 ?>
 
@@ -55,37 +57,41 @@ print $h->buttons($b1);
 
 <? } else if ($this->controller->getTask() == 'set_permissions') { ?>
 
-<h1><span>Site Permissions</span></h1>
+<h1><span><?=t('Site Permissions')?></span></h1>
 <div class="ccm-dashboard-inner">
 
 
 <? if (PERMISSIONS_MODEL != 'simple') { ?>
 
-<p>Your Concrete site does not use the simple permissions model. You must change your permissions for each specific page and content area.</p>
+<p>
+<?=t('Your Concrete site does not use the simple permissions model. You must change your permissions for each specific page and content area.')?>
+</p>
 
 
 <? } else { ?>
 
 <form method="post" id="permissions-form" action="<?=$this->url('/dashboard/settings', 'update_permissions')?>">
 
-<h2>Viewing Permissions</h2>
+<h2><?=t('Viewing Permissions')?></h2>
 
 
-<div class="ccm-dashboard-radio"><input type="radio" name="view" value="ANYONE" style="vertical-align: middle" <? if ($guestCanRead) { ?> checked <? } ?> /> Public</div>
-<div class="ccm-dashboard-description">Anyone may view the website.</div>
+<div class="ccm-dashboard-radio"><input type="radio" name="view" value="ANYONE" style="vertical-align: middle" <? if ($guestCanRead) { ?> checked <? } ?> /> <?=t('Public')?></div>
+<div class="ccm-dashboard-description"><?=t('Anyone may view the website.')?></div>
 
-<div class="ccm-dashboard-radio"><input type="radio" name="view" value="USERS" style="vertical-align: middle" <? if ($registeredCanRead) { ?> checked <? } ?> /> Members Only</div>
-<div class="ccm-dashboard-description">Only registered users may view the website.</div>
+<div class="ccm-dashboard-radio"><input type="radio" name="view" value="USERS" style="vertical-align: middle" <? if ($registeredCanRead) { ?> checked <? } ?> /> <?=t('Members Only')?></div>
+<div class="ccm-dashboard-description"><?=t('Only registered users may view the website.')?></div>
 
-<div class="ccm-dashboard-radio"><input type="radio" name="view" value="PRIVATE" style="vertical-align: middle" <? if ((!$guestCanRead) && (!$registeredCanRead)) { ?> checked <? } ?> /> Private.</div>
-<div class="ccm-dashboard-description">Only the administrative group may view the website.</div>
+<div class="ccm-dashboard-radio"><input type="radio" name="view" value="PRIVATE" style="vertical-align: middle" <? if ((!$guestCanRead) && (!$registeredCanRead)) { ?> checked <? } ?> /> <?=t('Private')?></div>
+<div class="ccm-dashboard-description"><?=t('Only the administrative group may view the website.')?></div>
 
 
 <br/><br/>
 
 
-<h2>Edit Access</h2>
-<p>Choose which users and groups below may edit your site. (<b>Note</b>: These settings can be overridden on specific pages.)</p>
+<h2><?=t('Edit Access')?></h2>
+<p>
+<?=t('Choose which users and groups below may edit your site. (<b>Note</b>: These settings can be overridden on specific pages.)')?>
+</p>
 
 <?
 
@@ -97,7 +103,7 @@ foreach ($gArray as $g) {
 <? } ?>
 
 <?
-$b1 = $h->submit('Update Site Permissions', 'permissions-form');
+$b1 = $h->submit(t('Update Site Permissions'), 'permissions-form');
 print $h->buttons($b1);
 ?>
 <br class="clear" />
@@ -119,15 +125,15 @@ print $h->buttons($b1);
 
 <form method="post" id="site-form" action="<?=$this->url('/dashboard/settings', 'update_sitename')?>">
 
-<h1><span>Site Name</span></h1>
+<h1><span>Site Name <?=t('Edit Access')?></span></h1>
 
 <div class="ccm-dashboard-inner">
 
-<div><?=$form->label('SITE', 'Name Your Website')?></div>
+<div><?=$form->label('SITE', t('Name Your Website'))?></div>
 <?=$form->text('SITE', $site, array('style'=>'width:285px'))?>
 
 <?
-$b1 = $h->submit('Save Site Name', 'site-form');
+$b1 = $h->submit(t('Save Site Name'), 'site-form');
 print $h->buttons($b1);
 ?>
 <br class="clear" />
@@ -137,16 +143,16 @@ print $h->buttons($b1);
 
 <form method="post" id="url-form" action="<?=$this->url('/dashboard/settings', 'update_rewriting')?>">
 
-<h1><span>Linking</span></h1>
+<h1><span><?=t('Linking')?></span></h1>
 
 <div class="ccm-dashboard-inner">
 
-<div class="ccm-dashboard-radio"><?=$form->checkbox('URL_REWRITING', 1, $url_rewriting)?> Enable "Pretty URLs"</div>
-<div class="ccm-dashboard-description">Automatically translates your path-based Concrete5 URLs so that they don't include "index.php".</div>
+<div class="ccm-dashboard-radio"><?=$form->checkbox('URL_REWRITING', 1, $url_rewriting)?> <?=t('Enable "Pretty URLs"')?></div>
+<div class="ccm-dashboard-description"><?=t("Automatically translates your path-based Concrete5 URLs so that they don't include \"index.php\".")?></div>
 
 <? if (URL_REWRITING) { ?>
-<h2>Required Code</h2>
-<p>You must copy the lines of code below and place them in your server's configuration file or .htaccess file. </p>
+<h2><?=t('Required Code')?></h2>
+<p><?=t("You must copy the lines of code below and place them in your server's configuration file or .htaccess file.")?></p>
 
 <textarea style="width: 295px; height: 140px;" onclick="this.select()">
 <IfModule mod_rewrite.c>
@@ -164,7 +170,7 @@ RewriteRule ^(.*)$ index.php/$1 [L]
 <? } ?>
 
 <?
-$b1 = $h->submit('Save', 'url-form');
+$b1 = $h->submit(t('Save'), 'url-form');
 print $h->buttons($b1);
 ?>
 <br class="clear" />
@@ -179,17 +185,22 @@ print $h->buttons($b1);
 
 <form method="post" id="user-settings-form" action="<?=$this->url('/dashboard/settings', 'update_user_settings')?>">
 
-<h1><span>Editing Preferences</span></h1>
+<h1><span><?=t('Editing Preferences')?></span></h1>
 
 <div class="ccm-dashboard-inner">
 
-<p>These editing preferences apply <b>just to your user account.</b></p>
+<p><?=t('These editing preferences apply <b>just to your user account.</b>')?></p>
 
-<div class="ccm-dashboard-radio"><input type="checkbox" name="ui_breadcrumb" value="1"  <? if ($ui_breadcrumb == 1) { ?> checked <? } ?> /> Display breadcrumb navigation bar.</div>
-<div class="ccm-dashboard-description">When enabled, rolling your mouse over the editing bar will show the path to the current page.</div>
+<div class="ccm-dashboard-radio">
+<input type="checkbox" name="ui_breadcrumb" value="1"  <? if ($ui_breadcrumb == 1) { ?> checked <? } ?> /> 
+<?=t('Display breadcrumb navigation bar.')?>
+</div>
+<div class="ccm-dashboard-description">
+<?=t('When enabled, rolling your mouse over the editing bar will show the path to the current page.')?>
+</div>
 
 <?
-$b1 = $h->submit('Save', "user-settings-form");
+$b1 = $h->submit(t('Save'), "user-settings-form");
 print $h->buttons($b1);
 ?>
 <br class="clear" />
@@ -199,19 +210,21 @@ print $h->buttons($b1);
 
 <form method="post" id="maintenance-form" action="<?=$this->url('/dashboard/settings', 'update_maintenance')?>">
 
-<h1><span>Maintenance Mode</span></h1>
+<h1><span><?=t('Maintenance Mode')?></span></h1>
 <div class="ccm-dashboard-inner">
 
-<p>Maintenance mode makes the front-end of the website inaccessible, while leaving the dashboard available to admin users.</p>
+<p>
+<?=t('Maintenance mode makes the front-end of the website inaccessible, while leaving the dashboard available to admin users.')?>
+</p>
 
-<div class="ccm-dashboard-radio"><input type="radio" name="site_maintenance_mode" value="0"  <? if ($site_maintenance_mode == 0) { ?> checked <? } ?> /> Disabled.</div>
-<div class="ccm-dashboard-description">When disabled, the site is available to the public.</div>
+<div class="ccm-dashboard-radio"><input type="radio" name="site_maintenance_mode" value="0"  <? if ($site_maintenance_mode == 0) { ?> checked <? } ?> /> <?=t('Disabled')?></div>
+<div class="ccm-dashboard-description"><?=t('When disabled, the site is available to the public.')?></div>
 
-<div class="ccm-dashboard-radio"><input type="radio" id="site-maintenance-mode-enabled" name="site_maintenance_mode" value="1" <? if ($site_maintenance_mode == 1) { ?> checked <? } ?> /> Enabled. </div>
-<div class="ccm-dashboard-description">If enabled, only your dashboard will be accessible.</div>
+<div class="ccm-dashboard-radio"><input type="radio" id="site-maintenance-mode-enabled" name="site_maintenance_mode" value="1" <? if ($site_maintenance_mode == 1) { ?> checked <? } ?> /> <?=t('Enabled')?> </div>
+<div class="ccm-dashboard-description"><?=t('If enabled, only your dashboard will be accessible.')?></div>
 
 <?
-$b1 = $h->button_js('Save', 'saveMaintenanceMode');
+$b1 = $h->button_js(t('Save'), 'saveMaintenanceMode');
 print $h->buttons($b1);
 ?>
 <br class="clear" />
@@ -227,7 +240,7 @@ print $h->buttons($b1);
 <script type="text/javascript">
 saveMaintenanceMode = function() {
 	if ($('#site-maintenance-mode-enabled').get(0).checked) {
-		if (confirm('Are you sure you want to put your site into maintenance mode? This will make it inaccessible to public visitors.')) {
+		if (confirm('<?=t('Are you sure you want to put your site into maintenance mode? This will make it inaccessible to public visitors.')?>')) {
 			$("#maintenance-form").get(0).submit();
 		}
 	} else {

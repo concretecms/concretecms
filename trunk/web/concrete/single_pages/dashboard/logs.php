@@ -2,20 +2,20 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 if ($this->controller->getTask() == 'database') { ?>
 
-	<h1><span>Database Logs</span></h1>
+	<h1><span><?=t('Database Logs')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	<? if (count($entries) > 0) { ?>
 		
 		<form id="ccm-log-search">
-		<input type="button" onclick="location.href='<?=$this->url('/dashboard/logs', 'clear_database_log')?>'" value="Clear Log" />
+		<input type="button" onclick="location.href='<?=$this->url('/dashboard/logs', 'clear_database_log')?>'" value="<?=t('Clear Log')?>" />
 		</form>
 		
 		<table border="0" cellspacing="1" cellpadding="0" class="grid-list">
 		<tr>
-			<td class="subheaderActive">Date/Time</td>
-			<td class="subheader">Query</td>
-			<td class="subheader">Params</td>
-			<td class="subheader">Page/Script</td>
+			<td class="subheaderActive"><?=t('Date/Time')?></td>
+			<td class="subheader"><?=t('Query')?></td>
+			<td class="subheader"><?=t('Params')?></td>
+			<td class="subheader"><?=t('Page/Script')?></td>
 		</tr>
 		<? foreach($entries as $ent) { ?>
 		<tr>
@@ -42,7 +42,9 @@ if ($this->controller->getTask() == 'database') { ?>
 	<?	
 	
 	} else { ?>
-		<p>You must first enable the logging of database queries from your <a href="<?=$this->url('/dashboard/settings', 'set_developer')?>">developer settings section</a> before you can use this page.
+		<p>
+		<?=t('You must first enable the logging of database queries from your <a href="%s">developer settings section</a> '.
+			 'before you can use this page. ', $this->url('/dashboard/settings', 'set_developer') )?>
 		</p>
 	<? } ?>
 
@@ -55,15 +57,15 @@ if ($this->controller->getTask() == 'database') { ?>
 	
 		<form method="post" id="ccm-log-search"  action="<?=$pageBase?>">
 		<?=$form->text('keywords', $keywords)?>
-		<?=$form->submit('search','Search')?>
-		<input type="button" onclick="if (confirm('Are you sure you want to clear this log?')) { location.href='<?=$this->url('/dashboard/logs', 'clear_log', $this->controller->getTask())?>'}" value="Clear Log" />
+		<?=$form->submit('search',t('Search') )?>
+		<input type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$this->url('/dashboard/logs', 'clear_log', $this->controller->getTask())?>'}" value="<?=t('Clear Log')?>" />
 		</form>
 
 		<table border="0" cellspacing="1" cellpadding="0" class="grid-list">
 		<tr>
-			<td class="subheaderActive">Date/Time</td>
-			<td class="subheader">Log Type</td>
-			<td class="subheader">Text</td>
+			<td class="subheaderActive"><?=t('Date/Time')?></td>
+			<td class="subheader"><?=t('Log Type')?></td>
+			<td class="subheader"><?=t('Text')?></td>
 		</tr>
 		<? foreach($entries as $ent) { ?>
 		<tr>

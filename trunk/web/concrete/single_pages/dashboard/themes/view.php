@@ -2,15 +2,15 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 $bt = Loader::helper('concrete/interface');
 ?>
-<h1><span>Themes</span></h1>
+<h1><span><?=t('Themes')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
 	
 	<? if (isset($activate_confirm)) { ?>
-	<strong>Are you sure you wish to activate this theme? Any custom theme selections across your site will be reset.</strong>
+	<strong><?=t('Are you sure you wish to activate this theme? Any custom theme selections across your site will be reset.')?></strong>
 	<br/><br/>
-	<?=$bt->button("Yes, activate this theme.", $activate_confirm, "left");?>
-	or <a href="<?=$this->url('/dashboard/themes/')?>">Cancel</a>
+	<?=$bt->button(t("Yes, activate this theme."), $activate_confirm, "left");?>
+	<?=t('or')?> <a href="<?=$this->url('/dashboard/themes/')?>"><?=t('Cancel')?></a>
 	
 	<div class="ccm-spacer">&nbsp;</div>
 	
@@ -21,7 +21,7 @@ $bt = Loader::helper('concrete/interface');
 	<?
 	if (count($tArray) == 0) { ?>
 	<tr>
-		<td colspan="5">No themes are available.</td>
+		<td colspan="5"><?=t('No themes are available.')?></td>
 	</tr>
 	<? } else {
 		foreach ($tArray as $t) { ?>
@@ -31,11 +31,11 @@ $bt = Loader::helper('concrete/interface');
 			<h2><?=$t->getThemeName()?></h2>
 			<?=$t->getThemeDescription()?>
 			<br/><br/>
-			<?=$bt->button("Activate", $this->url('/dashboard/themes','activate', $t->getThemeID()), "left");?>
-			<?=$bt->button("Inspect", $this->url('/dashboard/themes/inspect', $t->getThemeID()), "left");?>
+			<?=$bt->button(t("Activate"), $this->url('/dashboard/themes','activate', $t->getThemeID()), "left");?>
+			<?=$bt->button(t("Inspect"), $this->url('/dashboard/themes/inspect', $t->getThemeID()), "left");?>
 			
 			<? if ($t->isUninstallable()) { ?>
-				<?=$bt->button("Remove", $this->url('/dashboard/themes', 'remove', $t->getThemeID()), "left");?>
+				<?=$bt->button(t("Remove"), $this->url('/dashboard/themes', 'remove', $t->getThemeID()), "left");?>
 			<? } ?>
 			</td>
 		</tr>
@@ -44,7 +44,7 @@ $bt = Loader::helper('concrete/interface');
 	<? 
 	if (count($tArray2) > 0) { ?>
 	<tr>
-		<td colspan="2" class="header"><br/><h2>Themes Available to Install</h2></td>
+		<td colspan="2" class="header"><br/><h2><?=t('Themes Available to Install')?></h2></td>
 	</tr>
 
 	<? foreach ($tArray2 as $t) { ?>
@@ -54,7 +54,7 @@ $bt = Loader::helper('concrete/interface');
 			<h3><?=$t->getThemeName()?></h3>
 			<?=$t->getThemeDescription()?>
 			<br/><br/>
-			<?=$bt->button("Install", $this->url('/dashboard/themes','install', $t->getThemeHandle()), "left");?>
+			<?=$bt->button(t("Install"), $this->url('/dashboard/themes','install', $t->getThemeHandle()), "left");?>
 			
 		</tr>
 		<? }

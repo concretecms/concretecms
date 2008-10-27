@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 $ci = Loader::helper('concrete/interface');
 ?>
-	<h1><span>Inspect Theme</span></h1>
+	<h1><span><?=t('Inspect Theme')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
 
@@ -12,12 +12,12 @@ $ci = Loader::helper('concrete/interface');
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
 	<table border="0" cellspacing="1" cellpadding="0" class="grid-list" id="ccm-template-list">
 	<tr>
-		<td colspan="3" class="header">File in Theme</td>
+		<td colspan="3" class="header"><?=t('File in Theme')?></td>
 	</tr>
 	<tr>
-		<td class="subheader">File</td>
-		<td class="subheader">Type</td>
-		<td class="subheader">Action to Take</td>
+		<td class="subheader"><?=t('File')?></td>
+		<td class="subheader"><?=t('Type')?></td>
+		<td class="subheader"><?=t('Action to Take')?></td>
 	</tr>
 	<?	
 	$txt = Loader::helper('text');
@@ -25,7 +25,7 @@ $ci = Loader::helper('concrete/interface');
 	if (count($files) == 0) { ?>
 	<tr>
 	<td colspan="3">
-	There are no templates in this file.
+	<?=t('There are no templates in this file.')?>
 	</td>
 	</tr>
 	<? }
@@ -36,39 +36,39 @@ $ci = Loader::helper('concrete/interface');
 			<td><?
 				switch($f->getType()) {
 					case PageThemeFile::TFTYPE_VIEW:
-						print "Wrapper for static pages";
+						print t("Wrapper for static pages");
 						break;
 					case PageThemeFile::TFTYPE_DEFAULT:
-						print "Default template";
+						print t("Default template");
 						break;
 					case PageThemeFile::TFTYPE_SINGLE_PAGE:
-						print "Template for internal Concrete page.";
+						print t("Template for internal Concrete page.");
 						break;
 					case PageThemeFile::TFTYPE_PAGE_TYPE_NEW:
-						print "New template.";
+						print t("New template.");
 						break;
 					case PageThemeFile::TFTYPE_PAGE_TYPE_EXISTING:
-						print "Template for existing page type.";
+						print t("Template for existing page type.");
 						break;
 				}
 			?></td>
 			<td><?
 				switch($f->getType()) {
 					case PageThemeFile::TFTYPE_VIEW:
-						print '<span class="deem">None. This file will automatically be used.</span>';
+						print '<span class="deem">'.t('None. This file will automatically be used.').'</span>';
 						break;
 					case PageThemeFile::TFTYPE_DEFAULT:
-						print '<span class="deem">None. This file will automatically be used for pages without a template.</span>';
+						print '<span class="deem">'.t('None. This file will automatically be used for pages without a template.').'</span>';
 						break;
 					case PageThemeFile::TFTYPE_SINGLE_PAGE:
-						print '<span class="deem">None. This file will automatically be used by the <strong>' . $txt->uncamelcase($f->getHandle()) . '</strong> page.';
+						print '<span class="deem">'.t('None. This file will automatically be used by the <strong>%s</strong> page.',$txt->uncamelcase($f->getHandle()) ).'</span>';
 						break;
 					case PageThemeFile::TFTYPE_PAGE_TYPE_NEW:
 						$pf++;
 						print '<input type="checkbox" value="' . $f->getHandle() . '" name="pageTypes[]" checked /> Create page type.';
 						break;
 					case PageThemeFile::TFTYPE_PAGE_TYPE_EXISTING:
-						print '<span class="deem">None. This file will automatically be used by the <strong>' . $txt->uncamelcase($f->getHandle()) . '</strong> page type.';
+						print '<span class="deem">'.t('None. This file will automatically be used by the <strong>%s</strong> page type.',$txt->uncamelcase($f->getHandle())  ).'</span>';
 						break;
 				}
 			?></td>
@@ -82,7 +82,7 @@ $ci = Loader::helper('concrete/interface');
 	
 	
 	<?
-	$b1 = $ci->button('Return to Themes', $this->url('/dashboard/themes'), 'left');
+	$b1 = $ci->button(t('Return to Themes'), $this->url('/dashboard/themes'), 'left');
 	if ($pf > 0) { 
 		$b2 = $ci->submit('Activate Files', 'ccm-inspect-form'); ?>
 		<?=$ci->buttons($b1, $b2); ?>

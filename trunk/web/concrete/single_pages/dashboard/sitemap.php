@@ -25,7 +25,7 @@ if (isset($_REQUEST['reveal'])) {
 </script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.sitemap.js"></script>
 
-<h1><span>Sitemap</span></h1>
+<h1><span><?=t('Sitemap')?></span></h1>
 
 <div class="ccm-dashboard-inner" >
 
@@ -38,8 +38,7 @@ if (isset($_REQUEST['reveal'])) {
 		</ul>
 	</div>
 
-	<? Loader::element('dashboard/sitemap_search_results') ?>
-	
+	<? Loader::element('dashboard/sitemap_search_results') ?>	
 
 	</td>
 	<td valign="top">
@@ -48,7 +47,7 @@ if (isset($_REQUEST['reveal'])) {
 	
 	<div id="ccm-show-all-pages">
 	<input type="checkbox" id="ccm-show-all-pages-cb" <? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?> checked <? } ?> />
-	<label for="ccm-show-all-pages-cb">Show System Pages</label>
+	<label for="ccm-show-all-pages-cb"><?=t('Show System Pages')?></label>
 	</div>
 	
 	</td>

@@ -36,5 +36,5 @@ $returnURL = ($_POST['returnURL']) ? $_POST['returnURL'] : $_SERVER['HTTP_REFERE
 <? } ?>
 
 <? if ($returnURL) { ?>
-<p><a href="<?=$returnURL?>">&lt; Back</a></p>
+<p><a href="<?=$returnURL?>">&lt; <?=t('Back')?></a></p>
 <? } ?>

@@ -55,23 +55,23 @@ if ($_POST['add'] || $_POST['update']) {
 	
 	$error = array();
 	if (!$ukHandle) {
-		$error[] = "Handle required.";
+		$error[] = t("Handle required.");
 	}
 	if (!$ukName) {
-		$error[] = "Name required.";
+		$error[] = t("Name required.");
 	}
 	if (!$ukType) {
-		$error[] = "Type required.";
+		$error[] = t("Type required.");
 	}
 	if (($ukType == 'SELECT' || $ukType == 'RADIO' || $ukType == 'HTML') && !$ukValues) {
-		$error[] = "A select attribute must have at least one option.";
+		$error[] = t("A select attribute must have at least one option.");
 	}
 	
 	if (count($error) == 0) {
 		if ($_POST['add']) {
 			if ($ukHandle) {
 				if (UserAttributeKey::inUse($ukHandle)) {
-					$error[] = "A questionnaire item with the handle '" . $ukHandle . "' already exists.";
+					$error[] = t("A questionnaire item with the handle '%s' already exists.",$ukHandle);
 				}
 			}
 			if (count($error) == 0) {
@@ -95,11 +95,11 @@ if ($_REQUEST['task'] == 'delete') {
 }
 
 if ($_GET['created']) {
-	$message = "Attribute Key Created.";
+	$message = t("Attribute Key Created.");
 } else if ($_GET['deleted']) { 
-	$message = "Attribute Key Deleted.";
+	$message = t("Attribute Key Deleted.");
 } else if ($_GET['updated']) {
-	$message = "Attribute Key Updated.";
+	$message = t("Attribute Key Updated.");
 }
 
 $attribs = UserAttributeKey::getList(true);
@@ -118,46 +118,48 @@ if ($editMode) { ?>
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
 	<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 	<tr>
-		<td class="subheader">Handle <span class="required">*</span></td>
-		<td class="subheader">Type <span class="required">*</span></td>
-		<td class="subheader">Hidden?</td>
-		<td class="subheader">Required?</td>
+		<td class="subheader"><?=t('Handle')?> <span class="required">*</span></td>
+		<td class="subheader"><?=t('Type')?> <span class="required">*</span></td>
+		<td class="subheader"><?=t('Hidden?')?></td>
+		<td class="subheader"><?=t('Required?')?></td>
 	</tr>	
 	<tr>
 		<td><input type="text" name="ukHandle" style="width: 100%" value="<?=$ukHandle?>" /></td>
 		<td><select name="ukType" style="width: 100%" onchange="disableValues(this)">
-			<option value="TEXT"<? if ($ukType == 'TEXT') { ?> selected<? } ?>>Text Box</option>
-			<option value="TEXTAREA"<? if ($ukType == 'TEXTAREA') { ?> selected<? } ?>>Text Field</option>
-			<option value="BOOLEAN"<? if ($ukType == 'BOOLEAN') { ?> selected<? } ?>>Check Box</option>
-			<option value="SELECT"<? if ($ukType == 'SELECT') { ?> selected<? } ?>>Select Menu</option>
-			<option value="RADIO"<? if ($ukType == 'RADIO') { ?> selected<? } ?>>Radio Buttons Menu</option>
-			<option value="HTML"<? if ($ukType == 'HTML') { ?> selected<? } ?>>HTML Text (Not Interactive)</option>
+			<option value="TEXT"<? if ($ukType == 'TEXT') { ?> selected<? } ?>><?=t('Text Box')?></option>
+			<option value="TEXTAREA"<? if ($ukType == 'TEXTAREA') { ?> selected<? } ?>><?=t('Text Field')?></option>
+			<option value="BOOLEAN"<? if ($ukType == 'BOOLEAN') { ?> selected<? } ?>><?=t('Check Box')?></option>
+			<option value="SELECT"<? if ($ukType == 'SELECT') { ?> selected<? } ?>><?=t('Select Menu')?></option>
+			<option value="RADIO"<? if ($ukType == 'RADIO') { ?> selected<? } ?>><?=t('Radio Buttons Menu')?></option>
+			<option value="HTML"<? if ($ukType == 'HTML') { ?> selected<? } ?>><?=t('HTML Text (Not Interactive)')?></option>
 		</select></td>
-		<td><input type="checkbox" value="1" name="ukHidden" style="vertical-align: middle" <? if ($ukHidden) { ?> checked <? } ?> /> Yes</td>
-		<td><input type="checkbox" value="1" name="ukRequired" style="vertical-align: middle" <? if ($ukType == 'HTML') { ?> disabled <? } ?> <? if ($ukRequired) { ?> checked <? } ?> /> Yes</td>
+		<td><input type="checkbox" value="1" name="ukHidden" style="vertical-align: middle" <? if ($ukHidden) { ?> checked <? } ?> /> <?=t('Yes') ?> </td>
+		<td><input type="checkbox" value="1" name="ukRequired" style="vertical-align: middle" <? if ($ukType == 'HTML') { ?> disabled <? } ?> <? if ($ukRequired) { ?> checked <? } ?> /> <?=t('Yes')?> </td>
 	</tr>
 	<tr>	
-		<td class="subheader" colspan="2">Name <span class="required">*</span></td>
-		<td class="subheader">Private?</td>
-		<td class="subheader">Registration Q?</td>
+		<td class="subheader" colspan="2"><?=t('Name')?> <span class="required">*</span></td>
+		<td class="subheader"><?=t('Private?')?></td>
+		<td class="subheader"><?=t('Registration Q?')?></td>
 	</tr>
 	<tr>
 		<td colspan="2"><input type="text" name="ukName" style="width: 100%" value="<?=$ukName?>" /></td>
-		<td><input type="checkbox" name="ukPrivate" value="1" style="vertical-align: middle" <? if ($ukType == 'HTML') { ?> disabled <? } ?>  <? if ($ukPrivate) { ?> checked <? } ?> /> Yes</td>
-		<td><input type="checkbox" value="1" name="ukDisplayedOnRegister" style="vertical-align: middle" <? if ($ukDisplayedOnRegister) { ?> checked <? } ?> /> Yes</td>
+		<td><input type="checkbox" name="ukPrivate" value="1" style="vertical-align: middle" <? if ($ukType == 'HTML') { ?> disabled <? } ?>  <? if ($ukPrivate) { ?> checked <? } ?> /> <?=t('Yes')?></td>
+		<td><input type="checkbox" value="1" name="ukDisplayedOnRegister" style="vertical-align: middle" <? if ($ukDisplayedOnRegister) { ?> checked <? } ?> /> <?=t('Yes')?></td>
 	</tr>
 	<tr>
-		<td class="subheader" colspan="4">Values <span class="required" id="reqValues" <? if ($ukType != 'SELECT' && $ukType != 'RADIO' && $ukType != "HTML") { ?> style="display: none"<? } ?>>*</span></td>
+		<td class="subheader" colspan="4"><?=t('Values')?> <span class="required" id="reqValues" <? if ($ukType != 'SELECT' && $ukType != 'RADIO' && $ukType != "HTML") { ?> style="display: none"<? } ?>>*</span></td>
 	</tr>
 	<tr>
-		<td colspan="4"><textarea id="ukValues" <? if ($ukType != 'SELECT' && $ukType != 'RADIO' && $ukType != "HTML") { ?> disabled <? } ?> name="ukValues" style="width: 100%; height: 120px"><?=$ukValues?></textarea><br/>
-		(For select and radio types only - separate menu options with a line break.)<br/>
-		HTML Text is used in displaying the questionnaire - it is <b>not</b> an interactive question type.</td>
+		<td colspan="4">
+		<textarea id="ukValues" <? if ($ukType != 'SELECT' && $ukType != 'RADIO' && $ukType != "HTML") { ?> disabled <? } ?> name="ukValues" style="width: 100%; height: 120px"><?=$ukValues?></textarea><br/>
+		<?=t('(For select and radio types only - separate menu options with a line break.)')?><br/>		
+		<?=t('HTML Text is used in displaying the questionnaire - it is <b>not</b> an interactive question type.')?>
+		</td>
 	</tr>
 	<tr>
 		<td colspan="4" class="header">
-		<a href="<?=$this->url('/dashboard/users')?>" class="ccm-button-left"><span>Cancel</span></a>
-		<a href="javascript:void(0)" onclick="$('#ccm-attribute-update').get(0).submit()" class="ccm-button-right"><span>Update</span></a>
+		<a href="<?=$this->url('/dashboard/users')?>" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
+		<a href="javascript:void(0)" onclick="$('#ccm-attribute-update').get(0).submit()" class="ccm-button-right"><span><?=t('Update')?></span></a>
 		</td>		
 	</tr>
 	</table>
@@ -167,8 +169,8 @@ if ($editMode) { ?>
 	
 	<? if ($ak->getNumEntries() == 0) { ?>
 	
-	<div style="float: left; width: 200px; padding-top: 7px"><strong>This field has not been used yet. </strong></div>
-	<a href="<?=$this->url('/dashboard/users/attributes?ukID=' . $_REQUEST['ukID'] . '&task=delete')?>" class="ccm-button-left"><span>Delete</span></a>
+	<div style="float: left; width: 200px; padding-top: 7px"><strong><?=t('This field has not been used yet.')?> </strong></div>
+	<a href="<?=$this->url('/dashboard/users/attributes?ukID=' . $_REQUEST['ukID'] . '&task=delete')?>" class="ccm-button-left"><span><?=t('Delete')?></span></a>
 	
 	<div class="ccm-spacer">&nbsp;</div>
 	
@@ -181,7 +183,7 @@ if ($editMode) { ?>
 
 } else { ?>
 
-<h1><span>Add User Attribute</span></h1>
+<h1><span><?=t('Add User Attribute')?></span></h1>
 <div class="ccm-dashboard-inner">
 
 <form method="post" id="ccm-user-add-attribute" action="<?=$this->url('/dashboard/users/attributes/')?>"><input type="hidden" name="add" value="1" />
@@ -189,48 +191,49 @@ if ($editMode) { ?>
 <div style="margin:0px; padding:0px; width:100%; height:auto" >	
 <table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="subheader">Handle <span class="required">*</span></td>
-	<td class="subheader">Type <span class="required">*</span></td>
-	<td class="subheader">Hidden?</td>
-	<td class="subheader">Required?</td>
+	<td class="subheader"><?=t('Handle')?> <span class="required">*</span></td>
+	<td class="subheader"><?=t('Type')?> <span class="required">*</span></td>
+	<td class="subheader"><?=t('Hidden?')?></td>
+	<td class="subheader"><?=t('Required?')?></td>
 </tr>	
 <tr>
 	<td><input type="text" name="ukHandle" style="width: 100%" value="<?=$_POST['ukHandle']?>" /></td>
 	<td><select name="ukType" style="width: 100%"  onchange="disableValues(this)">
-		<option value="TEXT"<? if ($_POST['ukType'] == 'TEXT') { ?> selected<? } ?>>Text Box</option>
-		<option value="TEXTAREA"<? if ($_POST['ukType'] == 'TEXTAREA') { ?> selected<? } ?>>Text Area</option>
-		<option value="BOOLEAN"<? if ($_POST['ukType'] == 'BOOLEAN') { ?> selected<? } ?>>Check Box</option>
-		<option value="SELECT"<? if ($_POST['ukType'] == 'SELECT') { ?> selected<? } ?>>Select Menu</option>
-		<option value="RADIO"<? if ($_POST['ukType'] == 'RADIO') { ?> selected<? } ?>>Radio Button Menu</option>
-		<option value="HTML"<? if ($_POST['ukType'] == 'HTML') { ?> selected<? } ?>>HTML Text (Not Interactive)</option>
+		<option value="TEXT"<? if ($_POST['ukType'] == 'TEXT') { ?> selected<? } ?>><?=t('Text Box')?></option>
+		<option value="TEXTAREA"<? if ($_POST['ukType'] == 'TEXTAREA') { ?> selected<? } ?>><?=t('Text Area')?></option>
+		<option value="BOOLEAN"<? if ($_POST['ukType'] == 'BOOLEAN') { ?> selected<? } ?>><?=t('Check Box')?></option>
+		<option value="SELECT"<? if ($_POST['ukType'] == 'SELECT') { ?> selected<? } ?>><?=t('Select Menu')?></option>
+		<option value="RADIO"<? if ($_POST['ukType'] == 'RADIO') { ?> selected<? } ?>><?=t('Radio Button Menu')?></option>
+		<option value="HTML"<? if ($_POST['ukType'] == 'HTML') { ?> selected<? } ?>><?=t('HTML Text (Not Interactive)')?></option>
 	</select></td>
-	<td><input type="checkbox" name="ukHidden" value="1" style="vertical-align: middle" <? if ($_POST['ukHidden']) { ?> checked <? } ?> /> Yes</td>
-	<td><input type="checkbox" value="1" name="ukRequired" style="vertical-align: middle" <? if ($_POST['ukRequired']) { ?> checked <? } ?> /> Yes</td>
+	<td><input type="checkbox" name="ukHidden" value="1" style="vertical-align: middle" <? if ($_POST['ukHidden']) { ?> checked <? } ?> /> <?=t('Yes')?></td>
+	<td><input type="checkbox" value="1" name="ukRequired" style="vertical-align: middle" <? if ($_POST['ukRequired']) { ?> checked <? } ?> /> <?=t('Yes')?></td>
 
 </tr>
 <tr>
-	<td class="subheader" colspan="2">Name <span class="required">*</span></td>
-	<td class="subheader">Private?</td>
-	<td class="subheader">Registration Q?</td>
+	<td class="subheader" colspan="2"><?=t('Name')?> <span class="required">*</span></td>
+	<td class="subheader"><?=t('Private?')?></td>
+	<td class="subheader"><?=t('Registration Q?')?></td>
 </tr>
 <tr>
 	<td colspan="2"><input type="text" name="ukName" style="width: 100%" value="<?=$_POST['ukName']?>" /></td>
-	<td><input type="checkbox" name="ukPrivate" value="1" style="vertical-align: middle" <? if ($_POST['ukPrivate']) { ?> checked <? } ?> /> Yes</td>
-	<td><input type="checkbox" value="1" name="ukDisplayedOnRegister" style="vertical-align: middle" <? if ($_POST['ukDisplayedOnRegister'] || (!$_POST)) { ?> checked <? } ?> /> Yes</td>
+	<td><input type="checkbox" name="ukPrivate" value="1" style="vertical-align: middle" <? if ($_POST['ukPrivate']) { ?> checked <? } ?> /> <?=t('Yes')?></td>
+	<td><input type="checkbox" value="1" name="ukDisplayedOnRegister" style="vertical-align: middle" <? if ($_POST['ukDisplayedOnRegister'] || (!$_POST)) { ?> checked <? } ?> /> <?=t('Yes')?></td>
 
 </tr>
 <tr>
-	<td class="subheader" colspan="4">Values <span class="required" id="reqValues" <? if ($_POST['ukType'] != 'SELECT' && $_POST['ukType'] != 'RADIO') { ?> style="display: none"<? } ?>>*</span></td>
+	<td class="subheader" colspan="4"><?=t('Values')?> <span class="required" id="reqValues" <? if ($_POST['ukType'] != 'SELECT' && $_POST['ukType'] != 'RADIO') { ?> style="display: none"<? } ?>>*</span></td>
 </tr>
 <tr>
 	<td colspan="4"><textarea id="ukValues" <? if ($_POST['ukType'] != 'SELECT' && $_POST['ukType'] != 'RADIO') { ?> disabled <? } ?> name="ukValues" style="width: 100%; height: 120px"><?=$_POST['ukValues']?></textarea>
-	<br/>(For select and radio types only - separate menu options with a line break.)<br/>
-	HTML Text is used in displaying the questionnaire - it is <b>not</b> an interactive question type.</td>
+	<br /><?=t('(For select and radio types only - separate menu options with a line break.)')?><br />	
+	<?=t('HTML Text is used in displaying the questionnaire - it is <b>not</b> an interactive question type.')?>
+	</td>
 </tr>
 <tr>
 	<td colspan="4" class="header">
-	<a href="<?=$this->url('/dashboard/users')?>" class="ccm-button-left"><span>Cancel</span></a>
-	<a href="javascript:void(0)" onclick="$('#ccm-user-add-attribute').get(0).submit()" class="ccm-button-right"><span>Add User Attribute</span></a>
+	<a href="<?=$this->url('/dashboard/users')?>" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
+	<a href="javascript:void(0)" onclick="$('#ccm-user-add-attribute').get(0).submit()" class="ccm-button-right"><span><?=t('Add User Attribute')?></span></a>
 </tr>
 </table>
 </div>
