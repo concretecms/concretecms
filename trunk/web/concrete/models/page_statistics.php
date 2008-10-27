@@ -32,7 +32,7 @@ class PageStatistics {
 	public static function getTotalPageViews($date = null) {
 		$db = Loader::db();
 		if ($date != null) {
-			return $db->GetOne("select count(pstID) from PageStatistics where DATE_FORMAT(timestamp, '%Y-%m-%d') = ?", array($date));
+			return $db->GetOne("select count(pstID) from PageStatistics where date = ?", array($date));
 		} else {
 			return $db->GetOne("select count(pstID) from PageStatistics");
 		}
@@ -48,7 +48,7 @@ class PageStatistics {
 		$db = Loader::db();
 		if ($date != null) {
 			$v = array($u->getUserID(), $date);
-			return $db->GetOne("select count(pstID) from PageStatistics where uID <> ? and DATE_FORMAT(timestamp, '%Y-%m-%d') = ?", $v);
+			return $db->GetOne("select count(pstID) from PageStatistics where uID <> ? and date = ?", $v);
 		} else {
 			$v = array($u->getUserID());
 			return $db->GetOne("select count(pstID) from PageStatistics where uID <> ?", $v);

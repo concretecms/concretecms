@@ -151,7 +151,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$uID = ($this->uID > 0) ? $this->uID : 0;
 			$cID = $c->getCollectionID();
 			$v = array($cID, $uID);
-			$db->query("insert into PageStatistics (cID, uID) values (?, ?)", $v);
+			$db->query("insert into PageStatistics (cID, uID, date) values (?, ?, NOW())", $v);
 			
 			// record a view, arguments are
 			// 1. page being viewed
