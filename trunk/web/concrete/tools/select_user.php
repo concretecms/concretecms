@@ -22,9 +22,9 @@ if ($s->getTotal() > 0) {
 ?>
 <form id="ccm-user-search" method="get" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_user/">
 <div id="ccm-user-search-fields">
-<label>Username</label>
+<label><?=t('Username')?></label>
 <input type="text" id="ccm-user-search-uname" name="uName" value="<?=$_REQUEST['uName']?>" class="ccm-text" style="width: 80px" />
-<label>Email Address</label>
+<label><?=t('Email Address')?></label>
 <input type="text" id="ccm-user-search-email" name="uEmail" value="<?=$_REQUEST['uEmail']?>" class="ccm-text" style="width: 80px" />
 <input type="submit" value="Search" />
 </div>
@@ -36,8 +36,8 @@ if ($s->getTotal() > 0) {
 		<? include(DIR_FILES_ELEMENTS_CORE . '/search_results_top.php');?>
 		<table class="ccm-grid-list" cellspacing="0" cellpadding="0">
 		<tr>
-			<th>Username</th>
-			<th class="full">Email Address</th>
+			<th><?=t('Username')?></th>
+			<th class="full"><?=t('Email Address')?></th>
 		</tr>
 		<? while ($row = $res->fetchRow()) { ?>
 		<tr>
@@ -58,7 +58,7 @@ if ($s->getTotal() > 0) {
 
 	<? } else { ?>
 
-		No users found.
+		<?=t('No users found.')?>
 
 	<? } ?>
 

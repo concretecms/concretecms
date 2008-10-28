@@ -24,7 +24,7 @@ if ($gl->getTotal() > 0) {
 <form id="ccm-group-search" method="get" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_group/">
 <div id="ccm-group-search-fields">
 <input type="text" id="ccm-group-search-keywords" name="gKeywords" value="<?=$_REQUEST['gKeywords']?>" class="ccm-text" style="width: 100px" />
-<input type="submit" value="Search" />
+<input type="submit" value="<?=t('Search')?>" />
 <input type="hidden" name="group_submit_search" value="1" />
 </div>
 </form>
@@ -51,7 +51,7 @@ if ($pOptions['needPaging']) {
 
 } else { ?>
 
-	<p>No groups found.</p>
+	<p><?=t('No groups found.')?></p>
 	
 <? } ?>
 

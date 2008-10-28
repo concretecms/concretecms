@@ -36,8 +36,8 @@ $("#ccm-ug-tabs a").click(function() {
 <? if ($displayGroups && $displayUsers) { ?>
 
 <ul class="ccm-dialog-tabs" id="ccm-ug-tabs">
-<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-select-group">Groups</a></li>
-<li><a href="javascript:void(0)" id="ccm-select-user">Users</a></li>
+<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-select-group"><?=t('Groups')?></a></li>
+<li><a href="javascript:void(0)" id="ccm-select-user"><?=t('Users')?></a></li>
 </ul>
 
 <? } ?>
@@ -46,7 +46,7 @@ $("#ccm-ug-tabs a").click(function() {
 
 <div id="ccm-select-group-tab">
 
-<h1>Select Group</h1>
+<h1><?=t('Select Group')?></h1>
 
 <? include(DIR_FILES_TOOLS_REQUIRED . '/select_group.php'); ?>
 
@@ -57,7 +57,7 @@ $("#ccm-ug-tabs a").click(function() {
 <? if ($displayUsers) { ?>
 
 <div id="ccm-select-user-tab" style="display: none">
-<h1>Select User</h1>
+<h1><?=t('Select User')?></h1>
 
 <? include(DIR_FILES_TOOLS_REQUIRED . '/select_user.php'); ?>
 

@@ -16,8 +16,8 @@ if (isset($_FILES['Filedata'])) {
 	$data['file'] = $_FILES['Filedata']['tmp_name'];
 	$data['name'] = $_FILES['Filedata']['name'];
 	$nb = $bt->add($data);
-	echo('OK: '.$data['name']);
+	echo(t('OK: ').$data['name']);
 } else {
-	echo('ERROR: No files sent.');
+	echo(t('ERROR: No files sent.'));
 }
 ?>
