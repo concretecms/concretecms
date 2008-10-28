@@ -23,7 +23,7 @@
 		 * Used for localization. If we want to localize the name/description we have to include this
 		 */
 		public function getBlockTypeDescription() {
-			return t("Embeds Uploaded Video into a web page. Supports AVI, WMV, Quicktime/MPEG4 and FLV formats.");
+			return t("Embeds uploaded video into a web page. Supports AVI, WMV, Quicktime/MPEG4 and FLV formats.");
 		}
 		
 		public function getBlockTypeName() {

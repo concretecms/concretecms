@@ -19,7 +19,7 @@ div.survey-block-option img {
 <strong><?=t('Open to all site visitors?')?></strong><br/>
 <input type="radio" value="0" name="requiresRegistration" style="vertical-align: middle" <? if (!$controller->requiresRegistration()) { ?> checked <? } ?> />&nbsp;<?=t('Yes')?>
 &nbsp;&nbsp;
-<input type="radio" value="1" name="requiresRegistration" style="vertical-align: middle" <? if ($controller->requiresRegistration()) { ?> checked <? } ?> />&nbsp;<?=t('No')?>No (<?=t('requires registration to answer')?>)
+<input type="radio" value="1" name="requiresRegistration" style="vertical-align: middle" <? if ($controller->requiresRegistration()) { ?> checked <? } ?> />&nbsp;<?=t('No. Registration is required to answer.')?>
 <br><br>
 
 <strong><?=t('Options')?></strong>

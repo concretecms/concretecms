@@ -52,7 +52,6 @@ table#searchBlockSetup .note{ font-size:10px; color:#999999; font-weight:normal 
 			</div>
 			<div id="ccm-searchBlock-resultsURL-wrap" style=" <?=(strlen($searchObj->resultsURL))?'':'display:none'?>" >
 				<input id="ccm-searchBlock-resultsURL" name="resultsURL" value="<?=$searchObj->resultsURL?>" maxlength="255" type="text" style="width:100%">
-				<div><?=t('ex. /search-results/')?></div>
 			</div>
 		</td>
 	</tr>			

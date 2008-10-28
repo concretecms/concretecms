@@ -142,7 +142,9 @@ $ih = Loader::helper('concrete/interface');
 				<?
 				if($jobItem['jStatus']=='RUNNING'){
 					$runtime=date('H:i:s A', strtotime($jobItem['jDateLastRun']) );
-					echo t("<strong>Currently Running </strong>(Since %s)",$runtime);					
+					echo ("<strong>");
+					echo t("Currently Running (Since %s)",$runtime);					
+					echo ("</strong>");
 				}elseif(substr($jobItem['jDateLastRun'],0,4)=='0000'){
 					echo t('Never');
 				}else{

@@ -21,12 +21,12 @@ if (isset($_REQUEST['cID'] ) && is_numeric($_REQUEST['cID'])) {
 }
 
 if ((!is_object($c)) || (($c->getCollectionID() != $_REQUEST['cID']) && ($c->getCollectionPointerOriginalID() != $_REQUEST['cID']))) {
-	$error = t('Invalid Collection Specified');
+	$error = t('Invalid Page ID Specified.');
 }
 
 $cp = new Permissions($c);
 if (!$cp->canDeleteCollection()) {
-	$error = t('You are not allowed to delete this collection');
+	$error = t('You are not allowed to delete this page.');
 }
 
 if (isset($error)) {
@@ -46,5 +46,3 @@ if (isset($error)) {
 
 print json_encode($json);
 exit;
-
-?>

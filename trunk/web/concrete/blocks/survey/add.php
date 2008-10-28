@@ -20,7 +20,7 @@ var currentOption = 0;
 <strong><?=t('Open to all site visitors?')?></strong><br/>
 <input type="radio" value="0" name="requiresRegistration" style="vertical-align: middle" checked />&nbsp;<?=t('Yes')?>
 &nbsp;&nbsp;
-<input type="radio" value="1" name="requiresRegistration" style="vertical-align: middle" />&nbsp;<?=t('No')?> (<?=t('requires registration to answer')?>)
+<input type="radio" value="1" name="requiresRegistration" style="vertical-align: middle" />&nbsp;<?=t('No. Registration is required to answer.')?>
 <br><br>
 <strong><?=t('Options')?></strong>
 <div id="pollOptions">

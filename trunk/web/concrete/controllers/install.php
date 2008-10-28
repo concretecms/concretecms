@@ -170,7 +170,6 @@ class InstallController extends Controller {
 						
 						// Add default user attributes
 						UserAttributeKey::add('date_of_birth', t('Date of Birth'), 0, 1, 1, 0, null, "TEXT");
-						UserAttributeKey::add('gender', t('Gender'), 0, 1, 1, 0, t("Male\nFemale"), "RADIO");
 						
 						// Add our core views
 						SinglePage::add('/login');
@@ -368,13 +367,13 @@ class InstallController extends Controller {
 						$home->addBlock($bt, "Main", $data);
 
 
-						$data['content'] = t('<h2>Sidebar</h2><p>Everything about Concrete is completely customizable through the CMS. This is a separate area from the main content on the homepage.</p><p>We\'ve named this area the "sidebar" (pretty imaginative, eh?)</p>');
+						$data['content'] = t('<h2>Sidebar</h2><p>Everything about Concrete is completely customizable through the CMS. This is a separate area from the main content on the homepage.</p>');
 						$home->addBlock($bt, "Sidebar", $data);
 				
-						$data['content']  = t('<h1 class="noTopSpace">Sed ut perspiciatis unde omnis iste natus error (H1)</h1><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>');
+						$data['content']  = t('<h1>Sed ut perspiciatis unde omnis iste natus error (H1)</h1><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>');
 						$aboutPage->addBlock($bt, "Main", $data);
 						
-						$data['content']  = t('<h1 class="noTopSpace">Examples of Blocks</h1><p>Listed below are some of the more interesting blocks that Concrete5 ships with, installed and ready to use. Click through to explore the blocks on their own page.</p><p>These pages are actually listed using the <b>page list</b> block. To check it out, put the page in edit mode, mouse over the list of pages below, click, and then select edit.</p>');
+						$data['content']  = t('<h1>Examples of Blocks</h1><p>Listed below are some of the more interesting blocks that Concrete5 ships with, installed and ready to use. Click through to explore the blocks on their own page.</p><p>These pages are actually listed using the <b>page list</b> block. To check it out, put the page in edit mode, mouse over the list of pages below, click, and then select edit.</p>');
 						$examplesPage->addBlock($bt, "Main", $data);
 						
 						// add page list block below the examples intro text
@@ -391,7 +390,7 @@ class InstallController extends Controller {
 						// add javascript slideshow page beneath examples
 						$data['name'] = 'Image Slideshow';
 						$example0Page = $examplesPage->add($dt, $data);
-						$data['content']  = t("<h1 class='noTopSpace'>Image Slideshow</h1><p>Check out the image block above. It's actually multiple images setup as a JavaScript slideshow.");
+						$data['content']  = t("<h1>Image Slideshow</h1><p>Check out the image block above. It's actually multiple images setup as a JavaScript slideshow.");
 						$example0Page->addBlock($bt, "Main", $data);
 						
 						// remove image block from header
@@ -444,7 +443,7 @@ class InstallController extends Controller {
 						// add sitemap page beneath examples page
 						$data['name'] = t('Sitemap');
 						$example1Page = $examplesPage->add($dt, $data);
-						$data['content']  = t("<h1 class='noTopSpace'>Sitemap Example</h1><p>Below we're using the autonav block to build a nested sitemap of the whole site. When pages are added to the site this will automatically update.</p>");
+						$data['content']  = t("<h1>Sitemap Example</h1><p>Below we're using the autonav block to build a nested sitemap of the whole site. When pages are added to the site this will automatically update.</p>");
 						$example1Page->addBlock($bt, "Main", $data);
 						
 						// add sitemap block to example 1 page
@@ -459,7 +458,7 @@ class InstallController extends Controller {
 						$data['name'] = t('YouTube Video');
 						$data['handle'] = 'youtube';
 						$example2Page = $examplesPage->add($dt, $data);
-						$data['content']  = t('<h1 class="noTopSpace">Youtube Video Example</h1>');
+						$data['content']  = t('<h1>Youtube Video Example</h1>');
 						$example2Page->addBlock($bt, "Main", $data);
 						
 						// add youtube block to example 2 page
@@ -471,7 +470,7 @@ class InstallController extends Controller {
 						// add search page
 						$data['name'] = t('Search');
 						$example3Page = $examplesPage->add($dt, $data);
-						$data['content']  = t('<h1 class="noTopSpace">Search Example</h1>');
+						$data['content']  = t('<h1>Search Example</h1>');
 						$example3Page->addBlock($bt, "Main", $data);
 						
 						// add search block to example 3 page
@@ -487,13 +486,13 @@ class InstallController extends Controller {
 						$example4Page = $examplesPage->add($dt, $data);
 						$nh = Loader::helper('navigation');
 						$formURL = $nh->getLinkToCollection($contactPage);
-						$data['content']  = t('<h1 class="noTopSpace">Interactive Form Block</h1><p>An example of our interactive form block can be found on the <a href="' . $formURL . '">Contact Page</a>.');
+						$data['content']  = t('<h1>Interactive Form Block</h1><p>An example of our interactive form block can be found on the Contact Page.');
 						$example4Page->addBlock($bt, "Main", $data);					
 
 						// add survey page
 						$data['name'] = t('Survey');
 						$example5Page = $examplesPage->add($dt, $data);
-						$data['content']  = t('<h1 class="noTopSpace">Survey Example</h1>');
+						$data['content']  = t('<h1>Survey Example</h1>');
 						$example5Page->addBlock($bt, "Main", $data);
 						
 						// add survey to example 3 page
@@ -508,7 +507,7 @@ class InstallController extends Controller {
 						$data['name'] = t('Guestbook/Comments');
 						$data['cHandle'] = 'guestbook';
 						$example6Page = $examplesPage->add($dt, $data);
-						$data['content']  = t('<h1 class="noTopSpace">Guestbook/Comments Example</h1><p>Using Concrete5 you can add blog-style comments to any page easily, using the guestbook block below.</p>');
+						$data['content']  = t('<h1>Guestbook/Comments Example</h1><p>Using Concrete5 you can add blog-style comments to any page easily, using the guestbook block below.</p>');
 						$example6Page->addBlock($bt, "Main", $data);
 						
 						// add guestbook to example page

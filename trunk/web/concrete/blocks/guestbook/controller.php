@@ -162,7 +162,7 @@
 			if($bp->canWrite()) {
 				$Entry = new GuestBookBlockEntry($this->bID);
 				$Entry->removeEntry($_GET['entryID']);
-				$this->set('response', t('The comment has been removed') );
+				$this->set('response', t('The comment has been removed.') );
 			}
 		}
 	
@@ -177,7 +177,7 @@
 			if($bp->canWrite()) {
 				$Entry = new GuestBookBlockEntry($this->bID);
 				$Entry->approveEntry($_GET['entryID']);
-				$this->set('response', t('The comment has been approved') );
+				$this->set('response', t('The comment has been approved.') );
 			}
 		}
 		
@@ -190,7 +190,7 @@
 			if($bp->canWrite()) {
 				$Entry = new GuestBookBlockEntry($this->bID);
 				$Entry->unApproveEntry($_GET['entryID']);
-				$this->set('response', t('The comment has been set to not approved') );
+				$this->set('response', t('The comment has been unapproved.') );
 			}
 		}
 	

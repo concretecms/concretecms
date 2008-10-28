@@ -84,7 +84,7 @@ if ($s->getTotal() > 0) { ?>
 	</div>
 	<?
 } else {
-	echo(t('<strong>No files found.</strong><br/><br/>'));
+	echo('<strong>' . t('No files found.') . '</strong><br/><br/>');
 }
 ?>
 
