@@ -36,13 +36,17 @@ class ConcreteAvatarHelper {
 				$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
 				$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
 			}
-			$isize = getimagesize($size);
-			$isize[0] = round($isize[0]*$aspectRatio);
-			$isize[1] = round($isize[1]*$aspectRatio);
-			
-			$str = '<img class="u-avatar" src="' . $src . '" width="' . $isize[0] . '" height="' . $isize[1] . '" alt="' . $uo->getUserName() . '" />';
-			return $str;
-		} else if (!$suppressNone) {
+			if (file_exists($size)) {
+				$isize = getimagesize($size);
+				$isize[0] = round($isize[0]*$aspectRatio);
+				$isize[1] = round($isize[1]*$aspectRatio);
+				
+				$str = '<img class="u-avatar" src="' . $src . '" width="' . $isize[0] . '" height="' . $isize[1] . '" alt="' . $uo->getUserName() . '" />';
+				return $str;
+			}
+		}
+		
+		if (!$suppressNone) {
 			return $this->outputNoAvatar($aspectRatio);
 		}
 	}
