@@ -37,7 +37,8 @@ $this->inc('elements/header.php'); ?>
 	<div id="footer">
 			&copy; <?=date('Y')?> <a href="<?=DIR_REL?>/"><?=SITE?></a>.
 			&nbsp;&nbsp;
-			All rights reserved.	
+			<?=t('All rights reserved.')?>	
+			<span class="sign-in"><a href="<?=$this->url('/login')?>"><?=t('Sign In to Edit this Site')?></a></span>
 	</div>
 </div>
 <? $this->inc('elements/footer.php'); ?>
