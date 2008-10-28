@@ -81,7 +81,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		*/
 		public function inc($file, $args = array()) {
 			extract($args);
-			$base = $this->getBlocKPath();
+			$base = $this->getBlockPath();
 			include($base . '/' . $file);
 		}
 		
@@ -100,10 +100,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				} else {
 					$base = DIR_PACKAGES_CORE . '/' . $obj->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
 				}
-			} else if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle())) {
-				$base = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle();
-			} else {
+			} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle())) {
 				$base = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle();
+			} else {
+				$base = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle();
 			}
 			
 			return $base;

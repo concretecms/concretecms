@@ -8,9 +8,11 @@
 		$_c = $ni->getCollectionObject();
 		if (!$_c->getCollectionAttributeValue('exclude_nav')) {
 		
-			if ($c->getCollectionID() == $_c->getCollectionID()) 
+			if (strpos($c->getCollectionPath(), $_c->getCollectionPath()) === 0) {
 				$navSelected='nav-selected';
-			else $navSelected='';
+			} else {
+				$navSelected = '';
+			}
 			
 			if ($isFirst) $isFirstClass = 'first';
 			else $isFirstClass = '';
