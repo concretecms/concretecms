@@ -17,11 +17,11 @@ $u = new User();
 $max = 0;
 
 for ($i = -4; $i < 1; $i++) {
-	$date = date('Y-m-d', strtotime($i . " days"));
+	$date = date('Y-m-d', strtotime($i . ' '.t('days') ));
 	if ($i == 0) {
-		$daysRow[] = 'Today';
+		$daysRow[] = t('Today');
 	} else {
-		$daysRow[] = date('D', strtotime($i . " days"));
+		$daysRow[] = date('D', strtotime($i . ' '.t('days') ));
 	}
 	$total = PageStatistics::getTotalPageViewsForOthers($u, $date);
 	$viewsArray[] = $total;
