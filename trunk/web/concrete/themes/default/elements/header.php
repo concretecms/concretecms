@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
 	
-<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
 <!-- Site Header Content //-->
 <style type="text/css">@import "<?=$this->getThemePath()?>/main.css";</style>
