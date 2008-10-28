@@ -76,7 +76,7 @@ if (!$canViewPane) {
 	if (($c->isEditMode() || ($_GET['ctask'] == 'add')) && $toolSection) {
 		require_once(DIR_FILES_ELEMENTS_CORE . '/' . $toolSection . '.php');
 	} else {
-		$error = "Someone has already checked out this page for editing.";
+		$error = t("Someone has already checked out this page for editing.");
 	}
 
 }

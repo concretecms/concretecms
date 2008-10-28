@@ -161,8 +161,8 @@ $sp = Pile::getDefault();
 
 ?>
 
-Block added to scrapbook.
+<?=t('Block added to scrapbook.')?>
 
 <br/><br/>
 
-<a href="javascript:void(0)" class="ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close">Close Window</em></span></a>
+<a href="javascript:void(0)" class="ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Close Window')?></em></span></a>

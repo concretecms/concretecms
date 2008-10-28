@@ -10,11 +10,11 @@ if (!$cp->canRead()) {
 
 ?>
 
-<h1>Add Files</h1>
+<h1><?=t('Add Files')?></h1>
 
-<div id="ccm-al-upload-complete" style="display: none">Upload Complete! <a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop(); ccm_alRefresh();">Click here to close this window and refresh the library.</a></div>
+<div id="ccm-al-upload-complete" style="display: none"><?=t('Upload Complete!')?> <a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop(); ccm_alRefresh();"><?=t('Click here to close this window and refresh the library.')?></a></div>
 
-<div id="ccm-al-flash-uploader">The uploader requires <a href="http://www.adobe.com/">Adobe Flash</a>.</div>
+<div id="ccm-al-flash-uploader"><?=t('The uploader requires')?> <a href="http://www.adobe.com/"><?=t('Adobe Flash')?></a>.</div>
 
 <script type="text/javascript">
 params = {

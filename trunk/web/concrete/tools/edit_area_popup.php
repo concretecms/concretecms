@@ -16,13 +16,13 @@ $ci = Loader::helper('concrete/urls');
 ?>
 
 <ul class="ccm-dialog-tabs" id="ccm-area-tabs">
-<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-add">Add New</a></li>
-<li><a href="javascript:void(0)" id="ccm-add-existing">Add From Scrapbook</a></li>
-<? if (PERMISSIONS_MODEL != 'simple') { ?><li><a href="javascript:void(0)" id="ccm-permissions">Permissions</a></li><? } ?>
+<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-add"><?=t('Add New')?></a></li>
+<li><a href="javascript:void(0)" id="ccm-add-existing"><?=t('Add From Scrapbook')?></a></li>
+<? if (PERMISSIONS_MODEL != 'simple') { ?><li><a href="javascript:void(0)" id="ccm-permissions"><?=t('Permissions')?></a></li><? } ?>
 </ul>
 
 <div id="ccm-add-tab">
-<h1>Add New Block</h1>
+<h1><?=t('Add New Block')?></h1>
 <div id="ccm-block-type-list">
 <? if (count($blockTypes) > 0) {
 
@@ -31,13 +31,13 @@ $ci = Loader::helper('concrete/urls');
 		?>
 	
 	<div class="ccm-block-type">
-		<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescription(<?=$bt->getBlockTypeID()?>)" title="Learn more about this block type." id="ccm-bt-help-trigger<?=$bt->getBlockTypeID()?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/help.png" width="14" height="14" /></a>
+		<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescription(<?=$bt->getBlockTypeID()?>)" title="<?=t('Learn more about this block type.')?>" id="ccm-bt-help-trigger<?=$bt->getBlockTypeID()?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/help.png" width="14" height="14" /></a>
 		<a class="dialog-launch ccm-block-type-inner" dialog-modal="true" dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" style="background-image: url(<?=$btIcon?>)" dialog-title="Add <?=$bt->getBlockTypeName()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/add_block_popup.php?cID=<?=$c->getCollectionID()?>&btID=<?=$bt->getBlockTypeID()?>&arHandle=<?=$a->getAreaHandle()?>"><?=$bt->getBlockTypeName()?></a>
 		<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>"><?=$bt->getBlockTypeDescription()?></div>
 	</div>
 	<? }
 } else { ?>
-	<p>No block types can be added to this area.</p>
+	<p><?=t('No block types can be added to this area.')?></p>
 <? } ?>
 </div>
 </div>
@@ -77,14 +77,14 @@ $(function() {
 </script>
 
 <div id="ccm-add-existing-tab" style="display:none">
-<h1>Add From Scrapbook</h1>
+<h1><?=t('Add From Scrapbook')?></h1>
 <div id="ccm-scrapbook-list">
 <?
 Loader::model('pile');
 $sp = Pile::getDefault();
 $contents = $sp->getPileContentObjects('date_desc');
 if (count($contents) == 0) { 
-	print 'You have no items in your scrapbook.';
+	print t('You have no items in your scrapbook.');
 }
 foreach($contents as $obj) { 
 	$item = $obj->getObject();
@@ -122,7 +122,7 @@ foreach($contents as $obj) {
 </div>
 
 <div id="ccm-permissions-tab" style="display: none">
-<h1>Set Area Permissions</h1>
+<h1><?=t('Set Area Permissions')?></h1>
 
 <?
 
@@ -187,12 +187,12 @@ if ($cp->canAdminPage() && is_object($a)) {
 			row3.className = rowValue.replace(":","_");
 			
 			row1innerHTML = '<th colspan="7" style="text-align: left; white-space: nowrap"><a href="javascript:removePermissionRow(\'' + rowValue.replace(':','_') + '\',\'' + rowText + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12" style="float: right" ></a>' + uName + '</td>';
-			row2innerHTML = '<td valign="top" style="text-align: center"><strong>Read</strong></td>';
+			row2innerHTML = '<td valign="top" style="text-align: center"><strong><?=t('Read')?></strong></td>';
 			row2innerHTML += '<td valign="top" ><input type="checkbox" name="areaRead[]" value="' + rowValue + '"></td>';
-			row2innerHTML += '<td><div style="width: 54px; text-align: right"><strong>Write</strong></div></td><td><input type="checkbox" name="areaEdit[]" value="' + rowValue + '"></td>';
-			row2innerHTML += '<td><div style="width: 54px; text-align: right"><strong>Delete</strong></div></td><td><input type="checkbox" name="areaDelete[]" value="' + rowValue + '"></td>';
+			row2innerHTML += '<td><div style="width: 54px; text-align: right"><strong><?=t('Write')?></strong></div></td><td><input type="checkbox" name="areaEdit[]" value="' + rowValue + '"></td>';
+			row2innerHTML += '<td><div style="width: 54px; text-align: right"><strong><?=t('Delete')?></strong></div></td><td><input type="checkbox" name="areaDelete[]" value="' + rowValue + '"></td>';
 			row2innerHTML += '<td valign="top" width="100%"><div style="width: 225px">&nbsp;</div></td>';
-			row3innerHTML = '<td valign="top"  style="text-align: center"><strong>Add</strong></td>';
+			row3innerHTML = '<td valign="top"  style="text-align: center"><strong><?=t('Add')?></strong></td>';
 			row3innerHTML += '<td colspan="6" width="100%"><div style="width: 460px;">';
 			<? foreach ($btArray as $bt) { ?>
 				row3innerHTML += '<span style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="' + rowValue + '" />&nbsp;<?=$bt->getBlockTypeName()?></span>';
@@ -228,12 +228,12 @@ if ($cp->canAdminPage() && is_object($a)) {
 			row3.className = rowValue.replace(":","_");
 			
 			row1innerHTML = '<th colspan="7" style="text-align: left; white-space: nowrap"><a href="javascript:removePermissionRow(\'' + rowValue.replace(':','_') + '\',\'' + rowText + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12" style="float: right" ></a>' + rowText + '</td>';
-			row2innerHTML = '<td valign="top" style="text-align: center"><strong>Read</strong></td>';
+			row2innerHTML = '<td valign="top" style="text-align: center"><strong><?=t('Read')?></strong></td>';
 			row2innerHTML += '<td valign="top" ><input type="checkbox" name="areaRead[]" value="' + rowValue + '"></td>';
-			row2innerHTML += '<td><div style="width: 54px; text-align: right"><strong>Write</strong></div></td><td><input type="checkbox" name="areaEdit[]" value="' + rowValue + '"></td>';
-			row2innerHTML += '<td><div style="width: 54px; text-align: right"><strong>Delete</strong></div></td><td><input type="checkbox" name="areaDelete[]" value="' + rowValue + '"></td>';
+			row2innerHTML += '<td><div style="width: 54px; text-align: right"><strong><?=t('Write')?></strong></div></td><td><input type="checkbox" name="areaEdit[]" value="' + rowValue + '"></td>';
+			row2innerHTML += '<td><div style="width: 54px; text-align: right"><strong><?=t('Delete')?></strong></div></td><td><input type="checkbox" name="areaDelete[]" value="' + rowValue + '"></td>';
 			row2innerHTML += '<td valign="top" width="100%"><div style="width: 225px">&nbsp;</div></td>';
-			row3innerHTML = '<td valign="top"  style="text-align: center"><strong>Add</strong></td>';
+			row3innerHTML = '<td valign="top"  style="text-align: center"><strong><?=t('Add')?></strong></td>';
 			row3innerHTML += '<td colspan="6" width="100%"><div style="width: 460px;">';
 			<? foreach ($btArray as $bt) { ?>
 				row3innerHTML += '<span style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="' + rowValue + '" />&nbsp;<?=$bt->getBlockTypeName()?></span>';
@@ -298,24 +298,27 @@ if ($a->getAreaCollectionInheritID() != $c->getCollectionID() && $a->getAreaColl
 	$areac = Page::getByID($a->getAreaCollectionInheritID());
 ?>
 
-The following area permissions are inherited from an area set on <a href="<?=DIR_REL?>/index.php?cID=<?=$areac->getCollectionID()?>"><?=$areac->getCollectionName()?></a>. To change them everywhere, edit this area on that page. To override them here and on all sub-pages, edit below.</p>
+<p>
+<?=t("The following area permissions are inherited from an area set on ")?>
+<a href="<?=DIR_REL?>/index.php?cID=<?=$areac->getCollectionID()?>"><?=$areac->getCollectionName()?></a>. 
+<?=t("To change them everywhere, edit this area on that page. To override them here and on all sub-pages, edit below.")?>
+</p>
 
-<? } else if (!$a->overrideCollectionPermissions()) {
+<? } else if (!$a->overrideCollectionPermissions()) { ?>
 
-?>
-
-The following area permissions are inherited from the page's permissions. To override them, edit below.
+<?=t("The following area permissions are inherited from the page's permissions. To override them, edit below.")?>
 
 <? } else { ?>
 
 <span class="ccm-important">
-	Permissions for this area currently override those of the page. To revert to the page's permissions, click <strong>revert to page permissions</strong> below.<br/><br/>
+	<?=t("Permissions for this area currently override those of the page. To revert to the page's permissions, click <strong>revert to page permissions</strong> below.")?>
+	<br/><br/>
 </span>
 
 <? } ?>
 
 <div class="ccm-buttons" style="margin-bottom: 10px"> 
-<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-width="600" dialog-title="Choose User/Group"  dialog-height="400" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add">Add Group or User</em></span></a>
+<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-width="600" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="400" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add"><?=t('Add Group or User')?></em></span></a>
 </div>
 <div class="ccm-spacer">&nbsp;</div><br/>
 
@@ -330,7 +333,6 @@ $display = (($g->getGroupID() == GUEST_GROUP_ID || $g->getGroupID() == REGISTERE
 
 if ($display) { ?>
 
-
 <tr class="gID_<?=$g->getGroupID()?>" id="_row_gID_<?=$g->getGroupID()?>">
 <th colspan="7" style="text-align: left; white-space: nowrap"><? if ($g->getGroupID() != GUEST_GROUP_ID && $g->getGroupID() != REGISTERED_GROUP_ID) { ?>    
 			<a href="javascript:removePermissionRow('gID_<?=$g->getGroupID()?>', '<?=$g->getGroupName()?>')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12" style="float: right" ></a>
@@ -338,21 +340,20 @@ if ($display) { ?>
 		<?=$g->getGroupName()?></th>		
 </tr>
 <tr class="gID_<?=$g->getGroupID()?>">
-<td valign="top" style="text-align: center"><strong>Read</strong></td>
+<td valign="top" style="text-align: center"><strong><?=t('Read')?></strong></td>
 <td valign="top" ><input type="checkbox" name="areaRead[]" value="gID:<?=$g->getGroupID()?>"<? if ($g->canRead()) { ?> checked<? } ?>></td>
-<td><div style="width: 54px; text-align: right"><strong>Write</strong></div></td>
+<td><div style="width: 54px; text-align: right"><strong><?=t('Write')?></strong></div></td>
 <td><input type="checkbox" name="areaEdit[]" value="gID:<?=$g->getGroupID()?>"<? if ($g->canWrite()) { ?> checked<? } ?>></td>
-<td><div style="width: 54px; text-align: right"><strong>Delete</strong></div></td>
+<td><div style="width: 54px; text-align: right"><strong><?=t('Delete')?></strong></div></td>
 <td><input type="checkbox" name="areaDelete[]" value="gID:<?=$g->getGroupID()?>"<? if ($g->canDeleteBlock()) { ?> checked<? } ?>></td>
 <td valign="top" width="100%"><div style="width: 225px">&nbsp;</div></td>
 </tr>
 <tr class="gID_<?=$g->getGroupID()?>">
-<td valign="top"  style="text-align: center"><strong>Add</strong></td>
+<td valign="top"  style="text-align: center"><strong><?=t('Add')?></strong></td>
 <td colspan="6" width="100%">
 <div style="width: 460px;">
-<? foreach ($btArray as $bt) { ?>
-		<span style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="gID:<?=$g->getGroupID()?>"<? if ($bt->canAddBlock($g)) { ?> checked<? } ?>>&nbsp;<?=$bt->getBlockTypeName()?></span>
-		
+	<? foreach ($btArray as $bt) { ?>
+		<span style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="gID:<?=$g->getGroupID()?>"<? if ($bt->canAddBlock($g)) { ?> checked<? } ?>>&nbsp;<?=$bt->getBlockTypeName()?></span>		
 	<? } ?>
 </div>
 </td>
@@ -366,28 +367,26 @@ $rowNum++;
 foreach ($ulArray as $ui) { ?>
 
 <tr id="_row_uID_<?=$ui->getUserID()?>" class="uID_<?=$ui->getUserID()?>" class="no-bg">
-
 <th colspan="7" style="text-align: left; white-space: nowrap">
 <a href="javascript:removePermissionRow('uID_<?=$ui->getUserID()?>')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12" style="float: right"></a>
 <?=$ui->getUserName()?>
 </th>		
 </tr>
 <tr class="uID_<?=$ui->getUserID()?>" >
-<td valign="top" style="text-align: center"><strong>Read</strong></td>
+<td valign="top" style="text-align: center"><strong><?=t('Read')?></strong></td>
 <td valign="top" ><input type="checkbox" name="areaRead[]" value="uID:<?=$ui->getUserID()?>"<? if ($ui->canRead()) { ?> checked<? } ?>></td>
-<td><div style="width: 54px; text-align: right"><strong>Write</strong></div></td>
+<td><div style="width: 54px; text-align: right"><strong><?=t('Write')?></strong></div></td>
 <td><input type="checkbox" name="areaEdit[]" value="uID:<?=$ui->getUserID()?>"<? if ($ui->canWrite()) { ?> checked<? } ?>></td>
-<td><div style="width: 54px; text-align: right"><strong>Delete</strong></div></td>
+<td><div style="width: 54px; text-align: right"><strong><?=t('Delete')?></strong></div></td>
 <td><input type="checkbox" name="areaDelete[]" value="uID:<?=$ui->getUserID()?>"<? if ($ui->canDeleteBlock()) { ?> checked<? } ?>></td>
 <td valign="top" width="100%"><div style="width: 225px">&nbsp;</div></td>
 </tr>
 <tr class="uID_<?=$ui->getUserID()?>" >
-<td valign="top"  style="text-align: center"><strong>Add</strong></td>
+<td valign="top"  style="text-align: center"><strong><?=t('Add')?></strong></td>
 <td colspan="6" width="100%">
 <div style="width: 460px;">
-<? foreach ($btArray as $bt) { ?>
+	<? foreach ($btArray as $bt) { ?>
 		<span style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="uID:<?=$ui->getUserID()?>"<? if ($bt->canAddBlock($ui)) { ?> checked<? } ?>>&nbsp;<?=$bt->getBlockTypeName()?></span>
-		
 	<? } ?>
 </div>
 </td>
@@ -403,10 +402,9 @@ $rowNum++;
 
 <div class="ccm-buttons">
 <? if ($a->overrideCollectionPermissions()) { ?>
-	<a href="javascript:void(0)" onclick="$('#aRevertToPagePermissions').val(1);$('form[name=permissionForm]').get(0).submit()" class="ccm-button-left cancel"><span>Revert to Page Permissions</span></a>
+	<a href="javascript:void(0)" onclick="$('#aRevertToPagePermissions').val(1);$('form[name=permissionForm]').get(0).submit()" class="ccm-button-left cancel"><span><?=t('Revert to Page Permissions')?></span></a>
 <? } ?>
-
-	<a href="javascript:void(0)" onclick="$('form[name=permissionForm]').get(0).submit()" class="ccm-button-right accept"><span>Update</span></a>
+	<a href="javascript:void(0)" onclick="$('form[name=permissionForm]').get(0).submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
 </div>
 <div class="ccm-spacer">&nbsp;</div>
 </div>
