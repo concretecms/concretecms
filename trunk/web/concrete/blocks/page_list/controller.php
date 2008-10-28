@@ -11,7 +11,7 @@
 		 * Used for localization. If we want to localize the name/description we have to include this
 		 */
 		public function getBlockTypeDescription() {
-			return t("List pages based on type, area");
+			return t("List pages based on type, area.");
 		}
 		
 		public function getBlockTypeName() {

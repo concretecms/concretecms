@@ -66,7 +66,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 <strong><?=t('Sub Pages to Display')?></strong><br>
 <select name="displaySubPages" onchange="toggleSubPageLevels(this.value); reloadPreview(this.form);">
-	<option value="none"<? if ($info['displaySubPages'] == 'none') { ?> selected<? } ?>><?=t('None.')?></option>
+	<option value="none"<? if ($info['displaySubPages'] == 'none') { ?> selected<? } ?>><?=t('None')?></option>
 	<option value="relevant"<? if ($info['displaySubPages'] == 'relevant') { ?> selected<? } ?>><?=t('Relevant sub pages.')?></option>
 	<option value="relevant_breadcrumb"<? if ($info['displaySubPages'] == 'relevant_breadcrumb') { ?> selected<? } ?>><?=t('Display breadcrumb trail.')?></option>
 	<option value="all"<? if ($info['displaySubPages'] == 'all') { ?> selected<? } ?>><?=t('Display all.')?></option>

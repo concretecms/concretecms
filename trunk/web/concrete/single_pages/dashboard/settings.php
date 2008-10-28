@@ -90,7 +90,7 @@ print $h->buttons($b1);
 
 <h2><?=t('Edit Access')?></h2>
 <p>
-<?=t('Choose which users and groups below may edit your site. (<b>Note</b>: These settings can be overridden on specific pages.)')?>
+<?=t('Choose which users and groups below may edit your site. Note: These settings can be overridden on specific pages.')?>
 </p>
 
 <?
@@ -147,8 +147,8 @@ print $h->buttons($b1);
 
 <div class="ccm-dashboard-inner">
 
-<div class="ccm-dashboard-radio"><?=$form->checkbox('URL_REWRITING', 1, $url_rewriting)?> <?=t('Enable "Pretty URLs"')?></div>
-<div class="ccm-dashboard-description"><?=t("Automatically translates your path-based Concrete5 URLs so that they don't include \"index.php\".")?></div>
+<div class="ccm-dashboard-radio"><?=$form->checkbox('URL_REWRITING', 1, $url_rewriting)?> <?=t('Enable Pretty URLs')?></div>
+<div class="ccm-dashboard-description"><?=t("Automatically translates your path-based Concrete5 URLs so that they don't include 'index.php'.")?></div>
 
 <? if (URL_REWRITING) { ?>
 <h2><?=t('Required Code')?></h2>
@@ -189,7 +189,7 @@ print $h->buttons($b1);
 
 <div class="ccm-dashboard-inner">
 
-<p><?=t('These editing preferences apply <b>just to your user account.</b>')?></p>
+<p><?=t('These editing preferences apply just to your user account.')?></p>
 
 <div class="ccm-dashboard-radio">
 <input type="checkbox" name="ui_breadcrumb" value="1"  <? if ($ui_breadcrumb == 1) { ?> checked <? } ?> /> 

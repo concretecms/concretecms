@@ -6,14 +6,14 @@
 
 <?=$message?>
 <br/><br/>
-<a href="<?=DIR_REL?>/"><?=t('Continue to your site')?> &gt;</a>
+<a href="<?=DIR_REL?>/"><?=t('Continue to your site.')?> &gt;</a>
 
 <? } else { ?>
 
 <h1><?=t('Install Concrete')?></h1>
 	
 <p>
-<?=t('Concrete could not locate <strong>site.php</strong>, within the config directory. ')?>
+<?=t('Concrete could not locate <strong>site.php</strong> within the config directory.')?>
 <?=t('To install Concrete, please fill out the form below.')?>
 </p>
 

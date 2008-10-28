@@ -14,7 +14,7 @@ if (!$cp->canRead()) {
 
 <div id="ccm-al-upload-complete" style="display: none"><?=t('Upload Complete!')?> <a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop(); ccm_alRefresh();"><?=t('Click here to close this window and refresh the library.')?></a></div>
 
-<div id="ccm-al-flash-uploader"><?=t('The uploader requires')?> <a href="http://www.adobe.com/"><?=t('Adobe Flash')?></a>.</div>
+<div id="ccm-al-flash-uploader"><?=t('You must install Adobe Flash to view this content.')?></div>
 
 <script type="text/javascript">
 params = {

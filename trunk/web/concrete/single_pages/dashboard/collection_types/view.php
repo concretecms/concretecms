@@ -203,7 +203,7 @@ if ($ctEditMode) {
 	<div class="ccm-dashboard-inner">
 
 
-	<p><?=t('Click below to remove this page type entirely. <strong>Note:</strong> you may only remove page types which are not being used on your site. If a page type is being used, delete all instances of its pages first.')?> 
+	<p><?=t('Click below to remove this page type entirely. (Note: You may only remove page types which are not being used on your site. If a page type is being used, delete all instances of its pages first.)')?> 
 	<div class="ccm-spacer">&nbsp;</div>
 	
 	<? print $ih->button_js(t('Delete Page Type'), "deletePageType", 'left');?>
@@ -330,7 +330,7 @@ if ($ctEditMode) {
 				$package = Package::getByID($ct->getPackageID());
 				print $package->getPackageName(); 
 			} else {
-				print t('(None)');
+				print t('None');
 			}
 			?></td>
 		<td>
@@ -424,7 +424,7 @@ if ($ctEditMode) {
 			$packageHandle = $package->getPackageHandle();
 			$packageName = $package->getPackageName();
 		} else {
-			$packageName = t('(None)');
+			$packageName = t('None');
 		}
 		
 	?>
