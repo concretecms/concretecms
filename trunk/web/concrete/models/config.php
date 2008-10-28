@@ -57,7 +57,9 @@ class Config extends Object {
 		}
 		
 		if (!$getFullObject) {
-			return $instance->props[$cfKey]->value;
+			if (is_object($instance->props[$cfKey])) {
+				return $instance->props[$cfKey]->value;
+			}
 		} else {
 			return $instance->props[$cfKey];
 		}
