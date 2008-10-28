@@ -39,7 +39,7 @@ class DashboardThemesController extends Controller {
 			*/
 			
 			$pl->uninstall();
-			$this->set('message', t('Theme uninstalled.'));
+			$this->set('message', t('Theme uninstalled. Your theme directory has been moved to files/trash/.'));
 		} catch (Exception $e) {
 			$v->add($e);
 			$this->set('error', $v);
