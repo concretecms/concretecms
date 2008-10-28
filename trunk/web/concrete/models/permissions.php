@@ -487,7 +487,7 @@ class CollectionPermissions extends Permissions {
 			if (PERMISSIONS_MODEL == 'simple') { 
 				// we allow all pages to be added as subpages
 				$q = "select ctID from PageTypes";
-				$r = $db->query($q);
+				$r = $db->querycache(10, $q);
 				while($row = $r->fetchRow()) {
 					$this->addCollectionTypes[] = $row['ctID'];
 				}
@@ -496,7 +496,7 @@ class CollectionPermissions extends Permissions {
 				$permissions[] = "db";
 			}
 			$q = "select btID from BlockTypes where btIsInternal = 0";
-			$r = $db->query($q);
+				$r = $db->querycache(10, $q);
 			while($row = $r->fetchRow()) {
 				$this->addBlockTypes[] = $row['btID'];
 			}
@@ -547,7 +547,7 @@ class AreaPermissions extends Permissions {
 			
 			$db = Loader::db();
 			$q = "select btID from BlockTypes where btIsInternal = 0";
-			$r = $db->query($q);
+			$r = $db->querycache(10, $q);
 			while($row = $r->fetchRow()) {
 				$this->addBlockTypes[] = $row['btID'];
 			}
