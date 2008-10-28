@@ -47,9 +47,9 @@ $(function() {
 <div id="ccm-system-nav-wrapper1">
 <div id="ccm-system-nav-wrapper2">
 <ul id="ccm-system-nav">
-<li><a id="ccm-nav-return" href="<?=$this->url('/')?>">Return to Website</a></li>
-<li><a id="ccm-nav-dashboard-help" href="<?=MENU_HELP_URL?>">Help</a></li>
-<li class="ccm-last"><a id="ccm-nav-logout" href="<?=$this->url('/login/', 'logout')?>">Sign Out</a></li>
+<li><a id="ccm-nav-return" href="<?=$this->url('/')?>"><?=t('Return to Website')?></a></li>
+<li><a id="ccm-nav-dashboard-help" href="<?=MENU_HELP_URL?>"><?=t('Help')?></a></li>
+<li class="ccm-last"><a id="ccm-nav-logout" href="<?=$this->url('/login/', 'logout')?>"><?=t('Sign Out')?></a></li>
 </ul>
 </div>
 </div>
@@ -108,7 +108,7 @@ foreach($nav as $n2) {
 		}
 			?>
 			<div class="message error">
-			<strong>The following errors occurred when attempting to process your request:</strong>
+			<strong><?=t('The following errors occurred when attempting to process your request:')?></strong>
 			<ul>
 			<? foreach($_error as $e) { ?><li><?=$e?></li><? } ?>
 			</ul>
