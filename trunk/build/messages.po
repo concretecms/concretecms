@@ -1,0 +1,4755 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-10-28 10:39-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../web/concrete//blocks/autonav/add.php:1
+#: ../web/concrete//blocks/autonav/controller.php:23
+#: ../web/concrete//blocks/autonav/edit.php:2
+#: ../web/concrete//blocks/autonav/form_setup_html.php:2
+#: ../web/concrete//blocks/autonav/templates/header_menu.php:2
+#: ../web/concrete//blocks/autonav/tools/preview_pane.php:2
+#: ../web/concrete//blocks/autonav/view.php:2
+#: ../web/concrete//blocks/content/add.php:2
+#: ../web/concrete//blocks/content/controller.php:2
+#: ../web/concrete//blocks/content/edit.php:2
+#: ../web/concrete//blocks/content/editor_init.php:1
+#: ../web/concrete//blocks/content/view.php:2
+#: ../web/concrete//blocks/external_form/add.php:1
+#: ../web/concrete//blocks/external_form/controller.php:2
+#: ../web/concrete//blocks/external_form/edit.php:2
+#: ../web/concrete//blocks/external_form/forms/controllers/test_form.php:2
+#: ../web/concrete//blocks/external_form/forms/test_form.php:2
+#: ../web/concrete//blocks/external_form/view.php:2
+#: ../web/concrete//blocks/file/add.php:2
+#: ../web/concrete//blocks/file/controller.php:2
+#: ../web/concrete//blocks/file/edit.php:2
+#: ../web/concrete//blocks/file/view.php:2
+#: ../web/concrete//blocks/flash_content/add.php:2
+#: ../web/concrete//blocks/flash_content/controller.php:2
+#: ../web/concrete//blocks/flash_content/edit.php:2
+#: ../web/concrete//blocks/flash_content/view.php:2
+#: ../web/concrete//blocks/form/add.php:2
+#: ../web/concrete//blocks/form/controller.php:2
+#: ../web/concrete//blocks/form/edit.php:2
+#: ../web/concrete//blocks/form/form_setup_html.php:2
+#: ../web/concrete//blocks/form/styles_include.php:1
+#: ../web/concrete//blocks/form/tools/services.php:2
+#: ../web/concrete//blocks/form/view.php:2
+#: ../web/concrete//blocks/google_map/add.php:2
+#: ../web/concrete//blocks/google_map/controller.php:2
+#: ../web/concrete//blocks/google_map/edit.php:2
+#: ../web/concrete//blocks/google_map/form_setup_html.php:1
+#: ../web/concrete//blocks/google_map/view.php:1
+#: ../web/concrete//blocks/guestbook/add.php:1
+#: ../web/concrete//blocks/guestbook/controller.php:24
+#: ../web/concrete//blocks/guestbook/edit.php:1
+#: ../web/concrete//blocks/guestbook/view.php:1
+#: ../web/concrete//blocks/image/add.php:3
+#: ../web/concrete//blocks/image/controller.php:3
+#: ../web/concrete//blocks/image/edit.php:2
+#: ../web/concrete//blocks/image/view.php:2
+#: ../web/concrete//blocks/library_file/controller.php:21
+#: ../web/concrete//blocks/library_file/tools/properties.php:2
+#: ../web/concrete//blocks/page_list/add.php:2
+#: ../web/concrete//blocks/page_list/controller.php:3
+#: ../web/concrete//blocks/page_list/edit.php:2
+#: ../web/concrete//blocks/page_list/page_list_form.php:1
+#: ../web/concrete//blocks/page_list/tools/preview_pane.php:2
+#: ../web/concrete//blocks/page_list/tools/rss.php:2
+#: ../web/concrete//blocks/page_list/view.php:2
+#: ../web/concrete//blocks/rss_displayer/add.php:2
+#: ../web/concrete//blocks/rss_displayer/controller.php:2
+#: ../web/concrete//blocks/rss_displayer/edit.php:2
+#: ../web/concrete//blocks/rss_displayer/form_setup_html.php:1
+#: ../web/concrete//blocks/rss_displayer/view.php:1
+#: ../web/concrete//blocks/search/add.php:2
+#: ../web/concrete//blocks/search/controller.php:2
+#: ../web/concrete//blocks/search/edit.php:2
+#: ../web/concrete//blocks/search/form_setup_html.php:1
+#: ../web/concrete//blocks/search/view.php:1
+#: ../web/concrete//blocks/slideshow/add.php:2
+#: ../web/concrete//blocks/slideshow/controller.php:2
+#: ../web/concrete//blocks/slideshow/edit.php:2
+#: ../web/concrete//blocks/slideshow/form_setup_html.php:2
+#: ../web/concrete//blocks/slideshow/image_row_include.php:1
+#: ../web/concrete//blocks/slideshow/view.php:1
+#: ../web/concrete//blocks/survey/add.php:1
+#: ../web/concrete//blocks/survey/controller.php:23
+#: ../web/concrete//blocks/survey/edit.php:1
+#: ../web/concrete//blocks/survey/poll_view.php:2
+#: ../web/concrete//blocks/survey/view.php:2
+#: ../web/concrete//blocks/video/add.php:2
+#: ../web/concrete//blocks/video/controller.php:11
+#: ../web/concrete//blocks/video/edit.php:2
+#: ../web/concrete//blocks/video/form_setup_html.php:1
+#: ../web/concrete//blocks/video/view.php:2
+#: ../web/concrete//blocks/youtube/add.php:2
+#: ../web/concrete//blocks/youtube/controller.php:2
+#: ../web/concrete//blocks/youtube/edit.php:2
+#: ../web/concrete//blocks/youtube/form_setup_html.php:1
+#: ../web/concrete//blocks/youtube/tools/video_popup.php:2
+#: ../web/concrete//blocks/youtube/view.php:2
+#: ../web/concrete//config/app.php:10 ../web/concrete//config/base.php:2
+#: ../web/concrete//config/theme_paths.php:2
+#: ../web/concrete//controllers/dashboard/block_types.php:3
+#: ../web/concrete//controllers/dashboard/collection_types/controller.php:3
+#: ../web/concrete//controllers/dashboard/controller.php:2
+#: ../web/concrete//controllers/dashboard/form_results.php:3
+#: ../web/concrete//controllers/dashboard/install.php:3
+#: ../web/concrete//controllers/dashboard/jobs.php:3
+#: ../web/concrete//controllers/dashboard/logs.php:3
+#: ../web/concrete//controllers/dashboard/modules/activity.php:3
+#: ../web/concrete//controllers/dashboard/modules/help.php:3
+#: ../web/concrete//controllers/dashboard/modules/news.php:3
+#: ../web/concrete//controllers/dashboard/modules/notes.php:3
+#: ../web/concrete//controllers/dashboard/modules/reports.php:3
+#: ../web/concrete//controllers/dashboard/settings.php:3
+#: ../web/concrete//controllers/dashboard/themes/add.php:3
+#: ../web/concrete//controllers/dashboard/themes/controller.php:3
+#: ../web/concrete//controllers/dashboard/themes/inspect.php:3
+#: ../web/concrete//controllers/download_file.php:3
+#: ../web/concrete//controllers/install.php:2
+#: ../web/concrete//controllers/login.php:3
+#: ../web/concrete//controllers/page_forbidden.php:3
+#: ../web/concrete//controllers/page_not_found.php:3
+#: ../web/concrete//controllers/register.php:2
+#: ../web/concrete//controllers/upgrade.php:2
+#: ../web/concrete//elements/block_al.php:1
+#: ../web/concrete//elements/block_area_footer.php:2
+#: ../web/concrete//elements/block_area_header.php:2
+#: ../web/concrete//elements/block_controls.php:2
+#: ../web/concrete//elements/block_custom_template.php:2
+#: ../web/concrete//elements/block_footer.php:2
+#: ../web/concrete//elements/block_footer_add.php:1
+#: ../web/concrete//elements/block_footer_edit.php:2
+#: ../web/concrete//elements/block_groups.php:4
+#: ../web/concrete//elements/block_header.php:2
+#: ../web/concrete//elements/block_header_add.php:2
+#: ../web/concrete//elements/block_header_edit.php:2
+#: ../web/concrete//elements/block_master_collection_alias.php:2
+#: ../web/concrete//elements/collection_add.php:1
+#: ../web/concrete//elements/collection_add_external.php:1
+#: ../web/concrete//elements/collection_edit_external.php:1
+#: ../web/concrete//elements/collection_mcd.php:1
+#: ../web/concrete//elements/collection_metadata.php:2
+#: ../web/concrete//elements/collection_permissions.php:2
+#: ../web/concrete//elements/collection_permissions_simple.php:2
+#: ../web/concrete//elements/collection_theme.php:2
+#: ../web/concrete//elements/dashboard/modules/activity.php:1
+#: ../web/concrete//elements/dashboard/modules/help.php:2
+#: ../web/concrete//elements/dashboard/modules/news.php:2
+#: ../web/concrete//elements/dashboard/modules/notes.php:1
+#: ../web/concrete//elements/dashboard/modules/reports.php:1
+#: ../web/concrete//elements/dashboard/notification_update.php:1
+#: ../web/concrete//elements/dashboard/sitemap.php:2
+#: ../web/concrete//elements/dashboard/sitemap_search.php:2
+#: ../web/concrete//elements/dashboard/sitemap_search_results.php:1
+#: ../web/concrete//elements/dialog_header.php:1
+#: ../web/concrete//elements/editor_controls.php:1
+#: ../web/concrete//elements/error_fatal.php:1
+#: ../web/concrete//elements/header_required.php:2
+#: ../web/concrete//elements/page_controls.php:2
+#: ../web/concrete//elements/pane_header.php:1
+#: ../web/concrete//elements/search_results_paging.php:1
+#: ../web/concrete//elements/search_results_top.php:1
+#: ../web/concrete//helpers/concrete/asset_library.php:19
+#: ../web/concrete//helpers/concrete/avatar.php:20
+#: ../web/concrete//helpers/concrete/dashboard/sitemap.php:20
+#: ../web/concrete//helpers/concrete/interface.php:19
+#: ../web/concrete//helpers/concrete/upgrade/version_500a1.php:20
+#: ../web/concrete//helpers/concrete/upgrade/version_500b1.php:20
+#: ../web/concrete//helpers/concrete/upgrade/version_500b2.php:20
+#: ../web/concrete//helpers/concrete/urls.php:18
+#: ../web/concrete//helpers/concrete/user.php:20
+#: ../web/concrete//helpers/concrete/validation.php:18
+#: ../web/concrete//helpers/date.php:19 ../web/concrete//helpers/feed.php:19
+#: ../web/concrete//helpers/file.php:19
+#: ../web/concrete//helpers/form/date_time.php:21
+#: ../web/concrete//helpers/form.php:19 ../web/concrete//helpers/html.php:19
+#: ../web/concrete//helpers/lists/countries.php:19
+#: ../web/concrete//helpers/lists/states_provinces.php:19
+#: ../web/concrete//helpers/mail.php:19
+#: ../web/concrete//helpers/navigation.php:19
+#: ../web/concrete//helpers/pagination.php:19
+#: ../web/concrete//helpers/text.php:19
+#: ../web/concrete//helpers/validation/error.php:18
+#: ../web/concrete//helpers/validation/file.php:2
+#: ../web/concrete//helpers/validation/form.php:20
+#: ../web/concrete//helpers/validation/identifier.php:2
+#: ../web/concrete//helpers/validation/numbers.php:2
+#: ../web/concrete//helpers/validation/strings.php:21
+#: ../web/concrete//jobs/generate_sitemap.php:8
+#: ../web/concrete//jobs/index_search.php:8
+#: ../web/concrete//libraries/archive.php:2
+#: ../web/concrete//libraries/block_controller.php:2
+#: ../web/concrete//libraries/block_view.php:2
+#: ../web/concrete//libraries/controller.php:3
+#: ../web/concrete//libraries/database.php:3
+#: ../web/concrete//libraries/events.php:22
+#: ../web/concrete//libraries/indexed_search.php:8
+#: ../web/concrete//libraries/loader.php:3
+#: ../web/concrete//libraries/log.php:3 ../web/concrete//libraries/model.php:3
+#: ../web/concrete//libraries/object.php:3
+#: ../web/concrete//libraries/request.php:2
+#: ../web/concrete//libraries/search.php:3
+#: ../web/concrete//libraries/update.php:3
+#: ../web/concrete//libraries/view.php:3
+#: ../web/concrete//mail/block_form_submission.php:2
+#: ../web/concrete//mail/forgot_password.php:2
+#: ../web/concrete//mail/validate_user_email.php:3
+#: ../web/concrete//models/area.php:3 ../web/concrete//models/block.php:3
+#: ../web/concrete//models/block_types.php:3
+#: ../web/concrete//models/collection.php:3
+#: ../web/concrete//models/collection_attributes.php:3
+#: ../web/concrete//models/collection_types.php:3
+#: ../web/concrete//models/config.php:3
+#: ../web/concrete//models/dashboard/homepage.php:3
+#: ../web/concrete//models/job.php:3 ../web/concrete//models/package.php:3
+#: ../web/concrete//models/page.php:3
+#: ../web/concrete//models/page_statistics.php:3
+#: ../web/concrete//models/page_theme.php:2
+#: ../web/concrete//models/page_theme_archive.php:2
+#: ../web/concrete//models/permissions.php:3
+#: ../web/concrete//models/pile.php:3
+#: ../web/concrete//models/search/collection.php:3
+#: ../web/concrete//models/search/file.php:3
+#: ../web/concrete//models/search/group.php:2
+#: ../web/concrete//models/search/user.php:3
+#: ../web/concrete//models/single_page.php:3
+#: ../web/concrete//models/user.php:3
+#: ../web/concrete//models/user_attributes.php:3
+#: ../web/concrete//models/user_statistics.php:3
+#: ../web/concrete//models/userinfo.php:3
+#: ../web/concrete//models/version.php:2
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:2
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:2
+#: ../web/concrete//single_pages/dashboard/form_results.php:1
+#: ../web/concrete//single_pages/dashboard/groups.php:2
+#: ../web/concrete//single_pages/dashboard/install.php:2
+#: ../web/concrete//single_pages/dashboard/jobs.php:1
+#: ../web/concrete//single_pages/dashboard/logs.php:2
+#: ../web/concrete//single_pages/dashboard/mediabrowser.php:2
+#: ../web/concrete//single_pages/dashboard/settings.php:3
+#: ../web/concrete//single_pages/dashboard/sitemap.php:2
+#: ../web/concrete//single_pages/dashboard/themes/add.php:1
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:2
+#: ../web/concrete//single_pages/dashboard/themes/view.php:2
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:2
+#: ../web/concrete//single_pages/dashboard/users/view.php:2
+#: ../web/concrete//single_pages/dashboard/view.php:1
+#: ../web/concrete//single_pages/download_file.php:3
+#: ../web/concrete//single_pages/install.php:1
+#: ../web/concrete//single_pages/login.php:1
+#: ../web/concrete//single_pages/maintenance_mode.php:1
+#: ../web/concrete//single_pages/page_not_found.php:1
+#: ../web/concrete//single_pages/register.php:1
+#: ../web/concrete//single_pages/upgrade.php:1
+#: ../web/concrete//single_pages/user_error.php:1
+#: ../web/concrete//startup/config_check.php:2
+#: ../web/concrete//startup/config_check_complete.php:2
+#: ../web/concrete//startup/debug_logging.php:2
+#: ../web/concrete//startup/external_link.php:2
+#: ../web/concrete//startup/file_access_check.php:3
+#: ../web/concrete//startup/file_access_check.php:9
+#: ../web/concrete//startup/magic_quotes_gpc_check.php:3
+#: ../web/concrete//startup/maintenance_mode_check.php:2
+#: ../web/concrete//startup/process.php:2
+#: ../web/concrete//startup/session.php:2
+#: ../web/concrete//startup/shutdown.php:2
+#: ../web/concrete//startup/tools.php:2
+#: ../web/concrete//startup/url_check.php:3
+#: ../web/concrete//startup/user.php:2
+#: ../web/concrete//themes/core/concrete.php:1
+#: ../web/concrete//themes/core/dashboard.php:1
+#: ../web/concrete//themes/core/error.php:1
+#: ../web/concrete//themes/default/default.php:2
+#: ../web/concrete//themes/default/elements/footer.php:1
+#: ../web/concrete//themes/default/elements/header.php:1
+#: ../web/concrete//themes/default/full.php:2
+#: ../web/concrete//themes/default/left_sidebar.php:2
+#: ../web/concrete//themes/default/view.php:2
+#: ../web/concrete//themes/greensalad/default.php:2
+#: ../web/concrete//themes/greensalad/elements/footer.php:1
+#: ../web/concrete//themes/greensalad/elements/header.php:1
+#: ../web/concrete//themes/greensalad/full.php:2
+#: ../web/concrete//themes/greensalad/home.php:2
+#: ../web/concrete//themes/greensalad/view.php:2
+#: ../web/concrete//tools/add_block_popup.php:3
+#: ../web/concrete//tools/al.php:3 ../web/concrete//tools/al_delete.php:3
+#: ../web/concrete//tools/al_search_results.php:3
+#: ../web/concrete//tools/al_search_results.php:8
+#: ../web/concrete//tools/al_upload.php:3
+#: ../web/concrete//tools/al_upload.php:8
+#: ../web/concrete//tools/al_upload_process.php:3
+#: ../web/concrete//tools/al_upload_process.php:8
+#: ../web/concrete//tools/check_in.php:3 ../web/concrete//tools/check_in.php:7
+#: ../web/concrete//tools/dashboard/chart_handler.php:3
+#: ../web/concrete//tools/dashboard/chart_handler.php:8
+#: ../web/concrete//tools/dashboard/sitemap_data.php:3
+#: ../web/concrete//tools/dashboard/sitemap_data.php:7
+#: ../web/concrete//tools/dashboard/sitemap_delete_request.php:3
+#: ../web/concrete//tools/dashboard/sitemap_delete_request.php:7
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:3
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:7
+#: ../web/concrete//tools/dashboard/sitemap_update.php:2
+#: ../web/concrete//tools/dashboard/sitemap_update.php:6
+#: ../web/concrete//tools/dashboard/user_attributes_update.php:2
+#: ../web/concrete//tools/dashboard/user_attributes_update.php:6
+#: ../web/concrete//tools/edit_area_popup.php:2
+#: ../web/concrete//tools/edit_area_popup.php:6
+#: ../web/concrete//tools/edit_block_popup.php:3
+#: ../web/concrete//tools/edit_block_popup.php:10
+#: ../web/concrete//tools/edit_collection_popup.php:3
+#: ../web/concrete//tools/edit_collection_popup.php:57
+#: ../web/concrete//tools/jobs.php:3 ../web/concrete//tools/jobs.php:10
+#: ../web/concrete//tools/pile_manager.php:3
+#: ../web/concrete//tools/pile_manager.php:6
+#: ../web/concrete//tools/select_group.php:3
+#: ../web/concrete//tools/select_user.php:2
+#: ../web/concrete//tools/sitemap_overlay.php:2
+#: ../web/concrete//tools/upgrade.php:2
+#: ../web/concrete//tools/user_group_selector.php:2
+#: ../web/concrete//tools/user_group_selector.php:17
+#: ../web/concrete//tools/validate_user_email.php:2
+#: ../web/concrete//tools/versions.php:2
+#: ../web/concrete//tools/versions.php:10
+msgid "Access Denied."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:5
+#: ../web/concrete//blocks/form/form_setup_html.php:7
+#: ../web/concrete//blocks/form/form_setup_html.php:126
+#: ../web/concrete//blocks/guestbook/view.php:56
+#: ../web/concrete//elements/collection_metadata.php:95
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:322
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:342
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:379
+#: ../web/concrete//single_pages/dashboard/users/view.php:354
+#: ../web/concrete//tools/i18n_js.php:6
+msgid "Edit"
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:6
+#: ../web/concrete//blocks/autonav/form_setup_html.php:14
+#: ../web/concrete//blocks/form/form_setup_html.php:8
+#: ../web/concrete//blocks/form/form_setup_html.php:133
+msgid "Preview"
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:24
+msgid "Pages Should Appear"
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:26
+msgid "in their sitemap order."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:27
+msgid "with the most recent first."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:28
+msgid "with the earliest first."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:29
+msgid "in alphabetical order."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:30
+msgid "in reverse alphabetical order."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:31
+msgid "in reverse sitemap order."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:34
+#: ../web/concrete//single_pages/dashboard/settings.php:75
+msgid "Viewing Permissions"
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:36
+msgid "Display pages to users even when those users cannot access those pages."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:38
+msgid "Display Pages"
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:40
+msgid "at the top level."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:41
+msgid "at the second level."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:42
+msgid "at the third level."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:43
+msgid "at the level above."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:44
+msgid "at the current level."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:45
+msgid "At the level below."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:67
+msgid "Sub Pages to Display"
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:69
+#: ../web/concrete//blocks/survey/add.php:27
+#: ../web/concrete//blocks/survey/edit.php:30
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:333
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:427
+#: ../web/concrete//single_pages/dashboard/jobs.php:118
+#: ../web/concrete//tools/versions.php:332
+msgid "None"
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:70
+msgid "Relevant sub pages."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:71
+msgid "Display breadcrumb trail."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:72
+#: ../web/concrete//blocks/autonav/form_setup_html.php:80
+msgid "Display all."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:76
+msgid "Sub-Page Levels"
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:78
+msgid "Display sub pages to current."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:79
+msgid "Display sub pages to current +1."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:81
+msgid "Display a custom amount."
+msgstr ""
+
+#: ../web/concrete//blocks/autonav/form_setup_html.php:86
+msgid "levels"
+msgstr ""
+
+#: ../web/concrete//blocks/content/controller.php:12
+msgid "HTML/WYSIWYG Editor Content."
+msgstr ""
+
+#: ../web/concrete//blocks/content/controller.php:16
+msgid "Content"
+msgstr ""
+
+#: ../web/concrete//blocks/external_form/add.php:3
+#: ../web/concrete//blocks/external_form/edit.php:5
+msgid "External form file to include"
+msgstr ""
+
+#: ../web/concrete//blocks/external_form/add.php:4
+#: ../web/concrete//blocks/external_form/edit.php:6
+msgid ""
+"The following is a list of all the files in your external forms directory."
+msgstr ""
+
+#: ../web/concrete//blocks/external_form/add.php:8
+#: ../web/concrete//blocks/external_form/edit.php:11
+msgid "Select a form"
+msgstr ""
+
+#: ../web/concrete//blocks/external_form/controller.php:15
+msgid "Include external forms in the filesystem and place them on pages."
+msgstr ""
+
+#: ../web/concrete//blocks/external_form/controller.php:19
+msgid "External Form"
+msgstr ""
+
+#: ../web/concrete//blocks/external_form/controller.php:23
+msgid "You must select a form."
+msgstr ""
+
+#: ../web/concrete//blocks/external_form/forms/controllers/test_form.php:7
+msgid "Thanks!"
+msgstr ""
+
+#: ../web/concrete//blocks/external_form/forms/test_form.php:8
+msgid "This is just an example of how a custom form works."
+msgstr ""
+
+#: ../web/concrete//blocks/file/add.php:6
+#: ../web/concrete//blocks/file/controller.php:19
+#: ../web/concrete//blocks/file/edit.php:9
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:18
+msgid "File"
+msgstr ""
+
+#: ../web/concrete//blocks/file/add.php:7
+#: ../web/concrete//blocks/file/edit.php:10
+#: ../web/concrete//blocks/flash_content/add.php:7
+#: ../web/concrete//blocks/flash_content/edit.php:10
+#: ../web/concrete//elements/collection_metadata.php:197
+msgid "Choose File"
+msgstr ""
+
+#: ../web/concrete//blocks/file/add.php:10
+#: ../web/concrete//blocks/file/edit.php:13
+msgid "Link Text"
+msgstr ""
+
+#: ../web/concrete//blocks/file/add.php:13
+#: ../web/concrete//blocks/file/edit.php:16
+msgid "Password Required for Downloading"
+msgstr ""
+
+#: ../web/concrete//blocks/file/add.php:15
+#: ../web/concrete//blocks/file/edit.php:18
+msgid "A password is not required."
+msgstr ""
+
+#: ../web/concrete//blocks/file/controller.php:15
+msgid "Link to files stored in the asset library."
+msgstr ""
+
+#: ../web/concrete//blocks/file/controller.php:23
+#: ../web/concrete//blocks/flash_content/controller.php:23
+msgid "You must select a file."
+msgstr ""
+
+#: ../web/concrete//blocks/flash_content/add.php:6
+#: ../web/concrete//blocks/flash_content/edit.php:9
+msgid "Flash File"
+msgstr ""
+
+#: ../web/concrete//blocks/flash_content/add.php:10
+#: ../web/concrete//blocks/flash_content/edit.php:13
+msgid "Quality"
+msgstr ""
+
+#: ../web/concrete//blocks/flash_content/add.php:20
+#: ../web/concrete//blocks/flash_content/edit.php:23
+msgid "Minimum Flash Player Version"
+msgstr ""
+
+#: ../web/concrete//blocks/flash_content/controller.php:15
+msgid "Embeds SWF files, including flash detection."
+msgstr ""
+
+#: ../web/concrete//blocks/flash_content/controller.php:19
+msgid "Flash Content"
+msgstr ""
+
+#: ../web/concrete//blocks/flash_content/view.php:16
+#: ../web/concrete//elements/dashboard/modules/reports.php:2
+#: ../web/concrete//tools/al_upload.php:17
+msgid "You must install Adobe Flash to view this content."
+msgstr ""
+
+#: ../web/concrete//blocks/form/controller.php:16
+msgid "Build simple forms and surveys."
+msgstr ""
+
+#: ../web/concrete//blocks/form/controller.php:20
+msgid "Form"
+msgstr ""
+
+#: ../web/concrete//blocks/form/controller.php:25
+msgid "Are you sure you want to delete this question?"
+msgstr ""
+
+#: ../web/concrete//blocks/form/controller.php:26
+msgid "Your form must have a name."
+msgstr ""
+
+#: ../web/concrete//blocks/form/controller.php:27
+msgid "Please add at least one question to your form."
+msgstr ""
+
+#: ../web/concrete//blocks/form/controller.php:89
+msgid ""
+"Oops, something is wrong with the form you posted (it doesn't have a "
+"question set id)."
+msgstr ""
+
+#: ../web/concrete//blocks/form/controller.php:131
+msgid "Form Submission"
+msgstr ""
+
+#: ../web/concrete//blocks/form/controller.php:328
+msgid "Submit"
+msgstr ""
+
+#: ../web/concrete//blocks/form/controller.php:341
+msgid "edit"
+msgstr ""
+
+#: ../web/concrete//blocks/form/controller.php:342
+msgid "remove"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:6
+#: ../web/concrete//elements/block_footer_add.php:17
+#: ../web/concrete//elements/collection_add.php:96
+#: ../web/concrete//elements/collection_add_external.php:32
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:195
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:454
+#: ../web/concrete//single_pages/dashboard/groups.php:126
+#: ../web/concrete//single_pages/dashboard/groups.php:161
+#: ../web/concrete//tools/edit_area_popup.php:195
+#: ../web/concrete//tools/edit_area_popup.php:236
+#: ../web/concrete//tools/edit_area_popup.php:352
+#: ../web/concrete//tools/edit_area_popup.php:385
+msgid "Add"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:9
+#: ../web/concrete//blocks/survey/add.php:25
+#: ../web/concrete//blocks/survey/edit.php:25
+#: ../web/concrete//single_pages/dashboard/form_results.php:30
+msgid "Options"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:21
+msgid "Form Name"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:24
+msgid "Notify me by email when people submit this form"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:27
+msgid "Recipient Email"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:39
+msgid "Add a New Question"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:41
+msgid "Your question has been added. To view it click the preview tab."
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:44
+#: ../web/concrete//blocks/form/form_setup_html.php:93
+#: ../web/concrete//blocks/survey/add.php:17
+#: ../web/concrete//blocks/survey/edit.php:15
+#: ../web/concrete//blocks/survey/view.php:43
+msgid "Question"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:52
+#: ../web/concrete//blocks/form/form_setup_html.php:101
+msgid "Answer Type"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:54
+#: ../web/concrete//blocks/form/form_setup_html.php:103
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:130
+msgid "Text Field"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:55
+#: ../web/concrete//blocks/form/form_setup_html.php:104
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:203
+msgid "Text Area"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:56
+msgid "Radio Buttons "
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:57
+#: ../web/concrete//blocks/form/form_setup_html.php:106
+msgid "Select Box"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:58
+#: ../web/concrete//blocks/form/form_setup_html.php:107
+msgid "List Box"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:64
+#: ../web/concrete//blocks/form/form_setup_html.php:113
+msgid "Answer Options"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:67
+#: ../web/concrete//blocks/form/form_setup_html.php:116
+msgid "Put each answer options on a new line"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:87
+msgid "Your question has been edited."
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:90
+msgid "Edit Question"
+msgstr ""
+
+#: ../web/concrete//blocks/form/form_setup_html.php:105
+msgid "Radio Buttons"
+msgstr ""
+
+#: ../web/concrete//blocks/form/tools/services.php:24
+msgid "Invalid Permissions"
+msgstr ""
+
+#: ../web/concrete//blocks/form/view.php:18
+msgid ""
+"Thanks for taking the time to report a problem or ask a question. We're on "
+"it and you'll receive a response soon!"
+msgstr ""
+
+#: ../web/concrete//blocks/google_map/controller.php:22
+msgid ""
+"Enter an address and a Google Map of that location will be placed in your "
+"page."
+msgstr ""
+
+#: ../web/concrete//blocks/google_map/controller.php:26
+msgid "Google Map"
+msgstr ""
+
+#: ../web/concrete//blocks/google_map/controller.php:31
+msgid "Please enter a valid Google Maps API key."
+msgstr ""
+
+#: ../web/concrete//blocks/google_map/controller.php:32
+msgid "Please enter a zoom number from 0 to 17."
+msgstr ""
+
+#: ../web/concrete//blocks/google_map/controller.php:38
+msgid "My Map"
+msgstr ""
+
+#: ../web/concrete//blocks/google_map/form_setup_html.php:9
+msgid "Map Title"
+msgstr ""
+
+#: ../web/concrete//blocks/google_map/form_setup_html.php:9
+#: ../web/concrete//blocks/image/add.php:14
+#: ../web/concrete//blocks/image/edit.php:24
+#: ../web/concrete//blocks/rss_displayer/form_setup_html.php:14
+msgid "Optional"
+msgstr ""
+
+#: ../web/concrete//blocks/google_map/form_setup_html.php:13
+msgid "Google Maps API Key"
+msgstr ""
+
+#: ../web/concrete//blocks/google_map/form_setup_html.php:16
+msgid "Sign up for your key"
+msgstr ""
+
+#: ../web/concrete//blocks/google_map/form_setup_html.php:20
+msgid "Location"
+msgstr ""
+
+#: ../web/concrete//blocks/google_map/form_setup_html.php:23
+msgid "e.g. 222 NW Davis St. Portland, OR"
+msgstr ""
+
+#: ../web/concrete//blocks/google_map/form_setup_html.php:27
+msgid "Zoom"
+msgstr ""
+
+#: ../web/concrete//blocks/google_map/form_setup_html.php:30
+msgid "Enter a number from 0 to 17, with 17 being the most zoomed in."
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/add.php:3
+#: ../web/concrete//blocks/guestbook/edit.php:2
+#: ../web/concrete//blocks/library_file/tools/properties.php:7
+#: ../web/concrete//blocks/youtube/form_setup_html.php:10
+msgid "Title"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/add.php:4
+#: ../web/concrete//controllers/install.php:516
+#: ../web/concrete//tools/versions.php:347
+msgid "Comments"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/add.php:6
+#: ../web/concrete//blocks/guestbook/edit.php:5
+msgid "Comments Require Moderator Approval?"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/add.php:7
+#: ../web/concrete//blocks/guestbook/add.php:11
+#: ../web/concrete//blocks/guestbook/edit.php:6
+#: ../web/concrete//blocks/guestbook/edit.php:10
+#: ../web/concrete//blocks/page_list/page_list_form.php:70
+#: ../web/concrete//blocks/survey/add.php:21
+#: ../web/concrete//blocks/survey/edit.php:20
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:136
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:137
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:146
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:147
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:209
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:210
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:220
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:221
+#: ../web/concrete//single_pages/dashboard/users/view.php:441
+msgid "Yes"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/add.php:8
+#: ../web/concrete//blocks/guestbook/add.php:12
+#: ../web/concrete//blocks/guestbook/edit.php:7
+#: ../web/concrete//blocks/guestbook/edit.php:11
+#: ../web/concrete//blocks/page_list/page_list_form.php:72
+#: ../web/concrete//single_pages/dashboard/users/view.php:438
+msgid "No"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/add.php:10
+#: ../web/concrete//blocks/guestbook/edit.php:9
+msgid "Posting Comments is Enabled?"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/controller.php:42
+msgid "Adds blog-style comments (a guestbook) to your page."
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/controller.php:46
+msgid "Guestbook"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/controller.php:93
+msgid "invalid email address"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/controller.php:96
+msgid "name is required"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/controller.php:99
+msgid "a comment is required"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/controller.php:110
+msgid "Please correct the following errors:"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/controller.php:119
+msgid "The comment has been saved"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/controller.php:121
+msgid "An Error occured while saving the comment"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/controller.php:126
+msgid "Thanks! Your comment has been posted."
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/controller.php:165
+msgid "The comment has been removed."
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/controller.php:180
+msgid "The comment has been approved."
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/controller.php:193
+msgid "The comment has been unapproved."
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/view.php:57
+msgid "Are you sure you would like to remove this comment?"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/view.php:57
+#: ../web/concrete//single_pages/dashboard/install.php:103
+#: ../web/concrete//single_pages/dashboard/jobs.php:161
+#: ../web/concrete//single_pages/dashboard/themes/view.php:40
+#: ../web/concrete//tools/versions.php:339
+msgid "Remove"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/view.php:59
+msgid "Un-Approve"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/view.php:61
+#: ../web/concrete//elements/collection_permissions.php:190
+#: ../web/concrete//tools/versions.php:336
+#: ../web/concrete//tools/versions.php:425
+#: ../web/concrete//tools/versions.php:439
+#: ../web/concrete//tools/versions.php:463
+msgid "Approve"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/view.php:65
+msgid "Posted by"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/view.php:67
+msgid "on"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/view.php:86
+#: ../web/concrete//controllers/install.php:526
+#: ../web/concrete//elements/block_master_collection_alias.php:27
+#: ../web/concrete//elements/collection_add.php:77
+#: ../web/concrete//elements/collection_add_external.php:19
+#: ../web/concrete//elements/collection_edit_external.php:19
+#: ../web/concrete//elements/collection_metadata.php:68
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:123
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:180
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:132
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:235
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:319
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:369
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:411
+#: ../web/concrete//single_pages/dashboard/groups.php:114
+#: ../web/concrete//single_pages/dashboard/groups.php:147
+#: ../web/concrete//single_pages/dashboard/jobs.php:120
+#: ../web/concrete//single_pages/dashboard/jobs.php:184
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:140
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:214
+#: ../web/concrete//tools/versions.php:346
+msgid "Name"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/view.php:88
+#: ../web/concrete//controllers/install.php:527
+msgid "Email"
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/view.php:89
+msgid "Your email will not be publicly displayed."
+msgstr ""
+
+#: ../web/concrete//blocks/guestbook/view.php:92
+msgid "Post Comment"
+msgstr ""
+
+#: ../web/concrete//blocks/image/add.php:10
+#: ../web/concrete//blocks/image/controller.php:18
+#: ../web/concrete//blocks/image/edit.php:20
+msgid "Image"
+msgstr ""
+
+#: ../web/concrete//blocks/image/add.php:11
+#: ../web/concrete//blocks/image/edit.php:21
+msgid "Choose Image"
+msgstr ""
+
+#: ../web/concrete//blocks/image/add.php:14
+#: ../web/concrete//blocks/image/edit.php:24
+msgid "Image On-State"
+msgstr ""
+
+#: ../web/concrete//blocks/image/add.php:15
+#: ../web/concrete//blocks/image/edit.php:25
+msgid "Choose Image On-State"
+msgstr ""
+
+#: ../web/concrete//blocks/image/add.php:18
+#: ../web/concrete//blocks/image/edit.php:28
+msgid "Alt Text/Caption"
+msgstr ""
+
+#: ../web/concrete//blocks/image/controller.php:14
+msgid "Adds images and onstates from the library to pages."
+msgstr ""
+
+#: ../web/concrete//blocks/image/controller.php:23
+msgid "You must select an image."
+msgstr ""
+
+#: ../web/concrete//blocks/library_file/controller.php:31
+msgid "Files added to the asset library"
+msgstr ""
+
+#: ../web/concrete//blocks/library_file/controller.php:35
+msgid "Library File"
+msgstr ""
+
+#: ../web/concrete//blocks/library_file/tools/properties.php:11
+msgid "Size"
+msgstr ""
+
+#: ../web/concrete//blocks/library_file/tools/properties.php:15
+msgid "Added By"
+msgstr ""
+
+#: ../web/concrete//blocks/library_file/tools/properties.php:29
+msgid "Dimensions"
+msgstr ""
+
+#: ../web/concrete//blocks/library_file/tools/properties.php:34
+msgid "Date Added:"
+msgstr ""
+
+#: ../web/concrete//blocks/library_file/tools/properties.php:38
+msgid "Date Modified:"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/controller.php:14
+msgid "List pages based on type, area."
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/controller.php:18
+msgid "Page List"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/controller.php:23
+msgid "Please give your RSS Feed a name."
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:10
+msgid "Number and Type of Pages"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:11
+#: ../web/concrete//blocks/rss_displayer/form_setup_html.php:22
+msgid "Display"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:13
+msgid "pages of type"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:29
+msgid "Location in Website"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:30
+msgid "Display pages that are located"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:34
+#: ../web/concrete//blocks/search/form_setup_html.php:28
+msgid "everywhere"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:38
+#: ../web/concrete//blocks/search/form_setup_html.php:33
+msgid "beneath this page"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:42
+#: ../web/concrete//blocks/search/form_setup_html.php:38
+msgid "beneath another page"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:52
+#: ../web/concrete//blocks/search/form_setup_html.php:40
+msgid "Select Page"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:57
+msgid "Sort Pages"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:58
+msgid "Pages should appear"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:60
+msgid "in their sitemap order"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:61
+msgid "with the most recent first"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:62
+msgid "with the earlist first"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:63
+msgid "in alphabetical order"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:64
+msgid "in reverse alphabetical order"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:69
+msgid "Provide RSS Feed"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:75
+msgid "RSS Feed Title"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:77
+msgid "RSS Feed Description"
+msgstr ""
+
+#: ../web/concrete//blocks/page_list/page_list_form.php:84
+msgid "Preview Pane"
+msgstr ""
+
+#: ../web/concrete//blocks/rss_displayer/controller.php:20
+msgid "Fetch, parse and display the contents of an RSS or Atom feed."
+msgstr ""
+
+#: ../web/concrete//blocks/rss_displayer/controller.php:24
+msgid "RSS Displayer"
+msgstr ""
+
+#: ../web/concrete//blocks/rss_displayer/controller.php:29
+msgid "Please enter a valid feed address."
+msgstr ""
+
+#: ../web/concrete//blocks/rss_displayer/controller.php:30
+msgid "Please enter the number of items to display."
+msgstr ""
+
+#: ../web/concrete//blocks/rss_displayer/controller.php:47
+msgid "Oops, it looks like you've entered an invalid feed address!"
+msgstr ""
+
+#: ../web/concrete//blocks/rss_displayer/form_setup_html.php:10
+msgid "Feed URL"
+msgstr ""
+
+#: ../web/concrete//blocks/rss_displayer/form_setup_html.php:14
+msgid "Feed Title"
+msgstr ""
+
+#: ../web/concrete//blocks/rss_displayer/form_setup_html.php:18
+msgid "Number of items to display"
+msgstr ""
+
+#: ../web/concrete//blocks/rss_displayer/form_setup_html.php:24
+msgid "Only Titles"
+msgstr ""
+
+#: ../web/concrete//blocks/rss_displayer/form_setup_html.php:25
+msgid "Titles & Summary"
+msgstr ""
+
+#: ../web/concrete//blocks/rss_displayer/form_setup_html.php:29
+msgid "Open links in a new window"
+msgstr ""
+
+#: ../web/concrete//blocks/search/controller.php:20
+msgid "Add a search box to your site."
+msgstr ""
+
+#: ../web/concrete//blocks/search/controller.php:24
+#: ../web/concrete//blocks/search/controller.php:33
+#: ../web/concrete//controllers/install.php:471
+#: ../web/concrete//controllers/install.php:479
+#: ../web/concrete//elements/dashboard/sitemap_search.php:13
+#: ../web/concrete//elements/dashboard/sitemap_search.php:64
+#: ../web/concrete//single_pages/dashboard/groups.php:72
+#: ../web/concrete//single_pages/dashboard/logs.php:60
+#: ../web/concrete//tools/al.php:276
+#: ../web/concrete//tools/select_group.php:27
+msgid "Search"
+msgstr ""
+
+#: ../web/concrete//blocks/search/controller.php:28
+msgid "Please enter a valid search title."
+msgstr ""
+
+#: ../web/concrete//blocks/search/controller.php:162
+msgid "Unable to complete search: "
+msgstr ""
+
+#: ../web/concrete//blocks/search/form_setup_html.php:9
+msgid ""
+"The search index does not appear to exist. This block will not function "
+"until the reindex job has been run at least once in the dashboard."
+msgstr ""
+
+#: ../web/concrete//blocks/search/form_setup_html.php:13
+msgid "Search Title"
+msgstr ""
+
+#: ../web/concrete//blocks/search/form_setup_html.php:17
+msgid "Submit Button Text"
+msgstr ""
+
+#: ../web/concrete//blocks/search/form_setup_html.php:21
+msgid "Search Within Path"
+msgstr ""
+
+#: ../web/concrete//blocks/search/form_setup_html.php:47
+msgid "Results Page"
+msgstr ""
+
+#: ../web/concrete//blocks/search/form_setup_html.php:51
+msgid "Post to Another Page Elsewhere"
+msgstr ""
+
+#: ../web/concrete//blocks/search/view.php:32
+msgid "There were no results found. Please try another keyword or phrase."
+msgstr ""
+
+#: ../web/concrete//blocks/slideshow/controller.php:20
+msgid "Display a running loop of images."
+msgstr ""
+
+#: ../web/concrete//blocks/slideshow/controller.php:24
+msgid "Slideshow"
+msgstr ""
+
+#: ../web/concrete//blocks/slideshow/controller.php:29
+msgid "Choose Image/File"
+msgstr ""
+
+#: ../web/concrete//blocks/slideshow/controller.php:30
+msgid "Please choose at least two images."
+msgstr ""
+
+#: ../web/concrete//blocks/slideshow/form_setup_html.php:20
+msgid "Playback"
+msgstr ""
+
+#: ../web/concrete//blocks/slideshow/form_setup_html.php:22
+msgid "Display Order"
+msgstr ""
+
+#: ../web/concrete//blocks/slideshow/form_setup_html.php:23
+msgid "Random (But keep sets together)"
+msgstr ""
+
+#: ../web/concrete//blocks/slideshow/form_setup_html.php:24
+msgid "Completely Random"
+msgstr ""
+
+#: ../web/concrete//blocks/slideshow/form_setup_html.php:28
+#: ../web/concrete//elements/editor_controls.php:4
+msgid "Add Image"
+msgstr ""
+
+#: ../web/concrete//blocks/slideshow/image_row_include.php:12
+msgid "Duration"
+msgstr ""
+
+#: ../web/concrete//blocks/slideshow/image_row_include.php:14
+msgid "Fade Duration"
+msgstr ""
+
+#: ../web/concrete//blocks/slideshow/image_row_include.php:16
+msgid "Set Number"
+msgstr ""
+
+#: ../web/concrete//blocks/slideshow/image_row_include.php:18
+msgid "Link URL (optional)"
+msgstr ""
+
+#: ../web/concrete//blocks/survey/add.php:20
+#: ../web/concrete//blocks/survey/edit.php:19
+msgid "Open to all site visitors?"
+msgstr ""
+
+#: ../web/concrete//blocks/survey/add.php:23
+#: ../web/concrete//blocks/survey/edit.php:22
+msgid "No. Registration is required to answer."
+msgstr ""
+
+#: ../web/concrete//blocks/survey/add.php:31
+#: ../web/concrete//blocks/survey/edit.php:40
+msgid "Add option"
+msgstr ""
+
+#: ../web/concrete//blocks/survey/controller.php:41
+msgid "Provide a simple survey, along with results in a pie chart format."
+msgstr ""
+
+#: ../web/concrete//blocks/survey/controller.php:45
+#: ../web/concrete//controllers/install.php:493
+#: ../web/concrete//single_pages/dashboard/form_results.php:29
+msgid "Survey"
+msgstr ""
+
+#: ../web/concrete//blocks/survey/view.php:22
+msgid "You've voted on this survey."
+msgstr ""
+
+#: ../web/concrete//blocks/survey/view.php:60
+#: ../web/concrete//blocks/survey/view.php:94
+msgid "Vote"
+msgstr ""
+
+#: ../web/concrete//blocks/survey/view.php:60
+msgid "Votes"
+msgstr ""
+
+#: ../web/concrete//blocks/survey/view.php:73
+msgid "View Full Results"
+msgstr ""
+
+#: ../web/concrete//blocks/survey/view.php:96
+msgid "Please Login to Vote"
+msgstr ""
+
+#: ../web/concrete//blocks/video/add.php:8
+#: ../web/concrete//blocks/video/edit.php:10
+msgid "Video File"
+msgstr ""
+
+#: ../web/concrete//blocks/video/add.php:9
+#: ../web/concrete//blocks/video/edit.php:11
+msgid "Choose Video File"
+msgstr ""
+
+#: ../web/concrete//blocks/video/controller.php:26
+msgid ""
+"Embeds uploaded video into a web page. Supports AVI, WMV, Quicktime/MPEG4 "
+"and FLV formats."
+msgstr ""
+
+#: ../web/concrete//blocks/video/controller.php:30
+msgid "Video Player"
+msgstr ""
+
+#: ../web/concrete//blocks/video/controller.php:34
+msgid "You must select a valid FLV file."
+msgstr ""
+
+#: ../web/concrete//blocks/video/form_setup_html.php:11
+msgid "Width"
+msgstr ""
+
+#: ../web/concrete//blocks/video/form_setup_html.php:15
+msgid "Height"
+msgstr ""
+
+#: ../web/concrete//blocks/video/view.php:32
+msgid ""
+"Loading Video... If you're seeing this message you may not have Flash "
+"installed."
+msgstr ""
+
+#: ../web/concrete//blocks/youtube/controller.php:19
+msgid "Embeds a Youtube Video in your web page."
+msgstr ""
+
+#: ../web/concrete//blocks/youtube/controller.php:23
+msgid "Youtube Video"
+msgstr ""
+
+#: ../web/concrete//blocks/youtube/controller.php:27
+msgid "Please enter a valid Youtube URL."
+msgstr ""
+
+#: ../web/concrete//blocks/youtube/controller.php:32
+msgid "My Video"
+msgstr ""
+
+#: ../web/concrete//blocks/youtube/form_setup_html.php:14
+#: ../web/concrete//elements/collection_add_external.php:24
+#: ../web/concrete//elements/collection_edit_external.php:24
+msgid "URL"
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/collection_types/controller.php:31
+msgid "You must delete all pages of this type before deleting this page type."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/install.php:9
+msgid "You've already installed that package."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/install.php:10
+msgid "Invalid Package."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/install.php:38
+msgid "Block Type Refreshed. Any database schema changes have been applied."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/install.php:53
+msgid "Block Type Installed."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/install.php:67
+msgid ""
+"This block type is either internal, or is being used in your website. It "
+"cannot be uninstalled."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/install.php:119
+msgid "The package has been installed."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/logs.php:23
+msgid "Concrete5"
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/logs.php:24
+msgid "Database"
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/logs.php:25
+msgid "Custom"
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/logs.php:61
+msgid "Concrete5 Logs"
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/logs.php:83
+msgid "Custom Application Logs"
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/modules/activity.php:24
+msgid "Your login is the most recent."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/modules/notes.php:32
+msgid "Your dashboard notes were saved."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/settings.php:23
+msgid "Maintenance Mode turned on. Your site is now private."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/settings.php:26
+msgid "Maintenance Mode turned off. Your site is public."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/settings.php:29
+msgid "Editing preferences saved."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/settings.php:32
+msgid "Your site's name has been saved."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/settings.php:35
+#: ../web/concrete//controllers/dashboard/settings.php:116
+msgid "Debug configuration saved."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/settings.php:39
+msgid ""
+"URL rewriting enabled. Make sure you copy the lines below these URL "
+"Rewriting settings area and place them in your .htaccess or web server "
+"configuration file."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/settings.php:41
+msgid "URL rewriting disabled."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/settings.php:119
+msgid "Logging configuration saved."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/settings.php:142
+msgid "General"
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/settings.php:143
+msgid "Access"
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/settings.php:144
+msgid "Developer/Advanced"
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/settings.php:180
+msgid "Permissions saved."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/themes/controller.php:33
+msgid "Invalid theme."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/themes/controller.php:42
+msgid "Theme uninstalled. Your theme directory has been moved to files/trash/."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/themes/controller.php:72
+msgid "That theme has already been installed."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/themes/controller.php:94
+msgid "Theme activated"
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/themes/inspect.php:25
+msgid ""
+"Theme installed. You may automatically create page types from template files "
+"contained in your theme using the form below."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/themes/inspect.php:39
+msgid "You must specify at least one template to make into a page type."
+msgstr ""
+
+#: ../web/concrete//controllers/dashboard/themes/inspect.php:47
+msgid "Files in the theme were activated successfully."
+msgstr ""
+
+#: ../web/concrete//controllers/download_file.php:42
+msgid "Password incorrect. Please try again."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:15
+#: ../web/concrete//controllers/upgrade.php:118
+msgid "Unable to locate database import file."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:28
+msgid "Base URL is invalid"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:29
+msgid "Please specify your site's name"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:30
+msgid "Please specify a valid email address"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:31
+msgid "You must specify a valid database name"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:32
+msgid "You must specify a valid database server"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:37
+msgid ""
+"Your configuration directory config/ does not appear to be writable by the "
+"web server."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:41
+msgid ""
+"Your files directory files/ does not appear to be writable by the web server."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:45
+msgid ""
+"Your files directory files/thumbnails does not appear to be writable by the "
+"web server."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:49
+msgid ""
+"Your files directory files/onstates does not appear to be writable by the "
+"web server."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:53
+msgid ""
+"Your files directory files/trash does not appear to be writable by the web "
+"server."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:57
+msgid ""
+"Your files directory files/cache does not appear to be writable by the web "
+"server."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:61
+msgid ""
+"Your files directory files/avatars does not appear to be writable by the web "
+"server."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:69
+msgid "Unable to connect to database."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:74
+#, php-format
+msgid ""
+"There are already %s tables in this database. Concrete must be installed in "
+"an empty database."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:114
+msgid "Guest"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:114
+msgid "The guest group represents unregistered visitors to your site."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:115
+msgid "Registered Users"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:115
+msgid "The registered users group represents all user accounts."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:116
+msgid "Administrators"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:122
+msgid "Right Sidebar"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:130
+msgid "Left Sidebar"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:138
+msgid "Full Width"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:151
+msgid "Meta Title"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:152
+msgid "Meta Description"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:153
+msgid "Meta Keywords"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:154
+msgid "Exclude from Nav"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:172
+msgid "Date of Birth"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:225
+#: ../web/concrete//single_pages/download_file.php:15
+msgid "Download File"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:227
+#: ../web/concrete//controllers/install.php:444
+#: ../web/concrete//elements/dashboard/sitemap.php:26
+#: ../web/concrete//single_pages/dashboard/sitemap.php:28
+msgid "Sitemap"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:227
+msgid "Whole world at a glance."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:228
+msgid "File Manager"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:228
+msgid "All documents and images."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:229
+#: ../web/concrete//single_pages/dashboard/form_results.php:18
+msgid "Form Results"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:229
+msgid "Get submission data."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:230
+#: ../web/concrete//tools/user_group_selector.php:40
+msgid "Users"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:230
+msgid "Add and manage people."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:231
+#: ../web/concrete//single_pages/dashboard/users/view.php:737
+msgid "User Attributes"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:232
+#: ../web/concrete//single_pages/dashboard/groups.php:66
+#: ../web/concrete//single_pages/dashboard/users/view.php:363
+#: ../web/concrete//single_pages/dashboard/users/view.php:485
+#: ../web/concrete//single_pages/dashboard/users/view.php:717
+#: ../web/concrete//tools/user_group_selector.php:39
+msgid "Groups"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:232
+msgid "Permission levels for users."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:233
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:308
+msgid "Page Types"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:233
+msgid "What goes in your site."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:234
+msgid "Custom Page Attributes"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:234
+msgid "Setup Special Metadata for Pages"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:235
+#: ../web/concrete//single_pages/dashboard/themes/view.php:5
+msgid "Themes"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:235
+msgid "Reskin your site."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:236
+msgid "Add Functionality"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:236
+msgid "Install blocks to extend your site."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:237
+#: ../web/concrete//helpers/concrete/upgrade/version_500a1.php:37
+msgid "Maintenance"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:237
+#: ../web/concrete//helpers/concrete/upgrade/version_500a1.php:37
+msgid "Run common cleanup tasks."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:238
+#: ../web/concrete//single_pages/dashboard/settings.php:36
+msgid "Logging"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:238
+msgid "Keep tabs on your site."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:239
+msgid "Sitewide Settings"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:239
+msgid "Secure and setup your site."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:243
+msgid "Site Activity"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:244
+msgid "Statistics"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:245
+#: ../web/concrete//elements/page_controls.php:87
+#: ../web/concrete//themes/core/dashboard.php:51
+msgid "Help"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:246
+msgid "Latest News"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:247
+msgid "Notes"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:342
+msgid "About"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:344
+msgid "Examples"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:346
+msgid "Contact"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:353
+msgid ""
+"<h1>Welcome to Concrete.</h1><p>You are currently viewing the front page of "
+"your website. This is an example of a content block - rich text that can be "
+"added through a WYSIWYG editor.</p><p>Get started by putting the page in "
+"edit mode, adding sub-pages, or checking out the dashboard.</p><h3>Examples "
+"of Blocks</h3>Listed below are some of the more interesting blocks that "
+"Concrete5 ships with, installed and ready to use. Click through to explore "
+"the blocks on their own page.</p><p>These pages are actually listed using "
+"the <b>page list</b> block. To check it out, put the page in edit mode, "
+"mouse over the list of pages below, click, and then select edit.</p>"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:366
+msgid ""
+"<h3>Learn More</h3><p>There are many more blocks installed with Concrete5 "
+"than these. Start editing to check them out!</p>"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:370
+msgid ""
+"<h2>Sidebar</h2><p>Everything about Concrete is completely customizable "
+"through the CMS. This is a separate area from the main content on the "
+"homepage.</p>"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:373
+msgid ""
+"<h1>Sed ut perspiciatis unde omnis iste natus error (H1)</h1><p>Sed ut "
+"perspiciatis unde omnis iste natus error sit voluptatem accusantium "
+"doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore "
+"veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim "
+"ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia "
+"consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque "
+"porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, "
+"adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et "
+"dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis "
+"nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid "
+"ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea "
+"voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem "
+"eum fugiat quo voluptas nulla pariatur?</p>"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:376
+msgid ""
+"<h1>Examples of Blocks</h1><p>Listed below are some of the more interesting "
+"blocks that Concrete5 ships with, installed and ready to use. Click through "
+"to explore the blocks on their own page.</p><p>These pages are actually "
+"listed using the <b>page list</b> block. To check it out, put the page in "
+"edit mode, mouse over the list of pages below, click, and then select edit.</"
+"p>"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:387
+msgid ""
+"<h3>Learn More</h3><p>Concrete5 ships with more blocks than these. Start "
+"editing to check them out!</p>"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:393
+msgid ""
+"<h1>Image Slideshow</h1><p>Check out the image block above. It's actually "
+"multiple images setup as a JavaScript slideshow."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:446
+msgid ""
+"<h1>Sitemap Example</h1><p>Below we're using the autonav block to build a "
+"nested sitemap of the whole site. When pages are added to the site this will "
+"automatically update.</p>"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:458
+msgid "YouTube Video"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:461
+msgid "<h1>Youtube Video Example</h1>"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:467
+msgid "Movie Trailer"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:473
+msgid "<h1>Search Example</h1>"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:478
+msgid "Search Your Site"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:484
+msgid "Interactive Form"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:489
+msgid ""
+"<h1>Interactive Form Block</h1><p>An example of our interactive form block "
+"can be found on the Contact Page."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:495
+msgid "<h1>Survey Example</h1>"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:500
+msgid "Example Survey"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:501
+msgid "What is your favorite color?"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:502
+msgid "Red"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:502
+msgid "White"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:502
+msgid "Green"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:502
+msgid "Blue"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:502
+msgid "Yellow"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:502
+msgid "Black"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:502
+msgid "Purple"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:502
+msgid "Orange"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:507
+msgid "Guestbook/Comments"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:510
+msgid ""
+"<h1>Guestbook/Comments Example</h1><p>Using Concrete5 you can add blog-style "
+"comments to any page easily, using the guestbook block below.</p>"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:523
+msgid "Contact Form"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:528
+msgid "Comments/Questions?"
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:579
+#, php-format
+msgid ""
+"Congratulations. Concrete has been installed. You have been logged in as <b>%"
+"s</b> with the password <b>%s</b>.<br/><br/>If you wish to change this "
+"password, you may do so from the users area of the dashboard."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:583
+msgid "Unable to open config/site.php for writing."
+msgstr ""
+
+#: ../web/concrete//controllers/install.php:588
+msgid "Unable to locate config directory."
+msgstr ""
+
+#: ../web/concrete//controllers/login.php:11
+#: ../web/concrete//controllers/page_forbidden.php:11
+#: ../web/concrete//single_pages/dashboard/users/view.php:236
+#: ../web/concrete//single_pages/dashboard/users/view.php:306
+#: ../web/concrete//single_pages/dashboard/users/view.php:566
+#: ../web/concrete//single_pages/dashboard/users/view.php:650
+#: ../web/concrete//single_pages/dashboard/users/view.php:699
+#: ../web/concrete//single_pages/dashboard/users/view.php:707
+#: ../web/concrete//single_pages/login.php:25
+#: ../web/concrete//single_pages/login.php:59
+#: ../web/concrete//single_pages/register.php:32
+#: ../web/concrete//tools/select_user.php:27
+#: ../web/concrete//tools/select_user.php:40
+msgid "Email Address"
+msgstr ""
+
+#: ../web/concrete//controllers/login.php:13
+#: ../web/concrete//controllers/page_forbidden.php:13
+#: ../web/concrete//single_pages/dashboard/users/view.php:235
+#: ../web/concrete//single_pages/dashboard/users/view.php:305
+#: ../web/concrete//single_pages/dashboard/users/view.php:564
+#: ../web/concrete//single_pages/dashboard/users/view.php:699
+#: ../web/concrete//single_pages/login.php:27
+#: ../web/concrete//single_pages/register.php:25
+#: ../web/concrete//tools/select_user.php:25
+#: ../web/concrete//tools/select_user.php:39
+msgid "Username"
+msgstr ""
+
+#: ../web/concrete//controllers/login.php:31
+msgid "An email address and password are required."
+msgstr ""
+
+#: ../web/concrete//controllers/login.php:33
+msgid "A username and password are required."
+msgstr ""
+
+#: ../web/concrete//controllers/login.php:42
+msgid "Invalid username or password."
+msgstr ""
+
+#: ../web/concrete//controllers/login.php:44
+msgid "Invalid email address or password."
+msgstr ""
+
+#: ../web/concrete//controllers/login.php:48
+msgid "This user is inactive. Please contact us regarding this account."
+msgstr ""
+
+#: ../web/concrete//controllers/login.php:79
+msgid ""
+"An email containing your password has been sent to your account address."
+msgstr ""
+
+#: ../web/concrete//controllers/login.php:103
+msgid "Invalid email address."
+msgstr ""
+
+#: ../web/concrete//controllers/login.php:108
+msgid "We have no record of that email address."
+msgstr ""
+
+#: ../web/concrete//controllers/page_forbidden.php:9
+msgid "You must sign in order to access this page!"
+msgstr ""
+
+#: ../web/concrete//controllers/register.php:39
+#: ../web/concrete//single_pages/dashboard/users/view.php:74
+#: ../web/concrete//single_pages/dashboard/users/view.php:148
+msgid "Invalid email address provided."
+msgstr ""
+
+#: ../web/concrete//controllers/register.php:41
+#, php-format
+msgid "The email address %s is already in use. Please choose another."
+msgstr ""
+
+#: ../web/concrete//controllers/register.php:46
+#: ../web/concrete//single_pages/dashboard/users/view.php:81
+#: ../web/concrete//single_pages/dashboard/users/view.php:155
+#, php-format
+msgid "A username must be between at least %s characters long."
+msgstr ""
+
+#: ../web/concrete//controllers/register.php:50
+#: ../web/concrete//single_pages/dashboard/users/view.php:85
+#: ../web/concrete//single_pages/dashboard/users/view.php:159
+#, php-format
+msgid "A username cannot be more than %s characters long."
+msgstr ""
+
+#: ../web/concrete//controllers/register.php:54
+#: ../web/concrete//single_pages/dashboard/users/view.php:89
+#: ../web/concrete//single_pages/dashboard/users/view.php:163
+msgid "A username may only contain letters or numbers."
+msgstr ""
+
+#: ../web/concrete//controllers/register.php:57
+#, php-format
+msgid "The username %s already exists. Please choose another"
+msgstr ""
+
+#: ../web/concrete//controllers/register.php:62
+#: ../web/concrete//single_pages/dashboard/users/view.php:171
+msgid "Invalid Username"
+msgstr ""
+
+#: ../web/concrete//controllers/register.php:66
+#: ../web/concrete//single_pages/dashboard/users/view.php:69
+#: ../web/concrete//single_pages/dashboard/users/view.php:176
+#, php-format
+msgid "A password must be between %s and %s characters"
+msgstr ""
+
+#: ../web/concrete//controllers/register.php:70
+#: ../web/concrete//single_pages/dashboard/users/view.php:97
+#: ../web/concrete//single_pages/dashboard/users/view.php:180
+msgid "A password may not contain \", ', >, <, or any spaces."
+msgstr ""
+
+#: ../web/concrete//controllers/register.php:75
+#: ../web/concrete//single_pages/dashboard/users/view.php:102
+msgid "The two passwords provided do not match."
+msgstr ""
+
+#: ../web/concrete//controllers/register.php:81
+#, php-format
+msgid "The field %s is required."
+msgstr ""
+
+#: ../web/concrete//controllers/upgrade.php:20
+msgid ""
+"Unable to determine your current version of Concrete. Upgrading cannot "
+"continue."
+msgstr ""
+
+#: ../web/concrete//controllers/upgrade.php:22
+#: ../web/concrete//controllers/upgrade.php:52
+#, php-format
+msgid "Upgrading from <b>%s</b>"
+msgstr ""
+
+#: ../web/concrete//controllers/upgrade.php:23
+#: ../web/concrete//controllers/upgrade.php:53
+#, php-format
+msgid "Upgrading to <b>%s</b>"
+msgstr ""
+
+#: ../web/concrete//controllers/upgrade.php:24
+msgid ""
+"Your current website uses a version of Concrete5 greater than this one. You "
+"cannot upgrade."
+msgstr ""
+
+#: ../web/concrete//controllers/upgrade.php:28
+#, php-format
+msgid ""
+"Your site is already up to date! The current version of Concrete5 is <b>%s</"
+"b>. You should remove this file for security."
+msgstr ""
+
+#: ../web/concrete//controllers/upgrade.php:144
+#, php-format
+msgid "Error occurred while upgrading: %s"
+msgstr ""
+
+#: ../web/concrete//controllers/upgrade.php:148
+#, php-format
+msgid "Upgrade to <b>%s</b> complete!"
+msgstr ""
+
+#: ../web/concrete//elements/block_al.php:2
+msgid "Choose File/Image"
+msgstr ""
+
+#: ../web/concrete//elements/block_al.php:3
+#: ../web/concrete//helpers/concrete/asset_library.php:36
+msgid "None selected."
+msgstr ""
+
+#: ../web/concrete//elements/block_area_footer.php:34
+#, php-format
+msgid "Add To %s"
+msgstr ""
+
+#: ../web/concrete//elements/block_controls.php:13
+#: ../web/concrete//elements/block_controls.php:18
+msgid "Do you want to delete this block?"
+msgstr ""
+
+#: ../web/concrete//elements/block_controls.php:15
+msgid ""
+"This block is aliased by other blocks. If you edit this block, your changes "
+"will effect those other blocks. Are you sure you want to edit this block?"
+msgstr ""
+
+#: ../web/concrete//elements/block_controls.php:16
+msgid ""
+"Do you want to delete this block? This item is an original. If you delete "
+"it, you will delete all blocks aliased to it"
+msgstr ""
+
+#: ../web/concrete//elements/block_custom_template.php:11
+msgid "Custom Template"
+msgstr ""
+
+#: ../web/concrete//elements/block_custom_template.php:13
+msgid "There are no custom templates available."
+msgstr ""
+
+#: ../web/concrete//elements/block_custom_template.php:15
+#: ../web/concrete//elements/block_custom_template.php:26
+#: ../web/concrete//elements/block_footer_add.php:16
+#: ../web/concrete//elements/block_footer_edit.php:14
+#: ../web/concrete//elements/block_groups.php:185
+#: ../web/concrete//elements/block_master_collection_alias.php:51
+#: ../web/concrete//elements/collection_mcd.php:67
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:137
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:194
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:192
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:295
+#: ../web/concrete//single_pages/dashboard/groups.php:162
+#: ../web/concrete//single_pages/dashboard/themes/view.php:13
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:161
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:235
+#: ../web/concrete//single_pages/dashboard/users/view.php:353
+#: ../web/concrete//single_pages/dashboard/users/view.php:392
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:134
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:139
+msgid "Cancel"
+msgstr ""
+
+#: ../web/concrete//elements/block_custom_template.php:20
+msgid "None selected"
+msgstr ""
+
+#: ../web/concrete//elements/block_custom_template.php:27
+#: ../web/concrete//elements/block_footer_edit.php:15
+#: ../web/concrete//elements/block_groups.php:184
+#: ../web/concrete//elements/block_master_collection_alias.php:52
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:138
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:162
+#: ../web/concrete//tools/edit_area_popup.php:407
+msgid "Update"
+msgstr ""
+
+#: ../web/concrete//elements/block_groups.php:2
+msgid ""
+"Apply these changes to all blocks aliased to this block? Note: This may take "
+"some time."
+msgstr ""
+
+#: ../web/concrete//elements/block_groups.php:116
+msgid "Block Permissions"
+msgstr ""
+
+#: ../web/concrete//elements/block_groups.php:120
+msgid ""
+"Permissions for this block are currently dependent on the area containing "
+"this block. If you override those permissions here, they will not match "
+"those of the area."
+msgstr ""
+
+#: ../web/concrete//elements/block_groups.php:122
+msgid ""
+"Permissions for this block currently override those of the parent area. To "
+"revert to the area's permissions, click the button below."
+msgstr ""
+
+#: ../web/concrete//elements/block_groups.php:126
+#: ../web/concrete//tools/edit_area_popup.php:321
+msgid "Add Group or User"
+msgstr ""
+
+#: ../web/concrete//elements/block_groups.php:134
+#: ../web/concrete//elements/collection_permissions.php:187
+#: ../web/concrete//tools/edit_area_popup.php:190
+#: ../web/concrete//tools/edit_area_popup.php:231
+#: ../web/concrete//tools/edit_area_popup.php:343
+#: ../web/concrete//tools/edit_area_popup.php:376
+msgid "Read"
+msgstr ""
+
+#: ../web/concrete//elements/block_groups.php:135
+#: ../web/concrete//elements/collection_permissions.php:189
+#: ../web/concrete//tools/edit_area_popup.php:192
+#: ../web/concrete//tools/edit_area_popup.php:233
+#: ../web/concrete//tools/edit_area_popup.php:345
+#: ../web/concrete//tools/edit_area_popup.php:378
+msgid "Write"
+msgstr ""
+
+#: ../web/concrete//elements/block_groups.php:136
+#: ../web/concrete//elements/collection_permissions.php:191
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:380
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:173
+#: ../web/concrete//tools/edit_area_popup.php:193
+#: ../web/concrete//tools/edit_area_popup.php:234
+#: ../web/concrete//tools/edit_area_popup.php:347
+#: ../web/concrete//tools/edit_area_popup.php:380
+#: ../web/concrete//tools/i18n_js.php:5 ../web/concrete//tools/i18n_js.php:20
+#: ../web/concrete//tools/i18n_js.php:28
+msgid "Delete"
+msgstr ""
+
+#: ../web/concrete//elements/block_master_collection_alias.php:17
+msgid ""
+"There are no pages of this type added to your website. If there were, you'd "
+"be able to choose which of those pages this block appears on."
+msgstr ""
+
+#: ../web/concrete//elements/block_master_collection_alias.php:21
+msgid ""
+"Choose which pages below this particular block should appear on. Any "
+"previously selected blocks may also be removed using the checkbox. Click the "
+"checkbox in the header to select/deselect all pages."
+msgstr ""
+
+#: ../web/concrete//elements/block_master_collection_alias.php:28
+msgid "Date Created"
+msgstr ""
+
+#: ../web/concrete//elements/block_master_collection_alias.php:29
+msgid "Date Modified"
+msgstr ""
+
+#: ../web/concrete//elements/collection_add.php:38
+#: ../web/concrete//elements/page_controls.php:109
+#: ../web/concrete//tools/i18n_js.php:29
+msgid "Add Page"
+msgstr ""
+
+#: ../web/concrete//elements/collection_add.php:45
+#: ../web/concrete//elements/collection_theme.php:28
+msgid "Choose a Page Type"
+msgstr ""
+
+#: ../web/concrete//elements/collection_add.php:72
+msgid "Page Information"
+msgstr ""
+
+#: ../web/concrete//elements/collection_add.php:81
+#: ../web/concrete//elements/collection_metadata.php:72
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:115
+msgid "Alias"
+msgstr ""
+
+#: ../web/concrete//elements/collection_add.php:89
+#: ../web/concrete//elements/collection_metadata.php:108
+#: ../web/concrete//single_pages/dashboard/groups.php:120
+#: ../web/concrete//single_pages/dashboard/groups.php:153
+#: ../web/concrete//single_pages/dashboard/install.php:89
+#: ../web/concrete//single_pages/dashboard/jobs.php:121
+#: ../web/concrete//single_pages/dashboard/jobs.php:185
+msgid "Description"
+msgstr ""
+
+#: ../web/concrete//elements/collection_add.php:104
+msgid "You must choose a page type."
+msgstr ""
+
+#: ../web/concrete//elements/collection_add_external.php:12
+#: ../web/concrete//tools/i18n_js.php:21
+msgid "Add External Link"
+msgstr ""
+
+#: ../web/concrete//elements/collection_edit_external.php:12
+#: ../web/concrete//tools/i18n_js.php:19
+msgid "Edit External Link"
+msgstr ""
+
+#: ../web/concrete//elements/collection_mcd.php:18
+msgid "Move, Copy or Delete this Page"
+msgstr ""
+
+#: ../web/concrete//elements/collection_mcd.php:21
+#: ../web/concrete//tools/i18n_js.php:30
+msgid "Move/Copy Page"
+msgstr ""
+
+#: ../web/concrete//elements/collection_mcd.php:22
+msgid ""
+"Click below to move or copy the current page to a particular spot in your "
+"site."
+msgstr ""
+
+#: ../web/concrete//elements/collection_mcd.php:49
+#: ../web/concrete//elements/collection_mcd.php:52
+#: ../web/concrete//elements/collection_mcd.php:56
+#: ../web/concrete//elements/collection_mcd.php:73
+#: ../web/concrete//elements/collection_mcd.php:76
+#: ../web/concrete//elements/collection_mcd.php:83
+#: ../web/concrete//elements/collection_mcd.php:84
+msgid "Delete Page"
+msgstr ""
+
+#: ../web/concrete//elements/collection_mcd.php:50
+msgid "You may not delete this page."
+msgstr ""
+
+#: ../web/concrete//elements/collection_mcd.php:53
+msgid "You may not delete the home page."
+msgstr ""
+
+#: ../web/concrete//elements/collection_mcd.php:57
+msgid "This page has been marked for deletion."
+msgstr ""
+
+#: ../web/concrete//elements/collection_mcd.php:65
+#, php-format
+msgid "You marked this page for deletion on <strong>%s</strong>"
+msgstr ""
+
+#: ../web/concrete//elements/collection_mcd.php:74
+msgid "Since this page is being moved or copied, it cannot be deleted."
+msgstr ""
+
+#: ../web/concrete//elements/collection_mcd.php:77
+msgid ""
+"Before you can delete this page, you must delete all of its child pages."
+msgstr ""
+
+#: ../web/concrete//elements/collection_mcd.php:86
+#, php-format
+msgid "This will remove %s child page(s)."
+msgstr ""
+
+#: ../web/concrete//elements/collection_metadata.php:61
+msgid "Page Properties"
+msgstr ""
+
+#: ../web/concrete//elements/collection_metadata.php:64
+msgid "Standard Information"
+msgstr ""
+
+#: ../web/concrete//elements/collection_metadata.php:78
+msgid "Public Date/Time"
+msgstr ""
+
+#: ../web/concrete//elements/collection_metadata.php:85
+#: ../web/concrete//elements/dashboard/sitemap_search.php:41
+msgid "Owner"
+msgstr ""
+
+#: ../web/concrete//elements/collection_metadata.php:128
+msgid "Custom Fields"
+msgstr ""
+
+#: ../web/concrete//elements/collection_metadata.php:129
+msgid "Add Field"
+msgstr ""
+
+#: ../web/concrete//elements/collection_metadata.php:150
+msgid "Remove Field"
+msgstr ""
+
+#: ../web/concrete//elements/collection_metadata.php:226
+#: ../web/concrete//elements/collection_permissions.php:270
+#: ../web/concrete//elements/collection_permissions_simple.php:51
+#: ../web/concrete//elements/collection_theme.php:88
+#: ../web/concrete//elements/dashboard/modules/notes.php:10
+#: ../web/concrete//single_pages/dashboard/settings.php:173
+#: ../web/concrete//single_pages/dashboard/settings.php:203
+#: ../web/concrete//single_pages/dashboard/settings.php:227
+msgid "Save"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:15
+msgid "Save permissions first."
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:153
+msgid "Add User/Group"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:157
+msgid "Set"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:159
+msgid "By Area of Site (Hierarchy)"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:160
+msgid "By Page Type Defaults (in Dashboard)"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:161
+msgid "Manually"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:166
+msgid "Currently Viewing"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:168
+msgid "Page Permissions"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:169
+msgid "Sub-Page Permissions"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:170
+msgid "Timed Release Settings"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:181
+msgid "This page inherits its permissions from:"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:188
+#: ../web/concrete//elements/page_controls.php:105
+#: ../web/concrete//tools/i18n_js.php:27
+msgid "Versions"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:192
+msgid "Admin"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:193
+msgid "User/Group May Add the Following Pages"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:194
+msgid "Start Date/Time"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:195
+msgid "End Date/Time"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:262
+msgid "Inherit page type default permissions."
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions.php:263
+msgid "Inherit the permissions of this page."
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions_simple.php:13
+msgid "Page Access"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions_simple.php:19
+msgid "Who can view this page?"
+msgstr ""
+
+#: ../web/concrete//elements/collection_permissions_simple.php:34
+msgid "Who can edit this page?"
+msgstr ""
+
+#: ../web/concrete//elements/collection_theme.php:32
+msgid ""
+"This page is a single page, which means it doesn't have a page type "
+"associated with it."
+msgstr ""
+
+#: ../web/concrete//elements/collection_theme.php:64
+msgid "Choose a Theme"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/activity.php:2
+#, php-format
+msgid "You are logged in as <b>%s</b>. You logged in on <b>%s</b>."
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/activity.php:4
+msgid "Number of visits since your previous login"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/activity.php:5
+msgid "Total visits"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/activity.php:5
+msgid "Does not include your visits."
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/activity.php:6
+msgid "Total page versions"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/activity.php:7
+msgid "Last edit"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/activity.php:8
+msgid "Last login"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/activity.php:9
+msgid "Total pages in edit mode"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/activity.php:10
+msgid "Total form submissions"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/activity.php:10
+msgid "today"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/activity.php:10
+msgid "total"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/help.php:12
+msgid "Search Documentation"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/help.php:21
+msgid "Full Documentation"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/help.php:22
+#, php-format
+msgid "Full documentation is available <a href=\"%s\">at Concrete5.org</a>"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/news.php:12
+msgid "Read More"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/news.php:14
+#, php-format
+msgid "Read more C5 news <a href=\"%s\">at the C5 Developer Center</a>"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/modules/notes.php:2
+msgid "Write notes to yourself using the text area below."
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/notification_update.php:4
+#, php-format
+msgid ""
+"The latest version of Concrete5 is <strong>%s</strong>. You are running %s. "
+"<a href=\"%s\">Update Now</a>!"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/notification_update.php:8
+#, php-format
+msgid ""
+"You have downloaded a new version of Concrete5 but have not upgraded to it "
+"yet. <a href=\"%s\">Upgrade your site to %s now</a>!"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/sitemap_search.php:8
+#: ../web/concrete//tools/i18n_js.php:32
+msgid "Search Pages"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/sitemap_search.php:17
+msgid "Created on or after"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/sitemap_search.php:22
+msgid "Created on or before"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/sitemap_search.php:27
+msgid "Page Type"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/sitemap_search.php:29
+msgid "N/A"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/sitemap_search.php:46
+msgid "Containing Versions by"
+msgstr ""
+
+#: ../web/concrete//elements/dashboard/sitemap_search.php:52
+msgid "# Children"
+msgstr ""
+
+#: ../web/concrete//elements/editor_controls.php:5
+#: ../web/concrete//tools/al.php:231
+msgid "Add File"
+msgstr ""
+
+#: ../web/concrete//elements/editor_controls.php:6
+msgid "Insert Link to Page"
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:13
+msgid "Another user is currently editing this page."
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:18
+msgid "This page is an alias of one that actually appears elsewhere. "
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:19
+msgid "View/Edit Original"
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:22
+msgid "Remove Alias"
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:28
+msgid "This page is pending approval."
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:30
+msgid "Approve Version"
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:38
+msgid "This page is being moved."
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:40
+msgid "Approve Move"
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:44
+msgid "This page is marked for removal."
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:48
+#: ../web/concrete//tools/versions.php:430
+#, php-format
+msgid "This will remove %s pages."
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:50
+#: ../web/concrete//elements/page_controls.php:55
+msgid "Approve Delete"
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:52
+msgid "Only administrators can approve a multi-page delete operation."
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:86
+msgid "Dashboard"
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:88
+#: ../web/concrete//themes/core/dashboard.php:52
+msgid "Sign Out"
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:99
+msgid "Save Positioning"
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:101
+#: ../web/concrete//tools/check_in.php:26
+msgid "Exit Edit Mode"
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:102
+#: ../web/concrete//tools/al.php:73 ../web/concrete//tools/i18n_js.php:24
+msgid "Properties"
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:103
+#: ../web/concrete//tools/i18n_js.php:26
+msgid "Design"
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:104
+#: ../web/concrete//tools/edit_area_popup.php:21
+msgid "Permissions"
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:106
+msgid "Move/Delete"
+msgstr ""
+
+#: ../web/concrete//elements/page_controls.php:108
+msgid "Edit Page"
+msgstr ""
+
+#: ../web/concrete//elements/pane_header.php:8
+msgid "Close"
+msgstr ""
+
+#: ../web/concrete//elements/search_results_top.php:2
+#, php-format
+msgid "Viewing <b>%s</b> to <b>%s</b> (<b>%s</b> Total)"
+msgstr ""
+
+#: ../web/concrete//helpers/concrete/upgrade/version_500a1.php:24
+msgid ""
+"Make sure your web root contains a jobs/ directory, or upgrading will not go "
+"smoothly."
+msgstr ""
+
+#: ../web/concrete//helpers/mail.php:129
+msgid "EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()"
+msgstr ""
+
+#: ../web/concrete//helpers/mail.php:131
+msgid "EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT"
+msgstr ""
+
+#: ../web/concrete//helpers/mail.php:133
+msgid "Template Used"
+msgstr ""
+
+#: ../web/concrete//helpers/mail.php:134
+msgid "To"
+msgstr ""
+
+#: ../web/concrete//helpers/mail.php:135
+msgid "From"
+msgstr ""
+
+#: ../web/concrete//helpers/mail.php:136
+msgid "Subject"
+msgstr ""
+
+#: ../web/concrete//helpers/mail.php:137
+msgid "Body"
+msgstr ""
+
+#: ../web/concrete//helpers/pagination.php:85
+msgid "Next"
+msgstr ""
+
+#: ../web/concrete//helpers/pagination.php:104
+msgid "Previous"
+msgstr ""
+
+#: ../web/concrete//helpers/validation/banned_words.php:49
+msgid "Banned words list not found."
+msgstr ""
+
+#: ../web/concrete//helpers/validation/banned_words.php:53
+msgid "Banned words list has improper permissions."
+msgstr ""
+
+#: ../web/concrete//jobs/generate_sitemap.php:12
+msgid "Generate Sitemap File"
+msgstr ""
+
+#: ../web/concrete//jobs/generate_sitemap.php:16
+msgid ""
+"Generate the sitemap.xml file that search engines use to crawl your site."
+msgstr ""
+
+#: ../web/concrete//jobs/generate_sitemap.php:49
+#, php-format
+msgid "Cannot open file %s"
+msgstr ""
+
+#: ../web/concrete//jobs/generate_sitemap.php:97
+msgid "Sitemap XML File Saved."
+msgstr ""
+
+#: ../web/concrete//jobs/generate_sitemap.php:100
+#, php-format
+msgid "The file %s is not writable"
+msgstr ""
+
+#: ../web/concrete//jobs/index_search.php:14
+msgid "Index Search Engine"
+msgstr ""
+
+#: ../web/concrete//jobs/index_search.php:18
+msgid "Index the site to allow searching to work quickly and accurately."
+msgstr ""
+
+#: ../web/concrete//libraries/archive.php:42
+msgid "Could not transfer to temp directory - file not found."
+msgstr ""
+
+#: ../web/concrete//libraries/archive.php:63
+msgid ""
+"There was an error unpacking your theme. Perhaps you have not uploaded a "
+"valid zip file, or you do not have zip installed."
+msgstr ""
+
+#: ../web/concrete//libraries/archive.php:101
+#, php-format
+msgid ""
+"The directory %s already exists. Perhaps this item has already been "
+"installed."
+msgstr ""
+
+#: ../web/concrete//mail/block_form_submission.php:10
+#, php-format
+msgid ""
+"\n"
+"There has been a submission of the form %s on through your Concrete5 "
+"website.\n"
+"\n"
+"%s\n"
+"\n"
+"To view all of this form's submissions, visit %s \n"
+"\n"
+msgstr ""
+
+#: ../web/concrete//mail/forgot_password.php:5
+msgid "Forgot Password"
+msgstr ""
+
+#: ../web/concrete//mail/forgot_password.php:6
+#, php-format
+msgid ""
+"\n"
+"\n"
+"Dear %s,\n"
+"\n"
+"Here is your information:\n"
+"\n"
+"Your username: %s\n"
+"Your password: %s\n"
+"\n"
+"To login, head here:\n"
+"\n"
+"%s\n"
+"\n"
+"Thanks for browsing the site!\n"
+"\n"
+msgstr ""
+
+#: ../web/concrete//mail/validate_user_email.php:5
+msgid "Validate Email Address"
+msgstr ""
+
+#: ../web/concrete//mail/validate_user_email.php:6
+msgid "Registration - Validate Email Address"
+msgstr ""
+
+#: ../web/concrete//mail/validate_user_email.php:7
+#, php-format
+msgid ""
+"\n"
+"\n"
+"You must click the following URL in order to activate your account for %s:\n"
+"\n"
+"%s \n"
+"\n"
+"Thanks for your interest in %s\n"
+"\n"
+msgstr ""
+
+#: ../web/concrete//models/block_types.php:79
+#, php-format
+msgid ""
+"%s not found. Please check that the block controller file contains the "
+"correct class name."
+msgstr ""
+
+#: ../web/concrete//models/block_types.php:428
+msgid "No block found by that name in the core blocks directory."
+msgstr ""
+
+#: ../web/concrete//models/job.php:34
+msgid ""
+"Error: The Job::run() method must be overridden by your child Job class."
+msgstr ""
+
+#: ../web/concrete//models/job.php:171
+msgid "Error: The Job class must be a child class of Job."
+msgstr ""
+
+#: ../web/concrete//models/job.php:178
+#, php-format
+msgid "Error: Invalid Job file. The class %s was not found in %s ."
+msgstr ""
+
+#: ../web/concrete//models/job.php:185
+#, php-format
+msgid "Error: Invalid Jobs Directory %s"
+msgstr ""
+
+#: ../web/concrete//models/job.php:214
+msgid "The Job was run successfully."
+msgstr ""
+
+#: ../web/concrete//models/page_theme_archive.php:36
+#, php-format
+msgid "Unable to uninstall %s theme by moving it to the trash."
+msgstr ""
+
+#: ../web/concrete//models/userinfo.php:195
+msgid "Invalid user attribute key."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:44
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:45
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:58
+msgid "Handle required."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:47
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:48
+#: ../web/concrete//single_pages/dashboard/groups.php:34
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:61
+msgid "Name required."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:50
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:64
+msgid "Type required."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:53
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:67
+msgid "A select attribute must have at least one option."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:60
+#, php-format
+msgid "An attribute with the handle %s already exists."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:84
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:98
+msgid "Attribute Key Created."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:86
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:100
+msgid "Attribute Key Deleted."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:88
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:102
+msgid "Attribute Key Updated."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:96
+msgid "Edit Attribute Definition"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:96
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:120
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:225
+#: ../web/concrete//single_pages/dashboard/groups.php:106
+#: ../web/concrete//single_pages/dashboard/users/view.php:269
+#: ../web/concrete//single_pages/dashboard/users/view.php:688
+msgid "required field"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:106
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:163
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:133
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:236
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:320
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:370
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:121
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:194
+msgid "Handle"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:107
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:164
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:19
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:122
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:195
+#: ../web/concrete//tools/al.php:245
+msgid "Type"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:108
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:165
+msgid "Searchable?"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:113
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:170
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:129
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:202
+msgid "Text Box"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:114
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:171
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:131
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:204
+msgid "Check Box"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:115
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:172
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:132
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:205
+msgid "Select Menu"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:116
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:173
+msgid "Select Menu + Add Option"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:117
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:174
+msgid "Date"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:118
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:175
+msgid "Image/File"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:120
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:177
+msgid "Yes, include this field in the search index."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:129
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:186
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:150
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:225
+msgid "Values"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:132
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:189
+msgid "For select types only - separate menu options with a comma, no space."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/attributes.php:154
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:394
+msgid "Add Page Attribute"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:81
+msgid "That page has already been added."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:84
+msgid "That specified path doesn't appear to be a valid static page."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:94
+msgid "Page Type added."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:96
+msgid "Page Type updated."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:98
+msgid "Page refreshed."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:100
+msgid "Static page created."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:104
+#: ../web/concrete//single_pages/dashboard/users/view.php:18
+msgid "User Attribute Updated."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:107
+#: ../web/concrete//single_pages/dashboard/users/view.php:21
+msgid "User Attribute Created."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:110
+#: ../web/concrete//single_pages/dashboard/users/view.php:24
+msgid "User Attribute Deleted."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:120
+msgid "Edit Page Type"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:140
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:243
+msgid "Icon"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:161
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:264
+msgid "Available Metadata Attributes"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:191
+msgid "Update Page Type"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:202
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:209
+msgid "Delete Page Type"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:206
+msgid ""
+"Click below to remove this page type entirely. (Note: You may only remove "
+"page types which are not being used on your site. If a page type is being "
+"used, delete all instances of its pages first.)"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:225
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:294
+msgid "Add Page Type"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:313
+msgid "No page types found."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:321
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:413
+msgid "Package"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:338
+msgid "Defaults"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:338
+msgid "Lets you set default permissions and blocks for a particular page type."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:354
+msgid "Add a Page Type"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:361
+msgid "Page Attributes"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:380
+msgid "Are you sure you wish to delete this attribute?"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:388
+msgid "No page attributes defined."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:402
+msgid "Single Pages"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:408
+msgid "Already Installed"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:412
+msgid "Path"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:417
+msgid "No pages found."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:436
+#: ../web/concrete//single_pages/dashboard/install.php:101
+msgid "Refresh"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:443
+msgid "Add Single Page"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/collection_types/view.php:446
+msgid "The page you want to add is available at:"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/form_results.php:3
+msgid "View all fields"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/form_results.php:23
+msgid "You have not created any forms."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/form_results.php:41
+msgid "View Responses"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/form_results.php:43
+msgid "Open Page"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/form_results.php:61
+msgid "Responses to"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/form_results.php:65
+msgid "No one has yet submitted this form."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/form_results.php:70
+#: ../web/concrete//single_pages/dashboard/users/view.php:643
+msgid "Export to Excel"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/form_results.php:74
+msgid "Show All"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/form_results.php:76
+msgid "Show Paging"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/form_results.php:82
+msgid "Sort by Newest"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/form_results.php:84
+msgid "Sort Chronologically"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/form_results.php:94
+msgid "Submitted Date"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/groups.php:50
+msgid "Group Created."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/groups.php:52
+msgid "Group Updated."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/groups.php:100
+#: ../web/concrete//tools/select_group.php:54
+msgid "No groups found."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/groups.php:106
+#: ../web/concrete//single_pages/dashboard/users/view.php:362
+msgid "Add Group"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/groups.php:137
+msgid "Edit Group"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:30
+msgid "Block Type Installed"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:41
+msgid "Applications and Packages"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:44
+msgid "Installed Applications"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:47
+msgid "No packages have been installed."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:62
+msgid "Available Applications. Click to Install."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:64
+msgid "No packages are available."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:87
+msgid "Return to Block Types"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:92
+msgid "Usage Count"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:96
+msgid "Internal"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:97
+msgid "This is an internal block type."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:114
+msgid "Block Types"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:117
+msgid "Installed Block Types"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:120
+msgid "No block types have been installed."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:135
+msgid "Available Block Types. Click to Install."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/install.php:139
+msgid "No local block types available."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/jobs.php:18
+msgid "Please first check jobs you want to run."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/jobs.php:54
+msgid "Are you sure you want to uninstall this job?"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/jobs.php:89
+msgid "Scheduled Jobs"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/jobs.php:96
+msgid "You currently have no jobs installed."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/jobs.php:105
+#: ../web/concrete//single_pages/dashboard/jobs.php:107
+msgid "Run Checked"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/jobs.php:110
+msgid "Installed Jobs"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/jobs.php:118
+#: ../web/concrete//tools/al.php:254
+msgid "All"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/jobs.php:122
+msgid "Last Run"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/jobs.php:123
+msgid "Results of Last Run"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/jobs.php:146
+#, php-format
+msgid "Currently Running (Since %s)"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/jobs.php:149
+msgid "Never"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/jobs.php:179
+msgid "Jobs Available for Installation"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/jobs.php:210
+msgid ""
+"If you wish to run these jobs in the background, automate access to the "
+"following URL:"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/logs.php:5
+msgid "Database Logs"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/logs.php:10
+#: ../web/concrete//single_pages/dashboard/logs.php:61
+msgid "Clear Log"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/logs.php:15
+#: ../web/concrete//single_pages/dashboard/logs.php:66
+msgid "Date/Time"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/logs.php:16
+msgid "Query"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/logs.php:17
+msgid "Params"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/logs.php:18
+msgid "Page/Script"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/logs.php:46
+#, php-format
+msgid ""
+"You must first enable the logging of database queries from your <a href=\"%s"
+"\">developer settings section</a> "
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/logs.php:61
+msgid "Are you sure you want to clear this log?"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/logs.php:67
+msgid "Log Type"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/logs.php:68
+msgid "Text"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/mediabrowser.php:19
+msgid "File Deleted."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/mediabrowser.php:74
+msgid "Images and Files"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:13
+msgid "Debug Level"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:16
+msgid ""
+"Note: these are global settings. If enabled, PHP errors will be displayed to "
+"all visitors of the site."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:18
+msgid "Production"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:19
+msgid "PHP errors and database exceptions will be suppressed."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:21
+msgid "Development"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:22
+msgid "PHP errors and database exceptions will be displayed."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:25
+msgid "Set Debug Level"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:38
+msgid "Log Application Exceptions"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:40
+msgid "Log Database Activity"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:42
+msgid "Log Emails Sent"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:44
+msgid ""
+"Enables saving records of emails being sent out. This will save records even "
+"if actual email delivery is disabled on your site."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:48
+msgid "Save Logging Settings"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:60
+msgid "Site Permissions"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:67
+msgid ""
+"Your Concrete site does not use the simple permissions model. You must "
+"change your permissions for each specific page and content area."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:78
+msgid "Public"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:79
+msgid "Anyone may view the website."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:81
+msgid "Members Only"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:82
+msgid "Only registered users may view the website."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:84
+msgid "Private"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:85
+msgid "Only the administrative group may view the website."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:91
+#: ../web/concrete//single_pages/dashboard/settings.php:128
+msgid "Edit Access"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:93
+msgid ""
+"Choose which users and groups below may edit your site. Note: These settings "
+"can be overridden on specific pages."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:106
+msgid "Update Site Permissions"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:132
+msgid "Name Your Website"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:136
+msgid "Save Site Name"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:146
+msgid "Linking"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:150
+msgid "Enable Pretty URLs"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:151
+msgid ""
+"Automatically translates your path-based Concrete5 URLs so that they don't "
+"include 'index.php'."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:154
+msgid "Required Code"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:155
+msgid ""
+"You must copy the lines of code below and place them in your server's "
+"configuration file or .htaccess file."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:188
+msgid "Editing Preferences"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:192
+msgid "These editing preferences apply just to your user account."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:196
+msgid "Display breadcrumb navigation bar."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:199
+msgid ""
+"When enabled, rolling your mouse over the editing bar will show the path to "
+"the current page."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:213
+msgid "Maintenance Mode"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:217
+msgid ""
+"Maintenance mode makes the front-end of the website inaccessible, while "
+"leaving the dashboard available to admin users."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:220
+msgid "Disabled"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:221
+msgid "When disabled, the site is available to the public."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:223
+msgid "Enabled"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:224
+msgid "If enabled, only your dashboard will be accessible."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/settings.php:243
+msgid ""
+"Are you sure you want to put your site into maintenance mode? This will make "
+"it inaccessible to public visitors."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/sitemap.php:50
+msgid "Show System Pages"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/add.php:2
+msgid "Add a Template"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/add.php:6
+msgid ""
+"Upload a template bundle by using the form below. Files must be zipped and "
+"contain only HTML files and sub directories. All items referenced in HTML "
+"must be done so with relative links."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/add.php:11
+msgid "Add Theme"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/add.php:16
+msgid "Return to Template List"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:5
+msgid "Inspect Theme"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:15
+msgid "File in Theme"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:20
+msgid "Action to Take"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:28
+msgid "There are no templates in this file."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:39
+msgid "Wrapper for static pages"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:42
+msgid "Default template"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:45
+msgid "Template for internal Concrete page."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:48
+msgid "New template."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:51
+msgid "Template for existing page type."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:58
+msgid "None. This file will automatically be used."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:61
+msgid ""
+"None. This file will automatically be used for pages without a template."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:64
+#, php-format
+msgid ""
+"None. This file will automatically be used by the <strong>%s</strong> page."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:71
+#, php-format
+msgid ""
+"None. This file will automatically be used by the <strong>%s</strong> page "
+"type."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/inspect.php:85
+msgid "Return to Themes"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/view.php:10
+msgid ""
+"Are you sure you wish to activate this theme? Any custom theme selections "
+"across your site will be reset."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/view.php:12
+msgid "Yes, activate this theme."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/view.php:13
+msgid "or"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/view.php:24
+msgid "No themes are available."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/view.php:35
+msgid "Activate"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/view.php:37
+msgid "Inspect"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/view.php:49
+msgid "Themes Available to Install"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/themes/view.php:59
+msgid "Install"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:74
+#, php-format
+msgid "A questionnaire item with the handle '%s' already exists."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:123
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:196
+msgid "Hidden?"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:124
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:197
+msgid "Required?"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:133
+msgid "Radio Buttons Menu"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:134
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:207
+msgid "HTML Text (Not Interactive)"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:141
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:215
+msgid "Private?"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:142
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:216
+msgid "Registration Q?"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:155
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:229
+msgid ""
+"(For select and radio types only - separate menu options with a line break.)"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:156
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:230
+msgid ""
+"HTML Text is used in displaying the questionnaire - it is <b>not</b> an "
+"interactive question type."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:172
+msgid "This field has not been used yet."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:186
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:236
+#: ../web/concrete//single_pages/dashboard/users/view.php:763
+msgid "Add User Attribute"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/attributes.php:206
+msgid "Radio Button Menu"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:34
+msgid "User activated."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:40
+msgid "Email marked as valid."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:53
+msgid "User deactivated."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:76
+#: ../web/concrete//single_pages/dashboard/users/view.php:150
+#, php-format
+msgid "The email address '%s' is already in use. Please choose another."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:92
+#: ../web/concrete//single_pages/dashboard/users/view.php:166
+#, php-format
+msgid "The username '%s' already exists. Please choose another"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:121
+msgid "User updated successfully. "
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:123
+msgid "Password changed."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:198
+msgid "User created successfully. "
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:200
+msgid "An error occurred while trying to create the account."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:237
+msgid "Registered"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:238
+#: ../web/concrete//single_pages/dashboard/users/view.php:652
+msgid "# Logins"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:292
+msgid "Edit Account"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:302
+msgid "Core Information"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:307
+#: ../web/concrete//single_pages/dashboard/users/view.php:708
+msgid "User Avatar"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:315
+msgid "Remove Avatar"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:320
+msgid "Change Password"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:323
+#: ../web/concrete//single_pages/dashboard/users/view.php:700
+#: ../web/concrete//single_pages/download_file.php:31
+#: ../web/concrete//single_pages/login.php:33
+#: ../web/concrete//single_pages/register.php:38
+msgid "Password"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:324
+msgid "Password (Confirm)"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:329
+msgid "(Leave these fields blank to keep the same password)"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:332
+msgid "Other Information (Click the checkbox to modify existing values)"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:362
+msgid "Add Groups"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:393
+msgid "Update User"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:401
+msgid "View User"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:407
+msgid "Mark Email as Valid"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:412
+msgid "Deactivate User"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:414
+msgid "Activate User"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:417
+msgid "Edit User"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:420
+#: ../web/concrete//single_pages/dashboard/users/view.php:694
+msgid "Required Information"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:430
+msgid "Full Record"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:432
+msgid "Email Validated"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:435
+msgid "Unknown"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:454
+msgid "Other Information"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:490
+msgid "Group"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:491
+msgid "Date Entered"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:525
+msgid "Search User Accounts"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:531
+msgid "Advanced Search"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:536
+msgid "Username or Email Address Contains:"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:546
+#: ../web/concrete//single_pages/dashboard/users/view.php:621
+msgid "Search Users"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:555
+msgid "Back to Simple Search"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:570
+msgid "Registered between:"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:572
+msgid "and:"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:577
+msgid "Email Validation"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:579
+msgid "Non-Validated"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:580
+msgid "Validated"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:582
+msgid "Record Types"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:584
+msgid "Full"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:585
+msgid "Email Only "
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:634
+msgid "Results"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:649
+msgid "User Name"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:651
+msgid "Date Added"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:674
+#: ../web/concrete//tools/select_user.php:61
+msgid "No users found."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:683
+msgid "Create Account"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:719
+msgid "Once you create the account you may assign it to groups."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:724
+msgid "Create User"
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:743
+msgid ""
+"To set the order for these items on the registration form, click and drag "
+"the graphic next to the attribute's name."
+msgstr ""
+
+#: ../web/concrete//single_pages/dashboard/users/view.php:759
+msgid "No user attributes defined."
+msgstr ""
+
+#: ../web/concrete//single_pages/download_file.php:19
+msgid "Invalid File."
+msgstr ""
+
+#: ../web/concrete//single_pages/download_file.php:23
+msgid "This file requires a password to download."
+msgstr ""
+
+#: ../web/concrete//single_pages/download_file.php:33
+msgid "Download"
+msgstr ""
+
+#: ../web/concrete//single_pages/download_file.php:39
+msgid "Back"
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:5
+#: ../web/concrete//single_pages/install.php:13
+#: ../web/concrete//single_pages/install.php:66
+msgid "Install Concrete"
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:9
+msgid "Continue to your site."
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:16
+msgid ""
+"Concrete could not locate <strong>site.php</strong> within the config "
+"directory."
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:17
+msgid "To install Concrete, please fill out the form below."
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:25
+msgid "Name Your Site"
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:29
+msgid "Base URL"
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:31
+msgid "e.g. <strong>http://www.mysite.com</strong> - no trailing slash"
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:35
+msgid "Subdirectory for site"
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:37
+msgid "e.g. http://www.mysite.com<strong>/concrete</strong>/"
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:40
+msgid "Personal Information"
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:42
+msgid "Your Email Address"
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:47
+msgid "Database Information"
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:49
+msgid "Server"
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:53
+msgid "MySQL Username"
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:57
+msgid "MySQL Password"
+msgstr ""
+
+#: ../web/concrete//single_pages/install.php:61
+msgid "Database Name"
+msgstr ""
+
+#: ../web/concrete//single_pages/login.php:5
+msgid "Email Address Verified"
+msgstr ""
+
+#: ../web/concrete//single_pages/login.php:8
+#, php-format
+msgid ""
+"The email address <b>%s</b> has been verified and you are now a fully "
+"validated member of this website."
+msgstr ""
+
+#: ../web/concrete//single_pages/login.php:10
+#: ../web/concrete//single_pages/register.php:8
+#: ../web/concrete//single_pages/register.php:15
+msgid "Return to Home"
+msgstr ""
+
+#: ../web/concrete//single_pages/login.php:14
+#, php-format
+msgid "Sign in to %s"
+msgstr ""
+
+#: ../web/concrete//single_pages/login.php:37
+msgid "Remember Me"
+msgstr ""
+
+#: ../web/concrete//single_pages/login.php:40
+msgid "Sign In"
+msgstr ""
+
+#: ../web/concrete//single_pages/login.php:49
+msgid "Forgot Password?"
+msgstr ""
+
+#: ../web/concrete//single_pages/login.php:51
+msgid ""
+"If you've forgotten your password, enter your email address below. We will "
+"reset it to a new password, and send the new one to you."
+msgstr ""
+
+#: ../web/concrete//single_pages/login.php:64
+msgid "Reset and Email Password"
+msgstr ""
+
+#: ../web/concrete//single_pages/maintenance_mode.php:3
+msgid "Coming Back Soon"
+msgstr ""
+
+#: ../web/concrete//single_pages/maintenance_mode.php:5
+msgid "This site is currently down for maintenance."
+msgstr ""
+
+#: ../web/concrete//single_pages/page_not_found.php:3
+msgid "Page Not Found"
+msgstr ""
+
+#: ../web/concrete//single_pages/page_not_found.php:5
+msgid "No page could be found at this address."
+msgstr ""
+
+#: ../web/concrete//single_pages/page_not_found.php:10
+#: ../web/concrete//single_pages/upgrade.php:21
+#: ../web/concrete//single_pages/user_error.php:7
+msgid "Back to Home"
+msgstr ""
+
+#: ../web/concrete//single_pages/register.php:2
+msgid "Site Registration"
+msgstr ""
+
+#: ../web/concrete//single_pages/register.php:7
+msgid "Your account has been created, and you are now logged in."
+msgstr ""
+
+#: ../web/concrete//single_pages/register.php:13
+msgid ""
+"You are registered but you need to validate your email address. Some or all "
+"functionality on this site will be limited until you do so."
+msgstr ""
+
+#: ../web/concrete//single_pages/register.php:14
+msgid ""
+"An email has been sent to your email address. Click on the URL contained in "
+"the email to validate your email address."
+msgstr ""
+
+#: ../web/concrete//single_pages/register.php:44
+msgid "Confirm Password"
+msgstr ""
+
+#: ../web/concrete//single_pages/upgrade.php:2
+msgid "Upgrade Concrete5"
+msgstr ""
+
+#: ../web/concrete//single_pages/upgrade.php:9
+msgid "To proceed with the upgrade, click below."
+msgstr ""
+
+#: ../web/concrete//single_pages/upgrade.php:14
+msgid "Upgrade"
+msgstr ""
+
+#: ../web/concrete//single_pages/user_error.php:2
+msgid "Unexpected User Error"
+msgstr ""
+
+#: ../web/concrete//single_pages/user_error.php:4
+msgid ""
+"Something about your user account has changed. You have been logged out. "
+"Please refresh this page to continue."
+msgstr ""
+
+#: ../web/concrete//startup/config_check.php:6
+msgid "Concrete5 requires PHP5."
+msgstr ""
+
+#: ../web/concrete//themes/core/dashboard.php:50
+msgid "Return to Website"
+msgstr ""
+
+#: ../web/concrete//themes/core/dashboard.php:111
+msgid "The following errors occurred when attempting to process your request:"
+msgstr ""
+
+#: ../web/concrete//themes/default/elements/footer.php:5
+#: ../web/concrete//themes/greensalad/default.php:45
+#: ../web/concrete//themes/greensalad/full.php:40
+#: ../web/concrete//themes/greensalad/home.php:45
+#: ../web/concrete//themes/greensalad/view.php:44
+msgid "All rights reserved."
+msgstr ""
+
+#: ../web/concrete//themes/default/elements/footer.php:6
+#: ../web/concrete//themes/greensalad/default.php:46
+#: ../web/concrete//themes/greensalad/full.php:41
+#: ../web/concrete//themes/greensalad/home.php:46
+#: ../web/concrete//themes/greensalad/view.php:45
+msgid "Sign In to Edit this Site"
+msgstr ""
+
+#: ../web/concrete//tools/al.php:8
+msgid "Unable to access the file manager."
+msgstr ""
+
+#: ../web/concrete//tools/al.php:72
+msgid "View/Download"
+msgstr ""
+
+#: ../web/concrete//tools/al.php:73
+msgid "File Properties"
+msgstr ""
+
+#: ../web/concrete//tools/al.php:75 ../web/concrete//tools/versions.php:332
+msgid "Select"
+msgstr ""
+
+#: ../web/concrete//tools/al.php:77
+msgid "Delete File"
+msgstr ""
+
+#: ../web/concrete//tools/al.php:86
+msgid "Are you sure you want to delete this file?"
+msgstr ""
+
+#: ../web/concrete//tools/al.php:243 ../web/concrete//tools/al.php:260
+msgid "Filename"
+msgstr ""
+
+#: ../web/concrete//tools/al.php:244
+msgid "Added on or after:"
+msgstr ""
+
+#: ../web/concrete//tools/al.php:246
+msgid "Sort By"
+msgstr ""
+
+#: ../web/concrete//tools/al.php:247
+msgid "View"
+msgstr ""
+
+#: ../web/concrete//tools/al.php:261
+msgid "Most Recent Files First"
+msgstr ""
+
+#: ../web/concrete//tools/al.php:262
+msgid "Filename descending"
+msgstr ""
+
+#: ../web/concrete//tools/al.php:263
+msgid "Earliest First"
+msgstr ""
+
+#: ../web/concrete//tools/al_delete.php:16
+msgid "Could not find block."
+msgstr ""
+
+#: ../web/concrete//tools/al_delete.php:20
+msgid "You do not have permission to remove that block."
+msgstr ""
+
+#: ../web/concrete//tools/al_search_results.php:32
+msgid "View Files"
+msgstr ""
+
+#: ../web/concrete//tools/al_search_results.php:87
+msgid "No files found."
+msgstr ""
+
+#: ../web/concrete//tools/al_upload.php:13
+msgid "Add Files"
+msgstr ""
+
+#: ../web/concrete//tools/al_upload.php:15
+msgid "Upload Complete!"
+msgstr ""
+
+#: ../web/concrete//tools/al_upload.php:15
+msgid "Click here to close this window and refresh the library."
+msgstr ""
+
+#: ../web/concrete//tools/al_upload_process.php:20
+msgid "Error: No files sent."
+msgstr ""
+
+#: ../web/concrete//tools/check_in.php:30
+msgid "Version Comments"
+msgstr ""
+
+#: ../web/concrete//tools/check_in.php:35
+msgid "Publish My Edits"
+msgstr ""
+
+#: ../web/concrete//tools/check_in.php:37
+msgid "Preview My Edits"
+msgstr ""
+
+#: ../web/concrete//tools/check_in.php:38
+msgid "Discard My Edits"
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/chart_handler.php:22
+msgid "Today"
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_delete_request.php:20
+msgid "Invalid ID passed"
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_delete_request.php:24
+msgid "Invalid Page ID Specified."
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_delete_request.php:29
+msgid "You are not allowed to delete this page."
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_delete_request.php:44
+msgid "Page Removed"
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:12
+msgid "An unspecified error has occurred."
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:30
+msgid "You cannot view the source page."
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:32
+msgid ""
+"You do not have sufficient privileges to add this type of page to this "
+"destination."
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:34
+msgid "You may not move/copy/alias the chosen page to that location."
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:45
+msgid "was successfully aliased beneath"
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:52
+msgid "and all its children were successfully copied beneath"
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:57
+msgid "was successfully copied beneath"
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:61
+msgid "An error occurred while attempting the copy operation."
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:69
+msgid "was moved beneath"
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:72
+#, php-format
+msgid ""
+"Your request to move \"%s\" beneath \"%s\" has been stored. Someone with "
+"approval rights will have to activate the change."
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:101
+#, php-format
+msgid "You dragged \"%s\" onto \"%s.\" What do you wish to do?"
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:110
+#: ../web/concrete//tools/i18n_js.php:7
+msgid "Move"
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:110
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:115
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:120
+msgid "beneath"
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:115
+msgid ""
+"The page will appear in both locations; all edits to the original will be "
+"reflected in the alias."
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:120
+msgid "Copy"
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:123
+msgid "Copy this page."
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:124
+msgid "Copy this page + children."
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:126
+msgid ""
+"Your copy operation will only affect the current page - not any children."
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:134
+msgid "Choose Page"
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_drag_request.php:141
+msgid "Go"
+msgstr ""
+
+#: ../web/concrete//tools/dashboard/sitemap_update.php:19
+msgid "Display order saved."
+msgstr ""
+
+#: ../web/concrete//tools/edit_area_popup.php:19
+msgid "Add New"
+msgstr ""
+
+#: ../web/concrete//tools/edit_area_popup.php:20
+#: ../web/concrete//tools/edit_area_popup.php:80
+msgid "Add From Scrapbook"
+msgstr ""
+
+#: ../web/concrete//tools/edit_area_popup.php:25
+msgid "Add New Block"
+msgstr ""
+
+#: ../web/concrete//tools/edit_area_popup.php:34
+msgid "Learn more about this block type."
+msgstr ""
+
+#: ../web/concrete//tools/edit_area_popup.php:40
+msgid "No block types can be added to this area."
+msgstr ""
+
+#: ../web/concrete//tools/edit_area_popup.php:87
+msgid "You have no items in your scrapbook."
+msgstr ""
+
+#: ../web/concrete//tools/edit_area_popup.php:125
+msgid "Set Area Permissions"
+msgstr ""
+
+#: ../web/concrete//tools/edit_area_popup.php:302
+msgid "The following area permissions are inherited from an area set on "
+msgstr ""
+
+#: ../web/concrete//tools/edit_area_popup.php:304
+msgid ""
+"To change them everywhere, edit this area on that page. To override them "
+"here and on all sub-pages, edit below."
+msgstr ""
+
+#: ../web/concrete//tools/edit_area_popup.php:309
+msgid ""
+"The following area permissions are inherited from the page's permissions. To "
+"override them, edit below."
+msgstr ""
+
+#: ../web/concrete//tools/edit_area_popup.php:314
+msgid ""
+"Permissions for this area currently override those of the page. To revert to "
+"the page's permissions, click <strong>revert to page permissions</strong> "
+"below."
+msgstr ""
+
+#: ../web/concrete//tools/edit_area_popup.php:321
+msgid "Choose User/Group"
+msgstr ""
+
+#: ../web/concrete//tools/edit_area_popup.php:405
+msgid "Revert to Page Permissions"
+msgstr ""
+
+#: ../web/concrete//tools/edit_collection_popup.php:79
+#: ../web/concrete//tools/versions.php:327
+msgid "Someone has already checked out this page for editing."
+msgstr ""
+
+#: ../web/concrete//tools/i18n_js.php:8
+msgid "Copy to Scrapbook"
+msgstr ""
+
+#: ../web/concrete//tools/i18n_js.php:9
+msgid "Set Custom Template"
+msgstr ""
+
+#: ../web/concrete//tools/i18n_js.php:10 ../web/concrete//tools/i18n_js.php:25
+msgid "Set Permissions"
+msgstr ""
+
+#: ../web/concrete//tools/i18n_js.php:11
+msgid "Setup on Child Pages"
+msgstr ""
+
+#: ../web/concrete//tools/i18n_js.php:12
+msgid "Block Area"
+msgstr ""
+
+#: ../web/concrete//tools/i18n_js.php:18 ../web/concrete//tools/i18n_js.php:23
+msgid "Visit"
+msgstr ""
+
+#: ../web/concrete//tools/i18n_js.php:33
+msgid "Back to Sitemap"
+msgstr ""
+
+#: ../web/concrete//tools/i18n_js.php:34
+msgid "Search Results"
+msgstr ""
+
+#: ../web/concrete//tools/i18n_js.php:36
+msgid "Viewing"
+msgstr ""
+
+#: ../web/concrete//tools/i18n_js.php:37
+msgid "Result(s)"
+msgstr ""
+
+#: ../web/concrete//tools/i18n_js.php:38
+msgid "max"
+msgstr ""
+
+#: ../web/concrete//tools/i18n_js.php:39
+msgid "No results found."
+msgstr ""
+
+#: ../web/concrete//tools/i18n_js.php:46
+msgid "Resume Editing"
+msgstr ""
+
+#: ../web/concrete//tools/i18n_js.php:47
+msgid "No Suggestions"
+msgstr ""
+
+#: ../web/concrete//tools/jobs.php:37
+msgid "Error: Job not found"
+msgstr ""
+
+#: ../web/concrete//tools/jobs.php:61
+msgid "All Jobs Run Successfully"
+msgstr ""
+
+#: ../web/concrete//tools/pile_manager.php:164
+msgid "Block added to scrapbook."
+msgstr ""
+
+#: ../web/concrete//tools/pile_manager.php:168
+msgid "Close Window"
+msgstr ""
+
+#: ../web/concrete//tools/select_group.php:7
+msgid "You have no access to groups."
+msgstr ""
+
+#: ../web/concrete//tools/select_user.php:6
+msgid "You have no access to users."
+msgstr ""
+
+#: ../web/concrete//tools/user_group_selector.php:49
+msgid "Select Group"
+msgstr ""
+
+#: ../web/concrete//tools/user_group_selector.php:60
+msgid "Select User"
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:62
+#, php-format
+msgid "You must make %s executable in order to compare versions of pages."
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:320
+msgid "Page Versions"
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:321
+msgid ""
+"The following is a list of all this page's versions. If you can edit a page "
+"you will automatically see its most recent version, but the approved version "
+"(listed in white) is what regular users will see."
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:332
+msgid "Old Versions"
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:334
+msgid "Compare"
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:348
+msgid "Creator"
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:349
+msgid "Approver"
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:350
+msgid "Added On"
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:376
+msgid "Compare Versions"
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:404
+msgid "Pending Actions"
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:417
+msgid "DELETION"
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:418
+#: ../web/concrete//tools/versions.php:454
+#, php-format
+msgid "(Marked by: <strong>%s</strong> at <strong>%s</strong>)"
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:426
+#: ../web/concrete//tools/versions.php:434
+#: ../web/concrete//tools/versions.php:440
+#: ../web/concrete//tools/versions.php:464
+msgid "Deny"
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:432
+msgid "Only the super user may remove multiple pages."
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:453
+msgid "MOVE"
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:458
+msgid "This page is being moved to"
+msgstr ""
+
+#: ../web/concrete//tools/versions.php:470
+msgid "There are no pending actions for this page."
+msgstr ""
