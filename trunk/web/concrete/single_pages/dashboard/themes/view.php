@@ -31,7 +31,9 @@ $bt = Loader::helper('concrete/interface');
 			<h2><?=$t->getThemeName()?></h2>
 			<?=$t->getThemeDescription()?>
 			<br/><br/>
-			<?=$bt->button(t("Activate"), $this->url('/dashboard/themes','activate', $t->getThemeID()), "left");?>
+			<? if ($siteThemeID != $t->getThemeID()) { ?>
+				<?=$bt->button(t("Activate"), $this->url('/dashboard/themes','activate', $t->getThemeID()), "left");?>
+			<? } ?>
 			<?=$bt->button(t("Inspect"), $this->url('/dashboard/themes/inspect', $t->getThemeID()), "left");?>
 			
 			<? if ($t->isUninstallable()) { ?>
