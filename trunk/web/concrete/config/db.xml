@@ -549,6 +549,7 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="date" type="D" />
     <field name="timestamp" type="T">
       <NOTNULL/>
       <DEFTIMESTAMP/>
