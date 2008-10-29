@@ -46,6 +46,7 @@ div.guestBook-entry {
 </style>
 <h4 class="guestBook-title"><?=$controller->title?></h4>
 <?
+$u = new User();
 $posts = $controller->getEntries();
 $bp = $controller->getPermissionsObject(); 
 foreach($posts as $p) { ?>
@@ -62,10 +63,20 @@ foreach($posts as $p) { ?>
 					<? } ?>
                 </div>
 			<? } ?>
-			<div class="contentByLine"><?=t('Posted by')?>
-				<span class="userName"><?=$p['user_name']?></span> 
+			<div class="contentByLine">
+				<?=t('Posted by')?>
+				<span class="userName">
+					<?
+					if( intval($p['uID']) ){
+						$ui = UserInfo::getByID(intval($p['uID']));
+						echo $ui->getUserName();
+					}else echo $p['user_name'];
+					?>
+				</span> 
 				<?=t('on')?>
-				<span class="contentDate"><?=date("M dS, Y",strtotime($p['entryDate']));?></span>
+				<span class="contentDate">
+					<?=date("M dS, Y",strtotime($p['entryDate']));?>
+				</span>
 			</div>
 			<?=nl2br($p['commentText'])?>
     </div>
@@ -76,20 +87,29 @@ foreach($posts as $p) { ?>
 	<?=$response?>
 <? } ?>
 <? if($controller->displayGuestBookForm) { ?>
-    <a name="guestBookForm-<?=$controller->bID?>"></a>
-    <div id="guestBook-formBlock-<?=$controller->bID?>" class="guestBook-formBlock">
-        <h5 class="guestBook-formBlock-title">Leave a Reply</h5>
-        <form method="post" action="<?=$this->action('form_save_entry', '#guestBookForm-'.$controller->bID)?>">
-		<? if(isset($Entry->entryID)) { ?>
-        	<input type="hidden" name="entryID" value="<?=$Entry->entryID?>" />
-        <? } ?>
-        <label for="name"><?=t('Name')?>:</label><?=(isset($errors['name'])?"<span class=\"error\">".$errors['name']."</span>":"")?><br />
-		<input type="text" name="name" value="<?=$Entry->user_name ?>" /> <br />
-        <label for="email"><?=t('Email')?>:</label><?=(isset($errors['email'])?"<span class=\"error\">".$errors['email']."</span>":"")?><br />
-		<input type="text" name="email" value="<?=$Entry->user_email ?>" /> <span class="note">(<?=t('Your email will not be publicly displayed.')?>)</span> <br />
-        <?=(isset($errors['commentText'])?"<br /><span class=\"error\">".$errors['commentText']."</span>":"")?>
-        <textarea name="commentText"><?=$Entry->commentText ?></textarea><br />
-        <input type="submit" name="Post Comment" value="<?=t('Post Comment')?>" class="button"/>
-        </form>
-    </div>
+	<?	
+	if( $controller->authenticationRequired && !$u->isLoggedIn() ){ ?>
+		<div>You must be <a href="<?=DIR_REL?>/login/">logged in</a> to leave a reply.</div>
+	<? }else{ ?>	
+		<a name="guestBookForm-<?=$controller->bID?>"></a>
+		<div id="guestBook-formBlock-<?=$controller->bID?>" class="guestBook-formBlock">
+			<h5 class="guestBook-formBlock-title">Leave a Reply</h5>
+			<form method="post" action="<?=$this->action('form_save_entry', '#guestBookForm-'.$controller->bID)?>">
+			<? if(isset($Entry->entryID)) { ?>
+				<input type="hidden" name="entryID" value="<?=$Entry->entryID?>" />
+			<? } ?>
+			
+			<? if(!$controller->authenticationRequired){ ?>
+				<label for="name"><?=t('Name')?>:</label><?=(isset($errors['name'])?"<span class=\"error\">".$errors['name']."</span>":"")?><br />
+				<input type="text" name="name" value="<?=$Entry->user_name ?>" /> <br />
+				<label for="email"><?=t('Email')?>:</label><?=(isset($errors['email'])?"<span class=\"error\">".$errors['email']."</span>":"")?><br />
+				<input type="text" name="email" value="<?=$Entry->user_email ?>" /> <span class="note">(<?=t('Your email will not be publicly displayed.')?>)</span> <br />
+			<? } ?>
+			
+			<?=(isset($errors['commentText'])?"<br /><span class=\"error\">".$errors['commentText']."</span>":"")?>
+			<textarea name="commentText"><?=$Entry->commentText ?></textarea><br />
+			<input type="submit" name="Post Comment" value="<?=t('Post Comment')?>" class="button"/>
+			</form>
+		</div>
+	<? } ?>
 <? } ?>
