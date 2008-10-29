@@ -88,9 +88,12 @@ class RegisterController extends Controller {
 			$data['uName'] = $username;
 			$data['uPassword'] = $password;
 			$data['uPasswordConfirm'] = $passwordConfirm;
-			
+
 			$process = UserInfo::register($data);
 			if (is_object($process)) {
+
+				$process->updateUserAttributes($data);
+				
 				// now we log the user in
 
 				$u = new User($_POST['uName'], $_POST['uPassword']);
