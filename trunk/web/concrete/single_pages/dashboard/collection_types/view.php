@@ -319,7 +319,8 @@ if ($ctEditMode) {
 		<td class="subheader" width="100%"><?=t('Name')?></td>
 		<td class="subheader"><?=t('Handle')?></td>
 		<td class="subheader"><?=t('Package')?></td>
-		<td class="subheader" colspan="2"><?=t('Edit')?></td>
+		<td class="subheader"><div style="width: 90px"></div></td>
+		<td class="subheader"><div style="width: 60px"></div></td>
 	</tr>
 	<? foreach ($ctArray as $ct) { ?>
 	<tr>
@@ -368,8 +369,8 @@ if ($ctEditMode) {
 	<tr>
 		<td class="subheader" width="100%"><?=t('Name')?></td>
 		<td class="subheader"><?=t('Handle')?></td>
-		<td class="subheader">&nbsp;</td>
-		<td class="subheader">&nbsp;</td>
+		<td class="subheader"><div style="width: 60px"></div></td>
+		<td class="subheader"><div style="width: 70px"></div></td>
 	</tr>
 	<?
 	foreach($attribs as $ak) { ?>
@@ -411,7 +412,7 @@ if ($ctEditMode) {
 		<td class="subheader" width="100%"><?=t('Name')?></td>
 		<td class="subheader"><?=t('Path')?></td>
 		<td class="subheader"><?=t('Package')?></td>
-		<td class="subheader">&nbsp;</td>
+		<td class="subheader"><div style="width: 90px"></div></td>
 	</tr>
 	<? if (count($generated) == 0) { ?>
 		<td colspan="4"><?=t('No pages found.')?></td>
