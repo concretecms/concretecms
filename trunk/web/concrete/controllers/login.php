@@ -53,13 +53,12 @@ class LoginController extends Controller {
 			if ($this->post('uMaintainLogin')) {
 				$u->setUserForeverCookie();
 			}
-
-			//redirect to a page if specified
-			$rcURL = trim($this->post('rcURL')); 
-			if( strlen($rcURL)>0 ){
-				$this->redirect( $rcURL );
-			}
 			
+			$rcID = $this->post('rcID');
+			$nh = Loader::helper('validation/numbers');
+			if ($nh->integer($rcID)) {
+				$this->redirect('/index.php?cID=' . $rcID);
+			}		
 
 			$dash = Page::getByPath("/dashboard", "RECENT");
 			$dbp = new Permissions($dash);
@@ -83,6 +82,10 @@ class LoginController extends Controller {
 		$u = new User();
 		$u->logout();
 		$this->redirect('/');
+	}
+	
+	public function forward($cID) {
+		$this->set('rcID', $cID);
 	}
 	
 	// responsible for validating a user's email address
