@@ -10,3 +10,7 @@
 <?=t('Posting Comments is Enabled?')?><br/>
 <input type="radio" name="displayGuestBookForm" value="1" checked="checked" /> <?=t('Yes')?><br />
 <input type="radio" name="displayGuestBookForm" value="0" /> <?=t('No')?><br /><br />
+
+<?=t('Authentication Required to Post')?><br/>
+<input type="radio" name="authenticationRequired" value="1" /> <?=t('Email Only (checked by default)')?><br />
+<input type="radio" name="authenticationRequired" value="0" checked="checked" /> <?=t('Users must login to C5')?><br /><br />
