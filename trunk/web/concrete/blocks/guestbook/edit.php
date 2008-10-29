@@ -11,5 +11,5 @@
 <input type="radio" name="displayGuestBookForm" value="0" <?=($displayGuestBookForm?"":"checked=\"checked\"") ?> /> <?=t('No')?><br /><br />
 
 <?=t('Authentication Required to Post')?><br/>
-<input type="radio" name="authenticationRequired" value="0" <?=($authenticationRequired?"":"checked=\"checked\"") ?> /> <?=t('Email Only (checked by default)')?><br />
+<input type="radio" name="authenticationRequired" value="0" <?=($authenticationRequired?"":"checked=\"checked\"") ?> /> <?=t('Email Only')?><br />
 <input type="radio" name="authenticationRequired" value="1" <?=($authenticationRequired?"checked=\"checked\"":"") ?> /> <?=t('Users must login to C5')?><br /><br />
