@@ -149,7 +149,7 @@ class IndexedSearch {
 			
 			$query->addSubquery( $subQuery, $required );	
 		}
-
+		$query = utf8_encode($query);
 		$resultsTmp = $index->find($query);
 
 		$results = array();

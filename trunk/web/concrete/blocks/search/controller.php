@@ -30,7 +30,9 @@
 		
 		function __construct($obj = null) {		
 			parent::__construct($obj);
-			$this->title=t("Search");
+			if ($this->title == '') {
+				$this->title=t("Search");
+			}
 		}
 		
 		public function indexExists() {
@@ -108,8 +110,8 @@
 					if( count($this->search_paths) ){
 						$pathsBooleanQuery = new Zend_Search_Lucene_Search_Query_Boolean();
 						foreach($this->search_paths as $path){
-							$pattern = new Zend_Search_Lucene_Index_Term($path.'*', 'cPath');
-							$pathsQuery = new Zend_Search_Lucene_Search_Query_Wildcard($pattern);
+							$pattern = new Zend_Search_Lucene_Index_Term($path, 'cPath');
+							$pathsQuery = new Zend_Search_Lucene_Search_Query_Term($pattern);
 							$pathsBooleanQuery->addSubquery($pathsQuery, NULL);
 						}
 						$subqueries[]=array('query'=>$pathsBooleanQuery,'required'=>true);
