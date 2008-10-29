@@ -83,10 +83,14 @@
 					}
 					break;
 			}
-			$minGID .= ($omitRequiredGroups) ? 2 : 0;
+
 			$groups = array();
 			if ($where) {
-				$q = "select gID from $table where gID > $minGID and {$where} order by gID asc";
+				if (!$omitRequiredGroups) {
+					$groups[] = Group::getByID(GUEST_GROUP_ID);
+					$groups[] = Group::getByID(REGISTERED_GROUP_ID);
+				}
+				$q = "select gID from $table where gID > 2 and {$where} order by gID asc";
 				$r = $db->query($q);
 				while ($row = $r->fetchRow()) {
 					$g = Group::getByID($row['gID']);
