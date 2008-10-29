@@ -39,8 +39,8 @@
 	<div class="ccm-button">
 	<?=$form->submit('submit', t('Sign In') . ' &gt;')?>
 	</div>
-
-	<input type="hidden" name="rcURL" value="<?=$rcURL?>" />
+	
+	<?=$form->hidden('rcID', $rcID); ?>
 
 </form>
 </div>
