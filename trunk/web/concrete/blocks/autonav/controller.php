@@ -183,8 +183,10 @@
 					// it through the block interface
 					$this->bID = null;
 					global $c;
-					$this->cID = $c->getCollectionID();
-					$this->cParentID = $c->getCollectionParentID();
+					if (is_object($c)) {
+						$this->cID = $c->getCollectionID();
+						$this->cParentID = $c->getCollectionParentID();
+					}
 					break;
 				case "block": // block
 					// standard block object

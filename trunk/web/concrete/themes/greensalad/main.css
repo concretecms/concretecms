@@ -59,12 +59,13 @@ img {
 #page #header ul.nav-header {
 	list-style:none;
 	margin:0px;
+	float: right; 
 	padding:0px;
 	z-index:2;
 	overflow:visible;
 }
 #page #header ul.nav-header li {
-	float:right;
+	float:left;
 	padding:2px 0px;
 	margin-left:24px;
 	margin-bottom: 0px;

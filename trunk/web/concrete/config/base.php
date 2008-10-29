@@ -42,7 +42,7 @@ if (!defined('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL')) {
 }
 
 if (!defined('LOCALE')) {
-	define("LOCALE", 'de_DE');
+	define("LOCALE", 'en');
 }
 
 if (strpos(LOCALE, '_') > -1) {

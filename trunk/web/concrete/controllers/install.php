@@ -248,7 +248,7 @@ class InstallController extends Controller {
 						
 						// setup header autonav block we're going to add
 						$data = array();
-						$data['orderBy'] = 'display_desc';
+						$data['orderBy'] = 'display_asc';
 						$data['displayPages'] = 'top';
 						$data['displaySubPages'] = 'none';		
 						$data['uID'] = USER_SUPER_ID;
