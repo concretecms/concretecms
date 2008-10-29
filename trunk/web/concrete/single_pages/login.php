@@ -57,7 +57,7 @@
 <form method="post" action="<?=$this->url('/login', 'forgot_password')?>">
 	
 	<label for="uEmail"><?=t('Email Address')?></label><br/>
-	<input type="hidden" name="rcURL" value="<?=$rcURL?>" />
+	<?=$form->hidden('rcID', $rcID); ?>
 	<input type="text" name="uEmail" value="" class="ccm-input-text" >
 
 	<div class="ccm-button">
