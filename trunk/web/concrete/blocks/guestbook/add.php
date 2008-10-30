@@ -12,5 +12,10 @@
 <input type="radio" name="displayGuestBookForm" value="0" /> <?=t('No')?><br /><br />
 
 <?=t('Authentication Required to Post')?><br/>
+
 <input type="radio" name="authenticationRequired" value="0" checked /> <?=t('Email Only')?><br />
 <input type="radio" name="authenticationRequired" value="1" /> <?=t('Users must login to C5')?><br /><br />
+
+<?=t('Alert Email Address when Comment Posted')?><br/>
+<input name="notifyEmail" type="text" value="<?=$notifyEmail?>" size="30" /><br /><br />
+

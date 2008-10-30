@@ -16,7 +16,9 @@
 		</field>
 		<field name="authenticationRequired" type="i">
 			<default value="0"/>
-		</field>		
+		</field>
+		<field name="notifyEmail" type="C" size="100">
+		</field>				
 	</table>
 	<table name="btGuestBookEntries">
 		<field name="bID" type="I">
