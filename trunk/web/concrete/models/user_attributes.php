@@ -243,7 +243,7 @@ class UserAttributeKey extends Object {
 				break;
 			case "BOOLEAN":
 				$checked = ($text == 1) ? 'checked' : '';
-				return '<input type="checkbox" name="' . $this->getFormElementName() . '" id="' . $this->getFormElementName() . '" value="1" ' . $checked . ' />';
+				return '<input type="checkbox" name="' . $this->getFormElementName() . '" id="' . $this->getFormElementName() . '" value="1" ' . $checked . ' class="uak-checkbox"/>';
 				break;
 			case "SELECT":
 				$r = '<select name="' . $this->getFormElementName() . '" id="' . $this->getFormElementName() . '" class="uak-select">';
