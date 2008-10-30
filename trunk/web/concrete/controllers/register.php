@@ -7,9 +7,7 @@ class RegisterController extends Controller {
 	public function __construct() {
 		parent::__construct();
 		Loader::model('user_attributes');
-	}
-	
-	public function view() {
+
 		$u = new User();
 		$this->set('u', $u);
 		
@@ -18,6 +16,10 @@ class RegisterController extends Controller {
 		} else {
 			$this->set('displayUserName', true);
 		}
+	}
+	
+	public function forward($cID) {
+		$this->set('rcID', $cID);
 	}
 	
 	public function do_register() {
@@ -99,6 +101,11 @@ class RegisterController extends Controller {
 				$u = new User($_POST['uName'], $_POST['uPassword']);
 				// if this is successful, uID is loaded into session for this user
 				
+				$rcID = $this->post('rcID');
+				$nh = Loader::helper('validation/numbers');
+				if (!$nh->integer($rcID)) {
+					$rcID = 0;
+				}
 				
 				// now we check whether we need to validate this user's email address
 				if (defined("USER_VALIDATE_EMAIL")) {
@@ -112,12 +119,13 @@ class RegisterController extends Controller {
 						$mh->to($_POST['uEmail']);
 						$mh->load('validate_user_email');
 						$mh->sendMail();
-						$this->redirect('/register', 'register_success_validate');																
+
+						$this->redirect('/register', 'register_success_validate', $rcID);																
 					}
 				}
 				
 				if (!$u->isError()) {
-					$this->redirect('/register', 'register_success');																
+					$this->redirect('/register', 'register_success', $rcID);																
 				}
 				
 			}
@@ -125,14 +133,15 @@ class RegisterController extends Controller {
 			$this->set('error', $e);
 		}
 		
-		$this->view();
 	}
 	
-	public function register_success_validate() {
+	public function register_success_validate($rcID = 0) {
+		$this->set('rcID', $rcID);
 		$this->set('validate', true);
 	}
 	
-	public function register_success() {
+	public function register_success($rcID = 0) {
+		$this->set('rcID', $rcID);
 		$this->set('registered', true);
 	}
 

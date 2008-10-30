@@ -39,9 +39,9 @@ class LoginController extends Controller {
 				switch($u->getError()) {
 					case USER_INVALID:
 						if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
-							throw new Exception(t('Invalid username or password.'));
-						} else {
 							throw new Exception(t('Invalid email address or password.'));
+						} else {
+							throw new Exception(t('Invalid username or password.'));						
 						}
 						break;
 					case USER_INACTIVE:
