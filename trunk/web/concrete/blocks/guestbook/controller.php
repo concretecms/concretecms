@@ -123,16 +123,39 @@
 				if($_POST['entryID']) { // update
 					$bp = $this->getPermissionsObject(); 
 					if($bp->canWrite()) {
-						$E->updateEntry($_POST['entryID'], $_POST['commentText'], $_POST['name'], $_POST['email'], $uID);
+						$E->updateEntry($_POST['entryID'], $_POST['commentText'], $_POST['name'], $_POST['email'], $uID );
 						$this->set('response', t('The comment has been saved') );
 					} else {
 						$this->set('response', t('An Error occured while saving the comment') );
 						return true;
 					}
 				} else { // add			
-					$E->addEntry($_POST['commentText'], $_POST['name'], $_POST['email'], (!$this->requireApproval), $cID, $uID);	
+					$E->addEntry($_POST['commentText'], $_POST['name'], $_POST['email'], (!$this->requireApproval), $cID, $uID );	
 					$this->set('response', t('Thanks! Your comment has been posted.') );
 				}
+				 
+				$stringsHelper = Loader::helper('validation/strings');
+				if( $stringsHelper->email($this->notifyEmail) ){
+					global $c; 
+					if(intval($uID)>0){
+						Loader::model('userinfo');
+						$ui = UserInfo::getByID($uID);
+						$fromEmail=$ui->getUserEmail();
+						$fromName=$ui->getUserName();
+					}else{
+						$fromEmail=$_POST['email'];
+						$fromName=$_POST['name'];
+					} 
+					$mh = Loader::helper('mail');
+					$mh->to( $this->notifyEmail ); 
+					$mh->addParameter('guestbookURL', BASE_URL.DIR_REL.$c->getCollectionPath() ); 
+					$mh->addParameter('comment',  $_POST['commentText'] );  
+					$mh->from($fromEmail,$fromName);
+					$mh->load('block_guestbook_notification');
+					$mh->setSubject( t('Guestbook Comment Notification') ); 
+					//echo $mh->body.'<br>';
+					@$mh->sendMail(); 
+				} 
 			}
 			return true;
 		}
@@ -267,7 +290,7 @@
 		 * @param string $name
 		 * @param string $email
 		*/
- 		function addEntry($comment, $name, $email, $approved, $cID, $uID=0) {
+ 		function addEntry($comment, $name, $email, $approved, $cID, $uID=0 ) {
 			$txt = Loader::helper('text');
  		
 			$db = Loader::db();
@@ -284,7 +307,7 @@
 		 * @param string $email
 		 * @param string $uID
 		*/
-	 	function updateEntry($entryID, $comment, $name, $email, $uID=0) {
+	 	function updateEntry($entryID, $comment, $name, $email, $uID=0 ) {
 			$db = Loader::db();
 			$txt = Loader::helper('text');
 			$query = "UPDATE btGuestBookEntries SET user_name=?, uID=? user_email=?, commentText=? WHERE entryID=? AND bID=?";
