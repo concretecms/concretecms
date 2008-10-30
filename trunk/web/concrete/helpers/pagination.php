@@ -79,7 +79,15 @@ class PaginationHelper {
 	function getCurrentURL(){
 		return str_replace("%pageNum%",$this->current_page, $this->URL);; 
 	}
-		
+	
+	function getCurrentPage() {
+		return $this->current_page;
+	}
+	
+	function getTotalPages() {
+		return $this->number_of_pages;
+	}
+	
 	function getNext($linkText = false){
 		if (!$linkText) {
 			$linkText = t('Next') . ' &raquo;';
