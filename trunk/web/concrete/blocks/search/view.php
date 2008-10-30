@@ -27,6 +27,7 @@
 	<input name="submit" type="submit" value="<?=$buttonText?>" />
 
 <? 
+$tt = Loader::helper('text');
 if (strlen($query)) { 
 	if(count($results)==0){ ?>
 		<h4 style="margin-top:32px"><?=t('There were no results found. Please try another keyword or phrase.')?></h4>	
@@ -36,7 +37,7 @@ if (strlen($query)) {
 			<div class="searchResult">
 				<h3><a href="<?=DIR_REL?>/index.php?cID=<?=$r->getID()?>"><?=$r->getName()?></a></h3>
 				<p>
-					<?=$r->getDescription()?>
+					<?=$tt->shortText($r->getDescription())?>
 					<span class="pageLink"><?=BASE_URL.$r->getCPath() ?></span>
 				</p>
 			</div>

@@ -80,7 +80,7 @@ class MailHelper {
 		for ($i = 0; $i < count($arr); $i++) {
 			$v = $arr[$i];
 			if (isset($v[1])) {
-				$str .= $v[1] . ' <' . $v[0] . '>';
+				$str .= '"' . $v[1] . '" <' . $v[0] . '>';
 			} else {
 				$str .= $v[0];
 			}
