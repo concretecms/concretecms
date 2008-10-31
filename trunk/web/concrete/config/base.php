@@ -296,7 +296,9 @@ if (!defined('AVATAR_WIDTH') && !defined('AVATAR_HEIGHT')) {
 
 define('DIR_FILES_AVATARS', DIR_FILES_UPLOADED . '/avatars');
 define('REL_DIR_FILES_AVATARS', REL_DIR_FILES_UPLOADED . '/avatars');
-define('AVATAR_NONE', ASSETS_URL_IMAGES . '/spacer.gif');
+if (!defined('AVATAR_NONE')) {
+	define('AVATAR_NONE', ASSETS_URL_IMAGES . '/spacer.gif');
+}
 define('DIR_FILES_AVATARS_STOCK', DIR_FILES_UPLOADED . '/stock_avatars');
 define('REL_DIR_FILES_AVATARS_STOCK', REL_DIR_FILES_UPLOADED . '/stock_avatars');
 
