@@ -204,7 +204,7 @@
 		function save($args) {
 			$args['displayPagesIncludeSelf'] = isset($args['displayPagesIncludeSelf']) ? 1 : 0;
 			$args['displayPagesCID'] = isset($args['displayPagesCID']) ? $args['displayPagesCID'] : 0;
-			$args['displaySubPageLevelsNum'] = isset($args['displaySubPageLevelsNum']) ? $args['displaySubPageLevelsNum'] : 0;
+			$args['displaySubPageLevelsNum'] = $args['displaySubPageLevelsNum'] > 0 ? $args['displaySubPageLevelsNum'] : 0;
 			$args['displayUnavailablePages'] = isset($args['displayUnavailablePages']) ? 1 : 0;
 			parent::save($args);
 		}
