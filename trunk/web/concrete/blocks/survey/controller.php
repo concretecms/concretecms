@@ -159,7 +159,7 @@ class SurveyBlockController extends BlockController {
 		$slashedArgs=array();
 		foreach($args['survivingOptionNames'] as $arg)
 			$slashedArgs[]=addslashes($arg);
-		$db->query("DELETE FROM btSurveyOptions WHERE optionName NOT IN ('".implode("','",$slashedArgs)."') AND bID = ?",array($this->bID));
+		$db->query("DELETE FROM btSurveyOptions WHERE optionName NOT IN ('".implode("','",$slashedArgs)."') AND bID = ".intval($this->bID) );
 			
 		if (is_array($args['pollOption'])) {
 			$displayOrder = 0;
