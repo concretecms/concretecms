@@ -2,6 +2,6 @@
 <node handle="dashboard">
 <guests canRead="0" />
 <registered canRead="0" />
-<group gName="Administrators" canRead="1" canWrite="1" canAdmin="1" />
+<administrators canRead="1" canWrite="1" canAdmin="1" />
 </node>
 </access>

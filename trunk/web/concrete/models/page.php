@@ -266,7 +266,16 @@ class Page extends Collection {
 				$db->query($q, $v);
 			}
 		}
-		
+		if (isset($px->administrators)) {
+			$permissions = Permissions::buildPermissionsFromArray($px->administrators);
+			$q = "delete from PagePermissions where cID = '{$this->cID}' and gID = " . ADMIN_GROUP_ID;
+			$r = $db->query($q);
+			if ($permissions != '') {
+				$v = array($this->cID, ADMIN_GROUP_ID, $permissions);
+				$q = "insert into PagePermissions (cID, gID, cgPermissions) values (?, ?, ?)";
+				$db->query($q, $v);
+			}
+		}		
 		if (isset($px->group)) {
 			foreach($px->group as $g) {
 				
