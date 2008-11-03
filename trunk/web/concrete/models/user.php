@@ -46,6 +46,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$_SESSION['uBlockTypesSet'] = false;
 					$_SESSION['uGroups'] = $nu->uGroups;
 					$_SESSION['uLastOnline'] = $row['uLastOnline'];
+					$nu->recordLogin();
 				}
 			}
 			return $nu;
