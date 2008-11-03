@@ -6,6 +6,7 @@ ini_set('display_errors', 1);
 class InstallController extends Controller {
 
 	public $helpers = array('form', 'html');
+	private $fp;
 	
 	protected function installDB() {
 		
@@ -94,8 +95,8 @@ class InstallController extends Controller {
 				
 				if (file_exists(DIR_BASE . '/config')) {
 	
-					$fp = @fopen(DIR_BASE . '/config/site.php', 'w+');
-					if ($fp) {
+					$this->fp = @fopen(DIR_BASE . '/config/site.php', 'w+');
+					if ($this->fp) {
 
 						Loader::model('single_page');
 						Loader::model('dashboard/homepage');
@@ -562,8 +563,8 @@ class InstallController extends Controller {
 						}
 						$configuration .= "define('PASSWORD_SALT', '{$salt}');\n";
 						$configuration .= "?" . ">";
-						$res = fwrite($fp, $configuration);
-						fclose($fp);
+						$res = fwrite($this->fp, $configuration);
+						fclose($this->fp);
 						
 						// save some options into the database
 						Config::save('SITE', $_POST['SITE']);
@@ -597,6 +598,13 @@ class InstallController extends Controller {
 			}
 			
 		} catch (Exception $e) {
+			// remove site.php so that we can try again ?
+			if (is_resource($this->fp)) {
+				fclose($this->fp);
+			}
+			if (file_exists(DIR_BASE . '/config/site.php')) {
+				unlink(DIR_BASE . '/config/site.php');
+			}
 			$this->set('error', $e);
 		}
 	}
