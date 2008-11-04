@@ -31,6 +31,12 @@
 		<field name="rssTitle" type="C" size="255">
 		</field>
 		<field name="rssDescription" type="X2">
+		</field>		
+		<field name="truncateSummaries" type="I">
+			<default value="0"/>
 		</field>
+		<field name="truncateChars" type="I">
+			<default value="128"/>
+		</field>		
 	</table>
 </schema>
