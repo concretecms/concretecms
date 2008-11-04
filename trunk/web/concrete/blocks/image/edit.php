@@ -14,16 +14,25 @@ if ($controller->getFileID() > 0) {
 }
 if ($controller->getFileOnstateID() > 0) { 
 	$bfo = $controller->getFileOnstateObject();
+
 }
 
 ?>
+<div class="ccm-block-field-group">
 <h2><?=t('Image')?></h2>
 <?=$al->image('ccm-b-image', 'fID', t('Choose Image'), $bf);?>
-
-<br/><br/><br/>
+</div>
+<div class="ccm-block-field-group">
 <h2><?=t('Image On-State')?> (<?=t('Optional')?>)</h2>
 <?=$al->image('ccm-b-image-onstate', 'fOnstateID', t('Choose Image On-State'), $bfo);?>
+</div>
 
-<br/><br/><br/>
+<div class="ccm-block-field-group">
+<h2><?=t('Image Links to URL')?></h2>
+<?= $form->text('externalLink', $externalLink, array('style' => 'width: 250px')); ?>
+</div>
+
+<div class="ccm-block-field-group">
 <h2><?=t('Alt Text/Caption')?></h2>
-<input type="text" style="width: 200px" name="altText" value="<?=$controller->getAltText()?>" />
+<?= $form->text('altText', $altText, array('style' => 'width: 250px')); ?>
+</div>
