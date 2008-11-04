@@ -125,7 +125,7 @@ print $h->buttons($b1);
 
 <form method="post" id="site-form" action="<?=$this->url('/dashboard/settings', 'update_sitename')?>">
 
-<h1><span>Site Name <?=t('Edit Access')?></span></h1>
+<h1><span><?=t('Site Name')?></span></h1>
 
 <div class="ccm-dashboard-inner">
 

@@ -22,7 +22,7 @@ class IndexSearch extends Job {
 		Loader::library('indexed_search');
 		$is = new IndexedSearch();
 		$result = $is->reindex();
-		return $result->count . ' indexed.';
+		return t('%s page(s) indexed.', $result->count);
 	}
 
 }

@@ -149,11 +149,17 @@
 	 
 	class AutonavBlockController extends BlockController {
 
-		protected $btDescription = "Creates navigation trees and sitemaps";
-		protected $btName = "Auto-Nav";
 		protected $btTable = 'btNavigation';
 		protected $btInterfaceWidth = "500";
 		protected $btInterfaceHeight = "350";
+
+		public function getBlockTypeDescription() {
+			return t("Creates navigation trees and sitemaps.");
+		}
+		
+		public function getBlockTypeName() {
+			return t("Auto-Nav");
+		}
 
 		var $navArray = array();
 		var $cParentIDArray = array();

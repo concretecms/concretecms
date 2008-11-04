@@ -32,6 +32,7 @@ var ccmi18n_sitemap = {
 	searchPages: '<?=t('Search Pages')?>',
 	backToSitemap: '<?=t('Back to Sitemap')?>',
 	searchResults: '<?=t('Search Results')?>',
+	createdBy: '<?=t('Created By')?>',
 	
 	viewing: '<?=t('Viewing')?>',
 	results: '<?=t('Result(s)')?>',
