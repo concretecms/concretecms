@@ -84,7 +84,7 @@ $ci = Loader::helper('concrete/interface');
 	<?
 	$b1 = $ci->button(t('Return to Themes'), $this->url('/dashboard/themes'), 'left');
 	if ($pf > 0) { 
-		$b2 = $ci->submit('Activate Files', 'ccm-inspect-form'); ?>
+		$b2 = $ci->submit(t('Activate Files'), 'ccm-inspect-form'); ?>
 		<?=$ci->buttons($b1, $b2); ?>
 	<? } else { ?>
 		<?=$ci->buttons($b1); ?>

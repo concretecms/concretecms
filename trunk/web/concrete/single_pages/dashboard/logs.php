@@ -43,8 +43,7 @@ if ($this->controller->getTask() == 'database') { ?>
 	
 	} else { ?>
 		<p>
-		<?=t('You must first enable the logging of database queries from your <a href="%s">developer settings section</a> '.
-			 'before you can use this page. ', $this->url('/dashboard/settings', 'set_developer') )?>
+		<?=t('You must first enable the logging of database queries from your <a href="%s">developer settings section</a> before you can use this page.', $this->url('/dashboard/settings', 'set_developer'))?>
 		</p>
 	<? } ?>
 

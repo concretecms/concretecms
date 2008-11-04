@@ -434,7 +434,7 @@ if ($ctEditMode) {
 		<td><?=$p->getCollectionPath()?></td>
 		<td><? print $packageName; ?></td>
 		<td>
-			<? print $ih->button(t('Refresh'),$this->url('/dashboard/collection_types/?p=' . $p->getCollectionID() . '&task=refresh'), 'left', false, array('title'=>'Regenerates the page title and permissions based on their filesystem settings.'));?>
+			<? print $ih->button(t('Refresh'),$this->url('/dashboard/collection_types/?p=' . $p->getCollectionID() . '&task=refresh'), 'left', false, array('title'=>t('Refreshes the page, rebuilding its permissions and its name.')));?>
 		</td>
 	</tr>
 	<? }
