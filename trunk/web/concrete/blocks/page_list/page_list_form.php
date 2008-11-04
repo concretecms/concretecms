@@ -78,6 +78,21 @@
 		   <textarea name="rssDescription" style="width:250px" ><?=$rssDescription?></textarea>
 	   </div>
 	</div>
+	
+	<style>
+	#ccm-pagelist-truncateTxt.faintText{ color:#999; }
+	<? if(truncateChars==0 && !$truncateSummaries) $truncateChars=128; ?>
+	</style>
+	<div class="ccm-block-field-group">
+	   <h2><?=t('Truncate Summaries')?></h2>	  
+	   <input id="ccm-pagelist-truncateSummariesOn" name="truncateSummaries" type="checkbox" value="1" <?=($truncateSummaries?"checked=\"checked\"":"")?> /> 
+	   <span id="ccm-pagelist-truncateTxt" <?=($truncateSummaries?"":"class=\"faintText\"")?>>
+	   		<?=t('Truncate descriptions after')?> 
+			<input id="ccm-pagelist-truncateChars" <?=($truncateSummaries?"":"disabled=\"disabled\"")?> type="text" name="truncateChars" size="3" value="<?=intval($truncateChars)?>" /> 
+			<?=t('characters')?>
+	   </span>
+	</div>
+	
 </div>
 
 <div id="ccm-pagelistPane-preview" style="display:none" class="ccm-preview-pane ccm-pagelistPane">
