@@ -4,9 +4,9 @@
 	class ImageBlockController extends BlockController {
 
 		protected $btInterfaceWidth = 300;
-		protected $btInterfaceHeight = 250;
+		protected $btInterfaceHeight = 300;
 		protected $btTable = 'btContentImage';
-	
+
 		/** 
 		 * Used for localization. If we want to localize the name/description we have to include this
 		 */
@@ -24,6 +24,7 @@
 			);
 		}
 	
+	
 		function getFileID() {return $this->fID;}
 		function getFileOnstateID() {return $this->fOnstateID;}
 		function getFileOnstateObject() {
@@ -33,8 +34,9 @@
 			return LibraryFileBlockController::getFile($this->fID);
 		}		
 		function getAltText() {return $this->altText;}
+		function getExternalLink() {return $this->externalLink;}
 		
-		public function save($args) {
+		public function save($args) {		
 			$args['fOnstateID'] = ($args['fOnstateID'] != '') ? $args['fOnstateID'] : 0;
 			$args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;
 			parent::save($args);
@@ -50,18 +52,33 @@
 			$row = $r->fetchRow();
 
 			$fullPath = DIR_FILES_UPLOADED . '/' . $row['filename'];
+			
 			$size = @getimagesize($fullPath);
 
 			$relPath = REL_DIR_FILES_UPLOADED . '/' . $row['filename'];
-			// we now pipe all files through dl_file.php ...
-			//$relPath = REL_DIR_FILES_TOOLS . '/dl_file.php?bID=' . $bID . '&cID=' . $c->getCollectionID();
-
+			
+			
 			$img = "<img border=\"0\" alt=\"{$this->altText}\" src=\"{$relPath}\" {$size[3]} ";
 			$img .= ($align) ? "align=\"{$align}\" " : '';
+			
 			$img .= ($style) ? "style=\"{$style}\" " : '';
+			if($this->fOnstateID != 0){
+				$q = "select filename from btFile where bID = '{$this->fOnstateID}'";
+	
+				$r = $db->query($q);
+				$row = $r->fetchRow();
+				$fullPathHover = REL_DIR_FILES_UPLOADED . '/' . $row['filename'];
+
+				$img .= " onmouseover=\"this.src = '{$fullPathHover}'\" ";
+				$img .= " onmouseout=\"this.src = '{$relPath}'\" ";
+			}
+			
 			$img .= ($id) ? "id=\"{$id}\" " : "";
 			$img .= "/>";
 
+			if($this->externalLink != ""){
+				$img = "<a href=\"{$this->externalLink}\">" . $img ."</a>";
+			}
 			return $img;
 		}
 
