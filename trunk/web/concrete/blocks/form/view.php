@@ -15,7 +15,7 @@ $miniSurvey->frontEndMode=true;
 <form id="miniSurveyView<?=intval($survey->questionSetId)?>" class="miniSurveyView" method="post" action="<?=$this->action('submit_form')?>">
 	<div style="margin-bottom:8px"><strong><?=$survey->surveyName?></strong></div>
 	<? if( $_GET['surveySuccess'] && $_GET['qsid']==intval($survey->questionSetId) ){ ?>
-		<div id="msg"><?=t("Thanks for taking the time to report a problem or ask a question. We're on it and you'll receive a response soon!")?></div> 
+		<div id="msg"><?=$survey->thankyouMsg ?></div> 
 	<? } ?>
 	<input name="qsID" type="hidden" value="<?=intval($survey->questionSetId)?>" />
 	<input name="pURI" type="hidden" value="<?=$_SERVER['REQUEST_URI']?>" />

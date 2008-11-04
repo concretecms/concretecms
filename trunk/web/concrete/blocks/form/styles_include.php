@@ -1,8 +1,10 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <style>
-div.fieldRow{ border-top: 1px solid #ccc; padding:8px; margin:8px; clear:left}
-div.fieldRow div.fieldLabel{ float: left; width:20%; text-align:right; padding-top: 6px; padding-right:8px}
+div.fieldRow{ border-top: 1px solid #ccc; padding:8px 4px ; margin:8px; clear:left}
+div.fieldRow div.fieldLabel{ float: left; width:22%; text-align:right; padding-top: 6px; padding-right:8px}
 div.fieldRow div.fieldValues{ float: left; width:75%}
+#ccm-formBlockPane-options div.fieldLabel{width:30%;}
+#ccm-formBlockPane-options div.fieldValues{width:65%}
 div#newQuestionBox{ border:1px solid #ccc; padding:8px; margin-top:24px }
 div#miniSurvey{ border:1px solid #ccc; padding:8px; margin-top:24px; margin-bottom:8px }
 div#miniSurvey table{width:95%}
