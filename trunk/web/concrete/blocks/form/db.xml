@@ -12,6 +12,8 @@
 		</field>
 		<field name="surveyName" type="C" size="255">
 		</field> 
+		<field name="thankyouMsg" type="X" >
+		</field> 
 		<index name="questionSetIdForeign">
 			<col>questionSetId</col>
 		</index>

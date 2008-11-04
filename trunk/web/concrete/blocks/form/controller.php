@@ -8,6 +8,7 @@ class FormBlockController extends BlockController {
 	public $btAnswersTablename = 'btFormAnswers'; 	
 	public $btInterfaceWidth = '420';
 	public $btInterfaceHeight = '430';
+	public $thankyouMsg=''; 
 		
 	/** 
 	 * Used for localization. If we want to localize the name/description we have to include this
@@ -31,6 +32,9 @@ class FormBlockController extends BlockController {
 	public function __construct($b = null){ 
 		parent::__construct($b);
 		//$this->bID = intval($this->_bID);
+		if(!strlen($this->surveyName) && !strlen($this->thankyouMsg)){ 
+			$this->thankyouMsg=t("Thanks for taking the time to report a problem or ask a question. We're on it and you'll receive a response soon!");
+		}
 	}
 	
 	//form add or edit submit
@@ -41,10 +45,10 @@ class FormBlockController extends BlockController {
 			$q = "select count(*) as total from {$this->btTable} where bID = ".intval($this->bID);
 			$total = $db->getOne($q);
 		}else $total = 0;
-		$v = array( $data['qsID'], $data['surveyName'], intval($data['notifyMeOnSubmission']), $data['recipientEmail'], intval($this->bID) );
+		$v = array( $data['qsID'], $data['surveyName'], intval($data['notifyMeOnSubmission']), $data['recipientEmail'], $data['thankyouMsg'], intval($this->bID) );
 		
-		$q = ($total > 0) ? "update {$this->btTable} set questionSetId = ?, surveyName=?, notifyMeOnSubmission=?, recipientEmail=? where bID = ?"
-			: "insert into {$this->btTable} (questionSetId,surveyName, notifyMeOnSubmission, recipientEmail, bID) values (?, ?, ?, ?, ?)";		
+		$q = ($total > 0) ? "update {$this->btTable} set questionSetId = ?, surveyName=?, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=? where bID = ?"
+			: "insert into {$this->btTable} (questionSetId,surveyName, notifyMeOnSubmission, recipientEmail, thankyouMsg, bID) values (?, ?, ?, ?, ?, ?)";		
 
 		$rs = $db->query($q,$v); 
 		

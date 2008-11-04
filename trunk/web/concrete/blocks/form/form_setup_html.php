@@ -18,20 +18,40 @@ $uh = Loader::helper('concrete/urls'); ?>
 	if(strlen($miniSurveyInfo['surveyName'])==0)
 		$miniSurveyInfo['surveyName']=$c->getCollectionName();
 	?>
-	<strong><?=t('Form Name')?>: <input id="ccmSurveyName" name="surveyName" style="width: 95%" type="text" class="ccm-input-text" value="<?=$miniSurveyInfo['surveyName']?>" /></strong>
+	<strong>Options:</strong>
 	
-	<div style="margin-top:16px">
+	<div class="fieldRow">
+		<div class="fieldLabel"><?=t('Form Name')?>:</div>
+		<div class="fieldValues">
+			<input id="ccmSurveyName" name="surveyName" style="width: 95%" type="text" class="ccm-input-text" value="<?=$miniSurveyInfo['surveyName']?>" />
+		</div>
+		<div class="spacer"></div>
+	</div>	
+	
+	<div class="fieldRow">
+		<div class="fieldLabel" style="white-space:nowrap"><?=t('Thankyou Message')?>:</div>
+		<div class="fieldValues"> 
+			<textarea name="thankyouMsg" cols="50" rows="2" style="width: 95%" class="ccm-input-text" ><?=$this->controller->thankyouMsg ?></textarea>
+		</div>
+		<div class="spacer"></div>
+	</div>
+	
+	<div class="fieldRow" style="margin-top:16px">
 		<?=t('Notify me by email when people submit this form')?>: 
 		<input name="notifyMeOnSubmission" type="checkbox" value="1" <?=(intval($miniSurveyInfo['notifyMeOnSubmission'])>=1)?'checked':''?> onchange="miniSurvey.showRecipient(this)" onclick="miniSurvey.showRecipient(this)" />
-		<div id="recipientEmailWrap" style=" <?=(intval($miniSurveyInfo['notifyMeOnSubmission'])==0)?'display:none':''?>">
-			<?=t('Recipient Email')?>: <input name="recipientEmail" value="<?=$miniSurveyInfo['recipientEmail']?>" type="text" size="20" maxlength="128" />
+		<div id="recipientEmailWrap" class="fieldRow" style=" <?=(intval($miniSurveyInfo['notifyMeOnSubmission'])==0)?'display:none':''?>">
+			<div class="fieldLabel"><?=t('Recipient Email')?>:</div>
+			<div class="fieldValues">
+			 <input name="recipientEmail" value="<?=$miniSurveyInfo['recipientEmail']?>" type="text" size="20" maxlength="128" />
+			</div>
+			<div class="spacer"></div>
 		</div>
 	</div> 
 </div> 
 
-<input type="hidden" id="qsID" name="qsID" type="text" value="<?=intval($miniSurveyInfo['questionSetId'])?>" />          
+<input type="hidden" id="qsID" name="qsID" type="text" value="<?=intval($miniSurveyInfo['questionSetId'])?>" />           
 <input type="hidden" id="bID" name="bID" type="text" value="<?=intval($miniSurveyInfo['bID'])?>" />            
-<input type="hidden" id="msqID" name="msqID" type="text" value="<?=intval($msqID)?>" />        
+<input type="hidden" id="msqID" name="msqID" type="text" value="<?=intval($msqID)?>" />         
 
 <div id="ccm-formBlockPane-add" class="ccm-formBlockPane" style=" <?=(intval($miniSurveyInfo['bID'])==0)?'display:block':''?> ">
 	<div id="newQuestionBox">
