@@ -36,11 +36,12 @@
 		<exec command="find ../web/concrete/ -iname '*.php' -exec xgettext --default-domain=messages --keyword=t -l PHP -j {} \;" />
 	</target>
 
+	<!--
 	 <target name="localize_output_de_DE">
     	<echo msg="Moving German Files" />
 		<exec command="msgfmt -o ../web/concrete/locale/de_DE/LC_MESSAGES/messages.mo messages_de_DE.po" />
 	</target>
-
+	//-->
     
     <echo msg="MAKE SURE TO REMOVE ALL THE BLOCKS AND SINGLE PAGES AND SHIT AND UPDATE THE VERSION NUMBER FILE ON CONCRETE5.ORG" />
 </project>
