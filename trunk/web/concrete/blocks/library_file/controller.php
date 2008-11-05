@@ -37,14 +37,16 @@
 		
 		function getFile($fID) {
 			$db = Loader::db();
-			$r = $db->query("select bID, filename, origfilename, url from btFile where bID = ?", array($fID));
+			$r = $db->query("select bID, filename, origfilename, url, type, generictype from btFile where bID = ?", array($fID));
 			$obj = $r->fetchRow();
 			
 			$bf = new LibraryFileBlockController;
-			$bf->bID = $obj['bID'];
-			$bf->filename = $obj['filename'];
-			$bf->origfilename = $obj['origfilename'];			
-			$bf->url = $obj['url'];
+			$bf->bID 			= $obj['bID'];
+			$bf->filename 		= $obj['filename'];
+			$bf->origfilename 	= $obj['origfilename'];
+			$bf->generictype 	= $obj['generictype'];
+			$bf->type 			= $obj['type'];
+			$bf->url 			= $obj['url'];
 			return $bf;
 		}
 
