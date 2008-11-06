@@ -65,7 +65,7 @@ $ci = Loader::helper('concrete/interface');
 						break;
 					case PageThemeFile::TFTYPE_PAGE_TYPE_NEW:
 						$pf++;
-						print '<input type="checkbox" value="' . $f->getHandle() . '" name="pageTypes[]" checked /> Create page type.';
+						print '<input type="checkbox" value="' . $f->getHandle() . '" name="pageTypes[]" checked /> ' . t('Create page type.');
 						break;
 					case PageThemeFile::TFTYPE_PAGE_TYPE_EXISTING:
 						print '<span class="deem">'.t('None. This file will automatically be used by the <strong>%s</strong> page type.',$txt->uncamelcase($f->getHandle())  ).'</span>';

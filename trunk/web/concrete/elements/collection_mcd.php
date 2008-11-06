@@ -75,12 +75,14 @@ div#ccm-mc-page h1#ccm-sitemap-title {display: none}
 				<? } else if ($numChildren > 0 && !$cp->canAdminPage()) { ?>
 					<h2><?=t('Delete Page')?></h2>
 					<?=t('Before you can delete this page, you must delete all of its child pages.')?>
-				<? } else { ?>
+				<? } else { 
+					$deletePageMsg = t('Are you sure you wish to delete this page?');
+					?>
 					
 					<div class="ccm-buttons">
 
 					<form method="get" id="ccmDeletePageForm" action="<?=$c->getCollectionAction()?>">		
-						<a href="javascript:void(0)" onclick="if (confirm('Are you sure you wish to delete this page?')) { $('#ccmDeletePageForm').get(0).submit()}" class="ccm-button-right accept"><span><?=t('Delete Page')?></span></a>
+						<a href="javascript:void(0)" onclick="if (confirm('<?=$deletePageMsg?>')) { $('#ccmDeletePageForm').get(0).submit()}" class="ccm-button-right accept"><span><?=t('Delete Page')?></span></a>
 					<h2><?=t('Delete Page')?></h2>
 					<? if ($cp->canAdminPage() && $numChildren > 0) { ?>
 						<span class="important"><?=t('This will remove %s child page(s).', $numChildren)?></span>

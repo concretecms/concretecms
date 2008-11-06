@@ -92,7 +92,7 @@ if (CCM_SITEMAP_MODE == 'full') {
 
 deletePage = function(cID) {
 	ccm_hideMenus();
-	if (confirm('Are you sure?')) {
+	if (confirm(ccmi18n_sitemap.areYouSure)) {
 		$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_delete_request.php', {'cID': cID}, function(resp) {
 			parseJSON(resp, function() {
 				deleteBranchFade(cID);

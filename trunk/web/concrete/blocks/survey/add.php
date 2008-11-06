@@ -30,4 +30,4 @@ var currentOption = 0;
 <br/><br/>
 <strong><?=t('Add option')?></strong><br/>
 <input type="text" name="optionValue" id="ccm-survey-optionValue" style="width: 350px" />
-<input type="button" onclick="addOption()" value="Add" />
+<input type="button" onclick="addOption()" value="<?=t('Add')?>" />

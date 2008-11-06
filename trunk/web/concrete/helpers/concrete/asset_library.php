@@ -34,8 +34,10 @@
 			
 			$fileID = "";
 			$filename = t("None selected.");
+			$resetText = t('Reset');
 			$filedisplay = 'inline';
 			$resetdisplay = 'none';
+			
 			
 			if ($bf != null) {
 				$fileID = $bf->getFileID();
@@ -45,7 +47,7 @@
 			}
 			$html = '<div id="' . $id . '-display" style="display: inline">' . $filename . '</div> ';
 			$html .= '<a class="ccm-launch-al" id="' . $id . '" href="#" style="display: ' . $filedisplay . '">' . $chooseText . '</a> ';
-			$html .= '<a class="ccm-reset-al" id="' . $id . '-reset" href="#" style="display: ' . $resetdisplay . '">Reset</a> ';
+			$html .= '<a class="ccm-reset-al" id="' . $id . '-reset" href="#" style="display: ' . $resetdisplay . '">' . $resetText . '</a> ';
 			$html .= '<input id="' . $id . '-value" type="hidden" name="' . $postname . '" value="' . $fileID . '" />';
 			
 			return $html;

@@ -3,7 +3,9 @@
 var ccmi18n = {
 	
 	deleteBlock: '<?=t('Delete')?>',
+	closeWindow: '<?=t('Close')?>',
 	editBlock: '<?=t('Edit')?>',
+	compareVersions: '<?=t('Compare Versions')?>',
 	arrangeBlock: '<?=t('Move')?>',
 	copyBlockToScrapbook: '<?=t('Copy to Scrapbook')?>',
 	changeBlockTemplate: '<?=t('Set Custom Template')?>',
@@ -37,7 +39,8 @@ var ccmi18n_sitemap = {
 	viewing: '<?=t('Viewing')?>',
 	results: '<?=t('Result(s)')?>',
 	max: '<?=t('max')?>',
-	noResults: '<?=t('No results found.')?>'
+	noResults: '<?=t('No results found.')?>',
+	areYouSure: '<?=t('Are you sure?')?>'
 	
 	
 }
