@@ -101,13 +101,13 @@ if ($_REQUEST['created']) {
 }
 
 if ($_REQUEST['attribute_updated']) {
-	$message = t('User Attribute Updated.');
+	$message = t('Page Attribute Updated.');
 }
 if ($_REQUEST['attribute_created']) {
-	$message = t('User Attribute Created.');
+	$message = t('Page Attribute Created.');
 }
 if ($_REQUEST['attribute_deleted']) {
-	$message = t('User Attribute Deleted.');
+	$message = t('Page Attribute Deleted.');
 }
 
 ?>
