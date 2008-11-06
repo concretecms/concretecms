@@ -93,7 +93,7 @@ $uh = Loader::helper('concrete/urls'); ?>
 			<div class="fieldLabel">&nbsp; </div>
 			<div class="fieldValues">
 				<input id="refreshButton" name="refresh" type="button" value="Refresh" style="display:none" /> 
-				<input id="addQuestion" name="add" type="button" value="Add Question &raquo;" />
+				<input id="addQuestion" name="add" type="button" value="<?=t('Add Question')?> &raquo;" />
 			</div>
 		</div>
 		

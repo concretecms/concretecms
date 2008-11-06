@@ -198,7 +198,7 @@ if ($cp->canAdminPage()) {
 				<?
 					break;
 				case "BOOLEAN":?>
-					<input type="checkbox" <? if ($caValue == 1) { ?> checked <? } ?> name="akID_<?=$ak->getCollectionAttributeKeyID()?>" value="1" /> Yes
+					<input type="checkbox" <? if ($caValue == 1) { ?> checked <? } ?> name="akID_<?=$ak->getCollectionAttributeKeyID()?>" value="1" /> <?=t('Yes')?>
 					<?
 					break;
 				case "DATE":?>

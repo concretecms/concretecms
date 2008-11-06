@@ -103,7 +103,7 @@
 			$c = $this->cObj;
 
 			$u = new User();
-			$versionComments = (!$versionComments) ? "New Version {$newVID}" : $versionComments;
+			$versionComments = (!$versionComments) ? t("New Version %s", $newVID) : $versionComments;
 			
 			$dh = Loader::helper('date');
 			$v = array($c->getCollectionID(), $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getLocalDateTime(), $versionComments, $u->getUserID(), 1);

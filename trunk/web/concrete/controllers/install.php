@@ -318,23 +318,23 @@ class InstallController extends Controller {
 						$btImage = BlockType::getByHandle('image');
 						$data = array();
 						$data['fID'] = $image1->getBlockID();
-						$data['altText'] = 'Home Header Image';
+						$data['altText'] = t('Home Header Image');
 						$data['uID'] = USER_SUPER_ID;
 						$home->addBlock($btImage, 'Header', $data);
 
 						// Assign imagery to left sidebar page
 						$data['fID'] = $image2->getBlockID();
-						$data['altText'] = 'Left Sidebar Page Type Image';
+						$data['altText'] = t('Left Sidebar Page Type Image');
 						$b1 = $detailTemplate->addBlock($btImage, 'Header', $data);
 
 						// Assign imagery to right sidebar page
 						$data['fID'] = $image3->getBlockID();
-						$data['altText'] = 'Right Sidebar Page Type Image';
+						$data['altText'] = t('Right Sidebar Page Type Image');
 						$b2 = $rightNavTemplate->addBlock($btImage, 'Header', $data);
 						
 						// Assign imagery to full width page
 						$data['fID'] = $image3->getBlockID();
-						$data['altText'] = 'Full Width Page Type Image';
+						$data['altText'] = t('Full Width Page Type Image');
 						$b3 = $fullWidthTemplate->addBlock($btImage, 'Header', $data);
 
 						// add two subpages

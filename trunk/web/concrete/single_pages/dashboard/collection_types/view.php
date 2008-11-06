@@ -209,10 +209,12 @@ if ($ctEditMode) {
 	<? print $ih->button_js(t('Delete Page Type'), "deletePageType", 'left');?>
 	
 	<div class="ccm-spacer">&nbsp;</div>
-	
+	<?
+	$confirmMsg = t('Are you sure?');
+	?>
 	<script type="text/javascript">
 	deletePageType = function() {
-		if(confirm('Are you sure?')){ 
+		if(confirm('<?=$confirmMsg?>')){ 
 			location.href="<?=$this->url('/dashboard/collection_types/','delete',$_REQUEST['ctID'])?>";
 		}	
 	}
