@@ -36,6 +36,7 @@ if ($_POST['add'] || $_POST['update']) {
 	$akHandle = $txt->sanitize($_POST['akHandle']);
 	$akName = $txt->sanitize($_POST['akName']);
 	$akValues = $txt->sanitize($_POST['akValues']);
+	$akValues = preg_replace('/\r\n|\r/', "\n", $akValues); // make linebreaks consistant
 	$akType = $txt->sanitize($_POST['akType']);
 	$akSearchable = $_POST['akSearchable'] ? 1 : 0;
 	
@@ -129,7 +130,13 @@ if ($editMode) { ?>
 		<td class="subheader" colspan="3"><?=t('Values')?> <span class="required" id="reqValues" <? if ($akType != 'SELECT') { ?> style="display: none"<? } ?>>*</span></td>
 	</tr>
 	<tr>
-		<td colspan="3"><input type="text" id="akValues" name="akValues" style="width: 100%" value="<?=$akValues?>" <? if ($akType != 'SELECT') { ?> disabled <? } ?> /><br/>(<?=t('For select types only - separate menu options with a comma, no space.')?>)</td>
+		<td colspan="3">
+        <textarea id="akValues" name="akValues" style="width: 100%" <? if ($akType != 'SELECT') { ?> disabled="disabled" <? } ?>><?=$akValues?></textarea>
+        <br/>(<?=t('For select types only - separate menu options with line breaks')?>)
+        <!-- 
+        <input type="text" id="akValues" name="akValues" style="width: 100%" value="<?=$akValues?>" <? if ($akType != 'SELECT') { ?> disabled <? } ?> /><br/>(<?=t('For select types only - separate menu options with a comma, no space.')?>)
+        	-->
+        </td>
 	</tr>
 	<tr>
 		<td colspan="3" class="header">
@@ -186,7 +193,10 @@ if ($editMode) { ?>
 	<td class="subheader" colspan="3"><?=t('Values')?> <span class="required" id="reqValues" <? if ($_POST['akType'] != 'SELECT') { ?> style="display: none"<? } ?>>*</span></td>
 </tr>
 <tr>
-	<td colspan="3"><input type="text" id="akValues" name="akValues" style="width: 100%" value="<?=$_POST['akValues']?>" <? if ($_POST['akType'] != 'SELECT') { ?> disabled <? } ?> /><br/>(<?=t('For select types only - separate menu options with a comma, no space.')?>)</td>
+	<td colspan="3">
+    	<textarea id="akValues" name="akValues" style="width: 100%" <? if ($_POST['akType'] != 'SELECT') { ?> disabled="disabled" <? } ?>><?=$_POST['akValues']?></textarea>
+        <br/>(<?=t('For select types only - separate menu options with line breaks')?>)
+    </td>
 </tr>
 <tr>
 	<td colspan="3" class="header">

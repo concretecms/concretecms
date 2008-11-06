@@ -152,7 +152,7 @@ if ($cp->canAdminPage()) {
 		<label><?=$ak->getCollectionAttributeKeyName()?></label>
 			<? switch($ak->getCollectionAttributeKeyType()) {
 				case "SELECT":
-					$options = explode(',', $ak->getCollectionAttributeKeyValues()); ?>
+					$options = explode("\n", $ak->getCollectionAttributeKeyValues()); ?>
 					<select style="width: 150px" name="akID_<?=$ak->getCollectionAttributeKeyID()?>">
 						<option value="">** NONE</option>
 						<? foreach($options as $val) {
