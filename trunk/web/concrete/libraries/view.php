@@ -281,7 +281,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * @param string $error
 		 * @return void
 		*/	
-		public function renderError($title, $error) {
+		public function renderError($title, $error, $errorObj = null) {
 			$innerContent = $error;
 			$titleContent = $title; 
 			if (!$this->theme) {
@@ -518,7 +518,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	
 				// finally, we include the theme (which was set by setTheme and will automatically include innerContent)
 				// disconnect from our db and exit
-				if (isset($content)) {
+				if ($content != false) {
 					include($content);
 				}
 
@@ -542,20 +542,20 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			} catch(ADODB_Exception $e) {
 				// if it's a database exception we go here.
 				if (Config::get('SITE_DEBUG_LEVEL') == DEBUG_DISPLAY_ERRORS) {
-					$this->renderError('An unexpected error occurred.', $e->getMessage());		
+					$this->renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);		
 				} else {
-					$this->renderError('An unexpected error occurred.', 'A database error occurred while processing this request.');
+					$this->renderError(t('An unexpected error occurred.'), t('A database error occurred while processing this request.'), $e);
 				}
 				
 				// log if setup to do so
 				if (ENABLE_LOG_ERRORS) {
 					$l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
-					$l->write('Exception Occurred: ' . $e->getMessage());
+					$l->write(t('Exception Occurred: ') . $e->getMessage());
 					$l->write($e->getTraceAsString());
 					$l->close();
 				}
 			} catch (Exception $e) {
-				$this->renderError('An unexpected error occurred.', $e->getMessage());
+				$this->renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);
 				// log if setup to do so
 				if (ENABLE_LOG_ERRORS) {
 					$l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
