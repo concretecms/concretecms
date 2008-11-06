@@ -59,6 +59,11 @@
 	
 	## User level config ##	
 	require('config/app.php');
+	
+	## Site-level config POST user/app config ##
+	if (file_exists(DIR_BASE . '/config/site_post.php')) {
+		require(DIR_BASE . '/config/site_post.php');
+	}
 
 	## Set debug-related and logging activities
 	require('startup/debug_logging.php');
