@@ -124,7 +124,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						ADOdb_Active_Record::SetDatabaseAdapter($_dba);
 						$_db = new Database();
 						$_db->setDatabaseObject($_dba);
-					} else {
+					} else if (defined('DB_SERVER')) {
 						$v = View::getInstance();
 						$v->renderError(t('Unable to connect to database.'), t('A database error occurred while processing this request.'), $e);
 					}
