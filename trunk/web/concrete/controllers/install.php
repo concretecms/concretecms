@@ -62,21 +62,26 @@ class InstallController extends Controller {
 				$e->add(t('Your files directory files/avatars does not appear to be writable by the web server.'));
 			}
 			
-			// attempt to connect to the database
-			$db = Loader::db( $_POST['DB_SERVER'], $_POST['DB_USERNAME'], $_POST['DB_PASSWORD'], $_POST['DB_DATABASE']);			
-			
-			if ($_POST['DB_SERVER'] && $_POST['DB_DATABASE']) {
-				if (!$db) {
-					$e->add(t('Unable to connect to database.'));
-				} else {
-					
-					$num = $db->GetCol("show tables");
-					if (count($num) > 0) {
-						$e->add(t('There are already %s tables in this database. Concrete must be installed in an empty database.', count($num)));
+			if (!function_exists('mysql_connect')) {
+				$e->add(t('Function mysql_connect() not found. Your system does not appear to have MySQL available within PHP.'));
+			} else {
+
+				// attempt to connect to the database
+				$db = Loader::db( $_POST['DB_SERVER'], $_POST['DB_USERNAME'], $_POST['DB_PASSWORD'], $_POST['DB_DATABASE']);			
+				
+				if ($_POST['DB_SERVER'] && $_POST['DB_DATABASE']) {
+					if (!$db) {
+						$e->add(t('Unable to connect to database.'));
+					} else {
+						
+						$num = $db->GetCol("show tables");
+						if (count($num) > 0) {
+							$e->add(t('There are already %s tables in this database. Concrete must be installed in an empty database.', count($num)));
+						}
 					}
 				}
 			}
-
+			
 			if ($val->test() && (!$e->has())) {
 				
 				$this->installDB();
