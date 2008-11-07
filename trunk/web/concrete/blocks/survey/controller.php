@@ -153,12 +153,12 @@ class SurveyBlockController extends BlockController {
 		parent::save($args);
 		$db = Loader::db();
 		
-		if(!is_array($args['survivingOptionNames'])) {
+		if(!is_array($args['survivingOptionNames'])) 
 			$args['survivingOptionNames'] = array();
-		} 
+ 
 		$slashedArgs=array();
 		foreach($args['survivingOptionNames'] as $arg)
-			$slashedArgs[]=addslashes($arg);
+			$slashedArgs[]=addslashes($arg); 
 		$db->query("DELETE FROM btSurveyOptions WHERE optionName NOT IN ('".implode("','",$slashedArgs)."') AND bID = ".intval($this->bID) );
 			
 		if (is_array($args['pollOption'])) {
