@@ -32,9 +32,13 @@ class FormBlockController extends BlockController {
 	public function __construct($b = null){ 
 		parent::__construct($b);
 		//$this->bID = intval($this->_bID);
-		if(!strlen($this->surveyName) && !strlen($this->thankyouMsg)){ 
-			$this->thankyouMsg=t("Thanks for taking the time to report a problem or ask a question. We're on it and you'll receive a response soon!");
+		if(!strlen($this->thankyouMsg)){ 
+			$this->thankyouMsg = $this->getDefaultThankYouMsg();
 		}
+	}
+	
+	public function getDefaultThankYouMsg() {
+		return t("Thanks for taking the time to report a problem or ask a question. We're on it and you'll receive a response soon!");
 	}
 	
 	//form add or edit submit

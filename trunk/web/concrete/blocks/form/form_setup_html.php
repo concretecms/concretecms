@@ -29,7 +29,7 @@ $uh = Loader::helper('concrete/urls'); ?>
 	</div>	
 	
 	<div class="fieldRow">
-		<div class="fieldLabel" style="white-space:nowrap"><?=t('Thankyou Message')?>:</div>
+		<div class="fieldLabel" style=""><?=t('Message to display when completed')?>:</div>
 		<div class="fieldValues"> 
 			<textarea name="thankyouMsg" cols="50" rows="2" style="width: 95%" class="ccm-input-text" ><?=$this->controller->thankyouMsg ?></textarea>
 		</div>
