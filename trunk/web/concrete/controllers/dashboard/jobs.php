@@ -14,7 +14,7 @@ class DashboardJobsController extends Controller {
 	function install(){
 		$jobObj = Loader::model("job");
 		Job::installByHandle($_POST['jHandle']);
-		header('location: '.DIR_REL.'/dashboard/jobs/');
+		$this->redirect('/dashboard/jobs');
 	}
 	
 	function uninstall(){
@@ -23,7 +23,7 @@ class DashboardJobsController extends Controller {
 		if( $jobObj && !$jobObj->jNotUninstallable ){
 			$jobObj->uninstall();
 		}		
-		header('location: '.DIR_REL.'/dashboard/jobs/');
+		$this->redirect('/dashboard/jobs');
 	}
 }
 
