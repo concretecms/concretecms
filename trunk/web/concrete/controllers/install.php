@@ -556,7 +556,7 @@ class InstallController extends Controller {
 						$configuration .= "define('DB_USERNAME', '" . addslashes($_POST['DB_USERNAME']) . "');\n";
 						$configuration .= "define('DB_PASSWORD', '" . addslashes($_POST['DB_PASSWORD']) . "');\n";
 						$configuration .= "define('DB_DATABASE', '" . addslashes($_POST['DB_DATABASE']) . "');\n";
-						$configuration .= "define('BASE_URL', '" . addslashes($_POST['BASE_URL']) . "');\n";
+						$configuration .= "define('BASE_URL', '" . addslashes(trim($_POST['BASE_URL'], '/')) . "');\n";
 						$configuration .= "define('DIR_REL', '" . addslashes($_POST['DIR_REL']) . "');\n";
 						if (isset($setPermissionsModel)) {
 							$configuration .= "define('PERMISSIONS_MODEL', '" . addslashes($setPermissionsModel) . "');\n";
