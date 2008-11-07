@@ -25,16 +25,19 @@
 	<label for="SITE"><?=t('Name Your Site')?>:</label><br/>
 	<?=$form->text('SITE'); ?>
 	<br/><br/>
+
+	<h2><?=t('URL Information')?></h2>
+	<p><?=t("Concrete should automatically detect the next two settings. If you are confused don't change them.");?></p>
 	
 	<label for="BASE_URL"><?=t('Base URL')?>:</label><br/>
 	<?=$form->text('BASE_URL', BASE_URL); ?>
 	<div class="ccm-form-sub"><?=t('e.g. <strong>http://www.mysite.com</strong> - no trailing slash')?></div>
 	<br/>
-	
+
 	
 	<label for="DIR_REL"><?=t('Subdirectory for site')?>:</label><br/>
 	<?=$form->text('DIR_REL', DIR_REL); ?>
-	<div class="ccm-form-sub"><?=t('e.g. http://www.mysite.com<strong>/concrete</strong>/')?></div>	
+	<div class="ccm-form-sub"><?=t('e.g. /foo if accessing C5 at www.mysite.com/foo/')?></div>	
 	<br/>
 	
 	<h2><?=t('Personal Information')?></h2>

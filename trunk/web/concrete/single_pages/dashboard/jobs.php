@@ -145,7 +145,7 @@ $ih = Loader::helper('concrete/interface');
 					echo ("<strong>");
 					echo t("Currently Running (Since %s)",$runtime);					
 					echo ("</strong>");
-				}elseif(substr($jobItem['jDateLastRun'],0,4)=='0000'){
+				}elseif($jobItem['jDateLastRun'] == '' || substr($jobItem['jDateLastRun'],0,4)=='0000'){
 					echo t('Never');
 				}else{
 					$runtime=date('n/j/y \a\t g:i A', strtotime($jobItem['jDateLastRun']) );
