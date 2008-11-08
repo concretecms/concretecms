@@ -81,7 +81,7 @@ class SurveyBlockController extends BlockController {
 			if ($result > 0) {
 				return true;
 			}
-		} elseif ($_COOKIE['ccmPoll' . $this->bID] == 'voted') {
+		} elseif ($_COOKIE['ccmPoll' . $this->bID.'-'.$this->cID] == 'voted') {
 			return true;
 		}
 		return false;
@@ -119,7 +119,7 @@ class SurveyBlockController extends BlockController {
 			$v = array($_REQUEST['optionID'], $this->bID, $duID, $_SERVER['REMOTE_ADDR'], $this->cID);
 			$q = "insert into btSurveyResults (optionID, bID, uID, ipAddress, cID) values (?, ?, ?, ?, ?)";
 			$db->query($q, $v);
-			setcookie("ccmPoll" . $this->bID, "voted", time() + 1296000, DIR_REL . '/');
+			setcookie("ccmPoll" . $this->bID.'-'.$this->cID, "voted", time() + 1296000, DIR_REL . '/');
 			$this->redirect($c->getCollectionPath());
 		}
 	}		
