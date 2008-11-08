@@ -47,7 +47,8 @@ class SurveyBlockController extends BlockController {
 	
 	function __construct($obj = NULL) {
 		parent::__construct($obj);
-		
+		global $c;
+		$this->cID = $c->getCollectionID();
 		if($this->bID) {
 			$db = Loader::db();
 			$v = array($this->bID);
@@ -74,8 +75,8 @@ class SurveyBlockController extends BlockController {
 		$u = new User();
 		if ($u->isRegistered()) {
 			$db = Loader::db();
-			$v = array($u->getUserID(), $this->bID);
-			$q = "select count(resultID) as total from btSurveyResults where uID = ? and bID = ?";
+			$v = array($u->getUserID(), $this->bID, $this->cID);
+			$q = "select count(resultID) as total from btSurveyResults where uID = ? and bID = ? AND cID = ?";
 			$result = $db->getOne($q,$v);
 			if ($result > 0) {
 				return true;
@@ -115,8 +116,8 @@ class SurveyBlockController extends BlockController {
 				$duID = $u->getUserID();
 			}
 			
-			$v = array($_REQUEST['optionID'], $this->bID, $duID, $_SERVER['REMOTE_ADDR']);
-			$q = "insert into btSurveyResults (optionID, bID, uID, ipAddress) values (?, ?, ?, ?)";
+			$v = array($_REQUEST['optionID'], $this->bID, $duID, $_SERVER['REMOTE_ADDR'], $this->cID);
+			$q = "insert into btSurveyResults (optionID, bID, uID, ipAddress, cID) values (?, ?, ?, ?, ?)";
 			$db->query($q, $v);
 			setcookie("ccmPoll" . $this->bID, "voted", time() + 1296000, DIR_REL . '/');
 			$this->redirect($c->getCollectionPath());
@@ -210,9 +211,10 @@ class BlockPollOption {
 	function getOptionDisplayOrder() {return $this->displayOrder;}
 	
 	function getResults() {
+		global $c;
 		$db = Loader::db();
-		$v = array($this->optionID);
-		$q = "select count(resultID) from btSurveyResults where optionID = ?";
+		$v = array($this->optionID, intval($c->getCollectionID()) );
+		$q = "select count(resultID) from btSurveyResults where optionID = ? AND cID=?";
 		$result = $db->getOne($q, $v);
 		if ($result > 0) {
 			return $result;
