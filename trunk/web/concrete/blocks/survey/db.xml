@@ -39,6 +39,7 @@
 			<default value="0"/>
 		</field>
 		<field name="bID" type="I" />	
+		<field name="cID" type="I" />	
 		<field name="ipAddress" type="C" size="128" />
 		<field name="timestamp" type="T">
 			<deftimestamp/>
