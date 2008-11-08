@@ -78,7 +78,7 @@ if ($_GET['uID']) {
 			
 			if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) {
 				if (strlen($username) < USER_USERNAME_MINIMUM) {
-					$error[] = t('A username must be between at least %s characters long.',USER_USERNAME_MINIMUM);
+					$error[] = t('A username must be at least %s characters long.',USER_USERNAME_MINIMUM);
 				}
 	
 				if (strlen($username) > USER_USERNAME_MAXIMUM) {
