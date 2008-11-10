@@ -17,6 +17,7 @@ if (isset($_REQUEST['cID']) && is_array($_REQUEST['cID'])) {
 
 $json['error'] = false;
 $json['message'] = t("Display order saved.");
-print json_encode($json);
+$js = Loader::helper('json');
+print $js->encode($json);
 
 ?>

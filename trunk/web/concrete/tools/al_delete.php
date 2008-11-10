@@ -20,6 +20,6 @@ if (isset($_REQUEST['bID'])) {
 		$resp['message'] = t('You do not have permission to remove that block.');
 	}
 }
-
-print json_encode($resp);
+$js = Loader::helper('json');
+print $js->encode($resp);
 ?>

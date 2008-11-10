@@ -82,13 +82,16 @@ if ($successMessage) {
 	$json['error'] = false;
 	$json['message'] = $successMessage;
 	$json['cID'] = $newCID;
-	print json_encode($json);
+	$js = Loader::helper('json');
+	print $js->encode($json);
 	exit;
 } else if ($error) {
 	if ($_REQUEST['ctask']) {
 		$json['error'] = true;
 		$json['message'] = $error;
-		print json_encode($json);
+		$js = Loader::helper('json');
+		print $js->encode($json);
+
 	} else {
 		print '<div class="error">' . $error . '</div>';
 	}

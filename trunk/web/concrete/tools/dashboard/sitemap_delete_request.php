@@ -44,5 +44,6 @@ if (isset($error)) {
 	$json['message'] = t('Page Removed');
 }
 
-print json_encode($json);
+$js = Loader::helper('json');
+print $js->encode($json);
 exit;
