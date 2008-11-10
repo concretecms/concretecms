@@ -48,7 +48,9 @@ class SurveyBlockController extends BlockController {
 	function __construct($obj = NULL) {
 		parent::__construct($obj);
 		global $c;
-		$this->cID = $c->getCollectionID();
+		if (is_object($c)) {
+			$this->cID = $c->getCollectionID();
+		}
 		if($this->bID) {
 			$db = Loader::db();
 			$v = array($this->bID);

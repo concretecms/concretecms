@@ -53,7 +53,8 @@ if ($_REQUEST['search']) {
 } else { 
 	if (isset($_REQUEST['show_system'])) {
 		$_SESSION['dsbSitemapShowSystem'] = $_REQUEST['show_system'];
-		print json_encode(array());
+		$js = Loader::helper('json');
+		print $js->encode(array());
 		exit;
 	}
 	
@@ -91,9 +92,7 @@ if ($_REQUEST['search']) {
 
 }
 
-print json_encode($nodes);
-
+$js = Loader::helper('json');
+print $js->encode($nodes);
 $dh->clearOneTimeActiveNodes();
-
-
 ?>
