@@ -11,19 +11,17 @@ class ActivityDashboardModuleController extends Controller {
 		$ui = UserInfo::getByID($u->getUserID());
 		$us = new UserStatistics($ui);
 		$this->set('uLastActivity', $us->getPreviousSessionPageViews());
-		$this->set('uLastLogin', date('F d, Y', $ui->getLastLogin()) . ' at ' . date('g:i A', $ui->getLastLogin()));
+		$this->set('uLastLogin', strftime('%x ' . t('at') . ' %r', $ui->getLastLogin()));
 		$this->set('uName', $ui->getUserName());
 		$this->set('totalViews', PageStatistics::getTotalPageViewsForOthers($u));
 		$this->set('totalVersions', PageStatistics::getTotalPageVersions());
 		
-		$sle = strtotime(PageStatistics::getSiteLastEdit());
-		$this->set('lastEditSite', date('F d, Y', $sle) . ' at ' . date('g:i A', $sle));
-		
+		$this->set('lastEditSite', strftime('%x ' . t('at') . ' %r', strtotime(PageStatistics::getSiteLastEdit())));
 		$llu = UserStatistics::getLastLoggedInUser();
 		if ($llu->getUserID() == $u->getUserID()) {
 			$this->set('lastLoginSite', t('Your login is the most recent.'));		
 		} else { 
-			$this->set('lastLoginSite', date('F d, Y', $llu->getLastLogin()) . ' at ' . date('g:i A', $llu->getLastLogin()));
+			$this->set('lastLoginSite', strftime('%x ' . t('at') . ' %r', $llu->getLastLogin()));
 		}
 
 		$this->set('totalEditMode', PageStatistics::getTotalPagesCheckedOut());
