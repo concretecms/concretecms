@@ -21,7 +21,7 @@ for ($i = -4; $i < 1; $i++) {
 	if ($i == 0) {
 		$daysRow[] = t('Today');
 	} else {
-		$daysRow[] = date('D', strtotime($i . ' days'));
+		$daysRow[] = strftime('%a', strtotime($i . ' days'));
 	}
 	$total = PageStatistics::getTotalPageViewsForOthers($u, $date);
 	$viewsArray[] = $total;
