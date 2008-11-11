@@ -35,6 +35,7 @@ class InstallController extends Controller {
 	private function setRequiredItems() {
 		$this->set('imageTest', function_exists('imagecreatetruecolor'));
 		$this->set('mysqlTest', function_exists('mysql_connect'));
+		$this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
 		$this->set('fileWriteTest', $this->testFileWritePermissions());	
 	}
 	
@@ -51,7 +52,7 @@ class InstallController extends Controller {
 	}
 	
 	public function passedRequiredItems() {
-		if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest')) {
+		if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest') && $this->get('xmlTest')) {
 			return true;
 		}
 	}

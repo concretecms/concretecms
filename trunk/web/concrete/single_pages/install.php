@@ -103,6 +103,13 @@ $(function() {
 <div class="ccm-install-info"><?=t('Concrete requires GD library 2.0.1 or greater.')?></div>
 
 </div>
+<div class="test <? if ($xmlTest) { ?>passed<? } else { ?>fail<? } ?>"><?=t('XML Support')?>
+
+<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" width="16" height="16" alt="" /></a>
+<div class="ccm-install-info"><?=t('Concrete requires PHP XML Parser and SimpleXML extensions.')?></div>
+
+</div>
+
 <div class="test <? if ($fileWriteTest) { ?>passed<? } else { ?>fail<? } ?>"><?=t('Web Server Access to Files and Configuration Directories')?>
 
 <a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" width="16" height="16" alt="" /></a>
