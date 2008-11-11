@@ -1,5 +1,7 @@
 /* asset library */
-div#ccm-al-add-asset { margin-top: 8px; width:50% } 
+div#ccm-al-add-asset { margin-top: 8px; margin-bottom:8px; width:50%} 
+div#ccm-al-add-asset label { font-weight:bold;}
+div#ccm-al-add-asset form { padding-top: 12px;}
 
 div#ccm-al-add-asset embed, div#ccm-al-add-asset object {background-color: #d1e7ec}
 img.ccm-al-icon {margin-top: 28px; margin-bottom: 28px}
@@ -26,3 +28,5 @@ div#ccm-al-upload-complete {padding: 10px; border: 1px solid #94a7c7; background
 
 table.ccm-al-search-form {width: auto !important}
 table.ccm-al-search-form td {background: none; font-size: 11px; color: #333; font-weight: bold; padding: 3px; height: auto}
+
+a#ccm-button-browse { float: right;}

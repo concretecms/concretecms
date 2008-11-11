@@ -24,7 +24,7 @@ flashvars = {
 	"session": "<?=session_id()?>",
 	"skin_url":  "<?=ASSETS_URL_FLASH?>/uploader/images/",
 	"base_url":  "<?=BASE_URL?>",
-	"upload_script":  "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_upload_process.php?cID=<?=$_REQUEST['cID']?>",
+	"upload_script":  "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_upload_process_multiple.php?cID=<?=$_REQUEST['cID']?>",
 	"callback_function":  "ccm_uploadComplete",
 	"allow_file_types":  "all", // images | documents | all (all = images + documents)
 	"allow_file_extensions":  "<?=UPLOAD_FILE_EXTENSIONS_ALLOWED?>"
