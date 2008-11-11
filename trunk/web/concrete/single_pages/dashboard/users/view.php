@@ -351,7 +351,7 @@ if (is_object($uo)) {
 						<div id="attEditWrap<?=$ak->getKeyID()?>"><?=$ak->outputHTML($uo->getUserID())?>&nbsp;</div>
 					<? }else{ ?>
 						<div id="attEditWrap<?=$ak->getKeyID()?>" style="display:none"><?=$ak->outputHTML($uo->getUserID())?> <a onclick="editAttrVal(<?=$ak->getKeyID()?>,1)"><?=t('Cancel')?></a></div>
-						<div id="attUnknownWrap<?=$ak->getKeyID()?>">Unknown <a onclick="editAttrVal(<?=$ak->getKeyID()?>)"><?=t('Edit')?></a></div>
+						<div id="attUnknownWrap<?=$ak->getKeyID()?>"><?=t('Unknown')?> <a onclick="editAttrVal(<?=$ak->getKeyID()?>)"><?=t('Edit')?></a></div>
 					<? } ?>
 				</td>
 			</tr>	
