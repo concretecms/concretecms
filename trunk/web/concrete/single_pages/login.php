@@ -34,7 +34,7 @@
 	<input type="password" name="uPassword" id="uPassword" class="ccm-input-text">
 	</div>
 
-	<?=$form->checkbox('uMaintainLogin', 1)?> <?=t('Remember Me')?>
+	<?=$form->checkbox('uMaintainLogin', 1)?> <label for="uMaintainLogin"><?=t('Remember Me')?></label>
 	
 	<div class="ccm-button">
 	<?=$form->submit('submit', t('Sign In') . ' &gt;')?>
@@ -45,10 +45,13 @@
 </form>
 </div>
 
+<div class="ccm-form">
 
 <h2 style="margin-top:32px"><?=t('Forgot Password?')?></h2>
 
 <p><?=t("If you've forgotten your password, enter your email address below. We will reset it to a new password, and send the new one to you.")?></p>
+
+</div>
 
 <div class="ccm-form">
 
