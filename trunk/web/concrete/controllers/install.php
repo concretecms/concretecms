@@ -20,13 +20,71 @@ class InstallController extends Controller {
 		$err = Package::installDB($file);		
 	}
 	
+	public function test_url($num1, $num2) {
+		$js = Loader::helper('json');
+		$num = $num1 + $num2;
+		print $js->encode(array('response' => $num));
+		exit;
+	}
+	
+	public function on_start() {
+		$this->setRequiredItems();
+		$this->setOptionalItems();
+	}
+	
+	private function setRequiredItems() {
+		$this->set('imageTest', function_exists('imagecreatetruecolor'));
+		$this->set('mysqlTest', function_exists('mysql_connect'));
+		$this->set('fileWriteTest', $this->testFileWritePermissions());	
+	}
+	
+	private function setOptionalItems() {
+		$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower'));
+		$this->set('langTest', Localization::isAvailable());
+		$diffExecTest = is_executable(DIR_FILES_BIN_HTMLDIFF);
+		$diffSystem = (!ini_get('safe_mode'));
+		if ($diffExecTest && $diffSystem) {
+			$this->set('diffTest', true);
+		} else {
+			$this->set('diffTest', false);
+		}
+	}
+	
+	public function passedRequiredItems() {
+		if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest')) {
+			return true;
+		}
+	}
+
+	private function testFileWritePermissions() {
+		$e = Loader::helper('validation/error');
+
+		if (!is_writable(DIR_BASE . '/config')) {
+			$e->add(t('Your configuration directory config/ does not appear to be writable by the web server.'));
+		}
+
+		if (!is_writable(DIR_FILES_UPLOADED)) {
+			$e->add(t('Your files directory files/ does not appear to be writable by the web server.'));
+		}
+
+		$this->fileWriteErrors = $e;
+		if ($this->fileWriteErrors->has()) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	public function getDBErrorMsg() {
+		return t('Function mysql_connect() not found. Your system does not appear to have MySQL available within PHP.');
+	}
+	
 	public function configure() {
 		
 		try {
 
 			$val = Loader::helper('validation/form');
 			$val->setData($this->post());
-			$val->addRequired("BASE_URL", t('Base URL is invalid'));
 			$val->addRequired("SITE", t("Please specify your site's name"));
 			$val->addRequiredEmail("uEmail", t('Please specify a valid email address'));
 			$val->addRequired("DB_DATABASE", t('You must specify a valid database name'));
@@ -34,36 +92,10 @@ class InstallController extends Controller {
 			
 			$e = Loader::helper('validation/error');
 			
-			if (!is_writable(DIR_BASE . '/config')) {
-				$e->add(t('Your configuration directory config/ does not appear to be writable by the web server.'));
-			}
+			$e = $this->fileWriteErrors;
 
-			if (!is_writable(DIR_FILES_UPLOADED)) {
-				$e->add(t('Your files directory files/ does not appear to be writable by the web server.'));
-			}
-
-			if (!is_writable(DIR_FILES_UPLOADED_THUMBNAILS)) {
-				$e->add(t('Your files directory files/thumbnails does not appear to be writable by the web server.'));
-			}
-
-			if (!is_writable(DIR_FILES_UPLOADED_ONSTATES)) {
-				$e->add(t('Your files directory files/onstates does not appear to be writable by the web server.'));
-			}
-
-			if (!is_writable(DIR_FILES_TRASH)) {
-				$e->add(t('Your files directory files/trash does not appear to be writable by the web server.'));
-			}
-
-			if (!is_writable(DIR_FILES_CACHE)) {
-				$e->add(t('Your files directory files/cache does not appear to be writable by the web server.'));
-			}
-
-			if (!is_writable(DIR_FILES_AVATARS)) {
-				$e->add(t('Your files directory files/avatars does not appear to be writable by the web server.'));
-			}
-			
 			if (!function_exists('mysql_connect')) {
-				$e->add(t('Function mysql_connect() not found. Your system does not appear to have MySQL available within PHP.'));
+				$e->add($this->getDBErrorMsg());
 			} else {
 
 				// attempt to connect to the database
@@ -83,6 +115,22 @@ class InstallController extends Controller {
 			}
 			
 			if ($val->test() && (!$e->has())) {
+				
+				if (!is_dir(DIR_FILES_UPLOADED_THUMBNAILS)) {
+					mkdir(DIR_FILES_UPLOADED_THUMBNAILS);
+				}
+				if (!is_dir(DIR_FILES_UPLOADED_ONSTATES)) {
+					mkdir(DIR_FILES_UPLOADED_ONSTATES);
+				}
+				if (!is_dir(DIR_FILES_TRASH)) {
+					mkdir(DIR_FILES_TRASH);
+				}
+				if (!is_dir(DIR_FILES_CACHE)) {
+					mkdir(DIR_FILES_CACHE);
+				}
+				if (!is_dir(DIR_FILES_AVATARS)) {
+					mkdir(DIR_FILES_AVATARS);
+				}
 				
 				$this->installDB();
 
@@ -561,8 +609,8 @@ class InstallController extends Controller {
 						$configuration .= "define('DB_USERNAME', '" . addslashes($_POST['DB_USERNAME']) . "');\n";
 						$configuration .= "define('DB_PASSWORD', '" . addslashes($_POST['DB_PASSWORD']) . "');\n";
 						$configuration .= "define('DB_DATABASE', '" . addslashes($_POST['DB_DATABASE']) . "');\n";
-						$configuration .= "define('BASE_URL', '" . addslashes(trim($_POST['BASE_URL'], '/')) . "');\n";
-						$configuration .= "define('DIR_REL', '" . addslashes($_POST['DIR_REL']) . "');\n";
+						$configuration .= "define('BASE_URL', '" . BASE_URL . "');\n";
+						$configuration .= "define('DIR_REL', '" . DIR_REL . "');\n";
 						if (isset($setPermissionsModel)) {
 							$configuration .= "define('PERMISSIONS_MODEL', '" . addslashes($setPermissionsModel) . "');\n";
 						}
