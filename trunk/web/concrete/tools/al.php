@@ -225,10 +225,16 @@ if (is_array($assetLibraryPassThru)) {
 	}
 }
 
-?>
+if($_GET['single_upload_success']) { ?>
+	<div class="message success"><?=t('File Uploaded Successfully')?></div>
+<? } ?>
 
 <div id="ccm-al-add-asset">
-<a id="ccm-button-browse" class="ccm-button" dialog-width="600" dialog-height="525" dialog-modal="false" dialog-title="<?=t('Add File')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_upload.php?cID=<?=$_REQUEST['cID']?>"><span><em class="ccm-button-add"><?=t('Add File')?></em></span></a>
+<label><?=t('Quick Add File')?>:</label>
+ <a id="ccm-button-browse" class="ccm-button" dialog-width="600" dialog-height="525" dialog-modal="false" dialog-title="<?=t('Add File')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_upload.php?cID=<?=$_REQUEST['cID']?>"><span><em class="ccm-button-add"><?=t('Add Multiple Files')?></em></span></a>
+<form method="post" enctype="multipart/form-data" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_upload_process_single.php?cID=<?=$c->getCollectionID()?>" target="upload-frame">
+    <input type="file" name="Filedata" /> <input type="submit" value="<?=t('Upload')?>" />    
+</form>
 </div>
 
 <div class="ccm-spacer">&nbsp;</div>
@@ -288,3 +294,5 @@ if (is_array($assetLibraryPassThru)) {
 
 </div>
 </div>
+
+<iframe src="" style="display: none" border="0" id="upload-frame" name="upload-frame"></iframe>
