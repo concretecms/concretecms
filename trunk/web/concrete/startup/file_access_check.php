@@ -3,9 +3,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 if ($config_check_failed) {
-	$sp = preg_replace('/[^A-Za-z(\.)]/i', '', $_SERVER['PHP_SELF']);
-	
-	if ($sp == DIRNAME_APP . DISPATCHER_FILENAME_CORE) {
+	if (basename($_SERVER['PHP_SELF']) == DISPATCHER_FILENAME_CORE) {
 		die(_("Access Denied."));
 	}
 }

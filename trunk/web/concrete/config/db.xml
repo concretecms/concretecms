@@ -409,11 +409,10 @@
     <field name="jDateLastRun" type="T"></field>
     <field name="pkgID" type="I" size="10">
       <NOTNULL/>
-      <UNSIGNED />
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
-    <field name="jLastStatusText" type="C" size="255">
-      <NOTNULL/>
-    </field>
+    <field name="jLastStatusText" type="C" size="255"></field>
     <field name="jLastStatusCode" type="I2" size="4">
       <NOTNULL/>
       <DEFAULT value="0"/>
