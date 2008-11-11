@@ -25,6 +25,8 @@ class FormBlockController extends BlockController {
 		return array(
 			'delete-question' => t('Are you sure you want to delete this question?'),
 			'form-name' => t('Your form must have a name.'),
+			'complete-required' => t('Please complete all required fields.'),
+			'ajax-error' => t('AJAX Error.'),
 			'form-min-1' => t('Please add at least one question to your form.')			
 		);
 	}

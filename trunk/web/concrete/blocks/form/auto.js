@@ -65,9 +65,9 @@ var miniSurvey ={
 					success: function(msg){ 
 						eval('var jsonObj='+msg);
 						if(!jsonObj){
-						   alert('Ajax Error');
+						   alert(ccm_t('ajax-error'));
 						}else if(jsonObj.noRequired){
-						   alert('please complete all required fields');
+						   alert(ccm_t('complete-required'));
 						}else{
 						   if(jsonObj.mode=='Edit'){
 							   $('#questionEditedMsg').slideDown('slow');
