@@ -1,7 +1,45 @@
 <?
+	
+	class Localization {
+	
+		public function isAvailable() {
+			return function_exists('textdomain');
+		}
+		
+		public function setDomain($path) {
+			if (Localization::isAvailable()) {
+				if (is_dir($path . '/' . DIRNAME_LANGUAGES)) {
+					bindtextdomain(LANGUAGE_DOMAIN_CORE, $path . '/' . DIRNAME_LANGUAGES);
+					textdomain(LANGUAGE_DOMAIN_CORE);
+				}
+			}
+		}
+		
+		/** 
+		 * Resets the text domain to the default localization. This should be called after we branch out to any blocks, etc...
+		 */
+		public function reset() {
+			if (Localization::isAvailable()) {
+				Localization::setDomain(DIR_BASE);
+			}
+		}
+		
+		public function init() {
+			if (Localization::isAvailable()) {
+				setlocale(LC_ALL, LOCALE);
+				putenv('LC_ALL=' . LOCALE);
+				Localization::reset();		
+			}
+		}
+	}
+	
+	Localization::init();
+	if (!Localization::isAvailable()) {
+		function gettext($string) {return $string;}
+		function _($string) {return $string;}
+	}
 
 	function t($text) {
-		//return 'X'.$text.'X';
 		if (func_num_args() == 1) {
 			return gettext($text);
 		}
@@ -12,29 +50,3 @@
 	    }
 	    return vsprintf(gettext($text), $arg);
 	}
-	
-	class Localization {
-	
-	
-		public function setDomain($path) {
-			if (is_dir($path . '/' . DIRNAME_LANGUAGES)) {
-				bindtextdomain(LANGUAGE_DOMAIN_CORE, $path . '/' . DIRNAME_LANGUAGES);
-				textdomain(LANGUAGE_DOMAIN_CORE);
-			}
-		}
-		
-		/** 
-		 * Resets the text domain to the default localization. This should be called after we branch out to any blocks, etc...
-		 */
-		public function reset() {
-			Localization::setDomain(DIR_BASE);
-		}
-		
-		public function init() {
-			setlocale(LC_ALL, LOCALE);
-			putenv('LC_ALL=' . LOCALE);
-			Localization::reset();		
-		}
-	}
-	
-	Localization::init();
