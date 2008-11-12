@@ -146,6 +146,7 @@ ccm_alRefresh = function() {
 		sort: 'bDateAdded', order: 'desc', view: parseInt($('#search_page_size').val())
 	});
 	*/
+	ccm_alResetSingle();
 }
 
 ccm_alShowLoader = function() { 
@@ -176,6 +177,18 @@ ccm_alSetupPaging = function() {
 		return false;
 	});	
 }
+
+ccm_alSubmitSingle = function() {
+	$('#ccm-al-upload-single-submit').hide();
+	$('#ccm-al-upload-single-loader').show();
+}
+
+ccm_alResetSingle = function () {
+	$('#ccm-al-upload-single-file').val('');
+	$('#ccm-al-upload-single-loader').hide();
+	$('#ccm-al-upload-single-submit').show();
+}
+
 
 $(function() {
 	/*
@@ -232,8 +245,10 @@ if($_GET['single_upload_success']) { ?>
 <div id="ccm-al-add-asset">
 <label><?=t('Quick Add File')?>:</label>
  <a id="ccm-button-browse" class="ccm-button" dialog-width="600" dialog-height="525" dialog-modal="false" dialog-title="<?=t('Add File')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_upload.php?cID=<?=$_REQUEST['cID']?>"><span><em class="ccm-button-add"><?=t('Add Multiple Files')?></em></span></a>
-<form method="post" enctype="multipart/form-data" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_upload_process_single.php?cID=<?=$c->getCollectionID()?>" target="upload-frame">
-    <input type="file" name="Filedata" /> <input type="submit" value="<?=t('Upload')?>" />    
+<form method="post" enctype="multipart/form-data" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_upload_process_single.php?cID=<?=$c->getCollectionID()?>" target="upload-frame" onsubmit="ccm_alSubmitSingle();">
+    <input type="file" name="Filedata" id="#ccm-al-upload-single-file" />
+    <img id="ccm-al-upload-single-loader" style="display:none;" src="<?=ASSETS_URL_IMAGES?>/dashboard/sitemap/loading.gif" />
+    <input id="ccm-al-upload-single-submit" type="submit" value="<?=t('Upload')?>" />    
 </form>
 </div>
 
