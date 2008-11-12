@@ -10,7 +10,8 @@
 			if (Localization::isAvailable()) {
 				if (is_dir($path . '/' . DIRNAME_LANGUAGES)) {
 					bindtextdomain(LANGUAGE_DOMAIN_CORE, $path . '/' . DIRNAME_LANGUAGES);
-					textdomain(LANGUAGE_DOMAIN_CORE);
+					textdomain(LANGUAGE_DOMAIN_CORE);	
+					bind_textdomain_codeset(LANGUAGE_DOMAIN_CORE, "UTF-8");				
 				}
 			}
 		}
