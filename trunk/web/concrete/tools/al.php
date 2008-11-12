@@ -241,7 +241,6 @@ if (is_array($assetLibraryPassThru)) {
 if($_GET['single_upload_success']) { ?>
 	<div class="message success"><?=t('File Uploaded Successfully')?></div>
 <? } ?>
-
 <div id="ccm-al-add-asset">
 <label><?=t('Quick Add File')?>:</label>
  <a id="ccm-button-browse" class="ccm-button" dialog-width="600" dialog-height="525" dialog-modal="false" dialog-title="<?=t('Add File')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_upload.php?cID=<?=$_REQUEST['cID']?>"><span><em class="ccm-button-add"><?=t('Add Multiple Files')?></em></span></a>

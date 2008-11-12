@@ -9,28 +9,36 @@ if (!$cp->canRead()) {
 }
 
 require_once(DIR_FILES_BLOCK_TYPES_CORE . '/library_file/controller.php');
-
+$error = "";
 if (isset($_FILES['Filedata'])) {
+	
 	if(is_uploaded_file($_FILES['Filedata']['tmp_name'])) {
-		$bt = BlockType::getByHandle('library_file');
-		$data = array();
-		$data['file'] = $_FILES['Filedata']['tmp_name'];
-		$data['name'] = $_FILES['Filedata']['name'];
-		$nb = $bt->add($data);
-		$single_upload_success = 1;
+		$fh = Loader::helper('file');
+		if($fh->hasAllowedExtension($_FILES['Filedata']['name'])) {	
+			$bt = BlockType::getByHandle('library_file');
+			$data = array();
+			$data['file'] = $_FILES['Filedata']['tmp_name'];
+			$data['name'] = $_FILES['Filedata']['name'];
+			$nb = $bt->add($data);
+		} else {
+			$error = t('Invalid file extension.');
+		}
 	} else {
-		$single_upload_success = 0;
+		$error = t('An error occured while uploading your file');
 	}
-	?>
-    <html>
-    <body>
-    <script language="javascript">
-		window.parent.ccm_alRefresh();
-	</script>
-	</body>
-    </html>
-	<?
 } else {
-	echo(t('Error: No files sent.'));
+	$error = t('An error occured while uploading your file');
 }
 ?>
+<html>
+<head>
+<script language="javascript">
+	window.parent.ccm_alRefresh();
+	<? if(strlen($error)) { ?>
+		alert('<?=$error?>');
+	<? } ?>
+</script>
+</head>
+<body>
+</body>
+</html>
