@@ -1,7 +1,7 @@
 /* asset library */
 div#ccm-al-add-asset { margin-top: 8px; margin-bottom:8px;} 
 div#ccm-al-add-asset label { font-weight:bold;}
-div#ccm-al-add-asset form { padding-top: 12px;}
+div#ccm-al-add-asset form { padding-top: 4px;}
 
 div#ccm-al-add-asset embed, div#ccm-al-add-asset object {background-color: #d1e7ec}
 img.ccm-al-icon {margin-top: 28px; margin-bottom: 28px}
