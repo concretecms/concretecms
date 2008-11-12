@@ -87,32 +87,32 @@ $(function() {
 
 <div class="test <? if ($mysqlTest) { ?>passed<? } else { ?>fail<? } ?>"><?=t('MySQL Available')?>
 
-<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" width="16" height="16" alt="" /></a>
+<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
 <div class="ccm-install-info"><?=$this->controller->getDBErrorMsg()?></div>
 
 </div>
 <div class="test loading" id="ccm-test-urls"><?=t('Support for C5 Request URLs')?>
 
-<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" width="16" height="16" alt="" /></a>
+<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
 <div class="ccm-install-info"><?=t('Concrete cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.')?></div>
 
 </div>
 <div class="test <? if ($imageTest) { ?>passed<? } else { ?>fail<? } ?>"><?=t('Image Manipulation Available')?>
 
-<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" width="16" height="16" alt="" /></a>
+<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
 <div class="ccm-install-info"><?=t('Concrete requires GD library 2.0.1 or greater.')?></div>
 
 </div>
 <div class="test <? if ($xmlTest) { ?>passed<? } else { ?>fail<? } ?>"><?=t('XML Support')?>
 
-<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" width="16" height="16" alt="" /></a>
+<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
 <div class="ccm-install-info"><?=t('Concrete requires PHP XML Parser and SimpleXML extensions.')?></div>
 
 </div>
 
 <div class="test <? if ($fileWriteTest) { ?>passed<? } else { ?>fail<? } ?>"><?=t('Web Server Access to Files and Configuration Directories')?>
 
-<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" width="16" height="16" alt="" /></a>
+<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
 <div class="ccm-install-info"><?=t('The config/ and files/ directories must be writable by your web server.')?></div>
 
 </div>
@@ -120,19 +120,19 @@ $(function() {
 <h2><?=t('Testing Optional Items')?></h2>
 <div class="test <? if ($langTest) { ?>passed<? } else { ?>warning<? } ?>"><?=t('Multilingual Support')?>
 
-<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" width="16" height="16" alt="" /></a>
+<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
 <div class="ccm-install-info"><?=t('Multilingual support requires the gettext PHP extension.')?></div>
 
 </div>
 <div class="test <? if ($searchTest) { ?>passed<? } else { ?>warning<? } ?>"><?=t('Search Indexing Available')?>
 
-<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" width="16" height="16" alt="" /></a>
+<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
 <div class="ccm-install-info"><?=t('Search indexing requires the mbstring and iconv PHP extensions, and PCRE support.')?></div>
 
 </div>
 <div class="test <? if ($diffTest) { ?>passed<? } else { ?>warning<? } ?>"><?=t('Version Comparison Available')?>
 
-<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" width="16" height="16" alt="" /></a>
+<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
 <div class="ccm-install-info"><?=t('You much chmod 755 %s and disable PHP safe mode.', 'concrete/libraries/3rdparty/htmldiff.py')?></div>
 
 </div>

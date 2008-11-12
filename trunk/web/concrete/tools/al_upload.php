@@ -33,7 +33,6 @@ swfobject.embedSWF("<?=ASSETS_URL_FLASH?>/uploader/uploader.swf", "ccm-al-flash-
 
 ccm_uploadComplete = function() {
 	$("#ccm-al-upload-complete").show('highlight');
-	ccm_alRefresh();
 }
 
 </script>
