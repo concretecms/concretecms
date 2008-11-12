@@ -133,10 +133,14 @@ $(function() {
 <div class="test <? if ($diffTest) { ?>passed<? } else { ?>warning<? } ?>"><?=t('Version Comparison Available')?>
 
 <a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
-<div class="ccm-install-info"><?=t('You much chmod 755 %s and disable PHP safe mode.', 'concrete/libraries/3rdparty/htmldiff.py')?></div>
-
+<div class="ccm-install-info"><?=t('You must chmod 755 %s and disable PHP safe mode.', 'concrete/libraries/3rdparty/htmldiff.py')?></div>
 </div>
 
+<div>
+<form action="<?=$this->url('/install')?>" method="get">
+	<input type="submit" name="submit" value="<?=t('Re-test ')?>" />
+</form>
+</div>
 
 </div>
 <div id="ccm-install-note">
