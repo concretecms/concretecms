@@ -24,8 +24,8 @@ if (isset($_FILES['Filedata'])) {
 	?>
     <html>
     <body>
-    <script>
-		window.parent.location.href = '<?= View::url($c->getCollectionPath())?>?single_upload_success=<?=$single_upload_success?>';
+    <script language="javascript">
+		window.parent.ccm_alRefresh();
 	</script>
 	</body>
     </html>
@@ -33,3 +33,4 @@ if (isset($_FILES['Filedata'])) {
 } else {
 	echo(t('Error: No files sent.'));
 }
+?>
