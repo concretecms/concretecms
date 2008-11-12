@@ -40,7 +40,7 @@ class InstallController extends Controller {
 	}
 	
 	private function setOptionalItems() {
-		$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower'));
+		$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower') && (@preg_match('/\pL/u', 'a') == 1));
 		$this->set('langTest', Localization::isAvailable());
 		$diffExecTest = is_executable(DIR_FILES_BIN_HTMLDIFF);
 		$diffSystem = (!ini_get('safe_mode'));
