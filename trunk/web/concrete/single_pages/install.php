@@ -127,7 +127,7 @@ $(function() {
 <div class="test <? if ($searchTest) { ?>passed<? } else { ?>warning<? } ?>"><?=t('Search Indexing Available')?>
 
 <a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" width="16" height="16" alt="" /></a>
-<div class="ccm-install-info"><?=t('Search indexing requires the mbstring and iconv PHP extensions.')?></div>
+<div class="ccm-install-info"><?=t('Search indexing requires the mbstring and iconv PHP extensions, and PCRE support.')?></div>
 
 </div>
 <div class="test <? if ($diffTest) { ?>passed<? } else { ?>warning<? } ?>"><?=t('Version Comparison Available')?>
