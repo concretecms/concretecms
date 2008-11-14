@@ -81,11 +81,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		*/
 		public function inc($file, $args = array()) {
 			extract($args);
-			$base = $this->getBlockPath();
+			$base = $this->getBlockPath($file);
 			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
 
-			include($base . '/' . $file);
+			include($base);
 		}
 		
 		
@@ -94,7 +94,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * @access public
 		 * @return string
 		*/
-		public function getBlockPath() {
+		public function getBlockPath($file = null) {
 
 			$obj = $this->blockRenderObj;
 			if ($obj->getPackageID() > 0) {
