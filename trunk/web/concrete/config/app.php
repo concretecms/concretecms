@@ -34,6 +34,10 @@ if (!defined('URL_REWRITING')) {
 	Config::getOrDefine('URL_REWRITING', false);
 }
 
+if (!defined('URL_REWRITING_ALL')) {
+	define("URL_REWRITING_ALL", false);
+}
+
 if (URL_REWRITING == true) {
 	define('URL_SITEMAP', BASE_URL . DIR_REL . '/dashboard/sitemap');
 	define('REL_DIR_FILES_TOOLS', DIR_REL . '/tools');

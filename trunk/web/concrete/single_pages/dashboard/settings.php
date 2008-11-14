@@ -157,7 +157,7 @@ print $h->buttons($b1);
 <textarea style="width: 295px; height: 140px;" onclick="this.select()">
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteBase /
+RewriteBase <?=DIR_REL?>/
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
