@@ -15,7 +15,7 @@ var Jobs = {
 			this.pendingJobs.push( jobsCBs[i].value ); 
 		}
 		if( this.pendingJobs.length==0 )
-			alert('<?=t("Please first check jobs you want to run.")?>');
+			alert("<?=t("Please first check jobs you want to run.")?>");
 		this.runNextPending();
 	},
 	
