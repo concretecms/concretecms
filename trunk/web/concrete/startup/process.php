@@ -119,27 +119,20 @@
 				}
 				break;
 			case 'passthru':
-				$a = Area::get($c, $_GET['arHandle']);
-				$b = Block::getByID($_GET['bID'], $c, $a);
-				// basically, we hand off the current request to the block
-				// which handles permissions and everything
-				$p = new Permissions($b);
-				if ($p->canRead()) {
-					$action = $b->passThruBlock($_REQUEST['method']);
-					/*
-					if ($action != -1) {
-						if ($action) {
-							header('Location: ' . $action);
-							exit;
-						} else {
-							header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . $step);
-							exit;
-						}
+				if (isset($_GET['bID']) && isset($_GET['arHandle'])) {
+					$a = Area::get($c, $_GET['arHandle']);
+					$b = Block::getByID($_GET['bID'], $c, $a);
+					// basically, we hand off the current request to the block
+					// which handles permissions and everything
+					$p = new Permissions($b);
+					if ($p->canRead()) {
+						$action = $b->passThruBlock($_REQUEST['method']);
 					}
-					*/
-					
-					break;
+				} else if (isset($_GET['btID'])) {
+					$bt = BlockType::getByID($_GET['btID']);
+					$action = $bt->passThruBlockType($_REQUEST['method']);
 				}
+				break;
 		}
 	}
 	

@@ -24,11 +24,11 @@ class NavigationHelper {
 	 * @param Page $cObj
 	 * @return string $link
 	 */
-	public function getLinkToCollection(&$cObj, $appendBaseURL = false) {
+	public function getLinkToCollection(&$cObj, $appendBaseURL = false, $ignoreUrlRewriting = false) {
 		// basically returns a link to a collection, based on whether or we have 
 		// mod_rewrite enabled, and the collection has a path
 		$dispatcher = '';
-		if (!URL_REWRITING) {
+		if ((!URL_REWRITING) || $ignoreUrlRewriting) {
 			$dispatcher = '/index.php';
 		}
 		if ($cObj->getCollectionPath() != null) {

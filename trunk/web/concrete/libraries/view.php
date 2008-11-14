@@ -235,7 +235,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		*/	
 		public function url($action, $task = null) {
 			$dispatcher = '';
-			if (!URL_REWRITING) {
+			if (!URL_REWRITING_ALL) {
 				$dispatcher = '/index.php';
 			}
 			if ($action == '/') {
