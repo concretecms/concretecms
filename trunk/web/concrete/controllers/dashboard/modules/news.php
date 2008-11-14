@@ -2,9 +2,10 @@
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class NewsDashboardModuleController extends Controller {
-	
-	const FEED = 'http://www.concrete5.org/blog/category/news/feed/';
-	const FEED_READ_MORE = "http://www.concrete5.org/blog/";
+
+	// simple pie is awesome and parses the HTML!
+	const FEED = 'http://www.concrete5.org/community/updates/news/feed';
+	const FEED_READ_MORE = "http://www.concrete5.org/community/updates/news/";
 	
 	public function __construct() {
 		$fp = Loader::helper("feed");

@@ -37,7 +37,7 @@ if($_GET['bID']) {
 				<?= BASE_URL.DIR_REL.$nh->getLinkToCollection($cobj) ?>		  
 			  </link>
 			  <description><?=htmlspecialchars(strip_tags($cobj->getCollectionDescription()))."....";?></description>
-			  <pubDate><?=$cobj->getCollectionDateAdded()?></pubDate>
+			  <pubDate><?=$cobj->getCollectionDatePublic()?></pubDate>
 			</item>
 		<? } ?>
      		 </channel>

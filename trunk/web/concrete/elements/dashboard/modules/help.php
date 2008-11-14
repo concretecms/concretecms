@@ -19,4 +19,4 @@ foreach($posts as $item) { ?>
 <br/>
 
 <h2><?=t('Full Documentation')?></h2>
-<div><?=t('Full documentation is available <a href="%s">at Concrete5.org</a>', 'http://www.concrete5.org/documentation/')?>.</div><br/>
+<div><?=t('Full documentation is available <a href="%s">at Concrete5.org</a>', 'http://www.concrete5.org/docs/')?>.</div><br/>
