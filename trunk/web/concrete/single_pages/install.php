@@ -136,9 +136,9 @@ $(function() {
 <div class="ccm-install-info"><?=t('You must chmod 755 %s and disable PHP safe mode.', 'concrete/libraries/3rdparty/htmldiff.py')?></div>
 </div>
 
-<div>
+<div style="text-align: center; margin-top: 16px">
 <form action="<?=$this->url('/install')?>" method="get">
-	<input type="submit" name="submit" value="<?=t('Re-test ')?>" />
+	<input type="submit" name="submit" class="ccm-input-submit" value="<?=t('Run Tests Again')?>" />
 </form>
 </div>
 
