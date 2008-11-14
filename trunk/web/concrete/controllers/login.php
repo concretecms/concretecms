@@ -57,8 +57,9 @@ class LoginController extends Controller {
 			$rcID = $this->post('rcID');
 			$nh = Loader::helper('validation/numbers');
 			if ($nh->integer($rcID)) {
-				$this->redirect('/index.php?cID=' . $rcID);
-			}		
+				header('Location: ' . BASE_URL . DIR_REL . '/index.php?cID=' . $rcID);
+				exit;
+			}
 
 			$dash = Page::getByPath("/dashboard", "RECENT");
 			$dbp = new Permissions($dash);
