@@ -49,6 +49,6 @@ $g->set_y_max( $max );
 $g->num_decimals = 0;
 $g->is_fixed_num_decimals_forced = true;
 $g->y_label_steps( 5 );
-$g->set_y_legend( 'Views', 12, '#333333' );
+$g->set_y_legend( t('Views'), 12, '#333333' );
 
 echo $g->render();

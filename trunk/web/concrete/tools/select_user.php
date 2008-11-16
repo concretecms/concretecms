@@ -26,7 +26,7 @@ if ($s->getTotal() > 0) {
 <input type="text" id="ccm-user-search-uname" name="uName" value="<?=$_REQUEST['uName']?>" class="ccm-text" style="width: 80px" />
 <label><?=t('Email Address')?></label>
 <input type="text" id="ccm-user-search-email" name="uEmail" value="<?=$_REQUEST['uEmail']?>" class="ccm-text" style="width: 80px" />
-<input type="submit" value="Search" />
+<input type="submit" value="<?=t('Search')?>" />
 </div>
 
 <div id="ccm-user-search-results">
