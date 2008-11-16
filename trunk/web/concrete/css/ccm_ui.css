@@ -81,37 +81,37 @@ ul#ccm-main-nav li.ccm-nav-inactive:hover a {border-right: 1px solid #fff; paddi
 
 a.ccm-nav-loading {background-image: url(../images/icons/icon_header_loading.gif) !important;}
 
-ul#ccm-main-nav #ccm-nav-edit {background-image: url(../images/icons/icon_header_edit.png); background-position: 22px 4px !important}
-ul#ccm-main-nav a#ccm-nav-edit.ccm-nav-loading {background-position: 24px 8px !important}
+ul#ccm-main-nav #ccm-nav-edit {background-image: url(../images/icons/icon_header_edit.png); background-position: center 4px !important}
+ul#ccm-main-nav a#ccm-nav-edit.ccm-nav-loading {background-position: center 8px !important}
 
-ul#ccm-main-nav a#ccm-nav-add {background-image: url(../images/icons/icon_header_add.png); background-position: 24px 8px !important}
-ul#ccm-main-nav a#ccm-nav-add.ccm-nav-loading {background-position: 24px 9px !important}
+ul#ccm-main-nav a#ccm-nav-add {background-image: url(../images/icons/icon_header_add.png); background-position: center 8px !important}
+ul#ccm-main-nav a#ccm-nav-add.ccm-nav-loading {background-position: center 9px !important}
 
-ul#ccm-main-nav a#ccm-nav-exit-edit {background-image: url(../images/icons/icon_header_exit_edit_mode.png); background-position: 38px 8px !important}
-ul#ccm-main-nav a#ccm-nav-exit-edit.ccm-nav-loading {background-position: 36px 9px !important}
+ul#ccm-main-nav a#ccm-nav-exit-edit {background-image: url(../images/icons/icon_header_exit_edit_mode.png); background-position: center 8px !important}
+ul#ccm-main-nav a#ccm-nav-exit-edit.ccm-nav-loading {background-position: center 9px !important}
 
-ul#ccm-main-nav a#ccm-nav-properties {background-image: url(../images/icons/icon_header_properties.png); background-position: 25px 7px !important}
-ul#ccm-main-nav a#ccm-nav-properties.ccm-nav-loading {background-position: 26px 9px !important}
+ul#ccm-main-nav a#ccm-nav-properties {background-image: url(../images/icons/icon_header_properties.png); background-position: center 7px !important}
+ul#ccm-main-nav a#ccm-nav-properties.ccm-nav-loading {background-position: center 9px !important}
 
-ul#ccm-main-nav a#ccm-nav-design {background-image: url(../images/icons/icon_header_design.png); background-position: 9px 8px !important}
-ul#ccm-main-nav a#ccm-nav-design.ccm-nav-loading {background-position: 18px 9px !important}
+ul#ccm-main-nav a#ccm-nav-design {background-image: url(../images/icons/icon_header_design.png); background-position: center 8px !important}
+ul#ccm-main-nav a#ccm-nav-design.ccm-nav-loading {background-position: center 9px !important}
 
-ul#ccm-main-nav a#ccm-nav-permissions {background-image: url(../images/icons/icon_header_permissions.png); background-position: 30px 7px !important}
-ul#ccm-main-nav a#ccm-nav-permissions.ccm-nav-loading {background-position: 30px 10px !important}
+ul#ccm-main-nav a#ccm-nav-permissions {background-image: url(../images/icons/icon_header_permissions.png); background-position: center 7px !important}
+ul#ccm-main-nav a#ccm-nav-permissions.ccm-nav-loading {background-position: center 10px !important}
 
-ul#ccm-main-nav a#ccm-nav-versions {background-image: url(../images/icons/icon_header_versions.png); background-position: 13px 11px !important}
-ul#ccm-main-nav a#ccm-nav-versions.ccm-nav-loading {background-position: 24px 10px !important}
+ul#ccm-main-nav a#ccm-nav-versions {background-image: url(../images/icons/icon_header_versions.png); background-position: center 11px !important}
+ul#ccm-main-nav a#ccm-nav-versions.ccm-nav-loading {background-position: center 10px !important}
 
-ul#ccm-main-nav a#ccm-nav-mcd {background-image: url(../images/icons/icon_header_move_delete.png); background-position: 28px 12px !important}
-ul#ccm-main-nav a#ccm-nav-mcd.ccm-nav-loading {background-position: 33px 11px !important}
+ul#ccm-main-nav a#ccm-nav-mcd {background-image: url(../images/icons/icon_header_move_delete.png); background-position: center 12px !important}
+ul#ccm-main-nav a#ccm-nav-mcd.ccm-nav-loading {background-position: center 11px !important}
 
-ul#ccm-main-nav a#ccm-nav-save-arrange {background-image: url(../images/icons/icon_header_save_arrange.png); background-position: 38px 4px !important}
-ul#ccm-main-nav a#ccm-nav-save-arrange.ccm-nav-loading {background-position: 42px 9px !important}
+ul#ccm-main-nav a#ccm-nav-save-arrange {background-image: url(../images/icons/icon_header_save_arrange.png); background-position: center 4px !important}
+ul#ccm-main-nav a#ccm-nav-save-arrange.ccm-nav-loading {background-position: center 9px !important}
 
-ul#ccm-system-nav #ccm-nav-dashboard {background-image: url(../images/icons/icon_header_dashboard.png); background-position: 25px 8px !important}
-ul#ccm-system-nav #ccm-nav-dashboard.ccm-nav-loading {background-position: 28px 8px !important}
-ul#ccm-system-nav #ccm-nav-help {background-image: url(../images/icons/icon_header_help.png); background-position: 12px 8px !important}
-ul#ccm-system-nav #ccm-nav-logout {background-image: url(../images/icons/icon_header_logout.png); background-position: 18px 8px !important}
+ul#ccm-system-nav #ccm-nav-dashboard {background-image: url(../images/icons/icon_header_dashboard.png); background-position: center 8px !important}
+ul#ccm-system-nav #ccm-nav-dashboard.ccm-nav-loading {background-position: center 8px !important}
+ul#ccm-system-nav #ccm-nav-help {background-image: url(../images/icons/icon_header_help.png); background-position: center 8px !important}
+ul#ccm-system-nav #ccm-nav-logout {background-image: url(../images/icons/icon_header_logout.png); background-position: center 8px !important}
 
 
 div#ccm-page-detail {

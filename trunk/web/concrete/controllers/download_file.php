@@ -58,9 +58,17 @@ class DownloadFileController extends Controller {
 		header("Cache-Control: private",false);
 		header("Content-Transfer-Encoding: binary");
 	
-		// this should be from FILES -- but lets not break it just yet
-		$handle = fopen(DIR_FILES_UPLOADED."/".$filename, "r");
-		echo fread($handle, filesize(DIR_FILES_UPLOADED."/".$filename));
+		$buffer = '';
+		$chunk = 1024*1024;
+		$handle = fopen(DIR_FILES_UPLOADED."/".$filename, 'rb');
+		if ($handle === false) {
+			return false;
+		}
+		while (!feof($handle)) {
+			$buffer = fread($handle, $chunk);
+			print $buffer;
+		}
+		
 		fclose($handle);
 		exit;
 	}

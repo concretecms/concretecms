@@ -14,7 +14,7 @@ foreach($posts as $item) { ?>
 <input type="text" name="query" style="width: 130px" />
 <input name="search_paths[]" type="hidden" value="/documentation" />
 <input type="hidden" name="do" value="search" />
-<input type="submit" value="Search" />
+<input type="submit" value="<?=t('Search')?>" />
 </form>
 <br/>
 
