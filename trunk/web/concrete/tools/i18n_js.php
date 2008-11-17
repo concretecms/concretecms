@@ -40,7 +40,9 @@ var ccmi18n_sitemap = {
 	results: '<?=t('Result(s)')?>',
 	max: '<?=t('max')?>',
 	noResults: '<?=t('No results found.')?>',
-	areYouSure: '<?=t('Are you sure?')?>'
+	areYouSure: '<?=t('Are you sure?')?>',
+
+	on: '<?=t('on')?>'
 	
 	
 }

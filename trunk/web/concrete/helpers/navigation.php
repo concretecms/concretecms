@@ -28,8 +28,10 @@ class NavigationHelper {
 		// basically returns a link to a collection, based on whether or we have 
 		// mod_rewrite enabled, and the collection has a path
 		$dispatcher = '';
-		if ((!URL_REWRITING) || $ignoreUrlRewriting) {
-			$dispatcher = '/index.php';
+		if (!defined('URL_REWRITING_ALL') || URL_REWRITING_ALL == false) {
+			if ((!URL_REWRITING) || $ignoreUrlRewriting) {
+				$dispatcher = '/index.php';
+			}
 		}
 		if ($cObj->getCollectionPath() != null) {
 			$link = DIR_REL . $dispatcher . $cObj->getCollectionPath();

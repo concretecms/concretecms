@@ -514,7 +514,7 @@ parseResults = function(node) {
 			}
 		}
 		
-		html += '<div class="search-result-meta">' + ccmi18n_sitemap.createdBy + ' <b>' + node[i].uName + '</b> on ' + node[i].cDateAdded + '</div>';
+		html += '<div class="search-result-meta">' + ccmi18n_sitemap.createdBy + ' <b>' + node[i].uName + '</b> ' + ccmi18n_sitemap.on + ' ' + node[i].cDateAdded + '</div>';
 		
 		html += '<div tree-node-title="' + escape(node[i].cvName) + '" class="' + labelClass + '" id="tree-label' + node[i].id + '" rel="' + CCM_REL + '/index.php?cID=' + node[i].id + '"><img src="' + CCM_IMAGE_PATH + '/spacer.gif" width="16" height="16" class="handle" /><span>' + node[i].cvName + '</span><\/div>';
 		html += '<\/li><div class="dropzone tree-dz' + nodeID + '" tree-parent="' + nodeID + '" id="tree-dz' + node[i].id + '"><\/div>';

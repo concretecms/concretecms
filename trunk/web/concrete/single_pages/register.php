@@ -63,7 +63,7 @@
 	<? } ?>
 
 	<div class="ccm-button">
-		<?=$form->submit('register', 'Register &gt;')?>
+		<?=$form->submit('register', t('Register'))?>
 		<?=$form->hidden('rcID', $rcID); ?>
 	</div>
 

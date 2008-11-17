@@ -85,8 +85,8 @@ class DashboardInstallController extends Controller {
 			break;
 		}		
 		$subnav = array(
-			array(View::url('/dashboard/install'), 'Block Types', $btSelected),
-			array(View::url('/dashboard/install', 'packages'), 'Applications', $pkgsSelected)
+			array(View::url('/dashboard/install'), t('Block Types'), $btSelected),
+			array(View::url('/dashboard/install', 'packages'), t('Applications'), $pkgsSelected)
 		);
 		$this->set('subnav', $subnav);
 		if ($this->error->has()) {

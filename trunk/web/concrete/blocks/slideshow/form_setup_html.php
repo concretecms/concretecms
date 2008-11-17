@@ -25,7 +25,7 @@ $ah = Loader::helper('concrete/interface');
 	</select>
 	</td>
 	<td style="text-align: right">
-	<?=$ah->button_js(t('Add Image'), 'SlideshowBlock.chooseImg()');?>
+	<?=$ah->button_js(t('Add Image'), 'SlideshowBlock.chooseImg');?>
 	</td>
 	</tr>
 	</table>
