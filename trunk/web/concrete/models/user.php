@@ -86,9 +86,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				// first, we check to see if the username and password match the admin username and password
 				$username = $args[0];
 				$password = $args[1];
-				if (!$args[2]) {
-					$_SESSION = array();
-				}
 				
 				$password = User::encryptPassword($password, PASSWORD_SALT);
 				$v = array($username, $password);
