@@ -555,7 +555,11 @@ function addResortDroppable(nodeID){
 		});
 }
 
-$(function() {		   
+$(function() {
+	$(document).ajaxError(function(event, request, settings) {
+		alert(ccmi18n_sitemap.loadError + request.responseText);
+	});
+	
 	$.getJSON(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php", function(resp) {  
 		parseTree(resp, 0, false);
 		activateLabels();
