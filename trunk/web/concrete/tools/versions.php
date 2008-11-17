@@ -318,7 +318,7 @@ $("input[name=vRemove]").click(function() {
 <div id="ccm-edit-collection">
 
 <h1><?=t('Page Versions')?></h1>
-<p><?=t("The following is a list of all this page's versions. If you can edit a page you will automatically see its most recent version, but the approved version (listed in white) is what regular users will see.")?></p>
+<p><?=t("The following is a list of all this page's versions. If you can edit a page you will automatically see its most recent version, but the approved version is what regular users will see.")?></p>
 
 <div class="ccm-form-area">
 

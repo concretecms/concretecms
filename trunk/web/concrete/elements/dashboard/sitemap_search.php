@@ -51,10 +51,10 @@ Loader::model('collection_types'); ?>
 		<div class="fieldRow">
 			<?=t('# Children')?>:<br>
 			<select name="cChildrenSelect" style="width: 135px">
-				<option value="">N/A</option>
-				<option value="lt"<? if ($_GET['cChildrenSelect'] == 'lt') { ?> selected <? } ?>>Fewer Than</option>
-				<option value="="<? if ($_GET['cChildrenSelect'] == '=') { ?> selected <? } ?>>Equal To</option>
-				<option value="gt"<? if ($_GET['cChildrenSelect'] == 'gt') { ?> selected <? } ?>>More Than</option>
+				<option value=""><?=t('N/A')?></option>
+				<option value="lt"<? if ($_GET['cChildrenSelect'] == 'lt') { ?> selected <? } ?>><?=t('Fewer Than')?></option>
+				<option value="="<? if ($_GET['cChildrenSelect'] == '=') { ?> selected <? } ?>><?=t('Equal To')?></option>
+				<option value="gt"<? if ($_GET['cChildrenSelect'] == 'gt') { ?> selected <? } ?>><?=t('More Than')?></option>
 			</select>
 			<input type=text name="cChildren" value="<?=$_REQUEST[cChildren]?>" style="width: 30px">
 		</div>	
