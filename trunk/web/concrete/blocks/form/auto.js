@@ -54,8 +54,8 @@ var miniSurvey ={
 	addQuestion : function(mode){
 			var msqID=0;
 			if(mode!='Edit') mode='';
-			else msqID=parseInt($('#msqID').val())
-			var postStr='question='+escape($('#question'+mode).val())+'&options='+escape($('#answerOptions'+mode).val());
+			else msqID=parseInt($('#msqID').val()) 
+			var postStr='question='+encodeURIComponent($('#question'+mode).val())+'&options='+encodeURIComponent($('#answerOptions'+mode).val());
 			postStr+='&inputType='+$('input[@name=answerType'+mode+']:checked').val()
 			postStr+='&msqID='+msqID+'&qsID='+parseInt(this.qsID);			
 			$.ajax({ 
