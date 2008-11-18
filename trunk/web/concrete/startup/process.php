@@ -128,9 +128,6 @@
 					if ($p->canRead()) {
 						$action = $b->passThruBlock($_REQUEST['method']);
 					}
-				} else if (isset($_GET['btID'])) {
-					$bt = BlockType::getByID($_GET['btID']);
-					$action = $bt->passThruBlockType($_REQUEST['method']);
 				}
 				break;
 		}
