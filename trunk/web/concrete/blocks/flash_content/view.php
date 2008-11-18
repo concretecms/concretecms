@@ -15,8 +15,8 @@ global $c;
 $vWidth=$w;
 $vHeight=$h;
 if ($c->isEditMode()) { ?>
-	<div style="width:<?=$vWidth?>px; height:<?=$vHeight?>px; background: #ddd; color:#333; border:1px solid #888; text-align:center; font-size:14px; padding:0px;">
-		<div style="padding:8px; padding-top: <?=round($vHeight/2)-10?>px;"><?=t('Content disabled in edit mode.')?></div>
+	<div class="ccm-edit-mode-disabled-item" style="width:<?=$vWidth?>px; height:<?=$vHeight?>px;">
+		<div style="padding:8px 0px; padding-top: <?=round($vHeight/2)-10?>px;"><?=t('Content disabled in edit mode.')?></div>
 	</div>
 <? }else{ ?>
 
