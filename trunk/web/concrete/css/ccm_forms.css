@@ -166,10 +166,12 @@ div.ccm-block-field-group {margin-bottom: 10px; border-bottom: 1px dotted #aaa; 
 div.ccm-block-field-group h2 {margin-bottom: 6px}
 
 div#ccm-block-type-list {padding-top: 2px}
-div.ccm-block-type a.ccm-block-type-help {top: 10px; right: 10px; position: absolute}
+div.ccm-block-type a.ccm-block-type-help {float:right; margin-right:10px; margin-top:10px; position: static}
 div.ccm-block-type a.ccm-scrapbook-delete {top: 8px; right: 10px; position: absolute}
 div.ccm-block-type a.ccm-block-type-inner, div.ccm-block-type p.ccm-block-type-inner {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
 div.ccm-block-type p.ccm-block-type-inner {margin: 0px}
 div.ccm-block-type a.ccm-block-type-inner:hover {background-color: #d9e7ff; border: 1px solid #94a7c7}
-div.ccm-block-type {position: relative; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px}
+div.ccm-block-type {position: static; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px; left:0px; top:0px; width:auto; height:auto;}
 div.ccm-block-type div.ccm-block-type-description {display: none; padding-left: 30px; color: #aaa; font-size: 12p; padding-top: 2px; padding-bottom: 6px}
+
+ 
