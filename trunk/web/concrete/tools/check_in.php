@@ -45,7 +45,10 @@ Loader::element('pane_header', array('c'=>$c));
         <script type="text/javascript">
         $(function() {
             setTimeout("$('#ccm-check-in-comments').focus();",300);
-            $("#ccm-check-in-preview").click(function() { $('#ccm-check-in').get(0).submit() });
+            $("#ccm-check-in-preview").click(function() {
+                $("#ccm-approve-field").val('PREVIEW');
+                $("#ccm-check-in").submit();
+            });
         
             $("#ccm-check-in-discard").click(function() {
                 $("#ccm-approve-field").val('DISCARD');
