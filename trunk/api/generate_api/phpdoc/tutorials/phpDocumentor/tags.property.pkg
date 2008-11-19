@@ -1,0 +1,78 @@
+<refentry id="{@id}">
+ <refnamediv>
+  <refname>@property</refname>
+  <refpurpose>&quot;Magic&quot; Property of a class.</refpurpose>
+ </refnamediv>
+ <refsynopsisdiv>
+  <refsynopsisdivinfo>
+   <author>
+    Chuck Burgess
+    <authorblurb>Tag Documentation written by {@link mailto:ashnazg@php.net ashnazg@php.net}</authorblurb>
+   </author>
+   <copyright>Copyright 2007, Chuck Burgess</copyright>
+   <releaseinfo>phpDocumentor 1.4+</releaseinfo>
+  </refsynopsisdivinfo>
+  <cmdsynopsis>
+    <command>@property</command>
+    <arg choice="req">
+     <option>datatype</option>
+    </arg>
+	<arg choice="opt">
+	 <option>description</option>
+	</arg>
+   </cmdsynopsis>
+ </refsynopsisdiv>
+ <refsect1 id="{@id description}">
+  <title>Description</title>
+  <para>@property shows a &quot;magic&quot; property variable that is found inside the class.</para>
+  <para>datatype should be a valid PHP type or "mixed." phpDocumentor will display the optional description unmodified, and defaults to "mixed" if the datatype is not present.</para>
+  <para>The property is presumed to be available for both read and write operations.  If the property is read-only, you should use the @property-read tag instead.  If the property is write-only, use @property-write.</para>
+ </refsect1>
+ <refsect1 id="{@id example}">
+  <title>Example</title>
+  <para>
+   <programlisting role="php">
+   <![CDATA[
+/**
+ * show off @property, @property-read, @property-write
+ *
+ * @property mixed $regular regular read/write property
+ * @property-read int $foo the foo prop
+ * @property-write string $bar the bar prop
+ */
+class Magician
+{
+    private $_thingy;
+    private $_bar;
+
+    function __get($var)
+    {
+        switch ($var) {
+            case 'foo' :
+                return 45;
+            case 'regular' :
+                return $this->_thingy;
+        }
+    }
+
+    function __set($var, $val)
+    {
+        switch ($var) {
+            case 'bar' :
+                $this->_bar = $val;
+                break;
+            case 'regular' :
+                if (is_string($val)) {
+                    $this->_thingy = $val;
+                }
+        }
+    }
+}
+   ]]>
+   </programlisting>
+  </para>
+  <para>Using these "magic" tags will result in the tag info being listed in the &quot;infomational&quot; tag listing for the class itself.  It does NOT generate actual &quot;property&quot; or &quot;variable&quot; entities in the document.</para>
+  <para>In the example above, when using PhpDocumentor with the HTML:Smarty:HandS converter and the &quot;--parseprivate on&quot; setting, you'll see &quot;$_thingy&quot; and &quot;$_bar&quot; shown in the &quot;Property Summary&quot; listing of your class variables, but you will NOT see &quot;$regular&quot;, &quot;$foo&quot;, or &quot;$bar&quot; there, because the latter three are not explicitly declared variables in your code.  You WILL see &quot;$regular&quot;, &quot;$foo&quot; and &quot;$bar&quot; in the class-level's &quot;API Tags&quot; listing, thanks to your &quot;@property&quot; tags in the class-level docblock.</para>
+ </refsect1>
+</refentry>
+

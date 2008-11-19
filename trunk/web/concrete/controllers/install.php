@@ -2,6 +2,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 error_reporting(E_ALL ^ E_NOTICE);
 ini_set('display_errors', 1);
+set_time_limit(120);
 
 class InstallController extends Controller {
 

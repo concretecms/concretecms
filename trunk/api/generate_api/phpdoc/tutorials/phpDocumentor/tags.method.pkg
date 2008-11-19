@@ -1,0 +1,59 @@
+<refentry id="{@id}">
+ <refnamediv>
+  <refname>@method</refname>
+  <refpurpose>&quot;Magic&quot; Method of a class.</refpurpose>
+ </refnamediv>
+ <refsynopsisdiv>
+  <refsynopsisdivinfo>
+   <author>
+    Chuck Burgess
+    <authorblurb>Tag Documentation written by {@link mailto:ashnazg@php.net ashnazg@php.net}</authorblurb>
+   </author>
+   <copyright>Copyright 2007, Chuck Burgess</copyright>
+   <releaseinfo>phpDocumentor 1.4+</releaseinfo>
+  </refsynopsisdivinfo>
+  <cmdsynopsis>
+    <command>@method</command>
+    <arg choice="req">
+     <option>returntype</option>
+    </arg>
+	<arg choice="opt">
+	 <option>description</option>
+	</arg>
+   </cmdsynopsis>
+ </refsynopsisdiv>
+ <refsect1 id="{@id description}">
+  <title>Description</title>
+  <para>@method shows a &quot;magic&quot; method that is found inside the class.</para>
+  <para>returntype should be a valid PHP type or "mixed." phpDocumentor will display the optional description unmodified, and defaults to "void" if the returntype is not present.</para>
+ </refsect1>
+ <refsect1 id="{@id example}">
+  <title>Example</title>
+  <para>
+   <programlisting role="php">
+   <![CDATA[
+/**
+ * show off @method
+ *
+ * @method int borp() borp(int $int1, int $int2) multiply two integers
+ */
+class Magician
+{
+    function __call($method, $params)
+    {
+        if ($method == 'borp') {
+            if (count($params) == 2) {
+                return $params[0] * $params[1];
+            }
+        }
+    }
+
+}
+   ]]>
+   </programlisting>
+  </para>
+  <para>Using this "magic" tag will result in the tag info being listed in the &quot;infomational&quot; tag listing for the class itself.  It does NOT generate actual &quot;method&quot; or &quot;function&quot; entities in the document.</para>
+  <para>In the example above, when using PhpDocumentor with the HTML:Smarty:HandS converter, you'll see the &quot;__call()&quot; method shown in the &quot;Method Summary&quot; listing of your class methods, but you will NOT see &quot;borp()&quot; there, because the latter is not an explicitly declared method in your code.  You WILL see &quot;borp()&quot; in the class-level's &quot;API Tags&quot; listing, thanks to your &quot;@method&quot; tag in the class-level docblock.</para>
+ </refsect1>
+</refentry>
+

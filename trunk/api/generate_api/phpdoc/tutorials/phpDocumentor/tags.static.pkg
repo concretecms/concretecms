@@ -1,0 +1,72 @@
+<refentry id="{@id}">
+ <refnamediv>
+  <refname>@static</refname>
+  <refpurpose>Document a static property or method</refpurpose>
+ </refnamediv>
+ <refsynopsisdiv>
+  <refsynopsisdivinfo>
+   <author>
+    Gregory Beaver
+    <authorblurb>Tag Documentation written by {@link mailto:cellog@php.net cellog@php.net}</authorblurb>
+   </author>
+   <copyright>Copyright 2002, Gregory Beaver</copyright>
+   <releaseinfo>phpDocumentor 1.1+</releaseinfo>
+  </refsynopsisdivinfo>
+  <cmdsynopsis>
+    <command>@static</command>
+   </cmdsynopsis>
+ </refsynopsisdiv>
+ <refsect1 id="{@id description}">
+  <title>Description</title>
+  <para>Use the @static tag to declare a variable or method to be static.  Static elements can be called without reference to an instantiated class object, as in class::variable and class::method().</para>
+ </refsect1>
+ <refsect1 id="{@id example}">
+  <title>Example</title>
+  <para>Here's an example:</para>
+  <para>
+   <programlisting role="php">
+   <![CDATA[
+/**
+ * example of a class 
+ * with a single static variable 
+ * and method
+ */
+class myclass
+{
+   /**
+    * a static variable
+    * @static
+    */
+   public static $astaticvar = 0;
+   /**
+    * normal variable
+    */
+   public $anormalvar = 1;
+   /**
+    * a static function
+    * @static
+    */
+   function mystaticfunction()
+   {
+   ...
+   }
+   /**
+    * normal function
+    */
+   function mynormalfunction()
+   {
+   ...
+   }
+}
+
+// example of usage of static methods
+myclass::mystaticvar;
+myclass::mystaticfunction();
+   ]]>
+   </programlisting>
+  </para>
+  <para>Just using the <emphasis>static</emphasis> keyword in your code is enough for PhpDocumentor on PHP5 to recognize static variables and methods, and PhpDocumentor will mark them as static.</para>
+  <para>However, using the static tag will <emphasis>also</emphasis> result in PhpDocumentor marking the variable or method as static, even if the PHP code does <emphasis>not</emphasis> use the static keyword.  So, using the tag but not the keyword actually means your code behavior will not match your API doc... so handle with care.  The good news is that using both the keyword and the tag will not result in a double &quot;static&quot; in the resulting doc.</para>
+  <para>Ideally, the static keyword in your code is sufficient for the resulting docs to show your members are static.  This tag appears to be a &quot;helpful&quot; tag for use in PHP4 code, allowing you to hint that you want the member to be treated as static, even if PHP4 doesn't have the ability to make it act that way.  Most likely, you'll use this tag as a reminder that your intention with this member, once you move the code from PHP4 to PHP5, will be for that member to be static.</para>
+ </refsect1>
+</refentry>

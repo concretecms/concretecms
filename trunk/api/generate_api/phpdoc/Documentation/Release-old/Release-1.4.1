@@ -1,0 +1,101 @@
+$Id: Release-1.4.1,v 1.1 2008/03/31 00:45:57 ashnazg Exp $
+
+PhpDocumentor Version 1.4.1
+################################################################################
+http://www.phpdoc.org
+Gregory Beaver cellog@php.net
+Joshua Eichorn jeichorn@phpdoc.org
+################################################################################
+################################################################################
+
+The phpDocumentor team would like to announce the release of phpDocumentor
+1.4.1.  This release deprecates the usage of the old "phpdoc.php" and 
+"new_phpdoc.php" webpage interfaces, in favor of the docbuilder interface...
+the files remain in the application, but for now they automatically redirect
+to the docbuilder interface.  This release also fixes some runtime execution 
+bugs, provides a few  clarification updates to the manual, and establishes 
+unit tests available to the "pear run-tests" command.
+
+------
+IMPORTANT:  phpDocumentor 1.4.1 requires PHP version 4.2.0 or greater.
+phpDocumentor will function best with PHP version 4.3.0 or greater, as it will
+use of the tokenizer extension if php 4.3.0 is installed for a tremendous
+increase in parsing speed.  PHP version 5.1.0 or newer is recommended to take
+advantage of PHP5-only features.
+
+WARNING:  A bug in PHP v5.2.1 can cause PhpDocumentor v1.3.1 and older to
+spiral into an infinite loop when parsing tutorial documents.  PhpDocumentor 
+v1.3.2 and newer will crash itself at the beginning of the tutorial parsing 
+stage if it detects PHP v5.2.1 being used to parse tutorials.
+------
+
+Speaking of speed, do NOT run the PDF Converter with --sourcecode = on for any
+medium to large sized projects.  I had to kill a PDF generation after 36 hours
+on a Pentium IV 2.66GHz computer - 36 hours!  The design of the PDF generation
+library is tremendously inefficient, probably on the order of O(n^2).  I'd fix
+this if I knew anything about PDF.  If there are any users out there with the
+time and expertise to look into the algorithms used by CPdf, we would all
+appreciate it.
+
+A full listing of all closed bugs and feature requests can be found in the 
+next section of the notes.
+
+phpDocumentor 1.4.1 is ready for production use documenting any PHP project,
+download it and try the most advanced solution for PHP documentation
+today.
+
+################################################################################
+
+The following PEAR items are included in version 1.4.1:
+Req #11755: Remove Unused DocBlock_Lexer and PHPT Tests [ashnazg]
+Req #11757: Move PhpUnit Tests into new tests dir [ashnazg]
+Bug #10909: PHP Notice in PDF Converter line 210 [ashnazg]
+Bug #11613: -q flag is not honoured [ashnazg]
+Bug #11683: examples displayed using earthli style are not rendered properly
+            [ashnazg|kguest]
+Bug #11788: Two failing unit tests [ashnazg]
+Bug #11809: Incorrect @name usage causes fatal crash [ashnazg]
+Bug #12121: phpdoc.bat cannot launch php.exe [ashnazg|kalvaro]
+Bug #12172: media files are not being copied [ashnazg|nemesis]
+Bug #12201: Misleading error message [ashnazg|yunosh]
+Doc #12459: @subpackage does not fix name conflicts [ashnazg]
+
+The following Sourceforge items are included in version 1.4.1:
+- [1846302] php version > 4.3.0 and tokenizer [ashnazg]
+- [1845584] File suffix should be lowercase [ashnazg]
+- [1842595] makedoc.sh doesn\'t like embedded blanks in paths [ashnazg|munroe_r]
+- [1839924] addErrorDie has to exit with non-zero return code! [ashnazg|blueyed]
+- [1826342] Data-dependent endless(?) loop in parser [ashnazg]
+- [1733936] "phpdoc" does not return with error code "0" on success
+            [ashnazg|blueyed]
+
+
+You can view the bug details or reopen one if
+you think it's not totally fixed at:
+http://pear.php.net/bugs/search.php?cmd=display&package_name%5B%5D=PhpDocumentor
+http://sourceforge.net/tracker/?group_id=11194&atid=111194
+
+################################################################################
+
+The documentation has been updated for this release you can view it at
+http://www.phpdoc.org/docs
+or in the distribution in the spec directory
+
+The changelog is available in the tarball, or online at 
+http://pear.php.net/package/PhpDocumentor/download/
+
+You can download the newest version from 
+http://pear.php.net/package/PhpDocumentor/download/ 
+and http://phpdocu.sourceforge.net/downloads.php
+
+And of course you can reach the webpage at
+http://pear.php.net/package/PhpDocumentor/ or
+http://phpdocu.sourceforge.net/ or
+http://phpdoc.org/
+
+enjoy
+-gregory beaver <cellog@php.net>
+-joshua eichorn <jeichorn@phpdoc.org>
+
+
+vim: set expandtab :

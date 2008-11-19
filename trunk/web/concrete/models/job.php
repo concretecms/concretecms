@@ -221,7 +221,7 @@ class Job extends Object {
 		else $jStatus='DISABLED_ERROR';
 		$rs = $db->query( "UPDATE Jobs SET jStatus=?, jLastStatusText=? WHERE jHandle=?", array( $jStatus, $resultMsg, $this->jHandle ) );
 		
-		$timestamp=date('Y-m-d H:i:s A');
+		$timestamp=date('Y-m-d H:i:s');
 		$rs = $db->query( "INSERT INTO JobsLog (jID, jlMessage, jlTimestamp, jlError) VALUES(?,?,?,?)", array( $this->jID, $resultMsg, $timestamp, $this->getError() ) );
 		
 		
@@ -246,7 +246,7 @@ class Job extends Object {
 	final public function install(){
 		$db = Loader::db();
 		$jobExists=$db->getOne( 'SELECT count(*) FROM Jobs WHERE jHandle=?', array($this->jHandle) );
-		$vals=array($this->getJobName(),$this->getJobDescription(),  date('Y-m-d H:i:s A'), $this->jNotUninstallable, $this->jHandle);
+		$vals=array($this->getJobName(),$this->getJobDescription(),  date('Y-m-d H:i:s'), $this->jNotUninstallable, $this->jHandle);
 		if($jobExists){
 			$db->query('UPDATE Jobs SET jName=?, jDescription=?, jDateInstalled=?, jNotUninstallable=? WHERE jHandle=?',$vals);
 		}else{

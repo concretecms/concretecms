@@ -1,0 +1,21 @@
+Roadmaps for future releases can be found
+on the PEAR website area for PhpDocumentor,
+at http://pear.php.net/bugs/roadmap.php?package=PhpDocumentor.
+
+Remember, roadmaps are always "works-in-progress", so
+any input you would like to provide to the direction
+of PhpDocumentor is always appreciated.  Channels for 
+providing such feedback include:
+- Bug Tracker 
+  http://pear.php.net/bugs/search.php?package_name[]=PhpDocumentor&status=Open&cmd=display
+  You can open bugs, enhancement requests, and documentation updates
+  specific to PhpDocumentor's own online manual.
+- Sourceforge Mailing List for Developers
+  phpdocu-developer@lists.sourceforge.net
+  You can communicate specifically with the PhpDocumentor developers
+  on this mailing list.
+- PEAR Mailing List for Developers
+  pear-dev@lists.php.net
+  This mailing list covers developers for ALL the PEAR packages,
+  not just PhpDocumentor, so use it as a last resort for 
+  reaching the PhpDocumentor developers.
