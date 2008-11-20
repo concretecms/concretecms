@@ -1,0 +1,34 @@
+table.discussion-category-list {
+	border: 1px solid #AEAEAE;
+	width: 100%;
+}
+
+table.discussion-category-list th {white-space: nowrap; font-weight: bold; text-align: left; background-color: #DAE6D9; border-bottom: 1px solid #cecece; padding: 12px}
+table.discussion-category-list td {white-space: nowrap; padding: 12px; text-align: center; border-bottom: 1px solid #dedede}
+table.discussion-category-list td.discussion-category-name {width: 100%; text-align: left; white-space: normal}
+table.discussion-category-list td.discussion-category-last-post {text-align: left}
+table.discussion-category-list h2 {font-size: 14px; font-weight: bold; line-height: 14px; margin: 0px}
+table.discussion-category-list h2 a {text-decoration: none}
+table.discussion-category-list p {margin: 0px}
+table tr.discussion-post-pinned td {background-color: #EDF7F8}
+
+table.discussion-threaded-comment {margin-bottom: 30px; margin-left: 90px; }
+table.discussion-threaded-comment h3 {font-size: 12px; font-weight: bold; margin: 0px 0px 2px 0px; padding: 0px}
+table.discussion-threaded-comment td {vertical-align: top}
+table.discussion-comment-level-0 {margin-left: 0px}
+table.discussion-comment-level-1 {margin-left: 30px}
+table.discussion-comment-level-2 {margin-left: 60px}
+table td.discussion-threaded-comment-avatar {padding-right: 15px; width: 1%}
+div.discussion-threaded-comment-poster {padding-top: 3px; margin-top: 3px; font-size: 11px; border-top: 1px solid #dedede}
+
+div#facebox input.ccm-input-text {font-size: 13px; padding: 2px; width: 100%; border: 1px solid #ccc}
+div#facebox textarea.ccm-input-textarea {font-size: 13px; height: 220px; padding: 2px; width: 100%; border: 1px solid #ccc}
+div#facebox label {font-weight: bold; font-size: 12px; display: block; padding: 3px 0px 3px 0px}
+div#facebox input.ccm-input-submit {float: right; margin: 3px 0px 3px 0px; font-size: 12px}
+
+div.discussion-threaded-comment-poster div.discussion-threaded-comment-reply {float: right; text-align: right; width: 50px}
+
+div.discussion-reply {border: 1px solid #ccc; padding: 3px}
+div#discussion-post-errors {color: #f00; padding-bottom: 10px}
+div.discussion-post-loader {padding: 5px 8px 3px 0px; display: none; float: right}
+div.discussion-attachments-selector {display: none}
