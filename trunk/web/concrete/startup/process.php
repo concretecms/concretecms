@@ -644,10 +644,10 @@
 				if (is_object($nc)) {
 					if ($_POST['rel'] == 'SITEMAP') { 
 						if ($cp->canApproveCollection()) {
-							$v = new Version($c, "RECENT");
+							$v = new Version($nc, "RECENT");
 							$v->approve();
 							$u = new User();
-							$u->unloadCollectionEdit($c);
+							$u->unloadCollectionEdit($nc);
 						}
 						header('Location: ' . URL_SITEMAP);
 						exit;
