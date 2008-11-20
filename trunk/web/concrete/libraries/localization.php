@@ -28,7 +28,9 @@
 		public function init() {
 			if (Localization::isAvailable()) {
 				setlocale(LC_ALL, LOCALE);
-				putenv('LC_ALL=' . LOCALE);
+				if (!ini_get('safe_mode')) {
+					putenv('LC_ALL=' . LOCALE);
+				}
 				Localization::reset();		
 			}
 		}

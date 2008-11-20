@@ -2,7 +2,9 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 error_reporting(E_ALL ^ E_NOTICE);
 ini_set('display_errors', 1);
-set_time_limit(120);
+if (!ini_get('safe_mode')) {
+	set_time_limit(120);
+}
 
 class InstallController extends Controller {
 
@@ -42,7 +44,7 @@ class InstallController extends Controller {
 	
 	private function setOptionalItems() {
 		$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower') && (@preg_match('/\pL/u', 'a') == 1));
-		$this->set('langTest', Localization::isAvailable());
+		$this->set('langTest', Localization::isAvailable() && (!ini_get('safe_mode')));
 		$diffExecTest = is_executable(DIR_FILES_BIN_HTMLDIFF);
 		$diffSystem = (!ini_get('safe_mode'));
 		if ($diffExecTest && $diffSystem) {
