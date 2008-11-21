@@ -11,9 +11,38 @@ class InstallController extends Controller {
 	public $helpers = array('form', 'html');
 	private $fp;
 	
+	// default values to be the currently defined vals
+	private $installData = array(
+			"DIR_BASE_CORE"=>DIR_BASE_CORE,
+			"DIR_FILES_BIN_HTMLDIFF"=>DIR_FILES_BIN_HTMLDIFF,
+			"DIR_BASE"=>DIR_BASE,
+			"DIR_REL"=>DIR_REL,
+			"BASE_URL"=>BASE_URL,
+			"DIR_FILES_UPLOADED"=>DIR_FILES_UPLOADED,
+			"DIR_FILES_UPLOADED_THUMBNAILS"=>DIR_FILES_UPLOADED_THUMBNAILS,
+			"DIR_FILES_UPLOADED_ONSTATES"=>DIR_FILES_UPLOADED_ONSTATES,
+			"DIR_FILES_TRASH"=>DIR_FILES_TRASH,
+			"DIR_FILES_CACHE"=>DIR_FILES_CACHE,
+			"DIR_FILES_AVATARS"=>DIR_FILES_AVATARS,
+			"USER_SUPER_ID"=>USER_SUPER_ID,
+			"USER_SUPER"=>USER_SUPER,
+			"GUEST_GROUP_ID"=>GUEST_GROUP_ID,
+			"ADMIN_GROUP_ID"=>ADMIN_GROUP_ID,
+			"APP_VERSION"=>APP_VERSION,
+			"DEBUG_DISPLAY_ERRORS"=>DEBUG_DISPLAY_ERRORS,
+			"uPassword"=>NULL
+		);
+	
+	public function setInstallData($data) {
+		// reset only the supplied vals
+		foreach($data as $key=>$value) {
+			$this->installData[$key] = $value;
+		}
+	}
+	
 	protected function installDB() {
 		
-		$installDirectory = DIR_BASE_CORE . '/config';
+		$installDirectory = $this->installData['DIR_BASE_CORE'] . '/config';
 		$file = $installDirectory . '/db.xml';
 		if (!file_exists($file)) {
 			throw new Exception(t('Unable to locate database import file.'));
@@ -45,7 +74,7 @@ class InstallController extends Controller {
 	private function setOptionalItems() {
 		$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower') && (@preg_match('/\pL/u', 'a') == 1));
 		$this->set('langTest', Localization::isAvailable() && (!ini_get('safe_mode')));
-		$diffExecTest = is_executable(DIR_FILES_BIN_HTMLDIFF);
+		$diffExecTest = is_executable($this->installData['DIR_FILES_BIN_HTMLDIFF']);
 		$diffSystem = (!ini_get('safe_mode'));
 		if ($diffExecTest && $diffSystem) {
 			$this->set('diffTest', true);
@@ -63,11 +92,11 @@ class InstallController extends Controller {
 	private function testFileWritePermissions() {
 		$e = Loader::helper('validation/error');
 
-		if (!is_writable(DIR_BASE . '/config')) {
+		if (!is_writable($this->installData['DIR_BASE'] . '/config')) {
 			$e->add(t('Your configuration directory config/ does not appear to be writable by the web server.'));
 		}
 
-		if (!is_writable(DIR_FILES_UPLOADED)) {
+		if (!is_writable($this->installData['DIR_FILES_UPLOADED'])) {
 			$e->add(t('Your files directory files/ does not appear to be writable by the web server.'));
 		}
 
@@ -84,7 +113,6 @@ class InstallController extends Controller {
 	}
 	
 	public function configure() {
-		
 		try {
 
 			$val = Loader::helper('validation/form');
@@ -94,16 +122,18 @@ class InstallController extends Controller {
 			$val->addRequired("DB_DATABASE", t('You must specify a valid database name'));
 			$val->addRequired("DB_SERVER", t('You must specify a valid database server'));
 			
-			$e = Loader::helper('validation/error');
+			$e = Loader::helper('/validation/error');
 			
-			$e = $this->fileWriteErrors;
-
+			if(is_object($this->fileWriteErrors)) {
+				$e = $this->fileWriteErrors;
+			}
+			
 			if (!function_exists('mysql_connect')) {
 				$e->add($this->getDBErrorMsg());
 			} else {
 
 				// attempt to connect to the database
-				$db = Loader::db( $_POST['DB_SERVER'], $_POST['DB_USERNAME'], $_POST['DB_PASSWORD'], $_POST['DB_DATABASE']);			
+				$db = Loader::db( $_POST['DB_SERVER'], $_POST['DB_USERNAME'], $_POST['DB_PASSWORD'], $_POST['DB_DATABASE'], true);			
 				
 				if ($_POST['DB_SERVER'] && $_POST['DB_DATABASE']) {
 					if (!$db) {
@@ -120,20 +150,20 @@ class InstallController extends Controller {
 			
 			if ($val->test() && (!$e->has())) {
 				
-				if (!is_dir(DIR_FILES_UPLOADED_THUMBNAILS)) {
-					mkdir(DIR_FILES_UPLOADED_THUMBNAILS);
+				if (!is_dir($this->installData['DIR_FILES_UPLOADED_THUMBNAILS'])) {
+					mkdir($this->installData['DIR_FILES_UPLOADED_THUMBNAILS']);
 				}
-				if (!is_dir(DIR_FILES_UPLOADED_ONSTATES)) {
-					mkdir(DIR_FILES_UPLOADED_ONSTATES);
+				if (!is_dir($this->installData['DIR_FILES_UPLOADED_ONSTATES'])) {
+					mkdir($this->installData['DIR_FILES_UPLOADED_ONSTATES']);
 				}
-				if (!is_dir(DIR_FILES_TRASH)) {
-					mkdir(DIR_FILES_TRASH);
+				if (!is_dir($this->installData['DIR_FILES_TRASH'])) {
+					mkdir($this->installData['DIR_FILES_TRASH']);
 				}
-				if (!is_dir(DIR_FILES_CACHE)) {
-					mkdir(DIR_FILES_CACHE);
+				if (!is_dir($this->installData['DIR_FILES_CACHE'])) {
+					mkdir($this->installData['DIR_FILES_CACHE']);
 				}
-				if (!is_dir(DIR_FILES_AVATARS)) {
-					mkdir(DIR_FILES_AVATARS);
+				if (!is_dir($this->installData['DIR_FILES_AVATARS'])) {
+					mkdir($this->installData['DIR_FILES_AVATARS']);
 				}
 				
 				$this->installDB();
@@ -142,7 +172,11 @@ class InstallController extends Controller {
 				
 				// insert admin user into the user table
 				$salt = ( defined('MANUAL_PASSWORD_SALT') ) ? MANUAL_PASSWORD_SALT : $vh->getString(64);
-				$uPassword = rand(100000, 999999);
+				if(!isset($this->installData['uPassword'])) {
+					$uPassword = rand(100000, 999999);
+				} else {
+					$uPassword = $this->installData['uPassword'];
+				}
 				$uEmail = $_POST['uEmail'];
 				$uPasswordEncrypted = User::encryptPassword($uPassword, $salt);
 				UserInfo::addSuperUser($uPasswordEncrypted, $uEmail);
@@ -150,11 +184,11 @@ class InstallController extends Controller {
 					$setPermissionsModel = PERMISSIONS_MODEL;
 				}
 				
-				if (file_exists(DIR_BASE . '/config')) {
+				if (file_exists($this->installData['DIR_BASE'] . '/config')) {
 	
-					$this->fp = @fopen(DIR_BASE . '/config/site.php', 'w+');
+					$this->fp = @fopen($this->installData['DIR_BASE'] . '/config/site.php', 'w+');
 					if ($this->fp) {
-
+						
 						Loader::model('single_page');
 						Loader::model('dashboard/homepage');
 						Loader::model('collection_types');
@@ -179,7 +213,7 @@ class InstallController extends Controller {
 						$data['ctHandle'] = 'right_sidebar';
 						$data['ctName'] = t('Right Sidebar');
 						$data['ctIcon'] = 'template3.png'; 
-						$data['uID'] = USER_SUPER_ID;
+						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$rst = CollectionType::add($data);
 						
 						// Add our left nav page type
@@ -187,7 +221,7 @@ class InstallController extends Controller {
 						$data['ctHandle'] = 'left_sidebar';
 						$data['ctName'] = t('Left Sidebar');
 						$data['ctIcon'] = 'template1.png';
-						$data['uID'] = USER_SUPER_ID;
+						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$dt = CollectionType::add($data);	
 						
 						// Add our no side nav page type
@@ -195,7 +229,7 @@ class InstallController extends Controller {
 						$data['ctHandle'] = 'full';
 						$data['ctName'] = t('Full Width');
 						$data['ctIcon'] = 'main.png'; 
-						$data['uID'] = USER_SUPER_ID;
+						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$nst = CollectionType::add($data);		
 						
 						// update the home page to set page type to the right sidebar one
@@ -309,7 +343,7 @@ class InstallController extends Controller {
 						$data['orderBy'] = 'display_asc';
 						$data['displayPages'] = 'top';
 						$data['displaySubPages'] = 'none';		
-						$data['uID'] = USER_SUPER_ID;
+						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$autonav = BlockType::getByHandle('autonav');
 
 						// add autonav block to left sidebar page type
@@ -333,7 +367,7 @@ class InstallController extends Controller {
 						$data['displayPages'] = 'second_level';
 						$data['displaySubPages'] = 'relevant';
 						$data['displaySubPageLevels'] = 'enough_plus1';
-						$data['uID'] = USER_SUPER_ID;
+						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$b2 = $detailTemplate->addBlock($autonav, 'Sidebar', $data);
 						
 						// Add an autonav block to Every detail page sidebar
@@ -347,28 +381,28 @@ class InstallController extends Controller {
 						$data = array();
 						$data['file'] = $pl->getThemeDirectory() . '/images/inneroptics_dot_net_aspens.jpg';
 						$data['name'] = "aspens.jpg";
-						$data['uID'] = USER_SUPER_ID;
+						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$image1 = $bt->add($data);
 
 						$bt2 = BlockType::getByHandle('library_file');
 						$data = array();
 						$data['file'] = $pl->getThemeDirectory() . '/images/inneroptics_dot_net_canyonlands.jpg';
 						$data['name'] = "canyonlands.jpg";
-						$data['uID'] = USER_SUPER_ID;
+						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$image2 = $bt2->add($data);
 
 						$bt3 = BlockType::getByHandle('library_file');
 						$data = array();
 						$data['file'] = $pl->getThemeDirectory() . '/images/inneroptics_dot_net_new_zealand_sheep.jpg';
 						$data['name'] = "sheep.jpg";
-						$data['uID'] = USER_SUPER_ID;
+						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$image3 = $bt3->add($data);
 
 						$bt4 = BlockType::getByHandle('library_file');
 						$data = array();
 						$data['file'] = $pl->getThemeDirectory() . '/images/inneroptics_dot_net_starfish.jpg';
 						$data['name'] = "starfish.jpg";
-						$data['uID'] = USER_SUPER_ID;
+						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$image4 = $bt4->add($data);
 						
 						// Assign this imagery to the various pages.
@@ -376,7 +410,7 @@ class InstallController extends Controller {
 						$data = array();
 						$data['fID'] = $image1->getBlockID();
 						$data['altText'] = t('Home Header Image');
-						$data['uID'] = USER_SUPER_ID;
+						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$home->addBlock($btImage, 'Header', $data);
 
 						// Assign imagery to left sidebar page
@@ -396,7 +430,7 @@ class InstallController extends Controller {
 
 						// add two subpages
 						$data = array();
-						$data['uID'] = USER_SUPER_ID;
+						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$data['name'] = t('About');
 						$aboutPage = $home->add($dt, $data);
 						$data['name'] = t('Examples');
@@ -407,7 +441,7 @@ class InstallController extends Controller {
 						// Add Content to Home page
 						$bt = BlockType::getByHandle('content');
 						$data = array();
-						$data['uID'] = USER_SUPER_ID;
+						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$data['content'] = t('<h1>Welcome to Concrete.</h1><p>You are currently viewing the front page of your website. This is an example of a content block - rich text that can be added through a WYSIWYG editor.</p><p>Get started by putting the page in edit mode, adding sub-pages, or checking out the dashboard.</p><h3>Examples of Blocks</h3>Listed below are some of the more interesting blocks that Concrete5 ships with, installed and ready to use. Click through to explore the blocks on their own page.</p><p>These pages are actually listed using the <b>page list</b> block. To check it out, put the page in edit mode, mouse over the list of pages below, click, and then select edit.</p>');
 
 						$home->addBlock($bt, "Main", $data);
@@ -590,13 +624,13 @@ class InstallController extends Controller {
 						$args = array();
 						$args['cInheritPermissionsFrom'] = 'OVERRIDE';
 						$args['cOverrideTemplatePermissions'] = 1;
-						$args['collectionRead'][] = 'gID:' . GUEST_GROUP_ID;
-						$args['collectionAdmin'][] = 'gID:' . ADMIN_GROUP_ID;
-						$args['collectionRead'][] = 'gID:' . ADMIN_GROUP_ID;
-						$args['collectionApprove'][] = 'gID:' . ADMIN_GROUP_ID;
-						$args['collectionReadVersions'][] = 'gID:' . ADMIN_GROUP_ID;
-						$args['collectionWrite'][] = 'gID:' . ADMIN_GROUP_ID;
-						$args['collectionDelete'][] = 'gID:' . ADMIN_GROUP_ID;
+						$args['collectionRead'][] = 'gID:' . $this->installData['GUEST_GROUP_ID'];
+						$args['collectionAdmin'][] = 'gID:' . $this->installData['ADMIN_GROUP_ID'];
+						$args['collectionRead'][] = 'gID:' . $this->installData['ADMIN_GROUP_ID'];
+						$args['collectionApprove'][] = 'gID:' . $this->installData['ADMIN_GROUP_ID'];
+						$args['collectionReadVersions'][] = 'gID:' . $this->installData['ADMIN_GROUP_ID'];
+						$args['collectionWrite'][] = 'gID:' . $this->installData['ADMIN_GROUP_ID'];
+						$args['collectionDelete'][] = 'gID:' . $this->installData['ADMIN_GROUP_ID'];
 						
 						$home = Page::getByID(1, "RECENT");
 						$home->updatePermissions($args);
@@ -613,8 +647,8 @@ class InstallController extends Controller {
 						$configuration .= "define('DB_USERNAME', '" . addslashes($_POST['DB_USERNAME']) . "');\n";
 						$configuration .= "define('DB_PASSWORD', '" . addslashes($_POST['DB_PASSWORD']) . "');\n";
 						$configuration .= "define('DB_DATABASE', '" . addslashes($_POST['DB_DATABASE']) . "');\n";
-						$configuration .= "define('BASE_URL', '" . BASE_URL . "');\n";
-						$configuration .= "define('DIR_REL', '" . DIR_REL . "');\n";
+						$configuration .= "define('BASE_URL', '" . $this->installData['BASE_URL'] . "');\n";
+						$configuration .= "define('DIR_REL', '" . $this->installData['DIR_REL'] . "');\n";
 						if (isset($setPermissionsModel)) {
 							$configuration .= "define('PERMISSIONS_MODEL', '" . addslashes($setPermissionsModel) . "');\n";
 						}
@@ -626,15 +660,15 @@ class InstallController extends Controller {
 						// save some options into the database
 						Config::save('SITE', $_POST['SITE']);
 						// add the current app version as our site's app version
-						Config::save('SITE_APP_VERSION', APP_VERSION);
-						Config::save('SITE_DEBUG_LEVEL', DEBUG_DISPLAY_ERRORS);
+						Config::save('SITE_APP_VERSION', $this->installData['APP_VERSION']);
+						Config::save('SITE_DEBUG_LEVEL', $this->installData['DEBUG_DISPLAY_ERRORS']);
 						Config::save('ENABLE_LOG_EMAILS', 1);
 						Config::save('ENABLE_LOG_ERRORS', 1);
 						
 						// login 
 						define('PASSWORD_SALT', $salt);
-						$u = new User(USER_SUPER, $uPassword);
-						$this->set('message', t('Congratulations. Concrete has been installed. You have been logged in as <b>%s</b> with the password <b>%s</b>.<br/><br/>If you wish to change this password, you may do so from the users area of the dashboard.', USER_SUPER, $uPassword));
+						$u = new User($this->installData['USER_SUPER'], $uPassword);
+						$this->set('message', t('Congratulations. Concrete has been installed. You have been logged in as <b>%s</b> with the password <b>%s</b>.<br/><br/>If you wish to change this password, you may do so from the users area of the dashboard.', $this->installData['USER_SUPER'], $uPassword));
 						
 						
 					} else {
@@ -659,8 +693,8 @@ class InstallController extends Controller {
 			if (is_resource($this->fp)) {
 				fclose($this->fp);
 			}
-			if (file_exists(DIR_BASE . '/config/site.php')) {
-				unlink(DIR_BASE . '/config/site.php');
+			if (file_exists($this->installData['DIR_BASE'] . '/config/site.php')) {
+				unlink($this->installData['DIR_BASE'] . '/config/site.php');
 			}
 			$this->set('error', $e);
 		}
