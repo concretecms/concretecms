@@ -36,13 +36,30 @@
 			// keep links valid
 			$text = str_replace('href="{[CCM:BASE_URL]}', 'href="' . BASE_URL . DIR_REL, $text);
 			$text = str_replace('src="{[CCM:REL_DIR_FILES_UPLOADED]}', 'src="' . BASE_URL . REL_DIR_FILES_UPLOADED, $text);
+			
+			$text = preg_replace(
+				array(
+					'/{CCM:CID_([0-9]+)}/i',
+					'/{[CCM:BASE_URL]}/i'),
+				array(
+					BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=\\1',
+					BASE_URL . DIR_REL)
+				, $text);
 			return $text;
 		}
 	
 		function translateTo($text) {
 			// keep links valid
-			$text = str_replace('href="' . BASE_URL . DIR_REL, 'href="{[CCM:BASE_URL]}', $text);
-			$text = str_replace('src="' . BASE_URL . REL_DIR_FILES_UPLOADED, 'src="{[CCM:REL_DIR_FILES_UPLOADED]}', $text);
+			$url1 = str_replace('/', '\/', BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME);
+			$url2 = str_replace('/', '\/', BASE_URL . DIR_REL);
+			$text = preg_replace(
+				array(
+					'/' . $url1 . '\?cID=([0-9]+)/i', 
+					'/' . $url2 . '/i'),
+				array(
+					'{CCM:CID_\\1}',
+					'{[CCM:BASE_URL]}')
+				, $text);
 			return $text;
 		}
 		

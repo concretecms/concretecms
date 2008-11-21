@@ -11,6 +11,7 @@ tinyMCE.init({
 	theme_concrete_buttons2_add : "spellchecker",
 	spellchecker_languages : "+English=en",
 	relative_urls : false,
+	convert_urls: false,
 	content_css : "<?=$th->getThemeEditorCSS()?>"
 });
 </script>
