@@ -27,7 +27,8 @@
 		
 		public function init() {
 			if (Localization::isAvailable()) {
-				setlocale(LC_ALL, LOCALE);
+				$l = explode(',', str_replace(' ', '', LOCALE));
+				setlocale(LC_ALL, $l);
 				if (!ini_get('safe_mode')) {
 					putenv('LC_ALL=' . LOCALE);
 				}

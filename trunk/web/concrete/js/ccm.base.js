@@ -478,7 +478,7 @@ ccm_arrangeInit = function() {
 ccm_init = function() {
 	ccm_setupHeaderMenu();
 	// blink notification if it exists
-	$("#ccm-notification").fadeIn();
+	//$("#ccm-notification").fadeIn();
 	$("a#ccm-nav-edit").click(function() {
 		if (!ccm_topPaneDeactivated) {
 			setTimeout(function() {
