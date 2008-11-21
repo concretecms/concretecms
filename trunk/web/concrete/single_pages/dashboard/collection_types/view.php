@@ -48,15 +48,24 @@ if ($_POST['task'] == 'add' || $_POST['update']) {
 		$error[] = t("Name required.");
 	}
 	
+	$akIDArray = $_POST['akID'];
+	if (!is_array($akIDArray)) {
+		$akIDArray = array();
+	}
+	
 	if (count($error) == 0) {
-		if ($_POST['task'] == 'add') {
-			$nCT = CollectionType::add($_POST);
-			$this->controller->redirect('/dashboard/collection_types?created=1');
-		} else if (is_object($ct)) {
-			$ct->update($_POST);
-			$this->controller->redirect('/dashboard/collection_types?updated=1');
-		}		
-		exit;
+		try {
+			if ($_POST['task'] == 'add') {
+				$nCT = CollectionType::add($_POST);
+				$this->controller->redirect('/dashboard/collection_types?created=1');
+			} else if (is_object($ct)) {
+				$ct->update($_POST);
+				$this->controller->redirect('/dashboard/collection_types?updated=1');
+			}		
+			exit;
+		} catch(Exception $e1) {
+			$error[] = $e1->getMessage();
+		}
 	}
 } else {
 	if ($_REQUEST['p'] && $_REQUEST['task'] == 'refresh') { 
@@ -168,7 +177,7 @@ if ($ctEditMode) {
 			<tr>
 		<? } ?>
 		
-		<td><input type="checkbox" name="akID[]" value="<?=$ak->getCollectionAttributeKeyID()?>" <? if (($this->controller->isPost() && in_array($ak->getCollectionAttributeKeyID(), $_POST['akID']))) { ?> checked <? } else if ((!$this->controller->isPost()) && $ct->isAvailableCollectionTypeAttribute($ak->getCollectionAttributeKeyID())) { ?> checked <? } ?> /> <?=$ak->getCollectionAttributeKeyName()?></td>
+		<td><input type="checkbox" name="akID[]" value="<?=$ak->getCollectionAttributeKeyID()?>" <? if (($this->controller->isPost() && in_array($ak->getCollectionAttributeKeyID(), $akIDArray))) { ?> checked <? } else if ((!$this->controller->isPost()) && $ct->isAvailableCollectionTypeAttribute($ak->getCollectionAttributeKeyID())) { ?> checked <? } ?> /> <?=$ak->getCollectionAttributeKeyName()?></td>
 		
 		<? $i++;
 		
