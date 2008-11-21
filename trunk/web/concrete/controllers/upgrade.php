@@ -103,6 +103,9 @@ class UpgradeController extends Controller {
 			case "5.0.0b2":
 				$ugvs[] = "version_500b2";
 				break;
+			case "5.0.0":
+				$ugvs[] = "version_500";
+				break;
 
 		}
 		

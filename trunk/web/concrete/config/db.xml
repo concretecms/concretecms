@@ -557,6 +557,9 @@
     <index name="cID">
       <col>cID</col>
     </index>
+    <index name="date">
+      <col>date</col>
+    </index>
     <index name="uID">
       <col>uID</col>
     </index>
