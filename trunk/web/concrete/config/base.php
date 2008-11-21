@@ -73,6 +73,12 @@ define('DIR_BASE', dirname($_SERVER['SCRIPT_FILENAME']));
 # The core concrete directory. Either one per install or one per server
 define('DIRNAME_APP', 'concrete');
 
+# if "concrete/" does NOT exist in DIR_BASE then we set multi_site to on
+if (!is_dir(DIR_BASE . '/' . DIRNAME_APP)) {
+	print '1';
+	define("MULTI_SITE", 1);
+}
+
 # The core output buffering level. In the view class we need to know what the
 # initial value is. Usually it's zero but sometimes PHP is setting this to one
 # (gzip encoding?)
@@ -147,6 +153,7 @@ if (defined('MULTI_SITE') && MULTI_SITE == 1) {
 	define('ASSETS_URL_WEB', BASE_URL);
 } else {
 	define('ASSETS_URL_WEB', BASE_URL . DIR_REL);
+	define('MULTI_SITE', 0);
 }
 
 define('ASSETS_URL', ASSETS_URL_WEB . '/concrete');
@@ -331,7 +338,6 @@ define('DB_TYPE', 'mysql');
 if (!defined('DB_USE_CACHE')) {
 	define('DB_USE_CACHE', true);
 }
-define('MULTI_SITE', 0);
 $ADODB_ASSOC_CASE =  2;
 $ADODB_ACTIVE_CACHESECS = 300;
 $ADODB_CACHE_DIR = DIR_FILES_CACHE;
