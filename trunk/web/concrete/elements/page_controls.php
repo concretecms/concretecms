@@ -94,10 +94,6 @@ if (isset($cp)) {
 </div>
 </div>
 
-<? if ($statusMessage != '') {?>
-	<div id="ccm-notification"><?=$statusMessage?></div>
-<? } ?>
-
 <ul id="ccm-main-nav">
 <? if ($c->isArrangeMode()) { ?>
 <li><a href="#" id="ccm-nav-save-arrange"><?=t('Save Positioning')?></a></li>
@@ -138,3 +134,7 @@ if (isset($cp)) {
 <? }
 	}
 } ?>
+
+<? if ($statusMessage != '') {?>
+	<div id="ccm-notification"><div id="ccm-notification-inner"><?=$statusMessage?></div></div>
+<? } ?>

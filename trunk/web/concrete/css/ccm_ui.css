@@ -37,12 +37,9 @@ div#ccm-page-controls a {color: #1B67A2; text-decoration: none}
 div#ccm-logo-wrapper {position: absolute; top: 0px; left: 0px; height: 49px; border-right: 1px solid #d7d7d7}
 div#ccm-logo-wrapper img {display: block; border-right: 1px solid #fff}
 
-div#ccm-notification {display: none; position: absolute; top: 28px; text-align: right; width: 290px; right: 180px; font-size: 11px; color: #333}
-div#ccm-notification a {font-weight: bold}
-div#ccm-notification a:hover {text-decoration: underline}
-
 div#ccm-system-nav-wrapper1 {position: absolute; border-left: 1px solid #fff; top: 0px; right: 0px; }
 ul#ccm-system-nav {height: 49px; border-left: 1px solid #d7d7d7}
+div#ccm-notification {display: none}
 
 div#ccm-page-controls ul#ccm-system-nav { margin: 0px; padding: 0px; }
 div#ccm-page-controls ul#ccm-main-nav {margin: 0px; padding: 0px 0px 0px 49px;}
@@ -67,17 +64,14 @@ ul#ccm-main-nav li.ccm-nav-rolloversOff:hover a, ul#ccm-main-nav li.ccm-nav-roll
 	background-repeat: no-repeat; 
 	font-size: 10px; color: #828282; 
 	text-decoration: none; 
-	border-right: 1px solid #fff
 }
 
 ul#ccm-main-nav li span, ul#ccm-system-nav li span {color: #cecece}
 ul#ccm-system-nav li:hover, ul#ccm-main-nav li:hover, ul#ccm-main-nav li.ccm-nav-active {background: #A2DAFD url(../images/bg_header_active.png) repeat-x scroll;}
 ul#ccm-main-nav.ccm-pane-open li.ccm-nav-inactive:hover {background: #dedede url(../images/bg_header_active_over.png) repeat-x scroll;}
-ul#ccm-system-nav a:hover, ul#ccm-main-nav a:hover, ul#ccm-main-nav li.ccm-nav-active a {border-right: none; padding-right: 10px; color: #333}
 ul#ccm-main-nav li.ccm-nav-rolloversOff:hover a{ cursor: default}
 
 ul#ccm-main-nav li.ccm-nav-inactive:hover {	background: transparent url(../images/bg_header_rib.png) repeat-x scroll;}
-ul#ccm-main-nav li.ccm-nav-inactive:hover a {border-right: 1px solid #fff; padding-right: 9px; color: #828282;}
 
 a.ccm-nav-loading {background-image: url(../images/icons/icon_header_loading.gif) !important;}
 
