@@ -341,4 +341,12 @@ define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the
 define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_version_number.php');
 define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
 
+# Marketplace Vars
+if (!defined('MARKETPLACE_THEME_LIST_WS')) {
+	define('MARKETPLACE_THEME_LIST_WS', 'http://www.concrete5.org/tools/get_marketplace_theme_list/');
+}
+if (!defined('ENABLE_MARKETPLACE_SUPPORT')) {
+	define('ENABLE_MARKETPLACE_SUPPORT', true);
+}
+
 require_once(DIR_LIBRARIES_CORE . '/loader.php');
