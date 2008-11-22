@@ -136,6 +136,7 @@
 			$args['cThis'] = ($args['cParentID'] == $this->cID) ? '1' : '0';
 			$args['cParentID'] = ($args['cParentID'] == 'OTHER') ? $args['cParentIDValue'] : $args['cParentID'];
 			$args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
+			$args['truncateChars'] = intval($args['truncateChars']); 
 
 			parent::save($args);
 		
