@@ -20,6 +20,15 @@ class DashboardThemesController extends Controller {
 		if (is_object($obj)) {
 			$siteThemeID = $obj->getThemeID();
 		}
+		
+		if(ENABLE_MARKETPLACE_SUPPORT){
+			$subnav = array(
+				array(View::url('/dashboard/themes/'), t('Current Themes'), 1),
+				array(View::url('/dashboard/themes/marketplace'), t('Get More Themes'), 0)
+			);		
+			$this->set('subnav', $subnav);		
+		}
+		
 		$this->set('siteThemeID', $siteThemeID);
 		$this->set('activate', View::url('/dashboard/themes', 'activate'));		
 		$this->set('install', View::url('/dashboard/themes', 'install'));		
