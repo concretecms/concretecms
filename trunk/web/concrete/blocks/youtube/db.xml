@@ -5,7 +5,7 @@
 			<key />
 			<unsigned />
 		</field>
-		<field name="title" type="C" size="255"></field>		
+		<field name="title" type="D"></field>		
 		<field name="videoURL" type="C" size="255"></field>
 	</table>
 </schema>
