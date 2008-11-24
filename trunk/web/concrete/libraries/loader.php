@@ -109,9 +109,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * $db->query($sql);
 		 * </code>
 		 */
-		public function db($server = null, $username = null, $password = null, $database = null) {
+		public function db($server = null, $username = null, $password = null, $database = null, $create = false) {
 			static $_db;
-			if (!isset($_db)) {
+			if (!isset($_db) || $create) {
 				if ($server == null && defined('DB_SERVER')) {	
 					$dsn = DB_TYPE . '://' . DB_USERNAME . ':' . DB_PASSWORD . '@' . DB_SERVER . '/' . DB_DATABASE;
 				} else if ($server) {
