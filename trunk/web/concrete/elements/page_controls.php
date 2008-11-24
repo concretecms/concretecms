@@ -135,6 +135,8 @@ if (isset($cp)) {
 	}
 } ?>
 
-<? if ($statusMessage != '') {?>
+<?
+/* if ($statusMessage != '') {?>
 	<div id="ccm-notification"><div id="ccm-notification-inner"><?=$statusMessage?></div></div>
-<? } ?>
+<? } */
+?>

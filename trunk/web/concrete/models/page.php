@@ -1562,6 +1562,7 @@ class Page extends Collection {
 			$uID = $data['uID'];
 		} else {
 			$uID = $u->getUserID();
+			$data['uID'] = $uID;
 		}
 		
 		if (isset($data['pkgID'])) {
