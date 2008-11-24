@@ -95,6 +95,9 @@
 		public function getFileRelativePath() {
 			return REL_DIR_FILES_UPLOADED . '/' . $this->filename;
 		}
+		public function getFileFullURL() {
+			return BASE_URL . REL_DIR_FILES_UPLOADED . '/' . $this->filename;
+		}
 		
 		
 		/*
