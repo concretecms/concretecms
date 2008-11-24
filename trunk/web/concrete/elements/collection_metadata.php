@@ -92,7 +92,7 @@ if ($cp->canAdminPage()) {
 		}
 		print '<div style="padding-top: 4px;font-size: 12px"><span id="ccm-uName">' . $currentUName . '</span>';
 		if ($cp->canAdminPage()) { ?>
-		(<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_user.php" id="ccm-edit-page-user" dialog-modal="false" dialog-width="600" dialog-height="400" dialog-title="Choose User"><?=t('Edit')?></a>)
+		(<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_user.php" id="ccm-edit-page-user" dialog-modal="false" dialog-width="600" dialog-height="400" dialog-title="<?=t('Choose User')?>"><?=t('Edit')?></a>)
 		<input type="hidden" name="uID" value="<?=$c->getCollectionUserID()?>" id="ccm-uID" />
 		
 		<script type="text/javascript">$(function() {

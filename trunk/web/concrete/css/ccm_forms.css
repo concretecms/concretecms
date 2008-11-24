@@ -55,7 +55,7 @@ a.ccm-button-right {float: right}
 div.ccm-button, a.ccm-button-right, a.ccm-button-left, a.ccm-button {display: block; text-decoration: none !important; height: 38px; background: transparent url(../images/button_l.png) no-repeat;}
 a.ccm-button-right:hover, a.ccm-button-left:hover, a.ccm-button:hover {background: transparent url(../images/button_l_active.png) no-repeat scroll;}
 
-div.ccm-button span,a.ccm-button-left span, a.ccm-button-right span, a.ccm-button span {height: 12px; display: block; float: left; padding-top: 11px; padding-bottom: 15px; margin-left: 15px; padding-right: 16px; font-size: 11px; color: #535353; background: transparent url(../images/button_r.png) repeat-y scroll right top;}
+div.ccm-button span,a.ccm-button-left span, a.ccm-button-right span, a.ccm-button span {white-space: nowrap; height: 12px; display: block; float: left; padding-top: 11px; padding-bottom: 15px; margin-left: 15px; padding-right: 16px; font-size: 11px; color: #535353; background: transparent url(../images/button_r.png) repeat-y scroll right top;}
 /*
 div.ccm-buttons:after {
 	content: ".";

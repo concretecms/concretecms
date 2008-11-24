@@ -20,12 +20,7 @@ div#ccm-mc-page h1#ccm-sitemap-title {display: none}
 <div class="ccm-form-area" id="ccm-mc-page">	
 	<h2><?=t('Move/Copy Page')?></h2>
 	<p><?=t("Click below to move or copy the current page to a particular spot in your site.")?></p>
-		
-<? /*
-		<br/>
-		<a href="javascript:void(0)" onclick="window.location.href='<?=DIR_REL?>/dashboard/sitemap/?reveal=<?=$c->getCollectionID()?>'" class="ccm-button-right cancel" style="margin-right: 10px"><span>Go to Dashboard</span></a>
-		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay.php?reveal=<?=$c->getCollectionID()?>&sitemap_mode=move_copy_delete" dialog-title="Choose Page" dialog-width="600" dialog-height="440" dialog-modal="false" class="ccm-button-right cancel" id="ccm-launch-sitemap"><span>Move/Copy Page</span></a>
-*/ ?>
+	
 
 	<? 
 	

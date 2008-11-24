@@ -639,7 +639,10 @@
 				// the $c below identifies that we're adding a collection _to_ that particular collection object
 				//$newCollectionID = $ct->addCollection($c);				
 				
-				$nc = $c->add($ct, $_POST);
+				$data = $_POST;
+				$data['cvIsApproved'] = 0;
+				
+				$nc = $c->add($ct, $data);
 				
 				if (is_object($nc)) {
 					if ($_POST['rel'] == 'SITEMAP') { 
