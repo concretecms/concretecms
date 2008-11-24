@@ -300,7 +300,7 @@ class UserAttributeKey extends Object {
 				break;
 			case "SELECT":
 				$r = '<select name="' . $this->getFormElementName() . '" class="uak-select">';
-				$r .= '<option value="">N/A</option>';
+				$r .= '<option value="">' . t('N/A') . '</option>';
 				$arr = preg_split("/\r|\n/", trim($this->getKeyValues()), -1, PREG_SPLIT_NO_EMPTY);
 				foreach($arr as $v) {
 					$selected = ($text == $v) ? 'selected' : '';

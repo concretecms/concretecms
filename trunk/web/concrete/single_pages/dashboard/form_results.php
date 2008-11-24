@@ -1,8 +1,13 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <script>
-<? $toggleQuestionsShowText=t('View all fields').' &raquo;' ?>
+<? 
+
+$toggleQuestionsShowText = t('View all fields').' &raquo;'; 
+$toggleQuestionsHideText = t('Hide fields') . ' &raquo;'; 
+
+?>
 var toggleQuestionsShowText='<?=$toggleQuestionsShowText?>';
-var toggleQuestionsHideText='Hide fields &raquo;';
+var toggleQuestionsHideText='<?=$toggleQuestionsHideText?>';
 function toggleQuestions(qsID,trigger){
 	$('.extraQuestionRow'+qsID).toggleClass('noDisplay');
 	if(trigger.state=='open') {
