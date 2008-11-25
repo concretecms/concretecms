@@ -246,6 +246,17 @@
 		}
 
 		function delete(){
+			// we will NOT let you delete the required groups
+			if ($this->gID == REGISTERED_GROUP_ID || $this->gID == GUEST_GROUP_ID) {
+				return false;
+			}
+			
+			// run any internal event we have for group deletion
+			$ret = Events::fire('on_group_delete', $this);
+			if ($ret < 0) {
+				return false;
+			}
+			
 			$db = Loader::db(); 
 			$r = $db->query("DELETE FROM UserGroups WHERE gID = ?",array(intval($this->gID)) );
 			$r = $db->query("DELETE FROM Groups WHERE gID = ?",array(intval($this->gID)) );

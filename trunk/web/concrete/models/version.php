@@ -57,11 +57,15 @@
 			if ($extended) {
 				if ($this->cvAuthorUID > 0) {
 					$uAuthor = UserInfo::getByID($this->cvAuthorUID);
-					$this->cvAuthorUname = $uAuthor->getUserName();
+					if (is_object($uAuthor)) {
+						$this->cvAuthorUname = $uAuthor->getUserName();
+					}
 				}
 				if ($this->cvApproverUID > 0) {
 					$uApprover = UserInfo::getByID($this->cvApproverUID);
-					$this->cvApproverUname = $uApprover->getUserName();
+					if (is_object($uApprover)) {
+						$this->cvApproverUname = $uApprover->getUserName();
+					}
 				}
 			}
 			
