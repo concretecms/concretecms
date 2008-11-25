@@ -249,7 +249,6 @@
 		 * Deletes a group
 		 * @return void
 		 */
-
 		function delete(){
 			// we will NOT let you delete the required groups
 			if ($this->gID == REGISTERED_GROUP_ID || $this->gID == GUEST_GROUP_ID) {
