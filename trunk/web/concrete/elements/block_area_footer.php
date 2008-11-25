@@ -20,7 +20,7 @@ $c = $a->getAreaCollectionObject();
 $cID = $c->getCollectionID();
 $u = new User();
 
-if (($a->areaAcceptsBlocks()) || $cp->canAdminPage()) { ?>
+if ($a->areaAcceptsBlocks()) { ?>
 
 <? if (!$c->isArrangeMode()) { ?>
 	<script type="text/javascript">
