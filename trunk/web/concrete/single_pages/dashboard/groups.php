@@ -66,6 +66,7 @@ if ($gl->getTotal() > 0) {
 <h1><span><?=t('Groups')?></span></h1>
 <div class="ccm-dashboard-inner">
 
+
 <form id="ccm-group-search" method="get" style="top: -30px; left: 10px" action="<?=$this->url('/dashboard/groups')?>">
 <div id="ccm-group-search-fields">
 <input type="text" id="ccm-group-search-keywords" name="gKeywords" value="<?=$_REQUEST['gKeywords']?>" class="ccm-text" style="width: 100px" />
@@ -168,5 +169,19 @@ if ($pOptions['needPaging']) { ?>
 		<br>
 		</form>	
 	</div>
-	<?  
+	
+	<h1><span><?=t('Delete Group')?></span></h1>
+	
+	<div class="ccm-dashboard-inner">
+		<?
+		$u=new User();
+		$delConfimJS="if( !confirm('Are you sure you want to permanently remove this group?')) return false;";
+		if($u->isSuperUser() == false){ ?>
+			Only the user "<?=USER_SUPER?>" can remove this group.
+		<? }else{ ?> 
+			<?=$ih->button(t('Delete'),$this->url('/dashboard/groups/-/delete/?gID='.intval($_REQUEST['gID'])),'left',null,array(),$delConfimJS)?>
+		<? } ?>
+		<div class="ccm-spacer"></div>
+	</div>	
+	<?   
 }

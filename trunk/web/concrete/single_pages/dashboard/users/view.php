@@ -485,6 +485,7 @@ if (is_object($uo)) {
 		<h2><?=t('Groups')?></h2>
 
 		<div style="margin:0px; padding:0px; width:100%; height:auto" >
+		
 		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 		<tr>
 			<td colspan="2" class="header"><?=t('Group')?></td>
@@ -515,7 +516,22 @@ if (is_object($uo)) {
 		</div>
 	</div>
 		
+
+
+	<h1><span><?=t('Delete User')?></span></h1>
 	
+	<div class="ccm-dashboard-inner">
+		<?
+		$u=new User();
+		$ih = Loader::helper('concrete/interface');
+		$delConfimJS="if( !confirm('Are you sure you want to permanently remove this user?')) return false;";
+		if($u->isSuperUser() == false){ ?>
+			Only the user "<?=USER_SUPER?>" can remove this user.
+		<? }else{ ?>   
+			<?=$ih->button(t('Delete'),$this->url('/dashboard/users/-/delete/?uID='.intval($uo->getUserID()) ),'left',null,array(),$delConfimJS)?> 
+		<? } ?>
+		<div class="ccm-spacer"></div>
+	</div>
 	<? } ?>
 
 <?

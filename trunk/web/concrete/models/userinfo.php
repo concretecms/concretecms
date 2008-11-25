@@ -130,6 +130,24 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 
+		public function delete(){
+			$db = Loader::db();  
+			$r = $db->query("DELETE FROM UserGroups WHERE uID = ?",array(intval($this->uID)) );
+			$r = $db->query("DELETE FROM Users WHERE uID = ?",array(intval($this->uID)));
+			$r = $db->query("DELETE FROM UserValidationHashes WHERE uID = ?",array(intval($this->uID)));
+			$r = $db->query("DELETE FROM UserAttributeValues WHERE uID = ?",array(intval($this->uID)));
+			
+			$r = $db->query("DELETE FROM AreaGroupBlockTypes WHERE uID = ?",array(intval($this->uID)));
+			$r = $db->query("DELETE FROM CollectionVersionBlockPermissions WHERE uID = ?",array(intval($this->uID)));
+			$r = $db->query("DELETE FROM PagePermissionPageTypes WHERE uID = ?",array(intval($this->uID)));
+			$r = $db->query("DELETE FROM AreaGroups WHERE uID = ?",array(intval($this->uID)));
+			$r = $db->query("DELETE FROM PagePermissions WHERE uID = ?",array(intval($this->uID)));
+			$r = $db->query("DELETE FROM Piles WHERE uID = ?",array(intval($this->uID)));
+			
+			$r = $db->query("UPDATE Blocks set uID=? WHERE uID = ?",array( intval(USER_SUPER_ID), intval($this->uID)));
+			$r = $db->query("UPDATE Pages set uID=? WHERE uID = ?",array( intval(USER_SUPER_ID), intval($this->uID)));			
+		}
+
 		/**
 		 * Called only by the getGroupMembers function it sets the "type" of member for this group. Typically only used programmatically
 		 * @param string $type
