@@ -9,27 +9,43 @@ class DashboardUsersController extends Controller {
 	}
 	
 	
-	public function delete(){
+	public function delete($delUserId){
 		$u=new User();
-		$delUserId=intval($_REQUEST['uID']);
-		if(!$delUserId) 
-			throw new Exception(t('No user id was specified.'));		
-		if(!$u->isSuperUser()) 
-			throw new Exception(t('You do not have permission to perform this action.'));
-		if($delUserId==$u->getUserID()) 
-			throw new Exception(t('You cannot delete your own user account.'));			
-		$delUI=UserInfo::getByID($delUserId); 
-		if($delUI){ 
+		try {
+
+			if(!$u->isSuperUser()) {
+				throw new Exception(t('You do not have permission to perform this action.'));
+			}
+
+			if ($delUserId == USER_SUPER_ID) {
+				throw new Exception(t('You may not remove the super user account.'));
+			}			
+
+			if($delUserId==$u->getUserID()) {
+				throw new Exception(t('You cannot delete your own user account.'));
+			}
+
+			$delUI=UserInfo::getByID($delUserId); 
+			
+			if ($delUserId == GUEST_GROUP_ID || $delUserId == REGISTERED_GROUP_ID) {
+				throw new Exception(t('Invalid user ID.'));
+			}
+			
+			if(!($delUI instanceof UserInfo)) {
+				throw new Exception(t('Invalid user ID.'));
+			}
+
 			$delUI->delete(); 
 			$resultMsg=t('User deleted successfully.');
-		}else{
-			$resultMsg=t('User not found.');
+			
+			$_REQUEST=array();
+			$_GET=array();
+			$_POST=array();		
+			$this->set('message', $resultMsg);
+			$this->view(); 
+		} catch (Exception $e) {
+			$this->set('error', $e);
 		}
-		$_REQUEST=array();
-		$_GET=array();
-		$_POST=array();		
-		$this->set('message', $resultMsg);
-		$this->view(); 
 	}
 }
 

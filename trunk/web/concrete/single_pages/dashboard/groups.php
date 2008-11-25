@@ -175,11 +175,22 @@ if ($pOptions['needPaging']) { ?>
 	<div class="ccm-dashboard-inner">
 		<?
 		$u=new User();
-		$delConfimJS="if( !confirm('Are you sure you want to permanently remove this group?')) return false;";
+
+		$delConfirmJS = t('Are you sure you want to permanently remove this group?');
 		if($u->isSuperUser() == false){ ?>
-			Only the user "<?=USER_SUPER?>" can remove this group.
-		<? }else{ ?> 
-			<?=$ih->button(t('Delete'),$this->url('/dashboard/groups/-/delete/?gID='.intval($_REQUEST['gID'])),'left',null,array(),$delConfimJS)?>
+			<?=t('You must be logged in as %s to remove groups.', USER_SUPER)?>			
+		<? }else{ ?>   
+
+			<script type="text/javascript">
+			deleteGroup = function() {
+				if (confirm('<?=$delConfirmJS?>')) { 
+					location.href = "<?=$this->url('/dashboard/groups', 'delete', $_REQUEST['gID'])?>";				
+				}
+			}
+			</script>
+
+			<? print $ih->button_js(t('Delete Group'), "deleteGroup", 'left');?>
+
 		<? } ?>
 		<div class="ccm-spacer"></div>
 	</div>	

@@ -131,6 +131,17 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 
 		public function delete(){
+			// we will NOT let you delete the admin user
+			if ($this->uID == USER_SUPER_ID) {
+				return false;
+			}
+
+			// run any internal event we have for user deletion
+			$ret = Events::fire('on_user_delete', $this);
+			if ($ret < 0) {
+				return false;
+			}
+			
 			$db = Loader::db();  
 			$r = $db->query("DELETE FROM UserGroups WHERE uID = ?",array(intval($this->uID)) );
 			$r = $db->query("DELETE FROM Users WHERE uID = ?",array(intval($this->uID)));

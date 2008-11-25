@@ -524,11 +524,24 @@ if (is_object($uo)) {
 		<?
 		$u=new User();
 		$ih = Loader::helper('concrete/interface');
-		$delConfimJS="if( !confirm('Are you sure you want to permanently remove this user?')) return false;";
-		if($u->isSuperUser() == false){ ?>
-			Only the user "<?=USER_SUPER?>" can remove this user.
+		$delConfirmJS = t('Are you sure you want to permanently remove this user?');
+		if ($uo->getUserID() == USER_SUPER_ID) { ?>
+			<?=t('You may not remove the super user account.')?>
+		<? } else if($u->isSuperUser() == false){ ?>
+			<?=t('You must be logged in as %s to remove user accounts.', USER_SUPER)?>
+			
 		<? }else{ ?>   
-			<?=$ih->button(t('Delete'),$this->url('/dashboard/users/-/delete/?uID='.intval($uo->getUserID()) ),'left',null,array(),$delConfimJS)?> 
+			
+			<script type="text/javascript">
+			deleteUser = function() {
+				if (confirm('<?=$delConfirmJS?>')) { 
+					location.href = "<?=$this->url('/dashboard/users', delete, $uo->getUserID())?>";				
+				}
+			}
+			</script>
+
+			<? print $ih->button_js(t('Delete User Account'), "deleteUser", 'left');?>
+
 		<? } ?>
 		<div class="ccm-spacer"></div>
 	</div>

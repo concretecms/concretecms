@@ -8,25 +8,32 @@ class DashboardGroupsController extends Controller {
 	
 	}	
 	
-	public function delete(){
+	public function delete($delGroupId){
+
 		$u=new User();
-		$delGroupId=intval($_REQUEST['gID']);
-		if(!$u->isSuperUser()) 
-			throw new Exception(t('You do not have permission to perform this action.'));
-		if(!$delGroupId) 
-			throw new Exception(t('No group id was specified.'));				
-		$group = Group::getByID( intval($_REQUEST['gID']) );
-		if($group){	
+		try {
+		
+			if(!$u->isSuperUser()) {
+				throw new Exception(t('You do not have permission to perform this action.'));
+			}
+			
+			$group = Group::getByID($delGroupId);			
+			
+			if(!($group instanceof Group)) {
+				throw new Exception(t('Invalid group ID.'));
+			}
+			
 			$group->delete(); 
 			$resultMsg=t('Group deleted successfully.');		
-		}else{
-			$resultMsg=t('Group not found.');
+			
+			$_REQUEST=array();
+			$_GET=array();
+			$_POST=array();			
+			$this->set('message', $resultMsg);
+			$this->view(); 
+		} catch(Exception $e) {
+			$this->set('error', $e);
 		}
-		$_REQUEST=array();
-		$_GET=array();
-		$_POST=array();			
-		$this->set('message', $resultMsg);
-		$this->view(); 
 	}	
 }
 
