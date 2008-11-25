@@ -64,6 +64,13 @@ class Area extends Object {
 	function overrideCollectionPermissions() {return $this->arOverrideCollectionPermissions; }
 	function getAreaCollectionInheritID() {return $this->arInheritPermissionsFromAreaOnCID;}
 	
+	/** 
+	 * Sets the total number of blocks an area allows. Does not limit by type.
+	 */
+	public function setBlockLimit($num) {
+		$this->maximumBlocks = $num;
+	}
+	
 	function setAttribute($attr, $val) {
 		$this->attributes[$attr] = $val;
 	}
@@ -276,6 +283,9 @@ class Area extends Object {
 		}
 		if (count($this->attributes) > 0) {
 			$ourArea->attributes = $this->attributes;
+		}
+		if ($this->maximumBlocks > -1) {
+			$ourArea->maximumBlocks = $this->maximumBlocks;
 		}
 		$ap = new Permissions($ourArea);
 		$blocksToDisplay = ($alternateBlockArray) ? $alternateBlockArray : $ourArea->getAreaBlocksArray($c, $ap);
