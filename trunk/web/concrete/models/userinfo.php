@@ -129,7 +129,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				return UserInfo::getByID($newUID);
 			}
 		}
-
+		
+		/**
+		 * Deletes a user
+		 * @return void
+		 */
 		public function delete(){
 			// we will NOT let you delete the admin user
 			if ($this->uID == USER_SUPER_ID) {
