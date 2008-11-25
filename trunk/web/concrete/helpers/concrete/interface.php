@@ -44,8 +44,7 @@ class ConcreteInterfaceHelper {
 	 * @param array $args Extra args passed to the link
 	 * @return string
 	 */
-	public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = array()) {
-		$onclick = '';
+	public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = array(), $onclick='') { 
 		return $this->generateButton($href, $onclick, $text, $buttonAlign, $innerClass, $args);
 	}
 

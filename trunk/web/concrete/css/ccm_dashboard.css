@@ -63,7 +63,7 @@ h1 {font-size: 16px; margin: 0px}
 h2 {font-size: 14px; color: #457da5; margin-bottom: 8px}
 h3 {margin-bottom: 8px}
 
-div.message {padding: 10px; border: 1px solid #94a7c7; background: #eee; margin-bottom: 10px; font-size: 13px; font-weight: bold;}
+div.message {padding: 10px; border: 1px solid #94a7c7; background: #eee; margin-bottom: 20px; font-size: 13px; font-weight: bold;}
 div.message li {color: #666; font-weight: normal}
 div.message ul {margin: 10px 0px 0px 0px; padding-left: 20px}
 
