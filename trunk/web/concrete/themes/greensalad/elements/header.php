@@ -4,8 +4,6 @@
 <html lang="en">
 <head>
 	
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-
 <!-- Site Header Content //-->
 <style type="text/css">@import "<?=$this->getThemePath()?>/main.css";</style>
 <style type="text/css">@import "<?=$this->getThemePath()?>/typography.css";</style>
