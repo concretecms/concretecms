@@ -237,6 +237,7 @@ define('DIR_FILES_TRASH', DIR_FILES_UPLOADED . '/trash');
 # Cache
 define('DIR_FILES_CACHE', DIR_FILES_UPLOADED . '/cache');
 define('DIR_FILES_CACHE_PAGES', DIR_FILES_CACHE . '/lucene.pages');
+define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED . '/cache');
 
 # Binaries used by the system
 # Currently unused

@@ -28,7 +28,9 @@
 		function getFileID() {return $this->fID;}
 		function getFileOnstateID() {return $this->fOnstateID;}
 		function getFileOnstateObject() {
-			return LibraryFileBlockController::getFile($this->fOnstateID);
+			if ($this->fOnstateID > 0) {
+				return LibraryFileBlockController::getFile($this->fOnstateID);
+			}
 		}
 		function getFileObject() {
 			return LibraryFileBlockController::getFile($this->fID);
