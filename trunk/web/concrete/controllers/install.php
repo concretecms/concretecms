@@ -383,7 +383,7 @@ class InstallController extends Controller {
 						$data['name'] = "aspens.jpg";
 						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$image1 = $bt->add($data);
-
+						
 						$bt2 = BlockType::getByHandle('library_file');
 						$data = array();
 						$data['file'] = $pl->getThemeDirectory() . '/images/inneroptics_dot_net_canyonlands.jpg';
@@ -504,6 +504,14 @@ class InstallController extends Controller {
 						$fimage2 = $image2->getInstance();
 						$fimage3 = $image3->getInstance();
 						$fimage4 = $image4->getInstance();
+						
+						
+						if(DIR_FILES_UPLOADED != $this->installData['DIR_FILES_UPLOADED']) { // if we're calling install from another c5 install - move the file to the new install
+							rename(DIR_FILES_UPLOADED."/".$fimage1->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage1->getFilename());
+							rename(DIR_FILES_UPLOADED."/".$fimage2->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage2->getFilename());
+							rename(DIR_FILES_UPLOADED."/".$fimage3->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage3->getFilename());
+							rename(DIR_FILES_UPLOADED."/".$fimage4->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage4->getFilename());
+						}
 						
 						$jsData['fileNames'] = array(
 							$fimage1->getFilename(),
