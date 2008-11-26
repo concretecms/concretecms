@@ -159,8 +159,10 @@
 	require('startup/process.php');
 	
 	## Record the view
-	$u->recordView($c);
-
+	if (STATISTICS_TRACK_PAGE_VIEWS == true) {
+		$u->recordView($c);
+	}
+	
 	## now we display (provided we've gotten this far)
 
 	$v = View::getInstance();

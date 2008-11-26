@@ -1,7 +1,6 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
-$from = array('info@concrete5.org', 'Forgot Password');
 $subject = t("Forgot Password");
 $body = t("
 
