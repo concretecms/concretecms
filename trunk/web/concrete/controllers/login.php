@@ -116,6 +116,16 @@ class LoginController extends Controller {
 			$mh->addParameter('uPassword', $oUser->resetUserPassword());
 			$mh->addParameter('uName', $oUser->getUserName());			
 			$mh->to($oUser->getUserEmail());
+			if (defined('EMAIL_ADDRESS_FORGOT_PASSWORD')) {
+				$mh->from(EMAIL_ADDRESS_FORGOT_PASSWORD,  t('Forgot Password'));
+			} else {
+				$adminUser = UserInfo::getByID(USER_SUPER_ID);
+				if (is_object($adminUser)) {
+					$mh->from($adminUser->getUserEmail(),  t('Forgot Password'));
+				} else {
+					$mh->from('info@concrete5.org', t('Forgot Password'));
+				}
+			}
 			$mh->load('forgot_password');
 			$mh->sendMail();
 			
