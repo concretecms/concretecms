@@ -80,7 +80,6 @@ define('DIRNAME_APP', 'concrete');
 
 # if "concrete/" does NOT exist in DIR_BASE then we set multi_site to on
 if (!is_dir(DIR_BASE . '/' . DIRNAME_APP)) {
-	print '1';
 	define("MULTI_SITE", 1);
 }
 
