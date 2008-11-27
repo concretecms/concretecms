@@ -21,7 +21,7 @@ function previewMarketplaceTheme(themeCID,themeName){
 <div class="ccm-dashboard-inner">
 		
 	<? if( !count($availableThemes) ){ ?>
-		<div>No themes found.</div>
+		<div><?=t('No themes found.')?></div>
 	<? }else{ ?>
 		<table id="themesGrid" width="100%">
 			<tr>

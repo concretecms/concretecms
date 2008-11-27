@@ -115,7 +115,7 @@ ul#ccm-select-marketplace-theme li .name a:hover{ text-decoration:underline}
 				*/ ?>	
 			
 				<? if( !count($availableThemes) ){ ?>
-					<div>No themes found.</div>
+					<div><?=t('No themes found.')?></div>
 				<? }else{ ?>
 						
 					<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil(count($tArray)/4)?>">
