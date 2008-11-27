@@ -33,7 +33,7 @@
 	 <target name="generate_po">
     	<echo msg="Generating Translation Files" />
     	<touch file="messages.po" />
-		<exec command="find ../web/concrete/ -iname '*.php' -exec xgettext --default-domain=messages --keyword=t -l PHP -j {} \;" />
+		<exec command="find export/concrete/ -iname '*.php' -exec xgettext --default-domain=messages --keyword=t -l PHP -j {} \;" />
 	</target>
 
 	<!--
