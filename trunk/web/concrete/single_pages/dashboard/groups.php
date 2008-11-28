@@ -159,7 +159,7 @@ if ($pOptions['needPaging']) { ?>
 		<tr>
 			<td colspan="3" class="header">
 			<input type="hidden" name="update" value="1" />
-			<?=$ih->submit(t('Add'), 'update-group-form')?>
+			<?=$ih->submit(t('Update'), 'update-group-form')?>
 			<?=$ih->button(t('Cancel'), $this->url('/dashboard/groups'), 'left')?>
 			</td>
 		</tr>
