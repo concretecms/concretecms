@@ -1,6 +1,7 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('collection_types');
+$stringHelper=Loader::helper('text');
 $tArray = PageTheme::getGlobalList();
 $tArray2 = PageTheme::getLocalList();
 $tArray = array_merge($tArray, $tArray2);
@@ -26,6 +27,8 @@ ul#ccm-select-marketplace-theme li .preview-wrap{float:right; width:20px; paddin
 ul#ccm-select-marketplace-theme li .thumb{height:80px; overflow:hidden; margin-bottom:8px;}
 ul#ccm-select-marketplace-theme li .name a{text-decoration:none}
 ul#ccm-select-marketplace-theme li .name a:hover{ text-decoration:underline}
+ul#ccm-select-marketplace-theme li { white-space:normal }
+ul#ccm-select-marketplace-theme li .desc{ font-size:10px; line-height:14px; }
 </style>
 
 <div class="ccm-pane-controls">
@@ -132,7 +135,7 @@ ul#ccm-select-marketplace-theme li .name a:hover{ text-decoration:underline}
 										<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" /></a>
 									</div>
 									<div class="name" style="margin-left:20px"><a href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>
-									<div class="desc"><?=$availableTheme->getThemeDescription() ?></div>
+									<div class="desc"><?=$stringHelper->shortText($availableTheme->getThemeDescription(),60) ?></div>
 									<? /* <a href="<?=$availableTheme->getThemeURL() ?>">Get Theme &raquo;</a> */ ?>
 								</li>
 							<? } ?> 
