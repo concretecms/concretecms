@@ -12,6 +12,9 @@ class LoginController extends Controller {
 		} else {
 			$this->set('uNameLabel', t('Username'));
 		}
+		if(strlen($_GET['uName'])) { // pre-populate the username if supplied
+			$this->set("uName",$_GET['uName']);
+		}
 	}
 	
 	/* automagically run by the controller once we're done with the current method */

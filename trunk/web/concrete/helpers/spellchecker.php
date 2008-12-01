@@ -13,12 +13,18 @@
 class SpellcheckerHelper{
 
 	var $wordSuggestions=array();
+	var $aspell_path = DIR_FILES_BIN_ASPELL;
 
 	//check to see if aspell is installed - returns a boolean
 	public function enabled(){
-		$mistakes = `echo "norzbibbit flagnbaggel koolalalooper" | aspell list`;
+		$mistakes = `echo "norzbibbit flagnbaggel koolalalooper" | {$this->aspell_path} list`;
 		return (strlen($mistakes)>0)?1:0;
 	}
+	
+	// sets the location of aspell if it's not in your path 
+	public function setAspellPath($path) {
+		$this->aspell_path = $path;
+	} 
 	
 	/** 
 	 * Returns a link to the js library, as well as actual strings that can be used
@@ -40,7 +46,7 @@ class SpellcheckerHelper{
 		$cleanStr =	preg_replace("/[^a-z0-9\'\-]/i",' ', $string);		
 		$cleanStr =	addslashes( $cleanStr );
 		
-		$mistakes = `echo "$cleanStr" | aspell list`;
+		$mistakes = `echo "$cleanStr" | {$this->aspell_path} list`;
 		// Get list or errors.
 		$offset=0; 
 		
@@ -67,7 +73,7 @@ class SpellcheckerHelper{
 	}
 	
 	public function makeSuggestions($word){
-		$suggestionTxt = `echo $word | aspell -a`;
+		$suggestionTxt = `echo $word | {$this->aspell_path}aspell -a`;
 		$suggestionTxtLines=explode("\n",$suggestionTxt);
 		foreach($suggestionTxtLines as $suggestionTxtLine){
 			if( substr($suggestionTxtLine,0,1)=='&' ){
