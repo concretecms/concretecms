@@ -33,6 +33,10 @@
 		}
 		
 		function translateFrom($text) {
+			// old stuff. Can remove in a later version.
+			$text = str_replace('href="{[CCM:BASE_URL]}', 'href="' . BASE_URL . DIR_REL, $text);
+			$text = str_replace('src="{[CCM:REL_DIR_FILES_UPLOADED]}', 'src="' . BASE_URL . REL_DIR_FILES_UPLOADED, $text);
+
 			// we have the second one below with the backslash due to a screwup in the
 			// 5.1 release. Can remove in a later version.
 			
