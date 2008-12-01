@@ -33,16 +33,17 @@
 		}
 		
 		function translateFrom($text) {
-			// keep links valid
-			$text = str_replace('href="{[CCM:BASE_URL]}', 'href="' . BASE_URL . DIR_REL, $text);
-			$text = str_replace('src="{[CCM:REL_DIR_FILES_UPLOADED]}', 'src="' . BASE_URL . REL_DIR_FILES_UPLOADED, $text);
+			// we have the second one below with the backslash due to a screwup in the
+			// 5.1 release. Can remove in a later version.
 			
 			$text = preg_replace(
 				array(
 					'/{CCM:CID_([0-9]+)}/i',
-					'/{[CCM:BASE_URL]}/i'),
+					'/{\[CCM:BASE_URL\]}/i',
+					'/{CCM:BASE_URL}/i'),
 				array(
 					BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=\\1',
+					BASE_URL . DIR_REL,
 					BASE_URL . DIR_REL)
 				, $text);
 			return $text;
@@ -58,7 +59,7 @@
 					'/' . $url2 . '/i'),
 				array(
 					'{CCM:CID_\\1}',
-					'{[CCM:BASE_URL]}')
+					'{CCM:BASE_URL}')
 				, $text);
 			return $text;
 		}
