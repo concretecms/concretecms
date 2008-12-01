@@ -1,8 +1,11 @@
 var SpellChecker={
 
 	checkField:function(field,trigger,editingTxt){
-		var f = $('#'+field); 
-		
+		if(field.length) { // if it's a string, we'll consider it an id
+			var f = $('#'+field); 
+		} else {
+			var f = field; // expecting jquery element
+		}
 		//determine and display mode
 		if(!editingTxt) editingTxt= ccmi18n_spellchecker.resumeEditing; //'<img src="'+CCM_REL+'/images/btn_resume_editing.gif" />';
 		
@@ -24,15 +27,20 @@ var SpellChecker={
 		$.ajax({type:"POST",url:url,data:qStr,
 			success: function(json){
 				eval('var jobj='+json);
-				SpellChecker.suggestMode(jobj);
+				SpellChecker.suggestMode(jobj,f);
 			}
 		});
 	},
 
-	suggestMode:function(jobj){ 
+	suggestMode:function(jobj,field){ 
 		if(!jobj || !jobj.fieldId) return false;
-		var f = $('#'+jobj.fieldId); 
-				
+		
+		if(field.length) { // if it's a string, we'll consider it an id
+			var f = $('#'+field); 
+		} else {
+			var f = field; // expecting jquery element
+		}
+		
 		//swap text area / field with suggest box div
 		var suggestId=jobj.fieldId+'SuggestBox';
 		suggestBox=document.getElementById(suggestId)

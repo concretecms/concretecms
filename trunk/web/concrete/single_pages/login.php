@@ -26,7 +26,7 @@
 	<? } else { ?>
 		<?=t('Username')?>
 	<? } ?></label><br/>
-	<input type="text" name="uName" id="uName" class="ccm-input-text">
+	<input type="text" name="uName" id="uName" <?= (isset($uName)?'value="'.$uName.'"':'');?> class="ccm-input-text">
 	</div>
 	<br>
 	<div>
