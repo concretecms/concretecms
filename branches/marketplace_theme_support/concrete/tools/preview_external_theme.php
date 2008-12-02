@@ -41,16 +41,7 @@ if (!function_exists('curl_init')) { ?>
 	$contents = curl_exec($curl_handle);
 	curl_close($curl_handle);
 	echo $contents;
-}
-
-/*
-foreach($areasBlocksHTML as $areaName=>$areaBlocksHTML){
-	echo '<br><br><strong>'.$areaName.'</strong>';
-	foreach($areaBlocksHTML as $areaBlockHTML){
-		echo $areaBlockHTML.'<br>';
-	}
-}
-*/
+} 
 /*
 foreach($areasBlocksHTML as $areaName=>$areaBlocksHTML){
 	echo '<br><br><strong>'.$areaName.'</strong>';

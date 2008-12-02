@@ -183,7 +183,7 @@ function previewMarketplaceTheme(themeCID,themeName,themeHandle){
 		href: "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/preview_external_theme_iframe.php?themeCID="+themeCID+'&previewCID='+CCM_CID+'&themeHandle='+themeHandle+'&ctID='+ctID,
 		width: '85%',
 		modal: false,
-		height: '80%'
+		height: '400px'
 	});	
 }
 
