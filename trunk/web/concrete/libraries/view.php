@@ -397,7 +397,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * @return void
 		*/	
 		public function render($view, $args = null) {
-
+			
 			try {			
 				if (is_array($args)) {
 					extract($args);
@@ -423,6 +423,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				
 				// Determine which inner item to load, load it, and stick it in $innerContent
 				$content = false;
+				
+				
 				
 				ob_start();			
 				if ($view instanceof Page) {
@@ -528,10 +530,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					ob_end_clean();
 				}
 				
+				Events::fire('on_before_render', $this);
+				
 				include($this->theme);
 				
 				$this->controller->runTask('on_render_complete', $this->controller->getTask());
-	
+				
+				Events::fire('on_after_render', $this);
+				
 				if (ob_get_level() == OB_INITIAL_LEVEL) {
 	
 					require(DIR_BASE_CORE . '/startup/shutdown.php');
