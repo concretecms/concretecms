@@ -536,7 +536,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				
 				$this->controller->runTask('on_render_complete', $this->controller->getTask());
 				
-				Events::fire('on_after_render', $this);
+				Events::fire('on_render_complete', $this);
 				
 				if (ob_get_level() == OB_INITIAL_LEVEL) {
 	
