@@ -9,6 +9,7 @@ $h = Loader::helper('concrete/interface'); ?>
 <div class="ccm-module">
 
 <form method="post" id="debug-form" action="<?=$this->url('/dashboard/settings', 'update_debug')?>">
+<?=$this->controller->token->output('update_debug')?>
 
 <h1><span><?=t('Debug Level')?></span></h1>
 
@@ -33,6 +34,8 @@ print $h->buttons($b1);
 </div>
 <div class="ccm-module">
 <form method="post" id="logging-form" action="<?=$this->url('/dashboard/settings', 'update_logging')?>">
+<?=$this->controller->token->output('update_logging')?>
+
 <h1><span><?=t('Logging')?></span></h1>
 <div class="ccm-dashboard-inner">
 <div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOG_ERRORS', 1, $enable_log_errors)?> <?=t('Log Application Exceptions')?></div>
@@ -71,6 +74,7 @@ print $h->buttons($b1);
 <? } else { ?>
 
 <form method="post" id="permissions-form" action="<?=$this->url('/dashboard/settings', 'update_permissions')?>">
+<?=$this->controller->token->output('update_permissions')?>
 
 <h2><?=t('Viewing Permissions')?></h2>
 
@@ -124,6 +128,7 @@ print $h->buttons($b1);
 <div class="ccm-module" style="width: 320px; margin-bottom: 0px">
 
 <form method="post" id="site-form" action="<?=$this->url('/dashboard/settings', 'update_sitename')?>">
+<?=$this->controller->token->output('update_sitename')?>
 
 <h1><span><?=t('Site Name')?></span></h1>
 
@@ -142,6 +147,7 @@ print $h->buttons($b1);
 </form>
 
 <form method="post" id="url-form" action="<?=$this->url('/dashboard/settings', 'update_rewriting')?>">
+<?=$this->controller->token->output('update_rewriting')?>
 
 <h1><span><?=t('Linking')?></span></h1>
 
@@ -184,6 +190,7 @@ print $h->buttons($b1);
 <div class="ccm-module" style="width: 380px; margin-bottom: 0px">
 
 <form method="post" id="user-settings-form" action="<?=$this->url('/dashboard/settings', 'update_user_settings')?>">
+<?=$this->controller->token->output('update_user_settings')?>
 
 <h1><span><?=t('Editing Preferences')?></span></h1>
 
@@ -209,6 +216,7 @@ print $h->buttons($b1);
 </form>
 
 <form method="post" id="maintenance-form" action="<?=$this->url('/dashboard/settings', 'update_maintenance')?>">
+<?=$this->controller->token->output('update_maintenance')?>
 
 <h1><span><?=t('Maintenance Mode')?></span></h1>
 <div class="ccm-dashboard-inner">

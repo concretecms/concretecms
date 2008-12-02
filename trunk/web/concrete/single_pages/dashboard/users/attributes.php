@@ -69,7 +69,7 @@ if ($_POST['add'] || $_POST['update']) {
 	}
 
 	if (!$valt->validate('add_or_update_user_attribute')) {
-		$error[] = t($valt->getErrorMessage());
+		$error[] = $valt->getErrorMessage();
 	}
 
 	if (count($error) == 0) {

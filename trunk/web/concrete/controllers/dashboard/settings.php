@@ -46,48 +46,68 @@ class DashboardSettingsController extends Controller {
 	}
 
 	public function update_maintenance() {
-		if ($this->isPost()) {
-			Config::save('SITE_MAINTENANCE_MODE', $this->post('site_maintenance_mode'));
-			if ($this->post('site_maintenance_mode') == 1) { 
-				$this->redirect('/dashboard/settings','maintenance_enabled');
-			} else {
-				$this->redirect('/dashboard/settings','maintenance_disabled');
+		if ($this->token->validate("update_maintenance")) {
+			if ($this->isPost()) {
+				Config::save('SITE_MAINTENANCE_MODE', $this->post('site_maintenance_mode'));
+				if ($this->post('site_maintenance_mode') == 1) { 
+					$this->redirect('/dashboard/settings','maintenance_enabled');
+				} else {
+					$this->redirect('/dashboard/settings','maintenance_disabled');
+				}
 			}
+		} else {
+			$this->set('error', array($this->token->getErrorMessage()));
 		}
 	}
 
 	public function update_sitename() {
-		if ($this->isPost()) {
-			Config::save('SITE', $this->post('SITE'));
-			$this->redirect('/dashboard/settings','sitename_saved');
+		if ($this->token->validate("update_sitename")) {
+			if ($this->isPost()) {
+				Config::save('SITE', $this->post('SITE'));
+				$this->redirect('/dashboard/settings','sitename_saved');
+			}
+		} else {
+			$this->set('error', array($this->token->getErrorMessage()));
 		}
 	}
 
 	public function update_user_settings() {
-		if ($this->isPost()) {
-			$u = new User();
-			$u->saveConfig('UI_BREADCRUMB', $this->post('ui_breadcrumb'));
-			$this->redirect('/dashboard/settings','editing_preferences_saved');
+		if ($this->token->validate("update_user_settings")) {
+			if ($this->isPost()) {
+				$u = new User();
+				$u->saveConfig('UI_BREADCRUMB', $this->post('ui_breadcrumb'));
+				$this->redirect('/dashboard/settings','editing_preferences_saved');
+			}
+		} else {
+			$this->set('error', array($this->token->getErrorMessage()));
 		}
 	}
 
 	public function update_debug() {
-		if ($this->isPost()) {
-			Config::save('SITE_DEBUG_LEVEL', $this->post('debug_level'));
-			$this->redirect('/dashboard/settings','set_developer','debug_saved');
+		if ($this->token->validate("update_debug")) {
+			if ($this->isPost()) {
+				Config::save('SITE_DEBUG_LEVEL', $this->post('debug_level'));
+				$this->redirect('/dashboard/settings','set_developer','debug_saved');
+			}
+		} else {
+			$this->set('error', array($this->token->getErrorMessage()));
 		}
 	}
 
 	public function update_logging() {
-		if ($this->isPost()) {
-			$eldq = $this->post('ENABLE_LOG_DATABASE_QUERIES') == 1 ? 1 : 0;
-			$elem = $this->post('ENABLE_LOG_EMAILS') == 1 ? 1 : 0;
-			$eler = $this->post('ENABLE_LOG_ERRORS') == 1 ? 1 : 0;
-			
-			Config::save('ENABLE_LOG_DATABASE_QUERIES', $eldq);
-			Config::save('ENABLE_LOG_EMAILS', $elem);
-			Config::save('ENABLE_LOG_ERRORS', $eler);
-			$this->redirect('/dashboard/settings','set_developer','logging_saved');
+		if ($this->token->validate("update_logging")) {
+			if ($this->isPost()) {
+				$eldq = $this->post('ENABLE_LOG_DATABASE_QUERIES') == 1 ? 1 : 0;
+				$elem = $this->post('ENABLE_LOG_EMAILS') == 1 ? 1 : 0;
+				$eler = $this->post('ENABLE_LOG_ERRORS') == 1 ? 1 : 0;
+				
+				Config::save('ENABLE_LOG_DATABASE_QUERIES', $eldq);
+				Config::save('ENABLE_LOG_EMAILS', $elem);
+				Config::save('ENABLE_LOG_ERRORS', $eler);
+				$this->redirect('/dashboard/settings','set_developer','logging_saved');
+			}
+		} else {
+			$this->set('error', array($this->token->getErrorMessage()));
 		}
 	}
 
@@ -126,7 +146,9 @@ class DashboardSettingsController extends Controller {
 	public function on_start() {
 		$prefsSelected = false;
 		$globalSelected = false;
-		$permsSelected = false;				
+		$permsSelected = false;
+		$this->token = Loader::helper('validation/token');
+		
 		switch($this->getTask()) {
 			case "set_developer":
 				$devSelected = true;
