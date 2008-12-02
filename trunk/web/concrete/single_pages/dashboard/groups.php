@@ -34,6 +34,10 @@ if ($_POST['add'] || $_POST['update']) {
 	if (!$gName) {
 		$error[] = t("Name required.");
 	}
+	
+	if (!$valt->validate('add_or_update_group')) {
+		$error[] = $valt->getErrorMessage();
+	}
 
 	if (count($error) == 0) {
 		if ($_POST['add']) {
@@ -110,6 +114,7 @@ if ($pOptions['needPaging']) { ?>
 <div class="ccm-dashboard-inner">
 
 <form method="post" id="add-group-form" action="<?=$this->url('/dashboard/groups/')?>">
+<?=$valt->output('add_or_update_group')?>
 <div style="margin:0px; padding:0px; width:100%; height:auto" >	
 <table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 <tr>
@@ -140,6 +145,7 @@ if ($pOptions['needPaging']) { ?>
 	<div class="ccm-dashboard-inner">
 	
 		<form method="post" id="update-group-form" action="<?=$this->url('/dashboard/groups/')?>">
+		<?=$valt->output('add_or_update_group')?>
 		<input type="hidden" name="gID" value="<?=$_REQUEST['gID']?>" />
 		<input type="hidden" name="task" value="edit" />
 		
@@ -185,7 +191,7 @@ if ($pOptions['needPaging']) { ?>
 			<script type="text/javascript">
 			deleteGroup = function() {
 				if (confirm('<?=$delConfirmJS?>')) { 
-					location.href = "<?=$this->url('/dashboard/groups', 'delete', $_REQUEST['gID'])?>";				
+					location.href = "<?=$this->url('/dashboard/groups', 'delete', $_REQUEST['gID'], $valt->generate('delete_group_' . $_REQUEST['gID']))?>";				
 				}
 			}
 			</script>

@@ -8,7 +8,7 @@ class DashboardGroupsController extends Controller {
 	
 	}	
 	
-	public function delete($delGroupId){
+	public function delete($delGroupId, $token = ''){
 
 		$u=new User();
 		try {
@@ -21,6 +21,11 @@ class DashboardGroupsController extends Controller {
 			
 			if(!($group instanceof Group)) {
 				throw new Exception(t('Invalid group ID.'));
+			}
+			
+			$valt = Loader::helper('validation/token');
+			if (!$valt->validate('delete_group_' . $delGroupId, $token)) {
+				throw new Exception($valt->getErrorMessage());
 			}
 			
 			$group->delete(); 

@@ -105,7 +105,7 @@ if ($_GET['uID']) {
 			}
 			
 			if (!$valt->validate('update_account_' . $_GET['uID'])) {
-				$error[] = t($valt->getErrorMessage());
+				$error[] = $valt->getErrorMessage();
 			}
 		
 			if (!$error) {
@@ -185,7 +185,7 @@ if ($_POST['create']) {
 	}
 
 	if (!$valt->validate('create_account')) {
-		$error[] = t($valt->getErrorMessage());
+		$error[] = $valt->getErrorMessage();
 	}
 	
 	if (!$error) {
