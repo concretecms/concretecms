@@ -23,6 +23,7 @@ if ($_REQUEST['task'] == 'edit') {
 
 $txt = Loader::helper('text');
 $ih = Loader::helper('concrete/interface');
+$valt = Loader::helper('validation/token');
 
 if ($_POST['add'] || $_POST['update']) {
 

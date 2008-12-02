@@ -9,6 +9,7 @@ $attribs = UserAttributeKey::getList(true);
 $uh = Loader::helper('concrete/user');
 $txt = Loader::helper('text');
 $vals = Loader::helper('validation/strings');
+$valt = Loader::helper('validation/token');
 $valc = Loader::helper('concrete/validation');
 $dtt = Loader::helper('form/date_time');
 $form = Loader::helper('form');
@@ -102,7 +103,10 @@ if ($_GET['uID']) {
 					$error[] = t('The two passwords provided do not match.');
 				}
 			}
-					
+			
+			if (!$valt->validate('update_account_' . $_GET['uID'])) {
+				$error[] = t($valt->getErrorMessage());
+			}
 		
 			if (!$error) {
 				// do the registration
@@ -180,6 +184,10 @@ if ($_POST['create']) {
 		$error[] = t('A password may not contain ", \', >, <, or any spaces.');
 	}
 
+	if (!$valt->validate('create_account')) {
+		$error[] = t($valt->getErrorMessage());
+	}
+	
 	if (!$error) {
 		// do the registration
 		$data = array('uName' => $username, 'uPassword' => $password, 'uEmail' => $_POST['uEmail']);
@@ -294,6 +302,7 @@ if (is_object($uo)) {
 	<div class="ccm-dashboard-inner">
 
 		<form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$this->url('/dashboard/users?uID=' . $_GET['uID'])?>">
+		<?=$valt->output('update_account_' . $_GET['uID'])?>
 		<input type="hidden" name="_disableLogin" value="1">
 	
 		<div style="margin:0px; padding:0px; width:100%; height:auto" >
@@ -535,7 +544,7 @@ if (is_object($uo)) {
 			<script type="text/javascript">
 			deleteUser = function() {
 				if (confirm('<?=$delConfirmJS?>')) { 
-					location.href = "<?=$this->url('/dashboard/users', delete, $uo->getUserID())?>";				
+					location.href = "<?=$this->url('/dashboard/users', delete, $uo->getUserID(), $valt->generate('delete_account'))?>";				
 				}
 			}
 			</script>
@@ -586,6 +595,7 @@ if (is_object($uo)) {
 	<div id="ccm-user-search-advanced" <? if ($_REQUEST['task'] == 'search') { ?> style="display: block" <? } ?>>
 	
 	<form method="get" action="<?=$this->url('/dashboard/users')?>" id="ccm-user-search-advanced-form">
+	
 	<input type="hidden" name="task" value="search" />
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >
 	<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
@@ -718,6 +728,8 @@ if (is_object($uo)) {
 	</div>
 	
 	<form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$this->url('/dashboard/users?task=create')?>">
+	<?=$valt->output('create_account')?>
+	
 	<input type="hidden" name="_disableLogin" value="1">
 
 	<h2><?=t('Required Information')?></h2>

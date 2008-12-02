@@ -38,6 +38,7 @@ if ($_REQUEST['task'] == 'edit') {
 }
 
 $txt = Loader::helper('text');
+$valt = Loader::helper('validation/token');
 
 if ($_POST['add'] || $_POST['update']) {
 	$ukHandle = $txt->sanitize($_POST['ukHandle']);
@@ -66,7 +67,11 @@ if ($_POST['add'] || $_POST['update']) {
 	if (($ukType == 'SELECT' || $ukType == 'RADIO' || $ukType == 'HTML') && !$ukValues) {
 		$error[] = t("A select attribute must have at least one option.");
 	}
-	
+
+	if (!$valt->validate('add_or_update_user_attribute')) {
+		$error[] = t($valt->getErrorMessage());
+	}
+
 	if (count($error) == 0) {
 		if ($_POST['add']) {
 			if ($ukHandle) {
@@ -111,6 +116,8 @@ if ($editMode) { ?>
 <div class="ccm-dashboard-inner">
 
 	<form method="post" id="ccm-attribute-update" action="<?=$this->url('/dashboard/users/attributes/')?>">
+	<?=$valt->output('add_or_update_user_attribute')?>
+	
 	<input type="hidden" name="ukID" value="<?=$_REQUEST['ukID']?>" />
 	<input type="hidden" name="task" value="edit" />
 	<input type="hidden" name="update" value="1" />
@@ -187,7 +194,8 @@ if ($editMode) { ?>
 <div class="ccm-dashboard-inner">
 
 <form method="post" id="ccm-user-add-attribute" action="<?=$this->url('/dashboard/users/attributes/')?>"><input type="hidden" name="add" value="1" />
-
+<?=$valt->output('add_or_update_user_attribute')?>
+	
 <div style="margin:0px; padding:0px; width:100%; height:auto" >	
 <table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 <tr>
