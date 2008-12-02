@@ -9,7 +9,7 @@ class DashboardUsersController extends Controller {
 	}
 	
 	
-	public function delete($delUserId){
+	public function delete($delUserId, $token = null){
 		$u=new User();
 		try {
 
@@ -35,6 +35,11 @@ class DashboardUsersController extends Controller {
 				throw new Exception(t('Invalid user ID.'));
 			}
 
+			$valt = Loader::helper('validation/token');
+			if (!$valt->validate('delete_account', $token)) {
+				throw new Exception($valt->getErrorMessage());
+			}
+			
 			$delUI->delete(); 
 			$resultMsg=t('User deleted successfully.');
 			
