@@ -11,7 +11,7 @@ $ctID=intval($_REQUEST['ctID']);
 $collectionType=CollectionType::getByID($ctID);
 if($collectionType) $ctHandle=$collectionType->getCollectionTypeHandle();
 
-$c = Page::getByID($previewCID,"ACTIVE");
+$c = Page::getByID($previewCID,"RECENT");
 $cp = new Permissions($c);
 if(!$cp->canWrite()) throw new Exception(_('Access Denied.'));
 
@@ -30,7 +30,7 @@ foreach($previewBlocksData as $previewBlockData){
     $bv->render($b);
 	$blockHTML=ob_get_contents();
 	ob_end_clean();	
-	$areasBlocksHTML[$previewBlockData['arHandle']][]='<div style="border:1px solid red; margin:16px 0px">'.$blockHTML.'</div>';
+	$areasBlocksHTML[$previewBlockData['arHandle']][]= $blockHTML;
 }
 
 $areasBlocksSerialized=serialize($areasBlocksHTML);

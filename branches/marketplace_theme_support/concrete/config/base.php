@@ -352,4 +352,7 @@ if (!defined('ENABLE_MARKETPLACE_SUPPORT')) {
 	define('ENABLE_MARKETPLACE_SUPPORT', true);
 }
 
+define('MARKETPLACE_DIRNAME_THEME_PREVIEW', 'previewable_themes');
+define('MARKETPLACE_THEME_PREVIEW_ASSETS_URL', 'http://c5org/' . MARKETPLACE_DIRNAME_THEME_PREVIEW);
+
 require_once(DIR_LIBRARIES_CORE . '/loader.php');

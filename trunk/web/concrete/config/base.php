@@ -353,4 +353,7 @@ define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the
 define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_version_number');
 define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
 
+define('MARKETPLACE_DIRNAME_THEME_PREVIEW', 'previewable_themes');
+define('MARKETPLACE_THEME_PREVIEW_ASSETS_URL', 'http://c5org/' . MARKETPLACE_DIRNAME_THEME_PREVIEW);
+
 require_once(DIR_LIBRARIES_CORE . '/loader.php');
