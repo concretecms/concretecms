@@ -1,16 +1,20 @@
 var SpellChecker={
 
 	checkField:function(field,trigger,editingTxt){
-		if(field.length) { // if it's a string, we'll consider it an id
+		
+		
+		if(field.toString() === field) { // if it's a string, we'll consider it an id
 			var f = $('#'+field); 
 		} else {
 			var f = field; // expecting jquery element
+			field = f.attr('id');
 		}
+		
 		//determine and display mode
 		if(!editingTxt) editingTxt= ccmi18n_spellchecker.resumeEditing; //'<img src="'+CCM_REL+'/images/btn_resume_editing.gif" />';
 		
 		//second click - switch back to edit mode 
-		if( trigger.innerHTML.indexOf(ccmi18n_spellchecker.resumeEditing)>=0 ){
+		if( trigger.innerHTML.indexOf(ccmi18n_spellchecker.resumeEditing)>=0 ) {
 			trigger.innerHTML=trigger.initTxt;
 			f.css('display','block');
 			$('#'+field+'SuggestBox').css('display','none');
@@ -34,12 +38,9 @@ var SpellChecker={
 
 	suggestMode:function(jobj,field){ 
 		if(!jobj || !jobj.fieldId) return false;
-		
-		if(field.length) { // if it's a string, we'll consider it an id
-			var f = $('#'+field); 
-		} else {
-			var f = field; // expecting jquery element
-		}
+
+		var f = field; // expecting jquery element
+		field = f.attr('id');
 		
 		//swap text area / field with suggest box div
 		var suggestId=jobj.fieldId+'SuggestBox';
