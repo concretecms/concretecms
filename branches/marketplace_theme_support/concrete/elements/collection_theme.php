@@ -139,7 +139,7 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; line-height:14px; }
 								<li class="themeWrap">
 									<div class="thumb"><a href="<?=$availableTheme->getThemeURL() ?>"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a></div>
 									<div class="preview-wrap">
-										<a onclick="previewMarketplaceTheme(<?=intval($availableTheme->getMarketPlaceCID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" href="javascript:void(0)" class="preview">
+										<a onclick="previewMarketplaceTheme(<?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" href="javascript:void(0)" class="preview">
 										<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" /></a>
 									</div>
 									<div class="name" ><a href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>

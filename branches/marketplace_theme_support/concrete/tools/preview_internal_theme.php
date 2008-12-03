@@ -1,4 +1,7 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 Loader::model('collection_types');
 Loader::library('view');
 
