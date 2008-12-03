@@ -505,12 +505,16 @@ class InstallController extends Controller {
 						$fimage3 = $image3->getInstance();
 						$fimage4 = $image4->getInstance();
 						
-						
+						// this is an irritating hack.
 						if(DIR_FILES_UPLOADED != $this->installData['DIR_FILES_UPLOADED']) { // if we're calling install from another c5 install - move the file to the new install
 							rename(DIR_FILES_UPLOADED."/".$fimage1->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage1->getFilename());
 							rename(DIR_FILES_UPLOADED."/".$fimage2->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage2->getFilename());
 							rename(DIR_FILES_UPLOADED."/".$fimage3->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage3->getFilename());
 							rename(DIR_FILES_UPLOADED."/".$fimage4->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage4->getFilename());
+							rename(DIR_FILES_UPLOADED_THUMBNAILS."/".$fimage1->getFilename(),  $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']."/".$fimage1->getFilename());
+							rename(DIR_FILES_UPLOADED_THUMBNAILS."/".$fimage2->getFilename(),  $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']."/".$fimage2->getFilename());
+							rename(DIR_FILES_UPLOADED_THUMBNAILS."/".$fimage3->getFilename(),  $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']."/".$fimage3->getFilename());
+							rename(DIR_FILES_UPLOADED_THUMBNAILS."/".$fimage4->getFilename(),  $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']."/".$fimage4->getFilename());
 						}
 						
 						$jsData['fileNames'] = array(
