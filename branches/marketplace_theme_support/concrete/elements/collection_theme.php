@@ -183,7 +183,7 @@ function previewInternalTheme(themeID,themeName){
 	var ctID=$("input[name=ctID]").val();
 	$.fn.dialog.open({
 		title: themeName,
-		href: "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/preview_theme_iframe.php?themeID="+themeID+'&previewCID='+CCM_CID+'&ctID='+ctID,
+		href: "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/themes/preview?themeID="+themeID+'&previewCID='+CCM_CID+'&ctID='+ctID,
 		width: '85%',
 		modal: false,
 		height: '75%' 
@@ -194,7 +194,7 @@ function previewMarketplaceTheme(themeCID,themeName,themeHandle){
 	var ctID=$("input[name=ctID]").val();
 	$.fn.dialog.open({
 		title: themeName,
-		href: "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/preview_external_theme_iframe.php?themeCID="+themeCID+'&previewCID='+CCM_CID+'&themeHandle='+themeHandle+'&ctID='+ctID,
+		href: "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/themes/preview?themeCID="+themeCID+'&previewCID='+CCM_CID+'&themeHandle='+themeHandle+'&ctID='+ctID,
 		width: '85%',
 		modal: false,
 		height: '75%' 
