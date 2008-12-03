@@ -22,12 +22,14 @@ $availableThemes=$themesHelper->getPreviewableList();
 <style>
 ul.ccm-area-theme-tabs.ccm-dialog-tabs{height:23px; margin-bottom:16px; padding-right:8px}
 ul.ccm-area-theme-tabs.ccm-dialog-tabs li{ float:right; border-right:1px solid #ddd; }
-ul#ccm-select-marketplace-theme li{text-align:center}
-ul#ccm-select-marketplace-theme li .preview-wrap{float:right; width:20px; padding-top:2px; text-align:right}
-ul#ccm-select-marketplace-theme li .thumb{height:80px; overflow:hidden; margin-bottom:8px;}
-ul#ccm-select-marketplace-theme li .name a{text-decoration:none}
-ul#ccm-select-marketplace-theme li .name a:hover{ text-decoration:underline}
-ul#ccm-select-marketplace-theme li { white-space:normal }
+
+li.themeWrap{text-align:center;white-space:normal}
+li.themeWrap .preview-wrap{float:right; width:20px; padding-top:2px; text-align:right}
+div.ccm-scroller-inner ul li.themeWrap .preview-wrap img{border:0px none}
+li.themeWrap .thumb{height:80px; overflow:hidden; margin-bottom:8px;}
+li.themeWrap .name { width:auto; margin:0px 20px;}
+li.themeWrap .name a{text-decoration:none}
+li.themeWrap .name a:hover{ text-decoration:underline} 
 ul#ccm-select-marketplace-theme li .desc{ font-size:10px; line-height:14px; }
 </style>
 
@@ -96,8 +98,14 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; line-height:14px; }
 						<? foreach($tArray as $t) { ?>
 						
 							<? $class = ($t->getThemeID() == $plID) ? 'ccm-item-selected' : ''; ?>
-							<li class="<?=$class?>"><a href="javascript:void(0)" ccm-theme-id="<?=$t->getThemeID()?>"><?=$t->getThemeThumbnail()?></a>
-							<span><?=$t->getThemeName()?></span>
+							<li class="<?=$class?> themeWrap">
+							
+								<a href="javascript:void(0)" ccm-theme-id="<?=$t->getThemeID()?>"><?=$t->getThemeThumbnail()?></a>
+								<div class="preview-wrap">
+									<a onclick="previewInternalTheme(<?=intval($t->getThemeID())?>,'<?=addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) ?>')" href="javascript:void(0)" class="preview">
+									<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" /></a>
+								</div>							
+								<div class="name" ><?=$t->getThemeName()?></div>
 						
 							</li>
 						<? } ?>
@@ -128,13 +136,13 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; line-height:14px; }
 						<div class="ccm-scroller-inner">
 							<ul id="ccm-select-marketplace-theme" style="width: <?=count($availableThemes) * 132?>px">			
 							<? foreach($availableThemes as $availableTheme){ ?>
-								<li>
+								<li class="themeWrap">
 									<div class="thumb"><a href="<?=$availableTheme->getThemeURL() ?>"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a></div>
 									<div class="preview-wrap">
 										<a onclick="previewMarketplaceTheme(<?=intval($availableTheme->getMarketPlaceCID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" href="javascript:void(0)" class="preview">
 										<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" /></a>
 									</div>
-									<div class="name" style="margin-left:20px"><a href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>
+									<div class="name" ><a href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>
 									<div class="desc"><?=$stringHelper->shortText($availableTheme->getThemeDescription(),60) ?></div>
 									<? /* <a href="<?=$availableTheme->getThemeURL() ?>">Get Theme &raquo;</a> */ ?>
 								</li>
@@ -176,6 +184,17 @@ ccm_submit = function() {
 	$('form[name=ccmPermissionsForm]').get(0).submit();
 } 
 
+function previewInternalTheme(themeID,themeName){
+	var ctID=$("input[name=ctID]").val();
+	$.fn.dialog.open({
+		title: themeName,
+		href: "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/preview_theme_iframe.php?themeID="+themeID+'&previewCID='+CCM_CID+'&ctID='+ctID,
+		width: '85%',
+		modal: false,
+		height: '75%' 
+	});	
+}
+
 function previewMarketplaceTheme(themeCID,themeName,themeHandle){
 	var ctID=$("input[name=ctID]").val();
 	$.fn.dialog.open({
@@ -183,7 +202,7 @@ function previewMarketplaceTheme(themeCID,themeName,themeHandle){
 		href: "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/preview_external_theme_iframe.php?themeCID="+themeCID+'&previewCID='+CCM_CID+'&themeHandle='+themeHandle+'&ctID='+ctID,
 		width: '85%',
 		modal: false,
-		height: '400px'
+		height: '75%' 
 	});	
 }
 

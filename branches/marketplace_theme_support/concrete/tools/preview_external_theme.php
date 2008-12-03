@@ -9,6 +9,9 @@ $collectionType=CollectionType::getByID($ctID);
 if($collectionType) $ctHandle=$collectionType->getCollectionTypeHandle();
 
 $c = Page::getByID($previewCID,"ACTIVE");
+$cp = new Permissions($c);
+if(!$cp->canWrite()) throw new Exception('Access Denied');
+
 //$previewVersion=$previewCollection->getVersionObject();
 $previewVersionID=$c->getVersionID();
 

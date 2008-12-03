@@ -1,2 +1,2 @@
-<iframe id="previewExternalIFrame" style="width:100%; border:0px; height:420px" src="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/preview_external_theme.php?themeCID=<?=intval($_REQUEST['themeCID'])?>&previewCID=<?=intval($_REQUEST['previewCID'])?>&themeHandle=<?=$_REQUEST['themeHandle']?>&ctID=<?=intval($_REQUEST['ctID'])?>">
+<iframe id="previewExternalIFrame" height="100%" style="width:100%; border:0px; " src="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/preview_external_theme.php?themeCID=<?=intval($_REQUEST['themeCID'])?>&previewCID=<?=intval($_REQUEST['previewCID'])?>&themeHandle=<?=$_REQUEST['themeHandle']?>&ctID=<?=intval($_REQUEST['ctID'])?>">
 </iframe>
