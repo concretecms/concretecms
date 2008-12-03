@@ -1,4 +1,7 @@
 <?
+
+defined('C5_EXECUTE') or die(_("Access Denied."));
+
 Loader::model('collection_types');
 
 $previewCID=intval($_REQUEST['previewCID']);
@@ -10,7 +13,7 @@ if($collectionType) $ctHandle=$collectionType->getCollectionTypeHandle();
 
 $c = Page::getByID($previewCID,"ACTIVE");
 $cp = new Permissions($c);
-if(!$cp->canWrite()) throw new Exception('Access Denied');
+if(!$cp->canWrite()) throw new Exception(_('Access Denied.'));
 
 //$previewVersion=$previewCollection->getVersionObject();
 $previewVersionID=$c->getVersionID();
