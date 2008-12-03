@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btSurvey">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="question" type="C" size="255">
+			<default value=""/>
+		</field>
+		<field name="requiresRegistration" type="I">
+			<default value="0"/>
+		</field>
+	</table>
+	<table name="btSurveyOptions">
+		<field name="optionID" type="I">
+			<key/>
+			<unsigned/>
+			<autoincrement/>
+		</field>
+		<field name="bID" type="I" />	
+		<field name="optionName" type="C" size="255" />
+		<field name="displayOrder" type="I">
+			<default value="0"/>
+		</field>
+	</table>
+	<table name="btSurveyResults">
+		<field name="resultID" type="I">
+			<key/>
+			<unsigned/>
+			<autoincrement/>
+		</field>
+		<field name="optionID" type="I">
+			<unsigned/>
+			<default value="0"/>
+		</field>
+		<field name="uID" type="I">
+			<unsigned/>
+			<default value="0"/>
+		</field>
+		<field name="bID" type="I" />	
+		<field name="cID" type="I" />	
+		<field name="ipAddress" type="C" size="128" />
+		<field name="timestamp" type="T">
+			<deftimestamp/>
+		</field>
+	</table>
+</schema>
+
+
+

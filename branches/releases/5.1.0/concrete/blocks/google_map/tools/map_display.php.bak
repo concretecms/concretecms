@@ -1,0 +1,58 @@
+<?
+require(dirname(__FILE__) . '/../controller.php');
+
+$b = Block::getByID( intval($_REQUEST['bID']) );
+$googleMap = new GoogleMapBlockController( $b );
+
+$bID = $b->getBlockID();
+/* 
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>	
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?=$googleMap->api_key?>" type="text/javascript"></script>
+<script>
+function GoogleMapInit<?=$bID?>(bID){
+		alert('init');
+    	if ( GBrowserIsCompatible() ) {
+        	var map = new GMap2(document.getElementById("map_canvas"+bID));
+        	map.setCenter(new GLatLng(37.4419, -122.1419), 13);
+			alert('not compatible');
+		}else alert('not compatible');
+}
+</script>
+</head>
+
+<body onload="GoogleMapInit<?=$bID?>(<?=$bID?>);">
+	<div id="map_canvas<?=$bID?>"></div>
+</body>
+
+</html>
+<? */ ?>
+
+<!DOCTYPE html "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Google Maps JavaScript API Example</title>
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?=$googleMap->api_key?>" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    function initialize() {
+      if (GBrowserIsCompatible()) {
+        var map = new GMap2(document.getElementById("map_canvas"));
+        map.setCenter(new GLatLng(37.4419, -122.1419), 13);
+      }
+    }
+
+    </script>
+  </head>
+  <body onload="initialize()" onunload="GUnload()">
+    <div id="map_canvas" style="width: 500px; height: 300px"></div>
+  </body>
+</html>
+
