@@ -15,8 +15,12 @@ if ($plID == 0) {
 }
 
 //marketplace
-$themesHelper = Loader::helper('concrete/marketplace/themes'); 
-$availableThemes=$themesHelper->getPreviewableList();
+if (ENABLE_MARKETPLACE_SUPPORT) {
+	$themesHelper = Loader::helper('concrete/marketplace/themes'); 
+	$availableThemes=$themesHelper->getPreviewableList();
+} else {
+	$availableThemes=array();
+}
 ?>
 
 <style>

@@ -6,6 +6,9 @@ class DashboardThemesMarketplaceController extends Controller {
 	protected $helpers = array('html');
 
 	public function view() {
+		if (ENABLE_MARKETPLACE_SUPPORT == false) {
+			$this->redirect('/dashboard/themes');
+		}
 		$themesHelper = Loader::helper('concrete/marketplace/themes'); 
 		
 		$availableThemes=$themesHelper->getPreviewableList();
