@@ -36,9 +36,6 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
  
  	<h1><?=t('Design')?></h1>
 
-
-	
-		
 		<form method="post" name="ccmPermissionsForm" action="<?=$c->getCollectionAction()?>">
 			<input type="hidden" name="plID" value="<?=$c->getCollectionThemeID()?>" />
 			<input type="hidden" name="ctID" value="<?=$c->getCollectionTypeID()?>" />
@@ -76,13 +73,14 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 				<? } ?>
 				
 				
-				
+			<? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
 			<div style="height:1px; overflow: visible; width:100%;">
 				<ul style="position:relative; right:0px; top:4px; width:auto" class="ccm-dialog-tabs ccm-area-theme-tabs">
 					<li><a href="javascript:void(0)" class="ccm-more-themes-interface" id="ccm-more-themes-interface"><?=t('Get More Themes')?></a></li>				
 					<li class="ccm-nav-active"><a href="javascript:void(0)" class="ccm-current-themes-interface" id="ccm-current-themes-interface"><?=t('Current Themes')?></a></li>
 				</ul>	
 			</div>
+			<? } ?>
 				
 			<div id="ccm-current-themes-interface-tab">
 				

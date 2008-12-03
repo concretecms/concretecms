@@ -342,14 +342,17 @@ define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_versi
 define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
 
 # Marketplace Vars
+if (!defined('ENABLE_MARKETPLACE_SUPPORT')) {
+	define('ENABLE_MARKETPLACE_SUPPORT', true);
+}
+if (!defined('MARKETPLACE_BLOCK_LIST_WS')) {
+	define('MARKETPLACE_BLOCK_LIST_WS', 'http://www.concrete5.org/tools/get_marketplace_block_list/');
+}
 if (!defined('MARKETPLACE_THEME_LIST_WS')) {
 	define('MARKETPLACE_THEME_LIST_WS', 'http://www.concrete5.org/tools/get_marketplace_theme_list/');
 }
 if (!defined('MARKETPLACE_THEME_PREVIEW_URL')) {
 	define('MARKETPLACE_THEME_PREVIEW_URL', 'http://www.concrete5.org/tools/preview_theme/');
-}
-if (!defined('ENABLE_MARKETPLACE_SUPPORT')) {
-	define('ENABLE_MARKETPLACE_SUPPORT', true);
 }
 
 define('MARKETPLACE_DIRNAME_THEME_PREVIEW', 'previewable_themes');
