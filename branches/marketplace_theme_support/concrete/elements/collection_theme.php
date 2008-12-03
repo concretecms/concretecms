@@ -24,13 +24,12 @@ ul.ccm-area-theme-tabs.ccm-dialog-tabs{height:23px; margin-bottom:16px; padding-
 ul.ccm-area-theme-tabs.ccm-dialog-tabs li{ float:right; border-right:1px solid #ddd; }
 
 li.themeWrap{text-align:center;white-space:normal}
-li.themeWrap .preview-wrap{float:right; width:20px; padding-top:2px; text-align:right}
+li.themeWrap img.ccm-preview {float:right; padding-top:2px;}
 div.ccm-scroller-inner ul li.themeWrap .preview-wrap img{border:0px none}
-li.themeWrap .thumb{height:80px; overflow:hidden; margin-bottom:8px;}
-li.themeWrap .name { width:auto; margin:0px 20px;}
-li.themeWrap .name a{text-decoration:none}
-li.themeWrap .name a:hover{ text-decoration:underline} 
-ul#ccm-select-marketplace-theme li .desc{ font-size:10px; line-height:14px; }
+li.themeWrap .ccm-theme-name { width:auto; margin:0px 20px;}
+li.themeWrap .ccm-theme-name a{text-decoration:none}
+li.themeWrap .ccm-theme-name a:hover{ text-decoration:underline} 
+ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 </style>
 
 <div class="ccm-pane-controls">
@@ -87,7 +86,7 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; line-height:14px; }
 				
 			<div id="ccm-current-themes-interface-tab">
 				
-				<h2 ><?=t('Choose a Theme')?></h2>
+				<h2 ><?=t('Themes')?></h2>
 	
 				<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil(count($tArray)/4)?>">
 					<a href="javascript:void(0)" class="ccm-scroller-l"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_l.png" width="28" height="79" alt="l" /></a>
@@ -101,11 +100,9 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; line-height:14px; }
 							<li class="<?=$class?> themeWrap">
 							
 								<a href="javascript:void(0)" ccm-theme-id="<?=$t->getThemeID()?>"><?=$t->getThemeThumbnail()?></a>
-								<div class="preview-wrap">
 									<a onclick="previewInternalTheme(<?=intval($t->getThemeID())?>,'<?=addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) ?>')" href="javascript:void(0)" class="preview">
-									<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" /></a>
-								</div>							
-								<div class="name" ><?=$t->getThemeName()?></div>
+									<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" class="ccm-preview" /></a>
+								<div class="ccm-theme-name" ><?=$t->getThemeName()?></div>
 						
 							</li>
 						<? } ?>
@@ -117,7 +114,7 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; line-height:14px; }
 				
 			<div id="ccm-more-themes-interface-tab" style="display:none">	 
 			 
-				<h2><?=t('Get More Themes')?></h2> 
+				<h2><?=t('Themes')?></h2> 
 				<? /* 			
 				<ul class="ccm-dialog-tabs ccm-area-theme-tabs">
 					<li><a href="javascript:void(0)" class="ccm-more-themes-interface" id="ccm-more-themes-interface"><?=t('Get More Themes')?></a></li>				
@@ -137,12 +134,10 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; line-height:14px; }
 							<ul id="ccm-select-marketplace-theme" style="width: <?=count($availableThemes) * 132?>px">			
 							<? foreach($availableThemes as $availableTheme){ ?>
 								<li class="themeWrap">
-									<div class="thumb"><a href="<?=$availableTheme->getThemeURL() ?>"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a></div>
-									<div class="preview-wrap">
+									<a href="<?=$availableTheme->getThemeURL() ?>" target="_blank"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a>
 										<a onclick="previewMarketplaceTheme(<?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" href="javascript:void(0)" class="preview">
-										<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" /></a>
-									</div>
-									<div class="name" ><a href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>
+										<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" class="ccm-preview" /></a>
+									<div class="ccm-theme-name" ><a href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>
 									<div class="desc"><?=$stringHelper->shortText($availableTheme->getThemeDescription(),60) ?></div>
 									<? /* <a href="<?=$availableTheme->getThemeURL() ?>">Get Theme &raquo;</a> */ ?>
 								</li>
