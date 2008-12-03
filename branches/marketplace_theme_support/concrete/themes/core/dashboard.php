@@ -24,6 +24,7 @@ require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); ?>
 
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.dialog.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.base.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.themes.js"></script>
 
 <script type="text/javascript">
 $(function() {

@@ -98,8 +98,8 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 							<li class="<?=$class?> themeWrap">
 							
 								<a href="javascript:void(0)" ccm-theme-id="<?=$t->getThemeID()?>"><?=$t->getThemeThumbnail()?></a>
-									<a onclick="previewInternalTheme(<?=intval($t->getThemeID())?>,'<?=addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) ?>')" href="javascript:void(0)" class="preview">
-									<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" class="ccm-preview" /></a>
+									<? if ($t->getThemeID() != $plID) { ?><a onclick="ccm_previewInternalTheme(<?=$c->getCollectionID()?>, <?=intval($t->getThemeID())?>,'<?=addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) ?>')" href="javascript:void(0)" class="preview">
+									<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" class="ccm-preview" /></a><? } ?>
 								<div class="ccm-theme-name" ><?=$t->getThemeName()?></div>
 						
 							</li>
@@ -133,7 +133,7 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 							<? foreach($availableThemes as $availableTheme){ ?>
 								<li class="themeWrap">
 									<a href="<?=$availableTheme->getThemeURL() ?>" target="_blank"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a>
-										<a onclick="previewMarketplaceTheme(<?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" href="javascript:void(0)" class="preview">
+										<a onclick="ccm_previewMarketplaceTheme(<?=$c->getCollectionID()?>, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" href="javascript:void(0)" class="preview">
 										<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" class="ccm-preview" /></a>
 									<div class="ccm-theme-name" ><a href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>
 									<div class="desc"><?=$stringHelper->shortText($availableTheme->getThemeDescription(),60) ?></div>
@@ -176,28 +176,6 @@ ccm_submit = function() {
 	//ccm_showTopbarLoader();
 	$('form[name=ccmPermissionsForm]').get(0).submit();
 } 
-
-function previewInternalTheme(themeID,themeName){
-	var ctID=$("input[name=ctID]").val();
-	$.fn.dialog.open({
-		title: themeName,
-		href: "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/themes/preview?themeID="+themeID+'&previewCID='+CCM_CID+'&ctID='+ctID,
-		width: '85%',
-		modal: false,
-		height: '75%' 
-	});	
-}
-
-function previewMarketplaceTheme(themeCID,themeName,themeHandle){
-	var ctID=$("input[name=ctID]").val();
-	$.fn.dialog.open({
-		title: themeName,
-		href: "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/themes/preview?themeCID="+themeCID+'&previewCID='+CCM_CID+'&themeHandle='+themeHandle+'&ctID='+ctID,
-		width: '85%',
-		modal: false,
-		height: '75%' 
-	});	
-}
 
 $(function() {
 	$("a.ccm-scroller-l").hover(function() {

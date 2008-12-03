@@ -1,20 +1,8 @@
 <style>
-table#themesGrid td{ padding:8px; text-align:center  } 
+table#themesGrid td{ padding:8px 30px 15px 8px; text-align:center  } 
 table#themesGrid td .name{ font-weight:bold; margin-top:4px; font-size:14px; margin-left:20px; }
-table#themesGrid td .desc{ margin-bottom:4px}
+table#themesGrid td .desc{ margin-bottom:4px; line-height: 16px; }
 </style>
-
-<script>
-function previewMarketplaceTheme(themeCID,themeName){
-	$.fn.dialog.open({
-		title: themeName,
-		href: "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/preview_external_theme.php?cID="+themeCID,
-		width: '85%',
-		modal: false,
-		height: '80%'
-	});	
-}
-</script>
 
 <h1><span><?=t('Available Themes')?></span></h1>
 
@@ -34,15 +22,13 @@ function previewMarketplaceTheme(themeCID,themeName){
 					$colCount=0;
 				}
 				?>
-				<td width="<?=round(100/$numCols)?>%"> 
-					<a href="<?=$availableTheme->getThemeURL() ?>"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a>			
-					<div style="float:right; width:20px; padding-top:6px;">
-						<a onclick="previewMarketplaceTheme(<?=$availableTheme->getMarketPlaceCID()?>,'<?=addslashes($availableTheme->getThemeName()) ?>')" 
-						href="javascript:void(0)" class="preview"><img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" /></a>
-					</div>
-					<div class="name"><a href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>
+				<td valign="top" width="<?=round(100/$numCols)?>%"> 
+					<a href="<?=$availableTheme->getThemeURL() ?>"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a>		
+					<div class="name"><a href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a>
+					<a onclick="ccm_previewMarketplaceTheme(1, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" 
+						href="javascript:void(0)" class="preview"><img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" /></a></div>
 					<div class="desc"><?=$availableTheme->getThemeDescription() ?></div>
-					<a href="<?=$availableTheme->getThemeURL() ?>">Get Theme &raquo;</a>
+					<a href="<?=$availableTheme->getThemeURL() ?>"><?=t('Get Theme')?> &raquo;</a>
 				</td>
 			<?  $colCount++;
 			}
