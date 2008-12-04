@@ -170,34 +170,56 @@ $(function() {
 	
 				tbl = document.getElementById("ccmPermissionsTable");	   
 				row1 = tbl.insertRow(-1); // insert at bottom of table. safari, wtf ?                            
+				row1.id = "_row_uID_" + uID;
 				row2 = tbl.insertRow(-1); // insert at bottom of table. safari, wtf ?                            
 				row3 = tbl.insertRow(-1); // insert at bottom of table. safari, wtf ?    
 				
 				row1.className = rowValue.replace(":","_");
-				row1.id = "_row_uID_" + uID;
 				row2.className = rowValue.replace(":","_");
 				row3.className = rowValue.replace(":","_");
 				
-				row1innerHTML = '<th colspan="7" style="text-align: left; white-space: nowrap"><a href="javascript:removePermissionRow(\'' + rowValue.replace(':','_') + '\',\'' + rowText + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12" style="float: right" ></a>' + uName + '</td>';
-				row2innerHTML = '<td valign="top" style="text-align: center"><strong><?=t('Read')?></strong></td>';
-				row2innerHTML += '<td valign="top" ><input type="checkbox" name="areaRead[]" value="' + rowValue + '"></td>';
-				row2innerHTML += '<td><div style="width: 54px; text-align: right"><strong><?=t('Write')?></strong></div></td><td><input type="checkbox" name="areaEdit[]" value="' + rowValue + '"></td>';
-				row2innerHTML += '<td><div style="width: 54px; text-align: right"><strong><?=t('Delete')?></strong></div></td><td><input type="checkbox" name="areaDelete[]" value="' + rowValue + '"></td>';
-				row2innerHTML += '<td valign="top" width="100%"><div style="width: 225px">&nbsp;</div></td>';
-				row3innerHTML = '<td valign="top"  style="text-align: center"><strong><?=t('Add')?></strong></td>';
-				row3innerHTML += '<td colspan="6" width="100%"><div style="width: 460px;">';
+				row1Cell = document.createElement("TH");
+				row1Cell.innerHTML = '<a href="javascript:removePermissionRow(\'' + rowValue.replace(':','_') + '\',\'' + rowText + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12" style="float: right" ></a>' + rowText;
+				row1Cell.colSpan = 7;
+				row1Cell.className =  'ccm-permissions-header';
+				row1.appendChild(row1Cell);
+				
+				row2Cell1 = row2.insertCell(0);
+				row2Cell2 = row2.insertCell(1);
+				row2Cell3 = row2.insertCell(2);
+				row2Cell4 = row2.insertCell(3);
+				row2Cell5 = row2.insertCell(4);
+				row2Cell6 = row2.insertCell(5);
+				row2Cell7 = row2.insertCell(6);
+				
+				row2Cell1.vAlign = 'top';
+				row2Cell2.vAlign = 'top';
+				row2Cell3.vAlign = 'top';
+				row2Cell4.vAlign = 'top';
+				row2Cell5.vAlign = 'top';
+				row2Cell6.vAlign = 'top';
+				row2Cell7.width = '100%';
+				
+				row2Cell1.innerHTML = '<div style="text-align: center"><strong><?=t('Read')?></strong></div>';
+				row2Cell2.innerHTML = '<input type="checkbox" name="areaRead[]" value="' + rowValue + '">';
+				row2Cell3.innerHTML = '<div style="width: 54px; text-align: right"><strong><?=t('Write')?></strong></div>';
+				row2Cell4.innerHTML = '<input type="checkbox" name="areaEdit[]" value="' + rowValue + '" />';
+				row2Cell5.innerHTML = '<div style="width: 54px; text-align: right"><strong><?=t('Delete')?></strong></div>';
+				row2Cell6.innerHTML = '<input type="checkbox" name="areaDelete[]" value="' + rowValue + '" />';
+				row2Cell7.innerHTML = '<div style="width: 225px">&nbsp;</div>';
+				
+				row3Cell1 = row3.insertCell(0);
+				row3Cell1.vAlign = 'top';
+				row3Cell1.innerHTML = '<div style="text-align: center"><strong><?=t('Add')?></strong></div>';
+				row3Cell2 = row3.insertCell(1);
+				row3Cell2.colSpan = 7;
+				row3Cell2.vAlign = 'top';
+				row3Cell2.width = '100%';
+				row3Cell2.innerHTML = '<div style="width: 460px;">';
 				<? foreach ($btArray as $bt) { ?>
-					row3innerHTML += '<span style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="' + rowValue + '" />&nbsp;<?=$bt->getBlockTypeName()?></span>';
-				<? } ?>	
-				row3innerHTML += '</div></td>';
-				
-				row1.innerHTML = row1innerHTML;
-				row2.innerHTML = row2innerHTML;
-				row3.innerHTML = row3innerHTML;
-				
-				tbl.appendChild(row1);
-				tbl.appendChild(row2);
-				tbl.appendChild(row3);
+					row3Cell2.innerHTML += '<div style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="' + rowValue + '" />&nbsp;<?=$bt->getBlockTypeName()?></div>';
+				<? } ?>		
+				row3Cell2.innerHTML += '</div>';
 			}
 			
 			function ccm_triggerSelectGroup(gID, gName) {
@@ -219,26 +241,48 @@ $(function() {
 				row2.className = rowValue.replace(":","_");
 				row3.className = rowValue.replace(":","_");
 				
-				row1innerHTML = '<th colspan="7" style="text-align: left; white-space: nowrap"><a href="javascript:removePermissionRow(\'' + rowValue.replace(':','_') + '\',\'' + rowText + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12" style="float: right" ></a>' + rowText + '</td>';
-				row2innerHTML = '<td valign="top" style="text-align: center"><strong><?=t('Read')?></strong></td>';
-				row2innerHTML += '<td valign="top" ><input type="checkbox" name="areaRead[]" value="' + rowValue + '"></td>';
-				row2innerHTML += '<td><div style="width: 54px; text-align: right"><strong><?=t('Write')?></strong></div></td><td><input type="checkbox" name="areaEdit[]" value="' + rowValue + '"></td>';
-				row2innerHTML += '<td><div style="width: 54px; text-align: right"><strong><?=t('Delete')?></strong></div></td><td><input type="checkbox" name="areaDelete[]" value="' + rowValue + '"></td>';
-				row2innerHTML += '<td valign="top" width="100%"><div style="width: 225px">&nbsp;</div></td>';
-				row3innerHTML = '<td valign="top"  style="text-align: center"><strong><?=t('Add')?></strong></td>';
-				row3innerHTML += '<td colspan="6" width="100%"><div style="width: 460px;">';
+				row1Cell = document.createElement("TH");
+				row1Cell.innerHTML = '<a href="javascript:removePermissionRow(\'' + rowValue.replace(':','_') + '\',\'' + rowText + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12" style="float: right" ></a>' + rowText;
+				row1Cell.colSpan = 7;
+				row1Cell.className =  'ccm-permissions-header';
+				row1.appendChild(row1Cell);
+				
+				row2Cell1 = row2.insertCell(0);
+				row2Cell2 = row2.insertCell(1);
+				row2Cell3 = row2.insertCell(2);
+				row2Cell4 = row2.insertCell(3);
+				row2Cell5 = row2.insertCell(4);
+				row2Cell6 = row2.insertCell(5);
+				row2Cell7 = row2.insertCell(6);
+				
+				row2Cell1.vAlign = 'top';
+				row2Cell2.vAlign = 'top';
+				row2Cell3.vAlign = 'top';
+				row2Cell4.vAlign = 'top';
+				row2Cell5.vAlign = 'top';
+				row2Cell6.vAlign = 'top';
+				row2Cell7.width = '100%';
+				
+				row2Cell1.innerHTML = '<div style="text-align: center"><strong><?=t('Read')?></strong></div>';
+				row2Cell2.innerHTML = '<input type="checkbox" name="areaRead[]" value="' + rowValue + '">';
+				row2Cell3.innerHTML = '<div style="width: 54px; text-align: right"><strong><?=t('Write')?></strong></div>';
+				row2Cell4.innerHTML = '<input type="checkbox" name="areaEdit[]" value="' + rowValue + '" />';
+				row2Cell5.innerHTML = '<div style="width: 54px; text-align: right"><strong><?=t('Delete')?></strong></div>';
+				row2Cell6.innerHTML = '<input type="checkbox" name="areaDelete[]" value="' + rowValue + '" />';
+				row2Cell7.innerHTML = '<div style="width: 225px">&nbsp;</div>';
+				
+				row3Cell1 = row3.insertCell(0);
+				row3Cell1.vAlign = 'top';
+				row3Cell1.innerHTML = '<div style="text-align: center"><strong><?=t('Add')?></strong></div>';
+				row3Cell2 = row3.insertCell(1);
+				row3Cell2.colSpan = 7;
+				row3Cell2.vAlign = 'top';
+				row3Cell2.width = '100%';
+				row3Cell2.innerHTML = '<div style="width: 460px;">';
 				<? foreach ($btArray as $bt) { ?>
-					row3innerHTML += '<span style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="' + rowValue + '" />&nbsp;<?=$bt->getBlockTypeName()?></span>';
-				<? } ?>	
-				row3innerHTML += '</div></td>';
-				
-				row1.innerHTML = row1innerHTML;
-				row2.innerHTML = row2innerHTML;
-				row3.innerHTML = row3innerHTML;
-				
-				tbl.appendChild(row1);
-				tbl.appendChild(row2);
-				tbl.appendChild(row3);
+					row3Cell2.innerHTML += '<div style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="' + rowValue + '" />&nbsp;<?=$bt->getBlockTypeName()?></div>';
+				<? } ?>		
+				row3Cell2.innerHTML += '</div>';
 				
 			}
 			
