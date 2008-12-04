@@ -14,13 +14,15 @@ class PageThemeRemote extends PageTheme {
 	protected $remoteThumbURL='';
 	protected $cID='';
 	
-	function loadTheme( $options=array() ){
-		if($options['name']) $this->ptName=$options['name'];
-		if($options['cID']) $this->cID=$options['cID'];
-		if($options['handle']) $this->ptHandle=$options['handle'];
-		if($options['description']) $this->ptDescription=$options['description'];
-		if($options['url']) $this->ptURL=$options['url']; 
-		if($options['thumbnail']) $this->remoteThumbURL=$options['thumbnail']; 
+	// we have to explicitly cast these as their types otherwise they get serialized as simplexmlelement and we can't retrieve
+	// them from the cache easily
+	function loadFromXML( $options=array() ){
+		if($options['name']) $this->ptName= (string) $options['name'];
+		if($options['cID']) $this->cID= (int) $options['cID'];
+		if($options['handle']) $this->ptHandle= (string) $options['handle'];
+		if($options['description']) $this->ptDescription = (string)  $options['description'];
+		if($options['url']) $this->ptURL = (string) $options['url']; 
+		if($options['thumbnail']) $this->remoteThumbURL = (string) $options['thumbnail']; 
 	}	
 	public function getRemoteCollectionID(){ return $this->cID; }
 	public function getThemeThumbnail() {

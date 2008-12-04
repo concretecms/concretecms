@@ -53,24 +53,24 @@ if(ENABLE_MARKETPLACE_SUPPORT){
 </div>
 
 <? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
-<div id="ccm-add-marketplace-tab">
+<div id="ccm-add-marketplace-tab" style="display: none">
 	<h1><?=t('Add From Marketplace')?></h1>
 	<div id="ccm-block-type-list">
-	<? if (count($blockTypes) > 0) {
+	<? if (count($marketplaceBlockTypes) > 0) {
 
 		foreach($marketplaceBlockTypes as $bt) { 
 			$btIcon = $ci->getBlockTypeIconURL($bt);
 			?>	
 			<div class="ccm-block-type ccm-external-block-type">
-				<a class="ccm-block-type-help" title="<?=t('Learn more about this block type.')?>" href="<?=$bt->getRemoteURL()?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/help.png" width="14" height="14" /></a>
-				<div class="price">$<?=$bt->getPrice()?></div>
-				<a class="ccm-block-type-inner"  style="background-image: url(<?=$btIcon?>)"  href="#"><?=$bt->getBlockTypeName()?></a>
+				<a class="ccm-block-type-help" href="<?=$bt->getRemoteURL()?>" target="_blank"><img src="<?=ASSETS_URL_IMAGES?>/icons/help.png" width="14" height="14" /></a>
+				<div class="ccm-block-price"><? if ($bt->getPrice() == '0.00') { print t('Free'); } else { print '$' . $bt->getPrice(); } ?></div>
+				<a class="ccm-block-type-inner"  style="background-image: url(<?=$btIcon?>)"  href="<?=$bt->getRemoteURL()?>" target="_blank"><?=$bt->getBlockTypeName()?></a>
 				<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeHandle()?>"><?=$bt->getBlockTypeDescription()?></div>
 				<div class="ccm-spacer"></div>
 			</div>
 		<? }
 	} else { ?>
-		<p><?=t('No block types can be added to this area.')?></p>
+		<p><?=t('Unable to connect to the marketplace.')?></p>
 	<? } ?>
 	</div>
 </div>

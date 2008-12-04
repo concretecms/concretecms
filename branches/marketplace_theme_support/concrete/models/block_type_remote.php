@@ -16,14 +16,14 @@ class BlockTypeRemote extends BlockType{
 	protected $remoteURL='';
 	protected $price=0.00;	
 
-	function loadBlock( $options=array() ){
-		if($options['name']) $this->btName=$options['name'];
+	function loadFromXML( $options=array() ){
+		if($options['name']) $this->btName=(string) $options['name'];
 		//if($options['cID']) $this->cID=$options['cID'];
-		if($options['handle']) $this->btHandle=$options['handle'];
-		if($options['description']) $this->btDescription=$options['description'];
-		if($options['url']) $this->remoteURL=$options['url']; 
-		if($options['icon']) $this->remoteIconURL=$options['icon']; 
-		if($options['price']) $this->price=$options['price']; 
+		if($options['handle']) $this->btHandle= (string) $options['handle'];
+		if($options['description']) $this->btDescription= (string) $options['description'];
+		if($options['url']) $this->remoteURL= (string) $options['url']; 
+		if($options['icon']) $this->remoteIconURL= (string) $options['icon']; 
+		if($options['price']) $this->price= (string) $options['price']; 
 	}	
 
 	public function getPrice(){ return sprintf("%.2f",floatval($this->price)); }

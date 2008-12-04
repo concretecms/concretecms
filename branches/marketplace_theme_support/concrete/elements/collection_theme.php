@@ -125,7 +125,7 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 				*/ ?>	
 			
 				<? if( !count($availableThemes) ){ ?>
-					<div><?=t('No themes found.')?></div>
+					<div><?=t('Unable to connect to the marketplace.')?></div>
 				<? }else{ ?>
 						
 					<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil(count($availableThemes)/4)?>" >
