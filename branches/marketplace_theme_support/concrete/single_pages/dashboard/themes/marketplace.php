@@ -9,7 +9,7 @@ table#themesGrid td .desc{ margin-bottom:4px; line-height: 16px; }
 <div class="ccm-dashboard-inner">
 		
 	<? if( !count($availableThemes) ){ ?>
-		<div><?=t('No themes found.')?></div>
+		<div><?=t('Unable to connect to the marketplace.')?></div>
 	<? }else{ ?>
 		<table id="themesGrid" width="100%">
 			<tr>

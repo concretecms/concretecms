@@ -5,23 +5,28 @@ Loader::model('block_type_remote');
 
 class ConcreteMarketplaceBlocksHelper { 
 
-	function getPreviewableList(){
-		$fh = Loader::helper('file'); 
-		// Retrieve the URL contents 
-		$xml = $fh->getContents(MARKETPLACE_BLOCK_LIST_WS);
-		if(!$xml || !strlen($xml)) return array();	
-		//echo htmlspecialchars($xml);
-		// Parse the returned XML file
-		$enc = mb_detect_encoding($xml);
-		$xml = mb_convert_encoding($xml, 'UTF-8', $enc);
-		$this->xmlObj = new SimpleXMLElement($xml);
-		if(!$this->xmlObj) return array();	
-		$blockTypes=array();
-		foreach($this->xmlObj->block as $block){
-			$blockType = new BlockTypeRemote();
-			$blockType->loadBlock($block);			
-			$blockTypes[]=$blockType;
-		}	
+	function getPreviewableList() {
+		$blockTypes = Cache::get('marketplace_block_list', false);
+		if (!is_array($blockTypes)) {
+			$fh = Loader::helper('file'); 
+			// Retrieve the URL contents 
+			$xml = $fh->getContents(MARKETPLACE_BLOCK_LIST_WS);
+			$blockTypes=array();
+			if($xml || strlen($xml)) {
+				// Parse the returned XML file
+				$enc = mb_detect_encoding($xml);
+				$xml = mb_convert_encoding($xml, 'UTF-8', $enc);
+				$xmlObj = new SimpleXMLElement($xml);
+				foreach($xmlObj->block as $block){
+					$blockType = new BlockTypeRemote();
+					$blockType->loadFromXML($block);
+					$blockTypes[]=$blockType;
+				}
+			}
+
+			Cache::set('marketplace_block_list', false, $blockTypes, MARKETPLACE_CONTENT_LATEST_THRESHOLD);		
+		}
+
 		return $blockTypes;
 	}
 

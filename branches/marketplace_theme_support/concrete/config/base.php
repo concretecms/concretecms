@@ -58,6 +58,14 @@ if (!defined("LANGUAGE")) {
 
 define("LANGUAGE_DOMAIN_CORE", "messages");
 
+if (!defined('ENABLE_CACHE')) {
+	define('ENABLE_CACHE', true);
+}
+
+if (!defined('CACHE_LIBRARY')) {
+	define('CACHE_LIBRARY', 'default');
+}
+
 # Debug Menu - Determines whether a "Submit Feedback/Bug/Question" is active */
 # Currently Concrete5 does not include this capability but it will likely come back.
 define('MENU_FEEDBACK_DISPLAY', 1);
@@ -354,6 +362,9 @@ if (!defined('MARKETPLACE_THEME_LIST_WS')) {
 if (!defined('MARKETPLACE_THEME_PREVIEW_URL')) {
 	define('MARKETPLACE_THEME_PREVIEW_URL', 'http://www.concrete5.org/tools/preview_theme/');
 }
+
+define('MARKETPLACE_CONTENT_LATEST_THRESHOLD', 10800); // every three hours
+
 
 define('MARKETPLACE_DIRNAME_THEME_PREVIEW', 'previewable_themes');
 define('MARKETPLACE_THEME_PREVIEW_ASSETS_URL', 'http://c5org/' . MARKETPLACE_DIRNAME_THEME_PREVIEW);

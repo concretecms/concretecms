@@ -45,6 +45,10 @@
 	Loader::model('userinfo');
 	Loader::model('version');
 
+	## Startup cache ##
+	Loader::library('cache/abstract');	
+	Loader::library('cache/' . CACHE_LIBRARY);	
+
 	## Startup check, install ##	
 	require('startup/magic_quotes_gpc_check.php');
 
