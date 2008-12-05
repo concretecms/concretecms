@@ -28,7 +28,10 @@ $bt = Loader::helper('concrete/interface');
 		<tr <? if ($siteThemeID == $t->getThemeID()) { ?> class="ccm-theme-active" <? } ?>>
 			<td><?=$t->getThemeThumbnail()?></td>
 			<td class="ccm-template-content">
-			<h2><?=$t->getThemeName()?></h2>
+			<h2><?=$t->getThemeName()?>
+			<? if ($t->getThemeID() != $siteThemeID) { ?><a onclick="ccm_previewInternalTheme(1, <?=intval($t->getThemeID())?>,'<?=addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) ?>')" href="javascript:void(0)" class="preview">
+									<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" class="ccm-preview" /></a><? } ?>
+			</h2>
 			<?=$t->getThemeDescription()?>
 			<br/><br/>
 			<? if ($siteThemeID != $t->getThemeID()) { ?>
