@@ -90,12 +90,14 @@ class Area extends Object {
 	function getMaximumBlocks() {return $this->maximumBlocks;}
 	
 	function getAreaUpdateAction($alternateHandler = null) {
+		$valt = Loader::helper('validation/token');
+		$token = '&' . $valt->getParameter();
 		$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
 		$c = $this->getAreaCollectionObject();
 		if ($alternateHandler) {
-			$str = $alternateHandler . "?atask=update&cID=" . $c->getCollectionID() . "&arHandle=" . $this->getAreaHandle() . $step;
+			$str = $alternateHandler . "?atask=update&cID=" . $c->getCollectionID() . "&arHandle=" . $this->getAreaHandle() . $step . $token;
 		} else {
-			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?atask=update&cID=" . $c->getCollectionID() . "&arHandle=" . $this->getAreaHandle() . $step;
+			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?atask=update&cID=" . $c->getCollectionID() . "&arHandle=" . $this->getAreaHandle() . $step . $token;
 		}
 		return $str;
 	}

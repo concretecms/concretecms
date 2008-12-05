@@ -76,7 +76,7 @@ div#ccm-mc-page h1#ccm-sitemap-title {display: none}
 					
 					<div class="ccm-buttons">
 
-					<form method="get" id="ccmDeletePageForm" action="<?=$c->getCollectionAction()?>">		
+					<form method="post" id="ccmDeletePageForm" action="<?=$c->getCollectionAction()?>">	
 						<a href="javascript:void(0)" onclick="if (confirm('<?=$deletePageMsg?>')) { $('#ccmDeletePageForm').get(0).submit()}" class="ccm-button-right accept"><span><?=t('Delete Page')?></span></a>
 					<h2><?=t('Delete Page')?></h2>
 					<? if ($cp->canAdminPage() && $numChildren > 0) { ?>

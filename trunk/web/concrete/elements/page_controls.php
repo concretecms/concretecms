@@ -1,5 +1,7 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
+$valt = Loader::helper('validation/token');
+$token = '&' . $valt->getParameter();
 if (isset($cp)) {
 
 	$u = new User();
@@ -16,10 +18,10 @@ if (isset($cp)) {
 	
 	if ($c->getCollectionPointerID() > 0) {
 		$statusMessage .= t("This page is an alias of one that actually appears elsewhere. ");
-		$statusMessage .= "<a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent'>" . t('View/Edit Original') . "</a>";
+		$statusMessage .= "<br/><a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent'>" . t('View/Edit Original') . "</a>";
 		if ($cp->canApproveCollection()) {
 			$statusMessage .= "&nbsp;|&nbsp;";
-			$statusMessage .= "<a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionPointerOriginalID() . "&ctask=remove-alias'>" . t('Remove Alias') . "</a>";
+			$statusMessage .= "<a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionPointerOriginalID() . "&ctask=remove-alias" . $token . "'>" . t('Remove Alias') . "</a>";
 		}
 	} else {
 	
@@ -27,7 +29,7 @@ if (isset($cp)) {
 			if (!$vo->isApproved() && !$c->isEditMode()) {
 				$statusMessage .= t("This page is pending approval.");
 				if ($cp->canApproveCollection() && !$c->isCheckedOut()) {
-					$statusMessage .= " <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent'>" . t('Approve Version') . "</a>";
+					$statusMessage .= "<br/><a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent" . $token . "'>" . t('Approve Version') . "</a>";
 				}
 			}
 		}
@@ -37,7 +39,7 @@ if (isset($cp)) {
 			$statusMessage .= $statusMessage ? "&nbsp;|&nbsp;" : "";
 			$statusMessage .= t("This page is being moved.");
 			if ($cp->canApproveCollection() && (!$c->isCheckedOut() || ($c->isCheckedOut() && $c->isEditMode()))) {
-				$statusMessage .= "<a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action'>" . t('Approve Move') . "</a>";
+				$statusMessage .= "<br/><a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action'>" . t('Approve Move') . "</a> | <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=clear_pending_action" . $token . "'>" . t('Cancel') . "</a>";
 			}
 		} else if ($pendingAction == 'DELETE') {
 			$statusMessage .= $statusMessage ? "<br/>" : "";
@@ -47,12 +49,12 @@ if (isset($cp)) {
 				$pages = $children + 1;
 				$statusMessage .= " " . t('This will remove %s pages.', $pages);
 				if ($cp->canAdminPage()) {
-					$statusMessage .= " <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action'>" . t('Approve Delete') . "</a>";
+					$statusMessage .= " <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action" . $token . "'>" . t('Approve Delete') . "</a> | <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=clear_pending_action" . $token . "'>" . t('Cancel') . "</a>";
 				} else {
 					$statusMessage .= " " . t('Only administrators can approve a multi-page delete operation.');
 				}
 			} else if ($children == 0 && $cp->canApproveCollection() && (!$c->isCheckedOut() || ($c->isCheckedOut() && $c->isEditMode()))) {
-				$statusMessage .= " <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action'>" . t('Approve Delete') . "</a>";
+				$statusMessage .= " <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action" . $token . "'>" . t('Approve Delete') . "</a> | <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=clear_pending_action" . $token . "'>" . t('Cancel') . "</a>";
 			}
 		}
 	
@@ -66,8 +68,13 @@ if (isset($cp)) {
 <? if (LANGUAGE != 'en') { ?>
 	<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/i18n/ui.datepicker-<?=LANGUAGE?>.js"></script>
 <? } ?>
+<script type="text/javascript">
+<?
+$valt = Loader::helper('validation/token');
+print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
+?>
 
-
+</script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.dialog.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.base.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/tiny_mce_309/tiny_mce.js"></script>
@@ -136,7 +143,6 @@ if (isset($cp)) {
 } ?>
 
 <?
-/* if ($statusMessage != '') {?>
-	<div id="ccm-notification"><div id="ccm-notification-inner"><?=$statusMessage?></div></div>
-<? } */
-?>
+if ($statusMessage != '') {?>
+<div id="ccm-notification"><div id="ccm-notification-inner"><?=$statusMessage?></div></div>
+<? } ?>

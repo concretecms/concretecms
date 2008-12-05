@@ -39,7 +39,7 @@ div#ccm-logo-wrapper img {display: block; border-right: 1px solid #fff}
 
 div#ccm-system-nav-wrapper1 {position: absolute; border-left: 1px solid #fff; top: 0px; right: 0px; }
 ul#ccm-system-nav {height: 49px; border-left: 1px solid #d7d7d7}
-div#ccm-notification {display: none}
+div#ccm-notification {position: absolute; top: 20px; width: 300px; text-align: right; right: 190px; z-index: 120; font-size: 11px;}
 
 div#ccm-page-controls ul#ccm-system-nav { margin: 0px; padding: 0px; }
 div#ccm-page-controls ul#ccm-main-nav {margin: 0px; padding: 0px 0px 0px 49px;}
@@ -193,6 +193,7 @@ ul#autonav-preview, ul#autonav-preview li {list-style-type: disc}
 ul#autonav-preview li {margin-left: 10px; padding: 0px; }
 ul#autonav-preview ul {margin-left: 30px; padding: 0px}
 
+div.ccm-scrapbook-list-item {position:relative}
 div.ccm-scrapbook-list-item-detail {padding-left: 30px; padding-top: 8px; overflow: hidden; margin-bottom: 8px; max-height: 100px}
 
 div.ccm-pane-header {margin-top: -12px; padding-top: 8px; position: relative}

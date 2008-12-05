@@ -433,7 +433,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$bID = $this->getBlockID();
 			$arHandle = $this->getAreaHandle();
 			$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
-			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;bID={$bID}&amp;arHandle={$arHandle}" . $step;
+			$valt = Loader::helper('validation/token');
+			$token = $valt->generate();
+			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;bID={$bID}&amp;arHandle={$arHandle}" . $step . "&ccm_token=" . $token;
 			return $str;
 		}
 

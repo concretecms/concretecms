@@ -27,4 +27,8 @@ $txt = Loader::helper('text');
 	<a href="javascript:$('#ccmCustomTemplateForm').get(0).submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
 	</div>
 	<? } ?>
+<?
+$valt = Loader::helper('validation/token');
+$valt->output();
+?>
 </form>
