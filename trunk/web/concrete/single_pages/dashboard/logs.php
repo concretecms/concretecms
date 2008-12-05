@@ -1,5 +1,6 @@
 <? 
 defined('C5_EXECUTE') or die(_("Access Denied."));
+$valt = Loader::helper('validation/token');
 if ($this->controller->getTask() == 'database') { ?>
 
 	<h1><span><?=t('Database Logs')?></span></h1>
@@ -7,7 +8,7 @@ if ($this->controller->getTask() == 'database') { ?>
 	<? if (count($entries) > 0) { ?>
 		
 		<form id="ccm-log-search">
-		<input type="button" onclick="location.href='<?=$this->url('/dashboard/logs', 'clear_database_log')?>'" value="<?=t('Clear Log')?>" />
+		<input type="button" onclick="location.href='<?=$this->url('/dashboard/logs', 'clear_database_log', $valt->generate())?>'" value="<?=t('Clear Log')?>" />
 		</form>
 		
 		<table border="0" cellspacing="1" cellpadding="0" class="grid-list">
@@ -57,7 +58,7 @@ if ($this->controller->getTask() == 'database') { ?>
 		<form method="post" id="ccm-log-search"  action="<?=$pageBase?>">
 		<?=$form->text('keywords', $keywords)?>
 		<?=$form->submit('search',t('Search') )?>
-		<input type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$this->url('/dashboard/logs', 'clear_log', $this->controller->getTask())?>'}" value="<?=t('Clear Log')?>" />
+		<input type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$this->url('/dashboard/logs', 'clear_log', $this->controller->getTask(), $valt->generate())?>'}" value="<?=t('Clear Log')?>" />
 		</form>
 
 		<table border="0" cellspacing="1" cellpadding="0" class="grid-list">

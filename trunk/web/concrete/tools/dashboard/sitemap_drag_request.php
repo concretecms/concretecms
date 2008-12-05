@@ -18,6 +18,8 @@ if (isset($_REQUEST['destCID'] ) && is_numeric($_REQUEST['destCID'])) {
 	$dc = Page::getByID($_REQUEST['destCID']);
 }
 
+$valt = Loader::helper('validation/token');
+
 $json = array();
 $json['error'] = false;
 $json['message'] = false;
@@ -39,41 +41,45 @@ if (is_object($oc) && is_object($dc)) {
 
 if (!$error) {
 	if ($_REQUEST['ctask']) {
-		switch($_REQUEST['ctask']) {
-			case "ALIAS":
-				$ncID = $oc->addCollectionAlias($dc);
-				$successMessage = '"' . $oc->getCollectionName() . '" '.t('was successfully aliased beneath').' "' . $dc->getCollectionName() . '"';
-				$newCID = $ncID;
-				break;
-			case "COPY":
-				if ($_REQUEST['copyAll'] && $dcp->canAdminPage()) {
-					$nc2 = $oc->duplicateAll($dc); // new collection is passed back
-					if (is_object($nc2)) {
-						$successMessage = '"' . $oc->getCollectionName() . '" '.t('and all its children were successfully copied beneath').' "' . $dc->getCollectionName() . '"';
+		if ($valt->validate()) {
+			switch($_REQUEST['ctask']) {
+				case "ALIAS":
+					$ncID = $oc->addCollectionAlias($dc);
+					$successMessage = '"' . $oc->getCollectionName() . '" '.t('was successfully aliased beneath').' "' . $dc->getCollectionName() . '"';
+					$newCID = $ncID;
+					break;
+				case "COPY":
+					if ($_REQUEST['copyAll'] && $dcp->canAdminPage()) {
+						$nc2 = $oc->duplicateAll($dc); // new collection is passed back
+						if (is_object($nc2)) {
+							$successMessage = '"' . $oc->getCollectionName() . '" '.t('and all its children were successfully copied beneath').' "' . $dc->getCollectionName() . '"';
+						}
+					} else {
+						$nc2 = $oc->duplicate($dc);
+						if (is_object($nc2)) {
+							$successMessage = '"' . $oc->getCollectionName() . '" '.t('was successfully copied beneath').' "' . $dc->getCollectionName() . '"';
+						}
 					}
-				} else {
-					$nc2 = $oc->duplicate($dc);
-					if (is_object($nc2)) {
-						$successMessage = '"' . $oc->getCollectionName() . '" '.t('was successfully copied beneath').' "' . $dc->getCollectionName() . '"';
+					if (!is_object($nc2)) {
+						$error = t("An error occurred while attempting the copy operation.");
+					} else {
+						$newCID = $nc2->getCollectionID();
 					}
-				}
-				if (!is_object($nc2)) {
-					$error = t("An error occurred while attempting the copy operation.");
-				} else {
-					$newCID = $nc2->getCollectionID();
-				}
-				break;
-			case "MOVE":
-				if ($dcp->canApproveCollection() && $ocp->canApproveCollection()) {
-					$nc2 = $oc->move($dc);
-					$successMessage = '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '"';
-				} else {
-					$oc->markPendingAction('MOVE', $dc);
-					$successMessage = t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.", $oc->getCollectionName() , $dc->getCollectionName() );
-				}
-				$newCID = $oc->getCollectionID();
-				break;
-		}
+					break;
+				case "MOVE":
+					if ($dcp->canApproveCollection() && $ocp->canApproveCollection()) {
+						$nc2 = $oc->move($dc);
+						$successMessage = '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '"';
+					} else {
+						$oc->markPendingAction('MOVE', $dc);
+						$successMessage = t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.", $oc->getCollectionName() , $dc->getCollectionName() );
+					}
+					$newCID = $oc->getCollectionID();
+					break;
+			}
+		} else {
+			$error = $valt->getErrorMessage();
+		}	
 	}
 }
 

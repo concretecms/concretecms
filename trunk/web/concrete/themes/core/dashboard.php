@@ -15,6 +15,14 @@ require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); ?>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_dialog.css";</style>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_asset_library.css";</style>
 
+<script type="text/javascript">
+<?
+$valt = Loader::helper('validation/token');
+print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
+?>
+
+</script>
+
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.form.2.0.2.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.1.5.2.no_datepicker.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.1.6b.datepicker.js"></script>

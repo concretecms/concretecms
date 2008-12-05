@@ -1,6 +1,7 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 $bt = Loader::helper('concrete/interface');
+$valt = Loader::helper('validation/token');
 ?>
 <h1><span><?=t('Themes')?></span></h1>
 	<div class="ccm-dashboard-inner">
@@ -40,7 +41,7 @@ $bt = Loader::helper('concrete/interface');
 			<?=$bt->button(t("Inspect"), $this->url('/dashboard/themes/inspect', $t->getThemeID()), "left");?>
 			
 			<? if ($t->isUninstallable()) { ?>
-				<?=$bt->button(t("Remove"), $this->url('/dashboard/themes', 'remove', $t->getThemeID()), "left");?>
+				<?=$bt->button(t("Remove"), $this->url('/dashboard/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), "left");?>
 			<? } ?>
 			</td>
 		</tr>

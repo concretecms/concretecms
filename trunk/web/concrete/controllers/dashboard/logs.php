@@ -27,21 +27,31 @@ class DashboardLogsController extends Controller {
 		$this->set('subnav', $subnav);
 	}
 	
-	public function clear_database_log() {
-		DatabaseLogEntry::clear();
-		$this->redirect('/dashboard/logs/', 'database');
+	public function clear_database_log($token = '') {
+		$valt = Loader::helper('validation/token');
+		if ($valt->validate('', $token)) {
+			DatabaseLogEntry::clear();
+			$this->redirect('/dashboard/logs/', 'database');
+		} else {
+			$this->redirect('/dashboard/logs');
+		}
 	}
 	
-	public function clear_log($type) {
-		switch($type) {
-			case "custom":
-				Log::clearCustom();				
-				$this->redirect("/dashboard/logs", "custom");
-				break;
-			default:
-				Log::clearInternal();				
-				$this->redirect("/dashboard/logs");
-				break;
+	public function clear_log($type, $token = '') {
+		$valt = Loader::helper('validation/token');
+		if ($valt->validate('', $token)) {
+			switch($type) {
+				case "custom":
+					Log::clearCustom();				
+					$this->redirect("/dashboard/logs", "custom");
+					break;
+				default:
+					Log::clearInternal();				
+					$this->redirect("/dashboard/logs");
+					break;
+			}
+		} else {
+			$this->redirect('/dashboard/logs');
 		}
 	}
 	

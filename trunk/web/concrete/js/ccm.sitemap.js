@@ -93,7 +93,7 @@ if (CCM_SITEMAP_MODE == 'full') {
 deletePage = function(cID) {
 	ccm_hideMenus();
 	if (confirm(ccmi18n_sitemap.areYouSure)) {
-		$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_delete_request.php', {'cID': cID}, function(resp) {
+		$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_delete_request.php', {'cID': cID, 'ccm_token': CCM_SECURITY_TOKEN}, function(resp) {
 			parseJSON(resp, function() {
 				deleteBranchFade(cID);
 			});
@@ -322,6 +322,7 @@ moveCopyAliasNode = function(reloadPage) {
 		'origCID': origCID,
 		'destCID': destCID,
 		'ctask': ctask,
+		'ccm_token': CCM_SECURITY_TOKEN,
 		'copyAll': copyAll		
 	};
 	

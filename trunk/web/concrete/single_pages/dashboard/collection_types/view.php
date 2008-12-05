@@ -5,6 +5,7 @@ Loader::model('single_page');
 Loader::model('collection_attributes');
 $attribs = CollectionAttributeKey::getList();
 $ih = Loader::helper('concrete/interface');
+$valt = Loader::helper('validation/token');
 
 $ctArray = CollectionType::getList();
 $args['section'] = 'collection_types';
@@ -48,6 +49,10 @@ if ($_POST['task'] == 'add' || $_POST['update']) {
 		$error[] = t("Name required.");
 	}
 	
+	if (!$valt->validate('add_or_update_page_type')) {
+		$error[] = $valt->getErrorMessage();
+	}
+	
 	$akIDArray = $_POST['akID'];
 	if (!is_array($akIDArray)) {
 		$akIDArray = array();
@@ -68,7 +73,7 @@ if ($_POST['task'] == 'add' || $_POST['update']) {
 		}
 	}
 } else {
-	if ($_REQUEST['p'] && $_REQUEST['task'] == 'refresh') { 
+	if ($_REQUEST['p'] && $_REQUEST['task'] == 'refresh' && $valt->validate('refresh')) { 
 		$p = SinglePage::getByID($_REQUEST['p']);
 		$p->refresh();
 		$this->controller->redirect('/dashboard/collection_types?refreshed=1');
@@ -76,25 +81,26 @@ if ($_POST['task'] == 'add' || $_POST['update']) {
 	}
 	
 	if ($_POST['add_static_page']) {
-		$pathToNode = SinglePage::getPathToNode($_POST['pageURL'], false);
-		$path = SinglePage::sanitizePath($_POST['pageURL']);
-		
-		if (strlen($pathToNode) > 0) {
-			// now we check to see if this is already added
-			$pc = Page::getByPath('/' . $path, 'RECENT');
+		if ($valt->validate("add_single_page")) {
+			$pathToNode = SinglePage::getPathToNode($_POST['pageURL'], false);
+			$path = SinglePage::sanitizePath($_POST['pageURL']);
 			
-			if ($pc->getError() == COLLECTION_NOT_FOUND) {
-				SinglePage::add($_POST['pageURL']);
-				$this->controller->redirect('/dashboard/collection_types?page_created=1');
+			if (strlen($pathToNode) > 0) {
+				// now we check to see if this is already added
+				$pc = Page::getByPath('/' . $path, 'RECENT');
+				
+				if ($pc->getError() == COLLECTION_NOT_FOUND) {
+					SinglePage::add($_POST['pageURL']);
+					$this->controller->redirect('/dashboard/collection_types?page_created=1');
+				} else {
+					$error[] = t("That page has already been added.");
+				}
 			} else {
-				$error[] = t("That page has already been added.");
+				$error[] = t('That specified path doesn\'t appear to be a valid static page.');
 			}
 		} else {
-			$error[] = t('That specified path doesn\'t appear to be a valid static page.');
+			$error[] = $valt->getErrorMessage();
 		}
-		
-		
-
 	}
 	$generated = SinglePage::getList();
 }
@@ -131,6 +137,7 @@ if ($ctEditMode) {
 	<div class="ccm-dashboard-inner">
 	
 	<form method="post" id="update_page_type" action="<?=$this->url('/dashboard/collection_types/')?>">
+	<?=$valt->output('add_or_update_page_type')?>
 	<input type="hidden" name="ctID" value="<?=$_REQUEST['ctID']?>" />
 	<input type="hidden" name="task" value="edit" />
 	<input type="hidden" name="update" value="1" />
@@ -224,7 +231,7 @@ if ($ctEditMode) {
 	<script type="text/javascript">
 	deletePageType = function() {
 		if(confirm('<?=$confirmMsg?>')){ 
-			location.href="<?=$this->url('/dashboard/collection_types/','delete',$_REQUEST['ctID'])?>";
+			location.href="<?=$this->url('/dashboard/collection_types/','delete',$_REQUEST['ctID'], $valt->generate('delete_page_type'))?>";
 		}	
 	}
 	</script>
@@ -238,6 +245,7 @@ if ($ctEditMode) {
 	<div class="ccm-dashboard-inner">
 	
 	<form method="post" id="add_page_type" action="<?=$this->url('/dashboard/collection_types/')?>">
+	<?=$valt->output('add_or_update_page_type')?>
 	<input type="hidden" name="task" value="add" />
 	
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
@@ -389,7 +397,7 @@ if ($ctEditMode) {
 		<td><?=$ak->getCollectionAttributeKeyName()?></td>
 		<td style="white-space: nowrap"><?=$ak->getCollectionAttributeKeyHandle()?></td>
 		<td><? print $ih->button(t('Edit'), $this->url('/dashboard/collection_types/attributes?akID=' . $ak->getCollectionAttributeKeyID() . '&task=edit'))?></td>
-		<td><? print $ih->button(t('Delete'), "javascript:if (confirm('".t('Are you sure you wish to delete this attribute?')."')) { location.href='" . $this->url('/dashboard/collection_types/attributes?akID=' . $ak->getCollectionAttributeKeyID() . '&task=delete') . "' }")?></td>
+		<td><? print $ih->button(t('Delete'), "javascript:if (confirm('".t('Are you sure you wish to delete this attribute?')."')) { location.href='" . $this->url('/dashboard/collection_types/attributes?akID=' . $ak->getCollectionAttributeKeyID() . '&task=delete&' . $valt->getParameter('delete_attribute')) . "' }")?></td>
 	</tr>
 	<? } ?>
 	</table>
@@ -445,7 +453,7 @@ if ($ctEditMode) {
 		<td><?=$p->getCollectionPath()?></td>
 		<td><? print $packageName; ?></td>
 		<td>
-			<? print $ih->button(t('Refresh'),$this->url('/dashboard/collection_types/?p=' . $p->getCollectionID() . '&task=refresh'), 'left', false, array('title'=>t('Refreshes the page, rebuilding its permissions and its name.')));?>
+			<? print $ih->button(t('Refresh'),$this->url('/dashboard/collection_types/?p=' . $p->getCollectionID() . '&task=refresh&' . $valt->getParameter('refresh')), 'left', false, array('title'=>t('Refreshes the page, rebuilding its permissions and its name.')));?>
 		</td>
 	</tr>
 	<? }
@@ -458,6 +466,7 @@ if ($ctEditMode) {
 		<td colspan="4"><?=t('The page you want to add is available at:')?>
 		<br>
 		<form method="post" id="add_static_page_form" action="<?=$this->url('/dashboard/collection_types/')?>">
+		<?=$valt->output('add_single_page')?>
 		<table border="0" cellspacing="0" cellpadding="0">
 		<tr>
 		<td>
