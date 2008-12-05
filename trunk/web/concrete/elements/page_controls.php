@@ -77,6 +77,7 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 </script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.dialog.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.base.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.themes.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/tiny_mce_309/tiny_mce.js"></script>
 
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_dialog.css";</style>

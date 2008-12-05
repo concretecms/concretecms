@@ -148,13 +148,14 @@ form#ccm-group-search label {font-weight: bold}
 div.ccm-scroller {position: relative; padding: 20px 10px 20px 10px; background: #fff url(../images/bg_scroller.png) repeat-x}
 a.ccm-scroller-l {z-index: 100; position: absolute; top: 20px; left: 10px}
 a.ccm-scroller-r {z-index: 100; position: absolute; top: 20px; right: 10px}
-div.ccm-scroller-inner {width: 520px; margin-left: 40px; height: 120px; overflow: hidden; position: relative}
+div.ccm-scroller-inner {width: 520px; margin-left: 40px; height: 130px; overflow: hidden; position: relative}
 div.ccm-scroller-inner ul {position: absolute; list-style: none; overflow: none; white-space: nowrap; padding: 0px; margin: 0px;}
 div.ccm-scroller-inner ul li {float: left; width: 124px; margin-right: 8px;}
 div.ccm-scroller-inner ul li span {display: block; text-align: center; font-size: 12px; padding-top: 1px;}
 div.ccm-scroller-inner img {margin: 2px}
 div.ccm-scroller-inner ul li.ccm-item-selected {font-weight: bold;}
 div.ccm-scroller-inner ul li.ccm-item-selected img {margin: 0px; border: 2px solid #00BDF7}
+div.ccm-scroller-inner ul li.ccm-item-selected img.ccm-preview {margin: 2px; border: 0px}
 
 /* editor */
 div.ccm-editor-controls {background: transparent url(../images/bg_editor_concrete_controls.png) no-repeat scroll; text-align: right; padding: 0px 18px 8px 40px}
@@ -168,12 +169,13 @@ div.ccm-block-field-group {margin-bottom: 10px; border-bottom: 1px dotted #aaa; 
 div.ccm-block-field-group h2 {margin-bottom: 6px}
 
 div#ccm-block-type-list {padding-top: 2px}
-div.ccm-block-type a.ccm-block-type-help {float:right; margin-right:10px; margin-top:10px; position: static}
+div.ccm-block-type a.ccm-block-type-help {float:right; margin-right:10px; margin-top:10px; position: static; text-decoration:none; }
 div.ccm-block-type a.ccm-scrapbook-delete {top: 8px; right: 10px; position: absolute}
 div.ccm-block-type a.ccm-block-type-inner, div.ccm-block-type p.ccm-block-type-inner {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
 div.ccm-block-type p.ccm-block-type-inner {margin: 0px}
 div.ccm-block-type a.ccm-block-type-inner:hover {background-color: #d9e7ff; border: 1px solid #94a7c7}
 div.ccm-block-type {position: static; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px; left:0px; top:0px; width:auto; height:auto;}
 div.ccm-block-type div.ccm-block-type-description {display: none; padding-left: 30px; color: #aaa; font-size: 12p; padding-top: 2px; padding-bottom: 6px}
-
+div.ccm-block-type.ccm-external-block-type div.ccm-block-price{ float:right; margin:10px 10px 0px 10px; font-weight: bold; color: #205334; text-transform: uppercase}
+div.ccm-block-type.ccm-external-block-type div.ccm-block-type-description{display:block}
  

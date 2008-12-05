@@ -99,6 +99,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 
 		/**
+		 * set directory of current theme for use when loading an element
+		 * @access public
+		 * @param string $path
+		*/
+		public function setThemeDirectory($path) { $this->themeDir=$path; }
+
+		/**
 		 * get directory of current theme for use when loading an element
 		 * @access public
 		 * @return string $themeDir

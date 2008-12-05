@@ -14,11 +14,22 @@ $btl = $a->getAddBlockTypes($c, $ap );
 $blockTypes = $btl->getBlockTypeList();
 $ci = Loader::helper('concrete/urls');
 
+
+//marketplace
+if(ENABLE_MARKETPLACE_SUPPORT){
+	$marketplaceBlocksHelper = Loader::helper('concrete/marketplace/blocks'); 
+	$marketplaceBlockTypes=$marketplaceBlocksHelper->getPreviewableList();
+}else{
+	$marketplaceBlockTypes=array();
+}
 ?>
 
 <ul class="ccm-dialog-tabs" id="ccm-area-tabs">
 	<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-add"><?=t('Add New')?></a></li>
 	<li><a href="javascript:void(0)" id="ccm-add-existing"><?=t('Add From Scrapbook')?></a></li>
+	<? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
+		<li><a href="javascript:void(0)" id="ccm-add-marketplace"><?=t('Add From Marketplace')?></a></li>
+	<? } ?>
 	<? if (PERMISSIONS_MODEL != 'simple') { ?><li><a href="javascript:void(0)" id="ccm-permissions"><?=t('Permissions')?></a></li><? } ?>
 </ul>
 
@@ -41,6 +52,30 @@ $ci = Loader::helper('concrete/urls');
 	<? } ?>
 	</div>
 </div>
+
+<? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
+<div id="ccm-add-marketplace-tab" style="display: none">
+	<h1><?=t('Add From Marketplace')?></h1>
+	<div id="ccm-block-type-list">
+	<? if (count($marketplaceBlockTypes) > 0) {
+
+		foreach($marketplaceBlockTypes as $bt) { 
+			$btIcon = $ci->getBlockTypeIconURL($bt);
+			?>	
+			<div class="ccm-block-type ccm-external-block-type">
+				<a class="ccm-block-type-help" href="<?=$bt->getRemoteURL()?>" target="_blank"><img src="<?=ASSETS_URL_IMAGES?>/icons/help.png" width="14" height="14" /></a>
+				<div class="ccm-block-price"><? if ($bt->getPrice() == '0.00') { print t('Free'); } else { print '$' . $bt->getPrice(); } ?></div>
+				<a class="ccm-block-type-inner"  style="background-image: url(<?=$btIcon?>)"  href="<?=$bt->getRemoteURL()?>" target="_blank"><?=$bt->getBlockTypeName()?></a>
+				<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeHandle()?>"><?=$bt->getBlockTypeDescription()?></div>
+				<div class="ccm-spacer"></div>
+			</div>
+		<? }
+	} else { ?>
+		<p><?=t('Unable to connect to the marketplace.')?></p>
+	<? } ?>
+	</div>
+</div>
+<? } ?>
 
 <script type="text/javascript">
 ccm_showBlockTypeDescription = function(btID) {
