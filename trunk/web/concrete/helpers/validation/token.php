@@ -20,7 +20,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  
 class ValidationTokenHelper {
 
-	const VALID_HASH_TIME_THRESHOLD = 10800; // 3 hours (in seconds)
+	const VALID_HASH_TIME_THRESHOLD = 86400; // 24 hours (in seconds)
 	
 	/** 
 	 * For localization we can't just store this as a constant, unfortunately
@@ -38,25 +38,36 @@ class ValidationTokenHelper {
 	 */
 	public function generate($action = '', $time = null) {
 		$u = new User();
-		$uID = $u->getUserID();
+		//$uID = $u->getUserID();
 		if ($time == null) {
 			$time = time();
 		}
-		$hash = $time . ':' . md5($time . ':' . $uID . ':' . $action . ':' . PASSWORD_SALT);
+		//$hash = $time . ':' . md5($time . ':' . $uID . ':' . $action . ':' . PASSWORD_SALT);
+		$hash = $time . ':' . md5($time . ':' . $action . ':' . PASSWORD_SALT);
 		return $hash;
 	}
 	
 	/** 
 	 * prints out a generated token as a hidden form field
 	 */
-	public function output($action) {
+	public function output($action = '') {
 		$hash = $this->generate($action);
 		print '<input type="hidden" name="ccm_token" value="' . $hash . '" />';
 	}
 	
 	/** 
+	 * returns a generated token as a query string variable
+	 */
+	public function getParameter($action = '') {
+		$hash = $this->generate($action);
+		return 'ccm_token=' . $hash;
+	}
+	
+	
+	
+	/** 
 	 * Validates against a given action. Basically, we check the passed hash to see if
-	 * a. the hash is valid. That means it computes in the time:uID:action:PASSWORD_SALT format
+	 * a. the hash is valid. That means it computes in the time:action:PASSWORD_SALT format
 	 * b. the time included next to the hash is within the threshold.
 	 * @param string $action
 	 * @param string $token

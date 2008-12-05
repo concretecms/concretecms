@@ -8,7 +8,8 @@ if (!$cp->canWrite()) {
 
 $a = Area::get($c, $_GET['arHandle']);
 $ap = new Permissions($a);
-
+$valt = Loader::helper('validation/token');
+$token = '&' . $valt->getParameter();
 $btl = $a->getAddBlockTypes($c, $ap );
 $blockTypes = $btl->getBlockTypeList();
 $ci = Loader::helper('concrete/urls');
@@ -64,7 +65,7 @@ $(function() {
 		$.ajax({
 			type: 'POST',
 			url: CCM_DISPATCHER_FILENAME,
-			data: 'pcID=' + pcID + '&ptask=delete_content',
+			data: 'pcID=' + pcID + '&ptask=delete_content<?=$token?>',
 			success: function(msg) {
 				$("#ccm-pc-" + pcID).fadeOut();
 			}

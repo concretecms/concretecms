@@ -1267,7 +1267,9 @@ class Page extends Collection {
 
 	function getCollectionAction() {
 		$cID = $this->cID;
-		$str = BASE_URL . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}";
+		$valt = Loader::helper('validation/token');
+		$token = $valt->getParameter();
+		$str = BASE_URL . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&" . $token;
 		return $str;
 	}
 

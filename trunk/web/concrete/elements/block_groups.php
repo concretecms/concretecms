@@ -182,5 +182,8 @@
 		<a href="javascript:void(0)" onclick="<? if ($numChildren) { ?>applyToAll();<? } ?> $('form[name=permissionForm]').get(0).submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
 		<a href="javascript:void(0)" class="ccm-button-left cancel ccm-dialog-close"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
 		</div>
-		
+<?
+$valt = Loader::helper('validation/token');
+$valt->output();
+?>
 </form>

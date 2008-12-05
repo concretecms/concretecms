@@ -146,7 +146,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$arHandle = $a->getAreaHandle();
 			$c = $a->getAreaCollectionObject();
 			$cID = $c->getCollectionID();
-			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;areaName={$arHandle}&amp;mode=edit&amp;btask=add" . $step;
+			$valt = Loader::helper('validation/token');
+			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;areaName={$arHandle}&amp;mode=edit&amp;btask=add" . $step . '&' . $valt->getParameter();
 			return $str;			
 		}
 		
@@ -155,7 +156,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$arHandle = $a->getAreaHandle();
 			$c = $a->getAreaCollectionObject();
 			$cID = $c->getCollectionID();
-			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;areaName={$arHandle}&amp;mode=edit&amp;btask=alias" . $step;
+			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;areaName={$arHandle}&amp;mode=edit&amp;btask=alias" . $step . '&' . $valt->getParameter();
 			return $str;			
 		}
 			
@@ -609,11 +610,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$c = $a->getAreaCollectionObject();
 			$cID = $c->getCollectionID();
 			$arHandle = $a->getAreaHandle();
+			$valt = Loader::helper('validation/token');
+			
 			
 			if ($alternateHandler) {
-				$str = $alternateHandler . "?cID={$cID}&arHandle={$arHandle}&btID={$btID}&mode=edit" . $step;
+				$str = $alternateHandler . "?cID={$cID}&arHandle={$arHandle}&btID={$btID}&mode=edit" . $step . '&' . $valt->getParameter();
 			} else {
-				$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&arHandle={$arHandle}&btID={$btID}&mode=edit" . $step;
+				$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&arHandle={$arHandle}&btID={$btID}&mode=edit" . $step . '&' . $valt->getParameter();
 			}
 			return $str;			
 		}

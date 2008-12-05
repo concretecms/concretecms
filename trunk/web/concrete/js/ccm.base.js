@@ -146,7 +146,7 @@ ccm_deleteBlock = function(bID, aID, arHandle, msg) {
 		$.ajax({
  		type: 'POST',
  		url: CCM_DISPATCHER_FILENAME,
- 		data: 'cID=' + CCM_CID + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + arHandle,
+ 		data: 'cID=' + CCM_CID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + arHandle,
  		success: function(resp) {
  			$("#b" + bID + '-' + aID).fadeOut(300);
  		}});		
@@ -452,7 +452,7 @@ ccm_saveArrangement = function() {
  	$.ajax({
  		type: 'POST',
  		url: CCM_DISPATCHER_FILENAME,
- 		data: 'cID=' + CCM_CID + '&btask=ajax_do_arrange' + serial,
+ 		data: 'cID=' + CCM_CID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + serial,
  		success: function(msg) {
 			location.href= CCM_DISPATCHER_FILENAME + "?cID=" + CCM_CID;
  		}});
@@ -483,7 +483,7 @@ ccm_init = function() {
 		if (!ccm_topPaneDeactivated) {
 			setTimeout(function() {
 				// stupid safari? wtf?
-				window.location.href = CCM_REL + '/index.php?cID=' + CCM_CID + '&ctask=check-out';
+				window.location.href = CCM_REL + '/index.php?cID=' + CCM_CID + '&ctask=check-out&ccm_token=' + CCM_SECURITY_TOKEN;
 			}, 50);
 		}
 	});
