@@ -54,13 +54,17 @@ class DashboardInstallController extends Controller {
 		}
 	}
 	
-	public function uninstall_block_type($btID = 0) {
+	public function uninstall_block_type($btID = 0, $token = '') {
+		$valt = Loader::helper('validation/token');
+
 		if ($btID > 0) {
 			$bt = BlockType::getByID($btID);
 		}
 		
 		if (isset($bt) && ($bt instanceof BlockType)) {
-			if ($bt->canUnInstall()) {
+			if (!$valt->validate('uninstall', $token)) {
+				$this->error->add($valt->getErrorMessage());
+			} else if ($bt->canUnInstall()) {
 				$bt->delete();
 				$this->redirect('/dashboard/install', 'block_type_deleted');
 			} else {

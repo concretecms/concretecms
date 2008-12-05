@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $btArray = BlockTypeList::getInstalledList();
 $btArray2 = BlockTypeList::getAvailableList();
 $ih = Loader::helper('concrete/interface');
+$valt = Loader::helper('validation/token');
 
 if (isset($_POST['task'])) {
 	if ($_POST['task'] == 'install_blocktype') { 
@@ -100,7 +101,7 @@ $ch = Loader::helper('concrete/interface');
 			<?
 			$buttons[] = $ch->button(t("Refresh"), $this->url('/dashboard/install','refresh_block_type', $bt->getBlockTypeID()), "left");
 			if ($bt->canUnInstall()) {
-				$buttons[] = $ch->button(t("Remove"), $this->url('/dashboard/install', 'uninstall_block_type', $bt->getBlockTypeID()), "left");
+				$buttons[] = $ch->button(t("Remove"), $this->url('/dashboard/install', 'uninstall_block_type', $bt->getBlockTypeID(), $valt->generate('uninstall')), "left");
 			}
 	
 			print $ch->buttons($buttons); ?>

@@ -4,6 +4,7 @@ Loader::model('collection_attributes');
 Loader::model('collection_types');
 
 $section = 'collection_types';
+$valt = Loader::helper('validation/token');
 
 if ($_REQUEST['task'] == 'edit') {
 	$ak = CollectionAttributeKey::get($_REQUEST['akID']);
@@ -54,6 +55,10 @@ if ($_POST['add'] || $_POST['update']) {
 		$error[] = t("A select attribute must have at least one option.");
 	}
 	
+	if (!$valt->validate('add_or_update_attribute')) {
+		$error[] = $valt->getErrorMessage();
+	}
+	
 	if (count($error) == 0) {
 		if ($_POST['add']) {
 			if ($akHandle) {
@@ -73,7 +78,7 @@ if ($_POST['add'] || $_POST['update']) {
 	}
 }
 
-if ($_REQUEST['task'] == 'delete') { 
+if ($_REQUEST['task'] == 'delete' && $valt->validate('delete_attribute')) { 
 	$ck = CollectionAttributeKey::get($_REQUEST['akID']);
 	if (is_object($ck)) {
 		$ck->delete();
@@ -97,6 +102,7 @@ if ($editMode) { ?>
 <h1><span><?=t('Edit Attribute Definition')?> (<em class="required">*</em> - <?=t('required field')?>)</span></h1>
 <div class="ccm-dashboard-inner">
 	<form method="post" id="ccm-attribute-update" action="<?=$this->url('/dashboard/collection_types/attributes/')?>">
+	<?=$valt->output('add_or_update_attribute')?>
 	<input type="hidden" name="akID" value="<?=$_REQUEST['akID']?>" />
 	<input type="hidden" name="task" value="edit" />
 	<input type="hidden" name="update" value="1" />
@@ -163,6 +169,7 @@ if ($editMode) { ?>
 
 <form method="post" id="ccm-add-attribute" action="<?=$this->url('/dashboard/collection_types/attributes/')?>">
 <input type="hidden" name="add" value="1" />
+<?=$valt->output('add_or_update_attribute')?>
 
 <div style="margin:0px; padding:0px; width:100%; height:auto" >	
 <table class="entry-form" border="0" cellspacing="1" cellpadding="0">

@@ -1,5 +1,7 @@
 <?
 	defined('C5_EXECUTE') or die(_("Access Denied."));
+	$valt = Loader::helper('validation/token');
+	$token = '&' . $valt->getParameter();
 	
 	$c = Page::getByID($_REQUEST['cID']);
 	$cID = $c->getCollectionID();
@@ -75,84 +77,76 @@
 	}
 	
 	if (!$isCheckedOut) {
-	
-		switch($_REQUEST['vtask']) {
-			case 'remove_group':
-				if ($cp->canApproveCollection() && !$isCheckedOut) {
-					$cvIDs = explode('_', $_REQUEST['cvIDs']);
-					if (is_array($cvIDs)) {
-						foreach($cvIDs as $cvID) {
-							$v = new Version($c, $cvID);
-							if (!$v->isApproved()) {
-								$v->delete();							
-							}
-						}
-						header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&cID=" . $cID);
-						exit;
-					}
-				}
-				break;
-			case 'approve':
-				if ($cp->canApproveCollection() && !$isCheckedOut) {
-					$v = new Version($c, $_GET['cvID']);
-					$v->approve();
-					header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&cID=" . $cID . "&cvID=" . $_GET['cvID']);
-					exit;
-				}
-				break;
-			case 'deny':
-				if ($cp->canApproveCollection() && !$isCheckedOut) {
-					$v = new Version($c, $_GET['cvID']);
-					if ($v->isApproved()) {
-						$v->deny();
-						header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&cID=" . $cID . "&cvID=" . $_GET['cvID']);
-						exit;
-					}
-				}
-				break;
-			case 'remove':
-				if ($cp->canApproveCollection() && $cp->canWrite() && !$isCheckedOut) {
-					$v = new Version($c, $_GET['cvID']);
-					if (!$v->isApproved()) {
-						$v->delete();
-						header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&cID=" . $cID . "&cvID=" . $_GET['cvID']);
-						exit;
-					}
-				}
-				break;
-		}
 		
-		switch($_GET['ctask']) {
-			case 'approve_pending_action':
-				if ($cp->canApproveCollection() && $cp->canWrite() && !$isCheckedOut) {
-					$approve = false;
-					if ($c->isPendingDelete()) {
-						$children = $c->getNumChildren();
-						if ($children == 0 || $cp->canCP()) {
-							$approve = true;
-							$cParentID = $c->getCollectionParentID();
+		if ($valt->validate()) {
+			switch($_REQUEST['vtask']) {
+				case 'remove_group':
+					if ($cp->canApproveCollection() && !$isCheckedOut) {
+						$cvIDs = explode('_', $_REQUEST['cvIDs']);
+						if (is_array($cvIDs)) {
+							foreach($cvIDs as $cvID) {
+								$v = new Version($c, $cvID);
+								if (!$v->isApproved()) {
+									$v->delete();							
+								}
+							}
+							header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&cID=" . $cID);
+							exit;
 						}
-					} else {
-						$approve = true;
 					}
-					if ($approve) {
-						$c->approvePendingAction();
+					break;
+				case 'approve':
+					if ($cp->canApproveCollection() && !$isCheckedOut) {
+						$v = new Version($c, $_GET['cvID']);
+						$v->approve();
+						header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&cID=" . $cID . "&cvID=" . $_GET['cvID']);
+						exit;
 					}
-					if ($c->isPendingDelete() && $approve) {
-						header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?cIsDeleted=1&cParentID={$cParentID}");
-					} else {
+					break;
+				case 'deny':
+					if ($cp->canApproveCollection() && !$isCheckedOut) {
+						$v = new Version($c, $_GET['cvID']);
+						if ($v->isApproved()) {
+							$v->deny();
+							header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&cID=" . $cID . "&cvID=" . $_GET['cvID']);
+							exit;
+						}
+					}
+					break;
+			}
+			
+			switch($_GET['ctask']) {
+				case 'approve_pending_action':
+					if ($cp->canApproveCollection() && $cp->canWrite() && !$isCheckedOut) {
+						$approve = false;
+						if ($c->isPendingDelete()) {
+							$children = $c->getNumChildren();
+							if ($children == 0 || $cp->canCP()) {
+								$approve = true;
+								$cParentID = $c->getCollectionParentID();
+							}
+						} else {
+							$approve = true;
+						}
+						if ($approve) {
+							$c->approvePendingAction();
+						}
+						if ($c->isPendingDelete() && $approve) {
+							header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?cIsDeleted=1&cParentID={$cParentID}");
+						} else {
+							header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?cID=" . $cID);
+						}
+						exit;
+					}
+					break;
+				case 'clear_pending_action':
+					if ($cp->canApproveCollection() && $cp->canWrite() && !$isCheckedOut) {
+						$c->clearPendingAction();
 						header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?cID=" . $cID);
+						exit;
 					}
-					exit;
-				}
-				break;
-			case 'clear_pending_action':
-				if ($cp->canApproveCollection() && $cp->canWrite() && !$isCheckedOut) {
-					$c->clearPendingAction();
-					header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?cID=" . $cID);
-					exit;
-				}
-				break;
+					break;
+			}
 		}
 		
 		$vl = new VersionList($c);
@@ -284,7 +278,7 @@ $("input[name=vApprove]").click(function() {
 	
 	var cvID = $("input[type=checkbox]:checked").get(0).value;
 //	ccm_showTopbarLoader();
-	$("#ccm-versions-container").load(CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1&cID=<?=$c->getCollectionID()?>&cvID=' + cvID + '&vtask=approve' );
+	$("#ccm-versions-container").load(CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1&cID=<?=$c->getCollectionID()?>&cvID=' + cvID + '&vtask=approve<?=$token?>' );
 	
 });
 
@@ -304,6 +298,7 @@ $("input[name=vRemove]").click(function() {
 	//ccm_showTopbarLoader();
 	var params = {
 		'vtask': 'remove_group',
+		'ccm_token': '<?=$valt->generate()?>',
 		'cID': <?=$c->getCollectionID()?>,
 		'cvIDs': cvIDStr
 	}
@@ -384,18 +379,6 @@ $("input[name=vRemove]").click(function() {
 			
 			?></td>
 		<td><?=date('m/d/Y g:i A', strtotime($v->getVersionDateCreated()))?></td>
-		<? /*
-		
-		<? if ($cp->canApproveCollection()) { ?>
-			<? if ($v->isApproved()) { ?>
-				<td><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&cvID=<?=$v->getVersionID()?>&vtask=deny" onclick="return ccmVersions.runAction(this)">deny</a></td>
-				<? if ($cp->canWrite()) { ?><td>&nbsp;</td><? } ?>
-			<? } else { ?>
-				<td><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&cvID=<?=$v->getVersionID()?>&vtask=approve" onclick="return ccmVersions.runAction(this)">approve</a></td>
-				<? if ($cp->canWrite()) { ?><td><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&cvID=<?=$v->getVersionID()?>&vtask=remove" onclick="return ccmVersions.delVersion(this);">remove</a></td><? } ?>
-			<? } ?>
-		<? } ?>
-		*/ ?>
 	</tr>	
 	<? } ?>
 	</table>
@@ -422,8 +405,8 @@ $("input[name=vRemove]").click(function() {
 				<? if ($children == 0) { ?>
 				
 					<div class="ccm-buttons">
-					<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=approve_pending_action" class="ccm-button-right accept" onclick="return ccm_runAction(this)"><span><?=t('Approve')?></span></a>
-					<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=clear_pending_action" class="ccm-button-left cancel" onclick="return ccm_runAction(this)"><span><em class="ccm-button-close"><?=t('Deny')?></em></span></a>
+					<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=approve_pending_action<?=$token?>" class="ccm-button-right accept" onclick="return ccm_runAction(this)"><span><?=t('Approve')?></span></a>
+					<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=clear_pending_action<?=$token?>" class="ccm-button-left cancel" onclick="return ccm_runAction(this)"><span><em class="ccm-button-close"><?=t('Deny')?></em></span></a>
 					</div>
 			
 				<? } else if ($children > 0) { ?>
@@ -431,13 +414,13 @@ $("input[name=vRemove]").click(function() {
 					<? if (!$cp->canAdminPage()) { ?>
 						<?=t('Only the super user may remove multiple pages.')?><br>
 						<div class="ccm-buttons">
-						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=clear_pending_action" class="ccm-button-left cancel" onclick="return ccm_runAction(this)"><span><em class="ccm-button-close"><?=t('Deny')?></em></span></a>
+						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=clear_pending_action<?=$token?>" class="ccm-button-left cancel" onclick="return ccm_runAction(this)"><span><em class="ccm-button-close"><?=t('Deny')?></em></span></a>
 						</div>
 
 					<? } else { ?>
 						<div class="ccm-buttons">
-						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=approve_pending_action" class="ccm-button-right accept" onclick="return ccm_runAction(this)"><span><?=t('Approve')?></span></a>
-						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=clear_pending_action" class="ccm-button-left cancel" onclick="return ccm_runAction(this)"><span><em class="ccm-button-close"><?=t('Deny')?></em></span></a>
+						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=approve_pending_action<?=$token?>" class="ccm-button-right accept" onclick="return ccm_runAction(this)"><span><?=t('Approve')?></span></a>
+						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=clear_pending_action<?=$token?>" class="ccm-button-left cancel" onclick="return ccm_runAction(this)"><span><em class="ccm-button-close"><?=t('Deny')?></em></span></a>
 						</div>
 
 					<? } ?>
@@ -460,8 +443,8 @@ $("input[name=vRemove]").click(function() {
 			?>
 			<? if ($cp->canApproveCollection()) { ?>
 				<div class="ccm-buttons">
-				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=approve_pending_action" class="ccm-button-right accept" onclick="return ccm_runAction(this)"><span><?=t('Approve')?></span></a>
-				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=clear_pending_action" class="ccm-button-left cancel" onclick="return ccm_runAction(this)"><span><em class="ccm-button-close"><?=t('Deny')?></em></span></a>
+				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=approve_pending_action<?=$token?>" class="ccm-button-right accept" onclick="return ccm_runAction(this)"><span><?=t('Approve')?></span></a>
+				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=clear_pending_action<?=$token?>" class="ccm-button-left cancel" onclick="return ccm_runAction(this)"><span><em class="ccm-button-close"><?=t('Deny')?></em></span></a>
 				</div>
 			<? } ?>
 		<? break;

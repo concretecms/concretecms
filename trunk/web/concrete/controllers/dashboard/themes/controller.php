@@ -34,9 +34,13 @@ class DashboardThemesController extends Controller {
 		$this->set('install', View::url('/dashboard/themes', 'install'));		
 	}
 
-	public function remove($ptID) {
+	public function remove($ptID, $token = '') {
 		$v = Loader::helper('validation/error');
 		try {
+			$valt = Loader::helper('validation/token');
+			if (!$valt->validate('remove', $token)) {
+				throw new Exception($valt->getErrorMessage());
+			}
 			$pl = PageTheme::getByID($ptID);
 			if (!is_object($pl)) {
 				throw new Exception(t('Invalid theme.'));
@@ -57,7 +61,8 @@ class DashboardThemesController extends Controller {
 	}
 	
 	public function activate($ptID) {
-		$this->set('activate_confirm', View::url('/dashboard/themes', 'activate_confirm', $ptID));	
+		$valt = Loader::helper('validation/token');
+		$this->set('activate_confirm', View::url('/dashboard/themes', 'activate_confirm', $ptID, $valt->generate('activate')));	
 	}
 
 	public function install($ptHandle = null) {
@@ -92,10 +97,14 @@ class DashboardThemesController extends Controller {
 	
 	// this can be run from /layouts/add/ or /layouts/edit/ or /layouts/ - anything really
 	
-	public function activate_confirm($ptID) {
+	public function activate_confirm($ptID, $token) {
 		$l = PageTheme::getByID($ptID);
 		$val = Loader::helper('validation/error');
-		if (!is_object($l)) {
+		$valt = Loader::helper('validation/token');
+		if (!$valt->validate('activate', $token)) {
+			$val->add($valt->getErrorMessage());
+			$this->set('error', $val);
+		} else if (!is_object($l)) {
 			$val->add('Invalid Theme');
 			$this->set('error', $val);
 		} else {

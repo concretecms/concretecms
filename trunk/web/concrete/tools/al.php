@@ -3,6 +3,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 $c = Page::getByPath("/dashboard/mediabrowser");
 $cp = new Permissions($c);
+$valt = Loader::helper('validation/token');
 $u = new User();
 if (!$cp->canRead()) {
 	die(_("Unable to access the file manager."));
@@ -84,7 +85,7 @@ ccm_alSelectItem = function(obj, e) {
 		$('a#menuProperties' + bID).dialog();
 		$('a#menuDelete' + bID).click(function() {
 			if (confirm('<?=t('Are you sure you want to delete this file?')?>')) {
-				$.getJSON('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_delete.php', {'bID': bID}, function(resp) {
+				$.getJSON('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_delete.php', {'bID': bID, 'ccm_token': '<?=$valt->generate('delete_file')?>'}, function(resp) {
 					parseJSON(resp, function() {
 						if(resp.error==1) alert(resp.message);
 						else{
@@ -237,7 +238,6 @@ if (is_array($assetLibraryPassThru)) {
 		$_REQUEST[$key] = $value;	
 	}
 }
-
 if($_GET['single_upload_success']) { ?>
 	<div class="message success"><?=t('File Uploaded Successfully')?></div>
 <? } ?>
@@ -246,6 +246,7 @@ if($_GET['single_upload_success']) { ?>
  <a id="ccm-button-browse" class="ccm-button" dialog-width="600" dialog-height="525" dialog-modal="false" dialog-title="<?=t('Add File')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_upload.php?cID=<?=$_REQUEST['cID']?>"><span><em class="ccm-button-add"><?=t('Add Multiple Files')?></em></span></a>
 <form method="post" enctype="multipart/form-data" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_upload_process_single.php?cID=<?=$c->getCollectionID()?>" target="upload-frame" onsubmit="ccm_alSubmitSingle();">
     <input type="file" name="Filedata" id="#ccm-al-upload-single-file" />
+    <?=$valt->output('upload');?>
     <img id="ccm-al-upload-single-loader" style="display:none;" src="<?=ASSETS_URL_IMAGES?>/dashboard/sitemap/loading.gif" />
     <input id="ccm-al-upload-single-submit" type="submit" value="<?=t('Upload')?>" />    
 </form>
