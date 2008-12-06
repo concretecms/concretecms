@@ -55,7 +55,6 @@
               cells = new Array();
 				for (i = 0; i < 4; i++) {
 					cells[i] = row.insertCell(i);
-					cells[i].style="text-align: center";
 				}
 				
 				cells[0].className = "actor";
@@ -74,9 +73,9 @@
           existingRow = document.getElementById("_row:" + rowValue);
           if (!existingRow) {
                
-               tbl = document.getElementById("ccmPermissionsTable");	      
-              row = tbl.insertRow(-1); // insert at bottom of table. safari, wtf ?                            
-              row.id = "_row:" + rowValue;
+            tbl = document.getElementById("ccmPermissionsTable");	      
+            row = tbl.insertRow(-1); // insert at bottom of table. safari, wtf ?                            
+            row.id = "_row:" + rowValue;
 
 			ccm_setupGridStriping('ccmPermissionsTable');
 
@@ -84,7 +83,6 @@
               cells = new Array();
 				for (i = 0; i < 4; i++) {
 					cells[i] = row.insertCell(i);
-					cells[i].style="text-align: center";
 				}
               
               	cells[0].className = "actor";

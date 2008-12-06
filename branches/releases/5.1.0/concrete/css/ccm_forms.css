@@ -86,6 +86,8 @@ a.ccm-button em.ccm-button-close {background-image: url(../images/icons/close.pn
 	padding-right: 0;
 }
 
+th.ccm-permissions-header {text-align: left !important; white-space: nowrap}
+
 table.ccm-grid {border-left: 1px solid #D4D4D4; border-top: 1px solid #D4D4D4; font-size: 12px; }
 table.ccm-grid th, table.ccm-grid td {border-right: 1px solid #D4D4D4; border-bottom: 1px solid #D4D4D4; font-size: 12px; padding: 7px; background: #fff}
 table.ccm-grid tr.ccm-row-alt td {background-color: #E5EDFD !important}

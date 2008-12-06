@@ -21,14 +21,14 @@ if ((!$cp1->canRead()) && (!$cp2->canRead())) {
 ?>
 
 <script type="text/javascript">
-var ccm_areaActiveTab = "ccm-select-group";
+var ccm_ugActiveTab = "ccm-select-group";
 
 $("#ccm-ug-tabs a").click(function() {
 	$("li.ccm-nav-active").removeClass('ccm-nav-active');
-	$("#" + ccm_areaActiveTab + "-tab").hide();
-	ccm_areaActiveTab = $(this).attr('id');
+	$("#" + ccm_ugActiveTab + "-tab").hide();
+	ccm_ugActiveTab = $(this).attr('id');
 	$(this).parent().addClass("ccm-nav-active");
-	$("#" + ccm_areaActiveTab + "-tab").show();
+	$("#" + ccm_ugActiveTab + "-tab").show();
 });
 
 </script>
