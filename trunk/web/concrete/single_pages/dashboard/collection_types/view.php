@@ -355,7 +355,13 @@ if ($ctEditMode) {
 			?></td>
 		<td>
 		<? if ($ct->getMasterCollectionID()) {?>
-			<? print $ih->button_js(t('Defaults'), "window.open('" . $this->url('/dashboard/collection_types?cID=' . $ct->getMasterCollectionID() . '&task=load_master')."')", 'left', false, array('title'=>t('Lets you set default permissions and blocks for a particular page type.')) );?>
+			<? if ($u->getUserID() == USER_SUPER_ID) { ?>
+				<? print $ih->button_js(t('Defaults'), "window.open('" . $this->url('/dashboard/collection_types?cID=' . $ct->getMasterCollectionID() . '&task=load_master')."')", 'left', false, array('title'=>t('Lets you set default permissions and blocks for a particular page type.')) );?>
+			<? } else { 
+				$defaultsErrMsg = t('You must be logged in as %s to edit default content on page types.', USER_SUPER);
+				?>
+				<? print $ih->button_js(t('Defaults'), "alert('" . $defaultsErrMsg . "')", 'left', false, array('title'=>t('Lets you set default permissions and blocks for a particular page type.')) );?>
+			<? } ?>
 		<? } ?>
 	
 		</td>
