@@ -1,9 +1,11 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
+<div><?=intval($mapObj->kml_fID)?></div>
+<div><?=get_class($mapObj->getFileObject())?></div>
 <?
 $includeAssetLibrary = true;
 $al = Loader::helper('concrete/asset_library');
 if(intval($mapObj->kml_fID)>0){ 
-	$bf = $controller->getFileObject();
+	$bf = $mapObj->getFileObject();
 }
 ?>
 <style>
@@ -48,7 +50,7 @@ table#googleMapBlockSetup td{ font-size:12px; vertical-align:top; padding-bottom
 	<tr>
 		<th><?=t('KML Upload')?>:</th>
 		<td>
-		<?=$al->file('ccm-b-file', 'kml_fID', t('Choose File'), $bf);?></div>
+		<?=$al->file('ccm-b-file', 'fID', t('Choose File'), $bf);?></div>
 		<div class="ccm-note">
 			<a href="http://code.google.com/apis/kml/documentation/" target="_blank"><?=t("What's a KML file?")?></a><br />
 			<?=t('(For your KML file to work, it has to be accessible by google over the internet)'); ?>

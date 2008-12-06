@@ -27,7 +27,9 @@ function googleMapInit<?=$bID?>() {
 <? if( strlen($title)>0){ ?><h3><?=$title?></h3><? } ?>
 
 <div id="googleAdvancedMapCanvas<?=$bID?>" class="googleAdvancedMapCanvas"></div>
-<div class="ccm-note"><a href="<?=$kml_file_path ?>" target="_blank">Download KML for Google Earth</a></div>
+<? if(strlen($kml_file_path)){ ?>
+	<div class="ccm-note"><a href="<?=$kml_file_path ?>" target="_blank">Download KML for Google Earth</a></div>
+<? } ?>
 
 <script type="text/javascript">$(function() {
 	googleMapInit<?=$bID?>();
