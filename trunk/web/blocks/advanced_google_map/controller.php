@@ -79,7 +79,7 @@ class AdvancedGoogleMapBlockController extends BlockController {
 	function save($data) { 
 		$args['title'] = isset($data['title']) ? trim($data['title']) : '';
 		$args['api_key'] = isset($data['api_key']) ? trim($data['api_key']) : '';
-		$args['kml_fID'] = (isset($data['kml_fID']))?intval($data['kml_fID']):intval($this->kml_fID);
+		$args['kml_fID'] = (is_int($data['fID']))?intval($data['fID']):intval($this->kml_fID); 
 		$args['w'] = ($data['w']) ? trim($data['w']) : '100%';
 		$args['h'] = ($data['h']) ? trim($data['h']) : '400px';	
 		$args['map_type'] = ($data['map_type']) ? trim($data['map_type']) : 'Normal';			
