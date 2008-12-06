@@ -1,4 +1,5 @@
 <?
+$form = Loader::helper('form');
 defined('C5_EXECUTE') or die(_("Access Denied."));
 if (isset($response)) { ?>
 	<?=$response?>
@@ -7,7 +8,7 @@ if (isset($response)) { ?>
 
 <p><?=t("This is just an example of how a custom form works.")?></p>
 
-<input type="text" name="test_text_field" value="<?=$_GET['test_text_field']?>" />
+<?=$form->text('test_text_field')?>
 
 <input type="submit" name="submit" value="submit" />
 
