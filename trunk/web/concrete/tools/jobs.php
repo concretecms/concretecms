@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 if (!ini_get('safe_mode')) {
-	set_time_limit(0);
+	@set_time_limit(0);
 }
 $jobObj = Loader::model("job");
 $outputDisabled=0;
