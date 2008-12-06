@@ -115,11 +115,10 @@ div#ccm-dashboard-notification {
 /* subnav */
 
 div#ccm-dashboard-subnav {
-	background: url(../images/dashboard/subnav_bg.png) repeat-x top;;
+	background: url(../images/dashboard/subnav_bg.png) repeat-x top;
 	/* border-bottom: 1px solid #afafaf; */
 	margin: 46px 0px -48px 201px;
 	padding-bottom: 5px;
-	height:34px;
 }
 div#ccm-dashboard-subnav div.ccm-spacer {line-height: 0px; margin: 0px; height: 0px}
 div#ccm-dashboard-subnav ul {
