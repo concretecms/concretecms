@@ -35,10 +35,16 @@ class DashboardInstallController extends Controller {
 		}
 		
 		if (isset($bt) && ($bt instanceof BlockType)) {
-			$this->set('message', t('Block Type Refreshed. Any database schema changes have been applied.'));
 			try {
-				BlockType::installBlockType($bt->getBlockTypeHandle(), $btID);			
+				$resp = BlockType::installBlockType($bt->getBlockTypeHandle(), $btID);			
+				if ($resp != '') {
+					throw new Exception($resp);
+				}
+				
+				$this->set('message', t('Block Type Refreshed. Any database schema changes have been applied.'));
+
 			} catch(Exception $e) {
+				@ob_end_flush();
 				$this->set('error', $e);
 			}
 			$this->inspect_block_type($btID);
