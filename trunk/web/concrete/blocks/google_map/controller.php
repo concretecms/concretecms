@@ -34,7 +34,8 @@
 		}
 		
 		function __construct($obj = null) {		
-			parent::__construct($obj);	
+			parent::__construct($obj);	 
+			if(!$this->title) $this->title=t("My Map"); 
 		}		
 		
 		public function add() {
