@@ -40,7 +40,7 @@ class AdvancedGoogleMapBlockController extends BlockController {
 	
 	function __construct($obj = null) {		
 		parent::__construct($obj);	
-		$this->title=t("My Map");
+		if(!$this->title) $this->title=t("My Map");
 	}		
 	
 	public function add() {
