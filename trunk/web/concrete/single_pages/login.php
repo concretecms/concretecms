@@ -18,7 +18,6 @@
 <? } ?>
 
 <div class="ccm-form">
-
 <form method="post" action="<?=$this->url('/login', 'do_login')?>">
 	<div>
 	<label for="uName"><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?>

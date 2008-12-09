@@ -29,7 +29,7 @@
 		
 		function __construct($obj = null) {		
 			parent::__construct($obj);	
-			$this->title=t("My Video");
+			if(!$this->title) $this->title=t("My Video");
 		}
 		
 		function view(){ 
