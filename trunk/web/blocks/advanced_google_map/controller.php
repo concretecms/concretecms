@@ -64,7 +64,7 @@ class AdvancedGoogleMapBlockController extends BlockController {
 	}
 	
 	function getFileObject() {
-		return LibraryFileBlockController::getFile($this->fID);
+		return LibraryFileBlockController::getFile($this->kml_fID);
 	}		
 	
 	function getFileURL(){
