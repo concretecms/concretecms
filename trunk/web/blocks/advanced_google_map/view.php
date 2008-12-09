@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <style>
 #googleAdvancedMapCanvas<?=$bID?>{ width:<?=($w)?$w:'100%'?>; border:0px none; height:<?=($h)?$h:'400px'?>;}
-</style> 
+</style>  
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?=$api_key?>" type="text/javascript"></script> 
 <script type="text/javascript"> 
 var geoXml<?=$bID?>=null;
