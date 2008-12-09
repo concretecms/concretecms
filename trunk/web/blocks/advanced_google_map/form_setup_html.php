@@ -36,13 +36,13 @@ table#googleMapBlockSetup td{ font-size:12px; vertical-align:top; padding-bottom
 	<tr>
 		<th><?=t('Width')?>:</th>
 		<td>
-		<input id="ccm_googlemap_block_w" name="w" value="<?=$mapObj->w?>" maxlength="255" type="text" size="4"> 
+		<input id="ccm_googlemap_block_w" name="w" value="<?=$mapObj->w?>" maxlength="255" type="text" size="6"> 
 		</td>
 	</tr>
 	<tr>
 		<th><?=t('Height')?>:</th>
 		<td>
-		<input id="ccm_googlemap_block_h" name="h" value="<?=$mapObj->h?>" maxlength="255" type="text" size="4"> 
+		<input id="ccm_googlemap_block_h" name="h" value="<?=$mapObj->h?>" maxlength="255" type="text" size="6"> 
 		</td>
 	</tr>	
 	<tr>
