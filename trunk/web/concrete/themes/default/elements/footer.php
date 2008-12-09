@@ -8,5 +8,6 @@
 
 </div>
 
+<? require(DIR_FILES_ELEMENTS_CORE . '/footer_required.php'); ?>
 </body>
 </html>

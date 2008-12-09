@@ -11,7 +11,8 @@ class DashboardSettingsController extends Controller {
 		if ($site_maintenance_mode < 1) {
 			$site_maintenance_mode = 0;
 		}
-		
+		 
+		$this->set('site_tracking_code', Config::get('SITE_TRACKING_CODE') );
 		$this->set('site_maintenance_mode', $site_maintenance_mode);
 		$this->set('url_rewriting', URL_REWRITING);
 		$this->set('site', SITE);
@@ -19,6 +20,9 @@ class DashboardSettingsController extends Controller {
 		
 		if ($updated) {
 			switch($updated) {
+				case "tracking_code_saved";
+					$this->set('message', t('Your tracking code has been saved.'));	
+					break;			
 				case "maintenance_enabled";
 					$this->set('message', t('Maintenance Mode turned on. Your site is now private.'));	
 					break;
@@ -59,6 +63,17 @@ class DashboardSettingsController extends Controller {
 			$this->set('error', array($this->token->getErrorMessage()));
 		}
 	}
+	
+	public function update_tracking_code() {
+		if ($this->token->validate("update_tracking_code")) {
+			if ($this->isPost()) {
+				Config::save('SITE_TRACKING_CODE', $this->post('tracking_code'));
+				$this->redirect('/dashboard/settings','tracking_code_saved'); 			
+			}
+		} else {
+			$this->set('error', array($this->token->getErrorMessage()));
+		}
+	}	
 
 	public function update_sitename() {
 		if ($this->token->validate("update_sitename")) {
