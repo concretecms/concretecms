@@ -1,6 +1,6 @@
 // JavaScript Document
 
-var googleMapBlock ={
+var advancedGoogleMapBlock ={
 
 	validate:function(){
 		var failed=0; 
@@ -21,4 +21,4 @@ var googleMapBlock ={
 	} 
 }
 
-ccmValidateBlockForm = function() { return googleMapBlock.validate(); }
+ccmValidateBlockForm = function() { return advancedGoogleMapBlock.validate(); }
