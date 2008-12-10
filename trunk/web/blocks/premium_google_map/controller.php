@@ -3,11 +3,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 Loader::block('library_file');
 
-class AdvancedGoogleMapBlockController extends BlockController {
+class PremiumGoogleMapBlockController extends BlockController {
 	
 	var $pobj;
 	
-	protected $btTable = 'btAdvancedGoogleMap';
+	protected $btTable = 'btGoogleMapPremium';
 	protected $btInterfaceWidth = "400";
 	protected $btInterfaceHeight = "220";
 	
@@ -24,7 +24,7 @@ class AdvancedGoogleMapBlockController extends BlockController {
 	 * Used for localization. If we want to localize the name/description we have to include this
 	 */
 	public function getBlockTypeDescription() {
-		return t("The Advanced Google Map lets you add a KML data file.");
+		return t("The premium Google Map lets you add a KML data file and specify additional unavailable in the regular Google Map block.");
 	}
 	
 	public function getBlockTypeName() {
