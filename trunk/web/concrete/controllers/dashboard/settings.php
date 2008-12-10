@@ -7,13 +7,8 @@ class DashboardSettingsController extends Controller {
 	
 	public function view($updated = false) {
 		$u = new User();
-		$site_maintenance_mode = Config::get('SITE_MAINTENANCE_MODE');
-		if ($site_maintenance_mode < 1) {
-			$site_maintenance_mode = 0;
-		}
 		 
-		$this->set('site_tracking_code', Config::get('SITE_TRACKING_CODE') );
-		$this->set('site_maintenance_mode', $site_maintenance_mode);
+		$this->set('site_tracking_code', Config::get('SITE_TRACKING_CODE') );		
 		$this->set('url_rewriting', URL_REWRITING);
 		$this->set('site', SITE);
 		$this->set('ui_breadcrumb', $u->config('UI_BREADCRUMB'));
@@ -23,12 +18,15 @@ class DashboardSettingsController extends Controller {
 				case "tracking_code_saved";
 					$this->set('message', t('Your tracking code has been saved.'));	
 					break;			
+				/*
+				//moved to set_permissions
 				case "maintenance_enabled";
 					$this->set('message', t('Maintenance Mode turned on. Your site is now private.'));	
 					break;
 				case "maintenance_disabled":
 					$this->set('message', t('Maintenance Mode turned off. Your site is public.'));	
 					break;
+				*/
 				case "editing_preferences_saved":
 					$this->set('message', t('Editing preferences saved.'));	
 					break;
@@ -49,14 +47,15 @@ class DashboardSettingsController extends Controller {
 		}
 	}
 
-	public function update_maintenance() {
+	public function update_maintenance() { 
+		$this->set_permissions();
 		if ($this->token->validate("update_maintenance")) {
 			if ($this->isPost()) {
 				Config::save('SITE_MAINTENANCE_MODE', $this->post('site_maintenance_mode'));
 				if ($this->post('site_maintenance_mode') == 1) { 
-					$this->redirect('/dashboard/settings','maintenance_enabled');
+					$this->redirect('/dashboard/settings','set_permissions',"maintenance_enabled");
 				} else {
-					$this->redirect('/dashboard/settings','maintenance_disabled');
+					$this->redirect('/dashboard/settings','set_permissions',"maintenance_disabled");
 				}
 			}
 		} else {
@@ -184,6 +183,28 @@ class DashboardSettingsController extends Controller {
 	}
 	
 	protected function set_permissions($saved = false) {
+	
+		//maintanence mode
+		$site_maintenance_mode = Config::get('SITE_MAINTENANCE_MODE');
+		if ($site_maintenance_mode < 1) {
+			$site_maintenance_mode = 0;
+		}
+		$this->set('site_maintenance_mode', $site_maintenance_mode);	
+	
+		if ($saved) {
+			switch($saved) { 
+				case "maintenance_enabled";
+					$this->set('message', t('Maintenance Mode turned on. Your site is now private.'));	
+					break;
+				case "maintenance_disabled":
+					$this->set('message', t('Maintenance Mode turned off. Your site is public.'));	
+					break;	
+				//permissions saved	
+				default: 
+					$this->set('message', t('Permissions saved.'));	
+			}
+		}	
+	
 		if (PERMISSIONS_MODEL != 'simple') {
 			return;
 		}
@@ -212,10 +233,6 @@ class DashboardSettingsController extends Controller {
 		$this->set('gru', $gru);
 		$this->set('gArray', $gArray);
 		$this->set('home', $home);
-		
-		if ($saved) {
-			$this->set('message', t('Permissions saved.'));	
-		}
 	}
 	
 	public function update_permissions() {
