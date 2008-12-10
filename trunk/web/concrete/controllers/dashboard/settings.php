@@ -177,7 +177,7 @@ class DashboardSettingsController extends Controller {
 		$subnav = array(
 			array(View::url('/dashboard/settings'), t('General'), $globalSelected),
 			array(View::url('/dashboard/settings', 'set_permissions'), t('Access'), $permsSelected),
-			array(View::url('/dashboard/settings', 'set_developer'), t('Developer/Advanced'), $devSelected)
+			array(View::url('/dashboard/settings', 'set_developer'), t('Debug'), $devSelected)
 		);
 		$this->set('subnav', $subnav);
 	}
