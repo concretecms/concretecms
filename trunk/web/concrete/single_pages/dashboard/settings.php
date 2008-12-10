@@ -117,8 +117,46 @@ $h = Loader::helper('concrete/interface'); ?>
 </div>
 
 
-<? } else { ?>
 
+<form method="post" id="maintenance-form" action="<?=$this->url('/dashboard/settings', 'update_maintenance')?>">
+	<?=$this->controller->token->output('update_maintenance')?>
+	
+	<h1><span><?=t('Maintenance Mode')?></span></h1>
+	<div class="ccm-dashboard-inner">
+	
+	<p>
+	<?=t('Maintenance mode makes the front-end of the website inaccessible, while leaving the dashboard available to admin users.')?>
+	</p>
+	
+	<div class="ccm-dashboard-radio"><input type="radio" name="site_maintenance_mode" value="0"  <? if ($site_maintenance_mode == 0) { ?> checked <? } ?> /> <?=t('Disabled')?></div>
+	<div class="ccm-dashboard-description"><?=t('When disabled, the site is available to the public.')?></div>
+	
+	<div class="ccm-dashboard-radio"><input type="radio" id="site-maintenance-mode-enabled" name="site_maintenance_mode" value="1" <? if ($site_maintenance_mode == 1) { ?> checked <? } ?> /> <?=t('Enabled')?> </div>
+	<div class="ccm-dashboard-description"><?=t('If enabled, only your dashboard will be accessible.')?></div>
+	
+	<?
+	$b1 = $h->button_js(t('Save'), 'saveMaintenanceMode');
+	print $h->buttons($b1);
+	?>
+	<br class="clear" />
+	</div>
+
+</form>
+
+<script type="text/javascript">
+saveMaintenanceMode = function() {
+	if ($('#site-maintenance-mode-enabled').get(0).checked) {
+		if (confirm('<?=t('Are you sure you want to put your site into maintenance mode? This will make it inaccessible to public visitors.')?>')) {
+			$("#maintenance-form").get(0).submit();
+		}
+	} else {
+		$("#maintenance-form").get(0).submit();
+	}
+}
+</script>
+
+
+<? } else { ?>
 
 
 <div id="ccm-module-wrapper">
@@ -215,31 +253,6 @@ $h = Loader::helper('concrete/interface'); ?>
 
 </form>
 
-<form method="post" id="maintenance-form" action="<?=$this->url('/dashboard/settings', 'update_maintenance')?>">
-	<?=$this->controller->token->output('update_maintenance')?>
-	
-	<h1><span><?=t('Maintenance Mode')?></span></h1>
-	<div class="ccm-dashboard-inner">
-	
-	<p>
-	<?=t('Maintenance mode makes the front-end of the website inaccessible, while leaving the dashboard available to admin users.')?>
-	</p>
-	
-	<div class="ccm-dashboard-radio"><input type="radio" name="site_maintenance_mode" value="0"  <? if ($site_maintenance_mode == 0) { ?> checked <? } ?> /> <?=t('Disabled')?></div>
-	<div class="ccm-dashboard-description"><?=t('When disabled, the site is available to the public.')?></div>
-	
-	<div class="ccm-dashboard-radio"><input type="radio" id="site-maintenance-mode-enabled" name="site_maintenance_mode" value="1" <? if ($site_maintenance_mode == 1) { ?> checked <? } ?> /> <?=t('Enabled')?> </div>
-	<div class="ccm-dashboard-description"><?=t('If enabled, only your dashboard will be accessible.')?></div>
-	
-	<?
-	$b1 = $h->button_js(t('Save'), 'saveMaintenanceMode');
-	print $h->buttons($b1);
-	?>
-	<br class="clear" />
-	</div>
-
-</form>
-
 
 <form method="post" id="tracking-code-form" action="<?=$this->url('/dashboard/settings', 'update_tracking_code')?>">
 	<?=$this->controller->token->output('update_tracking_code')?>
@@ -266,18 +279,7 @@ $h = Loader::helper('concrete/interface'); ?>
 </div>
 </div>
 
-<script type="text/javascript"> 
 
-saveMaintenanceMode = function() {
-	if ($('#site-maintenance-mode-enabled').get(0).checked) {
-		if (confirm('<?=t('Are you sure you want to put your site into maintenance mode? This will make it inaccessible to public visitors.')?>')) {
-			$("#maintenance-form").get(0).submit();
-		}
-	} else {
-		$("#maintenance-form").get(0).submit();
-	}
-}
-</script>
 
 <? } ?>
 
