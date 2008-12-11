@@ -89,7 +89,7 @@ foreach($posts as $p) { ?>
 <? if($controller->displayGuestBookForm) { ?>
 	<?	
 	if( $controller->authenticationRequired && !$u->isLoggedIn() ){ ?>
-		<div>You must be <a href="<?=View::url("/login","forward",$controller->pobj->getBlockCollectionID())?>">logged in</a> to leave a reply.</div>
+		<div><?=t('You must be logged in to leave a reply.')?> <a href="<?=View::url("/login","forward",$controller->pobj->getBlockCollectionID())?>"><?=t('Login')?> &raquo;</a></div>
 	<? }else{ ?>	
 		<a name="guestBookForm-<?=$controller->bID?>"></a>
 		<div id="guestBook-formBlock-<?=$controller->bID?>" class="guestBook-formBlock">
