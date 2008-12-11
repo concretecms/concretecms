@@ -42,7 +42,7 @@ if (!defined('ENABLE_MARKETPLACE_SUPPORT')){
 		$marketplace_enabled==true;
 	} 
 	define('MARKETPLACE_CONFIG_OVERRIDE',false);
-	define('ENABLE_MARKETPLACE_SUPPORT',$marketplace_enabled);
+	define('ENABLE_MARKETPLACE_SUPPORT',$marketplace_enabled); 
 	//Config::getOrDefine('MARKETPLACE_ENABLED', true);	
 }else{
 	define('MARKETPLACE_CONFIG_OVERRIDE',true);
