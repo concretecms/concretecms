@@ -222,6 +222,34 @@ saveMaintenanceMode = function() {
 
 </form>
 
+
+<form method="post" id="marketplace-support-form" action="<?=$this->url('/dashboard/settings', 'update_marketplace_support')?>" enctype="multipart/form-data" >
+	<?=$this->controller->token->output('update_marketplace_support')?>
+
+	<h1><span><?=t('Enable Marketplace Support')?> </span></h1>
+	
+	<div class="ccm-dashboard-inner">	
+		 
+		<? if( MARKETPLACE_CONFIG_OVERRIDE ){ ?>
+		
+			<div class="ccm-dashboard-description"><?=t("The marketplace has been manually set in the site's configuration files.")?></div>
+		
+		<? }else{ ?>
+				
+			<div class="ccm-dashboard-radio"><?=$form->checkbox('MARKETPLACE_ENABLED', 1, $marketplace_enabled_in_config)?> <?=t('Marketplace Enabled')?></div>
+			<div class="ccm-dashboard-description"><? /*t("") */ ?></div>
+			
+			<?
+			$b1 = $h->submit( t('Save'), 'marketplace-support-form');
+			print $h->buttons($b1);
+			?> 
+		
+		<? } ?>
+		<br class="clear" />
+	</div>
+</form>
+
+
 </div>
 
 
