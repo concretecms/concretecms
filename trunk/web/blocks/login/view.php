@@ -1,7 +1,10 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied.")); 
 global $c;
+  
+$loginURL= $this->url('/login', 'do_login' );
 ?>
+
 
 <style>
 .login_block_form .loginTxt{ font-weight:bold }
@@ -10,7 +13,11 @@ global $c;
 .login_block_form .login_block_register_link{margin-top:8px; font-size:11px}
 </style>
 
-<form class="login_block_form" method="post" action="<?=$this->url('/login', 'do_login')?>">
+<form class="login_block_form" method="post" action="<?=$loginURL?>">
+	<? if($returnToSamePage ){ ?>
+		<input type="hidden" name="rcID" id="rcID" value="<?=$c->getCollectionID(); ?>" />
+	<? } ?>
+	
 	<div class="loginTxt"><?=t('Login')?></div>
 
 	<div class="uNameWrap">

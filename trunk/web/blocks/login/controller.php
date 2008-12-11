@@ -10,6 +10,8 @@
 		
 		public $showRegisterLink = 0;
 		public $registerText = "";
+		public $returnToSamePage = 0;
+		
 		
 		/** 
 		 * Used for localization. If we want to localize the name/description we have to include this
@@ -30,11 +32,13 @@
 		function view(){ 
 			$this->set('registerText', $this->registerText);	
 			$this->set('showRegisterLink', $this->showRegisterLink); 
+			$this->set('returnToSamePage', $this->returnToSamePage); 
 		}
 		
 		function save($data) { 
 			$args['registerText'] = isset($data['registerText']) ? trim($data['registerText']) : '';
-			$args['showRegisterLink'] = intval($data['showRegisterLink']);			
+			$args['showRegisterLink'] = intval($data['showRegisterLink']);	
+			$args['returnToSamePage'] = intval($data['returnToSamePage']);			
 			parent::save($args);
 		}
 		
