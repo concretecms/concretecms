@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <schema version="0.3">
-	<table name="btAdvancedGoogleMap">
+	<table name="btGoogleMapPremium">
 		<field name="bID" type="I">
 			<key />
 			<unsigned />
