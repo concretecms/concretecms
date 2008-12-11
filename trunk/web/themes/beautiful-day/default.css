@@ -1,0 +1,213 @@
+/*
+Template name: Beautiful Day
+Template URI: http://templates.arcsin.se/beautiful-day-website-template/
+Release date: 2006-11-12
+Description: A soft and bright two-column template.
+Author: Viktor Persson
+Author URI: http://arcsin.se/
+
+This template is licensed under a Creative Commons Attribution 2.5 License:
+http://templates.arcsin.se/license/
+*/
+
+/* standard elements */
+html {min-height: 100%;}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+a {color: #963;}
+a:hover {color: #C60;}
+
+body {
+	background: #CCD8E0 url(img/bg.jpg) repeat-x left bottom;
+	color: #444;
+	font: normal 62.5% Tahoma,sans-serif;
+}
+
+p,code,ul {padding-bottom: 1.2em;}
+
+li {list-style: none;}
+
+h1 {
+	font: normal 1.8em Tahoma,sans-serif;
+	margin-bottom: 4px;
+}
+
+code {
+	background: #FFF;
+	border: 1px solid #EEE;
+	border-left: 6px solid #C1CAD3;
+	color: #666;
+	display: block;
+	font: normal 1em Tahoma,sans-serif;
+	line-height: 1.6em;
+	margin-bottom: 12px;
+	padding: 8px 10px;
+	white-space: pre;
+}
+
+blockquote {
+	background: url(img/quote.gif) no-repeat;
+	display: block;
+	font-weight: bold;
+	padding-left: 28px;
+}
+
+h1,h2,h3 {padding-top: 6px;}
+
+/* misc */
+.clearer {clear: both;}
+
+.left {float: left;}
+
+.right {float: right;}
+
+/* structure */
+.container {
+	background: #FFF;
+	font-size: 1.2em;
+	margin: 0 auto;
+	padding: 0 10px 10px;
+	width: 780px;
+}
+
+/* header */
+.top {
+	background: url(img/clouds.gif) repeat-x;
+	padding: 50px 10px 0;
+}
+
+/* title */
+.header {
+	background: #FFF;
+	font-size: 1.2em;
+	height: 150px;
+	margin: 0 auto;
+	padding: 10px 10px 5px;
+	width: 780px;
+}
+.header .left, .header .right {
+	background: #A4A4A0;
+	color: #FFF;
+	height: 150px;	
+}
+.header .left {
+	background: #B3C2C7 url(img/header.jpg) no-repeat;
+	font: normal 2.8em "Trebuchet MS",sans-serif;
+	line-height: 150px;
+	text-align: center;	
+	width: 564px;
+}
+.header .right {
+	overflow: hidden;
+	width: 212px;
+}
+.header .right p,.header .right h2 {padding: 0 16px;}
+.header .right h2 {padding-top: 16px; font: normal 1.6em "Trebuchet MS",sans-serif;}
+
+/* navigation */
+.navigation {	
+	background: #D9E1E5 url(img/nav.gif);
+	border: 1px solid #DFEEF7;
+	border-color: #DFEEF7 #CFDEE7;
+	height: 41px;
+}
+.navigation li{
+	float:left;
+	
+}
+.navigation a {
+	background: #D9E1E5 url(img/nav.gif);
+	border-right: 1px solid #AFBEC7;
+	color: #456;
+	display: block;
+	/* float: left; */
+	font: bold 1.1em sans-serif;
+	line-height: 41px;
+	padding: 0 20px;
+	text-decoration: none;
+}
+.navigation a:hover {background-position: left bottom; color: #234;}
+
+/* main */
+.main {
+	border-top: 4px solid #FFF;
+	background: url(img/bgmain.gif) repeat-y;
+}
+
+/* sub navigation */
+.sidenav {
+	float: right;
+	width: 210px;
+}
+body.left_sidebar .sidenav {
+        float: left;
+}
+.sidenav h2 {
+	color: #5A5A43;
+	font-size: 1em;
+	line-height: 30px;
+	margin: 0;
+	padding-left: 12px;
+}
+.sidenav ul {
+	padding: 0;
+	border-top: 1px solid #EAEADA;
+}
+.sidenav li {border-bottom: 1px solid #EAEADA;}
+.sidenav li a {
+	font-size: 1.1em;
+	color: #554;
+	display: block;
+	padding: 8px 0 8px 5%;
+	text-decoration: none;
+	width: 95%;
+}
+.sidenav li a:hover {
+	background: #F0F0EB;
+	color: #654;	
+}
+
+/* content */
+.content {
+	float: left;
+	margin: 10px 0;
+	padding: 0 16px;
+	width: 531px;
+}
+
+body.full .content {
+        width: 741px;
+}
+
+body.left_sidebar .content {
+        float: right;
+}
+
+.content .descr {
+	color: #664;
+	font-size: 0.9em;
+	margin-bottom: 6px;
+}
+.content li {
+	list-style: url(img/li.gif);
+	margin-left: 18px;
+}
+.content p {font-family: "Lucida Sans Unicode",sans-serif;}
+
+/* footer */
+.footer {
+	background: url(img/bgfooter.gif) repeat-x;
+	color: #FFF;
+	font: bold 1em sans-serif;
+	line-height: 39px;
+	padding: 0 12px;
+	text-align: center;
+	height:40px;
+}
+.footer .right {color: #DEF;}
+.footer .right a {color: #DEF; text-decoration: none;}
+.footer a, .footer a:hover,.footer .right a:hover {color: #FFF;}

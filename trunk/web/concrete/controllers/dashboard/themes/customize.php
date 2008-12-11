@@ -5,20 +5,22 @@ class DashboardThemesCustomizeController extends Controller {
 
 	protected $helpers = array('html', 'form');
 
-	public function view($themeID, $isSaved = false) {
+	public function view($themeID, $state = false) {
 		$pt = PageTheme::getByID($themeID);
 		if (is_object($pt)) {
 			$styles = $pt->getEditableStylesList();
 			$this->set('styles', $styles);
 			$this->set('themeID', $themeID);
-		 	Cache::delete('preview_theme', $themeID);
+		 	Cache::delete('preview_theme_style', $themeID);
 		}
 		$subnav = array(
 			array(View::url('/dashboard/themes/'), '&lt; ' . t('Return to Themes'))
 		);
 		$this->set('subnav', $subnav);		
-		if ($isSaved) {
-			$this->set('message', t('Editable styles saved.'));
+		if ($state == 'saved') {
+			$this->set('message', t('Theme styles updated.'));
+		} else if ($state == 'reset') {
+			$this->set('message', t('This theme has been reset.'));
 		}
 	}
 	
@@ -37,6 +39,16 @@ class DashboardThemesCustomizeController extends Controller {
 		}
 	}
 	
+	public function reset() {
+		$themeID = $this->post('themeID');
+		$pt = PageTheme::getByID($themeID);
+		if (is_object($pt)) {
+			$values = $pt->reset();
+			$this->redirect('/dashboard/themes/customize', 'view', $themeID, 'reset');
+		}
+	}
+	
+
 
 
 }

@@ -308,6 +308,7 @@ class InstallController extends Controller {
 						$d9a = SinglePage::add('/dashboard/themes/add');
 						$d9b = SinglePage::add('/dashboard/themes/inspect');
 						$d9c = SinglePage::add('/dashboard/themes/customize');
+						$d9c = SinglePage::add('/dashboard/themes/marketplace');
 						$d10 = SinglePage::add('/dashboard/install');
 						$d11 = SinglePage::add('/dashboard/jobs');
 						$d12 = SinglePage::add('/dashboard/logs');

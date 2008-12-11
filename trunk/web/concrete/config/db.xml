@@ -585,6 +585,18 @@
       <col>ptHandle</col>
     </index>
   </table>
+  <table name="PageThemeStyles">
+    <field name="ptID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ptsHandle" type="C" size="128">
+      <KEY/>
+    </field>
+    <field name="ptsValue" type="X2" />
+    <field name="ptsType" type="C" size="32"/>
+  </table>
   <table name="PageTypeAttributes">
     <field name="ctID" type="I" size="10">
       <KEY/>

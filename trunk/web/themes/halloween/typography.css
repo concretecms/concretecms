@@ -1,0 +1,78 @@
+/*
+Template name: Decayed
+Template URI: http://templates.arcsin.se/decayed-website-template/
+Release date: 2007-05-12
+Description: A dark trash style two-column website template.
+Author: Viktor Persson
+Author URI: http://arcsin.se/
+
+This template is licensed under a Creative Commons Attribution 2.5 License:
+http://templates.arcsin.se/license/
+*/
+
+a {color: #CC3;}
+a:hover {color: #FF3;}
+
+body {
+	background-color: #000;
+	color: #DDD;
+	font: normal 62.5% "Trebuchet MS",Verdana,sans-serif;
+}
+
+body#tinymce {font-size: 13px}
+
+p,code,ul,ol {padding-bottom: 1.2em;}
+
+h1 {
+	color: #CCC;
+	font: normal 2em Impact,sans-serif;
+}
+h1 a {
+	color: #000;
+	text-decoration: none;
+}
+h1 a:hover {
+	color: #F00;
+}
+
+h2 {font: normal 1.8em Tahoma,sans-serif;}
+
+h1,h2 {padding-top: 6px;}
+
+blockquote {
+	color: #CCA;
+	display: block;
+	font-weight: bold;
+	padding-left: 28px;
+}
+
+img {border: none;}
+
+img.right {margin: 5px 0 5px 12px;}
+img.left {margin: 5px 12px 5px 0;}
+img.border {
+	background: #555;
+	display: block;
+	padding: 3px;
+}
+
+/* misc */
+.clearer {
+	clear: both;
+	font-size: 0;
+}
+
+.left {float: left;}
+.right {float: right;}
+
+h1, .decay,.decay-small {
+	background: url('img/decay.gif') no-repeat left center;
+	color: #000;
+	font: normal 2em Impact,sans-serif;
+	letter-spacing: 1px;
+	padding: 0 0 12px 22px;
+}
+.decay-small {
+	background: url('img/decay-small.gif') no-repeat left center;
+	padding-top: 6px;
+}

@@ -1,6 +1,41 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
+/** 
+ * A class specifically for editable fonts
+ */
+class PageThemeEditableStyleFont extends PageThemeEditableStyle {
+	
+	public function getFamily() {return $this->family;}
+	public function getSize() {return $this->size;}
+	public function getWeight() {return $this->weight;}
+	public function getStyle() {return $this->style;}
+	
+	public function __construct($value) {
+		$this->ptsValue = $value;
+		
+		// value is pretty rigid. Has to be "font: normal normal 18px Book Antiqua"
+		// so font: $weight $
+		
+		$trimmed = substr($value, 6);
+		$expl = explode(' ', $trimmed);
+		$this->style = trim($expl[0]);
+		$this->weight = trim($expl[1]);
+		$this->size = preg_replace('/[^0-9]/', '', trim($expl[2]));
+		$this->family = trim($expl[3]);
+		if (count($expl) > 4) {
+			for ($i = 4; $i < count($expl); $i++) {
+				$this->family .= ' ' . trim($expl[$i]);
+			}
+		}
+		
+	}
+	
+	public function getShortValue() {
+		return $this->style . '|' . $this->weight . '|' . $this->size . '|' . $this->family;
+	}
+}
+
 /**
  *
  * A page theme editable style object corresponds to a style in a stylesheet that is able to be manipulated through the dashboard.
@@ -10,6 +45,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class PageThemeEditableStyle extends Object {
 	
 	const TSTYPE_COLOR = 1;
+	const TSTYPE_FONT = 10;
+	const TSTYPE_CUSTOM = 20;
 	
 	public function getHandle() {return $this->ptsHandle;}
 	public function getValue() {return $this->ptsValue;}
@@ -200,7 +237,7 @@ class PageTheme extends Object {
 		print $this->parseStyleSheet($file, $styles);
 	}
 	
-	private function parseStyleSheet($file, $styles = false) {
+	public function parseStyleSheet($file, $styles = false) {
 		if (file_exists($this->getThemeDirectory() . '/' . $file)) {
 			$fh = Loader::helper('file');
 			$contents = $fh->getContents($this->getThemeDirectory() . '/' . $file);
@@ -228,8 +265,16 @@ class PageTheme extends Object {
 			foreach($styles as $p) {
 				switch($p->getType()) {
 					case PageThemeEditableStyle::TSTYPE_COLOR:
-						$searches[] = '/\/\*\{' . $p->getHandle() . '_color\}\*\/(.*)\/\*\{\/' . $p->getHandle() . '_color\}\*\//i';
+						$searches[] = '/\/\*[\s]?\{' . $p->getHandle() . '_color\}[\s]?\*\/(.*)\/\*[\s]?\{\/' . $p->getHandle() . '_color\}[\s]?\*\//i';
 						$replacements[] = '/*{' . $p->getHandle() . '_color}*/ ' . $p->getValue() . ' /*{/' . $p->getHandle() . '_color}*/';
+						break;
+					case PageThemeEditableStyle::TSTYPE_FONT:
+						$searches[] = '/\/\*[\s]?\{' . $p->getHandle() . '_font\}[\s]?\*\/(.*)\/\*[\s]?\{\/' . $p->getHandle() . '_font\}[\s]?\*\//i';
+						$replacements[] = '/*{' . $p->getHandle() . '_font}*/ ' . $p->getValue() . ' /*{/' . $p->getHandle() . '_font}*/';
+						break;
+					case PageThemeEditableStyle::TSTYPE_CUSTOM:
+						$searches[] = '/\/\*[\s]?\{' . $p->getHandle() . '_custom_style\}[\s]?\*\/(.*)\/\*[\s]?\{\/' . $p->getHandle() . '_custom_style\}[\s]?\*\//i';
+						$replacements[] = '/*{' . $p->getHandle() . '_custom_style}*/ ' . $p->getValue() . ' /*{/' . $p->getHandle() . '_custom_style}*/';
 						break;
 				}
 			}
@@ -251,8 +296,23 @@ class PageTheme extends Object {
 			
 			switch($st->getType()) {
 				case PageThemeEditableStyle::TSTYPE_COLOR:
-					if ($post['input_color_' . $st->getHandle()] != '') {
+					if (isset($post['input_color_' . $st->getHandle()])) {
 						$ptes->ptsValue = $post['input_color_' . $st->getHandle()];
+						$values[] = $ptes;
+					}
+					break;
+				case PageThemeEditableStyle::TSTYPE_CUSTOM:
+					if (isset($post['input_custom_' . $st->getHandle()])) {
+						$ptes->ptsValue = $post['input_custom_' . $st->getHandle()];
+						$values[] = $ptes;
+					}
+					break;
+				case PageThemeEditableStyle::TSTYPE_FONT:
+					if (isset($post['input_font_' . $st->getHandle()])) {
+						$value = $post['input_font_' . $st->getHandle()];
+						// now we transform it from it's post, which has pipes and separators and crap
+						$fv = explode('|', $value);
+						$ptes->ptsValue = 'font: ' . $fv[0] . ' ' . $fv[1] . ' ' . $fv[2] . 'px ' . $fv[3];
 						$values[] = $ptes;
 					}
 					break;
@@ -260,6 +320,23 @@ class PageTheme extends Object {
 		}
 		return $values;
 	}
+	
+	
+	/** 
+	 * Removes any custom styles by clearing them out of the database
+	 * @return void
+	 */
+	public function reset() {
+		$db = Loader::db();
+		$db->Execute('delete from PageThemeStyles where ptID = ?', array($this->ptID));	
+		
+		// now we reset all cached css files in this theme
+		$sheets = $this->getStyleSheets();
+		foreach($sheets as $s) {
+			Cache::delete($this->getThemeHandle(), $s);
+		}
+	}
+	
 	/** 
 	 * Takes an associative array of pagethemeeditablestyle objects and saves it to the PageThemeStyles table
 	 * @param array $styles
@@ -275,14 +352,15 @@ class PageTheme extends Object {
 			),
 			array('ptID', 'ptsHandle'), true);
 		}
+
+		// now we reset all cached css files in this theme
+		$sheets = $this->getStyleSheets();
+		foreach($sheets as $s) {
+			Cache::delete($this->getThemeHandle(), $s);
+		}
 	}
 	
-	/** 
-	 * Retrieves an array of editable style objects from the current them. This is accomplished by locating all style sheets in the root of the theme, parsing all their contents
-	 * @param string $file
-	 * @return array
-	 */
-	public function getEditableStylesList() {
+	private function getStyleSheets() {
 		$fh = Loader::helper('file');
 		$files = $fh->getDirectoryContents($this->getThemeDirectory());
 		$sheets = array();
@@ -293,24 +371,48 @@ class PageTheme extends Object {
 				$sheets[] = $f;
 			}
 		}
+		return $sheets;
+	}
+	
+	/** 
+	 * Retrieves an array of editable style objects from the current them. This is accomplished by locating all style sheets in the root of the theme, parsing all their contents
+	 * @param string $file
+	 * @return array
+	 */
+	public function getEditableStylesList() {
+		$sheets = $this->getStyleSheets();
 
 		$styles = array();
 		foreach($sheets as $file) {		
 			$ss = $this->parseStyleSheet($file);
-			// match all color-based tokens
-			preg_match_all("/\/\*\{(.*)_color\}\*\/(.*)\/\*\{\/(.*)_color\}\*\//i", $ss, $matches);	
-	
-			// the format of the $matches array is [1] = the handle of the editable style object, [2] = the value (which we need to trim)
-			// handles are unique.
-			$handles = $matches[1];
-			$values = $matches[2];
-			for($i = 0 ; $i < count($handles); $i++) {
-				$pte = new PageThemeEditableStyle();
-				$pte->ptsHandle = $handles[$i];
-				$pte->ptsValue = trim($values[$i]);
-				$pte->ptsType = PageThemeEditableStyle::TSTYPE_COLOR;
-				$styles[$pte->ptsHandle] = $pte;
-			}
+
+			// now, we loop through and assign an editable style object to each item
+			// $styleTypes[$tokenInStyleSheet] = $tokenInObject
+			$styleTypes['color'] = PageThemeEditableStyle::TSTYPE_COLOR;
+			$styleTypes['font'] = PageThemeEditableStyle::TSTYPE_FONT;
+			$styleTypes['custom_style'] = PageThemeEditableStyle::TSTYPE_CUSTOM;
+			
+			foreach($styleTypes as $token => $type) {
+				// match all tokens
+				$matches = array();
+				preg_match_all("/\/\*[\s]?\{(.*)_" . $token . "\}[\s]?\*\/(.*)\/\*[\s]?\{\/(.*)_" . $token . "\}[\s]?\*\//i", $ss, $matches);	
+		
+				// the format of the $matches array is [1] = the handle of the editable style object, [2] = the value (which we need to trim)
+				// handles are unique.
+				$handles = $matches[1];
+				$values = $matches[2];
+				for($i = 0 ; $i < count($handles); $i++) {
+					if ($type == PageThemeEditableStyle::TSTYPE_FONT) {
+						$pte = new PageThemeEditableStyleFont(trim($values[$i]));
+					} else {
+						$pte = new PageThemeEditableStyle();
+					}
+					$pte->ptsHandle = $handles[$i];
+					$pte->ptsValue = trim($values[$i]);
+					$pte->ptsType = $type;
+					$styles[$pte->ptsHandle] = $pte;
+				}
+			}			
 		}
 		return $styles;
 	}
