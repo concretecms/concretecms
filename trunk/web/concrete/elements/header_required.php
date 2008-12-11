@@ -71,6 +71,16 @@ var CCM_REL = "<?=DIR_REL?>";
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery1.2.6.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/swfobject2.1.js"></script>
 
+
+<?
+$favIconFID=intval(Config::get('FAVICON_FID'));
+if($favIconFID){
+	Loader::block('library_file');
+	$fileBlock=LibraryFileBlockController::getFile( $favIconFID ); ?> 
+	<link REL="SHORTCUT ICON" HREF="<?=$fileBlock->getFileRelativePath() ?>" type="image/ico" >
+<? } ?>
+
+
 <? 
 // output header items
 print $this->controller->outputHeaderItems();

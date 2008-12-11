@@ -27,6 +27,9 @@ class DashboardSettingsController extends Controller {
 					$this->set('message', t('Maintenance Mode turned off. Your site is public.'));	
 					break;
 				*/
+				case "favicon_saved":
+					$this->set('message', t('Bookmark icon saved.'));	
+					break;				
 				case "editing_preferences_saved":
 					$this->set('message', t('Editing preferences saved.'));	
 					break;
@@ -273,4 +276,32 @@ class DashboardSettingsController extends Controller {
 		$this->redirect('/dashboard/settings/', 'set_permissions', 'permissions_saved');
 	}
 	
+	function update_favicon(){
+		Loader::block('library_file');
+		
+		if ($this->token->validate("update_favicon")) { 
+		
+			if ( isset($_FILES['favicon_file']) ) {
+				$fh = Loader::helper('file');
+				if(!$fh->hasAllowedExtension($_FILES['favicon_file']['name'])){	
+					$msg = t('Invalid file extension.');
+				}else{ 
+					$bt = BlockType::getByHandle('library_file');
+					$data = array();
+					$data['file'] = $_FILES['favicon_file']['tmp_name'];
+					$data['name'] = $_FILES['favicon_file']['name'];
+					$nb = $bt->add($data);
+					$fileBlock=LibraryFileBlockController::getFile( $nb->getBlockID() );
+					$fileID=$fileBlock->getFileID(); 
+					Config::save('FAVICON_FID', $fileID);
+					$this->redirect('/dashboard/settings/', 'favicon_saved');
+				}				
+			}else{
+				$msg = t('An error occured while uploading your file');
+			}
+			
+		}else{
+			$this->set('error', array($this->token->getErrorMessage()));
+		}
+	}
 }
