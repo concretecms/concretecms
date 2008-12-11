@@ -50,7 +50,7 @@ class DashboardFormResultsController extends Controller {
 			foreach($questions as $questionId=>$question){ 
 				$questionNumber++;
 				echo "\t\t<td>\r\n";
-				echo "\t\t\t".$answerSet['answers'][$questionId]['answer'].$answerSet['answers'][$questionId]['answerLong']."\r\n";
+				echo "\t\t\t".utf8_decode($answerSet['answers'][$questionId]['answer'].$answerSet['answers'][$questionId]['answerLong'])."\r\n";
 				echo "\t\t</td>\r\n";
 			}
 			echo "\t</tr>\r\n";
