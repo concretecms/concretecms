@@ -9,5 +9,8 @@
 			<default value="0"/>
 		</field>		
 		<field name="registerText" type="C" size="255" ></field>
+		<field name="returnToSamePage" type="I" size="2">
+			<default value="0"/>
+		</field>		
 	</table>
 </schema>

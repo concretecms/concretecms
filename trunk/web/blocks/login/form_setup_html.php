@@ -8,13 +8,18 @@ function registerTextShown(cb){
 }
 </script>
 
-<div style="margin-bottom:16px;">
+<div style="margin-bottom:0px;">
 <input name="showRegisterLink" type="checkbox" value="1" <?=($bObj->showRegisterLink)?'checked':''?> onchange="registerTextShown(this)" onclick="registerTextShown(this)" /> 
-<strong><?=t('Show Register Link') ?></strong>
+<?=t('Show Register Link') ?>
 </div>
 
-<div id="registerTextWrap" style=" display:<?=($bObj->showRegisterLink)?'block':'none'?>; margin-top:16px; "> 
+<div id="registerTextWrap" style=" display:<?=($bObj->showRegisterLink)?'block':'none'?>; margin-top:8px; "> 
 <input name="registerText" type="text" value="<?=$bObj->registerText?>" maxlength="255" />
+</div>
+
+<div style="margin-top:16px; ">
+<input name="returnToSamePage" type="checkbox" value="1" <?=($bObj->returnToSamePage)?'checked':''?> />  
+<?=t('When login is complete, return users to this page.')?>
 </div>
 
 <div class="ccm-spacer" style="margin-bottom:16px;"></div>
