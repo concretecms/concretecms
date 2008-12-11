@@ -362,9 +362,9 @@ define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_versi
 define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
 
 # Marketplace Vars
-if (!defined('ENABLE_MARKETPLACE_SUPPORT')) {
+/* if (!defined('ENABLE_MARKETPLACE_SUPPORT')) {
 	define('ENABLE_MARKETPLACE_SUPPORT', true);
-}
+} */
 if (!defined('MARKETPLACE_BLOCK_LIST_WS')) {
 	define('MARKETPLACE_BLOCK_LIST_WS', 'http://beta.concrete5.org/tools/get_marketplace_block_list/');
 }

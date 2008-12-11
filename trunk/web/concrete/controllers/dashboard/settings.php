@@ -10,6 +10,7 @@ class DashboardSettingsController extends Controller {
 		 
 		$this->set('site_tracking_code', Config::get('SITE_TRACKING_CODE') );		
 		$this->set('url_rewriting', URL_REWRITING);
+		$this->set('marketplace_enabled_in_config', Config::get('ENABLE_MARKETPLACE_SUPPORT') );		
 		$this->set('site', SITE);
 		$this->set('ui_breadcrumb', $u->config('UI_BREADCRUMB'));
 		
@@ -27,6 +28,12 @@ class DashboardSettingsController extends Controller {
 					$this->set('message', t('Maintenance Mode turned off. Your site is public.'));	
 					break;
 				*/
+				case "marketplace_turned_on";
+					$this->set('message', t('Marketplace support is now enabled.'));	
+					break;
+				case "maintenance_turned_off":
+					$this->set('message', t('Maintenance support is now disabled.'));	
+					break;				
 				case "favicon_saved":
 					$this->set('message', t('Bookmark icon saved.'));	
 					break;				
@@ -304,4 +311,15 @@ class DashboardSettingsController extends Controller {
 			$this->set('error', array($this->token->getErrorMessage()));
 		}
 	}
+	
+	function update_marketplace_support(){ 		
+		if ($this->token->validate("update_marketplace_support")) { 
+ 			Config::save('ENABLE_MARKETPLACE_SUPPORT', intval($this->post('MARKETPLACE_ENABLED')) );
+ 			if($this->post('MARKETPLACE_ENABLED'))
+ 				 $this->redirect('/dashboard/settings/', 'marketplace_turned_on');
+			else $this->redirect('/dashboard/settings/', 'marketplace_turned_off');	
+		}else{
+			$this->set('error', array($this->token->getErrorMessage()));
+		}
+	}	
 }

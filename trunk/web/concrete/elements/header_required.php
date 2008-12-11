@@ -77,7 +77,7 @@ $favIconFID=intval(Config::get('FAVICON_FID'));
 if($favIconFID){
 	Loader::block('library_file');
 	$fileBlock=LibraryFileBlockController::getFile( $favIconFID ); ?> 
-	<link REL="SHORTCUT ICON" HREF="<?=$fileBlock->getFileRelativePath() ?>" type="image/ico" >
+	<link REL="SHORTCUT ICON" HREF="<?=$fileBlock->getFileRelativePath() ?>" type="image/ico" />
 <? } ?>
 
 

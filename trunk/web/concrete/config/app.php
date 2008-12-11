@@ -34,7 +34,21 @@ if (!defined('URL_REWRITING')) {
 	Config::getOrDefine('URL_REWRITING', false);
 }
 
-if (!defined('URL_REWRITING_ALL')) {
+# Default marketplace support
+if (!defined('ENABLE_MARKETPLACE_SUPPORT')){  
+	$marketplace_enabled=Config::get('ENABLE_MARKETPLACE_SUPPORT');
+	if( $marketplace_enabled==NULL ){ 
+		Config::save('ENABLE_MARKETPLACE_SUPPORT', 1 );
+		$marketplace_enabled==true;
+	} 
+	define('MARKETPLACE_CONFIG_OVERRIDE',false);
+	define('ENABLE_MARKETPLACE_SUPPORT',$marketplace_enabled);
+	//Config::getOrDefine('MARKETPLACE_ENABLED', true);	
+}else{
+	define('MARKETPLACE_CONFIG_OVERRIDE',true);
+}
+
+if (!defined('URL_REWRITING_ALL')) { 
 	define("URL_REWRITING_ALL", false);
 }
 
