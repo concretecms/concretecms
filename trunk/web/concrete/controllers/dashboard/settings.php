@@ -34,9 +34,12 @@ class DashboardSettingsController extends Controller {
 				case "maintenance_turned_off":
 					$this->set('message', t('Maintenance support is now disabled.'));	
 					break;				
-				case "favicon_saved":
+				case "favicon_saved":  
 					$this->set('message', t('Bookmark icon saved.'));	
-					break;				
+					break;
+				case "favicon_removed":  
+					$this->set('message', t('Bookmark icon removed.'));	
+					break;							
 				case "editing_preferences_saved":
 					$this->set('message', t('Editing preferences saved.'));	
 					break;
@@ -288,7 +291,10 @@ class DashboardSettingsController extends Controller {
 		
 		if ($this->token->validate("update_favicon")) { 
 		
-			if ( isset($_FILES['favicon_file']) ) {
+			if(intval($this->post('remove_favicon'))==1){
+				Config::save('FAVICON_FID',0);
+				$this->redirect('/dashboard/settings/', 'favicon_removed');
+			}elseif ( isset($_FILES['favicon_file']) ) {
 				$fh = Loader::helper('file');
 				if(!$fh->hasAllowedExtension($_FILES['favicon_file']['name'])){	
 					$msg = t('Invalid file extension.');

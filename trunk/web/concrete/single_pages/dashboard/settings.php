@@ -250,6 +250,44 @@ saveMaintenanceMode = function() {
 </form>
 
 
+<form method="post" id="favicon-form" action="<?=$this->url('/dashboard/settings', 'update_favicon')?>" enctype="multipart/form-data" >
+	<?=$this->controller->token->output('update_favicon')?>
+
+	<h1><span><?=t('Upload Bookmark Icon')?></span></h1>
+	
+	<div class="ccm-dashboard-inner">	
+		
+		<input id="remove-existing-favicon" name="remove_favicon" type="hidden" value="0" />
+		<?
+		$favIconFID=intval(Config::get('FAVICON_FID'));
+		if($favIconFID){
+			Loader::block('library_file');
+			$fileBlock=LibraryFileBlockController::getFile( $favIconFID ); ?>
+			<div style="float:right">
+			<img src="<?=$fileBlock->getFileRelativePath() ?>" />
+			<a onclick="removeFavIcon()"><?=t('Remove')?></a>
+			</div>
+			<script>
+			function removeFavIcon(){
+				document.getElementById('remove-existing-favicon').value=1;
+				$('#favicon-form').get(0).submit();
+			}
+			</script>
+		<? } ?>
+		<input id="favicon_upload" type="file" name="favicon_file"/>
+		
+		<div class="ccm-dashboard-description"><?=t('Your image should be 16x16 pixels, and should be an gif or a png with a .ico file extension.')?></div>
+		
+		<?
+		$b1 = $h->submit( t('Save'), 'favicon-form');
+		print $h->buttons($b1);
+		?> 
+		<br class="clear" />
+	</div>
+
+</form>
+
+
 </div>
 
 
@@ -301,35 +339,7 @@ saveMaintenanceMode = function() {
 
 </form>
 
-<form method="post" id="favicon-form" action="<?=$this->url('/dashboard/settings', 'update_favicon')?>" enctype="multipart/form-data" >
-	<?=$this->controller->token->output('update_favicon')?>
 
-	<h1><span><?=t('Upload Bookmark Icon')?></span></h1>
-	
-	<div class="ccm-dashboard-inner">	
-		
-		
-		<?
-		$favIconFID=intval(Config::get('FAVICON_FID'));
-		if($favIconFID){
-			Loader::block('library_file');
-			$fileBlock=LibraryFileBlockController::getFile( $favIconFID ); ?>
-			<div style="float:right">
-			<img src="<?=$fileBlock->getFileRelativePath() ?>" />
-			</div>
-		<? } ?>
-		<input id="favicon_upload" type="file" name="favicon_file"/>
-		
-		<div class="ccm-dashboard-description"><?=t('Your image should be 16x16 pixels, and should be an gif or a png with a .ico file extension.')?></div>
-		
-		<?
-		$b1 = $h->submit( t('Save'), 'favicon-form');
-		print $h->buttons($b1);
-		?> 
-		<br class="clear" />
-	</div>
-
-</form>
 
 
 </div>
