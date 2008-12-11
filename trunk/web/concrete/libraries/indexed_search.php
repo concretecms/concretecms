@@ -62,9 +62,11 @@ class IndexedSearch {
 	public function reindex() {
 
 		Loader::library('3rdparty/Zend/Search/Lucene');
+		Loader::library('3rdparty/StandardAnalyzer/Analyzer/Standard/English');
 
 		$index = new Zend_Search_Lucene(DIR_FILES_CACHE_PAGES, true);
-		Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
+		//Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
+		Zend_Search_Lucene_Analysis_Analyzer::setDefault(new StandardAnalyzer_Analyzer_Standard_English());
 		
 		$db = Loader::db();
 		$collection_attributes = Loader::model('collection_attributes');
@@ -125,11 +127,13 @@ class IndexedSearch {
 		$query = strtolower($query);
 		
 		Loader::library('3rdparty/Zend/Search/Lucene');
-	
+		Loader::library('3rdparty/StandardAnalyzer/Analyzer/Standard/English');
+		
 		$index = new Zend_Search_Lucene(DIR_FILES_CACHE_PAGES);
 		$index->setResultSetLimit(200);
 		
-		Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
+		//Zend_Search_Lucene_Analysis_Analyzer::setDefault(new StandardAnalyzer_Analyzer_Standard_English());
+		Zend_Search_Lucene_Analysis_Analyzer::setDefault(new StandardAnalyzer_Analyzer_Standard_English());
 		
 		$queryModifiers=array();
 

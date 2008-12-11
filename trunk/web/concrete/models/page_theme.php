@@ -2,6 +2,25 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 /**
+ *
+ * A page theme editable style object corresponds to a style in a stylesheet that is able to be manipulated through the dashboard.
+ * @package Pages
+ * @subpackage Themes
+ */
+class PageThemeEditableStyle extends Object {
+	
+	const TSTYPE_COLOR = 1;
+	
+	public function getHandle() {return $this->ptsHandle;}
+	public function getValue() {return $this->ptsValue;}
+	public function getType() {return $this->ptsType;}
+	public function getName() {
+		$h = Loader::helper('text');
+		return $h->uncamelcase($this->ptsHandle);
+	}
+}
+
+/**
 *
 * When activating a theme, any file within the theme is loaded into the system as a Page Theme File. At that point
 * the file can then be used to create a new page type. 
@@ -95,6 +114,7 @@ class PageTheme extends Object {
 	const E_THEME_INSTALLED = 1;
 	const THEME_EXTENSION = ".php";
 	const FILENAME_TYPOGRAPHY_CSS = "typography.css";	
+	const FILENAME_EXTENSION_CSS = "css";
 	
 	public static function getGlobalList() {
 		return PageTheme::getList('pkgID > 0');
@@ -169,6 +189,130 @@ class PageTheme extends Object {
 			}
 			return $th;
 		}
+	}
+	
+	/** 
+	 * Looks into the current theme and outputs the contents of the stylesheet.
+	 * This function will eventually check to see if a cached version is available, as well as tie the dynamic areas of the stylesheet to whatever they have been saved.
+	 * @param string $file
+	 */
+	public function outputStyleSheet($file, $styles = false) {
+		print $this->parseStyleSheet($file, $styles);
+	}
+	
+	private function parseStyleSheet($file, $styles = false) {
+		if (file_exists($this->getThemeDirectory() . '/' . $file)) {
+			$fh = Loader::helper('file');
+			$contents = $fh->getContents($this->getThemeDirectory() . '/' . $file);
+			
+			// replace all url( instances with url starting with path to theme
+			$contents = str_replace('url(', 'url(' . $this->getThemeURL() . '/', $contents);
+			
+			
+			// load up all tokens from the db for this stylesheet.
+			// if a replacement style array is passed then we use that instead of the database (as is the case when previewing)
+			if (!is_array($styles)) {			
+				$db = Loader::db();
+				$ptes = $db->GetAll("select ptsHandle, ptsValue, ptsType from PageThemeStyles where ptID = ?", $this->getThemeID());
+				$styles = array();
+				foreach($ptes as $p) {
+					$pts = new PageThemeEditableStyle();
+					$pts->setPropertiesFromArray($p);
+					$styles[] = $pts;
+				}
+			}
+
+			$replacements = array();
+			$searches = array();
+			
+			foreach($styles as $p) {
+				switch($p->getType()) {
+					case PageThemeEditableStyle::TSTYPE_COLOR:
+						$searches[] = '/\/\*\{' . $p->getHandle() . '_color\}\*\/(.*)\/\*\{\/' . $p->getHandle() . '_color\}\*\//i';
+						$replacements[] = '/*{' . $p->getHandle() . '_color}*/ ' . $p->getValue() . ' /*{/' . $p->getHandle() . '_color}*/';
+						break;
+				}
+			}
+			if (count($searches) > 0) {
+				$contents = preg_replace($searches, $replacements, $contents);
+			}
+			return $contents;
+		}
+	}
+	
+	
+	public function mergeStylesFromPost($post) {
+		$values = array();
+		$styles = $this->getEditableStylesList();
+		foreach($styles as $st) {
+			$ptes = new PageThemeEditableStyle();
+			$ptes->ptsHandle = $st->getHandle();
+			$ptes->ptsType = $st->getType();
+			
+			switch($st->getType()) {
+				case PageThemeEditableStyle::TSTYPE_COLOR:
+					if ($post['input_color_' . $st->getHandle()] != '') {
+						$ptes->ptsValue = $post['input_color_' . $st->getHandle()];
+						$values[] = $ptes;
+					}
+					break;
+			}
+		}
+		return $values;
+	}
+	/** 
+	 * Takes an associative array of pagethemeeditablestyle objects and saves it to the PageThemeStyles table
+	 * @param array $styles
+	 */
+	public function saveEditableStyles($styles) {
+		$db = Loader::db();
+		foreach($styles as $ptes) {
+			$db->Replace('PageThemeStyles', array(
+				'ptID' => $this->getThemeID(),
+				'ptsHandle' => $ptes->getHandle(),
+				'ptsValue' => $ptes->getValue(),
+				'ptsType' => $ptes->getType()
+			),
+			array('ptID', 'ptsHandle'), true);
+		}
+	}
+	
+	/** 
+	 * Retrieves an array of editable style objects from the current them. This is accomplished by locating all style sheets in the root of the theme, parsing all their contents
+	 * @param string $file
+	 * @return array
+	 */
+	public function getEditableStylesList() {
+		$fh = Loader::helper('file');
+		$files = $fh->getDirectoryContents($this->getThemeDirectory());
+		$sheets = array();
+		foreach($files as $f) {
+			$pos = strrpos($f, '.');
+			$ext = substr($f, $pos + 1);
+			if ($ext == PageTheme::FILENAME_EXTENSION_CSS) {
+				$sheets[] = $f;
+			}
+		}
+
+		$styles = array();
+		foreach($sheets as $file) {		
+			$ss = $this->parseStyleSheet($file);
+			// match all color-based tokens
+			preg_match_all("/\/\*\{(.*)_color\}\*\/(.*)\/\*\{\/(.*)_color\}\*\//i", $ss, $matches);	
+	
+			// the format of the $matches array is [1] = the handle of the editable style object, [2] = the value (which we need to trim)
+			// handles are unique.
+			$handles = $matches[1];
+			$values = $matches[2];
+			for($i = 0 ; $i < count($handles); $i++) {
+				$pte = new PageThemeEditableStyle();
+				$pte->ptsHandle = $handles[$i];
+				$pte->ptsValue = trim($values[$i]);
+				$pte->ptsType = PageThemeEditableStyle::TSTYPE_COLOR;
+				$styles[$pte->ptsHandle] = $pte;
+			}
+		}
+		return $styles;
 	}
 	
 	public function getByHandle($ptHandle) {

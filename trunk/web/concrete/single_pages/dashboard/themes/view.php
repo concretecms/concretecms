@@ -39,6 +39,7 @@ $valt = Loader::helper('validation/token');
 				<?=$bt->button(t("Activate"), $this->url('/dashboard/themes','activate', $t->getThemeID()), "left");?>
 			<? } ?>
 			<?=$bt->button(t("Inspect"), $this->url('/dashboard/themes/inspect', $t->getThemeID()), "left");?>
+			<?=$bt->button(t("Customize"), $this->url('/dashboard/themes/customize', $t->getThemeID()), "left");?>
 			
 			<? if ($t->isUninstallable()) { ?>
 				<?=$bt->button(t("Remove"), $this->url('/dashboard/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), "left");?>

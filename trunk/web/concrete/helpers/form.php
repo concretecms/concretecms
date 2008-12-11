@@ -79,7 +79,7 @@ class FormHelper {
 		} else if (isset($_REQUEST[$key])) {
 			$val = $_REQUEST[$key];
 		}
-		$str = '<input type="hidden" name="' . $key . '" value="' . $val . '" />';
+		$str = '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . $val . '" />';
 		return $str;
 	}
 	

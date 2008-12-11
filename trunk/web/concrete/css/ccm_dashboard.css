@@ -200,3 +200,22 @@ div.ccm-dashboard-radio input {vertical-align: middle}
 div.ccm-dashboard-radio {margin-bottom: 8px}
 div.ccm-dashboard-description {color: #888; margin-bottom: 8px}
 .clear {clear:both;}
+
+/* editable themes */
+div.ccm-theme-style-attribute {position: relative; height: 30px; white-space: nowrap; border-bottom: 2px solid #eee; margin-bottom: 8px; font-weight: bold; padding-left: 40px; padding-top: 10px; padding-right: 20px}
+div.ccm-theme-style-attribute div.ccm-theme-style-color {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 36px;
+	height: 36px;
+	background: url(../images/widgets/colorpicker/select2.png);
+}
+div.ccm-theme-style-attribute div.ccm-theme-style-color div {
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	width: 28px;
+	height: 28px;
+	background: url(../images/widgets/colorpicker/select2.png) center;
+}
