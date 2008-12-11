@@ -11,12 +11,13 @@ class Cache extends CacheTemplate {
 		if (ENABLE_CACHE == false) {
 			return false;
 		}
-		if(intval($expire)==0) return false;
+		//if(intval($expire)==0) return false;
 		
 		//create an object to store the data and the expiration
 		$key = parent::key($type, $id); 
 		$cacheDataObject = new Object();
-		$cacheDataObject->expires = date('U')+intval($expire);
+		if(!$expire) $cacheDataObject->expires = 0;
+		else $cacheDataObject->expires = date('U')+intval($expire);
 		$cacheDataObject->data = $obj;
 		
 		$fileHandle = fopen( self::getFilePath($key), "w+");
@@ -50,7 +51,7 @@ class Cache extends CacheTemplate {
 			$cacheDataObject=unserialize(file_get_contents($filePath));		
 			
 			//has the data expired? if so, remove it 
-			if( $cacheDataObject->expires<date('U') ){
+			if( $cacheDataObject->expires<date('U') && $cacheDataObject->expires!=0 ){
 				self::delete($type, $id);
 				return false;
 			}
