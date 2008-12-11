@@ -28,7 +28,7 @@ class PremiumGoogleMapBlockController extends BlockController {
 	}
 	
 	public function getBlockTypeName() {
-		return t("Advanced Google Map");
+		return t("Google Map (Premium)");
 	}		
 	
 	public function getJavaScriptStrings() {
