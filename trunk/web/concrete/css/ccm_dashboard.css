@@ -203,15 +203,16 @@ div.ccm-dashboard-description {color: #888; margin-bottom: 8px}
 
 /* editable themes */
 div.ccm-theme-style-attribute {position: relative; height: 30px; white-space: nowrap; border-bottom: 2px solid #eee; margin-bottom: 8px; font-weight: bold; padding-left: 40px; padding-top: 10px; padding-right: 20px}
-div.ccm-theme-style-attribute div.ccm-theme-style-color {
+div.ccm-theme-style-attribute div {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 36px;
 	height: 36px;
 	background: url(../images/widgets/colorpicker/select2.png);
+	cursor: pointer;
 }
-div.ccm-theme-style-attribute div.ccm-theme-style-color div {
+div.ccm-theme-style-attribute div div {
 	position: absolute;
 	top: 4px;
 	left: 4px;
@@ -219,3 +220,93 @@ div.ccm-theme-style-attribute div.ccm-theme-style-color div {
 	height: 28px;
 	background: url(../images/widgets/colorpicker/select2.png) center;
 }
+
+div.ccm-theme-style-attribute div.ccm-theme-style-font, div.ccm-theme-style-attribute div.ccm-theme-style-custom {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 36px;
+	height: 36px;
+	background: transparent url(../images/widgets/font/text_rich.png) no-repeat scroll 6px 6px;
+}
+
+
+div#jquery-font-panel, div#jquery-custom-panel {
+	display: none; 
+	position: absolute; 
+	top: 0px; left: 0px; 
+	width: 356px;
+	height: 176px;
+	overflow: hidden;
+	background: url(../images/widgets/font/background.png);
+	font-family: Arial, Helvetica, sans-serif;
+	display: none;
+}
+
+div#jquery-custom-panel div#jquery-custom-panel-save {
+	padding-top: 5px;
+	padding-right: 11px;
+	text-align: right;
+}
+
+div#jquery-custom-panel textarea {
+	margin-top: 10px;
+	margin-left: 10px;
+	border: 1px solid #dedede;
+	padding: 4px;
+	width: 325px;
+	height: 115px;
+}
+
+div#jquery-font-panel div.jquery-font-panel-list {
+	overflow: auto;
+	border: 2px solid #bfbfbf;
+	height: 152px;
+}
+
+div#jquery-font-panel div#jquery-font-panel-list-fonts {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	width: 180px; 
+}
+
+div#jquery-font-panel div#jquery-font-panel-list-sizes {
+	position: absolute;
+	top: 10px;
+	left: 205px;
+	width: 60px; 
+}
+
+div#jquery-font-panel div#jquery-font-panel-list-styles {
+	position: absolute;
+	top: 10px;
+	left: 280px;
+	width: 60px;
+	height: 48px;
+}
+
+div#jquery-font-panel div#jquery-font-panel-list-weights {
+	position: absolute;
+	top: 68px;
+	left: 280px;
+	width: 60px;
+	height: 48px;
+}
+
+div#jquery-font-panel div#jquery-font-panel-save {
+	position: absolute; 
+	top: 130px;
+	left: 290px;
+}
+
+div#jquery-font-panel div.jquery-font-panel-list div {
+	padding: 4px;
+	border-bottom: 2px solid #e1e1e1;
+	background-color: #fefefe;
+	font-size: 12px; 
+	color: #787878;
+	cursor: pointer;
+}
+
+div#jquery-font-panel div.jquery-font-panel-list div.font-panel-list-selected {background-color: #E6EBED; color: #333}

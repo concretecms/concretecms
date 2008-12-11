@@ -1,15 +1,15 @@
-body {font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:18px; color:#777}
+body { /*{body_font}*/ font: normal normal 13px Arial /*{/body_font}*/; font-size:13px; line-height:18px; color:#777}
 
 img {border: 0px}
 a,a:visited,a:active {
-	color: /*{link_color}*/ #66aa33 /*{/link_color}*/
+	color: /* {link_color} */ #66aa33 /* {/link_color} */
 }
 a:hover {
-	color: /*{link_hover_color}*/ #66CC00 /*{/link_hover_color}*/
+	color: /* {link_hover_color} */ #66CC00 /* {/link_hover_color} */
 } 
 
 h1,h2,h3,h4,h5{ color: /*{main_header_color}*/ #444444 /*{/main_header_color}*/; margin:0px 0px 4px 0px; padding:4px 0px; margin-top:8px }
-h1{ font-size:21px; line-height:28px }
+h1{ /*{header_font}*/ font: normal normal 21px Arial /*{/header_font}*/; line-height:28px }
 h2{ font-size:18px; line-height:24px }
 h3{ font-size:16px; line-height:21px }
 h4{ font-size:14px; line-height:18px }

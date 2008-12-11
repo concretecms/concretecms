@@ -1,0 +1,110 @@
+/*
+Template name: Decayed
+Template URI: http://templates.arcsin.se/decayed-website-template/
+Release date: 2007-05-12
+Description: A dark trash style two-column website template.
+Author: Viktor Persson
+Author URI: http://arcsin.se/
+
+This template is licensed under a Creative Commons Attribution 2.5 License:
+http://templates.arcsin.se/license/
+*/
+
+/* standard elements */
+html {min-height: 100%;}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: #000 url('img/body.gif') no-repeat; /*  url(img/bg.jpg) repeat-x; */
+	color: #DDD;
+	font: normal 62.5% "Trebuchet MS",Verdana,sans-serif;
+	padding-left: 90px;
+}
+
+p.postinfo {
+	border-top: 1px dashed #333;
+	color: #666;
+	font: bold 0.9em sans-serif;
+	margin-bottom: 24px;
+	padding: 8px;
+}
+p.postinfo a {color: #888;}
+p.postinfo a:hover {color: #CCC;}
+
+/* structure */
+#container {
+	font-size: 1.3em;
+}
+
+/* title */
+#site-title {font: normal 3em Tahoma,sans-serif; background: none; letter-spacing: auto; padding-left: 0px; padding-bottom: 30px; padding-top: 10px}
+#site-title a {
+	color: #DDD;
+	text-decoration: line-through;
+}
+#site-title a:hover {
+	color: #FFF;
+	text-decoration: none;
+}
+#site-description {color: #CCC;}
+
+/* content */
+#content {
+	left: 360px;
+	position: absolute;
+	top: 90px;
+	width: 610px;
+}
+#content .descr {
+	color: #8DC63F;
+	margin-bottom: 6px;
+}
+#content li {margin-left: 18px;}
+
+/* navigation */
+#navigation {
+	left: 120px;
+	position: absolute;
+	top: 290px;
+	width: 210px;
+}
+#navigation h2 {
+	color: #000;
+	font-size: 1.5em;
+	letter-spacing: 0;
+	line-height: 30px;
+	margin: 0;
+}
+#navigation ul {margin: 0 0 0 1em;}
+#navigation li {list-style: none;}
+#navigation li a {
+	color: #777;
+	font-size: 1.1em;
+	line-height: 1.5em;
+	text-decoration: none;
+}
+#navigation li a:hover {color: #8DCA3F;}
+
+/* footer */
+#footer {
+	border-top: 1px dashed #333;
+	color: #666;
+	font: normal 0.9em sans-serif;
+	position: absolute;
+	top: 100%;
+	width: 100%;
+}
+#footer a {
+	color: #999;
+	text-decoration: none;
+}
+#footer a:hover {
+	color: #CCC;
+	text-decoration: underline;
+}
+#footer .left, #footer .right {padding: 10px 0;}
+#footer .right a {color: #777;}
