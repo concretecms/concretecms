@@ -9,6 +9,7 @@ $v = View::getInstance();
 $v->disableEditing();
 require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); ?>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_dashboard.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_colorpicker.css";</style>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_menus.css";</style>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_forms.css";</style>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_calendar.css";</style>
@@ -26,6 +27,8 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.form.2.0.2.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.1.5.2.no_datepicker.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.1.6b.datepicker.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.colorpicker.js"></script>
+
 <? if (LANGUAGE != 'en') { ?>
 	<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/i18n/ui.datepicker-<?=LANGUAGE?>.js"></script>
 <? } ?>

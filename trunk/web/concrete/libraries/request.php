@@ -122,6 +122,17 @@ class Request {
 			return;
 		}
 
+		// theme-based css
+		if (preg_match("/^tools\/css\/themes\/(.[^\/]*)\/(.[^\.]*).css/i", $path, $matches)) {
+			$this->filename = 'css.php';
+			$this->includeType = 'CONCRETE_TOOL';
+			$this->auxData = new stdClass;
+			$this->auxData->theme = $matches[1];
+			$this->auxData->file = $matches[2] . '.css';
+			
+			return;
+		}
+
 		if (preg_match("/^tools\/packages\/(.[^\/]*)\/(.[^\.]*).php|^tools\/packages\/(.[^\/]*)\/(.[^\.]*)/i", $path, $matches)) {
 			if (isset($matches[4])) {
 				$this->filename = $matches[4] . '.php';
@@ -263,6 +274,13 @@ class Request {
 	 */
 	public function getBlock() {
 		return $this->btHandle;
+	}
+	
+	/** 
+	 * Auxiliary data is anything that the request specifies that doesn't really fit inside the request object, but gets passed along anyway
+	 */
+	public function getAuxiliaryData() {
+		return $this->auxData;
 	}
 	
 	/** 

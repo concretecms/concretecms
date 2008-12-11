@@ -103,7 +103,10 @@
 				if ($q != null) {
 					Loader::library('indexed_search');				
 					Loader::library('3rdparty/Zend/Search/Lucene');
-					Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
+					//Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
+					Loader::library('3rdparty/Zend/Search/Lucene');
+					Loader::library('3rdparty/StandardAnalyzer/Analyzer/Standard/English');
+					Zend_Search_Lucene_Analysis_Analyzer::setDefault(new StandardAnalyzer_Analyzer_Standard_English());
 					
 					//search a path
 					$subqueries = array();				

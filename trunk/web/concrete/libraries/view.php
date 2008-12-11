@@ -75,12 +75,38 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		/** 
+		 * Returns a stylesheet found in a themes directory - but FIRST passes it through the tools CSS handler
+		 * in order to make certain style attributes found inside editable
+		 * @param string $stylesheet
+		 */
+		public function getStyleSheet($stylesheet) {
+			if ($this->isPreview()) {
+				return REL_DIR_FILES_TOOLS . '/css/' . DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . $stylesheet . '?mode=preview';
+			} else {
+				return REL_DIR_FILES_TOOLS . '/css/' . DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . $stylesheet;
+			}
+		}
+
+		public function enablePreview() {
+			$this->isPreview = true;
+		}
+		
+		public function isPreview() {
+			return $this->isPreview;
+		}
+		
+		/** 
 		 * Returns the path used to access this view
 		 * @return string $viewPath
 		 */
 		private function getViewPath() {
 			return $this->viewPath;
 		}
+		
+		/** 
+		 * Returns the handle of the currently active theme
+		 */
+		public function getThemeHandle() { return $this->ptHandle;}
 		
 		/**
 		 * gets the theme include file for this particular view		
@@ -326,6 +352,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			// wrapTemplateInTheme gets set to true if we're passing the filename of a single page or page type file through 
 			$pkgID = 0;
 			if ($pl instanceof PageTheme) {
+				$this->ptHandle = $pl->getThemeHandle();
 				if ($pl->getPackageID() > 0) {
 					if (is_dir(DIR_PACKAGES . '/' . $pl->getPackageHandle())) {
 						$dirp = DIR_PACKAGES;
@@ -364,6 +391,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$themeDir = $dir . '/' . $pl->getThemeHandle();
 				}
 			} else {
+				$this->ptHandle = $pl;
 				if (file_exists(DIR_FILES_THEMES . '/' . $pl . '/' . $filename)) {
 					$themePath = BASE_URL . DIR_REL . '/' . DIRNAME_THEMES . '/' . $pl;
 					$theme = DIR_FILES_THEMES . "/" . $pl . '/' . $filename;
