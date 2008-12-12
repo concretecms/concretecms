@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btFlickr">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="title" type="C" size="255">
+		</field> 			
+		<field name="url" type="C" size="255">
+		</field> 		
+		<field name="itemsToDisplay" type="I">
+			<unsigned />
+			<default value="5" />
+		</field> 	
+		<field name="maxWidth" type="C" size="8">
+		</field>
+		<field name="maxHeight" type="C" size="8">
+		</field>				
+	</table>
+</schema>
