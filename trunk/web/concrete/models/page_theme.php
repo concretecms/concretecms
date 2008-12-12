@@ -1,6 +1,27 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
+/**
+ *
+ * A page theme editable style object corresponds to a style in a stylesheet that is able to be manipulated through the dashboard.
+ * @package Pages
+ * @subpackage Themes
+ */
+class PageThemeEditableStyle extends Object {
+	
+	const TSTYPE_COLOR = 1;
+	const TSTYPE_FONT = 10;
+	const TSTYPE_CUSTOM = 20;
+	
+	public function getHandle() {return $this->ptsHandle;}
+	public function getValue() {return $this->ptsValue;}
+	public function getType() {return $this->ptsType;}
+	public function getName() {
+		$h = Loader::helper('text');
+		return $h->uncamelcase($this->ptsHandle);
+	}
+}
+
 /** 
  * A class specifically for editable fonts
  */
@@ -36,26 +57,6 @@ class PageThemeEditableStyleFont extends PageThemeEditableStyle {
 	}
 }
 
-/**
- *
- * A page theme editable style object corresponds to a style in a stylesheet that is able to be manipulated through the dashboard.
- * @package Pages
- * @subpackage Themes
- */
-class PageThemeEditableStyle extends Object {
-	
-	const TSTYPE_COLOR = 1;
-	const TSTYPE_FONT = 10;
-	const TSTYPE_CUSTOM = 20;
-	
-	public function getHandle() {return $this->ptsHandle;}
-	public function getValue() {return $this->ptsValue;}
-	public function getType() {return $this->ptsType;}
-	public function getName() {
-		$h = Loader::helper('text');
-		return $h->uncamelcase($this->ptsHandle);
-	}
-}
 
 /**
 *
