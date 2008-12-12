@@ -53,7 +53,7 @@ img {
 	overflow:visible;
 }
 #page #header #logo a {
-	color:#fff;
+	color: /* {header_logo_color} */ #ffffff /* {/header_logo_color} */;
 	text-decoration:none;
 }
 #page #header ul.nav-header {

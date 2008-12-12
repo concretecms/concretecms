@@ -5,8 +5,8 @@
 <head>
 	
 <!-- Site Header Content //-->
-<style type="text/css">@import "<?=$this->getThemePath()?>/main.css";</style>
-<style type="text/css">@import "<?=$this->getThemePath()?>/typography.css";</style>
+<style type="text/css">@import "<?=$this->getStyleSheet('main.css')?>";</style>
+<style type="text/css">@import "<?=$this->getStyleSheet('typography.css')?>";</style>
 
 <? Loader::element('header_required'); ?>	
 
