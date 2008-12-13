@@ -184,40 +184,22 @@ saveMaintenanceMode = function() {
 
 </form>
 
-<form method="post" id="url-form" action="<?=$this->url('/dashboard/settings', 'update_rewriting')?>">
-	<?=$this->controller->token->output('update_rewriting')?>
+
+<form method="post" id="tracking-code-form" action="<?=$this->url('/dashboard/settings', 'update_tracking_code')?>">
+	<?=$this->controller->token->output('update_tracking_code')?>
+
+	<h1><span><?=t('Tracking Code')?></span></h1>
 	
-	<h1><span><?=t('Linking')?></span></h1>
-	
-	<div class="ccm-dashboard-inner">
-	
-	<div class="ccm-dashboard-radio"><?=$form->checkbox('URL_REWRITING', 1, $url_rewriting)?> <?=t('Enable Pretty URLs')?></div>
-	<div class="ccm-dashboard-description"><?=t("Automatically translates your path-based Concrete5 URLs so that they don't include 'index.php'.")?></div>
-	
-	<? if (URL_REWRITING) { ?>
-	<h2><?=t('Required Code')?></h2>
-	<p><?=t("You must copy the lines of code below and place them in your server's configuration file or .htaccess file.")?></p>
-	
-	<textarea style="width: 295px; height: 140px;" onclick="this.select()">
-	<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteBase <?=DIR_REL?>/
-	
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	
-	RewriteRule ^(.*)$ index.php/$1 [L]
-	</IfModule>
-	</textarea>
-	<br/>
-	<br/>
-	<? } ?>
-	
-	<?
-	$b1 = $h->submit(t('Save'), 'url-form');
-	print $h->buttons($b1);
-	?>
-	<br class="clear" />
+	<div class="ccm-dashboard-inner">	
+		<textarea name="tracking_code" cols="50" rows="4" style="width:98%;height:100px;" ><?=$site_tracking_code ?></textarea>
+		
+		<div class="ccm-dashboard-description"><?=t('Any HTML you paste here will be inserted at the bottom of every page in your website automatically.')?></div>
+		
+		<?
+		$b1 = $h->submit( t('Save'), 'tracking-code-form');
+		print $h->buttons($b1);
+		?> 
+		<br class="clear" />
 	</div>
 
 </form>
@@ -226,7 +208,7 @@ saveMaintenanceMode = function() {
 <form method="post" id="marketplace-support-form" action="<?=$this->url('/dashboard/settings', 'update_marketplace_support')?>" enctype="multipart/form-data" >
 	<?=$this->controller->token->output('update_marketplace_support')?>
 
-	<h1><span><?=t('Enable Marketplace Support')?> </span></h1>
+	<h1><span><?=t('Marketplace Integration')?> </span></h1>
 	
 	<div class="ccm-dashboard-inner">	
 		 
@@ -237,7 +219,7 @@ saveMaintenanceMode = function() {
 		<? }else{ ?>
 				
 			<div class="ccm-dashboard-radio"><?=$form->checkbox('MARKETPLACE_ENABLED', 1, $marketplace_enabled_in_config)?> <?=t('Marketplace Enabled')?></div>
-			<div class="ccm-dashboard-description"><? /*t("") */ ?></div>
+			<div class="ccm-dashboard-description"><?= t("Show me themes and add-ons available for Concrete5.") ?></div>
 			
 			<?
 			$b1 = $h->submit( t('Save'), 'marketplace-support-form');
@@ -263,7 +245,7 @@ saveMaintenanceMode = function() {
 		if($favIconFID){
 			Loader::block('library_file');
 			$fileBlock=LibraryFileBlockController::getFile( $favIconFID ); ?>
-			<div style="float:right">
+			<div>
 			<img src="<?=$fileBlock->getFileRelativePath() ?>" />
 			<a onclick="removeFavIcon()"><?=t('Remove')?></a>
 			</div>
@@ -273,10 +255,10 @@ saveMaintenanceMode = function() {
 				$('#favicon-form').get(0).submit();
 			}
 			</script>
+		<? }else{ ?>
+			<input id="favicon_upload" type="file" name="favicon_file"/>		
+			<div class="ccm-dashboard-description" style="margin-top:4px"><?=t('Your image should be 16x16 pixels, and should be an gif or a png with a .ico file extension.')?></div>
 		<? } ?>
-		<input id="favicon_upload" type="file" name="favicon_file"/>
-		
-		<div class="ccm-dashboard-description"><?=t('Your image should be 16x16 pixels, and should be an gif or a png with a .ico file extension.')?></div>
 		
 		<?
 		$b1 = $h->submit( t('Save'), 'favicon-form');
@@ -320,25 +302,43 @@ saveMaintenanceMode = function() {
 </form>
 
 
-<form method="post" id="tracking-code-form" action="<?=$this->url('/dashboard/settings', 'update_tracking_code')?>">
-	<?=$this->controller->token->output('update_tracking_code')?>
-
-	<h1><span><?=t('Tracking Code')?></span></h1>
+<form method="post" id="url-form" action="<?=$this->url('/dashboard/settings', 'update_rewriting')?>">
+	<?=$this->controller->token->output('update_rewriting')?>
 	
-	<div class="ccm-dashboard-inner">	
-		<textarea name="tracking_code" cols="50" rows="4" style="width:98%;height:100px;" ><?=$site_tracking_code ?></textarea>
-		
-		<div class="ccm-dashboard-description"><?=t('Any HTML you paste here will be inserted at the bottom of every page in your website automatically.')?></div>
-		
-		<?
-		$b1 = $h->submit( t('Save'), 'tracking-code-form');
-		print $h->buttons($b1);
-		?> 
-		<br class="clear" />
+	<h1><span><?=t('Linking')?></span></h1>
+	
+	<div class="ccm-dashboard-inner">
+	
+	<div class="ccm-dashboard-radio"><?=$form->checkbox('URL_REWRITING', 1, $url_rewriting)?> <?=t('Enable Pretty URLs')?></div>
+	<div class="ccm-dashboard-description"><?=t("Automatically translates your path-based Concrete5 URLs so that they don't include 'index.php'.")?></div>
+	
+	<? if (URL_REWRITING) { ?>
+	<h2><?=t('Required Code')?></h2>
+	<p><?=t("You must copy the lines of code below and place them in your server's configuration file or .htaccess file.")?></p>
+	
+	<textarea style="width: 97%; height: 140px;" onclick="this.select()">
+	<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase <?=DIR_REL?>/
+	
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	
+	RewriteRule ^(.*)$ index.php/$1 [L]
+	</IfModule>
+	</textarea>
+	<br/>
+	<br/>
+	<? } ?>
+	
+	<?
+	$b1 = $h->submit(t('Save'), 'url-form');
+	print $h->buttons($b1);
+	?>
+	<br class="clear" />
 	</div>
 
 </form>
-
 
 
 
