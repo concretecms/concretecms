@@ -46,7 +46,7 @@
 
 <div class="ccm-form">
 
-<h2 style="margin-top:32px"><?=t('Forgot Password?')?></h2>
+<h2 style="margin-top:32px"><?=t('Forgot Your Password?')?></h2>
 
 <p><?=t("If you've forgotten your password, enter your email address below. We will reset it to a new password, and send the new one to you.")?></p>
 
