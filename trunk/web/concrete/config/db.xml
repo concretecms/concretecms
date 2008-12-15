@@ -595,7 +595,9 @@
       <KEY/>
     </field>
     <field name="ptsValue" type="X2" />
-    <field name="ptsType" type="C" size="32"/>
+    <field name="ptsType" type="C" size="32">
+    	<key />
+    </field>
   </table>
   <table name="PageTypeAttributes">
     <field name="ctID" type="I" size="10">

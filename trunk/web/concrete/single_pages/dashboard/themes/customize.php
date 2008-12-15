@@ -1,4 +1,7 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+<? 
+defined('C5_EXECUTE') or die(_("Access Denied.")); 
+$vt = Loader::helper('validation/token');
+?>
 <h1><span><?=t('Customize Theme')?></span></h1>
 <div class="ccm-dashboard-inner">
 
@@ -7,52 +10,56 @@
 
 
 <form action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/themes/preview_internal?themeID=<?=$themeID?>&previewCID=1" method="post" target="preview-theme" id="customize-form">
+<?=$vt->output()?>
 <?=$form->hidden('saveAction', $this->action('save')); ?>
 <?=$form->hidden('resetAction', $this->action('reset')); ?>
+
+<? 
+$useSlots = false;
+// we use the slots if we have more than one style type for any given style
+foreach($styles as $tempStyles) {
+	if (count($tempStyles) > 1) {
+		$useSlots = true;
+		break;
+	}
+}
+?>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr>
 	<td valign="top">
 <?	
-	$lastType = false;
 	$customSt = false;
 	
-	foreach($styles as $st) { 
+	foreach($styles as $sto) { 
+		$st = $sto[0];
 		if ($st->getType() == PageThemeEditableStyle::TSTYPE_CUSTOM) {
 			$customST = $st;
 			continue;
 		}
 		
-		if ($st->getType() != $lastType) {
-			switch($st->getType()) {
-				case PageThemeEditableStyle::TSTYPE_COLOR:
-					print '<h2>' . t('Colors') . '</h2>';
-					break;
-				case PageThemeEditableStyle::TSTYPE_FONT:
-					print '<h2>' . t('Text and Type') . '</h2>';
-					break;
-			}
-		}
-		
-		$lastType = $st->getType();
-		
 		?>
 	
-		<div class="ccm-theme-style-attribute">
-		<? switch($st->getType()) {
-			case PageThemeEditableStyle::TSTYPE_COLOR: ?>
-				<?=$st->getName()?>
-				<?=$form->hidden('input_color_' . $st->getHandle(), $st->getValue())?>
-				<div class="ccm-theme-style-color" id="color_<?=$st->getHandle()?>"><div hex-color="<?=$st->getValue()?>" style="background-color: <?=$st->getValue()?>"></div></div>
-			<? 
-				break;
-			case PageThemeEditableStyle::TSTYPE_FONT: ?>
-				<?=$st->getName()?>
-				<?=$form->hidden('input_font_' . $st->getHandle(), $st->getShortValue())?>
-				<div class="ccm-theme-style-font" font-panel-font="<?=$st->getFamily()?>" font-panel-weight="<?=$st->getWeight()?>" font-panel-style="<?=$st->getStyle()?>" font-panel-size="<?=$st->getSize()?>" id="font_<?=$st->getHandle()?>"><div></div></div>
-				
-			<? 
-				break;
+		<div class="ccm-theme-style-attribute <? if ($useSlots) { ?>ccm-theme-style-slots<? } ?>">
+		<?=$st->getName()?>
+
+		<? 
+		for ($i = 0; $i < count($sto); $i++) { 
+			$slot = $i + 1;
+			$st = $sto[$i];
+			switch($st->getType()) {
+				case PageThemeEditableStyle::TSTYPE_COLOR: ?>
+					<?=$form->hidden('input_theme_style_' . $st->getHandle() . '_' . $st->getType(), $st->getValue())?>
+					<div class="ccm-theme-style-color <? if ($useSlots) { ?>ccm-theme-style-slot-<?=$slot?><? } ?>" id="theme_style_<?=$st->getHandle()?>_<?=$st->getType()?>"><div hex-color="<?=$st->getValue()?>" style="background-color: <?=$st->getValue()?>"></div></div>
+				<? 
+					break;
+				case PageThemeEditableStyle::TSTYPE_FONT: ?>
+					<?=$form->hidden('input_theme_style_' . $st->getHandle() . '_' . $st->getType(), $st->getShortValue())?>
+					<div class="ccm-theme-style-font <? if ($useSlots) { ?>ccm-theme-style-slot-<?=$slot?><? } ?>" font-panel-font="<?=$st->getFamily()?>" font-panel-weight="<?=$st->getWeight()?>" font-panel-style="<?=$st->getStyle()?>" font-panel-size="<?=$st->getSize()?>" id="theme_style_<?=$st->getHandle()?>_<?=$st->getType()?>"><div></div></div>
+					
+				<? 
+					break;
+			}
 		} ?>
 		</div>
 		
@@ -60,11 +67,10 @@
 	} 
 	
 	if (isset($customST)) { ?>
-	<h2>Custom Styles</h2>
-	<div class="ccm-theme-style-attribute">
-		<?=t('Edit Custom Styles')?>
-		<?=$form->hidden('input_custom_' . $customST->getHandle(), $customST->getValue())?>
-		<div class="ccm-theme-style-custom" id="custom_<?=$customST->getHandle()?>"><div></div></div>
+	<div class="ccm-theme-style-attribute <? if ($useSlots) { ?>ccm-theme-style-slots<? } ?>">
+		<?=t('Custom Styles')?>
+		<?=$form->hidden('input_theme_style_' . $customST->getHandle() . '_' . $customST->getType(), $customST->getOriginalValue())?>
+		<div class="ccm-theme-style-custom <? if ($useSlots) { ?>ccm-theme-style-slot-1<? } ?>" id="theme_style_<?=$customST->getHandle()?>_<?=$customST->getType()?>"><div></div></div>
 	</div>
 	
 	<? }
@@ -103,23 +109,9 @@
 
 var lblSave = '<?=$save?>';
 
-jQuery.fn.CustomPanel = function() {
-	jQuery.CustomPanel.init();
-	$(this).click(function() {
-		jQuery.CustomPanel.showPanel(this);
-	});
-}
-
-jQuery.fn.FontPanel = function() {
-	jQuery.FontPanel.init();
-	$(this).click(function() {
-		jQuery.FontPanel.showPanel(this);
-	});
-}
-
 jQuery.CustomPanel = {
 	activePanel: false,
-	init: function(font, size, weight, style) {
+	init: function() {
 		var html = '<div id="jquery-custom-panel"><textarea><\/textarea><div id="jquery-custom-panel-save"><input type="button" name="save" value="' + lblSave + '" /><\/<div><\/div>';
 		
 		if ($('#jquery-custom-panel').length == 0) {
@@ -164,7 +156,7 @@ jQuery.CustomPanel = {
 			$("#customize-form").get(0).submit()
 			jcp.hidePanel();
 		});
-	},
+	}
 	
 }
 
@@ -284,6 +276,20 @@ jQuery.FontPanel = {
 
 }
 
+jQuery.fn.CustomPanel = function() {
+	jQuery.CustomPanel.init();
+	$(this).click(function() {
+		jQuery.CustomPanel.showPanel(this);
+	});
+}
+
+jQuery.fn.FontPanel = function() {
+	jQuery.FontPanel.init();
+	$(this).click(function() {
+		jQuery.FontPanel.showPanel(this);
+	});
+}
+
 
 saveCustomizedTheme = function() {
 	$("#customize-form").attr('target', '_self');
@@ -311,7 +317,7 @@ $(function() {
 				$('input#input_' + thisID).val('#' + hex);
 				$('div#' + thisID + ' div').css('backgroundColor', '#' + hex);
 				$("#customize-form").get(0).submit()
-				cal.fadeOut(300);
+				cal.hide();
 			}
 		});
 	});

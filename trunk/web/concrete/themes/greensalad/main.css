@@ -53,9 +53,11 @@ img {
 	overflow:visible;
 }
 #page #header #logo a {
-	color: /* {header_logo_color} */ #ffffff /* {/header_logo_color} */;
+	/* customize_header_logo */ color: #ffffff; /* customize_header_logo */
+	/* customize_header_logo */ font: normal bold 32px Arial; /* customize_header_logo */
 	text-decoration:none;
 }
+
 #page #header ul.nav-header {
 	list-style:none;
 	margin:0px;

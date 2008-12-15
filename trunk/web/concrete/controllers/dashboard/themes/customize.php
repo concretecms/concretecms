@@ -25,26 +25,32 @@ class DashboardThemesCustomizeController extends Controller {
 	}
 	
 	public function save() {
-		$themeID = $this->post('themeID');
-		$pt = PageTheme::getByID($themeID);
-		// values will be an associative array of key/values that will be passed
-		// to the stylesheet. Stuff like
-		// $values['background_color'] = '#ffffff';
-		// This will then be merged. All values will be looped through and populatd in the stylesheet in place of the old values.
-		if (is_object($pt)) {
-			$values = $pt->mergeStylesFromPost($this->post());
-			$pt->saveEditableStyles($values);
-			$this->view($themeID);
-			$this->redirect('/dashboard/themes/customize', 'view', $themeID, 'saved');
+		$vt = Loader::helper('validation/token');
+		if ($vt->validate()) {
+			$themeID = $this->post('themeID');
+			$pt = PageTheme::getByID($themeID);
+			// values will be an associative array of key/values that will be passed
+			// to the stylesheet. Stuff like
+			// $values['background_color'] = '#ffffff';
+			// This will then be merged. All values will be looped through and populatd in the stylesheet in place of the old values.
+			if (is_object($pt)) {
+				$values = $pt->mergeStylesFromPost($this->post());
+				$pt->saveEditableStyles($values);
+				$this->view($themeID);
+				$this->redirect('/dashboard/themes/customize', 'view', $themeID, 'saved');
+			}
 		}
 	}
 	
 	public function reset() {
-		$themeID = $this->post('themeID');
-		$pt = PageTheme::getByID($themeID);
-		if (is_object($pt)) {
-			$values = $pt->reset();
-			$this->redirect('/dashboard/themes/customize', 'view', $themeID, 'reset');
+		$vt = Loader::helper('validation/token');
+		if ($vt->validate()) {
+			$themeID = $this->post('themeID');
+			$pt = PageTheme::getByID($themeID);
+			if (is_object($pt)) {
+				$values = $pt->reset();
+				$this->redirect('/dashboard/themes/customize', 'view', $themeID, 'reset');
+			}
 		}
 	}
 	

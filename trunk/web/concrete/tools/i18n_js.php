@@ -11,7 +11,8 @@ var ccmi18n = {
 	changeBlockTemplate: '<?=t('Set Custom Template')?>',
 	setBlockPermissions: '<?=t('Set Permissions')?>',
 	setBlockAlias: '<?=t('Setup on Child Pages')?>',	
-	blockAreaMenu: '<?=t('Block Area')?>'
+	blockAreaMenu: '<?=t('Block Area')?>',
+	save: '<?=t('Save')?>'
 	
 }
 
