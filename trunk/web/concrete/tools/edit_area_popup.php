@@ -125,7 +125,7 @@ $(function() {
 		$item = $obj->getObject();
 		if (is_object($item)) {
 			$bt = $item->getBlockTypeObject();
-				$btIcon = $ci->getBlockTypeIconURL($bt);
+			$btIcon = $ci->getBlockTypeIconURL($bt);
 			?>			
 			<div class="ccm-scrapbook-list-item" id="ccm-pc-<?=$obj->getPileContentID()?>">
 				<div class="ccm-block-type">
@@ -135,7 +135,7 @@ $(function() {
 						<?	
 						try {
 							$bv = new BlockView();
-							$bv->render($item);
+							$bv->render($item, 'scrapbook');
 						} catch(Exception $e) {
 							print BLOCK_NOT_AVAILABLE_TEXT;
 						}	

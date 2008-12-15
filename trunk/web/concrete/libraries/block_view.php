@@ -183,12 +183,23 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if ($this->controller->getRenderOverride() != '') { 
 				$_filename = $this->controller->getRenderOverride() . '.php';
 			}
-			if (!in_array($view, array('view', 'add', 'edit'))) {
+			
+			if ($view == 'scrapbook') {
+				if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . FILENAME_BLOCK_VIEW_SCRAPBOOK)) {
+					$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . FILENAME_BLOCK_VIEW_SCRAPBOOK;
+				} else if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . FILENAME_BLOCK_VIEW_SCRAPBOOK)) {
+					$template = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . FILENAME_BLOCK_VIEW_SCRAPBOOK;
+				} else {
+					$view = 'view';
+				}
+			}
+			
+			if (!in_array($view, array('view', 'add', 'edit', 'scrapbook'))) {
 				// then we're trying to render a custom view file, which we'll pass to the bottom functions as $_filename
 				$_filename = $view . '.php';
 				$view = 'view';
 			}
-
+			
 			switch($view) {
 				case 'view':
 					if (!isset($_filename)) {
