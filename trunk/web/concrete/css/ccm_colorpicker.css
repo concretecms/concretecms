@@ -142,8 +142,8 @@ input.colorpicker_submit {
 	position: absolute;
 	left: 298px;
 	top: 145px;
-	padding: 0px 6px 0px 6px;
-	width: 44px;
+	width: 36px;
+	padding: 0px;
 	font-size: 10px; 
 }
 .colorpicker_focus {

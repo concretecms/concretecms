@@ -68,7 +68,7 @@ foreach($styles as $tempStyles) {
 	
 	if (isset($customST)) { ?>
 	<div class="ccm-theme-style-attribute <? if ($useSlots) { ?>ccm-theme-style-slots<? } ?>">
-		<?=t('Custom Styles')?>
+		<?=t('Add Your CSS')?>
 		<?=$form->hidden('input_theme_style_' . $customST->getHandle() . '_' . $customST->getType(), $customST->getOriginalValue())?>
 		<div class="ccm-theme-style-custom <? if ($useSlots) { ?>ccm-theme-style-slot-1<? } ?>" id="theme_style_<?=$customST->getHandle()?>_<?=$customST->getType()?>"><div></div></div>
 	</div>
@@ -103,16 +103,16 @@ foreach($styles as $tempStyles) {
 ?>
 
 </form>
-<? $save = t('Save')?>
+<? $ok = t('Ok')?>
 <? $resetMsg = t('This will remove any theme customizations you have made.'); ?>
 <script type="text/javascript">
 
-var lblSave = '<?=$save?>';
+var lblOk = '<?=$ok?>';
 
 jQuery.CustomPanel = {
 	activePanel: false,
 	init: function() {
-		var html = '<div id="jquery-custom-panel"><textarea><\/textarea><div id="jquery-custom-panel-save"><input type="button" name="save" value="' + lblSave + '" /><\/<div><\/div>';
+		var html = '<div id="jquery-custom-panel"><textarea><\/textarea><div id="jquery-custom-panel-save"><input type="button" name="save" value="' + lblOk + '" /><\/<div><\/div>';
 		
 		if ($('#jquery-custom-panel').length == 0) {
 			$(document.body).append(html);
@@ -183,7 +183,7 @@ jQuery.FontPanel = {
 		for (i = 0; i < this.weights.length; i++) {
 			html += '<div font-panel-weight="' + this.weights[i] + '" style="font-weight:' + this.weights[i] + '">' + this.weights[i] + '<\/div>';
 		}
-		html +='<\/div><div id="jquery-font-panel-save"><input type="button" name="save" value="' + lblSave + '" /><\/<div><\/div>';
+		html +='<\/div><div id="jquery-font-panel-save"><input type="button" name="save" value="' + lblOk + '" /><\/<div><\/div>';
 		
 		if ($('#jquery-font-panel').length == 0) {
 			$(document.body).append(html);

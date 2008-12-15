@@ -12,7 +12,7 @@ var ccmi18n = {
 	setBlockPermissions: '<?=t('Set Permissions')?>',
 	setBlockAlias: '<?=t('Setup on Child Pages')?>',	
 	blockAreaMenu: '<?=t('Block Area')?>',
-	save: '<?=t('Save')?>'
+	ok: '<?=t('Ok')?>'
 	
 }
 
