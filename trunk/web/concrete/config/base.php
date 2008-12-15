@@ -154,6 +154,7 @@ define('DIRNAME_JAVASCRIPT', 'js');
 define('DIR_FILES_BLOCK_TYPES', DIR_BASE . '/blocks');
 define('DIR_FILES_BLOCK_TYPES_CORE', DIR_BASE_CORE . '/blocks');
 define('FILENAME_BLOCK_VIEW', 'view.php');
+define('FILENAME_BLOCK_VIEW_SCRAPBOOK', 'scrapbook.php');
 define('FILENAME_BLOCK_ADD', 'add.php');
 define('FILENAME_BLOCK_EDIT', 'edit.php');
 define('FILENAME_BLOCK_ICON', 'icon.png');
