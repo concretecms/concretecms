@@ -203,10 +203,19 @@ div.ccm-dashboard-description {color: #888; margin-bottom: 8px}
 
 /* editable themes */
 div.ccm-theme-style-attribute {position: relative; height: 30px; white-space: nowrap; border-bottom: 2px solid #eee; margin-bottom: 8px; font-weight: bold; padding-left: 40px; padding-top: 10px; padding-right: 20px}
+div.ccm-theme-style-slots {padding-left: 75px}
+
+div.ccm-theme-style-attribute div.ccm-theme-style-slot-1 {
+	left: 35px;
+}
+div.ccm-theme-style-attribute div.ccm-theme-style-slot-2 {
+	left: 0px;
+}
+
 div.ccm-theme-style-attribute div {
 	position: absolute;
 	top: 0;
-	left: 0;
+	left: 0px;
 	width: 36px;
 	height: 36px;
 	background: url(../images/widgets/colorpicker/select2.png);
@@ -221,16 +230,18 @@ div.ccm-theme-style-attribute div div {
 	background: url(../images/widgets/colorpicker/select2.png) center;
 }
 
-div.ccm-theme-style-attribute div.ccm-theme-style-font, div.ccm-theme-style-attribute div.ccm-theme-style-custom {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 36px;
-	height: 36px;
+div.ccm-theme-style-attribute div.ccm-theme-style-font {
 	background: transparent url(../images/widgets/font/text_rich.png) no-repeat scroll 6px 6px;
 }
 
+div.ccm-theme-style-attribute div.ccm-theme-style-custom {
+	background: transparent url(../images/widgets/font/custom_style.png) no-repeat scroll 10px 10px;
+}
 
+
+div#jquery-font-panel input, div#jquery-custom-panel input {
+	font-size: 10px;
+}
 div#jquery-font-panel, div#jquery-custom-panel {
 	display: none; 
 	position: absolute; 
@@ -282,22 +293,22 @@ div#jquery-font-panel div#jquery-font-panel-list-styles {
 	position: absolute;
 	top: 10px;
 	left: 280px;
-	width: 60px;
-	height: 48px;
+	width: 65px;
+	height: 50px;
 }
 
 div#jquery-font-panel div#jquery-font-panel-list-weights {
 	position: absolute;
 	top: 68px;
 	left: 280px;
-	width: 60px;
-	height: 48px;
+	width: 65px;
+	height: 50px;
 }
 
 div#jquery-font-panel div#jquery-font-panel-save {
 	position: absolute; 
 	top: 130px;
-	left: 290px;
+	left: 295px;
 }
 
 div#jquery-font-panel div.jquery-font-panel-list div {

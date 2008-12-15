@@ -1,6 +1,6 @@
 /* HTML Tag Redefinition */
 html, body {height: 100%;  }
-body {background: /*{body_background_color}*/#ffffff/*{/body_background_color}*/; text-align: center; padding: 0px; margin: 0px; }
+body {/* customize_background */ background-color: #ffffff; /* customize_background */ text-align: center; padding: 0px; margin: 0px; }
 img {border: 0px}
 a { cursor:pointer}
 
@@ -67,4 +67,4 @@ div.code {border: 1px solid #ddd; background: #eee; padding: 10px}
 div.spacer,div.ccm-spacer{ clear:both; font-size:1px; line-height:1px }
 .noTopSpace{margin-top:0px; padding-top:0px}
 
-/* {output_custom_style} */ /* {/output_custom_style} */
+/* customize_miscellaneous */ /* customize_miscellaneous */
