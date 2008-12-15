@@ -311,6 +311,12 @@ div#jquery-font-panel div#jquery-font-panel-save {
 	left: 295px;
 }
 
+div#jquery-font-panel-save input, div#jquery-custom-panel-save input {
+	width: 36px;
+	padding: 0px;
+	text-align: center;
+}
+
 div#jquery-font-panel div.jquery-font-panel-list div {
 	padding: 4px;
 	border-bottom: 2px solid #e1e1e1;
