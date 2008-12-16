@@ -110,8 +110,10 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 <? } else if ($c->isEditMode()) { ?>
 <li><a href="javascript:void(0)" id="ccm-nav-exit-edit"><?=t('Exit Edit Mode')?></a></li>
 <li><a href="javascript:void(0)" id="ccm-nav-properties"><?=t('Properties')?></a></li>
+<? if ($cp->canAdminPage()) { ?>
 <li><a href="javascript:void(0)" id="ccm-nav-design"><?=t('Design')?></a></li>
-<? if ($cp->canAdminPage()) { ?><li><a href="javascript:void(0)" id="ccm-nav-permissions"><?=t('Permissions')?></a></li><? } ?>
+<li><a href="javascript:void(0)" id="ccm-nav-permissions"><?=t('Permissions')?></a></li>
+<? } ?>
 <? if ($cp->canReadVersions()) { ?><li><a href="javascript:void(0)" id="ccm-nav-versions"><?=t('Versions')?></a></li><? } ?>
 <? if ($sh->canRead() && $cp->canDeleteCollection()) { ?>
 	<li><a href="javascript:void(0)" id="ccm-nav-mcd"><?=t('Move/Delete')?></a></li>

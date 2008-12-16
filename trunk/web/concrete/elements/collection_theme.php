@@ -1,11 +1,29 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
+
 Loader::model('collection_types');
 $stringHelper=Loader::helper('text');
 $tArray = PageTheme::getGlobalList();
 $tArray2 = PageTheme::getLocalList();
 $tArray = array_merge($tArray, $tArray2);
 $ctArray = CollectionType::getList($c->getAllowedSubCollections());
+
+$cp = new Permissions($c);
+if ($c->getCollectionID() > 1) {
+	$parent = Page::getByID($c->getCollectionParentID());
+	$parentCP = new Permissions($parent);
+}
+if (!$cp->canAdminPage()) {
+	die(t('Access Denied'));
+}
+
+$cnt = 0;
+for ($i = 0; $i < count($ctArray); $i++) {
+	$ct = $ctArray[$i];
+	if ($c->getCollectionID() == 1 || $parentCP->canAddSubCollection($ct)) { 
+		$cnt++;
+	}
+}
 
 $plID = $c->getCollectionThemeID();
 $ctID = $c->getCollectionTypeID();
@@ -48,27 +66,35 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 			<div class="ccm-form-area">
 	
 				<h2><?=t('Choose a Page Type')?></h2>
-	
-				<? if ($c->isGeneratedCollection()) { ?>
+				<? if ($c->isMasterCollection()) { ?>
+				
+					<?=t("This is the defaults page for the %s page type. You cannot change it.", $c->getCollectionTypeName()); ?>
+					<br/><br/>
+				
+				<? } else if ($c->isGeneratedCollection()) { ?>
 	
 				<?=t("This page is a single page, which means it doesn't have a page type associated with it."); ?>
 	
 				<? } else { ?>
 	
-				<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil(count($ctArray)/4)?>">
+				<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil($cnt/4)?>">
 					<a href="javascript:void(0)" class="ccm-scroller-l"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_l.png" width="28" height="79" alt="l" /></a>
 					<a href="javascript:void(0)" class="ccm-scroller-r"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_r.png" width="28" height="79" alt="l" /></a>
 	
 					<div class="ccm-scroller-inner">
-						<ul id="ccm-select-page-type" style="width: <?=count($ctArray) * 132?>px">
+						<ul id="ccm-select-page-type" style="width: <?=$cnt * 132?>px">
 							<? 
-							foreach($ctArray as $ct) { ?>		
+							foreach($ctArray as $ct) { 
+								if ($c->getCollectionID() == 1 || $parentCP->canAddSubCollection($ct)) { 
+								?>		
 								<? $class = ($ct->getCollectionTypeID() == $ctID) ? 'ccm-item-selected' : ''; ?>
 						
 								<li class="<?=$class?>"><a href="javascript:void(0)" ccm-page-type-id="<?=$ct->getCollectionTypeID()?>"><img src="<?=REL_DIR_FILES_COLLECTION_TYPE_ICONS?>/<?=$ct->getCollectionTypeIcon()?>" /></a>
 								<span><?=$ct->getCollectionTypeName()?></span>
 								</li>
-							<? } ?>
+							<? } 
+							
+							}?>
 						</ul>
 					</div>
 	
