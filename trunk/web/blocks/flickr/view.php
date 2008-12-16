@@ -25,7 +25,9 @@ if( strlen($errorMsg)>0 ){
 
 	foreach($posts as $itemNumber=>$item) { 	
 		if( intval($itemNumber) >= intval($controllerObj->itemsToDisplay) ) break; 
-		$fileURL=$item->get_link(0,"enclosure");
+		//$fileURL=$item->get_link(0,"enclosure");
+		$enclosure=$item->get_enclosure(); 
+		$fileURL=$enclosure->link; 
 		$fileID=$item->get_id(); 
 		if(!$fileID) $fileID=$fileURL;
 		$fileCachePathRel=$controllerObj->getResizedImagePath($fileURL, $fileID); 
