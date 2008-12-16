@@ -474,7 +474,7 @@
 		} else */
 		
 		if ($_POST['update_theme']) { 
-			if ($cp->canWrite()) {
+			if ($cp->canAdminPage()) {
 				$nvc = $c->getVersionToModify();
 				
 				$data = array();
@@ -484,8 +484,22 @@
 				if (!$c->isGeneratedCollection()) {
 				
 					if ($_POST['ctID']) {
-						$data['ctID'] = $_POST['ctID'];
-						$nvc->update($data);
+						// now we have to check to see if you're allowed to update this page to this page type.
+						// We do this by checking to see whether the PARENT page allows you to add this page type here.
+						// if this is the home page then we assume you are good
+						
+						if ($c->getCollectionID() > 1) {
+							Loader::model('collection_types');
+							$parentC = Page::getByID($c->getCollectionParentID());
+							$parentCP = new Permissions($parentC);
+							$ct = CollectionType::getByID($_POST['ctID']);
+						}
+						
+						if ($c->getCollectionID() == 1 || $parentCP->canAddSubCollection($ct)) {
+							$data['ctID'] = $_POST['ctID'];
+							$nvc->update($data);
+						}
+						
 					}
 				
 				}
