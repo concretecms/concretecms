@@ -32,7 +32,13 @@ table#googleMapBlockSetup td{ font-size:12px; vertical-align:top; padding-bottom
 			<? } ?>
 		</select>
 		</td>
-	</tr>	
+	</tr>
+	<tr>
+		<th><?=t('Show Google Earth Button')?>:</th>
+		<td>
+		<input type="checkbox" value="1" name="show_earth" <?=($mapObj->show_earth)?'checked':'' ?> />
+		</td>
+	</tr>		
 	<tr>
 		<th><?=t('Width')?>:</th>
 		<td>
@@ -44,7 +50,26 @@ table#googleMapBlockSetup td{ font-size:12px; vertical-align:top; padding-bottom
 		<td>
 		<input id="ccm_googlemap_block_h" name="h" value="<?=$mapObj->h?>" maxlength="255" type="text" size="6"> 
 		</td>
-	</tr>	
+	</tr>
+	<tr>
+		<th><?=t('Zoom')?>:</th>
+		<td>
+		<input id="ccm_googlemap_block_zoom" name="zoom" value="<?=$mapObj->zoom?>" maxlength="255" type="text">
+		<div class="ccm-note"><?=t('Enter a number from 0 to 17, with 17 being the most zoomed in.')?> </div>
+		</td>
+	</tr>
+	<tr>
+		<th><?=t('Latitude')?>:</th>
+		<td>
+		<input id="ccm_googlemap_block_latitude" name="latitude" value="<?=$mapObj->latitude?>" maxlength="255" type="text">
+		</td>
+	</tr>
+	<tr>
+		<th><?=t('Longitude')?>:</th>
+		<td>
+		<input id="ccm_googlemap_block_longitude" name="longitude" value="<?=$mapObj->longitude?>" maxlength="255" type="text">
+		</td>
+	</tr>			
 	<tr>
 		<th><?=t('KML Upload')?>:</th>
 		<td>
