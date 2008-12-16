@@ -3,6 +3,8 @@
 <?
 $children = $c->getCollectionChildrenArray();
 $numChildren = count($children);
+$sh = Loader::helper('concrete/dashboard/sitemap');
+
 ?>
 <script type="text/javascript">
 	var childPages = new Array();
@@ -14,6 +16,8 @@ $numChildren = count($children);
 <style type="text/css">
 div#ccm-mc-page h1#ccm-sitemap-title {display: none}
 </style>
+
+<? if ($sh->canRead()) { ?>
 
 <h1><?=t('Move, Copy or Delete this Page')?></h1>
 
@@ -38,12 +42,12 @@ div#ccm-mc-page h1#ccm-sitemap-title {display: none}
 
 	<div class="ccm-spacer">&nbsp;</div>
 </div>
+<? }
+
+if ($cp->canDeleteCollection()) { ?>
 
 <div class="ccm-form-area" style="margin-top: 10px">
-			<? if (!$cp->canDeleteCollection()) { ?>
-				<h2><?=t('Delete Page')?></h2>
-				<?=t('You may not delete this page.');?>
-			<? } else if ($c->getCollectionID() == 1) {  ?>
+			<? if ($c->getCollectionID() == 1) {  ?>
 				<h2><?=t('Delete Page')?></h2>
 				<?=t('You may not delete the home page.');?>
 			<? } else {	?>
@@ -91,5 +95,7 @@ div#ccm-mc-page h1#ccm-sitemap-title {display: none}
 			}?>
 <div class="ccm-spacer">&nbsp;</div>
 </div>
+
+<? } ?>
 
 </div>

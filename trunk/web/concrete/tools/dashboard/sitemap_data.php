@@ -78,6 +78,10 @@ if ($_REQUEST['search']) {
 			$tempArray[] = $dsb;
 		}
 		$_SESSION['dsbSitemapNodes'] = $tempArray;
+		
+		$js = Loader::helper('json');
+		print $js->encode(array());
+		
 		unset($tempArray);
 		exit;
 	} else {

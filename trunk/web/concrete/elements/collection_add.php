@@ -33,6 +33,16 @@ Loader::model('collection_types');
 $dh = Loader::helper('date');
 
 $ctArray = CollectionType::getList($c->getAllowedSubCollections());
+$cp = new Permissions($c);
+
+$cnt = 0;
+for ($i = 0; $i < count($ctArray); $i++) {
+	$ct = $ctArray[$i];
+	if ($cp->canAddSubCollection($ct)) { 
+		$cnt++;
+	}
+}
+
 	?>
 	
 	<h1><?=t('Add Page')?></h1>
@@ -45,14 +55,16 @@ $ctArray = CollectionType::getList($c->getAllowedSubCollections());
 	
 		<h2><?=t('Choose a Page Type')?></h2>
 		
-		<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil(count($ctArray)/4)?>">
+		<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil($cnt/4)?>">
 			<a href="javascript:void(0)" class="ccm-scroller-l"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_l.png" width="28" height="79" alt="l" /></a>
 			<a href="javascript:void(0)" class="ccm-scroller-r"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_r.png" width="28" height="79" alt="l" /></a>
 			
 			<div class="ccm-scroller-inner">
-				<ul id="ccm-select-page-type" style="width: <?=count($ctArray) * 132?>px">
+				<ul id="ccm-select-page-type" style="width: <?=$cnt * 132?>px">
 					<? 
-					foreach($ctArray as $ct) { ?>
+					foreach($ctArray as $ct) { 
+						if ($cp->canAddSubCollection($ct)) { 
+						?>
 						
 						<? $class = ($ct->getCollectionTypeID() == $ctID) ? 'ccm-item-selected' : ''; ?>
 				
@@ -60,7 +72,9 @@ $ctArray = CollectionType::getList($c->getAllowedSubCollections());
 						<span><?=$ct->getCollectionTypeName()?></span>
 						</li> 
 					
-					<? } ?>
+					<? } 
+					
+					}?>
 				
 				</ul>
 			</div>
