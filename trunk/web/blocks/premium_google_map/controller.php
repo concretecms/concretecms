@@ -17,8 +17,12 @@ class PremiumGoogleMapBlockController extends BlockController {
 	public $w = "100%"; 
 	public $h = "400px"; 
 	public $map_type='Normal';
+	public $show_earth=0;
+	public $latitude = "";
+	public $longitude = "";
+	public $zoom = 14;	
 	
-	public $map_types=array('Normal'=>'G_NORMAL_MAP','Hybrid'=>'G_HYBRID_MAP','Satellite'=>'G_SATELLITE_MAP','Physical'=>'G_PHYSICAL_MAP');
+	public $map_types=array('Normal'=>'G_NORMAL_MAP','Hybrid'=>'G_HYBRID_MAP','Satellite'=>'G_SATELLITE_MAP','Physical'=>'G_PHYSICAL_MAP' );
 	
 	/** 
 	 * Used for localization. If we want to localize the name/description we have to include this
@@ -56,7 +60,11 @@ class PremiumGoogleMapBlockController extends BlockController {
 		$this->set('kml_fID', $this->kml_fID);
 		$this->set('w', $this->w);	
 		$this->set('kml_file_path', $this->getFileURL() );
-		$this->set('map_type_constant', $this->getMapTypeConstant() );
+		$this->set('map_type_constant', $this->getMapTypeConstant() );		
+		$this->set('show_earth', $this->show_earth);
+		$this->set('latitude', $this->latitude);
+		$this->set('longitude', $this->longitude);
+		$this->set('zoom', $this->zoom);		
 	}
 	
 	function getFileID(){
@@ -67,7 +75,7 @@ class PremiumGoogleMapBlockController extends BlockController {
 		return LibraryFileBlockController::getFile($this->kml_fID);
 	}		
 	
-	function getFileURL(){
+	public function getFileURL(){
 		$db = Loader::db();
 		if(!intval($this->kml_fID)) return '';
 		$q = "select filename from btFile where bID=?";
@@ -83,6 +91,10 @@ class PremiumGoogleMapBlockController extends BlockController {
 		$args['w'] = ($data['w']) ? trim($data['w']) : '100%';
 		$args['h'] = ($data['h']) ? trim($data['h']) : '400px';	
 		$args['map_type'] = ($data['map_type']) ? trim($data['map_type']) : 'Normal';			
+		$args['show_earth'] = intval($data['show_earth']);	
+		$args['zoom'] = (intval($data['zoom'])>=0 && intval($data['zoom'])<=17) ? intval($data['zoom']) : 7;
+		$args['latitude']=( strlen($data['latitude'])>0 )? floatval($data['latitude']):0;
+		$args['longitude']=( strlen($data['longitude'])>0 )? floatval($data['longitude']):0;
 		parent::save($args);
 	}
 	
