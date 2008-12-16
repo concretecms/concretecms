@@ -161,6 +161,12 @@ class ConcreteDashboardSitemapHelper {
 		}
 		return $drops;
 	}
+	
+	function canRead() {
+		$sm = Page::getByPath('/dashboard/sitemap');
+		$smp = new Permissions($sm);
+		return $smp->canRead();
+	}
 
 
 }
