@@ -1,8 +1,7 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$th = $c->getCollectionThemeObject();
 $replaceOnUnload = 1;
-include("editor_init.php"); // start the advanced editor
+$bt->inc('editor_init.php');
 ?>
 
 <div style="text-align: center" id="ccm-editor-pane">

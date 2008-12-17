@@ -1,20 +1,6 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
-<script language="javascript">
-tinyMCE.init({
-	mode : "textareas",
-	editor_selector : "advancedEditor",
-	theme : "concrete",
-	width: "580px",
-	height: "380px",
-	plugins: "inlinepopups,spellchecker,safari,advlink",
-	inlinepopups_skin : "concreteMCE",
-	theme_concrete_buttons2_add : "spellchecker",
-	spellchecker_languages : "+English=en",
-	relative_urls : false,
-	convert_urls: false,
-	content_css : "<?=$th->getThemeEditorCSS()?>"
-});
-</script>
+<? $th = $c->getCollectionThemeObject(); ?>
+<? $this->inc('editor_config.php', array('theme' => $th)); ?>
 
 <script type="text/javascript">
 var ccm_editorCurrentAuxTool = '';
