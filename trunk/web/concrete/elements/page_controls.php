@@ -2,6 +2,8 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 $valt = Loader::helper('validation/token');
 $sh = Loader::helper('concrete/dashboard/sitemap');
+$dh = Loader::helper('concrete/dashboard');
+
 
 $token = '&' . $valt->getParameter();
 if (isset($cp)) {
@@ -97,7 +99,9 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 <div id="ccm-system-nav-wrapper1">
 <div id="ccm-system-nav-wrapper2">
 <ul id="ccm-system-nav">
-<li><a id="ccm-nav-dashboard" href="<?=$this->url('/dashboard')?>"><?=t('Dashboard')?></a></li>
+<? if ($dh->canRead()) { ?>
+	<li><a id="ccm-nav-dashboard" href="<?=$this->url('/dashboard')?>"><?=t('Dashboard')?></a></li>
+<? } ?>
 <li><a id="ccm-nav-help" helpurl="<?=MENU_HELP_URL?>" href="javascript:void(0)" ><?=t('Help')?></a></li>
 <li class="ccm-last"><a id="ccm-nav-logout" href="<?=$this->url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>
 </ul>
