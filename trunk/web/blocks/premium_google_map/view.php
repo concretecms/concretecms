@@ -3,8 +3,25 @@
 #googleAdvancedMapCanvas<?=$bID?>{ width:<?=($w)?$w:'100%'?>; border:0px none; height:<?=($h)?$h:'400px'?>;}
 </style>   
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?=$api_key?>" type="text/javascript"></script> 
+
+<? if($show_earth){ ?>
+<script type="text/javascript" src="http://www.google.com/jsapi?key=<?=$api_key?>"></script> 
+<script>
+google.load("earth","1"); 
+function detectGoogleEarth(){
+	try{
+	var isInstalled = google.earth.isInstalled(); 
+	var isSupported = google.earth.isSupported();
+	if(isInstalled && isSupported) return true;
+	}catch(e){  } 
+	return false;
+} 
+</script>
+<? } ?>
+
 <script type="text/javascript"> 
 var geoXml<?=$bID?>=null;
+
 function googleMapInit<?=$bID?>() { 
 	try{
 		if (GBrowserIsCompatible()) { 
@@ -15,10 +32,18 @@ function googleMapInit<?=$bID?>() {
 			//var mapControl = new GSmallMapControl();
 			//map.addControl(mapControl); 
 			//  G_NORMAL_MAP  G_HYBRID_MAP  G_SATELLITE_MAP  G_PHYSICAL_MAP  G_SATELLITE_3D_MAP
-			map.setMapType(<?=$map_type_constant?>);
 			<? if($show_earth){ ?>
-			map.addMapType(G_SATELLITE_3D_MAP);			
+			if(detectGoogleEarth())
+				 map.setMapType(G_SATELLITE_3D_MAP);
+			else map.setMapType(<?=$map_type_constant?>);
+			<? }else{ ?> 
+			map.setMapType(<?=$map_type_constant?>);
 			<? } ?>
+			
+			<? if($show_earth){ ?>
+			if(detectGoogleEarth()) map.addMapType(G_SATELLITE_3D_MAP);			
+			<? } ?>
+			
 		    map.addControl(new GHierarchicalMapTypeControl());
 		    map.addControl(new GLargeMapControl());							
 			<? if( strlen($kml_file_path) ){ ?>
