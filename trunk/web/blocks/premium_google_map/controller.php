@@ -20,7 +20,7 @@ class PremiumGoogleMapBlockController extends BlockController {
 	public $show_earth=0;
 	public $latitude = "";
 	public $longitude = "";
-	public $zoom = 14;	
+	public $zoom = 3;	
 	
 	public $map_types=array('Normal'=>'G_NORMAL_MAP','Hybrid'=>'G_HYBRID_MAP','Satellite'=>'G_SATELLITE_MAP','Physical'=>'G_PHYSICAL_MAP' );
 	
@@ -92,7 +92,7 @@ class PremiumGoogleMapBlockController extends BlockController {
 		$args['h'] = ($data['h']) ? trim($data['h']) : '400px';	
 		$args['map_type'] = ($data['map_type']) ? trim($data['map_type']) : 'Normal';			
 		$args['show_earth'] = intval($data['show_earth']);	
-		$args['zoom'] = (intval($data['zoom'])>=0 && intval($data['zoom'])<=17) ? intval($data['zoom']) : 7;
+		$args['zoom'] = (intval($data['zoom'])>=0 && intval($data['zoom'])<=17) ? intval($data['zoom']) : 3;
 		$args['latitude']=( strlen($data['latitude'])>0 )? floatval($data['latitude']):0;
 		$args['longitude']=( strlen($data['longitude'])>0 )? floatval($data['longitude']):0;
 		parent::save($args);
