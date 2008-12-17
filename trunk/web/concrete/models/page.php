@@ -699,6 +699,20 @@ class Page extends Collection {
 		}
 		return 0;
 	}
+	
+	/** 
+	 * Returns the first child of the current page, or null if there is no child
+	 * @param string $sortColumn
+	 * @return Page
+	 */
+	public function getFirstChild($sortColumn = 'cDisplayOrder') {
+		$db = Loader::db();
+		$cID = $db->GetOne("select cID from Pages where cParentID = ? order by ? asc", array($this->cID, $sortColumn));
+		if ($cID > 1) {
+			return Page::getByID($cID, "ACTIVE");
+		}
+		return false;
+	}
 
 	function getCollectionChildrenArray( $oneLevelOnly=0 ) {
 		$this->childrenCIDArray = array();

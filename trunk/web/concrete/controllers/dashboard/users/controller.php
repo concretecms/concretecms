@@ -8,6 +8,32 @@ class DashboardUsersController extends Controller {
 		
 	}
 	
+	public function sign_in_as_user($uID, $token = null) {
+		try {
+			$u = new User();
+			
+			if(!$u->isSuperUser()) {
+				throw new Exception(t('You do not have permission to perform this action.'));
+			}
+	
+			$ui = UserInfo::getByID($uID); 
+			
+			if(!($ui instanceof UserInfo)) {
+				throw new Exception(t('Invalid user ID.'));
+			}
+	
+			$valt = Loader::helper('validation/token');
+			if (!$valt->validate('sudo', $token)) {
+				throw new Exception($valt->getErrorMessage());
+			}
+			
+			User::loginByUserID($uID);
+			$this->redirect('/');
+			
+		} catch(Exception $e) {
+			$this->set('error', $e);
+		}
+	}
 	
 	public function delete($delUserId, $token = null){
 		$u=new User();
@@ -26,10 +52,6 @@ class DashboardUsersController extends Controller {
 			}
 
 			$delUI=UserInfo::getByID($delUserId); 
-			
-			if ($delUserId == GUEST_GROUP_ID || $delUserId == REGISTERED_GROUP_ID) {
-				throw new Exception(t('Invalid user ID.'));
-			}
 			
 			if(!($delUI instanceof UserInfo)) {
 				throw new Exception(t('Invalid user ID.'));

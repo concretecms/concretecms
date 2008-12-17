@@ -5,7 +5,7 @@ Loader::model('search/user');
 Loader::model('user_attributes');
 
 $attribs = UserAttributeKey::getList(true);
-
+$u = new User();
 $uh = Loader::helper('concrete/user');
 $txt = Loader::helper('text');
 $vals = Loader::helper('validation/strings');
@@ -13,6 +13,7 @@ $valt = Loader::helper('validation/token');
 $valc = Loader::helper('concrete/validation');
 $dtt = Loader::helper('form/date_time');
 $form = Loader::helper('form');
+$ih = Loader::helper('concrete/interface');
 $av = Loader::helper('concrete/avatar');
 
 if ($_REQUEST['updated_attribute']) {
@@ -410,20 +411,41 @@ if (is_object($uo)) {
 	<h1><span><?=t('View User')?></span></h1>
 	
 	<div class="ccm-dashboard-inner">
-		<div class="actions" >
-			<? if (USER_VALIDATE_EMAIL) { ?>
+		<div class="actions" >			<? define('USER_VALIDATE_EMAIL', 1);?>
+
+			<? print $ih->button(t('Edit User'), $this->url('/dashboard/users?uID=' . $uID) . '&task=edit', 'left');?>
+
+			<? if (USER_VALIDATE_EMAIL == true) { ?>
 				<? if ($uo->isValidated() < 1) { ?>
-					<a href="<?=$this->url('/dashboard/users?uID=' . $uID . '&task=validate_email')?>"><?=t('Mark Email as Valid')?></a>
-					&nbsp;|&nbsp;
-					<? } ?>
+				<? print $ih->button(t('Mark Email as Valid'), $this->url('/dashboard/users?uID=' . $uID . '&task=validate_email'), 'left');?>
+				<? } ?>
 			<? } ?>
+			
 			<? if ($uo->isActive()) { ?>
-				<a href="<?=$this->url('/dashboard/users?uID=' . $uID . '&task=deactivate')?>"><?=t('Deactivate User')?></a>
+				<? print $ih->button(t('Deactivate User'), $this->url('/dashboard/users?uID=' . $uID . '&task=deactivate'), 'left');?>
 			<? } else { ?>
-				<a href="<?=$this->url('/dashboard/users?uID=' . $uID . '&task=activate')?>"><?=t('Activate User')?></a>
+				<? print $ih->button(t('Activate User'), $this->url('/dashboard/users?uID=' . $uID . '&task=activate'), 'left');?>
 			<? } ?>
-			&nbsp;|&nbsp;		
-			<a href="<?=$this->url('/dashboard/users?uID=' . $uID)?>&task=edit"><?=t('Edit User')?></a>		
+			
+			<? if ($u->isSuperUser()) { ?>
+				<? 
+				
+				$loginAsUserConfirm = t('This will end your current session and sign you in as %s', $uo->getUserName());
+				
+				print $ih->button_js(t('Sign In as User'), 'loginAsUser()', 'left');?>
+
+				<script type="text/javascript">
+				loginAsUser = function() {
+					if (confirm('<?=$loginAsUserConfirm?>')) { 
+						location.href = "<?=$this->url('/dashboard/users', 'sign_in_as_user', $uo->getUserID(), $valt->generate('sudo'))?>";				
+					}
+				}
+				</script>
+
+			<? } else { ?>
+				<? print $ih->button_js(t('Sign In as User'), 'alert(\'' . t('Only the super user may sign in as another account.') . '\')', 'left', 'ccm-button-inactive');?>
+			<? } ?>
+
 		</div>
 		
 		<h2><?=t('Required Information')?></h2>
@@ -531,8 +553,6 @@ if (is_object($uo)) {
 	
 	<div class="ccm-dashboard-inner">
 		<?
-		$u=new User();
-		$ih = Loader::helper('concrete/interface');
 		$delConfirmJS = t('Are you sure you want to permanently remove this user?');
 		if ($uo->getUserID() == USER_SUPER_ID) { ?>
 			<?=t('You may not remove the super user account.')?>
@@ -544,12 +564,12 @@ if (is_object($uo)) {
 			<script type="text/javascript">
 			deleteUser = function() {
 				if (confirm('<?=$delConfirmJS?>')) { 
-					location.href = "<?=$this->url('/dashboard/users', delete, $uo->getUserID(), $valt->generate('delete_account'))?>";				
+					location.href = "<?=$this->url('/dashboard/users', 'delete', $uo->getUserID(), $valt->generate('delete_account'))?>";				
 				}
 			}
 			</script>
 
-			<? print $ih->button_js(t('Delete User Account'), "deleteUser", 'left');?>
+			<? print $ih->button_js(t('Delete User Account'), "deleteUser()", 'left');?>
 
 		<? } ?>
 		<div class="ccm-spacer"></div>

@@ -38,7 +38,6 @@
 
 	 <target name="sanitize_ds_store">
     	<echo msg="Removing stupid OS X files" />
-    	<touch file="messages.po" />
 		<exec command="find export -iname '.DS_Store' -exec rm {} \;" />
 	</target>
 

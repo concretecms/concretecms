@@ -135,7 +135,7 @@ $h = Loader::helper('concrete/interface'); ?>
 	<div class="ccm-dashboard-description"><?=t('If enabled, only your dashboard will be accessible.')?></div>
 	
 	<?
-	$b1 = $h->button_js(t('Save'), 'saveMaintenanceMode');
+	$b1 = $h->button_js(t('Save'), 'saveMaintenanceMode()');
 	print $h->buttons($b1);
 	?>
 	<br class="clear" />

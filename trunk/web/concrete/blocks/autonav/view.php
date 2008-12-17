@@ -3,6 +3,9 @@
 	$aBlocks = $controller->generateNav();
 	global $c;
 	echo("<ul class=\"nav\">");
+	
+	$nh = Loader::helper('navigation');
+	
 	foreach($aBlocks as $ni) {
 		$_c = $ni->getCollectionObject();
 		if (!$_c->getCollectionAttributeValue('exclude_nav')) {
@@ -18,10 +21,23 @@
 				print '</li>';
 			}
 			
+			$pageLink = false;
+			
+			if ($_c->getCollectionAttributeValue('replace_link_with_first_in_nav')) {
+				$subPage = $_c->getFirstChild();
+				if ($subPage instanceof Page) {
+					$pageLink = $nh->getLinkToCollection($subPage);
+				}
+			}
+			
+			if (!$pageLink) {
+				$pageLink = $ni->getURL();
+			}
+
 			if ($c->getCollectionID() == $_c->getCollectionID()) { 
-				echo('<li class="nav-selected"><a class="nav-selected" href="' . $ni->getURL() . '">' . $ni->getName() . '</a>');
+				echo('<li class="nav-selected"><a class="nav-selected" href="' . $pageLink . '">' . $ni->getName() . '</a>');
 			} else {
-				echo('<li><a href="' . $ni->getURL() . '">' . $ni->getName() . '</a>');
+				echo('<li><a href="' . $pageLink . '">' . $ni->getName() . '</a>');
 			}	
 			$lastLevel = $thisLevel;
 			$i++;

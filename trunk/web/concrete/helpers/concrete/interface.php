@@ -59,7 +59,6 @@ class ConcreteInterfaceHelper {
 	 */
 	public function button_js($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = array()) {
 		$href = 'javascript:void(0)';
-		$onclick = $onclick . '()';
 		return $this->generateButton($href, $onclick, $text, $buttonAlign, $innerClass, $args);
 	}
 	

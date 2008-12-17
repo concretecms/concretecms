@@ -25,8 +25,8 @@ table#themesGrid td .desc{ margin-bottom:4px; line-height: 16px; }
 				<td valign="top" width="<?=round(100/$numCols)?>%"> 
 					<a href="<?=$availableTheme->getThemeURL() ?>"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a>		
 					<div class="name"><a href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a>
-					<a onclick="ccm_previewMarketplaceTheme(1, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" 
-						href="javascript:void(0)" class="preview"><img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" /></a></div>
+					<a title="<?=t('Preview')?>" onclick="ccm_previewMarketplaceTheme(1, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" 
+						href="javascript:void(0)" class="preview"><img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" alt="<?=t('Preview')?>" /></a></div>
 					<div class="desc"><?=$availableTheme->getThemeDescription() ?></div>
 					<a href="<?=$availableTheme->getThemeURL() ?>"><?=t('Get Theme')?> &raquo;</a>
 				</td>

@@ -222,7 +222,7 @@ if ($ctEditMode) {
 	<p><?=t('Click below to remove this page type entirely. (Note: You may only remove page types which are not being used on your site. If a page type is being used, delete all instances of its pages first.)')?> 
 	<div class="ccm-spacer">&nbsp;</div>
 	
-	<? print $ih->button_js(t('Delete Page Type'), "deletePageType", 'left');?>
+	<? print $ih->button_js(t('Delete Page Type'), "deletePageType()", 'left');?>
 	
 	<div class="ccm-spacer">&nbsp;</div>
 	<?

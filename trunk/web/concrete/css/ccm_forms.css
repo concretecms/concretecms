@@ -77,6 +77,18 @@ a.ccm-button-left em, a.ccm-button-right em, a.ccm-button em {
 	display: block;
 }
 
+a.ccm-button-left em.ccm-button-inactive, a.ccm-button-right em.ccm-button-inactive, a.ccm-button em.ccm-button-inactive {
+	padding-bottom: 0px; 
+	background-color: transparent; 
+	background-repeat: no-repeat; 
+	padding-left: 0px;
+	padding-right: 0px;
+	font-style: normal; 
+	display: inline;
+	color: #aaa;
+	font-style: normal; 
+}
+
 /*
 em.ccm-button-add {background-image: url(../images/icons/add.png);}
 em.ccm-button-update {background-image: url(../images/icons/edit_small.png);}

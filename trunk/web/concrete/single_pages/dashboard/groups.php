@@ -196,7 +196,7 @@ if ($pOptions['needPaging']) { ?>
 			}
 			</script>
 
-			<? print $ih->button_js(t('Delete Group'), "deleteGroup", 'left');?>
+			<? print $ih->button_js(t('Delete Group'), "deleteGroup()", 'left');?>
 
 		<? } ?>
 		<div class="ccm-spacer"></div>
