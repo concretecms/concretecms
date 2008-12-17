@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class DashboardSettingsController extends Controller {
 
-	var $helpers = array('form');
+	var $helpers = array('form'); 
 	
 	public function view($updated = false) {
 		$u = new User();
@@ -13,6 +13,12 @@ class DashboardSettingsController extends Controller {
 		$this->set('marketplace_enabled_in_config', Config::get('ENABLE_MARKETPLACE_SUPPORT') );		
 		$this->set('site', SITE);
 		$this->set('ui_breadcrumb', $u->config('UI_BREADCRUMB'));
+		$txtEditorMode=Config::get('CONTENTS_TXT_EDITOR_MODE');
+		$this->set('txtEditorMode', $txtEditorMode ); 
+		$txtEditorCstmCode=Config::get('CONTENTS_TXT_EDITOR_CUSTOM_CODE');
+		if( !strlen($txtEditorCstmCode) || $txtEditorMode!='CUSTOM' )
+			$txtEditorCstmCode=$this->get_txt_editor_default();
+		$this->set('txtEditorCstmCode', $txtEditorCstmCode ); 
 		
 		if ($updated) {
 			switch($updated) {
@@ -49,6 +55,9 @@ class DashboardSettingsController extends Controller {
 				case "debug_saved":
 					$this->set('message', t('Debug configuration saved.'));
 					break;
+				case "txt_editor_config_saved":
+					$this->set('message', t('Content text editor toolbar mode saved.'));
+					break;					
 				case "rewriting_saved":
 					if (URL_REWRITING) {
 						$this->set('message', t('URL rewriting enabled. Make sure you copy the lines below these URL Rewriting settings area and place them in your .htaccess or web server configuration file.'));
@@ -327,5 +336,48 @@ class DashboardSettingsController extends Controller {
 		}else{
 			$this->set('error', array($this->token->getErrorMessage()));
 		}
-	}	
+	}
+	
+	function txt_editor_config(){
+		if ($this->token->validate("txt_editor_config")) { 
+ 			Config::save('CONTENTS_TXT_EDITOR_MODE', $this->post('CONTENTS_TXT_EDITOR_MODE') );
+			if($this->post('CONTENTS_TXT_EDITOR_MODE')=='CUSTOM')
+				Config::save('CONTENTS_TXT_EDITOR_CUSTOM_CODE', $this->post('CONTENTS_TXT_EDITOR_CUSTOM_CODE') );
+ 			$this->redirect('/dashboard/settings/', 'txt_editor_config_saved'); 
+		}else{
+			$this->set('error', array($this->token->getErrorMessage()));
+		}
+	}
+	
+	function get_txt_editor_default(){ 
+		ob_start();
+		?>
+theme : "concrete", 
+plugins: "inlinepopups,spellchecker,safari,advlink",
+editor_selector : "advancedEditor",
+spellchecker_languages : "+English=en",	
+theme_concrete_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,hr,|,styleselect,formatselect,fontsizeselect",
+theme_concrete_buttons2 : "bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,forecolor",
+theme_concrete_blockformats : "p,address,pre,h1,h2,h3,div,blockquote,cite",
+theme_concrete_toolbar_align : "left",
+theme_concrete_fonts : "Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats",
+theme_concrete_font_sizes : "1,2,3,4,5,6,7",
+theme_concrete_styles: "Note=ccm-note",
+spellchecker_languages : "+English=en"
+
+/*
+// Use the advanced theme for more than two rows of content
+plugins: "inlinepopups,spellchecker,safari,advlink,table,advhr,xhtmlxtras,emotions,insertdatetime,paste,visualchars,nonbreaking,pagebreak,style",
+editor_selector : "advancedEditor",
+theme : "advanced",
+theme_advanced_buttons1 : "cut,copy,paste,pastetext,pasteword,|,undo,redo,|,styleselect,formatselect,fontsizeselect,fontselect",
+theme_advanced_buttons2 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,|,outdent,indent,blockquote,|,link,unlink,anchor,|,forecolor,backcolor,|,image,charmap,emotions",
+theme_advanced_fonts : "Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats",
+// etc.
+*/		
+		<? 
+		$js=ob_get_contents();
+		ob_end_clean();
+		return $js;
+	}
 }

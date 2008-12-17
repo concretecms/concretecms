@@ -342,6 +342,55 @@ saveMaintenanceMode = function() {
 
 
 
+<form method="post" id="txt-editor-form" action="<?=$this->url('/dashboard/settings', 'txt_editor_config')?>">
+	<?=$this->controller->token->output('txt_editor_config')?>
+	
+	<h1><span><?=t("Content Toolbars")?></span></h1>
+	
+	<div class="ccm-dashboard-inner"> 
+		
+		<div class="ccm-dashboard-radio"><input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="SIMPLE" style="vertical-align: middle" <?=( $txtEditorMode=='SIMPLE' || !strlen($txtEditorMode) )?'checked':''?> /> <?=t('Simple')?></div>
+		<div class="ccm-dashboard-description"><?=t('')?></div>
+		
+		<div class="ccm-dashboard-radio"><input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="ADVANCED" style="vertical-align: middle" <?=($txtEditorMode=='ADVANCED')?'checked':''?> /> <?=t('Advanced')?></div>
+		<div class="ccm-dashboard-description"><?=t('')?></div>
+		
+		<div class="ccm-dashboard-radio"><input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="OFFICE" style="vertical-align: middle" <?=($txtEditorMode=='OFFICE')?'checked':''?> /> <?=t('Office')?></div>
+		<div class="ccm-dashboard-description"><?=t('')?></div>
+		
+		<div class="ccm-dashboard-radio"><input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="CUSTOM" style="vertical-align: middle" <?=($txtEditorMode=='CUSTOM')?'checked':'' ?> /> <?=t('Custom')?></div>
+		<div class="ccm-dashboard-description"><?=t('')?></div>
+		
+		<div id="cstmEditorTxtAreaWrap" style=" display:<?=($txtEditorMode=='CUSTOM')?'block':'none' ?>" >
+			<textarea wrap="off" name="CONTENTS_TXT_EDITOR_CUSTOM_CODE" cols="25" rows="20" style="width: 97%; height: 250px;"><?=$txtEditorCstmCode?></textarea>
+			<div class="ccm-note"><a target="_blank" href="http://tinymce.moxiecode.com/"><?=t('TinyMCE Reference')?></a></div>
+		</div>
+		
+		<?
+		$b1 = $h->submit(t('Save'), 'txt-editor-form');
+		print $h->buttons($b1);
+		?>
+		<br class="clear" />
+	</div>
+
+	<script>
+		$(function(){ 
+			$("input[@name='CONTENTS_TXT_EDITOR_MODE']").each(function(i,el){ 
+				el.onchange=function(){isTxtEditorModeCustom();}
+			})	 	
+		});	
+		function isTxtEditorModeCustom(){
+			if($("input[@name='CONTENTS_TXT_EDITOR_MODE']:checked").val()=='CUSTOM'){
+				$('#cstmEditorTxtAreaWrap').css('display','block');
+			}else{
+				$('#cstmEditorTxtAreaWrap').css('display','none');
+			}
+		}
+	</script>
+
+</form>
+
+
 </div>
 
 </div>

@@ -1,6 +1,7 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+
 <? $th = $c->getCollectionThemeObject(); ?>
-<? $this->inc('editor_config.php', array('theme' => $th)); ?>
+<? $this->inc('editor_config.php', array('theme' => $th)); ?> 
 
 <script type="text/javascript">
 var ccm_editorCurrentAuxTool = '';
