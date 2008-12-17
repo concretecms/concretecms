@@ -495,6 +495,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			extract($args);
 			$bt = $this;
 			global $c;
+			global $a;
 			if ($this->getPackageID() > 0) {
 				if (is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) {
 					include(DIR_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle() . '/' . $file);
