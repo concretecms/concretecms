@@ -68,10 +68,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (is_array($args)) {
 				extract($args);
 			}
-			if (file_exists(DIR_FILES_ELEMENTS_CORE . '/' . $file . '.php')) {
-				include(DIR_FILES_ELEMENTS_CORE . '/' . $file . '.php');
-			} else {
+			if (file_exists(DIR_FILES_ELEMENTS . '/' . $file . '.php')) {
 				include(DIR_FILES_ELEMENTS . '/' . $file . '.php');
+			} else {
+				include(DIR_FILES_ELEMENTS_CORE . '/' . $file . '.php');
 			}
 		}
 
