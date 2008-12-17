@@ -78,8 +78,8 @@ foreach($styles as $tempStyles) {
 	?>
 	
 	<? 
-		$b1 = $h->button_js(t('Reset'), 'resetCustomizedTheme', 'left');
-		$b2 = $h->button_js(t('Save'), 'saveCustomizedTheme');
+		$b1 = $h->button_js(t('Reset'), 'resetCustomizedTheme()', 'left');
+		$b2 = $h->button_js(t('Save'), 'saveCustomizedTheme()');
 	?>
 	<?=$h->buttons($b1, $b2); ?>
 	

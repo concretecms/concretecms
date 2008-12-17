@@ -102,7 +102,7 @@ $ih = Loader::helper('concrete/interface');
 ?>
 
 	<?
-		$b1 = $ih->button_js(t('Run Checked'), 'Jobs.runChecked');
+		$b1 = $ih->button_js(t('Run Checked'), 'Jobs.runChecked()');
 		//print $ih->buttons($b1);
 		print '<div class="ccm-buttons"><a onclick="Jobs.runChecked()" href="javascript:void(0)"><div class="ccm-button"><span>'.t('Run Checked').'</span></div></a></div>';
 	?>

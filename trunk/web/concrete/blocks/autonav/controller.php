@@ -86,6 +86,8 @@
 				$link = $this->cPointerExternalLink;
 			} else if ($this->cPath) {
 				$link = DIR_REL . $dispatcher . $this->cPath . '/';
+			} else if ($this->cID == HOME_CID) {
+				$link = DIR_REL . '/';
 			} else {
 				$link = DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->cID;
 			}
@@ -277,6 +279,9 @@
 			switch($this->displayPages) {
 				case 'current':
 					$cParentID = $this->cParentID;
+					if ($cParentID < 1) {
+						$cParentID = 1;
+					}
 					break;
 				case 'top':
 					// top level actually has ID 1 as its parent, since the home page is effectively alone at the top
@@ -301,9 +306,13 @@
 					$cParentID = 1;
 					break;
 			}
+			
 			if ($cParentID != null) {
 				
+				/*
+				
 				$displayHeadPage = false;
+
 				if ($this->displayPagesIncludeSelf) {
 					$q = "select Pages.cID from Pages where Pages.cID = '{$cParentID}' and cIsTemplate = 0";
 					$r = $db->query($q);
@@ -325,13 +334,33 @@
 				if ($displayHeadPage) {
 					$level++;
 				}
+				*/
 				
 				if ($this->displaySubPages == 'relevant' || $this->displaySubPages == 'relevant_breadcrumb') {
 					$this->populateParentIDArray($this->cID);
 				}
 				
 				$this->getNavigationArray($cParentID, $orderBy, $level);
-		
+				
+				// if we're at the top level we add home to the beginning
+				if ($this->displayUnapproved) {
+					$tc1 = Page::getByID(HOME_CID, "RECENT");
+				} else {
+					$tc1 = Page::getByID(HOME_CID, "ACTIVE");
+				}
+				$niRow = array();
+				$niRow['cvName'] = $tc1->getCollectionName();
+				$niRow['cID'] = HOME_CID;
+				$niRow['cvDescription'] = $tc1->getCollectionDescription();
+				$niRow['cPath'] = $tc1->getCollectionPath();
+				
+				$ni = new AutonavBlockItem($niRow, 0);
+				$ni->setCollectionObject($tc1);
+				
+				array_unshift($this->navArray, $ni);
+				
+				/*
+				
 				if ($displayHeadPage) {				
 					$niRow = array();
 					$niRow['cvName'] = $tc1->getCollectionName();
@@ -345,6 +374,8 @@
 					
 					array_unshift($this->navArray, $ni);
 				}
+				*/
+				
 			}
 			
 			return $this->navArray;

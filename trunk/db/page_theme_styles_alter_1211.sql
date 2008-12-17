@@ -1,0 +1,2 @@
+drop table PageThemeStyles;
+create table PageThemeStyles ( ptID int unsigned not null default 0, ptsHandle varchar(128) not null,  ptsType varchar(32) not null, ptsValue longtext null, primary key (ptID, ptsHandle, ptsType));

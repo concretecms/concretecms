@@ -306,7 +306,7 @@ define('ONLINE_NOW_TIMEOUT', 600);
 # Information for the home page in the system (used by the installation program)
 define("HOME_CID", 1);
 define("HOME_CTID", 1);
-define("HOME_NAME", "Home Page");
+define("HOME_NAME", "Home");
 define('HOME_UID', USER_SUPER_ID);
 define('HOME_HANDLE', "home");
 

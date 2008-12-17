@@ -2,7 +2,11 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 $bt = Loader::helper('concrete/interface');
 $valt = Loader::helper('validation/token');
+
+$alreadyActiveMessage = t('This theme is currently active on your site.');
+
 ?>
+
 <h1><span><?=t('Themes')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
@@ -29,15 +33,15 @@ $valt = Loader::helper('validation/token');
 		<tr <? if ($siteThemeID == $t->getThemeID()) { ?> class="ccm-theme-active" <? } ?>>
 			<td><?=$t->getThemeThumbnail()?></td>
 			<td class="ccm-template-content">
-			<h2><?=$t->getThemeName()?>
-			<? if ($t->getThemeID() != $siteThemeID) { ?><a onclick="ccm_previewInternalTheme(1, <?=intval($t->getThemeID())?>,'<?=addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) ?>')" href="javascript:void(0)" class="preview">
-									<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" class="ccm-preview" /></a><? } ?>
-			</h2>
+			<h2><?=$t->getThemeName()?></h2>
 			<?=$t->getThemeDescription()?>
 			<br/><br/>
-			<? if ($siteThemeID != $t->getThemeID()) { ?>
+			<? if ($siteThemeID == $t->getThemeID()) { ?>
+				<?=$bt->button_js(t("Activate"), "alert('" . $alreadyActiveMessage . "')", "left", "ccm-button-inactive");?>
+			<? } else { ?>
 				<?=$bt->button(t("Activate"), $this->url('/dashboard/themes','activate', $t->getThemeID()), "left");?>
 			<? } ?>
+			<?=$bt->button_js(t("Preview"), "ccm_previewInternalTheme(1, " . intval($t->getThemeID()) . ",'" . addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) . "')", "left");?>
 			<?=$bt->button(t("Inspect"), $this->url('/dashboard/themes/inspect', $t->getThemeID()), "left");?>
 			<?=$bt->button(t("Customize"), $this->url('/dashboard/themes/customize', $t->getThemeID()), "left");?>
 			

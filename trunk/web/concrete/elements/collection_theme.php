@@ -128,8 +128,8 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 							<li class="<?=$class?> themeWrap">
 							
 								<a href="javascript:void(0)" ccm-theme-id="<?=$t->getThemeID()?>"><?=$t->getThemeThumbnail()?></a>
-									<? if ($t->getThemeID() != $plID) { ?><a onclick="ccm_previewInternalTheme(<?=$c->getCollectionID()?>, <?=intval($t->getThemeID())?>,'<?=addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) ?>')" href="javascript:void(0)" class="preview">
-									<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" class="ccm-preview" /></a><? } ?>
+									<? if ($t->getThemeID() != $plID) { ?><a title="<?=t('Preview')?>" onclick="ccm_previewInternalTheme(<?=$c->getCollectionID()?>, <?=intval($t->getThemeID())?>,'<?=addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) ?>')" href="javascript:void(0)" class="preview">
+									<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" alt="<?=t('Preview')?>" class="ccm-preview" /></a><? } ?>
 								<div class="ccm-theme-name" ><?=$t->getThemeName()?></div>
 						
 							</li>
@@ -163,9 +163,9 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 							<? foreach($availableThemes as $availableTheme){ ?>
 								<li class="themeWrap">
 									<a href="<?=$availableTheme->getThemeURL() ?>" target="_blank"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a>
-										<a onclick="ccm_previewMarketplaceTheme(<?=$c->getCollectionID()?>, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" href="javascript:void(0)" class="preview">
-										<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" class="ccm-preview" /></a>
-									<div class="ccm-theme-name" ><a href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>
+										<a title="<?=t('Preview')?>" onclick="ccm_previewMarketplaceTheme(<?=$c->getCollectionID()?>, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" href="javascript:void(0)" class="preview">
+										<img src="<?=DIR_REL?>/concrete/images/icons/magnifying.png" alt="<?=t('Preview')?>" class="ccm-preview" /></a>
+									<div class="ccm-theme-name" ><a target="_blank" href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>
 									<div class="desc"><?=$stringHelper->shortText($availableTheme->getThemeDescription(),60) ?></div>
 									<? /* <a href="<?=$availableTheme->getThemeURL() ?>">Get Theme &raquo;</a> */ ?>
 								</li>
