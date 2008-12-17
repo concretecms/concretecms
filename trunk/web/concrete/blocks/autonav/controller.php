@@ -343,21 +343,23 @@
 				$this->getNavigationArray($cParentID, $orderBy, $level);
 				
 				// if we're at the top level we add home to the beginning
-				if ($this->displayUnapproved) {
-					$tc1 = Page::getByID(HOME_CID, "RECENT");
-				} else {
-					$tc1 = Page::getByID(HOME_CID, "ACTIVE");
+				if ($cParentID == 1) {
+					if ($this->displayUnapproved) {
+						$tc1 = Page::getByID(HOME_CID, "RECENT");
+					} else {
+						$tc1 = Page::getByID(HOME_CID, "ACTIVE");
+					}
+					$niRow = array();
+					$niRow['cvName'] = $tc1->getCollectionName();
+					$niRow['cID'] = HOME_CID;
+					$niRow['cvDescription'] = $tc1->getCollectionDescription();
+					$niRow['cPath'] = $tc1->getCollectionPath();
+					
+					$ni = new AutonavBlockItem($niRow, 0);
+					$ni->setCollectionObject($tc1);
+					
+					array_unshift($this->navArray, $ni);
 				}
-				$niRow = array();
-				$niRow['cvName'] = $tc1->getCollectionName();
-				$niRow['cID'] = HOME_CID;
-				$niRow['cvDescription'] = $tc1->getCollectionDescription();
-				$niRow['cPath'] = $tc1->getCollectionPath();
-				
-				$ni = new AutonavBlockItem($niRow, 0);
-				$ni->setCollectionObject($tc1);
-				
-				array_unshift($this->navArray, $ni);
 				
 				/*
 				
