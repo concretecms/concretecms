@@ -1,2 +1,2 @@
 <?
-print '1';require('concrete/dispatcher.php');
+require('concrete/dispatcher.php');
