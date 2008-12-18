@@ -133,9 +133,29 @@
 		var $ctID;
 		var $permissionSet;
 		
+		/* 
+		 * Takes the numeric id of a group and returns a group object
+		 * @parem string $gID
+		 * @return object Group
+		*/
 		public static function getByID($gID) {
 			$db = Loader::db();
 			$row = $db->getRow("select * from Groups where gID = ?", array($gID));
+			if (isset($row['gID'])) {
+				$g = new Group;
+				$g->setPropertiesFromArray($row);
+				return $g;
+			}
+		}
+		
+		/* 
+		 * Takes the name of a group and returns a group object
+		 * @parem string $gName
+		 * @return object Group
+		*/
+		public static function getByName($gName) {
+			$db = Loader::db();
+			$row = $db->getRow("select * from Groups where gName = ?", array($gName));
 			if (isset($row['gID'])) {
 				$g = new Group;
 				$g->setPropertiesFromArray($row);
