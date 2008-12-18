@@ -19,8 +19,8 @@ if( $_GET['bID'] ) {
 	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 	header("Cache-Control: private",false);
 	header("Content-Type: application/vnd.google-earth.kml+xml kml; charset=utf8");
-	header("Content-Disposition: inline; filename=".$fileController->getOrigfilename() ); 
-	header("Content-Title: Google Earth KML");	
+	header("Content-Disposition: inline; filename=".$fileController->getFilename() ); 
+	header("Content-Title: Google Earth KML");
 	 
 	$cp = new Permissions($c);
 	if( $cp->canRead() ) { 
