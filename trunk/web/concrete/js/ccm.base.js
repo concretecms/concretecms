@@ -76,7 +76,7 @@ ccm_showBlockMenu = function(obj, e) {
 		if (obj.canModifyGroups || obj.canAliasBlockOut) {
 			html += '<li class="header"></li>';
 		}
-		if (obj.canWrite) {
+		if (obj.canAdmin) {
 			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.changeBlockTemplate + '" dialog-width="300" dialog-height="100" id="menuChangeTemplate' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + CCM_CID + '&bID=' + obj.bID + '&arHandle=' + obj.arHandle + '&btask=template&modal=true&width=300&height=100" title="' + ccmi18n.changeBlockTemplate + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/wrench.png)">' + ccmi18n.changeBlockTemplate + '</span></a></li>';
 		}
 		if (obj.canModifyGroups) {
