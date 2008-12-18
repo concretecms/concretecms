@@ -17,22 +17,21 @@ class PermissionsCache {
 	}
 	
 	function getIdentifier($obj) {
-		switch(strtolower(get_class($obj))) {
-			case 'page':
-				$id = $obj->getCollectionID();
-				break;
-			case 'block':
-				$id = $obj->getBlockID();
-				break;
-			case 'version':
-				$id = $obj->getVersionID();
-				break;
-			case 'area':
-				$id = $obj->getAreaID();
-				break;
+		if (is_a($obj, "Page")) {
+			$id = $obj->getCollectionID();
+			$prefix = 'page';
+		} else if (is_a($obj, "Block")) {
+			$id = $obj->getBlockID();
+			$prefix = 'block';
+		} else if (is_a($obj, "Version")) {
+			$id = $obj->getVersionID();
+			$prefix = 'version';
+		} else if (is_a($obj, "Area")) {
+			$id = $obj->getAreaID();
+			$prefix = 'area';
 		}
 		
-		$identifier = strtoupper(get_class($obj)) . ':' . $id;
+		$identifier = $prefix . ':' . $id;
 		return $identifier;
 	}
 	
@@ -95,26 +94,21 @@ class PermissionsProxy {
 	
 	public function get($unknownObj) {
 		
-		switch(strtolower(get_class($unknownObj))) {
-			case 'page':
-				$po = PermissionsProxy::getNewOrCached($unknownObj, 'CollectionPermissions');
-				break;
-			case 'block':
-				$aObj = $unknownObj->getBlockAreaObject();
-				if (!$unknownObj->overrideAreaPermissions()) {
-					$po = PermissionsProxy::getAreaPermissions($aObj);
+		if (is_a($unknownObj, 'Page')) {
+			$po = PermissionsProxy::getNewOrCached($unknownObj, 'CollectionPermissions');
+		} else if (is_a($unknownObj, 'Block')) {
+			$aObj = $unknownObj->getBlockAreaObject();
+			if (!$unknownObj->overrideAreaPermissions()) {
+				$po = PermissionsProxy::getAreaPermissions($aObj);
 
-				} else {
-					$po = PermissionsProxy::getNewOrCached($unknownObj, 'BlockPermissions');
-				}
-				break;
-			case 'version':
-				$po = new VersionPermissions($unknownObj);
-				break;
-			case 'area':
-				$po = PermissionsProxy::getAreaPermissions($unknownObj);
-				break;
-		}
+			} else {
+				$po = PermissionsProxy::getNewOrCached($unknownObj, 'BlockPermissions');
+			}
+		} else if (is_a($unknownObj, 'Version')) {
+			$po = new VersionPermissions($unknownObj);
+		} else if (is_a($unknownObj, 'Area')) {
+			$po = PermissionsProxy::getAreaPermissions($unknownObj);
+		} 
 		
 		return $po;
 		
@@ -305,7 +299,7 @@ class Permissions extends Object {
 	
 	function canAdminBlock() {
 		$oObj = $this->getOriginalObject();
-		$c = (strtolower(get_class($oObj)) == 'area') ? $oObj->getAreaCollectionObject() : $oObj->getBlockCollectionObject();
+		$c = (is_a($oObj, 'Area')) ? $oObj->getAreaCollectionObject() : $oObj->getBlockCollectionObject();
 		$cp = new Permissions($c);
 		return $cp->canAdminPage();
 	}

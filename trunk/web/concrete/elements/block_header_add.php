@@ -18,7 +18,7 @@ if ($url != '') { ?>
 
 <input type="hidden" name="ccm-block-pane-action" value="<?=$_SERVER['REQUEST_URI']?>" />
 
-<form method="post" action="<?=$action?>" class="validate" id="ccm-block-form">
+<form method="post" action="<?=$action?>" class="validate" id="ccm-block-form" enctype="multipart/form-data">
 
 <? foreach($this->controller->getJavaScriptStrings() as $key => $val) { ?>
 	<input type="hidden" name="ccm-string-<?=$key?>" value="<?=$val?>" />

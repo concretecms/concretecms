@@ -30,7 +30,7 @@ if(ENABLE_MARKETPLACE_SUPPORT){
 	<? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
 		<li><a href="javascript:void(0)" id="ccm-add-marketplace"><?=t('Add From Marketplace')?></a></li>
 	<? } ?>
-	<? if (PERMISSIONS_MODEL != 'simple') { ?><li><a href="javascript:void(0)" id="ccm-permissions"><?=t('Permissions')?></a></li><? } ?>
+	<? if (PERMISSIONS_MODEL != 'simple' && $cp->canAdminPage()) { ?><li><a href="javascript:void(0)" id="ccm-permissions"><?=t('Permissions')?></a></li><? } ?>
 </ul>
 
 <div id="ccm-add-tab">
