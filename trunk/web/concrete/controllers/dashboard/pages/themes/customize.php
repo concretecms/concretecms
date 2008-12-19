@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
-class DashboardThemesCustomizeController extends Controller {
+class DashboardPagesThemesCustomizeController extends Controller {
 
 	protected $helpers = array('html', 'form');
 
@@ -14,7 +14,7 @@ class DashboardThemesCustomizeController extends Controller {
 		 	Cache::delete('preview_theme_style', $themeID);
 		}
 		$subnav = array(
-			array(View::url('/dashboard/themes/'), '&lt; ' . t('Return to Themes'))
+			array(View::url('/dashboard/pages/themes/'), '&lt; ' . t('Return to Themes'))
 		);
 		$this->set('subnav', $subnav);		
 		if ($state == 'saved') {
@@ -37,7 +37,7 @@ class DashboardThemesCustomizeController extends Controller {
 				$values = $pt->mergeStylesFromPost($this->post());
 				$pt->saveEditableStyles($values);
 				$this->view($themeID);
-				$this->redirect('/dashboard/themes/customize', 'view', $themeID, 'saved');
+				$this->redirect('/dashboard/pages/themes/customize', 'view', $themeID, 'saved');
 			}
 		}
 	}
@@ -49,7 +49,7 @@ class DashboardThemesCustomizeController extends Controller {
 			$pt = PageTheme::getByID($themeID);
 			if (is_object($pt)) {
 				$values = $pt->reset();
-				$this->redirect('/dashboard/themes/customize', 'view', $themeID, 'reset');
+				$this->redirect('/dashboard/pages/themes/customize', 'view', $themeID, 'reset');
 			}
 		}
 	}

@@ -137,6 +137,16 @@ class Log {
 		$db = Loader::db();
 		$db->Execute("delete from Logs where logIsInternal = 1");
 	}
+
+	
+	/** 
+	 * Removes all log entries
+	 */
+	public function clearAll() {
+		$db = Loader::db();
+		$db->Execute("delete from Logs");
+	}
+
 	
 	public function close() {
 		if ($this->isClosed) {
@@ -158,37 +168,35 @@ class Log {
 	/** 
 	 * Returns the total number of entries matching this type 
 	 */
-	public static function getTotal($keywords, $type, $isInternal) {
+	public static function getTotal($keywords, $type) {
 		$db = Loader::db();
 		if ($keywords != '') {
 			$kw = 'and logText like ' . $db->quote('%' . $keywords . '%');
 		}
 		if ($type != false) {
-			$v = array($type, $isInternal);
-			$r = $db->GetOne('select count(logID)  from Logs where logType = ? and logIsInternal = ? ' . $kw, $v);
+			$v = array($type);
+			$r = $db->GetOne('select count(logID)  from Logs where logType = ? ' . $kw, $v);
 		} else {
-			$v = array($isInternal);
-			$r = $db->GetOne('select count(logID)  from Logs where logIsInternal = ? ' . $kw, $v);
+			$r = $db->GetOne('select count(logID)  from Logs where 1=1 ' . $kw);
 		}
 		return $r;
-
 	}
 	
 	/** 
 	 * Returns a list of log entries
 	 */
-	public static function getList($keywords, $type, $isInternal, $limit) {
+	public static function getList($keywords, $type, $limit) {
 		$db = Loader::db();
 		if ($keywords != '') {
 			$kw = 'and logText like ' . $db->quote('%' . $keywords . '%');
 		}
 		if ($type != false) {
-			$v = array($type, $isInternal);
-			$r = $db->Execute('select logID from Logs where logType = ? and logIsInternal = ? ' . $kw . ' order by timestamp desc limit ' . $limit, $v);
+			$v = array($type);
+			$r = $db->Execute('select logID from Logs where logType = ? and ' . $kw . ' order by timestamp desc limit ' . $limit, $v);
 		} else {
-			$v = array($isInternal);
-			$r = $db->Execute('select logID from Logs where logIsInternal = ? ' . $kw . ' order by timestamp desc limit ' . $limit, $v);
+			$r = $db->Execute('select logID from Logs where 1=1 ' . $kw . ' order by timestamp desc limit ' . $limit);
 		}
+		
 		$entries = array();
 		while ($row = $r->FetchRow()) {
 			$entries[] = LogEntry::getByID($row['logID']);

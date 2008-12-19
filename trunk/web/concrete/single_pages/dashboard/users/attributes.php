@@ -81,11 +81,11 @@ if ($_POST['add'] || $_POST['update']) {
 			}
 			if (count($error) == 0) {
 				$ck = UserAttributeKey::add($ukHandle, $ukName, $ukRequired, $ukPrivate, $ukDisplayedOnRegister, $ukHidden, $ukValues, $ukType);
-				$this->controller->redirect('/dashboard/users?created_attribute=1');
+				$this->controller->redirect('/dashboard/users/attributes?created=1');
 			}
 		} else if (is_object($ak)) {
 			$ak = $ak->update($ukHandle, $ukName, $ukRequired, $ukPrivate, $ukDisplayedOnRegister, $ukHidden, $ukValues, $ukType);
-			$this->controller->redirect('/dashboard/users?updated_attribute=1');
+			$this->controller->redirect('/dashboard/users/attributes?updated=1');
 		}		
 	}
 }
@@ -94,7 +94,7 @@ if ($_REQUEST['task'] == 'delete') {
 	$ck = UserAttributeKey::get($_REQUEST['ukID']);
 	if (is_object($ck)) {
 		$ck->delete();
-		$this->controller->redirect('/dashboard/users?attribute_deleted=1');
+		$this->controller->redirect('/dashboard/users/attributes?deleted=1');
 		exit;
 	}
 }
@@ -165,7 +165,7 @@ if ($editMode) { ?>
 	</tr>
 	<tr>
 		<td colspan="4" class="header">
-		<a href="<?=$this->url('/dashboard/users')?>" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
+		<a href="<?=$this->url('/dashboard/users/attributes')?>" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
 		<a href="javascript:void(0)" onclick="$('#ccm-attribute-update').get(0).submit()" class="ccm-button-right"><span><?=t('Update')?></span></a>
 		</td>		
 	</tr>
@@ -188,7 +188,41 @@ if ($editMode) { ?>
 
 <? 
 
-} else { ?>
+} else if (ENABLE_DEFINABLE_USER_ATTRIBUTES) { ?>
+	
+	<a name="attributes"></a>
+
+	
+	<h1><span><?=t('User Attributes')?></span></h1>
+	<div class="ccm-dashboard-inner">
+	
+	
+	<? if (count($attribs) > 0) { ?>
+
+	<p><?=t("To set the order for these items on the registration form, click and drag the graphic next to the attribute's name.")?></p>
+	
+	<div id="user-attributes-list">
+	
+	<?
+	foreach($attribs as $ak) { ?>
+	<div class="uat" id="item_<?=$ak->getKeyID()?>" style="font-size: 12px">
+	<img src="<?=ASSETS_URL_IMAGES?>/dashboard/uat-<?=$ak->getKeyType()?>.gif" width="21" height="21" class="handle" id="handle<?=$ak->getKeyID()?>" /><a href="<?=$this->url('/dashboard/users/attributes?ukID=' . $ak->getKeyID() . '&task=edit')?>"><?=$ak->getKeyName()?></a> (<?=$ak->getNumEntries()?>)
+	</div>
+	
+	<? } ?>
+
+	</div>
+	
+	<? } else { ?>
+		
+	<br/><strong><?=t('No user attributes defined.')?></strong><br/><br/>
+		
+	<? } ?>
+
+	<div class="ccm-spacer">&nbsp;</div>
+	
+	</div>
+
 
 <h1><span><?=t('Add User Attribute')?></span></h1>
 <div class="ccm-dashboard-inner">
@@ -240,7 +274,7 @@ if ($editMode) { ?>
 </tr>
 <tr>
 	<td colspan="4" class="header">
-	<a href="<?=$this->url('/dashboard/users')?>" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
+	<a href="<?=$this->url('/dashboard/users/attributes')?>" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
 	<a href="javascript:void(0)" onclick="$('#ccm-user-add-attribute').get(0).submit()" class="ccm-button-right"><span><?=t('Add User Attribute')?></span></a>
 </tr>
 </table>
@@ -255,6 +289,21 @@ if ($editMode) { ?>
 <br/>
 
 <script type="text/javascript">
+$(function() {
+	$("div#user-attributes-list").sortable({
+		handle: 'img.handle',
+		cursor: 'move',
+		opacity: 0.5,
+		stop: function() {
+			var ualist = $(this).sortable('serialize');
+			$.post('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/dashboard/user_attributes_update.php', ualist, function(r) {
+
+			});
+		}
+	});
+});
+
+
 	disableValues = function(obj) {
 		if (obj.value == 'HTML') { 
 			document.forms[0].ukPrivate.checked=0;

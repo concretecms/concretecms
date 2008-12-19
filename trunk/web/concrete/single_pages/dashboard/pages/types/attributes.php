@@ -68,11 +68,11 @@ if ($_POST['add'] || $_POST['update']) {
 			}
 			if (count($error) == 0) {
 				$ck = CollectionAttributeKey::add($akHandle, $akName, $akSearchable, $akValues, $akType);
-				$this->controller->redirect('/dashboard/collection_types/?attribute_created=1');
+				$this->controller->redirect('/dashboard/pages/types/?attribute_created=1');
 			}
 		} else if (is_object($ak)) {
 			$ak = $ak->update($akHandle, $akName, $akSearchable, $akValues, $akType);
-			$this->controller->redirect('/dashboard/collection_types/?attribute_updated=1');
+			$this->controller->redirect('/dashboard/pages/types/?attribute_updated=1');
 		}		
 		exit;
 	}
@@ -82,7 +82,7 @@ if ($_REQUEST['task'] == 'delete' && $valt->validate('delete_attribute')) {
 	$ck = CollectionAttributeKey::get($_REQUEST['akID']);
 	if (is_object($ck)) {
 		$ck->delete();
-		$this->controller->redirect('/dashboard/collection_types/?attribute_deleted=1');
+		$this->controller->redirect('/dashboard/pages/types/?attribute_deleted=1');
 	}
 }
 
@@ -101,7 +101,7 @@ if ($editMode) { ?>
 
 <h1><span><?=t('Edit Attribute Definition')?> (<em class="required">*</em> - <?=t('required field')?>)</span></h1>
 <div class="ccm-dashboard-inner">
-	<form method="post" id="ccm-attribute-update" action="<?=$this->url('/dashboard/collection_types/attributes/')?>">
+	<form method="post" id="ccm-attribute-update" action="<?=$this->url('/dashboard/pages/types/attributes/')?>">
 	<?=$valt->output('add_or_update_attribute')?>
 	<input type="hidden" name="akID" value="<?=$_REQUEST['akID']?>" />
 	<input type="hidden" name="task" value="edit" />
@@ -147,7 +147,7 @@ if ($editMode) { ?>
 	<tr>
 		<td colspan="3" class="header">
 
-		<a href="<?=$this->url('/dashboard/collection_types')?>" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
+		<a href="<?=$this->url('/dashboard/pages/types')?>" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
 		<a href="javascript:void(0)" onclick="$('#ccm-attribute-update').get(0).submit()" class="ccm-button-right"><span><?=t('Update')?></span></a>
 		
 		</td>
@@ -167,7 +167,7 @@ if ($editMode) { ?>
 <h1><span><?=t('Add Page Attribute')?></span></h1>
 <div class="ccm-dashboard-inner">
 
-<form method="post" id="ccm-add-attribute" action="<?=$this->url('/dashboard/collection_types/attributes/')?>">
+<form method="post" id="ccm-add-attribute" action="<?=$this->url('/dashboard/pages/types/attributes/')?>">
 <input type="hidden" name="add" value="1" />
 <?=$valt->output('add_or_update_attribute')?>
 
@@ -208,7 +208,7 @@ if ($editMode) { ?>
 <tr>
 	<td colspan="3" class="header">
 
-	<a href="<?=$this->url('/dashboard/collection_types')?>" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
+	<a href="<?=$this->url('/dashboard/pages/types')?>" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
 	<a href="javascript:void(0)" onclick="$('#ccm-add-attribute').get(0).submit()" class="ccm-button-right"><span><?=t('Add')?></span></a>
 	
 	</td>

@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
-class DashboardThemesAddController extends Controller {
+class DashboardPagesThemesAddController extends Controller {
 
 	protected $helpers = array('html');
 
@@ -14,7 +14,7 @@ class DashboardThemesAddController extends Controller {
 			try {
 				$pl = new PageThemeArchive();
 				$t = $pl->install($_FILES['archive']['tmp_name']);
-				$this->redirect('/dashboard/themes/inspect', $t->getThemeID(), 1);
+				$this->redirect('/dashboard/pages/themes/inspect', $t->getThemeID(), 1);
 				
 			} catch (Exception $e) {
 				$v->add($e);
@@ -23,7 +23,7 @@ class DashboardThemesAddController extends Controller {
 		if ($v->has()) {
 			$this->set('error', $v);
 		}
-		$this->set('addurl', View::url('/dashboard/themes/add', 'install'));
+		$this->set('addurl', View::url('/dashboard/pages/themes/add', 'install'));
 	}
 
 

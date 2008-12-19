@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
-class DashboardThemesMarketplaceController extends Controller {
+class DashboardPagesThemesMarketplaceController extends Controller {
 
 	protected $helpers = array('html');
 

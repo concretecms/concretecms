@@ -1,7 +1,7 @@
 <?php
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
-class DashboardCollectionTypesController extends Controller {
+class DashboardPagesTypesContoller extends Controller {
 
 
 public function view() {
