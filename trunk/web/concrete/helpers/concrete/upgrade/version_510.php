@@ -82,6 +82,9 @@ class ConcreteUpgradeVersion510Helper {
 		$d7->update(array('cName' => t('Pages and Themes'), 'cDescription'=>t('Reskin your site.')));
 		$d7f->update(array('cName'=>t('Page Types'), 'cDescription'=>t('What goes in your site.')));	
 		$d7h->update(array('cName'=>t('Single Pages')));
+
+		$p = Page::getByPath('/dashboard/logs');
+		$p->delete();
 		
 	}
 	
