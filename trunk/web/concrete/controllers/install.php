@@ -308,6 +308,7 @@ class InstallController extends Controller {
 						$d4c = SinglePage::add('/dashboard/users/groups');
 						$d4d = SinglePage::add('/dashboard/users/attributes');
 						$d7 = SinglePage::add('/dashboard/pages');
+						$d71 = SinglePage::add('/dashboard/pages/themes');
 						$d7a = SinglePage::add('/dashboard/pages/themes/add');
 						$d7b = SinglePage::add('/dashboard/pages/themes/inspect');
 						$d7c = SinglePage::add('/dashboard/pages/themes/customize');
@@ -336,6 +337,7 @@ class InstallController extends Controller {
 						$d4c->update(array('cName'=>t('Groups')));
 						$d4d->update(array('cName'=>t('User Attributes')));
 						$d7->update(array('cName'=>t('Pages and Themes'), 'cDescription'=>t('Reskin your site.')));	
+						$d71->update(array('cName'=>t('Themes'), 'cDescription'=>t('Reskin your site.')));	
 						$d7e->update(array('cName'=>t('Page Types'), 'cDescription'=>t('What goes in your site.')));	
 						$d7g->update(array('cName'=>t('Single Pages')));	
 
