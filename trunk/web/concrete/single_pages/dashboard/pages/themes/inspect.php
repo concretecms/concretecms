@@ -7,7 +7,7 @@ $ci = Loader::helper('concrete/interface');
 	
 
 	
-	<form method="post" id="ccm-inspect-form" action="<?=$this->url('/dashboard/themes/inspect/', 'activate_files', $ptID)?>">
+	<form method="post" id="ccm-inspect-form" action="<?=$this->url('/dashboard/pages/themes/inspect/', 'activate_files', $ptID)?>">
 	
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
 	<table border="0" cellspacing="1" cellpadding="0" class="grid-list" id="ccm-template-list">
@@ -82,7 +82,7 @@ $ci = Loader::helper('concrete/interface');
 	
 	
 	<?
-	$b1 = $ci->button(t('Return to Themes'), $this->url('/dashboard/themes'), 'left');
+	$b1 = $ci->button(t('Return to Themes'), $this->url('/dashboard/pages/themes'), 'left');
 	if ($pf > 0) { 
 		$b2 = $ci->submit(t('Activate Files'), 'ccm-inspect-form'); ?>
 		<?=$ci->buttons($b1, $b2); ?>

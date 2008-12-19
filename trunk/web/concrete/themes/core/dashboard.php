@@ -67,8 +67,8 @@ $(function() {
 <? 
 Loader::block('autonav');
 $nh = Loader::helper('navigation');
-$pc = Page::getByPath("/dashboard");
-$nav = AutonavBlockController::getChildPages($pc);
+$dashboard = Page::getByPath("/dashboard");
+$nav = AutonavBlockController::getChildPages($dashboard);
 ?>
 
 <div id="ccm-dashboard-nav">
@@ -96,7 +96,29 @@ foreach($nav as $n2) {
 <ul><? foreach($subnav as $item) { ?><li <? if (isset($item[2]) && $item[2] == true) { ?> class="nav-selected" <? } ?>><a href="<?=$item[0]?>"><?=$item[1]?></a></li><? } ?></ul>
 <br/><div class="ccm-spacer">&nbsp;</div>
 </div>
-<? } ?>
+<? } else if ($c->getCollectionID() != $dashboard->getCollectionID()) {
+	// we auto-gen the subnav 
+	// if we're right under the dashboard, we get items beneath us. If not we get items at our same level
+	$pcs = $nh->getTrailToCollection($c);
+	$pcs = array_reverse($pcs);
+	if (count($pcs) == 2) {
+		$parent = $c;
+	} else {
+		$parent = $pcs[2];
+	}
+
+	$subpages = AutonavBlockController::getChildPages($parent);
+	if (count($subpages) > 0) { 
+	?>	
+		<div id="ccm-dashboard-subnav">
+		<ul><? foreach($subpages as $sc) { ?><li <? if ($sc->getCollectionID() == $c->getCollectionID()) { ?> class="nav-selected" <? } ?>><a href="<?=$nh->getLinkToCollection($sc, false, true)?>"><?=$sc->getCollectionName()?></a></li><? } ?></ul>
+		<br/><div class="ccm-spacer">&nbsp;</div>
+		</div>
+	
+	
+	<?
+		}
+} ?>
 
 <?
 	if (isset($latest_version)){ 

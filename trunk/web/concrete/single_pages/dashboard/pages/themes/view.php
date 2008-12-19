@@ -15,7 +15,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 	<strong><?=t('Are you sure you wish to activate this theme? Any custom theme selections across your site will be reset.')?></strong>
 	<br/><br/>
 	<?=$bt->button(t("Yes, activate this theme."), $activate_confirm, "left");?>
-	<?=t('or')?> <a href="<?=$this->url('/dashboard/themes/')?>"><?=t('Cancel')?></a>
+	<?=t('or')?> <a href="<?=$this->url('/dashboard/pages/themes/')?>"><?=t('Cancel')?></a>
 	
 	<div class="ccm-spacer">&nbsp;</div>
 	
@@ -39,14 +39,14 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 			<? if ($siteThemeID == $t->getThemeID()) { ?>
 				<?=$bt->button_js(t("Activate"), "alert('" . $alreadyActiveMessage . "')", "left", "ccm-button-inactive");?>
 			<? } else { ?>
-				<?=$bt->button(t("Activate"), $this->url('/dashboard/themes','activate', $t->getThemeID()), "left");?>
+				<?=$bt->button(t("Activate"), $this->url('/dashboard/pages/themes','activate', $t->getThemeID()), "left");?>
 			<? } ?>
 			<?=$bt->button_js(t("Preview"), "ccm_previewInternalTheme(1, " . intval($t->getThemeID()) . ",'" . addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) . "')", "left");?>
-			<?=$bt->button(t("Inspect"), $this->url('/dashboard/themes/inspect', $t->getThemeID()), "left");?>
-			<?=$bt->button(t("Customize"), $this->url('/dashboard/themes/customize', $t->getThemeID()), "left");?>
+			<?=$bt->button(t("Inspect"), $this->url('/dashboard/pages/themes/inspect', $t->getThemeID()), "left");?>
+			<?=$bt->button(t("Customize"), $this->url('/dashboard/pages/themes/customize', $t->getThemeID()), "left");?>
 			
 			<? if ($t->isUninstallable()) { ?>
-				<?=$bt->button(t("Remove"), $this->url('/dashboard/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), "left");?>
+				<?=$bt->button(t("Remove"), $this->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), "left");?>
 			<? } ?>
 			</td>
 		</tr>
@@ -65,7 +65,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 			<h3><?=$t->getThemeName()?></h3>
 			<?=$t->getThemeDescription()?>
 			<br/><br/>
-			<?=$bt->button(t("Install"), $this->url('/dashboard/themes','install', $t->getThemeHandle()), "left");?>
+			<?=$bt->button(t("Install"), $this->url('/dashboard/pages/themes','install', $t->getThemeHandle()), "left");?>
 			
 		</tr>
 		<? }

@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
-class DashboardThemesController extends Controller {
+class DashboardPagesThemesController extends Controller {
 
 	protected $helpers = array('html');
 
@@ -21,17 +21,9 @@ class DashboardThemesController extends Controller {
 			$siteThemeID = $obj->getThemeID();
 		}
 		
-		if(ENABLE_MARKETPLACE_SUPPORT){
-			$subnav = array(
-				array(View::url('/dashboard/themes/'), t('Current Themes'), 1),
-				array(View::url('/dashboard/themes/marketplace'), t('Get More Themes'), 0)
-			);		
-			$this->set('subnav', $subnav);		
-		}
-		
 		$this->set('siteThemeID', $siteThemeID);
-		$this->set('activate', View::url('/dashboard/themes', 'activate'));		
-		$this->set('install', View::url('/dashboard/themes', 'install'));		
+		$this->set('activate', View::url('/dashboard/pages/themes', 'activate'));		
+		$this->set('install', View::url('/dashboard/pages/themes', 'install'));		
 	}
 
 	public function remove($ptID, $token = '') {
@@ -62,20 +54,20 @@ class DashboardThemesController extends Controller {
 	
 	public function activate($ptID) {
 		$valt = Loader::helper('validation/token');
-		$this->set('activate_confirm', View::url('/dashboard/themes', 'activate_confirm', $ptID, $valt->generate('activate')));	
+		$this->set('activate_confirm', View::url('/dashboard/pages/themes', 'activate_confirm', $ptID, $valt->generate('activate')));	
 	}
 
 	public function install($ptHandle = null) {
 		$th = PageTheme::getByFileHandle($ptHandle);
 		if ($ptHandle == null) {
-			$this->redirect('/dashboard/themes');
+			$this->redirect('/dashboard/pages/themes');
 		}
 		
 		$v = Loader::helper('validation/error');
 		try {
 			if (is_object($th)) {
 				$t = PageTheme::add($ptHandle);
-				$this->redirect('/dashboard/themes/inspect', $t->getThemeID(), 1);
+				$this->redirect('/dashboard/pages/themes/inspect', $t->getThemeID(), 1);
 				
 			} else {
 				throw new Exception('Invalid Theme');

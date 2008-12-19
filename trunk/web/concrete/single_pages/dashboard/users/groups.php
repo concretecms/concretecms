@@ -42,10 +42,10 @@ if ($_POST['add'] || $_POST['update']) {
 	if (count($error) == 0) {
 		if ($_POST['add']) {
 			$g = Group::add($_POST['gName'], $_POST['gDescription']);
-			$this->controller->redirect('/dashboard/groups?created=1');
+			$this->controller->redirect('/dashboard/users/groups?created=1');
 		} else if (is_object($g)) {
 			$g->update($_POST['gName'], $_POST['gDescription']);
-			$this->controller->redirect('/dashboard/groups?updated=1');
+			$this->controller->redirect('/dashboard/users/groups?updated=1');
 		}		
 		exit;
 	}
@@ -72,7 +72,7 @@ if ($gl->getTotal() > 0) {
 <div class="ccm-dashboard-inner">
 
 
-<form id="ccm-group-search" method="get" style="top: -30px; left: 10px" action="<?=$this->url('/dashboard/groups')?>">
+<form id="ccm-group-search" method="get" style="top: -30px; left: 10px" action="<?=$this->url('/dashboard/users/groups')?>">
 <div id="ccm-group-search-fields">
 <input type="text" id="ccm-group-search-keywords" name="gKeywords" value="<?=$_REQUEST['gKeywords']?>" class="ccm-text" style="width: 100px" />
 <input type="submit" value="<?=t('Search')?>" />
@@ -87,7 +87,7 @@ if ($gl->getTotal() > 0) {
 <? foreach ($gResults as $g) { ?>
 
 	<div class="ccm-group">
-		<a class="ccm-group-inner" href="<?=$this->url('/dashboard/groups?task=edit&gID=' . $g['gID'])?>" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$g['gName']?></a>
+		<a class="ccm-group-inner" href="<?=$this->url('/dashboard/users/groups?task=edit&gID=' . $g['gID'])?>" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$g['gName']?></a>
 		<div class="ccm-group-description"><?=$g['gDescription']?></div>
 	</div>
 
@@ -113,7 +113,7 @@ if ($pOptions['needPaging']) { ?>
 
 <div class="ccm-dashboard-inner">
 
-<form method="post" id="add-group-form" action="<?=$this->url('/dashboard/groups/')?>">
+<form method="post" id="add-group-form" action="<?=$this->url('/dashboard/users/groups/')?>">
 <?=$valt->output('add_or_update_group')?>
 <div style="margin:0px; padding:0px; width:100%; height:auto" >	
 <table class="entry-form" border="0" cellspacing="1" cellpadding="0">
@@ -144,7 +144,7 @@ if ($pOptions['needPaging']) { ?>
 	<h1><span><?=t('Edit Group')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
-		<form method="post" id="update-group-form" action="<?=$this->url('/dashboard/groups/')?>">
+		<form method="post" id="update-group-form" action="<?=$this->url('/dashboard/users/groups/')?>">
 		<?=$valt->output('add_or_update_group')?>
 		<input type="hidden" name="gID" value="<?=$_REQUEST['gID']?>" />
 		<input type="hidden" name="task" value="edit" />
@@ -167,7 +167,7 @@ if ($pOptions['needPaging']) { ?>
 			<td colspan="3" class="header">
 			<input type="hidden" name="update" value="1" />
 			<?=$ih->submit(t('Update'), 'update-group-form')?>
-			<?=$ih->button(t('Cancel'), $this->url('/dashboard/groups'), 'left')?>
+			<?=$ih->button(t('Cancel'), $this->url('/dashboard/users/groups'), 'left')?>
 			</td>
 		</tr>
 		</table>
@@ -191,7 +191,7 @@ if ($pOptions['needPaging']) { ?>
 			<script type="text/javascript">
 			deleteGroup = function() {
 				if (confirm('<?=$delConfirmJS?>')) { 
-					location.href = "<?=$this->url('/dashboard/groups', 'delete', $_REQUEST['gID'], $valt->generate('delete_group_' . $_REQUEST['gID']))?>";				
+					location.href = "<?=$this->url('/dashboard/users/groups', 'delete', $_REQUEST['gID'], $valt->generate('delete_group_' . $_REQUEST['gID']))?>";				
 				}
 			}
 			</script>

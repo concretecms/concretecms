@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::block('form');
 
-class DashboardFormResultsController extends Controller {
+class DashboardReportsFormsController extends Controller {
 
 	private $pageSize=3; 
 
@@ -12,9 +12,8 @@ class DashboardFormResultsController extends Controller {
 			$this->pageSize=100000; 
 			$_REQUEST['page']=1;
 		}
-		$this->loadSurveyResponses();		
+		$this->loadSurveyResponses();
 	}
-	
 
 	public function excel(){ 
 		$this->pageSize=0;

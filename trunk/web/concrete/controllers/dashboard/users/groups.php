@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
-class DashboardGroupsController extends Controller {
+class DashboardUsersGroupsController extends Controller {
 
 
 	public function view() { 
