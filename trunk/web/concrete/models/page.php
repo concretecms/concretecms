@@ -789,8 +789,8 @@ class Page extends Collection {
 				$cFilename = $data['cFilename'];
 			}
 			// we only update a subset
-			$v = array($cName, $cDescription, $cDatePublic, $cvID, $this->cID);
-			$q = "update CollectionVersions set cvName = ?, cvDescription = ?, cvDatePublic = ? where cvID = ? and cID = ?";
+			$v = array($cName, $cHandle, $cDescription, $cDatePublic, $cvID, $this->cID);
+			$q = "update CollectionVersions set cvName = ?, cvHandle = ?, cvDescription = ?, cvDatePublic = ? where cvID = ? and cID = ?";
 			$r = $db->prepare($q);
 			$res = $db->execute($r, $v);
 
