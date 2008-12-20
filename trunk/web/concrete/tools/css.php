@@ -14,7 +14,8 @@ if (isset($au->theme) && isset($au->file)) {
 		}
 	}
 	
-	$style = Cache::get($au->theme, $au->file);
+	$stat = filemtime($pt->getThemeDirectory() . '/' . $au->file);
+	$style = Cache::get($au->theme, $au->file, $stat);
 	if ($style == '') {
 		$style = $pt->parseStyleSheet($au->file);
 		Cache::set($au->theme, $au->file, $style, 10800);

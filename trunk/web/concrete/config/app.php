@@ -52,7 +52,7 @@ if (!defined('URL_REWRITING_ALL')) {
 	define("URL_REWRITING_ALL", false);
 }
 
-if (URL_REWRITING == true) {
+if (URL_REWRITING_ALL == true) {
 	define('URL_SITEMAP', BASE_URL . DIR_REL . '/dashboard/sitemap');
 	define('REL_DIR_FILES_TOOLS', DIR_REL . '/tools');
 	define('REL_DIR_FILES_TOOLS_REQUIRED', DIR_REL . '/tools/required'); // front-end

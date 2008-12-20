@@ -18,6 +18,7 @@ class Cache extends CacheTemplate {
 		$cacheDataObject = new Object();
 		if(!$expire) $cacheDataObject->expires = 0;
 		else $cacheDataObject->expires = date('U')+intval($expire);
+		$cacheDataObject->timestamp = time();
 		$cacheDataObject->data = $obj;
 		
 		$fileHandle = fopen( self::getFilePath($key), "w+");
@@ -31,7 +32,7 @@ class Cache extends CacheTemplate {
 	/** 
 	 * Retrieves an item from the cache
 	 */	
-	public function get($type, $id){
+	public function get($type, $id, $mustBeNewerThan = false){
 		if (ENABLE_CACHE == false) {
 			return false;
 		}		
@@ -44,12 +45,20 @@ class Cache extends CacheTemplate {
 			
 		//check the file system for a cached version	
 		}else{		
-			$filePath=self::getFilePath($key);			
+			$filePath=self::getFilePath($key);		
 			if(!file_exists($filePath)) return false;
 			
 			//load the cached object
 			$cacheDataObject=unserialize(file_get_contents($filePath));		
 			
+			// If $mustBeNewerThan set? Is the timestamp of the cache item older than $mustBeNewerThan? If so, we remove.
+			// This is useful when you're dealing with caching the contents of files, and the files are changing on the
+			// drive, and you pass the filemtime to this function to ensure you always cache an updated version
+			if ($mustBeNewerThan != false && is_object($cacheDataObject) && $cacheDataObject->timestamp < $mustBeNewerThan) {
+				self::delete($type, $id);
+				return false;
+			}
+		
 			//has the data expired? if so, remove it 
 			if( $cacheDataObject->expires<date('U') && $cacheDataObject->expires!=0 ){
 				self::delete($type, $id);
