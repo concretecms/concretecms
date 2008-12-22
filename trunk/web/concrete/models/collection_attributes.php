@@ -96,6 +96,27 @@ class CollectionAttributeKey extends Object {
 		}
 	}
 	
+	/** 
+	 * Takes a passed array (or uses $_POST) and retrieves values for the submitted item.
+	 * We do this because the array may hold the item differently than just akID_ID (there may be multiple fields, etc...)
+	 */
+	public function getValueFromPost($arg = false) {
+		if (!is_array($arg)) {
+			$arg = $_POST;
+		}
+		switch($this->getCollectionAttributeKeyType()) {
+			case "DATE":
+				$dt = Loader::helper('form/date_time');
+				$val = $dt->translate('akID_' . $this->getCollectionAttributeKeyID());
+				break;
+			default:
+				$val = $arg['akID_' . $this->getCollectionAttributeKeyID()];
+				break;
+		}
+		
+		return $val;
+	}
+	
 	function delete() {
 		// this removes the record from the CAKeys table, and from the CTypeAttributes tables, but
 		// not from the actual CAValues table, nor from the lookup columns

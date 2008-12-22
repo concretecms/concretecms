@@ -539,7 +539,7 @@
 				foreach($_POST['selectedAKIDs'] as $akID) {
 					if ($akID > 0) {
 						$ak = CollectionAttributeKey::getByID($akID);
-						$submittedValue = $_POST['akID_' . $ak->getCollectionAttributeKeyID()];
+						$submittedValue = $ak->getValueFromPost();
 						if (isset($submittedValue)) {
 							$nvc->addAttribute($ak, $submittedValue);
 						}
