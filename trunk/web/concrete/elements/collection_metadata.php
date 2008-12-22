@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 global $c;
 Loader::model('collection_types');
 Loader::model('collection_attributes');
+$dt = Loader::helper('form/date_time');
 
 if ($cp->canAdminPage()) {
 	$ctArray = CollectionType::getList();
@@ -77,7 +78,6 @@ if ($cp->canAdminPage()) {
 	
 	<label><?=t('Public Date/Time')?></label> 
 	<? 
-	$dt = Loader::helper('form/date_time');
 	print $dt->datetime('cDatePublic', $c->getCollectionDatePublic()); ?>
 	</div>
 	
@@ -201,10 +201,8 @@ if ($cp->canAdminPage()) {
 					<input type="checkbox" <? if ($caValue == 1) { ?> checked <? } ?> name="akID_<?=$ak->getCollectionAttributeKeyID()?>" value="1" /> <?=t('Yes')?>
 					<?
 					break;
-				case "DATE":?>
-					<input type="text" value="<?=$caValue?>" name="akID_<?=$ak->getCollectionAttributeKeyID()?>" id="akID_<?=$ak->getCollectionAttributeKeyID()?>" />
-					<input type="button" name="" style="font-size: 10px; vertical-align: middle" value="calendar" onclick="popUpCalendar(this, document.getElementById('akID_<?=$ak->getCollectionAttributeKeyID()?>'), 'yyyy-mm-dd')">
-					<?
+				case "DATE":
+					print $dt->datetime('akID_' . $ak->getCollectionAttributeKeyID(), $caValue);
 					break;
 				default: // text ?>		
 				
