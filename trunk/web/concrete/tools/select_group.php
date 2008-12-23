@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$uc = Page::getByPath("/dashboard/groups");
+$uc = Page::getByPath("/dashboard/users/groups");
 $ucp = new Permissions($uc);
 if (!$ucp->canRead()) {
 	die(_("You have no access to groups."));
