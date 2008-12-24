@@ -48,8 +48,9 @@ class FormDateTimeHelper {
 	 * @param string $prefix
 	 * @param string $value
 	 * @param bool $includeActivation
+	 * @param bool $calendarAutoStart
 	 */
-	public function datetime($prefix, $value = null, $includeActivation = false) {
+	public function datetime($prefix, $value = null, $includeActivation = false, $calendarAutoStart = true) {
 		if ($value != null) {
 			$dt = date('m/d/Y', strtotime($value));
 			$h = date('h', strtotime($value));
@@ -108,7 +109,9 @@ class FormDateTimeHelper {
 		$html .= '>PM</option>';
 		$html .= '</select>';
 		$html .= '</span>';
-		$html .= '<script type="text/javascript">$(function() { $("#' . $id . '_dt").datepicker({ showAnim: \'fadeIn\' }); });</script>';
+		if ($calendarAutoStart) { 
+			$html .= '<script type="text/javascript">$(function() { $("#' . $id . '_dt").datepicker({ showAnim: \'fadeIn\' }); });</script>';
+		}
 		// first we add a calendar input
 		
 		if ($includeActivation) {
