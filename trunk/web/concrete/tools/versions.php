@@ -58,7 +58,7 @@
 			
 			if (is_executable(DIR_FILES_BIN_HTMLDIFF)) {
 				$val = system(DIR_FILES_BIN_HTMLDIFF . ' ' . DIR_TMP . '/' . $src1 . ' ' . DIR_TMP . '/' . $src2);
-				$val = str_replace($val, '</head>', '<style type="text/css">@import "' . ASSETS_URL_CSS . '/ccm_compare.css";</style></head>');
+				$val = str_replace($val, '</head>', '<style type="text/css">@import "' . ASSETS_URL_CSS . '/ccm.compare.css";</style></head>');
 				print $val;
 			} else {
 				print t('You must make %s executable in order to compare versions of pages.',DIR_FILES_BIN_HTMLDIFF);
