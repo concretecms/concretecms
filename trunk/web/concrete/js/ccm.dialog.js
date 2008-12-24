@@ -118,7 +118,10 @@ jQuery.fn.dialog.load = function(fnd) {
 	jQuery.fn.dialog.hideLoader();
 	if (fnd.element != '') {
 		// we are loading some content on the page rather than through AJAX
-		$("#ccm-dialog-content" + fnd.n).html($(fnd.element).html());
+		$("#ccm-dialog-content" + fnd.n).append($(fnd.element));
+		if ($(fnd.element).css('display') == 'none') {
+			$(fnd.element).show();
+		}
 		$("#ccm-dialog-content" + fnd.n + " .ccm-dialog-close").click(function() {
 			jQuery.fn.dialog.close(fnd);
 		});
@@ -165,6 +168,11 @@ jQuery.fn.dialog.close = function(fnd) {
 	jQuery.fn.dialog.dialogs.splice(jQuery.fn.dialog.totalDialogs, 1);
 	$("#TB_imageOff").unbind("click");
 	$("#TB_closeWindowButton" + fnd.n).unbind("click");
+
+	if (typeof fnd.onClose == "function") {
+		fnd.onClose();
+	}
+
 	if (ccm_animEffects) {
 		$("#ccm-dialog-window" + jQuery.fn.dialog.totalDialogs).fadeOut("fast",function(){
 			$('#ccm-dialog-window' + jQuery.fn.dialog.totalDialogs).trigger("unload").unbind().remove();
@@ -187,10 +195,6 @@ jQuery.fn.dialog.close = function(fnd) {
 		jQuery.fn.dialog.activate(jQuery.fn.dialog.totalDialogs-1);
 	}
 
-	if (typeof fnd.onClose == "function") {
-		fnd.onClose();
-	}
-	
 	document.onkeydown = "";
 	document.onkeyup = ""; 
 	ccm_dialogOpen=0;
