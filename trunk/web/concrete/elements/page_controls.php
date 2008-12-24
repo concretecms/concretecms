@@ -151,11 +151,13 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 	
 	</div>
 	</div>
-<? }
-	}
-} ?>
+<? } ?>
 
 <?
 if ($statusMessage != '') {?>
 <div id="ccm-notification"><div id="ccm-notification-inner"><?=$statusMessage?></div></div>
 <? } ?>
+
+<?
+	}
+} ?>
