@@ -8,13 +8,13 @@
 $v = View::getInstance();
 $v->disableEditing();
 require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); ?>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_dashboard.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_colorpicker.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_menus.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_forms.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_calendar.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_dialog.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_asset_library.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.dashboard.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.colorpicker.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.menus.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.forms.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.calendar.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.dialog.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.asset.library.css";</style>
 
 <script type="text/javascript">
 <?
@@ -25,6 +25,7 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 </script>
 
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.form.2.0.2.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.base.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.1.5.2.no_datepicker.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.1.6b.datepicker.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.colorpicker.js"></script>

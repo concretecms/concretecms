@@ -14,7 +14,7 @@ if (isset($reveal)) {
 
 ?>
 <div class="ccm-pane-controls">
-<link href="<?=ASSETS_URL_CSS?>/ccm_sitemap.css" rel="stylesheet" type="text/css">
+<link href="<?=ASSETS_URL_CSS?>/ccm.sitemap.css" rel="stylesheet" type="text/css">
 
 <script type="text/javascript">
 var CCM_SITEMAP_MODE = "<?=$sitemap_mode?>";

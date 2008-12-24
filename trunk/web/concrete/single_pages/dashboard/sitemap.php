@@ -17,7 +17,7 @@ if (isset($_REQUEST['reveal'])) {
 
 ?>
 
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm_sitemap.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.sitemap.css";</style>
 
 
 <script type="text/javascript">

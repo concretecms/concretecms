@@ -30,8 +30,8 @@ class SpellcheckerHelper{
 	 * Returns a link to the js library, as well as actual strings that can be used
 	 */
 	public function init() {
-		print '<script src="' . ASSETS_URL_JAVASCRIPT . '/ccm_spellchecker.js"></script>';
-		print '<style type="text/css">@import "' . ASSETS_URL_CSS . '/ccm_spellchecker.css";</style>';
+		print '<script src="' . ASSETS_URL_JAVASCRIPT . '/ccm.spellchecker.js"></script>';
+		print '<style type="text/css">@import "' . ASSETS_URL_CSS . '/ccm.spellchecker.css";</style>';
 	}
 
 	public function findMisspellings($string){  
