@@ -118,8 +118,7 @@ jQuery.fn.dialog.load = function(fnd) {
 	jQuery.fn.dialog.hideLoader();
 	if (fnd.element != '') {
 		// we are loading some content on the page rather than through AJAX
-		var content = $(fnd.element).html();
-		$("#ccm-dialog-content" + fnd.n).html(content);
+		$("#ccm-dialog-content" + fnd.n).html($(fnd.element).html());
 		$("#ccm-dialog-content" + fnd.n + " .ccm-dialog-close").click(function() {
 			jQuery.fn.dialog.close(fnd);
 		});
@@ -132,6 +131,9 @@ jQuery.fn.dialog.load = function(fnd) {
 			});
 			$("#ccm-dialog-content" + fnd.n + " .dialog-launch").dialog();
 		});
+	}
+	if (typeof(fnd.onLoad) == 'function') {
+		fnd.onLoad();
 	}
 }
 
