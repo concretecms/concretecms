@@ -347,7 +347,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function renderError($title, $error, $errorObj = null) {
 			$innerContent = $error;
 			$titleContent = $title; 
-			if (!$this->theme) {
+			if (!isset($this->theme) || (!$this->theme)) {
 				$this->setThemeForView(DIRNAME_THEMES_CORE, FILENAME_THEMES_ERROR . '.php', true);
 				include($this->theme);	
 			} else {
@@ -434,11 +434,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$theme = DIR_FILES_THEMES . '/' . DIRNAME_THEMES_CORE . "/" . $pl . '.php';
 					$themeDir = DIR_FILES_THEMES . '/' . DIRNAME_THEMES_CORE;
 				} else if (file_exists(DIR_FILES_THEMES_CORE . "/" . $pl . '/' . $filename)) {
-					$themePath = REL_DIR_FILES_THEMES_CORE . '/' . $pl;
+					$themePath = ASSETS_URL . '/' . DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $pl;
 					$theme = DIR_FILES_THEMES_CORE . "/" . $pl . '/' . $filename;
 					$themeDir = DIR_FILES_THEMES_CORE . "/" . $pl;
 				} else if (file_exists(DIR_FILES_THEMES_CORE . "/" . $pl . '/' . FILENAME_THEMES_VIEW)) {
-					$themePath = REL_DIR_FILES_THEMES_CORE . '/' . $pl;
+					$themePath = ASSETS_URL . '/' . DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $pl;
 					$theme = DIR_FILES_THEMES_CORE . "/" . $pl . '/' . FILENAME_THEMES_VIEW;
 					$themeDir = DIR_FILES_THEMES_CORE . "/" . $pl;
 				} else if (file_exists(DIR_FILES_THEMES_CORE_ADMIN . "/" . $pl . '.php')) {

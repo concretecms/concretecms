@@ -126,7 +126,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						$_db->setDatabaseObject($_dba);
 					} else if (defined('DB_SERVER')) {
 						$v = View::getInstance();
-						$v->renderError(t('Unable to connect to database.'), t('A database error occurred while processing this request.'), $e);
+						$v->renderError(t('Unable to connect to database.'), t('A database error occurred while processing this request.'));
 					}
 				} else {
 					return false;
