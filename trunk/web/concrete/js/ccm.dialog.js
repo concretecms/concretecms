@@ -116,7 +116,7 @@ jQuery.fn.dialog.isMacFF = function(fnd) {
 jQuery.fn.dialog.load = function(fnd) {
 	jQuery.fn.dialog.position(fnd);
 	jQuery.fn.dialog.hideLoader();
-	if (fnd.element != '') {
+	if (fnd.element != null) {
 		// we are loading some content on the page rather than through AJAX
 		$("#ccm-dialog-content" + fnd.n).append($(fnd.element));
 		if ($(fnd.element).css('display') == 'none') {
@@ -237,7 +237,7 @@ jQuery.fn.dialog.loadShell = function(fnd) {
 	$("#ccm-dialog-window" + fnd.n).show();
 	
 	if (fnd.draggable && ccm_dialogCanDrag) {
-		$("#ccm-dialog-window" + fnd.n).draggable();
+		$("#ccm-dialog-window" + fnd.n).draggable({'handle': $('#ccm-dialog-title-bar' + fnd.n)});
 	}
 
 }

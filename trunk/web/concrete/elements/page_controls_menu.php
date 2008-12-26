@@ -3,8 +3,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $valt = Loader::helper('validation/token');
 $sh = Loader::helper('concrete/dashboard/sitemap');
 $dh = Loader::helper('concrete/dashboard');
-
-
 $token = '&' . $valt->getParameter();
 if (isset($cp)) {
 
@@ -65,31 +63,6 @@ if (isset($cp)) {
 	}
 
 	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage()) { ?>
-
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.form.2.0.2.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.1.5.2.no_datepicker.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.datepicker.js"></script>
-<? if (LANGUAGE != 'en') { ?>
-	<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/i18n/ui.datepicker-<?=LANGUAGE?>.js"></script>
-<? } ?>
-<script type="text/javascript">
-<?
-$valt = Loader::helper('validation/token');
-print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
-?>
-
-</script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.dialog.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.ui.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.themes.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/tiny_mce_309/tiny_mce.js"></script>
-
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.dialog.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.ui.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.calendar.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.menus.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.forms.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.asset.library.css";</style>
 
 <div id="ccm-overlay"></div>
 <div id="ccm-page-controls">

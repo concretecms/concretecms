@@ -31,6 +31,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		*/
 		public $controller;
 		
+		
+		/** 
+		 * An array of items that get loaded into a page's header
+		 */
+		private $headerItems = array();
+
 		/**
 		 * themePaths holds the various hard coded paths to themes
 		 * @access private
@@ -87,6 +93,30 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 
+		public function addHeaderItem($item, $namespace = 'VIEW') {
+			$this->headerItems[$namespace][] = $item;
+		}
+		
+		public function outputHeaderItems() {
+			$items = array();
+			if (is_array($this->headerItems['VIEW'])) {
+				foreach($this->headerItems['VIEW'] as $hi) {
+					if (!in_array($hi, $items)) {
+						print $hi . "\n";
+						$items[] = $hi;
+					}
+				}
+			}
+			if (is_array($this->headerItems['CONTROLLER'])) {
+				foreach($this->headerItems['CONTROLLER'] as $hi) {
+					if (!in_array($hi, $items)) {
+						print $hi . "\n";
+						$items[] = $hi;
+					}
+				}
+			}
+		}
+		
 		public function enablePreview() {
 			$this->isPreview = true;
 		}
@@ -456,11 +486,24 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				extract($this->controller->getSets());
 				extract($this->controller->getHelperObjects());
 				
+				// Now, if we're on an actual page, we retrieve all the blocks on the page
+				// and store their view states in the local cache (for the page). That way
+				// we can add header items and have them show up in the header BEFORE
+				// the block itself is actually loaded
+				if ($view instanceof Page) {
+					$cl = CacheLocal::get();
+					$blocks = $view->getBlocks();
+					
+					foreach($blocks as $b1) {
+						$cl->cache['blocks'][$b1->getAreaHandle()][] = $b1;
+						$btc = Loader::controller($b1);
+						$btc->runTask('on_page_view', $view);
+					}
+				}
+				
 				// Determine which inner item to load, load it, and stick it in $innerContent
 				$content = false;
-				
-				
-				
+								
 				ob_start();			
 				if ($view instanceof Page) {
 					
@@ -568,8 +611,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				Events::fire('on_before_render', $this);
 				
 				include($this->theme);
-				
-				$this->controller->runTask('on_render_complete', $this->controller->getTask());
 				
 				Events::fire('on_render_complete', $this);
 				
