@@ -350,14 +350,26 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 		}
 		
-		public function getBlocks($arHandle) {
+		public function getBlocks($arHandle = false) {
+			if ($arHandle != false) {
+				$cl = CacheLocal::get();
+				if (isset($cl->cache['blocks'])) {
+					return $cl->cache['blocks'][$arHandle];
+				}
+			}
 			
 			$db = Loader::db();
 			
-			$v = array($arHandle, $this->getCollectionID(), $this->getVersionID());
-			$q = "select Blocks.bID, Blocks.btID, BlockTypes.btHandle, BlockTypes.pkgID, Blocks.bIsActive, bName, bDateAdded, bDateModified, bFilename, Blocks.uID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.isOriginal ";
-			$q .= "from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? ";
-			$q .= "and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) order by CollectionVersionBlocks.cbDisplayOrder asc";
+			$v = array($this->getCollectionID(), $this->getVersionID());
+			if ($arHandle != false) {
+				$v[] = $arHandle;
+			}
+			$q = "select Blocks.bID, Blocks.btID, BlockTypes.btHandle, BlockTypes.pkgID, Blocks.bIsActive, bName, bDateAdded, bDateModified, bFilename, Blocks.uID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.arHandle, CollectionVersionBlocks.isOriginal ";
+			$q .= "from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) ";
+			if ($arHandle != false) {
+				$q .= 'and CollectionVersionBlocks.arHandle = ? ';
+			}
+			$q .= "order by CollectionVersionBlocks.cbDisplayOrder asc";
 
 			$r = $db->query($q, $v);
 			$blocks = array();

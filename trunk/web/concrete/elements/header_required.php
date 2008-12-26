@@ -67,13 +67,13 @@ var CCM_TOOLS_PATH = "<?=REL_DIR_FILES_TOOLS_REQUIRED?>";
 var CCM_REL = "<?=DIR_REL?>";
 
 </script>
-<script type="text/javascript" src="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/i18n_js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery1.2.6.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/swfobject2.1.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.base.js"></script>
-
 
 <?
+$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
+$this->addHeaderItem('<script type="text/javascript" src="' . ASSETS_URL_JAVASCRIPT . '/jquery1.2.6.js"></script>');
+$this->addHeaderItem('<script type="text/javascript" src="' . ASSETS_URL_JAVASCRIPT . '/swfobject2.1.js"></script>');
+$this->addHeaderItem('<script type="text/javascript" src="' . ASSETS_URL_JAVASCRIPT . '/ccm.base.js"></script>');
+
 $favIconFID=intval(Config::get('FAVICON_FID'));
 if($favIconFID){
 	Loader::block('library_file');
@@ -81,18 +81,22 @@ if($favIconFID){
 	<link REL="SHORTCUT ICON" HREF="<?=$fileBlock->getFileRelativePath() ?>" type="image/ico" />
 <? } ?>
 
-
 <? 
-// output header items
-print $this->controller->outputHeaderItems();
-?>
+if (is_object($cp)) {
 
-<? 
-	if (is_object($cp)) {
-		$v = View::getInstance();
-
-		if ($v->editingEnabled()) {
-			require(DIR_FILES_ELEMENTS_CORE . '/page_controls.php');
-		}
+	if ($this->editingEnabled()) {
+		Loader::element('page_controls_header', array('cp' => $cp, 'c' => $c));
 	}
+}
+
+// Finally, we output all header CSS and JavaScript
+print $this->controller->outputHeaderItems();
+
+if (is_object($cp)) {
+
+	if ($this->editingEnabled()) {
+		Loader::element('page_controls_menu', array('cp' => $cp, 'c' => $c));
+	}
+}
+
 ?>

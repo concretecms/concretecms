@@ -27,7 +27,6 @@ class Controller {
 	// sets is an array of items set by the set() method. Whew.
 	private $sets = array();
 	private $helperObjects = array();
-	private $headerItems = array();
 	private $theme = null;
 	private $c; // collection
 
@@ -195,12 +194,13 @@ class Controller {
 	}
 	
 	/** 
-	 * Adds an item to the header. This item will then be automatically printed out in the <head> section of the page
+	 * Adds an item to the view's header. This item will then be automatically printed out in the <head> section of the page
 	 * @param string $item
 	 * @return void
 	 */
 	public function addHeaderItem($item) {
-		$this->headerItems[] = $item;
+		$v = View::getInstance();
+		$v->addHeaderItem($item, 'CONTROLLER');
 	}
 
 	/** 
@@ -278,9 +278,8 @@ class Controller {
 	 * @return void
 	 */
 	public function outputHeaderItems() {
-		foreach($this->headerItems as $hi) {
-			print $hi;
-		}
+		$v = View::getInstance();
+		$v->outputHeaderItems();
 	}
 
 }
