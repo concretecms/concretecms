@@ -62,7 +62,7 @@
 			Cache::delete('collection_version_id', $this->cID . ':ACTIVE');
 		}
 		
-		public function get(&$c, $cvID, $extended = false) {
+		public function get(&$c, $cvID) {
 			if (is_string($cvID)) {
 				$cvID = CollectionVersion::getNumericalVersionID($c->getCollectionID(), $cvID);
 			}
@@ -86,15 +86,13 @@
 				}
 			}
 			
-			if ($extended) {
-				if ($cv->cvAuthorUID > 0) {
-					$uAuthor = UserInfo::getByID($cv->cvAuthorUID);
-					$cv->cvAuthorUname = $uAuthor->getUserName();
-				}
-				if ($cv->cvApproverUID > 0) {
-					$uApprover = UserInfo::getByID($cv->cvApproverUID);
-					$cv->cvApproverUname = $uApprover->getUserName();
-				}
+			if ($cv->cvAuthorUID > 0) {
+				$uAuthor = UserInfo::getByID($cv->cvAuthorUID);
+				$cv->cvAuthorUname = $uAuthor->getUserName();
+			}
+			if ($cv->cvApproverUID > 0) {
+				$uApprover = UserInfo::getByID($cv->cvApproverUID);
+				$cv->cvApproverUname = $uApprover->getUserName();
 			}
 			
 			// load the attributes for a particular version object
@@ -198,10 +196,14 @@
 			$cvID = $this->cvID;
 			$cID = $this->cID;
 			$c = Page::getByID($cID, $this->cvID);
-			// first we remove approval for all versions of this collection
+			
+			$ov = Page::getByID($cID, 'ACTIVE');
+
+			// first we remove approval for the other version of this collection
 			$v = array($cID);
 			$q = "update CollectionVersions set cvIsApproved = 0 where cID = ?";
 			$r = $db->query($q, $v);
+			$ov->refreshCache();
 			
 			// now we approve our version
 			$v2 = array($uID, $cID, $cvID);
