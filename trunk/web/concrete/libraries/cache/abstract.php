@@ -23,6 +23,13 @@
 			return md5(strtolower($type . ':' . $id));
 		}
 		
+		/**
+		 * method run on load by dispatcher
+		 * if you need to check if the cache is initialized, something like that
+		 * do so here
+		 */
+		abstract public function startup();
+
 		abstract public function delete($type, $id);
 		abstract public function flush();
 		abstract public function set($type, $id, $obj, $expire = 0);

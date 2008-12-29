@@ -31,6 +31,24 @@ $h = Loader::helper('concrete/interface'); ?>
 
 </form>
 
+<form method="post" id="cache-form" action="<?=$this->url('/dashboard/settings', 'update_cache')?>">
+	<?=$this->controller->token->output('update_cache')?>
+	
+	<h1><span><?=t('Caching')?></span></h1>
+	
+	<div class="ccm-dashboard-inner">
+	<p><?=t('If your site is displaying out-dated information, or behaving unexpectedly, it may help to clear your cache.')?></p>
+	
+	<?
+	$b1 = $h->submit(t('Clear Cache'), 'cache-form');
+	print $h->buttons($b1);
+	?>
+	<br class="clear" />
+	</div>
+
+</form>
+
+
 </div>
 <div class="ccm-module">
 <form method="post" id="logging-form" action="<?=$this->url('/dashboard/settings', 'update_logging')?>">

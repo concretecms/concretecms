@@ -8,6 +8,12 @@
  * 3. Otherwise, we setup the defaults below.
  **/
 defined('C5_EXECUTE') or die(_("Access Denied.")); 
+
+// We define these here because we want to be able to turn them off during installation
+if (!defined('ENABLE_CACHE')) {
+	define('ENABLE_CACHE', true);
+}
+
 # permissions model - valid options are 'advanced' or 'simple'
 if (!defined('PERMISSIONS_MODEL')) {
 	Config::getOrDefine('PERMISSIONS_MODEL', 'simple');

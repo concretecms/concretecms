@@ -5,7 +5,7 @@ ini_set('display_errors', 1);
 if (!ini_get('safe_mode')) {
 	@set_time_limit(120);
 }
-
+define('ENABLE_CACHE', false);
 class InstallController extends Controller {
 
 	public $helpers = array('form', 'html');
@@ -23,6 +23,8 @@ class InstallController extends Controller {
 			"DIR_FILES_UPLOADED_ONSTATES"=>DIR_FILES_UPLOADED_ONSTATES,
 			"DIR_FILES_TRASH"=>DIR_FILES_TRASH,
 			"DIR_FILES_CACHE"=>DIR_FILES_CACHE,
+			"DIR_FILES_CACHE_CORE"=>DIR_FILES_CACHE_CORE,
+			"DIR_FILES_CACHE_DB"=>DIR_FILES_CACHE_DB,
 			"DIR_FILES_AVATARS"=>DIR_FILES_AVATARS,
 			"USER_SUPER_ID"=>USER_SUPER_ID,
 			"USER_SUPER"=>USER_SUPER,
@@ -161,6 +163,12 @@ class InstallController extends Controller {
 				}
 				if (!is_dir($this->installData['DIR_FILES_CACHE'])) {
 					mkdir($this->installData['DIR_FILES_CACHE']);
+				}
+				if (!is_dir($this->installData['DIR_FILES_CACHE_CORE'])) {
+					mkdir($this->installData['DIR_FILES_CACHE_CORE']);
+				}
+				if (!is_dir($this->installData['DIR_FILES_CACHE_DB'])) {
+					mkdir($this->installData['DIR_FILES_CACHE_DB']);
 				}
 				if (!is_dir($this->installData['DIR_FILES_AVATARS'])) {
 					mkdir($this->installData['DIR_FILES_AVATARS']);

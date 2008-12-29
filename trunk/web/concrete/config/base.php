@@ -63,10 +63,6 @@ if (!defined("LANGUAGE")) {
 
 define("LANGUAGE_DOMAIN_CORE", "messages");
 
-if (!defined('ENABLE_CACHE')) {
-	define('ENABLE_CACHE', true);
-}
-
 if (!defined('CACHE_LIBRARY')) {
 	define('CACHE_LIBRARY', 'default');
 }
@@ -244,6 +240,8 @@ define('DIR_FILES_TRASH', DIR_FILES_UPLOADED . '/trash');
 
 # Cache
 define('DIR_FILES_CACHE', DIR_FILES_UPLOADED . '/cache');
+define('DIR_FILES_CACHE_DB', DIR_FILES_CACHE);
+define('DIR_FILES_CACHE_CORE', DIR_FILES_UPLOADED . '/cache_objects');
 define('DIR_FILES_CACHE_PAGES', DIR_FILES_CACHE . '/lucene.pages');
 define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED . '/cache');
 
@@ -355,9 +353,9 @@ if (!defined('DB_USE_CACHE')) {
 }
 $ADODB_ASSOC_CASE =  2;
 $ADODB_ACTIVE_CACHESECS = 300;
-$ADODB_CACHE_DIR = DIR_FILES_CACHE;
+$ADODB_CACHE_DIR = DIR_FILES_CACHE_DB;
 define('ADODB_OUTP', 'concrete_log_query');
-define('APP_VERSION', '5.2.0a1');
+define('APP_VERSION', '5.2.0RC1');
 define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the latest version (this is seconds)
 define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_version_number');
 define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');

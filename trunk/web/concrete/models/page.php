@@ -12,16 +12,38 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class Page extends Collection {
 
 	public static function getByPath($path, $version = 'RECENT') {
+		$ca = new Cache();
+		$c = $ca->get('page', $path . ':' . $version);
+		if ($c instanceof Page) {
+			return $c;
+		}
+
 		$where = "where PagePaths.cPath = ?";
 		$c = new Page;
 		$c->populatePage($path, $where, $version);
+		$ca->set('page', $c->getCollectionPath() . ':' . $version, $c);
 		return $c;
 	}
 	
 	public static function getByID($cID, $version = 'RECENT') {
+		if ($version) {
+			$version = CollectionVersion::getNumericalVersionID($cID, $version);
+		}
+		$ca = new Cache();
+		$c = ($version > 0) ? $ca->get('page', $cID . ':' . $version) : $ca->get('page', $cID);
+
+		if ($c instanceof Page) {
+			return $c;
+		}
+		
 		$where = "where Pages.cID = ?";
 		$c = new Page;
 		$c->populatePage($cID, $where, $version);
+		if ($version > 0) {
+			$ca->set('page', $c->getCollectionID() . ':' . $version, $c);
+		} else {
+			$ca->set('page', $c->getCollectionID(), $c);
+		}
 		return $c;
 	}
 	
@@ -84,7 +106,6 @@ class Page extends Collection {
 		}
 	}		
 
-	
 	public function isEditMode() {
 		$v = View::getInstance();
 		return ($this->isCheckedOutByMe() && ($v->editingEnabled()));
@@ -451,6 +472,9 @@ class Page extends Collection {
 	function removeThisAlias() {
 		$cIDRedir = $this->getCollectionPointerID();
 		$cPointerExternalLink = $this->getCollectionPointerExternalLink();
+		
+		parent::refreshCache();
+
 		if ($cPointerExternalLink != '') {
 			$this->delete();
 		} else if ($cIDRedir > 0) {
@@ -623,14 +647,8 @@ class Page extends Collection {
 	
 	public function setTheme($pl) {
 		$db = Loader::db();
-		/*
-		$cArray = $this->getCollectionChildrenArray();
-		$cArray[] = $this->cID;
-		$cArrayStr = implode(',', $cArray);
-		$db->query("update Pages set ptID = ? where cID in ({$cArrayStr})", array($pl->getThemeID()));
-		*/
 		$db->query('update Pages set ptID = ? where cID = ?', array($pl->getThemeID(), $this->cID));
-		
+		parent::refreshCache();
 	}
 	
 	function setPermissionsInheritanceToTemplate() {
@@ -747,6 +765,7 @@ class Page extends Collection {
 		$vo = $this->getVersionObject();
 		$cvID = $vo->getVersionID();
 		$this->markModified();
+		parent::refreshCache();
 		
 		$cName = $this->getCollectionName();
 		$cDescription = $this->getCollectionDescription();
@@ -755,7 +774,6 @@ class Page extends Collection {
 		$uID = $this->getCollectionUserID();
 		$pkgID = $this->getPackageID();
 		$cFilename = $this->getCollectionFilename();
-		
 		if (isset($data['cName'])) {
 			$cName = $data['cName'];
 		}
@@ -844,14 +862,6 @@ class Page extends Collection {
 		}
 	}
 
-	function updateRestricted() {
-		$db = Loader::db();
-		// the only restricted portion of this that requires admin-level access is collection type ID (used to be permissions)
-		$v = array($_POST['ctID'], $_POST['uID'], $this->cID);
-		$q = "update Pages set ctID = ?, uID = ? where cID = ?";
-		$r = $db->query($q, $v);
-	}
-	
 	function updatePermissions($args = null) {
 		$db = Loader::db();
 		if (!is_array($args)) {
@@ -893,6 +903,7 @@ class Page extends Collection {
 		$v = array($args['cOverrideTemplatePermissions'], $this->cID);
 		$q = "update Pages set cOverrideTemplatePermissions = ? where cID = ?";
 		$db->query($q, $v);
+		parent::refreshCache();
 	}
 
 	function updatePermissionsCollectionID($cParentIDString, $npID) {
@@ -936,9 +947,10 @@ class Page extends Collection {
 		$newCParentID = $nc->getCollectionID();
 		$dh = Loader::helper('date');
 
-		Loader::model('page_statistics');	
+		Loader::model('page_statistics');
 		PageStatistics::decrementParents($this->cID);
-
+		parent::refreshCache();
+		
 		$cDateModified = $dh->getLocalDateTime();
 		if ($this->getPermissionsCollectionID() != $this->getCollectionID() && $this->getPermissionsCollectionID() != $this->getMasterCollectionID()) {
 			// implicitly, we're set to inherit the permissions of wherever we are in the site.
@@ -969,6 +981,10 @@ class Page extends Collection {
 		// 3. new parent
 		$oldParent = Page::getByID($this->getCollectionParentID(), 'RECENT');
 		$newParent = Page::getByID($newCParentID, 'RECENT');
+		
+		$oldParent->refreshCache();
+		$newParent->refreshCache();
+
 		$ret = Events::fire('on_page_move', $this, $oldParent, $newParent);
 
 		// now that we've moved the collection, we rescan its path
@@ -1062,6 +1078,7 @@ class Page extends Collection {
 		if ($res) {
 			
 			// rescan the collection path
+			$nc->refreshCache();
 			$nc2 = Page::getByID($newCID);
 			
 			// arguments for event
@@ -1091,7 +1108,8 @@ class Page extends Collection {
 		if ($ret < 0) {
 			return false;
 		}
-		
+
+		parent::refreshCache();
 		parent::delete();
 		
 		$cID = $this->getCollectionID();
@@ -1155,6 +1173,8 @@ class Page extends Collection {
 			
 			$q = "update Pages set cPendingAction = '{$action}', cPendingActionUID = {$uID},  cPendingActionDatetime = '{$dateTime}', cPendingActionTargetCID = '{$targetCID}' where cID = {$cID}";
 			$r = $db->query($q);
+			parent::refreshCache();
+
 		}
 	}
 	
@@ -1163,6 +1183,7 @@ class Page extends Collection {
 		$cID = $this->getCollectionID();
 		$q = "update Pages set cPendingAction = null, cPendingActionUID = null, cPendingActionDatetime = null where cID = {$cID}";
 		$r = $db->query($q);
+		parent::refreshCache();
 	}
 
 	function approvePendingAction() {
@@ -1605,6 +1626,7 @@ class Page extends Collection {
 		$cDate = $dh->getLocalDateTime();
 		$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;		
 		
+		parent::refreshCache();
 		$cobj = parent::add($data);		
 		$cID = $cobj->getCollectionID();		
 		$ctID = $ct->getCollectionTypeID();
@@ -1669,6 +1691,7 @@ class Page extends Collection {
 		$uID = USER_SUPER_ID;
 		$data['uID'] = $uID;
 		
+		parent::refreshCache();
 		$cobj = parent::add($data);		
 		$cID = $cobj->getCollectionID();
 		

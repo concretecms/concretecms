@@ -32,6 +32,8 @@ class Cache extends CacheTemplate {
 		return $result;
 	}
 	
+	public function startup() { }
+	
 	/** 
 	 * Inserts or updates an item to the cache
 	 */

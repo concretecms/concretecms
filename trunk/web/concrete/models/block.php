@@ -44,34 +44,43 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 
 			$b->cID = $c->getCollectionID();
-			$b->c = $c;
 			
 			return $b;
 		}
 		
 		public static function getByID($bID, $c = null, $a = null) {
+			if ($c == null && $a == null) {
+				$cID = 0;
+				$arHandle = "";
+			} else {
+				if (is_object($a)) {
+					$arHandle = $a->getAreaHandle();
+				} else if ($a != null) {
+					$arHandle = $a;
+					$a = Area::getOrCreate($c, $a);
+				}
+				$cID = $c->getCollectionID();
+			}
+
+			$ca = new Cache();
+			$b = $ca->get('block', $bID . ':' . $cID . ':' . $arHandle);
+			if ($b instanceof Block) {
+				return $b;
+			}
+
 			$db = Loader::db();
 
 			$b = new Block;
-
 			if ($c == null && $a == null) {
 				// just grab really specific block stuff
 				$q = "select bID, bIsActive, BlockTypes.btID, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
 				$b->isOriginal = 1;
-				$v = array($bID);
-				
+				$v = array($bID);				
 			} else {
 
-				if (is_object($a)) {
-					$b->a = $a;
-					$b->arHandle = $a->getAreaHandle();
-				} else if ($a != null) {
-					$b->arHandle = $a; // passing the area name. We only pass the object when we're adding from the front-end
-				}
-	
-				$cID = $c->getCollectionID();
+				$b->arHandle = $arHandle;
+				$b->a = $a;
 				$b->cID = $cID;
-				$b->c = ($c) ? $c : '';
 
 				$vo = $c->getVersionObject();
 				$cvID = $vo->getVersionID();
@@ -89,7 +98,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (is_array($row)) {
 				$b->setPropertiesFromArray($row);
 				$r->free();
-				return $b;
+				
+				$bt = BlockType::getByID($b->getBlockTypeID());
+				$class = $bt->getBlockTypeClass();
+				$b->instance = new $class($b);
+
+				if ($c != null || $a != null) {
+					$ca = new Cache();
+					$ca->set('block', $bID . ':' . $cID . ':' . $arHandle, $b);
+				}
+				return $b;				
 
 			}
 		}
@@ -139,7 +157,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 
 		function loadNewCollection(&$c) {
-			$this->c = $c;
+			$this->cID = $c->getCollectionID();
 		}
 
 		function setBlockAreaObject(&$a) {
@@ -189,10 +207,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		public function getInstance() {
-			$bt = BlockType::getByID($this->btID);
-			$class = $bt->getBlockTypeClass();
-			$bc = new $class($this);
-			return $bc;
+			return $this->instance;
 		}
 
 		function getCollectionList() {
@@ -230,6 +245,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$class = $bt->getBlockTypeClass();
 			$bc = new $class($this);
 			$bc->save($data);
+			
+			$this->refreshCache();
 		}
 
 		function isActive() {
@@ -240,12 +257,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$db = Loader::db();
 			$q = "update Blocks set bIsActive = 0 where bID = '{$this->bID}'";
 			$db->query($q);
+			$this->refreshCache();
 		}
 
 		function activate() {
 			$db = Loader::db();
 			$q = "update Blocks set bIsActive = 1 where bID = '{$this->bID}'";
 			$db->query($q);
+			$this->refreshCache();
 		}
 
 		public function getPackageID() {return $this->pkgID;}
@@ -266,6 +285,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$r = $db->prepare($q);
 				$res = $db->execute($r, $v);
 			}
+			$this->refreshCache();
 		}
 
 		function alias($c) {	
@@ -372,8 +392,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 
 		function getBlockCollectionObject() {
-			if (is_object($this->c)) {
-				return $this->c;
+			if ($this->cID) {
+				return Page::getByID($this->cID);
 			} else {
 				return $this->getOriginalCollection();
 			}
@@ -481,6 +501,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				return false;
 			}
 
+			$this->refreshCache();
+
 			$cID = $this->cID;
 			$c = $this->getBlockCollectionObject();
 			$cvID = $c->getVersionID();
@@ -555,6 +577,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 			$c = $this->getBlockCollectionObject();
 			$cvID = $c->getVersionID();
+			$this->refreshCache();
 
 			switch($i) {
 				case '1':
@@ -756,6 +779,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					}
 				}
 			}
+
+			$this->refreshCache();
+			
 		}
 		
 		public function setCustomTemplate($template) {
@@ -766,6 +792,15 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function setName($name) {
 			$data['bName'] = $name;
 			$this->updateBlockInformation($data);
+		}
+		
+		/** 
+		 * Removes a cached version of the block 
+		 */
+		public function refreshCache() {
+			$c = $this->getBlockCollectionObject();
+			$a = $this->getBlockAreaObject();
+			Cache::delete('block', $this->getBlockID() . ':' . $c->getCollectionID() . ':' . $a->getAreaHandle());
 		}
 		
 		function updateBlockInformation($data) {
@@ -787,6 +822,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$q = "update Blocks set bName = ?, bFilename = ?, bDateModified = ? where bID = ?";
 			$r = $db->prepare($q);
 			$res = $db->execute($r, $v);
+			$this->refreshCache();
 
 		}
 

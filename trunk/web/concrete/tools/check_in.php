@@ -7,7 +7,7 @@ if (!$cp->canWrite()) {
 	die(_("Access Denied."));
 }
 
-$v = new Version($c, "RECENT", true);
+$v = CollectionVersion::get($c, "RECENT", true);
 
 if ($cp->canApproveCollection()) {
 	$approveChecked = "";

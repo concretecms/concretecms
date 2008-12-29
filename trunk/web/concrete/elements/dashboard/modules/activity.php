@@ -9,6 +9,6 @@
 <li><?=t('Last edit')?>: <b><?=$lastEditSite?></b></li>
 <li><?=t('Last login')?>: <b><?=$lastLoginSite?></b></li>
 <li><?=t('Total pages in edit mode')?>: <b><?=$totalEditMode?></b></li>
-<li><?=t('Total form submissions')?>: <a href="<?=$this->url('/dashboard/form_results/')?>"><b><?=$totalFormSubmissionsToday?></b> <?=t('today')?></a> (<b><?=$totalFormSubmissions?></b> <?=t('total')?>)</li>
+<li><?=t('Total form submissions')?>: <a href="<?=$this->url('/dashboard/reports/forms/')?>"><b><?=$totalFormSubmissionsToday?></b> <?=t('today')?></a> (<b><?=$totalFormSubmissions?></b> <?=t('total')?>)</li>
 
 </ul>

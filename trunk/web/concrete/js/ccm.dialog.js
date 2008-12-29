@@ -114,10 +114,10 @@ jQuery.fn.dialog.isMacFF = function(fnd) {
 }
 
 jQuery.fn.dialog.load = function(fnd) {
-	jQuery.fn.dialog.position(fnd);
-	jQuery.fn.dialog.hideLoader();
 	if (fnd.element != null) {
 		// we are loading some content on the page rather than through AJAX
+		jQuery.fn.dialog.position(fnd);
+		jQuery.fn.dialog.hideLoader();
 		$("#ccm-dialog-content" + fnd.n).append($(fnd.element));
 		if ($(fnd.element).css('display') == 'none') {
 			$(fnd.element).show();
@@ -129,6 +129,8 @@ jQuery.fn.dialog.load = function(fnd) {
 	} else {
 		var url = encodeURI(fnd.href);
 		$("#ccm-dialog-content" + fnd.n).load(url += "&random=" + (new Date().getTime()),function(){//to do a post change this load method
+			jQuery.fn.dialog.position(fnd);
+			jQuery.fn.dialog.hideLoader();
 			$("#ccm-dialog-content" + fnd.n + " .ccm-dialog-close").click(function() {
 				jQuery.fn.dialog.close(fnd);
 			});
@@ -243,7 +245,6 @@ jQuery.fn.dialog.loadShell = function(fnd) {
 }
 
 jQuery.fn.dialog.overlay = function(fnd) {
-
 	if (fnd.n == 0) {
 		if (ccm_uiLoaded) {
 			ccm_initialHeaderDeactivated = ccm_topPaneDeactivated;
@@ -297,7 +298,7 @@ jQuery.fn.dialog.loaderImage = CCM_IMAGE_PATH + "/throbber_white_32.gif";
 
 var ccm_initialHeaderDeactivated;
 var ccm_initialOverlay;
-var ccm_dialogCanDrag = typeof($.fn.draggable) == 'function';
+var ccm_dialogCanDrag = (typeof($.fn.draggable) == 'function' && (!$.browser.safari));
 
 $(document).ready(function(){   
 	imgLoader = new Image();// preload image

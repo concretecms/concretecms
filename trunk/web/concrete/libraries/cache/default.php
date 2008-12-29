@@ -2,7 +2,15 @@
 
 class Cache extends CacheTemplate {
 
-	protected static $filePrefix='ccm_cache_';
+	protected static $filePrefix='object_';
+	
+	public function startup() {
+		if (!is_dir(DIR_FILES_CACHE_CORE) || !is_writable(DIR_FILES_CACHE_CORE)) {
+			if (!@mkdir(DIR_FILES_CACHE_CORE)) {
+				define("ENABLE_CACHE", false);
+			}
+		}	
+	}
 	
 	/** 
 	 * Inserts or updates an item to the cache
@@ -93,18 +101,26 @@ class Cache extends CacheTemplate {
 	 * Completely flushes the cache
 	 */	
 	public function flush(){
-		if ($handle = opendir(DIR_FILES_CACHE) ) {
+		if ($handle = opendir(DIR_FILES_CACHE_CORE) ) {
 			while (false !== ($file = readdir($handle))){
-				$filePath=DIR_FILES_CACHE.'/'.$file; 
+				$filePath=DIR_FILES_CACHE_CORE.'/'.$file; 
 				if (!strstr($filePath,'.') && strstr($filePath,self::$filePrefix) && is_file($filePath))
 					unlink($filePath); 
 			}
 			closedir($handle);		
 		}
-	}	
+		
+		return true;
+		
+		// another flush method
+		/*
+		rename(DIR_FILES_CACHE_CORE, DIR_FILES_CACHE_CORE . time());
+		mkdir(DIR_FILES_CACHE_CORE);
+		*/
+	}
 	
 	protected function getFilePath($key=''){
-		return DIR_FILES_CACHE.'/'.self::$filePrefix.$key.'';
+		return DIR_FILES_CACHE_CORE.'/'.self::$filePrefix.$key.'';
 	}
 }
 

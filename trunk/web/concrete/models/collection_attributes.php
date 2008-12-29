@@ -167,6 +167,8 @@ class CollectionAttributeKey extends Object {
 	}
 	
 	function update($akHandle, $akName, $akSearchable, $akValues, $akType) {
+		Cache::flush();
+
 		$db = Loader::db();
 		$a = array($akHandle, $akName, $akSearchable, $akValues, $akType, $this->akID);
 		$db->query("update CollectionAttributeKeys set akHandle = ?, akName = ?, akSearchable = ?, akValues = ?, akType = ? where akID = ?", $a);

@@ -22,10 +22,6 @@
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class SurveyBlockController extends BlockController {
-	/** 
-	* @var object
-	*/
-	var $pobj;
 	 
 	protected $btTable = 'btSurvey';
 	protected $btInterfaceWidth = "420";
@@ -105,7 +101,8 @@ class SurveyBlockController extends BlockController {
 	function action_form_save_vote() {
 		$u = new User();
 		$db = Loader::db();
-		$c = $this->pobj->getBlockCollectionObject();
+		$bo = $this->getBlockObject();
+		$c = $bo->getBlockCollectionObject();
 		if ($this->requiresRegistration()) {
 			if (!$u->isRegistered()) {
 				$this->redirect('/login');
