@@ -12,17 +12,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class Page extends Collection {
 
 	public static function getByPath($path, $version = 'RECENT') {
-		$ca = new Cache();
-		$c = $ca->get('page', $path . ':' . $version);
-		if ($c instanceof Page) {
-			return $c;
-		}
-
-		$where = "where PagePaths.cPath = ?";
-		$c = new Page;
-		$c->populatePage($path, $where, $version);
-		$ca->set('page', $c->getCollectionPath() . ':' . $version, $c);
-		return $c;
+		$db = Loader::db();
+		$cID = $db->GetOne("select cID from PagePaths where cPath = ?", array($path));
+		return Page::getByID($cID, $version);
 	}
 	
 	public static function getByID($cID, $version = 'RECENT') {
