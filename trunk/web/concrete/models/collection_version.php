@@ -108,7 +108,7 @@
 						}
 						break;
 					default:
-						$v = $value;
+						$v = $row['value'];
 						break;
 				}
 				$attributes[$row['akHandle']] = $v;
