@@ -102,7 +102,7 @@ class SurveyBlockController extends BlockController {
 		$u = new User();
 		$db = Loader::db();
 		$bo = $this->getBlockObject();
-		$c = $bo->getBlockCollectionObject();
+		global $c;
 		if ($this->requiresRegistration()) {
 			if (!$u->isRegistered()) {
 				$this->redirect('/login');

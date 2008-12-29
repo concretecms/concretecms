@@ -45,7 +45,7 @@
 		function delete() {
 			$E = new GuestBookBlockEntry($this->bID);
 			$bo = $this->getBlockObject();
-			$c = $bo->getBlockCollectionObject();
+			global $c;
 			$E->removeAllEntries( $c->getCollectionID() );
 			parent::delete();
 		}
@@ -83,7 +83,7 @@
 		function action_form_save_entry() {			
 			// get the cID from the block Object
 			$bo = $this->getBlockObject();
-			$c = $bo->getBlockCollectionObject();
+			global $c;
 			$cID = $c->getCollectionID();
 		
 			$v = Loader::helper('validation/strings');
@@ -169,7 +169,7 @@
 		*/
 		function getEntries($order = "ASC") {
 			$bo = $this->getBlockObject();
-			$c = $bo->getBlockCollectionObject();
+			global $c;
 			return GuestBookBlockEntry::getAll($this->bID, $c->getCollectionID(), $order);
 		}
 		
