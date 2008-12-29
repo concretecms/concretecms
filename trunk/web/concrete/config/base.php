@@ -365,18 +365,18 @@ define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
 	define('ENABLE_MARKETPLACE_SUPPORT', true);
 } */
 if (!defined('MARKETPLACE_BLOCK_LIST_WS')) {
-	define('MARKETPLACE_BLOCK_LIST_WS', 'http://beta.concrete5.org/tools/get_marketplace_block_list/');
+	define('MARKETPLACE_BLOCK_LIST_WS', 'http://www.concrete5.org/tools/get_marketplace_block_list/');
 }
 if (!defined('MARKETPLACE_THEME_LIST_WS')) {
-	define('MARKETPLACE_THEME_LIST_WS', 'http://beta.concrete5.org/tools/get_marketplace_theme_list/');
+	define('MARKETPLACE_THEME_LIST_WS', 'http://www.concrete5.org/tools/get_marketplace_theme_list/');
 }
 if (!defined('MARKETPLACE_THEME_PREVIEW_URL')) {
-	define('MARKETPLACE_THEME_PREVIEW_URL', 'http://beta.concrete5.org/tools/preview_theme/');
+	define('MARKETPLACE_THEME_PREVIEW_URL', 'http://www.concrete5.org/tools/preview_theme/');
 }
 
 define('MARKETPLACE_CONTENT_LATEST_THRESHOLD', 10800); // every three hours
 
 define('MARKETPLACE_DIRNAME_THEME_PREVIEW', 'previewable_themes');
-define('MARKETPLACE_THEME_PREVIEW_ASSETS_URL', 'http://beta.concrete5.org/' . MARKETPLACE_DIRNAME_THEME_PREVIEW);
+define('MARKETPLACE_THEME_PREVIEW_ASSETS_URL', 'http://www.concrete5.org/' . MARKETPLACE_DIRNAME_THEME_PREVIEW);
 
 require_once(DIR_LIBRARIES_CORE . '/loader.php');
