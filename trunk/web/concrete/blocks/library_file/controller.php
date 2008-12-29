@@ -343,7 +343,8 @@
 			if (file_exists($data['file'])) {
 				// copy the file into the files directory
 				$filename = LibraryFileBlockController::sanitizeAndCopy($data['file'], $data['name']);
-				$this->pobj->updateBlockName($filename);
+				$bo = $this->getBlockObject();
+				$bo->updateBlockName($filename);
 				
 				$size = @getimagesize(DIR_FILES_UPLOADED . '/' . $filename);
 				
@@ -373,7 +374,7 @@
 				
 				$db = Loader::db();
 				$origfilename= LibraryFileBlockController::sanitizeTitle($filename, 12);
-				$v = array($filename, $origfilename, $type, $generictype, $this->pobj->bID);
+				$v = array($filename, $origfilename, $type, $generictype, $bo->getBlockID());
 
 				$r = $db->query("insert into btFile (filename,origfilename, type, generictype, bID) values (?, ?, ?, ?, ?)", $v);
 

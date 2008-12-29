@@ -318,6 +318,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		function loadCollectionEdit(&$c) {
+			$c->refreshCache();
+
 			// can only load one page into edit mode at a time.
 			if ($c->isCheckedOut()) {
 				return false;
@@ -346,11 +348,19 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$c->cCheckedOutDatetimeLastEdit = $datetime;
 				}
 			}
+			
 		}
 			
 		function unloadCollectionEdit() {		
+			// first we remove the cached versions of all of these pages
 			$db = Loader::db();
 			if ($this->getUserID() > 0) { 
+				$col = $db->GetCol("select cID from Pages where cCheckedOutUID = " . $this->getUserID());
+				foreach($col as $cID) {
+					$p = Page::getByID($cID);
+					$p->refreshCache();
+				}
+				
 				$q = "update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cCheckedOutUID = " . $this->getUserID();
 				$r = $db->query($q);
 			}

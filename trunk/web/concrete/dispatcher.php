@@ -29,12 +29,16 @@
 	Loader::library('controller');
 	Loader::library('block_view');
 	Loader::library('block_controller');
+
+	## Autoload settings
+	require('startup/autoload.php');
 	
 	## Load required models ##
 	Loader::model('area');
 	Loader::model('block');
 	Loader::model('block_types');
 	Loader::model('collection');
+	Loader::model('collection_version');
 	Loader::model('config');
 	Loader::model('groups');
 	Loader::model('package');
@@ -43,12 +47,12 @@
 	Loader::model('permissions');
 	Loader::model('user');
 	Loader::model('userinfo');
-	Loader::model('version');
 
 	## Startup cache ##
 	Loader::library('cache/abstract');	
 	Loader::library('cache/' . CACHE_LIBRARY);	
-
+	Cache::startup();
+	
 	## Startup check, install ##	
 	require('startup/magic_quotes_gpc_check.php');
 

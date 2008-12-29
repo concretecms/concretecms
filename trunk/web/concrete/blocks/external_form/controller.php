@@ -2,7 +2,6 @@
 	defined('C5_EXECUTE') or die(_("Access Denied."));
 	class ExternalFormBlockController extends BlockController {
 		
-		var $pobj;
 		protected $btTable = 'btExternalForm';
 		protected $btInterfaceWidth = "300";
 		protected $btInterfaceHeight = "200";
@@ -53,7 +52,7 @@
 			if (isset($filename)) {
 				require_once($filename);
 				$class .= 'ExternalFormBlockController';
-				$fp = new $class($this->pobj);
+				$fp = new $class($this->getBlockObject());
 
 				return $fp;
 			}

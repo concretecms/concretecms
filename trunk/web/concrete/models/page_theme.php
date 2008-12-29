@@ -24,7 +24,7 @@ class PageThemeEditableStyle extends Object {
 	public function getType() {return $this->ptsType;}
 	public function getName() {
 		$h = Loader::helper('text');
-		return $h->uncamelcase($this->ptsHandle);
+		return $h->unhandle($this->ptsHandle);
 	}
 	
 	public function __construct($value = '') {
@@ -598,6 +598,7 @@ class PageTheme extends Object {
 		// applies the current theme to the entire site by overriding the theme on the home page
 		$db = Loader::db();
 		$r = $db->query("update Pages left join Packages on Pages.pkgID = Packages.pkgID set Pages.ptID = ? where cIsTemplate = 0 and (Packages.pkgHandle <> 'core' or pkgHandle is null or Pages.ctID > 0)", array($this->ptID));
+		Cache::flush();
 	}
 	
 	public function getSiteTheme() {

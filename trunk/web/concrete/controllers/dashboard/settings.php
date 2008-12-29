@@ -37,6 +37,9 @@ class DashboardSettingsController extends Controller {
 				case "marketplace_turned_on";
 					$this->set('message', t('Marketplace support is now enabled.'));	
 					break;
+				case "cache_cleared";
+					$this->set('message', t('Cached files removed.'));	
+					break;
 				case "maintenance_turned_off":
 					$this->set('message', t('Maintenance support is now disabled.'));	
 					break;				
@@ -101,6 +104,18 @@ class DashboardSettingsController extends Controller {
 			if ($this->isPost()) {
 				Config::save('SITE', $this->post('SITE'));
 				$this->redirect('/dashboard/settings','sitename_saved');
+			}
+		} else {
+			$this->set('error', array($this->token->getErrorMessage()));
+		}
+	}
+
+	public function update_cache() {
+		if ($this->token->validate("update_cache")) {
+			if ($this->isPost()) {
+				if (Cache::flush()) {
+					$this->redirect('/dashboard/settings','cache_cleared');
+				}
 			}
 		} else {
 			$this->set('error', array($this->token->getErrorMessage()));

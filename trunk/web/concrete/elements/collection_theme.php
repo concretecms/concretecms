@@ -65,17 +65,20 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 	
 			<div class="ccm-form-area">
 	
-				<h2><?=t('Choose a Page Type')?></h2>
 				<? if ($c->isMasterCollection()) { ?>
+					<h2><?=t('Choose a Page Type')?></h2>
 				
 					<?=t("This is the defaults page for the %s page type. You cannot change it.", $c->getCollectionTypeName()); ?>
 					<br/><br/>
 				
 				<? } else if ($c->isGeneratedCollection()) { ?>
-	
+				<h2><?=t('Choose a Page Type')?></h2>
+
 				<?=t("This page is a single page, which means it doesn't have a page type associated with it."); ?>
 	
-				<? } else { ?>
+				<? } else if ($cnt > 0) { ?>
+
+				<h2><?=t('Choose a Page Type')?></h2>
 	
 				<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil($cnt/4)?>">
 					<a href="javascript:void(0)" class="ccm-scroller-l"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_l.png" width="28" height="79" alt="l" /></a>

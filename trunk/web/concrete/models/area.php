@@ -103,6 +103,12 @@ class Area extends Object {
 	}
 
 	function get(&$c, $arHandle) {
+		$ca = new Cache();
+		$a = Cache::get('area', $c->getCollectionID() . ':' . $arHandle);
+		if ($a instanceof Area) {
+			return $a;
+		}
+		
 		$db = Loader::db();
 		// First, we verify that this is a legitimate area
 		$v = array($c->getCollectionID(), $arHandle);
@@ -116,6 +122,8 @@ class Area extends Object {
 			$area->arInheritPermissionsFromAreaOnCID = $arRow['arInheritPermissionsFromAreaOnCID'];
 			$area->cID = $c->getCollectionID();
 			$area->c = &$c;
+			
+			Cache::set('area', $c->getCollectionID() . ':' . $arHandle, $area);
 			
 			return $area;
 		}
@@ -134,7 +142,10 @@ class Area extends Object {
 			return $area;
 		}
 
-		$cID = ($c->getCollectionInheritance()) ? $c->getCollectionID() : $c->getParentPermissionsCollectionID();
+		// I'm pretty sure this next line is meaningless
+		// because this will ALWAYS be true.
+		// $cID = ($c->getCollectionInheritance()) ? $c->getCollectionID() : $c->getParentPermissionsCollectionID();
+		$cID = $c->getCollectionID();
 		$v = array($cID, $arHandle);
 		$q = "insert into Areas (cID, arHandle) values (?, ?)";
 		$db->query($q, $v);

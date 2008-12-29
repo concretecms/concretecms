@@ -23,9 +23,9 @@ class PermissionsCache {
 		} else if (is_a($obj, "Block")) {
 			$id = $obj->getBlockID();
 			$prefix = 'block';
-		} else if (is_a($obj, "Version")) {
+		} else if (is_a($obj, "CollectionVersion")) {
 			$id = $obj->getVersionID();
-			$prefix = 'version';
+			$prefix = 'collection_version';
 		} else if (is_a($obj, "Area")) {
 			$id = $obj->getAreaID();
 			$prefix = 'area';
@@ -93,18 +93,16 @@ class PermissionsProxy {
 	}
 	
 	public function get($unknownObj) {
-		
 		if (is_a($unknownObj, 'Page')) {
 			$po = PermissionsProxy::getNewOrCached($unknownObj, 'CollectionPermissions');
 		} else if (is_a($unknownObj, 'Block')) {
 			$aObj = $unknownObj->getBlockAreaObject();
 			if (!$unknownObj->overrideAreaPermissions()) {
 				$po = PermissionsProxy::getAreaPermissions($aObj);
-
 			} else {
 				$po = PermissionsProxy::getNewOrCached($unknownObj, 'BlockPermissions');
 			}
-		} else if (is_a($unknownObj, 'Version')) {
+		} else if (is_a($unknownObj, 'CollectionVersion')) {
 			$po = new VersionPermissions($unknownObj);
 		} else if (is_a($unknownObj, 'Area')) {
 			$po = PermissionsProxy::getAreaPermissions($unknownObj);

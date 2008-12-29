@@ -233,7 +233,7 @@
 			case 'check-in':
 				if ($cp->canWrite()) {
 					// checking out the collection for editing
-					$v = new Version($c, "RECENT");
+					$v = CollectionVersion::get($c, "RECENT");
 					
 					$v->setComment($_REQUEST['comments']);
 					if ($_REQUEST['approve'] == 'APPROVE' && $cp->canApproveCollection()) {
@@ -254,7 +254,7 @@
 			case 'approve-recent':
 				if ($cp->canApproveCollection()) {
 					// checking out the collection for editing
-					$v = new Version($c, "RECENT");
+					$v = CollectionVersion::get($c, "RECENT");
 					$v->setComment($_REQUEST['comments']);
 					$v->approve();
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . $step);
@@ -548,7 +548,7 @@
 				
 				if ($_POST['rel'] == 'SITEMAP') { 
 					if ($cp->canApproveCollection()) {
-						$v = new Version($c, "RECENT");
+						$v = CollectionVersion::get($c, "RECENT");
 						$v->approve();
 						$u = new User();
 						$u->unloadCollectionEdit($c);
@@ -620,7 +620,7 @@
 				if (is_object($nc)) {
 					if ($_POST['rel'] == 'SITEMAP') { 
 						if ($cp->canApproveCollection()) {
-							$v = new Version($nc, "RECENT");
+							$v = CollectionVersion::get($nc, "RECENT");
 							$v->approve();
 							$u = new User();
 							$u->unloadCollectionEdit($nc);

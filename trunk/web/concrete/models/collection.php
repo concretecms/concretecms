@@ -25,11 +25,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	class Collection extends Object {
 		
 		var $cID;
+		protected $attributes = array();
 		/* version specific stuff */
 
 		function loadVersionObject($cvID = "ACTIVE") {
-			$this->vObj = new Version($this, $cvID);
-			$vp = new Permissions($this->vObj);
+			$cvID = CollectionVersion::getNumericalVersionID($this->getCollectionID(), $cvID);
+			$this->vObj = CollectionVersion::get($this, $cvID);
+			$vp = new Permissions($this->vObj);			
 			return $vp;
 		}
 		
@@ -89,6 +91,24 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		/* attribute stuff */
 		
+		public function getAttribute($akHandle) {
+			if (is_object($this->vObj)) {
+				return $this->vObj->getAttribute($akHandle);
+			}
+		}
+		
+		public function getCollectionAttributeValue($ak) {
+			if (is_object($this->vObj)) {
+				if (is_object($ak)) {
+					return $this->vObj->getAttribute($ak->getCollectionAttributeKeyHandle());
+				} else {
+					return $this->vObj->getAttribute($ak);
+				}
+			}
+		}
+		
+		/*
+		
 		function getCollectionAttributeValue($ak) {
 			$db = Loader::db();
 			if (is_object($ak)) {
@@ -122,6 +142,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function getAttribute($akHandle) {
 			return $this->getCollectionAttributeValue($akHandle);
 		}
+		*/
+		
 		
 		public function setAttribute($akHandle, $value) {
 			$db = Loader::db();
@@ -350,10 +372,20 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 		}
 		
+		public function refreshCache() {
+			$vo = $this->getVersionObject();
+
+			Cache::delete('page', $this->getCollectionID());
+			Cache::delete('page', $this->getCollectionID() . ':' . $vo->getVersionID());
+
+			$v = $this->getVersionObject();
+			$v->refreshCache();
+		}
+		
 		public function getBlocks($arHandle = false) {
 			if ($arHandle != false) {
 				$cl = CacheLocal::get();
-				if (isset($cl->cache['blocks'])) {
+				if (isset($cl->cache['blocks'][$arHandle])) {
 					return $cl->cache['blocks'][$arHandle];
 				}
 			}
@@ -364,7 +396,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if ($arHandle != false) {
 				$v[] = $arHandle;
 			}
-			$q = "select Blocks.bID, Blocks.btID, BlockTypes.btHandle, BlockTypes.pkgID, Blocks.bIsActive, bName, bDateAdded, bDateModified, bFilename, Blocks.uID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.arHandle, CollectionVersionBlocks.isOriginal ";
+			$q = "select Blocks.bID, CollectionVersionBlocks.arHandle ";
 			$q .= "from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) ";
 			if ($arHandle != false) {
 				$q .= 'and CollectionVersionBlocks.arHandle = ? ';
@@ -374,7 +406,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$r = $db->query($q, $v);
 			$blocks = array();
 			while ($row = $r->fetchRow()) {
-				$ab = Block::populateManually($row, $this, $arHandle);
+				$ab = Block::getByID($row['bID'], $this, $row['arHandle']);
 				$btHandle = $ab->getBlockTypeHandle();
 				$blocks[] = $ab;
 			}
