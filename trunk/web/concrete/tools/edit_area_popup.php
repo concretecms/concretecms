@@ -130,7 +130,7 @@ $(function() {
 			<div class="ccm-scrapbook-list-item" id="ccm-pc-<?=$obj->getPileContentID()?>">
 				<div class="ccm-block-type">
 					<a class="ccm-scrapbook-delete" title="Remove from Scrapbook" href="javascript:void(0)" id="sb<?=$obj->getPileContentID()?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" width="16" height="16" /></a>
-					<a class="ccm-block-type-inner" style="background-image: url(<?=$btIcon?>)" href="<?=DIR_REL?>/index.php?pcID[]=<?=$obj->getPileContentID()?>&add=1&processBlock=1&cID=<?=$c->getCollectionID()?>&arHandle=<?=$a->getAreaHandle()?>&btask=alias_existing_block"><?=$bt->getBlockTypeName()?></a>
+					<a class="ccm-block-type-inner" style="background-image: url(<?=$btIcon?>)" href="<?=DIR_REL?>/index.php?pcID[]=<?=$obj->getPileContentID()?>&add=1&processBlock=1&cID=<?=$c->getCollectionID()?>&arHandle=<?=$a->getAreaHandle()?>&btask=alias_existing_block&<?=$token?>"><?=$bt->getBlockTypeName()?></a>
 					<div class="ccm-scrapbook-list-item-detail">	
 						<?	
 						try {
