@@ -98,10 +98,22 @@
 			// load the attributes for a particular version object
 			$db = Loader::db();
 			$v = array($c->getCollectionID(), $cv->getVersionID());
-			$r = $db->Execute('select akHandle, value from CollectionAttributeValues inner join CollectionAttributeKeys on CollectionAttributeKeys.akID = CollectionAttributeValues.akID where cID = ? and cvID = ?', $v);
+			$r = $db->Execute('select akHandle, value, akType from CollectionAttributeValues inner join CollectionAttributeKeys on CollectionAttributeKeys.akID = CollectionAttributeValues.akID where cID = ? and cvID = ?', $v);
 			while ($row = $r->fetchRow()) {
-				$attributes[$row['akHandle']] = $row['value'];
+				switch($row['akType']) {
+					case "IMAGE_FILE":
+						if ($row['value'] > 0) {
+							Loader::block('library_file');
+							$v = LibraryFileBlockController::getFile($row['value']);
+						}
+						break;
+					default:
+						$v = $value;
+						break;
+				}
+				$attributes[$row['akHandle']] = $v;
 			}
+			
 			$cv->setAttributeArray($attributes);
 
 			$cv->cID = $c->getCollectionID();			
