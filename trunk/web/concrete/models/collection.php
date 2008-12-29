@@ -79,7 +79,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					// duplicate them to our collection object (which is actually the same collection,
 					// but different version)
 					$b = Block::getByID($row['bID'], $this, $row['arHandle']);
-					$b->alias($nc);
+					if (is_object($b)) {
+						$b->alias($nc);
+					}
 				}
 			}
 
