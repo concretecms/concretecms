@@ -800,7 +800,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function refreshCache() {
 			$c = $this->getBlockCollectionObject();
 			$a = $this->getBlockAreaObject();
-			Cache::delete('block', $this->getBlockID() . ':' . $c->getCollectionID() . ':' . $a->getAreaHandle());
+			if (is_object($c) && is_object($a)) { 
+				Cache::delete('block', $this->getBlockID() . ':' . $c->getCollectionID() . ':' . $a->getAreaHandle());
+			}
 		}
 		
 		function updateBlockInformation($data) {
