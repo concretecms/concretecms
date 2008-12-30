@@ -238,9 +238,9 @@ if (is_object($uo)) {
 			<td class="subheader"><?=t('User Avatar')?></td>
 		</tr>	
 		<tr>
-			<td><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?><?=$uo->getUserName()?><? } else { ?><input type="text" name="uName" autocomplete="off" value="<?=$uName?>" style="width: 100%"><? } ?></td>
-			<td><input type="text" name="uEmail" autocomplete="off" value="<?=$uEmail?>" style="width: 100%"></td>
-			<td><input type="file" name="uAvatar" style="width: 100%" /> <input type="hidden" name="uHasAvatar" value="<?=$uo->hasAvatar()?>" />
+			<td><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?><?=$uo->getUserName()?><? } else { ?><input type="text" name="uName" autocomplete="off" value="<?=$uName?>" style="width: 94%"><? } ?></td>
+			<td><input type="text" name="uEmail" autocomplete="off" value="<?=$uEmail?>" style="width: 94%"></td>
+			<td><input type="file" name="uAvatar" style="width: 94%" /> <input type="hidden" name="uHasAvatar" value="<?=$uo->hasAvatar()?>" />
 			
 			<? if ($uo->hasAvatar()) { ?>
 			<input type="button" onclick="location.href='<?=$this->url('/dashboard/users/search?uID=' . $uID . '&task=remove-avatar')?>'" value="<?=t('Remove Avatar')?>" />
@@ -255,8 +255,8 @@ if (is_object($uo)) {
 			<td class="subheader" colspan="2"><?=t('Password (Confirm)')?></td>
 		</tr>	
 		<tr>
-			<td><input type="password" name="uPassword" autocomplete="off" value="" style="width: 100%"></td>
-			<td><input type="password" name="uPasswordConfirm" autocomplete="off" value="" style="width: 100%"></td>
+			<td><input type="password" name="uPassword" autocomplete="off" value="" style="width: 94%"></td>
+			<td><input type="password" name="uPasswordConfirm" autocomplete="off" value="" style="width: 94%"></td>
 			<td><?=t('(Leave these fields blank to keep the same password)')?></td>
 		</tr>
 		<tr>

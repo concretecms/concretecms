@@ -106,16 +106,16 @@ if ($_POST['create']) {
 		<td class="subheader" width="50%"><?=t('Password')?> <span class="required">*</span></td>
 	</tr>
 	<tr>
-		<td><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) { ?><input type="text" name="uName" autocomplete="off" value="<?=$_POST['uName']?>" style="width: 100%"><? } else { ?><input type="text" name="uEmail" autocomplete="off" value="<?=$_POST['uEmail']?>" style="width: 100%"><? } ?></td>
-		<td><input type="password" autocomplete="off" name="uPassword" value="" style="width: 100%"></td>
+		<td><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) { ?><input type="text" name="uName" autocomplete="off" value="<?=$_POST['uName']?>" style="width: 95%"><? } else { ?><input type="text" name="uEmail" autocomplete="off" value="<?=$_POST['uEmail']?>" style="width: 95%"><? } ?></td>
+		<td><input type="password" autocomplete="off" name="uPassword" value="" style="width: 95%"></td>
 	</tr>
 	<tr>
 		<td class="subheader"><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?>&nbsp;<? } else { ?><?=t('Email Address')?> <span class="required">*</span><? } ?></td>
 		<td class="subheader"><?=t('User Avatar')?></td>
 	</tr>	
 	<tr>
-		<td><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?>&nbsp;<? } else { ?><input type="text" name="uEmail" autocomplete="off" value="<?=$_POST['uEmail']?>" style="width: 100%"><? } ?></td>
-		<td><input type="file" name="uAvatar" style="width: 100%"/></td>
+		<td><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?>&nbsp;<? } else { ?><input type="text" name="uEmail" autocomplete="off" value="<?=$_POST['uEmail']?>" style="width: 95%"><? } ?></td>
+		<td><input type="file" name="uAvatar" style="width: 95%"/></td>
 	</tr>
 	</table>
 	</div>
