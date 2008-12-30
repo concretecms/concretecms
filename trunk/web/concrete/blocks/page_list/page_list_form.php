@@ -24,6 +24,9 @@
 		<? } ?>
 	  </select>
 	  <? } ?>
+	  <input type="checkbox" name="displayFeaturedOnly" value="1" <? if ($displayFeaturedOnly == 1) { ?> checked <? } ?> style="vertical-align: middle" />
+	  <?=t('Featured pages only.')?>
+
 	</div>
 	<div class="ccm-block-field-group">
 	  <h2><?=t('Location in Website')?></h2>

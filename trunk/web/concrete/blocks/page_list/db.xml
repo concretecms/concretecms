@@ -35,6 +35,9 @@
 		<field name="truncateSummaries" type="I">
 			<default value="0"/>
 		</field>
+		<field name="displayFeaturedOnly" type="I">
+			<default value="0"/>
+		</field>
 		<field name="truncateChars" type="I">
 			<default value="128"/>
 		</field>		
