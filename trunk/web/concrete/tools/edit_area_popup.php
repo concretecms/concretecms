@@ -60,7 +60,7 @@ if(ENABLE_MARKETPLACE_SUPPORT){
 	<? if (count($marketplaceBlockTypes) > 0) {
 
 		foreach($marketplaceBlockTypes as $bt) { 
-			$btIcon = $ci->getBlockTypeIconURL($bt);
+			$btIcon = $bt->getRemoteIconURL();
 			?>	
 			<div class="ccm-block-type ccm-external-block-type">
 				<a class="ccm-block-type-help" href="<?=$bt->getRemoteURL()?>" target="_blank"><img src="<?=ASSETS_URL_IMAGES?>/icons/help.png" width="14" height="14" /></a>
