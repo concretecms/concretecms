@@ -1239,7 +1239,7 @@ class Page extends Collection {
 
 	function rescanCollectionPathIndividual($cID, $cPath) {
 		$db = Loader::db();
-		$q = "select CollectionVersions.cID, CollectionVersions.cvHandle, PagePaths.cID as cpcID from CollectionVersions left join PagePaths on (PagePaths.cID = CollectionVersions.cID) where CollectionVersions.cID = '{$cID}' and CollectionVersions.cvIsApproved = 1";
+		$q = "select CollectionVersions.cID, CollectionVersions.cvHandle, CollectionVersions.cvID, PagePaths.cID as cpcID from CollectionVersions left join PagePaths on (PagePaths.cID = CollectionVersions.cID) where CollectionVersions.cID = '{$cID}' and CollectionVersions.cvIsApproved = 1";
 		$r = $db->query($q);
 		if ($r) {
 			$row = $r->fetchRow();
@@ -1273,6 +1273,8 @@ class Page extends Collection {
 				$res3 = $db->execute($r3, $v3);
 				
 				if ($res3) {
+					$np = Page::getByID($cID, $row['cvID']);
+					$np->refreshCache();
 					return $newPath;
 				}
 			}

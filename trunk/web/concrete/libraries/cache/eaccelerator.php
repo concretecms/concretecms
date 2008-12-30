@@ -6,7 +6,12 @@ class Cache extends CacheTemplate {
 	 * Completely flushes the cache
 	 */
 	public function flush() {
-		eaccelerator_clear();
+		$keys = eaccelerator_list_keys();
+		foreach($keys as $k) {
+			$key = substr($k['name'], strpos($k['name'], ':') + 1);
+			eaccelerator_rm($key);
+		}
+		return true;
 	}
 	
 	/** 
