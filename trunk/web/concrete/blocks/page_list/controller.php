@@ -4,8 +4,8 @@
 	class PageListBlockController extends BlockController {
 
 		protected $btTable = 'btPageList';
-		protected $btInterfaceWidth = "430";
-		protected $btInterfaceHeight = "300";
+		protected $btInterfaceWidth = "500";
+		protected $btInterfaceHeight = "350";
 		
 		/** 
 		 * Used for localization. If we want to localize the name/description we have to include this
@@ -70,6 +70,15 @@
 
 			$cParentID = ($row['cThis']) ? $this->cID : $row['cParentID'];
 			
+			$optJoin = '';
+			if ($this->displayFeaturedOnly == 1) {
+				Loader::model('collection_attributes');
+				$ak = CollectionAttributeKey::getByHandle('is_featured');
+				if (is_object($ak)) {
+					$optJoin = 'inner join CollectionAttributeValues cavFeatured on (cavFeatured.akID = ' . $ak->getCollectionAttributeKeyID() . ' and cavFeatured.cID = CollectionVersions.cID and cavFeatured.cvID = CollectionVersions.cvID and cavFeatured.value = 1) ';
+				}
+			}
+			
 			$filter = "where Pages.cIsTemplate = 0 ";
 			$filter .= " AND  CollectionVersions.cvName!='' ";
 			
@@ -93,7 +102,7 @@
 			left join PagePaths on (Pages.cID = PagePaths.cID)
 			left join PagePermissions on (Pages.cID = PagePermissions.cID)
 			left join CollectionVersions on (CollectionVersions.cID = Pages.cID and CollectionVersions.cvIsApproved = 1)
-			{$filter} {$orderBy} ";
+			{$optJoin} {$filter} {$orderBy} ";
 
 			//echo $q;
 			
@@ -136,6 +145,7 @@
 			$args['cThis'] = ($args['cParentID'] == $this->cID) ? '1' : '0';
 			$args['cParentID'] = ($args['cParentID'] == 'OTHER') ? $args['cParentIDValue'] : $args['cParentID'];
 			$args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
+			$args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
 			$args['truncateChars'] = intval($args['truncateChars']); 
 
 			parent::save($args);
