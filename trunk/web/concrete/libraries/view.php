@@ -491,11 +491,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				// we can add header items and have them show up in the header BEFORE
 				// the block itself is actually loaded
 				if ($view instanceof Page) {
-					$cl = CacheLocal::get();
 					$blocks = $view->getBlocks();
-					
 					foreach($blocks as $b1) {
-						$cl->cache['blocks'][$b1->getAreaHandle()][] = $b1;
 						$btc = Loader::controller($b1);
 						$btc->runTask('on_page_view', $view);
 					}

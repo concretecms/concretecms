@@ -385,12 +385,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		public function getBlocks($arHandle = false) {
-			if ($arHandle != false) {
-				$cl = CacheLocal::get();
-				if (isset($cl->cache['blocks'][$arHandle])) {
-					return $cl->cache['blocks'][$arHandle];
-				}
-			}
 			
 			$db = Loader::db();
 			
