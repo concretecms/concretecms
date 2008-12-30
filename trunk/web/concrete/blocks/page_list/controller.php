@@ -70,7 +70,7 @@
 
 			$cParentID = ($row['cThis']) ? $this->cID : $row['cParentID'];
 			
-			$filter = "where Pages.cPointerExternalLink is null and Pages.cIsTemplate = 0 ";
+			$filter = "where Pages.cIsTemplate = 0 ";
 			$filter .= " AND  CollectionVersions.cvName!='' ";
 			
 			if ($row['ctID']) {
