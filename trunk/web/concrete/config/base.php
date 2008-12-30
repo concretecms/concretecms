@@ -161,7 +161,7 @@ define('FILENAME_BLOCK_DB', 'db.xml');
 if (defined('MULTI_SITE') && MULTI_SITE == 1) {
 	define('ASSETS_URL_WEB', BASE_URL);
 } else {
-	define('ASSETS_URL_WEB', BASE_URL . DIR_REL);
+	define('ASSETS_URL_WEB', DIR_REL);
 	define('MULTI_SITE', 0);
 }
 
