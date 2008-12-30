@@ -322,7 +322,7 @@ class DashboardSettingsController extends Controller {
 				$fh = Loader::helper('file');
 				if(!$fh->hasAllowedExtension($_FILES['favicon_file']['name'])){	
 					$msg = t('Invalid file extension.');
-				}else{ 
+				}else{  
 					$bt = BlockType::getByHandle('library_file');
 					$data = array();
 					$data['file'] = $_FILES['favicon_file']['tmp_name'];
@@ -331,6 +331,8 @@ class DashboardSettingsController extends Controller {
 					$fileBlock=LibraryFileBlockController::getFile( $nb->getBlockID() );
 					$fileID=$fileBlock->getFileID(); 
 					Config::save('FAVICON_FID', $fileID);
+					$filepath=$fileBlock->getFilePath();  
+					copy($filepath,DIR_BASE.'/favicon.ico');
 					$this->redirect('/dashboard/settings/', 'favicon_saved');
 				}				
 			}else{

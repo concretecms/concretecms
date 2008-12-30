@@ -101,15 +101,15 @@ class Cache extends CacheTemplate {
 	 * Completely flushes the cache
 	 */	
 	public function flush(){
-		if ($handle = opendir(DIR_FILES_CACHE_CORE) ) {
+		if ($handle = opendir(DIR_FILES_CACHE_CORE) ) {		
 			while (false !== ($file = readdir($handle))){
 				$filePath=DIR_FILES_CACHE_CORE.'/'.$file; 
-				if (!strstr($filePath,'.') && strstr($filePath,self::$filePrefix) && is_file($filePath))
+				if (!strstr($filePath,'.') && strstr($filePath,self::$filePrefix) && is_file($filePath)){ 
 					unlink($filePath); 
+				}
 			}
 			closedir($handle);		
-		}
-		
+		} 
 		return true;
 		
 		// another flush method

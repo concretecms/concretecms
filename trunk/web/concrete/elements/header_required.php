@@ -75,10 +75,10 @@ $this->addHeaderItem('<script type="text/javascript" src="' . ASSETS_URL_JAVASCR
 $this->addHeaderItem('<script type="text/javascript" src="' . ASSETS_URL_JAVASCRIPT . '/ccm.base.js"></script>');
 
 $favIconFID=intval(Config::get('FAVICON_FID'));
-if($favIconFID){
+if($favIconFID && file_exists(DIR_BASE.'/favicon.ico')){
 	Loader::block('library_file');
 	$fileBlock=LibraryFileBlockController::getFile( $favIconFID ); ?> 
-	<link REL="SHORTCUT ICON" HREF="<?=$fileBlock->getFileRelativePath() ?>" type="image/ico" />
+	<link rel="shortcut icon" href="<?=BASE_URL.DIR_REL.'/favicon.ico' ?>" />
 <? } ?>
 
 <? 
