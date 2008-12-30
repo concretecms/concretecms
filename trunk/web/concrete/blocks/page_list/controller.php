@@ -74,7 +74,7 @@
 			if ($this->displayFeaturedOnly == 1) {
 				Loader::model('collection_attributes');
 				$ak = CollectionAttributeKey::getByHandle('is_featured');
-				if (is_object($ak)) {
+				if (is_object($ak) && $ak->getCollectionAttributeKeyID() > 1) {
 					$optJoin = 'inner join CollectionAttributeValues cavFeatured on (cavFeatured.akID = ' . $ak->getCollectionAttributeKeyID() . ' and cavFeatured.cID = CollectionVersions.cID and cavFeatured.cvID = CollectionVersions.cvID and cavFeatured.value = 1) ';
 				}
 			}
