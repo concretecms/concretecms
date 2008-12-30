@@ -378,10 +378,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$vo = $this->getVersionObject();
 
 			Cache::delete('page', $this->getCollectionID());
-			Cache::delete('page', $this->getCollectionID() . ':' . $vo->getVersionID());
-
-			$v = $this->getVersionObject();
-			$v->refreshCache();
+			if (is_object($vo)) {
+				Cache::delete('page', $this->getCollectionID() . ':' . $vo->getVersionID());
+				$vo->refreshCache();
+			}
 		}
 		
 		public function getBlocks($arHandle = false) {
