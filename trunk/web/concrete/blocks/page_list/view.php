@@ -26,7 +26,6 @@
 	
 <?  } 
 	if(!$previewMode && $controller->rss) { 
-			$b = $controller->getBlockObject();
 			$btID = $b->getBlockTypeID();
 			$bt = BlockType::getByID($btID);
 			$uh = Loader::helper('concrete/urls');
