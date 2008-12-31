@@ -1,8 +1,8 @@
-body {font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; color:#666}
+body {font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; /* customize_body */ color:#666 /* customize_body */ }
 
 img {border: 0px}
-a,a:visited,a:active {color: #69ab2b}
-a:hover {color:#50AAB5} 
+a,a:visited,a:active { /* customize_link */ color: #69ab2b /* customize_link */}
+a:hover { /* customize_link_hover */ color:#50AAB5 /* customize_link_hover */ } 
 
 h1,h2,h3,h4,h5{ color:#69ab2b; margin:0px 0px 4px 0px; padding:4px 0px; margin-top:8px }
 h1{ font-size:21px; line-height:28px }

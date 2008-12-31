@@ -121,7 +121,7 @@ img {
 	text-align:justify;
 	width:542px;
 	padding:15px;
-	background-color:#f4ffd2;
+	/* customize_background */ background-color:#f4ffd2; /* customize_background */
 }
 #page #central #sidebar {
 	float:right;
@@ -218,3 +218,5 @@ div.spacer, div.ccm-spacer {
 	margin-top:0px;
 	padding-top:0px
 }
+
+/* customize_miscellaneous */ /* customize_miscellaneous */
