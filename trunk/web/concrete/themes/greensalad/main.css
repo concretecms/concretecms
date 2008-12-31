@@ -54,7 +54,7 @@ img {
 }
 #page #header #logo a {
 	/* customize_header_logo */ color: #ffffff; /* customize_header_logo */
-	/* customize_header_logo */ font: normal bold 32px Arial; /* customize_header_logo */
+	font: normal bold 32px Arial;
 	text-decoration:none;
 }
 
