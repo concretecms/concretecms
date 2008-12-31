@@ -90,12 +90,12 @@ class Cache extends CacheTemplate {
 		
 		$key = parent::key($type, $id);
 		$filePath=self::getFilePath($key);
-		if (!strstr($filePath,'.') && strstr($filePath,self::$filePrefix) && is_file($filePath)){
+		if (strstr($filePath,self::$filePrefix) && is_file($filePath)){
 			unlink($filePath);
 			$loc = CacheLocal::get();
 			unset($loc->cache[$key]);
 		}				
-	}	
+	}
 	
 	/** 
 	 * Completely flushes the cache
@@ -104,7 +104,7 @@ class Cache extends CacheTemplate {
 		if ($handle = opendir(DIR_FILES_CACHE_CORE) ) {		
 			while (false !== ($file = readdir($handle))){
 				$filePath=DIR_FILES_CACHE_CORE.'/'.$file; 
-				if (!strstr($filePath,'.') && strstr($filePath,self::$filePrefix) && is_file($filePath)){ 
+				if (!strstr($file,'.') && strstr($filePath,self::$filePrefix) && is_file($filePath)){ 
 					unlink($filePath); 
 				}
 			}
