@@ -83,7 +83,7 @@ foreach($nav as $n2) {
 			$isActive = false;
 		}
 ?>
-	<li <? if ($isActive) { ?> class="ccm-nav-active" <? } ?>><a href="<?=$nh->getLinkToCollection($n2, false, true)?>"><?=$n2->getCollectionName()?> <span><?=$n2->getCollectionDescription()?></span></a></li>
+	<li <? if ($isActive) { ?> class="ccm-nav-active" <? } ?>><a href="<?=$nh->getLinkToCollection($n2, false, true)?>"><?=t($n2->getCollectionName())?> <span><?=t($n2->getCollectionDescription())?></span></a></li>
 <? }
 
 }?>
@@ -111,7 +111,7 @@ foreach($nav as $n2) {
 	if (count($subpages) > 0) { 
 	?>	
 		<div id="ccm-dashboard-subnav">
-		<ul><? foreach($subpages as $sc) { ?><li <? if ($sc->getCollectionID() == $c->getCollectionID()) { ?> class="nav-selected" <? } ?>><a href="<?=$nh->getLinkToCollection($sc, false, true)?>"><?=$sc->getCollectionName()?></a></li><? } ?></ul>
+		<ul><? foreach($subpages as $sc) { ?><li <? if ($sc->getCollectionID() == $c->getCollectionID()) { ?> class="nav-selected" <? } ?>><a href="<?=$nh->getLinkToCollection($sc, false, true)?>"><?=t($sc->getCollectionName())?></a></li><? } ?></ul>
 		<br/><div class="ccm-spacer">&nbsp;</div>
 		</div>
 	
