@@ -15,8 +15,8 @@ if (!$_REQUEST['group_submit_search']) { ?>
 Loader::model('search/group');
 $gl = new GroupSearch($_GET);
 if ($gl->getTotal() > 0) {
-	$gResults = $gl->getResult($_GET['sort'], $_GET['start'], $_GET['order'], 40);
-	$pOptions = $gl->paging($_GET['start'], $_GET['order'], 10);
+	$gResults = $gl->getResult($_GET['sort'], $_GET['start'], $_GET['order']);
+	$pOptions = $gl->paging($_GET['start'], $_GET['order']);
 }
 
 ?>

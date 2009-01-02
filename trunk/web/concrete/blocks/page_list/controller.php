@@ -25,6 +25,7 @@
 		}
 		
 		function getPages($query = null) {
+			Loader::model('page_list');
 			$db = Loader::db();
 			$bID = $this->bID;
 			if ($this->bID) {
@@ -43,87 +44,61 @@
 			}
 			
 
+			$pl = new PageList();
+			
 			$cArray = array();
 
 			switch($row['orderBy']) {
 				case 'display_asc':
-					$orderBy = "order by Pages.cDisplayOrder asc";
+					$pl->sortByDisplayOrder();
 					break;
 				case 'display_desc':
-					$orderBy = "order by Pages.cDisplayOrder desc";
+					$pl->sortByDisplayOrderDescending();
 					break;
 				case 'chrono_asc':
-					$orderBy = "order by cvDatePublic asc";
+					$pl->sortByPublicDate();
 					break;
 				case 'alpha_asc':
-					$orderBy = "order by cvName asc";
+					$pl->sortByName();
 					break;
 				case 'alpha_desc':
-					$orderBy = "order by cvName desc";
+					$pl->sortByNameDescending();
 					break;
 				default:
-					$orderBy = "order by cvDatePublic desc";
+					$pl->sortByPublicDateDescending();
 					break;
 			}
 
 			$num = (int) $row['num'];
+			
+			if ($num > 0) {
+				$pl->setItemsPerPage($num);
+			}
 
 			$cParentID = ($row['cThis']) ? $this->cID : $row['cParentID'];
 			
-			$optJoin = '';
 			if ($this->displayFeaturedOnly == 1) {
-				Loader::model('collection_attributes');
-				$ak = CollectionAttributeKey::getByHandle('is_featured');
-				if (is_object($ak) && $ak->getCollectionAttributeKeyID() > 1) {
-					$optJoin = 'inner join CollectionAttributeValues cavFeatured on (cavFeatured.akID = ' . $ak->getCollectionAttributeKeyID() . ' and cavFeatured.cID = CollectionVersions.cID and cavFeatured.cvID = CollectionVersions.cvID and cavFeatured.value = 1) ';
-				}
+				$pl->filterByCollectionAttribute('is_featured', 1);
 			}
 			
-			$filter = "where Pages.cIsTemplate = 0 ";
-			$filter .= " AND  CollectionVersions.cvName!='' ";
-			
+			$pl->filter('cIsTemplate', 0);
+			$pl->filter('cvName', '', '!=');			
+		
 			if ($row['ctID']) {
-				$filter .= "and Pages.ctID = '{$row['ctID']}' ";
+				$pl->filterByCollectionTypeID($row['ctID']);
 			}
 
 			if ($row['cParentID'] != 0) {
-				$filter .= "and Pages.cParentID = '{$cParentID}' and Pages.cIsTemplate = 0 ";
+				$pl->filterByParentID($cParentID);
 			}
 			
-			if (($query != null) || ($query != "")) {
-				$filter .= "and ((";
-				$filter .= "CollectionVersions.cvName like '%{$query}%'";
-				$filter .= ") or (";
-				$filter .= "CollectionVersions.cvDescription like '%{$query}%'";
-				$filter .= "))";
+			if ($num > 0) {
+				$pages = $pl->getPage();
+			} else {
+				$pages = $pl->get();
 			}
-
-			$q = "select DISTINCT Pages.cID from Pages
-			left join PagePaths on (Pages.cID = PagePaths.cID)
-			left join PagePermissions on (Pages.cID = PagePermissions.cID)
-			left join CollectionVersions on (CollectionVersions.cID = Pages.cID and CollectionVersions.cvIsApproved = 1)
-			{$optJoin} {$filter} {$orderBy} ";
-
-			//echo $q;
 			
-			$r2 = $db->query($q);
-			
-			if ($r2) {
-				while ($row = $r2->fetchRow()) {
-					$nc = Page::getByID($row['cID']);
-					$nc->loadVersionObject();
-					if ($nc->isSystemPage()) {
-						continue;
-					}
-					$cArray[] = $nc;
-					if (count($cArray) == $num) {
-						break;
-					}
-				}
-				$r2->free();
-				return $cArray;
-			}
-			$r->free();
+			return $pages;
 		}
 		
 		public function view() {

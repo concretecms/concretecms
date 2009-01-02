@@ -25,6 +25,7 @@
 	Loader::library('request');
 	Loader::library('events');
 	Loader::library('model');
+	Loader::library('item_list');
 	Loader::library('view');
 	Loader::library('controller');
 	Loader::library('block_view');
