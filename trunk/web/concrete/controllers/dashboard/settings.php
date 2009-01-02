@@ -37,8 +37,8 @@ class DashboardSettingsController extends Controller {
 				case "marketplace_turned_on";
 					$this->set('message', t('Marketplace support is now enabled.'));	
 					break;
-				case "maintenance_turned_off":
-					$this->set('message', t('Maintenance support is now disabled.'));	
+				case "marketplace_turned_off":
+					$this->set('message', t('Marketplace support is now disabled.'));	
 					break;				
 				case "favicon_saved":  
 					$this->set('message', t('Bookmark icon saved.'));	
