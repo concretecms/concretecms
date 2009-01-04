@@ -71,7 +71,9 @@ if (!defined('CACHE_LIBRARY')) {
 # Currently Concrete5 does not include this capability but it will likely come back.
 define('MENU_FEEDBACK_DISPLAY', 1);
 define('MENU_FEEDBACK_URL', 'http://www.concretecms.com/tools/process_feedback.php');
-define('MENU_HELP_URL', 'http://www.concrete5.org/docs/');
+if (!defined("MENU_HELP_URL")) {
+	define('MENU_HELP_URL', 'http://www.concrete5.org/help/');
+}
 
 # Path to the core files shared between all concrete 5 installations
 define('DIR_BASE_CORE', dirname(__FILE__) . '/..');
