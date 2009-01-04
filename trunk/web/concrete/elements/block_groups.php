@@ -8,9 +8,12 @@
 	if ($b->overrideAreaPermissions()) {
 		$gl = new GroupList($b);
 		$ul = new UserInfoList($b);
-	} else {
+	} else if ($a->overrideCollectionPermissions()) {
 		$gl = new GroupList($a);
 		$ul = new UserInfoList($a);
+	} else {
+		$gl = new GroupList($c);
+		$ul = new UserInfoList($c);
 	}
 	
 	$gArray = $gl->getGroupList();
