@@ -208,6 +208,9 @@ class Area extends Object {
 			// now we scan sub areas
 			$this->rescanSubAreaPermissions();
 		}
+		
+		$ca = new Cache();
+		$a = Cache::delete('area', $this->getCollectionID() . ':' . $this->getAreaHandle());
 	}
 	
 	function rescanAreaPermissionsChain() {
@@ -476,6 +479,9 @@ class Area extends Object {
 		} else {
 			$this->rescanSubAreaPermissions();
 		}
+
+		$a = Cache::delete('area', $this->getCollectionID() . ':' . $this->getAreaHandle());
+
 	}
 }
 
