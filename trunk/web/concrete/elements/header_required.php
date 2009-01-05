@@ -73,6 +73,7 @@ $this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOL
 $this->addHeaderItem('<script type="text/javascript" src="' . ASSETS_URL_JAVASCRIPT . '/jquery1.2.6.js"></script>');
 $this->addHeaderItem('<script type="text/javascript" src="' . ASSETS_URL_JAVASCRIPT . '/swfobject2.1.js"></script>');
 $this->addHeaderItem('<script type="text/javascript" src="' . ASSETS_URL_JAVASCRIPT . '/ccm.base.js"></script>');
+$this->addHeaderItem('<style type="text/css">@import "' . ASSETS_URL_CSS . '/ccm.base.css";></style>');
 
 $favIconFID=intval(Config::get('FAVICON_FID'));
 if($favIconFID && file_exists(DIR_BASE.'/favicon.ico')){

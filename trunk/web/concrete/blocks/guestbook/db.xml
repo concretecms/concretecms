@@ -14,6 +14,9 @@
 		<field name="displayGuestBookForm" type="i">
 			<default value="1"/>
 		</field>
+		<field name="displayCaptcha" type="i">
+			<default value="1"/>
+		</field>
 		<field name="authenticationRequired" type="i">
 			<default value="0"/>
 		</field>
