@@ -16,6 +16,10 @@
 <input type="radio" name="authenticationRequired" value="0" checked /> <?=t('Email Only')?><br />
 <input type="radio" name="authenticationRequired" value="1" /> <?=t('Users must login to C5')?><br /><br />
 
+<?=t('Show captcha?')?><br/>
+<input type="radio" name="displayCaptcha" value="1" checked="checked" /> <?php echo t('Yes')?><br />
+<input type="radio" name="displayCaptcha" value="0" /> <?php echo t('No')?><br /><br />
+
 <?=t('Alert Email Address when Comment Posted')?><br/>
 <input name="notifyEmail" type="text" value="<?=$notifyEmail?>" size="30" /><br /><br />
 

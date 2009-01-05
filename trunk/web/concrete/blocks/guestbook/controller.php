@@ -95,13 +95,21 @@
 					$errors['notLogged'] = '- '.t("Your session has expired.  Please log back in."); 
 			}elseif(!$this->authenticationRequired){		
 				if(!$v->email($_POST['email'])) {
-					$errors['email'] = '- '.t("invalid email address");
+					$errors['email'] = '- '.t("Invalid Email Address");
 				}
 				if(!$v->notempty($_POST['name'])) {
-					$errors['name'] = '- '.t("name is required");
+					$errors['name'] = '- '.t("Name is required");
 				}
 			}
 			
+			// check captcha if activated
+			if ($this->displayCaptcha) {
+			   $captcha = Loader::helper('validation/captcha');
+			   if (!$captcha->check()) {
+			      $errors['captcha'] = '- '.t("Incorrect captcha code");
+			   }
+			}
+
 			if(!$v->notempty($_POST['commentText'])) {
 				$errors['commentText'] = '- '.t("a comment is required");
 			}

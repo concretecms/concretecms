@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
-<style>
+<? global $c; ?><style>
 
 h4.guestBook-title {
 	border-bottom:1px solid #666666;
@@ -89,7 +89,7 @@ foreach($posts as $p) { ?>
 <? if($controller->displayGuestBookForm) { ?>
 	<?	
 	if( $controller->authenticationRequired && !$u->isLoggedIn() ){ ?>
-		<div><?=t('You must be logged in to leave a reply.')?> <a href="<?=View::url("/login","forward",$controller->pobj->getBlockCollectionID())?>"><?=t('Login')?> &raquo;</a></div>
+		<div><?=t('You must be logged in to leave a reply.')?> <a href="<?=View::url("/login","forward",$c->getCollectionID())?>"><?=t('Login')?> &raquo;</a></div>
 	<? }else{ ?>	
 		<a name="guestBookForm-<?=$controller->bID?>"></a>
 		<div id="guestBook-formBlock-<?=$controller->bID?>" class="guestBook-formBlock">
@@ -108,6 +108,21 @@ foreach($posts as $p) { ?>
 			
 			<?=(isset($errors['commentText'])?"<br /><span class=\"error\">".$errors['commentText']."</span>":"")?>
 			<textarea name="commentText"><?=$Entry->commentText ?></textarea><br />
+			<?
+			if($controller->displayCaptcha) {
+				
+				echo(t('Please type the letters and numbers shown in the image.'));			   
+				
+				$captcha = Loader::helper('validation/captcha');				
+				$captcha->display();
+				print '<br/>';
+				$captcha->showInput();		
+
+				echo isset($errors['captcha'])?'<span class="error">' . $errors['captcha'] . '</span>':'';
+				
+			}
+			?>
+			<br/><br/>
 			<input type="submit" name="Post Comment" value="<?=t('Post Comment')?>" class="button"/>
 			</form>
 		</div>
