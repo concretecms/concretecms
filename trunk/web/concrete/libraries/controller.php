@@ -27,7 +27,7 @@ class Controller {
 	// sets is an array of items set by the set() method. Whew.
 	private $sets = array();
 	private $helperObjects = array();
-	private $theme = null;
+	public $theme = null;
 	private $c; // collection
 
 	

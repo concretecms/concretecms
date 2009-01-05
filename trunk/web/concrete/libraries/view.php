@@ -581,7 +581,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				// obtain theme information for this collection
 				if (isset($this->themeOverride)) {
 					$theme = $this->themeOverride;
-				} else if (isset($this->controller->theme)) {
+				} else if ($this->controller->theme != false) {
 					$theme = $this->controller->theme;
 				} else if (($tmpTheme = $this->getThemeFromPath($viewPath)) != false) {
 					$theme = $tmpTheme;
