@@ -41,7 +41,11 @@ class PaginationHelper {
 		if($page_num>0) $page_num--;
 		$this->current_page=$page_num;
 		$this->result_count=intval($num_results);
-		$this->URL=$URL;						
+		if ($URL == false || $URL == '') {
+			$this->URL = $this->getBaseURL();
+		} else {
+			$this->URL=$URL;
+		}
 		$this->page_size=intval($size); 
 		//calulate the number of pages
 		if ($this->page_size==0) $this->page_size=1;
@@ -50,6 +54,17 @@ class PaginationHelper {
 		$this->result_offset=($this->current_page)*$this->page_size;
 		$this->recalc($num_results);
 		if($jsFunctionCall) $this->jsFunctionCall=$jsFunctionCall;
+	}
+	
+	private function getBaseURL() {
+		$base=$_SERVER['REQUEST_URI'];
+		if (strpos($base, '?') === false) {
+			$base .= '?';
+		} else {
+			$base .= '&';
+		}
+		$base .= 'p=%pageNum%';
+		return $base;
 	}
 	
 	function recalc($num_results){
@@ -77,7 +92,7 @@ class PaginationHelper {
 	}
 	
 	function getCurrentURL(){
-		return str_replace("%pageNum%",$this->current_page, $this->URL);; 
+		return str_replace("%pageNum%",$this->current_page, $this->URL);
 	}
 	
 	function getCurrentPage() {

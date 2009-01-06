@@ -67,11 +67,16 @@ if ($_GET['created']) {
 if (!$editMode) {
 
 Loader::model('search/group');
-$gl = new GroupSearch($_GET);
-if ($gl->getTotal() > 0) {
-	$gResults = $gl->getResult($_GET['sort'], $_GET['start'], $_GET['order']);
-	$pOptions = $gl->paging($_GET['start'], $_GET['order']);
+$gl = new GroupSearch();
+if (isset($_GET['gKeywords'])) {
+	$gl->filterByKeywords($_GET['gKeywords']);
 }
+
+if ($gl->getTotal() > 0) {
+	$gResults = $gl->getPage($_REQUEST['p']);
+}
+$paginator = Loader::helper('pagination');	
+$paginator->init($_REQUEST['p'], $gl->getTotal(), false, 20);	
 
 ?>
 
@@ -87,11 +92,10 @@ if ($gl->getTotal() > 0) {
 </div>
 </form>
 
-<? if ($gl->getTotal() > 0) { ?>
-
-	<? include(DIR_FILES_ELEMENTS_CORE . '/search_results_top.php'); ?>
-
-<? foreach ($gResults as $g) { ?>
+<? if ($gl->getTotal() > 0) {
+	$gl->displaySummary();
+	
+foreach ($gResults as $g) { ?>
 
 	<div class="ccm-group">
 		<a class="ccm-group-inner" href="<?=$this->url('/dashboard/users/groups?task=edit&gID=' . $g['gID'])?>" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$g['gName']?></a>
@@ -101,12 +105,15 @@ if ($gl->getTotal() > 0) {
 
 <? }
 
-if ($pOptions['needPaging']) { ?>
-	<div id="ccm-group-paging">
-	<? include(DIR_FILES_ELEMENTS_CORE . '/search_results_paging.php'); ?>
-	</div>
-<? }
 
+		if($paginator && strlen($paginator->getPages())>0){ ?>	
+		<div class="spacer"></div>
+		<div class="pagination">	
+			 <span class="pageLeft"><?=$paginator->getPrevious()?></span>
+			 <span class="pageRight"><?=$paginator->getNext()?></span>
+			 <?=$paginator->getPages()?>
+		</div>	
+		<? }
 
 } else { ?>
 
