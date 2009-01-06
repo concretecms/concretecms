@@ -159,6 +159,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				),
 				array('cID', 'cvID', 'akID'), true);
 			}
+			
+			$this->refreshCache();
 		}
 		
 		// get's an array of collection attribute objects that are attached to this collection. Does not get values
@@ -199,8 +201,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$value = implode("[|]", $_sub);
 				}
 			}
-
-		
+			$this->refreshCache();
 		}
 
 		/* area stuff */
