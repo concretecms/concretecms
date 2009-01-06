@@ -79,7 +79,8 @@ $favIconFID=intval(Config::get('FAVICON_FID'));
 if($favIconFID && file_exists(DIR_BASE.'/favicon.ico')){
 	Loader::block('library_file');
 	$fileBlock=LibraryFileBlockController::getFile( $favIconFID ); ?> 
-	<link rel="shortcut icon" href="<?=BASE_URL.DIR_REL.'/favicon.ico' ?>" />
+	<link rel="shortcut icon" href="<?=$fileBlock->getFileFullURL()?>" type="image/x-icon" />
+	<link rel="icon" href="<?=$fileBlock->getFileFullURL()?>" type="image/x-icon" />
 <? } ?>
 
 <? 
