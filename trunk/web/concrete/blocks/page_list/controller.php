@@ -91,7 +91,7 @@
 			if ($row['cParentID'] != 0) {
 				$pl->filterByParentID($cParentID);
 			}
-			
+
 			if ($num > 0) {
 				$pages = $pl->getPage();
 			} else {

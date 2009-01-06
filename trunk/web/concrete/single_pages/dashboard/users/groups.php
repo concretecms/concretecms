@@ -72,11 +72,7 @@ if (isset($_GET['gKeywords'])) {
 	$gl->filterByKeywords($_GET['gKeywords']);
 }
 
-if ($gl->getTotal() > 0) {
-	$gResults = $gl->getPage($_REQUEST['p']);
-}
-$paginator = Loader::helper('pagination');	
-$paginator->init($_REQUEST['p'], $gl->getTotal(), false, 20);	
+$gResults = $gl->getPage();
 
 ?>
 
@@ -92,7 +88,7 @@ $paginator->init($_REQUEST['p'], $gl->getTotal(), false, 20);
 </div>
 </form>
 
-<? if ($gl->getTotal() > 0) {
+<? if (count($gResults) > 0) { 
 	$gl->displaySummary();
 	
 foreach ($gResults as $g) { ?>
@@ -105,15 +101,7 @@ foreach ($gResults as $g) { ?>
 
 <? }
 
-
-		if($paginator && strlen($paginator->getPages())>0){ ?>	
-		<div class="spacer"></div>
-		<div class="pagination">	
-			 <span class="pageLeft"><?=$paginator->getPrevious()?></span>
-			 <span class="pageRight"><?=$paginator->getNext()?></span>
-			 <?=$paginator->getPages()?>
-		</div>	
-		<? }
+	$gl->displayPaging();
 
 } else { ?>
 

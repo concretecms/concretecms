@@ -126,8 +126,9 @@ class PageList extends ItemList {
 	public function get($itemsToGet = 0, $offset = 0) {
 		$pages = array();
 		$this->setBaseQuery();
+		$this->setItemsPerPage(0); // no limit
 		$this->setupCollectionAttributeFilters();
-		$r = parent::execute();
+		$r = parent::get();
 		foreach($r as $row) {
 			$nc = Page::getByID($row['cID']);
 			$nc->loadVersionObject();

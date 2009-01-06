@@ -23,5 +23,6 @@ class GroupSearch extends ItemList {
 	function __construct() {
 		$this->setQuery("select Groups.gID, Groups.gName, Groups.gDescription from Groups");
 		$this->filter('gID', REGISTERED_GROUP_ID, '>');
+		$this->sortBy('gName');
 	}
 }
