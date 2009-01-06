@@ -78,7 +78,7 @@
 			$cParentID = ($row['cThis']) ? $this->cID : $row['cParentID'];
 			
 			if ($this->displayFeaturedOnly == 1) {
-				$pl->filterByCollectionAttribute('is_featured', 1);
+				$pl->filterByIsFeatured(1);
 			}
 			
 			$pl->filter('cIsTemplate', 0);

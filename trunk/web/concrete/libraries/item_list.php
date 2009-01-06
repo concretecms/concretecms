@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class ItemList {
 
 	private $total = -1; // initial state == unknown
-	private $itemsPerPage = 20;
+	protected $itemsPerPage = 20;
 	private $currentPage = false;
 	private $start = 0;
 	private $sortBy;
@@ -74,20 +74,20 @@ class ItemList {
 		print $html;
 	}
 	
-	public function getPagination() {
+	public function getPagination($url) {
 		$pagination = Loader::helper('pagination');
 		if ($this->currentPage == false) {
 			$this->setCurrentPage();
 		}
-		$pagination->init($this->currentPage, $this->getTotal(), false, $this->itemsPerPage);
+		$pagination->init($this->currentPage, $this->getTotal(), $url, $this->itemsPerPage);
 		return $pagination;
 	}
 	
 	/** 
 	 * Gets standard HTML to display paging */
-	public function displayPaging() {
+	public function displayPaging($script = false) {
 		$summary = $this->getSummary();
-		$paginator = $this->getPagination();
+		$paginator = $this->getPagination($script);
 		if ($summary->pages > 1) {
 			print '<div class="ccm-spacer"></div>';
 			print '<div class="ccm-pagination">';

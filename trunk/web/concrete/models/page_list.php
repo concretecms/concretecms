@@ -14,6 +14,20 @@ class PageList extends ItemList {
 	private $includeSystemPages = false;
 	private $displayOnlyPermittedPages = false;
 	
+	/* magic method for filtering by page attributes. */
+	
+	public function __call($nm, $a) {
+		if (substr($nm, 0, 8) == 'filterBy') {
+			$txt = Loader::helper('text');
+			$attrib = $txt->uncamelcase(substr($nm, 8));
+			if (count($a) == 2) {
+				$this->filterByCollectionAttribute($attrib, $a[0], $a[1]);
+			} else {
+				$this->filterByCollectionAttribute($attrib, $a[0]);
+			}
+		}			
+	}
+
 	/** 
 	 * Sorts this list by display order 
 	 */
