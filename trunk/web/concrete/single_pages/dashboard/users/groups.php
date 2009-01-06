@@ -38,13 +38,20 @@ if ($_POST['add'] || $_POST['update']) {
 	if (!$valt->validate('add_or_update_group')) {
 		$error[] = $valt->getErrorMessage();
 	}
-
+	
+	$g1 = Group::getByName($gName);
+	if ($g1 instanceof Group) {
+		if ((!is_object($g)) || $g->getGroupID() != $g1->getGroupID()) {
+			$error[] = t('A group named "%s" already exists', $g1->getGroupName());
+		}
+	}
+	
 	if (count($error) == 0) {
 		if ($_POST['add']) {
-			$g = Group::add($_POST['gName'], $_POST['gDescription']);
+			$g = Group::add($gName, $_POST['gDescription']);
 			$this->controller->redirect('/dashboard/users/groups?created=1');
 		} else if (is_object($g)) {
-			$g->update($_POST['gName'], $_POST['gDescription']);
+			$g->update($gName, $_POST['gDescription']);
 			$this->controller->redirect('/dashboard/users/groups?updated=1');
 		}		
 		exit;
