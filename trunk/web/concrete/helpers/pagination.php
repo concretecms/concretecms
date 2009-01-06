@@ -31,6 +31,7 @@ class PaginationHelper {
 	var $classCurrent='currentPage';		
 	var $URL=''; //%pageNum% for page number
 	var $jsFunctionCall='';
+	var $queryStringPagingVariable = 'ccm_paging_p';
 	
 	function PaginationHelper(){
 	
@@ -57,13 +58,17 @@ class PaginationHelper {
 	}
 	
 	private function getBaseURL() {
-		$base=$_SERVER['REQUEST_URI'];
+		$base= trim($_SERVER['REQUEST_URI'], '?');
+
+		// strip out existing paging
+		$base = preg_replace('/[&|?]' . $this->queryStringPagingVariable . '=[0-9]/', '', $base);
+
 		if (strpos($base, '?') === false) {
 			$base .= '?';
 		} else {
 			$base .= '&';
 		}
-		$base .= 'p=%pageNum%';
+		$base .= $this->queryStringPagingVariable . '=%pageNum%';
 		return $base;
 	}
 	
@@ -97,6 +102,14 @@ class PaginationHelper {
 	
 	function getCurrentPage() {
 		return $this->current_page;
+	}
+	
+	function getRequestedPage() {
+		if (isset($_REQUEST[$this->queryStringPagingVariable])) {
+			return $_REQUEST[$this->queryStringPagingVariable];
+		} else {
+			return 1;
+		}
 	}
 	
 	function getTotalPages() {
