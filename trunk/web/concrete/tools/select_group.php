@@ -13,11 +13,12 @@ if (!$_REQUEST['group_submit_search']) { ?>
 
 <? 
 Loader::model('search/group');
-$gl = new GroupSearch($_GET);
-if ($gl->getTotal() > 0) {
-	$gResults = $gl->getResult($_GET['sort'], $_GET['start'], $_GET['order']);
-	$pOptions = $gl->paging($_GET['start'], $_GET['order']);
+$gl = new GroupSearch();
+if (isset($_GET['gKeywords'])) {
+	$gl->filterByKeywords($_GET['gKeywords']);
 }
+
+$gResults = $gl->getPage();
 
 ?>
 
@@ -29,9 +30,11 @@ if ($gl->getTotal() > 0) {
 </div>
 </form>
 
-<? if ($gl->getTotal() > 0) { ?>
+<? if (count($gResults) > 0) { 
 
-<? foreach ($gResults as $g) { ?>
+	$gl->displaySummary();
+
+	foreach ($gResults as $g) { ?>
 
 	<div class="ccm-group">
 		<a class="ccm-group-inner" id="g<?=$g['gID']?>" group-id="<?=$g['gID']?>" group-name="<?=$g['gName']?>" href="javascript:void(0)" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$g['gName']?></a>
@@ -39,15 +42,16 @@ if ($gl->getTotal() > 0) {
 	</div>
 
 
-<? }
+<? } ?>
 
-if ($pOptions['needPaging']) { 
-	$pOptions['script'] = REL_DIR_FILES_TOOLS_REQUIRED . '/select_group';	?>
-	<div id="ccm-group-paging">
-	<? include(DIR_FILES_ELEMENTS_CORE . '/search_results_paging.php'); ?>
-	</div>
-<? }
+<div id="ccm-group-paging">
+<?
+$url = REL_DIR_FILES_TOOLS_REQUIRED . '/select_group?gKeywords=' . $_REQUEST['gKeywords'] . '&ccm_paging_p=%pageNum%';
+$gl->displayPaging($url);
+?>
+</div>
 
+<?
 
 } else { ?>
 

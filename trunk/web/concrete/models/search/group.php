@@ -15,6 +15,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class GroupSearch extends ItemList {
 	
+	
+	protected $itemsPerPage = 10;
+	
 	public function filterByKeywords($kw) {
 		$db = Loader::db();
 		$this->filter(false, "(Groups.gName like " . $db->qstr('%' . $kw . '%') . " or Groups.gDescription like " . $db->qstr('%' . $kw . '%') . ")");
