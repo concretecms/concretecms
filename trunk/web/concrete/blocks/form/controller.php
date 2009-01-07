@@ -386,7 +386,7 @@ class MiniSurvey{
 					
 				case 'field':
 				default:
-					return '<input name="Question'.$questionData['msqID'].'" type="field" />';
+					return '<input name="Question'.$questionData['msqID'].'" type="text" />';
 			}
 		}
 		

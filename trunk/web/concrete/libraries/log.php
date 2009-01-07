@@ -71,7 +71,7 @@ class DatabaseLogEntry extends LogEntry {
 		$db->Execute("delete from adodb_logsql");
 	}
 	
-	public function getTimestamp() {return $this->created;}
+	public function getTimestamp() { return $this->created; }
 	
 	public static function getList($limit) {
 		$entries = array();
