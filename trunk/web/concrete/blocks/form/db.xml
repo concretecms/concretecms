@@ -46,6 +46,14 @@
 			<unsigned />
 			<default value="1000" />
 		</field>
+		<field name="width" type="I">
+			<unsigned />
+			<default value="50" />
+		</field>
+		<field name="height" type="I">
+			<unsigned />
+			<default value="3" />
+		</field>
 	</table>
 	
 	<table name="btFormAnswerSet">

@@ -1,4 +1,4 @@
-<?
+<?php 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 //$miniSurveyInfo['surveyName']= $bs->surveyName;
 $miniSurvey=new MiniSurvey($b);
@@ -11,10 +11,9 @@ if( strlen(trim($miniSurveyInfo['recipientEmail']))==0 )
 ?>
 
 <script>
-var thisbID=parseInt(<?=$b->getBlockID()?>); 
-var thisbtID=parseInt(<?=$b->getBlockTypeID()?>); 
+var thisbID=parseInt(<?php echo $b->getBlockID()?>); 
+var thisbtID=parseInt(<?php echo $b->getBlockTypeID()?>); 
 </script>
 
-<? include(DIR_FILES_BLOCK_TYPES_CORE.'/form/styles_include.php'); ?>
-  
-<? include(DIR_FILES_BLOCK_TYPES_CORE.'/form/form_setup_html.php'); ?>
+<?php  include('styles_include.php'); ?>
+<?php  include('form_setup_html.php'); ?>

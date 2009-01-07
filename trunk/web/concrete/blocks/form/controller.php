@@ -1,4 +1,4 @@
-<?
+<?php 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class FormBlockController extends BlockController {
 
@@ -83,8 +83,8 @@ class FormBlockController extends BlockController {
 			//duplicate questions records
 			$rs=$db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$oldQuestionSetId");
 			while( $row=$rs->fetchRow() ){
-				$v=array($newQuestionSetId,$row['question'],$row['inputType'],$row['options'],$row['position']);
-				$sql='INSERT INTO {$this->btQuestionsTablename} (questionSetId,question,inputType,options,position) VALUES (!,?,?,?,!)';
+				$v=array($newQuestionSetId,$row['question'],$row['inputType'],$row['options'],$row['position'],$row['width'],$row['height']);
+				$sql='INSERT INTO {$this->btQuestionsTablename} (questionSetId,question,inputType,options,position,width,height) VALUES (!,?,?,?,!,?,?)';
 			}
 		}
 	}
@@ -111,7 +111,16 @@ class FormBlockController extends BlockController {
 		//loop through each question and get the answers 
 		while( $row=$rs->fetchRow() ){	
 			//save each answer
-			if($row['inputType']=='text'){
+			if($row['inputType']=='checkboxlist'){
+				$answer = Array();
+				$answerLong="";
+				$keys = array_keys($_POST);
+				foreach ($keys as $key){
+					if (strpos($key, 'Question'.$row['msqID'].'_') === 0){
+						$answer[]=$txt->sanitize($_POST[$key]);
+					}
+				}
+			}else if($row['inputType']=='text'){
 				$answerLong=$txt->sanitize($_POST['Question'.$row['msqID']]);
 				$answer='';
 			}else{
@@ -181,7 +190,7 @@ class FormBlockController extends BlockController {
  *
  * @package Blocks
  * @subpackage BlockTypes
- * @author 
+ * @author Tony Trupp <tony@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  *
@@ -266,6 +275,7 @@ class MiniSurvey{
 		function addEditQuestion($values,$withOutput=1){
 			$jsonVals=array();
 			$values['options']=str_replace(array("\r","\n"),'%%',$values['options']); 
+			if(strtolower($values['inputType'])=='undefined')  $values['inputType']='field';
 			
 			//set question set id, or create a new one if none exists
 			if(intval($values['qsID'])==0) $values['qsID']=time();
@@ -277,14 +287,19 @@ class MiniSurvey{
 				$jsonVals['noRequired']=1;
 			}else{
 				if(intval($values['msqID'])>0){ 
+					$width = $height = 0;
+					if ($values['inputType'] == 'text'){
+						$width  = $this->limitRange(intval($values['width']), 20, 500);
+						$height = $this->limitRange(intval($values['height']), 1, 100); 
+					}
 					$dataValues=array(intval($values['qsID']), trim($values['question']), $values['inputType'],
-								      $values['options'], intval($values['position']), intval($values['msqID']) );			
-					$sql='UPDATE btFormQuestions SET questionSetId=?, question=?, inputType=?, options=?, position=? WHERE msqID=?';
+								      $values['options'], intval($values['position']), $width, $height, intval($values['msqID']) );			
+					$sql='UPDATE btFormQuestions SET questionSetId=?, question=?, inputType=?, options=?, position=?, width=?, height=? WHERE msqID=?';
 					$jsonVals['mode']='"Edit"';
 				}else{ 
-					$dataValues=array( intval($values['qsID']), trim($values['question']), $values['inputType'],
-								      $values['options'], 1000 );			
-					$sql='INSERT INTO btFormQuestions (questionSetId,question,inputType,options,position) VALUES (?,?,?,?,?)';
+					$dataValues=array(intval($values['qsID']), trim($values['question']), $values['inputType'],
+								     $values['options'], 1000, intval($values['width']), intval($values['height']) );			
+					$sql='INSERT INTO btFormQuestions (questionSetId,question,inputType,options,position,width,height) VALUES (?,?,?,?,?,?,?)';
 					$jsonVals['mode']='"Add"';
 				}
 				$result=$this->db->query($sql,$dataValues); 
@@ -330,43 +345,61 @@ class MiniSurvey{
 			if(!$showEdit){
 				echo '<table class="formBlockSurveyTable">';					
 				while( $questionRow=$questionsRS->fetchRow() ){	
-					echo '<tr>
-							<td valign="top" class="question">'.$questionRow['question'].'</td>
-							<td valign="top">'.$this->loadInputType($questionRow,$showEdit).'</td>';
-					echo '</tr>';
+					if ($questionRow['inputType'] == 'checkboxlist' && strpos($questionRow['options'], '%%') === false){
+						echo '<tr>
+						        <td valign="top" colspan="2" class="question">
+						          <div class="checkboxItem">
+						            <div class="checkboxPair">'.$this->loadInputType($questionRow,$showEdit).$questionRow['question'].'</div>
+						          </div>
+						        </td>
+						      </tr>';
+					} else {
+						echo '<tr>
+						        <td valign="top" class="question">'.$questionRow['question'].'</td>
+						        <td valign="top">'.$this->loadInputType($questionRow,showEdit).'</td>
+						      </tr>';
+					}
 				}			
 				echo '<tr><td>&nbsp;</td><td><input class="formBlockSubmitButton" name="Submit" type="submit" value="'.t('Submit').'" /></td></tr>';
 				echo '</table>';
 			}else{
 				echo '<div id="miniSurveyTableWrap"><div id="miniSurveyPreviewTable" class="miniSurveyTable">';					
 				while( $questionRow=$questionsRS->fetchRow() ){	 ?>
-					<div id="miniSurveyQuestionRow<?=$questionRow['msqID']?>" class="miniSurveyQuestionRow">
-						<div class="miniSurveyQuestion"><?=$questionRow['question']?></div>
-						<? /* <div class="miniSurveyResponse"><?=$this->loadInputType($questionRow,$showEdit)?></div> */ ?>
+					<div id="miniSurveyQuestionRow<?php echo $questionRow['msqID']?>" class="miniSurveyQuestionRow">
+						<div class="miniSurveyQuestion"><?php echo $questionRow['question']?></div>
+						<?php  /* <div class="miniSurveyResponse"><?php echo $this->loadInputType($questionRow,$showEdit)?></div> */ ?>
 						<div class="miniSurveyOptions">
 							<div style="float:right">
-								<a href="#" onclick="miniSurvey.moveUp(this,<?=$questionRow['msqID']?>);return false" class="moveUpLink"></a> 
-								<a href="#" onclick="miniSurvey.moveDown(this,<?=$questionRow['msqID']?>);return false" class="moveDownLink"></a>						  
+								<a href="#" onclick="miniSurvey.moveUp(this,<?php echo $questionRow['msqID']?>);return false" class="moveUpLink"></a> 
+								<a href="#" onclick="miniSurvey.moveDown(this,<?php echo $questionRow['msqID']?>);return false" class="moveDownLink"></a>						  
 							</div>						
-							<a href="#" onclick="miniSurvey.reloadQuestion(<?=$questionRow['msqID']?>);return false"><?=t('edit')?></a> &nbsp;&nbsp; 
-							<a href="#" onclick="miniSurvey.deleteQuestion(this,<?=$questionRow['msqID']?>);return false"><?=t('remove')?></a>
+							<a href="#" onclick="miniSurvey.reloadQuestion(<?php echo $questionRow['msqID']?>);return false"><?php echo t('edit')?></a> &nbsp;&nbsp; 
+							<a href="#" onclick="miniSurvey.deleteQuestion(this,<?php echo $questionRow['msqID']?>);return false"><?php echo t('remove')?></a>
 						</div>
 						<div class="miniSurveySpacer"></div>
 					</div>
-				<? }			 
+				<?php  }			 
 				echo '</div></div>';
 			}
 		}
 		
 		function loadInputType($questionData,$showEdit){
-			$options=explode('%%',$questionData['options']);				
+			$options=explode('%%',$questionData['options']);
 			switch($questionData['inputType']){			
-				case 'list': 
-					// return 'what to do with lists?'; 				
-					foreach($options as $option)
-						$html.= '<option >'.trim($option).'</option>';
-					return '<select name="Question'.$questionData['msqID'].'[]" size="4" multiple >'.$html.'</select>';							
-			
+				case 'checkboxlist': 
+					if (count($options) == 1){
+						if(strlen(trim($options[0]))==0) continue;
+						$html.= '<input name="Question'.$questionData['msqID'].'_0" type="checkbox" value="'.trim($options[0]).'" />';
+					}else{
+						$html.= '<div class="checkboxList">'."\r\n";
+						for ($i = 0; $i < count($options); $i++) {
+							if(strlen(trim($options[$i]))==0) continue;
+							$html.= '  <div class="checkboxPair"><input name="Question'.$questionData['msqID'].'_'.$i.'" type="checkbox" value="'.trim($options[$i]).'" />&nbsp;'.$options[$i].'</div>'."\r\n";
+						}
+						$html.= '</div>';
+					}
+					return $html;
+
 				case 'select':
 					if($this->frontEndMode)
 						$html.= '<option value="">----</option>';					
@@ -382,7 +415,7 @@ class MiniSurvey{
 					return $html;
 					
 				case 'text':
-					return '<textarea name="Question'.$questionData['msqID'].'" cols="50" rows="4" style="width:95%"></textarea>';
+					return '<textarea name="Question'.$questionData['msqID'].'" cols="'.$questionData['width'].'" rows="'.$questionData['height'].'" style="width:95%"></textarea>';
 					
 				case 'field':
 				default:
@@ -406,5 +439,11 @@ class MiniSurvey{
 				$positionNum++;
 			}
 		}		
+
+		function limitRange($val, $min, $max){
+			$val = ($val < $min) ? $min : $val;
+			$val = ($val > $max) ? $max : $val;
+			return $val;
+		}
 }	
 ?>
