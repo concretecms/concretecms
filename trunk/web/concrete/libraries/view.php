@@ -44,6 +44,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		*/
 		private $themePaths = array();	
 	
+		private $areLinksDisabled = false;
+		
 		/**
 		 * editing mode is enabled or not
 		 * @access private
@@ -123,6 +125,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		public function isPreview() {
 			return $this->isPreview;
+		}
+		
+		public function disableLinks() {
+			$this->areLinksDisabled = true;
+		}
+		
+		public function enableLinks() {
+			$this->areLinksDisabled = false;
+		}
+		
+		public function areLinksDisabled() {
+			return $this->areLinksDisabled;
 		}
 		
 		/** 
