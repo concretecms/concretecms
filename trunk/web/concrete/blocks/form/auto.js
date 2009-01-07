@@ -7,12 +7,12 @@ var miniSurvey ={
 			this.answerTypesEdit=document.forms['ccm-block-form'].answerTypeEdit; 
 
 			for(var i=0;i<this.answerTypes.length;i++){
-				this.answerTypes[i].onclick=function(){miniSurvey.optionsCheck(this)}
-				this.answerTypes[i].onchange=function(){miniSurvey.optionsCheck(this)}
+				this.answerTypes[i].onclick=function(){miniSurvey.optionsCheck(this);miniSurvey.settingsCheck(this);}
+				this.answerTypes[i].onchange=function(){miniSurvey.optionsCheck(this);miniSurvey.settingsCheck(this);}
 			} 
 			for(var i=0;i<this.answerTypesEdit.length;i++){
-				this.answerTypesEdit[i].onclick=function(){miniSurvey.optionsCheck(this,'Edit')}
-				this.answerTypesEdit[i].onchange=function(){miniSurvey.optionsCheck(this,'Edit')}
+				this.answerTypesEdit[i].onclick=function(){miniSurvey.optionsCheck(this,'Edit');miniSurvey.settingsCheck(this,'Edit');}
+				this.answerTypesEdit[i].onchange=function(){miniSurvey.optionsCheck(this,'Edit');miniSurvey.settingsCheck(this,'Edit');}
 			} 			
 			$('#refreshButton').click( function(){ miniSurvey.refreshSurvey() } );
 			$('#addQuestion').click(   function(){ miniSurvey.addQuestion()   } );
@@ -47,15 +47,23 @@ var miniSurvey ={
 		},
 	optionsCheck : function(radioButton,mode){
 			if(mode!='Edit') mode='';
-			if( radioButton.value=='select' || radioButton.value=='radios' || radioButton.value=='list' ){
+			if( radioButton.value=='select' || radioButton.value=='radios' || radioButton.value=='checkboxlist'){
 				 $('#answerOptionsArea'+mode).css('display','block');
 			}else $('#answerOptionsArea'+mode).css('display','none');			
 		},
-	addQuestion : function(mode){
+	settingsCheck : function(radioButton,mode){
+			if(mode!='Edit') mode='';
+			if( radioButton.value=='text'){
+				 $('#answerSettings'+mode).css('display','block');
+			}else $('#answerSettings'+mode).css('display','none');			
+		},
+	addQuestion : function(mode){ 
 			var msqID=0;
 			if(mode!='Edit') mode='';
-			else msqID=parseInt($('#msqID').val()) 
-			var postStr='question='+encodeURIComponent($('#question'+mode).val())+'&options='+encodeURIComponent($('#answerOptions'+mode).val());
+			else msqID=parseInt($('#msqID').val())
+			var postStr='question='+escape($('#question'+mode).val())+'&options='+escape($('#answerOptions'+mode).val());
+			postStr+='&width='+escape($('#width'+mode).val());
+			postStr+='&height='+escape($('#height'+mode).val());
 			postStr+='&inputType='+$('input[@name=answerType'+mode+']:checked').val()
 			postStr+='&msqID='+msqID+'&qsID='+parseInt(this.qsID);			
 			$.ajax({ 
@@ -94,11 +102,14 @@ var miniSurvey ={
 						$('#editQuestionForm').css('display','block')
 						$('#questionEdit').val(jsonObj.question);
 						$('#answerOptionsEdit').val(jsonObj.optionVals.replace(/%%/g,"\r\n") );
+						$('#widthEdit').val(jsonObj.width);
+						$('#heightEdit').val(jsonObj.height);
 						$('#msqID').val(jsonObj.msqID);  					
 						for(var i=0;i<miniSurvey.answerTypesEdit.length;i++){							
 							if(miniSurvey.answerTypesEdit[i].value==jsonObj.inputType){
 								miniSurvey.answerTypesEdit[i].checked=true; 
 								miniSurvey.optionsCheck(miniSurvey.answerTypesEdit[i],'Edit');
+								miniSurvey.settingsCheck(miniSurvey.answerTypesEdit[i],'Edit');
 							}
 						}
 						scroll(0,165);
@@ -116,11 +127,14 @@ var miniSurvey ={
 	resetQuestion : function(){
 			$('#question').val('');
 			$('#answerOptions').val('');
-			$('#msqID').val('');    	 			
+			$('#width').val('50');
+			$('#height').val('3');
+			$('#msqID').val('');
 			for(var i=0;i<this.answerTypes.length;i++){
 				this.answerTypes[i].checked=false;
 			}
 			$('#answerOptionsArea').hide();
+			$('#answerSettings').hide();
 	},
 	
 	validate:function(){

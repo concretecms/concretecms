@@ -72,7 +72,7 @@ function toggleQuestions(qsID,trigger){
 	
 		<div style="margin-bottom:8px">
 			<div style="float:right; margin-bottom:8px">
-			<a href="<?=$this->url('/dashboard/form_results/', 'excel', '?qsid=' . $questionSet)?>"><?=t('Export to Excel')?> &raquo;</a>
+			<a href="<?=$this->url('/dashboard/reports/forms/', 'excel', '?qsid=' . $questionSet)?>"><?=t('Export to Excel')?> &raquo;</a>
 			</div>
 			
 			<? if($_REQUEST['all']!=1){ ?>
