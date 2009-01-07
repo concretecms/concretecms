@@ -17,11 +17,13 @@ $valt = Loader::helper('validation/token');
 		<td class="subheader"><?=t('Params')?></td>
 		<td class="subheader"><?=t('Page/Script')?></td>
 	</tr>
-	<? foreach($entries as $ent) { ?>
+	<? foreach($entries as $ent) { ?> 
 	<tr>
-		<td class="active"><?=date('g:i:s', strtotime($ent->getTimestamp()))?><? if (date('m-d-y') != date('m-d-y', strtotime($ent->getTimestamp()))) { ?>
-			<?=date('m/d/y', strtotime($ent->getTimestamp()))?>
-		<? } ?></td>
+		<td class="active">
+			<?=date('g:i:s', strtotime($ent->getTimestamp()))?>
+			<? if (date('m-d-y') != date('m-d-y', strtotime($ent->getTimestamp()))) { ?>
+				<?=date('m/d/y', strtotime($ent->getTimestamp()))?>
+			<? } ?></td>
 		<td><?=$ent->getQuery()?></td>
 		<td><?=$ent->getParameters()?></td>
 		<td><?=$ent->getTrace()?></td>
