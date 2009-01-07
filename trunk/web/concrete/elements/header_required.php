@@ -89,6 +89,11 @@ if (is_object($cp)) {
 	if ($this->editingEnabled()) {
 		Loader::element('page_controls_header', array('cp' => $cp, 'c' => $c));
 	}
+	
+	if ($this->areLinksDisabled()) { 
+		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_disableLinks(); })</script>');
+	}
+
 }
 
 // Finally, we output all header CSS and JavaScript

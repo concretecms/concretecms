@@ -35,9 +35,13 @@ ccm_activateSite = function() {
 	ccm_siteActivated = true;
 }
 
-
-
+// called in versions popup
+ccm_disableLinks = function() {
+	$(document.body).append('<div style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 1000"></div>');
+}
 
 if ($.browser.msie) {
 	ccm_animEffects = false;
 }
+
+

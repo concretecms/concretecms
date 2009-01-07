@@ -458,6 +458,11 @@ ccm_saveArrangement = function() {
 
 ccm_arrangeInit = function() {
 	//$(document.body).append('<img src="' + CCM_IMAGE_PATH + '/topbar_throbber.gif" width="16" height="16" id="ccm-topbar-loader" />');
+	$("a").click(function(e) {
+		ccm_hideMenus();
+		return false;	
+	});
+	
 	ccm_setupHeaderMenu();
 	$("div.ccm-area").each(function() {
 		$(this).sortable({
@@ -522,6 +527,11 @@ ccm_fadeInMenu = function(bobj, e) {
 	} else {
 		bobj.show();
 	}
+}
+
+ccm_blockWindowClose = function() {
+	jQuery.fn.dialog.closeTop();
+	ccmValidateBlockForm = function() {return true;}
 }
 
 ccm_blockFormInit = function() {

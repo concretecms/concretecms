@@ -24,6 +24,7 @@ if(!file_exists($th->getThemeDirectory()))
 	throw new Exception(t('Theme not found in %s', $th->getThemeDirectory()));
 $v->setTheme($th);
 $v->disableEditing();
+$v->disableLinks();
 $v->enablePreview();
 $v->render($c); 
 

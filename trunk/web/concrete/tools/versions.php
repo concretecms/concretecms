@@ -40,6 +40,8 @@
 			$c = Page::getByID($_GET['cID'], $_GET['cvID1']);
 			$v = View::getInstance();
 			$v->disableEditing();
+			$v->disableLinks();
+
 			$v->render($c);
 			$ret = ob_get_contents();
 			ob_end_clean();
@@ -50,6 +52,7 @@
 			$c = Page::getByID($_GET['cID'], $_GET['cvID2']);
 			$v = View::getInstance();
 			$v->disableEditing();
+			$v->disableLinks();
 			$v->render($c);
 			$ret = ob_get_contents();
 			ob_end_clean();

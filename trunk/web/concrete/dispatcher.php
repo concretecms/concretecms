@@ -148,6 +148,7 @@
 	if ($_REQUEST['ccm-disable-controls'] == true || intval($cvID) > 0) {
 		$v = View::getInstance();
 		$v->disableEditing();
+		$v->disableLinks();
 	}
 	
 	$vp = $c->loadVersionObject($cvID);
