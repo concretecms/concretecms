@@ -189,7 +189,7 @@ jQuery.fn.dialog.close = function(fnd) {
 		if (ccm_initialSiteActivated) {
 			ccm_activateSite();
 		}
-		if (!ccm_initialHeaderDeactivated) {
+		if (!ccm_initialHeaderDeactivated && typeof(ccm_initialHeaderDeactivated) == 'function') {
 			ccm_activateHeader();
 		}
 	} else {

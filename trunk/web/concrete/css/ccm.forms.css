@@ -144,9 +144,6 @@ table.ccm-grid-list th {padding: 4px; border-top: 1px solid #aaa; border-left: 1
 table.ccm-grid-list th a {color: #000}
 table.ccm-grid-list th.full {width: 100%}
 
-div.ccm-error {font-weight: bold; color: #f00}
-
-
 /* user/group selector */
 div.ccm-group a.ccm-group-inner {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
 div.ccm-group {position: relative; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px}
