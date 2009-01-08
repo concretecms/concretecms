@@ -31,10 +31,12 @@ class Page extends Collection {
 		$where = "where Pages.cID = ?";
 		$c = new Page;
 		$c->populatePage($cID, $where, $version);
-		if ($version > 0) {
-			$ca->set('page', $c->getCollectionID() . ':' . $version, $c);
-		} else {
-			$ca->set('page', $c->getCollectionID(), $c);
+		if ($c->cPointerID < 1) {
+			if ($version > 0) {
+				$ca->set('page', $c->getCollectionID() . ':' . $version, $c);
+			} else {
+				$ca->set('page', $c->getCollectionID(), $c);
+			}
 		}
 		return $c;
 	}
@@ -371,6 +373,8 @@ class Page extends Collection {
 			$v2 = array($newCID, $cPath . '/' . $handle);
 			$db->query($q2, $v2);
 		}
+		
+		$c->refreshCache();
 
 		return $newCID;
 	}

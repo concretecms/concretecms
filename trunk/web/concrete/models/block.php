@@ -44,6 +44,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 
 			$b->cID = $c->getCollectionID();
+			$b->c = $c;
 			
 			return $b;
 		}
@@ -52,6 +53,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if ($c == null && $a == null) {
 				$cID = 0;
 				$arHandle = "";
+				$cvID = 0;
 			} else {
 				if (is_object($a)) {
 					$arHandle = $a->getAreaHandle();
@@ -60,14 +62,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$a = Area::getOrCreate($c, $a);
 				}
 				$cID = $c->getCollectionID();
+				$cvID = $c->getVersionID();
 			}
 
 			$ca = new Cache();
-			$b = $ca->get('block', $bID . ':' . $cID . ':' . $arHandle);
+			$b = $ca->get('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle);
 			if ($b instanceof Block) {
 				return $b;
 			}
-
 			$db = Loader::db();
 
 			$b = new Block;
@@ -81,6 +83,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$b->arHandle = $arHandle;
 				$b->a = $a;
 				$b->cID = $cID;
+				$b->c = ($c) ? $c : '';
 
 				$vo = $c->getVersionObject();
 				$cvID = $vo->getVersionID();
@@ -105,7 +108,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 				if ($c != null || $a != null) {
 					$ca = new Cache();
-					$ca->set('block', $bID . ':' . $cID . ':' . $arHandle, $b);
+					$ca->set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
 				}
 				return $b;				
 
@@ -157,7 +160,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 
 		function loadNewCollection(&$c) {
-			$this->cID = $c->getCollectionID();
+			$this->c = $c;
 		}
 
 		function setBlockAreaObject(&$a) {
@@ -392,8 +395,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 
 		function getBlockCollectionObject() {
-			if ($this->cID) {
-				return Page::getByID($this->cID);
+			if (is_object($this->c)) {
+				return $this->c;
 			} else {
 				return $this->getOriginalCollection();
 			}
@@ -533,7 +536,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			//then, we see whether or not this block is aliased to anything else
 			$q = "select count(*) as total from CollectionVersionBlocks where bID = '$bID'";
 			$totalBlocks = $db->getOne($q);
-			
 			if ($totalBlocks < 1) {
 				$q = "delete from BlockRelations where originalBID = ? or bID = ?";
 				$r = $db->query($q, array($this->bID, $this->bID));

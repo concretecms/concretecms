@@ -92,6 +92,10 @@ class PageStatistics {
 		$cParentID = $db->GetOne("select cParentID from Pages where cID = ?", array($cID));
 
 		$q = "update Pages set cChildren = cChildren+1 where cID = ?";
+
+		$cpc = Page::getByID($cParentID);
+		$cpc->refreshCache();
+
 		$r = $db->query($q, array($cParentID));
 
 	}
@@ -104,6 +108,10 @@ class PageStatistics {
 		$cParentID = $db->GetOne("select cParentID from Pages where cID = ?", array($cID));
 
 		$q = "update Pages set cChildren = cChildren - 1 where cID = ?";
+		
+		$cpc = Page::getByID($cParentID);
+		$cpc->refreshCache();
+		
 		$r = $db->query($q, array($cParentID));
 
 	}
