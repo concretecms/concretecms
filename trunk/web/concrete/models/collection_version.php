@@ -56,10 +56,16 @@
 		}
 		
 		public function refreshCache() {
-			Cache::delete('collection_version', $this->cID . ':' . $this->getVersionID());
-			Cache::delete('collection_version_id', $this->cID . ':' . $this->getVersionID());
-			Cache::delete('collection_version_id', $this->cID . ':RECENT');
-			Cache::delete('collection_version_id', $this->cID . ':ACTIVE');
+			$db = Loader::db();
+			$cID = $this->cID;
+			$cvIDs = $db->GetCol("select cvID from CollectionVersions where cID = ?", $this->cID);
+			foreach($cvIDs as $cvID) {
+				Cache::delete('page', $cID . ':' . $cvID);
+				Cache::delete('collection_version', $cID . ':' . $cvID);
+				Cache::delete('collection_version_id', $cID . ':' . $cvID);
+				Cache::delete('collection_version_id', $cID . ':RECENT');
+				Cache::delete('collection_version_id', $cID . ':ACTIVE');
+			}
 		}
 		
 		public function get(&$c, $cvID) {
