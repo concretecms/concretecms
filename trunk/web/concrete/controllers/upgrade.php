@@ -149,6 +149,8 @@ class UpgradeController extends Controller {
 		try {
 			$this->set_upgrades();
 			$this->refresh_schema();
+			$ca = new Cache();
+			$ca->flush();
 			foreach($this->upgrades as $ugh) {
 				$ugh->run();
 			}
