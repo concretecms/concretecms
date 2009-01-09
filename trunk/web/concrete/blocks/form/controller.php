@@ -354,7 +354,7 @@ class MiniSurvey{
 			return $db->getOne( 'SELECT count(*) FROM btFormAnswerSet WHERE questionSetId='.intval($qsID) );
 		}		
 		
-		function loadSurvey($qsID,$showEdit=false){
+		function loadSurvey($qsID,$showEdit=false,$bID=0){
 			//loading questions	
 			$questionsRS=self::loadQuestions($qsID);
 		
@@ -378,7 +378,7 @@ class MiniSurvey{
 						      </tr>';
 					//}
 				}			
-				$surveyBlockInfo = $this->getMiniSurveyBlockInfoByQuestionId($qsID);
+				$surveyBlockInfo = $this->getMiniSurveyBlockInfoByQuestionId($qsID,intval($bID));
 				
 				if($surveyBlockInfo['displayCaptcha']) {
 				  echo '<tr><td colspan="2">';
@@ -476,8 +476,11 @@ class MiniSurvey{
 			return $rs->fetchRow();
 		}
 		
-		function getMiniSurveyBlockInfoByQuestionId($qsID){
-			$rs=$this->db->query('SELECT * FROM btForm WHERE questionSetId='.intval($qsID).' LIMIT 1' );
+		function getMiniSurveyBlockInfoByQuestionId($qsID,$bID=0){
+			$sql='SELECT * FROM btForm WHERE questionSetId='.intval($qsID);
+			if(intval($bID)>0) $sql.=' AND bID='.$bID;
+			$sql.=' LIMIT 1'; 
+			$rs=$this->db->query( $sql );
 			return $rs->fetchRow();
 		}		
 		

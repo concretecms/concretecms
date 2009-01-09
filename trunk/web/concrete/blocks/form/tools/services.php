@@ -46,7 +46,7 @@ switch ($_GET['mode']){
 	case 'refreshSurvey':
 	default: 
 		$showEdit=(intval($_REQUEST['showEdit'])==1)?true:false; 
-		$miniSurvey->loadSurvey( intval($_GET['qsID']),$showEdit ); 
+		$miniSurvey->loadSurvey( intval($_GET['qsID']), $showEdit, intval($_GET['bID']) ); 
 }
 
 ?>

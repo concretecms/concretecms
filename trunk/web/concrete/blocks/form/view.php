@@ -12,6 +12,7 @@ $miniSurvey->frontEndMode=true;
 .miniSurveyView table.formBlockSurveyTable td{ padding-bottom:4px }
 .miniSurveyView td.question {padding-right: 12px}
 .miniSurveyView #msg .error{padding-left:16px; color:#cc0000}
+.miniSurveyView table.formBlockSurveyTable td img.ccm-captcha-image{float:none}
 </style>
 
 <form id="miniSurveyView<?php echo intval($survey->questionSetId)?>" class="miniSurveyView" method="post" action="<?php echo $this->action('submit_form')?>">
@@ -29,5 +30,5 @@ $miniSurvey->frontEndMode=true;
 	<? } ?>
 	<input name="qsID" type="hidden" value="<?php echo intval($survey->questionSetId)?>" />
 	<input name="pURI" type="hidden" value="<?php echo ($_REQUEST['pURI'])?$_REQUEST['pURI']:str_replace(array('&ccm_token='.$_REQUEST['ccm_token'],'&btask=passthru','&method=submit_form'),'',$_SERVER['REQUEST_URI'])?>" />
-	<?php  $miniSurvey->loadSurvey( $survey->questionSetId ); ?>
+	<?php  $miniSurvey->loadSurvey( $survey->questionSetId, 0, intval($bID) ); ?>
 </form>
