@@ -81,7 +81,6 @@
 				$pl->filterByIsFeatured(1);
 			}
 			
-			$pl->filter('cIsTemplate', 0);
 			$pl->filter('cvName', '', '!=');			
 		
 			if ($row['ctID']) {

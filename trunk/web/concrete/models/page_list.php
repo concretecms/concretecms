@@ -32,7 +32,7 @@ class PageList extends ItemList {
 	 * Sorts this list by display order 
 	 */
 	public function sortByDisplayOrder() {
-		parent::sortBy('cDisplayOrder', 'asc');
+		parent::sortBy('p1.cDisplayOrder', 'asc');
 	}
 	
 	/** 
@@ -75,7 +75,7 @@ class PageList extends ItemList {
 	 * @param mixed $cParentID
 	 */
 	public function filterByParentID($cParentID) {
-		$this->filter('Pages.cParentID', $cParentID);
+		$this->filter('p1.cParentID', $cParentID);
 	}
 	
 	/** 
@@ -83,7 +83,7 @@ class PageList extends ItemList {
 	 * @param mixed $ctID
 	 */
 	public function filterByCollectionTypeID($ctID) {
-		$this->filter('Pages.ctID', $ctID);
+		$this->filter(false, "(p1.ctID = $ctID or p2.ctID = $ctID)");
 	}
 
 	/** 
@@ -91,7 +91,8 @@ class PageList extends ItemList {
 	 * @param mixed $ctID
 	 */
 	public function filterByCollectionTypeHandle($ctHandle) {
-		$this->filter('PageTypes.ctHandle', $ctHandle);
+		$db = Loader::db();
+		$this->filter(false, "(pt1.ctHandle = " . $db->quote($ctHandle) . " or pt2.ctHandle = " . $db->quote($ctHandle) . ")");
 	}
 
 	/** 
@@ -120,7 +121,7 @@ class PageList extends ItemList {
 	}
 	
 	protected function setBaseQuery() {
-		$this->setQuery('select Pages.cID from Pages inner join PageTypes on (PageTypes.ctID = Pages.ctID) inner join CollectionVersions cv on (cv.cID = Pages.cID and cv.cvIsApproved = 1)');
+		$this->setQuery('select p1.cID, if(p2.cID is null, pt1.ctHandle, pt2.ctHandle) as ctHandle from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PageTypes pt1 on (pt1.ctID = p1.ctID) left join PageTypes pt2 on (pt2.ctID = p2.ctID) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID))');
 	}
 	
 	protected function setupCollectionAttributeFilters() {
@@ -128,7 +129,7 @@ class PageList extends ItemList {
 		foreach($this->collectionAttributeFilters as $caf) {
 			$akID = $db->GetOne("select akID from CollectionAttributeKeys where akHandle = ?", array($caf[0]));
 			$tbl = "cav_{$akID}";
-			$this->addToQuery("left join CollectionAttributeValues $tbl on Pages.cID = {$tbl}.cID and cv.cvID = {$tbl}.cvID");
+			$this->addToQuery("left join CollectionAttributeValues $tbl on {$tbl}.cID = if(p2.cID is null, p1.cID, p2.cID) and cv.cvID = {$tbl}.cvID");
 			$this->filter($tbl . '.value', $caf[1], $caf[2]);
 			$this->filter($tbl . '.akID', $akID);
 		}
@@ -140,6 +141,8 @@ class PageList extends ItemList {
 	public function get($itemsToGet = 0, $offset = 0) {
 		$pages = array();
 		$this->setBaseQuery();
+		$this->filter('cvIsApproved', 1);
+		$this->filter(false, "(p1.cIsTemplate = 0 or p2.cIsTemplate = 0)");
 		$this->setItemsPerPage(0); // no limit
 		$this->setupCollectionAttributeFilters();
 		$r = parent::get();
