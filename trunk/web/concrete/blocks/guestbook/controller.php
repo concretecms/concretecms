@@ -114,7 +114,7 @@
 				$errors['commentText'] = '- '.t("a comment is required");
 			}
 			
-			if(count($errors)) {
+			if(count($errors)){
 				$E = new GuestBookBlockEntry($this->bID);
 				$E->user_name = $_POST['name'].'';
 				$E->user_email = $_POST['email'].'';
