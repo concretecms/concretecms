@@ -49,7 +49,7 @@ $uh = Loader::helper('concrete/urls'); ?>
 	</div> 
 	
 	<div class="fieldRow">
-		<?php echo t('Show %sCAPTCHA%s to limit spam?','<a href="http://en.wikipedia.org/wiki/Captcha" target="_blank">','</a>')?>:
+		<?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', 'http://en.wikipedia.org/wiki/Captcha')?>
         <input name="displayCaptcha" value="1" <?php echo (intval($miniSurveyInfo['displayCaptcha'])>=1)?'checked="checked"':''?> type="checkbox" />
 	</div>	
 	

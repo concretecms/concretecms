@@ -33,14 +33,55 @@ class DashboardReportsFormsController extends Controller {
 		$date = date('Ymd');
 		header("Content-Disposition: inline; filename=".$fileName."_form_data_{$date}.xls"); 
 		header("Content-Title: ".$surveys[$questionSet]['surveyName']." Form Data Output - Run on {$date}");		
-
 		echo "<table>\r\n";
-		echo "\t\t<td><b>Submitted Date</b></td>\r\n";
+		$hasCBRow = false;
 		foreach($questions as $questionId=>$question){ 
-			echo "\t\t<td><b>\r\n";
+            if ($question['inputType'] == 'checkboxlist') {
+				$hasCBRow = true;
+			}
+		}
+
+		echo "<tr>";
+		echo "\t\t<td ";
+		if ($hasCBRow) {
+			echo "rowspan=\"2\" valign='bottom'";
+		}
+		echo "><b>Submitted Date</b></td>\r\n";
+		
+		foreach($questions as $questionId=>$question){ 
+            if ($question['inputType'] == 'checkboxlist')
+            {
+                $options = explode('%%', $question['options']);
+			    echo "\t\t".'<td colspan="'.count($options).'"><b>'."\r\n";
+            }
+            else
+            {
+			    echo "\t\t<td ";
+			    if ($hasCBRow) {
+			    	echo "rowspan=\"2\" valign='bottom'>";
+			    }
+			    echo "<b>\r\n";
+            }
 			echo "\t\t\t".$questions[$questionId]['question']."\r\n";
 			echo "\t\t</b></td>\r\n";			
-		}		
+		}	
+		echo "</tr>";
+
+		// checkbox row
+		if ($hasCBRow) {
+			echo "<tr>";
+			foreach($questions as $questionId=>$question){ 
+				if ($question['inputType'] == 'checkboxlist')
+				{
+					$options = explode('%%', $question['options']);
+					foreach($options as $opt) {
+						echo "<td><b>{$opt}</b></td>";
+					}
+				}
+			}
+			echo "</tr>";
+		}
+		
 		foreach($answerSets as $answerSetId=>$answerSet){ 
 			$questionNumber=0;
 			$numQuestionsToShow=2;
@@ -48,9 +89,27 @@ class DashboardReportsFormsController extends Controller {
 			echo "\t\t<td>".$answerSet['created']."</td>\r\n";
 			foreach($questions as $questionId=>$question){ 
 				$questionNumber++;
-				echo "\t\t<td>\r\n";
-				echo "\t\t\t".utf8_decode($answerSet['answers'][$questionId]['answer'].$answerSet['answers'][$questionId]['answerLong'])."\r\n";
-				echo "\t\t</td>\r\n";
+                if ($question['inputType'] == 'checkboxlist')
+                {
+                    $options = explode('%%', $question['options']);
+                    $subanswers = explode(',', $answerSet['answers'][$questionId]['answer']);
+                    for ($i = 1; $i <= count($options); $i++)
+                    {
+				        echo "\t\t<td align='center'>\r\n";
+                        if (in_array($options[$i-1], $subanswers))
+				           // echo "\t\t\t".$options[$i-1]."\r\n";
+				           echo "&#10004;";
+                        else
+				            echo "\t\t\t&nbsp;\r\n";
+				        echo "\t\t</td>\r\n";
+                    }
+                }
+                else
+                {
+				    echo "\t\t<td>\r\n";
+				    echo "\t\t\t".$answerSet['answers'][$questionId]['answer'].$answerSet['answers'][$questionId]['answerLong']."\r\n";
+				    echo "\t\t</td>\r\n";
+                }
 			}
 			echo "\t</tr>\r\n";
 		}
