@@ -137,7 +137,7 @@ class ItemList {
 			$value = $f[1];
 			// if there is NO column, then we have a free text filter that we just add on
 			if ($column == false || $column == '') {
-				$q .= 'and ' . $f[1];
+				$q .= 'and ' . $f[1] . ' ';
 			} else {
 				if (is_array($value)) {
 					switch($comp) {
