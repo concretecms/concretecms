@@ -38,7 +38,7 @@ $uh = Loader::helper('concrete/urls'); ?>
 	
 	<div class="fieldRow" style="margin-top:16px">
 		<?php echo t('Notify me by email when people submit this form')?>: 
-		<input name="notifyMeOnSubmission" type="checkbox" value="1" <?php echo (intval($miniSurveyInfo['notifyMeOnSubmission'])>=1)?'checked':''?> onchange="miniSurvey.showRecipient(this)" onclick="miniSurvey.showRecipient(this)" />
+		<input name="notifyMeOnSubmission" type="checkbox" value="1" <?php echo (intval($miniSurveyInfo['notifyMeOnSubmission'])>=1)?'checked="checked"':''?> onchange="miniSurvey.showRecipient(this)" onclick="miniSurvey.showRecipient(this)" />
 		<div id="recipientEmailWrap" class="fieldRow" style=" <?php echo (intval($miniSurveyInfo['notifyMeOnSubmission'])==0)?'display:none':''?>">
 			<div class="fieldLabel"><?php echo t('Recipient Email')?>:</div>
 			<div class="fieldValues">
@@ -47,6 +47,12 @@ $uh = Loader::helper('concrete/urls'); ?>
 			<div class="spacer"></div>
 		</div>
 	</div> 
+	
+	<div class="fieldRow">
+		<?php echo t('Show %sCAPTCHA%s to limit spam?','<a href="http://en.wikipedia.org/wiki/Captcha" target="_blank">','</a>')?>:
+        <input name="displayCaptcha" value="1" <?php echo (intval($miniSurveyInfo['displayCaptcha'])>=1)?'checked="checked"':''?> type="checkbox" />
+	</div>	
+	
 </div> 
 
 <input type="hidden" id="qsID" name="qsID" type="text" value="<?php echo intval($miniSurveyInfo['questionSetId'])?>" />
