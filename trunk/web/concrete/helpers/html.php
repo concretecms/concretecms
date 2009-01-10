@@ -20,27 +20,59 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class HtmlHelper {
 
 	/** 
-	 * Includes a CSS file in the root /css/ directory of a website. Assumes this directory exists.
+	 * Includes a CSS file. This function looks in several places. First it checks the currently active theme, then if a package is specified it checks there. Otherwise if nothing is found it
+	 * fires off a request to the relative directory CSS directory. If nothing is there, then it checks to the assets directories
 	 * @param $file
 	 * @return $str
 	 */
-	public function css($file) {
-		// This is only for one-off files. If you have special CSS files that your theme
-		// requires then they won't be used in here.
-		
-		$str = '<style type="text/css">@import "' . DIR_REL . '/' . DIRNAME_CSS . '/' . $file . '.css";</style>';
+	public function css($file, $pkgHandle = null) {
+		$v = View::getInstance();
+		// checking the theme directory for it. It's just in the root.
+		if (file_exists($v->getThemeDirectory() . '/' . $file)) {
+			$str = '<style type="text/css">@import "' . $v->getThemePath() . '/' . $file . '";</style>';
+		} else if ($pkgHandle != null) {
+			if (file_exists(DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file)) {
+				$str = '<style type="text/css">@import "' . DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file . '";</style>';
+			} else if (file_exists(DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file)) {
+				$str = '<style type="text/css">@import "' . ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file . '";</style>';
+			}
+		}
+			
+		if (!isset($str)) {
+			if (file_exists(DIR_BASE . '/' . DIRNAME_CSS . '/' . $file)) {
+				$str = '<style type="text/css">@import "' . DIR_REL . '/' . DIRNAME_CSS . '/' . $file . '";</style>';
+			} else {
+				$str = '<style type="text/css">@import "' . ASSETS_URL_CSS . '/' . $file . '";</style>';
+			}
+		}
 		return $str;
 	}
 	
 	/** 
-	 * Includes a JavaScript file in the root "/js" directory of a website. Assumes the directory exists.
-	 * @param string $file
-	 * @return string $str
+	 * Includes a JavaScript file. This function looks in several places. If a package is specified it checks there. Otherwise if nothing is found it
+	 * fires off a request to the relative directory JavaScript directory.
+	 * @param $file
+	 * @return $str
 	 */
-	public function javascript($file) {
-		$str = '<script type="text/javascript" src="' .  DIR_REL . '/' . DIRNAME_JAVASCRIPT . '/' . $file . '.js"></script>';
+	public function javascript($file, $pkgHandle = null) {
+		if ($pkgHandle != null) {
+			if (file_exists(DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
+				$str = '<script type="text/javascript" src="' . DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file . '"></script>';
+			} else if (file_exists(DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
+				$str = '<script type="text/javascript" src="' . ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file . '"></script>';
+			}
+		}
+			
+		if (!isset($str)) {
+			if (file_exists(DIR_BASE . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
+				$str = '<script type="text/javascript" src="' . DIR_REL . '/' . DIRNAME_JAVASCRIPT . '/' . $file . '"></script>';
+			} else {
+				$str = '<script type="text/javascript" src="' . ASSETS_URL_JAVASCRIPT . '/' . $file . '"></script>';
+			}
+		}
 		return $str;
 	}
+	
 	
 	/** 
 	 * Includes an image file when given a src, width and height. Optional attribs array specifies style, other properties.

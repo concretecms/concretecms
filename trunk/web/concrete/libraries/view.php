@@ -500,18 +500,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				extract($this->controller->getSets());
 				extract($this->controller->getHelperObjects());
 				
-				// Now, if we're on an actual page, we retrieve all the blocks on the page
-				// and store their view states in the local cache (for the page). That way
-				// we can add header items and have them show up in the header BEFORE
-				// the block itself is actually loaded
-				if ($view instanceof Page) {
-					$blocks = $view->getBlocks();
-					foreach($blocks as $b1) {
-						$btc = Loader::controller($b1);
-						$btc->runTask('on_page_view', $view);
-					}
-				}
-				
 				// Determine which inner item to load, load it, and stick it in $innerContent
 				$content = false;
 								
@@ -606,6 +594,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				}		
 	
 				$this->setThemeForView($theme, $themeFilename, $wrapTemplateInTheme);
+
+				// Now, if we're on an actual page, we retrieve all the blocks on the page
+				// and store their view states in the local cache (for the page). That way
+				// we can add header items and have them show up in the header BEFORE
+				// the block itself is actually loaded
+				if ($view instanceof Page) {
+					$blocks = $view->getBlocks();
+					foreach($blocks as $b1) {
+						$btc = Loader::controller($b1);
+						$btc->runTask('on_page_view', $view);
+					}
+				}
 	
 				// finally, we include the theme (which was set by setTheme and will automatically include innerContent)
 				// disconnect from our db and exit
