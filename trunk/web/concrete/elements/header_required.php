@@ -69,11 +69,14 @@ var CCM_REL = "<?=DIR_REL?>";
 </script>
 
 <?
+$html = Loader::helper('html');
 $this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
-$this->addHeaderItem('<script type="text/javascript" src="' . ASSETS_URL_JAVASCRIPT . '/jquery1.2.6.js"></script>');
-$this->addHeaderItem('<script type="text/javascript" src="' . ASSETS_URL_JAVASCRIPT . '/swfobject2.1.js"></script>');
-$this->addHeaderItem('<script type="text/javascript" src="' . ASSETS_URL_JAVASCRIPT . '/ccm.base.js"></script>');
-$this->addHeaderItem('<style type="text/css">@import "' . ASSETS_URL_CSS . '/ccm.base.css";></style>');
+
+$this->addHeaderItem($html->javascript('jquery1.2.6.js'));
+$this->addHeaderItem($html->javascript('swfobject2.1.js'));
+$this->addHeaderItem($html->javascript('ccm.base.js'));
+$this->addHeaderItem($html->javascript('ccm.dialog.js'));
+$this->addHeaderItem($html->css('ccm.base.css'));
 
 $favIconFID=intval(Config::get('FAVICON_FID'));
 if($favIconFID && file_exists(DIR_BASE.'/favicon.ico')){
