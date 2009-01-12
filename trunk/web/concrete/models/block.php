@@ -801,7 +801,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$c = $this->getBlockCollectionObject();
 			$a = $this->getBlockAreaObject();
 			if (is_object($c) && is_object($a)) { 
-				Cache::delete('block', $this->getBlockID() . ':' . $c->getCollectionID() . ':' . $a->getAreaHandle());
+				Cache::delete('block', $this->getBlockID() . ':' . $c->getCollectionID() . ':' . $c->getVersionID() . ':' . $a->getAreaHandle());
 			}
 		}
 		
