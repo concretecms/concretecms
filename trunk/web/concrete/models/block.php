@@ -292,9 +292,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 
 		function alias($c) {	
-			// The master collection "alias to all" functionality has been removed from here and will be added back into a 
-			// separate interface, utilizing separate functions to do the same stuff.
-			
+		
 			// creates an alias of the block, attached to this collection, within the CollectionVersionBlocks table
 			// additionally, this command grabs the permissions from the original record in the
 			// CollectionVersionBlocks table, and attaches them to the new one

@@ -542,7 +542,17 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						} else if (file_exists(DIR_BASE_CORE. '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php')) {
 							$content = DIR_BASE_CORE . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php';
 							$wrapTemplateInTheme = true;
-						}					
+						} else if ($view->getPackageID() > 0) {
+							$file1 = DIR_PACKAGES . '/' . $view->getPackageHandle() . '/'. DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php';
+							$file2 = DIR_PACKAGES_CORE . '/' . $view->getPackageHandle() . '/'. DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php';
+							if (file_exists($file1)) {
+								$content = $file1;
+								$wrapTemplateInTheme = true;
+							} else if (file_exists($file2)) {
+								$content = $file2;
+								$wrapTemplateInTheme = true;
+							}
+						}
 						
 						$themeFilename = $ctHandle . '.php';
 					}

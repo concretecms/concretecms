@@ -27,8 +27,8 @@ $this->inc('elements/header.php'); ?>
         </div>
         <div id="sidebar">
 			<?
-			$as = new Area('Sidebar');
-			$as->display($c);
+			//$as = new Area('Sidebar');
+			//$as->display($c);
 			?>		
 		</div>
 		<div id="body">
