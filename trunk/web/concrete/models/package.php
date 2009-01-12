@@ -94,8 +94,15 @@ class Package extends Object {
 	public function getPackageHandle() {return $this->pkgHandle;}
 	public function getPackageDateInstalled() {return $this->pkgDateInstalled;}
 	
+	protected $appVersionRequired = '5.0.0';
+	
 	const E_PACKAGE_NOT_FOUND = 1;
 	const E_PACKAGE_INSTALLED = 2;
+	const E_PACKAGE_VERSION = 3;
+	
+	public function getApplicationVersionRequired() {
+		return $this->appVersionRequired;
+	}
 	
 	public static function installDB($xmlFile) {
 		
@@ -154,6 +161,12 @@ class Package extends Object {
 		$db = Loader::db();
 		$errors = array();
 		
+		// test minimum application version requirement
+		$pkg = Loader::package($package);
+		if (version_compare(APP_VERSION, $pkg->getApplicationVersionRequired(), '<')) {
+			$errors[] = array(E_PACKAGE_VERSION, $pkg->getApplicationVersionRequired());
+		}
+		
 		// Step 1 does that package exist ?
 		if ((!is_dir(DIR_PACKAGES . '/' . $package) && (!is_dir(DIR_PACKAGES_CORE . '/' . $package))) || $package == '') {
 			$errors[] = E_PACKAGE_NOT_FOUND;
@@ -198,7 +211,7 @@ class Package extends Object {
 	protected function install() {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
-		$v = array($this->pkgName, $this->pkgDescription, $this->pkgHandle, 1, $dh->getLocalDateTime());
+		$v = array($this->getPackageName(), $this->getPackageDescription(), $this->getPackageHandle(), 1, $dh->getLocalDateTime());
 		$db->query("insert into Packages (pkgName, pkgDescription, pkgHandle, pkgIsInstalled, pkgDateInstalled) values (?, ?, ?, ?, ?)", $v);
 		
 		$pkg = Package::getByID($db->Insert_ID());

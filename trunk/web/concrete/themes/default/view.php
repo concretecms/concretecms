@@ -3,13 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $this->inc('elements/header.php'); ?>
 
 
-	<div id="central">
-		<div id="sidebar">
-			<?
-			$as = new Area('Sidebar');
-			$as->display($c);
-			?>		
-		</div>
+	<div id="central" class="no-sidebar">
 		
 		<div id="body">	
 			<?

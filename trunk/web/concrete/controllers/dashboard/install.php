@@ -7,7 +7,8 @@ class DashboardInstallController extends Controller {
 	
 	public function __construct() {
 		$this->errorText[E_PACKAGE_INSTALLED] = t("You've already installed that package.");		
-		$this->errorText[E_PACKAGE_NOT_FOUND] = t("Invalid Package.");		
+		$this->errorText[E_PACKAGE_NOT_FOUND] = t("Invalid Package.");
+		$this->errorText[E_PACKAGE_VERSION] = t("This package requires concrete version %s or greater.");
 		$this->error = Loader::helper('validation/error');
 	}
 	
@@ -20,7 +21,13 @@ class DashboardInstallController extends Controller {
 	private function mapError($testResults) {
 		$testResultsText = array();
 		foreach($testResults as $result) {
-			$testResultsText[] = $this->errorText[$result];
+			if (is_array($result)) {
+				$et = $this->errorText[$result[0]];
+				array_shift($result);
+				$testResultsText[] = vsprintf($et, $result);
+			} else {
+				$testResultsText[] = $this->errorText[$result];
+			}
 		}
 		return $testResultsText;
 	}
