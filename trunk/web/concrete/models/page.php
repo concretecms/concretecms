@@ -1240,7 +1240,13 @@ class Page extends Collection {
 			}
 		}
 	}
-
+	
+	function updateDisplayOrder($do) {
+		$db = Loader::db();
+		$db->query("update Pages set cDisplayOrder = ? where cID = ?", array($do, $this->getCollectionID()));
+		$this->refreshCache();
+	}
+	
 	function rescanCollectionPathIndividual($cID, $cPath) {
 		$db = Loader::db();
 		$q = "select CollectionVersions.cID, CollectionVersions.cvHandle, CollectionVersions.cvID, PagePaths.cID as cpcID from CollectionVersions left join PagePaths on (PagePaths.cID = CollectionVersions.cID) where CollectionVersions.cID = '{$cID}' and CollectionVersions.cvIsApproved = 1";
