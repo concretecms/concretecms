@@ -14,6 +14,7 @@ $u = new User();
 if ($_GET['cID'] && $_GET['task'] == 'load_master') { 
 	$u->loadMasterCollectionEdit($_GET['cID'], 1);
 	header('Location: ' . BASE_URL . DIR_REL . '/index.php?cID=' . $_GET['cID'] . '&mode=edit');
+	exit;
 }
 
 $icons = CollectionType::getIcons();
