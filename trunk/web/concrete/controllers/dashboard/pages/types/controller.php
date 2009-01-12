@@ -1,7 +1,7 @@
 <?php
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
-class DashboardPagesTypesContoller extends Controller {
+class DashboardPagesTypesController extends Controller {
 
 
 public function view() {
@@ -29,7 +29,7 @@ public function delete($ctID, $token = '') {
 			
 			$db->query("DELETE FROM PageTypes WHERE ctID = ?",array($ctID));
 			$db->query("DELETE FROM PageTypeAttributes WHERE ctID = ?",array($ctID));
-			$this->redirect("/dashboard/collection_types");
+			$this->redirect("/dashboard/pages/types");
 		} else {
 			$this->set("message", t("You must delete all pages of this type before deleting this page type."));
 		}
