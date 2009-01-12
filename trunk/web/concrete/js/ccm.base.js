@@ -33,6 +33,7 @@ ccm_activateSite = function() {
 		$("#ccm-overlay").hide();
 	}
 	ccm_siteActivated = true;
+	ccm_topPaneDeactivated = false;
 }
 
 // called in versions popup
