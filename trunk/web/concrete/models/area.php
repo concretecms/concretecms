@@ -223,37 +223,39 @@ class Area extends Object {
 		}
 		// first, we obtain the inheritance of permissions for this particular collection
 		$areac = $this->getAreaCollectionObject();
-		if ($areac->getCollectionInheritance() == 'PARENT') {
-			
-			// now we go up the tree
-			
-			
-			$cIDToCheck = $areac->getCollectionParentID();
-			
-			while ($cIDToCheck > 0) {
-				$row = $db->getRow("select c.cParentID, c.cID, a.arHandle, a.arOverrideCollectionPermissions, a.arID from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?", array($cIDToCheck, $this->getAreaHandle()));
-				if ($row['arOverrideCollectionPermissions'] == 1) {
-					break;
-				} else {
-					$cIDToCheck = $row['cParentID'];
+		if (is_a($areac, 'Page')) {
+			if ($areac->getCollectionInheritance() == 'PARENT') {
+				
+				// now we go up the tree
+				
+				
+				$cIDToCheck = $areac->getCollectionParentID();
+				
+				while ($cIDToCheck > 0) {
+					$row = $db->getRow("select c.cParentID, c.cID, a.arHandle, a.arOverrideCollectionPermissions, a.arID from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?", array($cIDToCheck, $this->getAreaHandle()));
+					if ($row['arOverrideCollectionPermissions'] == 1) {
+						break;
+					} else {
+						$cIDToCheck = $row['cParentID'];
+					}
 				}
-			}
-			
-			if (is_array($row)) {
-				if ($row['arOverrideCollectionPermissions']) {
-					// then that means we have successfully found a parent area record that we can inherit from. So we set
-					// out current area to inherit from that COLLECTION ID (not area ID - from the collection ID)
-					$db->query("update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?", array($row['cID'], $this->getAreaID()));
-					$this->arInheritPermissionsFromAreaOnCID = $row['cID']; 
+				
+				if (is_array($row)) {
+					if ($row['arOverrideCollectionPermissions']) {
+						// then that means we have successfully found a parent area record that we can inherit from. So we set
+						// out current area to inherit from that COLLECTION ID (not area ID - from the collection ID)
+						$db->query("update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?", array($row['cID'], $this->getAreaID()));
+						$this->arInheritPermissionsFromAreaOnCID = $row['cID']; 
+					}
 				}
+			} else if ($areac->getCollectionInheritance() == 'TEMPLATE') {
+				 // we grab an area on the master collection (if it exists)
+				$doOverride = $db->getOne("select arOverrideCollectionPermissions from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?", array($areac->getPermissionsCollectionID(), $this->getAreaHandle()));
+				if ($doOverride) {
+					$db->query("update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?", array($areac->getPermissionsCollectionID(), $this->getAreaID()));
+					$this->arInheritPermissionsFromAreaOnCID = $areac->getPermissionsCollectionID();
+				}			
 			}
-		} else if ($areac->getCollectionInheritance() == 'TEMPLATE') {
-			 // we grab an area on the master collection (if it exists)
-			$doOverride = $db->getOne("select arOverrideCollectionPermissions from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?", array($areac->getPermissionsCollectionID(), $this->getAreaHandle()));
-			if ($doOverride) {
-				$db->query("update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?", array($areac->getPermissionsCollectionID(), $this->getAreaID()));
-				$this->arInheritPermissionsFromAreaOnCID = $areac->getPermissionsCollectionID();
-			}			
 		}
 	}
 	
