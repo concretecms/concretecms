@@ -75,7 +75,6 @@ $this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOL
 $this->addHeaderItem($html->javascript('jquery1.2.6.js'));
 $this->addHeaderItem($html->javascript('swfobject2.1.js'));
 $this->addHeaderItem($html->javascript('ccm.base.js'));
-$this->addHeaderItem($html->javascript('ccm.dialog.js'));
 $this->addHeaderItem($html->css('ccm.base.css'));
 
 $favIconFID=intval(Config::get('FAVICON_FID'));
