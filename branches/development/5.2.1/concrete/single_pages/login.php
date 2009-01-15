@@ -33,6 +33,12 @@
 	<input type="password" name="uPassword" id="uPassword" class="ccm-input-text">
 	</div>
 
+	<hr />
+	
+	<div>
+	<label for="uOpenID"><?=t('Or login using an OpenID')?>:</label><br/>
+	<input type="text" name="uOpenID" id="uOpenID" <?= (isset($uOpenID)?'value="'.$uOpenID.'"':'');?> class="ccm-input-openid">
+	</div>
 	<?=$form->checkbox('uMaintainLogin', 1)?> <label for="uMaintainLogin"><?=t('Remember Me')?></label>
 	
 	<div class="ccm-button">
