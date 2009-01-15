@@ -22,6 +22,30 @@ class ValidationIdentifierHelper {
 
 	private $letters = 'abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 	
+	
+	/** 
+	 * Like generate() below, but simply appends an ever increasing number to what you provide
+	 * until it comes back as not found
+	 */
+	public function generateFromBase($string, $table, $key) {
+		$foundRecord = false;
+		$db = Loader::db();
+		$i = ''; 
+		while ($foundRecord == false) {
+			$_string = $string . $i;
+			$cnt = $db->GetOne("select count(" . $key . ") as total from " . $table . " where " . $key . " = ?", array($_string));
+			if ($cnt < 1) {
+				$foundRecord = true;
+			} else {
+				if ($i == '') {
+					$i = 0;
+				}
+				$i++;
+			}
+		}
+		return $_string;
+	}
+	
 	/**
 	 * Generates a unique identifier for an item in a database table. Used, among other places, in generating
 	 * User hashes for email validation

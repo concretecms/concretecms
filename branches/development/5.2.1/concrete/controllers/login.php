@@ -30,25 +30,78 @@ class LoginController extends Controller {
 		}
 	}
 	
-	public function complete_openid() {
-		$oa = new OpenIDAuth();
-		$oa->setReturnURL($this->openIDReturnTo);
-		$oa->complete();
-		if ($oa->getError() == OpenIDAuth::E_CANCEL) {
-        	$this->error->add(t('OpenID Verification Cancelled'));
-        } else if ($oa->getError() == OpenIDAuth::E_FAILURE) {
-        	$this->error->add(t('OpenID Authentication Failed: %s', $oa->getErrorMessage()));
-        } else {
-        	switch($oa->getResponse()) {
-        		case OpenIDAuth::S_INCOMPLETE:
-        			break;
-        		case OpenIDAuth::S_COMPLETE:
-        			break;
-        			
-        	}
+	public function complete_openid_email() {
+		$email = $this->post('uEmail');
+		$vals = Loader::helper('validation/strings');
+		$valc = Loader::helper('concrete/validation');
+		if (!$vals->email($email)) {
+			$this->error->add(t('Invalid email address provided.'));
+		} else if (!$valc->isUniqueEmail($email)) {
+			$this->error->add(t("The email address %s is already in use. Please choose another.", $_POST['uEmail']));
+		}	
+	
+		if (!$this->error->has()) {
+			// complete the openid record with the provided email
+			if (isset($_SESSION['uOpenIDRequested'])) {
+				$oa = new OpenIDAuth();
+				$ui = $oa->registerUser($_SESSION['uOpenIDRequested'], $email);
+				User::loginByUserID($ui->getUserID());
+				$this->finishLogin();
+			}
 		}
 	}
 	
+	public function complete_openid() {
+		$v = Loader::helper('validation/numbers');
+		$oa = new OpenIDAuth();
+		$oa->setReturnURL($this->openIDReturnTo);
+		$oa->complete();
+		$response = $oa->getResponse();
+		if ($response->code == OpenIDAuth::E_CANCEL) {
+        	$this->error->add(t('OpenID Verification Cancelled'));
+        } else if ($response->code == OpenIDAuth::E_FAILURE) {
+        	$this->error->add(t('OpenID Authentication Failed: %s', $response->message));
+        } else {
+        	switch($response->code) {
+        		case OpenIDAuth::S_USER_CREATED:
+        		case OpenIDAuth::S_USER_AUTHENTICATED:
+					if ($v->integer($response->message)) {
+						User::loginByUserID($response->message);
+						$this->finishLogin();
+					}
+        			break;
+        		case OpenIDAuth::E_REGISTRATION_EMAIL_INCOMPLETE:
+        			// we don't have an email address, but the account is valid
+					// valid display identifier comes back in message
+					$_SESSION['uOpenIDRequested'] = $response->message;
+					$_SESSION['uOpenIDError'] = OpenIDAuth::E_REGISTRATION_EMAIL_INCOMPLETE;
+					break;        			
+        	}
+		}
+		$this->set('oa', $oa);
+		
+	}
+	
+	private function finishLogin() {
+		if ($this->post('uMaintainLogin')) {
+			$u->setUserForeverCookie();
+		}
+		$rcID = $this->post('rcID');
+		$nh = Loader::helper('validation/numbers');
+		if ($nh->integer($rcID)) {
+			header('Location: ' . BASE_URL . DIR_REL . '/index.php?cID=' . $rcID);
+			exit;
+		}
+
+		$dash = Page::getByPath("/dashboard", "RECENT");
+		$dbp = new Permissions($dash);
+		if ($dbp->canRead()) {
+			$this->redirect('/dashboard');
+		} else {
+			$this->redirect('/');
+		}
+	}
+
 	public function do_login() { 
 	
 		$vs = Loader::helper('validation/strings');
@@ -58,7 +111,8 @@ class LoginController extends Controller {
 				$oa = new OpenIDAuth();
 				$oa->setReturnURL($this->openIDReturnTo);
 				$return = $oa->request($this->post('uOpenID'));
-				if ($oa->isError() && $oa->getError() == OpenIDAuth::E_INVALID_OPENID) {
+				$resp = $oa->getResponse();
+				if ($resp->code == OpenIDAuth::E_INVALID_OPENID) {
 					throw new Exception(t('Invalid OpenID.'));
 				}
 			}
@@ -87,25 +141,7 @@ class LoginController extends Controller {
 				}
 			}
 
-			if ($this->post('uMaintainLogin')) {
-				$u->setUserForeverCookie();
-			}
-			
-			$rcID = $this->post('rcID');
-			$nh = Loader::helper('validation/numbers');
-			if ($nh->integer($rcID)) {
-				header('Location: ' . BASE_URL . DIR_REL . '/index.php?cID=' . $rcID);
-				exit;
-			}
-
-			$dash = Page::getByPath("/dashboard", "RECENT");
-			$dbp = new Permissions($dash);
-			if ($dbp->canRead()) {
-				$this->redirect('/dashboard');
-			} else {
-				$this->redirect('/');
-			}
-			
+			$this->finishLogin();
 			
 		} catch(Exception $e) {
 			$this->error->add($e);

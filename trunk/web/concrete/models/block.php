@@ -150,10 +150,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$dirp = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
 				$dir = $dirp . '/' . $pkgHandle . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle();
 			} else {
-				if (is_dir(DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle())) {
-					$dir = DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle();
-				} else {
+				if (is_dir(DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle())) {
 					$dir = DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle();
+				} else {
+					$dir = DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle();
 				}
 			}
 			return $dir;	
