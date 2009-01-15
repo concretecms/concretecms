@@ -33,6 +33,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		const E_CANCEL = 3;
 		const E_FAILURE = 4;
 		const E_REGISTRATION_EMAIL_INCOMPLETE = 5;	
+		const E_REGISTRATION_EMAIL_EXISTS = 6;
 	
 		/** 
 		 * Successful authentication. New user created in system. uID is the message
@@ -156,10 +157,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
     		$ui = UserInfo::add($data);
     		
     		if (is_object($ui)) {
-    			$db = Loader::db();
-    			$db->Execute('insert into UserOpenIDs (uOpenID, uID) values (?, ?)', array($openID, $ui->getUserID()));
-	    		return $ui;    		
+				$this->linkUser($openID, $ui);
+				return $ui;
     		}    		
+    	}
+    	
+    	public function linkUser($openID, $ui) {
+			$db = Loader::db();
+			$db->Execute('insert into UserOpenIDs (uOpenID, uID) values (?, ?)', array($openID, $ui->getUserID()));
     	}
     	
     	/** 
@@ -182,7 +187,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					// if so, does it belong to an existing user on the site ?
 					$ui = UserInfo::getByEmail($sreg['email']);
 					if (is_object($ui)) {
-						// A user who is NOT mapped to this open id already has this email account.
+						$this->response->code = OpenIDAuth::E_REGISTRATION_EMAIL_EXISTS;
+						$this->response->user = $ui->getUserID();
+						$this->response->openid = $openid;
 					} else {
 						// best possible case, really: we are a new user with an email address that is not mapped to 
 						// an existing account. We register the new account here, and pass back information to the calling page

@@ -51,6 +51,16 @@ class LoginController extends Controller {
 		}
 	}
 	
+	public function view() {
+		$this->clearOpenIDSession();
+	}
+	
+	private function clearOpenIDSession() {
+		unset($_SESSION['uOpenIDError']);
+		unset($_SESSION['uOpenIDRequested']);
+		unset($_SESSION['uOpenIDExistingUser']);
+	}
+	
 	public function complete_openid() {
 		$v = Loader::helper('validation/numbers');
 		$oa = new OpenIDAuth();
@@ -59,8 +69,10 @@ class LoginController extends Controller {
 		$response = $oa->getResponse();
 		if ($response->code == OpenIDAuth::E_CANCEL) {
         	$this->error->add(t('OpenID Verification Cancelled'));
+        	$this->clearOpenIDSession();
         } else if ($response->code == OpenIDAuth::E_FAILURE) {
         	$this->error->add(t('OpenID Authentication Failed: %s', $response->message));
+        	$this->clearOpenIDSession();
         } else {
         	switch($response->code) {
         		case OpenIDAuth::S_USER_CREATED:
@@ -75,11 +87,17 @@ class LoginController extends Controller {
 					// valid display identifier comes back in message
 					$_SESSION['uOpenIDRequested'] = $response->message;
 					$_SESSION['uOpenIDError'] = OpenIDAuth::E_REGISTRATION_EMAIL_INCOMPLETE;
-					break;        			
+					break; 
+				case OpenIDAuth::E_REGISTRATION_EMAIL_EXISTS:
+					// an email address came back with us from the openid server
+					// but that email already exists
+					$_SESSION['uOpenIDRequested'] = $response->openid;
+					$_SESSION['uOpenIDExistingUser'] = $response->user;
+					$_SESSION['uOpenIDError'] = OpenIDAuth::E_REGISTRATION_EMAIL_EXISTS;
+					break;
         	}
 		}
-		$this->set('oa', $oa);
-		
+		$this->set('oa', $oa);		
 	}
 	
 	private function finishLogin() {
@@ -124,7 +142,7 @@ class LoginController extends Controller {
 					throw new Exception(t('A username and password are required.'));
 				}
 			}
-
+			
 			$u = new User($this->post('uName'), $this->post('uPassword'));
 			if ($u->isError()) {
 				switch($u->getError()) {
@@ -138,6 +156,20 @@ class LoginController extends Controller {
 					case USER_INACTIVE:
 						throw new Exception(t('This user is inactive. Please contact us regarding this account.'));
 						break;
+				}
+			} else {
+				if (OpenIDAuth::isEnabled() && $_SESSION['uOpenIDExistingUser'] > 0) {
+					$oa = new OpenIDAuth();
+					if ($_SESSION['uOpenIDExistingUser'] == $u->getUserID()) {
+						// the account we logged in with is the same as the existing user from the open id. that means
+						// we link the account to open id and keep the user logged in.
+						$oa->linkUser($_SESSION['uOpenIDRequested'], $u);
+					} else {
+						// The user HAS logged in. But the account they logged into is NOT the same as the one
+						// that links to their OpenID. So we log them out and tell them so.
+						$u->logout();
+						throw new Exception(t('This account does not match the email address provided.'));
+					}
 				}
 			}
 
