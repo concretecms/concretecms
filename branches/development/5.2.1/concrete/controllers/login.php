@@ -1,10 +1,12 @@
 <?
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
+Loader::library('authentication/open_id');
+
 class LoginController extends Controller {
 	
 	public $helpers = array('form');
-	
+	private $openIDReturnTo;
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
 		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
@@ -15,6 +17,9 @@ class LoginController extends Controller {
 		if(strlen($_GET['uName'])) { // pre-populate the username if supplied
 			$this->set("uName",$_GET['uName']);
 		}
+		
+		$this->openIDReturnTo = BASE_URL . View::url("/login", "complete_openid");
+		
 	}
 	
 	/* automagically run by the controller once we're done with the current method */
@@ -25,10 +30,39 @@ class LoginController extends Controller {
 		}
 	}
 	
+	public function complete_openid() {
+		$oa = new OpenIDAuth();
+		$oa->setReturnURL($this->openIDReturnTo);
+		$oa->complete();
+		if ($oa->getError() == OpenIDAuth::E_CANCEL) {
+        	$this->error->add(t('OpenID Verification Cancelled'));
+        } else if ($oa->getError() == OpenIDAuth::E_FAILURE) {
+        	$this->error->add(t('OpenID Authentication Failed: %s', $oa->getErrorMessage()));
+        } else {
+        	switch($oa->getResponse()) {
+        		case OpenIDAuth::S_INCOMPLETE:
+        			break;
+        		case OpenIDAuth::S_COMPLETE:
+        			break;
+        			
+        	}
+		}
+	}
+	
 	public function do_login() { 
 	
 		$vs = Loader::helper('validation/strings');
 		try {
+			
+			if (OpenIDAuth::isEnabled() && $vs->notempty($this->post('uOpenID'))) {
+				$oa = new OpenIDAuth();
+				$oa->setReturnURL($this->openIDReturnTo);
+				$return = $oa->request($this->post('uOpenID'));
+				if ($oa->isError() && $oa->getError() == OpenIDAuth::E_INVALID_OPENID) {
+					throw new Exception(t('Invalid OpenID.'));
+				}
+			}
+			
 			if ((!$vs->notempty($this->post('uName'))) || (!$vs->notempty($this->post('uPassword')))) {
 				if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
 					throw new Exception(t('An email address and password are required.'));
