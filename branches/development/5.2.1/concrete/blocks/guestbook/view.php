@@ -69,7 +69,9 @@ foreach($posts as $p) { ?>
 					<?
 					if( intval($p['uID']) ){
 						$ui = UserInfo::getByID(intval($p['uID']));
-						echo $ui->getUserName();
+						if (is_object($ui)) {
+							echo $ui->getUserName();
+						}
 					}else echo $p['user_name'];
 					?>
 				</span> 

@@ -1,17 +1,40 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 
+<h1><?=t('Sign in to %s', SITE)?></h1>
+
 <? if ($validated) { ?>
 
-<h1><?=t('Email Address Verified')?></h1>
+<h2><?=t('Email Address Verified')?></h2>
 
 <p>
 <?=t('The email address <b>%s</b> has been verified and you are now a fully validated member of this website.', $uEmail)?>
 </p>
 <p><a href="<?=$this->url('/')?>"><?=t('Return to Home')?> &gt;</a></p>
 
-<? } else { ?>
+<? } else if (isset($_SESSION['uOpenIDError']) && isset($_SESSION['uOpenIDRequested'])) { ?>
 
-<h1><?=t('Sign in to %s', SITE)?></h1>
+<div class="ccm-form">
+
+<? switch($_SESSION['uOpenIDError']) {
+	case OpenIDAuth::E_REGISTRATION_EMAIL_INCOMPLETE: ?>
+
+<form method="post" action="<?=$this->url('/login', 'complete_openid_email')?>">
+	<p><?=t('To complete the signup process, you must provide a valid email address.')?></p>
+	<label for="uEmail"><?=t('Email Address')?></label><br/>
+	<?=$form->text('uEmail')?>
+		
+	<div class="ccm-button">
+	<?=$form->submit('submit', t('Sign In') . ' &gt;')?>
+	</div>
+</form>
+
+	<? break;
+	}
+?>
+
+</div>
+
+<? } else { ?>
 
 <? if (isset($intro_msg)) { ?>
 <h2><?=$intro_msg?></h2>
