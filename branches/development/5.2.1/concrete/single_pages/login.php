@@ -18,17 +18,49 @@
 <? switch($_SESSION['uOpenIDError']) {
 	case OpenIDAuth::E_REGISTRATION_EMAIL_INCOMPLETE: ?>
 
-<form method="post" action="<?=$this->url('/login', 'complete_openid_email')?>">
-	<p><?=t('To complete the signup process, you must provide a valid email address.')?></p>
-	<label for="uEmail"><?=t('Email Address')?></label><br/>
-	<?=$form->text('uEmail')?>
-		
-	<div class="ccm-button">
-	<?=$form->submit('submit', t('Sign In') . ' &gt;')?>
-	</div>
-</form>
+		<form method="post" action="<?=$this->url('/login', 'complete_openid_email')?>">
+			<p><?=t('To complete the signup process, you must provide a valid email address.')?></p>
+			<label for="uEmail"><?=t('Email Address')?></label><br/>
+			<?=$form->text('uEmail')?>
+				
+			<div class="ccm-button">
+			<?=$form->submit('submit', t('Sign In') . ' &gt;')?>
+			</div>
+		</form>
 
 	<? break;
+	case OpenIDAuth::E_REGISTRATION_EMAIL_EXISTS:
+	
+	$ui = UserInfo::getByID($_SESSION['uOpenIDExistingUser']);
+	
+	?>
+
+		<form method="post" action="<?=$this->url('/login', 'do_login')?>">
+			<p><?=t('The OpenID account returned an email address already registered on this site. To join this OpenID to the existing user account, login below:')?></p>
+			<label for="uEmail"><?=t('Email Address')?></label><br/>
+			<div><strong><?=$ui->getUserEmail()?></strong></div>
+			<br/>
+			
+			<div>
+			<label for="uName"><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?>
+				<?=t('Email Address')?>
+			<? } else { ?>
+				<?=t('Username')?>
+			<? } ?></label><br/>
+			<input type="text" name="uName" id="uName" <?= (isset($uName)?'value="'.$uName.'"':'');?> class="ccm-input-text">
+			</div>			<div>
+
+			<label for="uPassword"><?=t('Password')?></label><br/>
+			<input type="password" name="uPassword" id="uPassword" class="ccm-input-text">
+			</div>
+
+			<div class="ccm-button">
+			<?=$form->submit('submit', t('Sign In') . ' &gt;')?>
+			</div>
+		</form>
+
+	<? break;
+
 	}
 ?>
 
