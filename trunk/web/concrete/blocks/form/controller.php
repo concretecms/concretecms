@@ -447,9 +447,10 @@ class MiniSurvey{
 						$selected=(!$_REQUEST['Question'.$msqID])?'selected':'';
 						$html.= '<option value="" '.$selected.'>----</option>';					
 					}
-					foreach($options as $option)
+					foreach($options as $option){
 						$checked=($_REQUEST['Question'.$msqID]==trim($option))?'selected':'';
 						$html.= '<option '.$checked.'>'.trim($option).'</option>';
+					}
 					return '<select name="Question'.$msqID.'" >'.$html.'</select>';
 								
 				case 'radios':
