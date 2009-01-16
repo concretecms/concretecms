@@ -719,9 +719,9 @@ class Page extends Collection {
 	 * @param string $sortColumn
 	 * @return Page
 	 */
-	public function getFirstChild($sortColumn = 'cDisplayOrder') {
+	public function getFirstChild($sortColumn = 'cDisplayOrder asc') {
 		$db = Loader::db();
-		$cID = $db->GetOne("select cID from Pages where cParentID = ? order by ? asc", array($this->cID, $sortColumn));
+		$cID = $db->GetOne("select Pages.cID from Pages inner join CollectionVersions on Pages.cID = CollectionVersions.cID where cvIsApproved = 1 and cParentID = ? order by {$sortColumn}", array($this->cID));
 		if ($cID > 1) {
 			return Page::getByID($cID, "ACTIVE");
 		}
