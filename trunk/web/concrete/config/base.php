@@ -147,6 +147,7 @@ define('DIRNAME_BLOCK_TOOLS', 'tools');
 define('DIRNAME_BLOCK_TEMPLATES', 'templates');
 define('DIRNAME_CSS', 'css');
 define('DIRNAME_JAVASCRIPT', 'js');
+define('DIRNAME_IMAGES', 'images');
 
 # Blocks
 define('DIR_FILES_BLOCK_TYPES', DIR_BASE . '/blocks');

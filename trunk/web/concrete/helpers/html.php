@@ -76,21 +76,54 @@ class HtmlHelper {
 	
 	/** 
 	 * Includes an image file when given a src, width and height. Optional attribs array specifies style, other properties.
-	 * @todo Make this use getimagesize to generate ?
+	 * First checks the PATH off the root of the site
+	 * Then checks the PATH off the images directory at the root of the site.
 	 * @param string $src
 	 * @param int $width
 	 * @param int $height
 	 * @param array $attribs
 	 * @return string $html
 	 */
-	public function image($src, $width, $height, $attribs = null) {
+	public function image($src, $width = false, $height = false, $attribs = null) {
+		$image = parse_url($src);
 		$attribsStr = '';
+		
+		if (is_array($width) && $height == false) {
+			$attribs = $width;
+			$width = false;
+		}
+		
 		if (is_array($attribs)) {
 			foreach($attribs as $key => $at) {
 				$attribsStr .= " {$key}=\"{$at}\" ";
 			}
 		}
-		$str = '<img src="' . $src . '" width="' . $width . '" border="0" height="' . $height . '" ' . $attribsStr . ' />';
+		
+		if ($width == false && $height == false && (!isset($image['scheme']))) {
+			// if our file is not local we DON'T do getimagesize() on it. too slow
+			$v = View::getInstance();
+			if ($v->getThemeDirectory() != '' && file_exists($v->getThemeDirectory() . '/' . DIRNAME_IMAGES . '/' . $src)) {
+				$s = getimagesize($v->getThemeDirectory() . '/' . DIRNAME_IMAGES . '/' . $src);
+				$width = $s[0];
+				$height = $s[1];
+				$src = $v->getThemePath() . '/' . DIRNAME_IMAGES . '/' . $src;
+			} else if (file_exists(DIR_BASE . '/' . $src)) {
+				$s = getimagesize(DIR_BASE . '/' . $src);
+				$width = $s[0];
+				$height = $s[1];
+			} else if (file_exists(DIR_BASE . '/' . DIRNAME_IMAGES . '/' . $src)) {
+				$s = getimagesize(DIR_BASE . '/'  . DIRNAME_IMAGES . '/' . $src);
+				$width = $s[0];
+				$height = $s[1];
+				$src = DIR_REL . '/' . DIRNAME_IMAGES . '/' . $src;
+			}
+		}
+		
+		if ($width > 0) {
+			$str = '<img src="' . $src . '" width="' . $width . '" border="0" height="' . $height . '" ' . $attribsStr . ' />';
+		} else {
+			$str = '<img src="' . $src . '" border="0" ' . $attribsStr . ' />';
+		}
 		return $str;
 	}	
 	
