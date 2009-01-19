@@ -377,7 +377,9 @@
 				$v = array($filename, $origfilename, $type, $generictype, $bo->getBlockID());
 
 				$r = $db->query("insert into btFile (filename,origfilename, type, generictype, bID) values (?, ?, ?, ?, ?)", $v);
-
+				
+				$bf = LibraryFileBlockController::getFile($bo->getBlockID());
+				$ret = Events::fire('on_file_upload', $bf);
 			}
 		}
 		

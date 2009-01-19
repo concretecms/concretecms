@@ -126,11 +126,13 @@ class Events {
 						}
 					}
 				}
-				if (strpos($ev[3], DIR_BASE) === 0) {	
-					// then this means that our path ALREADY has DIR_BASE in it
-					require_once($ev[3]);
-				} else {
-					require_once(DIR_BASE . '/' . $ev[3]);
+				if ($ev[3] != false) {
+					if (strpos($ev[3], DIR_BASE) === 0) {	
+						// then this means that our path ALREADY has DIR_BASE in it
+						require_once($ev[3]);
+					} else {
+						require_once(DIR_BASE . '/' . $ev[3]);
+					}
 				}
 				$params = (is_array($ev[4])) ? $ev[4] : array();
 				

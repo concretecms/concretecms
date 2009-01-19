@@ -95,10 +95,19 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 
+		/** 
+		 * Function responsible for adding header items within the context of a view.
+		 * @access private
+		 */
+
 		public function addHeaderItem($item, $namespace = 'VIEW') {
 			$this->headerItems[$namespace][] = $item;
 		}
 		
+		/** 
+		 * Function responsible for outputting header items
+		 * @access private
+		 */
 		public function outputHeaderItems() {
 			$items = array();
 			if (is_array($this->headerItems['VIEW'])) {
@@ -119,22 +128,37 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 		
+		/** 
+		 * @access private
+		 */
 		public function enablePreview() {
 			$this->isPreview = true;
 		}
 		
+		/** 
+		 * @access private
+		 */
 		public function isPreview() {
 			return $this->isPreview;
 		}
 		
+		/** 
+		 * @access private
+		 */
 		public function disableLinks() {
 			$this->areLinksDisabled = true;
 		}
 		
+		/** 
+		 * @access private
+		 */
 		public function enableLinks() {
 			$this->areLinksDisabled = false;
 		}
 		
+		/** 
+		 * @access private
+		 */
 		public function areLinksDisabled() {
 			return $this->areLinksDisabled;
 		}
@@ -195,7 +219,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		/**
-		 * [need desc]
+		 * Returns the value of the item in the POST array.
 		 * @access public
 		 * @param $key
 		 * @return void
@@ -225,7 +249,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 
 		/**
-		 * includes file from the current theme path similar to php's include()
+		 * Includes file from the current theme path. Similar to php's include().
+		 * Files included with this function will have all variables set using $this->controller->set() in their local scope,
+		 * As well as access to all that controller's helper objects.
 		 * @access public
 		 * @param string $file
 		 * @param array $args
@@ -244,7 +270,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	
 		/**
 		 * editing is enabled true | false
-		 * @access public
+		 * @access private
 		 * @return boolean
 		*/		
 		public function editingEnabled() {
@@ -254,7 +280,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	
 		/**
 		 * set's editing to disabled
-		 * @access public
+		 * @access private
 		 * @return void
 		*/
 		public function disableEditing() {
@@ -264,7 +290,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 		/**
 		 * sets editing to enabled
-		 * @access public
+		 * @access private
 		 * @return void
 		*/
 		public function enableEditing() {
@@ -278,7 +304,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * This is rarely used. We want to render another view
 		 * but keep the current controller. Views should probably not
 		 * auto-grab the controller anyway but whatever
-		 * @access public
+		 * @access private
 		 * @param object $cnt
 		 * @return void
 		*/
