@@ -298,6 +298,7 @@ class Permissions extends Object {
 	function canAdminBlock() {
 		$oObj = $this->getOriginalObject();
 		$c = (is_a($oObj, 'Area')) ? $oObj->getAreaCollectionObject() : $oObj->getBlockCollectionObject();
+		$c->loadVersionObject('RECENT');		
 		$cp = new Permissions($c);
 		return $cp->canAdminPage();
 	}
