@@ -249,6 +249,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * Gets the path to a particular page type controller
 		 */
 		public function pageTypeControllerPath($ctHandle) {
+			
 			Loader::model('collection_types');
 			$ct = CollectionType::getByHandle($ctHandle);
 			$pkgHandle = $ct->getPackageHandle();
