@@ -153,9 +153,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		/** 
 		 * Loads a helper file. If the same helper file is contained in both the core concrete directory and the site's directory, it will load the site's first, which could then extend the core.
 		 */
-		public function helper($file) {
+		public function helper($file, $pkgHandle = false) {
 			// loads and instantiates the object
-			if (file_exists(DIR_HELPERS . '/' . $file . '.php')) {
+			if ($pkgHandle != false) {
+				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+				$class = Object::camelcase($file) . "Helper";
+				require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_HELPERS . '/' . $file . '.php');
+			} else if (file_exists(DIR_HELPERS . '/' . $file . '.php')) {
 				// first we check if there's an object of the SAME kind in the core. If so, then we load the core first, then, we load the second one (site)
 				// and we hope the second one EXTENDS the first
 				if (file_exists(DIR_HELPERS_CORE . '/' . $file . '.php')) {
@@ -244,10 +248,15 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		/** 
 		 * Gets the path to a particular page type controller
 		 */
-		public function pageTypeControllerPath($ctHandle, $pkgHandle = null) {
+		public function pageTypeControllerPath($ctHandle) {
+			Loader::model('collection_types');
+			$ct = CollectionType::getByHandle($ctHandle);
+			$pkgHandle = $ct->getPackageHandle();
+
 			if ($pkgHandle != '') {
 				$packageDir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
 			}
+
 			if (file_exists(DIR_FILES_CONTROLLERS . "/" . DIRNAME_PAGE_TYPES . "/{$ctHandle}.php")) {
 				$path = DIR_FILES_CONTROLLERS . "/" . DIRNAME_PAGE_TYPES . "/{$ctHandle}.php";
 			} else if (isset($packageDir) && (file_exists($packageDir . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php'))) {

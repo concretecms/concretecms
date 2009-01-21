@@ -25,10 +25,6 @@ if (!defined('REDIRECT_TO_BASE_URL')) {
 	define('REDIRECT_TO_BASE_URL', true);
 }
 
-if (!defined('ENABLE_APPLICATION_EVENTS')) {
-	define('ENABLE_APPLICATION_EVENTS', false);
-}
-
 if (!defined('ENABLE_EMAILS')) {
 	define('ENABLE_EMAILS', true);
 }
@@ -148,6 +144,7 @@ define('DIRNAME_BLOCK_TEMPLATES', 'templates');
 define('DIRNAME_CSS', 'css');
 define('DIRNAME_JAVASCRIPT', 'js');
 define('DIRNAME_IMAGES', 'images');
+define('DIRNAME_HELPERS', 'helpers');
 
 # Blocks
 define('DIR_FILES_BLOCK_TYPES', DIR_BASE . '/blocks');
@@ -182,6 +179,7 @@ define('FILENAME_COLLECTION_DEFAULT_THEME', 'default');
 define('FILENAME_COLLECTION_TYPE_DEFAULT_ICON', 'main.png');
 define('FILENAME_PAGE_ICON', 'icon.png');
 define('FILENAME_PACKAGE_CONTROLLER', 'controller.php');
+define('FILENAME_PACKAGE_DB', 'db.xml');
 //define('DIR_FILES_COLLECTION_TYPES', DIR_BASE . '/views/page_types');
 define('DIR_FILES_COLLECTION_TYPE_ICONS', DIR_BASE_CORE . '/images/icons/page_types');
 define('REL_DIR_FILES_COLLECTION_TYPE_ICONS', ASSETS_URL_IMAGES . '/icons/page_types');

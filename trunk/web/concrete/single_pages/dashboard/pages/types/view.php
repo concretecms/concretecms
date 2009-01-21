@@ -312,8 +312,11 @@ if ($ctEditMode) {
 		<td><?=$ct->getCollectionTypeName()?></td>
 		<td><?=$ct->getCollectionTypeHandle()?></td>
 		<td><?
+			$package = false;
 			if ($ct->getPackageID() > 0) {
 				$package = Package::getByID($ct->getPackageID());
+			}
+			if (is_object($package)) {
 				print $package->getPackageName(); 
 			} else {
 				print t('None');

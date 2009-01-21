@@ -26,6 +26,15 @@ class Events {
 	const EVENT_TYPE_GLOBAL = "global";
 	
 	/** 
+	 * Enables events if they haven't been enabled yet. This happens automatically if a particular 3rd party addon requires it
+	 */
+	public static function enableEvents() {
+		if (!defined("ENABLE_APPLICATION_EVENTS")) {
+			define("ENABLE_APPLICATION_EVENTS", true);
+		}
+	}
+	
+	/** 
 	 * Returns an instance of the systemwide Events object.
 	 */
 	public function getInstance() {
@@ -45,20 +54,21 @@ class Events {
 	 * whenever an event takes place. The name/location of this event is not customizable. If you want more
 	 * customization, used extend() below.
 	 */
-	public static function extendPageType($ctHandle, $event = false, $pkgHandle = null, $params = array()) {
+	public static function extendPageType($ctHandle, $event = false, $params = array()) {
+		Events::enableEvents();
 		if ($event == false) {
 			// then we're registering ALL the page type events for this particular page type
-			Events::extendPageType($ctHandle, 'on_page_add', $pkgHandle, $params);
-			Events::extendPageType($ctHandle, 'on_page_update', $pkgHandle, $params);
-			Events::extendPageType($ctHandle, 'on_page_duplicate', $pkgHandle, $params);
-			Events::extendPageType($ctHandle, 'on_page_move', $pkgHandle, $params);
-			Events::extendPageType($ctHandle, 'on_page_view', $pkgHandle, $params);
-			Events::extendPageType($ctHandle, 'on_page_delete', $pkgHandle, $params);
+			Events::extendPageType($ctHandle, 'on_page_add', $params);
+			Events::extendPageType($ctHandle, 'on_page_update', $params);
+			Events::extendPageType($ctHandle, 'on_page_duplicate', $params);
+			Events::extendPageType($ctHandle, 'on_page_move', $params);
+			Events::extendPageType($ctHandle, 'on_page_view', $params);
+			Events::extendPageType($ctHandle, 'on_page_delete', $params);
 		} else {
 			$ce = Events::getInstance();
 			$class = Object::camelcase($ctHandle) . 'PageTypeController';
 			$method = $event;
-			$filename = Loader::pageTypeControllerPath($ctHandle, $pkgHandle);
+			$filename = Loader::pageTypeControllerPath($ctHandle);
 			$ce->registeredEvents[$event][] = array(
 				Events::EVENT_TYPE_PAGETYPE,
 				$class,
@@ -82,6 +92,7 @@ class Events {
 	 * @return void
 	 */
 	public static function extend($event, $class, $method, $filename, $params = array()) {
+		Events::enableEvents();
 		$ce = Events::getInstance();
 		$ce->registeredEvents[$event][] = array(
 			Events::EVENT_TYPE_GLOBAL,

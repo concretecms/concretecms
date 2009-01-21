@@ -64,7 +64,6 @@ if (isset($cp)) {
 
 	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage()) { ?>
 
-<div id="ccm-overlay"></div>
 <div id="ccm-page-controls">
 <div id="ccm-logo-wrapper"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" width="49" height="49" id="ccm-logo" /></div>
 <!--<img src="<?=ASSETS_URL_IMAGES?>/logo_menu_throbber.gif" width="38" height="43" id="ccm-logo-loading" />//-->

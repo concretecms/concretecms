@@ -81,9 +81,13 @@
 	@include('config/site_theme_paths.php');
 
 	## Specific site/app events if they are enabled ##
-	if (ENABLE_APPLICATION_EVENTS) {
+	## This must come before packages ##
+	if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true) {
 		include('config/site_events.php');
 	}
+	
+	## Package events
+	require('startup/packages.php');
 	
 	## Check online, user-related startup routines
 	require('startup/user.php');

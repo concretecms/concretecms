@@ -15,20 +15,6 @@ img#ccm-pane-loader {
 	width: 126px;
 }
 
-div#ccm-overlay {
-	position: fixed;
-	z-index:99;
-	top: 0px;
-	left: 0px;
-	background-color:#000;
-	filter:alpha(opacity=70);
-	-moz-opacity: 0.7;
-	opacity: 0.7;
-	height:100%;
-	width:100%;
-	display: none;
-}
-
 div#ccm-page-controls {z-index: 102; font-family: "Lucida Grande", Verdana, Arial, Helvetica, sans-serif; background: transparent url(../images/bg_header.png) repeat-x scroll; height: 53px; width: 100%; position: fixed; top: 0px; left: 0px; margin:0; padding:0;}
 div#ccm-page-controls * {z-index: 102; font-family: "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;}
 

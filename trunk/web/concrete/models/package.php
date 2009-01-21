@@ -62,7 +62,7 @@ class PackageList extends Object {
 		static $list;
 		if (!isset($list)) {
 			$db = Loader::db();
-			$r = $db->query("select pkgID, pkgName, pkgDescription, pkgHandle, pkgDateInstalled from Packages order by pkgID asc");
+			$r = $db->query("select pkgID, pkgName, pkgIsInstalled, pkgDescription, pkgHandle, pkgDateInstalled from Packages order by pkgID asc");
 			$list = new PackageList();
 			while ($row = $r->fetchRow()) {
 				$pkg = new Package;
@@ -93,6 +93,7 @@ class Package extends Object {
 	public function getPackageDescription() {return $this->pkgDescription;}
 	public function getPackageHandle() {return $this->pkgHandle;}
 	public function getPackageDateInstalled() {return $this->pkgDateInstalled;}
+	public function isPackageInstalled() { return $this->pkgIsInstalled;}
 	
 	protected $appVersionRequired = '5.0.0';
 	
@@ -215,6 +216,7 @@ class Package extends Object {
 		$db->query("insert into Packages (pkgName, pkgDescription, pkgHandle, pkgIsInstalled, pkgDateInstalled) values (?, ?, ?, ?, ?)", $v);
 		
 		$pkg = Package::getByID($db->Insert_ID());
+		Package::installDB($pkg->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
 		return $pkg;
 	}
 	
