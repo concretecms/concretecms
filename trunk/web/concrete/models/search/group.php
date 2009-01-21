@@ -13,7 +13,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  * @access private
  */
 
-class GroupSearch extends ItemList {
+class GroupSearch extends DatabaseItemList {
 	
 	
 	protected $itemsPerPage = 10;
