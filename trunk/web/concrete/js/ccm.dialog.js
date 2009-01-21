@@ -113,6 +113,10 @@ jQuery.fn.dialog.isMacFF = function(fnd) {
 	}
 }
 
+jQuery.fn.dialog.getTotalOpen = function() {
+	return jQuery.fn.dialog.totalDialogs;
+}
+
 jQuery.fn.dialog.load = function(fnd) {
 	if (fnd.element != null) {
 		// we are loading some content on the page rather than through AJAX
@@ -127,8 +131,13 @@ jQuery.fn.dialog.load = function(fnd) {
 		});
 		$("#ccm-dialog-content" + fnd.n + " .dialog-launch").dialog();
 	} else {
+		var qsi = "?";
+		if (fnd.href.indexOf('?') > -1) {
+			qsi = '&';
+		}
 		var url = encodeURI(fnd.href);
-		$("#ccm-dialog-content" + fnd.n).load(url += "&random=" + (new Date().getTime()),function(){//to do a post change this load method
+		
+		$("#ccm-dialog-content" + fnd.n).load(url += qsi + "random=" + (new Date().getTime()),function(){//to do a post change this load method
 			jQuery.fn.dialog.position(fnd);
 			jQuery.fn.dialog.hideLoader();
 			$("#ccm-dialog-content" + fnd.n + " .ccm-dialog-close").click(function() {
