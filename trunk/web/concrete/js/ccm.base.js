@@ -45,4 +45,6 @@ if ($.browser.msie) {
 	ccm_animEffects = false;
 }
 
-
+$(function() {
+	$(document.body).append('<div id="ccm-overlay"></div>');
+});

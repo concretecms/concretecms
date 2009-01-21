@@ -269,6 +269,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function getMasterCollectionID() { return $this->mcID; }
 		public function getCollectionTypeIcon() {return $this->ctIcon;}
 		public function getPackageID() {return $this->pkgID;}
+		public function getPackageHandle() {
+			return PackageList::getHandle($this->pkgID);
+		}
 
 	}
 ?>
