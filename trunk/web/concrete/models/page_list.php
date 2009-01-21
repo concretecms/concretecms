@@ -8,7 +8,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 * @package Pages
 *
 */
-class PageList extends ItemList {
+class PageList extends DatabaseItemList {
 
 	private $collectionAttributeFilters = array();
 	private $includeSystemPages = false;

@@ -175,6 +175,53 @@ class Controller {
 	}
 	
 	/** 
+	 * If no arguments are passed, returns the GET array. If a key is passed, it returns the value as it exists in the GET array.
+	 * Also checks the set array, because this function used to return the value of the $this->set() function
+	 * @param string $key
+	 * @return string $value
+	 */
+	public function get($key = null) {
+		if ($key == null) {
+			return $_GET;
+		}
+		
+		if (isset($this->sets[$key])) {
+			return $this->sets[$key];
+		}
+		
+		if (isset($_GET[$key])) {
+			if (is_string($_GET[$key])) {
+				return trim($_GET[$key]);
+			} else {
+				return $_GET[$key];
+			}
+		} else {
+			return null;
+		}
+	}
+	
+	/** 
+	 * If no arguments are passed, returns the REQUEST array. If a key is passed, it returns the value as it exists in the request array.
+	 * @param string $key
+	 * @return string $value
+	 */
+	public function request($key = null) {
+		if ($key == null) {
+			return $_REQUEST;
+		}
+		
+		if (isset($_REQUEST[$key])) {
+			if (is_string($_REQUEST[$key])) {
+				return trim($_REQUEST[$key]);
+			} else {
+				return $_REQUEST[$key];
+			}
+		} else {
+			return null;
+		}
+	}
+	
+	/** 
 	 * Sets a variable to be passed through from the controller to the view
 	 * @param string $key
 	 * @param string $val
@@ -189,7 +236,7 @@ class Controller {
 	 * @param string $key
 	 * @return string $value
 	 */
-	public function get($key) {
+	public function getvar($key) {
 		return $this->sets[$key];
 	}
 	
