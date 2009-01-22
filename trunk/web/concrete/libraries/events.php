@@ -128,31 +128,35 @@ class Events {
 		if (is_array($events)) {
 			foreach($events as $ev) {
 				$type = $ev[0];
+				$proceed = true;
 				if ($type == Events::EVENT_TYPE_PAGETYPE) {
 					// then the first argument in the event fire() method will be the page
 					// that this applies to. We check to see if the page type is the right type
 					if (is_object($args[0]) && $args[0] instanceof Page && $args[0]->getCollectionTypeID() > 0) {
 						if ($ev[3] != Loader::pageTypeControllerPath($args[0]->getCollectionTypeHandle())) {
-							return false;
+							$proceed = false;
 						}
 					}
 				}
-				if ($ev[3] != false) {
-					if (strpos($ev[3], DIR_BASE) === 0) {	
-						// then this means that our path ALREADY has DIR_BASE in it
-						require_once($ev[3]);
-					} else {
-						require_once(DIR_BASE . '/' . $ev[3]);
-					}
-				}
-				$params = (is_array($ev[4])) ? $ev[4] : array();
 				
-				// now if args has any values we put them FIRST
-				$params = array_merge($args, $params);
-
-				if (method_exists($ev[1], $ev[2])) {
-					call_user_func_array(array($ev[1], $ev[2]), $params);
-				}				
+				if ($proceed) {
+					if ($ev[3] != false) {
+						if (strpos($ev[3], DIR_BASE) === 0) {	
+							// then this means that our path ALREADY has DIR_BASE in it
+							require_once($ev[3]);
+						} else {
+							require_once(DIR_BASE . '/' . $ev[3]);
+						}
+					}
+					$params = (is_array($ev[4])) ? $ev[4] : array();
+					
+					// now if args has any values we put them FIRST
+					$params = array_merge($args, $params);
+	
+					if (method_exists($ev[1], $ev[2])) {
+						call_user_func_array(array($ev[1], $ev[2]), $params);
+					}				
+				}
 			}
 		}
 	}
