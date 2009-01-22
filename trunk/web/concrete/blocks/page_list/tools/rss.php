@@ -37,13 +37,15 @@ if($_GET['bID']) {
 				<?= BASE_URL.DIR_REL.$nh->getLinkToCollection($cobj) ?>		  
 			  </link>
 			  <description><?=htmlspecialchars(strip_tags($cobj->getCollectionDescription()))."....";?></description>
-			  <pubDate><?=$cobj->getCollectionDatePublic()?></pubDate>
+			  <? /* <pubDate><?=$cobj->getCollectionDatePublic()?></pubDate>
+			  Wed, 23 Feb 2005 16:12:56 GMT  */ ?>
+			  <pubDate><?=date( 'D, d M Y H:i:s T',strtotime($cobj->getCollectionDatePublic())) ?></pubDate>
 			</item>
 		<? } ?>
      		 </channel>
 		</rss>
 		
-<?	} else { 	
+<?	} else {  	
 		$v = View::getInstance();
 		$v->renderError('Permission Denied',"You don't have permission to access this RSS feed");
 		exit;
