@@ -46,31 +46,37 @@ class PackageList extends Object {
 	}
 	
 	public static function getHandle($pkgID) {
+		$pkgHandle = Cache::get('pkgHandle', $pkgID);
+		if ($pkgHandle != false) {
+			return $pkgHandle;
+		}
+		
 		$pl = PackageList::get();
 		$handle = null;
 		$plitems = $pl->getPackages();
+		
 		foreach($plitems as $p) {
 			if ($p->getPackageID() == $pkgID) {
 				$handle = $p->getPackageHandle();
 				break;
 			}
 		}
+
+		Cache::set('pkgHandle', $pkgID, $handle);
 		return $handle;
 	}
 	
 	public static function get() {
-		static $list;
-		if (!isset($list)) {
-			$db = Loader::db();
-			$r = $db->query("select pkgID, pkgName, pkgIsInstalled, pkgDescription, pkgHandle, pkgDateInstalled from Packages order by pkgID asc");
-			$list = new PackageList();
-			while ($row = $r->fetchRow()) {
-				$pkg = new Package;
-				$pkg->setPropertiesFromArray($row);
-				$list->add($pkg);
-			}
-		}
 		
+		$db = Loader::db();
+		$r = $db->query("select pkgID, pkgName, pkgIsInstalled, pkgDescription, pkgHandle, pkgDateInstalled from Packages order by pkgID asc");
+		$list = new PackageList();
+		while ($row = $r->fetchRow()) {
+			$pkg = new Package;
+			$pkg->setPropertiesFromArray($row);
+			$list->add($pkg);
+		}
+
 		return $list;
 	}
 	
@@ -217,6 +223,7 @@ class Package extends Object {
 		
 		$pkg = Package::getByID($db->Insert_ID());
 		Package::installDB($pkg->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+		
 		return $pkg;
 	}
 	
