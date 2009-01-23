@@ -278,6 +278,7 @@ class InstallController extends Controller {
 						// Install our blocks
 						BlockType::installBlockType('library_file');
 						BlockType::installBlockType('content');
+						BlockType::installBlockType('html');
 						BlockType::installBlockType('autonav');
 						BlockType::installBlockType('external_form');
 						BlockType::installBlockType('form');

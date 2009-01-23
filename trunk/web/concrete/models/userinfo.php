@@ -47,6 +47,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public static function getByEmail($uEmail, $userPermissionsArray = null) {
 			return UserInfo::get('where uEmail = ?', $uEmail, $userPermissionsArray);
 		}
+
+		/** 
+		 * Returns a user object by open ID. Does not log a user in.
+		 */
+		public function getByOpenID($uOpenID) {
+			return UserInfo::get('inner join UserOpenIDs on Users.uID = UserOpenIDs.uID where uOpenID = ?', $uOpenID);
+		}
+		
 		
 		public static function getByValidationHash($uHash, $unredeemedHashesOnly = true) {
 			$db = Loader::db();
@@ -88,7 +96,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$dh = Loader::helper('date');
 			$uDateAdded = $dh->getLocalDateTime();
 			
-			if (isset($data['uIsValidated']) && $data['uIsValidated'] == 0) {
+			if ($data['uIsValidated'] == 1) {
+				$uIsValidated = 1;
+			} else if (isset($data['uIsValidated']) && $data['uIsValidated'] == 0) {
 				$uIsValidated = 0;
 			} else {
 				$uIsValidated = -1;

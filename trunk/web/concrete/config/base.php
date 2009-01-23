@@ -25,6 +25,10 @@ if (!defined('REDIRECT_TO_BASE_URL')) {
 	define('REDIRECT_TO_BASE_URL', true);
 }
 
+if (!defined('ENABLE_OPENID_AUTHENTICATION')) { 
+	define('ENABLE_OPENID_AUTHENTICATION', false);
+}
+
 if (!defined('ENABLE_EMAILS')) {
 	define('ENABLE_EMAILS', true);
 }
