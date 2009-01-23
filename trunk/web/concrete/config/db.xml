@@ -940,6 +940,19 @@
 		<notnull />
 	</field>
   </table>
+   <table name="UserOpenIDs">
+    <field name="uID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED/>
+    </field>
+    <field name="uOpenID" type="C" size="255">
+      <NOTNULL/>
+      <KEY/>
+    </field>
+    <index name="uID">
+      <col>uID</col>
+    </index>
+  </table>
   <table name="Users">
     <field name="uID" type="I" size="10">
       <KEY/>
