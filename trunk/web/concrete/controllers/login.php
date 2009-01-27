@@ -101,6 +101,7 @@ class LoginController extends Controller {
 	}
 	
 	private function finishLogin() {
+		$u = new User();
 		if ($this->post('uMaintainLogin')) {
 			$u->setUserForeverCookie();
 		}
