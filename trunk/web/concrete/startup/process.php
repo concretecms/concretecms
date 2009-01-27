@@ -539,12 +539,14 @@
 				foreach($_POST['selectedAKIDs'] as $akID) {
 					if ($akID > 0) {
 						$ak = CollectionAttributeKey::getByID($akID);
-						$submittedValue = $ak->getValueFromPost();
+						$submittedValue = $ak->getValueFromPost(); 
+						if(is_array($submittedValue))
+							$submittedValue=join("\n",$submittedValue); 
 						if (isset($submittedValue)) {
 							$nvc->addAttribute($ak, $submittedValue);
 						}
 					}
-				}
+				} 
 				
 				if ($_POST['rel'] == 'SITEMAP') { 
 					if ($cp->canApproveCollection()) {
