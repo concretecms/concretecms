@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  */
 class CollectionAttributeKey extends Object {
 	
-	var $akID, $akHandle, $akName, $akSearchable, $akValues, $akType;
+	var $akID, $akHandle, $akName, $akSearchable, $akValues, $akType, $akAllowOtherValues;
 	
 	function get($akID) {
 		if (!is_numeric($akID)) {
@@ -33,7 +33,7 @@ class CollectionAttributeKey extends Object {
 		
 		$db = Loader::db();
 		$a = array($akID);
-		$q = "select akID, akHandle, akName, akSearchable, akValues, akType from CollectionAttributeKeys where akID = ?";
+		$q = "select akID, akHandle, akName, akSearchable, akAllowOtherValues, akValues, akType from CollectionAttributeKeys where akID = ?";
 		$r = $db->query($q, $a);
 	
 		if ($r) {
@@ -53,7 +53,7 @@ class CollectionAttributeKey extends Object {
 	function getByHandle($akHandle) {
 		$db = Loader::db();
 		$a = array($akHandle);
-		$q = "select akID, akHandle, akName, akSearchable, akValues, akType from CollectionAttributeKeys where akHandle = ?";
+		$q = "select akID, akHandle, akName, akSearchable, akAllowOtherValues, akValues, akType from CollectionAttributeKeys where akHandle = ?";
 		$r = $db->query($q, $a);
 		
 	
@@ -73,6 +73,7 @@ class CollectionAttributeKey extends Object {
 	function getCollectionAttributeKeyHandle() {return $this->akHandle;}
 	function getCollectionAttributeKeyName() {return $this->akName;}
 	function isCollectionAttributeKeySearchable() {return $this->akSearchable;}
+	function getAllowOtherValues() {return $this->akAllowOtherValues; }
 	function getCollectionAttributeKeyValues() {return $this->akValues;}
 	function getCollectionAttributeKeyType() {return $this->akType;}
 	function isManageableType() {return in_array($this->akType, array("SELECT_ADD"));}
@@ -151,10 +152,10 @@ class CollectionAttributeKey extends Object {
 		return $values;
 	}
 	
-	function add($akHandle, $akName, $akSearchable, $akValues, $akType) {
+	function add($akHandle, $akName, $akSearchable, $akValues, $akType, $akAllowOtherValues=0) {
 		$db = Loader::db();
-		$a = array($akHandle, $akName, $akSearchable, $akValues, $akType);
-		$r = $db->query("insert into CollectionAttributeKeys (akHandle, akName, akSearchable, akValues, akType) values (?, ?, ?, ?, ?)", $a);
+		$a = array($akHandle, $akName, $akSearchable, $akValues, $akType, $akAllowOtherValues);
+		$r = $db->query("insert into CollectionAttributeKeys (akHandle, akName, akSearchable, akValues, akType, akAllowOtherValues) values (?, ?, ?, ?, ?, ?)", $a);
 		
 		if ($r) {
 			$akID = $db->Insert_ID();
@@ -166,12 +167,12 @@ class CollectionAttributeKey extends Object {
 		}
 	}
 	
-	function update($akHandle, $akName, $akSearchable, $akValues, $akType) {
+	function update($akHandle, $akName, $akSearchable, $akValues, $akType, $akAllowOtherValues=0) {
 		Cache::flush();
 
 		$db = Loader::db();
-		$a = array($akHandle, $akName, $akSearchable, $akValues, $akType, $this->akID);
-		$db->query("update CollectionAttributeKeys set akHandle = ?, akName = ?, akSearchable = ?, akValues = ?, akType = ? where akID = ?", $a);
+		$a = array($akHandle, $akName, $akSearchable, $akValues, $akType, intval($akAllowOtherValues), $this->akID);
+		$db->query("update CollectionAttributeKeys set akHandle = ?, akName = ?, akSearchable = ?, akValues = ?, akType = ?, akAllowOtherValues = ? where akID = ?", $a);
 		
 		$ak = CollectionAttributeKey::get($this->akID);
 		if (is_object($ak)) {

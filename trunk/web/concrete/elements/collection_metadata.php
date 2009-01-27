@@ -150,45 +150,40 @@ if ($cp->canAdminPage()) {
 			<a href="javascript:void(0)" class="ccm-meta-close" ccm-meta-name="<?=$ak->getCollectionAttributeKeyName()?>" id="ccm-remove-field-ak<?=$ak->getCollectionAttributeKeyID()?>"><?=t('Remove Field')?></a>
 		<? } ?>
 		<label><?=$ak->getCollectionAttributeKeyName()?></label>
-			<? switch($ak->getCollectionAttributeKeyType()) {
+			<?
+			$akType=$ak->getCollectionAttributeKeyType();
+			switch($akType) {
 				case "SELECT":
-					$options = explode("\n", $ak->getCollectionAttributeKeyValues()); ?>
-					<select style="width: 150px" name="akID_<?=$ak->getCollectionAttributeKeyID()?>">
+					$options = explode("\n", $ak->getCollectionAttributeKeyValues()); 
+					$caValues=explode("\n",$caValue); 
+					?>
+					<select style="width: 150px" name="akID_<?=$ak->getCollectionAttributeKeyID()?>[]">
 						<option value="">** NONE</option>
 						<? foreach($options as $val) {
 							$val = trim($val);
 							print '<option value="' . $val . '"';
-							if ($caValue == $val) { 
-								print " selected";
+							if ( in_array($val, $caValues) ) { 
+								 print " selected";
 							}						
 							print '>' . $val . '</option>';
 						} ?>
 					</select>
 					<?
 					break;
-				case "SELECT_ADD":
-						$options = $ak->getPreviouslySelectedValues();
-						$caValueArray = explode("[|]", $caValue);
-						?>
-						<div id="selectAdd<?=$ak->getCollectionAttributeKeyID()?>">
-						<select style="width: 250px; height: 80px;" multiple name="akID_<?=$ak->getCollectionAttributeKeyID()?>[]" id="akID<?=$ak->getCollectionAttributeKeyID()?>">
-							<? foreach($options as $val) {
-								$val = trim($val);
-								print '<option value="' . $val . '"';
-								if (in_array($val, $caValueArray)) {
-									print " selected";
-								}	
-								print '>' . $val . '</option>';
-							}
-						?>
-						</select>
-						<div id="addElement<?=$ak->getCollectionAttributeKeyID()?>_1">
-						<input style="vertical-align: middle" type="text" style="width: 220px" id="TEXTakID<?=$ak->getCollectionAttributeKeyID()?>" />
-						<input type="button" id="btn<?=$ak->getCollectionAttributeKeyID()?>_1" onclick="addOption(<?=$ak->getCollectionAttributeKeyID()?>)" value="+" style="font-size: 10px; vertical-align: middle" />
+				case "SELECT_MULTIPLE":
+					$options = explode("\n", $ak->getCollectionAttributeKeyValues()); 
+					$caValues=explode("\n",$caValue);
+					?>
+					<div> 
+					<?  foreach($options as $val) { ?>
+						<div>
+						<input name="akID_<?=$ak->getCollectionAttributeKeyID()?>[]" type="checkbox" value="<?=str_replace('"','\"',$val)?>" <?=( in_array($val, $caValues) )?'checked':''?> />
+						<?=$val ?>
 						</div>
-						</div>
-						<?
-						break;
+					<? } ?>
+					</div>
+					<?
+					break;			 
 				case "IMAGE_FILE": 
 					$bf = null; 
 					if (is_object($caValue)) {
@@ -210,6 +205,17 @@ if ($cp->canAdminPage()) {
 				
 				<? break;
 			} ?>
+			
+			<? if(($akType=='SELECT' || $akType=='SELECT_MULTIPLE') && $ak->getAllowOtherValues() ){ ?>
+				<div style="margin-top:8px"><?=t('(Enter other values below - separate  options with line breaks')?>)</div>
+				<textarea name="akID_<?=$ak->getCollectionAttributeKeyID()?>[]" cols="50" rows="4" style="width: 100%; height: 40px;"><?
+				foreach($caValues as $caValue){
+					if(!in_array($caValue,$options))
+						echo $caValue."\n";
+				}
+				?></textarea>
+				
+			<? } ?>
 			
 			</div>
 		<? } ?>	

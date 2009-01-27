@@ -15,6 +15,7 @@ if ($_REQUEST['task'] == 'edit') {
 			$akName = $_POST['akName'];
 			$akHandle = $_POST['akHandle'];
 			$akSearchable = $_POST['akSearchable'];
+			$akAllowOtherValues = $_POST['akAllowOtherValues'];
 			$akValues = $_POST['akValues'];
 			
 		} else {
@@ -24,6 +25,7 @@ if ($_REQUEST['task'] == 'edit') {
 			$akHandle = $ak->getCollectionAttributeKeyHandle();
 			$akSearchable = $ak->isCollectionAttributeKeySearchable();
 			$akValues = $ak->getCollectionAttributeKeyValues();
+			$akAllowOtherValues = $ak->getAllowOtherValues();			
 		
 		}
 		
@@ -40,6 +42,7 @@ if ($_POST['add'] || $_POST['update']) {
 	$akValues = preg_replace('/\r\n|\r/', "\n", $akValues); // make linebreaks consistant
 	$akType = $txt->sanitize($_POST['akType']);
 	$akSearchable = $_POST['akSearchable'] ? 1 : 0;
+	$akAllowOtherValues = $_POST['akAllowOtherValues'] ? 1 : 0;
 	
 	$error = array();
 	if (!$akHandle) {
@@ -67,11 +70,11 @@ if ($_POST['add'] || $_POST['update']) {
 				}
 			}
 			if (count($error) == 0) {
-				$ck = CollectionAttributeKey::add($akHandle, $akName, $akSearchable, $akValues, $akType);
+				$ck = CollectionAttributeKey::add($akHandle, $akName, $akSearchable, $akValues, $akType, $akAllowOtherValues);
 				$this->controller->redirect('/dashboard/pages/types/?attribute_created=1');
 			}
 		} else if (is_object($ak)) {
-			$ak = $ak->update($akHandle, $akName, $akSearchable, $akValues, $akType);
+			$ak = $ak->update($akHandle, $akName, $akSearchable, $akValues, $akType, $akAllowOtherValues);
 			$this->controller->redirect('/dashboard/pages/types/?attribute_updated=1');
 		}		
 		exit;
@@ -94,10 +97,23 @@ if ($_GET['created']) {
 	$message = t("Attribute Key Updated.");
 }
 
-$attribs = CollectionAttributeKey::getList();
+$attribs = CollectionAttributeKey::getList(); ?>
 
+<script>
+function ccm_akValuesBoxDisabled(typeSelect){
+	if (typeSelect.value == 'SELECT' || typeSelect.value == 'SELECT_MULTIPLE') {
+		document.getElementById('akValues').disabled = false; 
+		document.getElementById('reqValues').style.display='inline'; 
+		document.getElementById('allowOtherValuesWrap').style.display='block';
+	} else {  
+		document.getElementById('reqValues').style.display='none'; 
+		document.getElementById('akValues').disabled = true; 
+		document.getElementById('allowOtherValuesWrap').style.display='none';
+	}	
+}
+</script>
 
-if ($editMode) { ?>	
+<? if ($editMode) { ?>	
 
 <h1><span><?=t('Edit Attribute Definition')?> (<em class="required">*</em> - <?=t('required field')?>)</span></h1>
 <div class="ccm-dashboard-inner">
@@ -116,11 +132,12 @@ if ($editMode) { ?>
 	</tr>	
 	<tr>
 		<td style="width: 33%"><input type="text" name="akHandle" style="width: 100%" value="<?=$akHandle?>" /></td>
-		<td style="width: 33%"><select name="akType" style="width: 100%" onchange="if (this.value == 'SELECT') { document.getElementById('akValues').disabled = false; document.getElementById('reqValues').style.display='inline'; } else {  document.getElementById('reqValues').style.display='none'; document.getElementById('akValues').disabled = true; }">
+		<td style="width: 33%"><select name="akType" style="width: 100%" onchange="ccm_akValuesBoxDisabled(this)">
 			<option value="TEXT"<? if ($akType == 'TEXT') { ?> selected<? } ?>><?=t('Text Box')?></option>
 			<option value="BOOLEAN"<? if ($akType == 'BOOLEAN') { ?> selected<? } ?>><?=t('Check Box')?></option>
 			<option value="SELECT"<? if ($akType == 'SELECT') { ?> selected<? } ?>><?=t('Select Menu')?></option>
-			<option value="SELECT_ADD"<? if ($akType == 'SELECT_ADD') { ?> selected<? } ?>><?=t('Select Menu + Add Option')?></option>
+			<option value="SELECT_MULTIPLE"<? if ($akType == 'SELECT_MULTIPLE') { ?> selected<? } ?>><?=t('Select Multiple')?></option>
+			<? /* <option value="SELECT_ADD"<? if ($akType == 'SELECT_ADD') { ?> selected<? } ?>><?=t('Select Menu + Add Option')?></option> */ ?>
 			<option value="DATE"<? if ($akType == 'DATE') { ?> selected <? } ?>><?=t('Date')?></option>
 			<option value="IMAGE_FILE"<? if ($akType == 'IMAGE_FILE') { ?> selected <? } ?>><?=t('Image/File')?></option>
 		</select></td>
@@ -133,15 +150,18 @@ if ($editMode) { ?>
 		<td colspan="3"><input type="text" name="akName" style="width: 100%" value="<?=$akName?>" /></td>
 	</tr>
 	<tr>
-		<td class="subheader" colspan="3"><?=t('Values')?> <span class="required" id="reqValues" <? if ($akType != 'SELECT') { ?> style="display: none"<? } ?>>*</span></td>
+		<td class="subheader" colspan="3"><?=t('Values')?> <span class="required" id="reqValues" <? if ($akType != 'SELECT' && $akType != 'SELECT_MULTIPLE') { ?> style="display: none"<? } ?>>*</span></td>
 	</tr>
 	<tr>
 		<td colspan="3">
-        <textarea id="akValues" name="akValues" style="width: 100%" <? if ($akType != 'SELECT') { ?> disabled="disabled" <? } ?>><?=$akValues?></textarea>
+        <textarea id="akValues" name="akValues" rows="10" style="width: 100%" <? if ($akType != 'SELECT' && $akType != 'SELECT_MULTIPLE') { ?> disabled="disabled" <? } ?>><?=$akValues?></textarea>
         <br/>(<?=t('For select types only - separate menu options with line breaks')?>)
         <!-- 
         <input type="text" id="akValues" name="akValues" style="width: 100%" value="<?=$akValues?>" <? if ($akType != 'SELECT') { ?> disabled <? } ?> /><br/>(<?=t('For select types only - separate menu options with a comma, no space.')?>)
         	-->
+		<div id="allowOtherValuesWrap" style="margin-top:8px; display:<?=($akType != 'SELECT' && $akType != 'SELECT_MULTIPLE')?'none':'block' ?>">
+		<input type="checkbox" name="akAllowOtherValues" style="vertical-align: middle" <? if ($akAllowOtherValues) { ?> checked <? } ?> /> <?=t('Allow users to add to this list.')?>
+		</div>
         </td>
 	</tr>
 	<tr>
@@ -180,11 +200,12 @@ if ($editMode) { ?>
 </tr>	
 <tr>
 	<td style="width: 33%"><input type="text" name="akHandle" style="width: 100%" value="<?=$_POST['akHandle']?>" /></td>
-	<td style="width: 33%"><select name="akType" style="width: 100%" onchange="if (this.value == 'SELECT') { document.getElementById('akValues').disabled = false; document.getElementById('reqValues').style.display='inline'; } else {  document.getElementById('reqValues').style.display='none'; document.getElementById('akValues').disabled = true; }">
+	<td style="width: 33%"><select name="akType" style="width: 100%" onchange="ccm_akValuesBoxDisabled(this)">
 		<option value="TEXT"<? if ($_POST['akType'] == 'TEXT') { ?> selected<? } ?>><?=t('Text Box')?></option>
 		<option value="BOOLEAN"<? if ($_POST['akType'] == 'BOOLEAN') { ?> selected<? } ?>><?=t('Check Box')?></option>
 		<option value="SELECT"<? if ($_POST['akType'] == 'SELECT') { ?> selected<? } ?>><?=t('Select Menu')?></option>
-		<option value="SELECT_ADD"<? if ($_POST['akType'] == 'SELECT_ADD') { ?> selected<? } ?>><?=t('Select Menu + Add Option')?></option>
+		<? /* <option value="SELECT_ADD"<? if ($_POST['akType'] == 'SELECT_ADD') { ?> selected<? } ?>><?=t('Select Menu + Add Option')?></option> */ ?>
+		<option value="SELECT_MULTIPLE"<? if ($_POST['akType'] == 'SELECT_MULTIPLE') { ?> selected<? } ?>><?=t('Select Multiple')?></option>
 		<option value="DATE"<? if ($_POST['akType'] == 'DATE') { ?> selected <? } ?>><?=t('Date')?></option>
 		<option value="IMAGE_FILE"<? if ($_POST['akType'] == 'IMAGE_FILE') { ?> selected <? } ?>><?=t('Image/File')?></option>
 	</select></td>
@@ -197,12 +218,15 @@ if ($editMode) { ?>
 	<td colspan="3"><input type="text" name="akName" style="width: 100%" value="<?=$_POST['akName']?>" /></td>
 </tr>
 <tr>
-	<td class="subheader" colspan="3"><?=t('Values')?> <span class="required" id="reqValues" <? if ($_POST['akType'] != 'SELECT') { ?> style="display: none"<? } ?>>*</span></td>
+	<td class="subheader" colspan="3"><?=t('Values')?> <span class="required" id="reqValues" <? if ($_POST['akType'] != 'SELECT' && $akType != 'SELECT_MULTIPLE') { ?> style="display: none"<? } ?>>*</span></td>
 </tr>
 <tr>
 	<td colspan="3">
-    	<textarea id="akValues" name="akValues" style="width: 100%" <? if ($_POST['akType'] != 'SELECT') { ?> disabled="disabled" <? } ?>><?=$_POST['akValues']?></textarea>
+    	<textarea id="akValues" name="akValues" rows="10" style="width: 100%" <? if ($_POST['akType'] != 'SELECT' && $akType != 'SELECT_MULTIPLE') { ?> disabled="disabled" <? } ?>><?=$_POST['akValues']?></textarea>
         <br/>(<?=t('For select types only - separate menu options with line breaks')?>)
+		<div id="allowOtherValuesWrap" style="margin-top:8px; display:<?=($akType != 'SELECT' && $akType != 'SELECT_MULTIPLE')?'none':'block' ?>"">
+		<input type="checkbox" name="akAllowOtherValues" style="vertical-align: middle" <? if ($_POST['akAllowOtherValues']) { ?> checked <? } ?> /> <?=t('Allow users to add to this list.')?>
+		</div>		
     </td>
 </tr>
 <tr>
