@@ -180,6 +180,34 @@ class CollectionAttributeKey extends Object {
 		}
 	}
 	
+	function updateValues($akValues) {
+		Cache::flush();
+		$db = Loader::db();
+		$a = array($akValues, $this->akID);
+		$db->query("update CollectionAttributeKeys set akValues = ? where akID = ?", $a);		
+		$ak = CollectionAttributeKey::get($this->akID);
+		if (is_object($ak)) {
+			return $ak;
+		}
+	}
+	
+	//scan all respective collectionAttributeValues rows, and
+	function renameValue($oldSpelling,$newSpelling){
+		$db = Loader::db();
+		$a = array( $this->akID);
+		$CAVs=$db->GetArray("Select * FROM CollectionAttributeValues WHERE value LIKE '%".addslashes($oldSpelling)."%' AND akID = ? ", $a);
+		foreach($CAVs as $CAV){
+			$vals=explode("\n",$CAV['value']);
+			$fixedVals=array();
+			foreach($vals as $val){
+				if($val==$oldSpelling) $fixedVals[]=$newSpelling;
+				else $fixedVals[]=$val;
+			}
+			$a = array(join("\n",$fixedVals), $CAV['akID'], $CAV['cID'], $CAV['cvID'] );
+			$db->query("update CollectionAttributeValues set value = ? where akID=? AND cID=? AND cvID=?", $a);	
+		}
+	}
+	
 	function getList() {
 		$db = Loader::db();
 		$q = "select akID from CollectionAttributeKeys order by akID asc";

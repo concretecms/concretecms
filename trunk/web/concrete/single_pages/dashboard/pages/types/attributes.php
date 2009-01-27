@@ -38,11 +38,23 @@ $txt = Loader::helper('text');
 if ($_POST['add'] || $_POST['update']) {
 	$akHandle = $txt->sanitize($_POST['akHandle']);
 	$akName = $txt->sanitize($_POST['akName']);
-	$akValues = $txt->sanitize($_POST['akValues']);
-	$akValues = preg_replace('/\r\n|\r/', "\n", $akValues); // make linebreaks consistant
+	//$akValues = $txt->sanitize($_POST['akValues']);
+	//$akValues = preg_replace('/\r\n|\r/', "\n", $akValues); // make linebreaks consistant
 	$akType = $txt->sanitize($_POST['akType']);
 	$akSearchable = $_POST['akSearchable'] ? 1 : 0;
 	$akAllowOtherValues = $_POST['akAllowOtherValues'] ? 1 : 0;
+	
+	//grab the attribute key possible values
+	$akValuesArray=array();
+	foreach($_POST as $key=>$newVal){ 
+		if( !strstr($key,'akValue_') || $newVal=='TEMPLATE' ) continue; 
+		$originalVal=str_replace('akValue_','',$key);
+		$akValuesArray[]=$newVal;
+		
+		//change all previous answers
+		if($ak) $ak->renameValue($originalVal,$newVal);
+	}
+	$akValues=join("\n",$akValuesArray); 
 	
 	$error = array();
 	if (!$akHandle) {
@@ -97,21 +109,90 @@ if ($_GET['created']) {
 	$message = t("Attribute Key Updated.");
 }
 
-$attribs = CollectionAttributeKey::getList(); ?>
+$attribs = CollectionAttributeKey::getList(); 
+
+$defaultNewOptionNm = t('Type an option here, then click add');
+
+?>
 
 <script>
-function ccm_akValuesBoxDisabled(typeSelect){
-	if (typeSelect.value == 'SELECT' || typeSelect.value == 'SELECT_MULTIPLE') {
-		document.getElementById('akValues').disabled = false; 
-		document.getElementById('reqValues').style.display='inline'; 
-		document.getElementById('allowOtherValuesWrap').style.display='block';
-	} else {  
-		document.getElementById('reqValues').style.display='none'; 
-		document.getElementById('akValues').disabled = true; 
-		document.getElementById('allowOtherValuesWrap').style.display='none';
-	}	
+var ccmAttributesHelper={   
+	valuesBoxDisabled:function(typeSelect){
+		if (typeSelect.value == 'SELECT' || typeSelect.value == 'SELECT_MULTIPLE') {
+			document.getElementById('akValues').disabled = false; 
+			document.getElementById('reqValues').style.display='inline'; 
+			document.getElementById('allowOtherValuesWrap').style.display='block';
+		} else {  
+			document.getElementById('reqValues').style.display='none'; 
+			document.getElementById('akValues').disabled = true; 
+			document.getElementById('allowOtherValuesWrap').style.display='none';
+		}	
+	},  
+	
+	deleteValue:function(val){
+		if(!confirm('<?=t("Are you sure you want to remove this value?")?>'))
+			return false; 
+		$('#akValueWrap_'+val).remove();				
+	},
+	
+	editValue:function(val){ 
+		if($('#akValueDisplay_'+val).css('display')!='none'){
+			$('#akValueDisplay_'+val).css('display','none');
+			$('#akValueEdit_'+val).css('display','block');		
+		}else{
+			$('#akValueDisplay_'+val).css('display','block');
+			$('#akValueEdit_'+val).css('display','none');
+			$('#akValueField_'+val).val( $('#akValueStatic_'+val).html() )
+		}
+	},
+	
+	changeValue:function(val){ 
+		$('#akValueStatic_'+val).html( $('#akValueField_'+val).val() );
+		this.editValue(val)
+	},
+	
+	saveNewOption:function(){
+		var newValF=$('#akValueFieldNew');
+		var val=newValF.val()
+		if(val=='' || val=="<?=$defaultNewOptionNm?>"){
+			alert("<?=t('Please first type an option.')?>");
+			return;
+		}		
+		var template=document.getElementById('akValueWrapTemplate'); 
+		var newRowEl=document.createElement('div');
+		newRowEl.innerHTML=template.innerHTML.replace(/template/ig,val);
+		newRowEl.id="akValueWrap_"+val;
+		newRowEl.className='akValueWrap';
+		$('#attributeValuesWrap').append(newRowEl);				
+		newValF.val(''); 
+	},
+	
+	clrInitTxt:function(field,initText,removeClass,blurred){
+		if(blurred && field.value==''){
+			field.value=initText;
+			$(field).addClass(removeClass);
+			return;	
+		}
+		if(field.value==initText) field.value='';
+		if($(field).hasClass(removeClass)) $(field).removeClass(removeClass);
+	}
 }
+
+
 </script>
+
+<style>
+#attributeValuesWrap{margin-top:16px; width:400px}
+#attributeValuesWrap .akValueWrap{ margin-bottom:2px; border:1px solid #eee; padding:2px;}
+#attributeValuesWrap .akValueWrap:hover{border:1px solid #ddd; }
+#attributeValuesWrap .akValueWrap .leftCol{float:left; }
+#attributeValuesWrap .akValueWrap .rightCol{float:right; text-align:right }
+
+#addAttributeValueWrap{ margin-top:8px }
+#addAttributeValueWrap input.faint{ color:#999 }
+
+#allowOtherValuesWrap{margin-top:16px}
+</style>
 
 <? if ($editMode) { ?>	
 
@@ -132,7 +213,7 @@ function ccm_akValuesBoxDisabled(typeSelect){
 	</tr>	
 	<tr>
 		<td style="width: 33%"><input type="text" name="akHandle" style="width: 100%" value="<?=$akHandle?>" /></td>
-		<td style="width: 33%"><select name="akType" style="width: 100%" onchange="ccm_akValuesBoxDisabled(this)">
+		<td style="width: 33%"><select name="akType" style="width: 100%" onchange="ccmAttributesHelper.valuesBoxDisabled(this)">
 			<option value="TEXT"<? if ($akType == 'TEXT') { ?> selected<? } ?>><?=t('Text Box')?></option>
 			<option value="BOOLEAN"<? if ($akType == 'BOOLEAN') { ?> selected<? } ?>><?=t('Check Box')?></option>
 			<option value="SELECT"<? if ($akType == 'SELECT') { ?> selected<? } ?>><?=t('Select Menu')?></option>
@@ -154,22 +235,21 @@ function ccm_akValuesBoxDisabled(typeSelect){
 	</tr>
 	<tr>
 		<td colspan="3">
+		<? /*
         <textarea id="akValues" name="akValues" rows="10" style="width: 100%" <? if ($akType != 'SELECT' && $akType != 'SELECT_MULTIPLE') { ?> disabled="disabled" <? } ?>><?=$akValues?></textarea>
         <br/>(<?=t('For select types only - separate menu options with line breaks')?>)
         <!-- 
         <input type="text" id="akValues" name="akValues" style="width: 100%" value="<?=$akValues?>" <? if ($akType != 'SELECT') { ?> disabled <? } ?> /><br/>(<?=t('For select types only - separate menu options with a comma, no space.')?>)
-        	-->
-		<div id="allowOtherValuesWrap" style="margin-top:8px; display:<?=($akType != 'SELECT' && $akType != 'SELECT_MULTIPLE')?'none':'block' ?>">
-		<input type="checkbox" name="akAllowOtherValues" style="vertical-align: middle" <? if ($akAllowOtherValues) { ?> checked <? } ?> /> <?=t('Allow users to add to this list.')?>
-		</div>
+        -->
+		*/ ?>
+		
+		<? Loader::element('collection_attribute_values', array('akValues'=>$akValues, 'akType'=>$akType, 'akAllowOtherValues'=>$akAllowOtherValues, 'defaultNewOptionNm'=>$defaultNewOptionNm) ); ?>
         </td>
 	</tr>
 	<tr>
 		<td colspan="3" class="header">
-
 		<a href="<?=$this->url('/dashboard/pages/types')?>" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
 		<a href="javascript:void(0)" onclick="$('#ccm-attribute-update').get(0).submit()" class="ccm-button-right"><span><?=t('Update')?></span></a>
-		
 		</td>
 	</tr>
 	</table>
@@ -200,7 +280,7 @@ function ccm_akValuesBoxDisabled(typeSelect){
 </tr>	
 <tr>
 	<td style="width: 33%"><input type="text" name="akHandle" style="width: 100%" value="<?=$_POST['akHandle']?>" /></td>
-	<td style="width: 33%"><select name="akType" style="width: 100%" onchange="ccm_akValuesBoxDisabled(this)">
+	<td style="width: 33%"><select name="akType" style="width: 100%" onchange="ccmAttributesHelper.valuesBoxDisabled(this)">
 		<option value="TEXT"<? if ($_POST['akType'] == 'TEXT') { ?> selected<? } ?>><?=t('Text Box')?></option>
 		<option value="BOOLEAN"<? if ($_POST['akType'] == 'BOOLEAN') { ?> selected<? } ?>><?=t('Check Box')?></option>
 		<option value="SELECT"<? if ($_POST['akType'] == 'SELECT') { ?> selected<? } ?>><?=t('Select Menu')?></option>
@@ -222,11 +302,12 @@ function ccm_akValuesBoxDisabled(typeSelect){
 </tr>
 <tr>
 	<td colspan="3">
+		<? /*
     	<textarea id="akValues" name="akValues" rows="10" style="width: 100%" <? if ($_POST['akType'] != 'SELECT' && $akType != 'SELECT_MULTIPLE') { ?> disabled="disabled" <? } ?>><?=$_POST['akValues']?></textarea>
         <br/>(<?=t('For select types only - separate menu options with line breaks')?>)
-		<div id="allowOtherValuesWrap" style="margin-top:8px; display:<?=($akType != 'SELECT' && $akType != 'SELECT_MULTIPLE')?'none':'block' ?>"">
-		<input type="checkbox" name="akAllowOtherValues" style="vertical-align: middle" <? if ($_POST['akAllowOtherValues']) { ?> checked <? } ?> /> <?=t('Allow users to add to this list.')?>
-		</div>		
+		*/ ?>
+		
+		<? Loader::element('collection_attribute_values', array('akValues'=>$_POST['akValues'], 'akType'=>$akType, 'akAllowOtherValues'=>$_POST['akValues'], 'defaultNewOptionNm'=>$defaultNewOptionNm) ); ?>
     </td>
 </tr>
 <tr>

@@ -57,7 +57,24 @@ if ($cp->canAdminPage()) {
 			});
 		});
 		
+		var ccmAttributeValuesHelper={ 
+			add:function(akID){
+				var newRow=document.createElement('div');
+				newRow.className='newAttrValueRow';
+				newRow.innerHTML='<input name="akID_'+akID+'[]" type="text" value="" /> ';
+				newRow.innerHTML+='<a onclick="ccmAttributeValuesHelper.remove(this)">[X]</a>';
+				$('#newAttrValueRows').append(newRow);				
+			},
+			remove:function(a){
+				$(a.parentNode).remove();			
+			}
+		}
 	</script>
+	
+	<style>
+	#newAttrValueRows{ margin-top:4px; }
+	.newAttrValueRow{margin-top:4px}
+	</style>
 	
 	<h1><?=t('Page Properties')?></h1>
 	
@@ -157,7 +174,7 @@ if ($cp->canAdminPage()) {
 					$options = explode("\n", $ak->getCollectionAttributeKeyValues()); 
 					$caValues=explode("\n",$caValue); 
 					?>
-					<select style="width: 150px" name="akID_<?=$ak->getCollectionAttributeKeyID()?>[]">
+					<select style="width: 150px" name="akID_<?=$ak->getCollectionAttributeKeyID()?>">
 						<option value="">** NONE</option>
 						<? foreach($options as $val) {
 							$val = trim($val);
@@ -168,12 +185,18 @@ if ($cp->canAdminPage()) {
 							print '>' . $val . '</option>';
 						} ?>
 					</select>
+					
+					<? if( $ak->getAllowOtherValues() ){ ?> 
+						<input name="akID_<?=$ak->getCollectionAttributeKeyID()?>_other[]" type="text" value="Other" />
+					<? } ?>					
+					
 					<?
 					break;
 				case "SELECT_MULTIPLE":
 					$options = explode("\n", $ak->getCollectionAttributeKeyValues()); 
 					$caValues=explode("\n",$caValue);
 					?>
+					
 					<div> 
 					<?  foreach($options as $val) { ?>
 						<div>
@@ -182,6 +205,15 @@ if ($cp->canAdminPage()) {
 						</div>
 					<? } ?>
 					</div>
+					
+					<? if( $ak->getAllowOtherValues() ){ ?>
+						<div id="newAttrValueRows">
+						</div>
+						<div><a onclick="ccmAttributeValuesHelper.add(<?=intval($ak->getCollectionAttributeKeyID())?>)">
+							<?=t('Add Another Option')?> +</a>
+						</div>
+					<? } ?>
+							
 					<?
 					break;			 
 				case "IMAGE_FILE": 
@@ -205,17 +237,6 @@ if ($cp->canAdminPage()) {
 				
 				<? break;
 			} ?>
-			
-			<? if(($akType=='SELECT' || $akType=='SELECT_MULTIPLE') && $ak->getAllowOtherValues() ){ ?>
-				<div style="margin-top:8px"><?=t('(Enter other values below - separate  options with line breaks')?>)</div>
-				<textarea name="akID_<?=$ak->getCollectionAttributeKeyID()?>[]" cols="50" rows="4" style="width: 100%; height: 40px;"><?
-				foreach($caValues as $caValue){
-					if(!in_array($caValue,$options))
-						echo $caValue."\n";
-				}
-				?></textarea>
-				
-			<? } ?>
 			
 			</div>
 		<? } ?>	

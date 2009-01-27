@@ -536,12 +536,24 @@
 				Loader::model('collection_attributes');
 				Loader::model('collection_types');
 				
+				
 				foreach($_POST['selectedAKIDs'] as $akID) {
 					if ($akID > 0) {
 						$ak = CollectionAttributeKey::getByID($akID);
 						$submittedValue = $ak->getValueFromPost(); 
-						if(is_array($submittedValue))
+						if( is_array($submittedValue) ){													
+							//add new options to list if allowed
+							if( $ak->getAllowOtherValues() ){
+								$existingOptions = explode("\n", $ak->getCollectionAttributeKeyValues());
+								$newValues=array();
+								foreach($submittedValue as $val)
+									if( !in_array($val,$existingOptions) && strlen(trim($val))  ) 
+										$newValues[]=$val; 
+								$akValues=join("\n",array_merge($existingOptions,$newValues));
+								$ak->updateValues($akValues);
+							}							
 							$submittedValue=join("\n",$submittedValue); 
+						}
 						if (isset($submittedValue)) {
 							$nvc->addAttribute($ak, $submittedValue);
 						}
