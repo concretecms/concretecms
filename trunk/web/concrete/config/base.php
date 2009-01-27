@@ -304,7 +304,7 @@ define('SEARCH_CHUNK_SIZE','20'); /* number of entries retrieved per page */
 # Versioning/Editing defaults 
 define('CHECKOUT_TIMEOUT', 300); // # in seconds.
 define('VERSION_INITIAL_COMMENT', 'Initial Version');
-define('ONLINE_NOW_TIMEOUT', 600);
+define('ONLINE_NOW_TIMEOUT', 300);
 
 # Information for the home page in the system (used by the installation program)
 define("HOME_CID", 1);
