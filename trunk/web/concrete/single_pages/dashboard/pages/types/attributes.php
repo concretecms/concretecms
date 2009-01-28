@@ -182,7 +182,7 @@ var ccmAttributesHelper={
 </script>
 
 <style>
-#attributeValuesWrap{margin-top:16px; width:400px}
+#attributeValuesWrap{margin-top:4px; width:400px}
 #attributeValuesWrap .akValueWrap{ margin-bottom:2px; border:1px solid #eee; padding:2px;}
 #attributeValuesWrap .akValueWrap:hover{border:1px solid #ddd; }
 #attributeValuesWrap .akValueWrap .leftCol{float:left; }
