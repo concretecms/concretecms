@@ -57,7 +57,7 @@ if ($cp->canAdminPage()) {
 			});
 		});
 		
-		var ccmAttributeValuesHelper={ 
+		var ccmAttributeValuesHelper={  
 			add:function(akID){
 				var newRow=document.createElement('div');
 				newRow.className='newAttrValueRow';
@@ -67,13 +67,23 @@ if ($cp->canAdminPage()) {
 			},
 			remove:function(a){
 				$(a.parentNode).remove();			
+			},	
+			clrInitTxt:function(field,initText,removeClass,blurred){
+				if(blurred && field.value==''){
+					field.value=initText;
+					$(field).addClass(removeClass);
+					return;	
+				}
+				if(field.value==initText) field.value='';
+				if($(field).hasClass(removeClass)) $(field).removeClass(removeClass);
 			}
 		}
 	</script>
 	
 	<style>
-	#newAttrValueRows{ margin-top:4px; }
-	.newAttrValueRow{margin-top:4px}
+	.ccm-field-meta #newAttrValueRows{ margin-top:4px; }
+	.ccm-field-meta .newAttrValueRow{margin-top:4px}	
+	.ccm-field-meta input.faint{ color:#999 }
 	</style>
 	
 	<h1><?=t('Page Properties')?></h1>
@@ -187,7 +197,13 @@ if ($cp->canAdminPage()) {
 					</select>
 					
 					<? if( $ak->getAllowOtherValues() ){ ?> 
-						<input name="akID_<?=$ak->getCollectionAttributeKeyID()?>_other[]" type="text" value="Other" />
+						
+						<input name="akID_<?=$ak->getCollectionAttributeKeyID()?>_other" type="text" class="faint"
+						value="<?=CollectionAttributeKey::getNewValueEmptyFieldTxt() ?>"
+						
+						onfocus="ccmAttributeValuesHelper.clrInitTxt(this,'<?=CollectionAttributeKey::getNewValueEmptyFieldTxt() ?>','faint',0)"  
+						onblur="ccmAttributeValuesHelper.clrInitTxt(this,'<?=CollectionAttributeKey::getNewValueEmptyFieldTxt() ?>','faint',1)" 
+						 />
 					<? } ?>					
 					
 					<?
