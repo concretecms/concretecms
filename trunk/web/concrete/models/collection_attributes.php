@@ -22,7 +22,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-class CollectionAttributeKey extends Object {
+class CollectionAttributeKey extends Object {  
 	
 	var $akID, $akHandle, $akName, $akSearchable, $akValues, $akType, $akAllowOtherValues;
 	
@@ -219,6 +219,10 @@ class CollectionAttributeKey extends Object {
 		return $la;
 	}
 	
+	static function getNewValueEmptyFieldTxt(){
+		return t('Other');
+	}
+		
 }
 
 ?>
