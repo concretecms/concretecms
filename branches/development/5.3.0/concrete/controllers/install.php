@@ -306,7 +306,11 @@ class InstallController extends Controller {
 						$d0 = SinglePage::add('/dashboard');
 				
 						$d1 = SinglePage::add('/dashboard/sitemap');
-						$d2 = SinglePage::add('/dashboard/mediabrowser');
+						$d2 = SinglePage::add('/dashboard/files');
+						$d2a = SinglePage::add('/dashboard/files/search');
+						$d2b = SinglePage::add('/dashboard/files/attributes');
+						$d2c = SinglePage::add('/dashboard/files/sets');
+						$d2d = SinglePage::add('/dashboard/files/access');						
 						$d3 = SinglePage::add('/dashboard/reports');
 						$d3a = SinglePage::add('/dashboard/reports/forms');
 						$d3b = SinglePage::add('/dashboard/reports/logs');
