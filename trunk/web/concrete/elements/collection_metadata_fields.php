@@ -53,6 +53,7 @@ var ccmAttributeValuesHelper={
 
 
 	<?
+	$dt = Loader::helper('form/date_time');
 	
 	$requiredKeys = array();
 	$usedKeys = array();
