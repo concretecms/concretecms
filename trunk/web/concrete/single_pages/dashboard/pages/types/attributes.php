@@ -176,6 +176,11 @@ var ccmAttributesHelper={
 		}
 		if(field.value==initText) field.value='';
 		if($(field).hasClass(removeClass)) $(field).removeClass(removeClass);
+	},
+	
+	addEnterClick:function(e,fn){
+		var keyCode = (e.keyCode ? e.keyCode : e.which);
+		if(keyCode == 13 && typeof(fn)=='function' ) fn();
 	}
 }
 

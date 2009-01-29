@@ -18,7 +18,8 @@ function getAttributeOptionHTML($akValue="TEMPLATE"){
 			</div>		
 			<span class="leftCol">
 				<input name="akValueOriginal_<?=$akValueClean?>" type="hidden" value="<?=$akValue?>" />
-				<input id="akValueField_<?=$akValueClean?>" name="akValue_<?=$akValueClean?>" type="text" value="<?=$akValue?>" size="20" />
+				<input id="akValueField_<?=$akValueClean?>" name="akValue_<?=$akValueClean?>" type="text" value="<?=$akValue?>" size="20" 
+				  onkeypress="ccmAttributesHelper.addEnterClick(event,function(){ccmAttributesHelper.changeValue('<?=addslashes($akValueClean)?>')})" />
 			</span>		
 		</div>	
 		<div class="ccm-spacer">&nbsp;</div>
@@ -52,7 +53,9 @@ function getAttributeOptionHTML($akValue="TEMPLATE"){
 	<div id="addAttributeValueWrap"> 
 		<input id="akValueFieldNew" name="akValueNew" type="text" value="<?=$defaultNewOptionNm ?>" size="40" class="faint" 
 		onfocus="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm ?>','faint',0)" 
-		onblur="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm ?>','faint',1)" /> 
+		onblur="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm ?>','faint',1)"
+		onkeypress="ccmAttributesHelper.addEnterClick(event,function(){ccmAttributesHelper.saveNewOption()})"
+		 /> 
 		<a onClick="ccmAttributesHelper.saveNewOption()"><?=t('Add') ?> +</a>
 	</div>
 	
