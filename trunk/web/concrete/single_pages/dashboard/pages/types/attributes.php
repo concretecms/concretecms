@@ -9,26 +9,21 @@ $valt = Loader::helper('validation/token');
 if ($_REQUEST['task'] == 'edit') {
 	$ak = CollectionAttributeKey::get($_REQUEST['akID']);
 	if (is_object($ak)) { 		
-		if ($_POST['update']) {
-		
+		if ($_POST['update']) {		
 			$akType = $_POST['akType'];
 			$akName = $_POST['akName'];
 			$akHandle = $_POST['akHandle'];
 			$akSearchable = $_POST['akSearchable'];
 			$akAllowOtherValues = $_POST['akAllowOtherValues'];
-			$akValues = $_POST['akValues'];
-			
-		} else {
-			
+			$akValues = $_POST['akValues'];			
+		} else {			
 			$akType = $ak->getCollectionAttributeKeyType();
 			$akName = $ak->getCollectionAttributeKeyName();
 			$akHandle = $ak->getCollectionAttributeKeyHandle();
 			$akSearchable = $ak->isCollectionAttributeKeySearchable();
 			$akValues = $ak->getCollectionAttributeKeyValues();
-			$akAllowOtherValues = $ak->getAllowOtherValues();			
-		
-		}
-		
+			$akAllowOtherValues = $ak->getAllowOtherValues();		
+		}		
 		$editMode = true;
 	}
 }
@@ -45,15 +40,15 @@ if ($_POST['add'] || $_POST['update']) {
 	$akAllowOtherValues = $_POST['akAllowOtherValues'] ? 1 : 0;
 	
 	//grab the attribute key possible values
-	$akValuesArray=array();
+	$akValuesArray=array(); 
 	foreach($_POST as $key=>$newVal){ 
 		if( !strstr($key,'akValue_') || $newVal=='TEMPLATE' ) continue; 
-		$originalVal=str_replace('akValue_','',$key);
+		$originalVal=$_REQUEST['akValueOriginal_'.str_replace('akValue_','',$key)];		
 		$akValuesArray[]=$newVal;
-		
+		//echo $originalVal.' '.$newVal.'<br>';
 		//change all previous answers
 		if($ak) $ak->renameValue($originalVal,$newVal);
-	}
+	} 
 	$akValuesArray=array_unique($akValuesArray);
 	$akValues=join("\n",$akValuesArray); 
 	
@@ -121,13 +116,15 @@ $defaultNewOptionNm = t('Type an option here, then click add');
 var ccmAttributesHelper={   
 	valuesBoxDisabled:function(typeSelect){
 		if (typeSelect.value == 'SELECT' || typeSelect.value == 'SELECT_MULTIPLE') {
-			document.getElementById('akValues').disabled = false; 
+			document.getElementById('attributeValuesInterface').style.display='block';
 			document.getElementById('reqValues').style.display='inline'; 
 			document.getElementById('allowOtherValuesWrap').style.display='block';
+			document.getElementById('attributeValuesOffMsg').style.display='none';			
 		} else {  
 			document.getElementById('reqValues').style.display='none'; 
-			document.getElementById('akValues').disabled = true; 
+			document.getElementById('attributeValuesInterface').style.display='none';
 			document.getElementById('allowOtherValuesWrap').style.display='none';
+			document.getElementById('attributeValuesOffMsg').style.display='block'; 
 		}	
 	},  
 	
@@ -155,15 +152,17 @@ var ccmAttributesHelper={
 	
 	saveNewOption:function(){
 		var newValF=$('#akValueFieldNew');
-		var val=newValF.val()
+		var myRegxp = /^([a-zA-Z0-9_-]+)$/; 
+		var val=newValF.val();
+		var val_clean=val.replace(/[^a-zA-Z0-9\-]/g,'');				
 		if(val=='' || val=="<?=$defaultNewOptionNm?>"){
 			alert("<?=t('Please first type an option.')?>");
 			return;
 		}		
 		var template=document.getElementById('akValueWrapTemplate'); 
 		var newRowEl=document.createElement('div');
-		newRowEl.innerHTML=template.innerHTML.replace(/template/ig,val);
-		newRowEl.id="akValueWrap_"+val;
+		newRowEl.innerHTML=template.innerHTML.replace(/template_clean/ig,val_clean).replace(/template/ig,val);
+		newRowEl.id="akValueWrap_"+val_clean;
 		newRowEl.className='akValueWrap';
 		$('#attributeValuesWrap').append(newRowEl);				
 		newValF.val(''); 
