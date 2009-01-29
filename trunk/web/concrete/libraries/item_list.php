@@ -174,12 +174,12 @@ class ItemList {
 	/** 
 	 * Displays summary text about a list
 	 */
-	public function displaySummary() {
+	public function displaySummary( $right_content = '' ) {
 		if ($this->getTotal() < 1) {
 			return false;
 		}
 		$summary = $this->getSummary();
-		$html = '<div class="ccm-paging-top">' . t('Viewing <b>%s</b> to <b>%s</b> (<b>%s</b> Total)', $summary->currentStart, "<span id=\"pagingPageResults\">" . $summary->currentEnd . "</span>", "<span id=\"pagingTotalResults\">" . $this->total . "</span>") . '</div>';
+		$html = '<div class="ccm-paging-top">'. t('Viewing <b>%s</b> to <b>%s</b> (<b>%s</b> Total)', $summary->currentStart, "<span id=\"pagingPageResults\">" . $summary->currentEnd . "</span>", "<span id=\"pagingTotalResults\">" . $this->total . "</span>") . ( $right_content != '' ? '<span class="ccm-paging-top-content">'. $right_content .'</span>' : '' ) .'</div>';
 		print $html;
 	}
 	
