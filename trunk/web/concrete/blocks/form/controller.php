@@ -40,7 +40,7 @@ class FormBlockController extends BlockController {
 	}
 	
 	public function getDefaultThankYouMsg() {
-		return t("Thanks for taking the time to report a problem or ask a question. We're on it and you'll receive a response soon!");
+		return t("Thanks!");
 	}
 	
 	//form add or edit submit
