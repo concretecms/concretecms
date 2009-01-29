@@ -72,6 +72,8 @@ if (isset($_GET['gKeywords'])) {
 	$gl->filterByKeywords($_GET['gKeywords']);
 }
 
+$gl->updateItemsPerPage(5);
+
 $gResults = $gl->getPage();
 
 ?>
@@ -79,23 +81,28 @@ $gResults = $gl->getPage();
 <h1><span><?=t('Groups')?></span></h1>
 <div class="ccm-dashboard-inner">
 
-
-<form id="ccm-group-search" method="get" style="top: -30px; left: 10px" action="<?=$this->url('/dashboard/users/groups')?>">
-<div id="ccm-group-search-fields">
-<input type="text" id="ccm-group-search-keywords" name="gKeywords" value="<?=$_REQUEST['gKeywords']?>" class="ccm-text" style="width: 100px" />
-<input type="submit" value="<?=t('Search')?>" />
-<input type="hidden" name="group_submit_search" value="1" />
-</div>
-</form>
+<?php
+	$group_search_form = '
+		<form id="ccm-group-search" method="get" style="top: -15px; left: 10px" action="'. $this->url('/dashboard/users/groups') .'">
+			<div id="ccm-group-search-fields">
+				<input type="text" id="ccm-group-search-keywords" name="gKeywords" value="'. $_REQUEST['gKeywords'] .'" class="ccm-text" style="width: 100px" />
+				<input type="submit" value="'. t('Search') .'" />
+				<input type="hidden" name="group_submit_search" value="1" />
+			</div>
+		</form>
+	';
+?>
 
 <? if (count($gResults) > 0) { 
-	$gl->displaySummary();
+	$gl->displaySummary( $group_search_form );
 	
 foreach ($gResults as $g) { ?>
 
 	<div class="ccm-group">
-		<a class="ccm-group-inner" href="<?=$this->url('/dashboard/users/groups?task=edit&gID=' . $g['gID'])?>" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$g['gName']?></a>
-		<div class="ccm-group-description"><?=$g['gDescription']?></div>
+		<div style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)" class="ccm-group-inner-indiv">
+			<a class="ccm-group-inner-atag" href="<?=$this->url('/dashboard/users/groups?task=edit&gID=' . $g['gID'])?>"><?=$g['gName']?></a>
+			<?=( $g['gDescription'] != '' ? ' - <span class="ccm-group-description">'. $g['gDescription'] .'</span>' : '' )?>
+		</div>
 	</div>
 
 
