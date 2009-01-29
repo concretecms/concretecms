@@ -54,6 +54,7 @@ if ($_POST['add'] || $_POST['update']) {
 		//change all previous answers
 		if($ak) $ak->renameValue($originalVal,$newVal);
 	}
+	$akValuesArray=array_unique($akValuesArray);
 	$akValues=join("\n",$akValuesArray); 
 	
 	$error = array();
