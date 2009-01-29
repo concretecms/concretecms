@@ -34,7 +34,7 @@ $ah = Loader::helper('concrete/interface');
 
 <div id="ccm-slideshowBlock-imgRows">
 <? foreach($images as $imgInfo){ ?> 
-	<? include($this->getBlockPath() .'/image_row_include.php'); ?> 
+<? $this->inc('image_row_include.php', array('imgInfo' => $imgInfo)); ?> 
 <? } ?>
 </div>
 
@@ -52,5 +52,5 @@ $imgInfo['imgHeight']=tempHeight;
 $imgInfo['url']='';
 ?>
 <div id="imgRowTemplateWrap" style="display:none">
-<? include($this->getBlockPath() .'/image_row_include.php'); ?> 
+<? $this->inc('image_row_include.php', array('imgInfo' => $imgInfo)); ?> 
 </div>

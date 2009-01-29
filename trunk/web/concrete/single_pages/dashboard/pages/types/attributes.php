@@ -75,13 +75,14 @@ if ($_POST['add'] || $_POST['update']) {
 		$error[] = $valt->getErrorMessage();
 	}
 	
+	if (CollectionAttributeKey::inUse($akHandle)) {
+		if ((!is_object($ak)) || ($ak->getCollectionAttributeKeyHandle() != $akHandle)) {
+			$error[] = t("An attribute with the handle %s already exists.", $akHandle);
+		}
+	}
+
 	if (count($error) == 0) {
 		if ($_POST['add']) {
-			if ($akHandle) {
-				if (CollectionAttributeKey::inUse($akHandle)) {
-					$error[] = t("An attribute with the handle %s already exists.", $akHandle);
-				}
-			}
 			if (count($error) == 0) {
 				$ck = CollectionAttributeKey::add($akHandle, $akName, $akSearchable, $akValues, $akType, $akAllowOtherValues);
 				$this->controller->redirect('/dashboard/pages/types/?attribute_created=1');

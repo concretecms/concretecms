@@ -4,4 +4,4 @@ $slideshowObj=$controller;
 
 ?>
 
-<? include($this->getBlockPath() .'/form_setup_html.php'); ?> 
+<? $this->inc('/form_setup_html.php'); ?> 
