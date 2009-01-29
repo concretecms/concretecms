@@ -16,7 +16,6 @@ $miniSurvey->frontEndMode=true;
 </style>
 
 <form id="miniSurveyView<?php echo intval($survey->questionSetId)?>" class="miniSurveyView" method="post" action="<?php echo $this->action('submit_form')?>">
-	<div style="margin-bottom:8px"><strong><?php echo $survey->surveyName?></strong></div>
 	<?php  if( $_GET['surveySuccess'] && $_GET['qsid']==intval($survey->questionSetId) ){ ?>
 		<div id="msg"><?php echo $survey->thankyouMsg ?></div> 
 	<?php  }elseif(strlen($formResponse)){ ?>
