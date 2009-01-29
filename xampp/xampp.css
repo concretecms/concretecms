@@ -1,0 +1,187 @@
+
+body.n {
+	font-family: verdana,helvetica;
+	color: #000000;
+	background-color: #f87820; 
+	margin-left:-8px; 
+	margin-top:-8px;
+	font-size: 10px;
+}
+
+body.white {
+	font-family: verdana,helvetica;
+	color: #000000;
+	background-color: #ffffff;
+	font-size: 12px;
+}
+body {
+	font-family: verdana,helvetica;
+	color: #000000;
+	background-color: #f8e8a0;
+	font-size: 12px;
+}
+h1 {
+	font-family: verdana,helvetica;
+	font-size: 16px;
+	font-weight: bold;
+	color: #bb3902;
+}
+h2 {
+	font-family: verdana,helvetica;
+	font-size: 14px;
+	font-weight: bold;
+	color: #bb3902;
+}
+h3 {
+	font-family: verdana,helvetica;
+	font-size: 12px;
+	font-weight: bold;
+	color: #000000;
+}
+td {
+	font-family: verdana,helvetica;
+	color: #000000;
+	font-size: 12px;
+}
+a {
+	font-family: verdana,helvetica;
+	font-size: 12px;
+}
+.white {
+	font-family: verdana,helvetica;
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 12pt;
+}
+.tabval {
+	font-family: verdana,helvetica;
+	color: #000000;
+	background-color: #ffffff;
+	font-weight: plain;
+	font-size: 10pt;
+}
+.tabhead {
+	font-family: verdana,helvetica;
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 10pt;
+}
+.nh {
+	font-family: verdana,helvetica;
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 10pt;
+}
+p {
+	font-family: verdana,helvetica;
+	color: #000000;
+	font-size: 12px;
+}
+.navi {
+	font-family: verdana,helvetica;
+	background-color: #fb7922;
+	color: #ffffff;
+	font-size: 10px;
+}
+.small {
+	font-family: verdana,helvetica;
+	color: #db5902;
+	font-size: 10px;
+}
+
+a.n:link:focus, a.n:visited:focus {-moz-outline:0px;}
+a.n:link { font-size: 10pt; color: #ffffff; font-weight:normal; text-decoration:none;}
+a.n:visited { font-size: 10pt; color: #ffffff; font-weight:normal; text-decoration:none;}
+a.n:active { font-size: 10pt; color: #ffffff; font-weight:normal; text-decoration:none;}
+a.n:hover { font-size: 10pt; background-color: #ffffff; color: #fb7822; font-weight:normal; text-decoration:none;}
+a.nh:link:focus, a.nh:visited:focus {-moz-outline:0px;}
+
+a.nh:link { font-size: 10pt; background-color: #ffffff; color: #fb7822; font-weight:normal; text-decoration:none;}
+a.nh:visited { font-size: 10pt; background-color: #ffffff; color: #fb7822; font-weight:normal; text-decoration:none;}
+a.nh:active { font-size: 10pt; background-color: #ffffff; color: #fb7822; font-weight:normal; text-decoration:none;}
+a.nh:hover { font-size: 10pt; background-color: #ffffff; color: #fb7822; font-weight:normal; text-decoration:none;}
+
+a:link { color: #bb3902; font-weight:normal; text-decoration:underline;}
+a:visited { color: #bb3902; font-weight:normal; text-decoration:underline;}
+a:active { color: #bb3902; font-weight:normal; text-decoration:underline;}
+a:hover { color: #bb3902; font-weight:normal; text-decoration:underline;}
+
+.h {
+	font-family: verdana,helvetica;
+	color: #3c3c5c;
+	background-color: #ffffff;
+	font-size: 12px;
+}
+.d {
+	font-family: verdana,helvetica;
+	color: #ffffff;
+	background-color: #fb7922;
+	font-size: 12px;
+}
+.black {
+	font-family: verdana,helvetica;
+	color: #000000;
+	font-weight: normal;
+	font-size: 12px;
+}
+.blue {
+	font-family: verdana,helvetica;
+	color: #3c3c5c;
+	font-weight: normal;
+	font-size: 10px;
+	text-decoration: underline;
+}
+.big {
+	font-family: verdana,helvetica;
+	color: #000000;
+	background-color: #ffffff;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.red {
+	font-family: verdana,helvetica;
+	color: #ffffff;
+	background-color: #df0000;
+	font-weight: bold;
+	font-size: 10px;
+}
+.green {
+	font-family: verdana,helvetica;
+	color: #ffffff;
+	background-color: #00df00;
+	font-weight: bold;
+	font-size: 10px;
+}
+
+.yellow {
+	font-family: verdana,helvetica;
+	color: #ffffff;
+	background-color: #dfdf00;
+	font-weight: bold;
+	font-size: 10px;
+}
+
+#langsel {
+	font-family: Verdana;
+	font-size: 8px;
+	vertical-align: bottom;
+	padding-bottom: 1px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#langsel div {
+	float: right;
+}
+
+#langsel a {
+	color: #000;	
+	text-decoration: none;
+	font-family: Verdana;
+	font-size: 10px;
+}
+
+#langsel a:hover {
+	text-decoration: underline;
+}
