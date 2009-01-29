@@ -589,6 +589,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					// if we're passing a view but our render override is not null, that means that we're passing 
 					// a new view from within a controller. If that's the case, then we DON'T override the viewPath, we want to keep it
 					
+					$pp = Page::getByPath($view);
+					if (!$pp->isError()) {
+						$this->c = $pp;
+					}
+					
 					$viewPath = $view;
 					if ($this->controller->getRenderOverride() != '' && $this->getCollectionObject() != null) {
 						// we are INSIDE a collection renderring a view. Which means we want to keep the viewPath that of the collection
