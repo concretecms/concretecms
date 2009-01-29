@@ -178,7 +178,98 @@ saveMaintenanceMode = function() {
 }
 </script>
 
+<form method="post" id="ipblacklist-form" action="<?=$this->url('/dashboard/settings', 'update_ipblacklist')?>">
+	<?=$this->controller->token->output('update_ipblacklist')?>
+	
+	<h1><span><?=t('IP Address Blacklist')?></span></h1>
+	<div class="ccm-dashboard-inner">
+	
+	<div class="ccm-dashboard-radio">
+		<?=$form->checkbox('ip_ban_lock_ip_enable', 1, $ip_ban_enable_lock_ip_after)?> <?=t('Lock IP after')?>
+		<?=$form->text('ip_ban_lock_ip_attempts', $ip_ban_lock_ip_after_attempts, array('style'=>'width:30px'))?>
+		<?=t('failed login attempts');?>		
+		in		
+		<?=$form->text('ip_ban_lock_ip_time', $ip_ban_lock_ip_after_time, array('style'=>'width:30px'))?>				
+		<?=t('seconds');?>				
+	</div>		
+	
+	<table class="grid-list" width="100%" cellspacing="1" cellpadding="0" border="0">	
+		<tr>
+			<td class="subheader"><?=$form->checkbox('ip_ban_select_all',1,false)?> <?=t('IP')?></td>
+			<td class="subheader"><?=t('Reason For Ban')?></td>
+			<td class="subheader"><?=t('Expires In')?></td>
+			<td class="subheader"> 
+				<select name="ip_ban_change_to" id="ip_ban_change_to">				
+					<option value="<?=$ip_ban_change_makeperm?>"><?=t('Make Ban Permanant')?></option>
+					<option value="<?=$ip_ban_change_remove?>"><?=t('Remove Ban')?></option>
+				</selct>
+				<input type="button" style="position:relative;left:5px;width:150px;" value="<?=t('Make Ban Permanant')?>" name="submit-ipblacklist" id="submit-ipblacklist" />
+			</td>
+		</tr>
+		<?php foreach ($user_banned_limited_ips as $user_banned_ip) { ?>
+			<tr>
+				<td><?=$form->checkbox('ip_ban_changes[]',$user_banned_ip->getUniqueID(),false)?> <?=$user_banned_ip->getIPRangeForDisplay()?></td>
+				<td><?=$user_banned_ip->getReason()?></td>
+				<td><?=($this->formatTimestampAsMinutesSeconds($user_banned_ip->expires))?></td>			
+				<td>&nbsp;</td>
+			</tr>		
+		<? } ?>
+	</table>		
 
+	<p>
+	<?=t('You may also enter any number of ip addresses, one per line, in the form below to create a <strong>permanatly ban</strong>.')?>
+	</p>	
+	<p>
+	<?=t('To indicate a range, use a wildcard character. ex. 192.168.15.* would block all the IP addresses in the 192.168.15 subnet.')?>
+	</p>		
+	<h2><?=t('Permanent IP Ban')?></h2>
+	<textarea id="ip_ban_manual" name="ip_ban_manual" rows="10" cols="40" style="width:450px;"><?=$user_banned_manual_ips?></textarea>
+	<?	
+	$b1 = $h->button_js(t('Save'), 'saveIpBlacklist()');
+	print $h->buttons($b1);
+	?>
+	<br class="clear" />
+	</div>
+
+</form>
+
+<script type="text/javascript">
+
+var saveIpBlacklist = function(){
+	$("form#ipblacklist-form").get(0).submit();	
+}
+
+//jQuery block for non-submit form logic
+$(document).ready(function(){
+	var sParentSelector;
+	sParentSelector = 'form#ipblacklist-form';	
+	//delegate for any clicks to this form
+	$(sParentSelector).bind('click', function(e){
+		//clicks the parent IP checkbox
+		if ( $(e.target).is('input#ip_ban_select_all') ) {
+			allIPs(e.target);
+		}
+		else if( $(e.target).is('input#submit-ipblacklist') ) {
+			saveIpBlacklist();
+		}
+	});	
+	
+	$(sParentSelector).bind('change', function(e){
+		if ($(e.target).is('select')) {			
+			$('input[name=submit-ipblacklist]').attr('value',$(':selected',e.target).text());
+		}
+	});
+	
+	function allIPs(t){
+		if(t.checked){
+			$('form#ipblacklist-form table input').attr('checked',true);
+		}
+		else{
+			$('form#ipblacklist-form table input').attr('checked',false);
+		}	
+	}
+});
+</script>
 <? } else { ?>
 
 

@@ -855,6 +855,38 @@
       <DEFTIMESTAMP/>
     </field>
   </table>
+  <table name="UserBannedIPs">
+    <field name="ipFrom" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ipTo" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="banCode" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+      <UNSIGNED/>
+    </field>
+    <field name="expires" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="isManual" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="ipFrom">
+      <col>ipFrom</col>
+    </index>
+    <index name="ipTo">
+      <col>ipTo</col>
+    </index>
+  </table>  
   <table name="UserGroups">
     <field name="uID" type="I" size="10">
       <KEY/>
