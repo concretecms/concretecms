@@ -22,9 +22,7 @@
  *
  */
 	defined('C5_EXECUTE') or die(_("Access Denied."));
-	class GuestbookBlockController extends BlockController {
-		
-		  
+	class GuestbookBlockController extends BlockController {		
 		protected $btTable = 'btGuestBook';
 		protected $btInterfaceWidth = "300";
 		protected $btInterfaceHeight = "260";	
@@ -43,6 +41,11 @@
 		}			
 			
 		function delete() {
+			$ip = Loader::helper('validation/ip');
+			if (!$ip->check()) {
+				$this->set('invalidIP', $ip->getErrorMessage());			
+				return;
+			}
 			$E = new GuestBookBlockEntry($this->bID);
 			$bo = $this->getBlockObject();
 			global $c;
@@ -80,7 +83,13 @@
 		 * Handles the form post for adding a new guest book entry
 		 *
 		*/	
-		function action_form_save_entry() {			
+		function action_form_save_entry() {	
+			$ip = Loader::helper('validation/ip');
+			if (!$ip->check()) {
+				$this->set('invalidIP', $ip->getErrorMessage());			
+				return;
+			}
+
 			// get the cID from the block Object
 			$bo = $this->getBlockObject();
 			global $c;
@@ -199,6 +208,11 @@
 		 *
 		*/
 		function action_removeEntry() {
+			$ip = Loader::helper('validation/ip');
+			if (!$ip->check()) {
+				$this->set('invalidIP', $ip->getErrorMessage());			
+				return;
+			}
 			$bp = $this->getPermissionsObject(); 
 			if($bp->canWrite()) {
 				$Entry = new GuestBookBlockEntry($this->bID);
@@ -214,6 +228,12 @@
 		 *
 		*/
 		function action_approveEntry() {
+			$ip = Loader::helper('validation/ip');
+			if (!$ip->check()) {
+				$this->set('invalidIP', $ip->getErrorMessage());			
+				return;
+			}
+
 			$bp = $this->getPermissionsObject(); 
 			if($bp->canWrite()) {
 				$Entry = new GuestBookBlockEntry($this->bID);
@@ -227,6 +247,12 @@
 		 *
 		*/
 		function action_unApproveEntry() {
+			$ip = Loader::helper('validation/ip');
+			if (!$ip->check()) {
+				$this->set('invalidIP', $ip->getErrorMessage());			
+				return;
+			}
+
 			$bp = $this->getPermissionsObject(); 
 			if($bp->canWrite()) {
 				$Entry = new GuestBookBlockEntry($this->bID);
