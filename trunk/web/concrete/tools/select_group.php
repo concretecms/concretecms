@@ -26,7 +26,7 @@ $gResults = $gl->getPage();
 
 <?php
 $group_search_form = '
-	<form id="ccm-group-search" style="top: -17px; left: 10px"  method="get" action="'. REL_DIR_FILES_TOOLS_REQUIRED .'/select_group/">
+	<form id="ccm-group-search" style="position: absolute; top: 2px; right: 0px"  method="get" action="'. REL_DIR_FILES_TOOLS_REQUIRED .'/select_group/">
 	<div id="ccm-group-search-fields">
 	<input type="text" id="ccm-group-search-keywords" name="gKeywords" value="'. $_REQUEST['gKeywords'] .'" class="ccm-text" style="width: 100px" />
 	<input type="submit" value="'. t('Search') .'" />

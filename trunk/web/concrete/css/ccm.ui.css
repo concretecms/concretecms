@@ -163,7 +163,8 @@ div.ccm-theme-selector {width: 124px; height: 120px; float: left; text-align: ce
 div.ccm-theme-selector a img {border: 2px solid #ababab}
 div.ccm-theme-selector a.ccm-theme-thumbnail-selected img {border: 2px solid #00B7FF}
 
-div.ccm-paging-top {background: #A7C5DA; padding: 4px}
+div.ccm-paging-top {background: #A7C5DA; padding: 4px; position: relative;}
+div.ccm-paging-top input {font-size: 10px; padding-top: 0px; padding-bottom: 0px}
 
 /* preview */
 .ccm-preview-pane {
