@@ -8,7 +8,7 @@
  * @license    http://www.concrete5.org/license/     MIT License
  */
  	defined('C5_EXECUTE') or die(_("Access Denied."));
-	class ValidationIpHelper {
+	class ValidationIpHelper {	
 		/**
  		 * Checks if an IP has been banned
 		 * @param type $ip
@@ -22,14 +22,16 @@
 			FROM UserBannedIPs 
 			WHERE 	
 			(
-				(ipFrom = '.ip2long($ip).' AND ipTo = 0) 
+				(ipFrom = ? AND ipTo = 0) 
 				OR 
-				(ipFrom <= '.ip2long($ip).' AND ipTo >= '.ip2long($ip).')
+				(ipFrom <= ? AND ipTo >= ?)
 			)
 			AND (expires = 0 OR expires > UNIX_TIMESTAMP(now()))
 			';
+			$ip_as_long = ip2long($ip);
+			$v = array($ip_as_long, $ip_as_long, $ip_as_long);
 			
-			$rs 	= $db->Execute($q);
+			$rs 	= $db->Execute($q,$v);
 			$row 	= $rs->fetchRow();
 			
 			return ($row['count'] > 0) ? false : true;
@@ -50,6 +52,25 @@
 		public function getErrorMessage() {
 			return t("Unable to complete action: your IP address has been banned. Please contact the administrator of this site for more information.");
 		}	
+		
+		public function logSignupRequest(){		
+			if(Config::get('IP_BAN_LOCK_IP_ENABLE') == 1){
+				$signupRequest = new SignupRequest();
+				$signupRequest->ipFrom = ip2long($this->getRequestIP());
+				$signupRequest->save();
+			}
+		}
+		
+		public function signupRequestThreshholdReached(){
+			$threshold_attemps  = Config::get('IP_BAN_LOCK_IP_ATTEMPTS');
+			$threshhold_seconds = Config::get('IP_BAN_LOCK_IP_TIME');
+			
+			$q = 'SELECT count(ipFrom) 
+			FROM SignupRequests 
+			WHERE ipFrom =  AND UNIX_TIMESTAMP(date_access) > (UNIX_TIMESTAMP(now()) - 1000);';
+		}
+		
 	}
-	
+
+	class SignupRequest extends Model{}	
 ?>
