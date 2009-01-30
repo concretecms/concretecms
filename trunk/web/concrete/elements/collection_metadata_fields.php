@@ -74,11 +74,12 @@ var ccmAttributeValuesHelper={
 
 	<h2>
 		<?=t('Custom Fields')?>
+		<?=$c->getCollectionTypeID()?>
 		<select id="ccm-meta-custom-fields">
 			<option value="">** <?=t('Add Field')?></option>
 			<? $cAttributes = CollectionAttributeKey::getList(); 
 			foreach($cAttributes as $ck) { 
-				if (!in_array($ck->getCollectionAttributeKeyID(), $usedKeysCombined)) {?>
+				if (!in_array($ck->getCollectionAttributeKeyID(), $usedKeysCombined) || $c->getCollectionTypeID()==0) {?>
 				<option value="<?=$ck->getCollectionAttributeKeyID()?>"><?=$ck->getCollectionAttributeKeyName()?></option>
 			<? }
 			
@@ -94,11 +95,12 @@ var ccmAttributeValuesHelper={
 			$caValue = $c->getCollectionAttributeValue($ak); ?>
 		
 		<div class="ccm-field-meta" id="ccm-field-ak<?=$ak->getCollectionAttributeKeyID()?>" <? if (!in_array($ak->getCollectionAttributeKeyID(), $usedKeysCombined)) { ?> style="display: none" <? } ?>>
-		<input type="hidden" id="ccm-meta-field-selected<?=$ak->getCollectionAttributeKeyID()?>" name="selectedAKIDs[]" value="<? if (!in_array($ak->getCollectionAttributeKeyID(), $usedKeysCombined)) { ?>0<? } else { ?><?=$ak->getCollectionAttributeKeyID()?><? } ?>" />
+		<input type="hidden" class="ccm-meta-field-selected" id="ccm-meta-field-selected<?=$ak->getCollectionAttributeKeyID()?>" name="selectedAKIDs[]" value="<? if (!in_array($ak->getCollectionAttributeKeyID(), $usedKeysCombined)) { ?>0<? } else { ?><?=$ak->getCollectionAttributeKeyID()?><? } ?>" />
 		
-		<? if (!in_array($ak->getCollectionAttributeKeyID(), $requiredKeys)) { ?>
-			<a href="javascript:void(0)" class="ccm-meta-close" ccm-meta-name="<?=$ak->getCollectionAttributeKeyName()?>" id="ccm-remove-field-ak<?=$ak->getCollectionAttributeKeyID()?>"><?=t('Remove Field')?></a>
-		<? } ?>
+		<a href="javascript:void(0)" class="ccm-meta-close" ccm-meta-name="<?=$ak->getCollectionAttributeKeyName()?>" id="ccm-remove-field-ak<?=$ak->getCollectionAttributeKeyID()?>"
+		  style="display:<?=(!in_array($ak->getCollectionAttributeKeyID(), $requiredKeys))?'block':'none'?>" ><?=t('Remove Field')?></a>
+
+		
 		<label><?=$ak->getCollectionAttributeKeyName()?></label>
 			<?
 			$akType=$ak->getCollectionAttributeKeyType();
