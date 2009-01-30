@@ -162,7 +162,7 @@ class DashboardSettingsController extends Controller {
 					//silently discard duplicates
 				}
 			}
-			$db->EndTrans();
+			$db->CompleteTrans();
 			
 			$this->redirect('/dashboard/settings','set_permissions','saved_ipblacklist');
 		}
