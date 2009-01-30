@@ -329,7 +329,9 @@ div#jquery-font-panel div.jquery-font-panel-list div {
 }
 
 div#jquery-font-panel div.jquery-font-panel-list div.font-panel-list-selected {background-color: #E6EBED; color: #333}
-	
-div.ccm-dashboard-inner div.ccm-dashboard-inner-leftcol{float:left;width:60%;}
-div.ccm-dashboard-inner div.ccm-dashboard-inner-rightcol{width:40%;float:left;}	
-div.ccm-dashboard-inner-leftcol table.grid-list{width:99%;}
+
+table.ccm-dashboard-inner-columns {width: 100%}
+td.ccm-dashboard-inner-leftcol{width:60%;}
+td.ccm-dashboard-inner-rightcol{width: 40%;}
+td.ccm-dashboard-inner-gutter div {width: 20px}
+div.ccm-dashboard-inner-leftcol table.grid-list{width:100%;}

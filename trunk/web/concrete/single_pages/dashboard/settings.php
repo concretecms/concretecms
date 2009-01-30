@@ -184,28 +184,31 @@ saveMaintenanceMode = function() {
 	<h1><span><?=t('IP Address Blacklist')?></span></h1>
 
 	<div class="ccm-dashboard-inner">	
-		<h2>Smart IP Banning</h2>
-		<div class="ccm-dashboard-radio">
-			<?=$form->checkbox('ip_ban_lock_ip_enable', 1, $ip_ban_enable_lock_ip_after)?> <?=t('Lock IP after')?>
-			<?=$form->text('ip_ban_lock_ip_attempts', $ip_ban_lock_ip_after_attempts, array('style'=>'width:30px'))?>
-			<?=t('failed login attempts');?>		
-			in		
-			<?=$form->text('ip_ban_lock_ip_time', $ip_ban_lock_ip_after_time, array('style'=>'width:30px'))?>				
-			<?=t('seconds');?>				
-		</div>		
-		<div class="ccm-dashboard-inner-leftcol">	
+		<table border="0" cellspacing="0" cellpadding="0" class="ccm-dashboard-inner-columns">
+		<tr>
+		<td valign="top" class="ccm-dashboard-inner-leftcol">	
+			<h2>Smart IP Banning</h2>
+			<div class="ccm-dashboard-radio">
+				<?=$form->checkbox('ip_ban_lock_ip_enable', 1, $ip_ban_enable_lock_ip_after)?> <?=t('Lock IP after')?>
+				<?=$form->text('ip_ban_lock_ip_attempts', $ip_ban_lock_ip_after_attempts, array('style'=>'width:30px'))?>
+				<?=t('failed login attempts');?>		
+				in		
+				<?=$form->text('ip_ban_lock_ip_time', $ip_ban_lock_ip_after_time, array('style'=>'width:30px'))?>				
+				<?=t('seconds');?>				
+			</div>	
+			<Div style="height: 10px">&nbsp;</div>
 			<h3><?=t('Automatically Banned IP Addresses')?></h3>
-			<table class="grid-list" width="40%" cellspacing="1" cellpadding="0" border="0">	
+			<table class="grid-list" width="100%" cellspacing="1" cellpadding="0" border="0">	
 				<tr>
 					<td class="subheader"><?=$form->checkbox('ip_ban_select_all',1,false)?> <?=t('IP')?></td>
 					<td class="subheader"><?=t('Reason For Ban')?></td>
 					<td class="subheader"><?=t('Expires In')?></td>
 					<td class="subheader"> 
-						<select name="ip_ban_change_to" id="ip_ban_change_to" style="display:block;margin-bottom:5px;">				
+						<select name="ip_ban_change_to" id="ip_ban_change_to">				
 							<option value="<?=$ip_ban_change_makeperm?>"><?=t('Make Ban Permanant')?></option>
 							<option value="<?=$ip_ban_change_remove?>"><?=t('Remove Ban')?></option>
-						</selct>
-						<input type="button" value="<?=t('Make Ban Permanant')?>" name="submit-ipblacklist" id="submit-ipblacklist" />
+						</select>
+						<input type="button" value="<?=t('Go')?>" name="submit-ipblacklist" id="submit-ipblacklist" />
 					</td>
 				</tr>
 				<?php if (count($user_banned_limited_ips) == 0) {?>
@@ -223,14 +226,19 @@ saveMaintenanceMode = function() {
 					<? } ?>
 				<? } ?>
 			</table>	
-		</div>
-		<div class="ccm-dashboard-inner-rightcol">
-			<h3><?=t('Permanent IP Ban')?></h3>
-			<textarea id="ip_ban_manual" name="ip_ban_manual" rows="10" cols="40" style="width:100%"><?=$user_banned_manual_ips?></textarea>
-			<p>
+		</td>
+		<td class="ccm-dashboard-inner-gutter"><div>&nbsp;</div></td>
+		<td valign="top" class="ccm-dashboard-inner-rightcol">
+			<h2><?=t('Permanent IP Ban')?></h2>
+			<p class="notes">
 			<?=t('Enter IP addresses, one per line, in the form below to manually ban an IP address. To indicate a range, use a wildcard character (e.g. 192.168.15.* will block 192.168.15.1, 192.168.15.2, etc...)')?>			
 			</p>					
-		</div>
+			<textarea id="ip_ban_manual" name="ip_ban_manual" rows="10" cols="40" style="width:100%"><?=$user_banned_manual_ips?></textarea>
+		</td>
+		</tr>
+		</table>
+		<br/>
+		
 		<?	
 		$b1 = $h->button_js(t('Save'), 'saveIpBlacklist()');
 		print $h->buttons($b1);
@@ -263,7 +271,7 @@ $(document).ready(function(){
 	
 	$(sParentSelector).bind('change', function(e){
 		if ($(e.target).is('select')) {			
-			$('input[name=submit-ipblacklist]').attr('value',$(':selected',e.target).text());
+			//$('input[name=submit-ipblacklist]').attr('value',$(':selected',e.target).text());
 		}
 	});
 	
