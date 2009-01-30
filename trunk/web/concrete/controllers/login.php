@@ -122,10 +122,12 @@ class LoginController extends Controller {
 	}
 
 	public function do_login() { 
-	
+		$ip = Loader::helper('validation/ip');
 		$vs = Loader::helper('validation/strings');
 		try {
-			
+			if (!$ip->check()) {				
+				throw new Exception($ip->getErrorMessage());
+			}
 			if (OpenIDAuth::isEnabled() && $vs->notempty($this->post('uOpenID'))) {
 				$oa = new OpenIDAuth();
 				$oa->setReturnURL($this->openIDReturnTo);
