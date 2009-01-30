@@ -178,9 +178,16 @@ var ccmAttributesHelper={
 		if($(field).hasClass(removeClass)) $(field).removeClass(removeClass);
 	},
 	
+	doSubmit: true,
+	
 	addEnterClick:function(e,fn){
+		ccmAttributesHelper.doSubmit = false;
 		var keyCode = (e.keyCode ? e.keyCode : e.which);
-		if(keyCode == 13 && typeof(fn)=='function' ) fn();
+		if(keyCode == 13 && typeof(fn)=='function' ) {
+			fn();
+			setTimeout(function() { ccmAttributesHelper.doSubmit = true; }, 100);
+		}
+		
 	}
 }
 
@@ -204,7 +211,7 @@ var ccmAttributesHelper={
 
 <h1><span><?=t('Edit Attribute Definition')?> (<em class="required">*</em> - <?=t('required field')?>)</span></h1>
 <div class="ccm-dashboard-inner">
-	<form method="post" id="ccm-attribute-update" action="<?=$this->url('/dashboard/pages/types/attributes/')?>">
+	<form method="post" id="ccm-attribute-update" action="<?=$this->url('/dashboard/pages/types/attributes/')?>" onsubmit="return ccmAttributesHelper.doSubmit">
 	<?=$valt->output('add_or_update_attribute')?>
 	<input type="hidden" name="akID" value="<?=$_REQUEST['akID']?>" />
 	<input type="hidden" name="task" value="edit" />
@@ -273,7 +280,7 @@ var ccmAttributesHelper={
 <h1><span><?=t('Add Page Attribute')?></span></h1>
 <div class="ccm-dashboard-inner">
 
-<form method="post" id="ccm-add-attribute" action="<?=$this->url('/dashboard/pages/types/attributes/')?>">
+<form method="post" id="ccm-add-attribute" action="<?=$this->url('/dashboard/pages/types/attributes/')?>" onsubmit="return ccmAttributesHelper.doSubmit">
 <input type="hidden" name="add" value="1" />
 <?=$valt->output('add_or_update_attribute')?>
 
