@@ -135,6 +135,10 @@ class RegisterController extends Controller {
 				
 			}
 		} else {
+			$ip->logSignupRequest();
+			if ($ip->signupRequestThreshholdReached()) {
+				$ip->createIPBan();
+			}		
 			$this->set('error', $e);
 		}
 		
