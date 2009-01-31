@@ -1049,4 +1049,21 @@
       <col>uName</col>
     </index>
   </table>
+  <table name="signuprequests">
+    <field name="id" type="I" size="11">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="ipFrom" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="date_access" type="T">
+      <DEFAULT value="CURRENT_TIMESTAMP"/>
+    </field>
+    <index name="index_ipFrom">
+      <col>ipFrom</col>
+    </index>
+  </table>  
 </schema>

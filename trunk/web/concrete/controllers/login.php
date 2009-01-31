@@ -14,7 +14,7 @@ class LoginController extends Controller {
 		} else {
 			$this->set('uNameLabel', t('Username'));
 		}
-		if(strlen($_GET['uName'])) { // pre-populate the username if supplied
+		if (strlen($_GET['uName'])) { // pre-populate the username if supplied
 			$this->set("uName",$_GET['uName']);
 		}
 		
@@ -124,6 +124,7 @@ class LoginController extends Controller {
 	public function do_login() { 
 		$ip = Loader::helper('validation/ip');
 		$vs = Loader::helper('validation/strings');
+		
 		try {
 			if (!$ip->check()) {				
 				throw new Exception($ip->getErrorMessage());
@@ -179,6 +180,10 @@ class LoginController extends Controller {
 			$this->finishLogin();
 			
 		} catch(Exception $e) {
+			$ip->logSignupRequest();
+			if ($ip->signupRequestThreshholdReached()) {
+				$ip->createIPBan();
+			}
 			$this->error->add($e);
 		}
 	}
