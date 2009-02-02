@@ -380,6 +380,127 @@
       <UNSIGNED/>
     </field>
   </table>
+  <table name="FileAttributeKeys">
+    <field name="fakID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="fakHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="fakName" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="fakValues" type="X"/>
+    <field name="fakAllowOtherValues" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="fakType" type="C" size="255">
+      <DEFAULT value="TEXT"/>
+    </field>
+    <index name="fakHandle">
+      <UNIQUE/>
+      <col>fakHandle</col>
+    </index>
+  </table>
+  <table name="FileAttributeValues">
+    <field name="fID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fakID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="value" type="X"/>
+  </table>
+  <table name="FileVersions">
+    <field name="fID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fvFilename" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="fvPrefix" type="C" size="12">
+      <NOTNULL/>
+    </field>
+    <field name="fvGenericType" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fvSize" type="I" size="20">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fvTitle" type="C" size="255"/>
+    <field name="fvDescription" type="X"/>
+    <field name="fvTags" type="C" size="255"/>
+    <field name="fvIsApproved" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fvDateAdded" type="T"/>
+    <field name="fvApproverUID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fvAuthorUID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fvActivateDatetime" type="T"/>
+    <field name="fvUpdateTypeID" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fvUpdateTypeAttributes" type="C" size="255"/>
+    <field name="fvHasThumbnail1" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="fvHasThumbnail2" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="fvHasThumbnail3" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+  <table name="Files">
+    <field name="fID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="fDateAdded" type="T"/>
+    <field name="fOverrideSetPermissions" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
   <table name="Groups">
     <field name="gID" type="I" size="10">
       <KEY/>
