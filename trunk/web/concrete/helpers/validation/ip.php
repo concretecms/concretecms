@@ -89,38 +89,26 @@
 			if ($ignoreConfig || Config::get('IP_BAN_LOCK_IP_ENABLE') == 1) {		
 				$ip = ($ip) ? $ip : $this->getRequestIP();			
 				$ip = ip2long($ip);
-				$time = time() + (60 * 60 * 24 * 1);     //ban for a day
+				
+				//$time = time() + (60 * 60 * 24 * 1);     //ban for a day
+				$timeOffset = Config::get('IP_BAN_LOCK_IP_HOW_LONG') ? Config::get('IP_BAN_LOCK_IP_HOW_LONG') : (60 * 60 * 24 * 1);
+				$time 		= time() + $timeOffset;
+				$db	= Loader::db();				
 				Loader::model('user_banned_ip');
-				$ban = new UserBannedIP();
-				$ban->ipFrom 	= $ip;
-				$ban->ipTo 		= 0;
-				$ban->banCode	= UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE;
-				$ban->expires	= $time;
-				$ban->isManual	= 0;
-				try{
-					$ban->save();
-				}
-				catch (Exception $e) {
-					//AdoDB active record has problems with no primary key tables
-					//if a duplicate key, update the expired 
-					//if (strpos ( $e->getMsg(), string needle [, int offset] )
-					if ($e->getCode() == 1062) {		//1602 is duplicate entry key
-						$db = Loader::db();
-						
-						$q = 'UPDATE UserBannedIPs 
-						SET 
-						expires = ?
-						WHERE 
-						(ipFrom = ? AND ipTo = 0)
-						AND
-						NOT (expires = 0)';
-						
-						$time 	= time() + (60 * 60 * 24 * 1);
-						$ip		= $ip;
-						$v = array($time,$ip);					
-						$db->execute($q,$v);
-					}
-				}
+				
+				//delete before inserting .. catching a duplicate (1062) doesn't 
+				//seem to be working in all enviornments
+				$db->StartTrans();
+				$q 	= 'DELETE FROM UserBannedIPs WHERE ipFrom = ? AND ipTo = 0 AND isManual = 0';
+				$v  = Array($ip,0);				
+				$db->execute($q,$v);
+				
+				$q	=  'INSERT INTO UserBannedIPs (ipFrom,ipTo,banCode,expires,isManual) ';
+				$q  .= 'VALUES (?,?,?,?,?)';				
+				$v  = array($ip,0,UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE,$time,0);
+				$db->execute($q,$v);
+
+				$db->CompleteTrans();				
 			}
 		}
 		
