@@ -45,6 +45,9 @@ div.guestBook-entry {
 }
 </style>
 <h4 class="guestBook-title"><?=$controller->title?></h4>
+<?php if($invalidIP) { ?>
+<div class="ccm-error"><p><?=$invalidIP?></p></div>
+<? } ?>
 <?
 $u = new User();
 $posts = $controller->getEntries();

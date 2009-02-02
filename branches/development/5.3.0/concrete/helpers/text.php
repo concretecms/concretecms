@@ -18,7 +18,6 @@
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class TextHelper {
-
 	
 	/** 
 	 * Takes text and returns it in the "lowercase_and_underscored_with_no_punctuation" format

@@ -25,6 +25,7 @@ class RegisterController extends Controller {
 	public function do_register() {
 		
 		$e = Loader::helper('validation/error');
+		$ip = Loader::helper('validation/ip');		
 		$txt = Loader::helper('text');
 		$vals = Loader::helper('validation/strings');
 		$valc = Loader::helper('concrete/validation');
@@ -32,6 +33,10 @@ class RegisterController extends Controller {
 		$username = $_POST['uName'];
 		$password = $_POST['uPassword'];
 		$passwordConfirm = $_POST['uPasswordConfirm'];
+		
+		if (!$ip->check()) {
+			$e->add($ip->getErrorMessage());
+		}		
 		
 		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
 			$_POST['uName'] = $_POST['uEmail'];
@@ -130,6 +135,10 @@ class RegisterController extends Controller {
 				
 			}
 		} else {
+			$ip->logSignupRequest();
+			if ($ip->signupRequestThreshholdReached()) {
+				$ip->createIPBan();
+			}		
 			$this->set('error', $e);
 		}
 		

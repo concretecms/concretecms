@@ -41,6 +41,10 @@ class SlideshowBlockController extends BlockController {
 		$this->set('playback', $this->playback);
 		$this->set('bID', $this->bID);			
 	}	
+	
+	public function getImages() {
+		return $this->images;
+	}
 			
 	function view(){
 		
