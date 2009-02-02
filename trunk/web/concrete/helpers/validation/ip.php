@@ -11,10 +11,10 @@
 	class ValidationIpHelper {	
 		/**
  		 * Checks if an IP has been banned
-		 * @param type $ip
+		 * @param type $ip  if 127.0.0.1 form (as opposed to int)
 		 * @return boolean
 		 */		
-		public function check($ip=false) {
+		public function check($ip=false,$extraParamString=false,$extraParamValues=array()) {
 			$ip = ($ip) ? $ip : $this->getRequestIP();
 			$db = Loader::db();
 			//do ip check
@@ -28,8 +28,14 @@
 			)
 			AND (expires = 0 OR expires > UNIX_TIMESTAMP(now()))
 			';
+			
+			if($extraParamString !== false){
+				$q .= $extraParamString;
+			}
+			
 			$ip_as_long = ip2long($ip);
 			$v = array($ip_as_long, $ip_as_long, $ip_as_long);
+			$v = array_merge($v,$extraParamValues);
 			
 			$rs 	= $db->Execute($q,$v);
 			$row 	= $rs->fetchRow();
@@ -37,6 +43,10 @@
 			return ($row['count'] > 0) ? false : true;
 		}
 	
+		protected function checkForManualPermBan($ip=false){
+			return $this->check($ip, ' AND isManual = ? AND expires = ? ',Array(1,0));
+		}
+		
 		protected function getRequestIP() {			
 			if ( array_key_exists ('HTTP_CLIENT_IP', $_SERVER ) && $_SERVER['HTTP_CLIENT_IP']){
 				return $_SERVER['HTTP_CLIENT_IP'];
@@ -97,18 +107,23 @@
 				Loader::model('user_banned_ip');
 				
 				//delete before inserting .. catching a duplicate (1062) doesn't 
-				//seem to be working in all enviornments
-				$db->StartTrans();
-				$q 	= 'DELETE FROM UserBannedIPs WHERE ipFrom = ? AND ipTo = 0 AND isManual = 0';
-				$v  = Array($ip,0);				
-				$db->execute($q,$v);
-				
-				$q	=  'INSERT INTO UserBannedIPs (ipFrom,ipTo,banCode,expires,isManual) ';
-				$q  .= 'VALUES (?,?,?,?,?)';				
-				$v  = array($ip,0,UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE,$time,0);
-				$db->execute($q,$v);
-
-				$db->CompleteTrans();				
+				//seem to be working in all enviornments.  If there's a permanant ban,
+				//obey its setting
+				if ($this->checkForManualPermBan(long2ip($ip), true)) {
+					$db->StartTrans();
+					//check if there's a manual ban
+	
+					$q 	= 'DELETE FROM UserBannedIPs WHERE ipFrom = ? AND ipTo = 0 AND isManual = 0';
+					$v  = Array($ip,0);				
+					$db->execute($q,$v);
+					
+					$q	=  'INSERT INTO UserBannedIPs (ipFrom,ipTo,banCode,expires,isManual) ';
+					$q  .= 'VALUES (?,?,?,?,?)';				
+					$v  = array($ip,0,UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE,$time,0);
+					$db->execute($q,$v);
+	
+					$db->CompleteTrans();				
+				}
 			}
 		}
 		
