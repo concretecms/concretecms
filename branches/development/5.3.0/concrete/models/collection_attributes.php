@@ -76,7 +76,6 @@ class CollectionAttributeKey extends Object {
 	function getAllowOtherValues() {return $this->akAllowOtherValues; }
 	function getCollectionAttributeKeyValues() {return $this->akValues;}
 	function getCollectionAttributeKeyType() {return $this->akType;}
-	function isManageableType() {return in_array($this->akType, array("SELECT_ADD"));}
 	
 	function inUse($akHandle) {
 		$db = Loader::db();
@@ -85,15 +84,6 @@ class CollectionAttributeKey extends Object {
 		$akID = $db->getOne($q, $a);
 		if ($akID > 0) {
 			return true;
-		}
-	}
-	
-	function removeManageableStoredTerm($term) {
-		if ($this->isManageableType()) {
-			// this takes a term added by the "select + add one" and clears it out
-			// it gets deleted/deselected everywhere
-			// TODO
-			
 		}
 	}
 	
@@ -125,31 +115,6 @@ class CollectionAttributeKey extends Object {
 		$a = array($this->getCollectionAttributeKeyID());
 		$db->query("delete from CollectionAttributeKeys where akID = ?", $a);
 		$db->query("delete from PageTypeAttributes where akID = ?", $a);		
-	}
-	
-	function getPreviouslySelectedValues() {
-		$db = Loader::db();
-		$a = array($this->getCollectionAttributeKeyID());
-		$q = "select distinct value from CollectionAttributeValues where akID = ?";
-		$r = $db->query($q, $a);
-		
-		$values = array();
-		// [|] = special separate. don't include this in any meta values you have :[
-		while ($row = $r->fetchRow()) {
-			$v2 = explode('[|]', $row['value']);
-			if (is_array($v2)) {
-				foreach($v2 as $v2i) {
-					if (!in_array($v2i, $values)) {
-						$values[] = $v2i;
-					}
-				}
-			} else {
-				if (!in_array($row['value'], $values)) {
-					$values[] = $row['value'];
-				}
-			}
-		}
-		return $values;
 	}
 	
 	function add($akHandle, $akName, $akSearchable, $akValues, $akType, $akAllowOtherValues=0) {
@@ -192,5 +157,3 @@ class CollectionAttributeKey extends Object {
 	}
 	
 }
-
-?>

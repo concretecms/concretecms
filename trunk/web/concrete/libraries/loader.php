@@ -297,11 +297,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					require_once(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $item->getBlockTypeHandle() . '/' . FILENAME_BLOCK_CONTROLLER);
 				} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $item->getBlockTypeHandle() . '/' . FILENAME_BLOCK_CONTROLLER)) {
 					require_once(DIR_FILES_BLOCK_TYPES . "/" . $item->getBlockTypeHandle() . "/" . FILENAME_BLOCK_CONTROLLER);
-				} else {
+				} else if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . '/' . $item->getBlockTypeHandle() . '/' . FILENAME_BLOCK_CONTROLLER)) {
 					require_once(DIR_FILES_BLOCK_TYPES_CORE . "/" . $item->getBlockTypeHandle() . "/" . FILENAME_BLOCK_CONTROLLER);
 				}
 				$class = Object::camelcase($item->getBlockTypeHandle()) . 'BlockController';
-				if ($item instanceof BlockType) {
+				if (class_exists($class) && $item instanceof BlockType) {
 					$controller = new $class($item);
 				}
 			} else {
