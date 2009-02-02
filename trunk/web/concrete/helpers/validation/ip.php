@@ -54,6 +54,7 @@
 		}	
 		
 		public function logSignupRequest($ignoreConfig=false) {		
+			Loader::model('signup_request');
 			if (Config::get('IP_BAN_LOCK_IP_ENABLE') == 1) {
 				$signupRequest = new SignupRequest();
 				$signupRequest->ipFrom = ip2long($this->getRequestIP());
@@ -124,6 +125,4 @@
 		}
 		
 	}
-
-	class SignupRequest extends Model{}	
 ?>
