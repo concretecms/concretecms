@@ -1049,7 +1049,7 @@
       <col>uName</col>
     </index>
   </table>
-  <table name="signuprequests">
+  <table name="SignupRequests">
     <field name="id" type="I" size="11">
       <KEY/>
       <AUTOINCREMENT/>
@@ -1060,7 +1060,8 @@
       <UNSIGNED/>
     </field>
     <field name="date_access" type="T">
-      <DEFAULT value="CURRENT_TIMESTAMP"/>
+      <NOTNULL/>
+      <DEFTIMESTAMP/>
     </field>
     <index name="index_ipFrom">
       <col>ipFrom</col>
