@@ -109,6 +109,14 @@ class FileHelper {
 	
 	
 	/** 
+	 * Cleans up a filename and returns the cleaned up version
+	 */
+	public function sanitize($file) {
+		//return preg_replace(array("/[^0-9A-Za-z-.]/","/[\s]/"),"", $file);
+		return preg_replace("/[^0-9A-Z_a-z-.\s]/","", $file);
+	}
+	
+	/** 
 	* Returns the extension for a file name
 	* @param $filename
 	*/
@@ -116,25 +124,6 @@ class FileHelper {
 		$extension = end(explode(".",$filename));
 		return $extension;
 	}
-
-	/** 
-	* Parses the file extension for a given file name, checks it to see if it's in the the extension array if provided
-	* if not, it checks to see if it's in the UPLOAD_FILE_EXTENSIONS_ALLOWED constant
-	* @param string $filename
-	* @param array $extensions
-	* @return boolean
-	*/
-
-	public function hasAllowedExtension($filename, $extensions = NULL) {
-		$ext = strtolower($this->getExtension($filename));
-		if(isset($extensions) && is_array($extensions) && count($extensions)) {
-			$allowed_extensions = $extensions;
-		} else { // pull from constants
-			$extensions_string = strtolower(str_replace(array("*","."),"",UPLOAD_FILE_EXTENSIONS_ALLOWED));
-			$allowed_extensions = explode(";",$extensions_string);
-		}
-		return in_array($ext,$allowed_extensions);
-	}
-
+	
 }
 ?>

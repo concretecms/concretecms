@@ -236,6 +236,11 @@ define('DIR_FILES_UPLOADED', DIR_BASE . '/files');
 define('REL_DIR_FILES_UPLOADED', DIR_REL . '/files');
 define('DIR_FILES_UPLOADED_THUMBNAILS', DIR_BASE . '/files/thumbnails');
 define('REL_DIR_FILES_UPLOADED_THUMBNAILS', DIR_REL . '/files/thumbnails');
+define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_BASE . '/files/thumbnails/level2');
+define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_REL . '/files/thumbnails/level2');
+define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_BASE . '/files/thumbnails/level3');
+define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_REL . '/files/thumbnails/level3');
+
 define('DIR_FILES_UPLOADED_ONSTATES', DIR_BASE . '/files/onstates');
 define('REL_DIR_FILES_UPLOADED_ONSTATES', DIR_REL . '/files/onstates');
 define('DIR_FILES_ORIGINALS', DIR_FILES_UPLOADED . '/originals');
@@ -260,6 +265,9 @@ if(!defined('DIR_FILES_BIN_ASPELL')) define('DIR_FILES_BIN_ASPELL', '/usr/bin/as
 # Asset library constants 
 define('AL_THUMBNAIL_WIDTH', '80');
 define('AL_THUMBNAIL_HEIGHT', '80');
+define('AL_THUMBNAIL_WIDTH_LEVEL2', '250');
+define('AL_THUMBNAIL_HEIGHT_LEVEL2', '250');
+
 define('AL_ICON_WIDTH', 24);
 define('AL_ICON_HEIGHT', 24);
 define('DIR_AL_ICONS', DIR_BASE_CORE . '/images/icons/filetypes');

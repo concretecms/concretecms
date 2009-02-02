@@ -319,8 +319,8 @@ class DashboardSettingsController extends Controller {
 				Config::save('FAVICON_FID',0);
 				$this->redirect('/dashboard/settings/', 'favicon_removed');
 			}elseif ( isset($_FILES['favicon_file']) ) {
-				$fh = Loader::helper('file');
-				if(!$fh->hasAllowedExtension($_FILES['favicon_file']['name'])){	
+				$fh = Loader::helper('validation/file');
+				if(!$fh->extension($_FILES['favicon_file']['name'])){	
 					$msg = t('Invalid file extension.');
 				}else{  
 					$bt = BlockType::getByHandle('library_file');

@@ -28,6 +28,7 @@
 	Loader::library('item_list');
 	Loader::library('view');
 	Loader::library('controller');
+	Loader::library('file/types');
 	Loader::library('block_view');
 	Loader::library('block_controller');
 
@@ -77,8 +78,14 @@
 	## Set debug-related and logging activities
 	require('startup/debug_logging.php');
 
+	## File types ##
+	require('config/file_types.php');
+
 	## Specific site routes for various content items (if they exist) ##
 	@include('config/site_theme_paths.php');
+
+	## Specific site routes for various content items (if they exist) ##
+	@include('config/site_file_types.php');
 
 	## Specific site/app events if they are enabled ##
 	## This must come before packages ##
