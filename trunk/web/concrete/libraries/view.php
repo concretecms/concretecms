@@ -609,9 +609,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					// if we're passing a view but our render override is not null, that means that we're passing 
 					// a new view from within a controller. If that's the case, then we DON'T override the viewPath, we want to keep it
 					
-					$pp = Page::getByPath($view);
-					if (!$pp->isError()) {
-						$this->c = $pp;
+					$db = Loader::db();
+					// let's put a check in here to ensure that we're not accessing this without a db connection
+					if (is_object($db)) {
+						$pp = Page::getByPath($view);
+						if (!$pp->isError()) {
+							$this->c = $pp;
+						}
 					}
 					
 					$viewPath = $view;
