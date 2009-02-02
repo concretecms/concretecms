@@ -99,10 +99,12 @@
 			if ($ignoreConfig || Config::get('IP_BAN_LOCK_IP_ENABLE') == 1) {		
 				$ip = ($ip) ? $ip : $this->getRequestIP();			
 				$ip = ip2long($ip);
+
+				//IP_BAN_LOCK_IP_HOW_LONG_MIN of 0 or undefined  means forever
+				$timeOffset = Config::get('IP_BAN_LOCK_IP_HOW_LONG_MIN');
+				$timeOffset = $timeOffset ? ($timeOffset * 60)  : 0;				
+				$time 		= $timeOffset ? time() + $timeOffset : 0;
 				
-				//$time = time() + (60 * 60 * 24 * 1);     //ban for a day
-				$timeOffset = Config::get('IP_BAN_LOCK_IP_HOW_LONG') ? Config::get('IP_BAN_LOCK_IP_HOW_LONG') : (60 * 60 * 24 * 1);
-				$time 		= time() + $timeOffset;
 				$db	= Loader::db();				
 				Loader::model('user_banned_ip');
 				
