@@ -97,7 +97,9 @@ table.entry-form td.subheader {font-weight: bold; color: #333; font-size: 13px; 
 table.entry-form input, table.entry-form select {font-size: 13px}
 
 div.ccm-paging {margin: 10px 0px 10px 0px}
-div.ccm-paging-top {margin: 0px 0px 10px 0px}
+div.ccm-paging-top {margin: 0px 0px 10px 0px;}
+span.ccm-paging-top-content{padding-left: 10px; font-size: 10px;}
+span.ccm-paging-top-content form {padding:0px;margin:0px;}
 
 img.u-avatar {margin: 0px 10px 10px 0px; border: 2px solid #eaeaea}
 div.ccm-dashboard-inner div.ccm-buttons {padding-top: 0px !important}
@@ -327,3 +329,9 @@ div#jquery-font-panel div.jquery-font-panel-list div {
 }
 
 div#jquery-font-panel div.jquery-font-panel-list div.font-panel-list-selected {background-color: #E6EBED; color: #333}
+
+table.ccm-dashboard-inner-columns {width: 100%}
+td.ccm-dashboard-inner-leftcol{width:60%;}
+td.ccm-dashboard-inner-rightcol{width: 40%;}
+td.ccm-dashboard-inner-gutter div {width: 20px}
+div.ccm-dashboard-inner-leftcol table.grid-list{width:100%;}

@@ -62,8 +62,9 @@ class ConcreteUrlsHelper {
 	 * @return string
 	 */
 	public function getBlockTypeIconURL($bt) {
-		if (file_exists($bt->getBlockTypePath() . '/' . FILENAME_BLOCK_ICON)) {
-			return $this->getBlockTypeAssetsURL($bt) . '/' . FILENAME_BLOCK_ICON;		
+		$url = $this->getBlockTypeAssetsURL($bt, FILENAME_BLOCK_ICON);
+		if ($url != false) {
+			return $url;
 		} else {
 			return BLOCK_TYPE_GENERIC_ICON;
 		}
@@ -74,16 +75,21 @@ class ConcreteUrlsHelper {
 	 * @param BlockType $bt
 	 * @return string $url
 	 */
-	public function getBlockTypeAssetsURL($bt) {
+	public function getBlockTypeAssetsURL($bt, $file = false) {
+		$ff = '';
+		if ($file != false) {
+			$ff = '/' . $file;
+		}
+		
 		if ($bt->getPackageID() > 0) {
 			$db = Loader::db();
 			$h = $bt->getPackageHandle();
 			$url = (is_dir(DIR_PACKAGES . '/' . $h)) ? BASE_URL . DIR_REL : ASSETS_URL; 
-			$url = $url . '/' . DIRNAME_PACKAGES . '/' . $h . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle();		
-		} else if (is_dir(DIR_FILES_BLOCK_TYPES_CORE . '/' . $bt->getBlockTypeHandle())) {
-			$url = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle();
+			$url = $url . '/' . DIRNAME_PACKAGES . '/' . $h . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
+		} else if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . '/' . $bt->getBlockTypeHandle() . $ff)) {
+			$url = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
 		} else {
-			$url = BASE_URL . DIR_REL . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle();
+			$url = BASE_URL . DIR_REL . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
 		}
 		
 		return $url;
@@ -95,9 +101,7 @@ class ConcreteUrlsHelper {
 	 * @return string $url
 	 */
 	public function getBlockTypeJavaScriptURL($bt) {
-		if (file_exists($bt->getBlockTypePath() . '/auto.js')) {
-			return $this->getBlockTypeAssetsURL($bt) . '/auto.js';
-		}
+		return $this->getBlockTypeAssetsURL($bt, 'auto.js');
 	}
 
 	/** 

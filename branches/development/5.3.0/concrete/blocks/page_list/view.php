@@ -32,7 +32,7 @@
 			$rssUrl = $controller->getRssUrl($b);
 			?>
 			<div class="rssIcon">
-				<a href="<?=$rssUrl?>" target="_blank"><img src="<?=$uh->getBlockTypeAssetsURL($bt)?>/rss.png" width="14" height="14" /></a>
+				<a href="<?=$rssUrl?>" target="_blank"><img src="<?=$uh->getBlockTypeAssetsURL($bt, 'rss.png')?>" width="14" height="14" /></a>
 				
 			</div>
 			<link href="<?=$rssUrl?>" rel="alternate" type="application/rss+xml" title="<?=$controller->rssTitle?>" />

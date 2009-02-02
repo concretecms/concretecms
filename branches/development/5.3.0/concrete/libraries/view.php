@@ -375,7 +375,27 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return $ret;
 		}
 
-
+		/**
+		 * Formats seconds in 8m23s format
+		 *
+		 * Multi Line Description
+		 * @author Alan Storm <alan.storm@alanstorm.com>
+		 * @package SkyVibe
+		 * @var type $varName
+		 * @param type $var_name
+		 * @return type $var_name
+		 */
+		public function formatTimestampAsMinutesSeconds($seconds){
+			if ($seconds == 0) {
+				return t('Never');
+			}
+			else{
+				$seconds = $seconds-time();
+				return floor($seconds / 60) . 'm' . $seconds % 60 . 's';
+			}
+			
+		}
+		
 		/**
 		 * render's a fata error using the built-in view. This is currently only
 		 * used when the database connection fails
@@ -588,6 +608,15 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					
 					// if we're passing a view but our render override is not null, that means that we're passing 
 					// a new view from within a controller. If that's the case, then we DON'T override the viewPath, we want to keep it
+					
+					$db = Loader::db();
+					// let's put a check in here to ensure that we're not accessing this without a db connection
+					if (is_object($db)) {
+						$pp = Page::getByPath($view);
+						if (!$pp->isError()) {
+							$this->c = $pp;
+						}
+					}
 					
 					$viewPath = $view;
 					if ($this->controller->getRenderOverride() != '' && $this->getCollectionObject() != null) {

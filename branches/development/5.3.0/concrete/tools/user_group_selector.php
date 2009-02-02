@@ -47,7 +47,6 @@ $("#ccm-ug-tabs a").click(function() {
 <div id="ccm-select-group-tab">
 
 <h1><?=t('Select Group')?></h1>
-
 <? include(DIR_FILES_TOOLS_REQUIRED . '/select_group.php'); ?>
 
 </div>

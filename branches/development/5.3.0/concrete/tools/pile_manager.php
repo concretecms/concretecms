@@ -6,6 +6,7 @@ if (!$u->isRegistered()) {
 	die(_("Access Denied."));
 }
 Loader::model('pile');
+$p = false;
 
 if ($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') {
 	// add a block to a pile

@@ -92,7 +92,19 @@ class PageList extends DatabaseItemList {
 	 */
 	public function filterByCollectionTypeHandle($ctHandle) {
 		$db = Loader::db();
-		$this->filter(false, "(pt1.ctHandle = " . $db->quote($ctHandle) . " or pt2.ctHandle = " . $db->quote($ctHandle) . ")");
+		if (is_array($ctHandle)) {
+			$cth = '(';
+			for ($i = 0; $i < count($ctHandle); $i++) {
+				if ($i > 0) {
+					$cth .= ',';
+				}
+				$cth .= $db->quote($ctHandle[$i]);
+			}
+			$cth .= ')';
+			$this->filter(false, "(pt1.ctHandle in {$cth} or pt2.ctHandle in {$cth})");
+		} else {
+			$this->filter(false, "(pt1.ctHandle = " . $db->quote($ctHandle) . " or pt2.ctHandle = " . $db->quote($ctHandle) . ")");
+		}
 	}
 
 	/** 

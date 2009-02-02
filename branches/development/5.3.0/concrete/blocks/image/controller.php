@@ -60,7 +60,7 @@
 			$relPath = REL_DIR_FILES_UPLOADED . '/' . $row['filename'];
 			
 			
-			$img = "<img border=\"0\" alt=\"{$this->altText}\" src=\"{$relPath}\" {$size[3]} ";
+			$img = "<img border=\"0\" class=\"ccm-image-block\" alt=\"{$this->altText}\" src=\"{$relPath}\" {$size[3]} ";
 			$img .= ($align) ? "align=\"{$align}\" " : '';
 			
 			$img .= ($style) ? "style=\"{$style}\" " : '';

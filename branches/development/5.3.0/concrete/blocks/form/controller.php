@@ -40,7 +40,7 @@ class FormBlockController extends BlockController {
 	}
 	
 	public function getDefaultThankYouMsg() {
-		return t("Thanks for taking the time to report a problem or ask a question. We're on it and you'll receive a response soon!");
+		return t("Thanks!");
 	}
 	
 	//form add or edit submit
@@ -91,6 +91,11 @@ class FormBlockController extends BlockController {
 	
 	//users submits the completed survey
 	function action_submit_form() {
+		$ip = Loader::helper('validation/ip');
+		if (!$ip->check()) {
+			$this->set('invalidIP', $ip->getErrorMessage());			
+			return;
+		}	
 		$txt = Loader::helper('text');
 		$db = Loader::db();
 		//question set id

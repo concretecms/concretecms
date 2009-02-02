@@ -126,7 +126,7 @@ class UpgradeController extends Controller {
 		}
 	}
 	
-	private function refresh_schema() {
+	public function refresh_schema() {
 		$installDirectory = DIR_BASE_CORE . '/config';
 		$file = $installDirectory . '/db.xml';
 		if (!file_exists($file)) {

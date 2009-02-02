@@ -8,6 +8,54 @@
 	# checks to see if a any submits are taking place. If they are, then
 	# _process makes sure that they're handled correctly
 	
+	
+	//just trying to prevent duplication of this code
+	function processMetaData($nvc){			
+		/* update meta data */
+		Loader::model('collection_attributes');
+		Loader::model('collection_types');		
+			
+		foreach($_POST['selectedAKIDs'] as $akID) {
+			if ($akID > 0) {
+				$ak = CollectionAttributeKey::getByID($akID);
+				$existingOptions = explode("\n", $ak->getCollectionAttributeKeyValues());
+				$submittedValue = $ak->getValueFromPost();
+				$otherSubmittedVal=trim($_POST['akID_'.$akID.'_other']); 
+				
+				//Multi Select List
+				if( is_array($submittedValue) ){													
+					//add new options to list if allowed
+					if( $ak->getAllowOtherValues() ){
+						$newValues=array();
+						foreach($submittedValue as $val)
+							if( !in_array($val,$existingOptions) && strlen(trim($val))  ) 
+								$newValues[]=$val; 
+						$akValues=join("\n",array_merge($existingOptions,$newValues));
+						$ak->updateValues($akValues);
+					}							
+					$submittedValue=join("\n",$submittedValue);
+					
+				//Single Select - New Value
+				}elseif( strlen($otherSubmittedVal) && 
+						 $otherSubmittedVal!=CollectionAttributeKey::getNewValueEmptyFieldTxt() && 
+						 $ak->getAllowOtherValues() ){
+						 
+					$submittedValue=$otherSubmittedVal;
+					
+					//add the new value to possible values
+					if( !in_array($otherSubmittedVal,$existingOptions) ){
+						$existingOptions[]=$otherSubmittedVal;
+						$akValues=join("\n",$existingOptions);
+						$ak->updateValues($akValues);
+					}
+				}
+				if (isset($submittedValue)) {
+					$nvc->addAttribute($ak, $submittedValue);
+				}
+			}
+		} 
+	}	
+	
 	// Modification for step editing
 	$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
 	
@@ -530,23 +578,9 @@
 				}
 				
 				$nvc->update($data);
-				$nvc->clearCollectionAttributes();
+				$nvc->clearCollectionAttributes();			
 				
-				/* update meta data */
-				Loader::model('collection_attributes');
-				Loader::model('collection_types');
-				
-				foreach($_POST['selectedAKIDs'] as $akID) {
-					if ($akID > 0) {
-						$ak = CollectionAttributeKey::getByID($akID);
-						$submittedValue = $ak->getValueFromPost(); 
-						if(is_array($submittedValue))
-							$submittedValue=join("\n",$submittedValue); 
-						if (isset($submittedValue)) {
-							$nvc->addAttribute($ak, $submittedValue);
-						}
-					}
-				} 
+				processMetaData($nvc);
 				
 				if ($_POST['rel'] == 'SITEMAP') { 
 					if ($cp->canApproveCollection()) {
@@ -616,8 +650,13 @@
 				
 				$data = $_POST;
 				$data['cvIsApproved'] = 0;
+				$dt = Loader::helper('form/date_time');
+				$data['cDatePublic'] = $dt->translate('cDatePublic');				
 				
 				$nc = $c->add($ct, $data);
+				
+				$nvc = $nc->getVersionToModify();
+				processMetaData($nvc); 				
 				
 				if (is_object($nc)) {
 					if ($_POST['rel'] == 'SITEMAP') { 

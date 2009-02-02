@@ -23,6 +23,10 @@ class GroupSearch extends DatabaseItemList {
 		$this->filter(false, "(Groups.gName like " . $db->qstr('%' . $kw . '%') . " or Groups.gDescription like " . $db->qstr('%' . $kw . '%') . ")");
 	}
 	
+	public function updateItemsPerPage( $num ) {
+		$this->itemsPerPage = $num;
+	}
+	
 	function __construct() {
 		$this->setQuery("select Groups.gID, Groups.gName, Groups.gDescription from Groups");
 		$this->filter('gID', REGISTERED_GROUP_ID, '>');
