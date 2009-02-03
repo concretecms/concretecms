@@ -1,1 +1,2 @@
-Advanced Search.
+<?
+Loader::element('files/upload_single');
