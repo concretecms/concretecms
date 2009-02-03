@@ -113,7 +113,8 @@ class FileHelper {
 	 */
 	public function sanitize($file) {
 		//return preg_replace(array("/[^0-9A-Za-z-.]/","/[\s]/"),"", $file);
-		return preg_replace("/[^0-9A-Z_a-z-.\s]/","", $file);
+		$file = preg_replace("/[^0-9A-Z_a-z-.\s]/","", $file);
+		return trim($file);
 	}
 	
 	/** 
@@ -125,5 +126,13 @@ class FileHelper {
 		return $extension;
 	}
 	
+	/** 
+	 * Takes a path and replaces the files extension in that path with the specified extension
+	 */
+	public function replaceExtension($filename, $extension) {
+		$newFileName = substr($filename, 0, strrpos($filename, '.')) . '.' . $extension;
+		return $newFileName;
+	}
+		
 }
 ?>
