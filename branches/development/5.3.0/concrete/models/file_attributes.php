@@ -82,7 +82,7 @@ class FileAttributeKey extends AttributeKey {
 		Cache::flush();
 
 		$db = Loader::db();
-		$a = array($akHandle, $akName, $$akValues, $akType, intval($akAllowOtherValues), $this->fakID);
+		$a = array($akHandle, $akName, $akValues, $akType, intval($akAllowOtherValues), $this->fakID);
 		$db->query("update FileAttributeKeys set akHandle = ?, akName = ?, akValues = ?, akType = ?, akAllowOtherValues = ? where fakID = ?", $a);
 		
 		$ak = FileAttributeKey::get($this->fakID);
