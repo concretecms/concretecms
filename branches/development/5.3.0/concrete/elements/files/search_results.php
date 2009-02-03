@@ -1,8 +1,13 @@
 <?
 	Loader::model('file_list');
 	$pl = new FileList();
+	$pl->setItemsPerPage(4);
+	//$pl->debug();
 	$files = $pl->getPage();
 	$html = Loader::helper('html');
+	$pl->displaySummary();
+	
+	$pagination = $pl->getPagination();
 	
 	if (count($files) > 0) { ?>
 	
@@ -14,10 +19,10 @@
 			</select>
 			</th>
 			<th>Type</th>
-			<th>Filename</th>
-			<th>Title</th>
-			<th>Date</th>
-			<th>Size</th>
+			<th><a href="<?=$pl->getSortByURL('fvFilename')?>"><?=t('Filename')?></a></th>
+			<th><a href="<?=$pl->getSortByURL('fvTitle')?>"><?=t('Title')?></a></th>
+			<th><a href="<?=$pl->getSortByURL('fvDateAdded')?>"><?=t('Date Added')?></a></th>
+			<th><a href="<?=$pl->getSortByURL('fvSize')?>"><?=t('Size')?></a></th>
 		</tr>
 		
 	
@@ -49,4 +54,4 @@
 	
 
 	<? } 
-	
+	$pl->displayPaging();

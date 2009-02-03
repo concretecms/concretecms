@@ -58,18 +58,8 @@ class PaginationHelper {
 	}
 	
 	private function getBaseURL() {
-		$base= trim($_SERVER['REQUEST_URI'], '?');
-
-		// strip out existing paging
-		$base = preg_replace('/[&|?]' . $this->queryStringPagingVariable . '=[0-9]/', '', $base);
-
-		if (strpos($base, '?') === false) {
-			$base .= '?';
-		} else {
-			$base .= '&';
-		}
-		$base .= $this->queryStringPagingVariable . '=%pageNum%';
-		return $base;
+		$uh = Loader::helper('url');
+		return $uh->setVariable($this->queryStringPagingVariable, '%pageNum%');
 	}
 	
 	function recalc($num_results){
