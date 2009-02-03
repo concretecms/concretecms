@@ -11,6 +11,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class FileList extends DatabaseItemList {
 
 	private $fileAttributeFilters = array();
+	protected $autoSortColumns = array('fvFilename', 'fvTitle', 'fvDateAdded', 'fvSize');
 	
 	/* magic method for filtering by page attributes. */
 	
@@ -132,6 +133,8 @@ class FileList extends DatabaseItemList {
 		Loader::model('file');
 		$this->setBaseQuery();
 		$this->filter('fvIsApproved', 1);
+		$ipp = $this->itemsPerPage; // we store this in case a value is being used for paging that is separate from this value we want to use
+		
 		$this->setItemsPerPage(0); // no limit
 		$this->setupFileAttributeFilters();
 		$r = parent::get();
@@ -139,7 +142,9 @@ class FileList extends DatabaseItemList {
 			$f = File::getByID($row['fID']);
 			$files[] = $f;
 		}
-		return $files;
+		$this->setItemsPerPage($ipp);
+		$this->start = $offset;
+		return array_slice($files, $offset, $itemsToGet);
 	}
 	
 }
