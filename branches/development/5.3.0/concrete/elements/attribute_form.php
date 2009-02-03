@@ -109,6 +109,7 @@ var ccmAttributesHelper={
 		<option value="BOOLEAN"<? if ($akType == 'BOOLEAN') { ?> selected<? } ?>><?=t('Check Box')?></option>
 		<option value="SELECT"<? if ($akType == 'SELECT') { ?> selected<? } ?>><?=t('Select Menu')?></option>
 		<option value="SELECT_MULTIPLE"<? if ($akType == 'SELECT_MULTIPLE') { ?> selected<? } ?>><?=t('Select Multiple')?></option>
+		<option value="NUMBER"<? if ($akType == 'NUMBER') { ?> selected<? } ?>><?=t('Number')?></option>
 		<option value="DATE"<? if ($akType == 'DATE') { ?> selected <? } ?>><?=t('Date')?></option>
 		<option value="IMAGE_FILE"<? if ($akType == 'IMAGE_FILE') { ?> selected <? } ?>><?=t('Image/File')?></option>
 	</select></td>
