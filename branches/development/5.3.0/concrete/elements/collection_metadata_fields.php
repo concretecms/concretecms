@@ -73,8 +73,7 @@ var ccmAttributeValuesHelper={
 	?>
 
 	<h2>
-		<?=t('Custom Fields')?>
-		<?=$c->getCollectionTypeID()?>
+		<?=t('Custom Fields')?> 
 		<select id="ccm-meta-custom-fields">
 			<option value="">** <?=t('Add Field')?></option>
 			<? $cAttributes = CollectionAttributeKey::getList(); 
@@ -156,7 +155,11 @@ var ccmAttributeValuesHelper={
 					<? } ?>
 							
 					<?
-					break;			 
+					break;	
+				case "NUMBER":?>
+					<input name="akID_<?=$ak->getCollectionAttributeKeyID()?>" type="text" value="<?=$caValue ?>" size="10" />
+					<?
+					break;								 
 				case "IMAGE_FILE": 
 					$bf = null; 
 					if (is_object($caValue)) {
