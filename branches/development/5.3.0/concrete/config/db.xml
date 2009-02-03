@@ -386,23 +386,23 @@
       <AUTOINCREMENT/>
       <UNSIGNED/>
     </field>
-    <field name="fakHandle" type="C" size="255">
+    <field name="akHandle" type="C" size="255">
       <NOTNULL/>
     </field>
-    <field name="fakName" type="C" size="255">
+    <field name="akName" type="C" size="255">
       <NOTNULL/>
     </field>
-    <field name="fakValues" type="X"/>
-    <field name="fakAllowOtherValues" type="I" size="1">
+    <field name="akValues" type="X"/>
+    <field name="akAllowOtherValues" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="fakType" type="C" size="255">
+    <field name="akType" type="C" size="255">
       <DEFAULT value="TEXT"/>
     </field>
-    <index name="fakHandle">
+    <index name="akHandle">
       <UNIQUE/>
-      <col>fakHandle</col>
+      <col>akHandle</col>
     </index>
   </table>
   <table name="FileAttributeValues">

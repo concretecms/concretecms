@@ -22,7 +22,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-class CollectionAttributeKey extends Object {  
+ 
+Loader::model('attributes');
+ 
+class CollectionAttributeKey extends AttributeKey {  
 	
 	var $akID, $akHandle, $akName, $akSearchable, $akValues, $akType, $akAllowOtherValues;
 	
@@ -69,13 +72,9 @@ class CollectionAttributeKey extends Object {
 		}
 	}
 	
-	function getCollectionAttributeKeyID() {return $this->akID;}
-	function getCollectionAttributeKeyHandle() {return $this->akHandle;}
-	function getCollectionAttributeKeyName() {return $this->akName;}
-	function isCollectionAttributeKeySearchable() {return $this->akSearchable;}
-	function getAllowOtherValues() {return $this->akAllowOtherValues; }
-	function getCollectionAttributeKeyValues() {return $this->akValues;}
-	function getCollectionAttributeKeyType() {return $this->akType;}
+	
+	function getAttributeKeyID() {return $this->akID;}	
+	function isAttributeKeySearchable() {return $this->akSearchable;}
 	
 	function inUse($akHandle) {
 		$db = Loader::db();
@@ -108,15 +107,6 @@ class CollectionAttributeKey extends Object {
 		return $val;
 	}
 	
-	function delete() {
-		// this removes the record from the CAKeys table, and from the CTypeAttributes tables, but
-		// not from the actual CAValues table, nor from the lookup columns
-		$db = Loader::db();
-		$a = array($this->getCollectionAttributeKeyID());
-		$db->query("delete from CollectionAttributeKeys where akID = ?", $a);
-		$db->query("delete from PageTypeAttributes where akID = ?", $a);		
-	}
-	
 	function add($akHandle, $akName, $akSearchable, $akValues, $akType, $akAllowOtherValues=0) {
 		$db = Loader::db();
 		$a = array($akHandle, $akName, $akSearchable, $akValues, $akType, $akAllowOtherValues);
@@ -143,6 +133,15 @@ class CollectionAttributeKey extends Object {
 		if (is_object($ak)) {
 			return $ak;
 		}
+	}	
+	
+	function delete() {
+		// this removes the record from the CAKeys table, and from the CTypeAttributes tables, but
+		// not from the actual CAValues table, nor from the lookup columns
+		$db = Loader::db();
+		$a = array($this->getCollectionAttributeKeyID());
+		$db->query("delete from CollectionAttributeKeys where akID = ?", $a);
+		$db->query("delete from PageTypeAttributes where akID = ?", $a);		
 	}
 	
 	function updateValues($akValues) {
@@ -188,4 +187,8 @@ class CollectionAttributeKey extends Object {
 		return t('Other');
 	}
 		
+		
+	/* DEPRICATED */
+	function getCollectionAttributeKeyID() {return $this->akID;}	
+	function isCollectionAttributeKeySearchable() {return $this->akSearchable;}		
 }
