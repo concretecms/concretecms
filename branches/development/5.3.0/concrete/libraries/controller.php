@@ -43,7 +43,7 @@ class Controller {
 		}
 		foreach($this->helpers as $h) {
 			$$h = Loader::helper($h);
-			$this->helperObjects[$h] = $$h;
+			$this->helperObjects[(str_replace('/','_',$h))] = $$h;
 		}
 		
 	}	
