@@ -356,33 +356,7 @@ if ($ctEditMode) {
 	<h1><span><?=t('Page Attributes')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
-	<? if (count($attribs) > 0) { ?>
-	
-	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
-	<table border="0" cellspacing="1" cellpadding="0" class="grid-list">
-	<tr>
-		<td class="subheader" width="100%"><?=t('Name')?></td>
-		<td class="subheader"><?=t('Handle')?></td>
-		<td class="subheader"><div style="width: 60px"></div></td>
-		<td class="subheader"><div style="width: 70px"></div></td>
-	</tr>
-	<?
-	foreach($attribs as $ak) { ?>
-	<tr>
-		<td><?=$ak->getCollectionAttributeKeyName()?></td>
-		<td style="white-space: nowrap"><?=$ak->getCollectionAttributeKeyHandle()?></td>
-		<td><? print $ih->button(t('Edit'), $this->url('/dashboard/pages/types/attributes?akID=' . $ak->getCollectionAttributeKeyID() . '&task=edit'))?></td>
-		<td><? print $ih->button(t('Delete'), "javascript:if (confirm('".t('Are you sure you wish to delete this attribute?')."')) { location.href='" . $this->url('/dashboard/pages/types/attributes?akID=' . $ak->getCollectionAttributeKeyID() . '&task=delete&' . $valt->getParameter('delete_attribute')) . "' }")?></td>
-	</tr>
-	<? } ?>
-	</table>
-	</div>
-	
-	<? } else { ?>
-		
-	<br/><strong><?=t('No page attributes defined.')?></strong><br/><br/>
-		
-	<? } ?>
+	<?= Loader::element('attributes_table', array('attribs'=>$attribs) ); ?>
 	
 	<br/>
 	<div class="ccm-buttons">

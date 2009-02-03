@@ -66,16 +66,16 @@ class FileVersion extends Object {
 		}
 	}
 
-	public function createThumbnailDirectories() {
+	public function createThumbnailDirectories(){
 		$f = Loader::helper('concrete/file');
 		for ($i = 1; $i <= $this->numThumbnailLevels; $i++) {
 			$path = $f->getThumbnailSystemPath($this->fvPrefix, $this->fvFilename, $i, true);	
 		}
 	}
 	
-	public function setAttribute($fakHandle, $value) {
+	public function setAttribute($akHandle, $value) {
 		$db = Loader::db();
-		$fakID = $db->GetOne("select fakID from FileAttributeKeys where fakHandle = ?", array($fakHandle));
+		$fakID = $db->GetOne("select fakID from FileAttributeKeys where akHandle = ?", array($akHandle));
 		if ($fakID > 0) {
 			$db->Replace('FileAttributeValues', array(
 				'fID' => $this->fID,
