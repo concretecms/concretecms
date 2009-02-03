@@ -15,6 +15,7 @@ class DashboardFilesAttributesController extends Controller {
 		}if($_REQUEST['attribute_updated']) {
 			$message = t("File Attribute Key Updated.");		
 		}
+		$this->set( "message", $message );
 	}
 	
 	public function add(){
@@ -50,10 +51,10 @@ class DashboardFilesAttributesController extends Controller {
 			$originalVal=$_REQUEST['akValueOriginal_'.str_replace('akValue_','',$key)];		
 			$akValuesArray[]=$newVal; 
 			//change all previous answers
-			if($fak) $fak->renameValue($originalVal,$newVal);
+			if($fak && $originalVal) $fak->renameValue($originalVal,$newVal);
 		} 
 		$akValuesArray=array_unique($akValuesArray);
-		$akValues=join("\n",$akValuesArray); 
+		$akValues=join("\n",$akValuesArray);
 		
 		$error = array();
 		if (!$akHandle) {
@@ -80,8 +81,8 @@ class DashboardFilesAttributesController extends Controller {
 		}
 		
 		if( count($error) == 0 ){
-			if($fak && $_REQUEST['edit']){
-				$fak = $fak->update($akHandle, $akName, $akValues, $akType, $akAllowOtherValues);
+			if($fak && $_REQUEST['edit']){ 
+				$fak = $fak->update($akHandle, $akName, $akValues, $akType, $akAllowOtherValues); 
 				$this->redirect('/dashboard/files/attributes/?attribute_updated=1');
 			}elseif($_REQUEST['add']){
 				$fak = FileAttributeKey::add($akHandle, $akName, $akValues, $akType, $akAllowOtherValues);
@@ -93,13 +94,15 @@ class DashboardFilesAttributesController extends Controller {
 	}
 	
 	public function delete(){
+		$valt = Loader::helper('validation/token');
 		if ( $valt->validate('delete_attribute') ) { 
-			$fa = FileAttributeKey::get($_REQUEST['fakID']);
+			$fa = FileAttributeKey::get( intval($_REQUEST['fakID']) );
 			if (is_object($fa)) {
 				$fa->delete();
 				$this->redirect('/dashboard/files/attributes/?attribute_deleted=1');
 			}
-		}	
+		}
+		$this->redirect('/dashboard/files/attributes/');
 	}
 }
 
