@@ -38,6 +38,8 @@
 	## Load required models ##
 	Loader::model('area');
 	Loader::model('block');
+	Loader::model('file');
+	Loader::model('file_version');
 	Loader::model('block_types');
 	Loader::model('collection');
 	Loader::model('collection_version');

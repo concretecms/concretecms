@@ -8,6 +8,19 @@ class FileVersion extends Object {
 	public function getFileVersionID() {return $this->fvID;}
 	public function getPrefix() {return $this->fvPrefix;}
 	public function getFileName() {return $this->fvFilename;}
+	public function getTitle() {return $this->fvTitle;}
+	public function getSize() {
+		return round($this->fvSize / 1024) . t('KB');
+	}
+	public function getType() {
+		$fh = Loader::helper('file');
+		$ext = $fh->getExtension($this->fvFilename);
+		
+		$ftl = FileTypeList::getType($ext);
+		if (is_object($ftl)) {
+			return $ftl->getName();
+		}
+	}
 	
 	/** 
 	 * Returns a full filesystem path to the file on disk.
@@ -24,10 +37,27 @@ class FileVersion extends Object {
 		return $path;
 	}
 	
+	public function getThumbnailSRC($level) {
+		eval('$hasThumbnail = $this->fvHasThumbnail' . $level . ';');
+		if ($hasThumbnail) {
+			$f = Loader::helper('concrete/file');
+			$path = $f->getThumbnailRelativePath($this->fvPrefix, $this->fvFilename, $level);
+			return $path;
+		}
+	}
+	
 	// 
-	public function setThumbnail($level, $hasThumbnail) {
+	public function refreshThumbnails() {
 		$db = Loader::db();
-		$db->Execute("update FileVersions set fvHasThumbnail" . $level . "= ? where fID = ? and fvID = ?", array($hasThumbnail, $this->fID, $this->fvID));
+		$f = Loader::helper('concrete/file');
+		for ($i = 1; $i <= $this->numThumbnailLevels; $i++) {
+			$path = $f->getThumbnailSystemPath($this->fvPrefix, $this->fvFilename, $i);	
+			$hasThumbnail = 0;
+			if (file_exists($path)) {
+				$hasThumbnail = 1;
+			}
+			$db->Execute("update FileVersions set fvHasThumbnail" . $i . "= ? where fID = ? and fvID = ?", array($hasThumbnail, $this->fID, $this->fvID));
+		}
 	}
 	
 	// update types

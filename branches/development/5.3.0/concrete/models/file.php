@@ -15,6 +15,10 @@ class File extends Object {
 		
 		return $f;
 	}
+	
+	public function getDateAdded() {
+		return $this->fDateAdded;
+	}
 
 	public static function add($filename, $prefix, $data = array()) {
 		$db = Loader::db();
@@ -60,6 +64,10 @@ class File extends Object {
 			
 		$fv = $this->getVersion($fvID);
 		return $fv;
+	}
+	
+	public function getActiveVersion() {
+		return $this->getVersion();
 	}
 	
 	public function getVersion($fvID = null) {

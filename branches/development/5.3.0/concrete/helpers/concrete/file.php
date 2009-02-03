@@ -40,6 +40,26 @@
 					break;
 			}
 			
+			$hi = Loader::helper('file');
+			$filename = $hi->replaceExtension($filename, 'jpg');
+			return $this->mapSystemPath($prefix, $filename, $createDirectories, $base);
+		}
+		
+		public function getThumbnailRelativePath($prefix, $filename, $level) {
+			switch($level) {
+				case 2:
+					$base = REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2;
+					break;
+				case 3:
+					$base = REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3;
+					break;
+				default: // level 1
+					$base = REL_DIR_FILES_UPLOADED_THUMBNAILS;
+					break;
+			}
+			
+			$hi = Loader::helper('file');
+			$filename = $hi->replaceExtension($filename, 'jpg');
 			return $this->mapSystemPath($prefix, $filename, $createDirectories, $base);
 		}
 		
