@@ -54,3 +54,13 @@ var ccmi18n_spellchecker = {
 	noSuggestions: '<?=t('No Suggestions')?>'
 	
 }
+
+var ccmi18n_filemanager = {
+	
+	viewDownload: '<?=t('View/Download')?>',
+	properties: '<?=t('Properties')?>',
+	editReplace: '<?=t('Edit/Replace File')?>',
+	addTo: '<?=t('Add to Set/Archive')?>',
+	permissions: '<?=t('Permissions')?>',
+	deleteFile: '<?=t('Delete File')?>'
+}

@@ -37,9 +37,11 @@ if ($valt->validate('upload')) {
 <html>
 <head>
 <script language="javascript">
-	window.parent.ccm_alRefresh();
 	<? if(strlen($error)) { ?>
 		alert('<?=$error?>');
+		window.parent.ccm_alResetSingle();
+	<? } else { ?>
+		window.parent.ccm_alRefresh();
 	<? } ?>
 </script>
 </head>

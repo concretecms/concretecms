@@ -108,8 +108,3 @@ if (is_object($cp)) {
 		Loader::element('page_controls_menu', array('cp' => $cp, 'c' => $c));
 	}
 }
-
-require_once(DIR_BASE . '/traffic/ParticleTraffic.config.php');
-ParticleTrafficTracker::printTrackingJS( ParticleTraffic_SITE_ID_NUMBER );
-
-?>

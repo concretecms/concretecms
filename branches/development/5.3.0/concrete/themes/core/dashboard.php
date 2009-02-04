@@ -14,7 +14,6 @@ require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); ?>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.forms.css";</style>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.calendar.css";</style>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.dialog.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.asset.library.css";</style>
 
 <script type="text/javascript">
 <?

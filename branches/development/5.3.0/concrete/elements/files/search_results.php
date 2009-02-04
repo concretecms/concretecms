@@ -1,7 +1,7 @@
 <?
 	Loader::model('file_list');
 	$pl = new FileList();
-	$pl->setItemsPerPage(4);
+	//$pl->setItemsPerPage(4);
 	//$pl->debug();
 	$files = $pl->getPage();
 	$html = Loader::helper('html');
@@ -33,7 +33,7 @@
 		foreach($files as $f) {
 			$fv = $f->getActiveVersion(); ?>
 			
-			<tr>
+			<tr class="ccm-file-list-record" id="fID<?=$f->getFileID()?>">
 			<td><input type="checkbox" /></td>
 			<td class="ccm-file-list-thumbnail"><?=$fv->getThumbnail(1)?></td>
 			<td><?=$fv->getType()?></td>

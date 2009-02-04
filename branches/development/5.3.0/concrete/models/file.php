@@ -20,6 +20,8 @@ class File extends Object {
 		return $this->fDateAdded;
 	}
 
+	public function getFileID() { return $this->fID;}
+	
 	public static function add($filename, $prefix, $data = array()) {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
