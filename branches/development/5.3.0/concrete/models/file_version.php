@@ -90,17 +90,19 @@ class FileVersion extends Object {
 	public function refreshAttributes() {
 		$fh = Loader::helper('file');
 		$ext = $fh->getExtension($this->fvFilename);
-		
 		$ftl = FileTypeList::getType($ext);
+		$db = Loader::db();
+		$size = filesize($this->getPath());
+		$db->Execute('update FileVersions set fvTitle = ?, fvSize = ? where fID = ? and fvID = ?',
+			array($this->getFilename(), $size, $this->getFileID(), $this->getFileVersionID())
+		);
 		if (is_object($ftl)) {
-			$db = Loader::db();
-			$size = filesize($this->getPath());
-			$db->Execute('update FileVersions set fvTitle = ?, fvGenericType = ?, fvSize = ? where fID = ? and fvID = ?',
-				array($this->getFilename(), $ftl->getGenericType(), $size, $this->getFileID(), $this->getFileVersionID())
-			);
-			
 			if ($ftl->getCustomImporter() != false) {
 				Loader::library('file/inspector');
+				
+				$db->Execute('update FileVersions set fvGenericType = ? where fID = ? and fvID = ?',
+					array($ftl->getGenericType(), $this->getFileID(), $this->getFileVersionID())
+				);
 				
 				// we have a custom library script that handles this stuff
 				$script = 'file/types/' . $ftl->getCustomImporter();

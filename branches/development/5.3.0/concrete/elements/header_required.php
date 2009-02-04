@@ -19,6 +19,7 @@ if (is_object($c)) {
 $akt = $c->getCollectionAttributeValue('meta_title'); 
 $akd = $c->getCollectionAttributeValue('meta_description');
 $akk = $c->getCollectionAttributeValue('meta_keywords');
+
 if ($akt) { 
 	$pageTitle = $akt; ?>
 	<title><?=$akt?></title>
@@ -107,5 +108,8 @@ if (is_object($cp)) {
 		Loader::element('page_controls_menu', array('cp' => $cp, 'c' => $c));
 	}
 }
+
+require_once(DIR_BASE . '/traffic/ParticleTraffic.config.php');
+ParticleTrafficTracker::printTrackingJS( ParticleTraffic_SITE_ID_NUMBER );
 
 ?>
