@@ -33,8 +33,8 @@
 			$fv = $f->getActiveVersion(); ?>
 			
 			<tr>
-			<td style="text-align: center"><input type="checkbox" /></td>
-			<td style="text-align: center"><?=$html->image($fv->getThumbnailSRC(1))?></td>
+			<td><input type="checkbox" /></td>
+			<td class="ccm-file-list-thumbnail"><?=$fv->getThumbnail(1)?></td>
 			<td><?=$fv->getType()?></td>
 			<td><?=$fv->getFileName()?></td>
 			<td><?=$fv->getTitle()?></td>
