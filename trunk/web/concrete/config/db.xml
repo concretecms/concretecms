@@ -490,7 +490,7 @@
       <NOTNULL/>
     </field>
     <index name="cPath">
-      <UNIQUE/>
+      <!--<UNIQUE/> -->
       <col>cPath</col>
     </index>
   </table>
