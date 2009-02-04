@@ -1188,4 +1188,39 @@
       <col>ipFrom</col>
     </index>
   </table>  
+  
+  <table name="FileSets">
+    <field name="fsID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="fsName" type="C" size="64">
+      <NOTNULL/>
+    </field>
+    <field name="uID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fsType" type="I" size="4">
+      <NOTNULL/>
+    </field>
+  </table>    
+  <table name="FileSetFiles">
+    <field name="fID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="fsID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED/>
+    </field>
+    <field name="timestamp" type="T">
+      <NOTNULL/>
+      <DEFTIMESTAMP/>
+    </field>
+  </table>
+  
 </schema>
