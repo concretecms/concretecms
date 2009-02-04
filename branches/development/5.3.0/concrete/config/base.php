@@ -18,7 +18,7 @@ if ($config_check_failed) {
 }
 
 if (!defined('UPLOAD_FILE_EXTENSIONS_ALLOWED')) {
-	define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.swf;*.doc;*.txt;*.xls;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.mp4;*.mp3;*.qt;*.ppt;*.kml');
+	define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.mp4;*.mp3;*.qt;*.ppt;*.kml');
 }
 
 if (!defined('REDIRECT_TO_BASE_URL')) {
@@ -263,8 +263,10 @@ define('DIR_FILES_BIN_UNZIP', '/usr/bin/unzip');
 if(!defined('DIR_FILES_BIN_ASPELL')) define('DIR_FILES_BIN_ASPELL', '/usr/bin/aspell'); // spellchecker
 
 # Asset library constants 
-define('AL_THUMBNAIL_WIDTH', '80');
-define('AL_THUMBNAIL_HEIGHT', '80');
+define('AL_THUMBNAIL_WIDTH', '60');
+define('AL_THUMBNAIL_HEIGHT', '60');
+define('AL_THUMBNAIL_WIDTH_LEVEL1', '60'); // level1 duplicated here for internal functions
+define('AL_THUMBNAIL_HEIGHT_LEVEL1', '60');
 define('AL_THUMBNAIL_WIDTH_LEVEL2', '250');
 define('AL_THUMBNAIL_HEIGHT_LEVEL2', '250');
 
@@ -272,6 +274,7 @@ define('AL_ICON_WIDTH', 24);
 define('AL_ICON_HEIGHT', 24);
 define('DIR_AL_ICONS', DIR_BASE_CORE . '/images/icons/filetypes');
 define('REL_DIR_AL_ICONS', ASSETS_URL_IMAGES . '/icons/filetypes');
+define('AL_ICON_DEFAULT', ASSETS_URL_IMAGES . '/icons/filetypes/default.png');
 
 # This is the max size of any image in the system
 define('IMAGE_MAX_WIDTH','1200'); // this is the max - can't be any higher, this overrides area settings

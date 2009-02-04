@@ -1,3 +1,11 @@
 /* asset library */
 
-table#ccm-file-list {width: 100%}
+table#ccm-file-list {width: 100%; border-left: 1px solid #ffffff}
+table#ccm-file-list th, table#ccm-file-list td {padding: 4px 8px 4px 8px; font-size: 14px}
+table#ccm-file-list tr th {font-size: 14px; background-color: #efefef}
+table#ccm-file-list tr td {text-align: center;}
+table#ccm-file-list tr th a {color: #333}
+table#ccm-file-list tr:hover td {cursor: pointer; background-color: #F1FCFF}
+
+td.ccm-file-list-thumbnail img {border: 2px solid #dedede}
+td.ccm-file-list-thumbnail img.ccm-generic-thumbnail {border: 0px}

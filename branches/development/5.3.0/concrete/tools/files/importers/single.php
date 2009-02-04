@@ -18,7 +18,7 @@ if ($valt->validate('upload')) {
 	if (isset($_FILES['Filedata']) && (is_uploaded_file($_FILES['Filedata']['tmp_name']))) {
 		$fi = new FileImporter();
 		$resp = $fi->import($_FILES['Filedata']['tmp_name'], $_FILES['Filedata']['name']);
-		if (!($resp instanceof File)) {
+		if (!($resp instanceof FileVersion)) {
 			switch($resp) {
 				case FileImporter::E_FILE_INVALID_EXTENSION:
 					$error = t('Invalid file extension.');
