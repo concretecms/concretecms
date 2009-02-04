@@ -233,6 +233,7 @@ define('DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS_CORE', DIR_FILES_BLOCK_TYPE
 
 # Uploaded files 
 define('DIR_FILES_UPLOADED', DIR_BASE . '/files');
+define('DIR_FILES_INCOMING', DIR_BASE . '/files/incoming');
 define('REL_DIR_FILES_UPLOADED', DIR_REL . '/files');
 define('DIR_FILES_UPLOADED_THUMBNAILS', DIR_BASE . '/files/thumbnails');
 define('REL_DIR_FILES_UPLOADED_THUMBNAILS', DIR_REL . '/files/thumbnails');
