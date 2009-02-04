@@ -179,16 +179,6 @@ ccm_alSetupPaging = function() {
 	});	
 }
 
-ccm_alSubmitSingle = function() {
-	$('#ccm-al-upload-single-submit').hide();
-	$('#ccm-al-upload-single-loader').show();
-}
-
-ccm_alResetSingle = function () {
-	$('#ccm-al-upload-single-file').val('');
-	$('#ccm-al-upload-single-loader').hide();
-	$('#ccm-al-upload-single-submit').show();
-}
 
 
 $(function() {
