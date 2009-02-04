@@ -6,6 +6,7 @@
 	$files = $pl->getPage();
 	$html = Loader::helper('html');
 	$pl->displaySummary();
+	$txt = Loader::helper('text');
 	
 	$pagination = $pl->getPagination();
 	
@@ -36,8 +37,8 @@
 			<td><input type="checkbox" /></td>
 			<td class="ccm-file-list-thumbnail"><?=$fv->getThumbnail(1)?></td>
 			<td><?=$fv->getType()?></td>
-			<td><?=$fv->getFileName()?></td>
-			<td><?=$fv->getTitle()?></td>
+			<td><?=wordwrap($fv->getFileName(), 25, "\n", true)?></td>
+			<td><?=wordwrap($fv->getTitle(), 25, "\n", true)?></td>
 			<td><?=date('M d, Y g:ia', strtotime($f->getDateAdded()))?></td>
 			<td><?=$fv->getSize()?></td>
 			
