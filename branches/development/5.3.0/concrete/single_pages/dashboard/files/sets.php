@@ -14,10 +14,8 @@
 					</tr>
 					<tr>
 						<td class="header">
-						<?php
-							$b1 = $concrete_interface->submit(t('Edit'), 'file_sets_edit');
-							print $concrete_interface->buttons($b1);
-						?>					
+						<?=$concrete_interface->submit(t('Update'), 'file_sets_edit');?>
+						<?=$concrete_interface->button(t('Cancel'), $this->url('/dashboard/files/sets'), 'left');?>						
 						</td>
 					</tr>
 				</tbody>
@@ -44,13 +42,13 @@
 						<td><?=$set->fsName?></td>
 						<td>
 							<?php
-								$b1 = $concrete_interface->button_js(t('Edit Set'), 'editFileSet('.$set->fsID.')');
+								$b1 = $concrete_interface->button_js(t('Edit'), 'editFileSet('.$set->fsID.')');
 								print $concrete_interface->buttons($b1);
 							?>									
 						</td>
 						<td>
 							<?php
-								$b1 = $concrete_interface->button_js(t('Delete Set'), 'deleteFileSet('.$set->fsID.')');
+								$b1 = $concrete_interface->button_js(t('Delete'), 'deleteFileSet('.$set->fsID.')');
 								print $concrete_interface->buttons($b1);
 							?>									
 						</td>
