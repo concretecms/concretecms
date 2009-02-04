@@ -9,10 +9,10 @@ class DashboardFilesAccessController extends Controller {
 		
 		$file_access_file_types = Config::get('UPLOAD_FILE_EXTENSIONS_ALLOWED');
 		//is nothing's been defined, display the constant value
-		if(!$file_access_file_types){
+		if (!$file_access_file_types) {
 			$file_access_file_types = $helper_file->unSerializeUploadFileExtentions(UPLOAD_FILE_EXTENSIONS_ALLOWED);
 		}
-		else{
+		else {
 			$file_access_file_types = $helper_file->unSerializeUploadFileExtentions($file_access_file_types);		
 		}
 		$file_access_file_types = join(', ',$file_access_file_types);		
