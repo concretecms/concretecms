@@ -77,8 +77,41 @@
 			$path = $base . '/' . $d1 . '/' . $d2 . '/' . $d3 . '/' . $filename;
 			return $path;
 		}
-	
 
+		const REGEX_INVALID_EXTENSION_CHARS = '{[^a-z0-9]}i';
+		/**
+		 * Serizlies an array of strings into format suitable for multi-uploader
+		 *
+		 * example for format:
+		 * '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.mp4;*.mp3;*.qt;*.ppt;*.kml'
+		 * @param array $types
+		 * @return string
+		 */	
+		public function serializeUploadFileExtentions($types){
+			$serialized = '';
+			$types = preg_replace(self::REGEX_INVALID_EXTENSION_CHARS,'',$types);
+			foreach ($types as $type) {				
+				$serialized .= '*.'.$type.';';
+			}
+			//removing trailing ; unclear if multiupload will choke on that or not
+			$serialized = substr ($serialized, 0, strlen($serialized)-1);
+			return $serialized;			
+		}
+		
+		/**
+		 * UnSerizlies an array of strings from format suitable for multi-uploader
+		 *
+		 * example for format:
+		 * '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.mp4;*.mp3;*.qt;*.ppt;*.kml'
+		 * @param string $types
+		 * @return array
+		 */					
+		public function unSerializeUploadFileExtentions($types){
+			//split by semi-colon
+			$types = preg_split('{;}',$types,null,PREG_SPLIT_NO_EMPTY);
+			$types = preg_replace(self::REGEX_INVALID_EXTENSION_CHARS,'',$types);
+			return $types;
+		}		
 	
 	}
 	

@@ -17,9 +17,10 @@ if ($config_check_failed) {
 	define('URL_REWRITING', false);
 }
 
-if (!defined('UPLOAD_FILE_EXTENSIONS_ALLOWED')) {
-	define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.mp4;*.mp3;*.qt;*.ppt;*.kml');
-}
+// AS: moved to concrete/config/app.php Wednesday; February 4, 2009
+// if (!defined('UPLOAD_FILE_EXTENSIONS_ALLOWED')) {
+// 	define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.mp4;*.mp3;*.qt;*.ppt;*.kml');
+// }
 
 if (!defined('REDIRECT_TO_BASE_URL')) {
 	define('REDIRECT_TO_BASE_URL', true);

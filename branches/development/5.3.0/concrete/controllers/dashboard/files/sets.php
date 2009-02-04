@@ -15,8 +15,6 @@ class DashboardFilesSetsController extends Controller {
 		$file_sets = $file_set->Find('');		
 		$this->set('file_sets',$file_sets);
 		$this->set('action',$this->post('file-sets-edit-or-delete-action'));
-// 		print_r($this);
-// 		die();
 	}
 
 	public function file_sets_add(){
