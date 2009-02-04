@@ -4,6 +4,8 @@
 <li><a href="javascript:void(0)" id="ccm-file-add-remote"><?=t('Add Remote Files')?></a></li>
 </ul>
 
+<? $iframeNoCache = time(); ?>
+<iframe src="" style="display: none" border="0" id="ccm-upload-more-options-frame<?=$iframeNoCache?>" name="ccm-upload-more-options-frame<?=$iframeNoCache?>"></iframe>
 
 <script type="text/javascript">
 var ccm_fiActiveTab = "ccm-file-upload-multiple";
