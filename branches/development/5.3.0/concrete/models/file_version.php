@@ -2,7 +2,7 @@
 
 class FileVersion extends Object {
 	
-	private $numThumbnailLevels = 3;
+	private $numThumbnailLevels = 3; 
 	
 	public function getFileID() {return $this->fID;}
 	public function getFileVersionID() {return $this->fvID;}
@@ -30,6 +30,12 @@ class FileVersion extends Object {
 		$path = $f->getSystemPath($this->fvPrefix, $this->fvFilename);
 		return $path;
 	}
+	
+	public function getRelativePath() {
+		$f = Loader::helper('concrete/file');
+		$path = $f->getFileRelativePath($this->fvPrefix, $this->fvFilename );
+		return $path;
+	}	
 	
 	public function getThumbnailPath($level) {
 		$f = Loader::helper('concrete/file');

@@ -56,7 +56,10 @@
 		<field name="height" type="I">
 			<unsigned />
 			<default value="3" />
-		</field>
+		</field> 
+		<field name="required" type="i">
+			<default value="0"/>
+		</field>  			
 	</table>
 	
 	<table name="btFormAnswerSet">

@@ -13,11 +13,12 @@ $miniSurvey->frontEndMode=true;
 .miniSurveyView td.question {padding-right: 12px}
 .miniSurveyView #msg .error{padding-left:16px; color:#cc0000}
 .miniSurveyView table.formBlockSurveyTable td img.ccm-captcha-image{float:none}
+.miniSurveyView .required{ color:#cc0000 }
 </style>
 <?php if ($invalidIP) { ?>
 <div class="ccm-error"><p><?=$invalidIP?></p></div>
 <? } ?>
-<form id="miniSurveyView<?php echo intval($survey->questionSetId)?>" class="miniSurveyView" method="post" action="<?php echo $this->action('submit_form')?>">
+<form enctype="multipart/form-data" id="miniSurveyView<?php echo intval($survey->questionSetId)?>" class="miniSurveyView" method="post" action="<?php echo $this->action('submit_form')?>">
 	<?php  if( $_GET['surveySuccess'] && $_GET['qsid']==intval($survey->questionSetId) ){ ?>
 		<div id="msg"><?php echo $survey->thankyouMsg ?></div> 
 	<?php  }elseif(strlen($formResponse)){ ?>

@@ -5,7 +5,7 @@ img {border: 0px}
 
 div#ccm-dashboard-header {background: transparent url(../images/dashboard/bg_header.png) repeat-x scroll; position: absolute; top: 0px; left: 0px; height: 53px; width: 100%; z-index: 10}
 
-div#ccm-system-nav-wrapper1 {position: absolute; border-left: 1px solid #fff; top: 0; right: 0; z-index: 15; text-align:right; width:50%; }
+div#ccm-system-nav-wrapper1 {position: absolute; top: 0; right: 0; z-index: 15; text-align:right; width:50%; }
 ul#ccm-system-nav {height: 45px; border-left: 1px solid #d7d7d7; float:right;}
 ul#ccm-system-nav li {
 	float: left;

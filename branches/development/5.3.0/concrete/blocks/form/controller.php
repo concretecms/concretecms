@@ -92,6 +92,8 @@ class FormBlockController extends BlockController {
 	//users submits the completed survey
 	function action_submit_form() {
 		$ip = Loader::helper('validation/ip');
+		Loader::library("file/importer");
+		
 		if (!$ip->check()) {
 			$this->set('invalidIP', $ip->getErrorMessage());			
 			return;
@@ -102,6 +104,9 @@ class FormBlockController extends BlockController {
 		$qsID=intval($_POST['qsID']); 
 		if($qsID==0)
 			throw new Exception(t("Oops, something is wrong with the form you posted (it doesn't have a question set id)."));
+			
+		//get all questions for this question set
+		$rows=$db->GetArray("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=?", array($qsID));			
 
 		// check captcha if activated
 		if ($this->displayCaptcha) {
@@ -110,7 +115,46 @@ class FormBlockController extends BlockController {
 				$errors['captcha'] = t("Incorrect captcha code");
 				$_REQUEST['ccmCaptchaCode']='';
 			}
-		}		
+		}
+		
+		//checked required fields
+		foreach($rows as $row){
+			if( intval($row['required'])==1){
+				$notCompleted=0;
+				if($row['inputType']=='checkboxlist'){
+					if( !is_array($_POST['Question'.$row['msqID']]) || !count($_POST['Question'.$row['msqID']]) )
+						$notCompleted=1;
+				}elseif($row['inputType']=='fileupload'){		
+					if( !isset($_FILES['Question'.$row['msqID']]) || !is_uploaded_file($_FILES['Question'.$row['msqID']]['tmp_name']) )					
+						$notCompleted=1;
+				}elseif( !strlen(trim($_POST['Question'.$row['msqID']])) ){
+					$notCompleted=1;
+				}				
+				if($notCompleted) $errors['CompleteRequired'] = t("Complete required fields *"); 
+			}
+		}
+		
+		//try importing the file if everything else went ok	
+		$tmpFileIds=array();	
+		if(!count($errors))	foreach($rows as $row){
+			if( $row['inputType']!='fileupload' ) continue;
+			$questionName='Question'.$row['msqID']; 
+			$fi = new FileImporter();
+			$resp = $fi->import($_FILES[$questionName]['tmp_name'], $_FILES[$questionName]['name']);
+			if (!($resp instanceof FileVersion)) {
+				switch($resp) {
+					case FileImporter::E_FILE_INVALID_EXTENSION:
+						$errors['fileupload'] = t('Invalid file extension.');
+						break;
+					case FileImporter::E_FILE_INVALID:
+						$errors['fileupload'] = t('Invalid file.');
+						break;
+					
+				}
+			}else{
+				$tmpFileIds[intval($row['msqID'])] = $resp->getFileID();
+			}	
+		}	
 		
 		if(count($errors)){			
 			$this->set('formResponse', t('Please correct the following errors:') );
@@ -122,13 +166,10 @@ class FormBlockController extends BlockController {
 			$db->query($q,array($qsID));
 			$answerSetID=$db->Insert_ID();
 			
-			//get all questions for this question set
-			$rs=$db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=?", array($qsID));
-			
 			$questionAnswerPairs=array();
 			
 			//loop through each question and get the answers 
-			while( $row=$rs->fetchRow() ){	
+			foreach( $rows as $row ){	
 				//save each answer
 				if($row['inputType']=='checkboxlist'){
 					$answer = Array();
@@ -139,9 +180,11 @@ class FormBlockController extends BlockController {
 							$answer[]=$txt->sanitize($_POST[$key]);
 						}
 					}
-				}else if($row['inputType']=='text'){
+				}elseif($row['inputType']=='text'){
 					$answerLong=$txt->sanitize($_POST['Question'.$row['msqID']]);
 					$answer='';
+				}elseif($row['inputType']=='fileupload'){
+					 $answer=intval( $tmpFileIds[intval($row['msqID'])] );
 				}else{
 					$answerLong="";
 					$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
@@ -314,13 +357,13 @@ class MiniSurvey{
 						$height = $this->limitRange(intval($values['height']), 1, 100); 
 					}
 					$dataValues=array(intval($values['qsID']), trim($values['question']), $values['inputType'],
-								      $values['options'], intval($values['position']), $width, $height, intval($values['msqID']) );			
-					$sql='UPDATE btFormQuestions SET questionSetId=?, question=?, inputType=?, options=?, position=?, width=?, height=? WHERE msqID=?';
+								      $values['options'], intval($values['position']), $width, $height, intval($values['required']), intval($values['msqID']) );			
+					$sql='UPDATE btFormQuestions SET questionSetId=?, question=?, inputType=?, options=?, position=?, width=?, height=?, required=? WHERE msqID=?';
 					$jsonVals['mode']='"Edit"';
 				}else{ 
 					$dataValues=array(intval($values['qsID']), trim($values['question']), $values['inputType'],
-								     $values['options'], 1000, intval($values['width']), intval($values['height']) );			
-					$sql='INSERT INTO btFormQuestions (questionSetId,question,inputType,options,position,width,height) VALUES (?,?,?,?,?,?,?)';
+								     $values['options'], 1000, intval($values['width']), intval($values['height']), intval($values['required']) );			
+					$sql='INSERT INTO btFormQuestions (questionSetId,question,inputType,options,position,width,height,required) VALUES (?,?,?,?,?,?,?,?)';
 					$jsonVals['mode']='"Add"';
 				}
 				$result=$this->db->query($sql,$dataValues); 
@@ -377,8 +420,9 @@ class MiniSurvey{
 						        </td>
 						      </tr>';
 					} else { */
+						$requiredSymbol=($questionRow['required'])?'<span class="required">*</span>':'';
 						echo '<tr>
-						        <td valign="top" class="question">'.$questionRow['question'].'</td>
+						        <td valign="top" class="question">'.$questionRow['question'].' '.$requiredSymbol.'</td>
 						        <td valign="top">'.$this->loadInputType($questionRow,showEdit).'</td>
 						      </tr>';
 					//}
@@ -405,9 +449,11 @@ class MiniSurvey{
 				
 			}else{
 				echo '<div id="miniSurveyTableWrap"><div id="miniSurveyPreviewTable" class="miniSurveyTable">';					
-				while( $questionRow=$questionsRS->fetchRow() ){	 ?>
+				while( $questionRow=$questionsRS->fetchRow() ){	 
+					$requiredSymbol=($questionRow['required'])?'<span class="required">*</span>':'';				
+					?>
 					<div id="miniSurveyQuestionRow<?php echo $questionRow['msqID']?>" class="miniSurveyQuestionRow">
-						<div class="miniSurveyQuestion"><?php echo $questionRow['question']?></div>
+						<div class="miniSurveyQuestion"><?php echo $questionRow['question'].' '.$requiredSymbol?></div>
 						<?php  /* <div class="miniSurveyResponse"><?php echo $this->loadInputType($questionRow,$showEdit)?></div> */ ?>
 						<div class="miniSurveyOptions">
 							<div style="float:right">
@@ -466,10 +512,14 @@ class MiniSurvey{
 					}
 					return $html;
 					
+				case 'fileupload': 
+					$html='<input type="file" name="Question'.$msqID.'" id="" />'; 				
+					return $html;
+					
 				case 'text':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
 					return '<textarea name="Question'.$msqID.'" cols="'.$questionData['width'].'" rows="'.$questionData['height'].'" style="width:95%">'.$val.'</textarea>';
-					;
+					
 				case 'field':
 				default:
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
