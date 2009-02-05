@@ -1,6 +1,6 @@
 <?
 
-class File extends Object {
+class File extends Object { 
 
 	public function getPath() {
 		$fv = $this->getVersion();

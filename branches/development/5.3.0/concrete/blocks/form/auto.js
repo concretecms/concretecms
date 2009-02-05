@@ -64,6 +64,8 @@ var miniSurvey ={
 			var postStr='question='+escape($('#question'+mode).val())+'&options='+escape($('#answerOptions'+mode).val());
 			postStr+='&width='+escape($('#width'+mode).val());
 			postStr+='&height='+escape($('#height'+mode).val());
+			var req=($('#required'+mode).get(0).checked)?1:0;
+			postStr+='&required='+req;
 			postStr+='&inputType='+$('input[@name=answerType'+mode+']:checked').val()
 			postStr+='&msqID='+msqID+'&qsID='+parseInt(this.qsID);			
 			$.ajax({ 
@@ -103,7 +105,10 @@ var miniSurvey ={
 						$('#questionEdit').val(jsonObj.question);
 						$('#answerOptionsEdit').val(jsonObj.optionVals.replace(/%%/g,"\r\n") );
 						$('#widthEdit').val(jsonObj.width);
-						$('#heightEdit').val(jsonObj.height);
+						$('#heightEdit').val(jsonObj.height); 
+						if( parseInt(jsonObj.required)==1 ) 
+							 $('#requiredEdit').get(0).checked=true;
+						else $('#requiredEdit').get(0).checked=false;
 						$('#msqID').val(jsonObj.msqID);  					
 						for(var i=0;i<miniSurvey.answerTypesEdit.length;i++){							
 							if(miniSurvey.answerTypesEdit[i].value==jsonObj.inputType){
@@ -135,6 +140,7 @@ var miniSurvey ={
 			}
 			$('#answerOptionsArea').hide();
 			$('#answerSettings').hide();
+			$('#required').get(0).checked=0;
 	},
 	
 	validate:function(){
