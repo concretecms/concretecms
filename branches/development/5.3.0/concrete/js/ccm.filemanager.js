@@ -118,3 +118,19 @@ ccm_selectFile = function(obj, e) {
 ccm_alSelectNone = function() {
 	ccm_hideMenus();
 }
+
+var checkbox_status = false;
+toggleCheckboxStatus = function(field) {
+	if(checkbox_status) {
+		for (i = 0; i < field.length; i++) {
+			field[i].checked = false;
+		}
+		checkbox_status = false;
+	}
+	else {
+		for (i = 0; i < field.length; i++) {
+			field[i].checked = true;
+		}
+		checkbox_status = true;		
+	}
+}	

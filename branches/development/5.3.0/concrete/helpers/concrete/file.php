@@ -77,7 +77,31 @@
 			$path = $base . '/' . $d1 . '/' . $d2 . '/' . $d3 . '/' . $filename;
 			return $path;
 		}
-
+		public function getIncomingDirectoryContents() {
+			$incoming_file_information = array();
+			
+			if (is_dir(DIR_FILES_INCOMING)) {
+			    if ($incoming_file_handle = opendir(DIR_FILES_INCOMING)) {
+			        $cnt = 0;
+					
+					while (($file = readdir($incoming_file_handle)) !== false) {
+						if($file == '.' || $file == '..')
+							continue;
+						
+						$current_file_stats = array();
+						$current_file_stats = stat(DIR_FILES_INCOMING .'/'. $file);
+						
+						$incoming_file_information[$cnt]['name'] = $file;
+			            $incoming_file_information[$cnt]['size'] = floor($current_file_stats[7] / 1000); // Fetch for Kb
+			        
+						$cnt++;
+					}
+			        closedir($incoming_file_handle);
+				}
+			}			
+		
+			return $incoming_file_information;
+		}
 		const REGEX_INVALID_EXTENSION_CHARS = '{[^a-z0-9]}i';
 		/**
 		 * Serizlies an array of strings into format suitable for multi-uploader
