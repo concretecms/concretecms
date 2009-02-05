@@ -1,13 +1,33 @@
 /* asset library */
 
 table#ccm-file-list {width: 100%; border-left: 1px solid #ffffff}
-table#ccm-file-list th, table#ccm-file-list td {padding: 4px 8px 4px 8px; font-size: 14px}
-table#ccm-file-list tr th {font-size: 14px; background-color: #efefef}
+table#ccm-file-list th, table#ccm-file-list td {padding: 4px 8px 4px 8px; font-size: 11px}
+table#ccm-file-list tr th {font-size: 11px; background-color: #efefef}
 table#ccm-file-list tr td {text-align: center;}
 table#ccm-file-list tr th a {color: #333}
-table#ccm-file-list tr:hover td {cursor: pointer; background-color: #F1FCFF}
+table#ccm-file-list tr.ccm-file-list-alt td {cursor: pointer; background-color: #ECFBFF}
+table#ccm-file-list tr:hover td {background-color: #DDECF0}
 
-td.ccm-file-list-thumbnail img {border: 2px solid #dedede}
+div#ccm-file-list-wrapper div.ccm-paging-top {padding-top: 5px}
+td.ccm-file-list-thumbnail img.ccm-generic-thumbnail {border: 0px}
+
+/* advanced search */
+div#ccm-file-manager-advanced {display: table; width: 100%}
+div#ccm-file-manager-advanced h2 {margin-bottom: 0px}
+div#ccm-file-search-advanced-fields {display: table-cell; border: 1px solid #ddd; padding: 8px; width:180px; min-width: 180px; background:#fafafa;}
+div#ccm-file-search-advanced-fields-gutter {display: block; width: 10px}
+div#ccm-file-search-advanced-results-wrapper {display: table-cell}
+
+div#ccm-file-search-advanced-fields div, div#ccm-sitemap-search td {font-size: 10px !important}
+div#ccm-file-search-advanced-fields-inner {padding-top: 4px}
+div#ccm-file-search-advanced-fields div.ccm-field {margin-bottom:8px}
+div#ccm-file-search-advanced-results-wrapper {position: relative}
+
+/* add asset */
+div#ccm-files-add-asset {float: right}
+div#ccm-files-add-asset h3 {float: left; margin-right: 4px; margin-top: 2px}
+div#ccm-files-add-asset form {float: left}
+div#ccm-files-add-asset a {float: left; margin-left: 4px; margin-top: 4px}=======
 td.ccm-file-list-thumbnail img.ccm-generic-thumbnail {border: 0px}
 
 .incoming_file_importer {margin: 10px auto 10px auto; height: 300px;}
