@@ -120,17 +120,21 @@ ccm_alSelectNone = function() {
 }
 
 var checkbox_status = false;
-toggleCheckboxStatus = function(field) {
+toggleCheckboxStatus = function(form) {
 	if(checkbox_status) {
-		for (i = 0; i < field.length; i++) {
-			field[i].checked = false;
-		}
+		for (i = 0; i < form.elements.length; i++) {
+			if (form.elements[i].type == "checkbox") {
+				form.elements[i].checked = false;
+			}
+		}	
 		checkbox_status = false;
 	}
 	else {
-		for (i = 0; i < field.length; i++) {
-			field[i].checked = true;
-		}
-		checkbox_status = true;		
+		for (i = 0; i < form.elements.length; i++) {
+			if (form.elements[i].type == "checkbox") {
+				form.elements[i].checked = true;
+			}
+		}	
+		checkbox_status = true;	
 	}
 }	

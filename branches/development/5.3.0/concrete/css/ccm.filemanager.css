@@ -30,11 +30,9 @@ div#ccm-files-add-asset form {float: left}
 div#ccm-files-add-asset a {float: left; margin-left: 4px; margin-top: 4px}=======
 td.ccm-file-list-thumbnail img.ccm-generic-thumbnail {border: 0px}
 
-.incoming_file_importer {margin: 10px auto 10px auto; height: 300px;}
-.incoming_file_importer .height {height: 200px}
+.incoming_file_importer {margin: 10px auto 10px auto; height: 225px;}
 .incoming_file_importer .borderflow {border: 1px solid #DEDEDE; overflow-y: scroll}
 .incoming_file_importer .incoming_file {margin: 10px 0px 10px 0px; float: left; text-align: center}
-.incoming_file_importer .leftside {width: 15%;}
-.incoming_file_importer .center {width: 70%; text-align:left}
-.incoming_file_importer .rightside {width: 15%; text-align:left}
-.incoming_file_importer .clear {clear:both}
+.incoming_file_importer .incoming_file_table .center {text-align: center}
+.incoming_file_importer .clear {clear: both}
+.theader {background-color: #EFEFEF; font-weight: bold; padding: 4px 0px 4px 0px}
