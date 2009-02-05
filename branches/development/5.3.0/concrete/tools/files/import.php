@@ -90,6 +90,7 @@ $(function() {
 <?php
 	$valt = Loader::helper('validation/token');
 	$ch = Loader::helper('concrete/file');
+	$fh = Loader::helper('validation/file');
 	Loader::library('file/types');
 	
 	$incoming_contents = $ch->getIncomingDirectoryContents();
@@ -97,25 +98,34 @@ $(function() {
 <div id="ccm-file-add-incoming-tab" style="display: none">
 <h1>Add Files from Incoming Directory</h1>
 <?php if(!empty($incoming_contents)) { ?>
-<div class="incoming_file_importer">
-	<div class="incoming_file leftside"><input type="checkbox" id="check_all_imports" name="check_all_imports" onclick="toggleCheckboxStatus(document.file_importer_form.send_file);" value="" /></div>
-	<div class="incoming_file center"><strong>Filename</strong></div>
-	<div class="incoming_file rightside"><strong>Size</strong></div>
-	<div class="clear">		
-</div>
 <form target="ccm-upload-more-options-frame<?=$iframeNoCache?>" id="file_importer_form" name="file_importer_form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
-	<div id="incoming_files" class="incoming_file_importer height borderflow">
-	<?php foreach($incoming_contents as $filenum=>$file_array) { 
-		$ft = FileTypeList::getType($file_array['name']);
+		<table id="incoming_file_table" width="100%" cellpadding="0" cellspacing="0">
+			<tr>
+				<td width="10%" valign="middle" class="center theader"><input type="checkbox" id="check_all_imports" name="check_all_imports" onclick="toggleCheckboxStatus(document.file_importer_form);" value="" /></td>
+				<td width="20%" valign="middle" class="center theader"></td>
+				<td width="45%" valign="middle" class="theader"><?=t('Filename')?></td>
+				<td width="25%" valign="middle" class="center theader"><?=t('Size')?></td>
+			</tr>
+		</table>
+	<div id="incoming_files" class="incoming_file_importer borderflow">
+		<table id="incoming_file_table" width="100%">
+		<?php foreach($incoming_contents as $filenum=>$file_array) { 
+				$ft = FileTypeList::getType($file_array['name']);
 		?>
-		<div class="incoming_file_thumbnail"><?=$ft->getThumbnail(1)?></div>
-		<div class="incoming_file leftside"><input type="checkbox" name="send_file<?=$filenum?>" value="<?=$file_array['name']?>" /></div>
-		<div class="incoming_file center"><?=$file_array['name']?></div>
-		<div class="incoming_file rightside"><?=$file_array['size']?>KB</div>
+			<tr>
+				<td width="10%" valign="middle" class="center">
+					<?php if($fh->extension($file_array['name'])) { ?>
+						<input type="checkbox" name="send_file<?=$filenum?>" value="<?=$file_array['name']?>" />
+					<?php } ?>
+				</td>
+				<td width="20%" valign="middle" class="center"><?=$ft->getThumbnail(1)?></td>
+				<td width="45%" valign="middle"><?=$file_array['name']?></td>
+				<td width="25%" valign="middle" class="center"><?=$file_array['size']?><?=t('Kb')?></div>
+			</tr>
+		<?php } ?>
+		</table>
 		<div class="clear"></div>
-	<?php } ?>
 	</div>
-	<div class="clear"></div>
 	<?=$valt->output('import_incoming');?>
 	<input type="submit" value="Submit" />
 </form>
