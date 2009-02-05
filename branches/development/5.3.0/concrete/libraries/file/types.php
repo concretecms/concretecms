@@ -47,13 +47,20 @@ class FileTypeList {
 	}
 	
 	/** 
+	 * Can take an extension or a filename
 	 * Returns any registered information we have for the particular file type, based on its registration
 	 */
 	public static function getType($ext) {
 		$ftl = FileTypeList::getInstance();	
+		if (strpos($ext, '.') !== false) {
+			// filename
+			$h = Loader::helper('file');
+			$ext = $h->getExtension($ext);
+		}
 		return $ftl->types[$ext];
 	}
 	
+		
 }
 
 class FileType {
@@ -70,6 +77,20 @@ class FileType {
 	public function getExtension() {return $this->extension;}
 	public function getCustomImporter() {return $this->customImporter;}
 	public function getGenericType() {return $this->type;}
+
+	/** 
+	 * Returns a thumbnail for this type of file
+	 */
+	public function getThumbnail($level) {
+		eval('$width = AL_THUMBNAIL_WIDTH_LEVEL' . $level . ';');
+		eval('$height = AL_THUMBNAIL_WIDTH_HEIGHT' . $level . ';');
+		if (file_exists(DIR_AL_ICONS . '/' . $this->extension . '.png')) {
+			$url = REL_DIR_AL_ICONS . '/' . $this->extension . '.png';
+		} else {
+			$url = AL_ICON_DEFAULT;
+		}
+		return '<img src="' . $url . '" class="ccm-generic-thumbnail" width="' . $width . '" height="' . $height . '" />';
+	}
 	
 		
 
