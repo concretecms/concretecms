@@ -91,6 +91,8 @@ $(function() {
 <?php
 	$valt = Loader::helper('validation/token');
 	$ch = Loader::helper('concrete/file');
+	Loader::library('file/types');
+	
 	$incoming_contents = $ch->getIncomingDirectoryContents();
 ?>
 <div id="ccm-file-add-incoming-tab" style="display: none">
@@ -104,7 +106,10 @@ $(function() {
 </div>
 <form target="ccm-upload-more-options-frame<?=$iframeNoCache?>" id="file_importer_form" name="file_importer_form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
 	<div id="incoming_files" class="incoming_file_importer height borderflow">
-	<?php foreach($incoming_contents as $filenum=>$file_array) { ?>
+	<?php foreach($incoming_contents as $filenum=>$file_array) { 
+		$ft = FileTypeList::getType($file_array['name']);
+		?>
+		<div class="incoming_file_thumbnail"><?=$ft->getThumbnail(1)?></div>
 		<div class="incoming_file leftside"><input type="checkbox" name="send_file<?=$filenum?>" value="<?=$file_array['name']?>" /></div>
 		<div class="incoming_file center"><?=$file_array['name']?></div>
 		<div class="incoming_file rightside"><?=$file_array['size']?>KB</div>

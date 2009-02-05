@@ -58,16 +58,8 @@ class FileVersion extends Object {
 		if ($hasThumbnail) {
 			return $html->image($this->getThumbnailSRC(1));
 		} else {
-			eval('$width = AL_THUMBNAIL_WIDTH_LEVEL' . $level . ';');
-			eval('$height = AL_THUMBNAIL_WIDTH_HEIGHT' . $level . ';');
-			$fh = Loader::helper('file');
-			$ext = $fh->getExtension($this->fvFilename);
-			if (file_exists(DIR_AL_ICONS . '/' . $ext . '.png')) {
-				$url = REL_DIR_AL_ICONS . '/' . $ext . '.png';
-			} else {
-				$url = AL_ICON_DEFAULT;
-			}
-			return '<img src="' . $url . '" class="ccm-generic-thumbnail" width="' . $width . '" height="' . $height . '" />';
+			$ft = FileTypeList::getType($this->fvFilename);
+			return $ft->getThumbnail($level);
 		}
 	}
 	// 
