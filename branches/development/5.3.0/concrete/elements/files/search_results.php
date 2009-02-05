@@ -1,3 +1,4 @@
+<div id="ccm-file-list-wrapper">
 <?
 	Loader::model('file_list');
 	$pl = new FileList();
@@ -10,6 +11,7 @@
 	
 	$pagination = $pl->getPagination();
 	
+	
 	if (count($files) > 0) { ?>
 	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-file-list">
@@ -20,7 +22,6 @@
 			</select>
 			</th>
 			<th>Type</th>
-			<th><a href="<?=$pl->getSortByURL('fvFilename')?>"><?=t('Filename')?></a></th>
 			<th><a href="<?=$pl->getSortByURL('fvTitle')?>"><?=t('Title')?></a></th>
 			<th><a href="<?=$pl->getSortByURL('fvDateAdded')?>"><?=t('Date Added')?></a></th>
 			<th><a href="<?=$pl->getSortByURL('fvSize')?>"><?=t('Size')?></a></th>
@@ -31,13 +32,18 @@
 	
 	<?
 		foreach($files as $f) {
+			if (!isset($striped) || $striped == 'ccm-file-list-alt') {
+				$striped = '';
+			} else if ($striped == '') { 
+				$striped = 'ccm-file-list-alt';
+			}
+			
 			$fv = $f->getActiveVersion(); ?>
 			
-			<tr class="ccm-file-list-record" id="fID<?=$f->getFileID()?>">
+			<tr class="ccm-file-list-record <?=$striped?>" id="fID<?=$f->getFileID()?>">
 			<td><input type="checkbox" /></td>
 			<td class="ccm-file-list-thumbnail"><?=$fv->getThumbnail(1)?></td>
 			<td><?=$fv->getType()?></td>
-			<td><?=wordwrap($fv->getFileName(), 25, "\n", true)?></td>
 			<td><?=wordwrap($fv->getTitle(), 25, "\n", true)?></td>
 			<td><?=date('M d, Y g:ia', strtotime($f->getDateAdded()))?></td>
 			<td><?=$fv->getSize()?></td>
@@ -55,4 +61,6 @@
 	
 
 	<? } 
-	$pl->displayPaging();
+	$pl->displayPaging(); ?>
+	
+</div>
