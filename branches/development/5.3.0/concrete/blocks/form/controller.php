@@ -119,18 +119,23 @@ class FormBlockController extends BlockController {
 		
 		//checked required fields
 		foreach($rows as $row){
-			if( intval($row['required'])==1){
+			if( intval($row['required'])==1 ){
 				$notCompleted=0;
 				if($row['inputType']=='checkboxlist'){
-					if( !is_array($_POST['Question'.$row['msqID']]) || !count($_POST['Question'.$row['msqID']]) )
-						$notCompleted=1;
+					$answerFound=0;
+					foreach($_POST as $key=>$val){
+						if( strstr($key,'Question'.$row['msqID'].'_') && strlen($val) ){
+							$answerFound=1;
+						} 
+					}
+					if(!$answerFound) $notCompleted=1;
 				}elseif($row['inputType']=='fileupload'){		
 					if( !isset($_FILES['Question'.$row['msqID']]) || !is_uploaded_file($_FILES['Question'.$row['msqID']]['tmp_name']) )					
 						$notCompleted=1;
 				}elseif( !strlen(trim($_POST['Question'.$row['msqID']])) ){
 					$notCompleted=1;
 				}				
-				if($notCompleted) $errors['CompleteRequired'] = t("Complete required fields *"); 
+				if($notCompleted) $errors['CompleteRequired'] = t("Complete required fields *") ; 
 			}
 		}
 		
@@ -138,7 +143,14 @@ class FormBlockController extends BlockController {
 		$tmpFileIds=array();	
 		if(!count($errors))	foreach($rows as $row){
 			if( $row['inputType']!='fileupload' ) continue;
-			$questionName='Question'.$row['msqID']; 
+			$questionName='Question'.$row['msqID']; 			
+			if	( !intval($row['required']) && 
+			   		( 
+			   		!isset($_FILES[$questionName]['tmp_name']) || !is_uploaded_file($_FILES[$questionName]['tmp_name'])
+			   		) 
+				){
+					continue;
+			}
 			$fi = new FileImporter();
 			$resp = $fi->import($_FILES[$questionName]['tmp_name'], $_FILES[$questionName]['name']);
 			if (!($resp instanceof FileVersion)) {
