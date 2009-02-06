@@ -11,8 +11,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class FileList extends DatabaseItemList {
 
 	private $fileAttributeFilters = array();
-	protected $autoSortColumns = array('fvFilename', 'fvTitle', 'fvDateAdded', 'fvSize');
-	
+	protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fvDateAdded', 'fvSize');
+	protected $itemsPerPage = 10;
 	/* magic method for filtering by page attributes. */
 	
 	public function __call($nm, $a) {
@@ -28,63 +28,39 @@ class FileList extends DatabaseItemList {
 	}
 
 	/** 
-	 * Sorts this list by display order 
+	 * Filters by type of collection (using the ID field)
+	 * @param mixed $ctID
 	 */
-	public function sortByDisplayOrder() {
-		parent::sortBy('p1.cDisplayOrder', 'asc');
-	}
-	
-	/** 
-	 * Sorts this list by display order descending 
-	 */
-	public function sortByDisplayOrderDescending() {
-		parent::sortBy('cDisplayOrder', 'desc');
-	}
-	
-	/** 
-	 * Sorts this list by public date ascending order 
-	 */
-	public function sortByPublicDate() {
-		parent::sortBy('cvDatePublic', 'asc');
-	}
-	
-	/** 
-	 * Sorts this list by name 
-	 */
-	public function sortByName() {
-		parent::sortBy('cvName', 'asc');
-	}
-	
-	/** 
-	 * Sorts this list by name descending order
-	 */
-	public function sortByNameDescending() {
-		parent::sortBy('cvName', 'desc');
+	public function filterByExtension($ext) {
+		$this->filter('fv.fvExtension', $ext, '=');
 	}
 
-	/** 
-	 * Sorts this list by public date descending order 
-	 */
-	public function sortByPublicDateDescending() {
-		parent::sortBy('cvDatePublic', 'desc');
-	}	
-	
-	/** 
-	 * Sets the parent ID that we will grab pages from. 
-	 * @param mixed $cParentID
-	 */
-	public function filterByParentID($cParentID) {
-		$this->filter('p1.cParentID', $cParentID);
-	}
-	
 	/** 
 	 * Filters by type of collection (using the ID field)
 	 * @param mixed $ctID
 	 */
-	public function filterByCollectionTypeID($ctID) {
-		$this->filter(false, "(p1.ctID = $ctID or p2.ctID = $ctID)");
+	public function filterByType($type) {
+		$this->filter('fv.fvType', $type, '=');
 	}
-
+	
+	/** 
+	 * Filters by "keywords" (which searches everything including filenames, title, tags, users who uploaded the file, tags)
+	 */
+	public function filterByKeywords($keywords) {
+		$db = Loader::db();
+		$keywordsExact = $db->quote($keywords);
+		$keywords = $db->quote('%' . $keywords . '%');
+		$this->filter(false, '(fvFilename like ' . $keywords . ' or fvTitle like ' . $keywords . ' or fvTags like ' . $keywords . ' or u.uName = ' . $keywordsExact . ')');
+	}
+	
+	/** 
+	 * Filters the file list by file size (in kilobytes)
+	 */
+	public function filterBySize($from, $to) {
+		$this->filter('fv.fvSize', $from * 1024, '>=');
+		$this->filter('fv.fvSize', $to * 1024, '<=');
+	}
+	
 	/** 
 	 * Filters by public date
 	 * @param string $date
@@ -111,7 +87,7 @@ class FileList extends DatabaseItemList {
 	}
 	
 	protected function setBaseQuery() {
-		$this->setQuery('select f.fID from Files f inner join FileVersions fv on f.fID = fv.fID');
+		$this->setQuery('select f.fID, u.uName as fvAuthorName from Files f inner join FileVersions fv on f.fID = fv.fID left join Users u on u.uID = fv.fvAuthorUID');
 	}
 	
 	protected function setupFileAttributeFilters() {
@@ -147,4 +123,16 @@ class FileList extends DatabaseItemList {
 		return array_slice($files, $offset, $itemsToGet);
 	}
 	
+	public static function getExtensionList() {
+		$db = Loader::db();
+		$col = $db->GetCol('select distinct(trim(fvExtension)) as extension from FileVersions where fvIsApproved = 1 and fvExtension <> ""');
+		return $col;
+	}
+
+	public static function getTypeList() {
+		$db = Loader::db();
+		$col = $db->GetCol('select distinct(trim(fvType)) as type from FileVersions where fvIsApproved = 1 and fvType <> 0');
+		return $col;
+	}
+
 }

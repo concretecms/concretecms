@@ -77,7 +77,39 @@ class FileType {
 	public function getExtension() {return $this->extension;}
 	public function getCustomImporter() {return $this->customImporter;}
 	public function getGenericType() {return $this->type;}
-
+	
+	
+	private function mapGenericTypeText($type) {
+		switch($type) {
+			case FileType::T_IMAGE:
+				return t('Image');
+				break;
+			case FileType::T_VIDEO:
+				return t('Video');
+				break;
+			case FileType::T_TEXT:
+				return t('Text');
+				break;
+			case FileType::T_AUDIO:
+				return t('Audio');
+				break;
+			case FileType::T_DOCUMENT:
+				return t('Document');
+				break;
+			case FileType::T_APPLICATION:
+				return t('Application');
+				break;
+		}
+	}
+	
+	public function getGenericTypeText($type) {
+		if ($type > 0) {
+			return FileType::mapGenericTypeText($type);
+		} else if (!empty($this->type)) {
+			return FileType::mapGenericTypeText($this->type);		
+		}
+	}
+	
 	/** 
 	 * Returns a thumbnail for this type of file
 	 */

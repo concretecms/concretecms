@@ -131,6 +131,14 @@ class TextHelper {
 	 * @return string
 	 */
 	public function filterNonAlphaNum($val){ return preg_replace('/[^[:alnum:]]/', '', $val);  }
+	
+	/** 
+	 * Useful for highlighting search strings within results (for nice display)
+	 */
+	 
+	public function highlightSearch($value, $searchString) {
+		return str_ireplace($searchString, '<em class="ccm-highlight-search">' . $searchString . '</em>', $value);
+	}
 }
 
 ?>

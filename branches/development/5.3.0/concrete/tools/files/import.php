@@ -1,3 +1,13 @@
+<?
+defined('C5_EXECUTE') or die(_("Access Denied."));
+$c = Page::getByPath("/dashboard/files");
+$cp = new Permissions($c);
+$u = new User();
+if (!$cp->canRead()) {
+	die(_("Unable to access the file manager."));
+}
+
+?>
 <ul class="ccm-dialog-tabs" id="ccm-file-import-tabs">
 <li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-file-upload-multiple"><?=t('Upload Multiple')?></a></li>
 <li><a href="javascript:void(0)" id="ccm-file-add-incoming"><?=t('Add Incoming')?></a></li>
