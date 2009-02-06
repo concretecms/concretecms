@@ -11,17 +11,22 @@ table#ccm-file-list tr:hover td {background-color: #DDECF0}
 div#ccm-file-list-wrapper div.ccm-paging-top {padding-top: 5px}
 td.ccm-file-list-thumbnail img.ccm-generic-thumbnail {border: 0px}
 
+img#ccm-file-search-advanced-loading {position: absolute; top: 0px; right: 0px; display: none}
+
 /* advanced search */
 div#ccm-file-manager-advanced {display: table; width: 100%}
 div#ccm-file-manager-advanced h2 {margin-bottom: 0px}
-div#ccm-file-search-advanced-fields {display: table-cell; border: 1px solid #ddd; padding: 8px; width:180px; min-width: 180px; background:#fafafa;}
+div#ccm-file-search-advanced-fields {display: table-cell; border: 1px solid #ddd; padding: 8px; width:210px; min-width: 210px; background:#fafafa;}
 div#ccm-file-search-advanced-fields-gutter {display: block; width: 10px}
 div#ccm-file-search-advanced-results-wrapper {display: table-cell}
 
 div#ccm-file-search-advanced-fields div, div#ccm-sitemap-search td {font-size: 10px !important}
 div#ccm-file-search-advanced-fields-inner {padding-top: 4px}
-div#ccm-file-search-advanced-fields div.ccm-field {margin-bottom:8px}
+div#ccm-file-search-advanced-fields div.ccm-file-search-field {margin-bottom:8px}
 div#ccm-file-search-advanced-results-wrapper {position: relative}
+div#ccm-file-search-field-base {display: none}
+div#ccm-file-search-advanced-results-wrapper em.ccm-highlight-search {background-color: #FFF9BB; padding: 4px; font-weight: bold; font-style: normal}
+div.ccm-file-search-field input, div.ccm-file-search-field select, div.ccm-file-search-field td {font-size: 10px !important}
 
 /* add asset */
 div#ccm-files-add-asset {float: right}

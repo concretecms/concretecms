@@ -12,6 +12,10 @@ class FileVersion extends Object {
 	public function getSize() {
 		return round($this->fvSize / 1024) . t('KB');
 	}
+	public function getAuthorName() {
+		return $this->fvAuthorName;
+	}
+	
 	public function getType() {
 		$fh = Loader::helper('file');
 		$ext = $fh->getExtension($this->fvFilename);
@@ -91,8 +95,8 @@ class FileVersion extends Object {
 		$ftl = FileTypeList::getType($ext);
 		$db = Loader::db();
 		$size = filesize($this->getPath());
-		$db->Execute('update FileVersions set fvTitle = ?, fvSize = ? where fID = ? and fvID = ?',
-			array($this->getFilename(), $size, $this->getFileID(), $this->getFileVersionID())
+		$db->Execute('update FileVersions set fvExtension = ?, fvType = ?, fvTitle = ?, fvSize = ? where fID = ? and fvID = ?',
+			array($ext, $ftl->getGenericType(), $this->getFilename(), $size, $this->getFileID(), $this->getFileVersionID())
 		);
 		if (is_object($ftl)) {
 			if ($ftl->getCustomImporter() != false) {

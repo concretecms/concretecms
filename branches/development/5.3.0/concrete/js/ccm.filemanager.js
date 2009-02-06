@@ -11,6 +11,45 @@ ccm_activateFileManager = function() {
 		ccm_alSelectNone();
 	});
 	$(".dialog-launch").dialog();
+	
+	$("#ccm-file-search-add-option").click(function() {
+		$("#ccm-file-search-fields-wrapper").append('<div class="ccm-file-search-field">' + $("#ccm-file-search-field-base").html() + '<\/div>');
+		ccm_activateFileManagerFields();
+	});
+	$("#ccm-dashboard-file-search").ajaxForm({
+		beforeSubmit: function() {
+			$("#ccm-file-search-advanced-results").css('opacity','0.5');	
+			$("#ccm-search-files").attr('disabled', true);
+			$("#ccm-file-search-advanced-loading").show();
+		},
+			/*beforeSubmit: function() {
+				ccm_alShowLoader();
+				$("#ccm-al-search-results").html('');
+				return true;
+			},*/
+			
+			success: function(resp) {
+				$("#ccm-file-search-advanced-results").css('opacity','1');	
+				$("#ccm-file-search-advanced-loading").hide();
+				$("#ccm-search-files").attr('disabled', false);
+				$("#ccm-file-search-advanced-results").html(resp);
+				//$("#ccm-al-search-results").html(resp);	
+			}
+	});
+}
+
+ccm_activateFileManagerFields = function() {
+	$(".ccm-file-search-field select[name=fvField]").unbind();
+	$(".ccm-file-search-field select[name=fvField]").change(function() {
+		var selected = $(this).find(':selected').val();
+		$(this).next('input.ccm-file-selected-field').val(selected);
+		$(this).parents('table').find('.ccm-file-search-option').hide();
+		$(this).parents('table').find('.ccm-file-search-option[search-field=' + selected + ']').show();		
+	});
+	$(".ccm-file-search-remove-option").unbind();
+	$(".ccm-file-search-remove-option").click(function() {
+		$(this).parents('table').parent().remove();
+	});
 }
 
 ccm_alSubmitSingle = function() {

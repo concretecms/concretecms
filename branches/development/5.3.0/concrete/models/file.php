@@ -78,6 +78,8 @@ class File extends Object {
 		}
 		$db = Loader::db();
 		$row = $db->GetRow("select * from FileVersions where fvID = ? and fID = ?", array($fvID, $this->fID));
+		$row['fvAuthorName'] = $db->GetOne("select uName from Users where uID = ?", array($row['fvAuthorUID']));
+		
 		$fv = new FileVersion();
 		$fv->setPropertiesFromArray($row);
 		return $fv;
