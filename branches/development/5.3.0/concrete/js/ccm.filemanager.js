@@ -1,12 +1,23 @@
 
 ccm_activateFileManager = function() {
-	$("tr.ccm-file-list-record").each(function() {
-		$(this).click(function(e) {
-			e.stopPropagation();
-			ccm_selectFile($(this), e);		
-		});
-	});
-	$(document).click(function(e) {
+
+	//delegate event handling to table container so clicks
+	//to our star don't interfer with clicks to our rows
+	$('#ccm-file-list').click(function(e){
+		e.stopPropagation();
+		if ($(e.target).is('img.ccm-star')) {	
+			var fID = $(e.target).parents('tr.ccm-file-list-record')[0].id;
+			fID = fID.substring(3);
+			ccm_starFile(e.target,fID);
+		}
+		else{
+			$(e.target).parents('tr.ccm-file-list-record').each(function(){
+				ccm_selectFile($(this), e);		
+			});
+		}
+	});		
+	
+	$(document).click(function(e) {		
 		e.stopPropagation();
 		ccm_alSelectNone();
 	});
@@ -177,3 +188,19 @@ toggleCheckboxStatus = function(form) {
 		checkbox_status = true;	
 	}
 }	
+
+ccm_starFile = function (img,fID) {				
+	var action = '';
+	if ($(img).attr('src').indexOf(CCM_STAR_STATES.unstarred) != -1) {
+		$(img).attr('src',$(img).attr('src').replace(CCM_STAR_STATES.unstarred,CCM_STAR_STATES.starred));
+		action = 'star';
+	}
+	else {
+		$(img).attr('src',$(img).attr('src').replace(CCM_STAR_STATES.starred,CCM_STAR_STATES.unstarred));
+		action = 'unstar';
+	}
+	
+	$.post(CCM_TOOLS_PATH + '/' + CCM_STAR_ACTION,{'action':action,'file-id':fID},function(data, textStatus){
+		//callback, in case we want to do some post processing
+	});
+}
