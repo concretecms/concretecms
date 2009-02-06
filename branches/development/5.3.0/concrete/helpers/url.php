@@ -20,9 +20,11 @@ class UrlHelper {
 		
 		if ($url == false) {
 			$url = $_SERVER['REQUEST_URI'];
+		} else {
+			$url = $url . '?' . $_SERVER['QUERY_STRING'];
 		}
-		
-		$vars = array();
+
+ 		$vars = array();
 		if ($variable && $value && (!is_array($variable))) {
 			$vars[$variable] = $value;
 		} else {

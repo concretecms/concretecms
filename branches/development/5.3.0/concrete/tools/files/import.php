@@ -117,7 +117,7 @@ $(function() {
 				<td width="25%" valign="middle" class="center theader"><?=t('Size')?></td>
 			</tr>
 		</table>
-	<div id="incoming_files" class="incoming_file_importer borderflow">
+	<div id="incoming_files" class="incoming_file_importer">
 		<table id="incoming_file_table" width="100%">
 		<?php foreach($incoming_contents as $filenum=>$file_array) { 
 				$ft = FileTypeList::getType($file_array['name']);
@@ -133,11 +133,25 @@ $(function() {
 				<td width="25%" valign="middle" class="center"><?=$file_array['size']?><?=t('Kb')?></div>
 			</tr>
 		<?php } ?>
+			<tr>
+				<td style="text-align: center"><input type="checkbox" name="removeFilesAfterPost" value="1" checked /></td>
+				<td colspan="2">
+				
+				<?=t('Remove files from incoming/ directory.')?></td>
+				<td>
+				<?
+					$h = Loader::helper('concrete/interface');
+					$b1 = $h->submit(t('Add Files'), 'file_importer_form');
+					print $b1;
+				?>
+				</td>
+			</tr>
 		</table>
 		<div class="clear"></div>
 	</div>
 	<?=$valt->output('import_incoming');?>
-	<input type="submit" value="Submit" />
+	<div style="clear: both">&nbsp;</div>
+
 </form>
 <?php } else { ?>
 No Incoming Files Found

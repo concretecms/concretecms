@@ -57,7 +57,12 @@ class FileTypeList {
 			$h = Loader::helper('file');
 			$ext = $h->getExtension($ext);
 		}
-		return $ftl->types[$ext];
+		if (is_object($ftl->types[$ext])) {
+			return $ftl->types[$ext];
+		} else {
+			$ft = new FileType(); // generic
+			return $ft;
+		}
 	}
 	
 		

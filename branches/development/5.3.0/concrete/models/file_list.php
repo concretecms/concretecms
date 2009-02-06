@@ -54,6 +54,12 @@ class FileList extends DatabaseItemList {
 	}
 	
 	/** 
+	 * Filters by files found in a certain set */
+	public function filterBySet($fs) {
+		$this->addToQuery("left join FileSetFiles fsf on fsf.fID = f.fID");
+		$this->filter('fsf.fsID', $fs->getFileSetID(), '=');
+	}
+	/** 
 	 * Filters the file list by file size (in kilobytes)
 	 */
 	public function filterBySize($from, $to) {

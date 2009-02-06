@@ -8,6 +8,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class DatabaseItemList extends ItemList {
 
 	private $query = '';
+	private $userQuery = '';
 	private $debug = false;
 	private $filters = array();
 	protected $autoSortColumns = array();
@@ -32,7 +33,7 @@ class DatabaseItemList extends ItemList {
 	}
 	
 	protected function addToQuery($query) {
-		$this->query .= $query . ' ';
+		$this->userQuery .= $query . ' ';
 	}
 
 	private function setupAutoSort() {
@@ -45,7 +46,7 @@ class DatabaseItemList extends ItemList {
 	
 	private function executeBase() {
 		$v = array();		
-		$q = $this->query . ' where 1=1 ';
+		$q = $this->query . $this->userQuery . ' where 1=1 ';
 		foreach($this->filters as $f) {
 			$column = $f[0];
 			$comp = $f[2];
@@ -206,7 +207,7 @@ class ItemList {
 		$url = $uh->setVariable(array(
 			$this->queryStringSortVariable => $column,
 			$this->queryStringSortDirectionVariable => $dir
-		));
+		), false, $baseURL);
 		print $url;
 	}
 	
