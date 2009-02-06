@@ -1,5 +1,10 @@
 <?
 
+if ($_GET['refresh'] == 1) {
+	$cnt = Loader::controller('/upgrade');
+	$cnt->refresh_schema();
+}
+
 $db = Loader::db();
 $ab = $db->getADOSChema();
 $xml = $ab->ExtractSchema();
