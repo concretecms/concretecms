@@ -14,7 +14,7 @@ Loader::library("file/importer");
 
 $error = "";
 
-
+$files = array();
 if ($valt->validate('import_incoming')) {
 	if( !empty($_POST) ) {
 		$fi = new FileImporter();
@@ -31,7 +31,12 @@ if ($valt->validate('import_incoming')) {
 							break;
 						
 					}
-				}				
+				} else {
+					$files[] = $resp;
+					if ($_POST['removeFilesAfterPost'] == 1) {
+						unlink(DIR_FILES_INCOMING .'/'. $name);
+					}
+				}
 			}
 		}
 	}
@@ -48,6 +53,12 @@ if ($valt->validate('import_incoming')) {
 		window.parent.ccm_alResetSingle();
 	<? } else { ?>
 		window.parent.ccm_alRefresh();
+		window.parent.jQuery.fn.dialog.closeTop();
+		highlight = new Array();
+		<? foreach($files as $resp) { ?>
+			highlight.push(<?=$resp->getFileID()?>);
+		<? } ?>
+		window.parent.ccm_alRefresh(highlight);
 	<? } ?>
 </script>
 </head>

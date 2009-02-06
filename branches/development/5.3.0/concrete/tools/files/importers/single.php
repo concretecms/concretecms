@@ -41,7 +41,9 @@ if ($valt->validate('upload')) {
 		alert('<?=$error?>');
 		window.parent.ccm_alResetSingle();
 	<? } else { ?>
-		window.parent.ccm_alRefresh();
+		highlight = new Array();
+		highlight.push(<?=$resp->getFileID()?>);
+		window.parent.ccm_alRefresh(highlight);
 	<? } ?>
 </script>
 </head>

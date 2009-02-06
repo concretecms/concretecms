@@ -1,21 +1,8 @@
 
 ccm_activateFileManager = function() {
-
 	//delegate event handling to table container so clicks
 	//to our star don't interfer with clicks to our rows
-	$('#ccm-file-list').click(function(e){
-		e.stopPropagation();
-		if ($(e.target).is('img.ccm-star')) {	
-			var fID = $(e.target).parents('tr.ccm-file-list-record')[0].id;
-			fID = fID.substring(3);
-			ccm_starFile(e.target,fID);
-		}
-		else{
-			$(e.target).parents('tr.ccm-file-list-record').each(function(){
-				ccm_selectFile($(this), e);		
-			});
-		}
-	});		
+	ccm_alSetupSelectFiles();
 	
 	$(document).click(function(e) {		
 		e.stopPropagation();
@@ -29,9 +16,7 @@ ccm_activateFileManager = function() {
 	});
 	$("#ccm-dashboard-file-search").ajaxForm({
 		beforeSubmit: function() {
-			$("#ccm-file-search-advanced-results").css('opacity','0.5');	
-			$("#ccm-search-files").attr('disabled', true);
-			$("#ccm-file-search-advanced-loading").show();
+			ccm_deactivateSearchResults();
 		},
 			/*beforeSubmit: function() {
 				ccm_alShowLoader();
@@ -40,12 +25,59 @@ ccm_activateFileManager = function() {
 			},*/
 			
 			success: function(resp) {
-				$("#ccm-file-search-advanced-results").css('opacity','1');	
-				$("#ccm-file-search-advanced-loading").hide();
-				$("#ccm-search-files").attr('disabled', false);
 				$("#ccm-file-search-advanced-results").html(resp);
+				ccm_activateSearchResults();
+				ccm_alSetupSelectFiles();
 				//$("#ccm-al-search-results").html(resp);	
 			}
+	});
+	ccm_alSetupInPagePaginationAndSorting();
+}
+
+ccm_alSetupSelectFiles = function() {
+	$('#ccm-file-list').click(function(e){
+		e.stopPropagation();
+		if ($(e.target).is('img.ccm-star')) {	
+			var fID = $(e.target).parents('tr.ccm-file-list-record')[0].id;
+			fID = fID.substring(3);
+			ccm_starFile(e.target,fID);
+		}
+		else{
+			$(e.target).parents('tr.ccm-file-list-record').each(function(){
+				ccm_selectFile($(this), e);		
+			});
+		}
+	});
+}
+ccm_deactivateSearchResults = function() {
+	$("#ccm-file-search-advanced-results").css('opacity','0.5');	
+	$("#ccm-search-files").attr('disabled', true);
+	$("#ccm-file-search-advanced-loading").show();
+}
+
+ccm_activateSearchResults = function() {
+	$("#ccm-file-search-advanced-results").css('opacity','1');	
+	$("#ccm-file-search-advanced-loading").hide();
+	$("#ccm-search-files").attr('disabled', false);
+	ccm_alSetupInPagePaginationAndSorting();
+}
+
+ccm_alSetupInPagePaginationAndSorting = function() {
+	$("#ccm-file-list th a").click(function() {
+		ccm_deactivateSearchResults();
+		$("#ccm-file-search-advanced-results").load($(this).attr('href'), false, function() {
+			ccm_activateSearchResults();
+			ccm_alSetupSelectFiles();
+		});
+		return false;
+	});
+	$("div.ccm-pagination a").click(function() {
+		ccm_deactivateSearchResults();
+		$("#ccm-file-search-advanced-results").load($(this).attr('href'), false, function() {
+			ccm_activateSearchResults();
+			ccm_alSetupSelectFiles();
+		});
+		return false;
 	});
 }
 
@@ -57,6 +89,13 @@ ccm_activateFileManagerFields = function() {
 		$(this).parents('table').find('.ccm-file-search-option').hide();
 		$(this).parents('table').find('.ccm-file-search-option[search-field=' + selected + ']').show();		
 	});
+	
+	// add the initial state of the latest select menu
+	var lastSelect = $(".ccm-file-search-field select[name=fvField]").eq($(".ccm-file-search-field select[name=fvField]").length-1);
+	var selected = lastSelect.find(':selected').val();
+	lastSelect.next('input.ccm-file-selected-field').val(selected);
+
+	
 	$(".ccm-file-search-remove-option").unbind();
 	$(".ccm-file-search-remove-option").click(function() {
 		$(this).parents('table').parent().remove();
@@ -74,21 +113,25 @@ ccm_alResetSingle = function () {
 	$('#ccm-al-upload-single-submit').show();
 }
 
-ccm_alRefresh = function() {
-	/*
-	$('#fileSearch_bDateAdded').val('');
-	$('#fileSearch_bFile').val('');	
-	$('#fileSearchSorting').val('bDateAdded desc');
-	
-	//$("#ccm-al-add-asset").hide();
-	//$("#ccm-al").show();
-	$('#ccm-al-search-button').get(0).click()
-	
-	$("#ccm-al-search-results").load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_search_results.php', {
-		sort: 'bDateAdded', order: 'desc', view: parseInt($('#search_page_size').val())
+ccm_alRefresh = function(highlightFIDs) {
+	ccm_deactivateSearchResults();
+	$("#ccm-file-search-advanced-results").load(CCM_TOOLS_PATH + '/files/search_results', {
+		'ccm_order_by': 'fvDateAdded',
+		'ccm_order_dir': 'desc'
+	}, function() {
+		ccm_activateSearchResults();
+		ccm_alResetSingle();
+		ccm_highlightFileIDArray(highlightFIDs);
+		ccm_alSetupSelectFiles();
+
 	});
-	*/
-	ccm_alResetSingle();
+}
+
+ccm_highlightFileIDArray = function(ids) {
+	for (i = 0; i < ids.length; i++) {
+		var oldBG = $("#fID" + ids[i] + ' td').css('backgroundColor');
+		$("#fID" + ids[i] + ' td').animate({ backgroundColor: '#FFF9BB'}, { queue: true, duration: 300 }).animate( {backgroundColor: oldBG}, 500);
+	}
 }
 
 ccm_selectFile = function(obj, e) {

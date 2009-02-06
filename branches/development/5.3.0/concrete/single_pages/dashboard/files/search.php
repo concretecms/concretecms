@@ -36,7 +36,7 @@
 		<tr>
 		<td style="padding-right: 4px">
 		<?=$form->select('fvField', array(
-			'set' => 'Set',
+			'file_set' => 'Set',
 			'size' => 'Size',
 			'type' => 'Type',
 			'extension' => 'Extension'		
@@ -47,8 +47,8 @@
 		<td width="100%">
 		
 		
-		<span class="ccm-file-search-option" search-field="set">
-		Coming soon
+		<span class="ccm-file-search-option" search-field="file_set">
+		<?=$form->select('file_set[]', $sets)?>
 		</span>
 		
 		<span class="ccm-file-search-option" style="display: none" search-field="size">

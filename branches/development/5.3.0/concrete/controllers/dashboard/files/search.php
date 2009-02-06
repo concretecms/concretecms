@@ -1,6 +1,7 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('file_list');
+Loader::model('file_set');
 class DashboardFilesSearchController extends Controller {
 
 	public function view() {
@@ -23,8 +24,15 @@ class DashboardFilesSearchController extends Controller {
 			$types[$value] = FileType::getGenericTypeText($value);
 		}
 		
+		$s1 = FileSet::getMySets();
+		$sets = array();
+		foreach($s1 as $s) {
+			$sets[$s->getFileSetID()] = $s->getFileSetName();
+		}
+		
 		$this->set('extensions', $extensions);		
 		$this->set('types', $types);	
+		$this->set('sets', $sets);	
 		
 		$fileList = $this->getRequestedSearchResults();
 		$files = $fileList->getPage();
@@ -49,6 +57,12 @@ class DashboardFilesSearchController extends Controller {
 						case "extension":
 							$extension = $_REQUEST['extension'][$index];
 							$fileList->filterByExtension($extension);
+							break;
+						case "file_set":
+							Loader::model('file_set');
+							$set = $_REQUEST['file_set'][$index];
+							$fs = FileSet::getByID($set);
+							$fileList->filterBySet($fs);
 							break;
 						case "type":
 							$type = $_REQUEST['type'][$index];

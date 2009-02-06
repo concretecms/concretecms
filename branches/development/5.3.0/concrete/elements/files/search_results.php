@@ -10,6 +10,7 @@
 	$fileList->displaySummary();
 	$txt = Loader::helper('text');
 	$keywords = $_REQUEST['fKeywords'];
+	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/files/search_results';
 
 	if (count($files) > 0) { ?>
 	
@@ -21,11 +22,12 @@
 			</select>
 			</th>
 			<th>Type</th>
+
 			<th class="ccm-starred">&nbsp;</th>			
-			<th class="ccm-filename"><a href="<?=$fileList->getSortByURL('fvTitle')?>"><?=t('Title')?></a></th>
-			<th><a href="<?=$fileList->getSortByURL('fvDateAdded')?>"><?=t('Date Added')?></a></th>
-			<th><a href="<?=$fileList->getSortByURL('fvSize')?>"><?=t('Size')?></a></th>
-			<th><a href="<?=$fileList->getSortByURL('fvAuthorName')?>"><?=t('Uploaded By')?></a></th>
+			<th class="ccm-filename><a href="<?=$fileList->getSortByURL('fvTitle', 'asc', $bu)?>"><?=t('Title')?></a></th>
+			<th><a href="<?=$fileList->getSortByURL('fvDateAdded', 'asc', $bu)?>"><?=t('Date Added')?></a></th>
+			<th><a href="<?=$fileList->getSortByURL('fvSize', 'asc', $bu)?>"><?=t('Size')?></a></th>
+			<th><a href="<?=$fileList->getSortByURL('fvAuthorName', 'asc', $bu)?>"><?=t('Uploaded By')?></a></th>
 		</tr>
 		
 	
@@ -65,6 +67,6 @@
 	
 
 	<? } 
-	$fileList->displayPaging(); ?>
+	$fileList->displayPaging($bu); ?>
 	
 </div>
