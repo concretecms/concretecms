@@ -1228,10 +1228,14 @@
     </field>
   </table>    
   <table name="FileSetFiles">
-    <field name="fID" type="I" size="10">
+    <field name="fsfID" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
       <UNSIGNED/>
+    </field>  
+    <field name="fID" type="I" size="10">
+      <UNSIGNED/>
+      <NOTNULL/>
     </field>
     <field name="fsID" type="I" size="10">
       <NOTNULL/>

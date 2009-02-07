@@ -14,7 +14,7 @@ class FileList extends DatabaseItemList {
 	protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fvDateAdded', 'fvSize');
 	protected $itemsPerPage = 10;
 	/* magic method for filtering by page attributes. */
-	
+
 	public function __call($nm, $a) {
 		if (substr($nm, 0, 8) == 'filterBy') {
 			$txt = Loader::helper('text');
@@ -93,7 +93,10 @@ class FileList extends DatabaseItemList {
 	}
 	
 	protected function setBaseQuery() {
-		$this->setQuery('select f.fID, u.uName as fvAuthorName from Files f inner join FileVersions fv on f.fID = fv.fID left join Users u on u.uID = fv.fvAuthorUID');
+		$this->setQuery('SELECT f.fID, u.uName as fvAuthorName
+		FROM Files f INNER JOIN FileVersions fv ON f.fID = fv.fID 
+		LEFT JOIN Users u on u.uID = fv.fvAuthorUID
+		');
 	}
 	
 	protected function setupFileAttributeFilters() {
@@ -121,7 +124,7 @@ class FileList extends DatabaseItemList {
 		$this->setupFileAttributeFilters();
 		$r = parent::get();
 		foreach($r as $row) {
-			$f = File::getByID($row['fID']);
+			$f = File::getByID($row['fID']);			
 			$files[] = $f;
 		}
 		$this->setItemsPerPage($ipp);
