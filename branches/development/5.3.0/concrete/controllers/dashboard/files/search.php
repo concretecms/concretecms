@@ -36,7 +36,7 @@ class DashboardFilesSearchController extends Controller {
 		
 		$fileList = $this->getRequestedSearchResults();
 		$files = $fileList->getPage();
-
+				
 		$this->set('fileList', $fileList);		
 		$this->set('files', $files);		
 		$this->set('pagination', $fileList->getPagination());

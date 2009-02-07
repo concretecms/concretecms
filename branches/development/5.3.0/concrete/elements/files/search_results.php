@@ -12,8 +12,7 @@
 	$keywords = $_REQUEST['fKeywords'];
 	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/files/search_results';
 
-	if (count($files) > 0) { ?>
-	
+	if (count($files) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-file-list">
 		<tr>
 			<th><input type="checkbox" /></td>
@@ -40,7 +39,7 @@
 			} else if ($striped == '') { 
 				$striped = 'ccm-file-list-alt';
 			}
-			
+			$star_icon = ($f->isStarred == 1) ? 'star_yellow.png' : 'star_grey.png';
 			$fv = $f->getActiveVersion(); ?>
 			
 			<tr class="ccm-file-list-record <?=$striped?>" id="fID<?=$f->getFileID()?>">
@@ -52,8 +51,7 @@
 			<? } ?>
 				</td>
 			<td><?=$fv->getType()?></td>
-			<!-- star_yellow.png -->
-			<td class="ccm-starred"><img src="<?=ASSETS_URL_IMAGES?>/icons/star_grey.png" height="16" width="16" border="0" class="ccm-star" /></td>			
+			<td class="ccm-starred"><img src="<?=ASSETS_URL_IMAGES?>/icons/<?=$star_icon?>" height="16" width="16" border="0" class="ccm-star" /></td>			
 			<td class="ccm-filename"><?=$txt->highlightSearch(wordwrap($fv->getTitle(), 25, "\n", true), $keywords)?></td>
 			<td><?=date('M d, Y g:ia', strtotime($f->getDateAdded()))?></td>
 			<td><?=$fv->getSize()?></td>

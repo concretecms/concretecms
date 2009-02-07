@@ -10,7 +10,12 @@ class File extends Object {
 	public function getByID($fID) {
 		$db = Loader::db();
 		$f = new File();
-		$row = $db->GetRow("select Files.*, FileVersions.fvID from Files left join FileVersions on Files.fID = FileVersions.fID where Files.fID = ?", array($fID));
+		$row = $db->GetRow("SELECT Files.*, FileVersions.fvID,
+		(fs.fsType = ?) as isStarred
+		FROM Files LEFT JOIN FileVersions on Files.fID = FileVersions.fID 
+		LEFT JOIN FileSetFiles fsf on Files.fID = fsf.fID
+		LEFT JOIN FileSets fs on fsf.fsID = fs.fsID			
+		WHERE Files.fID = ?", array(FileSet::TYPE_STARRED,$fID));
 		$f->setPropertiesFromArray($row);
 		
 		return $f;
