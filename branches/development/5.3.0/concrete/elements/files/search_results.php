@@ -45,7 +45,12 @@
 			
 			<tr class="ccm-file-list-record <?=$striped?>" id="fID<?=$f->getFileID()?>">
 			<td><input type="checkbox" /></td>
-			<td class="ccm-file-list-thumbnail"><?=$fv->getThumbnail(1)?></td>
+			<td class="ccm-file-list-thumbnail">
+				<div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><?=$fv->getThumbnail(1)?></div>
+				<? if ($fv->hasThumbnail(2)) { ?>
+				<div class="ccm-file-list-thumbnail-hover" id="fID<?=$f->getFileID()?>hoverThumbnail"><div><?=$fv->getThumbnail(2)?></div></div>
+			<? } ?>
+				</td>
 			<td><?=$fv->getType()?></td>
 			<!-- star_yellow.png -->
 			<td class="ccm-starred"><img src="<?=ASSETS_URL_IMAGES?>/icons/star_grey.png" height="16" width="16" border="0" class="ccm-star" /></td>			

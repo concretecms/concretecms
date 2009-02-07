@@ -63,10 +63,22 @@ class FileAttributeKey extends AttributeKey {
 		return $la;
 	}	
 	
-	function add($akHandle, $akName, $akValues, $akType, $akAllowOtherValues=0) {
+	function getUserAddedList() {
 		$db = Loader::db();
-		$a = array($akHandle, $akName, $akValues, $akType, $akAllowOtherValues);
-		$r = $db->query("insert into FileAttributeKeys (akHandle, akName, akValues, akType, akAllowOtherValues) values (?, ?, ?, ?, ?)", $a);
+		$q = "select fakID from FileAttributeKeys where akIsUserAdded = 1 order by fakID asc";
+		$r = $db->query($q);
+		$la = array();
+		while ($row = $r->fetchRow()) {
+			$la[] = FileAttributeKey::get($row['fakID']);
+		}
+		return $la;
+	}	
+	
+
+	function add($akHandle, $akName, $akValues, $akType, $akAllowOtherValues=0, $akIsUserAdded = 0) {
+		$db = Loader::db();
+		$a = array($akHandle, $akName, $akValues, $akType, $akAllowOtherValues, $akIsUserAdded);
+		$r = $db->query("insert into FileAttributeKeys (akHandle, akName, akValues, akType, akAllowOtherValues, akIsUserAdded) values (?, ?, ?, ?, ?, ?)", $a);
 		
 		if ($r) {
 			$fakID = $db->Insert_ID();
