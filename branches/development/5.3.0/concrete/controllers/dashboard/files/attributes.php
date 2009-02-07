@@ -16,6 +16,12 @@ class DashboardFilesAttributesController extends Controller {
 			$message = t("File Attribute Key Updated.");		
 		}
 		$this->set( "message", $message );
+		$this->set("showUserAdded", false);	
+	}
+	
+	public function show_user_added() {
+		$this->set( "attribs", FileAttributeKey::getUserAddedList() );
+		$this->set("showUserAdded", true);
 	}
 	
 	public function add(){
@@ -85,7 +91,7 @@ class DashboardFilesAttributesController extends Controller {
 				$fak = $fak->update($akHandle, $akName, $akValues, $akType, $akAllowOtherValues); 
 				$this->redirect('/dashboard/files/attributes/?attribute_updated=1');
 			}elseif($_REQUEST['add']){
-				$fak = FileAttributeKey::add($akHandle, $akName, $akValues, $akType, $akAllowOtherValues);
+				$fak = FileAttributeKey::add($akHandle, $akName, $akValues, $akType, $akAllowOtherValues, 1);
 				$this->redirect('/dashboard/files/attributes/?attribute_created=1');				
 			}
 		}	

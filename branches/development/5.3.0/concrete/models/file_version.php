@@ -12,6 +12,9 @@ class FileVersion extends Object {
 	public function getSize() {
 		return round($this->fvSize / 1024) . t('KB');
 	}
+	public function getFullSize() {
+		return $this->fvSize;
+	}
 	public function getAuthorName() {
 		return $this->fvAuthorName;
 	}
@@ -56,11 +59,16 @@ class FileVersion extends Object {
 		}
 	}
 	
+	public function hasThumbnail($level) {
+		eval('$hasThumbnail = $this->fvHasThumbnail' . $level . ';');
+		return $hasThumbnail;
+	}
+	
 	public function getThumbnail($level) {
 		$html = Loader::helper('html');
 		eval('$hasThumbnail = $this->fvHasThumbnail' . $level . ';');
 		if ($hasThumbnail) {
-			return $html->image($this->getThumbnailSRC(1));
+			return $html->image($this->getThumbnailSRC($level));
 		} else {
 			$ft = FileTypeList::getType($this->fvFilename);
 			return $ft->getThumbnail($level);

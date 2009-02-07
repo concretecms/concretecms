@@ -400,6 +400,10 @@
     <field name="akType" type="C" size="255">
       <DEFAULT value="TEXT"/>
     </field>
+    <field name="akIsUserAdded" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <index name="akHandle">
       <UNIQUE/>
       <col>akHandle</col>

@@ -17,6 +17,8 @@ td.ccm-file-list-thumbnail img.ccm-generic-thumbnail {border: 0px}
 
 img#ccm-file-search-advanced-loading {position: absolute; top: 0px; right: 0px; display: none}
 
+div.ccm-file-list-thumbnail-hover div {display: none; z-index: 105; position: absolute; top: 0px; left: 0px; border: 1px dotted #aaa; padding: 8px; background-color: #fff}
+
 /* advanced search */
 div#ccm-file-manager-advanced {display: table; width: 100%}
 div#ccm-file-manager-advanced h2 {margin-bottom: 0px}
@@ -47,3 +49,6 @@ td.ccm-file-list-thumbnail img.ccm-generic-thumbnail {border: 0px}
 .incoming_file_importer .incoming_file_table .center {text-align: center}
 .incoming_file_importer .clear {clear: both}
 .theader {background-color: #EFEFEF; font-weight: bold; padding: 4px 0px 4px 0px}
+
+/* properties */
+table#ccm-file-properties th {white-space: nowrap}

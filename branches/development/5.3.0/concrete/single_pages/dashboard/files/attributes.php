@@ -1,5 +1,6 @@
 <?
 $ih = Loader::helper('concrete/interface');
+$form = Loader::helper('form'); 
 $valt = Loader::helper('validation/token');
 ?>
 
@@ -8,7 +9,22 @@ $valt = Loader::helper('validation/token');
 	
 	<div class="ccm-dashboard-inner">
 	
-		<?= Loader::element('attributes_table', array( 'attribs'=>$attribs, 'attributeType'=>'file') ); ?>
+		<?=$form->checkbox('showUserAdded', 1, $showUserAdded)?>
+		<?=t('Show Only User Added Attributes')?>
+		
+		<script type="text/javascript">
+		$(function() {
+			$("input[name=showUserAdded]").click(function() {
+				if ($(this).get(0).checked) {
+					window.location.href='<?=$this->url('/dashboard/files/attributes', 'show_user_added')?>';
+				} else {
+					window.location.href='<?=$this->url('/dashboard/files/attributes')?>';
+				}
+			});
+		});
+		</script>
+		
+		<?= Loader::element('dashboard/attributes_table', array( 'attribs'=>$attribs, 'attributeType'=>'file') ); ?>
 	
 	</div>
 <? } ?>
@@ -37,7 +53,7 @@ $valt = Loader::helper('validation/token');
 				'submitBtnTxt'=>t('Update'),
 				'noSearchable'=>1
 			);
-		Loader::element('attribute_form', $attributeFormData);
+		Loader::element('dashboard/attribute_form', $attributeFormData);
 		?>
 		
 		<br>
@@ -68,7 +84,7 @@ $valt = Loader::helper('validation/token');
 				'submitBtnTxt'=>t('Add'),
 				'noSearchable'=>1
 			);
-		Loader::element('attribute_form', $attributeFormData);
+		Loader::element('dashboard/attribute_form', $attributeFormData);
 		?>
 		
 		<br>
