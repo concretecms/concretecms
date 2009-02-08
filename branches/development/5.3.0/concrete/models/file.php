@@ -8,6 +8,7 @@ class File extends Object {
 	}
 	
 	public function getByID($fID) {
+		Loader::model('file_set');
 		$db = Loader::db();
 		$f = new File();
 		$row = $db->GetRow("SELECT Files.*, FileVersions.fvID,

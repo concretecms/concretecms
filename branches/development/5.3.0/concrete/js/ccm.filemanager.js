@@ -1,4 +1,6 @@
 
+var ccm_totalAdvancedSearchFields = 0;
+
 ccm_activateFileManager = function() {
 	//delegate event handling to table container so clicks
 	//to our star don't interfer with clicks to our rows
@@ -11,8 +13,9 @@ ccm_activateFileManager = function() {
 	$(".dialog-launch").dialog();
 	
 	$("#ccm-file-search-add-option").click(function() {
-		$("#ccm-file-search-fields-wrapper").append('<div class="ccm-file-search-field">' + $("#ccm-file-search-field-base").html() + '<\/div>');
-		ccm_activateFileManagerFields();
+		ccm_totalAdvancedSearchFields++;
+		$("#ccm-file-search-fields-wrapper").append('<div class="ccm-file-search-field" id="ccm-file-search-field-set' + ccm_totalAdvancedSearchFields + '">' + $("#ccm-file-search-field-base").html() + '<\/div>');
+		ccm_activateFileManagerFields(ccm_totalAdvancedSearchFields);
 	});
 	$("#ccm-dashboard-file-search").ajaxForm({
 		beforeSubmit: function() {
@@ -99,30 +102,47 @@ ccm_alSetupInPagePaginationAndSorting = function() {
 	});
 }
 
-ccm_activateFileManagerFields = function() {
-	$(".ccm-file-search-field select[name=fvField]").unbind();
-	$(".ccm-file-search-field select[name=fvField]").change(function() {
+ccm_activateFileManagerFields = function(fieldset) {
+	$("#ccm-file-search-field-set" + fieldset + " select[name=fvField]").unbind();
+	$("#ccm-file-search-field-set" + fieldset + " select[name=fvField]").change(function() {
 		var selected = $(this).find(':selected').val();
 		$(this).next('input.ccm-file-selected-field').val(selected);
 		$(this).parents('table').find('.ccm-file-search-option').hide();
 		$(this).parents('table').find('.ccm-file-search-option[search-field=' + selected + ']').show();		
 	});
 	
+	$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option[search-field=date_added] input").each(function() {
+		if ($(this).attr('id') == 'date_from[]') {
+			$(this).attr('id', 'date_from' + fieldset);
+		} else if ($(this).attr('id') == 'date_to[]') {
+			$(this).attr('id', 'date_to' + fieldset);
+		}
+	});
+	$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option[search-field=date_added] input").datepicker({
+		showAnim: 'fadeIn'
+	});
+	
 	// add the initial state of the latest select menu
-	var lastSelect = $(".ccm-file-search-field select[name=fvField]").eq($(".ccm-file-search-field select[name=fvField]").length-1);
+	var lastSelect = $("#ccm-file-search-field-set" + fieldset + " select[name=fvField]").eq($(".ccm-file-search-field select[name=fvField]").length-1);
 	var selected = lastSelect.find(':selected').val();
 	lastSelect.next('input.ccm-file-selected-field').val(selected);
 
 	
-	$(".ccm-file-search-remove-option").unbind();
-	$(".ccm-file-search-remove-option").click(function() {
+	$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-remove-option").unbind();
+	$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-remove-option").click(function() {
 		$(this).parents('table').parent().remove();
+		ccm_totalAdvancedSearchFields--;
 	});
 }
 
 ccm_alSubmitSingle = function() {
-	$('#ccm-al-upload-single-submit').hide();
-	$('#ccm-al-upload-single-loader').show();
+	if ($("#ccm-al-upload-single-file").val() == '') { 
+		alert(ccmi18n_filemanager.uploadErrorChooseFile);
+		return false;
+	} else {
+		$('#ccm-al-upload-single-submit').hide();
+		$('#ccm-al-upload-single-loader').show();
+	}
 }
 
 ccm_alResetSingle = function () {
