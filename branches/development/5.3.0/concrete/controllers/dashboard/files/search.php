@@ -68,6 +68,22 @@ class DashboardFilesSearchController extends Controller {
 							$type = $_REQUEST['type'][$index];
 							$fileList->filterByType($type);
 							break;
+						case "date_added":
+							$dateFrom = $_REQUEST['date_from'][$index];
+							$dateTo = $_REQUEST['date_to'][$index];
+							if ($dateFrom != '') {
+								$dateFrom = date('Y-m-d', strtotime($dateFrom));
+								$fileList->filterByDateAdded($dateFrom, '>=');
+								$dateFrom .= ' 00:00:00';
+							}
+							if ($dateTo != '') {
+								$dateTo = date('Y-m-d', strtotime($dateTo));
+								$dateTo .= ' 23:59:59';
+								
+								$fileList->filterByDateAdded($dateTo, '<=');
+							}
+							break;
+
 						case "size":
 							$from = $_REQUEST['size_from'][$index];
 							$to = $_REQUEST['size_to'][$index];

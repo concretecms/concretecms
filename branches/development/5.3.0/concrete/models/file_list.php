@@ -71,8 +71,8 @@ class FileList extends DatabaseItemList {
 	 * Filters by public date
 	 * @param string $date
 	 */
-	public function filterByPublicDate($date, $comparison = '=') {
-		$this->filter('cv.cvDatePublic', $date, $comparison);
+	public function filterByDateAdded($date, $comparison = '=') {
+		$this->filter('f.fDateAdded', $date, $comparison);
 	}
 	
 	/** 

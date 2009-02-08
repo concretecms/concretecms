@@ -62,5 +62,6 @@ var ccmi18n_filemanager = {
 	editReplace: '<?=t('Edit/Replace File')?>',
 	addTo: '<?=t('Add to Set/Archive')?>',
 	permissions: '<?=t('Permissions')?>',
-	deleteFile: '<?=t('Delete File')?>'
+	deleteFile: '<?=t('Delete File')?>',
+	uploadErrorChooseFile: '<?=t('You must choose a file.')?>'
 }

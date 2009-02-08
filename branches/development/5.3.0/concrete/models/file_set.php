@@ -11,7 +11,7 @@
 			}
 			$db = Loader::db();
 			$sets = array();
-			$r = $db->Execute('select * from FileSets where fsType = ? or (fsType = ? and uID = ?) order by fsName asc', array(FileSet::TYPE_PUBLIC, FileSet::TYPE_PRIVATE, $u->getUserID()));
+			$r = $db->Execute('select * from FileSets where fsType = ? or (fsType in (?, ?) and uID = ?) order by fsName asc', array(FileSet::TYPE_PUBLIC, FileSet::TYPE_STARRED, FileSet::TYPE_PRIVATE, $u->getUserID()));
 			while ($row = $r->FetchRow()) {
 				$fs = new FileSet();
 				foreach($row as $key => $value) {
