@@ -2,8 +2,8 @@
 
 table#ccm-file-list {width: 100%; border-left: 1px solid #ffffff}
 table#ccm-file-list th, table#ccm-file-list td {padding: 4px 8px 4px 8px; font-size: 11px}
-table#ccm-file-list th.ccm-starred, table#ccm-file-list td.ccm-starred {padding: 0 4px 0 0; margin:0;}
-table#ccm-file-list th.ccm-filename, table#ccm-file-list td.ccm-filename {padding: 0; margin:0; text-align:left;}
+table#ccm-file-list th.ccm-file-list-starred, table#ccm-file-list td.ccm-file-list-starred {padding: 0 4px 0 0; margin:0;}
+table#ccm-file-list th.ccm-file-list-filename, table#ccm-file-list td.ccm-file-list-filename {padding: 0; margin:0; text-align:left;}
 
 table#ccm-file-list tr th {font-size: 11px; background-color: #efefef}
 table#ccm-file-list tr td {text-align: center; background-color: #ffffff}
