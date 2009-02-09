@@ -133,8 +133,9 @@ class File extends Object {
 		
 		$fv = new FileVersion();
 		$fv->setPropertiesFromArray($row);
-		return $fv;
+		$fv->populateAttributes();
 		
+		return $fv;
 	}
 
 

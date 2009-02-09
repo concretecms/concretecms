@@ -111,7 +111,7 @@ var ccmAttributesHelper={
 		<option value="SELECT_MULTIPLE"<? if ($akType == 'SELECT_MULTIPLE') { ?> selected<? } ?>><?=t('Select Multiple')?></option>
 		<option value="NUMBER"<? if ($akType == 'NUMBER') { ?> selected<? } ?>><?=t('Number')?></option>
 		<option value="DATE"<? if ($akType == 'DATE') { ?> selected <? } ?>><?=t('Date')?></option>
-		<option value="IMAGE_FILE"<? if ($akType == 'IMAGE_FILE') { ?> selected <? } ?>><?=t('Image/File')?></option>
+		<? if ($attributeType == 'page') { ?><option value="IMAGE_FILE"<? if ($akType == 'IMAGE_FILE') { ?> selected <? } ?>><?=t('Image/File')?></option><? } ?>
 	</select></td>
 	<? if(!$noSearchable){?>
 	<td style="width: 33%"><input type="checkbox" name="akSearchable" style="vertical-align: middle" <? if ($akSearchable) { ?> checked <? } ?> /> <?=t('Yes, include this field in the search index.')?></td>
@@ -128,7 +128,7 @@ var ccmAttributesHelper={
 </tr>
 <tr>
 	<td colspan="3"> 		
-	<? Loader::element('collection_attribute_values', array('akValues'=>$akValues, 'akType'=>$akType, 'akAllowOtherValues'=>$akAllowOtherValues, 'defaultNewOptionNm'=>$defaultNewOptionNm) ); ?>
+	<? Loader::element('dashboard/attribute_values', array('attributeType' => $attributeType, 'akValues'=>$akValues, 'akType'=>$akType, 'akAllowOtherValues'=>$akAllowOtherValues, 'defaultNewOptionNm'=>$defaultNewOptionNm) ); ?>
 	</td>
 </tr>
 <tr>

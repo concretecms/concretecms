@@ -48,7 +48,6 @@ class DashboardFilesAttributesController extends Controller {
 		$akName = $txt->sanitize($_POST['akName']); 
 		$akType = $txt->sanitize($_POST['akType']);
 		$akSearchable = $_POST['akSearchable'] ? 1 : 0;
-		$akAllowOtherValues = $_POST['akAllowOtherValues'] ? 1 : 0;
 		
 		//grab the attribute key possible values
 		$akValuesArray=array(); 
@@ -88,10 +87,10 @@ class DashboardFilesAttributesController extends Controller {
 		
 		if( count($error) == 0 ){
 			if($fak && $_REQUEST['edit']){ 
-				$fak = $fak->update($akHandle, $akName, $akValues, $akType, $akAllowOtherValues); 
+				$fak = $fak->update($akHandle, $akName, $akValues, $akType); 
 				$this->redirect('/dashboard/files/attributes/?attribute_updated=1');
 			}elseif($_REQUEST['add']){
-				$fak = FileAttributeKey::add($akHandle, $akName, $akValues, $akType, $akAllowOtherValues, 1);
+				$fak = FileAttributeKey::add($akHandle, $akName, $akValues, $akType, 1);
 				$this->redirect('/dashboard/files/attributes/?attribute_created=1');				
 			}
 		}	

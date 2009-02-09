@@ -3,6 +3,7 @@
 class FileVersion extends Object {
 	
 	private $numThumbnailLevels = 3; 
+	private $attributes = array();
 	
 	// Update type constants
 	const UT_REPLACE_FILE = 1;
@@ -19,6 +20,47 @@ class FileVersion extends Object {
 	public function getTags() {return $this->fvTags;}
 	public function getDescription() {return $this->fvDescription;}
 	public function isApproved() {return $this->fvIsApproved;}
+
+	/** 
+	 * Gets an attribute for the file. If "nice mode" is set, we display it nicely
+	 * for use in the file attributes table 
+	 */
+	public function getAttribute($item, $displayNiceMode = false) {
+		$akHandle = (is_object($item)) ? $item->getAttributeKeyHandle() : $item;
+		$value = $this->attributes[$akHandle];
+		
+		if ($displayNiceMode && is_object($item)) {
+			switch($item->getAttributeKeyType()) {
+				case 'BOOLEAN':
+					return ($value == 1) ? t('Yes') : t('No');
+					break;
+				case 'SELECT_MULTIPLE':
+					return nl2br($value);
+					break;
+				default:
+					return $value;
+					break;
+			}
+		} else {
+			return $value;
+		}
+	}
+
+	public function populateAttributes() {
+		// load the attributes for a particular version object
+		$db = Loader::db();
+		$v = array($this->fID, $this->fvID);
+		$r = $db->Execute('select akHandle, value, akType from FileAttributeValues inner join FileAttributeKeys on FileAttributeKeys.fakID = FileAttributeValues.fakID where fID = ? and fvID = ?', $v);
+		while ($row = $r->fetchRow()) {
+			
+			switch($row['akType']) {
+				default:
+					$v = $row['value'];
+					break;
+			}
+			$this->attributes[$row['akHandle']] = $v;
+		}
+	}
 	
 	public function getSize() {
 		return round($this->fvSize / 1024) . t('KB');
@@ -38,12 +80,13 @@ class FileVersion extends Object {
 		return $this->fvDateAdded;
 	}
 	
-	protected function logVersionUpdate($updateTypeID, $auxValue = false) {
+	protected function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0) {
 		$db = Loader::db();
-		$db->Execute('insert into FileVersionLog (fID, fvID, fvUpdateTypeID) values (?, ?, ?)', array(
+		$db->Execute('insert into FileVersionLog (fID, fvID, fvUpdateTypeID, fvUpdateTypeAttributeID) values (?, ?, ?, ?)', array(
 			$this->getFileID(),
 			$this->getFileVersionID(),
-			$updateTypeID
+			$updateTypeID,
+			$updateTypeAttributeID
 		));
 	}
 	
@@ -251,7 +294,8 @@ class FileVersion extends Object {
 		}
 	}
 	
-	public function setAttribute($akHandle, $value) {
+	public function setAttribute($ak, $value) {
+		$akHandle = (is_object($ak)) ? $ak->getAttributeKeyHandle() : $ak;
 		$db = Loader::db();
 		$fakID = $db->GetOne("select fakID from FileAttributeKeys where akHandle = ?", array($akHandle));
 		if ($fakID > 0) {
@@ -262,6 +306,8 @@ class FileVersion extends Object {
 				'value' => $value
 			),
 			array('fID', 'fvID', 'fakID'), true);
+			$this->logVersionUpdate(FileVersion::UT_EXTENDED_ATTRIBUTE, $ak->getAttributeKeyID());
+
 		}
 		
 	}

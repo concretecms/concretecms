@@ -393,10 +393,6 @@
       <NOTNULL/>
     </field>
     <field name="akValues" type="X"/>
-    <field name="akAllowOtherValues" type="I" size="1">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
     <field name="akType" type="C" size="255">
       <DEFAULT value="TEXT"/>
     </field>
@@ -524,8 +520,10 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="fvUpdateTypeAttributeHandle" type="C" size="128">
+    <field name="fvUpdateTypeAttributeID" type="I" size="10">
       <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
   </table>
   <table name="Files">

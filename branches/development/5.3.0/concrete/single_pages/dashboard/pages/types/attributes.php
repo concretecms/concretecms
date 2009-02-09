@@ -133,9 +133,10 @@ $defaultNewOptionNm = t('Type an option here, then click add');
 			'cancelURL'=>'/dashboard/pages/types',
 			'defaultNewOptionNm'=>$defaultNewOptionNm,
 			'formId'=>'ccm-attribute-update',
+			'attributeType' => 'page',
 			'submitBtnTxt'=>t('Update')
 		);
-	Loader::element('attribute_form', $attributeFormData);
+	Loader::element('dashboard/attribute_form', $attributeFormData);
 	?>
 	
 	<br>
@@ -165,9 +166,10 @@ $defaultNewOptionNm = t('Type an option here, then click add');
 			'cancelURL'=>'/dashboard/pages/types',
 			'defaultNewOptionNm'=>$defaultNewOptionNm,
 			'formId'=>'ccm-add-attribute',
+			'attributeType' => 'page',
 			'submitBtnTxt'=>t('Add')
 		);
-	Loader::element('attribute_form', $attributeFormData);
+	Loader::element('dashboard/attribute_form', $attributeFormData);
 	?>
 
 <br>

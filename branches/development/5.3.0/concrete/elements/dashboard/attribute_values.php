@@ -59,8 +59,10 @@ function getAttributeOptionHTML($akValue="TEMPLATE"){
 		<a onClick="ccmAttributesHelper.saveNewOption()"><?=t('Add') ?> +</a>
 	</div>
 	
+	<? if ($attributeType == 'page') { ?>
 	<div id="allowOtherValuesWrap" style="display:<?=($akType != 'SELECT' && $akType != 'SELECT_MULTIPLE')?'none':'block' ?>">
 		<input type="checkbox" name="akAllowOtherValues" style="vertical-align: middle" <? if ($akAllowOtherValues) { ?> checked <? } ?> /> <?=t('Allow users to add to this list.')?>
 	</div>
+	<? } ?>
 
 </div>
