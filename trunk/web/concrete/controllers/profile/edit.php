@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('user_attributes');
 class ProfileEditController extends Controller {
 
@@ -13,7 +14,7 @@ class ProfileEditController extends Controller {
 			$this->render('/login');
 		}
 		$this->set('ui', UserInfo::getByID($u->getUserID()));
-		$this->set("editPage", 1);
+		$this->set('av', Loader::helper('concrete/avatar'));
 	}
 
 	public function save() { 
@@ -23,48 +24,57 @@ class ProfileEditController extends Controller {
 		$th = Loader::helper('text');
 		$vsh = Loader::helper('validation/strings');
 		$cvh = Loader::helper('concrete/validation');
+		$e = Loader::helper('validation/error');
 	
-		$username = $this->post('uName');
-		$email = $this->post('uEmail');
+		$data = $this->post();
 		
 		/* 
 		 * Validation
-		 */
-		$e = Loader::helper('validation/error');
-		if (strlen($username) < USER_USERNAME_MINIMUM) {
-			$e->add('A username must be between at least ' . USER_USERNAME_MINIMUM . ' characters long.');
-		}
-
-		if (strlen($username) > USER_USERNAME_MAXIMUM) {
-			$e->add('A username cannot be more than ' . USER_USERNAME_MAXIMUM . ' characters long.');
-		}
-
-		if (strlen($username) >= USER_USERNAME_MINIMUM && !$vsh->alphanum($username)) {
-			$e->add('A username may only contain letters or numbers.');
-		}
-		if (!$cvh->isUniqueUsername($username) && $ui->getUserName() != $username) {
-			$e->add("The username '{$username}' already exists. Please choose another");
-		}		
+		*/
 		
+		// validate the user's attributes
+		$invalidFields = UserAttributeKey::validateSubmittedRequest();
+		foreach($invalidFields as $field) {
+			$e->add(t("The field %s is required.", $field));
+		}
+		
+		// validate the user's email
+		$email = $this->post('uEmail');
 		if (!$vsh->email($email)) {
-			$e->add('Invalid email address provided.');
+			$e->add(t('Invalid email address provided.'));
 		} else if (!$cvh->isUniqueEmail($email) && $ui->getUserEmail() != $email) {
-			$e->add("The email address '{$email}' is already in use. Please choose another.");
+			$e->add(t("The email address '%s' is already in use. Please choose another.",$email));
 		}
 
-		if (!$e->has()) {
-		
-			$data['uName'] = $username;
-			$data['uEmail'] = $email;
-			$ui->update($data);
+		// password
+		if(strlen($data['uPasswordNew'])) {
+			$passwordNew = $data['uPasswordNew'];
+			$passwordNewConfirm = $data['uPasswordNewConfirm'];
 			
-			$ui->setAttribute('first_name', $th->sanitize($this->post('uFirstName'), 64));
-			$ui->setAttribute('last_name', $th->sanitize($this->post('uLastName'), 128));
-			$ui->setAttribute('sites', $th->sanitize($this->post('uC5Sites')));
-			$ui->setAttribute('bio', $th->sanitize($this->post('uBio')));
-			$ui->setAttribute('url', $th->sanitize($this->post('uURL'), 255));
+			if ((strlen($passwordNew) < USER_PASSWORD_MINIMUM) || (strlen($passwordNew) > USER_PASSWORD_MAXIMUM)) {
+				$e->add(t('A password must be between %s and %s characters', USER_PASSWORD_MINIMUM, USER_PASSWORD_MAXIMUM));
+			}		
+			
+			if (strlen($passwordNew) >= USER_PASSWORD_MINIMUM && !$vsh->password($passwordNew)) {
+				$e->add(t('A password may not contain ", \', >, <, or any spaces.'));
+			}
+			
+			if ($passwordNew) {
+				if ($passwordNew != $passwordNewConfirm) {
+					$e->add(t('The two passwords provided do not match.'));
+				}
+			}
+			$data['uPasswordConfirm'] = $passwordNew;
+			$data['uPassword'] = $passwordNew;
+		}		
+
+		if (!$e->has()) {		
+			$data['uEmail'] = $email;		
+			
+			$ui->update($data);
+			$ui->updateUserAttributes($data);
 		
-			$this->set('message', 'Profile Information Saved.');
+			$this->set('message', t('Profile Information Saved.'));
 		} else {
 			$this->set('error', $e);
 		}
