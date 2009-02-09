@@ -297,6 +297,14 @@ if (!defined('USER_VALIDATE_EMAIL_REQUIRED')) {
 	define('USER_VALIDATE_EMAIL_REQUIRED', false);	
 }
 
+if (!defined('USER_VALIDATE_EMAIL_REQUIRED')) {
+	define('USER_VALIDATE_EMAIL_REQUIRED', false);	
+}
+
+// public facing user profiles enabled
+if(!defined('ENABLE_USER_PROFILES')) {
+	define('ENABLE_USER_PROFILES', false);
+}
 
 # Default search size
 define('SEARCH_CHUNK_SIZE','20'); /* number of entries retrieved per page */

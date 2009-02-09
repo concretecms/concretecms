@@ -1,5 +1,5 @@
 <?
-
+defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::controller('/profile/edit');
 
 class ProfileAvatarController extends ProfileEditController {
@@ -7,7 +7,6 @@ class ProfileAvatarController extends ProfileEditController {
 	public function __construct(){
 		parent::__construct();
 		$this->set('av', Loader::helper('concrete/avatar'));
-		$this->set("editPage", 1);
 	}
 
 	
