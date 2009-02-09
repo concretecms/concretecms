@@ -135,6 +135,44 @@ ccm_activateFileManagerFields = function(fieldset) {
 	});
 }
 
+ccm_alActiveEditableProperties = function() {
+	$("tr.ccm-file-manager-editable-field").each(function() {
+		var trow = $(this);
+		$(this).find('a').click(function() {
+			trow.find('.ccm-file-manager-editable-field-text').hide();
+			trow.find('.ccm-file-manager-editable-field-form').show();
+			trow.find('.ccm-file-manager-editable-field-save-button').show();
+		});
+		
+		trow.find('form').submit(function() {
+			ccm_alSubmitEditableProperty(trow);
+			return false;
+		});
+		
+		trow.find('.ccm-file-manager-editable-field-save a').click(function() {
+			ccm_alSubmitEditableProperty(trow);
+		});
+	});
+}
+
+ccm_alSubmitEditableProperty = function(trow) {
+	trow.find('.ccm-file-manager-editable-field-save-button').hide();
+	trow.find('.ccm-file-manager-editable-field-loading').show();
+	trow.find('form').ajaxSubmit(function(resp) {
+		// resp is new HTML to display in the div
+		trow.find('.ccm-file-manager-editable-field-loading').hide();
+		trow.find('.ccm-file-manager-editable-field-save-button').show();
+		trow.find('.ccm-file-manager-editable-field-text').html(resp);
+		trow.find('.ccm-file-manager-editable-field-form').hide();
+		trow.find('.ccm-file-manager-editable-field-save-button').hide();
+		trow.find('.ccm-file-manager-editable-field-text').show();
+		trow.find('td').show('highlight', {
+			color: '#FFF9BB'
+		});
+
+	});
+}
+
 ccm_alSubmitSingle = function() {
 	if ($("#ccm-al-upload-single-file").val() == '') { 
 		alert(ccmi18n_filemanager.uploadErrorChooseFile);

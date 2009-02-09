@@ -48,7 +48,13 @@ class FileAttributeKey extends AttributeKey {
 			}
 			return $cak;
 		}
-	}	
+	}
+	
+	public function getByHandle($akHandle) {
+		$db = Loader::db();
+		$akID = $db->GetOne("select fakID from FileAttributeKeys where akHandle = ?", array($akHandle));
+		return FileAttributeKey::get($akID);
+	}
 	
 	function getAttributeKeyID() { return $this->fakID; }
 	

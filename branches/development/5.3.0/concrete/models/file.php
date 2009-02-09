@@ -2,6 +2,8 @@
 
 class File extends Object { 
 
+	const CREATE_NEW_VERSION_THRESHOLD = 300; // in seconds (5 minutes)
+	
 	public function getPath() {
 		$fv = $this->getVersion();
 		return $fv->getPath();
@@ -13,7 +15,7 @@ class File extends Object {
 		$f = new File();
 		$row = $db->GetRow("SELECT Files.*, FileVersions.fvID,
 		(fs.fsType = ?) as isStarred
-		FROM Files LEFT JOIN FileVersions on Files.fID = FileVersions.fID 
+		FROM Files LEFT JOIN FileVersions on Files.fID = FileVersions.fID and FileVersions.fvIsApproved = 1
 		LEFT JOIN FileSetFiles fsf on Files.fID = fsf.fID
 		LEFT JOIN FileSets fs on fsf.fsID = fs.fsID			
 		WHERE Files.fID = ?", array(FileSet::TYPE_STARRED,$fID));
@@ -25,7 +27,36 @@ class File extends Object {
 	public function getDateAdded() {
 		return $this->fDateAdded;
 	}
-
+	
+	/** 
+	 * Returns a file version object that is to be written to. Computes whether we can use the current most recent version, OR a new one should be created
+	 */
+	public function getVersionToModify() {
+		$u = new User();
+		$createNew = false;
+		
+		$fv = $this->getRecentVersion();
+		
+		// first test. Does the user ID of the most recent version match ours? If not, then we create new
+		if ($u->getUserID() != $fv->getAuthorUserID()) {
+			$createNew = true;
+		}
+		
+		// second test. If the date the version was added is older than File::CREATE_NEW_VERSION_THRESHOLD, we create new
+		$unixTime = strtotime($fv->getDateAdded());
+		$diff = time() - $unixTime;
+		if ($diff > File::CREATE_NEW_VERSION_THRESHOLD) {
+			$createNew = true;
+		}
+				
+		if ($createNew) {
+			$fv2 = $fv->duplicate();
+			return $fv2;
+		} else {
+			return $fv;
+		}
+	}
+	
 	public function getFileID() { return $this->fID;}
 	
 	public static function add($filename, $prefix, $data = array()) {
@@ -46,7 +77,12 @@ class File extends Object {
 	public function addVersion($filename, $prefix, $data = array()) {
 		$u = new User();
 		$uID = (isset($data['uID'])) ? $data['uID'] : $u->getUserID();
-		
+
+		$fvTitle = (isset($data['fvTitle'])) ? $data['fvTitle'] : '';
+		$fvDescription = (isset($data['fvDescription'])) ? $data['fvDescription'] : '';
+		$fvTags = (isset($data['fvTags'])) ? $data['fvTags'] : '';
+		$fvIsApproved = (isset($data['fvIsApproved'])) ? $data['fvIsApproved'] : '1';
+
 		$db = Loader::db();
 		$dh = Loader::helper('date');
 		$date = $dh->getLocalDateTime();
@@ -58,24 +94,33 @@ class File extends Object {
 			$fvID = 1;
 		}
 		
-		$db->Execute('insert into FileVersions (fID, fvID, fvFilename, fvPrefix, fvDateAdded, fvIsApproved, fvApproverUID, fvAuthorUID, fvActivateDateTime) 
-		values (?, ?, ?, ?, ?, ?, ?, ?, ?)', array(
+		$db->Execute('insert into FileVersions (fID, fvID, fvFilename, fvPrefix, fvDateAdded, fvIsApproved, fvApproverUID, fvAuthorUID, fvActivateDateTime, fvTitle, fvDescription, fvTags) 
+		values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', array(
 			$this->fID, 
 			$fvID,
 			$filename,
 			$prefix, 
 			$date,
-			1, 
+			$fvIsApproved, 
 			$uID, 
 			$uID, 
-			$date));
+			$date,
+			$fvTitle,
+			$fvDescription, 
+			$fvTags));
 			
 		$fv = $this->getVersion($fvID);
 		return $fv;
 	}
 	
-	public function getActiveVersion() {
+	public function getApprovedVersion() {
 		return $this->getVersion();
+	}
+
+	public function getRecentVersion() {
+		$db = Loader::db();
+		$fvID = $db->GetOne("select fvID from FileVersions where fID = ? order by fvID desc", array($this->fID));
+		return $this->getVersion($fvID);
 	}
 	
 	public function getVersion($fvID = null) {

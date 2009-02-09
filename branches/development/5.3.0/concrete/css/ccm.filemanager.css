@@ -51,4 +51,14 @@ td.ccm-file-list-thumbnail img.ccm-generic-thumbnail {border: 0px}
 .theader {background-color: #EFEFEF; font-weight: bold; padding: 4px 0px 4px 0px}
 
 /* properties */
-table#ccm-file-properties th {white-space: nowrap}
+table#ccm-file-properties th {white-space: nowrap;}
+table#ccm-file-properties th, table#ccm-file-properties td {vertical-align: top}
+table#ccm-file-properties th {text-align: right}
+table#ccm-file-properties th a { color: #999; text-decoration: underline}
+table#ccm-file-properties td.ccm-file-manager-editable-field-central {border-right: 0px}
+table#ccm-file-properties td.ccm-file-manager-editable-field-save img {display: none}
+table#ccm-file-properties div.ccm-file-manager-field-none {color: #aaa;}
+tr.ccm-file-manager-editable-field textarea, tr.ccm-file-manager-editable-field input {width: 100%}
+tr.ccm-file-manager-editable-field textarea {height: 100px}
+img.ccm-file-manager-editable-field-loading {display: none}
+div.ccm-file-manager-editable-field-form {display: none}

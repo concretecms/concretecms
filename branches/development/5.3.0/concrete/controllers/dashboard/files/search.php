@@ -89,6 +89,23 @@ class DashboardFilesSearchController extends Controller {
 							$to = $_REQUEST['size_to'][$index];
 							$fileList->filterBySize($from, $to);
 							break;
+						default:
+							Loader::model('file_attributes');
+							$handle = $_REQUEST['file_attribute_handle'][$index];
+							$fak = FileAttributeKey::getByHandle($handle);
+							print $fak->getAttributeKeyType();
+							switch($fak->getAttributeKeyType()) {
+								case 'NUMBER':
+								$numFrom = $_REQUEST['fak_' . $handle . '_from'][$index];
+								$numTo = $_REQUEST['fak_' . $handle . '_to'][$index];
+								if ($numFrom != '') {
+									$fileList->filterByFileAttribute($handle, $numFrom, '>=');
+								}
+								if ($numTo != '') {
+									$fileList->filterByFileAttribute($handle, $numTo, '<=');
+								}
+							}
+							break;
 						
 					}
 				}

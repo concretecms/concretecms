@@ -474,12 +474,6 @@
       <UNSIGNED/>
     </field>
     <field name="fvActivateDatetime" type="T"/>
-    <field name="fvUpdateTypeID" type="I" size="3">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="fvUpdateTypeAttributes" type="C" size="255"/>
     <field name="fvHasThumbnail1" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -508,6 +502,31 @@
       <col>fvType</col>
     </index>
 
+  </table>
+  <table name="FileVersionLog">
+    <field name="fvlID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="fID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fvID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fvUpdateTypeID" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fvUpdateTypeAttributeHandle" type="C" size="128">
+      <NOTNULL/>
+    </field>
   </table>
   <table name="Files">
     <field name="fID" type="I" size="10">
