@@ -36,7 +36,7 @@ class FileAttributeKey extends AttributeKey {
 		
 		$db = Loader::db();
 		$a = array($fakID);
-		$q = "select fakID, akHandle, akName, akAllowOtherValues, akValues, akType from FileAttributeKeys where fakID = ?";
+		$q = "select fakID, akHandle, akName, akValues, akType from FileAttributeKeys where fakID = ?";
 		$r = $db->query($q, $a);
 	
 		if ($r) {
@@ -81,10 +81,10 @@ class FileAttributeKey extends AttributeKey {
 	}	
 	
 
-	function add($akHandle, $akName, $akValues, $akType, $akAllowOtherValues=0, $akIsUserAdded = 0) {
+	function add($akHandle, $akName, $akValues, $akType, $akIsUserAdded = 0) {
 		$db = Loader::db();
-		$a = array($akHandle, $akName, $akValues, $akType, $akAllowOtherValues, $akIsUserAdded);
-		$r = $db->query("insert into FileAttributeKeys (akHandle, akName, akValues, akType, akAllowOtherValues, akIsUserAdded) values (?, ?, ?, ?, ?, ?)", $a);
+		$a = array($akHandle, $akName, $akValues, $akType, $akIsUserAdded);
+		$r = $db->query("insert into FileAttributeKeys (akHandle, akName, akValues, akType, akIsUserAdded) values (?, ?, ?, ?, ?)", $a);
 		
 		if ($r) {
 			$fakID = $db->Insert_ID();
@@ -96,12 +96,12 @@ class FileAttributeKey extends AttributeKey {
 		}
 	}
 	
-	function update($akHandle, $akName, $akValues, $akType, $akAllowOtherValues=0) {
+	function update($akHandle, $akName, $akValues, $akType) {
 		Cache::flush();
 
 		$db = Loader::db();
-		$a = array($akHandle, $akName, $akValues, $akType, intval($akAllowOtherValues), $this->fakID);
-		$db->query("update FileAttributeKeys set akHandle = ?, akName = ?, akValues = ?, akType = ?, akAllowOtherValues = ? where fakID = ?", $a);
+		$a = array($akHandle, $akName, $akValues, $akType, $this->fakID);
+		$db->query("update FileAttributeKeys set akHandle = ?, akName = ?, akValues = ?, akType = ? where fakID = ?", $a);
 		
 		$ak = FileAttributeKey::get($this->fakID);
 		if (is_object($ak)) {
@@ -142,4 +142,48 @@ class FileAttributeKey extends AttributeKey {
 			return true;
 		}
 	}	
+	
+	function outputHTML($fv = false) {
+		$f = Loader::helper("form");
+		$value = '';
+		if (is_object($fv)) {
+			$value = $fv->getAttribute($this);
+		}
+		
+		switch($this->getAttributeKeyType()) {
+			case 'NUMBER':
+			case 'TEXT':
+				$html = $f->text('fakID_' . $this->getAttributeKeyID(), $value);
+				break;
+			case 'BOOLEAN':
+				$html = $f->checkbox('fakID_' . $this->getAttributeKeyID(), 1, ($value == 1));
+				$html .= ' ' . t('Yes');
+				break;
+			case 'SELECT':
+				$optionsTmp = explode("\n", $this->getCollectionAttributeKeyValues());
+				$options = array('' => '** ' . t('None'));
+				foreach($optionsTmp as $o) {
+					$options[$o] = $o;
+				}
+				unset($optionsTmp);
+				$html = $f->select('fakID_' . $this->getAttributeKeyID(), $options, $value);
+				break;
+			case 'SELECT_MULTIPLE':
+				$options = explode("\n", $this->getCollectionAttributeKeyValues());
+				$values = explode("\n", $value);
+				foreach($options as $o) {
+					$html .= '<div>';
+					$html .= $f->checkbox('fakID_' . $this->getAttributeKeyID() . '[]', $o, in_array($o, $values));
+					$html .= ' ' . $o;
+					$html .= '</div>';
+				}
+				
+				break;
+			case 'DATE':
+				$dt = Loader::helper('form/date_time');
+				$html = $dt->datetime('fakID_' . $this->getAttributeKeyID(), $value, true);	
+				break;
+		}
+		return $html;
+	}
 }

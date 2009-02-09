@@ -356,7 +356,7 @@ if ($ctEditMode) {
 	<h1><span><?=t('Page Attributes')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
-	<?= Loader::element('attributes_table', array('attribs'=>$attribs) ); ?>
+	<?= Loader::element('dashboard/attributes_table', array('attribs'=>$attribs) ); ?>
 	
 	<br/>
 	<div class="ccm-buttons">

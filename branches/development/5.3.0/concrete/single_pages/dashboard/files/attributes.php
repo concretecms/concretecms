@@ -51,6 +51,7 @@ $valt = Loader::helper('validation/token');
 				'defaultNewOptionNm'=>$defaultNewOptionNm,
 				'formId'=>'ccm-add-attribute',
 				'submitBtnTxt'=>t('Update'),
+				'attributeType' => 'file',
 				'noSearchable'=>1
 			);
 		Loader::element('dashboard/attribute_form', $attributeFormData);
