@@ -83,10 +83,10 @@ class IndexedSearch {
 				$doc = new Zend_Search_Lucene_Document();
 				$doc->addField(Zend_Search_Lucene_Field::Keyword('cIDhash', $pageID));
 				$doc->addField(Zend_Search_Lucene_Field::Unindexed('cID', $row['cID']));
-				$doc->addField(Zend_Search_Lucene_Field::Text('cName', $c->getCollectionName()));
+				$doc->addField(Zend_Search_Lucene_Field::Text('cName', $c->getCollectionName(), 'utf-8'));
 				$doc->addField(Zend_Search_Lucene_Field::Keyword('ctHandle', $c->getCollectionTypeHandle()));
-				$doc->addField(Zend_Search_Lucene_Field::Text('cDescription', $c->getCollectionDescription()));
-				$doc->addField(Zend_Search_Lucene_Field::Text('cBody', $this->getBodyContentFromPage($c)));
+				$doc->addField(Zend_Search_Lucene_Field::Text('cDescription', $c->getCollectionDescription(), 'utf-8'));
+				$doc->addField(Zend_Search_Lucene_Field::Text('cBody', $this->getBodyContentFromPage($c), 'utf-8'));
 				
 				if (is_object($themeObject)) {
 					$doc->addField(Zend_Search_Lucene_Field::Text('cTheme', $themeObject->getThemeHandle()));
@@ -137,7 +137,7 @@ class IndexedSearch {
 		
 		$queryModifiers=array();
 
-		$mainQuery = Zend_Search_Lucene_Search_QueryParser::parse($query);
+		$mainQuery = Zend_Search_Lucene_Search_QueryParser::parse($query, 'utf-8');
 
 		$query = new Zend_Search_Lucene_Search_Query_Boolean();
 		$query->addSubquery($mainQuery, true);
