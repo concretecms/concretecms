@@ -4,11 +4,22 @@ class FileVersion extends Object {
 	
 	private $numThumbnailLevels = 3; 
 	
+	// Update type constants
+	const UT_REPLACE_FILE = 1;
+	const UT_TITLE = 2;
+	const UT_DESCRIPTION = 3;
+	const UT_TAGS = 4;
+	const UT_EXTENDED_ATTRIBUTE = 5;
+	
 	public function getFileID() {return $this->fID;}
 	public function getFileVersionID() {return $this->fvID;}
 	public function getPrefix() {return $this->fvPrefix;}
 	public function getFileName() {return $this->fvFilename;}
 	public function getTitle() {return $this->fvTitle;}
+	public function getTags() {return $this->fvTags;}
+	public function getDescription() {return $this->fvDescription;}
+	public function isApproved() {return $this->fvIsApproved;}
+	
 	public function getSize() {
 		return round($this->fvSize / 1024) . t('KB');
 	}
@@ -19,6 +30,81 @@ class FileVersion extends Object {
 		return $this->fvAuthorName;
 	}
 	
+	public function getAuthorUserID() {
+		return $this->fvAuthorUID;
+	}
+	
+	public function getDateAdded() {
+		return $this->fvDateAdded;
+	}
+	
+	protected function logVersionUpdate($updateTypeID, $auxValue = false) {
+		$db = Loader::db();
+		$db->Execute('insert into FileVersionLog (fID, fvID, fvUpdateTypeID) values (?, ?, ?)', array(
+			$this->getFileID(),
+			$this->getFileVersionID(),
+			$updateTypeID
+		));
+	}
+	
+	/** 
+	 * Takes the current value of the file version and makes a new one with the same values
+	 */
+	public function duplicate() {
+		$f = File::getByID($this->fID);
+
+		$dh = Loader::helper('date');
+		$date = $dh->getLocalDateTime();
+		$db = Loader::db();
+		$fvID = $db->GetOne("select max(fvID) from FileVersions where fID = ?", array($this->fID));
+		if ($fvID > 0) {
+			$fvID++;
+		}
+
+		$data = $db->GetRow("select * from FileVersions where fID = ? and fvID = ?", array($this->fID, $this->fvID));
+		$data['fvID'] = $fvID;
+		$data['fvDateAdded'] = $date;
+		$u = new User();
+		$data['fvAuthorUID'] = $u->getUserID();
+		
+		// If This version is the approved version, we approve the new one.
+		if ($this->isApproved()) {
+			$data['fvIsApproved'] = 1;
+		} else {
+			$data['fvIsApproved'] = 0;
+		}
+
+		// build the field insert query
+		$fields = '';
+		$i = 0;
+		$data2 = array();
+		foreach($data as $key => $value) {
+			if (!is_integer($key)) {	
+				$data2[$key] = $value;
+			}
+		}
+		
+		foreach($data2 as $key => $value) {		
+			$fields .= $key;
+			$questions .= '?';
+			if (($i + 1) < count($data2)) {
+				$fields .= ',';
+				$questions .= ',';
+			}
+			$i++;
+		}
+		
+		$db->Execute("insert into FileVersions (" . $fields . ") values (" . $questions . ")", $data2);
+		
+		
+		$this->deny();
+		// TODO: duplicate attribute key/values
+		$fv2 = $f->getVersion($fvID);
+		
+		return $fv2;
+	}
+	
+	
 	public function getType() {
 		$fh = Loader::helper('file');
 		$ext = $fh->getExtension($this->fvFilename);
@@ -28,6 +114,38 @@ class FileVersion extends Object {
 			return $ftl->getName();
 		}
 	}
+	
+	public function updateTitle($title) {
+		$db = Loader::db();
+		$db->Execute("update FileVersions set fvTitle = ? where fID = ? and fvID = ?", array($title, $this->getFileID(), $this->getFileVersionID()));
+		$this->logVersionUpdate(FileVersion::UT_TITLE);
+	}
+
+	public function updateTags($tags) {
+		$db = Loader::db();
+		$db->Execute("update FileVersions set fvTags = ? where fID = ? and fvID = ?", array($tags, $this->getFileID(), $this->getFileVersionID()));
+		$this->logVersionUpdate(FileVersion::UT_TAGS);
+	}
+
+
+	public function updateDescription($descr) {
+		$db = Loader::db();
+		$db->Execute("update FileVersions set fvDescription = ? where fID = ? and fvID = ?", array($descr, $this->getFileID(), $this->getFileVersionID()));
+		$this->logVersionUpdate(FileVersion::UT_DESCRIPTION);
+
+	}
+
+	public function approve() {
+		$db = Loader::db();
+		$db->Execute("update FileVersions set fvIsApproved = 1 where fID = ? and fvID = ?", array($this->getFileID(), $this->getFileVersionID()));
+	}
+
+
+	public function deny() {
+		$db = Loader::db();
+		$db->Execute("update FileVersions set fvIsApproved = 0 where fID = ? and fvID = ?", array($this->getFileID(), $this->getFileVersionID()));
+	}
+	
 	
 	/** 
 	 * Returns a full filesystem path to the file on disk.

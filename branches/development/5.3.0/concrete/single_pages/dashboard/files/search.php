@@ -40,7 +40,9 @@
 			'size' => t('Size'),
 			'type' => t('Type'),
 			'extension' => t('Extension'),
-			'date_added' => t('Added Between')
+			'date_added' => t('Added Between'),
+			'fak_width' => t('Width')
+			
 		), array('style' => 'width: 85px'));
 		?>
 		<input type="hidden" value="" class="ccm-file-selected-field" name="fvSelectedField[]" />
@@ -71,7 +73,13 @@
 		<?=$form->text('date_from[]', array('style' => 'width: 86px'))?>
 		and
 		<?=$form->text('date_to[]', array('style' => 'width: 86px'))?>
+		</span>
 
+		<span class="ccm-file-search-option" style="display: none" search-field="fak_width">
+		<?=$form->hidden('file_attribute_handle[]', 'width')?>
+		<?=$form->text('fak_width_from[]', array('style' => 'width: 30px'))?>
+		to
+		<?=$form->text('fak_width_to[]', array('style' => 'width: 30px'))?>
 		</span>
 
 		</td>

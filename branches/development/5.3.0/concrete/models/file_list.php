@@ -80,8 +80,8 @@ class FileList extends DatabaseItemList {
 	 * @param string $handle Collection Attribute Handle
 	 * @param string $value
 	 */
-	public function filterByCollectionAttribute($handle, $value, $comparison = '=') {
-		$this->collectionAttributeFilters[] = array($handle, $value, $comparison);
+	public function filterByFileAttribute($handle, $value, $comparison = '=') {
+		$this->fileAttributeFilters[] = array($handle, $value, $comparison);
 	}
 	
 	/** 
@@ -101,12 +101,14 @@ class FileList extends DatabaseItemList {
 	
 	protected function setupFileAttributeFilters() {
 		$db = Loader::db();
+		$i = 1;
 		foreach($this->fileAttributeFilters as $caf) {
-			$akID = $db->GetOne("select akID from FileAttributeKeys where akHandle = ?", array($caf[0]));
-			$tbl = "cav_{$akID}";
-			$this->addToQuery("left join FileAttributeValues $tbl on {$tbl}.cID = fv.cID and fv.cvID = {$tbl}.cvID");
+			$fakID = $db->GetOne("select fakID from FileAttributeKeys where akHandle = ?", array($caf[0]));
+			$tbl = "fav_{$i}";
+			$this->addToQuery("left join FileAttributeValues $tbl on {$tbl}.fID = fv.fID and fv.fvID = {$tbl}.fvID");
 			$this->filter($tbl . '.value', $caf[1], $caf[2]);
-			$this->filter($tbl . '.akID', $akID);
+			$this->filter($tbl . '.fakID', $fakID);
+			$i++;
 		}
 	}
 	
