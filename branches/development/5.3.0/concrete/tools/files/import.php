@@ -6,7 +6,7 @@ $u = new User();
 if (!$cp->canRead()) {
 	die(_("Unable to access the file manager."));
 }
-
+$valt = Loader::helper('validation/token');
 ?>
 <ul class="ccm-dialog-tabs" id="ccm-file-import-tabs">
 <li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-file-upload-multiple"><?=t('Upload Multiple')?></a></li>
@@ -47,23 +47,23 @@ $(function() {
 
 		flash_url : "<?=ASSETS_URL_FLASH?>/swfupload/swfupload.swf",
 		upload_url : "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/multiple",
-		post_params: {'ccm-session' : "<?php echo session_id(); ?>"},
+		post_params: {'ccm-session' : "<?php echo session_id(); ?>",'ccm_token' : '<?=$valt->generate("upload")?>'},
 		file_size_limit : "100 MB",
 		file_types : "*.*",
 		file_types_description : "All Files",
 		file_upload_limit : 100,
 		file_queue_limit : 0,
 		custom_settings : {
-			progressTarget : "fsUploadProgress",
-			cancelButtonId : "btnCancel"
+			progressTarget : "ccm-file-upload-multiple-progress",
+			cancelButtonId : "ccm-file-upload-multiple-btnCancel"
 		},
-		debug: true,
+		debug: false,
 
 		// Button settings
-		button_image_url: "<?=ASSETS_URL_IMAGES?>/icons/add_file.png",	// Relative to the Flash file
+		button_image_url: "<?=ASSETS_URL_IMAGES?>/icons/add_file_swfupload.png",	// Relative to the Flash file
 		button_width: "16",
 		button_height: "16",
-		button_placeholder_id: "spanButtonPlaceHolder",
+		button_placeholder_id: "ccm-file-upload-multiple-spanButtonPlaceHolder",
 		
 		// The event handler functions are defined in handlers.js
 		file_queued_handler : fileQueued,
@@ -81,16 +81,20 @@ $(function() {
 });
 </script>
 
+<style type="text/css">
+
+</style>
 
 <form id="form1" action="index.php" method="post" enctype="multipart/form-data">
-
-		<div class="fieldset flash" id="fsUploadProgress">
+		<div class="fieldset flash" id="ccm-file-upload-multiple-progress">
 		<span class="legend">Upload Queue</span>
 		</div>
-	<div id="divStatus">0 Files Uploaded</div>
+		
+		<div><div id="ccm-file-upload-multiple-results">0 Files Uploaded</div></div>
+		<br style="clear:left;"/>
 		<div>
-			<span id="spanButtonPlaceHolder"></span>
-			<input id="btnCancel" type="button" value="Cancel All Uploads" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
+			<span id="ccm-file-upload-multiple-spanButtonPlaceHolder" style="width:16px;"></span>
+			<input id="ccm-file-upload-multiple-btnCancel" type="button" value="Cancel All Uploads" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
 		</div>
 
 </form>

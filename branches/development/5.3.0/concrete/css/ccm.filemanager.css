@@ -1,60 +1,60 @@
 /* asset library */
 
-table#ccm-file-list {width: 100%; border-left: 1px solid #ffffff}
-table#ccm-file-list th, table#ccm-file-list td {padding: 4px 8px 4px 8px; font-size: 11px}
-table#ccm-file-list th.ccm-file-list-starred, table#ccm-file-list td.ccm-file-list-starred {padding: 0 4px 0 0; margin:0;}
-table#ccm-file-list th.ccm-file-list-filename, table#ccm-file-list td.ccm-file-list-filename {padding: 0; margin:0; text-align:left;}
+table#ccm-file-list {width: 100%;border-left: 1px solid #ffffff}
+table#ccm-file-list th, table#ccm-file-list td {padding: 4px 8px 4px 8px;font-size: 11px}
+table#ccm-file-list th.ccm-file-list-starred, table#ccm-file-list td.ccm-file-list-starred {padding: 0 4px 0 0;margin:0;}
+table#ccm-file-list th.ccm-file-list-filename, table#ccm-file-list td.ccm-file-list-filename {padding: 0;margin:0;text-align:left;}
 
-table#ccm-file-list tr th {font-size: 11px; background-color: #efefef}
-table#ccm-file-list tr td {text-align: center; background-color: #ffffff}
+table#ccm-file-list tr th {font-size: 11px;background-color: #efefef}
+table#ccm-file-list tr td {text-align: center;background-color: #ffffff}
 
 table#ccm-file-list tr th a {color: #333}
 table#ccm-file-list tr.ccm-file-list-alt td {background-color: #ECFBFF}
-table#ccm-file-list tr:hover td {cursor: pointer; background-color: #DDECF0 !important}
+table#ccm-file-list tr:hover td {cursor: pointer;background-color: #DDECF0 !important}
 
 div#ccm-file-list-wrapper div.ccm-paging-top {padding-top: 5px}
 td.ccm-file-list-thumbnail img.ccm-generic-thumbnail {border: 0px}
 
-img#ccm-file-search-advanced-loading {position: absolute; top: 0px; right: 0px; display: none}
+img#ccm-file-search-advanced-loading {position: absolute;top: 0px;right: 0px;display: none}
 
-div.ccm-file-list-thumbnail-hover div {display: none; z-index: 105; position: absolute; top: 0px; left: 0px; border: 1px dotted #aaa; padding: 8px; background-color: #fff}
+div.ccm-file-list-thumbnail-hover div {display: none;z-index: 105;position: absolute;top: 0px;left: 0px;border: 1px dotted #aaa;padding: 8px;background-color: #fff}
 
 /* advanced search */
-div#ccm-file-manager-advanced {display: table; width: 100%}
+div#ccm-file-manager-advanced {display: table;width: 100%}
 div#ccm-file-manager-advanced h2 {margin-bottom: 0px}
-div#ccm-file-search-advanced-fields {display: table-cell; border: 1px solid #ddd; padding: 8px; width:210px; min-width: 210px; background:#fafafa;}
-div#ccm-file-search-advanced-fields-gutter {display: block; width: 10px}
+div#ccm-file-search-advanced-fields {display: table-cell;border: 1px solid #ddd;padding: 8px;width:210px;min-width: 210px;background:#fafafa;}
+div#ccm-file-search-advanced-fields-gutter {display: block;width: 10px}
 div#ccm-file-search-advanced-results-wrapper {display: table-cell}
 
 div#ccm-file-search-advanced-fields div, div#ccm-sitemap-search td {font-size: 10px !important}
 div#ccm-file-search-advanced-fields-inner {padding-top: 4px}
 div#ccm-file-search-advanced-fields div.ccm-file-search-field {margin-bottom:8px}
 div#ccm-file-search-advanced-results-wrapper {position: relative}
-div#ccm-file-search-advanced-results div.ccm-pagination {font-size: 14px; margin-top: 12px; margin-bottom: 12px}
+div#ccm-file-search-advanced-results div.ccm-pagination {font-size: 14px;margin-top: 12px;margin-bottom: 12px}
 
 div#ccm-file-search-field-base {display: none}
-div#ccm-file-search-advanced-results-wrapper em.ccm-highlight-search {background-color: #FFF9BB; padding: 4px; font-weight: bold; font-style: normal}
+div#ccm-file-search-advanced-results-wrapper em.ccm-highlight-search {background-color: #FFF9BB;padding: 4px;font-weight: bold;font-style: normal}
 div.ccm-file-search-field input, div.ccm-file-search-field select, div.ccm-file-search-field td {font-size: 10px !important}
 
 /* add asset */
 div#ccm-files-add-asset {float: right}
-div#ccm-files-add-asset h3 {float: left; margin-right: 4px; margin-top: 2px}
+div#ccm-files-add-asset h3 {float: left;margin-right: 4px;margin-top: 2px}
 div#ccm-files-add-asset form {float: left}
-div#ccm-files-add-asset a {float: left; margin-left: 4px; margin-top: 4px}=======
+div#ccm-files-add-asset a {float: left;margin-left: 4px;margin-top: 4px}=======
 td.ccm-file-list-thumbnail img.ccm-generic-thumbnail {border: 0px}
 
 .incoming_file_importer {margin: 10px auto 10px auto;}
-.incoming_file_importer .borderflow {border: 1px solid #DEDEDE; overflow-y: scroll}
-.incoming_file_importer .incoming_file {margin: 10px 0px 10px 0px; float: left; text-align: center}
+.incoming_file_importer .borderflow {border: 1px solid #DEDEDE;overflow-y: scroll}
+.incoming_file_importer .incoming_file {margin: 10px 0px 10px 0px;float: left;text-align: center}
 .incoming_file_importer .incoming_file_table .center {text-align: center}
 .incoming_file_importer .clear {clear: both}
-.theader {background-color: #EFEFEF; font-weight: bold; padding: 4px 0px 4px 0px}
+.theader {background-color: #EFEFEF;font-weight: bold;padding: 4px 0px 4px 0px}
 
 /* properties */
 div#ccm-file-properties table th {white-space: nowrap;}
 div#ccm-file-properties table th, div#ccm-file-properties table td {vertical-align: top}
 div#ccm-file-properties table th {text-align: right}
-div#ccm-file-properties table th a { color: #999; text-decoration: underline}
+div#ccm-file-properties table th a { color: #999;text-decoration: underline}
 div#ccm-file-properties table td.ccm-file-manager-editable-field-central {border-right: 0px}
 div#ccm-file-properties table td.ccm-file-manager-editable-field-save img {display: none}
 div#ccm-file-properties table div.ccm-file-manager-field-none {color: #aaa;}
@@ -65,3 +65,12 @@ div.ccm-file-manager-editable-field-form {display: none}
 
 div.ccm-file-manager-editable-field-type-text input {width: 100%}
 div.ccm-file-manager-editable-field-type-number input {width: 60px}
+
+/* multiple upload */
+#ccm-file-upload-multiple-progress .progressContainer{clear:left;border-color:#ddd;border-style:solid;border-width:0px 1px 0px 1px;}
+#ccm-file-upload-multiple-progress .progressContainer div{background-color:#fff;width:197px;}
+#ccm-file-upload-multiple-progress .progressContainer div.progressName,.progressContainer div.progressBarStatus,.progressContainer div.progressBarComplete{float:left;padding:0 10px 0 10px;}
+#ccm-file-upload-multiple-progress{width:100%;border:1px solid #ddd;}
+#ccm-file-upload-multiple-progress:after{content:".";height:0;clear:left;visibility: hidden;}
+#ccm-file-upload-multiple-results{clear:left;width:426px;border:1px solid #ddd;border-top:0px;background-color:#efefef;padding:5px;}	
+#ccm-file-upload-multiple-progress span.legend{display:block;background-color:#efefef;border:1px solid #dddwidth:422px;padding:5px;font-weight:bold;}
