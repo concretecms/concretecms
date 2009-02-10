@@ -396,9 +396,13 @@
     <field name="akType" type="C" size="255">
       <DEFAULT value="TEXT"/>
     </field>
-    <field name="akIsUserAdded" type="I" size="1">
+    <field name="akIsFileTypeAttribute" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
+    </field>
+    <field name="akIsEditable" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
     </field>
     <index name="akHandle">
       <UNIQUE/>

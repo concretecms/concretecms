@@ -276,11 +276,7 @@ class FileVersion extends Object {
 				);
 				
 				// we have a custom library script that handles this stuff
-				$script = 'file/types/' . $ftl->getCustomImporter();
-				Loader::library($script);
-				
-				$class = Object::camelcase($ftl->getCustomImporter()) . 'FileTypeInspector';
-				$cl = new $class;
+				$cl = $ftl->getCustomInspector();
 				$cl->inspect($this);
 				
 			}
@@ -306,8 +302,9 @@ class FileVersion extends Object {
 				'value' => $value
 			),
 			array('fID', 'fvID', 'fakID'), true);
-			$this->logVersionUpdate(FileVersion::UT_EXTENDED_ATTRIBUTE, $ak->getAttributeKeyID());
-
+			if (is_object($ak)) {
+				$this->logVersionUpdate(FileVersion::UT_EXTENDED_ATTRIBUTE, $ak->getAttributeKeyID());
+			}
 		}
 		
 	}

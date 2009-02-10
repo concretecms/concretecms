@@ -90,7 +90,7 @@ class DashboardFilesAttributesController extends Controller {
 				$fak = $fak->update($akHandle, $akName, $akValues, $akType); 
 				$this->redirect('/dashboard/files/attributes/?attribute_updated=1');
 			}elseif($_REQUEST['add']){
-				$fak = FileAttributeKey::add($akHandle, $akName, $akValues, $akType, 1);
+				$fak = FileAttributeKey::add($akHandle, $akName, $akValues, $akType, 0);
 				$this->redirect('/dashboard/files/attributes/?attribute_created=1');				
 			}
 		}	

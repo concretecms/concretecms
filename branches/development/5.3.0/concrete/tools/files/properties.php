@@ -93,10 +93,18 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 
 function printFileAttributeRow($ak, $fv) {
 	global $f;
+	$value = $fv->getAttribute($ak, true);
+	if ($value == '') {
+		$text = '<div class="ccm-file-manager-field-none">' . t('None') . '</div>';
+	} else {
+		$text = $value;
+	}
+	if ($ak->isAttributeKeyEditable()) { 
+	
 	$html = '
 	<tr class="ccm-file-manager-editable-field">
 		<th><a href="javascript:void(0)">' . $ak->getAttributeKeyName() . '</a></th>
-		<td width="100%" class="ccm-file-manager-editable-field-central"><div class="ccm-file-manager-editable-field-text">' . $fv->getAttribute($ak, true) . '</div>
+		<td width="100%" class="ccm-file-manager-editable-field-central"><div class="ccm-file-manager-editable-field-text">' . $text . '</div>
 		<form method="post" action="' . REL_DIR_FILES_TOOLS_REQUIRED . '/files/properties">
 		<input type="hidden" name="fakID" value="' . $ak->getAttributeKeyID() . '" />
 		<input type="hidden" name="fID" value="' . $f->getFileID() . '" />
@@ -110,13 +118,22 @@ function printFileAttributeRow($ak, $fv) {
 		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-file-manager-editable-field-loading" />
 		</td>
 	</tr>';
+	
+	} else {
+
+	$html = '
+	<tr>
+		<th>' . $ak->getAttributeKeyName() . '</th>
+		<td width="100%" colspan="2">' . $text . '</td>
+	</tr>';	
+	}
 	print $html;
 }
 
 ?>
 
 <div id="ccm-file-properties">
-<h2><?=t('Basic Information')?></h2>
+<h2><?=t('Basic Properties')?></h2>
 <table border="0" cellspacing="0" cellpadding="0" class="ccm-grid">
 <tr>
 	<th><?=t('Filename')?></th>
@@ -143,12 +160,19 @@ printCorePropertyRow(t('Tags'), 'fvTags', $fv->getTags(), $form->textarea('fvTag
 
 </table>
 
+
+<? 
+$attribs = FileAttributeKey::getImporterList($fv);
+$ft = $fv->getType();
+
+if (count($attribs) > 0) { ?>
+
 <br/>
-<h2><?=t('Extended Information')?></h2>
 
+<h2><?=t('%s File Properties', $ft)?></h2>
 <table border="0" cellspacing="0" cellpadding="0" class="ccm-grid">
+<?
 
-<? $attribs = FileAttributeKey::getList();
 foreach($attribs as $at) {
 
 	printFileAttributeRow($at, $fv);
@@ -157,6 +181,29 @@ foreach($attribs as $at) {
 
 ?>
 </table>
+<? } ?>
+
+<? 
+$attribs = FileAttributeKey::getUserAddedList();
+
+if (count($attribs) > 0) { ?>
+
+<br/>
+
+<h2><?=t('Other Properties')?></h2>
+<table border="0" cellspacing="0" cellpadding="0" class="ccm-grid">
+<?
+
+foreach($attribs as $at) {
+
+	printFileAttributeRow($at, $fv);
+
+}
+
+?>
+</table>
+<? } ?>
+
 
 <script type="text/javascript">
 $(function() { ccm_alActiveEditableProperties(); });

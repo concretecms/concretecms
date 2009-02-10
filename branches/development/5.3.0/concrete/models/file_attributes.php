@@ -24,10 +24,6 @@
 Loader::model('attributes');
 
 class FileAttributeKey extends AttributeKey {
-
-	// reserved keys
-	const K_WIDTH = 'width';
-	const K_HEIGHT = 'height';
 	
 	function get($fakID) {
 		if (!is_numeric($fakID)) {
@@ -36,7 +32,7 @@ class FileAttributeKey extends AttributeKey {
 		
 		$db = Loader::db();
 		$a = array($fakID);
-		$q = "select fakID, akHandle, akName, akValues, akType from FileAttributeKeys where fakID = ?";
+		$q = "select fakID, akHandle, akName, akValues, akType, akIsEditable, akIsImporterAttribute from FileAttributeKeys where fakID = ?";
 		$r = $db->query($q, $a);
 	
 		if ($r) {
@@ -50,10 +46,25 @@ class FileAttributeKey extends AttributeKey {
 		}
 	}
 	
+	public function isAttributeKeyEditable() { return $this->akIsEditable;}
+	
+	
 	public function getByHandle($akHandle) {
 		$db = Loader::db();
 		$akID = $db->GetOne("select fakID from FileAttributeKeys where akHandle = ?", array($akHandle));
-		return FileAttributeKey::get($akID);
+		if ($akID > 0) {
+			return FileAttributeKey::get($akID);
+		} else {
+			 // else we check to see if it's listed in the initial registry
+			 $ia = FileTypeList::getImporterAttribute($akHandle);
+			 if (is_object($ia)) {
+			 	// we create this attribute and return it.
+			 	return FileAttributeKey::add($akHandle, $ia->akName, false, $ia->akType, 1, $ia->akIsEditable);
+			 } else {
+			 	$txt = Loader::helper('text');
+			 	return FileAttributeKey::add($akHandle, $txt->unhandle($akHandle), false, 'TEXT', 1, 0);
+			 }
+		}
 	}
 	
 	function getAttributeKeyID() { return $this->fakID; }
@@ -68,10 +79,10 @@ class FileAttributeKey extends AttributeKey {
 		}
 		return $la;
 	}	
-	
+
 	function getUserAddedList() {
 		$db = Loader::db();
-		$q = "select fakID from FileAttributeKeys where akIsUserAdded = 1 order by fakID asc";
+		$q = "select fakID from FileAttributeKeys where akIsImporterAttribute = 0 order by fakID asc";
 		$r = $db->query($q);
 		$la = array();
 		while ($row = $r->fetchRow()) {
@@ -80,11 +91,28 @@ class FileAttributeKey extends AttributeKey {
 		return $la;
 	}	
 	
-
-	function add($akHandle, $akName, $akValues, $akType, $akIsUserAdded = 0) {
+	function getImporterList($fv = false) {
 		$db = Loader::db();
-		$a = array($akHandle, $akName, $akValues, $akType, $akIsUserAdded);
-		$r = $db->query("insert into FileAttributeKeys (akHandle, akName, akValues, akType, akIsUserAdded) values (?, ?, ?, ?, ?)", $a);
+		if (!is_object($fv)) {
+			// then we only return file attributes relevant to this file
+			$q = "select fakID from FileAttributeKeys where akIsImporterAttribute = 1 order by fakID asc";
+			$r = $db->query($q);
+		} else {
+			$q = "select FileAttributeKeys.fakID from FileAttributeKeys inner join FileAttributeValues on (FileAttributeKeys.fakID = FileAttributeValues.fakID) where akIsImporterAttribute = 1 and fID = ? and fvID = ? order by fakID asc";
+			$r = $db->query($q, array($fv->getFileID(), $fv->getFileVersionID()));
+		}
+		$la = array();
+		while ($row = $r->fetchRow()) {
+			$la[] = FileAttributeKey::get($row['fakID']);
+		}
+		return $la;
+	}	
+	
+
+	function add($akHandle, $akName, $akValues, $akType, $akIsImporterAttribute = 0, $akIsEditable = 1) {
+		$db = Loader::db();
+		$a = array($akHandle, $akName, $akValues, $akType, $akIsImporterAttribute, $akIsEditable);
+		$r = $db->query("insert into FileAttributeKeys (akHandle, akName, akValues, akType, akIsImporterAttribute, akIsEditable) values (?, ?, ?, ?, ?, ?)", $a);
 		
 		if ($r) {
 			$fakID = $db->Insert_ID();

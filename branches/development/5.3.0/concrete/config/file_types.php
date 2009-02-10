@@ -14,7 +14,7 @@ $ft->define('asf,wmv', t('Windows Video'), FileType::T_VIDEO);
 $ft->define('mov/qt', t('Quicktime'), FileType::T_VIDEO);
 $ft->define('avi', t('AVI'), FileType::T_VIDEO);
 $ft->define('txt', t('Plain Text'), FileType::T_TEXT);
-$ft->define('php', t('PHP'), FileType::T_TEXT);
+$ft->define('php', t('PHP'), FileType::T_TEXT, 'php');
 $ft->define('doc,docx', t('MS Word'), FileType::T_DOCUMENT);
 $ft->define('css', t('Stylesheet'), FileType::T_TEXT);
 $ft->define('mp4', t('MP4'), FileType::T_VIDEO);
@@ -31,3 +31,6 @@ $ft->define('pps,ppt,pot', t('MS Powerpoint'), FileType::T_DOCUMENT);
 $ft->define('tar', t('TAR Archive'), FileType::T_APPLICATION);
 $ft->define('zip', t('Zip Archive'), FileType::T_APPLICATION);
 $ft->define('gz,gzip', t('GZip Archive'), FileType::T_APPLICATION);
+
+$ft->defineImporterAttribute('width', t('Width'), 'NUMBER', false);
+$ft->defineImporterAttribute('height', t('Height'), 'NUMBER', false);

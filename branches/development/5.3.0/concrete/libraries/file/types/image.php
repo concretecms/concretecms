@@ -12,8 +12,10 @@ class ImageFileTypeInspector extends FileTypeInspector {
 		
 		// sets an attribute - these file attribute keys should be added 
 		// by the system and "reserved"
-		$fv->setAttribute(FileAttributeKey::K_WIDTH, $size[0]);
-		$fv->setAttribute(FileAttributeKey::K_HEIGHT, $size[1]);
+		$at1 = FileAttributeKey::getByHandle('width');
+		$at2 = FileAttributeKey::getByHandle('height');
+		$fv->setAttribute($at1, $size[0]);
+		$fv->setAttribute($at2, $size[1]);
 		
 		// create a level one and a level two thumbnail
 		// load up image helper
