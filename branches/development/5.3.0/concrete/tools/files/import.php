@@ -67,13 +67,47 @@ $(function() {
 		button_placeholder_id: "ccm-file-upload-multiple-spanButtonPlaceHolder",
 		
 		// The event handler functions are defined in handlers.js
-		file_queued_handler : fileQueued,
+		// wrapped function with apply are so c5 can do anything special it needs to
+		// some functions needed to be overridden completly
+		file_queued_handler : function (file) {
+			fileQueued.apply(this,[file]);
+			$('#'+this.customSettings.progressTarget).append('<br style="clear:left"/>');
+		},
 		file_queue_error_handler : fileQueueError,
-		file_dialog_complete_handler : fileDialogComplete,
+		file_dialog_complete_handler : function(numFilesSelected, numFilesQueued){
+			try {
+				if (numFilesSelected > 0) {
+					document.getElementById(this.customSettings.cancelButtonId).disabled = false;
+				}								
+				//this.startUpload();
+			} catch (ex)  {
+				this.debug(ex);
+			}		
+		},
 		upload_start_handler : uploadStart,
-		upload_progress_handler : uploadProgress,
+		upload_progress_handler : function(file, bytesLoaded, bytesTotal){
+			try {
+				var percent = Math.ceil((bytesLoaded / bytesTotal) * 100);
+		
+				var progress = new FileProgress(file, this.customSettings.progressTarget);
+				progress.setProgress(percent);
+				progress.setStatus("Uploading... ("+percent+"%)");
+			} catch (ex) {
+				this.debug(ex);
+			}		
+		},
 		upload_error_handler : uploadError,
-		upload_success_handler : uploadSuccess,
+		upload_success_handler : function(file, serverData){
+			try {
+				var progress = new FileProgress(file, this.customSettings.progressTarget);
+				progress.setComplete();
+				progress.setStatus(serverData);
+				progress.toggleCancel(false);
+		
+			} catch (ex) {
+				this.debug(ex);
+			}		
+		},
 		upload_complete_handler : uploadComplete,
 		queue_complete_handler : queueComplete	// Queue plugin event
 	});
@@ -95,6 +129,7 @@ $(function() {
 		<br style="clear:left;"/>
 		<div>
 			<span id="ccm-file-upload-multiple-spanButtonPlaceHolder" style="width:16px;"></span>
+			<input id="ccm-file-upload-multiple-btnStart"  type="button" value="Start Uploads" onclick="swfu.startUpload();" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
 			<input id="ccm-file-upload-multiple-btnCancel" type="button" value="Cancel All Uploads" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
 		</div>
 

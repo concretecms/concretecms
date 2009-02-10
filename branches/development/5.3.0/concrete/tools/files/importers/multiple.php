@@ -34,8 +34,8 @@ if ($valt->validate('upload')) {
 }
 
 if (strlen($error) > 0) {
-	echo json_encode($error);
+	echo $error;
 }
 else{
-	echo json_encode('Uploaded');
+	echo 'Complete';
 }
