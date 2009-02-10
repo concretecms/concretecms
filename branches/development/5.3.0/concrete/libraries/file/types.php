@@ -33,6 +33,7 @@ class FileTypeList {
 	}
 	
 	private $types = array();
+	private $importerAttributes = array();
 	
 	public function define($extension, $name, $type, $customImporter = false) {
 		$ext = explode(',', $extension);
@@ -46,6 +47,20 @@ class FileTypeList {
 		}
 	}
 	
+	public function defineImporterAttribute($akHandle, $akName, $akType, $akIsEditable) {
+		$obj = new stdClass;
+		$obj->akHandle = $akHandle;
+		$obj->akName = $akName;
+		$obj->akType = $akType;
+		$obj->akIsEditable = $akIsEditable;		
+		$this->importerAttributes[$akHandle] = $obj;
+	}
+	
+	public function getImporterAttribute($akHandle) {
+		$ftl = FileTypeList::getInstance();
+		return $ftl->importerAttributes[$akHandle];
+	}
+		
 	/** 
 	 * Can take an extension or a filename
 	 * Returns any registered information we have for the particular file type, based on its registration
@@ -113,6 +128,14 @@ class FileType {
 		} else if (!empty($this->type)) {
 			return FileType::mapGenericTypeText($this->type);		
 		}
+	}
+	
+	public function getCustomInspector() {
+		$script = 'file/types/' . $this->getCustomImporter();
+		Loader::library($script);		
+		$class = Object::camelcase($this->getCustomImporter()) . 'FileTypeInspector';
+		$cl = new $class;
+		return $cl;
 	}
 	
 	/** 
