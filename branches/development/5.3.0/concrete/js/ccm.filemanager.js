@@ -108,18 +108,29 @@ ccm_activateFileManagerFields = function(fieldset) {
 		var selected = $(this).find(':selected').val();
 		$(this).next('input.ccm-file-selected-field').val(selected);
 		$(this).parents('table').find('.ccm-file-search-option').hide();
-		$(this).parents('table').find('.ccm-file-search-option[search-field=' + selected + ']').show();		
-	});
+		var itemToCopy = $('#ccm-file-search-field-base-elements .ccm-file-search-option[search-field=' + selected + ']');
+		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-selected-field-content").html('');
+		itemToCopy.clone().appendTo("#ccm-file-search-field-set" + fieldset + " .ccm-file-selected-field-content");
+
+		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option[search-field=date_added] input").each(function() {
+			if ($(this).attr('id') == 'date_from') {
+				$(this).attr('id', 'date_from' + fieldset);
+			} else if ($(this).attr('id') == 'date_to') {
+				$(this).attr('id', 'date_to' + fieldset);
+			}
+		});
 	
-	$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option[search-field=date_added] input").each(function() {
-		if ($(this).attr('id') == 'date_from[]') {
-			$(this).attr('id', 'date_from' + fieldset);
-		} else if ($(this).attr('id') == 'date_to[]') {
-			$(this).attr('id', 'date_to' + fieldset);
-		}
-	});
-	$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option[search-field=date_added] input").datepicker({
-		showAnim: 'fadeIn'
+		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option-type-date input").each(function() {
+			$(this).attr('id', $(this).attr('id') + fieldset);
+		});
+		
+		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option[search-field=date_added] input").datepicker({
+			showAnim: 'fadeIn'
+		});
+		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option-type-date input").datepicker({
+			showAnim: 'fadeIn'
+		});
+		
 	});
 	
 	// add the initial state of the latest select menu
@@ -131,7 +142,7 @@ ccm_activateFileManagerFields = function(fieldset) {
 	$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-remove-option").unbind();
 	$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-remove-option").click(function() {
 		$(this).parents('table').parent().remove();
-		ccm_totalAdvancedSearchFields--;
+		//ccm_totalAdvancedSearchFields--;
 	});
 }
 

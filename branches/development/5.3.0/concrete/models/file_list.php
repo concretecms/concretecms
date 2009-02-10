@@ -81,7 +81,8 @@ class FileList extends DatabaseItemList {
 	 * @param string $value
 	 */
 	public function filterByFileAttribute($handle, $value, $comparison = '=') {
-		$this->fileAttributeFilters[] = array($handle, $value, $comparison);
+		$ak = FileAttributeKey::getByHandle($handle);
+		$this->fileAttributeFilters[] = array($handle, $value, $comparison, $ak->getAttributeKeyType());
 	}
 	
 	/** 
@@ -105,9 +106,38 @@ class FileList extends DatabaseItemList {
 		foreach($this->fileAttributeFilters as $caf) {
 			$fakID = $db->GetOne("select fakID from FileAttributeKeys where akHandle = ?", array($caf[0]));
 			$tbl = "fav_{$i}";
-			$this->addToQuery("left join FileAttributeValues $tbl on {$tbl}.fID = fv.fID and fv.fvID = {$tbl}.fvID");
-			$this->filter($tbl . '.value', $caf[1], $caf[2]);
-			$this->filter($tbl . '.fakID', $fakID);
+			$this->addToQuery("left join FileAttributeValues $tbl on ({$tbl}.fID = fv.fID and fv.fvID = {$tbl}.fvID and {$tbl}.fakID = {$fakID})");
+			switch($caf[3]) {
+				case 'NUMBER':
+					$val = $db->quote($caf[1]);
+					$this->filter(false, 'CAST(' . $tbl . '.value as unsigned) ' . $caf[2] . ' ' . $val);
+					break;
+				case 'DATE':
+					$val = $db->quote($caf[1]);
+					$this->filter(false, 'CAST(' . $tbl . '.value as date) ' . $caf[2] . ' ' . $val);
+					break;
+				case 'SELECT_MULTIPLE':
+					$multiString = '(';
+					$i = 0;
+					foreach($caf[1] as $val) {
+						$val = $db->quote('%' . $val . '||%');
+						$multiString .= 'REPLACE(' . $tbl . '.value, "\n", "||") like ' . $val . ' ';
+						if (($i + 1) < count($caf[1])) {
+							$multiString .= 'OR ';
+						}
+						$i++;
+					}
+					$multiString .= ')';
+					$this->filter(false, $multiString);
+					break;
+				case 'TEXT':
+					$val = $db->quote('%' . $caf[1] . '%');
+					$this->filter(false, $tbl . '.value like ' . $val);
+					break;
+				default:
+					$this->filter($tbl . '.value', $caf[1], $caf[2]);
+					break;
+			}
 			$i++;
 		}
 	}

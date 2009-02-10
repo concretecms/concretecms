@@ -4,6 +4,41 @@
 <div id="ccm-file-manager-advanced">
 
 <div id="ccm-file-search-advanced-fields">
+
+<div id="ccm-file-search-field-base-elements" style="display: none">
+	<span class="ccm-file-search-option" search-field="file_set">
+	<?=$form->select('file_set', $sets)?>
+	</span>
+	
+	<span class="ccm-file-search-option" search-field="size">
+	<?=$form->text('size_from', array('style' => 'width: 30px'))?>
+	<?=t('to')?>
+	<?=$form->text('size_to', array('style' => 'width: 30px'))?>
+	KB
+	</span>
+
+	<span class="ccm-file-search-option"  search-field="type">
+	<?=$form->select('type', $types)?>
+	</span>
+
+	<span class="ccm-file-search-option"  search-field="extension">
+	<?=$form->select('extension', $extensions)?>
+	</span>
+
+	<span class="ccm-file-search-option"  search-field="date_added">
+	<?=$form->text('date_from', array('style' => 'width: 86px'))?>
+	<?=t('to')?>
+	<?=$form->text('date_to', array('style' => 'width: 86px'))?>
+	</span>
+	
+	<? foreach($searchFieldAttributes as $sfa) { ?>
+		<span class="ccm-file-search-option ccm-file-search-option-type-<?=strtolower($sfa->getAttributeKeyType())?>" search-field="<?=$sfa->getAttributeKeyID()?>">
+		<?=$sfa->outputSearchHTML()?>
+		</span>
+	<? } ?>	
+</div>
+
+
 <form method="get" id="ccm-dashboard-file-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
 	<input type="hidden" name="search" value="1" />
 	
@@ -35,53 +70,12 @@
 		<table border="0" cellspacing="0" cellpadding="0">
 		<tr>
 		<td valign="top" style="padding-right: 4px">
-		<?=$form->select('fvField', array(
-			'file_set' => t('Set'),
-			'size' => t('Size'),
-			'type' => t('Type'),
-			'extension' => t('Extension'),
-			'date_added' => t('Added Between'),
-			'fak_width' => t('Width')
-			
-		), array('style' => 'width: 85px'));
+		<?=$form->select('fvField', $searchFields, array('style' => 'width: 85px'));
 		?>
 		<input type="hidden" value="" class="ccm-file-selected-field" name="fvSelectedField[]" />
 		</td>
-		<td width="100%" valign="top">
-		
-		
-		<span class="ccm-file-search-option" search-field="file_set">
-		<?=$form->select('file_set[]', $sets)?>
-		</span>
-		
-		<span class="ccm-file-search-option" style="display: none" search-field="size">
-		<?=$form->text('size_from[]', array('style' => 'width: 30px'))?>
-		to
-		<?=$form->text('size_to[]', array('style' => 'width: 30px'))?>
-		KB
-		</span>
-	
-		<span class="ccm-file-search-option" style="display: none"  search-field="type">
-		<?=$form->select('type[]', $types)?>
-		</span>
-	
-		<span class="ccm-file-search-option" style="display: none"  search-field="extension">
-		<?=$form->select('extension[]', $extensions)?>
-		</span>
-
-		<span class="ccm-file-search-option" style="display: none"  search-field="date_added">
-		<?=$form->text('date_from[]', array('style' => 'width: 86px'))?>
-		and
-		<?=$form->text('date_to[]', array('style' => 'width: 86px'))?>
-		</span>
-
-		<span class="ccm-file-search-option" style="display: none" search-field="fak_width">
-		<?=$form->hidden('file_attribute_handle[]', 'width')?>
-		<?=$form->text('fak_width_from[]', array('style' => 'width: 30px'))?>
-		to
-		<?=$form->text('fak_width_to[]', array('style' => 'width: 30px'))?>
-		</span>
-
+		<td width="100%" valign="top" class="ccm-file-selected-field-content">
+		<?=t('Select Search Field.')?>
 		</td>
 		<td valign="top">
 		<a href="javascript:void(0)" class="ccm-file-search-remove-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" /></a>
