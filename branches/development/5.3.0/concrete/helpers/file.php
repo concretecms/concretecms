@@ -54,6 +54,26 @@ class FileHelper {
 		return substr($txt->unhandle($filename), 0, strrpos($filename, '.'));
 	}
 	
+	/** 
+	 * Returns the full path to the temporary directory
+	 */
+	public function getTemporaryDirectory() {
+		if (function_exists('sys_get_temp_dir')) {
+			return sys_get_temp_dir();
+		} else {
+			if (!empty($_ENV['TMP'])) { return realpath($_ENV['TMP']); }
+			if (!empty($_ENV['TMPDIR'])) { return realpath( $_ENV['TMPDIR']); }
+			if (!empty($_ENV['TEMP'])) { return realpath( $_ENV['TEMP']); }
+			
+			$tempfile=tempnam(uniqid(rand(),TRUE),'');
+			if (file_exists($tempfile)) {
+				unlink($tempfile);
+				return realpath(dirname($tempfile));
+			}
+		}
+	}
+
+
 	
 	/**
 	 * Adds content to a new line in a file. If a file is not there it will be created

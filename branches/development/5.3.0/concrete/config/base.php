@@ -97,7 +97,6 @@ define('OB_INITIAL_LEVEL', ob_get_level());
 
 # Sessions/TMP directories
 define('DIR_SESSIONS', '/tmp');
-define('DIR_TMP', '/tmp');
 define('DISPATCHER_FILENAME_CORE', 'dispatcher.php');
 
 # Used by the loader to load core libraries
