@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $c = Page::getByPath("/dashboard/files");
 $cp = new Permissions($c);
 $u = new User();
+$form = Loader::helper('form');
 if (!$cp->canRead()) {
 	die(_("Unable to access the file manager."));
 }
@@ -158,19 +159,24 @@ $(function() {
 
 </form>
 <?php } else { ?>
-No Incoming Files Found
+	<?=t('No files found in %s', DIR_FILES_INCOMING)?>
 <?php } ?>
 </div>
 
 <div id="ccm-file-add-remote-tab" style="display: none">
-<h1>Add Remote Files</h1>
-<form method="POST" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/remote" target="ccm-upload-more-options-frame<?=$iframeNoCache?>">
-	<p>Enter URL to valid file(s)</p>
-	<input type="text" name="url_upload_1" value="" style="width: 95%; margin-bottom: 1em;" />
-	<input type="text" name="url_upload_2" value="" style="width: 95%; margin-bottom: 1em;" />
-	<input type="text" name="url_upload_3" value="" style="width: 95%; margin-bottom: 1em;" />
-	<input type="text" name="url_upload_4" value="" style="width: 95%; margin-bottom: 1em;" />
-	<input type="text" name="url_upload_5" value="" style="width: 95%; margin-bottom: 1em;" />
-	<input type="submit" value="Add" style=" font-size: 8pt; height: 29px;" />
+<h1><?=t('Add Remote Files')?></h1>
+<form method="POST" id="ccm-file-add-remote-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/remote" target="ccm-upload-more-options-frame<?=$iframeNoCache?>">
+	<h3><?=t('Enter URL to valid file(s)')?></h3>
+	<?=$form->text('url_upload_1', array('style' => 'width:90%'))?><br/>
+	<?=$form->text('url_upload_2', array('style' => 'width:90%'))?><br/>
+	<?=$form->text('url_upload_3', array('style' => 'width:90%'))?><br/>
+	<?=$form->text('url_upload_4', array('style' => 'width:90%'))?><br/>
+	<?=$form->text('url_upload_5', array('style' => 'width:90%'))?><br/>
+	<br/>
+	<?
+		$h = Loader::helper('concrete/interface');
+		$b1 = $h->submit(t('Add Files'), 'ccm-file-add-remote-form', 'left');
+		print $b1;
+	?>
 </form>
 </div>

@@ -12,12 +12,13 @@ if (!$cp->canRead()) {
 Loader::library("file/importer");
 Loader::library('3rdparty/Zend/Http/Client');
 Loader::library('3rdparty/Zend/Uri/Http');
+$file = Loader::helper('file');
 Loader::helper('mime');
 
 $errors = array();
 
 // load all the incoming fields into an array
-$incomming_urls = array();
+$incoming_urls = array();
 for ($i = 1; $i < 6; $i++) {
 	$this_url = trim($_POST['url_upload_' .$i]); 
 
@@ -28,10 +29,14 @@ for ($i = 1; $i < 6; $i++) {
 	// validate URL
 	if (Zend_Uri_Http::check($this_url)) {
 		// URL appears to be good... add it
-		$incomming_urls[] = $this_url;
+		$incoming_urls[] = $this_url;
 	} else {
 		$errors[] = '"' . $this_url . '"' . t(' is not a valid URL.');
 	}
+}
+
+if (count($incoming_urls) < 1) {
+	$errors[] = t('You must specify at least one valid URL.');
 }
 
 $import_responses = array();
@@ -39,7 +44,7 @@ $import_responses = array();
 // if we haven't gotten any errors yet then try to process the form
 if (count($errors) < 1) {
 	// itterate over each incoming URL adding if relevant
-	foreach($incomming_urls as $this_url) {
+	foreach($incoming_urls as $this_url) {
 		// try to D/L the provided file
 		$client = new Zend_Http_Client($this_url);
 		$response = $client->request();
@@ -47,7 +52,7 @@ if (count($errors) < 1) {
 		if ($response->isSuccessful()) {
 			$uri = Zend_Uri_Http::fromString($this_url);
 			$fname = '';
-			$fpath = sys_get_temp_dir() . '/';
+			$fpath = $file->getTemporaryDirectory() . '/';
 	
 			// figure out a filename based on filename, mimetype, ???
 			if (preg_match('/^.+?[\\/]([-\w%]+\.[-\w%]+)$/', $uri->getPath(), $matches)) {
@@ -118,6 +123,7 @@ if(count($errors)) {
 			alert('<?=implode('\n', $errors)?>');
 			window.parent.ccm_alResetSingle();
 <? } else { ?>
+			window.parent.jQuery.fn.dialog.closeTop();
 			highlight = new Array();
 <? 	foreach ($import_responses as $r) { ?>
 			highlight.push(<?=$r->getFileID()?>);
