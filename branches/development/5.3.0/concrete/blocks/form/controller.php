@@ -9,6 +9,9 @@ class FormBlockController extends BlockController {
 	public $btInterfaceWidth = '420';
 	public $btInterfaceHeight = '430';
 	public $thankyouMsg=''; 
+	
+	protected $noSubmitFormRedirect=0;
+	protected $lastAnswerSetId=0;
 		
 	/** 
 	 * Used for localization. If we want to localize the name/description we have to include this
@@ -177,6 +180,7 @@ class FormBlockController extends BlockController {
 			$q="insert into {$this->btAnswerSetTablename} (questionSetId) values (?)";
 			$db->query($q,array($qsID));
 			$answerSetID=$db->Insert_ID();
+			$this->lastAnswerSetId=$answerSetID;
 			
 			$questionAnswerPairs=array();
 			
@@ -225,9 +229,11 @@ class FormBlockController extends BlockController {
 				//echo $mh->body.'<br>';
 				@$mh->sendMail(); 
 			} 
-			//$_REQUEST=array();			
-			header("Location: ".$refer_uri."&surveySuccess=1&qsid=".$this->questionSetId);
-			die;
+			//$_REQUEST=array();	
+			if(!$this->noSubmitFormRedirect){
+				header("Location: ".$refer_uri."&surveySuccess=1&qsid=".$this->questionSetId);
+				die;
+			}
 		}
 	}		
 	
@@ -342,6 +348,8 @@ class MiniSurvey{
 		public $btQuestionsTablename = 'btFormQuestions';
 		public $btAnswerSetTablename = 'btFormAnswerSet';
 		public $btAnswersTablename = 'btFormAnswers'; 	
+		
+		public $lastSavedMsqID=0;
 
 		function MiniSurvey(){
 			$db = Loader::db();
@@ -377,8 +385,11 @@ class MiniSurvey{
 								     $values['options'], 1000, intval($values['width']), intval($values['height']), intval($values['required']) );			
 					$sql='INSERT INTO btFormQuestions (questionSetId,question,inputType,options,position,width,height,required) VALUES (?,?,?,?,?,?,?,?)';
 					$jsonVals['mode']='"Add"';
+					$this->lastSavedMsqID=0;
 				}
 				$result=$this->db->query($sql,$dataValues); 
+				if( intval($values['msqID']) ) $this->lastSavedMsqID=intval($values['msqID']);	
+				else $this->lastSavedMsqID=$this->db->LastInsertID();
 				$jsonVals['success']=1;
 			}
 			$jsonVals['qsID']=$values['qsID'];
