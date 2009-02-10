@@ -72,6 +72,7 @@ class FileTypeList {
 			$h = Loader::helper('file');
 			$ext = $h->getExtension($ext);
 		}
+		$ext = strtolower($ext);
 		if (is_object($ftl->types[$ext])) {
 			return $ftl->types[$ext];
 		} else {
