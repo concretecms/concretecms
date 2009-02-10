@@ -10,12 +10,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class IndexedSearchResult {
 
 
-	public function __construct($id, $name, $description, $score, $cPath) {
+	public function __construct($id, $name, $description, $score, $cPath, $cBody='') {
 		$this->cID = $id;
 		$this->cName = $name;
 		$this->cDescription = $description;		
 		$this->score = $score;
 		$this->cPath = $cPath;
+		$this->cBody = $cBody;
 	}
 
 	public function getID() {return $this->cID;}
@@ -23,6 +24,7 @@ class IndexedSearchResult {
 	public function getDescription() {return $this->cDescription;}
 	public function getScore() {return $this->score;}
 	public function getCPath() {return $this->cPath;}
+	public function getCBody() {return $this->cBody;}
 }
 
 /**
@@ -158,7 +160,7 @@ class IndexedSearch {
 
 		$results = array();
 		foreach($resultsTmp as $r)
-			$results[] = new IndexedSearchResult($r->cID, $r->cName, $r->cDescription, $r->score, $r->cPath);
+			$results[] = new IndexedSearchResult($r->cID, $r->cName, $r->cDescription, $r->score, $r->cPath, $r->cBody);
 		
 		return $results;
 	}
