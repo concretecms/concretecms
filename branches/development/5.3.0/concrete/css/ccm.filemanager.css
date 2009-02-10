@@ -70,10 +70,10 @@ div.ccm-file-manager-editable-field-type-text input {width: 100%}
 div.ccm-file-manager-editable-field-type-number input {width: 60px}
 
 /* multiple upload */
+#ccm-file-upload-multiple-progress{padding:0;margin:0;}
 #ccm-file-upload-multiple-progress .progressContainer{clear:left;border-color:#ddd;border-style:solid;border-width:0px 1px 0px 1px;}
 #ccm-file-upload-multiple-progress .progressContainer div{background-color:#fff;width:197px;}
 #ccm-file-upload-multiple-progress .progressContainer div.progressName,.progressContainer div.progressBarStatus,.progressContainer div.progressBarComplete{float:left;padding:0 10px 0 10px;}
 #ccm-file-upload-multiple-progress{width:100%;border:1px solid #ddd;}
-#ccm-file-upload-multiple-progress:after{content:".";height:0;clear:left;visibility: hidden;}
 #ccm-file-upload-multiple-results{clear:left;width:426px;border:1px solid #ddd;border-top:0px;background-color:#efefef;padding:5px;}	
 #ccm-file-upload-multiple-progress span.legend{display:block;background-color:#efefef;border:1px solid #dddwidth:422px;padding:5px;font-weight:bold;}
