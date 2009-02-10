@@ -164,6 +164,13 @@ No Incoming Files Found
 
 <div id="ccm-file-add-remote-tab" style="display: none">
 <h1>Add Remote Files</h1>
-Form Here
+<form method="POST" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/remote" target="ccm-upload-more-options-frame<?=$iframeNoCache?>">
+	<p>Enter URL to valid file(s)</p>
+	<input type="text" name="url_upload_1" value="" style="width: 95%; margin-bottom: 1em;" />
+	<input type="text" name="url_upload_2" value="" style="width: 95%; margin-bottom: 1em;" />
+	<input type="text" name="url_upload_3" value="" style="width: 95%; margin-bottom: 1em;" />
+	<input type="text" name="url_upload_4" value="" style="width: 95%; margin-bottom: 1em;" />
+	<input type="text" name="url_upload_5" value="" style="width: 95%; margin-bottom: 1em;" />
+	<input type="submit" value="Add" style=" font-size: 8pt; height: 29px;" />
+</form>
 </div>
-
