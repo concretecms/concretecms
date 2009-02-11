@@ -38,6 +38,24 @@ ccm_activateFileManager = function() {
 	ccm_alSetupInPagePaginationAndSorting();
 }
 
+ccm_alSubmitAddToSetsForm = function() {
+	jQuery.fn.dialog.closeTop();
+	ccm_deactivateSearchResults();
+	$("#ccm-file-add-to-set-form").ajaxSubmit(function(resp) {
+		$("#ccm-dashboard-file-search").ajaxSubmit(function(resp) {
+			ccm_alParseSearchResponse(resp);
+		});
+	});
+}
+
+		
+ccm_alSetupAddToSetsForm = function() {
+	$("#ccm-file-add-to-set-form").submit(function() {
+		ccm_alSubmitAddToSetsForm();
+		return false;
+	});
+}
+	
 ccm_alRescanFiles = function() {
 	var turl = CCM_TOOLS_PATH + '/files/rescan?';
 	var files = arguments;
