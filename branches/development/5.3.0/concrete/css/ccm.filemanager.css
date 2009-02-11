@@ -53,6 +53,12 @@ td.ccm-file-list-thumbnail img.ccm-generic-thumbnail {border: 0px}
 .incoming_file_importer .clear {clear: both}
 .theader {background-color: #EFEFEF;font-weight: bold;padding: 4px 0px 4px 0px}
 
+/* file sets dialog */
+div#ccm-file-add-to-set-tab h2 {margin-bottom: 10px}
+div#ccm-file-add-to-set-tab hr {border: 0px; background: #aaa; margin: 8px 0px 8px 0px; height: 1px}
+
+div.ccm-file-set-add-cb {margin-top: 8px}
+
 /* properties */
 div#ccm-file-properties table th {white-space: nowrap;}
 div#ccm-file-properties table th, div#ccm-file-properties table td {vertical-align: top}
@@ -73,7 +79,8 @@ div.ccm-file-manager-editable-field-type-number input {width: 60px}
 #ccm-file-upload-multiple-progress{padding:0;margin:0;}
 #ccm-file-upload-multiple-progress .progressContainer{clear:left;border-color:#ddd;border-style:solid;border-width:0px 1px 0px 1px;}
 #ccm-file-upload-multiple-progress .progressContainer div{background-color:#fff;width:197px;}
-#ccm-file-upload-multiple-progress .progressContainer div.progressName,.progressContainer div.progressBarStatus,.progressContainer div.progressBarComplete{float:left;padding:0 10px 0 10px;}
-#ccm-file-upload-multiple-progress{width:100%;border:1px solid #ddd;}
-#ccm-file-upload-multiple-results{clear:left;width:426px;border:1px solid #ddd;border-top:0px;background-color:#efefef;padding:5px;}	
-#ccm-file-upload-multiple-progress span.legend{display:block;background-color:#efefef;border:1px solid #dddwidth:422px;padding:5px;font-weight:bold;}
+#ccm-file-upload-multiple-progress .progressContainer div.progressName,.progressContainer div.progressBarStatus,.progressContainer div.progressBarComplete{float:left;padding: 10px 10px 10px 4px;}
+#ccm-file-upload-multiple-progress{border:1px solid #ddd;}
+#ccm-file-upload-multiple-results-wrapper {clear:left; border:1px solid #ddd;border-top:0px;background-color:#efefef;padding:5px;}	
+#ccm-file-upload-multiple-results {float: left; width: 200px;}
+#ccm-file-upload-multiple-progress span.legend{display:block;background-color:#efefef;padding:5px;font-weight:bold;}

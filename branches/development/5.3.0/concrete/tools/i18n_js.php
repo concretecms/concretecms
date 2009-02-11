@@ -63,5 +63,6 @@ var ccmi18n_filemanager = {
 	addTo: '<?=t('Add to Set/Archive')?>',
 	permissions: '<?=t('Permissions')?>',
 	deleteFile: '<?=t('Delete File')?>',
-	uploadErrorChooseFile: '<?=t('You must choose a file.')?>'
+	uploadErrorChooseFile: '<?=t('You must choose a file.')?>',
+	rescan: '<?=t('Rescan Files')?>'
 }

@@ -3,6 +3,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $c = Page::getByPath("/dashboard/files");
 $cp = new Permissions($c);
 $u = new User();
+$ch = Loader::helper('concrete/file');
+$h = Loader::helper('concrete/interface');
 $form = Loader::helper('form');
 if (!$cp->canRead()) {
 	die(_("Unable to access the file manager."));
@@ -49,8 +51,10 @@ $(function() {
 		post_params: {'ccm-session' : "<?php echo session_id(); ?>",'ccm_token' : '<?=$valt->generate("upload")?>'},
 		file_size_limit : "100 MB",
 		file_types : "*.*",
+		button_window_mode : SWFUpload.WINDOW_MODE.TRANSPARENT,
 		file_types_description : "All Files",
 		file_upload_limit : 100,
+		button_cursor: SWFUpload.CURSOR.HAND,
 		file_queue_limit : 0,
 		custom_settings : {
 			progressTarget : "ccm-file-upload-multiple-progress",
@@ -60,8 +64,11 @@ $(function() {
 
 		// Button settings
 		button_image_url: "<?=ASSETS_URL_IMAGES?>/icons/add_file_swfupload.png",	// Relative to the Flash file
-		button_width: "16",
+		button_width: "80",
+		button_text: '<span class="uploadButtonText"><?=t('Add Files')?><\/span>',
 		button_height: "16",
+		button_text_left_padding: 18,
+		button_text_style: ".uploadButtonText {background-color: #eee; font-family: Helvetica Neue, Helvetica, Arial}",
 		button_placeholder_id: "ccm-file-upload-multiple-spanButtonPlaceHolder",
 		
 		// The event handler functions are defined in handlers.js
@@ -128,12 +135,27 @@ $(function() {
 		<span class="legend"><?=t('Upload Queue');?></span>
 		</div>
 		
-		<div><div id="ccm-file-upload-multiple-results">0 <?=t('Files Uploaded');?></div></div>
+		<div>
+
+		<div id="ccm-file-upload-multiple-results-wrapper">
+
+		<div style="width: 100px; float: right; text-align: right"><span id="ccm-file-upload-multiple-spanButtonPlaceHolder"></span></div>
+
+		<div id="ccm-file-upload-multiple-results">0 <?=t('Files Uploaded');?></div>
+		
+		<div class="ccm-spacer">&nbsp;</div>
+		
+		</div>
+		
+		</div>
 		<br style="clear:left;"/>
 		<div>
-			<span id="ccm-file-upload-multiple-spanButtonPlaceHolder" style="width:16px;"></span>
-			<input id="ccm-file-upload-multiple-btnStart"  type="button" value="<?=t('Start Uploads')?>" onclick="swfu.startUpload();" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
-			<input id="ccm-file-upload-multiple-btnCancel" type="button" value="<?=t('Cancel All Uploads')?>" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
+			<?
+			
+			print $h->button_js(t('Start Uploads'), 'swfu.startUpload()');
+			print $h->button_js(t('Cancel All Uploads'), 'swfu.cancelQueue()', 'left');
+			
+			?>
 		</div>
 
 </form>
@@ -142,7 +164,6 @@ $(function() {
 
 <?php
 	$valt = Loader::helper('validation/token');
-	$ch = Loader::helper('concrete/file');
 	$fh = Loader::helper('validation/file');
 	Loader::library('file/types');
 	
@@ -183,7 +204,6 @@ $(function() {
 				<?=t('Remove files from incoming/ directory.')?></td>
 				<td>
 				<?
-					$h = Loader::helper('concrete/interface');
 					$b1 = $h->submit(t('Add Files'), 'file_importer_form');
 					print $b1;
 				?>
@@ -212,7 +232,6 @@ $(function() {
 	<?=$form->text('url_upload_5', array('style' => 'width:90%'))?><br/>
 	<br/>
 	<?
-		$h = Loader::helper('concrete/interface');
 		$b1 = $h->submit(t('Add Files'), 'ccm-file-add-remote-form', 'left');
 		print $b1;
 	?>

@@ -31,7 +31,7 @@ if ($valt->validate('upload')) {
 		}
 		else{
 			$id = $resp->getFileID();			
-			$info['message'] = 'complete';
+			$info['message'] = t('Upload Complete.');
 			$info['id']		 = $resp->getFileID();
 		}
 	}

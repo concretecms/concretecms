@@ -38,7 +38,8 @@ jQuery.fn.dialog.open = function(settings) {
 }
 
 jQuery.fn.dialog.getOptions = function(settings, node) {
-	var options = jQuery.extend(jQuery.fn.dialog.defaults, settings);
+
+	var options = jQuery.extend({}, jQuery.fn.dialog.defaults, settings);
 
 	if (typeof(node) != 'undefined') {
 		var _modal = node.attr('dialog-modal');
@@ -65,6 +66,7 @@ jQuery.fn.dialog.getOptions = function(settings, node) {
 	if (typeof(_height) != 'undefined') {
 		options.height = _height;
 	}
+
 	if (typeof(_title) != 'undefined') {
 		options.title = _title;
 	}
