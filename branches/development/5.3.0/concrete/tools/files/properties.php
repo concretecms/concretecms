@@ -132,6 +132,27 @@ function printFileAttributeRow($ak, $fv) {
 
 ?>
 
+<ul class="ccm-dialog-tabs" id="ccm-file-properties-tabs">
+<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-file-properties-details"><?=t('Details')?></a></li>
+<li><a href="javascript:void(0)" id="ccm-file-properties-versions"><?=t('Versions')?></a></li>
+<li><a href="javascript:void(0)" id="ccm-file-properties-statistics"><?=t('Statistics')?></a></li>
+</ul>
+
+<script type="text/javascript">
+var ccm_fiActiveTab = "ccm-file-properties-details";
+$("#ccm-file-properties-tabs a").click(function() {
+	$("li.ccm-nav-active").removeClass('ccm-nav-active');
+	$("#" + ccm_fiActiveTab + "-tab").hide();
+	ccm_fiActiveTab = $(this).attr('id');
+	$(this).parent().addClass("ccm-nav-active");
+	$("#" + ccm_fiActiveTab + "-tab").show();
+});
+</script>
+
+<div id="ccm-file-properties-details-tab">
+
+<h1><?=t('File Details')?></h1>
+
 <div id="ccm-file-properties">
 <h2><?=t('Basic Properties')?></h2>
 <table border="0" cellspacing="0" cellpadding="0" class="ccm-grid">
@@ -204,7 +225,17 @@ foreach($attribs as $at) {
 </table>
 <? } ?>
 
+</div>
+</div>
+
+<div id="ccm-file-properties-versions-tab" style="display: none">
+asdf
+</div>
+<div id="ccm-file-properties-statistics-tab" style="display: none">
+asdf2
+</div>
 
 <script type="text/javascript">
 $(function() { ccm_alActiveEditableProperties(); });
 </script>
+
