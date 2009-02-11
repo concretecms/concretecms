@@ -8,6 +8,11 @@ if (!$cp->canRead()) {
 	die(_("Access Denied."));
 }
 
+if (!isset($_REQUEST['reload'])) { ?>
+	<div id="ccm-file-properties-wrapper">
+<? }
+
+
 Loader::model("file_attributes");
 
 $f = File::getByID($_REQUEST['fID']);
@@ -170,7 +175,7 @@ $("#ccm-file-properties-tabs a").click(function() {
 </tr>
 <tr>
 	<th><?=t('Date Added')?></th>
-	<td colspan="2"><?=$f->getDateAdded()?></td>
+	<td colspan="2"><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $f->getDateAdded())?></td>
 </tr>
 <?
 printCorePropertyRow(t('Title'), 'fvTitle', $fv->getTitle(), $form->text('fvTitle', $fv->getTitle()));
@@ -223,13 +228,33 @@ foreach($attribs as $at) {
 
 ?>
 </table>
-<? } ?>
+<br/>
+<? }
+
+$h = Loader::helper('concrete/interface');
+$b1 = $h->button_js(t('Rescan'), 'ccm_alRescanFiles(' . $f->getFileID() . ')');
+print $b1;
+
+?>
+
 
 </div>
 </div>
 
 <div id="ccm-file-properties-versions-tab" style="display: none">
-asdf
+<h1><?=t('File Versions')?></h1>
+
+	<table border="0" cellspacing="0" width="100%" class="ccm-grid" cellpadding="0">
+	<tr>
+		<th>&nbsp;</th>
+		<th><?=t('Name')?></th>
+		<th><?=t('Comments')?></th>
+		<th><?=t('Creator')?></th>
+		<th><?=t('Added On')?></th>
+	</tr>
+	
+	</table>
+
 </div>
 <div id="ccm-file-properties-statistics-tab" style="display: none">
 asdf2
@@ -239,3 +264,7 @@ asdf2
 $(function() { ccm_alActiveEditableProperties(); });
 </script>
 
+<?
+if (!isset($_REQUEST['reload'])) { ?>
+</div>
+<? }
