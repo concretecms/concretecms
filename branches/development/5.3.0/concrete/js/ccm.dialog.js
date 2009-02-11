@@ -4,7 +4,6 @@ jQuery.fn.dialog = function(settings) {
 		$(this).click(function(e) {
 			ccm_dialogOpen=1;
 			options = jQuery.fn.dialog.getOptions(settings, $(this));
-			console.log(options);
 			jQuery.fn.dialog._create(options);
 			$(this).blur();
 			return false;
