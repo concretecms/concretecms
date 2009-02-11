@@ -6,11 +6,11 @@ table#ccm-file-list th.ccm-file-list-starred, table#ccm-file-list td.ccm-file-li
 table#ccm-file-list th.ccm-file-list-filename, table#ccm-file-list td.ccm-file-list-filename {padding: 0;margin:0;text-align:left;}
 
 table#ccm-file-list tr th {font-size: 11px;background-color: #efefef}
-table#ccm-file-list tr td {text-align: center;background-color: #ffffff}
+table#ccm-file-list tr td {text-align: center;}
 
 table#ccm-file-list tr th a {color: #333}
 table#ccm-file-list tr.ccm-file-list-alt td {background-color: #ECFBFF}
-table#ccm-file-list tr:hover td {cursor: pointer;background-color: #DDECF0 !important}
+table#ccm-file-list tr.ccm-file-list-record:hover td {cursor: pointer;background-color: #DDECF0 !important}
 
 div#ccm-file-list-wrapper div.ccm-paging-top {padding-top: 5px}
 td.ccm-file-list-thumbnail img.ccm-generic-thumbnail {border: 0px}

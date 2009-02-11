@@ -25,7 +25,6 @@ $valt = Loader::helper('validation/token');
 
 <script type="text/javascript">
 var ccm_fiActiveTab = "ccm-file-upload-multiple";
-
 $("#ccm-file-import-tabs a").click(function() {
 	$("li.ccm-nav-active").removeClass('ccm-nav-active');
 	$("#" + ccm_fiActiveTab + "-tab").hide();
@@ -33,7 +32,6 @@ $("#ccm-file-import-tabs a").click(function() {
 	$(this).parent().addClass("ccm-nav-active");
 	$("#" + ccm_fiActiveTab + "-tab").show();
 });
-
 </script>
 
 <div id="ccm-file-upload-multiple-tab">

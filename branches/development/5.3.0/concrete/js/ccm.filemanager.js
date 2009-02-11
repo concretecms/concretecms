@@ -28,13 +28,28 @@ ccm_activateFileManager = function() {
 			},*/
 			
 			success: function(resp) {
-				$("#ccm-file-search-advanced-results").html(resp);
-				ccm_activateSearchResults();
-				ccm_alSetupSelectFiles();
-				//$("#ccm-al-search-results").html(resp);	
+				ccm_alParseSearchResponse(resp);
 			}
 	});
 	ccm_alSetupInPagePaginationAndSorting();
+}
+
+ccm_alParseSearchResponse = function(resp) {
+	$("#ccm-file-search-advanced-results").html(resp);
+	ccm_activateSearchResults();
+	ccm_alSetupSelectFiles();
+}
+
+ccm_alDeleteFiles = function() {
+	$("#ccm-delete-files-form").ajaxSubmit(function(resp) {
+		parseJSON(resp, function() {	
+			jQuery.fn.dialog.closeTop();
+			ccm_deactivateSearchResults();
+			$("#ccm-dashboard-file-search").ajaxSubmit(function(resp) {
+				ccm_alParseSearchResponse(resp);
+			});
+		});
+	});
 }
 
 ccm_alSetupSelectFiles = function() {

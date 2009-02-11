@@ -116,6 +116,42 @@ class File extends Object {
 	public function getApprovedVersion() {
 		return $this->getVersion();
 	}
+	
+	/** 
+	 * Removes a file, including all of its versions
+	 */
+	public function delete() {
+		// first, we remove all files from the drive
+		$db = Loader::db();
+		$r = $db->GetAll('select fvFilename, fvPrefix from FileVersions where fID = ?', array($this->fID));
+		$h = Loader::helper('concrete/file');
+		foreach($r as $val) {
+			$path = $h->getSystemPath($val['fvPrefix'], $val['fvFilename']);
+			$t1 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 1);
+			$t2 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 2);
+			$t3 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 3);
+			if (file_exists($path)) {
+				unlink($path);
+			}
+			if (file_exists($t1)) {
+				unlink($t1);
+			}
+			if (file_exists($t2)) {
+				unlink($t2);
+			}
+			if (file_exists($t3)) {
+				unlink($t3);
+			}
+		}
+		
+		// now from the DB
+		$db->Execute("delete from Files where fID = ?", array($this->fID));
+		$db->Execute("delete from FileVersions where fID = ?", array($this->fID));
+		$db->Execute("delete from FileAttributeValues where fID = ?", array($this->fID));
+		$db->Execute("delete from FileSetFiles where fID = ?", array($this->fID));
+		$db->Execute("delete from FileVersionLog where fID = ?", array($this->fID));			
+	}
+	
 
 	public function getRecentVersion() {
 		$db = Loader::db();
