@@ -89,6 +89,7 @@ $(function() {
 		
 				var progress = new FileProgress(file, this.customSettings.progressTarget);
 				progress.setProgress(percent);
+				
 				progress.setStatus("Uploading... ("+percent+"%)");
 			} catch (ex) {
 				this.debug(ex);
@@ -97,11 +98,15 @@ $(function() {
 		upload_error_handler : uploadError,
 		upload_success_handler : function(file, serverData){
 			try {
+				eval('serverData = '+serverData);
 				var progress = new FileProgress(file, this.customSettings.progressTarget);
 				progress.setComplete();
-				progress.setStatus(serverData);
+				progress.setStatus(serverData['message']);
 				progress.toggleCancel(false);
-		
+				if(serverData['id']){
+					if(!this.highlight){this.highlight = [];}
+					this.highlight.push(serverData['id']);
+				}
 			} catch (ex) {
 				this.debug(ex);
 			}		
@@ -120,15 +125,15 @@ $(function() {
 
 <form id="form1" action="index.php" method="post" enctype="multipart/form-data">
 		<div class="fieldset flash" id="ccm-file-upload-multiple-progress">
-		<span class="legend">Upload Queue</span>
+		<span class="legend"><?=t('Upload Queue');?></span>
 		</div>
 		
-		<div><div id="ccm-file-upload-multiple-results">0 Files Uploaded</div></div>
+		<div><div id="ccm-file-upload-multiple-results">0 <?=t('Files Uploaded');?></div></div>
 		<br style="clear:left;"/>
 		<div>
 			<span id="ccm-file-upload-multiple-spanButtonPlaceHolder" style="width:16px;"></span>
-			<input id="ccm-file-upload-multiple-btnStart"  type="button" value="Start Uploads" onclick="swfu.startUpload();" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
-			<input id="ccm-file-upload-multiple-btnCancel" type="button" value="Cancel All Uploads" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
+			<input id="ccm-file-upload-multiple-btnStart"  type="button" value="<?=t('Start Uploads')?>" onclick="swfu.startUpload();" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
+			<input id="ccm-file-upload-multiple-btnCancel" type="button" value="<?=t('Cancel All Uploads')?>" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
 		</div>
 
 </form>

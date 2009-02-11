@@ -10,7 +10,11 @@ ccm_activateFileManager = function() {
 		e.stopPropagation();
 		ccm_alSelectNone();
 	});
-	$(".dialog-launch").dialog();
+	$(".dialog-launch").dialog({after_close:function(){
+		if(swfu && swfu.highlight){
+			ccm_alRefresh(swfu.highlight);
+		}		
+	}});
 	
 	$("#ccm-file-search-add-option").click(function() {
 		ccm_totalAdvancedSearchFields++;

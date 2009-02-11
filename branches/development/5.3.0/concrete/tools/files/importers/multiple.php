@@ -16,7 +16,8 @@ $error = "";
 if ($valt->validate('upload')) {
 	if (isset($_FILES['Filedata']) && (is_uploaded_file($_FILES['Filedata']['tmp_name']))) {
 		$fi = new FileImporter();
-		$resp = $fi->import($_FILES['Filedata']['tmp_name'], $_FILES['Filedata']['name']);
+		$resp = $fi->import($_FILES['Filedata']['tmp_name'], $_FILES['Filedata']['name']);		
+		$info = array();
 		if (!($resp instanceof FileVersion)) {
 			switch($resp) {
 				case FileImporter::E_FILE_INVALID_EXTENSION:
@@ -28,14 +29,20 @@ if ($valt->validate('upload')) {
 				
 			}
 		}
+		else{
+			$id = $resp->getFileID();			
+			$info['message'] = 'complete';
+			$info['id']		 = $resp->getFileID();
+		}
 	}
 } else {
 	$error = $valt->getErrorMessage();
 }
 
 if (strlen($error) > 0) {
-	echo $error;
+	$info = array('message'=>$error);
+	echo json_encode($info);
 }
 else{
-	echo 'Complete';
+	echo json_encode($info);
 }

@@ -1,10 +1,10 @@
 jQuery.fn.dialog = function(settings) {
-
 	// this is probably woefully inefficient. 
 	return $(this).each(function() {
 		$(this).click(function(e) {
 			ccm_dialogOpen=1;
 			options = jQuery.fn.dialog.getOptions(settings, $(this));
+			console.log(options);
 			jQuery.fn.dialog._create(options);
 			$(this).blur();
 			return false;
@@ -128,6 +128,9 @@ jQuery.fn.dialog.load = function(fnd) {
 		}
 		$("#ccm-dialog-content" + fnd.n + " .ccm-dialog-close").click(function() {
 			jQuery.fn.dialog.close(fnd);
+			if(fnd.after_close){
+				fnd.after_close.apply(this);
+			}
 		});
 		$("#ccm-dialog-content" + fnd.n + " .dialog-launch").dialog();
 	} else {
@@ -142,6 +145,9 @@ jQuery.fn.dialog.load = function(fnd) {
 			jQuery.fn.dialog.hideLoader();
 			$("#ccm-dialog-content" + fnd.n + " .ccm-dialog-close").click(function() {
 				jQuery.fn.dialog.close(fnd);
+				if(fnd.after_close){
+					fnd.after_close.apply(this);
+				}
 			});
 			$("#ccm-dialog-content" + fnd.n + " .dialog-launch").dialog();
 		});
@@ -243,6 +249,9 @@ jQuery.fn.dialog.loadShell = function(fnd) {
 	}
 	$("#ccm-dialog-window" + fnd.n + " .ccm-dialog-close").click(function() {
 		jQuery.fn.dialog.close(fnd);
+		if(fnd.after_close){
+			fnd.after_close.apply(this);
+		}
 	});
 	$("#ccm-dialog-window" + fnd.n).append("<div class='ccm-dialog-content-bl'><div class='ccm-dialog-content-br'><div class='ccm-dialog-content-b'></div></div></div>");
 	$("#ccm-dialog-window" + fnd.n).show();
