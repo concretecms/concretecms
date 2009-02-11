@@ -11,6 +11,10 @@ class ProfileController extends Controller {
 	}
 	
 	public function view($userID = 0) {
+		if(!ENABLE_USER_PROFILES) {
+			$this->render("/page_not_found");
+		}
+		
 		$html = Loader::helper('html');
 		$canEdit = false;
 		$u = new User();
