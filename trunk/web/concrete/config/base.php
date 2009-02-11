@@ -25,10 +25,11 @@ if (!defined('REDIRECT_TO_BASE_URL')) {
 	define('REDIRECT_TO_BASE_URL', true);
 }
 
+/*
 if (!defined('ENABLE_OPENID_AUTHENTICATION')) { 
 	define('ENABLE_OPENID_AUTHENTICATION', false);
 }
-
+*/
 if (!defined('ENABLE_EMAILS')) {
 	define('ENABLE_EMAILS', true);
 }
@@ -283,28 +284,6 @@ define('REGISTERED_GROUP_NAME', 'Registered Users');
 define('ADMIN_GROUP_ID', '3');
 define('ADMIN_GROUP_NAME', 'Admin');
 define('SESSION_MAX_LIFETIME', 7200); // 2 hours
-
-# If user registration with email address is true we don't use username's - we just use uEmail and we populate uName with the email address
-if (!defined('USER_REGISTRATION_WITH_EMAIL_ADDRESS')) {
-	define('USER_REGISTRATION_WITH_EMAIL_ADDRESS', false);
-}
-
-if (!defined('USER_VALIDATE_EMAIL')) {
-	define('USER_VALIDATE_EMAIL', false);	
-}
-
-if (!defined('USER_VALIDATE_EMAIL_REQUIRED')) {
-	define('USER_VALIDATE_EMAIL_REQUIRED', false);	
-}
-
-if (!defined('USER_VALIDATE_EMAIL_REQUIRED')) {
-	define('USER_VALIDATE_EMAIL_REQUIRED', false);	
-}
-
-// public facing user profiles enabled
-if(!defined('ENABLE_USER_PROFILES')) {
-	define('ENABLE_USER_PROFILES', false);
-}
 
 # Default search size
 define('SEARCH_CHUNK_SIZE','20'); /* number of entries retrieved per page */
