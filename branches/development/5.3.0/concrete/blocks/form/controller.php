@@ -384,12 +384,11 @@ class MiniSurvey{
 					$dataValues=array(intval($values['qsID']), trim($values['question']), $values['inputType'],
 								     $values['options'], 1000, intval($values['width']), intval($values['height']), intval($values['required']) );			
 					$sql='INSERT INTO btFormQuestions (questionSetId,question,inputType,options,position,width,height,required) VALUES (?,?,?,?,?,?,?,?)';
-					$jsonVals['mode']='"Add"';
-					$this->lastSavedMsqID=0;
+					$jsonVals['mode']='"Add"'; 
 				}
 				$result=$this->db->query($sql,$dataValues); 
 				if( intval($values['msqID']) ) $this->lastSavedMsqID=intval($values['msqID']);	
-				else $this->lastSavedMsqID=$this->db->LastInsertID();
+				else $this->lastSavedMsqID = $this->db->GetOne("SELECT MAX(msqID) FROM btFormQuestions");
 				$jsonVals['success']=1;
 			}
 			$jsonVals['qsID']=$values['qsID'];
