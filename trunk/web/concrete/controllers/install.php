@@ -274,6 +274,9 @@ class InstallController extends Controller {
 						// Add our core views
 						SinglePage::add('/login');
 						SinglePage::add('/register');
+						SinglePage::add('/profile');
+						SinglePage::add('/profile/edit');
+						SinglePage::add('/profile/avatar');
 				
 						// Install our blocks
 						BlockType::installBlockType('library_file');
@@ -316,6 +319,7 @@ class InstallController extends Controller {
 						$d4b = SinglePage::add('/dashboard/users/add');
 						$d4c = SinglePage::add('/dashboard/users/groups');
 						$d4d = SinglePage::add('/dashboard/users/attributes');
+						$d4e = SinglePage::add('/dashboard/users/registration');
 						$d7 = SinglePage::add('/dashboard/pages');
 						$d71 = SinglePage::add('/dashboard/pages/themes');
 						$d7a = SinglePage::add('/dashboard/pages/themes/add');
@@ -345,6 +349,7 @@ class InstallController extends Controller {
 						$d4b->update(array('cName'=>t('Add User')));
 						$d4c->update(array('cName'=>t('Groups')));
 						$d4d->update(array('cName'=>t('User Attributes')));
+						$d4e->update(array('cName'=>t('User Registration')));
 						$d7->update(array('cName'=>t('Pages and Themes'), 'cDescription'=>t('Reskin your site.')));	
 						$d71->update(array('cName'=>t('Themes'), 'cDescription'=>t('Reskin your site.')));	
 						$d7e->update(array('cName'=>t('Page Types'), 'cDescription'=>t('What goes in your site.')));	
