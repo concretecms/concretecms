@@ -21,7 +21,7 @@ if($success) {
 		case "pending":
 			?>
 			<p><?=t('You are registered but a site administrator must review your account, you will not be able to login until your account has been approved.')?></p>
-			<p><?=t('A message will be sent to your email address once your account has been reviewed.')?></p>
+			<!--<p><?= // t('A message will be sent to your email address once your account has been reviewed.')?></p>-->
 			<p><a href="<?=$this->url('/')?>"><?=t('Return to Home')?></a></p>
             <?
 		break;
