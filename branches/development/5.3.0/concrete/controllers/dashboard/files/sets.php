@@ -12,7 +12,7 @@ class DashboardFilesSetsController extends Controller {
 		Loader::model('file_set');
 		$file_set = new FileSet();
 		
-		$file_sets = $file_set->Find('');		
+		$file_sets = $file_set->Find('fsType = ' . FileSet::TYPE_PUBLIC);		
 		$this->set('file_sets',$file_sets);
 		$this->set('action',$this->post('file-sets-edit-or-delete-action'));
 	}
@@ -36,7 +36,7 @@ class DashboardFilesSetsController extends Controller {
 		$u = new User();		
 		$file_set 			= new FileSet();
 		$file_set->fsName 	= $this->post('file_set_name');
-		$file_set->fsType 	= FileSet::TYPE_PRIVATE;
+		$file_set->fsType 	= FileSet::TYPE_PUBLIC;
 		$file_set->uID		= $u->getUserID();
 		$file_set->save();
 		

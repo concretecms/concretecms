@@ -39,7 +39,7 @@
 			} else if ($striped == '') { 
 				$striped = 'ccm-file-list-alt';
 			}
-			$star_icon = ($f->isStarred == 1) ? 'star_yellow.png' : 'star_grey.png';
+			$star_icon = ($f->isStarred() == 1) ? 'star_yellow.png' : 'star_grey.png';
 			$fv = $f->getApprovedVersion(); ?>
 			
 			<tr class="ccm-file-list-record <?=$striped?>" id="fID<?=$f->getFileID()?>">

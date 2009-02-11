@@ -8,6 +8,36 @@ if (!$cp->canRead()) {
 	die(_("Access Denied."));
 }
 Loader::model('file_set');
+
+$f = File::getByID($_REQUEST['fID']);
+
+if ($_POST['task'] == 'add_to_sets') {
+
+	$fsIDs = array();
+	if (is_array($_POST['fsID'])) {
+		foreach($_POST['fsID'] as $fsID) {
+			$fsIDs[] = $fsID;
+			//$fs = FileSet::getByID($fsID);
+			//$fs->addFileToSet($f);
+		}
+	}	
+
+	$s1 = FileSet::getMySets();
+	foreach($s1 as $s) {
+		if ($f->inFileSet($s) && (!in_array($s->getFileSetID(), $fsIDs))) {
+			$s->removeFileFromSet($f);
+		} else if ((!$f->inFileSet($s)) && in_array($s->getFileSetID(), $fsIDs)) {
+			$s->addFileToSet($f);
+		}		
+	}
+	
+	if ($_POST['fsNew']) {
+		$type = ($_POST['fsNewShare'] == 1) ? FileSet::TYPE_PUBLIC : FileSet::TYPE_PRIVATE;
+		$fs = FileSet::createAndGetSet($_POST['fsNewText'], $type);
+		$fs->addFileToSet($f);
+	}
+	exit;
+}
 ?>
 
 <ul class="ccm-dialog-tabs" id="ccm-add-to-tabs">
@@ -24,11 +54,16 @@ $("#ccm-add-to-tabs a").click(function() {
 	$(this).parent().addClass("ccm-nav-active");
 	$("#" + ccm_alatTab + "-tab").show();
 });
+
+$(function() {
+	ccm_alSetupAddToSetsForm();
+});
 </script>
 
 <div id="ccm-file-add-to-set-tab">
 <form method="post" id="ccm-file-add-to-set-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/add_to/">
 <?=$form->hidden('task', 'add_to_sets')?>
+<?=$form->hidden('fID')?>
 
 <h1><?=t('Add to Set')?></h1>
 
@@ -36,7 +71,7 @@ $("#ccm-add-to-tabs a").click(function() {
 <? $s1 = FileSet::getMySets(); ?>
 <? foreach($s1 as $s) { ?>
 
-	<div class="ccm-file-set-add-cb"><?=$form->checkbox('fsID[]', $s->getFileSetID())?> <?=$s->getFileSetName()?></div>
+	<div class="ccm-file-set-add-cb"><?=$form->checkbox('fsID[]', $s->getFileSetID(), $f->inFileSet($s))?> <?=$s->getFileSetName()?></div>
 
 <? } ?>
 
@@ -49,7 +84,7 @@ $("#ccm-add-to-tabs a").click(function() {
 <br/><br/>
 <?
 $h = Loader::helper('concrete/interface');
-$b1 = $h->submit(t('Add to Selected Sets'), 'ccm-file-add-to-set-form', 'left');
+$b1 = $h->button_js(t('Add to Selected Sets'), 'ccm_alSubmitAddToSetsForm()', 'left');
 print $b1;
 ?>
 </form>

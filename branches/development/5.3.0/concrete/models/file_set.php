@@ -77,15 +77,15 @@
 		* @param type $fID  //accepts an ID or a File object
 		* @return object
 		*/		
-		public function AddFileToSet($f_id) {
+		public function addFileToSet($f_id) {
 			if (is_object($f_id)) {
-				$f_id = $f_id->fID;
+				$f_id = $f_id->getFileID();
 			}			
 			$file_set_file = FileSetFile::createAndGetFile($f_id,$this->fsID);
 			return $file_set_file;
 		}
 		
-		public function RemoveFileFromSet($f_id){
+		public function removeFileFromSet($f_id){
 			if (is_object($f_id)) {
 				$f_id = $f_id->fID;
 			}			

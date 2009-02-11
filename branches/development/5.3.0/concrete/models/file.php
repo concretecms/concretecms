@@ -13,15 +13,23 @@ class File extends Object {
 		Loader::model('file_set');
 		$db = Loader::db();
 		$f = new File();
-		$row = $db->GetRow("SELECT Files.*, FileVersions.fvID,
-		(fs.fsType = ?) as isStarred
+		$row = $db->GetRow("SELECT Files.*, FileVersions.fvID
 		FROM Files LEFT JOIN FileVersions on Files.fID = FileVersions.fID and FileVersions.fvIsApproved = 1
-		LEFT JOIN FileSetFiles fsf on Files.fID = fsf.fID
-		LEFT JOIN FileSets fs on fsf.fsID = fs.fsID			
-		WHERE Files.fID = ?", array(FileSet::TYPE_STARRED,$fID));
+		WHERE Files.fID = ?", array($fID));
 		$f->setPropertiesFromArray($row);
 		
 		return $f;
+	}
+	
+	public function isStarred($u = false) {
+		if (!$u) {
+			$u = new User();
+		}
+		$db = Loader::db();
+		Loader::model('file_set');
+		$r = $db->GetOne("select fsfID from FileSetFiles fsf inner join FileSets fs on fs.fsID = fsf.fsID where fsf.fID = ? and fs.uID = ? and fs.fsType = ?",
+			array($this->getFileID(), $u->getUserID(), FileSet::TYPE_STARRED));
+		return $r > 0;
 	}
 	
 	public function getDateAdded() {
@@ -115,6 +123,12 @@ class File extends Object {
 	
 	public function getApprovedVersion() {
 		return $this->getVersion();
+	}
+	
+	public function inFileSet($fs) {
+		$db = Loader::db();
+		$r = $db->GetOne("select fsfID from FileSetFiles where fID = ? and fsID = ?", array($this->getFileID(), $fs->getFileSetID()));
+		return $r > 0;
 	}
 	
 	/** 
