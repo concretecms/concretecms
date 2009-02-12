@@ -51,7 +51,7 @@ class DashboardUsersRegistrationController extends Controller {
 	public function update_profiles() { 
 		if ($this->isPost()) {
 			Config::save('ENABLE_USER_PROFILES', ($this->post('public_profiles')?true:false));
-			$message = (ENABLE_USER_PROFILES?t('Public profiles have been enabled'):t('Public profiles have been disabled.'));
+			$message = ($this->post('public_profiles')?t('Public profiles have been enabled'):t('Public profiles have been disabled.'));
 			$this->redirect('/dashboard/users/registration',$message);
 		}
 	}
