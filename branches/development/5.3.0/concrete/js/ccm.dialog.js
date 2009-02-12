@@ -49,6 +49,7 @@ jQuery.fn.dialog.getOptions = function(settings, node) {
 		var _draggable = node.attr('dialog-draggable');
 		var _element = node.attr('dialog-element');
 		var href = node.attr('href');
+		var onClose = node.attr('dialog-on-close');
 		var _replace = node.attr('dialog-replace');
 	}
 	
@@ -75,6 +76,9 @@ jQuery.fn.dialog.getOptions = function(settings, node) {
 	}
 	if (typeof(_draggable) != 'undefined') {
 		options.draggable = _draggable;
+	}
+	if (typeof(onClose) != 'undefined') {
+		options.onClose = onClose;
 	}
 
 	options.modal = (options.modal == "true" || options.modal == true) ? true : false;
@@ -129,9 +133,6 @@ jQuery.fn.dialog.load = function(fnd) {
 		}
 		$("#ccm-dialog-content" + fnd.n + " .ccm-dialog-close").click(function() {
 			jQuery.fn.dialog.close(fnd);
-			if(fnd.after_close){
-				fnd.after_close.apply(this);
-			}
 		});
 		$("#ccm-dialog-content" + fnd.n + " .dialog-launch").dialog();
 	} else {
@@ -146,9 +147,6 @@ jQuery.fn.dialog.load = function(fnd) {
 			jQuery.fn.dialog.hideLoader();
 			$("#ccm-dialog-content" + fnd.n + " .ccm-dialog-close").click(function() {
 				jQuery.fn.dialog.close(fnd);
-				if(fnd.after_close){
-					fnd.after_close.apply(this);
-				}
 			});
 			$("#ccm-dialog-content" + fnd.n + " .dialog-launch").dialog();
 		});
@@ -187,8 +185,12 @@ jQuery.fn.dialog.close = function(fnd) {
 	$("#TB_imageOff").unbind("click");
 	$("#TB_closeWindowButton" + fnd.n).unbind("click");
 
-	if (typeof fnd.onClose == "function") {
-		fnd.onClose();
+	if (typeof fnd.onClose != "undefined") {
+		if ((typeof fnd.onClose) == 'function') {
+			fnd.onClose();
+		} else {
+			eval(fnd.onClose);
+		}
 	}
 
 	if (ccm_animEffects) {
@@ -250,9 +252,6 @@ jQuery.fn.dialog.loadShell = function(fnd) {
 	}
 	$("#ccm-dialog-window" + fnd.n + " .ccm-dialog-close").click(function() {
 		jQuery.fn.dialog.close(fnd);
-		if(fnd.after_close){
-			fnd.after_close.apply(this);
-		}
 	});
 	$("#ccm-dialog-window" + fnd.n).append("<div class='ccm-dialog-content-bl'><div class='ccm-dialog-content-br'><div class='ccm-dialog-content-b'></div></div></div>");
 	$("#ccm-dialog-window" + fnd.n).show();

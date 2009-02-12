@@ -10,7 +10,7 @@ class DashboardFilesSearchController extends Controller {
 		$this->set('form', $form);
 		$this->addHeaderItem($html->css('ccm.filemanager.css'));
 		$this->addHeaderItem($html->javascript('ccm.filemanager.js'));
-		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_activateFileManager(); });</script>');
+		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_activateFileManager(\'DASHBOARD\'); });</script>');
 		
 		$ext1 = FileList::getExtensionList();
 		$extensions = array();
@@ -66,6 +66,13 @@ class DashboardFilesSearchController extends Controller {
 		
 		if ($keywords != '') {
 			$fileList->filterByKeywords($keywords);
+		}
+		
+		if (isset($_GET['fSet']) && $_GET['fSet'] != '') {
+			Loader::model('file_set');
+			$set = $_REQUEST['fSet'];
+			$fs = FileSet::getByID($set);
+			$fileList->filterBySet($fs);
 		}
 		
 		if (is_array($_REQUEST['fvSelectedField'])) {

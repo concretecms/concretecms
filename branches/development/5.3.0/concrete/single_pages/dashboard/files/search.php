@@ -39,13 +39,13 @@
 </div>
 
 
-<form method="get" id="ccm-dashboard-file-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
+<form method="get" class="ccm-dashboard-file-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
 	<input type="hidden" name="search" value="1" />
 	
 	<div style="position: relative">
 
 		<h2><?=t('Advanced Search')?></h2>
-		<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" id="ccm-file-search-advanced-loading" />
+		<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" id="ccm-file-search-loading" />
 
 	</div>
 	
@@ -99,7 +99,7 @@
 
 <? Loader::element('files/upload_single'); ?>
 
-<div id="ccm-file-search-advanced-results">
+<div id="ccm-file-search-results">
 
 <? Loader::element('files/search_results', array('files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
 

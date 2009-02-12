@@ -39,17 +39,26 @@
 			$resetdisplay = 'none';
 			
 			
-			if ($bf != null) {
+			if ($bf == null) {
+				/* 
 				$fileID = $bf->getFileID();
 				$filename = $bf->getFilename();
 				$filedisplay = 'none';
-				$resetdisplay = 'inline';
+				$resetdisplay = 'inline'; */
+				
+				$html = '<div class="ccm-file-manager-select" id="' . $id . '-fm-display" >';
+				$html .= '<a href="javascript:void(0)" class="ccm-file-manager-launch">' . t('Choose File') . '</a>';
+				$html .= '</div><input id="' . $id . '-fm-value" type="hidden" name="' . $postname . '" value="' . $fileID . '" />';
+			} else {
+			
 			}
+			
+			/* 
 			$html = '<div id="' . $id . '-display" style="display: inline">' . $filename . '</div> ';
 			$html .= '<a class="ccm-launch-al" id="' . $id . '" href="#" style="display: ' . $filedisplay . '">' . $chooseText . '</a> ';
 			$html .= '<a class="ccm-reset-al" id="' . $id . '-reset" href="#" style="display: ' . $resetdisplay . '">' . $resetText . '</a> ';
 			$html .= '<input id="' . $id . '-value" type="hidden" name="' . $postname . '" value="' . $fileID . '" />';
-			
+			*/
 			return $html;
 		}
 		

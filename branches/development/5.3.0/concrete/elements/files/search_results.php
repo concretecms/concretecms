@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
 <script type="text/javascript">
 	var CCM_STAR_STATES = {
 		'unstarred':'star_grey.png',
@@ -69,6 +70,11 @@
 	
 	
 
+	<? } else { ?>
+		
+		<div id="ccm-file-list-none"><?=t('No files found.')?></div>
+		
+	
 	<? } 
 	$fileList->displayPaging($bu); ?>
 	
