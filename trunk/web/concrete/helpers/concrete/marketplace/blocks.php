@@ -6,7 +6,7 @@ Loader::model('block_type_remote');
 class ConcreteMarketplaceBlocksHelper { 
 
 	function getPreviewableList() {
-		$blockTypes = Cache::get('marketplace_block_list', false);
+		$blockTypes = Cache::get('marketplace_block_list', false, false, true);
 		if (!is_array($blockTypes)) {
 			$fh = Loader::helper('file'); 
 			// Retrieve the URL contents 
@@ -24,7 +24,7 @@ class ConcreteMarketplaceBlocksHelper {
 				}
 			}
 
-			Cache::set('marketplace_block_list', false, $blockTypes, MARKETPLACE_CONTENT_LATEST_THRESHOLD);		
+			Cache::set('marketplace_block_list', false, $blockTypes, MARKETPLACE_CONTENT_LATEST_THRESHOLD, true);		
 		}
 
 		return $blockTypes;

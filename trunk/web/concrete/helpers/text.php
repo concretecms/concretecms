@@ -82,7 +82,7 @@ class TextHelper {
 	 * @return string $output
 	 */
 	public function autolink($input) {
-		$output = preg_replace("/(http:\/\/|https:\/\/|(www\.))(([^\s<]{4,68})[^\s<]*)/", '<a href="http://$2$3" rel="nofollow">http://$2$4</a>', $input);
+		$output = preg_replace("/(http:\/\/|https:\/\/|(www\.))(([^\s<]{4,80})[^\s<]*)/", '<a href="http://$2$3" rel="nofollow">http://$2$4</a>', $input);
 		return ($output);
 	}
 	
