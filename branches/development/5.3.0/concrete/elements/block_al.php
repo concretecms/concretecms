@@ -36,11 +36,11 @@ $(function() {
 	$(".ccm-reset-al").click(function() {
 		ccm_resetAsset($(this).attr('id'));
 	});
-	$(".ccm-launch-al").dialog({ 
+	$(".ccm-file-manager-launch").dialog({ 
 			width: 650,
 			height: 450,
 			modal: false,
-			href: CCM_TOOLS_PATH + "/al.php?launch_in_page=1<?= (is_object($c)?"&cID=".$c->getCollectionID():"") ?>",
+			href: CCM_TOOLS_PATH + "/files/search_dialog<?= (is_object($c)?"?cID=".$c->getCollectionID():"") ?>",
 			title: "<?=$chooseMSG?>"
 	});
 });

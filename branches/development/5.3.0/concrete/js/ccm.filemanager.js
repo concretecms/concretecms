@@ -1,7 +1,7 @@
 
 var ccm_totalAdvancedSearchFields = 0;
 
-ccm_activateFileManager = function() {
+ccm_activateFileManager = function(type) {
 	//delegate event handling to table container so clicks
 	//to our star don't interfer with clicks to our rows
 	ccm_alSetupSelectFiles();
@@ -10,18 +10,18 @@ ccm_activateFileManager = function() {
 		e.stopPropagation();
 		ccm_alSelectNone();
 	});
-	$(".dialog-launch").dialog({after_close:function(){
-		if(swfu && swfu.highlight){
-			ccm_alRefresh(swfu.highlight);
-		}		
-	}});
+	
+	if (type == 'DASHBOARD') {
+		$(".dialog-launch").dialog();
+	}
 	
 	$("#ccm-file-search-add-option").click(function() {
 		ccm_totalAdvancedSearchFields++;
 		$("#ccm-file-search-fields-wrapper").append('<div class="ccm-file-search-field" id="ccm-file-search-field-set' + ccm_totalAdvancedSearchFields + '">' + $("#ccm-file-search-field-base").html() + '<\/div>');
 		ccm_activateFileManagerFields(ccm_totalAdvancedSearchFields);
 	});
-	$("#ccm-dashboard-file-search").ajaxForm({
+	
+	$(".ccm-dashboard-file-search").ajaxForm({
 		beforeSubmit: function() {
 			ccm_deactivateSearchResults();
 		},
@@ -42,7 +42,7 @@ ccm_alSubmitAddToSetsForm = function() {
 	jQuery.fn.dialog.closeTop();
 	ccm_deactivateSearchResults();
 	$("#ccm-file-add-to-set-form").ajaxSubmit(function(resp) {
-		$("#ccm-dashboard-file-search").ajaxSubmit(function(resp) {
+		$(".ccm-dashboard-file-search").ajaxSubmit(function(resp) {
 			ccm_alParseSearchResponse(resp);
 		});
 	});
@@ -83,7 +83,7 @@ ccm_alRescanFiles = function() {
 }
 
 ccm_alParseSearchResponse = function(resp) {
-	$("#ccm-file-search-advanced-results").html(resp);
+	$("#ccm-file-search-results").html(resp);
 	ccm_activateSearchResults();
 	ccm_alSetupSelectFiles();
 }
@@ -93,7 +93,7 @@ ccm_alDeleteFiles = function() {
 		parseJSON(resp, function() {	
 			jQuery.fn.dialog.closeTop();
 			ccm_deactivateSearchResults();
-			$("#ccm-dashboard-file-search").ajaxSubmit(function(resp) {
+			$(".ccm-dashboard-file-search").ajaxSubmit(function(resp) {
 				ccm_alParseSearchResponse(resp);
 			});
 		});
@@ -134,14 +134,14 @@ ccm_alSetupSelectFiles = function() {
 	});
 }
 ccm_deactivateSearchResults = function() {
-	$("#ccm-file-search-advanced-results").css('opacity','0.5');	
+	$("#ccm-file-list-wrapper").css('opacity','0.5');	
 	$("#ccm-search-files").attr('disabled', true);
-	$("#ccm-file-search-advanced-loading").show();
+	$("#ccm-file-search-loading").show();
 }
 
 ccm_activateSearchResults = function() {
-	$("#ccm-file-search-advanced-results").css('opacity','1');	
-	$("#ccm-file-search-advanced-loading").hide();
+	$("#ccm-file-list-wrapper").css('opacity','1');	
+	$("#ccm-file-search-loading").hide();
 	$("#ccm-search-files").attr('disabled', false);
 	ccm_alSetupInPagePaginationAndSorting();
 }
@@ -149,7 +149,7 @@ ccm_activateSearchResults = function() {
 ccm_alSetupInPagePaginationAndSorting = function() {
 	$("#ccm-file-list th a").click(function() {
 		ccm_deactivateSearchResults();
-		$("#ccm-file-search-advanced-results").load($(this).attr('href'), false, function() {
+		$("#ccm-file-search-results").load($(this).attr('href'), false, function() {
 			ccm_activateSearchResults();
 			ccm_alSetupSelectFiles();
 		});
@@ -157,7 +157,7 @@ ccm_alSetupInPagePaginationAndSorting = function() {
 	});
 	$("div.ccm-pagination a").click(function() {
 		ccm_deactivateSearchResults();
-		$("#ccm-file-search-advanced-results").load($(this).attr('href'), false, function() {
+		$("#ccm-file-search-results").load($(this).attr('href'), false, function() {
 			ccm_activateSearchResults();
 			ccm_alSetupSelectFiles();
 		});
@@ -265,7 +265,7 @@ ccm_alResetSingle = function () {
 
 ccm_alRefresh = function(highlightFIDs) {
 	ccm_deactivateSearchResults();
-	$("#ccm-file-search-advanced-results").load(CCM_TOOLS_PATH + '/files/search_results', {
+	$("#ccm-file-search-results").load(CCM_TOOLS_PATH + '/files/search_results', {
 		'ccm_order_by': 'fvDateAdded',
 		'ccm_order_dir': 'desc'
 	}, function() {

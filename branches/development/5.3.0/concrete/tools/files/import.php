@@ -43,7 +43,6 @@ $("#ccm-file-import-tabs a").click(function() {
 
 var swfu;
 $(function() { 
-
 	swfu = new SWFUpload({
 
 		flash_url : "<?=ASSETS_URL_FLASH?>/swfupload/swfupload.swf",
