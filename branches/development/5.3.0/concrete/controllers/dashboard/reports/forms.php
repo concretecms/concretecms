@@ -108,7 +108,7 @@ class DashboardReportsFormsController extends Controller {
 					$fID=intval($answerSet['answers'][$questionId]['answer']);
 					$file=File::getByID($fID);
 					if($fID && $file){
-						$fileVersion=$file->getActiveVersion();
+						$fileVersion=$file->getApprovedVersion();
 						echo "\t\t\t".'<a href="'. BASE_URL . DIR_REL . $fileVersion->getRelativePath() .'">'.$fileVersion->getFileName().'</a>'."\r\n";
 					}else{
 						echo "\t\t\t".t('File not found')."\r\n";
