@@ -8,7 +8,7 @@ if (isset($au->theme) && isset($au->file)) {
 	if (is_object($pt)) {
 		if (file_exists($pt->getThemeDirectory() . '/' . $au->file)) {
 			if ($_REQUEST['mode'] == 'preview') {
-				$val = Cache::get('preview_theme_style', $pt->getThemeID());
+				$val = Cache::get('preview_theme_style', $pt->getThemeID(), false, true);
 				if (is_array($val)) {
 					$values = $pt->mergeStylesFromPost($val);
 					$pt->outputStyleSheet($au->file, $values);
@@ -19,7 +19,7 @@ if (isset($au->theme) && isset($au->file)) {
 			$style = Cache::get($au->theme, $au->file, $stat);
 			if ($style == '') {
 				$style = $pt->parseStyleSheet($au->file);
-				Cache::set($au->theme, $au->file, $style, 10800);
+				Cache::set($au->theme, $au->file, $style, 10800, true);
 			}
 		
 			print $style;

@@ -42,8 +42,10 @@ class Config extends Object {
 		}
 
 		$ca = new Cache();
-		$cv = $ca->get('config_option', $cfKey);
-		if (!($cv instanceof ConfigValue)) {
+		if ($cfKey != 'ENABLE_CACHE') {
+			$cv = $ca->get('config_option', $cfKey);
+		}
+		if ((!isset($cv)) || (!($cv instanceof ConfigValue))) {
 			$db = Loader::db();
 			$val = @$db->GetRow("select timestamp, cfValue from Config where cfKey = ?", array($cfKey));
 			if (!$val) {

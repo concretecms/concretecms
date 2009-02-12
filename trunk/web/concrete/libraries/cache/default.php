@@ -14,11 +14,14 @@ class Cache extends CacheTemplate {
 	
 	/** 
 	 * Inserts or updates an item to the cache
+	 * If $forceSet is true, we sidestep ENABLE_CACHE. This is for certain operations that
+	 * the cache must always be enabled for (getting remote data, etc..)
 	 */	
-	public function set($type, $id, $obj, $expire = 0){
-		if (ENABLE_CACHE == false) {
+	public function set($type, $id, $obj, $expire = 0, $forceSet = false){
+		if (ENABLE_CACHE == false && $forceSet == false) {
 			return false;
 		}
+		
 		//if(intval($expire)==0) return false;
 		
 		//create an object to store the data and the expiration
@@ -39,11 +42,14 @@ class Cache extends CacheTemplate {
 	
 	/** 
 	 * Retrieves an item from the cache
+	 * If $forceGet is true, we sidestep ENABLE_CACHE. This is for certain operations that
+	 * the cache must always be enabled for (getting remote data, etc..)
 	 */	
-	public function get($type, $id, $mustBeNewerThan = false){
-		if (ENABLE_CACHE == false) {
+	public function get($type, $id, $mustBeNewerThan = false, $forceGet = false){
+		if (ENABLE_CACHE == false && $forceGet == false) {
 			return false;
 		}		
+
 		$key = parent::key($type, $id);
 		
 		//check the local (in memory) cache first
