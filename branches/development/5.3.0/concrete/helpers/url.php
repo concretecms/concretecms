@@ -20,7 +20,7 @@ class UrlHelper {
 		
 		if ($url == false) {
 			$url = $_SERVER['REQUEST_URI'];
-		} else {
+		} elseif(!strstr($url,'?')) {
 			$url = $url . '?' . $_SERVER['QUERY_STRING'];
 		}
 
