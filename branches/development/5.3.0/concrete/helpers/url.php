@@ -13,7 +13,7 @@
  * @license    http://www.concrete5.org/license/     MIT License
  */
 defined('C5_EXECUTE') or die(_("Access Denied."));
-class UrlHelper {
+class UrlHelper { 
 
 	public function setVariable($variable, $value = false, $url = false) {
 		// either it's key/value as variables, or it's an associative array of key/values
