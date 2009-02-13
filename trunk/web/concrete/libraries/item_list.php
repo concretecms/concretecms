@@ -8,9 +8,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class DatabaseItemList extends ItemList {
 
 	private $query = '';
+	private $userQuery = '';
 	private $debug = false;
 	private $filters = array();
-
+	protected $autoSortColumns = array();
+	
 	public function getTotal() {
 		if ($this->total == -1) {
 			$db = Loader::db();
@@ -31,12 +33,20 @@ class DatabaseItemList extends ItemList {
 	}
 	
 	protected function addToQuery($query) {
-		$this->query .= $query . ' ';
+		$this->userQuery .= $query . ' ';
 	}
 
+	private function setupAutoSort() {
+		if (count($this->autoSortColumns) > 0) {
+			if (in_array($_REQUEST[$this->queryStringSortVariable], $this->autoSortColumns)) {
+				$this->sortBy($_REQUEST[$this->queryStringSortVariable], $_REQUEST[$this->queryStringSortDirectionVariable]);
+			}
+		}
+	}
+	
 	private function executeBase() {
 		$v = array();		
-		$q = $this->query . ' where 1=1 ';
+		$q = $this->query . $this->userQuery . ' where 1=1 ';
 		foreach($this->filters as $f) {
 			$column = $f[0];
 			$comp = $f[2];
@@ -80,7 +90,8 @@ class DatabaseItemList extends ItemList {
 		$arr = $this->executeBase(); // returns an associated array of query/placeholder values
 		$q = $arr[0];
 		$v = $arr[1];
-		// handle order by 
+		// handle order by
+		$this->setupAutoSort();
 		if ($this->sortBy != '') {
 			$q .= 'order by ' . $this->sortBy . ' ' . $this->sortByDirection . ' ';
 		}
@@ -126,6 +137,8 @@ class ItemList {
 	protected $sortBy;
 	protected $sortByDirection;
 	protected $queryStringPagingVariable = 'ccm_paging_p';
+	protected $queryStringSortVariable = 'ccm_order_by';
+	protected $queryStringSortDirectionVariable = 'ccm_order_dir';
 	
 	private $items = array();
 	
@@ -160,6 +173,7 @@ class ItemList {
 	}
 
 	public function get($itemsToGet = 0, $offset = 0) {
+		$this->start = $offset;
 		return array_slice($this->items, $offset, $itemsToGet);
 	}
 	
@@ -183,7 +197,46 @@ class ItemList {
 		print $html;
 	}
 	
-	public function getPagination($url) {
+	public function getSearchResultsClass($field) {
+		$class = '';
+		if ($this->isActiveSortColumn($field)) {	
+			$class = 'ccm-results-list-active-sort-';
+			if ($this->getActiveSortDirection() == 'desc') {
+				$class .= 'desc';
+			} else {
+				$class .= 'asc';
+			}
+		}
+		return $class;
+	}	
+
+	public function getSortByURL($column, $dir = 'asc', $baseURL = false) {
+		$uh = Loader::helper('url');
+		
+		// we switch it up if this column is the currently active column and the direction is currently the case
+		if ($_REQUEST[$this->queryStringSortVariable] == $column && $_REQUEST[$this->queryStringSortDirectionVariable] == $dir) {
+			$dir = ($dir == 'asc') ? 'desc' : 'asc';
+		}
+		$url = $uh->setVariable(array(
+			$this->queryStringSortVariable => $column,
+			$this->queryStringSortDirectionVariable => $dir
+		), false, $baseURL);
+		print $url;
+	}
+	
+	public function isActiveSortColumn($column) {
+		return ($this->getActiveSortColumn() == $column);
+	}
+	
+	public function getActiveSortColumn() {
+		return $this->sortBy;
+	}
+	
+	public function getActiveSortDirection() {
+		return $this->sortByDirection;
+	}
+	
+	public function getPagination($url = false) {
 		$pagination = Loader::helper('pagination');
 		if ($this->currentPage == false) {
 			$this->setCurrentPage();
