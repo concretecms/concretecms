@@ -10,7 +10,7 @@
 	<?=$error?><br/><br/>
 <? } ?>
 
-<form action="<?=$this->url( $resultTargetURL )?>" method="post">
+<form action="<?=$this->url( $resultTargetURL )?>" method="get">
 
 	<? if( strlen($title)>0){ ?><h3><?=$title?></h3><? } ?>
 	
@@ -38,7 +38,7 @@ if (strlen($query)) {
 				<h3><a href="<?=DIR_REL?>/index.php?cID=<?=$r->getID()?>"><?=$r->getName()?></a></h3>
 				<p>
 					<?=$tt->shortText($r->getDescription())?>
-					<span class="pageLink"><?=BASE_URL.$r->getCPath() ?></span>
+					<span class="pageLink"><?=BASE_URL.$r->getCollectionPath() ?></span>
 				</p>
 			</div>
 		<? 	}//foreach search result ?>

@@ -19,7 +19,7 @@ class IndexSearch extends Job {
 	}
 	
 	function run() {
-		Loader::library('indexed_search');
+		Loader::library('database_indexed_search');
 		$is = new IndexedSearch();
 		$result = $is->reindex();
 		return t('%s page(s) indexed.', $result->count);
