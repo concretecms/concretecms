@@ -25,6 +25,6 @@ $pagination = $fileList->getPagination();
 
 print '<div id="ccm-file-search-results">';
 
-Loader::element('files/search_results', array('files' => $files, 'fileList' => $fileList, 'pagination' => $pagination));
+Loader::element('files/search_results', array('fileSelector' => true, 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination));
 
 print '</div>';

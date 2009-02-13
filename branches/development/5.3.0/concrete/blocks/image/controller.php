@@ -29,11 +29,11 @@
 		function getFileOnstateID() {return $this->fOnstateID;}
 		function getFileOnstateObject() {
 			if ($this->fOnstateID > 0) {
-				return LibraryFileBlockController::getFile($this->fOnstateID);
+				return File::getByID($this->fOnstateID);
 			}
 		}
 		function getFileObject() {
-			return LibraryFileBlockController::getFile($this->fID);
+			return File::getByID($this->fID);
 		}		
 		function getAltText() {return $this->altText;}
 		function getExternalLink() {return $this->externalLink;}
@@ -48,30 +48,22 @@
 			$db = Loader::db();
 			global $c;
 			$bID = $this->bID;
-			$q = "select filename from btFile where bID = '{$this->fID}'";
-
-			$r = $db->query($q);
-			$row = $r->fetchRow();
-
-			$fullPath = DIR_FILES_UPLOADED . '/' . $row['filename'];
+			
+			$f = $this->getFileObject();
+			$fullPath = $f->getPath();
+			$relPath = $f->getRelativePath();
 			
 			$size = @getimagesize($fullPath);
 
-			$relPath = REL_DIR_FILES_UPLOADED . '/' . $row['filename'];
-			
-			
 			$img = "<img border=\"0\" class=\"ccm-image-block\" alt=\"{$this->altText}\" src=\"{$relPath}\" {$size[3]} ";
 			$img .= ($align) ? "align=\"{$align}\" " : '';
 			
 			$img .= ($style) ? "style=\"{$style}\" " : '';
-			if($this->fOnstateID != 0){
-				$q = "select filename from btFile where bID = '{$this->fOnstateID}'";
-	
-				$r = $db->query($q);
-				$row = $r->fetchRow();
-				$fullPathHover = REL_DIR_FILES_UPLOADED . '/' . $row['filename'];
+			if($this->fOnstateID != 0) {
+				$fos = $this->getFileOnstateObject();
+				$relPathHover = $fos->getRelativePath();
 
-				$img .= " onmouseover=\"this.src = '{$fullPathHover}'\" ";
+				$img .= " onmouseover=\"this.src = '{$relPathHover}'\" ";
 				$img .= " onmouseout=\"this.src = '{$relPath}'\" ";
 			}
 			

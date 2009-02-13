@@ -3,7 +3,15 @@
 class File extends Object { 
 
 	const CREATE_NEW_VERSION_THRESHOLD = 300; // in seconds (5 minutes)
-	
+
+	/** 
+	 * For all methods that file does not implement, we pass through to the currently active file version object 
+	 */
+	public function __call($nm, $a) {
+		$fv = $this->getApprovedVersion();
+		return call_user_func_array(array($fv, $nm), $a);
+	}
+
 	public function getPath() {
 		$fv = $this->getVersion();
 		return $fv->getPath();

@@ -1,7 +1,8 @@
 
 var ccm_totalAdvancedSearchFields = 0;
+var ccm_alLaunchType;
 
-ccm_activateFileManager = function(type) {
+ccm_activateFileManager = function(altype) {
 	//delegate event handling to table container so clicks
 	//to our star don't interfer with clicks to our rows
 	ccm_alSetupSelectFiles();
@@ -11,9 +12,10 @@ ccm_activateFileManager = function(type) {
 		ccm_alSelectNone();
 	});
 	
-	if (type == 'DASHBOARD') {
+	if (altype == 'DASHBOARD') {
 		$(".dialog-launch").dialog();
 	}
+	ccm_alLaunchType = altype;
 	
 	$("#ccm-file-search-add-option").click(function() {
 		ccm_totalAdvancedSearchFields++;
@@ -110,7 +112,7 @@ ccm_alSetupSelectFiles = function() {
 		}
 		else{
 			$(e.target).parents('tr.ccm-file-list-record').each(function(){
-				ccm_selectFile($(this), e);		
+				ccm_alActivateMenu($(this), e);		
 			});
 		}
 	});
@@ -119,8 +121,8 @@ ccm_alSetupSelectFiles = function() {
 		var obj = $('#fID' + fID + 'hoverThumbnail');
 		if (obj.length > 0) {
 			var tdiv = obj.find('div');
-			var pos = $(this).position();
-			tdiv.css('top', pos.top + $(this).attr('height') + 10);
+			var pos = obj.position();
+			tdiv.css('top', pos.top);
 			tdiv.css('left', pos.left);
 			tdiv.show();
 
@@ -271,20 +273,25 @@ ccm_alRefresh = function(highlightFIDs) {
 	}, function() {
 		ccm_activateSearchResults();
 		ccm_alResetSingle();
-		ccm_highlightFileIDArray(highlightFIDs);
+		ccm_alHighlightFileIDArray(highlightFIDs);
 		ccm_alSetupSelectFiles();
 
 	});
 }
 
-ccm_highlightFileIDArray = function(ids) {
+ccm_alHighlightFileIDArray = function(ids) {
 	for (i = 0; i < ids.length; i++) {
 		var oldBG = $("#fID" + ids[i] + ' td').css('backgroundColor');
 		$("#fID" + ids[i] + ' td').animate({ backgroundColor: '#FFF9BB'}, { queue: true, duration: 300 }).animate( {backgroundColor: oldBG}, 500);
 	}
 }
 
-ccm_selectFile = function(obj, e) {
+ccm_alSelectFile = function(fID) {
+	ccm_triggerSelectFile(fID);
+	jQuery.fn.dialog.closeTop();
+}
+
+ccm_alActivateMenu = function(obj, e) {
 	ccm_hideMenus();
 	
 	var fID = $(obj).attr('id').substring(3);
@@ -309,6 +316,9 @@ ccm_selectFile = function(obj, e) {
 		var html = '<div class="ccm-menu-tl"><div class="ccm-menu-tr"><div class="ccm-menu-t"></div></div></div>';
 		html += '<div class="ccm-menu-l"><div class="ccm-menu-r">';
 		html += '<ul>';
+		if (ccm_alLaunchType != 'DASHBOARD') {
+			html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="90%" dialog-height="70%" dialog-title="' + ccmi18n_filemanager.selectFile + '" id="menuSelectFile' + fID + '" href="javascript:void(0)" onclick="ccm_alSelectFile(' + fID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.selectFile + '<\/span><\/a><\/li>';
+		}
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="90%" dialog-height="70%" dialog-title="' + ccmi18n_filemanager.viewDownload + '" id="menuViewDownload' + fID + '" href="' + CCM_TOOLS_PATH + '/files/view_download?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.viewDownload + '<\/span><\/a><\/li>';
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.properties + '" id="menuProperties' + fID + '" href="' + CCM_TOOLS_PATH + '/files/properties?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/edit_small.png)">'+ ccmi18n_filemanager.properties + '<\/span><\/a><\/li>';
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.editReplace + '" id="menuFileEditReplace' + fID + '" href="' + CCM_TOOLS_PATH + '/files/edit?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.editReplace + '<\/span><\/a><\/li>';

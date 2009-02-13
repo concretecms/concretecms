@@ -1,6 +1,6 @@
 body {background: #efefef url(../images/dashboard/bg.png) repeat-y scroll; padding: 0px; margin: 0px}
 ul, li {margin: 0px; padding: 0px}
-body, ul, td, div, h1, h2, h3, h4, h5 {font-family: "Arial Rounded MT", "Helvetica Neue", Arial, Helvetica, sans-serif}
+body, ul, td, div, h1, h2, h3, h4, h5 {font-family: "Helvetica Neue", Arial, Helvetica, sans-serif}
 img {border: 0px}
 
 div#ccm-dashboard-header {background: transparent url(../images/dashboard/bg_header.png) repeat-x scroll; position: absolute; top: 0px; left: 0px; height: 53px; width: 100%; z-index: 10}
@@ -30,7 +30,7 @@ div#ccm-dashboard-nav li {display: block; width: 200px; background: #ededed url(
 div#ccm-dashboard-nav li a {color: #787878; font-weight: bold; display: block; font-size: 13px; height: 40px; overflow: hidden; padding: 6px 11px 0px 12px; text-decoration: none}
 div#ccm-dashboard-nav li a:hover {background: #A2DAFD url(../images/bg_header_active.png) repeat-x scroll;}
 div#ccm-dashboard-nav li.ccm-nav-active a {background: #cdd9dd url(../images/dashboard/bg_nav_active.png) repeat-x scroll bottom right}
-div#ccm-dashboard-nav li a span {font-family: Arial, Helvetica; font-size: 11px; color: #a8a8a8; height: 12px; overflow: hidden; font-weight: normal; display: block; margin-top: 1px}
+div#ccm-dashboard-nav li a span {font-family: "Helvetica Neue", Arial, Helvetica; font-size: 11px; color: #a8a8a8; height: 12px; overflow: hidden; font-weight: normal; display: block; margin-top: 1px}
 
 /*
 div#ccm-dashboard-page{ width:auto; padding-left:225px; margin:0px; padding-right:20px; padding-top:70px; padding-bottom:30px  }
@@ -252,7 +252,7 @@ div#jquery-font-panel, div#jquery-custom-panel {
 	height: 176px;
 	overflow: hidden;
 	background: url(../images/widgets/font/background.png);
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
 	display: none;
 }
 

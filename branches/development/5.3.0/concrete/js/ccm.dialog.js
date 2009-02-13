@@ -169,7 +169,7 @@ jQuery.fn.dialog.showLoader = function(fnd) {
 
 jQuery.fn.dialog.deactivate = function(w) {
 	// w = window number. typically the previous window below the current active one
-	$("#ccm-dialog-window" + w).css('z-index', '1');
+	$("#ccm-dialog-window" + w).css('z-index', '6');
 	
 }
 
