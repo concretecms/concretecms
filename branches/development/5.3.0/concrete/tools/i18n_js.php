@@ -58,6 +58,7 @@ var ccmi18n_spellchecker = {
 var ccmi18n_filemanager = {
 	
 	viewDownload: '<?=t('View/Download')?>',
+	selectFile: '<?=t('Choose File')?>',
 	properties: '<?=t('Properties')?>',
 	editReplace: '<?=t('Edit/Replace File')?>',
 	addTo: '<?=t('Add to Set/Archive')?>',

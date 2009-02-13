@@ -12,7 +12,7 @@
 	$txt = Loader::helper('text');
 	$keywords = $_REQUEST['fKeywords'];
 	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/files/search_results';
-
+	
 	if (count($files) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-file-list">
 		<tr>
@@ -24,10 +24,10 @@
 			<th>Type</th>
 
 			<th class="ccm-file-list-starred">&nbsp;</th>			
-			<th class="ccm-file-list-filename"><a href="<?=$fileList->getSortByURL('fvTitle', 'asc', $bu)?>"><?=t('Title')?></a></th>
-			<th><a href="<?=$fileList->getSortByURL('fvDateAdded', 'asc', $bu)?>"><?=t('Date Added')?></a></th>
-			<th><a href="<?=$fileList->getSortByURL('fvSize', 'asc', $bu)?>"><?=t('Size')?></a></th>
-			<th><a href="<?=$fileList->getSortByURL('fvAuthorName', 'asc', $bu)?>"><?=t('Uploaded By')?></a></th>
+			<th class="ccm-file-list-filename <?=$fileList->getSearchResultsClass('fvTitle')?>"><a href="<?=$fileList->getSortByURL('fvTitle', 'asc', $bu)?>"><?=t('Title')?></a></th>
+			<th class="<?=$fileList->getSearchResultsClass('fvDateAdded')?>"><a href="<?=$fileList->getSortByURL('fvDateAdded', 'asc', $bu)?>"><?=t('Date Added')?></a></th>
+			<th class="<?=$fileList->getSearchResultsClass('fvSize')?>"><a href="<?=$fileList->getSortByURL('fvSize', 'asc', $bu)?>"><?=t('Size')?></a></th>
+			<th class="<?=$fileList->getSearchResultsClass('fvAuthorName')?>"><a href="<?=$fileList->getSortByURL('fvAuthorName', 'asc', $bu)?>"><?=t('Uploaded By')?></a></th>
 		</tr>
 		
 	
@@ -45,11 +45,15 @@
 			
 			<tr class="ccm-file-list-record <?=$striped?>" id="fID<?=$f->getFileID()?>">
 			<td><input type="checkbox" /></td>
-			<td class="ccm-file-list-thumbnail">
+			<td><div class="ccm-file-list-thumbnail">
 				<div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><?=$fv->getThumbnail(1)?></div>
-				<? if ($fv->hasThumbnail(2)) { ?>
+			
+			</div>
+		
+			<? if ($fv->hasThumbnail(2)) { ?>
 				<div class="ccm-file-list-thumbnail-hover" id="fID<?=$f->getFileID()?>hoverThumbnail"><div><?=$fv->getThumbnail(2)?></div></div>
 			<? } ?>
+
 				</td>
 			<td><?=$fv->getType()?></td>
 			<td class="ccm-file-list-starred"><img src="<?=ASSETS_URL_IMAGES?>/icons/<?=$star_icon?>" height="16" width="16" border="0" class="ccm-star" /></td>			

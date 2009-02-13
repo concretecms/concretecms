@@ -63,6 +63,7 @@ class DashboardFilesSearchController extends Controller {
 	public function getRequestedSearchResults() {
 		$fileList = new FileList();
 		$keywords = htmlentities($_GET['fKeywords']);
+		$fileList->sortBy('fvDateAdded', 'desc');
 		
 		if ($keywords != '') {
 			$fileList->filterByKeywords($keywords);
@@ -73,6 +74,11 @@ class DashboardFilesSearchController extends Controller {
 			$set = $_REQUEST['fSet'];
 			$fs = FileSet::getByID($set);
 			$fileList->filterBySet($fs);
+		}
+
+		if (isset($_GET['fType']) && $_GET['fType'] != '') {
+			$type = $_REQUEST['fType'];
+			$fileList->filterByType($type);
 		}
 		
 		if (is_array($_REQUEST['fvSelectedField'])) {

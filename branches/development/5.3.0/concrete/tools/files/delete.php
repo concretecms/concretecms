@@ -43,12 +43,8 @@ $form = Loader::helper('form');
 		<?=$form->hidden('fID[]', $f->getFileID())?>		
 		
 		<tr class="" style="font-weight: bold">
-			<td class="ccm-file-list-thumbnail">
-				<div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><?=$fv->getThumbnail(1)?></div>
-				<? if ($fv->hasThumbnail(2)) { ?>
-				<div class="ccm-file-list-thumbnail-hover" id="fID<?=$f->getFileID()?>hoverThumbnail"><div><?=$fv->getThumbnail(2)?></div></div>
-			<? } ?>
-				</td>
+			<td><div class="ccm-file-list-thumbnail"><div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><?=$fv->getThumbnail(1)?></div></div></td>
+
 			<td><?=$fv->getType()?></td>
 			<td class="ccm-file-list-filename"><?=wordwrap($fv->getTitle(), 25, "\n", true)?></td>
 			<td><?=date('M d, Y g:ia', strtotime($f->getDateAdded()))?></td>
