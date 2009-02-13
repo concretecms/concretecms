@@ -91,7 +91,7 @@ class SearchBlockController extends BlockController {
 	public $reservedParams=array('page=','query=','search_paths[]=','submit=','search_paths%5B%5D=' );
 	
 	function do_search() {
-		
+		/*
 		try {
 		
 			$q = $_REQUEST['query'];
@@ -166,7 +166,30 @@ class SearchBlockController extends BlockController {
 		
 		} catch(Zend_Search_Lucene_Exception $e) {
 			$this->set('error', t('Unable to complete search: ') . $e->getMessage());
+		}*/
+		
+		$q = $_REQUEST['query'];
+
+		Loader::library('database_indexed_search');
+		$ipl = new IndexedPageList();
+		$ipl->filterByKeywordsBoolean($q);
+		
+		if( is_array($_REQUEST['search_paths']) ){
+			foreach($_REQUEST['search_paths'] as $path) {
+				$ipl->addSearchPath($path);
+			}
 		}
+
+		$res = $ipl->getPage();
+		
+		foreach($res as $r) {
+			$results[] = new IndexedSearchResult($r['cID'], $r['cName'], $r['cDescription'], $r['score'], $r['cPath']);
+		}
+		
+		$this->set('query', htmlentities($q));
+		$this->set('paginator', $ipl->getPagination());
+		$this->set('results', $results);
+		
 	}		
 	
 }
