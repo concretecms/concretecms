@@ -11,12 +11,13 @@ Loader::model('page_list');
 class IndexedSearchResult {
 
 
-	public function __construct($id, $name, $description, $score, $cPath) {
+	public function __construct($id, $name, $description, $score, $cPath, $content) {
 		$this->cID = $id;
 		$this->cName = $name;
 		$this->cDescription = $description;		
 		$this->score = $score;
 		$this->cPath = $cPath;
+		$this->content = $content;
 	}
 
 	public function getID() {return $this->cID;}
@@ -24,6 +25,8 @@ class IndexedSearchResult {
 	public function getDescription() {return $this->cDescription;}
 	public function getScore() {return $this->score;}
 	public function getCollectionPath() {return $this->cPath;}
+	public function getCpath() {return $this->cPath;}
+	public function getBodyContent() {return $this->content;}
 }
 
 class IndexedPageList extends DatabaseItemList {
@@ -62,11 +65,7 @@ class IndexedPageList extends DatabaseItemList {
 
 		return parent::getPage();
 	}
-
-
 }
-
-
 
 /**
 *

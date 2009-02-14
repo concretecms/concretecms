@@ -665,6 +665,7 @@
     <field name="cDescription" type="X"/>
     <field name="cPath" type="X"/>
     <field name="cDatePublic" type="T"/>
+    <!--
     <index name="cPath">
       <col>cPath</col>
     </index>
@@ -681,7 +682,7 @@
       <col>cName</col>
       <col>cDescription</col>
       <col>content</col>
-    </index>
+    </index>//-->
   </table>
   <table name="PageSearchIndexAttributes">
     <field name="cID" type="I" size="10">
