@@ -356,5 +356,15 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$controller->setupRestrictedMethods();
 			return $controller;
 		}
-		
+
+		/**
+		* Instantiates one of our Soap Client Singletons
+		*/		
+		public function soapClient($client) {			
+			Loader::library('soap_clients');
+			$client .= 'SoapClient';			
+			$api = call_user_func_array($client.'::getInstance',Array());					
+			$api->setup();
+			return $api;
+		}
 	}
