@@ -43,7 +43,7 @@
 			$star_icon = ($f->isStarred() == 1) ? 'star_yellow.png' : 'star_grey.png';
 			$fv = $f->getApprovedVersion(); ?>
 			
-			<tr class="ccm-file-list-record <?=$striped?>" id="fID<?=$f->getFileID()?>">
+			<tr class="ccm-file-list-record <?=$striped?>" fID="<?=$f->getFileID()?>" id="fID<?=$f->getFileID()?>">
 			<td><input type="checkbox" /></td>
 			<td><div class="ccm-file-list-thumbnail">
 				<div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><?=$fv->getThumbnail(1)?></div>
