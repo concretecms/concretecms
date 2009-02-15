@@ -95,6 +95,8 @@ div.ccm-file-manager-select {border: 1px solid #dedede}
 div.ccm-file-selected-wrapper {border: 1px solid #dedede; padding: 10px 10px 10px 11px}
 div.ccm-file-manager-select a {display: block; padding: 10px 10px 10px 25px; text-decoration: none; background: transparent url(../images/icons/add.png) no-repeat scroll 6px 11px; color: #666; font-weight: bold}
 div.ccm-file-manager-select a:hover {background-color: #E6F2F3}
+div.ccm-file-selected-wrapper:hover {background-color: #E6F2F3; cursor:pointer}
+
 div.ccm-file-manager-pre-filter {margin-bottom: 10px; font-size: 14px; color: #888; font-weight: bold; }
 div.ccm-file-selected-thumbnail {width: 60px; margin-right: 10px; float: left}
 div.ccm-file-selected-data {width: 100px; padding-top: 10px; float: left}

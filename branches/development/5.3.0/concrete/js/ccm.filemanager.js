@@ -294,7 +294,7 @@ ccm_alSelectFile = function(fID) {
 ccm_alActivateMenu = function(obj, e) {
 	ccm_hideMenus();
 	
-	var fID = $(obj).attr('id').substring(3);
+	var fID = $(obj).attr('fID');
 
 	// now, check to see if this menu has been made
 	var bobj = document.getElementById("ccm-al-menu" + fID);

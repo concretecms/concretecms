@@ -12,7 +12,18 @@ ccm_triggerSelectFile = function(fID, af) {
 	var dobj = $('#' + af + "-fm-display");
 	dobj.hide();
 	obj.show();
-	obj.load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/selector_data?fID=' + fID + '&ccm_file_selected_field=' + af);
+	obj.load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/selector_data?fID=' + fID + '&ccm_file_selected_field=' + af, function() {
+		$(this).find('a.ccm-file-manager-clear-asset').click(function(e) {
+			var field = $(this).attr('ccm-file-manager-field');
+			ccm_clearAsset(e, field);
+		});
+
+		obj.attr('fID', fID);
+		obj.click(function(e) {
+			e.stopPropagation();
+			ccm_alActivateMenu($(this),e);
+		});
+	});
 	var vobj = $('#' + af + "-fm-value");
 	vobj.attr('value', fID);
 	
@@ -32,7 +43,8 @@ ccm_triggerSelectFile = function(fID, af) {
 
  }
  
-ccm_clearAsset = function(af) {
+ccm_clearAsset = function(e, af) {
+	e.stopPropagation();
 	var obj = $('#' + af + "-fm-selected");
 	var dobj = $('#' + af + "-fm-display");
 	var vobj = $('#' + af + "-fm-value");
