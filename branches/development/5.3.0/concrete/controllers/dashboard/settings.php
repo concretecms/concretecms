@@ -96,8 +96,10 @@ class DashboardSettingsController extends Controller {
 		}
 	}	
 	
-	const IP_BLACKLIST_CHANGE_MAKEPERM	= 1;
-	const IP_BLACKLIST_CHANGE_REMOVE	= 2;
+	const IP_BLACKLIST_CHANGE_MAKEPERM		 	= 1;
+	const IP_BLACKLIST_CHANGE_REMOVE		 	= 2;
+	const IP_BAN_LOCK_IP_HOW_LONG_TYPE_TIMED 	= 'timed';
+	const IP_BAN_LOCK_IP_HOW_LONG_TYPE_FOREVER 	= 'forever';	
 	public function update_ipblacklist() {
 		$db = Loader::db();
 		if ($this->token->validate("update_ipblacklist")) {	
@@ -107,7 +109,14 @@ class DashboardSettingsController extends Controller {
 			Config::save('IP_BAN_LOCK_IP_ENABLE',$ip_ban_lock_ip_enable);
 			Config::save('IP_BAN_LOCK_IP_ATTEMPTS',$this->post('ip_ban_lock_ip_attempts'));
 			Config::Save('IP_BAN_LOCK_IP_TIME',$this->post('ip_ban_lock_ip_time'));
-
+			
+			if (self::IP_BAN_LOCK_IP_HOW_LONG_TYPE_FOREVER != $this->post('ip_ban_lock_ip_how_long_type')) {
+				Config::Save('IP_BAN_LOCK_IP_HOW_LONG_MIN',$this->post('ip_ban_lock_ip_how_long_min'));							
+			}
+			else {
+				Config::Save('IP_BAN_LOCK_IP_HOW_LONG_MIN',0);	
+			}
+			
 			//ip table actions
 			//use a single sql query, more efficient than active record
 			$ip_ban_changes = $this->post('ip_ban_changes');
@@ -218,8 +227,8 @@ class DashboardSettingsController extends Controller {
 		}
 	}
 
-	public function update_cache() {
-		if ($this->token->validate("update_cache")) {
+	public function clear_cache() {
+		if ($this->token->validate("clear_cache")) {
 			if ($this->isPost()) {
 				if (Cache::flush()) {
 					$this->redirect('/dashboard/settings', 'set_developer', 'cache_cleared');
@@ -242,6 +251,18 @@ class DashboardSettingsController extends Controller {
 		}
 	}
 
+	public function update_cache() {
+		if ($this->token->validate("update_cache")) {
+			if ($this->isPost()) {
+				$u = new User();
+				$eca = $this->post('ENABLE_CACHE') == 1 ? 1 : 0; 
+				Config::save('ENABLE_CACHE', $eca);
+				$this->redirect('/dashboard/settings', 'set_developer', 'cache_updated');
+			}
+		} else {
+			$this->set('error', array($this->token->getErrorMessage()));
+		}
+	}
 	public function update_debug() {
 		if ($this->token->validate("update_debug")) {
 			if ($this->isPost()) {
@@ -300,6 +321,9 @@ class DashboardSettingsController extends Controller {
 				case "cache_cleared";
 					$this->set('message', t('Cached files removed.'));	
 					break;
+				case "cache_updated";
+					$this->set('message', t('Cache settings saved.'));	
+					break;
 			}
 		}
 	}
@@ -337,7 +361,15 @@ class DashboardSettingsController extends Controller {
 		$ip_ban_enable_lock_ip_after	= ($ip_ban_enable_lock_ip_after == 1) ? 1 : 0;
 		$ip_ban_lock_ip_after_attempts 	= Config::get('IP_BAN_LOCK_IP_ATTEMPTS');
 		$ip_ban_lock_ip_after_time		= Config::get('IP_BAN_LOCK_IP_TIME');		
-		$user_banned_ip 				= new UserBannedIP();
+		$ip_ban_lock_ip_how_long_min	= Config::get('IP_BAN_LOCK_IP_HOW_LONG_MIN') ? Config::get('IP_BAN_LOCK_IP_HOW_LONG_MIN') : '';
+		if(!$ip_ban_lock_ip_how_long_min){
+			$ip_ban_lock_ip_how_long_type = self::IP_BAN_LOCK_IP_HOW_LONG_TYPE_FOREVER;
+		}
+		else{
+			$ip_ban_lock_ip_how_long_type = self::IP_BAN_LOCK_IP_HOW_LONG_TYPE_TIMED;		
+		}
+		
+		$user_banned_ip 				= new UserBannedIP();	
 		//pull all once filter various lists using code
 		$user_banned_ips 				= $user_banned_ip->Find('1=1');		
 		$user_banned_manual_ips 		= Array();
@@ -359,7 +391,13 @@ class DashboardSettingsController extends Controller {
 		$this->set('ip_ban_lock_ip_after_time',$ip_ban_lock_ip_after_time);
 		$this->set('ip_ban_change_makeperm',self::IP_BLACKLIST_CHANGE_MAKEPERM);
 		$this->set('ip_ban_change_remove',self::IP_BLACKLIST_CHANGE_REMOVE);		
-	
+		
+		$this->set('ip_ban_lock_ip_how_long_type',$ip_ban_lock_ip_how_long_type);
+		$this->set('ip_ban_lock_ip_how_long_type',$ip_ban_lock_ip_how_long_type);
+		$this->set('ip_ban_lock_ip_how_long_type_forever',self::IP_BAN_LOCK_IP_HOW_LONG_TYPE_FOREVER);
+		$this->set('ip_ban_lock_ip_how_long_type_timed',self::IP_BAN_LOCK_IP_HOW_LONG_TYPE_TIMED);		
+		$this->set('ip_ban_lock_ip_how_long_min',$ip_ban_lock_ip_how_long_min);
+		
 		//maintanence mode
 		$site_maintenance_mode = Config::get('SITE_MAINTENANCE_MODE');
 		if ($site_maintenance_mode < 1) {

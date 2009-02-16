@@ -10,12 +10,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class IndexedSearchResult {
 
 
-	public function __construct($id, $name, $description, $score, $cPath) {
+	public function __construct($id, $name, $description, $score, $cPath, $cBody='') {
 		$this->cID = $id;
 		$this->cName = $name;
 		$this->cDescription = $description;		
 		$this->score = $score;
 		$this->cPath = $cPath;
+		$this->cBody = $cBody;
 	}
 
 	public function getID() {return $this->cID;}
@@ -23,6 +24,7 @@ class IndexedSearchResult {
 	public function getDescription() {return $this->cDescription;}
 	public function getScore() {return $this->score;}
 	public function getCPath() {return $this->cPath;}
+	public function getCBody() {return $this->cBody;}
 }
 
 /**
@@ -83,10 +85,10 @@ class IndexedSearch {
 				$doc = new Zend_Search_Lucene_Document();
 				$doc->addField(Zend_Search_Lucene_Field::Keyword('cIDhash', $pageID));
 				$doc->addField(Zend_Search_Lucene_Field::Unindexed('cID', $row['cID']));
-				$doc->addField(Zend_Search_Lucene_Field::Text('cName', $c->getCollectionName()));
+				$doc->addField(Zend_Search_Lucene_Field::Text('cName', $c->getCollectionName(), 'utf-8'));
 				$doc->addField(Zend_Search_Lucene_Field::Keyword('ctHandle', $c->getCollectionTypeHandle()));
-				$doc->addField(Zend_Search_Lucene_Field::Text('cDescription', $c->getCollectionDescription()));
-				$doc->addField(Zend_Search_Lucene_Field::Text('cBody', $this->getBodyContentFromPage($c)));
+				$doc->addField(Zend_Search_Lucene_Field::Text('cDescription', $c->getCollectionDescription(), 'utf-8'));
+				$doc->addField(Zend_Search_Lucene_Field::Text('cBody', $this->getBodyContentFromPage($c), 'utf-8'));
 				
 				if (is_object($themeObject)) {
 					$doc->addField(Zend_Search_Lucene_Field::Text('cTheme', $themeObject->getThemeHandle()));
@@ -137,7 +139,7 @@ class IndexedSearch {
 		
 		$queryModifiers=array();
 
-		$mainQuery = Zend_Search_Lucene_Search_QueryParser::parse($query);
+		$mainQuery = Zend_Search_Lucene_Search_QueryParser::parse($query, 'utf-8');
 
 		$query = new Zend_Search_Lucene_Search_Query_Boolean();
 		$query->addSubquery($mainQuery, true);
@@ -158,7 +160,7 @@ class IndexedSearch {
 
 		$results = array();
 		foreach($resultsTmp as $r)
-			$results[] = new IndexedSearchResult($r->cID, $r->cName, $r->cDescription, $r->score, $r->cPath);
+			$results[] = new IndexedSearchResult($r->cID, $r->cName, $r->cDescription, $r->score, $r->cPath, $r->cBody);
 		
 		return $results;
 	}

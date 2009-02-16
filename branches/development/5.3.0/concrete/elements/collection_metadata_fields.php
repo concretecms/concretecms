@@ -102,7 +102,8 @@ var ccmAttributeValuesHelper={
 		
 		<label><?=$ak->getCollectionAttributeKeyName()?></label>
 			<?
-			$akType=$ak->getCollectionAttributeKeyType();
+			$akType=$ak->getCollectionAttributeKeyType(); 
+			
 			switch($akType) {
 				case "SELECT":
 					$options = explode("\n", $ak->getCollectionAttributeKeyValues()); 
@@ -155,7 +156,7 @@ var ccmAttributeValuesHelper={
 					<? } ?>
 							
 					<?
-					break;	
+
 				case "NUMBER":?>
 					<input name="akID_<?=$ak->getCollectionAttributeKeyID()?>" type="text" value="<?=$caValue ?>" size="10" />
 					<?

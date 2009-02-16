@@ -5,7 +5,7 @@ Loader::model('page_theme_remote');
 class ConcreteMarketplaceThemesHelper  {
 
 	function getPreviewableList() { 	
-		$pageThemes = Cache::get('marketplace_theme_list', false);
+		$pageThemes = Cache::get('marketplace_theme_list', false, false, true);
 		if (!is_array($pageThemes)) {
 			$fh = Loader::helper('file'); 
 			// Retrieve the URL contents 
@@ -22,7 +22,7 @@ class ConcreteMarketplaceThemesHelper  {
 					$pageThemes[]=$pgTheme;
 				}
 			}
-			Cache::set('marketplace_theme_list', false, $pageThemes, MARKETPLACE_CONTENT_LATEST_THRESHOLD);		
+			Cache::set('marketplace_theme_list', false, $pageThemes, MARKETPLACE_CONTENT_LATEST_THRESHOLD, true);		
 		} 
 
 		return $pageThemes;

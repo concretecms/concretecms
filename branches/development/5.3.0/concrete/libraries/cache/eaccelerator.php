@@ -1,5 +1,8 @@
 <?
 
+/** 
+ * NOTE: THIS CLASS HAS PROBLEMS. PLEASE DO NOT USE.
+ */
 class Cache extends CacheTemplate {
 
 	/** 
@@ -42,8 +45,8 @@ class Cache extends CacheTemplate {
 	/** 
 	 * Inserts or updates an item to the cache
 	 */
-	public function set($type, $id, $obj, $expire = 0) {
-		if (ENABLE_CACHE == false) {
+	public function set($type, $id, $obj, $expire = 0, $forceSet = false) {
+		if (ENABLE_CACHE == false && $forceSet == false) {
 			return false;
 		}
 		
@@ -64,9 +67,9 @@ class Cache extends CacheTemplate {
 	/** 
 	 * Retrieves an item from the cache
 	 */
-	public function get($type, $id) {
+	public function get($type, $id, $mustBeNewerThan = false, $forceGet = false) {
 		
-		if (ENABLE_CACHE == false) {
+		if (ENABLE_CACHE == false && $forceGet == false) {
 			return false;
 		}
 		

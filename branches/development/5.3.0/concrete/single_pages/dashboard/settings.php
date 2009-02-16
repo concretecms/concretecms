@@ -36,18 +36,43 @@ $h = Loader::helper('concrete/interface'); ?>
 
 </form>
 
-<form method="post" id="cache-form" action="<?=$this->url('/dashboard/settings', 'update_cache')?>">
-	<?=$this->controller->token->output('update_cache')?>
-	
+
 	<h1><span><?=t('Caching')?></span></h1>
-	
 	<div class="ccm-dashboard-inner">
+
+	<form method="post" id="update-cache-form" action="<?=$this->url('/dashboard/settings', 'update_cache')?>">
+
+	<?=$this->controller->token->output('update_cache')?>
+
+	<h2><?=t('Cache site for better performance?')?></h2>
+
+	<div class="ccm-dashboard-radio"><input type="radio" name="ENABLE_CACHE" value="0" <? if (ENABLE_CACHE == false) { ?> checked <? } ?> /> <?=t('Disabled')?> </div>
+	<div class="ccm-dashboard-description"><?=t('Your site content will not be cached. This may be useful while development is proceeding.')?></div>
+	
+	<div class="ccm-dashboard-radio"><input type="radio" name="ENABLE_CACHE" value="1" <? if (ENABLE_CACHE == true) { ?> checked <? } ?> /> <?=t('Enabled')?> </div>
+	<div class="ccm-dashboard-description"><?=t('Once your site is live, it is usually best to enable the cache.')?></div>
+
+	<?
+	$b1 = $h->submit(t('Update Cache'), 'update-cache-form');
+	print $h->buttons($b1);
+	?>
+	
+	</form>
+	
+	<form method="post" id="clear-cache-form" action="<?=$this->url('/dashboard/settings', 'clear_cache')?>">
+
+	<?=$this->controller->token->output('clear_cache')?>
+
+	<h2><?=t('Clear Cache')?></h2>
 	<p><?=t('If your site is displaying out-dated information, or behaving unexpectedly, it may help to clear your cache.')?></p>
 	
 	<?
-	$b1 = $h->submit(t('Clear Cache'), 'cache-form');
+	$b1 = $h->submit(t('Clear Cache'), 'clear-cache-form');
 	print $h->buttons($b1);
 	?>
+	
+	</form>
+	
 	<br class="clear" />
 	</div>
 
@@ -190,12 +215,20 @@ saveMaintenanceMode = function() {
 			<h2>Smart IP Banning</h2>
 			<div class="ccm-dashboard-radio">
 				<?=$form->checkbox('ip_ban_lock_ip_enable', 1, $ip_ban_enable_lock_ip_after)?> <?=t('Lock IP after')?>
+				
 				<?=$form->text('ip_ban_lock_ip_attempts', $ip_ban_lock_ip_after_attempts, array('style'=>'width:30px'))?>
 				<?=t('failed login attempts');?>		
 				in		
 				<?=$form->text('ip_ban_lock_ip_time', $ip_ban_lock_ip_after_time, array('style'=>'width:30px'))?>				
 				<?=t('seconds');?>				
 			</div>	
+			<div class="ccm-dashboard-radio">
+				<?=$form->radio('ip_ban_lock_ip_how_long_type', $ip_ban_lock_ip_how_long_type_timed, $ip_ban_lock_ip_how_long_type)?> <?=t('Ban IP For')?>	
+				<?=$form->text('ip_ban_lock_ip_how_long_min', $ip_ban_lock_ip_how_long_min, array('style'=>'width:30px'))?>				
+				<?=t('minutes');?>
+				<?=$form->radio('ip_ban_lock_ip_how_long_type', $ip_ban_lock_ip_how_long_type_forever, $ip_ban_lock_ip_how_long_type)?> <?=t('Forever')?>					
+			</div>
+			
 			<Div style="height: 10px">&nbsp;</div>
 			<h3><?=t('Automatically Banned IP Addresses')?></h3>
 			<table class="grid-list" width="100%" cellspacing="1" cellpadding="0" border="0">	

@@ -11,10 +11,10 @@
 	class ValidationIpHelper {	
 		/**
  		 * Checks if an IP has been banned
-		 * @param type $ip
+		 * @param type $ip  if 127.0.0.1 form (as opposed to int)
 		 * @return boolean
 		 */		
-		public function check($ip=false) {
+		public function check($ip=false,$extraParamString=false,$extraParamValues=array()) {
 			$ip = ($ip) ? $ip : $this->getRequestIP();
 			$db = Loader::db();
 			//do ip check
@@ -28,8 +28,14 @@
 			)
 			AND (expires = 0 OR expires > UNIX_TIMESTAMP(now()))
 			';
+			
+			if($extraParamString !== false){
+				$q .= $extraParamString;
+			}
+			
 			$ip_as_long = ip2long($ip);
 			$v = array($ip_as_long, $ip_as_long, $ip_as_long);
+			$v = array_merge($v,$extraParamValues);
 			
 			$rs 	= $db->Execute($q,$v);
 			$row 	= $rs->fetchRow();
@@ -37,6 +43,10 @@
 			return ($row['count'] > 0) ? false : true;
 		}
 	
+		protected function checkForManualPermBan($ip=false){
+			return $this->check($ip, ' AND isManual = ? AND expires = ? ',Array(1,0));
+		}
+		
 		protected function getRequestIP() {			
 			if ( array_key_exists ('HTTP_CLIENT_IP', $_SERVER ) && $_SERVER['HTTP_CLIENT_IP']){
 				return $_SERVER['HTTP_CLIENT_IP'];
@@ -89,37 +99,32 @@
 			if ($ignoreConfig || Config::get('IP_BAN_LOCK_IP_ENABLE') == 1) {		
 				$ip = ($ip) ? $ip : $this->getRequestIP();			
 				$ip = ip2long($ip);
-				$time = time() + (60 * 60 * 24 * 1);     //ban for a day
+
+				//IP_BAN_LOCK_IP_HOW_LONG_MIN of 0 or undefined  means forever
+				$timeOffset = Config::get('IP_BAN_LOCK_IP_HOW_LONG_MIN');
+				$timeOffset = $timeOffset ? ($timeOffset * 60)  : 0;				
+				$time 		= $timeOffset ? time() + $timeOffset : 0;
+				
+				$db	= Loader::db();				
 				Loader::model('user_banned_ip');
-				$ban = new UserBannedIP();
-				$ban->ipFrom 	= $ip;
-				$ban->ipTo 		= 0;
-				$ban->banCode	= UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE;
-				$ban->expires	= $time;
-				$ban->isManual	= 0;
-				try{
-					$ban->save();
-				}
-				catch (Exception $e) {
-					//AdoDB active record has problems with no primary key tables
-					//if a duplicate key, update the expired 
-					//if (strpos ( $e->getMsg(), string needle [, int offset] )
-					if ($e->getCode() == 1062) {		//1602 is duplicate entry key
-						$db = Loader::db();
-						
-						$q = 'UPDATE UserBannedIPs 
-						SET 
-						expires = ?
-						WHERE 
-						(ipFrom = ? AND ipTo = 0)
-						AND
-						NOT (expires = 0)';
-						
-						$time 	= time() + (60 * 60 * 24 * 1);
-						$ip		= $ip;
-						$v = array($time,$ip);					
-						$db->execute($q,$v);
-					}
+				
+				//delete before inserting .. catching a duplicate (1062) doesn't 
+				//seem to be working in all enviornments.  If there's a permanant ban,
+				//obey its setting
+				if ($this->checkForManualPermBan(long2ip($ip), true)) {
+					$db->StartTrans();
+					//check if there's a manual ban
+	
+					$q 	= 'DELETE FROM UserBannedIPs WHERE ipFrom = ? AND ipTo = 0 AND isManual = 0';
+					$v  = Array($ip,0);				
+					$db->execute($q,$v);
+					
+					$q	=  'INSERT INTO UserBannedIPs (ipFrom,ipTo,banCode,expires,isManual) ';
+					$q  .= 'VALUES (?,?,?,?,?)';				
+					$v  = array($ip,0,UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE,$time,0);
+					$db->execute($q,$v);
+	
+					$db->CompleteTrans();				
 				}
 			}
 		}
