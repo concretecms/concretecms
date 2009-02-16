@@ -46,8 +46,12 @@ class FileImporter {
 	 * If a $fr (FileRecord) object is passed, we assign the newly imported FileVersion
 	 * object to that File. If not, we make a new filerecord.
 	 */
-	public function import($pointer, $filename, $fr = false) {
+	public function import($pointer, $filename = false, $fr = false) {
 		
+		if ($filename == false) {
+			// determine filename from $pointer
+			$filename = basename($pointer);
+		}
 		
 		$fh = Loader::helper('validation/file');
 		$fi = Loader::helper('file');

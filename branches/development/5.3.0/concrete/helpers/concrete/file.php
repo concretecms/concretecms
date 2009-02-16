@@ -44,11 +44,14 @@
 			$filename = $hi->replaceExtension($filename, 'jpg');
 			return $this->mapSystemPath($prefix, $filename, $createDirectories, $base);
 		}
+
+		public function getRelativePath($prefix, $filename ) { 
+			$hi = Loader::helper('file');
+			return $this->mapSystemPath($prefix, $filename, false, REL_DIR_FILES_UPLOADED);
+		}
 		
 		public function getFileRelativePath($prefix, $filename ) { 	
-			$hi = Loader::helper('file');
-			$filename = $hi->replaceExtension($filename, 'jpg');
-			return $this->mapSystemPath($prefix, $filename, $createDirectories, REL_DIR_FILES_UPLOADED);
+			return $this->getRelativePath($prefix, $filename);
 		}
 		
 		public function getThumbnailRelativePath($prefix, $filename, $level) {
