@@ -134,6 +134,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 				if ($dsn) {
 					$_dba = @NewADOConnection($dsn);
+					$_dba->Execute('set names utf8');
 					if (is_object($_dba)) {
 						ADOdb_Active_Record::SetDatabaseAdapter($_dba);
 						$_db = new Database();
