@@ -90,7 +90,7 @@ class Cache extends CacheTemplate {
 	 * Removes an item from the cache
 	 */	
 	public function delete($type, $id){
-		if (ENABLE_CACHE == false) {
+		if ((!defined('ENABLE_CACHE')) || (ENABLE_CACHE == false)) {
 			return false;
 		}		
 		
