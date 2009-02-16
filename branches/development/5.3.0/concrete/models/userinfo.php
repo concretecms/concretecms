@@ -91,7 +91,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 		
-		public static function add($data) {
+		const ADD_OPTIONS_NOHASH		= 0;
+		const ADD_OPTIONS_SKIP_CALLBACK	= 1;
+		public static function add($data,$options=false) {
+			$options = is_array($options) ? $options : array();
 			$db = Loader::db();
 			$dh = Loader::helper('date');
 			$uDateAdded = $dh->getLocalDateTime();
@@ -110,14 +113,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$uIsFullRecord = 1;
 			}
 			
-			$v = array($data['uName'], $data['uEmail'], User::encryptPassword($data['uPassword']), $uIsValidated, $uDateAdded, $uIsFullRecord, 1);
+			$password_to_insert = $data['uPassword'];
+			if (!in_array(self::ADD_OPTIONS_NOHASH, $options)) {
+				$password_to_insert = User::encryptPassword($password_to_insert);			
+			}	
+			$v = array($data['uName'], $data['uEmail'], $password_to_insert, $uIsValidated, $uDateAdded, $uIsFullRecord, 1);
 			$r = $db->prepare("insert into Users (uName, uEmail, uPassword, uIsValidated, uDateAdded, uIsFullRecord, uIsActive) values (?, ?, ?, ?, ?, ?, ?)");
 			$res = $db->execute($r, $v);
 			if ($res) {
 				$newUID = $db->Insert_ID();
 				$ui = UserInfo::getByID($newUID);
 				
-				if (is_object($ui)) {
+				if (is_object($ui) && !in_array(self::ADD_OPTIONS_SKIP_CALLBACK,$options)) {
 					// run any internal event we have for user add
 					Events::fire('on_user_add', $ui);
 				}
