@@ -73,8 +73,8 @@ var CCM_REL = "<?=DIR_REL?>";
 $html = Loader::helper('html');
 $this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 
-$this->addHeaderItem($html->javascript('jquery1.2.6.js'));
-$this->addHeaderItem($html->javascript('swfobject2.1.js'));
+$this->addHeaderItem($html->javascript('jquery.js'));
+$this->addHeaderItem($html->javascript('swfobject.js'));
 $this->addHeaderItem($html->javascript('ccm.base.js'));
 $this->addHeaderItem($html->css('ccm.base.css'));
 
