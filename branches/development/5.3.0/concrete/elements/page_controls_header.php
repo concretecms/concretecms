@@ -7,8 +7,8 @@ $html = Loader::helper('html');
 if (isset($cp)) {
 	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage()) {
 
-$this->addHeaderItem($html->javascript('jquery.form.2.0.2.js'));
-$this->addHeaderItem($html->javascript('jquery.ui.1.5.2.no_datepicker.js'));
+$this->addHeaderItem($html->javascript('jquery.form.js'));
+$this->addHeaderItem($html->javascript('jquery.ui.js'));
 $this->addHeaderItem($html->javascript('jquery.ui.datepicker.js'));
 	
 if (LANGUAGE != 'en') {
