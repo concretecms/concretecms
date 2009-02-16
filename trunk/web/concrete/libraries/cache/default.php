@@ -18,7 +18,7 @@ class Cache extends CacheTemplate {
 	 * the cache must always be enabled for (getting remote data, etc..)
 	 */	
 	public function set($type, $id, $obj, $expire = 0, $forceSet = false){
-		if (ENABLE_CACHE == false && $forceSet == false) {
+		if ((!defined('ENABLE_CACHE')) || (ENABLE_CACHE == false && $forceSet == false)) {
 			return false;
 		}
 		
@@ -46,9 +46,9 @@ class Cache extends CacheTemplate {
 	 * the cache must always be enabled for (getting remote data, etc..)
 	 */	
 	public function get($type, $id, $mustBeNewerThan = false, $forceGet = false){
-		if (ENABLE_CACHE == false && $forceGet == false) {
+		if ((!defined('ENABLE_CACHE')) || (ENABLE_CACHE == false && $forceGet == false)) {
 			return false;
-		}		
+		}
 
 		$key = parent::key($type, $id);
 		
