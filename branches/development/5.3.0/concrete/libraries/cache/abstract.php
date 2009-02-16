@@ -32,8 +32,8 @@
 
 		abstract public function delete($type, $id);
 		abstract public function flush();
-		abstract public function set($type, $id, $obj, $expire = 0);
-		abstract public function get($type, $id);
+		abstract public function set($type, $id, $obj, $expire = 0, $forceSet = false);
+		abstract public function get($type, $id, $mustBeNewerThan = false, $forceSet = false);
 		//abstract public function stats();
 	
 	}

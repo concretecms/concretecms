@@ -5,6 +5,9 @@ class RegisterController extends Controller {
 	public $helpers = array('form', 'html');
 	
 	public function __construct() {
+		if(!ENABLE_REGISTRATION) {
+			$this->render("/page_not_found");
+		}
 		parent::__construct();
 		Loader::model('user_attributes');
 
@@ -30,6 +33,10 @@ class RegisterController extends Controller {
 		$vals = Loader::helper('validation/strings');
 		$valc = Loader::helper('concrete/validation');
 
+		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
+			$_POST['uName'] = $_POST['uEmail'];
+		}
+		
 		$username = $_POST['uName'];
 		$password = $_POST['uPassword'];
 		$passwordConfirm = $_POST['uPasswordConfirm'];
@@ -37,10 +44,6 @@ class RegisterController extends Controller {
 		if (!$ip->check()) {
 			$e->add($ip->getErrorMessage());
 		}		
-		
-		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
-			$_POST['uName'] = $_POST['uEmail'];
-		}
 		
 		if (!$vals->email($_POST['uEmail'])) {
 			$e->add(t('Invalid email address provided.'));
@@ -111,9 +114,12 @@ class RegisterController extends Controller {
 				if (!$nh->integer($rcID)) {
 					$rcID = 0;
 				}
-				
+				if(defined('USER_REGISTRATION_APPROVAL_REQUIRED') && USER_REGISTRATION_APPROVAL_REQUIRED) {
+					$ui = UserInfo::getByID($u->getUserID());
+					$ui->deactivate();
+					$this->redirect('/register', 'register_pending', $rcID);
 				// now we check whether we need to validate this user's email address
-				if (defined("USER_VALIDATE_EMAIL")) {
+				} elseif (defined("USER_VALIDATE_EMAIL")) {
 					if (USER_VALIDATE_EMAIL > 0) {
 						$ui = UserInfo::getByID($u->getUserID());
 						$uHash = $ui->setupValidation();
@@ -146,14 +152,18 @@ class RegisterController extends Controller {
 	
 	public function register_success_validate($rcID = 0) {
 		$this->set('rcID', $rcID);
-		$this->set('validate', true);
+		$this->set('success', 'validate');
 	}
 	
 	public function register_success($rcID = 0) {
 		$this->set('rcID', $rcID);
-		$this->set('registered', true);
+		$this->set('success', 'registered');
 	}
 
+	public function register_pending() {
+		$this->set('rcID', $rcID);
+		$this->set('success', 'pending');
+	}
 }
 
 ?>

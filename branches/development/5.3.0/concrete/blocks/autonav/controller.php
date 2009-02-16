@@ -26,7 +26,7 @@
 		private $level;
 		private $isActive = false;
 		private $_c;
-
+		
 		/**
 		 * Instantiates an Autonav Block Item. 
 		 * @param array $itemInfo 
@@ -173,6 +173,7 @@
 		var $displayPages, $displayPagesCID, $displayPagesIncludeSelf, $displaySubPages, $displaySubPageLevels, $displaySubPageLevelsNum, $orderBy, $displayUnavailablePages;
 		var $haveRetrievedSelf = false;
 		var $haveRetrievedSelfPlus1 = false;
+		public $displaySystemPages = false;
 
 		// private variable $displayUnapproved, used by the dashboard
 		var $displayUnapproved = false;
@@ -438,8 +439,8 @@
 							$tc = Page::getByID($row['cID'], "ACTIVE");
 						}
 						
-						if ($tc->isSystemPage()) {
-							continue;
+						if ($tc->isSystemPage() && (!$this->displaySystemPages)) { 
+							continue; 
 						}
 						
 						$tcv = $tc->getVersionObject();

@@ -665,24 +665,6 @@
     <field name="cDescription" type="X"/>
     <field name="cPath" type="X"/>
     <field name="cDatePublic" type="T"/>
-    <!--
-    <index name="cPath">
-      <col>cPath</col>
-    </index>
-    <index name="content">
-      <col>content</col>
-    </index>
-    <index name="cName">
-      <col>cName</col>
-    </index>
-    <index name="cDescription">
-      <col>cDescription</col>
-    </index>
-    <index name="cName_2">
-      <col>cName</col>
-      <col>cDescription</col>
-      <col>content</col>
-    </index>//-->
   </table>
   <table name="PageSearchIndexAttributes">
     <field name="cID" type="I" size="10">

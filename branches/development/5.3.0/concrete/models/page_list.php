@@ -11,6 +11,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class PageList extends DatabaseItemList {
 
 	private $collectionAttributeFilters = array();
+	private $collectionAttributeSortFilter = array();
 	private $includeSystemPages = false;
 	private $displayOnlyPermittedPages = false;
 	
@@ -124,6 +125,10 @@ class PageList extends DatabaseItemList {
 		$this->collectionAttributeFilters[] = array($handle, $value, $comparison);
 	}
 	
+	public function sortByCollectionAttribute($handle, $order = 'asc') {
+		$this->collectionAttributeSortFilter = array($handle, $order);
+	}
+	
 	/** 
 	 * If true, pages will be checked for permissions prior to being returned
 	 * @param bool $checkForPermissions
@@ -138,12 +143,31 @@ class PageList extends DatabaseItemList {
 	
 	protected function setupCollectionAttributeFilters() {
 		$db = Loader::db();
+		
 		foreach($this->collectionAttributeFilters as $caf) {
 			$akID = $db->GetOne("select akID from CollectionAttributeKeys where akHandle = ?", array($caf[0]));
+			if (!$akID) {
+				$akID = 0;
+			}
 			$tbl = "cav_{$akID}";
-			$this->addToQuery("left join CollectionAttributeValues $tbl on {$tbl}.cID = if(p2.cID is null, p1.cID, p2.cID) and cv.cvID = {$tbl}.cvID");
+			$this->addToQuery("left join CollectionAttributeValues $tbl on {$tbl}.cID = if(p2.cID is null, p1.cID, p2.cID) and {$tbl}.akID = {$akID} and cv.cvID = {$tbl}.cvID");
 			$this->filter($tbl . '.value', $caf[1], $caf[2]);
 			$this->filter($tbl . '.akID', $akID);
+			
+			if (isset($this->collectionAttributeSortFilter[0]) && $this->collectionAttributeSortFilter[0] == $caf[0]) {
+				$sortByTable = $tbl;
+			}
+		}
+		
+		if (!isset($sortByTable) && (isset($this->collectionAttributeSortFilter[0]))) {
+			$akID = $db->GetOne("select akID from CollectionAttributeKeys where akHandle = ?", array($this->collectionAttributeSortFilter[0]));
+			$tbl = "cav_{$akID}";			
+			$this->addToQuery("left join CollectionAttributeValues $tbl on {$tbl}.cID = if(p2.cID is null, p1.cID, p2.cID) and {$tbl}.akID = {$akID} and cv.cvID = {$tbl}.cvID");
+			$sortByTable = $tbl;
+		}
+		
+		if (isset($sortByTable)) {
+			parent::sortBy($sortByTable . '.value', $this->collectionAttributeSortFilter[1]);
 		}
 	}
 	
@@ -157,6 +181,7 @@ class PageList extends DatabaseItemList {
 		$this->filter(false, "(p1.cIsTemplate = 0 or p2.cIsTemplate = 0)");
 		$this->setItemsPerPage(0); // no limit
 		$this->setupCollectionAttributeFilters();
+		$this->setupCollectionAttributeSortFilters();
 		$r = parent::get();
 		foreach($r as $row) {
 			$nc = Page::getByID($row['cID']);

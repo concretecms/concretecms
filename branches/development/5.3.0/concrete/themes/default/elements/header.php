@@ -39,8 +39,6 @@
 		<? if ($c->isEditMode()) { ?>
 		</div>
 		<? } ?>
-
-
 		
 		<div id="header-area">
 			<div class="divider"></div>
