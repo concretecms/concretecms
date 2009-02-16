@@ -73,7 +73,7 @@ class SpellcheckerHelper{
 	}
 	
 	public function makeSuggestions($word){
-		$suggestionTxt = `echo $word | {$this->aspell_path}aspell -a`;
+		$suggestionTxt = `echo $word | {$this->aspell_path} -a`;
 		$suggestionTxtLines=explode("\n",$suggestionTxt);
 		foreach($suggestionTxtLines as $suggestionTxtLine){
 			if( substr($suggestionTxtLine,0,1)=='&' ){
