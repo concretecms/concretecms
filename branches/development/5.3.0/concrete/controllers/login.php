@@ -110,6 +110,10 @@ class LoginController extends Controller {
 		if ($nh->integer($rcID)) {
 			header('Location: ' . BASE_URL . DIR_REL . '/index.php?cID=' . $rcID);
 			exit;
+		}elseif( strlen($rcID) ){
+			//url redirect
+			header('Location: ' . $rcID );
+			exit;
 		}
 
 		$dash = Page::getByPath("/dashboard", "RECENT");
