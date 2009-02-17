@@ -28,7 +28,7 @@ class Simple_BB_Code{
 	//Tags with atributes
 	var $tags_with_att = array('color' => array('font','color'),'size' => array('font','size'),'url' => array('a','href'));
 	//Gotta have smilies
-	var $smilies = array(':)' => 'smile.gif',':(' => 'frown.gif');
+	var $smilies = array();
 	//Config Variables
 	//Convert new line charactes to linebreaks?
 	var $convert_newlines = true;
