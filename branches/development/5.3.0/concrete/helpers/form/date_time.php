@@ -155,18 +155,22 @@ EOS;
 	 * @param bool $includeActivation
 	 * @param bool $calendarAutoStart
 	 */
-	public function date($prefix, $value = null, $calendarAutoStart = true) {
-		if ($value != null) {
+	public function date($field, $value = null, $calendarAutoStart = true) {
+		if (isset($_REQUEST[$field])) {
+			$dt = $_REQUEST[$field];
+		} else if ($value != "") {
 			$dt = date('m/d/Y', strtotime($value));
+		} else if ($value === '') {
+			$dt = '';
 		} else {
 			$dt = date('m/d/Y');
 		}
-		$id = preg_replace("/[^0-9A-Za-z-]/", "_", $prefix);
+		//$id = preg_replace("/[^0-9A-Za-z-]/", "_", $prefix);
 		$html = '';
-		$html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_d" name="' . $prefix . '_d" class="ccm-input-date" value="' . $dt . '"  /></span>';
+		$html .= '<span class="ccm-input-date-wrapper" id="' . $field . '_dw"><input id="' . $field . '" name="' . $field . '" class="ccm-input-date" value="' . $dt . '"  /></span>';
 
 		if ($calendarAutoStart) { 
-			$html .= '<script type="text/javascript">$(function() { $("#' . $id . '_d").datepicker({ showAnim: \'fadeIn\' }); });</script>';
+			$html .= '<script type="text/javascript">$(function() { $("#' . $field . '").datepicker({ showAnim: \'fadeIn\' }); });</script>';
 		}
 		return $html;
 	
