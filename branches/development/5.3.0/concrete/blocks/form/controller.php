@@ -289,9 +289,10 @@ class FormBlockStatistics {
 
 	}
 	
-	public static function loadSurveys($MiniSurvey){
+	public static function loadSurveys($MiniSurvey){  
 		$db = Loader::db();
-		return $db->query('SELECT * FROM '.$MiniSurvey->btTable.' AS s');
+		return $db->query('SELECT s.* FROM '.$MiniSurvey->btTable.' AS s, Blocks AS b, BlockTypes AS bt '.
+						  'WHERE s.bID=b.bID AND b.btID=bt.btID AND bt.btHandle="form" ' );
 	}
 	
 	public static $sortChoices=array('newest'=>'created DESC','chrono'=>'created');
