@@ -88,7 +88,10 @@ class SearchBlockController extends BlockController {
 		$this->set('baseSearchPath', $this->baseSearchPath);			
 		
 		//auto target is the form action that is used if none is explicity set by the user
-		$autoTarget=str_replace('query='.$_REQUEST['query'],'',$c->getCollectionPath());
+		$autoTarget= $c->getCollectionPath();
+		/* 
+		 * This code is weird. I don't know why it's here or what it does 
+		 
 		if( is_array($_REQUEST['search_paths']) ){
 			foreach($_REQUEST['search_paths'] as $search_path){
 				$autoTarget=str_replace('search_paths[]='.$search_path,'',$autoTarget);
@@ -98,11 +101,13 @@ class SearchBlockController extends BlockController {
 		$autoTarget=str_replace('page='.$_REQUEST['page'],'',$autoTarget);
 		$autoTarget=str_replace('submit='.$_REQUEST['submit'],'',$autoTarget);
 		$autoTarget=str_replace(array('&&&&','&&&','&&'),'',$autoTarget);
-		$resultTargetURL = (strlen($this->resultsURL)) ? $this->resultsURL : $autoTarget;			
+		*/
+		
+		$resultTargetURL = ($this->resultsURL != '') ? $this->resultsURL : $autoTarget;			
 		$this->set('resultTargetURL', $resultTargetURL);
 
 		//run query if display results elsewhere not set, or the cID of this page is set
-		if( strlen($_REQUEST['query']) && (strlen(trim($this->resultsURL))==0 || strstr($this->resultsURL,'cID='.$c->getCollectionId()) ) ){ 
+		if( !empty($_REQUEST['query'])) { 
 			$this->do_search();
 		}						
 	}
@@ -143,7 +148,7 @@ class SearchBlockController extends BlockController {
 			$results[] = new IndexedSearchResult($r['cID'], $r['cName'], $r['cDescription'], $r['score'], $r['cPath'], $r['content']);
 		}
 		
-		$this->set('query', htmlentities($q));
+		$this->set('query', htmlentities($q, ENT_COMPAT, APP_CHARSET));
 		$this->set('paginator', $ipl->getPagination());
 		$this->set('results', $results);
 		

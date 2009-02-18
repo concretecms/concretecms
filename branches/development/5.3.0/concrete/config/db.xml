@@ -659,12 +659,28 @@
       <UNSIGNED/>
     </field>
     <field name="content" type="X"/>
-    <field name="cName" type="C" size="255">
-      <NOTNULL/>
-    </field>
+    <field name="cName" type="C" size="255" />
     <field name="cDescription" type="X"/>
     <field name="cPath" type="X"/>
     <field name="cDatePublic" type="T"/>
+    <index name="cName">
+      <col>cName</col>
+      <FULLTEXT />
+	</index>
+    <index name="cDescription">
+      <col>cDescription</col>
+      <FULLTEXT />
+	</index>
+    <index name="content">
+      <col>content</col>
+      <FULLTEXT />
+	</index>
+    <index name="content2">
+      <col>cName</col>
+      <col>cDescription</col>
+      <col>content</col>
+      <FULLTEXT />
+	</index>
   </table>
   <table name="PageSearchIndexAttributes">
     <field name="cID" type="I" size="10">
@@ -679,8 +695,6 @@
     </field>
     <field name="akHandle" type="C" size="255">
       <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
     </field>
     <field name="value" type="X"/>
   </table>

@@ -3,7 +3,7 @@
         "http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=<?=APP_CHARSET?>">
 <?
 $v = View::getInstance();
 $v->disableEditing();

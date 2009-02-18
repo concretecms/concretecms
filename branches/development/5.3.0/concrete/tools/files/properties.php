@@ -27,17 +27,17 @@ if ($_POST['task'] == 'update_core') {
 
 	switch($_POST['attributeField']) {
 		case 'fvTitle':
-			$text = htmlentities($_POST['fvTitle']);
+			$text = htmlentities($_POST['fvTitle'], ENT_QUOTES, APP_CHARSET);
 			$fv->updateTitle($text);
 			print $text;
 			break;
 		case 'fvDescription':
-			$text = htmlentities($_POST['fvDescription']);
+			$text = htmlentities($_POST['fvDescription'], ENT_QUOTES, APP_CHARSET);
 			$fv->updateDescription($text);
 			print $text;
 			break;
 		case 'fvTags':
-			$text = htmlentities($_POST['fvTags']);
+			$text = htmlentities($_POST['fvTags'], ENT_QUOTES, APP_CHARSET);
 			$fv->updateTags($text);
 			print $text;
 			break;
@@ -57,10 +57,10 @@ if ($_POST['task'] == 'update_extended_attribute') {
 		$value = $dt->translate('fakID_' . $fakID);
 	} else if (is_array($_REQUEST['fakID_' . $fakID])) {
 		foreach($_REQUEST['fakID_' . $fakID] as $val) {
-			$value .= htmlentities($val) . "\n";
+			$value .= htmlentities($val, ENT_QUOTES, APP_CHARSET) . "\n";
 		}
 	} else {
-		$value = htmlentities($_REQUEST['fakID_' . $fakID]);
+		$value = htmlentities($_REQUEST['fakID_' . $fakID], ENT_QUOTES, APP_CHARSET);
 	}
 	$fv->setAttribute($ak, $value);
 	$fv->populateAttributes();	
@@ -228,8 +228,11 @@ foreach($attribs as $at) {
 
 ?>
 </table>
+<? } ?>
+
 <br/>
-<? }
+
+<?
 
 $h = Loader::helper('concrete/interface');
 $b1 = $h->button_js(t('Rescan'), 'ccm_alRescanFiles(' . $f->getFileID() . ')');

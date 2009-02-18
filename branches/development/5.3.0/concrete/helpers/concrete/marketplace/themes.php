@@ -4,7 +4,11 @@ Loader::model('page_theme_remote');
 
 class ConcreteMarketplaceThemesHelper  {
 
-	function getPreviewableList() { 	
+	function getPreviewableList() {
+		if (!function_exists('mb_detect_encoding')) {
+			return false;
+		}
+		
 		$pageThemes = Cache::get('marketplace_theme_list', false, false, true);
 		if (!is_array($pageThemes)) {
 			$fh = Loader::helper('file'); 

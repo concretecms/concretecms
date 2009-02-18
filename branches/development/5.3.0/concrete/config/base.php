@@ -47,6 +47,21 @@ if (!defined('STATISTICS_TRACK_PAGE_VIEWS')) {
 	define('STATISTICS_TRACK_PAGE_VIEWS', true);
 }
 
+/** 
+ * Character support
+ */
+
+if (!defined('APP_CHARSET')) {
+	define('APP_CHARSET', 'UTF-8'); // pages, etc...
+}
+
+if (!defined('DB_CHARSET')) {
+	define('DB_CHARSET', 'utf8'); // pages, etc...
+}
+
+if (!defined("DB_COLLATE")) {
+	define('DB_COLLATE', '');
+}
 
 if (!defined('LOCALE')) {
 	define("LOCALE", 'en_US');

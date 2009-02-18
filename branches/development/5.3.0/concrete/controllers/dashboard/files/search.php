@@ -62,7 +62,7 @@ class DashboardFilesSearchController extends Controller {
 	
 	public function getRequestedSearchResults() {
 		$fileList = new FileList();
-		$keywords = htmlentities($_GET['fKeywords']);
+		$keywords = htmlentities($_GET['fKeywords'], ENT_QUOTES, APP_CHARSET);
 		$fileList->sortBy('fvDateAdded', 'desc');
 		
 		if ($keywords != '') {
