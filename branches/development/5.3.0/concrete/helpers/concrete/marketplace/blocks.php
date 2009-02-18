@@ -6,6 +6,10 @@ Loader::model('block_type_remote');
 class ConcreteMarketplaceBlocksHelper { 
 
 	function getPreviewableList() {
+		if (!function_exists('mb_detect_encoding')) {
+			return false;
+		}
+		
 		$blockTypes = Cache::get('marketplace_block_list', false, false, true);
 		if (!is_array($blockTypes)) {
 			$fh = Loader::helper('file'); 

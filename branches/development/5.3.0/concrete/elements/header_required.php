@@ -39,7 +39,7 @@ if ($akk) { ?>
 	<meta name="keywords" content="<?=htmlspecialchars($akk)?>" />
 <? } ?>
 
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta http-equiv="content-type" content="text/html; charset=<?=APP_CHARSET?>" />
 
 <? $u = new User(); ?>
 <script type="text/javascript">

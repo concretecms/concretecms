@@ -19,7 +19,7 @@
 		if(!$controller->truncateSummaries){
 			echo $cobj->getCollectionDescription();
 		}else{
-			echo $textHelper->shortText($cobj->getCollectionDescription(),$controller->truncateChars);
+			echo $textHelper->shorten($cobj->getCollectionDescription(),$controller->truncateChars);
 		}
 		?>
 	</div>

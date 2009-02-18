@@ -215,7 +215,7 @@
 		public function outputThumbnail($maxWidth = null, $maxHeight = null) {
 			$thumb = $this->getThumbnail($maxWidth, $maxHeight);
 			if (is_object($thumb)) {
-				print '<img class="ccm-output-thumbnail" alt="' . htmlentities($thumb->alt, ENT_QUOTES) . '" src="' . $thumb->src . '" width="' . $thumb->width . '" height="' . $thumb->height . '" />';
+				print '<img class="ccm-output-thumbnail" alt="' . htmlentities($thumb->alt, ENT_QUOTES, APP_CHARSET) . '" src="' . $thumb->src . '" width="' . $thumb->width . '" height="' . $thumb->height . '" />';
 			}
 		}
 
