@@ -135,10 +135,15 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				if ($dsn) {
 					$_dba = @NewADOConnection($dsn);
 					if (DB_CHARSET != '') {
-						$charset = 'SET NAMES \'' . DB_CHARSET . '\'';
+						$names = 'SET NAMES \'' . DB_CHARSET . '\'';
+						if (DB_COLLATE != '') {
+							$names .= ' COLLATE \'' . DB_COLLATE . '\'';
+						}
+						$charset = 'SET CHARACTER SET \'' . DB_CHARSET . '\'';
 						if (DB_COLLATE != '') {
 							$charset .= ' COLLATE \'' . DB_COLLATE . '\'';
 						}
+						$_dba->Execute($names);
 						$_dba->Execute($charset);
 					}
 					

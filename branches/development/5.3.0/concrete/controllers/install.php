@@ -53,7 +53,9 @@ class InstallController extends Controller {
 		}
 		
 		$db = Loader::db();
+		$db->ensureEncoding();
 		$err = Package::installDB($file);		
+
 	}
 	
 	public function test_url($num1, $num2) {
