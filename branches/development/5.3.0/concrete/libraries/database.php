@@ -36,6 +36,17 @@ class Database {
 			return $this->db->Query($q);
 		}
 	}
+	
+	public function ensureEncoding() {
+		if (APP_CHARSET == '') {
+			return false;
+		}
+		
+		$cd = $this->db->GetRow("show create database {$this->db->database}");
+		if (!preg_match('/' . DB_CHARSET . '/i', $cd[1])) {
+			$this->db->Execute("ALTER DATABASE {$this->db->database} character set " . DB_CHARSET);
+		}
+	}
 
 	/** 
 	 * Get's a Schema Object for a particular database object
