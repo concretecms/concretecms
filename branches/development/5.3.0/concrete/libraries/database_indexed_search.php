@@ -125,7 +125,8 @@ class IndexedSearch {
 				$attributes=$c->getSetCollectionAttributes();
 				foreach($attributes as $attribute){
 					if ($attribute->isCollectionAttributeKeySearchable()) {
-						$v = array($row['cID'], $attribute->getAttributeKeyID(), $attribute->getAttributeKeyHandle(), $c->getCollectionAttributeValue($attribute));
+						$val = $db->GetOne("select value from CollectionAttributeValues where cID = ? and cvID = ? and akID = ?", array($c->getCollectionID(), $c->getVersionID(), $attribute->getCollectionAttributeKeyID()));
+						$v = array($row['cID'], $attribute->getAttributeKeyID(), $attribute->getAttributeKeyHandle(), $val);
 						$db->Execute("insert into PageSearchIndexAttributes (cID, akID, akHandle, value) values (?, ?, ?, ?)", $v);
 					}
 				}

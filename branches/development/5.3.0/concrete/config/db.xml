@@ -677,7 +677,7 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="akHandle" type="I" size="10">
+    <field name="akHandle" type="C" size="255">
       <NOTNULL/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
