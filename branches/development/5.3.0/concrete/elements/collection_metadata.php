@@ -88,6 +88,4 @@ if ($cp->canAdminPage()) {
 	<div class="ccm-buttons">
 <!--	<a href="javascript:void(0)" onclick="ccm_hidePane()" class="ccm-button-left cancel"><span><em class="ccm-button-close">Cancel</em></span></a>//-->
 	<a href="javascript:void(0)" onclick="$('#ccmMetadataForm').get(0).submit()" class="ccm-button-right accept"><span><?=t('Save')?></span></a>
-	</div>	
-
-<? Loader::element('block_al'); ?>
+	</div>

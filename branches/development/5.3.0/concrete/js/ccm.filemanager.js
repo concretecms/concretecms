@@ -1,6 +1,41 @@
 
 var ccm_totalAdvancedSearchFields = 0;
 var ccm_alLaunchType;
+var ccm_alActiveAssetField = "";
+
+ccm_triggerSelectFile = function(fID, af) {
+	if (af == null) {
+		var af = ccm_alActiveAssetField;
+	}
+	var obj = $('#' + af + "-fm-selected");
+	var dobj = $('#' + af + "-fm-display");
+	dobj.hide();
+	obj.show();
+	obj.load(CCM_TOOLS_PATH + '/files/selector_data?fID=' + fID + '&ccm_file_selected_field=' + af, function() {
+		$(this).find('a.ccm-file-manager-clear-asset').click(function(e) {
+			var field = $(this).attr('ccm-file-manager-field');
+			ccm_clearFile(e, field);
+		});
+
+		obj.attr('fID', fID);
+		obj.click(function(e) {
+			e.stopPropagation();
+			ccm_alActivateMenu($(this),e);
+		});
+	});
+	var vobj = $('#' + af + "-fm-value");
+	vobj.attr('value', fID);
+}
+ 
+ccm_clearFile = function(e, af) {
+	e.stopPropagation();
+	var obj = $('#' + af + "-fm-selected");
+	var dobj = $('#' + af + "-fm-display");
+	var vobj = $('#' + af + "-fm-value");
+	vobj.attr('value', 0);
+	obj.hide();
+	dobj.show();
+}
 
 ccm_activateFileManager = function(altype) {
 	//delegate event handling to table container so clicks
@@ -38,6 +73,27 @@ ccm_activateFileManager = function(altype) {
 			}
 	});
 	ccm_alSetupInPagePaginationAndSorting();
+}
+
+ccm_activateFileSelectors = function() {
+
+	$(".ccm-file-manager-launch").click(function() {
+	
+		ccm_alActiveAssetField = $(this).parent().attr('ccm-file-manager-field');
+		var filterStr = "";
+		$(this).parent().find('.ccm-file-manager-filter').each(function() {
+			filterStr += '&' + $(this).attr('name') + '=' + $(this).attr('value');		
+		});
+		var dtitle = $(this).attr('title');
+		$.fn.dialog.open({
+			width: 650,
+			height: 450,
+			modal: false,
+			href: CCM_TOOLS_PATH + "/files/search_dialog?search=1" + filterStr,
+			title: dtitle
+		});
+	
+	});
 }
 
 ccm_alSubmitAddToSetsForm = function() {

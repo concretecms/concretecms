@@ -117,6 +117,11 @@ class ImageHelper {
 		$src = $this->getThumbnail($obj, $maxWidth, $maxHeight);
 		print '<img class="ccm-output-thumbnail" alt="' . $alt . '" src="' . $thumb->src . '" width="' . $thumb->width . '" height="' . $thumb->height . '" />';
 	}
+	
+	public function output($obj, $alt = null) {
+		$s = @getimagesize($obj->getPath());
+		print '<img class="ccm-output-image" alt="' . $alt . '" src="' . $obj->getRelativePath() . '" width="' . $s[0] . '" height="' . $s[1] . '" />';
+	}
 
 
 }
