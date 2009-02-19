@@ -8,8 +8,6 @@ if ($action == null) {
 
 <a name="_add<?=$bt->getBlockTypeID()?>"></a>
 
-<? include(DIR_FILES_ELEMENTS_CORE . '/block_al.php'); ?>
-
 <? $ci = Loader::helper("concrete/urls"); ?>
 <? $url = $ci->getBlockTypeJavaScriptURL($bt); 
 if ($url != '') { ?>

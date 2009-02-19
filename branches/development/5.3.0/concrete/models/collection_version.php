@@ -110,7 +110,7 @@
 					case "IMAGE_FILE":
 						if ($row['value'] > 0) {
 							Loader::block('library_file');
-							$v = LibraryFileBlockController::getFile($row['value']);
+							$v = File::getByID($row['value']);
 						}
 						break;
 					default:
