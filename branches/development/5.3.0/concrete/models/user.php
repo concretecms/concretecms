@@ -90,8 +90,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$_SESSION['uGroups'] = false;
 				}
 				$password = User::encryptPassword($password, PASSWORD_SALT);
-				$v = array($username, $password);
-				$q = "select uID, uName, uIsActive, uIsValidated from Users where uName = ? and uPassword = ?";
+				$v = array($username, $username, $password);
+				$q = "select uID, uName, uIsActive, uIsValidated from Users where (uName = ? OR uEmail = ?) and uPassword = ?";
 				
 				$r = $db->query($q, $v);
 				if ($r) {

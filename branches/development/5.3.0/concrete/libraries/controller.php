@@ -266,6 +266,33 @@ class Controller {
 		header("Location: " . $url);
 		exit;
 	}
+
+	/** 
+	 * Redirects to a given external URL
+	 * @param string $url
+	 * @param string $http_status
+	 */	
+	public function externalRedirect($url,$http_status=false) {
+		if($this->isValidExternalUrl($url)){
+			if($http_status){
+				header($http_status);
+			}
+			header('Location: '.$url);		
+			exit;
+		}
+		throw new Exception('Invalid Redirect URL');
+	}
+
+	/** 
+	 * Validates an external URL request to avoid possible shenanagins
+	 *
+	 * Placeholder for now
+	 * @param string $url
+	 * @param string $http_status
+	 */	
+	public function isValidExternalUrl($url){
+		return true;
+	}
 	
 	/** 
 	 * Renders a view with the current controller as its controller
