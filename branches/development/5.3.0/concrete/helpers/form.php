@@ -164,8 +164,8 @@ class FormHelper {
 		}
 
 		if (is_array($miscFields)) {
-			foreach($miscFields as $k => $value) {
-				$str .= $k . '="' . $value . '" ';
+			foreach($miscFields as $k => $v) {
+				$str .= $k . '="' . $v . '" ';
 			}
 		}
 		

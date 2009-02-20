@@ -3,7 +3,8 @@
 class File extends Object { 
 
 	const CREATE_NEW_VERSION_THRESHOLD = 300; // in seconds (5 minutes)
-
+	const F_ERROR_INVALID_FILE = 1;
+	
 	/** 
 	 * For all methods that file does not implement, we pass through to the currently active file version object 
 	 */
@@ -24,8 +25,11 @@ class File extends Object {
 		$row = $db->GetRow("SELECT Files.*, FileVersions.fvID
 		FROM Files LEFT JOIN FileVersions on Files.fID = FileVersions.fID and FileVersions.fvIsApproved = 1
 		WHERE Files.fID = ?", array($fID));
-		$f->setPropertiesFromArray($row);
-		
+		if ($row['fID'] == $fID) {
+			$f->setPropertiesFromArray($row);
+		} else {
+			$f->error = File::F_ERROR_INVALID_FILE;
+		}
 		return $f;
 	}
 	
