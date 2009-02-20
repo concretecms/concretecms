@@ -59,6 +59,8 @@ var ccmi18n_filemanager = {
 	
 	viewDownload: '<?=t('View/Download')?>',
 	selectFile: '<?=t('Choose File')?>',
+	clearFile: '<?=t('Clear File')?>',
+	replaceFile: '<?=t('Replace File')?>',
 	properties: '<?=t('Properties')?>',
 	editReplace: '<?=t('Edit/Replace File')?>',
 	addTo: '<?=t('Add to Set/Archive')?>',

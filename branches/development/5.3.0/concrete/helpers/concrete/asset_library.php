@@ -33,7 +33,7 @@
 			$resetDisplay = 'block';
 			$fileID = 0;
 			
-			if ($bf != null) {
+			if (is_object($bf) && (!$bf->isError())) {
 				$fileID = $bf->getFileID();
 				$selectedDisplay = 'block';
 				$resetDisplay = 'none';
@@ -50,7 +50,7 @@
 			}
 			$html .= '</div><input id="' . $id . '-fm-value" type="hidden" name="' . $postname . '" value="' . $fileID . '" />';
 
-			if ($bf != null) {
+			if (is_object($bf) && (!$bf->isError())) {
 				$html .= '<script type="text/javascript">$(function() { ccm_triggerSelectFile(' . $fileID . ', \'' . $id . '\'); });</script>';
 			}
 			

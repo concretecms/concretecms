@@ -12,11 +12,12 @@ ccm_triggerSelectFile = function(fID, af) {
 	dobj.hide();
 	obj.show();
 	obj.load(CCM_TOOLS_PATH + '/files/selector_data?fID=' + fID + '&ccm_file_selected_field=' + af, function() {
+		/*
 		$(this).find('a.ccm-file-manager-clear-asset').click(function(e) {
 			var field = $(this).attr('ccm-file-manager-field');
 			ccm_clearFile(e, field);
 		});
-
+		*/
 		obj.attr('fID', fID);
 		obj.click(function(e) {
 			e.stopPropagation();
@@ -78,21 +79,23 @@ ccm_activateFileManager = function(altype) {
 ccm_activateFileSelectors = function() {
 
 	$(".ccm-file-manager-launch").click(function() {
-	
-		ccm_alActiveAssetField = $(this).parent().attr('ccm-file-manager-field');
-		var filterStr = "";
-		$(this).parent().find('.ccm-file-manager-filter').each(function() {
-			filterStr += '&' + $(this).attr('name') + '=' + $(this).attr('value');		
-		});
-		var dtitle = $(this).attr('title');
-		$.fn.dialog.open({
-			width: 650,
-			height: 450,
-			modal: false,
-			href: CCM_TOOLS_PATH + "/files/search_dialog?search=1" + filterStr,
-			title: dtitle
-		});
-	
+		ccm_alLaunchSelectorFileManager($(this).parent().attr('ccm-file-manager-field'));	
+	});
+}
+
+ccm_alLaunchSelectorFileManager = function(selector) {
+	ccm_alActiveAssetField = selector;
+	var filterStr = "";
+	$(this).parent().find('.ccm-file-manager-filter').each(function() {
+		filterStr += '&' + $(this).attr('name') + '=' + $(this).attr('value');		
+	});
+	var dtitle = $(this).attr('title');
+	$.fn.dialog.open({
+		width: 650,
+		height: 450,
+		modal: false,
+		href: CCM_TOOLS_PATH + "/files/search_dialog?search=1" + filterStr,
+		title: dtitle
 	});
 }
 
@@ -348,24 +351,32 @@ ccm_alSelectFile = function(fID) {
 }
 
 ccm_alActivateMenu = function(obj, e) {
+	
+	// Is this a file that's already been chosen that we're selecting?
+	// If so, we need to offer the reset switch
+	
+	var selectedFile = $(obj).find('div[ccm-file-manager-field]');
+	var selector = '';
+	if(selectedFile.length > 0) {
+		selector = selectedFile.attr('ccm-file-manager-field');
+	}
 	ccm_hideMenus();
 	
 	var fID = $(obj).attr('fID');
 
 	// now, check to see if this menu has been made
-	var bobj = document.getElementById("ccm-al-menu" + fID);
+	var bobj = document.getElementById("ccm-al-menu" + fID + selector);
 
 	if (!bobj) {
-		
 		// create the 1st instance of the menu
 		el = document.createElement("DIV");
-		el.id = "ccm-al-menu" + fID;
+		el.id = "ccm-al-menu" + fID + selector;
 		el.className = "ccm-menu";
 		el.style.display = "none";
 		document.body.appendChild(el);
 		
 		var filepath = $(obj).attr('al-filepath'); 
-		bobj = $("#ccm-al-menu" + fID);
+		bobj = $("#ccm-al-menu" + fID + selector);
 		bobj.css("position", "absolute");
 		
 		//contents  of menu
@@ -373,7 +384,13 @@ ccm_alActivateMenu = function(obj, e) {
 		html += '<div class="ccm-menu-l"><div class="ccm-menu-r">';
 		html += '<ul>';
 		if (ccm_alLaunchType != 'DASHBOARD') {
-			html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="90%" dialog-height="70%" dialog-title="' + ccmi18n_filemanager.selectFile + '" id="menuSelectFile' + fID + '" href="javascript:void(0)" onclick="ccm_alSelectFile(' + fID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.selectFile + '<\/span><\/a><\/li>';
+			// if we're launching this at the selector level, that means we've already chosen a file, and this should instead launch the library
+			var onclick = (selectedFile.length > 0) ? 'ccm_alLaunchSelectorFileManager(\'' + selector + '\')' : 'ccm_alSelectFile(' + fID + ')';
+			var chooseText = (selectedFile.length > 0) ? ccmi18n_filemanager.replaceFile : ccmi18n_filemanager.selectFile;
+			html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="90%" dialog-height="70%" dialog-title="' + ccmi18n_filemanager.selectFile + '" id="menuSelectFile' + fID + '" href="javascript:void(0)" onclick="' + onclick + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ chooseText + '<\/span><\/a><\/li>';
+		}
+		if (selectedFile.length > 0) {
+			html += '<li><a class="ccm-icon" href="javascript:void(0)" id="menuClearFile' + fID + selector + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.clearFile + '<\/span><\/a><\/li>';
 		}
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="90%" dialog-height="70%" dialog-title="' + ccmi18n_filemanager.viewDownload + '" id="menuViewDownload' + fID + '" href="' + CCM_TOOLS_PATH + '/files/view_download?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.viewDownload + '<\/span><\/a><\/li>';
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.properties + '" id="menuProperties' + fID + '" href="' + CCM_TOOLS_PATH + '/files/properties?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/edit_small.png)">'+ ccmi18n_filemanager.properties + '<\/span><\/a><\/li>';
@@ -391,6 +408,10 @@ ccm_alActivateMenu = function(obj, e) {
 		$('a#menuFileEditReplace' + fID).dialog();
 		$('a#menuFileAddTo' + fID).dialog();
 		$('a#menuFilePermissions' + fID).dialog();
+		$('a#menuClearFile' + fID + selector).click(function(e) {
+			ccm_clearFile(e, selector);
+			ccm_hideMenus();
+		});
 		$('a#menuDeleteFile' + fID).dialog();
 		/*		
 		$('a#menuProperties' + fID).dialog();
@@ -417,7 +438,7 @@ ccm_alActivateMenu = function(obj, e) {
 		*/
 
 	} else {
-		bobj = $("#ccm-al-menu" + fID);
+		bobj = $("#ccm-al-menu" + fID + selector);
 	}
 	
 	ccm_fadeInMenu(bobj, e);
