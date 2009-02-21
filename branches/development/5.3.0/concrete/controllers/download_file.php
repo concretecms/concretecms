@@ -48,29 +48,8 @@ class DownloadFileController extends Controller {
 		//header('Content-type: $mime_type');
 		// everything else lets just download
 		$filename = $file->getFilename();
-	
-		header('Content-type: application/octet-stream');
-		header("Content-Disposition: attachment; filename=\"$filename\"");
-		header('Content-Length: ' . filesize(DIR_FILES_UPLOADED."/".$filename));
-		header("Pragma: public");
-		header("Expires: 0");
-		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-		header("Cache-Control: private",false);
-		header("Content-Transfer-Encoding: binary");
-	
-		$buffer = '';
-		$chunk = 1024*1024;
-		$handle = fopen(DIR_FILES_UPLOADED."/".$filename, 'rb');
-		if ($handle === false) {
-			return false;
-		}
-		while (!feof($handle)) {
-			$buffer = fread($handle, $chunk);
-			print $buffer;
-		}
-		
-		fclose($handle);
-		exit;
+		$ci = Loader::helper('file');
+		$ci->forceDownload($filename);
 	}
 	
 	private function getBlock($bID) {

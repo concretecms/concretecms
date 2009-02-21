@@ -149,13 +149,18 @@ class FileVersion extends Object {
 	
 	
 	public function getType() {
+		$ftl = $this->getTypeObject();
+		if (is_object($ftl)) {
+			return $ftl->getName();
+		}
+	}
+	
+	public function getTypeObject() {
 		$fh = Loader::helper('file');
 		$ext = $fh->getExtension($this->fvFilename);
 		
 		$ftl = FileTypeList::getType($ext);
-		if (is_object($ftl)) {
-			return $ftl->getName();
-		}
+		return $ftl;
 	}
 	
 	/** 
@@ -334,6 +339,18 @@ class FileVersion extends Object {
 		for ($i = 1; $i <= $this->numThumbnailLevels; $i++) {
 			$path = $f->getThumbnailSystemPath($this->fvPrefix, $this->fvFilename, $i, true);	
 		}
+	}
+	
+	
+	/** 
+	 * Checks current viewers for this type and returns true if there is a viewer for this type, false if not
+	 */
+	public function canView() {
+		$to = $this->getTypeObject();
+		if (is_object($to) && $to->getView() != '') {
+			return true;
+		}
+		return false;
 	}
 	
 	public function setAttribute($ak, $value) {

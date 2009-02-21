@@ -441,7 +441,18 @@ ccm_alActivateMenu = function(obj, e) {
 		if (selectedFile.length > 0) {
 			html += '<li><a class="ccm-icon" href="javascript:void(0)" id="menuClearFile' + fID + selector + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.clearFile + '<\/span><\/a><\/li>';
 		}
-		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="90%" dialog-height="70%" dialog-title="' + ccmi18n_filemanager.viewDownload + '" id="menuViewDownload' + fID + '" href="' + CCM_TOOLS_PATH + '/files/view_download?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.viewDownload + '<\/span><\/a><\/li>';
+		if ($(obj).attr('ccm-file-manager-can-view') == '1') {
+			if ($(obj).attr('ccm-file-manager-view-width').indexOf('%') > -1) {
+				var vw = $(obj).attr('ccm-file-manager-view-width');
+				var vh = $(obj).attr('ccm-file-manager-view-height');
+			} else {
+				var vh = parseInt($(obj).attr("ccm-file-manager-view-height")) + 10; // enough room for download bar
+				var vw = parseInt($(obj).attr("ccm-file-manager-view-width")) + 20;
+			}
+			html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="' + vw + '" dialog-height="' + vh + '" dialog-title="' + ccmi18n_filemanager.view + '" id="menuView' + fID + '" href="' + CCM_TOOLS_PATH + '/files/view?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.view + '<\/span><\/a><\/li>';
+		} else {
+			html += '<li><a class="ccm-icon" id="menuDownload' + fID + '" target="' + ccm_alProcessorTarget + '" href="' + CCM_TOOLS_PATH + '/files/download?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.download + '<\/span><\/a><\/li>';	
+		}
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="' + ccmi18n_filemanager.properties + '" id="menuProperties' + fID + '" href="' + CCM_TOOLS_PATH + '/files/properties?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/edit_small.png)">'+ ccmi18n_filemanager.properties + '<\/span><\/a><\/li>';
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="300" dialog-height="180" dialog-title="' + ccmi18n_filemanager.editReplace + '" id="menuFileEditReplace' + fID + '" href="' + CCM_TOOLS_PATH + '/files/edit?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.editReplace + '<\/span><\/a><\/li>';
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.addTo + '" id="menuFileAddTo' + fID + '" href="' + CCM_TOOLS_PATH + '/files/add_to?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.addTo + '<\/span><\/a><\/li>';
@@ -452,7 +463,7 @@ ccm_alActivateMenu = function(obj, e) {
 		html += '<div class="ccm-menu-bl"><div class="ccm-menu-br"><div class="ccm-menu-b"></div></div></div>';
 		bobj.append(html);
 		
-		$('a#menuViewDownload' + fID).dialog();
+		$('a#menuView' + fID).dialog();
 		$('a#menuProperties' + fID).dialog();
 		$('a#menuFileEditReplace' + fID).dialog();
 		$('a#menuFileAddTo' + fID).dialog();

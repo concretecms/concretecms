@@ -79,9 +79,17 @@ div.ccm-file-manager-editable-field-form {display: none}
 
 /* Versions */
 tr.ccm-file-versions-grid-active td {font-weight: bold !important}
-
 div.ccm-file-manager-editable-field-type-text input {width: 100%}
 div.ccm-file-manager-editable-field-type-number input {width: 60px}
+
+/* Download */
+div#ccm-file-manager-download-bar {
+	background-color: rgb(221, 236, 240);
+	padding: 4px;
+	margin-bottom: 4px;
+	border-bottom: 1px solid #dedede;
+	text-align: right;
+}
 
 /* multiple upload */
 #ccm-file-upload-multiple-progress{padding:0;margin:0;}

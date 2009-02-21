@@ -41,9 +41,21 @@
 				$striped = 'ccm-file-list-alt';
 			}
 			$star_icon = ($f->isStarred() == 1) ? 'star_yellow.png' : 'star_grey.png';
-			$fv = $f->getApprovedVersion(); ?>
-			
-			<tr class="ccm-file-list-record <?=$striped?>" fID="<?=$f->getFileID()?>" id="fID<?=$f->getFileID()?>">
+			$fv = $f->getApprovedVersion(); 
+			$canViewInline = $fv->canView() ? 1 : 0;
+			$viewWidth = 0;
+			$viewHeight = 0;
+			if ($canViewInline) {
+				$viewWidth = $fv->getAttribute('width');
+				$viewHeight = $fv->getAttribute('height');
+			}
+			if ($viewWidth < 1 && $canViewInline) {
+				// we fudge it
+				$viewWidth = '90%';
+				$viewHeight = '70%';
+			}
+			?>
+			<tr class="ccm-file-list-record <?=$striped?>" ccm-file-manager-can-view="<?=$canViewInline?>" ccm-file-manager-view-width="<?=$viewWidth?>" ccm-file-manager-view-height="<?=$viewHeight?>" fID="<?=$f->getFileID()?>" id="fID<?=$f->getFileID()?>">
 			<td><input type="checkbox" /></td>
 			<td><div class="ccm-file-list-thumbnail">
 				<div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><?=$fv->getThumbnail(1)?></div>

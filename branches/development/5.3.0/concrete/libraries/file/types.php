@@ -35,7 +35,7 @@ class FileTypeList {
 	private $types = array();
 	private $importerAttributes = array();
 	
-	public function define($extension, $name, $type, $customImporter = false) {
+	public function define($extension, $name, $type, $customImporter = false, $inlineFileViewer = false) {
 		$ext = explode(',', $extension);
 		foreach($ext as $e) {
 			$ft = new FileType();
@@ -43,6 +43,7 @@ class FileTypeList {
 			$ft->extension = $e;
 			$ft->customImporter = $customImporter;
 			$ft->type = $type;
+			$ft->view = $inlineFileViewer;
 			$this->types[$e] = $ft;
 		}
 	}
@@ -98,7 +99,7 @@ class FileType {
 	public function getExtension() {return $this->extension;}
 	public function getCustomImporter() {return $this->customImporter;}
 	public function getGenericType() {return $this->type;}
-	
+	public function getView() {return $this->view;}	
 	
 	private function mapGenericTypeText($type) {
 		switch($type) {
