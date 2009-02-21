@@ -56,6 +56,7 @@ class File extends Object {
 		$createNew = false;
 		
 		$fv = $this->getRecentVersion();
+		$fav = $this->getApprovedVersion();
 		
 		// first test. Does the user ID of the most recent version match ours? If not, then we create new
 		if ($u->getUserID() != $fv->getAuthorUserID()) {
@@ -71,6 +72,11 @@ class File extends Object {
 				
 		if ($createNew) {
 			$fv2 = $fv->duplicate();
+			
+			// Are the recent and active versions the same? If so, we approve this new version we just made
+			if ($fv->getFileVersionID() == $fav->getFileVersionID()) {
+				$fv2->approve();
+			}
 			return $fv2;
 		} else {
 			return $fv;
@@ -96,8 +102,12 @@ class File extends Object {
 	
 	public function addVersion($filename, $prefix, $data = array()) {
 		$u = new User();
-		$uID = (isset($data['uID'])) ? $data['uID'] : $u->getUserID();
-
+		$uID = (isset($data['uID']) && $data['uID'] > 0) ? $data['uID'] : $u->getUserID();
+		
+		if ($uID < 1) {
+			$uID = 0;
+		}
+		
 		$fvTitle = (isset($data['fvTitle'])) ? $data['fvTitle'] : '';
 		$fvDescription = (isset($data['fvDescription'])) ? $data['fvDescription'] : '';
 		$fvTags = (isset($data['fvTags'])) ? $data['fvTags'] : '';
@@ -199,6 +209,17 @@ class File extends Object {
 		
 		return $fv;
 	}
-
-
+	
+	/** 
+	 * Returns an array of all FileVersion objects owned by this file
+	 */
+	public function getVersionList() {
+		$db = Loader::db();
+		$r = $db->Execute("select fvID from FileVersions where fID = ? order by fvDateAdded desc", array($this->getFileID()));
+		$files = array();
+		while ($row = $r->FetchRow()) {
+			$files[] = $this->getVersion($row['fvID']);
+		}
+		return $files;
+	}
 }

@@ -77,13 +77,14 @@ class FileImporter {
 		if (!($fr instanceof File)) {
 			// we have to create a new file object for this file version
 			$fv = File::add($filename, $prefix);
+			$fv->refreshAttributes(true);
 		} else {
-			$fv = $fr->addVersion($filename, $prefix);
+			// We get a new version to modify
+			$fv = $fr->getVersionToModify();
+			$fv->updateFile($filename, $prefix);
+			$fv->refreshAttributes();
 		}
 
-		// finally, we scan our file version object for its metadata
-		$fv->refreshAttributes();
-		
 		return $fv;
 	}
 	

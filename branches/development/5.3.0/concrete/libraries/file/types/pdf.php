@@ -15,9 +15,6 @@ class PdfFileTypeInspector extends FileTypeInspector {
 		$fv->createThumbnailDirectories();
 		exec('/usr/local/bin/convert \'' . $fv->getPath() . '\'[0] -thumbnail ' . AL_THUMBNAIL_WIDTH . 'x' . AL_THUMBNAIL_HEIGHT . ' \'' . $fv->getThumbnailPath(1) . '\'');
 		exec('/usr/local/bin/convert \'' . $fv->getPath() . '\'[0] -thumbnail ' . AL_THUMBNAIL_WIDTH_LEVEL2 . 'x' . AL_THUMBNAIL_HEIGHT_LEVEL2 . ' \'' . $fv->getThumbnailPath(2) . '\'');
-		
-		// check the filesystem and enable thumbnails if the files exist in the proper spot
-		$fv->refreshThumbnails();
 	}
 	
 

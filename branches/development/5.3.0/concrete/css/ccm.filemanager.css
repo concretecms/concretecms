@@ -77,6 +77,9 @@ tr.ccm-file-manager-editable-field textarea {height: 100px}
 img.ccm-file-manager-editable-field-loading {display: none}
 div.ccm-file-manager-editable-field-form {display: none}
 
+/* Versions */
+tr.ccm-file-versions-grid-active td {font-weight: bold !important}
+
 div.ccm-file-manager-editable-field-type-text input {width: 100%}
 div.ccm-file-manager-editable-field-type-number input {width: 60px}
 

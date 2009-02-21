@@ -14,13 +14,20 @@ Loader::library("file/importer");
 
 $error = "";
 
+if (isset($_POST['fID'])) {
+	// we are replacing a file
+	$fr = File::getByID($_REQUEST['fID']);
+} else {
+	$fr = false;
+}
+
 $files = array();
 if ($valt->validate('import_incoming')) {
 	if( !empty($_POST) ) {
 		$fi = new FileImporter();
 		foreach($_POST as $k=>$name) {
 			if(preg_match("#^send_file#", $k)) {
-				$resp = $fi->import(DIR_FILES_INCOMING .'/'. $name, $name);
+				$resp = $fi->import(DIR_FILES_INCOMING .'/'. $name, $name, $fr);
 				if (!($resp instanceof FileVersion)) {
 					switch($resp) {
 						case FileImporter::E_FILE_INVALID_EXTENSION:

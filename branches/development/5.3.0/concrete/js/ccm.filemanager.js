@@ -2,6 +2,8 @@
 var ccm_totalAdvancedSearchFields = 0;
 var ccm_alLaunchType;
 var ccm_alActiveAssetField = "";
+var ccm_alProcessorTarget = "";
+var ccm_alDebug = false;
 
 ccm_triggerSelectFile = function(fID, af) {
 	if (af == null) {
@@ -74,6 +76,16 @@ ccm_activateFileManager = function(altype) {
 			}
 	});
 	ccm_alSetupInPagePaginationAndSorting();
+	ccm_alSetupFileProcessor();
+	ccm_alSetupSingleUploadForm();
+	// setup upload form
+}
+
+ccm_alSetupSingleUploadForm = function() {
+	$(".ccm-file-manager-submit-single").submit(function() {
+		$(this).attr('target', ccm_alProcessorTarget);
+		ccm_alSubmitSingle($(this).get(0));		
+	});
 }
 
 ccm_activateFileSelectors = function() {
@@ -137,6 +149,8 @@ ccm_alRescanFiles = function() {
 				// open the properties window for this bad boy.
 				$("#ccm-file-properties-wrapper").load(CCM_TOOLS_PATH + '/files/properties?fID=' + files[0] + '&reload=1', false, function() {
 					jQuery.fn.dialog.hideLoader();
+					$(this).find(".dialog-launch").dialog();
+
 				});				
 			}
 		}
@@ -147,6 +161,23 @@ ccm_alParseSearchResponse = function(resp) {
 	$("#ccm-file-search-results").html(resp);
 	ccm_activateSearchResults();
 	ccm_alSetupSelectFiles();
+}
+
+ccm_alSetupVersionSelector = function() {
+	$("#ccm-file-versions-grid input[type=radio]").click(function() {
+		$('#ccm-file-versions-grid tr').removeClass('ccm-file-versions-grid-active');
+		
+		var trow = $(this).parent().parent();
+		var fID = trow.attr('fID');
+		var fvID = trow.attr('fvID');
+		var postStr = 'task=approve_version&fID=' + fID + '&fvID=' + fvID;
+		$.post(CCM_TOOLS_PATH + '/files/properties', postStr, function(resp) {
+			trow.addClass('ccm-file-versions-grid-active');
+			trow.find('td').show('highlight', {
+				color: '#FFF9BB'
+			});
+		});
+	});
 }
 
 ccm_alDeleteFiles = function() {
@@ -308,20 +339,38 @@ ccm_alSubmitEditableProperty = function(trow) {
 	});
 }
 
-ccm_alSubmitSingle = function() {
-	if ($("#ccm-al-upload-single-file").val() == '') { 
+ccm_alSetupFileProcessor = function() {
+	var ts = parseInt(new Date().getTime().toString().substring(0, 10))
+	var ifr = document.createElement('iframe');
+	ifr.id = 'ccm-al-upload-processor' + ts;
+	ifr.name = 'ccm-al-upload-processor' + ts;
+	ifr.style.border='0px';
+	ifr.style.width='0px';
+	ifr.style.height='0px';
+	ifr.style.display = "none";
+	document.body.appendChild(ifr);
+	
+	if (ccm_alDebug) {
+		ccm_alProcessorTarget = "_blank";
+	} else {
+		ccm_alProcessorTarget = 'ccm-al-upload-processor' + ts;
+	}
+}
+
+ccm_alSubmitSingle = function(form) {
+	if ($(form).find(".ccm-al-upload-single-file").val() == '') { 
 		alert(ccmi18n_filemanager.uploadErrorChooseFile);
 		return false;
 	} else {
-		$('#ccm-al-upload-single-submit').hide();
-		$('#ccm-al-upload-single-loader').show();
+		$(form).find('.ccm-al-upload-single-submit').hide();
+		$(form).find('.ccm-al-upload-single-loader').show();
 	}
 }
 
 ccm_alResetSingle = function () {
-	$('#ccm-al-upload-single-file').val('');
-	$('#ccm-al-upload-single-loader').hide();
-	$('#ccm-al-upload-single-submit').show();
+	$('.ccm-al-upload-single-file').val('');
+	$('.ccm-al-upload-single-loader').hide();
+	$('.ccm-al-upload-single-submit').show();
 }
 
 ccm_alRefresh = function(highlightFIDs) {
@@ -393,8 +442,8 @@ ccm_alActivateMenu = function(obj, e) {
 			html += '<li><a class="ccm-icon" href="javascript:void(0)" id="menuClearFile' + fID + selector + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.clearFile + '<\/span><\/a><\/li>';
 		}
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="90%" dialog-height="70%" dialog-title="' + ccmi18n_filemanager.viewDownload + '" id="menuViewDownload' + fID + '" href="' + CCM_TOOLS_PATH + '/files/view_download?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.viewDownload + '<\/span><\/a><\/li>';
-		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.properties + '" id="menuProperties' + fID + '" href="' + CCM_TOOLS_PATH + '/files/properties?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/edit_small.png)">'+ ccmi18n_filemanager.properties + '<\/span><\/a><\/li>';
-		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.editReplace + '" id="menuFileEditReplace' + fID + '" href="' + CCM_TOOLS_PATH + '/files/edit?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.editReplace + '<\/span><\/a><\/li>';
+		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="' + ccmi18n_filemanager.properties + '" id="menuProperties' + fID + '" href="' + CCM_TOOLS_PATH + '/files/properties?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/edit_small.png)">'+ ccmi18n_filemanager.properties + '<\/span><\/a><\/li>';
+		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="300" dialog-height="180" dialog-title="' + ccmi18n_filemanager.editReplace + '" id="menuFileEditReplace' + fID + '" href="' + CCM_TOOLS_PATH + '/files/edit?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.editReplace + '<\/span><\/a><\/li>';
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.addTo + '" id="menuFileAddTo' + fID + '" href="' + CCM_TOOLS_PATH + '/files/add_to?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.addTo + '<\/span><\/a><\/li>';
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.permissions + '" id="menuFilePermissions' + fID + '" href="' + CCM_TOOLS_PATH + '/files/permissions?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.permissions + '<\/span><\/a><\/li>';
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.deleteFile + '" id="menuDeleteFile' + fID + '" href="' + CCM_TOOLS_PATH + '/files/delete?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.deleteFile + '<\/span><\/a><\/li>';

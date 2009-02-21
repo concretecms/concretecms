@@ -8,21 +8,27 @@ if (!$cp->canRead()) {
 	die(_("Access Denied."));
 }
 
-if (!isset($_REQUEST['reload'])) { ?>
-	<div id="ccm-file-properties-wrapper">
-<? }
-
-
 Loader::model("file_attributes");
+
+$previewMode = false;
 
 $f = File::getByID($_REQUEST['fID']);
 if (isset($_REQUEST['fvID'])) {
-
+	$fv = $f->getVersion($_REQUEST['fvID']);
 } else {
-	$fv = $f->getRecentVersion();
+	$fv = $f->getApprovedVersion();
 }
 
-if ($_POST['task'] == 'update_core') {
+if ($_REQUEST['task'] == 'preview_version') { 
+	$previewMode = true;
+}
+
+if ($_POST['task'] == 'approve_version' && (!$previewMode)) {
+	$fv->approve();
+	exit;
+}
+
+if ($_POST['task'] == 'update_core' && (!$previewMode)) {
 	$fv = $f->getVersionToModify();
 
 	switch($_POST['attributeField']) {
@@ -46,7 +52,7 @@ if ($_POST['task'] == 'update_core') {
 	exit;
 }
 
-if ($_POST['task'] == 'update_extended_attribute') {
+if ($_POST['task'] == 'update_extended_attribute' && (!$previewMode)) {
 	$fv = $f->getVersionToModify();
 	$fakID = $_REQUEST['fakID'];
 	$value = '';
@@ -69,12 +75,14 @@ if ($_POST['task'] == 'update_extended_attribute') {
 }
 
 function printCorePropertyRow($title, $field, $value, $formText) {
-	global $f;
+	global $previewMode, $f;
 	if ($value == '') {
 		$text = '<div class="ccm-file-manager-field-none">' . t('None') . '</div>';
 	} else {
 		$text = $value;
 	}
+
+	if (!$previewMode) { 
 	
 	$html = '
 	<tr class="ccm-file-manager-editable-field">
@@ -93,18 +101,27 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-file-manager-editable-field-loading" />
 		</td>
 	</tr>';
+	
+	} else {
+		$html = '
+		<tr>
+			<th>' . $title . '</th>
+			<td width="100%" colspan="2">' . $text . '</td>
+		</tr>';	
+	}
+	
 	print $html;
 }
 
 function printFileAttributeRow($ak, $fv) {
-	global $f;
+	global $previewMode, $f;
 	$value = $fv->getAttribute($ak, true);
 	if ($value == '') {
 		$text = '<div class="ccm-file-manager-field-none">' . t('None') . '</div>';
 	} else {
 		$text = $value;
 	}
-	if ($ak->isAttributeKeyEditable()) { 
+	if ($ak->isAttributeKeyEditable() && (!$previewMode)) { 
 	
 	$html = '
 	<tr class="ccm-file-manager-editable-field">
@@ -135,26 +152,31 @@ function printFileAttributeRow($ak, $fv) {
 	print $html;
 }
 
-?>
+if (!isset($_REQUEST['reload'])) { ?>
+	<div id="ccm-file-properties-wrapper">
+<? } ?>
 
-<ul class="ccm-dialog-tabs" id="ccm-file-properties-tabs">
-<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-file-properties-details"><?=t('Details')?></a></li>
-<li><a href="javascript:void(0)" id="ccm-file-properties-versions"><?=t('Versions')?></a></li>
-<li><a href="javascript:void(0)" id="ccm-file-properties-statistics"><?=t('Statistics')?></a></li>
+<div class="ccm-file-properties-tabs" id="ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>">
+
+<ul class="ccm-dialog-tabs">
+<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-file-properties-details-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>"><?=t('Details')?></a></li>
+<? if (!$previewMode) { ?>
+	<li><a href="javascript:void(0)" id="ccm-file-properties-versions-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>"><?=t('Versions')?></a></li>
+<? } ?>
+<li><a href="javascript:void(0)" id="ccm-file-properties-statistics-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>"><?=t('Statistics')?></a></li>
 </ul>
 
 <script type="text/javascript">
-var ccm_fiActiveTab = "ccm-file-properties-details";
-$("#ccm-file-properties-tabs a").click(function() {
-	$("li.ccm-nav-active").removeClass('ccm-nav-active');
-	$("#" + ccm_fiActiveTab + "-tab").hide();
-	ccm_fiActiveTab = $(this).attr('id');
+//var ccm_fiActiveTab = "ccm-file-properties-details-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>";
+$("#ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?> ul a").click(function() {
+	$("#ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?> li").removeClass('ccm-nav-active');
+	$("#ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?> .ccm-file-properties-details-tab").hide();
 	$(this).parent().addClass("ccm-nav-active");
-	$("#" + ccm_fiActiveTab + "-tab").show();
+	$('#' + $(this).attr('id') + '-tab').show();
 });
 </script>
 
-<div id="ccm-file-properties-details-tab">
+<div class="ccm-file-properties-details-tab" id="ccm-file-properties-details-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>-tab">
 
 <h1><?=t('File Details')?></h1>
 
@@ -233,10 +255,11 @@ foreach($attribs as $at) {
 <br/>
 
 <?
-
-$h = Loader::helper('concrete/interface');
-$b1 = $h->button_js(t('Rescan'), 'ccm_alRescanFiles(' . $f->getFileID() . ')');
-print $b1;
+if (!$previewMode) { 
+	$h = Loader::helper('concrete/interface');
+	$b1 = $h->button_js(t('Rescan'), 'ccm_alRescanFiles(' . $f->getFileID() . ')');
+	print $b1;
+}
 
 ?>
 
@@ -244,27 +267,63 @@ print $b1;
 </div>
 </div>
 
-<div id="ccm-file-properties-versions-tab" style="display: none">
-<h1><?=t('File Versions')?></h1>
-
-	<table border="0" cellspacing="0" width="100%" class="ccm-grid" cellpadding="0">
-	<tr>
-		<th>&nbsp;</th>
-		<th><?=t('Name')?></th>
-		<th><?=t('Comments')?></th>
-		<th><?=t('Creator')?></th>
-		<th><?=t('Added On')?></th>
-	</tr>
+<? if (!$previewMode) { ?>
 	
-	</table>
+	<div class="ccm-file-properties-details-tab" id="ccm-file-properties-versions-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>-tab" style="display: none">
+	<h1><?=t('File Versions')?></h1>
+	
+		<table border="0" cellspacing="0" width="100%" id="ccm-file-versions-grid" class="ccm-grid" cellpadding="0">
+		<tr>
+			<th>&nbsp;</th>
+			<th><?=t('Name')?></th>
+			<th><?=t('Comments')?></th>
+			<th><?=t('Creator')?></th>
+			<th><?=t('Added On')?></th>
+		</tr>
+		<?
+		$versions = $f->getVersionList();
+		foreach($versions as $fvv) { ?>
+			<tr fID="<?=$f->getFileID()?>" fvID="<?=$fvv->getFileVersionID()?>" <? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?> class="ccm-file-versions-grid-active" <? } ?>>
+				<td style="text-align: center"><?=$form->radio('vlfvID', $fvv->getFileVersionID(), $fvv->getFileVersionID() == $fv->getFileVersionID())?></td>
+				<td><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/properties?fID=<?=$f->getFileID()?>&fvID=<?=$fvv->getFileVersionID()?>&task=preview_version" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="<?=t('Preview File')?>" class="dialog-launch"><?=$fvv->getTitle()?></a></td>
+				<td><?
+					$comments = $fvv->getVersionLogComments();
+					if (count($comments) > 0) {
+						print t('Updated ');
+	
+						for ($i = 0; $i < count($comments); $i++) {
+							print $comments[$i];
+							if (count($comments) > ($i + 1)) {
+								print ', ';
+							}
+						}
+						
+						print '.';
+					}
+					?>
+					</td>
+				<td><?=$fvv->getAuthorName()?></td>
+				<td><?=$fvv->getDateAdded()?></td>
+			</tr>	
+		
+		<? } ?>
+		
+		</table>
+	
+	</div>
 
-</div>
-<div id="ccm-file-properties-statistics-tab" style="display: none">
+<? } ?>
+
+<div class="ccm-file-properties-details-tab" id="ccm-file-properties-statistics-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>-tab" style="display: none">
 asdf2
+</div>
 </div>
 
 <script type="text/javascript">
-$(function() { ccm_alActiveEditableProperties(); });
+$(function() { 
+	ccm_alActiveEditableProperties(); 
+	ccm_alSetupVersionSelector();
+});
 </script>
 
 <?

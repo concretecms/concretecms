@@ -158,16 +158,48 @@ class FileVersion extends Object {
 		}
 	}
 	
+	/** 
+	 * Returns an array containing human-readable descriptions of everything that happened in this version
+	 */
+	public function getVersionLogComments() {
+		$updates = array();
+		$db = Loader::db();
+		$ga = $db->GetAll('select fvUpdateTypeID, fvUpdateTypeAttributeID from FileVersionLog where fID = ? and fvID = ? order by fvlID asc', array($this->getFileID(), $this->getFileVersionID()));
+		foreach($ga as $a) {
+			switch($a['fvUpdateTypeID']) {
+				case FileVersion::UT_REPLACE_FILE:
+					$updates[] = t('File');
+					break;
+				case FileVersion::UT_TITLE:
+					$updates[] = t('Title');
+					break;
+				case FileVersion::UT_DESCRIPTION:
+					$updates[] = t('Description');
+					break;
+				case FileVersion::UT_TAGS:
+					$updates[] = t('Tags');
+					break;
+				case FileVersion::UT_EXTENDED_ATTRIBUTE:
+					$updates[] = $db->GetOne("select akName from FileAttributeKeys where fakID = ?", array($a['fvUpdateTypeAttributeID']));
+					break;
+			}
+		}
+		$updates = array_unique($updates);
+		return $updates;
+	}
+	
 	public function updateTitle($title) {
 		$db = Loader::db();
 		$db->Execute("update FileVersions set fvTitle = ? where fID = ? and fvID = ?", array($title, $this->getFileID(), $this->getFileVersionID()));
 		$this->logVersionUpdate(FileVersion::UT_TITLE);
+		$this->fvTitle = $title;
 	}
 
 	public function updateTags($tags) {
 		$db = Loader::db();
 		$db->Execute("update FileVersions set fvTags = ? where fID = ? and fvID = ?", array($tags, $this->getFileID(), $this->getFileVersionID()));
 		$this->logVersionUpdate(FileVersion::UT_TAGS);
+		$this->fvTitle = $tags;
 	}
 
 
@@ -175,11 +207,21 @@ class FileVersion extends Object {
 		$db = Loader::db();
 		$db->Execute("update FileVersions set fvDescription = ? where fID = ? and fvID = ?", array($descr, $this->getFileID(), $this->getFileVersionID()));
 		$this->logVersionUpdate(FileVersion::UT_DESCRIPTION);
-
+		$this->fvTitle = $descr;
 	}
+
+	public function updateFile($filename, $prefix) {
+		$db = Loader::db();
+		$db->Execute("update FileVersions set fvFilename = ?, fvPrefix = ? where fID = ? and fvID = ?", array($filename, $prefix, $this->getFileID(), $this->getFileVersionID()));
+		$this->logVersionUpdate(FileVersion::UT_REPLACE_FILE);
+		$this->fvFilename = $filename;
+		$this->fvPrefix = $prefix;
+	}
+
 
 	public function approve() {
 		$db = Loader::db();
+		$db->Execute("update FileVersions set fvIsApproved = 0 where fID = ?", array($this->getFileID()));
 		$db->Execute("update FileVersions set fvIsApproved = 1 where fID = ? and fvID = ?", array($this->getFileID(), $this->getFileVersionID()));
 	}
 
@@ -258,14 +300,17 @@ class FileVersion extends Object {
 	 * This will run any type-based import routines, and store those attributes, generate thumbnails,
 	 * etc...
 	 */
-	public function refreshAttributes() {
+	public function refreshAttributes($firstRun = false) {
 		$fh = Loader::helper('file');
 		$ext = $fh->getExtension($this->fvFilename);
 		$ftl = FileTypeList::getType($ext);
 		$db = Loader::db();
 		$size = filesize($this->getPath());
+		
+		$title = ($firstRun) ? $this->getFilename() : $this->getTitle();
+		
 		$db->Execute('update FileVersions set fvExtension = ?, fvType = ?, fvTitle = ?, fvSize = ? where fID = ? and fvID = ?',
-			array($ext, $ftl->getGenericType(), $this->getFilename(), $size, $this->getFileID(), $this->getFileVersionID())
+			array($ext, $ftl->getGenericType(), $title, $size, $this->getFileID(), $this->getFileVersionID())
 		);
 		if (is_object($ftl)) {
 			if ($ftl->getCustomImporter() != false) {
@@ -281,6 +326,7 @@ class FileVersion extends Object {
 				
 			}
 		}
+		$this->refreshThumbnails();
 	}
 
 	public function createThumbnailDirectories(){
