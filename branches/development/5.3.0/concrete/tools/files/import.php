@@ -17,9 +17,6 @@ $valt = Loader::helper('validation/token');
 <li><a href="javascript:void(0)" id="ccm-file-add-remote"><?=t('Add Remote Files')?></a></li>
 </ul>
 
-<? $iframeNoCache = time(); ?>
-<iframe src="" style="display: none" border="0" id="ccm-upload-more-options-frame<?=$iframeNoCache?>" name="ccm-upload-more-options-frame<?=$iframeNoCache?>"></iframe>
-
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/swfupload/swfupload.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/swfupload/swfupload.handlers.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/swfupload/swfupload.fileprogress.js"></script>
@@ -43,6 +40,16 @@ $("#ccm-file-import-tabs a").click(function() {
 
 var swfu;
 $(function() { 
+
+	$("#ccm-file-manager-multiple-remote").submit(function() {
+		$(this).attr('target', ccm_alProcessorTarget);		
+	});
+
+	$("#ccm-file-manager-multiple-incoming").submit(function() {
+		$(this).attr('target', ccm_alProcessorTarget);		
+	});
+
+
 	swfu = new SWFUpload({
 
 		flash_url : "<?=ASSETS_URL_FLASH?>/swfupload/swfupload.swf",
@@ -169,9 +176,9 @@ $(function() {
 	$incoming_contents = $ch->getIncomingDirectoryContents();
 ?>
 <div id="ccm-file-add-incoming-tab" style="display: none">
-<h1>Add Files from Incoming Directory</h1>
+<h1><?=t('Add from Incoming Directory')?></h1>
 <?php if(!empty($incoming_contents)) { ?>
-<form target="ccm-upload-more-options-frame<?=$iframeNoCache?>" id="file_importer_form" name="file_importer_form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
+<form id="ccm-file-manager-multiple-incoming" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
 		<table id="incoming_file_table" width="100%" cellpadding="0" cellspacing="0">
 			<tr>
 				<td width="10%" valign="middle" class="center theader"><input type="checkbox" id="check_all_imports" name="check_all_imports" onclick="toggleCheckboxStatus(document.file_importer_form);" value="" /></td>
@@ -203,8 +210,7 @@ $(function() {
 				<?=t('Remove files from incoming/ directory.')?></td>
 				<td>
 				<?
-					$b1 = $h->submit(t('Add Files'), 'file_importer_form');
-					print $b1;
+					print $form->submit('submit', t('Add Files'));
 				?>
 				</td>
 			</tr>
@@ -221,9 +227,11 @@ $(function() {
 </div>
 
 <div id="ccm-file-add-remote-tab" style="display: none">
-<h1><?=t('Add Remote Files')?></h1>
-<form method="POST" id="ccm-file-add-remote-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/remote" target="ccm-upload-more-options-frame<?=$iframeNoCache?>">
+<h1><?=t('Add From Remote URL')?></h1>
+<form method="POST" id="ccm-file-manager-multiple-remote" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/remote">
 	<h3><?=t('Enter URL to valid file(s)')?></h3>
+	<?=$valt->output('import_remote');?>
+
 	<?=$form->text('url_upload_1', array('style' => 'width:90%'))?><br/>
 	<?=$form->text('url_upload_2', array('style' => 'width:90%'))?><br/>
 	<?=$form->text('url_upload_3', array('style' => 'width:90%'))?><br/>
@@ -231,8 +239,7 @@ $(function() {
 	<?=$form->text('url_upload_5', array('style' => 'width:90%'))?><br/>
 	<br/>
 	<?
-		$b1 = $h->submit(t('Add Files'), 'ccm-file-add-remote-form', 'left');
-		print $b1;
+		print $form->submit('submit', t('Add Files'));
 	?>
 </form>
 </div>

@@ -26,9 +26,6 @@ class ImageFileTypeInspector extends FileTypeInspector {
 		$hi->create($fv->getPath(), $fv->getThumbnailPath(1), AL_THUMBNAIL_WIDTH, AL_THUMBNAIL_HEIGHT, true);
 		$hi->create($fv->getPath(), $fv->getThumbnailPath(2), AL_THUMBNAIL_WIDTH_LEVEL2, AL_THUMBNAIL_HEIGHT_LEVEL2, true);
 		
-		// assign this file as the thumbnail (which will then copy it into the correct spot)
-		$fv->refreshThumbnails();
-		
 	}
 	
 

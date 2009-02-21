@@ -96,7 +96,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$r = $db->query($q, $v);
 				if ($r) {
 					$row = $r->fetchRow(); 
-					if ($row['uID'] && $row['uIsValidated'] < 1 && USER_VALIDATE_EMAIL_REQUIRED) {
+					if ($row['uID'] && $row['uIsValidated'] < 1 && defined('USER_VALIDATE_EMAIL_REQUIRED') && USER_VALIDATE_EMAIL_REQUIRED == TRUE) {
 						$this->loadError(USER_NON_VALIDATED);
 					} else if ($row['uID'] && $row['uIsActive']) {
 						$this->uID = $row['uID'];

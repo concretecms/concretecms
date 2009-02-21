@@ -8,7 +8,15 @@ if (!$cp->canRead()) {
 	die(_("Access Denied."));
 }
 
-//$valt = Loader::helper('validation/token');
+if (isset($_POST['fID'])) {
+	// we are replacing a file
+	$fr = File::getByID($_REQUEST['fID']);
+} else {
+	$fr = false;
+}
+
+
+$valt = Loader::helper('validation/token');
 Loader::library("file/importer");
 Loader::library('3rdparty/Zend/Http/Client');
 Loader::library('3rdparty/Zend/Uri/Http');
@@ -34,6 +42,11 @@ for ($i = 1; $i < 6; $i++) {
 		$errors[] = '"' . $this_url . '"' . t(' is not a valid URL.');
 	}
 }
+
+if (!$valt->validate('import_remote')) {
+	$errors[] = $valt->getErrorMessage();
+}
+			
 
 if (count($incoming_urls) < 1) {
 	$errors[] = t('You must specify at least one valid URL.');
@@ -80,26 +93,22 @@ if (count($errors) < 1) {
 				fwrite($handle, $response->getBody());
 				fclose($handle);
 				
-				//if ($valt->validate('upload')) {
-					// import the file into concrete
-					$fi = new FileImporter();
-					$resp = $fi->import($fpath.$fname, $fname);
-		
-					if (!($resp instanceof FileVersion)) {
-						switch($resp) {
-							case FileImporter::E_FILE_INVALID_EXTENSION:
-								$errors[] = t('Invalid file extension.');
-								break;
-							case FileImporter::E_FILE_INVALID:
-								$errors[] = t('Invalid file.');
-								break;
-						}
-					} else {
-						$import_responses[] = $resp;
+				// import the file into concrete
+				$fi = new FileImporter();
+				$resp = $fi->import($fpath.$fname, $fname, $fr);
+	
+				if (!($resp instanceof FileVersion)) {
+					switch($resp) {
+						case FileImporter::E_FILE_INVALID_EXTENSION:
+							$errors[] = t('Invalid file extension.');
+							break;
+						case FileImporter::E_FILE_INVALID:
+							$errors[] = t('Invalid file.');
+							break;
 					}
-				//} else {
-					//$errors[] = $valt->getErrorMessage();
-				//}
+				} else {
+					$import_responses[] = $resp;
+				}
 				
 				// clean up the file
 				unlink($fpath.$fname);

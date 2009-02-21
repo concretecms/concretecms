@@ -120,7 +120,7 @@ class LoginController extends Controller {
 		$dbp = new Permissions($dash);		
 		
 		Events::fire('on_user_login',$this);
-		if ($this->isValidExternalUrl($this->post('redirect'))) {
+		if ($this->post('redirect') != '' && $this->isValidExternalUrl($this->post('redirect'))) {
 			//make double secretly sure there's no caching going on
 			header("Cache-Control: no-store, no-cache, must-revalidate");
 			header("Pragma: no-cache");

@@ -1,5 +1,6 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
+$form = Loader::helper('form');
 ?>
 <ul id="ccm-autonav-tabs" class="ccm-dialog-tabs">
 	<li class="ccm-nav-active"><a id="ccm-autonav-tab-add" href="javascript:void(0);"><?=t('Edit')?></a></li>
@@ -32,7 +33,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 </select>
 <br><br>
 <strong><?=t('Viewing Permissions')?></strong><br/>
-<input type="checkbox" name="displayUnavailablePages" onclick="reloadPreview(this.form)" value="1" <? if ($info['displayUnavailablePages'] == 1) { ?> checked <? } ?> style="vertical-align: middle" />
+<?=$form->checkbox('displayUnavailablePages', 1, $info['displayUnavailablePages']); ?>
 <?=t('Display pages to users even when those users cannot access those pages.')?>
 <br/><br/>
 <strong><?=t('Display Pages')?></strong><br>
