@@ -171,7 +171,8 @@ class FormBlockController extends BlockController {
 	}
 	
 	//users submits the completed survey
-	function action_submit_form() {
+	function action_submit_form() { 
+	
 		$ip = Loader::helper('validation/ip');
 		Loader::library("file/importer");
 		
@@ -181,13 +182,14 @@ class FormBlockController extends BlockController {
 		}	
 		$txt = Loader::helper('text');
 		$db = Loader::db();
+		
 		//question set id
 		$qsID=intval($_POST['qsID']); 
 		if($qsID==0)
 			throw new Exception(t("Oops, something is wrong with the form you posted (it doesn't have a question set id)."));
 			
 		//get all questions for this question set
-		$rows=$db->GetArray("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=?", array($qsID));			
+		$rows=$db->GetArray("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=? AND bID=?", array( $qsID, intval($this->bID)));			
 
 		// check captcha if activated
 		if ($this->displayCaptcha) {
