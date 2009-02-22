@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 //$miniSurveyInfo['surveyName']= $bs->surveyName;
 $miniSurvey=new MiniSurvey($b);
 $miniSurveyInfo=$miniSurvey->getMiniSurveyBlockInfo( $b->getBlockID() );
+MiniSurvey::questionCleanup( intval($miniSurveyInfo['questionSetId']), $b->getBlockID() );
 
 $u=new User();
 $ui=UserInfo::getByID($u->uID);

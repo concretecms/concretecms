@@ -106,8 +106,8 @@ function toggleQuestions(qsID,trigger){
 					$questionNumber++; 
 					?>
 					<tr class="<?=($questionNumber>$numQuestionsToShow)?'extra':''?>QuestionRow<?=$answerSetId?> <?=($questionNumber>$numQuestionsToShow)?'noDisplay':'' ?>">
-						<td>
-							<?= $questions[$questionId]['question']?>
+						<td width="33%">
+							<?= $questions[$questionId]['question'] ?>
 						</td>
 						<td>
 							<?
@@ -120,6 +120,8 @@ function toggleQuestions(qsID,trigger){
 								}else{
 									echo t('File not found');
 								}
+							}elseif($question['inputType']=='text'){
+								echo $answerSet['answers'][$questionId]['answerLong'];
 							}else{
 								echo $answerSet['answers'][$questionId]['answer'];
 							}

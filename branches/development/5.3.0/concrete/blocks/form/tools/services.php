@@ -32,7 +32,7 @@ switch ($_GET['mode']){
 		break;
 		
 	case 'getQuestion':
-		$miniSurvey->getQuestionInfo( intval($_GET['qsID']), intval($_GET['msqID']) );
+		$miniSurvey->getQuestionInfo( intval($_GET['qsID']), intval($_GET['qID']) );
 		break;			
 		
 	case 'delQuestion':
@@ -46,7 +46,7 @@ switch ($_GET['mode']){
 	case 'refreshSurvey':
 	default: 
 		$showEdit=(intval($_REQUEST['showEdit'])==1)?true:false; 
-		$miniSurvey->loadSurvey( intval($_GET['qsID']), $showEdit, intval($_GET['bID']) ); 
+		$miniSurvey->loadSurvey( intval($_GET['qsID']), $showEdit, intval($_GET['bID']), explode(',',$_GET['hide']), 1 ); 
 }
 
 ?>
