@@ -11,6 +11,10 @@ $uh = Loader::helper('concrete/urls'); ?>
 
 <input type="hidden" name="miniSurveyServices" value="<?php echo $uh->getBlockTypeToolsURL($bt)?>/services.php" />
 
+<? /* these question ids have been deleted, or edited, and so shouldn't be duplicated for block versioning */ ?>
+<input type="hidden" id="ccm-ignoreQuestionIDs" name="ignoreQuestionIDs" value="" />
+<input type="hidden" id="ccm-pendingDeleteIDs" name="pendingDeleteIDs" value="" />
+
 <div id="ccm-formBlockPane-options" class="ccm-formBlockPane">
 
 	<?php 
