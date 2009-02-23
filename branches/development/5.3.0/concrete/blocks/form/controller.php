@@ -146,7 +146,16 @@ class FormBlockController extends BlockController {
 		
 		//$db->CacheFlush();
 		
-		return parent::install($path); 
+		$installResult = parent::install($path);  
+		 
+		//give all questions a bID 
+		$questionsWithBIDs=$db->getAll('SELECT max(bID) AS bID, btForm.questionSetId AS qSetId FROM `btForm` GROUP BY questionSetId');
+		foreach($questionsWithBIDs as $questionsWithBID){
+			$vals=array( intval($questionsWithBID['bID']), intval($questionsWithBID['qSetId']) );
+			$rs=$db->query('UPDATE btFormQuestions SET bID=? WHERE questionSetId=? AND bID=0',$vals);  
+		}
+		
+		return $installResult;	
 	}	
 			
 	function duplicate($newBID) {
@@ -302,6 +311,7 @@ class FormBlockController extends BlockController {
 			if(intval($this->notifyMeOnSubmission)>0){
 				$mh = Loader::helper('mail');
 				$mh->to( $this->recipientEmail ); 
+				$mh->from( $this->recipientEmail ); 
 				$mh->addParameter('formName', $this->surveyName);
 				$mh->addParameter('questionSetId', $this->questionSetId);
 				$mh->addParameter('questionAnswerPairs', $questionAnswerPairs); 
@@ -350,6 +360,8 @@ class FormBlockController extends BlockController {
 		//delete the form block		
 		$q = "delete from {$this->btTable} where bID = '{$this->bID}'";
 		$r = $db->query($q);		
+		
+		parent::delete();
 		
 		return $deleteData;
 	}
@@ -694,8 +706,7 @@ class MiniSurvey{
 			$val = ($val > $max) ? $max : $val;
 			return $val;
 		}
-		
-		
+				
 		//Run on Form block edit
 		static function questionCleanup( $qsID=0, $bID=0 ){
 			$db = Loader::db();
