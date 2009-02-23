@@ -16,9 +16,12 @@
 	if (count($files) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-file-list">
 		<tr>
-			<th><input type="checkbox" /></td>
-			<th><select>
-			
+			<th><input id="ccm-file-list-cb-all" type="checkbox" /></td>
+			<th><select id="ccm-file-list-multiple-operations" disabled>
+				<option value="">**</option>
+				<option value="download"><?=t('Download')?></option>
+				<option value="add_to_set"><?=t('Add to Set')?></option>
+				<option value="delete"><?=t('Delete')?></option>
 			</select>
 			</th>
 			<th>Type</th>
@@ -56,7 +59,7 @@
 			}
 			?>
 			<tr class="ccm-file-list-record <?=$striped?>" ccm-file-manager-can-view="<?=$canViewInline?>" ccm-file-manager-view-width="<?=$viewWidth?>" ccm-file-manager-view-height="<?=$viewHeight?>" fID="<?=$f->getFileID()?>" id="fID<?=$f->getFileID()?>">
-			<td><input type="checkbox" /></td>
+			<td class="ccm-file-list-cb"><input type="checkbox" value="<?=$f->getFileID()?>" /></td>
 			<td><div class="ccm-file-list-thumbnail">
 				<div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><?=$fv->getThumbnail(1)?></div>
 			

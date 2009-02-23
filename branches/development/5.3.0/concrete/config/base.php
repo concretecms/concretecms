@@ -276,7 +276,12 @@ define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED . '/cache');
 # Currently unused
 # define('DIR_FILES_BIN', DIR_BASE_CORE . '/bin');
 define('DIR_FILES_BIN_HTMLDIFF', DIR_LIBRARIES_3RDPARTY_CORE . '/htmldiff.py');
-define('DIR_FILES_BIN_UNZIP', '/usr/bin/unzip');
+if (!defined('DIR_FILES_BIN_UNZIP')) {
+	define('DIR_FILES_BIN_UNZIP', '/usr/bin/unzip');
+}
+if (!defined('DIR_FILES_BIN_ZIP')) {
+	define('DIR_FILES_BIN_ZIP', '/usr/bin/zip');
+}
 if(!defined('DIR_FILES_BIN_ASPELL')) define('DIR_FILES_BIN_ASPELL', '/usr/bin/aspell'); // spellchecker
 
 # Asset library constants 

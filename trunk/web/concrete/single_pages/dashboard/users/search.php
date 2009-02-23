@@ -81,15 +81,15 @@ if ($_GET['uID']) {
 					$error[] = t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM);
 				}
 
-				if (strlen($username) >= USER_USERNAME_MINIMUM && !$vals->alphanum($username)) {
-					$error[] = t('A username may only contain letters or numbers.');
+				if (strlen($username) >= USER_USERNAME_MINIMUM && !$valc->username($username)) {
+					$error[] = t('A username may not contain ", \', >, <, or any spaces.');
 				}
 				if (!$valc->isUniqueUsername($username) && $uo->getUserName() != $username) {
 					$error[] = t("The username '%s' already exists. Please choose another",$username);
 				}		
 			}
 			
-			if (strlen($password) >= USER_PASSWORD_MINIMUM && !$vals->password($password)) {
+			if (strlen($password) >= USER_PASSWORD_MINIMUM && !$valc->password($password)) {
 				$error[] = t('A password may not contain ", \', >, <, or any spaces.');
 			}
 			
