@@ -90,12 +90,14 @@ class FormBlockController extends BlockController {
 	}
 	
 	//users submits the completed survey
-	function action_submit_form() {
+	function action_submit_form() {	
+	
 		$ip = Loader::helper('validation/ip');
 		if (!$ip->check()) {
 			$this->set('invalidIP', $ip->getErrorMessage());			
 			return;
 		}	
+		
 		$txt = Loader::helper('text');
 		$db = Loader::db();
 		//question set id
@@ -126,7 +128,7 @@ class FormBlockController extends BlockController {
 			$rs=$db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=?", array($qsID));
 			
 			$questionAnswerPairs=array();
-			
+
 			//loop through each question and get the answers 
 			while( $row=$rs->fetchRow() ){	
 				//save each answer
@@ -147,11 +149,12 @@ class FormBlockController extends BlockController {
 					$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
 				}
 				
-				$questionAnswerPairs[$row['msqID']]['question']=$row['question'];
-				$questionAnswerPairs[$row['msqID']]['answer']=$txt->sanitize($_POST['Question'.$row['msqID']]);
-				
 				if( is_array($answer) ) 
 					$answer=join(',',$answer);
+									
+				$questionAnswerPairs[$row['msqID']]['question']=$row['question'];
+				$questionAnswerPairs[$row['msqID']]['answer']=$txt->sanitize( $answer.$answerLong );
+				
 				$v=array($row['msqID'],$answerSetID,$answer,$answerLong);
 				$q="insert into {$this->btAnswersTablename} (msqID,asID,answer,answerLong) values (?,?,?,?)";
 				$db->query($q,$v);
@@ -181,28 +184,27 @@ class FormBlockController extends BlockController {
 
 		$miniSurvey=new MiniSurvey();
 		$info=$miniSurvey->getMiniSurveyBlockInfo($this->bID);
-		
-		//get all answer sets
-		$q = "SELECT asID FROM {$this->btAnswerSetTablename} WHERE questionSetId = ".intval($info['questionSetId']);
-		$answerSetsRS = $db->query($q);
-		
-		//delete the answers
-		while( $answerSet=$answerSetsRS->fetchRow() ){	 
-			$q = "delete from {$this->btAnswersTablename} where asID = ".intval( $answerSet['asID'] );
-			$r = $db->query($q);
-		}
-		 
-		//delete the answer sets
-		$q = "delete from {$this->btAnswerSetTablename} where questionSetId = ".intval($info['questionSetId']);
-		$r = $db->query($q);
- 
-		//delete the questions
-		$q = "delete from {$this->btQuestionsTablename} where questionSetId = ".intval($info['questionSetId']);
-		$r = $db->query($q);	
-		
+		 		
 		//delete the form block		
 		$q = "delete from {$this->btTable} where bID = '{$this->bID}'";
-		$r = $db->query($q); 				
+		$r = $db->query($q); 
+		
+		//delete the left over questions
+		$strandedQuestionsDs = $db->getAll("SELECT fq.msqID FROM btFormQuestions AS fq LEFT JOIN btForm as f ON fq.questionSetId=f.questionSetId WHERE f.questionSetId IS NULL");
+		foreach($strandedQuestionsDs as $strandedQuestionsDs)
+			$db->query('DELETE FROM btFormQuestions WHERE msqID='.intval($strandedQuestionsDs['msqID'])); 			
+		
+		//delete left over answers
+		$strandedAnswerIDs = $db->getAll('SELECT fa.aID FROM `btFormAnswers` AS fa LEFT JOIN btFormQuestions as fq ON fq.msqID=fa.msqID WHERE fq.msqID IS NULL');
+		foreach($strandedAnswerIDs as $strandedAnswerIDs)
+			$db->query('DELETE FROM btFormAnswers WHERE aID='.intval($strandedAnswer['aID']));
+			
+		//delete the left over answer sets
+		$deleteData['strandedAnswerSetIDs'] = $db->getAll('SELECT aset.asID FROM btFormAnswerSet AS aset LEFT JOIN btFormAnswers AS fa ON aset.asID=fa.asID WHERE fa.asID IS NULL');
+		foreach($deleteData['strandedAnswerSetIDs'] as $strandedAnswerSetIDs)
+			$db->query('DELETE FROM btFormAnswerSet WHERE asID='.intval($strandedAnswerSetIDs['asID']));		
+		
+		parent::delete();
 	}
 }
 
