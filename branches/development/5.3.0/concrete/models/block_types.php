@@ -349,6 +349,21 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return BlockType::doInstallBlockType($btHandle, $bt, $dir, $btID);
 		}
 		
+		public function refresh() {
+			if ($this->getPackageID() > 0) {
+				$pkg = Package::getByID($this->getPackageID());
+				$resp = BlockType::installBlockTypeFromPackage($this->getBlockTypeHandle(), $pkg, $this->getBlockTypeID());			
+				if ($resp != '') {
+					throw new Exception($resp);
+				}
+			} else {
+				$resp = BlockType::installBlockType($this->getBlockTypeHandle(), $this->getBlockTypeID());			
+				if ($resp != '') {
+					throw new Exception($resp);
+				}
+			}
+		}
+		
 		function installBlockType($btHandle, $btID = 0) {
 		
 			if ($btID == 0) {
