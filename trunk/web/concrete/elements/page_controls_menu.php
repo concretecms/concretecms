@@ -95,7 +95,7 @@ if (isset($cp)) {
 	<li><a href="javascript:void(0)" id="ccm-nav-mcd"><?=t('Move/Delete')?></a></li>
 <? } ?>
 <? } else { ?>
-<li><? if ($cantCheckOut) { ?><span id="ccm-nav-edit"><?=t('Edit Page')?></span><? } else { ?><a href="javascript:void(0)" id="ccm-nav-edit"><?=t('Edit Page')?></a><? } ?></li>
+<li><? if ($cantCheckOut) { ?><span id="ccm-nav-edit"><?=t('Edit Page')?></span><? } else if ($cp->canWrite()) { ?><a href="javascript:void(0)" id="ccm-nav-edit"><?=t('Edit Page')?></a><? } ?></li>
 <? if ($cp->canAddSubContent()) { ?>
 	<li><a href="javascript:void(0)" id="ccm-nav-add"><?=t('Add Page')?></a></li>
 <? } ?>
