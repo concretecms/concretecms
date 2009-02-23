@@ -376,11 +376,17 @@ class CollectionPermissions extends Permissions {
 			}
 		} else {
 			if ($adm) {
+				/*
 				$cv = $cObj->getVersionObject();
 				if (is_object($cv)) {
-					//$this->permissionSet = ($cv->isMostRecent()) ? 'r:rv:wa:av:cp:dc:adm:db' : 'r:rv';
+					$this->permissionSet = ($cv->isMostRecent()) ? 'r:rv:wa:av:cp:dc:adm:db' : 'r:rv';
+				} else {
 					$this->permissionSet = 'r:rv:wa:av:cp:dc:db:adm';
 				}
+				*/
+
+				$this->permissionSet = 'r:rv:wa:av:cp:dc:db:adm';
+
 				
 				$db = Loader::db();
 				$q = "select ctID from PageTypes";
