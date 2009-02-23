@@ -3,17 +3,42 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $c = Page::getByPath("/dashboard/mediabrowser");
 $cp = new Permissions($c);
 $u = new User();
+$fh = Loader::helper('file');
+$vh = Loader::helper('validation/identifier');
 $form = Loader::helper('form');
 if (!$cp->canRead()) {
 	die(_("Access Denied."));
 }
 
-$f = File::getByID($_REQUEST['fID']);
-if (isset($_REQUEST['fvID'])) {
-	$fv = $f->getVersion($_REQUEST['fvID']);
-} else {
-	$fv = $f->getApprovedVersion();
-}
-
 $ci = Loader::helper('file');
-$ci->forceDownload($fv->getPath());
+
+
+if (isset($_REQUEST['fID']) && is_array($_REQUEST['fID'])) {
+
+	// zipem up
+	
+	$filename = $fh->getTemporaryDirectory() . '/' . $vh->getString() . '.zip';
+	$files = '';
+	$filenames = array();
+	foreach($_REQUEST['fID'] as $fID) {
+		$f = File::getByID($fID);
+		if (!in_array(basename($f->getPath()), $filenames)) {
+			$files .= "'" . addslashes($f->getPath()) . "' ";
+		}
+		$filenames[] = basename($f->getPath());
+	}
+	exec(DIR_FILES_BIN_ZIP . ' -j \'' . addslashes($filename) . '\' ' . $files);
+	$ci->forceDownload($filename);	
+
+} else {
+	
+	$f = File::getByID($_REQUEST['fID']);
+	if (isset($_REQUEST['fvID'])) {
+		$fv = $f->getVersion($_REQUEST['fvID']);
+	} else {
+		$fv = $f->getApprovedVersion();
+	}
+	
+	$ci->forceDownload($fv->getPath());
+
+}

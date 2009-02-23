@@ -76,6 +76,7 @@ ccm_activateFileManager = function(altype) {
 			}
 	});
 	ccm_alSetupInPagePaginationAndSorting();
+	ccm_alSetupCheckboxes();
 	ccm_alSetupFileProcessor();
 	ccm_alSetupSingleUploadForm();
 	// setup upload form
@@ -236,8 +237,55 @@ ccm_activateSearchResults = function() {
 	$("#ccm-file-search-loading").hide();
 	$("#ccm-search-files").attr('disabled', false);
 	ccm_alSetupInPagePaginationAndSorting();
+	ccm_alSetupCheckboxes();
 }
 
+ccm_alSetupCheckboxes = function() {
+	$("#ccm-file-list-cb-all").click(function() {
+		if ($(this).attr('checked') == true) {
+			$('.ccm-file-list-record td.ccm-file-list-cb input[type=checkbox]').attr('checked', true);
+			$("#ccm-file-list-multiple-operations").attr('disabled', false);
+		} else {
+			$('.ccm-file-list-record td.ccm-file-list-cb input[type=checkbox]').attr('checked', false);
+			$("#ccm-file-list-multiple-operations").attr('disabled', true);
+		}
+	});
+	$(".ccm-file-list-record td.ccm-file-list-cb input[type=checkbox]").click(function(e) {
+		e.stopPropagation();
+		ccm_alRescanMultiFileMenu();
+	});
+	$(".ccm-file-list-record td.ccm-file-list-cb").click(function(e) {
+		e.stopPropagation();
+		$(this).find('input[type=checkbox]').click();
+		ccm_alRescanMultiFileMenu();
+	});
+	
+	$("#ccm-file-list-multiple-operations").change(function() {
+		var action = $(this).val();
+		var fIDstring = ccm_alGetSelectedFileIDs();
+		switch(action) {
+			case "download":
+				window.frames[ccm_alProcessorTarget].location = CCM_TOOLS_PATH + '/files/download?' + fIDstring;
+				break;
+		}
+	});
+}
+
+ccm_alGetSelectedFileIDs = function() {
+	var fidstr = '';
+	$(".ccm-file-list-record td.ccm-file-list-cb input[type=checkbox]:checked").each(function() {
+		fidstr += 'fID[]=' + $(this).val() + '&';
+	});
+	return fidstr;
+}
+
+ccm_alRescanMultiFileMenu = function() {
+	if ($(".ccm-file-list-record td.ccm-file-list-cb input[type=checkbox]:checked").length > 0) {
+		$("#ccm-file-list-multiple-operations").attr('disabled', false);
+	} else {
+		$("#ccm-file-list-multiple-operations").attr('disabled', true);
+	}
+}
 ccm_alSetupInPagePaginationAndSorting = function() {
 	$("#ccm-file-list th a").click(function() {
 		ccm_deactivateSearchResults();

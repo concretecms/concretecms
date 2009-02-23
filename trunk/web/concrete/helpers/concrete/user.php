@@ -42,5 +42,5 @@ class ConcreteUserHelper {
 			
 		}
 	}
-
+	
 }

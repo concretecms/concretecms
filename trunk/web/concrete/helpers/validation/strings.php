@@ -41,26 +41,6 @@
 		}
 		
 		/**
-		 * Returns true if this is a valid pass. Valid passwords cannot contain
-		 * ',",\ or whitespace. Also checks against the password length constant
-		 */
-		public function password($pass) {
-			$pass = trim($pass);
-			if (strlen($pass) < USER_PASSWORD_MINIMUM) {
-				return false;
-			}
-			if (strlen($pass) > USER_PASSWORD_MAXIMUM) {
-				return false;
-			}
-			
-			$resp = preg_match('/[[:space:]]|\>|\<|\"|\'|\\\/i', $pass);
-			if ($resp > 0) {
-				return false;
-			}
-			return true;
-		}
-		
-		/**
 		 * Returns false if the string is empty (including trim())
 		 * @param string $field
 		 * @return bool

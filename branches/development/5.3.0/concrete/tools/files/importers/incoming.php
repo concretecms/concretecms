@@ -60,7 +60,7 @@ if ($valt->validate('import_incoming')) {
 		window.parent.ccm_alResetSingle();
 	<? } else { ?>
 		window.parent.ccm_alRefresh();
-		window.parent.jQuery.fn.dialog.closeTop();
+		//window.parent.jQuery.fn.dialog.closeTop();
 		highlight = new Array();
 		<? foreach($files as $resp) { ?>
 			highlight.push(<?=$resp->getFileID()?>);
