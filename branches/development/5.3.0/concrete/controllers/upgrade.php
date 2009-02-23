@@ -141,10 +141,7 @@ class UpgradeController extends Controller {
 		$btl = new BlockTypeList();
 		$btArray = $btl->getInstalledList();
 		foreach($btArray as $bt) {
-			$path = $bt->getBlockTypePath();
-			if (file_exists($path . '/' . FILENAME_BLOCK_DB)) {
-				Package::installDB($path . '/' . FILENAME_BLOCK_DB);
-			}
+			$bt->refresh();
 		}
 	}
 	
