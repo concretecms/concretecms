@@ -32,5 +32,5 @@ $miniSurvey->frontEndMode=true;
 	<? } ?>
 	<input name="qsID" type="hidden" value="<?php echo intval($survey->questionSetId)?>" />
 	<input name="pURI" type="hidden" value="<?php echo ($_REQUEST['pURI'])?$_REQUEST['pURI']:str_replace(array('&ccm_token='.$_REQUEST['ccm_token'],'&btask=passthru','&method=submit_form'),'',$_SERVER['REQUEST_URI'])?>" />
-	<?php  $miniSurvey->loadSurvey( $survey->questionSetId, 0, intval($bID) ); ?>
+	<?php  $miniSurvey->loadSurvey( $survey->questionSetId, 0, intval($bID) );  ?> 
 </form>

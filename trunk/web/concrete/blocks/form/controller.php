@@ -167,16 +167,21 @@ class FormBlockController extends BlockController {
 		if(count($row)>0){
 			$oldQuestionSetId=$row['questionSetId'];
 			$newQuestionSetId=time();
-			//duplicate survey block record
-			$v = array($newQuestionSetId,$row['surveyName'],$newBID);
-			$q = "insert into {$this->btTable} (questionSetId,surveyName, , bID) values (?, ?, ?)";
+			//duplicate survey block record  
+			$v = array($newQuestionSetId,$row['surveyName'],$newBID,$row['thankyouMsg'],intval($row['notifyMeOnSubmission']),$row['recipientEmail'],$row['displayCaptcha']);
+			$q = "insert into {$this->btTable} ( questionSetId, surveyName, bID,thankyouMsg,notifyMeOnSubmission,recipientEmail,displayCaptcha) values (?, ?, ?, ?, ?, ?, ?)";
+			
+			/*
+			//done in the save routine
 			//duplicate questions records
-			$rs=$db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$oldQuestionSetId");
+			$rs=$db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$oldQuestionSetId AND bID=".intval($this->bID) );
 			while( $row=$rs->fetchRow() ){
-				$v=array($newQuestionSetId,intval($row['msqID']),$row['question'],$row['inputType'],$row['options'],$row['position'],$row['width'],$row['height']);
-				$sql='INSERT INTO {$this->btQuestionsTablename} (questionSetId,msqID,question,inputType,options,position,width,height) VALUES (!,!,?,?,?,!,?,?)';
+				$v=array($newQuestionSetId,intval($row['msqID']), intval($newBID), $row['question'],$row['inputType'],$row['options'],$row['position'],$row['width'],$row['height'],$row['required']);
+				$sql='INSERT INTO {$this->btQuestionsTablename} (questionSetId,msqID,bID,question,inputType,options,position,width,height,required) VALUES (!,!,!,?,?,?,!,?,?,?)';
 			}
-		}
+			*/
+			return $newQuestionSetId;
+		}		
 	}
 	
 	//users submits the completed survey
