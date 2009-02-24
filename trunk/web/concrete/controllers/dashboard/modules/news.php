@@ -5,7 +5,7 @@ class NewsDashboardModuleController extends Controller {
 
 	// simple pie is awesome and parses the HTML!
 	const FEED = 'http://www.concrete5.org/community/updates/news/feed';
-	const FEED_READ_MORE = "http://www.concrete5.org/community/updates/news/";
+	const FEED_READ_MORE = "http://www.concrete5.org/community/";
 	
 	public function __construct() {
 		$fp = Loader::helper("feed");
