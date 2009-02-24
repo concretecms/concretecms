@@ -144,7 +144,10 @@ class Page extends Collection {
 				foreach($blocks as $bID) {
 					if (intval($bID) > 0) {
 						$v = array($startDO, $arHandle, $bID, $this->getCollectionID(), $this->getVersionID());
-						$db->query("update CollectionVersionBlocks set cbDisplayOrder = ?, arHandle = ? where bID = ? and cID = ? and cvID = ?", $v);							
+						try {
+							$db->query("update CollectionVersionBlocks set cbDisplayOrder = ?, arHandle = ? where bID = ? and cID = ? and cvID = ?", $v);
+						} catch(Exception $e) {}
+						
 						$startDO++;
 					}
 				}

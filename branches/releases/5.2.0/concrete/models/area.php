@@ -257,6 +257,8 @@ class Area extends Object {
 				}			
 			}
 		}
+		
+		Cache::delete('area', $this->getCollectionID() . ':' . $this->getAreaHandle());
 	}
 	
 	function rescanSubAreaPermissions($cIDToCheck = null) {
