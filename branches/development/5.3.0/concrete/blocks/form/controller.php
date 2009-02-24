@@ -451,6 +451,7 @@ class MiniSurvey{
 		public $btAnswersTablename = 'btFormAnswers'; 	
 		
 		public $lastSavedMsqID=0;
+		public $lastSavedqID=0;
 
 		function MiniSurvey(){
 			$db = Loader::db();
@@ -493,16 +494,18 @@ class MiniSurvey{
 					}
 					$dataValues=array(intval($values['qsID']), trim($values['question']), $values['inputType'],
 								      $values['options'], intval($values['position']), $width, $height, intval($values['required']), intval($values['msqID']) );			
-					$sql='UPDATE btFormQuestions SET questionSetId=?, question=?, inputType=?, options=?, position=?, width=?, height=?, required=? WHERE msqID=? AND bID=0';
+					$sql='UPDATE btFormQuestions SET questionSetId=?, question=?, inputType=?, options=?, position=?, width=?, height=?, required=? WHERE msqID=? AND bID=0';					
 				}else{ 
 					if(!intval($values['msqID']))
 						$values['msqID']=intval($this->db->GetOne("SELECT MAX(msqID) FROM btFormQuestions")+1); 
 					$dataValues=array($values['msqID'],intval($values['qsID']), trim($values['question']), $values['inputType'],
 								     $values['options'], 1000, intval($values['width']), intval($values['height']), intval($values['required']) );			
-					$sql='INSERT INTO btFormQuestions (msqID,questionSetId,question,inputType,options,position,width,height,required) VALUES (?,?,?,?,?,?,?,?,?)';			
+					$sql='INSERT INTO btFormQuestions (msqID,questionSetId,question,inputType,options,position,width,height,required) VALUES (?,?,?,?,?,?,?,?,?)'; 
 				}
 				$result=$this->db->query($sql,$dataValues);  
 				$this->lastSavedMsqID=intval($values['msqID']);	
+				$this->lastSavedqID=intval($this->db->GetOne("SELECT MAX(qID) FROM btFormQuestions WHERE bID=0 AND msqID=?", array($values['msqID']) ));
+				$jsonVals['qID']=$this->lastSavedqID;
 				$jsonVals['success']=1;
 			}
 			
@@ -530,7 +533,7 @@ class MiniSurvey{
 			$this->db->query($sql,$dataValues);
 		} 
 		
-		static function loadQuestions($qsID, $bID=0, $showPending=0 ){
+		function loadQuestions($qsID, $bID=0, $showPending=0 ){
 			$db = Loader::db();
 			if( intval($bID) ){
 				$bIDClause=' AND ( bID='.intval($bID).' ';			
@@ -547,8 +550,9 @@ class MiniSurvey{
 		}		
 		
 		function loadSurvey( $qsID, $showEdit=false, $bID=0, $hideQIDs=array(), $showPending=0 ){
+		
 			//loading questions	
-			$questionsRS=self::loadQuestions( $qsID, $bID, $showPending);
+			$questionsRS=$this->loadQuestions( $qsID, $bID, $showPending);
 		
 			if(!$showEdit){
 				echo '<table class="formBlockSurveyTable">';					
@@ -609,8 +613,8 @@ class MiniSurvey{
 								<a href="#" onclick="miniSurvey.moveUp(this,<?php echo $questionRow['msqID']?>);return false" class="moveUpLink"></a> 
 								<a href="#" onclick="miniSurvey.moveDown(this,<?php echo $questionRow['msqID']?>);return false" class="moveDownLink"></a>						  
 							</div>						
-							<a href="#" onclick="miniSurvey.reloadQuestion(<?= $questionRow['qID']?>);return false"><?php echo t('edit')?></a> &nbsp;&nbsp; 
-							<a href="#" onclick="miniSurvey.deleteQuestion(this,<?= $questionRow['msqID']?>,<?=intval($questionRow['qID'])?>);return false"><?= t('remove')?></a>
+							<a href="#" onclick="miniSurvey.reloadQuestion(<?=intval($questionRow['qID']) ?>);return false"><?php echo t('edit')?></a> &nbsp;&nbsp; 
+							<a href="#" onclick="miniSurvey.deleteQuestion(this,<?=intval($questionRow['msqID']) ?>,<?=intval($questionRow['qID'])?>);return false"><?= t('remove')?></a>
 						</div>
 						<div class="miniSurveySpacer"></div>
 					</div>
