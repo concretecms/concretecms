@@ -12,7 +12,7 @@ foreach($posts as $item) { ?>
 <h2><?php echo t('Search Documentation')?></h2>
 <form method="post" action="http://www.concrete5.org/search/">
 <input type="text" name="query" style="width: 130px" />
-<input name="search_paths[]" type="hidden" value="/documentation" />
+<input name="search_paths[]" type="hidden" value="/help" />
 <input type="hidden" name="do" value="search" />
 <input type="submit" value="<?php echo t('Search')?>" />
 </form>

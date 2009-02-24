@@ -21,7 +21,7 @@ class GenerateSitemap extends Job {
 		$ni = Loader::helper('navigation');
 		
 		$xmlFile = DIR_BASE.'/sitemap.xml';
-		$xmlHead = "<?php xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+		$xmlHead = "<" . "?" . "xml version=\"1.0\" encoding=\"" . APP_CHARSET . "\"?>\n"
 				  ."<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
 		$home = '';
 		$c = Page::getByID(1, "ACTIVE");
@@ -29,7 +29,7 @@ class GenerateSitemap extends Job {
 		$priority = $c->getAttribute("sitemap_priority");
 		
 		if ($changefreq == '') {
-			$changefreq = 'monthly';
+			$changefreq = 'weekly';
 		}
 		if ($priority == '') {
 			$priority = '1.0';
@@ -70,10 +70,10 @@ class GenerateSitemap extends Job {
 					$priority = $c->getAttribute("sitemap_priority");
 					
 					if ($changefreq == '') {
-						$changefreq = 'monthly';
+						$changefreq = 'weekly';
 					}
 					if ($priority == '') {
-						$priority = '0.5';
+						$priority = '0.' . round(rand(1, 5));
 					}
 					
 					$node = "";		

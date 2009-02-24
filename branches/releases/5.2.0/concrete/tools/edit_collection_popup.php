@@ -31,7 +31,7 @@ switch($_GET['ctask']) {
 	case 'add':
 		$toolSection = "collection_add";
 		$divID = 'ccm-edit-collection-design';
-		$canViewPane = $cp->canWrite();
+		$canViewPane = $cp->canAddSubContent();
 		break;
 	case 'add_external':
 		$toolSection = "collection_add_external";
