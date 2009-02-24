@@ -45,6 +45,7 @@ class InstallController extends Controller {
 	}
 	
 	protected function installDB() {
+		 
 		
 		$installDirectory = $this->installData['DIR_BASE_CORE'] . '/config';
 		$file = $installDirectory . '/db.xml';

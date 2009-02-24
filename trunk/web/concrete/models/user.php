@@ -20,7 +20,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  *
  */
 
-	class User extends Object {
+	class User extends Object { 
 	
 		var $uID = '';
 		var $uName = '';

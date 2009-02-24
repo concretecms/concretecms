@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  *
  */
 
-	class UserInfo extends Object {
+	class UserInfo extends Object { 
 	
 		/* magic method for user attributes. This is db expensive but pretty damn cool */
 		
