@@ -21,7 +21,7 @@ class GenerateSitemap extends Job {
 		$ni = Loader::helper('navigation');
 		
 		$xmlFile = DIR_BASE.'/sitemap.xml';
-		$xmlHead = "<" . "?" . "xml version=\"1.0\" encoding=\"" . APP_CHARSET . "\"?>\n"
+		$xmlHead = "<" . "?" . "xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 				  ."<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
 		$home = '';
 		$c = Page::getByID(1, "ACTIVE");
