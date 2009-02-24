@@ -31,10 +31,14 @@ class FormDateTimeHelper {
 		if ($arr == null) {
 			$arr = $_POST;
 		}
+		
 		if (isset($arr[$field . '_dt'])) {
 			$dt = date('Y-m-d', strtotime($arr[$field . '_dt']));
 			$str = $dt . ' ' . $arr[$field . '_h'] . ':' . $arr[$field . '_m'] . ' ' . $arr[$field . '_a'];
 			return date('Y-m-d H:i:s', strtotime($str));
+		} else if (isset($arr[$field . '_d'])) {
+			$dt = date('Y-m-d', strtotime($arr[$field . '_d']));
+			return $dt;
 		} else {
 			return false;
 		}
@@ -140,6 +144,37 @@ EOS;
 		return $html;
 	
 	}
+	
+	/** 
+	 * Creates form fields and JavaScript calendar includes for a particular item but includes only calendar controls (no time.)
+	 * <code>
+	 *     $dh->datetime('yourStartDate', '2008-07-12 3:00:00');
+	 * </code>
+	 * @param string $prefix
+	 * @param string $value
+	 * @param bool $includeActivation
+	 * @param bool $calendarAutoStart
+	 */
+	public function date($field, $value = null, $calendarAutoStart = true) {
+		if (isset($_REQUEST[$field])) {
+			$dt = $_REQUEST[$field];
+		} else if ($value != "") {
+			$dt = date('m/d/Y', strtotime($value));
+		} else if ($value === '') {
+			$dt = '';
+		} else {
+			$dt = date('m/d/Y');
+		}
+		//$id = preg_replace("/[^0-9A-Za-z-]/", "_", $prefix);
+		$html = '';
+		$html .= '<span class="ccm-input-date-wrapper" id="' . $field . '_dw"><input id="' . $field . '" name="' . $field . '" class="ccm-input-date" value="' . $dt . '"  /></span>';
+
+		if ($calendarAutoStart) { 
+			$html .= '<script type="text/javascript">$(function() { $("#' . $field . '").datepicker({ showAnim: \'fadeIn\' }); });</script>';
+		}
+		return $html;
+	
+	}	
 
 }
 

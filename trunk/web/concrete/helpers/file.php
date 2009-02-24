@@ -54,6 +54,56 @@ class FileHelper {
 		return substr($txt->unhandle($filename), 0, strrpos($filename, '.'));
 	}
 	
+	/** 
+	 * Takes a path to a file and sends it to the browser, streaming it, and closing the HTTP connection afterwards. Basically a force download method
+	 */
+	public function forceDownload($file) {
+		
+		header('Content-type: application/octet-stream');
+		$filename = basename($file);
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header('Content-Length: ' . filesize($file));
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: private",false);
+		header("Content-Transfer-Encoding: binary");
+	
+		$buffer = '';
+		$chunk = 1024*1024;
+		$handle = fopen($file, 'rb');
+		if ($handle === false) {
+			return false;
+		}
+		while (!feof($handle)) {
+			$buffer = fread($handle, $chunk);
+			print $buffer;
+		}
+		
+		fclose($handle);
+		exit;		
+	}
+	
+	/** 
+	 * Returns the full path to the temporary directory
+	 */
+	public function getTemporaryDirectory() {
+		if (function_exists('sys_get_temp_dir')) {
+			return sys_get_temp_dir();
+		} else {
+			if (!empty($_ENV['TMP'])) { return realpath($_ENV['TMP']); }
+			if (!empty($_ENV['TMPDIR'])) { return realpath( $_ENV['TMPDIR']); }
+			if (!empty($_ENV['TEMP'])) { return realpath( $_ENV['TEMP']); }
+			
+			$tempfile=tempnam(uniqid(rand(),TRUE),'');
+			if (file_exists($tempfile)) {
+				unlink($tempfile);
+				return realpath(dirname($tempfile));
+			}
+		}
+	}
+
+
 	
 	/**
 	 * Adds content to a new line in a file. If a file is not there it will be created
@@ -109,6 +159,15 @@ class FileHelper {
 	
 	
 	/** 
+	 * Cleans up a filename and returns the cleaned up version
+	 */
+	public function sanitize($file) {
+		//return preg_replace(array("/[^0-9A-Za-z-.]/","/[\s]/"),"", $file);
+		$file = preg_replace("/[^0-9A-Z_a-z-.\s]/","", $file);
+		return trim($file);
+	}
+	
+	/** 
 	* Returns the extension for a file name
 	* @param $filename
 	*/
@@ -116,25 +175,14 @@ class FileHelper {
 		$extension = end(explode(".",$filename));
 		return $extension;
 	}
-
+	
 	/** 
-	* Parses the file extension for a given file name, checks it to see if it's in the the extension array if provided
-	* if not, it checks to see if it's in the UPLOAD_FILE_EXTENSIONS_ALLOWED constant
-	* @param string $filename
-	* @param array $extensions
-	* @return boolean
-	*/
-
-	public function hasAllowedExtension($filename, $extensions = NULL) {
-		$ext = strtolower($this->getExtension($filename));
-		if(isset($extensions) && is_array($extensions) && count($extensions)) {
-			$allowed_extensions = $extensions;
-		} else { // pull from constants
-			$extensions_string = strtolower(str_replace(array("*","."),"",UPLOAD_FILE_EXTENSIONS_ALLOWED));
-			$allowed_extensions = explode(";",$extensions_string);
-		}
-		return in_array($ext,$allowed_extensions);
+	 * Takes a path and replaces the files extension in that path with the specified extension
+	 */
+	public function replaceExtension($filename, $extension) {
+		$newFileName = substr($filename, 0, strrpos($filename, '.')) . '.' . $extension;
+		return $newFileName;
 	}
-
+		
 }
 ?>

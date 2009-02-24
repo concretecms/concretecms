@@ -17,9 +17,10 @@ if ($config_check_failed) {
 	define('URL_REWRITING', false);
 }
 
-if (!defined('UPLOAD_FILE_EXTENSIONS_ALLOWED')) {
-	define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.swf;*.doc;*.txt;*.xls;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.mp4;*.mp3;*.qt;*.ppt;*.kml');
-}
+// AS: moved to concrete/config/app.php Wednesday; February 4, 2009
+// if (!defined('UPLOAD_FILE_EXTENSIONS_ALLOWED')) {
+// 	define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.mp4;*.mp3;*.qt;*.ppt;*.kml');
+// }
 
 if (!defined('REDIRECT_TO_BASE_URL')) {
 	define('REDIRECT_TO_BASE_URL', true);
@@ -46,6 +47,21 @@ if (!defined('STATISTICS_TRACK_PAGE_VIEWS')) {
 	define('STATISTICS_TRACK_PAGE_VIEWS', true);
 }
 
+/** 
+ * Character support
+ */
+
+if (!defined('APP_CHARSET')) {
+	define('APP_CHARSET', 'UTF-8'); // pages, etc...
+}
+
+if (!defined('DB_CHARSET')) {
+	define('DB_CHARSET', 'utf8'); // pages, etc...
+}
+
+if (!defined("DB_COLLATE")) {
+	define('DB_COLLATE', '');
+}
 
 if (!defined('LOCALE')) {
 	define("LOCALE", 'en_US');
@@ -97,7 +113,6 @@ define('OB_INITIAL_LEVEL', ob_get_level());
 
 # Sessions/TMP directories
 define('DIR_SESSIONS', '/tmp');
-define('DIR_TMP', '/tmp');
 define('DISPATCHER_FILENAME_CORE', 'dispatcher.php');
 
 # Used by the loader to load core libraries
@@ -234,9 +249,15 @@ define('DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS_CORE', DIR_FILES_BLOCK_TYPE
 
 # Uploaded files 
 define('DIR_FILES_UPLOADED', DIR_BASE . '/files');
+define('DIR_FILES_INCOMING', DIR_BASE . '/files/incoming');
 define('REL_DIR_FILES_UPLOADED', DIR_REL . '/files');
 define('DIR_FILES_UPLOADED_THUMBNAILS', DIR_BASE . '/files/thumbnails');
 define('REL_DIR_FILES_UPLOADED_THUMBNAILS', DIR_REL . '/files/thumbnails');
+define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_BASE . '/files/thumbnails/level2');
+define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_REL . '/files/thumbnails/level2');
+define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_BASE . '/files/thumbnails/level3');
+define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_REL . '/files/thumbnails/level3');
+
 define('DIR_FILES_UPLOADED_ONSTATES', DIR_BASE . '/files/onstates');
 define('REL_DIR_FILES_UPLOADED_ONSTATES', DIR_REL . '/files/onstates');
 define('DIR_FILES_ORIGINALS', DIR_FILES_UPLOADED . '/originals');
@@ -255,16 +276,27 @@ define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED . '/cache');
 # Currently unused
 # define('DIR_FILES_BIN', DIR_BASE_CORE . '/bin');
 define('DIR_FILES_BIN_HTMLDIFF', DIR_LIBRARIES_3RDPARTY_CORE . '/htmldiff.py');
-define('DIR_FILES_BIN_UNZIP', '/usr/bin/unzip');
+if (!defined('DIR_FILES_BIN_UNZIP')) {
+	define('DIR_FILES_BIN_UNZIP', '/usr/bin/unzip');
+}
+if (!defined('DIR_FILES_BIN_ZIP')) {
+	define('DIR_FILES_BIN_ZIP', '/usr/bin/zip');
+}
 if(!defined('DIR_FILES_BIN_ASPELL')) define('DIR_FILES_BIN_ASPELL', '/usr/bin/aspell'); // spellchecker
 
 # Asset library constants 
-define('AL_THUMBNAIL_WIDTH', '80');
-define('AL_THUMBNAIL_HEIGHT', '80');
+define('AL_THUMBNAIL_WIDTH', '60');
+define('AL_THUMBNAIL_HEIGHT', '60');
+define('AL_THUMBNAIL_WIDTH_LEVEL1', '60'); // level1 duplicated here for internal functions
+define('AL_THUMBNAIL_HEIGHT_LEVEL1', '60');
+define('AL_THUMBNAIL_WIDTH_LEVEL2', '250');
+define('AL_THUMBNAIL_HEIGHT_LEVEL2', '250');
+
 define('AL_ICON_WIDTH', 24);
 define('AL_ICON_HEIGHT', 24);
 define('DIR_AL_ICONS', DIR_BASE_CORE . '/images/icons/filetypes');
 define('REL_DIR_AL_ICONS', ASSETS_URL_IMAGES . '/icons/filetypes');
+define('AL_ICON_DEFAULT', ASSETS_URL_IMAGES . '/icons/filetypes/default.png');
 
 # This is the max size of any image in the system
 define('IMAGE_MAX_WIDTH','1200'); // this is the max - can't be any higher, this overrides area settings
@@ -346,7 +378,7 @@ if (!defined('DB_USE_CACHE')) {
 $ADODB_ASSOC_CASE =  2;
 $ADODB_ACTIVE_CACHESECS = 300;
 $ADODB_CACHE_DIR = DIR_FILES_CACHE_DB;
-define('APP_VERSION', '5.2.1b1');
+define('APP_VERSION', '5.3.0a1');
 define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the latest version (this is seconds)
 define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_version_number');
 define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');

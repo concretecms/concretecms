@@ -45,7 +45,7 @@ class PaginationHelper {
 		if ($URL == false || $URL == '') {
 			$this->URL = $this->getBaseURL();
 		} else {
-			$this->URL=$URL;
+			$this->URL = $this->getBaseURL($URL);
 		}
 		$this->page_size=intval($size); 
 		//calulate the number of pages
@@ -57,19 +57,9 @@ class PaginationHelper {
 		if($jsFunctionCall) $this->jsFunctionCall=$jsFunctionCall;
 	}
 	
-	private function getBaseURL() {
-		$base= trim($_SERVER['REQUEST_URI'], '?');
-
-		// strip out existing paging
-		$base = preg_replace('/[&|?]' . $this->queryStringPagingVariable . '=[0-9]/', '', $base);
-
-		if (strpos($base, '?') === false) {
-			$base .= '?';
-		} else {
-			$base .= '&';
-		}
-		$base .= $this->queryStringPagingVariable . '=%pageNum%';
-		return $base;
+	private function getBaseURL($url = false) {
+		$uh = Loader::helper('url');
+		return $uh->setVariable($this->queryStringPagingVariable, '%pageNum%', $url);
 	}
 	
 	function recalc($num_results){

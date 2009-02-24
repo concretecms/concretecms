@@ -54,3 +54,19 @@ var ccmi18n_spellchecker = {
 	noSuggestions: '<?=t('No Suggestions')?>'
 	
 }
+
+var ccmi18n_filemanager = {
+	
+	view: '<?=t('View File')?>',
+	download: '<?=t('Download File')?>',
+	selectFile: '<?=t('Choose File')?>',
+	clearFile: '<?=t('Clear File')?>',
+	replaceFile: '<?=t('Replace File')?>',
+	properties: '<?=t('Properties')?>',
+	editReplace: '<?=t('Edit/Replace File')?>',
+	addTo: '<?=t('Add to Set/Archive')?>',
+	permissions: '<?=t('Permissions')?>',
+	deleteFile: '<?=t('Delete File')?>',
+	uploadErrorChooseFile: '<?=t('You must choose a file.')?>',
+	rescan: '<?=t('Rescan Files')?>'
+}

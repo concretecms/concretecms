@@ -69,7 +69,6 @@ if (URL_REWRITING_ALL == true) {
 define('REL_DIR_FILES_TOOLS_BLOCKS', REL_DIR_FILES_TOOLS . '/blocks'); // this maps to the /tools/ directory in the blocks subdir
 define('REL_DIR_FILES_TOOLS_PACKAGES', REL_DIR_FILES_TOOLS . '/packages'); 
 
-
 # User & Registration Settings
 
 if (!defined('ENABLE_OPENID_AUTHENTICATION')) { 
@@ -105,3 +104,40 @@ if (!defined('ENABLE_REGISTRATION')) {
 }
 
 
+if (!defined('UPLOAD_FILE_EXTENSIONS_ALLOWED')) {
+	Config::getOrDefine('UPLOAD_FILE_EXTENSIONS_ALLOWED','*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.mp4;*.mp3;*.qt;*.ppt;*.kml');
+}
+
+# User & Registration Settings
+
+if (!defined('ENABLE_OPENID_AUTHENTICATION')) { 
+	Config::getOrDefine('ENABLE_OPENID_AUTHENTICATION', false);
+}
+if (!defined('ENABLE_USER_PROFILES')) { 
+	Config::getOrDefine('ENABLE_USER_PROFILES', false);
+}
+
+# If user registration with email address is true we don't use username's - we just use uEmail and we populate uName with the email address
+if (!defined('USER_REGISTRATION_WITH_EMAIL_ADDRESS')) {
+	Config::getOrDefine('USER_REGISTRATION_WITH_EMAIL_ADDRESS', false);
+}
+
+if (!defined('USER_VALIDATE_EMAIL')) {
+	Config::getOrDefine('USER_VALIDATE_EMAIL', false);	
+}
+
+if (!defined('USER_VALIDATE_EMAIL_REQUIRED')) {
+	Config::getOrDefine('USER_VALIDATE_EMAIL_REQUIRED', false);	
+}
+
+if (!defined('USER_REGISTRATION_APPROVAL_REQUIRED')) {
+	Config::getOrDefine('USER_REGISTRATION_APPROVAL_REQUIRED', false);
+}
+
+if (!defined('REGISTRATION_TYPE')) {
+	Config::getOrDefine('REGISTRATION_TYPE', 'disabled');	
+}
+
+if (!defined('ENABLE_REGISTRATION')) {
+	Config::getOrDefine('ENABLE_REGISTRATION', false);	
+}

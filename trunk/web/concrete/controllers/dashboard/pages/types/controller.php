@@ -4,9 +4,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class DashboardPagesTypesController extends Controller {
 
 
-public function view() {
-
-}
+public function view() { 
+	
+}	
 
 public function delete($ctID, $token = '') {
 	$db = Loader::db();

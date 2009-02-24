@@ -2,7 +2,7 @@
 
 	## This constant ensures that we're operating inside dispatcher.php. There is a LATER check to ensure that dispatcher.php is being called correctly. ##
 	define('C5_EXECUTE', true);
-	
+
 	## Startup check ##	
 	require('startup/config_check.php');
 
@@ -28,6 +28,7 @@
 	Loader::library('item_list');
 	Loader::library('view');
 	Loader::library('controller');
+	Loader::library('file/types');
 	Loader::library('block_view');
 	Loader::library('block_controller');
 
@@ -37,6 +38,8 @@
 	## Load required models ##
 	Loader::model('area');
 	Loader::model('block');
+	Loader::model('file');
+	Loader::model('file_version');
 	Loader::model('block_types');
 	Loader::model('collection');
 	Loader::model('collection_version');
@@ -63,6 +66,12 @@
 	## Load session handlers
 	require('startup/session.php');
 
+	## Startup check ##	
+	require('startup/encoding_check.php');
+
+	## File types ##
+	require('config/file_types.php');
+
 	## Startup check, install ##	
 	require('startup/config_check_complete.php');
 	
@@ -79,6 +88,9 @@
 
 	## Specific site routes for various content items (if they exist) ##
 	@include('config/site_theme_paths.php');
+
+	## Specific site routes for various content items (if they exist) ##
+	@include('config/site_file_types.php');
 
 	## Specific site/app events if they are enabled ##
 	## This must come before packages ##

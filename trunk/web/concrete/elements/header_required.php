@@ -19,6 +19,7 @@ if (is_object($c)) {
 $akt = $c->getCollectionAttributeValue('meta_title'); 
 $akd = $c->getCollectionAttributeValue('meta_description');
 $akk = $c->getCollectionAttributeValue('meta_keywords');
+
 if ($akt) { 
 	$pageTitle = $akt; ?>
 	<title><?=$akt?></title>
@@ -38,7 +39,7 @@ if ($akk) { ?>
 	<meta name="keywords" content="<?=htmlspecialchars($akk)?>" />
 <? } ?>
 
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta http-equiv="content-type" content="text/html; charset=<?=APP_CHARSET?>" />
 
 <? $u = new User(); ?>
 <script type="text/javascript">
@@ -72,8 +73,8 @@ var CCM_REL = "<?=DIR_REL?>";
 $html = Loader::helper('html');
 $this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 
-$this->addHeaderItem($html->javascript('jquery1.2.6.js'));
-$this->addHeaderItem($html->javascript('swfobject2.1.js'));
+$this->addHeaderItem($html->javascript('jquery.js'));
+$this->addHeaderItem($html->javascript('swfobject.js'));
 $this->addHeaderItem($html->javascript('ccm.base.js'));
 $this->addHeaderItem($html->css('ccm.base.css'));
 
@@ -107,5 +108,3 @@ if (is_object($cp)) {
 		Loader::element('page_controls_menu', array('cp' => $cp, 'c' => $c));
 	}
 }
-
-?>

@@ -43,7 +43,7 @@ class Controller {
 		}
 		foreach($this->helpers as $h) {
 			$$h = Loader::helper($h);
-			$this->helperObjects[$h] = $$h;
+			$this->helperObjects[(str_replace('/','_',$h))] = $$h;
 		}
 		
 	}	
@@ -265,6 +265,33 @@ class Controller {
 		}
 		header("Location: " . $url);
 		exit;
+	}
+
+	/** 
+	 * Redirects to a given external URL
+	 * @param string $url
+	 * @param string $http_status
+	 */	
+	public function externalRedirect($url,$http_status=false) {
+		if($this->isValidExternalUrl($url)){
+			if($http_status){
+				header($http_status);
+			}
+			header('Location: '.$url);		
+			exit;
+		}
+		throw new Exception('Invalid Redirect URL');
+	}
+
+	/** 
+	 * Validates an external URL request to avoid possible shenanagins
+	 *
+	 * Placeholder for now
+	 * @param string $url
+	 * @param string $http_status
+	 */	
+	public function isValidExternalUrl($url){
+		return true;
 	}
 	
 	/** 

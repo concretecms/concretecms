@@ -44,8 +44,7 @@ if ($_POST['add'] || $_POST['update']) {
 	foreach($_POST as $key=>$newVal){ 
 		if( !strstr($key,'akValue_') || $newVal=='TEMPLATE' ) continue; 
 		$originalVal=$_REQUEST['akValueOriginal_'.str_replace('akValue_','',$key)];		
-		$akValuesArray[]=$newVal;
-		//echo $originalVal.' '.$newVal.'<br>';
+		$akValuesArray[]=$newVal; 
 		//change all previous answers
 		if($ak) $ak->renameValue($originalVal,$newVal);
 	} 
@@ -112,101 +111,6 @@ $defaultNewOptionNm = t('Type an option here, then click add');
 
 ?>
 
-<script>
-var ccmAttributesHelper={   
-	valuesBoxDisabled:function(typeSelect){
-		if (typeSelect.value == 'SELECT' || typeSelect.value == 'SELECT_MULTIPLE') {
-			document.getElementById('attributeValuesInterface').style.display='block';
-			document.getElementById('reqValues').style.display='inline'; 
-			document.getElementById('allowOtherValuesWrap').style.display='block';
-			document.getElementById('attributeValuesOffMsg').style.display='none';			
-		} else {  
-			document.getElementById('reqValues').style.display='none'; 
-			document.getElementById('attributeValuesInterface').style.display='none';
-			document.getElementById('allowOtherValuesWrap').style.display='none';
-			document.getElementById('attributeValuesOffMsg').style.display='block'; 
-		}	
-	},  
-	
-	deleteValue:function(val){
-		if(!confirm('<?=t("Are you sure you want to remove this value?")?>'))
-			return false; 
-		$('#akValueWrap_'+val).remove();				
-	},
-	
-	editValue:function(val){ 
-		if($('#akValueDisplay_'+val).css('display')!='none'){
-			$('#akValueDisplay_'+val).css('display','none');
-			$('#akValueEdit_'+val).css('display','block');		
-		}else{
-			$('#akValueDisplay_'+val).css('display','block');
-			$('#akValueEdit_'+val).css('display','none');
-			$('#akValueField_'+val).val( $('#akValueStatic_'+val).html() )
-		}
-	},
-	
-	changeValue:function(val){ 
-		$('#akValueStatic_'+val).html( $('#akValueField_'+val).val() );
-		this.editValue(val)
-	},
-	
-	saveNewOption:function(){
-		var newValF=$('#akValueFieldNew');
-		var myRegxp = /^([a-zA-Z0-9_-]+)$/; 
-		var val=newValF.val();
-		var val_clean=val.replace(/[^a-zA-Z0-9\-]/g,'');				
-		if(val=='' || val=="<?=$defaultNewOptionNm?>"){
-			alert("<?=t('Please first type an option.')?>");
-			return;
-		}		
-		var template=document.getElementById('akValueWrapTemplate'); 
-		var newRowEl=document.createElement('div');
-		newRowEl.innerHTML=template.innerHTML.replace(/template_clean/ig,val_clean).replace(/template/ig,val);
-		newRowEl.id="akValueWrap_"+val_clean;
-		newRowEl.className='akValueWrap';
-		$('#attributeValuesWrap').append(newRowEl);				
-		newValF.val(''); 
-	},
-	
-	clrInitTxt:function(field,initText,removeClass,blurred){
-		if(blurred && field.value==''){
-			field.value=initText;
-			$(field).addClass(removeClass);
-			return;	
-		}
-		if(field.value==initText) field.value='';
-		if($(field).hasClass(removeClass)) $(field).removeClass(removeClass);
-	},
-	
-	doSubmit: true,
-	
-	addEnterClick:function(e,fn){
-		ccmAttributesHelper.doSubmit = false;
-		var keyCode = (e.keyCode ? e.keyCode : e.which);
-		if(keyCode == 13 && typeof(fn)=='function' ) {
-			fn();
-			setTimeout(function() { ccmAttributesHelper.doSubmit = true; }, 100);
-		}
-		
-	}
-}
-
-
-</script>
-
-<style>
-#attributeValuesWrap{margin-top:4px; width:400px}
-#attributeValuesWrap .akValueWrap{ margin-bottom:2px; border:1px solid #eee; padding:2px;}
-#attributeValuesWrap .akValueWrap:hover{border:1px solid #ddd; }
-#attributeValuesWrap .akValueWrap .leftCol{float:left; }
-#attributeValuesWrap .akValueWrap .rightCol{float:right; text-align:right }
-
-#addAttributeValueWrap{ margin-top:8px }
-#addAttributeValueWrap input.faint{ color:#999 }
-
-#allowOtherValuesWrap{margin-top:16px}
-</style>
-
 <? if ($editMode) { ?>	
 
 <h1><span><?=t('Edit Attribute Definition')?> (<em class="required">*</em> - <?=t('required field')?>)</span></h1>
@@ -216,57 +120,24 @@ var ccmAttributesHelper={
 	<input type="hidden" name="akID" value="<?=$_REQUEST['akID']?>" />
 	<input type="hidden" name="task" value="edit" />
 	<input type="hidden" name="update" value="1" />
+
 	
-	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
-	<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
-	<tr>
-		<td class="subheader"><?=t('Handle')?> <span class="required">*</span></td>
-		<td class="subheader"><?=t('Type')?> <span class="required">*</span></td>
-		<td class="subheader"><?=t('Searchable?')?> <span class="required">*</span></td>
-	</tr>	
-	<tr>
-		<td style="width: 33%"><input type="text" name="akHandle" style="width: 100%" value="<?=$akHandle?>" /></td>
-		<td style="width: 33%"><select name="akType" style="width: 100%" onchange="ccmAttributesHelper.valuesBoxDisabled(this)">
-			<option value="TEXT"<? if ($akType == 'TEXT') { ?> selected<? } ?>><?=t('Text Box')?></option>
-			<option value="BOOLEAN"<? if ($akType == 'BOOLEAN') { ?> selected<? } ?>><?=t('Check Box')?></option>
-			<option value="SELECT"<? if ($akType == 'SELECT') { ?> selected<? } ?>><?=t('Select Menu')?></option>
-			<option value="SELECT_MULTIPLE"<? if ($akType == 'SELECT_MULTIPLE') { ?> selected<? } ?>><?=t('Select Multiple')?></option>
-			<? /* <option value="SELECT_ADD"<? if ($akType == 'SELECT_ADD') { ?> selected<? } ?>><?=t('Select Menu + Add Option')?></option> */ ?>
-			<option value="DATE"<? if ($akType == 'DATE') { ?> selected <? } ?>><?=t('Date')?></option>
-			<option value="IMAGE_FILE"<? if ($akType == 'IMAGE_FILE') { ?> selected <? } ?>><?=t('Image/File')?></option>
-		</select></td>
-		<td style="width: 33%"><input type="checkbox" name="akSearchable" style="vertical-align: middle" <? if ($akSearchable) { ?> checked <? } ?> /> <?=t('Yes, include this field in the search index.')?></td>
-	</tr>
-	<tr>
-		<td class="subheader" colspan="3"><?=t('Name')?> <span class="required">*</span></td>
-	</tr>
-	<tr>
-		<td colspan="3"><input type="text" name="akName" style="width: 100%" value="<?=$akName?>" /></td>
-	</tr>
-	<tr>
-		<td class="subheader" colspan="3"><?=t('Values')?> <span class="required" id="reqValues" <? if ($akType != 'SELECT' && $akType != 'SELECT_MULTIPLE') { ?> style="display: none"<? } ?>>*</span></td>
-	</tr>
-	<tr>
-		<td colspan="3">
-		<? /*
-        <textarea id="akValues" name="akValues" rows="10" style="width: 100%" <? if ($akType != 'SELECT' && $akType != 'SELECT_MULTIPLE') { ?> disabled="disabled" <? } ?>><?=$akValues?></textarea>
-        <br/>(<?=t('For select types only - separate menu options with line breaks')?>)
-        <!-- 
-        <input type="text" id="akValues" name="akValues" style="width: 100%" value="<?=$akValues?>" <? if ($akType != 'SELECT') { ?> disabled <? } ?> /><br/>(<?=t('For select types only - separate menu options with a comma, no space.')?>)
-        -->
-		*/ ?>
-		
-		<? Loader::element('collection_attribute_values', array('akValues'=>$akValues, 'akType'=>$akType, 'akAllowOtherValues'=>$akAllowOtherValues, 'defaultNewOptionNm'=>$defaultNewOptionNm) ); ?>
-        </td>
-	</tr>
-	<tr>
-		<td colspan="3" class="header">
-		<a href="<?=$this->url('/dashboard/pages/types')?>" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
-		<a href="javascript:void(0)" onclick="$('#ccm-attribute-update').get(0).submit()" class="ccm-button-right"><span><?=t('Update')?></span></a>
-		</td>
-	</tr>
-	</table>
-	</div>
+	<?
+	$attributeFormData=array(
+			'akType'=>$akType,
+			'akName'=>$akName,
+			'akHandle'=>$akHandle, 
+			'akValues'=>$akValues,	
+			'akSearchable'=>$akSearchable, 
+			'akAllowOtherValues'=>$akAllowOtherValues,
+			'cancelURL'=>'/dashboard/pages/types',
+			'defaultNewOptionNm'=>$defaultNewOptionNm,
+			'formId'=>'ccm-attribute-update',
+			'attributeType' => 'page',
+			'submitBtnTxt'=>t('Update')
+		);
+	Loader::element('dashboard/attribute_form', $attributeFormData);
+	?>
 	
 	<br>
 	</form>	
@@ -284,55 +155,22 @@ var ccmAttributesHelper={
 <input type="hidden" name="add" value="1" />
 <?=$valt->output('add_or_update_attribute')?>
 
-<div style="margin:0px; padding:0px; width:100%; height:auto" >	
-<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
-<tr>
-	<td class="subheader"><?=t('Handle')?> <span class="required">*</span></td>
-	<td class="subheader"><?=t('Type')?> <span class="required">*</span></td>
-	<td class="subheader"><?=t('Searchable?')?> <span class="required">*</span></td>
-</tr>	
-<tr>
-	<td style="width: 33%"><input type="text" name="akHandle" style="width: 100%" value="<?=$_POST['akHandle']?>" /></td>
-	<td style="width: 33%"><select name="akType" style="width: 100%" onchange="ccmAttributesHelper.valuesBoxDisabled(this)">
-		<option value="TEXT"<? if ($_POST['akType'] == 'TEXT') { ?> selected<? } ?>><?=t('Text Box')?></option>
-		<option value="BOOLEAN"<? if ($_POST['akType'] == 'BOOLEAN') { ?> selected<? } ?>><?=t('Check Box')?></option>
-		<option value="SELECT"<? if ($_POST['akType'] == 'SELECT') { ?> selected<? } ?>><?=t('Select Menu')?></option>
-		<? /* <option value="SELECT_ADD"<? if ($_POST['akType'] == 'SELECT_ADD') { ?> selected<? } ?>><?=t('Select Menu + Add Option')?></option> */ ?>
-		<option value="SELECT_MULTIPLE"<? if ($_POST['akType'] == 'SELECT_MULTIPLE') { ?> selected<? } ?>><?=t('Select Multiple')?></option>
-		<option value="DATE"<? if ($_POST['akType'] == 'DATE') { ?> selected <? } ?>><?=t('Date')?></option>
-		<option value="IMAGE_FILE"<? if ($_POST['akType'] == 'IMAGE_FILE') { ?> selected <? } ?>><?=t('Image/File')?></option>
-	</select></td>
-	<td style="width: 33%"><input type="checkbox" name="akSearchable" style="vertical-align: middle" <? if ($_POST['akSearchable']) { ?> checked <? } ?> /> <?=t('Yes, include this field in the search index.')?></td>
-</tr>
-<tr>
-	<td class="subheader" colspan="3"><?=t('Name')?> <span class="required">*</span></td>
-</tr>
-<tr>
-	<td colspan="3"><input type="text" name="akName" style="width: 100%" value="<?=$_POST['akName']?>" /></td>
-</tr>
-<tr>
-	<td class="subheader" colspan="3"><?=t('Values')?> <span class="required" id="reqValues" <? if ($_POST['akType'] != 'SELECT' && $akType != 'SELECT_MULTIPLE') { ?> style="display: none"<? } ?>>*</span></td>
-</tr>
-<tr>
-	<td colspan="3">
-		<? /*
-    	<textarea id="akValues" name="akValues" rows="10" style="width: 100%" <? if ($_POST['akType'] != 'SELECT' && $akType != 'SELECT_MULTIPLE') { ?> disabled="disabled" <? } ?>><?=$_POST['akValues']?></textarea>
-        <br/>(<?=t('For select types only - separate menu options with line breaks')?>)
-		*/ ?>
-		
-		<? Loader::element('collection_attribute_values', array('akValues'=>$_POST['akValues'], 'akType'=>$akType, 'akAllowOtherValues'=>$_POST['akValues'], 'defaultNewOptionNm'=>$defaultNewOptionNm) ); ?>
-    </td>
-</tr>
-<tr>
-	<td colspan="3" class="header">
-
-	<a href="<?=$this->url('/dashboard/pages/types')?>" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
-	<a href="javascript:void(0)" onclick="$('#ccm-add-attribute').get(0).submit()" class="ccm-button-right"><span><?=t('Add')?></span></a>
-	
-	</td>
-</tr>
-</table>
-</div>
+	<?
+	$attributeFormData=array(
+			'akType'=>$_POST['akType'],
+			'akName'=>$_POST['akName'],
+			'akHandle'=>$_POST['akHandle'], 
+			'akValues'=>$_POST['akValues'], 
+			'akSearchable'=>$_POST['akSearchable'], 
+			'akAllowOtherValues'=>$_POST['akAllowOtherValues'],
+			'cancelURL'=>'/dashboard/pages/types',
+			'defaultNewOptionNm'=>$defaultNewOptionNm,
+			'formId'=>'ccm-add-attribute',
+			'attributeType' => 'page',
+			'submitBtnTxt'=>t('Add')
+		);
+	Loader::element('dashboard/attribute_form', $attributeFormData);
+	?>
 
 <br>
 </form>	

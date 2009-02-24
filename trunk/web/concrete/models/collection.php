@@ -150,7 +150,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function setAttribute($akHandle, $value) {
 			$db = Loader::db();
 			$akID = $db->GetOne("select akID from CollectionAttributeKeys where akHandle = ?", array($akHandle));
-			if ($akID > 1) {
+			if ($akID > 0) {
 				$db->Replace('CollectionAttributeValues', array(
 					'cID' => $this->cID,
 					'cvID' => $this->getVersionID(),

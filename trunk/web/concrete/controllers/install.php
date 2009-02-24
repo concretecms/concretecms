@@ -6,6 +6,8 @@ if (!ini_get('safe_mode')) {
 	@set_time_limit(120);
 }
 define('ENABLE_CACHE', false);
+define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.jpg;');
+
 class InstallController extends Controller {
 
 	public $helpers = array('form', 'html');
@@ -51,7 +53,9 @@ class InstallController extends Controller {
 		}
 		
 		$db = Loader::db();
+		$db->ensureEncoding();
 		$err = Package::installDB($file);		
+
 	}
 	
 	public function test_url($num1, $num2) {
@@ -309,7 +313,11 @@ class InstallController extends Controller {
 						$d0 = SinglePage::add('/dashboard');
 				
 						$d1 = SinglePage::add('/dashboard/sitemap');
-						$d2 = SinglePage::add('/dashboard/mediabrowser');
+						$d2 = SinglePage::add('/dashboard/files');
+						$d2a = SinglePage::add('/dashboard/files/search');
+						$d2b = SinglePage::add('/dashboard/files/attributes');
+						$d2c = SinglePage::add('/dashboard/files/sets');
+						$d2d = SinglePage::add('/dashboard/files/access');						
 						$d3 = SinglePage::add('/dashboard/reports');
 						$d3a = SinglePage::add('/dashboard/reports/forms');
 						$d3b = SinglePage::add('/dashboard/reports/logs');
@@ -406,54 +414,34 @@ class InstallController extends Controller {
 						$b1->alias($home);
 						
 						// Add Some Imagery
-						$bt = BlockType::getByHandle('library_file');
-						$data = array();
-						$data['file'] = $pl->getThemeDirectory() . '/images/inneroptics_dot_net_aspens.jpg';
-						$data['name'] = "aspens.jpg";
-						$data['uID'] = $this->installData['USER_SUPER_ID'];
-						$image1 = $bt->add($data);
-						
-						$bt2 = BlockType::getByHandle('library_file');
-						$data = array();
-						$data['file'] = $pl->getThemeDirectory() . '/images/inneroptics_dot_net_canyonlands.jpg';
-						$data['name'] = "canyonlands.jpg";
-						$data['uID'] = $this->installData['USER_SUPER_ID'];
-						$image2 = $bt2->add($data);
+						Loader::library("file/importer");
 
-						$bt3 = BlockType::getByHandle('library_file');
-						$data = array();
-						$data['file'] = $pl->getThemeDirectory() . '/images/inneroptics_dot_net_new_zealand_sheep.jpg';
-						$data['name'] = "sheep.jpg";
-						$data['uID'] = $this->installData['USER_SUPER_ID'];
-						$image3 = $bt3->add($data);
+						$fi = new FileImporter();
+						$image1 = $fi->import($pl->getThemeDirectory() . '/images/inneroptics_dot_net_aspens.jpg');
+						$image2 = $fi->import($pl->getThemeDirectory() . '/images/inneroptics_dot_net_canyonlands.jpg');
+						$image3 = $fi->import($pl->getThemeDirectory() . '/images/inneroptics_dot_net_new_zealand_sheep.jpg');
+						$image4 = $fi->import($pl->getThemeDirectory() . '/images/inneroptics_dot_net_starfish.jpg');
 
-						$bt4 = BlockType::getByHandle('library_file');
-						$data = array();
-						$data['file'] = $pl->getThemeDirectory() . '/images/inneroptics_dot_net_starfish.jpg';
-						$data['name'] = "starfish.jpg";
-						$data['uID'] = $this->installData['USER_SUPER_ID'];
-						$image4 = $bt4->add($data);
-						
 						// Assign this imagery to the various pages.
 						$btImage = BlockType::getByHandle('image');
 						$data = array();
-						$data['fID'] = $image1->getBlockID();
+						$data['fID'] = $image1->getFileID();
 						$data['altText'] = t('Home Header Image');
 						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$home->addBlock($btImage, 'Header', $data);
 
 						// Assign imagery to left sidebar page
-						$data['fID'] = $image2->getBlockID();
+						$data['fID'] = $image2->getFileID();
 						$data['altText'] = t('Left Sidebar Page Type Image');
 						$b1 = $detailTemplate->addBlock($btImage, 'Header', $data);
 
 						// Assign imagery to right sidebar page
-						$data['fID'] = $image3->getBlockID();
+						$data['fID'] = $image3->getFileID();
 						$data['altText'] = t('Right Sidebar Page Type Image');
 						$b2 = $rightNavTemplate->addBlock($btImage, 'Header', $data);
 						
 						// Assign imagery to full width page
-						$data['fID'] = $image3->getBlockID();
+						$data['fID'] = $image3->getFileID();
 						$data['altText'] = t('Full Width Page Type Image');
 						$b3 = $fullWidthTemplate->addBlock($btImage, 'Header', $data);
 
@@ -519,27 +507,24 @@ class InstallController extends Controller {
 						if (is_object($blocks[0])) {
 							$blocks[0]->deleteBlock();
 						}
+
+						/*
 						
 						$jsBT = BlockType::getByHandle('slideshow');
 						$jsData['playback'] = 'ORDER';
 						$jsData['imgBIDs'] = array(
-							$image1->getBlockID(),
-							$image2->getBlockID(),
-							$image3->getBlockID(),
-							$image4->getBlockID()
+							$image1->getFileID(),
+							$image2->getFileID(),
+							$image3->getFileID(),
+							$image4->getFileID()
 						);
-						
-						$fimage1 = $image1->getInstance();
-						$fimage2 = $image2->getInstance();
-						$fimage3 = $image3->getInstance();
-						$fimage4 = $image4->getInstance();
 						
 						// this is an irritating hack.
 						if(DIR_FILES_UPLOADED != $this->installData['DIR_FILES_UPLOADED']) { // if we're calling install from another c5 install - move the file to the new install
-							rename(DIR_FILES_UPLOADED."/".$fimage1->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage1->getFilename());
-							rename(DIR_FILES_UPLOADED."/".$fimage2->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage2->getFilename());
-							rename(DIR_FILES_UPLOADED."/".$fimage3->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage3->getFilename());
-							rename(DIR_FILES_UPLOADED."/".$fimage4->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage4->getFilename());
+							rename(DIR_FILES_UPLOADED."/".$image1->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage1->getFilename());
+							rename(DIR_FILES_UPLOADED."/".$image2->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage2->getFilename());
+							rename(DIR_FILES_UPLOADED."/".$image3->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$image3->getFilename());
+							rename(DIR_FILES_UPLOADED."/".$image4->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$image4->getFilename());
 							rename(DIR_FILES_UPLOADED_THUMBNAILS."/".$fimage1->getFilename(),  $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']."/".$fimage1->getFilename());
 							rename(DIR_FILES_UPLOADED_THUMBNAILS."/".$fimage2->getFilename(),  $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']."/".$fimage2->getFilename());
 							rename(DIR_FILES_UPLOADED_THUMBNAILS."/".$fimage3->getFilename(),  $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']."/".$fimage3->getFilename());
@@ -547,17 +532,17 @@ class InstallController extends Controller {
 						}
 						
 						$jsData['fileNames'] = array(
-							$fimage1->getFilename(),
-							$fimage2->getFilename(),
-							$fimage3->getFilename(),
-							$fimage4->getFilename()
+							$image1->getFilename(),
+							$image2->getFilename(),
+							$image3->getFilename(),
+							$image4->getFilename()
 						);
 
 						$jsData['origfileNames'] = array(
-							$fimage1->getOriginalFilename(),
-							$fimage2->getOriginalFilename(),
-							$fimage3->getOriginalFilename(),
-							$fimage4->getOriginalFilename()
+							$image1->getOriginalFilename(),
+							$image2->getOriginalFilename(),
+							$image3->getOriginalFilename(),
+							$image4->getOriginalFilename()
 						);
 
 						$jsData['thumbPaths'] = array(
@@ -571,7 +556,7 @@ class InstallController extends Controller {
 						$jsData['imgHeight'] = array(192, 192, 192, 192);
 						$jsData['fadeDuration'] = array(1, 1, 1, 1);
 						$example0Page->addBlock($jsBT, "Header", $jsData);
-
+						*/
 
 						// add sitemap page beneath examples page
 						$data['name'] = t('Sitemap');

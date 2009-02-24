@@ -41,6 +41,8 @@ div.ccm-spacer {font-size: 0px; line-height: 0px; clear: both; height: 0px}
 
 div#ccm-dialog-throbber {position: absolute; top: 50%; left: 50%; margin-top: -16px; margin-left: -16px; display: none}
 
+hr {border: 1px solid #dedede; margin: 10px 0px 10px 0px;}
+
 
 /* buttons */
 div.ccm-buttons {clear: both; padding-top: 8px}
@@ -102,7 +104,7 @@ th.ccm-permissions-header {text-align: left !important; white-space: nowrap}
 
 table.ccm-grid {border-left: 1px solid #D4D4D4; border-top: 1px solid #D4D4D4; font-size: 12px; }
 table.ccm-grid th, table.ccm-grid td {border-right: 1px solid #D4D4D4; border-bottom: 1px solid #D4D4D4; font-size: 12px; padding: 7px; background: #fff}
-table.ccm-grid tr.ccm-row-alt td {background-color: #E5EDFD !important}
+table.ccm-grid tr.ccm-row-alt td {background-color: #F0F5FF !important}
 table.ccm-grid th {font-weight: bold; color: #999999; background-color: #efefef; text-align: center;}
 table.ccm-grid tr.version-active td, table.ccm-grid tr.active td {font-weight: bold; font-size: 13px}
 table.ccm-grid td.actor img {float: right}
@@ -119,7 +121,7 @@ ul.ccm-dialog-tabs li {padding: 0px; margin: 0px}
 ul.ccm-dialog-tabs li:last-child * {border-right: 1px solid #dedede}
 ul.ccm-dialog-tabs li {border-right: 1px solid #dedede !ie}
 
-.ccm-input-text, div.ccm-field-meta input, div.ccm-field-meta textarea {font-size: 12px; border: 1px solid #aaa; color: #444; padding: 4px}
+.ccm-input-text, div.ccm-field-meta input, div.ccm-field-meta textarea, .ccm-input-date {font-size: 12px; border: 1px solid #aaa; color: #444; padding: 4px}
 .ccm-input-date-wrapper input {width: 100px}
 
 /* user search */

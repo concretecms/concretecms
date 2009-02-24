@@ -10,7 +10,7 @@
 	<?=$error?><br/><br/>
 <? } ?>
 
-<form action="<?=$this->url( $resultTargetURL )?>" method="post">
+<form action="<?=$this->url( $resultTargetURL )?>" method="get">
 
 	<? if( strlen($title)>0){ ?><h3><?=$title?></h3><? } ?>
 	
@@ -33,12 +33,14 @@ if (strlen($query)) {
 		<h4 style="margin-top:32px"><?=t('There were no results found. Please try another keyword or phrase.')?></h4>	
 	<? }else{ ?>
 		<div id="searchResults">
-		<? foreach($results as $r) { ?>
+		<? foreach($results as $r) { 
+			$currentPageBody = $this->controller->highlightedExtendedMarkup($r->getBodyContent(), $query);?>
 			<div class="searchResult">
 				<h3><a href="<?=DIR_REL?>/index.php?cID=<?=$r->getID()?>"><?=$r->getName()?></a></h3>
 				<p>
-					<?=$tt->shortText($r->getDescription())?>
-					<span class="pageLink"><?=BASE_URL.$r->getCPath() ?></span>
+					<?php echo ($currentPageBody ? $currentPageBody .'<br />' : '')?>
+					<?php echo $this->controller->highlightedMarkup($tt->shortText($r->getDescription()),$query)?>
+					<span class="pageLink"><?php echo $this->controller->highlightedMarkup(BASE_URL.DIR_REL.$r->getCollectionPath(),$query)?></span>
 				</p>
 			</div>
 		<? 	}//foreach search result ?>
