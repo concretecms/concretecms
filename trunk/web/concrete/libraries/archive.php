@@ -38,11 +38,12 @@ class Archive {
 	 * @return string $directory
 	 */
 	protected function uploadZipToTemp($file) {
+		$fh = Loader::helper('file');
 		if (!file_exists($file)) {
 			throw new Exception(t('Could not transfer to temp directory - file not found.'));
 		} else {
 			$dir = time();
-			copy($_FILES['archive']['tmp_name'], DIR_TMP . '/' . $dir . '.zip');
+			copy($_FILES['archive']['tmp_name'], $fh->getTemporaryDirectory() . '/' . $dir . '.zip');
 			return $dir;
 		}
 	}
@@ -57,12 +58,13 @@ class Archive {
 	 */
 	protected function unzip($directory) {
 		$file = $directory . '.zip';
-		$ret = @shell_exec(DIR_FILES_BIN_UNZIP . ' ' . DIR_TMP . '/' . $file . ' -d ' . DIR_TMP . '/' . $directory . '/');
-		$files = $this->f->getDirectoryContents(DIR_TMP . '/' . $directory);
+		$fh = Loader::helper('file');
+		$ret = @shell_exec(DIR_FILES_BIN_UNZIP . ' ' . $fh->getTemporaryDirectory() . '/' . $file . ' -d ' . $fh->getTemporaryDirectory() . '/' . $directory . '/');
+		$files = $this->f->getDirectoryContents($fh->getTemporaryDirectory() . '/' . $directory);
 		if (count($files) == 0) {
 			throw new Exception(t('There was an error unpacking your theme. Perhaps you have not uploaded a valid zip file, or you do not have zip installed.'));
 		} else {
-			return DIR_TMP . '/' . $directory;
+			return $fh->getTemporaryDirectory() . '/' . $directory;
 		}
 	}
 	

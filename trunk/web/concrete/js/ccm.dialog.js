@@ -1,5 +1,4 @@
 jQuery.fn.dialog = function(settings) {
-
 	// this is probably woefully inefficient. 
 	return $(this).each(function() {
 		$(this).click(function(e) {
@@ -39,7 +38,8 @@ jQuery.fn.dialog.open = function(settings) {
 }
 
 jQuery.fn.dialog.getOptions = function(settings, node) {
-	var options = jQuery.extend(jQuery.fn.dialog.defaults, settings);
+
+	var options = jQuery.extend({}, jQuery.fn.dialog.defaults, settings);
 
 	if (typeof(node) != 'undefined') {
 		var _modal = node.attr('dialog-modal');
@@ -49,6 +49,7 @@ jQuery.fn.dialog.getOptions = function(settings, node) {
 		var _draggable = node.attr('dialog-draggable');
 		var _element = node.attr('dialog-element');
 		var href = node.attr('href');
+		var onClose = node.attr('dialog-on-close');
 		var _replace = node.attr('dialog-replace');
 	}
 	
@@ -66,6 +67,7 @@ jQuery.fn.dialog.getOptions = function(settings, node) {
 	if (typeof(_height) != 'undefined') {
 		options.height = _height;
 	}
+
 	if (typeof(_title) != 'undefined') {
 		options.title = _title;
 	}
@@ -74,6 +76,9 @@ jQuery.fn.dialog.getOptions = function(settings, node) {
 	}
 	if (typeof(_draggable) != 'undefined') {
 		options.draggable = _draggable;
+	}
+	if (typeof(onClose) != 'undefined') {
+		options.onClose = onClose;
 	}
 
 	options.modal = (options.modal == "true" || options.modal == true) ? true : false;
@@ -164,7 +169,7 @@ jQuery.fn.dialog.showLoader = function(fnd) {
 
 jQuery.fn.dialog.deactivate = function(w) {
 	// w = window number. typically the previous window below the current active one
-	$("#ccm-dialog-window" + w).css('z-index', '1');
+	$("#ccm-dialog-window" + w).css('z-index', '6');
 	
 }
 
@@ -180,8 +185,12 @@ jQuery.fn.dialog.close = function(fnd) {
 	$("#TB_imageOff").unbind("click");
 	$("#TB_closeWindowButton" + fnd.n).unbind("click");
 
-	if (typeof fnd.onClose == "function") {
-		fnd.onClose();
+	if (typeof fnd.onClose != "undefined") {
+		if ((typeof fnd.onClose) == 'function') {
+			fnd.onClose();
+		} else {
+			eval(fnd.onClose);
+		}
 	}
 
 	if (ccm_animEffects) {

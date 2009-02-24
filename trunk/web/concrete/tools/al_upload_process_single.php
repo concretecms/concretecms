@@ -15,8 +15,8 @@ if ($valt->validate('upload')) {
 	if (isset($_FILES['Filedata'])) {
 		
 		if(is_uploaded_file($_FILES['Filedata']['tmp_name'])) {
-			$fh = Loader::helper('file');
-			if($fh->hasAllowedExtension($_FILES['Filedata']['name'])) {	
+			$fh = Loader::helper('validation/file');
+			if($fh->extension($_FILES['Filedata']['name'])) {	
 				$bt = BlockType::getByHandle('library_file');
 				$data = array();
 				$data['file'] = $_FILES['Filedata']['tmp_name'];

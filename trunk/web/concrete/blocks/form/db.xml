@@ -29,12 +29,20 @@
 		</field>      		
 	</table>
 
-	<table name="btFormQuestions">
-		<field name="msqID" type="I">
+	<table name="btFormQuestions"> 
+		<field name="qID" type="I">
 			<key />
-			<autoincrement />
+			<autoincrement />			
 			<unsigned />
 		</field>
+		<field name="msqID" type="I">
+			<unsigned />
+			<default value="0" /> 
+		</field>
+		<field name="bID" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>		
 		<field name="questionSetId" type="I">
 			<unsigned />
 			<default value="0" />
@@ -56,7 +64,16 @@
 		<field name="height" type="I">
 			<unsigned />
 			<default value="3" />
-		</field>
+		</field> 
+		<field name="required" type="i">
+			<default value="0"/>
+		</field>  
+		<index name="questionSetId">
+		  <col>questionSetId</col>
+		</index>
+		<index name="msqID">
+		  <col>msqID</col> 
+		</index> 							
 	</table>
 	
 	<table name="btFormAnswerSet">

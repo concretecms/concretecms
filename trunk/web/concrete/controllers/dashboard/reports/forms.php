@@ -89,8 +89,7 @@ class DashboardReportsFormsController extends Controller {
 			echo "\t\t<td>".$answerSet['created']."</td>\r\n";
 			foreach($questions as $questionId=>$question){ 
 				$questionNumber++;
-                if ($question['inputType'] == 'checkboxlist')
-                {
+                if ($question['inputType'] == 'checkboxlist'){
                     $options = explode('%%', $question['options']);
                     $subanswers = explode(',', $answerSet['answers'][$questionId]['answer']);
                     for ($i = 1; $i <= count($options); $i++)
@@ -103,11 +102,21 @@ class DashboardReportsFormsController extends Controller {
 				            echo "\t\t\t&nbsp;\r\n";
 				        echo "\t\t</td>\r\n";
                     }
-                }
-                else
-                {
+					
+                }elseif($question['inputType']=='fileupload'){ 
+					echo "\t\t<td>\r\n";
+					$fID=intval($answerSet['answers'][$questionId]['answer']);
+					$file=File::getByID($fID);
+					if($fID && $file){
+						$fileVersion=$file->getApprovedVersion();
+						echo "\t\t\t".'<a href="'. BASE_URL . DIR_REL . $fileVersion->getRelativePath() .'">'.$fileVersion->getFileName().'</a>'."\r\n";
+					}else{
+						echo "\t\t\t".t('File not found')."\r\n";
+					} 	
+					echo "\t\t</td>\r\n";		
+				}else{					
 				    echo "\t\t<td>\r\n";
-				    echo "\t\t\t".$answerSet['answers'][$questionId]['answer'].$answerSet['answers'][$questionId]['answerLong']."\r\n";
+				    echo "\t\t\t".$answerSet['answers'][$questionId]['answer'].$answerSet['answers'][$questionId]['answerLong']."\r\n";					
 				    echo "\t\t</td>\r\n";
                 }
 			}

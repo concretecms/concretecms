@@ -21,6 +21,7 @@ class FormHelper {
 
 
 	private $radioIndex = 1;
+	private $selectIndex = 1;
 
 	/** 
 	 * Returns an action suitable for including in a form action property.
@@ -158,15 +159,13 @@ class FormHelper {
 	public function radio($key, $value, $valueOrArray = false, $miscFields = array()) {
 		$str = '<input type="radio" class="ccm-input-radio" name="' . $key . '" id="' . $key . $this->radioIndex . '" value="' . $value . '" ';
 		
-		if (!is_array($isCheckedOrArray)) {
-			$isChecked = $isCheckedOrArray;
-		} else {
-			$miscFields = $isCheckedOrArray;
+		if (is_array($valueOrArray)) {
+			$miscFields = $valueOrArray;
 		}
 
 		if (is_array($miscFields)) {
-			foreach($miscFields as $k => $value) {
-				$str .= $k . '="' . $value . '" ';
+			foreach($miscFields as $k => $v) {
+				$str .= $k . '="' . $v . '" ';
 			}
 		}
 		
@@ -222,6 +221,53 @@ class FormHelper {
 		return $str;
 		
 	}
+
+
+	/**
+	 * Renders a select field. First argument is the name of the field. Second is an associative array of key => display. Second argument is either the value of the field to be selected (and if it's blank we check post) or a misc. array of fields
+	 * @param string $key
+	 * @return $html
+	 */
+	public function select($key, $values, $valueOrArray = false, $miscFields = array()) {
+
+		if ((strpos($key, '[]') + 2) == strlen($key)) {
+			$_key = substr($key, 0, strpos($key, '[]'));
+			$id = $_key . $this->selectIndex;
+		} else {
+			$_key = $key;
+			$id = $key;
+		}
+
+		$str = '<select class="ccm-input-select" name="' . $key . '" id="' . $id . '" ';
+
+		if (is_array($valueOrArray)) {
+			$miscFields = $valueOrArray;
+		}
+
+		if (is_array($miscFields)) {
+			foreach($miscFields as $k => $value) {
+				$str .= $k . '="' . $value . '" ';
+			}
+		}
+		
+		$str .= '>';
+		
+
+		foreach($values as $k => $value) { 
+			$selected = "";
+			if ($valueOrArray == $k && !isset($_REQUEST[$_key]) || (isset($_REQUEST[$_key]) && $_REQUEST[$_key] == $k) || (is_array($_REQUEST[$_key]) && (in_array($k, $_REQUEST[$_key])))) {
+				$selected = 'selected';
+			}
+			$str .= '<option value="' . $k . '" ' . $selected . '>' . $value . '</option>';
+		}
+
+		
+		$this->selectIndex++;
+
+		$str .= '</select>';
+		return $str;
+	}
+	
 
 
 	/**

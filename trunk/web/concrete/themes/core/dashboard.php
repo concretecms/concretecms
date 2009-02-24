@@ -3,7 +3,7 @@
         "http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=<?=APP_CHARSET?>">
 <?
 $v = View::getInstance();
 $v->disableEditing();
@@ -14,7 +14,6 @@ require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); ?>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.forms.css";</style>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.calendar.css";</style>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.dialog.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.asset.library.css";</style>
 
 <script type="text/javascript">
 <?
@@ -24,10 +23,10 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 
 </script>
 
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.form.2.0.2.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.form.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.ui.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.themes.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.1.5.2.no_datepicker.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.colorpicker.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.dialog.js"></script>

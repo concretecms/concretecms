@@ -28,6 +28,30 @@ class PageList extends DatabaseItemList {
 			}
 		}			
 	}
+	
+	/** 
+	 * Sets up a list to only return items the proper user can access 
+	 */
+	public function setupPermissions() {
+		$u = new User();
+		if ($u->isSuperUser()) {
+			return; // super user always sees everything. no need to limit
+		}
+		
+		$groups = $u->getUserGroups();
+		$groupIDs = array();
+		foreach($groups as $key => $value) {
+			$groupIDs[] = $key;
+		}
+		
+		$uID = -1;
+		if ($u->isRegistered()) {
+			$uID = $u->getUserID();
+		}
+		
+		$this->addToQuery('left join PagePermissions pp1 on (pp1.cID = p1.cInheritPermissionsFromCID) left join PagePermissions pp2 on (pp2.cID = p2.cInheritPermissionsFromCID)');
+		$this->filter(false, "((pp1.cgPermissions like 'r%' and (pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID})) or (pp2.cgPermissions like 'r%' and (pp2.gID in (" . implode(',', $groupIDs) .  ") or pp2.uID = {$uID})))");
+	}
 
 	/** 
 	 * Sorts this list by display order 
@@ -137,8 +161,8 @@ class PageList extends DatabaseItemList {
 		$this->displayOnlyPermittedPages = $checkForPermissions;
 	}
 	
-	protected function setBaseQuery() {
-		$this->setQuery('select p1.cID, if(p2.cID is null, pt1.ctHandle, pt2.ctHandle) as ctHandle from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PageTypes pt1 on (pt1.ctID = p1.ctID) left join PageTypes pt2 on (pt2.ctID = p2.ctID) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID))');
+	protected function setBaseQuery($additionalFields = '') {
+		$this->setQuery('select distinct p1.cID, if(p2.cID is null, pt1.ctHandle, pt2.ctHandle) as ctHandle ' . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PageTypes pt1 on (pt1.ctID = p1.ctID) left join PageTypes pt2 on (pt2.ctID = p2.ctID) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID))');
 	}
 	
 	protected function setupCollectionAttributeFilters() {
@@ -171,6 +195,10 @@ class PageList extends DatabaseItemList {
 		}
 	}
 	
+	protected function loadPageID($cID) {
+		return Page::getByID($cID);
+	}
+	
 	/** 
 	 * Returns an array of page objects based on current settings
 	 */
@@ -179,12 +207,13 @@ class PageList extends DatabaseItemList {
 		$this->setBaseQuery();
 		$this->filter('cvIsApproved', 1);
 		$this->filter(false, "(p1.cIsTemplate = 0 or p2.cIsTemplate = 0)");
-		$this->setItemsPerPage(0); // no limit
+		$this->setItemsPerPage($itemsToGet);
 		$this->setupCollectionAttributeFilters();
+		$this->setupPermissions();
 		$this->setupCollectionAttributeSortFilters();
-		$r = parent::get();
+		$r = parent::get($itemsToGet, $offset);
 		foreach($r as $row) {
-			$nc = Page::getByID($row['cID']);
+			$nc = $this->loadPageID($row['cID']);
 			$nc->loadVersionObject();
 			if ($nc->isSystemPage()) {
 				continue;
@@ -194,6 +223,7 @@ class PageList extends DatabaseItemList {
 				break;
 			}
 		}
+		
 		return $pages;
 	}
 	

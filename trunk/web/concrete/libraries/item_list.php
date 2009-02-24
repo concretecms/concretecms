@@ -11,8 +11,9 @@ class DatabaseItemList extends ItemList {
 	private $userQuery = '';
 	private $debug = false;
 	private $filters = array();
+	protected $sortByString = '';
 	protected $autoSortColumns = array();
-	
+
 	public function getTotal() {
 		if ($this->total == -1) {
 			$db = Loader::db();
@@ -83,6 +84,12 @@ class DatabaseItemList extends ItemList {
 		return array($q, $v);
 	}
 	
+	protected function setupSortByString() {
+		if ($this->sortByString == '' && $this->sortBy != '') {
+			$this->sortByString = $this->sortBy . ' ' . $this->sortByDirection;
+		}
+	}
+	
 	/** 
 	 * Returns an array of whatever objects extends this class (e.g. PageList returns a list of pages).
 	 */
@@ -92,8 +99,9 @@ class DatabaseItemList extends ItemList {
 		$v = $arr[1];
 		// handle order by
 		$this->setupAutoSort();
-		if ($this->sortBy != '') {
-			$q .= 'order by ' . $this->sortBy . ' ' . $this->sortByDirection . ' ';
+		$this->setupSortByString();
+		if ($this->sortByString != '') {
+			$q .= 'order by ' . $this->sortByString . ' ';
 		}
 		if ($this->itemsPerPage > 0) {
 			$q .= 'limit ' . $offset . ',' . $itemsToGet . ' ';
@@ -295,6 +303,19 @@ class ItemList {
 	public function sortBy($column, $direction = 'asc') {
 		$this->sortBy = $column;
 		$this->sortByDirection = $direction;
+	}
+
+	/** 
+	 * Sets up a column to sort by
+	 */
+	public function sortByMultiple() {
+		$args = func_get_args();
+		for ($i = 0; $i < count($args); $i++) {
+			$this->sortByString .= $args[$i];
+			if (($i + 1) < count($args)) { 
+				$this->sortByString .= ', ';
+			}
+		}
 	}
 
 }

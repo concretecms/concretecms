@@ -110,11 +110,24 @@ class LoginController extends Controller {
 		if ($nh->integer($rcID)) {
 			header('Location: ' . BASE_URL . DIR_REL . '/index.php?cID=' . $rcID);
 			exit;
+		}elseif( strlen($rcID) ){
+			//url redirect
+			header('Location: ' . $rcID );
+			exit;
 		}
 
 		$dash = Page::getByPath("/dashboard", "RECENT");
-		$dbp = new Permissions($dash);
-		if ($dbp->canRead()) {
+		$dbp = new Permissions($dash);		
+		
+		Events::fire('on_user_login',$this);
+		if ($this->post('redirect') != '' && $this->isValidExternalUrl($this->post('redirect'))) {
+			//make double secretly sure there's no caching going on
+			header("Cache-Control: no-store, no-cache, must-revalidate");
+			header("Pragma: no-cache");
+			header('Expires: Fri, 30 Oct 1998 14:19:41 GMT'); //in the past		
+			$this->externalRedirect($this->post('redirect'));
+		}
+		else if ($dbp->canRead()) {
 			$this->redirect('/dashboard');
 		} else {
 			$this->redirect('/');

@@ -30,7 +30,11 @@ class TextHelper {
 		$replace = array("and", "_", "", "_");
 		
 		$handle = preg_replace($search, $replace, $handle);
-		$handle = strtolower(substr($handle, 0, 48));
+		if (function_exists('mb_substr')) {
+			$handle = mb_strtolower(mb_substr($handle, 0, 48, APP_CHARSET), APP_CHARSET);
+		} else {
+			$handle = strtolower(substr($handle, 0, 48));
+		}
 		return $handle;
 	}
 
@@ -43,7 +47,11 @@ class TextHelper {
 	function sanitize($string, $maxlength = 0) {
 		$text = trim(strip_tags($string));
 		if ($maxlength > 0) {
-			$text = substr($text, 0, $maxlength);
+			if (function_exists('mb_substr')) {
+				$text = mb_substr($text, 0, $maxlength, APP_CHARSET);
+			} else {
+				$text = substr($text, 0, $maxlength);
+			}
 		}
 		if ($text == null) {
 			return ""; // we need to explicitly return a string otherwise some DB functions might insert this as a ZERO.
@@ -51,18 +59,31 @@ class TextHelper {
 		return $text;
 	}
 
+	 
 	/**
 	 * Like sanitize, but requiring a certain number characters, and assuming a tail
 	 * @param string $textStr
 	 * @param int $numChars
 	 * @param string $tail
 	 */
-	function shortText($textStr, $numChars=255, $tail='...'){
-		if(intval($numChars)==0)$numChars=150;
+	public function shorten($textStr, $numChars = 255, $tail = '...') {
+		return $this->shortText($textStr, $numChars, $tail);
+	}
+	
+	/** 
+	 * An alias for shorten()
+	 */	
+	function shortText($textStr, $numChars=255, $tail='...') {
+		if (intval($numChars)==0) $numChars=255;
 		$textStr=strip_tags($textStr);
-		if (strlen($textStr)>intval($numChars)){ 
-			
-			$textStr= substr($textStr,0,$numChars).$tail;
+		if (function_exists('mb_substr')) {
+			if (mb_strlen($textStr, APP_CHARSET) > $numChars) { 
+				$textStr = mb_substr($textStr, 0, $numChars, APP_CHARSET) . $tail;
+			}
+		} else {
+			if (strlen($textStr) > $numChars) { 
+				$textStr = substr($textStr, 0, $numChars) . $tail;
+			}
 		}
 		return $textStr;				
 	}
@@ -108,7 +129,11 @@ class TextHelper {
 		array_shift($v);
 		for($i = 0; $i < count($v); $i++) {
 			if ($i % 2) {
-				$a[] = strtolower($v[$i - 1] . $v[$i]);
+				if (function_exists('mb_strtolower')) {
+					$a[] = mb_strtolower($v[$i - 1] . $v[$i], APP_CHARSET);
+				} else {
+					$a[] = strtolower($v[$i - 1] . $v[$i]);
+				}
 			}
 		}
 		return implode('_', $a);
@@ -131,6 +156,14 @@ class TextHelper {
 	 * @return string
 	 */
 	public function filterNonAlphaNum($val){ return preg_replace('/[^[:alnum:]]/', '', $val);  }
+	
+	/** 
+	 * Useful for highlighting search strings within results (for nice display)
+	 */
+	 
+	public function highlightSearch($value, $searchString) {
+		return str_ireplace($searchString, '<em class="ccm-highlight-search">' . $searchString . '</em>', $value);
+	}
 }
 
 ?>

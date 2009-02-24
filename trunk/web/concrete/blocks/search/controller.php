@@ -13,6 +13,40 @@ class SearchBlockController extends BlockController {
 	public $buttonText = ">"; 
 	public $baseSearchPath = "";
 	public $resultsURL = "";
+		
+	protected $hColor = '#EFE795';
+
+	public function highlightedMarkup($fulltext, $highlight) {
+		$this->hText = $fulltext;
+		$this->hHighlight = $highlight;
+		
+		$this->hText = @preg_replace( "#$this->hHighlight#i", '<span style="background-color:'. $this->hColor .';">'. $this->hHighlight .'</span>', $this->hText );
+		return $this->hText; 
+	}
+	
+	public function highlightedExtendedMarkup($fulltext, $highlight) {
+		$text = @preg_replace("#\n|\r#", ' ', $fulltext);
+		
+		$matches = array();
+		
+		$regex = '([a-z|A-Z|0-9|\.|_|\s]{0,45})'. $highlight .'([a-z|A-Z|0-9|\.|_|\s]{0,45})';
+		preg_match_all("#$regex#i", $text, $matches);
+		
+		if(!empty($matches[0])) {
+			$body_length = 0;
+			$body_string = array();
+			foreach($matches[0] as $line) {
+				$body_length += strlen($line);
+				
+				$body_string[] = $this->highlightedMarkup($line, $highlight);
+				
+				if($body_length > 150)
+					break;
+			}
+			if(!empty($body_string))
+				return @implode("....", $body_string);
+		}
+	}	
 	
 	/** 
 	 * Used for localization. If we want to localize the name/description we have to include this
@@ -54,7 +88,10 @@ class SearchBlockController extends BlockController {
 		$this->set('baseSearchPath', $this->baseSearchPath);			
 		
 		//auto target is the form action that is used if none is explicity set by the user
-		$autoTarget=str_replace('query='.$_REQUEST['query'],'',$c->getCollectionPath());
+		$autoTarget= $c->getCollectionPath();
+		/* 
+		 * This code is weird. I don't know why it's here or what it does 
+		 
 		if( is_array($_REQUEST['search_paths']) ){
 			foreach($_REQUEST['search_paths'] as $search_path){
 				$autoTarget=str_replace('search_paths[]='.$search_path,'',$autoTarget);
@@ -64,11 +101,13 @@ class SearchBlockController extends BlockController {
 		$autoTarget=str_replace('page='.$_REQUEST['page'],'',$autoTarget);
 		$autoTarget=str_replace('submit='.$_REQUEST['submit'],'',$autoTarget);
 		$autoTarget=str_replace(array('&&&&','&&&','&&'),'',$autoTarget);
-		$resultTargetURL = (strlen($this->resultsURL)) ? $this->resultsURL : $autoTarget;			
+		*/
+		
+		$resultTargetURL = ($this->resultsURL != '') ? $this->resultsURL : $autoTarget;			
 		$this->set('resultTargetURL', $resultTargetURL);
 
 		//run query if display results elsewhere not set, or the cID of this page is set
-		if( strlen($_REQUEST['query']) && (strlen(trim($this->resultsURL))==0 || strstr($this->resultsURL,'cID='.$c->getCollectionId()) ) ){ 
+		if( !empty($_REQUEST['query'])) { 
 			$this->do_search();
 		}						
 	}
@@ -91,82 +130,28 @@ class SearchBlockController extends BlockController {
 	public $reservedParams=array('page=','query=','search_paths[]=','submit=','search_paths%5B%5D=' );
 	
 	function do_search() {
+		$q = $_REQUEST['query'];
+
+		Loader::library('database_indexed_search');
+		$ipl = new IndexedPageList();
+		$ipl->filterByKeywordsBoolean($q);
 		
-		try {
-		
-			$q = $_REQUEST['query'];
-			$this->search_paths=$_REQUEST['search_paths'];
-			if( !is_array($this->search_paths) && strlen($this->search_paths)>0 ) 
-				 $this->search_paths=array($this->search_paths);
-			if( !is_array($this->search_paths) ) $this->search_paths=array();
-			$pagination = Loader::helper('pagination');	
-			
-			if ($q != null) {
-				Loader::library('indexed_search');				
-				Loader::library('3rdparty/Zend/Search/Lucene');
-				//Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
-				Loader::library('3rdparty/Zend/Search/Lucene');
-				Loader::library('3rdparty/StandardAnalyzer/Analyzer/Standard/English');
-				Zend_Search_Lucene_Analysis_Analyzer::setDefault(new StandardAnalyzer_Analyzer_Standard_English());
-				
-				//search a path
-				$subqueries = array();				
-				if( count($this->search_paths) ){
-					$pathsBooleanQuery = new Zend_Search_Lucene_Search_Query_Boolean();
-					foreach($this->search_paths as $path){
-						$pattern = new Zend_Search_Lucene_Index_Term($path, 'cPath');
-						$pathsQuery = new Zend_Search_Lucene_Search_Query_Term($pattern);
-						$pathsBooleanQuery->addSubquery($pathsQuery, NULL);
-					}
-					$subqueries[]=array('query'=>$pathsBooleanQuery,'required'=>true);
-				}
-				
-				$results = IndexedSearch::search( $q, $subqueries );
-				
-				//pagination
-				$pageSize=10;
-				$page=intval($_REQUEST['page']);
-				global $c;
-				$cID=$c->getCollectionId();
-				$cPath=$c->getCollectionPath();
-				
-				//clean and build query string from current URI
-				$url=$_SERVER['REQUEST_URI'];
-				if( !strstr($url,'?')) $url.='?';
-				else{
-					//strip non reserved params from query string, leave the unique params
-					$qStr=substr($url,strpos($url,'?')+1);
-					$qStrParts=explode('&',$qStr);
-					$nonReservedQStrParts=array();
-					foreach($qStrParts as $qStrPart){
-						$reserved=0;
-						foreach($this->reservedParams as $reservedParam){
-							if( strstr($qStrPart,$reservedParam) ){
-								$reserved=1;
-								break;
-							}
-						}
-						if($reserved) continue;
-						$nonReservedQStrParts[]=$qStrPart;
-					}
-					$php_self=( !strstr($_SERVER['PHP_SELF'],'?') )?$_SERVER['PHP_SELF'].'?':$_SERVER['PHP_SELF'];
-					$url=$php_self.join('&',$nonReservedQStrParts);
-				}
-				$pageBase=$url;
-				
-				$queryString='&page=%pageNum%&query=' . $q . '&search_paths%5B%5D='.join('&search_paths%5B%5D=',$this->search_paths);			
-				$pagination->init($page,count($results),$pageBase.$queryString,$pageSize );	
-				$limitedResults=$pagination->limitResultsToPage($results);
-				
-				$this->set('results', $limitedResults);				
-			}			
-					
-			$this->set('query', htmlentities($q));
-			$this->set('paginator', $pagination);
-		
-		} catch(Zend_Search_Lucene_Exception $e) {
-			$this->set('error', t('Unable to complete search: ') . $e->getMessage());
+		if( is_array($_REQUEST['search_paths']) ){
+			foreach($_REQUEST['search_paths'] as $path) {
+				$ipl->addSearchPath($path);
+			}
 		}
+
+		$res = $ipl->getPage();
+		
+		foreach($res as $r) {
+			$results[] = new IndexedSearchResult($r['cID'], $r['cName'], $r['cDescription'], $r['score'], $r['cPath'], $r['content']);
+		}
+		
+		$this->set('query', htmlentities($q, ENT_COMPAT, APP_CHARSET));
+		$this->set('paginator', $ipl->getPagination());
+		$this->set('results', $results);
+		
 	}		
 	
 }

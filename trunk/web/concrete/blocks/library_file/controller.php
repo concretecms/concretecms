@@ -12,6 +12,7 @@
  * The library file block is an internal block type used by external block types to reference files. Basically, any file in Concrete maps to an instance of the library file block.
  *
  * @package Blocks
+ * @access private
  * @author Andrew Embler <andrew@concrete5.org>
  * @category Concrete
  * @copyright  Copyright (c) 2003-2008 Concrete5. <http://www.concrete5.org>
@@ -131,72 +132,8 @@
 		 * @return void
 		 */		
 		public function createImage($originalPath, $newPath, $width, $height) {
-			// first, we grab the original image. We shouldn't ever get to this function unless the image is valid
-			$imageSize = getimagesize($originalPath);
-			$oWidth = $imageSize[0];
-			$oHeight = $imageSize[1];
-			$finalWidth = 0;
-			$finalHeight = 0;
-			
-			// first, if what we're uploading is actually smaller than width and height, we do nothing
-			if ($oWidth < $width && $oHeight < $height) {
-				$finalWidth = $oWidth;
-				$finalHeight = $oHeight;
-			} else {
-				// otherwise, we do some complicated stuff
-				// first, we subtract width and height from original width and height, and find which difference is greater
-				$wDiff = $oWidth - $width;
-				$hDiff = $oHeight - $height;
-//				if ($wDiff > $hDiff) {
-				if ($wDiff > $hDiff && (($oHeight / ($oWidth / $width)) < $height)) { // check to ensure that the finalHeight won't be too large still
-					// there's more of a difference between width than height, so if we constrain to width, we should be safe
-					$finalWidth = $width;
-					$finalHeight = $oHeight / ($oWidth / $width);
-				} else {
-					// more of a difference in height, so we do the opposite
-					$finalWidth = $oWidth / ($oHeight / $height);
-					$finalHeight = $height;
-				}
-			}
-		
-			$image = imageCreateTrueColor($finalWidth, $finalHeight);
-			switch($imageSize[2]) {
-				case IMAGETYPE_GIF:
-					$im = imageCreateFromGIF($originalPath);
-					break;
-				case IMAGETYPE_JPEG:
-					$im = imageCreateFromJPEG($originalPath);
-					break;
-				case IMAGETYPE_PNG:
-					$im = imageCreateFromPNG($originalPath);
-					break;
-			}
-			
-			if ($im) {
-				$res = imageCopyResampled($image, $im, 0, 0, 0, 0, $finalWidth, $finalHeight, $oWidth, $oHeight);
-				if ($res) {
-					/*
-					switch($imageSize[2]) {
-						case IMAGETYPE_GIF:
-							if (function_exists("imageGIF")) {
-								$res2 = imageGIF($image, $newPath);
-							} else {
-								$res2 = imagePNG($image, $newPath);						
-							}
-							break;
-						case IMAGETYPE_JPEG:
-							$res2 = imageJPEG($image, $newPath, 80);
-							break;
-						case IMAGETYPE_PNG:
-							$res2 = imagePNG($image, $newPath, 80);
-							break;
-					}
-					*/
-					
-					$res2 = imageJPEG($image, $newPath, 80);
-				}
-			}
-			
+			$fi = Loader::helper('image');
+			$fi->create($originalPath, $newPath, $width, $height);
 		}
 
 		/** 
@@ -278,7 +215,7 @@
 		public function outputThumbnail($maxWidth = null, $maxHeight = null) {
 			$thumb = $this->getThumbnail($maxWidth, $maxHeight);
 			if (is_object($thumb)) {
-				print '<img class="ccm-output-thumbnail" alt="' . htmlentities($thumb->alt, ENT_QUOTES) . '" src="' . $thumb->src . '" width="' . $thumb->width . '" height="' . $thumb->height . '" />';
+				print '<img class="ccm-output-thumbnail" alt="' . htmlentities($thumb->alt, ENT_QUOTES, APP_CHARSET) . '" src="' . $thumb->src . '" width="' . $thumb->width . '" height="' . $thumb->height . '" />';
 			}
 		}
 

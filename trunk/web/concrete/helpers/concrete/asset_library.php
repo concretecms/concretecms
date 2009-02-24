@@ -27,28 +27,32 @@
 		 * @param LibraryFileBlock $bf
 		 * return string $html
 		 */
-		public function file($id, $postname, $chooseText, $bf = null) {
+		public function file($id, $postname, $chooseText, $bf = null, $filterArgs = array()) {
 		
-			// id = the id prefix of the various items  - this is just a unique name
-			// postname = the name your script expects to carry the filename
+			$selectedDisplay = 'none';
+			$resetDisplay = 'block';
+			$fileID = 0;
 			
-			$fileID = "";
-			$filename = t("None selected.");
-			$resetText = t('Reset');
-			$filedisplay = 'inline';
-			$resetdisplay = 'none';
-			
-			
-			if ($bf != null) {
+			if (is_object($bf) && (!$bf->isError())) {
 				$fileID = $bf->getFileID();
-				$filename = $bf->getFilename();
-				$filedisplay = 'none';
-				$resetdisplay = 'inline';
+				$selectedDisplay = 'block';
+				$resetDisplay = 'none';
 			}
-			$html = '<div id="' . $id . '-display" style="display: inline">' . $filename . '</div> ';
-			$html .= '<a class="ccm-launch-al" id="' . $id . '" href="#" style="display: ' . $filedisplay . '">' . $chooseText . '</a> ';
-			$html .= '<a class="ccm-reset-al" id="' . $id . '-reset" href="#" style="display: ' . $resetdisplay . '">' . $resetText . '</a> ';
-			$html .= '<input id="' . $id . '-value" type="hidden" name="' . $postname . '" value="' . $fileID . '" />';
+				
+			$html = '<div id="' . $id . '-fm-selected" class="ccm-file-selected-wrapper" style="display: ' . $selectedDisplay . '"><img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" /></div>';
+			
+			$html .= '<div class="ccm-file-manager-select" id="' . $id . '-fm-display" ccm-file-manager-field="' . $id . '" style="display: ' . $resetDisplay . '">';
+			$html .= '<a href="javascript:void(0)" class="ccm-file-manager-launch">' . $chooseText . '</a>';
+			if ($filterArgs != false) {
+				foreach($filterArgs as $key => $value) {
+					$html .= '<input type="hidden" class="ccm-file-manager-filter" name="' . $key . '" value="' . $value . '" />';
+				}
+			}
+			$html .= '</div><input id="' . $id . '-fm-value" type="hidden" name="' . $postname . '" value="' . $fileID . '" />';
+
+			if (is_object($bf) && (!$bf->isError())) {
+				$html .= '<script type="text/javascript">$(function() { ccm_triggerSelectFile(' . $fileID . ', \'' . $id . '\'); });</script>';
+			}
 			
 			return $html;
 		}
@@ -62,7 +66,9 @@
 		 * return string $html
 		 */
 		public function image($id, $postname, $chooseText, $fileInstanceBlock = null) {
-			return $this->file($id, $postname, $chooseText, $fileInstanceBlock);
+			$args = array();
+			$args['fType'] = FileType::T_IMAGE;
+			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
 		}
 	
 	}

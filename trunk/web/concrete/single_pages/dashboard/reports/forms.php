@@ -76,17 +76,17 @@ function toggleQuestions(qsID,trigger){
 			</div>
 			
 			<? if($_REQUEST['all']!=1){ ?>
-				<a href="<?=$this->url('/dashboard/form_results/', 'view', '?all=1&sortBy='.$_REQUEST['sortBy'].'&qsid='.$questionSet)?>"><?=t('Show All')?></a>
+				<a href="<?=$this->url('/dashboard/reports/forms/', 'view', '?all=1&sortBy='.$_REQUEST['sortBy'].'&qsid='.$questionSet)?>"><?=t('Show All')?></a>
 			<? }else{ ?>
-				<a href="<?=$this->url('/dashboard/form_results/', 'view', '?all=0&sortBy='.$_REQUEST['sortBy'].'&qsid='.$questionSet)?>"><?=t('Show Paging')?></a>
+				<a href="<?=$this->url('/dashboard/reports/forms/', 'view', '?all=0&sortBy='.$_REQUEST['sortBy'].'&qsid='.$questionSet)?>"><?=t('Show Paging')?></a>
 			<? } ?>
 			
 			&nbsp;|&nbsp;
 			 
 			<? if($_REQUEST['sortBy']=='chrono'){ ?>
-				<a href="<?=$this->url('/dashboard/form_results/', 'view', '?all=1&sortBy=newest&qsid='.$questionSet)?>"><?=t('Sort by Newest')?></a>
+				<a href="<?=$this->url('/dashboard/reports/forms/', 'view', '?all=1&sortBy=newest&qsid='.$questionSet)?>"><?=t('Sort by Newest')?></a>
 			<? }else{ ?>
-				<a href="<?=$this->url('/dashboard/form_results/', 'view', '?all=0&sortBy=chrono&qsid='.$questionSet)?>"><?=t('Sort Chronologically')?></a>
+				<a href="<?=$this->url('/dashboard/reports/forms/', 'view', '?all=0&sortBy=chrono&qsid='.$questionSet)?>"><?=t('Sort Chronologically')?></a>
 			<? } ?>			
 			<div class="spacer"></div>
 		</div>
@@ -106,8 +106,27 @@ function toggleQuestions(qsID,trigger){
 					$questionNumber++; 
 					?>
 					<tr class="<?=($questionNumber>$numQuestionsToShow)?'extra':''?>QuestionRow<?=$answerSetId?> <?=($questionNumber>$numQuestionsToShow)?'noDisplay':'' ?>">
-						<td><?=$questions[$questionId]['question']?></td>
-						<td><?=$answerSet['answers'][$questionId]['answer']?> <?=$answerSet['answers'][$questionId]['answerLong']?></td>
+						<td width="33%">
+							<?= $questions[$questionId]['question'] ?>
+						</td>
+						<td>
+							<?
+							if( $question['inputType']=='fileupload' ){
+								$fID=intval($answerSet['answers'][$questionId]['answer']);
+								$file=File::getByID($fID);
+								if($fID && $file){
+									$fileVersion=$file->getApprovedVersion();
+									echo '<a href="'. DIR_REL . $fileVersion->getRelativePath() .'">'.$fileVersion->getFileName().'</a>';
+								}else{
+									echo t('File not found');
+								}
+							}elseif($question['inputType']=='text'){
+								echo $answerSet['answers'][$questionId]['answerLong'];
+							}else{
+								echo $answerSet['answers'][$questionId]['answer'];
+							}
+							?>							
+						</td>
 					</tr>
 				<? } ?>
 			</table>

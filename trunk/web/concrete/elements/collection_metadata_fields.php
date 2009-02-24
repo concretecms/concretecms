@@ -110,7 +110,7 @@ var ccmAttributeValuesHelper={
 					$caValues=explode("\n",$caValue); 
 					?>
 					<select style="width: 150px" name="akID_<?=$ak->getCollectionAttributeKeyID()?>">
-						<option value="">** NONE</option>
+						<option value="">** <?=t('None')?></option>
 						<? foreach($options as $val) {
 							$val = trim($val);
 							print '<option value="' . $val . '"';
@@ -156,11 +156,11 @@ var ccmAttributeValuesHelper={
 					<? } ?>
 							
 					<?
-					break;	
+
 				case "NUMBER":?>
 					<input name="akID_<?=$ak->getCollectionAttributeKeyID()?>" type="text" value="<?=$caValue ?>" size="10" />
 					<?
-					break;							 
+					break;								 
 				case "IMAGE_FILE": 
 					$bf = null; 
 					if (is_object($caValue)) {

@@ -134,6 +134,19 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 				if ($dsn) {
 					$_dba = @NewADOConnection($dsn);
+					if (DB_CHARSET != '') {
+						$names = 'SET NAMES \'' . DB_CHARSET . '\'';
+						if (DB_COLLATE != '') {
+							$names .= ' COLLATE \'' . DB_COLLATE . '\'';
+						}
+						$charset = 'SET CHARACTER SET \'' . DB_CHARSET . '\'';
+						if (DB_COLLATE != '') {
+							$charset .= ' COLLATE \'' . DB_COLLATE . '\'';
+						}
+						$_dba->Execute($names);
+						$_dba->Execute($charset);
+					}
+					
 					if (is_object($_dba)) {
 						ADOdb_Active_Record::SetDatabaseAdapter($_dba);
 						$_db = new Database();
@@ -356,5 +369,15 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$controller->setupRestrictedMethods();
 			return $controller;
 		}
-		
+
+		/**
+		* Instantiates one of our Soap Client Singletons
+		*/		
+		public function soapClient($client) {			
+			Loader::library('soap_clients');
+			$client .= 'SoapClient';			
+			$api = call_user_func_array($client.'::getInstance',Array());					
+			$api->setup();
+			return $api;
+		}
 	}

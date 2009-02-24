@@ -232,7 +232,7 @@ class UserAttributeKey extends Object {
 			$text = $db->getOne("select value from UserAttributeValues where uID = {$uID} and ukID = {$this->ukID}");
 		}
 		if ($ir) {
-			$text = htmlentities($_REQUEST[$this->getFormElementName()]);
+			$text = htmlentities($_REQUEST[$this->getFormElementName()], ENT_QUOTES, APP_CHARSET);
 		}
 		switch($this->ukType) {
 			case "TEXT":
