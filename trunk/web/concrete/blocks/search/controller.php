@@ -18,7 +18,7 @@ class SearchBlockController extends BlockController {
 
 	public function highlightedMarkup($fulltext, $highlight) {
 		$this->hText = $fulltext;
-		$this->hHighlight = $highlight;
+		$this->hHighlight  = str_replace(array('"',"'","&quot;"),'',$highlight); // strip the quotes as they mess the regex
 		$this->hText = @preg_replace( "#$this->hHighlight#i", '<span style="background-color:'. $this->hColor .';">'. $this->hHighlight .'</span>', $this->hText );	
 		return $this->hText; 
 	}
