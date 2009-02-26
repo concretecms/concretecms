@@ -73,9 +73,11 @@ class DashboardHomepageView extends View {
 /* 
  * @access private
  */
-class DashboardHomepage extends ADODB_Active_Record {
+class DashboardHomepage extends Model {
 
 	public $_table = "DashboardHomepage";
-	
+	public function __construct() {
+		parent::__construct($this->_table);
+	}
 
 }

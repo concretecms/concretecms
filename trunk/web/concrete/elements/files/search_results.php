@@ -20,7 +20,7 @@
 			<th><select id="ccm-file-list-multiple-operations" disabled>
 				<option value="">**</option>
 				<option value="download"><?=t('Download')?></option>
-				<option value="add_to_set"><?=t('Add to Set')?></option>
+				<option value="sets"><?=t('Sets')?></option>
 				<option value="delete"><?=t('Delete')?></option>
 			</select>
 			</th>

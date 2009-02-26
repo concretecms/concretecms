@@ -110,7 +110,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function database() {
 			Loader::library('3rdparty/adodb/adodb.inc');
 			Loader::library('3rdparty/adodb/adodb-exceptions.inc');
-			Loader::library('3rdparty/adodb/adodb-active-record.inc');
+			Loader::library('3rdparty/adodb/adodb-active-recordx.inc');
 			Loader::library('3rdparty/adodb/adodb-xmlschema03.inc');
 			Loader::library('database');
 		}

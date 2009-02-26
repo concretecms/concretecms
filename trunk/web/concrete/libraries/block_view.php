@@ -26,7 +26,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function __construct($tbl = null) {
 			if ($tbl) {
 				$this->_table = $tbl;
-				parent::__construct();
+				parent::__construct($tbl);
 			}
 		}
 		

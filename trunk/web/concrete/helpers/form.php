@@ -91,7 +91,14 @@ class FormHelper {
 	 * @param bool $checked
 	 * @return string $html
 	 */
-	public function checkbox($field, $value, $isChecked = false) {
+	public function checkbox($field, $value, $isChecked = false, $miscFields = array()) {
+
+		$mf = '';
+		if (is_array($miscFields)) {
+			foreach($miscFields as $k => $v) {
+				$mf .= $k . '="' . $v . '" ';
+			}
+		}
 		
 		$_field = $field;
 		$_array = false;
@@ -112,7 +119,7 @@ class FormHelper {
 			$checked = 'checked="checked" ';
 		}
 		
-		$str = '<input type="checkbox" name="' . $field . '" id="' . $field . '" value="' . $value . '" ' . $checked . ' />';
+		$str = '<input type="checkbox" name="' . $field . '" id="' . $field . '" value="' . $value . '" ' . $checked . ' ' . $mf . ' />';
 		return $str;
 	}
 
