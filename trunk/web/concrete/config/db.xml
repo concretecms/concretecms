@@ -380,6 +380,31 @@
       <UNSIGNED/>
     </field>
   </table>
+  
+  <table name="DownloadStatistics">
+    <field name="dsID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field> 
+    <field name="fID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED />
+    </field>
+    <field name="fvID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED />
+    </field>
+    <field name="uID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED />
+    </field>
+    <field name="timestamp" type="T">
+      <NOTNULL/>
+      <DEFTIMESTAMP/>
+    </field>		
+  </table>  
+  
   <table name="FileAttributeKeys">
     <field name="fakID" type="I" size="10">
       <KEY/>

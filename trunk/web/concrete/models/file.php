@@ -222,4 +222,19 @@ class File extends Object {
 		}
 		return $files;
 	}
+	
+	public function getDownloadStatistics(){
+		$db = Loader::db();
+		return $db->getAll("SELECT * FROM DownloadStatistics WHERE fID = ? ORDER BY timestamp desc", array($this->getFileID()));
+	}
+	
+	public function trackDownload(){ 
+		$u = new User();
+		$uID = intval( $u->getUserID() );
+		$fv = $this->getVersion();
+		$fvID = $fv->getFileVersionID();
+		
+		$db = Loader::db();
+		$db->Execute('insert into DownloadStatistics (fID, fvID, uID) values (?, ?, ?)',  array( $this->fID, intval($fvID), $uID ) );		
+	}
 }

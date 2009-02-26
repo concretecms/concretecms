@@ -16,20 +16,17 @@ class DownloadFileController extends Controller {
 		if (is_object($block)) {
 			$file = $block->getFileObject();
 			
-			if ($file) {
-				
+			if ($file) {				
 				// if block password is blank download
 				if (!$block->getPassword())
 					return $this->download($file);			
-			
+						
 				// otherwise show the form
 				$this->set('bID', $bID);
 				$this->set('filename', $file->getFilename());
-				$this->set('filesize', filesize(DIR_FILES_UPLOADED."/".$file->getFilename()));
-			}
-			
+				$this->set('filesize', filesize( $file->getPath() ) );
+			}			
 		}
-
 	}
 	
 	public function submit_password($bID = 0) {
@@ -48,8 +45,9 @@ class DownloadFileController extends Controller {
 		//header('Content-type: $mime_type');
 		// everything else lets just download
 		$filename = $file->getFilename();
+		$file->trackDownload();
 		$ci = Loader::helper('file');
-		$ci->forceDownload($filename);
+		$ci->forceDownload($filename);		
 	}
 	
 	private function getBlock($bID) {
