@@ -270,7 +270,8 @@ if (!$previewMode) {
 <? if (!$previewMode) { ?>
 	
 	<div class="ccm-file-properties-details-tab" id="ccm-file-properties-versions-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>-tab" style="display: none">
-	<h1><?=t('File Versions')?></h1>
+	
+		<h1><?=t('File Versions')?></h1>
 	
 		<table border="0" cellspacing="0" width="100%" id="ccm-file-versions-grid" class="ccm-grid" cellpadding="0">
 		<tr>
@@ -315,8 +316,45 @@ if (!$previewMode) {
 <? } ?>
 
 <div class="ccm-file-properties-details-tab" id="ccm-file-properties-statistics-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>-tab" style="display: none">
-asdf2
+	
+	<h1><?=t('Download Statistics')?></h1>
+	<?
+	$downloadStatistics = $f->getDownloadStatistics();
+	?>
+	<h2><?=count($downloadStatistics).' '.t('Downloads')?></h2>
+	<table border="0" cellspacing="0" width="100%" id="ccm-file-versions-grid" class="ccm-grid" cellpadding="0">
+		<tr> 
+			<th><?=t('User')?></th>
+			<th><?=t('Download Time')?></th>
+			<th><?=t('File Version ID')?></th>
+		</tr>	
+		<?
+		
+		$downloadStatsCounter=0;
+		foreach($downloadStatistics as $download){ 
+			$downloadStatsCounter++;
+			if($downloadStatsCounter>20) break;
+			?>
+		<tr>
+			<td>
+				<? 
+				$uID=intval($download['uID']);
+				if(!$uID){
+					echo t('Anonymous');
+				}else{ 
+					$downloadUI = UserInfo::getById($uID);
+					//echo get_class($downloadUI);
+					echo $downloadUI->getUserName();
+				} 
+				?>
+			</td>
+			<td><?=$download['timestamp']?></td>
+			<td><?=intval($download['fvID'])?></td>
+		</tr>
+		<? } ?>
+	</table>
 </div>
+
 </div>
 
 <script type="text/javascript">
