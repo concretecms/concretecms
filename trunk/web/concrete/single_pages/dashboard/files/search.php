@@ -52,8 +52,6 @@
 	<div id="ccm-file-search-advanced-fields-inner">
 	<div class="ccm-file-search-field">
 
-	<?=$form->label('fKeywords', 'Keywords')?><br/>
-
 	<table border="0" cellspacing="0" cellpadding="0">
 	<tr>
 		<td width="100%">
@@ -87,7 +85,9 @@
 	
 	</div>
 	
-	<?=$form->submit('ccm-search-files', 'Search')?>
+	<div id="ccm-file-search-fields-submit">
+		<?=$form->submit('ccm-search-files', 'Search')?>
+	</div>
 	</div>
 
 </form>	

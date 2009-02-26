@@ -21,24 +21,29 @@ if ($_POST['task'] == 'delete_files') {
 }
 
 $form = Loader::helper('form');
+
+$files = array();
+if (is_array($_REQUEST['fID'])) {
+	foreach($_REQUEST['fID'] as $fID) {
+		$files[] = File::getByID($fID);
+	}
+} else {
+	$files[] = File::getByID($_REQUEST['fID']);
+}
 ?>
 
 <h1>Delete Files</h1>
 
-<?
 
-	$f = File::getByID($_REQUEST['fID']);
-	$fv = $f->getApprovedVersion();
-	
-	?>
-
-	<?=t('Are you sure you want to delete the file(s): ')?><br/>
+	<?=t('Are you sure you want to delete the following files?')?><br/><br/>
 
 	<form id="ccm-delete-files-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete">
 	<?=$form->hidden('task', 'delete_files')?>
 	<table id="ccm-file-list" border="0" cellspacing="0" cellpadding="0">
 	
-		<? if (is_object($fv)) { ?>
+	<? foreach($files as $f) { 
+		$fv = $f->getApprovedVersion();
+		if (is_object($fv)) { ?>
 		
 		<?=$form->hidden('fID[]', $f->getFileID())?>		
 		
@@ -52,8 +57,9 @@ $form = Loader::helper('form');
 			<td><?=$fv->getAuthorName()?></td>
 		</tr>
 		
-		<? } ?>
-
+		<? }
+		
+	} ?>
 	</table>
 	</form>
 	<br/>

@@ -112,10 +112,10 @@ ccm_alLaunchSelectorFileManager = function(selector) {
 	});
 }
 
-ccm_alSubmitAddToSetsForm = function() {
-	jQuery.fn.dialog.closeTop();
+ccm_alSubmitSetsForm = function() {
 	ccm_deactivateSearchResults();
 	$("#ccm-file-add-to-set-form").ajaxSubmit(function(resp) {
+		jQuery.fn.dialog.closeTop();
 		$(".ccm-dashboard-file-search").ajaxSubmit(function(resp) {
 			ccm_alParseSearchResponse(resp);
 		});
@@ -123,9 +123,37 @@ ccm_alSubmitAddToSetsForm = function() {
 }
 
 		
-ccm_alSetupAddToSetsForm = function() {
+ccm_alSetupSetsForm = function() {
+	// Setup the tri-state checkboxes
+	$("div.ccm-file-set-add-cb a").each(function() {
+		var cb = $(this);
+		var startingState = cb.attr("ccm-tri-state-startup");
+		$(this).click(function() {
+			var selectedState = $(this).attr("ccm-tri-state-selected");
+			var toSetState = 0;
+			switch(selectedState) {
+				case '0':
+					if (startingState == '1') {
+						toSetState = '1';
+					} else {
+						toSetState = '2';
+					}
+					break;
+				case '1':
+					toSetState = '2';
+					break;
+				case '2':
+					toSetState = '0';
+					break;
+			}
+			
+			$(this).attr('ccm-tri-state-selected', toSetState);
+			$(this).find('input').val(toSetState);
+			$(this).find('img').attr('src', CCM_IMAGE_PATH + '/checkbox_state_' + toSetState + '.png');
+		});
+	});
 	$("#ccm-file-add-to-set-form").submit(function() {
-		ccm_alSubmitAddToSetsForm();
+		ccm_alSubmitSetsForm();
 		return false;
 	});
 }
@@ -264,10 +292,30 @@ ccm_alSetupCheckboxes = function() {
 		var action = $(this).val();
 		var fIDstring = ccm_alGetSelectedFileIDs();
 		switch(action) {
+			case "delete":
+				jQuery.fn.dialog.open({
+					width: 500,
+					height: 400,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/files/delete?' + fIDstring,
+					title: ccmi18n_filemanager.deleteFile				
+				});
+				break;
+			case "sets":
+				jQuery.fn.dialog.open({
+					width: 500,
+					height: 400,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/files/add_to?' + fIDstring,
+					title: ccmi18n_filemanager.sets				
+				});
+				break;
 			case "download":
 				window.frames[ccm_alProcessorTarget].location = CCM_TOOLS_PATH + '/files/download?' + fIDstring;
 				break;
 		}
+		
+		$(this).get(0).selectedIndex = 0;
 	});
 }
 
@@ -496,6 +544,13 @@ ccm_alActivateMenu = function(obj, e) {
 			} else {
 				var vh = parseInt($(obj).attr("ccm-file-manager-view-height")) + 10; // enough room for download bar
 				var vw = parseInt($(obj).attr("ccm-file-manager-view-width")) + 20;
+				
+				if (vh < 100) {
+					vh = 100;
+				}
+				if (vw < 240) {
+					vw = 240;
+				}
 			}
 			html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="' + vw + '" dialog-height="' + vh + '" dialog-title="' + ccmi18n_filemanager.view + '" id="menuView' + fID + '" href="' + CCM_TOOLS_PATH + '/files/view?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.view + '<\/span><\/a><\/li>';
 		} else {
@@ -503,7 +558,7 @@ ccm_alActivateMenu = function(obj, e) {
 		}
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="' + ccmi18n_filemanager.properties + '" id="menuProperties' + fID + '" href="' + CCM_TOOLS_PATH + '/files/properties?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/edit_small.png)">'+ ccmi18n_filemanager.properties + '<\/span><\/a><\/li>';
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="300" dialog-height="180" dialog-title="' + ccmi18n_filemanager.editReplace + '" id="menuFileEditReplace' + fID + '" href="' + CCM_TOOLS_PATH + '/files/edit?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.editReplace + '<\/span><\/a><\/li>';
-		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.addTo + '" id="menuFileAddTo' + fID + '" href="' + CCM_TOOLS_PATH + '/files/add_to?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.addTo + '<\/span><\/a><\/li>';
+		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.sets + '" id="menuFileSets' + fID + '" href="' + CCM_TOOLS_PATH + '/files/add_to?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.sets + '<\/span><\/a><\/li>';
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.permissions + '" id="menuFilePermissions' + fID + '" href="' + CCM_TOOLS_PATH + '/files/permissions?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.permissions + '<\/span><\/a><\/li>';
 		html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.deleteFile + '" id="menuDeleteFile' + fID + '" href="' + CCM_TOOLS_PATH + '/files/delete?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.deleteFile + '<\/span><\/a><\/li>';
 		html += '</ul>';
@@ -514,36 +569,13 @@ ccm_alActivateMenu = function(obj, e) {
 		$('a#menuView' + fID).dialog();
 		$('a#menuProperties' + fID).dialog();
 		$('a#menuFileEditReplace' + fID).dialog();
-		$('a#menuFileAddTo' + fID).dialog();
+		$('a#menuFileSets' + fID).dialog();
 		$('a#menuFilePermissions' + fID).dialog();
 		$('a#menuClearFile' + fID + selector).click(function(e) {
 			ccm_clearFile(e, selector);
 			ccm_hideMenus();
 		});
 		$('a#menuDeleteFile' + fID).dialog();
-		/*		
-		$('a#menuProperties' + fID).dialog();
-		$('a#menuDelete' + fID).click(function() {
-			if (confirm('<?=t('Are you sure you want to delete this file?')?>')) {
-				$.getJSON('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_delete.php', {'fID': fID, 'ccm_token': '<?=$valt->generate('delete_file')?>'}, function(resp) {
-					parseJSON(resp, function() {
-						if(resp.error==1) alert(resp.message);
-						else{
-							$(obj).fadeOut(300);
-							//update paging result details
-							var ptr=$('#pagingTotalResults');
-							var ppr=$('#pagingPageResults');
-							ptr.html(  parseInt(ptr.html())-1  );
-							if( parseInt(ptr.html())<=parseInt(ppr.html()) ){
-								ppr.html(  parseInt(ptr.html())  );
-								$('.ccm-al-actions .ccm-paging').css('display','none');
-							}
-						}
-					});
-				});
-			}
-		});
-		*/
 
 	} else {
 		bobj = $("#ccm-al-menu" + fID + selector);
