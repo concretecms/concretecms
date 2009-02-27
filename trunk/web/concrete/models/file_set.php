@@ -129,6 +129,9 @@
 				return $matched_sets;
 			}
 			else{
+				//AS: Adodb Active record is complaining a ?/value array mismatch unless
+				//we explicatly set the primary key ID field to null
+				$file_set_file->fsfID = 'null';
 				$file_set_file->fID =  $f_id;			
 				$file_set_file->fsID = $fs_id;
 				$file_set_file->Save();

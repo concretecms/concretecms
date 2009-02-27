@@ -33,8 +33,12 @@ class DashboardFilesSetsController extends Controller {
 			return;		
 		}
 		
-		$u = new User();		
+		//print('<pre>');print_r(get_included_files());print('</pre>');
+		$u = new User();				
 		$file_set 			= new FileSet();
+		//AS: Adodb Active record is complaining a ?/value array mismatch unless
+		//we explicatly set the primary key ID field to null		
+		$file_set->fsID		= 'null';
 		$file_set->fsName 	= $this->post('file_set_name');
 		$file_set->fsType 	= FileSet::TYPE_PUBLIC;
 		$file_set->uID		= $u->getUserID();
