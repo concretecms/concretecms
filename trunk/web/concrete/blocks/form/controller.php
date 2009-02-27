@@ -145,7 +145,7 @@ class FormBlockController extends BlockController {
 		}catch(Exception $e){ } 
 		
 		//$db->CacheFlush();
-		
+		//$db->setDebug(true);
 		$installResult = parent::install($path);  
 		 
 		//give all questions a bID 

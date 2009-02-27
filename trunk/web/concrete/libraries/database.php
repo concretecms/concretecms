@@ -80,6 +80,10 @@ class Database {
 	public function setDebug($_debug) {
 		$this->db->debug = $_debug;
 	}
+	
+	public function getDebug() {
+		return $this->db->debug;
+	}
 
 	/** 
 	 * Sets logging to true or false.
