@@ -125,7 +125,9 @@ class Package extends Object {
 		// to find a table that doesn't exist! 
 		
 		$handler = $db->IgnoreErrors();
-		//ob_start();
+		if ($db->getDebug() == false) {
+			ob_start();
+		}
 		
 		$schema = $db->getADOSChema();		
 		$sql = $schema->ParseSchema($xmlFile);
@@ -139,10 +141,12 @@ class Package extends Object {
 
 		$r = $schema->ExecuteSchema();
 
-		//$dbLayerErrorMessage = ob_get_contents();
-				
-		//ob_end_clean();
 
+		if ($db->getDebug() == false) {
+			$dbLayerErrorMessage = ob_get_contents();
+			ob_end_clean();
+		}
+		
 		$result = new stdClass;
 		$result->result = false;
 		
