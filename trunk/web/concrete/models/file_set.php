@@ -91,9 +91,11 @@
 		public function removeFileFromSet($f_id){
 			if (is_object($f_id)) {
 				$f_id = $f_id->fID;
-			}			
-			$file_set_file = FileSetFile::createAndGetFile($f_id,$this->fsID);
-			$file_set_file->Delete();
+			}
+			$db = Loader::db();
+			$db->Execute('DELETE FROM FileSetFiles 
+			WHERE fID = ? 
+			AND   fsID = ?', array($f_id, $this->getFileSetID()));
 		}
 
 		/**
