@@ -168,10 +168,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 */	
 	class BlockTypeDB extends ADOdb_Active_Record {
 		var $_table = 'BlockTypes';
-		
-		public function __construct() {
-			parent::__construct('BlockTypes');
-		}
 	}
 
 /**
