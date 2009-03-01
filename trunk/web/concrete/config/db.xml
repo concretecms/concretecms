@@ -10,7 +10,7 @@
       <UNSIGNED/>
     </field>
     <field name="timestamp" type="T">
-      <DEFAULT value="CURRENT_TIMESTAMP"/>
+      <deftimestamp />
     </field>
     <index name="uID">
       <UNIQUE/>
