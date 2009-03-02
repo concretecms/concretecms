@@ -680,7 +680,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 				$innerContent = ob_get_contents();
 				
-				if (ob_get_level() == (OB_INITIAL_LEVEL + 1)) {
+				if (ob_get_level() > OB_INITIAL_LEVEL) {
 					ob_end_clean();
 				}
 				

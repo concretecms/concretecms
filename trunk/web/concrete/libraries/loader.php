@@ -134,20 +134,20 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 				if ($dsn) {
 					$_dba = @NewADOConnection($dsn);
-					if (DB_CHARSET != '') {
-						$names = 'SET NAMES \'' . DB_CHARSET . '\'';
-						if (DB_COLLATE != '') {
-							$names .= ' COLLATE \'' . DB_COLLATE . '\'';
-						}
-						$charset = 'SET CHARACTER SET \'' . DB_CHARSET . '\'';
-						if (DB_COLLATE != '') {
-							$charset .= ' COLLATE \'' . DB_COLLATE . '\'';
-						}
-						$_dba->Execute($names);
-						$_dba->Execute($charset);
-					}
-					
 					if (is_object($_dba)) {
+						if (DB_CHARSET != '') {
+							$names = 'SET NAMES \'' . DB_CHARSET . '\'';
+							if (DB_COLLATE != '') {
+								$names .= ' COLLATE \'' . DB_COLLATE . '\'';
+							}
+							$charset = 'SET CHARACTER SET \'' . DB_CHARSET . '\'';
+							if (DB_COLLATE != '') {
+								$charset .= ' COLLATE \'' . DB_COLLATE . '\'';
+							}
+							$_dba->Execute($names);
+							$_dba->Execute($charset);
+						}
+						
 						ADOdb_Active_Record::SetDatabaseAdapter($_dba);
 						$_db = new Database();
 						$_db->setDatabaseObject($_dba);

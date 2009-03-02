@@ -26,6 +26,10 @@ if (!defined('REDIRECT_TO_BASE_URL')) {
 	define('REDIRECT_TO_BASE_URL', true);
 }
 
+if (!defined('ENABLE_DEVELOPER_OPTIONS')) {
+	define("ENABLE_DEVELOPER_OPTIONS", false);
+}
+
 /*
 if (!defined('ENABLE_OPENID_AUTHENTICATION')) { 
 	define('ENABLE_OPENID_AUTHENTICATION', false);
@@ -205,6 +209,7 @@ define('DIR_FILES_COLLECTION_TYPE_ICONS', DIR_BASE_CORE . '/images/icons/page_ty
 define('REL_DIR_FILES_COLLECTION_TYPE_ICONS', ASSETS_URL_IMAGES . '/icons/page_types');
 define('DIR_FILES_CONTENT', DIR_BASE . '/single_pages');
 define('DIR_FILES_CONTENT_REQUIRED', DIR_BASE_CORE . '/single_pages');
+define("FILENAME_LOCAL_DB", 'site_db.xml');
 
 # Block Types
 define('BLOCK_TYPE_GENERIC_ICON', ASSETS_URL_IMAGES . '/icons/icon_block_type_generic.png');
