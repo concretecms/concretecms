@@ -609,14 +609,6 @@ ccm_removeHeaderLoading = function() {
 	$("a.ccm-nav-loading").removeClass('ccm-nav-loading');
 }
 
-parseJSON = function(resp, onNoError) {
-	if (resp.error) {
-		alert(resp.message);	
-	} else {
-		onNoError();
-	}
-}
-
 if (CCM_ARRANGE_MODE) {
 	$(ccm_arrangeInit);	
 } else if (CCM_EDIT_MODE) {

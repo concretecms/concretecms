@@ -1,8 +1,8 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
 <div class="ccm-editor-controls">
 <ul>
-<li><a class="ccm-launch-al" onclick="ccm_editorCurrentAuxTool='image'; setBookMark();" href="#"><?=t('Add Image')?></a></li>
-<li><a class="ccm-launch-al" onclick="ccm_editorCurrentAuxTool='file'; setBookMark();" href="#"><?=t('Add File')?></a></li>
+<li><a class="ccm-file-manager-launch" onclick="ccm_editorCurrentAuxTool='image'; setBookMark();" href="#"><?=t('Add Image')?></a></li>
+<li><a class="ccm-file-manager-launch" onclick="ccm_editorCurrentAuxTool='file'; setBookMark();" href="#"><?=t('Add File')?></a></li>
 <li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay.php?sitemap_mode=select_page" onclick="setBookMark();" class="dialog-launch" dialog-modal="false" ><?=t('Insert Link to Page')?></a></li>
 </ul>
 </div>

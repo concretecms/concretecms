@@ -94,7 +94,7 @@ deletePage = function(cID) {
 	ccm_hideMenus();
 	if (confirm(ccmi18n_sitemap.areYouSure)) {
 		$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_delete_request.php', {'cID': cID, 'ccm_token': CCM_SECURITY_TOKEN}, function(resp) {
-			parseJSON(resp, function() {
+			ccm_parseJSON(resp, function() {
 				deleteBranchFade(cID);
 			});
 		});
@@ -142,7 +142,7 @@ rescanDisplayOrder = function(nodeID) {
 		queryString += "&cID[]=" + $(nodes[i]).attr('id').substring(9);
 	}
 	$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_update.php', queryString, function(resp) {
-		parseJSON(resp, function() {});
+		ccm_parseJSON(resp, function() {});
 		removeLoading(nodeID);	
 	});
 }
@@ -328,7 +328,7 @@ moveCopyAliasNode = function(reloadPage) {
 	
 	$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request.php', params, function(resp) {
 		// parse response
-		parseJSON(resp, function() {
+		ccm_parseJSON(resp, function() {
 			
 			alert(resp.message);
 			

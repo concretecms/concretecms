@@ -10,15 +10,13 @@ class DownloadFileController extends Controller {
 		Loader::block('file');
 	}
 
-	public function view($bID = 0) {
+	public function view($fID = 0) {
 		// get the block
-		$block = $this->getBlock($bID);
-		if (is_object($block)) {
-			$file = $block->getFileObject();
-			
+		if ($fID > 0) {
+			$file = File::getByID($fID);			
 			if ($file) {				
 				// if block password is blank download
-				if (!$block->getPassword())
+				if (!$file->getPassword())
 					return $this->download($file);			
 						
 				// otherwise show the form
@@ -27,6 +25,16 @@ class DownloadFileController extends Controller {
 				$this->set('filesize', filesize( $file->getPath() ) );
 			}			
 		}
+	}
+	
+	public function view_inline($fID) {
+		$file = File::getByID($fID);
+		$mimeType = $file->getMimeType();
+		header("Content-type: $mimeType");
+		$fc = Loader::helper('file');
+		$contents = $fc->getContents($file->getPath());
+		print $contents;
+		exit;
 	}
 	
 	public function submit_password($bID = 0) {
@@ -47,7 +55,7 @@ class DownloadFileController extends Controller {
 		$filename = $file->getFilename();
 		$file->trackDownload();
 		$ci = Loader::helper('file');
-		$ci->forceDownload($filename);		
+		$ci->forceDownload($file->getPath());		
 	}
 	
 	private function getBlock($bID) {

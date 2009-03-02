@@ -41,6 +41,15 @@ ccm_disableLinks = function() {
 	$(document.body).append('<div style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 1000"></div>');
 }
 
+ccm_parseJSON = function(resp, onNoError) {
+	if (resp.error) {
+		alert(resp.message);	
+	} else {
+		onNoError();
+	}
+}
+
+
 if ($.browser.msie) {
 	ccm_animEffects = false;
 }

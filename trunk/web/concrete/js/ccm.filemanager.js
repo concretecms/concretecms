@@ -211,7 +211,7 @@ ccm_alSetupVersionSelector = function() {
 
 ccm_alDeleteFiles = function() {
 	$("#ccm-delete-files-form").ajaxSubmit(function(resp) {
-		parseJSON(resp, function() {	
+		ccm_parseJSON(resp, function() {	
 			jQuery.fn.dialog.closeTop();
 			ccm_deactivateSearchResults();
 			$(".ccm-dashboard-file-search").ajaxSubmit(function(resp) {
@@ -491,8 +491,21 @@ ccm_alHighlightFileIDArray = function(ids) {
 }
 
 ccm_alSelectFile = function(fID) {
-	ccm_triggerSelectFile(fID);
-	jQuery.fn.dialog.closeTop();
+	if (typeof(ccm_chooseAsset) == 'function') {
+
+		ccm_deactivateSearchResults();
+
+		$.getJSON(CCM_TOOLS_PATH + '/files/get_data.php', {'fID' : fID}, function(resp) {
+			jQuery.fn.dialog.closeTop();
+			ccm_parseJSON(resp, function() {
+				ccm_chooseAsset(resp);
+			});
+		});
+		
+	} else {
+		ccm_triggerSelectFile(fID);
+	
+	}
 }
 
 ccm_alActivateMenu = function(obj, e) {
