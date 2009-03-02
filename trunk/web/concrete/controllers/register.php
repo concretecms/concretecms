@@ -76,7 +76,7 @@ class RegisterController extends Controller {
 			$e->add(t('A password must be between %s and %s characters', USER_PASSWORD_MINIMUM, USER_PASSWORD_MAXIMUM));
 		}
 			
-		if (strlen($password) >= USER_PASSWORD_MINIMUM && !$vals->password($password)) {
+		if (strlen($password) >= USER_PASSWORD_MINIMUM && !$valc->password($password)) {
 			$e->add(t('A password may not contain ", \', >, <, or any spaces.'));
 		}
 
@@ -121,8 +121,7 @@ class RegisterController extends Controller {
 				// now we check whether we need to validate this user's email address
 				} elseif (defined("USER_VALIDATE_EMAIL")) {
 					if (USER_VALIDATE_EMAIL > 0) {
-						$ui = UserInfo::getByID($u->getUserID());
-						$uHash = $ui->setupValidation();
+						$uHash = $process->setupValidation();
 						
 						$mh = Loader::helper('mail');
 						$mh->addParameter('uEmail', $_POST['uEmail']);

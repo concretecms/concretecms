@@ -163,6 +163,9 @@ class LoginController extends Controller {
 			$u = new User($this->post('uName'), $this->post('uPassword'));
 			if ($u->isError()) {
 				switch($u->getError()) {
+					case USER_NON_VALIDATED:
+						throw new Exception(t('This account has not yet been validated. Please check the email associated with this account and follow the link it contains.'));
+						break;
 					case USER_INVALID:
 						if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
 							throw new Exception(t('Invalid email address or password.'));
