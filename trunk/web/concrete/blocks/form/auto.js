@@ -61,7 +61,7 @@ var miniSurvey ={
 			var msqID=0;
 			if(mode!='Edit') mode='';
 			else msqID=parseInt($('#msqID').val())
-			var postStr='question='+escape($('#question'+mode).val())+'&options='+escape($('#answerOptions'+mode).val());
+			var postStr='question='+encodeURIComponent($('#question'+mode).val())+'&options='+encodeURIComponent($('#answerOptions'+mode).val());
 			postStr+='&width='+escape($('#width'+mode).val());
 			postStr+='&height='+escape($('#height'+mode).val());
 			var req=($('#required'+mode).get(0).checked)?1:0;
