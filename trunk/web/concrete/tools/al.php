@@ -86,7 +86,7 @@ ccm_alSelectItem = function(obj, e) {
 		$('a#menuDelete' + bID).click(function() {
 			if (confirm('<?=t('Are you sure you want to delete this file?')?>')) {
 				$.getJSON('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/al_delete.php', {'bID': bID, 'ccm_token': '<?=$valt->generate('delete_file')?>'}, function(resp) {
-					parseJSON(resp, function() {
+					ccm_parseJSON(resp, function() {
 						if(resp.error==1) alert(resp.message);
 						else{
 							$(obj).fadeOut(300);

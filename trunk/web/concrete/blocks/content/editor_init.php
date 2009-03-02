@@ -42,8 +42,8 @@ ccm_chooseAsset = function(obj) {
 		case "image":
 			var args = {};
 			tinymce.extend(args, {
-				src : obj.filePath,
-				alt : obj.fileName,
+				src : obj.filePathInline,
+				alt : obj.title,
 				width : obj.width,
 				height : obj.height
 			});
@@ -60,12 +60,12 @@ ccm_chooseAsset = function(obj) {
 			if(selectedText != '') { // make a link, let mce deal with the text of the link..
 				mceEd.execCommand('mceInsertLink', false, {
 					href : obj.filePath,
-					title : obj.fileName,
+					title : obj.title,
 					target : null,
 					'class' :  null
 				});
 			} else { // insert a normal link
-				var html = '<a href="' + obj.filePath + '">' + obj.fileName + '<\/a>';
+				var html = '<a href="' + obj.filePath + '">' + obj.title + '<\/a>';
 				tinyMCE.execCommand('mceInsertRawHTML', false, html, true); 
 			}
 		break;

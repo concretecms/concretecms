@@ -46,6 +46,13 @@ class FileVersion extends Object {
 		}
 	}
 
+	public function getMimeType() {
+		$h = Loader::helper('mime');
+		$fh = Loader::helper('file');
+		$ext = $fh->getExtension($this->fvFilename);
+		return $h->mimeFromExtension($ext);
+	}
+	
 	public function populateAttributes() {
 		// load the attributes for a particular version object
 		$db = Loader::db();

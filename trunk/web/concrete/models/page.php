@@ -511,6 +511,19 @@ class Page extends Collection {
 	function getCollectionPath() {
 		return $this->cPath;
 	}
+	
+	public static function getCollectionPathFromID($cID) {
+		$path = Cache::get('page_path', $cID);
+		if ($path != false) {
+			return $path;
+		}
+		
+		$db = Loader::db();
+		$path = $db->GetOne("select cPath from PagePaths inner join CollectionVersions on (PagePaths.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) where PagePaths.cID = ?", array($cID));
+		
+		Cache::set('page_path', $cID, $path);
+		return $path;
+	}
 
 	function getCollectionUserID() {
 		return $this->uID;

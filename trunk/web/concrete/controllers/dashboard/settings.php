@@ -96,6 +96,10 @@ class DashboardSettingsController extends Controller {
 		}
 	}	
 	
+	public function export_database_schema() {
+	
+	}
+	
 	const IP_BLACKLIST_CHANGE_MAKEPERM		 	= 1;
 	const IP_BLACKLIST_CHANGE_REMOVE		 	= 2;
 	const IP_BAN_LOCK_IP_HOW_LONG_TYPE_TIMED 	= 'timed';

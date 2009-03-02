@@ -8,7 +8,15 @@ $h = Loader::helper('concrete/interface'); ?>
 .ccm-module form div.ccm-dashboard-inner{ margin-bottom:0px !important; }
 </style>
 
-<? if ($this->controller->getTask() == 'set_developer') { ?>
+
+<? if ($this->controller->getTask() == 'export_database_schema') { ?>
+
+<h1><span><?=t('Database Schema')?></span></h1>
+<div class="ccm-dashboard-inner">
+<textarea style="width: 100%; height: 500px"><?=$schema?></textarea>
+</div>
+
+<? } else if ($this->controller->getTask() == 'set_developer') { ?>
 
 <div id="ccm-module-row1">
 <div class="ccm-module">
@@ -37,7 +45,7 @@ $h = Loader::helper('concrete/interface'); ?>
 </form>
 
 
-	<h1><span><?=t('Caching')?></span></h1>
+<h1><span><?=t('Caching')?></span></h1>
 	<div class="ccm-dashboard-inner">
 
 	<form method="post" id="update-cache-form" action="<?=$this->url('/dashboard/settings', 'update_cache')?>">
@@ -78,7 +86,6 @@ $h = Loader::helper('concrete/interface'); ?>
 
 </form>
 
-
 </div>
 <div class="ccm-module">
 <form method="post" id="logging-form" action="<?=$this->url('/dashboard/settings', 'update_logging')?>">
@@ -103,6 +110,24 @@ $h = Loader::helper('concrete/interface'); ?>
 	
 	</div>
 </form>
+
+<form method="post" id="export-db-form" action="<?=$this->url('/dashboard/settings', 'export_database_schema')?>">
+	
+	<h1><span><?=t('Database Tables and Content')?></span></h1>
+	<div class="ccm-dashboard-inner">
+	
+	<h2><?=t('Current Database Schema')?></h2>
+	<p><?=t('Click below to view your database schema in a format that can imported into concrete5 later.')?></p>
+	
+	<?
+	$b1 = $h->submit(t('Export Database Tables'), 'export-db-form');
+	print $h->buttons($b1);
+	?>
+	
+	
+	</div>
+</form>
+
 </div>
 </div>
 

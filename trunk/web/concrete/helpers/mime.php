@@ -19,14 +19,8 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class MimeHelper {
-	/** 
-	 * Converts a known mime-type into it's common file extension. 
-	 * @todo: Maybe add more mime-types?
-	 * @param string $mimeType
-	 * @return string $extension or bolean false
-	 */
-	static function mimeToExtension($mimeType) {
-		$mime_types_and_extensions = array(
+
+	static $mime_types_and_extensions = array(
 			'application/atom+xml'          => 'atom',
 			'application/mac-binhex40'      => 'hqx',
 			'application/mathml+xml'        => 'mathml',
@@ -97,9 +91,21 @@ class MimeHelper {
 			'video/x-msvideo'               => 'avi'
 		);
 		
-		if (array_key_exists($mimeType, $mime_types_and_extensions)) 
-			return $mime_types_and_extensions[$mimeType];
+	public function mimeFromExtension($extension) {
+		$mime = array_search($extension, MimeHelper::$mime_types_and_extensions);
+		return $mime;
+		
+	}
 	
+	/** 
+	 * Converts a known mime-type into it's common file extension. 
+	 * @todo: Maybe add more mime-types?
+	 * @param string $mimeType
+	 * @return string $extension or bolean false
+	 */
+	public function mimeToExtension($mimeType) {		
+		if (array_key_exists($mimeType, MimeHelper::$mime_types_and_extensions)) 
+			return MimeHelper::$mime_types_and_extensions[$mimeType];
 		return false;
 	}
 	

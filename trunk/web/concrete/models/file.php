@@ -33,6 +33,10 @@ class File extends Object {
 		return $f;
 	}
 	
+	public function getPassword() {
+		return false;
+	}
+	
 	public function isStarred($u = false) {
 		if (!$u) {
 			$u = new User();
