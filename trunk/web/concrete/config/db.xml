@@ -566,6 +566,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="fPassword" type="C" size="255"/>
   </table>
   <table name="Groups">
     <field name="gID" type="I" size="10">

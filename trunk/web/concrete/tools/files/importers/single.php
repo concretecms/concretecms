@@ -51,6 +51,10 @@ if ($valt->validate('upload')) {
 		highlight = new Array();
 		highlight.push(<?=$resp->getFileID()?>);
 		window.parent.ccm_alRefresh(highlight);
+		
+		<? if (is_object($fr)) { ?>
+			window.parent.jQuery.fn.dialog.closeTop();
+		<? } ?>
 	<? } ?>
 </script>
 </head>

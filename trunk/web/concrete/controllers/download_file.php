@@ -20,7 +20,7 @@ class DownloadFileController extends Controller {
 					return $this->download($file);			
 						
 				// otherwise show the form
-				$this->set('bID', $bID);
+				$this->set('fID', $fID);
 				$this->set('filename', $file->getFilename());
 				$this->set('filesize', filesize( $file->getPath() ) );
 			}			
@@ -37,15 +37,14 @@ class DownloadFileController extends Controller {
 		exit;
 	}
 	
-	public function submit_password($bID = 0) {
-		$block = $this->getBlock($bID);
-		$file = $block->getFileObject();
-	
-		if ($block->getPassword() == $_POST['password'])
-			return $this->download($file);
+	public function submit_password($fID = 0) {
+		$f = File::getByID($fID);
+
+		if ($f->getPassword() == $_POST['password'])
+			return $this->download($f);
 		
 		$this->set('error', t("Password incorrect. Please try again."));
-		$this->view($bID);
+		$this->view($fID);
 	}
 	
 	private function download($file) {
@@ -58,12 +57,6 @@ class DownloadFileController extends Controller {
 		$ci->forceDownload($file->getPath());		
 	}
 	
-	private function getBlock($bID) {
-		$b = Block::getByID($bID);
-		if (is_object($b)) {
-			return $b->getInstance();
-		}
-	}
 }
 
 ?>
