@@ -1017,7 +1017,7 @@ class Page extends Collection {
 	function _duplicateAll($cParent, $cNewParent) {
 		$db = Loader::db();
 		$cID = $cParent->getCollectionID();
-		$q = "select cID from Pages where cParentID = '{$cID}'";
+		$q = "select cID from Pages where cParentID = '{$cID}' order by cDisplayOrder asc";
 		$r = $db->query($q);
 		if ($r) {
 			while ($row = $r->fetchRow()) {
@@ -1042,8 +1042,8 @@ class Page extends Collection {
 		$newC = $cobj->duplicate();
 		$newCID = $newC->getCollectionID();
 		
-		$v = array($newCID, $this->getCollectionTypeID(), $cParentID, $uID, $this->overrideTemplatePermissions(), $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->cPointerID, $this->cPointerExternalLink);
-		$q = "insert into Pages (cID, ctID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		$v = array($newCID, $this->getCollectionTypeID(), $cParentID, $uID, $this->overrideTemplatePermissions(), $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->cPointerID, $this->cPointerExternalLink, $this->ptID, $this->cDisplayOrder);
+		$q = "insert into Pages (cID, ctID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink, ptID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$res = $db->query($q, $v);
 	
 		Loader::model('page_statistics');
