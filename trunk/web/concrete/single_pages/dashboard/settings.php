@@ -13,10 +13,11 @@ $h = Loader::helper('concrete/interface'); ?>
 
 <h1><span><?=t('Database Schema')?></span></h1>
 <div class="ccm-dashboard-inner">
+<a href="<?=$this->url('/dashboard/settings', 'set_developer')?>">&laquo; <?=t('Return to Developer Settings')?></a><br/><br/>
 <textarea style="width: 100%; height: 500px"><?=$schema?></textarea>
 </div>
 
-<? } else if ($this->controller->getTask() == 'set_developer') { ?>
+<? } else if ($this->controller->getTask() == 'set_developer' || $this->controller->getTask() == 'refresh_database_schema') { ?>
 
 <div id="ccm-module-row1">
 <div class="ccm-module">
@@ -111,22 +112,49 @@ $h = Loader::helper('concrete/interface'); ?>
 	</div>
 </form>
 
-<form method="post" id="export-db-form" action="<?=$this->url('/dashboard/settings', 'export_database_schema')?>">
+
+<? if (ENABLE_DEVELOPER_OPTIONS) { ?>
 	
 	<h1><span><?=t('Database Tables and Content')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
-	<h2><?=t('Current Database Schema')?></h2>
+	<form method="post" id="export-db-form" action="<?=$this->url('/dashboard/settings', 'export_database_schema')?>">
+
+	<h2><?=t('Export Database Schema')?></h2>
 	<p><?=t('Click below to view your database schema in a format that can imported into concrete5 later.')?></p>
 	
 	<?
 	$b1 = $h->submit(t('Export Database Tables'), 'export-db-form');
 	print $h->buttons($b1);
 	?>
-	
-	
+	</form>
+
+	<form method="post" id="refresh-schema-form" action="<?=$this->url('/dashboard/settings', 'refresh_database_schema')?>">
+		<?=$this->controller->token->output('refresh_database_schema')?>
+		<h2><?=t('Refresh Schema')?></h2>
+		<? 
+		$extra = array();
+		if (!file_exists('config/' . FILENAME_LOCAL_DB)) {
+			$extra = array('disabled' => 'true');
+		}
+		?>
+		<div class="ccm-dashboard-radio"><?=$form->checkbox('refresh_global_schema', 1, false)?> <?=t('Refresh core database tables and blocks.')?></div>
+		<div class="ccm-dashboard-description"><?=t('Refreshes %s files contained in %s and all block directories.', FILENAME_BLOCK_DB, 'concrete/config/')?></div>
+		<div class="ccm-dashboard-radio"><?=$form->checkbox('refresh_local_schema', 1, false, $extra)?> <?=t('Reload custom tables.')?></div>
+		<div class="ccm-dashboard-description"><?=t('Reloads database tables contained in %s.', 'config/' . FILENAME_LOCAL_DB)?></div>
+
+		
+		<?
+		$b1 = $h->submit(t('Refresh Databases'), 'refresh-schema-form');
+		print $h->buttons($b1);
+		?>
+		
+	</form>
+		
 	</div>
-</form>
+
+
+<? } ?>
 
 </div>
 </div>

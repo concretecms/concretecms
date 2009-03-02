@@ -122,6 +122,12 @@ class UpgradeController extends Controller {
 			case "5.1.1":
 				$ugvs[] = "version_510";
 				break;
+			case "5.2.0rc1":
+			case "5.2.0":
+			case "5.2.1":
+				$ugvs[] = "version_520";
+				break;
+
 		}
 		
 		foreach($ugvs as $ugh) {

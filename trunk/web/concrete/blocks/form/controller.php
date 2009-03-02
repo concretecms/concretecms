@@ -131,33 +131,6 @@ class FormBlockController extends BlockController {
 		$unchangedQuestions=$db->query('DELETE FROM btFormQuestions WHERE bID=? AND questionSetId=? AND msqID IN (?)',$vals);			
 	}
 	
-	//form block question versioning upgrade, new primary key
-	public function install($path){
-		$db = Loader::db();
-		
-		//couldn't get adodb to remove the existing key, but this ugly glop works
-		try{
-			$db->query('ALTER TABLE btFormQuestions CHANGE msqID msqID INT(11) UNSIGNED NOT NULL '); 
-			$db->query('ALTER TABLE btFormQuestions DROP PRIMARY KEY'); 			
-		}catch(Exception $e){ }
-		try{
-			$db->query('ALTER TABLE btFormQuestions ADD qID INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY '); 			
-		}catch(Exception $e){ } 
-		
-		//$db->CacheFlush();
-		//$db->setDebug(true);
-		$installResult = parent::install($path);  
-		 
-		//give all questions a bID 
-		$questionsWithBIDs=$db->getAll('SELECT max(bID) AS bID, btForm.questionSetId AS qSetId FROM `btForm` GROUP BY questionSetId');
-		foreach($questionsWithBIDs as $questionsWithBID){
-			$vals=array( intval($questionsWithBID['bID']), intval($questionsWithBID['qSetId']) );
-			$rs=$db->query('UPDATE btFormQuestions SET bID=? WHERE questionSetId=? AND bID=0',$vals);  
-		}
-		
-		return $installResult;	
-	}	
-			
 	function duplicate($newBID) {
 		$db = Loader::db();
 		$v = array($this->bID);
