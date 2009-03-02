@@ -13,8 +13,9 @@ $h = Loader::helper('concrete/interface'); ?>
 
 <h1><span><?=t('Database Schema')?></span></h1>
 <div class="ccm-dashboard-inner">
-<a href="<?=$this->url('/dashboard/settings', 'set_developer')?>">&laquo; <?=t('Return to Developer Settings')?></a><br/><br/>
-<textarea style="width: 100%; height: 500px"><?=$schema?></textarea>
+<a href="<?=$this->url('/dashboard/settings', 'set_developer')?>">&laquo; <?=t('Return to Developer Settings')?></a>
+<code><pre><?=htmlentities($schema, ENT_COMPAT, APP_CHARSET)?></pre></code>
+
 </div>
 
 <? } else if ($this->controller->getTask() == 'set_developer' || $this->controller->getTask() == 'refresh_database_schema') { ?>

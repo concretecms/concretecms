@@ -17,6 +17,16 @@ class File extends Object {
 		$fv = $this->getVersion();
 		return $fv->getPath();
 	}
+
+	public function getPassword() {
+		return $this->fPassword;
+	}
+	
+	public function setPassword($pw) {
+		$db = Loader::db();
+		$db->Execute("update Files set fPassword = ? where fID = ?", array($pw, $this->getFileID()));
+		$this->fPassword = $pw;
+	}
 	
 	public function getByID($fID) {
 		Loader::model('file_set');
@@ -31,10 +41,6 @@ class File extends Object {
 			$f->error = File::F_ERROR_INVALID_FILE;
 		}
 		return $f;
-	}
-	
-	public function getPassword() {
-		return false;
 	}
 	
 	public function isStarred($u = false) {

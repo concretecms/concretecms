@@ -26,7 +26,7 @@ $returnURL = ($_POST['returnURL']) ? $_POST['returnURL'] : $_SERVER['HTTP_REFERE
 		<div class="ccm-error-response"><?=$error?></div>
 	<? } ?>
 	
-	<form action="<?= View::url('/download_file', 'submit_password', $bID) ?>" method="post">
+	<form action="<?= View::url('/download_file', 'submit_password', $fID) ?>" method="post">
 		<input type="hidden" value="<?=$returnURL?>" name="returnURL" />
 		<label for="password"><?=t('Password')?>: <input type="text" name="password" /></label>
 		<br /><br />
