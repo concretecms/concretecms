@@ -42,7 +42,6 @@ ccm_showBlockMenu = function(obj, e) {
 	var bobj = document.getElementById("ccm-block-menu" + obj.bID + "-" + obj.aID);
 
 	if (!bobj) {
-		
 		// create the 1st instance of the menu
 		el = document.createElement("DIV");
 		el.id = "ccm-block-menu" + obj.bID + "-" + obj.aID;
@@ -156,7 +155,7 @@ ccm_hideMenus = function() {
 	ccm_menuActivated = false;
 }
 
-ccm_activate = function(obj, domID) {
+ccm_activate = function(obj, domID) { 
 	if (ccm_topPaneDeactivated) {
 		return false;
 	}
