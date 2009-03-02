@@ -284,7 +284,6 @@ class InstallController extends Controller {
 						SinglePage::add('/profile/avatar');
 				
 						// Install our blocks
-						BlockType::installBlockType('library_file');
 						BlockType::installBlockType('content');
 						BlockType::installBlockType('html');
 						BlockType::installBlockType('autonav');
@@ -329,6 +328,10 @@ class InstallController extends Controller {
 						$d4c = SinglePage::add('/dashboard/users/groups');
 						$d4d = SinglePage::add('/dashboard/users/attributes');
 						$d4e = SinglePage::add('/dashboard/users/registration');
+						$d5 = SinglePage::add('/dashboard/scrapbook');
+						$d5a = SinglePage::add('/dashboard/scrapbook/user');
+						$d5b = SinglePage::add('/dashboard/scrapbook/global');
+						
 						$d7 = SinglePage::add('/dashboard/pages');
 						$d71 = SinglePage::add('/dashboard/pages/themes');
 						$d7a = SinglePage::add('/dashboard/pages/themes/add');
