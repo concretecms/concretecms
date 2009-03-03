@@ -134,7 +134,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 		// if $c is provided, then we check to see if this particular block is aliased
 		// to this particular collection
-		function isAlias($c = null) {
+		public function isAlias($c = null) {
 			if ($c) {
 				$db = Loader::db();
 				$cID = $c->getCollectionID();
@@ -146,6 +146,17 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			} else {
 				return (!$this->isOriginal);
 			}
+		}
+		
+		public function isGlobal(){
+			$db = Loader::db();
+			$q = "SELECT b.bID FROM Blocks AS b, CollectionVersionBlocks AS cvb ".
+				 "WHERE b.bID = '{$this->bID}' AND cvb.bID=b.bID and cvb.arHandle='Global Scrapbook' LIMIT 1";
+			$r = $db->query($q);
+			if ($r) {
+				return ($r->numRows() > 0)?1:0;
+			}			
+			return 0;
 		}
 
 		public function inc($file) {

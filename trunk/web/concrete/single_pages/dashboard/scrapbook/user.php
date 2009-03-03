@@ -1,3 +1,8 @@
+<style>
+
+#ccm-scrapbook-list .ccm-block-type .options { float:right; padding:8px; }
+</style>
+
 <h1><span><?=t('User Scrapbook')?></span></h1>
 
 <div class="ccm-dashboard-inner">
@@ -21,9 +26,13 @@
 			?>			
 			<div class="ccm-scrapbook-list-item" id="ccm-pc-<?=$pcID ?>">
 				<div class="ccm-block-type">
-					<a class="ccm-scrapbook-delete" title="Remove from Scrapbook" 
+				 	<div class="options">  					 
+					  <a title="Remove from Scrapbook" 
 						href="<?=$this->url('/dashboard/scrapbook/user/','delete','?pcID='.$pcID ) ?>" 
-						id="sb<?=$pcID ?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" width="16" height="16" /></a>
+						id="sb<?=$pcID ?>">
+					  	<img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" width="16" height="16" />
+					  </a>
+					</div> 
 					<a class="ccm-block-type-inner" style="background-image: url(<?=$btIcon?>)"><?=$bt->getBlockTypeName()?></a>
 					<div class="ccm-scrapbook-list-item-detail">	
 						<?	
