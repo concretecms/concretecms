@@ -893,17 +893,19 @@ $ppWhere = '';
 		}
 
 		// Third, fill in the cPath values from the user updated data.
-		foreach ($newPaths as $key=>$val) {
-			if (!empty($val)) {
-				// Auto-prepend a slash if one is missing.
-				$val = $txt->sanitizeFileSystem($val, true);
-				if ($val{0} != '/') {
-					$val = '/' . $val;
+		if(is_array($newPaths)) {
+			foreach ($newPaths as $key=>$val) {
+				if (!empty($val)) {
+					// Auto-prepend a slash if one is missing.
+					$val = $txt->sanitizeFileSystem($val, true);
+					if ($val{0} != '/') {
+						$val = '/' . $val;
+					}
+					$paths[$key] = $val;
 				}
-				$paths[$key] = $val;
 			}
 		}
-
+		
 		// Fourth, delete, update, or insert page paths as necessary.
 		foreach ($paths as $key=>$val) {
 			if (empty($val)) {
