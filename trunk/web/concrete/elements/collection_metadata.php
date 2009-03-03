@@ -40,10 +40,35 @@ if ($cp->canAdminPage()) {
 	</div>
 	
 	<div class="ccm-field-two">
-	<label><?=t('Alias')?></label> <? if (!$c->isGeneratedCollection()) { ?><input s type="text" name="cHandle" class="ccm-input-text" value="<?=$c->getCollectionHandle()?>" id="cHandle"><input type="hidden" name="oldCHandle" value="<?=$c->getCollectionHandle()?>"><? } else { ?><?=$c->getCollectionHandle()?><? } ?>
+	<label><?php echo t('Alias')?></label> <?php  if (!$c->isGeneratedCollection()) { ?><input s type="text" name="cHandle" class="ccm-input-text" value="<?php echo $c->getCollectionHandle()?>" id="cHandle"><input type="hidden" name="oldCHandle" value="<?php echo $c->getCollectionHandle()?>"><?php  } else { ?><?php echo $c->getCollectionHandle()?><?php  } ?>
 	</div>
 	
-	
+	<div class="ccm-field-one">
+      <p>&nbsp;</p>
+	</div>
+
+	<div class="ccm-field-two">
+	<label><?=t('Additional Page URL(s)')?></label> <?
+if (!$c->isGeneratedCollection()) { 
+	$paths = $c->getPagePaths();
+    echo '<div>';
+	foreach ($paths as $path) {
+		if (!$path['ppIsCanonical']) {
+			$ppID = $path['ppID'];
+			$cPath = $path['cPath'];
+			echo '<span>' .
+			     '<input type="text" name="ppURL-' . $ppID . '" class="ccm-input-text-narrow" value="' . $cPath . '" id="ppID-'. $ppID . '"> ' .
+			     '<a onclick="ccm_delListEl(this)" href="javascript:void(0)">-</a>' . '<br /></span>'."\n";
+		}
+	}
+	echo '<span>' .
+	     '<input type="text" name="ppURL-add-0" class="ccm-input-text-narrow" value="" id="ppID-add-0"> ' .
+		 '<a onclick="ccm_addListEl(this)" href="javascript:void(0)">+</a></span>';
+    echo '</div>';
+}
+?>
+	</div>
+
 	<div class="ccm-field-one">
 	
 	<label><?=t('Public Date/Time')?></label> 

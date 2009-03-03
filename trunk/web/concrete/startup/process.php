@@ -8,7 +8,6 @@
 	# checks to see if a any submits are taking place. If they are, then
 	# _process makes sure that they're handled correctly
 	
-	
 	//just trying to prevent duplication of this code
 	function processMetaData($nvc){			
 		/* update meta data */
@@ -572,6 +571,14 @@
 				$data['cName'] = $_POST['cName'];
 				$data['cDescription'] = $_POST['cDescription'];
 				$data['cHandle'] = $_POST['cHandle'];
+
+				$data['ppURL'] = array();
+				foreach ($_POST as $key=>$value) {
+					if (strpos($key, 'ppURL-') === 0) {
+						$subkey = substr($key, 6);
+						$data['ppURL'][$subkey] = $value;
+					}
+				}
 				
 				$dt = Loader::helper('form/date_time');
 				$data['cDatePublic'] = $dt->translate('cDatePublic');

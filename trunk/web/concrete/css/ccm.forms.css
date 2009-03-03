@@ -32,6 +32,7 @@ div#ccm-required-meta, div#ccm-move-page, div#ccm-required-meta-add {-webkit-bor
 div#ccm-optional-meta, div#ccm-delete-page, div#ccm-page-types {border: 2px solid #bababa; padding: 8px; background: white; -webkit-border-radius: 12px; -moz-border-radius: 12px;}
 
 div#ccm-required-meta input.ccm-input-text {width: 272px !important}
+div#ccm-required-meta input.ccm-input-text-narrow {width: 248px !important}
 
 div.ccm-form-area {border: 2px solid #bababa; padding: 8px; background: white; -webkit-border-radius: 12px; -moz-border-radius: 12px;}
 
