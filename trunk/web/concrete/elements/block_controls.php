@@ -6,6 +6,7 @@
 	$bID = $b->getBlockID();
 	$arHandle = $a->getAreaHandle();
 	$isAlias = $b->isAlias();
+	$isGlobal = $b->isGlobal();
 	$u = new User();
 	$numChildren = (!$isAlias) ? $b->getNumChildren() : 0;
 	if ($isAlias) {
@@ -31,10 +32,11 @@ ccm_menuObj<?=$id?>.type = "BLOCK";
 ccm_menuObj<?=$id?>.arHandle = '<?=$arHandle?>';
 ccm_menuObj<?=$id?>.aID = <?=$a->getAreaID()?>;
 ccm_menuObj<?=$id?>.bID = <?=$bID?>;
+ccm_menuObj<?=$id?>.isGlobal = <?=intval($isGlobal)?>;
 <? if ($b->isEditable() && $p->canWrite()) { ?>
 ccm_menuObj<?=$id?>.canWrite =true;
 ccm_menuObj<?=$id?>.width = <?=$btw->getBlockTypeInterfaceWidth()?>;
-ccm_menuObj<?=$id?>.height = <?=$btw->getBlockTypeInterfaceHeight()?>;
+ccm_menuObj<?=$id?>.height = <?=(!$isGlobal)?$btw->getBlockTypeInterfaceHeight():100 ?>;
 <? }
 if ($p->canAdminBlock() && PERMISSIONS_MODEL != 'simple') { ?>
 ccm_menuObj<?=$id?>.canModifyGroups = true;

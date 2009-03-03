@@ -31,11 +31,18 @@ if (is_object($b)) {
 			}
 			break;
 		case 'edit':
-			if ($bp->canWrite()) {
-				$bv->render($b, 'edit', array(
-					'c' => $c,
-					'a' => $a
-				));
+			if($_REQUEST['isGlobal']){
+				echo '<div style="text-align:center; margin:32px 0px">';
+				echo t('This is a global block.  Edit it from the <a href="%s">Global Scrapbook</a> in your dashboard.<br /><br /><br />', View::url('/dashboard/scrapbook/global/') );
+				echo '[<a class="ccm-dialog-close">'.t('Close Window').'</a>]';
+				echo '</div>';
+			}else{
+				if ($bp->canWrite()) {
+					$bv->render($b, 'edit', array(
+						'c' => $c,
+						'a' => $a
+					));
+				}
 			}
 			break;
 	}
