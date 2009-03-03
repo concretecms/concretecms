@@ -146,9 +146,44 @@ $(function() {
 			<?
 			$i++;
 		} 
-	}	?>
+	}	?> 
 	</div>
+	
+	<? 
+	$globalScrapbookArea = new Area('Global Scrapbook'); 
+	$globalScrapbookC = Page::getByPath('/dashboard/scrapbook/global');
+	$globalScrapbookBlocks = $globalScrapbookArea->getAreaBlocksArray( $globalScrapbookC ); 
+	if( count($globalScrapbookBlocks) ){ ?>
+		<h1><?=t('Add From Global Scrapbook') ?></h1>
+		<div id="ccm-scrapbook-list">
+		<? foreach($globalScrapbookBlocks as $b){ 
+			$bt = BlockType::getByID( $b->getBlockTypeID() ); 
+			$btIcon = $ci->getBlockTypeIconURL($bt);
+			?>
+			<div class="ccm-scrapbook-list-item" id=""> 
+				<div class="ccm-block-type">
+					<a class="ccm-block-type-inner" style="background-image: url(<?=$btIcon?>)" 
+					   href="<?=DIR_REL?>/index.php?globalBlock=1&bID=<?=$b->bID ?>&add=1&processBlock=1&cID=<?=$c->getCollectionID()?>&arHandle=<?=$a->getAreaHandle()?>&btask=alias_existing_block&<?=$token?>">
+					   		<?=$bt->getBlockTypeName()?>: "<?=$b->getBlockName() ?>"
+					</a>
+					<div class="ccm-scrapbook-list-item-detail">	
+						<?	
+						try {
+							$bv = new BlockView();
+							$bv->render( $b, 'scrapbook');
+						} catch(Exception $e) {
+							print BLOCK_NOT_AVAILABLE_TEXT;
+						}	
+						?>
+					</div>
+				</div> 
+			</div> 
+		<? } ?> 
+		</div> 
+	<? } ?>
 </div>
+
+
 
 <div id="ccm-permissions-tab" style="display: none"> 
 	<h1><?=t('Set Area Permissions')?></h1>
