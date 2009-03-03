@@ -1,5 +1,9 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 	<div id="footer">
+			<? 
+			//$block = Block::getGlobalBlock('Standard Footer');
+			//$block->display();
+			?>
 			&copy; <?=date('Y')?> <a href="<?=DIR_REL?>/"><?=SITE?></a>.
 			&nbsp;&nbsp;
 			<?=t('All rights reserved.')?>	

@@ -91,7 +91,6 @@ ccm_alSetupSingleUploadForm = function() {
 }
 
 ccm_activateFileSelectors = function() {
-
 	$(".ccm-file-manager-launch").click(function() {
 		ccm_alLaunchSelectorFileManager($(this).parent().attr('ccm-file-manager-field'));	
 	});

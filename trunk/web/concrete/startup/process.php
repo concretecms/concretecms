@@ -416,8 +416,10 @@
 							}
 						}
 					} else if (isset($_REQUEST['bID'])) {
-						$b = Block::getByID($_REQUEST['bID']);
-						$bt = BlockType::getByHandle($b->getBlockTypeHandle());
+						$b = Block::getByID($_REQUEST['bID']); 
+						if($_REQUEST['globalBlock'])
+							$b->setBlockAreaObject($a);
+						$bt = BlockType::getByHandle($b->getBlockTypeHandle());						
 						if ($ap->canAddBlock($bt)) {
 							if (!$bt->includeAll()) {
 								$nvc = $c->getVersionToModify();
