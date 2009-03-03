@@ -24,11 +24,17 @@ class TextHelper {
 	 * @param string $handle
 	 * @return string
 	 */
-	function sanitizeFileSystem($handle) {
+	function sanitizeFileSystem($handle, $leaveSlashes=false) {
 		$handle = trim($handle);
-		$search = array("/[&]/", "/[\s|.]+/", "/[^0-9A-Za-z-_]/", "/--/");
+		$searchNormal = array("/[&]/", "/[\s|.]+/", "/[^0-9A-Za-z-_]/", "/--/");
+		$searchSlashes = array("/[&]/", "/[\s|.]+/", "/[^0-9A-Za-z-_\/]/", "/--/");
 		$replace = array("and", "_", "", "_");
 		
+		$search = $searchNormal;
+		if ($leaveSlashes) {
+			$search = $searchSlashes;
+		}
+
 		$handle = preg_replace($search, $replace, $handle);
 		if (function_exists('mb_substr')) {
 			$handle = mb_strtolower(mb_substr($handle, 0, 48, APP_CHARSET), APP_CHARSET);

@@ -669,6 +669,11 @@
     </index>
   </table>
   <table name="PagePaths">
+    <field name="ppID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
     <field name="cID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -676,6 +681,10 @@
     </field>
     <field name="cPath" type="X">
       <NOTNULL/>
+    </field>
+    <field name="ppIsCanonical" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
     </field>
   </table>
   <table name="PageSearchIndex">
