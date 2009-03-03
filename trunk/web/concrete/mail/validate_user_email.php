@@ -12,6 +12,6 @@ You must click the following URL in order to activate your account for %s:
 
 Thanks for your interest in %s
 
-", SITE, BASE_URL . DIR_REL . View::url('/login', 'v', $uHash), SITE);
+", SITE, BASE_URL . View::url('/login', 'v', $uHash), SITE);
 
 ?>
