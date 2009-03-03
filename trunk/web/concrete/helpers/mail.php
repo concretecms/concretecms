@@ -120,12 +120,16 @@ class MailHelper {
 		$to = $this->generateEmailStrings($this->to);
 		if (ENABLE_EMAILS) {
 			$header  = "MIME-Version: 1.0\r\n";
-			$header .= "Content-type: text; charset=" . APP_CHARSET . "\r\n";
+			$header .= "Content-type: text/plain; charset=" . APP_CHARSET . "\r\n";
 			if ($from == '') {
 				$from = 'concrete5@' . str_replace(array('http://', 'https://'), '', BASE_URL);
 			}
 			$header .= "From: {$from}";
-			mail($to, $this->subject, $this->body, $header); 
+			$subject = $this->subject;
+			if (function_exists(mb_encode_mimeheader)) {
+				$subject = mb_encode_mimeheader($subject, APP_CHARSET);
+			}
+			mail($to, $subject, $this->body, $header); 
 		}
 		
 		// add email to log
