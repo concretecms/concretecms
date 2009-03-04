@@ -66,7 +66,7 @@
 			else{
 				//AS: Adodb Active record is complaining a ?/value array mismatch unless
 				//we explicatly set the primary key ID field to null					
-				$file_set->fsID		= 'null';
+				$file_set->fsID		= null;
 				$file_set->fsName 	= $fs_name;
 				$file_set->fsType 	= $fs_type;
 				$file_set->uID		= $fs_uid;

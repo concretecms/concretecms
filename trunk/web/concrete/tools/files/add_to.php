@@ -81,7 +81,10 @@ if ($_POST['task'] == 'add_to_sets') {
 	if ($_POST['fsNew']) {
 		$type = ($_POST['fsNewShare'] == 1) ? FileSet::TYPE_PUBLIC : FileSet::TYPE_PRIVATE;
 		$fs = FileSet::createAndGetSet($_POST['fsNewText'], $type);
-		$fs->addFileToSet($f);
+		print_r($fs);
+		foreach($files as $f) {
+			$fs->addFileToSet($f);
+		}
 	}
 	exit;
 }
