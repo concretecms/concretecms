@@ -2,9 +2,9 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 $ft = FileTypeList::getInstance();
-$ft->define('jpg,jpeg,jpe', t('JPEG'), FileType::T_IMAGE, 'image', 'image');
-$ft->define('gif', t('GIF'), FileType::T_IMAGE, 'image', 'image');
-$ft->define('png', t('PNG'), FileType::T_IMAGE, 'image', 'image');
+$ft->define('jpg,jpeg,jpe', t('JPEG'), FileType::T_IMAGE, 'image', 'image', 'image');
+$ft->define('gif', t('GIF'), FileType::T_IMAGE, 'image', 'image', 'image');
+$ft->define('png', t('PNG'), FileType::T_IMAGE, 'image', 'image', 'image');
 $ft->define('bmp', t('Windows Bitmap'), FileType::T_IMAGE, 'image');
 $ft->define('tif,tiff', t('TIFF'), FileType::T_IMAGE, 'image');
 $ft->define('htm,html', t('HTML'), FileType::T_IMAGE);

@@ -57,16 +57,16 @@ var ccmi18n_spellchecker = {
 
 var ccmi18n_filemanager = {
 	
-	view: '<?=t('View File')?>',
-	download: '<?=t('Download File')?>',
-	selectFile: '<?=t('Choose File')?>',
-	clearFile: '<?=t('Clear File')?>',
-	replaceFile: '<?=t('Replace File')?>',
+	view: '<?=t('View')?>',
+	download: '<?=t('Download')?>',
+	select: '<?=t('Choose')?>',
+	clear: '<?=t('Clear')?>',
+	edit: '<?=t('Edit')?>',
+	replace: '<?=t('Replace')?>',
 	properties: '<?=t('Properties')?>',
-	editReplace: '<?=t('Edit/Replace File')?>',
 	sets: '<?=t('Sets')?>',
 	permissions: '<?=t('Access & Permissions')?>',
-	deleteFile: '<?=t('Delete File')?>',
+	deleteFile: '<?=t('Delete')?>',
 	uploadErrorChooseFile: '<?=t('You must choose a file.')?>',
-	rescan: '<?=t('Rescan Files')?>'
+	rescan: '<?=t('Rescan')?>'
 }

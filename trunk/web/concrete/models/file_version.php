@@ -359,6 +359,14 @@ class FileVersion extends Object {
 		}
 		return false;
 	}
+
+	public function canEdit() {
+		$to = $this->getTypeObject();
+		if (is_object($to) && $to->getEditor() != '') {
+			return true;
+		}
+		return false;
+	}
 	
 	public function setAttribute($ak, $value) {
 		$akHandle = (is_object($ak)) ? $ak->getAttributeKeyHandle() : $ak;
