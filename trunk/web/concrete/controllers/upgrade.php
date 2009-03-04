@@ -125,6 +125,7 @@ class UpgradeController extends Controller {
 			case "5.2.0rc1":
 			case "5.2.0":
 			case "5.2.1":
+			case "5.3.0a1":
 				$ugvs[] = "version_520";
 				break;
 
@@ -154,6 +155,11 @@ class UpgradeController extends Controller {
 	private function do_upgrade() {
 		try {
 			$this->set_upgrades();
+			foreach($this->upgrades as $ugh) {
+				if (method_exists($ugh, 'prepare')) {
+					$ugh->prepare();
+				}
+			}
 			$this->refresh_schema();
 			$ca = new Cache();
 			$ca->flush();
