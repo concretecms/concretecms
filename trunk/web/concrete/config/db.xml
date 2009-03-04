@@ -675,7 +675,6 @@
       <UNSIGNED/>
     </field>
     <field name="cID" type="I" size="10">
-      <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>

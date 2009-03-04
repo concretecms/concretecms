@@ -20,6 +20,11 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class ConcreteUpgradeVersion520Helper {
 	
+	public function prepare() {
+		//$db = Loader::db();
+		//$db->Execute('alter table PagePaths drop primary key');
+	}
+	
 	public function run() {
 		$db = Loader::db();
 		$tables = $db->MetaTables('TABLES');
