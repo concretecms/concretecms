@@ -63,10 +63,12 @@ var ccmi18n_filemanager = {
 	clear: '<?=t('Clear')?>',
 	edit: '<?=t('Edit')?>',
 	replace: '<?=t('Replace')?>',
+	chooseNew: '<?=t('Choose New File')?>',
 	properties: '<?=t('Properties')?>',
 	sets: '<?=t('Sets')?>',
 	permissions: '<?=t('Access & Permissions')?>',
 	deleteFile: '<?=t('Delete')?>',
+	title: '<?=t('File Manager')?>',
 	uploadErrorChooseFile: '<?=t('You must choose a file.')?>',
 	rescan: '<?=t('Rescan')?>'
 }

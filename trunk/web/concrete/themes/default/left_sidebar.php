@@ -12,7 +12,11 @@ $this->inc('elements/header.php'); ?>
 		</div>
 		
 		<div id="body">	
-			<?			
+			<?
+			$ab = Block::getByName('my_picture');
+			$ab->display();
+			
+
 			$a = new Area('Main');
 			$a->display($c);			
 			?>

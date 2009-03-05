@@ -4,6 +4,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class DashboardScrapbookGlobalController extends Controller {
 
 	public function view() { 
+		
+		$a = Area::get($this->getCollectionObject(), 'Global Scrapbook');
+		if (!is_object($a)) {
+			$a = Area::getOrCreate($this->getCollectionObject(), 'Global Scrapbook');
+		}
 		$html = Loader::helper('html');
 		$this->addHeaderItem($html->css('ccm.filemanager.css'));
 		$this->addHeaderItem($html->javascript('ccm.filemanager.js'));
