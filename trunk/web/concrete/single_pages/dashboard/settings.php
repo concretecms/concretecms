@@ -556,7 +556,24 @@ $(document).ready(function(){
 
 </form>
 
+<form method="post" id="image-editing-form" action="<?=$this->url('/dashboard/settings', 'update_image_editing')?>">
+	<?=$this->controller->token->output('update_image_editing')?>
+	
+	<h1><span><?=t('Image Editing')?></span></h1>
+	
+	<div class="ccm-dashboard-inner">
+	
+	<div><?=$form->label('API_KEY_PICNIK', t('Picnik API Key'))?></div>
+	<?=$form->text('API_KEY_PICNIK', $api_key_picnik, array('style'=>'width:285px; float: left'))?>
+	
+	<?
+	$b1 = $h->submit(t('Save'), 'image-editing-form');
+	print $b1;
+	?>
+	<br class="clear" />
+	</div>
 
+</form>
 
 <form method="post" id="txt-editor-form" action="<?=$this->url('/dashboard/settings', 'txt_editor_config')?>">
 	<?=$this->controller->token->output('txt_editor_config')?>

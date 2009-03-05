@@ -21,8 +21,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class ConcreteUpgradeVersion520Helper {
 	
 	public function prepare() {
-		//$db = Loader::db();
-		//$db->Execute('alter table PagePaths drop primary key');
+		$db = Loader::db();
+		$db->Execute('alter table PagePaths change cID ppID int unsigned not null auto_increment');
+		$db->Execute('alter table PagePaths add column cID int unsigned not null default 0');
+		$db->Execute('update PagePaths set cID = ppID');
 	}
 	
 	public function run() {
