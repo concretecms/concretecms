@@ -116,17 +116,28 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 		
-		
-		public static function getGlobalBlock($globalBlockName=''){
+
+		/** 
+		 * Returns a global block 
+		 */
+		public static function getByName($globalBlockName) {
 			if(!$globalBlockName) return;
 			$db = Loader::db();
 			$bID = $db->getOne( 'SELECT b.bID FROM Blocks AS b, CollectionVersionBlocks AS cvb '.
 							  'WHERE b.bName=? AND b.bID=cvb.bID AND cvb.arHandle="Global Scrapbook" ', 
 							   array($globalBlockName) ); 
-			return Block::getByID( intval($bID) );
+			if ($bID > 0) {
+				return Block::getByID( intval($bID) );
+			} else {
+				return new Block();
+			}
 		}
 		
 		public function display( $view = 'view', $args = array()){
+			if ($this->getBlockTypeID() < 1) {
+				return ;
+			}
+			
 			$bv = new BlockView();
 			$bt = BlockType::getByID( $this->getBlockTypeID() );  
 			$bv->render($this, $view, $args);

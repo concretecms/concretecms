@@ -12,19 +12,33 @@ if (!$cp->canRead()) {
 	
 Loader::model('file_list');
 
-
-Loader::element('files/search_form_simple');
-
-
 $cnt = Loader::controller('/dashboard/files/search');
 $fileList = $cnt->getRequestedSearchResults();
-
 $files = $fileList->getPage();
 $pagination = $fileList->getPagination();
 
+Loader::element('files/search_form_advanced'); ?>
 
-print '<div id="ccm-file-search-results">';
 
-Loader::element('files/search_results', array('fileSelector' => true, 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination));
+<div id="ccm-file-search-advanced-fields-gutter">&nbsp;</div>
 
-print '</div>';
+<div id="ccm-file-search-advanced-results-wrapper">
+
+<? Loader::element('files/upload_single'); ?>
+
+<div id="ccm-file-search-results">
+
+<? Loader::element('files/search_results', array('fileSelector' => true, 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
+
+</div>
+
+</div>
+
+</div>
+
+<?
+print '<script type="text/javascript">
+$(function() {
+	ccm_activateFileManager();
+});
+</script>';

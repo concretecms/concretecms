@@ -12,29 +12,6 @@ class DashboardFilesSearchController extends Controller {
 		$this->addHeaderItem($html->javascript('ccm.filemanager.js'));
 		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_activateFileManager(\'DASHBOARD\'); });</script>');
 		
-		$ext1 = FileList::getExtensionList();
-		$extensions = array();
-		foreach($ext1 as $value) {
-			$extensions[$value] = $value;
-		}
-		
-		$t1 = FileList::getTypeList();
-		$types = array();
-		foreach($t1 as $value) {
-			$types[$value] = FileType::getGenericTypeText($value);
-		}
-		
-		$s1 = FileSet::getMySets();
-		$sets = array();
-		$sets[] = '** ' . t('All');
-		foreach($s1 as $s) {
-			$sets[$s->getFileSetID()] = $s->getFileSetName();
-		}
-		
-		$this->set('extensions', $extensions);		
-		$this->set('types', $types);	
-		$this->set('sets', $sets);	
-		
 		$fileList = $this->getRequestedSearchResults();
 		$files = $fileList->getPage();
 				
@@ -42,22 +19,7 @@ class DashboardFilesSearchController extends Controller {
 		$this->set('files', $files);		
 		$this->set('pagination', $fileList->getPagination());
 		
-		$searchFields = array(
-			'' => '** ' . t('Fields'),
-			'size' => t('Size'),
-			'type' => t('Type'),
-			'extension' => t('Extension'),
-			'date_added' => t('Added Between'),
-		);
-		
-		Loader::model('file_attributes');
-		$attributes = FileAttributeKey::getList();
-		foreach($attributes as $ak) {
-			$searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyName();
-		}
-		
-		$this->set('searchFields', $searchFields);
-		$this->set('searchFieldAttributes', $attributes);
+
 	}
 	
 	public function getRequestedSearchResults() {

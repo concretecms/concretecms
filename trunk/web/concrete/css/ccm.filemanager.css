@@ -1,10 +1,10 @@
 /* asset library */
 
 table#ccm-file-list {width: 100%;border-left: 1px solid #ffffff}
-table#ccm-file-list th, table#ccm-file-list td {padding: 4px 8px 4px 8px; font-size: 12px}
+table#ccm-file-list th, table#ccm-file-list td {padding: 4px 8px 4px 8px; font-size: 11px}
 table#ccm-file-list th.ccm-file-list-starred, table#ccm-file-list td.ccm-file-list-starred {padding: 0 4px 0 0;margin:0; text-align: center;}
 tr.ccm-file-list-record td {height: 60px}
-table#ccm-file-list tr th {font-size: 12px;background-color: #efefef; text-align: left; padding-left: 8px; white-space: nowrap; color: #666}
+table#ccm-file-list tr th {font-size: 11px;background-color: #efefef; text-align: left; padding-left: 8px; white-space: nowrap; color: #666}
 
 table#ccm-file-list tr th a {color: #666; padding-right: 14px; text-decoration: none}
 table#ccm-file-list tr th a:hover {color: #333;}
@@ -25,7 +25,7 @@ div.ccm-file-list-thumbnail-hover div {display: none;z-index: 105;position: abso
 div#ccm-file-list-none { font-weight: bold}
 
 /* advanced search */
-div#ccm-file-manager-advanced {display: table;width: 100%}
+div#ccm-file-manager-advanced {display: table;width: 100%; font-size: 11px}
 div#ccm-file-manager-advanced h2 {margin-bottom: 0px}
 div#ccm-file-search-advanced-fields {display: table-cell;border: 1px solid #ddd;padding: 8px;width:210px;min-width: 210px;background:#fafafa;}
 div#ccm-file-search-advanced-fields-gutter {display: block;width: 10px}
@@ -48,11 +48,12 @@ div.ccm-file-search-field input, div.ccm-file-search-field select, div.ccm-file-
 #ccm-file-list-multiple-operations {font-size: 10px}
 
 /* add asset */
-div#ccm-files-add-asset {position: absolute; top: 15px; right: 15px}
-div#ccm-files-add-asset h3 {float: left;margin-right: 4px;margin-top: 2px}
+div#ccm-files-add-asset {float: right; padding-right: 20px; font-size: 11px; z-index: 100; position: relative}
+div#ccm-files-add-asset h3 {float: left;margin-right: 4px;margin-top: 0px; padding-top: 4px; font-size: 11px}
 div#ccm-files-add-asset form {float: left}
-div#ccm-files-add-asset a {float: left;margin-left: 4px;margin-top: 4px}=======
+div#ccm-files-add-asset a {float: left;margin-left: 4px;margin-top: 4px}
 img.ccm-generic-thumbnail {border: 0px}
+input.ccm-al-upload-single-file {width: 180px}
 
 .incoming_file_importer {margin: 10px auto 10px auto;}
 .incoming_file_importer .borderflow {border: 1px solid #DEDEDE;overflow-y: scroll}

@@ -102,16 +102,19 @@ ccm_activateFileSelectors = function() {
 ccm_alLaunchSelectorFileManager = function(selector) {
 	ccm_alActiveAssetField = selector;
 	var filterStr = "";
-	$(this).parent().find('.ccm-file-manager-filter').each(function() {
-		filterStr += '&' + $(this).attr('name') + '=' + $(this).attr('value');		
-	});
-	var dtitle = $(this).attr('title');
+	
+	var types = $('#' + selector + '-fm-display input.ccm-file-manager-filter');
+	if (types.length) {
+		for (i = 0; i < types.length; i++) {
+			filterStr += '&' + $(types[i]).attr('name') + '=' + $(types[i]).attr('value');		
+		}
+	}
 	$.fn.dialog.open({
-		width: 650,
-		height: 450,
+		width: '90%',
+		height: '70%',
 		modal: false,
 		href: CCM_TOOLS_PATH + "/files/search_dialog?search=1" + filterStr,
-		title: dtitle
+		title: ccmi18n_filemanager.title
 	});
 }
 
@@ -571,7 +574,7 @@ ccm_alActivateMenu = function(obj, e) {
 		if (ccm_alLaunchType != 'DASHBOARD') {
 			// if we're launching this at the selector level, that means we've already chosen a file, and this should instead launch the library
 			var onclick = (selectedFile.length > 0) ? 'ccm_alLaunchSelectorFileManager(\'' + selector + '\')' : 'ccm_alSelectFile(' + fID + ')';
-			var chooseText = (selectedFile.length > 0) ? ccmi18n_filemanager.replace : ccmi18n_filemanager.select;
+			var chooseText = (selectedFile.length > 0) ? ccmi18n_filemanager.chooseNew : ccmi18n_filemanager.select;
 			html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="90%" dialog-height="70%" dialog-title="' + ccmi18n_filemanager.select + '" id="menuSelectFile' + fID + '" href="javascript:void(0)" onclick="' + onclick + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ chooseText + '<\/span><\/a><\/li>';
 		}
 		if (selectedFile.length > 0) {
