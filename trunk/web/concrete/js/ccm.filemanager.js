@@ -567,21 +567,7 @@ ccm_alActivateMenu = function(obj, e) {
 			html += '<li><a class="ccm-icon" href="javascript:void(0)" id="menuClearFile' + fID + selector + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.clear + '<\/span><\/a><\/li>';
 		}
 		if ($(obj).attr('ccm-file-manager-can-view') == '1') {
-			if ($(obj).attr('ccm-file-manager-view-width').indexOf('%') > -1) {
-				var vw = $(obj).attr('ccm-file-manager-view-width');
-				var vh = $(obj).attr('ccm-file-manager-view-height');
-			} else {
-				var vh = parseInt($(obj).attr("ccm-file-manager-view-height")) + 10; // enough room for download bar
-				var vw = parseInt($(obj).attr("ccm-file-manager-view-width")) + 20;
-				
-				if (vh < 100) {
-					vh = 100;
-				}
-				if (vw < 240) {
-					vw = 240;
-				}
-			}
-			html += '<li><a class="ccm-icon dialog-launch" dialog-modal="false" dialog-width="' + vw + '" dialog-height="' + vh + '" dialog-title="' + ccmi18n_filemanager.view + '" id="menuView' + fID + '" href="' + CCM_TOOLS_PATH + '/files/view?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.view + '<\/span><\/a><\/li>';
+			html += '<li><a class="ccm-icon dialog-launch" dialog-modal="false" dialog-width="90%" dialog-height="75%" dialog-title="' + ccmi18n_filemanager.view + '" id="menuView' + fID + '" href="' + CCM_TOOLS_PATH + '/files/view?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.view + '<\/span><\/a><\/li>';
 		} else {
 			html += '<li><a class="ccm-icon" id="menuDownload' + fID + '" target="' + ccm_alProcessorTarget + '" href="' + CCM_TOOLS_PATH + '/files/download?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.download + '<\/span><\/a><\/li>';	
 		}

@@ -13,6 +13,7 @@ class DashboardSettingsController extends Controller {
 		$this->set('marketplace_enabled_in_config', Config::get('ENABLE_MARKETPLACE_SUPPORT') );		
 		$this->set('site', SITE);
 		$this->set('ui_breadcrumb', $u->config('UI_BREADCRUMB'));
+		$this->set('api_key_picnik', Config::get('API_KEY_PICNIK'));
 		$txtEditorMode=Config::get('CONTENTS_TXT_EDITOR_MODE');
 		$this->set('txtEditorMode', $txtEditorMode ); 
 		$txtEditorCstmCode=Config::get('CONTENTS_TXT_EDITOR_CUSTOM_CODE');
@@ -51,6 +52,9 @@ class DashboardSettingsController extends Controller {
 					break;
 				case "sitename_saved":
 					$this->set('message', t("Your site's name has been saved."));	
+					break;
+				case "image_editing_saved":
+					$this->set('message', t("Image editing options have been saved."));	
 					break;
 				case "debug_saved":
 					$this->set('message', t('Debug configuration saved.'));
@@ -266,6 +270,17 @@ class DashboardSettingsController extends Controller {
 			if ($this->isPost()) {
 				Config::save('SITE', $this->post('SITE'));
 				$this->redirect('/dashboard/settings','sitename_saved');
+			}
+		} else {
+			$this->set('error', array($this->token->getErrorMessage()));
+		}
+	}
+
+	public function update_image_editing() {
+		if ($this->token->validate("update_image_editing")) {
+			if ($this->isPost()) {
+				Config::save('API_KEY_PICNIK', $this->post('API_KEY_PICNIK'));
+				$this->redirect('/dashboard/settings','image_editing_saved');
 			}
 		} else {
 			$this->set('error', array($this->token->getErrorMessage()));
