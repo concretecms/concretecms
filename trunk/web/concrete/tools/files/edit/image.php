@@ -18,15 +18,16 @@ $fv = $f->getApprovedVersion();
 $image = BASE_URL . $fv->getRelativePath();
 $apiKey = 'be63e3b4ae4f0a0035caf17fc5f2f02b';
 $service = 'http://www.picnik.com/service/';
-$export = BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/files/edit?fID=' . $fv->getFileID();
+$export = BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/files/importers/remote';
 $apiKey = Config::get('API_KEY_PICNIK');
 
-$url = $service . '?_apikey=' . $apiKey . '&_export=' . rawurlencode($export) . '&_export_method=POST&export_agent=browser&_import=' . rawurlencode($image);
+$valt = Loader::helper('validation/token');
+
+$url = $service . '?_apikey=' . $apiKey . '&_export=' . $export . '&' . $valt->getParameter('import_remote') . '&task=update_file&fID=' . $_REQUEST['fID'] . '&_export_field=url_upload_1&_export_agent=browser&_import=' . rawurlencode($image);
 
 ?>
 
 <? if ($apiKey == '') { 
-	$form = Loader::helper('form');
 	$html = Loader::helper('html');
 	print $html->css('ccm.default.theme.css');
 	?>
