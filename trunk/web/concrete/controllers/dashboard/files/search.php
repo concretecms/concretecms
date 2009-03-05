@@ -26,6 +26,7 @@ class DashboardFilesSearchController extends Controller {
 		
 		$s1 = FileSet::getMySets();
 		$sets = array();
+		$sets[] = '** ' . t('All');
 		foreach($s1 as $s) {
 			$sets[$s->getFileSetID()] = $s->getFileSetName();
 		}
@@ -43,7 +44,6 @@ class DashboardFilesSearchController extends Controller {
 		
 		$searchFields = array(
 			'' => '** ' . t('Fields'),
-			'file_set' => t('Set'),
 			'size' => t('Size'),
 			'type' => t('Type'),
 			'extension' => t('Extension'),
@@ -69,7 +69,7 @@ class DashboardFilesSearchController extends Controller {
 			$fileList->filterByKeywords($keywords);
 		}
 		
-		if (isset($_GET['fSet']) && $_GET['fSet'] != '') {
+		if (isset($_GET['fSet']) && $_GET['fSet'] != '' && $_GET['fSet'] > 0) {
 			Loader::model('file_set');
 			$set = $_REQUEST['fSet'];
 			$fs = FileSet::getByID($set);
