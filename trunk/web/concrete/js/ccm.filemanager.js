@@ -9,6 +9,7 @@ ccm_triggerSelectFile = function(fID, af) {
 	if (af == null) {
 		var af = ccm_alActiveAssetField;
 	}
+	//alert(af);
 	var obj = $('#' + af + "-fm-selected");
 	var dobj = $('#' + af + "-fm-display");
 	dobj.hide();
@@ -21,11 +22,13 @@ ccm_triggerSelectFile = function(fID, af) {
 		});
 		*/
 		obj.attr('fID', fID);
+		obj.attr('ccm-file-manager-can-view', obj.children('div').attr('ccm-file-manager-can-view'));
+		obj.attr('ccm-file-manager-can-edit', obj.children('div').attr('ccm-file-manager-can-edit'));
+		
 		obj.click(function(e) {
 			e.stopPropagation();
 			ccm_alActivateMenu($(this),e);
 		});
-		jQuery.fn.dialog.closeTop();
 	});
 	var vobj = $('#' + af + "-fm-value");
 	vobj.attr('value', fID);
@@ -520,8 +523,9 @@ ccm_alSelectFile = function(fID) {
 		
 	} else {
 		ccm_triggerSelectFile(fID);
-	
 	}
+	jQuery.fn.dialog.closeTop();	
+
 }
 
 ccm_alActivateMenu = function(obj, e) {
@@ -541,6 +545,13 @@ ccm_alActivateMenu = function(obj, e) {
 	// now, check to see if this menu has been made
 	var bobj = document.getElementById("ccm-al-menu" + fID + selector);
 
+	if (ccm_alLaunchType != 'DASHBOARD' && selector == '') {
+		// then we are in file list mode in the site, which means we 
+		// we don't give out all the options in the list
+		ccm_alSelectFile(fID);
+		return;
+	}
+	
 	if (!bobj) {
 		// create the 1st instance of the menu
 		el = document.createElement("DIV");
@@ -560,7 +571,7 @@ ccm_alActivateMenu = function(obj, e) {
 		if (ccm_alLaunchType != 'DASHBOARD') {
 			// if we're launching this at the selector level, that means we've already chosen a file, and this should instead launch the library
 			var onclick = (selectedFile.length > 0) ? 'ccm_alLaunchSelectorFileManager(\'' + selector + '\')' : 'ccm_alSelectFile(' + fID + ')';
-			var chooseText = (selectedFile.length > 0) ? ccmi18n_filemanager.replaceFile : ccmi18n_filemanager.select;
+			var chooseText = (selectedFile.length > 0) ? ccmi18n_filemanager.replace : ccmi18n_filemanager.select;
 			html += '<li><a class="ccm-icon" dialog-modal="false" dialog-width="90%" dialog-height="70%" dialog-title="' + ccmi18n_filemanager.select + '" id="menuSelectFile' + fID + '" href="javascript:void(0)" onclick="' + onclick + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ chooseText + '<\/span><\/a><\/li>';
 		}
 		if (selectedFile.length > 0) {
