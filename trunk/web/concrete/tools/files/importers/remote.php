@@ -8,7 +8,7 @@ if (!$cp->canRead()) {
 	die(_("Access Denied."));
 }
 
-if (isset($_POST['fID'])) {
+if (isset($_REQUEST['fID'])) {
 	// we are replacing a file
 	$fr = File::getByID($_REQUEST['fID']);
 } else {
@@ -28,7 +28,7 @@ $errors = array();
 // load all the incoming fields into an array
 $incoming_urls = array();
 for ($i = 1; $i < 6; $i++) {
-	$this_url = trim($_POST['url_upload_' .$i]); 
+	$this_url = trim($_REQUEST['url_upload_' .$i]); 
 
 	// did we get anything?
 	if (!strlen($this_url))
