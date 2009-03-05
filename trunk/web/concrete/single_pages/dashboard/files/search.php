@@ -6,10 +6,7 @@
 <div id="ccm-file-search-advanced-fields">
 
 <div id="ccm-file-search-field-base-elements" style="display: none">
-	<span class="ccm-file-search-option" search-field="file_set">
-	<?=$form->select('file_set', $sets)?>
-	</span>
-	
+
 	<span class="ccm-file-search-option" search-field="size">
 	<?=$form->text('size_from', array('style' => 'width: 30px'))?>
 	<?=t('to')?>
@@ -55,13 +52,25 @@
 	<table border="0" cellspacing="0" cellpadding="0">
 	<tr>
 		<td width="100%">
-		<?=$form->text('fKeywords', array('style' => 'width:175px')); ?>
+		<?=$form->text('fKeywords', array('style' => 'width:200px')); ?>
 		</td>
-		<td><a href="javascript:void(0)" id="ccm-file-search-add-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a></td>
 	</tr>
 	</table>
-	
 	</div>
+	
+	<div class="ccm-file-search-field">
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td style="white-space: nowrap" align="right"><div style="width: 85px; padding-right:5px"><?=t('Found in Set')?></div></td>
+		<td width="100%">
+			<?=$form->select('fSet', $sets, false, array('style' => 'width:95px'))?>
+		</td>
+		<td><a href="javascript:void(0)" id="ccm-file-search-add-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a></td>
+
+	</tr>	
+	</table>
+	</div>
+	
 	
 	<div id="ccm-file-search-field-base">
 		
