@@ -53,7 +53,6 @@ div#ccm-files-add-asset h3 {float: left;margin-right: 4px;margin-top: 0px; paddi
 div#ccm-files-add-asset form {float: left}
 div#ccm-files-add-asset a {float: left;margin-left: 4px;margin-top: 4px}
 img.ccm-generic-thumbnail {border: 0px}
-input.ccm-al-upload-single-file {width: 180px}
 
 .incoming_file_importer {margin: 10px auto 10px auto;}
 .incoming_file_importer .borderflow {border: 1px solid #DEDEDE;overflow-y: scroll}
