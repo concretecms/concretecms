@@ -451,7 +451,7 @@ class MiniSurvey{
 			if(strtolower($values['inputType'])=='undefined')  $values['inputType']='field';
 			
 			//set question set id, or create a new one if none exists
-			if(intval($values['qsID'])==0) $values['qsID']=time();
+			if(intval($values['qsID'])==0) $values['qsID']=time(); 
 			
 			//validation
 			if( strlen($values['question'])==0 || strlen($values['inputType'])==0  || $values['inputType']=='null' ){

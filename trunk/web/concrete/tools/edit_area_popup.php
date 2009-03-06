@@ -36,8 +36,7 @@ if(ENABLE_MARKETPLACE_SUPPORT){
 <div id="ccm-add-tab">
 	<h1><?=t('Add New Block')?></h1>
 	<div id="ccm-block-type-list">
-	<? if (count($blockTypes) > 0) {
-
+	<? if (count($blockTypes) > 0) { 
 		foreach($blockTypes as $bt) { 
 			$btIcon = $ci->getBlockTypeIconURL($bt);
 			?>	

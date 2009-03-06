@@ -66,6 +66,7 @@ var miniSurvey ={
 			postStr+='&height='+escape($('#height'+mode).val());
 			var req=($('#required'+mode).get(0).checked)?1:0;
 			postStr+='&required='+req;
+			postStr+='&position='+escape($('#position'+mode).val());
 			postStr+='&inputType='+$('input[@name=answerType'+mode+']:checked').val()
 			postStr+='&msqID='+msqID+'&qsID='+parseInt(this.qsID);			
 			$.ajax({ 
@@ -86,6 +87,7 @@ var miniSurvey ={
 						   }else{
 							   $('#questionAddedMsg').slideDown('slow');
 							   setTimeout("$('#questionAddedMsg').slideUp('slow');",5000);
+							   //miniSurvey.saveOrder();
 						   }
 						   $('#editQuestionForm').css('display','none');
 						   miniSurvey.qsID=jsonObj.qsID;
@@ -116,6 +118,7 @@ var miniSurvey ={
 						$('#answerOptionsEdit').val(jsonObj.optionVals.replace(/%%/g,"\r\n") );
 						$('#widthEdit').val(jsonObj.width);
 						$('#heightEdit').val(jsonObj.height); 
+						$('#positionEdit').val(jsonObj.position); 
 						if( parseInt(jsonObj.required)==1 ) 
 							 $('#requiredEdit').get(0).checked=true;
 						else $('#requiredEdit').get(0).checked=false;
@@ -229,7 +232,7 @@ var miniSurvey ={
 		}
 		return qIDs;
 	},
-	saveOrder:function(){
+	saveOrder:function(){ 
 		var postStr='qIDs='+this.serialize().join(',')+'&qsID='+parseInt(this.qsID);
 		$.ajax({ 
 			type: "POST",
