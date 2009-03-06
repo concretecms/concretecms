@@ -124,6 +124,7 @@ $uh = Loader::helper('concrete/urls'); ?>
 		<div class="fieldRow" >
 			<div class="fieldLabel">&nbsp; </div>
 			<div class="fieldValues">
+				<input type="hidden" id="position" name="position" type="text" value="1000" />
 				<input id="refreshButton" name="refresh" type="button" value="Refresh" style="display:none" /> 
 				<input id="addQuestion" name="add" type="button" value="<?php echo t('Add Question')?> &raquo;" />
 			</div>
@@ -190,6 +191,7 @@ $uh = Loader::helper('concrete/urls'); ?>
 			<div class="ccm-spacer"></div>
 		</div>		
 		
+		<input type="hidden" id="positionEdit" name="position" type="text" value="1000" />
 		<input id="cancelEditQuestion" name="cancelEdit" type="button" value="Cancel"/>
 		<input id="editQuestion" name="edit" type="button" value="Save Changes &raquo;"/>
 	</div>
