@@ -831,7 +831,8 @@ $ppWhere = '';
         }
 		
 		// Update the non-canonical page paths
-		$this->rescanPagePaths($data['ppURL']);
+		if (isset($data['ppURL']))
+			$this->rescanPagePaths($data['ppURL']);
 
 		if ($this->isGeneratedCollection()) {
 			if (isset($data['cFilename'])) {
@@ -893,16 +894,14 @@ $ppWhere = '';
 		}
 
 		// Third, fill in the cPath values from the user updated data.
-		if(is_array($newPaths)) {
-			foreach ($newPaths as $key=>$val) {
-				if (!empty($val)) {
-					// Auto-prepend a slash if one is missing.
-					$val = $txt->sanitizeFileSystem($val, true);
-					if ($val{0} != '/') {
-						$val = '/' . $val;
-					}
-					$paths[$key] = $val;
+		foreach ($newPaths as $key=>$val) {
+			if (!empty($val)) {
+				// Auto-prepend a slash if one is missing.
+				$val = $txt->sanitizeFileSystem($val, true);
+				if ($val{0} != '/') {
+					$val = '/' . $val;
 				}
+				$paths[$key] = $val;
 			}
 		}
 		
