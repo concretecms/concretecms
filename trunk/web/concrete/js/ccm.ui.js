@@ -114,7 +114,7 @@ ccm_showBlockMenu = function(obj, e) {
 ccm_showAreaMenu = function(obj, e) {
 	$.fn.dialog.open({
 		title: ccmi18n.blockAreaMenu,
-		href: CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + obj.arHandle,
+		href: CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + obj.arHandle + '&addOnly=' + obj.addOnly,
 		width: 550,
 		modal: false,
 		height: 380

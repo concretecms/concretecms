@@ -14,6 +14,8 @@ $ci = Loader::helper('concrete/urls');
 #ccm-scrapbook-list .ccm-block-type-inner .edit{ display:none }
 #ccm-scrapbook-list .ccm-block-type-inner.editMode .view{ display:none }
 #ccm-scrapbook-list .ccm-block-type-inner.editMode .edit{ display:block }
+
+#ccm-scrapbook-list .ccm-scrapbook-list-item .ccm-scrapbook-list-item-detail{ overflow:hidden } 
 </style>
 
 <script>
@@ -23,6 +25,7 @@ var GlobalScrapbook = {
 		ccm_areaScrapbookObj.type = "AREA";	
 		ccm_areaScrapbookObj.aID = <?=intval($globalScrapbookArea->getAreaID()) ?>;
 		ccm_areaScrapbookObj.arHandle = "<?=$globalScrapbookArea->getAreaHandle() ?>";	
+		ccm_areaScrapbookObj.addOnly = 1;
 		ccm_showAreaMenu(ccm_areaScrapbookObj,e); 
 	},
 	editBlock:function(bID,w,h){ 
