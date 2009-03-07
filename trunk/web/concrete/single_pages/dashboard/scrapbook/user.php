@@ -1,6 +1,14 @@
 <style>
 
 #ccm-scrapbook-list .ccm-block-type .options { float:right; padding:8px; }
+
+#ccm-scrapbook-list .ccm-scrapbook-list-item a.ccm-block-type-inner,
+#ccm-scrapbook-list .ccm-scrapbook-list-item a.ccm-block-type-inner:hover{ border:1px solid #e1e1e1; background-color:#f6f6f6; margin-bottom:8px  }
+
+#ccm-scrapbook-list div.ccm-block-type{ border:0px none; }
+
+#ccm-scrapbook-list .ccm-scrapbook-list-item .ccm-scrapbook-list-item-detail{ overflow:hidden } 
+
 </style>
 
 <h1><span><?=t('User Scrapbook')?></span></h1>
@@ -30,7 +38,7 @@
 					  <a title="Remove from Scrapbook" 
 						href="<?=$this->url('/dashboard/scrapbook/user/','delete','?pcID='.$pcID ) ?>" 
 						id="sb<?=$pcID ?>">
-					  	<img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" width="16" height="16" />
+					  	<?=t('Delete') ?>
 					  </a>
 					</div> 
 					<a class="ccm-block-type-inner" style="background-image: url(<?=$btIcon?>)"><?=$bt->getBlockTypeName()?></a>

@@ -24,12 +24,15 @@ if(ENABLE_MARKETPLACE_SUPPORT){
 }
 ?>
 
-<ul class="ccm-dialog-tabs" id="ccm-area-tabs">
+<ul class="ccm-dialog-tabs" id="ccm-area-tabs" style="display:<?=!$_REQUEST['addOnly']?'block':'none'?>">
 	<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-add"><?=t('Add New')?></a></li>
+
 	<li><a href="javascript:void(0)" id="ccm-add-existing"><?=t('Add From Scrapbook')?></a></li>
+	
 	<? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
 		<li><a href="javascript:void(0)" id="ccm-add-marketplace"><?=t('Add From Marketplace')?></a></li>
 	<? } ?>
+	
 	<? if (PERMISSIONS_MODEL != 'simple' && $cp->canAdminPage()) { ?><li><a href="javascript:void(0)" id="ccm-permissions"><?=t('Permissions')?></a></li><? } ?>
 </ul>
 
