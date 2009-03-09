@@ -31,7 +31,7 @@ function toggleQuestions(qsID,trigger){
 <div style="margin:0px; padding:0px; width:100%; height:auto" >
 <table class="entry-form" >
 	<tr>
-		<td class="header"><?=t('Survey')?></td>
+		<td class="header"><?=t('Form')?></td>
 		<td class="header"><?=t('Options')?></td>
 	</tr>
 	<? foreach($surveys as $thisQuestionSetId=>$survey){
