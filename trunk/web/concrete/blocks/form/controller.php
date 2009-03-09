@@ -42,6 +42,11 @@ class FormBlockController extends BlockController {
 		}
 	}
 	
+	public function view(){ 
+		$pURI = ($_REQUEST['pURI']) ? $_REQUEST['pURI'] : str_replace(array('&ccm_token='.$_REQUEST['ccm_token'],'&btask=passthru','&method=submit_form'),'',$_SERVER['REQUEST_URI']);
+		$this->set('pURI',  htmlentities( $pURI, ENT_COMPAT, APP_CHARSET));
+	}
+	
 	public function getDefaultThankYouMsg() {
 		return t("Thanks!");
 	}
