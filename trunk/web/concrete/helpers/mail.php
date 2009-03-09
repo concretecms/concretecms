@@ -126,10 +126,14 @@ class MailHelper {
 			}
 			$header .= "From: {$from}";
 			$subject = $this->subject;
-			if (function_exists(mb_encode_mimeheader)) {
+			if (function_exists('mb_encode_mimeheade')) {
 				$subject = mb_encode_mimeheader($subject, APP_CHARSET);
 			}
-			mail($to, $subject, $this->body, $header); 
+			if (function_exists('mb_send_mail')) {
+				mb_send_mail($to, $subject, $this->body, $header); 
+			} else {
+				mail($to, $subject, $this->body, $header); 
+			}
 		}
 		
 		// add email to log
