@@ -20,7 +20,16 @@ if ($cp->canAdminPage()) {
 			$('#ccm-uName').html(uName);
 		}
 		
-
+		
+		var ccm_activePropertiesTab = "ccm-page-properties-standard";
+		
+		$("#ccm-properties-tabs a").click(function() {
+			$("li.ccm-nav-active").removeClass('ccm-nav-active');
+			$("#" + ccm_activePropertiesTab + "-tab").hide();
+			ccm_activePropertiesTab = $(this).attr('id');
+			$(this).parent().addClass("ccm-nav-active");
+			$("#" + ccm_activePropertiesTab + "-tab").show();
+		});
 	</script>
 	
 	<style>
@@ -30,10 +39,18 @@ if ($cp->canAdminPage()) {
 	</style>
 	
 	<h1><?=t('Page Properties')?></h1>
+
 	
 	<div id="ccm-required-meta">
-	<h2><?=t('Standard Information')?></h2></td>
+	
+		
+	<ul class="ccm-dialog-tabs" id="ccm-properties-tabs">
+		<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-page-properties-standard"><?=t('Standard Properties')?></a></li>
+		<li><a href="javascript:void(0)" id="ccm-page-paths"><?=t('Page Paths and Location')?></a></li>
+		<li><a href="javascript:void(0)" id="ccm-properties-custom"><?=t('Custom Fields')?></a></li>
+	</ul>
 
+	<div id="ccm-page-properties-standard-tab">
 	
 	<div class="ccm-field-one">
 	<label><?=t('Name')?></label> <input type="text" name="cName" value="<?=$c->getCollectionName()?>" class="ccm-input-text">
@@ -103,7 +120,16 @@ if (!$c->isGeneratedCollection()) {
 	<label><?=t('Description')?></label> <textarea name="cDescription" class="ccm-input-text" style="width: 570px; height: 50px"><?=$c->getCollectionDescription()?></textarea>
 	</div>
 	
-	<? Loader::element('collection_metadata_fields', array('c'=>$c ) ); ?>
+	</div>
+	
+	<div id="ccm-page-paths-tab" style="display: none">
+	asdflkj
+	</div>
+	
+	<div id="ccm-properties-custom-tab" style="display: none">
+		<? Loader::element('collection_metadata_fields', array('c'=>$c ) ); ?>
+	</div>
+	
 	
 	<input type="hidden" name="update_metadata" value="1" />
 	<input type="hidden" name="processCollection" value="1">
