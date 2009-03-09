@@ -15,6 +15,8 @@ if (is_object($c)) {
 }
 ?>
 
+<meta http-equiv="content-type" content="text/html; charset=<?=APP_CHARSET?>" />
+
 <?
 $akt = $c->getCollectionAttributeValue('meta_title'); 
 $akd = $c->getCollectionAttributeValue('meta_description');
@@ -38,8 +40,6 @@ if ($akd) { ?>
 if ($akk) { ?>
 	<meta name="keywords" content="<?=htmlspecialchars($akk)?>" />
 <? } ?>
-
-<meta http-equiv="content-type" content="text/html; charset=<?=APP_CHARSET?>" />
 
 <? $u = new User(); ?>
 <script type="text/javascript">
