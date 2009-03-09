@@ -3,7 +3,7 @@
 Rough code, badly documented. Send me comments and patches."""
 
 __author__ = 'Aaron Swartz <me@aaronsw.com>'
-__copyright__ = '(C) 2003 Aaron Swartz. GNU GPL 2.'
+__copyright__ = '(C) 2003 Aaron Swartz. GNU GPL 2. Licensed by concrete5 under the LGPL by special agreement with the original copyright holder.' 
 __version__ = '0.22'
 
 import difflib, string
