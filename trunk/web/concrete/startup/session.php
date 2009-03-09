@@ -8,10 +8,10 @@ session_set_cookie_params(0, str_replace(' ','%20',DIR_REL) . '/');
 ini_set('session.gc_maxlifetime', SESSION_MAX_LIFETIME);
 
 //if we've set the _postSID variable, we populate session_id using it
-if (isset($_REQUEST['ccm-session'])) {
-	session_id($_REQUEST['ccm-session']);
-} else if (isset($_REQUEST['sessionIDOverride'])) {
-	session_id($_REQUEST['sessionIDOverride']);
+if (isset($_POST['ccm-session'])) {
+	session_id($_POST['ccm-session']);
+} else if (isset($_POST['sessionIDOverride'])) {
+	session_id($_POST['sessionIDOverride']);
 }
 
 session_name(SESSION);
