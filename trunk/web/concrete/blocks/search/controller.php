@@ -71,14 +71,9 @@ class SearchBlockController extends BlockController {
 	}
 	
 	public function indexExists() {
-		Loader::library('indexed_search');				
-		Loader::library('3rdparty/Zend/Search/Lucene');
-		try {
-			$index = Zend_Search_Lucene::open(DIR_FILES_CACHE_PAGES);
-			return true;
-		} catch(Exception $e) {
-			return false;
-		}
+		$db = Loader::db();
+		$numRows = $db->GetOne('select count(cID) from PageSearchIndex');
+		return ($numRows > 0);
 	}
 	
 	function view(){
