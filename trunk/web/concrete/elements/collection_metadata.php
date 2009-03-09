@@ -21,7 +21,7 @@ if ($cp->canAdminPage()) {
 		}
 		
 		
-		var ccm_activePropertiesTab = "ccm-page-properties-standard";
+		var ccm_activePropertiesTab = "ccm-properties-standard";
 		
 		$("#ccm-properties-tabs a").click(function() {
 			$("li.ccm-nav-active").removeClass('ccm-nav-active');
@@ -36,6 +36,10 @@ if ($cp->canAdminPage()) {
 	.ccm-field-meta #newAttrValueRows{ margin-top:4px; }
 	.ccm-field-meta .newAttrValueRow{margin-top:4px}	
 	.ccm-field-meta input.faint{ color:#999 }
+	
+	#ccm-properties-custom-tab, #ccm-properties-standard-tab, #ccm-page-paths-tab {
+		margin-top: 12px;
+	}
 	</style>
 	
 	<h1><?=t('Page Properties')?></h1>
@@ -45,12 +49,12 @@ if ($cp->canAdminPage()) {
 	
 		
 	<ul class="ccm-dialog-tabs" id="ccm-properties-tabs">
-		<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-page-properties-standard"><?=t('Standard Properties')?></a></li>
+		<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-properties-standard"><?=t('Standard Properties')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-page-paths"><?=t('Page Paths and Location')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-properties-custom"><?=t('Custom Fields')?></a></li>
 	</ul>
 
-	<div id="ccm-page-properties-standard-tab">
+	<div id="ccm-properties-standard-tab">
 	
 	<div class="ccm-field-one">
 	<label><?=t('Name')?></label> <input type="text" name="cName" value="<?=$c->getCollectionName()?>" class="ccm-input-text">
@@ -123,7 +127,14 @@ if (!$c->isGeneratedCollection()) {
 	</div>
 	
 	<div id="ccm-page-paths-tab" style="display: none">
-	asdflkj
+		
+	<h2><?=t('Canonical URL')?></h2>
+	
+	
+	<div class="ccm-note"><?=t('This page must always be available from at least one URL. That URL is listed above.')?></div
+	<br/><br/>
+	<h2><?=t('Additional Page URL(s)')?></h2>
+	
 	</div>
 	
 	<div id="ccm-properties-custom-tab" style="display: none">
