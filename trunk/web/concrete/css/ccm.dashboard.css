@@ -335,3 +335,38 @@ td.ccm-dashboard-inner-leftcol{width:60%;}
 td.ccm-dashboard-inner-rightcol{width: 40%;}
 td.ccm-dashboard-inner-gutter div {width: 20px}
 div.ccm-dashboard-inner-leftcol table.grid-list{width:100%;}
+
+div#displayOptions {
+	margin: 0 0 7px 0;
+}
+
+div#sortOptions {
+	display: inline;
+	margin-left: 20px;
+}
+
+div.surveyDetails {
+	height: auto;
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+}
+
+div.surveyOverview {
+	float: left;
+	height: auto;
+	margin: 0px;
+	padding: 0px;
+	width: 60%;
+}
+
+div.surveySwatch {
+	background: #999999 none repeat scroll 0 50%;
+	border: 1px solid #666666;
+	float: left;
+	font-size: 1px;
+	height: 10px;
+	line-height: 1px;
+	margin: 3px 4px 0 0;
+	width: 10px;
+}

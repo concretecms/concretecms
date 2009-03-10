@@ -1,48 +1,14 @@
 <?php
-// Survey single page
 defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 
-<!-- TODO:
-	- Don't use JS to toggle between modes. Use 2 separate pages.
--->
-
-<!-- Temporary: CSS and JS here until done debugging -->
-<style type="text/css" rel="stylesheet">
-div.surveySwatch {
-	background: #999999 none repeat scroll 0 50%;
-	border: 1px solid #666666;
-	float: left;
-	font-size: 1px;
-	height: 10px;
-	line-height: 1px;
-	margin: 3px 4px 0 0;
-	width: 10px;
-}
-</style>
-
-<script type="text/javascript">
-/*
-function show_survey_detail(bID) {
-	// Make ajax call to load data into survey_details
-	$("#survey_main").css("display", "none");
-	$("#survey_details").css("display", "block");
-}
-
-function go_back() {
-	$("#survey_main").css("display", "block");
-	$("#survey_details").css("display", "none");
-}
-*/
-</script>
-
-
-<? if ($this->controller->getTask() == 'view_detail') { ?>
-	<div id="survey_details">
-		<h1><span><?=t('Results for &#34;' . $surveys[32]['name'] . '&#34;')?></span></h1>
-		<div class="ccm-dashboard-inner">
+<? if ($this->controller->getTask() == 'viewDetail') { ?>
+	<h1><span><?=t('Results for &#34;' . $current_survey . '&#34;')?></span></h1>
+	<div class="ccm-dashboard-inner">
 	
-		<div style="margin:0px; padding:0px; width:60%; height:auto; float: left;" >
-		<a href="<?=$this->action('view')?>">&#60;&#60; Back to List</a>
+	<div class="surveyOverview" >
+		<div id="displayOptions">
+			<a href="<?=$this->action('view')?>">&#60;&#60; Back to List</a>
+		</div>
 		<table class="entry-form" >
 			<tr>
 				<td class="header"><?=t('Option')?></td>
@@ -51,37 +17,81 @@ function go_back() {
 				<td class="header"><?=t('User')?></td>
 			</tr>
 			<? foreach($survey_details as $detail) { ?>
-					<tr>
-						<td><?=$detail['option'] ?></td>
-						<td><?=$detail['ipAddress'] ?></td>
-						<td><?=$detail['date'] ?></td>
-						<td><?=$detail['user'] ?></td>
-					</tr>
-			<? } ?>
-		</table>
-		</div>
+			<tr>
+				<td><?=$detail['option'] ?></td>
+				<td><?=$detail['ipAddress'] ?></td>
+				<td><?=$detail['date'] ?></td>
+				<td><?=$detail['user'] ?></td>
+			</tr>
+		<? } ?>
+	</table>
+	</div>
 	
 		<div>
 			<?= $chart_options ?>
 			<?= $pie_chart ?>
 		</div>
+		<div style="clear: both;"></div>
 	</div>
-	
-	<div style="clear: both;"></div>
-	
 	</div>
 
 <? } else { ?>
 
-<div id="survey_main">
-	<h1><span><?=t('Surveys')?></span></h1>
-	<div class="ccm-dashboard-inner">
+<h1><span><?=t('Surveys')?></span></h1>
+<div class="ccm-dashboard-inner">
 	
-		<? if (count($surveys) == 0) { ?>
-		<?=t('You have not created any surveys.')?>
-		<? } else { ?>
+	<? if (count($surveys) == 0) { ?>
+	<?=t('You have not created any surveys.')?>
+	<? } else { ?>
 	
-		<div style="margin:0px; padding:0px; width:100%; height:auto">
+	<div class="surveyDetails">
+		<div id="displayOptions">
+			Sort By:
+			
+			<? switch ($_GET['sortBy']) {
+				case 'name': ?>
+				<strong>
+					<a href="?sortBy=name<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Name</a>
+				</strong> &#124;
+				<a href="?sortBy=dateCreated<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Date Created</a> &#124;
+				<a href="?sortBy=numberOfResponses<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Number of Responses</a>
+			<? break; ?>	
+			<? case 'numberOfResponses': ?>
+				<a href="?sortBy=name<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Name</a> &#124;
+				<a href="?sortBy=dateCreated<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Date Created</a> &#124;
+				<strong>
+					<a href="?sortBy=numberOfResponses<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Number of Responses</a>
+				</strong>	
+			<? break; ?>
+			<? default: ?>
+				<a href="?sortBy=name<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Name</a> &#124;
+				<strong>
+					<a href="?sortBy=dateCreated<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Date Created</a>
+				</strong> &#124;
+				<a href="?sortBy=numberOfResponses<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Number of Responses</a>
+			<? break; ?>
+			<? } ?>
+			
+			<div id="sortOptions">
+				Order:
+				<? switch ($_GET['dir']) {
+				case 'asc': ?>
+					<strong>
+						<a href="<?= isset($_GET['sortBy']) ? '?sortBy=' . $_GET['sortBy'] . '&' : '?' ?>dir=asc">Ascending</a>
+					</strong> &#124;
+					<a href="<?= isset($_GET['sortBy']) ? '?sortBy=' . $_GET['sortBy'] . '&' : '?' ?>dir=desc">Descending</a>
+				<? break; ?>
+				<? default: ?>
+					<a href="<?= isset($_GET['sortBy']) ? '?sortBy=' . $_GET['sortBy'] . '&' : '?' ?>dir=asc">Ascending</a> &#124;
+					<strong>
+						<a href="<?= isset($_GET['sortBy']) ? '?sortBy=' . $_GET['sortBy'] . '&' : '?' ?>dir=desc">Descending</a>
+					</strong>
+				<? break; ?>
+				<? } ?>
+				
+			</div>
+			
+		</div>
 		<table class="entry-form" >
 			<tr>
 				<td class="header"><?=t('Name')?></td>
@@ -91,7 +101,7 @@ function go_back() {
 			</tr>
 			<? foreach($surveys as $survey) { ?>
 					<tr>
-						<td><a href="<?=$this->action('view_detail', $survey['bID'])?>"><?=$survey['name'] ?></a></td>
+						<td><a href="<?=$this->action('viewDetail', $survey['bID'])?>"><?=$survey['name'] ?></a></td>
 						<td><?=$survey['foundOnPage'] ?></td>
 						<td><?=$survey['lastResponse'] ?></td>
 						<td><?=$survey['numberOfResponses'] ?></td>
@@ -99,7 +109,7 @@ function go_back() {
 				<? }
 			} ?>
 		</table>
-		</div>
+	</div>
 	
 	
 	</div>
