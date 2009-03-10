@@ -10,14 +10,27 @@ Loader::block('survey');
 
 class DashboardReportsSurveysController extends Controller {
 	
+	public function view_detail($bID = 0) {
+		if ($bID > 0) {
+			$this->get_survey_details($bID);
+			$this->get_chart($bID);
+		} else {
+			$this->redirect('/dashboard/reports/surveys');
+		}
+	}
+	
 	public function view() { 	
 		// Prepare the database query
 		$db = Loader::db();
 		
 		$q1 = 'select btSurvey.bID, btSurvey.question, CollectionVersions.cvName
+
 				from btSurvey, CollectionVersions, CollectionVersionBlocks
+
 				where btSurvey.bID = CollectionVersionBlocks.bID 
+
 				AND CollectionVersions.cID = CollectionVersionBlocks.cID and 
+
 				CollectionVersionBlocks.cvID = CollectionVersionBlocks.cvID and CollectionVersions.cvIsApproved = 1';
 		$r1 = $db->query($q1);
 		
@@ -58,8 +71,6 @@ class DashboardReportsSurveysController extends Controller {
 		}
 		
 		// Get details for first entry
-		$this->get_survey_details($surveys[32]['bID']);
-		$this->get_chart($surveys[32]['bID']);
 		
 		// Store data in variable stored in larger scope
 		$this->set('surveys', $surveys);	
@@ -71,13 +82,21 @@ class DashboardReportsSurveysController extends Controller {
 		
 		// Load the data from the database
 		$q = 
+
 		'select ' . 
+
 			'btSurveyOptions.optionName, ipAddress, timestamp, Users.uName ' .
+
 		 'from ' .
+
 			'btSurveyResults, Users, btSurveyOptions ' . 
+
 		 'where ' . 
+
 			'Users.uID = btSurveyResults.uID and ' .
+
 			'btSurveyResults.optionID = btSurveyOptions.optionID and ' . 
+
 			'btSurveyResults.bID = ' . intval($bID);
 		$r = $db->query($q);
 		

@@ -4,13 +4,7 @@ var SlideshowBlock = {
 	init:function(){},	
 	
 	chooseImg:function(){ 
-		jQuery.fn.dialog.open({ 
-			width: 650,
-			height: 450,
-			modal: false,
-			href: CCM_TOOLS_PATH + "/al.php?launch_in_page=1&cID="+0,
-			title: ccm_t('choose-file')
-		});
+		ccm_launchFileManager();
 	},
 	
 	selectImg:function(obj){
