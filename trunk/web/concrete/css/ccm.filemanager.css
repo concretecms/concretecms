@@ -48,7 +48,7 @@ div.ccm-file-search-field input, div.ccm-file-search-field select, div.ccm-file-
 #ccm-file-list-multiple-operations {font-size: 10px}
 
 /* add asset */
-div#ccm-files-add-asset {float: right; padding-right: 20px; font-size: 11px; z-index: 100; position: relative}
+div#ccm-files-add-asset {float: right; padding-right: 20px; font-size: 11px; z-index: 10; position: relative}
 div#ccm-files-add-asset h3 {float: left;margin-right: 4px;margin-top: 0px; padding-top: 4px; font-size: 11px}
 div#ccm-files-add-asset form {float: left}
 div#ccm-files-add-asset a {float: left;margin-left: 4px;margin-top: 4px}

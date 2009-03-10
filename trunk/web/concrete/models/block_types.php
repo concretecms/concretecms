@@ -441,7 +441,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					return $db->ErrorMsg();
 				}
 			} else {
-				return t("No block found by that name in the core blocks directory.");
+				return t("No block found with the handle %s found.", $this->getBlockTypeHandle());
 			}
 		}
 		

@@ -317,6 +317,11 @@ class FileVersion extends Object {
 		$ext = $fh->getExtension($this->fvFilename);
 		$ftl = FileTypeList::getType($ext);
 		$db = Loader::db();
+		
+		if (!file_exists($this->getPath())) {
+			return File::F_ERROR_FILE_NOT_FOUND;
+		}
+		
 		$size = filesize($this->getPath());
 		
 		$title = ($firstRun) ? $this->getFilename() : $this->getTitle();

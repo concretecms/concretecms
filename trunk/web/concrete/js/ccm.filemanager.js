@@ -337,6 +337,15 @@ ccm_alSetupCheckboxes = function() {
 					title: ccmi18n_filemanager.sets				
 				});
 				break;
+			case "rescan":
+				jQuery.fn.dialog.open({
+					width: 350,
+					height: 200,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/files/rescan?' + fIDstring,
+					title: ccmi18n_filemanager.rescan				
+				});
+				break;
 			case "download":
 				window.frames[ccm_alProcessorTarget].location = CCM_TOOLS_PATH + '/files/download?' + fIDstring;
 				break;

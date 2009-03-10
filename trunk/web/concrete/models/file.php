@@ -4,6 +4,7 @@ class File extends Object {
 
 	const CREATE_NEW_VERSION_THRESHOLD = 300; // in seconds (5 minutes)
 	const F_ERROR_INVALID_FILE = 1;
+	const F_ERROR_FILE_NOT_FOUND = 2;
 	
 	/** 
 	 * For all methods that file does not implement, we pass through to the currently active file version object 
