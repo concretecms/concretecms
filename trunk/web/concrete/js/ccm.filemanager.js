@@ -109,11 +109,16 @@ ccm_alLaunchSelectorFileManager = function(selector) {
 			filterStr += '&' + $(types[i]).attr('name') + '=' + $(types[i]).attr('value');		
 		}
 	}
+	
+	ccm_launchFileManager(filterStr);
+}
+
+ccm_launchFileManager = function(filters) {
 	$.fn.dialog.open({
 		width: '90%',
 		height: '70%',
 		modal: false,
-		href: CCM_TOOLS_PATH + "/files/search_dialog?search=1" + filterStr,
+		href: CCM_TOOLS_PATH + "/files/search_dialog?search=1" + filters,
 		title: ccmi18n_filemanager.title
 	});
 }
