@@ -13,7 +13,8 @@ class DatabaseItemList extends ItemList {
 	private $filters = array();
 	protected $sortByString = '';
 	protected $autoSortColumns = array();
-
+	protected $userPostQuery = '';
+	
 	public function getTotal() {
 		if ($this->total == -1) {
 			$db = Loader::db();
@@ -79,6 +80,10 @@ class DatabaseItemList extends ItemList {
 					$v[] = $value;
 				}
 			}
+		}
+		
+		if ($this->userPostQuery != '') {
+			$q .= ' ' . $this->userPostQuery . ' ';
 		}
 		
 		return array($q, $v);
