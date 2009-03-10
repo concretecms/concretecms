@@ -209,13 +209,10 @@ class BlockPollOption {
 	function getOptionName() {return $this->optionName;}
 	function getOptionDisplayOrder() {return $this->displayOrder;}
 	
-	function getResults($cID = 0) {
-		if ($cID == 0) {
-			global $c;
-			$cID = $c->getCollectionID();
-		}
+	function getResults() {
+		global $c;
 		$db = Loader::db();
-		$v = array($this->optionID, $cID);
+		$v = array($this->optionID, intval($c->getCollectionID()) );
 		$q = "select count(resultID) from btSurveyResults where optionID = ? AND cID=?";
 		$result = $db->getOne($q, $v);
 		if ($result > 0) {
