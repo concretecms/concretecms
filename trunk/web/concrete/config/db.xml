@@ -466,9 +466,7 @@
     <field name="fvFilename" type="C" size="255">
       <NOTNULL/>
     </field>
-    <field name="fvPrefix" type="C" size="12">
-      <NOTNULL/>
-    </field>
+    <field name="fvPrefix" type="C" size="12" />
     <field name="fvGenericType" type="I" size="3">
       <NOTNULL/>
       <DEFAULT value="0"/>

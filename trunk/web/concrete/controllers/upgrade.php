@@ -73,64 +73,28 @@ class UpgradeController extends Controller {
 	private function set_upgrades() {
 		$ugvs = array();
 		
-		/*
-		The upgrades file behave as follows:
-		for a specific site_version, if special crap is to happen, it gets a version_xxx file in the
-		helpers directory. For example, let's say a Concrete5 b1 site wants to upgrade to b4, the current version
-		Say that b2 introduces some new items, b3 introduces no new pages/db changes, and b4 does
-		then we'd have
-		case "5.0.0b1":
-			$ugvs[] = "version_500b2";
-			$ugvs[] = "version_500b4";
-			break;
-		case "5.0.0b2":
-			$ugvs[] = "version_500b4";
-			break;
-		case "5.0.0b3":
-			$ugvs[] = "version_500b4";
-			break;
-			
-		This typically shouldn't include schema changes which will be picked up by refresh_schema
-		*/
-
-		switch(strtolower($this->site_version)) {
-			case "5.0.0a1":
-				$ugvs[] = "version_500a1";
-				$ugvs[] = "version_500b1";
-				$ugvs[] = "version_500b2";
-				$ugvs[] = "version_500";
-				$ugvs[] = "version_510";
-				break;
-			case "5.0.0b1":
-				$ugvs[] = "version_500b1";
-				$ugvs[] = "version_500b2";
-				$ugvs[] = "version_500";
-				$ugvs[] = "version_510";
-				break;
-			case "5.0.0b2":
-				$ugvs[] = "version_500b2";
-				$ugvs[] = "version_500";
-				$ugvs[] = "version_510";
-				break;
-			case "5.0.0":
-				$ugvs[] = "version_500";
-				$ugvs[] = "version_510";
-				break;
-			case "5.1.0rc1":
-			case "5.1.0rc2":
-			case "5.1.0":
-			case "5.1.1":
-				$ugvs[] = "version_510";
-				break;
-			case "5.2.0rc1":
-			case "5.2.0":
-			case "5.2.1":
-			case "5.3.0a1":
-				$ugvs[] = "version_520";
-				break;
-
-		}
 		
+		$sav = $this->site_version;
+
+		if (version_compare($sav, '5.0.0b1', '<')) { 
+			$ugvs[] = "version_500a1";
+		}
+		if (version_compare($sav, '5.0.0b2', '<')) { 
+			$ugvs[] = "version_500b1";
+		}
+		if (version_compare($sav, '5.0.0', '<')) { 
+			$ugvs[] = "version_500b2";
+		}
+		if (version_compare($sav, '5.1.0', '<')) { 
+			$ugvs[] = "version_500";
+		}
+		if (version_compare($sav, '5.2.0', '<')) { 
+			$ugvs[] = "version_510";
+		}
+		if (version_compare($sav, '5.3.0', '<')) { 
+			$ugvs[] = "version_520";
+		}
+
 		foreach($ugvs as $ugh) {
 			$this->upgrades[] = Loader::helper('concrete/upgrade/' . $ugh);
 		}

@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c = Page::getByPath("/dashboard/mediabrowser");
+$c = Page::getByPath("/dashboard/files");
 $cp = new Permissions($c);
 $u = new User();
 $form = Loader::helper('form');

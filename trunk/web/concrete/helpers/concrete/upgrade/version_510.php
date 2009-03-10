@@ -25,6 +25,12 @@ class ConcreteUpgradeVersion510Helper {
 		Loader::model('single_page');
 		// Rename Forms to Reports
 		$p = Page::getByPath('/dashboard/form_results');
+		
+		// We can only run these once so we do a check to see if that's the case.
+		if ($p->isError()) {
+			return false;
+		}
+		
 		$p->update(array('cName' => t('Reports'), 'cDescription'=>t('Get data from forms and logs.'), 'cHandle' => 'reports'));	
 		$p->rescanCollectionPath();
 		$p = SinglePage::getByID($p->getCollectionID());

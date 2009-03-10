@@ -73,19 +73,24 @@
 		}
 		
 		private function mapSystemPath($prefix, $filename, $createDirectories = false, $base = DIR_FILES_UPLOADED) {
-			$d1 = substr($prefix, 0, 4);
-			$d2 = substr($prefix, 4, 4);
-			$d3 = substr($prefix, 8);
-			
-			if ($createDirectories) {
-				if (!is_dir($base . '/' . $d1 . '/' . $d2 . '/' . $d3)) {
-					mkdir($base . '/' . $d1 . '/' . $d2 . '/' . $d3, 0777, TRUE);
+			if ($prefix == null) {
+				$path = $base . '/' . $filename;
+			} else {
+				$d1 = substr($prefix, 0, 4);
+				$d2 = substr($prefix, 4, 4);
+				$d3 = substr($prefix, 8);
+				
+				if ($createDirectories) {
+					if (!is_dir($base . '/' . $d1 . '/' . $d2 . '/' . $d3)) {
+						mkdir($base . '/' . $d1 . '/' . $d2 . '/' . $d3, 0777, TRUE);
+					}
 				}
+				
+				$path = $base . '/' . $d1 . '/' . $d2 . '/' . $d3 . '/' . $filename;
 			}
-			
-			$path = $base . '/' . $d1 . '/' . $d2 . '/' . $d3 . '/' . $filename;
 			return $path;
 		}
+		
 		public function getIncomingDirectoryContents() {
 			$incoming_file_information = array();
 			
