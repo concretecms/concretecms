@@ -24,7 +24,7 @@ if(ENABLE_MARKETPLACE_SUPPORT){
 }
 ?>
 
-<ul class="ccm-dialog-tabs" id="ccm-area-tabs" style="display:<?=!$_REQUEST['addOnly']?'block':'none'?>">
+<ul class="ccm-dialog-tabs" id="ccm-area-tabs" style="display:<?=($_REQUEST['addOnly']!=1)?'block':'none'?>">
 	<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-add"><?=t('Add New')?></a></li>
 
 	<li><a href="javascript:void(0)" id="ccm-add-existing"><?=t('Add From Scrapbook')?></a></li>
