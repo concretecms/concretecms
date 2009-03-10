@@ -23,6 +23,9 @@ $(function() {
 		});
 				
 	});
+
+	$("a.ccm-meta-path-add").click(function(ev) { ccmPathHelper.add(ev.target) });
+	$("a.ccm-meta-path-del").click(function(ev) { ccmPathHelper.del(ev.target) });
 });
 
 var ccmAttributeValuesHelper={  
@@ -44,6 +47,33 @@ var ccmAttributeValuesHelper={
 		}
 		if(field.value==initText) field.value='';
 		if($(field).hasClass(removeClass)) $(field).removeClass(removeClass);
+	}
+}
+
+var ccmPathHelper={
+	add:function(field){
+		var parent = $(field).parent();
+		var clone = parent.clone();
+		clone.children().each(function() {
+			if (this.id != undefined  && (i = this.id.search("-add-")) != -1) {
+				this.id = this.id.substr(0, i) + "-add-" + (parseInt(this.id.substr(i+5)) + 1);
+			}
+			if (this.name != undefined && (i = this.name.search("-add-")) != -1) {
+				this.name = this.name.substr(0, i) + "-add-" + (parseInt(this.name.substr(i+5)) + 1);
+			}
+			if (this.type == "text") {
+				this.value = "";
+			}
+		});
+    	$(field).replaceWith('<a href="javascript:void(0)" class="ccm-meta-path-del">Remove Path</a>');
+		clone.appendTo(parent.parent());
+
+		$("a.ccm-meta-path-add,a.ccm-meta-path.del").unbind('click');
+		$("a.ccm-meta-path-add").click(function(ev) { ccmPathHelper.add(ev.target) });
+		$("a.ccm-meta-path-del").click(function(ev) { ccmPathHelper.del(ev.target) });
+	},
+	del:function(field){
+		$(field).parent().remove();
 	}
 }
 </script>

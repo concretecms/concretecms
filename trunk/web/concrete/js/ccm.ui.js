@@ -670,28 +670,6 @@ ccm_setupBreadcrumb = function() {
 	}
 }
 
-ccm_addListEl = function(el) {
-	var parent = $(el).parent();
-	var clone = parent.clone();
-	clone.children().each(function() {
-		if (this.id != undefined  && (i = this.id.search("-add-")) != -1) {
-			this.id = this.id.substr(0, i) + "-add-" + (parseInt(this.id.substr(i+5)) + 1);
-		}
-		if (this.name != undefined && (i = this.name.search("-add-")) != -1) {
-			this.name = this.name.substr(0, i) + "-add-" + (parseInt(this.name.substr(i+5)) + 1);
-		}
-		if (this.type == "text") {
-			this.value = "";
-		}
-	});
-    $(el).replaceWith('<a onclick="ccm_delListEl(this)" href="javascript:void(0)">-</a>');
-	clone.appendTo(parent.parent());
-}
-
-ccm_delListEl = function(el) {
-	$(el).parent().remove();
-}
-
 /** 
  * JavaScript localization. Provide a key and then reference that key in PHP somewhere (where it will be translated)
  */
