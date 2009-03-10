@@ -45,70 +45,26 @@ defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 	<? } else { ?>
 	
 	<div class="surveyDetails">
-		<div id="displayOptions">
-			Sort By:
-			
-			<? switch ($_GET['sortBy']) {
-				case 'name': ?>
-				<strong>
-					<a href="?sortBy=name<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Name</a>
-				</strong> &#124;
-				<a href="?sortBy=dateCreated<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Date Created</a> &#124;
-				<a href="?sortBy=numberOfResponses<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Number of Responses</a>
-			<? break; ?>	
-			<? case 'numberOfResponses': ?>
-				<a href="?sortBy=name<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Name</a> &#124;
-				<a href="?sortBy=dateCreated<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Date Created</a> &#124;
-				<strong>
-					<a href="?sortBy=numberOfResponses<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Number of Responses</a>
-				</strong>	
-			<? break; ?>
-			<? default: ?>
-				<a href="?sortBy=name<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Name</a> &#124;
-				<strong>
-					<a href="?sortBy=dateCreated<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Date Created</a>
-				</strong> &#124;
-				<a href="?sortBy=numberOfResponses<?= isset($_GET['dir']) ? '&dir=' . $_GET['dir'] : '' ?>">Number of Responses</a>
-			<? break; ?>
-			<? } ?>
-			
-			<div id="sortOptions">
-				Order:
-				<? switch ($_GET['dir']) {
-				case 'asc': ?>
-					<strong>
-						<a href="<?= isset($_GET['sortBy']) ? '?sortBy=' . $_GET['sortBy'] . '&' : '?' ?>dir=asc">Ascending</a>
-					</strong> &#124;
-					<a href="<?= isset($_GET['sortBy']) ? '?sortBy=' . $_GET['sortBy'] . '&' : '?' ?>dir=desc">Descending</a>
-				<? break; ?>
-				<? default: ?>
-					<a href="<?= isset($_GET['sortBy']) ? '?sortBy=' . $_GET['sortBy'] . '&' : '?' ?>dir=asc">Ascending</a> &#124;
-					<strong>
-						<a href="<?= isset($_GET['sortBy']) ? '?sortBy=' . $_GET['sortBy'] . '&' : '?' ?>dir=desc">Descending</a>
-					</strong>
-				<? break; ?>
-				<? } ?>
-				
-			</div>
-			
-		</div>
+
 		<table class="entry-form" >
 			<tr>
-				<td class="header"><?=t('Name')?></td>
-				<td class="header"><?=t('Found on Page')?></td>
-				<td class="header"><?=t('Last Response')?></td>
-				<td class="header"><?=t('Number of Responses')?></td>
+				<td class="header"><a href="<?=$surveyList->getSortByURL('question', 'asc')?>"><?=t('Name')?></a></td>
+				<td class="header"><a href="<?=$surveyList->getSortByURL('cvName', 'asc')?>"><?=t('Found on Page')?></a></td>
+				<td class="header"><a href="<?=$surveyList->getSortByURL('lastResponse', 'asc')?>"><?=t('Last Response')?></a></td>
+				<td class="header"><a href="<?=$surveyList->getSortByURL('numberOfResponses', 'asc')?>"><?=t('Number of Responses')?></a></td>
 			</tr>
 			<? foreach($surveys as $survey) { ?>
 					<tr>
-						<td><a href="<?=$this->action('viewDetail', $survey['bID'])?>"><?=$survey['name'] ?></a></td>
-						<td><?=$survey['foundOnPage'] ?></td>
+						<td><a href="<?=$this->action('viewDetail', $survey['bID'], $survey['cID'])?>"><?=$survey['question'] ?></a></td>
+						<td><?=$survey['cvName'] ?></td>
 						<td><?=$survey['lastResponse'] ?></td>
 						<td><?=$survey['numberOfResponses'] ?></td>
 					</tr>
 				<? }
 			} ?>
 		</table>
+		
+		<? $surveyList->displayPaging(); ?>
 	</div>
 	
 	

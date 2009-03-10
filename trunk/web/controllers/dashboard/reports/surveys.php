@@ -3,6 +3,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::block('survey');
 
 // Custom sorting function to sort by number of responses
+
+// This is not necessary
+/*
 function responseSort($a, $b) {
 	if ($a['numberOfResponses'] == $b['numberOfResponses']) {
 		return 0;
@@ -16,6 +19,7 @@ function responseSort($a, $b) {
 		return ($a['numberOfResponses'] < $b['numberOfResponses']) ? 1 : -1;
 	}
 }
+*/
 
 class DashboardReportsSurveysController extends Controller {
 	
@@ -34,10 +38,10 @@ class DashboardReportsSurveysController extends Controller {
 		$db = Loader::db();
 		
 		$sl = new SurveyList();
-		$sl->view();
 		$slResults = $sl->getPage();
 		
 		// Build array of information we need
+		/*
 		$surveys = array();
 		
 		foreach ($slResults as $row) {
@@ -76,9 +80,10 @@ class DashboardReportsSurveysController extends Controller {
 		if ($_GET['sortBy'] == 'numberOfResponses') {			
 			usort($surveys, "responseSort");
 		}
-		
+		*/
 		// Store data in variable stored in larger scope
-		$this->set('surveys', $surveys);	
+		$this->set('surveys', $slResults);	
+		$this->set('surveyList', $sl);
 	}	
 	
 	public function getSurveyDetails($bID) {
@@ -208,18 +213,13 @@ class DashboardReportsSurveysController extends Controller {
 }
 
 class SurveyList extends DatabaseItemList {
-	protected $itemsPerPage = 100;
-	
+	protected $itemsPerPage = 10;
+	protected $autoSortColumns = array('cvName', 'question', 'numberOfResponses', 'lastResponse');
 	function __construct() {
-		// $this->debug();
-	}
-	
-	public function view() {
+
 		$this->setQuery(
-			   'select ' .
-					'btSurvey.bID, btSurvey.question, CollectionVersions.cvName ' .
-				'from ' . 	
-					'btSurvey, CollectionVersions, CollectionVersionBlocks');	
+			   'select distinct btSurvey.bID, CollectionVersions.cID, btSurvey.question, CollectionVersions.cvName, (select max(timestamp) from btSurveyResults where btSurveyResults.bID = btSurvey.bID and btSurveyResults.cID = CollectionVersions.cID) as lastResponse, (select count(timestamp) from btSurveyResults where btSurveyResults.bID = btSurvey.bID and btSurveyResults.cID = CollectionVersions.cID) as numberOfResponses ' .
+				'from btSurvey, CollectionVersions, CollectionVersionBlocks');	
 		$this->filter(false, 'btSurvey.bID = CollectionVersionBlocks.bID');
 		$this->filter(false, 'CollectionVersions.cID = CollectionVersionBlocks.cID');
 		$this->filter(false, 'CollectionVersionBlocks.cvID = CollectionVersionBlocks.cvID');
@@ -227,7 +227,9 @@ class SurveyList extends DatabaseItemList {
 		
 		// Parse GET parameter so we're not passing a GET parameter directly into a query
 		$direction = ($_GET['dir'] == 'asc') ? 'asc' : 'desc';
+		$this->userPostQuery .= 'group by bID, CollectionVersions.cID';
 		
+		/*
 		switch ($_GET['sortBy']) {
 			case 'name':
 				$this->sortBy('btSurvey.question', $direction);
@@ -236,7 +238,8 @@ class SurveyList extends DatabaseItemList {
 			default:
 				$this->sortBy('btSurvey.bID', $direction);
 				break;
-		}
+		}*/
+		
 	}
 	
 	public function getLastResponseTime($bID) {
