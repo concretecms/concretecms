@@ -21,6 +21,7 @@ div.surveySwatch {
 </style>
 
 <script type="text/javascript">
+/*
 function show_survey_detail(bID) {
 	// Make ajax call to load data into survey_details
 	$("#survey_main").css("display", "none");
@@ -31,6 +32,7 @@ function go_back() {
 	$("#survey_main").css("display", "block");
 	$("#survey_details").css("display", "none");
 }
+*/
 </script>
 
 
