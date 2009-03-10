@@ -526,8 +526,8 @@ ccm_alSelectFile = function(fID) {
 		
 	} else {
 		ccm_triggerSelectFile(fID);
+		jQuery.fn.dialog.closeTop();	
 	}
-	jQuery.fn.dialog.closeTop();	
 
 }
 

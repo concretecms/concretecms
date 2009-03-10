@@ -49,7 +49,7 @@ $(function() {
 <div id="ccm-dashboard-page">
 
 <div id="ccm-dashboard-header">
-<a href="<?=$this->url('/dashboard/')?>"><img src="<?=ASSETS_URL_IMAGES?>/dashboard/logo.png" height="45" width="48" alt="Concrete5" /></a>
+<a href="<?=$this->url('/dashboard/')?>"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" height="49" width="49" alt="Concrete5" /></a>
 </div>
 
 
