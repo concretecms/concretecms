@@ -13,6 +13,8 @@ div.ccm-pane-controls h2, div.ccm-dialog-window h2 {color: #666; font-size: 14px
 div.ccm-pane-controls div.ccm-field {clear: both; padding-bottom: 8px; border-bottom: 1px solid #ddd; margin-bottom: 8px}
 div.ccm-pane-controls div.ccm-field-meta {clear: both; margin: 0px auto 8px auto; position: relative; width: 400px; padding-bottom: 8px; border-bottom: 1px solid #ddd}
 div.ccm-field-meta a.ccm-meta-close {position: absolute; top: 0px; right: 0px; font-weight: bold; color: #bababa; font-size: 10px}
+span.ccm-meta-path {display:  block; margin-bottom: 8px}
+div.ccm-field a.ccm-meta-path-add, div.ccm-field a.ccm-meta-path-del {font-weight: bold; color: #bababa; font-size: 10px}
 div.ccm-pane-controls label {display: block; color: #000; margin-bottom: 3px; font-weight: bold !important}
 div.ccm-pane-controls div.ccm-field-one {width: 280px; float: left; margin-right: 12px; padding-bottom: 8px}
 div.ccm-pane-controls div.ccm-field-two {width: 280px; float: left; padding-bottom: 8px}
@@ -32,7 +34,6 @@ div#ccm-required-meta, div#ccm-move-page, div#ccm-required-meta-add {-webkit-bor
 div#ccm-optional-meta, div#ccm-delete-page, div#ccm-page-types {border: 2px solid #bababa; padding: 8px; background: white; -webkit-border-radius: 12px; -moz-border-radius: 12px;}
 
 div#ccm-required-meta input.ccm-input-text {width: 272px !important}
-div#ccm-required-meta input.ccm-input-text-narrow {width: 248px !important}
 
 div.ccm-form-area {border: 2px solid #bababa; padding: 8px; background: white; -webkit-border-radius: 12px; -moz-border-radius: 12px;}
 
