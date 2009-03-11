@@ -155,7 +155,9 @@
 		 * Returns an array of all allowed file extensions within the system
 		 */
 		public function getAllowedFileExtensions() {
-			return $this->unserializeUploadFileExtensions(UPLOAD_FILE_EXTENSIONS_ALLOWED);
+			$arr = $this->unserializeUploadFileExtensions(UPLOAD_FILE_EXTENSIONS_ALLOWED);
+			sort($arr);
+			return $arr;
 		}
 	}
 	

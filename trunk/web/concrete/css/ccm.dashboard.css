@@ -160,8 +160,8 @@ form#ccm-log-search input.ccm-input-text {padding: 2px}
 
 div.ccm-file-permissions-entity {padding-bottom: 10px; border-bottom: 1px dotted #aaa; margin-bottom: 10px}
 div.ccm-file-permissions-entity h2 {margin-bottom: 10px; border-bottom: 1px dotted #aaa; padding-bottom: 4px}
-div.ccm-file-permissions-entity th {text-align: left; width: 80px}
-div.ccm-file-permissions-entity td {width: 75px}
+div.ccm-file-permissions-entity th {text-align: left; vertical-align: top; width: 80px}
+div.ccm-file-permissions-entity td {vertical-align: top; padding-right: 30px}
 
 /* homepage modules */
 
