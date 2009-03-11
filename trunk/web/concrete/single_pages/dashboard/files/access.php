@@ -58,11 +58,20 @@
 			</tr>
 			<tr>
 				<th>&nbsp;</th>
-				<td colspan="3"><br/><strong><?=t('Allowed File Types')?></strong>
+				<td colspan="3"><br/>
 				
-				<div style="border: 1px solid #ddd; padding: 4px; height: 120px">
+				<div style="padding: 5px"><?=$form->checkbox('toggleCanAddExtension', 1)?>
+				<strong><?=t('Allowed File Types')?></strong></div>
+				
+				<div style="border: 1px solid #ddd; padding: 4px; height: 120px; overflow: auto">
 				<?
 				$extensions = $concrete_file->getAllowedFileExtensions();
+				foreach($extensions as $ext) {?>
+					
+					<div><?=$form->checkbox('canAddExtension[]', $ext)?> <?=$ext?></div>
+					
+				<?
+				}
 				?>
 				</div>
 				
