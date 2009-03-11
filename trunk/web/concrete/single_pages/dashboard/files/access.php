@@ -50,7 +50,7 @@
 				<td><?=$form->radio('canAdmin[]', 'NONE')?> <?=('None')?></td>
 				</td>
 			</tr>
-			<tr>
+			<tr class="ccm-file-access-add">
 				<th><?=t('Add')?></th>
 				<td><?=$form->radio('canAdd[]', 'ALL', true)?> <?=('All')?></td>
 				<td><?=$form->radio('canAdd[]', 'NONE')?> <?=('None')?></td>
@@ -58,21 +58,24 @@
 			</tr>
 			<tr>
 				<th>&nbsp;</th>
-				<td colspan="3"><br/>
+				<td colspan="3">
 				
-				<div style="padding: 5px"><?=$form->checkbox('toggleCanAddExtension', 1)?>
+				<div class="ccm-file-access-add-extensions" style="display: none; padding-top: 8px">
+				
+				<div style="border-top: 1px solid #cecece; border-left: 1px solid #cecece; border-right: 1px solid #cecece; background: #D3E4F0; padding: 4px"><?=$form->checkbox('toggleCanAddExtension', 1, true)?>
 				<strong><?=t('Allowed File Types')?></strong></div>
 				
-				<div style="border: 1px solid #ddd; padding: 4px; height: 120px; overflow: auto">
+				<div class="ccm-file-access-extensions" style="border: 1px solid #cecece; padding: 4px; height: 120px; overflow: auto">
 				<?
 				$extensions = $concrete_file->getAllowedFileExtensions();
 				foreach($extensions as $ext) {?>
 					
-					<div><?=$form->checkbox('canAddExtension[]', $ext)?> <?=$ext?></div>
+					<div><?=$form->checkbox('canAddExtension[]', $ext, true)?> <?=$ext?></div>
 					
 				<?
 				}
 				?>
+				</div>
 				</div>
 				
 				</td>
@@ -95,6 +98,23 @@
 	
 	$(function() {	
 		$("#ug-selector").dialog();	
+		$("tr.ccm-file-access-add input").click(function() {
+			var p = $(this).parents('div.ccm-file-permissions-entity')[0];
+			if ($(this).val() == 'CUSTOM') {
+				$(p).find('div.ccm-file-access-add-extensions').show();				
+			} else {
+				$(p).find('div.ccm-file-access-add-extensions').hide();				
+			}
+		});
+		$("input[name=toggleCanAddExtension]").click(function() {
+			var ext = $(this).parent().parent().find('div.ccm-file-access-extensions');
+			
+			if ($(this).attr('checked') == 1) {
+				ext.find('input').attr('checked', true);
+			} else {
+				ext.find('input').attr('checked', false);
+			}
+		});
 		ccm_setupGridStriping('ccm-file-permissions-grid');
 	});
 	
