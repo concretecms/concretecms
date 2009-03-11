@@ -100,43 +100,12 @@ class LoginController extends Controller {
 		$this->set('oa', $oa);		
 	}
 	
-	private function finishLogin() {
-		$u = new User();
-		if ($this->post('uMaintainLogin')) {
-			$u->setUserForeverCookie();
-		}
-		$rcID = $this->post('rcID');
-		$nh = Loader::helper('validation/numbers');
-		if ($nh->integer($rcID)) {
-			header('Location: ' . BASE_URL . DIR_REL . '/index.php?cID=' . $rcID);
-			exit;
-		}elseif( strlen($rcID) ){
-			//url redirect
-			header('Location: ' . $rcID );
-			exit;
-		}
-
-		$dash = Page::getByPath("/dashboard", "RECENT");
-		$dbp = new Permissions($dash);		
-		
-		Events::fire('on_user_login',$this);
-		if ($this->post('redirect') != '' && $this->isValidExternalUrl($this->post('redirect'))) {
-			//make double secretly sure there's no caching going on
-			header("Cache-Control: no-store, no-cache, must-revalidate");
-			header("Pragma: no-cache");
-			header('Expires: Fri, 30 Oct 1998 14:19:41 GMT'); //in the past		
-			$this->externalRedirect($this->post('redirect'));
-		}
-		else if ($dbp->canRead()) {
-			$this->redirect('/dashboard');
-		} else {
-			$this->redirect('/');
-		}
-	}
 
 	public function do_login() { 
 		$ip = Loader::helper('validation/ip');
 		$vs = Loader::helper('validation/strings');
+		
+		$loginData['success']=0;
 		
 		try {
 			if (!$ip->check()) {				
@@ -178,6 +147,9 @@ class LoginController extends Controller {
 						break;
 				}
 			} else {
+				$loginData['success']=1;
+				$loginData['msg']=t('Login Successful');
+			
 				if (OpenIDAuth::isEnabled() && $_SESSION['uOpenIDExistingUser'] > 0) {
 					$oa = new OpenIDAuth();
 					if ($_SESSION['uOpenIDExistingUser'] == $u->getUserID()) {
@@ -193,7 +165,7 @@ class LoginController extends Controller {
 				}
 			}
 
-			$this->finishLogin();
+			$loginData = $this->finishLogin($loginData);
 			
 		} catch(Exception $e) {
 			$ip->logSignupRequest();
@@ -201,11 +173,71 @@ class LoginController extends Controller {
 				$ip->createIPBan();
 			}
 			$this->error->add($e);
+			$loginData['error']=$e->getMessage();
+		}
+		
+		if( $_REQUEST['format']=='JSON' ){
+			$jsonHelper=Loader::helper('JSON'); 
+			echo $jsonHelper->encode($loginData);
+			die;
+		}	
+	}
+
+	protected function finishLogin( $loginData=array() ) {
+		$u = new User();
+		if ($this->post('uMaintainLogin')) {
+			$u->setUserForeverCookie();
+		}
+		$rcID = $this->post('rcID');
+		$nh = Loader::helper('validation/numbers');
+
+		//set redirect url
+		if ($nh->integer($rcID)) {
+			$loginData['redirectURL'] = BASE_URL . DIR_REL . '/index.php?cID=' . $rcID;
+		}elseif( strlen($rcID) ){
+			$loginData['redirectURL'] = $rcID;
+		}
+		
+		//full page login redirect (non-ajax login)
+		if( strlen($loginData['redirectURL']) && $_REQUEST['format']!='JSON' ){ 
+			header('Location: ' . $loginData['redirectURL']);
+			exit;	
+		}
+		
+		//not sure why there's this second redirect approach, but oh well...
+		if ($this->post('redirect') != '' && $this->isValidExternalUrl($this->post('redirect'))) {
+			$loginData['redirectURL']=$this->post('redirect');
+		}
+		
+		$dash = Page::getByPath("/dashboard", "RECENT");
+		$dbp = new Permissions($dash);		
+		
+		Events::fire('on_user_login',$this);
+		
+		//End JSON Login
+		if($_REQUEST['format']=='JSON') 
+			return $loginData;		
+		
+		//Full page login, standard redirection
+		if ($loginData['redirectURL']) {
+			//make double secretly sure there's no caching going on
+			header("Cache-Control: no-store, no-cache, must-revalidate");
+			header("Pragma: no-cache");
+			header('Expires: Fri, 30 Oct 1998 14:19:41 GMT'); //in the past		
+			$this->externalRedirect( $loginData['redirectURL'] );
+		}else if ($dbp->canRead()) {
+			$this->redirect('/dashboard');
+		} else {
+			$this->redirect('/');
 		}
 	}
-	
+
 	public function password_sent() {
-		$this->set('intro_msg', t('An email containing your password has been sent to your account address.'));
+		$this->set('intro_msg', $this->getPasswordSentMsg() );
+	}
+	
+	public function getPasswordSentMsg(){
+		return t('An email containing your password has been sent to your account address.');
 	}
 	
 	public function logout() {
@@ -229,6 +261,8 @@ class LoginController extends Controller {
 	}
 	
 	public function forgot_password() {
+		$loginData['success']=0;
+	
 		$vs = Loader::helper('validation/strings');
 		$em = $this->post('uEmail');
 		try {
@@ -256,13 +290,24 @@ class LoginController extends Controller {
 				}
 			}
 			$mh->load('forgot_password');
-			$mh->sendMail();
+			@$mh->sendMail();
 			
-			$this->redirect('/login', 'password_sent');
+			$loginData['success']=1;
+			$loginData['msg']=$this->getPasswordSentMsg();
 
 		} catch(Exception $e) {
 			$this->error->add($e);
+			$loginData['error']=$e->getMessage();
 		}
+		
+		if( $_REQUEST['format']=='JSON' ){
+			$jsonHelper=Loader::helper('JSON'); 
+			echo $jsonHelper->encode($loginData);
+			die;
+		}		
+		
+		if($loginData['success']==1)
+			$this->redirect('/login', 'password_sent');	
 	}
 	
 }
