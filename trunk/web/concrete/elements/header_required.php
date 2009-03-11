@@ -78,6 +78,15 @@ $this->addHeaderItem($html->javascript('swfobject.js'));
 $this->addHeaderItem($html->javascript('ccm.base.js'));
 $this->addHeaderItem($html->css('ccm.base.css'));
 
+/* 
+//Login Popup Requirements 
+$this->addHeaderItem($html->javascript('ccm.popup_login.js'));
+$this->addHeaderItem($html->javascript('jquery.form.js'));
+$this->addHeaderItem($html->javascript('ccm.dialog.js'));
+$this->addHeaderItem($html->css('ccm.dialog.css'));
+$this->addHeaderItem($html->css('ccm.popup_login.css'));
+*/ 
+
 $favIconFID=intval(Config::get('FAVICON_FID'));
 if($favIconFID && file_exists(DIR_BASE.'/favicon.ico')){
 	Loader::block('library_file');

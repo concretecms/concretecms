@@ -26,6 +26,8 @@ class RegisterController extends Controller {
 	}
 	
 	public function do_register() {
+	
+		$registerData['success']=0;
 		
 		$e = Loader::helper('validation/error');
 		$ip = Loader::helper('validation/ip');		
@@ -117,7 +119,10 @@ class RegisterController extends Controller {
 				if(defined('USER_REGISTRATION_APPROVAL_REQUIRED') && USER_REGISTRATION_APPROVAL_REQUIRED) {
 					$ui = UserInfo::getByID($u->getUserID());
 					$ui->deactivate();
-					$this->redirect('/register', 'register_pending', $rcID);
+					//$this->redirect('/register', 'register_pending', $rcID);
+					$redirectMethod='register_pending';
+					$registerData['msg']=$this->getRegisterPendingMsg();
+					
 				// now we check whether we need to validate this user's email address
 				} elseif (defined("USER_VALIDATE_EMAIL")) {
 					if (USER_VALIDATE_EMAIL > 0) {
@@ -130,14 +135,22 @@ class RegisterController extends Controller {
 						$mh->load('validate_user_email');
 						$mh->sendMail();
 
-						$this->redirect('/register', 'register_success_validate', $rcID);																
+						//$this->redirect('/register', 'register_success_validate', $rcID);
+						$redirectMethod='register_success_validate';
+						$registerData['msg']= join('<br><br>',$this->getRegisterSuccessValidateMsgs());
 					}
 				}
 				
 				if (!$u->isError()) {
-					$this->redirect('/register', 'register_success', $rcID);																
+					//$this->redirect('/register', 'register_success', $rcID);
+					$redirectMethod='register_success';	
+					$registerData['msg']=$this->getRegisterSuccessMsg();															
 				}
 				
+				$registerData['success']=1;
+				
+				if($_REQUEST['format']!='JSON')
+					$this->redirect('/register', $redirectMethod, $rcID);				
 			}
 		} else {
 			$ip->logSignupRequest();
@@ -145,24 +158,48 @@ class RegisterController extends Controller {
 				$ip->createIPBan();
 			}		
 			$this->set('error', $e);
+			$registerData['errors'] = $e->getList();
 		}
 		
+		if( $_REQUEST['format']=='JSON' ){
+			$jsonHelper=Loader::helper('JSON'); 
+			echo $jsonHelper->encode($registerData);
+			die;
+		}		
 	}
 	
 	public function register_success_validate($rcID = 0) {
 		$this->set('rcID', $rcID);
 		$this->set('success', 'validate');
+		$this->set('successMsg', $this->getRegisterSuccessValidateMsgs() );
 	}
 	
 	public function register_success($rcID = 0) {
 		$this->set('rcID', $rcID);
 		$this->set('success', 'registered');
+		$this->set('successMsg', $this->getRegisterSuccessMsg() );
 	}
 
 	public function register_pending() {
 		$this->set('rcID', $rcID);
 		$this->set('success', 'pending');
+		$this->set('successMsg', $this->getRegisterPendingMsg() );
 	}
+	
+	public function getRegisterSuccessMsg(){
+		return t('Your account has been created, and you are now logged in.');
+	}
+	
+	public function getRegisterSuccessValidateMsgs(){
+		$msgs=array();
+		$msgs[]= t('You are registered but you need to validate your email address. Some or all functionality on this site will be limited until you do so.');
+		$msgs[]= t('An email has been sent to your email address. Click on the URL contained in the email to validate your email address.');
+		return $msgs;
+	}
+	
+	public function getRegisterPendingMsg(){
+		return t('You are registered but a site administrator must review your account, you will not be able to login until your account has been approved.');
+	}	
 }
 
 ?>

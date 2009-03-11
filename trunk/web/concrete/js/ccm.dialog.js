@@ -161,6 +161,7 @@ jQuery.fn.dialog.hideLoader = function() {
 }
 
 jQuery.fn.dialog.showLoader = function(fnd) {
+	if (typeof(imgLoader)=='undefined' || !imgLoader || !imgLoader.src) return false; 
 	if ($('#ccm-dialog-loader').length < 1) {
 		$("body").append("<img id='ccm-dialog-loader' src='"+imgLoader.src+"' />");//add loader to the page
 	}
@@ -317,6 +318,7 @@ jQuery.fn.dialog.loaderImage = CCM_IMAGE_PATH + "/throbber_white_32.gif";
 var ccm_initialHeaderDeactivated;
 var ccm_initialOverlay;
 var ccm_dialogCanDrag = (typeof($.fn.draggable) == 'function' && (!$.browser.safari));
+var imgLoader;
 
 $(document).ready(function(){   
 	imgLoader = new Image();// preload image
