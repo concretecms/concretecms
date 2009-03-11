@@ -50,8 +50,8 @@ defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 			<tr>
 				<td class="header"><a href="<?=$surveyList->getSortByURL('question', 'asc')?>"><?=t('Name')?></a></td>
 				<td class="header"><a href="<?=$surveyList->getSortByURL('cvName', 'asc')?>"><?=t('Found on Page')?></a></td>
-				<td class="header"><a href="<?=$surveyList->getSortByURL('lastResponse', 'asc')?>"><?=t('Last Response')?></a></td>
-				<td class="header"><a href="<?=$surveyList->getSortByURL('numberOfResponses', 'asc')?>"><?=t('Number of Responses')?></a></td>
+				<td class="header"><a href="<?=$surveyList->getSortByURL('lastResponse', 'desc')?>"><?=t('Last Response')?></a></td>
+				<td class="header"><a href="<?=$surveyList->getSortByURL('numberOfResponses', 'desc')?>"><?=t('Number of Responses')?></a></td>
 			</tr>
 			<? foreach($surveys as $survey) { ?>
 					<tr>

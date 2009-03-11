@@ -2,33 +2,14 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::block('survey');
 
-// Custom sorting function to sort by number of responses
-
-// This is not necessary
-/*
-function responseSort($a, $b) {
-	if ($a['numberOfResponses'] == $b['numberOfResponses']) {
-		return 0;
-	}
-	
-	// Check the order we need to sort
-	if ($_GET['dir'] == 'asc') {
-		return ($a['numberOfResponses'] < $b['numberOfResponses']) ? -1 : 1;
-	}
-	else {
-		return ($a['numberOfResponses'] < $b['numberOfResponses']) ? 1 : -1;
-	}
-}
-*/
-
 class DashboardReportsSurveysController extends Controller {
 	
-	public function viewDetail($bID = 0) {
-		// If a valid bID is set, get the corresponding data
-		if ($bID > 0) {
-			$this->getSurveyDetails($bID);
-			$this->getChart($bID);
-		} else { // Otherwise, redirect the page
+	public function viewDetail($bID = 0, $cID = 0) {
+		// If a valid bID and cID are set, get the corresponding data
+		if ($bID > 0 && $cID > 0) {
+			$this->getSurveyDetails($bID, $cID);
+			$this->getChart($bID, $cID);
+		} else { // Otherwise, redirect the page to overview
 			$this->redirect('/dashboard/reports/surveys');
 		}
 	}
@@ -40,53 +21,12 @@ class DashboardReportsSurveysController extends Controller {
 		$sl = new SurveyList();
 		$slResults = $sl->getPage();
 		
-		// Build array of information we need
-		/*
-		$surveys = array();
-		
-		foreach ($slResults as $row) {
-			// Store bID, Name, and Found on Page
-			$surveys[$row['bID']]['bID'] = $row['bID'];
-			$surveys[$row['bID']]['name'] = $row['question'];
-			$surveys[$row['bID']]['foundOnPage'] = $row['cvName'];
-			
-			// Get last response time
-			$sl2 = new SurveyList();
-			$sl2->getLastResponseTime($row['bID']);
-			$slResults2 = $sl2->getPage();
-			
-			// Format last response time into a more readable format
-			if ($row2 = $slResults2) {
-				$surveys[$row['bID']]['lastResponse'] = $this->formatDate($row2[0]['max(timestamp)']);
-			}
-			else {
-				$surveys[$row['bID']]['lastResponse'] = 'None';
-			}
-			
-			// Reset variable (safeguard)
-			$row2 = null;
-			
-			// Get number of responses
-			$sl2->getNumberOfResponses($row['bID']);
-			if ($row2 = $sl2->getPage()) {
-				$surveys[$row['bID']]['numberOfResponses'] = $row2[0]['count(*)'];
-			}
-			else {
-				$surveys[$row['bID']]['numberOfResponses'] = 0;
-			}
-		}
-		
-		// Reorganize array if the sort mode is "Number of Responses"
-		if ($_GET['sortBy'] == 'numberOfResponses') {			
-			usort($surveys, "responseSort");
-		}
-		*/
 		// Store data in variable stored in larger scope
 		$this->set('surveys', $slResults);	
 		$this->set('surveyList', $sl);
 	}	
 	
-	public function getSurveyDetails($bID) {
+	public function getSurveyDetails($bID, $cID) {
 		$bID = intval($bID);
 		
 		// Prepare the database query
@@ -94,7 +34,7 @@ class DashboardReportsSurveysController extends Controller {
 		
 		// Load the data from the database
 		$sl = new SurveyList;
-		$sl->getSurveyDetails($bID);
+		$sl->getSurveyDetails($bID, $cID);
 		$slResults = $sl->getPage();
 		
 		// Build array of information we need
@@ -110,7 +50,7 @@ class DashboardReportsSurveysController extends Controller {
 		
 		// Get the current survey question
 		$sl = new SurveyList;
-		$sl->getSurveyQuestion($bID);
+		$sl->getSurveyQuestion($bID, $cID);
 		$slResults = $sl->getPage();
 		if ($row = $slResults) {
 			$current_curvey = $row[0]['question'];
@@ -124,16 +64,17 @@ class DashboardReportsSurveysController extends Controller {
 		$this->set('current_survey', $current_curvey);
 	}
 	
-	private function getChart($bID) {
+	private function getChart($bID, $cID) {
 		// Prepare the database query
 		$db = Loader::db();
 		
 		$bID = intval($bID);
+		$cID = intval($cID);
 		
 		// Get all available options
 		$options = array();
 		$sl = new SurveyList;
-		$sl->getSurveyOptions($bID);
+		$sl->getSurveyOptions($bID, $cID);
 		$slResults = $sl->getPage();
 		$i = 0;
 		foreach ($slResults as $row) {
@@ -148,7 +89,7 @@ class DashboardReportsSurveysController extends Controller {
 		$i = 0;
 		foreach ($options as $option) {
 			$sl = new SurveyList;
-			$sl->getOptionChosenCount($option['id'], $bID);
+			$sl->getOptionChosenCount($option['id'], $bID, $cID);
 			$slResults = $sl->getPage();
 			if ($row = $slResults[0]) {
 				$options[$i]['amount'] = $row['count(*)'];
@@ -224,69 +165,60 @@ class SurveyList extends DatabaseItemList {
 		$this->filter(false, 'CollectionVersions.cID = CollectionVersionBlocks.cID');
 		$this->filter(false, 'CollectionVersionBlocks.cvID = CollectionVersionBlocks.cvID');
 		$this->filter(false, 'CollectionVersions.cvIsApproved = 1');
-		
-		// Parse GET parameter so we're not passing a GET parameter directly into a query
-		$direction = ($_GET['dir'] == 'asc') ? 'asc' : 'desc';
-		$this->userPostQuery .= 'group by bID, CollectionVersions.cID';
-		
-		/*
-		switch ($_GET['sortBy']) {
-			case 'name':
-				$this->sortBy('btSurvey.question', $direction);
-				break;
-			// "Number of Responses" case handled back in invoking function
-			default:
-				$this->sortBy('btSurvey.bID', $direction);
-				break;
-		}*/
-		
+		$this->userPostQuery .= 'group by btSurvey.bID, CollectionVersions.cID';
 	}
 	
-	public function getLastResponseTime($bID) {
-		$this->setQuery('select max(timestamp) from btSurveyResults');
-		$this->filter('bID', intval($bID), '=');
+	public function getLastResponseTime($bID, $cID) {
+		$this->setQuery('select max(timestamp) from btSurveyResults, btSurvey, CollectionVersions, CollectionVersionBlocks');
+		$this->filter('btSurveyResults.bID', intval($bID), '=');
+		$this->filter('CollectionVersionBlocks.cID', intval($cID), '=');
 	}
 	
-	public function getNumberOfResponses($bID) {
-		$this->setQuery('select count(*) from btSurveyResults');
-		$this->filter('bID', intval($bID), '=');	
+	public function getNumberOfResponses($bID, $cID) {
+		$this->setQuery('select count(*) from btSurveyResults, btSurvey, CollectionVersions, CollectionVersionBlocks');
+		$this->filter('btSurveyResults.bID', intval($bID), '=');	
+		$this->filter('CollectionVersionBlocks.cID', intval($cID), '=');
 	}
 	
-	public function getSurveyDetails($bID) {
+	public function getSurveyDetails($bID, $cID) {
 		$this->setQuery(
 		'select ' .
 			'btSurveyOptions.optionName, ipAddress, timestamp, Users.uName ' .
 		 'from ' .
-			'btSurveyResults, Users, btSurveyOptions ');
+			'btSurveyResults, Users, btSurveyOptions, btSurvey, CollectionVersions, CollectionVersionBlocks');
 		$this->filter(false, 'Users.uID = btSurveyResults.uID');
 		$this->filter(false, 'btSurveyResults.optionID = btSurveyOptions.optionID');
-		$this->filter(false, 'btSurveyResults.bID = ' . intval($bID));	
+		$this->filter('btSurveyResults.bID', intval($bID), '=');	
+		$this->filter('CollectionVersionBlocks.cID', intval($cID), '=');
 		$this->sortBy('timestamp', 'desc');
 	}
 	
-	public function getSurveyQuestion($bID) {
-		$this->setQuery('select question from btSurvey');
-		$this->filter('bID', intval($bID), '=');	
+	public function getSurveyQuestion($bID, $cID) {
+		$this->setQuery('select question from btSurvey, CollectionVersions, CollectionVersionBlocks');
+		$this->filter('btSurvey.bID', intval($bID), '=');
+		$this->filter('CollectionVersionBlocks.cID', intval($cID), '=');	
 	}
 	
-	public function getSurveyOptions($bID) {
+	public function getSurveyOptions($bID, $cID) {
 		$this->setQuery(
 			'select ' .
 				'optionName, optionID ' . 
 			'from ' . 
-				'btSurveyOptions');
-		$this->filter('bID', intval($bID), '=');
+				'btSurveyOptions, btSurvey, CollectionVersions, CollectionVersionBlocks');
+		$this->filter('btSurveyOptions.bID', intval($bID), '=');
+		$this->filter('CollectionVersionBlocks.cID', intval($cID), '=');
 		$this->sortBy('displayOrder');
 	}
 	
-	public function getOptionChosenCount($optionID, $bID) {
+	public function getOptionChosenCount($optionID, $bID, $cID) {
 		$this->setQuery(
 			'select '.
 				'count(*) ' . 
 			'from ' .
-				'btSurveyResults ');
-		$this->filter('optionID', intval($optionID), '=');
-		$this->filter('bID', intval($bID), '=');
+				'btSurveyResults, btSurvey, CollectionVersions, CollectionVersionBlocks');
+		$this->filter('btSurveyResults.optionID', intval($optionID), '=');
+		$this->filter('btSurveyResults.bID', intval($bID), '=');
+		$this->filter('CollectionVersionBlocks.cID', intval($cID), '=');
 	}
 }
 
