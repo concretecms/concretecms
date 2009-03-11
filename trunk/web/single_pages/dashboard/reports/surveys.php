@@ -57,7 +57,7 @@ defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 					<tr>
 						<td><a href="<?=$this->action('viewDetail', $survey['bID'], $survey['cID'])?>"><?=$survey['question'] ?></a></td>
 						<td><?=$survey['cvName'] ?></td>
-						<td><?=$survey['lastResponse'] ?></td>
+						<td><?=formatDate($survey['lastResponse']) ?></td>
 						<td><?=$survey['numberOfResponses'] ?></td>
 					</tr>
 				<? }

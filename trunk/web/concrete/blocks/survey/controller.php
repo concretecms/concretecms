@@ -178,6 +178,79 @@ class SurveyBlockController extends BlockController {
 			AND bID = {$this->bID} ";
 		$db->query($query);
 	}	
+	
+	public function displayChart($bID, $cID) {
+		// Prepare the database query
+		$db = Loader::db();
+		
+		// Get all available options
+		$options = array();
+		$v = array(intval($bID));
+		$q = 'select optionID, optionName from btSurveyOptions where bID = ? order by displayOrder asc';
+		$r = $db->Execute($q, $v);
+		
+		$i = 0;
+		while ($row = $r->fetchRow()) {
+			$options[$i]['name'] = $row['optionName'];
+			$options[$i]['id'] = $row['optionID'];
+			$i++;
+		}
+		
+		// Get chosen count for each option
+		$total_results = 0;
+		$i = 0;
+		foreach ($options as $option) {
+			$v = array($option['id'], intval($bID), intval($cID));
+			$q = 'select count(*) from btSurveyResults where optionID = ? and bID = ? and cID = ?';
+			$r = $db->Execute($q, $v);
+			
+			if ($row = $r->fetchRow()) {
+				$options[$i]['amount'] = $row['count(*)'];
+				$total_results += $row['count(*)'];
+			}
+			$i++;
+		}
+		
+		if ($total_results <= 0) { 
+			$chart_options = '<div style="text-align: center; margin-top: 15px;">No data is available yet.</div>';
+			$this->set('chart_options', $chart_options);
+			return;
+		}		
+		
+		// Convert option counts to percentages, initiate colors
+		$availableChartColors=array('00CCdd','cc3333','330099','FF6600','9966FF','dd7700','66DD00','6699FF','FFFF33','FFCC33','00CCdd','cc3333','330099','FF6600','9966FF','dd7700','66DD00','6699FF','FFFF33','FFCC33');
+		$percentage_value_string = '';
+		foreach ($options as $option) {
+			$option['amount'] /= $total_results;
+			$percentage_value_string .= round($option['amount'], 3) . ',';
+			$graphColors[]=array_pop($availableChartColors);
+		}
+		
+		// Strip off trailing comma
+		$percentage_value_string = substr_replace($percentage_value_string,'',-1);
+		
+		// Get Google Charts API image
+		$img_src = '<img border="" src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $percentage_value_string . '&chs=120x120&chco=' . join(',',$graphColors) . '" />';
+		$this->set('pie_chart', $img_src);
+		
+		// Build human-readable option list
+		$i = 1;
+		$chart_options = '<table style="margin-left: 20px; float: left; width: 130px;">';
+		foreach($options as $option) {
+			$chart_options .= '<tr>'; 
+			$chart_options .= '<td width="55px" class="note" style="white-space:nowrap">';
+			$chart_options .= '<div class="surveySwatch" style="background:#' . $graphColors[$i - 1] . '"></div>';
+			$chart_options .= '&nbsp;' . ($option['amount'] > 0) ? round($option['amount'] / $total_results * 100) : 0;
+			$chart_options .= '%</td>';
+			$chart_options .= '<td>'; 
+			$chart_options .= '<strong>' . $options[$i - 1]['name'] . '</strong>';
+			$chart_options .= '</td>';
+			$chart_options .= '</tr>';
+			$i++;
+		}
+		$chart_options .= '</table>';
+		$this->set('chart_options', $chart_options);
+	}
 }
 
 
