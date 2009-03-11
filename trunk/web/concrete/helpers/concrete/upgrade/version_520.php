@@ -32,7 +32,7 @@ class ConcreteUpgradeVersion520Helper {
 		}
 		
 		$columns = $db->MetaColumns('btFormQuestions');
-		if ($columns['qID'] == false) {
+		if ($columns['QID'] == false) {
 			try{
 				$db->query('ALTER TABLE btFormQuestions CHANGE msqID msqID INT(11) UNSIGNED NOT NULL '); 
 				$db->query('ALTER TABLE btFormQuestions DROP PRIMARY KEY'); 
