@@ -61,11 +61,14 @@ class ConcreteUpgradeVersion520Helper {
 		}
 		
 		// now we populate files
-		$r = $db->Execute("select btFile.*, Blocks.bDateAdded from btFile inner join Blocks on btFile.bID = Blocks.bID");
-		while ($row = $r->fetchRow()) {
-			$v = array($row['bID'], 1, $row['filename'], null, $row['origfilename']);
-			$db->Execute("insert into FileVersions (fID, fvID, fvFilename, fvPrefix, fvTitle) values (?, ?, ?, ?, ?)", $v);	
-			$db->Execute("insert into Files (fID, fDateAdded) values (?, ?)", array($row['bID'], $row['bDateAdded']));
+		$num = $db->GetOne("select count(*) from Files");
+		if ($num < 1) {
+			$r = $db->Execute("select btFile.*, Blocks.bDateAdded from btFile inner join Blocks on btFile.bID = Blocks.bID");
+			while ($row = $r->fetchRow()) {
+				$v = array($row['bID'], 1, $row['filename'], null, $row['origfilename']);
+				$db->Execute("insert into FileVersions (fID, fvID, fvFilename, fvPrefix, fvTitle) values (?, ?, ?, ?, ?)", $v);	
+				$db->Execute("insert into Files (fID, fDateAdded) values (?, ?)", array($row['bID'], $row['bDateAdded']));
+			}
 		}
 
 		Loader::model('single_page');
@@ -74,13 +77,16 @@ class ConcreteUpgradeVersion520Helper {
 		if (!$p->isError()) {
 			$p->delete();
 		}
-		
-		$d2 = SinglePage::add('/dashboard/files');
-		$d2a = SinglePage::add('/dashboard/files/search');
-		$d2b = SinglePage::add('/dashboard/files/attributes');
-		$d2c = SinglePage::add('/dashboard/files/sets');
-		$d2d = SinglePage::add('/dashboard/files/access');						
-		$d2->update(array('cName'=>t('File Manager'), 'cDescription'=>t('All documents and images.')));
+
+		$p = Page::getByPath('/dashboard/files');
+		if ($p->isError()) {
+			$d2 = SinglePage::add('/dashboard/files');
+			$d2a = SinglePage::add('/dashboard/files/search');
+			$d2b = SinglePage::add('/dashboard/files/attributes');
+			$d2c = SinglePage::add('/dashboard/files/sets');
+			$d2d = SinglePage::add('/dashboard/files/access');						
+			$d2->update(array('cName'=>t('File Manager'), 'cDescription'=>t('All documents and images.')));
+		}
 	}
 	
 }
