@@ -23,12 +23,25 @@ class ConcreteUpgradeVersion520Helper {
 	public function prepare() {
 		$db = Loader::db();
 		$columns = $db->MetaColumns('PagePaths');
-		if ($columns['PPID'] != false) {
-			return true;
+		if ($columns['PPID'] == false) {
+
+			$db->Execute('alter table PagePaths change cID ppID int unsigned not null auto_increment');
+			$db->Execute('alter table PagePaths add column cID int unsigned not null default 0');
+			$db->Execute('update PagePaths set cID = ppID');
+
 		}
-		$db->Execute('alter table PagePaths change cID ppID int unsigned not null auto_increment');
-		$db->Execute('alter table PagePaths add column cID int unsigned not null default 0');
-		$db->Execute('update PagePaths set cID = ppID');
+		
+		$columns = $db->MetaColumns('btFormQuestions');
+		if ($columns['qID'] == false) {
+			try{
+				$db->query('ALTER TABLE btFormQuestions CHANGE msqID msqID INT(11) UNSIGNED NOT NULL '); 
+				$db->query('ALTER TABLE btFormQuestions DROP PRIMARY KEY'); 
+			}catch(Exception $e){ }
+			try{
+				$db->query('ALTER TABLE btFormQuestions ADD qID INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY '); 			
+			}catch(Exception $e){ } 
+
+		}
 	}
 	
 	public function run() {
@@ -36,13 +49,6 @@ class ConcreteUpgradeVersion520Helper {
 		$tables = $db->MetaTables('TABLES');
 
 		if (in_array('btFormQuestions', $tables)) {
-			try{
-				$db->query('ALTER TABLE btFormQuestions CHANGE msqID msqID INT(11) UNSIGNED NOT NULL '); 
-				$db->query('ALTER TABLE btFormQuestions DROP PRIMARY KEY'); 			
-			}catch(Exception $e){ }
-			try{
-				$db->query('ALTER TABLE btFormQuestions ADD qID INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY '); 			
-			}catch(Exception $e){ } 
 			
 			//$db->CacheFlush();
 			//$db->setDebug(true);
