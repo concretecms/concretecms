@@ -125,7 +125,7 @@
 		 * @param array $types
 		 * @return string
 		 */	
-		public function serializeUploadFileExtentions($types){
+		public function serializeUploadFileExtensions($types){
 			$serialized = '';
 			$types = preg_replace(self::REGEX_INVALID_EXTENSION_CHARS,'',$types);
 			foreach ($types as $type) {				
@@ -144,13 +144,19 @@
 		 * @param string $types
 		 * @return array
 		 */					
-		public function unSerializeUploadFileExtentions($types){
+		public function unSerializeUploadFileExtensions($types){
 			//split by semi-colon
 			$types = preg_split('{;}',$types,null,PREG_SPLIT_NO_EMPTY);
 			$types = preg_replace(self::REGEX_INVALID_EXTENSION_CHARS,'',$types);
 			return $types;
 		}		
-	
+		
+		/** 
+		 * Returns an array of all allowed file extensions within the system
+		 */
+		public function getAllowedFileExtensions() {
+			return $this->unserializeUploadFileExtensions(UPLOAD_FILE_EXTENSIONS_ALLOWED);
+		}
 	}
 	
 ?>

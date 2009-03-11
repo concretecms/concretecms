@@ -502,7 +502,7 @@ class InstallController extends Controller {
 						$examplesPage->addBlock($bt, "Main", $data);
 						
 						// add javascript slideshow page beneath examples
-						$data['name'] = 'Image Slideshow';
+						$data['name'] = t('Image Slideshow');
 						$example0Page = $examplesPage->add($dt, $data);
 						$data['content']  = t("<h1>Image Slideshow</h1><p>Check out the image block above. It's actually multiple images setup as a JavaScript slideshow.");
 						$example0Page->addBlock($bt, "Main", $data);

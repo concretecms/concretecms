@@ -158,6 +158,11 @@ form#ccm-log-search {position: absolute; top: -22px; font-size: 10px; right: 10p
 form#ccm-log-search input {font-size: 10px;}
 form#ccm-log-search input.ccm-input-text {padding: 2px}
 
+div.ccm-file-permissions-entity {padding-bottom: 10px; border-bottom: 1px dotted #aaa; margin-bottom: 10px}
+div.ccm-file-permissions-entity h2 {margin-bottom: 10px; border-bottom: 1px dotted #aaa; padding-bottom: 4px}
+div.ccm-file-permissions-entity th {text-align: left; width: 80px}
+div.ccm-file-permissions-entity td {width: 75px}
+
 /* homepage modules */
 
 div#ccm-module-wrapper {min-width: 778px}
@@ -337,36 +342,69 @@ td.ccm-dashboard-inner-gutter div {width: 20px}
 div.ccm-dashboard-inner-leftcol table.grid-list{width:100%;}
 
 div#displayOptions {
+
 	margin: 0 0 7px 0;
+
 }
+
+
 
 div#sortOptions {
+
 	display: inline;
+
 	margin-left: 20px;
+
 }
+
+
 
 div.surveyDetails {
+
 	height: auto;
+
 	margin: 0px;
+
 	padding: 0px;
+
 	width: 100%;
+
 }
+
+
 
 div.surveyOverview {
+
 	float: left;
+
 	height: auto;
+
 	margin: 0px;
+
 	padding: 0px;
+
 	width: 60%;
+
 }
 
+
+
 div.surveySwatch {
+
 	background: #999999 none repeat scroll 0 50%;
+
 	border: 1px solid #666666;
+
 	float: left;
+
 	font-size: 1px;
+
 	height: 10px;
+
 	line-height: 1px;
+
 	margin: 3px 4px 0 0;
+
 	width: 10px;
+
 }
