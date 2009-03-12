@@ -144,7 +144,8 @@ class RegisterController extends Controller {
 				if (!$u->isError()) {
 					//$this->redirect('/register', 'register_success', $rcID);
 					$redirectMethod='register_success';	
-					$registerData['msg']=$this->getRegisterSuccessMsg();															
+					$registerData['msg']=$this->getRegisterSuccessMsg();
+					$registerData['uID']=intval($u->uID);													
 				}
 				
 				$registerData['success']=1;
