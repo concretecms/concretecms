@@ -53,10 +53,14 @@ $registerFormSubmitURL=View::url('/register', 'do_register');
 				<label id="uMaintainLoginLabel" for="uMaintainLogin"><?=t('Remember Me')?></label> 			
 			</div>
 			
+			<div class="ccm-spacer"></div>
+			
 			<?=$form->submit('submit', t('Sign In') . ' &gt;')?>
 			
 			<?=$form->hidden('rcID', $rcID); ?>	
 		</form> 
+		
+		<div class="ccm-spacer"></div>
 		
 		<div class="" style="margin-top:16px">
 			<a onClick="ccmPopupLogin.toggleForgot()"><?=t('Forgot your password?')?></a>
@@ -83,13 +87,17 @@ $registerFormSubmitURL=View::url('/register', 'do_register');
 			
 			<input name="format" type="hidden" value="JSON">
 			
-			<label for="uEmail"><?=t('Email Address')?></label><br/>
+			<label for="uEmail"><?=t('Email Address')?></label> 
 			<?=$form->hidden('rcID', $rcID); ?>
 			<input type="text" name="uEmail" value="" class="ccm-input-text" >
+		 
+		 	<div class="ccm-spacer"></div>
 		 
 			<?=$form->submit('submit', t('Reset and Email Password') . ' &gt;')?>
 			
 		</form>
+		
+		<div class="ccm-spacer"></div>
 		
 		<div style="margin-top:16px"><a onClick="ccmPopupLogin.toggleForgot()"><?=t('&laquo; Return to login')?></a></div>
 	
@@ -149,11 +157,15 @@ $registerFormSubmitURL=View::url('/register', 'do_register');
 				<? } ?>
 			<? } ?>
 		
+			<div class="ccm-spacer"></div>
+		
 			<?=$form->submit('register', t('Register'))?>
 			
 			<?=$form->hidden('rcID', $rcID); ?>
 		
 		</form>	
+		
+		<div class="ccm-spacer"></div>
 		
 		<div style="margin-top:16px"><a onClick="ccmPopupLogin.toggleRegister()"><?=t('&laquo; Return to login')?></a></div>
 	

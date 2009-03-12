@@ -43,14 +43,8 @@ var ccmPopupLogin = {
 						if(jsObj.error) ccmPopupLogin.loginMsg(jsObj.error,1); 
 						else ccmPopupLogin.loginMsg('Unknown Error: Login Failed.',1)
 					}else{ 
-						ccmPopupLogin.loginMsg('<div class="success">'+jsObj.msg+'</div>');
-						if(typeof(ccmPopupLogin.loggedInFunction)=='function') 
-							ccmPopupLogin.loggedInFunction();
-						if(jsObj.redirectURL.toLowerCase()=='refresh' || jsObj.redirectURL.toLowerCase()=='reload'){
-							window.location.href = unescape(window.location.pathname); //reload() for old browsers
-						}else if(jsObj.redirectURL){
-							window.location=jsObj.redirectURL;
-						}
+						ccmPopupLogin.loginMsg('<div class="success">'+jsObj.msg+'</div>'); 
+						ccmPopupLogin.postLoginAction(jsObj);
 					}
 				}
 			});	
@@ -59,6 +53,17 @@ var ccmPopupLogin = {
 		}
 		return false;
 	},
+	
+	postLoginAction:function(jsObj){
+		ccmPopupLogin.uID=(jsObj.uID>0)?jsObj.uID:0; 
+		if(typeof(ccmPopupLogin.loggedInFunction)=='function' && ccmPopupLogin.uID>0) 
+			ccmPopupLogin.loggedInFunction();
+		if(typeof(jsObj.redirectURL)!='undefined' && (jsObj.redirectURL.toLowerCase()=='refresh' || jsObj.redirectURL.toLowerCase()=='reload')){
+			window.location.href = unescape(window.location.pathname); //reload() for old browsers
+		}else if(typeof(jsObj.redirectURL)!='undefined'){
+			window.location=jsObj.redirectURL;
+		}
+	}, 
 	
 	loginMsg:function(msg,isError){
 		var el=$('#ccm-popupLoginMsg');
@@ -99,7 +104,7 @@ var ccmPopupLogin = {
 			
 			var prw = $('#ccm-popupRegisterWrap');
 			if(prw.css('display')!='none') 
-				plw.fadeOut( 500, function(){ $(this).css('display','none'); } 	);			
+				prw.fadeOut( 500, function(){ $(this).css('display','none'); } 	);			
 		}
 	},
 	
@@ -196,10 +201,10 @@ var ccmPopupLogin = {
 					if(!jsObj.success){
 						if(jsObj.errors && jsObj.errors.length>0){ 
 							ccmPopupLogin.registerMsg('<div>'+jsObj.errors.join('</div> <div>')+'</div>',1);							
-						}
-						
+						} 
 					}else{ 
 						ccmPopupLogin.registerMsg('<div class="success">'+jsObj.msg+'</div>'); 
+						ccmPopupLogin.postLoginAction(jsObj);
 					}
 				}
 			});	

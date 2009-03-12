@@ -147,8 +147,7 @@ class LoginController extends Controller {
 						break;
 				}
 			} else {
-				$loginData['success']=1;
-				$loginData['msg']=t('Login Successful');
+
 			
 				if (OpenIDAuth::isEnabled() && $_SESSION['uOpenIDExistingUser'] > 0) {
 					$oa = new OpenIDAuth();
@@ -163,6 +162,10 @@ class LoginController extends Controller {
 						throw new Exception(t('This account does not match the email address provided.'));
 					}
 				}
+				
+				$loginData['success']=1;
+				$loginData['msg']=t('Login Successful');	
+				$loginData['uID'] = intval($u->getUserID());			
 			}
 
 			$loginData = $this->finishLogin($loginData);
