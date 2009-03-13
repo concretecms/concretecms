@@ -5,7 +5,8 @@ $ah = Loader::helper('concrete/interface');
 ?>
 <style>
 #ccm-slideshowBlock-imgRows a{cursor:pointer}
-#ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow{margin-bottom:16px;clear:both;padding:7px;background-color:#eee}
+#ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow,
+#ccm-slideshowBlock-fsRow {margin-bottom:16px;clear:both;padding:7px;background-color:#eee}
 #ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow a.moveUpLink{ display:block; background:url(<?=DIR_REL?>/concrete/images/icons/arrow_up.png) no-repeat center; height:10px; width:16px; }
 #ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow a.moveDownLink{ display:block; background:url(<?=DIR_REL?>/concrete/images/icons/arrow_down.png) no-repeat center; height:10px; width:16px; }
 #ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow a.moveUpLink:hover{background:url(<?=DIR_REL?>/concrete/images/icons/arrow_up_black.png) no-repeat center;}
@@ -17,6 +18,13 @@ $ah = Loader::helper('concrete/interface');
 	<table cellspacing="0" cellpadding="0" border="0" width="100%">
 	<tr>
 	<td>
+	<strong><?=t('Type')?></strong>
+	<select name="type" style="vertical-align: middle">
+		<option value="CUSTOM"<? if ($type == 'CUSTOM') { ?> selected<? } ?>><?=t('Custom Slideshow')?></option>
+		<option value="FILESET"<? if ($type == 'FILESET') { ?> selected<? } ?>><?=t('Pictures from File Set')?></option>
+	</select>
+	</td>
+	<td>
 	<strong><?=t('Playback')?></strong>
 	<select name="playback" style="vertical-align: middle">
 		<option value="ORDER"<? if ($playback == 'ORDER') { ?> selected<? } ?>><?=t('Display Order')?></option>
@@ -24,8 +32,12 @@ $ah = Loader::helper('concrete/interface');
 		<option value="RANDOM"<? if ($playback == 'RANDOM') { ?> selected<? } ?>><?=t('Completely Random')?></option>
 	</select>
 	</td>
-	<td style="text-align: right">
-	<?=$ah->button_js(t('Add Image'), 'SlideshowBlock.chooseImg()');?>
+	</tr>
+	<tr style="padding-top: 8px">
+	<td colspan="2">
+	<br />
+	<span id="ccm-slideshowBlock-chooseFS"><?=$ah->button_js(t('Choose File Set'), 'SlideshowBlock.chooseFileSet()', 'left');?></span>
+	<span id="ccm-slideshowBlock-chooseImg"><?=$ah->button_js(t('Add Image'), 'SlideshowBlock.chooseImg()', 'left');?></span>
 	</td>
 	</tr>
 	</table>
@@ -33,15 +45,31 @@ $ah = Loader::helper('concrete/interface');
 <br/>
 
 <div id="ccm-slideshowBlock-imgRows">
-<? foreach($images as $imgInfo){ ?> 
-<? $this->inc('image_row_include.php', array('imgInfo' => $imgInfo)); ?> 
+<? if ($fsID <= 0) { ?>
+<?   foreach($images as $imgInfo){ ?> 
+<?     $this->inc('image_row_include.php', array('imgInfo' => $imgInfo)); ?> 
+<?   } ?>
 <? } ?>
 </div>
 
+<?
+if ($fsID > 0) {
+	$fsInfo['fsID'] = $fsID;
+	$fsInfo['fsName'] = $fsName;
+	$fsInfo['duration']=$duration;
+	$fsInfo['fadeDuration']=$fadeDuration;
+} else {
+	$fsInfo['fsID']='0';
+	$fsInfo['fsName']='';
+	$fsInfo['duration']=$defaultDuration;
+	$fsInfo['fadeDuration']=$defaultFadeDuration;
+}
+$this->inc('fileset_row_include.php', array('fsInfo' => $fsInfo)); ?> 
 
+<div id="imgRowTemplateWrap" style="display:none">
 <?
 $imgInfo['slideshowImgId']='tempSlideshowImgId';
-$imgInfo['image_bID']='tempBID';
+$imgInfo['fID']='tempFID';
 $imgInfo['fileName']='tempFilename';
 $imgInfo['origfileName']='tempOrigFilename';
 $imgInfo['thumbPath']='tempThumbPath';
@@ -50,7 +78,7 @@ $imgInfo['fadeDuration']=$defaultFadeDuration;
 $imgInfo['groupSet']=0;
 $imgInfo['imgHeight']=tempHeight;
 $imgInfo['url']='';
+$imgInfo['class']='ccm-slideshowBlock-imgRow';
 ?>
-<div id="imgRowTemplateWrap" style="display:none">
 <? $this->inc('image_row_include.php', array('imgInfo' => $imgInfo)); ?> 
 </div>

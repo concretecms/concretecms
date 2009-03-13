@@ -7,7 +7,7 @@ class SlideshowBlockController extends BlockController {
 	protected $btTable = 'btSlideshow';
 	protected $btInterfaceWidth = "550";
 	protected $btInterfaceHeight = "400";
-	
+
 	public $defaultDuration = 5;	
 	public $defaultFadeDuration = 2;	
 	
@@ -27,29 +27,62 @@ class SlideshowBlockController extends BlockController {
 	public function getJavaScriptStrings() {
 		return array(
 			'choose-file' => t('Choose Image/File'),
-			'choose-min-2' => t('Please choose at least two images.')
+			'choose-min-2' => t('Please choose at least two images.'),
+			'choose-fileset' => t('Please choose a file set.')
 		);
 	}
 	
 	function __construct($obj = null) {		
 		parent::__construct($obj);
 		$this->db = Loader::db();
-		$this->loadImages();
+		if ($this->fsID == 0) {
+			$this->loadImages();
+		} else {
+			$this->loadFileSet();
+		}
+		$this->randomizeImages();	
 		$this->set('defaultFadeDuration', $this->defaultFadeDuration);
 		$this->set('defaultDuration', $this->defaultDuration);
+		$this->set('fadeDuration', $this->fadeDuration);
+		$this->set('duration', $this->duration);
+		$this->set('minHeight', $this->minHeight);
+		$this->set('fsID', $this->fsID);
+		$this->set('fsName', $this->getFileSetName());
 		$this->set('images', $this->images);
 		$this->set('playback', $this->playback);
 		$this->set('bID', $this->bID);			
 	}	
 	
-	public function getImages() {
-		return $this->images;
-	}
-			
 	function view(){
-		
 	}
 	
+	function getFileSetName(){
+		$sql = "SELECT fsName FROM FileSets WHERE fsID=".intval($this->fsID);
+		return $this->db->getOne($sql); 
+	}
+
+	function loadFileSet(){
+        $f = Loader::helper('concrete/file');
+
+		$sql = "SELECT fv.fvFilename, fv.fvPrefix FROM FileSetFiles fsf, FileVersions fv WHERE fsf.fsID = " . $this->fsID .
+		       " AND fsf.fID = fv.fID AND fvIsApproved = 1";
+		$files = $this->db->getAll($sql); 
+
+		$image = array();
+		$image['duration'] = $this->duration;
+		$image['fadeDuration'] = $this->fadeDuration;
+		$image['groupSet'] = 0;
+		$image['imgHeight'] = $this->minHeight;
+		$image['url'] = '';
+		$images = array();
+		foreach ($files as $file) {
+			$image['fileName'] = $file['fvFilename'];
+			$image['fullFilePath'] = $f->getFileRelativePath($file['fvPrefix'], $file['fvFilename']);
+			$images[] = $image;
+		}
+		$this->images = $images;
+	}
+
 	function loadImages(){
 		if(intval($this->bID)==0) $this->images=array();
 		$sortChoices=array('ORDER'=>'position','RANDOM-SET'=>'groupSet asc, position asc','RANDOM'=>'rand()');
@@ -58,23 +91,6 @@ class SlideshowBlockController extends BlockController {
 		if(intval($this->bID)==0) return array();
 		$sql = "SELECT * FROM btSlideshowImg WHERE bID=".intval($this->bID).' ORDER BY '.$sortChoices[$this->playback];
 		$this->images=$this->db->getAll($sql); 
-		
-		//randomize groups if RANDOM-SET mode
-		if($this->playback!='RANDOM-SET') return;		
-		$imageGroups=array();
-		$imageGroupIds=array();
-		$sortedImgs=array();
-		foreach($this->images as $imgInfo){
-			$imageGroups[$imgInfo['groupSet']][]=$imgInfo;
-			if( !in_array($imgInfo['groupSet'],$imageGroupIds) )
-				$imageGroupIds[]=$imgInfo['groupSet'];
-		}
-		shuffle($imageGroupIds);
-		foreach($imageGroupIds as $imageGroupId){
-			foreach($imageGroups[$imageGroupId] as $imgInfo)
-				$sortedImgs[]=$imgInfo;
-		}
-		$this->images=$sortedImgs;
 	}
 	
 	function delete(){
@@ -85,18 +101,40 @@ class SlideshowBlockController extends BlockController {
 	function save($data) { 
 		$args['playback'] = isset($data['playback']) ? trim($data['playback']) : 'ORDER';
 		
-		if( count($data['imgBIDs']) ){
+		if( $data['type'] == 'FILESET' && $data['fsID'] > 0){
+			$args['fsID'] = $data['fsID'];
+			$args['duration'] = $data['duration'][0];
+			$args['fadeDuration'] = $data['fadeDuration'][0];
+
+			$fakID= $this->db->getOne("SELECT fakID FROM FileAttributeKeys WHERE akName = 'height'"); 
+			$files = $this->db->getAll("SELECT fv.fID FROM FileSetFiles fsf, FileVersions fv WHERE fsf.fsID = " . $data['fsID'] .
+			         " AND fsf.fID = fv.fID AND fvIsApproved = 1");
+			$minHeight = 0;
+			foreach($files as $file)
+			{
+				$height = $this->db->getOne("SELECT value FROM FileAttributeValues WHERE fID = " . $file['fID'] . " AND fakID = " . $fakID);
+				if ($minHeight == 0 || $height < $minHeight) {
+					$minHeight = $height;
+				}
+			}
+			$args['minHeight'] = $minHeight;
+			
+			//delete existing images
+			$this->db->query("DELETE FROM btSlideshowImg WHERE bID=".intval($this->bID));
+		} else if( $data['type'] == 'CUSTOM' && count($data['imgFIDs']) ){
+			$args['fsID'] = 0;
+
 			//delete existing images
 			$this->db->query("DELETE FROM btSlideshowImg WHERE bID=".intval($this->bID));
 			
 			//loop through and add the images
 			$pos=0;
-			foreach($data['imgBIDs'] as $imgBID){ 
-				if(intval($imgBID)==0 || $data['fileNames'][$pos]=='tempFilename') continue;
-				$vals = array(intval($this->bID),intval($imgBID),$data['fileNames'][$pos],$data['origfileNames'][$pos],$data['thumbPaths'][$pos],
+			foreach($data['imgFIDs'] as $imgFID){ 
+				if(intval($imgFID)==0 || $data['fileNames'][$pos]=='tempFilename') continue;
+				$vals = array(intval($this->bID),intval($imgFID),$data['fileNames'][$pos],$data['origfileNames'][$pos],$data['thumbPaths'][$pos],
 						trim($data['url'][$pos]),intval($data['duration'][$pos]),intval($data['fadeDuration'][$pos]),
 						intval($data['groupSet'][$pos]),intval($data['imgHeight'][$pos]),$pos);
-				$this->db->query("INSERT INTO btSlideshowImg (bID,image_bID,fileName,origfileName,thumbPath,url,duration,fadeDuration,groupSet,imgHeight,position) values (?,?,?,?,?,?,?,?,?,?,?)",$vals);
+				$this->db->query("INSERT INTO btSlideshowImg (bID,fID,fileName,origfileName,thumbPath,url,duration,fadeDuration,groupSet,imgHeight,position) values (?,?,?,?,?,?,?,?,?,?,?)",$vals);
 				$pos++;
 			}
 		}
@@ -104,6 +142,30 @@ class SlideshowBlockController extends BlockController {
 		parent::save($args);
 	}
 	
+	function randomizeImages()
+	{
+		if($this->playback == 'RANDOM')
+		{
+			shuffle($this->images);
+		}
+		else if($this->playback == 'RANDOM-SET')
+		{
+			$imageGroups=array();
+			$imageGroupIds=array();
+			$sortedImgs=array();
+			foreach($this->images as $imgInfo){
+				$imageGroups[$imgInfo['groupSet']][]=$imgInfo;
+				if( !in_array($imgInfo['groupSet'],$imageGroupIds) )
+					$imageGroupIds[]=$imgInfo['groupSet'];
+			}
+			shuffle($imageGroupIds);
+			foreach($imageGroupIds as $imageGroupId){
+				foreach($imageGroups[$imageGroupId] as $imgInfo)
+					$sortedImgs[]=$imgInfo;
+			}
+			$this->images=$sortedImgs;
+		}
+	}
 }
 
 ?>

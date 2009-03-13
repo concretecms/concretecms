@@ -16,7 +16,7 @@
 		<?=t('Set Number')?>: <input type="text" name="groupSet[]" value="<?=intval($imgInfo['groupSet'])?>" style="vertical-align: middle; width: 30px" /><br/>
 		<div style="margin-top:4px">
 		<?=t('Link URL (optional)')?>: <input type="text" name="url[]" value="<?=$imgInfo['url']?>" style="vertical-align: middle; font-size: 10px; width: 140px" />
-		<input type="hidden" name="imgBIDs[]" value="<?=$imgInfo['image_bID']?>">
+		<input type="hidden" name="imgFIDs[]" value="<?=$imgInfo['fID']?>">
 		<input type="hidden" name="fileNames[]" value="<?=$imgInfo['fileName']?>">
 		<input type="hidden" name="thumbPaths[]" value="<?=$imgInfo['thumbPath']?>">
 		<input type="hidden" name="imgHeight[]" value="<?=$imgInfo['imgHeight']?>">
