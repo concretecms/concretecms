@@ -123,6 +123,24 @@ ccm_launchFileManager = function(filters) {
 	});
 }
 
+ccm_launchFileSetPicker = function(fsID) {
+	$.fn.dialog.open({
+		width: 500,
+		height: 160,
+		modal: false,
+		href: CCM_TOOLS_PATH + '/files/pick_set?oldFSID=' + fsID,
+		title: ccmi18n_filemanager.sets				
+	});
+}
+
+ccm_alSubmitPickSetForm = function() {
+	jQuery.fn.dialog.closeTop();
+	var fsSel = $(".ccm-file-set-pick-cb #fsID")[0];
+	var json = { "fsID" : fsSel.value,
+	             "fsName" : fsSel.options[fsSel.options.selectedIndex].text };
+	ccm_chooseAsset(json);
+}
+
 ccm_alSubmitSetsForm = function() {
 	ccm_deactivateSearchResults();
 	$("#ccm-file-add-to-set-form").ajaxSubmit(function(resp) {
