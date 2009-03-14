@@ -16,6 +16,8 @@ ul#ccm-system-nav li {
 	list-style-type: none;
 }
 
+#ccm-dashboard-version{text-align:right; position:absolute; top:46px; right:0px; font-size:11px; color:#888; padding:4px; z-index:-1}
+
 ul#ccm-system-nav li a, ul#ccm-system-nav li span {display: block; padding: 15px 9px 14px 28px; text-align: center; background-repeat: no-repeat; font-size: 13px; font-weight: bold; color: #787878; text-decoration: none; border-right: 1px solid #fff}
 ul#ccm-system-nav li span {color: #cecece}
 ul#ccm-system-nav li:hover {background: #A2DAFD url(../images/bg_header_active.png) repeat-x scroll;}

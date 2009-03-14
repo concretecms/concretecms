@@ -41,6 +41,8 @@
 		
 		//auto detect flash movie size
 		function getFlvMetaData($flvFileName) {
+			if(!file_exists($flvFileName)) return array();
+			
 			$fp = fopen($flvFileName,'r');
 			fseek($fp,27);
 			$onMetaData = fread($fp,10);
