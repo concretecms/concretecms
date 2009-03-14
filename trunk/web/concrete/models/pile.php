@@ -28,7 +28,7 @@ class Pile extends Object {
 		$row = $r->fetchRow();
 
 		$p = new Pile;
-		foreach ($row as $k => $v) {
+		if(is_array($row)) foreach ($row as $k => $v) {
 			$p->{$k} = $v;
 		}
 		return $p;
@@ -357,7 +357,7 @@ class PileContent extends Object {
 		$row = $r->fetchRow();
 
 		$pc = new PileContent;
-		foreach ($row as $k => $v) {
+		if( is_array($row) ) foreach ($row as $k => $v) {
 			$pc->{$k} = $v;
 		}
 

@@ -121,7 +121,7 @@ ul.ccm-dialog-tabs li span {color: #ccc}
 ul.ccm-dialog-tabs li a:hover, ul.ccm-dialog-tabs li.ccm-nav-active a, ul.ccm-dialog-tabs li.current a {background: transparent url(../images/bg_header_active.png) repeat-x scroll}
 ul.ccm-dialog-tabs li {padding: 0px; margin: 0px}
 ul.ccm-dialog-tabs li:last-child * {border-right: 1px solid #dedede}
-ul.ccm-dialog-tabs li {border-right: 1px solid #dedede !ie}
+ul.ccm-dialog-tabs li {border-right: 1px solid #dedede }
 
 .ccm-input-text, div.ccm-field-meta input, div.ccm-field-meta textarea, .ccm-input-date {font-size: 12px; border: 1px solid #aaa; color: #444; padding: 4px}
 .ccm-input-date-wrapper input {width: 100px}
@@ -155,7 +155,7 @@ div.ccm-group a.ccm-group-inner-atag {color: #666; font-size: 14px; padding: 8px
 div.ccm-group a.ccm-group-inner-atag:hover {color: #666; font-size: 14px; padding: 8px 0px; text-decoration: none; border: 1px solid #fff}
 div.ccm-group {position: relative; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px}
 div.ccm-group a.ccm-group-inner:hover {background-color: #d9e7ff; border: 1px solid #94a7c7}
-div.ccm-group-description {padding-left: 30px; color: #aaa; font-size: 12p; padding-top: 2px; padding-bottom: 6px}
+div.ccm-group-description {padding-left: 30px; color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
 span.ccm-group-description {color: #aaa; font-size: 12p; padding-top: 2px; padding-bottom: 6px}
 form#ccm-group-search {width: 200px; text-align: right; padding-right: 10px; float: right; position: relative; top: -40px; font-size: 10px}
 form#ccm-group-search input {font-size: 10px}
@@ -166,7 +166,7 @@ div.ccm-scroller {position: relative; padding: 20px 10px 20px 10px; background: 
 a.ccm-scroller-l {z-index: 100; position: absolute; top: 20px; left: 10px}
 a.ccm-scroller-r {z-index: 100; position: absolute; top: 20px; right: 10px}
 div.ccm-scroller-inner {width: 520px; margin-left: 40px; height: 130px; overflow: hidden; position: relative}
-div.ccm-scroller-inner ul {position: absolute; list-style: none; overflow: none; white-space: nowrap; padding: 0px; margin: 0px;}
+div.ccm-scroller-inner ul {position: absolute; list-style: none; overflow: hidden; white-space: nowrap; padding: 0px; margin: 0px;}
 div.ccm-scroller-inner ul li {float: left; width: 124px; margin-right: 8px;}
 div.ccm-scroller-inner ul li span {display: block; text-align: center; font-size: 12px; padding-top: 1px;}
 div.ccm-scroller-inner img {margin: 2px}
@@ -192,7 +192,7 @@ div.ccm-block-type a.ccm-block-type-inner, div.ccm-block-type p.ccm-block-type-i
 div.ccm-block-type p.ccm-block-type-inner {margin: 0px}
 div.ccm-block-type a.ccm-block-type-inner:hover {background-color: #d9e7ff; border: 1px solid #94a7c7}
 div.ccm-block-type {position: static; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px; left:0px; top:0px; width:auto; height:auto;}
-div.ccm-block-type div.ccm-block-type-description {display: none; padding-left: 30px; color: #aaa; font-size: 12p; padding-top: 2px; padding-bottom: 6px}
+div.ccm-block-type div.ccm-block-type-description {display: none; padding-left: 30px; color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
 div.ccm-block-type.ccm-external-block-type div.ccm-block-price{ float:right; margin:10px 10px 0px 10px; font-weight: bold; color: #205334; text-transform: uppercase}
 div.ccm-block-type.ccm-external-block-type div.ccm-block-type-description{display:block}
  

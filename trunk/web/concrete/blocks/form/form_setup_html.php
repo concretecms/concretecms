@@ -47,6 +47,7 @@ $uh = Loader::helper('concrete/urls'); ?>
 			<div class="fieldLabel"><?php echo t('Recipient Email')?>:</div>
 			<div class="fieldValues">
 			 <input name="recipientEmail" value="<?php echo $miniSurveyInfo['recipientEmail']?>" type="text" size="20" maxlength="128" />
+			<div class="ccm-note"><?= t('(Seperate multiple emails with a comma)')?></div>
 			</div>
 			<div class="ccm-spacer"></div>
 		</div>

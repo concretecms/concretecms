@@ -20,7 +20,7 @@ class DashboardReportsDatabaseController extends Controller {
 		$paginator = Loader::helper('pagination');
 		$paginator->init(intval($page), $total, $pageBase . '/%pageNum%', 50);
 		$limit=$paginator->getLIMIT();
-		$entries = DatabaseLogEntry::getList($limit);
+		$entries = DatabaseLogEntry::getList($limit); 
 		$this->set('entries', $entries);
 		$this->set('paginator', $paginator);
 	}

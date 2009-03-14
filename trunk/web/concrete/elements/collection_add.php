@@ -6,7 +6,8 @@
 		alias = value.replace(/[&]/gi, "and");
 		alias = alias.replace(/[\s|.]+/gi, "_");
 		alias = alias.replace(/[^0-9A-Za-z-]/gi, "_");
-		alias = alias.replace(/--/gi, '_');
+		//alias = alias.replace(/--/gi, '_');
+		alias = alias.replace(/-+/gi, '_');
 		alias = alias.toLowerCase();
 		
 		formObj = document.getElementById(formInputID);
@@ -93,7 +94,7 @@ for ($i = 0; $i < count($ctArray); $i++) {
 
 		<div class="ccm-field">	
 			<div class="ccm-field-one" style="width: 400px">
-				<label><?=t('Name')?></label> <input type="text" name="cName" value="" class="text" style="width: 100%" onBlur="makeAlias(this.value, 'cHandle')">
+				<label><?=t('Name')?></label> <input type="text" name="cName" value="" class="text" style="width: 100%" onBlur="makeAlias(this.value, 'cHandle')" onkeypress="makeAlias(this.value, 'cHandle')" >
 			</div>
 			
 			<div class="ccm-field-two" style="width: 200px"	>

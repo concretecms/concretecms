@@ -125,6 +125,12 @@ foreach($nav as $n2) {
 	}
 ?>
 
+<? if(strlen(APP_VERSION)){ ?>
+<div id="ccm-dashboard-version">
+	<?= t('Concrete5 Version') ?>: <?=APP_VERSION ?>
+</div>
+<? } ?>
+
 <div id="ccm-dashboard-content">
 
 	<div style="margin:0px; padding:0px; width:100%; ">

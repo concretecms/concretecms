@@ -4,6 +4,7 @@ $valt = Loader::helper('validation/token');
 ?>
 <h1><span><?=t('Database Logs')?></span></h1>
 <div class="ccm-dashboard-inner">
+
 <? if (count($entries) > 0) { ?>
 	
 	<form id="ccm-log-search">

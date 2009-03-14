@@ -81,8 +81,7 @@ class DatabaseLogEntry extends LogEntry {
 			$dle = new DatabaseLogEntry();
 			$dle->setPropertiesFromArray($row);
 			$entries[] = $dle;
-		}
-		
+		}		
 		return $entries;
 	}
 	

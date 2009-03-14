@@ -16,13 +16,13 @@
  */
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
-class ConcreteUrlsHelper {
+class ConcreteUrlsHelper { 
 
 	/** 
 	 * Gets a full URL to an icon for a particular application
 	 */
 	public function getPackageIconURL($pkg) {
-		if (file_exists($pkg->getPackagePath() . '/' . FILENAME_BLOCK_ICON)) {
+		if ($pkg && file_exists($pkg->getPackagePath() . '/' . FILENAME_BLOCK_ICON)) {
 			return $this->getPackageURL($pkg) . '/' . FILENAME_BLOCK_ICON;
 		} else {
 			return BLOCK_TYPE_GENERIC_ICON;
