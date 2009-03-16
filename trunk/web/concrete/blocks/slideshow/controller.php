@@ -77,17 +77,15 @@ class SlideshowBlockController extends BlockController {
 		$image['groupSet'] = 0;
 		$image['url'] = '';
 		$images = array();
-		$minHeight = 0;
+		$maxHeight = 0;
 		foreach ($files as $file) {
 			$image['fileName'] = $file['fvFilename'];
 			$image['fullFilePath'] = $f->getFileRelativePath($file['fvPrefix'], $file['fvFilename']);
-			if ($minHeight == 0 || $file['value'] < $minHeight) {
-				$minHeight = $file['value'];
+			$image['imgHeight'] = $file['value'];
+			if ($maxHeight == 0 || $file['value'] > $maxHeight) {
+				$maxHeight = $file['value'];
 			}
 			$images[] = $image;
-		}
-		for ($i = 0; $i < count($images); $i++) {
-			$images[$i]['imgHeight'] = $minHeight;
 		}
 		$this->images = $images;
 	}

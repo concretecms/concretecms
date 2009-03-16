@@ -13,24 +13,21 @@ var ccmSlideShowHelper<?=intval($bID)?> = {
 			//alert('There are no images in this slideshow');
 			return false;
 		}
-		var minHeight=0;
+		var maxHeight=0;
 		for(var i=0;i<this.imgInfos.length;i++){
 			this.addImg(i);
-			if(minHeight==0 || this.imgInfos[i].imgHeight<minHeight)
-				minHeight=this.imgInfos[i].imgHeight;
+			if(maxHeight==0 || this.imgInfos[i].imgHeight > maxHeight)
+				maxHeight=this.imgInfos[i].imgHeight;
 		}
-		this.displayWrap.css('height',minHeight);
-		/*
+		this.displayWrap.css('height',maxHeight);
+
 		//center images
 		for(var i=0;i<this.imgInfos.length;i++){ 
-			alert(this.imgInfos[i].imgHeight+' '+minHeight);
-			if( this.imgInfos[i].imgHeight>minHeight ){
-				var t=((this.imgInfos[i].imgHeight-minHeight)/2)*-1
-				alert(t);
+			if( this.imgInfos[i].imgHeight < maxHeight){
+				var t=((maxHeight - this.imgInfos[i].imgHeight)/2);
 				this.imgEls[i].css('top',t);
 			}
 		}
-		*/
 		this.nextImg();
 	}, 
 	nextImg:function(){ 
