@@ -36,7 +36,6 @@ $ah = Loader::helper('concrete/interface');
 	<tr style="padding-top: 8px">
 	<td colspan="2">
 	<br />
-	<span id="ccm-slideshowBlock-chooseFS"><?=$ah->button_js(t('Choose File Set'), 'SlideshowBlock.chooseFileSet()', 'left');?></span>
 	<span id="ccm-slideshowBlock-chooseImg"><?=$ah->button_js(t('Add Image'), 'SlideshowBlock.chooseImg()', 'left');?></span>
 	</td>
 	</tr>
@@ -53,14 +52,20 @@ $ah = Loader::helper('concrete/interface');
 </div>
 
 <?
+Loader::model('file_set');
+$s1 = FileSet::getMySets();
+$sets = array();
+foreach ($s1 as $s){
+    $sets[$s->fsID] = $s->fsName;
+}
+$fsInfo['fileSets'] = $sets;
+
 if ($fsID > 0) {
 	$fsInfo['fsID'] = $fsID;
-	$fsInfo['fsName'] = $fsName;
 	$fsInfo['duration']=$duration;
 	$fsInfo['fadeDuration']=$fadeDuration;
 } else {
 	$fsInfo['fsID']='0';
-	$fsInfo['fsName']='';
 	$fsInfo['duration']=$defaultDuration;
 	$fsInfo['fadeDuration']=$defaultFadeDuration;
 }
