@@ -426,7 +426,12 @@ class InstallController extends Controller {
 						$image2 = $fi->import($pl->getThemeDirectory() . '/images/inneroptics_dot_net_canyonlands.jpg');
 						$image3 = $fi->import($pl->getThemeDirectory() . '/images/inneroptics_dot_net_new_zealand_sheep.jpg');
 						$image4 = $fi->import($pl->getThemeDirectory() . '/images/inneroptics_dot_net_starfish.jpg');
-
+						
+						$image1->getFile()->setUserID($this->installData['USER_SUPER_ID']);
+						$image2->getFile()->setUserID($this->installData['USER_SUPER_ID']);
+						$image3->getFile()->setUserID($this->installData['USER_SUPER_ID']);
+						$image4->getFile()->setUserID($this->installData['USER_SUPER_ID']);
+						
 						// Assign this imagery to the various pages.
 						$btImage = BlockType::getByHandle('image');
 						$data = array();
