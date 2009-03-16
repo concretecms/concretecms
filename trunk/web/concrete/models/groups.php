@@ -64,6 +64,11 @@
 					$bID = $obj->getBlockID();
 					$where = "cID = '{$cID}' and cvID = '{$cvID}' and bID = '{$bID}'";
 					break;
+				case 'fileset':
+					$table = 'FilePermissions';
+					$fsID = $obj->getFileSetID();
+					$where = "fsID = '{$fsID}'";
+					break;
 				case 'page':
 					$table = 'PagePermissions';
 					$cID = $obj->getPermissionsCollectionID();
@@ -132,6 +137,7 @@
 	
 		var $ctID;
 		var $permissionSet;
+		private $permissions = array(); // more advanced version of permissions
 		
 		/* 
 		 * Takes the numeric id of a group and returns a group object
@@ -209,6 +215,19 @@
 					if ($permissions) {
 						$this->permissionSet = $permissions;
 					}
+					break;
+				case 'fileset':
+					$fsID = $obj->getFileSetID();
+					$gID = $this->gID;
+					$q = "select canRead, canAccessFileSet, canWrite, canAdmin, canAdd from FilePermissions where fsID = '{$fsID}' and gID = '{$gID}'";
+					$permissions = $db->GetRow($q);
+					if ($permissions) {
+						$this->permissions = $permissions;
+					}
+					
+					$q = "select extension from FilePermissionFileTypes where fsID = '{$fsID}' and gID = '{$gID}'";
+					$extensions = $db->GetCol($q);
+					$this->permissions['canAddExtensions'] = $extensions;
 					break;
 				case 'page':
 					//$cID = $obj->getCollectionID();
@@ -365,6 +384,29 @@
 		
 		function canAdminCollection() {
 			return strpos($this->permissionSet, 'adm') > -1;
+		}
+		
+		/** 
+		 * File manager permissions at the group level 
+		 */
+		public function canAccessFileSet() {
+			return $this->permissions['canAccessFileSet'];
+		}
+		
+		public function getFileReadLevel() {
+			return $this->permissions['canRead'];
+		}
+		public function getFileWriteLevel() {
+			return $this->permissions['canWrite'];
+		}
+		public function getFileAdminLevel() {
+			return $this->permissions['canAdmin'];
+		}
+		public function getFileAddLevel() {
+			return $this->permissions['canAdd'];
+		}
+		public function getAllowedFileExtensions() {
+			return $this->permissions['canAddExtensions'];
 		}
 		
 		function update($gName, $gDescription) {

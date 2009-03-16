@@ -7,10 +7,62 @@
 			<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 				<tbody>
 					<tr>
-						<td class="subheader">Name</td>
+						<td class="subheader"><?=t('Name')?></td>
 					</tr>
 					<tr>
 						<td><?=$form->text('file_set_name',$file_set->fsName,array('style'=>'width:99%'));?></td>
+					</tr>
+					<tr>
+						<td class="subheader"><?=t('Custom Permissions')?></td>
+					</tr>
+					<tr>
+						<td>
+						
+						<?=$form->checkbox('fsOverrideGlobalPermissions', 1, $file_set->overrideGlobalPermissions())?>
+						<?=t('Enable custom permissions for this file set.')?>
+						
+						<div id="ccm-file-set-permissions-wrapper" <? if (!$file_set->overrideGlobalPermissions()) { ?> style="display: none" <? } ?>>
+						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector" id="ug-selector" dialog-width="600" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="400" class="ccm-button-right dialog-launch"><span><em><?=t('Add Group or User')?></em></span></a>
+			
+						<p>
+						<?=t('Add users or groups to determine access to the file manager. These permissions affect only this set.');?>
+						</p>
+
+						<div id="ccm-file-permissions-entities-wrapper">			
+						<div id="ccm-file-permissions-entity-base">
+						
+							<? print $ph->getFileAccessRow('SET'); ?>
+							
+							
+						</div>
+						
+						
+						<? 
+						$gl = new GroupList($file_set);
+						$ul = new UserInfoList($file_set);
+						
+						$gArray = $gl->getGroupList();
+						$uArray = $ul->getUserInfoList();
+						foreach($gArray as $g) { ?>
+							
+							<? print $ph->getFileAccessRow('SET','gID_' . $g->getGroupID(), $g->getGroupName(), $g->canAccessFileSet(), $g->getFileReadLevel(), $g->getFileWriteLevel(), $g->getFileAdminLevel(), $g->getFileAddLevel(), $g->getAllowedFileExtensions()); ?>
+						
+						<? } ?>
+						<? foreach($uArray as $ui) { ?>
+							
+							<? print print $ph->getFileAccessRow('SET','uID_' . $ui->getUserID(), $ui->getUserName(), $ui->canAccessFileSet(), $ui->getFileReadLevel(), $ui->getFileWriteLevel(), $ui->getFileAdminLevel(), $ui->getFileAddLevel(), $ui->getAllowedFileExtensions()); ?>
+						
+						<? } ?>
+						</div>
+						
+						
+						<div class="ccm-spacer">&nbsp;</div>
+						
+						</div>
+						
+						
+						
+						</td>
 					</tr>
 					<tr>
 						<td class="header">
@@ -25,6 +77,28 @@
 			?>
 		</form>
 	</div>
+	<script type="text/javascript">
+		ccm_triggerSelectUser = function(uID, uName) {
+			ccm_alSelectPermissionsEntity('uID', uID, uName);
+		}
+		
+		ccm_triggerSelectGroup = function (gID, gName) {
+			ccm_alSelectPermissionsEntity('gID', gID, gName);
+		}
+		
+		$(function() {	
+			$("#ug-selector").dialog();	
+			ccm_alActivateFilePermissionsSelector();	
+			
+			$("#fsOverrideGlobalPermissions").click(function() {
+				if ($(this).attr('checked')) {
+					$('#ccm-file-set-permissions-wrapper').show();
+				} else { 
+					$('#ccm-file-set-permissions-wrapper').hide();
+				}
+			});
+		});
+</script>	
 <?php } else { ?>
 	<h1><span><?=t('Public File Sets')?></span></h1>
 		<div class="ccm-dashboard-inner">
@@ -33,7 +107,7 @@
 				<?=$validation_token->output('file_sets_edit_or_delete');?>
 				<table border="0" cellspacing="1" cellpadding="0" class="grid-list" width="600">
 					<tr>
-						<td class="subheader" width="100%">Name</td>	
+						<td class="subheader" width="100%"><?=t('Name')?></td>	
 						<td class="subheader"><div style="width: 90px"></div></td>
 						<td class="subheader"><div style="width: 60px"></div></td>
 					</tr>
@@ -68,7 +142,7 @@
 			<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 				<tbody>
 					<tr>
-						<td class="subheader">Name</td>
+						<td class="subheader"><?=t('Name')?></td>
 					</tr>
 					<tr>
 						<td><?=$form->text('file_set_name','',array('style'=>'width:99%'));?></td>
@@ -103,5 +177,7 @@
 				$("#file-sets-edit-or-delete").get(0).submit();
 			}
 		}
+		
+		
 	</script>
 <?php } ?>	

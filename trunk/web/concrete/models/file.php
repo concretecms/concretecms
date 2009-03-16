@@ -29,6 +29,24 @@ class File extends Object {
 		$this->fPassword = $pw;
 	}
 	
+	public function overrideFileSetPermissions() {
+		return $this->fOverrideSetPermissions;
+	}
+	
+	public function getUserID() {
+		return $this->uID;
+	}
+	
+	public function getFileSets() {
+		$db = Loader::db();
+		Loader::model('file_set');
+		$fsIDs = $db->Execute("select fsID from FileSetFiles where fID = ?", array($this->getFileID()));
+		$filesets = array();
+		foreach($fsIDs as $fsID) {
+			$filesets[] = FileSet::getByID($fsID);
+		}
+		return $filesets;
+	}
 	public function getByID($fID) {
 		Loader::model('file_set');
 		$db = Loader::db();
@@ -100,7 +118,8 @@ class File extends Object {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
 		$date = $dh->getLocalDateTime(); 
-		$db->Execute('insert into Files (fDateAdded) values (?)', array($date));
+		$u = new User();
+		$db->Execute('insert into Files (fDateAdded, uID) values (?, ?)', array($date, $u->getUserID()));
 		
 		$fID = $db->Insert_ID();
 		

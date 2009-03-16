@@ -297,7 +297,7 @@
       <DEFAULT value="1"/>
       <UNSIGNED/>
     </field>
-    <field name="cvName" type="C" size="128"/>
+    <field name="cvName" type="X" />
     <field name="cvHandle" type="C" size="64"/>
     <field name="cvDescription" type="X"/>
     <field name="cvDatePublic" type="T"/>
@@ -452,6 +452,48 @@
     </field>
     <field name="value" type="X"/>
   </table>
+  <table name="FilePermissionFileTypes">
+    <field name="fsID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="gID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="extension" type="C" size="32">
+      <KEY/>
+    </field>
+  </table>
+  <table name="FilePermissions">
+    <field name="fsID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="gID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="canRead" type="I" size="4"/>
+    <field name="canWrite" type="I" size="4"/>
+    <field name="canAdmin" type="I" size="4"/>
+    <field name="canAdd" type="I" size="4"/>
+    <field name="canAccessFileSet" type="I" size="4"/>
+  </table>
   <table name="FileVersions">
     <field name="fID" type="I" size="10">
       <KEY/>
@@ -560,6 +602,11 @@
       <UNSIGNED/>
     </field>
     <field name="fDateAdded" type="T"/>
+    <field name="uID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <field name="fOverrideSetPermissions" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -1194,24 +1241,12 @@
     </index>
   </table>
   <table name="adodb_logsql">
-	<field name="created" type="T">
-		<notnull />
-	</field>
-	<field name="sql0" type="C" size="250">
-		<notnull />
-	</field>
-	<field name="sql1" type="X">
-		<notnull />
-	</field>
-	<field name="params" type="X">
-		<notnull />
-	</field>
-	<field name="tracer" type="X">
-		<notnull />
-	</field>
-	<field name="timer" type="N">
-		<notnull />
-	</field>
+    <field name="created" type="C" size="50"/>
+    <field name="sql0" type="C" size="250"/>
+    <field name="sql1" type="C" size="4000"/>
+    <field name="params" type="C" size="3000"/>
+    <field name="tracer" type="C" size="500"/>
+    <field name="timer" type="N" size="16"/>
   </table>
    <table name="UserOpenIDs">
     <field name="uID" type="I" size="10">

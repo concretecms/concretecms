@@ -55,7 +55,7 @@ class ProfileEditController extends Controller {
 				$e->add(t('A password must be between %s and %s characters', USER_PASSWORD_MINIMUM, USER_PASSWORD_MAXIMUM));
 			}		
 			
-			if (strlen($passwordNew) >= USER_PASSWORD_MINIMUM && !$vsh->password($passwordNew)) {
+			if (strlen($passwordNew) >= USER_PASSWORD_MINIMUM && !$cvh->password($passwordNew)) {
 				$e->add(t('A password may not contain ", \', >, <, or any spaces.'));
 			}
 			

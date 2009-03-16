@@ -1,16 +1,16 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c = Page::getByPath("/dashboard/mediabrowser");
-$cp = new Permissions($c);
 $u = new User();
 $ch = Loader::helper('concrete/file');
 $valt = Loader::helper('validation/token');
 $form = Loader::helper('form');
-if (!$cp->canRead()) {
-	die(_("Access Denied."));
-}
+
 
 $f = File::getByID($_REQUEST['fID']);
+$fp = new Permissions($f);
+if (!$fp->canWrite()) {
+	die(t('Access Denied.'));
+}
 
 Loader::element('files/upload_single', array('mode' => 'replace', 'fID' => $f->getFileID())); 
 

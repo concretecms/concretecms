@@ -1,11 +1,11 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c = Page::getByPath("/dashboard/files");
-$cp = new Permissions($c);
-$u = new User();
-if (!$cp->canRead()) {
+$fp = FilePermissions::getGlobal();
+if (!$fp->canAccessFileManager()) {
 	die(_("Unable to access the file manager."));
 }
+
+$u = new User();
 	
 Loader::model('file_list');
 

@@ -47,6 +47,18 @@ div.ccm-file-search-field input, div.ccm-file-search-field select, div.ccm-file-
 
 #ccm-file-list-multiple-operations {font-size: 10px}
 
+/* file permissions */
+
+div#ccm-file-permissions-entities-wrapper {padding-bottom: 10px; border-bottom: 1px dotted #aaa; margin-bottom: 10px}
+div#ccm-file-permissions-entities-wrapper h2 {margin-bottom: 10px; border-bottom: 1px dotted #aaa; padding-bottom: 4px}
+div#ccm-file-permissions-entities-wrapper th {text-align: left; vertical-align: top; width: 120px}
+div#ccm-file-permissions-entities-wrapper td {vertical-align: top; padding: 0px 30px 0px 0px}
+div#ccm-file-permissions-entities-wrapper h2 img {float: right}
+div#ccm-file-permissions-entity-base {display: none}
+div.ccm-file-access-add-extensions-header {border-top: 1px solid #cecece; border-left: 1px solid #cecece; border-right: 1px solid #cecece; background: #D3E4F0; padding: 4px}
+div.ccm-file-access-extensions {border: 1px solid #cecece; padding: 4px; height: 120px; overflow: auto; margin-bottom: 20px}
+
+
 /* add asset */
 div#ccm-files-add-asset {float: right; padding-right: 20px; font-size: 11px; z-index: 10; position: relative}
 div#ccm-files-add-asset h3 {float: left;margin-right: 4px;margin-top: 0px; padding-top: 4px; font-size: 11px}

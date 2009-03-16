@@ -82,9 +82,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 			if (is_object($ui)) {
 				if ($userPermissionsArray) {
-					$ui->permissionSet = $userPermissionsArray['permissionSet'];
-					$ui->upStartDate = $userPermissionsArray['upStartDate'];
-					$ui->upEndDate = $userPermissionsArray['upEndDate'];
+					if (isset($userPermissionsArray['permissions'])) {
+						$ui->permissions = $userPermissionsArray['permissions'];					
+					} else {
+						$ui->permissionSet = $userPermissionsArray['permissionSet'];
+						$ui->upStartDate = $userPermissionsArray['upStartDate'];
+						$ui->upEndDate = $userPermissionsArray['upEndDate'];
+					}
 				}
 
 				return $ui;
@@ -493,6 +497,28 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return strpos($this->permissionSet, 'adm') > -1;
 		}
 
+		/** 
+		 * File manager permissions at the user level 
+		 */
+		public function canAccessFileSet() {
+			return $this->permissions['canAccessFileSet'];
+		}
+		public function getFileReadLevel() {
+			return $this->permissions['canRead'];
+		}
+		public function getFileWriteLevel() {
+			return $this->permissions['canWrite'];
+		}
+		public function getFileAdminLevel() {
+			return $this->permissions['canAdmin'];
+		}
+		public function getFileAddLevel() {
+			return $this->permissions['canAdd'];
+		}
+		public function getAllowedFileExtensions() {
+			return $this->permissions['canAddExtensions'];
+		}
+
 		function getUserStartDate() {
 			// time-release permissions for users
 			return $this->upStartDate;
@@ -556,7 +582,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$cID = $c->getCollectionID();
 					$cvID = $c->getVersionID();
 					$bID = $obj->getBlockID();
-					$gID = $this->gID;
 					$q = "select uID, cbgPermissions from CollectionVersionBlockPermissions where cID = '{$cID}' and cvID = '{$cvID}' and bID = '{$bID}' and uID > 0";
 					$r = $db->query($q);
 					if ($r) {
@@ -566,11 +591,25 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						}
 					}
 					break;
+				case 'fileset':
+					$fsID = $obj->getFileSetID();
+					$q = "select uID, canAccessFileSet, canRead, canWrite, canAdmin, canAdd from FilePermissions where fsID = '{$fsID}' and uID > 0";
+					$r = $db->query($q);
+					if ($r) {
+						while ($row = $r->fetchRow()) {
+							$userPermissionsArray['permissions'] = $row;
+							if ($row['canAdd'] == FilePermissions::PTYPE_CUSTOM) {
+								$userPermissionsArray['permissions']['canAddExtensions'] = $db->GetCol("select extension from FilePermissionFileTypes where uID = {$row['uID']} and fsID = {$fsID}");
+							}
+							$this->uiArray[] = UserInfo::getByID($row['uID'], $userPermissionsArray);
+						}
+					}
+
+					break;
 				case 'area':
 					
 					$c = $obj->getAreaCollectionObject();
 					$cID = ($obj->getAreaCollectionInheritID() > 0) ? $obj->getAreaCollectionInheritID() : $c->getCollectionID();
-					$gID = $this->gID;
 					$v = array($cID, $obj->getAreaHandle());
 					$q = "select uID, agPermissions from AreaGroups where cID =  ? and arHandle = ? and uID > 0";
 					$r = $db->query($q, $v);

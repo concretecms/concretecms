@@ -1,14 +1,17 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c = Page::getByPath("/dashboard/files");
-$cp = new Permissions($c);
 $u = new User();
 $ch = Loader::helper('concrete/file');
 $h = Loader::helper('concrete/interface');
 $form = Loader::helper('form');
-if (!$cp->canRead()) {
-	die(_("Unable to access the file manager."));
+
+$fp = FilePermissions::getGlobal();
+if (!$fp->canAddFiles()) {
+	die(_("Unable to add files."));
 }
+
+$types = $fp->getAllowedFileExtensions();
+$types = $ch->serializeUploadFileExtensions($types);
 $valt = Loader::helper('validation/token');
 ?>
 <ul class="ccm-dialog-tabs" id="ccm-file-import-tabs">
@@ -56,7 +59,7 @@ $(function() {
 		upload_url : "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/multiple",
 		post_params: {'ccm-session' : "<?php echo session_id(); ?>",'ccm_token' : '<?=$valt->generate("upload")?>'},
 		file_size_limit : "100 MB",
-		file_types : "*.*",
+		file_types : "<?=$types?>",
 		button_window_mode : SWFUpload.WINDOW_MODE.TRANSPARENT,
 		file_types_description : "All Files",
 		file_upload_limit : 100,

@@ -231,6 +231,70 @@ ccm_alRescanFiles = function() {
 	});
 }
 
+	
+ccm_alSelectPermissionsEntity = function(selector, id, name) {
+	var html = $('#ccm-file-permissions-entity-base').html();
+	$('#ccm-file-permissions-entities-wrapper').append('<div class="ccm-file-permissions-entity">' + html + '<\/div>');
+	var p = $('.ccm-file-permissions-entity');
+	var ap = p[p.length - 1];
+	$(ap).find('h2 span').html(name);
+	$(ap).find('input[type=hidden]').val(selector + '_' + id);
+	$(ap).find('input[type=radio]').each(function() {
+		$(this).attr('name', $(this).attr('name') + '_' + selector + '_' + id);
+	});
+	$(ap).find('div.ccm-file-access-extensions input[type=checkbox]').each(function() {
+		$(this).attr('name', $(this).attr('name') + '_' + selector + '_' + id + '[]');
+	});
+	
+	ccm_alActivateFilePermissionsSelector();	
+}
+
+ccm_alActivateFilePermissionsSelector = function() {
+	$("tr.ccm-file-access-add input").unbind();
+	$("tr.ccm-file-access-add input").click(function() {
+		var p = $(this).parents('div.ccm-file-permissions-entity')[0];
+		if ($(this).val() == ccmi18n_filemanager.PTYPE_CUSTOM) {
+			$(p).find('div.ccm-file-access-add-extensions').show();				
+		} else {
+			$(p).find('div.ccm-file-access-add-extensions').hide();				
+		}
+	});
+	$("tr.ccm-file-access-file-manager input").click(function() {
+		var p = $(this).parents('div.ccm-file-permissions-entity')[0];
+		if ($(this).val() == ccmi18n_filemanager.PTYPE_ALL) {
+			$(p).find('tr.ccm-file-access-view').show();				
+			$(p).find('tr.ccm-file-access-add').show();				
+			$(p).find('tr.ccm-file-access-edit').show();				
+			$(p).find('tr.ccm-file-access-admin').show();
+			//$(p).find('div.ccm-file-access-add-extensions').show();				
+		} else {
+			$(p).find('tr.ccm-file-access-view').hide();				
+			$(p).find('tr.ccm-file-access-add').hide();				
+			$(p).find('tr.ccm-file-access-edit').hide();				
+			$(p).find('tr.ccm-file-access-admin').hide();				
+			$(p).find('div.ccm-file-access-add-extensions').hide();				
+		}
+	});
+
+
+	$("a.ccm-file-permissions-remove").click(function() {
+		$(this).parent().parent().fadeOut(100, function() {
+			$(this).remove();
+		});
+	});
+	$("input[name=toggleCanAddExtension]").unbind();
+	$("input[name=toggleCanAddExtension]").click(function() {
+		var ext = $(this).parent().parent().find('div.ccm-file-access-extensions');
+		
+		if ($(this).attr('checked') == 1) {
+			ext.find('input').attr('checked', true);
+		} else {
+			ext.find('input').attr('checked', false);
+		}
+	});
+}
+
+
 ccm_alParseSearchResponse = function(resp) {
 	$("#ccm-file-search-results").html(resp);
 	ccm_activateSearchResults();
@@ -550,9 +614,9 @@ ccm_alSelectFile = function(fID) {
 		ccm_deactivateSearchResults();
 
 		$.getJSON(CCM_TOOLS_PATH + '/files/get_data.php', {'fID' : fID}, function(resp) {
-			jQuery.fn.dialog.closeTop();
 			ccm_parseJSON(resp, function() {
 				ccm_chooseAsset(resp);
+				jQuery.fn.dialog.closeTop();
 			});
 		});
 		

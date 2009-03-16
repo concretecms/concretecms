@@ -5,6 +5,17 @@
 		const TYPE_STARRED 	= 2;
 		protected $fileSetFiles;
 	
+		/** 
+		 * Returns an object mapping to the global file set, fsID = 0.
+		 * This is really only used for permissions mapping
+		 */
+		 
+		public function getGlobal() {
+			$fs = new FileSet;
+			$fs->fsID = 0;
+			return $fs;
+		}
+		
 		public function getMySets($u = false) {
 			if ($u == false) {
 				$u = new User();
@@ -17,7 +28,10 @@
 				foreach($row as $key => $value) {
 					$fs->{$key} = $value;
 				}
-				$sets[] = $fs;
+				$fsp = new Permissions($fs);
+				if ($fsp->canAccessFileSet()) {
+					$sets[] = $fs;
+				}
 			}
 			return $sets;
 		}
@@ -35,6 +49,8 @@
 		}
 		
 		public function getFileSetID() {return $this->fsID;}
+		public function overrideGlobalPermissions() {return $this->fsOverrideGlobalPermissions;}
+		
 		public function getFileSetName() {return $this->fsName;}	
 		
 		/**
@@ -68,6 +84,7 @@
 				//we explicatly set the primary key ID field to null					
 				$file_set->fsID		= null;
 				$file_set->fsName 	= $fs_name;
+				$file_set->fsOverrideGlobalPermissions = 0;
 				$file_set->fsType 	= $fs_type;
 				$file_set->uID		= $fs_uid;
 				$file_set->save();
@@ -116,6 +133,51 @@
 			foreach ($this->fileSetFiles as $file) {
 				if($file->fID == $f_id){
 					return true;
+				}
+			}
+		}
+
+		public function resetPermissions() {
+			$db = Loader::db();
+			$db->Execute('delete from FilePermissions where fsID = ?', array($this->fsID));
+			$db->Execute('delete from FilePermissionFileTypes where fsID = ?', array($this->fsID));
+		}
+		
+		public function setPermissions($obj, $canAccessFileSet, $canRead, $canWrite, $canAdmin, $canAdd, $extensions = array()) {
+			$fsID = $this->fsID;
+			$uID = 0;
+			$gID = 0;
+			$db = Loader::db();
+			if (is_a($obj, 'UserInfo')) {
+				$uID = $obj->getUserID();
+			} else {
+				$gID = $obj->getGroupID();
+			}
+			
+			if ($canAccessFileSet == FilePermissions::PTYPE_NONE) {
+				$canRead = FilePermissions::PTYPE_MINE;
+				$canWrite = FilePermissions::PTYPE_NONE;
+				$canAdd = FilePermissions::PTYPE_NONE;
+				$canAdmin = FilePermissions::PTYPE_NONE;
+			}
+				
+			$db->Replace('FilePermissions', array(
+				'fsID' => $fsID,
+				'uID' => $uID, 
+				'gID' => $gID,
+				'canRead' => $canRead,
+				'canAccessFileSet' => $canAccessFileSet,
+				'canWrite' => $canWrite,
+				'canAdmin' => $canAdmin,
+				'canAdd' => $canAdd
+			), 
+			array('fsID', 'gID', 'uID'), true);
+			
+			$db->Execute("delete from FilePermissionFileTypes where fsID = ? and gID = ? and uID = ?", array($fsID, $uID, $gID));
+	
+			if ($canAdd == FilePermissions::PTYPE_CUSTOM && is_array($extensions)) {
+				foreach($extensions as $e) {
+					$db->Execute('insert into FilePermissionFileTypes (fsID, gID, uID, extension) values (?, ?, ?, ?)', array($fsID, $gID, $uID, $e));
 				}
 			}
 		}		

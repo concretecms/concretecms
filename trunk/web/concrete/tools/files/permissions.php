@@ -1,15 +1,14 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c = Page::getByPath("/dashboard/mediabrowser");
-$cp = new Permissions($c);
 $u = new User();
 $form = Loader::helper('form');
-if (!$cp->canRead()) {
-	die(_("Access Denied."));
-}
 
 $ih = Loader::helper('concrete/interface'); 
 $f = File::getByID($_REQUEST['fID']);
+$cp = new Permissions($f);
+if (!$cp->canAdmin()) {
+	die(_("Access Denied."));
+}
 $form = Loader::helper('form');
 
 if ($_POST['task'] == 'set_password') {

@@ -459,10 +459,10 @@ $(document).ready(function(){
 		<?
 		$favIconFID=intval(Config::get('FAVICON_FID'));
 		if($favIconFID){
-			Loader::block('library_file');
-			$fileBlock=LibraryFileBlockController::getFile( $favIconFID ); ?>
+			$f = File::getByID($favIconFID);
+			?>
 			<div>
-			<img src="<?=$fileBlock->getFileRelativePath() ?>" />
+			<img src="<?=$f->getRelativePath() ?>" />
 			<a onclick="removeFavIcon()"><?=t('Remove')?></a>
 			</div>
 			<script>
