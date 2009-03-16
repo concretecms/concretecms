@@ -37,6 +37,12 @@ class File extends Object {
 		return $this->uID;
 	}
 	
+	public function setUserID($uID) {
+		$this->uID = $uID;
+		$db = Loader::db();
+		$db->Execute("update Files set uID = ? where fID = ?", array($uID, $this->fID));
+	}
+	
 	public function getFileSets() {
 		$db = Loader::db();
 		Loader::model('file_set');
@@ -118,8 +124,16 @@ class File extends Object {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
 		$date = $dh->getLocalDateTime(); 
+		
+		$uID = 0;
 		$u = new User();
-		$db->Execute('insert into Files (fDateAdded, uID) values (?, ?)', array($date, $u->getUserID()));
+		if (isset($data['uID'])) {
+			$uID = $data['uID'];
+		} else if ($u->isRegistered()) {
+			$uID = $u->getUserID();
+		}
+		
+		$db->Execute('insert into Files (fDateAdded, uID) values (?, ?)', array($date, $uID));
 		
 		$fID = $db->Insert_ID();
 		
