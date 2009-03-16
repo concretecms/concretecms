@@ -64,21 +64,30 @@ class SlideshowBlockController extends BlockController {
 	function loadFileSet(){
         $f = Loader::helper('concrete/file');
 
-		$sql = "SELECT fv.fvFilename, fv.fvPrefix FROM FileSetFiles fsf, FileVersions fv WHERE fsf.fsID = " . $this->fsID .
-		       " AND fsf.fID = fv.fID AND fvIsApproved = 1";
+		$fakID = $this->db->getOne("SELECT fakID FROM FileAttributeKeys WHERE akName = 'height'"); 
+
+		$sql = "SELECT fv.fvFilename, fv.fvPrefix, fav.value FROM FileSetFiles fsf, FileVersions fv, FileAttributeValues fav " .
+		       "WHERE fsf.fsID = " . $this->fsID . " AND fsf.fID = fv.fID AND fvIsApproved = 1 AND fav.fID = fv.fID " .
+		       " AND fav.fvID = fv.fvID AND fav.fakID = " . $fakID;
 		$files = $this->db->getAll($sql); 
 
 		$image = array();
 		$image['duration'] = $this->duration;
 		$image['fadeDuration'] = $this->fadeDuration;
 		$image['groupSet'] = 0;
-		$image['imgHeight'] = $this->minHeight;
 		$image['url'] = '';
 		$images = array();
+		$minHeight = 0;
 		foreach ($files as $file) {
 			$image['fileName'] = $file['fvFilename'];
 			$image['fullFilePath'] = $f->getFileRelativePath($file['fvPrefix'], $file['fvFilename']);
+			if ($minHeight == 0 || $file['value'] < $minHeight) {
+				$minHeight = $file['value'];
+			}
 			$images[] = $image;
+		}
+		for ($i = 0; $i < count($images); $i++) {
+			$images[$i]['imgHeight'] = $minHeight;
 		}
 		$this->images = $images;
 	}
@@ -106,18 +115,8 @@ class SlideshowBlockController extends BlockController {
 			$args['duration'] = $data['duration'][0];
 			$args['fadeDuration'] = $data['fadeDuration'][0];
 
-			$fakID= $this->db->getOne("SELECT fakID FROM FileAttributeKeys WHERE akName = 'height'"); 
 			$files = $this->db->getAll("SELECT fv.fID FROM FileSetFiles fsf, FileVersions fv WHERE fsf.fsID = " . $data['fsID'] .
 			         " AND fsf.fID = fv.fID AND fvIsApproved = 1");
-			$minHeight = 0;
-			foreach($files as $file)
-			{
-				$height = $this->db->getOne("SELECT value FROM FileAttributeValues WHERE fID = " . $file['fID'] . " AND fakID = " . $fakID);
-				if ($minHeight == 0 || $height < $minHeight) {
-					$minHeight = $height;
-				}
-			}
-			$args['minHeight'] = $minHeight;
 			
 			//delete existing images
 			$this->db->query("DELETE FROM btSlideshowImg WHERE bID=".intval($this->bID));

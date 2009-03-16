@@ -6,22 +6,16 @@ var SlideshowBlock = {
 		ccm_launchFileManager();
 	},
 	
-	chooseFileSet:function(){ 
-		ccm_launchFileSetPicker($("#ccm-slideshowBlock-fsRow input[name=fsID]").val());
-	},
-
 	showImages:function(){
 		$("#ccm-slideshowBlock-imgRows").show();
 		$("#ccm-slideshowBlock-chooseImg").show();
 		$("#ccm-slideshowBlock-fsRow").hide();
-		$("#ccm-slideshowBlock-chooseFS").hide();
 	},
 
 	showFileSet:function(){
 		$("#ccm-slideshowBlock-imgRows").hide();
 		$("#ccm-slideshowBlock-chooseImg").hide();
 		$("#ccm-slideshowBlock-fsRow").show();
-		$("#ccm-slideshowBlock-chooseFS").show();
 	},
 
 	selectObj:function(obj){
@@ -127,7 +121,7 @@ ccmValidateBlockForm = function() { return SlideshowBlock.validate(); }
 ccm_chooseAsset = function(obj) { SlideshowBlock.selectObj(obj); }
 
 $(function() {
-	if ($("#ccm-slideshowBlock-fsRow input[name=fsID]").val() > 0) {
+	if ($("#ccm-slideshowBlock-fsRow #fsID").val() > 0) {
 		$("#newImg select[name=type]").val('FILESET');
 		SlideshowBlock.showFileSet();
 	} else {
