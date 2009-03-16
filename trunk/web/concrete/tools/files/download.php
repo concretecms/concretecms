@@ -1,12 +1,13 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c = Page::getByPath("/dashboard/mediabrowser");
-$cp = new Permissions($c);
+
 $u = new User();
 $fh = Loader::helper('file');
 $vh = Loader::helper('validation/identifier');
 $form = Loader::helper('form');
-if (!$cp->canRead()) {
+
+$fp = FilePermissions::getGlobal();
+if (!$fp->canRead()) {
 	die(_("Access Denied."));
 }
 
@@ -22,10 +23,13 @@ if (isset($_REQUEST['fID']) && is_array($_REQUEST['fID'])) {
 	$filenames = array();
 	foreach($_REQUEST['fID'] as $fID) {
 		$f = File::getByID($fID);
-		if (!in_array(basename($f->getPath()), $filenames)) {
-			$files .= "'" . addslashes($f->getPath()) . "' ";
+		$fp = new Permissions($f);
+		if ($fp->canRead()) {
+			if (!in_array(basename($f->getPath()), $filenames)) {
+				$files .= "'" . addslashes($f->getPath()) . "' ";
+			}
+			$filenames[] = basename($f->getPath());
 		}
-		$filenames[] = basename($f->getPath());
 	}
 	exec(DIR_FILES_BIN_ZIP . ' -j \'' . addslashes($filename) . '\' ' . $files);
 	$ci->forceDownload($filename);	
@@ -33,12 +37,14 @@ if (isset($_REQUEST['fID']) && is_array($_REQUEST['fID'])) {
 } else {
 	
 	$f = File::getByID($_REQUEST['fID']);
-	if (isset($_REQUEST['fvID'])) {
-		$fv = $f->getVersion($_REQUEST['fvID']);
-	} else {
-		$fv = $f->getApprovedVersion();
+	$fp = new Permissions($f);
+	if ($fp->canRead()) {
+		if (isset($_REQUEST['fvID'])) {
+			$fv = $f->getVersion($_REQUEST['fvID']);
+		} else {
+			$fv = $f->getApprovedVersion();
+		}
+		
+		$ci->forceDownload($fv->getPath());
 	}
-	
-	$ci->forceDownload($fv->getPath());
-
 }

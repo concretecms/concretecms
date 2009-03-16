@@ -1,12 +1,8 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c = Page::getByPath("/dashboard/mediabrowser");
-$cp = new Permissions($c);
 $u = new User();
 $form = Loader::helper('form');
-if (!$cp->canRead()) {
-	die(_("Access Denied."));
-}
+
 
 if ($_REQUEST['task'] == 'save_picnik_api_key') {
 	Config::save('API_KEY_PICNIK', $_POST['API_KEY_PICNIK']);
@@ -15,19 +11,24 @@ if ($_REQUEST['task'] == 'save_picnik_api_key') {
 $f = File::getByID($_REQUEST['fID']);
 $fv = $f->getApprovedVersion();
 
+$fp = new Permissions($f);
+if (!$fp->canWrite()) {
+	die(t("Access Denied."));
+}
+
 $image = BASE_URL . $fv->getRelativePath();
-$apiKey = 'be63e3b4ae4f0a0035caf17fc5f2f02b';
 $service = 'http://www.picnik.com/service/';
 $export = BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/files/importers/remote';
-$apiKey = Config::get('API_KEY_PICNIK');
 
 $valt = Loader::helper('validation/token');
 
-$url = $service . '?_apikey=' . $apiKey . '&_export=' . $export . '&' . $valt->getParameter('import_remote') . '&task=update_file&fID=' . $_REQUEST['fID'] . '&_export_field=url_upload_1&_export_agent=browser&_import=' . rawurlencode($image);
+$url = $service . '?_apikey=' . API_KEY_PICNIK . '&_export=' . $export . '&' . $valt->getParameter('import_remote') . '&task=update_file&fID=' . $_REQUEST['fID'] . '&_export_field=url_upload_1&_export_agent=browser&_import=' . rawurlencode($image);
 
 ?>
 
-<? if ($apiKey == '') { 
+<?
+/*
+if ($apiKey == '') { 
 	$html = Loader::helper('html');
 	print $html->css('ccm.default.theme.css');
 	?>
@@ -41,11 +42,12 @@ $url = $service . '?_apikey=' . $apiKey . '&_export=' . $export . '&' . $valt->g
 	
 	<form method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/edit/image?task=save_picnik_api_key">
 	<?=$form->text('API_KEY_PICNIK')?>
+	<?=$form->hidden('fID')?>
 	<?=$form->submit('save_picnik', t('Save'))?>
 	</form>
 	
 
-<? } else { ?>
+<? } else {  */ ?>
 	
 	<script type="text/javascript">
 	parent.jQuery(function() {
@@ -55,4 +57,4 @@ $url = $service . '?_apikey=' . $apiKey . '&_export=' . $export . '&' . $valt->g
 	</script>
 	
 
-<? } ?>
+<? // } ?>

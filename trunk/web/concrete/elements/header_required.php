@@ -88,11 +88,12 @@ $this->addHeaderItem($html->css('ccm.popup_login.css'));
 */ 
 
 $favIconFID=intval(Config::get('FAVICON_FID'));
-if($favIconFID && file_exists(DIR_BASE.'/favicon.ico')){
-	Loader::block('library_file');
-	$fileBlock=LibraryFileBlockController::getFile( $favIconFID ); ?> 
-	<link rel="shortcut icon" href="<?=$fileBlock->getFileFullURL()?>" type="image/x-icon" />
-	<link rel="icon" href="<?=$fileBlock->getFileFullURL()?>" type="image/x-icon" />
+
+
+if($favIconFID) {
+	$f = File::getByID($favIconFID); ?>
+	<link rel="shortcut icon" href="<?=$f->getRelativePath()?>" type="image/x-icon" />
+	<link rel="icon" href="<?=$f->getRelativePath()?>" type="image/x-icon" />
 <? } ?>
 
 <? 

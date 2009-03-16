@@ -1,11 +1,12 @@
 <?
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c = Page::getByPath("/dashboard/mediabrowser");
-$cp = new Permissions($c);
 $u = new User();
-if (!$cp->canRead()) {
-	die(_("Access Denied."));
+
+$cf = Loader::helper('file');
+$fp = FilePermissions::getGlobal();
+if (!$fp->canAddFiles()) {
+	die(_("Unable to add files."));
 }
 
 if (isset($_REQUEST['fID'])) {
@@ -94,9 +95,12 @@ if (count($errors) < 1) {
 				fclose($handle);
 				
 				// import the file into concrete
-				$fi = new FileImporter();
-				$resp = $fi->import($fpath.$fname, $fname, $fr);
-	
+				if ($fp->canAddFileType($cf->getExtension($fname))) {
+					$fi = new FileImporter();
+					$resp = $fi->import($fpath.$fname, $fname, $fr);
+				} else {
+					$resp = FileImporter::E_FILE_INVALID_EXTENSION;
+				}
 				if (!($resp instanceof FileVersion)) {
 					switch($resp) {
 						case FileImporter::E_FILE_INVALID_EXTENSION:

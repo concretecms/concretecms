@@ -70,5 +70,8 @@ var ccmi18n_filemanager = {
 	deleteFile: '<?=t('Delete')?>',
 	title: '<?=t('File Manager')?>',
 	uploadErrorChooseFile: '<?=t('You must choose a file.')?>',
-	rescan: '<?=t('Rescan')?>'
+	rescan: '<?=t('Rescan')?>',
+	
+	PTYPE_CUSTOM: '<?=FilePermissions::PTYPE_CUSTOM?>',
+	PTYPE_ALL: '<?=FilePermissions::PTYPE_ALL?>'
 }

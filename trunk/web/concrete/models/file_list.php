@@ -100,6 +100,24 @@ class FileList extends DatabaseItemList {
 		');
 	}
 	
+	protected function setupFilePermissions() {
+		
+		// FIRST, we find files that override their set permissions and see if we can view them
+		
+		
+		
+
+		$fp = FilePermissions::getGlobal();
+		
+		if ($fp->getFileReadLevel() == FilePermissions::PTYPE_MINE) {
+
+			// but there may be files in sets that we can view that override this global permission
+			$sets = FileSetPermissions::getViewableSetsIDs();
+			
+			$u = new User();
+			$this->filter(false, '(f.uID = ' . $u->getUserID() . ' or (select count(fID) from FileSetFiles where fsID in (' . implode(',', $sets) . ') > 0))');
+		}
+	}
 	protected function setupFileAttributeFilters() {
 		$db = Loader::db();
 		$i = 1;
@@ -150,18 +168,15 @@ class FileList extends DatabaseItemList {
 		Loader::model('file');
 		$this->setBaseQuery();
 		$this->filter('fvIsApproved', 1);
-		$ipp = $this->itemsPerPage; // we store this in case a value is being used for paging that is separate from this value we want to use
-		
-		$this->setItemsPerPage(0); // no limit
+
 		$this->setupFileAttributeFilters();
-		$r = parent::get();
+		$this->setupFilePermissions();
+		$r = parent::get($itemsToGet, $offset);
 		foreach($r as $row) {
 			$f = File::getByID($row['fID']);			
 			$files[] = $f;
 		}
-		$this->setItemsPerPage($ipp);
-		$this->start = $offset;
-		return array_slice($files, $offset, $itemsToGet);
+		return $files;
 	}
 	
 	public static function getExtensionList() {

@@ -1,14 +1,12 @@
 <?
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c = Page::getByPath("/dashboard/mediabrowser");
-$cp = new Permissions($c);
 $u = new User();
-if (!$cp->canRead()) {
-	die(_("Access Denied."));
+$fp = FilePermissions::getGlobal();
+if (!$fp->canAddFiles()) {
+	die(_("Unable to add files."));
 }
-
-
+$cf = Loader::helper("file");
 $valt = Loader::helper('validation/token');
 Loader::library("file/importer");
 
@@ -27,7 +25,11 @@ if ($valt->validate('import_incoming')) {
 		$fi = new FileImporter();
 		foreach($_POST as $k=>$name) {
 			if(preg_match("#^send_file#", $k)) {
-				$resp = $fi->import(DIR_FILES_INCOMING .'/'. $name, $name, $fr);
+				if (!$fp->canAddFileType($cf->getExtension($name))) {
+					$resp = FileImporter::E_FILE_INVALID_EXTENSION;
+				} else {
+					$resp = $fi->import(DIR_FILES_INCOMING .'/'. $name, $name, $fr);
+				}
 				if (!($resp instanceof FileVersion)) {
 					switch($resp) {
 						case FileImporter::E_FILE_INVALID_EXTENSION:

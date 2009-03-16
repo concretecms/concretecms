@@ -1,12 +1,7 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c = Page::getByPath("/dashboard/files");
-$cp = new Permissions($c);
 $u = new User();
 $form = Loader::helper('form');
-if (!$cp->canRead()) {
-	die(_("Access Denied."));
-}
 
 $f = File::getByID($_REQUEST['fID']);
 if (isset($_REQUEST['fvID'])) {
@@ -15,6 +10,10 @@ if (isset($_REQUEST['fvID'])) {
 	$fv = $f->getApprovedVersion();
 }
 
+$fp = new Permissions($f);
+if (!$fp->canRead()) {
+	die(_("Access Denied."));
+}
 ?>
 
 <div id="ccm-file-manager-download-bar">

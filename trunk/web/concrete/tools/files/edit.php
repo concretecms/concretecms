@@ -1,16 +1,17 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c = Page::getByPath("/dashboard/mediabrowser");
-$cp = new Permissions($c);
 $u = new User();
 $form = Loader::helper('form');
-if (!$cp->canRead()) {
-	die(_("Access Denied."));
-}
 
 $ci = Loader::helper('concrete/urls');
 $f = File::getByID($_REQUEST['fID']);
 $fv = $f->getApprovedVersion();
+
+$fp = new Permissions($f);
+if (!$fp->canWrite()) {
+	die(_("Access Denied."));
+}
+
 
 $to = $fv->getTypeObject();
 

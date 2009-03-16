@@ -91,6 +91,8 @@ class Database {
 	 */ 
 	public function setLogging($log) {
 		$this->db->LogSQL($log);
+		global $ADODB_PERF_MIN;
+		$ADODB_PERF_MIN = 0;
 	}
 
 

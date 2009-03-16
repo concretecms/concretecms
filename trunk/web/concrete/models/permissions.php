@@ -29,6 +29,12 @@ class PermissionsCache {
 		} else if (is_a($obj, "Area")) {
 			$id = $obj->getAreaID();
 			$prefix = 'area';
+		} else if (is_a($obj, 'FileSet')) {
+			$id = $obj->getFileSetID();
+			$prefix = 'fileset';
+		} else if (is_a($obj, 'File')) {
+			$id = $obj->getFileID();
+			$prefix = 'file';
 		}
 		
 		$identifier = $prefix . ':' . $id;
@@ -93,7 +99,20 @@ class PermissionsProxy {
 	}
 	
 	public function get($unknownObj) {
-		if (is_a($unknownObj, 'Page')) {
+		if (is_a($unknownObj, 'File')) {
+			if (!$unknownObj->overrideFileSetPermissions()) {				
+				$po = PermissionsProxy::getNewOrCached($unknownObj, 'FileSetPermissions');
+			} else {
+				$po = PermissionsProxy::getNewOrCached($unknownObj, 'FilePermissions');
+			}		
+		} else if (is_a($unknownObj, 'FileSet')) {
+			if ($unknownObj->overrideGlobalPermissions()) {
+				$po = PermissionsProxy::getNewOrCached($unknownObj, 'FileSetPermissions');
+			} else {
+				$gs = FileSet::getGlobal();
+				$po = PermissionsProxy::getNewOrCached($gs, 'FileSetPermissions');
+			}
+		} else if (is_a($unknownObj, 'Page')) {
 			$po = PermissionsProxy::getNewOrCached($unknownObj, 'CollectionPermissions');
 		} else if (is_a($unknownObj, 'Block')) {
 			$aObj = $unknownObj->getBlockAreaObject();
@@ -295,6 +314,14 @@ class Permissions extends Object {
 		return (in_array($btID, $this->addBlockTypes));
 	}
 	
+	function canAddFiles() {
+		return count($this->permissions['canAddFileTypes']) > 0;
+	}
+	
+	function canAddFileType($ext) {
+		return (in_array($ext, $this->permissions['canAddFileTypes']));
+	}
+	
 	function canAdminBlock() {
 		$oObj = $this->getOriginalObject();
 		$c = (is_a($oObj, 'Area')) ? $oObj->getAreaCollectionObject() : $oObj->getBlockCollectionObject();
@@ -304,7 +331,36 @@ class Permissions extends Object {
 	}
 
 	function canAdminPage() {
+		return $this->canAdmin();
+	}
+	
+	function canAdmin() {
 		return strpos($this->permissionSet, 'adm') > -1;
+	}
+	
+	
+	public function canAccessFileSet() {
+		return $this->permissions['canAccessFileSet'];
+	}
+	
+	public function canAccessFileManager() {
+		return $this->permissions['canAccessFileSet'];
+	}
+	
+	public function getFileReadLevel() {
+		return $this->permissions['canRead'];
+	}
+	public function getFileWriteLevel() {
+		return $this->permissions['canWrite'];
+	}
+	public function getFileAdminLevel() {
+		return $this->permissions['canAdmin'];
+	}
+	public function getFileAddLevel() {
+		return $this->permissions['canAdd'];
+	}
+	public function getAllowedFileExtensions() {
+		return $this->permissions['canAddFileTypes'];
 	}
 	
 	function buildPermissionsFromArray($ar) {
@@ -337,6 +393,7 @@ class Permissions extends Object {
 	
 	function loadPermissionSet($pObj) {
 		$this->permissionSet = $pObj->permissionSet;
+		$this->permissions = $pObj->permissions;
 		$this->oUID = $pObj->oUID;
 		$this->addBlockTypes = $pObj->addBlockTypes;
 		$this->addCollectionTypes = $pObj->addCollectionTypes;
@@ -694,5 +751,142 @@ class VersionPermissions extends Permissions {
 
 		return $this;
 	}
+
+}
+
+
+/** 
+ * Permissions for file sets
+ */
+class FileSetPermissions extends Permissions {
+
+	public function __construct($fObj) {
+		// This object can either be a file set, or a file
+		// if it's a file, we grab permissions from all sets associated with that file		
+		
+		$u = new User();
+		
+		$adm = $u->isSuperUser();
+		
+		if ($adm) {
+			$this->permissions['canAccessFileSet'] = FilePermissions::PTYPE_ALL;
+			$this->permissions['canRead'] = FilePermissions::PTYPE_ALL;
+			$this->permissions['canWrite'] = FilePermissions::PTYPE_ALL;
+			$this->permissions['canAdmin'] = FilePermissions::PTYPE_ALL;
+			$this->permissions['canAdd'] = FilePermissions::PTYPE_ALL;
+		} else {
+			$this->permissions = $this->setGroupAccess($fObj, $u);
+		}
+
+		if ($this->permissions['canRead'] == FilePermissions::PTYPE_ALL || (is_a($fObj, 'File') && $fObj->getUserID() == $u->getUserID() && $this->permissions['canRead'] == FilePermissions::PTYPE_MINE)) {
+			$this->permissionSet .= 'r:';
+		}
+		if ($this->permissions['canWrite'] == FilePermissions::PTYPE_ALL || (is_a($fObj, 'File') && $fObj->getUserID() == $u->getUserID() && $this->permissions['canWrite'] == FilePermissions::PTYPE_MINE)) {
+			$this->permissionSet .= 'wa:';
+		}
+		
+		if ($this->permissions['canAdd'] == FilePermissions::PTYPE_ALL) {
+			$ch = Loader::helper('concrete/file');
+			
+			$this->permissions['canAddFileTypes'] = $ch->getAllowedFileExtensions();		
+		}
+		
+	}
+	
+	/** 
+	 * Returns an array of file set IDs that override the global, and allow the logged-in user to view them.
+	 */
+	public function getViewableSetsIDs() {
+		$db = Loader::db();
+		$u = new User();
+
+		$groups = $u->getUserGroups();
+		$inStr = '(' . implode(',', array_keys($groups)) . ')';
+		$_uID = ($u->getUserID() > -1) ? " or FilePermissions.uID = " . $u->getUserID() : "";
+
+		$q = "select FileSets.fsID from FilePermissions inner join FileSets on (FileSets.fsID = FilePermissions.fsID) where (gID in $inStr $_uID) and fsOverrideGlobalPermissions = 1 and canRead = " . FilePermissions::PTYPE_ALL;
+		$r = $db->query($q);
+		
+		$sets = array();
+		while($row = $r->fetchRow()) {
+			$sets[] = $row['fsID'];
+		}
+		return $sets;		
+	}
+	
+	function setGroupAccess($fs, $u) {
+		
+		
+		$db = Loader::db();
+		$groups = $u->getUserGroups();
+		$inStr = '(' . implode(',', array_keys($groups)) . ')';
+
+		if (is_a($fs, 'FileSet')) {
+			$fsIDStr = "fsID = " .  $fs->getFileSetID();
+		} else if (is_a($fs, 'File')) {
+			$f = $fs->getFile();
+			$sets = $f->getFileSets();
+			$sets[] = FileSet::getGlobal();
+			$setIDs = array();
+			foreach($sets as $fs) {
+				$setIDs[] = $fs->getFileSetID();
+			}
+			
+			$fsIDStr = 'fsID in (' . implode(',', array_keys($setIDs)) . ')';
+		}
+		$_uID = ($u->getUserID() > -1) ? " or uID = " . $u->getUserID() : "";
+		
+		$q = "select canAdmin, canAccessFileSet, canRead, canWrite, canAdd from FilePermissions where {$fsIDStr} and (gID in $inStr $_uID)";
+		$r = $db->query($q);
+		
+		$p = array();
+		$p['canRead'] = FilePermissions::PTYPE_NONE;
+		$p['canAccessFileSet'] = FilePermissions::PTYPE_NONE;
+		$p['canWrite'] = FilePermissions::PTYPE_NONE;
+		$p['canAdmin'] = FilePermissions::PTYPE_NONE;
+		$p['canAdd'] = FilePermissions::PTYPE_NONE;
+		$p['canAddFileTypes'] = array();
+		
+		while ($row = $r->fetchRow()) {
+			foreach($row as $k => $v) {
+				if (isset($p[$k]) && $p[$k] < $v) {
+					$p[$k] = $v;
+				}
+			}
+		}
+		
+		if ($p['canAdd'] == FilePermissions::PTYPE_CUSTOM) {
+			$q = "select extension from FilePermissionFileTypes where {$fsIDStr} and (gID in $inStr $_uID)";
+			$p['canAddFileTypes'] = $db->GetCol($q);
+		}
+		
+		return $p;
+		
+	}
+	
+}
+
+/** 
+ * A specific permissions object belonging to files 
+ * @package Permissions
+ */
+class FilePermissions extends Permissions {
+
+	const PTYPE_NONE = 0;
+	const PTYPE_MINE = 3;
+	const PTYPE_ALL = 10;
+	const PTYPE_CUSTOM = 7;
+	
+	public function __construct($f = null) {
+
+	}
+	
+	public static function getGlobal() {
+		Loader::model('file_set');
+		$fs = FileSet::getGlobal();			
+		$fsp = new Permissions($fs);
+		return $fsp;
+	}
+	
 
 }

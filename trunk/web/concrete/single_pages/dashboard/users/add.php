@@ -53,7 +53,7 @@ if ($_POST['create']) {
 		$error[] = t('A password must be between %s and %s characters',USER_PASSWORD_MINIMUM,USER_PASSWORD_MAXIMUM);
 	}
 		
-	if (strlen($password) >= USER_PASSWORD_MINIMUM && !$vals->password($password)) {
+	if (strlen($password) >= USER_PASSWORD_MINIMUM && !$valc->password($password)) {
 		$error[] = t('A password may not contain ", \', >, <, or any spaces.');
 	}
 

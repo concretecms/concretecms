@@ -1,18 +1,17 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c = Page::getByPath("/dashboard/files");
-$cp = new Permissions($c);
 $u = new User();
 $form = Loader::helper('form');
-if (!$cp->canRead()) {
-	die(_("Access Denied."));
-}
-
 Loader::model("file_attributes");
-
 $previewMode = false;
 
 $f = File::getByID($_REQUEST['fID']);
+
+$fp = new Permissions($f);
+if (!$fp->canRead()) {
+	die(_("Access Denied."));
+}
+
 if (isset($_REQUEST['fvID'])) {
 	$fv = $f->getVersion($_REQUEST['fvID']);
 } else {
@@ -23,12 +22,12 @@ if ($_REQUEST['task'] == 'preview_version') {
 	$previewMode = true;
 }
 
-if ($_POST['task'] == 'approve_version' && (!$previewMode)) {
+if ($_POST['task'] == 'approve_version' && $fp->canWrite() && (!$previewMode)) {
 	$fv->approve();
 	exit;
 }
 
-if ($_POST['task'] == 'update_core' && (!$previewMode)) {
+if ($_POST['task'] == 'update_core' && $fp->canWrite() && (!$previewMode)) {
 	$fv = $f->getVersionToModify();
 
 	switch($_POST['attributeField']) {
@@ -52,7 +51,7 @@ if ($_POST['task'] == 'update_core' && (!$previewMode)) {
 	exit;
 }
 
-if ($_POST['task'] == 'update_extended_attribute' && (!$previewMode)) {
+if ($_POST['task'] == 'update_extended_attribute' && $fp->canWrite() && (!$previewMode)) {
 	$fv = $f->getVersionToModify();
 	$fakID = $_REQUEST['fakID'];
 	$value = '';
@@ -75,14 +74,14 @@ if ($_POST['task'] == 'update_extended_attribute' && (!$previewMode)) {
 }
 
 function printCorePropertyRow($title, $field, $value, $formText) {
-	global $previewMode, $f;
+	global $previewMode, $f, $fp;
 	if ($value == '') {
 		$text = '<div class="ccm-file-manager-field-none">' . t('None') . '</div>';
 	} else {
 		$text = $value;
 	}
 
-	if (!$previewMode) { 
+	if ($fp->canWrite() && (!$previewMode)) {
 	
 	$html = '
 	<tr class="ccm-file-manager-editable-field">
@@ -114,14 +113,14 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 }
 
 function printFileAttributeRow($ak, $fv) {
-	global $previewMode, $f;
+	global $previewMode, $f, $fp;
 	$value = $fv->getAttribute($ak, true);
 	if ($value == '') {
 		$text = '<div class="ccm-file-manager-field-none">' . t('None') . '</div>';
 	} else {
 		$text = $value;
 	}
-	if ($ak->isAttributeKeyEditable() && (!$previewMode)) { 
+	if ($ak->isAttributeKeyEditable() && $fp->canWrite() && (!$previewMode)) { 
 	
 	$html = '
 	<tr class="ccm-file-manager-editable-field">

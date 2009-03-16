@@ -1,14 +1,16 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c = Page::getByPath("/dashboard/mediabrowser");
-$cp = new Permissions($c);
+
 $u = new User();
 $form = Loader::helper('form');
-if (!$cp->canRead()) {
+
+
+$f = File::getByID($_REQUEST['fID']);
+$fp = new Permissions($f);
+if (!$fp->canRead()) {
 	die(_("Access Denied."));
 }
 
-$f = File::getByID($_REQUEST['fID']);
 $fv = $f->getApprovedVersion();
 
 $canViewInline = $fv->canView() ? 1 : 0;

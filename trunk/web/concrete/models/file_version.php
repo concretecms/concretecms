@@ -21,6 +21,11 @@ class FileVersion extends Object {
 	public function getDescription() {return $this->fvDescription;}
 	public function isApproved() {return $this->fvIsApproved;}
 
+	public function getFile() {
+		$fo = File::getByID($this->fID);
+		return $fo;
+	}
+	
 	/** 
 	 * Gets an attribute for the file. If "nice mode" is set, we display it nicely
 	 * for use in the file attributes table 
@@ -148,7 +153,16 @@ class FileVersion extends Object {
 		
 		
 		$this->deny();
-		// TODO: duplicate attribute key/values
+		
+		$r = $db->Execute('select fvID, fakID, value from FileAttributeValues where fID = ? and fvID = ?', array($this->getFileID(), $this->fvID));
+		while ($row = $r->fetchRow()) {
+			$db->Execute("insert into FileAttributeValues (fID, fvID, fakID, value) values (?, ?, ?, ?)", array(
+				$this->fID, 
+				$fvID,
+				$row['fakID'], 
+				$row['value']
+			));
+		}
 		$fv2 = $f->getVersion($fvID);
 		
 		return $fv2;

@@ -554,33 +554,35 @@ class DashboardSettingsController extends Controller {
 	}
 	
 	function update_favicon(){
-		Loader::block('library_file');
-		
+		Loader::library('file/importer');
 		if ($this->token->validate("update_favicon")) { 
 		
 			if(intval($this->post('remove_favicon'))==1){
 				Config::save('FAVICON_FID',0);
 				$this->redirect('/dashboard/settings/', 'favicon_removed');
-			}elseif ( isset($_FILES['favicon_file']) ) {
-				$fh = Loader::helper('validation/file');
-				if(!$fh->extension($_FILES['favicon_file']['name'])){	
-					$msg = t('Invalid file extension.');
-				}else{  
-					$bt = BlockType::getByHandle('library_file');
-					$data = array();
-					$data['file'] = $_FILES['favicon_file']['tmp_name'];
-					$data['name'] = $_FILES['favicon_file']['name'];
-					$nb = $bt->add($data);
-					$fileBlock=LibraryFileBlockController::getFile( $nb->getBlockID() );
-					$fileID=$fileBlock->getFileID(); 
-					Config::save('FAVICON_FID', $fileID);
-					$filepath=$fileBlock->getFilePath();  
-					copy($filepath,DIR_BASE.'/favicon.ico');
+			} else {
+				$fi = new FileImporter();
+				$resp = $fi->import($_FILES['favicon_file']['tmp_name'], $_FILES['favicon_file']['name'], $fr);
+	
+				if (!($resp instanceof FileVersion)) {
+					switch($resp) {
+						case FileImporter::E_FILE_INVALID_EXTENSION:
+							$this->set('error', array(t('Invalid file extension.')));
+							break;
+						case FileImporter::E_FILE_INVALID:
+							$this->set('error', array(t('Invalid file.')));
+							break;
+						
+					}
+				} else {
+				
+					Config::save('FAVICON_FID', $resp->getFileID());
+					$filepath=$resp->getPath();  
+					//@copy($filepath, DIR_BASE.'/favicon.ico');
 					$this->redirect('/dashboard/settings/', 'favicon_saved');
-				}				
-			}else{
-				$msg = t('An error occured while uploading your file');
-			}
+
+				}
+			}		
 			
 		}else{
 			$this->set('error', array($this->token->getErrorMessage()));

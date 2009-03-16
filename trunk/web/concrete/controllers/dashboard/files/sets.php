@@ -5,7 +5,9 @@ class DashboardFilesSetsController extends Controller {
 	var $helpers = array('form','validation/token','concrete/interface'); 
 
 	public function on_start(){
-
+		$html = Loader::helper('html');
+		$this->addHeaderItem($html->css('ccm.filemanager.css'));
+		$this->addHeaderItem($html->javascript('ccm.filemanager.js'));
 	}
 	
 	public function view() {
@@ -50,6 +52,9 @@ class DashboardFilesSetsController extends Controller {
 	public function file_sets_edit_or_delete(){
 		extract($this->getHelperObjects());
 		
+		$ph = Loader::controller('/dashboard/files/access');
+		$this->set('ph', $ph);
+		
 		if (!$validation_token->validate("file_sets_edit_or_delete")) {			
 			$this->set('error', array($validation_token->getErrorMessage()));
 			$this->view();
@@ -93,7 +98,15 @@ class DashboardFilesSetsController extends Controller {
 		$file_set = new FileSet();
 		$file_set->Load('fsID = ?', $this->post('fsID'));		
 		$file_set->fsName = $this->post('file_set_name');
+		$file_set->fsOverrideGlobalPermissions = ($this->post('fsOverrideGlobalPermissions') == 1) ? 1 : 0;
 		$file_set->save();
+		
+		$file_set->resetPermissions();		
+		if ($file_set->fsOverrideGlobalPermissions == 1) {
+			$p = $this->post();
+			$fh = Loader::controller('/dashboard/files/access');
+			$fh->setFileSetPermissions($file_set, $p);			
+		}
 		
 		$this->set('message',t('Changes Saved'));
 		$this->view();
