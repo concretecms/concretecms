@@ -86,6 +86,7 @@ class ConcreteUpgradeVersion520Helper {
 			$d2c = SinglePage::add('/dashboard/files/sets');
 			$d2d = SinglePage::add('/dashboard/files/access');						
 			$d2->update(array('cName'=>t('File Manager'), 'cDescription'=>t('All documents and images.')));
+			$d3b = SinglePage::add('/dashboard/reports/surveys');
 		}
 	}
 	
