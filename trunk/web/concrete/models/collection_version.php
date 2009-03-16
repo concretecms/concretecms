@@ -216,6 +216,9 @@
 			$c = Page::getByID($cID, $this->cvID);
 			
 			$ov = Page::getByID($cID, 'ACTIVE');
+			
+			$oldHandle = $ov->getCollectionHandle();
+			$newHandle = $this->cvHandle;
 
 			// first we remove approval for the other version of this collection
 			$v = array($cID);
@@ -229,7 +232,7 @@
 			$r = $db->query($q2, $v2);
 			
 			// next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection
-			if (!$c->isGeneratedCollection()) {
+			if (($oldHandle != $newHandle) && (!$c->isGeneratedCollection())) {
 				$c->rescanCollectionPath();
 			}
 			$this->refreshCache();
