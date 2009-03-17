@@ -14,11 +14,14 @@ if (!$_REQUEST['group_submit_search']) { ?>
 <? 
 Loader::model('search/group');
 $gl = new GroupSearch();
+if ($_REQUEST['include_core_groups'] == 1) {
+	$gl->includeAllGroups();
+}
 if (isset($_GET['gKeywords'])) {
 	$gl->filterByKeywords($_GET['gKeywords']);
 }
 
-$gl->updateItemsPerPage(5);
+$gl->updateItemsPerPage(8);
 
 $gResults = $gl->getPage();
 
@@ -31,6 +34,7 @@ $group_search_form = '
 	<input type="text" id="ccm-group-search-keywords" name="gKeywords" value="'. $_REQUEST['gKeywords'] .'" class="ccm-text" style="width: 100px" />
 	<input type="submit" value="'. t('Search') .'" />
 	<input type="hidden" name="group_submit_search" value="1" />
+	<input type="hidden" name="include_core_groups" value="' . $_REQUEST['include_core_groups'] . '" />
 	</div>
 	</form>
 ';
@@ -53,7 +57,7 @@ $group_search_form = '
 
 <div id="ccm-group-paging">
 <?
-$url = REL_DIR_FILES_TOOLS_REQUIRED . '/select_group?gKeywords=' . $_REQUEST['gKeywords'] . '&ccm_paging_p=%pageNum%';
+$url = REL_DIR_FILES_TOOLS_REQUIRED . '/select_group?gKeywords=' . $_REQUEST['gKeywords'] . '&include_core_groups=' . $_REQUEST['include_core_groups'] . '&ccm_paging_p=%pageNum%';
 $gl->displayPaging($url);
 ?>
 </div>

@@ -1358,6 +1358,7 @@
     <field name="fsType" type="I" size="4">
       <NOTNULL/>
     </field>
+    <field name="fsOverrideGlobalPermissions" type="I" size="4"/>
   </table>    
   <table name="FileSetFiles">
     <field name="fsfID" type="I" size="10">

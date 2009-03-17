@@ -784,6 +784,9 @@ class FileSetPermissions extends Permissions {
 		if ($this->permissions['canWrite'] == FilePermissions::PTYPE_ALL || (is_a($fObj, 'File') && $fObj->getUserID() == $u->getUserID() && $this->permissions['canWrite'] == FilePermissions::PTYPE_MINE)) {
 			$this->permissionSet .= 'wa:';
 		}
+		if ($this->permissions['canAdmin'] == FilePermissions::PTYPE_ALL || (is_a($fObj, 'File') && $fObj->getUserID() == $u->getUserID() && $this->permissions['canAdmin'] == FilePermissions::PTYPE_MINE)) {
+			$this->permissionSet .= 'adm:';
+		}
 		
 		if ($this->permissions['canAdd'] == FilePermissions::PTYPE_ALL) {
 			$ch = Loader::helper('concrete/file');
@@ -794,9 +797,9 @@ class FileSetPermissions extends Permissions {
 	}
 	
 	/** 
-	 * Returns an array of file set IDs that override the global, and allow the logged-in user to view them.
+	 * Returns an array of file set IDs that override the global, with the relevant permission set.
 	 */
-	public function getViewableSetsIDs() {
+	public function getOverriddenSets($pcolumn = 'canRead', $ptype = FilePermissions::PTYPE_ALL) {
 		$db = Loader::db();
 		$u = new User();
 
@@ -804,7 +807,7 @@ class FileSetPermissions extends Permissions {
 		$inStr = '(' . implode(',', array_keys($groups)) . ')';
 		$_uID = ($u->getUserID() > -1) ? " or FilePermissions.uID = " . $u->getUserID() : "";
 
-		$q = "select FileSets.fsID from FilePermissions inner join FileSets on (FileSets.fsID = FilePermissions.fsID) where (gID in $inStr $_uID) and fsOverrideGlobalPermissions = 1 and canRead = " . FilePermissions::PTYPE_ALL;
+		$q = "select FileSets.fsID from FilePermissions inner join FileSets on (FileSets.fsID = FilePermissions.fsID) where (gID in $inStr $_uID) and fsOverrideGlobalPermissions = 1 and {$pcolumn} = {$ptype}";
 		$r = $db->query($q);
 		
 		$sets = array();
@@ -826,13 +829,20 @@ class FileSetPermissions extends Permissions {
 		} else if (is_a($fs, 'File')) {
 			$f = $fs->getFile();
 			$sets = $f->getFileSets();
-			$sets[] = FileSet::getGlobal();
+			
+			// we only include sets in this list that are setup to override the global permissions
 			$setIDs = array();
 			foreach($sets as $fs) {
-				$setIDs[] = $fs->getFileSetID();
+				if ($fs->overrideGlobalPermissions()) {
+					$setIDs[] = $fs->getFileSetID();
+				}
 			}
 			
-			$fsIDStr = 'fsID in (' . implode(',', array_keys($setIDs)) . ')';
+			if (count($setIDs) == 0) {
+				$setIDs[] = 0; // global file set
+			}
+			
+			$fsIDStr = 'fsID in (' . implode(',', $setIDs) . ')';
 		}
 		$_uID = ($u->getUserID() > -1) ? " or uID = " . $u->getUserID() : "";
 		

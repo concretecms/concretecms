@@ -48,7 +48,7 @@ class DashboardFilesAccessController extends Controller {
 			$ida = '_' . $identifier . '[]';
 		}
 		$html .= '<h2>';
-		if ($identifier != 'gID_1' && $identifier != 'gID_2') {
+		if ($type == 'SET' || ($identifier != 'gID_1' && $identifier != 'gID_2')) {
 			$html .= '<a href="javascript:void(0)" class="ccm-file-permissions-remove"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" width="16" height="16" /></a>';
 		}
 		$html .= '<span>' . $name . '</span></h2>';

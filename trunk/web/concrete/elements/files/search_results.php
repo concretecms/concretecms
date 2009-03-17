@@ -38,6 +38,7 @@
 	
 	<?
 		foreach($files as $f) {
+			$pf = new Permissions($f);
 			if (!isset($striped) || $striped == 'ccm-file-list-alt') {
 				$striped = '';
 			} else if ($striped == '') { 
@@ -46,9 +47,9 @@
 			$star_icon = ($f->isStarred() == 1) ? 'star_yellow.png' : 'star_grey.png';
 			$fv = $f->getApprovedVersion(); 
 			$canViewInline = $fv->canView() ? 1 : 0;
-			$canEdit = $fv->canEdit() ? 1 : 0;
+			$canEdit = ($fv->canEdit() && $pf->canWrite()) ? 1 : 0;
 			?>
-			<tr class="ccm-file-list-record <?=$striped?>" ccm-file-manager-can-view="<?=$canViewInline?>" ccm-file-manager-can-edit="<?=$canEdit?>" fID="<?=$f->getFileID()?>" id="fID<?=$f->getFileID()?>">
+			<tr class="ccm-file-list-record <?=$striped?>" ccm-file-manager-can-admin="<?=$pf->canAdmin()?>" ccm-file-manager-can-view="<?=$canViewInline?>" ccm-file-manager-can-replace="<?=$pf->canWrite()?>" ccm-file-manager-can-edit="<?=$canEdit?>" fID="<?=$f->getFileID()?>" id="fID<?=$f->getFileID()?>">
 			<td class="ccm-file-list-cb"><input type="checkbox" value="<?=$f->getFileID()?>" /></td>
 			<td><div class="ccm-file-list-thumbnail">
 				<div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><?=$fv->getThumbnail(1)?></div>
