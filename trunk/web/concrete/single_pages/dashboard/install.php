@@ -113,7 +113,6 @@ $themesArray = PageTheme::getAvailableThemes();
 
 		<h1><span><?=t('Available Block Types')?></span></h1>
 		<div class="ccm-dashboard-inner">
-    	<h2><?php echo t('Click to Install.')?></h2>
 
 		<? if (count($availableArray) == 0) { ?>
 
