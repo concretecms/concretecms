@@ -102,22 +102,60 @@ class FileList extends DatabaseItemList {
 	
 	protected function setupFilePermissions() {
 		
-		// FIRST, we find files that override their set permissions and see if we can view them
+
+		$vs = FileSetPermissions::getOverriddenSets('canAccessFileSet', FilePermissions::PTYPE_ALL);
+		$nvs = FileSetPermissions::getOverriddenSets('canAccessFileSet', FilePermissions::PTYPE_NONE);
+		$vsm = FileSetPermissions::getOverriddenSets('canRead', FilePermissions::PTYPE_MINE);
 		
+		// we remove all the items from nonviewableSets that appear in viewableSets because viewing trumps non-viewing
 		
+		for ($i = 0; $i < count($nvs); $i++) {
+			if (in_array($nvs[$i], $vs)) {
+				unset($nvs[$i]);
+			}
+		}
+
+		// we have $nvs, which is an array of sets of files that we CANNOT see
+		// first, we add -1 so that we are always dealing with an array that at least has one value, just for
+		// query writing sanity sake
+		$nvs[] = -1;
+		$vs[] = -1;
+		$vsm[] = -1;
+
+		//$this->debug();
 		
+		// this excludes all file that are found in sets that I can't find
+		$this->filter(false, '((select count(fID) from FileSetFiles where FileSetFiles.fID = f.fID and fsID in (' . implode(',',$nvs) . ')) = 0)');		
+
+		$u = new User();
+		$uID = ($u->isRegistered()) ? $u->getUserID() : 0;
+		
+		// This excludes all files found in sets where I may only read mine, and I did not upload the file
+		$this->filter(false, '(f.uID = ' . $uID . ' or (select count(fID) from FileSetFiles where FileSetFiles.fID = f.fID and fsID in (' . implode(',',$vsm) . ')) = 0)');		
+		
+		$fp = FilePermissions::getGlobal();
+		if ($fp->getFileReadLevel() == FilePermissions::PTYPE_MINE) {
+			// this means that we're only allowed to read files we've uploaded (unless, of course, those files are in previously covered sets)
+			$this->filter(false, '(f.uID = ' . $uID . ' or (select count(fID) from FileSetFiles where FileSetFiles.fID = f.fID and fsID in (' . implode(',',$vs) . ')) > 0)');		
+		}
+		
+		/*
 
 		$fp = FilePermissions::getGlobal();
 		
 		if ($fp->getFileReadLevel() == FilePermissions::PTYPE_MINE) {
 
 			// but there may be files in sets that we can view that override this global permission
-			$sets = FileSetPermissions::getViewableSetsIDs();
 			
 			$u = new User();
-			$this->filter(false, '(f.uID = ' . $u->getUserID() . ' or (select count(fID) from FileSetFiles where fsID in (' . implode(',', $sets) . ') > 0))');
-		}
+			if (count($sets) > 0) {	
+				$this->filter(false, '(f.uID = ' . $u->getUserID() . ' or (select count(fID) from FileSetFiles where fsID in (' . implode(',', $sets) . ') > 0))');
+			} else {
+				$this->filter('f.uID', $u->getUserID());
+			}
+		}*/
 	}
+	
 	protected function setupFileAttributeFilters() {
 		$db = Loader::db();
 		$i = 1;

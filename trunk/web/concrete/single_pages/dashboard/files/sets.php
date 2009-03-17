@@ -22,11 +22,12 @@
 						<?=t('Enable custom permissions for this file set.')?>
 						
 						<div id="ccm-file-set-permissions-wrapper" <? if (!$file_set->overrideGlobalPermissions()) { ?> style="display: none" <? } ?>>
-						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector" id="ug-selector" dialog-width="600" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="400" class="ccm-button-right dialog-launch"><span><em><?=t('Add Group or User')?></em></span></a>
+						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector?include_core_groups=1" id="ug-selector" dialog-width="600" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="400" class="ccm-button-right dialog-launch"><span><em><?=t('Add Group or User')?></em></span></a>
 			
 						<p>
 						<?=t('Add users or groups to determine access to the file manager. These permissions affect only this set.');?>
 						</p>
+						<div class="ccm-spacer">&nbsp;</div><br/>
 
 						<div id="ccm-file-permissions-entities-wrapper">			
 						<div id="ccm-file-permissions-entity-base">
@@ -38,7 +39,7 @@
 						
 						
 						<? 
-						$gl = new GroupList($file_set);
+						$gl = new GroupList($file_set, true);
 						$ul = new UserInfoList($file_set);
 						
 						$gArray = $gl->getGroupList();

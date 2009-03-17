@@ -91,13 +91,21 @@
 
 			$groups = array();
 			if ($where) {
+				$q = "select gID from $table where 1=1 and {$where} order by gID asc";
+				$gs = $db->GetCol($q);
+
 				if (!$omitRequiredGroups) {
-					$groups[] = Group::getByID(GUEST_GROUP_ID);
-					$groups[] = Group::getByID(REGISTERED_GROUP_ID);
+					if (!in_array(GUEST_GROUP_ID, $gs)) {
+						$gs[] = GUEST_GROUP_ID;
+					}
+					if (!in_array(REGISTERED_GROUP_ID, $gs)) {
+						$gs[] = REGISTERED_GROUP_ID;
+					}
 				}
-				$q = "select gID from $table where gID > 2 and {$where} order by gID asc";
-				$r = $db->query($q);
-				while ($row = $r->fetchRow()) {
+				
+				sort($gs);
+
+				foreach($gs as $row) {
 					$g = Group::getByID($row['gID']);
 					$groups[] = $g;
 				}

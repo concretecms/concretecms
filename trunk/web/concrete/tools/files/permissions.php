@@ -12,9 +12,7 @@ if (!$cp->canAdmin()) {
 $form = Loader::helper('form');
 
 if ($_POST['task'] == 'set_password') {
-	if ($_POST['fPassword'] != '') {
-		$f->setPassword($_POST['fPassword']);
-	}
+	$f->setPassword($_POST['fPassword']);
 	exit;
 }
 ?>
