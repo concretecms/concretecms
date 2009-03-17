@@ -136,10 +136,10 @@ $themesArray = PageTheme::getAvailableThemes();
 			<tr>
 			<? if (get_class($obj) == "BlockType") { ?>
 				<td colspan="2" style="color: #aaa; padding: 2px 0 6px"><?=$obj->getBlockTypeDescription()?></td>
-				<td><?=$ch->button(t("Install"), $this->url('/dashboard/install','install_block_type', $obj->getBlockTypeHandle()), "left");?></td>
+				<td style="vertical-align: bottom"><?=$ch->button(t("Install"), $this->url('/dashboard/install','install_block_type', $obj->getBlockTypeHandle()), "right");?></td>
 			<? } else { ?>
 				<td colspan="2" style="color: #aaa; padding: 2px 0 6px"><?=$obj->getPackageDescription()?></td>
-				<td><?=$ch->button(t("Install"), $this->url('/dashboard/install','install_package', $obj->getPackageHandle()), "left");?></td>
+				<td style="vertical-align: bottom"><?=$ch->button(t("Install"), $this->url('/dashboard/install','install_package', $obj->getPackageHandle()), "right");?></td>
 			<? } ?>
 			</tr>
 			</table>
@@ -168,11 +168,11 @@ $themesArray = PageTheme::getAvailableThemes();
 				<td class="ccm-template-content" colspan="2"><h3><?=$t->getThemeName()?></h3></td>
 			</tr>
 			<tr>
-				<td class="ccm-template-content"><?=$t->getThemeThumbnail()?></td>
-				<td><?=$ch->button(t("Install"), $this->url('/dashboard/pages/themes','install', $t->getThemeHandle()), "left");?></td>
+				<td class="ccm-template-content" colspan="2"><?=$t->getThemeThumbnail()?></td>
 			</tr>
 			<tr>
-				<td colspan="2" style="color: #aaa; padding: 2px 0 6px"><?=$t->getThemeDescription()?></td>
+				<td style="color: #aaa; padding: 2px 0 6px"><?=$t->getThemeDescription()?></td>
+				<td style="vertical-align: bottom"><?=$ch->button(t("Install"), $this->url('/dashboard/pages/themes','install', $t->getThemeHandle()), "right");?></td>
 			</tr>
 			</table>
 			</div>
