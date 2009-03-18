@@ -14,7 +14,12 @@
 </form>
 </div>
 
-<? } else { ?>
+<? } else { 
+
+$fp = FilePermissions::getGlobal();
+if ($fp->canAddFiles()) {
+
+?>
 
 <div id="ccm-files-add-asset">
 <h3><?=t('Add')?>:</h3>
@@ -27,4 +32,7 @@
 <a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import" class="dialog-launch" dialog-title="<?=t('Add Files')?>" dialog-on-close="if(swfu && swfu.highlight) { ccm_alRefresh(swfu.highlight) }" dialog-modal="false" dialog-width="450" dialog-height="350"><?=t('More')?></a>
 </div>
 
-<? } ?>
+<? } 
+
+}
+?>

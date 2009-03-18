@@ -37,10 +37,21 @@ if (is_array($_REQUEST['fID'])) {
 } else {
 	$files[] = File::getByID($_REQUEST['fID']);
 }
+
+$fcnt = 0;
+foreach($files as $f) { 
+	$fp = new Permissions($f);
+	if ($fp->canAdmin()) {
+		$fcnt++;
+	}
+}
 ?>
 
-<h1>Delete Files</h1>
+<h1><?=t('Delete Files')?></h1>
 
+<? if ($fcnt == 0) { ?>
+	<?=t("You do not have permission to delete any of the selected files."); ?>
+<? } else { ?>
 
 	<?=t('Are you sure you want to delete the following files?')?><br/><br/>
 
@@ -79,5 +90,7 @@ if (is_array($_REQUEST['fID'])) {
 		
 		
 	<?
+	
+}
 	
 	
