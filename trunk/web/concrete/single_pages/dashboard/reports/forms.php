@@ -116,7 +116,7 @@ function toggleQuestions(qsID,trigger){
 								$file=File::getByID($fID);
 								if($fID && $file){
 									$fileVersion=$file->getApprovedVersion();
-									echo '<a href="'. DIR_REL . $fileVersion->getRelativePath() .'">'.$fileVersion->getFileName().'</a>';
+									echo '<a href="' . $fileVersion->getRelativePath() .'">'.$fileVersion->getFileName().'</a>';
 								}else{
 									echo t('File not found');
 								}
