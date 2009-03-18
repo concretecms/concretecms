@@ -322,6 +322,10 @@ class Permissions extends Object {
 		return (in_array($ext, $this->permissions['canAddFileTypes']));
 	}
 	
+	function canAddFile($f) {
+		return ($this->canAddFileType($f->getExtension()));
+	}
+	
 	function canAdminBlock() {
 		$oObj = $this->getOriginalObject();
 		$c = (is_a($oObj, 'Area')) ? $oObj->getAreaCollectionObject() : $oObj->getBlockCollectionObject();

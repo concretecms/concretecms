@@ -11,14 +11,27 @@ Loader::model('file_set');
 $s1 = FileSet::getMySets();
 
 $files = array();
+$extensions = array();
+
 if (is_array($_REQUEST['fID'])) {
 	foreach($_REQUEST['fID'] as $fID) {
-		$files[] = File::getByID($fID);
+		$f = File::getByID($fID);
+		$fp = new Permissions($f);
+		if ($fp->canRead()) {
+			$files[] = $f;
+			$extensions[] = $f->getExtension();
+		}
 	}
 } else {
-	$files[] = File::getByID($_REQUEST['fID']);
+	$f = File::getByID($_REQUEST['fID']);
+	$fp = new Permissions($f);
+	if ($fp->canRead()) {
+		$files[] = $f;
+		$extensions[] = $f->getExtension();
+	}
 }
 
+$extensions = array_unique($extensions);
 $sets = array();
 // tri state checkbox
 // state 0 - none of the selected files are in the set
@@ -57,23 +70,24 @@ if ($_POST['task'] == 'add_to_sets') {
 			
 			// so the affected file set is $fsID, the state of the thing is $value
 			$fs = FileSet::getByID($fsID);
-			
-			switch($value) {
-				case '0':
-					foreach($files as $f) {
-						$fs->removeFileFromSet($f);
-					}
-					break;
-				case '1':
-					// do nothing
-					break;
-				case '2':
-					foreach($files as $f) {
-						$fs->addFileToSet($f);
-					}
-					break;
-			}		
-			
+			$fsp = new Permissions($fs);
+			if ($fsp->canAddFile($f)) {
+				switch($value) {
+					case '0':
+						foreach($files as $f) {
+							$fs->removeFileFromSet($f);
+						}
+						break;
+					case '1':
+						// do nothing
+						break;
+					case '2':
+						foreach($files as $f) {
+							$fs->addFileToSet($f);
+						}
+						break;
+				}		
+			}			
 		}
 	}
 
@@ -121,13 +135,36 @@ $(function() {
 <h1><?=t('File Sets')?></h1>
 
 <? $s1 = FileSet::getMySets(); ?>
-<? foreach($sets as $s) { ?>
+<? foreach($sets as $s) { 
+	$displaySet = true;
+	
+	$pf = new Permissions($s);
+	if (!$pf->canAddFiles()) { 
+		$displaySet = false;
+	} else {
+		foreach($extensions as $ext) {
+			if (!$pf->canAddFileType($ext)) {
+				$displaySet = false;
+			}
+		}
+	}
+	
+	if ($displaySet) {
+	?>
 
 	<div class="ccm-file-set-add-cb">
 		<?=checkbox('fsID', $s->getFileSetID(), $s->state)?> <?=$s->getFileSetName()?>
 	</div>
-<? } ?>
+<? } 
 
+}?>
+
+<? if (count($extensions) > 1) { ?>
+
+	<br/><div class="ccm-note"><?=t('If a file set does not appear above, you either have no access to add files to it, or it does not accept the file types %s.', implode(', ', $extensions));?></div>
+	
+	
+<? } ?>
 <br/>
 <hr />
 

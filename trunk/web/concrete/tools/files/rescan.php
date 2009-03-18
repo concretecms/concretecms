@@ -4,10 +4,12 @@ $u = new User();
 $form = Loader::helper('form');
 
 print '<ol>';
+$fcnt = 0;
 foreach($_REQUEST['fID'] as $fID) {
 	$f = File::getByID($fID);
 	$fp = new Permissions($f);
 	if ($fp->canWrite()) {
+		$fcnt++;
 		$fv = $f->getApprovedVersion();
 		$resp = $fv->refreshAttributes();
 		switch($resp) {
@@ -23,3 +25,6 @@ foreach($_REQUEST['fID'] as $fID) {
 }
 print '</ol>';
 
+if ($fcnt == 0) { ?>
+	<?=t('You do not have permission to rescan any of the selected files.'); ?>
+<? } ?>

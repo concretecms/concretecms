@@ -92,6 +92,10 @@ class FileVersion extends Object {
 		return $this->fvDateAdded;
 	}
 	
+	public function getExtension() {
+		return $this->fvExtension;
+	}
+	
 	protected function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0) {
 		$db = Loader::db();
 		$db->Execute('insert into FileVersionLog (fID, fvID, fvUpdateTypeID, fvUpdateTypeAttributeID) values (?, ?, ?, ?)', array(
