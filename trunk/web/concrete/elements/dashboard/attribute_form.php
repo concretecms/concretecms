@@ -16,7 +16,7 @@ var ccmAttributesHelper={
 	
 	deleteValue:function(val){
 		if(!confirm('<?=t("Are you sure you want to remove this value?")?>'))
-			return false; 
+			return false;  
 		$('#akValueWrap_'+val).remove();				
 	},
 	
