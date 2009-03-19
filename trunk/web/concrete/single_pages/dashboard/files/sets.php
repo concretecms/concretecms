@@ -12,6 +12,7 @@
 					<tr>
 						<td><?=$form->text('file_set_name',$file_set->fsName,array('style'=>'width:99%'));?></td>
 					</tr>
+					<? if (PERMISSIONS_MODEL != 'simple') { ?>
 					<tr>
 						<td class="subheader"><?=t('Custom Permissions')?></td>
 					</tr>
@@ -72,6 +73,7 @@
 						
 						</td>
 					</tr>
+					<? } ?>
 					<tr>
 						<td class="header">
 						<?=$concrete_interface->submit(t('Update'), 'file_sets_edit');?>

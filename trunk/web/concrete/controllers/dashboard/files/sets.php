@@ -44,6 +44,7 @@ class DashboardFilesSetsController extends Controller {
 		$file_set->fsName 	= $this->post('file_set_name');
 		$file_set->fsType 	= FileSet::TYPE_PUBLIC;
 		$file_set->uID		= $u->getUserID();
+		$file_set->fsOverrideGlobalPermissions = ($this->post('fsOverrideGlobalPermissions') == 1) ? 1 : 0;
 		$file_set->save();
 		
 		$this->view();
