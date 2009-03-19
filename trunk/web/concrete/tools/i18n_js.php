@@ -74,5 +74,13 @@ var ccmi18n_filemanager = {
 	
 	PTYPE_CUSTOM: '<?=FilePermissions::PTYPE_CUSTOM?>',
 	PTYPE_NONE: '<?=FilePermissions::PTYPE_NONE?>',
-	PTYPE_ALL: '<?=FilePermissions::PTYPE_ALL?>'
+	PTYPE_ALL: '<?=FilePermissions::PTYPE_ALL?>',
+
+	FTYPE_IMAGE: '<?=FileType::T_IMAGE?>',	
+	FTYPE_VIDEO: '<?=FileType::T_VIDEO?>',	
+	FTYPE_TEXT: '<?=FileType::T_TEXT?>',	
+	FTYPE_AUDIO: '<?=FileType::T_AUDIO?>',	
+	FTYPE_DOCUMENT: '<?=FileType::T_DOCUMENT?>',	
+	FTYPE_APPLICATION: '<?=FileType::T_APPLICATION?>'
+	
 }

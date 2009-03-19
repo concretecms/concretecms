@@ -3,7 +3,7 @@ var SlideshowBlock = {
 	init:function(){},	
 	
 	chooseImg:function(){ 
-		ccm_launchFileManager();
+		ccm_launchFileManager('&fType=' + ccmi18n_filemanager.FTYPE_IMAGE);
 	},
 	
 	showImages:function(){
@@ -121,7 +121,7 @@ ccmValidateBlockForm = function() { return SlideshowBlock.validate(); }
 ccm_chooseAsset = function(obj) { SlideshowBlock.selectObj(obj); }
 
 $(function() {
-	if ($("#ccm-slideshowBlock-fsRow #fsID").val() > 0) {
+	if ($("#newImg select[name=type]").val() == 'FILESET') {
 		$("#newImg select[name=type]").val('FILESET');
 		SlideshowBlock.showFileSet();
 	} else {

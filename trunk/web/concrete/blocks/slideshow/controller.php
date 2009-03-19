@@ -50,6 +50,8 @@ class SlideshowBlockController extends BlockController {
 		$this->set('fsName', $this->getFileSetName());
 		$this->set('images', $this->images);
 		$this->set('playback', $this->playback);
+		$type = ($this->fsID > 0) ? 'FILESET' : 'CUSTOM';
+		$this->set('type', $type);
 		$this->set('bID', $this->bID);			
 	}	
 	
@@ -62,6 +64,9 @@ class SlideshowBlockController extends BlockController {
 	}
 
 	function loadFileSet(){
+		if (intval($this->fsID) < 1) {
+			return false;
+		}
         $f = Loader::helper('concrete/file');
 
 		$fakID = $this->db->getOne("SELECT fakID FROM FileAttributeKeys WHERE akName = 'height'"); 
