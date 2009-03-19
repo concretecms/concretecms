@@ -65,9 +65,22 @@
 					$where = "cID = '{$cID}' and cvID = '{$cvID}' and bID = '{$bID}'";
 					break;
 				case 'fileset':
-					$table = 'FilePermissions';
+					$table = 'FileSetPermissions';
 					$fsID = $obj->getFileSetID();
 					$where = "fsID = '{$fsID}'";
+					break;
+				case 'filesetlist':
+					$table = 'FileSetPermissions';
+					$fsIDs = array();
+					foreach($obj->sets as $fs) {
+						$fsIDs[] = $fs->getFileSetID();
+					}
+					$where = "fsID in (" . implode(',', $fsIDs) . ")";
+					break;
+				case 'file':
+					$table = 'FilePermissions';
+					$fID = $obj->getFileID();
+					$where = "fID = '{$fID}'";
 					break;
 				case 'page':
 					$table = 'PagePermissions';
@@ -91,7 +104,7 @@
 
 			$groups = array();
 			if ($where) {
-				$q = "select gID from $table where 1=1 and {$where} order by gID asc";
+				$q = "select distinct gID from $table where 1=1 and {$where} and gID > 0 order by gID asc";
 				$gs = $db->GetCol($q);
 
 				if (!$omitRequiredGroups) {
@@ -224,10 +237,24 @@
 						$this->permissionSet = $permissions;
 					}
 					break;
+				case 'filesetlist':
+					$fsIDs = array();
+					foreach($obj->sets as $fs) {
+						$fsIDs[] = $fs->getFileSetID();
+					}
+					$where = "fsID in (" . implode(',', $fsIDs) . ")";
+
+					$gID = $this->gID;
+					$q = "select max(canRead) as canRead, max(canWrite) as canWrite, max(canSearch) as canSearch, max(canAdmin) as canAdmin from FileSetPermissions where {$where} and gID = '{$gID}' group by gID";
+					$p = $db->GetRow($q);
+
+					$this->permissions = $p;
+
+					break;
 				case 'fileset':
 					$fsID = $obj->getFileSetID();
 					$gID = $this->gID;
-					$q = "select canRead, canAccessFileSet, canWrite, canAdmin, canAdd from FilePermissions where fsID = '{$fsID}' and gID = '{$gID}'";
+					$q = "select canRead, canSearch, canWrite, canAdmin, canAdd from FileSetPermissions where fsID = '{$fsID}' and gID = '{$gID}'";
 					$permissions = $db->GetRow($q);
 					if ($permissions) {
 						$this->permissions = $permissions;
@@ -236,6 +263,15 @@
 					$q = "select extension from FilePermissionFileTypes where fsID = '{$fsID}' and gID = '{$gID}'";
 					$extensions = $db->GetCol($q);
 					$this->permissions['canAddExtensions'] = $extensions;
+					break;
+				case 'file':
+					$fID = $obj->getFileID();
+					$gID = $this->gID;
+					$q = "select canRead, canWrite, canSearch, canAdmin from FilePermissions where fID = '{$fID}' and gID = '{$gID}'";
+					$permissions = $db->GetRow($q);
+					if ($permissions) {
+						$this->permissions = $permissions;
+					}
 					break;
 				case 'page':
 					//$cID = $obj->getCollectionID();
@@ -290,6 +326,18 @@
 					}
 					break;
 			}
+			
+			// if we have a permissions array, we set the character tokens for backwards compatibility 
+			if ($this->permissions['canRead']) {
+				$this->permissionSet .= 'r:';
+			}
+			if ($this->permissions['canWrite']) {
+				$this->permissionSet .= 'wa:';
+			}
+			if ($this->permissions['canAdmin']) {
+				$this->permissionSet .= 'adm:';
+			}
+
 		}
 
 		/**
@@ -393,16 +441,23 @@
 		function canAdminCollection() {
 			return strpos($this->permissionSet, 'adm') > -1;
 		}
+
+		function canAdmin() {
+			return strpos($this->permissionSet, 'adm') > -1;
+		}
 		
 		/** 
 		 * File manager permissions at the group level 
 		 */
-		public function canAccessFileSet() {
-			return $this->permissions['canAccessFileSet'];
+		public function canSearchFiles() {
+			return $this->permissions['canSearch'];
 		}
 		
 		public function getFileReadLevel() {
 			return $this->permissions['canRead'];
+		}
+		public function getFileSearchLevel() {
+			return $this->permissions['canSearch'];
 		}
 		public function getFileWriteLevel() {
 			return $this->permissions['canWrite'];

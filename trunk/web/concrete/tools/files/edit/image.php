@@ -16,18 +16,20 @@ if (!$fp->canWrite()) {
 	die(t("Access Denied."));
 }
 
+//$apiKey = API_KEY_PICNIK;
+$apiKey = Config::get("API_KEY_PICNIK");
 $image = BASE_URL . $fv->getRelativePath();
 $service = 'http://www.picnik.com/service/';
 $export = BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/files/importers/remote';
 
 $valt = Loader::helper('validation/token');
 
-$url = $service . '?_apikey=' . API_KEY_PICNIK . '&_export=' . $export . '&' . $valt->getParameter('import_remote') . '&task=update_file&fID=' . $_REQUEST['fID'] . '&_export_field=url_upload_1&_export_agent=browser&_import=' . rawurlencode($image);
+$url = $service . '?_apikey=' . $apiKey . '&_export=' . $export . '&' . $valt->getParameter('import_remote') . '&task=update_file&fID=' . $_REQUEST['fID'] . '&_export_field=url_upload_1&_export_agent=browser&_import=' . rawurlencode($image);
 
 ?>
 
 <?
-/*
+
 if ($apiKey == '') { 
 	$html = Loader::helper('html');
 	print $html->css('ccm.default.theme.css');
@@ -47,7 +49,7 @@ if ($apiKey == '') {
 	</form>
 	
 
-<? } else {  */ ?>
+<? } else { ?>
 	
 	<script type="text/javascript">
 	parent.jQuery(function() {
@@ -57,4 +59,4 @@ if ($apiKey == '') {
 	</script>
 	
 
-<? // } ?>
+<?  } ?>

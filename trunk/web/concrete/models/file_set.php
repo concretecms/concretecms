@@ -1,4 +1,13 @@
 <?php
+
+	/** 
+	 * @access private
+	 * Internal object used to pass an array for filesets to group and user lists
+	 */
+	class FileSetList {
+		public $sets = array();	
+	}
+	
 	class FileSet extends Model {
 		const TYPE_PRIVATE 	= 0;
 		const TYPE_PUBLIC 	= 1;
@@ -29,7 +38,7 @@
 					$fs->{$key} = $value;
 				}
 				$fsp = new Permissions($fs);
-				if ($fsp->canAccessFileSet()) {
+				if ($fsp->canSearchFiles()) {
 					$sets[] = $fs;
 				}
 			}
@@ -139,11 +148,11 @@
 
 		public function resetPermissions() {
 			$db = Loader::db();
-			$db->Execute('delete from FilePermissions where fsID = ?', array($this->fsID));
+			$db->Execute('delete from FileSetPermissions where fsID = ?', array($this->fsID));
 			$db->Execute('delete from FilePermissionFileTypes where fsID = ?', array($this->fsID));
 		}
 		
-		public function setPermissions($obj, $canAccessFileSet, $canRead, $canWrite, $canAdmin, $canAdd, $extensions = array()) {
+		public function setPermissions($obj, $canSearch, $canRead, $canWrite, $canAdmin, $canAdd, $extensions = array()) {
 			$fsID = $this->fsID;
 			$uID = 0;
 			$gID = 0;
@@ -154,19 +163,18 @@
 				$gID = $obj->getGroupID();
 			}
 			
-			if ($canAccessFileSet == FilePermissions::PTYPE_NONE) {
-				$canRead = FilePermissions::PTYPE_MINE;
+			if ($canSearch == FilePermissions::PTYPE_NONE) {
 				$canWrite = FilePermissions::PTYPE_NONE;
 				$canAdd = FilePermissions::PTYPE_NONE;
 				$canAdmin = FilePermissions::PTYPE_NONE;
 			}
 				
-			$db->Replace('FilePermissions', array(
+			$db->Replace('FileSetPermissions', array(
 				'fsID' => $fsID,
 				'uID' => $uID, 
 				'gID' => $gID,
 				'canRead' => $canRead,
-				'canAccessFileSet' => $canAccessFileSet,
+				'canSearch' => $canSearch,
 				'canWrite' => $canWrite,
 				'canAdmin' => $canAdmin,
 				'canAdd' => $canAdd

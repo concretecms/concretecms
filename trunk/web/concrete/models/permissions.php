@@ -343,14 +343,17 @@ class Permissions extends Object {
 	}
 	
 	
-	public function canAccessFileSet() {
-		return $this->permissions['canAccessFileSet'];
-	}
-	
 	public function canAccessFileManager() {
-		return $this->permissions['canAccessFileSet'];
+		return $this->permissions['canSearch'];
+	}
+
+	public function getFileSearchLevel() {
+		return $this->permissions['canSearch'];
 	}
 	
+	public function canSearchFiles() {
+		return $this->permissions['canSearch'];
+	}
 	public function getFileReadLevel() {
 		return $this->permissions['canRead'];
 	}
@@ -773,7 +776,7 @@ class FileSetPermissions extends Permissions {
 		$adm = $u->isSuperUser();
 		
 		if ($adm) {
-			$this->permissions['canAccessFileSet'] = FilePermissions::PTYPE_ALL;
+			$this->permissions['canSearch'] = FilePermissions::PTYPE_ALL;
 			$this->permissions['canRead'] = FilePermissions::PTYPE_ALL;
 			$this->permissions['canWrite'] = FilePermissions::PTYPE_ALL;
 			$this->permissions['canAdmin'] = FilePermissions::PTYPE_ALL;
@@ -809,14 +812,15 @@ class FileSetPermissions extends Permissions {
 
 		$groups = $u->getUserGroups();
 		$inStr = '(' . implode(',', array_keys($groups)) . ')';
-		$_uID = ($u->getUserID() > -1) ? " or FilePermissions.uID = " . $u->getUserID() : "";
-
-		$q = "select FileSets.fsID from FilePermissions inner join FileSets on (FileSets.fsID = FilePermissions.fsID) where (gID in $inStr $_uID) and fsOverrideGlobalPermissions = 1 and {$pcolumn} = {$ptype}";
-		$r = $db->query($q);
+		$_uID = ($u->getUserID() > -1) ? " or FileSetPermissions.uID = " . $u->getUserID() : "";
 		
+		$q = "select max({$pcolumn}) as {$pcolumn}, FileSets.fsID from FileSetPermissions inner join FileSets on (FileSets.fsID = FileSetPermissions.fsID) where (gID in $inStr $_uID) and fsOverrideGlobalPermissions = 1 group by fsID";
+		$r = $db->query($q);
 		$sets = array();
 		while($row = $r->fetchRow()) {
-			$sets[] = $row['fsID'];
+			if ($row[$pcolumn] == $ptype) {
+				$sets[] = $row['fsID'];
+			}
 		}
 		return $sets;		
 	}
@@ -850,24 +854,8 @@ class FileSetPermissions extends Permissions {
 		}
 		$_uID = ($u->getUserID() > -1) ? " or uID = " . $u->getUserID() : "";
 		
-		$q = "select canAdmin, canAccessFileSet, canRead, canWrite, canAdd from FilePermissions where {$fsIDStr} and (gID in $inStr $_uID)";
-		$r = $db->query($q);
-		
-		$p = array();
-		$p['canRead'] = FilePermissions::PTYPE_NONE;
-		$p['canAccessFileSet'] = FilePermissions::PTYPE_NONE;
-		$p['canWrite'] = FilePermissions::PTYPE_NONE;
-		$p['canAdmin'] = FilePermissions::PTYPE_NONE;
-		$p['canAdd'] = FilePermissions::PTYPE_NONE;
-		$p['canAddFileTypes'] = array();
-		
-		while ($row = $r->fetchRow()) {
-			foreach($row as $k => $v) {
-				if (isset($p[$k]) && $p[$k] < $v) {
-					$p[$k] = $v;
-				}
-			}
-		}
+		$q = "select max(canAdmin) as canAdmin, max(canSearch) as canSearch, max(canRead) as canRead, max(canWrite) as canWrite, max(canAdd) as canAdd from FileSetPermissions where {$fsIDStr} and (gID in $inStr $_uID)";
+		$p = $db->GetRow($q);
 		
 		if ($p['canAdd'] == FilePermissions::PTYPE_CUSTOM) {
 			$q = "select extension from FilePermissionFileTypes where {$fsIDStr} and (gID in $inStr $_uID)";
@@ -892,7 +880,42 @@ class FilePermissions extends Permissions {
 	const PTYPE_CUSTOM = 7;
 	
 	public function __construct($f = null) {
-
+		
+		if ($f == null) {
+			return false;
+		}
+		
+		$u = new User();
+		
+		$adm = $u->isSuperUser();
+		
+		if ($adm) {
+			$this->permissions['canRead'] = FilePermissions::PTYPE_ALL;
+			$this->permissions['canWrite'] = FilePermissions::PTYPE_ALL;
+			$this->permissions['canAdmin'] = FilePermissions::PTYPE_ALL;
+		} else {
+			$db = Loader::db();
+			$groups = $u->getUserGroups();
+			
+			$inStr = '(' . implode(',', array_keys($groups)) . ')';
+			$_uID = ($u->getUserID() > -1) ? " or uID = " . $u->getUserID() : "";
+			$fID = $f->getFileID();
+			$p = $db->GetRow("select max(canAdmin) as canAdmin, max(canRead) as canRead, max(canSearch) as canSearch, max(canWrite) as canWrite from FilePermissions where fID = {$fID} and (gID in $inStr $_uID)");
+			$this->permissions = $p;
+		}
+	
+		if ($this->permissions['canRead'] == FilePermissions::PTYPE_ALL) {
+			$this->permissionSet .= 'r:';
+		}
+		if ($this->permissions['canSearch'] == FilePermissions::PTYPE_ALL) {
+			$this->permissionSet .= 'sch:';
+		}
+		if ($this->permissions['canWrite'] == FilePermissions::PTYPE_ALL) {
+			$this->permissionSet .= 'wa:';
+		}
+		if ($this->permissions['canAdmin'] == FilePermissions::PTYPE_ALL) {
+			$this->permissionSet .= 'adm:';
+		}
 	}
 	
 	public static function getGlobal() {

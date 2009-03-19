@@ -102,10 +102,13 @@ class FileList extends DatabaseItemList {
 	
 	protected function setupFilePermissions() {
 		
-
-		$vs = FileSetPermissions::getOverriddenSets('canAccessFileSet', FilePermissions::PTYPE_ALL);
-		$nvs = FileSetPermissions::getOverriddenSets('canAccessFileSet', FilePermissions::PTYPE_NONE);
-		$vsm = FileSetPermissions::getOverriddenSets('canRead', FilePermissions::PTYPE_MINE);
+		$u = new User();
+		if ($u->isSuperUser()) {
+			return false;
+		}
+		$vs = FileSetPermissions::getOverriddenSets('canSearch', FilePermissions::PTYPE_ALL);
+		$nvs = FileSetPermissions::getOverriddenSets('canSearch', FilePermissions::PTYPE_NONE);
+		$vsm = FileSetPermissions::getOverriddenSets('canSearch', FilePermissions::PTYPE_MINE);
 		
 		// we remove all the items from nonviewableSets that appear in viewableSets because viewing trumps non-viewing
 		
@@ -127,33 +130,38 @@ class FileList extends DatabaseItemList {
 		// this excludes all file that are found in sets that I can't find
 		$this->filter(false, '((select count(fID) from FileSetFiles where FileSetFiles.fID = f.fID and fsID in (' . implode(',',$nvs) . ')) = 0)');		
 
-		$u = new User();
 		$uID = ($u->isRegistered()) ? $u->getUserID() : 0;
 		
 		// This excludes all files found in sets where I may only read mine, and I did not upload the file
 		$this->filter(false, '(f.uID = ' . $uID . ' or (select count(fID) from FileSetFiles where FileSetFiles.fID = f.fID and fsID in (' . implode(',',$vsm) . ')) = 0)');		
 		
 		$fp = FilePermissions::getGlobal();
-		if ($fp->getFileReadLevel() == FilePermissions::PTYPE_MINE) {
+		if ($fp->getFileSearchLevel() == FilePermissions::PTYPE_MINE) {
 			// this means that we're only allowed to read files we've uploaded (unless, of course, those files are in previously covered sets)
 			$this->filter(false, '(f.uID = ' . $uID . ' or (select count(fID) from FileSetFiles where FileSetFiles.fID = f.fID and fsID in (' . implode(',',$vs) . ')) > 0)');		
 		}
-		
-		/*
 
-		$fp = FilePermissions::getGlobal();
+		// now we filter out files we directly don't have access to
+		$groups = $u->getUserGroups();
+		$groupIDs = array();
+		foreach($groups as $key => $value) {
+			$groupIDs[] = $key;
+		}
 		
-		if ($fp->getFileReadLevel() == FilePermissions::PTYPE_MINE) {
-
-			// but there may be files in sets that we can view that override this global permission
-			
-			$u = new User();
-			if (count($sets) > 0) {	
-				$this->filter(false, '(f.uID = ' . $u->getUserID() . ' or (select count(fID) from FileSetFiles where fsID in (' . implode(',', $sets) . ') > 0))');
-			} else {
-				$this->filter('f.uID', $u->getUserID());
-			}
-		}*/
+		$uID = -1;
+		if ($u->isRegistered()) {
+			$uID = $u->getUserID();
+		}
+		
+		if (PERMISSIONS_MODEL != 'simple') {
+			// There is a really stupid MySQL bug that, if the subquery returns null, the entire query is nullified
+			// So I have to do this query OUTSIDE of MySQL and give it to mysql
+			$db = Loader::db();
+			$fIDs = $db->GetCol("select Files.fID from Files inner join FilePermissions on FilePermissions.fID = Files.fID where fOverrideSetPermissions = 1 and (FilePermissions.gID in (" . implode(',', $groupIDs) . ") or FilePermissions.uID = {$uID}) having max(canSearch) = 0");
+			if (count($fIDs) > 0) {
+				$this->filter(false, "(f.fID not in (" . implode(',', $fIDs) . "))");
+			}			
+		}
 	}
 	
 	protected function setupFileAttributeFilters() {

@@ -33,6 +33,52 @@ class File extends Object {
 		return $this->fOverrideSetPermissions;
 	}
 	
+	public function resetPermissions($fOverrideSetPermissions = 0) {
+		$db = Loader::db();
+		$db->Execute("delete from FilePermissions where fID = ?", array($this->fID));
+		$db->Execute("update Files set fOverrideSetPermissions = ? where fID = ?", array($fOverrideSetPermissions, $this->fID));
+	}
+	
+	public function setPermissions($obj, $canRead, $canSearch, $canWrite, $canAdmin) {
+		$fID = $this->fID;
+		$uID = 0;
+		$gID = 0;
+		$db = Loader::db();
+		if (is_a($obj, 'UserInfo')) {
+			$uID = $obj->getUserID();
+		} else {
+			$gID = $obj->getGroupID();
+		}
+		
+		if ($canRead < 1) {
+			$canRead = 0;
+		}
+		
+		if ($canSearch < 1) {
+			$canSearch = 0;
+		}
+		
+		if ($canWrite < 1) {
+			$canWrite = 0;
+		}
+		
+		if ($canAdmin < 1) {
+			$canAdmin = 0;
+		}
+		
+		$db->Replace('FilePermissions', array(
+			'fID' => $fID,
+			'uID' => $uID, 
+			'gID' => $gID,
+			'canRead' => $canRead,
+			'canSearch' => $canSearch,
+			'canWrite' => $canWrite,
+			'canAdmin' => $canAdmin
+		), 
+		array('fID', 'gID', 'uID'), true);
+		
+	}
+	
 	public function getUserID() {
 		return $this->uID;
 	}

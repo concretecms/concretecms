@@ -73,5 +73,6 @@ var ccmi18n_filemanager = {
 	rescan: '<?=t('Rescan')?>',
 	
 	PTYPE_CUSTOM: '<?=FilePermissions::PTYPE_CUSTOM?>',
+	PTYPE_NONE: '<?=FilePermissions::PTYPE_NONE?>',
 	PTYPE_ALL: '<?=FilePermissions::PTYPE_ALL?>'
 }

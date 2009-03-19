@@ -161,6 +161,16 @@ ccm_alSubmitPasswordForm = function() {
 	});
 }
 
+ccm_alSubmitPermissionsForm = function() {
+	ccm_deactivateSearchResults();
+	$("#ccm-file-permissions-form").ajaxSubmit(function(resp) {
+		jQuery.fn.dialog.closeTop();
+		$(".ccm-dashboard-file-search").ajaxSubmit(function(resp) {
+			ccm_alParseSearchResponse(resp);
+		});
+	});
+}
+
 		
 ccm_alSetupSetsForm = function() {
 	// Setup the tri-state checkboxes
@@ -261,14 +271,12 @@ ccm_alActivateFilePermissionsSelector = function() {
 	});
 	$("tr.ccm-file-access-file-manager input").click(function() {
 		var p = $(this).parents('div.ccm-file-permissions-entity')[0];
-		if ($(this).val() == ccmi18n_filemanager.PTYPE_ALL) {
-			$(p).find('tr.ccm-file-access-view').show();				
+		if ($(this).val() != ccmi18n_filemanager.PTYPE_NONE) {
 			$(p).find('tr.ccm-file-access-add').show();				
 			$(p).find('tr.ccm-file-access-edit').show();				
 			$(p).find('tr.ccm-file-access-admin').show();
 			//$(p).find('div.ccm-file-access-add-extensions').show();				
 		} else {
-			$(p).find('tr.ccm-file-access-view').hide();				
 			$(p).find('tr.ccm-file-access-add').hide();				
 			$(p).find('tr.ccm-file-access-edit').hide();				
 			$(p).find('tr.ccm-file-access-admin').hide();				
@@ -683,7 +691,7 @@ ccm_alActivateMenu = function(obj, e) {
 		if ($(obj).attr('ccm-file-manager-can-view') == '1') {
 			html += '<li><a class="ccm-icon dialog-launch" dialog-modal="false" dialog-width="90%" dialog-height="75%" dialog-title="' + ccmi18n_filemanager.view + '" id="menuView' + fID + '" href="' + CCM_TOOLS_PATH + '/files/view?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/design_small.png)">'+ ccmi18n_filemanager.view + '<\/span><\/a><\/li>';
 		} else {
-			html += '<li><a class="ccm-icon" id="menuDownload' + fID + '" target="' + ccm_alProcessorTarget + '" href="' + CCM_TOOLS_PATH + '/files/download?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/design.png)">'+ ccmi18n_filemanager.download + '<\/span><\/a><\/li>';	
+			html += '<li><a class="ccm-icon" id="menuDownload' + fID + '" target="' + ccm_alProcessorTarget + '" href="' + CCM_TOOLS_PATH + '/files/download?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/design_small.png)">'+ ccmi18n_filemanager.download + '<\/span><\/a><\/li>';	
 		}
 		if ($(obj).attr('ccm-file-manager-can-edit') == '1') {
 			html += '<li><a class="ccm-icon dialog-launch" dialog-modal="false" dialog-width="90%" dialog-height="75%" dialog-title="' + ccmi18n_filemanager.edit + '" id="menuEdit' + fID + '" href="' + CCM_TOOLS_PATH + '/files/edit?fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/edit_small.png)">'+ ccmi18n_filemanager.edit + '<\/span><\/a><\/li>';

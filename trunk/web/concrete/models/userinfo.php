@@ -83,7 +83,17 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (is_object($ui)) {
 				if ($userPermissionsArray) {
 					if (isset($userPermissionsArray['permissions'])) {
-						$ui->permissions = $userPermissionsArray['permissions'];					
+						$ui->permissions = $userPermissionsArray['permissions'];
+						if ($ui->permissions['canRead']) {
+							$ui->permissionSet .= 'r:';
+						}
+						if ($ui->permissions['canWrite']) {
+							$ui->permissionSet .= 'wa:';
+						}
+						if ($ui->permissions['canAdmin']) {
+							$ui->permissionSet .= 'adm:';
+						}
+
 					} else {
 						$ui->permissionSet = $userPermissionsArray['permissionSet'];
 						$ui->upStartDate = $userPermissionsArray['upStartDate'];
@@ -497,14 +507,21 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return strpos($this->permissionSet, 'adm') > -1;
 		}
 
+		function canAdmin() {
+			return strpos($this->permissionSet, 'adm') > -1;
+		}
+
 		/** 
 		 * File manager permissions at the user level 
 		 */
-		public function canAccessFileSet() {
-			return $this->permissions['canAccessFileSet'];
+		public function canSearchFiles() {
+			return $this->permissions['canSearch'];
 		}
 		public function getFileReadLevel() {
 			return $this->permissions['canRead'];
+		}
+		public function getFileSearchLevel() {
+			return $this->permissions['canSearch'];
 		}
 		public function getFileWriteLevel() {
 			return $this->permissions['canWrite'];
@@ -591,9 +608,27 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						}
 					}
 					break;
+				case 'filesetlist':
+					$fsIDs = array();
+					foreach($obj->sets as $fs) {
+						$fsIDs[] = $fs->getFileSetID();
+					}
+					$where = "fsID in (" . implode(',', $fsIDs) . ")";
+
+					$gID = $this->gID;
+					$q = "select uID, MAX(canRead) as canRead, MAX(canSearch) as canSearch, max(canWrite) as canWrite, max(canAdmin) as canAdmin from FileSetPermissions where {$where} and uID > 0 group by uID";
+					$r = $db->Execute($q);
+					while ($row = $r->fetchRow()) {
+						$userPermissionsArray['permissions'] = $row;
+						$this->uiArray[] = UserInfo::getByID($row['uID'], $userPermissionsArray);
+					}
+
+					break;
+				
+					break;
 				case 'fileset':
 					$fsID = $obj->getFileSetID();
-					$q = "select uID, canAccessFileSet, canRead, canWrite, canAdmin, canAdd from FilePermissions where fsID = '{$fsID}' and uID > 0";
+					$q = "select uID, canSearch, canRead, canWrite, canAdmin, canAdd from FileSetPermissions where fsID = '{$fsID}' and uID > 0";
 					$r = $db->query($q);
 					if ($r) {
 						while ($row = $r->fetchRow()) {
@@ -601,6 +636,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 							if ($row['canAdd'] == FilePermissions::PTYPE_CUSTOM) {
 								$userPermissionsArray['permissions']['canAddExtensions'] = $db->GetCol("select extension from FilePermissionFileTypes where uID = {$row['uID']} and fsID = {$fsID}");
 							}
+							$this->uiArray[] = UserInfo::getByID($row['uID'], $userPermissionsArray);
+						}
+					}
+
+					break;
+				case 'file':
+					$fID = $obj->getFileID();
+					$q = "select uID, canRead, canWrite, canSearch, canAdmin from FilePermissions where fID = '{$fID}' and uID > 0";
+					$r = $db->query($q);
+					if ($r) {
+						while ($row = $r->fetchRow()) {
+							$userPermissionsArray['permissions'] = $row;
 							$this->uiArray[] = UserInfo::getByID($row['uID'], $userPermissionsArray);
 						}
 					}

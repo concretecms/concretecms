@@ -39,7 +39,6 @@
 			}
 		}
 		
-		function getPassword() {return $this->filePassword;}
 		
 		
 	}
