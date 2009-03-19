@@ -488,10 +488,11 @@ class MiniSurvey{
 								      $values['options'], intval($values['position']), $width, $height, intval($values['required']), intval($values['msqID']) );			
 					$sql='UPDATE btFormQuestions SET questionSetId=?, question=?, inputType=?, options=?, position=?, width=?, height=?, required=? WHERE msqID=? AND bID=0';					
 				}else{ 
+					if( !isset($values['position']) ) $values['position']=1000;
 					if(!intval($values['msqID']))
 						$values['msqID']=intval($this->db->GetOne("SELECT MAX(msqID) FROM btFormQuestions")+1); 
 					$dataValues=array($values['msqID'],intval($values['qsID']), trim($values['question']), $values['inputType'],
-								     $values['options'], 1000, intval($values['width']), intval($values['height']), intval($values['required']) );			
+								     $values['options'], intval($values['position']), intval($values['width']), intval($values['height']), intval($values['required']) );			
 					$sql='INSERT INTO btFormQuestions (msqID,questionSetId,question,inputType,options,position,width,height,required) VALUES (?,?,?,?,?,?,?,?,?)'; 
 				}
 				$result=$this->db->query($sql,$dataValues);  
