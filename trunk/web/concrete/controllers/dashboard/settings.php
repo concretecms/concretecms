@@ -539,6 +539,7 @@ class DashboardSettingsController extends Controller {
 		$args['collectionWrite'] = array();
 		if (is_array($_POST['gID'])) {
 			foreach($_POST['gID'] as $gID) {
+				$args['collectionReadVersions'][] = 'gID:' . $gID;
 				$args['collectionWrite'][] = 'gID:' . $gID;
 				$args['collectionAdmin'][] = 'gID:' . $gID;
 				$args['collectionDelete'][] = 'gID:' . $gID;

@@ -628,6 +628,7 @@
 					$args['collectionWrite'] = array();
 					if (is_array($_POST['editGID'])) {
 						foreach($_POST['editGID'] as $gID) {
+							$args['collectionReadVersions'][] = 'gID:' . $gID;
 							$args['collectionWrite'][] = 'gID:' . $gID;
 							$args['collectionAdmin'][] = 'gID:' . $gID;
 							$args['collectionDelete'][] = 'gID:' . $gID;
