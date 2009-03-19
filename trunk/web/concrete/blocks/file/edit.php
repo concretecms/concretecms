@@ -12,7 +12,3 @@
 <br/>
 <h2><?=t('Link Text')?></h2>
 <input type="text" style="width: 200px" name="fileLinkText" value="<?=$controller->getLinkText()?>" /><br/>
-
-<h2><?=t('Password Required for Downloading')?></h2>
-<input type="text" style="width: 200px" name="filePassword" value="<?=$controller->getPassword()?>" />
-<div class="ccm-note"><?=t('A password is not required.')?></div>

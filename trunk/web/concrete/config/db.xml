@@ -473,6 +473,42 @@
     </field>
   </table>
   <table name="FilePermissions">
+    <field name="fID" type="I" size="10">
+      <KEY/>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="gID" type="I" size="10">
+      <KEY/>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uID" type="I" size="10">
+      <KEY/>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="canRead" type="I" size="4">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="canWrite" type="I" size="4">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="canAdmin" type="I" size="4">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="canSearch" type="I" size="4">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+  <table name="FileSetPermissions">
     <field name="fsID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -492,9 +528,27 @@
     <field name="canWrite" type="I" size="4"/>
     <field name="canAdmin" type="I" size="4"/>
     <field name="canAdd" type="I" size="4"/>
-    <field name="canAccessFileSet" type="I" size="4"/>
+    <field name="canSearch" type="I" size="3">
+      <UNSIGNED/>
+    </field>
+    <index name="canRead">
+      <col>canRead</col>
+    </index>
+    <index name="canWrite">
+      <col>canWrite</col>
+    </index>
+    <index name="canAdmin">
+      <col>canAdmin</col>
+    </index>
+    <index name="canSearch">
+      <col>canSearch</col>
+    </index>
+    <index name="canAdd">
+      <col>canAdd</col>
+    </index>
   </table>
   <table name="FileVersions">
+    <opt platform="MYSQL">ENGINE=MYISAM</opt>
     <field name="fID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -566,7 +620,9 @@
     <index name="fvExtension">
       <col>fvType</col>
     </index>
-
+	<index name="fvTitle">
+      <col>fvTitle</col>
+    </index>
   </table>
   <table name="FileVersionLog">
     <field name="fvlID" type="I" size="10">
@@ -612,6 +668,9 @@
       <DEFAULT value="0"/>
     </field>
     <field name="fPassword" type="C" size="255"/>
+    <index name="fOverrideSetPermissions">
+      <col>fOverrideSetPermissions</col>
+    </index>
   </table>
   <table name="Groups">
     <field name="gID" type="I" size="10">
@@ -1359,6 +1418,9 @@
       <NOTNULL/>
     </field>
     <field name="fsOverrideGlobalPermissions" type="I" size="4"/>
+    <index name="fsOverrideGlobalPermissions">
+      <col>fsOverrideGlobalPermissions</col>
+    </index>
   </table>    
   <table name="FileSetFiles">
     <field name="fsfID" type="I" size="10">
@@ -1378,4 +1440,10 @@
       <NOTNULL/>
       <DEFTIMESTAMP/>
     </field>
+     <index name="fID">
+      <col>fID</col>
+    </index>
+    <index name="fsID">
+      <col>fsID</col>
+    </index>
   </table></schema>

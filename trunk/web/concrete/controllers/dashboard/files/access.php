@@ -31,7 +31,7 @@ class DashboardFilesAccessController extends Controller {
 		$this->addHeaderItem($html->javascript('ccm.filemanager.js'));
 	}
 	
-	public function getFileAccessRow($type, $identifier = '', $name = '', $canAccessFileSet = true, $canRead = FilePermissions::PTYPE_MINE, $canWrite = FilePermissions::PTYPE_ALL, $canAdmin = FilePermissions::PTYPE_ALL, $canAdd = FilePermissions::PTYPE_ALL, $allowedExtensions = array()) {
+	public function getFileAccessRow($type, $identifier = '', $name = '', $canSearch = true, $canRead = FilePermissions::PTYPE_ALL, $canWrite = FilePermissions::PTYPE_ALL, $canAdmin = FilePermissions::PTYPE_ALL, $canAdd = FilePermissions::PTYPE_ALL, $allowedExtensions = array()) {
 
 		$concrete_file = Loader::helper("concrete/file");
 		$form = Loader::helper('form');
@@ -48,31 +48,30 @@ class DashboardFilesAccessController extends Controller {
 			$ida = '_' . $identifier . '[]';
 		}
 		$html .= '<h2>';
-		if ($type == 'SET' || ($identifier != 'gID_1' && $identifier != 'gID_2')) {
+		if (($identifier != 'gID_1' && $identifier != 'gID_2')) {
 			$html .= '<a href="javascript:void(0)" class="ccm-file-permissions-remove"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" width="16" height="16" /></a>';
 		}
 		$html .= '<span>' . $name . '</span></h2>';
 
-		$viewExtended = (FilePermissions::PTYPE_NONE == $canAccessFileSet) ? 'style="display: none"' : '';
+		$viewExtended = (FilePermissions::PTYPE_NONE == $canSearch) ? 'style="display: none"' : '';
 		
-		$html .= '<table border="0" cellspacing="0" cellpadding="0" id="ccm-file-permissions-grid">';
+		$html .= '<table border="0" cellspacing="0" cellpadding="0" id="ccm-file-permissions-grid">
+		<tr class="ccm-file-access-view">
+			<th>' . t('View Site Files') . '</th>
+			<td>' . $form->radio('canRead' . $id, FilePermissions::PTYPE_ALL, $canRead) . ' ' . t('Yes') . '</td>
+			<td>' . $form->radio('canRead' . $id, FilePermissions::PTYPE_NONE, $canRead) . ' ' . t('No') . '</td>
+		</tr>';		
 			$html .= '<tr class="ccm-file-access-file-manager">';
 			if ($type == 'GLOBAL') {
-				$html .= '<th>' . t('Use File Manager') . '</th>';
+				$html .= '<th>' . t('Search Files') . '</th>';
 			} else {
-				$html .= '<th>' . t('Can View Set') . '</th>';
+				$html .= '<th>' . t('Search Files in Set') . '</th>';
 			}
-			$html .= '<td>' . $form->radio('canAccessFileSet' . $id, FilePermissions::PTYPE_ALL, $canAccessFileSet) . ' ' . t('Yes') . '</td>
-				<td>' . $form->radio('canAccessFileSet' . $id, FilePermissions::PTYPE_NONE, $canAccessFileSet) . ' ' . t('No') . '</td>
-				<td>&nbsp;</td>
+			$html .= '<td>' . $form->radio('canSearch' . $id, FilePermissions::PTYPE_ALL, $canSearch) . ' ' . t('All') . '</td>
+				<td>' . $form->radio('canSearch' . $id, FilePermissions::PTYPE_MINE, $canSearch) . ' ' . t('Mine') . '</td>
+				<td>' . $form->radio('canSearch' . $id, FilePermissions::PTYPE_NONE, $canSearch) . ' ' . t('No') . '</td>
 			</tr>';
 		$html .='
-		<tr class="ccm-file-access-view" ' . $viewExtended . '>
-			<th>' . t('View Files') . '</th>
-			<td>' . $form->radio('canRead' . $id, FilePermissions::PTYPE_ALL, $canRead) . ' ' . t('All') . '</td>
-			<td>' . $form->radio('canRead' . $id, FilePermissions::PTYPE_MINE, $canRead) . ' ' . t('Mine') . '</td>
-			<td>&nbsp;</td>
-		</tr>
 		<tr class="ccm-file-access-edit" ' . $viewExtended . '>
 			<th>' . t('Edit Files') . '</th>
 			<td>' . $form->radio('canWrite' . $id, FilePermissions::PTYPE_ALL, $canWrite) . ' ' . t('All') . '</td>
@@ -95,7 +94,7 @@ class DashboardFilesAccessController extends Controller {
 			<th>&nbsp;</th>
 			<td colspan="3">';
 			
-			$disp = ($canAdd == FilePermissions::PTYPE_CUSTOM && $canAccessFileSet != FilePermissions::PTYPE_NONE) ? 'block' : 'none';
+			$disp = ($canAdd == FilePermissions::PTYPE_CUSTOM && $canSearch != FilePermissions::PTYPE_NONE) ? 'block' : 'none';
 			
 			$html .= '<div class="ccm-file-access-add-extensions" style="display: ' . $disp . '; padding-top: 8px">
 			
@@ -146,14 +145,14 @@ class DashboardFilesAccessController extends Controller {
 					$obj = Group::getByID($id);					
 				}
 			
-				$canAccessFileSet = $post['canAccessFileSet_' . $e];
+				$canSearch = $post['canSearch_' . $e];
 				$canRead = $post['canRead_' . $e];
 				$canWrite = $post['canWrite_' . $e];
 				$canAdmin = $post['canAdmin_' . $e];
 				$canAdd = $post['canAdd_' . $e];
 				$extensions = $post['canAddExtension_' . $e];
 				
-				$fs->setPermissions($obj, $canAccessFileSet, $canRead, $canWrite, $canAdmin, $canAdd, $extensions);
+				$fs->setPermissions($obj, $canSearch, $canRead, $canWrite, $canAdmin, $canAdd, $extensions);
 			}
 		}	
 	}
