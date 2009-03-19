@@ -8,7 +8,9 @@ if (isset($cp)) {
 	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage()) {
 
 $this->addHeaderItem($html->javascript('jquery.form.js'));
+$this->addHeaderItem($html->javascript('jquery.metadata.js'));
 $this->addHeaderItem($html->javascript('jquery.ui.js'));
+$this->addHeaderItem($html->javascript('jquery.rating.js'));
 $this->addHeaderItem($html->javascript('jquery.ui.datepicker.js'));
 	
 if (LANGUAGE != 'en') {
@@ -31,6 +33,7 @@ $this->addHeaderItem($html->javascript('ccm.filemanager.js'));
 $this->addHeaderItem($html->javascript('ccm.ui.js'));
 $this->addHeaderItem($html->javascript('tiny_mce_309/tiny_mce.js'));
 
+$this->addHeaderItem($html->css('jquery.rating.css'));
 $this->addHeaderItem($html->css('ccm.dialog.css'));
 $this->addHeaderItem($html->css('ccm.ui.css'));
 $this->addHeaderItem($html->css('ccm.calendar.css'));

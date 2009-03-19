@@ -112,6 +112,7 @@ var ccmAttributesHelper={
 		<option value="NUMBER"<? if ($akType == 'NUMBER') { ?> selected<? } ?>><?=t('Number')?></option>
 		<option value="DATE"<? if ($akType == 'DATE') { ?> selected <? } ?>><?=t('Date')?></option>
 		<? if ($attributeType == 'page') { ?><option value="IMAGE_FILE"<? if ($akType == 'IMAGE_FILE') { ?> selected <? } ?>><?=t('Image/File')?></option><? } ?>
+		<option value="RATING"<? if ($akType == 'RATING') { ?> selected <? } ?>><?=t('Rating')?></option>
 	</select></td>
 	<? if(!$noSearchable){?>
 	<td style="width: 33%"><input type="checkbox" name="akSearchable" style="vertical-align: middle" <? if ($akSearchable) { ?> checked <? } ?> /> <?=t('Yes, include this field in the search index.')?></td>
