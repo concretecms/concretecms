@@ -1,7 +1,7 @@
 <?
 //because duplicated code is evil.
 function getAttributeOptionHTML($akValue="TEMPLATE"){ 
-		$akValueClean=TextHelper::filterNonAlphaNum($akValue);
+		$akValueClean=str_replace(' ','',TextHelper::filterNonAlphaNum($akValue));
 		if($akValue=='TEMPLATE') $akValueClean='TEMPLATE_CLEAN'
 		?>
 		<div id="akValueDisplay_<?=$akValueClean?>" >
@@ -36,9 +36,10 @@ function getAttributeOptionHTML($akValue="TEMPLATE"){
 	Loader::helper('text');
 	if(!is_array($akValues)) $akValues=explode("\n",$akValues);
 	foreach($akValues as $akValue){ 
-		if(!strlen(trim($akValue))) continue;
+		$akValueClean=str_replace(' ','',TextHelper::filterNonAlphaNum($akValue));
+		if(!strlen(trim($akValue))) continue;		
 		?>
-		<div id="akValueWrap_<?=$akValue?>" class="akValueWrap">
+		<div id="akValueWrap_<?=$akValueClean?>" class="akValueWrap">
 			<?=getAttributeOptionHTML( $akValue )?>
 		</div>
 	<? } ?>
