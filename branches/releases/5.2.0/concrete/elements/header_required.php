@@ -38,6 +38,7 @@ if ($akk) { ?>
 	<meta name="keywords" content="<?php echo htmlspecialchars($akk)?>" />
 <?php  } ?>
 
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
 <?php  $u = new User(); ?>
