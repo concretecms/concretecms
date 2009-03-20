@@ -110,5 +110,3 @@ class DashboardInstallController extends Controller {
 	}
 
 }
-
-?>

@@ -232,6 +232,10 @@ class FileAttributeKey extends AttributeKey {
 				$dt = Loader::helper('form/date_time');
 				$html = $dt->datetime('fakID_' . $this->getAttributeKeyID(), $value, true);	
 				break;
+			case 'RATING':
+				$dt = Loader::helper('form/rating');
+				$html = $dt->rating('fakID_' . $this->getAttributeKeyID(), $value);	
+				break;
 		}
 		return $html;
 	}

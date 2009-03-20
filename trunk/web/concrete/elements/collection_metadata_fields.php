@@ -190,7 +190,11 @@ var ccmPathHelper={
 				case "NUMBER":?>
 					<input name="akID_<?=$ak->getCollectionAttributeKeyID()?>" type="text" value="<?=$caValue ?>" size="10" />
 					<?
-					break;								 
+					break;	
+				case "RATING":
+					$rt = Loader::helper('form/rating');
+					print $rt->rating('akID_' . $ak->getCollectionAttributeKeyID(), $caValue); 
+					break;
 				case "IMAGE_FILE": 
 					$bf = null; 
 					if (is_object($caValue)) {

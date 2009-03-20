@@ -8,10 +8,7 @@ class DashboardFilesSearchController extends Controller {
 		$html = Loader::helper('html');
 		$form = Loader::helper('form');
 		$this->set('form', $form);
-		$this->addHeaderItem($html->css('ccm.filemanager.css'));
-		$this->addHeaderItem($html->javascript('ccm.filemanager.js'));
 		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_activateFileManager(\'DASHBOARD\'); });</script>');
-		
 		$fileList = $this->getRequestedSearchResults();
 		$files = $fileList->getPage();
 				

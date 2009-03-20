@@ -34,7 +34,7 @@ $ch = Loader::helper('concrete/interface');
 
 $btArray = BlockTypeList::getInstalledList();
 $btAvailableArray = BlockTypeList::getAvailableList();
-//$pkgArray = Package::getInstalledList();
+$pkgArray = Package::getInstalledList();
 $pkgAvailableArray = Package::getAvailablePackages();
 $installedArray = $btArray;
 $availableArray = array_merge($btAvailableArray, $pkgAvailableArray);
@@ -84,9 +84,8 @@ $themesArray = PageTheme::getAvailableThemes();
 
 	<div class="ccm-module" style="width: 250px; margin-bottom: 0px">
 
-		<h1><span><?=t('Installed Block Types')?></span></h1>
+		<h1><span><?=t('Currently Installed')?></span></h1>
 		<div class="ccm-dashboard-inner">
-    	<h2><?php echo t('Click to View Details.')?></h2>
 		
 		<? 
 		if (count($installedArray) == 0) { ?>
@@ -105,18 +104,36 @@ $themesArray = PageTheme::getAvailableThemes();
 				
 		<? } ?>
 
+		<? 
+		/*
+		if (count($pkgArray) == 0) { ?>
+			<p><?=t('No packages have been installed.')?></p>
+		<? } else { ?>
+		
+			<div style="margin:0px; padding:0px; height:auto">	
+	
+			<?	foreach ($pkgArray as $pkg) { ?>
+				<div class="ccm-block-type" style="border-bottom: none">
+					<div class="ccm-block-type-inner" style="background-image: url(<?=$ci->getPackageIconURL($pkg)?>)"><?=$pkg->getPackageName()?></a>
+				</div>
+			<? } ?>
+
+			</div>
+				
+		<? }*/  ?>
+
 		</div>
 			
 	</div>
 
 	<div class="ccm-module" style="width: 250px; margin-bottom: 0px">
 
-		<h1><span><?=t('Available Block Types')?></span></h1>
+		<h1><span><?=t('New')?></span></h1>
 		<div class="ccm-dashboard-inner">
 
 		<? if (count($availableArray) == 0) { ?>
 
-		<?=t('No added functionality is available to install.')?>
+		<?=t('Nothing is available to install.')?>
 	
 		<? } else { ?>
 
@@ -135,10 +152,10 @@ $themesArray = PageTheme::getAvailableThemes();
 			</tr>
 			<tr>
 			<? if (get_class($obj) == "BlockType") { ?>
-				<td colspan="2" style="color: #aaa; padding: 2px 0 6px"><?=$obj->getBlockTypeDescription()?></td>
+				<td style="color: #aaa; padding: 2px 0 6px"><?=$obj->getBlockTypeDescription()?></td>
 				<td style="vertical-align: bottom"><?=$ch->button(t("Install"), $this->url('/dashboard/install','install_block_type', $obj->getBlockTypeHandle()), "right");?></td>
 			<? } else { ?>
-				<td colspan="2" style="color: #aaa; padding: 2px 0 6px"><?=$obj->getPackageDescription()?></td>
+				<td style="color: #aaa; padding: 2px 0 6px"><?=$obj->getPackageDescription()?></td>
 				<td style="vertical-align: bottom"><?=$ch->button(t("Install"), $this->url('/dashboard/install','install_package', $obj->getPackageHandle()), "right");?></td>
 			<? } ?>
 			</tr>

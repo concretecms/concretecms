@@ -66,10 +66,10 @@ class PackageList extends Object {
 		return $handle;
 	}
 	
-	public static function get() {
+	public static function get($pkgIsInstalled = 1) {
 		
 		$db = Loader::db();
-		$r = $db->query("select pkgID, pkgName, pkgIsInstalled, pkgDescription, pkgHandle, pkgDateInstalled from Packages order by pkgID asc");
+		$r = $db->query("select pkgID, pkgName, pkgIsInstalled, pkgDescription, pkgVersion, pkgHandle, pkgDateInstalled from Packages where pkgIsInstalled = ? order by pkgID asc", array($pkgIsInstalled));
 		$list = new PackageList();
 		while ($row = $r->fetchRow()) {
 			$pkg = new Package;
@@ -99,6 +99,7 @@ class Package extends Object {
 	public function getPackageDescription() {return $this->pkgDescription;}
 	public function getPackageHandle() {return $this->pkgHandle;}
 	public function getPackageDateInstalled() {return $this->pkgDateInstalled;}
+	public function getPackageVersion() {return $this->pkgVersion;}
 	public function isPackageInstalled() { return $this->pkgIsInstalled;}
 	
 	protected $appVersionRequired = '5.0.0';
@@ -222,8 +223,8 @@ class Package extends Object {
 	protected function install() {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
-		$v = array($this->getPackageName(), $this->getPackageDescription(), $this->getPackageHandle(), 1, $dh->getLocalDateTime());
-		$db->query("insert into Packages (pkgName, pkgDescription, pkgHandle, pkgIsInstalled, pkgDateInstalled) values (?, ?, ?, ?, ?)", $v);
+		$v = array($this->getPackageName(), $this->getPackageDescription(), $this->getPackageVersion(), $this->getPackageHandle(), 1, $dh->getLocalDateTime());
+		$db->query("insert into Packages (pkgName, pkgDescription, pkgVersion, pkgHandle, pkgIsInstalled, pkgDateInstalled) values (?, ?, ?, ?, ?, ?)", $v);
 		
 		$pkg = Package::getByID($db->Insert_ID());
 		Package::installDB($pkg->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
