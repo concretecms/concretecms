@@ -1,5 +1,5 @@
 
-var ccmPopupLogin = {
+var ccmPopupLogin = { 
 	
 	init : function(){
 		//alert('remove popup_login.js from header_required.php');
@@ -8,19 +8,26 @@ var ccmPopupLogin = {
 	
 	//"redirect" can be a cID or a URL, or it can be the string "refresh" to reload the current page after login
 	//successFunction is a callback run after a successful login
-	show : function( redirect, successFunction ){ 
+	show : function( redirect, successFunction, targetId, remote ){ 
 		var rcID=(redirect && typeof(redirect)!='undefined')?redirect:'';
 		this.loggedInFunction=successFunction;
-		$.fn.dialog.open({
-			href: CCM_TOOLS_PATH + '/popup_login?rcID='+rcID, 
-			title: "Login",
-			width: 550,
-			modal: false, 
-			//onLoad:function(){alert('onLoad')},
-			onClose: function(){}, 
-			height: 220
-		});
-		
+		var loginFormUrl = CCM_TOOLS_PATH + '/popup_login?rcID='+rcID;
+		if(remote) loginFormUrl=loginFormUrl+'&remote=1';
+		if(targetId){
+			var targetEl=$('#'+targetId)
+			if(!targetEl) alert('Error: Target Not Found');
+			else targetEl.load(loginFormUrl); 
+		}else{
+			$.fn.dialog.open({
+				href: loginFormUrl, 
+				title: "Login",
+				width: 550,
+				modal: false, 
+				//onLoad:function(){alert('onLoad')},
+				onClose: function(){}, 
+				height: 220
+			});
+		}
 	},
 	
 	login:function(form){ 

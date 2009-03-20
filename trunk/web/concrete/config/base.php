@@ -393,10 +393,12 @@ define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the
 define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_version_number');
 define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
 
+//Main Concrete Site - For Marketplace, Knowledge Base, etc.
+if (!defined('CONCRETE5_ORG_URL')) {
+	define('CONCRETE5_ORG_URL', 'http://www.concrete5.org');
+}
+
 # Marketplace Vars
-/* if (!defined('ENABLE_MARKETPLACE_SUPPORT')) {
-	define('ENABLE_MARKETPLACE_SUPPORT', true);
-} */
 if (!defined('MARKETPLACE_BLOCK_LIST_WS')) {
 	define('MARKETPLACE_BLOCK_LIST_WS', 'http://www.concrete5.org/tools/get_marketplace_block_list/');
 }
@@ -406,10 +408,23 @@ if (!defined('MARKETPLACE_THEME_LIST_WS')) {
 if (!defined('MARKETPLACE_THEME_PREVIEW_URL')) {
 	define('MARKETPLACE_THEME_PREVIEW_URL', 'http://www.concrete5.org/tools/preview_theme/');
 }
-
 define('MARKETPLACE_CONTENT_LATEST_THRESHOLD', 10800); // every three hours
-
 define('MARKETPLACE_DIRNAME_THEME_PREVIEW', 'previewable_themes');
 define('MARKETPLACE_THEME_PREVIEW_ASSETS_URL', 'http://www.concrete5.org/' . MARKETPLACE_DIRNAME_THEME_PREVIEW);
+
+
+# Knowledge Base Vars
+if (!defined('KNOWLEDGE_BASE_URL')){
+	define('KNOWLEDGE_BASE_URL', CONCRETE5_ORG_URL.'/help/kb/');
+}
+if (!defined('KNOWLEDGE_BASE_POST_URL')) {
+	define('KNOWLEDGE_BASE_POST_URL', CONCRETE5_ORG_URL.'/tools/open_support_ticket/');
+}
+if (!defined('KNOWLEDGE_BASE_TICKET_LIST_URL')) {
+	define('KNOWLEDGE_BASE_TICKET_LIST_URL', CONCRETE5_ORG_URL.'/tools/get_support_ticket_list/');
+}
+if (!defined('KNOWLEDGE_BASE_AUTH_URL')) {
+	define('KNOWLEDGE_BASE_AUTH_URL', CONCRETE5_ORG_URL.'/tools/authenticate_user/');
+}
 
 require_once(DIR_LIBRARIES_CORE . '/loader.php');

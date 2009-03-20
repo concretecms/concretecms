@@ -1,4 +1,12 @@
 <?
+//THIS PAGE IS DEPREICATED
+
+//Use elements/dashboard/attribute_values.php instead
+
+
+
+
+
 //because duplicated code is evil.
 function getAttributeOptionHTML($akValue="TEMPLATE"){ 
 		$akValueClean=TextHelper::filterNonAlphaNum($akValue);

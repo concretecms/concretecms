@@ -74,7 +74,7 @@ if (isset($cp)) {
 <? if ($dh->canRead()) { ?>
 	<li><a id="ccm-nav-dashboard" href="<?=$this->url('/dashboard')?>"><?=t('Dashboard')?></a></li>
 <? } ?>
-<li><a id="ccm-nav-help" helpurl="<?=MENU_HELP_URL?>" href="javascript:void(0)" ><?=t('Help')?></a></li>
+<li><a id="ccm-nav-help" helpurl="<?=MENU_HELP_URL?>" href="javascript:void(0)"><?=t('Help')?></a></li>
 <li class="ccm-last"><a id="ccm-nav-logout" href="<?=$this->url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>
 </ul>
 </div>
