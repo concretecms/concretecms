@@ -107,11 +107,7 @@ class DashboardInstallController extends Controller {
 				$this->set('error', $e);
 			}
 		}
-		$this->packages();
 	}
-	
-
-	
 
 }
 
