@@ -41,6 +41,9 @@ $this->addHeaderItem($html->css('ccm.menus.css'));
 $this->addHeaderItem($html->css('ccm.forms.css'));
 $this->addHeaderItem($html->css('ccm.filemanager.css'));
 
+$this->addHeaderItem($html->javascript('ccm.popup_login.js'));  
+$this->addHeaderItem($html->css('ccm.popup_login.css'));
+
 	}
 	
 }

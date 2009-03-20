@@ -548,6 +548,62 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		function getUserEndDate() {
 			return $this->upEndDate;
 		}
+		
+		
+		
+		
+		//Remote Authentication Stuff
+		//****************************
+		
+		static function setRemoteAuthToken($token=''){ $_SESSION['remote_auth_token']=$token; }
+		static function getRemoteAuthToken(){ return $_SESSION['remote_auth_token']; }		
+		
+		static function setRemoteAuthTimestamp($timestamp=0){ $_SESSION['remote_auth_timestamp']=$timestamp; }		
+		static function getRemoteAuthTimestamp(){ return $_SESSION['remote_auth_timestamp']; }		
+		
+		static function setRemoteAuthUserName($uname=0){ $_SESSION['remote_auth_uname']=$uname; }		
+		static function getRemoteAuthUserName(){ return $_SESSION['remote_auth_uname'];	}		
+		
+		static function endRemoteAuthSession(){
+			unset($_SESSION['remote_auth_token']);
+			unset($_SESSION['remote_auth_uname']);
+			unset($_SESSION['remote_auth_timestamp']);
+		}			
+		
+		static function generateAuthToken( $uname='', $timestamp=0){
+			if( !intval($timestamp) ) $timestamp=time();
+			$raw_identifier = intval($timestamp).trim(strtolower($uname));
+			//echo intval($timestamp).' '.$uname;
+			return User::encryptPassword( $raw_identifier, PASSWORD_SALT);
+		}
+		
+		//c5 install checks with c5org to see if this user is logged in
+		static function isRemotelyLoggedIn(){ 
+			$token = UserInfo::getRemoteAuthToken();
+			$uname = UserInfo::getRemoteAuthUserName();
+			$timestamp = UserInfo::getRemoteAuthTimestamp();		
+			if( strlen($token) && strlen($uname) && intval($timestamp) ){
+				Loader::helper('JSON');
+				$authURL=KNOWLEDGE_BASE_AUTH_URL.'?uname='.urlencode($uname).'&token='.$token.'&t='.$timestamp; 
+				
+				//echo $authURL;
+				
+				if (function_exists('curl_init')) {
+					$curl_handle = curl_init();
+					curl_setopt($curl_handle, CURLOPT_URL, $authURL);
+					curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 15);
+					curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+					$response = curl_exec($curl_handle); 
+					if( !$response || !strstr($response,'logged') ) return false;
+					$responseData = JsonHelper::decode($response);
+					if($responseData->logged==1) return true; 
+				} 
+				return false;
+			}else{
+				UserInfo::endRemoteAuthSession();
+				return false;			
+			}
+		}	
 
 	}
 
@@ -677,4 +733,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		function getUserInfoList() {
 			return $this->uiArray;
 		}
+		
+				
+		
 	}

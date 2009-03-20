@@ -587,12 +587,19 @@ ccm_setupHeaderMenu = function() {
 		
 	});
 
+	/*
+	//old help
 	$("a#ccm-nav-help").click(function() {
 		var helpurl = $(this).attr('helpurl');
 		window.open(helpurl);
 		ccm_removeHeaderLoading();
 
 	});
+	*/
+	
+	$("a#ccm-nav-help").click(function() { 
+		ccm_support.show(this);
+	});	
 	
 	$("a#ccm-nav-logout").click(function() {
 		var href = $(this).attr('href');
@@ -716,3 +723,155 @@ $(function() {
 	m8.src = CCM_IMAGE_PATH + "/bg_menu_lt.png";
 
 });
+
+
+/* SUPPORT SECTION */
+
+var ccm_support = {   
+	
+	show:function(){
+		//alert(helpurl);
+		var supportWrap=document.getElementById('ccm-supportWrap');
+		//load into existing window, if help is already open
+		if(supportWrap){
+			$.ajax({
+				type: 'GET',
+				url: CCM_TOOLS_PATH + '/support/search.php', 
+				success: function(resp) {
+					var supportWrap=document.getElementById('ccm-supportWrap');
+					if(!supportWrap) return false;
+					$(supportWrap.parentNode).html(resp); 
+					ccm_removeHeaderLoading();
+					//setTimeout('ccm_support.checkedLogged()',500);
+				}	
+			});
+		}else{
+			$.fn.dialog.open({
+				title: ccmi18n.helpPopup,
+				href: CCM_TOOLS_PATH + '/support/search/' ,
+				width: 550,
+				modal: false,
+				height: 400,
+				onLoad:function(){ 
+					ccm_removeHeaderLoading();
+					//setTimeout('ccm_support.checkedLogged()',500);
+				}
+			});
+		}		
+	},
+	
+	isLoggedIn:0,
+	isLogged:function(){
+		var el=$('#ccm-isRemotelyLogged');		
+		if(el && el.get(0)){
+			this.isLoggedIn=parseInt(el.val());
+		}
+		return this.isLoggedIn;
+	},
+	/*
+	checkedLogged:function(){
+		$.ajax({
+			type: 'GET',
+			url: CCM_TOOLS_PATH + '/support/auth/', 
+			success: function(resp) {
+				if(!resp) return false; 
+				eval('var jObj='+resp);
+				if(jObj.loggedIn==1){
+					ccm_support.isLoggedIn=1;
+				}else{
+					ccm_support.isLoggedIn=0;
+				}
+			}	
+		});
+	},
+	*/
+	searchAnswers:function(form){
+		this.showLoading();
+		try{  
+			//$("#ccm-dialog-throbber").css('visibility', 'visible');
+			$.ajax({
+				type: 'POST',
+				url: CCM_TOOLS_PATH + '/support/search/',
+				data: $(form).formSerialize(),
+				success: function(resp) {
+					ccm_support.hideLoading();
+					var supportWrap=document.getElementById('ccm-supportWrap');
+					if(!supportWrap) return false;
+					$(supportWrap.parentNode).html(resp); 
+				}		
+			});
+		}catch(e){
+			alert('Error in ccm_support.askQuestion(): '+e.message);
+		}
+		return false;
+	},
+	
+	showMyTickets:function(){
+		this.showLoading();
+		$.ajax({
+			type: 'GET',
+			url: CCM_TOOLS_PATH + '/support/tickets.php',
+			success: function(resp) {
+				ccm_support.hideLoading();
+				var supportWrap=document.getElementById('ccm-supportWrap');
+				if(!supportWrap) return false;
+				$(supportWrap.parentNode).html(resp); 
+			}		
+		});
+	},
+	
+	showQuestionForm:function(){
+		this.showLoading();	
+		if( !ccm_support.isLogged() ){
+			ccmPopupLogin.show( '', function(){
+							ccm_support.isLoggedIn=1;
+							$('#ccm-isRemotelyLogged').remove();
+							ccm_support.showQuestionForm() 
+						}, 'ccm-supportWrap', 1 );
+			return;
+		}
+		$.ajax({
+			type: 'POST',
+			url: CCM_TOOLS_PATH + '/support/post.php',
+			success: function(resp) {
+				ccm_support.hideLoading();
+				var supportWrap=document.getElementById('ccm-supportWrap');
+				if(!supportWrap) return false;
+				$(supportWrap.parentNode).html(resp); 
+			}		
+		});
+	},
+	
+	submitNewQuestion:function(form){ 
+		this.showLoading();
+		try{
+			$.ajax({
+				type: 'POST',
+				url: CCM_TOOLS_PATH + '/support/post.php',
+				data: $(form).formSerialize(),
+				success: function(resp) {
+					ccm_support.hideLoading();
+					var supportWrap=document.getElementById('ccm-supportWrap');
+					if(!supportWrap) return false;
+					$(supportWrap.parentNode).html(resp); 
+				}		
+			});
+		}catch(e){
+			alert('Error in ccm_support.submitNewQuestion(): '+e.message);
+		}
+		return false;
+	},
+	
+	signOut:function(){
+		
+		
+	},
+	
+	showLoading:function(){
+		$('#ccm-supportWrap .ccm-throbber').css('display','block');
+	},
+	
+	hideLoading:function(){
+		$('#ccm-supportWrap .ccm-throbber').css('display','none');
+	}
+}

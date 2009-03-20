@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::library('authentication/open_id');
 
-class LoginController extends Controller {
+class LoginController extends Controller { 
 	
 	public $helpers = array('form');
 	private $openIDReturnTo;
@@ -18,8 +18,7 @@ class LoginController extends Controller {
 			$this->set("uName",$_GET['uName']);
 		}
 		
-		$this->openIDReturnTo = BASE_URL . View::url("/login", "complete_openid");
-		
+		$this->openIDReturnTo = BASE_URL . View::url("/login", "complete_openid"); 
 	}
 	
 	/* automagically run by the controller once we're done with the current method */
@@ -147,7 +146,6 @@ class LoginController extends Controller {
 						break;
 				}
 			} else {
-
 			
 				if (OpenIDAuth::isEnabled() && $_SESSION['uOpenIDExistingUser'] > 0) {
 					$oa = new OpenIDAuth();
@@ -165,7 +163,9 @@ class LoginController extends Controller {
 				
 				$loginData['success']=1;
 				$loginData['msg']=t('Login Successful');	
-				$loginData['uID'] = intval($u->getUserID());			
+				$loginData['uID'] = intval($u->getUserID());
+				if($_REQUEST['remote'] && intval($_REQUEST['timestamp'])) 
+					$loginData['auth_token'] = 	UserInfo::generateAuthToken( $u->getUserName(), intval($_REQUEST['timestamp']) );
 			}
 
 			$loginData = $this->finishLogin($loginData);
