@@ -42,6 +42,10 @@ class FileVersion extends Object {
 				case 'SELECT_MULTIPLE':
 					return nl2br($value);
 					break;
+				case 'RATING':
+					$rt = Loader::helper('rating');
+					return $rt->output($akHandle . time(), $value);
+					break;
 				default:
 					return $value;
 					break;

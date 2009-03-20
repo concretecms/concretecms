@@ -767,6 +767,7 @@
       <NOTNULL/>
       <DEFAULT value="1"/>
     </field>
+    <field name="pkgVersion" type="C" size="32"/>
     <index name="pkgHandle">
       <UNIQUE/>
       <col>pkgHandle</col>

@@ -15,12 +15,16 @@
 				echo("<ul>");
 			} else if ($thisLevel < $lastLevel) {
 				for ($j = $thisLevel; $j < $lastLevel; $j++) {
-					echo("</li></ul></li>");
+					if ($lastLevel - $j > 1) {
+						echo("</li></ul>");
+					} else {
+						echo("</li></ul></li>");
+					}
 				}
 			} else if ($i > 0) {
-				print '</li>';
+				echo("</li>");
 			}
-			
+
 			$pageLink = false;
 			
 			if ($_c->getCollectionAttributeValue('replace_link_with_first_in_nav')) {
