@@ -202,6 +202,8 @@ img {
 }
 
 span.sign-in {margin-left: 20px}
+#page #footer span.powered-by { float:right; margin-right:20px;}
+
 
 /* MISC STYLES & SHORTCUTS */
 div.code {

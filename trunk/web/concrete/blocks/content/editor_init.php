@@ -52,7 +52,6 @@ ccm_chooseAsset = function(obj) {
 			mceEd.dom.setAttribs('__mce_tmp', args);
 			mceEd.dom.setAttrib('__mce_tmp', 'id', '');
 			mceEd.undoManager.add();
-			
 			break;
 		default: // file
 			var selectedText = mceEd.selection.getContent();
@@ -70,7 +69,6 @@ ccm_chooseAsset = function(obj) {
 			}
 		break;
 	}
-		
 }
 </script>
 

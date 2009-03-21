@@ -40,7 +40,8 @@ $this->inc('elements/header.php'); ?>
 		<div class="spacer">&nbsp;</div>		
 	</div>
 	<div id="footer">
-			&copy; <?=date('Y')?> <a href="<?=DIR_REL?>/"><?=SITE?></a>.
+		<span class="powered-by">This site is powered by <a href="http://www.concrete5.org">concrete5</a></span>
+            &copy; <?=date('Y')?> <a href="<?=DIR_REL?>/"><?=SITE?></a>.
 			&nbsp;&nbsp;
 			<?=t('All rights reserved.')?>	
 			<span class="sign-in"><a href="<?=$this->url('/login')?>"><?=t('Sign In to Edit this Site')?></a></span>
