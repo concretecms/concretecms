@@ -60,7 +60,17 @@ class Area extends Object {
 	function getCustomTemplates() {return $this->customTemplateArray;}
 	function setCustomTemplate($btHandle, $temp) {$this->customTemplateArray[$btHandle] = $temp;}
 	
-	function getTotalBlocksInArea() {return $this->totalBlocks; }
+	/** 
+	 * Returns the total number of blocks in an area. 
+	 * @param Page $c must be passed if the display() method has not been run on the area object yet.
+	 */
+	function getTotalBlocksInArea($c = false) {
+		if (!is_array($this->areaBlocksArray) && is_object($c)) {
+			$this->getAreaBlocksArray($c);
+		}
+		return $this->totalBlocks; 
+		
+	}
 	function overrideCollectionPermissions() {return $this->arOverrideCollectionPermissions; }
 	function getAreaCollectionInheritID() {return $this->arInheritPermissionsFromAreaOnCID;}
 	
