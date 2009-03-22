@@ -6,6 +6,7 @@ var ccmi18n = {
 	closeWindow: '<?=t('Close')?>',
 	editBlock: '<?=t('Edit')?>',
 	compareVersions: '<?=t('Compare Versions')?>',
+	blockAreaMenu: '<?=t("Add Block")?>',
 	arrangeBlock: '<?=t('Move')?>',
 	copyBlockToScrapbook: '<?=t('Copy to Scrapbook')?>',
 	changeBlockTemplate: '<?=t('Set Custom Template')?>',

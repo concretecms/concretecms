@@ -189,6 +189,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$this->set('controller', $this);
 		}
 		
+		public function outputAutoHeaderItems() {
+			$b = $this->getBlockObject();
+			$bvt = new BlockViewTemplate($b);
+			
+			$headers = $bvt->getTemplateHeaderItems();
+			if (count($headers) > 0) {
+				foreach($headers as $h) {
+					$this->addHeaderItem($h);
+				}
+			}
+		}
+		
 		public function setupAndRun($method) {
 			if ($method) {
 				$this->task = $method;
