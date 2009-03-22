@@ -20,12 +20,19 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class HtmlHelper {
 
 	/** 
-	 * Includes a CSS file. This function looks in several places. First it checks the currently active theme, then if a package is specified it checks there. Otherwise if nothing is found it
+	 * Includes a CSS file. This function looks in several places. 
+	 * First, if the item is either a path or a URL it just returns the link to that item (as XHTML-formatted style tag.) 
+	 * Then it checks the currently active theme, then if a package is specified it checks there. Otherwise if nothing is found it
 	 * fires off a request to the relative directory CSS directory. If nothing is there, then it checks to the assets directories
 	 * @param $file
 	 * @return $str
 	 */
 	public function css($file, $pkgHandle = null) {
+		// if the first character is a / then that means we just go right through, it's a direct path
+		if (substr($file, 0, 1) == '/' || substr($file, 0, 4) == 'http') {
+			return '<style type="text/css">@import "' . $file . '";</style>';
+		}
+		
 		$v = View::getInstance();
 		// checking the theme directory for it. It's just in the root.
 		if (file_exists($v->getThemeDirectory() . '/' . $file)) {
@@ -49,12 +56,19 @@ class HtmlHelper {
 	}
 	
 	/** 
-	 * Includes a JavaScript file. This function looks in several places. If a package is specified it checks there. Otherwise if nothing is found it
+	 * Includes a JavaScript file. This function looks in several places. 
+	 * First, if the item is either a path or a URL it just returns the link to that item (as XHTML-formatted script tag.) 
+	 * If a package is specified it checks there. Otherwise if nothing is found it
 	 * fires off a request to the relative directory JavaScript directory.
 	 * @param $file
 	 * @return $str
 	 */
 	public function javascript($file, $pkgHandle = null) {
+
+		if (substr($file, 0, 1) == '/' || substr($file, 0, 4) == 'http') {
+			return '<script type="text/javascript" src="' . $file . '"></script>';
+		}
+
 		if ($pkgHandle != null) {
 			if (file_exists(DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
 				$str = '<script type="text/javascript" src="' . DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file . '"></script>';

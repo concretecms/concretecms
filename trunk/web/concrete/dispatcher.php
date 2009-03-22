@@ -30,6 +30,7 @@
 	Loader::library('controller');
 	Loader::library('file/types');
 	Loader::library('block_view');
+	Loader::library('block_view_template');
 	Loader::library('block_controller');
 
 	## Autoload settings
@@ -92,6 +93,10 @@
 	## Specific site routes for various content items (if they exist) ##
 	@include('config/site_file_types.php');
 
+	// Now we check to see if we're including CSS, Javascript, etc...
+	// Include Tools. Format: index.php?task=include_frontend&fType=TOOL&filename=test.php
+	require('startup/tools.php');
+
 	## Specific site/app events if they are enabled ##
 	## This must come before packages ##
 	if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true) {
@@ -104,10 +109,6 @@
 	## Check online, user-related startup routines
 	require('startup/user.php');
 
-	// Now we check to see if we're including CSS, Javascript, etc...
-	// Include Tools. Format: index.php?task=include_frontend&fType=TOOL&filename=test.php
-	require('startup/tools.php');
-	
 	// figure out where we need to go
 	$req = Request::get();
 	if ($req->getRequestCollectionPath() != '') {
