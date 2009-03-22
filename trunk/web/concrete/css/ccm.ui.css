@@ -1,6 +1,9 @@
 /* make up for the new bar on the top of the screen */
 body {margin: 49px 0px 0px 0px !important; }
 div#ccm-page-controls img {border: 0px}
+div#ccm-page-controls-wrapper {background: transparent url(../images/bg_header.png) repeat-x scroll; height: 53px; width: 100%; position: fixed; top: 0px; left: 0px; margin:0; padding:0;}
+
+
 img {border: 0px}
 
 form {margin: 0px; padding: 0px}
