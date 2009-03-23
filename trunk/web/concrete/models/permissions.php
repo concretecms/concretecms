@@ -519,7 +519,8 @@ class CollectionPermissions extends Permissions {
 							$canWriteToPage = true; // once this is set it can't be unset
 						}
 						
-						if ($row['gID'] != GUEST_GROUP_ID && $row['gID'] != REGISTERED_GROUP_ID) {
+						//if ($row['gID'] != GUEST_GROUP_ID && $row['gID'] != REGISTERED_GROUP_ID) {
+						if ($row['gID'] != GUEST_GROUP_ID) {
 							$groupSetAdditional = true;
 							if (PERMISSIONS_MODEL != 'simple') {
 								$q2 = "select ctID from PagePermissionPageTypes where cID = '{$_cID}' and (gID in $inStr $_uID)";
