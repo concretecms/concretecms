@@ -586,6 +586,11 @@ ccm_setupHeaderMenu = function() {
 		}, 50);
 		
 	});
+	 
+	$("a#ccm-nav-dashboard-help").click(function() {
+		try{ ccm_support.show(this); }catch(e){alert(e.message);}
+		return false;
+	});	
 
 	/*
 	//old help
@@ -760,7 +765,20 @@ var ccm_support = {
 		}
 		return this.isLoggedIn;
 	},
+	
+	signOut:function(){
+		$.ajax({
+			type: 'GET',
+			url: CCM_TOOLS_PATH + '/support/auth/?logout=1', 
+			success: function() {
+				ccm_support.isLoggedIn=0;
+				jQuery.fn.dialog.closeTop();
+			}	
+		});	
+	},
+	
 	/*
+	//this was making my server crash - only god knows why
 	checkedLogged:function(){
 		$.ajax({
 			type: 'GET',
@@ -852,11 +870,6 @@ var ccm_support = {
 			alert('Error in ccm_support.submitNewQuestion(): '+e.message);
 		}
 		return false;
-	},
-	
-	signOut:function(){
-		
-		
 	},
 	
 	showLoading:function(){

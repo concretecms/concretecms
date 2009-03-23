@@ -29,14 +29,20 @@ class ConcreteSupportHelper {
 			throw new Exception(t('php cUrl must be enabled on your server'));
 		}
 		
+		//echo $response;
+		
 		if( strlen($response) ) $json = JsonHelper::decode($response);
 		if( is_array($json) ) return $json; 
 		return false;
 	}
 	
-	function postQuestion( $question='', $notes=''){
-		$authId=UserInfo::getRemoteAuthToken();		
-		$postStr='question='.urlencode($question).'&notes='.urlencode($notes).'&session='.$authId;
+	function postQuestion( $ticketData=array() ){ 
+	
+		$authData = UserInfo::getAuthData();
+		$ticketData=array_merge($ticketData,$authData);
+		
+		//$postStr='question='.urlencode($data['question']).'&notes='.urlencode($data['notes']).'&session='.$authId;
+		$postStr = http_build_query($ticketData, '', '&');
 		
 		if (function_exists('curl_init')) {
 			$curl_handle = curl_init();
@@ -55,7 +61,8 @@ class ConcreteSupportHelper {
 	}
 	
 	function usersTickets(){
-		$authId=ConcreteSupportHelper::getRemoteAuthId();
+		Loader::model('userinfo'); 
+		$authId=UserInfo::getRemoteAuthToken();
 		
 		$postStr='session='.$authId;
 		$myTicketsURL=KNOWLEDGE_BASE_TICKET_LIST_URL;

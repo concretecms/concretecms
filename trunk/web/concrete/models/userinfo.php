@@ -558,17 +558,35 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		static function setRemoteAuthToken($token=''){ $_SESSION['remote_auth_token']=$token; }
 		static function getRemoteAuthToken(){ return $_SESSION['remote_auth_token']; }		
 		
-		static function setRemoteAuthTimestamp($timestamp=0){ $_SESSION['remote_auth_timestamp']=$timestamp; }		
+		static function setRemoteAuthTimestamp($timestamp=0){ $_SESSION['remote_auth_timestamp']=intval($timestamp); }		
 		static function getRemoteAuthTimestamp(){ return $_SESSION['remote_auth_timestamp']; }		
 		
-		static function setRemoteAuthUserName($uname=0){ $_SESSION['remote_auth_uname']=$uname; }		
-		static function getRemoteAuthUserName(){ return $_SESSION['remote_auth_uname'];	}		
+		static function setRemoteAuthUserName($uname=''){ $_SESSION['remote_auth_uname']=$uname; }		
+		static function getRemoteAuthUserName(){ return $_SESSION['remote_auth_uname'];	}
+		
+		static function setRemoteAuthUserId($uid=0){ $_SESSION['remote_auth_uid']=intval($uid); }		
+		static function getRemoteAuthUserId(){ return intval($_SESSION['remote_auth_uid']);	}
+		
+		static function setRemoteAuthInSupportGroup($in_support_group=0){ //boolean 
+			$_SESSION['remote_auth_support_group']=intval($in_support_group); 
+		}		
+		static function getRemoteAuthInSupportGroup(){ return intval($_SESSION['remote_auth_support_group']);	}				
 		
 		static function endRemoteAuthSession(){
 			unset($_SESSION['remote_auth_token']);
 			unset($_SESSION['remote_auth_uname']);
 			unset($_SESSION['remote_auth_timestamp']);
-		}			
+			unset($_SESSION['remote_auth_support_group']);
+		}
+		
+		//necessary name value pair for remote authentication
+		static function getAuthData(){
+			$authData=array();
+			$authData['auth_token']=UserInfo::getRemoteAuthToken();
+			$authData['auth_timestamp']=UserInfo::getRemoteAuthTimestamp();
+			$authData['auth_uname']=UserInfo::getRemoteAuthUserName();
+			return $authData;
+		}		
 		
 		static function generateAuthToken( $uname='', $timestamp=0){
 			if( !intval($timestamp) ) $timestamp=time();
@@ -579,12 +597,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		//c5 install checks with c5org to see if this user is logged in
 		static function isRemotelyLoggedIn(){ 
-			$token = UserInfo::getRemoteAuthToken();
-			$uname = UserInfo::getRemoteAuthUserName();
-			$timestamp = UserInfo::getRemoteAuthTimestamp();		
-			if( strlen($token) && strlen($uname) && intval($timestamp) ){
+			$authData = UserInfo::getAuthData();
+			if( strlen($authData['auth_token']) && intval($authData['auth_timestamp']) && strlen($authData['auth_uname']) ){
 				Loader::helper('JSON');
-				$authURL=KNOWLEDGE_BASE_AUTH_URL.'?uname='.urlencode($uname).'&token='.$token.'&t='.$timestamp; 
+				$qStr = http_build_query( $authData, '', '&');
+				$authURL=KNOWLEDGE_BASE_AUTH_URL.'?'.$qStr; 
 				
 				//echo $authURL;
 				

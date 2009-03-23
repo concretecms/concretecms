@@ -78,7 +78,9 @@ $supportHelper=Loader::helper('concrete/support');
 		
 		<div class="ccm-spacer"></div>
 		
-		<a onclick="ccm_support.showMyTickets()"><?=t('View Old Help Requests')?> &raquo;</a>
+		<? if(UserInfo::getRemoteAuthInSupportGroup()){ ?>
+			<a onclick="ccm_support.showMyTickets()"><?=t('View Old Help Requests')?> &raquo;</a>
+		<? } ?>
 	
 	<? } ?>
 
