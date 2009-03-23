@@ -142,7 +142,7 @@ menuHTML += '<div id="ccm-notification"><div id="ccm-notification-inner"><?=$sta
 } ?>
 
 $(function() {
-	$(document.body).prepend('<div id="ccm-page-controls-wrapper">asdlfkj</div>');
+	$(document.body).prepend('<div id="ccm-page-controls-wrapper"></div>');
 	$("#ccm-page-controls-wrapper").html(menuHTML);
 
 	if (CCM_ARRANGE_MODE) {
