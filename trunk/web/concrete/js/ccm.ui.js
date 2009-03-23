@@ -616,14 +616,6 @@ ccm_removeHeaderLoading = function() {
 	$("a.ccm-nav-loading").removeClass('ccm-nav-loading');
 }
 
-if (CCM_ARRANGE_MODE) {
-	$(ccm_arrangeInit);	
-} else if (CCM_EDIT_MODE) {
-	$(ccm_editInit);	
-} else {
-	$(ccm_init);
-}
-
 ccm_showBreadcrumb = function() {
 /*$("#ccm-bc").animate({
 	top: '50x',
