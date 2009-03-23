@@ -1,6 +1,10 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-header('Content-type: text/javascript');
+header('Content-type: text/javascript');?>
+
+var menuHTML = '';
+
+<?
 $c = Page::getByID($_REQUEST['cID']);
 $cp = new Permissions($c);
 
@@ -69,8 +73,6 @@ if (isset($cp)) {
 
 	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage()) { ?>
 
-var menuHTML = '';
-
 menuHTML += '<div id="ccm-page-controls">';
 menuHTML += '<div id="ccm-logo-wrapper"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" width="49" height="49" id="ccm-logo" /></div>';
 menuHTML += '<div id="ccm-system-nav-wrapper1">';
@@ -137,21 +139,23 @@ if ($statusMessage != '') {?>
 menuHTML += '<div id="ccm-notification"><div id="ccm-notification-inner"><?=$statusMessage?></div></div>';
 <? } ?>
 
+	
+	$(function() {
+		$(document.body).prepend('<div id="ccm-page-controls-wrapper"></div>');
+		$("#ccm-page-controls-wrapper").html(menuHTML);
+	
+		if (CCM_ARRANGE_MODE) {
+			$(ccm_arrangeInit);	
+		} else if (CCM_EDIT_MODE) {
+			$(ccm_editInit);	
+		} else {
+			$(ccm_init);
+		}
+		
+		
+	});
 <?
 	}
+	
 } ?>
 
-$(function() {
-	$(document.body).prepend('<div id="ccm-page-controls-wrapper"></div>');
-	$("#ccm-page-controls-wrapper").html(menuHTML);
-
-	if (CCM_ARRANGE_MODE) {
-		$(ccm_arrangeInit);	
-	} else if (CCM_EDIT_MODE) {
-		$(ccm_editInit);	
-	} else {
-		$(ccm_init);
-	}
-	
-	
-});
