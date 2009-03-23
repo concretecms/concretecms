@@ -124,6 +124,7 @@ class BlockViewTemplate {
 	public function getTemplateHeaderItems() {
 		$items = array();
 		$h = Loader::helper("html");
+		$dh = Loader::helper('file');
 		if ($this->checkHeaderItems == false) {
 			return $items;
 		} else {
@@ -137,6 +138,18 @@ class BlockViewTemplate {
 							$items[] = $h->javascript($this->getBaseURL() . '/' . $i);
 							break;
 					}
+				}
+			}
+			$css = $dh->getDirectoryContents($this->basePath . '/' . DIRNAME_CSS);
+			$js = $dh->getDirectoryContents($this->basePath . '/' . DIRNAME_JAVASCRIPT);
+			if (count($css) > 0) {
+				foreach($css as $i) {
+					$items[] = $h->css($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i);
+				}
+			}
+			if (count($js) > 0) {
+				foreach($js as $i) {
+					$items[] = $h->javascript($this->getBaseURL() . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
 				}
 			}
 			return $items;
