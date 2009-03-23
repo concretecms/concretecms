@@ -5,8 +5,12 @@ Loader::model('userinfo');
 
 $responseData['loggedIn']=0; 
 
-if( UserInfo::isRemotelyLoggedIn() ){
-	$responseData['loggedIn']=1;
+if($_REQUEST['logout']==1){
+	UserInfo::endRemoteAuthSession();
+}else{
+	if( UserInfo::isRemotelyLoggedIn() ){
+		$responseData['loggedIn']=1;
+	}
 }
 
 echo JsonHelper::encode($responseData);

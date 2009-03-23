@@ -1,5 +1,5 @@
 
-var ccmPopupLogin = { 
+var ccmPopupLogin = {  
 	
 	init : function(){
 		//alert('remove popup_login.js from header_required.php');

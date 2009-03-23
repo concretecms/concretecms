@@ -7,7 +7,7 @@ if($_POST['new-question-submitted']){
 	$errors=array();
 	 
 	if( !UserInfo::isRemotelyLoggedIn() ){
-		$errors[]=t('You log back in to post a new question');
+		$errors[]=t('You must log back in to post a new question');
 	}		
 	
 	if(!trim($_POST['question'])){
@@ -19,9 +19,22 @@ if($_POST['new-question-submitted']){
 	}
 	
 	if(!count($errors)){
-		$postResponseData=$supportHelper->postQuestion($_POST['question'],$_POST['notes']);
+	
+		$ticketData=array();
+		$ticketData['question']=$_POST['question'];
+		$ticketData['notes']=$_POST['notes'];
+		
+	
+		//send data to concrete5.org
+		$postResponseData=$supportHelper->postQuestion( $ticketData );
+		
 		//var_dump($postResponseData);
-		$questionPosted=1;
+		
+		//check that there were no errors in the remote validation
+		$errors=$postResponseData->errors;
+		if( !count($errors) ){
+			$questionPosted=1;
+		}
 	}
 }
 
@@ -56,7 +69,7 @@ if($_POST['new-question-submitted']){
 		<form id="ccm-support-new-question-form" onSubmit="return ccm_support.submitNewQuestion(this);">
 		
 			<? if(count($errors)){ ?>
-				<div class="alertMsg">
+				<div class="alertMsg" style="margin-bottom:16px">
 					<strong><?=t('There were some problems with this submission.') ?></strong>
 					<? foreach($errors as $error){ ?>
 						<div><?=$error ?></div>
@@ -88,7 +101,7 @@ if($_POST['new-question-submitted']){
 			<div style="margin-top:16px;">
 				<label>concrete5.org Account</label>
 				<?=t('You are signed in with the concrete5.org account') ?>
-				<a>account name</a>
+				<a href="<?=CONCRETE5_ORG_URL ?>/profile/-/<?=UserInfo::getRemoteAuthUserId() ?>/" ><?=UserInfo::getRemoteAuthUserName() ?></a>
 				<?=t('(Not your account? <a onclick="ccm_support.signOut()">Sign Out</a>)')?>				
 			</div>
 			

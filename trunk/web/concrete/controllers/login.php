@@ -164,8 +164,17 @@ class LoginController extends Controller {
 				$loginData['success']=1;
 				$loginData['msg']=t('Login Successful');	
 				$loginData['uID'] = intval($u->getUserID());
-				if($_REQUEST['remote'] && intval($_REQUEST['timestamp'])) 
+				if($_REQUEST['remote'] && intval($_REQUEST['timestamp'])){ 
 					$loginData['auth_token'] = 	UserInfo::generateAuthToken( $u->getUserName(), intval($_REQUEST['timestamp']) );
+					//is this user in a support group? 
+					foreach( RemoteMarketplaceHelper::getSupportGroups() as $group){
+						if($u->inGroup($group)){
+							$inValidSupportGroup=1;
+							break;
+						}
+					}
+					$loginData['in_support_group'] = intval($inValidSupportGroup);
+				}
 			}
 
 			$loginData = $this->finishLogin($loginData);
