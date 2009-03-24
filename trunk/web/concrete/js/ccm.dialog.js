@@ -321,7 +321,7 @@ jQuery.fn.dialog.overlay = function(fnd) {
 
 jQuery.fn.dialog.closeTop = function() {
 	var obj = jQuery.fn.dialog.dialogs[jQuery.fn.dialog.totalDialogs-1];
-	jQuery.fn.dialog.close(obj);
+	if(obj) jQuery.fn.dialog.close(obj);
 }
 
 jQuery.fn.dialog.defaults = {
