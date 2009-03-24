@@ -16,6 +16,7 @@ require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); ?>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.calendar.css";</style>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.dialog.css";</style>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/jquery.rating.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/jquery.ui.css";</style>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.popup_login.css";</style>
 
 <script type="text/javascript">
@@ -32,7 +33,6 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.filemanager.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.themes.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.colorpicker.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.dialog.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.popup_login.js"></script>

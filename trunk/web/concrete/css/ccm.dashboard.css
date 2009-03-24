@@ -78,7 +78,6 @@ div#ccm-user-search span.ccm-input-time-wrapper {white-space: nowrap}
 div#ccm-user-search-advanced {margin-top: 10px; display: none;}
 div#ccm-user-search-regular {margin-top: 10px; display: none;}
 
-img.handle:hover {cursor: move}
 
 table.grid-list td.crumb {color: #777;font-size:9px;background: #efefef}
 table.grid-list td.crumb a {color: #aaa}

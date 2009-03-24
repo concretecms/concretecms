@@ -28,6 +28,8 @@ if (isset($_REQUEST['reveal'])) {
 <h1><span><?=t('Sitemap')?></span></h1>
 
 <div class="ccm-dashboard-inner" >
+	
+	<div id="ccm-sitemap-message"></div>
 
 	<table border="0" cellspacing="0" cellpadding="0">
 	<tr>
