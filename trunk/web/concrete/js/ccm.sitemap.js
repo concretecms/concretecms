@@ -3,6 +3,7 @@ var tr_doAnim = false; // we initial set it to false, but once we're done loadin
 var tr_parseSubnodes = true;
 var tr_maxSearchResults = 50;
 var tr_reorderMode = false;
+var	tr_moveCopyMode = false;
 
 if (CCM_SITEMAP_MODE == false) {
 	var CCM_SITEMAP_MODE = 'full';
@@ -121,6 +122,19 @@ cancelReorder = function() {
 	}
 }
 
+activateMoveCopy = function(cID) {
+	showSitemapMessage(ccmi18n_sitemap.moveCopyPageMessage);
+	CCM_SITEMAP_MODE = 'move_copy_delete';
+	CCM_CID = cID;
+	tr_moveCopyMode = true;
+}
+
+deactivateMoveCopy = function() {
+	tr_moveCopyMode = false;
+	CCM_SITEMAP_MODE = 'full';
+	hideSitemapMessage();
+}
+
 activateReorder = function(cID) {
 	tr_reorderMode = true;
 	
@@ -167,7 +181,7 @@ activateReorder = function(cID) {
 		}
 	});
 	fixResortingDroppables();
-	showSitemapMessage(ccmi18n_sitemap.moveCopyPageMessage);
+	showSitemapMessage(ccmi18n_sitemap.reorderPageMessage);
 }
 
 deleteBranchFade = function(nodeID) {
@@ -294,6 +308,9 @@ selectLabel = function(e, node) {
 				height: 350,
 				onClose: function() {
 					//$("#tree").fadeIn(200);
+					if (tr_moveCopyMode == true) {
+						deactivateMoveCopy();
+					}
 				}
 
 			});
@@ -319,8 +336,8 @@ selectLabel = function(e, node) {
 
 activateLabels = function() {
 	$('div.tree-label').unbind();
-	$('div.tree-label span').click(function(e) {
-		selectLabel(e, $(this).parent())
+	$('div.tree-label').click(function(e) {
+		selectLabel(e, $(this))
 	}); 
 }
 

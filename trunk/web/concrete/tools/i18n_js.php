@@ -34,7 +34,8 @@ var ccmi18n_sitemap = {
 	addPage: '<?=t('Add Page')?>',
 	moveCopyPage: '<?=t('Move/Copy')?>',
 	reorderPage: '<?=t('Change Page Order')?>',
-	moveCopyPageMessage: '<?=t('Move or reorder pages by dragging their icons.')?>',
+	reorderPageMessage: '<?=t('Move or reorder pages by dragging their icons.')?>',
+	moveCopyPageMessage: '<?=t('Choose a new parent page from the sitemap.')?>',
 	
 	searchPages: '<?=t('Search Pages')?>',
 	backToSitemap: '<?=t('Back to Sitemap')?>',

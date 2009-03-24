@@ -42,7 +42,7 @@
 </div>
 <? } 
 	
-	if ($paginate && $num > 0) {
+	if ($paginate && $num > 0 && is_object($pl)) {
 		$pl->displayPaging();
 	}
 	

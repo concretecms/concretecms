@@ -35,6 +35,7 @@ class BlockViewTemplate {
 		'CSS' => 'view.css', 
 		'JAVASCRIPT' => 'view.js'
 	);
+	private $render = FILENAME_BLOCK_VIEW;
 	
 	public function __construct($obj) {
 		$this->btHandle = $obj->getBlockTypeHandle();
@@ -64,10 +65,10 @@ class BlockViewTemplate {
 				$this->baseURL = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/';
 				$this->checkHeaderItems = false;
 			} else if (is_dir(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
-				$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename . '/' . FILENAME_BLOCK_VIEW;
+				$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename . '/' . $this->render;
 				$this->baseURL = DIR_REL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
 			} else if (is_dir(DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
-				$template = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename . '/'  . FILENAME_BLOCK_VIEW;
+				$template = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename . '/'  . $this->render;
 				$this->baseURL = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
 			}
 
@@ -83,7 +84,7 @@ class BlockViewTemplate {
 						$this->baseURL .= '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
 						$this->checkHeaderItems = false;
 					} else if (is_dir($d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
-						$template = $d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename . '/' . FILENAME_BLOCK_VIEW;
+						$template = $d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename . '/' . $this->render;
 						$this->baseURL .= '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
 					}
 				}
@@ -93,15 +94,15 @@ class BlockViewTemplate {
 			$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php';
 			$this->baseURL = DIR_REL . '/' . DIRNAME_BLOCKS . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES;
 			$this->checkHeaderItems = false;
-		} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . FILENAME_BLOCK_VIEW)) {
-			$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . FILENAME_BLOCK_VIEW;
+		} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $this->render)) {
+			$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $this->render;
 			$this->baseURL = DIR_REL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES;
 		}
 		
 		if (!isset($template)) {
 			$bv = new BlockView();
 			$bv->setBlockObject($obj);
-			$template = $bv->getBlockPath(FILENAME_BLOCK_VIEW) . '/' . FILENAME_BLOCK_VIEW;
+			$template = $bv->getBlockPath($this->render) . '/' . $this->render;
 			$this->baseURL = $bv->getBlockURL();
 		}
 		
@@ -116,6 +117,18 @@ class BlockViewTemplate {
 		$this->bFilename = $bFilename;
 		$this->computeView();
 	}
+	
+	public function setBlockCustomRender($renderFilename) {
+		// if we've passed in "templates/" as the first part, we strip that off.
+		if (strpos($renderFilename, 'templates/') === 0) {
+			$bFilename = substr($renderFilename, 10);
+			$this->setBlockCustomTemplate($bFilename);
+		} else {
+			$this->render = $renderFilename;
+		}
+		$this->computeView();
+	}
+	
 	
 	public function getTemplate() {
 		return $this->template;
