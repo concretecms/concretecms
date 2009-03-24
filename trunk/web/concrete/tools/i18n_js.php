@@ -32,7 +32,7 @@ var ccmi18n_sitemap = {
 	pageVersions: '<?=t('Versions')?>',
 	deletePage: '<?=t('Delete')?>',
 	addPage: '<?=t('Add Page')?>',
-	moveCopyPage: '<?=t('Move/Copy Page')?>',
+	moveCopyPage: '<?=t('Move/Copy')?>',
 	
 	searchPages: '<?=t('Search Pages')?>',
 	backToSitemap: '<?=t('Back to Sitemap')?>',

@@ -54,7 +54,10 @@ showPageMenu = function(obj, e) {
 			html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="310" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.setPagePermissions + '" id="menuPermissions' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=edit_permissions"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + ccmi18n_sitemap.setPagePermissions + '<\/span><\/a><\/li>';
 			html += '<li><a class="ccm-icon" dialog-width="680" dialog-height="420" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageDesign + '" id="menuDesign' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=set_theme"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/design_small.png)">' + ccmi18n_sitemap.pageDesign + '<\/span><\/a><\/li>';
 			html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageVersions + '" id="menuVersions' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/versions.php?rel=SITEMAP&cID=' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/versions_small.png)">' + ccmi18n_sitemap.pageVersions + '<\/span><\/a><\/li>';
+			html += '<li><a class="ccm-icon" id="menuMoveCopy' + obj.cID + '" href="javascript:activateMoveCopy(' + obj.cID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n_sitemap.moveCopyPage + '<\/span><\/a><\/li>';
 			html += '<li><a class="ccm-icon" id="menuDelete' + obj.cID + '" href="javascript:deletePage(' + obj.cID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n_sitemap.deletePage + '<\/span><\/a><\/li>';
+			html += '<li class=\"header\"><\/li>';
+			html += '<li><a class="ccm-icon" id="menuSearch' + obj.cID + '" href="javascript:searchSubPages(' + obj.cID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/magnifying.png)">' + ccmi18n_sitemap.searchPages + '<\/span><\/a><\/li>';
 			html += '<li class=\"header\"><\/li>';
 			html += '<li><a class="ccm-icon" dialog-width="680" dialog-modal="false" dialog-height="440" dialog-title="' + ccmi18n_sitemap.addPage + '" id="menuSubPage' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=add"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n_sitemap.addPage + '<\/span><\/a><\/li>';
 			html += '<li><a class="ccm-icon" dialog-width="350" dialog-modal="false" dialog-height="160" dialog-title="' + ccmi18n_sitemap.addExternalLink + '" dialog-modal="false" id="menuLink' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=add_external"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n_sitemap.addExternalLink + '<\/span><\/a><\/li>';
@@ -208,6 +211,8 @@ parseTree = function(node, nodeID, deactivateSubNodes) {
 	if (CCM_SITEMAP_MODE == 'full') {
 		
 		//drop onto a page
+		/*
+		
 		$('li.tree-branch' + nodeID + ' div.tree-label').droppable({
 			accept: '.tree-node',
 			hoverClass: 'on-drop',
@@ -234,7 +239,7 @@ parseTree = function(node, nodeID, deactivateSubNodes) {
 			}
 		}); 
 		
-		//addResortDroppable(nodeID);		
+		*/
 	}
 
 	container.attr('tree-root-state', 'open');
@@ -291,6 +296,8 @@ activateLabels = function() {
 		selectLabel(e, $(this).parent())
 	}); 
 	if (CCM_SITEMAP_MODE == 'full') {
+		/*
+		
 		$('li.tree-node').draggable({
 			handle: 'img.handle',
 			opacity: 0.5,
@@ -303,6 +310,8 @@ activateLabels = function() {
 				$(document.body).css('overflowX', 'auto');
 			}
 		});
+		
+		*/
 	}
 
 }
@@ -382,7 +391,7 @@ openSub = function(nodeID, onComplete) {
 	$.getJSON(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?node=" + nodeID, function(resp) {
 		parseTree(resp, nodeID, false);	
 		activateLabels();
-		fixResortingDroppables();
+		//fixResortingDroppables();
 		setTimeout(function() {
 			removeLoading(nodeID);
 			if (onComplete != null) {
