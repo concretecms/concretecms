@@ -26,9 +26,11 @@ if (isset($_POST['task'])) {
 }
 
 if ($_REQUEST['bt_installed']) {
-	$message = t('Block Type Installed');
+	$message = t('Add-On Installed');
 }
 
+/* Load installed and available blocks, packages, and themes.
+ */
 $ci = Loader::helper('concrete/urls');
 $ch = Loader::helper('concrete/interface');
 
@@ -41,7 +43,36 @@ $availableArray = array_merge($btAvailableArray, $pkgAvailableArray);
 ksort($availableArray);
 $themesArray = PageTheme::getAvailableThemes();
 
+/* Load featured add-ons and themes from the marketplace.
+ */
+Loader::model('collection_attributes');
+$db = Loader::db();
+
+$isFeaturedKeyId = CollectionAttributeKey::getByHandle('is_featured_remotely');
+
+if(ENABLE_MARKETPLACE_SUPPORT){
+	$blocksHelper = Loader::helper('concrete/marketplace/blocks');
+	$themesHelper = Loader::helper('concrete/marketplace/themes');
+
+	$featuredBlocks = $blocksHelper->getPreviewableList();
+	$featuredThemes = $themesHelper->getPreviewableList();
+}else{
+    $featuredBlocks = $featuredThemes = array();
+}
+
 ?>
+
+<script type="text/javascript">
+function loginSuccess() {
+    jQuery.fn.dialog.closeTop();
+    ccmAlert.notice('Marketplace Login', '<p>You have successfully logged into the concrete5 marketplace.</p>',
+		function() {str=unescape(window.location.pathname); window.location.href = str.replace(/\/-\/.*/, '');});
+}
+function logoutSuccess() {
+    ccmAlert.notice('Marketplace Logout', '<p>You are now logged out of concrete5 marketplace.</p>',
+		function() {str=unescape(window.location.pathname); window.location.href = str.replace(/\/-\/.*/, '');});
+}
+</script>
 
 <? if (is_object($bt)) { ?>
 
@@ -175,7 +206,7 @@ $themesArray = PageTheme::getAvailableThemes();
 		<div class="ccm-dashboard-inner">
 
 		<? if (count($themesArray) == 0) { ?>
-			<p><?=t('No themes are available.')?></p>
+			<p><?=t('No themes are available to install.')?></p>
 		<? } ?>
 
 		<? foreach ($themesArray as $t) { ?>
@@ -206,9 +237,63 @@ $themesArray = PageTheme::getAvailableThemes();
 
 		<h1><span><?=t('Marketplace')?></span></h1>
 		<div class="ccm-dashboard-inner">
-			<p>You aren't currently signed in to the marketplace.
-			  <a href="#">Click here to sign in or create an account.</a></p>
+		<? if (!UserInfo::isRemotelyLoggedIn()) { ?>
+			<p>You aren't currently signed in to the marketplace.</p>
+			<p><a onclick="ccmPopupLogin.show('', loginSuccess, '', 1)">Click here to sign in or create an account.</a></p>
+		<? } else { ?>
+			<p><?=t('You are currently signed in to the marketplace as');?>
+          	  <a href="<?=CONCRETE5_ORG_URL ?>/profile/-/<?=UserInfo::getRemoteAuthUserId() ?>/" ><?=UserInfo::getRemoteAuthUserName() ?></a>
+			  <?=t('(Not your account? <a onclick="ccm_support.signOut(logoutSuccess)">Sign Out</a>)')?></p>
+			<br/><h2><?=t('Featured Add-Ons')?></h2>
+			<div style="margin:0px; padding:0px;  height:auto" >	
+			<? foreach ($featuredBlocks as $fb) { ?>
+				<div class="ccm-block-type">
+				<table>
+				<tr>
+					<td colspan="2"><p class="ccm-block-type-inner" style="background-image: url(<?=$fb->getRemoteIconURL()?>)"><?=$fb->btName?></p></td>
+				</tr>
+				<tr>
+					<td style="color: #aaa; padding: 2px 0 6px"><?=$fb->btDescription?></td>
+				<? $file = $fb->getRemoteFileURL();
+				   if (!empty($file) && intval($fb->getPrice()) == 0) { ?>
+					<td style="vertical-align: bottom"><?=$ch->button(t("Install"), View::url('/dashboard/install', 'remote_addon', $fb->getHandle()), "right");?></td>
+				<? } else { ?>
+					<td style="vertical-align: bottom"><?=$ch->button(t("Download"), $fb->getRemoteURL(), "right");?></td>
+				<? } ?>
+				</tr>
+				</table>
+				</div>
+			<? } ?>
+			</div>
+
+			<br/><h2><?=t('Featured Themes')?></h2>
+			<div style="margin:0px; padding:0px;  height:auto" >	
+			<? foreach ($featuredThemes as $ft) { ?>
+				<div class="ccm-block-type">
+				<table>
+				<tr>
+					<td class="ccm-template-content" colspan="2"><h3><?=$ft->getThemeName()?></h3></td>
+				</tr>
+				<tr>
+					<td class="ccm-template-content" colspan="2"><img src="<?=$ft->getThemeThumbnail()?>"></td>
+				</tr>
+				<tr>
+					<td style="color: #aaa; padding: 2px 0 6px"><?=$ft->getThemeDescription()?></td>
+				<? $file = $ft->getRemoteFileURL();
+				   if (!empty($file) && intval($ft->getPrice()) == 0) { ?>
+					<td style="vertical-align: bottom"><?=$ch->button(t("Install"), View::url('/dashboard/install', 'remote_theme', $ft->getHandle()), "right");?></td>
+				<? } else { ?>
+					<td style="vertical-align: bottom"><?=$ch->button(t("Download"), $ft->getRemoteURL(), "right");?></td>
+				<? } ?>
+				</tr>
+				</table>
+				</div>
+			<? } ?>
+			</div>
+		<? } ?>
 		</div>
+
+	</div>
 
 	</div>
 

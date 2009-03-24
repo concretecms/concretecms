@@ -4,7 +4,7 @@ Loader::model('page_theme_remote');
 
 class ConcreteMarketplaceThemesHelper  {
 
-	function getPreviewableList() {
+	function getPreviewableList($filterInstalled=true) {
 		if (!function_exists('mb_detect_encoding')) {
 			return false;
 		}
@@ -29,12 +29,20 @@ class ConcreteMarketplaceThemesHelper  {
 			Cache::set('marketplace_theme_list', false, $pageThemes, MARKETPLACE_CONTENT_LATEST_THRESHOLD, true);		
 		} 
 
+		if ($filterInstalled && is_array($pageThemes)) {
+			Loader::model('page_theme');
+			$handles = PageTheme::getInstalledHandles();
+			$ptList = array();
+			foreach($pageThemes as $pt) {
+				if (!in_array($pt->getHandle(), $handles)) {
+					$ptList[] = $pt;
+				}
+			}
+			$pageThemes = $ptList;
+		}
+
 		return $pageThemes;
 	}
-
-
-
-
 
 }
 

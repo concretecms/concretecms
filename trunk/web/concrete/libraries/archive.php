@@ -43,7 +43,7 @@ class Archive {
 			throw new Exception(t('Could not transfer to temp directory - file not found.'));
 		} else {
 			$dir = time();
-			copy($_FILES['archive']['tmp_name'], $fh->getTemporaryDirectory() . '/' . $dir . '.zip');
+			copy($file, $fh->getTemporaryDirectory() . '/' . $dir . '.zip');
 			return $dir;
 		}
 	}
@@ -62,7 +62,7 @@ class Archive {
 		$ret = @shell_exec(DIR_FILES_BIN_UNZIP . ' ' . $fh->getTemporaryDirectory() . '/' . $file . ' -d ' . $fh->getTemporaryDirectory() . '/' . $directory . '/');
 		$files = $this->f->getDirectoryContents($fh->getTemporaryDirectory() . '/' . $directory);
 		if (count($files) == 0) {
-			throw new Exception(t('There was an error unpacking your theme. Perhaps you have not uploaded a valid zip file, or you do not have zip installed.'));
+			throw new Exception(t('There was an error unpacking your add-on or theme. Perhaps you have not uploaded a valid zip file, or you do not have zip installed.'));
 		} else {
 			return $fh->getTemporaryDirectory() . '/' . $directory;
 		}
@@ -89,27 +89,28 @@ class Archive {
 	}
 
 	/**
-	 * Installs a theme from the passed directory
+	 * Installs a zip file from the passed directory
 	 * @todo This is theme-specific - it really ought to be moved to the page_theme_archive class, at least most it. 
 	 * @param string $zipfile
-	 * @return PageTheme $theme
+	 * @return base directory into which the zipfile was unzipped
 	 */
-	protected function install($file) {
-		$directory = $this->uploadZipToTemp($file);
-		$dir = $this->unzip($directory);
-		$themeDirFull = $this->getArchiveDirectory($dir);
-		$themeDir = substr(strrchr($themeDirFull, '/'), 1);
-		if (file_exists($this->targetDirectory . '/' . $themeDir)) {
-			throw new Exception(t('The directory %s already exists. Perhaps this item has already been installed.', $this->targetDirectory . '/' . $themeDir));
+	protected function install($file, $inplace=false) {
+		if (!$inplace) {
+			$directory = $this->uploadZipToTemp($file);
 		} else {
-			$r = @rename($themeDirFull, $this->targetDirectory . '/' . $themeDir);
+			$directory = $file;
+		}
+		$dir = $this->unzip($directory);
+		$dirFull = $this->getArchiveDirectory($dir);
+		$dirBase = substr(strrchr($dirFull, '/'), 1);
+		if (file_exists($this->targetDirectory . '/' . $dirBase)) {
+			throw new Exception(t('The directory %s already exists. Perhaps this item has already been installed.', $this->targetDirectory . '/' . $dirBase));
+		} else {
+			$r = @rename($dirFull, $this->targetDirectory . '/' . $dirBase);
 			if (!$r) {
-				throw new Exception('Unable to copy directory ' . $themeDir . ' to ' . $this->targetDirectory . '. Perhaps permissions are set incorrectly or the target directory does not exist.');
-			} else {
-				// now we install the bad boy
-				$pl = PageTheme::addSiteTheme($themeDir);
-				return $pl;
+				throw new Exception('Unable to copy directory ' . $dirBase . ' to ' . $this->targetDirectory . '. Perhaps permissions are set incorrectly or the target directory does not exist.');
 			}
 		}
+		return $dirBase;
 	}
 }

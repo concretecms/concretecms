@@ -774,13 +774,15 @@ var ccm_support = {
 		return this.isLoggedIn;
 	},
 	
-	signOut:function(){
+	signOut:function(closeFn){
 		$.ajax({
 			type: 'GET',
 			url: CCM_TOOLS_PATH + '/support/auth/?logout=1', 
 			success: function() {
 				ccm_support.isLoggedIn=0;
-				jQuery.fn.dialog.closeTop();
+				if (typeof closeFn == 'function') {
+					closeFn();
+				}
 			}	
 		});	
 	},

@@ -192,6 +192,11 @@ class PageTheme extends Object {
 		return $themes;
 	}
 		
+	public static function getInstalledHandles() {
+		$db = Loader::db();
+		return $db->GetCol("select ptHandle from PageThemes");
+	}
+
 	public static function getAvailableThemes($filterInstalled = true) {
 		// scans the directory for available themes. For those who don't want to go through
 		// the hassle of uploading
@@ -217,7 +222,9 @@ class PageTheme extends Object {
 			// get theme objects from the file system
 			foreach($themes as $t) {
 				$th = PageTheme::getByFileHandle($t);
-				$themesTemp[] = $th;
+                if (!empty($pkg)) {
+					$themesTemp[] = $th;
+				}
 			}
 			$themes = $themesTemp;
 		}

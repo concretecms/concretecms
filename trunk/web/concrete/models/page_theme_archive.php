@@ -13,9 +13,8 @@ class PageThemeArchive extends Archive {
 	
 	// takes a zip file and tries to unpack it to the theme directory on the site
 	
-	public function install($file) {
-		$pl = parent::install($file);
-		return $pl;
+	public function install($file, $inplace=false) {
+		parent::install($file, $inplace);
 	}
 	
 	public function __construct($theme = null) {
