@@ -40,4 +40,10 @@
 	} 
 	?>
 </div>
-<? } ?>
+<? } 
+	
+	if ($paginate && $num > 0) {
+		$pl->displayPaging();
+	}
+	
+?>

@@ -45,6 +45,7 @@
 			
 
 			$pl = new PageList();
+			$pl->setNameSpace('b' . $this->bID);
 			
 			$cArray = array();
 
@@ -96,7 +97,7 @@
 			} else {
 				$pages = $pl->get();
 			}
-			
+			$this->set('pl', $pl);
 			return $pages;
 		}
 		
@@ -121,6 +122,7 @@
 			$args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
 			$args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
 			$args['truncateChars'] = intval($args['truncateChars']); 
+			$args['paginate'] = intval($args['paginate']); 
 
 			parent::save($args);
 		

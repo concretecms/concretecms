@@ -133,7 +133,7 @@ foreach($nav as $n2) {
 
 <? if(strlen(APP_VERSION)){ ?>
 <div id="ccm-dashboard-version">
-	<?= t('Concrete5 Version') ?>: <?=APP_VERSION ?>
+	<?= t('Version') ?>: <?=APP_VERSION ?>
 </div>
 <? } ?>
 

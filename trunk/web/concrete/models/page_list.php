@@ -14,6 +14,7 @@ class PageList extends DatabaseItemList {
 	private $collectionAttributeSortFilter = array();
 	private $includeSystemPages = false;
 	private $displayOnlyPermittedPages = false;
+	private $systemPagesToExclude = array('login.php', 'register.php', 'download_file.php', 'profile/%', 'dashboard/%');
 	
 	/* magic method for filtering by page attributes. */
 	
@@ -165,6 +166,27 @@ class PageList extends DatabaseItemList {
 		$this->setQuery('select distinct p1.cID, if(p2.cID is null, pt1.ctHandle, pt2.ctHandle) as ctHandle ' . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PageTypes pt1 on (pt1.ctID = p1.ctID) left join PageTypes pt2 on (pt2.ctID = p2.ctID) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID))');
 	}
 	
+	protected function setupSystemPagesToExclude() {
+		$cIDs = Cache::get('page_list_exclude_ids', false);
+		if ($cIDs == false) {
+			$db = Loader::db();
+			$filters = ''; 
+			for ($i = 0; $i < count($this->systemPagesToExclude); $i++) {
+				$spe = $this->systemPagesToExclude[$i];
+				$filters .= 'cFilename like \'/' . $spe . '\' ';
+				if ($i + 1 < count($this->systemPagesToExclude)) {
+					$filters .= 'or ';
+				}
+			}
+			$cIDs = $db->GetCol("select cID from Pages where 1=1 and ctID = 0 and (" . $filters . ")");
+			if (count($cIDs) > 0) {
+				Cache::set('page_list_exclude_ids', false, $cIDs);
+			}
+		}
+		$cIDStr = implode(',', $cIDs);
+		$this->filter(false, "(p1.cID not in ({$cIDStr}) or p2.cID not in ({$cIDStr}))");
+	}
+	
 	protected function setupCollectionAttributeFilters() {
 		$db = Loader::db();
 		
@@ -205,25 +227,20 @@ class PageList extends DatabaseItemList {
 	public function get($itemsToGet = 0, $offset = 0) {
 		$pages = array();
 		$this->setBaseQuery();
+
 		$this->filter('cvIsApproved', 1);
 		$this->filter(false, "(p1.cIsTemplate = 0 or p2.cIsTemplate = 0)");
 		$this->setItemsPerPage($itemsToGet);
 		$this->setupCollectionAttributeFilters();
 		$this->setupPermissions();
 		$this->setupCollectionAttributeSortFilters();
+		$this->setupSystemPagesToExclude();
 		$r = parent::get($itemsToGet, $offset);
 		foreach($r as $row) {
 			$nc = $this->loadPageID($row['cID']);
 			$nc->loadVersionObject();
-			if ($nc->isSystemPage()) {
-				continue;
-			}
 			$pages[] = $nc;
-			if (count($pages) == $itemsToGet) {
-				break;
-			}
 		}
-		
 		return $pages;
 	}
 	
