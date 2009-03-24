@@ -70,14 +70,6 @@ class ConcreteUpgradeVersion520Helper {
 				$db->Execute("insert into Files (fID, fDateAdded) values (?, ?)", array($row['bID'], $row['bDateAdded']));
 			}
 		}
-		
-		// now we add in the new thumbnails directories
-		if (!is_dir(DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2)) {
-			@mkdir(DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2, '0777');
-		}
-		if (!is_dir(DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3)) {
-			@mkdir(DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3, '0777');
-		}
 
 		Loader::model('single_page');
 		// Rename Forms to Reports
@@ -95,6 +87,19 @@ class ConcreteUpgradeVersion520Helper {
 			$d2d = SinglePage::add('/dashboard/files/access');						
 			$d2->update(array('cName'=>t('File Manager'), 'cDescription'=>t('All documents and images.')));
 			$d3b = SinglePage::add('/dashboard/reports/surveys');
+		}
+
+		$p = Page::getByPath('/dashboard/scrapbook');
+		if ($p->isError()) {
+			$d3 = SinglePage::add('/dashboard/scrapbook');
+			$d3b = SinglePage::add('/dashboard/scrapbook/user');
+			$d3a = SinglePage::add('/dashboard/scrapbook/global');
+			$d3->update(array('cName'=>t('Scrapbook'), 'cDescription'=>t('Share content across your site.')));
+		}
+
+		$p = Page::getByPath('/dashboard/reports/surveys');
+		if ($p->isError()) {
+			$p = SinglePage::add('/dashboard/reports/surveys');
 		}
 	}
 	
