@@ -11,7 +11,9 @@ $this->addHeaderItem($html->javascript('jquery.form.js'));
 $this->addHeaderItem($html->javascript('jquery.metadata.js'));
 $this->addHeaderItem($html->javascript('jquery.ui.js'));
 $this->addHeaderItem($html->javascript('jquery.rating.js'));
-$this->addHeaderItem($html->javascript('jquery.ui.datepicker.js'));
+//$this->addHeaderItem($html->javascript('jquery.draggable.js'));
+//$this->addHeaderItem($html->javascript('jquery.droppable.js'));
+//$this->addHeaderItem($html->javascript('jquery.ui.datepicker.js'));
 	
 if (LANGUAGE != 'en') {
 	$this->addHeaderItem($html->javascript('i18n/ui.datepicker-' . LANGUAGE . '.js'));
@@ -26,7 +28,7 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 </script>
 
 <?
-
+$this->addHeaderItem($html->css('jquery.ui.css'));
 $this->addHeaderItem($html->javascript('ccm.dialog.js'));
 $this->addHeaderItem($html->javascript('ccm.themes.js'));
 $this->addHeaderItem($html->javascript('ccm.filemanager.js'));

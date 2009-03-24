@@ -6,6 +6,9 @@ div#tree ul li {padding-top: 0px; padding-bottom: 0px; padding-left: 17px; margi
 div#tree ul li img.handle {position: absolute; top: 0px; left: 0px;}
 div#tree ul li img.moveable {cursor: move}
 li.tree-node {position: relative; background-color: transparent; background-repeat: no-repeat; width: 100%; background-attachment: scroll; height:auto;}
+div#ccm-sitemap-message {display: none}
+
+a.ccm-icon-sitemap-search span {background-position: 9px 6px !important}
 
 li.tree-node-document {background-image: url(../images/dashboard/sitemap/document.png)}
 li.tree-node-folder {background-image: url(../images/dashboard/sitemap/folder.png)}
