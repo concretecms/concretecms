@@ -29,6 +29,11 @@
 
 	</div>
 	<div class="ccm-block-field-group">
+		<h2><?=t('Pagination')?></h2>
+		<input type="checkbox" name="paginate" value="1" <? if ($paginate == 1) { ?> checked <? } ?> />
+		<?=t('Display pagination interface if more items are available than are displayed.')?>
+	</div>
+	<div class="ccm-block-field-group">
 	  <h2><?=t('Location in Website')?></h2>
 	  <?=t('Display pages that are located')?>:<br/>
 	  <br/>

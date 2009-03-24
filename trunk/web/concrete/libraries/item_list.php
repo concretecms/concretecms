@@ -152,7 +152,7 @@ class ItemList {
 	protected $queryStringPagingVariable = 'ccm_paging_p';
 	protected $queryStringSortVariable = 'ccm_order_by';
 	protected $queryStringSortDirectionVariable = 'ccm_order_dir';
-	
+\	
 	private $items = array();
 	
 	public function setItemsPerPage($num) {
@@ -162,6 +162,12 @@ class ItemList {
 	public function setItems($items) {
 		$this->items = $items;
 	}
+
+	public function setNameSpace($ns) {
+		$this->queryStringPagingVariable .= '_' . $ns;
+		$this->queryStringSortVariable .= '_' . $ns;
+		$this->queryStringSortDirectionVariable .= '_' . $ns;		
+	}	
 	
 	/** 
 	 * Returns the total number of items found by this list
@@ -194,6 +200,7 @@ class ItemList {
 		$this->currentPage = $page;
 		if ($page == false) {
 			$pagination = Loader::helper('pagination');
+			$pagination->queryStringPagingVariable = $this->queryStringPagingVariable;
 			$this->currentPage = $pagination->getRequestedPage();
 		}
 	}
@@ -254,6 +261,7 @@ class ItemList {
 		if ($this->currentPage == false) {
 			$this->setCurrentPage();
 		}
+		$pagination->queryStringPagingVariable = $this->queryStringPagingVariable;
 		$pagination->init($this->currentPage, $this->getTotal(), $url, $this->itemsPerPage);
 		return $pagination;
 	}
