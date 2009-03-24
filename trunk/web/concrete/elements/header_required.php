@@ -115,7 +115,7 @@ if (is_object($cp)) {
 
 	if ($this->editingEnabled()) {
 		//Loader::element('page_controls_menu', array('cp' => $cp, 'c' => $c));
-		$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/page_controls_menu_js?' . $_SERVER['QUERY_STRING'] . '"></script>'); 
+		$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/page_controls_menu_js?cID=' . $c->getCollectionID() . '&btask=' . $_REQUEST['btask'] . '"></script>'); 
 	}
 }
 
