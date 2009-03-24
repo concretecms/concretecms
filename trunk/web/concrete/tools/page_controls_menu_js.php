@@ -11,6 +11,7 @@ $cp = new Permissions($c);
 $valt = Loader::helper('validation/token');
 $sh = Loader::helper('concrete/dashboard/sitemap');
 $dh = Loader::helper('concrete/dashboard');
+$supportHelper=Loader::helper('concrete/support');
 $token = '&' . $valt->getParameter();
 
 if (isset($cp)) {
@@ -81,7 +82,7 @@ menuHTML += '<ul id="ccm-system-nav">';
 <? if ($dh->canRead()) { ?>
 	menuHTML += '<li><a id="ccm-nav-dashboard" href="<?=View::url('/dashboard')?>"><?=t('Dashboard')?></a></li>';
 <? } ?>
-menuHTML += '<li><a id="ccm-nav-help" helpurl="<?=MENU_HELP_URL?>" href="javascript:void(0)"><?=t('Help')?></a></li>';
+menuHTML += '<li><a id="ccm-nav-help" helpurl="<?=MENU_HELP_URL?>" href="javascript:void(0)" helpwaiting="<?=ConcreteSupportHelper::hasNewHelpResponse() ?>"><?=t('Help')?></a></li>';
 menuHTML += '<li class="ccm-last"><a id="ccm-nav-logout" href="<?=View::url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>';
 menuHTML += '</ul>';
 menuHTML += '</div>';

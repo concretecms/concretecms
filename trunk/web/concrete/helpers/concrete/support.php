@@ -12,7 +12,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 Loader::helper('JSON');
 
-class ConcreteSupportHelper {
+class ConcreteSupportHelper { 
 
 	function askQuestion( $question='' ) {
 		$answers=array();
@@ -61,10 +61,9 @@ class ConcreteSupportHelper {
 	}
 	
 	function usersTickets(){
-		Loader::model('userinfo'); 
-		$authId=UserInfo::getRemoteAuthToken();
-		
-		$postStr='session='.$authId;
+		Loader::model('userinfo');
+		$postData = UserInfo::getAuthData(); 
+		$postStr = http_build_query($postData, '', '&');
 		$myTicketsURL=KNOWLEDGE_BASE_TICKET_LIST_URL;
 		if (function_exists('curl_init')) {
 			$curl_handle = curl_init();
@@ -77,11 +76,38 @@ class ConcreteSupportHelper {
 		}else{
 			throw new Exception(t('php cUrl must be enabled on your server'));
 		}
-		echo $response;
+		//echo $response;
+
+		if( strlen($response) ){
+			$responseObj=JsonHelper::decode($response);
+			if( $responseObj->lastReplyTime ) 
+				$_SESSION['lastHelpReplyTime']=$responseObj->lastReplyTime;
+			return $responseObj;
+		}else return new Object(); 
+	}
+	
+	function hasNewHelpResponse(){
+		//user hasn't checked their tickets since it was noticed they have a new reply
+		if($_SESSION['newHelpResponseWaiting']==1) return true;
 		
-		if( strlen($response) ) $tickets = JsonHelper::decode($response);
-		if(is_array($tickets)) return $tickets;
-		else return array(); 
+		if( UserInfo::isRemotelyLoggedIn() ){
+		
+			//only check every 5 minutes
+			if( intval($_SESSION['lastHelpWaitingCheckTime'])<(time() )){//   -300) ){
+				$response=ConcreteSupportHelper::usersTickets();				
+				$_SESSION['lastHelpWaitingCheckTime']=time(); 
+			}
+			
+			//since last time the user viewed the tickets list, or since last login
+			if( (intval($_SESSION['lastSupportListViewTime']) && $_SESSION['lastHelpReplyTime']>$_SESSION['lastSupportListViewTime']) || 
+			    (!intval($_SESSION['lastSupportListViewTime']) && $_SESSION['lastHelpReplyTime']>UserInfo::getRemoteAuthTimestamp()) ){
+				
+				//echo 'NEW RESPONSE WAITING!!!'.(intval($_SESSION['lastHelpReplyTime'])-intval($_COOKIE['lastSupportListViewTime']));
+				$_SESSION['newHelpResponseWaiting']=1;
+				return true;
+			}
+		}
+		return false;
 	}
 }
 

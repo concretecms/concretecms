@@ -128,3 +128,6 @@
 #ccm-supportWrap .bigButtonWrap span{width:190px}
 #ccm-supportWrap .alertMsg{ border:1px solid #999; background:#ffffaa; padding:4px }
 #ccm-supportWrap .ccm-throbber{width:20px; height:20px; background:url(../images/throbber_white_16.gif) center no-repeat; margin:10px; display:none; }
+#ccm-supportWrap table.ccm-dataGrid {background:#ddd}
+#ccm-supportWrap table.ccm-dataGrid td{ padding:2px; background:#fafafa; }
+#ccm-supportWrap table.ccm-dataGrid tr.header td{background:#eee; font-weight:bold}

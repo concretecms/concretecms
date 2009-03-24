@@ -6,24 +6,29 @@ var ccmPopupLogin = {
 		//setTimeout('ccmPopupLogin.show("refresh")',1000);
 	},
 	
+	showLoginFunction:function(){},
+	loadFunction:function(){},
+	
 	//"redirect" can be a cID or a URL, or it can be the string "refresh" to reload the current page after login
 	//successFunction is a callback run after a successful login
-	show : function( redirect, successFunction, targetId, remote ){ 
+	
+	show : function( redirect, successFunction, targetId, remote, loadFunction ){ 
 		var rcID=(redirect && typeof(redirect)!='undefined')?redirect:'';
-		this.loggedInFunction=successFunction;
+		if(typeof(loadFunction)=='function') this.showLoginFunction=loadFunction; 
+		if(typeof(successFunction)=='function') this.loggedInFunction=successFunction;
 		var loginFormUrl = CCM_TOOLS_PATH + '/popup_login?rcID='+rcID;
 		if(remote) loginFormUrl=loginFormUrl+'&remote=1';
 		if(targetId){
 			var targetEl=$('#'+targetId)
 			if(!targetEl) alert('Error: Target Not Found');
-			else targetEl.load(loginFormUrl); 
+			else targetEl.load(loginFormUrl,'',ccmPopupLogin.showLoginFunction); 
 		}else{
 			$.fn.dialog.open({
 				href: loginFormUrl, 
 				title: "Login",
 				width: 550,
 				modal: false, 
-				//onLoad:function(){alert('onLoad')},
+				onLoad:function(){ccmPopupLogin.showLoginFunction()},
 				onClose: function(){}, 
 				height: 220
 			});

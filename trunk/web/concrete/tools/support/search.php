@@ -80,6 +80,8 @@ $supportHelper=Loader::helper('concrete/support');
 		
 		<? if(UserInfo::getRemoteAuthInSupportGroup()){ ?>
 			<a onclick="ccm_support.showMyTickets()"><?=t('View Old Help Requests')?> &raquo;</a>
+		<? }else{ ?>
+			<a onclick="ccm_support.showMyTickets()"><?=t('Login to view your old help requests') ?></a>
 		<? } ?>
 	
 	<? } ?>

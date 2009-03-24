@@ -426,5 +426,8 @@ if (!defined('KNOWLEDGE_BASE_TICKET_LIST_URL')) {
 if (!defined('KNOWLEDGE_BASE_AUTH_URL')) {
 	define('KNOWLEDGE_BASE_AUTH_URL', CONCRETE5_ORG_URL.'/tools/authenticate_user/');
 }
+if (!defined('KNOWLEDGE_BASE_SUPPORT_LEARN_MORE_URL')) {
+	define('KNOWLEDGE_BASE_SUPPORT_LEARN_MORE_URL', CONCRETE5_ORG_URL.'/help/kb/');
+}
 
 require_once(DIR_LIBRARIES_CORE . '/loader.php');
