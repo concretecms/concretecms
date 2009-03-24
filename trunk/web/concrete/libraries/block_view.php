@@ -216,7 +216,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					if ($bFilename) {
 						$bvt->setBlockCustomTemplate($bFilename); // this is PROBABLY already set by the method above, but in the case that it's passed by area we have to set it here
 					} else if ($_filename != FILENAME_BLOCK_VIEW) {
-						$bvt->setBlockCustomTemplate($_filename); 
+						$bvt->setBlockCustomRender($_filename); 
 					}
 					$template = $bvt->getTemplate();					
 					break;
