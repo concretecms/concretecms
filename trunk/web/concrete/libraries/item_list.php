@@ -152,7 +152,7 @@ class ItemList {
 	protected $queryStringPagingVariable = 'ccm_paging_p';
 	protected $queryStringSortVariable = 'ccm_order_by';
 	protected $queryStringSortDirectionVariable = 'ccm_order_dir';
-\	
+	
 	private $items = array();
 	
 	public function setItemsPerPage($num) {

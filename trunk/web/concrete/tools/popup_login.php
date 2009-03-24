@@ -20,7 +20,9 @@ if( $_REQUEST['remote'] ){
 
 	<div id="ccm-popupLoginWrap" class="ccm-form">
 	
-		<div id="ccm-popupLoginMsg" class="ccm-popupMsg" style="margin-bottom:8px"></div>
+		<div id="ccm-popupLoginIntroMsg" ></div>
+	
+		<div id="ccm-popupLoginMsg" class="ccm-popupMsg" style="margin-bottom:16px"></div>
 	
 		<form id="popupLoginForm" method="post" action="<?=$loginFormSubmitURL ?>" onSubmit="return ccmPopupLogin.login(this);">
 		
@@ -53,10 +55,12 @@ if( $_REQUEST['remote'] ){
 				</div>
 			<? } ?>
 			
+			<? if( !$_REQUEST['remote'] ){ ?>
 			<div class="ccm-fieldPair">
 				<?=$form->checkbox('uMaintainLogin', 1)?>
 				<label id="uMaintainLoginLabel" for="uMaintainLogin"><?=t('Remember Me')?></label> 			
 			</div>
+			<? } ?>
 			
 			<div class="ccm-spacer"></div>
 			

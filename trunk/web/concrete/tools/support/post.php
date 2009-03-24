@@ -2,7 +2,7 @@
 Loader::model('userinfo');
 $supportHelper=Loader::helper('concrete/support');
 
-if($_POST['new-question-submitted']){
+if($_POST['new-question-submitted'] && UserInfo::getRemoteAuthInSupportGroup()){
 	
 	$errors=array();
 	 
@@ -32,7 +32,7 @@ if($_POST['new-question-submitted']){
 		
 		//check that there were no errors in the remote validation
 		$errors=$postResponseData->errors;
-		if( !count($errors) ){
+		if( !count($errors) &&  $postResponseData->success){
 			$questionPosted=1;
 		}
 	}
@@ -45,7 +45,20 @@ if($_POST['new-question-submitted']){
 	
 	<h1 style="margin-top:0px"><?=t('Get Help')?></h1>
 	
-	<? if($questionPosted){ ?>
+	<? if( !UserInfo::getRemoteAuthInSupportGroup() ){ ?>
+	
+		<div style="">
+		
+			<div style="margin-bottom:16px"><?=t('Help is unavailable, but you can get help if you need it')?></div>
+		
+			<div class="bigButtonWrap ccm-buttons">
+				<a href="<?=KNOWLEDGE_BASE_SUPPORT_LEARN_MORE_URL?>" target="_blank" onclick="" class="ccm-button-right"><span><em class=""><?=t('Learn More')?></em></span></a>
+			</div>
+		
+		</div>
+	
+	
+	<? }elseif($questionPosted){ ?>
 
 		<div style="text-align:center">
 			<strong>

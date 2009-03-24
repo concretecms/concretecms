@@ -602,8 +602,13 @@ ccm_setupHeaderMenu = function() {
 	});
 	*/
 	
-	$("a#ccm-nav-help").click(function() { 
-		ccm_support.show(this);
+	var helpEl=$("a#ccm-nav-help");
+	if(helpEl.attr('helpwaiting')) 
+		setTimeout('ccm_support.helpPulse()',1500);
+	helpEl.click(function() { 
+		if($(this).attr('helpwaiting')) 
+			 ccm_support.showMyTickets();
+		else ccm_support.show();
 	});	
 	
 	$("a#ccm-nav-logout").click(function() {
@@ -724,9 +729,9 @@ $(function() {
 
 /* SUPPORT SECTION */
 
-var ccm_support = {   
+var ccm_support = {    
 	
-	show:function(){
+	show:function(){ 
 		//alert(helpurl);
 		var supportWrap=document.getElementById('ccm-supportWrap');
 		//load into existing window, if help is already open
@@ -743,18 +748,21 @@ var ccm_support = {
 				}	
 			});
 		}else{
-			$.fn.dialog.open({
-				title: ccmi18n.helpPopup,
-				href: CCM_TOOLS_PATH + '/support/search/' ,
-				width: 550,
-				modal: false,
-				height: 400,
-				onLoad:function(){ 
-					ccm_removeHeaderLoading();
-					//setTimeout('ccm_support.checkedLogged()',500);
-				}
-			});
+			this.dialog(CCM_TOOLS_PATH + '/support/search/');
 		}		
+	},
+	
+	dialog:function(url){
+		$.fn.dialog.open({
+			title: ccmi18n.helpPopup,
+			href:  url,
+			width: 550,
+			modal: false,
+			height: 400,
+			onLoad:function(){ 
+				ccm_removeHeaderLoading();
+			}
+		});
 	},
 	
 	isLoggedIn:0,
@@ -818,26 +826,54 @@ var ccm_support = {
 	
 	showMyTickets:function(){
 		this.showLoading();
-		$.ajax({
-			type: 'GET',
-			url: CCM_TOOLS_PATH + '/support/tickets.php',
-			success: function(resp) {
-				ccm_support.hideLoading();
-				var supportWrap=document.getElementById('ccm-supportWrap');
-				if(!supportWrap) return false;
-				$(supportWrap.parentNode).html(resp); 
-			}		
-		});
+		var supportWrap=document.getElementById('ccm-supportWrap');
+		//load into existing window, if help is already open
+		if(supportWrap){
+			if( !ccm_support.isLogged() ){
+				ccm_support.login(function(){
+						ccm_support.isLoggedIn=1;
+						$('#ccm-isRemotelyLogged').remove();
+						ccm_support.showMyTickets();
+					});
+				return;
+			}			
+			$.ajax({
+				type: 'GET',
+				url: CCM_TOOLS_PATH + '/support/tickets/',
+				success: function(resp) {
+					ccm_support.hideLoading();
+					var supportWrap=document.getElementById('ccm-supportWrap');
+					if(!supportWrap) return false;
+					$(supportWrap.parentNode).html(resp); 
+					ccm_removeHeaderLoading();
+				}		
+			});
+		}else{ 
+			this.dialog(CCM_TOOLS_PATH + '/support/tickets/');
+		}		
+	},
+	
+	login:function(loggedInFunc){
+		if(typeof(loggedInFunc)!='function'){
+			loggedInFunc=function(){
+				ccm_support.isLoggedIn=1;
+				$('#ccm-isRemotelyLogged').remove();
+				ccm_support.showQuestionForm() 
+			}
+		}
+		ccmPopupLogin.show( '', loggedInFunc, 'ccm-supportWrap', 1, function(){ 
+				var plm=$('#ccm-popupLoginIntroMsg');
+				plm.css('display','block');
+				plm.css('margin-top','8px');
+				plm.css('margin-bottom','16px');
+				plm.html(ccmi18n.helpPopupLoginMsg);
+			});
 	},
 	
 	showQuestionForm:function(){
 		this.showLoading();	
 		if( !ccm_support.isLogged() ){
-			ccmPopupLogin.show( '', function(){
-							ccm_support.isLoggedIn=1;
-							$('#ccm-isRemotelyLogged').remove();
-							ccm_support.showQuestionForm() 
-						}, 'ccm-supportWrap', 1 );
+			ccm_support.login();
 			return;
 		}
 		$.ajax({
@@ -878,5 +914,23 @@ var ccm_support = {
 	
 	hideLoading:function(){
 		$('#ccm-supportWrap .ccm-throbber').css('display','none');
+	},
+	
+	helpPulse:function(){
+		var el=$('#ccm-nav-help');
+		el.css('background-color','#fafafa');
+		el.animate({backgroundColor:"#ffa"},'','',function(){
+		}).animate({backgroundColor:"#fafafa"},'','',function(){
+		}).animate({backgroundColor:"#ffa"},'','',function(){
+		}).animate({backgroundColor:"#fafafa"},'','',function(){					
+		}).animate({backgroundColor:"#ffa"},'','',function(){
+		}).animate({backgroundColor:"#fafafa"},'','',function(){
+		}).animate({backgroundColor:"#ffa"},'','',function(){
+		}).animate({backgroundColor:"#fafafa"},'','',function(){
+		}).animate({backgroundColor:"#ffa"},'','',function(){			
+		}).animate({backgroundColor:"#fafafa"},'','',function(){
+			$(this).css('background-color','inherit')
+		}); 		
+		//A2DAFD
 	}
 }

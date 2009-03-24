@@ -1,6 +1,6 @@
 <? header('Content-type: text/javascript'); ?>
 
-var ccmi18n = {
+var ccmi18n = { 
 	
 	deleteBlock: '<?=t('Delete')?>',
 	closeWindow: '<?=t('Close')?>',
@@ -13,6 +13,7 @@ var ccmi18n = {
 	setBlockPermissions: '<?=t('Set Permissions')?>',
 	setBlockAlias: '<?=t('Setup on Child Pages')?>',	
 	helpPopup: '<?=t('Help')?>',
+	helpPopupLoginMsg: '<?=t('Get more help on your question by posting it to the concrete5 help center on concrete5.org')?>',
 	ok: '<?=t('Ok')?>'
 	
 }
