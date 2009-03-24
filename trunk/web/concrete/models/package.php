@@ -232,6 +232,11 @@ class Package extends Object {
 		return $pkg;
 	}
 	
+	public static function getInstalledHandles() {
+		$db = Loader::db();
+		return $db->GetCol("select pkgHandle from Packages");
+	}
+
 	public static function getInstalledList() {
 		$db = Loader::db();
 		$r = $db->query("select * from Packages where pkgIsInstalled = 1 order by pkgDateInstalled asc");
@@ -245,13 +250,13 @@ class Package extends Object {
 	}
 	
 	public static function getAvailablePackages($filterInstalled = true) {
-		$db = Loader::db();
 		$dh = Loader::helper('file');
 		
 		$packages = $dh->getDirectoryContents(DIR_PACKAGES);
 		if ($filterInstalled) {
+			$handles = self::getInstalledHandles();
+
 			// strip out packages we've already installed
-			$handles = $db->GetCol("select pkgHandle from Packages");
 			$packagesTemp = array();
 			foreach($packages as $p) {
 				if (!in_array($p, $handles)) {
@@ -266,7 +271,9 @@ class Package extends Object {
 			// get package objects from the file system
 			foreach($packages as $p) {
 				$pkg = Loader::package($p);
-				$packagesTemp[] = $pkg;
+                if (!empty($pkg)) {
+				    $packagesTemp[] = $pkg;
+                }
 			}
 			$packages = $packagesTemp;
 		}

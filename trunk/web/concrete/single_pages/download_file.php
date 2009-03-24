@@ -2,8 +2,8 @@
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
-// Block ID = $bID
-// get the block and 
+// File ID = $fID
+// get the file and 
 
 
 // Find out where to take the user once they're done.

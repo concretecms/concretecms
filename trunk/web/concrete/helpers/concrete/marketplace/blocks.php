@@ -5,7 +5,7 @@ Loader::model('block_type_remote');
 
 class ConcreteMarketplaceBlocksHelper { 
 
-	function getPreviewableList() {
+	function getPreviewableList($filterInstalled=true) {
 		if (!function_exists('mb_detect_encoding')) {
 			return false;
 		}
@@ -29,6 +29,18 @@ class ConcreteMarketplaceBlocksHelper {
 			}
 
 			Cache::set('marketplace_block_list', false, $blockTypes, MARKETPLACE_CONTENT_LATEST_THRESHOLD, true);		
+		}
+
+		if ($filterInstalled && is_array($blockTypes)) {
+			Loader::model('package');
+			$handles = Package::getInstalledHandles();
+			$btList = array();
+			foreach($blockTypes as $bt) {
+				if (!in_array($bt->getHandle(), $handles)) {
+					$btList[] = $bt;
+				}
+			}
+			$blockTypes = $btList;
 		}
 
 		return $blockTypes;

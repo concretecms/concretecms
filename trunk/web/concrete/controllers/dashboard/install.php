@@ -109,4 +109,80 @@ class DashboardInstallController extends Controller {
 		}
 	}
 
+	public function remote_addon($pkgName=null)
+	{
+		$this->install_remote('addon', $pkgName);
+	}
+
+	public function remote_theme($pkgName=null)
+	{
+		$this->install_remote('theme', $pkgName);
+	}
+
+	private function install_remote($type, $pkgName=null)
+	{
+		if (empty($pkgName)) {
+			$this->error->add(t('No package name provided.'));
+			return;
+		}
+
+	    $helper = Loader::helper($type == 'addon' ? 'concrete/marketplace/blocks' : 'concrete/marketplace/themes');
+    	$featured = $helper->getPreviewableList();
+        foreach ($featured as $fi) {
+			if ($pkgName == $fi->getHandle()) {
+				break;
+			}
+		}
+
+		$fileURL = $fi ? $fi->getRemoteFileURL() : '';
+		$file = $this->download_remote_package($fileURL);
+		if (empty($file)) {
+			$this->error->add(t('Not a recognized package.'));
+			return;
+		}
+
+		try {
+			Loader::model('package_archive');
+			$am = new PackageArchive($fi->getHandle());
+			$am->install($file, true);
+		} catch (Exception $e) {
+			$this->error->add(t('Error installing package.'));
+			$this->set('message', $e->getMessage());
+			return;
+		}
+
+        $tests = Package::testForInstall($fi->getHandle());
+        if (is_array($tests)) {
+            $tests = $this->mapError($tests);
+            $this->set('error', $tests);
+        } else {
+            $p = Loader::package($fi->getHandle());
+            try {
+                $p->install();
+                $this->set('message', t('The package has been installed.'));
+            } catch(Exception $e) {
+                $this->error->add('error', $e);
+            }
+        }
+ 
+		$msg = "The " . ($type == 'addon' ? 'add-on' : 'theme') . " '" . $fi->getName() . "' was successfully installed.";
+		$this->set('message', $msg);
+	}
+
+	private function download_remote_package($fileURL)
+	{
+		if (empty($fileURL)) return;
+
+		$fh = Loader::helper('file');
+		$pkg = $fh->getContents($fileURL);
+
+		$file = time();
+		// Use the same method as the Archive library to build a temporary file name.
+		$tmpFile = $fh->getTemporaryDirectory() . '/' . $file . '.zip';
+		$fp = fopen($tmpFile, "wb");
+		fwrite($fp, $pkg);
+		fclose($fp);
+
+		return $file;
+	}
 }

@@ -54,6 +54,14 @@ li.themeWrap .ccm-theme-name a:hover{ text-decoration:underline}
 ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 </style>
 
+<script type="text/javascript">
+function loginSuccess() {
+    jQuery.fn.dialog.closeTop();
+	ccm_hidePane();
+    ccmAlert.notice('Marketplace Login', '<p>You have successfully logged into the concrete5 marketplace.</p>');
+}
+</script>
+
 <div class="ccm-pane-controls">
  
  	<h1><?=t('Design')?></h1>
@@ -153,29 +161,32 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 				</ul>
 				*/ ?>	
 			
-				<? if( !count($availableThemes) ){ ?>
-					<div><?=t('Unable to connect to the marketplace.')?></div>
-				<? }else{ ?>
+    			<? if (!UserInfo::isRemotelyLoggedIn()) { ?>
+        			<p>You aren't currently signed in to the marketplace.</p>
+        			<p><a onclick="ccmPopupLogin.show('', loginSuccess, '', 1)">Click here to sign in or create an account.</a></p>
+    			<? } else { ?>
+					<? if( !count($availableThemes) ){ ?>
+						<div><?=t('Unable to connect to the marketplace.')?></div>
+					<? }else{ ?>
 						
-					<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil(count($availableThemes)/4)?>" >
-						<a href="javascript:void(0)" class="ccm-scroller-l"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_l.png" width="28" height="79" alt="l" /></a>
-						<a href="javascript:void(0)" class="ccm-scroller-r"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_r.png" width="28" height="79" alt="l" /></a>
+						<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil(count($availableThemes)/4)?>" >
+							<a href="javascript:void(0)" class="ccm-scroller-l"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_l.png" width="28" height="79" alt="l" /></a>
+							<a href="javascript:void(0)" class="ccm-scroller-r"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_r.png" width="28" height="79" alt="l" /></a>
 						
-						<div class="ccm-scroller-inner">
-							<ul id="ccm-select-marketplace-theme" style="width: <?=count($availableThemes) * 132?>px">			
-							<? foreach($availableThemes as $availableTheme){ ?>
-								<li class="themeWrap">
-									<a href="<?=$availableTheme->getThemeURL() ?>" target="_blank"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a>
-										<a title="<?=t('Preview')?>" onclick="ccm_previewMarketplaceTheme(<?=$c->getCollectionID()?>, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" href="javascript:void(0)" class="preview">
-										<img src="<?=ASSETS_URL_IMAGES?>/icons/magnifying.png" alt="<?=t('Preview')?>" class="ccm-preview" /></a>
-									<div class="ccm-theme-name" ><a target="_blank" href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>
-									<div class="desc"><?=$stringHelper->shortText($availableTheme->getThemeDescription(),60) ?></div>
-									<? /* <a href="<?=$availableTheme->getThemeURL() ?>">Get Theme &raquo;</a> */ ?>
-								</li>
-							<? } ?> 
-							</ul>
-						</div>
-					</div>			
+							<div class="ccm-scroller-inner">
+								<ul id="ccm-select-marketplace-theme" style="width: <?=count($availableThemes) * 132?>px">			
+								<? foreach($availableThemes as $availableTheme){ ?>
+									<li class="themeWrap">
+										<a href="<?=View::url('/dashboard/install', 'remote_theme', $availableTheme->getHandle())?>" title="<?=t('Install theme')?>"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a>
+											<a title="<?=t('Preview')?>" onclick="ccm_previewMarketplaceTheme(<?=$c->getCollectionID()?>, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" href="javascript:void(0)" class="preview">
+											<img src="<?=ASSETS_URL_IMAGES?>/icons/magnifying.png" alt="<?=t('Preview')?>" class="ccm-preview" /></a>
+										<div class="ccm-theme-name" ><a target="_blank" href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>
+									</li>
+								<? } ?> 
+								</ul>
+							</div>
+						</div>			
+					<? } ?> 	
 				<? } ?> 	
 			</div> 				
 				

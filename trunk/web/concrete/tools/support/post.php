@@ -115,7 +115,7 @@ if($_POST['new-question-submitted'] && UserInfo::getRemoteAuthInSupportGroup()){
 				<label>concrete5.org Account</label>
 				<?=t('You are signed in with the concrete5.org account') ?>
 				<a href="<?=CONCRETE5_ORG_URL ?>/profile/-/<?=UserInfo::getRemoteAuthUserId() ?>/" ><?=UserInfo::getRemoteAuthUserName() ?></a>
-				<?=t('(Not your account? <a onclick="ccm_support.signOut()">Sign Out</a>)')?>				
+				<?=t('(Not your account? <a onclick="ccm_support.signOut(jQuery.fn.dialog.closeTop)">Sign Out</a>)')?>				
 			</div>
 			
 			<div class="bigButtonWrap ccm-buttons">

@@ -49,7 +49,9 @@ jQuery.fn.dialog.getOptions = function(settings, node) {
 		var _draggable = node.attr('dialog-draggable');
 		var _element = node.attr('dialog-element');
 		var href = node.attr('href');
+		var onOpen = node.attr('dialog-on-open');
 		var onClose = node.attr('dialog-on-close');
+		var onDestroy = node.attr('dialog-on-destroy');
 		var _replace = node.attr('dialog-replace');
 	}
 	
@@ -77,8 +79,14 @@ jQuery.fn.dialog.getOptions = function(settings, node) {
 	if (typeof(_draggable) != 'undefined') {
 		options.draggable = _draggable;
 	}
+	if (typeof(onOpen) != 'undefined') {
+		options.onOpen = onOpen;
+	}
 	if (typeof(onClose) != 'undefined') {
 		options.onClose = onClose;
+	}
+	if (typeof(onDestroy) != 'undefined') {
+		options.onDestroy = onDestroy;
 	}
 
 	options.modal = (options.modal == "true" || options.modal == true) ? true : false;
@@ -149,6 +157,14 @@ jQuery.fn.dialog.load = function(fnd) {
 				jQuery.fn.dialog.close(fnd);
 			});
 			$("#ccm-dialog-content" + fnd.n + " .dialog-launch").dialog();
+
+			if (typeof fnd.onOpen != "undefined") {
+				if ((typeof fnd.onOpen) == 'function') {
+					fnd.onOpen();
+				} else {
+					eval(fnd.onOpen);
+				}
+			}
 		});
 	}
 	if (typeof(fnd.onLoad) == 'function') {
@@ -194,7 +210,7 @@ jQuery.fn.dialog.close = function(fnd) {
 		}
 	}
 
-	if (ccm_animEffects) {
+	if (fnd.onDestroy == "undefined" && ccm_animEffects) {
 		$("#ccm-dialog-window" + jQuery.fn.dialog.totalDialogs).fadeOut("fast",function(){
 			$('#ccm-dialog-window' + jQuery.fn.dialog.totalDialogs).trigger("unload").unbind().remove();
 		});
@@ -219,6 +235,14 @@ jQuery.fn.dialog.close = function(fnd) {
 	document.onkeydown = "";
 	document.onkeyup = ""; 
 	ccm_dialogOpen=0;
+
+	if (typeof fnd.onDestroy != "undefined") {
+		if ((typeof fnd.onDestroy) == 'function') {
+			fnd.onDestroy();
+		} else {
+			eval(fnd.onDestroy);
+		}
+	}
 }	
 
 jQuery.fn.dialog.position = function(fnd) {
@@ -319,6 +343,22 @@ var ccm_initialHeaderDeactivated;
 var ccm_initialOverlay;
 var ccm_dialogCanDrag = (typeof($.fn.draggable) == 'function');
 var imgLoader;
+
+var ccmAlert = {  
+    notice : function(title, message, onCloseFn) {
+        $.fn.dialog.open({
+            href: CCM_TOOLS_PATH + '/alert',
+            title: title,
+            width: 320,
+            height: 160,
+            modal: false, 
+			onOpen: function () {
+        		$("#ccm-popup-alert-message").html(message);
+			},
+			onDestroy: onCloseFn
+        }); 
+    }
+}       
 
 $(document).ready(function(){   
 	imgLoader = new Image();// preload image
