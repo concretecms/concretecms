@@ -12,10 +12,6 @@ $this->inc('elements/header.php'); ?>
 		
 		<div id="body">	
 			<?
-			echo intval($_SESSION['lastSupportListViewTime']).'<br>';
-			echo $_SESSION['lastHelpReplyTime'].'<br>';
-			echo UserInfo::getRemoteAuthTimestamp().'<br>';
-			
 			$a = new Area('Main');
 			$a->display($c);
 			
