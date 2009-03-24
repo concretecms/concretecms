@@ -6,9 +6,9 @@ Loader::model('user_attributes');
 $form=Loader::helper('form');
 
 if( $_REQUEST['remote'] ){ 
-	$loginFormSubmitURL=DIR_REL.'/tools/required/support/remote_auth_proxy/?action=do_login';
-	$forgotPasswordFormSubmitURL=DIR_REL.'/tools/required/support/remote_auth_proxy/?action=forgot_password';
-	$registerFormSubmitURL=DIR_REL.'/tools/required/support/remote_auth_proxy/?action=do_register';
+	$loginFormSubmitURL=REL_DIR_FILES_TOOLS_REQUIRED.'/support/remote_auth_proxy/?action=do_login';
+	$forgotPasswordFormSubmitURL=REL_DIR_FILES_TOOLS_REQUIRED.'/support/remote_auth_proxy/?action=forgot_password';
+	$registerFormSubmitURL=REL_DIR_FILES_TOOLS_REQUIRED.'/support/remote_auth_proxy/?action=do_register';
 }else{
 	$loginFormSubmitURL=View::url('/login', 'do_login');
 	$forgotPasswordFormSubmitURL=View::url('/login', 'forgot_password');
