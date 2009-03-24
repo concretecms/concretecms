@@ -70,6 +70,14 @@ class ConcreteUpgradeVersion520Helper {
 				$db->Execute("insert into Files (fID, fDateAdded) values (?, ?)", array($row['bID'], $row['bDateAdded']));
 			}
 		}
+		
+		// now we add in the new thumbnails directories
+		if (!is_dir(DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2)) {
+			@mkdir(DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2, '0777');
+		}
+		if (!is_dir(DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3)) {
+			@mkdir(DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3, '0777');
+		}
 
 		Loader::model('single_page');
 		// Rename Forms to Reports

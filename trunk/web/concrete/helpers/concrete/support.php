@@ -10,7 +10,7 @@
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
-Loader::helper('JSON');
+Loader::helper('json');
 
 class ConcreteSupportHelper { 
 
