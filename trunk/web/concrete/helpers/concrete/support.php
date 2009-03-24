@@ -56,6 +56,8 @@ class ConcreteSupportHelper {
 			throw new Exception(t('php cUrl must be enabled on your server'));
 		}
 		
+		//echo $response;
+		
 		if( strlen($response) ) return JsonHelper::decode($response);
 		else return array();		
 	}
@@ -90,12 +92,15 @@ class ConcreteSupportHelper {
 		//user hasn't checked their tickets since it was noticed they have a new reply
 		if($_SESSION['newHelpResponseWaiting']==1) return true;
 		
-		if( UserInfo::isRemotelyLoggedIn() ){
+		$authData = UserInfo::getAuthData();
+		if( $authData['auth_token'] ){
 		
 			//only check every 5 minutes
-			if( intval($_SESSION['lastHelpWaitingCheckTime'])<(time() )){//   -300) ){
-				$response=ConcreteSupportHelper::usersTickets();				
-				$_SESSION['lastHelpWaitingCheckTime']=time(); 
+			if( intval($_SESSION['lastHelpWaitingCheckTime'])<(time()-300) ){
+				if(UserInfo::isRemotelyLoggedIn()){
+					$response=ConcreteSupportHelper::usersTickets();				
+					$_SESSION['lastHelpWaitingCheckTime']=time(); 
+				}
 			}
 			
 			//since last time the user viewed the tickets list, or since last login

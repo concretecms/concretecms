@@ -63,8 +63,8 @@ $supportHelper=Loader::helper('concrete/support');
 		
 		<form id="ccm-support-question-form" onSubmit="return ccm_support.searchAnswers(this);">
 		
-			<div style="margin-top:16px; text-align:center">	
-				<textarea id="ccm-support-question-textarea" name="question" cols="50" rows="5" style="width:98%; margin:auto;" ></textarea>
+			<div style="margin-top:16px; text-align:center"> 
+				<input id="ccm-support-question-textarea" name="question" type="text" value="" style="width:98%; margin:auto; font-size:18px; padding:4px" />
 			</div>
 			
 			<div class="ccm-buttons">
