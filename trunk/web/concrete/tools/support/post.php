@@ -54,6 +54,17 @@ if($_POST['new-question-submitted'] && UserInfo::getRemoteAuthInSupportGroup()){
 			<div class="bigButtonWrap ccm-buttons">
 				<a href="<?=KNOWLEDGE_BASE_SUPPORT_LEARN_MORE_URL?>" target="_blank" onclick="" class="ccm-button-right"><span><em class=""><?=t('Learn More')?></em></span></a>
 			</div>
+			
+			<div class="ccm-spacer"></div>
+			
+			<? if( UserInfo::isRemotelyLoggedIn() ){ ?>
+			<div style="margin-top:16px;">
+				<label>concrete5.org Account</label>
+				<?=t('You are signed in with the concrete5.org account') ?>
+				<a href="<?=CONCRETE5_ORG_URL ?>/profile/-/<?=UserInfo::getRemoteAuthUserId() ?>/" ><?=UserInfo::getRemoteAuthUserName() ?></a>
+				<?=t('(Not your account? <a onclick="ccm_support.signOut(jQuery.fn.dialog.closeTop)">Sign Out</a>)')?>				
+			</div>		
+			<? } ?>	
 		
 		</div>
 	
