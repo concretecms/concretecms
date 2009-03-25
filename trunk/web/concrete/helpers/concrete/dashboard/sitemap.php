@@ -50,7 +50,7 @@ class ConcreteDashboardSitemapHelper {
 		return ($_SESSION['dsbSitemapActiveNode'] == $cID);
 	}
 	
-	function getNode($cID, $level = 0) {
+	function getNode($cID, $level = 0, $autoOpenNodes = true) {
 		$db = Loader::db();
 		$v = array($cID);
 		$q = "select cPointerID from Pages where cID = ?";
@@ -119,29 +119,39 @@ class ConcreteDashboardSitemapHelper {
 			'selected'=>$selected
 		);
 		
-		if ($nodeOpen) {
+		if ($nodeOpen && $autoOpenNodes || $level == 1) {
 			// We open another level
-			$node['subnodes'] = ConcreteDashboardSitemapHelper::getSubNodes($cID, $level);
+			$node['subnodes'] = ConcreteDashboardSitemapHelper::getSubNodes($cID, $level, false, $autoOpenNodes);
 		}
 		
 		return $node;
 	}
 	
-	function getSubNodes($cID, $level = 0) {
+	function getSubNodes($cID, $level = 0, $keywords = '', $autoOpenNodes = true) {
 		$db = Loader::db();
 		
-		$v = array($cID);
-		// why the interesting join? We want to prevent items that are in the core set of pages from showing up here
-		// ok we're commenting that out for a moment	
-		//if (ConcreteDashboardSitemapHelper::showSystemPages()) {
-			$q = "select cID from Pages where cParentID = ? and cIsTemplate = 0 order by cDisplayOrder asc ";
-		//} else {
-		//	$q = "select cID from Pages left join Packages on Pages.pkgID = Packages.pkgID where cParentID = ? and cIsTemplate = 0 and (Packages.pkgHandle <> 'core' or pkgHandle is null or Pages.ctID > 0) order by cDisplayOrder asc ";
-		//}
-		$r = $db->query($q, $v);
+		
+		if ($keywords != '' && $keywords != false) {
+			$nc = Page::getByID($cID, 'RECENT');
+			$q1 = $db->quote('%' . $keywords . '%');
+			$path = $db->quote($nc->getCollectionPath() . '%');
+			
+			$q = "select Pages.cID from Pages inner join PagePaths pp on Pages.cID = pp.cID inner join CollectionVersions cv on Pages.cID = cv.cID and cv.cvID = (select max(cvID) from CollectionVersions where cID = Pages.cID) where cPath like $path and (cvName like $q1 or cvDescription like $q1)";
+			$r = $db->query($q);
+		} else {
+			$v = array($cID);		
+			// why the interesting join? We want to prevent items that are in the core set of pages from showing up here
+			// ok we're commenting that out for a moment	
+			//if (ConcreteDashboardSitemapHelper::showSystemPages()) {
+				$q = "select cID from Pages where cParentID = ? and cIsTemplate = 0 order by cDisplayOrder asc ";
+			//} else {
+			//	$q = "select cID from Pages left join Packages on Pages.pkgID = Packages.pkgID where cParentID = ? and cIsTemplate = 0 and (Packages.pkgHandle <> 'core' or pkgHandle is null or Pages.ctID > 0) order by cDisplayOrder asc ";
+			//}
+			$r = $db->query($q, $v);
+		}
 		$nodes = array();
 		while ($row = $r->fetchRow()) {
-			$n = ConcreteDashboardSitemapHelper::getNode($row['cID'], $level+1);
+			$n = ConcreteDashboardSitemapHelper::getNode($row['cID'], $level+1, $autoOpenNodes);
 			if ($n != false) {
 				$nodes[] = $n;
 			}
