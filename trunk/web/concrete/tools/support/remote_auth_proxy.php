@@ -3,7 +3,7 @@
 //this file converts a local ajax call into the remote cUrl call to get around that issue
 //yay.
 
-Loader::helper('JSON');
+Loader::helper('json');
 Loader::model('userinfo');
 
 //does this request have one of the allowed actions?

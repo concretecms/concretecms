@@ -189,7 +189,7 @@ class LoginController extends Controller {
 		}
 		
 		if( $_REQUEST['format']=='JSON' ){
-			$jsonHelper=Loader::helper('JSON'); 
+			$jsonHelper=Loader::helper('json'); 
 			echo $jsonHelper->encode($loginData);
 			die;
 		}	
@@ -313,7 +313,7 @@ class LoginController extends Controller {
 		}
 		
 		if( $_REQUEST['format']=='JSON' ){
-			$jsonHelper=Loader::helper('JSON'); 
+			$jsonHelper=Loader::helper('json'); 
 			echo $jsonHelper->encode($loginData);
 			die;
 		}		

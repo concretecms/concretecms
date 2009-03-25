@@ -599,7 +599,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		static function isRemotelyLoggedIn(){ 
 			$authData = UserInfo::getAuthData();
 			if( strlen($authData['auth_token']) && intval($authData['auth_timestamp']) && strlen($authData['auth_uname']) ){
-				Loader::helper('JSON');
+				Loader::helper('json');
 				$qStr = http_build_query( $authData, '', '&');
 				$authURL=KNOWLEDGE_BASE_AUTH_URL.'?'.$qStr; 
 				

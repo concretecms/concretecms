@@ -1,6 +1,6 @@
 <?
 $supportHelper=Loader::helper('concrete/support');
-Loader::helper('JSON');
+Loader::helper('json');
 Loader::model('userinfo');
 
 $responseData['loggedIn']=0; 
