@@ -222,7 +222,7 @@ class PageTheme extends Object {
 			// get theme objects from the file system
 			foreach($themes as $t) {
 				$th = PageTheme::getByFileHandle($t);
-                if (!empty($pkg)) {
+				if (!empty($th)) {
 					$themesTemp[] = $th;
 				}
 			}
