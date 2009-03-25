@@ -105,6 +105,27 @@ foreach($s1 as $s) {
 	</tr>
 	</table>
 	</div>
+
+	<div class="ccm-file-search-field">
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td style="white-space: nowrap" align="right"><div style="width: 85px; padding-right:5px"><?=t('Results Per Page')?></div></td>
+		<td width="100%">
+			<?=$form->select('fNumResults', array(
+				'10' => '10',
+				'25' => '25',
+				'50' => '50',
+				'100' => '100',
+				'500' => '500'
+			), false, array('style' => 'width:65px'))?>
+		</td>
+		<td>&nbsp;</td>
+
+	</tr>	
+	</table>
+	</div>
+	
+	
 	
 	<div class="ccm-file-search-field">
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
