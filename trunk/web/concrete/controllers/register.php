@@ -175,7 +175,7 @@ class RegisterController extends Controller {
 		}
 		
 		if( $_REQUEST['format']=='JSON' ){
-			$jsonHelper=Loader::helper('JSON'); 
+			$jsonHelper=Loader::helper('json'); 
 			echo $jsonHelper->encode($registerData);
 			die;
 		}		
