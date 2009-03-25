@@ -9,6 +9,7 @@ li.tree-node {position: relative; background-color: transparent; background-repe
 div#ccm-sitemap-message {display: none}
 
 a.ccm-icon-sitemap-search span {background-position: 9px 6px !important}
+a.ccm-tree-search-trigger {display: none; vertical-align: middle; margin-left: 3px}
 
 li.tree-node-document {background-image: url(../images/dashboard/sitemap/document.png)}
 li.tree-node-folder {background-image: url(../images/dashboard/sitemap/folder.png)}
