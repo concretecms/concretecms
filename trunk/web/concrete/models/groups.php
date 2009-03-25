@@ -35,13 +35,16 @@
 				while ($row = $r->FetchRow()) {
 					$g = Group::getByID($row['gID']);
 					$g->setPermissionsForObject($obj);
-					$this->gArray[] = $g;
+					if(!in_array($g,$this->gArray)) 
+						$this->gArray[] = $g;
 				}
 			} else {
 				$groups = $this->getRelevantGroups($obj, $omitRequiredGroups);
 				foreach($groups as $g) {
+					if(!$g) continue;
 					$g->setPermissionsForObject($obj);
-					$this->gArray[] = $g;
+					if(!in_array($g,$this->gArray)) 
+						$this->gArray[] = $g;
 				}
 			}
 		}
