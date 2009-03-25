@@ -35,13 +35,13 @@ var CCM_NODE_ACTION = "<?=node_action?>";
 	</ul>
 </div>
 
-<?// Loader::element('dashboard/sitemap_search_results') ?>
+<? Loader::element('dashboard/sitemap_search_results') ?>
 
 
 </td>
 <td valign="top">
 
-<?// Loader::element('dashboard/sitemap_search') ?>
+<? Loader::element('dashboard/sitemap_search') ?>
 
 </td>
 </tr>

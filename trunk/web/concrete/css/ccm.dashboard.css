@@ -54,7 +54,7 @@ h1 {background: transparent url(../images/dashboard/header_l.png) no-repeat}
 h1 span {display: block; background: transparent url(../images/dashboard/header_r.png) repeat-x right top; padding: 4px 3px 4px 0px; margin-left: 11px}
 
 form {margin: 0px}
-a {text-decoration: none; color: #5377A9; cursor:pointer}
+a {text-decoration: none; color: #5377A9;}
 .required {color: #009}
 .error {color: #f00}
 .success {color: #666}

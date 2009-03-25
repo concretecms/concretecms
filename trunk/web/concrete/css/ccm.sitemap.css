@@ -14,10 +14,18 @@ li.tree-node-document {background-image: url(../images/dashboard/sitemap/documen
 li.tree-node-folder {background-image: url(../images/dashboard/sitemap/folder.png)}
 li.tree-node-loading {background-image: url(../images/dashboard/sitemap/loading.gif) !important}
 
+ul.ccm-sitemap-search-results {margin-left: 17px !important}
+
+form.ccm-tree-search {margin-top: 2px; background: #e3e3e3; width: 160px; padding: 4px; font-size: 10px; display: none; position: relative}
+form.ccm-tree-search input {font-size: 10px; width: 110px}
+form.ccm-tree-search input, form.ccm-tree-search img {vertical-align: middle}
+form.ccm-tree-search a.ccm-tree-search-close {position: absolute; top: 8px; right: 5px}
+
 div#tree li.tree-node img.tree-plus {margin-right: 2px; position: absolute; top: 3px; left: -12px;  }
 li.tree-node div.on-drop {background-color: #f4f4f4; font-weight: bold;}
-div.tree-label {padding: 2px; font-size: 12px !important;  cursor:pointer; -webkit-user-select: none; -moz-user-select: none}
+div.tree-label {padding: 2px; font-size: 12px !important;  -webkit-user-select: none; -moz-user-select: none}
 div.tree-label-selected span {background: #eee;}
+div.tree-label span {cursor:pointer}
 div.tree-label-selected-onload span {background: #CFE3E9;}
 div.tree-label-inactive {color: #aaa !important; -webkit-user-select: none; -moz-user-select: none; font-size: 12px !important}
 
