@@ -27,7 +27,10 @@ class DashboardFilesSearchController extends Controller {
 		if ($keywords != '') {
 			$fileList->filterByKeywords($keywords);
 		}
-		
+
+		if ($_REQUEST['fNumResults']) {
+			$fileList->setItemsPerPage($_REQUEST['fNumResults']);
+		}
 		if (isset($_GET['fSet']) && $_GET['fSet'] != '' && $_GET['fSet'] > 0) {
 			Loader::model('file_set');
 			$set = $_REQUEST['fSet'];
