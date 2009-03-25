@@ -12,7 +12,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 Loader::helper('json');
 
-class ConcreteSupportHelper { 
+class ConcreteSupportHelper {  
 
 	function askQuestion( $question='' ) {
 		$answers=array();

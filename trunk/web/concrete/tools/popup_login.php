@@ -29,7 +29,8 @@ if( $_REQUEST['remote'] ){
 			<input name="format" type="hidden" value="JSON">
 		
 			<div class="ccm-fieldPair">
-				<label for="uName"><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?>
+				<label for="uName">
+				<? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true && !$_REQUEST['remote']) { ?>
 					<?=t('Email Address')?>
 				<? } else { ?>
 					<?=t('Username')?>
@@ -47,7 +48,7 @@ if( $_REQUEST['remote'] ){
 		
 			<hr />
 			
-			<? if (OpenIDAuth::isEnabled()) { ?>
+			<? if (OpenIDAuth::isEnabled() && !$_REQUEST['remote']) { ?>
 				<div class="ccm-fieldPair">
 					<label for="uOpenID"><?=t('Or login using an OpenID')?>:</label><br/>
 					<input type="text" name="uOpenID" id="uOpenID" <?= (isset($uOpenID)?'value="'.$uOpenID.'"':'');?> class="ccm-input-openid">
@@ -74,7 +75,7 @@ if( $_REQUEST['remote'] ){
 		<div class="" style="margin-top:16px">
 			<a onClick="ccmPopupLogin.toggleForgot()"><?=t('Forgot your password?')?></a>
 		
-			<? if(ENABLE_REGISTRATION){ ?>
+			<? if(ENABLE_REGISTRATION || $_REQUEST['remote']){ ?>
 				 &nbsp;|&nbsp; <a onClick="ccmPopupLogin.toggleRegister()"><?=t('Register a new account.')?></a> 	
 			<? } ?>
 		</div>	
@@ -114,7 +115,7 @@ if( $_REQUEST['remote'] ){
 	
 	
 	
-	<? if(ENABLE_REGISTRATION){ ?>
+	<? if(ENABLE_REGISTRATION || $_REQUEST['remote']){ ?>
 	<div id="ccm-popupRegisterWrap" class="ccm-form" style="display:none">
 	
 		<h2><?=t('Register')?></h2>
@@ -125,7 +126,7 @@ if( $_REQUEST['remote'] ){
 		
 			<input name="format" type="hidden" value="JSON">
 		
-			<? if (!USER_REGISTRATION_WITH_EMAIL_ADDRESS) { ?>
+			<? if (!USER_REGISTRATION_WITH_EMAIL_ADDRESS || $_REQUEST['remote']) { ?>
 				<div class="ccm-fieldPair">
 					<?=$form->label('uName', t('Username') )?>
 					<?=$form->text('uName')?>
@@ -152,9 +153,10 @@ if( $_REQUEST['remote'] ){
 			</div>
 			
 			<?
-			
+			if(!$_REQUEST['remote']){
 			$attribs = UserAttributeKey::getRegistrationList();
 			foreach($attribs as $ak) { 
+			
 				if ($ak->getKeyType() == 'HTML') { ?>
 					<div><?=$ak->outputHTML()?></div>
 				<? } else { ?>
@@ -164,7 +166,9 @@ if( $_REQUEST['remote'] ){
 					<div class="ccm-spacer"></div>
 					</div>				
 				<? } ?>
-			<? } ?>
+				
+			<? }
+			} ?>
 		
 			<div class="ccm-spacer"></div>
 		

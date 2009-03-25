@@ -23,7 +23,10 @@ UserInfo::setRemoteAuthTimestamp( $_POST['timestamp'] );
 UserInfo::setRemoteAuthUserName( $_POST['uName'] );
 
 //send the data to the remote login page
-$remoteLoginURL = CONCRETE5_ORG_URL.'/login/-/'.$action.'/';
+if($action=='do_register') 
+	 $remoteLoginURL = CONCRETE5_ORG_URL.'/register/-/'.$action.'/';
+else $remoteLoginURL = CONCRETE5_ORG_URL.'/login/-/'.$action.'/';
+
 $postStr = http_build_query($_POST, '', '&');
 $curl_handle = curl_init();
 curl_setopt($curl_handle, CURLOPT_URL, $remoteLoginURL);
