@@ -115,17 +115,22 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		/** 
-		 * Returns a relative path to the current block's directory
+		 * Returns a relative path to the current block's directory. If a filename is specified it will be appended and searched for as well.
 		 * @return string
 		 */
-		public function getBlockURL() {
+		public function getBlockURL($filename = null) {
+
 			$obj = $this->blockObj;
 			if ($obj->getPackageID() > 0) {
-				$base = ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $obj->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
-			} else if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle())) {
-				$base = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
+				if (is_dir(DIR_PACKAGES . '/' . $obj->getPackageHandle())) {
+					$base = ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $obj->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
+				} else {
+					$base = DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $obj->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
+				}
+			} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $filename)) {
+				$base = DIR_REL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
 			} else {
-				$base = DIR_REL . '/' . DIRNAME_BLOCKS . '/' . '/' . $obj->getBlockTypeHandle();
+				$base = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
 			}
 			
 			return $base;
