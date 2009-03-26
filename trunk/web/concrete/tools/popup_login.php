@@ -65,7 +65,10 @@ if( $_REQUEST['remote'] ){
 			
 			<div class="ccm-spacer"></div>
 			
-			<?=$form->submit('submit', t('Sign In') . ' &gt;')?>
+			<div class="ccm-buttons"> 
+			<a onclick="$('#ccm-popup-login-submit').click()" class="ccm-button-left"><span><em class=""><?=t('Sign In')?> &gt;</em></span></a>	
+			<input type="submit" name="submit" value="submit" style="display: none" id="ccm-popup-login-submit" />
+			</div>
 			
 			<?=$form->hidden('rcID', $rcID); ?>	
 		</form> 
@@ -97,13 +100,24 @@ if( $_REQUEST['remote'] ){
 			
 			<input name="format" type="hidden" value="JSON">
 			
-			<label for="uEmail"><?=t('Email Address')?></label> 
-			<?=$form->hidden('rcID', $rcID); ?>
-			<input type="text" name="uEmail" value="" class="ccm-input-text" >
-		 
-		 	<div class="ccm-spacer"></div>
-		 
-			<?=$form->submit('submit', t('Reset and Email Password') . ' &gt;')?>
+			<table>
+				<tr>
+					<td>
+						<label for="uEmail" style="white-space:nowrap; width: auto; float:none; padding-top:12px; "><?=t('Email Address')?></label> 
+					</td>
+					<td style="padding-left:8px; padding-top:8px">
+						<?=$form->hidden('rcID', $rcID); ?>
+						<input type="text" name="uEmail" value="" class="ccm-input-text" >
+						<div class="ccm-spacer"></div>
+					</td>
+					<td style="padding-left:12px"> 		
+						<div class="ccm-buttons"> 
+							<a onclick="$('#ccm-popup-forgot-pass-submit').click()" class="ccm-button-left"><span><em><?=t('Reset and Email Password')  ?> &gt;</em></span></a>	
+							<input type="submit" name="submit" value="submit" style="display: none" id="ccm-popup-forgot-pass-submit" />
+						</div>	
+					</td>
+				</tr>
+			</table>		
 			
 		</form>
 		
@@ -171,8 +185,11 @@ if( $_REQUEST['remote'] ){
 			} ?>
 		
 			<div class="ccm-spacer"></div>
-		
-			<?=$form->submit('register', t('Register'))?>
+
+			<div class="ccm-buttons"> 
+				<a onclick="$('#ccm-popup-register-submit').click()" class="ccm-button-left"><span><em><?=t('Register') ?></em></span></a>	
+				<input type="submit" name="submit" value="submit" style="display: none" id="ccm-popup-register-submit" />
+			</div>				
 			
 			<?=$form->hidden('rcID', $rcID); ?>
 		

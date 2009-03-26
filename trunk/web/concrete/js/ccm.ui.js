@@ -588,6 +588,7 @@ ccm_setupHeaderMenu = function() {
 	});
 	 
 	$("a#ccm-nav-dashboard-help").click(function() {
+		$(this).addClass('ccm-nav-loading');
 		try{ ccm_support.show(this); }catch(e){alert(e.message);}
 		return false;
 	});	
@@ -606,6 +607,7 @@ ccm_setupHeaderMenu = function() {
 	if(helpEl.attr('helpwaiting')) 
 		setTimeout('ccm_support.helpPulse()',1500);
 	helpEl.click(function() { 
+		$(this).addClass('ccm-nav-loading'); 
 		if($(this).attr('helpwaiting')) 
 			 ccm_support.showMyTickets();
 		else ccm_support.show();

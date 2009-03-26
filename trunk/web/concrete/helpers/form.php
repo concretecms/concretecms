@@ -39,12 +39,12 @@ class FormHelper {
 	 * @param array $fields Additional fields appended at the end of the submit button
 	 * return string $html
 	 */	 
-	public function submit($name, $value, $fields = array()) {
+	public function submit($name, $value, $fields = array(), $additionalClasses='') {
 		$_fields = '';
 		foreach($fields as $key => $fieldvalue) {
 			$_fields .= $key . '="' . $fieldvalue . '" ';
 		}
-		$str = '<input type="submit" class="ccm-input-submit" id="' . $name . '" name="' . $name . '" value="' . $value . '" ' . $_fields . ' />';
+		$str = '<input type="submit" class="ccm-input-submit '.$additionalClasses.'" id="' . $name . '" name="' . $name . '" value="' . $value . '" ' . $_fields . ' />';
 		return $str;
 	}
 	

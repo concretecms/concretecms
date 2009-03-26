@@ -95,6 +95,7 @@ ul#ccm-main-nav a#ccm-nav-save-arrange.ccm-nav-loading {background-position: cen
 ul#ccm-system-nav #ccm-nav-dashboard {background-image: url(../images/icons/icon_header_dashboard.png); background-position: center 8px !important}
 ul#ccm-system-nav #ccm-nav-dashboard.ccm-nav-loading {background-position: center 8px !important}
 ul#ccm-system-nav #ccm-nav-help {background-image: url(../images/icons/icon_header_help.png); background-position: center 8px !important}
+ul#ccm-system-nav #ccm-nav-help.ccm-nav-loading {background-position: center 8px !important}
 ul#ccm-system-nav #ccm-nav-logout {background-image: url(../images/icons/icon_header_logout.png); background-position: center 8px !important}
 
 
