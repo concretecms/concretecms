@@ -691,10 +691,6 @@ ccm_t = function(key) {
 
 $(function() {
 	
-	if (CCM_ENABLE_BREADCRUMB) {
-		ccm_setupBreadcrumb();
-	}
-	
 	b1 = new Image();// preload image
 	b1.src = CCM_IMAGE_PATH + "/button_l.png";
 	b2 = new Image();// preload image

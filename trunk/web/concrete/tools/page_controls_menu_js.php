@@ -153,6 +153,9 @@ menuHTML += '<div id="ccm-notification"><div id="ccm-notification-inner"><?=$sta
 			$(ccm_init);
 		}
 		
+		<? if ($u->config('UI_BREADCRUMB')) {  ?>
+			ccm_setupBreadcrumb();
+		<? } ?>
 		
 	});
 <?
