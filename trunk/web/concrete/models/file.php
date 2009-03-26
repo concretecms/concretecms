@@ -132,7 +132,7 @@ class File extends Object {
 	/** 
 	 * Returns a file version object that is to be written to. Computes whether we can use the current most recent version, OR a new one should be created
 	 */
-	public function getVersionToModify() {
+	public function getVersionToModify($forceCreateNew = false) {
 		$u = new User();
 		$createNew = false;
 		
@@ -150,7 +150,11 @@ class File extends Object {
 		if ($diff > File::CREATE_NEW_VERSION_THRESHOLD) {
 			$createNew = true;
 		}
-				
+		
+		if ($forceCreateNew) {
+			$createNew = true;
+		}
+		
 		if ($createNew) {
 			$fv2 = $fv->duplicate();
 			
