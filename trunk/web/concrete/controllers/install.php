@@ -694,6 +694,7 @@ class InstallController extends Controller {
 						$configuration .= "?" . ">";
 						$res = fwrite($this->fp, $configuration);
 						fclose($this->fp);
+						chmod($this->installData['DIR_BASE'] . '/config/site.php', 0777);
 						
 						// save some options into the database
 						Config::save('SITE', $_POST['SITE']);
