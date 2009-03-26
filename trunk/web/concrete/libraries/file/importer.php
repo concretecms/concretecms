@@ -80,7 +80,7 @@ class FileImporter {
 			$fv->refreshAttributes(true);
 		} else {
 			// We get a new version to modify
-			$fv = $fr->getVersionToModify();
+			$fv = $fr->getVersionToModify(true);
 			$fv->updateFile($filename, $prefix);
 			$fv->refreshAttributes();
 		}
