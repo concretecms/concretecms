@@ -123,7 +123,7 @@ ul.ccm-dialog-tabs li {padding: 0px; margin: 0px}
 ul.ccm-dialog-tabs li:last-child * {border-right: 1px solid #dedede}
 ul.ccm-dialog-tabs li {border-right: 1px solid #dedede }
 
-.ccm-input-text, div.ccm-field-meta input, div.ccm-field-meta textarea, .ccm-input-date {font-size: 12px; border: 1px solid #aaa; color: #444; padding: 4px}
+.ccm-input-text, div.ccm-field-meta input, div.ccm-field-meta textarea, .ccm-input-date, .ccm-input-password {font-size: 12px; border: 1px solid #aaa; color: #444; padding: 4px}
 .ccm-input-date-wrapper input {width: 100px}
 
 /* user search */
