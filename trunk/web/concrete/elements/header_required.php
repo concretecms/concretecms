@@ -44,11 +44,6 @@ if ($akk) { ?>
 <? $u = new User(); ?>
 <script type="text/javascript">
 <?
-	if ($u->config('UI_BREADCRUMB')) { 
-		echo("var CCM_ENABLE_BREADCRUMB = true;\r");
-	} else {
-		echo("var CCM_ENABLE_BREADCRUMB = false;\r");
-	}
 	echo("var CCM_DISPATCHER_FILENAME = '" . DIR_REL . '/' . DISPATCHER_FILENAME . "';\r");
 	echo("var CCM_CID = {$cID};\r");
 	if (MENU_FEEDBACK_DISPLAY) {
