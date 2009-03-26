@@ -122,7 +122,7 @@ if($_POST['new-question-submitted'] && UserInfo::getRemoteAuthInSupportGroup()){
 				<div class="ccm-spacer"></div>
 			</div>
 			
-			<div style="margin-top:16px;">
+			<div style="margin:8px 0px 16px 0px;">
 				<label>concrete5.org Account</label>
 				<?=t('You are signed in with the concrete5.org account') ?>
 				<a href="<?=CONCRETE5_ORG_URL ?>/profile/-/<?=UserInfo::getRemoteAuthUserId() ?>/" ><?=UserInfo::getRemoteAuthUserName() ?></a>
