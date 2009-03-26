@@ -67,7 +67,16 @@ var miniSurvey ={
 			var req=($('#required'+mode).get(0).checked)?1:0;
 			postStr+='&required='+req;
 			postStr+='&position='+escape($('#position'+mode).val());
-			postStr+='&inputType='+$('input[@name=answerType'+mode+']:checked').val()
+			var form=document.getElementById('ccm-block-form'); 
+			var opts=form['answerType'+mode];
+			var answerType='';
+			for(var i=0;i<opts.length;i++){
+				if(opts[i].checked){
+					answerType=opts[i].value;
+					break;
+				}
+			} 
+			postStr+='&inputType='+answerType;//$('input[@name=answerType'+mode+']:checked').val()
 			postStr+='&msqID='+msqID+'&qsID='+parseInt(this.qsID);			
 			$.ajax({ 
 					type: "POST",
