@@ -733,7 +733,7 @@ var ccm_support = {
 		//alert(helpurl);
 		var supportWrap=document.getElementById('ccm-supportWrap');
 		//load into existing window, if help is already open
-		if(supportWrap){
+		if(supportWrap){ 
 			$.ajax({
 				type: 'GET',
 				url: CCM_TOOLS_PATH + '/support/search.php', 
@@ -757,7 +757,9 @@ var ccm_support = {
 			width: 550,
 			modal: false,
 			height: 400,
-			onLoad:function(){ 
+			onLoad:function(){ 				
+			},
+			onOpen:function(){ 
 				ccm_removeHeaderLoading();
 			}
 		});
