@@ -121,8 +121,8 @@
 				
 				sort($gs);
 
-				foreach($gs as $row) {
-					$g = Group::getByID($row['gID']);
+				foreach($gs as $gID) {
+					$g = Group::getByID( $gID );
 					$groups[] = $g;
 				}
 			}
