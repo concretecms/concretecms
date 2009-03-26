@@ -184,7 +184,7 @@ $(function() {
 <form id="ccm-file-manager-multiple-incoming" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
 		<table id="incoming_file_table" width="100%" cellpadding="0" cellspacing="0">
 			<tr>
-				<td width="10%" valign="middle" class="center theader"><input type="checkbox" id="check_all_imports" name="check_all_imports" onclick="toggleCheckboxStatus(document.file_importer_form);" value="" /></td>
+				<td width="10%" valign="middle" class="center theader"><input type="checkbox" id="check_all_imports" name="check_all_imports" onclick="ccm_alSelectMultipleIncomingFiles(this);" value="" /></td>
 				<td width="20%" valign="middle" class="center theader"></td>
 				<td width="45%" valign="middle" class="theader"><?=t('Filename')?></td>
 				<td width="25%" valign="middle" class="center theader"><?=t('Size')?></td>
@@ -198,7 +198,7 @@ $(function() {
 			<tr>
 				<td width="10%" valign="middle" class="center">
 					<?php if($fh->extension($file_array['name'])) { ?>
-						<input type="checkbox" name="send_file<?=$filenum?>" value="<?=$file_array['name']?>" />
+						<input type="checkbox" name="send_file<?=$filenum?>" class="ccm-file-select-incoming" value="<?=$file_array['name']?>" />
 					<?php } ?>
 				</td>
 				<td width="20%" valign="middle" class="center"><?=$ft->getThumbnail(1)?></td>
@@ -207,7 +207,7 @@ $(function() {
 			</tr>
 		<?php } ?>
 			<tr>
-				<td style="text-align: center"><input type="checkbox" name="removeFilesAfterPost" value="1" checked /></td>
+				<td style="text-align: center"><input type="checkbox" name="removeFilesAfterPost" value="1" /></td>
 				<td colspan="2">
 				
 				<?=t('Remove files from incoming/ directory.')?></td>
