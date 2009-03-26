@@ -61,12 +61,11 @@ if ($valt->validate('import_incoming')) {
 		alert('<?=$error?>');
 		window.parent.ccm_alResetSingle();
 	<? } else { ?>
-		window.parent.ccm_alRefresh();
-		//window.parent.jQuery.fn.dialog.closeTop();
 		highlight = new Array();
 		<? foreach($files as $resp) { ?>
 			highlight.push(<?=$resp->getFileID()?>);
 		<? } ?>
+		window.parent.jQuery.fn.dialog.closeTop();
 		window.parent.ccm_alRefresh(highlight);
 	<? } ?>
 </script>

@@ -596,6 +596,7 @@ ccm_alResetSingle = function () {
 }
 
 ccm_alRefresh = function(highlightFIDs) {
+	var ids = highlightFIDs;
 	ccm_deactivateSearchResults();
 	$("#ccm-file-search-results").load(CCM_TOOLS_PATH + '/files/search_results', {
 		'ccm_order_by': 'fvDateAdded',
@@ -603,7 +604,9 @@ ccm_alRefresh = function(highlightFIDs) {
 	}, function() {
 		ccm_activateSearchResults();
 		ccm_alResetSingle();
-		ccm_alHighlightFileIDArray(highlightFIDs);
+		if (ids != false) {
+			ccm_alHighlightFileIDArray(ids);
+		}
 		ccm_alSetupSelectFiles();
 
 	});
@@ -753,6 +756,14 @@ toggleCheckboxStatus = function(form) {
 		checkbox_status = true;	
 	}
 }	
+
+ccm_alSelectMultipleIncomingFiles = function(obj) {
+	if ($(obj).attr('checked')) {
+		$("input.ccm-file-select-incoming").attr('checked', true);
+	} else {
+		$("input.ccm-file-select-incoming").attr('checked', false);
+	}
+}
 
 ccm_starFile = function (img,fID) {				
 	var action = '';
