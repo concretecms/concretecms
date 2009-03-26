@@ -19,11 +19,6 @@ class File extends Object {
 		return $fv->getPath();
 	}
 
-    public function getFileFullURL() {
-		$fv = $this->getVersion();
-		return BASE_URL.DIR_REL.$fv->getRelativePath(1);
-	}
-
 	public function getPassword() {
 		return $this->fPassword;
 	}

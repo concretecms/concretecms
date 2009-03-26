@@ -275,6 +275,13 @@ class FileVersion extends Object {
 		return $path;
 	}
 	
+	/** 
+	 * Returns a full URL to the file on disk
+	 */
+	public function getURL() {
+		return BASE_URL . $this->getRelativePath();	
+	}
+	
 	public function getRelativePath() {
 		$f = Loader::helper('concrete/file');
 		$path = $f->getFileRelativePath($this->fvPrefix, $this->fvFilename );
