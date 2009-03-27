@@ -1,16 +1,20 @@
 <script>
 var ccmAttributesHelper={   
 	valuesBoxDisabled:function(typeSelect){
+		var attrValsInterface=document.getElementById('attributeValuesInterface')
+		var requiredVals=document.getElementById('reqValues');
+		var allowOther=document.getElementById('allowOtherValuesWrap');
+		var offMsg=document.getElementById('attributeValuesOffMsg');
 		if (typeSelect.value == 'SELECT' || typeSelect.value == 'SELECT_MULTIPLE') {
-			document.getElementById('attributeValuesInterface').style.display='block';
-			document.getElementById('reqValues').style.display='inline'; 
-			document.getElementById('allowOtherValuesWrap').style.display='block';
-			document.getElementById('attributeValuesOffMsg').style.display='none';			
+			attrValsInterface.style.display='block';
+			requiredVals.style.display='inline'; 
+			if(allowOther) allowOther.style.display='block';
+			offMsg.style.display='none';			
 		} else {  
-			document.getElementById('reqValues').style.display='none'; 
-			document.getElementById('attributeValuesInterface').style.display='none';
-			document.getElementById('allowOtherValuesWrap').style.display='none';
-			document.getElementById('attributeValuesOffMsg').style.display='block'; 
+			requiredVals.style.display='none'; 
+			attrValsInterface.style.display='none';
+			if(allowOther) allowOther.style.display='none';
+			offMsg.style.display='block'; 
 		}	
 	},  
 	
@@ -89,6 +93,7 @@ var ccmAttributesHelper={
 
 #addAttributeValueWrap{ margin-top:8px }
 #addAttributeValueWrap input.faint{ color:#999 }
+#addAttributeValueWrap a{cursor:pointer}
 
 #allowOtherValuesWrap{margin-top:16px}
 </style>
