@@ -562,13 +562,37 @@ ccm_setupGridStriping = function(tbl) {
 	});
 }
 
-ccm_setupHeaderMenu = function() {
-	// preload
+ccm_headerMenuPreloads = function(){ 
 	var ccmLoadingIcon = new Image();
 	ccmLoadingIcon.src = CCM_IMAGE_PATH + "/icons/icon_header_loading.gif";
 	
 	var ccmHeaderImg = new Image();// preload image
 	ccmHeaderImg.src = CCM_IMAGE_PATH + "/bg_header_active.png";
+}
+
+ccm_setupDashboardHeaderMenu = function(){	
+	ccm_headerMenuPreloads();
+	
+	var helpEl=$("a#ccm-nav-dashboard-help");
+	if(!helpEl || !helpEl.html()) return false;
+	
+	if(helpEl.attr('helpwaiting')==1) 
+		setTimeout('ccm_support.helpPulse();',1500);
+	helpEl.click(function() { 
+		$(this).addClass('ccm-nav-loading'); 
+		try{
+			if($(this).attr('helpwaiting')==1) 
+				 ccm_support.showMyTickets();
+			else ccm_support.show();
+		}catch(e){alert(e.message);}
+		return false;
+	});		
+}
+
+
+ccm_setupHeaderMenu = function() {
+	
+	ccm_headerMenuPreloads();
 
 	$("ul#ccm-main-nav a").click(function() {
 		if (!ccm_topPaneDeactivated) {
@@ -586,29 +610,13 @@ ccm_setupHeaderMenu = function() {
 		}, 50);
 		
 	});
-	 
-	$("a#ccm-nav-dashboard-help").click(function() {
-		$(this).addClass('ccm-nav-loading');
-		try{ ccm_support.show(this); }catch(e){alert(e.message);}
-		return false;
-	});	
-
-	/*
-	//old help
-	$("a#ccm-nav-help").click(function() {
-		var helpurl = $(this).attr('helpurl');
-		window.open(helpurl);
-		ccm_removeHeaderLoading();
-
-	});
-	*/
 	
 	var helpEl=$("a#ccm-nav-help");
-	if(helpEl.attr('helpwaiting')) 
+	if(helpEl.attr('helpwaiting')==1) 
 		setTimeout('ccm_support.helpPulse()',1500);
 	helpEl.click(function() { 
 		$(this).addClass('ccm-nav-loading'); 
-		if($(this).attr('helpwaiting')) 
+		if($(this).attr('helpwaiting')==1) 
 			 ccm_support.showMyTickets();
 		else ccm_support.show();
 	});	
@@ -919,7 +927,9 @@ var ccm_support = {
 	},
 	
 	helpPulse:function(){
-		var el=$('#ccm-nav-help');
+		var el=document.getElementById('ccm-nav-help');
+		if(!el) el=document.getElementById('ccm-nav-dashboard-help');
+		el=$(el);
 		el.css('background-color','#fafafa');
 		el.animate({backgroundColor:"#ffa"},'','',function(){
 		}).animate({backgroundColor:"#fafafa"},'','',function(){

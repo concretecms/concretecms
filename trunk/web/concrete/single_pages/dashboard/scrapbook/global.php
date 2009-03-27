@@ -55,12 +55,13 @@ var GlobalScrapbook = {
 
 <div class="ccm-dashboard-inner"> 
 	
-	<?= $ih->button_js( t('Add Block to Scrapbook'), 'GlobalScrapbook.addBlock(event)','left'); ?>
+	<div class="sillyIE7"><?= $ih->button_js( t('Add Block to Scrapbook'), 'GlobalScrapbook.addBlock(event)','left'); ?></div>
 	
-	<div class="ccm-spacer"></div>
+	<div class="ccm-spacer"></div>	
 	
 	<div id="ccm-scrapbook-list"> 
 		<? 
+		
 		//$globalScrapbookArea->display($c);
 		$globalScrapbookBlocks = $globalScrapbookArea->getAreaBlocksArray($c); 
 		
@@ -85,8 +86,7 @@ var GlobalScrapbook = {
 					  <a onclick="GlobalScrapbook.editBlock(<?=intval($b->bID) ?>,<?=$bt->getBlockTypeInterfaceWidth()?> , <?=$bt->getBlockTypeInterfaceHeight()?> )" ><?=t('Edit')?></a> 
 					  &nbsp;|&nbsp; 					 
 					  <a href="<?= $this->url($c->getCollectionPath(),'delete','?bID='.intval($b->bID))?>" onclick="return GlobalScrapbook.confirmDelete()">
-					  	<? /* <img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" width="16" height="16" /> */ ?>
-						<?=t('Delete')?>
+					  	<?=t('Delete')?>
 					  </a>
 					</div> 
 					<div id="ccm-block-type-inner<?=intval($b->bID)?>" class="ccm-block-type-inner" style="background-image: url(<?=$btIcon?>)" >
@@ -111,6 +111,7 @@ var GlobalScrapbook = {
 				</div>
 			</div>
 		<? } ?>	
+		
 	</div> 	
 
 </div>
