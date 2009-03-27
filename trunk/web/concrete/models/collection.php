@@ -403,8 +403,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$blocks = array();
 			while ($row = $r->fetchRow()) {
 				$ab = Block::getByID($row['bID'], $this, $row['arHandle']);
-				$btHandle = $ab->getBlockTypeHandle();
-				$blocks[] = $ab;
+				if (is_object($ab)) {
+					$blocks[] = $ab;
+				}
 			}
 			$r->free();
 			return $blocks;

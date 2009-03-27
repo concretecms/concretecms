@@ -24,6 +24,8 @@ ccm_triggerSelectFile = function(fID, af) {
 		obj.attr('fID', fID);
 		obj.attr('ccm-file-manager-can-view', obj.children('div').attr('ccm-file-manager-can-view'));
 		obj.attr('ccm-file-manager-can-edit', obj.children('div').attr('ccm-file-manager-can-edit'));
+		obj.attr('ccm-file-manager-can-admin', obj.children('div').attr('ccm-file-manager-can-admin'));
+		obj.attr('ccm-file-manager-can-replace', obj.children('div').attr('ccm-file-manager-can-replace'));
 		
 		obj.click(function(e) {
 			e.stopPropagation();

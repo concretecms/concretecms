@@ -159,6 +159,7 @@ class DashboardFilesAccessController extends Controller {
 	
 	public function global_permissions_saved() {
 		$this->set('message', t('Global Permissions saved.'));
+		$this->view();
 	}
 	
 	public function file_access_extensions(){
