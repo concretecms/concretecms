@@ -279,6 +279,9 @@ if (!$previewMode) {
 			<th><?=t('Comments')?></th>
 			<th><?=t('Creator')?></th>
 			<th><?=t('Added On')?></th>
+			<? if ($fp->canAdmin()) { ?>
+				<th>&nbsp;</th>
+			<? } ?>
 		</tr>
 		<?
 		$versions = $f->getVersionList();
@@ -304,6 +307,13 @@ if (!$previewMode) {
 					</td>
 				<td><?=$fvv->getAuthorName()?></td>
 				<td><?=$fvv->getDateAdded()?></td>
+				<? if ($fp->canAdmin()) { ?>
+					<? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?>
+						<td>&nbsp;</td>
+					<? } else { ?>
+						<td><a class="ccm-file-versions-remove" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/properties?fID=<?=$f->getFileID()?>&fvID=<?=$fvv->getFileVersionID()?>&task=delete_version"><?=t('Delete')?></a></td>
+					<? } ?>
+				<? } ?>
 			</tr>	
 		
 		<? } ?>
