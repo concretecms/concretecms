@@ -136,8 +136,8 @@ menuHTML += '</div>';
 <? } ?>
 
 <?
-if ($statusMessage != '') {?>
-menuHTML += '<div id="ccm-notification"><div id="ccm-notification-inner"><?=$statusMessage?></div></div>';
+if ($statusMessage != '') {?> 
+menuHTML += '<div id="ccm-notification"><div id="ccm-notification-inner"><?=str_replace("'",'"',$statusMessage) ?></div></div>';
 <? } ?>
 
 	
