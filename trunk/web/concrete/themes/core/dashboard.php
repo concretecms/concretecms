@@ -47,6 +47,8 @@ $(function() {
 	$("div.message").show('highlight', {
 		color: '#ffffff'
 	});
+	
+	ccm_setupDashboardHeaderMenu();
 });
 </script>
 </head>
@@ -58,23 +60,23 @@ $(function() {
 <a href="<?=$this->url('/dashboard/')?>"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" height="49" width="49" alt="Concrete5" /></a>
 </div>
 
+<? 
+Loader::block('autonav');
+$supportHelper=Loader::helper('concrete/support'); 
+$nh = Loader::helper('navigation');
+$dashboard = Page::getByPath("/dashboard");
+$nav = AutonavBlockController::getChildPages($dashboard);
+?>
 
 <div id="ccm-system-nav-wrapper1">
 <div id="ccm-system-nav-wrapper2">
 <ul id="ccm-system-nav">
 <li><a id="ccm-nav-return" href="<?=$this->url('/')?>"><?=t('Return to Website')?></a></li>
-<li><a id="ccm-nav-dashboard-help" href="<?=MENU_HELP_URL?>"><?=t('Help')?></a></li>
+<li><a id="ccm-nav-dashboard-help" href="<?=MENU_HELP_URL?>"  helpwaiting="<?=(ConcreteSupportHelper::hasNewHelpResponse())?1:0 ?>"><?=t('Help')?></a></li>
 <li class="ccm-last"><a id="ccm-nav-logout" href="<?=$this->url('/login/', 'logout')?>"><?=t('Sign Out')?></a></li>
 </ul>
 </div>
 </div>
-
-<? 
-Loader::block('autonav');
-$nh = Loader::helper('navigation');
-$dashboard = Page::getByPath("/dashboard");
-$nav = AutonavBlockController::getChildPages($dashboard);
-?>
 
 <div id="ccm-dashboard-nav">
 <ul>

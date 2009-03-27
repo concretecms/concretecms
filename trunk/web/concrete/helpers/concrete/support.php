@@ -82,21 +82,23 @@ class ConcreteSupportHelper {
 
 		if( strlen($response) ){
 			$responseObj=JsonHelper::decode($response);
-			if( $responseObj->lastReplyTime ) 
-				$_SESSION['lastHelpReplyTime']=$responseObj->lastReplyTime;
+			if( $responseObj->lastReplyTime ){ 
+				$_SESSION['lastHelpReplyTime']=$responseObj->lastReplyTime-($responseObj->c5orgTime-time());
+			}
 			return $responseObj;
 		}else return new Object(); 
 	}
 	
 	function hasNewHelpResponse(){
-		//user hasn't checked their tickets since it was noticed they have a new reply
-		if($_SESSION['newHelpResponseWaiting']==1) return true;
+	
+		//user hasn't checked their tickets since it was noticed they have a new reply 
+		if($_SESSION['newHelpResponseWaiting']==1) return true; 
 		
 		$authData = UserInfo::getAuthData();
 		if( $authData['auth_token'] ){
-		
+			
 			//only check every 5 minutes
-			if( intval($_SESSION['lastHelpWaitingCheckTime'])<(time()-300) ){
+			if( intval($_SESSION['lastHelpWaitingCheckTime'])<(time()-3) ){
 				if(UserInfo::isRemotelyLoggedIn()){
 					$response=ConcreteSupportHelper::usersTickets();				
 					$_SESSION['lastHelpWaitingCheckTime']=time(); 
@@ -106,9 +108,8 @@ class ConcreteSupportHelper {
 			//since last time the user viewed the tickets list, or since last login
 			if( (intval($_SESSION['lastSupportListViewTime']) && $_SESSION['lastHelpReplyTime']>$_SESSION['lastSupportListViewTime']) || 
 			    (!intval($_SESSION['lastSupportListViewTime']) && $_SESSION['lastHelpReplyTime']>UserInfo::getRemoteAuthTimestamp()) ){
-				
-				//echo 'NEW RESPONSE WAITING!!!'.(intval($_SESSION['lastHelpReplyTime'])-intval($_COOKIE['lastSupportListViewTime']));
-				$_SESSION['newHelpResponseWaiting']=1;
+				//echo 'TESTING: '.(intval($_SESSION['lastHelpReplyTime']).'-'.intval($_SESSION['lastSupportListViewTime']));
+				$_SESSION['newHelpResponseWaitingTime']=time();
 				return true;
 			}
 		}

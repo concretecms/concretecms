@@ -4,12 +4,9 @@ $responseData=$supportHelper->usersTickets();
 
 $_SESSION['newHelpResponseWaiting']=0;
 $lastSupportListViewTime=$_SESSION['lastSupportListViewTime'];
+//echo $_SESSION['newHelpResponseWaiting'].'<br>';
 $_SESSION['lastSupportListViewTime']=time();
-if(!$lastSupportListViewTime) $lastSupportListViewTime=time();
-
-//$_SESSION['lastHelpWaitingViewTime']=time();
-
-//echo 'save last help waiting view time, maybe in user object?';
+if(!$lastSupportListViewTime) $lastSupportListViewTime=time();  
 
 //var_dump($responseData);
 ?>

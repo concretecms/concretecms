@@ -98,7 +98,6 @@ ul#ccm-system-nav #ccm-nav-help {background-image: url(../images/icons/icon_head
 ul#ccm-system-nav #ccm-nav-help.ccm-nav-loading {background-position: center 8px !important}
 ul#ccm-system-nav #ccm-nav-logout {background-image: url(../images/icons/icon_header_logout.png); background-position: center 8px !important}
 
-
 div#ccm-page-detail {
 	position: absolute;
 	top: 49px;

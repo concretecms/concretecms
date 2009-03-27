@@ -119,6 +119,7 @@
 
 
 /* Help System */
+#ccm-supportWrap a { cursor:pointer }
 #ccm-supportWrap #answers{border:1px solid #999; height:300px; overflow:scroll; overflow-y:scroll; overflow-x:hidden}
 #ccm-supportWrap #answers a {color:inherit}
 #ccm-supportWrap #answers a .answer{border-bottom: 1px solid #ccc; padding:12px;}

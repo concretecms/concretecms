@@ -23,9 +23,11 @@ ul#ccm-system-nav li span {color: #cecece}
 ul#ccm-system-nav li:hover {background: #A2DAFD url(../images/bg_header_active.png) repeat-x scroll;}
 ul#ccm-system-nav a:hover {border-right: none; padding-right: 10px; color: #333}
 
+a.ccm-nav-loading {background-image: url(../images/icons/icon_header_loading.gif) !important;}
 ul#ccm-system-nav #ccm-nav-return {background-image: url(../images/dashboard/icon_return_to_website.png); background-position: 6px 14px !important}
 ul#ccm-system-nav #ccm-nav-logout {background-image: url(../images/dashboard/icon_logout.png); background-position: 5px 14px !important}
 ul#ccm-system-nav #ccm-nav-dashboard-help {background-image: url(../images/icons/icon_header_help.png); background-position: 6px 15px !important}
+ul#ccm-system-nav #ccm-nav-dashboard-help.ccm-nav-loading {background-position: 6px 14px !important}
 
 div#ccm-dashboard-nav {position: absolute; top: 45px; left: 0px; width: 200px; z-index: 2}
 div#ccm-dashboard-nav li {display: block; width: 200px; background: #ededed url(../images/dashboard/bg_nav.png) repeat-x scroll; border-bottom: 1px solid #e1e1e1}
