@@ -3,32 +3,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 $valt = Loader::helper('validation/token');
 
-if (isset($_POST['task'])) {
-	if ($_POST['task'] == 'install_blocktype') { 
-		if (isset($_POST['btID']) && $_POST['btID'] > 0) {
-			if ($_POST['pkgID']) {
-				$pkg = Package::getByID($_POST['pkgID']);
-				$resp = BlockType::installBlockTypeFromPackage($_POST['btHandle'], $pkg, $_POST['btID']);
-			} else {
-				$resp = BlockType::installBlockType($_POST['btHandle'], $_POST['btID']);
-			}
-		} else {
-			$resp = BlockType::installBlockType($_POST['btHandle']);
-		}
-	
-		if ($resp != '') {
-			$error[] = $resp;
-		} else {
-			$this->controller->redirect('/dashboard/install?bt_installed=1');
-		}
-		
-	}
-}
-
-if ($_REQUEST['bt_installed']) {
-	$message = t('Add-On Installed');
-}
-
 /* Load installed and available blocks and packages.
  */
 $ci = Loader::helper('concrete/urls');
@@ -47,14 +21,12 @@ ksort($availableArray);
 Loader::model('collection_attributes');
 $db = Loader::db();
 
-$isFeaturedKeyId = CollectionAttributeKey::getByHandle('is_featured_remotely');
-
 if(ENABLE_MARKETPLACE_SUPPORT){
 	$blocksHelper = Loader::helper('concrete/marketplace/blocks');
 
-	$featuredBlocks = $blocksHelper->getPreviewableList();
+	$purchasedBlocks = $blocksHelper->getPurchasesList();
 }else{
-    $featuredBlocks = array();
+    $purchasedBlocks = array();
 }
 
 ?>
@@ -101,11 +73,6 @@ function logoutSuccess() {
 			
 <? } else { ?>
 
-	<style>
-	.ccm-module form{ width:auto; height:auto; padding:0px; padding-bottom:10px; display:block; }
-	.ccm-module form div.ccm-dashboard-inner{ margin-bottom:0px !important; }
-	</style>
-
 	<div id="ccm-module-wrapper">
 	<div style="width: 778px">
 
@@ -131,9 +98,7 @@ function logoutSuccess() {
 				
 		<? } ?>
 
-		<? 
-		/*
-		if (count($pkgArray) == 0) { ?>
+		<?  /* if (count($pkgArray) == 0) { ?>
 			<p><?=t('No packages have been installed.')?></p>
 		<? } else { ?>
 		
@@ -168,16 +133,38 @@ function logoutSuccess() {
 		<? } ?>
 		<hr />
 
-		<? if (count($availableArray) == 0) { ?>
+	<? if (count($availableArray) == 0 && count($purchasedBlocks) == 0) { ?>
 
 		<?=t('Nothing is available to install.')?>
 	
-		<? } else { ?>
+	<? } else { ?>
 
-		<div style="margin:0px; padding:0px;  height:auto" >	
+		<div style="margin:0px; padding:0px;  height:auto">
+		<? foreach ($purchasedBlocks as $pb) {
+			$style = $pb->getRemoteIconURL() ? 'style="background-image: url('.$pb->getRemoteIconURL().')"' : ''; ?>
+			<div class="ccm-block-type">
+			<table width="100%">
+				<tr>
+					<td colspan="2"><p class="ccm-block-type-inner" <?=$style?>><?=$pb->btName?></p></td>
+				</tr>
+				<tr>
+					<td style="color: #aaa; padding: 2px 0 6px"><?=$pb->btDescription?></td>
+				<? $file = $pb->getRemoteFileURL();
+				   if (!empty($file))  { ?>
+					<td style="vertical-align: bottom"><?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getHandle()), "right");?></td>
+				<? } else { ?>
+					<td style="vertical-align: bottom"><?=$ch->button(t("Details"), $pb->getRemoteURL(), "right");?></td>
+				<? } ?>
+				</tr>
+			</table>
+			</div>
+		<? } ?>
+		</div>
+
+		<div style="margin:0px; padding:0px;  height:auto">
 		<?	foreach ($availableArray as $obj) { ?>
 			<div class="ccm-block-type">
-			<table>
+			<table width="100%">
 			<tr>
 			<td colspan="2">
 			<? if (get_class($obj) == "BlockType") { ?>

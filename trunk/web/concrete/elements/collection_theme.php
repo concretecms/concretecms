@@ -177,7 +177,7 @@ function loginSuccess() {
 								<ul id="ccm-select-marketplace-theme" style="width: <?=count($availableThemes) * 132?>px">			
 								<? foreach($availableThemes as $availableTheme){ ?>
 									<li class="themeWrap">
-										<a href="<?=View::url('/dashboard/install', 'remote_theme', $availableTheme->getHandle())?>" title="<?=t('Install theme')?>"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a>
+										<a href="<?=View::url('/dashboard/install', 'remote_theme', $availableTheme->getHandle())?>" title="<?=t('Download theme')?>"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a>
 											<a title="<?=t('Preview')?>" onclick="ccm_previewMarketplaceTheme(<?=$c->getCollectionID()?>, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" href="javascript:void(0)" class="preview">
 											<img src="<?=ASSETS_URL_IMAGES?>/icons/magnifying.png" alt="<?=t('Preview')?>" class="ccm-preview" /></a>
 										<div class="ccm-theme-name" ><a target="_blank" href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>

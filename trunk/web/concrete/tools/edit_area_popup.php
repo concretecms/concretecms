@@ -90,7 +90,7 @@ function logoutSuccess() {
 			?>	
 			<div class="ccm-block-type ccm-external-block-type">
 				<div class="ccm-block-type-inner"  style="background-image: url(<?=$btIcon?>)"?>
-					<?=$ch->button(t("Install"), View::url('/dashboard/install', 'remote_addon', $bt->getHandle()), "right");?>
+					<?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_addon', $bt->getHandle()), "right");?>
 					<div class="ccm-block-price"><? if ($bt->getPrice() == '0.00') { print t('Free'); } else { print '$' . $bt->getPrice(); } ?></div>
 					<?=$bt->getBlockTypeName()?>
 					<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeHandle()?>"><?=$bt->getBlockTypeDescription()?></div>
