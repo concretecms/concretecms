@@ -105,8 +105,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				
 				$bt = BlockType::getByID($b->getBlockTypeID());
 				$class = $bt->getBlockTypeClass();
+				if ($class == false) {
+					// we can't find the class file, so we return
+					return false;
+				}
+				
 				$b->instance = new $class($b);
-
+				
+				
 				if ($c != null || $a != null) {
 					$ca = new Cache();
 					$ca->set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);

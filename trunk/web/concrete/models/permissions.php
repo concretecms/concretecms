@@ -319,6 +319,7 @@ class Permissions extends Object {
 	}
 	
 	function canAddFileType($ext) {
+		$ext = strtolower($ext);
 		return (in_array($ext, $this->permissions['canAddFileTypes']));
 	}
 	
