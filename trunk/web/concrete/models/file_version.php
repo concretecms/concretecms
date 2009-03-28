@@ -282,6 +282,13 @@ class FileVersion extends Object {
 		return BASE_URL . $this->getRelativePath();	
 	}
 	
+	/** 
+	 * Returns a URL that can be used to download the file. This passes through the download_file single page.
+	 */
+	public function getDownloadURL() {
+		return BASE_URL . View::url('/download_file', $this->getFileID());
+	}
+	
 	public function getRelativePath() {
 		$f = Loader::helper('concrete/file');
 		$path = $f->getFileRelativePath($this->fvPrefix, $this->fvFilename );

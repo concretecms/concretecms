@@ -124,7 +124,7 @@ function logoutSuccess() {
 		<div class="ccm-dashboard-inner">
 
 		<? if (!UserInfo::isRemotelyLoggedIn()) { ?>
-			<p>You aren't currently signed in to the marketplace.</p>
+			<p><?=t('You are not currently signed in to the marketplace.')?></p>
 			<p><a href="#" onclick="ccmPopupLogin.show('', loginSuccess, '', 1)">Click here to sign in or create an account.</a></p>
 		<? } else { ?>
 			<p><?=t('You are currently signed in to the marketplace as');?>
