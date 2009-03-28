@@ -192,7 +192,7 @@ class DashboardInstallController extends Controller {
 			$action = 'installed';
         }
  
-		$msg = "The " . ($type == 'theme' ? 'themen' : 'add-on') . " '" . $item->getName() . "' was successfully $action.";
+		$msg = "The " . ($type == 'theme' ? 'theme' : 'add-on') . " '" . $item->getName() . "' was successfully $action.";
 		$this->set('message', $msg);
 	}
 
