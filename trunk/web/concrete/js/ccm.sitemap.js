@@ -241,23 +241,25 @@ rescanDisplayOrder = function(nodeID) {
 }
 
 var SITEMAP_LAST_DIALOGUE_URL='';
+var ccm_sitemap_html = '';
+
 parseTree = function(node, nodeID, deactivateSubNodes) { 
 
+	if (!node) {
+		return false;
+	}
+	
 	var container = $("#tree-root" + nodeID);
-	container.hide();
-	var outerhtml = '<div class="dropzone tree-dz' + nodeID + '" tree-parent="' + nodeID + '" id="tree-dz' + nodeID + '-sub"><\/div>';
-	container.html(outerhtml);
+	//container.hide();
+	ccm_sitemap_html += '<div class="dropzone tree-dz' + nodeID + '" tree-parent="' + nodeID + '" id="tree-dz' + nodeID + '-sub"><\/div>';
 	
 //	var moveableClass = 'moveable';
 	var moveableClass = '';
 	if (CCM_SITEMAP_MODE == 'move_copy_delete') {
 		var moveableClass = '';
 	}
-	
-	var html = '';
-	
+		
 	for (var i = 0; i < node.length; i++) {
-
 		var typeClass = 'tree-node-document';
 		var treeNodeType = 'document';
 		// var labelClass = (deactivateSubNodes) ? "tree-label-inactive" : "tree-label";
@@ -274,15 +276,19 @@ parseTree = function(node, nodeID, deactivateSubNodes) {
 		var cAlias = node[i].cAlias;
 		var canWrite = node[i].canWrite;
 
-		html += '<li tree-node-type="' + treeNodeType + '" class="tree-node ' + typeClass + ' tree-branch' + nodeID + '" id="tree-node' + node[i].id + '"' + customIconSrc + '>';
+		ccm_sitemap_html += '<li tree-node-type="' + treeNodeType + '" class="tree-node ' + typeClass + ' tree-branch' + nodeID + '" id="tree-node' + node[i].id + '"' + customIconSrc + '>';
 		if (node[i].numSubpages > 0 && (!deactivateSubNodes)) {
 			var subPageStr = (node[i].id == 1) ? '' : ' (' + node[i].numSubpages + ')';
-			html += '<img src="' + CCM_IMAGE_PATH + '/spacer.gif" width="16" height="16" class="handle ' + moveableClass + '" /><a href="javascript:toggleSub(' + node[i].id + ')"><img src="' + CCM_IMAGE_PATH + '/dashboard/plus.jpg" width="9" height="9" class="tree-plus" id="tree-collapse' + node[i].id + '" /><\/a><div rel="' + CCM_REL + '/index.php?cID=' + node[i].id + '" class="' + labelClass + '" tree-node-alias="' + cAlias + '" tree-node-canwrite="' + canWrite + '" tree-node-children="' + escape(node[i].numSubpages) + '" tree-node-title="' + escape(node[i].cvName) + '" id="tree-label' + node[i].id + '"><span>' + node[i].cvName + subPageStr + '</span><a class="ccm-tree-search-trigger" href="javascript:void(0)" onclick="searchSubPages(' + node[i].id + ')"><img src="' + CCM_IMAGE_PATH + '/icons/magnifying.png" /></a><\/div><form onsubmit="return searchSitemapNode(' + node[i].id + ')" id="ccm-tree-search' + node[i].id + '" class="ccm-tree-search"><a href="javascript:void(0)" onclick="closeSitemapSearch(' + node[i].id + ')" class="ccm-tree-search-close"><img src="' + CCM_IMAGE_PATH + '/icons/close.png" /></a><input type="text" name="submit" name="q" /> <a href="javascript:void(0)" onclick="searchSitemapNode(' + node[i].id + ')"><img src="' + CCM_IMAGE_PATH + '/icons/magnifying.png" /></a></form><ul tree-root-state="closed" id="tree-root' + node[i].id + '"><\/ul>';
+			ccm_sitemap_html += '<img src="' + CCM_IMAGE_PATH + '/spacer.gif" width="16" height="16" class="handle ' + moveableClass + '" /><a href="javascript:toggleSub(' + node[i].id + ')"><img src="' + CCM_IMAGE_PATH + '/dashboard/plus.jpg" width="9" height="9" class="tree-plus" id="tree-collapse' + node[i].id + '" /><\/a><div rel="' + CCM_REL + '/index.php?cID=' + node[i].id + '" class="' + labelClass + '" tree-node-alias="' + cAlias + '" tree-node-canwrite="' + canWrite + '" tree-node-children="' + escape(node[i].numSubpages) + '" tree-node-title="' + escape(node[i].cvName) + '" id="tree-label' + node[i].id + '"><span>' + node[i].cvName + subPageStr + '</span><a class="ccm-tree-search-trigger" href="javascript:void(0)" onclick="searchSubPages(' + node[i].id + ')"><img src="' + CCM_IMAGE_PATH + '/icons/magnifying.png" /></a><\/div><form onsubmit="return searchSitemapNode(' + node[i].id + ')" id="ccm-tree-search' + node[i].id + '" class="ccm-tree-search"><a href="javascript:void(0)" onclick="closeSitemapSearch(' + node[i].id + ')" class="ccm-tree-search-close"><img src="' + CCM_IMAGE_PATH + '/icons/close.png" /></a><input type="text" name="submit" name="q" /> <a href="javascript:void(0)" onclick="searchSitemapNode(' + node[i].id + ')"><img src="' + CCM_IMAGE_PATH + '/icons/magnifying.png" /></a></form><ul tree-root-state="closed" tree-root-node-id="' + node[i].id + '" id="tree-root' + node[i].id + '">';
+			if (tr_parseSubnodes) {
+				parseTree(node[i].subnodes, node[i].id, deactivateSubNodes);
+			}		
+			ccm_sitemap_html += '<\/ul>';
 		} else {
-			html += '<div tree-node-title="' + escape(node[i].cvName) + '" tree-node-children="' + escape(node[i].numSubpages) + '" class="' + labelClass + '" tree-node-alias="' + cAlias + '" tree-node-canwrite="' + canWrite + '" id="tree-label' + node[i].id + '" rel="' + CCM_REL + '/index.php?cID=' + node[i].id + '"><img src="' + CCM_IMAGE_PATH + '/spacer.gif" width="16" height="16" class="handle ' + moveableClass + '" /><span>' + node[i].cvName + '</span><\/div>';
+			ccm_sitemap_html += '<div tree-node-title="' + escape(node[i].cvName) + '" tree-node-children="' + escape(node[i].numSubpages) + '" class="' + labelClass + '" tree-node-alias="' + cAlias + '" tree-node-canwrite="' + canWrite + '" id="tree-label' + node[i].id + '" rel="' + CCM_REL + '/index.php?cID=' + node[i].id + '"><img src="' + CCM_IMAGE_PATH + '/spacer.gif" width="16" height="16" class="handle ' + moveableClass + '" /><span>' + node[i].cvName + '</span><\/div>';
 		}
-		html += '<\/li><div class="dropzone tree-dz' + nodeID + '" tree-parent="' + nodeID + '" id="tree-dz' + node[i].id + '"><\/div>';
-		
+		ccm_sitemap_html += '<\/li><div class="dropzone tree-dz' + nodeID + '" tree-parent="' + nodeID + '" id="tree-dz' + node[i].id + '"><\/div>';
+
 		if (node[i].selected == true) {
 			$("#tree-label" + node[i].id).addClass('tree-label-selected-onload');
 			if (CCM_SITEMAP_MODE == 'move_copy_delete') {
@@ -290,22 +296,17 @@ parseTree = function(node, nodeID, deactivateSubNodes) {
 			}
 		}
 		
-		if (node[i].subnodes && tr_parseSubnodes) {
-			parseTree(node[i].subnodes, node[i].id, deactivateSubNodes);
-		}		
-		
-		deactivateSubNodes = false;
 	}
  
-	container.attr('tree-root-state', 'open');
-	$("#tree-collapse" + nodeID).attr('src', CCM_IMAGE_PATH + '/dashboard/minus.jpg');
-	container.append(html);
+	container.html(ccm_sitemap_html);
 	
 	if (!tr_doAnim) {
 		container.show();
 	} else {
 		container.slideDown(300);
 	}
+	
+	//ccm_sitemap_html = '';
 	
 }
 
@@ -354,6 +355,17 @@ activateLabels = function() {
 	$('div.tree-label span').click(function(e) {
 		selectLabel(e, $(this).parent())
 	}); 
+	
+	// now we make sure that all the items that are open are registered as open
+	$("ul[tree-root-state=closed]").each(function() {
+		var container = $(this);
+		var nodeID = $(this).attr('tree-root-node-id');
+		if ($(this).find('li').length > 0) {
+			container.attr('tree-root-state', 'open');
+			$("#tree-collapse" + nodeID).attr('src', CCM_IMAGE_PATH + '/dashboard/minus.jpg');
+		}
+	});
+
 }
 
 moveCopyAliasNode = function(reloadPage) {
@@ -445,6 +457,7 @@ openSub = function(nodeID, onComplete) {
 	setLoading(nodeID);
 	var container = $("#tree-root" + nodeID);
 	cancelReorder();
+	ccm_sitemap_html = '';
 	$.getJSON(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?node=" + nodeID, function(resp) {
 		parseTree(resp, nodeID, false);	
 		activateLabels();
@@ -482,6 +495,7 @@ closeSub = function(nodeID) {
 		container.slideUp(300, function() {
 			removeLoading(nodeID);
 			container.attr('tree-root-state', 'closed');
+			container.html('');
 			$("#tree-collapse" + nodeID).attr('src', CCM_IMAGE_PATH + '/dashboard/plus.jpg');
 		});
 	} else {	
@@ -662,6 +676,7 @@ $(function() {
 		activateLabels();
 		tr_doAnim = true;
 		tr_parseSubnodes = false;
+		ccm_sitemap_html = '';
 		if (CCM_SITEMAP_MODE == 'move_copy_delete') {
 			$('.ccm-tree-search-trigger').show();
 		}

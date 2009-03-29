@@ -140,8 +140,7 @@ if ($successMessage) {
 	
 	<div class="ccm-buttons">
 	<? if ($_REQUEST['sitemap_mode'] == 'move_copy_delete') { ?>
-		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay.php?reveal=<?=$oc->getCollectionID()?>&sitemap_mode=<?=$_REQUEST['sitemap_mode']?>" id="ccm-exit-drag-request" title="<?=t('Choose Page')?>" class="ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
-		<script type="text/javascript">$(function() {tb_init('#ccm-exit-drag-request');})</script>
+		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" id="ccm-exit-drag-request" title="<?=t('Choose Page')?>" class="ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
 
 
 	<? } else { ?>
