@@ -253,9 +253,11 @@ parseTree = function(node, nodeID, deactivateSubNodes) {
 	if (CCM_SITEMAP_MODE == 'move_copy_delete') {
 		var moveableClass = '';
 	}
-		
+	
+	var html = '';
+	
 	for (var i = 0; i < node.length; i++) {
-		var html = "";
+
 		var typeClass = 'tree-node-document';
 		var treeNodeType = 'document';
 		// var labelClass = (deactivateSubNodes) ? "tree-label-inactive" : "tree-label";
@@ -281,10 +283,6 @@ parseTree = function(node, nodeID, deactivateSubNodes) {
 		}
 		html += '<\/li><div class="dropzone tree-dz' + nodeID + '" tree-parent="' + nodeID + '" id="tree-dz' + node[i].id + '"><\/div>';
 		
-		existingHTML = container.html();
-		container.html(existingHTML + html);
-		
-		
 		if (node[i].selected == true) {
 			$("#tree-label" + node[i].id).addClass('tree-label-selected-onload');
 			if (CCM_SITEMAP_MODE == 'move_copy_delete') {
@@ -301,6 +299,7 @@ parseTree = function(node, nodeID, deactivateSubNodes) {
  
 	container.attr('tree-root-state', 'open');
 	$("#tree-collapse" + nodeID).attr('src', CCM_IMAGE_PATH + '/dashboard/minus.jpg');
+	container.append(html);
 	
 	if (!tr_doAnim) {
 		container.show();
