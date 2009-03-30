@@ -926,10 +926,14 @@ var ccm_support = {
 		$('#ccm-supportWrap .ccm-throbber').css('display','none');
 	},
 	
+	helpIconOrigImg:'',
+	helpIconOrigClr:'',
 	helpPulse:function(){
 		var el=document.getElementById('ccm-nav-help');
-		if(!el) el=document.getElementById('ccm-nav-dashboard-help');
+		if(!el) el=document.getElementById('ccm-nav-dashboard-help'); 
 		el=$(el);
+		this.helpIconOrigClr=el.css('background-color');
+		
 		el.css('background-color','#fafafa');
 		el.animate({backgroundColor:"#ffa"},'','',function(){
 		}).animate({backgroundColor:"#fafafa"},'','',function(){
@@ -941,7 +945,7 @@ var ccm_support = {
 		}).animate({backgroundColor:"#fafafa"},'','',function(){
 		}).animate({backgroundColor:"#ffa"},'','',function(){			
 		}).animate({backgroundColor:"#fafafa"},'','',function(){
-			$(this).css('background-color','inherit')
+			$(this).css('background-color',ccm_support.helpIconOrigClr);	 
 		}); 		
 		//A2DAFD
 	}
