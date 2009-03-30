@@ -266,6 +266,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (file_exists(DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES)) {
 				$templates = array_merge($templates, $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES));
 			}
+			
+			/*
 			if ($pkgHandle != null) {
 				if (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) {
 					$templates = array_merge($templates, $fh->getDirectoryContents(DIR_PACKAGES . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES));
@@ -273,6 +275,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$templates = array_merge($templates, $fh->getDirectoryContents(DIR_PACKAGES_CORE . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES));
 				}
 			}
+			*/ 
 			
 			// NOW, we check to see if this btHandle has any custom templates that have been installed as separate packages
 			$pl = PackageList::get();
