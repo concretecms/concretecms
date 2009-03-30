@@ -27,6 +27,12 @@ if ($_POST['task'] == 'approve_version' && $fp->canWrite() && (!$previewMode)) {
 	exit;
 }
 
+if ($_POST['task'] == 'delete_version' && $fp->canAdmin() && (!$previewMode)) {
+	$fv->delete();
+	exit;
+}
+
+
 if ($_POST['task'] == 'update_core' && $fp->canWrite() && (!$previewMode)) {
 	$fv = $f->getVersionToModify();
 
@@ -325,7 +331,7 @@ if (!$previewMode) {
 					<? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?>
 						<td>&nbsp;</td>
 					<? } else { ?>
-						<td><a class="ccm-file-versions-remove" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/properties?fID=<?=$f->getFileID()?>&fvID=<?=$fvv->getFileVersionID()?>&task=delete_version"><?=t('Delete')?></a></td>
+						<td><a class="ccm-file-versions-remove" href="javascript:void(0)"><?=t('Delete')?></a></td>
 					<? } ?>
 				<? } ?>
 			</tr>	

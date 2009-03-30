@@ -336,6 +336,19 @@ ccm_alSetupVersionSelector = function() {
 			});
 		});
 	});
+	
+	$(".ccm-file-versions-remove").click(function() {
+		var trow = $(this).parent().parent();
+		var fID = trow.attr('fID');
+		var fvID = trow.attr('fvID');
+		var postStr = 'task=delete_version&fID=' + fID + '&fvID=' + fvID;
+		$.post(CCM_TOOLS_PATH + '/files/properties', postStr, function(resp) {
+			trow.fadeOut(200, function() {
+				trow.remove();
+			});
+		});
+		return false;
+	});
 }
 
 ccm_alDeleteFiles = function() {
