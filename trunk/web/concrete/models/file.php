@@ -6,6 +6,21 @@ class File extends Object {
 	const F_ERROR_INVALID_FILE = 1;
 	const F_ERROR_FILE_NOT_FOUND = 2;
 	
+	public function getByID($fID) {
+		Loader::model('file_set');
+		$db = Loader::db();
+		$f = new File();
+		$row = $db->GetRow("SELECT Files.*, FileVersions.fvID
+		FROM Files LEFT JOIN FileVersions on Files.fID = FileVersions.fID and FileVersions.fvIsApproved = 1
+		WHERE Files.fID = ?", array($fID));
+		if ($row['fID'] == $fID) {
+			$f->setPropertiesFromArray($row);
+		} else {
+			$f->error = File::F_ERROR_INVALID_FILE;
+		}
+		return $f;
+	}	
+	
 	/** 
 	 * For all methods that file does not implement, we pass through to the currently active file version object 
 	 */
@@ -126,20 +141,6 @@ class File extends Object {
 			$filesets[] = FileSet::getByID($fsID);
 		}
 		return $filesets;
-	}
-	public function getByID($fID) {
-		Loader::model('file_set');
-		$db = Loader::db();
-		$f = new File();
-		$row = $db->GetRow("SELECT Files.*, FileVersions.fvID
-		FROM Files LEFT JOIN FileVersions on Files.fID = FileVersions.fID and FileVersions.fvIsApproved = 1
-		WHERE Files.fID = ?", array($fID));
-		if ($row['fID'] == $fID) {
-			$f->setPropertiesFromArray($row);
-		} else {
-			$f->error = File::F_ERROR_INVALID_FILE;
-		}
-		return $f;
 	}
 	
 	public function isStarred($u = false) {
