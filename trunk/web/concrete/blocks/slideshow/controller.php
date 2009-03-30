@@ -133,10 +133,9 @@ class SlideshowBlockController extends BlockController {
 			$pos=0;
 			foreach($data['imgFIDs'] as $imgFID){ 
 				if(intval($imgFID)==0 || $data['fileNames'][$pos]=='tempFilename') continue;
-				$vals = array(intval($this->bID),intval($imgFID),$data['fileNames'][$pos],$data['origfileNames'][$pos],$data['thumbPaths'][$pos],
-						trim($data['url'][$pos]),intval($data['duration'][$pos]),intval($data['fadeDuration'][$pos]),
+				$vals = array(intval($this->bID),intval($imgFID), trim($data['url'][$pos]),intval($data['duration'][$pos]),intval($data['fadeDuration'][$pos]),
 						intval($data['groupSet'][$pos]),intval($data['imgHeight'][$pos]),$pos);
-				$this->db->query("INSERT INTO btSlideshowImg (bID,fID,fileName,origfileName,thumbPath,url,duration,fadeDuration,groupSet,imgHeight,position) values (?,?,?,?,?,?,?,?,?,?,?)",$vals);
+				$this->db->query("INSERT INTO btSlideshowImg (bID,fID,url,duration,fadeDuration,groupSet,imgHeight,position) values (?,?,?,?,?,?,?,?)",$vals);
 				$pos++;
 			}
 		}

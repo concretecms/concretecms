@@ -252,30 +252,21 @@ define('DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS', DIR_FILES_BLOCK_TYPES . '
 define('DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE', DIR_FILES_BLOCK_TYPES_CORE . '/external_form/forms');
 define('DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS_CORE', DIR_FILES_BLOCK_TYPES_CORE . '/external_form/forms/controllers');
 
-# Uploaded files 
-define('DIR_FILES_UPLOADED', DIR_BASE . '/files');
-define('DIR_FILES_INCOMING', DIR_BASE . '/files/incoming');
 define('REL_DIR_FILES_UPLOADED', DIR_REL . '/files');
+
 define('DIR_FILES_UPLOADED_THUMBNAILS', DIR_BASE . '/files/thumbnails');
 define('REL_DIR_FILES_UPLOADED_THUMBNAILS', DIR_REL . '/files/thumbnails');
 define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_BASE . '/files/thumbnails/level2');
 define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_REL . '/files/thumbnails/level2');
 define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_BASE . '/files/thumbnails/level3');
 define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_REL . '/files/thumbnails/level3');
-
-define('DIR_FILES_UPLOADED_ONSTATES', DIR_BASE . '/files/onstates');
-define('REL_DIR_FILES_UPLOADED_ONSTATES', DIR_REL . '/files/onstates');
-define('DIR_FILES_ORIGINALS', DIR_FILES_UPLOADED . '/originals');
-define('REL_DIR_FILES_ORIGINALS', DIR_REL . '/files/originals');
-define('DIR_FILES_ORIGINALS_ONSTATES', DIR_FILES_ORIGINALS . '/onstates');
-define('DIR_FILES_TRASH', DIR_FILES_UPLOADED . '/trash');
-
-# Cache
-define('DIR_FILES_CACHE', DIR_FILES_UPLOADED . '/cache');
-define('DIR_FILES_CACHE_DB', DIR_FILES_CACHE);
-define('DIR_FILES_CACHE_CORE', DIR_FILES_UPLOADED . '/cache_objects');
-define('DIR_FILES_CACHE_PAGES', DIR_FILES_CACHE . '/lucene.pages');
 define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED . '/cache');
+
+#Cache
+define('DIR_FILES_CACHE', DIR_BASE . '/files/cache');
+define('DIR_FILES_CACHE_DB', DIR_FILES_CACHE);
+define('DIR_FILES_CACHE_CORE', DIR_BASE . '/files/cache_objects');
+define('DIR_FILES_CACHE_PAGES', DIR_FILES_CACHE . '/lucene.pages');
 
 # Binaries used by the system
 # Currently unused
@@ -343,12 +334,11 @@ if (!defined('AVATAR_WIDTH') && !defined('AVATAR_HEIGHT')) {
 	define('AVATAR_HEIGHT', 80);
 }
 
-define('DIR_FILES_AVATARS', DIR_FILES_UPLOADED . '/avatars');
+define('DIR_FILES_AVATARS', DIR_BASE . '/files/avatars');
 define('REL_DIR_FILES_AVATARS', REL_DIR_FILES_UPLOADED . '/avatars');
 if (!defined('AVATAR_NONE')) {
 	define('AVATAR_NONE', ASSETS_URL_IMAGES . '/spacer.gif');
 }
-define('DIR_FILES_AVATARS_STOCK', DIR_FILES_UPLOADED . '/stock_avatars');
 define('REL_DIR_FILES_AVATARS_STOCK', REL_DIR_FILES_UPLOADED . '/stock_avatars');
 
 # CMS errors - this is legacy

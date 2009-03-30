@@ -24,18 +24,17 @@ var SlideshowBlock = {
 			$("#ccm-slideshowBlock-fsRow input[name=fsName]").attr("value", obj.fsName);
 			$("#ccm-slideshowBlock-fsRow .ccm-slideshowBlock-fsName").text(obj.fsName);
 		} else {
-			fileName = obj.filePathDirect.replace(/\/files\//, "");
-			thumbPath = "/files/thumbnails/" + fileName;
-			this.addNewImage(obj.fID,thumbPath,fileName,obj.height,obj.fileName);
+			this.addNewImage(obj.fID, obj.thumbnailLevel1, obj.height, obj.title);
 		}
 	},
 
 	addImages:0, 
-	addNewImage: function(fID, thumbPath, thumbName, imgHeight, origFileName) { 
+	addNewImage: function(fID, thumbPath, imgHeight, title) { 
 		this.addImages--; //negative counter - so it doesn't compete with real slideshowImgIds
 		var slideshowImgId=this.addImages;
 		var templateHTML=$('#imgRowTemplateWrap .ccm-slideshowBlock-imgRow').html().replace(/tempFID/g,fID);
-		templateHTML=templateHTML.replace(/tempFilename/g,thumbName).replace(/tempThumbPath/g,thumbPath).replace(/tempOrigFilename/g,origFileName);
+		templateHTML=templateHTML.replace(/tempThumbPath/g,thumbPath);
+		templateHTML=templateHTML.replace(/tempFilename/g,title);
 		templateHTML=templateHTML.replace(/tempSlideshowImgId/g,slideshowImgId).replace(/tempHeight/g,imgHeight);
 		var imgRow = document.createElement("div");
 		imgRow.innerHTML=templateHTML;

@@ -15,10 +15,16 @@ class DownloadFileController extends Controller {
 		if ($fID > 0) {
 			$file = File::getByID($fID);			
 			if ($file) {				
+				
+				$fp = new Permissions($file);
+				if (!$fp->canRead()) {
+					return false;
+				}
+				
 				// if block password is blank download
-				if (!$file->getPassword())
+				if (!$file->getPassword()) {
 					return $this->download($file);			
-						
+				}
 				// otherwise show the form
 				$this->set('fID', $fID);
 				$this->set('filename', $file->getFilename());
@@ -29,6 +35,11 @@ class DownloadFileController extends Controller {
 	
 	public function view_inline($fID) {
 		$file = File::getByID($fID);
+		$fp = new Permissions($file);
+		if (!$fp->canRead()) {
+			return false;
+		}
+		
 		$mimeType = $file->getMimeType();
 		header("Content-type: $mimeType");
 		$fc = Loader::helper('file');

@@ -96,6 +96,24 @@ class ConcreteUpgradeVersion520Helper {
 			$d3a = SinglePage::add('/dashboard/scrapbook/global');
 			$d3->update(array('cName'=>t('Scrapbook'), 'cDescription'=>t('Share content across your site.')));
 		}
+			
+		Loader::model('file_set');
+		Loader::model('groups');
+		
+		$htbt = BlockType::getByHandle('html');
+		if (!is_object($htbt)) {
+			BlockType::installBlockType('html');			
+		}
+		
+		$g1 = Group::getByID(GUEST_GROUP_ID);
+		$g2 = Group::getByID(REGISTERED_GROUP_ID);
+		$g3 = Group::getByID(ADMIN_GROUP_ID);
+		
+		$fs = FileSet::getGlobal();
+		$fs->setPermissions($g1, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE);
+		$fs->setPermissions($g2, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE);
+		$fs->setPermissions($g3, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL);
+
 
 		$p = Page::getByPath('/dashboard/reports/surveys');
 		if ($p->isError()) {

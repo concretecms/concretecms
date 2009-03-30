@@ -291,9 +291,13 @@ class FileVersion extends Object {
 	
 	public function getRelativePath() {
 		$f = Loader::helper('concrete/file');
-		$path = $f->getFileRelativePath($this->fvPrefix, $this->fvFilename );
+		if (ENABLE_ALTERNATE_DEFAULT_STORAGE == true) {
+			$path = BASE_URL . View::url('/download_file', 'view_inline', $this->getFileID());
+		} else {
+			$path = $f->getFileRelativePath($this->fvPrefix, $this->fvFilename );
+		}		
 		return $path;
-	}	
+	}
 	
 	public function getThumbnailPath($level) {
 		$f = Loader::helper('concrete/file');

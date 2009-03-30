@@ -56,9 +56,6 @@
 				array('ContentBlockController', 'replaceCollectionID'),				
 				$text);
 			
-			// now support for files
-			
-			
 			return $text;
 		}
 		

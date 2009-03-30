@@ -22,7 +22,6 @@ class InstallController extends Controller {
 			"BASE_URL"=>BASE_URL,
 			"DIR_FILES_UPLOADED"=>DIR_FILES_UPLOADED,
 			"DIR_FILES_UPLOADED_THUMBNAILS"=>DIR_FILES_UPLOADED_THUMBNAILS,
-			"DIR_FILES_UPLOADED_ONSTATES"=>DIR_FILES_UPLOADED_ONSTATES,
 			"DIR_FILES_TRASH"=>DIR_FILES_TRASH,
 			"DIR_FILES_CACHE"=>DIR_FILES_CACHE,
 			"DIR_FILES_CACHE_CORE"=>DIR_FILES_CACHE_CORE,
@@ -160,9 +159,6 @@ class InstallController extends Controller {
 				if (!is_dir($this->installData['DIR_FILES_UPLOADED_THUMBNAILS'])) {
 					mkdir($this->installData['DIR_FILES_UPLOADED_THUMBNAILS']);
 				}
-				if (!is_dir($this->installData['DIR_FILES_UPLOADED_ONSTATES'])) {
-					mkdir($this->installData['DIR_FILES_UPLOADED_ONSTATES']);
-				}
 				if (!is_dir($this->installData['DIR_FILES_TRASH'])) {
 					mkdir($this->installData['DIR_FILES_TRASH']);
 				}
@@ -216,9 +212,9 @@ class InstallController extends Controller {
 						// create the groups our site users
 						// have to add these in the right order so their IDs get set
 						// starting at 1 w/autoincrement
-						Group::add(t("Guest"), t("The guest group represents unregistered visitors to your site."));
-						Group::add(t("Registered Users"), t("The registered users group represents all user accounts."));
-						Group::add(t("Administrators"), "");
+						$g1 = Group::add(t("Guest"), t("The guest group represents unregistered visitors to your site."));
+						$g2 = Group::add(t("Registered Users"), t("The registered users group represents all user accounts."));
+						$g3 = Group::add(t("Administrators"), "");
 						
 						// Now the default site!
 						// Add our right nav page type
@@ -571,6 +567,12 @@ class InstallController extends Controller {
 						$jsData['fadeDuration'] = array(1, 1, 1, 1);
 						$example0Page->addBlock($jsBT, "Header", $jsData);
 						*/
+						
+						// File permissions
+						$fs = FileSet::getGlobal();
+						$fs->setPermissions($g1, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE);
+						$fs->setPermissions($g2, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE);
+						$fs->setPermissions($g3, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL);
 
 						// add sitemap page beneath examples page
 						$data['name'] = t('Sitemap');
