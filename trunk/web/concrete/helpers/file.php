@@ -88,7 +88,7 @@ class FileHelper {
 	 * Returns the full path to the temporary directory
 	 */
 	public function getTemporaryDirectory() {
-		if (function_exists('sys_get_temp_dir')) {
+		if (function_exists('sys_get_temp_dir') && (ini_get('open_basedir') == '')) {
 			return sys_get_temp_dir();
 		} else {
 			if (!empty($_ENV['TMP'])) { return realpath($_ENV['TMP']); }
