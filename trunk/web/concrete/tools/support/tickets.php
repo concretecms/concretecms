@@ -34,6 +34,7 @@ if(!$lastSupportListViewTime) $lastSupportListViewTime=time();
 			<tr class="header" >
 				<td><?=t('Question')?></td>
 				<td style="width:50px"><?=t('Replies')?></td>	
+				<td style="width:50px"><?=t('Status')?></td>	
 				<td style="width:100px"><?=t('Submitted')?></td>						
 			</tr>
 			
@@ -49,6 +50,7 @@ if(!$lastSupportListViewTime) $lastSupportListViewTime=time();
 					</div>
 				</td>
 				<td><?= $ticket->replies ?></td>
+				<td><?= $ticket->status ?></td>
 				<td><?=date("M d, Y", strtotime($ticket->date))?></td>				
 			</tr>
 			<? } ?>
