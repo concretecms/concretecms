@@ -265,6 +265,22 @@ class FileVersion extends Object {
 		$db->Execute("update FileVersions set fvIsApproved = 0 where fID = ? and fvID = ?", array($this->getFileID(), $this->getFileVersionID()));
 	}
 	
+	/** 
+	 * Removes a version of a file
+	 */
+	public function delete() {
+		// first, we remove all files from the drive
+		if ($this->fvIsApproved == 1) {
+			return false; // can only delete non-live files
+		}
+		
+		$db = Loader::db();
+		// now from the DB
+		$db->Execute("delete from FileVersions where fID = ? and fvID = ?", array($this->fID, $this->fvID));
+		$db->Execute("delete from FileAttributeValues where fID = ? and fvID = ?", array($this->fID, $this->fvID));
+		$db->Execute("delete from FileVersionLog where fID = ? and fvID = ?", array($this->fID, $this->fvID));
+	}
+	
 	
 	/** 
 	 * Returns a full filesystem path to the file on disk.
