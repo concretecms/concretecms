@@ -80,10 +80,18 @@
 	<div class="ccm-dashboard-inner">
 		<form method="post" id="file-storage" action="<?=$this->url('/dashboard/files/access', 'file_storage')?>">
 			<?=$validation_token->output('file_storage');?>
-			<h2><?=t('Standard Upload Directory')?></h2>
+			<h2><?=t('Standard File Location')?></h2>
 			<p><?=t('Enter the directory where files will be stored on this server by default.')?></p>
-			<?=$form->textarea('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED, array('rows'=>'2','style' => 'width:270px'))?>
+			<?=$form->textarea('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED, array('rows'=>'2','style' => 'width:280px'))?>
 			<div class="ccm-spacer">&nbsp;</div><br/>
+			
+			<h2><?=t('Alternate Storage Directory')?></h2>
+			<p><?=t('Enter the name and path of an optional, additional location for file storage.')?></p>
+			
+			<label for="alternate_storage_directory_name"><strong><?=t('Location Name')?></strong></label>
+			<?=$form->text('fslName', $fslName, array('style' => 'width:270px'))?>
+			<label for="alternate_storage_directory_name"><strong><?=t('Path')?></strong></label>
+			<?=$form->textarea('fslDirectory', $fslDirectory, array('rows' => '2', 'style' => 'width:280px'))?>
 			<?php		
 				$b1 = $concrete_interface->submit(t('Save'), 'file-storage');
 				print $concrete_interface->buttons($b1);

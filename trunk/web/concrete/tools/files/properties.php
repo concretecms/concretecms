@@ -199,6 +199,20 @@ $("#ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?> ul
 	<td colspan="2"><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $f->getDateAdded())?></td>
 </tr>
 <?
+Loader::model("file_storage_location");
+$fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
+if (is_object($fsl)) {
+	if ($f->getStorageLocationID() == 0) {
+		$sli = t('Default Location') . ' <span style="color: #afafaf">(' . DIR_FILES_UPLOADED . ')</span>';
+	} else {
+		$sli = $fsl->getName() . ' <span style="color: #afafaf">(' . $fsl->getDirectory() . ')</span>';;
+	}
+} ?>
+<tr>
+	<th><?=t('Location')?></th>
+	<td colspan="2"><?=$sli?></td>
+</tr>
+<?
 printCorePropertyRow(t('Title'), 'fvTitle', $fv->getTitle(), $form->text('fvTitle', $fv->getTitle()));
 printCorePropertyRow(t('Description'), 'fvDescription', $fv->getDescription(), $form->textarea('fvDescription', $fv->getDescription()));
 printCorePropertyRow(t('Tags'), 'fvTags', $fv->getTags(), $form->textarea('fvTags', $fv->getTags()));

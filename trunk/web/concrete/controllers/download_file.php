@@ -41,9 +41,9 @@ class DownloadFileController extends Controller {
 		}
 		
 		$mimeType = $file->getMimeType();
-		header("Content-type: $mimeType");
 		$fc = Loader::helper('file');
 		$contents = $fc->getContents($file->getPath());
+		header("Content-type: $mimeType");
 		print $contents;
 		exit;
 	}

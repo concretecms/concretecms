@@ -271,7 +271,13 @@ class FileVersion extends Object {
 	 */
 	public function getPath() {
 		$f = Loader::helper('concrete/file');
-		$path = $f->getSystemPath($this->fvPrefix, $this->fvFilename);
+		if ($this->fslID > 0) {
+			Loader::model('file_storage_location');
+			$fsl = FileStorageLocation::getByID($this->fslID);
+			$path = $f->mapSystemPath($this->fvPrefix, $this->fvFilename, false, $fsl->getDirectory());
+		} else {
+			$path = $f->getSystemPath($this->fvPrefix, $this->fvFilename);
+		}
 		return $path;
 	}
 	
@@ -291,7 +297,7 @@ class FileVersion extends Object {
 	
 	public function getRelativePath() {
 		$f = Loader::helper('concrete/file');
-		if (ENABLE_ALTERNATE_DEFAULT_STORAGE == true) {
+		if ($this->fslID > 0) {
 			$path = BASE_URL . View::url('/download_file', 'view_inline', $this->getFileID());
 		} else {
 			$path = $f->getFileRelativePath($this->fvPrefix, $this->fvFilename );

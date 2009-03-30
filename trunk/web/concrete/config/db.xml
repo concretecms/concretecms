@@ -651,6 +651,19 @@
       <UNSIGNED/>
     </field>
   </table>
+  <table name="FileStorageLocations">
+    <field name="fslID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fslName" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="fslDirectory" type="C" size="255">
+      <NOTNULL/>
+    </field>
+  </table>
   <table name="Files">
     <field name="fID" type="I" size="10">
       <KEY/>
@@ -659,6 +672,11 @@
     </field>
     <field name="fDateAdded" type="T"/>
     <field name="uID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fslID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>

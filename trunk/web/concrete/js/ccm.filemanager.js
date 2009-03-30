@@ -163,6 +163,16 @@ ccm_alSubmitPasswordForm = function() {
 	});
 }
 
+ccm_alSubmitStorageForm = function() {
+	ccm_deactivateSearchResults();
+	$("#ccm-file-storage-form").ajaxSubmit(function(resp) {
+		jQuery.fn.dialog.closeTop();
+		$(".ccm-dashboard-file-search").ajaxSubmit(function(resp) {
+			ccm_alParseSearchResponse(resp);
+		});
+	});
+}
+
 ccm_alSubmitPermissionsForm = function() {
 	ccm_deactivateSearchResults();
 	$("#ccm-file-permissions-form").ajaxSubmit(function(resp) {
