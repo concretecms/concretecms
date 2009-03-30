@@ -161,6 +161,25 @@ class DashboardFilesAccessController extends Controller {
 		$this->set('message', t('Global Permissions saved.'));
 		$this->view();
 	}
+
+	public function storage_saved() {
+		$this->set('message', t('File storage locations saved.'));
+		$this->view();
+	}
+
+	public function file_storage(){
+		$helper_file = Loader::helper('concrete/file');
+		$validation_token = Loader::helper('validation/token');
+		
+		if (!$validation_token->validate("file_storage")) {
+			$this->set('error', array($validation_token->getErrorMessage()));
+			return;
+		}
+		
+		Config::save('DIR_FILES_UPLOADED', $this->post('DIR_FILES_UPLOADED'));
+		$this->redirect('/dashboard/files/access','storage_saved');
+	}
+	
 	
 	public function file_access_extensions(){
 		$helper_file = Loader::helper('concrete/file');

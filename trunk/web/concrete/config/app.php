@@ -69,6 +69,21 @@ if (URL_REWRITING_ALL == true) {
 define('REL_DIR_FILES_TOOLS_BLOCKS', REL_DIR_FILES_TOOLS . '/blocks'); // this maps to the /tools/ directory in the blocks subdir
 define('REL_DIR_FILES_TOOLS_PACKAGES', REL_DIR_FILES_TOOLS . '/packages'); 
 
+# File settings
+if (!defined('DIR_FILES_UPLOADED')) {
+	Config::getOrDefine('DIR_FILES_UPLOADED', DIR_BASE . '/files');
+}
+
+define('DIR_FILES_TRASH', DIR_FILES_UPLOADED . '/trash');
+define('DIR_FILES_INCOMING', DIR_FILES_UPLOADED . '/incoming');
+define('DIR_FILES_AVATARS_STOCK', DIR_FILES_UPLOADED . '/stock_avatars');
+
+if (DIR_FILES_UPLOADED != DIR_BASE . '/files') {
+	define('ENABLE_ALTERNATE_DEFAULT_STORAGE', true);
+} else {
+	define('ENABLE_ALTERNATE_DEFAULT_STORAGE', false);
+}
+
 # User & Registration Settings
 
 if (!defined('ENABLE_OPENID_AUTHENTICATION')) { 

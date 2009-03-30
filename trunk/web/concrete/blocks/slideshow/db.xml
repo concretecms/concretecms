@@ -20,9 +20,6 @@
 		</field>
 		<field name="bID" type="I"><unsigned /></field>
 		<field name="fID" type="I"><unsigned /></field>		
-		<field name="fileName" type="C" size="255"></field>
-		<field name="origfileName" type="C" size="255"></field>
-		<field name="thumbPath" type="C" size="255"></field>
 		<field name="url" type="C" size="255"></field>
 		<field name="duration" type="I"><unsigned /></field>
 		<field name="fadeDuration" type="I"><unsigned /></field>

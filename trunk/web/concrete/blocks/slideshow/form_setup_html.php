@@ -44,11 +44,17 @@ $ah = Loader::helper('concrete/interface');
 <br/>
 
 <div id="ccm-slideshowBlock-imgRows">
-<? if ($fsID <= 0) { ?>
-<?   foreach($images as $imgInfo){ ?> 
-<?     $this->inc('image_row_include.php', array('imgInfo' => $imgInfo)); ?> 
-<?   } ?>
-<? } ?>
+<? if ($fsID <= 0) {
+	foreach($images as $imgInfo){ 
+		$f = File::getByID($imgInfo['fID']);
+		$fp = new Permissions($f);
+		$imgInfo['thumbPath'] = $f->getThumbnailSRC(1);
+		$imgInfo['fileName'] = $f->getTitle();
+		if ($fp->canRead()) { 
+			$this->inc('image_row_include.php', array('imgInfo' => $imgInfo));
+		}
+	}
+} ?>
 </div>
 
 <?

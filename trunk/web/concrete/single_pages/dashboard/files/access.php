@@ -67,13 +67,30 @@
 			Separate extensions with commas. Periods and spaces will be
 			ignored.')?>
 			</p>
-			<?=$form->textarea('file-access-file-types',$file_access_file_types,array('rows'=>'20','style'=>'width:100%'));?>
+			<?=$form->textarea('file-access-file-types',$file_access_file_types,array('rows'=>'5','style'=>'width:100%'));?>
+			<div class="ccm-spacer">&nbsp;</div><br/>
 			<?php		
 				$b1 = $concrete_interface->submit(t('Save'), 'file-access-extensions');
 				print $concrete_interface->buttons($b1);
 			?>		
 		</form>
 	</div>
+	<br/>
+	<h1><span><?=t('File Storage')?></span></h1>
+	<div class="ccm-dashboard-inner">
+		<form method="post" id="file-storage" action="<?=$this->url('/dashboard/files/access', 'file_storage')?>">
+			<?=$validation_token->output('file_storage');?>
+			<h2><?=t('Standard Upload Directory')?></h2>
+			<p><?=t('Enter the directory where files will be stored on this server by default.')?></p>
+			<?=$form->textarea('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED, array('rows'=>'2','style' => 'width:270px'))?>
+			<div class="ccm-spacer">&nbsp;</div><br/>
+			<?php		
+				$b1 = $concrete_interface->submit(t('Save'), 'file-storage');
+				print $concrete_interface->buttons($b1);
+			?>		
+		</form>
+	</div>
+
 </div>
 
 
