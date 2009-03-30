@@ -23,6 +23,34 @@ class File extends Object {
 		return $this->fPassword;
 	}
 	
+	public function getStorageLocationID() {
+		return $this->fslID;
+	}
+	
+	public function setStorageLocation($item) {
+		if ($item == 0) {
+			// set to default
+			$itemID = 0;
+			$path = DIR_FILES_UPLOADED;
+		} else {
+			$itemID = $item->getID();
+			$path = $item->getDirectory();
+		}
+		
+		if ($itemID != $this->getStorageLocationID()) {
+			// retrieve all versions of a file and move its stuff
+			$list = $this->getVersionList();
+			$fh = Loader::helper('concrete/file');
+			foreach($list as $fv) {
+				$newPath = $fh->mapSystemPath($fv->getPrefix(), $fv->getFileName(), true, $path);
+				$currPath = $fv->getPath();
+				rename($currPath, $newPath);
+			}			
+			$db = Loader::db();
+			$db->Execute('update Files set fslID = ? where fID = ?', array($itemID, $this->fID));
+		}
+	}
+	
 	public function setPassword($pw) {
 		$db = Loader::db();
 		$db->Execute("update Files set fPassword = ? where fID = ?", array($pw, $this->getFileID()));
@@ -298,6 +326,7 @@ class File extends Object {
 		$row['fvAuthorName'] = $db->GetOne("select uName from Users where uID = ?", array($row['fvAuthorUID']));
 		
 		$fv = new FileVersion();
+		$row['fslID'] = $this->fslID;
 		$fv->setPropertiesFromArray($row);
 		$fv->populateAttributes();
 		

@@ -16,6 +16,20 @@ if ($_POST['task'] == 'set_password') {
 	exit;
 }
 
+
+Loader::model('file_storage_location');
+if ($_POST['task'] == 'set_location') {
+	if ($_POST['fslID'] == 0) {
+		$f->setStorageLocation(0);
+	} else {
+		$fsl = FileStorageLocation::getByID($_POST['fslID']);
+		if (is_object($fsl)) {
+			$f->setStorageLocation($fsl);
+		}
+	}
+	exit;
+}
+
 if ($_POST['task'] == 'set_advanced_permissions') { 
 	if ($_POST['fRevertToSetPermissions'] == '1') {
 		$f->resetPermissions(0);
@@ -46,10 +60,15 @@ if ($_POST['task'] == 'set_advanced_permissions') {
 }
 ?>
 
-<ul class="ccm-dialog-tabs" id="ccm-file-permissions-tabs" style="display:<?=($_REQUEST['addOnly']!=1)?'block':'none'?>">
-	<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-file-permissions-advanced"><?=t('Permissions')?></a></li>
-	<li><a href="javascript:void(0)" id="ccm-file-password"><?=t('Protect with Password')?></a></li>
+<ul class="ccm-dialog-tabs" id="ccm-file-permissions-tabs">
+	<? if (PERMISSIONS_MODEL != 'simple') { ?>
+		<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-file-permissions-advanced"><?=t('Permissions')?></a></li>
+	<? } ?>
+	<li <? if (PERMISSIONS_MODEL == 'simple') { ?> class="ccm-nav-active" <? } ?>><a href="javascript:void(0)" id="ccm-file-password"><?=t('Protect with Password')?></a></li>
+	<li><a href="javascript:void(0)" id="ccm-file-storage"><?=t('Storage Location')?></a></li>
 </ul>
+
+<? if (PERMISSIONS_MODEL != 'simple') { ?>
 
 <div id="ccm-file-permissions-advanced-tab">
 
@@ -166,8 +185,9 @@ $uArray = $ul->getUserInfoList();
 </form>
 
 </div>
+<? } ?>
 
-<div id="ccm-file-password-tab" style="display: none">
+<div id="ccm-file-password-tab" <? if (PERMISSIONS_MODEL != 'simple') { ?> style="display: none" <? } ?>>
 <br/>
 
 <h2><?=t('Requires Password to Access')?></h2>
@@ -188,11 +208,42 @@ $uArray = $ul->getUserInfoList();
 
 </div>
 
+<div id="ccm-file-storage-tab" style="display: none">
+
+<br/>
+
+<h2><?=t('Choose File Storage Location')?></h2>
+
+<form method="post" id="ccm-file-storage-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions/">
+<?=$form->hidden('task', 'set_location')?>
+<?=$form->hidden('fID', $f->getFileID())?>
+<div><?=$form->radio('fslID', 0, $f->getStorageLocationID()) ?> <?=t('Default Location')?> (<?=DIR_FILES_UPLOADED?>)</div>
+
+<?
+$fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
+if (is_object($fsl)) { ?>
+	<div><?=$form->radio('fslID', FileStorageLocation::ALTERNATE_ID, $f->getStorageLocationID()) ?> <?=$fsl->getName()?> (<?=$fsl->getDirectory()?>)</div>
+<? } ?>
+</form>
+
+<div class="ccm-spacer">&nbsp;</div>
+<?=$ih->button_js(t('Save Location'), 'ccm_alSubmitStorageForm()')?>
+<div class="ccm-spacer">&nbsp;</div>
+
+<br/>
+<div class="ccm-note"><?=t('All versions of a file will be moved to the selected location.')?></div>
+
+
+
+</div>
 
 <script type="text/javascript">
 	
-
-var ccm_fpActiveTab = "ccm-file-permissions-advanced";
+<? if (PERMISSIONS_MODEL == 'simple') { ?>
+	var ccm_fpActiveTab = "ccm-file-password";
+<? } else { ?>
+	var ccm_fpActiveTab = "ccm-file-permissions-advanced";
+<? } ?>
 
 $("#ccm-file-permissions-tabs a").click(function() {
 	$("li.ccm-nav-active").removeClass('ccm-nav-active');

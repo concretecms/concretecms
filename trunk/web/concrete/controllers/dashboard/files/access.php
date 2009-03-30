@@ -18,6 +18,13 @@ class DashboardFilesAccessController extends Controller {
 		$file_access_file_types = join(', ',$file_access_file_types);		
 		$this->set('file_access_file_types', $file_access_file_types);		
 		
+		Loader::model('file_storage_location');
+		$fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
+		if (is_object($fsl)) {
+			$this->set('fslName', $fsl->getName());
+			$this->set('fslDirectory', $fsl->getDirectory());
+		}
+		
 		switch ($updated) {
 			case 'extensions-saved':
 				$this->set('message',t('Changes Saved'));
@@ -177,6 +184,17 @@ class DashboardFilesAccessController extends Controller {
 		}
 		
 		Config::save('DIR_FILES_UPLOADED', $this->post('DIR_FILES_UPLOADED'));
+
+		if ($this->post('fslName') != '' && $this->post('fslDirectory') != '') {
+			Loader::model('file_storage_location');
+			$fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
+			if (!is_object($fsl)) {
+				FileStorageLocation::add($this->post('fslName'), $this->post('fslDirectory'), FileStorageLocation::ALTERNATE_ID);
+			} else {
+				$fsl->update($this->post('fslName'), $this->post('fslDirectory'));
+			}			
+		}
+
 		$this->redirect('/dashboard/files/access','storage_saved');
 	}
 	

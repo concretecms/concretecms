@@ -72,7 +72,7 @@
 			return $this->mapSystemPath($prefix, $filename, $createDirectories, $base);
 		}
 		
-		private function mapSystemPath($prefix, $filename, $createDirectories = false, $base = DIR_FILES_UPLOADED) {
+		public function mapSystemPath($prefix, $filename, $createDirectories = false, $base = DIR_FILES_UPLOADED) {
 			if ($prefix == null) {
 				$path = $base . '/' . $filename;
 			} else {
