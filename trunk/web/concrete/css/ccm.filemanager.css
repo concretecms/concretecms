@@ -15,27 +15,29 @@ table#ccm-file-list tr th.ccm-results-list-active-sort-asc a {background: #efefe
 table#ccm-file-list tr.ccm-file-list-alt td {background-color: #ECFBFF}
 table#ccm-file-list tr.ccm-file-list-record:hover td {cursor: pointer;background-color: #DDECF0 !important}
 
-div#ccm-file-list-wrapper div.ccm-paging-top {padding-top: 5px}
-div.ccm-file-list-thumbnail {text-align: center; height: 70px; width: 70px; border: 4px solid #dedede; -moz-border-radius: 6px; -webkit-border-radius: 6px; position: relative}
-div.ccm-file-list-thumbnail-image img {position:absolute; top:0; bottom:0; left: 0px; right: 0px; margin:auto;}
+div#ccm-file-list-wrapper div.ccm-paging-top { padding-top: 5px; position:static }
+div.ccm-file-list-thumbnail {text-align: center; height: 70px; width: 70px; border: 4px solid #dedede; -moz-border-radius: 6px; -webkit-border-radius: 6px; /* position: relative; top:0px; left:0px; */}
+div.ccm-file-list-thumbnail-image{ background-position:center; background-repeat:no-repeat; margin:auto; height:70px; width:70px }
+div.ccm-file-list-thumbnail-image img { /*position:absolute; top:0; bottom:0; left: 0px; right: 0px;*/ margin:auto;}
 
-img#ccm-file-search-loading {position: absolute;top: 0px;right: 0px;display: none}
+img#ccm-file-search-loading { /*position: absolute;top: 0px;right: 0px;*/display: none; float:right; }
 
 div.ccm-file-list-thumbnail-hover div {display: none;z-index: 105;position: absolute;top: 0px;left: 0px;border: 1px dotted #aaa;padding: 8px;background-color: #fff}
 div#ccm-file-list-none { font-weight: bold}
 
 /* advanced search */
-div#ccm-file-manager-advanced {display: table;width: 100%; font-size: 11px}
+table#ccm-file-manager-table {width:100%}
+table#ccm-file-manager-table td{ vertical-align:top }
+div#ccm-file-manager-advanced {display: block; width: 100%; font-size: 11px; padding:0px; margin:0px; height:auto; overflow:hidden }
 div#ccm-file-manager-advanced h2 {margin-bottom: 0px}
-div#ccm-file-search-advanced-fields {display: table-cell;border: 1px solid #ddd;padding: 8px;width:210px;min-width: 210px;background:#fafafa;}
-div#ccm-file-search-advanced-fields-gutter {display: block;width: 10px}
-div#ccm-file-search-advanced-results-wrapper {display: table-cell; width: 100%}
+div#ccm-file-search-advanced-fields {display: block;border: 1px solid #ddd;padding: 8px; width:auto; background:#fafafa; margin-right:10px; min-width:210px}
+/* div#ccm-file-search-advanced-fields-gutter {display: block;width: 10px} */
+div#ccm-file-search-advanced-results-wrapper {display: block; width: 100%; /* position: relative */}
 
 div#ccm-file-search-advanced-fields div, div#ccm-sitemap-search td {font-size: 10px !important}
 div#ccm-file-search-advanced-fields-inner {padding-top: 4px}
-div#ccm-file-search-advanced-fields div.ccm-file-search-field {margin-bottom:8px}
-div#ccm-file-search-advanced-results-wrapper {position: relative}
-div#ccm-file-list-wrapper div.ccm-pagination {font-size: 14px;margin-top: 12px;margin-bottom: 12px}
+div#ccm-file-search-advanced-fields div.ccm-file-search-field {margin-bottom:8px} 
+div#ccm-file-list-wrapper div.ccm-pagination {font-size: 14px;margin-top: 12px;margin-bottom: 12px; }
 
 div#ccm-file-search-field-base {display: none}
 div#ccm-file-search-results em.ccm-highlight-search {background-color: #FFF9BB;padding: 4px;font-weight: bold;font-style: normal}
@@ -60,7 +62,7 @@ div.ccm-file-access-extensions {border: 1px solid #cecece; padding: 4px; height:
 
 
 /* add asset */
-div#ccm-files-add-asset {float: right; padding-right: 20px; font-size: 11px; z-index: 10; position: relative}
+div#ccm-files-add-asset {float: right; padding-right: 20px; font-size: 11px; z-index: 10; /* position: relative */ }
 div#ccm-files-add-asset h3 {float: left;margin-right: 4px;margin-top: 0px; padding-top: 4px; font-size: 11px}
 div#ccm-files-add-asset form {float: left}
 div#ccm-files-add-asset a {float: left;margin-left: 4px;margin-top: 4px}
