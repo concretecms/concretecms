@@ -115,7 +115,7 @@ hideBranch = function(nodeID) {
 
 cancelReorder = function() {
 	if (tr_reorderMode) {
-		$('img.handle').removeClass('moveable');
+		//$('img.handle').removeClass('moveable');
 		tr_reorderMode = false;
 		$('li.tree-node').draggable('destroy');
 		if (!tr_moveCopyMode) {
@@ -154,7 +154,6 @@ searchSubPages = function(cID) {
 activateReorder = function(cID) {
 	tr_reorderMode = true;
 	
-	$('img.handle').addClass('moveable');
 	/*
 	
 	$('div.tree-label').droppable({
@@ -299,6 +298,38 @@ parseTree = function(node, nodeID, deactivateSubNodes) {
 	}
  
 	container.html(ccm_sitemap_html);
+
+	if (CCM_SITEMAP_MODE == 'full') {
+		
+		//drop onto a page
+		$('li.tree-branch' + nodeID + ' div.tree-label').droppable({
+			accept: '.tree-node',
+			hoverClass: 'on-drop',
+			drop: function(e, ui) {
+				var orig = ui.draggable;
+				var destCID = $(this).attr('id').substring(10);
+				var origCID = $(orig).attr('id').substring(9);
+				if(destCID==origCID) return false;
+				var dialog_url=CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request.php?origCID=' + origCID + '&destCID=' + destCID;
+				//prevent window from opening twice
+				if(SITEMAP_LAST_DIALOGUE_URL==dialog_url) return false;
+				else SITEMAP_LAST_DIALOGUE_URL=dialog_url;
+				$.fn.dialog.open({
+					title: ccmi18n_sitemap.moveCopyPage,
+					href: dialog_url,
+					width: 350,
+					modal: false,
+					height: 350, 
+					onClose: function() {
+						showBranch(origCID);
+					}
+				});
+				hideBranch(origCID);
+			}
+		}); 
+		
+		//addResortDroppable(nodeID);		
+	}
 	
 	if (!tr_doAnim) {
 		container.show();
@@ -365,6 +396,23 @@ activateLabels = function() {
 			$("#tree-collapse" + nodeID).attr('src', CCM_IMAGE_PATH + '/dashboard/minus.jpg');
 		}
 	});
+
+	if (CCM_SITEMAP_MODE == 'full') {
+		$('img.handle').addClass('moveable');
+
+		$('li.tree-node').draggable({
+			handle: 'img.handle',
+			opacity: 0.5,
+			revert: false,
+			helper: 'clone',
+			start: function() {
+				$(document.body).css('overflowX', 'hidden');
+			},
+			stop: function() {
+				$(document.body).css('overflowX', 'auto');
+			}
+		});
+	}
 
 }
 

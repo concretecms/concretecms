@@ -15,6 +15,7 @@ class PageList extends DatabaseItemList {
 	private $includeSystemPages = false;
 	private $displayOnlyPermittedPages = false;
 	private $systemPagesToExclude = array('login.php', 'register.php', 'download_file.php', 'profile/%', 'dashboard/%');
+	private $filterByCParentID = 0;
 	
 	/* magic method for filtering by page attributes. */
 	
@@ -101,6 +102,7 @@ class PageList extends DatabaseItemList {
 	 * @param mixed $cParentID
 	 */
 	public function filterByParentID($cParentID) {
+		$this->filterByCParentID = $cParentID;
 		$this->filter('p1.cParentID', $cParentID);
 	}
 	
@@ -167,6 +169,9 @@ class PageList extends DatabaseItemList {
 	}
 	
 	protected function setupSystemPagesToExclude() {
+		if ($this->filterByCParentID > 1) {
+			return false;
+		}
 		$cIDs = Cache::get('page_list_exclude_ids', false);
 		if ($cIDs == false) {
 			$db = Loader::db();
