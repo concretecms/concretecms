@@ -7,6 +7,8 @@ if (!ini_get('safe_mode')) {
 }
 define('ENABLE_CACHE', false);
 define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.jpg;');
+define('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED_STANDARD);
+define('DIR_FILES_TRASH', DIR_FILES_TRASH_STANDARD);
 
 class InstallController extends Controller {
 
@@ -20,9 +22,9 @@ class InstallController extends Controller {
 			"DIR_BASE"=>DIR_BASE,
 			"DIR_REL"=>DIR_REL,
 			"BASE_URL"=>BASE_URL,
-			"DIR_FILES_UPLOADED"=>DIR_FILES_UPLOADED,
+			"DIR_FILES_UPLOADED"=>DIR_FILES_UPLOADED_STANDARD,
 			"DIR_FILES_UPLOADED_THUMBNAILS"=>DIR_FILES_UPLOADED_THUMBNAILS,
-			"DIR_FILES_TRASH"=>DIR_FILES_TRASH,
+			"DIR_FILES_TRASH"=>DIR_FILES_TRASH_STANDARD,
 			"DIR_FILES_CACHE"=>DIR_FILES_CACHE,
 			"DIR_FILES_CACHE_CORE"=>DIR_FILES_CACHE_CORE,
 			"DIR_FILES_CACHE_DB"=>DIR_FILES_CACHE_DB,
@@ -78,7 +80,8 @@ class InstallController extends Controller {
 	}
 	
 	private function setOptionalItems() {
-		$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower') && (@preg_match('/\pL/u', 'a') == 1));
+		// no longer need lucene
+		//$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower') && (@preg_match('/\pL/u', 'a') == 1));
 		$this->set('langTest', Localization::isAvailable() && (!ini_get('safe_mode')));
 		$diffExecTest = is_executable($this->installData['DIR_FILES_BIN_HTMLDIFF']);
 		$diffSystem = (!ini_get('safe_mode'));
@@ -518,8 +521,6 @@ class InstallController extends Controller {
 							$blocks[0]->deleteBlock();
 						}
 
-						/*
-						
 						$jsBT = BlockType::getByHandle('slideshow');
 						$jsData['playback'] = 'ORDER';
 						$jsData['imgBIDs'] = array(
@@ -541,32 +542,17 @@ class InstallController extends Controller {
 							rename(DIR_FILES_UPLOADED_THUMBNAILS."/".$fimage4->getFilename(),  $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']."/".$fimage4->getFilename());
 						}
 						
-						$jsData['fileNames'] = array(
-							$image1->getFilename(),
-							$image2->getFilename(),
-							$image3->getFilename(),
-							$image4->getFilename()
+						$jsData['imgFIDs'] = array(
+							$image1->getFileID(),
+							$image2->getFileID(),
+							$image3->getFileID(),
+							$image4->getFileID()
 						);
-
-						$jsData['origfileNames'] = array(
-							$image1->getOriginalFilename(),
-							$image2->getOriginalFilename(),
-							$image3->getOriginalFilename(),
-							$image4->getOriginalFilename()
-						);
-
-						$jsData['thumbPaths'] = array(
-							REL_DIR_FILES_UPLOADED_THUMBNAILS . '/' . $fimage1->getFilename(),
-							REL_DIR_FILES_UPLOADED_THUMBNAILS . '/' . $fimage2->getFilename(),
-							REL_DIR_FILES_UPLOADED_THUMBNAILS . '/' . $fimage3->getFilename(),
-							REL_DIR_FILES_UPLOADED_THUMBNAILS . '/' . $fimage4->getFilename()
-						);
-
+						$jsData['type'] = 'CUSTOM';
 						$jsData['duration'] = array(3, 3, 3, 3);
 						$jsData['imgHeight'] = array(192, 192, 192, 192);
 						$jsData['fadeDuration'] = array(1, 1, 1, 1);
 						$example0Page->addBlock($jsBT, "Header", $jsData);
-						*/
 						
 						// File permissions
 						$fs = FileSet::getGlobal();
