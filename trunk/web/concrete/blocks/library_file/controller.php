@@ -35,19 +35,33 @@
 		public function getBlockTypeName() {
 			return t("Library File");
 		}		
-		
+
 		function getFile($fID) {
-			$db = Loader::db();
-			$r = $db->query("select bID, filename, origfilename, url, type, generictype from btFile where bID = ?", array($fID));
-			$obj = $r->fetchRow();
-			
+			Loader::model('file');
+			$mf = new File();
+
+			$file_obj = $mf->getByID($fID);
+			$fileversion_obj = $file_obj->getVersion();
+				
 			$bf = new LibraryFileBlockController;
-			$bf->bID 			= $obj['bID'];
-			$bf->filename 		= $obj['filename'];
-			$bf->origfilename 	= $obj['origfilename'];
-			$bf->generictype 	= $obj['generictype'];
-			$bf->type 			= $obj['type'];
-			$bf->url 			= $obj['url'];
+
+			$this->generictype = FileTypeList::getType($fileversion_obj->getExtension());
+			$this->filename = $fileversion_obj->getFileName();
+			$this->type = $fileversion_obj->getType();
+			$this->url = $fileversion_obj->getURL();
+			$this->filepath = $fileversion_obj->getPath();
+			$this->relpath = $fileversion_obj->getRelativePath();
+			$this->origfilename = $fileversion_obj->getRelativePath();
+			$this->filesize = $fileversion_obj->getFullSize();
+
+			$bf->bID 			= $fileversion_obj->getFileID();
+			$bf->filename 		= $this->filename;
+			$bf->generictype 	= $this->generictype;
+			$bf->type 			= $this->type;
+			$bf->url 			= $this->url;
+			$bf->filepath  		= $this->filepath;
+			$bf->relpath  		= $this->relpath;
+			$bf->filesize		= $this->filesize;
 			return $bf;
 		}
 
@@ -90,14 +104,17 @@
 		function getURL() {return $this->url;}
 		function getType() {return $this->type;}
 		function getGenericType() {return $this->generictype;}
+
 		public function getFilePath() {
-			return DIR_FILES_UPLOADED . '/' . $this->filename;
+			return $this->filepath;
 		}
+
 		public function getFileRelativePath() {
-			return REL_DIR_FILES_UPLOADED . '/' . $this->filename;
+			return $this->relpath;
 		}
+
 		public function getFileFullURL() {
-			return BASE_URL . REL_DIR_FILES_UPLOADED . '/' . $this->filename;
+			return BASE_URL . $this->url;
 		}
 		
 		
@@ -107,7 +124,7 @@
 		 * @return array $dimensions
 		 */
 		function getDimensions() {
-			$r = @getimagesize(DIR_FILES_UPLOADED . '/' . $this->filename);
+			$r = @getimagesize($this->filepath);
 			if ($r) {
 				return $r;
 			}
@@ -160,18 +177,7 @@
 		 * @return string $path
 		 */
 		function getThumbnailAbsolutePath($filename = null) {
-			if (!$filename) {
-				$db = Loader::db();
-				$q = "select filename from btFile where bID = '{$this->bID}'";
-				$filename = $db->getOne($q);
-				if ($filename) {
-					$newFileName = substr($filename, 0, strrpos($filename, '.')) . '.jpg';
-					return DIR_FILES_UPLOADED_THUMBNAILS . '/' . $newFileName;
-				}
-			} else {
-				$newFileName = substr($filename, 0, strrpos($filename, '.')) . '.jpg';
-				return DIR_FILES_UPLOADED_THUMBNAILS . '/' . $newFileName;
-			}
+			
 		}
 		
 		/** 
@@ -191,10 +197,8 @@
 				$pi = pathinfo($this->filename);
 				$filename = $pi['filename'] . '_' . $maxWidth . 'x' . $maxHeight . '.jpg';
 				if (!file_exists(DIR_FILES_CACHE . '/' . $filename)) {
-					// create image there
 					LibraryFileBlockController::createImage(DIR_FILES_UPLOADED . '/' . $this->filename, DIR_FILES_CACHE . '/' . $filename, $maxWidth, $maxHeight);
 				}
-				
 				$src = REL_DIR_FILES_CACHE . '/' . $filename;
 				$abspath = DIR_FILES_CACHE . '/' . $filename;
 			}
@@ -219,14 +223,8 @@
 			}
 		}
 
-		function getFileSize($filename = null) {
-			if (!$filename) {
-				$filename = $this->filename;
-				$path = DIR_FILES_UPLOADED . '/' . $filename;
-			} else {
-				$path = $filename;
-			}
-			return filesize($path) / 1048; // return kilobytes
+		function getFileSize() {
+			return $this->filesize;
 		}
 
 		function delete() {
