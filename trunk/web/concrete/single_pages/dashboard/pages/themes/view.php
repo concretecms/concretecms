@@ -77,7 +77,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 	
 	</div>
 	
-<? if (ENABLE_MARKETPLACE_SUPPORT == true) { ?>
+<? if (ENABLE_MARKETPLACE_SUPPORT == true && (!isset($activate_confirm))) { ?>
 	<style>
 	table#themesGrid td{ padding:8px 30px 15px 8px; text-align:center  } 
 	table#themesGrid td .name{ font-weight:bold; margin-top:4px; font-size:14px; margin-left:20px; }

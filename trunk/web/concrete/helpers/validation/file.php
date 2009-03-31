@@ -68,5 +68,12 @@ class ValidationFileHelper {
 		}
 		return in_array($ext,$allowed_extensions);
 	}
-
+	
+	/** 
+	 * @access private
+	 * deprecated
+	 */
+	public function filetype($filename, $extensions = null) {
+		return $this->extension($filename, $extensions);
+	}
 }

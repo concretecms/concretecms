@@ -390,10 +390,10 @@ if (!defined('CONCRETE5_ORG_URL')) {
 
 # Marketplace Vars
 if (!defined('MARKETPLACE_BLOCK_LIST_WS')) {
-	define('MARKETPLACE_BLOCK_LIST_WS', 'http://www.concrete5.org/tools/get_marketplace_block_list/');
+	define('MARKETPLACE_BLOCK_LIST_WS', 'http://c5org/marketplace/-/get_remote_addons_list/');
 }
 if (!defined('MARKETPLACE_THEME_LIST_WS')) {
-	define('MARKETPLACE_THEME_LIST_WS', 'http://www.concrete5.org/tools/get_marketplace_theme_list/');
+	define('MARKETPLACE_THEME_LIST_WS', 'http://c5org/marketplace/-/get_remote_addons_list/');
 }
 if (!defined('MARKETPLACE_THEME_PREVIEW_URL')) {
 	define('MARKETPLACE_THEME_PREVIEW_URL', 'http://www.concrete5.org/tools/preview_theme/');
