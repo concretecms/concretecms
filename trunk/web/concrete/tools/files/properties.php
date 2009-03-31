@@ -208,12 +208,16 @@ $("#ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?> ul
 Loader::model("file_storage_location");
 $fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
 if (is_object($fsl)) {
-	if ($f->getStorageLocationID() == 0) {
-		$sli = t('Default Location') . ' <span style="color: #afafaf">(' . DIR_FILES_UPLOADED . ')</span>';
-	} else {
+	if ($f->getStorageLocationID() > 0) {
 		$sli = $fsl->getName() . ' <span style="color: #afafaf">(' . $fsl->getDirectory() . ')</span>';;
 	}
-} ?>
+}
+
+if (!isset($sli)) {
+	$sli = t('Default Location') . ' <span style="color: #afafaf">(' . DIR_FILES_UPLOADED . ')</span>';
+}
+
+?>
 <tr>
 	<th><?=t('Location')?></th>
 	<td colspan="2"><?=$sli?></td>

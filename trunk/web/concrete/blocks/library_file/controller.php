@@ -45,7 +45,8 @@
 				
 			$bf = new LibraryFileBlockController;
 
-			$this->generictype = FileTypeList::getType($fileversion_obj->getExtension());
+			$ftype = FileTypeList::getType($fileversion_obj->getExtension());
+			$this->generictype = strtolower($ftype->getGenericTypeText($ftype->getGenericType()));
 			$this->filename = $fileversion_obj->getFileName();
 			$this->type = $fileversion_obj->getType();
 			$this->url = $fileversion_obj->getURL();
