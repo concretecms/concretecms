@@ -42,6 +42,13 @@ class ConcreteUpgradeVersion520Helper {
 			}catch(Exception $e){ } 
 
 		}
+
+		$columns = $db->MetaColumns('btSlideshowImg');
+		if ($columns['FID'] == false && $columns['IMAGE_BID'] != false) {
+			try{
+				$db->query('ALTER TABLE btSlideshowImg CHANGE image_bID fID INT(11) unsigned null'); 
+			}catch(Exception $e){ } 
+		}
 	}
 	
 	public function run() {
