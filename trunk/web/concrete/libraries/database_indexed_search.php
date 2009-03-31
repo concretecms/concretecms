@@ -63,6 +63,7 @@ class IndexedPageList extends DatabaseItemList {
 
 		}
 
+		$this->sortByMultiple('score desc', 'cDatePublic desc');
 		return parent::getPage();
 	}
 }
@@ -95,6 +96,7 @@ class IndexedSearch {
 				$text .= strip_tags($bi->content);
 			}
 		}
+		unset($blarray);
 		return $text;
 	}
 	
@@ -130,9 +132,14 @@ class IndexedSearch {
 						$db->Execute("insert into PageSearchIndexAttributes (cID, akID, akHandle, value) values (?, ?, ?, ?)", $v);
 					}
 				}
+				unset($v);
 				$num++;
-			}			
+			}
+			
+			unset($c);
 		}
+		
+		$r->Close();
 		$result = new stdClass;
 		$result->count = $num;
 		return $result;
