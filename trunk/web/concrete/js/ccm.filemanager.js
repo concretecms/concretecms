@@ -397,13 +397,13 @@ ccm_alSetupSelectFiles = function() {
 	});
 }
 ccm_deactivateSearchResults = function() {
-	$("#ccm-file-list-wrapper").css('opacity','0.5');	
+	//$("#ccm-file-list-wrapper").css('opacity','0.5');//buggy on IE7
 	$("#ccm-search-files").attr('disabled', true);
 	$("#ccm-file-search-loading").show();
 }
 
 ccm_activateSearchResults = function() {
-	$("#ccm-file-list-wrapper").css('opacity','1');	
+	//$("#ccm-file-list-wrapper").css('opacity','1');//buggy on IE7
 	$("#ccm-file-search-loading").hide();
 	$("#ccm-search-files").attr('disabled', false);
 	ccm_alSetupInPagePaginationAndSorting();
