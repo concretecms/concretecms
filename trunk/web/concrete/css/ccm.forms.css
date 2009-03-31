@@ -113,7 +113,7 @@ table.ccm-grid td.actor img {float: right}
 table.ccm-grid img {border: 0px}
 
 ul.ccm-dialog-tabs {display: block; height: 18px; margin: 0px; padding: 0px 0px 0px 10px; border-bottom: 1px solid #dedede; list-style-type: none; font-size: 10px; }
-ul.ccm-dialog-tabs li {float:left;}
+ul.ccm-dialog-tabs li {float:left; line-height: 12px}
 ul.ccm-dialog-tabs li a {color: #666; border-top: 1px solid #dedede; text-decoration: none; display: block; float: left; padding: 3px 8px 2px 8px; background: transparent url(../images/bg_dialog_t.png) repeat-x scroll left -1px; border-left: 1px solid #dedede}
 ul.ccm-dialog-tabs li a, ul.ccm-dialog-tabs span {border-top: 1px solid #dedede; text-decoration: none; display: block; float: left; padding: 3px 8px 2px 8px; background: transparent url(../images/bg_dialog_t.png) repeat-x scroll left -1px; border-left: 1px solid #dedede}
 ul.ccm-dialog-tabs li a {color: #666}
