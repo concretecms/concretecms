@@ -12,23 +12,31 @@ $cnt = Loader::controller('/dashboard/files/search');
 $fileList = $cnt->getRequestedSearchResults();
 $files = $fileList->getPage();
 $pagination = $fileList->getPagination();
+?>
 
-Loader::element('files/search_form_advanced'); ?>
-
-
-<div id="ccm-file-search-advanced-fields-gutter">&nbsp;</div>
-
-<div id="ccm-file-search-advanced-results-wrapper">
-
-<? Loader::element('files/upload_single'); ?>
-
-<div id="ccm-file-search-results">
-
-<? Loader::element('files/search_results', array('fileSelector' => true, 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
-
-</div>
-
-</div>
+<div id="ccm-file-manager-advanced" >
+	
+	<table id="ccm-file-manager-table" >
+		<tr>
+			<td>
+				<? Loader::element('files/search_form_advanced'); ?>
+			</td>		
+			<? /* <div id="ccm-file-search-advanced-fields-gutter">&nbsp;</div> */ ?>		
+			<td>	
+				<div id="ccm-file-search-advanced-results-wrapper">
+				
+					<? Loader::element('files/upload_single'); ?>
+					
+					<div id="ccm-file-search-results">
+					
+						<? Loader::element('files/search_results', array('fileSelector' => true, 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
+					
+					</div>
+				
+				</div> 	
+			</td>	
+		</tr>
+	</table>
 
 </div>
 
@@ -38,3 +46,4 @@ $(function() {
 	ccm_activateFileManager();
 });
 </script>';
+?>
