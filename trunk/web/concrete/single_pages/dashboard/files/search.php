@@ -8,7 +8,7 @@ if ($fp->canSearchFiles()) { ?>
 	
 		<table id="ccm-file-manager-table" >
 			<tr>
-				<td>
+				<td class="ccm-search-form-advanced-col">
 					<? Loader::element('files/search_form_advanced'); ?>
 				</td>		
 				<? /* <div id="ccm-file-search-advanced-fields-gutter">&nbsp;</div> */ ?>		
