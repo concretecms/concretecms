@@ -272,8 +272,24 @@
 		function duplicate($newBID) {
 			// nothing
 		}
+
 		
 		function save($data) {
+			Loader::library("file/importer");
+			$fi = new FileImporter();
+           	$resp = $fi->import($data['file'], $data['name']);
+
+			if (file_exists($data['file'])) {
+				$fi = new FileImporter();
+           		$resp = $fi->import($data['file'], $data['name']);
+
+				$lbc = new LibraryFileBlockController();
+				return $lbc->getFile($resp->getFileID());				
+			}
+		}
+
+/*
+		function save_OLD($data) {
 			
 			if (file_exists($data['file'])) {
 				// copy the file into the files directory
@@ -317,7 +333,7 @@
 				$ret = Events::fire('on_file_upload', $bf);
 			}
 		}
-		
+		*/	
 	}
 
 ?>
