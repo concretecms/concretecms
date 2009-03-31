@@ -15,6 +15,5 @@ $fileList = $cnt->getRequestedSearchResults();
 $files = $fileList->getPage();
 $pagination = $fileList->getPagination();
 
-echo '<div style="border:1px solid green">';
+
 Loader::element('files/search_results', array('files' => $files, 'fileList' => $fileList, 'pagination' => $pagination));
-echo '</div>';
