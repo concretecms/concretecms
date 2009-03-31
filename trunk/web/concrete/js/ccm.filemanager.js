@@ -507,12 +507,17 @@ ccm_alSetupInPagePaginationAndSorting = function() {
 ccm_activateFileManagerFields = function(fieldset) {
 	$("#ccm-file-search-field-set" + fieldset + " select[name=fvField]").unbind();
 	$("#ccm-file-search-field-set" + fieldset + " select[name=fvField]").change(function() {
-		var selected = $(this).find(':selected').val();
+		var selected = $(this).find(':selected').val(); 
 		$(this).next('input.ccm-file-selected-field').val(selected);
-		$(this).parents('table').find('.ccm-file-search-option').hide();
+		
+		//$(this).parents('tr').find('.ccm-file-search-option').hide();
+		
+		//all of the options are predefined above, this will copy it
 		var itemToCopy = $('#ccm-file-search-field-base-elements .ccm-file-search-option[search-field=' + selected + ']');
 		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-selected-field-content").html('');
 		itemToCopy.clone().appendTo("#ccm-file-search-field-set" + fieldset + " .ccm-file-selected-field-content");
+		
+		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-selected-field-content .ccm-file-search-option").show();
 
 		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option[search-field=date_added] input").each(function() {
 			if ($(this).attr('id') == 'date_from') {
@@ -525,6 +530,7 @@ ccm_activateFileManagerFields = function(fieldset) {
 		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option-type-date input").each(function() {
 			$(this).attr('id', $(this).attr('id') + fieldset);
 		});
+		
 		
 		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option[search-field=date_added] input").datepicker({
 			showAnim: 'fadeIn'
@@ -543,7 +549,7 @@ ccm_activateFileManagerFields = function(fieldset) {
 	
 	$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-remove-option").unbind();
 	$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-remove-option").click(function() {
-		$(this).parents('table').parent().remove();
+		$(this).parents('div.ccm-file-search-field').remove();
 		//ccm_totalAdvancedSearchFields--;
 	});
 }
