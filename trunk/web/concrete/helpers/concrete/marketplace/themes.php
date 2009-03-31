@@ -15,7 +15,7 @@ class ConcreteMarketplaceThemesHelper  {
 			// Retrieve the URL contents 
 			$xml = $fh->getContents(MARKETPLACE_THEME_LIST_WS);
 			$pageThemes=array();
-			if($xml || strlen($xml)) {
+			if( !strstr($xml,'<title>404 Not Found</title>') && ($xml || strlen($xml))  ) {
 				// Parse the returned XML file
 				$enc = mb_detect_encoding($xml);
 				$xml = mb_convert_encoding($xml, 'UTF-8', $enc);
