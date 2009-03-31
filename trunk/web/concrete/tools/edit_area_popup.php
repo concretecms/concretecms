@@ -15,25 +15,86 @@ $blockTypes = $btl->getBlockTypeList();
 $ci = Loader::helper('concrete/urls');
 $ch = Loader::helper('concrete/interface');
 
-
-//marketplace
-if(ENABLE_MARKETPLACE_SUPPORT){
-	$marketplaceBlocksHelper = Loader::helper('concrete/marketplace/blocks'); 
-	$marketplaceBlockTypes=$marketplaceBlocksHelper->getPreviewableList();
-}else{
-	$marketplaceBlockTypes=array();
-}
 ?>
 
 <script type="text/javascript">
-function loginSuccess() {
-	jQuery.fn.dialog.closeTop(); jQuery.fn.dialog.closeTop();
-	ccmAlert.notice('Marketplace Login', '<p>You have successfully logged into the concrete5 marketplace.</p>');
+var installURL = null;
+var isRemotelyLoggedIn = '<?=UserInfo::isRemotelyLoggedIn()?>';
+var remoteUID = <?=UserInfo::getRemoteAuthUserId() ?>;
+var remoteUName = '<?=UserInfo::getRemoteAuthUserName()?>';
+
+function installPackage() {
+   $.ajax({
+        url: installURL,
+        type: 'POST',
+        success: function(html){
+			ccmAlert.notice('Marketplace Install', html);
+        },
+		error: function (XMLHttpRequest, textStatus, errorThrown){
+			ccmAlert.notice('Marketplace Install', ccmi18n.marketplaceErrorMsg);
+		}
+	});
+}
+function loginStartInstall(jsObj) {
+	remoteUID = jsObj.uID;
+	remoteUName = jsObj.uName;
+	jQuery.fn.dialog.closeTop();
+	ccmAlert.notice('Marketplace Login', ccmi18n.marketplaceLoginSuccessMsg+ccmi18n.marketplaceInstallMsg, installPackage);
+}
+function loginSuccess(jsObj) {
+	isRemotelyLoggedIn = true;
+	remoteUID = jsObj.uID;
+	remoteUName = jsObj.uName;
+	jQuery.fn.dialog.closeTop();
+	updateMarketplaceTab();
+	ccmAlert.notice('Marketplace Login', ccmi18n.marketplaceLoginSuccessMsg);
 }
 function logoutSuccess() {
-	jQuery.fn.dialog.closeTop();
-	ccmAlert.notice('Marketplace Logout', '<p>You are now logged out of concrete5 marketplace.</p>');
+	isRemotelyLoggedIn = false;
+	updateMarketplaceTab();
+	ccmAlert.notice('Marketplace Logout', ccmi18n.marketplaceLogoutSuccessMsg);
 }
+function updateLoginArea() {
+	if (isRemotelyLoggedIn) {
+		$("#ccm-marketplace-logged-in").show();
+		$("#ccm-marketplace-logged-out").hide();
+		$("#ccm-marketplace-login-link").html('<a href="<?=CONCRETE5_ORG_URL ?>/profile/-/'+remoteUID+'/" >'+remoteUName+'</a>');
+	} else {
+		$("#ccm-marketplace-logged-in").hide();
+		$("#ccm-marketplace-logged-out").show();
+	}
+}
+function updateMarketplaceTab() {
+	$("#ccm-add-marketplace-tab div.ccm-block-type-list").html(ccmi18n.marketplaceLoadingMsg);
+	$.ajax({
+        url: '/index.php/tools/required/marketplace/refresh_block',
+        type: 'POST',
+        success: function(html){
+			$("#ccm-add-marketplace-tab div.ccm-block-type-list").html(html);
+			updateLoginArea();
+
+			$(".ccm-button-marketplace-install a").click(function(e){
+				installURL = $(this).attr('href');
+				e.preventDefault();
+				if (!isRemotelyLoggedIn) {
+					ccmPopupLogin.show('', loginStartInstall, '', 1, function() {
+                		var plm=$('#ccm-popupLoginIntroMsg');
+                		plm.css('display','block');
+                		plm.css('margin-top','8px');
+                		plm.css('margin-bottom','16px');
+                		plm.html(ccmi18n.marketplaceLoginMsg);
+					});
+				} else {
+					installPackage();
+				}
+			});
+        },
+	});
+}
+
+$(document).ready(function(){
+	updateMarketplaceTab();
+});
 </script>
 
 <ul class="ccm-dialog-tabs" id="ccm-area-tabs" style="display:<?=($_REQUEST['addOnly']!=1)?'block':'none'?>">
@@ -70,42 +131,8 @@ function logoutSuccess() {
 <? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
 <div id="ccm-add-marketplace-tab" style="display: none">
 	<h1><?=t('Add From Marketplace')?></h1>
-	<div id="ccm-block-type-list">
-	<? if (!UserInfo::isRemotelyLoggedIn()) { ?>
-		<p>You aren't currently signed in to the marketplace.</p>
-		<p><a onclick="ccmPopupLogin.show('', loginSuccess, '', 1)">Click here to sign in or create an account.</a></p>
-	<? } else { ?>
-		<? if (count($marketplaceBlockTypes) > 0) {
-
-		foreach($marketplaceBlockTypes as $bt) { 
-			$btIcon = $bt->getRemoteIconURL();
-			$btFile = $bt->getRemoteFileURL();
-			if (!empty($btFile) && intval($bt->getPrice()) == 0) {
-				$btLink = View::url('/dashboard/install', 'remote_addon', $bt->getHandle());
- 				$btTarget = '';
-			} else {
-				$btLink = $bt->getRemoteURL();
- 				$btTarget = ' target="_blank"';
-			}
-			?>	
-			<div class="ccm-block-type ccm-external-block-type">
-				<div class="ccm-block-type-inner"  style="background-image: url(<?=$btIcon?>)"?>
-					<?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_addon', $bt->getHandle()), "right");?>
-					<div class="ccm-block-price"><? if ($bt->getPrice() == '0.00') { print t('Free'); } else { print '$' . $bt->getPrice(); } ?></div>
-					<?=$bt->getBlockTypeName()?>
-					<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeHandle()?>"><?=$bt->getBlockTypeDescription()?></div>
-				</div>
-				<div class="ccm-spacer"></div>
-			</div>
-		<? }
-		} else { ?>
-			<p><?=t('Unable to connect to the marketplace.')?></p>
-		<? } ?>
-
-		<p><?=t('You are currently signed in to the marketplace as');?>
-		  <a href="<?=CONCRETE5_ORG_URL ?>/profile/-/<?=UserInfo::getRemoteAuthUserId() ?>/" ><?=UserInfo::getRemoteAuthUserName() ?></a>
-		  <?=t('(Not your account? <a onclick="ccm_support.signOut(logoutSuccess)">Sign Out</a>)')?></p>
-	<? } ?>
+	<div class="ccm-block-type-list">
+		<p><?=t('Unable to connect to the Concrete5 Marketplace.')?></p>
 	</div>
 </div>
 <? } ?>
