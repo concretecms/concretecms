@@ -5,6 +5,37 @@ Loader::model('block_type_remote');
 
 class ConcreteMarketplaceBlocksHelper { 
 
+	function getCombinedList($filterInstalled=true) {
+		$previewList = $this->getList('marketplace_previewable_list', $filterInstalled);
+		$purchasesList = $this->getList('marketplace_purchases_list', $filterInstalled);
+
+		if (!empty($purchasesList)) {
+			$combinedList = array();
+			foreach ($previewList as $preview) {
+				$handle = $preview->getHandle();
+				for ($i = 0; $i < count($purchasesList); $i++) {
+					if ($handle == $purchasesList[$i]->getHandle()) {
+						$combinedList[] = $purchasesList[$i];
+						$purchasesList[$i] = null;
+						break;
+					}
+				}
+				if ($i >= count($purchasesList)) {
+					$combinedList[] = $preview;
+				}
+			}
+			for ($i = 0; $i < count($purchasesList); $i++) {
+				if (!empty($purchasesList[$i])) {
+					$combinedList[] = $purchasesList[$i];
+				}
+			}
+		} else {
+			$combinedList = $previewList;
+		}
+
+		return $combinedList;
+	}
+
 	function getPreviewableList($filterInstalled=true) {
 		return $this->getList('marketplace_previewable_list', $filterInstalled);
 	}
@@ -39,6 +70,7 @@ class ConcreteMarketplaceBlocksHelper {
 				foreach($xmlObj->block as $block){
 					$blockType = new BlockTypeRemote();
 					$blockType->loadFromXML($block);
+					$blockType->isPurchase($list == 'marketplace_purchases_list' ? 1 : 0);
 					$blockTypes[]=$blockType;
 				}
 			}

@@ -141,21 +141,26 @@ function logoutSuccess() {
 
 		<div style="margin:0px; padding:0px;  height:auto">
 		<? foreach ($purchasedBlocks as $pb) {
-			$style = $pb->getRemoteIconURL() ? 'style="background-image: url('.$pb->getRemoteIconURL().')"' : ''; ?>
+			$style = $pb->getRemoteIconURL() ? 'style="background-image: url('.$pb->getRemoteIconURL().')"' : '';
+			$file = $pb->getRemoteFileURL();
+			$button = (!empty($file)) ? $ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getRemoteCollectionID()), "right")
+			                          : $ch->button(t("Details"), $pb->getRemoteURL(), "right"); ?>
 			<div class="ccm-block-type">
 			<table width="100%">
+			<? if (!empty($pb->btDescription)) {?>
 				<tr>
 					<td colspan="2"><p class="ccm-block-type-inner" <?=$style?>><?=$pb->btName?></p></td>
 				</tr>
 				<tr>
 					<td style="color: #aaa; padding: 2px 0 6px"><?=$pb->btDescription?></td>
-				<? $file = $pb->getRemoteFileURL();
-				   if (!empty($file))  { ?>
-					<td style="vertical-align: bottom"><?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getHandle()), "right");?></td>
-				<? } else { ?>
-					<td style="vertical-align: bottom"><?=$ch->button(t("Details"), $pb->getRemoteURL(), "right");?></td>
-				<? } ?>
+					<td style="vertical-align: bottom"><?=$button?></td>
 				</tr>
+			<? } else {?>
+				<tr>
+					<td><p class="ccm-block-type-inner" <?=$style?>><?=$pb->btName?></p></td>
+					<td style="vertical-align: bottom"><?=$button?></td>
+				</tr>
+			<? } ?>
 			</table>
 			</div>
 		<? } ?>

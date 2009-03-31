@@ -392,18 +392,20 @@ if (!defined('CONCRETE5_ORG_URL')) {
 
 # Marketplace Vars
 if (!defined('MARKETPLACE_BLOCK_LIST_WS')) {
-	define('MARKETPLACE_BLOCK_LIST_WS', 'http://c5org/marketplace/addons/-/get_remote_list');
+	define('MARKETPLACE_BLOCK_LIST_WS', CONCRETE5_ORG_URL.'/marketplace/addons/-/get_remote_list');
 }
 if (!defined('MARKETPLACE_THEME_LIST_WS')) {
-	define('MARKETPLACE_THEME_LIST_WS', 'http://c5org/marketplace/themes/-/get_remote_list/');
+	define('MARKETPLACE_THEME_LIST_WS', CONCRETE5_ORG_URL.'/marketplace/themes/-/get_remote_list/');
 }
 if (!defined('MARKETPLACE_THEME_PREVIEW_URL')) {
-	define('MARKETPLACE_THEME_PREVIEW_URL', 'http://www.concrete5.org/tools/preview_theme/');
+	define('MARKETPLACE_THEME_PREVIEW_URL', CONCRETE5_ORG_URL.'/tools/preview_theme/');
+}
+if (!defined('MARKETPLACE_PURCHASES_LIST_WS')) {
+	define('MARKETPLACE_PURCHASES_LIST_WS', CONCRETE5_ORG_URL.'/tools/get_purchased_block_list/');
 }
 define('MARKETPLACE_CONTENT_LATEST_THRESHOLD', 10800); // every three hours
 define('MARKETPLACE_DIRNAME_THEME_PREVIEW', 'previewable_themes');
-define('MARKETPLACE_THEME_PREVIEW_ASSETS_URL', 'http://www.concrete5.org/' . MARKETPLACE_DIRNAME_THEME_PREVIEW);
-
+define('MARKETPLACE_THEME_PREVIEW_ASSETS_URL', CONCRETE5_ORG_URL . MARKETPLACE_DIRNAME_THEME_PREVIEW);
 
 # Knowledge Base Vars
 if (!defined('KNOWLEDGE_BASE_URL')){

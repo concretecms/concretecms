@@ -31,14 +31,6 @@ if ($plID == 0) {
 	$pl = PageTheme::getSiteTheme();
 	$plID = $pl->getThemeID();
 }
-
-//marketplace
-if (ENABLE_MARKETPLACE_SUPPORT) {
-	$themesHelper = Loader::helper('concrete/marketplace/themes'); 
-	$availableThemes=$themesHelper->getPreviewableList();
-} else {
-	$availableThemes=array();
-}
 ?>
 
 <style>
@@ -55,11 +47,66 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 </style>
 
 <script type="text/javascript">
+var installURL = null;
+var isRemotelyLoggedIn = '<?=UserInfo::isRemotelyLoggedIn()?>';
+var remoteUID = <?=UserInfo::getRemoteAuthUserId() ?>;
+var remoteUName = '<?=UserInfo::getRemoteAuthUserName()?>';
+
+function installPackage() {
+   $.ajax({
+        url: installURL,
+        type: 'POST',
+        success: function(html){
+            ccmAlert.notice('Marketplace Install', html,
+				ccm_hidePane(ccm_showPane(this, CCM_TOOLS_PATH + "/edit_collection_popup.php?ctask=set_theme&cID=" + CCM_CID)));
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown){
+            ccmAlert.notice('Marketplace Install', ccmi18n.marketplaceErrorMsg);
+        }
+    });
+}
+function loginStartInstall(jsObj) {
+    remoteUID = jsObj.uID;
+    remoteUName = jsObj.uName;
+    jQuery.fn.dialog.closeTop();
+    ccmAlert.notice('Marketplace Login', ccmi18n.marketplaceLoginSuccessMsg+ccmi18n.marketplaceInstallMsg, installPackage);
+}
 function loginSuccess() {
     jQuery.fn.dialog.closeTop();
-	ccm_hidePane();
     ccmAlert.notice('Marketplace Login', '<p>You have successfully logged into the concrete5 marketplace.</p>');
 }
+function updateMoreThemesTab() {
+    $("#ccm-more-themes-interface-tab").html(ccmi18n.marketplaceLoadingMsg);
+    $.ajax({
+        url: '/tools/required/marketplace/refresh_theme',
+        type: 'POST',
+		data: 'cID=<?=$c->getCollectionID()?>',
+        success: function(html){
+            $("#ccm-more-themes-interface-tab").html(html);
+
+			ccm_enable_scrollers();
+            $(".ccm-button-marketplace-install a").click(function(e){
+                installURL = $(this).attr('href');
+                e.preventDefault();
+                if (!isRemotelyLoggedIn) {
+                    ccmPopupLogin.show('', loginStartInstall, '', 1, function() {
+                        var plm=$('#ccm-popupLoginIntroMsg');
+                        plm.css('display','block');
+                        plm.css('margin-top','8px');
+                        plm.css('margin-bottom','16px');
+                        plm.html(ccmi18n.marketplaceLoginMsg);
+                    });
+                } else {
+                    installPackage();
+                }
+            });
+        },
+    });
+}
+
+$(document).ready(function(){
+    updateMoreThemesTab();
+});
 </script>
 
 <div class="ccm-pane-controls">
@@ -161,33 +208,8 @@ function loginSuccess() {
 				</ul>
 				*/ ?>	
 			
-    			<? if (!UserInfo::isRemotelyLoggedIn()) { ?>
-        			<p>You aren't currently signed in to the marketplace.</p>
-        			<p><a onclick="ccmPopupLogin.show('', loginSuccess, '', 1)">Click here to sign in or create an account.</a></p>
-    			<? } else { ?>
-					<? if( !count($availableThemes) ){ ?>
-						<div><?=t('Unable to connect to the marketplace.')?></div>
-					<? }else{ ?>
-						
-						<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil(count($availableThemes)/4)?>" >
-							<a href="javascript:void(0)" class="ccm-scroller-l"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_l.png" width="28" height="79" alt="l" /></a>
-							<a href="javascript:void(0)" class="ccm-scroller-r"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_r.png" width="28" height="79" alt="l" /></a>
-						
-							<div class="ccm-scroller-inner">
-								<ul id="ccm-select-marketplace-theme" style="width: <?=count($availableThemes) * 132?>px">			
-								<? foreach($availableThemes as $availableTheme){ ?>
-									<li class="themeWrap">
-										<a href="<?=View::url('/dashboard/install', 'remote_theme', $availableTheme->getHandle())?>" title="<?=t('Download theme')?>"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a>
-											<a title="<?=t('Preview')?>" onclick="ccm_previewMarketplaceTheme(<?=$c->getCollectionID()?>, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" href="javascript:void(0)" class="preview">
-											<img src="<?=ASSETS_URL_IMAGES?>/icons/magnifying.png" alt="<?=t('Preview')?>" class="ccm-preview" /></a>
-										<div class="ccm-theme-name" ><a target="_blank" href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>
-									</li>
-								<? } ?> 
-								</ul>
-							</div>
-						</div>			
-					<? } ?> 	
-				<? } ?> 	
+				<p><?=t('Unable to connect to the Concrete5 Marketplace.')?></p>
+
 			</div> 				
 				
 	
@@ -221,7 +243,7 @@ ccm_submit = function() {
 	$('form[name=ccmPermissionsForm]').get(0).submit();
 } 
 
-$(function() {
+ccm_enable_scrollers = function() {
 	$("a.ccm-scroller-l").hover(function() {
 		$(this).children('img').attr('src', '<?=ASSETS_URL_IMAGES?>/button_scroller_l_active.png');
 	}, function() {
@@ -305,7 +327,11 @@ $(function() {
 			$(this).hide();
 		}
 	});
-	
+}
+
+$(function() {
+	ccm_enable_scrollers();
+
 	$("#ccm-select-page-type a").click(function() {
 		$("#ccm-select-page-type li").each(function() {
 			$(this).removeClass('ccm-item-selected');

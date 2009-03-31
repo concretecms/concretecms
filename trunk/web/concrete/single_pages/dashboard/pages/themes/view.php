@@ -108,7 +108,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 						<a title="<?=t('Preview')?>" onclick="ccm_previewMarketplaceTheme(1, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" 
 							href="javascript:void(0)" class="preview"><img src="<?=ASSETS_URL_IMAGES?>/icons/magnifying.png" alt="<?=t('Preview')?>" /></a></div>
 						<div class="desc"><?=$availableTheme->getThemeDescription() ?></div>
-						<a href="<?=$availableTheme->getThemeURL() ?>"><?=t('Get Theme')?> &raquo;</a>
+						<a href="<?=$this->url('/dashboard/pages/themes','download_remote', $availableTheme->getRemoteCollectionID(), 1) ?>"><?=t('Install Theme')?> &raquo;</a>
 					</td>
 				<?  $colCount++;
 				}

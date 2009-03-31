@@ -28,7 +28,7 @@ var ccmPopupLogin = {
 				title: "Login",
 				width: 550,
 				modal: false, 
-				onLoad:function(){ccmPopupLogin.showLoginFunction()},
+				onOpen:function(){ccmPopupLogin.showLoginFunction()},
 				onClose: function(){}, 
 				height: 220
 			});
@@ -69,7 +69,7 @@ var ccmPopupLogin = {
 	postLoginAction:function(jsObj){
 		ccmPopupLogin.uID=(jsObj.uID>0)?jsObj.uID:0; 
 		if(typeof(ccmPopupLogin.loggedInFunction)=='function' && ccmPopupLogin.uID>0) 
-			ccmPopupLogin.loggedInFunction();
+			ccmPopupLogin.loggedInFunction(jsObj);
 		if(typeof(jsObj.redirectURL)!='undefined' && (jsObj.redirectURL.toLowerCase()=='refresh' || jsObj.redirectURL.toLowerCase()=='reload')){
 			window.location.href = unescape(window.location.pathname); //reload() for old browsers
 		}else if(typeof(jsObj.redirectURL)!='undefined'){

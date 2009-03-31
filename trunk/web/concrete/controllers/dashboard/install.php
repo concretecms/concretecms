@@ -109,107 +109,13 @@ class DashboardInstallController extends Controller {
 		}
 	}
 
-	public function remote_addon($pkgName=null)
-	{
-		$this->install_remote('addon', $pkgName);
-	}
-
-	public function remote_purchase($pkgName=null)
-	{
-		$this->install_remote('purchase', $pkgName);
-	}
-
-	public function remote_theme($pkgName=null)
-	{
-		$this->install_remote('theme', $pkgName);
-	}
-
-	private function install_remote($type, $pkgName=null, $install=false)
-	{
-		if (empty($pkgName)) {
-			$this->error->add(t('No package name provided.'));
-			return;
+    public function remote_purchase($remoteCID=null)
+    {
+    	$ph = Loader::helper('package');
+    	$error = $ph->install_remote('purchase', $remoteCID, false);
+		if (!empty($error)) {
+			$this->set('error', array($error));
 		}
+    }
 
-	    if ($type == 'addon') {
-	    	$helper = Loader::helper('concrete/marketplace/blocks');
-    		$list = $helper->getPreviewableList();
-		} else if ($type == 'purchase') {
-	    	$helper = Loader::helper('concrete/marketplace/blocks');
-    		$list = $helper->getPurchasesList();
-		} else {
-	    	$helper = Loader::helper('concrete/marketplace/themes');
-    		$list = $helper->getPreviewableList();
-		}
-        foreach ($list as $item) {
-			if ($pkgName == $item->getHandle()) {
-				break;
-			}
-		}
-		if (empty($item)) {
-			$this->error->add(t('Not a recognized package.'));
-			return;
-		}
-
-		$fileURL = $item->getRemoteFileURL();
-		if ($type == 'purchase') {
-			$authData = UserInfo::getAuthData();
-			$fileURL .= "&auth_token={$authData['auth_token']}&auth_uname={$authData['auth_uname']}&auth_timestamp={$authData['auth_timestamp']}";
-		}
-		$file = $this->download_remote_package($fileURL);
-		if (empty($file)) {
-			$this->error->add(t('Not a recognized package.'));
-			return;
-		}
-
-		try {
-			Loader::model('package_archive');
-			$am = new PackageArchive($item->getHandle());
-			$am->install($file, true);
-		} catch (Exception $e) {
-			$this->error->add(t('Error while expanding package.'));
-			$this->set('message', $e->getMessage());
-			return;
-		}
-		$action = 'downloaded';
-
-		
-		if ($install) {
-        	$tests = Package::testForInstall($item->getHandle());
-        	if (is_array($tests)) {
-            	$tests = $this->mapError($tests);
-            	$this->set('error', $tests);
-        	} else {
-            	$p = Loader::package($item->getHandle());
-            	try {
-                	$p->install();
-                	$this->set('message', t('The package has been installed.'));
-            	} catch(Exception $e) {
-                	$this->error->add('error', $e);
-            	}
-			}
-
-			$action = 'installed';
-        }
- 
-		$msg = "The " . ($type == 'theme' ? 'theme' : 'add-on') . " '" . $item->getName() . "' was successfully $action.";
-		$this->set('message', $msg);
-	}
-
-	private function download_remote_package($fileURL)
-	{
-		if (empty($fileURL)) return;
-
-		$fh = Loader::helper('file');
-		$pkg = $fh->getContents($fileURL);
-
-		$file = time();
-		// Use the same method as the Archive library to build a temporary file name.
-		$tmpFile = $fh->getTemporaryDirectory() . '/' . $file . '.zip';
-		$fp = fopen($tmpFile, "wb");
-		fwrite($fp, $pkg);
-		fclose($fp);
-
-		return $file;
-	}
 }

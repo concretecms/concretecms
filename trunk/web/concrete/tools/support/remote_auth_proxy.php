@@ -38,6 +38,8 @@ $response = curl_exec($curl_handle);
 
 //save the authentication token and uID if it was a successful login
 $responseData = JsonHelper::decode($response);
+$responseData->uName = $_POST['uName'];
+$responseExtra = JsonHelper::encode($responseData);
 if( $responseData->success && $responseData->auth_token ){
 	UserInfo::setRemoteAuthToken( $responseData->auth_token );
 	UserInfo::setRemoteAuthUserId( $responseData->uID );
@@ -45,6 +47,6 @@ if( $responseData->success && $responseData->auth_token ){
 }
 
 //return the json response to the ajax script, just as if it were a standard login
-echo $response;
+echo $responseExtra;
 
 ?>

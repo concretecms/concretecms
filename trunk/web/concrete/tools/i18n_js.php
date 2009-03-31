@@ -14,6 +14,12 @@ var ccmi18n = {
 	setBlockAlias: '<?=t('Setup on Child Pages')?>',	
 	helpPopup: '<?=t('Help')?>',
 	helpPopupLoginMsg: '<?=t('Get more help on your question by posting it to the concrete5 help center on concrete5.org')?>',
+	marketplaceErrorMsg: '<?=t('<p>You package could not be installed.  An unknown error occured.</p>')?>',
+	marketplaceInstallMsg: '<?=t('<p>Your package will now be downloaded and installed.</p>')?>',
+	marketplaceLoadingMsg: '<?=t('<p>Retrieving information from the Concrete5 Marketplace.</p>')?>',
+	marketplaceLoginMsg: '<?=t('<p>You must be logged into the concrete5 Marketplace to install add-ons and themes.  Please log in.</p>')?>',
+	marketplaceLoginSuccessMsg: '<?=t('<p>You have successfully logged into the concrete5 Marketplace.</p>')?>',
+	marketplaceLogoutSuccessMsg: '<?=t('<p>You are now logged out of concrete5 Marketplace.</p>')?>',
 	ok: '<?=t('Ok')?>'
 	
 }
