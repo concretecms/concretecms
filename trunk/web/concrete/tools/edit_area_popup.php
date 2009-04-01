@@ -18,82 +18,47 @@ $ch = Loader::helper('concrete/interface');
 ?>
 
 <script type="text/javascript">
-var installURL = null;
-var isRemotelyLoggedIn = '<?=UserInfo::isRemotelyLoggedIn()?>';
-var remoteUID = <?=UserInfo::getRemoteAuthUserId() ?>;
-var remoteUName = '<?=UserInfo::getRemoteAuthUserName()?>';
+ccm_isRemotelyLoggedIn = '<?=UserInfo::isRemotelyLoggedIn()?>';
+ccm_remoteUID = <?=UserInfo::getRemoteAuthUserId() ?>;
+ccm_remoteUName = '<?=UserInfo::getRemoteAuthUserName()?>';
 
-function installPackage() {
-   $.ajax({
-        url: installURL,
-        type: 'POST',
-        success: function(html){
-			ccmAlert.notice('Marketplace Install', html);
-        },
-		error: function (XMLHttpRequest, textStatus, errorThrown){
-			ccmAlert.notice('Marketplace Install', ccmi18n.marketplaceErrorMsg);
-		}
-	});
-}
-function loginStartInstall(jsObj) {
-	remoteUID = jsObj.uID;
-	remoteUName = jsObj.uName;
+function ccm_loginSuccess(jsObj) {
+	ccm_isRemotelyLoggedIn = true;
+	ccm_remoteUID = jsObj.uID;
+	ccm_remoteUName = jsObj.uName;
 	jQuery.fn.dialog.closeTop();
-	ccmAlert.notice('Marketplace Login', ccmi18n.marketplaceLoginSuccessMsg+ccmi18n.marketplaceInstallMsg, installPackage);
-}
-function loginSuccess(jsObj) {
-	isRemotelyLoggedIn = true;
-	remoteUID = jsObj.uID;
-	remoteUName = jsObj.uName;
-	jQuery.fn.dialog.closeTop();
-	updateMarketplaceTab();
+	ccm_updateMarketplaceTab();
 	ccmAlert.notice('Marketplace Login', ccmi18n.marketplaceLoginSuccessMsg);
 }
-function logoutSuccess() {
-	isRemotelyLoggedIn = false;
-	updateMarketplaceTab();
+function ccm_logoutSuccess() {
+	ccm_isRemotelyLoggedIn = false;
+	ccm_updateMarketplaceTab();
 	ccmAlert.notice('Marketplace Logout', ccmi18n.marketplaceLogoutSuccessMsg);
 }
-function updateLoginArea() {
-	if (isRemotelyLoggedIn) {
+function ccm_updateLoginArea() {
+	if (ccm_isRemotelyLoggedIn) {
 		$("#ccm-marketplace-logged-in").show();
 		$("#ccm-marketplace-logged-out").hide();
-		$("#ccm-marketplace-login-link").html('<a href="<?=CONCRETE5_ORG_URL ?>/profile/-/'+remoteUID+'/" >'+remoteUName+'</a>');
 	} else {
 		$("#ccm-marketplace-logged-in").hide();
 		$("#ccm-marketplace-logged-out").show();
 	}
 }
-function updateMarketplaceTab() {
+function ccm_updateMarketplaceTab() {
 	$("#ccm-add-marketplace-tab div.ccm-block-type-list").html(ccmi18n.marketplaceLoadingMsg);
 	$.ajax({
         url: '/index.php/tools/required/marketplace/refresh_block',
         type: 'POST',
         success: function(html){
 			$("#ccm-add-marketplace-tab div.ccm-block-type-list").html(html);
-			updateLoginArea();
-
-			$(".ccm-button-marketplace-install a").click(function(e){
-				installURL = $(this).attr('href');
-				e.preventDefault();
-				if (!isRemotelyLoggedIn) {
-					ccmPopupLogin.show('', loginStartInstall, '', 1, function() {
-                		var plm=$('#ccm-popupLoginIntroMsg');
-                		plm.css('display','block');
-                		plm.css('margin-top','8px');
-                		plm.css('margin-bottom','16px');
-                		plm.html(ccmi18n.marketplaceLoginMsg);
-					});
-				} else {
-					installPackage();
-				}
-			});
+			ccm_updateLoginArea();
+			ccmLoginHelper.bindInstallLinks();
         },
 	});
 }
 
 $(document).ready(function(){
-	updateMarketplaceTab();
+	ccm_updateMarketplaceTab();
 });
 </script>
 

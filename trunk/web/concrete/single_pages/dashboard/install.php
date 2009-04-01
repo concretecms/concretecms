@@ -127,7 +127,7 @@ function logoutSuccess() {
 			<p><?=t('You are not currently signed in to the marketplace.')?></p>
 			<p><a href="#" onclick="ccmPopupLogin.show('', loginSuccess, '', 1)">Click here to sign in or create an account.</a></p>
 		<? } else { ?>
-			<p><?=t('You are currently signed in to the marketplace as');?>
+			<p><?=t('You are currently signed in to the marketplace as ');?>
           	  <a href="<?=CONCRETE5_ORG_URL ?>/profile/-/<?=UserInfo::getRemoteAuthUserId() ?>/" ><?=UserInfo::getRemoteAuthUserName() ?></a>
 			  <?=t('(Not your account? <a href="#" onclick="ccm_support.signOut(logoutSuccess)">Sign Out</a>)')?></p>
 		<? } ?>
