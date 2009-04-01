@@ -10,7 +10,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied.")); 
 
 if (!defined('ENABLE_CACHE')) {
-	Config::getOrDefine('ENABLE_CACHE', true);
+	Config::getOrDefine('ENABLE_CACHE', true); 
 }
 # permissions model - valid options are 'advanced' or 'simple'
 if (!defined('PERMISSIONS_MODEL')) {
@@ -18,7 +18,7 @@ if (!defined('PERMISSIONS_MODEL')) {
 }
 
 if (!defined('SITE')) {
-	Config::getOrDefine('SITE', 'Concrete5');
+	Config::getOrDefine('SITE', 'concrete5');
 }
 
 if (!defined('ENABLE_LOG_EMAILS')) {
