@@ -48,7 +48,7 @@ function ccm_updateLoginArea() {
 function ccm_updateMarketplaceTab() {
 	$("#ccm-add-marketplace-tab div.ccm-block-type-list").html(ccmi18n.marketplaceLoadingMsg);
 	$.ajax({
-        url: '/index.php/tools/required/marketplace/refresh_block',
+        url: CCM_TOOLS_PATH+'/marketplace/refresh_block',
         type: 'POST',
         success: function(html){
 			$("#ccm-add-marketplace-tab div.ccm-block-type-list").html(html);
