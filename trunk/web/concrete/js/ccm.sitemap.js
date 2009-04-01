@@ -324,7 +324,7 @@ parseTree = function(node, nodeID, deactivateSubNodes) {
 						showBranch(origCID);
 					}
 				});
-				hideBranch(origCID);
+				//hideBranch(origCID);
 			}
 		}); 
 		

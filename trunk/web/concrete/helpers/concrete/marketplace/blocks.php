@@ -61,7 +61,7 @@ class ConcreteMarketplaceBlocksHelper {
 			}
 			$xml = $fh->getContents($url);
 			$blockTypes=array();
-			if( !strstr($xml,'<title>404 Not Found</title>') && ($xml || strlen($xml)) ) {
+			if( $xml || strlen($xml) ) {
 				// Parse the returned XML file
 				$enc = mb_detect_encoding($xml);
 				$xml = mb_convert_encoding($xml, 'UTF-8', $enc); 
