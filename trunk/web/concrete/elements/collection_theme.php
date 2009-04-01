@@ -57,7 +57,7 @@ ccm_remoteUName = '<?php echo UserInfo::getRemoteAuthUserName()?>';
 function ccm_updateMoreThemesTab() {
     $("#ccm-more-themes-interface-tab").html(ccmi18n.marketplaceLoadingMsg);
     $.ajax({
-        url: '/tools/required/marketplace/refresh_theme',
+        url: CCM_TOOLS_PATH+'/marketplace/refresh_theme',
         type: 'POST',
 		data: 'cID=<?=$c->getCollectionID()?>',
         success: function(html){
