@@ -16,6 +16,7 @@ class PageList extends DatabaseItemList {
 	private $displayOnlyPermittedPages = false;
 	private $systemPagesToExclude = array('login.php', 'register.php', 'download_file.php', 'profile/%', 'dashboard/%');
 	private $filterByCParentID = 0;
+	private $ignorePermissions = false;
 	
 	/* magic method for filtering by page attributes. */
 	
@@ -31,12 +32,16 @@ class PageList extends DatabaseItemList {
 		}			
 	}
 	
+	public function ignorePermissions() {
+		$this->ignorePermissions = true;
+	}
+	
 	/** 
 	 * Sets up a list to only return items the proper user can access 
 	 */
 	public function setupPermissions() {
 		$u = new User();
-		if ($u->isSuperUser()) {
+		if ($u->isSuperUser() || ($this->ignorePermissions)) {
 			return; // super user always sees everything. no need to limit
 		}
 		
