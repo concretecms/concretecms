@@ -42,11 +42,9 @@ class PackageHelper {
 			return t('Not a recognized package.');
 		}
 
+		$authData = UserInfo::getAuthData();
 		$fileURL = $item->getRemoteFileURL();
-		if ($type == 'purchase') {
-			$authData = UserInfo::getAuthData();
-			$fileURL .= "&auth_token={$authData['auth_token']}&auth_uname={$authData['auth_uname']}&auth_timestamp={$authData['auth_timestamp']}";
-		}
+		$fileURL .= "&auth_token={$authData['auth_token']}&auth_uname={$authData['auth_uname']}&auth_timestamp={$authData['auth_timestamp']}";
 		$file = $this->download_remote_package($fileURL);
 		if (empty($file)) {
 			return t('Not a recognized package.');

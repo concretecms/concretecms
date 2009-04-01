@@ -12,10 +12,10 @@ if (!empty($cID)) {
 
 if (empty($error)) {
 	$msg = "<p>The package was successfully " . 
-	       ($install ? "installed." : "downloaded and unzipped onto your server.</p>");
+		($install ? "installed." : "downloaded and unzipped onto your server.</p>");
 } else {
 	$msg = "<p>The package could not be installed.</p>" .
-	       "<p>$error</p>";
+		"<p>$error</p>";
 }
 ?>
 

@@ -196,7 +196,7 @@ div.ccm-block-type div.ccm-block-type-description {display: none; padding-left: 
 div.ccm-block-type.ccm-external-block-type div.ccm-block-price{ float:right; margin:10px 10px 0px 10px; font-weight: bold; color: #205334; text-transform: uppercase}
 div.ccm-block-type.ccm-external-block-type div.ccm-block-type-description{display:block; padding-left: 0px;}
  
-table.ccm-block-type-table {border-collapse: collapse}
+table.ccm-block-type-table {border-collapse: collapse;width: 100%}
 table.ccm-block-type-table div.ccm-block-type-inner {color: #666; display: block; font-size: 14px; text-decoration: none; border: 1px solid #fff}
-table.ccm-block-type-table div.ccm-block-type-description {color: #aaa; font-size: 12px; padding-top: 10px; padding-bottom: 14px}
-table.ccm-block-type-table td {padding: 8px 2px 0; border-bottom: 1px solid #DEDEDE}
+table.ccm-block-type-table div.ccm-block-type-description {color: #aaa; font-size: 12px; padding-top: 10px}
+table.ccm-block-type-table td {padding: 8px 2px 8px; border-bottom: 1px solid #DEDEDE}
