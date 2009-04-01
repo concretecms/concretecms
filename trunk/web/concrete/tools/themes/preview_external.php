@@ -37,7 +37,7 @@ $areasBlocksSerialized=serialize($areasBlocksHTML);
 $postStr='content='.urlencode($areasBlocksSerialized).'&themeHandle='.$themeHandle.'&ctID='.$ctID.'&ctHandle='.$ctHandle;
 
 if (!function_exists('curl_init')) { ?>
-	<div>cURL must be enabled to preview external themes.</div>
+	<div><?=t('curl must be enabled to preview external themes.')?></div>
 <? }else{
 	$curl_handle = curl_init();
 	curl_setopt($curl_handle, CURLOPT_URL, MARKETPLACE_THEME_PREVIEW_URL);
