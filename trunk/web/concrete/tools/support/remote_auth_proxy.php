@@ -28,17 +28,22 @@ if($action=='do_register')
 else $remoteLoginURL = CONCRETE5_ORG_URL.'/login/-/'.$action.'/';
 
 $postStr = http_build_query($_POST, '', '&');
-$curl_handle = curl_init();
-curl_setopt($curl_handle, CURLOPT_URL, $remoteLoginURL);
-curl_setopt($curl_handle, CURLOPT_POST, true);
-curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $postStr);
-curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 30);
-curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-$response = curl_exec($curl_handle); 
+if (function_exists('curl_init')) { 
+	$curl_handle = curl_init();
+	curl_setopt($curl_handle, CURLOPT_URL, $remoteLoginURL);
+	curl_setopt($curl_handle, CURLOPT_POST, true);
+	curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $postStr);
+	curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 30);
+	curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+	$response = curl_exec($curl_handle); 
+	$responseData = JsonHelper::decode($response);
+	$responseData->uName = $_POST['uName'];
+} else {
+	$responseData = new stdClass;
+	$responseData->error = t('Error: curl must be enabled to proceed.');
+}
 
 //save the authentication token and uID if it was a successful login
-$responseData = JsonHelper::decode($response);
-$responseData->uName = $_POST['uName'];
 $responseExtra = JsonHelper::encode($responseData);
 if( $responseData->success && $responseData->auth_token ){
 	UserInfo::setRemoteAuthToken( $responseData->auth_token );
