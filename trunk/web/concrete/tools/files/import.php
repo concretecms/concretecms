@@ -90,7 +90,7 @@ $(function() {
 		file_queue_error_handler : fileQueueError,
 		file_dialog_complete_handler : function(numFilesSelected, numFilesQueued){
 			try {
-				if (numFilesSelected > 0) {
+				if (numFilesSelected > 0) {					
 					document.getElementById(this.customSettings.cancelButtonId).disabled = false;
 				}								
 				//this.startUpload();
@@ -162,7 +162,7 @@ $(function() {
 			<?
 			
 			print $h->button_js(t('Start Uploads'), 'swfu.startUpload()');
-			print $h->button_js(t('Cancel All Uploads'), 'swfu.cancelQueue()', 'left');
+			print $h->button_js(t('Cancel All Uploads'), 'swfu.cancelQueue()', 'left', null,array('id'=>'ccm-file-upload-multiple-btnCancel'));
 			
 			?>
 		</div>
