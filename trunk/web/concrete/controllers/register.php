@@ -42,11 +42,16 @@ class RegisterController extends Controller {
 		$username = $_POST['uName'];
 		$password = $_POST['uPassword'];
 		$passwordConfirm = $_POST['uPasswordConfirm'];
+		$terms_and_conditions = $_POST['uTermsConditions'];
 		
 		if (!$ip->check()) {
 			$e->add($ip->getErrorMessage());
 		}		
 		
+		if(!$terms_and_conditions) {
+			$e->add(t('You must agree to the Terms &amp; Conditions to register.'));
+		}
+
 		if (!$vals->email($_POST['uEmail'])) {
 			$e->add(t('Invalid email address provided.'));
 		} else if (!$valc->isUniqueEmail($_POST['uEmail'])) {
