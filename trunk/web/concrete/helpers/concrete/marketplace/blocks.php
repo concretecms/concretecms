@@ -9,31 +9,7 @@ class ConcreteMarketplaceBlocksHelper {
 		$previewList = $this->getList('marketplace_previewable_list', $filterInstalled);
 		$purchasesList = $this->getList('marketplace_purchases_list', $filterInstalled);
 
-		if (!empty($purchasesList)) {
-			$combinedList = array();
-			foreach ($previewList as $preview) {
-				$handle = $preview->getHandle();
-				for ($i = 0; $i < count($purchasesList); $i++) {
-					if ($handle == $purchasesList[$i]->getHandle()) {
-						$combinedList[] = $purchasesList[$i];
-						$purchasesList[$i] = null;
-						break;
-					}
-				}
-				if ($i >= count($purchasesList)) {
-					$combinedList[] = $preview;
-				}
-			}
-			for ($i = 0; $i < count($purchasesList); $i++) {
-				if (!empty($purchasesList[$i])) {
-					$combinedList[] = $purchasesList[$i];
-				}
-			}
-		} else {
-			$combinedList = $previewList;
-		}
-
-		return $combinedList;
+		return array_merge($previewList, $purchasesList);
 	}
 
 	function getPreviewableList($filterInstalled=true) {
@@ -46,19 +22,28 @@ class ConcreteMarketplaceBlocksHelper {
 
 	private function getList($list, $filterInstalled=true) {
 		if (!function_exists('mb_detect_encoding')) {
-			return false;
+			return array();
 		}
 		
+		if ($list == 'marketplace_purchases_list') {
+			$authData = UserInfo::getAuthData();
+			if (!isset($authData['auth_token']) || !isset($authData['auth_uname']) || !isset($authData['auth_timestamp'])) {
+				return array();
+			}
+		}
+
 		$blockTypes = Cache::get($list, false, false, true);
 		if (!is_array($blockTypes)) {
 			$fh = Loader::helper('file'); 
+			if (!$fh) return array();
+
 			// Retrieve the URL contents 
-			if ($list == 'marketplace_previewable_list') {
-				$url = MARKETPLACE_BLOCK_LIST_WS;
-			} else {
-				$authData = UserInfo::getAuthData();
+			if ($list == 'marketplace_purchases_list') {
 				$url = MARKETPLACE_PURCHASES_LIST_WS."?auth_token={$authData['auth_token']}&auth_uname={$authData['auth_uname']}&auth_timestamp={$authData['auth_timestamp']}";
+			} else if ($list == 'marketplace_purchases_list') {
+				$url = MARKETPLACE_BLOCK_LIST_WS;
 			}
+
 			$xml = $fh->getContents($url);
 			$blockTypes=array();
 			if( $xml || strlen($xml) ) {
@@ -66,13 +51,19 @@ class ConcreteMarketplaceBlocksHelper {
 				$enc = mb_detect_encoding($xml);
 				$xml = mb_convert_encoding($xml, 'UTF-8', $enc); 
 				
-				$xmlObj = new SimpleXMLElement($xml);
-				foreach($xmlObj->block as $block){
-					$blockType = new BlockTypeRemote();
-					$blockType->loadFromXML($block);
-					$blockType->isPurchase($list == 'marketplace_purchases_list' ? 1 : 0);
-					$blockTypes[]=$blockType;
-				}
+				try {
+					libxml_use_internal_errors(true);
+					$xmlObj = new SimpleXMLElement($xml);
+					foreach($xmlObj->block as $block){
+						$blockType = new BlockTypeRemote();
+						$blockType->loadFromXML($block);
+						$blockType->isPurchase($list == 'marketplace_purchases_list' ? 1 : 0);
+						$remoteCID = $blockType->getRemoteCollectionID();
+						if (!empty($remoteCID)) {
+							$blockTypes['cid-'.$remoteCID] = $blockType;
+						}
+					}
+				} catch (Exception $e) {}
 			}
 
 			Cache::set($list, false, $blockTypes, MARKETPLACE_CONTENT_LATEST_THRESHOLD, true);		
@@ -81,13 +72,15 @@ class ConcreteMarketplaceBlocksHelper {
 		if ($filterInstalled && is_array($blockTypes)) {
 			Loader::model('package');
 			$handles = Package::getInstalledHandles();
-			$btList = array();
-			foreach($blockTypes as $bt) {
-				if (!in_array($bt->getHandle(), $handles)) {
-					$btList[] = $bt;
+			if (is_array($handles)) {
+				$btList = array();
+				foreach($blockTypes as $key=>$bt) {
+					if (!in_array($bt->getHandle(), $handles)) {
+						$btList[$key] = $bt;
+					}
 				}
+				$blockTypes = $btList;
 			}
-			$blockTypes = $btList;
 		}
 
 		return $blockTypes;
