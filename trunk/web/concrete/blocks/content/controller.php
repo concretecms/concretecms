@@ -63,10 +63,15 @@
 			$cID = $match[1];
 			if ($cID > 0) {
 				$path = Page::getCollectionPathFromID($cID);
+				if (URL_REWRITING == true) {
+					$path = DIR_REL . $path;
+				} else {
+					$path = DIR_REL . '/' . DISPATCHER_FILENAME . $path;
+				}
 				return $path;
 			}
 		}
-	
+		
 		function translateTo($text) {
 			// keep links valid
 			$url1 = str_replace('/', '\/', BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME);
