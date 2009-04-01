@@ -20,6 +20,7 @@ if(ENABLE_MARKETPLACE_SUPPORT){
 		$btFile = $bt->getRemoteFileURL();
 		$btButton = t("Download");
 		$btClass = "";
+		$btDesc = $bt->getBlockTypeDescription();
 		if (!empty($btFile)) {
 			if (intval($bt->getPrice()) == 0 || $bt->isPurchase()) {
 				$btButton = t("Install");
@@ -37,11 +38,10 @@ if(ENABLE_MARKETPLACE_SUPPORT){
 		}
 		?>	
 		<tr class="ccm-block-type-row">
-			<td valign="top"><img src="<?=$btIcon?>" /></td>
+			<td<?=!empty($btDesc)?' valign="top"':''?>><img src="<?=$btIcon?>" /></td>
 			<td width="90%">
 				<div class="ccm-block-type-inner"><?=$bt->getBlockTypeName()?></div>
-			<? $btDesc = $bt->getBlockTypeDescription();
-				if (!empty($btDesc)) { ?>
+			<? if (!empty($btDesc)) { ?>
 				<div class="ccm-block-type-description" id="ccm-bt-help<?=$bt->getBlockTypeHandle()?>"><?=$btDesc?></div>
 			<? } ?>
 			</td>
