@@ -29,7 +29,7 @@ if(ENABLE_MARKETPLACE_SUPPORT){
 			}
 		}
 		if (!empty($btFile) && (intval($bt->getPrice()) == 0 || $bt->isPurchase())) {
-			$btLink = REL_DIR_FILES_TOOLS_REQUIRED.'/package_install?type=addon&cID=' . $bt->getRemoteCollectionID();
+			$btLink = REL_DIR_FILES_TOOLS_REQUIRED.'/package_install?type=addon&install=1&cID=' . $bt->getRemoteCollectionID();
  			$btTarget = '';
 		} else {
 			$btLink = $bt->getRemoteURL();
@@ -38,9 +38,12 @@ if(ENABLE_MARKETPLACE_SUPPORT){
 		?>	
 		<tr class="ccm-block-type-row">
 			<td valign="top"><img src="<?=$btIcon?>" /></td>
-			<td>
+			<td width="90%">
 				<div class="ccm-block-type-inner"><?=$bt->getBlockTypeName()?></div>
-				<div class="ccm-block-type-description" id="ccm-bt-help<?=$bt->getBlockTypeHandle()?>"><?=$bt->getBlockTypeDescription()?></div>
+			<? $btDesc = $bt->getBlockTypeDescription();
+				if (!empty($btDesc)) { ?>
+				<div class="ccm-block-type-description" id="ccm-bt-help<?=$bt->getBlockTypeHandle()?>"><?=$btDesc?></div>
+			<? } ?>
 			</td>
 			<td><div class="ccm-block-price"><? if ($bt->getPrice() == '0.00') { print t('Free'); } else { print '$' . $bt->getPrice(); } ?></div></td>
 			<td<?=$btClass?>><?=$ch->button($btButton, $btLink, "right");?></td>

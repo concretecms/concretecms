@@ -11,6 +11,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 ccm_isRemotelyLoggedIn = '<?php echo UserInfo::isRemotelyLoggedIn()?>';
 ccm_remoteUID = <?php echo UserInfo::getRemoteAuthUserId() ?>;
 ccm_remoteUName = '<?php echo UserInfo::getRemoteAuthUserName()?>';
+ccm_loginInstallSuccessFn = function() { str=unescape(window.location.pathname); window.location.href = str.replace(/\/-\/.*/, ''); };
 
 $(document).ready(function(){
 	ccmLoginHelper.bindInstallLinks();

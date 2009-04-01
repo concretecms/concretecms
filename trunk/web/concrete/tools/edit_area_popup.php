@@ -21,6 +21,7 @@ $ch = Loader::helper('concrete/interface');
 ccm_isRemotelyLoggedIn = '<?=UserInfo::isRemotelyLoggedIn()?>';
 ccm_remoteUID = <?=UserInfo::getRemoteAuthUserId() ?>;
 ccm_remoteUName = '<?=UserInfo::getRemoteAuthUserName()?>';
+ccm_loginInstallSuccessFn = function() { jQuery.fn.dialog.closeTop(); };
 
 function ccm_loginSuccess(jsObj) {
 	ccm_isRemotelyLoggedIn = true;

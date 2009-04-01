@@ -21,7 +21,7 @@ var ccmLoginHelper = {
     	remoteUID = jsObj.uID;
     	remoteUName = jsObj.uName;
     	jQuery.fn.dialog.closeTop();
-    	ccmAlert.notice('Marketplace Login', ccmi18n.marketplaceLoginSuccessMsg+ccmi18n.marketplaceInstallMsg, installPackage);
+    	ccmAlert.notice('Marketplace Login', ccmi18n.marketplaceLoginSuccessMsg+ccmi18n.marketplaceInstallMsg, ccmLoginHelper.installPackage);
 	},
 	bindInstallLinks:function() {
     	$(".ccm-button-marketplace-install a").click(function(e){
@@ -29,11 +29,11 @@ var ccmLoginHelper = {
         	e.preventDefault();
         	if (!ccm_isRemotelyLoggedIn) {
             	ccmPopupLogin.show('', ccmLoginHelper.loginStartInstall, '', 1, function() {
-                	var plm=$('#ccm-popupLoginIntroMsg');
-                	plm.css('display','block');
-                	plm.css('margin-top','8px');
-                	plm.css('margin-bottom','16px');
-                	plm.html(ccmi18n.marketplaceLoginMsg);
+               		var plm=$('#ccm-popupLoginIntroMsg');
+               		plm.css('display','block');
+               		plm.css('margin-top','8px');
+               		plm.css('margin-bottom','16px');
+               		plm.html(ccmi18n.marketplaceLoginMsg);
             	});
         	} else {
             	ccmLoginHelper.installPackage();
@@ -70,7 +70,7 @@ var ccmPopupLogin = {
 				href: loginFormUrl, 
 				title: "Login",
 				width: 550,
-				modal: false, 
+				modal: true, 
 				onOpen:function(){ccmPopupLogin.showLoginFunction()},
 				onClose: function(){}, 
 				height: 220
