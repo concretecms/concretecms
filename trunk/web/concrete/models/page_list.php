@@ -115,6 +115,14 @@ class PageList extends DatabaseItemList {
 	}
 
 	/** 
+	 * Filters by user ID of collection (using the uID field)
+	 * @param mixed $ctID
+	 */
+	public function filterByUserID($uID) {
+		$this->filter(false, "(p1.uID = $uID or p2.uID = $uID)");
+	}
+
+	/** 
 	 * Filters by type of collection (using the handle field)
 	 * @param mixed $ctID
 	 */
