@@ -32,7 +32,7 @@ class ImageHelper {
 		$oHeight = $imageSize[1];
 		$finalWidth = 0;
 		$finalHeight = 0;
-		
+
 		// first, if what we're uploading is actually smaller than width and height, we do nothing
 		if ($oWidth < $width && $oHeight < $height) {
 			$finalWidth = $oWidth;
@@ -53,7 +53,7 @@ class ImageHelper {
 				$finalHeight = $height;
 			}
 		}
-	
+
 		$image = imageCreateTrueColor($finalWidth, $finalHeight);
 		switch($imageSize[2]) {
 			case IMAGETYPE_GIF:
@@ -88,10 +88,11 @@ class ImageHelper {
 			$path = $obj->getPath();
 		} else {
 			$path = $obj;
-		}
-		
+		}		
+
 		// first we check to see if a file with these dimensions exists
 		$filename = md5($path . ':' . $maxWidth . ':' . $maxHeight) . '.jpg';
+		
 		if (!file_exists(DIR_FILES_CACHE . '/' . $filename)) {
 			// create image there
 			$this->create($path, DIR_FILES_CACHE . '/' . $filename, $maxWidth, $maxHeight);
@@ -106,15 +107,14 @@ class ImageHelper {
 			$thumb->width = $dimensions[0];
 			$thumb->height = $dimensions[1];
 			return $thumb;
-		}				
-	
+		}					
 	}
 	
 	/** 
 	 * Runs getThumbnail on the path, and then prints it out as an XHTML image
 	 */
 	public function outputThumbnail($obj, $maxWidth, $maxHeight, $alt = null) {
-		$src = $this->getThumbnail($obj, $maxWidth, $maxHeight);
+		$thumb = $this->getThumbnail($obj, $maxWidth, $maxHeight);
 		print '<img class="ccm-output-thumbnail" alt="' . $alt . '" src="' . $thumb->src . '" width="' . $thumb->width . '" height="' . $thumb->height . '" />';
 	}
 	
