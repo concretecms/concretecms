@@ -47,35 +47,14 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 </style>
 
 <script type="text/javascript">
-var installURL = null;
-var isRemotelyLoggedIn = '<?=UserInfo::isRemotelyLoggedIn()?>';
-var remoteUID = <?=UserInfo::getRemoteAuthUserId() ?>;
-var remoteUName = '<?=UserInfo::getRemoteAuthUserName()?>';
+ccm_loginInstallSuccessFn = function() {
+	ccm_hidePane(ccm_showPane(this, CCM_TOOLS_PATH + "/edit_collection_popup.php?ctask=set_theme&cID=" + CCM_CID));
+};
+ccm_isRemotelyLoggedIn = '<?php echo UserInfo::isRemotelyLoggedIn()?>';
+ccm_remoteUID = <?php echo UserInfo::getRemoteAuthUserId() ?>;
+ccm_remoteUName = '<?php echo UserInfo::getRemoteAuthUserName()?>';
 
-function installPackage() {
-   $.ajax({
-        url: installURL,
-        type: 'POST',
-        success: function(html){
-            ccmAlert.notice('Marketplace Install', html,
-				ccm_hidePane(ccm_showPane(this, CCM_TOOLS_PATH + "/edit_collection_popup.php?ctask=set_theme&cID=" + CCM_CID)));
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown){
-            ccmAlert.notice('Marketplace Install', ccmi18n.marketplaceErrorMsg);
-        }
-    });
-}
-function loginStartInstall(jsObj) {
-    remoteUID = jsObj.uID;
-    remoteUName = jsObj.uName;
-    jQuery.fn.dialog.closeTop();
-    ccmAlert.notice('Marketplace Login', ccmi18n.marketplaceLoginSuccessMsg+ccmi18n.marketplaceInstallMsg, installPackage);
-}
-function loginSuccess() {
-    jQuery.fn.dialog.closeTop();
-    ccmAlert.notice('Marketplace Login', '<p>You have successfully logged into the concrete5 marketplace.</p>');
-}
-function updateMoreThemesTab() {
+function ccm_updateMoreThemesTab() {
     $("#ccm-more-themes-interface-tab").html(ccmi18n.marketplaceLoadingMsg);
     $.ajax({
         url: '/tools/required/marketplace/refresh_theme',
@@ -85,27 +64,13 @@ function updateMoreThemesTab() {
             $("#ccm-more-themes-interface-tab").html(html);
 
 			ccm_enable_scrollers();
-            $(".ccm-button-marketplace-install a").click(function(e){
-                installURL = $(this).attr('href');
-                e.preventDefault();
-                if (!isRemotelyLoggedIn) {
-                    ccmPopupLogin.show('', loginStartInstall, '', 1, function() {
-                        var plm=$('#ccm-popupLoginIntroMsg');
-                        plm.css('display','block');
-                        plm.css('margin-top','8px');
-                        plm.css('margin-bottom','16px');
-                        plm.html(ccmi18n.marketplaceLoginMsg);
-                    });
-                } else {
-                    installPackage();
-                }
-            });
+			ccmLoginHelper.bindInstallLinks();
         },
     });
 }
 
 $(document).ready(function(){
-    updateMoreThemesTab();
+    ccm_updateMoreThemesTab();
 });
 </script>
 

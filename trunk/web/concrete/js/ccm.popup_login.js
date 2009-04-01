@@ -1,3 +1,46 @@
+var ccm_loginInstallURL = null;
+var ccm_loginInstallSuccessFn = null;
+var ccm_isRemotelyLoggedIn = false;
+var ccm_remoteUID = 0;
+var ccm_remoteUName = '';
+
+var ccmLoginHelper = {
+	installPackage:function() {
+		$.ajax({
+        	url: ccm_loginInstallURL,
+        	type: 'POST',
+        	success: function(html){
+            	ccmAlert.notice('Marketplace Install', html, ccm_loginInstallSuccessFn);
+        	},
+        	error: function (XMLHttpRequest, textStatus, errorThrown){
+            	ccmAlert.notice('Marketplace Install', ccmi18n.marketplaceErrorMsg);
+        	}
+    	});
+	},
+	loginStartInstall:function(jsObj) {
+    	remoteUID = jsObj.uID;
+    	remoteUName = jsObj.uName;
+    	jQuery.fn.dialog.closeTop();
+    	ccmAlert.notice('Marketplace Login', ccmi18n.marketplaceLoginSuccessMsg+ccmi18n.marketplaceInstallMsg, installPackage);
+	},
+	bindInstallLinks:function() {
+    	$(".ccm-button-marketplace-install a").click(function(e){
+        	ccm_loginInstallURL = $(this).attr('href');
+        	e.preventDefault();
+        	if (!ccm_isRemotelyLoggedIn) {
+            	ccmPopupLogin.show('', ccmLoginHelper.loginStartInstall, '', 1, function() {
+                	var plm=$('#ccm-popupLoginIntroMsg');
+                	plm.css('display','block');
+                	plm.css('margin-top','8px');
+                	plm.css('margin-bottom','16px');
+                	plm.html(ccmi18n.marketplaceLoginMsg);
+            	});
+        	} else {
+            	ccmLoginHelper.installPackage();
+        	}
+    	});
+	}
+}
 
 var ccmPopupLogin = {  
 	
