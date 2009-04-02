@@ -199,6 +199,10 @@ if (!$previewMode) {
 <h2><?=t('Basic Properties')?></h2>
 <table border="0" cellspacing="0" cellpadding="0" class="ccm-grid">
 <tr>
+	<th><?=t('ID')?></th>
+	<td width="100%" colspan="2"><?=$fv->getFileID()?> <span style="color: #afafaf">(<?=t('Version')?> <?=$fv->getFileVersionID()?>)</span></td>
+</tr>
+<tr>
 	<th><?=t('Filename')?></th>
 	<td width="100%" colspan="2"><?=$fv->getFileName()?></td>
 </tr>

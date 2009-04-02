@@ -54,14 +54,17 @@
 			$this->relpath = $fileversion_obj->getRelativePath();
 			$this->origfilename = $fileversion_obj->getRelativePath();
 			$this->filesize = $fileversion_obj->getFullSize();
-
+			
+			$len = strlen(REL_DIR_FILES_UPLOADED);
+			$fh = Loader::helper('concrete/file');
+			
 			$bf->bID 			= $fileversion_obj->getFileID();
-			$bf->filename 		= $this->filename;
 			$bf->generictype 	= $this->generictype;
 			$bf->type 			= $this->type;
 			$bf->url 			= $this->url;
 			$bf->filepath  		= $this->filepath;
 			$bf->relpath  		= $this->relpath;
+			$bf->filename 		= substr($this->relpath, $len); // for backwards compatibility this must include the prefixes
 			$bf->filesize		= $this->filesize;
 			return $bf;
 		}

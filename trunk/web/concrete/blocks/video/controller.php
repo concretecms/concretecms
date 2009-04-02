@@ -36,7 +36,7 @@
 
 		function getFileID() {return $this->fID;}
 		function getFileObject() {
-			return LibraryFileBlockController::getFile($this->fID);
+			return File::getByID($this->fID);
 		}
 		
 		//auto detect flash movie size
@@ -65,7 +65,10 @@
 			$args['fID']    = intval($data['fID']);	
 			$args['width']  = (intval($data['width'])>0)  ? intval($data['width'])  : 425;
 			$args['height'] = (intval($data['height'])>0) ? intval($data['height']) : 334;		
+			/*
 			
+			// DEPRECATED
+			// We need to move this into the FLV file type importer
 			$flvFile = LibraryFileBlockController::getFile($data['fID']);
 			$flvFileName = DIR_FILES_UPLOADED .'/'. $flvFile->getFilename();			
 			$flvMetaData = $this->getFlvMetaData($flvFileName);
@@ -73,14 +76,11 @@
 				$args['width']  = $flvMetaData['width'];
 			if(intval($data['width'])==0 && intval($flvMetaData['height'])>0  ) 				
 				$args['height']  = $flvMetaData['height'];			
-		
+			*/
+			
 			parent::save($args);
 		}				
 		
-		function delete() {
-			LibraryFileBlockController::delete($this->fID);
-			parent::delete();
-		}
 		
 	}
 
