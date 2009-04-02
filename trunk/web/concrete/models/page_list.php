@@ -244,8 +244,9 @@ class PageList extends DatabaseItemList {
 	 */
 	public function get($itemsToGet = 0, $offset = 0) {
 		$pages = array();
-		$this->setBaseQuery();
-
+		if ($this->getQuery() == '') {
+			$this->setBaseQuery();
+		}		
 		$this->filter('cvIsApproved', 1);
 		$this->filter(false, "(p1.cIsTemplate = 0 or p2.cIsTemplate = 0)");
 		$this->setItemsPerPage($itemsToGet);

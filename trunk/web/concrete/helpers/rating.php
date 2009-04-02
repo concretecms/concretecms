@@ -47,10 +47,7 @@ class RatingHelper {
 		});
 		</script>
 EOS;
-			
-		return $html;
-
-		
+					
 		return $html;		
 	}
 

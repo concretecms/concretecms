@@ -34,6 +34,10 @@ class DatabaseItemList extends ItemList {
 		$this->query = $query . ' ';
 	}
 	
+	protected function getQuery() {
+		return $this->query;
+	}
+	
 	protected function addToQuery($query) {
 		$this->userQuery .= $query . ' ';
 	}
