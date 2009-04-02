@@ -556,6 +556,7 @@ $(document).ready(function(){
 
 </form>
 
+<? /*
 <form method="post" id="image-editing-form" action="<?=$this->url('/dashboard/settings', 'update_image_editing')?>">
 	<?=$this->controller->token->output('update_image_editing')?>
 	
@@ -574,6 +575,7 @@ $(document).ready(function(){
 	</div>
 
 </form>
+*/ ?>
 
 <form method="post" id="txt-editor-form" action="<?=$this->url('/dashboard/settings', 'txt_editor_config')?>">
 	<?=$this->controller->token->output('txt_editor_config')?>

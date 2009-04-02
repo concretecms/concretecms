@@ -3,10 +3,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $u = new User();
 $form = Loader::helper('form');
 
-
+/*
 if ($_REQUEST['task'] == 'save_picnik_api_key') {
 	Config::save('API_KEY_PICNIK', $_POST['API_KEY_PICNIK']);
 }
+*/
 
 $f = File::getByID($_REQUEST['fID']);
 $fv = $f->getApprovedVersion();
@@ -16,8 +17,8 @@ if (!$fp->canWrite()) {
 	die(t("Access Denied."));
 }
 
-//$apiKey = API_KEY_PICNIK;
-$apiKey = Config::get("API_KEY_PICNIK");
+$apiKey = API_KEY_PICNIK;
+//$apiKey = Config::get("API_KEY_PICNIK");
 $image = BASE_URL . $fv->getRelativePath();
 $service = 'http://www.picnik.com/service/';
 $export = BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/files/importers/remote';
@@ -29,7 +30,7 @@ $url = $service . '?_apikey=' . $apiKey . '&_export=' . $export . '&' . $valt->g
 ?>
 
 <?
-
+/*
 if ($apiKey == '') { 
 	$html = Loader::helper('html');
 	print $html->css('ccm.default.theme.css');
@@ -49,7 +50,7 @@ if ($apiKey == '') {
 	</form>
 	
 
-<? } else { ?>
+<? } else { */ ?>
 	
 	<script type="text/javascript">
 	parent.jQuery(function() {
@@ -59,4 +60,4 @@ if ($apiKey == '') {
 	</script>
 	
 
-<?  } ?>
+<?  //} ?>
