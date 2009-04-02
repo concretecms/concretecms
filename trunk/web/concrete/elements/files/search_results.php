@@ -54,8 +54,7 @@
 			<td>
 				<div class="ccm-file-list-thumbnail">
 					<div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"
-					     style=" background-image: url(<?=$fv->getThumbnailSRC(1)?>)">
-						<? /* $fv->getThumbnail(1)*/ ?>
+					     style=" background-image: url(<?=$fv->getThumbnail(1, false)?>)">
 					</div>
 				</div>
 		

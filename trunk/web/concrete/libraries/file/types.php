@@ -145,7 +145,7 @@ class FileType {
 	/** 
 	 * Returns a thumbnail for this type of file
 	 */
-	public function getThumbnail($level) {
+	public function getThumbnail($level, $fullImageTag = true) {
 		eval('$width = AL_THUMBNAIL_WIDTH_LEVEL' . $level . ';');
 		eval('$height = AL_THUMBNAIL_WIDTH_HEIGHT' . $level . ';');
 		if (file_exists(DIR_AL_ICONS . '/' . $this->extension . '.png')) {
@@ -153,7 +153,11 @@ class FileType {
 		} else {
 			$url = AL_ICON_DEFAULT;
 		}
-		return '<img src="' . $url . '" class="ccm-generic-thumbnail" width="' . $width . '" height="' . $height . '" />';
+		if ($fullImageTag == true) {
+			return '<img src="' . $url . '" class="ccm-generic-thumbnail" width="' . $width . '" height="' . $height . '" />';
+		} else {
+			return $url;
+		}
 	}
 	
 		
