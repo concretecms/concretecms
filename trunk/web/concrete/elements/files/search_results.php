@@ -53,7 +53,7 @@
 			<td class="ccm-file-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$f->getFileID()?>" /></td>
 			<td>
 				<div class="ccm-file-list-thumbnail">
-					<div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><table border="0" cellspacing="0" cellpadding="0" height="70" width="100%"><tr><td align="center"><?=$fv->getThumbnail(1)?></td></tr></table></div>
+					<div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><table border="0" cellspacing="0" cellpadding="0" height="70" width="100%"><tr><td align="center" fID="<?=$f->getFileID()?>"><?=$fv->getThumbnail(1)?></td></tr></table></div>
 				</div>
 		
 			<? if ($fv->hasThumbnail(2)) { ?>
