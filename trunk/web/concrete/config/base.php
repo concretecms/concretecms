@@ -373,7 +373,9 @@ if (!defined('DB_USE_CACHE')) {
 	define('DB_USE_CACHE', true);
 }
 
-define('API_KEY_PICNIK', '184f46c36757c7f060ed319eaf7337ac-' . urlencode(BASE_URL . DIR_REL . '/'));
+if (!defined("API_KEY_PICNIK")) {
+	define('API_KEY_PICNIK', '184f46c36757c7f060ed319eaf7337ac-' . urlencode(BASE_URL . DIR_REL . '/'));
+}
 
 $ADODB_ASSOC_CASE =  2;
 $ADODB_ACTIVE_CACHESECS = 300;
