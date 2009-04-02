@@ -25,14 +25,9 @@
 		
 		function getFileID() {return $this->fID;}
 		function getFileObject() {
-			return LibraryFileBlockController::getFile($this->fID);
+			return File::getByID($this->fID);
 		}		
 		function getLinkText() {return $this->fileLinkText;}
-		
-		function delete() {
-			LibraryFileBlockController::delete($this->fID);
-			parent::delete();
-		}
 		
 	}
 ?>
