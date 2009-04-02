@@ -888,7 +888,7 @@ var ccm_support = {
 		}
 		$.ajax({
 			type: 'POST',
-			url: CCM_TOOLS_PATH + '/support/post.php',
+			url: CCM_TOOLS_PATH + '/support/post/?pg_url='+encodeURIComponent(window.location),
 			success: function(resp) {
 				ccm_support.hideLoading();
 				var supportWrap=document.getElementById('ccm-supportWrap');
@@ -903,7 +903,7 @@ var ccm_support = {
 		try{
 			$.ajax({
 				type: 'POST',
-				url: CCM_TOOLS_PATH + '/support/post.php',
+				url: CCM_TOOLS_PATH + '/support/post/',
 				data: $(form).formSerialize(),
 				success: function(resp) {
 					ccm_support.hideLoading();

@@ -24,6 +24,9 @@ if($_POST['new-question-submitted'] && UserInfo::getRemoteAuthInSupportGroup()){
 		$ticketData['question']=$_POST['question'];
 		$ticketData['notes']=$_POST['notes'];
 		
+		//diagnositic data
+		$diagnosticData=$supportHelper->getDiagnosticData();
+		$ticketData=array_merge($ticketData,$diagnosticData);
 	
 		//send data to concrete5.org
 		$postResponseData=$supportHelper->postQuestion( $ticketData );
@@ -91,6 +94,8 @@ if($_POST['new-question-submitted'] && UserInfo::getRemoteAuthInSupportGroup()){
 		<h2><?=t('Post Help Request to concrete5.org') ?></h2>
 		
 		<form id="ccm-support-new-question-form" onSubmit="return ccm_support.submitNewQuestion(this);">
+		
+			<input name="pg_url" type="hidden" value="<?=htmlentities($_REQUEST['pg_url']) ?>" />
 		
 			<? if(count($errors)){ ?>
 				<div class="alertMsg" style="margin-bottom:16px">

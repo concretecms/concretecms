@@ -378,23 +378,21 @@ ccm_alSetupSelectFiles = function() {
 			});
 		}
 	});
-	$("div.ccm-file-list-thumbnail-image img").hover(function(e) {
+	$("div.ccm-file-list-thumbnail-image img").hover(function(e) { 
 		var fID = $(this).parent().attr('fID');
-		var obj = $('#fID' + fID + 'hoverThumbnail');
-		if (obj.length > 0) {
+		var obj = $('#fID' + fID + 'hoverThumbnail'); 
+		if (obj.length > 0) { 
 			var tdiv = obj.find('div');
 			var pos = obj.position();
 			tdiv.css('top', pos.top);
 			tdiv.css('left', pos.left);
 			tdiv.show();
-
 		}
 	}, function() {
 		var fID = $(this).parent().attr('fID');
 		var obj = $('#fID' + fID + 'hoverThumbnail');
 		var tdiv = obj.find('div');
-		tdiv.hide();
-			
+		tdiv.hide(); 
 	});
 }
 ccm_deactivateSearchResults = function() {

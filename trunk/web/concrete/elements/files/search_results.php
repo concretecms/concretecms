@@ -66,10 +66,7 @@
 			<td class="ccm-file-list-filename"><?=$txt->highlightSearch(wordwrap($fv->getTitle(), 15, "\n", true), $keywords)?></td>
 			<td><?=date('M d, Y g:ia', strtotime($f->getDateAdded()))?></td>
 			<td><?=$fv->getSize()?></td>
-			
-			
-			
-			
+						
 			<?
 		}
 
