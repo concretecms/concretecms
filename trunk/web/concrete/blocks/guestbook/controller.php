@@ -332,8 +332,35 @@
 			$db = Loader::db();
 			$query = "INSERT INTO btGuestBookEntries (bID, cID, uID, user_name, user_email, commentText, approved) VALUES (?, ?, ?, ?, ?, ?, ?)";
 			$res = $db->query($query, array($this->bID, $cID, intval($uID), $txt->sanitize($name), $txt->sanitize($email), $txt->sanitize($comment), $approved) );
+
+			$this->adjustCountCache(1);
 		}
-		
+
+		/**
+		* Adjusts cache of count bynumber specified, 
+		*
+		* Refreshes from db if cache is invalidated or
+		* false is called in
+		*/		
+		private function adjustCountCache($number=false){
+			$ca 	= new Cache();
+			$db 	= Loader::db();			
+			$count = $ca->get('GuestBookCount',$this->bID);
+			if($count && $number){
+				$count += $number;				
+			}
+			else{
+				$q = 'SELECT count(bID) as count
+				FROM btGuestBookEntries
+				WHERE bID = ?
+				AND approved=1';				
+				$v = Array($this->bID);
+				$rs = $db->query($q,$v);
+				$row = $rs->FetchRow();
+				$count = $row['count'];
+			}			
+			$ca->set('GuestBookCount',$this->bID,$count);
+		}
 		
 		/** 
 		 * Updates the given guestbook entry for the current block
@@ -358,18 +385,21 @@
 			$db = Loader::db();
 			$query = "DELETE FROM btGuestBookEntries WHERE entryID=? AND bID=?";
 			$res = $db->query($query, array($entryID,$this->bID));
+			$this->adjustCountCache(-1);
 		}
 		
 		function approveEntry($entryID) {
 			$db = Loader::db();
 			$query = "UPDATE btGuestBookEntries SET approved = 1 WHERE entryID=? AND bID=?";
 			$res = $db->query($query, array($entryID,$this->bID));
+			$this->adjustCountCache(1);
 		}
 	
 		function unApproveEntry($entryID) {
 			$db = Loader::db();
 			$query = "UPDATE btGuestBookEntries SET approved = 0 WHERE entryID=? AND bID=?";
 			$res = $db->query($query, array($entryID,$this->bID));
+			$this->adjustCountCache(-1);
 		}
 		
 		/** 
@@ -379,6 +409,7 @@
 			$db = Loader::db();
 			$query = "DELETE FROM btGuestBookEntries WHERE bID=? AND cID = ?";
 			$res = $db->query($query, array($this->bID, $cID));	
+			$this->adjustCountCache(false);
 		}
 		
 		/** 
