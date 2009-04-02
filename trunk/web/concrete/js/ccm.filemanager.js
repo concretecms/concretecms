@@ -90,9 +90,9 @@ ccm_activateFileManager = function(altype) {
 }
 
 ccm_alSetupSingleUploadForm = function() {
-	$(".ccm-file-manager-submit-single").submit(function() {
+	$(".ccm-file-manager-submit-single").submit(function() {  
 		$(this).attr('target', ccm_alProcessorTarget);
-		ccm_alSubmitSingle($(this).get(0));		
+		ccm_alSubmitSingle($(this).get(0));	 
 	});
 }
 
@@ -596,8 +596,13 @@ ccm_alSetupFileProcessor = function() {
 		return false;
 	}
 	
-	var ts = parseInt(new Date().getTime().toString().substring(0, 10))
-	var ifr = document.createElement('iframe');
+	var ts = parseInt(new Date().getTime().toString().substring(0, 10)); 
+	var ifr; 
+	try { //IE7 hack
+	  ifr = document.createElement('<iframe name="ccm-al-upload-processor'+ts+'">');
+	} catch (ex) {
+	  ifr = document.createElement('iframe');
+	}	
 	ifr.id = 'ccm-al-upload-processor' + ts;
 	ifr.name = 'ccm-al-upload-processor' + ts;
 	ifr.style.border='0px';
@@ -617,7 +622,7 @@ ccm_alSubmitSingle = function(form) {
 	if ($(form).find(".ccm-al-upload-single-file").val() == '') { 
 		alert(ccmi18n_filemanager.uploadErrorChooseFile);
 		return false;
-	} else {
+	} else { 
 		$(form).find('.ccm-al-upload-single-submit').hide();
 		$(form).find('.ccm-al-upload-single-loader').show();
 	}
