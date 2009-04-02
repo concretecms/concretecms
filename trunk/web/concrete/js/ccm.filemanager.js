@@ -34,6 +34,7 @@ ccm_triggerSelectFile = function(fID, af) {
 	});
 	var vobj = $('#' + af + "-fm-value");
 	vobj.attr('value', fID);
+	ccm_alSetupFileProcessor();
 }
  
 ccm_clearFile = function(e, af) {
@@ -593,6 +594,10 @@ ccm_alSubmitEditableProperty = function(trow) {
 }
 
 ccm_alSetupFileProcessor = function() {
+	if (ccm_alProcessorTarget != '') {
+		return false;
+	}
+	
 	var ts = parseInt(new Date().getTime().toString().substring(0, 10))
 	var ifr = document.createElement('iframe');
 	ifr.id = 'ccm-al-upload-processor' + ts;
