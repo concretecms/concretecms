@@ -185,8 +185,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (!isset($this->controller)) {
 				$this->controller = Loader::controller($obj);
 			}
-			
-			$this->controller->setupAndRun($view);
+			if (in_array($view, array('view', 'add', 'edit'))) {
+				$_action = $view;
+			} else {
+				$_action = 'view';
+			}
+			$this->controller->setupAndRun($_action);
 			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
 			extract($args);
