@@ -39,7 +39,7 @@ $this->inc('elements/header.php'); ?>
 		<div class="spacer">&nbsp;</div>		
 	</div>
 	<div id="footer">
-    	<span class="powered-by">This site is powered by <a href="http://www.concrete5.org">concrete5</a></span>
+			<span class="powered-by"><?=t('Built with concrete5')?> <a href="http://www.concrete5.org">CMS</a>.</span>
 			&copy; <?=date('Y')?> <a href="<?=DIR_REL?>/"><?=SITE?></a>.
 			&nbsp;&nbsp;
 			<?=t('All rights reserved.')?>	
