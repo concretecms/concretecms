@@ -262,5 +262,4 @@ class PageList extends DatabaseItemList {
 		}
 		return $pages;
 	}
-	
 }
