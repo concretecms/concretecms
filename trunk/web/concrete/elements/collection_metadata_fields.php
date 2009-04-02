@@ -151,11 +151,9 @@ var ccmPathHelper={
 						} ?>
 					</select>
 					
-					<? if( $ak->getAllowOtherValues() ){ ?> 
-						
+					<? if( $ak->getAllowOtherValues()==1 ){ ?> 						
 						<input name="akID_<?=$ak->getCollectionAttributeKeyID()?>_other" type="text" class="faint"
-						value="<?=CollectionAttributeKey::getNewValueEmptyFieldTxt() ?>"
-						
+						value="<?=CollectionAttributeKey::getNewValueEmptyFieldTxt() ?>"						
 						onfocus="ccmAttributeValuesHelper.clrInitTxt(this,'<?=CollectionAttributeKey::getNewValueEmptyFieldTxt() ?>','faint',0)"  
 						onblur="ccmAttributeValuesHelper.clrInitTxt(this,'<?=CollectionAttributeKey::getNewValueEmptyFieldTxt() ?>','faint',1)" 
 						 />
@@ -163,9 +161,9 @@ var ccmPathHelper={
 					
 					<?
 					break;
-				case "SELECT_MULTIPLE":
+				case "SELECT_MULTIPLE":					
 					$options = explode("\n", $ak->getCollectionAttributeKeyValues()); 
-					$caValues=explode("\n",$caValue);
+					$caValues=explode("\n",$caValue); 
 					?>
 					
 					<div> 
@@ -176,8 +174,8 @@ var ccmPathHelper={
 						</div>
 					<? } ?>
 					</div>
-					
-					<? if( $ak->getAllowOtherValues() ){ ?>
+					 
+					<? if( $ak->getAllowOtherValues()==1 ){ ?>
 						<div id="newAttrValueRows">
 						</div>
 						<div><a onclick="ccmAttributeValuesHelper.add(<?=intval($ak->getCollectionAttributeKeyID())?>)">
@@ -186,7 +184,7 @@ var ccmPathHelper={
 					<? } ?>
 							
 					<?
-
+					break;
 				case "NUMBER":?>
 					<input name="akID_<?=$ak->getCollectionAttributeKeyID()?>" type="text" value="<?=$caValue ?>" size="10" />
 					<?
