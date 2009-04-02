@@ -7,10 +7,10 @@
 		private $pages;
 		
 		public function __construct() {
-			Loader::model('blogpage_list');
+			Loader::model('page_list');
 			$nh = Loader::helper('navigation');
 
-			$this->pages = new BlogpageList();
+			$this->pages = new PageList();
 			$this->pages->filterByCollectionTypeID($this->getCollectionIdForBlogPageType());
 			
 			$this->set('navigation', $nh);

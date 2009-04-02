@@ -1,6 +1,7 @@
 <?php defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <?php 
 	foreach($page_list as $page){
+		$page->populateGuestbookInformation();
 		$user = UserInfo::getById($page->getCollectionUserId());
 		Loader::element('blog_abstract', Array(
 			'title'			=>$page->getCollectionName(),
