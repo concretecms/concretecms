@@ -183,7 +183,17 @@ $("#ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?> ul
 
 <div class="ccm-file-properties-details-tab" id="ccm-file-properties-details-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>-tab">
 
+<?
+if (!$previewMode) { 
+	$h = Loader::helper('concrete/interface');
+	$b1 = $h->button_js(t('Rescan'), 'ccm_alRescanFiles(' . $f->getFileID() . ')');
+	print $b1;
+}
+
+?>
+
 <h1><?=t('File Details')?></h1>
+
 
 <div id="ccm-file-properties">
 <h2><?=t('Basic Properties')?></h2>
@@ -277,17 +287,14 @@ foreach($attribs as $at) {
 
 <br/>
 
-<?
-if (!$previewMode) { 
-	$h = Loader::helper('concrete/interface');
-	$b1 = $h->button_js(t('Rescan'), 'ccm_alRescanFiles(' . $f->getFileID() . ')');
-	print $b1;
-}
-
-?>
-
-
 </div>
+
+<h2><?=t('File Preview')?></h2>
+
+<div style="text-align: center">
+<?=$fv->getThumbnail(2)?>
+</div>
+
 </div>
 
 <? if (!$previewMode) { ?>
@@ -299,7 +306,8 @@ if (!$previewMode) {
 		<table border="0" cellspacing="0" width="100%" id="ccm-file-versions-grid" class="ccm-grid" cellpadding="0">
 		<tr>
 			<th>&nbsp;</th>
-			<th><?=t('Name')?></th>
+			<th><?=t('Filename')?></th>
+			<th><?=t('Title')?></th>
 			<th><?=t('Comments')?></th>
 			<th><?=t('Creator')?></th>
 			<th><?=t('Added On')?></th>
@@ -312,7 +320,8 @@ if (!$previewMode) {
 		foreach($versions as $fvv) { ?>
 			<tr fID="<?=$f->getFileID()?>" fvID="<?=$fvv->getFileVersionID()?>" <? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?> class="ccm-file-versions-grid-active" <? } ?>>
 				<td style="text-align: center"><?=$form->radio('vlfvID', $fvv->getFileVersionID(), $fvv->getFileVersionID() == $fv->getFileVersionID())?></td>
-				<td><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/properties?fID=<?=$f->getFileID()?>&fvID=<?=$fvv->getFileVersionID()?>&task=preview_version" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="<?=t('Preview File')?>" class="dialog-launch"><?=$fvv->getTitle()?></a></td>
+				<td><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/properties?fID=<?=$f->getFileID()?>&fvID=<?=$fvv->getFileVersionID()?>&task=preview_version" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="<?=t('Preview File')?>" class="dialog-launch"><?=$fvv->getFilename()?></a></td>
+				<td><?=$fvv->getTitle()?></td>
 				<td><?
 					$comments = $fvv->getVersionLogComments();
 					if (count($comments) > 0) {
