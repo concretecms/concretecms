@@ -341,16 +341,21 @@ class FileVersion extends Object {
 		return $hasThumbnail;
 	}
 	
-	public function getThumbnail($level) {
+	public function getThumbnail($level, $fullImageTag = true) {
 		$html = Loader::helper('html');
 		eval('$hasThumbnail = $this->fvHasThumbnail' . $level . ';');
 		if ($hasThumbnail) {
-			return $html->image($this->getThumbnailSRC($level));
+			if ($fullImageTag) {
+				return $html->image($this->getThumbnailSRC($level));
+			} else {
+				return $this->getThumbnailSRC($level);
+			}
 		} else {
 			$ft = FileTypeList::getType($this->fvFilename);
-			return $ft->getThumbnail($level);
+			return $ft->getThumbnail($level, $fullImageTag);
 		}
 	}
+	
 	// 
 	public function refreshThumbnails() {
 		$db = Loader::db();
