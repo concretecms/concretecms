@@ -40,7 +40,9 @@ div#ccm-file-search-advanced-results-wrapper {display: block; width: 100%; /* po
 div#ccm-file-search-advanced-fields div, div#ccm-sitemap-search td {font-size: 10px !important}
 div#ccm-file-search-advanced-fields-inner {padding-top: 4px}
 div#ccm-file-search-advanced-fields div.ccm-file-search-field {margin-bottom:8px} 
-div#ccm-file-list-wrapper div.ccm-pagination {font-size: 14px;margin-top: 12px;margin-bottom: 12px; }
+div#ccm-file-list-wrapper div.ccm-pagination {font-size: 14px;padding:0px; margin-top: 12px;margin-bottom: 12px; width: 98%; position:static; }
+div#ccm-file-list-wrapper div.ccm-pagination span.ccm-page-left{ position:static; float:left; text-align:left; display:block; width:100px; }
+div#ccm-file-list-wrapper div.ccm-pagination span.ccm-page-right{ position:static; float:right; text-align:right; display:block; width:100px; }
 
 div#ccm-file-search-field-base {display: none}
 div#ccm-file-search-results em.ccm-highlight-search {background-color: #FFF9BB;padding: 4px;font-weight: bold;font-style: normal}
