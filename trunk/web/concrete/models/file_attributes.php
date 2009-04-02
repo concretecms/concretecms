@@ -2,7 +2,7 @@
 
 /**
  * Contains the collection attribute key and value objects.
- * @package models
+ * @package Files
  * @author Tony Trupp <tony@concrete5.org>
  * @category Concrete
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
@@ -13,8 +13,7 @@
 /**
  * An object that represents metadata of a file.
  * @author Tony Trupp <tony@concrete5.org>
- * @package models
- * @category Concrete
+ * @package Files
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  *
@@ -22,6 +21,7 @@
  
  
 Loader::model('attributes');
+defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class FileAttributeKey extends AttributeKey {
 	

@@ -147,7 +147,7 @@ class FileType {
 	 */
 	public function getThumbnail($level, $fullImageTag = true) {
 		eval('$width = AL_THUMBNAIL_WIDTH_LEVEL' . $level . ';');
-		eval('$height = AL_THUMBNAIL_WIDTH_HEIGHT' . $level . ';');
+		eval('$height = AL_THUMBNAIL_HEIGHT_LEVEL' . $level . ';');
 		if (file_exists(DIR_AL_ICONS . '/' . $this->extension . '.png')) {
 			$url = REL_DIR_AL_ICONS . '/' . $this->extension . '.png';
 		} else {
