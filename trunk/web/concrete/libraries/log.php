@@ -189,7 +189,7 @@ class Log {
 		}
 		if ($type != false) {
 			$v = array($type);
-			$r = $db->Execute('select logID from Logs where logType = ? and ' . $kw . ' order by timestamp desc limit ' . $limit, $v);
+			$r = $db->Execute('select logID from Logs where logType = ? ' . $kw . ' order by timestamp desc limit ' . $limit, $v);
 		} else {
 			$r = $db->Execute('select logID from Logs where 1=1 ' . $kw . ' order by timestamp desc limit ' . $limit);
 		}
