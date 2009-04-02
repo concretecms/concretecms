@@ -104,6 +104,7 @@ class IndexedSearch {
 	 * Reindexes the search engine.
 	 */
 	public function reindex() {
+		Cache::disableCache();
 
 		$db = Loader::db();
 		$collection_attributes = Loader::model('collection_attributes');
@@ -140,6 +141,7 @@ class IndexedSearch {
 		}
 		
 		$r->Close();
+		Cache::enableCache();
 		$result = new stdClass;
 		$result->count = $num;
 		return $result;
