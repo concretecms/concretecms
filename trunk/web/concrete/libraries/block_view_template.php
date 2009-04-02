@@ -89,7 +89,10 @@ class BlockViewTemplate {
 					}
 				}
 			}
-			
+		} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php') && $this->bFilename) {
+			$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php';
+			$this->baseURL = DIR_REL . '/' . DIRNAME_BLOCKS . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES;
+			$this->checkHeaderItems = false;						
 		} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php')) {
 			$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php';
 			$this->baseURL = DIR_REL . '/' . DIRNAME_BLOCKS . $obj->getBlockTypeHandle();
