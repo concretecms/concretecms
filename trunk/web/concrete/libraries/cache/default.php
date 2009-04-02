@@ -1,5 +1,8 @@
 <?
 
+// This is ugly. Fix later.
+$GLOBALS['ccmRuntimeCacheEnabled'] = true;
+
 class Cache extends CacheTemplate {
 
 	protected static $filePrefix='object_';
@@ -18,6 +21,9 @@ class Cache extends CacheTemplate {
 	 * the cache must always be enabled for (getting remote data, etc..)
 	 */	
 	public function set($type, $id, $obj, $expire = 0, $forceSet = false){
+		if (!$GLOBALS['ccmRuntimeCacheEnabled']) {
+			return false;
+		}
 		if ((!defined('ENABLE_CACHE')) || (ENABLE_CACHE == false && $forceSet == false)) {
 			return false;
 		}
@@ -46,6 +52,9 @@ class Cache extends CacheTemplate {
 	 * the cache must always be enabled for (getting remote data, etc..)
 	 */	
 	public function get($type, $id, $mustBeNewerThan = false, $forceGet = false){
+		if (!$GLOBALS['ccmRuntimeCacheEnabled']) {
+			return false;
+		}
 		if ((!defined('ENABLE_CACHE')) || (ENABLE_CACHE == false && $forceGet == false)) {
 			return false;
 		}
@@ -90,6 +99,9 @@ class Cache extends CacheTemplate {
 	 * Removes an item from the cache
 	 */	
 	public function delete($type, $id){
+		if (!$GLOBALS['ccmRuntimeCacheEnabled']) {
+			return false;
+		}
 		if ((!defined('ENABLE_CACHE')) || (ENABLE_CACHE == false)) {
 			return false;
 		}		
@@ -107,6 +119,9 @@ class Cache extends CacheTemplate {
 	 * Completely flushes the cache
 	 */	
 	public function flush(){
+		if (!$GLOBALS['ccmRuntimeCacheEnabled']) {
+			return false;
+		}
 		if ($handle = opendir(DIR_FILES_CACHE_CORE) ) {		
 			while (false !== ($file = readdir($handle))){
 				$filePath=DIR_FILES_CACHE_CORE.'/'.$file; 
@@ -128,6 +143,15 @@ class Cache extends CacheTemplate {
 	protected function getFilePath($key=''){
 		return DIR_FILES_CACHE_CORE.'/'.self::$filePrefix.$key.'';
 	}
+	
+	public function disableCache() {
+		$GLOBALS['ccmRuntimeCacheEnabled'] = false;
+	}
+	
+	public function enableCache() {
+		$GLOBALS['ccmRuntimeCacheEnabled'] = true;
+	}
+	
 }
 
 
