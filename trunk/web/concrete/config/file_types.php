@@ -1,4 +1,15 @@
 <?
+
+/**
+ * Routes file types to importers, handlers.
+ * File type icons provided by http://Jordan-Michael.com/
+ * @package Files
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2009 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
+
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 $ft = FileTypeList::getInstance();
