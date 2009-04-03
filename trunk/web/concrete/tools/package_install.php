@@ -11,12 +11,14 @@ if (!empty($cID)) {
 }
 
 if (empty($error)) {
-	$msg = "<p>The package was successfully " . 
-		($install ? "installed." : "downloaded and unzipped onto your server.</p>");
+	if ($install) {
+		$msg = t('The package was successfully installed.');
+	} else {
+		$msg = t('The package was successfully downloaded and decompressed on your server.');
+	}
 } else {
-	$msg = "<p>The package could not be installed.</p>" .
-		"<p>$error</p>";
+	$msg = t("The package could not be installed: %s.", $error);
 }
 ?>
 
-<div><?=$msg?></div>
+<div><p><?=$msg?></p></div>
