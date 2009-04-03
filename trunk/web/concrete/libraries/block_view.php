@@ -122,7 +122,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 			$obj = $this->blockObj;
 			if ($obj->getPackageID() > 0) {
-				if (is_dir(DIR_PACKAGES . '/' . $obj->getPackageHandle())) {
+				if (is_dir(DIR_PACKAGES_CORE . '/' . $obj->getPackageHandle())) {
 					$base = ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $obj->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
 				} else {
 					$base = DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $obj->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
