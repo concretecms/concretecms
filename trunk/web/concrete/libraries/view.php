@@ -110,6 +110,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 */
 		public function outputHeaderItems() {
 			$items = array();
+			if (is_array($this->headerItems['CORE'])) {
+				foreach($this->headerItems['CORE'] as $hi) {
+					if (!in_array($hi, $items)) {
+						print $hi . "\n";
+						$items[] = $hi;
+					}
+				}
+			}
 			if (is_array($this->headerItems['VIEW'])) {
 				foreach($this->headerItems['VIEW'] as $hi) {
 					if (!in_array($hi, $items)) {
