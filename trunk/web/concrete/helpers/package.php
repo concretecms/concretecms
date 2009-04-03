@@ -20,6 +20,25 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class PackageHelper {
 
+
+	private function mapError($testResults) {
+		$errorText[Package::E_PACKAGE_INSTALLED] = t("You've already installed that package.");		
+		$errorText[Package::E_PACKAGE_NOT_FOUND] = t("Invalid Package.");
+		$errorText[Package::E_PACKAGE_VERSION] = t("This package requires concrete version %s or greater.");
+
+		$testResultsText = array();
+		foreach($testResults as $result) {
+			if (is_array($result)) {
+				$et = $errorText[$result[0]];
+				array_shift($result);
+				$testResultsText[] = vsprintf($et, $result);
+			} else {
+				$testResultsText[] = $errorText[$result];
+			}
+		}
+		return $testResultsText;
+	}
+
 	public function install_remote($type, $remoteCID=null, $install=false)
 	{
 		if (empty($remoteCID)) {
@@ -62,6 +81,8 @@ class PackageHelper {
         	$tests = Package::testForInstall($item->getHandle());
 			$errors = "";
         	if (is_array($tests)) {
+				$tests = $this->mapError($tests);
+
 				$errors .= "<ol>";
 				foreach ($tests as $test) {
 					$errors .= "<li>$test</li>";
