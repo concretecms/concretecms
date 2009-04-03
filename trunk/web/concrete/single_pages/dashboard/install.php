@@ -122,6 +122,8 @@ function logoutSuccess() {
 
 		<h1><span><?=t('New')?></span></h1>
 		<div class="ccm-dashboard-inner">
+		
+		<? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
 
 		<? if (!UserInfo::isRemotelyLoggedIn()) { ?>
 			<p><?=t('You are not currently signed in to the marketplace.')?></p>
@@ -132,7 +134,9 @@ function logoutSuccess() {
 			  <?=t('(Not your account? <a href="#" onclick="ccm_support.signOut(logoutSuccess)">Sign Out</a>)')?></p>
 		<? } ?>
 		<hr />
-
+		
+		<? } ?>
+		
 	<? if (count($availableArray) == 0 && count($purchasedBlocks) == 0) { ?>
 
 		<?=t('Nothing is available to install.')?>
@@ -194,6 +198,13 @@ function logoutSuccess() {
 		</div>
 
 		<? } ?>
+
+		<? if (ENABLE_MARKETPLACE_SUPPORT) { ?>		
+		<hr />
+		<p><strong><?=t('You can extend your site with new addons and themes from the <a href="%s" target="_blank">concrete5 marketplace</a>.', MARKETPLACE_URL_LANDING);?></strong></p>
+		
+		<? } ?>
+		
 		</div>
 
 	</div>
