@@ -25,14 +25,16 @@ class ConcreteMarketplaceBlocksHelper {
 			return array();
 		}
 		
+		$cacheKey = '';
 		if ($list == 'marketplace_purchases_list') {
 			$authData = UserInfo::getAuthData();
+			$cacheKey = $authData['auth_timestamp'];
 			if (!isset($authData['auth_token']) || !isset($authData['auth_uname']) || !isset($authData['auth_timestamp'])) {
 				return array();
 			}
 		}
 
-		$blockTypes = Cache::get($list, false, false, true);
+		$blockTypes = Cache::get($list.$cacheKey, false, false, true);
 		if (!is_array($blockTypes)) {
 			$fh = Loader::helper('file'); 
 			if (!$fh) return array();
@@ -66,7 +68,7 @@ class ConcreteMarketplaceBlocksHelper {
 				} catch (Exception $e) {}
 			}
 
-			Cache::set($list, false, $blockTypes, MARKETPLACE_CONTENT_LATEST_THRESHOLD, true);		
+			Cache::set($list.$cacheKey, false, $blockTypes, MARKETPLACE_CONTENT_LATEST_THRESHOLD, true);		
 		}
 
 		if ($filterInstalled && is_array($blockTypes)) {
