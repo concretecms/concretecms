@@ -610,12 +610,12 @@ $(document).ready(function(){
 
 	<script>
 		$(function(){ 
-			$("input[@name='CONTENTS_TXT_EDITOR_MODE']").each(function(i,el){ 
+			$("input[name='CONTENTS_TXT_EDITOR_MODE']").each(function(i,el){ 
 				el.onchange=function(){isTxtEditorModeCustom();}
 			})	 	
 		});	
 		function isTxtEditorModeCustom(){
-			if($("input[@name='CONTENTS_TXT_EDITOR_MODE']:checked").val()=='CUSTOM'){
+			if($("input[name='CONTENTS_TXT_EDITOR_MODE']:checked").val()=='CUSTOM'){
 				$('#cstmEditorTxtAreaWrap').css('display','block');
 			}else{
 				$('#cstmEditorTxtAreaWrap').css('display','none');
