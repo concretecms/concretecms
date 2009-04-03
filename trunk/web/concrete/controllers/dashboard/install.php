@@ -6,9 +6,9 @@ class DashboardInstallController extends Controller {
 	protected $errorText = array();
 	
 	public function __construct() {
-		$this->errorText[E_PACKAGE_INSTALLED] = t("You've already installed that package.");		
-		$this->errorText[E_PACKAGE_NOT_FOUND] = t("Invalid Package.");
-		$this->errorText[E_PACKAGE_VERSION] = t("This package requires concrete version %s or greater.");
+		$this->errorText[Package::E_PACKAGE_INSTALLED] = t("You've already installed that package.");		
+		$this->errorText[Package::E_PACKAGE_NOT_FOUND] = t("Invalid Package.");
+		$this->errorText[Package::E_PACKAGE_VERSION] = t("This package requires concrete version %s or greater.");
 		$this->error = Loader::helper('validation/error');
 	}
 	
