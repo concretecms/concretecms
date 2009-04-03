@@ -70,7 +70,7 @@ var ccmPopupLogin = {
 				href: loginFormUrl, 
 				title: "Login",
 				width: 550,
-				modal: true, 
+				modal: false, 
 				onOpen:function(){ccmPopupLogin.showLoginFunction()},
 				onClose: function(){}, 
 				height: 220
