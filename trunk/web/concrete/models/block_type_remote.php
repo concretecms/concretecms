@@ -12,6 +12,9 @@
 
 class BlockTypeRemote extends BlockType{
 
+	protected $btName='';
+	protected $btHandle='';
+	protected $btDescription='';
 	protected $isPurchase=false;
 	protected $price=0.00;	
 	protected $remoteCID=0;
