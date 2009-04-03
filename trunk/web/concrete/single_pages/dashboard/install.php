@@ -145,28 +145,22 @@ function logoutSuccess() {
 
 		<div style="margin:0px; padding:0px;  height:auto">
 		<? foreach ($purchasedBlocks as $pb) {
-			$style = $pb->getRemoteIconURL() ? 'style="background-image: url('.$pb->getRemoteIconURL().')"' : '';
 			$file = $pb->getRemoteFileURL();
-			$button = (!empty($file)) ? $ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getRemoteCollectionID()), "right")
-			                          : $ch->button(t("Details"), $pb->getRemoteURL(), "right"); ?>
+			if (!empty($file)) {?>
 			<div class="ccm-block-type">
 			<table width="100%">
-			<? if (!empty($pb->btDescription)) {?>
-				<tr>
-					<td colspan="2"><p class="ccm-block-type-inner" <?=$style?>><?=$pb->btName?></p></td>
-				</tr>
-				<tr>
-					<td style="color: #aaa; padding: 2px 0 6px"><?=$pb->btDescription?></td>
-					<td style="vertical-align: bottom"><?=$button?></td>
-				</tr>
-			<? } else {?>
-				<tr>
-					<td><p class="ccm-block-type-inner" <?=$style?>><?=$pb->btName?></p></td>
-					<td style="vertical-align: bottom"><?=$button?></td>
-				</tr>
-			<? } ?>
+			<tr>
+				<td rowspan="2"><img src="<?=$pb->getRemoteIconURL()?>" style="width:90px;height:90px"></td>
+				<td><p class="ccm-block-type-inner-nobkgd"><?=$pb->btName?></p></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td style="color: #aaa; padding: 2px 0 6px"><?=$pb->btDescription?></td>
+				<td style="vertical-align: bottom"><?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getRemoteCollectionID()), "right")?></td>
+			</tr>
 			</table>
 			</div>
+			<? } ?>
 		<? } ?>
 		</div>
 
@@ -175,13 +169,14 @@ function logoutSuccess() {
 			<div class="ccm-block-type">
 			<table width="100%">
 			<tr>
-			<td colspan="2">
 			<? if (get_class($obj) == "BlockType") { ?>
-				<p class="ccm-block-type-inner" style="background-image: url(<?=$ci->getBlockTypeIconURL($obj)?>)"><?=$obj->getBlockTypeName()?></p>
+				<td rowspan="2"><img src="<?=$ci->getBlockTypeIconURL($obj)?>" style="width:90px;height:90px"></td>
+				<td><p class="ccm-block-type-inner-nobkgd"><?=$obj->getBlockTypeName()?></p></td>
 			<? } else { ?>
-				<p class="ccm-block-type-inner" style="background-image: url(<?=$ci->getPackageIconURL($obj)?>)"><?=$obj->getPackageName()?></p>
+				<td rowspan="2"><img src="<?=$ci->getPackageIconURL($obj)?>" style="width:90px;height:90px"></td>
+				<td><p class="ccm-block-type-inner-nobkgd"><?=$obj->getPackageName()?></p></td>
 			<? } ?>
-			</td>
+				<td>&nbsp;</td>
 			</tr>
 			<tr>
 			<? if (get_class($obj) == "BlockType") { ?>
