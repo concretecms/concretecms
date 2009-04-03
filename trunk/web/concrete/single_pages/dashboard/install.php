@@ -150,7 +150,7 @@ function logoutSuccess() {
 			<div class="ccm-block-type">
 			<table width="100%">
 			<tr>
-				<td rowspan="2"><img src="<?=$pb->getRemoteIconURL()?>" style="width:90px;height:90px"></td>
+				<td rowspan="2"><img src="<?=$pb->getRemoteIconURL()?>" style="width:90px;height:90px; margin-right: 8px"></td>
 				<td><p class="ccm-block-type-inner-nobkgd"><?=$pb->btName?></p></td>
 				<td>&nbsp;</td>
 			</tr>
