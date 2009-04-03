@@ -17,30 +17,27 @@ if (is_object($c)) {
 ?>
 
 <meta http-equiv="content-type" content="text/html; charset=<?=APP_CHARSET?>" />
-
 <?
 $akt = $c->getCollectionAttributeValue('meta_title'); 
 $akd = $c->getCollectionAttributeValue('meta_description');
 $akk = $c->getCollectionAttributeValue('meta_keywords');
 
 if ($akt) { 
-	$pageTitle = $akt; ?>
-	<title><?=$akt?></title>
+	$pageTitle = $akt; 
+	?><title><?=$akt?></title>
 <? } else { 
 	$pageTitle = $c->getCollectionName();
-	?>
-	<title><?=SITE . ' :: ' . $pageTitle?></title>
+	?><title><?=SITE . ' :: ' . $pageTitle?></title>
 <? } 
 
-if ($akd) { ?>
-	<meta name="description" content="<?=htmlspecialchars($akd)?>" />
-<? } else { ?>	
-	<meta name="description" content="<?=htmlspecialchars($pageDescription)?>" />
+if ($akd) { 
+?><meta name="description" content="<?=htmlspecialchars($akd)?>" />
+<? } else { 
+?><meta name="description" content="<?=htmlspecialchars($pageDescription)?>" />
 <? }
-
-if ($akk) { ?>
-	<meta name="keywords" content="<?=htmlspecialchars($akk)?>" />
+if ($akk) { ?><meta name="keywords" content="<?=htmlspecialchars($akk)?>" />
 <? } ?>
+<meta name="generator" content="concrete5 - <?=APP_VERSION ?>" />
 
 <? $u = new User(); ?>
 <script type="text/javascript">
@@ -82,7 +79,7 @@ if($favIconFID) {
 	<link rel="icon" href="<?=$f->getRelativePath()?>" type="image/x-icon" />
 <? } ?>
 
-<? 
+<?  
 if (is_object($cp)) {
 
 	if ($this->editingEnabled()) {

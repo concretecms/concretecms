@@ -148,8 +148,10 @@ class RegisterController extends Controller {
 				
 				if (!$u->isError()) {
 					//$this->redirect('/register', 'register_success', $rcID);
-					$redirectMethod='register_success';	
-					$registerData['msg']=$this->getRegisterSuccessMsg();
+					if(!$redirectMethod){
+						$redirectMethod='register_success';	
+						$registerData['msg']=$this->getRegisterSuccessMsg();
+					}
 					$registerData['uID']=intval($u->uID);		
 					
 					if($_REQUEST['remote'] && intval($_REQUEST['timestamp'])){ 

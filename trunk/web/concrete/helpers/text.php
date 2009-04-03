@@ -108,10 +108,24 @@ class TextHelper {
 	 * @param string $input
 	 * @return string $output
 	 */
-	public function autolink($input) {
-		$output = preg_replace("/(http:\/\/|https:\/\/|(www\.))(([^\s<]{4,80})[^\s<]*)/", '<a href="http://$2$3" rel="nofollow">http://$2$4</a>', $input);
+	public function autolink($input,$newWindow=0) {
+		$target=($newWindow)?' target="_blank" ':'';
+		$output = preg_replace("/(http:\/\/|https:\/\/|(www\.))(([^\s<]{4,80})[^\s<]*)/", '<a href="http://$2$3" '.$target.' rel="nofollow">http://$2$4</a>', $input);
 		return ($output);
 	}
+	
+	/** 
+	 * automatically add hyperlinks to any twitter style @usernames in a string
+	 * @param string $input
+	 * @return string $output
+	 */	
+	public function twitterAutolink($input,$newWindow=0,$withSearch=0) {
+		$target=($newWindow)?' target="_blank" ':'';
+    	$output = preg_replace('/([\.|\,|\:|\¡|\¿|\>|\{|\(]?)@{1}(\w*)([\.|\,|\:|\!|\?|\>|\}|\)]?)\s/i', "$1<a href=\"http://twitter.com/$2\" ".$target." class=\"twitter-username\">@$2</a>$3 ", $input);
+		if($withSearch) 
+			$output = preg_replace('/([\.|\,|\:|\¡|\¿|\>|\{|\(]?)#{1}(\w*)([\.|\,|\:|\!|\?|\>|\}|\)]?)\s/i', "$1<a href=\"http://search.twitter.com/search?q=%23$2\" ".$target." class=\"twitter-search\">#$2</a>$3 ", $input);		
+    	return $output;
+	}  
 	
 	/**
 	 * Runs a number of text functions, including autolink, nl2br, strip_tags. Assumes that you want simple

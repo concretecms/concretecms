@@ -245,7 +245,7 @@ class Controller {
 	 * @param string $item
 	 * @return void
 	 */
-	public function addHeaderItem($item) {
+	public function addHeaderItem($item) { 
 		$v = View::getInstance();
 		$v->addHeaderItem($item, 'CONTROLLER');
 	}
