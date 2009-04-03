@@ -214,6 +214,7 @@ var ccmPathHelper={
 				
 				<? break;
 			} ?>
+				<div class="ccm-spacer">&nbsp;</div>
 			
 			</div>
 		<? } ?>	

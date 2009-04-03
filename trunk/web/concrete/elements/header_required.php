@@ -67,21 +67,11 @@ var CCM_REL = "<?=DIR_REL?>";
 
 <?
 $html = Loader::helper('html');
-$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
-
-$this->addHeaderItem($html->javascript('jquery.js'));
-$this->addHeaderItem($html->javascript('swfobject.js'));
-$this->addHeaderItem($html->javascript('ccm.base.js'));
-$this->addHeaderItem($html->css('ccm.base.css'));
-
-/* 
-//Login Popup Requirements 
-$this->addHeaderItem($html->javascript('ccm.popup_login.js'));
-$this->addHeaderItem($html->javascript('jquery.form.js'));
-$this->addHeaderItem($html->javascript('ccm.dialog.js'));
-$this->addHeaderItem($html->css('ccm.dialog.css'));
-$this->addHeaderItem($html->css('ccm.popup_login.css'));
-*/ 
+$this->addHeaderItem($html->javascript('jquery.js'), 'CORE');
+$this->addHeaderItem($html->javascript('swfobject.js'), 'CORE');
+$this->addHeaderItem($html->javascript('ccm.base.js'), 'CORE');
+$this->addHeaderItem($html->css('ccm.base.css'), 'CORE');
+$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>', 'CORE'); 
 
 $favIconFID=intval(Config::get('FAVICON_FID'));
 
@@ -100,7 +90,7 @@ if (is_object($cp)) {
 	}
 	
 	if ($this->areLinksDisabled()) { 
-		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_disableLinks(); })</script>');
+		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_disableLinks(); })</script>', 'CORE');
 	}
 
 }
@@ -111,7 +101,7 @@ if (is_object($cp)) {
 
 	if ($this->editingEnabled()) {
 		//Loader::element('page_controls_menu', array('cp' => $cp, 'c' => $c));
-		$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/page_controls_menu_js?cID=' . $c->getCollectionID() . '&cvID=' . $cvID . '&btask=' . $_REQUEST['btask'] . '&ts=' . time() . '"></script>'); 
+		$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/page_controls_menu_js?cID=' . $c->getCollectionID() . '&cvID=' . $cvID . '&btask=' . $_REQUEST['btask'] . '&ts=' . time() . '"></script>', 'CORE'); 
 	}
 }
 

@@ -693,13 +693,16 @@ ccm_alActivateMenu = function(obj, e) {
 
 	// now, check to see if this menu has been made
 	var bobj = document.getElementById("ccm-al-menu" + fID + selector);
-
+	
+	// This immediate click mode has promise, but it's annoying more than it's helpful
+	/*
 	if (ccm_alLaunchType != 'DASHBOARD' && selector == '') {
 		// then we are in file list mode in the site, which means we 
 		// we don't give out all the options in the list
 		ccm_alSelectFile(fID);
 		return;
 	}
+	*/
 	
 	if (!bobj) {
 		// create the 1st instance of the menu
