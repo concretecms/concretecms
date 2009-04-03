@@ -25,14 +25,14 @@
 	}
 
 	reloadPreview = function(blockForm) {
-		orderBy = $("select[@name=orderBy]").val();
-		displayPages = $("select[@name=displayPages]").val();
-		displaySubPages = $("select[@name=displaySubPages]").val();
-		displaySubPageLevels = $("select[@name=displaySubPageLevels]").val();
-		displaySubPageLevelsNum = $("input[@name=displaySubPageLevelsNum]").val();
-		displayUnavailablePages = $("input[@name=displayUnavailablePages]").val();
-		displayPagesCID = $("input[@name=displaySubPageLevelsNum]").val();
-		displayPagesIncludeSelf = $("input[@name=displayUnavailablePages]").val();
+		orderBy = $("select[name=orderBy]").val();
+		displayPages = $("select[name=displayPages]").val();
+		displaySubPages = $("select[name=displaySubPages]").val();
+		displaySubPageLevels = $("select[name=displaySubPageLevels]").val();
+		displaySubPageLevelsNum = $("input[name=displaySubPageLevelsNum]").val();
+		displayUnavailablePages = $("input[name=displayUnavailablePages]").val();
+		displayPagesCID = $("input[name=displaySubPageLevelsNum]").val();
+		displayPagesIncludeSelf = $("input[name=displayUnavailablePages]").val();
 
 		if(displayPages == "custom" && !displayPagesCID) { return false; }
 		
@@ -43,8 +43,8 @@
 		
 		$.ajax({
 			type: 'POST',
-			url: $("input[@name=autonavPreviewPane]").val(),
-			data: 'orderBy=' + orderBy + '&cID=' + $("input[@name=autonavCurrentCID]").val() + '&displayPages=' + displayPages + '&displaySubPages=' + displaySubPages + '&displaySubPageLevels=' + displaySubPageLevels + '&displaySubPageLevelsNum=' + displaySubPageLevelsNum + '&displayUnavailablePages=' + displayUnavailablePages + '&displayPagesCID=' + displayPagesCID + '&displayPagesIncludeSelf=' + displayPagesIncludeSelf,
+			url: $("input[name=autonavPreviewPane]").val(),
+			data: 'orderBy=' + orderBy + '&cID=' + $("input[name=autonavCurrentCID]").val() + '&displayPages=' + displayPages + '&displaySubPages=' + displaySubPages + '&displaySubPageLevels=' + displaySubPageLevels + '&displaySubPageLevelsNum=' + displaySubPageLevelsNum + '&displayUnavailablePages=' + displayUnavailablePages + '&displayPagesCID=' + displayPagesCID + '&displayPagesIncludeSelf=' + displayPagesIncludeSelf,
 			success: function(resp) {
 				//$("#ccm-dialog-throbber").css('visibility', 'hidden');
 				$("#ccm-autonavPane-preview").html(resp);

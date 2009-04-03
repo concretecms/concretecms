@@ -76,7 +76,7 @@ var miniSurvey ={
 					break;
 				}
 			} 
-			postStr+='&inputType='+answerType;//$('input[@name=answerType'+mode+']:checked').val()
+			postStr+='&inputType='+answerType;//$('input[name=answerType'+mode+']:checked').val()
 			postStr+='&msqID='+msqID+'&qsID='+parseInt(this.qsID);			
 			$.ajax({ 
 					type: "POST",
