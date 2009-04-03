@@ -101,13 +101,14 @@ class Archive {
 			$directory = $file;
 		}
 		$dir = $this->unzip($directory);
+		$fh = Loader::helper('file');
 		$dirFull = $this->getArchiveDirectory($dir);
 		$dirBase = substr(strrchr($dirFull, '/'), 1);
 		if (file_exists($this->targetDirectory . '/' . $dirBase)) {
 			throw new Exception(t('The directory %s already exists. Perhaps this item has already been installed.', $this->targetDirectory . '/' . $dirBase));
 		} else {
-			$r = @rename($dirFull, $this->targetDirectory . '/' . $dirBase);
-			if (!$r) {
+			$f = $fh->copyAll($dirFull, $this->targetDirectory . '/' . $dirBase);
+			if (!is_dir($this->targetDirectory . '/' . $dirBase)) {
 				throw new Exception('Unable to copy directory ' . $dirBase . ' to ' . $this->targetDirectory . '. Perhaps permissions are set incorrectly or the target directory does not exist.');
 			}
 		}

@@ -173,21 +173,26 @@ class Package extends Object {
 		$db = Loader::db();
 		$errors = array();
 		
-		// test minimum application version requirement
 		$pkg = Loader::package($package);
-		if (version_compare(APP_VERSION, $pkg->getApplicationVersionRequired(), '<')) {
-			$errors[] = array(E_PACKAGE_VERSION, $pkg->getApplicationVersionRequired());
-		}
 		
 		// Step 1 does that package exist ?
 		if ((!is_dir(DIR_PACKAGES . '/' . $package) && (!is_dir(DIR_PACKAGES_CORE . '/' . $package))) || $package == '') {
-			$errors[] = E_PACKAGE_NOT_FOUND;
+			$errors[] = Package::E_PACKAGE_NOT_FOUND;
+		} else if (!is_object($pkg)) {
+			$errors[] = Package::E_PACKAGE_NOT_FOUND;
 		}
 		
 		// Step 2 - check to see if the user has already installed a package w/this handle
 		$cnt = $db->getOne("select count(*) from Packages where pkgHandle = ?", array($package));
 		if ($cnt > 0) {
-			$errors[] = E_PACKAGE_INSTALLED;
+			$errors[] = Package::E_PACKAGE_INSTALLED;
+		}
+		
+		if (count($errors) == 0) {
+			// test minimum application version requirement
+			if (version_compare(APP_VERSION, $pkg->getApplicationVersionRequired(), '<')) {
+				$errors[] = array(Package::E_PACKAGE_VERSION, $pkg->getApplicationVersionRequired());
+			}
 		}
 		
 		if (count($errors) > 0) {

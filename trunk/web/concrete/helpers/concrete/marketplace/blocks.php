@@ -40,7 +40,7 @@ class ConcreteMarketplaceBlocksHelper {
 			// Retrieve the URL contents 
 			if ($list == 'marketplace_purchases_list') {
 				$url = MARKETPLACE_PURCHASES_LIST_WS."?auth_token={$authData['auth_token']}&auth_uname={$authData['auth_uname']}&auth_timestamp={$authData['auth_timestamp']}";
-			} else if ($list == 'marketplace_purchases_list') {
+			} else if ($list == 'marketplace_previewable_list') {
 				$url = MARKETPLACE_BLOCK_LIST_WS;
 			}
 

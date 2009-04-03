@@ -55,6 +55,39 @@ class FileHelper {
 	}
 	
 	/** 
+	 * Recursively copies all items in the source directory to the target directory
+	 * @param string $source
+	 * @param string $target
+	 */
+	public function copyAll($source, $target, $mode = 0777) {
+		if (is_dir($source)) {
+			@mkdir($target, $mode);
+			chmod($target, $mode);
+			
+			$d = dir($source);
+			while (FALSE !== ($entry = $d->read())) {
+				if ( $entry == '.' || $entry == '..' ) {
+					continue;
+				}
+			
+				$Entry = $source . '/' . $entry;            
+				if (is_dir($Entry)) {
+					$this->copyAll($Entry, $target . '/' . $entry, $mode);
+					continue;
+				}
+				
+				copy($Entry, $target . '/' . $entry);
+				chmod($target . '/' . $entry, $mode);
+			}
+			
+			$d->close();
+		} else {
+			copy($source, $target);
+			chmod($target, $mode);
+		}
+	}
+	
+	/** 
 	 * Takes a path to a file and sends it to the browser, streaming it, and closing the HTTP connection afterwards. Basically a force download method
 	 */
 	public function forceDownload($file) {
