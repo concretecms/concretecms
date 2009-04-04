@@ -183,6 +183,13 @@ if( $_REQUEST['remote'] ){
 				
 			<? }
 			} ?>
+
+			<div class="ccm-fieldPair">
+			<?=$form->label('uTermsConditions', t('I agree to the <a href="%s" target="_blank">terms and conditions</a>.','http://www.concrete5.org/help/legal') )?>
+			<?=$form->checkbox('uTermsConditions', 'terms')?>
+			
+			<div class="ccm-spacer"></div>
+			</div>
 		
 			<div class="ccm-spacer"></div>
 
