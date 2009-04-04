@@ -3,27 +3,8 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class DashboardInstallController extends Controller {
 	
-	protected $errorText = array();
-	
 	public function __construct() {
-		$this->errorText[Package::E_PACKAGE_INSTALLED] = t("You've already installed that package.");		
-		$this->errorText[Package::E_PACKAGE_NOT_FOUND] = t("Invalid Package.");
-		$this->errorText[Package::E_PACKAGE_VERSION] = t("This package requires concrete version %s or greater.");
 		$this->error = Loader::helper('validation/error');
-	}
-	
-	private function mapError($testResults) {
-		$testResultsText = array();
-		foreach($testResults as $result) {
-			if (is_array($result)) {
-				$et = $this->errorText[$result[0]];
-				array_shift($result);
-				$testResultsText[] = vsprintf($et, $result);
-			} else {
-				$testResultsText[] = $this->errorText[$result];
-			}
-		}
-		return $testResultsText;
 	}
 	
 	public function view() {
@@ -96,7 +77,7 @@ class DashboardInstallController extends Controller {
 	public function install_package($package) {
 		$tests = Package::testForInstall($package);
 		if (is_array($tests)) {
-			$tests = $this->mapError($tests);
+			$tests = Package::mapError($tests);
 			$this->set('error', $tests);
 		} else {
 			$p = Loader::package($package);
@@ -112,9 +93,10 @@ class DashboardInstallController extends Controller {
     public function remote_purchase($remoteCID=null)
     {
     	$ph = Loader::helper('package');
-    	$error = $ph->install_remote('purchase', $remoteCID, false);
-		if (!empty($error)) {
-			$this->set('error', array($error));
+    	$errors = $ph->install_remote('purchase', $remoteCID, false);
+		if (is_array($errors)) {
+			$errors = Package::mapError($errors);
+			$this->set('error', $errors);
 		}
     }
 

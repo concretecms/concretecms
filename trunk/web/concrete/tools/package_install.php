@@ -5,20 +5,31 @@ $install = isset($_REQUEST['install']) ? $_REQUEST['install'] : false;
 
 if (!empty($cID)) {
 	$ph = Loader::helper('package');
-	$error = $ph->install_remote($type, $cID, $install);
-} else {
-	$error = t('No package specified.');
-}
-
-if (empty($error)) {
-	if ($install) {
-		$msg = t('The package was successfully installed.');
-	} else {
-		$msg = t('The package was successfully downloaded and decompressed on your server.');
+	$errors = $ph->install_remote($type, $cID, $install);
+	if (is_array($errors)) {
+		$errors = Package::mapError($errors);
 	}
 } else {
-	$msg = t("The package could not be installed: %s.", $error);
+	$errors = array(t('No package specified.'));
 }
+
 ?>
 
-<div><p><?=$msg?></p></div>
+<div>
+<? if (!is_array($errors)) { ?>
+	<p>
+	<? if ($install) {
+ 		echo t('The package was successfully installed.');
+	} else {
+		echo t('The package was successfully downloaded and decompressed on your server.');
+	} ?>
+	</p>
+<? } else { ?>
+	<p><?= t("The package could not be installed:") ?></p>
+	<ol>
+	<? foreach ($errors as $error) { ?>
+		<li><?= $error ?></li>
+	<? } ?>
+	</ol>
+<? } ?>
+</div>

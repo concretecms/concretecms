@@ -18,6 +18,7 @@ if(ENABLE_MARKETPLACE_SUPPORT){
 	<? foreach($marketplaceBlockTypes as $bt) { 
 		$btIcon = $bt->getRemoteIconURL();
 		$btFile = $bt->getRemoteFileURL();
+		if (empty($btFile)) continue;
 		$btButton = t("Download");
 		$btClass = "";
 		$btDesc = $bt->getBlockTypeDescription();

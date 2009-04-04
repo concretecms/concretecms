@@ -20,29 +20,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class PackageHelper {
 
-
-	private function mapError($testResults) {
-		$errorText[Package::E_PACKAGE_INSTALLED] = t("You've already installed that package.");		
-		$errorText[Package::E_PACKAGE_NOT_FOUND] = t("Invalid Package.");
-		$errorText[Package::E_PACKAGE_VERSION] = t("This package requires concrete version %s or greater.");
-
-		$testResultsText = array();
-		foreach($testResults as $result) {
-			if (is_array($result)) {
-				$et = $errorText[$result[0]];
-				array_shift($result);
-				$testResultsText[] = vsprintf($et, $result);
-			} else {
-				$testResultsText[] = $errorText[$result];
-			}
-		}
-		return $testResultsText;
-	}
-
 	public function install_remote($type, $remoteCID=null, $install=false)
 	{
 		if (empty($remoteCID)) {
-			return t('No package specified.');
+			return array(Package::E_PACKAGE_NOT_FOUND);
 		}
 
 	    if ($type != 'theme') {
@@ -58,15 +39,19 @@ class PackageHelper {
 			}
 		}
 		if (empty($item)) {
-			return t('Not a recognized package.');
+			return array(Package::E_PACKAGE_NOT_FOUND);
 		}
 
 		$authData = UserInfo::getAuthData();
 		$fileURL = $item->getRemoteFileURL();
 		$fileURL .= "&auth_token={$authData['auth_token']}&auth_uname={$authData['auth_uname']}&auth_timestamp={$authData['auth_timestamp']}";
+		if (empty($fileURL)) {
+			return array(Package::E_PACKAGE_NOT_FOUND);
+		}
+
 		$file = $this->download_remote_package($fileURL);
 		if (empty($file)) {
-			return t('Not a recognized package.');
+			return array(Package::E_PACKAGE_DOWNLOAD);
 		}
 
 		try {
@@ -74,38 +59,28 @@ class PackageHelper {
 			$am = new PackageArchive($item->getHandle());
 			$am->install($file, true);
 		} catch (Exception $e) {
-			return t('An error while trying to unzip the package: ') . $e->getMessage();
+			return array($e->getMessage());
 		}
 
 		if ($install) {
         	$tests = Package::testForInstall($item->getHandle());
-			$errors = "";
         	if (is_array($tests)) {
-				$tests = $this->mapError($tests);
-
-				$errors .= "<ol>";
-				foreach ($tests as $test) {
-					$errors .= "<li>$test</li>";
-				}
-				$errors .= "</ol>";
-				return $errors;
+				return $tests;
         	} else {
             	$p = Loader::package($item->getHandle());
             	try {
                 	$p->install();
             	} catch(Exception $e) {
-					return t('An error while trying to install the package: ') . $e->getMessage();
+					return array(Package::E_PACKAGE_INSTALL);
             	}
 			}
         }
 
-		return null;
+		return true;
 	}
 
 	private function download_remote_package($fileURL)
 	{
-		if (empty($fileURL)) return;
-
 		$fh = Loader::helper('file');
 		$pkg = $fh->getContents($fileURL);
 
