@@ -24,6 +24,7 @@ class InstallController extends Controller {
 			"BASE_URL"=>BASE_URL,
 			"DIR_FILES_UPLOADED"=>DIR_FILES_UPLOADED_STANDARD,
 			"DIR_FILES_UPLOADED_THUMBNAILS"=>DIR_FILES_UPLOADED_THUMBNAILS,
+			"DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2" => DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2,
 			"DIR_FILES_TRASH"=>DIR_FILES_TRASH_STANDARD,
 			"DIR_FILES_CACHE"=>DIR_FILES_CACHE,
 			"DIR_FILES_CACHE_CORE"=>DIR_FILES_CACHE_CORE,
@@ -532,14 +533,38 @@ class InstallController extends Controller {
 						
 						// this is an irritating hack.
 						if(DIR_FILES_UPLOADED != $this->installData['DIR_FILES_UPLOADED']) { // if we're calling install from another c5 install - move the file to the new install
-							rename(DIR_FILES_UPLOADED."/".$image1->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage1->getFilename());
-							rename(DIR_FILES_UPLOADED."/".$image2->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$fimage2->getFilename());
-							rename(DIR_FILES_UPLOADED."/".$image3->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$image3->getFilename());
-							rename(DIR_FILES_UPLOADED."/".$image4->getFilename(),  $this->installData['DIR_FILES_UPLOADED']."/".$image4->getFilename());
-							rename(DIR_FILES_UPLOADED_THUMBNAILS."/".$fimage1->getFilename(),  $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']."/".$fimage1->getFilename());
-							rename(DIR_FILES_UPLOADED_THUMBNAILS."/".$fimage2->getFilename(),  $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']."/".$fimage2->getFilename());
-							rename(DIR_FILES_UPLOADED_THUMBNAILS."/".$fimage3->getFilename(),  $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']."/".$fimage3->getFilename());
-							rename(DIR_FILES_UPLOADED_THUMBNAILS."/".$fimage4->getFilename(),  $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']."/".$fimage4->getFilename());
+							$cfhi = Loader::helper('concrete/file');
+							$fsrc1 = $cfhi->mapSystemPath($image1->getPrefix(), $image1->getFileName(), true, $this->installData['DIR_FILES_UPLOADED']);
+							$fsrc2 = $cfhi->mapSystemPath($image2->getPrefix(), $image2->getFileName(), true, $this->installData['DIR_FILES_UPLOADED']);
+							$fsrc3 = $cfhi->mapSystemPath($image3->getPrefix(), $image3->getFileName(), true, $this->installData['DIR_FILES_UPLOADED']);
+							$fsrc4 = $cfhi->mapSystemPath($image4->getPrefix(), $image4->getFileName(), true, $this->installData['DIR_FILES_UPLOADED']);
+							$fsrc5 = $cfhi->mapSystemPath($image5->getPrefix(), $image5->getFileName(), true, $this->installData['DIR_FILES_UPLOADED']);
+							$fsrc6 = $cfhi->mapSystemPath($image1->getPrefix(), $image1->getFileName(), true, $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']);
+							$fsrc7 = $cfhi->mapSystemPath($image2->getPrefix(), $image2->getFileName(), true, $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']);
+							$fsrc8 = $cfhi->mapSystemPath($image3->getPrefix(), $image3->getFileName(), true, $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']);
+							$fsrc9 = $cfhi->mapSystemPath($image4->getPrefix(), $image4->getFileName(), true, $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']);
+							$fsrc10 = $cfhi->mapSystemPath($image5->getPrefix(), $image5->getFileName(), true, $this->installData['DIR_FILES_UPLOADED_THUMBNAILS']);
+							$fsrc11 = $cfhi->mapSystemPath($image1->getPrefix(), $image1->getFileName(), true, $this->installData['DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2']);
+							$fsrc12 = $cfhi->mapSystemPath($image2->getPrefix(), $image2->getFileName(), true, $this->installData['DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2']);
+							$fsrc13 = $cfhi->mapSystemPath($image3->getPrefix(), $image3->getFileName(), true, $this->installData['DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2']);
+							$fsrc14 = $cfhi->mapSystemPath($image4->getPrefix(), $image4->getFileName(), true, $this->installData['DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2']);
+							$fsrc15 = $cfhi->mapSystemPath($image5->getPrefix(), $image5->getFileName(), true, $this->installData['DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2']);
+							
+							rename($image1->getPath(), $fsrc1);
+							rename($image2->getPath(), $fsrc2);
+							rename($image3->getPath(), $fsrc3);
+							rename($image4->getPath(), $fsrc4);
+							rename($image5->getPath(), $fsrc5);
+							rename($image1->getThumbnailPath(1), $fsrc6);
+							rename($image2->getThumbnailPath(1), $fsrc7);
+							rename($image3->getThumbnailPath(1), $fsrc8);
+							rename($image4->getThumbnailPath(1), $fsrc9);
+							rename($image5->getThumbnailPath(1), $fsrc10);
+							rename($image1->getThumbnailPath(2), $fsrc11);
+							rename($image2->getThumbnailPath(2), $fsrc12);
+							rename($image3->getThumbnailPath(2), $fsrc13);
+							rename($image4->getThumbnailPath(2), $fsrc14);
+							rename($image5->getThumbnailPath(2), $fsrc15);
 						}
 						
 						$jsData['imgFIDs'] = array(
