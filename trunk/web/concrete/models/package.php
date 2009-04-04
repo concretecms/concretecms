@@ -107,7 +107,12 @@ class Package extends Object {
 	const E_PACKAGE_NOT_FOUND = 1;
 	const E_PACKAGE_INSTALLED = 2;
 	const E_PACKAGE_VERSION = 3;
-	
+	const E_PACKAGE_DOWNLOAD = 4;
+	const E_PACKAGE_UNZIP = 5;
+	const E_PACKAGE_INSTALL = 6;
+
+	protected $errorText = array();
+
 	public function getApplicationVersionRequired() {
 		return $this->appVersionRequired;
 	}
@@ -200,6 +205,29 @@ class Package extends Object {
 		} else {
 			return true;
 		}
+	}
+
+	public function mapError($testResults) {
+		$errorText[Package::E_PACKAGE_INSTALLED] = t("You've already installed that package.");
+		$errorText[Package::E_PACKAGE_NOT_FOUND] = t("Invalid Package.");
+		$errorText[Package::E_PACKAGE_VERSION] = t("This package requires concrete version %s or greater.");
+		$errorText[Package::E_PACKAGE_DOWNLOAD] = t("An error occured while downloading the package.");
+		$errorText[Package::E_PACKAGE_UNZIP] = t('An error while trying to unzip the package.');
+		$errorText[Package::E_PACKAGE_INSTALL] = t('An error while trying to install the package.');
+
+		$testResultsText = array();
+		foreach($testResults as $result) {
+			if (is_array($result)) {
+				$et = $errorText[$result[0]];
+				array_shift($result);
+				$testResultsText[] = vsprintf($et, $result);
+			} else if (is_int($result)) {
+				$testResultsText[] = $errorText[$result];
+			} else if (!empty($result)) {
+				$testResultsText[] = $result;
+			}
+		}
+		return $testResultsText;
 	}
 
 	/*
