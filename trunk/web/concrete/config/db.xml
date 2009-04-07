@@ -605,9 +605,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="fvExtension" type="C" size="32">
-      <NOTNULL/>
-    </field>
+    <field name="fvExtension" type="C" size="32" />
     <field name="fvType" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
