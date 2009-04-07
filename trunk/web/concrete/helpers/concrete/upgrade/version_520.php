@@ -72,8 +72,8 @@ class ConcreteUpgradeVersion520Helper {
 		if ($num < 1) {
 			$r = $db->Execute("select btFile.*, Blocks.bDateAdded from btFile inner join Blocks on btFile.bID = Blocks.bID");
 			while ($row = $r->fetchRow()) {
-				$v = array($row['bID'], 1, $row['filename'], null, $row['origfilename'], $row['bDateAdded']);
-				$db->Execute("insert into FileVersions (fID, fvID, fvFilename, fvPrefix, fvTitle, fvDateAdded) values (?, ?, ?, ?, ?, ?)", $v);	
+				$v = array($row['bID'], 1, $row['filename'], null, '', $row['origfilename'], $row['bDateAdded']);
+				$db->Execute("insert into FileVersions (fID, fvID, fvFilename, fvPrefix, fvExtension, fvTitle, fvDateAdded) values (?, ?, ?, ?, ?, ?, ?)", $v);	
 				$db->Execute("insert into Files (fID, fDateAdded) values (?, ?)", array($row['bID'], $row['bDateAdded']));
 			}
 		}
