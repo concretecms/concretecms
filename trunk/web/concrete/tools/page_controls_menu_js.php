@@ -145,13 +145,13 @@ menuHTML += '<div id="ccm-notification"><div id="ccm-notification-inner"><?=str_
 		$(document.body).prepend('<div id="ccm-page-controls-wrapper"></div>');
 		$("#ccm-page-controls-wrapper").html(menuHTML);
 	
-		if (CCM_ARRANGE_MODE) {
+		<? if ($c->isArrangeMode()) { ?>
 			$(ccm_arrangeInit);	
-		} else if (CCM_EDIT_MODE) {
+		<? } else if ($c->isEditMode()) { ?>
 			$(ccm_editInit);	
-		} else {
+		<? } else { ?>
 			$(ccm_init);
-		}
+		<? } ?>
 		
 		<? if ($u->config('UI_BREADCRUMB')) {  ?>
 			ccm_setupBreadcrumb();
