@@ -278,15 +278,30 @@ parseTree = function(node, nodeID, deactivateSubNodes) {
 		ccm_sitemap_html += '<li tree-node-type="' + treeNodeType + '" draggable="' + canDrag + '" class="tree-node ' + typeClass + ' tree-branch' + nodeID + '" id="tree-node' + node[i].id + '"' + customIconSrc + '>';
 		if (node[i].numSubpages > 0 && (!deactivateSubNodes)) {
 			var subPageStr = (node[i].id == 1) ? '' : ' (' + node[i].numSubpages + ')';
-			ccm_sitemap_html += '<img src="' + CCM_IMAGE_PATH + '/spacer.gif" width="16" height="16" class="handle ' + moveableClass + '" /><a href="javascript:toggleSub(' + node[i].id + ')"><img src="' + CCM_IMAGE_PATH + '/dashboard/plus.jpg" width="9" height="9" class="tree-plus" id="tree-collapse' + node[i].id + '" /><\/a><div rel="' + CCM_REL + '/index.php?cID=' + node[i].id + '" class="' + labelClass + '" tree-node-alias="' + cAlias + '" tree-node-canwrite="' + canWrite + '" tree-node-children="' + escape(node[i].numSubpages) + '" tree-node-title="' + escape(node[i].cvName) + '" id="tree-label' + node[i].id + '"><span>' + node[i].cvName + subPageStr + '</span><a class="ccm-tree-search-trigger" href="javascript:void(0)" onclick="searchSubPages(' + node[i].id + ')"><img src="' + CCM_IMAGE_PATH + '/icons/magnifying.png" /></a><\/div><form onsubmit="return searchSitemapNode(' + node[i].id + ')" id="ccm-tree-search' + node[i].id + '" class="ccm-tree-search"><a href="javascript:void(0)" onclick="closeSitemapSearch(' + node[i].id + ')" class="ccm-tree-search-close"><img src="' + CCM_IMAGE_PATH + '/icons/close.png" /></a><input type="text" name="submit" name="q" /> <a href="javascript:void(0)" onclick="searchSitemapNode(' + node[i].id + ')"><img src="' + CCM_IMAGE_PATH + '/icons/magnifying.png" /></a></form><\/li><li><ul tree-root-state="closed" tree-root-node-id="' + node[i].id + '" id="tree-root' + node[i].id + '">';
+			ccm_sitemap_html += '<img src="' + CCM_IMAGE_PATH + '/spacer.gif" width="16" height="16" class="handle ' + moveableClass + '" />';
+			ccm_sitemap_html += '<a href="javascript:toggleSub(' + node[i].id + ')">';
+			ccm_sitemap_html += '<img src="' + CCM_IMAGE_PATH + '/dashboard/plus.jpg" width="9" height="9" class="tree-plus" id="tree-collapse' + node[i].id + '" /><\/a>';
+			ccm_sitemap_html += '<div rel="' + CCM_REL + '/index.php?cID=' + node[i].id + '" class="' + labelClass + '" tree-node-alias="' + cAlias + '" ';
+			ccm_sitemap_html += 'tree-node-canwrite="' + canWrite + '" tree-node-children="' + escape(node[i].numSubpages) + '" ';
+			ccm_sitemap_html += 'tree-node-title="' + escape(node[i].cvName) + '" id="tree-label' + node[i].id + '">';
+			ccm_sitemap_html += '<span>' + node[i].cvName + subPageStr + '</span><a class="ccm-tree-search-trigger" href="javascript:void(0)" onclick="searchSubPages(' + node[i].id + ')">';
+			ccm_sitemap_html += '<img src="' + CCM_IMAGE_PATH + '/icons/magnifying.png" /></a><\/div>';
+			ccm_sitemap_html += '<form onsubmit="return searchSitemapNode(' + node[i].id + ')" id="ccm-tree-search' + node[i].id + '" class="ccm-tree-search">';
+			ccm_sitemap_html += '<a href="javascript:void(0)" onclick="closeSitemapSearch(' + node[i].id + ')" class="ccm-tree-search-close"><img src="' + CCM_IMAGE_PATH + '/icons/close.png" /></a>';
+			ccm_sitemap_html += '<input type="text" name="submit" name="q" /> <a href="javascript:void(0)" onclick="searchSitemapNode(' + node[i].id + ')">';
+			ccm_sitemap_html += '<img src="' + CCM_IMAGE_PATH + '/icons/magnifying.png" /></a></form>';
+			ccm_sitemap_html += '<li><ul tree-root-state="closed" tree-root-node-id="' + node[i].id + '" id="tree-root' + node[i].id + '">';
 			if (tr_parseSubnodes) {
 				parseTree(node[i].subnodes, node[i].id, deactivateSubNodes);
 			}		
 			ccm_sitemap_html += '<\/ul>';
 		} else {
-			ccm_sitemap_html += '<div tree-node-title="' + escape(node[i].cvName) + '" tree-node-children="' + escape(node[i].numSubpages) + '" class="' + labelClass + '" tree-node-alias="' + cAlias + '" tree-node-canwrite="' + canWrite + '" id="tree-label' + node[i].id + '" rel="' + CCM_REL + '/index.php?cID=' + node[i].id + '"><img src="' + CCM_IMAGE_PATH + '/spacer.gif" width="16" height="16" class="handle ' + moveableClass + '" /><span>' + node[i].cvName + '</span><\/div>';
+			ccm_sitemap_html += '<div tree-node-title="' + escape(node[i].cvName) + '" tree-node-children="' + escape(node[i].numSubpages) + '" ';
+			ccm_sitemap_html += 'class="' + labelClass + '" tree-node-alias="' + cAlias + '" tree-node-canwrite="' + canWrite + '" ';
+			ccm_sitemap_html += 'id="tree-label' + node[i].id + '" rel="' + CCM_REL + '/index.php?cID=' + node[i].id + '">';
+			ccm_sitemap_html += '<img src="' + CCM_IMAGE_PATH + '/spacer.gif" width="16" height="16" class="handle ' + moveableClass + '" /><span>' + node[i].cvName + '</span><\/div>';
 		}
-		ccm_sitemap_html += '<div class="dropzone tree-dz' + nodeID + '" tree-parent="' + nodeID + '" id="tree-dz' + node[i].id + '"><\/div>';
+		ccm_sitemap_html += '</li><div class="dropzone tree-dz' + nodeID + '" tree-parent="' + nodeID + '" id="tree-dz' + node[i].id + '"><\/div>';
 
 		if (node[i].selected == true) {
 			$("#tree-label" + node[i].id).addClass('tree-label-selected-onload');
