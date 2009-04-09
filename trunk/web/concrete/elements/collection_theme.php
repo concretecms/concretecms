@@ -226,6 +226,9 @@ ccm_enable_scrollers = function() {
 
 
 	
+	$('a.ccm-scroller-r').unbind();
+	$('a.ccm-scroller-l').unbind();
+	
 	$('a.ccm-scroller-r').click(function() {
 		var item = $(this).parent().children('div.ccm-scroller-inner').children('ul');
 
