@@ -30,6 +30,7 @@ class InstallController extends Controller {
 			"DIR_FILES_CACHE_CORE"=>DIR_FILES_CACHE_CORE,
 			"DIR_FILES_CACHE_DB"=>DIR_FILES_CACHE_DB,
 			"DIR_FILES_AVATARS"=>DIR_FILES_AVATARS,
+			"DIR_PACKAGES"=>DIR_PACKAGES,
 			"USER_SUPER_ID"=>USER_SUPER_ID,
 			"USER_SUPER"=>USER_SUPER,
 			"GUEST_GROUP_ID"=>GUEST_GROUP_ID,
@@ -108,6 +109,10 @@ class InstallController extends Controller {
 
 		if (!is_writable($this->installData['DIR_FILES_UPLOADED'])) {
 			$e->add(t('Your files directory files/ does not appear to be writable by the web server.'));
+		}
+		
+		if (!is_writable($this->installData['DIR_PACKAGES'])) {
+			$e->add(t('Your packages directory packages/ does not appear to be writable by the web server.'));
 		}
 
 		$this->fileWriteErrors = $e;

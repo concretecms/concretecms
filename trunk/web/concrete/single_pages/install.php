@@ -113,7 +113,7 @@ $(function() {
 <div class="test <? if ($fileWriteTest) { ?>passed<? } else { ?>fail<? } ?>"><?=t('Web Server Access to Files and Configuration Directories')?>
 
 <a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
-<div class="ccm-install-info"><?=t('The config/ and files/ directories must be writable by your web server.')?></div>
+<div class="ccm-install-info"><?=t('The config/, packages/ and files/ directories must be writable by your web server.')?></div>
 
 </div>
 

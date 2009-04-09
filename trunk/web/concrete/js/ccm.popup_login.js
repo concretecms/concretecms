@@ -6,16 +6,18 @@ var ccm_remoteUName = '';
 
 var ccmLoginHelper = {
 	installPackage:function() {
-		$.ajax({
-        	url: ccm_loginInstallURL,
-        	type: 'POST',
-        	success: function(html){
-            	ccmAlert.notice('Marketplace Install', html, ccm_loginInstallSuccessFn);
-        	},
-        	error: function (XMLHttpRequest, textStatus, errorThrown){
-            	ccmAlert.notice('Marketplace Install', ccmi18n.marketplaceErrorMsg);
-        	}
-    	});
+		if(ccm_loginInstallURL) {
+			$.ajax({
+				url: ccm_loginInstallURL,
+				type: 'POST',
+				success: function(html){
+					ccmAlert.notice('Marketplace Install', html, ccm_loginInstallSuccessFn);
+				},
+				error: function (XMLHttpRequest, textStatus, errorThrown){
+					ccmAlert.notice('Marketplace Install', ccmi18n.marketplaceErrorMsg);
+				}
+			});
+		}
 	},
 	loginStartInstall:function(jsObj) {
     	remoteUID = jsObj.uID;
@@ -26,6 +28,9 @@ var ccmLoginHelper = {
 	bindInstallLinks:function() {
     	$(".ccm-button-marketplace-install a").click(function(e){
         	ccm_loginInstallURL = $(this).attr('href');
+			if(ccm_loginInstallURL == 'javascript:void(0)') { // avoid passing this to an ajax call
+				ccm_loginInstallURL = null;
+			}
         	e.preventDefault();
         	if (!ccm_isRemotelyLoggedIn) {
             	ccmPopupLogin.show('', ccmLoginHelper.loginStartInstall, '', 1, function() {
