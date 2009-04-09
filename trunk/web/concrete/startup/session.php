@@ -10,8 +10,8 @@ ini_set('session.gc_maxlifetime', SESSION_MAX_LIFETIME);
 //if we've set the _postSID variable, we populate session_id using it
 if (isset($_POST['ccm-session'])) {
 	session_id($_POST['ccm-session']);
-} else if (isset($_POST['sessionIDOverride'])) {
-	session_id($_POST['sessionIDOverride']);
+} else if (isset($_REQUEST['sessionIDOverride'])) {
+	session_id($_REQUEST['sessionIDOverride']);
 }
 
 session_name(SESSION);
