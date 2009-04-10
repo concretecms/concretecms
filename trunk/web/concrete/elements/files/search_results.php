@@ -6,7 +6,7 @@
 	};
 	var CCM_STAR_ACTION    = 'files/star.php';
 </script>
-<div id="ccm-file-list-wrapper">
+<div id="ccm-file-list-wrapper"><a name="ccm-file-list-wrapper-anchor"></a>
 <?
 	$fileList->displaySummary();
 	$txt = Loader::helper('text');

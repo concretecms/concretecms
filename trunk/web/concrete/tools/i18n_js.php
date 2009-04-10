@@ -82,6 +82,8 @@ var ccmi18n_filemanager = {
 	title: '<?=t('File Manager')?>',
 	uploadErrorChooseFile: '<?=t('You must choose a file.')?>',
 	rescan: '<?=t('Rescan')?>',
+	pending: '<?=t('Pending')?>',
+	uploadComplete: '<?=t('Upload Complete')?>',
 	
 	PTYPE_CUSTOM: '<?=FilePermissions::PTYPE_CUSTOM?>',
 	PTYPE_NONE: '<?=FilePermissions::PTYPE_NONE?>',

@@ -52,6 +52,7 @@ $(function() {
 		$(this).attr('target', ccm_alProcessorTarget);		
 	});
 
+	$("div.ccm-file-manager-progress-bar").progressbar({value: '37'});
 
 	swfu = new SWFUpload({
 
@@ -66,7 +67,7 @@ $(function() {
 		button_cursor: SWFUpload.CURSOR.HAND,
 		file_queue_limit : 0,
 		custom_settings : {
-			progressTarget : "ccm-file-upload-multiple-progress",
+			progressTarget : "ccm-file-upload-multiple-list",
 			cancelButtonId : "ccm-file-upload-multiple-btnCancel"
 		},
 		debug: false,
@@ -85,7 +86,6 @@ $(function() {
 		// some functions needed to be overridden completly
 		file_queued_handler : function (file) {
 			fileQueued.apply(this,[file]);
-			$('#'+this.customSettings.progressTarget).append('<br style="clear:left"/>');
 		},
 		file_queue_error_handler : fileQueueError,
 		file_dialog_complete_handler : function(numFilesSelected, numFilesQueued){
@@ -117,7 +117,6 @@ $(function() {
 				eval('serverData = '+serverData);
 				var progress = new FileProgress(file, this.customSettings.progressTarget);
 				progress.setComplete();
-				progress.setStatus(serverData['message']);
 				progress.toggleCancel(false);
 				if(serverData['id']){
 					if(!this.highlight){this.highlight = [];}
@@ -140,15 +139,21 @@ $(function() {
 </style>
 
 <form id="form1" action="index.php" method="post" enctype="multipart/form-data">
-		<div class="fieldset flash" id="ccm-file-upload-multiple-progress">
-		<span class="legend"><?=t('Upload Queue');?></span>
-		</div>
 		
+		<table border="0" width="100%" cellspacing="0" cellpadding="0" id="ccm-file-upload-multiple-list">
+		<tr>
+			<th colspan="2"><div style="width: 80px; float: right"><span id="ccm-file-upload-multiple-spanButtonPlaceHolder"></span></div><?=t('Upload Queue');?></th>
+		</tr>
+		</table>
+		
+		<div class="ccm-spacer">&nbsp;</div><br/>
+		
+		<!--
 		<div>
 
 		<div id="ccm-file-upload-multiple-results-wrapper">
 
-		<div style="width: 100px; float: right; text-align: right"><span id="ccm-file-upload-multiple-spanButtonPlaceHolder"></span></div>
+		<div style="width: 100px; float: right; text-align: right"></div>
 
 		<div id="ccm-file-upload-multiple-results">0 <?=t('Files Uploaded');?></div>
 		
@@ -157,7 +162,7 @@ $(function() {
 		</div>
 		
 		</div>
-		<br style="clear:left;"/>
+		<br style="clear:left;"/> //-->
 		<div>
 			<?
 			
