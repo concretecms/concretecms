@@ -411,6 +411,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$bv->render($this, $view);
 		}			
 		
+		public function getController() {
+			return $this->controller;
+		}
+		
 		private function doInstallBlockType($btHandle, $bt, $dir, $btID = 0) {
 			$db = Loader::db();
 			

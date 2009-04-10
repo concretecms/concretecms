@@ -20,13 +20,20 @@ $c->loadVersionObject('RECENT');
 require_once(DIR_FILES_ELEMENTS_CORE . '/dialog_header.php');
 
 if ($ap->canAddBlock($bt)) {
-
-	$bv = new BlockView();
-	$bv->render($bt, 'add', array(
-		'a' => $a,
-		'cp' => $cp,
-		'ap' => $ap
-	));
-
+	$cnt = $bt->getController();
+	if (!is_a($cnt, 'BlockController')) {
+		$jsh = Loader::helper('concrete/interface');
+		print '<div class="ccm-error">' . t('Unable to load the controller for this block type. Perhaps it has been moved or removed.') . '</div>';
+		print '<br><br>';
+		print $jsh->button_js(t('Close'), 'jQuery.fn.dialog.closeTop()', 'left');
+	} else {
+		$bv = new BlockView();
+		$bv->render($bt, 'add', array(
+			'a' => $a,
+			'cp' => $cp,
+			'ap' => $ap
+		));
+	}
 }
+
 require_once(DIR_FILES_ELEMENTS_CORE . '/dialog_footer.php'); ?>

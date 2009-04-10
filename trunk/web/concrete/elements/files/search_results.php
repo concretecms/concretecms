@@ -19,6 +19,9 @@
 			<th><input id="ccm-file-list-cb-all" type="checkbox" /></td>
 			<th><select id="ccm-file-list-multiple-operations" disabled>
 				<option value="">**</option>
+				<? if ($fileSelector) { ?>
+					<option value="choose"><?=t('Choose')?></option>
+				<? } ?>
 				<option value="download"><?=t('Download')?></option>
 				<option value="sets"><?=t('Sets')?></option>
 				<option value="rescan"><?=t('Rescan')?></option>

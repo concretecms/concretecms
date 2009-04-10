@@ -433,6 +433,13 @@ ccm_alSetupCheckboxes = function() {
 		var action = $(this).val();
 		var fIDstring = ccm_alGetSelectedFileIDs();
 		switch(action) {
+			case 'choose':
+				var fIDs = new Array();
+				$(".ccm-file-list-record td.ccm-file-list-cb input[type=checkbox]:checked").each(function() {
+					fIDs.push($(this).val());
+				});
+				ccm_alSelectFile(fIDs, true);
+				break;
 			case "delete":
 				jQuery.fn.dialog.open({
 					width: 500,
@@ -659,19 +666,37 @@ ccm_alHighlightFileIDArray = function(ids) {
 }
 
 ccm_alSelectFile = function(fID) {
+	
 	if (typeof(ccm_chooseAsset) == 'function') {
 
+		var qstring = '';
+		if (typeof(fID) == 'object') {
+			for (i = 0; i < fID.length; i++) {
+				qstring += 'fID[]=' + fID[i] + '&';
+			}
+		} else {
+			qstring += 'fID=' + fID;
+		}
+		
 		ccm_deactivateSearchResults();
 
-		$.getJSON(CCM_TOOLS_PATH + '/files/get_data.php', {'fID' : fID}, function(resp) {
+		$.getJSON(CCM_TOOLS_PATH + '/files/get_data.php?' + qstring, function(resp) {
 			ccm_parseJSON(resp, function() {
-				ccm_chooseAsset(resp);
+				for(i = 0; i < resp.length; i++) {
+					ccm_chooseAsset(resp[i]);
+				}
 				jQuery.fn.dialog.closeTop();
 			});
 		});
 		
 	} else {
-		ccm_triggerSelectFile(fID);
+		if (typeof(fID) == 'object') {
+			for (i = 0; i < fID.length; i++) {
+				ccm_triggerSelectFile(fID[i]);
+			}
+		} else {
+			ccm_triggerSelectFile(fID);
+		}
 		jQuery.fn.dialog.closeTop();	
 	}
 
