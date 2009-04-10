@@ -505,6 +505,7 @@ ccm_alSetupInPagePaginationAndSorting = function() {
 		$("#ccm-file-search-results").load($(this).attr('href'), false, function() {
 			ccm_activateSearchResults();
 			ccm_alSetupSelectFiles();
+			$("div.ccm-dialog-content").attr('scrollTop', 0);
 		});
 		return false;
 	});

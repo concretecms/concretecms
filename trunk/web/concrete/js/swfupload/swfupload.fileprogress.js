@@ -17,22 +17,21 @@ function FileProgress(file, targetID) {
 
 	this.fileProgressWrapper = document.getElementById(this.fileProgressID);
 	if (!this.fileProgressWrapper) {
-		this.fileProgressWrapper = document.createElement("div");
-		this.fileProgressWrapper.className = "progressWrapper";
+		/* 
+		
+		this.fileProgressWrapper = document.createElement("TR");
 		this.fileProgressWrapper.id = this.fileProgressID;
 
-		this.fileProgressElement = document.createElement("div");
-		this.fileProgressElement.className = "progressContainer";
-
+		this.fileProgressElement1 = document.createElement("TD");
+		this.fileProgressElement2 = document.createElement("TD");
+		
 		var progressCancel = document.createElement("a");
 		progressCancel.className = "progressCancel";
 		progressCancel.href = "#";
 		progressCancel.style.visibility = "hidden";
 		progressCancel.appendChild(document.createTextNode(" "));
 
-		var progressText = document.createElement("div");
-		progressText.className = "progressName";
-		progressText.appendChild(document.createTextNode(file.name));
+		this.fileProgressElement1.appendChild(document.createTextNode(file.name));
 
 		var progressBar = document.createElement("div");
 		progressBar.className = "progressBarInProgress";
@@ -41,16 +40,23 @@ function FileProgress(file, targetID) {
 		progressStatus.className = "progressBarStatus";
 		progressStatus.innerHTML = "&nbsp;";
 
-		this.fileProgressElement.appendChild(progressCancel);
-		this.fileProgressElement.appendChild(progressText);
-		this.fileProgressElement.appendChild(progressStatus);
-		this.fileProgressElement.appendChild(progressBar);
+		this.fileProgressElement1.appendChild(progressCancel);
+		this.fileProgressElement1.appendChild(progressText);
+		this.fileProgressElement1.appendChild(progressStatus);
+		this.fileProgressElement1.appendChild(progressBar);
+		
+		this.fileProgressWrapper.appendChild(this.fileProgressElement1);
+		this.fileProgressWrapper.appendChild(this.fileProgressElement2);
+		*/
 
-		this.fileProgressWrapper.appendChild(this.fileProgressElement);
-
-		document.getElementById(targetID).appendChild(this.fileProgressWrapper);
+		$("#" + targetID).append('<tr id="' + this.fileProgressID + '"><td width="100%">' + file.name + '</td><td><div style="width: 250px" class="ccm-file-manager-progress-bar-pending">' + ccmi18n_filemanager.pending + '</div><div class="ccm-file-manager-progress-bar" style="display: none"></div></tr>');
+		this.fileProgressWrapper = $("#" + this.fileProgressID).get(0);
+		$("#" + this.fileProgressID).find('div.ccm-file-manager-progress-bar').progressbar();
+		
+//		document.getElementById(targetID).appendChild(this.fileProgressWrapper);
 	} else {
-		this.fileProgressElement = this.fileProgressWrapper.firstChild;
+		this.fileProgressElement = $(this.fileProgressWrapper).find('div.ccm-file-manager-progress-bar').get(0);
+		this.fileProgressPendingElement = $(this.fileProgressWrapper).find('div.ccm-file-manager-progress-bar-pending').get(0);
 		this.reset();
 	}
 
@@ -68,6 +74,10 @@ FileProgress.prototype.getTimer = function (timer) {
 };
 
 FileProgress.prototype.reset = function () {
+	$(this.fileProgressPendingElement).hide();
+	$(this.fileProgressElement).show();
+	
+	/*
 	this.fileProgressElement.className = "progressContainer";
 
 	this.fileProgressElement.childNodes[2].innerHTML = "&nbsp;";
@@ -76,35 +86,31 @@ FileProgress.prototype.reset = function () {
 	this.fileProgressElement.childNodes[3].className = "progressBarInProgress";
 	this.fileProgressElement.childNodes[3].style.width = "0%";
 	
-	this.appear();	
+	this.appear();	*/
+	
+	
 };
 
 FileProgress.prototype.setProgress = function (percentage) {
-	this.fileProgressElement.className = "progressContainer green";
-	this.fileProgressElement.childNodes[3].className = "progressBarInProgress";
-	this.fileProgressElement.childNodes[3].style.width = percentage + "%";
-
+	$(this.fileProgressElement).progressbar('option', 'value', percentage);
 	this.appear();	
 };
 FileProgress.prototype.setComplete = function () {
-	this.fileProgressElement.className = "progressContainer blue";
-	this.fileProgressElement.childNodes[3].className = "progressBarComplete";
-	this.fileProgressElement.childNodes[3].style.width = "";
-
-	var oSelf = this;
-	this.setTimer(setTimeout(function () {
-		oSelf.disappear();
-	}, 10000));
+	var pendingBar = $(this.fileProgressWrapper).find('div.ccm-file-manager-progress-bar-pending');
+	$(this.fileProgressElement).fadeOut(200, function() {
+		pendingBar.html(ccmi18n_filemanager.uploadComplete);
+		pendingBar.show();
+	});
 };
 FileProgress.prototype.setError = function () {
-	this.fileProgressElement.className = "progressContainer red";
+	/*this.fileProgressElement.className = "progressContainer red";
 	this.fileProgressElement.childNodes[3].className = "progressBarError";
 	this.fileProgressElement.childNodes[3].style.width = "";
 
 	var oSelf = this;
 	this.setTimer(setTimeout(function () {
 		oSelf.disappear();
-	}, 5000));
+	}, 5000));*/
 };
 FileProgress.prototype.setCancelled = function () {
 	this.fileProgressElement.className = "progressContainer";
