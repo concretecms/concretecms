@@ -27,7 +27,7 @@ class ImageHelper {
 	 */		
 	public function create($originalPath, $newPath, $width, $height) {
 		// first, we grab the original image. We shouldn't ever get to this function unless the image is valid
-		$imageSize = getimagesize($originalPath);
+		$imageSize = @getimagesize($originalPath);
 		$oWidth = $imageSize[0];
 		$oHeight = $imageSize[1];
 		$finalWidth = 0;
@@ -54,23 +54,23 @@ class ImageHelper {
 			}
 		}
 
-		$image = imageCreateTrueColor($finalWidth, $finalHeight);
+		$image = @imageCreateTrueColor($finalWidth, $finalHeight);
 		switch($imageSize[2]) {
 			case IMAGETYPE_GIF:
-				$im = imageCreateFromGIF($originalPath);
+				$im = @imageCreateFromGIF($originalPath);
 				break;
 			case IMAGETYPE_JPEG:
-				$im = imageCreateFromJPEG($originalPath);
+				$im = @imageCreateFromJPEG($originalPath);
 				break;
 			case IMAGETYPE_PNG:
-				$im = imageCreateFromPNG($originalPath);
+				$im = @imageCreateFromPNG($originalPath);
 				break;
 		}
 		
 		if ($im) {
-			$res = imageCopyResampled($image, $im, 0, 0, 0, 0, $finalWidth, $finalHeight, $oWidth, $oHeight);
+			$res = @imageCopyResampled($image, $im, 0, 0, 0, 0, $finalWidth, $finalHeight, $oWidth, $oHeight);
 			if ($res) {
-				$res2 = imageJPEG($image, $newPath, 80);
+				$res2 = @imageJPEG($image, $newPath, 80);
 			}
 		}
 	}

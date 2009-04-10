@@ -76,7 +76,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 							
 							require_once($fdir . '/' . FILENAME_BLOCK_CONTROLLER);
 							if (!class_exists($class)) {
-								throw new Exception(t("%s not found. Please check that the block controller file contains the correct class name.", $class));
+								continue;
 							}
 							$bta = new $class;
 							$bt->btName = $bta->getBlockTypeName();
@@ -424,6 +424,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				
 				Localization::setDomain($dir . '/' . $btHandle);
 
+				if (!class_exists($class)) {
+					throw new Exception(t("%s not found. Please check that the block controller file contains the correct class name.", $class));
+				}
 				$bta = new $class;
 				
 				// first run the subclass methods. If they work then we install the block
@@ -455,7 +458,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					return $db->ErrorMsg();
 				}
 			} else {
-				return t("No block found with the handle %s found.", $this->getBlockTypeHandle());
+				return t("No block found with the handle %s found.", $btHandle);
 			}
 		}
 		

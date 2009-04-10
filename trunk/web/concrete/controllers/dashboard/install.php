@@ -30,11 +30,17 @@ class DashboardInstallController extends Controller {
 	}
 	
 	public function install_block_type($btHandle = null) {
-		$resp = BlockType::installBlockType($btHandle);
-		if ($resp != '') {
-			$this->error->add($resp);
-		} else {
-			$this->set('message', t('Block Type Installed.'));
+		try {
+			$resp = BlockType::installBlockType($btHandle);
+			
+			if ($resp != '') {
+				$this->error->add($resp);
+			} else {
+				$this->set('message', t('Block Type Installed.'));
+			}
+		} catch(Exception $e) {
+			$this->error->add($e);
+			$this->set('error', $this->error);
 		}
 	}
 	

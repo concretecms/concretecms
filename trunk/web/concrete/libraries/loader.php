@@ -202,8 +202,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (file_exists(DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER)) {
 				require_once(DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER);
 				$class = Object::camelcase($pkgHandle) . "Package";
-				$cl = new $class;
-				return $cl;
+				if (class_exists($class)) {
+					$cl = new $class;
+					return $cl;
+				}
 			}
 		}
 		
@@ -306,7 +308,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					}
 				}
 			} else if ($item instanceof Block || $item instanceof BlockType) {
-				if ($item->getPackageID() > 0) {
+				if ($item->getPackageID() > 0 && file_exists(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $item->getBlockTypeHandle() . '/' . FILENAME_BLOCK_CONTROLLER)) {
 					require_once(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $item->getBlockTypeHandle() . '/' . FILENAME_BLOCK_CONTROLLER);
 				} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $item->getBlockTypeHandle() . '/' . FILENAME_BLOCK_CONTROLLER)) {
 					require_once(DIR_FILES_BLOCK_TYPES . "/" . $item->getBlockTypeHandle() . "/" . FILENAME_BLOCK_CONTROLLER);
