@@ -1,5 +1,19 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
+
+function shutdownRescan() {
+	$isError = false;
+	global $fv;
+	$error = error_get_last();
+	if ($error != false) {
+		if ($error['type'] == E_ERROR) {
+			print '<li><div class="ccm-error">' . t('Unable to rescan %s. Error encountered: %s. Rescan halted.', $fv->getTitle(), $error['message']) . '</div></li>';
+		}
+	}
+}
+
+register_shutdown_function('shutdownRescan');
+
 $u = new User();
 $form = Loader::helper('form');
 
