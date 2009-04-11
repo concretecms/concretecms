@@ -63,10 +63,25 @@ function logoutSuccess() {
 
 		<?
 		$buttons[] = $ch->button(t("Refresh"), $this->url('/dashboard/install','refresh_block_type', $bt->getBlockTypeID()), "left");
-		if ($bt->canUnInstall()) {
-			$buttons[] = $ch->button(t("Remove"), $this->url('/dashboard/install', 'uninstall_block_type', $bt->getBlockTypeID(), $valt->generate('uninstall')), "left");
-		}
-	
+		$u = new User();
+		if ($u->isSuperUser()) {
+		
+			$removeBTConfirm = t('This will remove all instances of the %s block type. This cannot be undone. Are you sure?', $bt->getBlockTypeHandle());
+			
+			$buttons[] = $ch->button_js(t('Remove'), 'removeBlockType()', 'left');?>
+
+			<script type="text/javascript">
+			removeBlockType = function() {
+				if (confirm('<?=$removeBTConfirm?>')) { 
+					location.href = "<?=$this->url('/dashboard/install', 'uninstall_block_type', $bt->getBlockTypeID(), $valt->generate('uninstall'))?>";				
+				}
+			}
+			</script>
+
+		<? } else { ?>
+			<? $buttons[] = $ch->button_js(t('Remove'), 'alert(\'' . t('Only the super user may remove block types.') . '\')', 'left', 'ccm-button-inactive');?>
+		<? }
+
 		print $ch->buttons($buttons); ?>
 		
 	</div>

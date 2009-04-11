@@ -42,6 +42,24 @@ class File extends Object {
 		return $this->fslID;
 	}
 	
+	public function refreshCache() {
+		Cache::delete('file_relative_path', $this->getFileID());
+	}
+
+	public static function getRelativePathFromID($fID) {
+		$path = Cache::get('file_relative_path', $fID);
+		if ($path != false) {
+			return $path;
+		}
+		
+		$f = File::getByID($fID);
+		$path = $f->getRelativePath();
+		
+		Cache::set('file_relative_path', $fID, $path);
+		return $path;
+	}
+
+	
 	public function setStorageLocation($item) {
 		if ($item == 0) {
 			// set to default
