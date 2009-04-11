@@ -250,6 +250,9 @@ class FileVersion extends Object {
 		$this->logVersionUpdate(FileVersion::UT_REPLACE_FILE);
 		$this->fvFilename = $filename;
 		$this->fvPrefix = $prefix;
+		
+		$fo = $this->getFileObject();
+		$fo->refreshCache();
 	}
 
 
@@ -257,6 +260,9 @@ class FileVersion extends Object {
 		$db = Loader::db();
 		$db->Execute("update FileVersions set fvIsApproved = 0 where fID = ?", array($this->getFileID()));
 		$db->Execute("update FileVersions set fvIsApproved = 1 where fID = ? and fvID = ?", array($this->getFileID(), $this->getFileVersionID()));
+
+		$fo = $this->getFile();
+		$fo->refreshCache();
 	}
 
 

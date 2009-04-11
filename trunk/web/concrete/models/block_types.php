@@ -241,15 +241,15 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		/**
-		 * Not a permissions call. Actually checks to see whether there are 0 instances of this block, AS well as
-		 * that this block is not an internal one.
+		 * Not a permissions call. Actually checks to see whether this block is not an internal one.
 		 */
 		public function canUnInstall() {
-			$cnt = $this->getCount();
+			/*$cnt = $this->getCount();
 			if ($cnt > 0 || $this->isBlockTypeInternal()) {
 				return false;
-			}
-			return true;
+			}*/
+			
+			return (!$this->isBlockTypeInternal());
 		}
 		
 		function getBlockTypeDescription() {
@@ -556,7 +556,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		/** 
 		 * Removes the block type. ONLY removes the block type from the blocktypes table - doesn't do any kind of 
-		 * content deactivation. The frontend ensures that only blocks with no instances are removed.
+		 * content deactivation.
 		 */
 		public function delete() {
 			$db = Loader::db();

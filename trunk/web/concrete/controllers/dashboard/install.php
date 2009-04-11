@@ -51,17 +51,24 @@ class DashboardInstallController extends Controller {
 			$bt = BlockType::getByID($btID);
 		}
 		
-		if (isset($bt) && ($bt instanceof BlockType)) {
+		$u = new User();
+		if (!$u->isSuperUser()) {
+			$this->error->add(t('Only the super user may remove block types.'));
+		} else if (isset($bt) && ($bt instanceof BlockType)) {
 			if (!$valt->validate('uninstall', $token)) {
 				$this->error->add($valt->getErrorMessage());
 			} else if ($bt->canUnInstall()) {
 				$bt->delete();
 				$this->redirect('/dashboard/install', 'block_type_deleted');
 			} else {
-				$this->error->add(t('This block type is either internal, or is being used in your website. It cannot be uninstalled.'));
+				$this->error->add(t('This block type is internal. It cannot be uninstalled.'));
 			}
 		} else {
 			$this->error->add('Invalid block type.');
+		}
+		
+		if ($this->error->has()) {
+			$this->set('error', $this->error);
 		}
 		$this->inspect_block_type($btID);
 
