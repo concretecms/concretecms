@@ -251,7 +251,7 @@ class FileVersion extends Object {
 		$this->fvFilename = $filename;
 		$this->fvPrefix = $prefix;
 		
-		$fo = $this->getFileObject();
+		$fo = $this->getFile();
 		$fo->refreshCache();
 	}
 

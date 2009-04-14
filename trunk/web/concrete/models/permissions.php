@@ -116,7 +116,10 @@ class PermissionsProxy {
 			$po = PermissionsProxy::getNewOrCached($unknownObj, 'CollectionPermissions');
 		} else if (is_a($unknownObj, 'Block')) {
 			$aObj = $unknownObj->getBlockAreaObject();
-			if (!$unknownObj->overrideAreaPermissions()) {
+			if (!is_object($aObj)) {
+				$cObj = $unknownObj->getBlockCollectionObject();
+				$po = PermissionsProxy::getNewOrCached($cObj, 'CollectionPermissions');
+			} else if (!$unknownObj->overrideAreaPermissions()) {
 				$po = PermissionsProxy::getAreaPermissions($aObj);
 			} else {
 				$po = PermissionsProxy::getNewOrCached($unknownObj, 'BlockPermissions');
