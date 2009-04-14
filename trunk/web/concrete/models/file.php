@@ -300,10 +300,20 @@ class File extends Object {
 	public function delete() {
 		// first, we remove all files from the drive
 		$db = Loader::db();
+		$pathbase = false;
 		$r = $db->GetAll('select fvFilename, fvPrefix from FileVersions where fID = ?', array($this->fID));
 		$h = Loader::helper('concrete/file');
+		Loader::model('file_storage_location');
+		if ($this->getStorageLocationID() > 0) {
+			$fsl = FileStorageLocation::getByID($this->getStorageLocationID());
+			$pathbase = $fsl->getDirectory();
+		}
 		foreach($r as $val) {
-			$path = $h->getSystemPath($val['fvPrefix'], $val['fvFilename']);
+			if ($pathbase != false) {
+				$path = $h->mapSystemPath($val['fvPrefix'], $val['fvFilename'], false, $pathbase);
+			} else {
+				$path = $h->mapSystemPath($val['fvPrefix'], $val['fvFilename'], false);
+			}
 			$t1 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 1);
 			$t2 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 2);
 			$t3 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 3);

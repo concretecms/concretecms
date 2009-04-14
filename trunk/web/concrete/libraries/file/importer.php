@@ -33,10 +33,18 @@ class FileImporter {
 		return $prefix;	
 	}
 	
-	private function storeFile($prefix, $pointer, $filename) {
+	private function storeFile($prefix, $pointer, $filename, $fr = false) {
 		// assumes prefix are 12 digits
 		$fi = Loader::helper('concrete/file');
-		$path = $fi->getSystemPath($prefix, $filename, true);
+		if ($fr instanceof File) {
+			if ($fr->getStorageLocationID() > 0) {
+				Loader::model('file_storage_location');
+				$fsl = FileStorageLocation::getByID($fr->getStorageLocationID());
+				$path = $fi->mapSystemPath($prefix, $filename, true, $fsl->getDirectory());
+			}
+		} else {
+			$path = $fi->mapSystemPath($prefix, $filename, true);
+		}
 		copy($pointer, $path);
 	}
 	
@@ -72,7 +80,7 @@ class FileImporter {
 		// do save in the FileVersions table
 		
 		// move file to correct area in the filesystem based on prefix
-		$this->storeFile($prefix, $pointer, $filename);
+		$this->storeFile($prefix, $pointer, $filename, $fr);
 		
 		if (!($fr instanceof File)) {
 			// we have to create a new file object for this file version
