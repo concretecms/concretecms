@@ -145,7 +145,7 @@ class BlockViewTemplate {
 				if (file_exists($this->basePath . '/' . $i)) {
 					switch($t) {
 						case 'CSS':
-							$items[] = $h->css($this->getBaseURL() . '/' . $i);
+							$items[] = $h->css($this->getBaseURL() . '/' . $i, false, true);
 							break;
 						case 'JAVASCRIPT':
 							$items[] = $h->javascript($this->getBaseURL() . '/' . $i);
@@ -157,7 +157,7 @@ class BlockViewTemplate {
 			$js = $dh->getDirectoryContents($this->basePath . '/' . DIRNAME_JAVASCRIPT);
 			if (count($css) > 0) {
 				foreach($css as $i) {
-					$items[] = $h->css($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i);
+					$items[] = $h->css($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i, false, true);
 				}
 			}
 			if (count($js) > 0) {

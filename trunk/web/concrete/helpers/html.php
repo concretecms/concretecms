@@ -27,10 +27,14 @@ class HtmlHelper {
 	 * @param $file
 	 * @return $str
 	 */
-	public function css($file, $pkgHandle = null) {
+	public function css($file, $pkgHandle = null, $runCSSParser = false) {
 		// if the first character is a / then that means we just go right through, it's a direct path
 		if (substr($file, 0, 1) == '/' || substr($file, 0, 4) == 'http') {
-			return '<style type="text/css">@import "' . $file . '";</style>';
+			if ($runCSSParser) {
+				return '<link rel="stylesheet" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/css' . $file . '" />';
+			} else {
+				return '<link rel="stylesheet" href="' . $file . '" />';
+			}
 		}
 		
 		$v = View::getInstance();
