@@ -44,25 +44,15 @@ $form = Loader::helper('form');
 	<option value="above"<? if ($info['displayPages'] == 'above') { ?> selected<? } ?>><?=t('at the level above.')?></option>
 	<option value="current"<? if ($info['displayPages'] == 'current') { ?> selected<? } ?>><?=t('at the current level.')?></option>
 	<option value="below"<? if ($info['displayPages'] == 'below') { ?> selected<? } ?>><?=t('At the level below.')?></option>
-	<!--<option value="custom"<? if ($info['displayPages'] == 'custom') { ?> selected<? } ?>>Beneath a particular page</option>//-->
+	<option value="custom"<? if ($info['displayPages'] == 'custom') { ?> selected<? } ?>><?=t('Beneath a particular page')?></option>
 </select>
 
-<!--
-<div id="divInclude"<? if ($info['displayPages'] != 'custom') { ?> style="display: none"<? } ?>>
-<br><br>
-	Select Page:<br>
-	<? if ($info['displayPagesCID']) {
-		$dpc = Collection::getByID($info['displayPagesCID'], 'ACTIVE');
-		$niTitle = $dpc->getCollectionName();
-	} ?>
-	<div id="navigationItems" class="selectOne"><?=$niTitle?></div>
-	<input type="button" id="searchButton" name="search" value="search" onclick="ccmOpenWindow('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_collection.php',640,500); return false">
-	<input type="hidden" name="displayPagesCID" id="cValueField" value="<?=$info['displayPagesCID']?>">
-	<br><br>
-	<input type="checkbox" name="displayPagesIncludeSelf" onclick="reloadPreview(this.form);" value="1"<? if ($info['displayPagesIncludeSelf']) { ?> checked<? } ?> style="vertical-align: middle">
-	Include selected page as top node in list.
+<div id="ccm-autonav-page-selector"<? if ($info['displayPages'] != 'custom') { ?> style="display: none"<? } ?>>
+<? $form = Loader::helper('form/page_selector');
+print $form->selectPage('displayPagesCID', $info['displayPagesCID']);
+?>
 </div>
-//-->
+
 <br><br>
 
 <strong><?=t('Sub Pages to Display')?></strong><br>

@@ -181,6 +181,9 @@ div.ccm-editor-controls ul li {float: left; font-size: 10px; color: #333; margin
 div.ccm-editor-controls ul li a {color: #333; text-decoration: none; display: block; padding: 10px 0px 10px 12px; background: transparent url(../images/bg_editor_concrete_caret.png) no-repeat scroll left 14px; }
 div.ccm-editor-controls ul li a:hover {text-decoration: underline}
 
+/* page selector in blocks */
+div.ccm-summary-selected-page {border: 1px solid #dedede; margin-top: 8px; margin-bottom: 8px; padding: 10px}
+
 /* blocks */
 div.ccm-block-field-group {margin-bottom: 10px; border-bottom: 1px dotted #aaa; padding-bottom: 10px}
 div.ccm-block-field-group h2 {margin-bottom: 6px}
