@@ -1,8 +1,8 @@
 	function toggleCustomPage(value) {
 		if (value == "custom") {
-			$("#divInclude").css('display','block');
+			$("#ccm-autonav-page-selector").css('display','block');
 		} else {
-			$("#divInclude").hide();
+			$("#ccm-autonav-page-selector").hide();
 		}
 	}
 
@@ -31,7 +31,7 @@
 		displaySubPageLevels = $("select[name=displaySubPageLevels]").val();
 		displaySubPageLevelsNum = $("input[name=displaySubPageLevelsNum]").val();
 		displayUnavailablePages = $("input[name=displayUnavailablePages]").val();
-		displayPagesCID = $("input[name=displaySubPageLevelsNum]").val();
+		displayPagesCID = $("input[name=displayPagesCID]").val();
 		displayPagesIncludeSelf = $("input[name=displayUnavailablePages]").val();
 
 		if(displayPages == "custom" && !displayPagesCID) { return false; }

@@ -50,11 +50,11 @@ var pageList ={
 	locationOtherShown:function(){
 		for(var i=0;i<this.cParentIDRadios.length;i++){
 			if( this.cParentIDRadios[i].checked && this.cParentIDRadios[i].value=='OTHER' ){
-				$('#ccm-summary-selected-page-wrapper').css('display','block');
+				$('div.ccm-page-list-page-other').css('display','block');
 				return; 
 			}				
 		}
-		$('#ccm-summary-selected-page-wrapper').css('display','none');
+		$('div.ccm-page-list-page-other').css('display','none');
 	},
 	rssInfoShown:function(){
 		for(var i=0;i<this.rss.length;i++){
@@ -94,8 +94,4 @@ var pageList ={
 }
 $(function(){ pageList.init(); });
 
-ccm_selectSitemapNode = function(cID, cName) {
-	$("#ccm-pageList-underCName").html(cName);
-	$("#ccm-pageList-cValueField").val(cID);
-}
 ccmValidateBlockForm = function() { return pageList.validate(); }

@@ -48,17 +48,17 @@
 			&nbsp;&nbsp;
 			<input type="radio" name="cParentID" id="cOtherField" value="OTHER" <? if ($isOtherPage) { ?> checked<? } ?>>
 			<?=t('beneath another page')?> </div>
-			<div id="ccm-summary-selected-page-wrapper" style=" <? if (!$isOtherPage) { ?>display: none;<? } ?> padding: 8px 0px 8px 0px">
-				<div id="ccm-summary-selected-page">
-					<b id="ccm-pageList-underCName">
-					  <? if ($isOtherPage) { 
-						$oc = Page::getByID($cParentID);
-						print $oc->getCollectionName();
-					} ?>
-					</b>
-				</div>
-				<a id="ccm-sitemap-select-page" class="dialog-launch" dialog-width="600" dialog-height="450" dialog-modal="false" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay.php?sitemap_mode=select_page"><?=t('Select Page')?></a>
-				<input type="hidden" name="cParentIDValue" id="ccm-pageList-cValueField" value="<?=$cParentID?>">				
+			
+			<div class="ccm-page-list-page-other" <? if (!$isOtherPage) { ?> style="display: none" <? } ?>>
+			
+			<? $form = Loader::helper('form/page_selector');
+			if ($isOtherPage) {
+				print $form->selectPage('cParentIDValue', $cParentID);
+			} else {
+				print $form->selectPage('cParentIDValue');
+			}
+			?>
+			
 			</div>
 	</div>
 	<div class="ccm-block-field-group">

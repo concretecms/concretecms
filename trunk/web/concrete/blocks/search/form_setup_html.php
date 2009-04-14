@@ -37,8 +37,15 @@ table#searchBlockSetup .note{ font-size:10px; color:#999999; font-weight:normal 
 				<input type="radio" name="baseSearchPath" id="baseSearchPathOther" value="OTHER" onchange="searchBlock.pathSelector(this)" <?=($searchWithinOther)?'checked':''?>>
 				<?=t('beneath another page')?>
 				<div id="basePathSelector" style="display:<?=($searchWithinOther)?'block':'none'?>" >
-					<a id="ccm-sitemap-select-page" class="dialog-launch" dialog-width="600" dialog-height="450" dialog-modal="false" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay.php?sitemap_mode=select_page"><?=t('Select Page')?></a>
-					<input type="hidden" name="searchUnderCID" id="searchUnderCID" value="">
+
+					<? $form = Loader::helper('form/page_selector');
+					if ($searchWithinOther) {
+						$cpo = Page::getByPath($baseSearchPath);
+						print $form->selectPage('searchUnderCID', $cpo->getCollectionID());
+					} else {
+						print $form->selectPage('searchUnderCID');
+					}
+					?>
 				</div>
 			</div>
 		</td>

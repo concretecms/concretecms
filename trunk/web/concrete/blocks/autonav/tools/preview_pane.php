@@ -11,7 +11,7 @@ $bt->controller->displaySubPageLevels 		= $_REQUEST['displaySubPageLevels'];
 $bt->controller->displaySubPageLevelsNum 		= $_REQUEST['displaySubPageLevelsNum'];
 $bt->controller->displayUnavailablePages 		= $_REQUEST['displayUnavailablePages'];
 
-if($controller->displayPages == "custom") {
+if($bt->controller->displayPages == "custom") {
 	$bt->controller->displayPagesCID = $_REQUEST['displayPagesCID'];
 	$bt->controller->displayPagesIncludeSelf = $_REQUEST['displayPagesIncludeSelf'];
 }
