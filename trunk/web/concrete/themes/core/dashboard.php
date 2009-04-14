@@ -113,12 +113,20 @@ foreach($nav as $n2) {
 	} else {
 		$parent = $pcs[2];
 	}
-
+	
 	$subpages = AutonavBlockController::getChildPages($parent);
-	if (count($subpages) > 0) { 
+	$subpagesP = array();
+	foreach($subpages as $sc) {
+		$cp = new Permissions($sc);
+		if ($cp->canRead()) { 
+			$subpagesP[] = $sc;
+		}
+	}
+	
+	if (count($subpagesP) > 0) { 
 	?>	
 		<div id="ccm-dashboard-subnav">
-		<ul><? foreach($subpages as $sc) { ?><li <? if ($sc->getCollectionID() == $c->getCollectionID()) { ?> class="nav-selected" <? } ?>><a href="<?=$nh->getLinkToCollection($sc, false, true)?>"><?=t($sc->getCollectionName())?></a></li><? } ?></ul>
+		<ul><? foreach($subpagesP as $sc) { ?><li <? if ($sc->getCollectionID() == $c->getCollectionID()) { ?> class="nav-selected" <? } ?>><a href="<?=$nh->getLinkToCollection($sc, false, true)?>"><?=t($sc->getCollectionName())?></a></li><? } ?></ul>
 		<br/><div class="ccm-spacer">&nbsp;</div>
 		</div>
 	
