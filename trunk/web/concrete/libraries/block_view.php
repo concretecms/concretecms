@@ -200,11 +200,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 			
 			if ($view == 'scrapbook') {
-				if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . FILENAME_BLOCK_VIEW_SCRAPBOOK)) {
-					$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . FILENAME_BLOCK_VIEW_SCRAPBOOK;
-				} else if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . FILENAME_BLOCK_VIEW_SCRAPBOOK)) {
-					$template = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . FILENAME_BLOCK_VIEW_SCRAPBOOK;
-				} else {
+				$template = $this->getBlockPath(FILENAME_BLOCK_VIEW_SCRAPBOOK) . '/' . FILENAME_BLOCK_VIEW_SCRAPBOOK;
+				if (!file_exists($template)) {
 					$view = 'view';
 				}
 			}
