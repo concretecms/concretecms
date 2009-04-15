@@ -17,12 +17,18 @@ You'll probably want to change your admin users password (which can be done in t
 	5. You should get some upgrade notes for the current version of Concrete. These might advise you to do current things for upgrading to go smoothly.
 	6. Click the upgrade button, and your site should be upgraded!
 	
+## IMPORTANT! FOR THOSE UPGRADING TO 5.3.x WITH NON ASCII CHARACTER SETS ##
+
+	If your database isn't setup for UTF-8 you may encounter problems. Please backup your database and run through the tutorials described here:
+
+	http://www.concrete5.org/community/forums/internationalization/upgrading_from_5_2_1_to_5_3
+
 ## Credits
 
-Everyone in the concrete5 core beta team for lots of testing and feedback.
+	Everyone in the concrete5 core beta team for lots of testing and feedback.
 
-Everyone who has worked tirelessly to translate concrete5 to different languages - thank you.
+	Everyone who has worked tirelessly to translate concrete5 to different languages - thank you.
 
-Passionate concrete5 developers and users worldwide.
+	Passionate concrete5 developers and users worldwide.
 
-File type icons provided by http://Jordan-Michael.com/
+	File type icons provided by http://Jordan-Michael.com/
