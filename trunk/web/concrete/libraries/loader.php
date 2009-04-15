@@ -319,6 +319,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				if (class_exists($class) && $item instanceof BlockType) {
 					$controller = new $class($item);
 				}
+				
+				if ($item instanceof Block) {
+					$c = $item->getBlockCollectionObject();
+				}
+				
 			} else {
 				$path = $item;
 			}

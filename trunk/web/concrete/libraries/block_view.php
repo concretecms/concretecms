@@ -178,7 +178,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				}
 
 			}				
-
+			
 			$btHandle = $obj->getBlockTypeHandle();
 			Localization::setDomain($base);
 			
