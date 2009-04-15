@@ -5,7 +5,7 @@ class DashboardReportsLogsController extends Controller {
 	
 	public $helpers = array('form', 'html');
 	
-	public function clear($type, $token = '') {
+	public function clear($token = '') {
 		$valt = Loader::helper('validation/token');
 		if ($valt->validate('', $token)) {
 			Log::clearAll();
@@ -15,22 +15,34 @@ class DashboardReportsLogsController extends Controller {
 		}
 	}
 	
-	public function view($page = 0, $keywords = '') {
+	public function view($page = 0) {
 		$this->set('title', t('Logs'));
 		$pageBase = View::url('/dashboard/reports/logs', 'view');
 		$paginator = Loader::helper('pagination');
-		if ($keywords == '') {
-			$keywords = $_POST['keywords'];
-		}
-		$total = Log::getTotal($keywords, $type);
-		$paginator->init(intval($page), $total, $pageBase . '/%pageNum%/' . $keywords, 10);
+		
+		$total = Log::getTotal($_REQUEST['keywords'], $_REQUEST['logType']);
+		$paginator->init(intval($page), $total, $pageBase . '/%pageNum%/?keywords=' . $_REQUEST['keywords'] . '&logType=' . $_REQUEST['logType'], 10);
 		$limit=$paginator->getLIMIT();
 
-		$entries = Log::getList($keywords, null, $limit);
+		$types = Log::getTypeList();
+		$txt = Loader::helper('text');
+		$logTypes = array();
+		$logTypes[''] = '** ' . t('All');
+		foreach($types as $t) {
+			if ($t == '') {
+				$logTypes[''] = '** ' . t('All');
+			} else {
+				$logTypes[$t] = $txt->unhandle($t);
+			}
+		}
+
+		$entries = Log::getList($_REQUEST['keywords'], $_REQUEST['logType'], $limit);
 		$this->set('keywords', $keywords);
 		$this->set('pageBase', $pageBase);
 		$this->set('entries', $entries);
 		$this->set('paginator', $paginator);
+		$this->set('logTypes', $logTypes);
+			
 
 	}
 	

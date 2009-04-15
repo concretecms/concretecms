@@ -201,6 +201,18 @@ class Log {
 		return $entries;
 	}
 	
+	/** 
+	 * Returns an array of distinct log types
+	 */
+	public static function getTypeList() {
+		$db = Loader::db();
+		$lt = $db->GetCol("select distinct logType from Logs");
+		if (!is_array($lt)) {
+			$lt = array();
+		}
+		return $lt;
+	}
+	
 	public function getName() { return $this->name;}
 	
 	/** 

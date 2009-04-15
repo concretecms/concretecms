@@ -8,9 +8,12 @@ $th = Loader::helper('text');
 <div class="ccm-dashboard-inner">
 
 	<form method="post" id="ccm-log-search"  action="<?=$pageBase?>">
+	<?=t('Keywords')?>
 	<?=$form->text('keywords', $keywords)?>
+	&nbsp;&nbsp;
+	<?=t('Type')?>
+	<?=$form->select('logType', $logTypes)?>
 	<?=$form->submit('search',t('Search') )?>
-	<input type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$this->url('/dashboard/reports/logs', 'clear', $this->controller->getTask(), $valt->generate())?>'}" value="<?=t('Clear Log')?>" />
 	</form>
 
 	<table border="0" cellspacing="1" cellpadding="0" class="grid-list">
@@ -29,6 +32,12 @@ $th = Loader::helper('text');
 	</tr>
 	<? } ?>
 	</table>	
+
+	<? if (count($entries) > 0) { ?>
+		<div style="text-align: center; padding-top: 10px">
+		<input type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$this->url('/dashboard/reports/logs', 'clear', $valt->generate())?>'}" value="<?=t('Clear Log')?>" />
+		</div>
+	<? } ?>
 	
 	<br/>
 	
