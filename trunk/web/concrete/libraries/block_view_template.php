@@ -157,7 +157,7 @@ class BlockViewTemplate {
 			$js = $dh->getDirectoryContents($this->basePath . '/' . DIRNAME_JAVASCRIPT);
 			if (count($css) > 0) {
 				foreach($css as $i) {
-					$items[] = $h->css($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i, false, true);
+					$items[] = $h->css($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i, false);
 				}
 			}
 			if (count($js) > 0) {
