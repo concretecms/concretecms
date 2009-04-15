@@ -114,13 +114,12 @@ $(document).ready(function(){
 					}
 					?>
 					<td valign="top" width="<?=round(100/$numCols)?>%"> 
-						<a href="<?=$availableTheme->getThemeURL() ?>"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a>		
+						<a href="<?=$availableTheme->getThemeURL() ?>" class="do-default" target="_blank"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a>		
 						<div class="name">
-                        <a href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a>
-						<a title="<?=t('Preview')?>"
+                        <a href="<?=$availableTheme->getThemeURL() ?>" class="do-default" target="_blank"><?=$availableTheme->getThemeName() ?></a>
+						<a title="<?=t('Preview')?>" class="do-default preview"
                         	onclick="ccm_previewMarketplaceTheme(1, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" 
-                            href="javascript:void(0)"
-                            class="preview"><img src="<?=ASSETS_URL_IMAGES?>/icons/magnifying.png" alt="<?=t('Preview')?>" /></a>
+                            href="javascript:void(0)"><img src="<?=ASSETS_URL_IMAGES?>/icons/magnifying.png" alt="<?=t('Preview')?>" /></a>
                            </div>
 						<div class="desc"><?=$availableTheme->getThemeDescription() ?></div>
 						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED.'/package_install?type=theme&install=1&cID='.$availableTheme->getRemoteCollectionID()?>"><?=t('Install Theme')?> &raquo;</a>

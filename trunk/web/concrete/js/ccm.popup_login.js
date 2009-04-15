@@ -28,22 +28,26 @@ var ccmLoginHelper = {
 	bindInstallLinks:function() {
     	$(".ccm-button-marketplace-install a").click(function(e){
         	ccm_loginInstallURL = $(this).attr('href');
-			if(ccm_loginInstallURL == 'javascript:void(0)') { // avoid passing this to an ajax call
+			
+			if($(this).hasClass('do-default')) {
+				//if(ccm_loginInstallURL == 'javascript:void(0)') { // avoid passing this to an ajax call
 				ccm_loginInstallURL = null;
-			}
-        	e.preventDefault();
-        	if (!ccm_isRemotelyLoggedIn) {
-            	ccmPopupLogin.show('', ccmLoginHelper.loginStartInstall, '', 1, function() {
-               		var plm=$('#ccm-popupLoginIntroMsg');
-               		plm.css('display','block');
-               		plm.css('margin-top','8px');
-               		plm.css('margin-bottom','16px');
-               		plm.html(ccmi18n.marketplaceLoginMsg);
-            	});
-        	} else {
-            	ccmLoginHelper.installPackage();
-        	}
-    	});
+			} else {
+				e.preventDefault();
+			
+				if (!ccm_isRemotelyLoggedIn) {
+					ccmPopupLogin.show('', ccmLoginHelper.loginStartInstall, '', 1, function() {
+						var plm=$('#ccm-popupLoginIntroMsg');
+						plm.css('display','block');
+						plm.css('margin-top','8px');
+						plm.css('margin-bottom','16px');
+						plm.html(ccmi18n.marketplaceLoginMsg);
+					});
+				} else {
+					ccmLoginHelper.installPackage();
+				}
+    		}
+		});
 	}
 }
 

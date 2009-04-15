@@ -43,7 +43,7 @@ if ($akk) { ?><meta name="keywords" content="<?=htmlspecialchars($akk)?>" />
 <script type="text/javascript">
 <?
 	echo("var CCM_DISPATCHER_FILENAME = '" . DIR_REL . '/' . DISPATCHER_FILENAME . "';\r");
-	echo("var CCM_CID = {$cID};\r");
+	echo("var CCM_CID = ".($cID?$cID:0).";\r");
 	if (MENU_FEEDBACK_DISPLAY) {
 		echo("var CCM_FEEDBACK = true;\r");
 	} else {
