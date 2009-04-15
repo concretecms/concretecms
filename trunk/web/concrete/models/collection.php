@@ -415,7 +415,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$db = Loader::db();
 			
 			// first we add the block to the system
-			$nb = $bt->add($data);
+			$nb = $bt->add($data, $this, $a);
 			
 			// now that we have a block, we add it to the collectionversions table
 			

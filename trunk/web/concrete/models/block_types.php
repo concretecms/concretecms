@@ -586,10 +586,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 }
 		 
 		 
-		/* new addBlock action in blocktype just adds a block to the system without adding it to a collection */
-		/* returns block object, which can then be assigned to a collection higher up */
-		
-		public function add($data) {
+		/* 
+		 * Adds a block to the system without adding it to a collection. 
+		 * Passes page and area data along if it is available, however.
+		 */
+		public function add($data, $c = false, $a = false) {
 			$db = Loader::db();
 			
 			$u = new User();
@@ -620,6 +621,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				
 				$class = $this->getBlockTypeClass();
 				$bc = new $class($nb);
+				if (is_object($c)) {
+					$bc->setCollectionObject($c);
+				}
 				$bc->save($data);
 				
 				return Block::getByID($bIDnew);

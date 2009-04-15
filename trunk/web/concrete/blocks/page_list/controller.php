@@ -76,6 +76,10 @@
 				$pl->setItemsPerPage($num);
 			}
 
+			$c = $this->getCollectionObject();
+			if (is_object($c)) {
+				$this->cID = $c->getCollectionID();
+			}
 			$cParentID = ($row['cThis']) ? $this->cID : $row['cParentID'];
 			
 			if ($this->displayFeaturedOnly == 1) {
@@ -115,6 +119,10 @@
 			$db = Loader::db();
 
 			$bID = $this->bID;
+			$c = $this->getCollectionObject();
+			if (is_object($c)) {
+				$this->cID = $c->getCollectionID();
+			}
 			
 			$args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
 			$args['cThis'] = ($args['cParentID'] == $this->cID) ? '1' : '0';
