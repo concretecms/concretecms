@@ -22,7 +22,9 @@ class Update {
 		
 		// first, we check session
 		$queryWS = false;
+		Cache::disableCache();
 		$vNum = Config::get('APP_VERSION_LATEST', true);
+		Cache::enableCache();
 		if (is_object($vNum)) {
 			$seconds = strtotime($vNum->timestamp);
 			$version = $vNum->value;
@@ -36,8 +38,19 @@ class Update {
 		}
 		
 		if ($queryWS) {
-			$f = Loader::helper('file');
-			$version = $f->getContents(APP_VERSION_LATEST_WS, 3);
+			
+			if (function_exists('curl_init')) {
+				$curl_handle = @curl_init();
+				@curl_setopt($curl_handle, CURLOPT_URL, APP_VERSION_LATEST_WS);
+				@curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
+				@curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+				@curl_setopt($curl_handle, CURLOPT_POST, true);
+				@curl_setopt($curl_handle, CURLOPT_POSTFIELDS, 'BASE_URL_FULL=' . BASE_URL . '/' . DIR_REL . '&APP_VERSION=' . APP_VERSION);
+				$version = @curl_exec($curl_handle);
+			} else {
+				$version = APP_VERSION;
+			}
+			
 			if ($version) {
 				Config::save('APP_VERSION_LATEST', $version);
 			} else {
