@@ -67,6 +67,8 @@
 			Loader::model('signup_request');
 			if (Config::get('IP_BAN_LOCK_IP_ENABLE') == 1) {
 				$signupRequest = new SignupRequest();
+				$signupRequest->id = null;
+				$signupRequest->date_access = null;
 				$signupRequest->ipFrom = ip2long($this->getRequestIP());
 				$signupRequest->save();
 			}
