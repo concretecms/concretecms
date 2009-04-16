@@ -23,10 +23,21 @@ $db = Loader::db();
 
 if(ENABLE_MARKETPLACE_SUPPORT){
 	$blocksHelper = Loader::helper('concrete/marketplace/blocks');
-
 	$purchasedBlocks = $blocksHelper->getPurchasesList();
 }else{
     $purchasedBlocks = array();
+}
+
+// now we iterate through the purchased items (NOT BLOCKS, THESE CAN INCLUDE THEMES) list and removed ones already downloaded
+// This really should be made into a more generic object since it's not block types anymore.
+
+$skipHandles = array();
+foreach($availableArray as $ava) {
+	foreach($purchasedBlocks as $pi) {
+		if ($pi->getBlockTypeHandle() == $ava->getPackageHandle()) {
+			$skipHandles[] = $ava->getPackageHandle();
+		}
+	}
 }
 
 ?>
@@ -158,49 +169,43 @@ function logoutSuccess() {
 	
 	<? } else { ?>
 
-		<div style="margin:0px; padding:0px;  height:auto">
+		<div class="ccm-addon-list-wrapper">
 		<? foreach ($purchasedBlocks as $pb) {
+			if (in_array($pb->getBlockTypeHandle(), $skipHandles)) {
+				continue;
+			}
 			$file = $pb->getRemoteFileURL();
 			if (!empty($file)) {?>
-			<div class="ccm-block-type">
-			<table width="100%">
+			<div class="ccm-addon-list">
+			<table cellspacing="0" cellpadding="0">
 			<tr>
-				<td rowspan="2"><img src="<?=$pb->getRemoteIconURL()?>" style="width:90px;height:90px; margin-right: 8px"></td>
-				<td><p class="ccm-block-type-inner-nobkgd"><?=$pb->btName?></p></td>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td style="color: #aaa; padding: 2px 0 6px"><?=$pb->btDescription?></td>
-				<td style="vertical-align: bottom"><?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getRemoteCollectionID()), "right")?></td>
+				<td><img src="<?=$pb->getRemoteIconURL()?>" /></td>
+				<td class="ccm-addon-list-description"><h3><?=$pb->btName?></h3>
+				<?=$pb->btDescription?>
+				</td>
+				<td><?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getRemoteCollectionID()), "right")?></td>
 			</tr>
 			</table>
 			</div>
 			<? } ?>
 		<? } ?>
-		</div>
 
-		<div style="margin:0px; padding:0px;  height:auto">
 		<?	foreach ($availableArray as $obj) { ?>
-			<div class="ccm-block-type">
-			<table width="100%">
+			<div class="ccm-addon-list">
+			<table cellspacing="0" cellpadding="0">
 			<tr>
 			<? if (get_class($obj) == "BlockType") { ?>
-				<td rowspan="2"><img src="<?=$ci->getBlockTypeIconURL($obj)?>" style="width:90px;height:90px"></td>
-				<td><p class="ccm-block-type-inner-nobkgd"><?=$obj->getBlockTypeName()?></p></td>
+				<td><img src="<?=$ci->getBlockTypeIconURL($obj)?>" /></td>
+				<td class="ccm-addon-list-description"><h3><?=$obj->getBlockTypeName()?></h3>
+				<?=$obj->getBlockTypeDescription()?></td>
+				<td><?=$ch->button(t("Install"), $this->url('/dashboard/install','install_block_type', $obj->getBlockTypeHandle()), "right");?></td>
 			<? } else { ?>
-				<td rowspan="2"><img src="<?=$ci->getPackageIconURL($obj)?>" style="width:90px;height:90px"></td>
-				<td><p class="ccm-block-type-inner-nobkgd"><?=$obj->getPackageName()?></p></td>
+				<td><img src="<?=$ci->getPackageIconURL($obj)?>" /></td>
+				<td class="ccm-addon-list-description"><h3><?=$obj->getPackageName()?></h3>
+				<?=$obj->getPackageDescription()?></td>
+				<td><?=$ch->button(t("Install"), $this->url('/dashboard/install','install_package', $obj->getPackageHandle()), "right");?></td>
 			<? } ?>
-				<td>&nbsp;</td>
 			</tr>
-			<tr>
-			<? if (get_class($obj) == "BlockType") { ?>
-				<td style="color: #aaa; padding: 2px 0 6px"><?=$obj->getBlockTypeDescription()?></td>
-				<td style="vertical-align: bottom"><?=$ch->button(t("Install"), $this->url('/dashboard/install','install_block_type', $obj->getBlockTypeHandle()), "right");?></td>
-			<? } else { ?>
-				<td style="color: #aaa; padding: 2px 0 6px"><?=$obj->getPackageDescription()?></td>
-				<td style="vertical-align: bottom"><?=$ch->button(t("Install"), $this->url('/dashboard/install','install_package', $obj->getPackageHandle()), "right");?></td>
-			<? } ?>
 			</tr>
 			</table>
 			</div>
