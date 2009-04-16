@@ -76,9 +76,8 @@ class Request {
 		if ($_REQUEST['cID'] && intval($_REQUEST['cID']) > 0) {
 			$this->cID = $_REQUEST['cID'];
 		} else {
-			$this->cID = 1;
+			$this->cID = HOME_CID;
 		}
-		
 		// home page w/param and task
 		
 		if (preg_match("/^\-\/(.[^\/]*)\/(.*)/i", $path, $matches)) {
