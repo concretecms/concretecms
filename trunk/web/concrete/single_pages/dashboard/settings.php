@@ -585,16 +585,12 @@ $(document).ready(function(){
 	<div class="ccm-dashboard-inner"> 
 		
 		<div class="ccm-dashboard-radio"><input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="SIMPLE" style="vertical-align: middle" <?=( $txtEditorMode=='SIMPLE' || !strlen($txtEditorMode) )?'checked':''?> /> <?=t('Simple')?></div>
-		<div class="ccm-dashboard-description"><?=t('')?></div>
 		
 		<div class="ccm-dashboard-radio"><input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="ADVANCED" style="vertical-align: middle" <?=($txtEditorMode=='ADVANCED')?'checked':''?> /> <?=t('Advanced')?></div>
-		<div class="ccm-dashboard-description"><?=t('')?></div>
 		
 		<div class="ccm-dashboard-radio"><input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="OFFICE" style="vertical-align: middle" <?=($txtEditorMode=='OFFICE')?'checked':''?> /> <?=t('Office')?></div>
-		<div class="ccm-dashboard-description"><?=t('')?></div>
 		
 		<div class="ccm-dashboard-radio"><input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="CUSTOM" style="vertical-align: middle" <?=($txtEditorMode=='CUSTOM')?'checked':'' ?> /> <?=t('Custom')?></div>
-		<div class="ccm-dashboard-description"><?=t('')?></div>
 		
 		<div id="cstmEditorTxtAreaWrap" style=" display:<?=($txtEditorMode=='CUSTOM')?'block':'none' ?>" >
 			<textarea wrap="off" name="CONTENTS_TXT_EDITOR_CUSTOM_CODE" cols="25" rows="20" style="width: 97%; height: 250px;"><?=$txtEditorCstmCode?></textarea>
