@@ -83,6 +83,7 @@ foreach($s1 as $s) {
 		 * Here are all the things that could be passed through the asset library that we need to account for, as hidden form fields
 		 */
 		print $form->hidden('fType'); 
+		print $form->hidden('fileSelector', $fileSelector); 
 	?>	
 		<div id="ccm-search-box-title">
 			<? if ($_REQUEST['fType'] != false) { ?>

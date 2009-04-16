@@ -71,7 +71,7 @@ class SlideshowBlockController extends BlockController {
 
 		$fakID = $this->db->getOne("SELECT fakID FROM FileAttributeKeys WHERE akName = 'height'"); 
 
-		$sql = "SELECT fv.fvFilename, fv.fvPrefix, fav.value FROM FileSetFiles fsf, FileVersions fv, FileAttributeValues fav " .
+		$sql = "SELECT fsf.fID, fv.fvFilename, fv.fvPrefix, fav.value FROM FileSetFiles fsf, FileVersions fv, FileAttributeValues fav " .
 		       "WHERE fsf.fsID = " . $this->fsID . " AND fsf.fID = fv.fID AND fvIsApproved = 1 AND fav.fID = fv.fID " .
 		       " AND fav.fvID = fv.fvID AND fav.fakID = " . $fakID;
 		$files = $this->db->getAll($sql); 
@@ -84,6 +84,7 @@ class SlideshowBlockController extends BlockController {
 		$images = array();
 		$maxHeight = 0;
 		foreach ($files as $file) {
+			$image['fID'] = $file['fID']; 
 			$image['fileName'] = $file['fvFilename'];
 			$image['fullFilePath'] = $f->getFileRelativePath($file['fvPrefix'], $file['fvFilename']);
 			$image['imgHeight'] = $file['value'];
