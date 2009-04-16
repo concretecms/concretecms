@@ -19,7 +19,7 @@ $pagination = $fileList->getPagination();
 	<table id="ccm-file-manager-table" >
 		<tr>
 			<td class="ccm-search-form-advanced-col">
-				<? Loader::element('files/search_form_advanced'); ?>
+				<? Loader::element('files/search_form_advanced', array('fileSelector' => true)); ?>
 			</td>		
 			<? /* <div id="ccm-file-search-advanced-fields-gutter">&nbsp;</div> */ ?>		
 			<td>	
