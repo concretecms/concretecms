@@ -292,7 +292,7 @@ saveMaintenanceMode = function() {
 					<td class="subheader"><?=t('Expires In')?></td>
 					<td class="subheader"> 
 						<select name="ip_ban_change_to" id="ip_ban_change_to">				
-							<option value="<?=$ip_ban_change_makeperm?>"><?=t('Make Ban Permanant')?></option>
+							<option value="<?=$ip_ban_change_makeperm?>"><?=t('Make Ban Permanent')?></option>
 							<option value="<?=$ip_ban_change_remove?>"><?=t('Remove Ban')?></option>
 						</select>
 						<input type="button" value="<?=t('Go')?>" name="submit-ipblacklist" id="submit-ipblacklist" />
