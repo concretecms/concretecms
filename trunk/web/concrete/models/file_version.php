@@ -27,6 +27,20 @@ class FileVersion extends Object {
 	}
 	
 	/** 
+	 * Gets an associative array of all attributes for a file version
+	 */
+	public function getAttributeList() {
+		$db = Loader::db();
+		$v = array($this->fID, $this->fvID);
+		$r = $db->Execute("select FileAttributeKeys.akHandle, FileAttributeValues.value from FileAttributeKeys inner join FileAttributeValues on FileAttributeKeys.fakID = FileAttributeValues.fakID where FileAttributeValues.fID = ? and FileAttributeValues.fvID = ?", $v);
+		$attributes = array();
+		while ($row = $r->FetchRow()) {
+			$attributes[$row['akHandle']] = $row['value'];
+		}
+		return $attributes;
+	}
+	
+	/** 
 	 * Gets an attribute for the file. If "nice mode" is set, we display it nicely
 	 * for use in the file attributes table 
 	 */
