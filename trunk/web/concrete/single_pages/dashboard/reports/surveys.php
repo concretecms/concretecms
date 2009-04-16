@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 
 <? if ($this->controller->getTask() == 'viewDetail') { ?>
-	<h1><span><?=t('Results for &#34;' . $current_survey . '&#34;')?></span></h1>
+	<h1><span><?=t('Results for &#34;%s&#34;', $current_survey)?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
 	<div class="surveyOverview" >
