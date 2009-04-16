@@ -27,6 +27,7 @@ if (count($files) == 0) {
 
 $i = 0;
 foreach($files as $f) {
+	$ats = $f->getAttributeList();
 	$resp[$i]['error'] = false;
 	$resp[$i]['filePathDirect'] = $f->getRelativePath();
 	$resp[$i]['filePathInline'] = View::url('/download_file', 'view_inline', $f->getFileID());
@@ -36,9 +37,10 @@ foreach($files as $f) {
 	$resp[$i]['thumbnailLevel1'] = $f->getThumbnailSRC(1);
 	$resp[$i]['thumbnailLevel2'] = $f->getThumbnailSRC(2);
 	$resp[$i]['thumbnailLevel3'] = $f->getThumbnailSRC(3);
-	$resp[$i]['width'] = $f->getAttribute("width");
-	$resp[$i]['height'] = $f->getAttribute("height");
 	$resp[$i]['fID'] = $f->getFileID();
+	foreach($ats as $key => $value) {
+		$resp[$i][$key] = $value;
+	}
 	$i++;
 }
 

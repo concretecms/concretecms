@@ -4,3 +4,13 @@ ccmValidateBlockForm = function() {
 	}
 	return false;
 }
+
+ccm_chooseAsset = function(obj) {
+	ccm_triggerSelectFile(obj.fID);
+	if (obj.width) {
+		$("#ccm-block-video-width").val(obj.width);
+	}
+	if (obj.height) {
+		$("#ccm-block-video-height").val(obj.width);
+	}
+}
