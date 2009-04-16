@@ -31,13 +31,23 @@ var GlobalScrapbook = {
 	editBlock:function(bID,w,h){ 
 		if(!w) w=550;
 		if(!h) h=380; 
-		var editBlockURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED ?>/edit_block_popup.php';
+		var editBlockURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED ?>/edit_block_popup';
 		$.fn.dialog.open({
 			title: ccmi18n.editBlock,
 			href: editBlockURL+'?cID='+CCM_CID+'&bID='+bID+'&arHandle=Global+Scrapbook&btask=edit#_edit'+bID,
 			width: w,
 			modal: false,
 			height: h
+		});		
+	},
+	editBlockTemplate:function(bID){ 
+		var editBlockURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED ?>/edit_block_popup';
+		$.fn.dialog.open({
+			title: ccmi18n.changeBlockTemplate,
+			href: editBlockURL+'?cID='+CCM_CID+'&bID='+bID+'&arHandle=Global+Scrapbook&btask=template#_edit'+bID,
+			width: 300,
+			modal: false,
+			height: 100
 		});		
 	},
 	confirmDelete:function(){
@@ -81,9 +91,11 @@ var GlobalScrapbook = {
 			 <div class="ccm-scrapbook-list-item"> 
 				 <div class="ccm-block-type">  
 				 	<div class="options"> 
-					  <a onclick="GlobalScrapbook.toggleRename(<?=intval($b->bID) ?>)"><?=t('Rename')?></a>
+					  <a href="javascript:void(0)" onclick="GlobalScrapbook.toggleRename(<?=intval($b->bID) ?>)"><?=t('Rename')?></a>
 					  &nbsp;|&nbsp; 
-					  <a onclick="GlobalScrapbook.editBlock(<?=intval($b->bID) ?>,<?=$bt->getBlockTypeInterfaceWidth()?> , <?=$bt->getBlockTypeInterfaceHeight()?> )" ><?=t('Edit')?></a> 
+					  <a href="javascript:void(0)" onclick="GlobalScrapbook.editBlockTemplate(<?=intval($b->bID) ?>)" ><?=t('Set Custom Template')?></a> 
+					  &nbsp;|&nbsp; 
+					  <a href="javascript:void(0)" onclick="GlobalScrapbook.editBlock(<?=intval($b->bID) ?>,<?=$bt->getBlockTypeInterfaceWidth()?> , <?=$bt->getBlockTypeInterfaceHeight()?> )" ><?=t('Edit')?></a> 
 					  &nbsp;|&nbsp; 					 
 					  <a href="<?= $this->url($c->getCollectionPath(),'delete','?bID='.intval($b->bID))?>" onclick="return GlobalScrapbook.confirmDelete()">
 					  	<?=t('Delete')?>

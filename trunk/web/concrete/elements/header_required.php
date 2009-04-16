@@ -98,7 +98,7 @@ if (is_object($cp)) {
 
 	if ($this->editingEnabled()) {
 		//Loader::element('page_controls_menu', array('cp' => $cp, 'c' => $c));
-		$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/page_controls_menu_js?cID=' . $c->getCollectionID() . '&cvID=' . $cvID . '&btask=' . $_REQUEST['btask'] . '&ts=' . time() . '"></script>', 'CORE'); 
+		$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/page_controls_menu_js?cID=' . $c->getCollectionID() . '&amp;cvID=' . $cvID . '&amp;btask=' . $_REQUEST['btask'] . '&amp;ts=' . time() . '"></script>', 'CORE'); 
 	}
 }
 
