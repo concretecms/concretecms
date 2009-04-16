@@ -2,6 +2,7 @@
 
 // This is ugly. Fix later.
 $GLOBALS['ccmRuntimeCacheEnabled'] = true;
+$GLOBALS['ccmRuntimeLocalCacheEnabled'] = true;
 
 class Cache extends CacheTemplate {
 
@@ -42,8 +43,10 @@ class Cache extends CacheTemplate {
 		fputs($fileHandle, serialize($cacheDataObject) );
 		fclose($fileHandle);
 		
-		$loc = CacheLocal::get();
-		$loc->cache[$key] = $obj;		
+		if ($GLOBALS['ccmRuntimeLocalCacheEnabled']) {
+			$loc = CacheLocal::get();
+			$loc->cache[$key] = $obj;
+		}
 	}
 	
 	/** 
@@ -63,7 +66,7 @@ class Cache extends CacheTemplate {
 		
 		//check the local (in memory) cache first
 		$loc = CacheLocal::get();
-		if (isset($loc->cache[$key])){
+		if (($GLOBALS['ccmRuntimeLocalCacheEnabled']) && isset($loc->cache[$key])) {
 			$value = $loc->cache[$key];
 			
 		//check the file system for a cached version	
@@ -110,8 +113,10 @@ class Cache extends CacheTemplate {
 		$filePath=self::getFilePath($key);
 		if (strstr($filePath,self::$filePrefix) && is_file($filePath)){
 			unlink($filePath);
-			$loc = CacheLocal::get();
-			unset($loc->cache[$key]);
+			if ($GLOBALS['ccmRuntimeLocalCacheEnabled']) {
+				$loc = CacheLocal::get();
+				unset($loc->cache[$key]);
+			}
 		}				
 	}
 	
@@ -148,8 +153,16 @@ class Cache extends CacheTemplate {
 		$GLOBALS['ccmRuntimeCacheEnabled'] = false;
 	}
 	
+	public function disableLocalCache() {
+		$GLOBALS['ccmRuntimeLocalCacheEnabled'] = false;
+	}
+	
 	public function enableCache() {
 		$GLOBALS['ccmRuntimeCacheEnabled'] = true;
+	}
+
+	public function enableLocalCache() {
+		$GLOBALS['ccmRuntimeLocalCacheEnabled'] = true;
 	}
 	
 }
