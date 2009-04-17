@@ -95,7 +95,13 @@ class FileType {
 	const T_AUDIO = 4;
 	const T_DOCUMENT = 5;
 	const T_APPLICATION = 6;
-
+	const T_UNKNOWN = 99;
+	
+	public function __construct() {
+		$this->type = FileType::T_UNKNOWN;
+		$this->name = $this->mapGenericTypeText($this->type);
+	}
+	
 	public function getName() {return $this->name;}
 	public function getExtension() {return $this->extension;}
 	public function getCustomImporter() {return $this->customImporter;}
@@ -123,6 +129,10 @@ class FileType {
 			case FileType::T_APPLICATION:
 				return t('Application');
 				break;
+			case FileType::T_UNKNOWN:
+				return t('File');
+				break;
+
 		}
 	}
 	

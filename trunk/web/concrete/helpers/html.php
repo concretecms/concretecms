@@ -30,26 +30,26 @@ class HtmlHelper {
 	public function css($file, $pkgHandle = null) {
 		// if the first character is a / then that means we just go right through, it's a direct path
 		if (substr($file, 0, 1) == '/' || substr($file, 0, 4) == 'http') {
-			return '<link rel="stylesheet" href="' . $file . '" />';
+			return '<link rel="stylesheet" media="screen" type="text/css" href="' . $file . '" />';
 		}
 		
 		$v = View::getInstance();
 		// checking the theme directory for it. It's just in the root.
 		if (file_exists($v->getThemeDirectory() . '/' . $file)) {
-			$str = '<style type="text/css">@import "' . $v->getThemePath() . '/' . $file . '";</style>';
+			$str = '<link rel="stylesheet" media="screen" type="text/css" href="' . $v->getThemePath() . '/' . $file . '" />';
 		} else if ($pkgHandle != null) {
 			if (file_exists(DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file)) {
-				$str = '<style type="text/css">@import "' . DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file . '";</style>';
+				$str = '<link rel="stylesheet" media="screen" type="text/css" href="' . DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file . '" />';
 			} else if (file_exists(DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file)) {
-				$str = '<style type="text/css">@import "' . ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file . '";</style>';
+				$str = '<link rel="stylesheet" media="screen" type="text/css" href="' . ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file . '" />';
 			}
 		}
 			
 		if (!isset($str)) {
 			if (file_exists(DIR_BASE . '/' . DIRNAME_CSS . '/' . $file)) {
-				$str = '<style type="text/css">@import "' . DIR_REL . '/' . DIRNAME_CSS . '/' . $file . '";</style>';
+				$str = '<link rel="stylesheet" media="screen" type="text/css" href="' . DIR_REL . '/' . DIRNAME_CSS . '/' . $file . '" />';
 			} else {
-				$str = '<style type="text/css">@import "' . ASSETS_URL_CSS . '/' . $file . '";</style>';
+				$str = '<link rel="stylesheet" media="screen" type="text/css" href="' . ASSETS_URL_CSS . '/' . $file . '" />';
 			}
 		}
 		return $str;
