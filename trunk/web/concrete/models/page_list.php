@@ -216,7 +216,9 @@ class PageList extends DatabaseItemList {
 			$tbl = "cav_{$akID}";
 			$this->addToQuery("left join CollectionAttributeValues $tbl on {$tbl}.cID = if(p2.cID is null, p1.cID, p2.cID) and {$tbl}.akID = {$akID} and cv.cvID = {$tbl}.cvID");
 			$this->filter($tbl . '.value', $caf[1], $caf[2]);
-			$this->filter($tbl . '.akID', $akID);
+			if ($caf[1] != null && $caf[2] != 'is') {
+				$this->filter($tbl . '.akID', $akID);
+			}
 			
 			if (isset($this->collectionAttributeSortFilter[0]) && $this->collectionAttributeSortFilter[0] == $caf[0]) {
 				$sortByTable = $tbl;
