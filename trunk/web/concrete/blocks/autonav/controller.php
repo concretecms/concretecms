@@ -514,8 +514,17 @@
 					}
 
 					$sortit=0;
-					if($this->orderBy == "alpha_desc") { arsort($navObjectNames); $sortit=1; }
-					if($this->orderBy == "alpha_asc") { asort($navObjectNames); $sortit=1; }
+					if($this->orderBy == "alpha_desc") { 
+						$navObjectNames = array_map('strtolower',$navObjectNames);
+						arsort($navObjectNames);						
+						$sortit=1; 						
+					}
+					
+					if($this->orderBy == "alpha_asc") { 
+						$navObjectNames = array_map('strtolower',$navObjectNames);
+						asort($navObjectNames); 
+						$sortit=1; 
+					}
 
 					if($sortit) {
 						foreach($navObjectNames as $sortCID => $sortnameaction) {
