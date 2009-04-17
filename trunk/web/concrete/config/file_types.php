@@ -25,6 +25,7 @@ $ft->define('asf,wmv', t('Windows Video'), FileType::T_VIDEO, false, 'video');
 $ft->define('mov,qt', t('Quicktime'), FileType::T_VIDEO, false, 'video');
 $ft->define('avi', t('AVI'), FileType::T_VIDEO, false, 'video');
 $ft->define('txt', t('Plain Text'), FileType::T_TEXT);
+$ft->define('xml', t('XML'), FileType::T_TEXT);
 $ft->define('php', t('PHP'), FileType::T_TEXT);
 $ft->define('doc,docx', t('MS Word'), FileType::T_DOCUMENT);
 $ft->define('css', t('Stylesheet'), FileType::T_TEXT);
