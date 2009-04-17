@@ -36,6 +36,7 @@ if (function_exists('curl_init')) {
 	curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 30);
 	curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
 	$response = curl_exec($curl_handle); 
+print_r($response);
 	$responseData = JsonHelper::decode($response);
 	$responseData->uName = $_POST['uName'];
 } else {
