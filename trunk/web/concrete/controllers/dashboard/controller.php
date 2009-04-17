@@ -11,6 +11,9 @@ class DashboardController extends Controller {
 		$modules = $dh->getModules();
 		$this->set('dh', $dh);
 		$this->set('modules', $modules);
+		
+		$html = Loader::helper('html');
+		$this->addHeaderItem($html->javascript('swfobject.js'));
 	}
 	
 	public function module($module = null, $task = null) {
