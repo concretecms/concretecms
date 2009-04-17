@@ -28,7 +28,7 @@ class JsonHelper {
 		} else {
 			Loader::library('3rdparty/JSON/JSON');
 			$sjs = new Services_JSON();
-			return $sjs->decode($mixed);
+			return $sjs->decode($string);
 		}
 	}
 	
