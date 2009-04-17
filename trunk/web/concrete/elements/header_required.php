@@ -65,7 +65,6 @@ var CCM_REL = "<?=DIR_REL?>";
 <?
 $html = Loader::helper('html');
 $this->addHeaderItem($html->javascript('jquery.js'), 'CORE');
-$this->addHeaderItem($html->javascript('swfobject.js'), 'CORE');
 $this->addHeaderItem($html->javascript('ccm.base.js'), 'CORE');
 $this->addHeaderItem($html->css('ccm.base.css'), 'CORE');
 $this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>', 'CORE'); 

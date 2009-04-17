@@ -23,7 +23,6 @@ if ($c->isEditMode()) { ?>
 	//echo mime_content_type(DIR_FILES_UPLOADED.'/'.$file->getFilename()).'<br>';
 	if( strstr(strtolower($file->getFilename()),'.flv') ){   ?>
 		
-		<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/swfobject.js"></script>
 		<script type="text/javascript">
 		var flashvars = {};
 		flashvars.flvfile = "<?=$rel_file_path?>";
