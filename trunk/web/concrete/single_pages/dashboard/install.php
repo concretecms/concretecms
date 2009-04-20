@@ -46,11 +46,15 @@ foreach($availableArray as $ava) {
 function loginSuccess() {
     jQuery.fn.dialog.closeTop();
     ccmAlert.notice('Marketplace Login', '<p>You\'ve successfully connected this website to your concrete5 Marketplace account. Browse the full marketplace at <a href="http://concrete5.org/marketplace/" target="_blank">concrete5.org/marketplace</a>.</p>',
-		function() {str=unescape(window.location.pathname); window.location.href = str.replace(/\/-\/.*/, '');});
+		function() {
+			location.href = '<?=$this->url('/dashboard/install')?>?ts=<?=time()?>';		
+		});
 }
 function logoutSuccess() {
     ccmAlert.notice('Marketplace Logout', '<p>You have disconnected this site from the marketplace.</p>',
-		function() {str=unescape(window.location.pathname); window.location.href = str.replace(/\/-\/.*/, '');});
+		function() {
+			location.href = '<?=$this->url('/dashboard/install')?>?ts=<?=time()?>';		
+		});
 }
 </script>
 
