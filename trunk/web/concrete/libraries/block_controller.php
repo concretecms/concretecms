@@ -239,7 +239,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * @return string $btName
 		 */
 		public function getBlockTypeName() {
-			return $this->btName;
+			return t($this->btName);
 		}
 		
 		/**
@@ -263,7 +263,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * @return string
 		 */
 		public function getBlockTypeDescription() {
-			return $this->btDescription;
+			return t($this->btDescription);
 		}
 		
 		/**

@@ -47,7 +47,7 @@ if(ENABLE_MARKETPLACE_SUPPORT){
 			<? } ?>
 			</td>
 			<td><div class="ccm-block-price"><? if ($bt->getPrice() == '0.00') { print t('Free'); } else { print '$' . $bt->getPrice(); } ?></div></td>
-			<td<?=$btClass?>><?=$ch->button($btButton, $btLink, "right");?></td>
+			<td<?=$btClass?>><?=$ch->button($btButton, $btLink, "right", NULL, array('target'=>'_blank') );?></td>
 		</tr>
 	<? } ?>
 		</table>

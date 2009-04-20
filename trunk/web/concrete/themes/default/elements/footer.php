@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 	<div id="footer">
-			<span class="powered-by"><?=t('Built with concrete5')?> <a href="http://www.concrete5.org">CMS</a>.</span>
+			<span class="powered-by"><?=t('Built with ')?> <a href="http://www.concrete5.org"><?=t('concrete5 CMS') ?></a>.</span>
 			<? 
 			//$block = Block::getGlobalBlock('Standard Footer');
 			//$block->display();

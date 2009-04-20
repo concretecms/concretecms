@@ -7,7 +7,7 @@
 .rssSummaryList .rssSummaryListTitle{font-weight:bold}
 </style>
 
-<div id="rssSummaryList<?=intval($survey->questionSetId)?>" class="rssSummaryList">
+<div id="rssSummaryList<?=intval($bID)?>" class="rssSummaryList">
 
 <? if( strlen($title)>0 ){ ?>
 	<div class="rssSummaryListTitle" style="margin-bottom:8px"><?=$title?></div>

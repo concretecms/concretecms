@@ -66,7 +66,7 @@ if (count($errors) < 1) {
 		if ($response->isSuccessful()) {
 			$uri = Zend_Uri_Http::fromString($this_url);
 			$fname = '';
-			$fpath = $file->getTemporaryDirectory() . '/';
+			$fpath = $file->getTemporaryDirectory();
 	
 			// figure out a filename based on filename, mimetype, ???
 			if (preg_match('/^.+?[\\/]([-\w%]+\.[-\w%]+)$/', $uri->getPath(), $matches)) {
