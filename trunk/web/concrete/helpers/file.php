@@ -122,18 +122,22 @@ class FileHelper {
 	 */
 	public function getTemporaryDirectory() {
 		if (function_exists('sys_get_temp_dir') && (ini_get('open_basedir') == '')) {
-			return sys_get_temp_dir();
+			$path = sys_get_temp_dir();
 		} else {
-			if (!empty($_ENV['TMP'])) { return realpath($_ENV['TMP']); }
-			if (!empty($_ENV['TMPDIR'])) { return realpath( $_ENV['TMPDIR']); }
-			if (!empty($_ENV['TEMP'])) { return realpath( $_ENV['TEMP']); }
-			
-			$tempfile=tempnam(uniqid(rand(),TRUE),'');
-			if (file_exists($tempfile)) {
-				unlink($tempfile);
-				return realpath(dirname($tempfile));
+			if (!empty($_ENV['TMP'])) { $path =  realpath($_ENV['TMP']); }
+			elseif (!empty($_ENV['TMPDIR'])) { $path =  realpath( $_ENV['TMPDIR']); }
+			elseif (!empty($_ENV['TEMP'])) { $path =  realpath( $_ENV['TEMP']); }
+			else{
+				$tempfile=tempnam(uniqid(rand(),TRUE),'');
+				if (file_exists($tempfile)) {
+					unlink($tempfile);
+					$path = realpath(dirname($tempfile));
+				}
 			}
 		}
+		$trailingChar=substr($path,strlen($path)-1);
+		if($trailingChar!='/' && $trailingChar!="\\") $path.='/';		
+		return $path;
 	}
 
 

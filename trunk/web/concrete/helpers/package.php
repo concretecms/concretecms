@@ -20,8 +20,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class PackageHelper {
 
-	public function install_remote($type, $remoteCID=null, $install=false)
-	{
+	public function install_remote($type, $remoteCID=null, $install=false){
 		if (empty($remoteCID)) {
 			return array(Package::E_PACKAGE_NOT_FOUND);
 		}
@@ -79,14 +78,13 @@ class PackageHelper {
 		return true;
 	}
 
-	private function download_remote_package($fileURL)
-	{
+	private function download_remote_package($fileURL) {
 		$fh = Loader::helper('file');
 		$pkg = $fh->getContents($fileURL);
 
 		$file = time();
 		// Use the same method as the Archive library to build a temporary file name.
-		$tmpFile = $fh->getTemporaryDirectory() . '/' . $file . '.zip';
+		$tmpFile = $fh->getTemporaryDirectory() . $file . '.zip';
 		$fp = fopen($tmpFile, "wb");
 		fwrite($fp, $pkg);
 		fclose($fp);

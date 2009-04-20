@@ -144,7 +144,7 @@ var ccmPathHelper={
 						<? foreach($options as $val) {
 							$val = trim($val);
 							print '<option value="' . $val . '"';
-							if ( in_array($val, $caValues) ) { 
+							if ( in_array(html_entity_decode($val), $caValues) ) { 
 								 print " selected";
 							}						
 							print '>' . $val . '</option>';
@@ -169,7 +169,7 @@ var ccmPathHelper={
 					<div> 
 					<?  foreach($options as $val) { ?>
 						<div>
-						<input name="akID_<?=$ak->getCollectionAttributeKeyID()?>[]" type="checkbox" value="<?=str_replace('"','\"',$val)?>" <?=( in_array($val, $caValues) )?'checked':''?> />
+						<input name="akID_<?=$ak->getCollectionAttributeKeyID()?>[]" type="checkbox" value="<?=str_replace('"','\"',$val)?>" <?=( in_array(html_entity_decode($val), $caValues) )?'checked':''?> />
 						<?=$val ?>
 						</div>
 					<? } ?>

@@ -45,11 +45,11 @@ foreach($availableArray as $ava) {
 <script type="text/javascript">
 function loginSuccess() {
     jQuery.fn.dialog.closeTop();
-    ccmAlert.notice('Marketplace Login', '<p>You have successfully logged into the concrete5 marketplace.</p>',
+    ccmAlert.notice('Marketplace Login', '<p>You\'ve successfully connected this website to your concrete5 Marketplace account. Browse the full marketplace at <a href="http://concrete5.org/marketplace/" target="_blank">concrete5.org/marketplace</a>.</p>',
 		function() {str=unescape(window.location.pathname); window.location.href = str.replace(/\/-\/.*/, '');});
 }
 function logoutSuccess() {
-    ccmAlert.notice('Marketplace Logout', '<p>You are now logged out of concrete5 marketplace.</p>',
+    ccmAlert.notice('Marketplace Logout', '<p>You have disconnected this site from the marketplace.</p>',
 		function() {str=unescape(window.location.pathname); window.location.href = str.replace(/\/-\/.*/, '');});
 }
 </script>
@@ -148,15 +148,20 @@ function logoutSuccess() {
 
 		<h1><span><?=t('New')?></span></h1>
 		<div class="ccm-dashboard-inner">
-		
+		 
 		<? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
+		<p><strong>		
+		<?=t('You can safely and easily extend your website without touching a line of code. Login with your concrete5 marketplace <a href="%s" target="_blank">account here</a>,', MARKETPLACE_URL_LANDING)?>
+		<?=t('  and you can automatically install your themes and add-ons!') ?>
+		</strong></p>
+				
+		<hr />		
 
-		<? if (!UserInfo::isRemotelyLoggedIn()) { ?>
-			<p><?=t('You are not currently signed in to the marketplace.')?></p>
-			<p><a href="#" onclick="ccmPopupLogin.show('', loginSuccess, '', 1)">Click here to sign in or create an account.</a></p>
-		<? } else { ?>
-			<p><?=t('You are currently signed in to the marketplace as ');?>
-          	  <a href="<?=CONCRETE5_ORG_URL ?>/profile/-/<?=UserInfo::getRemoteAuthUserId() ?>/" ><?=UserInfo::getRemoteAuthUserName() ?></a>
+		<? if (!UserInfo::isRemotelyLoggedIn()) { ?> 
+			<p><a href="#" onclick="ccmPopupLogin.show('', loginSuccess, '', 1)">Sign in or create an account.</a></p>			
+		<? } else { ?> 
+			<p><?=t('You have connected this website to the concrete5 marketplace as  ');?>
+          	  <a href="<?=CONCRETE5_ORG_URL ?>/profile/-/<?=UserInfo::getRemoteAuthUserId() ?>/" target="_blank" ><?=UserInfo::getRemoteAuthUserName() ?></a>
 			  <?=t('(Not your account? <a href="#" onclick="ccm_support.signOut(logoutSuccess)">Sign Out</a>)')?></p>
 		<? } ?>
 		<hr />
@@ -165,7 +170,7 @@ function logoutSuccess() {
 		
 	<? if (count($availableArray) == 0 && count($purchasedBlocks) == 0) { ?>
 
-		<?=t('Nothing is available to install.')?>
+		<?=t('Nothing currently available to install.')?>
 	
 	<? } else { ?>
 
@@ -214,12 +219,6 @@ function logoutSuccess() {
 
 		<? } ?>
 
-		<? if (ENABLE_MARKETPLACE_SUPPORT) { ?>		
-		<hr />
-		<p><strong><?=t('You can extend your site with new addons and themes from the <a href="%s" target="_blank">concrete5 marketplace</a>.', MARKETPLACE_URL_LANDING);?></strong></p>
-		
-		<? } ?>
-		
 		</div>
 
 	</div>

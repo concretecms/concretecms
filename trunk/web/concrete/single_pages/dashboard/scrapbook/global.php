@@ -14,6 +14,8 @@ $ci = Loader::helper('concrete/urls');
 #ccm-scrapbook-list .ccm-block-type-inner .edit{ display:none }
 #ccm-scrapbook-list .ccm-block-type-inner.editMode .view{ display:none }
 #ccm-scrapbook-list .ccm-block-type-inner.editMode .edit{ display:block }
+#ccm-scrapbook-list .ccm-block-type-inner a{ cursor:pointer }
+#ccm-scrapbook-list .ccm-block-type-inner.editMode .view a{cursor:text}
 
 #ccm-scrapbook-list .ccm-scrapbook-list-item .ccm-scrapbook-list-item-detail{ overflow:hidden } 
 </style>

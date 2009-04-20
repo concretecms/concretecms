@@ -95,8 +95,8 @@ class PackageList extends Object {
 class Package extends Object {
 
 	public function getPackageID() {return $this->pkgID;}
-	public function getPackageName() {return $this->pkgName;}
-	public function getPackageDescription() {return $this->pkgDescription;}
+	public function getPackageName() {return t($this->pkgName);}
+	public function getPackageDescription() {return t($this->pkgDescription);}
 	public function getPackageHandle() {return $this->pkgHandle;}
 	public function getPackageDateInstalled() {return $this->pkgDateInstalled;}
 	public function getPackageVersion() {return $this->pkgVersion;}

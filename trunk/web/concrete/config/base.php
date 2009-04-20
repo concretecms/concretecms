@@ -270,15 +270,17 @@ define('DIR_FILES_CACHE_DB', DIR_FILES_CACHE);
 define('DIR_FILES_CACHE_CORE', DIR_BASE . '/files/cache_objects');
 define('DIR_FILES_CACHE_PAGES', DIR_FILES_CACHE . '/lucene.pages');
 
+define('ON_WINDOWS', intval(substr(PHP_OS,0,3)=='WIN') );
+
 # Binaries used by the system
 # Currently unused
 # define('DIR_FILES_BIN', DIR_BASE_CORE . '/bin');
 define('DIR_FILES_BIN_HTMLDIFF', DIR_LIBRARIES_3RDPARTY_CORE . '/htmldiff.py');
 if (!defined('DIR_FILES_BIN_UNZIP')) {
-	define('DIR_FILES_BIN_UNZIP', '/usr/bin/unzip');
+	 define('DIR_FILES_BIN_UNZIP', '/usr/bin/unzip');
 }
 if (!defined('DIR_FILES_BIN_ZIP')) {
-	define('DIR_FILES_BIN_ZIP', '/usr/bin/zip');
+	 define('DIR_FILES_BIN_ZIP', '/usr/bin/zip');
 }
 if(!defined('DIR_FILES_BIN_ASPELL')) define('DIR_FILES_BIN_ASPELL', '/usr/bin/aspell'); // spellchecker
 

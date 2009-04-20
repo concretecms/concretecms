@@ -103,8 +103,7 @@ class DashboardInstallController extends Controller {
 		}
 	}
 
-    public function remote_purchase($remoteCID=null)
-    {
+    public function remote_purchase($remoteCID=null){
     	$ph = Loader::helper('package');
     	$errors = $ph->install_remote('purchase', $remoteCID, false);
 		if (is_array($errors)) {
