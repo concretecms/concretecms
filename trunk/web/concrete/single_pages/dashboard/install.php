@@ -215,7 +215,6 @@ function logoutSuccess() {
 				<td><?=$ch->button(t("Install"), $this->url('/dashboard/install','install_package', $obj->getPackageHandle()), "right");?></td>
 			<? } ?>
 			</tr>
-			</tr>
 			</table>
 			</div>
 		<? } ?>

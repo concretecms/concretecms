@@ -263,9 +263,12 @@ jQuery.fn.dialog.loadShell = function(fnd) {
 	if (fnd.draggable && ccm_dialogCanDrag) {
 		dragCursor = "style='cursor: move'";
 	}
+	if (typeof(ccmi18n) == 'undefined') {
+		cwt = 'Close';
+	}
 	if($("#ccm-dialog-window" + fnd.n).css("display") != "block"){
 		if(fnd.modal == false){//ajax no modal
-			$("#ccm-dialog-window" + fnd.n).append("<div class='ccm-dialog-title-bar-l' " + dragCursor + "><div class='ccm-dialog-title-bar-r'><div class='ccm-dialog-title-bar' id='ccm-dialog-title-bar" + fnd.n + "'><div class='ccm-dialog-title' id='ccm-dialog-title" + fnd.n + "'>"+fnd.title+"</div><a href='javascript:void(0)' class='ccm-dialog-close'>" + ccmi18n.closeWindow + "</a></div></div></div><div id='ccm-dialog-content-wrapper'><div class='ccm-dialog-content-l'><div class='ccm-dialog-content-r'><div class='ccm-dialog-content' id='ccm-dialog-content" + fnd.n + "' style='width:"+fnd.contentWidth+"px;height:"+fnd.contentHeight+"px'></div></div></div></div>");
+			$("#ccm-dialog-window" + fnd.n).append("<div class='ccm-dialog-title-bar-l' " + dragCursor + "><div class='ccm-dialog-title-bar-r'><div class='ccm-dialog-title-bar' id='ccm-dialog-title-bar" + fnd.n + "'><div class='ccm-dialog-title' id='ccm-dialog-title" + fnd.n + "'>"+fnd.title+"</div><a href='javascript:void(0)' class='ccm-dialog-close'>" + cwt + "</a></div></div></div><div id='ccm-dialog-content-wrapper'><div class='ccm-dialog-content-l'><div class='ccm-dialog-content-r'><div class='ccm-dialog-content' id='ccm-dialog-content" + fnd.n + "' style='width:"+fnd.contentWidth+"px;height:"+fnd.contentHeight+"px'></div></div></div></div>");
 		}else{//ajax modal
 			$("#ccm-dialog-window" + fnd.n).append("<div class='ccm-dialog-title-bar-l' " + dragCursor + "><div class='ccm-dialog-title-bar-r'><div class='ccm-dialog-title-bar' id='ccm-dialog-title-bar" + fnd.n + "'><div class='ccm-dialog-title' id='ccm-dialog-title" + fnd.n + "'>"+fnd.title+"</div></div></div></div><div id='ccm-dialog-content-wrapper'><div class='ccm-dialog-content-l'><div class='ccm-dialog-content-r'><div class='ccm-dialog-content' id='ccm-dialog-content" + fnd.n + "' class='TB_modal' style='width:"+fnd.contentWidth+"px;height:"+fnd.contentHeight+"px;'>");	
 		}

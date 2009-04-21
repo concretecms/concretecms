@@ -65,6 +65,7 @@ var CCM_REL = "<?=DIR_REL?>";
 <?
 $html = Loader::helper('html');
 $this->addHeaderItem($html->css('ccm.base.css'), 'CORE');
+$this->addHeaderItem($html->javascript('ccm.base.js', 'CORE'));
 
 $favIconFID=intval(Config::get('FAVICON_FID'));
 
@@ -83,7 +84,7 @@ if (is_object($cp)) {
 	}
 	
 	if ($this->areLinksDisabled()) { 
-		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_disableLinks(); })</script>', 'CORE');
+		$this->addHeaderItem('<script type="text/javascript">window.onload = function() {ccm_disableLinks()}</script>', 'CORE');
 	}
 
 }

@@ -730,6 +730,13 @@ $(function() {
 	m8 = new Image();// preload image
 	m8.src = CCM_IMAGE_PATH + "/bg_menu_lt.png";
 
+	if ($.browser.msie) {
+		ccm_animEffects = false;
+	} else {
+		ccm_animEffects = true;
+	}
+
+
 });
 
 
@@ -947,6 +954,5 @@ var ccm_support = {
 		}).animate({backgroundColor:"#fafafa"},'','',function(){
 			$(this).css('background-color',ccm_support.helpIconOrigClr);	 
 		}); 		
-		//A2DAFD
 	}
 }
