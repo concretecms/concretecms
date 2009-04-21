@@ -27,7 +27,7 @@ if ($akt) {
 	?><title><?=$akt?></title>
 <? } else { 
 	$pageTitle = $c->getCollectionName();
-	?><title><?=SITE . ' :: ' . $pageTitle?></title>
+	?><title><?=sprintf(PAGE_TITLE_FORMAT, SITE, $pageTitle)?></title>
 <? } 
 
 if ($akd) { 
