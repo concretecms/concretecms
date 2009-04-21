@@ -5,19 +5,45 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?=APP_CHARSET?>">
 <?
+$html = Loader::helper('html');
 $v = View::getInstance();
 $v->disableEditing();
-require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); ?>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.dashboard.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.colorpicker.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.menus.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.forms.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.filemanager.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.calendar.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.dialog.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/jquery.rating.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/jquery.ui.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.popup_login.css";</style>
+
+// Required JavaScript
+
+$v->addHeaderItem($html->javascript('jquery.js'));
+$v->addHeaderItem($html->javascript('ccm.dialog.js'));
+$v->addHeaderItem($html->javascript('ccm.base.js'));
+$v->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
+
+$v->addHeaderItem($html->javascript('jquery.rating.js'));
+$v->addHeaderItem($html->javascript('jquery.form.js'));
+$v->addHeaderItem($html->javascript('ccm.ui.js'));
+$v->addHeaderItem($html->javascript('ccm.filemanager.js'));
+$v->addHeaderItem($html->javascript('ccm.themes.js'));
+$v->addHeaderItem($html->javascript('jquery.ui.js'));
+$v->addHeaderItem($html->javascript('jquery.colorpicker.js'));
+$v->addHeaderItem($html->javascript('ccm.popup_login.js'));
+
+if (LANGUAGE != 'en') {
+	$v->addHeaderItem($html->javascript('i18n/ui.datepicker-<?=LANGUAGE?>.js'));
+}
+
+// Require CSS
+$v->addHeaderItem($html->css('ccm.dashboard.css'));
+$v->addHeaderItem($html->css('ccm.colorpicker.css'));
+$v->addHeaderItem($html->css('ccm.menus.css'));
+$v->addHeaderItem($html->css('ccm.forms.css'));
+$v->addHeaderItem($html->css('ccm.filemanager.css'));
+$v->addHeaderItem($html->css('ccm.calendar.css'));
+$v->addHeaderItem($html->css('ccm.dialog.css'));
+$v->addHeaderItem($html->css('jquery.rating.css'));
+$v->addHeaderItem($html->css('jquery.ui.css'));
+$v->addHeaderItem($html->css('ccm.popup_login.css'));
+
+require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); 
+
+?>
 
 <script type="text/javascript">
 <?
@@ -26,21 +52,6 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 ?>
 
 </script>
-
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.rating.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.form.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.ui.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.filemanager.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.themes.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.ui.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.colorpicker.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.dialog.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.popup_login.js"></script>
-
-<? if (LANGUAGE != 'en') { ?>
-	<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/i18n/ui.datepicker-<?=LANGUAGE?>.js"></script>
-<? } ?>
-
 
 <script type="text/javascript">
 $(function() {

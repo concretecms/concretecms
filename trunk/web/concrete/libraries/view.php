@@ -109,31 +109,66 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * @access private
 		 */
 		public function outputHeaderItems() {
-			$items = array();
-			if (is_array($this->headerItems['CORE'])) {
-				foreach($this->headerItems['CORE'] as $hi) {
-					if (!in_array($hi, $items)) {
-						print $hi . "\n";
-						$items[] = $hi;
+			
+			$a1 = (is_array($this->headerItems['CORE'])) ? $this->headerItems['CORE'] : array();
+			$a2 = (is_array($this->headerItems['VIEW'])) ? $this->headerItems['VIEW'] : array();
+			$a3 = (is_array($this->headerItems['CONTROLLER'])) ? $this->headerItems['CONTROLLER'] : array();
+			
+			$items = array_merge($a1, $a2, $a3);
+			$items = array_unique($items);
+			
+			// Loop through all items
+			// If it is a header output object, place each item in a separate array for its container directory
+			// Otherwise, put it in the outputPost array
+			
+			$outputPost = array();
+			$output = array();
+			
+			/*
+			if (ENABLE_ASSET_COMPRESSION == true) {
+				foreach($items as $item) {
+					if (is_a($item, 'JavaScriptOutputObject')) {
+						$output['JAVASCRIPT'][dirname($item->file)][] = $item;
+					} else if (is_a($item, 'CSSOutputObject')) {
+						$output['CSS'][dirname($item->file)][] = $item;
+					} else {
+						$outputPost[] = $item;
 					}
 				}
-			}
-			if (is_array($this->headerItems['VIEW'])) {
-				foreach($this->headerItems['VIEW'] as $hi) {
-					if (!in_array($hi, $items)) {
-						print $hi . "\n";
-						$items[] = $hi;
+	
+				$html = Loader::helper("html");
+				foreach($output as $type => $item) {
+					switch($type) {
+						case 'JAVASCRIPT':
+							foreach($item as $base => $ind) {
+								$src = REL_DIR_FILES_TOOLS_REQUIRED . '/minify?b=' . trim($base, '/') . '&f=';
+								foreach($ind as $i) {
+									$src .= basename($i->file) . ',';
+								}
+								print $html->javascript(trim($src, ',')) . "\n";
+							}
+							break;
+						case 'CSS':
+							foreach($item as $base => $ind) {
+								$src = REL_DIR_FILES_TOOLS_REQUIRED . '/minify?b=' . trim($base, '/') . '&f=';
+								foreach($ind as $i) {
+									$src .= basename($i->file) . ',';
+								}
+								print $html->css(trim($src, ',')) . "\n";
+							}
+							break;					
 					}
 				}
+			} else {
+				$outputPost = $items;
 			}
-			if (is_array($this->headerItems['CONTROLLER'])) {
-				foreach($this->headerItems['CONTROLLER'] as $hi) {
-					if (!in_array($hi, $items)) {
-						print $hi . "\n";
-						$items[] = $hi;
-					}
-				}
+			*/
+			
+			foreach($items as $hi) {
+				print $hi . "\n";
 			}
+			
+			
 		}
 		
 		/** 
