@@ -120,6 +120,7 @@ class DatabaseItemList extends ItemList {
 		if ($this->debug) { 
 			$db->setDebug(true);
 		}
+		//echo $q.'<br>'; 
 		$resp = $db->GetAll($q, $v);
 		if ($this->debug) { 
 			$db->setDebug(false);

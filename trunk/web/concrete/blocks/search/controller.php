@@ -19,7 +19,7 @@ class SearchBlockController extends BlockController {
 	public function highlightedMarkup($fulltext, $highlight) {
 		$this->hText = $fulltext;
 		$this->hHighlight  = str_replace(array('"',"'","&quot;"),'',$highlight); // strip the quotes as they mess the regex
-		$this->hText = @preg_replace( "#$this->hHighlight#i", '<span style="background-color:'. $this->hColor .';">'. $this->hHighlight .'</span>', $this->hText );	
+		$this->hText = @preg_replace( "#$this->hHighlight#i", '<span style="background-color:'. $this->hColor .';">$0</span>', $this->hText );	
 		return $this->hText; 
 	}
 	
@@ -131,15 +131,16 @@ class SearchBlockController extends BlockController {
 		$ipl = new IndexedPageList();
 		$ipl->filterByKeywordsBoolean($q);
 		
-		if( is_array($_REQUEST['search_paths']) ){
+		if( is_array($_REQUEST['search_paths']) ){ 
 			foreach($_REQUEST['search_paths'] as $path) {
+				//if(!strlen($path)) continue;
 				$ipl->addSearchPath($path);
 			}
 		}
 
-		$res = $ipl->getPage();
+		$res = $ipl->getPage(); 
 		
-		foreach($res as $r) {
+		foreach($res as $r) { 
 			$results[] = new IndexedSearchResult($r['cID'], $r['cName'], $r['cDescription'], $r['score'], $r['cPath'], $r['content']);
 		}
 		
