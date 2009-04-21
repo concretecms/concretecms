@@ -31,7 +31,6 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 
 <?
 $this->addHeaderItem($html->css('jquery.ui.css'));
-$this->addHeaderItem($html->javascript('ccm.base.js'));
 $this->addHeaderItem($html->javascript('ccm.dialog.js'));
 $this->addHeaderItem($html->javascript('ccm.themes.js'));
 $this->addHeaderItem($html->javascript('ccm.filemanager.js'));

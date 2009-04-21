@@ -414,4 +414,4 @@ div.ccm-addon-list:last-child {border-bottom: none}
 div.ccm-addon-list table {width: 100%; margin-bottom: 15px;}
 div.ccm-addon-list table td {vertical-align: top}
 div.ccm-addon-list h3 {margin: 0px 0px 2px 0px; padding: 0px}
-div.ccm-addon-list table td.ccm-addon-list-description {padding: 0px 6px 0px 12px}
+div.ccm-addon-list table td.ccm-addon-list-description {width: 100%; padding: 0px 6px 0px 10px}

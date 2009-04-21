@@ -1,15 +1,27 @@
+// cannot rely on jQuery being loaded here
+
 var ccm_uiLoaded = false;
 var ccm_siteActivated = true;
-/* animated effects */
 var ccm_animEffects = true;
+
+ccm_parseJSON = function(resp, onNoError) {
+	if (resp.error) {
+		alert(resp.message);	
+	} else {
+		onNoError();
+	}
+}
 
 ccm_deactivateSite = function(onDone) {
 	if (ccm_siteActivated == false) {
 		return false;
 	}
 	
-	if (ccm_animEffects) {
-				
+	if ($("#ccm-overlay").length < 1) {
+		$(document.body).append('<div id="ccm-overlay"></div>');
+	}
+	
+	if (ccm_animEffects) {				
 		$("#ccm-overlay").fadeIn(100, function() {
 			ccm_siteActivated = false;
 			if (typeof onDone == 'function') {
@@ -36,24 +48,15 @@ ccm_activateSite = function() {
 	ccm_topPaneDeactivated = false;
 }
 
+
 // called in versions popup
 ccm_disableLinks = function() {
-	$(document.body).append('<div style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 1000"></div>');
+	td = document.createElement("DIV");
+	td.style.position = "absolute";
+	td.style.top = "0px";
+	td.style.left = "0px";
+	td.style.width = "100%";
+	td.style.height = "100%";
+	td.style.zIndex = "1000";
+	document.body.appendChild(td);
 }
-
-ccm_parseJSON = function(resp, onNoError) {
-	if (resp.error) {
-		alert(resp.message);	
-	} else {
-		onNoError();
-	}
-}
-
-
-if ($.browser.msie) {
-	ccm_animEffects = false;
-}
-
-$(function() {
-	$(document.body).append('<div id="ccm-overlay"></div>');
-});
