@@ -7,6 +7,8 @@ $html = Loader::helper('html');
 if (isset($cp)) {
 	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage()) {
 
+
+$this->addHeaderItem($html->javascript('jquery.js'));
 $this->addHeaderItem($html->javascript('jquery.form.js'));
 $this->addHeaderItem($html->javascript('jquery.metadata.js'));
 $this->addHeaderItem($html->javascript('jquery.ui.js'));
@@ -29,6 +31,7 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 
 <?
 $this->addHeaderItem($html->css('jquery.ui.css'));
+$this->addHeaderItem($html->javascript('ccm.base.js'));
 $this->addHeaderItem($html->javascript('ccm.dialog.js'));
 $this->addHeaderItem($html->javascript('ccm.themes.js'));
 $this->addHeaderItem($html->javascript('ccm.filemanager.js'));
@@ -45,6 +48,9 @@ $this->addHeaderItem($html->css('ccm.filemanager.css'));
 
 $this->addHeaderItem($html->javascript('ccm.popup_login.js'));  
 $this->addHeaderItem($html->css('ccm.popup_login.css'));
+
+$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
+$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/page_controls_menu_js?cID=' . $c->getCollectionID() . '&amp;cvID=' . $cvID . '&amp;btask=' . $_REQUEST['btask'] . '&amp;ts=' . time() . '"></script>'); 
 
 	}
 	

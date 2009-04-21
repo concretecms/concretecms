@@ -58,6 +58,11 @@ class SlideshowBlockController extends BlockController {
 	function view(){
 	}
 	
+	public function on_page_view() {
+		$html = Loader::helper('html');
+		$this->addHeaderItem($html->javascript('jquery.js'));
+	}
+	
 	function getFileSetName(){
 		$sql = "SELECT fsName FROM FileSets WHERE fsID=".intval($this->fsID);
 		return $this->db->getOne($sql); 

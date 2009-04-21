@@ -55,6 +55,10 @@ if (!defined("PAGE_TITLE_FORMAT")) {
 	define('PAGE_TITLE_FORMAT', '%1$s :: %2$s');
 }
 
+if (!defined('ENABLE_ASSET_COMPRESSION')) {
+	define('ENABLE_ASSET_COMPRESSION', false);
+}
+
 /** 
  * Character support
  */
@@ -282,6 +286,8 @@ define('DIR_FILES_BIN_HTMLDIFF', DIR_LIBRARIES_3RDPARTY_CORE . '/htmldiff.py');
 if (!defined('DIR_FILES_BIN_UNZIP')) {
 	 define('DIR_FILES_BIN_UNZIP', '/usr/bin/unzip');
 }
+define('DIR_FILES_BIN_COMPRESS_ASSETS', DIR_LIBRARIES_3RDPARTY_CORE . '/minify_2.1.2/index.php');
+
 if (!defined('DIR_FILES_BIN_ZIP')) {
 	 define('DIR_FILES_BIN_ZIP', '/usr/bin/zip');
 }
