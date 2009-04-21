@@ -47,8 +47,9 @@ class IndexedPageList extends DatabaseItemList {
 	}
 	
 	public function getPage() {
-		$db = Loader::db();
-		if (count($this->searchPaths) > 0) {
+		$db = Loader::db(); 
+		
+		if (count($this->searchPaths) > 0) { 
 			$i = 0;
 			$subfilter = '';
 			foreach($this->searchPaths as $sp) {
@@ -60,7 +61,6 @@ class IndexedPageList extends DatabaseItemList {
 				$i++;
 			}
 			$this->filter(false, $subfilter);
-
 		}
 
 		$this->sortByMultiple('score desc', 'cDatePublic desc');
