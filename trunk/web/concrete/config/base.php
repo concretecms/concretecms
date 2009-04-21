@@ -264,12 +264,15 @@ define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_BASE . '/files/thumbnails/lev
 define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_REL . '/files/thumbnails/level3');
 define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED . '/cache');
 
+if (!defined("PAGE_TITLE_FORMAT")) {
+	define('PAGE_TITLE_FORMAT', '%1$s :: %2$s');
+}
+
 #Cache
 define('DIR_FILES_CACHE', DIR_BASE . '/files/cache');
 define('DIR_FILES_CACHE_DB', DIR_FILES_CACHE);
 define('DIR_FILES_CACHE_CORE', DIR_BASE . '/files/cache_objects');
 define('DIR_FILES_CACHE_PAGES', DIR_FILES_CACHE . '/lucene.pages');
-
 define('ON_WINDOWS', intval(substr(PHP_OS,0,3)=='WIN') );
 
 # Binaries used by the system
