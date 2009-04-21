@@ -51,6 +51,10 @@ if (!defined('STATISTICS_TRACK_PAGE_VIEWS')) {
 	define('STATISTICS_TRACK_PAGE_VIEWS', true);
 }
 
+if (!defined("PAGE_TITLE_FORMAT")) {
+	define('PAGE_TITLE_FORMAT', '%1$s :: %2$s');
+}
+
 /** 
  * Character support
  */
@@ -263,10 +267,6 @@ define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_REL . '/files/thumbnails/
 define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_BASE . '/files/thumbnails/level3');
 define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_REL . '/files/thumbnails/level3');
 define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED . '/cache');
-
-if (!defined("PAGE_TITLE_FORMAT")) {
-	define('PAGE_TITLE_FORMAT', '%1$s :: %2$s');
-}
 
 #Cache
 define('DIR_FILES_CACHE', DIR_BASE . '/files/cache');
