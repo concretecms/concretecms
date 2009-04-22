@@ -108,8 +108,9 @@ class Package extends Object {
 	const E_PACKAGE_INSTALLED = 2;
 	const E_PACKAGE_VERSION = 3;
 	const E_PACKAGE_DOWNLOAD = 4;
-	const E_PACKAGE_UNZIP = 5;
-	const E_PACKAGE_INSTALL = 6;
+	const E_PACKAGE_SAVE = 5;
+	const E_PACKAGE_UNZIP = 6;
+	const E_PACKAGE_INSTALL = 7;
 
 	protected $errorText = array();
 
@@ -210,8 +211,9 @@ class Package extends Object {
 	public function mapError($testResults) {
 		$errorText[Package::E_PACKAGE_INSTALLED] = t("You've already installed that package.");
 		$errorText[Package::E_PACKAGE_NOT_FOUND] = t("Invalid Package.");
-		$errorText[Package::E_PACKAGE_VERSION] = t("This package requires concrete version %s or greater.");
+		$errorText[Package::E_PACKAGE_VERSION] = t("This package requires Concrete version %s or greater.");
 		$errorText[Package::E_PACKAGE_DOWNLOAD] = t("An error occured while downloading the package.");
+		$errorText[Package::E_PACKAGE_SAVE] = t("Concrete was not able to save the package after download.");
 		$errorText[Package::E_PACKAGE_UNZIP] = t('An error while trying to unzip the package.');
 		$errorText[Package::E_PACKAGE_INSTALL] = t('An error while trying to install the package.');
 

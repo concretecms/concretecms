@@ -31,5 +31,18 @@ if (!empty($cID)) {
 		<li><?= $error ?></li>
 	<? } ?>
 	</ol>
+    <hr/>
+	<p><?= t("To install the package manually:") ?></p>
+	<ol>
+		<? if (!empty($ph)) { ?>
+		<li>Download the the package from <a href="<?=$ph->get_remote_url($type, $cID);?>">here</a>.</li>
+		<? } else { ?>
+		<li>Download the the package.</li>
+		<? } ?>
+		<li>Upload and unpack the package on your web server.
+		  Place the unpacked files in the 'packages' directory of the root of your Concrete5 installation.</li>
+		<li>Goto the the <a href="<?=DIR_REL?>/index.php/dashboard/install">Add Functionality</a> page in your Concrete5 Dashboard.</li>
+        <li>Click the 'Install' button next to the package name.</li>
+	</ol>
 <? } ?>
 </div>
