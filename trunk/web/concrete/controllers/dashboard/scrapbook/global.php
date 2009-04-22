@@ -12,7 +12,7 @@ class DashboardScrapbookGlobalController extends Controller {
 		$html = Loader::helper('html');
 		$this->addHeaderItem($html->css('ccm.filemanager.css'));
 		$this->addHeaderItem($html->javascript('ccm.filemanager.js'));
-		$this->addHeaderItem($html->javascript('tiny_mce_321/tiny_mce.js'));
+		$this->addHeaderItem($html->javascript('tiny_mce/tiny_mce.js'));
 		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_activateFileManager(\'DASHBOARD\'); });</script>');
 		
 		//make sure global scrapbook area exists 
