@@ -77,15 +77,24 @@ class BlockViewTemplate {
 				$pl = PackageList::get();
 				$packages = $pl->getPackages();
 				foreach($packages as $pkg) {
-					$d = (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) ? DIR_PACKAGES . '/'. $pkg->getPackageHandle() : DIR_PACKAGES_CORE . '/'. $pkg->getPackageHandle();
-					$this->baseURL = (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) ? DIR_REL . '/' . DIRNAME_PACKAGES . '/'. $pkg->getPackageHandle() : ASSETS_URL . '/'. DIRNAME_PACKAGES . '/' . $pkg->getPackageHandle();
-					if (is_file($d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
-						$template = $d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
-						$this->baseURL .= '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
-						$this->checkHeaderItems = false;
-					} else if (is_dir($d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
-						$template = $d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename . '/' . $this->render;
-						$this->baseURL .= '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
+					$d = '';
+					if (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) {
+						$d = DIR_PACKAGES . '/'. $pkg->getPackageHandle();
+					} else if (is_dir(DIR_PACKAGES_CORE . '/'. $pkg->getPackageHandle())) {
+						$d = DIR_PACKAGES_CORE . '/'. $pkg->getPackageHandle();
+					}
+					
+					if ($d != '') {
+						$this->baseURL = (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) ? DIR_REL . '/' . DIRNAME_PACKAGES . '/'. $pkg->getPackageHandle() : ASSETS_URL . '/'. DIRNAME_PACKAGES . '/' . $pkg->getPackageHandle();
+						
+						if (is_file($d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
+							$template = $d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
+							$this->baseURL .= '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
+							$this->checkHeaderItems = false;
+						} else if (is_dir($d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
+							$template = $d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename . '/' . $this->render;
+							$this->baseURL .= '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
+						}
 					}
 				}
 			}
@@ -145,7 +154,7 @@ class BlockViewTemplate {
 				if (file_exists($this->basePath . '/' . $i)) {
 					switch($t) {
 						case 'CSS':
-							$items[] = $h->css($this->getBaseURL() . '/' . $i, false, true);
+							$items[] = $h->css($this->getBaseURL() . '/' . $i);
 							break;
 						case 'JAVASCRIPT':
 							$items[] = $h->javascript($this->getBaseURL() . '/' . $i);
@@ -157,7 +166,7 @@ class BlockViewTemplate {
 			$js = $dh->getDirectoryContents($this->basePath . '/' . DIRNAME_JAVASCRIPT);
 			if (count($css) > 0) {
 				foreach($css as $i) {
-					$items[] = $h->css($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i, false);
+					$items[] = $h->css($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i);
 				}
 			}
 			if (count($js) > 0) {
