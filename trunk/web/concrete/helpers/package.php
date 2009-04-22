@@ -21,42 +21,34 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class PackageHelper {
 
 	public function get_remote_url($type, $remoteCID) {
-		if (empty($remoteCID)) {
-			return "";
-		}
-
-	    if ($type != 'theme') {
-	    	$helper = Loader::helper('concrete/marketplace/blocks');
-    		$list = $helper->getCombinedList();
-		} else {
-	    	$helper = Loader::helper('concrete/marketplace/themes');
-    		$list = $helper->getPreviewableList();
-		}
-        foreach ($list as $item) {
-			if ($remoteCID == $item->getRemoteCollectionID()) {
-				break;
-			}
-		}
+		$item = $this->get_remote_item($type, $remoteCID);
 		if (empty($item)) {
 			return "";
 		}
 
-		$authData = UserInfo::getAuthData();
 		$fileURL = $item->getRemoteFileURL();
-		$fileURL .= "&auth_token={$authData['auth_token']}&auth_uname={$authData['auth_uname']}&auth_timestamp={$authData['auth_timestamp']}";
+		if (empty($fileURL)) {
+			return "";
+		}
 
+		$authData = UserInfo::getAuthData();
+		$fileURL .= "&auth_token={$authData['auth_token']}&auth_uname={$authData['auth_uname']}&auth_timestamp={$authData['auth_timestamp']}";
 		return $fileURL;
 	}
 
 	public function install_remote($type, $remoteCID=null, $install=false){
-		if (empty($remoteCID)) {
+		$item = $this->get_remote_item($type, $remoteCID);
+		if (empty($item)) {
 			return array(Package::E_PACKAGE_NOT_FOUND);
 		}
 
-		$fileURL = $this->get_remote_url($type, $remoteCID);
+		$fileURL = $item->getRemoteFileURL();
 		if (empty($fileURL)) {
 			return array(Package::E_PACKAGE_NOT_FOUND);
 		}
+
+		$authData = UserInfo::getAuthData();
+		$fileURL .= "&auth_token={$authData['auth_token']}&auth_uname={$authData['auth_uname']}&auth_timestamp={$authData['auth_timestamp']}";
 
 		$file = $this->download_remote_package($fileURL);
 		if (empty($file) || $file == Package::E_PACKAGE_DOWNLOAD) {
@@ -111,4 +103,23 @@ class PackageHelper {
 		return $file;
 	}
 
+	private function get_remote_item($type, $remoteCID) {
+		if (empty($remoteCID)) {
+			return "";
+		}
+
+	    if ($type != 'theme') {
+	    	$helper = Loader::helper('concrete/marketplace/blocks');
+    		$list = $helper->getCombinedList();
+		} else {
+	    	$helper = Loader::helper('concrete/marketplace/themes');
+    		$list = $helper->getPreviewableList();
+		}
+        foreach ($list as $item) {
+			if ($remoteCID == $item->getRemoteCollectionID()) {
+				break;
+			}
+		}
+		return $item;
+	}
 }
