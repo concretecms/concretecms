@@ -20,9 +20,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class PackageHelper {
 
-	public function install_remote($type, $remoteCID=null, $install=false){
+	public function get_remote_url($type, $remoteCID) {
 		if (empty($remoteCID)) {
-			return array(Package::E_PACKAGE_NOT_FOUND);
+			return "";
 		}
 
 	    if ($type != 'theme') {
@@ -38,19 +38,31 @@ class PackageHelper {
 			}
 		}
 		if (empty($item)) {
-			return array(Package::E_PACKAGE_NOT_FOUND);
+			return "";
 		}
 
 		$authData = UserInfo::getAuthData();
 		$fileURL = $item->getRemoteFileURL();
 		$fileURL .= "&auth_token={$authData['auth_token']}&auth_uname={$authData['auth_uname']}&auth_timestamp={$authData['auth_timestamp']}";
+
+		return $fileURL;
+	}
+
+	public function install_remote($type, $remoteCID=null, $install=false){
+		if (empty($remoteCID)) {
+			return array(Package::E_PACKAGE_NOT_FOUND);
+		}
+
+		$fileURL = $this->get_remote_url($type, $remoteCID);
 		if (empty($fileURL)) {
 			return array(Package::E_PACKAGE_NOT_FOUND);
 		}
 
 		$file = $this->download_remote_package($fileURL);
-		if (empty($file)) {
+		if (empty($file) || $file == Package::E_PACKAGE_DOWNLOAD) {
 			return array(Package::E_PACKAGE_DOWNLOAD);
+		} else if ($file == Package::E_PACKAGE_SAVE) {
+			return array($file);
 		}
 
 		try {
@@ -81,14 +93,22 @@ class PackageHelper {
 	private function download_remote_package($fileURL) {
 		$fh = Loader::helper('file');
 		$pkg = $fh->getContents($fileURL);
+		if (empty($pkg)) {
+			return Package::E_PACKAGE_DOWNLOAD;
+		}
 
 		$file = time();
 		// Use the same method as the Archive library to build a temporary file name.
 		$tmpFile = $fh->getTemporaryDirectory() . $file . '.zip';
 		$fp = fopen($tmpFile, "wb");
-		fwrite($fp, $pkg);
-		fclose($fp);
+		if ($fp) {
+			fwrite($fp, $pkg);
+			fclose($fp);
+		} else {
+			return Package::E_PACKAGE_SAVE;
+		}
 
 		return $file;
 	}
+
 }
