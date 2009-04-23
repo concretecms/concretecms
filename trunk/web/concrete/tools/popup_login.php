@@ -42,7 +42,9 @@ if( $_REQUEST['remote'] ){
 				<? } ?>
 				
 				<div id="loginFormLeft" style="width:60%;">
-				
+					
+					<h2><?=t('Login')?></h2>
+					
 					<div class="ccm-fieldPair">
 						<label for="uName">
 						<? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true && !$_REQUEST['remote']) { ?>

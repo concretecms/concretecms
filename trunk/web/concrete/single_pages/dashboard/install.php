@@ -40,12 +40,13 @@ foreach($availableArray as $ava) {
 	}
 }
 
+$mtitle = t('Marketplace Login');
+$mmsg = t("You've successfully connected this website to your concrete5 Marketplace account. Featured items will be visible to you while using this site. You can browse the complete marketplace at <a href='%s' target='_blank'>concrete5.org/marketplace</a>", 'http://www.concrete5.org/marketplace/');
 ?>
-
 <script type="text/javascript">
 function loginSuccess() {
     jQuery.fn.dialog.closeTop();
-    ccmAlert.notice('Marketplace Login', '<p>You\'ve successfully connected this website to your concrete5 Marketplace account. Browse the full marketplace at <a href="http://concrete5.org/marketplace/" target="_blank">concrete5.org/marketplace</a>.</p>',
+    ccmAlert.notice("<?=$mtitle?>", "<?=$mmsg?>", 
 		function() {
 			location.href = '<?=$this->url('/dashboard/install')?>?ts=<?=time()?>';		
 		});
@@ -154,10 +155,9 @@ function logoutSuccess() {
 		<div class="ccm-dashboard-inner">
 		 
 		<? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
-		<p><strong>		
-		<?=t('You can safely and easily extend your website without touching a line of code. Login with your concrete5 marketplace <a href="%s" target="_blank">account here</a>,', MARKETPLACE_URL_LANDING)?>
-		<?=t('  and you can automatically install your themes and add-ons!') ?>
-		</strong></p>
+		<p>		
+		<?=t('You can safely and easily extend your website without touching a line of code. Connect to the <a href="%s" target="_blank">concrete5.org marketplace</a>, and you can automatically install your themes and add-ons right here!', MARKETPLACE_URL_LANDING)?>
+		</p>
 				
 		<hr />		
 
