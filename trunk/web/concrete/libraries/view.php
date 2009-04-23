@@ -165,8 +165,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			*/
 			
 			foreach($items as $hi) {
-				print $hi;
-				print "\n";
+				print $hi . "\n";
 			}
 			
 			
