@@ -56,7 +56,7 @@ class HtmlHelper {
 				$css->file = ASSETS_URL_CSS . '/' . $file;
 			}
 		}
-		return $css;
+		return $css->__toString();
 	}
 	
 	/** 
@@ -91,7 +91,7 @@ class HtmlHelper {
 				$js->file = ASSETS_URL_JAVASCRIPT . '/' . $file;
 			}
 		}
-		return $js;
+		return $js->__toString();
 	}
 	
 	
