@@ -36,13 +36,16 @@ class FileImporter {
 	private function storeFile($prefix, $pointer, $filename, $fr = false) {
 		// assumes prefix are 12 digits
 		$fi = Loader::helper('concrete/file');
+		$path = false;
 		if ($fr instanceof File) {
 			if ($fr->getStorageLocationID() > 0) {
 				Loader::model('file_storage_location');
 				$fsl = FileStorageLocation::getByID($fr->getStorageLocationID());
 				$path = $fi->mapSystemPath($prefix, $filename, true, $fsl->getDirectory());
 			}
-		} else {
+		}
+		
+		if ($path == false) {
 			$path = $fi->mapSystemPath($prefix, $filename, true);
 		}
 		copy($pointer, $path);
