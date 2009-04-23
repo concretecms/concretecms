@@ -1,0 +1,153 @@
+/* asset library */
+
+table#ccm-file-list {width: 100%;border-left: 1px solid #ffffff}
+table#ccm-file-list th, table#ccm-file-list td {padding: 4px 8px 4px 8px; font-size: 11px}
+table#ccm-file-list th.ccm-file-list-starred, table#ccm-file-list td.ccm-file-list-starred {padding: 0 4px 0 0;margin:0; text-align: center;}
+tr.ccm-file-list-record td {height: 60px}
+table#ccm-file-list tr th {font-size: 11px;background-color: #efefef; text-align: left; padding-left: 8px; white-space: nowrap; color: #666}
+
+table#ccm-file-list tr th a {color: #666; padding-right: 14px; text-decoration: none}
+table#ccm-file-list tr th a:hover {color: #333;}
+table#ccm-file-list tr th.ccm-results-list-active-sort-desc a, table#ccm-file-list tr th.ccm-results-list-active-sort-asc a {color: #333}
+table#ccm-file-list tr th.ccm-results-list-active-sort-desc a {background: #efefef url(../images/icons/arrow_down_black.png) no-repeat scroll right 5px}
+table#ccm-file-list tr th.ccm-results-list-active-sort-asc a {background: #efefef url(../images/icons/arrow_up_black.png) no-repeat scroll right 4px}
+
+table#ccm-file-list tr.ccm-file-list-alt td {background-color: #ECFBFF}
+table#ccm-file-list tr.ccm-file-list-record:hover td {cursor: pointer;background-color: #DDECF0 !important}
+
+div#ccm-file-list-wrapper{ }
+div#ccm-file-list-wrapper div.ccm-paging-top { padding-top: 5px; position:static }
+ 
+div.ccm-file-list-thumbnail {text-align: center; width: 75px; border: 4px solid #dedede; -moz-border-radius: 6px; -webkit-border-radius: 6px; }
+.ccm-file-list-thumbnail-image{ text-align: center; height: 70px;}
+div.ccm-file-list-thumbnail-image img {}
+
+img#ccm-file-search-loading { display: none; float:right; }
+
+div.ccm-file-list-thumbnail-hover div {display: none;z-index: 105;position: absolute;top: 0px;left: 0px;border: 1px dotted #aaa;padding: 8px;background-color: #fff}
+div#ccm-file-list-none { font-weight: bold}
+
+/* advanced search */
+table#ccm-file-manager-table {width:100%}
+table#ccm-file-manager-table td{  }
+div#ccm-file-manager-advanced {display: block; width: 100%; font-size: 11px; padding:0px; margin:0px; height:auto; overflow:hidden }
+div#ccm-file-manager-advanced h2 {margin-bottom: 0px}
+table td.ccm-search-form-advanced-col{ width:210px; vertical-align: top}
+div#ccm-file-search-advanced-fields {display: block;border: 1px solid #ddd;padding: 8px; width:auto; background:#fafafa; margin-right:10px; width:210px}
+/* div#ccm-file-search-advanced-fields-gutter {display: block;width: 10px} */
+div#ccm-file-search-advanced-results-wrapper {display: block; width: 100%; /* position: relative */}
+
+div#ccm-file-search-advanced-fields div, div#ccm-sitemap-search td {font-size: 10px !important}
+div#ccm-file-search-advanced-fields-inner {padding-top: 4px}
+div#ccm-file-search-advanced-fields div.ccm-file-search-field {margin-bottom:8px} 
+div#ccm-file-list-wrapper div.ccm-pagination {font-size: 14px;padding:0px; margin-top: 12px;margin-bottom: 12px; width: 98%; position:static; }
+div#ccm-file-list-wrapper div.ccm-pagination span.ccm-page-left{ position:static; float:left; text-align:left; display:block; width:100px; }
+div#ccm-file-list-wrapper div.ccm-pagination span.ccm-page-right{ position:static; float:right; text-align:right; display:block; width:100px; }
+
+div#ccm-file-search-field-base {display: none}
+div#ccm-file-search-results em.ccm-highlight-search {background-color: #FFF9BB;padding: 4px;font-weight: bold;font-style: normal}
+div.ccm-file-search-field input, div.ccm-file-search-field select, div.ccm-file-search-field td {font-size: 10px !important}
+.ccm-file-search-option-type-number input.ccm-input-text {width: 30px !important}
+.ccm-file-search-option-type-text input.ccm-input-text {width: 86px !important}
+.ccm-file-search-option-type-date input.ccm-input-date {width: 86px !important}
+#ccm-file-search-fields-submit {text-align: right; padding-top: 8px}
+
+#ccm-file-list-multiple-operations {font-size: 10px}
+
+/* file permissions */
+
+div#ccm-file-permissions-entities-wrapper {padding-bottom: 10px; border-bottom: 1px dotted #aaa; margin-bottom: 10px}
+div#ccm-file-permissions-entities-wrapper h2 {margin-bottom: 10px; border-bottom: 1px dotted #aaa; padding-bottom: 4px}
+div#ccm-file-permissions-entities-wrapper th {text-align: left; vertical-align: top; width: 120px}
+div#ccm-file-permissions-entities-wrapper td {vertical-align: top; padding: 0px 30px 0px 0px}
+div#ccm-file-permissions-entities-wrapper h2 img {float: right}
+div#ccm-file-permissions-entity-base {display: none}
+div.ccm-file-access-add-extensions-header {border-top: 1px solid #cecece; border-left: 1px solid #cecece; border-right: 1px solid #cecece; background: #D3E4F0; padding: 4px}
+div.ccm-file-access-extensions {border: 1px solid #cecece; padding: 4px; height: 120px; overflow: auto; margin-bottom: 20px}
+
+
+/* add asset */
+div#ccm-files-add-asset {float: right; padding-right: 20px; font-size: 11px; z-index: 10; /* position: relative */ }
+div#ccm-files-add-asset h3 {float: left;margin-right: 4px;margin-top: 0px; padding-top: 4px; font-size: 11px}
+div#ccm-files-add-asset form {float: left}
+div#ccm-files-add-asset a {float: left;margin-left: 4px;margin-top: 4px}
+img.ccm-generic-thumbnail {border: 0px}
+
+.incoming_file_importer {margin: 10px auto 10px auto;}
+.incoming_file_importer .borderflow {border: 1px solid #DEDEDE;overflow-y: scroll}
+.incoming_file_importer .incoming_file {margin: 10px 0px 10px 0px;float: left;text-align: center}
+.incoming_file_importer .incoming_file_table .center {text-align: center}
+.incoming_file_importer .clear {clear: both}
+.theader {background-color: #EFEFEF;font-weight: bold;padding: 4px 0px 4px 0px}
+
+/* file sets dialog */
+div#ccm-file-add-to-set-tab h2 {margin-bottom: 10px}
+div#ccm-file-add-to-set-tab hr {border: 0px; background: #aaa; margin: 8px 0px 8px 0px; height: 1px}
+
+div.ccm-file-set-add-cb {margin-top: 8px}
+div.ccm-file-set-add-cb img {vertical-align: middle;}
+
+/* properties */
+div#ccm-file-properties table th {white-space: nowrap;}
+div#ccm-file-properties table th, div#ccm-file-properties table td {vertical-align: top}
+div#ccm-file-properties table th {text-align: right}
+div#ccm-file-properties table th a { color: #999;text-decoration: underline}
+div#ccm-file-properties table td.ccm-file-manager-editable-field-central {border-right: 0px}
+div#ccm-file-properties table td.ccm-file-manager-editable-field-save img {display: none}
+div#ccm-file-properties table div.ccm-file-manager-field-none {color: #aaa;}
+tr.ccm-file-manager-editable-field textarea {width: 100%}
+tr.ccm-file-manager-editable-field textarea {height: 100px}
+img.ccm-file-manager-editable-field-loading {display: none}
+div.ccm-file-manager-editable-field-form {display: none}
+
+/* Versions */
+tr.ccm-file-versions-grid-active td {font-weight: bold !important}
+div.ccm-file-manager-editable-field-type-text input {width: 100%}
+div.ccm-file-manager-editable-field-type-number input {width: 60px}
+
+/* Download */
+div#ccm-file-manager-download-bar {
+	background-color: rgb(221, 236, 240);
+	padding: 4px;
+	margin-bottom: 4px;
+	border-bottom: 1px solid #dedede;
+	text-align: right;
+}
+
+/* multiple upload */
+/*
+#ccm-file-upload-multiple-progress{padding:0;margin:0;}
+#ccm-file-upload-multiple-progress .progressContainer{clear:left;border-color:#ddd;border-style:solid;border-width:0px 1px 0px 1px;}
+#ccm-file-upload-multiple-progress .progressContainer div{background-color:#fff;width:197px;}
+#ccm-file-upload-multiple-progress .progressContainer div.progressName,.progressContainer div.progressBarStatus,.progressContainer div.progressBarComplete{float:left;padding: 10px 10px 10px 4px;}
+#ccm-file-upload-multiple-progress{border:1px solid #ddd;}
+#ccm-file-upload-multiple-results-wrapper {clear:left; border:1px solid #ddd;border-top:0px;background-color:#efefef;padding:5px;}	
+#ccm-file-upload-multiple-results {float: left; width: 200px;}
+#ccm-file-upload-multiple-progress span.legend{display:block;background-color:#efefef;padding:5px;font-weight:bold;}
+*/
+
+table#ccm-file-upload-multiple-list {border:1px solid #ddd;}
+table#ccm-file-upload-multiple-list th {font-weight: bold; text-align: left; padding: 4px; background-color: #D3E4F0; border-bottom: 1px solid #cecece}
+table#ccm-file-upload-multiple-list td {padding: 8px; color: #666}
+div.ccm-file-manager-progress-bar-pending {font-weight: bold; text-align: center}
+
+.ui-progressbar { height:2em; text-align: left; width: 250px}
+.ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }
+
+/* Choose Asset in page */
+div.ccm-file-manager-select {border: 1px solid #dedede}
+div.ccm-file-selected-wrapper {border: 1px solid #dedede; padding: 10px 10px 10px 11px}
+div.ccm-file-manager-select a {display: block; padding: 10px 10px 10px 25px; text-decoration: none; background: transparent url(../images/icons/add.png) no-repeat scroll 6px 11px; color: #666; font-weight: bold}
+div.ccm-file-manager-select a:hover {background-color: #E6F2F3}
+div.ccm-file-selected-wrapper:hover {background-color: #E6F2F3; cursor:pointer}
+
+div.ccm-file-manager-pre-filter {margin-bottom: 10px; font-size: 14px; color: #888; font-weight: bold; }
+div.ccm-file-selected-thumbnail {width: 60px; margin-right: 10px; float: left}
+div.ccm-file-selected-data {width: 100px; padding-top: 0px; float: left}
+div.ccm-file-selected-data div {font-size: 11px; word-wrap: break-word}
+
+div#ccm-file-manager-search-simple {padding: 10px 0px 0px 0px}
+div#ccm-file-manager-search-simple table table td {padding-right: 16px;}
+div#ccm-file-manager-search-simple img#ccm-file-search-loading {top: -4px}
+div#ccm-file-manager-search-simple label, div#ccm-file-manager-search-simple h3 {line-height: 12px !important; font-size: 12px !important; display: block; font-weight: bold; margin: 0px 0px 3px 0px !important; padding: 0px !important; float: none !important}
+div#ccm-file-manager-search-simple div#ccm-files-add-asset {float: none; padding: 0px; margin: 0px; font-size: 10px}
