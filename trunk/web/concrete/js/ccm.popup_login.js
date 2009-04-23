@@ -82,7 +82,7 @@ var ccmPopupLogin = {
 				modal: false, 
 				onOpen:function(){ccmPopupLogin.showLoginFunction()},
 				onClose: function(){}, 
-				height: 220
+				height: 240
 			});
 		}
 	},
