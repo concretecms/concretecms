@@ -1,0 +1,16 @@
+body {
+	/* customize_body */ font: normal normal 13px Arial; /* customize_body */ 
+	/* customize_body */ color:#666 /* customize_body */ 
+}
+
+img {border: 0px}
+a,a:visited,a:active { /* customize_link */ color: #69ab2b /* customize_link */}
+a:hover { /* customize_link_hover */ color:#50AAB5 /* customize_link_hover */ } 
+
+h1,h2,h3,h4,h5{ color:#69ab2b; margin:0px 0px 4px 0px; padding:4px 0px; margin-top:8px }
+h1{ font-size:21px; line-height:28px }
+h2{ font-size:18px; line-height:24px }
+h3{ font-size:16px; line-height:21px }
+h4{ font-size:14px; line-height:18px }
+h5{ font-size:13px; line-height:16px }
+p{ padding:0px 0px 0px 0px; 0px 0px 16px 0px}
