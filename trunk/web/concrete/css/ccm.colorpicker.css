@@ -6,6 +6,7 @@
 	background: url(../images/widgets/colorpicker/custom_background.png);
 	font-family: Arial, Helvetica, sans-serif;
 	display: none;
+	z-index:500;
 }
 .colorpicker_color {
 	width: 150px;
@@ -158,3 +159,22 @@ input.colorpicker_submit {
 .colorpicker_slider {
 	background-position: bottom;
 }
+
+div.ccm-color-swatch-wrapper { position:relative; left:0px; top:0px; height:36px; width:36px; }
+div.ccm-color-swatch-wrapper div.ccm-color-swatch { 
+	position: absolute;
+	top: 0;
+	left: 0px;
+	width: 28px;
+	height: 36px;
+	background: url(../images/widgets/colorpicker/select2.png);
+	cursor: pointer;
+}
+div.ccm-color-swatch-wrapper  div.ccm-color-swatch div {
+	position: absolute;
+	top: 4px;
+	left: 0px;
+	width: 28px;
+	height: 28px;
+	background: url(../images/widgets/colorpicker/select2.png) center;
+} 
