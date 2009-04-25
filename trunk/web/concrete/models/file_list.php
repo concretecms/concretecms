@@ -8,7 +8,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 * @package Files
 *
 */
-class FileList extends DatabaseItemList {
+class FileList extends DatabaseItemList { 
 
 	private $fileAttributeFilters = array();
 	protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fvDateAdded', 'fvSize');
@@ -212,11 +212,7 @@ class FileList extends DatabaseItemList {
 	public function get($itemsToGet = 0, $offset = 0) {
 		$files = array();
 		Loader::model('file');
-		$this->setBaseQuery();
-		$this->filter('fvIsApproved', 1);
-
-		$this->setupFileAttributeFilters();
-		$this->setupFilePermissions();
+		$this->createQuery();
 		$r = parent::get($itemsToGet, $offset);
 		foreach($r as $row) {
 			$f = File::getByID($row['fID']);			
@@ -224,6 +220,39 @@ class FileList extends DatabaseItemList {
 		}
 		return $files;
 	}
+	
+	public function getTotal(){
+		$files = array();
+		Loader::model('file');
+		$this->createQuery();
+		return parent::getTotal();
+	}
+	
+	//this was added because calling both getTotal() and get() was duplicating some of the query components
+	protected function createQuery(){
+		if(!$this->queryCreated){
+			$this->setBaseQuery();
+			$this->filter('fvIsApproved', 1);
+			$this->setupFileAttributeFilters();
+			$this->setupFilePermissions();
+			$this->queryCreated=1;
+		}
+	}
+	
+	//$key can be handle or fak id
+	public function sortByAttributeKey($key,$order='asc'){
+		if(!is_int($key)){
+			$fak = FileAttributeKey::getByHandle($key);
+			if(!$fak)
+				throw new Exception('File list sorting attribute key not found - '.$key );
+			$sortFileAttrKeyId=$fak->getAttributeKeyID();
+		}else{
+			$sortFileAttrKeyId=intval($key);	
+		}
+		$sortFileAttrKeyId=$fak->getAttributeKeyID();
+		$this->addToQuery(' left join FileAttributeValues sortAttr on (sortAttr.fID = fv.fID and fv.fvID = sortAttr.fvID and sortAttr.fakID = '.$sortFileAttrKeyId.') ');
+		$this->sortBy('sortAttr.value ', $order);	
+	}	
 	
 	public static function getExtensionList() {
 		$db = Loader::db();
