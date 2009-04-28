@@ -68,10 +68,10 @@ if ($_POST['task'] == 'update_extended_attribute' && $fp->canWrite() && (!$previ
 		$value = $dt->translate('fakID_' . $fakID);
 	} else if (is_array($_REQUEST['fakID_' . $fakID])) {
 		foreach($_REQUEST['fakID_' . $fakID] as $val) {
-			$value .= htmlentities($val, ENT_QUOTES, APP_CHARSET) . "\n";
+			$value .= $val  . "\n";
 		}
 	} else {
-		$value = htmlentities($_REQUEST['fakID_' . $fakID], ENT_QUOTES, APP_CHARSET);
+		$value = $_REQUEST['fakID_' . $fakID] ;
 	}
 	$fv->setAttribute($ak, $value);
 	$fv->populateAttributes();	
@@ -92,7 +92,7 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 	$html = '
 	<tr class="ccm-file-manager-editable-field">
 		<th><a href="javascript:void(0)">' . $title . '</a></th>
-		<td width="100%" class="ccm-file-manager-editable-field-central"><div class="ccm-file-manager-editable-field-text">' . $text . '</div>
+		<td width="100%" class="ccm-file-manager-editable-field-central"><div class="ccm-file-manager-editable-field-text">' . htmlentities( $text, ENT_QUOTES, APP_CHARSET) . '</div>
 		<form method="post" action="' . REL_DIR_FILES_TOOLS_REQUIRED . '/files/properties">
 		<input type="hidden" name="attributeField" value="' . $field . '" />
 		<input type="hidden" name="fID" value="' . $f->getFileID() . '" />
