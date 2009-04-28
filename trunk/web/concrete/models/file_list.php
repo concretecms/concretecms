@@ -252,7 +252,7 @@ class FileList extends DatabaseItemList {
 		$sortFileAttrKeyId=$fak->getAttributeKeyID();
 		$this->addToQuery(' left join FileAttributeValues sortAttr on (sortAttr.fID = fv.fID and fv.fvID = sortAttr.fvID and sortAttr.fakID = '.$sortFileAttrKeyId.') ');
 		$this->sortBy('sortAttr.value ', $order);	
-	}	
+	} 
 	
 	public static function getExtensionList() {
 		$db = Loader::db();
