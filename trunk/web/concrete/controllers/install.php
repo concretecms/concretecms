@@ -261,22 +261,25 @@ class InstallController extends Controller {
 						$cab1 = CollectionAttributeKey::add('meta_title', t('Meta Title'), true, null, 'TEXT');
 						$cab2 = CollectionAttributeKey::add('meta_description', t('Meta Description'), true, null, 'TEXT');
 						$cab3 = CollectionAttributeKey::add('meta_keywords', t('Meta Keywords'), true, null, 'TEXT');
-						$cab4 = CollectionAttributeKey::add('exclude_nav', t('Exclude from Nav'), true, null, 'BOOLEAN');
+						$cab4 = CollectionAttributeKey::add('exclude_nav', t('Exclude From Nav'), true, null, 'BOOLEAN');
+						
+						$cab5 = CollectionAttributeKey::add('header_extra_content', t('Header Extra Content'), true, null, 'TEXT');
+						$cab6 = CollectionAttributeKey::add('exclude_search_index', t('Exclude From Search Index'), true, null, 'BOOLEAN');
 						
 						$dt->assignCollectionAttribute($cab1);
 						$dt->assignCollectionAttribute($cab2);
 						$dt->assignCollectionAttribute($cab3);
-						$dt->assignCollectionAttribute($cab4);
+						$dt->assignCollectionAttribute($cab4); 
 
 						$rst->assignCollectionAttribute($cab1);
 						$rst->assignCollectionAttribute($cab2);
 						$rst->assignCollectionAttribute($cab3);
-						$rst->assignCollectionAttribute($cab4);
+						$rst->assignCollectionAttribute($cab4); 
 
 						$nst->assignCollectionAttribute($cab1);
 						$nst->assignCollectionAttribute($cab2);
 						$nst->assignCollectionAttribute($cab3);
-						$nst->assignCollectionAttribute($cab4);
+						$nst->assignCollectionAttribute($cab4); 
 						
 						// Add default user attributes
 						UserAttributeKey::add('date_of_birth', t('Date of Birth'), 0, 1, 1, 0, null, "TEXT");

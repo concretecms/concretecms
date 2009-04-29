@@ -118,6 +118,9 @@ class IndexedSearch {
 		$num = 0;
 		while ($row = $r->fetchRow()) {
 			$c = Page::getByID($row['cID'], 'ACTIVE');
+			
+			if($c->getCollectionAttributeValue('exclude_search_index')) continue;		
+			
 			$themeObject = $c->getCollectionThemeObject();
 			$g->setPermissionsForObject($c);
 			if ($g->canRead()) {
