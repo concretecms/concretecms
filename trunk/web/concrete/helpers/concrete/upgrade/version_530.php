@@ -22,7 +22,16 @@ class ConcreteUpgradeVersion530Helper {
 	
 	public function run() {
 		$db = Loader::db();
-
+		Loader::model('collection_attributes');
+		
+		//add the new collection attribute keys
+		$cak=CollectionAttributeKey::getByHandle('header_extra_content');
+		if( !intval($cak->getAttributeKeyID()) )
+			CollectionAttributeKey::add('header_extra_content', t('Header Extra Content'), true, null, 'TEXT');
+		$cak=CollectionAttributeKey::getByHandle('exclude_search_index');
+		if( !intval($cak->getAttributeKeyID()) )
+			CollectionAttributeKey::add('exclude_search_index', t('Exclude From Search Index'), true, null, 'BOOLEAN');
+		
 	}
 	
 }

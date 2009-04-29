@@ -10,15 +10,15 @@ class IndexSearch extends Job {
 
 	public $jNotUninstallable=1;
 	
-	function getJobName() {
+	public function getJobName() {
 		return t("Index Search Engine");
 	}
 	
-	function getJobDescription() {
+	public function getJobDescription() {
 		return t("Index the site to allow searching to work quickly and accurately.");
 	}
 	
-	function run() {
+	public function run() {
 		Loader::library('database_indexed_search');
 		$is = new IndexedSearch();
 		$result = $is->reindex();
