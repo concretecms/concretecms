@@ -57,6 +57,18 @@
 			}
 		}
 		
+		public function getByName($fsName) {
+			$db = Loader::db();
+			$row = $db->GetRow('select * from FileSets where fsName = ?', array($fsName));
+			if (is_array($row)) {
+				$fs = new FileSet();
+				foreach($row as $key => $value) {
+					$fs->{$key} = $value;
+				}
+				return $fs;
+			}
+		}			
+		
 		public function getFileSetID() {return $this->fsID;}
 		public function overrideGlobalPermissions() {return $this->fsOverrideGlobalPermissions;}
 		
@@ -71,6 +83,8 @@
 		 * @param int $fs_type
 		 * @param int $fs_uid
 		 * @return Mixed 
+		 *
+		 * Dev Note: This will create duplicate sets with the same name if a set exists owned by another user!!! 
 		 */		
 		public static function createAndGetSet($fs_name, $fs_type, $fs_uid=false) {
 			if (!$fs_uid) {
