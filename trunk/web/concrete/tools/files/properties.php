@@ -38,17 +38,17 @@ if ($_POST['task'] == 'update_core' && $fp->canWrite() && (!$previewMode)) {
 
 	switch($_POST['attributeField']) {
 		case 'fvTitle':
-			$text = htmlentities($_POST['fvTitle'], ENT_QUOTES, APP_CHARSET);
+			$text = $_POST['fvTitle'];
 			$fv->updateTitle($text);
 			print $text;
 			break;
 		case 'fvDescription':
-			$text = htmlentities($_POST['fvDescription'], ENT_QUOTES, APP_CHARSET);
+			$text = $_POST['fvDescription'];
 			$fv->updateDescription($text);
 			print $text;
 			break;
 		case 'fvTags':
-			$text = htmlentities($_POST['fvTags'], ENT_QUOTES, APP_CHARSET);
+			$text = $_POST['fvTags'];
 			$fv->updateTags($text);
 			print $text;
 			break;
@@ -83,8 +83,8 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 	global $previewMode, $f, $fp;
 	if ($value == '') {
 		$text = '<div class="ccm-file-manager-field-none">' . t('None') . '</div>';
-	} else {
-		$text = $value;
+	} else { 
+		$text = htmlentities( $value, ENT_QUOTES, APP_CHARSET);
 	}
 
 	if ($fp->canWrite() && (!$previewMode)) {
@@ -92,7 +92,7 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 	$html = '
 	<tr class="ccm-file-manager-editable-field">
 		<th><a href="javascript:void(0)">' . $title . '</a></th>
-		<td width="100%" class="ccm-file-manager-editable-field-central"><div class="ccm-file-manager-editable-field-text">' . htmlentities( $text, ENT_QUOTES, APP_CHARSET) . '</div>
+		<td width="100%" class="ccm-file-manager-editable-field-central"><div class="ccm-file-manager-editable-field-text">' . $text . '</div>
 		<form method="post" action="' . REL_DIR_FILES_TOOLS_REQUIRED . '/files/properties">
 		<input type="hidden" name="attributeField" value="' . $field . '" />
 		<input type="hidden" name="fID" value="' . $f->getFileID() . '" />
