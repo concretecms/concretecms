@@ -127,7 +127,7 @@ menuHTML += '</div>';
 	?>
 	menuHTML += '<ul>';
 	<? foreach($trail as $_c) { ?>
-		menuHTML += '<li><a href="#" onclick="javascript:location.href=\'<?=$nh->getLinkToCollection($_c)?>\'"><?=htmlentities($_c->getCollectionName(), ENT_QUOTES)?></a></li>';
+		menuHTML += '<li><a href="#" onclick="javascript:location.href=\'<?=$nh->getLinkToCollection($_c)?>\'"><?=htmlentities($_c->getCollectionName(), ENT_QUOTES, APP_CHARSET)?></a></li>';
 	<? } ?>
 	menuHTML += '</ul>';
 	
