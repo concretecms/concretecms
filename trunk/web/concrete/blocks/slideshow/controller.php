@@ -74,12 +74,12 @@ class SlideshowBlockController extends BlockController {
 		}
         $f = Loader::helper('concrete/file');
 
-		$fakID = $this->db->getOne("SELECT fakID FROM FileAttributeKeys WHERE akName = 'height'"); 
+		Loader::model('file_attributes');
+		$fak = FileAttributeKey::getByHandle('height');
 
 		$sql = "SELECT fsf.fID, fv.fvFilename, fv.fvPrefix, fav.value FROM FileSetFiles fsf, FileVersions fv, FileAttributeValues fav " .
-		       "WHERE fsf.fsID = " . $this->fsID . " AND fsf.fID = fv.fID AND fvIsApproved = 1 AND fav.fID = fv.fID " .
-		       " AND fav.fvID = fv.fvID AND fav.fakID = " . $fakID;
-		$files = $this->db->getAll($sql); 
+		       "WHERE fsf.fsID = ? AND fsf.fID = fv.fID AND fvIsApproved = 1 AND fav.fID = fv.fID AND fav.fvID = fv.fvID AND fav.fakID = ?";
+		$files = $this->db->getAll($sql, array($this->fsID, $fak->getAttributeKeyID())); 
 
 		$image = array();
 		$image['duration'] = $this->duration;
