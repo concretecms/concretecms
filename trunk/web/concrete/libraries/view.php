@@ -384,24 +384,31 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if ((!URL_REWRITING_ALL) || !defined('URL_REWRITING_ALL')) {
 				$dispatcher = '/index.php';
 			}
-			if ($action == '/') {
+			
+			$action = trim($action, '/');
+			if ($action == '') {
 				return DIR_REL . '/';
 			}
-			$_action = DIR_REL . $dispatcher. $action;
-			// remove last / if it's on there
-			if (substr($_action, strlen($_action) - 1, 1) == '/') {
-				$_action = substr($_action, 0, strlen($_action) - 1);
+			
+			// if a query string appears in this variable, then we just pass it through as is
+			if (strpos($action, '?') > -1) {
+				return DIR_REL . $dispatcher. '/' . $action;
+			} else {
+				$_action = DIR_REL . $dispatcher. '/' . $action . '/';
 			}
 			
 			if ($task != null) {
-				$_action .= '/-/' . $task;
+				$_action .= '-/' . $task;
 				$args = func_get_args();
 				if (count($args) > 2) {
 					for ($i = 2; $i < count($args); $i++){
 						$_action .= '/' . $args[$i];
 					}
 				}
-				$_action .= '/';
+				
+				if (strpos($_action, '?') === false) {
+					$_action .= '/';
+				}
 			}
 			
 			return $_action;
