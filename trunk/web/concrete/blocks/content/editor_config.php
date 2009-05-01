@@ -6,6 +6,7 @@ tinyMCE.init({
 	inlinepopups_skin : "concreteMCE",
 	theme_concrete_buttons2_add : "spellchecker",
 	relative_urls : false,
+	document_base_url: '<?=BASE_URL . DIR_REL?>/',
 	convert_urls: false,
 	content_css : "<?=$theme->getThemeEditorCSS()?>",
 	<?
