@@ -34,7 +34,7 @@ class NavigationHelper {
 			}
 		}
 		if ($cObj->getCollectionPath() != null) {
-			$link = DIR_REL . $dispatcher . $cObj->getCollectionPath();
+			$link = DIR_REL . $dispatcher . $cObj->getCollectionPath() . '/';
 		} else {
 			$_cID = ($cObj->getCollectionPointerID() > 0) ? $cObj->getCollectionPointerOriginalID() : $cObj->getCollectionID();
 			$link = DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_cID;
