@@ -387,7 +387,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if ($action == '/') {
 				return DIR_REL . '/';
 			}
-			$_action = BASE_URL . DIR_REL . $dispatcher. $action;
+			$_action = DIR_REL . $dispatcher. $action;
 			// remove last / if it's on there
 			if (substr($_action, strlen($_action) - 1, 1) == '/') {
 				$_action = substr($_action, 0, strlen($_action) - 1);
@@ -401,11 +401,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						$_action .= '/' . $args[$i];
 					}
 				}
-			}
-			
-			if ($_action != '') {
 				$_action .= '/';
 			}
+			
 			return $_action;
 		}
 		
