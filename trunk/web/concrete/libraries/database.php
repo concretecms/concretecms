@@ -42,9 +42,9 @@ class Database {
 			return false;
 		}
 		
-		$cd = $this->db->GetRow("show create database {$this->db->database}");
+		$cd = $this->db->GetRow("show create database `{$this->db->database}`");
 		if (!preg_match('/' . DB_CHARSET . '/i', $cd[1])) {
-			$this->db->Execute("ALTER DATABASE {$this->db->database} character set " . DB_CHARSET);
+			$this->db->Execute("ALTER DATABASE `{$this->db->database}` character set " . DB_CHARSET);
 		}
 	}
 
