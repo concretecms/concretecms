@@ -24,6 +24,18 @@ class ConcreteUpgradeVersion530Helper {
 		$db = Loader::db();
 		Loader::model('collection_attributes');
 		
+		// Add in stuff that may have gotten missed before
+		$p = Page::getByPath('/profile');
+		if ($p->isError()) {
+			$d1 = SinglePage::add('/profile');
+			$d2 = SinglePage::add('/profile/edit');
+			$d3 = SinglePage::add('/profile/avatar');				
+		}
+		$p2 = Page::getByPath('/dashboard/users/registration');
+		if ($p2->isError()) {
+			$d4 = SinglePage::add('/dashboard/users/registration');
+		}
+		
 		//add the new collection attribute keys
 		$cak=CollectionAttributeKey::getByHandle('header_extra_content');
 		if( !intval($cak->getAttributeKeyID()) )
