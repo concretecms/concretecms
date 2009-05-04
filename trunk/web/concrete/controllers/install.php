@@ -361,6 +361,10 @@ class InstallController extends Controller {
 						
 						$d1->update(array('cName'=>t('Sitemap'), 'cDescription'=>t('Whole world at a glance.')));
 						$d2->update(array('cName'=>t('File Manager'), 'cDescription'=>t('All documents and images.')));
+						$d2a->update(array('cName'=>t('Search')));
+						$d2b->update(array('cName'=>t('Attributes')));
+						$d2c->update(array('cName'=>t('Sets')));
+						$d2d->update(array('cName'=>t('Access')));						
 						$d3->update(array('cName'=>t('Reports'), 'cDescription'=>t('Get data from forms and logs.')));
 						$d3a->update(array('cName'=>t('Form Results'), 'cDescription'=>t('Get submission data.')));
 						$d3b->update(array('cName'=>t('Surveys')));
@@ -373,6 +377,8 @@ class InstallController extends Controller {
 						$d4d->update(array('cName'=>t('User Attributes')));
 						$d4e->update(array('cName'=>t('User Registration')));
 						$d5->update(array('cName'=>t('Scrapbook'), 'cDescription'=>t('Share content across your site.')));	
+						$d5a->update(array('cName'=>t('User')));
+						$d5b->update(array('cName'=>t('Global')));
 						$d7->update(array('cName'=>t('Pages and Themes'), 'cDescription'=>t('Reskin your site.')));	
 						$d71->update(array('cName'=>t('Themes'), 'cDescription'=>t('Reskin your site.')));	
 						$d7e->update(array('cName'=>t('Page Types'), 'cDescription'=>t('What goes in your site.')));	
