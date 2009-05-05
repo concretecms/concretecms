@@ -17,9 +17,9 @@ class Page extends Collection {
 		return Page::getByID($cID, $version);
 	}
 	
-	public static function getByID($cID, $version = 'RECENT') {
-		if ($version) {
-			$version = CollectionVersion::getNumericalVersionID($cID, $version);
+	public static function getByID($cID, $versionOrig = 'RECENT') {
+		if ($versionOrig) {
+			$version = CollectionVersion::getNumericalVersionID($cID, $versionOrig);
 		}
 		$ca = new Cache();
 		$c = ($version > 0) ? $ca->get('page', $cID . ':' . $version) : $ca->get('page', $cID);
@@ -36,6 +36,13 @@ class Page extends Collection {
 				$ca->set('page', $c->getCollectionID() . ':' . $version, $c);
 			} else {
 				$ca->set('page', $c->getCollectionID(), $c);
+			}
+		}else{
+			//requested alias, update version number if parent version number is different
+			if($cID != $c->getCollectionID()){
+				$cParentVersion = CollectionVersion::getNumericalVersionID($c->getCollectionID(), $versionOrig);
+				if($cParentVersion!=$version) 
+					$c->populatePage($c->getCollectionID(), $where, $cParentVersion);
 			}
 		}
 		return $c;
