@@ -323,9 +323,17 @@ foreach($attribs as $at) {
 		$versions = $f->getVersionList();
 		foreach($versions as $fvv) { ?>
 			<tr fID="<?=$f->getFileID()?>" fvID="<?=$fvv->getFileVersionID()?>" <? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?> class="ccm-file-versions-grid-active" <? } ?>>
-				<td style="text-align: center"><?=$form->radio('vlfvID', $fvv->getFileVersionID(), $fvv->getFileVersionID() == $fv->getFileVersionID())?></td>
-				<td><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/properties?fID=<?=$f->getFileID()?>&fvID=<?=$fvv->getFileVersionID()?>&task=preview_version" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="<?=t('Preview File')?>" class="dialog-launch"><?=$fvv->getFilename()?></a></td>
-				<td><?=$fvv->getTitle()?></td>
+				<td style="text-align: center">
+					<?=$form->radio('vlfvID', $fvv->getFileVersionID(), $fvv->getFileVersionID() == $fv->getFileVersionID())?>
+				</td>
+				<td>
+					<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/properties?fID=<?=$f->getFileID()?>&fvID=<?=$fvv->getFileVersionID()?>&task=preview_version" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="<?=t('Preview File')?>" class="dialog-launch">
+						<?=wordwrap($fvv->getFilename(),20,"\n",true) ?>
+					</a>
+				</td>
+				<td> 
+					<?=wordwrap($fvv->getTitle(),20,"\n",true) ?>
+				</td>
 				<td><?
 					$comments = $fvv->getVersionLogComments();
 					if (count($comments) > 0) {
