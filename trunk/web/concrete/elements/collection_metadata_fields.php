@@ -34,7 +34,7 @@ var ccmAttributeValuesHelper={
 		newRow.className='newAttrValueRow';
 		newRow.innerHTML='<input name="akID_'+akID+'[]" type="text" value="" /> ';
 		newRow.innerHTML+='<a onclick="ccmAttributeValuesHelper.remove(this)">[X]</a>';
-		$('#newAttrValueRows').append(newRow);				
+		$('#newAttrValueRows'+akID).append(newRow);				
 	},
 	remove:function(a){
 		$(a.parentNode).remove();			
@@ -176,7 +176,7 @@ var ccmPathHelper={
 					</div>
 					 
 					<? if( $ak->getAllowOtherValues()==1 ){ ?>
-						<div id="newAttrValueRows">
+						<div id="newAttrValueRows<?=$ak->getCollectionAttributeKeyID()?>" class="newAttrValueRows">
 						</div>
 						<div><a onclick="ccmAttributeValuesHelper.add(<?=intval($ak->getCollectionAttributeKeyID())?>)">
 							<?=t('Add Another Option')?> +</a>
