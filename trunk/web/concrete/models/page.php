@@ -31,19 +31,12 @@ class Page extends Collection {
 		$where = "where Pages.cID = ?";
 		$c = new Page;
 		$c->populatePage($cID, $where, $version);
-		if ($c->cPointerID < 1) {
-			if ($version > 0) {
-				$ca->set('page', $c->getCollectionID() . ':' . $version, $c);
-			} else {
-				$ca->set('page', $c->getCollectionID(), $c);
-			}
-		}else{
-			//requested alias, update version number if parent version number is different
-			if($cID != $c->getCollectionID()){
-				$cParentVersion = CollectionVersion::getNumericalVersionID($c->getCollectionID(), $versionOrig);
-				if($cParentVersion!=$version) 
-					$c->populatePage($c->getCollectionID(), $where, $cParentVersion);
-			}
+		// must use cID instead of c->getCollectionID() because cID may be the pointer to another page
+		
+		if ($version > 0) {
+			$ca->set('page', $cID . ':' . $version, $c);
+		} else {
+			$ca->set('page', $cID, $c);
 		}
 		return $c;
 	}
