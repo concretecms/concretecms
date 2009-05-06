@@ -205,8 +205,9 @@ class Job extends Object {
 	final function executeJob(){
 		
 		$db = Loader::db();
-		$timestamp=date('Y-m-d g:i:s A');
-		$this->jDateLastRun = $timestamp; 
+		$timestampH =date('Y-m-d g:i:s A');
+		$timestamp=date('Y-m-d H:i:s');
+		$this->jDateLastRun = $timestampH; 
 		$rs = $db->query( "UPDATE Jobs SET jStatus='RUNNING', jDateLastRun=? WHERE jHandle=?", array( $timestamp, $this->jHandle ) );
 		try{ 
 			$resultMsg=$this->run();
@@ -221,8 +222,11 @@ class Job extends Object {
 		else $jStatus='DISABLED_ERROR';
 		$rs = $db->query( "UPDATE Jobs SET jStatus=?, jLastStatusText=? WHERE jHandle=?", array( $jStatus, $resultMsg, $this->jHandle ) );
 		
-		$timestamp=date('Y-m-d H:i:s');
-		$rs = $db->query( "INSERT INTO JobsLog (jID, jlMessage, jlTimestamp, jlError) VALUES(?,?,?,?)", array( $this->jID, $resultMsg, $timestamp, $this->getError() ) );
+		$enum = 0;
+		if ($this->getError() > 0) {
+			$enum = $this->getError();
+		}
+		$rs = $db->query( "INSERT INTO JobsLog (jID, jlMessage, jlTimestamp, jlError) VALUES(?,?,?,?)", array( $this->jID, $resultMsg, $timestamp, $enum ) );
 		
 		
 		return $resultMsg;
