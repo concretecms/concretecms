@@ -146,7 +146,7 @@ $(function() {
 
 </div>
 <div id="ccm-install-note">
-<?=t('Trouble installing? <a href="%s">Click here to host with us</a>.', 'http://www.getconcrete5.com')?>
+<?=t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', 'http://www.concrete5.org/community/forums/installation', 'http://www.getconcrete5.com')?>
 </div>
 </div>
 
