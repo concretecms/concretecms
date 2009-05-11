@@ -109,89 +109,91 @@
 	## Check online, user-related startup routines
 	require(dirname(__FILE__) . '/startup/user.php');
 
-	// figure out where we need to go
-	$req = Request::get();
-	if ($req->getRequestCollectionPath() != '') {
-		$c = Page::getByPath($req->getRequestCollectionPath(), false);		
-	} else {
-		$c = Page::getByID($req->getRequestCollectionID(), false);
-	}
-
-	if ($c->isError()) {
-		// if we've gotten an error getting information about this particular collection
-		// than we load up the Content class, and get prepared to fire away
-		switch($c->getError()) {
-			case COLLECTION_NOT_FOUND:
-				$v = View::getInstance();
-				$v->render('/page_not_found');
-				break;
+	if (C5_ENVIRONMENT_ONLY == false) {
+	
+		// figure out where we need to go
+		$req = Request::get();
+		if ($req->getRequestCollectionPath() != '') {
+			$c = Page::getByPath($req->getRequestCollectionPath(), false);		
+		} else {
+			$c = Page::getByID($req->getRequestCollectionID(), false);
 		}
-	}
-
-	## Check maintenance mode
-	require(dirname(__FILE__) . '/startup/maintenance_mode_check.php');
 	
-	## Check to see whether this is an external alias. If so we go there.
-	include(dirname(__FILE__) . '/startup/external_link.php');
+		if ($c->isError()) {
+			// if we've gotten an error getting information about this particular collection
+			// than we load up the Content class, and get prepared to fire away
+			switch($c->getError()) {
+				case COLLECTION_NOT_FOUND:
+					$v = View::getInstance();
+					$v->render('/page_not_found');
+					break;
+			}
+		}
 	
-	## Get a permissions object for this particular collection.
-	$cp = new Permissions($c);
-
-	## Now that we have a collections and permissions object, we check to make sure
-	## everything is okay with collections and permissions
-
-	if ($cp->isError()) {
-		// if we've gotten an error getting information about this particular collection
-		// than we load up the Content class, and get prepared to fire away
+		## Check maintenance mode
+		require(dirname(__FILE__) . '/startup/maintenance_mode_check.php');
 		
-		switch($cp->getError()) {
-			case COLLECTION_FORBIDDEN:
-				$v = View::getInstance();
-				$v->render('/page_forbidden');
-				break;
+		## Check to see whether this is an external alias. If so we go there.
+		include(dirname(__FILE__) . '/startup/external_link.php');
+		
+		## Get a permissions object for this particular collection.
+		$cp = new Permissions($c);
+	
+		## Now that we have a collections and permissions object, we check to make sure
+		## everything is okay with collections and permissions
+	
+		if ($cp->isError()) {
+			// if we've gotten an error getting information about this particular collection
+			// than we load up the Content class, and get prepared to fire away
+			
+			switch($cp->getError()) {
+				case COLLECTION_FORBIDDEN:
+					$v = View::getInstance();
+					$v->render('/page_forbidden');
+					break;
+			}
 		}
-	}
-
-	## If there's no error, then we build the collection, but first we load it with the appropriate
-	## version. We pass the function the collection object, as well as the collection permissions
-	## object, which the function will use to determine what version we get to see
-
-	if ($cp->canWrite() || $cp->canReadVersions()) {
-		$cvID = ($_REQUEST['cvID']) ? $_REQUEST['cvID'] : "RECENT";
-	} else {
-		$cvID = "ACTIVE";
-	}
-
-	if ($_REQUEST['ccm-disable-controls'] == true || intval($cvID) > 0) {
+	
+		## If there's no error, then we build the collection, but first we load it with the appropriate
+		## version. We pass the function the collection object, as well as the collection permissions
+		## object, which the function will use to determine what version we get to see
+	
+		if ($cp->canWrite() || $cp->canReadVersions()) {
+			$cvID = ($_REQUEST['cvID']) ? $_REQUEST['cvID'] : "RECENT";
+		} else {
+			$cvID = "ACTIVE";
+		}
+	
+		if ($_REQUEST['ccm-disable-controls'] == true || intval($cvID) > 0) {
+			$v = View::getInstance();
+			$v->disableEditing();
+			$v->disableLinks();
+		}
+		
+		$vp = $c->loadVersionObject($cvID);
+		// returns the $vp object, which we then check
+		if ($vp->isError()) {
+			// if we've gotten an error getting information about this particular collection
+			// than we load up the Content class, and get prepared to fire away
+			switch($vp->getError()) {
+				case VERSION_NOT_RECENT:
+					// the collection is not the most recent version. We're not going to allow any writing to the collection
+					$cp->disableWrite();
+					break;
+			}
+		}
+		
+		## Make sure that any submitted forms, etc... are handled correctly
+		## This is legacy cms specific stuff, like adding pages
+		require(dirname(__FILE__) . '/startup/process.php');
+		
+		## Record the view
+		if (STATISTICS_TRACK_PAGE_VIEWS == true) {
+			$u->recordView($c);
+		}
+		
+		## now we display (provided we've gotten this far)
+	
 		$v = View::getInstance();
-		$v->disableEditing();
-		$v->disableLinks();
+		$v->render($c);
 	}
-	
-	$vp = $c->loadVersionObject($cvID);
-	// returns the $vp object, which we then check
-	if ($vp->isError()) {
-		// if we've gotten an error getting information about this particular collection
-		// than we load up the Content class, and get prepared to fire away
-		switch($vp->getError()) {
-			case VERSION_NOT_RECENT:
-				// the collection is not the most recent version. We're not going to allow any writing to the collection
-				$cp->disableWrite();
-				break;
-		}
-	}
-	
-	## Make sure that any submitted forms, etc... are handled correctly
-	## This is legacy cms specific stuff, like adding pages
-	require(dirname(__FILE__) . '/startup/process.php');
-	
-	## Record the view
-	if (STATISTICS_TRACK_PAGE_VIEWS == true) {
-		$u->recordView($c);
-	}
-	
-	## now we display (provided we've gotten this far)
-
-	$v = View::getInstance();
-	$v->render($c);
-?>

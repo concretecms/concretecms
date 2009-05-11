@@ -1,6 +1,9 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 define('DISPATCHER_FILENAME', 'index.php');
+if (!defined('C5_ENVIRONMENT_ONLY')) {
+	define('C5_ENVIRONMENT_ONLY', false);
+}
 
 # These items should be set by site.php in config/ but if they're not that means we're installing and we need something there
 if (!defined('BASE_URL')) {
@@ -108,7 +111,9 @@ if (!defined("MENU_HELP_URL")) {
 define('DIR_BASE_CORE', dirname(__FILE__) . '/..');
 
 # Path to the base directory of THIS install
-define('DIR_BASE', dirname($_SERVER['SCRIPT_FILENAME']));
+if (!defined('DIR_BASE')) {
+	define('DIR_BASE', dirname($_SERVER['SCRIPT_FILENAME']));
+}
 
 # The core concrete directory. Either one per install or one per server
 define('DIRNAME_APP', 'concrete');
