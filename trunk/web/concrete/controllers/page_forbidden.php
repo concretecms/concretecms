@@ -8,6 +8,14 @@ class PageForbiddenController extends LoginController {
 	
 	
 	public function view() {
+		$v = View::getInstance();
+		$c = $v->getCollectionObject();
+		if (is_object($c)) {
+			$cID = $c->getCollectionID();
+			if($cID) { 
+				$this->forward($cID); // set the intended url
+			}
+		}
 		parent::view();
 		$this->render('/login');
 	}
