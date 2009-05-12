@@ -142,7 +142,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function setAreaObject($a) {
 			$this->area = $a;
 		}
-
+		
+		
+		/** 
+		 * Returns the template used in the block view
+		 */
+		public function getTemplate() {
+			return $this->template;
+		}
+		
+		
 		public function setBlockObject($obj) {
 			$this->blockObj = $obj;
 		}
@@ -257,6 +266,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				include($footer);
 			}
 
+			$this->template = $template;
+			$this->header = $header;
+			$this->footer = $footer;
+			
 			Localization::reset();
 			
 		}
