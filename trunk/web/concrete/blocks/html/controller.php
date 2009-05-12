@@ -8,8 +8,8 @@ class HtmlBlockController extends BlockController {
 	var $pobj;
 
 	protected $btTable = 'btContentLocal';
-	protected $btInterfaceWidth = "400";
-	protected $btInterfaceHeight = "170";
+	protected $btInterfaceWidth = "600";
+	protected $btInterfaceHeight = "465";
 	
 	public $content = "";	
 	
