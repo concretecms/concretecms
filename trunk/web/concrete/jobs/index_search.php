@@ -21,7 +21,7 @@ class IndexSearch extends Job {
 	public function run() {
 		Loader::library('database_indexed_search');
 		$is = new IndexedSearch();
-		$result = $is->reindex();
+		$result = $is->reindex(GUEST_GROUP_ID);
 		return t('%s page(s) indexed.', $result->count);
 	}
 
