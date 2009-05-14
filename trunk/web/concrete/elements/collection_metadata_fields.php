@@ -138,6 +138,7 @@ var ccmPathHelper={
 				case "SELECT":
 					$options = explode("\n", $ak->getCollectionAttributeKeyValues()); 
 					$caValues=explode("\n",$caValue); 
+					if( $ak->getAllowOtherValues()==1 ) asort($options); 
 					?>
 					<select style="width: 150px" name="akID_<?=$ak->getCollectionAttributeKeyID()?>">
 						<option value="">** <?=t('None')?></option>
@@ -164,6 +165,7 @@ var ccmPathHelper={
 				case "SELECT_MULTIPLE":					
 					$options = explode("\n", $ak->getCollectionAttributeKeyValues()); 
 					$caValues=explode("\n",$caValue); 
+					if( $ak->getAllowOtherValues()==1 ) asort($options);
 					?>
 					
 					<div> 
