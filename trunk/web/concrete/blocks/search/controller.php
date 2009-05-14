@@ -147,7 +147,6 @@ class SearchBlockController extends BlockController {
 		$this->set('query', htmlentities($q, ENT_COMPAT, APP_CHARSET));
 		$this->set('paginator', $ipl->getPagination());
 		$this->set('results', $results);
-		
 	}		
 	
 }

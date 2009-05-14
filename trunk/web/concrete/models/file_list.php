@@ -183,6 +183,7 @@ class FileList extends DatabaseItemList {
 				case 'SELECT_MULTIPLE':
 					$multiString = '(';
 					$i = 0;
+					if(!is_array($caf[1])) $caf[1]=array($caf[1]); 
 					foreach($caf[1] as $val) {
 						$val = $db->quote('%' . $val . '||%');
 						$multiString .= 'REPLACE(' . $tbl . '.value, "\n", "||") like ' . $val . ' ';

@@ -72,6 +72,7 @@ $ppWhere = '';
 			$cParentIDOverride = $row['cParentID'];
 			$cPathOverride = $row['cPath'];
 			$cPointerID = $row['cPointerID'];
+			$cDisplayOrderOverride = $row['cDisplayOrder'];
 		} else {
 			$q1 = $q0 . $where . $ppWhere;
 		}
@@ -1343,9 +1344,11 @@ $ppWhere = '';
 		}
 	}
 	
-	function updateDisplayOrder($do) {
+	function updateDisplayOrder($do,$cID=0) {
+		//this line was added to allow changing the display order of aliases
+		if(!intval($cID)) $cID=$this->getCollectionID();
 		$db = Loader::db();
-		$db->query("update Pages set cDisplayOrder = ? where cID = ?", array($do, $this->getCollectionID()));
+		$db->query("update Pages set cDisplayOrder = ? where cID = ?", array($do, $cID));
 		$this->refreshCache();
 	}
 	

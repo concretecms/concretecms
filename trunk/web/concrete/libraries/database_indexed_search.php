@@ -103,13 +103,13 @@ class IndexedSearch {
 	/** 
 	 * Reindexes the search engine.
 	 */
-	public function reindex() {
+	public function reindex($search_index_group_id=0) {
 		Cache::disableLocalCache();
 
 		$db = Loader::db();
 		$collection_attributes = Loader::model('collection_attributes');
 		$r = $db->query("select cID from Pages order by cID asc");
-		$g = Group::getByID(GUEST_GROUP_ID);
+		$g = Group::getByID($search_index_group_id);
 		$nh = Loader::helper('navigation');
 		
 		$db->Execute("truncate table PageSearchIndex");
