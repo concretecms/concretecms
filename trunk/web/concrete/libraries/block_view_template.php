@@ -58,8 +58,10 @@ class BlockViewTemplate {
 		if ($bFilename) {
 			if (is_file(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
 				$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
-				$this->baseURL = DIR_REL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
-				$this->basePath = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle();
+				$bv = new BlockView();
+				$bv->setBlockObject($obj);
+				$this->baseURL = $bv->getBlockURL();
+				$this->basePath = $bv->getBlockPath($this->render);
 			} else if (is_file(DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
 				$template = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
 				$this->baseURL = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
@@ -110,8 +112,10 @@ class BlockViewTemplate {
 			
 		} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php')) {
 			$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php';
-			$this->baseURL = DIR_REL . '/' . DIRNAME_BLOCKS . $obj->getBlockTypeHandle();
-			$this->basePath = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle;
+			$bv = new BlockView();
+			$bv->setBlockObject($obj);
+			$this->baseURL = $bv->getBlockURL();
+			$this->basePath = $bv->getBlockPath($this->render);
 		} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $this->render)) {
 			$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $this->render;
 			$this->baseURL = DIR_REL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
