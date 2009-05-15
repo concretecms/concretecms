@@ -21,6 +21,10 @@
 			return $content;				
 		}
 		
+		public function getSearchableContent(){
+			return $this->content;
+		}
+		
 		function br2nl($str) {
 			$str = str_replace("\r\n", "\n", $str);
 			$str = str_replace("<br />\n", "\n", $str);

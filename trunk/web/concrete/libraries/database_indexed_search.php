@@ -90,11 +90,13 @@ class IndexedSearch {
 		 	$blarray = array_merge( $blarray, $c->getBlocks($searchableAreaName) );
 		}
 		$text = '';
-		foreach($blarray as $b) {
-			if ($b->getBlockTypeHandle() == 'content') {
-				$bi = $b->getInstance();
-				$text .= strip_tags($bi->content);
-			}
+		foreach($blarray as $b) { 
+			$bi = $b->getInstance();
+			if(method_exists($bi,'getSearchableContent')){
+				$searchableContent = $bi->getSearchableContent();  
+				if(strlen(trim($searchableContent))) 
+					$text .= strip_tags($searchableContent).' ';
+			}			
 		}
 		unset($blarray);
 		return $text;
