@@ -189,6 +189,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			while ($row = $r->fetchRow()) {
 				$p = new Page;
 				$p->setPropertiesFromArray($row);
+				$p->vObj = new CollectionVersion();
+				$p->vObj->cvID = $row['cvID'];
+				$p->vObj->cvName = $row['cvName'];
 				$pages[] = $p;
 			}
 			
