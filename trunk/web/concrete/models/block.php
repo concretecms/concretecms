@@ -155,7 +155,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if ($c) {
 				$db = Loader::db();
 				$cID = $c->getCollectionID();
-				$q = "select bID from CollectionVersionBlocks where bID = '{$this->bID}' and cID='{$cID}' and isOriginal = 0";
+				$cvID = $db->GetOne("select max(cvID) from CollectionVersions where cID = ?", array($cID));
+				$q = "select cvb.bID from CollectionVersionBlocks cvb inner join CollectionVersions cv on cvb.cID = cv.cID and cvb.cvID = cv.cvID where cvb.bID = '{$this->bID}' and cvb.cID='{$cID}' and cvb.cvID = '{$cvID}' and isOriginal = 0 order by cvb.cvID desc limit 1";
 				$r = $db->query($q);
 				if ($r) {
 					return ($r->numRows() > 0);
