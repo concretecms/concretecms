@@ -126,9 +126,11 @@ class MailHelper {
 			}
 			$header .= "From: {$from}\n";
 			$subject = $this->subject;
+			/*
 			if (function_exists('mb_encode_mimeheader')) {
 				$subject = mb_encode_mimeheader($subject, APP_CHARSET);
 			}
+			*/
 			if (function_exists('mb_send_mail')) {
 				mb_send_mail($to, $subject, $this->body, $header); 
 			} else {
