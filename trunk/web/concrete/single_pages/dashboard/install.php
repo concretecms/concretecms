@@ -12,9 +12,17 @@ $btArray = BlockTypeList::getInstalledList();
 $btAvailableArray = BlockTypeList::getAvailableList();
 $pkgArray = Package::getInstalledList();
 $pkgAvailableArray = Package::getAvailablePackages();
+
+$coreBlockTypes = array();
+$webBlockTypes = array();
+
 foreach($btArray as $_bt) {
 	if ($_bt->getPackageID() == 0) {
-		$installedArray[] = $_bt;
+		if ($_bt->isCoreBlockType()) {
+			$coreBlockTypes[] = $_bt;
+		} else {
+			$webBlockTypes[] = $_bt;
+		}
 	}
 }
 $availableArray = array_merge($btAvailableArray, $pkgAvailableArray);
@@ -27,9 +35,9 @@ $db = Loader::db();
 
 if(ENABLE_MARKETPLACE_SUPPORT){
 	$blocksHelper = Loader::helper('concrete/marketplace/blocks');
-	$purchasedBlocks = $blocksHelper->getPurchasesList();
+	$purchasedBlocksSource = $blocksHelper->getPurchasesList();
 }else{
-    $purchasedBlocks = array();
+    $purchasedBlocksSource = array();
 }
 
 // now we iterate through the purchased items (NOT BLOCKS, THESE CAN INCLUDE THEMES) list and removed ones already downloaded
@@ -37,10 +45,17 @@ if(ENABLE_MARKETPLACE_SUPPORT){
 
 $skipHandles = array();
 foreach($availableArray as $ava) {
-	foreach($purchasedBlocks as $pi) {
+	foreach($purchasedBlocksSource as $pi) {
 		if ($pi->getBlockTypeHandle() == $ava->getPackageHandle()) {
 			$skipHandles[] = $ava->getPackageHandle();
 		}
+	}
+}
+
+$purchasedBlocks = array();
+foreach($purchasedBlocksSource as $pb) {
+	if (!in_array($pb->getBlockTypeHandle(), $skipHandles)) {
+		$purchasedBlocks[] = $pb;
 	}
 }
 
@@ -65,7 +80,45 @@ function logoutSuccess() {
 }
 </script>
 
-<? if (is_object($bt)) { ?>
+<? 
+
+if (is_object($pkg)) { ?>
+
+	<h1><span><?=$pkg->getPackageName()?></span></h1>
+	<div class="ccm-dashboard-inner">
+		<img src="<?=$ci->getPackageIconURL($pkg)?>" style="float: right" />
+		<div><a href="<?=$this->url('/dashboard/install')?>">&lt; <?=t('Return to Add Functionality')?></a></div><br/>
+			
+		<h2><?=t('Description')?></h2>
+		<p><?=$pkg->getPackageDescription()?></p>
+	
+		<?
+		$u = new User();
+		if ($u->isSuperUser()) {
+		
+			$removeBTConfirm = t('This will remove all elements associated with the %s package. This cannot be undone. Are you sure?', $pkg->getPackageHandle());
+			
+			$buttons[] = $ch->button_js(t('Remove'), 'removePackage()', 'left');?>
+
+			<script type="text/javascript">
+			removePackage = function() {
+				if (confirm('<?=$removeBTConfirm?>')) { 
+					location.href = "<?=$this->url('/dashboard/install', 'uninstall_package', $pkg->getPackageID(), $valt->generate('uninstall'))?>";				
+				}
+			}
+			</script>
+
+		<? } else { ?>
+			<? $buttons[] = $ch->button_js(t('Remove'), 'alert(\'' . t('Only the super user may remove packages.') . '\')', 'left', 'ccm-button-inactive');?>
+		<? }
+
+		print $ch->buttons($buttons); ?>
+		
+	</div>
+	
+<?
+
+} else if (is_object($bt)) { ?>
 
 	<h1><span><?=$bt->getBlockTypeName()?></span></h1>
 	<div class="ccm-dashboard-inner">
@@ -110,49 +163,69 @@ function logoutSuccess() {
 			
 <? } else { ?>
 
-	<div class="ccm-module" style="width: 320px; margin-bottom: 0px">
+	<div class="ccm-module" style="width: 350px; margin-bottom: 20px">
 
 		<h1><span><?=t('Currently Installed')?></span></h1>
 		<div class="ccm-dashboard-inner">
+		<? if (count($pkgArray) > 0) { ?>
+		<h2><?=t('Packages')?></h2>
 		
+			<?	foreach ($pkgArray as $pkg) { ?>
+				<div class="ccm-addon-list">
+				<table cellspacing="0" cellpadding="0">		
+				<tr>
+					<td class="ccm-installed-items-icon"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
+					<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></a></h3><?=$pkg->getPackageDescription()?></td>
+					<td><?=$ch->button(t("Edit"), View::url('/dashboard/install', 'inspect_package', $pkg->getPackageID()), "right")?></td>					
+				</tr>
+				</table>
+				</div>
+			<? } ?>				
+	
+			<br/><br/>
+
+		<? } ?>
+		
+		<? if (count($webBlockTypes) > 0) { ?>
+			<h2><?=t('Custom Block Types')?></h2>
+			<?	foreach ($webBlockTypes as $bt) { ?>
+				<div class="ccm-addon-list">
+				<table cellspacing="0" cellpadding="0">		
+				<tr>
+					<td class="ccm-installed-items-icon"><img src="<?=$ci->getBlockTypeIconURL($bt)?>" /></td>
+					<td class="ccm-addon-list-description"><h3><?=$bt->getBlockTypeName()?></a></h3><?=$bt->getBlockTypeDescription()?></td>
+					<td><?=$ch->button(t("Edit"), View::url('/dashboard/install', 'inspect_block_type', $bt->getBlockTypeID()), "right")?></td>					
+				</tr>
+				</table>
+				</div>
+			<? } ?>
+			<br/><br/>
+		<? } ?>
+		
+		<h2><?=t('Core Block Types')?></h2>
 		<? 
-		if (count($installedArray) == 0) { ?>
+		if (count($coreBlockTypes) == 0) { ?>
 			<p><?=t('No block types have been installed.')?></p>
 		<? } else { ?>
 		
-			<div style="margin:0px; padding:0px; height:auto">	
-	
-			<?	foreach ($installedArray as $bt) { ?>
-				<div class="ccm-block-type" style="border-bottom: none">
-					<a class="ccm-block-type-inner" style="background-image: url(<?=$ci->getBlockTypeIconURL($bt)?>)" href="<?=$this->url('/dashboard/install', 'inspect_block_type', $bt->getBlockTypeID())?>" title="<?=$bt->getBlockTypeDescription()?>"><?=$bt->getBlockTypeName()?></a>
+			<?	foreach ($coreBlockTypes as $bt) { ?>
+				<div class="ccm-addon-list">
+				<table cellspacing="0" cellpadding="0">		
+				<tr>
+					<td class="ccm-installed-items-icon"><img src="<?=$ci->getBlockTypeIconURL($bt)?>" /></td>
+					<td class="ccm-addon-list-description"><h3><?=$bt->getBlockTypeName()?></a></h3><?=$bt->getBlockTypeDescription()?></td>
+					<td><?=$ch->button(t("Edit"), View::url('/dashboard/install', 'inspect_block_type', $bt->getBlockTypeID()), "right")?></td>					
+				</tr>
+				</table>
 				</div>
-			<? } ?>
-
-			</div>
-				
+			<? } ?>				
 		<? } ?>
-
-		<?  /* if (count($pkgArray) == 0) { ?>
-			<p><?=t('No packages have been installed.')?></p>
-		<? } else { ?>
-		
-			<div style="margin:0px; padding:0px; height:auto">	
-	
-			<?	foreach ($pkgArray as $pkg) { ?>
-				<div class="ccm-block-type" style="border-bottom: none">
-					<div class="ccm-block-type-inner" style="background-image: url(<?=$ci->getPackageIconURL($pkg)?>)"><?=$pkg->getPackageName()?></a>
-				</div>
-			<? } ?>
-
-			</div>
-				
-		<? }*/  ?>
 
 		</div>
 			
 	</div>
 
-	<div class="ccm-module" style="width: 380px; margin-bottom: 0px">
+	<div class="ccm-module" style="width: 350px; margin-bottom: 20px">
 
 		<h1><span><?=t('New')?></span></h1>
 		<div class="ccm-dashboard-inner">
@@ -182,26 +255,10 @@ function logoutSuccess() {
 	<? } else { ?>
 
 		<div class="ccm-addon-list-wrapper">
-		<? foreach ($purchasedBlocks as $pb) {
-			if (in_array($pb->getBlockTypeHandle(), $skipHandles)) {
-				continue;
-			}
-			$file = $pb->getRemoteFileURL();
-			if (!empty($file)) {?>
-			<div class="ccm-addon-list">
-			<table cellspacing="0" cellpadding="0">
-			<tr>
-				<td><img src="<?=$pb->getRemoteIconURL()?>" /></td>
-				<td class="ccm-addon-list-description"><h3><?=$pb->btName?></h3>
-				<?=$pb->btDescription?>
-				</td>
-				<td><?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getRemoteCollectionID()), "right")?></td>
-			</tr>
-			</table>
-			</div>
-			<? } ?>
+		
+		<? if (count($availableArray) > 0) { ?>
+		<h2><?=t('Downloaded and Ready to Install')?></h2>
 		<? } ?>
-
 		<?	foreach ($availableArray as $obj) { ?>
 			<div class="ccm-addon-list">
 			<table cellspacing="0" cellpadding="0">
@@ -221,6 +278,29 @@ function logoutSuccess() {
 			</table>
 			</div>
 		<? } ?>
+		
+		<br/><Br/>
+		<? if (count($purchasedBlocks) > 0) { ?>
+		<h2><?=t('Ready to Download')?></h2>
+		<? } ?>
+
+		<? foreach ($purchasedBlocks as $pb) {
+			$file = $pb->getRemoteFileURL();
+			if (!empty($file)) {?>
+			<div class="ccm-addon-list">
+			<table cellspacing="0" cellpadding="0">
+			<tr>
+				<td><img src="<?=$pb->getRemoteIconURL()?>" /></td>
+				<td class="ccm-addon-list-description"><h3><?=$pb->btName?></h3>
+				<?=$pb->btDescription?>
+				</td>
+				<td><?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getRemoteCollectionID()), "right")?></td>
+			</tr>
+			</table>
+			</div>
+			<? } ?>
+		<? } ?>
+
 		</div>
 
 		<? } ?>

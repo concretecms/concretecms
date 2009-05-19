@@ -211,7 +211,24 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 		}
 		
+		/** 
+		 * @access private
+		 */
 		function isBlockTypeInternal() {return $this->btIsInternal;}
+		
+		/** 
+		 * Returns true if the block type is internal (and therefore cannot be removed)
+		 */
+		public function isInternalBlockType() {
+			return $this->btIsInternal;
+		}
+		
+		/** 
+		 * Returns true if the block type ships with concrete5
+		 */
+		public function isCoreBlockType() {
+			return is_dir(DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle());
+		}
 		
 		function getBlockTypeInterfaceWidth() {return $this->btInterfaceWidth;}
 		function getBlockTypeInterfaceHeight() {return $this->btInterfaceHeight;}

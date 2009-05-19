@@ -86,6 +86,18 @@ class DashboardInstallController extends Controller {
 			$this->redirect('/dashboard/install');
 		}
 	}
+
+	public function inspect_package($pkgID = 0) { 
+		if ($pkgID > 0) {
+			$pkg = Package::getByID($pkgID);
+		}
+		
+		if (isset($pkg) && ($pkg instanceof Package)) {
+			$this->set('pkg', $pkg);
+		} else {
+			$this->redirect('/dashboard/install');
+		}
+	}
 	
 	public function install_package($package) {
 		$tests = Package::testForInstall($package);
