@@ -90,12 +90,13 @@ class IndexedSearch {
 		 	$blarray = array_merge( $blarray, $c->getBlocks($searchableAreaName) );
 		}
 		$text = '';
+		$tagsToSpaces=array('<br>','<br/>','<br />','<p>','</p>','</ p>','<div>','</div>','</ div>');
 		foreach($blarray as $b) { 
 			$bi = $b->getInstance();
 			if(method_exists($bi,'getSearchableContent')){
 				$searchableContent = $bi->getSearchableContent();  
-				if(strlen(trim($searchableContent))) 
-					$text .= strip_tags($searchableContent).' ';
+				if(strlen(trim($searchableContent))) 					
+					$text .= strip_tags(str_ireplace($tagsToSpaces,' ',$searchableContent)).' ';
 			}			
 		}
 		unset($blarray);

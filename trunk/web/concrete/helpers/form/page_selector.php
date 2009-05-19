@@ -30,7 +30,7 @@ class FormPageSelectorHelper {
 	 * @param int $cID
 	 */
 	 
-	public function selectPage($fieldName, $cID = false) {
+	public function selectPage($fieldName, $cID = false, $javascriptFunc='ccm_selectSitemapNode') {
 		$selectedCID = 0;
 		if (isset($_REQUEST[$fieldName])) {
 			$selectedCID = $_REQUEST[$fieldName];
@@ -47,7 +47,7 @@ class FormPageSelectorHelper {
 		$html .= '</strong></div>';
 		$html .= '<a class="ccm-sitemap-select-page dialog-launch" onclick="ccmActivePageField=this" dialog-width="600" dialog-height="450" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_overlay.php?sitemap_mode=select_page">' . t('Select Page') . '</a>';
 		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedCID . '">';
-		$html .= '</div>';
+		$html .= '</div>'; 
 		$html .= '<script type="text/javascript"> 
 		ccm_selectSitemapNode = function(cID, cName) {
 			var par = $(ccmActivePageField).parent().find(\'.ccm-summary-selected-page-label\');
