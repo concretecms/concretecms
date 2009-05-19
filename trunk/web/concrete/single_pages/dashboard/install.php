@@ -12,7 +12,11 @@ $btArray = BlockTypeList::getInstalledList();
 $btAvailableArray = BlockTypeList::getAvailableList();
 $pkgArray = Package::getInstalledList();
 $pkgAvailableArray = Package::getAvailablePackages();
-$installedArray = $btArray;
+foreach($btArray as $_bt) {
+	if ($_bt->getPackageID() == 0) {
+		$installedArray[] = $_bt;
+	}
+}
 $availableArray = array_merge($btAvailableArray, $pkgAvailableArray);
 ksort($availableArray);
 
@@ -41,7 +45,9 @@ foreach($availableArray as $ava) {
 }
 
 $mtitle = t('Marketplace Login');
+$mlogouttitle = t('Marketplace Logout');
 $mmsg = t("You've successfully connected this website to your concrete5 Marketplace account. Featured items will be visible to you while using this site. You can browse the complete marketplace at <a href='%s' target='_blank'>concrete5.org/marketplace</a>", 'http://www.concrete5.org/marketplace/');
+$mlogoutmsg = t("You have disconnected this site from the marketplace.");
 ?>
 <script type="text/javascript">
 function loginSuccess() {
@@ -52,7 +58,7 @@ function loginSuccess() {
 		});
 }
 function logoutSuccess() {
-    ccmAlert.notice('Marketplace Logout', '<p>You have disconnected this site from the marketplace.</p>',
+    ccmAlert.notice("<?=$mlogouttitle?>", "<?=$mlogoutmsg?>", 
 		function() {
 			location.href = '<?=$this->url('/dashboard/install')?>?ts=<?=time()?>';		
 		});
@@ -103,9 +109,6 @@ function logoutSuccess() {
 	</div>
 			
 <? } else { ?>
-
-	<div id="ccm-module-wrapper">
-	<div style="width: 778px">
 
 	<div class="ccm-module" style="width: 320px; margin-bottom: 0px">
 

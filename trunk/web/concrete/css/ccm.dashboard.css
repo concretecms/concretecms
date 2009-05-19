@@ -192,7 +192,16 @@ table.entry-form div.uak-radio {margin: 0px 0px 10px 0px}
 .center{text-align:center}
 
 #loadingIcon{ display:none }
-   
+
+/* Add Functionality */
+table.ccm-installed-items-list {width: 600px}
+td.ccm-installed-items-list-name {width: 140px; white-space: nowrap}
+td.ccm-installed-items-list-version {padding-right: 0px !important; text-align: right}
+td.ccm-installed-items-list-description {padding-right: 40px !important;}
+tr.ccm-installed-items-section-header {}
+table.ccm-installed-items-list td {color: #777; vertical-align: top; padding: 6px 8px 6px 0px; line-height: 16px}
+table.ccm-installed-items-list th {border-bottom: 1px solid #dedede; padding: 2px 0px 6px 0px;text-align: left;}
+
 /* templates */
 
 table#ccm-template-list {width: 100%}
