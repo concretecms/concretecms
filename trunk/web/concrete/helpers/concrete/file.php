@@ -80,10 +80,16 @@
 				$d2 = substr($prefix, 4, 4);
 				$d3 = substr($prefix, 8);
 				
-				if ($createDirectories) {
-					if (!is_dir($base . '/' . $d1 . '/' . $d2 . '/' . $d3)) {
-						mkdir($base . '/' . $d1 . '/' . $d2 . '/' . $d3, 0777, TRUE);
-					}
+				if ($createDirectories) { 
+					if (!is_dir($base . '/' . $d1)) { 
+						mkdir($base . '/' . $d1, 0777, TRUE); 
+					} 
+					if (!is_dir($base . '/' . $d1 . '/' . $d2)) { 
+						mkdir($base . '/' . $d1 . '/' . $d2, 0777, TRUE); 
+					} 
+					if (!is_dir($base . '/' . $d1 . '/' . $d2 . '/' . $d3)) { 
+						mkdir($base . '/' . $d1 . '/' . $d2 . '/' . $d3, 0777, TRUE); 
+					} 
 				}
 				
 				$path = $base . '/' . $d1 . '/' . $d2 . '/' . $d3 . '/' . $filename;

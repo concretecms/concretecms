@@ -194,7 +194,7 @@ table.entry-form div.uak-radio {margin: 0px 0px 10px 0px}
 #loadingIcon{ display:none }
 
 /* Add Functionality */
-table.ccm-installed-items-list {width: 600px}
+table.ccm-installed-items-list {width: 100%}
 td.ccm-installed-items-list-name {width: 140px; white-space: nowrap}
 td.ccm-installed-items-list-version {padding-right: 0px !important; text-align: right}
 td.ccm-installed-items-list-description {padding-right: 40px !important;}
