@@ -1,12 +1,128 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
+Loader::model('pile');
+
 class DashboardScrapbookController extends Controller {
 
-	public function view() { 
-		$this->redirect('/dashboard/scrapbook/user');
+	public function view() {  
+	
+		//add required header libraries
+		$html = Loader::helper('html');
+		$this->addHeaderItem($html->css('ccm.filemanager.css'));
+		$this->addHeaderItem($html->javascript('ccm.filemanager.js'));
+		$this->addHeaderItem($html->javascript('tiny_mce/tiny_mce.js'));
+		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_activateFileManager(\'DASHBOARD\'); });</script>');
+		$c=$this->getCollectionObject();
+		$cPath=$c->getCollectionPath();
+		//echo $c->getCollectionId();
+		
+		//make sure global scrapbook exists
+		$a = Area::get($c, t('Global Scrapbook'));
+		if (!is_object($a)) {
+			$a = Area::getOrCreate($c, t('Global Scrapbook'));
+		}		
+		
+		//get available block areas		
+		$availableScrapbooks = $this->getAvailableScrapbooks();		
+		$this->set('availableScrapbooks', $availableScrapbooks);
+		
+		$scrapbookName=$_REQUEST['scrapbookName'];
+		//get scrapbook name from referrer if a block has just been added or edited
+		if($_REQUEST['cID']==$c->getCollectionId() && $_REQUEST['mode']=='edit' && stristr($_SERVER['HTTP_REFERER'],'scrapbookName=')){
+			$startPos = strrpos($_SERVER['HTTP_REFERER'],'?')+1;
+			$qStr = substr($_SERVER['HTTP_REFERER'],$startPos); 
+			parse_str($qStr,$referrerVals);  
+			$scrapbookName=$referrerVals['scrapbookName'];
+		}
+		
+		//test that the requested scrapbook name is a valid one
+		if($scrapbookName=='userScrapbook'){
+			$validScrapbookName=1;
+		}else{
+			foreach($availableScrapbooks as $availableScrapbook){
+				if($availableScrapbook['arHandle']==$scrapbookName)
+					$validScrapbookName=1;
+			}			
+		}
+		
+		if( strlen($scrapbookName) && $validScrapbookName ){
+			$this->set('scrapbookName', $scrapbookName);		
+			$globalScrapbookArea = new Area( $scrapbookName );
+			$globalScrapbookBlocks = $globalScrapbookArea->getAreaBlocksArray($c); 
+			$this->set('globalScrapbookArea', $globalScrapbookArea);
+			$this->set('globalScrapbookBlocks', $globalScrapbookBlocks);			
+		}
+		
+		$this->set('availableScrapbooks', $availableScrapbooks);
+		$this->set('cPath', $cPath); 
 	}
 	
+	public function delete_scrapbook(){
+		$db = Loader::db();
+		$c = $this->getCollectionObject(); 
+		$vals = array( intval($_REQUEST['arID']), intval($c->getCollectionId()) );
+		$db->query( 'DELETE FROM Areas WHERE arID=? AND cID=?', $vals);
+		Cache::flush(); 
+		$this->redirect('/dashboard/scrapbook/');		
+	}
+	
+	public function getAvailableScrapbooks(){
+		$db = Loader::db();
+		$c=$this->getCollectionObject();
+		return $db->getAll('SELECT arID, arHandle FROM Areas WHERE cID='.intval($c->getCollectionId()));
+	}
+	
+	public function addScrapbook(){
+		$scrapbookName = $_REQUEST['scrapbookName']; 
+		$c=$this->getCollectionObject();
+		$a = Area::get($c, $scrapbookName);
+		if (!is_object($a)) {
+			$a = Area::getOrCreate( $c, $scrapbookName);
+		}		
+		$this->redirect('/dashboard/scrapbook/');
+	}	
+	
+	public function deleteBlock(){
+		if( intval($_REQUEST['pcID']) ){
+			$pc = PileContent::get($_REQUEST['pcID']);
+			$p = $pc->getPile();
+			if ($p->isMyPile()) {
+				$pc->delete();
+			}
+		}else{
+			$bID=intval($_REQUEST['bID']);
+			$block=Block::getById($bID); 
+			$c=$this->getCollectionObject(); 
+			if( $block ){  //&& $block->getAreaHandle()=='Global Scrapbook'
+				$block->delete(1);
+			}
+		}
+		$this->view();
+	}
+	
+	public function rename_block(){
+		$bID=intval($_REQUEST['bID']); 
+		$globalScrapbookC=$this->getCollectionObject(); 
+		$scrapbookName = $_REQUEST['scrapbookName']; 
+		$globalScrapbookArea = new Area( $scrapbookName );
+		$block=Block::getById($bID, $globalScrapbookC, $globalScrapbookArea); 		
+		if($block && strlen($_POST['bName']) ){  //&& $block->getAreaHandle()=='Global Scrapbook'		
+			//this is needed so the cache clears correctly
+			$block->setBlockAreaObject($globalScrapbookArea);			
+			$block->updateBlockName( $_POST['bName'], 1 );
+		} 
+		$this->view();	
+	}
+	
+	public function rename_scrapbook(){
+		$db = Loader::db();
+		$c=$this->getCollectionObject();
+		$scrapbookName=$_POST['scrapbookName'];
+		$vals=array( $scrapbookName, $_POST['arID'], $c->getCollectionId() );
+		$db->query( 'UPDATE Areas SET arHandle=? WHERE arID=? AND cID=?', $vals);
+		$this->redirect('/dashboard/scrapbook/');
+	}			
 }
 
 ?>
