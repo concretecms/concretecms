@@ -163,6 +163,7 @@ if (is_object($pkg)) { ?>
 			
 <? } else { ?>
 
+	<div style="width: 720px">
 	<div class="ccm-module" style="width: 350px; margin-bottom: 20px">
 
 		<h1><span><?=t('Currently Installed')?></span></h1>
@@ -309,6 +310,7 @@ if (is_object($pkg)) { ?>
 
 	</div>
 
+	</div>
 	</div>
 	</div>
 
