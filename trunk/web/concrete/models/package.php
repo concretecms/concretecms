@@ -171,7 +171,38 @@ class Package extends Object {
 		return $result;
 	
 	}
+	
+	/** 
+	 * Returns an array of package items (e.g. blocks, themes)
+	 */
+	public function getPackageItems() {
+		$items = array();
+		// check blocks
+		$items = array_merge(BlockTypeList::getByPackage($this), $items);
 
+		// TODO ! Single Pages
+		// TODO ! Themes
+		
+		return $items;
+	}
+
+	/** 
+	 * Uninstalls the package. Removes any blocks, themes, or pages associated with the package.
+	 */
+	public function uninstall() {
+		$db = Loader::db();		
+		
+		$items = $this->getPackageItems();
+		foreach($items as $item) {
+			switch(get_class($item)) {
+				case 'BlockType':
+					$item->delete();	
+					break;
+					
+			}
+		}
+		$db->Execute("delete from Packages where pkgID = ?", array($this->pkgID));
+	}
 	
 	public function testForInstall($package) {
 		// this is the pre-test routine that packages run through before they are installed. Any errors that come here

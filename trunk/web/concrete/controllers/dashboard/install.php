@@ -74,6 +74,35 @@ class DashboardInstallController extends Controller {
 
 	}
 
+	public function uninstall_package($pkgID = 0, $token = '') {
+		$valt = Loader::helper('validation/token');
+
+		if ($pkgID > 0) {
+			$pkg = Package::getByID($pkgID);
+		}
+		
+		$u = new User();
+		if (!$u->isSuperUser()) {
+			$this->error->add(t('Only the super user may remove packages.'));
+		} else if (isset($pkg) && ($pkg instanceof Package)) {
+			if (!$valt->validate('uninstall', $token)) {
+				$this->error->add($valt->getErrorMessage());
+			} else {
+				$pkg->uninstall();
+				$this->redirect('/dashboard/install', 'package_uninstalled');
+			}
+		} else {
+			$this->error->add('Invalid package.');
+		}
+		
+		if ($this->error->has()) {
+			$this->set('error', $this->error);
+		}
+		$this->inspect_package($pkgID);
+
+	}
+
+
 	public function inspect_block_type($btID = 0) { 
 		if ($btID > 0) {
 			$bt = BlockType::getByID($btID);
@@ -97,6 +126,14 @@ class DashboardInstallController extends Controller {
 		} else {
 			$this->redirect('/dashboard/install');
 		}
+	}
+	
+	public function block_type_deleted() {
+		$this->set('message', t('The block type has been removed.'));
+	}
+
+	public function package_uninstalled() {
+		$this->set('message', t('The package type has been uninstalled.'));
 	}
 	
 	public function install_package($package) {

@@ -27,6 +27,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	
 		var $btArray = array();
 		
+		public static function getByPackage($pkg) {
+			$db = Loader::db();
+			$r = $db->Execute("select btID from BlockTypes where pkgID = ?", $pkg->getPackageID());
+			$blockTypes = array();
+			while ($row = $r->FetchRow()) {
+				$blockTypes[] = BlockType::getByID($row['btID']);
+			}
+			return $blockTypes;
+		}
+		
 		function BlockTypeList($allowedBlocks = null) {
 			$db = Loader::db();
 			$this->btArray = array();
