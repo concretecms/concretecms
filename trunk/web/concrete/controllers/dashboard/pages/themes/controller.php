@@ -49,8 +49,23 @@ class DashboardPagesThemesController extends Controller {
 			}
 			*/
 			
-			$pl->uninstall();
-			$this->set('message', t('Theme uninstalled. Your theme directory has been moved to files/trash/.'));
+			$localUninstall = true;
+			if ($pl->getPackageID() > 0) {
+				// then we check to see if this is the only theme in that package. If so, we uninstall the package too
+				$pkg = Package::getByID($pl->getPackageID());
+				$items = $pkg->getPackageItems();
+				if (count($items) == 1) {
+					$_pl = $items[0];
+					if ($_pl instanceof PageTheme && $_pl->getThemeID() == $ptID) {
+						$pkg->uninstall();
+						$localUninstall = false;						
+					}
+				}
+			}
+			if ($localUninstall) {
+				$pl->uninstall();
+			}
+			$this->set('message', t('Theme uninstalled.'));
 		} catch (Exception $e) {
 			$v->add($e);
 			$this->set('error', $v);

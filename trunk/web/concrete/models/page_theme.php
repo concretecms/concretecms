@@ -176,6 +176,10 @@ class PageTheme extends Object {
 	public static function getLocalList() {
 		return PageTheme::getList('pkgID = 0');
 	}
+
+	public static function getByPackage($pkg) {
+		return PageTheme::getList('pkgID = ' . $pkg->getPackageID());
+	}
 	
 	public static function getList($where = null) {
 		if ($where != null) {
@@ -618,8 +622,8 @@ class PageTheme extends Object {
 	public function uninstall() {
 		$db = Loader::db();
 		Loader::model('page_theme_archive');
-		$pla = new PageThemeArchive($this->ptHandle);
-		$pla->uninstall();
+		//$pla = new PageThemeArchive($this->ptHandle);
+		//$pla->uninstall();
 		$db->query("delete from PageThemes where ptID = ?", array($this->ptID));
 		
 	}

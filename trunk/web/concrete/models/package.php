@@ -177,11 +177,10 @@ class Package extends Object {
 	 */
 	public function getPackageItems() {
 		$items = array();
-		// check blocks
 		$items = array_merge(BlockTypeList::getByPackage($this), $items);
+		$items = array_merge(PageTheme::getByPackage($this), $items);
 
 		// TODO ! Single Pages
-		// TODO ! Themes
 		
 		return $items;
 	}
@@ -198,7 +197,9 @@ class Package extends Object {
 				case 'BlockType':
 					$item->delete();	
 					break;
-					
+				case 'PageTheme':
+					$item->uninstall();	
+					break;
 			}
 		}
 		$db->Execute("delete from Packages where pkgID = ?", array($this->pkgID));
