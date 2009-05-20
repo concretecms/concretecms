@@ -16,6 +16,16 @@ class SinglePage extends Page {
 		$themeableCorePages = array('login.php', 'register.php');
 		return $themeableCorePages;
 	}
+
+	public static function getListByPackage($pkg) {
+		$db = Loader::db();
+		$r = $db->Execute("select cID from Pages where ctID = 0 and cFilename is not null and pkgID = ?", $pkg->getPackageID());
+		$singlePages = array();
+		while ($row = $r->FetchRow()) {
+			$singlePages[] = SinglePage::getByID($row['cID']);
+		}
+		return $singlePages;
+	}
 		
  	public static function sanitizePath($path) {
 		//takes a damn cpath and returns no first slash, and no more than 1 intermediate slash in

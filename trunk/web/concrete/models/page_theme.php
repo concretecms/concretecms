@@ -177,7 +177,7 @@ class PageTheme extends Object {
 		return PageTheme::getList('pkgID = 0');
 	}
 
-	public static function getByPackage($pkg) {
+	public static function getListByPackage($pkg) {
 		return PageTheme::getList('pkgID = ' . $pkg->getPackageID());
 	}
 	
