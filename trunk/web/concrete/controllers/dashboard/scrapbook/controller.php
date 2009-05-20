@@ -9,6 +9,7 @@ class DashboardScrapbookController extends Controller {
 	
 		//add required header libraries
 		$html = Loader::helper('html');
+		$scrapbookHelper=Loader::helper('concrete/scrapbook');
 		$this->addHeaderItem($html->css('ccm.filemanager.css'));
 		$this->addHeaderItem($html->javascript('ccm.filemanager.js'));
 		$this->addHeaderItem($html->javascript('tiny_mce/tiny_mce.js'));
@@ -24,7 +25,7 @@ class DashboardScrapbookController extends Controller {
 		}		
 		
 		//get available block areas		
-		$availableScrapbooks = $this->getAvailableScrapbooks();		
+		$availableScrapbooks = $scrapbookHelper->getAvailableScrapbooks();		
 		$this->set('availableScrapbooks', $availableScrapbooks);
 		
 		$scrapbookName=$_REQUEST['scrapbookName'];
@@ -65,13 +66,7 @@ class DashboardScrapbookController extends Controller {
 		$db->query( 'DELETE FROM Areas WHERE arID=? AND cID=?', $vals);
 		Cache::flush(); 
 		$this->redirect('/dashboard/scrapbook/');		
-	}
-	
-	public function getAvailableScrapbooks(){
-		$db = Loader::db();
-		$c=$this->getCollectionObject();
-		return $db->getAll('SELECT arID, arHandle FROM Areas WHERE cID='.intval($c->getCollectionId()));
-	}
+	} 
 	
 	public function addScrapbook(){
 		$scrapbookName = $_REQUEST['scrapbookName']; 
