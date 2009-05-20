@@ -93,6 +93,33 @@ if (is_object($pkg)) { ?>
 		<p><?=$pkg->getPackageDescription()?></p>
 	
 		<?
+		
+		$items = $pkg->getPackageItems();
+		$blocks = array();
+		foreach($items as $_b) {
+			if ($_b instanceof BlockType) {
+				$blocks[] = $_b;
+			}
+		}
+		
+		if (count($blocks) > 0) { ?>
+			<h2><?=t("Block Types")?></h2>
+			<? foreach($blocks as $bt) { ?>
+
+				<div class="ccm-addon-list">
+				<table cellspacing="0" cellpadding="0">		
+				<tr>
+					<td class="ccm-installed-items-icon"><img src="<?=$ci->getBlockTypeIconURL($bt)?>" /></td>
+					<td class="ccm-addon-list-description"><h3><?=$bt->getBlockTypeName()?></a></h3><?=$bt->getBlockTypeDescription()?></td>
+					<td><?=$ch->button(t("Edit"), View::url('/dashboard/install', 'inspect_block_type', $bt->getBlockTypeID()), "right")?></td>					
+				</tr>
+				</table>
+				</div>
+			
+			<? } ?>		
+			<br/><br/>
+		<? }
+		
 		$u = new User();
 		if ($u->isSuperUser()) {
 		
@@ -139,24 +166,27 @@ if (is_object($pkg)) { ?>
 		<?
 		$buttons[] = $ch->button(t("Refresh"), $this->url('/dashboard/install','refresh_block_type', $bt->getBlockTypeID()), "left");
 		$u = new User();
-		if ($u->isSuperUser()) {
 		
-			$removeBTConfirm = t('This will remove all instances of the %s block type. This cannot be undone. Are you sure?', $bt->getBlockTypeHandle());
+		if ($bt->getPackageID() < 1) { 
+			if ($u->isSuperUser()) {
 			
-			$buttons[] = $ch->button_js(t('Remove'), 'removeBlockType()', 'left');?>
-
-			<script type="text/javascript">
-			removeBlockType = function() {
-				if (confirm('<?=$removeBTConfirm?>')) { 
-					location.href = "<?=$this->url('/dashboard/install', 'uninstall_block_type', $bt->getBlockTypeID(), $valt->generate('uninstall'))?>";				
+				$removeBTConfirm = t('This will remove all instances of the %s block type. This cannot be undone. Are you sure?', $bt->getBlockTypeHandle());
+				
+				$buttons[] = $ch->button_js(t('Remove'), 'removeBlockType()', 'left');?>
+	
+				<script type="text/javascript">
+				removeBlockType = function() {
+					if (confirm('<?=$removeBTConfirm?>')) { 
+						location.href = "<?=$this->url('/dashboard/install', 'uninstall_block_type', $bt->getBlockTypeID(), $valt->generate('uninstall'))?>";				
+					}
 				}
-			}
-			</script>
-
-		<? } else { ?>
-			<? $buttons[] = $ch->button_js(t('Remove'), 'alert(\'' . t('Only the super user may remove block types.') . '\')', 'left', 'ccm-button-inactive');?>
-		<? }
-
+				</script>
+	
+			<? } else { ?>
+				<? $buttons[] = $ch->button_js(t('Remove'), 'alert(\'' . t('Only the super user may remove block types.') . '\')', 'left', 'ccm-button-inactive');?>
+			<? }
+		}
+		
 		print $ch->buttons($buttons); ?>
 		
 	</div>
