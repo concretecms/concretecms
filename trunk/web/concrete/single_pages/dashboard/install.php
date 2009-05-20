@@ -98,7 +98,7 @@ if (is_object($pkg)) { ?>
 		
 			$removeBTConfirm = t('This will remove all elements associated with the %s package. This cannot be undone. Are you sure?', $pkg->getPackageHandle());
 			
-			$buttons[] = $ch->button_js(t('Remove'), 'removePackage()', 'left');?>
+			$buttons[] = $ch->button_js(t('Uninstall Package'), 'removePackage()', 'left');?>
 
 			<script type="text/javascript">
 			removePackage = function() {
