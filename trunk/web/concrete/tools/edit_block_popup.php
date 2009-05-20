@@ -33,7 +33,7 @@ if (is_object($b)) {
 		case 'edit':
 			if($_REQUEST['isGlobal']){
 				echo '<div style="text-align:center; margin:32px 0px">';
-				echo t('This is a global block.  Edit it from the <a href="%s">Global Scrapbook</a> in your dashboard.<br /><br /><br />', View::url('/dashboard/scrapbook/global/') );
+				echo t('This is a global block.  Edit it from the <a href="%s">Global Scrapbook</a> in your dashboard.<br /><br /><br />', View::url('/dashboard/scrapbook/') );
 				echo '[<a class="ccm-dialog-close">'.t('Close Window').'</a>]';
 				echo '</div>';
 			}else{

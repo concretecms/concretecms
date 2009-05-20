@@ -11,8 +11,9 @@ if (!$u->isRegistered()) {
 }
 Loader::model('pile');
 $p = false;
+$scrapbookName=$_REQUEST['scrapbookName'];
 
-if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $_REQUEST['scrapbookName']) {
+if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $scrapbookName) {
 
 	// add a block to a pile
 	$c = Page::getByID($_REQUEST['cID']);
@@ -33,10 +34,23 @@ if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $_REQUEST['s
 		$obj = &$c;
 	}	
 
-	if($_REQUEST['scrapbookName']!='userScrapbook'){
+	if( $scrapbookName!='userScrapbook' && $b ){
 	
-		$globalScrapbookPage=$scrapbookHelper::getGlobalScrapbookPage();
-		
+		$globalScrapbookPage = $scrapbookHelper->getGlobalScrapbookPage();
+		$globalScrapbookArea = Area::get( $globalScrapbookPage, $scrapbookName );
+		if($globalScrapbookArea){
+			$b->setBlockAreaObject($globalScrapbookArea); 
+			$b->updateBlockName( $scrapbookName.' '.intval($b->bID) );
+			if($_REQUEST['blockAddMode']=='alias'){
+				//make a global version of the original block 
+				$duplicatedBlock = $b->duplicate($globalScrapbookPage);
+				//delete original block
+				$b->delete(1);
+				//add the new global back to the page as a global
+				$duplicatedBlock->setBlockAreaObject( $a ); 
+				$duplicatedBlock->alias( $c );				
+			}else $b->duplicate($globalScrapbookPage);
+		}
 	
 	}else{	
 	
@@ -179,34 +193,40 @@ if( !$_REQUEST['scrapbookName'] && $_REQUEST['btask']=='add' ){
 	
 	$sp = Pile::getDefault();
 	$scrapBookAreasData = $scrapbookHelper->getAvailableScrapbooks(); 
+	$ih = Loader::helper('concrete/interface'); 
 	?>
 	
 	<script>
 	if(!ccmSaveToScrapbookDialogTarget)
 		var ccmSaveToScrapbookDialogTarget=null;
 		
-	ccmSaveToScrapbook = function(sel){  
-		ccmSaveToScrapbookDialogTarget = $(sel).closest('.ccm-dialog-content');
-		var scrapbook=$(sel).val(); 
-		if(!scrapbook) return false;
+	ccmSaveToScrapbook = function(sel){
+		var sel=$('#ccm-addToScrapbookName');
+		var modeAliased=document.getElementById('blockAddModeAliased');
+		var blockAddMode=(modeAliased.checked)?'alias':'duplicate';
+		ccmSaveToScrapbookDialogTarget = sel.closest('.ccm-dialog-content'); 
+		var scrapbook=sel.val(); 
+		if(!scrapbook){
+			alert("<?=t("Please choose a scrapbook.") ?>");
+			return false;
+		}
 		$.ajax({
  		type: 'POST',
  		url: CCM_TOOLS_PATH+"/pile_manager.php",
- 		data: 'cID=<?=intval($_REQUEST['cID'])?>&bID=<?=intval($_REQUEST['bID'])?>&arHandle=<?=urlencode($_REQUEST['arHandle'])?>&btask=add&scrapbookName='+scrapbook,
+ 		data: 'cID=<?=intval($_REQUEST['cID'])?>&bID=<?=intval($_REQUEST['bID'])?>&arHandle=<?=urlencode($_REQUEST['arHandle'])?>&btask=add&scrapbookName='+scrapbook+'&blockAddMode='+blockAddMode,
  		success: function(resp) { 
 			ccmSaveToScrapbookDialogTarget.html(resp);
 			ccmSaveToScrapbookDialogTarget.find('.ccm-dialog-close').click(function(){
-				jQuery.fn.dialog.closeTop(); 
+				jQuery.fn.dialog.closeTop();
+				window.location.reload(); 
 			})
  		}});		
 		return false;
 	}
 	</script>
+	
 	 
-	
-	
-	<br/> 
-	<select name="scrapbookName" onchange="ccmSaveToScrapbook(this)" style="margin:auto; display:block">
+	<select id="ccm-addToScrapbookName" name="scrapbookName" >
 		<option value=""><?=t('Choose a Scrapbook...')?></option>	
 		<option value="userScrapbook">
 			<?=ucfirst($u->getUserName()) ?><?=t("'s Scrapbook") ?> 
@@ -216,9 +236,16 @@ if( !$_REQUEST['scrapbookName'] && $_REQUEST['btask']=='add' ){
 				<?=$scrapBookAreaData['arHandle'] ?>
 			</option>
 		<? } ?>
-	</select> 	
+	</select> 
+	
+	<br/><br/>	
+	
+	<input name="blockAddMode" type="radio" value="duplicate" checked="checked" /> New copy to Scrapbook<br />
+	<input id="blockAddModeAliased" name="blockAddMode" type="radio" value="alias" /> Alias original to Scrapbook
 
 	<br/><br/> 
+	
+	<div class="sillyIE7"><?= $ih->button_js( t('Add Block to Scrapbook'), 'ccmSaveToScrapbook()','left'); ?></div>
 	
 <? }else{ ?>
 	

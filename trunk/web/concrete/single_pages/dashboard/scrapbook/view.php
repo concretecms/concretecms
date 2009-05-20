@@ -158,7 +158,7 @@ var GlobalScrapbook = {
 						 &nbsp;|&nbsp; 
 						<a onclick="GlobalScrapbook.toggleScrapbookRename(<?=intval($availableScrapbook['arID']) ?>); return false;" href="#">Rename</a> &nbsp;|&nbsp; 
 						<a onclick="if(!confirm('<?=t('Are you sure you want to permantly delete this scrapbook?')?>')) return false;" 
-						   href="<?=View::url($cPath,'delete_scrapbook','?arID='.intval($availableScrapbook['arID']) ) ?>">Delete</a>
+						   href="<?=View::url($cPath,'delete_scrapbook','?arHandle='.urlencode($availableScrapbook['arHandle']) ) ?>">Delete</a>
 					<? } ?>
 				</td>
 			</tr> 
