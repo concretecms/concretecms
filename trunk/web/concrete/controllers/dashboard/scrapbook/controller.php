@@ -30,11 +30,12 @@ class DashboardScrapbookController extends Controller {
 		
 		$scrapbookName=$_REQUEST['scrapbookName'];
 		//get scrapbook name from referrer if a block has just been added or edited
-		if($_REQUEST['cID']==$c->getCollectionId() && $_REQUEST['mode']=='edit' && stristr($_SERVER['HTTP_REFERER'],'scrapbookName=')){
+		if($_REQUEST['cID']==$c->getCollectionId() && $_REQUEST['mode']=='edit' && !$scrapbookName && stristr($_SERVER['HTTP_REFERER'],'scrapbookName=')){
 			$startPos = strrpos($_SERVER['HTTP_REFERER'],'?')+1;
 			$qStr = substr($_SERVER['HTTP_REFERER'],$startPos); 
 			parse_str($qStr,$referrerVals);  
 			$scrapbookName=$referrerVals['scrapbookName'];
+			$this->redirect('/dashboard/scrapbook/?scrapbookName='.$scrapbookName);
 		}
 		
 		//test that the requested scrapbook name is a valid one
@@ -61,9 +62,11 @@ class DashboardScrapbookController extends Controller {
 	
 	public function delete_scrapbook(){
 		$db = Loader::db();
-		$c = $this->getCollectionObject(); 
-		$vals = array( intval($_REQUEST['arID']), intval($c->getCollectionId()) );
-		$db->query( 'DELETE FROM Areas WHERE arID=? AND cID=?', $vals);
+		$c = $this->getCollectionObject();
+		$vals = array( $_REQUEST['arHandle'], intval($c->getCollectionId()) );
+		$db->query( 'DELETE FROM Areas WHERE arHandle=? AND cID=?', $vals);
+		$vals = array( $arHandle, intval($c->getCollectionId()) );		
+		$db->query( 'DELETE FROM CollectionVersionBlocks WHERE arHandle=? AND cID=?', $vals);	
 		Cache::flush(); 
 		$this->redirect('/dashboard/scrapbook/');		
 	} 

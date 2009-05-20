@@ -155,8 +155,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if ($c) {
 				$db = Loader::db();
 				$cID = $c->getCollectionID();
-				$cvID = $c->getVersionID();
-				$q = "select cvb.bID from CollectionVersionBlocks cvb inner join CollectionVersions cv on cvb.cID = cv.cID and cvb.cvID = cv.cvID where cvb.bID = '{$this->bID}' and cvb.cID='{$cID}' and cvb.cvID = '{$cvID}' and isOriginal = 0 order by cvb.cvID desc limit 1";
+				$q = "select bID from CollectionVersionBlocks where bID = '{$this->bID}' and cID='{$cID}' and isOriginal = 0";
 				$r = $db->query($q);
 				if ($r) {
 					return ($r->numRows() > 0);
@@ -168,8 +167,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		public function isGlobal(){
 			$db = Loader::db();
+			
+			$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
+			$globalScrapbookC = $scrapbookHelper->getGlobalScrapbookPage(); 
 			$q = "SELECT b.bID FROM Blocks AS b, CollectionVersionBlocks AS cvb ".
-				 "WHERE b.bID = '{$this->bID}' AND cvb.bID=b.bID and cvb.arHandle='Global Scrapbook' LIMIT 1";
+				 "WHERE b.bID = '{$this->bID}' AND cvb.bID=b.bID AND cvb.cID=".intval($globalScrapbookC->getCollectionId())." LIMIT 1";
+				 
 			$r = $db->query($q);
 			if ($r) {
 				return ($r->numRows() > 0)?1:0;

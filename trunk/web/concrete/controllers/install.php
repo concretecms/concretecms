@@ -338,8 +338,8 @@ class InstallController extends Controller {
 						$d4d = SinglePage::add('/dashboard/users/attributes');
 						$d4e = SinglePage::add('/dashboard/users/registration');
 						$d5 = SinglePage::add('/dashboard/scrapbook');
-						$d5a = SinglePage::add('/dashboard/scrapbook/user');
-						$d5b = SinglePage::add('/dashboard/scrapbook/global');
+						//$d5a = SinglePage::add('/dashboard/scrapbook/user');
+						//$d5b = SinglePage::add('/dashboard/scrapbook/global');
 						
 						$d7 = SinglePage::add('/dashboard/pages');
 						$d71 = SinglePage::add('/dashboard/pages/themes');
