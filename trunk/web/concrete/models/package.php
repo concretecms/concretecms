@@ -177,10 +177,10 @@ class Package extends Object {
 	 */
 	public function getPackageItems() {
 		$items = array();
+		Loader::model('single_page');
 		$items = array_merge(BlockTypeList::getByPackage($this), $items);
-		$items = array_merge(PageTheme::getByPackage($this), $items);
-
-		// TODO ! Single Pages
+		$items = array_merge(PageTheme::getListByPackage($this), $items);
+		$items = array_merge(SinglePage::getListByPackage($this), $items);
 		
 		return $items;
 	}
@@ -192,6 +192,7 @@ class Package extends Object {
 		$db = Loader::db();		
 		
 		$items = $this->getPackageItems();
+
 		foreach($items as $item) {
 			switch(get_class($item)) {
 				case 'BlockType':
@@ -199,6 +200,9 @@ class Package extends Object {
 					break;
 				case 'PageTheme':
 					$item->uninstall();	
+					break;
+				case 'SinglePage':
+					@$item->delete(); // we suppress errors because sometimes the wrapper pages can delete first.
 					break;
 			}
 		}
