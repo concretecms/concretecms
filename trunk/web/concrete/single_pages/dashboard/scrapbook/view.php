@@ -121,8 +121,7 @@ var GlobalScrapbook = {
 			<tr>
 				<td>  
 					<a href="<?=View::url($cPath,'view','?scrapbookName=userScrapbook' ) ?>">
-					<?=ucfirst($u->getUserName()) ?><?=t("'s") ?>
-					Scrapbook 
+					<?=ucfirst($u->getUserName()) ?><?=t("'s Scrapbook") ?>
 					</a>
 				</td>
 				<td class="options">

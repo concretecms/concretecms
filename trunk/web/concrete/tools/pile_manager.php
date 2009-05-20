@@ -1,20 +1,26 @@
 <?
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
+
+
 $u = new User();
+$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
+
 if (!$u->isRegistered()) {
 	die(_("Access Denied."));
 }
 Loader::model('pile');
 $p = false;
 
-if ($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') {
+if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $_REQUEST['scrapbookName']) {
+
 	// add a block to a pile
 	$c = Page::getByID($_REQUEST['cID']);
 	$cp = new Permissions($c);
 	if (!$cp->canRead()) {
 		exit;
 	}
+	
 	if ($_REQUEST['btask'] == 'add') {
 		$a = Area::get($c, $_REQUEST['arHandle']);
 		$b = Block::getByID($_REQUEST['bID'], $c, $a);
@@ -25,20 +31,30 @@ if ($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') {
 		$obj = &$b;
 	} else {
 		$obj = &$c;
-	}
+	}	
+
+	if($_REQUEST['scrapbookName']!='userScrapbook'){
 	
-	if ($_REQUEST['pID']) {
-		$p = Pile::get($_REQUEST['pID']);
-		if (is_object($p)) {
-			if (!$p->isMyPile()) {
-				unset($p);
+		$globalScrapbookPage=$scrapbookHelper::getGlobalScrapbookPage();
+		
+	
+	}else{	
+	
+		if ($_REQUEST['pID']) {
+			$p = Pile::get($_REQUEST['pID']);
+			if (is_object($p)) {
+				if (!$p->isMyPile()) {
+					unset($p);
+				}
 			}
 		}
+		if (!is_object($p)) {
+			$p = Pile::getDefault();
+		}
+		$p->add($obj);
+		
 	}
-	if (!is_object($p)) {
-		$p = Pile::getDefault();
-	}
-	$p->add($obj);
+	
 	$added = true;
 	
 } else {
@@ -158,12 +174,61 @@ if ($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') {
 	
 }
 
-$sp = Pile::getDefault();
 
-?>
+if( !$_REQUEST['scrapbookName'] && $_REQUEST['btask']=='add' ){
+	
+	$sp = Pile::getDefault();
+	$scrapBookAreasData = $scrapbookHelper->getAvailableScrapbooks(); 
+	?>
+	
+	<script>
+	if(!ccmSaveToScrapbookDialogTarget)
+		var ccmSaveToScrapbookDialogTarget=null;
+		
+	ccmSaveToScrapbook = function(sel){  
+		ccmSaveToScrapbookDialogTarget = $(sel).closest('.ccm-dialog-content');
+		var scrapbook=$(sel).val(); 
+		if(!scrapbook) return false;
+		$.ajax({
+ 		type: 'POST',
+ 		url: CCM_TOOLS_PATH+"/pile_manager.php",
+ 		data: 'cID=<?=intval($_REQUEST['cID'])?>&bID=<?=intval($_REQUEST['bID'])?>&arHandle=<?=urlencode($_REQUEST['arHandle'])?>&btask=add&scrapbookName='+scrapbook,
+ 		success: function(resp) { 
+			ccmSaveToScrapbookDialogTarget.html(resp);
+			ccmSaveToScrapbookDialogTarget.find('.ccm-dialog-close').click(function(){
+				jQuery.fn.dialog.closeTop(); 
+			})
+ 		}});		
+		return false;
+	}
+	</script>
+	 
+	
+	
+	<br/> 
+	<select name="scrapbookName" onchange="ccmSaveToScrapbook(this)" style="margin:auto; display:block">
+		<option value=""><?=t('Choose a Scrapbook...')?></option>	
+		<option value="userScrapbook">
+			<?=ucfirst($u->getUserName()) ?><?=t("'s Scrapbook") ?> 
+		</option>
+		<? foreach($scrapBookAreasData as $scrapBookAreaData){ ?>
+			<option value="<?=addslashes($scrapBookAreaData['arHandle'])?>">
+				<?=$scrapBookAreaData['arHandle'] ?>
+			</option>
+		<? } ?>
+	</select> 	
 
-<?=t('Block added to scrapbook.')?>
-
-<br/><br/>
-
-<a href="javascript:void(0)" class="ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Close Window')?></em></span></a>
+	<br/><br/> 
+	
+<? }else{ ?>
+	
+	
+	<br/> 
+	
+	<?=t('Block added to scrapbook.')?>
+	
+	<br/><br/>
+	
+	<a href="javascript:void(0)" class="ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Close Window')?></em></span></a>
+	
+<? } ?>
