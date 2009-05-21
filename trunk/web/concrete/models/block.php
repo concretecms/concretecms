@@ -386,6 +386,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 			$db = Loader::db();
 			$dh = Loader::helper('date');
+			
+			$bt = BlockType::getByID($this->getBlockTypeID());
+			$blockTypeClass = $bt->getBlockTypeClass();
+			$bc = new $blockTypeClass($this);
+			if(!$bc) return false;
+						
 			$bDate = $dh->getLocalDateTime();
 			$v = array($this->bName, $bDate, $bDate, $this->bFilename, $this->btID, $this->uID);
 			$q = "insert into Blocks (bName, bDateAdded, bDateModified, bFilename, btID, uID) values (?, ?, ?, ?, ?, ?)";
@@ -394,7 +400,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$newBID = $db->Insert_ID(); // this is the latest inserted block ID
 
 			// now, we duplicate the block-specific permissions
-
 			$oc = $this->getBlockCollectionObject();
 			$ocID = $oc->getCollectionID();
 			$ovID = $oc->getVersionID();
@@ -412,11 +417,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$r->free();
 			}
 
-			// we duplicate block-specific sub-content
-			$bt = BlockType::getByID($this->getBlockTypeID());
-			$class = $bt->getBlockTypeClass();
-
-			$bc = new $class($this);
+			// we duplicate block-specific sub-content 
 			$bc->duplicate($newBID);
 
 			// finally, we insert into the CollectionVersionBlocks table
