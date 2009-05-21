@@ -49,12 +49,18 @@ class FormPageSelectorHelper {
 		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedCID . '">';
 		$html .= '</div>'; 
 		$html .= '<script type="text/javascript"> 
-		ccm_selectSitemapNode = function(cID, cName) {
+		ccm_selectSitemapNode = function(cID, cName) { ';
+		if($javascriptFunc=='' || $javascriptFunc=='ccm_selectSitemapNode'){
+			$html .= '
 			var par = $(ccmActivePageField).parent().find(\'.ccm-summary-selected-page-label\');
 			var pari = $(ccmActivePageField).parent().find(\'[name=' . $fieldName . ']\');
 			par.html(cName);
 			pari.val(cID);
-		}</script>';
+			';
+		}else{
+			$html .= $javascriptFunc."(cID, cName); \n";
+		}
+		$html .= "} \r\n </script>";
 		return $html;
 	}
 	
