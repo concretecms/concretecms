@@ -25,7 +25,7 @@ $pagination = $fileList->getPagination();
 			<td valign="top">	
 				<div id="ccm-file-search-advanced-results-wrapper">
 				
-					<? Loader::element('files/upload_single'); ?>
+					<? Loader::element('files/upload_single', array('fileSelector' => true)); ?>
 					
 					<div id="ccm-file-search-results">
 					
