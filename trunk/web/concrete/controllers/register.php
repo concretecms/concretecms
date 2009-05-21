@@ -47,6 +47,11 @@ class RegisterController extends Controller {
 			$e->add($ip->getErrorMessage());
 		}		
 		
+		$captcha = Loader::helper('validation/captcha');
+	   if (!$captcha->check()) {
+	      $e->add(t("Incorrect image validation code. Please check the image and re-enter the letters or numbers as necessary."));
+	     }
+	
 		if (!$vals->email($_POST['uEmail'])) {
 			$e->add(t('Invalid email address provided.'));
 		} else if (!$valc->isUniqueEmail($_POST['uEmail'])) {

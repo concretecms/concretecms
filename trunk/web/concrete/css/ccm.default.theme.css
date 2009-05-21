@@ -20,7 +20,7 @@ div.ccm-form {width: 300px; margin: 0px auto 0px auto}
 
 div.ccm-form label {font-size: 14px; color: #333}
 div.ccm-form-sub {color: #888; font-size: 12px}
-div.ccm-form input.ccm-input-text, div.ccm-form input.uak-text, div.ccm-form input.ccm-input-password {width: 300px; font-size: 18px; color: #444; padding: 4px}
+div.ccm-form input.ccm-input-text, div.ccm-form input.uak-text, div.ccm-form input.ccm-input-password, div.ccm-form input.ccm-input-captcha {width: 300px; font-size: 18px; color: #444; padding: 4px}
 div.ccm-form input.ccm-input-openid {background: #fff url(../images/icons/openid.gif) no-repeat scroll 2px 6px; width: 284px; font-size: 18px; color: #444; padding: 4px 4px 4px 20px}
 
 input.ccm-input-submit {font-size: 18px;}
