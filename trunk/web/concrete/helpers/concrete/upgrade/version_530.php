@@ -36,6 +36,21 @@ class ConcreteUpgradeVersion530Helper {
 			$d4 = SinglePage::add('/dashboard/users/registration');
 		}
 		
+		// Move any global blocks to new scrapbook page.
+		$sc = Page::getByPath("/dashboard/scrapbook/global");
+		$scn = Page::getByPath('/dashboard/scrapbook');
+		$scu = Page::getByPath('/dashboard/scrapbook/user');
+		if (!$sc->isError()) {
+			$blocks = $sc->getBlocks("Global Scrapbook");
+			foreach($blocks as $_b) {
+				// we move them into the area on the new page
+				$_b->duplicate($scn);
+			}
+			$sc->delete();
+		}
+		if (!$scu->isError()) {
+			$scu->delete();
+		}
 		//add the new collection attribute keys
 		$cak=CollectionAttributeKey::getByHandle('header_extra_content');
 		if( !intval($cak->getAttributeKeyID()) )

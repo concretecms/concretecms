@@ -20,6 +20,9 @@ $h = Loader::helper('concrete/interface'); ?>
 
 <? } else if ($this->controller->getTask() == 'set_developer' || $this->controller->getTask() == 'refresh_database_schema') { ?>
 
+<div id="ccm-module-wrapper">
+<div style="width: 778px">
+
 <div id="ccm-module-row1">
 <div class="ccm-module">
 
@@ -157,6 +160,8 @@ $h = Loader::helper('concrete/interface'); ?>
 
 <? } ?>
 
+</div>
+</div>
 </div>
 </div>
 

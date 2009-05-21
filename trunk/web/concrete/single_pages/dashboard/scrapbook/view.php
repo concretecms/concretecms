@@ -57,7 +57,7 @@ var GlobalScrapbook = {
 		var editBlockURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED ?>/edit_block_popup';
 		$.fn.dialog.open({
 			title: ccmi18n.editBlock,
-			href: editBlockURL+'?cID='+CCM_CID+'&bID='+bID+'&arHandle='+encodeURIComponent("<?=$scrapbookName?>")+'&btask=edit#_edit'+bID,
+			href: editBlockURL+'?cID='+CCM_CID+'&bID='+bID+'&arHandle=<?=urlencode($scrapbookName)?>&btask=edit#_edit'+bID,
 			width: w,
 			modal: false,
 			height: h
@@ -67,7 +67,7 @@ var GlobalScrapbook = {
 		var editBlockURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED ?>/edit_block_popup';
 		$.fn.dialog.open({
 			title: ccmi18n.changeBlockTemplate,
-			href: editBlockURL+'?cID='+CCM_CID+'&bID='+bID+'&arHandle='+encodeURIComponent("<?=$scrapbookName?>")+'&btask=template#_edit'+bID,
+			href: editBlockURL+'?cID='+CCM_CID+'&bID='+bID+'&arHandle=<?=urlencode($scrapbookName)?>&btask=template#_edit'+bID,
 			width: 300,
 			modal: false,
 			height: 100
@@ -109,19 +109,19 @@ var GlobalScrapbook = {
 	
 	<div class="ccm-dashboard-inner"> 
 		 
-		<table id="availableScrapbooks" class="grid-list" >
+		<table id="availableScrapbooks" border="0" cellspacing="1" class="grid-list" >
 			<tr>
-				<td class="subheader">
-					Scrapbook Name
+				<td class="header">
+					<?=t('Scrapbook Name')?>
 				</td>
-				<td class="subheader">
-					Options
+				<td class="header">
+					<?=t('Options')?>
 				</td>
 			</tr>		
 			<tr>
 				<td>  
 					<a href="<?=View::url($cPath,'view','?scrapbookName=userScrapbook' ) ?>">
-					<?=ucfirst($u->getUserName()) ?><?=t("'s Scrapbook") ?>
+					<?=t("%s's Scrapbook", ucfirst($u->getUserName())) ?>
 					</a>
 				</td>
 				<td class="options">
@@ -153,33 +153,41 @@ var GlobalScrapbook = {
 					</div>					
 				</td>
 				<td class="options">
-					<a href="<?=View::url($cPath,'view','?scrapbookName='.urlencode($availableScrapbook['arHandle']) ) ?>">View</a>
+					<a href="<?=View::url($cPath,'view','?scrapbookName='.urlencode($availableScrapbook['arHandle']) ) ?>"><?=t('View')?></a>
 					<? if( $availableScrapbook['arHandle'] != t('Global Scrapbook') ){ ?>
 						 &nbsp;|&nbsp; 
-						<a onclick="GlobalScrapbook.toggleScrapbookRename(<?=intval($availableScrapbook['arID']) ?>); return false;" href="#">Rename</a> &nbsp;|&nbsp; 
+						<a onclick="GlobalScrapbook.toggleScrapbookRename(<?=intval($availableScrapbook['arID']) ?>); return false;" href="#"><?=t('Rename')?></a> &nbsp;|&nbsp; 
 						<a onclick="if(!confirm('<?=t('Are you sure you want to permantly delete this scrapbook?')?>')) return false;" 
-						   href="<?=View::url($cPath,'delete_scrapbook','?arHandle='.urlencode($availableScrapbook['arHandle']) ) ?>">Delete</a>
+						   href="<?=View::url($cPath,'delete_scrapbook','?arHandle='.urlencode($availableScrapbook['arHandle']) ) ?>"><?=t('Delete')?></a>
 					<? } ?>
 				</td>
 			</tr> 
-			<? } ?>
+			<? } 
+			
+			$form = Loader::helper('form'); ?>
+			
+			<tr>
+				<td colspan="2" class="subheader"><?=t('Add a Global Scrapbook')?></td>
+			</tr>
+			<tr>
+			<td colspan="2">
+			<form id="addScrapbookForm" method="post" action="<?=View::url($cPath,'addScrapbook') ?>">
+			<table border="0" cellspacing="0" cellpadding="0">
+			<tr>
+			<td><?=$form->label('scrapbookName', t('Scrapbook Name'))?><br/>
+			<input name="scrapbookName" id="scrapbookName" class="ccm-input-text" type="text" value="" size="30"  />
+			</td>
+			<td valign="bottom">
+			<?= $ih->button_js( t('Add'), 'GlobalScrapbook.submitAddScrapbookForm()','left'); ?>
+			</td>
+			</tr>
+			</table>
+			
+			</form>
+			</td>
+		</tr>
 		</table>
 		
-		<form id="addScrapbookForm" method="post" action="<?=View::url($cPath,'addScrapbook') ?>">
-			<div id="fieldsWrap"> 
-				<? $defaultNewScrapbookName = t("Type your scrapbook name"); ?>
-				<div style="float:left; padding:8px 12px 0px 0px">
-				<input name="scrapbookName" type="text" value="<?=$defaultNewScrapbookName?>" size="30" class="faint" 
-				  onfocus="GlobalScrapbook.clrInitTxt(this,'<?=$defaultNewScrapbookName?>','faint',0)" 
-				  onblur="GlobalScrapbook.clrInitTxt(this,'<?=$defaultNewScrapbookName?>','faint',1)" />
-				</div>
-				<?= $ih->button_js( t('Add'), 'GlobalScrapbook.submitAddScrapbookForm()','left'); ?>
-				<?= $ih->button_js( t('Cancel'), 'GlobalScrapbook.toggleAddScrapbook()','left'); ?>
-			</div>
-			<div id="enableButton" class="sillyIE7">
-				<?= $ih->button_js( t('Add New Scrapbook'), 'GlobalScrapbook.toggleAddScrapbook()','left'); ?>
-			</div>
-		</form> 
 		
 		<div class="ccm-spacer"></div>			
 		
