@@ -429,6 +429,11 @@ ccm_alSetupCheckboxes = function() {
 		ccm_alRescanMultiFileMenu();
 	});
 	
+	// if we're not in the dashboard, add to the multiple operations select menu
+	if (ccm_alLaunchType != 'DASHBOARD') {
+		var chooseText = ccmi18n_filemanager.select;
+		$("#ccm-file-list-multiple-operations option:eq(0)").after("<option value=\"choose\">" + chooseText + "</option>");
+	}
 	$("#ccm-file-list-multiple-operations").change(function() {
 		var action = $(this).val();
 		var fIDstring = ccm_alGetSelectedFileIDs();
@@ -642,12 +647,13 @@ ccm_alResetSingle = function () {
 	$('.ccm-al-upload-single-submit').show();
 }
 
-ccm_alRefresh = function(highlightFIDs) {
+ccm_alRefresh = function(highlightFIDs, fileSelector) {
 	var ids = highlightFIDs;
 	ccm_deactivateSearchResults();
 	$("#ccm-file-search-results").load(CCM_TOOLS_PATH + '/files/search_results', {
 		'ccm_order_by': 'fvDateAdded',
-		'ccm_order_dir': 'desc'
+		'ccm_order_dir': 'desc', 
+		'fileSelector': fileSelector
 	}, function() {
 		ccm_activateSearchResults();
 		ccm_alResetSingle();
