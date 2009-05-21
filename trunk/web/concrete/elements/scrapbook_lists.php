@@ -46,7 +46,9 @@ if($scrapbookName && $scrapbookName!='userScrapbook'){
 	$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
 	$globalScrapbookC = $scrapbookHelper->getGlobalScrapbookPage(); 
 	$globalScrapbookBlocks = $globalScrapbookArea->getAreaBlocksArray( $globalScrapbookC ); 
-	if( count($globalScrapbookBlocks) ){ ?> 
+	if( !count($globalScrapbookBlocks) ){ ?> 
+		<div style="padding:16px 0px;"><?=t('No blocks have been added to this scrapbook.')?></div>	
+	<? }else{ ?>
 		<div id="ccm-scrapbook-list">
 		<? foreach($globalScrapbookBlocks as $b){ 
 			$bt = BlockType::getByID( $b->getBlockTypeID() ); 

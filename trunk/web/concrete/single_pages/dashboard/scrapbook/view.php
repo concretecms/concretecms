@@ -74,7 +74,7 @@ var GlobalScrapbook = {
 		});		
 	},
 	confirmDelete:function(){
-		if(!confirm("<?=t('Are you sure you want to delete this block?') ?>")) return false;
+		if(!confirm("<?=t('Are you sure you want to delete this block?').'\n'.t('(All page instances will also be removed)') ?>")) return false;
 		return true;
 	},
 	toggleRename:function(bID){
