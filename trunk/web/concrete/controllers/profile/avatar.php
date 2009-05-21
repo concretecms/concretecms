@@ -6,7 +6,9 @@ class ProfileAvatarController extends ProfileEditController {
 	
 	public function __construct(){
 		parent::__construct();
+		$html = Loader::helper('html');
 		$this->set('av', Loader::helper('concrete/avatar'));
+		$this->addHeaderItem($html->javascript('swfobject.js'));
 	}
 
 	
