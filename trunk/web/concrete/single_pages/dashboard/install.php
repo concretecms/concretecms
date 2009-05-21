@@ -192,7 +192,12 @@ if (is_object($pkg)) { ?>
 	</div>
 			
 <? } else { ?>
-
+	
+	<!--[if IE 7]>
+	<style type="text/css">
+	td.ccm-addon-list-description {width: 161px !important}
+	</style>
+	<![endif]-->
 	<div style="width: 720px">
 	<div class="ccm-module" style="width: 350px; margin-bottom: 20px">
 
@@ -266,16 +271,17 @@ if (is_object($pkg)) { ?>
 		<?=t('You can safely and easily extend your website without touching a line of code. Connect to the <a href="%s" target="_blank">concrete5.org marketplace</a>, and you can automatically install your themes and add-ons right here!', MARKETPLACE_URL_LANDING)?>
 		</p>
 				
-		<hr />		
+		<div class="ccm-addon-marketplace-account">
 
 		<? if (!UserInfo::isRemotelyLoggedIn()) { ?> 
-			<p><a href="#" onclick="ccmPopupLogin.show('', loginSuccess, '', 1)">Sign in or create an account.</a></p>			
+			<a href="#" onclick="ccmPopupLogin.show('', loginSuccess, '', 1)">Sign in or create an account.</a>
 		<? } else { ?> 
-			<p><?=t('You have connected this website to the concrete5 marketplace as  ');?>
+			<?=t('You have connected this website to the concrete5 marketplace as  ');?>
           	  <a href="<?=CONCRETE5_ORG_URL ?>/profile/-/<?=UserInfo::getRemoteAuthUserId() ?>/" target="_blank" ><?=UserInfo::getRemoteAuthUserName() ?></a>
-			  <?=t('(Not your account? <a href="#" onclick="ccm_support.signOut(logoutSuccess)">Sign Out</a>)')?></p>
+			  <?=t('(Not your account? <a href="#" onclick="ccm_support.signOut(logoutSuccess)">Sign Out</a>)')?>
 		<? } ?>
-		<hr />
+		
+		</div>
 		
 		<? } ?>
 		
