@@ -18,13 +18,13 @@ class DashboardScrapbookController extends Controller {
 		$cPath=$c->getCollectionPath();
 		//echo $c->getCollectionId();
 		
-		//make sure global scrapbook exists
-		$a = Area::get($c, t('Global Scrapbook'));
+		/*
+		$a = Area::get($c, t('Shared Scrapbook 1'));
 		if (!is_object($a)) {
-			$a = Area::getOrCreate($c, t('Global Scrapbook'));
+			$a = Area::getOrCreate($c, t('Shared Scrapbook 1'));
 		}		
-		
-		//get available block areas		
+		*/
+		//get available block areas	
 		$availableScrapbooks = $scrapbookHelper->getAvailableScrapbooks();		
 		$this->set('availableScrapbooks', $availableScrapbooks);
 		
@@ -55,7 +55,6 @@ class DashboardScrapbookController extends Controller {
 			$this->set('globalScrapbookArea', $globalScrapbookArea);
 			$this->set('globalScrapbookBlocks', $globalScrapbookBlocks);			
 		}
-		
 		$this->set('availableScrapbooks', $availableScrapbooks);
 		$this->set('cPath', $cPath); 
 	}
@@ -63,9 +62,8 @@ class DashboardScrapbookController extends Controller {
 	public function delete_scrapbook(){
 		$db = Loader::db();
 		$c = $this->getCollectionObject();
-		$vals = array( $_REQUEST['arHandle'], intval($c->getCollectionId()) );
+		$vals = array( $_REQUEST['arHandle'], intval($c->getCollectionID()) );
 		$db->query( 'DELETE FROM Areas WHERE arHandle=? AND cID=?', $vals);
-		$vals = array( $arHandle, intval($c->getCollectionId()) );		
 		$db->query( 'DELETE FROM CollectionVersionBlocks WHERE arHandle=? AND cID=?', $vals);	
 		Cache::flush(); 
 		$this->redirect('/dashboard/scrapbook/');		

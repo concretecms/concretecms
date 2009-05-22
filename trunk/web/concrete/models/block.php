@@ -379,7 +379,20 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				}
 			}
 		}
+		
+		/** 
+		 * Moves a block onto a new page and into a new area. Does not change any data about the block otherwise
+		 */
+		function move($nc, $area) {
+			$db = Loader::db();
+			$cID = $this->getBlockCollectionID();
 
+			$newBlockDisplayOrder = $nc->getCollectionAreaDisplayOrder($area->getAreaHandle());
+			
+			$v = array($nc->getCollectionID(), $area->getAreaHandle(), $newBlockDisplayOrder, $cID, $this->arHandle);
+			$db->Execute('update CollectionVersionBlocks set cID = ?, arHandle = ?, cbDisplayOrder = ? where cID = ? and arHandle = ?', $v);
+		}
+		
 		function duplicate($nc) {
 			// duplicate takes a new collection as its argument, and duplicates the existing block
 			// to that collection

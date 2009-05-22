@@ -42,9 +42,13 @@ class ConcreteUpgradeVersion530Helper {
 		$scu = Page::getByPath('/dashboard/scrapbook/user');
 		if (!$sc->isError()) {
 			$blocks = $sc->getBlocks("Global Scrapbook");
-			foreach($blocks as $_b) {
-				// we move them into the area on the new page
-				$_b->duplicate($scn);
+			if (count($blocks) > 0) {
+				// we create the new shared scrapbook 1
+				$a = Area::getOrCreate($scn, t('Shared Scrapbook 1'));
+				foreach($blocks as $_b) {
+					// we move them into the area on the new page. 
+					$_b->move($scn, $a);					
+				}
 			}
 			$sc->delete();
 		}
