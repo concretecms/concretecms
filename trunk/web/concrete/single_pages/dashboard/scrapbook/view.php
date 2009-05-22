@@ -121,7 +121,7 @@ var GlobalScrapbook = {
 			<tr>
 				<td>  
 					<a href="<?=View::url($cPath,'view','?scrapbookName=userScrapbook' ) ?>">
-					<?=t("%s's Scrapbook", ucfirst($u->getUserName())) ?>
+					<?=t("%s's Personal Scrapbook", $u->getUserName()) ?>
 					</a>
 				</td>
 				<td class="options">
@@ -131,15 +131,13 @@ var GlobalScrapbook = {
 			<? if(is_array($availableScrapbooks)) 
 				foreach($availableScrapbooks as $availableScrapbook){ ?>
 			<tr>
-				<td>					
+				<td>		
 					<div id="ccm-scrapbookNameWrap<?=$availableScrapbook['arID'] ?>" class="ccm-scrapbookNameWrap">
 						<div class="view">
 							<a href="<?=View::url($cPath,'view','?scrapbookName='.urlencode($availableScrapbook['arHandle']) ) ?>" >
 								<?=$availableScrapbook['arHandle'] ?>
 							</a>&nbsp;
 						</div>
-						
-						<? if($availableScrapbook['arHandle'] != t('Global Scrapbook')){ ?> 
 						<div class="edit">
 							<form method="post" action="<?=$this->url($cPath, 'rename_scrapbook' )?>">
 								<input name="arID" type="hidden" value="<?=intval($availableScrapbook['arID']) ?>" /> 
@@ -149,17 +147,13 @@ var GlobalScrapbook = {
 								&nbsp;
 							</form>
 						</div>
-						<? } ?>	
 					</div>					
 				</td>
 				<td class="options">
-					<a href="<?=View::url($cPath,'view','?scrapbookName='.urlencode($availableScrapbook['arHandle']) ) ?>"><?=t('View')?></a>
-					<? if( $availableScrapbook['arHandle'] != t('Global Scrapbook') ){ ?>
-						 &nbsp;|&nbsp; 
+					<a href="<?=View::url($cPath,'view','?scrapbookName='.urlencode($availableScrapbook['arHandle']) ) ?>"><?=t('View')?></a> &nbsp;|&nbsp; 
 						<a onclick="GlobalScrapbook.toggleScrapbookRename(<?=intval($availableScrapbook['arID']) ?>); return false;" href="#"><?=t('Rename')?></a> &nbsp;|&nbsp; 
 						<a onclick="if(!confirm('<?=t('Are you sure you want to permantly delete this scrapbook?')?>')) return false;" 
 						   href="<?=View::url($cPath,'delete_scrapbook','?arHandle='.urlencode($availableScrapbook['arHandle']) ) ?>"><?=t('Delete')?></a>
-					<? } ?>
 				</td>
 			</tr> 
 			<? } 
@@ -201,6 +195,8 @@ var GlobalScrapbook = {
 	
 	<div class="ccm-dashboard-inner">	
 	
+			<a style="float: right" href="<?=View::url($cPath) ?>"><?= t("&laquo; Return to Scrapbook List") ?></a>		
+
 		<div id="ccm-scrapbook-list" class="user-scrapbook">
 		<?  
 		$sp = Pile::getDefault();
@@ -243,7 +239,6 @@ var GlobalScrapbook = {
 		}	?>
 		</div>
 		
-		<a href="<?=View::url($cPath) ?>"><?= t("&laquo; Return to Scrapbook List") ?></a>		
 	
 	</div>
 
@@ -252,6 +247,8 @@ var GlobalScrapbook = {
 	<h1><span><?=htmlentities($scrapbookName) ?></span></h1>
 	
 	<div class="ccm-dashboard-inner"> 
+
+		<a style="float: right" href="<?=View::url($cPath) ?>"><?= t("&laquo; Return to Scrapbook List") ?></a>		
 		
 		<div class="sillyIE7"><?= $ih->button_js( t('Add Block to Scrapbook'), 'GlobalScrapbook.addBlock(event)','left'); ?></div>
 		
@@ -312,7 +309,6 @@ var GlobalScrapbook = {
 			
 		</div> 	
 		
-		<a href="<?=View::url($cPath) ?>"><?= t("&laquo; Return to Scrapbook List") ?></a>
 	
 	</div>
 

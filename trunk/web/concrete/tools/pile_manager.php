@@ -12,8 +12,7 @@ if (!$u->isRegistered()) {
 Loader::model('pile');
 $p = false;
 $scrapbookName=$_REQUEST['scrapbookName'];
-if($scrapbookName) $_SESSION['ccmLastViewedScrapbook']=$scrapbookName;
-
+if($scrapbookName) $scrapbookHelper->setDefault($scrapbookName);
 $c = Page::getByID($_REQUEST['cID']);
 // add a block to a pile	
 $cp = new Permissions($c);
@@ -35,7 +34,7 @@ if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $scrapbookNa
 		$obj = &$c;
 	}	
 
-	if( $scrapbookName!='userScrapbook' && intval($b->bID) > 0 ){
+	if( $scrapbookName != $scrapbookHelper->getPersonalScrapbookName()  && intval($b->bID) > 0) {
 	
 		$globalScrapbookPage = $scrapbookHelper->getGlobalScrapbookPage();
 		$globalScrapbookArea = Area::get( $globalScrapbookPage, $scrapbookName );
@@ -219,9 +218,8 @@ if($_REQUEST['btask']=='add'){
 		$sp = Pile::getDefault();
 		$scrapBookAreasData = $scrapbookHelper->getAvailableScrapbooks(); 
 		$ih = Loader::helper('concrete/interface'); 
-		$defaultScrapbook=$_SESSION['ccmLastViewedScrapbook'];
-		?>
 		
+		$defaultScrapbook=$scrapbookHelper->getDefault(); ?>		
 		<script>
 		if(!ccmSaveToScrapbookDialogTarget)
 			var ccmSaveToScrapbookDialogTarget=null;
@@ -254,11 +252,11 @@ if($_REQUEST['btask']=='add'){
 		}
 		</script>
 		
-		 
-		<select id="ccm-addToScrapbookName" name="scrapbookName" onchange="ccmShowBlockAddModeRadios(this)" >
-			<option value=""><?=t('Choose a Scrapbook...')?></option>	
-			<option value="userScrapbook" <?=($defaultScrapbook=='userScrapbook')?'selected':''?>>
-				<?=ucfirst($u->getUserName()) ?><?=t("'s Scrapbook") ?> 
+		
+		<div>
+		<select id="ccm-addToScrapbookName" name="scrapbookName" onchange="ccmShowBlockAddModeRadios(this)" style="width: 205px">
+			<option value="userScrapbook" <?=($defaultScrapbook==$scrapbookHelper->getPersonalScrapbookName())?'selected':''?>>
+				<?=t("%s's Personal Scrapbook", $u->getUserName()) ?> 
 			</option>
 			<? foreach($scrapBookAreasData as $scrapBookAreaData){ ?>
 				<option value="<?=addslashes($scrapBookAreaData['arHandle'])?>" 
@@ -267,9 +265,9 @@ if($_REQUEST['btask']=='add'){
 				</option>
 			<? } ?>
 		</select> 
+		</div>
 		
-		<br/> 
-		<div id="ccm-blockAddModeWrap" style="display:<?=(!$defaultScrapbook && $defaultScrapbook!='userScrapbook')?'block':'none'?>">
+		<div id="ccm-blockAddModeWrap" style="display:<?=($defaultScrapbook!=$scrapbookHelper->getPersonalScrapbookName())?'block':'none'?>">
 			&nbsp;<br />
 			<input name="blockAddMode" type="radio" value="duplicate" checked="checked" /> New copy to Scrapbook<br />
 			<input id="blockAddModeAliased" name="blockAddMode" type="radio" value="alias" /> Alias original to Scrapbook
@@ -286,7 +284,9 @@ if($_REQUEST['btask']=='add'){
 		<?=t('Block added to scrapbook.')?>
 		
 		<br/><br/>
-		<?=t('Refreshing page...')?>
+		<div style="text-align: center">
+		<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_32.gif" width="32" height="32" />
+		</div>
 		
 		<? /*<a href="javascript:void(0)" class="ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Close Window')?></em></span></a>*/ ?>
 		

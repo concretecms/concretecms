@@ -12,6 +12,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class ConcreteScrapbookHelper {  
 
+	function getPersonalScrapbookName() {
+		return 'userScrapbook';
+	}
+
 	function getGlobalScrapbookPage(){
 		return Page::getByPath('/dashboard/scrapbook'); 
 	}
@@ -21,6 +25,25 @@ class ConcreteScrapbookHelper {
 		$scrapbookPage = ConcreteScrapbookHelper::getGlobalScrapbookPage(); 
 		return $db->getAll('SELECT arID, arHandle FROM Areas WHERE cID='.intval($scrapbookPage->getCollectionId()));
 	}
+
+	/** 
+	 * Returns the default scrapbook to add blocks to. This is typically the last one added to.
+	 */
+	public function getDefault() {
+		$sb = $_SESSION['ccmLastViewedScrapbook'];
+		if ($sb == '') {
+			return $this->getPersonalScrapbookName();
+		}
+		return $sb;
+	}
+	
+	/** 
+	 * Sets the default scrapbook to add blocks to. This is typically the last one added to.
+	 */
+	public function setDefault($scrapbook) {
+		$_SESSION['ccmLastViewedScrapbook'] = $scrapbook;
+	}
+
 
 }
 

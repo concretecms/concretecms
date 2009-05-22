@@ -338,8 +338,6 @@ class InstallController extends Controller {
 						$d4d = SinglePage::add('/dashboard/users/attributes');
 						$d4e = SinglePage::add('/dashboard/users/registration');
 						$d5 = SinglePage::add('/dashboard/scrapbook');
-						//$d5a = SinglePage::add('/dashboard/scrapbook/user');
-						//$d5b = SinglePage::add('/dashboard/scrapbook/global');
 						
 						$d7 = SinglePage::add('/dashboard/pages');
 						$d71 = SinglePage::add('/dashboard/pages/themes');
@@ -377,8 +375,6 @@ class InstallController extends Controller {
 						$d4d->update(array('cName'=>t('User Attributes')));
 						$d4e->update(array('cName'=>t('User Registration')));
 						$d5->update(array('cName'=>t('Scrapbook'), 'cDescription'=>t('Share content across your site.')));	
-						$d5a->update(array('cName'=>t('User')));
-						$d5b->update(array('cName'=>t('Global')));
 						$d7->update(array('cName'=>t('Pages and Themes'), 'cDescription'=>t('Reskin your site.')));	
 						$d71->update(array('cName'=>t('Themes'), 'cDescription'=>t('Reskin your site.')));	
 						$d7e->update(array('cName'=>t('Page Types'), 'cDescription'=>t('What goes in your site.')));	
