@@ -56,8 +56,9 @@ class FileList extends DatabaseItemList {
 	/** 
 	 * Filters by files found in a certain set */
 	public function filterBySet($fs) {
-		$this->addToQuery("left join FileSetFiles fsf on fsf.fID = f.fID");
-		$this->filter('fsf.fsID', $fs->getFileSetID(), '=');
+		$tableAliasName='fsf'.intval($fs->getFileSetID());
+		$this->addToQuery("left join FileSetFiles {$tableAliasName} on {$tableAliasName}.fID = f.fID");
+		$this->filter("{$tableAliasName}.fsID", $fs->getFileSetID(), '=');
 	}
 	/** 
 	 * Filters the file list by file size (in kilobytes)
@@ -94,7 +95,7 @@ class FileList extends DatabaseItemList {
 	}
 	
 	protected function setBaseQuery() {
-		$this->setQuery('SELECT f.fID, u.uName as fvAuthorName
+		$this->setQuery('SELECT DISTINCT f.fID, u.uName as fvAuthorName
 		FROM Files f INNER JOIN FileVersions fv ON f.fID = fv.fID 
 		LEFT JOIN Users u on u.uID = fv.fvAuthorUID
 		');
