@@ -182,6 +182,9 @@ class Pile extends Object {
 		$pc = array();
 		$db = Loader::db();
 		switch($display) {
+			case 'display_order_date':
+				$order = 'displayOrder asc, timestamp desc';
+				break;		
 			case 'date_desc':
 				$order = 'timestamp desc';
 				break;

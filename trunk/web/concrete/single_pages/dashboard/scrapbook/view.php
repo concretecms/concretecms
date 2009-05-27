@@ -7,7 +7,8 @@ $u = new User();
 #ccm-scrapbook-list { margin-top:32px; margin-bottom:32px; } 
 #ccm-scrapbook-list .ccm-block-type{border:none 0px}
 #ccm-scrapbook-list .ccm-block-type .options { float:right; padding:8px }
-#ccm-scrapbook-list .ccm-block-type-inner{ border:1px solid #e1e1e1; background-color:#f6f6f6 }
+#ccm-scrapbook-list .ccm-block-type-inner{ border:1px solid #e1e1e1; background-color:#f6f6f6; padding-left:8px; }
+#ccm-scrapbook-list .ccm-block-type-inner .ccm-block-type-inner-icon {width:16px; height:16px; margin-right:8px; float:left; cursor:move}
 #ccm-scrapbook-list .ccm-scrapbook-list-item-detail{margin:8px 0px}
 #ccm-scrapbook-list .ccm-scrapbook-list-item{margin-bottom:16px; border:none;}
 
@@ -38,7 +39,24 @@ $u = new User();
 </style> 
 
 <script>
-var GlobalScrapbook = {   
+var GlobalScrapbook = { 
+	init:function(){
+		this.enableSorting();
+	},  
+	enableSorting:function(){ 
+		$("div#ccm-scrapbook-list").sortable({
+			handle: '.handle',
+			cursor: 'move',
+			opacity: 0.5,
+			stop: function() {
+				var idslist = $('#ccm-scrapbook-list').sortable('serialize'); 
+				idslist=idslist+'&arHandle=<?=($globalScrapbookArea) ? urlencode($globalScrapbookArea->getAreaHandle()) : '' ?>';
+				$.post('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/dashboard/scrapbook_services.php?mode=reorder', idslist, function(r) {
+					
+				});
+			}
+		});
+	},
 	addBlock:function(e){
 		<? if(!$globalScrapbookArea){ ?>
 		return false;
@@ -99,6 +117,7 @@ var GlobalScrapbook = {
 		$('#addScrapbookForm').submit();
 	}
 }
+$(function(){ GlobalScrapbook.init(); }); 
 </script>
 
 
@@ -195,12 +214,12 @@ var GlobalScrapbook = {
 	
 	<div class="ccm-dashboard-inner">	
 	
-			<a style="float: right" href="<?=View::url($cPath) ?>"><?= t("&laquo; Return to Scrapbook List") ?></a>		
+		<a style="float: right" href="<?=View::url($cPath) ?>"><?= t("&laquo; Return to Scrapbook List") ?></a>		
 
-		<div id="ccm-scrapbook-list" class="user-scrapbook">
+		<div id="ccm-scrapbook-list" class="user-scrapbook ui-sortable">
 		<?  
 		$sp = Pile::getDefault();
-		$contents = $sp->getPileContentObjects('date_desc');
+		$contents = $sp->getPileContentObjects('display_order_date');
 		if (count($contents) == 0) { 
 			print t('You have no items in your scrapbook.');
 		}
@@ -220,7 +239,16 @@ var GlobalScrapbook = {
 							<?=t('Delete') ?>
 						  </a>
 						</div> 
-						<a class="ccm-block-type-inner" style="background-image: url(<?=$btIcon?>)"><?=$bt->getBlockTypeName()?></a>
+						
+						<div class="ccm-block-type-inner">
+							<div class="ccm-block-type-inner-icon handle" style="background: url(<?=$btIcon?>) no-repeat center left;">
+							
+							</div>
+							<div class="view">
+								<a><?=$bt->getBlockTypeName()?></a>													
+							</div>							
+						</div>
+						
 						<div class="ccm-scrapbook-list-item-detail">	
 							<?	
 							try {
@@ -254,8 +282,7 @@ var GlobalScrapbook = {
 		
 		<div class="ccm-spacer"></div>	
 		
-		<div id="ccm-scrapbook-list"> 
-			
+		<div id="ccm-scrapbook-list" class="ui-sortable">			
 			<? 		 			
 			if( !count($globalScrapbookBlocks) ){
 				echo t('You have no items in this scrapbook.');
@@ -270,7 +297,7 @@ var GlobalScrapbook = {
 					$b->updateBlockName( $scrapbookName.' '.intval($b->bID) );
 				 }
 				 ?>
-				 <div class="ccm-scrapbook-list-item"> 
+				 <div class="ccm-scrapbook-list-item" id="ccm-scrapbook-list-item-<?=intval($b->bID)?>"> 
 					 <div class="ccm-block-type">  
 						<div class="options"> 
 							<a href="javascript:void(0)" onclick="GlobalScrapbook.toggleRename(<?=intval($b->bID) ?>)"><?=t('Rename')?></a>
@@ -281,9 +308,12 @@ var GlobalScrapbook = {
 							&nbsp;|&nbsp; 					 
 							<a href="<?= $this->url($c->getCollectionPath(),'deleteBlock','?scrapbookName='.urlencode($scrapbookName).'&bID='.intval($b->bID))?>" onclick="return GlobalScrapbook.confirmDelete()">
 								<?=t('Delete')?>
-							</a>
-						</div> 
-						<div id="ccm-block-type-inner<?=intval($b->bID)?>" class="ccm-block-type-inner" style="background-image: url(<?=$btIcon?>)" >
+							</a> 
+						</div>  
+						<div id="ccm-block-type-inner<?=intval($b->bID)?>" class="ccm-block-type-inner">
+							<div class="ccm-block-type-inner-icon handle" style="background: url(<?=$btIcon?>) no-repeat center left;">
+							
+							</div>
 							<div class="view">
 								<a onclick="GlobalScrapbook.toggleRename(<?=intval($b->bID) ?>)" >
 									<?=$bt->getBlockTypeName()?>: "<?=$b->getBlockName() ?>"
