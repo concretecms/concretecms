@@ -1,6 +1,8 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$step = ($_REQUEST['step']) ? "&step={$_REQUEST['step']}" : ""; ?>
+$step = ($_REQUEST['step']) ? "&step={$_REQUEST['step']}" : ""; 
+$closeWindowCID=(intval($rcID))?intval($rcID):$c->getCollectionID();
+?>
 
 <? global $c; ?>
 	
@@ -11,7 +13,7 @@ $step = ($_REQUEST['step']) ? "&step={$_REQUEST['step']}" : ""; ?>
 	<? } ?>
 	
 	<div class="ccm-buttons">
-	<a href="javascript:void(0)" <? if ($replaceOnUnload) { ?>onclick="location.href='<?=DIR_REL?>/index.php?cID=<?=$c->getCollectionID()?><?=$step?>'; return true" class="ccm-button-left cancel"<? } else { ?>class="ccm-button-left cancel" onclick="ccm_blockWindowClose()" <? } ?>><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
+	<a href="javascript:void(0)" <? if ($replaceOnUnload) { ?>onclick="location.href='<?=DIR_REL?>/index.php?cID=<?=$closeWindowCID ?><?=$step?>'; return true" class="ccm-button-left cancel"<? } else { ?>class="ccm-button-left cancel" onclick="ccm_blockWindowClose()" <? } ?>><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
 	<a href="javascript:clickedButton = true;$('#ccm-form-submit-button').get(0).click()" class="ccm-button-right accept"><span><em class="ccm-button-update"><?=t('Update')?></em></span></a>
 	</div>	
 

@@ -104,7 +104,7 @@
 			case 'update_groups':
 				$a = Area::get($c, $_GET['arHandle']);
 				if (is_object($a)) {
-					$b = Block::getByID($_GET['bID'], $c, $a);
+					$b = Block::getByID($_GET['bID'], $c, $a); 
 					$p = new Permissions($b);
 					// we're updating the groups for a particular block
 					if ($p->canAdminBlock()) {
@@ -116,7 +116,9 @@
 							$b->updateBlockGroups();
 						}
 						
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
+						$redirectCID = (intval($_REQUEST['rcID'])) ? intval($_REQUEST['rcID']) : intval($_REQUEST['cID']);
+					
+						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $redirectCID . '&mode=edit' . $step);
 						exit;
 					}
 				}
@@ -164,8 +166,11 @@
 
 					$data = $_POST;					
 					$b->updateBlockInformation($data);
+					$b->refreshCacheAll();
 					
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
+					$redirectCID = (intval($_REQUEST['rcID'])) ? intval($_REQUEST['rcID']) : intval($_REQUEST['cID']);
+					
+					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $redirectCID . '&mode=edit' . $step);
 					exit;
 				}
 				break;
@@ -318,6 +323,7 @@
 		// piles !
 		switch($_REQUEST['ptask']) {
 			case 'delete_content':
+				//personal scrapbook
 				if ($_REQUEST['pcID'] > 0) {
 					$pc = PileContent::get($_REQUEST['pcID']);
 					$p = $pc->getPile();
@@ -328,13 +334,28 @@
 						header('Location: ' . BASE_URL . $_GET['sbURL']);
 						exit;
 					}
+				//global scrapbooks
+				}elseif($_REQUEST['bID'] > 0 && $_REQUEST['arHandle']){
+					$bID=intval($_REQUEST['bID']);
+					$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
+					$globalScrapbookC = $scrapbookHelper->getGlobalScrapbookPage();					
+					$globalScrapbookA = Area::get( $globalScrapbookC, $_REQUEST['arHandle']);		
+					$block=Block::getById($bID,$globalScrapbookC,$globalScrapbookA); 					
+					if( $block ){  //&& $block->getAreaHandle()=='Global Scrapbook'
+						$bp = new Permissions($block);
+						if (!$bp->canWrite()) {
+							throw new Exception(t('Access to block denied'));
+						}else{					
+							$block->delete(1);
+						}
+					}
 				}
+				die; 
 				break;
 		}
 	}
 	
 	if ($_REQUEST['processBlock'] && $valt->validate()) {
-
 		
 		// some admin (or unscrupulous person) is doing something to a block of content on the site
 		$edit = ($_REQUEST['enterViewMode']) ? "" : "&mode=edit";
@@ -370,13 +391,13 @@
 					
 				}
 				
-				
-				
 				// we can update the block that we're submitting
 				$b->update($_POST);
 					
+				$redirectCID = (intval($_REQUEST['rcID'])) ? intval($_REQUEST['rcID']) : intval($_REQUEST['cID']);
+					
 				if (!$_SESSION['disableRedirect']) {
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_REQUEST['cID'] . $edit . $step);
+					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $redirectCID . $edit . $step);
 					exit;
 				}
 			}

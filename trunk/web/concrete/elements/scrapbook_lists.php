@@ -54,8 +54,9 @@ if($scrapbookName && $scrapbookName!='userScrapbook'){
 			$bt = BlockType::getByID( $b->getBlockTypeID() ); 
 			$btIcon = $ci->getBlockTypeIconURL($bt);
 			?>
-			<div class="ccm-scrapbook-list-item" id=""> 
+			<div class="ccm-scrapbook-list-item" id="ccm-scrapbook-list-item-<?=intval($b->bID) ?>"> 
 				<div class="ccm-block-type">
+					<a class="ccm-scrapbook-delete" title="Remove from Scrapbook" href="javascript:void(0)" arHandle="<?=addslashes($scrapbookName)?>" id="scrapbook-bID<?=intval($b->bID) ?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" width="16" height="16" /></a>				
 					<a class="ccm-block-type-inner" style="background-image: url(<?=$btIcon?>)" 
 					   href="<?=DIR_REL?>/index.php?globalBlock=1&bID=<?=$b->bID ?>&add=1&processBlock=1&cID=<?=$c->getCollectionID()?>&arHandle=<?=$a->getAreaHandle()?>&btask=alias_existing_block&<?=$token?>">
 							<?=$bt->getBlockTypeName()?>: "<?=$b->getBlockName() ?>"
