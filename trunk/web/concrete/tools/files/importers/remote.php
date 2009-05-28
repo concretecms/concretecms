@@ -24,7 +24,7 @@ Loader::library('3rdparty/Zend/Uri/Http');
 $file = Loader::helper('file');
 Loader::helper('mime');
 
-$errors = array();
+$error = array();
 
 // load all the incoming fields into an array
 $incoming_urls = array();
@@ -102,14 +102,7 @@ if (count($errors) < 1) {
 					$resp = FileImporter::E_FILE_INVALID_EXTENSION;
 				}
 				if (!($resp instanceof FileVersion)) {
-					switch($resp) {
-						case FileImporter::E_FILE_INVALID_EXTENSION:
-							$errors[] = t('Invalid file extension.');
-							break;
-						case FileImporter::E_FILE_INVALID:
-							$errors[] = t('Invalid file.');
-							break;
-					}
+					$errors[] .= $fname . ': ' . FileImporter::getErrorMessage($resp) . "\n";
 				} else {
 					$import_responses[] = $resp;
 				}
@@ -118,11 +111,11 @@ if (count($errors) < 1) {
 				unlink($fpath.$fname);
 			} else {
 				// could not figure out a file name
-				$errors[] = t('Could not determine the name of the file at ') . '"' . $this_url . '".';
+				$errors[] = t('Could not determine the name of the file at ') . $this_url;
 			}
 		} else {
 			// warn that we couldn't download the file
-			$errors[] = t('There was an error downloading ') . '"' . $this_url . '".';
+			$errors[] = t('There was an error downloading ') . $this_url;
 		}
 	}
 }
@@ -133,8 +126,8 @@ if (count($errors) < 1) {
 <? 
 if(count($errors)) { 
 ?>
-			alert('<?=implode('\n', $errors)?>');
-			window.parent.ccm_alResetSingle();
+	window.parent.ccmAlert.notice("<?=t('Upload Error')?>", "<?=str_replace("\n", '', nl2br(implode('\n', $errors)))?>");
+	window.parent.ccm_alResetSingle();
 <? } else { ?>
 			window.parent.jQuery.fn.dialog.closeTop();
 			highlight = new Array();
