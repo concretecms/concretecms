@@ -12,6 +12,7 @@ if (!$fp->canAddFiles()) {
 }
 
 $error = "";
+$errorCode = -1;
 
 if (isset($_POST['fID'])) {
 	// we are replacing a file
@@ -29,26 +30,29 @@ if ($valt->validate('upload')) {
 			$resp = $fi->import($_FILES['Filedata']['tmp_name'], $_FILES['Filedata']['name'], $fr);
 		}
 		if (!($resp instanceof FileVersion)) {
-			switch($resp) {
-				case FileImporter::E_FILE_INVALID_EXTENSION:
-					$error = t('Invalid file extension.');
-					break;
-				case FileImporter::E_FILE_INVALID:
-					$error = t('Invalid file.');
-					break;
-				
-			}
+			$errorCode = $resp;
 		}
+	} else {
+		$errorCode = $_FILES['Filedata']['error'];
 	}
-} else {
+} else if (isset($_FILES['Filedata'])) {
+	// first, we check for validate upload token. If the posting of a file fails because of
+	// post_max_size then this may not even be set, leading to misleading errors
+
 	$error = $valt->getErrorMessage();
+} else {
+	$errorCode = FileImporter::E_PHP_FILE_ERROR_DEFAULT;
+}
+
+if ($errorCode > -1 && $error == '') {
+	$error = FileImporter::getErrorMessage($errorCode);
 }
 ?>
 <html>
 <head>
 <script language="javascript">
 	<? if(strlen($error)) { ?>
-		alert('<?=$error?>');
+		window.parent.ccmAlert.notice("<?=t('Upload Error')?>", "<?=str_replace("\n", '', nl2br($error))?>");
 		window.parent.ccm_alResetSingle();
 	<? } else { ?>
 		highlight = new Array();

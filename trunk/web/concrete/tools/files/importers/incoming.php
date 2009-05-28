@@ -31,15 +31,7 @@ if ($valt->validate('import_incoming')) {
 					$resp = $fi->import(DIR_FILES_INCOMING .'/'. $name, $name, $fr);
 				}
 				if (!($resp instanceof FileVersion)) {
-					switch($resp) {
-						case FileImporter::E_FILE_INVALID_EXTENSION:
-							$error .= t('Invalid file extension.');
-							break;
-						case FileImporter::E_FILE_INVALID:
-							$error .= t('Invalid file.');
-							break;
-						
-					}
+					$error .= $name . ': ' . FileImporter::getErrorMessage($resp) . "\n";
 				} else {
 					$files[] = $resp;
 					if ($_POST['removeFilesAfterPost'] == 1) {
@@ -58,7 +50,7 @@ if ($valt->validate('import_incoming')) {
 <head>
 <script language="javascript">
 	<? if(strlen($error)) { ?>
-		alert('<?=$error?>');
+		window.parent.ccmAlert.notice("<?=t('Upload Error')?>", "<?=str_replace("\n", '', nl2br($error))?>");
 		window.parent.ccm_alResetSingle();
 	<? } else { ?>
 		highlight = new Array();

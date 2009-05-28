@@ -16,6 +16,7 @@ function FileProgress(file, targetID) {
 	
 
 	this.fileProgressWrapper = document.getElementById(this.fileProgressID);
+
 	if (!this.fileProgressWrapper) {
 		/* 
 		
@@ -60,9 +61,11 @@ function FileProgress(file, targetID) {
 		this.reset();
 	}
 
+	this.fileProgressElement = $(this.fileProgressWrapper).find('div.ccm-file-manager-progress-bar').get(0);
+	this.fileProgressPendingElement = $(this.fileProgressWrapper).find('div.ccm-file-manager-progress-bar-pending').get(0);
+
 	this.height = this.fileProgressWrapper.offsetHeight;
 	this.setTimer(null);
-
 
 }
 
@@ -102,18 +105,16 @@ FileProgress.prototype.setComplete = function () {
 		pendingBar.show();
 	});
 };
-FileProgress.prototype.setError = function () {
-	/*this.fileProgressElement.className = "progressContainer red";
-	this.fileProgressElement.childNodes[3].className = "progressBarError";
-	this.fileProgressElement.childNodes[3].style.width = "";
-
-	var oSelf = this;
-	this.setTimer(setTimeout(function () {
-		oSelf.disappear();
-	}, 5000));*/
+FileProgress.prototype.setError = function (msg) {
+	var pendingBar = $(this.fileProgressWrapper).find('div.ccm-file-manager-progress-bar-pending');
+	$(this.fileProgressElement).fadeOut(200, function() {
+		pendingBar.addClass('ccm-error');
+		pendingBar.html(msg);
+		pendingBar.show();
+	});
 };
 FileProgress.prototype.setCancelled = function () {
-	this.fileProgressElement.className = "progressContainer";
+	/*this.fileProgressElement.className = "progressContainer";
 	this.fileProgressElement.childNodes[3].className = "progressBarError";
 	this.fileProgressElement.childNodes[3].style.width = "";
 
@@ -121,21 +122,24 @@ FileProgress.prototype.setCancelled = function () {
 	this.setTimer(setTimeout(function () {
 		oSelf.disappear();
 	}, 2000));
+	*/
 };
 FileProgress.prototype.setStatus = function (status) {
-	this.fileProgressElement.childNodes[2].innerHTML = status;
+	var pendingBar = $(this.fileProgressWrapper).find('div.ccm-file-manager-progress-bar-pending');
+	pendingBar.html(status);
 };
 
 // Show/Hide the cancel button
 FileProgress.prototype.toggleCancel = function (show, swfUploadInstance) {
-	this.fileProgressElement.childNodes[0].style.visibility = show ? "visible" : "hidden";
+	/*this.fileProgressElement.childNodes[0].style.visibility = show ? "visible" : "hidden";
 	if (swfUploadInstance) {
 		var fileID = this.fileProgressID;
 		this.fileProgressElement.childNodes[0].onclick = function () {
 			swfUploadInstance.cancelUpload(fileID);
 			return false;
 		};
-	}
+	}*/
+	
 };
 
 FileProgress.prototype.appear = function () {
