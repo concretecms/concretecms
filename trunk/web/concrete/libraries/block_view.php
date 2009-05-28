@@ -206,7 +206,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 			if ($this->controller->getRenderOverride() != '') { 
 				$_filename = $this->controller->getRenderOverride() . '.php';
-			}
+			} 
 			
 			if ($view == 'scrapbook') {
 				$template = $this->getBlockPath(FILENAME_BLOCK_VIEW_SCRAPBOOK) . '/' . FILENAME_BLOCK_VIEW_SCRAPBOOK;
@@ -225,8 +225,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				case 'view':
 					if (!isset($_filename)) {
 						$_filename = FILENAME_BLOCK_VIEW;
-					}
-					
+					}					
 					$bvt = new BlockViewTemplate($obj);
 					if ($bFilename) {
 						$bvt->setBlockCustomTemplate($bFilename); // this is PROBABLY already set by the method above, but in the case that it's passed by area we have to set it here
@@ -249,13 +248,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$header = DIR_FILES_ELEMENTS_CORE . '/block_header_edit.php';
 					$footer = DIR_FILES_ELEMENTS_CORE . '/block_footer_edit.php';
 					break;
-			}
+			} 		
 			
 			if (!isset($template)) {
 				$base = $this->getBlockPath($_filename);
 				$template = $base . '/' . $_filename;
 			}
-			
+						
 			if (isset($header)) {
 				include($header);
 			}

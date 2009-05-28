@@ -4,7 +4,7 @@
 $GLOBALS['ccmRuntimeCacheEnabled'] = true;
 $GLOBALS['ccmRuntimeLocalCacheEnabled'] = true;
 
-class Cache extends CacheTemplate {
+class Cache extends CacheTemplate { 
 
 	protected static $filePrefix='object_';
 	

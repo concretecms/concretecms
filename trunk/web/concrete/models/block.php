@@ -868,6 +868,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 		
+		public function refreshCacheAll(){
+			$db = Loader::db();
+			$rows=$db->getAll( 'SELECT cID, cvID, arHandle FROM CollectionVersionBlocks WHERE bID='.intval($this->getBlockID()) ); 
+			foreach($rows as $row){
+				Cache::delete('block', $this->getBlockID() . ':' . intval($row['cID']) . ':' . intval($row['cvID']) . ':' . $row['arHandle'] );
+			}
+		}
+		
 		function updateBlockInformation($data) {
 			// this is the function that updates a block's information, like its block filename, and block name
 			$db = Loader::db();

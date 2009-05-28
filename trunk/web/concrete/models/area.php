@@ -335,7 +335,7 @@ class Area extends Object {
 
 		foreach ($blocksToDisplay as $b) {
 			$bv = new BlockView();
-			$bv->setAreaObject($ourArea);
+			$bv->setAreaObject($ourArea); 
 			$p = new Permissions($b);
 			if (($p->canWrite() || $p->canDeleteBlock()) && $c->isEditMode()) {
 				$includeEditStrip = true;

@@ -220,11 +220,9 @@ $(function(){ GlobalScrapbook.init(); });
 		<?  
 		$sp = Pile::getDefault();
 		$contents = $sp->getPileContentObjects('display_order_date');
-		if (count($contents) == 0) { 
-			print t('You have no items in your scrapbook.');
-		}
+		$realPilesCounter=0;
 		foreach($contents as $obj) { 
-			$item = $obj->getObject();
+			$item = $obj->getObject(); 
 			if (is_object($item)) {
 				$bt = $item->getBlockTypeObject();
 				$btIcon = $ci->getBlockTypeIconURL($bt);
@@ -262,9 +260,14 @@ $(function(){ GlobalScrapbook.init(); });
 					</div>
 				</div>	
 				<?
-				$i++;
+				$realPilesCounter++;
 			} 
-		}	?>
+		}	
+		
+		if(!$realPilesCounter){
+			print t('You have no items in your scrapbook.');
+		} 		
+		?>
 		</div>
 		
 	
