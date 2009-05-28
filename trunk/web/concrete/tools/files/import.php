@@ -39,6 +39,11 @@ $("#ccm-file-import-tabs a").click(function() {
 <div id="ccm-file-upload-multiple-tab">
 <h1>Upload Multiple Files</h1>
 
+<?
+$umf = ini_get('upload_max_filesize');
+$umf = str_replace(array('M', 'K', 'G'), array(' MB', 'KB', ' GB'), $umf);
+?>
+
 <script type="text/javascript">
 
 var swfu;
@@ -52,14 +57,12 @@ $(function() {
 		$(this).attr('target', ccm_alProcessorTarget);		
 	});
 
-	$("div.ccm-file-manager-progress-bar").progressbar({value: '37'});
-
 	swfu = new SWFUpload({
 
 		flash_url : "<?=ASSETS_URL_FLASH?>/swfupload/swfupload.swf",
 		upload_url : "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/multiple",
 		post_params: {'ccm-session' : "<?php echo session_id(); ?>",'ccm_token' : '<?=$valt->generate("upload")?>'},
-		file_size_limit : "100 MB",
+		file_size_limit : "<?=$umf?>",
 		file_types : "<?=$types?>",
 		button_window_mode : SWFUpload.WINDOW_MODE.TRANSPARENT,
 		file_types_description : "All Files",
@@ -116,7 +119,11 @@ $(function() {
 			try {
 				eval('serverData = '+serverData);
 				var progress = new FileProgress(file, this.customSettings.progressTarget);
-				progress.setComplete();
+				if (serverData['error'] == true) {
+					progress.setError(serverData['message']);
+				} else {
+					progress.setComplete();
+				}
 				progress.toggleCancel(false);
 				if(serverData['id']){
 					if(!this.highlight){this.highlight = [];}
@@ -173,6 +180,14 @@ $(function() {
 		</div>
 
 </form>
+
+<div class="ccm-spacer">&nbsp;</div>
+<br/>
+
+<div class="ccm-note">
+	<strong><?=t('Upload Max File Size: %s', ini_get('upload_max_filesize'))?></strong><br/>
+	<strong><?=t('Post Max Size: %s', ini_get('post_max_size'))?></strong><br/>
+</div>
 
 </div>
 
