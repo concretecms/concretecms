@@ -35,8 +35,8 @@ foreach($s1 as $s) {
 			</div>
 		</td>
 		<td valign="top">
-			<div><?=$form->label('fSet', t('Set'))?></div>
-			<div style="white-space: nowrap"><?=$form->select('fSet', $sets)?>&nbsp;<?=$form->submit('ccm-search-files', t('Go'))?></div>
+			<div><?=$form->label('fsID', t('Set'))?></div>
+			<div style="white-space: nowrap"><?=$form->select('fsID', $sets)?>&nbsp;<?=$form->submit('ccm-search-files', t('Go'))?></div>
 		</td>
 	</tr>
 	</table>

@@ -23,6 +23,7 @@ class DashboardFilesSearchController extends Controller {
 		$fileList = new FileList();
 		$keywords = htmlentities($_GET['fKeywords'], ENT_QUOTES, APP_CHARSET);
 		$fileList->sortBy('fvDateAdded', 'desc');
+		Loader::model('file_set');
 		
 		if ($keywords != '') {
 			$fileList->filterByKeywords($keywords);
@@ -31,9 +32,14 @@ class DashboardFilesSearchController extends Controller {
 		if ($_REQUEST['fNumResults']) {
 			$fileList->setItemsPerPage($_REQUEST['fNumResults']);
 		}
-		if (isset($_GET['fSet']) && $_GET['fSet'] != '' && $_GET['fSet'] > 0) {
-			Loader::model('file_set');
-			$set = $_REQUEST['fSet'];
+		
+		if (is_array($_GET['fsID'])) {
+			foreach($_GET['fsID'] as $fsID) {
+				$fs = FileSet::getByID($fsID);
+				$fileList->filterBySet($fs);
+			}
+		} else if (isset($_GET['fsID']) && $_GET['fsID'] != '' && $_GET['fsID'] > 0) {
+			$set = $_REQUEST['fsID'];
 			$fs = FileSet::getByID($set);
 			$fileList->filterBySet($fs);
 		}
@@ -43,6 +49,8 @@ class DashboardFilesSearchController extends Controller {
 			$fileList->filterByType($type);
 		}
 		
+		$selectedSets = array();
+		
 		if (is_array($_REQUEST['fvSelectedField'])) {
 			foreach($_REQUEST['fvSelectedField'] as $i => $item) {
 				// due to the way the form is setup, index will always be one more than the arrays
@@ -51,12 +59,6 @@ class DashboardFilesSearchController extends Controller {
 						case "extension":
 							$extension = $_REQUEST['extension'];
 							$fileList->filterByExtension($extension);
-							break;
-						case "file_set":
-							Loader::model('file_set');
-							$set = $_REQUEST['file_set'];
-							$fs = FileSet::getByID($set);
-							$fileList->filterBySet($fs);
 							break;
 						case "type":
 							$type = $_REQUEST['type'];
