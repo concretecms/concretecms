@@ -54,9 +54,10 @@ class FormBlockController extends BlockController {
 	//form add or edit submit
 	function save( $data=array() ) {	
 		if( !$data || count($data)==0 ) $data=$_POST;
-		
-		global $c;
+		 
 		$b=$this->getBlockObject(); 
+		$c=$b->getBlockCollectionObject();
+		
 		$db = Loader::db();
 		if(intval($this->bID)>0){	 
 			$q = "select count(*) as total from {$this->btTable} where bID = ".intval($this->bID);

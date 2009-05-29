@@ -19,6 +19,23 @@
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class ConcreteUpgradeVersion530Helper {
+
+	//run before the db.xml changes take place
+	public function prepare() {
+		$db = Loader::db();
+		//remove autoincrement column from 
+		$columns = $db->MetaColumns('UserValidationHashes');
+		if ($columns['uvhID'] == false) {
+			try{
+				$db->query('ALTER TABLE UserValidationHashes CHANGE uID uID INT(11) UNSIGNED NOT NULL '); 
+				$db->query('ALTER TABLE UserValidationHashes DROP PRIMARY KEY'); 
+			}catch(Exception $e){ }
+			try{
+				$db->query('ALTER TABLE UserValidationHashes ADD uvhID INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY '); 			
+			}catch(Exception $e){ } 
+
+		}
+	}
 	
 	public function run() {
 		$db = Loader::db();
@@ -62,7 +79,7 @@ class ConcreteUpgradeVersion530Helper {
 		$cak=CollectionAttributeKey::getByHandle('exclude_search_index');
 		if( !intval($cak->getAttributeKeyID()) )
 			CollectionAttributeKey::add('exclude_search_index', t('Exclude From Search Index'), true, null, 'BOOLEAN');
-		
+				
 	}
 	
 }
