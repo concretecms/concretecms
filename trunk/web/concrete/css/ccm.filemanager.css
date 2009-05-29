@@ -34,6 +34,9 @@ div#ccm-file-manager-advanced {display: block; width: 100%; font-size: 11px; pad
 div#ccm-file-manager-advanced h2 {margin-bottom: 0px}
 table td.ccm-search-form-advanced-col{ width:210px; vertical-align: top}
 div#ccm-file-search-advanced-fields {display: block;border: 1px solid #ddd;padding: 8px; width:auto; background:#fafafa; margin-right:10px; width:210px}
+
+div#ccm-file-search-advanced-sets {display: block;border: 1px solid #ddd;padding: 8px; width:auto; background:#fafafa; margin-right:10px; margin-top: 20px; width:210px}
+
 /* div#ccm-file-search-advanced-fields-gutter {display: block;width: 10px} */
 div#ccm-file-search-advanced-results-wrapper {display: block; width: 100%; /* position: relative */}
 

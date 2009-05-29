@@ -479,6 +479,13 @@ ccm_alSetupCheckboxes = function() {
 		
 		$(this).get(0).selectedIndex = 0;
 	});
+
+	// activate the file sets checkboxes
+	$("#ccm-file-search-advanced-sets input[type=checkbox]").unbind();
+	$("#ccm-file-search-advanced-sets input[type=checkbox]").click(function() {
+		$(".ccm-dashboard-file-search").submit();
+	});
+
 }
 
 ccm_alGetSelectedFileIDs = function() {
@@ -564,6 +571,7 @@ ccm_activateFileManagerFields = function(fieldset) {
 		$(this).parents('div.ccm-file-search-field').remove();
 		//ccm_totalAdvancedSearchFields--;
 	});
+	
 }
 
 ccm_alActiveEditableProperties = function() {
