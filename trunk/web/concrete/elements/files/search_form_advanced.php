@@ -75,9 +75,10 @@ foreach($s1 as $s) {
 		<? } ?>	
 	</div>
 	
+	<form method="get" class="ccm-dashboard-file-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
+
 <div id="ccm-file-search-advanced-fields" >
 	
-	<form method="get" class="ccm-dashboard-file-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
 		<input type="hidden" name="search" value="1" />
 	<?	/** 
 		 * Here are all the things that could be passed through the asset library that we need to account for, as hidden form fields
@@ -162,4 +163,4 @@ foreach($s1 as $s) {
 </div>
 
 <? } ?>
-	</form>	
+</form>	
