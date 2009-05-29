@@ -1272,9 +1272,12 @@
     
   </table>
   <table name="UserValidationHashes">
-    <field name="uID" type="I" size="10">
+    <field name="uvhID" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>  
+    <field name="uID" type="I" size="10"> 
       <UNSIGNED/>
     </field>
     <field name="uHash" type="C" size="64">
