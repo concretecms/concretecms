@@ -43,4 +43,24 @@ class ConcreteUserHelper {
 		}
 	}
 	
+	public function validNewPassword( $password, $errorObj=NULL){
+			
+		$valc = Loader::helper('concrete/validation');	
+			
+		if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
+			if($errorObj) 
+				$errorObj->add( t('A password must be between %s and %s characters', USER_PASSWORD_MINIMUM, USER_PASSWORD_MAXIMUM) );
+			$invalid=1;
+		}
+			
+		if (strlen($password) >= USER_PASSWORD_MINIMUM && !$valc->password($password)) {
+			if($errorObj) 
+				$errorObj->add( t('A password may not contain ", \', >, <, or any spaces.') );
+			$invalid=1;
+		}
+		
+		if($invalid) return false;
+		
+		return true;
+	}
 }

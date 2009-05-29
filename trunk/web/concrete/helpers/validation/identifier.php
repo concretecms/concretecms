@@ -70,5 +70,10 @@ class ValidationIdentifierHelper {
 		$hash = substr(str_shuffle($this->letters), 0, $length);
 		return $hash;
 	}
+	
+	public function deleteKey($table, $keyCol, $uHash){
+		$db = Loader::db();
+		$db->Execute("DELETE FROM ".$table." WHERE ".$keyCol."=?", array($uHash) );		
+	}
 
 }

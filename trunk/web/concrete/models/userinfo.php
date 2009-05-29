@@ -371,7 +371,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return true;
 		}
 		
-		function changePassword($newPassword) {
+		function changePassword($newPassword) { 
 			$db = Loader::db();
 			if ($this->uID) {
 				$v = array(User::encryptPassword($newPassword), $this->uID);

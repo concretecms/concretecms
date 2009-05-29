@@ -6,17 +6,14 @@ $body = t("
 
 Dear %s,
 
-Here is your information:
+You have requested a new password for the site %s 
 
-Your username: %s
-Your password: %s
-
-To login, head here:
+You may change your password at the following address:
 
 %s
 
 Thanks for browsing the site!
 
-", $uName, $uName, $uPassword, BASE_URL . DIR_REL . "/index.php/login/");
+", $uName, SITE, $changePassURL);
 
 ?>
