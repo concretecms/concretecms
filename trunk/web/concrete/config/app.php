@@ -118,6 +118,10 @@ if (!defined('ENABLE_REGISTRATION')) {
 	Config::getOrDefine('ENABLE_REGISTRATION', false);	
 }
 
+//these are the hashkey types for registration related authentication
+define('UVTYPE_REGISTER', 0);
+define('UVTYPE_CHANGE_PASSWORD', 1);
+
 
 if (!defined('UPLOAD_FILE_EXTENSIONS_ALLOWED')) {
 	Config::getOrDefine('UPLOAD_FILE_EXTENSIONS_ALLOWED','*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.mp4;*.mp3;*.qt;*.ppt;*.kml');

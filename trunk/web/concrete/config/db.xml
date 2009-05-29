@@ -1280,6 +1280,11 @@
     <field name="uHash" type="C" size="64">
       <NOTNULL/>
     </field>
+    <field name="type" type="I" size="4">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>  	
     <field name="uDateGenerated" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>

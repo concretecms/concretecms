@@ -29,6 +29,7 @@ class RegisterController extends Controller {
 	
 		$registerData['success']=0;
 		
+		$userHelper = Loader::helper('concrete/user');
 		$e = Loader::helper('validation/error');
 		$ip = Loader::helper('validation/ip');		
 		$txt = Loader::helper('text');
@@ -79,6 +80,7 @@ class RegisterController extends Controller {
 			$e->add(t('Invalid Username'));
 		}
 		
+		/*
 		if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
 			$e->add(t('A password must be between %s and %s characters', USER_PASSWORD_MINIMUM, USER_PASSWORD_MAXIMUM));
 		}
@@ -86,6 +88,9 @@ class RegisterController extends Controller {
 		if (strlen($password) >= USER_PASSWORD_MINIMUM && !$valc->password($password)) {
 			$e->add(t('A password may not contain ", \', >, <, or any spaces.'));
 		}
+		*/
+		
+		$userHelper->validNewPassword($password,$e);
 
 		if ($password) {
 			if ($password != $passwordConfirm) {

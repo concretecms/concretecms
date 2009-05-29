@@ -249,7 +249,7 @@ class LoginController extends Controller {
 	}
 	
 	public function getPasswordSentMsg(){
-		return t('An email containing your password has been sent to your account address.');
+		return t('An email containing instructions on reseting your password has been sent to your account address.');
 	}
 	
 	public function logout() {
@@ -272,6 +272,46 @@ class LoginController extends Controller {
 		}
 	}
 	
+	// responsible for validating a user's email address
+	public function change_password($uHash) {
+		$db = Loader::db();
+		$h = Loader::helper('validation/identifier');
+		$e = Loader::helper('validation/error');
+		
+		$ui = UserInfo::getByValidationHash($uHash);		
+		if (is_object($ui)){
+			$hashCreated = $db->GetOne("select uDateGenerated FROM UserValidationHashes where uHash=?", array($uHash));
+			if($hashCreated < (time()-(60*60*5)) ){
+				$h->deleteKey('UserValidationHashes','uHash',$uHash);
+				throw new Exception( t('Key Expired. Please visit the forgot password page again to have a new key generated.') );
+			}else{	
+			
+				if(strlen($_POST['uPassword'])){
+				
+					$userHelper = Loader::helper('concrete/user');
+					$userHelper->validNewPassword($_POST['uPassword'],$e);
+					
+					if(strlen($_POST['uPassword']) && $_POST['uPasswordConfirm']!=$_POST['uPassword']){			
+						$e->add(t('The two passwords provided do not match.'));
+					}
+					
+					if (!$e->has()){ 
+						$ui->changePassword( $_POST['uPassword'] );						
+						$h->deleteKey('UserValidationHashes','uHash',$uHash);					
+						$this->set('passwordChanged', true);
+					}else{
+						$this->set('errorMsg', join( '<br>', $e->getList() ) );					
+					}
+				}else{ 				
+					$this->set('uHash', $uHash);
+					$this->set('changePasswordForm', true);
+				}
+			}		
+		}else{
+			throw new Exception( t('Invalid Key. Please visit the forgot password page again to have a new key generated.') );
+		}
+	}	
+	
 	public function forgot_password() {
 		$loginData['success']=0;
 	
@@ -291,6 +331,16 @@ class LoginController extends Controller {
 			$mh->addParameter('uPassword', $oUser->resetUserPassword());
 			$mh->addParameter('uName', $oUser->getUserName());			
 			$mh->to($oUser->getUserEmail());
+			
+			//generate hash that'll be used to authenticate user, allowing them to change their password
+			$h = Loader::helper('validation/identifier');
+			$uHash = $h->generate('UserValidationHashes', 'uHash');	
+			$db = Loader::db();
+			$db->Execute("DELETE FROM UserValidationHashes WHERE uID=?", array( $oUser->uID ) );			
+			$db->Execute("insert into UserValidationHashes (uID, uHash, uDateGenerated, type) values (?, ?, ?, ?)", array($oUser->uID, $uHash, time(),intval(UVTYPE_CHANGE_PASSWORD)));		
+			$changePassURL=BASE_URL . View::url('/login', 'change_password', $uHash);
+			$mh->addParameter('changePassURL', $changePassURL);
+			
 			if (defined('EMAIL_ADDRESS_FORGOT_PASSWORD')) {
 				$mh->from(EMAIL_ADDRESS_FORGOT_PASSWORD,  t('Forgot Password'));
 			} else {
