@@ -29,6 +29,7 @@ function toggleQuestions(qsID,trigger){
 <? } else { ?>
 
 <div style="margin:0px; padding:0px; width:100%; height:auto" >
+
 <table class="entry-form" >
 	<tr>
 		<td class="header"><?=t('Form')?></td>
