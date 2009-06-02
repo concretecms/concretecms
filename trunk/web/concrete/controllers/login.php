@@ -328,7 +328,7 @@ class LoginController extends Controller {
 			}			
 			
 			$mh = Loader::helper('mail');
-			$mh->addParameter('uPassword', $oUser->resetUserPassword());
+			//$mh->addParameter('uPassword', $oUser->resetUserPassword());
 			$mh->addParameter('uName', $oUser->getUserName());			
 			$mh->to($oUser->getUserEmail());
 			
