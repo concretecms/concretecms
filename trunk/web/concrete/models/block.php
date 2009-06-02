@@ -129,9 +129,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public static function getByName($globalBlockName) {
 			if(!$globalBlockName) return;
 			$db = Loader::db();
+			$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
+			$globalScrapbookPage=$scrapbookHelper->getGlobalScrapbookPage();
 			$bID = $db->getOne( 'SELECT b.bID FROM Blocks AS b, CollectionVersionBlocks AS cvb '.
-							  'WHERE b.bName=? AND b.bID=cvb.bID AND cvb.arHandle="Global Scrapbook" ', 
-							   array($globalBlockName) ); 
+							  'WHERE b.bName=? AND b.bID=cvb.bID AND cvb.cID=?', 
+							   array($globalBlockName, intval($globalScrapbookPage->getCollectionId()) ) ); 
 			if ($bID > 0) {
 				return Block::getByID( intval($bID) );
 			} else {
