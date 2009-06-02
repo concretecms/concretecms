@@ -300,6 +300,8 @@ class LoginController extends Controller {
 						$h->deleteKey('UserValidationHashes','uHash',$uHash);					
 						$this->set('passwordChanged', true);
 					}else{
+						$this->set('uHash', $uHash);
+						$this->set('changePasswordForm', true);					
 						$this->set('errorMsg', join( '<br>', $e->getList() ) );					
 					}
 				}else{ 				
@@ -338,7 +340,7 @@ class LoginController extends Controller {
 			$db = Loader::db();
 			$db->Execute("DELETE FROM UserValidationHashes WHERE uID=?", array( $oUser->uID ) );			
 			$db->Execute("insert into UserValidationHashes (uID, uHash, uDateGenerated, type) values (?, ?, ?, ?)", array($oUser->uID, $uHash, time(),intval(UVTYPE_CHANGE_PASSWORD)));		
-			$changePassURL=BASE_URL . View::url('/login', 'change_password', $uHash);
+			$changePassURL=BASE_URL . View::url('/login', 'change_password', $uHash); 		
 			$mh->addParameter('changePassURL', $changePassURL);
 			
 			if (defined('EMAIL_ADDRESS_FORGOT_PASSWORD')) {
