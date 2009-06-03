@@ -281,7 +281,7 @@ class LoginController extends Controller {
 		$ui = UserInfo::getByValidationHash($uHash);		
 		if (is_object($ui)){
 			$hashCreated = $db->GetOne("select uDateGenerated FROM UserValidationHashes where uHash=?", array($uHash));
-			if($hashCreated < (time()-(60*60*5)) ){
+			if($hashCreated < (time()-(USER_CHANGE_PASSWORD_URL_LIFETIME))) {
 				$h->deleteKey('UserValidationHashes','uHash',$uHash);
 				throw new Exception( t('Key Expired. Please visit the forgot password page again to have a new key generated.') );
 			}else{	

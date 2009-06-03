@@ -153,7 +153,7 @@ foreach($s1 as $s) {
 	
 </div>
 
-<? if (count($s1 > 0)) { ?>
+<? if (count($s1) > 0) { ?>
 
 <div id="ccm-file-search-advanced-sets">
 	<h2><?=t('File Sets')?></h2>
