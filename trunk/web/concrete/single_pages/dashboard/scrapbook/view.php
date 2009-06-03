@@ -180,7 +180,7 @@ $(function(){ GlobalScrapbook.init(); });
 			$form = Loader::helper('form'); ?>
 			
 			<tr>
-				<td colspan="2" class="subheader"><?=t('Add a Global Scrapbook')?></td>
+				<td colspan="2" class="subheader"><?=t('Add a Shared Scrapbook')?></td>
 			</tr>
 			<tr>
 			<td colspan="2">
