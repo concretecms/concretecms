@@ -84,15 +84,20 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 			if ($args[1]) {
 				// first, we check to see if the username and password match the admin username and password
+				// $username = uName normally, but if not it's email address
+				
 				$username = $args[0];
 				$password = $args[1];
 				if (!$args[2]) {
 					$_SESSION['uGroups'] = false;
 				}
 				$password = User::encryptPassword($password, PASSWORD_SALT);
-				$v = array($username, $username, $password);
-				$q = "select uID, uName, uIsActive, uIsValidated from Users where (uName = ? OR uEmail = ?) and uPassword = ?";
-				
+				$v = array($username, $password);
+				if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
+					$q = "select uID, uName, uIsActive, uIsValidated from Users where uEmail = ? and uPassword = ?";
+				} else {
+					$q = "select uID, uName, uIsActive, uIsValidated from Users where uName = ? and uPassword = ?";
+				}
 				$r = $db->query($q, $v);
 				if ($r) {
 					$row = $r->fetchRow(); 

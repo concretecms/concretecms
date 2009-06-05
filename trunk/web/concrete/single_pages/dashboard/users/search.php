@@ -52,10 +52,6 @@ if ($_GET['uID']) {
 		
 		if ($_POST['edit']) {
 			
-			if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
-				$_POST['uName'] = $_POST['uEmail'];
-			}
-			
 			$username = $_POST['uName'];
 			$password = $_POST['uPassword'];
 			$passwordConfirm = $_POST['uPasswordConfirm'];
@@ -238,7 +234,7 @@ if (is_object($uo)) {
 			<td class="subheader"><?=t('User Avatar')?></td>
 		</tr>	
 		<tr>
-			<td><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?><?=$uo->getUserName()?><? } else { ?><input type="text" name="uName" autocomplete="off" value="<?=$uName?>" style="width: 94%"><? } ?></td>
+			<td><input type="text" name="uName" autocomplete="off" value="<?=$uName?>" style="width: 94%"></td>
 			<td><input type="text" name="uEmail" autocomplete="off" value="<?=$uEmail?>" style="width: 94%"></td>
 			<td><input type="file" name="uAvatar" style="width: 94%" /> <input type="hidden" name="uHasAvatar" value="<?=$uo->hasAvatar()?>" />
 			
@@ -630,9 +626,14 @@ if (is_object($uo)) {
 		<?=$s->printHeader(t('# Logins'), 'uNumLogins',1)?>
 	</tr>
 	<? if ($s->getTotal() > 0) { 
-		while ($row = $res->fetchRow()) { ?>
+		while ($row = $res->fetchRow()) { 
+			$uName = '(' . t('None') . ')';
+			if ($row['uName']) {
+				$uName = $row['uName'];
+			}
+			?>
 		<tr>
-			<?=$s->printRow($row['uName'], 'uName', $this->url('/dashboard/users/search?uID=' . $row['uID']))?>
+			<?=$s->printRow($uName, 'uName', $this->url('/dashboard/users/search?uID=' . $row['uID']))?>
 			<?=$s->printRow($row['uEmail'], 'uEmail', 'mailto:' . $row['uEmail'])?>
 			<?=$s->printRow($row['uDateAdded'], 'uDateAdded')?>
 			<?=$s->printRow($row['uNumLogins'], 'uNumLogins')?>
