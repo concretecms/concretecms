@@ -26,6 +26,17 @@ class FileVersion extends Object {
 		return $fo;
 	}
 	
+	//returns an array of tags, instead of a string
+	public function getTagsList(){
+		$tags=explode("\n",str_replace("\r","\n",trim($this->getTags())));
+		$clean_tags=array();
+		foreach($tags as $tag){
+			if( strlen(trim($tag)) ) 
+				$clean_tags[]=trim($tag);
+		}
+		return $clean_tags;
+	} 
+	
 	/** 
 	 * Gets an associative array of all attributes for a file version
 	 */
@@ -245,6 +256,7 @@ class FileVersion extends Object {
 
 	public function updateTags($tags) {
 		$db = Loader::db();
+		$tags = File::cleanTags($tags);
 		$db->Execute("update FileVersions set fvTags = ? where fID = ? and fvID = ?", array($tags, $this->getFileID(), $this->getFileVersionID()));
 		$this->logVersionUpdate(FileVersion::UT_TAGS);
 		$this->fvTitle = $tags;

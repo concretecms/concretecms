@@ -251,7 +251,7 @@ class File extends Object {
 		
 		$fvTitle = (isset($data['fvTitle'])) ? $data['fvTitle'] : '';
 		$fvDescription = (isset($data['fvDescription'])) ? $data['fvDescription'] : '';
-		$fvTags = (isset($data['fvTags'])) ? $data['fvTags'] : '';
+		$fvTags = (isset($data['fvTags'])) ? self::cleanTags($data['fvTags']) : '';
 		$fvIsApproved = (isset($data['fvIsApproved'])) ? $data['fvIsApproved'] : '1';
 
 		$db = Loader::db();
@@ -282,6 +282,18 @@ class File extends Object {
 			
 		$fv = $this->getVersion($fvID);
 		return $fv;
+	}
+	
+	//takes a string of comma or new line delimited tags, and puts them in the appropriate format
+	public static function cleanTags($tagsStr){ 
+		$tagsArray=explode("\n",str_replace(array("\r",","),"\n",$tagsStr));
+		$cleanTags=array();
+		foreach($tagsArray as $tag){
+			if( !strlen(trim($tag)) ) continue;
+			$cleanTags[]=trim($tag);
+		}
+		//the leading and trailing line break char is for searching: fvTag like %\ntag\n% 
+		return "\n".join("\n",$cleanTags)."\n";
 	}
 	
 	public function getApprovedVersion() {
