@@ -48,7 +48,6 @@ class FileAttributeKey extends AttributeKey {
 	
 	public function isAttributeKeyEditable() { return $this->akIsEditable;}
 	
-	
 	public function getByHandle($akHandle) {
 		$db = Loader::db();
 		$akID = $db->GetOne("select fakID from FileAttributeKeys where akHandle = ?", array($akHandle));

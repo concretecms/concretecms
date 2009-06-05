@@ -79,7 +79,13 @@ class ConcreteUpgradeVersion530Helper {
 		$cak=CollectionAttributeKey::getByHandle('exclude_search_index');
 		if( !intval($cak->getAttributeKeyID()) )
 			CollectionAttributeKey::add('exclude_search_index', t('Exclude From Search Index'), true, null, 'BOOLEAN');
-				
+		
+		//convert file tags to new format, cleaned up with leading and trailing line breaks  
+		$fileVersionsData=$db->GetAll('SELECT fID, fvID, fvTags FROM FileVersions');
+		foreach($fileVersionsData as $fvData){
+			$vals=array( File::cleanTags($fvData['fvTags']) , $fvData['fID'] , $fvData['fvID'] );
+			$db->query('UPDATE FileVersions SET fvTags=? WHERE fID=? AND fvID=?',  $vals );
+		}
 	}
 	
 }

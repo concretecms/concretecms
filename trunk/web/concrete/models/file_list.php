@@ -13,8 +13,8 @@ class FileList extends DatabaseItemList {
 	private $fileAttributeFilters = array();
 	protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fvDateAdded', 'fvSize');
 	protected $itemsPerPage = 10;
+	
 	/* magic method for filtering by page attributes. */
-
 	public function __call($nm, $a) {
 		if (substr($nm, 0, 8) == 'filterBy') {
 			$txt = Loader::helper('text');
