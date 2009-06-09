@@ -22,7 +22,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	class UserInfo extends Object { 
 	
 		/* magic method for user attributes. This is db expensive but pretty damn cool */
-		
+		// so if the attrib handle is "my_attribute", then get the attribute with $ui->getUserMyAttribute(), or "uFirstName" become $ui->getUserUfirstname();
 		public function __call($nm, $a) {
 			if (substr($nm, 0, 7) == 'getUser') {
 				$nm = preg_replace('/(?!^)[[:upper:]]/','_\0', $nm);
@@ -233,9 +233,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			Loader::model('user_attributes');
 			if (is_array($keyArray)) {
 				$db = Loader::db();
-				$keys = UserAttributeKey::getList();
+				$keys = UserAttributeKey::getList();   
 				foreach($keys as $v) {
-					if (in_array($v->getKeyID(), $keyArray)) {
+					if (in_array($v->getKeyID(), $keyArray) || in_array($v->getKeyHandle(), $keyArray)) {
 						$db->query("delete from UserAttributeValues where uID = {$this->uID} and ukID = " . $v->getKeyID());
 		
 						if ($data['uak_' . $v->getKeyID()]) {
