@@ -243,15 +243,14 @@ class FileList extends DatabaseItemList {
 	
 	//$key can be handle or fak id
 	public function sortByAttributeKey($key,$order='asc'){
-		if(!is_int($key)){
+		if(!is_int($key) && intval($key)!=0){
 			$fak = FileAttributeKey::getByHandle($key);
 			if(!$fak)
 				throw new Exception('File list sorting attribute key not found - '.$key );
 			$sortFileAttrKeyId=$fak->getAttributeKeyID();
 		}else{
 			$sortFileAttrKeyId=intval($key);	
-		}
-		$sortFileAttrKeyId=$fak->getAttributeKeyID();
+		} 
 		$this->addToQuery(' left join FileAttributeValues sortAttr on (sortAttr.fID = fv.fID and fv.fvID = sortAttr.fvID and sortAttr.fakID = '.$sortFileAttrKeyId.') ');
 		$this->sortBy('sortAttr.value ', $order);	
 	} 
