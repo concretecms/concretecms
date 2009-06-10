@@ -285,6 +285,8 @@ jQuery.fn.dialog.loadShell = function(fnd) {
 		jQuery.fn.dialog.close(fnd);
 	});
 	$("#ccm-dialog-window" + fnd.n).append("<div class='ccm-dialog-content-bl'><div class='ccm-dialog-content-br'><div class='ccm-dialog-content-b'></div></div></div>");
+	// finish loading wrapper
+	$("#ccm-dialog-window" + fnd.n).append("</div>");
 	$("#ccm-dialog-window" + fnd.n).show();
 	
 	if (fnd.draggable && ccm_dialogCanDrag) {
@@ -314,7 +316,7 @@ jQuery.fn.dialog.overlay = function(fnd) {
 	}
 	
 	fnd.realZ = sz;
-	$("body").append("<div class='ccm-dialog-window' id='ccm-dialog-window" + fnd.n + "' style='display: none; z-index: " + sz + "'></div>");
+	$("body").append("<div class=\"" + fnd.wrapperClass + "\"><div class='ccm-dialog-window' id='ccm-dialog-window" + fnd.n + "' style='display: none; z-index: " + sz + "'></div>");
 
 	if(jQuery.fn.dialog.isMacFF(fnd)){
 		$("#TB_overlay" + fnd.n).addClass("TB_overlayMacFFBGHack");//use png overlay so hide flash
@@ -334,6 +336,7 @@ jQuery.fn.dialog.defaults = {
 	modal: true,
 	width: 500,
 	height: 500,
+	wrapperClass: 'ccm-dialog-window-wrapper',
 	draggable: true,
 	replace: false,
 	title: 'CCM Dialog',
