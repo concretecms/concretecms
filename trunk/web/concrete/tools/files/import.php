@@ -41,7 +41,7 @@ $("#ccm-file-import-tabs a").click(function() {
 
 <?
 $umf = ini_get('upload_max_filesize');
-$umf = str_replace(array('M', 'K', 'G'), array(' MB', 'KB', ' GB'), $umf);
+$umf = str_ireplace(array('M', 'K', 'G'), array(' MB', 'KB', ' GB'), $umf);
 ?>
 
 <script type="text/javascript">
