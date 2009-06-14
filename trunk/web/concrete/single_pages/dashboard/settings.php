@@ -271,7 +271,7 @@ saveMaintenanceMode = function() {
 		<table border="0" cellspacing="0" cellpadding="0" class="ccm-dashboard-inner-columns">
 		<tr>
 		<td valign="top" class="ccm-dashboard-inner-leftcol">	
-			<h2>Smart IP Banning</h2>
+			<h2><?=t('Smart IP Banning')?></h2>
 			<div class="ccm-dashboard-radio">
 				<?=$form->checkbox('ip_ban_lock_ip_enable', 1, $ip_ban_enable_lock_ip_after)?> <?=t('Lock IP after')?>
 				
