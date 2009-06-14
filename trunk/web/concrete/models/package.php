@@ -248,10 +248,10 @@ class Package extends Object {
 		$errorText[Package::E_PACKAGE_INSTALLED] = t("You've already installed that package.");
 		$errorText[Package::E_PACKAGE_NOT_FOUND] = t("Invalid Package.");
 		$errorText[Package::E_PACKAGE_VERSION] = t("This package requires Concrete version %s or greater.");
-		$errorText[Package::E_PACKAGE_DOWNLOAD] = t("An error occured while downloading the package.");
+		$errorText[Package::E_PACKAGE_DOWNLOAD] = t("An error occurred while downloading the package.");
 		$errorText[Package::E_PACKAGE_SAVE] = t("Concrete was not able to save the package after download.");
-		$errorText[Package::E_PACKAGE_UNZIP] = t('An error while trying to unzip the package.');
-		$errorText[Package::E_PACKAGE_INSTALL] = t('An error while trying to install the package.');
+		$errorText[Package::E_PACKAGE_UNZIP] = t('An error occurred while trying to unzip the package.');
+		$errorText[Package::E_PACKAGE_INSTALL] = t('An error occurred while trying to install the package.');
 
 		$testResultsText = array();
 		foreach($testResults as $result) {
