@@ -199,8 +199,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function package($pkgHandle) {
 			// loads and instantiates the object
 			$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-			if (file_exists(DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER)) {
-				require_once(DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER);
+			if (file_exists($dir . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER)) {
+				require_once($dir . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER);
 				$class = Object::camelcase($pkgHandle) . "Package";
 				if (class_exists($class)) {
 					$cl = new $class;
