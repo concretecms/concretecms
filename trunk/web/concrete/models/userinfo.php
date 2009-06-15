@@ -29,10 +29,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$nm = strtolower($nm);
 				$nm = str_replace('get_user_', '', $nm);
 				
-				$db = Loader::db();
-				$v = array($this->uID, $nm);
-				$r = $db->getOne("select value from UserAttributeValues inner join UserAttributeKeys on UserAttributeValues.ukID = UserAttributeKeys.ukID where uID = ? and UserAttributeKeys.ukHandle = ?", $v);
-				return $r;
+				return $this->getAttribute($nm);
 			}			
 		}
 		
@@ -260,6 +257,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 		
+		/** 
+		 * Gets the value of the attribute for the user
+		 */
+		public function getAttribute($attributeHandle) {
+			$db = Loader::db();
+			$v = array($this->uID, $attributeHandle);
+			$r = $db->getOne("select value from UserAttributeValues inner join UserAttributeKeys on UserAttributeValues.ukID = UserAttributeKeys.ukID where uID = ? and UserAttributeKeys.ukHandle = ?", $v);
+			return $r;
+		}
+		
 		public function update($data) {
 			$db = Loader::db();
 			if ($this->uID) {
@@ -276,11 +283,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$uHasAvatar = $data['uHasAvatar'];
 				}
 				
+				$testChange = false;
+				
 				if ($data['uPassword'] != null) {
 					if (User::encryptPassword($data['uPassword']) == User::encryptPassword($data['uPasswordConfirm'])) {
 						$v = array($uName, $uEmail, User::encryptPassword($data['uPassword']), $uHasAvatar, $this->uID);
 						$r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ? where uID = ?");
 						$res = $db->execute($r, $v);
+						
+						$testChange = true;
+
 					} else {
 						$updateGroups = false;
 					}
@@ -296,8 +308,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				}
 
 				// run any internal event we have for user update
-				Events::fire('on_user_update', $this);
+				$ui = UserInfo::getByID($this->uID);
+				Events::fire('on_user_update', $ui);
 				
+				if ($testChange) {
+					Events::fire('on_user_change_password', $ui, $data['uPassword']);
+				}				
 				return $res;
 			}
 		}
