@@ -43,7 +43,13 @@ $this->inc('elements/header.php'); ?>
 			&copy; <?=date('Y')?> <a href="<?=DIR_REL?>/"><?=SITE?></a>.
 			&nbsp;&nbsp;
 			<?=t('All rights reserved.')?>	
-			<span class="sign-in"><a href="<?=$this->url('/login')?>"><?=t('Sign In to Edit this Site')?></a></span>
+			<?
+			$u = new User();
+			if ($u->isRegistered()) { ?>
+				<span class="sign-in"><?=t('Currently logged in as <b>%s</b>.', $u->getUserName())?> <a href="<?=$this->url('/login', 'logout')?>"><?=t('Sign Out')?></a></span>
+			<? } else { ?>
+				<span class="sign-in"><a href="<?=$this->url('/login')?>"><?=t('Sign In to Edit this Site')?></a></span>
+			<? } ?>
 	</div>
 </div>
 <? $this->inc('elements/footer.php'); ?>
