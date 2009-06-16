@@ -19,7 +19,7 @@ if (is_array($_REQUEST['fID'])) {
 		$fp = new Permissions($f);
 		if ($fp->canRead()) {
 			$files[] = $f;
-			$extensions[] = $f->getExtension();
+			$extensions[] = strtolower($f->getExtension());
 		}
 	}
 } else {
@@ -27,7 +27,7 @@ if (is_array($_REQUEST['fID'])) {
 	$fp = new Permissions($f);
 	if ($fp->canRead()) {
 		$files[] = $f;
-		$extensions[] = $f->getExtension();
+		$extensions[] = strtolower($f->getExtension());
 	}
 }
 
