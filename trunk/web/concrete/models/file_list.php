@@ -11,7 +11,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class FileList extends DatabaseItemList { 
 
 	private $fileAttributeFilters = array();
-	protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fvDateAdded', 'fvSize');
+	protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fDateAdded', 'fvDateAdded', 'fvSize');
 	protected $itemsPerPage = 10;
 	
 	/* magic method for filtering by page attributes. */
