@@ -394,6 +394,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$q = "update Users set uPassword = ? where uID = ?";
 				$r = $db->prepare($q);
 				$res = $db->execute($r, $v);
+
+				Events::fire('on_user_change_password', $this, $newPassword);
+
 				return $res;
 			}
 		}
