@@ -18,7 +18,7 @@ $controller->cThis 		= $_REQUEST['cThis'];
 $controller->orderBy	= $_REQUEST['orderBy'];
 $controller->ctID 		= $_REQUEST['ctID'];
 $controller->rss 		= $_REQUEST['rss'];
-
+$controller->displayFeaturedOnly = $_REQUEST['displayFeaturedOnly'];
 
 $cArray = $controller->getPages();
 
