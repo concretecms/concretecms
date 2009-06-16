@@ -101,8 +101,8 @@ if ($_GET['uID']) {
 		
 			if (!$error) {
 				// do the registration
-				$process = $uo->update($_POST);
 				$pr2 = $uo->updateUserAttributes($_POST);
+				$process = $uo->update($_POST);
 				
 				//$db = Loader::db();
 				if ($process) {
