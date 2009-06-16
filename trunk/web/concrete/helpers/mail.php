@@ -122,7 +122,7 @@ class MailHelper {
 			$header  = "MIME-Version: 1.0\n";
 			$header .= "Content-type: text/plain; charset=" . APP_CHARSET . "\n";
 			if ($from == '') {
-				$from = 'concrete5@' . str_replace(array('http://', 'https://'), '', BASE_URL);
+				$from = 'concrete5@' . str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', BASE_URL);
 			}
 			$header .= "From: {$from}\n";
 			$subject = $this->subject;
