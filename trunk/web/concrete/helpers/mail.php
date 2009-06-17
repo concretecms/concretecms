@@ -19,13 +19,13 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class MailHelper {
 
-	private $headers = array();
-	private $to = array();
-	private $from = array();
-	private $data = array();
-	private $subject = '';
+	protected $headers = array();
+	protected $to = array();
+	protected $from = array();
+	protected $data = array();
+	protected $subject = '';
 	public $body = '';
-	private $template;
+	protected $template; 
 	
 	/** 
 	 * Adds a parameter to a mail template
@@ -75,7 +75,7 @@ class MailHelper {
 		$this->subject = $subject;
 	}	
 	
-	private function generateEmailStrings($arr) {
+	protected function generateEmailStrings($arr) {
 		$str = '';
 		for ($i = 0; $i < count($arr); $i++) {
 			$v = $arr[$i];
