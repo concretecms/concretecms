@@ -51,7 +51,7 @@ class ConcreteAvatarHelper {
 		}
 	}
 	
-	public function getImagePath($uo) {
+	public function getImagePath($uo,$withNoCacheStr=true) {
 		if (!$uo->hasAvatar()) {
 			return false;
 		}
@@ -64,7 +64,7 @@ class ConcreteAvatarHelper {
 			$base = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
 			$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
 		}
-		$src .= $cacheStr;
+		if($withNoCacheStr) $src .= $cacheStr;
 		if (!file_exists($base)) {
 			return "";
 		} else {
