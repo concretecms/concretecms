@@ -103,11 +103,11 @@
 			
 			if ($cv->cvAuthorUID > 0) {
 				$uAuthor = UserInfo::getByID($cv->cvAuthorUID);
-				$cv->cvAuthorUname = $uAuthor->getUserName();
+				if(is_object($uAuthor)) $cv->cvAuthorUname = $uAuthor->getUserName();
 			}
 			if ($cv->cvApproverUID > 0) {
 				$uApprover = UserInfo::getByID($cv->cvApproverUID);
-				$cv->cvApproverUname = $uApprover->getUserName();
+				if(is_object($uApprover)) $cv->cvApproverUname = $uApprover->getUserName();
 			}
 			
 			// load the attributes for a particular version object
