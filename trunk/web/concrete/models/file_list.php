@@ -76,6 +76,15 @@ class FileList extends DatabaseItemList {
 		$this->filter('f.fDateAdded', $date, $comparison);
 	}
 	
+
+	/** 
+	 * Filters by tag
+	 * @param string $tag
+	 */
+	public function filterByTag($tag='') { 
+		$this->filter(false, "( fv.fvTags like ".$db->qstr("%\n".$tag."\n%")."  )");
+	}	
+	
 	/** 
 	 * Filters the list by collection attribute
 	 * @param string $handle Collection Attribute Handle
