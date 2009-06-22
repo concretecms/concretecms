@@ -19,6 +19,8 @@ if ($_POST['create']) {
 	
 
 	$username = $_POST['uName'];
+	$username = trim($username);
+	$username = ereg_replace(" +", " ", $username);
 	$password = $_POST['uPassword'];
 	
 	if (!$vals->email($_POST['uEmail'])) {
@@ -36,9 +38,15 @@ if ($_POST['create']) {
 			$error[] = t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM);
 		}
 
-		if (strlen($username) >= USER_USERNAME_MINIMUM && !$vals->alphanum($username)) {
-			$error[] = t('A username may only contain letters or numbers.');
+		if (strlen($username) >= USER_USERNAME_MINIMUM && !$valc->username($username)) {
+			if(USER_USERNAME_ALLOW_SPACES) {
+				$e->add(t('A username may only contain letters, numbers and spaces.'));
+			} else {
+				$e->add(t('A username may only contain letters or numbers.'));
+			}
+			
 		}
+
 		if (!$valc->isUniqueUsername($username)) {
 			$error[] = t("The username '%s' already exists. Please choose another",$username);
 		}		

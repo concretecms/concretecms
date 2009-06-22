@@ -36,8 +36,12 @@
 		 * @param string $field
 		 * @return bool
 		 */
-		public function alphanum($field) {
-			return !eregi('[^A-Za-z0-9]', $field);
+		public function alphanum($field, $allow_spaces = false) {
+			if($allow_spaces) {
+				return !eregi("[^A-Za-z0-9 ]", $field);
+			} else {
+				return !eregi('[^A-Za-z0-9]', $field);
+			}
 		}
 		
 		/**

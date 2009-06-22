@@ -73,26 +73,25 @@
 		}
 			
 		/**
-		 * Returns true if this is a valid username. Valid usernames cannot contain
-		 * ',",\ or whitespace.
-		 */
+		 * Returns true if this is a valid username. 
+		 * Valid usernames can only contain letters, numbers and optionally single spaces
+		*/
 		public function username($username) {
 			$username = trim($username);
 			if (strlen($username) < USER_USERNAME_MINIMUM) {
 				return false;
 			}
-			if (strlen($username) > USER_USERNAME_MAXIMUM) {
-				return false;
+			if(USER_USERNAME_ALLOW_SPACES) {
+				$resp = eregi("[^A-Za-z0-9 ]", $username);
+			} else {
+				$resp = eregi("[^A-Za-z0-9 ]", $username);
 			}
-			
-			$resp = preg_match('/[[:space:]]|\>|\<|\"|\'|\\\/i', $username);
+
 			if ($resp > 0) {
 				return false;
 			}
+			
 			return true;
 		}
 	
-	
-
-
 	}

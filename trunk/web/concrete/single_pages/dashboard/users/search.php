@@ -53,6 +53,9 @@ if ($_GET['uID']) {
 		if ($_POST['edit']) {
 			
 			$username = $_POST['uName'];
+			$username = trim($username);
+			$username = ereg_replace(" +", " ", $username);
+			
 			$password = $_POST['uPassword'];
 			$passwordConfirm = $_POST['uPasswordConfirm'];
 			
@@ -77,8 +80,23 @@ if ($_GET['uID']) {
 					$error[] = t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM);
 				}
 
+				/*
+				if (strlen($username) >= USER_USERNAME_MINIMUM && !$vals->alphanum($username,USER_USERNAME_ALLOW_SPACES)) {
+					if(USER_USERNAME_ALLOW_SPACES) {
+						$e->add(t('A username may only contain letters, numbers and spaces.'));
+					} else {
+						$e->add(t('A username may only contain letters or numbers.'));
+					}
+					
+				}
+				*/
+				
 				if (strlen($username) >= USER_USERNAME_MINIMUM && !$valc->username($username)) {
-					$error[] = t('A username may not contain ", \', >, <, or any spaces.');
+					if(USER_USERNAME_ALLOW_SPACES) {
+						$error[] = t('A username may only contain letters, numbers and spaces.');
+					} else {
+						$error[] = t('A username may only contain letters or numbers.');
+					}
 				}
 				if (!$valc->isUniqueUsername($username) && $uo->getUserName() != $username) {
 					$error[] = t("The username '%s' already exists. Please choose another",$username);

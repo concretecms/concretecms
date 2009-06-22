@@ -89,6 +89,7 @@ if (DIR_FILES_UPLOADED != DIR_BASE . '/files') {
 if (!defined('ENABLE_OPENID_AUTHENTICATION')) { 
 	Config::getOrDefine('ENABLE_OPENID_AUTHENTICATION', false);
 }
+
 if (!defined('ENABLE_USER_PROFILES')) { 
 	Config::getOrDefine('ENABLE_USER_PROFILES', false);
 }
@@ -96,6 +97,11 @@ if (!defined('ENABLE_USER_PROFILES')) {
 # If user registration with email address is true we don't use username's - we just use uEmail and we populate uName with the email address
 if (!defined('USER_REGISTRATION_WITH_EMAIL_ADDRESS')) {
 	Config::getOrDefine('USER_REGISTRATION_WITH_EMAIL_ADDRESS', false);
+}
+
+// allow spaces in usernames
+if (!defined('USER_USERNAME_ALLOW_SPACES')) {
+	Config::getOrDefine('USER_USERNAME_ALLOW_SPACES', false);	
 }
 
 if (!defined('USER_VALIDATE_EMAIL')) {

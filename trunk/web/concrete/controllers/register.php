@@ -44,6 +44,11 @@ class RegisterController extends Controller {
 		$password = $_POST['uPassword'];
 		$passwordConfirm = $_POST['uPasswordConfirm'];
 		
+		// clean the username
+		$username = trim($username);
+		$username = ereg_replace(" +", " ", $username);
+		
+		
 		if (!$ip->check()) {
 			$e->add($ip->getErrorMessage());
 		}		
@@ -60,6 +65,7 @@ class RegisterController extends Controller {
 		}
 		
 		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) {
+			
 			if (strlen($username) < USER_USERNAME_MINIMUM) {
 				$e->add(t('A username must be between at least %s characters long.', USER_USERNAME_MINIMUM));
 			}
@@ -68,8 +74,14 @@ class RegisterController extends Controller {
 				$e->add(t('A username cannot be more than %s characters long.', USER_USERNAME_MAXIMUM));
 			}
 	
-			if (strlen($username) >= USER_USERNAME_MINIMUM && !$vals->alphanum($username)) {
-				$e->add(t('A username may only contain letters or numbers.'));
+	
+			if (strlen($username) >= USER_USERNAME_MINIMUM && !$valc->username($username)) {
+				if(USER_USERNAME_ALLOW_SPACES) {
+					$e->add(t('A username may only contain letters, numbers and spaces.'));
+				} else {
+					$e->add(t('A username may only contain letters or numbers.'));
+				}
+				
 			}
 			if (!$valc->isUniqueUsername($username)) {
 				$e->add(t("The username %s already exists. Please choose another", $username));
