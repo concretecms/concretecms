@@ -96,7 +96,7 @@ if ($controller->hasVoted()) { ?>
 		<div class="faint" style="margin-top:8px"><?=t('Please Login to Vote')?></div>
 	<? } ?>
 
-	<? if(intval($uID)>0){ ?>
+	<? if(!$controller->requiresRegistration() || intval($uID) > 0) { ?>
 	</form>
 	<? } ?>
 
