@@ -34,7 +34,9 @@
 	Loader::library('block_controller');
 
 	## Autoload settings
-	require(dirname(__FILE__) . '/startup/autoload.php');
+	if (C5_ENVIRONMENT_ONLY == false) {
+		require(dirname(__FILE__) . '/startup/autoload.php');
+	}
 	
 	## Load required models ##
 	Loader::model('area');
@@ -100,7 +102,7 @@
 	## Specific site/app events if they are enabled ##
 	## This must come before packages ##
 	if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true) {
-		include('config/site_events.php');
+		@include('config/site_events.php');
 	}
 	
 	## Package events
