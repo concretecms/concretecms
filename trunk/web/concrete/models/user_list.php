@@ -66,6 +66,9 @@ class UserList extends DatabaseItemList {
 	 */
 	public function filterByUserAttribute($handle, $value, $comparison = '=') {
 		$ak = UserAttributeKey::getByHandle($handle);
+		if(!$ak) {
+			throw new Exception(t("The user attribute \"%s\" does not exist",$handle)); 
+		}
 		$this->userAttributeFilters[] = array($handle, $value, $comparison, $ak->getKeyType());
 	}
 	
