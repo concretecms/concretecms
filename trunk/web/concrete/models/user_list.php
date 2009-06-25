@@ -115,9 +115,9 @@ class UserList extends DatabaseItemList {
 			$txt = Loader::helper('text');
 			$attrib = $txt->uncamelcase(substr($nm, 8));
 			if (count($a) == 2) {
-				$this->filterByFileAttribute($attrib, $a[0], $a[1]);
+				$this->filterByUserAttribute($attrib, $a[0], $a[1]);
 			} else {
-				$this->filterByFileAttribute($attrib, $a[0]);
+				$this->filterByUserAttribute($attrib, $a[0]);
 			}
 		}			
 	}
