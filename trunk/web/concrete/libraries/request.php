@@ -169,39 +169,7 @@ class Request {
 		if (preg_match("/^(.[^\.]*)/i", $path, $matches)) {
 			$this->cPath = $matches[1];
 			return;
-		}
-
-		
-		// legacy support - we can probably strip this out
-		// once people have a chance to replace their .htaccess files
-		
-		if ($_REQUEST['cPath']) {
-			$this->cPath = $_REQUEST['cPath'];
-		}
-		if ($_REQUEST['task']) {
-			$this->task = $_REQUEST['task'];
-		}
-		if ($_REQUEST['params']) {
-			$this->params = $_REQUEST['params'];
-		}
-		if (isset($_REQUEST['fType'])) {
-			switch($_REQUEST['fType']) {
-				case 'TOOL':
-					$this->includeType = 'CONCRETE_TOOL';
-					$this->filename = $_REQUEST['filename'];
-					break;
-				case 'SITE_TOOL':
-					$this->includeType = 'TOOL';
-					$this->filename = $_REQUEST['filename'];
-					break;
-				case 'BLOCKTOOL':
-					$this->includeType = 'BLOCK_TOOL';
-					$this->filename = $_REQUEST['filename'];
-					$this->btHandle = $_REQUEST['block'];				
-					break;
-			}
-		}
-		
+		}		
 	}
 	
 	/** 
