@@ -115,8 +115,21 @@ class DashboardScrapbookController extends Controller {
 		$db = Loader::db();
 		$c=$this->getCollectionObject();
 		$scrapbookName=$_POST['scrapbookName'];
-		$vals=array( $scrapbookName, $_POST['arID'], $c->getCollectionId() );
+		
+		//get original area name
+		$vals=array(  intval($_POST['arID']), $c->getCollectionId() ); 
+		$oldScrapbookName=$db->getOne( 'SELECT arHandle FROM Areas WHERE arID=? AND cID=?', $vals); 
+		
+		//update area name
+		$vals=array( $scrapbookName, intval($_POST['arID']), $c->getCollectionId() );		
 		$db->query( 'UPDATE Areas SET arHandle=? WHERE arID=? AND cID=?', $vals);
+		
+		//update area blocks
+		if($oldScrapbookName){  
+			$vals=array( $scrapbookName, $oldScrapbookName, $c->getCollectionId() );
+			$db->query( 'UPDATE CollectionVersionBlocks SET arHandle=? WHERE arHandle=? AND cID=?', $vals);
+		}
+		
 		$this->redirect('/dashboard/scrapbook/');
 	}			
 }

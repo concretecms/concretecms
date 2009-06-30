@@ -184,9 +184,8 @@ class Area extends Object {
 		foreach($blocks as $ab) {
 			$ab->setBlockAreaObject($this);
 			$this->areaBlocksArray[] = $ab;
-			$this->totalBlocks++;			
+			$this->totalBlocks++;
 		}
-
 		return $this->areaBlocksArray;
 	}
 
