@@ -117,8 +117,6 @@ class Search {
 		$defaultSort = ($args[3]) ? $args[3] : 'asc';
 		if ($args[1]) {
 			//$img = ($this->order == 'desc' && ($this->sort == $args[1])) ? 'sort_desc.gif' : 'sort_asc.gif';
-						
-			
 			
 			if ($this->sort == $args[1]) {
 				$order = ($this->order != 'desc') ? 'desc' : 'asc';
@@ -127,14 +125,14 @@ class Search {
 				$variables['order'] = $order;
 				$url = $_SERVER['PHP_SELF'] . $this->qsReplace($variables);
 					
-				$cell .= ' class="subheaderActive"><a href="' . $url . '">' . $fieldtext . '</a></td>';
+				$cell .= ' class="subheaderActive"><a href="' . htmlentities($url) . '">' . $fieldtext . '</a></td>';
 			} else {
 			
 				$variables['sort'] = $args[1];
 				$variables['order'] = $defaultSort;
 				$url = $_SERVER['PHP_SELF'] . $this->qsReplace($variables);
 				
-				$cell .= ' class="subheader"><a href="' . $url . '">' . $fieldtext . '</a></td>';
+				$cell .= ' class="subheader"><a href="' . htmlentities($url) . '">' . $fieldtext . '</a></td>';
 			}
 		} else {
 			$cell .= ' class="subheader">' . $fieldtext . '</td>';

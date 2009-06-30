@@ -14,39 +14,48 @@ $valc = Loader::helper('concrete/validation');
 $dtt = Loader::helper('form/date_time');
 $form = Loader::helper('form');
 $ih = Loader::helper('concrete/interface');
-$av = Loader::helper('concrete/avatar');
+$av = Loader::helper('concrete/avatar'); 
 
 if ($_REQUEST['user_created'] == 1) {
 	$message = t('User created successfully. ');
 }
 
-if ($_GET['uID']) {
-	$uo = UserInfo::getByID($_GET['uID']);
+if (intval($_GET['uID'])) {
+	$uo = UserInfo::getByID(intval($_GET['uID']));
 	if (is_object($uo)) {
-		$uID = $_REQUEST['uID'];
+		$uID = intval($_REQUEST['uID']);
+		
 		if ($_GET['task'] == 'activate') {
-			$uo->activate();
-			$uo = UserInfo::getByID($_GET['uID']);
-			$message = t("User activated.");
+			if( !$valt->validate("user_activate") ){
+				throw new Exception('Invalid token.  Unable to activate user.');
+			}else{		
+				$uo->activate();
+				$uo = UserInfo::getByID(intval($_GET['uID']));
+				$message = t("User activated.");
+			}
 		}
 
 		if ($_GET['task'] == 'validate_email') {
 			$uo->markValidated();
-			$uo = UserInfo::getByID($_GET['uID']);
+			$uo = UserInfo::getByID(intval($_GET['uID']));
 			$message = t("Email marked as valid.");
 		}
 		
 		
 		if ($_GET['task'] == 'remove-avatar') {
 			$av->removeAvatar($uo->getUserID());
-			$this->controller->redirect('/dashboard/users/search?uID=' . $_GET['uID'] . '&task=edit');
+			$this->controller->redirect('/dashboard/users/search?uID=' . intval($_GET['uID']) . '&task=edit');
 
 		}
 		
 		if ($_GET['task'] == 'deactivate') {
-			$uo->deactivate();
-			$uo = UserInfo::getByID($_GET['uID']);
-			$message = t("User deactivated.");
+			if( !$valt->validate("user_deactivate") ){
+				throw new Exception('Invalid token.  Unable to deactivate user.');
+			}else{
+				$uo->deactivate();
+				$uo = UserInfo::getByID(intval($_GET['uID']));
+				$message = t("User deactivated.");
+			}
 		}
 		
 		
@@ -113,7 +122,7 @@ if ($_GET['uID']) {
 				}
 			}
 			
-			if (!$valt->validate('update_account_' . $_GET['uID'])) {
+			if (!$valt->validate('update_account_' . intval($_GET['uID']) )) {
 				$error[] = $valt->getErrorMessage();
 			}
 		
@@ -137,7 +146,7 @@ if ($_GET['uID']) {
 					}
 					$editComplete = true;
 					// reload user object
-					$uo = UserInfo::getByID($_GET['uID']);
+					$uo = UserInfo::getByID(intval($_GET['uID']));
 				} else {
 					$db = Loader::db();
 					$error[] = $db->ErrorMsg();
@@ -192,7 +201,7 @@ if ((!is_object($uo))) {
 				echo("<td>" . date('Y-m-d H:i:s', strtotime($row['uDateAdded'])) . "</td>");
 				echo("<td>{$row['uNumLogins']}</td>");
 				foreach($attribs as $ak) {
-					echo("<td>" . $ak->getUserValue($row['uID']) . "</td>");
+					echo("<td>" . $ak->getUserValue(intval($row['uID'])) . "</td>");
 				}
 				echo("</tr>");
 			}
@@ -237,8 +246,8 @@ if (is_object($uo)) {
 	
 	<div class="ccm-dashboard-inner">
 
-		<form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$this->url('/dashboard/users/search?uID=' . $_GET['uID'])?>">
-		<?=$valt->output('update_account_' . $_GET['uID'])?>
+		<form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$this->url('/dashboard/users/search?uID=' . intval($_GET['uID']) )?>">
+		<?=$valt->output('update_account_' . intval($_GET['uID']) )?>
 		<input type="hidden" name="_disableLogin" value="1">
 	
 		<div style="margin:0px; padding:0px; width:100%; height:auto" >
@@ -257,7 +266,7 @@ if (is_object($uo)) {
 			<td><input type="file" name="uAvatar" style="width: 94%" /> <input type="hidden" name="uHasAvatar" value="<?=$uo->hasAvatar()?>" />
 			
 			<? if ($uo->hasAvatar()) { ?>
-			<input type="button" onclick="location.href='<?=$this->url('/dashboard/users/search?uID=' . $uID . '&task=remove-avatar')?>'" value="<?=t('Remove Avatar')?>" />
+			<input type="button" onclick="location.href='<?=$this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=remove-avatar')?>'" value="<?=t('Remove Avatar')?>" />
 			<? } ?>
 			</td>
 		</tr>
@@ -280,7 +289,7 @@ if (is_object($uo)) {
 	
 		$attribs = UserAttributeKey::getList();
 		foreach($attribs as $ak) { 
-			$attrVal=$ak->getUserValue($_REQUEST['uID']);
+			$attrVal=$ak->getUserValue(intval($_REQUEST['uID']));
 			?>
 			<tr>
 				<td valign="top" class="field" style="text-align: right">
@@ -334,7 +343,7 @@ if (is_object($uo)) {
 		
 		<div class="ccm-buttons">
 		<input type="hidden" name="edit" value="1" />
-		<a href="<?=$this->url('/dashboard/users/search?uID=' . $_GET['uID'])?>" class="ccm-button-left cancel"><span><?=t('Cancel')?></span></a>
+		<a href="<?=$this->url('/dashboard/users/search?uID=' . intval($_GET['uID']))?>" class="ccm-button-left cancel"><span><?=t('Cancel')?></span></a>
 		<a href="javascript:void(0)" onclick="$('#ccm-user-form').get(0).submit()" class="ccm-button-right accept"><span><?=t('Update User')?></span></a>
 		</div>	
 		
@@ -348,18 +357,18 @@ if (is_object($uo)) {
 	<div class="ccm-dashboard-inner">
 		<div class="actions" >			<? define('USER_VALIDATE_EMAIL', 1);?>
 
-			<? print $ih->button(t('Edit User'), $this->url('/dashboard/users/search?uID=' . $uID) . '&task=edit', 'left');?>
+			<? print $ih->button(t('Edit User'), $this->url('/dashboard/users/search?uID=' . intval($uID) ) . '&task=edit', 'left');?>
 
 			<? if (USER_VALIDATE_EMAIL == true) { ?>
 				<? if ($uo->isValidated() < 1) { ?>
-				<? print $ih->button(t('Mark Email as Valid'), $this->url('/dashboard/users/search?uID=' . $uID . '&task=validate_email'), 'left');?>
+				<? print $ih->button(t('Mark Email as Valid'), $this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=validate_email'), 'left');?>
 				<? } ?>
 			<? } ?>
 			
 			<? if ($uo->isActive()) { ?>
-				<? print $ih->button(t('Deactivate User'), $this->url('/dashboard/users/search?uID=' . $uID . '&task=deactivate'), 'left');?>
+				<? print $ih->button(t('Deactivate User'), $this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=deactivate&ccm_token='.$valt->generate('user_deactivate')), 'left');?>
 			<? } else { ?>
-				<? print $ih->button(t('Activate User'), $this->url('/dashboard/users/search?uID=' . $uID . '&task=activate'), 'left');?>
+				<? print $ih->button(t('Activate User'), $this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=activate&ccm_token='.$valt->generate('user_activate')), 'left');?>
 			<? } ?>
 			
 			<? if ($u->isSuperUser()) { ?>
@@ -533,7 +542,7 @@ if (is_object($uo)) {
 	<tr>
 	<td>
 	<input type="hidden" name="task" value="simple_search" />
-	<input type="text" name="uVal" value="<?=$_REQUEST['uVal']?>" style="width: 200px" />
+	<input type="text" name="uVal" value="<?=htmlentities($_REQUEST['uVal'])?>" style="width: 200px" />
 	</td>
 	<td style="padding-left: 10px">
 	<a href="javascript:void(0)" onclick="$('#ccm-user-search-simple-form').get(0).submit()" class="ccm-button"><span><?=t('Search Users')?></span></a>
@@ -556,9 +565,9 @@ if (is_object($uo)) {
 	<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 	<tr>
 		<td class="subheader"><?=t('Username')?></td>
-		<td><input type="text" name="uName" autocomplete="off" value="<?=$_GET['uName']?>" style="width: 100%"></td>
+		<td><input type="text" name="uName" autocomplete="off" value="<?=htmlentities($_GET['uName'])?>" style="width: 100%"></td>
 		<td class="subheader"><?=t('Email Address')?></td>
-		<td><input type="text" name="uEmail" autocomplete="off" value="<?=$_GET['uEmail']?>" style="width: 100%"></td>
+		<td><input type="text" name="uEmail" autocomplete="off" value="<?=htmlentities($_GET['uEmail'])?>" style="width: 100%"></td>
 	</tr>
 	<tr>
 		<td class="subheader"><?=t('Registered between:')?></td>
@@ -632,7 +641,7 @@ if (is_object($uo)) {
 		$variables['output'] = 'excel';
 		$url = Search::qsReplace($variables);
 	?>
-	<a href="<?=$url?>" style="float: right; line-height: 18px; padding-left: 20px; background: transparent url(<?=ASSETS_URL_IMAGES?>/icons/excel.png) no-repeat"><?=t('Export to Excel')?></a>
+	<a href="<?=htmlentities($url) ?>" style="float: right; line-height: 18px; padding-left: 20px; background: transparent url(<?=ASSETS_URL_IMAGES?>/icons/excel.png) no-repeat"><?=t('Export to Excel')?></a>
 
 	<? include(DIR_FILES_ELEMENTS_CORE . '/search_results_top.php'); ?>
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >
@@ -651,7 +660,7 @@ if (is_object($uo)) {
 			}
 			?>
 		<tr>
-			<?=$s->printRow($uName, 'uName', $this->url('/dashboard/users/search?uID=' . $row['uID']))?>
+			<?=$s->printRow($uName, 'uName', $this->url('/dashboard/users/search?uID=' . intval($row['uID']) ))?>
 			<?=$s->printRow($row['uEmail'], 'uEmail', 'mailto:' . $row['uEmail'])?>
 			<?=$s->printRow($row['uDateAdded'], 'uDateAdded')?>
 			<?=$s->printRow($row['uNumLogins'], 'uNumLogins')?>
