@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $section = 'groups';
 
 if ($_REQUEST['task'] == 'edit') {
-	$g = Group::getByID($_REQUEST['gID']);
+	$g = Group::getByID(intval($_REQUEST['gID']));
 	if (is_object($g)) { 		
 		if ($_POST['update']) {
 		
@@ -82,7 +82,7 @@ $gResults = $gl->getPage();
 
 <form id="ccm-group-search" method="get" style="top: -30px; left: 10px" action="<?=$this->url('/dashboard/users/groups')?>">
 <div id="ccm-group-search-fields">
-<input type="text" id="ccm-group-search-keywords" name="gKeywords" value="<?=$_REQUEST['gKeywords']?>" class="ccm-text" style="width: 100px" />
+<input type="text" id="ccm-group-search-keywords" name="gKeywords" value="<?=htmlentities($_REQUEST['gKeywords'])?>" class="ccm-text" style="width: 100px" />
 <input type="submit" value="<?=t('Search')?>" />
 <input type="hidden" name="group_submit_search" value="1" />
 </div>
@@ -123,7 +123,7 @@ foreach ($gResults as $g) { ?>
 	<td class="subheader" colspan="3"><?=t('Name')?> <span class="required">*</span></td>
 </tr>
 <tr>
-	<td colspan="3"><input type="text" name="gName" style="width: 100%" value="<?=$_POST['gName']?>" /></td>
+	<td colspan="3"><input type="text" name="gName" style="width: 100%" value="<?=htmlentities($_POST['gName'])?>" /></td>
 </tr>
 <tr>
 	<td class="subheader" colspan="3"><?=t('Description')?></td>
@@ -148,7 +148,7 @@ foreach ($gResults as $g) { ?>
 	
 		<form method="post" id="update-group-form" action="<?=$this->url('/dashboard/users/groups/')?>">
 		<?=$valt->output('add_or_update_group')?>
-		<input type="hidden" name="gID" value="<?=$_REQUEST['gID']?>" />
+		<input type="hidden" name="gID" value="<?=intval($_REQUEST['gID'])?>" />
 		<input type="hidden" name="task" value="edit" />
 		
 		<div style="margin:0px; padding:0px; width:100%; height:auto" >	
@@ -193,7 +193,7 @@ foreach ($gResults as $g) { ?>
 			<script type="text/javascript">
 			deleteGroup = function() {
 				if (confirm('<?=$delConfirmJS?>')) { 
-					location.href = "<?=$this->url('/dashboard/users/groups', 'delete', $_REQUEST['gID'], $valt->generate('delete_group_' . $_REQUEST['gID']))?>";				
+					location.href = "<?=$this->url('/dashboard/users/groups', 'delete', intval($_REQUEST['gID']), $valt->generate('delete_group_' . intval($_REQUEST['gID']) ))?>";				
 				}
 			}
 			</script>
