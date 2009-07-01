@@ -88,6 +88,17 @@ class DashboardSettingsController extends Controller {
 			$this->set('error', array($this->token->getErrorMessage()));
 		}
 	}
+
+	public function formatTimestampAsMinutesSeconds($seconds){
+		if ($seconds == 0) {
+			return t('Never');
+		}
+		else{
+			$seconds = $seconds-time();
+			return floor($seconds / 60) . 'm' . $seconds % 60 . 's';
+		}
+		
+	}
 	
 	public function update_tracking_code() {
 		if ($this->token->validate("update_tracking_code")) {
