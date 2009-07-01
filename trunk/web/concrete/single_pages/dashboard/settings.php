@@ -312,7 +312,7 @@ saveMaintenanceMode = function() {
 						<tr>
 							<td><?=$form->checkbox('ip_ban_changes[]',$user_banned_ip->getUniqueID(),false)?> <?=$user_banned_ip->getIPRangeForDisplay()?></td>
 							<td><?=$user_banned_ip->getReason()?></td>
-							<td><?=($this->formatTimestampAsMinutesSeconds($user_banned_ip->expires))?></td>			
+							<td><?=($this->controller->formatTimestampAsMinutesSeconds($user_banned_ip->expires))?></td>			
 							<td>&nbsp;</td>
 						</tr>		
 					<? } ?>
