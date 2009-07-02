@@ -116,8 +116,8 @@ class DashboardFilesSearchController extends Controller {
 									$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), 1);
 									break;
 								case 'TEXT':
-									$value = $_REQUEST['fakID_' . $akID];
-									$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $value);
+									$value = '%' . $_REQUEST['fakID_' . $akID] . '%';
+									$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $value, 'like');
 									break;
 								case 'SELECT':
 									$value = $_REQUEST['fakID_' . $akID];

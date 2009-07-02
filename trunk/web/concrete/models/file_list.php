@@ -206,8 +206,8 @@ class FileList extends DatabaseItemList {
 					$this->filter(false, $multiString);
 					break;
 				case 'TEXT':
-					$val = $db->quote('%' . $caf[1] . '%');
-					$this->filter(false, $tbl . '.value like ' . $val);
+					$val = $db->quote($caf[1]);
+					$this->filter(false, $tbl . '.value ' . $caf[2] . ' ' . $val);
 					break;
 				default:
 					$this->filter($tbl . '.value', $caf[1], $caf[2]);
