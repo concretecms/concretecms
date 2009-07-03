@@ -293,7 +293,9 @@
 				while ($row = $r->fetchRow()) {
 					if ($row['bID']) {
 						$b = Block::getByID($row['bID'], $c, $row['arHandle']);
-						$b->deleteBlock();
+						if (is_object($b)) {
+							$b->deleteBlock();
+						}
 					}
 					unset($b);
 				}
