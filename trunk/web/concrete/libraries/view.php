@@ -721,6 +721,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				
 				Events::fire('on_before_render', $this);
 				
+				if (defined('APP_CHARSET')) {
+					header("Content-Type: text/html; charset=" . APP_CHARSET);
+				}
+				
 				include($this->theme);
 				
 				Events::fire('on_render_complete', $this);
