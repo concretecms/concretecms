@@ -159,7 +159,7 @@
 				$b = Block::getByID($_GET['bID'], $c, $a);
 				$p = new Permissions($b);
 				// we're updating the groups for a particular block
-				if ($p->canAdminBlock()) {
+				if ($p->canWrite()) {
 					
 					$nvc = $c->getVersionToModify();
 					$b->loadNewCollection($nvc);
