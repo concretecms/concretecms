@@ -54,12 +54,28 @@ class FileList extends DatabaseItemList {
 	}
 	
 	/** 
-	 * Filters by files found in a certain set */
+	 * Filters by files found in a certain set. If "false" is provided, we display files not found in any set. */
 	public function filterBySet($fs) {
-		$tableAliasName='fsf'.intval($fs->getFileSetID());
-		$this->addToQuery("left join FileSetFiles {$tableAliasName} on {$tableAliasName}.fID = f.fID");
-		$this->filter("{$tableAliasName}.fsID", $fs->getFileSetID(), '=');
+		if ($fs != false) {
+			$tableAliasName='fsf'.intval($fs->getFileSetID());
+			$this->addToQuery("left join FileSetFiles {$tableAliasName} on {$tableAliasName}.fID = f.fID");
+			$this->filter("{$tableAliasName}.fsID", $fs->getFileSetID(), '=');
+		} else {
+			$s1 = FileSet::getMySets();
+			$sets = array();
+			foreach($s1 as $fs) {
+				$sets[] = $fs->getFileSetID();
+			}
+			if (count($sets) == 0) {
+				return false;
+			}
+			$db = Loader::db();
+			$setStr = implode(',', $sets);
+			$this->addToQuery("left join FileSetFiles fsfex on fsfex.fID = f.fID");
+			$this->filter(false, '(fsfex.fID is null or (select count(fID) from FileSetFiles where fID = fsfex.fID and fsID in (' . $setStr . ')) = 0)');
+		}
 	}
+	
 	/** 
 	 * Filters the file list by file size (in kilobytes)
 	 */

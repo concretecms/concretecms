@@ -1,11 +1,6 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
 <?
 Loader::model('file_set');
-$s1 = FileSet::getMySets();
-$sets = array('' =>'** ' . t('All'));
-foreach($s1 as $s) {
-	$sets[$s->getFileSetID()] = $s->getFileSetName();
-}
 
 $searchFields = array(
 	'' => '** ' . t('Fields'),
@@ -34,11 +29,6 @@ foreach($t1 as $value) {
 }
 
 $s1 = FileSet::getMySets();
-$sets = array();
-$sets[] = '** ' . t('All');
-foreach($s1 as $s) {
-	$sets[$s->getFileSetID()] = $s->getFileSetName();
-}
 
 ?>
 
@@ -156,10 +146,14 @@ foreach($s1 as $s) {
 <? if (count($s1) > 0) { ?>
 
 <div id="ccm-file-search-advanced-sets">
-	<h2><?=t('File Sets')?></h2>
+	<h2><?=t('Filter by File Set')?></h2>
 	<? foreach($s1 as $fs) { ?>
-		<div><?=$form->checkbox('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetID())?> <?=$form->label('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetName())?></div>
+		<div class="ccm-file-search-advanced-sets-cb"><?=$form->checkbox('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetID())?> <?=$form->label('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetName())?></div>
 	<? } ?>
+	
+	<hr/>
+	
+	<div><?=$form->checkbox('fsIDNone', '1')?> <?=$form->label('fsIDNone', t('Display files in no sets.'))?></div>
 </div>
 
 <? } ?>

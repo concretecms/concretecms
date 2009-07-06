@@ -33,17 +33,21 @@ class DashboardFilesSearchController extends Controller {
 			$fileList->setItemsPerPage($_REQUEST['fNumResults']);
 		}
 		
-		if (is_array($_GET['fsID'])) {
-			foreach($_GET['fsID'] as $fsID) {
-				$fs = FileSet::getByID($fsID);
+		if (isset($_GET['fsIDNone']) && $_GET['fsIDNone'] == 1) { 
+			$fileList->filterBySet(false);
+		} else {
+			if (is_array($_GET['fsID'])) {
+				foreach($_GET['fsID'] as $fsID) {
+					$fs = FileSet::getByID($fsID);
+					$fileList->filterBySet($fs);
+				}
+			} else if (isset($_GET['fsID']) && $_GET['fsID'] != '' && $_GET['fsID'] > 0) {
+				$set = $_REQUEST['fsID'];
+				$fs = FileSet::getByID($set);
 				$fileList->filterBySet($fs);
 			}
-		} else if (isset($_GET['fsID']) && $_GET['fsID'] != '' && $_GET['fsID'] > 0) {
-			$set = $_REQUEST['fsID'];
-			$fs = FileSet::getByID($set);
-			$fileList->filterBySet($fs);
 		}
-
+		
 		if (isset($_GET['fType']) && $_GET['fType'] != '') {
 			$type = $_REQUEST['fType'];
 			$fileList->filterByType($type);
