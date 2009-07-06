@@ -36,7 +36,7 @@ if($isGlobal){
 if (is_object($b)) {
 	switch($_REQUEST['btask']) { 
 		case 'template': 		
-			if ($bp->canAdminBlock()) {
+			if ($bp->canWrite()) {
 				$bv->renderElement('block_custom_template', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;
