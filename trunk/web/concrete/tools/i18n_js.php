@@ -13,6 +13,7 @@ var ccmi18n = {
 	setBlockPermissions: '<?=t('Set Permissions')?>',
 	setBlockAlias: '<?=t('Setup on Child Pages')?>',	
 	helpPopup: '<?=t('Help')?>',
+	noIE6: '<?=t('Concrete5 does not support Internet Explorer 6 in edit mode.')?>',
 	helpPopupLoginMsg: '<?=t('Get more help on your question by posting it to the concrete5 help center on concrete5.org')?>',
 	marketplaceErrorMsg: '<?=t('<p>You package could not be installed.  An unknown error occured.</p>')?>',
 	marketplaceInstallMsg: '<?=t('<p>Your package will now be downloaded and installed.</p>')?>',

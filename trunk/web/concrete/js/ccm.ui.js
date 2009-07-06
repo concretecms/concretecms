@@ -738,7 +738,16 @@ $(function() {
 
 
 });
+ 
 
+//make sure the user isn't using internet explorer 6
+$(function(){
+	if( $.browser.msie ){
+		var versionParts = jQuery.browser.version.split('.'); 
+		if( parseInt(versionParts[0])==6 ) 
+			alert( ccmi18n.noIE6 );
+	}
+});
 
 /* SUPPORT SECTION */
 

@@ -98,6 +98,7 @@ class FileList extends DatabaseItemList {
 	 * @param string $tag
 	 */
 	public function filterByTag($tag='') { 
+		$db=Loader::db();  
 		$this->filter(false, "( fv.fvTags like ".$db->qstr("%\n".$tag."\n%")."  )");
 	}	
 	
