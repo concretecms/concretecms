@@ -38,6 +38,7 @@ class FileImporter {
 	 */
 	const E_FILE_INVALID_EXTENSION = 10;
 	const E_FILE_INVALID = 11; // pointer is invalid file, is a directory, etc...
+	const E_FILE_UNABLE_TO_STORE = 12;
 	
 	/** 
 	 * Returns a text string explaining the error that was passed
@@ -58,6 +59,9 @@ class FileImporter {
 			case FileImporter::E_PHP_FILE_EXCEEDS_HTML_MAX_FILE_SIZE:
 			case FileImporter::E_PHP_FILE_EXCEEDS_UPLOAD_MAX_FILESIZE:
 				$msg = t('Uploaded file is too large. The current value of upload_max_filesize is %s', ini_get('upload_max_filesize'));
+				break;
+			case FileImporter::E_FILE_UNABLE_TO_STORE:			
+				$msg = t('Unable to copy file to storage directory. Please check permissions on your upload directory and ensure they can be written to by your web server.');
 				break;
 			case FileImporter::E_PHP_FILE_ERROR_DEFAULT:
 			default:
@@ -87,7 +91,7 @@ class FileImporter {
 		if ($path == false) {
 			$path = $fi->mapSystemPath($prefix, $filename, true);
 		}
-		copy($pointer, $path);
+		return copy($pointer, $path);
 	}
 	
 	/** 
@@ -122,7 +126,10 @@ class FileImporter {
 		// do save in the FileVersions table
 		
 		// move file to correct area in the filesystem based on prefix
-		$this->storeFile($prefix, $pointer, $filename, $fr);
+		$response = $this->storeFile($prefix, $pointer, $filename, $fr);
+		if (!$response) {
+			return FileImporter::E_FILE_UNABLE_TO_STORE;
+		}
 		
 		if (!($fr instanceof File)) {
 			// we have to create a new file object for this file version
