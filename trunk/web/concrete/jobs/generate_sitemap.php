@@ -55,13 +55,17 @@ class GenerateSitemap extends Job {
 			
 			$db = Loader::db();
 			$collection_attributes = Loader::model('collection_attributes');
-			$r = $db->query("select cID from Pages order by cID asc");
+			$r = $db->query("select cID from Pages where cID > 1 order by cID asc");
 			$g = Group::getByID(GUEST_GROUP_ID);
 			$nh = Loader::helper('navigation');
 			
 			while ($row = $r->fetchRow()) {
 				$c = Page::getByID($row['cID'], 'ACTIVE');
 				$g->setPermissionsForObject($c);
+				if ($c->isSystemPage()) {
+					continue;
+				}
+				
 				if ($g->canRead()) {			
 	
 					$name = ($c->getCollectionName()) ? $c->getCollectionName() : '(No name)';
