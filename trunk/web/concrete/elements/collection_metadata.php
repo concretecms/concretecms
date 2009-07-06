@@ -57,7 +57,7 @@ if ($cp->canAdminPage()) {
 	<div id="ccm-properties-standard-tab">
 	
 	<div class="ccm-field-one">
-	<label><?=t('Name')?></label> <input type="text" name="cName" value="<?=htmlentities($c->getCollectionName()) ?>" class="ccm-input-text">
+	<label><?=t('Name')?></label> <input type="text" name="cName" value="<?=htmlentities( $c->getCollectionName(), ENT_QUOTES, APP_CHARSET) ?>" class="ccm-input-text">
 	</div>
 	
 	<div class="ccm-field-one">
