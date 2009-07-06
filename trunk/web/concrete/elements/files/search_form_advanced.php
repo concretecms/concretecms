@@ -147,9 +147,11 @@ $s1 = FileSet::getMySets();
 
 <div id="ccm-file-search-advanced-sets">
 	<h2><?=t('Filter by File Set')?></h2>
+	<div style="max-height: 200px; overflow: auto">
 	<? foreach($s1 as $fs) { ?>
 		<div class="ccm-file-search-advanced-sets-cb"><?=$form->checkbox('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetID())?> <?=$form->label('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetName())?></div>
 	<? } ?>
+	</div>
 	
 	<hr/>
 	
