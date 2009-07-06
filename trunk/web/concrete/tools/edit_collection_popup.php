@@ -74,7 +74,10 @@ if (!$canViewPane) {
 	}
 	
 	if (($c->isEditMode() || ($_GET['ctask'] == 'add')) && $toolSection) {
-		require_once(DIR_FILES_ELEMENTS_CORE . '/' . $toolSection . '.php');
+		Loader::element($toolSection, array(
+			'c' => $c,
+			'cp' => $cp			
+		));
 	} else {
 		$error = t("Someone has already checked out this page for editing.");
 	}
