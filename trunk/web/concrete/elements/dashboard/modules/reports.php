@@ -4,7 +4,8 @@
 <script type="text/javascript">
 params = {
 	'bgcolor': "#ffffff",
-	'allowScriptAccess': "always"
+	'allowScriptAccess': "always",
+	'wmode': "transparent"
 }
 
 flashvars = {
