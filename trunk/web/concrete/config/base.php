@@ -324,11 +324,8 @@ define('USER_PASSWORD_MAXIMUM', 64);
 define('USER_SUPER', 'admin');
 define('USER_SUPER_ID', 1);
 define('GUEST_GROUP_ID', '1');
-define('GUEST_GROUP_NAME', 'Guest');
 define('REGISTERED_GROUP_ID', '2');
-define('REGISTERED_GROUP_NAME', 'Registered Users');
 define('ADMIN_GROUP_ID', '3');
-define('ADMIN_GROUP_NAME', 'Admin');
 define('SESSION_MAX_LIFETIME', 7200); // 2 hours
 define('USER_CHANGE_PASSWORD_URL_LIFETIME',  7200);
 
@@ -371,7 +368,6 @@ define('USER_NON_VALIDATED', 22);
 define('COLLECTION_MASTER_UNAUTH', 30);
 define('COLLECTION_PRIVATE', 40);
 define('BLOCK_NOT_AVAILABLE', 50);
-define('BLOCK_NOT_AVAILABLE_TEXT', 'This block is no longer available.');
 
 # Debug and Logging
 define('DEBUG_DISPLAY_PRODUCTION', 0);

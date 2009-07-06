@@ -133,6 +133,11 @@ if (!defined('UPLOAD_FILE_EXTENSIONS_ALLOWED')) {
 	Config::getOrDefine('UPLOAD_FILE_EXTENSIONS_ALLOWED','*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.mp4;*.mp3;*.qt;*.ppt;*.kml');
 }
 
+define('BLOCK_NOT_AVAILABLE_TEXT', t('This block is no longer available.'));
+define('GUEST_GROUP_NAME', t('Guest'));
+define('REGISTERED_GROUP_NAME', t('Registered Users'));
+define('ADMIN_GROUP_NAME', t('Admin'));
+
 # User & Registration Settings
 
 if (!defined('ENABLE_OPENID_AUTHENTICATION')) { 

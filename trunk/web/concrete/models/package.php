@@ -285,7 +285,7 @@ class Package extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow("select * from Packages where pkgID = ?", array($pkgID));
 		if ($row) {
-			$pkg = new Package;
+			$pkg = Loader::package($row['pkgHandle']);
 			$pkg->setPropertiesFromArray($row);
 			return $pkg;
 		}
