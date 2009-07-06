@@ -481,8 +481,20 @@ ccm_alSetupCheckboxes = function() {
 	});
 
 	// activate the file sets checkboxes
-	$("#ccm-file-search-advanced-sets input[type=checkbox]").unbind();
-	$("#ccm-file-search-advanced-sets input[type=checkbox]").click(function() {
+	$("div.ccm-file-search-advanced-sets-cb input[type=checkbox]").unbind();
+	$("div.ccm-file-search-advanced-sets-cb input[type=checkbox]").click(function() {
+		$("input[name=fsIDNone]").attr('checked', false);
+		$(".ccm-dashboard-file-search").submit();
+	});
+	
+	$("input[name=fsIDNone]").unbind();
+	$("input[name=fsIDNone]").click(function() {
+		if ($(this).attr('checked')) {
+			$("div.ccm-file-search-advanced-sets-cb input[type=checkbox]").attr('checked', false);
+			$("div.ccm-file-search-advanced-sets-cb input[type=checkbox]").attr('disabled', true);
+		} else {
+			$("div.ccm-file-search-advanced-sets-cb input[type=checkbox]").attr('disabled', false);
+		}
 		$(".ccm-dashboard-file-search").submit();
 	});
 
