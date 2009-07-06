@@ -279,6 +279,11 @@ define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED . '/cache');
 
 #Cache
 define('DIR_FILES_CACHE', DIR_BASE . '/files/cache');
+if (!is_dir(DIR_FILES_CACHE)) {
+	@mkdir(DIR_FILES_CACHE);
+	@chmod(DIR_FILES_CACHE, 0777);
+}
+
 define('DIR_FILES_CACHE_DB', DIR_FILES_CACHE);
 define('DIR_FILES_CACHE_CORE', DIR_BASE . '/files/cache_objects');
 define('DIR_FILES_CACHE_PAGES', DIR_FILES_CACHE . '/lucene.pages');

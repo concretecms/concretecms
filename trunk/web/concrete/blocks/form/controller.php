@@ -161,6 +161,8 @@ class FormBlockController extends BlockController {
 		$unchangedQuestions=$db->query('DELETE FROM btFormQuestions WHERE bID=? AND questionSetId=? AND msqID IN (?)',$vals);			
 	}
 	
+	
+	/*
 	function duplicate($newBID) { 
 		global $c;
 		$b=$this->getBlockObject(); 
@@ -175,6 +177,7 @@ class FormBlockController extends BlockController {
 			
 			//duplicate survey block record with a new questionSetId...
 			//only if this !isOriginal (not the master version) for this cID, and isAlias
+			*/
 			/*
 			$isOriginalForCollection=$db->getOne("SELECT count(*) FROM CollectionVersionBlocks WHERE isOriginal=1 AND bID=".intval($this->bID)." AND cID=".intval($c->getCollectionId()) );			
 			echo '$isOriginalForCollection'.$isOriginalForCollection.'<br>';
@@ -197,10 +200,37 @@ class FormBlockController extends BlockController {
 				$sql='INSERT INTO {$this->btQuestionsTablename} (questionSetId,msqID,bID,question,inputType,options,position,width,height,required) VALUES (!,!,!,?,?,?,!,?,?,?)';
 			}
 			*/
+			/*
 			return $questionSetId;
 		}		
 	}
+	*/
 	
+	
+	function duplicate($newBID) {
+		$db = Loader::db();
+		$v = array($this->bID);
+		$q = "select * from {$this->btTable} where bID = ? LIMIT 1";
+		$r = $db->query($q, $v);
+		$row = $r->fetchRow();
+		if(count($row)>0){
+			$oldQuestionSetId=$row['questionSetId'];
+			$newQuestionSetId=time();
+			//duplicate survey block record  
+			$v = array($newQuestionSetId,$row['surveyName'],$newBID,$row['thankyouMsg'],intval($row['notifyMeOnSubmission']),$row['recipientEmail'],$row['displayCaptcha']);
+			$q = "insert into {$this->btTable} ( questionSetId, surveyName, bID,thankyouMsg,notifyMeOnSubmission,recipientEmail,displayCaptcha) values (?, ?, ?, ?, ?, ?, ?)";
+			$db->Execute($q, $v);
+			
+			$rs=$db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$oldQuestionSetId AND bID=".intval($this->bID) );
+			while( $row=$rs->fetchRow() ){
+				$v=array($newQuestionSetId,intval($row['msqID']), intval($newBID), $row['question'],$row['inputType'],$row['options'],$row['position'],$row['width'],$row['height'],$row['required']);
+				$sql= "INSERT INTO {$this->btQuestionsTablename} (questionSetId,msqID,bID,question,inputType,options,position,width,height,required) VALUES (?,?,?,?,?,?,?,?,?,?)";
+				$db->Execute($sql, $v);
+			}
+		}		
+	}
+	
+
 	//users submits the completed survey
 
 	function action_submit_form() { 
