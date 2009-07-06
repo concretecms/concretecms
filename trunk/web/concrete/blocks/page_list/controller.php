@@ -91,6 +91,11 @@
 			if ($row['ctID']) {
 				$pl->filterByCollectionTypeID($row['ctID']);
 			}
+			
+			
+			$akID = $db->GetOne("select akID from CollectionAttributeKeys where akHandle = 'exclude_nav'");
+			$pl->addToQuery("left join CollectionAttributeValues cafefn on cafefn.cID = if(p2.cID is null, p1.cID, p2.cID) and cafefn.akID = {$akID} and cv.cvID = cafefn.cvID");
+			$pl->filter(false, '(cafefn.value = 0 or cafefn.value is null)');
 
 			if ($row['cParentID'] != 0) {
 				$pl->filterByParentID($cParentID);
