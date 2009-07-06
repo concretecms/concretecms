@@ -205,7 +205,10 @@ class LoginController extends Controller {
 
 		//set redirect url
 		if ($nh->integer($rcID)) {
-			$loginData['redirectURL'] = BASE_URL . DIR_REL . '/index.php?cID=' . $rcID;
+			$nh = Loader::helper('navigation');
+			$rc = Page::getByID($rcID);
+			$url = $nh->getLinkToCollection($rc, true);
+			$loginData['redirectURL'] = $url;
 		}elseif( strlen($rcID) ){
 			$loginData['redirectURL'] = $rcID;
 		}
