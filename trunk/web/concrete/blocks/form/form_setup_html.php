@@ -61,6 +61,7 @@ $uh = Loader::helper('concrete/urls'); ?>
 </div> 
 
 <input type="hidden" id="qsID" name="qsID" type="text" value="<?php echo intval($miniSurveyInfo['questionSetId'])?>" />
+<input type="hidden" id="oldQsID" name="oldQsID" type="text" value="<?php echo intval($miniSurveyInfo['questionSetId'])?>" />
 <input type="hidden" id="bID" name="bID" type="text" value="<?php echo intval($miniSurveyInfo['bID'])?>" />
 <input type="hidden" id="msqID" name="msqID" type="text" value="<?php echo intval($msqID)?>" />
 
