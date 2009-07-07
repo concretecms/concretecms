@@ -93,7 +93,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				}
 				$password = User::encryptPassword($password, PASSWORD_SALT);
 				$v = array($username, $password);
-				if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
+				if (defined('USER_REGISTRATION_WITH_EMAIL_ADDRESS') && USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
 					$q = "select uID, uName, uIsActive, uIsValidated from Users where uEmail = ? and uPassword = ?";
 				} else {
 					$q = "select uID, uName, uIsActive, uIsValidated from Users where uName = ? and uPassword = ?";
