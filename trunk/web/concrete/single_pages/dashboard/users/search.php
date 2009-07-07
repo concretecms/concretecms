@@ -542,7 +542,7 @@ if (is_object($uo)) {
 	<tr>
 	<td>
 	<input type="hidden" name="task" value="simple_search" />
-	<input type="text" name="uVal" value="<?=htmlentities($_REQUEST['uVal'])?>" style="width: 200px" />
+	<input type="text" name="uVal" value="<?=htmlentities($_REQUEST['uVal'], ENT_QUOTES, APP_CHARSET)?>" style="width: 200px" />
 	</td>
 	<td style="padding-left: 10px">
 	<a href="javascript:void(0)" onclick="$('#ccm-user-search-simple-form').get(0).submit()" class="ccm-button"><span><?=t('Search Users')?></span></a>
@@ -565,9 +565,9 @@ if (is_object($uo)) {
 	<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 	<tr>
 		<td class="subheader"><?=t('Username')?></td>
-		<td><input type="text" name="uName" autocomplete="off" value="<?=htmlentities($_GET['uName'])?>" style="width: 100%"></td>
+		<td><input type="text" name="uName" autocomplete="off" value="<?=htmlentities($_GET['uName'], ENT_QUOTES, APP_CHARSET)?>" style="width: 100%"></td>
 		<td class="subheader"><?=t('Email Address')?></td>
-		<td><input type="text" name="uEmail" autocomplete="off" value="<?=htmlentities($_GET['uEmail'])?>" style="width: 100%"></td>
+		<td><input type="text" name="uEmail" autocomplete="off" value="<?=htmlentities($_GET['uEmail'], ENT_QUOTES, APP_CHARSET)?>" style="width: 100%"></td>
 	</tr>
 	<tr>
 		<td class="subheader"><?=t('Registered between:')?></td>
@@ -641,7 +641,7 @@ if (is_object($uo)) {
 		$variables['output'] = 'excel';
 		$url = Search::qsReplace($variables);
 	?>
-	<a href="<?=htmlentities($url) ?>" style="float: right; line-height: 18px; padding-left: 20px; background: transparent url(<?=ASSETS_URL_IMAGES?>/icons/excel.png) no-repeat"><?=t('Export to Excel')?></a>
+	<a href="<?=htmlentities($url, ENT_QUOTES, APP_CHARSET) ?>" style="float: right; line-height: 18px; padding-left: 20px; background: transparent url(<?=ASSETS_URL_IMAGES?>/icons/excel.png) no-repeat"><?=t('Export to Excel')?></a>
 
 	<? include(DIR_FILES_ELEMENTS_CORE . '/search_results_top.php'); ?>
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >

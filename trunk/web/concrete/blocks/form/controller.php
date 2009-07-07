@@ -51,10 +51,11 @@ class FormBlockController extends BlockController {
 		return t("Thanks!");
 	}
 	
-	//form add or edit submit
-	function save( $data=array() ) {	
-		if( !$data || count($data)==0 ) $data=$_POST;
-		 
+	//form add or edit submit 
+	//(run after the duplicate method on first block edit of new page version)
+	function save( $data=array() ) { 
+		if( !$data || count($data)==0 ) $data=$_POST;  
+		
 		$b=$this->getBlockObject(); 
 		$c=$b->getBlockCollectionObject();
 		
@@ -62,31 +63,61 @@ class FormBlockController extends BlockController {
 		if(intval($this->bID)>0){	 
 			$q = "select count(*) as total from {$this->btTable} where bID = ".intval($this->bID);
 			$total = $db->getOne($q);
-		}else $total = 0;
-		 
-		$data['oldQsID']=$data['qsID'];
+		}else $total = 0; 
+			
+		if($_POST['qsID']) $data['qsID']=$_POST['qsID'];
+		if( !$data['qsID'] ) $data['qsID']=time(); 	
+		if(!$data['oldQsID']) $data['oldQsID']=$data['qsID'];
 		
+		//if(!$data['oldQsID']) $data['oldQsID']=$data['qsID'];
+	
+		//override if these were set during the blocks duplication
+		/*
+		if(intval($_POST['newQuestionSetId'])) 
+			$data['qsID']=intval($_POST['newQuestionSetId']); 
+		if(intval($_POST['oldQuestionSetId'])) 
+			$data['oldQsID']=intval($_POST['oldQuestionSetId']); 				
+		*/ 
+		
+		/*
+		//SAVE TIME DUPLICATION APPROACH
 		//duplicate survey block record with a new questionSetId...
 		//only if this !isOriginal (not the master version) for this cID, and isAlias		
 		$blockVersionInCollection=$db->getOne("SELECT count(*) FROM CollectionVersionBlocks as cvb, btForm as f WHERE isOriginal=1 && cvb.bID=f.bID AND f.questionSetId=".$data['qsID']." AND cvb.bID=".intval($this->bID)." AND cvb.cID=".intval($c->getCollectionId()) );			
 		//echo "SELECT count(*) FROM CollectionVersionBlocks as cvb, btForm as f WHERE cvb.bID=f.bID AND f.questionSetId=".$data['qsID']." AND cvb.bID=".intval($this->bID)." AND cvb.cID=".intval($c->getCollectionId()).'<br>';
 		$qIDExists=$db->getOne("SELECT count(*) FROM btForm as f WHERE f.questionSetId=".$data['qsID']);			
 		  
-		if($blockVersionInCollection<=1 && $total==0 && $qIDExists>=1){ 
-			$data['qsID']=time();
+		//echo '$blockVersionInCollection'.$blockVersionInCollection.'<br>';
+		//echo '$total'.$total.'<br>';
+		//echo '$qIDExists'.$qIDExists.'<br>'; 
+		
+		if($blockVersionInCollection<=1 && $total<=0 && $qIDExists>=1){  
+			$data['qsID']=time(); 
+			//die;
 			$updateSQLappend=' AND questionSetId='.$data['oldQsID'];
 		} 
+		*/ 
 		
 		$v = array( $data['qsID'], $data['surveyName'], intval($data['notifyMeOnSubmission']), $data['recipientEmail'], $data['thankyouMsg'], intval($data['displayCaptcha']), intval($this->bID) );
 		
+		/*
 		//it should insert a new row most of the time, unless a block is being edited multiple times while in edit mode.
+		//SAVE TIME DUPLICATION APPROACH
 		if($total > 0){  
 			$q = "update {$this->btTable} set questionSetId = ?, surveyName=?, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=?, displayCaptcha=? where bID = ? ".$updateSQLappend;
 		}else{ 
 			$q = "insert into {$this->btTable} (questionSetId, surveyName, notifyMeOnSubmission, recipientEmail, thankyouMsg, displayCaptcha, bID) values (?, ?, ?, ?, ?, ?, ?)";		
-		}
-
-		$rs = $db->query($q,$v); 
+		} 
+		*/
+		
+		//is it new? 
+		if( intval($total)==0 ){ 
+			$q = "insert into {$this->btTable} (questionSetId, surveyName, notifyMeOnSubmission, recipientEmail, thankyouMsg, displayCaptcha, bID) values (?, ?, ?, ?, ?, ?, ?)";		
+		}else{
+			$q = "update {$this->btTable} set questionSetId = ?, surveyName=?, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=?, displayCaptcha=? where bID = ? AND questionSetId=".$data['qsID'];
+		}		
+		
+		$rs = $db->query($q,$v);  
 		
 		//Add Questions (for programmatically creating forms, such as during the site install)
 		if( count($data['questions'])>0 ){
@@ -107,14 +138,14 @@ class FormBlockController extends BlockController {
 		$oldBID = intval($data['bID']);
 		
 		//if this block is being edited a second time, remove edited questions with the current bID that are pending replacement
-		if( intval($oldBID) == intval($this->bID) ){  
+		//if( intval($oldBID) == intval($this->bID) ){  
 			$vals=array( intval($data['oldQsID']) );  
-			$pendingQuestions=$db->getAll('SELECT msqID FROM btFormQuestions WHERE bID=0 && questionSetId=?',$vals);
-			foreach($pendingQuestions as $pendingQuestion){ 
+			$pendingQuestions=$db->getAll('SELECT msqID FROM btFormQuestions WHERE bID=0 && questionSetId=?',$vals); 
+			foreach($pendingQuestions as $pendingQuestion){  
 				$vals=array( intval($this->bID), intval($pendingQuestion['msqID']) );  
 				$db->query('DELETE FROM btFormQuestions WHERE bID=? AND msqID=?',$vals);
 			}
-		}
+		//} 
 	
 		//assign any new questions the new block id 
 		$vals=array( intval($this->bID), intval($data['qsID']), intval($data['oldQsID']) );  
@@ -127,6 +158,8 @@ class FormBlockController extends BlockController {
 			$ignoreQuestionIDs[]=intval($msqID);	
 		$ignoreQuestionIDstr=join(',',$ignoreQuestionIDs);
 		
+		/*
+		//SAVE TIME DUPLICATION APPROACH
 		//Retrieve all unchanged questions for duplication with new bID - skip this step is the new block is being edit for a second time		
 		if( intval($oldBID) != intval($this->bID) ){
 				
@@ -151,6 +184,7 @@ class FormBlockController extends BlockController {
 				$rs=$db->query("INSERT INTO btFormQuestions (".join(', ',$sqlCols).") VALUES (".join(', ',$sqlValPlaceHolders).")",$sqlVals);
 			}
 		} 
+		*/
 		
 		//remove any questions that are pending deletion, that already have this current bID 
  		$pendingDeleteQIDsDirty=explode( ',', $data['pendingDeleteIDs'] );
@@ -207,19 +241,42 @@ class FormBlockController extends BlockController {
 	*/
 	
 	
-	function duplicate($newBID) {
+	//Duplicate will run when copying a page with a block, or editing a block for the first time within a page version (before the save).
+	function duplicate($newBID) { 
+	
+		$b=$this->getBlockObject(); 
+		$c=$b->getBlockCollectionObject();	 
+		 
 		$db = Loader::db();
 		$v = array($this->bID);
 		$q = "select * from {$this->btTable} where bID = ? LIMIT 1";
 		$r = $db->query($q, $v);
 		$row = $r->fetchRow();
-		if(count($row)>0){
+		
+		//if the same block exists in multiple collections with the same questionSetID
+		if(count($row)>0){ 
 			$oldQuestionSetId=$row['questionSetId'];
-			$newQuestionSetId=time();
-			//duplicate survey block record  
+			//$_POST['oldQsID']=$oldQuestionSetId; 
+			
+			//It should only generate a new question set id if the block is copied to a new page,
+			//otherwise it will loose all of its answer sets (from all the people who've used the form on this page)
+			$questionSetCIDs=$db->getCol("SELECT distinct cID FROM {$this->btTable} AS f, CollectionVersionBlocks AS cvb ".
+						"WHERE f.bID=cvb.bID AND questionSetId=".intval($row['questionSetId']) );
+			
+			//this question set id is used on other pages, so make a new one for this page block 
+			if( count( $questionSetCIDs ) >1 || !in_array( $c->cID, $questionSetCIDs ) ){ 
+				$newQuestionSetId=time(); 
+				$_POST['qsID']=$newQuestionSetId; 
+			}else{
+				//otherwise the question set id stays the same
+				$newQuestionSetId=$row['questionSetId']; 
+			}
+			
+			//duplicate survey block record 
+			//with a new Block ID and a new Question 
 			$v = array($newQuestionSetId,$row['surveyName'],$newBID,$row['thankyouMsg'],intval($row['notifyMeOnSubmission']),$row['recipientEmail'],$row['displayCaptcha']);
 			$q = "insert into {$this->btTable} ( questionSetId, surveyName, bID,thankyouMsg,notifyMeOnSubmission,recipientEmail,displayCaptcha) values (?, ?, ?, ?, ?, ?, ?)";
-			$db->Execute($q, $v);
+			$result=$db->Execute($q, $v); 
 			
 			$rs=$db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$oldQuestionSetId AND bID=".intval($this->bID) );
 			while( $row=$rs->fetchRow() ){
@@ -616,6 +673,7 @@ class MiniSurvey{
 			//loading questions	
 			$questionsRS=$this->loadQuestions( $qsID, $bID, $showPending);
 		
+		
 			if(!$showEdit){
 				echo '<table class="formBlockSurveyTable">';					
 				while( $questionRow=$questionsRS->fetchRow() ){	
@@ -661,8 +719,11 @@ class MiniSurvey{
 				echo '</table>';
 				
 			}else{
+			
+			
 				echo '<div id="miniSurveyTableWrap"><div id="miniSurveyPreviewTable" class="miniSurveyTable">';					
 				while( $questionRow=$questionsRS->fetchRow() ){	 
+				
 					if( in_array($questionRow['qID'], $hideQIDs) ) continue;
 				
 					$requiredSymbol=($questionRow['required'])?'<span class="required">*</span>':'';				

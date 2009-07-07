@@ -92,7 +92,10 @@ var miniSurvey ={
 						   if(jsonObj.mode=='Edit'){
 							   $('#questionEditedMsg').slideDown('slow');
 							   setTimeout("$('#questionEditedMsg').slideUp('slow');",5000);
-							   if(jsonObj.hideQID) miniSurvey.hideQuestions.push(jsonObj.hideQID); 
+							   if(jsonObj.hideQID){
+								   miniSurvey.hideQuestions.push( miniSurvey.edit_qID ); //jsonObj.hideQID); 
+								   miniSurvey.edit_qID=0;
+							   }
 						   }else{
 							   $('#questionAddedMsg').slideDown('slow');
 							   setTimeout("$('#questionAddedMsg').slideUp('slow');",5000);
@@ -118,6 +121,7 @@ var miniSurvey ={
 		ignoreEl.val( msqIDs.join(',') );
 	},
 	reloadQuestion : function(qID){
+			
 			$.ajax({ 
 				url: this.serviceURL+"mode=getQuestion&qsID="+parseInt(this.qsID)+'&qID='+parseInt(qID),
 				success: function(msg){				
@@ -131,7 +135,7 @@ var miniSurvey ={
 						if( parseInt(jsonObj.required)==1 ) 
 							 $('#requiredEdit').get(0).checked=true;
 						else $('#requiredEdit').get(0).checked=false;
-						$('#msqID').val(jsonObj.msqID);  					
+						$('#msqID').val(jsonObj.msqID);    
 						for(var i=0;i<miniSurvey.answerTypesEdit.length;i++){							
 							if(miniSurvey.answerTypesEdit[i].value==jsonObj.inputType){
 								miniSurvey.answerTypesEdit[i].checked=true; 
@@ -139,6 +143,8 @@ var miniSurvey ={
 								miniSurvey.settingsCheck(miniSurvey.answerTypesEdit[i],'Edit');
 							}
 						}
+						if(parseInt(jsonObj.bID)>0) 
+							miniSurvey.edit_qID = parseInt(qID) ;
 						scroll(0,165);
 					}
 			});

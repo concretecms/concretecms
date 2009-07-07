@@ -104,6 +104,12 @@ function toggleQuestions(qsID,trigger){
 				$questionNumber=0;
 				$numQuestionsToShow=2;
 				foreach($questions as $questionId=>$question){ 
+				
+					//if this row doesn't have an answer, don't show it.
+					if(!strlen(trim($answerSet['answers'][$questionId]['answerLong'])) && 
+					   !strlen(trim($answerSet['answers'][$questionId]['answer'])))
+					   		continue;
+					   
 					$questionNumber++; 
 					?>
 					<tr class="<?=($questionNumber>$numQuestionsToShow)?'extra':''?>QuestionRow<?=$answerSetId?> <?=($questionNumber>$numQuestionsToShow)?'noDisplay':'' ?>">
