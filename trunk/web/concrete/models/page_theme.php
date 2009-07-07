@@ -429,7 +429,13 @@ class PageTheme extends Object {
 
 			// match all tokens
 			$matches = array();
-			preg_match_all("/\/\*[\s]?customize_(.*)[\s]?\*\/(.*)\/\*[\s]?customize_\\1[\s]?\*\//i", $ss, $matches);	
+			 
+			//REGEX NEW LINE BUG!
+			//currently this doesn't capture customize_ tags that span multiple lines
+			//you can easily make the .* dot character match multiple lines by adding the "s" modifiers to the end of the expression...
+			//but this introduces another bug where you can't have two tags with the same name within a style sheet
+			//Any regex wizards out there wanting to give it a shot?
+			preg_match_all("/\/\*[\s]?customize_(.*)[\s]?\*\/(.*)\/\*[\s]?customize_\\1[\s]?\*\//i", $ss, $matches); 
 	
 			// the format of the $matches array is [1] = the handle of the editable style object, [2] = the value (which we need to trim)
 			// handles are unique.
