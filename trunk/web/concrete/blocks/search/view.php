@@ -15,14 +15,14 @@
 	<? if( strlen($title)>0){ ?><h3><?=$title?></h3><? } ?>
 	
 	<? if(strlen($query)==0){ ?>
-	<input name="search_paths[]" type="hidden" value="<?=$baseSearchPath?>" />
+	<input name="search_paths[]" type="hidden" value="<?=htmlentities($baseSearchPath, ENT_COMPAT, APP_CHARSET) ?>" />
 	<? } else if (is_array($_REQUEST['search_paths'])) { 
 		foreach($_REQUEST['search_paths'] as $search_path){ ?>
-			<input name="search_paths[]" type="hidden" value="<?=$search_path?>" />
+			<input name="search_paths[]" type="hidden" value="<?=htmlentities($search_path, ENT_COMPAT, APP_CHARSET) ?>" />
 	<?  }
 	} ?>
 	
-	<input name="query" type="text" value="<?=$query?>" />
+	<input name="query" type="text" value="<?=htmlentities($query, ENT_COMPAT, APP_CHARSET)?>" />
 	
 	<input name="submit" type="submit" value="<?=$buttonText?>" />
 
