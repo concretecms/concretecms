@@ -391,8 +391,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 			$newBlockDisplayOrder = $nc->getCollectionAreaDisplayOrder($area->getAreaHandle());
 			
-			$v = array($nc->getCollectionID(), $area->getAreaHandle(), $newBlockDisplayOrder, $cID, $this->arHandle);
-			$db->Execute('update CollectionVersionBlocks set cID = ?, arHandle = ?, cbDisplayOrder = ? where cID = ? and arHandle = ?', $v);
+			$v = array($nc->getCollectionID(), $nc->getVersionID(), $area->getAreaHandle(), $newBlockDisplayOrder, $cID, $this->arHandle);
+			$db->Execute('update CollectionVersionBlocks set cID = ?, cvID = ?, arHandle = ?, cbDisplayOrder = ? where cID = ? and arHandle = ? and isOriginal = 1', $v);
 		}
 		
 		function duplicate($nc) {

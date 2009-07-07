@@ -64,7 +64,8 @@ class ConcreteUpgradeVersion530Helper {
 				$a = Area::getOrCreate($scn, t('Shared Scrapbook 1'));
 				foreach($blocks as $_b) {
 					// we move them into the area on the new page. 
-					$_b->move($scn, $a);					
+					$_b->move($scn, $a);
+					$_b->refreshCacheAll();
 				}
 			}
 			$sc->delete();

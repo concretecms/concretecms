@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>http://concrete5.dev</loc>
+  <lastmod> 2009-07-07</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>1.0</priority>
+</url>
+<url>
+<loc>http://concrete5.dev/index.php/about/</loc>
+  <lastmod>2009-07-07</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.1</priority>
+</url>
+<url>
+<loc>http://concrete5.dev/index.php/examples/</loc>
+  <lastmod>2009-07-07</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.3</priority>
+</url>
+<url>
+<loc>http://concrete5.dev/index.php/contact/</loc>
+  <lastmod>2009-07-07</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.2</priority>
+</url>
+<url>
+<loc>http://concrete5.dev/index.php/examples/image_slideshow/</loc>
+  <lastmod>2009-07-07</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.2</priority>
+</url>
+<url>
+<loc>http://concrete5.dev/index.php/examples/sitemap/</loc>
+  <lastmod>2009-07-07</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.3</priority>
+</url>
+<url>
+<loc>http://concrete5.dev/index.php/examples/youtube_video/</loc>
+  <lastmod>2009-07-07</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.1</priority>
+</url>
+<url>
+<loc>http://concrete5.dev/index.php/examples/search/</loc>
+  <lastmod>2009-07-07</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.5</priority>
+</url>
+<url>
+<loc>http://concrete5.dev/index.php/examples/form/</loc>
+  <lastmod>2009-07-07</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.1</priority>
+</url>
+<url>
+<loc>http://concrete5.dev/index.php/examples/form1/</loc>
+  <lastmod>2009-07-07</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.2</priority>
+</url>
+<url>
+<loc>http://concrete5.dev/index.php/examples/guestbook/</loc>
+  <lastmod>2009-07-07</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.5</priority>
+</url>
+</urlset>
