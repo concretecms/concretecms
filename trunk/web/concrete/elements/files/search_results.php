@@ -21,6 +21,7 @@
 				<option value="">**</option>
 				<option value="download"><?=t('Download')?></option>
 				<option value="sets"><?=t('Sets')?></option>
+				<option value="properties"><?=t('Properties')?></option>
 				<option value="rescan"><?=t('Rescan')?></option>
 				<option value="delete"><?=t('Delete')?></option>
 			</select>
