@@ -463,6 +463,15 @@ ccm_alSetupCheckboxes = function() {
 					title: ccmi18n_filemanager.sets				
 				});
 				break;
+			case "properties": 
+				jQuery.fn.dialog.open({
+					width: 350,
+					height: 200,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/files/bulk_properties?' + fIDstring,
+					title: ccmi18n_filemanager.properties				
+				});
+				break;				
 			case "rescan":
 				jQuery.fn.dialog.open({
 					width: 350,

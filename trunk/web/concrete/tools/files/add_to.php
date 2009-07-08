@@ -102,20 +102,20 @@ if ($_POST['task'] == 'add_to_sets') {
 	exit;
 }
 
-	function checkbox($field, $value, $state, $miscFields = array()) {
+function checkbox($field, $value, $state, $miscFields = array()) {
 
-		$mf = '';
-		if (is_array($miscFields)) {
-			foreach($miscFields as $k => $v) {
-				$mf .= $k . '="' . $v . '" ';
-			}
+	$mf = '';
+	if (is_array($miscFields)) {
+		foreach($miscFields as $k => $v) {
+			$mf .= $k . '="' . $v . '" ';
 		}
-
-		$src = ASSETS_URL_IMAGES . '/checkbox_state_' . $state . '.png';
-						
-		$str = '<a href="javascript:void(0)" ccm-tri-state-startup="' . $state . '" ccm-tri-state-selected="' . $state . '" ><input type="hidden" value="' . $state . '" name="' . $field . ':' . $value . '" /> <img width="16" height="16" src="' . $src . '" ' . $mf . ' /></a>';
-		return $str;
 	}
+
+	$src = ASSETS_URL_IMAGES . '/checkbox_state_' . $state . '.png';
+					
+	$str = '<a href="javascript:void(0)" ccm-tri-state-startup="' . $state . '" ccm-tri-state-selected="' . $state . '" ><input type="hidden" value="' . $state . '" name="' . $field . ':' . $value . '" /> <img width="16" height="16" src="' . $src . '" ' . $mf . ' /></a>';
+	return $str;
+}
 
 
 ?>
