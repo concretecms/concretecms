@@ -40,6 +40,7 @@ class ConcreteUpgradeVersion530Helper {
 	public function run() {
 		$db = Loader::db();
 		Loader::model('collection_attributes');
+		Loader::model('single_page');
 		
 		// Add in stuff that may have gotten missed before
 		$p = Page::getByPath('/profile');
