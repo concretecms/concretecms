@@ -129,12 +129,14 @@ if(count($errors)) {
 	window.parent.ccmAlert.notice("<?=t('Upload Error')?>", "<?=str_replace("\n", '', nl2br(implode('\n', $errors)))?>");
 	window.parent.ccm_alResetSingle();
 <? } else { ?>
-			window.parent.jQuery.fn.dialog.closeTop();
-			highlight = new Array();
-<? 	foreach ($import_responses as $r) { ?>
+		window.parent.jQuery.fn.dialog.closeTop();
+		highlight = new Array();
+	<? 	foreach ($import_responses as $r) { ?>
 			highlight.push(<?=$r->getFileID()?>);
-<?	} ?>
-			window.parent.ccm_alRefresh(highlight);
+			window.parent.ccm_uploadedFiles.push(<?=intval($r->getFileID())?>);
+	<?	} ?>		
+		window.parent.ccm_filesUploadedDialog();	
+		window.parent.ccm_alRefresh(highlight);
 <? } ?>
 		</script>
 	</head>

@@ -62,6 +62,9 @@ if ($errorCode > -1 && $error == '') {
 		<? if (is_object($fr)) { ?>
 			window.parent.jQuery.fn.dialog.closeTop();
 		<? } ?>
+		
+		window.parent.ccm_uploadedFiles.push(<?=intval($resp->getFileID())?>);
+		window.parent.ccm_filesUploadedDialog();
 	<? } ?>
 </script>
 </head>
