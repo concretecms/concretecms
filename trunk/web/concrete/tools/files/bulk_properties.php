@@ -38,39 +38,38 @@ if (is_array($_REQUEST['fID'])) {
 //the attributes interface needs a file version
 $fv = $f->getVersionToModify();
 
-//see what are the most common names, descriptions, tags, and attributes for this collection of files
-$popularProperties=array();
+//Default Values - if all the selected files share the same property, then display, otherwise leave it blank
+$defaultPropertyVals=array();
 foreach($files as $f){
 	$fv = $f->getVersionToModify();
 	$title=$fv->getTitle();
-	if( strlen(trim($title)) ){
-		$popularProperties['title'][$title]=intval($popularProperties['title'][$title])+1;
-	}
-	$description=$fv->getDescription();
-	if( strlen(trim($fv->getDescription())) ){
-		$popularProperties['description'][$description]=intval($popularProperties['description'][$description])+1;
-	}
-	$tags=$fv->getTags();
-	if( strlen(trim($tags)) ){
-		$popularProperties['tags'][$tags]=intval($popularProperties['tags'][$tags])+1;
-	}
+	if(!strlen($defaultPropertyVals['title']) || $defaultPropertyVals['title']==$title) 
+		 $defaultPropertyVals['title']=$title;
+	else $defaultPropertyVals['title']='MIXED VALUES'; 
+	
+	$description=$fv->getDescription(); 
+	if(!strlen($defaultPropertyVals['description']) || $defaultPropertyVals['description']==$description) 
+		 $defaultPropertyVals['description']=$description;
+	else $defaultPropertyVals['description']='MIXED VALUES'; 
+	
+	$tags=$fv->getTags(); 
+	if(!strlen($defaultPropertyVals['tags']) || $defaultPropertyVals['tags']==$tags) 
+		 $defaultPropertyVals['tags']=$tags;
+	else $defaultPropertyVals['tags']='MIXED VALUES';	 
+	
 	foreach($attribs as $ak){
 		$akID=$ak->getAttributeKeyID();
 		$attrVal = $fv->getAttribute($ak, true); 
-		$popularProperties['ak'.$akID][$attrVal]=intval($popularProperties['ak'.$akID][$attrVal])+1;
+		if(!strlen($defaultPropertyVals['ak'.$akID]) || $defaultPropertyVals['ak'.$akID]==$attrVal) 
+			 $defaultPropertyVals['ak'.$akID]=$attrVal;
+		else $defaultPropertyVals['ak'.$akID]='MIXED VALUES';		
 	}
-}   
+}
+foreach($defaultPropertyVals as $key=>$val)
+	if($val=='MIXED VALUES')  $defaultPropertyVals[$key]='';
 
-//set the default values for each property
-$defaultPropertyVals=array();
-foreach($popularProperties as $propertyName=>$valsArray){
-	$maxVal='';
-	$maxValCount=0;
-	foreach($valsArray as $val=>$count){
-		if($count>$maxValCount) $maxVal=$val; 
-	}
-	$defaultPropertyVals[$propertyName]=$maxVal;
-}    
+
+
  
 if ($_POST['task'] == 'update_core' && $fp->canWrite() && (!$previewMode)) { 
  

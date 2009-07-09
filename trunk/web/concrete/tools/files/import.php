@@ -128,13 +128,18 @@ $(function() {
 				if(serverData['id']){
 					if(!this.highlight){this.highlight = [];}
 					this.highlight.push(serverData['id']);
-				}
+					if(ccm_uploadedFiles && serverData['id']!='undefined') ccm_uploadedFiles.push(serverData['id']);
+				}   
 			} catch (ex) {
 				this.debug(ex);
 			}		
 		},
-		upload_complete_handler : uploadComplete,
-		queue_complete_handler : queueComplete	// Queue plugin event
+		upload_complete_handler : uploadComplete, 
+		queue_complete_handler : function(file){
+			// queueComplete() from swfupload.handlers.js
+			queueComplete();		
+			ccm_filesUploadedDialog(); 
+		}				
 	});
 
 	

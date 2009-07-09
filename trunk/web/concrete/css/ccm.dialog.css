@@ -6,7 +6,7 @@
 	font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
-.ccm-dialog-window a {color: #003C8A;}
+.ccm-dialog-window a { color: #003C8A; cursor:pointer }
 
 .ccm-dialog-window .ccm-dialog-title-bar-l,.ccm-dialog-window #ccm-dialog-content-wrapper,.ccm-dialog-window .ccm-dialog-title-bar-bl{ z-index:11; position:relative }
 
