@@ -126,6 +126,12 @@ class IndexedSearch {
 				continue;
 			}
 			
+			// make sure something is approved
+			$cv = $c->getVersionObject();
+			if(!$cv->cvIsApproved) { 
+				continue;
+			}		
+			
 			$themeObject = $c->getCollectionThemeObject();
 			$g->setPermissionsForObject($c);
 			if ($g->canRead()) {

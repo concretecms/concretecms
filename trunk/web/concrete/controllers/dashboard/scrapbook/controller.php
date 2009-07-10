@@ -55,6 +55,7 @@ class DashboardScrapbookController extends Controller {
 			$this->set('globalScrapbookArea', $globalScrapbookArea);
 			$this->set('globalScrapbookBlocks', $globalScrapbookBlocks);			
 		}
+		
 		$this->set('availableScrapbooks', $availableScrapbooks);
 		$this->set('cPath', $cPath); 
 	}
