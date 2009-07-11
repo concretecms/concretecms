@@ -1,8 +1,8 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 
-<h1 class="error"><?=t('Page Not Found')?></h1>
+<h1 class="error"><?=t('Page Forbidden')?></h1>
 
-<?=t('No page could be found at this address.')?>
+<?=t('You are not authorized to access this page.')?>
 <br/>
 <br/>
 
