@@ -290,6 +290,8 @@ class InstallController extends Controller {
 						SinglePage::add('/profile');
 						SinglePage::add('/profile/edit');
 						SinglePage::add('/profile/avatar');
+						SinglePage::add('/page_not_found');
+						SinglePage::add('/page_forbidden');
 				
 						// Install our blocks
 						BlockType::installBlockType('content');

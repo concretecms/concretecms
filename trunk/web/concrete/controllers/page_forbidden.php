@@ -6,7 +6,6 @@ Loader::controller('/login');
 
 class PageForbiddenController extends LoginController {
 	
-	
 	public function view() {
 		$v = View::getInstance();
 		$c = $v->getCollectionObject();
