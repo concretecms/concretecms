@@ -607,16 +607,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	
 				$v = array($this->bID);
 
-				// so, first we delete the block's sub content
-				
+				// so, first we delete the block's sub content				
 				$bt = BlockType::getByID($this->getBlockTypeID());
-				$class = $bt->getBlockTypeClass();
-				
-				$bc = new $class($this);
-				$bc->delete();
+				if( $bt && method_exists($bt,'getBlockTypeClass') ){
+					$class = $bt->getBlockTypeClass();
+					
+					$bc = new $class($this);
+					$bc->delete();
+				}
 
 				// now that the block's subcontent delete() method has been run, we delete the block from the Blocks table
-
 				$q = "delete from Blocks where bID = ?";
 				$r = $db->query($q, $v);
 
