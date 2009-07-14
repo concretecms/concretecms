@@ -36,6 +36,9 @@ class Request {
 	
 	private static function parsePathFromRequest($var) {
 		$path = (isset($_SERVER[$var])) ? $_SERVER[$var] : @getenv($var);
+		if (!$path) {
+			return false;
+		}
 		$replace[] = DIR_REL . '/' . DISPATCHER_FILENAME;
 		if (DIR_REL != '') {
 			$replace[] = DIR_REL . '/';
@@ -56,8 +59,14 @@ class Request {
 	 */
 	public static function get() {
 		static $req;
-		if (!isset($req)) {
-			$path = Request::parsePathFromRequest('ORIG_PATH_INFO');
+		if (!isset($req)) {			
+			$path = false;
+			if (defined('SERVER_PATH_VARIABLE')) {
+				$path = Request::parsePathFromRequest(SERVER_PATH_VARIABLE);
+			}
+			if (!$path) {
+				$path = Request::parsePathFromRequest('ORIG_PATH_INFO');
+			}
 			if (!$path) {
 				$path = Request::parsePathFromRequest('PATH_INFO');
 			}
