@@ -115,8 +115,9 @@ $ih = Loader::helper('concrete/interface');
 	
 		<tr>
 			<td class="subheader center" >
-				<a onclick="Jobs.selectAll()"><?=t('All')?></a> | <a onclick="Jobs.selectNone()"><?=t('None')?></a>
+				<a href="javascript:void(0)" onclick="Jobs.selectAll()"><?=t('All')?></a> | <a href="javascript:void(0)" onclick="Jobs.selectNone()"><?=t('None')?></a>
 			</td>
+			<td class="subheader"><?=t('ID')?></td>
 			<td class="subheader"><?=t('Name')?></td>
 			<td class="subheader"><?=t('Description')?></td>
 			<td class="subheader"><?=t('Last Run')?></td>
@@ -136,6 +137,7 @@ $ih = Loader::helper('concrete/interface');
 					onchange="Jobs.changeStatus(this)" />
 				</div>
 			</td>
+			<td><?=$jobItem['jID']?></td>
 			<td><?=$jobItem['jName']?></td>
 			<td><?=$jobItem['jDescription']?></td>
 			<td id="jDateLastRun<?=$jobItem['jID']?>">
