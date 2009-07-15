@@ -383,7 +383,9 @@ define('LOG_TYPE_EMAILS', 'sent_emails');
 define('LOG_TYPE_EXCEPTIONS', 'exceptions');
 
 # The name of the session cookie used.
-define('SESSION', 'CONCRETE5');
+if (!defined('SESSION')) {
+	define('SESSION', 'CONCRETE5');
+}
 
 # Variables/constants necessary for ADODB
 define('DB_TYPE', 'mysql');
