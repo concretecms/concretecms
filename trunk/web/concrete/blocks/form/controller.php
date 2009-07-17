@@ -309,12 +309,8 @@ class FormBlockController extends BlockController {
 			if(!strstr($refer_uri,'?')) $refer_uri.='?';
 			
 			if(intval($this->notifyMeOnSubmission)>0){
-				$adminUser=User::getByUserID(1);
-				if( $adminUser && $adminUser->isSuperUser() ){
-					$adminUserInfo=UserInfo::getByID( $adminUser->getUserID() );
-					if($adminUserInfo) 
-						$adminEmail = $adminUserInfo->getUserEmail(); 
-				}
+				$adminUserInfo=UserInfo::getByID(USER_SUPER_ID);
+				$adminEmail = $adminUserInfo->getUserEmail(); 
 			
 				$mh = Loader::helper('mail');
 				$mh->to( $this->recipientEmail ); 
