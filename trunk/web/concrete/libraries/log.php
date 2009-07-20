@@ -124,6 +124,11 @@ class Log {
 			$this->close();
 		}
 	}
+
+	public static function addEntry($message) {
+		$l = new Log();
+		$l->write($message);
+	}
 	
 	/** 
 	 * Removes all "custom" log entries - these are entries that an app owner has written and don't have a builtin C5 type
