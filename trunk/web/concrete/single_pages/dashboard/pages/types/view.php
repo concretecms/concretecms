@@ -1,8 +1,6 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-Loader::model('collection_types');
-Loader::model('single_page');
-Loader::model('collection_attributes');
+
 $attribs = CollectionAttributeKey::getList();
 $ih = Loader::helper('concrete/interface');
 $valt = Loader::helper('validation/token');
@@ -16,8 +14,6 @@ if ($_GET['cID'] && $_GET['task'] == 'load_master') {
 	header('Location: ' . BASE_URL . DIR_REL . '/index.php?cID=' . $_GET['cID'] . '&mode=edit');
 	exit;
 }
-
-$icons = CollectionType::getIcons();
 
 if ($_REQUEST['task'] == 'edit') {
 	$ct = CollectionType::getByID($_REQUEST['ctID']);
@@ -125,18 +121,36 @@ if ($ctEditMode) {
 		<td colspan="3">
 		<? 
 		$first = true;
-		foreach($icons as $ic) { ?>
-			<?
-			$checked = false;
-			if ($ct->getCollectionTypeIcon() == $ic || $first) { 
-				$checked = 'checked';
+		foreach($icons as $ic) { 
+			if(is_object($ic)) {
+				$fv = $ic->getApprovedVersion(); 
+				$checked = false;
+				if ($ct->getCollectionTypeIcon() == $ic->getFileID() || $first) { 
+					$checked = 'checked';
+				}
+				$first = false;
+				?>
+				<label style="white-space: nowrap; margin: 10px 20px 10px 0; float:left;">
+				<input type="radio" name="ctIcon" value="<?= $ic->getFileID() ?>" style="vertical-align: middle" <?=$checked?> />
+				<?= $fv->getThumbnail(2); ?>
+				</label>
+			<? 
+			} else {
+            	$checked = false;
+				if ($ct->getCollectionTypeIcon() == $ic || $first) { 
+					$checked = 'checked';
+				}
+				$first = false;
+				?>
+				<label style="white-space: nowrap; margin: 10px 20px 10px 0; float:left;">
+				<input type="radio" name="ctIcon" value="<?= $ic ?>" style="vertical-align: middle" <?=$checked?> />
+					<img src="<?=REL_DIR_FILES_COLLECTION_TYPE_ICONS.'/'.$ic;?>" />
+                </label>
+            <?
 			}
-			$first = false;
-			?>
-			<span style="white-space: nowrap; margin-right: 20px">
-			<input type="radio" name="ctIcon" value="<?=$ic?>" style="vertical-align: middle" <?=$checked?> />
-			<img src="<?=REL_DIR_FILES_COLLECTION_TYPE_ICONS?>/<?=$ic?>" style="vertical-align: middle" /></span>
-		<? } ?>
+		
+		} ?>
+        	<br style="clear:both"/>
 		</td>
 	</tr>
 	<tr>
@@ -239,11 +253,12 @@ if ($ctEditMode) {
 			}
 			$first = false;
 			?>
-			<span style="white-space: nowrap; margin-right: 20px">
+			<label style="white-space: nowrap; margin: 10px 20px 10px 0; float:left;">
 			<input type="radio" name="ctIcon" value="<?=$ic?>" style="vertical-align: middle" <?=$checked?> />
-			<img src="<?=REL_DIR_FILES_COLLECTION_TYPE_ICONS?>/<?=$ic?>" style="vertical-align: middle" /></span>
+			<img src="<?=REL_DIR_FILES_COLLECTION_TYPE_ICONS?>/<?=$ic?>" style="vertical-align: middle" /></label>
 		<? } ?>
-		</td>
+		<br style="clear:both"/>
+        </td>
 	</tr>
 	<tr>
 		<td colspan="3"><?=t('Available Metadata Attributes')?></td>
