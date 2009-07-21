@@ -17,6 +17,7 @@ class DashboardPagesThemesInspectController extends Controller {
 			$files = $pt->getFilesInTheme();
 			$this->set('files', $files);
 			$this->set('ptID', $ptID);
+			$this->set('pageTheme', $pt);
 		} else {
 			$v->add('Invalid Theme');
 		}	
