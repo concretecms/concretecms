@@ -282,7 +282,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		/**
 		 * returns the complete html img tag for this collection type's icon
 		*/
-		public function getCollectionTypeIconImg() {
+		public function getCollectionTypeIconImage() {
 			Loader::helper('concrete/file');
 			$html = Loader::helper('html');
 			$icon = $this->getCollectionTypeIcon();

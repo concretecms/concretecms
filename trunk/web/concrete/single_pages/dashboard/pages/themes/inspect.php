@@ -12,7 +12,7 @@ $ci = Loader::helper('concrete/interface');
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
 	<table border="0" cellspacing="1" cellpadding="0" class="grid-list" id="ccm-template-list">
 	<tr>
-		<td colspan="3" class="header"><?=t('Files in Theme: ')?>  <?=$pageTheme->getThemeHandle() ?> </td>
+		<td colspan="3" class="header"><?=t('Files in Theme:')?>  <?=$pageTheme->getThemeHandle() ?> </td>
 
 	</tr>
 	<tr>
