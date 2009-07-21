@@ -60,7 +60,7 @@
 		public function getByName($fsName) {
 			$db = Loader::db();
 			$row = $db->GetRow('select * from FileSets where fsName = ?', array($fsName));
-			if (is_array($row)) {
+			if (is_array($row) && count($row)) {
 				$fs = new FileSet();
 				foreach($row as $key => $value) {
 					$fs->{$key} = $value;

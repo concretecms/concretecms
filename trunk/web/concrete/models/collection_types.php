@@ -235,9 +235,22 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		public function getIcons() {
-			$f = Loader::helper('file');
-			$ctIcons = $f->getDirectoryContents(DIR_FILES_COLLECTION_TYPE_ICONS);
-			return $ctIcons;
+			Loader::model('file_list');
+			Loader::model('file_set');
+			$fileList = new FileList();
+			$fs = FileSet::getByName(t('Page Type Icons'));
+			//echo var_dump($fs); exit;
+			if(!$fs) {
+				$f = Loader::helper('file');
+				return $f->getDirectoryContents(DIR_FILES_COLLECTION_TYPE_ICONS);				
+			} else { 
+				$fileList->filterBySet($fs);
+				$icons = $fileList->get(100);
+				if(!count($icons)) {
+					$ctIcons = $f->getDirectoryContents(DIR_FILES_COLLECTION_TYPE_ICONS);
+				}
+				return $icons;
+			}
 		}
 
 		public function getAvailableAttributeKeys() {
@@ -265,6 +278,26 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					break;
 			}
 		}
+		
+		/**
+		 * returns the complete html img tag for this collection type's icon
+		*/
+		public function getCollectionTypeIconImg() {
+			Loader::helper('concrete/file');
+			$html = Loader::helper('html');
+			$icon = $this->getCollectionTypeIcon();
+			if(is_numeric($icon) && $icon) {
+				$f = File::getByID($icon);
+				$fv = $f->getApprovedVersion(); 
+				$src = $fv->getThumbnailSRC(2);	
+			} else { // retain support for legacy file type images
+				$src = REL_DIR_FILES_COLLECTION_TYPE_ICONS.'/'.$icon;
+			}
+			$iconImg = '<img src="'.$src.'" height="90" width="120" alt="'.$this->getCollectionTypeName().'" title="'.$this->getCollectionTypeName().'" />';
+				
+			return $iconImg;
+		}
+		
 		
 		public function getCollectionTypeID() { return $this->ctID; }
 		public function getCollectionTypeName() { return $this->ctName; }
