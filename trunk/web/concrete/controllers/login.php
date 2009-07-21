@@ -302,6 +302,12 @@ class LoginController extends Controller {
 						$ui->changePassword( $_POST['uPassword'] );						
 						$h->deleteKey('UserValidationHashes','uHash',$uHash);					
 						$this->set('passwordChanged', true);
+						
+						$u = $ui->getUserObject();
+						$_POST['uName'] =  $u->getUserName();
+						$this->do_login();
+							
+						return;
 					}else{
 						$this->set('uHash', $uHash);
 						$this->set('changePasswordForm', true);					
