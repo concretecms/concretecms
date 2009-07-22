@@ -265,6 +265,7 @@ class InstallController extends Controller {
 						
 						$cab5 = CollectionAttributeKey::add('header_extra_content', t('Header Extra Content'), true, null, 'TEXT');
 						$cab6 = CollectionAttributeKey::add('exclude_search_index', t('Exclude From Search Index'), true, null, 'BOOLEAN');
+						$cab7 = CollectionAttributeKey::add('exclude_sitemapxml', t('Exclude From sitemap.xml'), true, null, 'BOOLEAN');
 						
 						$dt->assignCollectionAttribute($cab1);
 						$dt->assignCollectionAttribute($cab2);

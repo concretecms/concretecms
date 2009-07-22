@@ -66,6 +66,11 @@ class GenerateSitemap extends Job {
 					continue;
 				}
 				
+				if($c->getAttribute("exclude_sitemapxml")) {
+					continue;
+				}
+				
+				
 				if ($g->canRead()) {			
 	
 					$name = ($c->getCollectionName()) ? $c->getCollectionName() : '(No name)';
