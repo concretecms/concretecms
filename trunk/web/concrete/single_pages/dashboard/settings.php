@@ -586,9 +586,16 @@ $(document).ready(function(){
 <form method="post" id="txt-editor-form" action="<?=$this->url('/dashboard/settings', 'txt_editor_config')?>">
 	<?=$this->controller->token->output('txt_editor_config')?>
 	
-	<h1><span><?=t("Content Toolbars")?></span></h1>
+	<h1><span><?=t("Rich Text Editor")?></span></h1>
 	
 	<div class="ccm-dashboard-inner"> 
+		
+		
+		<table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+		<td valign="top">
+
+		<h2>Toolbar Set</h2>
 		
 		<div class="ccm-dashboard-radio"><input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="SIMPLE" style="vertical-align: middle" <?=( $txtEditorMode=='SIMPLE' || !strlen($txtEditorMode) )?'checked':''?> /> <?=t('Simple')?></div>
 		
@@ -602,12 +609,27 @@ $(document).ready(function(){
 			<textarea wrap="off" name="CONTENTS_TXT_EDITOR_CUSTOM_CODE" cols="25" rows="20" style="width: 97%; height: 250px;"><?=$txtEditorCstmCode?></textarea>
 			<div class="ccm-note"><a target="_blank" href="http://tinymce.moxiecode.com/"><?=t('TinyMCE Reference')?></a></div>
 		</div>
+
+		</td>
+		<td><div style="width: 50px">&nbsp;</div></td>
+		<td valign="top">
 		
-		<div style="padding-top:8px;">
-			<?=t('Width')?> <input type="text" name="CONTENTS_TXT_EDITOR_WIDTH" size="3" value="<?=($textEditorWidth<580) ? 580 : intval($textEditorWidth) ?>"/>&nbsp;<?=t('px')?>&nbsp;&nbsp;&nbsp;  
-			<?=t('Height')?> <input type="text" name="CONTENTS_TXT_EDITOR_HEIGHT" size="3" value="<?=($textEditorHeight<100) ? 380 : intval($textEditorHeight) ?>"/>&nbsp;<?=t('px')?>
-			<div class="ccm-note"><?=t('(The minimum width is 580px)')?></div>
-		</div>
+		<h2>Editor Dimensions</h2>
+		
+		<table cellspacing="0" cellpadding="0">
+		<tr>
+		<td><?=t('Width')?></td><td><input type="text" name="CONTENTS_TXT_EDITOR_WIDTH" size="3" value="<?=($textEditorWidth<580) ? 580 : intval($textEditorWidth) ?>"/></td><td>&nbsp;px</td>
+		</tr>
+		<tr>
+		<td><?=t('Height')?></td><td><input type="text" name="CONTENTS_TXT_EDITOR_HEIGHT" size="3" value="<?=($textEditorHeight<100) ? 380 : intval($textEditorHeight) ?>"/></td><td>&nbsp;px</td>
+		</tr>
+		</table>
+		
+		<div class="ccm-note"><?=t('The minimum width is 580px.')?></div>
+		
+		</td>
+		</tr>
+		</table>
 		
 		<?
 		$b1 = $h->submit(t('Save'), 'txt-editor-form');
