@@ -680,7 +680,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						}
 					}
 					foreach($userIDArray as $uID) {
-						$this->uiArray[] = UserInfo::getByID($uID, $userPermissionsArray[$uID]);
+						$ui = UserInfo::getByID($uID, $userPermissionsArray[$uID]);
+						if( !$ui || !method_exists($ui,'getUserID') ) continue;
+						$this->uiArray[]=$ui;
 					}
 					unset($userPermissionsArray);
 					unset($upTemp);
@@ -696,7 +698,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					if ($r) {
 						while ($row = $r->fetchRow()) {
 								$userPermissionsArray['permissionSet'] = $row['cbgPermissions'];
-								$this->uiArray[] = UserInfo::getByID($row['uID'], $userPermissionsArray);
+								$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
+								if( !$ui || !method_exists($ui,'getUserID') ) continue;
+								$this->uiArray[]=$ui;								
 						}
 					}
 					break;
@@ -712,7 +716,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$r = $db->Execute($q);
 					while ($row = $r->fetchRow()) {
 						$userPermissionsArray['permissions'] = $row;
-						$this->uiArray[] = UserInfo::getByID($row['uID'], $userPermissionsArray);
+						$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
+						if( !$ui || !method_exists($ui,'getUserID') ) continue;
+						$this->uiArray[]=$ui;	
 					}
 
 					break;
@@ -728,7 +734,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 							if ($row['canAdd'] == FilePermissions::PTYPE_CUSTOM) {
 								$userPermissionsArray['permissions']['canAddExtensions'] = $db->GetCol("select extension from FilePermissionFileTypes where uID = {$row['uID']} and fsID = {$fsID}");
 							}
-							$this->uiArray[] = UserInfo::getByID($row['uID'], $userPermissionsArray);
+							$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
+							if( !$ui || !method_exists($ui,'getUserID') ) continue;
+							$this->uiArray[]=$ui;								
 						}
 					}
 
@@ -740,7 +748,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					if ($r) {
 						while ($row = $r->fetchRow()) {
 							$userPermissionsArray['permissions'] = $row;
-							$this->uiArray[] = UserInfo::getByID($row['uID'], $userPermissionsArray);
+							$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
+							if( !$ui || !method_exists($ui,'getUserID') ) continue;
+							$this->uiArray[]=$ui;	
 						}
 					}
 
@@ -755,7 +765,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					if ($r) {
 						while ($row = $r->fetchRow()) {
 							$userPermissionsArray['permissionSet'] = $row['agPermissions'];
-							$this->uiArray[] = UserInfo::getByID($row['uID'], $userPermissionsArray);
+							$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
+							if( !$ui || !method_exists($ui,'getUserID') ) continue;
+							$this->uiArray[]=$ui;
 						}
 					}
 					break;
