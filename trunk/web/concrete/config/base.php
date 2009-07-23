@@ -220,6 +220,8 @@ define('FILENAME_PACKAGE_DB', 'db.xml');
 //define('DIR_FILES_COLLECTION_TYPES', DIR_BASE . '/views/page_types');
 define('DIR_FILES_COLLECTION_TYPE_ICONS', DIR_BASE_CORE . '/images/icons/page_types');
 define('REL_DIR_FILES_COLLECTION_TYPE_ICONS', ASSETS_URL_IMAGES . '/icons/page_types');
+define('COLLECTION_TYPE_ICON_WIDTH', 120);
+define('COLLECTION_TYPE_ICON_HEIGHT', 90);
 define('DIR_FILES_CONTENT', DIR_BASE . '/single_pages');
 define('DIR_FILES_CONTENT_REQUIRED', DIR_BASE_CORE . '/single_pages');
 define("FILENAME_LOCAL_DB", 'site_db.xml');

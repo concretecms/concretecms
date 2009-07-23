@@ -9,6 +9,9 @@ $ctArray = CollectionType::getList();
 $args['section'] = 'collection_types';
 $u = new User();
 
+Loader::model('file_set');
+$pageTypeIconsFS = FileSet::getByName("Page Type Icons");
+
 if ($_GET['cID'] && $_GET['task'] == 'load_master') { 
 	$u->loadMasterCollectionEdit($_GET['cID'], 1);
 	header('Location: ' . BASE_URL . DIR_REL . '/index.php?cID=' . $_GET['cID'] . '&mode=edit');
@@ -115,7 +118,19 @@ if ($ctEditMode) {
 		<td style="width: 35%"><input type="text" name="ctHandle" style="width: 100%" value="<?=$ctHandle?>" /></td>
 	</tr>
 	<tr>
-		<td colspan="3" class="subheader"><?=t('Icon')?></td>
+		<td colspan="3" class="subheader"><?=t('Icon')?>
+		<?
+			if (!is_object($pageTypeIconsFS)) {
+				print '<span style="margin-left: 4px; color: #aaa">';
+				print t('(To add your own page type icons, create a file set named "%s" and add files to that set)', t('Page Type Icons'));
+				print '</span>';
+			} else {
+				print '<span style="margin-left: 4px; color: #aaa">';
+				print t('(Pulling icons from file set "%s". Icons will be displayed at %s x %s.)', t('Page Type Icons'), COLLECTION_TYPE_ICON_WIDTH, COLLECTION_TYPE_ICON_HEIGHT);
+				print '</span>';
+			}
+		?>
+		</td>
 	</tr>
 	<tr>
 		<td colspan="3">
@@ -132,7 +147,7 @@ if ($ctEditMode) {
 				?>
 				<label style="white-space: nowrap; margin: 10px 20px 10px 0; float:left;">
 				<input type="radio" name="ctIcon" value="<?= $ic->getFileID() ?>" style="vertical-align: middle" <?=$checked?> />
-				<?= $fv->getThumbnail(2); ?>
+				<img src="<?= $fv->getRelativePath(); ?>" width="<?=COLLECTION_TYPE_ICON_WIDTH?>" height="<?=COLLECTION_TYPE_ICON_HEIGHT?>" style="vertical-align: middle" />
 				</label>
 			<? 
 			} else {
@@ -144,7 +159,7 @@ if ($ctEditMode) {
 				?>
 				<label style="white-space: nowrap; margin: 10px 20px 10px 0; float:left;">
 				<input type="radio" name="ctIcon" value="<?= $ic ?>" style="vertical-align: middle" <?=$checked?> />
-					<img src="<?=REL_DIR_FILES_COLLECTION_TYPE_ICONS.'/'.$ic;?>" />
+					<img src="<?=REL_DIR_FILES_COLLECTION_TYPE_ICONS.'/'.$ic;?>" width="<?=COLLECTION_TYPE_ICON_WIDTH?>" height="<?=COLLECTION_TYPE_ICON_HEIGHT?>" style="vertical-align: middle" />
                 </label>
             <?
 			}
@@ -154,7 +169,7 @@ if ($ctEditMode) {
 		</td>
 	</tr>
 	<tr>
-		<td colspan="3" class="header"><?=t('Available Metadata Attributes')?></td>
+		<td colspan="3" class="header" class="subheader"><?=t('Available Metadata Attributes')?></td>
 	</tr>
 	<?
 		$attribs = CollectionAttributeKey::getList();
@@ -239,29 +254,67 @@ if ($ctEditMode) {
 		<td style="width: 35%"><input type="text" name="ctHandle" style="width: 100%" value="<?=$_POST['ctHandle']?>" /></td>
 	</tr>
 	<tr>
-		<td colspan="3" class="subheader"><?=t('Icon')?></td>
+		<td colspan="3" class="subheader"><?=t('Icon')?>
+		<?
+			if (!is_object($pageTypeIconsFS)) {
+				print '<span style="margin-left: 4px; color: #aaa">';
+				print t('(To add your own page type icons, create a file set named "%s" and add files to that set)', t('Page Type Icons'));
+				print '</span>';
+			} else {
+				print '<span style="margin-left: 4px; color: #aaa">';
+				print t('(Pulling icons from file set "%s". Icons will be displayed at %s x %s.)', t('Page Type Icons'), COLLECTION_TYPE_ICON_WIDTH, COLLECTION_TYPE_ICON_HEIGHT);
+				print '</span>';
+			}
+		?>
+
+		</td>
 	</tr>
 	<tr>
 		<td colspan="3">
 		<? 
 		$first = true;
-		foreach($icons as $ic) { ?>
-			<?
-			$checked = false;
-			if ($first) { 
-				$checked = 'checked';
+		foreach($icons as $ic) { 
+			if(is_object($ic)) {
+				$fv = $ic->getApprovedVersion(); 
+				$checked = false;
+				if (isset($_POST['ctIcon']) && $_POST['ctIcon'] == $ic->getFileID()) {
+					$checked = 'checked';
+				} else {
+					if ($first) { 
+						$checked = 'checked';
+					}
+				}
+				$first = false;
+				?>
+				<label style="white-space: nowrap; margin: 10px 20px 10px 0; float:left;">
+				<input type="radio" name="ctIcon" value="<?= $ic->getFileID() ?>" style="vertical-align: middle" <?=$checked?> />
+				<img src="<?= $fv->getRelativePath(); ?>" width="<?=COLLECTION_TYPE_ICON_WIDTH?>" height="<?=COLLECTION_TYPE_ICON_HEIGHT?>" style="vertical-align: middle" />
+				</label>
+			<? 
+			} else {
+            	$checked = false;
+				if (isset($_POST['ctIcon']) && $_POST['ctIcon'] == $ic) {
+					$checked = 'checked';
+				} else {
+					if ($first) { 
+						$checked = 'checked';
+					}
+				}
+				$first = false;
+				?>
+				<label style="white-space: nowrap; margin: 10px 20px 10px 0; float:left;">
+				<input type="radio" name="ctIcon" value="<?= $ic ?>" style="vertical-align: middle" <?=$checked?> />
+					<img src="<?=REL_DIR_FILES_COLLECTION_TYPE_ICONS.'/'.$ic;?>" width="<?=COLLECTION_TYPE_ICON_WIDTH?>" height="<?=COLLECTION_TYPE_ICON_HEIGHT?>" style="vertical-align: middle" />
+                </label>
+            <?
 			}
-			$first = false;
-			?>
-			<label style="white-space: nowrap; margin: 10px 20px 10px 0; float:left;">
-			<input type="radio" name="ctIcon" value="<?=$ic?>" style="vertical-align: middle" <?=$checked?> />
-			<img src="<?=REL_DIR_FILES_COLLECTION_TYPE_ICONS?>/<?=$ic?>" style="vertical-align: middle" /></label>
-		<? } ?>
+		
+		} ?>
 		<br style="clear:both"/>
         </td>
 	</tr>
 	<tr>
-		<td colspan="3"><?=t('Available Metadata Attributes')?></td>
+		<td colspan="3" class="subheader"><?=t('Available Metadata Attributes')?></td>
 	</tr>
 	<?
 		$attribs = CollectionAttributeKey::getList();

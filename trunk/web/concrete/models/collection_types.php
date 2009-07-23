@@ -289,11 +289,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if(is_numeric($icon) && $icon) {
 				$f = File::getByID($icon);
 				$fv = $f->getApprovedVersion(); 
-				$src = $fv->getThumbnailSRC(2);	
+				$src = $fv->getRelativePath();	
 			} else { // retain support for legacy file type images
 				$src = REL_DIR_FILES_COLLECTION_TYPE_ICONS.'/'.$icon;
 			}
-			$iconImg = '<img src="'.$src.'" height="90" width="120" alt="'.$this->getCollectionTypeName().'" title="'.$this->getCollectionTypeName().'" />';
+			$iconImg = '<img src="'.$src.'" height="' . COLLECTION_TYPE_ICON_HEIGHT . '" width="' . COLLECTION_TYPE_ICON_WIDTH . '" alt="'.$this->getCollectionTypeName().'" title="'.$this->getCollectionTypeName().'" />';
 				
 			return $iconImg;
 		}
