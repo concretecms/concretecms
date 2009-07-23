@@ -603,6 +603,12 @@ $(document).ready(function(){
 			<div class="ccm-note"><a target="_blank" href="http://tinymce.moxiecode.com/"><?=t('TinyMCE Reference')?></a></div>
 		</div>
 		
+		<div style="padding-top:8px;">
+			<?=t('Width')?> <input type="text" name="CONTENTS_TXT_EDITOR_WIDTH" size="3" value="<?=($textEditorWidth<580) ? 580 : intval($textEditorWidth) ?>"/>&nbsp;<?=t('px')?>&nbsp;&nbsp;&nbsp;  
+			<?=t('Height')?> <input type="text" name="CONTENTS_TXT_EDITOR_HEIGHT" size="3" value="<?=($textEditorHeight<100) ? 380 : intval($textEditorHeight) ?>"/>&nbsp;<?=t('px')?>
+			<div class="ccm-note"><?=t('(The minimum width is 580px)')?></div>
+		</div>
+		
 		<?
 		$b1 = $h->submit(t('Save'), 'txt-editor-form');
 		print $h->buttons($b1);

@@ -17,7 +17,9 @@
 .defaultSkin .mceExternalToolbar td.mceToolbar {padding-right:13px;}
 .defaultSkin .mceExternalClose {position:absolute; top:3px; right:3px; width:7px; height:7px; background:url(../../img/icons.gif) -820px 0}
 
-.defaultSkin table.mceLayout tr.mceFirst { background: #fbfbfb top left no-repeat url(img/menu_bg.gif); }
+.defaultSkin table.mceLayout { background: #fbfbfb top right no-repeat url(img/menu_bg_long.gif); }
+.defaultSkin table.mceLayout tr.mceFirst { }
+.defaultSkin table.mceLayout tr.mceFirst .mceLeft { background: top left no-repeat url(img/menu_bg_left_cap.gif); } 
 
 /* Layout */
 .defaultSkin table.mceLayout {border:0;}

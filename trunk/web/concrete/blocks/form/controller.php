@@ -306,15 +306,20 @@ class FormBlockController extends BlockController {
 				$db->query($q,$v);
 			}
 			$refer_uri=$_POST['pURI'];
-			if(!strstr($refer_uri,'?')) $refer_uri.='?';
+			if(!strstr($refer_uri,'?')) $refer_uri.='?';			
 			
-			if(intval($this->notifyMeOnSubmission)>0){
-				$adminUserInfo=UserInfo::getByID(USER_SUPER_ID);
-				$adminEmail = $adminUserInfo->getUserEmail(); 
-			
+			if(intval($this->notifyMeOnSubmission)>0){	
+				
+				if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
+					$formFormEmailAddress = FORM_BLOCK_SENDER_EMAIL;  
+				}else{ 
+					$adminUserInfo=UserInfo::getByID(USER_SUPER_ID);
+					$formFormEmailAddress = $adminUserInfo->getUserEmail(); 
+				}  
+				
 				$mh = Loader::helper('mail');
 				$mh->to( $this->recipientEmail ); 
-				$mh->from( $adminEmail ); 
+				$mh->from( $formFormEmailAddress ); 
 				$mh->addParameter('formName', $this->surveyName);
 				$mh->addParameter('questionSetId', $this->questionSetId);
 				$mh->addParameter('questionAnswerPairs', $questionAnswerPairs); 
@@ -576,9 +581,9 @@ class MiniSurvey{
 						        </td>
 						      </tr>';
 					} else { */
-						$requiredSymbol=($questionRow['required'])?'<span class="required">*</span>':'';
+						$requiredSymbol=($questionRow['required'])?'&nbsp;<span class="required">*</span>':'';
 						echo '<tr>
-						        <td valign="top" class="question">'.$questionRow['question'].' '.$requiredSymbol.'</td>
+						        <td valign="top" class="question">'.$questionRow['question'].''.$requiredSymbol.'</td>
 						        <td valign="top">'.$this->loadInputType($questionRow,showEdit).'</td>
 						      </tr>';
 					//}
