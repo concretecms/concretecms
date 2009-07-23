@@ -41,6 +41,7 @@ class ConcreteUpgradeVersion530Helper {
 		$db = Loader::db();
 		Loader::model('collection_attributes');
 		Loader::model('single_page');
+		Loader::model('file_version');
 		
 		// Add in stuff that may have gotten missed before
 		$p = Page::getByPath('/profile');
@@ -85,7 +86,7 @@ class ConcreteUpgradeVersion530Helper {
 		//convert file tags to new format, cleaned up with leading and trailing line breaks  
 		$fileVersionsData=$db->GetAll('SELECT fID, fvID, fvTags FROM FileVersions');
 		foreach($fileVersionsData as $fvData){
-			$vals=array( File::cleanTags($fvData['fvTags']) , $fvData['fID'] , $fvData['fvID'] );
+			$vals=array( FileVersion::cleanTags($fvData['fvTags']) , $fvData['fID'] , $fvData['fvID'] );
 			$db->query('UPDATE FileVersions SET fvTags=? WHERE fID=? AND fvID=?',  $vals );
 		}
 	}
