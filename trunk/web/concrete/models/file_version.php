@@ -256,7 +256,7 @@ class FileVersion extends Object {
 
 	public function updateTags($tags) {
 		$db = Loader::db();
-		$tags = File::cleanTags($tags);
+		$tags = FileVersion::cleanTags($tags);
 		$db->Execute("update FileVersions set fvTags = ? where fID = ? and fvID = ?", array($tags, $this->getFileID(), $this->getFileVersionID()));
 		$this->logVersionUpdate(FileVersion::UT_TAGS);
 		$this->fvTitle = $tags;
@@ -491,5 +491,15 @@ class FileVersion extends Object {
 		
 	}
 	
-	
+	//takes a string of comma or new line delimited tags, and puts them in the appropriate format
+	public static function cleanTags($tagsStr){ 
+		$tagsArray=explode("\n",str_replace(array("\r",","),"\n",$tagsStr));
+		$cleanTags=array();
+		foreach($tagsArray as $tag){
+			if( !strlen(trim($tag)) ) continue;
+			$cleanTags[]=trim($tag);
+		}
+		//the leading and trailing line break char is for searching: fvTag like %\ntag\n% 
+		return "\n".join("\n",$cleanTags)."\n";
+	}	
 }

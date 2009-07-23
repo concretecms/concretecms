@@ -512,6 +512,9 @@ $ppWhere = '';
 			$q = "delete from PagePaths where cID = ?";
 			$r = $db->query($q, $args);
 
+			Cache::delete('page', $this->getCollectionPointerOriginalID()  );
+			Cache::delete('page_path', $this->getCollectionPointerOriginalID()  );
+
 			return $cIDRedir;
 		}
 	}
@@ -1244,8 +1247,10 @@ $ppWhere = '';
 		if ($r) {
 			while ($row = $r->fetchRow()) {
 				if ($row['cID'] > 0) {
-					$nc = Page::getByID($row['cID']);
-					$nc->delete();
+					$nc = Page::getByID($row['cID']);  
+					if( $nc->isAlias() )
+						 $nc->removeThisAlias(); 
+					else $nc->delete();
 				}
 			}
 		}
