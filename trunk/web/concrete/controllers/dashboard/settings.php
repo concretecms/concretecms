@@ -14,8 +14,15 @@ class DashboardSettingsController extends Controller {
 		$this->set('site', SITE);
 		$this->set('ui_breadcrumb', $u->config('UI_BREADCRUMB'));
 		$this->set('api_key_picnik', Config::get('API_KEY_PICNIK'));
-		$txtEditorMode=Config::get('CONTENTS_TXT_EDITOR_MODE');
-		$this->set('txtEditorMode', $txtEditorMode ); 
+		
+		$txtEditorMode = Config::get('CONTENTS_TXT_EDITOR_MODE');
+		$this->set( 'txtEditorMode', $txtEditorMode ); 
+		
+		$textEditorWidth = Config::get('CONTENTS_TXT_EDITOR_WIDTH');
+		$this->set( 'textEditorWidth', $textEditorWidth );
+		$textEditorHeight = Config::get('CONTENTS_TXT_EDITOR_HEIGHT');
+		$this->set( 'textEditorHeight', $textEditorHeight );		
+				
 		$txtEditorCstmCode=Config::get('CONTENTS_TXT_EDITOR_CUSTOM_CODE');
 		if( !strlen($txtEditorCstmCode) || $txtEditorMode!='CUSTOM' )
 			$txtEditorCstmCode=$this->get_txt_editor_default();
@@ -60,7 +67,7 @@ class DashboardSettingsController extends Controller {
 					$this->set('message', t('Debug configuration saved.'));
 					break;
 				case "txt_editor_config_saved":
-					$this->set('message', t('Content text editor toolbar mode saved.'));
+					$this->set('message', t('Content text editor settings saved.'));
 					break;										
 				case "rewriting_saved":
 					if (URL_REWRITING) {
@@ -609,12 +616,25 @@ class DashboardSettingsController extends Controller {
 			else $this->redirect('/dashboard/settings/', 'marketplace_turned_off');	
 		}else{
 			$this->set('error', array($this->token->getErrorMessage()));
-		}
+		} 
 	}
 	
 	function txt_editor_config(){
 		if ($this->token->validate("txt_editor_config")) { 
  			Config::save('CONTENTS_TXT_EDITOR_MODE', $this->post('CONTENTS_TXT_EDITOR_MODE') );
+			
+			$textEditorWidth = intval($this->post('CONTENTS_TXT_EDITOR_WIDTH'));
+			if( $textEditorWidth<580 ) $textEditorWidth=580;
+			Config::save( 'CONTENTS_TXT_EDITOR_WIDTH', $textEditorWidth );
+			
+			$textEditorHeight = intval($this->post('CONTENTS_TXT_EDITOR_HEIGHT'));
+			if( $textEditorHeight<100 ) $textEditorHeight=380;
+			Config::save( 'CONTENTS_TXT_EDITOR_HEIGHT', $textEditorHeight );	
+			
+			$db = Loader::db();
+			$values=array( $textEditorWidth, $textEditorHeight );
+			$db->query( 'UPDATE BlockTypes SET btInterfaceWidth=?, btInterfaceHeight=? where btHandle = "content"', $values );
+			
 			if($this->post('CONTENTS_TXT_EDITOR_MODE')=='CUSTOM')
 				Config::save('CONTENTS_TXT_EDITOR_CUSTOM_CODE', $this->post('CONTENTS_TXT_EDITOR_CUSTOM_CODE') );
  			$this->redirect('/dashboard/settings/', 'txt_editor_config_saved'); 
