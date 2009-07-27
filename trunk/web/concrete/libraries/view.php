@@ -532,6 +532,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$themePath = ASSETS_URL . '/' . DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $pl;
 					$theme = DIR_FILES_THEMES_CORE . "/" . $pl . '/' . FILENAME_THEMES_VIEW;
 					$themeDir = DIR_FILES_THEMES_CORE . "/" . $pl;
+				} else if(file_exists(DIR_PACKAGES . "/theme_".$pl."/".DIRNAME_THEMES."/".$pl."/".$filename)) { // Packaged Theme - specific file
+					$themePath = DIR_REL . "/" . DIRNAME_PACKAGES . "/theme_" . $pl . "/" . $pl;
+					$theme = DIR_PACKAGES . "/theme_".$pl."/".DIRNAME_THEMES."/theme_".$pl ."/".$filename;
+					$themeDir = DIR_PACKAGES . "/theme_".$pl."/".DIRNAME_THEMES."/".$pl;			
+				} else if(file_exists(DIR_PACKAGES . "/theme_".$pl."/".DIRNAME_THEMES."/".$pl)) { // Packaged Theme - view.php
+					$themePath = DIR_REL . "/" . DIRNAME_PACKAGES . "/theme_" . $pl . "/" . $pl;
+					$theme = DIR_PACKAGES . "/theme_".$pl."/".DIRNAME_THEMES."/".$pl ."/".FILENAME_THEMES_VIEW;
+					$themeDir = DIR_PACKAGES . "/theme_".$pl."/".DIRNAME_THEMES."/".$pl;
 				} else if (file_exists(DIR_FILES_THEMES_CORE_ADMIN . "/" . $pl . '.php')) {
 					$theme = DIR_FILES_THEMES_CORE_ADMIN . "/" . $pl . '.php';
 					$themeDir = DIR_FILES_THEMES_CORE_ADMIN;
@@ -688,7 +696,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				} else {
 					$theme = FILENAME_COLLECTION_DEFAULT_THEME;
 				}		
-	
+				
 				$this->setThemeForView($theme, $themeFilename, $wrapTemplateInTheme);
 
 				// Now, if we're on an actual page, we retrieve all the blocks on the page
@@ -724,6 +732,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				if (defined('APP_CHARSET')) {
 					header("Content-Type: text/html; charset=" . APP_CHARSET);
 				}
+				
 				
 				include($this->theme);
 				
