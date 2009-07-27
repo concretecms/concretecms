@@ -37,9 +37,9 @@ class TextHelper {
 
 		$handle = preg_replace($search, $replace, $handle);
 		if (function_exists('mb_substr')) {
-			$handle = mb_strtolower(mb_substr($handle, 0, 48, APP_CHARSET), APP_CHARSET);
+			$handle = mb_strtolower($handle, APP_CHARSET);
 		} else {
-			$handle = strtolower(substr($handle, 0, 48));
+			$handle = strtolower($handle);
 		}
 		return $handle;
 	}
