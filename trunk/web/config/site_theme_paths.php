@@ -1,12 +1,24 @@
-<?php
+<?php 
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
-// $v = View::getInstance();
 
-// you can override system layouts here  - but we're not going to by default */
+/* 
+	you can override system layouts here  - but we're not going to by default 
+	
+	For example: if you would like to theme your login page with the Green Salad theme,
+	you would uncomment the lines below and change the second argument of setThemeByPath 
+	to be the handle of the the Green Salad theme "greensalad" 
 
- $v->setThemeByPath('/login', "greensalad");
- //$v->setThemeByPath('/403', "greensalad");
- //$v->setThemeByPath('/register', "greensalad");
-// $v->setThemeByPath('/dashboard', "greensalad");
+*/
+
+/*
+
+$v = View::getInstance();
+
+$v->setThemeByPath('/login', "yourtheme");
+ // $v->setThemeByPath('/403', "yourtheme");
+ // $v->setThemeByPath('/register', "yourtheme");
+ // $v->setThemeByPath('/dashboard', "yourtheme");
+
+*/
