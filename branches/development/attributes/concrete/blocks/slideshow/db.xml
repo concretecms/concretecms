@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+
+	<table name="btSlideshow">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="fsID" type="I"><unsigned /></field>		
+		<field name="playback" type="C" size="50"></field>	
+		<field name="duration" type="I"><unsigned /></field>
+		<field name="fadeDuration" type="I"><unsigned /></field>
+	</table>
+	
+	<table name="btSlideshowImg">
+		<field name="slideshowImgId" type="I">
+			<key />
+			<autoincrement />
+			<unsigned />
+		</field>
+		<field name="bID" type="I"><unsigned /></field>
+		<field name="fID" type="I"><unsigned /></field>		
+		<field name="url" type="C" size="255"></field>
+		<field name="duration" type="I"><unsigned /></field>
+		<field name="fadeDuration" type="I"><unsigned /></field>
+		<field name="groupSet" type="I"><unsigned /></field>
+		<field name="position" type="I"><unsigned /></field>	
+		<field name="imgHeight" type="I"><unsigned /></field>							
+	</table>
+	
+</schema>
