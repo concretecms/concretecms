@@ -258,8 +258,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * @return void
 		*/
 		public function setThemeByPath($path, $theme = NULL) {
-			if(is_string($theme) || !isset($theme)) {
+			if(!isset($theme)) {
 				$theme = PageTheme::getByHandle($theme);
+			} elseif (is_string($theme)) {
+				$pageTheme = PageTheme::getByHandle($theme);
+				if(is_object($pageTheme) && $pageTheme->getThemeHandle() == $theme) { // is it the theme that's been requested?
+					$theme = $pageTheme;
+				}
 			}
 			$this->themePaths[$path] = $theme;
 		}
