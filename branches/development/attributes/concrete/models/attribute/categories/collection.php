@@ -2,7 +2,6 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class CollectionAttributeKey extends AttributeKey {
 
-
 	/** 
 	 * Returns an attribute value list of attributes and values (duh) which a collection version can store 
 	 * against its object.
@@ -20,16 +19,32 @@ class CollectionAttributeKey extends AttributeKey {
 		return $avl;
 	}
 	
-	public static function getByID($akID) {
-		$ak = new CollectionAttributeKey();
-		$ak->load($akID);
-		
+	public function load($akID) {
+		parent::load($akID);
 		// now we load the specific fields for collection attributes
 		$db = Loader::db();
 		$row = $db->GetRow('select akSearchable from CollectionAttributeKeys where akID = ?', array($akID));
-		$ak->setPropertiesFromArray($row);
+		$this->setPropertiesFromArray($row);
 		return $ak;	
 	}
+		
+	public static function getByID($akID) {
+		$ak = new CollectionAttributeKey();
+		$ak->load($akID);
+		return $ak;
+	}
+		
+	public static function getList() {
+		return parent::getList('collection');	
+	}
+	
+	/** 
+	 * @access private 
+	 */
+	public function get($akID) {
+		return CollectionAttributeKey::getByID($akID);
+	}
 
+	
 
 }

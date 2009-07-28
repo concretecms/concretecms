@@ -114,7 +114,7 @@ class CollectionAttributeKey extends AttributeKey {
 		if ($r) {
 			$akID = $db->Insert_ID();
 			
-			$ak = CollectionAttributeKey::get($akID);
+			$ak = CollectionAttributeKey::getByID($akID);
 			if (is_object($ak)) {
 				return $ak;
 			}
