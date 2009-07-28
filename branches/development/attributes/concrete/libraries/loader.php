@@ -57,17 +57,17 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		protected function legacyModel($model) {
-			switch($mode) {
+			switch($model) {
 				case 'collection_attributes':
-					Loader::model('attributes/categories/collection');
+					Loader::model('attribute/categories/collection');
 					return true;
 					break;
 				case 'user_attributes':
-					Loader::model('attributes/categories/user');
+					Loader::model('attribute/categories/user');
 					return true;
 					break;
 				case 'file_attributes':
-					Loader::model('attributes/categories/file');
+					Loader::model('attribute/categories/file');
 					return true;
 					break;
 				default:

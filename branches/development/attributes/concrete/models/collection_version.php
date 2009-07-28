@@ -124,7 +124,7 @@
 		}
 
 		public function getAttribute($ak) {
-			return $this->attributes[$ak];
+			return $this->attributes->getAttribute($ak);
 		}
 
 		function isApproved() {return $this->cvIsApproved;}
