@@ -254,10 +254,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * used by the theme_paths and site_theme_paths files in config/ to hard coded certain paths to various themes
 		 * @access public
 		 * @param $path string
-		 * @param $theme object
+		 * @param $theme object, if null site theme is default
 		 * @return void
 		*/
-		public function setThemeByPath($path, $theme) {
+		public function setThemeByPath($path, $theme = NULL) {
+			$theme = PageTheme::getByHandle($theme);
 			$this->themePaths[$path] = $theme;
 		}
 		
@@ -532,14 +533,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$themePath = ASSETS_URL . '/' . DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $pl;
 					$theme = DIR_FILES_THEMES_CORE . "/" . $pl . '/' . FILENAME_THEMES_VIEW;
 					$themeDir = DIR_FILES_THEMES_CORE . "/" . $pl;
-				} else if(file_exists(DIR_PACKAGES . "/theme_".$pl."/".DIRNAME_THEMES."/".$pl."/".$filename)) { // Packaged Theme - specific file
-					$themePath = DIR_REL . "/" . DIRNAME_PACKAGES . "/theme_" . $pl . "/" . $pl;
-					$theme = DIR_PACKAGES . "/theme_".$pl."/".DIRNAME_THEMES."/theme_".$pl ."/".$filename;
-					$themeDir = DIR_PACKAGES . "/theme_".$pl."/".DIRNAME_THEMES."/".$pl;			
-				} else if(file_exists(DIR_PACKAGES . "/theme_".$pl."/".DIRNAME_THEMES."/".$pl)) { // Packaged Theme - view.php
-					$themePath = DIR_REL . "/" . DIRNAME_PACKAGES . "/theme_" . $pl . "/" . $pl;
-					$theme = DIR_PACKAGES . "/theme_".$pl."/".DIRNAME_THEMES."/".$pl ."/".FILENAME_THEMES_VIEW;
-					$themeDir = DIR_PACKAGES . "/theme_".$pl."/".DIRNAME_THEMES."/".$pl;
 				} else if (file_exists(DIR_FILES_THEMES_CORE_ADMIN . "/" . $pl . '.php')) {
 					$theme = DIR_FILES_THEMES_CORE_ADMIN . "/" . $pl . '.php';
 					$themeDir = DIR_FILES_THEMES_CORE_ADMIN;
