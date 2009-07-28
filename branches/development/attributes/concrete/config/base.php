@@ -163,6 +163,8 @@ define('DIRNAME_BLOCKS', 'blocks');
 define('DIRNAME_PAGES', 'single_pages');
 define('DIRNAME_PACKAGES', 'packages');
 define('DIRNAME_MODELS', 'models');
+define('DIRNAME_ATTRIBUTES', 'attribute');
+define('DIRNAME_ATTRIBUTE_TYPES', 'types');
 define('DIRNAME_LIBRARIES', 'libraries');
 define('DIRNAME_PAGE_TYPES', 'page_types');
 define('DIRNAME_ELEMENTS', 'elements');
@@ -234,6 +236,7 @@ define('DIR_FILES_CONTROLLERS', DIR_BASE . '/controllers');
 define('FILENAME_COLLECTION_CONTROLLER', 'controller.php');
 define('DIRNAME_CONTROLLERS', 'controllers');
 define('DIR_FILES_CONTROLLERS_REQUIRED', DIR_BASE_CORE . '/controllers');
+define('FILENAME_ATTRIBUTE_CONTROLLER', 'controller.php');
 
 # Elements
 define('DIR_FILES_ELEMENTS', DIR_BASE . '/elements');

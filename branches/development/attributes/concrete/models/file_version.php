@@ -89,18 +89,8 @@ class FileVersion extends Object {
 	
 	public function populateAttributes() {
 		// load the attributes for a particular version object
-		$db = Loader::db();
-		$v = array($this->fID, $this->fvID);
-		$r = $db->Execute('select akHandle, value, akType from FileAttributeValues inner join FileAttributeKeys on FileAttributeKeys.fakID = FileAttributeValues.fakID where fID = ? and fvID = ?', $v);
-		while ($row = $r->fetchRow()) {
-			
-			switch($row['akType']) {
-				default:
-					$v = $row['value'];
-					break;
-			}
-			$this->attributes[$row['akHandle']] = $v;
-		}
+		Loader::model('attribute/categories/file');			
+		$this->attributes = FileAttributeKey::getAttributes($this->fID, $this->fvID);
 	}
 	
 	public function getSize() {
