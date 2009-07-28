@@ -102,7 +102,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function getCollectionAttributeValue($ak) {
 			if (is_object($this->vObj)) {
 				if (is_object($ak)) {
-					return $this->vObj->getAttribute($ak->getCollectionAttributeKeyHandle());
+					return $this->vObj->getAttribute($ak->getAttributeKeyHandle());
 				} else {
 					return $this->vObj->getAttribute($ak);
 				}

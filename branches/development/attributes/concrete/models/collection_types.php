@@ -259,7 +259,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 			$objArray = array();
 			foreach($this->akIDArray as $akID) {
-				$objArray[] = CollectionAttributeKey::get($akID);
+				$objArray[] = CollectionAttributeKey::getByID($akID);
 			}
 			return $objArray;
 		}
