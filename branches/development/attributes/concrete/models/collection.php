@@ -109,6 +109,20 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 		
+		public function getAttributeValueObject($ak) {
+			$db = Loader::db();
+			$v = array($this->getCollectionID(), $this->getVersionID(), $ak->getAttributeKeyID());
+			$avID = $db->GetOne("select avID from CollectionAttributeValues where cID = ? and cvID = ? and akID = ?", $v);
+			if ($avID > 0) {
+				$av = CollectionAttributeValue::getByID($avID);
+				if (is_object($av)) {
+					$av->setCollection($this);
+					$av->setAttributeKey($ak);
+					return $av;
+				}
+			}
+		}
+		
 		/*
 		
 		function getCollectionAttributeValue($ak) {

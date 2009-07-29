@@ -121,7 +121,7 @@ var ccmPathHelper={
 
 
 		foreach($cAttributes as $ak) {
-			$caValue = $c->getCollectionAttributeValue($ak); ?>
+			$caValue = $c->getAttributeValueObject($ak); ?>
 		
 		<div class="ccm-field-meta" id="ccm-field-ak<?=$ak->getAttributeKeyID()?>" <? if (!in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?> style="display: none" <? } ?>>
 		<input type="hidden" class="ccm-meta-field-selected" id="ccm-meta-field-selected<?=$ak->getAttributeKeyID()?>" name="selectedAKIDs[]" value="<? if (!in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>0<? } else { ?><?=$ak->getAttributeKeyID()?><? } ?>" />

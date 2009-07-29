@@ -15,9 +15,7 @@
 		foreach($_POST['selectedAKIDs'] as $akID) {
 			if ($akID > 0) {
 				$ak = CollectionAttributeKey::getByID($akID);
-				$at = $ak->getAttributeType();
-				$at->controller->setAttributeKey($ak);
-				$at->controller->save($avID, $at->controller->post());
+				$ak->saveAttribute($nvc);
 			}
 		} 
 	}
@@ -575,8 +573,6 @@
 				}
 				
 				$nvc->update($data);
-				$nvc->clearCollectionAttributes();			
-				
 				processMetaData($nvc);
 				
 				if ($_POST['rel'] == 'SITEMAP') { 
