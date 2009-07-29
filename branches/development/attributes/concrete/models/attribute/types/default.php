@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-class DefaultAttributeType extends AttributeType  {
+class DefaultAttributeTypeController extends AttributeTypeController  {
 
 
 	public function getValue($avID) {
