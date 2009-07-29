@@ -165,12 +165,12 @@
 			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew)
 				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				
-			$q2 = "select akID, value from CollectionAttributeValues where cID = ? and cvID = ?";
+			$q2 = "select akID, avID from CollectionAttributeValues where cID = ? and cvID = ?";
 			$v2 = array($c->getCollectionID(), $this->getVersionID());
 			$r2 = $db->query($q2, $v2);
 			while ($row2 = $r2->fetchRow()) {
-				$v3 = array($c->getCollectionID(), $newVID, $row2['akID'], $row2['value']);
-				$db->query("insert into CollectionAttributeValues (cID, cvID, akID, value) values (?, ?, ?, ?)", $v3);
+				$v3 = array($c->getCollectionID(), $newVID, $row2['akID'], $row2['avID']);
+				$db->query("insert into CollectionAttributeValues (cID, cvID, akID, avID) values (?, ?, ?, ?)", $v3);
 				
 			}
 			
