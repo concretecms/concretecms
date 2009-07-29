@@ -32,6 +32,8 @@
 	Loader::library('block_view');
 	Loader::library('block_view_template');
 	Loader::library('block_controller');
+	Loader::library('attribute/view');
+	Loader::library('attribute/controller');
 
 	## Autoload settings
 	if (C5_ENVIRONMENT_ONLY == false) {
