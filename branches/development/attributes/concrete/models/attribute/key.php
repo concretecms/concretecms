@@ -26,6 +26,12 @@ class AttributeKey extends Object {
 		$this->setPropertiesFromArray($row);
 	}
 
+	/** 
+	 * Returns an attribute type object 
+	 */
+	public function getAttributeType() {
+		return AttributeType::getByID($this->atID);
+	}
 	
 	/** 
 	 * Loads a value for a particular attribute key/valID combination
