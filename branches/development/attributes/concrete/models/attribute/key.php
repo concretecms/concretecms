@@ -37,8 +37,9 @@ class AttributeKey extends Object {
 	 * Loads a value for a particular attribute key/valID combination
 	 */
 	public function getAttributeValue($avID) {
-		$at = AttributeType::getByHandle($this->atHandle);
-		return $at->getValue($avID);
+		$av = CollectionAttributeValue::getByID($avID);
+		$av->setAttributeKey($this);
+		return $av->getValue();
 	}
 
 	/** 
@@ -69,5 +70,15 @@ class AttributeKey extends Object {
 		$at = AttributeType::getByHandle($this->atHandle);
 		$at->render($this, $view, $value);
 	}
-		
+	
+	/** 
+	 * Calls the functions necessary to save this attribute to the database using its stock form
+	 */
+	protected function saveAttribute($attributeValue) {
+		$at = $this->getAttributeType();
+		$at->controller->setAttributeKey($this);
+		$at->controller->setAttributeValue($attributeValue);
+		$at->controller->save($at->controller->post());
+		return $av;
+	}
 }

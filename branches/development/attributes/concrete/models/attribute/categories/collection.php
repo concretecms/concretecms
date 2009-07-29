@@ -44,7 +44,61 @@ class CollectionAttributeKey extends AttributeKey {
 	public function get($akID) {
 		return CollectionAttributeKey::getByID($akID);
 	}
-
 	
+	public function saveAttribute($nvc) {
+		// We check a cID/cvID/akID combo, and if that particular combination has an attribute value ID that
+		// is NOT in use anywhere else on the same cID, cvID, akID combo, we use it (so we reuse IDs)
+		// otherwise generate new IDs
+		
+		$av = $nvc->getAttributeValueObject($this);
+		$cnt = 0;
+		
+		// Is this avID in use ?
+		if (is_object($av)) {
+			$db = Loader::db();
+			$cnt = $db->GetOne("select count(avID) from CollectionAttributeValues where avID = ?", $av->getAttributeValueID());
+		}
+		
+		if ((!is_object($av)) || ($cnt > 1)) {
+			$at = $this->getAttributeType();
+			$av = $at->addAttributeValue();
+		}
+		
+		parent::saveAttribute($av);
+		$db = Loader::db();
+		$v = array($nvc->getCollectionID(), $nvc->getVersionID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
+		$db->Replace('CollectionAttributeValues', array(
+			'cID' => $nvc->getCollectionID(), 
+			'cvID' => $nvc->getVersionID(), 
+			'akID' => $this->getAttributeKeyID(), 
+			'avID' => $av->getAttributeValueID()
+		), array('cID', 'cvID', 'akID'));
+	}
+	
+}
 
+class CollectionAttributeValue extends AttributeValue {
+
+	public function setCollection($cObj) {
+		$this->c = $cObj;
+	}
+	
+	public static function getByID($avID) {
+		$cav = new CollectionAttributeValue();
+		$cav->load($avID);
+		if ($cav->getAttributeValueID() == $avID) {
+			return $cav;
+		}
+	}
+
+	public function delete() {
+		parent::delete();
+		$db = Loader::db();
+		$db->Execute('delete from CollectionAttributeValues where cID = ? and cvID = ? and akID = ? and avID = ?', array(
+			$this->c->getCollectionID(), 
+			$this->c->getVersionID(),
+			$this->attributeKey->getAttributeKeyID(),
+			$this->getAttributeValueID()
+		));
+	}
 }
