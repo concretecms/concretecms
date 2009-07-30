@@ -7,7 +7,7 @@ $this->inc('elements/header.php'); ?>
 		<h1 id="logo"><!--
 			--><a href="<?=DIR_REL?>/"><?
 				$block = Block::getByName('My_Site_Name');
-				if($block) $block->display();  
+				if( $block && $block->bID ) $block->display();  
 				else echo SITE;
 			?></a><!--
 		--></h1>
