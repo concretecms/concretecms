@@ -378,6 +378,36 @@ $(document).ready(function(){
 	}
 });
 </script>
+
+
+<? /*
+<form method="post" id="login-redirect-form" action="<?=$this->url('/dashboard/settings', 'update_login_redirect')?>">
+	<?=$this->controller->token->output('update_login_redirect')?>
+	
+	<h1><span><?=t('Where to send users on login?')?></span></h1>
+	<div class="ccm-dashboard-inner"> 
+		
+		<div class="ccm-dashboard-radio">
+			<input type="radio" name="LOGIN_REDIRECT" value="0"  <?=($site_login_redirect==0)?'checked':''?> /> <?=t('Homepage')?>
+		</div>
+
+		<div class="ccm-dashboard-radio">
+			<input type="radio" name="LOGIN_REDIRECT" value="1" <?=($site_login_redirect==1)?'checked':''?> /> <?=t('The page they were heading to')?>
+		</div>
+		
+		<div class="ccm-dashboard-radio">
+			<input type="radio" name="LOGIN_REDIRECT" value="2" <?=($site_login_redirect==2)?'checked':''?> /> <?=t('Custom page')?>
+		</div>		
+
+		<?
+		$b1 = $h->submit(t('Update Login Redirect'), 'login-redirect-form');
+		print $h->buttons($b1);
+		?>
+		<br class="clear" />
+	</div>
+</form>
+*/ ?>
+
 <? } else { ?>
 
 

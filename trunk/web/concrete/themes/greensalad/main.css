@@ -58,6 +58,8 @@ img {
 	text-decoration:none;
 }
 
+#page #header #logo p{ display:inline; line-height:inherit; font-size:inherit; padding:inherit; margin:inherit; color:inherit }
+
 #page #header ul.nav-header {
 	list-style:none;
 	margin:0px;

@@ -482,12 +482,27 @@ class InstallController extends Controller {
 						$data['name'] = t('Contact');
 						$contactPage = $home->add($dt, $data);
 						
+						// Add global scrapbook area
+						$scrapbookHelper = Loader::helper('concrete/scrapbook');
+						$scrapbookPage=$scrapbookHelper->getGlobalScrapbookPage(); 
+						$globalScrapbookName = t('Global Scrapbook');
+						$global_a = Area::get($scrapbookPage, $globalScrapbookName);						
+						if (!is_object($global_a)) 
+							$global_a = Area::getOrCreate( $scrapbookPage, $globalScrapbookName); 						
+						
+						// Add global scrapbook site name block	 															
+						$bt = BlockType::getByHandle('content');
+						$data = array();
+						$data['uID'] = $this->installData['USER_SUPER_ID'];
+						$data['content'] = $_POST['SITE'];					
+						$b = $scrapbookPage->addBlock($bt, $globalScrapbookName, $data);
+						$b->updateBlockName( 'My_Site_Name', 1 );
+						
 						// Add Content to Home page
 						$bt = BlockType::getByHandle('content');
 						$data = array();
 						$data['uID'] = $this->installData['USER_SUPER_ID'];
 						$data['content'] = t('<h1>Welcome to Concrete.</h1><p>You are currently viewing the front page of your website. This is an example of a content block - rich text that can be added through a WYSIWYG editor.</p><p>Get started by putting the page in edit mode, adding sub-pages, or checking out the dashboard.</p><h3>Examples of Blocks</h3>Listed below are some of the more interesting blocks that Concrete5 ships with, installed and ready to use. Click through to explore the blocks on their own page.</p><p>These pages are actually listed using the <b>page list</b> block. To check it out, put the page in edit mode, mouse over the list of pages below, click, and then select edit.</p>');
-
 						$home->addBlock($bt, "Main", $data);
 
 						// add page list block below the examples intro text

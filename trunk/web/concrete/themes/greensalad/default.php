@@ -3,8 +3,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $this->inc('elements/header.php'); ?>
 <div id="page" class="sidebar-left">
 	<div id="headerSpacer"></div>
-	<div id="header">		
-		<h1 id="logo"><a href="<?=DIR_REL?>/"><?=SITE?></a></h1>
+	<div id="header">		 
+		<h1 id="logo"><!--
+			--><a href="<?=DIR_REL?>/"><?
+				$block = Block::getByName('My_Site_Name');
+				if($block) $block->display();  
+				else echo SITE;
+			?></a><!--
+		--></h1>		
 		<?
 		// we use the "is edit mode" check because, in edit mode, the bottom of the area overlaps the item below it, because
 		// we're using absolute positioning. So in edit mode we add a bit of space so everything looks nice.
