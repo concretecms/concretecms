@@ -40,11 +40,10 @@ if ($_POST['create']) {
 
 		if (strlen($username) >= USER_USERNAME_MINIMUM && !$valc->username($username)) {
 			if(USER_USERNAME_ALLOW_SPACES) {
-				$e->add(t('A username may only contain letters, numbers and spaces.'));
+				$error[] = t('A username may only contain letters, numbers and spaces.');
 			} else {
-				$e->add(t('A username may only contain letters or numbers.'));
+				$error[] = t('A username may only contain letters or numbers.');
 			}
-			
 		}
 
 		if (!$valc->isUniqueUsername($username)) {

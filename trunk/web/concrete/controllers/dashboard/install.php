@@ -22,7 +22,6 @@ class DashboardInstallController extends Controller {
 				$this->set('message', t('Block Type Refreshed. Any database schema changes have been applied.'));
 
 			} catch(Exception $e) {
-				@ob_end_flush();
 				$this->set('error', $e);
 			}
 			$this->inspect_block_type($btID);
