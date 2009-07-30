@@ -38,9 +38,9 @@ div.ccm-error-response {color: #f00; margin-bottom: 12px}
 #page #central.central-left div#sidebar {float: left !important; }
 #page #central.central-left #body {padding-left: 72px !important; padding-right: 0px !important; float:right}
  
-#page #central #body{ float:left; width:67%; padding-right:28px; overflow:hidden; padding-left: 0px !important; padding-right: 0px !important }
+#page #central #body{ float:left; width:67%; padding-right:28px; padding-left: 0px !important; padding-right: 0px !important }
 #page #central #body p {text-align:justify;}
-#page .no-sidebar #body{ float: none !important; width: auto !important; overflow:hidden }
+#page .no-sidebar #body{ float: none !important; width: auto !important; }
 #page #central #sidebar{ float:right; width:24%; overflow:hidden }
 #page #central #sidebar p{ line-height:24px}
 #page #central #sidebar ul.nav{ list-style:none; margin-left:0px; padding:0px; padding-left:24px; font-size:11px;}
