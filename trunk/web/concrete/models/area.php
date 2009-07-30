@@ -116,6 +116,7 @@ class Area extends Object {
 	}
 
 	function get(&$c, $arHandle) {
+		
 		$ca = new Cache();
 		$a = Cache::get('area', $c->getCollectionID() . ':' . $arHandle);
 		if ($a instanceof Area) {

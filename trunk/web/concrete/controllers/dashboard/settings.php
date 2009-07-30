@@ -376,6 +376,18 @@ class DashboardSettingsController extends Controller {
 		}
 	}
 	
+	
+	public function update_login_redirect(){ 
+		if ($this->token->validate("update_login_redirect")) {	
+			if ($this->isPost()) {
+				//Config::save('LOGIN_REDIRECT', $this->post('LOGIN_REDIRECT'));
+				//$this->redirect('/dashboard/settings','rewriting_saved');
+			}
+		} else {
+			$this->set('error', array($this->token->getErrorMessage()));
+		}	
+	}		
+	
 	public function set_developer($updated = false) {
 		$debug_level = Config::get('SITE_DEBUG_LEVEL');
 		$enable_log_emails = Config::get('ENABLE_LOG_EMAILS');

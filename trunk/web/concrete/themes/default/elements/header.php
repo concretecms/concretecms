@@ -27,7 +27,14 @@
 			$a->display($c);
 			?>
 		</div>
-		<h1 id="logo"><a href="<?=DIR_REL?>/"><?=SITE?></a></h1>
+		
+		<h1 id="logo"><!--
+			--><a href="<?=DIR_REL?>/"><?
+				$block = Block::getByName('My_Site_Name'); 
+				if($block) $block->display();   
+				else echo SITE;
+			?></a><!--
+		--></h1>
 
 		<?
 		// we use the "is edit mode" check because, in edit mode, the bottom of the area overlaps the item below it, because

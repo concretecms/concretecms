@@ -86,7 +86,8 @@ class ConcreteDashboardSitemapHelper {
 		}
 		
 		$status = '';
-		if ($c->getPendingAction() || ($c->getVersionObject()->isApproved())) {
+		
+		if ($c->getPendingAction() || ( $c->getVersionObject() && $c->getVersionObject()->isApproved()) ) {
 			$status = ucfirst($c->getPendingAction());
 		}
 		
