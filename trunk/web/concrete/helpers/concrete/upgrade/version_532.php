@@ -33,6 +33,12 @@ class ConcreteUpgradeVersion532Helper {
 		if( !intval($cak->getAttributeKeyID()) ) [
 			$cak = CollectionAttributeKey::add('exclude_sitemapxml', t('Exclude From sitemap.xml'), true, null, 'BOOLEAN');
 		}
+		
+		//change the page/tab name of the dashboard users registration page
+		$dashboardRegistrationPage=Page::getByPath('/dashboard/users/registration');
+		if( intval($dashboardRegistrationPage->cID) ) 
+			$dashboardRegistrationPage->update(array('cName'=>t('Login & Registration')));
+		Config::save('LOGIN_ADMIN_TO_DASHBOARD', 1);
 	}
 	
 }

@@ -376,7 +376,7 @@ class InstallController extends Controller {
 						$d4b->update(array('cName'=>t('Add User')));
 						$d4c->update(array('cName'=>t('Groups')));
 						$d4d->update(array('cName'=>t('User Attributes')));
-						$d4e->update(array('cName'=>t('User Registration')));
+						$d4e->update(array('cName'=>t('Login & Registration')));
 						$d5->update(array('cName'=>t('Scrapbook'), 'cDescription'=>t('Share content across your site.')));	
 						$d7->update(array('cName'=>t('Pages and Themes'), 'cDescription'=>t('Reskin your site.')));	
 						$d71->update(array('cName'=>t('Themes'), 'cDescription'=>t('Reskin your site.')));	

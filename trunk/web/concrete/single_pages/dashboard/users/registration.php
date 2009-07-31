@@ -2,42 +2,107 @@
 $h = Loader::helper('concrete/interface');
 ?>
 
-<div class="ccm-module">
-    <h1><span><?=t('Registration')?></span></h1>
-    <div class="ccm-dashboard-inner">
-    <form method="post" id="registration-type-form" action="<?=$this->url('/dashboard/users/registration', 'update_registration_type')?>">        
-        <div class="ccm-dashboard-radio"><input type="radio" name="registration_type" value="disabled" style="vertical-align: middle" <? if ($registration_type == "disabled") { ?> checked <? } ?> /> <?=t('Registration is disabled')?></div>
-        <div class="ccm-dashboard-radio"><input type="radio" name="registration_type" value="validate_email" style="vertical-align: middle" <? if ($registration_type == "validate_email") { ?> checked <? } ?> /> <?=t('Registration is enabled, email must be validated.')?></div>
-        <div class="ccm-dashboard-radio"><input type="radio" name="registration_type" value="manual_approve" style="vertical-align: middle" <? if ($registration_type == "manual_approve") { ?> checked <? } ?> /> <?=t('Registration is enabled, but must be manually approved.')?></div>
-        <div class="ccm-dashboard-radio"><input type="radio" name="registration_type" value="enabled" style="vertical-align: middle" <? if ($registration_type == "enabled") { ?> checked <? } ?> /> <?=t('Registration is enabled.')?></div>
-	        
-    	<br />
-<div class="ccm-dashboard-checkbox"><input type="checkbox" name="enable_openID" value="1" style="vertical-align: middle" <? if ($enable_openID) { ?> checked <? } ?> /> <?=t('Enable OpenID')?></div>
-        <br />
-        <div class="ccm-dashboard-checkbox"><input type="checkbox" name="email_as_username" value="1" style="vertical-align: middle" <? if ($email_as_username) { ?> checked <? } ?> /> <?=t('Use email address as username')?></div>
-        
-        <?
-        $b1 = $h->submit(t('Save'), 'registration-type-form');
-        print $h->buttons($b1);
-        ?>
-        <br class="clear" />
-    </form>    
-    </div>
-</div>
+<style>
+.ccm-module form{ width:auto; height:auto; padding:0px; padding-bottom:10px; display:block; }
+.ccm-module form div.ccm-dashboard-inner{ margin-bottom:0px !important; }
+</style>
 
 <div class="ccm-module">
-    <h1><span><?=t('Public Profiles')?></span></h1>
-    <div class="ccm-dashboard-inner">
+	<form method="post" id="login-redirect-form" action="<?=$this->url('/dashboard/users/registration', 'update_login_redirect')?>">
+		<?=$this->controller->token->output('update_login_redirect')?>
+		
+		<h1><span><?=t('Where to send users on login?')?></span></h1>
+		<div class="ccm-dashboard-inner"> 
+			
+			<div class="ccm-dashboard-radio">
+				<input type="radio" name="LOGIN_REDIRECT" value="HOMEPAGE"  <?=(!strlen($site_login_redirect) || $site_login_redirect=='HOMEPAGE')?'checked':''?> /> <?=t('Homepage')?>
+			</div> 
+			
+			<div class="ccm-dashboard-radio">
+				<input type="radio" name="LOGIN_REDIRECT" value="PROFILE" <?=($site_login_redirect=='PROFILE')?'checked':''?> /> <?=t('Member profile (if enabled)')?>
+			</div>			
+			
+			<div class="ccm-dashboard-radio">
+				<input type="radio" name="LOGIN_REDIRECT" value="CUSTOM" <?=($site_login_redirect=='CUSTOM')?'checked':''?> /> <?=t('Custom page')?>
+				
+				<div id="login_redirect_custom_cid_wrap" style="display:<?=( $site_login_redirect=='CUSTOM' )?'block':'none'?>">
+				<? 
+				$formPageSelector = Loader::helper('form/page_selector'); 
+				echo $formPageSelector->selectPage('LOGIN_REDIRECT_CID', $login_redirect_cid ); 
+				?> 
+				</div>
+				
+				<script>			
+				$(function(){ 
+					$("#login_redirect_custom_cid_wrap .dialog-launch").dialog(); 
+				
+					$("input[name='LOGIN_REDIRECT']").each(function(i,el){ 
+						el.onchange=function(){isLoginRedirectCustom();}
+					})	 	
+				});	
+				function isLoginRedirectCustom(){
+					if($("input[name='LOGIN_REDIRECT']:checked").val()=='CUSTOM'){
+						$('#login_redirect_custom_cid_wrap').css('display','block');
+					}else{
+						$('#login_redirect_custom_cid_wrap').css('display','none');
+					}
+				}			
+				</script>
+			</div>
+			
+			<div class="ccm-dashboard-radio" style="margin-top:16px;" > 
+				<input type="checkbox" name="LOGIN_ADMIN_TO_DASHBOARD" value="1" <?=($site_login_admin_to_dashboard)?'checked':''?> /> <?=t('Redirect administrators to dashboard')?>
+			</div>		
+	
+			<?
+			$b1 = $h->submit(t('Update Login Redirect'), 'login-redirect-form');
+			print $h->buttons($b1);
+			?>
+			
+			<br class="clear" />
+		</div>
+	</form>	
+	
+	
     <form method="post" id="public-profiles-form" action="<?=$this->url('/dashboard/users/registration', 'update_profiles')?>">
-        
-        <div class="ccm-dashboard-checkbox"><input type="checkbox" name="public_profiles" value="1" style="vertical-align: middle" <? if ($public_profiles) { ?> checked <? } ?> /> <?=t('Enable public profiles.')?></div>
-        <div class="ccm-dashboard-description"><?=t('Enable public profile pages for site members.')?></div>
-        
-        <?
-        $b1 = $h->submit(t('Save'), 'public-profiles-form');
-        print $h->buttons($b1);
-        ?>
-        <br class="clear" />
-    </form>    
-    </div>
+		<h1><span><?=t('Public Profiles')?></span></h1>
+		<div class="ccm-dashboard-inner">
+			
+			<div class="ccm-dashboard-checkbox"><input type="checkbox" name="public_profiles" value="1" style="vertical-align: middle" <? if ($public_profiles) { ?> checked <? } ?> /> <?=t('Enable public profiles.')?></div>
+			<div class="ccm-dashboard-description"><?=t('Enable public profile pages for site members.')?></div>
+			
+			<?
+			$b1 = $h->submit(t('Save'), 'public-profiles-form');
+			print $h->buttons($b1);
+			?>
+			<br class="clear" />    
+		</div>
+    </form>		
+</div>
+
+
+
+<div class="ccm-module">
+
+    <form method="post" id="registration-type-form" action="<?=$this->url('/dashboard/users/registration', 'update_registration_type')?>">        
+		<h1><span><?=t('Registration')?></span></h1>
+		<div class="ccm-dashboard-inner">
+			<div class="ccm-dashboard-radio"><input type="radio" name="registration_type" value="disabled" style="vertical-align: middle" <? if ($registration_type == "disabled") { ?> checked <? } ?> /> <?=t('Registration is disabled')?></div>
+			<div class="ccm-dashboard-radio"><input type="radio" name="registration_type" value="validate_email" style="vertical-align: middle" <? if ($registration_type == "validate_email") { ?> checked <? } ?> /> <?=t('Registration is enabled, email must be validated.')?></div>
+			<div class="ccm-dashboard-radio"><input type="radio" name="registration_type" value="manual_approve" style="vertical-align: middle" <? if ($registration_type == "manual_approve") { ?> checked <? } ?> /> <?=t('Registration is enabled, but must be manually approved.')?></div>
+			<div class="ccm-dashboard-radio"><input type="radio" name="registration_type" value="enabled" style="vertical-align: middle" <? if ($registration_type == "enabled") { ?> checked <? } ?> /> <?=t('Registration is enabled.')?></div>
+				
+			<br />
+			
+			<div class="ccm-dashboard-checkbox"><input type="checkbox" name="enable_openID" value="1" style="vertical-align: middle" <? if ($enable_openID) { ?> checked <? } ?> /> <?=t('Enable OpenID')?></div>
+			<br />
+			<div class="ccm-dashboard-checkbox"><input type="checkbox" name="email_as_username" value="1" style="vertical-align: middle" <? if ($email_as_username) { ?> checked <? } ?> /> <?=t('Use email address as username')?></div>
+			
+			<?
+			$b1 = $h->submit(t('Save'), 'registration-type-form');
+			print $h->buttons($b1);
+			?>
+			<br class="clear" />	   
+		</div>
+    </form> 		
 </div>
