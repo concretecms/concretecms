@@ -48,7 +48,7 @@
 			}
 			$E = new GuestBookBlockEntry($this->bID);
 			$bo = $this->getBlockObject();
-			global $c;
+			$c = Page::getCurrentPage();
 			$E->removeAllEntries( $c->getCollectionID() );
 			parent::delete();
 		}
@@ -92,7 +92,7 @@
 
 			// get the cID from the block Object
 			$bo = $this->getBlockObject();
-			global $c;
+			$c = Page::getCurrentPage();
 			$cID = $c->getCollectionID();
 		
 			$v = Loader::helper('validation/strings');
@@ -153,7 +153,7 @@
 				 
 				$stringsHelper = Loader::helper('validation/strings');
 				if( $stringsHelper->email($this->notifyEmail) ){
-					global $c; 
+					$c = Page::getCurrentPage(); 
 					if(intval($uID)>0){
 						Loader::model('userinfo');
 						$ui = UserInfo::getByID($uID);
@@ -186,7 +186,7 @@
 		*/
 		function getEntries($order = "ASC") {
 			$bo = $this->getBlockObject();
-			global $c;
+			$c = Page::getCurrentPage();
 			return GuestBookBlockEntry::getAll($this->bID, $c->getCollectionID(), $order);
 		}
 		

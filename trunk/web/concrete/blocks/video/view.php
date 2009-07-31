@@ -10,7 +10,7 @@ $rel_file_path=$file->getRelativePath(); ?>
 <div style="text-align:center">
 
 <?
-global $c;
+$c = Page::getCurrentPage();
 $vWidth=intval($controller->width);
 $vHeight=intval($controller->height);
 if ($c->isEditMode()) { ?>

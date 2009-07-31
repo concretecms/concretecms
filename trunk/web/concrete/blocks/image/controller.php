@@ -48,7 +48,7 @@
 
 		function getContentAndGenerate($align = false, $style = false, $id = null) {
 			$db = Loader::db();
-			global $c;
+			$c = Page::getCurrentPage();
 			$bID = $this->bID;
 			
 			$f = $this->getFileObject();

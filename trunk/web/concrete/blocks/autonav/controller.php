@@ -191,7 +191,7 @@
 					// instantiating autonav on a particular collection page, instead of adding
 					// it through the block interface
 					$this->bID = null;
-					global $c;
+					$c = Page::getCurrentPage();
 					if (is_object($c)) {
 						$this->cID = $c->getCollectionID();
 						$this->cParentID = $c->getCollectionParentID();

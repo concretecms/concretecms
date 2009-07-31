@@ -515,7 +515,8 @@ class Block extends Object {
 	}
 
 	function _getBlockAction() {
-		$cID = $this->getBlockCollectionID();
+		$c = Page::getCurrentPage();
+		$cID = $c->getCollectionID();
 		$bID = $this->getBlockID();
 		$arHandle = $this->getAreaHandle();
 		$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';

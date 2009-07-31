@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
-<? global $c; ?><style>
+<? $c = Page::getCurrentPage(); ?><style>
 
 h4.guestBook-title {
 	border-bottom:1px solid #666666;
