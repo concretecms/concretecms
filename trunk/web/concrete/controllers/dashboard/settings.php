@@ -4,9 +4,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class DashboardSettingsController extends Controller {
 
 	var $helpers = array('form'); 
+
 	
 	public function view($updated = false) {
-		$u = new User();
+		$u = new User();		
 		 
 		$this->set('site_tracking_code', Config::get('SITE_TRACKING_CODE') );		
 		$this->set('url_rewriting', URL_REWRITING);
@@ -26,8 +27,8 @@ class DashboardSettingsController extends Controller {
 		$txtEditorCstmCode=Config::get('CONTENTS_TXT_EDITOR_CUSTOM_CODE');
 		if( !strlen($txtEditorCstmCode) || $txtEditorMode!='CUSTOM' )
 			$txtEditorCstmCode=$this->get_txt_editor_default();
-		$this->set('txtEditorCstmCode', $txtEditorCstmCode ); 
-		
+		$this->set('txtEditorCstmCode', $txtEditorCstmCode );
+				
 		if ($updated) {
 			switch($updated) {
 				case "tracking_code_saved";
@@ -68,7 +69,7 @@ class DashboardSettingsController extends Controller {
 					break;
 				case "txt_editor_config_saved":
 					$this->set('message', t('Content text editor settings saved.'));
-					break;										
+					break;														
 				case "rewriting_saved":
 					if (URL_REWRITING) {
 						$this->set('message', t('URL rewriting enabled. Make sure you copy the lines below these URL Rewriting settings area and place them in your .htaccess or web server configuration file.'));
@@ -374,19 +375,7 @@ class DashboardSettingsController extends Controller {
 			Config::save('URL_REWRITING', $this->post('URL_REWRITING'));
 			$this->redirect('/dashboard/settings','rewriting_saved');
 		}
-	}
-	
-	
-	public function update_login_redirect(){ 
-		if ($this->token->validate("update_login_redirect")) {	
-			if ($this->isPost()) {
-				//Config::save('LOGIN_REDIRECT', $this->post('LOGIN_REDIRECT'));
-				//$this->redirect('/dashboard/settings','rewriting_saved');
-			}
-		} else {
-			$this->set('error', array($this->token->getErrorMessage()));
-		}	
-	}		
+	}	
 	
 	public function set_developer($updated = false) {
 		$debug_level = Config::get('SITE_DEBUG_LEVEL');
@@ -489,6 +478,7 @@ class DashboardSettingsController extends Controller {
 		$this->set('ip_ban_lock_ip_how_long_type_forever',self::IP_BAN_LOCK_IP_HOW_LONG_TYPE_FOREVER);
 		$this->set('ip_ban_lock_ip_how_long_type_timed',self::IP_BAN_LOCK_IP_HOW_LONG_TYPE_TIMED);		
 		$this->set('ip_ban_lock_ip_how_long_min',$ip_ban_lock_ip_how_long_min);
+	
 		
 		//maintanence mode
 		$site_maintenance_mode = Config::get('SITE_MAINTENANCE_MODE');
@@ -508,7 +498,7 @@ class DashboardSettingsController extends Controller {
 					break;	
 				case "saved_ipblacklist":
 					$this->set('message',t('IP Blacklist Settings Updated'));
-					break;					
+					break; 								
 				//permissions saved	
 				default: 
 					$this->set('message', t('Permissions saved.'));	

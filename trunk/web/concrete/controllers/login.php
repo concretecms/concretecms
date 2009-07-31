@@ -233,17 +233,35 @@ class LoginController extends Controller {
 		if($_REQUEST['format']=='JSON') 
 			return $loginData;		
 		
-		//Full page login, standard redirection
+		//should administrator be redirected to dashboard?  defaults to yes if not set. 
+		$adminToDash=intval(Config::get('LOGIN_ADMIN_TO_DASHBOARD'));  	
+		
+		//Full page login, standard redirection			
 		if ($loginData['redirectURL']) {
 			//make double secretly sure there's no caching going on
 			header("Cache-Control: no-store, no-cache, must-revalidate");
 			header("Pragma: no-cache");
 			header('Expires: Fri, 30 Oct 1998 14:19:41 GMT'); //in the past		
 			$this->externalRedirect( $loginData['redirectURL'] );
-		}else if ($dbp->canRead()) {
+		}else if ( $dbp->canRead() && $adminToDash ) {
 			$this->redirect('/dashboard');
 		} else {
-			$this->redirect('/');
+			//options set in dashboard/users/registration
+			$login_redirect_cid=intval(Config::get('LOGIN_REDIRECT_CID'));
+			$login_redirect_mode=Config::get('LOGIN_REDIRECT');		
+			
+			//redirect to user profile
+			if( $login_redirect_mode=='PROFILE' && ENABLE_USER_PROFILES ){ 			
+				$this->redirect( '/profile/', $u->uID ); 				
+				
+			//redirect to custom page	
+			}elseif( $login_redirect_mode=='CUSTOM' && $login_redirect_cid > 0 ){ 
+				$redirectTarget = Page::getByID( $login_redirect_cid ); 
+				if(intval($redirectTarget->cID)>0) $this->redirect( $redirectTarget->getCollectionPath() );
+				else $this->redirect('/');		
+						
+			//redirect home
+			}else $this->redirect('/');
 		}
 	}
 
