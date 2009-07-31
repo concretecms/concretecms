@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model("collection_types");
 
-global $c;
+$c = Page::getCurrentPage();
 global $b;
 
 $uh = Loader::helper('concrete/urls');

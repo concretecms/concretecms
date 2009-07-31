@@ -18,7 +18,7 @@ $uh = Loader::helper('concrete/urls'); ?>
 <div id="ccm-formBlockPane-options" class="ccm-formBlockPane">
 
 	<?php 
-	global $c;
+	$c = Page::getCurrentPage();
 	if(strlen($miniSurveyInfo['surveyName'])==0)
 		$miniSurveyInfo['surveyName']=$c->getCollectionName();
 	?>

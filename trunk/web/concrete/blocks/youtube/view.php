@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 $url = parse_url($videoURL);
 parse_str($url['query'], $query);
-global $c;
+$c = Page::getCurrentPage();
  
 $vWidth=425;
 $vHeight=344;

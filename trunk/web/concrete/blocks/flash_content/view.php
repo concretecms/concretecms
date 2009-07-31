@@ -10,7 +10,7 @@
 		$h = 300;
 	}
 	
-global $c;
+$c = Page::getCurrentPage();
  
 $vWidth=$w;
 $vHeight=$h;

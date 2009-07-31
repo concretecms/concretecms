@@ -1878,6 +1878,16 @@ $ppWhere = '';
 			}
 		}		
 	}
+
+	/*
+	 * returns an instance of the current page object 
+	 *
+	*/
+	public static function getCurrentPage() {
+		global $c;
+		return $c;
+	}
+
 }
 
 ?>

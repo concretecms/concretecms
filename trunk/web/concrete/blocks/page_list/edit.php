@@ -6,7 +6,7 @@ if ($c->getCollectionID() != $cParentID && (!$cThis) && ($cParentID != 0)) {
 	$isOtherPage = true;
 }
 
-global $c;
+$c = Page::getCurrentPage();
 global $b;
 
 $uh = Loader::helper('concrete/urls');

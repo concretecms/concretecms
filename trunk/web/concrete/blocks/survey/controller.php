@@ -43,7 +43,7 @@ class SurveyBlockController extends BlockController {
 	
 	function __construct($obj = NULL) {
 		parent::__construct($obj);
-		global $c;
+		$c = Page::getCurrentPage();
 		if (is_object($c)) {
 			$this->cID = $c->getCollectionID();
 		}
@@ -102,7 +102,7 @@ class SurveyBlockController extends BlockController {
 		$u = new User();
 		$db = Loader::db();
 		$bo = $this->getBlockObject();
-		global $c;
+		$c = Page::getCurrentPage();
 		if ($this->requiresRegistration()) {
 			if (!$u->isRegistered()) {
 				$this->redirect('/login');
@@ -283,7 +283,7 @@ class BlockPollOption {
 	function getOptionDisplayOrder() {return $this->displayOrder;}
 	
 	function getResults() {
-		global $c;
+		$c = Page::getCurrentPage();
 		$db = Loader::db();
 		$v = array($this->optionID, intval($c->getCollectionID()) );
 		$q = "select count(resultID) from btSurveyResults where optionID = ? AND cID=?";

@@ -77,7 +77,7 @@ class SearchBlockController extends BlockController {
 	}
 	
 	function view(){
-		global $c; 
+		$c = Page::getCurrentPage(); 
 		$this->set('title', $this->title);
 		$this->set('buttonText', $this->buttonText);
 		$this->set('baseSearchPath', $this->baseSearchPath);			
