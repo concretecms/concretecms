@@ -44,7 +44,6 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		
 		if (!$e->has()) {
 			$ak = CollectionAttributeKey::add($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('atID'), $this->post('akSelectAllowMultipleValues'), $this->post('akSelectAllowOtherValues'), $vals);		
-			print_r($ak);
 		}
 
 		$this->set('error', $e);

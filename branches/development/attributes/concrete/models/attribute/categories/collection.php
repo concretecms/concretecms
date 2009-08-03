@@ -19,15 +19,6 @@ class CollectionAttributeKey extends AttributeKey {
 		return $avl;
 	}
 	
-	public function load($akID) {
-		parent::load($akID);
-		// now we load the specific fields for collection attributes
-		$db = Loader::db();
-		$row = $db->GetRow('select akSearchable from CollectionAttributeKeys where akID = ?', array($akID));
-		$this->setPropertiesFromArray($row);
-		return $ak;	
-	}
-		
 	public static function getByID($akID) {
 		$ak = new CollectionAttributeKey();
 		$ak->load($akID);
@@ -85,7 +76,24 @@ class CollectionAttributeKey extends AttributeKey {
 	
 	public function add($akHandle, $akName, $akIsSearchable, $atID, $akSelectAllowMultipleValues, $akSelectAllowOtherValues, $akValues) {
 		$ak = parent::add('collection', $akHandle, $akName, $akIsSearchable, $atID);
-	
+		$db = Loader::db();
+		
+		if ($akSelectAllowMultipleValues != 1) {
+			$akSelectAllowMultipleValues = 0;
+		}
+		if ($akSelectAllowOtherValues != 1) {
+			$akSelectAllowOtherValues = 0;
+		}
+				
+		// now we have a collection attribute key object above.
+		$db->Replace('atSelectSettings', array(
+			'akID' => $ak->getAttributeKeyID(), 
+			'akSelectAllowMultipleValues' => $akSelectAllowMultipleValues, 
+			'akSelectAllowOtherValues' => $akSelectAllowOtherValues
+		), array('akID'));
+		
+		// now we add the values
+		
 	}
 
 }
