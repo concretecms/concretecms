@@ -17,13 +17,14 @@ class DefaultAttributeTypeController extends AttributeTypeController  {
 	}
 
 	// run when we call setAttribute(), instead of saving through the UI
-	public function setValue($value) {
-		
+	public function saveValue($value) {
+		$db = Loader::db();
+		$db->Replace('atDefault', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
 	}
 	
-	public function save($data) {
+	public function saveForm($data) {
 		$db = Loader::db();
-		$db->Replace('atDefault', array('avID' => $this->getAttributeValueID(), 'value' => $data['value']), 'avID', true);
+		$this->saveValue($data['value']);
 	}
 	
 	public function delete() {

@@ -18,6 +18,10 @@ class AttributeKey extends Object {
 	public function getAttributeKeyID() {return $this->akID;}
 	
 	/** 
+	 * Returns whether the attribute key is searchable */
+	public function isAttributeKeySearchable() {return $this->akIsSearchable;}
+	
+	/** 
 	 * Loads the required attribute fields for this instantiated attribute
 	 */
 	protected function load($akID) {
@@ -61,6 +65,23 @@ class AttributeKey extends Object {
 	}
 	
 	/** 
+	 * Adds an attribute key. 
+	 */
+	protected function add($akCategoryHandle, $akHandle, $akName, $akIsSearchable, $atID) {
+		$db = Loader::db();
+		$akCategoryID = $db->GetOne("select akCategoryID from AttributeKeyCategories where akCategoryHandle = ?", $akCategoryHandle);
+		$a = array($akHandle, $akName, $akIsSearchable, $atID, $akCategoryID);
+		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, atID, akCategoryID) values (?, ?, ?, ?, ?)", $a);
+		
+		if ($r) {
+			$akID = $db->Insert_ID();
+			$ak = new AttributeKey();
+			$ak->load($akID);
+			return $ak;
+		}
+	}
+
+	/** 
 	 * Renders a view for this attribute key. If no view is default we display it's "view"
 	 * Valid views are "view", "form" or a custom view (if the attribute has one in its directory)
 	 * Additionally, an attribute does not have to have its own interface. If it doesn't, then whatever
@@ -68,17 +89,21 @@ class AttributeKey extends Object {
 	 */
 	public function render($view = 'view', $value = false) {
 		$at = AttributeType::getByHandle($this->atHandle);
-		$at->render($this, $view, $value);
+		$at->render($view, $this, $value);
 	}
 	
 	/** 
-	 * Calls the functions necessary to save this attribute to the database using its stock form
+	 * Calls the functions necessary to save this attribute to the database. If no passed value is passed, then we save it via the stock form.
 	 */
-	protected function saveAttribute($attributeValue) {
+	protected function saveAttribute($attributeValue, $passedValue = false) {
 		$at = $this->getAttributeType();
 		$at->controller->setAttributeKey($this);
 		$at->controller->setAttributeValue($attributeValue);
-		$at->controller->save($at->controller->post());
+		if ($passedValue) {
+			$at->controller->saveValue($passedValue);
+		} else {
+			$at->controller->saveForm($at->controller->post());
+		}
 		return $av;
 	}
 }

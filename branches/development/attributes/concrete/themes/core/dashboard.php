@@ -165,11 +165,16 @@ foreach($nav as $n2) {
 		<? 
 		if ($error instanceof Exception) {
 			$_error[] = $error->getMessage();
-		} else if ($error instanceof ValidationErrorHelper) { 
-			$_error = $error->getList();
+		} else if ($error instanceof ValidationErrorHelper) {
+			$_error = array();
+			if ($error->has()) {
+				$_error = $error->getList();
+			}
 		} else {
 			$_error = $error;
 		}
+		
+		if (count($_error) > 0) {
 			?>
 			<div class="message error">
 			<strong><?=t('The following errors occurred when attempting to process your request:')?></strong>
@@ -178,6 +183,7 @@ foreach($nav as $n2) {
 			</ul>
 			</div>
 		<? 
+		}
 	}
 	
 	if (isset($message)) { ?>

@@ -18,21 +18,57 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return $this->controller->field($fieldName);
 		}
 		
-		/** 
-		 * Renders a particular view for an attribute
-		 */
-		public function render($attributeKey, $attributeType, $view, $attributeValue) {
+		public function action($action) {
+			$v = View::getInstance();
+			$a = func_get_args();
+			array_unshift($a, $this->controller->attributeType->getAttributeTypeID());
+			array_unshift($a, 'attribute_type_passthru');
+			return call_user_func_array(array($v, 'action'), $a);
+		}
+		
+		public function getAttributeTypeURL($filename = false) {
+			$atHandle = $this->attributeType->getAttributeTypeHandle();
+			if (file_exists(DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $filename)) {
+				$url = BASE_URL . DIR_REL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $filename;
+			}
+			
+			if (!isset($file) && $this->pkgID > 0) {
+				$pkgHandle = PackageList::getHandle($pkgID);
+				$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
+				$rdirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? BASE_URL . DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle : ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle;
+				if (file_exists($dirp . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $filename)) {
+					$url = $rdirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $filename;
+				}
+			}
+			
+			if (!isset($url)) {
+				$url = ASSETS_URL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $filename;
+			}
+			
+			return $url;
+		}
+		
+		public function __construct($attributeType, $attributeKey, $attributeValue) {
 			$this->controller = $attributeType->getController();
 			$this->controller->setAttributeKey($attributeKey);
 			$this->controller->setAttributeValue($attributeValue);
 			$this->attributeValue = $attributeValue;
 			$this->attributeKey = $attributeKey;
+			$this->attributeType = $attributeType;
+		}
+		
+		/** 
+		 * Renders a particular view for an attribute
+		 */
+		public function render($view) {
 			$this->controller->setupAndRun($view);
 			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
-			$atHandle = $attributeType->getAttributeTypeHandle();
+			$atHandle = $this->attributeType->getAttributeTypeHandle();
 			
-			$this->controller->set('akID', $attributeKey->getAttributeKeyID());
+			if (is_object($attributeKey)) {
+				$this->controller->set('akID', $this->attributeKey->getAttributeKeyID());
+			}
 			
 			if (file_exists(DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php')) {
 				$file = DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $view . '.php';
@@ -41,8 +77,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (!isset($file) && $this->pkgID > 0) {
 				$pkgHandle = PackageList::getHandle($pkgID);
 				$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
-				if (file_exists($dirp . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php')) {
-					$file = $dirp . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php';
+				if (file_exists($dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php')) {
+					$file = $dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php';
 				}
 			}
 			

@@ -21,14 +21,15 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 	}
 
 	// run when we call setAttribute(), instead of saving through the UI
-	public function setValue($value) {
-		
+	public function saveValue($value) {
+		$db = Loader::db();
+		$value = ($value == false || $value == '0') ? 0 : 1;
+		$db->Replace('atBoolean', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
 	}
 	
-	public function save($data) {
+	public function saveForm($data) {
 		$db = Loader::db();
-		$value = $data['value'] == '1' ? 1 : 0;
-		$db->Replace('atBoolean', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
+		$this->saveValue($data['value']);
 	}
 	
 	public function delete() {
