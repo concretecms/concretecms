@@ -75,7 +75,8 @@ class AttributeKey extends Object {
 		
 		if ($r) {
 			$akID = $db->Insert_ID();
-			$ak = new AttributeKey();
+			$className = $akCategoryHandle . 'AttributeKey';
+			$ak = new $className();
 			$ak->load($akID);
 			return $ak;
 		}
