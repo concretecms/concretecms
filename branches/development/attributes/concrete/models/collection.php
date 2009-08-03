@@ -118,62 +118,27 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				if (is_object($av)) {
 					$av->setCollection($this);
 					$av->setAttributeKey($ak);
-					return $av;
 				}
 			}
-		}
+			
+			$cnt = 0;
 		
-		/*
-		
-		function getCollectionAttributeValue($ak) {
-			$db = Loader::db();
-			if (is_object($ak)) {
-				$v = array($this->getCollectionID(), $this->getVersionID(), $ak->getCollectionAttributeKeyID());
-				$q = "select value from CollectionAttributeValues where cID = ? and cvID = ? and akID = ?";		
-				$value = $db->GetOne($q, $v);
-				$akType = $ak->getCollectionAttributeKeyType();
-			} else if (is_string($ak)) {
-				$db = Loader::db();
-				$v = array($this->getCollectionID(), $this->getVersionID(), $ak);
-				$q = "select cak.akType, cav.value from CollectionAttributeValues cav inner join CollectionAttributeKeys cak on cav.akID = cak.akID where cID = ? and cvID = ? and cak.akHandle = ?";
-				$r = $db->getRow($q, $v);
-				$value = $r['value'];
-				$akType = $r['akType'];
-			}
-			$v = false;
-			switch($akType) {
-				case "IMAGE_FILE":
-					if ($value > 0) {
-						Loader::block('library_file');
-						$v = LibraryFileBlockController::getFile($value);
-					}
-					break;
-				default:
-					$v = $value;
-					break;
-			}
-			return $v;
-		}
-		
-		public function getAttribute($akHandle) {
-			return $this->getCollectionAttributeValue($akHandle);
-		}
-		*/
-		
-		
-		public function setAttribute($akHandle, $value) {
-			$db = Loader::db();
-			$akID = $db->GetOne("select akID from CollectionAttributeKeys where akHandle = ?", array($akHandle));
-			if ($akID > 0) {
-				$db->Replace('CollectionAttributeValues', array(
-					'cID' => $this->cID,
-					'cvID' => $this->getVersionID(),
-					'akID' => $akID,
-					'value' => $value
-				),
-				array('cID', 'cvID', 'akID'), true);
+			// Is this avID in use ?
+			if (is_object($av)) {
+				$cnt = $db->GetOne("select count(avID) from CollectionAttributeValues where avID = ?", $av->getAttributeValueID());
 			}
 			
+			if ((!is_object($av)) || ($cnt > 1)) {
+				$at = $this->getAttributeType();
+				$av = $at->addAttributeValue();
+			}
+			
+			return $av;
+		}
+		
+		public function setAttribute($akHandle, $value) {
+			$ak = CollectionAttributeKey::getByHandle($akHandle);
+			$ak->setAttribute($this, $value);			
 			$this->refreshCache();
 		}
 		

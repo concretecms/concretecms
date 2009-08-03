@@ -4,6 +4,7 @@ class AttributeType extends Object {
 
 	public function getAttributeTypeID() {return $this->atID;}
 	public function getAttributeTypeHandle() {return $this->atHandle;}
+	public function getAttributeTypeName() {return $this->atName;}
 	public function getController() {return $this->controller;}
 	
 	public static function getByID($atID) {
@@ -13,6 +14,16 @@ class AttributeType extends Object {
 		$at->setPropertiesFromArray($row);
 		$at->loadController();
 		return $at;
+	}
+	
+	public static function getList() {
+		$db = Loader::db();
+		$list = array();
+		$r = $db->Execute('select atID from AttributeTypes order by atID asc');
+		while ($row = $r->FetchRow()) {
+			$list[] = AttributeType::getByID($row['atID']);
+		}
+		return $list;
 	}
 	
 	public static function getByHandle($atHandle) {
@@ -29,11 +40,11 @@ class AttributeType extends Object {
 		return $cnt->getValue($avID);
 	}
 	
-	public function render($ak, $view, $value) {
+	public function render($view, $ak = false, $value = false) {
 		// local scope
 		Loader::library('attribute/view');
-		$av = new AttributeTypeView();
-		$av->render($ak, $this, $view, $value);
+		$av = new AttributeTypeView($this, $ak, $value);		
+		$av->render($view);
 	}
 	
 	/** 

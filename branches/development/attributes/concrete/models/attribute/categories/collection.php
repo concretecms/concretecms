@@ -33,7 +33,15 @@ class CollectionAttributeKey extends AttributeKey {
 		$ak->load($akID);
 		return $ak;
 	}
-		
+
+	public static function getByHandle($akHandle) {
+		$db = Loader::db();
+		$akID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', array($akHandle));
+		$ak = new CollectionAttributeKey();
+		$ak->load($akID);
+		return $ak;
+	}
+	
 	public static function getList() {
 		return parent::getList('collection');	
 	}
@@ -45,26 +53,26 @@ class CollectionAttributeKey extends AttributeKey {
 		return CollectionAttributeKey::getByID($akID);
 	}
 	
-	public function saveAttribute($nvc) {
+	/** 
+	 * Saves an attribute using its stock form.
+	 */
+	public function saveAttributeForm($nvc) {
+		$this->saveAttribute($nvc);
+	}
+	
+	/** 
+	 * Sets an attribute directly with a passed value.
+	 */
+	public function setAttribute($nvc, $value) {
+		$this->saveAttribute($nvc, $value);
+	}
+	
+	protected function saveAttribute($nvc, $value = false) {
 		// We check a cID/cvID/akID combo, and if that particular combination has an attribute value ID that
 		// is NOT in use anywhere else on the same cID, cvID, akID combo, we use it (so we reuse IDs)
 		// otherwise generate new IDs
-		
 		$av = $nvc->getAttributeValueObject($this);
-		$cnt = 0;
-		
-		// Is this avID in use ?
-		if (is_object($av)) {
-			$db = Loader::db();
-			$cnt = $db->GetOne("select count(avID) from CollectionAttributeValues where avID = ?", $av->getAttributeValueID());
-		}
-		
-		if ((!is_object($av)) || ($cnt > 1)) {
-			$at = $this->getAttributeType();
-			$av = $at->addAttributeValue();
-		}
-		
-		parent::saveAttribute($av);
+		parent::saveAttribute($av, $value);
 		$db = Loader::db();
 		$v = array($nvc->getCollectionID(), $nvc->getVersionID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
 		$db->Replace('CollectionAttributeValues', array(
@@ -75,6 +83,11 @@ class CollectionAttributeKey extends AttributeKey {
 		), array('cID', 'cvID', 'akID'));
 	}
 	
+	public function add($akHandle, $akName, $akIsSearchable, $atID, $akSelectAllowMultipleValues, $akSelectAllowOtherValues, $akValues) {
+		$ak = parent::add('collection', $akHandle, $akName, $akIsSearchable, $atID);
+	
+	}
+
 }
 
 class CollectionAttributeValue extends AttributeValue {

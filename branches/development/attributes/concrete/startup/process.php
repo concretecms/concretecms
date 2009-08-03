@@ -15,7 +15,7 @@
 		foreach($_POST['selectedAKIDs'] as $akID) {
 			if ($akID > 0) {
 				$ak = CollectionAttributeKey::getByID($akID);
-				$ak->saveAttribute($nvc);
+				$ak->saveAttributeForm($nvc);
 			}
 		} 
 	}
