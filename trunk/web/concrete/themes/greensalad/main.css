@@ -19,6 +19,7 @@ body {
 img {
 	border: 0px
 }
+a { cursor:pointer }
 /* Page Structure / Navigation */
 #page {
 	width:800px;
@@ -120,7 +121,7 @@ img {
 /* body & sidebar */
 #page #central #body {
 	float:left;
-	text-align:justify;
+	text-align:left;
 	width:542px;
 	padding:15px;
 	/* customize_background */ background-color:#f4ffd2; /* customize_background */

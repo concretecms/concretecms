@@ -39,6 +39,12 @@ class ConcreteUpgradeVersion532Helper {
 		if( intval($dashboardRegistrationPage->cID) ) 
 			$dashboardRegistrationPage->update(array('cName'=>t('Login & Registration')));
 		Config::save('LOGIN_ADMIN_TO_DASHBOARD', 1);
+	
+		//profile friends page install	
+		Loader::model('single_page');
+		$friendsPage=Page::getByPath('/profile/friends');
+		if( !intval($friendsPage->cID) ) 
+			SinglePage::add('/profile/friends');
 	}
 	
 }

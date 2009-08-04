@@ -1405,6 +1405,27 @@
       <col>uName</col>
     </index>
   </table>
+  
+  <table name="UsersFriends">
+    <field name="ufID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>   
+    <field name="uID" type="I" size="10"> 
+      <UNSIGNED/>
+    </field> 
+    <field name="status" type="C" size="64">
+      <NOTNULL/>
+    </field> 
+    <field name="friendUID" type="I" size="10">
+      <UNSIGNED/>
+    </field> 
+    <field name="uDateAdded" type="T">
+      <NOTNULL/>
+      <DEFAULT value="0000-00-00 00:00:00"/>
+    </field>		 
+  </table>   
 
   <table name="SignupRequests">
     <field name="id" type="I" size="11">

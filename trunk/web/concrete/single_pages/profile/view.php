@@ -1,12 +1,32 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
-<div id="central" class="central-left">
-    <div id="sidebar">
+<div id="ccm-profile-wrapper">
+    <div id="ccm-profile-sidebar" style="float:left; width:20%; margin-right:5%">
         <div class="ccm-profile-header">
         	<a href="<?=View::url('/profile',$profile->getUserID())?>"><?= $av->outputUserAvatar($profile)?></a><br />
             <a href="<?=View::url('/profile',$profile->getUserID())?>"><?= $profile->getUsername()?></a>
         </div>
-        <h4 style="margin-top: 0px"><?=t('Member Since')?></h4>
+        <div style="margin-top:16px; padding-bottom:4px; margin-bottom:0px; font-weight:bold"><?=t('Member Since')?></div>
         <?=date('F d, Y', strtotime($profile->getUserDateAdded()))?>
+		
+		<? 
+		$u = new User();
+		if( $u && $u->uID!=$profile->getUserID() ){ ?>
+		<div style="margin-top:16px;">
+			<? if( !UsersFriends::isFriend( $profile->getUserID(), $u->uID ) ){ ?>
+				<a href="<?=View::url($c->getCollectionPath(),'add_friend','?fuID='.$profile->getUserID())?>">
+					<?=t('Make this person my friend') ?>
+				</a>
+			<? }else{ ?>
+				<a href="<?=View::url($c->getCollectionPath(),'remove_friend','?fuID='.$profile->getUserID() )?>">
+					<?=t('Unfriend this person') ?>
+				</a>
+			<? } ?>
+		</div>
+		<? } ?>
+		
+		<style>
+		#ccm-profile-sidebar ul.nav { list-style:none; margin:0px; padding:0px; margin-top:16px;}
+		</style>		
         <div>
         <? 
 		if($canEdit) {
@@ -22,7 +42,7 @@
         </div>
     </div>
     
-    <div id="body">	
+    <div id="ccm-profile-body" style="float:left; width:70%;">	
         <h1><?=$profile->getUserName()?></h1>
         <?
         $uaks = UserAttributeKey::getList();
@@ -33,4 +53,6 @@
             </div>
         <? } ?>		
     </div>
+	
+	<div class="ccm-spacer"></div>
 </div>
