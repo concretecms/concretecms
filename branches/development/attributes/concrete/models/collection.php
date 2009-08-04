@@ -109,8 +109,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 		
-		public function getAttributeValueObject($ak) {
+		public function getAttributeValueObject($ak, $createIfNotFound = false) {
 			$db = Loader::db();
+			$av = false;
 			$v = array($this->getCollectionID(), $this->getVersionID(), $ak->getAttributeKeyID());
 			$avID = $db->GetOne("select avID from CollectionAttributeValues where cID = ? and cvID = ? and akID = ?", $v);
 			if ($avID > 0) {
@@ -121,16 +122,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				}
 			}
 			
-			$cnt = 0;
-		
-			// Is this avID in use ?
-			if (is_object($av)) {
-				$cnt = $db->GetOne("select count(avID) from CollectionAttributeValues where avID = ?", $av->getAttributeValueID());
-			}
+			if ($createIfNotFound) {
+				$cnt = 0;
 			
-			if ((!is_object($av)) || ($cnt > 1)) {
-				$at = $this->getAttributeType();
-				$av = $at->addAttributeValue();
+				// Is this avID in use ?
+				if (is_object($av)) {
+					$cnt = $db->GetOne("select count(avID) from CollectionAttributeValues where avID = ?", $av->getAttributeValueID());
+				}
+				
+				if ((!is_object($av)) || ($cnt > 1)) {
+					$at = $ak->getAttributeType();
+					$av = $at->addAttributeValue();
+				}
 			}
 			
 			return $av;
