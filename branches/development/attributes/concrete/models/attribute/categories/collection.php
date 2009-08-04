@@ -62,7 +62,7 @@ class CollectionAttributeKey extends AttributeKey {
 		// We check a cID/cvID/akID combo, and if that particular combination has an attribute value ID that
 		// is NOT in use anywhere else on the same cID, cvID, akID combo, we use it (so we reuse IDs)
 		// otherwise generate new IDs
-		$av = $nvc->getAttributeValueObject($this);
+		$av = $nvc->getAttributeValueObject($this, true);
 		parent::saveAttribute($av, $value);
 		$db = Loader::db();
 		$v = array($nvc->getCollectionID(), $nvc->getVersionID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
@@ -74,26 +74,9 @@ class CollectionAttributeKey extends AttributeKey {
 		), array('cID', 'cvID', 'akID'));
 	}
 	
-	public function add($akHandle, $akName, $akIsSearchable, $atID, $akSelectAllowMultipleValues, $akSelectAllowOtherValues, $akValues) {
+	public function add($akHandle, $akName, $akIsSearchable, $atID) {
 		$ak = parent::add('collection', $akHandle, $akName, $akIsSearchable, $atID);
-		$db = Loader::db();
-		
-		if ($akSelectAllowMultipleValues != 1) {
-			$akSelectAllowMultipleValues = 0;
-		}
-		if ($akSelectAllowOtherValues != 1) {
-			$akSelectAllowOtherValues = 0;
-		}
-				
-		// now we have a collection attribute key object above.
-		$db->Replace('atSelectSettings', array(
-			'akID' => $ak->getAttributeKeyID(), 
-			'akSelectAllowMultipleValues' => $akSelectAllowMultipleValues, 
-			'akSelectAllowOtherValues' => $akSelectAllowOtherValues
-		), array('akID'));
-		
-		// now we add the values
-		
+		return $ak;
 	}
 
 }

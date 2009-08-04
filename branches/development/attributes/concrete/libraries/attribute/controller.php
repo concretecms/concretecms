@@ -28,7 +28,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	 	}
 	 	
 	 	protected function getAttributeValueID() {
-	 		return $this->attributeValue->getAttributeValueID();
+	 		if (is_object($this->attributeValue)) {
+		 		return $this->attributeValue->getAttributeValueID();
+		 	}
 	 	}
 	 	
 		public function field($fieldName) {
@@ -50,6 +52,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				if ($field) {
 					return $p[$field];
 				}
+				return $p;
 			}
 			
 			return parent::post($field);
@@ -81,7 +84,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		/* Automatically run when an attribute key is added
 		*/
 		
-		public function add() {
+		public function addKey() {
 			$val = Loader::helper('validation/form');
 			$valt = Loader::helper('validation/token');
 			$val->setData($this->post());
