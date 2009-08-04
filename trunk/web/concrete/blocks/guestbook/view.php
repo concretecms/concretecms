@@ -21,6 +21,8 @@ div.guestBook-entry {
 	font-size:.8em;
 	color:#333333;
 	text-align:right;
+	float:right;
+	padding-left:8px; 
 }
 .guestBook-formBlock {
 	margin:12px 0 12px 0;
@@ -80,7 +82,7 @@ foreach($posts as $p) { ?>
 				</span> 
 				<?=t('on')?>
 				<span class="contentDate">
-					<?=date("M dS, Y",strtotime($p['entryDate']));?>
+					<?=date("M jS, Y",strtotime($p['entryDate']));?>
 				</span>
 			</div>
 			<?=nl2br($p['commentText'])?>

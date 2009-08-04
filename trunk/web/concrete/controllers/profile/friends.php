@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('user_attributes');
 Loader::model('users_friends');
 
-class ProfileController extends Controller {
+class ProfileFriendsController extends Controller {
 	
 	var $helpers = array('html', 'form'); 
 	
@@ -33,23 +33,10 @@ class ProfileController extends Controller {
 			$this->set('intro_msg', t('You must sign in order to access this page!'));
 			$this->render('/login');
 		}
+		
 		$this->set('profile', $profile);
 		$this->set('av', Loader::helper('concrete/avatar'));
 		$this->set('t', Loader::helper('text'));
 		$this->set('canEdit',$canEdit);
 	}
-	
-	public function on_before_render() {
-		$this->set('error', $this->error);
-	}	
-	
-	public function add_friend(){
-		UsersFriends::addFriend( intval($_REQUEST['fuID']) );
-		$this->view( intval($_REQUEST['fuID']) );
-	}
-	
-	public function remove_friend(){
-		UsersFriends::removeFriend( intval($_REQUEST['fuID']) );
-		$this->view( intval($_REQUEST['fuID']) );
-	}	
 }
