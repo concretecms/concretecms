@@ -11,7 +11,7 @@
 	//just trying to prevent duplication of this code
 	function processMetaData($nvc){			
 		Loader::model('collection_attributes');
-			
+		$nvc->clearCollectionAttributes();
 		foreach($_POST['selectedAKIDs'] as $akID) {
 			if ($akID > 0) {
 				$ak = CollectionAttributeKey::getByID($akID);

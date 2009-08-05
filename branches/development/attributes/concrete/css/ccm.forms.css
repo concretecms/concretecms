@@ -33,7 +33,7 @@ div#ccm-page-types, div#ccm-required-meta-add {height: 180px}
 div#ccm-required-meta, div#ccm-move-page, div#ccm-required-meta-add {-webkit-border-radius: 12px; -moz-border-radius: 12px; border: 2px solid #bababa; background: white; padding: 8px}
 div#ccm-optional-meta, div#ccm-delete-page, div#ccm-page-types {border: 2px solid #bababa; padding: 8px; background: white; -webkit-border-radius: 12px; -moz-border-radius: 12px;}
 
-div#ccm-required-meta input.ccm-input-text {width: 272px !important}
+div#ccm-properties-standard-tab input.ccm-input-text, div#ccm-page-paths-tab input.ccm-input-text {width: 272px !important}
 
 div.ccm-form-area {border: 2px solid #bababa; padding: 8px; background: white; -webkit-border-radius: 12px; -moz-border-radius: 12px;}
 

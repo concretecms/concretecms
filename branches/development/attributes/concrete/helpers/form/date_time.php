@@ -55,6 +55,21 @@ class FormDateTimeHelper {
 	 * @param bool $calendarAutoStart
 	 */
 	public function datetime($prefix, $value = null, $includeActivation = false, $calendarAutoStart = true) {
+		if (substr($prefix, -1) == ']') {
+			$prefix = substr($prefix, 0, strlen($prefix) -1);
+			$_activate = $prefix . '_activate]';
+			$_dt = $prefix . '_dt]';
+			$_h = $prefix . '_h]';
+			$_m = $prefix . '_m]';
+			$_a = $prefix . '_a]';
+		} else {
+			$_activate = $prefix . '_activate';
+			$_dt = $prefix . '_dt';
+			$_h = $prefix . '_h';
+			$_m = $prefix . '_m';
+			$_a = $prefix . '_a';
+		}
+		
 		if ($value != null) {
 			$dt = date('m/d/Y', strtotime($value));
 			$h = date('h', strtotime($value));
@@ -76,11 +91,11 @@ class FormDateTimeHelper {
 				$disabled = 'disabled';
 			}
 			
-			$html .= '<input type="checkbox" id="' . $id . '_activate" class="ccm-activate-date-time" ccm-date-time-id="' . $id . '" name="' . $prefix . '_activate" ' . $activated . ' />';
+			$html .= '<input type="checkbox" id="' . $id . '_activate" class="ccm-activate-date-time" ccm-date-time-id="' . $id . '" name="' . $_activate . '" ' . $activated . ' />';
 		}
-		$html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_dt" name="' . $prefix . '_dt" class="ccm-input-date" value="' . $dt . '" ' . $disabled . ' /></span>';
+		$html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_dt" name="' . $_dt . '" class="ccm-input-date" value="' . $dt . '" ' . $disabled . ' /></span>';
 		$html .= '<span class="ccm-input-time-wrapper" id="' . $id . '_tw">';
-		$html .= '<select id="' . $id . '_h" name="' . $prefix . '_h" ' . $disabled . '>';
+		$html .= '<select id="' . $id . '_h" name="' . $_h . '" ' . $disabled . '>';
 		for ($i = 1; $i <= 12; $i++) {
 			if ($h == $i) {
 				$selected = 'selected';
@@ -90,7 +105,7 @@ class FormDateTimeHelper {
 			$html .= '<option value="' . $i . '" ' . $selected . '>' . $i . '</option>';
 		}
 		$html .= '</select>:';
-		$html .= '<select id="' . $id . '_m" name="' . $prefix . '_m" ' . $disabled . '>';
+		$html .= '<select id="' . $id . '_m" name="' . $_m . '" ' . $disabled . '>';
 		for ($i = 0; $i <= 59; $i++) {
 			if ($m == sprintf('%02d', $i)) {
 				$selected = 'selected';
@@ -100,7 +115,7 @@ class FormDateTimeHelper {
 			$html .= '<option value="' . sprintf('%02d', $i) . '"' . $selected . '>' . sprintf('%02d', $i) . '</option>';
 		}
 		$html .= '</select>';
-		$html .= '<select id="' . $id . '_a" name="' . $prefix . '_a" ' . $disabled . '>';
+		$html .= '<select id="' . $id . '_a" name="' . $_a . '" ' . $disabled . '>';
 		$html .= '<option value="AM" ';
 		if ($a == 'AM') {
 			$html .= 'selected';
@@ -156,6 +171,7 @@ EOS;
 	 * @param bool $calendarAutoStart
 	 */
 	public function date($field, $value = null, $calendarAutoStart = true) {
+		$id = preg_replace("/[^0-9A-Za-z-]/", "_", $field);
 		if (isset($_REQUEST[$field])) {
 			$dt = $_REQUEST[$field];
 		} else if ($value != "") {
@@ -167,10 +183,10 @@ EOS;
 		}
 		//$id = preg_replace("/[^0-9A-Za-z-]/", "_", $prefix);
 		$html = '';
-		$html .= '<span class="ccm-input-date-wrapper" id="' . $field . '_dw"><input id="' . $field . '" name="' . $field . '" class="ccm-input-date" value="' . $dt . '"  /></span>';
+		$html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '" name="' . $field . '" class="ccm-input-date" value="' . $dt . '"  /></span>';
 
 		if ($calendarAutoStart) { 
-			$html .= '<script type="text/javascript">$(function() { $("#' . $field . '").datepicker({ showAnim: \'fadeIn\' }); });</script>';
+			$html .= '<script type="text/javascript">$(function() { $("#' . $id . '").datepicker({ showAnim: \'fadeIn\' }); });</script>';
 		}
 		return $html;
 	
