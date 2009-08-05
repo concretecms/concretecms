@@ -24,14 +24,38 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 	}
 	
 	public function form() {
+		$this->load();
 		$dt = Loader::helper('form/date_time');
-		print $dt->datetime($this->field('value'), $caValue);
+		$caValue = $this->getValue();
+		if ($this->akDateDisplayMode == 'date') {
+			print $dt->date($this->field('value'), $caValue);
+		} else {
+			print $dt->datetime($this->field('value'), $caValue);
+		}
 	}
 
 	public function getValue() {
 		$db = Loader::db();
 		$value = $db->GetOne("select value from atDateTime where avID = ?", array($this->getAttributeValueID()));
 		return $value;
+	}
+
+	public function saveValue($value) {
+		$value = date('Y-m-d H:i:s', strtotime($value));
+		
+		$db = Loader::db();
+		$db->Replace('atDateTime', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
+	}
+	
+	public function saveForm($data) {
+		$this->load();
+		$dt = Loader::helper('form/date_time');
+		if ($this->akDateDisplayMode == 'date') {
+			$this->saveValue($data['value']);
+		} else {
+			$value = $dt->translate('value', $data);
+			$this->saveValue($value);
+		}
 	}
 	
 	protected function load() {
@@ -54,12 +78,6 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 			$db->Execute('delete from atDateTime where avID = ?', array($id));
 		}
 	}
-	
-	public function saveForm($data) {
-		$db = Loader::db();
-		$this->saveValue($data['value']);
-	}
-	
 	public function deleteValue() {
 		$db = Loader::db();
 		$db->Execute('delete from atDateTime where avID = ?', array($this->getAttributeValueID()));
