@@ -96,7 +96,42 @@ class AttributeKey extends Object {
 		}
 	}
 
+	public function delete() {
+		$at = $this->getAttributeType();
+		$at->controller->setAttributeKey($this);
+		$at->controller->deleteKey();
+		
+		$db = Loader::db();
+		$db->Execute('delete from AttributeKeys where akID = ?', array($this->getAttributeKeyID()));
+		$db->Execute('delete from AttributeSetKeys where akID = ?', array($this->getAttributeKeyID()));
+	}
+	
+	public function getAttributeValueIDList() {
+		$db = Loader::db();
+		$ids = array();
+		$r = $db->Execute('select avID from AttributeValues where akID = ?', array($this->getAttributeKeyID()));
+		while ($row = $r->FetchRow()) {
+			$ids[] = $row['avID'];
+		}
+		return $ids;
+	}
 
+	/** 
+	 * Adds a generic attribute record (with this type) to the AttributeValues table
+	 */
+	public function addAttributeValue() {
+		$db = Loader::db();
+		$u = new User();
+		$dh = Loader::helper('date');
+		$uID = $u->isRegistered() ? $u->getUserID() : 0;
+		$avDate = $dh->getLocalDateTime();
+		$v = array($this->atID, $this->akID, $uID, $avDate);
+		$db->Execute('insert into AttributeValues (atID, akID,  uID, avDateAdded) values (?, ?, ?, ?)', $v);
+		$avID = $db->Insert_ID();
+		return AttributeValue::getByID($avID);
+	}
+	
+	
 	/** 
 	 * Renders a view for this attribute key. If no view is default we display it's "view"
 	 * Valid views are "view", "form" or a custom view (if the attribute has one in its directory)

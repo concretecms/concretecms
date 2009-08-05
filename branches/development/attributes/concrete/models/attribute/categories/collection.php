@@ -84,6 +84,18 @@ class CollectionAttributeKey extends AttributeKey {
 		$ak = parent::add('collection', $akHandle, $akName, $akIsSearchable, $atID);
 		return $ak;
 	}
+	
+	public function delete() {
+		parent::delete();
+		$db = Loader::db();
+		$r = $db->Execute('select avID from CollectionAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+		while ($row = $r->FetchRow()) {
+			$db->Execute('delete from AttributeValues where avID = ?', array($row['avID']));
+		}
+		$db->Execute('delete from CollectionAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+		$db->Execute('delete from PageSearchIndexAttributes where akID = ?', array($this->getAttributeKeyID()));
+		$db->Execute('delete from PageTypeAttributes where akID = ?', array($this->getAttributeKeyID()));
+	}
 
 }
 

@@ -59,7 +59,7 @@ class AttributeValue extends Object {
 	
 	protected function load($avID) {
 		$db = Loader::db();
-		$row = $db->GetRow("select avID, uID, avDateAdded, atID from AttributeValues where avID = ?", array($avID));
+		$row = $db->GetRow("select avID, akID, uID, avDateAdded, atID from AttributeValues where avID = ?", array($avID));
 		if (is_array($row) && $row['avID'] == $avID) {
 			$this->setPropertiesFromArray($row);
 		}
@@ -74,8 +74,7 @@ class AttributeValue extends Object {
 	}
 	
 	public function delete() {
-		$this->attributeType->controller->delete();
-
+		$this->attributeType->controller->deleteValue();
 		$db = Loader::db();	
 		$db->Execute('delete from AttributeValues where avID = ?', $this->getAttributeValueID());
 	}
