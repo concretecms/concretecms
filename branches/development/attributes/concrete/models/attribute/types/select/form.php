@@ -18,7 +18,7 @@ if ($akSelectAllowMultipleValues) { ?>
 
 if ($akSelectAllowOtherValues) { ?>
 	<div id="newAttrValueRows<?=$this->attributeKey->getAttributeKeyID()?>" class="newAttrValueRows"></div>
-	<div><a onclick="ccmAttributeTypeSelectHelper.add(<?=intval($this->attributeKey->getAttributeKeyID())?>)">
+	<div><a onclick="ccmAttributeTypeSelectHelper.add(<?=$this->attributeKey->getAttributeKeyID()?>, '<?=$this->field('atSelectNewOption')?>[]')">
 		<?=t('Add Another Option')?> +</a>
 	</div>
 <? } ?>
@@ -26,10 +26,10 @@ if ($akSelectAllowOtherValues) { ?>
 <script type="text/javascript">
 
 var ccmAttributeTypeSelectHelper={  
-	add:function(akID){
+	add:function(akID, field){
 		var newRow=document.createElement('div');
 		newRow.className='newAttrValueRow';
-		newRow.innerHTML='<input name="<?=$this->field('atSelectNewOption')?>[]" type="text" value="" /> ';
+		newRow.innerHTML='<input name="' + field + '" type="text" value="" /> ';
 		newRow.innerHTML+='<a onclick="ccmAttributeTypeSelectHelper.remove(this)">[X]</a>';
 		$('#newAttrValueRows'+akID).append(newRow);				
 	},
