@@ -42,7 +42,7 @@ class RatingHelper {
 		if ($includeJS) { 
 			$html .= "<script type=\"text/javascript\">
 				$(function() {
-					$('input[name={$field}]').rating();
+					$('input[name=\"{$field}\"]').rating();
 				});
 				</script>";
 		}
@@ -83,7 +83,7 @@ class RatingHelper {
 		if ($includeJS) { 
 			$html .= "<script type=\"text/javascript\">
 				$(function() {
-					$('input[name={$field}]').rating();
+					$('input[name=\"{$field}\"]').rating();
 				});
 				</script>";
 		}
