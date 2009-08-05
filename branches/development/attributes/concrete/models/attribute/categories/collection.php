@@ -19,6 +19,12 @@ class CollectionAttributeKey extends AttributeKey {
 		return $avl;
 	}
 	
+	public function getAttributeValue($avID) {
+		$av = CollectionAttributeValue::getByID($avID);
+		$av->setAttributeKey($this);
+		return $av->getValue();
+	}
+	
 	public static function getByID($akID) {
 		$ak = new CollectionAttributeKey();
 		$ak->load($akID);

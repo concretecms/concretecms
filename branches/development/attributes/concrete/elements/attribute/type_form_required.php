@@ -6,17 +6,18 @@ $akHandle = '';
 $akName = '';
 $akIsSearchable = 0;
 
-if (is_object($ak)) {
-	$akHandle = $ak->getAttributeKeyHandle();
-	$akName = $ak->getAttributeKeyName();
-	$akIsSearchable = $ak->isAttributeKeySearchable();
+if (is_object($key)) {
+	$akHandle = $key->getAttributeKeyHandle();
+	$akName = $key->getAttributeKeyName();
+	$akIsSearchable = $key->isAttributeKeySearchable();
+	print $form->hidden('akID', $key->getAttributeKeyID());
 }
 ?>
 <table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="subheader"><?=t('Handle')?> <span class="required">*</span></td>
-	<td class="subheader"><?=t('Name')?> <span class="required">*</span></td>
-	<td class="subheader"><?=t("Searchable")?></td>
+	<td class="subheader" width="33%"><?=t('Handle')?> <span class="required">*</span></td>
+	<td class="subheader" width="34%"><?=t('Name')?> <span class="required">*</span></td>
+	<td class="subheader" width="33%"><?=t("Searchable")?></td>
 </tr>	
 <tr>
 	<td style="padding-right: 15px"><?=$form->text('akHandle', $akHandle, array('style' => 'width: 100%'))?></td>
@@ -28,8 +29,12 @@ if (is_object($ak)) {
 <?=$form->hidden('atID', $type->getAttributeTypeID())?>
 <?=$form->hidden('akCategoryID', $category->getAttributeKeyCategoryID()); ?>
 <?=$valt->output('add_or_update_attribute')?>
-<? $type->render('type_form'); ?>
+<? $type->render('type_form', $key); ?>
 
-<?=$ih->submit(t('Add Attribute'), 'ccm-attribute-key-form')?>
+<? if (is_object($key)) { ?>
+	<?=$ih->submit(t('Update Attribute'), 'ccm-attribute-key-form')?>
+<? } else { ?>
+	<?=$ih->submit(t('Add Attribute'), 'ccm-attribute-key-form')?>
+<? } ?>
 
 <div class="ccm-spacer">&nbsp;</div>

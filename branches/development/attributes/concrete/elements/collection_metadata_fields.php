@@ -28,28 +28,6 @@ $(function() {
 	$("a.ccm-meta-path-del").click(function(ev) { ccmPathHelper.del(ev.target) });
 });
 
-var ccmAttributeValuesHelper={  
-	add:function(akID){
-		var newRow=document.createElement('div');
-		newRow.className='newAttrValueRow';
-		newRow.innerHTML='<input name="akID_'+akID+'[]" type="text" value="" /> ';
-		newRow.innerHTML+='<a onclick="ccmAttributeValuesHelper.remove(this)">[X]</a>';
-		$('#newAttrValueRows'+akID).append(newRow);				
-	},
-	remove:function(a){
-		$(a.parentNode).remove();			
-	},	
-	clrInitTxt:function(field,initText,removeClass,blurred){
-		if(blurred && field.value==''){
-			field.value=initText;
-			$(field).addClass(removeClass);
-			return;	
-		}
-		if(field.value==initText) field.value='';
-		if($(field).hasClass(removeClass)) $(field).removeClass(removeClass);
-	}
-}
-
 var ccmPathHelper={
 	add:function(field){
 		var parent = $(field).parent();

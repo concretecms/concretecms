@@ -22,13 +22,7 @@ if (count($attribs) > 0) {
 		<tr>
 			<td><?=$ak->getAttributeKeyName()?></td>
 			<td style="white-space: nowrap"><?=$ak->getAttributeKeyHandle()?></td>
-			<td>
-				<?
-				if($attributeType=='file')
-					 $target='/dashboard/files/attributes/-/edit/?fakID=' . $ak->getAttributeKeyID();
-				else $target='/dashboard/pages/types/attributes?akID=' . $ak->getAttributeKeyID() . '&task=edit';
-				print $ih->button(t('Edit'), $this->url($target) );
-				?>
+			<td><? print $ih->button(t('Edit'), $this->url($editURL, 'edit', $ak->getAttributeKeyID()));?>
 			</td>
 			<td>
 				<? 

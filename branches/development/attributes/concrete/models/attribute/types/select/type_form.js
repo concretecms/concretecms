@@ -18,9 +18,9 @@ var ccmAttributesHelper={
 	},  
 	
 	deleteValue:function(val){
-		if(!confirm('<?=t("Are you sure you want to remove this value?")?>'))
-			return false;  
-		$('#akSelectValueWrap_'+val).remove();				
+		if(confirm(ccmi18n.deleteAttributeValue)) {
+			$('#akSelectValueWrap_'+val).remove();				
+		}
 	},
 	
 	editValue:function(val){ 
@@ -39,19 +39,24 @@ var ccmAttributesHelper={
 		this.editValue(val)
 	},
 	
+	makeSortable: function() {
+		$("div#attributeValuesWrap").sortable({
+			cursor: 'move',
+			opacity: 0.5,
+		});
+	},
+	
 	saveNewOption:function(){
 		var newValF=$('#akSelectValueFieldNew');
-		var myRegxp = /^([a-zA-Z0-9_-]+)$/; 
 		var val=newValF.val();
-		var val_clean=val.replace(/[^a-zA-Z0-9\-]/g,'');				
-		if(val=='' || val=="<?=$defaultNewOptionNm?>"){
-			alert("<?=t('Please first type an option.')?>");
+		if(val=='') {
 			return;
-		}		
+		}
+		var ts = 't' + new Date().getTime();
 		var template=document.getElementById('akSelectValueWrapTemplate'); 
 		var newRowEl=document.createElement('div');
-		newRowEl.innerHTML=template.innerHTML.replace(/template_clean/ig,val_clean).replace(/template/ig,val);
-		newRowEl.id="akSelectValueWrap_"+val_clean;
+		newRowEl.innerHTML=template.innerHTML.replace(/template_clean/ig,ts).replace(/template/ig,val);
+		newRowEl.id="akSelectValueWrap_"+ts;
 		newRowEl.className='akSelectValueWrap';
 		$('#attributeValuesWrap').append(newRowEl);		
 		newValF.val(''); 

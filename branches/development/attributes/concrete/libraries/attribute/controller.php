@@ -47,7 +47,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		public function post($field = false) {
 			// the only post that matters is the one for this attribute's name space
-			if (is_object($this->attributeKey)) {
+			if (is_object($this->attributeKey) && is_array($_POST['akID'])) {
 				$p = $_POST['akID'][$this->attributeKey->getAttributeKeyID()];
 				if ($field) {
 					return $p[$field];
@@ -81,10 +81,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 
-		/* Automatically run when an attribute key is added
-		*/
+		public function saveKey() {
 		
-		public function addKey() {
+		}
+		
+		/* Automatically run when an attribute key is added or updated
+		* @return ValidationError
+		*/		
+		public function validateKey() {
 			$val = Loader::helper('validation/form');
 			$valt = Loader::helper('validation/token');
 			$val->setData($this->post());
@@ -100,12 +104,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 			$akc = AttributeKeyCategory::getByID($this->post('akCategoryID'));
 			if ($akc->handleExists($this->post('akHandle'))) {
-				if ((!is_object($ak)) || ($ak->getAttributeKeyHandle() != $this->post('akHandle'))) {
+				if ((!is_object($this->attributeKey)) || ($this->attributeKey->getAttributeKeyHandle() != $this->post('akHandle'))) {
 					$error->add(t("An attribute with the handle %s already exists.", $akHandle));
 				}
 			}		
 			
-			$this->set("attributeError", $error);
+			return $error;			
 		}
 		
 	}
