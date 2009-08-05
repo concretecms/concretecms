@@ -62,13 +62,13 @@ for ($i = 0; $i < count($ctArray); $i++) {
 							$requiredKeys=array();
 							$aks = $ct->getAvailableAttributeKeys();
 							foreach($aks as $ak)
-								$requiredKeys[] = intval($ak->getCollectionAttributeKeyID());
+								$requiredKeys[] = intval($ak->getAttributeKeyID());
 								
 							$usedKeysCombined=array();
 							$usedKeys=array();
 							$setAttribs = $c->getSetCollectionAttributes();
 							foreach($setAttribs as $ak) 
-								$usedKeys[] = $ak->getCollectionAttributeKeyID(); 
+								$usedKeys[] = $ak->getAttributeKeyID(); 
 							$usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 							?>
 							
