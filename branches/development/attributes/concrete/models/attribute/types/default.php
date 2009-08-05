@@ -27,7 +27,15 @@ class DefaultAttributeTypeController extends AttributeTypeController  {
 		$this->saveValue($data['value']);
 	}
 	
-	public function delete() {
+	public function deleteKey() {
+		$db = Loader::db();
+		$arr = $this->attributeKey->getAttributeValueIDList();
+		foreach($arr as $id) {
+			$db->Execute('delete from atDefault where avID = ?', array($id));
+		}
+	}
+
+	public function deleteValue() {
 		$db = Loader::db();
 		$db->Execute('delete from atDefault where avID = ?', array($this->getAttributeValueID()));
 	}

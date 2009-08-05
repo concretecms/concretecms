@@ -15,6 +15,27 @@ class DashboardPagesTypesAttributesController extends Controller {
 		$this->set('types', $types);
 	}
 	
+	public function delete($akID, $token = null){
+		try {
+			$ak = CollectionAttributeKey::getByID($akID); 
+				
+			if(!($ak instanceof CollectionAttributeKey)) {
+				throw new Exception(t('Invalid attribute ID.'));
+			}
+	
+			$valt = Loader::helper('validation/token');
+			if (!$valt->validate('delete_attribute', $token)) {
+				throw new Exception($valt->getErrorMessage());
+			}
+			
+			$ak->delete();
+			
+			$this->redirect("/dashboard/pages/types", 'attribute_deleted');
+		} catch (Exception $e) {
+			$this->set('error', $e);
+		}
+	}
+	
 	public function select_type() {
 		$atID = $this->request('atID');
 		$at = AttributeType::getByID($atID);

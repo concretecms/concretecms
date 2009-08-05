@@ -27,12 +27,20 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 		$db->Replace('atBoolean', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
 	}
 	
+	public function deleteKey() {
+		$db = Loader::db();
+		$arr = $this->attributeKey->getAttributeValueIDList();
+		foreach($arr as $id) {
+			$db->Execute('delete from atBoolean where avID = ?', array($id));
+		}
+	}
+	
 	public function saveForm($data) {
 		$db = Loader::db();
 		$this->saveValue($data['value']);
 	}
 	
-	public function delete() {
+	public function deleteValue() {
 		$db = Loader::db();
 		$db->Execute('delete from atBoolean where avID = ?', array($this->getAttributeValueID()));
 	}

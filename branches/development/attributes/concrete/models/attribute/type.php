@@ -47,21 +47,6 @@ class AttributeType extends Object {
 		$av->render($view);
 	}
 	
-	/** 
-	 * Adds a generic attribute record (with this type) to the AttributeValues table
-	 */
-	public function addAttributeValue() {
-		$db = Loader::db();
-		$u = new User();
-		$dh = Loader::helper('date');
-		$uID = $u->isRegistered() ? $u->getUserID() : 0;
-		$avDate = $dh->getLocalDateTime();
-		$v = array($this->atID, $uID, $avDate);
-		$db->Execute('insert into AttributeValues (atID, uID, avDateAdded) values (?, ?, ?)', $v);
-		$avID = $db->Insert_ID();
-		return AttributeValue::getByID($avID);
-	}
-	
 	protected function loadController() {
 		// local scope
 		$atHandle = $this->atHandle;

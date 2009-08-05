@@ -24,14 +24,7 @@ if (count($attribs) > 0) {
 			<td style="white-space: nowrap"><?=$ak->getAttributeKeyHandle()?></td>
 			<td><? print $ih->button(t('Edit'), $this->url($editURL, 'edit', $ak->getAttributeKeyID()));?>
 			</td>
-			<td>
-				<? 
-				if($attributeType=='file')
-					 $target='/dashboard/files/attributes/-/delete/?fakID=' . $ak->getAttributeKeyID().'&' . $valt->getParameter('delete_attribute');
-				else $target='/dashboard/pages/types/attributes?akID=' . $ak->getAttributeKeyID() . '&task=delete&' . $valt->getParameter('delete_attribute');
-				print $ih->button(t('Delete'), "javascript:if (confirm('".t('Are you sure you wish to delete this attribute?')."')) { location.href='" . $this->url($target) . "' }");
-				?>
-			</td>
+			<td><? print $ih->button_js(t('Delete'), "javascript:if (confirm('".t('Are you sure you wish to delete this attribute?')."')) { location.href='" . $this->url($editURL, 'delete', $ak->getAttributeKeyID(), $valt->generate('delete_attribute')) . "' }")?></td>
 		</tr>
 	<? } ?>
 	</table>

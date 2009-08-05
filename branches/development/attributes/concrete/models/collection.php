@@ -131,8 +131,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				}
 				
 				if ((!is_object($av)) || ($cnt > 1)) {
-					$at = $ak->getAttributeType();
-					$av = $at->addAttributeValue();
+					$av = $ak->addAttributeValue();
 				}
 			}
 			
