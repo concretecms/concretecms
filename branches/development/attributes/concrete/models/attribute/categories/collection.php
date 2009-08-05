@@ -1,5 +1,25 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
+/**
+ * Contains the collection attribute key and value objects.
+ * @package Pages
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
+
+/**
+ * An object that represents metadata added to pages. They key object maps to the "type"
+ * of metadata added to pages.
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @package Pages
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 class CollectionAttributeKey extends AttributeKey {
 
 	/** 
