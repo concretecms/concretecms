@@ -26,11 +26,52 @@ class DashboardPagesTypesAttributesController extends Controller {
 		$this->select_type();
 		$type = $this->get('type');
 		$cnt = $type->getController();
-		$ak = $cnt->addKey();
+		$e = $cnt->validateKey();
+		if ($e->has()) {
+			$this->set('error', $e);
+		} else {
+			$ak = CollectionAttributeKey::add($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('atID'));
+			$cnt->setAttributeKey($ak);
+			$cnt->saveKey();
+			$this->redirect('/dashboard/pages/types/', 'attribute_created');
+		}
 	}
 	
-	public function attribute_type_passthru($atID) {
+	public function attribute_type_passthru($atID, $method) {
+		$args = func_get_args();
+		$type = AttributeType::getByID($atID);
+		$cnt = $type->getController();
 		
+		$method = $args[1];
+		
+		array_shift($args);
+		array_shift($args);
+		
+		call_user_func_array(array($cnt, 'action_' . $method), $args);
+	}
+	
+	public function edit($akID = 0) {
+		if ($this->post('akID')) {
+			$akID = $this->post('akID');
+		}
+		$key = CollectionAttributeKey::getByID($akID);
+		$type = $key->getAttributeType();
+		$this->set('key', $key);
+		$this->set('type', $type);
+		$this->set('category', AttributeKeyCategory::getByHandle('collection'));
+		
+		if ($this->isPost()) {
+			$cnt = $type->getController();
+			$cnt->setAttributeKey($key);
+			$e = $cnt->validateKey();
+			if ($e->has()) {
+				$this->set('error', $e);
+			} else {
+				$key->update($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('atID'));
+				$cnt->saveKey();
+				$this->redirect('/dashboard/pages/types/', 'attribute_updated');
+			}
+		}
 	}
 	
 }

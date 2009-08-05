@@ -85,6 +85,7 @@ class AttributeValue extends Object {
 	}
 	public function setAttributeKey($ak) {
 		$this->attributeKey = $ak;
+		$this->attributeType->controller->setAttributeKey($ak);
 	}
 	public function getAttributeValueID() { return $this->avID;}
 	public function getAttributeValueUserID() { return $this->uID;}

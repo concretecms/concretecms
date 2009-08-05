@@ -1,25 +1,39 @@
 <?
 
-function getAttributeOptionHTML($akSelectValue="TEMPLATE"){ 
-		$akSelectValueClean=str_replace(' ','',TextHelper::filterNonAlphaNum($akSelectValue));
-		if($akSelectValue=='TEMPLATE') $akSelectValueClean='TEMPLATE_CLEAN'
+function getAttributeOptionHTML($v){ 
+	if ($v == 'TEMPLATE') {
+		$akSelectValueID = 'TEMPLATE_CLEAN';
+		$akSelectValue = 'TEMPLATE';
+	} else {
+		if ($v->getSelectAttributeOptionTemporaryID() != false) {
+			$akSelectValueID = $v->getSelectAttributeOptionTemporaryID();
+		} else {
+			$akSelectValueID = $v->getSelectAttributeOptionID();
+		}
+		$akSelectValue = $v->getSelectAttributeOptionValue();
+	}
 		?>
-		<div id="akSelectValueDisplay_<?=$akSelectValueClean?>" >
+		<div id="akSelectValueDisplay_<?=$akSelectValueID?>" >
 			<div class="rightCol">
-				<a onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueClean)?>')"><?=t('Edit')?></a> |
-				<a onClick="ccmAttributesHelper.deleteValue('<?=addslashes($akSelectValueClean)?>')"><?=t('Delete')?></a>
+				<input type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Edit')?>" />
+				<input type="button" onClick="ccmAttributesHelper.deleteValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Delete')?>" />
 			</div>			
-			<span onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueClean)?>')" id="akSelectValueStatic_<?=$akSelectValueClean?>" class="leftCol"><?=$akSelectValue ?></span>
+			<span onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" id="akSelectValueStatic_<?=$akSelectValueID?>" class="leftCol"><?=$akSelectValue ?></span>
 		</div>
-		<div id="akSelectValueEdit_<?=$akSelectValueClean?>" style="display:none">
+		<div id="akSelectValueEdit_<?=$akSelectValueID?>" style="display:none">
 			<div class="rightCol">
-				<a onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueClean)?>')"><?=t('Cancel')?></a> | 
-				<a onClick="ccmAttributesHelper.changeValue('<?=addslashes($akSelectValueClean)?>')"><?=t('Save')?></a>
+				<input type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Cancel')?>" />
+				<input type="button" onClick="ccmAttributesHelper.changeValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Save')?>" />
 			</div>		
 			<span class="leftCol">
-				<input name="akSelectValueOriginal_<?=$akSelectValueClean?>" type="hidden" value="<?=$akSelectValue?>" />
-				<input id="akSelectValueField_<?=$akSelectValueClean?>" name="akSelectValue_<?=$akSelectValueClean?>" type="text" value="<?=$akSelectValue?>" size="20" 
-				  onkeypress="ccmAttributesHelper.addEnterClick(event,function(){ccmAttributesHelper.changeValue('<?=addslashes($akSelectValueClean)?>')})" />
+				<input name="akSelectValueOriginal_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValue?>" />
+				<? if (is_object($v) && $v->getSelectAttributeOptionTemporaryID() == false) { ?>
+					<input id="akSelectValueExistingOption_<?=$akSelectValueID?>" name="akSelectValueExistingOption_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValueID?>" />
+				<? } else { ?>
+					<input id="akSelectValueNewOption_<?=$akSelectValueID?>" name="akSelectValueNewOption_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValueID?>" />
+				<? } ?>
+				<input id="akSelectValueField_<?=$akSelectValueID?>" name="akSelectValue_<?=$akSelectValueID?>" type="text" value="<?=$akSelectValue?>" size="20" 
+				  onkeypress="ccmAttributesHelper.addEnterClick(event,function(){ccmAttributesHelper.changeValue('<?=addslashes($akSelectValueID)?>')})" />
 			</span>		
 		</div>	
 		<div class="ccm-spacer">&nbsp;</div>
@@ -27,41 +41,54 @@ function getAttributeOptionHTML($akSelectValue="TEMPLATE"){
 
 <table class="entry-form" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="subheader" style="width:50%"><?=t('Multiple Values')?></td>
-	<td class="subheader" style="width:50%"><?=t('User Submissions')?></td>
+	<td class="subheader" style="width:33%"><?=t('Multiple Values')?></td>
+	<td class="subheader" style="width:34%"><?=t('User Submissions')?></td>
+	<td class="subheader" style="width:33%"><?=t('Option Order')?></td>
+
 </tr>
 <tr>
-	<td><?=$form->checkbox('akSelectAllowMultipleValues', 1, false)?>
+	<td><?=$form->checkbox('akSelectAllowMultipleValues', 1, $akSelectAllowMultipleValues)?>
 	<?=t('Allow multiple options to be chosen.')?>
 	</td>
-	<td><?=$form->checkbox('akSelectAllowOtherValues', 1, false)?>
+	<td><?=$form->checkbox('akSelectAllowOtherValues', 1, $akSelectAllowOtherValues)?>
 	<?=t('Allow users to add to this list.')?>	
 	</td>
-</tr>
-<tr>
-	<td colspan="2" class="subheader"><?=t('Values')?></td>
-</tr>
-<tr>
-	<td colspan="2">
-	<div id="attributeValuesInterface">
+	<? 
+	$displayOrderOptions = array(
+		'display_asc' => t('Display Order'),
+		'alpha_asc' => t('Alphabetical'),
+		'popularity_desc' => t('Most Popular First')
+	);
+	?>
+	<td><?=$form->select('akSelectOptionDisplayOrder', $displayOrderOptions, $akSelectOptionDisplayOrder)?></td>
 
+</tr>
+<tr>
+	<td colspan="3" class="subheader"><?=t('Values')?></td>
+</tr>
+<tr>
+	<td colspan="3">
+	<div id="attributeValuesInterface">
+	<input type="hidden" id="akSelectValueSortableTarget" name="akSelectValueSortableTarget" value="<?=$this->action('sort_options', 'test')?>" />
 	<div id="attributeValuesWrap">
 	<?
 	Loader::helper('text');
-	if(!is_array($akSelectValues)) $akSelectValues=explode("\n",$akSelectValues);
-	foreach($akSelectValues as $akSelectValue){ 
-		$akSelectValueClean=str_replace(' ','',TextHelper::filterNonAlphaNum($akSelectValue));
-		if(!strlen(trim($akSelectValue))) continue;		
+	foreach($akSelectValues as $v) { 
+		if ($v->getSelectAttributeOptionTemporaryID() != false) {
+			$akSelectValueID = $v->getSelectAttributeOptionTemporaryID();
+		} else {
+			$akSelectValueID = $v->getSelectAttributeOptionID();
+		}
 		?>
-		<div id="akSelectValueWrap_<?=$akSelectValueClean?>" class="akSelectValueWrap">
-			<?=getAttributeOptionHTML( $akSelectValue )?>
+		<div id="akSelectValueWrap_<?=$akSelectValueID?>" class="akSelectValueWrap <? if ($akSelectOptionDisplayOrder == 'display_asc') { ?> akSelectValueWrapSortable <? } ?>">
+			<?=getAttributeOptionHTML( $v )?>
 		</div>
 	<? } ?>
 	</div>
 	<div class="ccm-spacer"></div>
 	
 	<div id="akSelectValueWrapTemplate" class="akSelectValueWrap" style="display:none">
-		<?=getAttributeOptionHTML() ?>
+		<?=getAttributeOptionHTML('TEMPLATE') ?>
 	</div>
 	<div class="ccm-spacer"></div>
 	
@@ -84,3 +111,11 @@ function getAttributeOptionHTML($akSelectValue="TEMPLATE"){
 	</td>
 </tr>
 </table>
+
+<? if ($akSelectOptionDisplayOrder == 'display_asc') { ?>
+<script type="text/javascript">
+$(function() {
+	ccmAttributesHelper.makeSortable();
+});
+</script>
+<? } ?>

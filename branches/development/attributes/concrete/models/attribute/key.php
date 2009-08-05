@@ -26,7 +26,7 @@ class AttributeKey extends Object {
 	 */
 	protected function load($akID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ?', array($akID));
+		$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsSearchable, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ?', array($akID));
 		$this->setPropertiesFromArray($row);
 	}
 
@@ -35,15 +35,6 @@ class AttributeKey extends Object {
 	 */
 	public function getAttributeType() {
 		return AttributeType::getByID($this->atID);
-	}
-	
-	/** 
-	 * Loads a value for a particular attribute key/valID combination
-	 */
-	public function getAttributeValue($avID) {
-		$av = CollectionAttributeValue::getByID($avID);
-		$av->setAttributeKey($this);
-		return $av->getValue();
 	}
 
 	/** 
@@ -68,6 +59,9 @@ class AttributeKey extends Object {
 	 * Adds an attribute key. 
 	 */
 	protected function add($akCategoryHandle, $akHandle, $akName, $akIsSearchable, $atID) {
+		if (!$akIsSearchable) {
+			$akIsSearchable = 0;
+		}
 		$db = Loader::db();
 		$akCategoryID = $db->GetOne("select akCategoryID from AttributeKeyCategories where akCategoryHandle = ?", $akCategoryHandle);
 		$a = array($akHandle, $akName, $akIsSearchable, $atID, $akCategoryID);
@@ -81,6 +75,27 @@ class AttributeKey extends Object {
 			return $ak;
 		}
 	}
+
+	/** 
+	 * Updates an attribute key. 
+	 */
+	public function update($akHandle, $akName, $akIsSearchable) {
+		if (!$akIsSearchable) {
+			$akIsSearchable = 0;
+		}
+		$db = Loader::db();
+		$akCategoryID = $db->GetOne("select akCategoryHandle from AttributeKeyCategories inner join AttributeKeys on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akID = ?", $this->getAttributeKeyID());
+		$a = array($akHandle, $akName, $akIsSearchable, $this->getAttributeKeyID());
+		$r = $db->query("update AttributeKeys set akHandle = ?, akName = ?, akIsSearchable = ? where akID = ?", $a);
+		
+		if ($r) {
+			$className = $akCategoryHandle . 'AttributeKey';
+			$ak = new $className();
+			$ak->load($ak->getAttributeKeyID());
+			return $ak;
+		}
+	}
+
 
 	/** 
 	 * Renders a view for this attribute key. If no view is default we display it's "view"
