@@ -11,7 +11,7 @@ $searchFields = array(
 );
 
 Loader::model('file_attributes');
-$searchFieldAttributes = FileAttributeKey::getList();
+//$searchFieldAttributes = FileAttributeKey::getList();
 foreach($searchFieldAttributes as $ak) {
 	$searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyName();
 }
