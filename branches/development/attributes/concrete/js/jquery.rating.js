@@ -79,7 +79,7 @@
 				control.serial = raters.count++;
 				
 				// create rating element
-				rater = $('<input type="text" class="rating-star-control" name="' + eid + '" value="" size="2"/>');
+				rater = $('<input type="text" class="rating-star-control" name="' + this.name + '" id="' + eid + '" value="" size="2"/>');
 				$(this).before(rater.hide());
 				
 				// Mark element for initialization (once all stars are ready)
