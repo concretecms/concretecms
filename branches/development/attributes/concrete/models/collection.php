@@ -108,6 +108,20 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				}
 			}
 		}
+
+		// remove the collection attributes for this version of a page
+		public function clearCollectionAttributes($retainAKIDs = array()) {
+			$db = Loader::db();
+			if (count($retainAKIDs) > 0) {
+				$akIDStr = implode(',', $retainAKIDs);
+				$v2 = array($this->getCollectionID(), $this->getVersionID());
+				$db->query("delete from CollectionAttributeValues where cID = ? and cvID = ? and akID not in ({$akIDStr})", $v2);
+			} else {
+				$v2 = array($this->getCollectionID(), $this->getVersionID());
+				$db->query("delete from CollectionAttributeValues where cID = ? and cvID = ?", $v2);
+			}
+		}
+	
 		
 		public function getAttributeValueObject($ak, $createIfNotFound = false) {
 			$db = Loader::db();

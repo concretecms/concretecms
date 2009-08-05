@@ -929,13 +929,6 @@ $ppWhere = '';
 		}
 	}
 
-	// remove the collection attributes for this version of a page
-	public function clearCollectionAttributes() {
-		$db = Loader::db();
-		$v2 = array($this->getCollectionID(), $this->getVersionID());
-		$db->query("delete from CollectionAttributeValues where cID = ? and cvID = ?", $v2);
-	}
-
 	function acquireAreaPermissions($permissionsCollectionID) {
 		$v = array($this->cID);
 		$db = Loader::db();
