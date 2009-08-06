@@ -10,7 +10,6 @@ class RatingAttributeTypeController extends AttributeTypeController  {
 	}
 
 	public function form() {
-		$bf = false;
 		$caValue = 0;
 		if ($this->getAttributeValueID() > 0) {
 			$caValue = $this->getValue();
@@ -35,6 +34,10 @@ class RatingAttributeTypeController extends AttributeTypeController  {
 	
 	public function saveForm($data) {
 		$this->saveValue($data['value']);
+	}
+	
+	public function search() {
+		$this->form();
 	}
 	
 	public function deleteValue() {

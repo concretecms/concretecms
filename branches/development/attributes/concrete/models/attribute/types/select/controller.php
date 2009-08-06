@@ -82,6 +82,10 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		$this->set('selectedOptions', $selectedOptions);
 	}
 	
+	public function search() {
+		$this->form();
+	}
+	
 	public function deleteValue() {
 		$db = Loader::db();
 		$db->Execute('delete from atSelectOptionsSelected where avID = ?', array($this->getAttributeValueID()));
