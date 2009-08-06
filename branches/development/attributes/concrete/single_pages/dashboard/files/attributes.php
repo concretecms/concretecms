@@ -1,97 +1,59 @@
-<?
-$ih = Loader::helper('concrete/interface');
-$form = Loader::helper('form'); 
-$valt = Loader::helper('validation/token');
-?>
 
-<? if($pageMode!='edit' && $pageMode!='add'){ ?>
-	<h1><span><?=t('Files Attributes')?></span></h1>
-	
+<? if ($this->controller->getTask() != 'select_type' && $this->controller->getTask() != 'add' && $this->controller->getTask() != 'edit') { ?>
+	<h1><span><?=t('Page Attributes')?></span></h1>
 	<div class="ccm-dashboard-inner">
-	
-		<?=$form->checkbox('showUserAdded', 1, $showUserAdded)?>
-		<?=t('Show Only User Added Attributes')?>
-		
-		<script type="text/javascript">
-		$(function() {
-			$("input[name=showUserAdded]").click(function() {
-				if ($(this).get(0).checked) {
-					window.location.href='<?=$this->url('/dashboard/files/attributes', 'show_user_added')?>';
-				} else {
-					window.location.href='<?=$this->url('/dashboard/files/attributes')?>';
-				}
-			});
-		});
-		</script>
-		
-		<?= Loader::element('dashboard/attributes_table', array( 'attribs'=>$attribs, 'attributeType'=>'file') ); ?>
-	
-	</div>
+	<?
+	$attribs = FileAttributeKey::getList();
+	Loader::element('dashboard/attributes_table', array('attribs'=> $attribs, 'editURL' => '/dashboard/files/attributes')); ?>
+
+</div>
+
 <? } ?>
 
-<? if($pageMode=='edit'){ ?>
 
-	<h1><span><?=t('Edit a File Attribute')?></span></h1>
-	<div class="ccm-dashboard-inner">
-	
-		<form method="post" id="ccm-add-attribute" action="<?=$this->url('/dashboard/files/attributes/-/edit/')?>" onsubmit="return ccmAttributesHelper.doSubmit">
-		<input type="hidden" name="submitted" value="1" />
-		<input type="hidden" name="edit" value="1" />
-		<input type="hidden" name="fakID" value="<?=$fak->getAttributeKeyID() ?>" />
-		<?=$valt->output('add_or_update_attribute')?>
-		
-		<?
-		$attributeFormData=array(
-				'akType'=>$fak->getAttributeKeyType(),
-				'akName'=>$fak->getAttributeKeyName(),
-				'akHandle'=>$fak->getAttributeKeyHandle(), 
-				'akValues'=>$fak->getAttributeKeyValues(),				
-				'akAllowOtherValues'=>$fak->getAllowOtherValues(), 
-				'cancelURL'=>'/dashboard/files/attributes',
-				'defaultNewOptionNm'=>$defaultNewOptionNm,
-				'formId'=>'ccm-add-attribute',
-				'submitBtnTxt'=>t('Update'),
-				'attributeType' => 'file',
-				'noSearchable'=>1
-			);
-		Loader::element('dashboard/attribute_form', $attributeFormData);
-		?>
-		
-		<br>
-		</form>	
-	
-	</div>
-	
-<? }else{ ?>
+<? if (isset($key)) { ?>
 
-	<h1><span><?=t('Add a File Attribute')?></span></h1>
-	<div class="ccm-dashboard-inner">
-	
-		<form method="post" id="ccm-add-attribute" action="<?=$this->url('/dashboard/files/attributes/-/add/')?>" onsubmit="return ccmAttributesHelper.doSubmit">
-		<input type="hidden" name="add" value="1" />
-		<input type="hidden" name="submitted" value="1" />
-		<?=$valt->output('add_or_update_attribute')?>
-		
-		<?
-		$attributeFormData=array(
-				'akType'=>$_POST['akType'],
-				'akName'=>$_POST['akName'],
-				'akHandle'=>$_POST['akHandle'], 
-				'akValues'=>$_POST['akValues'], 
-				'akAllowOtherValues'=>$_POST['akAllowOtherValues'],
-				'cancelURL'=>'/dashboard/files/attributes',
-				'defaultNewOptionNm'=>$defaultNewOptionNm,
-				'formId'=>'ccm-add-attribute',
-				'submitBtnTxt'=>t('Add'),
-				'noSearchable'=>1
-			);
-		Loader::element('dashboard/attribute_form', $attributeFormData);
-		?>
-		
-		<br>
-		</form>	
-	
-	
-	</div>
-	
+<h1><span><?=t('Edit Page Attribute')?></span></h1>
+<div class="ccm-dashboard-inner">
+
+<h2><?=t('Attribute Type')?></h2>
+
+<strong><?=$type->getAttributeTypeName()?></strong>
+<br/><br/>
+
+
+<form method="post" action="<?=$this->action('edit')?>" id="ccm-attribute-key-form">
+
+<? Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
+
+</form>	
+
+</div>
+
+<? } else { ?>
+
+<h1><span><?=t('Add File Attribute')?></span></h1>
+<div class="ccm-dashboard-inner">
+
+<h2><?=t('Choose Attribute Type')?></h2>
+
+<form method="get" action="<?=$this->action('select_type')?>" id="ccm-attribute-type-form">
+
+<?=$form->select('atID', $types)?>
+<?=$form->submit('submit', t('Go'))?>
+
+</form>
+
+<? if (isset($type)) { ?>
+	<br/>
+
+	<form method="post" action="<?=$this->action('add')?>" id="ccm-attribute-key-form">
+
+	<? Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type)); ?>
+
+	</form>	
+<? } ?>
+
+</div>
+
 <? } ?>

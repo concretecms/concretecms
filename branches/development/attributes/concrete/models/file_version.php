@@ -461,24 +461,43 @@ class FileVersion extends Object {
 		}
 		return false;
 	}
-	
+
 	public function setAttribute($ak, $value) {
-		$akHandle = (is_object($ak)) ? $ak->getAttributeKeyHandle() : $ak;
+		if (!is_object($ak)) {
+			$ak = FileAttributeKey::getByHandle($ak);
+		}
+		$ak->setAttribute($this, $value);
+		$fo = $this->getFile();
+		$fo->refreshCache();
+	}
+
+	public function getAttributeValueObject($ak, $createIfNotFound = false) {
 		$db = Loader::db();
-		$fakID = $db->GetOne("select fakID from FileAttributeKeys where akHandle = ?", array($akHandle));
-		if ($fakID > 0) {
-			$db->Replace('FileAttributeValues', array(
-				'fID' => $this->fID,
-				'fvID' => $this->getFileVersionID(),
-				'fakID' => $fakID,
-				'value' => $value
-			),
-			array('fID', 'fvID', 'fakID'), true);
-			if (is_object($ak)) {
-				$this->logVersionUpdate(FileVersion::UT_EXTENDED_ATTRIBUTE, $ak->getAttributeKeyID());
+		$av = false;
+		$v = array($this->getFileID(), $this->getFileVersionID(), $ak->getAttributeKeyID());
+		$avID = $db->GetOne("select avID from FileAttributeValues where fID = ? and fvID = ? and akID = ?", $v);
+		if ($avID > 0) {
+			$av = FileAttributeValue::getByID($avID);
+			if (is_object($av)) {
+				$av->setFile($this->getFile());
+				$av->setAttributeKey($ak);
 			}
 		}
 		
+		if ($createIfNotFound) {
+			$cnt = 0;
+		
+			// Is this avID in use ?
+			if (is_object($av)) {
+				$cnt = $db->GetOne("select count(avID) from FileAttributeValues where avID = ?", $av->getAttributeValueID());
+			}
+			
+			if ((!is_object($av)) || ($cnt > 1)) {
+				$av = $ak->addAttributeValue();
+			}
+		}
+		
+		return $av;
 	}
 	
 	//takes a string of comma or new line delimited tags, and puts them in the appropriate format

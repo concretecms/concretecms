@@ -70,20 +70,6 @@ class CollectionAttributeKey extends AttributeKey {
 		return CollectionAttributeKey::getByID($akID);
 	}
 	
-	/** 
-	 * Saves an attribute using its stock form.
-	 */
-	public function saveAttributeForm($nvc) {
-		$this->saveAttribute($nvc);
-	}
-	
-	/** 
-	 * Sets an attribute directly with a passed value.
-	 */
-	public function setAttribute($nvc, $value) {
-		$this->saveAttribute($nvc, $value);
-	}
-	
 	protected function saveAttribute($nvc, $value = false) {
 		// We check a cID/cvID/akID combo, and if that particular combination has an attribute value ID that
 		// is NOT in use anywhere else on the same cID, cvID, akID combo, we use it (so we reuse IDs)
@@ -100,8 +86,9 @@ class CollectionAttributeKey extends AttributeKey {
 		), array('cID', 'cvID', 'akID'));
 	}
 	
-	public function add($akHandle, $akName, $akIsSearchable, $atID) {
-		$ak = parent::add('collection', $akHandle, $akName, $akIsSearchable, $atID);
+	public function add($akHandle, $akName, $akIsSearchable, $atID, $akIsAutoCreated = false, $akIsEditable = true) {
+
+		$ak = parent::add('collection', $akHandle, $akName, $akIsSearchable, $akIsAutoCreated, $akIsEditable, $atID);
 		return $ak;
 	}
 	

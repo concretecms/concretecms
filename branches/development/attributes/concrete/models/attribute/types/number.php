@@ -15,7 +15,15 @@ class NumberAttributeTypeController extends AttributeTypeController  {
 		}
 		return round($value, $p);	
 	}
-
+	
+	public function search() {
+		$f = Loader::helper('form');
+		$html = $f->text($this->field('from'));
+		$html .= ' ' . t('to') . ' ';
+		$html .= $f->text($this->field('to'));
+		print $html;
+	}
+	
 	public function form() {
 		if (is_object($this->attributeValue)) {
 			$value = $this->getAttributeValue()->getValue();

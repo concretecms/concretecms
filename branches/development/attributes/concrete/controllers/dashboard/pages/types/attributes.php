@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
-Loader::model('collection_attributes');
+
 class DashboardPagesTypesAttributesController extends Controller {
 	
 	public $helpers = array('form');

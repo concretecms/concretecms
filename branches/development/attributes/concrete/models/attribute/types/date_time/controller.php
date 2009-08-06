@@ -40,6 +40,15 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 		return $value;
 	}
 
+	public function search() {
+		print 'COMEON';
+		$dt = Loader::helper('form/date_time');
+		$html = $dt->date($this->field('from'), false, false);
+		$html .= ' ' . t('to') . ' ';
+		$html .= $dt->date($this->field('to'), false, false);
+		print $html;
+	}
+	
 	public function saveValue($value) {
 		$value = date('Y-m-d H:i:s', strtotime($value));
 		

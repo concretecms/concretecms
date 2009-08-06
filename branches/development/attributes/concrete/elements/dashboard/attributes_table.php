@@ -36,8 +36,7 @@ if (count($attribs) > 0) {
 	
 	<strong>
 		<?
-		if($attributeType=='file') echo t('No file attributes defined.');
-		else echo t('No page attributes defined.');
+	 echo t('No attributes defined.');
 		?>
 	</strong>
 	
