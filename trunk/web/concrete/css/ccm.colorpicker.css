@@ -160,7 +160,7 @@ input.colorpicker_submit {
 	background-position: bottom;
 }
 
-div.ccm-color-swatch-wrapper { position:relative; left:0px; top:0px; height:36px; width:36px; }
+div.ccm-color-swatch-wrapper { position:relative; left:0px; top:0px; height:36px; width:36px; float: left}
 div.ccm-color-swatch-wrapper div.ccm-color-swatch { 
 	position: absolute;
 	top: 0;

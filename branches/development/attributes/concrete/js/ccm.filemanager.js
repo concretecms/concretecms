@@ -567,7 +567,7 @@ ccm_activateFileManagerFields = function(fieldset) {
 			}
 		});
 	
-		$("#ccm-file-search-field-set" + fieldset + " .ccm-search-option-type-date input").each(function() {
+		$("#ccm-file-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").each(function() {
 			$(this).attr('id', $(this).attr('id') + fieldset);
 		});
 		
@@ -578,6 +578,7 @@ ccm_activateFileManagerFields = function(fieldset) {
 		$("#ccm-file-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").datepicker({
 			showAnim: 'fadeIn'
 		});
+		$("#ccm-file-search-field-set" + fieldset + " .ccm-search-option-type-rating input").rating();
 		
 	});
 	
