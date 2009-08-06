@@ -116,7 +116,6 @@ class IndexedSearch {
 		$nh = Loader::helper('navigation');
 		
 		$db->Execute("truncate table PageSearchIndex");
-		$db->Execute("truncate table PageSearchIndexAttributes");
 		
 		$num = 0;
 		while ($row = $r->fetchRow()) {
@@ -138,7 +137,7 @@ class IndexedSearch {
 				$v = array($row['cID'], $c->getCollectionName(), $c->getCollectionDescription(), $c->getCollectionPath(), $c->getCollectionDatePublic(), $this->getBodyContentFromPage($c));
 				$db->Execute("insert into PageSearchIndex (cID, cName, cDescription, cPath, cDatePublic, content) values (?, ?, ?, ?, ?, ?)", $v);
 				unset($v);
-
+				/*
 				$attributes=$c->getSetCollectionAttributes();
 				foreach($attributes as $attribute){
 					if ($attribute->isCollectionAttributeKeySearchable()) {
@@ -147,7 +146,9 @@ class IndexedSearch {
 						$db->Execute("insert into PageSearchIndexAttributes (cID, akID, akHandle, value) values (?, ?, ?, ?)", $v);
 					}
 				}
+				
 				unset($v);
+				*/
 				$num++;
 			}
 			

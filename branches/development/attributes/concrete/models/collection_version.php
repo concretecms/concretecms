@@ -124,7 +124,9 @@
 		}
 
 		public function getAttribute($ak) {
-			return $this->attributes->getAttribute($ak);
+			if (is_object($this->attributes)) {
+				return $this->attributes->getAttribute($ak);
+			}
 		}
 
 		function isApproved() {return $this->cvIsApproved;}
@@ -223,6 +225,7 @@
 			if (($oldHandle != $newHandle) && (!$c->isGeneratedCollection())) {
 				$c->rescanCollectionPath();
 			}
+			$c->reindex();
 			$this->refreshCache();
 		}
 		

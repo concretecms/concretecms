@@ -2,11 +2,26 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class BooleanAttributeTypeController extends AttributeTypeController  {
+	
+	// Field definition in the ADODB Format. We omit the first column (name) though, since it's
+	// automatically generated
+	
+	protected $searchIndexFieldDefinition = 'I1 DEFAULT 0 NOTNULL';
+	
+	public function searchForm($list) {
+		$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), 1);
+		return $list;
+	}	
 
 	public function getValue() {
 		$db = Loader::db();
 		$value = $db->GetOne("select value from atBoolean where avID = ?", array($this->getAttributeValueID()));
 		return $value;	
+	}
+	
+	public function getDisplayValue() {
+		$v = $this->getValue();
+		return ($v == 1) ? t('Yes') : t('No');
 	}
 
 	public function form() {

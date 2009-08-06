@@ -22,27 +22,31 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  */
 class CollectionAttributeKey extends AttributeKey {
 
+	protected function getIndexedSearchTable() {
+		return 'CollectionSearchIndexAttributes';
+	}
+
 	/** 
 	 * Returns an attribute value list of attributes and values (duh) which a collection version can store 
 	 * against its object.
 	 * @return AttributeValueList
 	 */
-	public function getAttributes($cID, $cvID) {
+	public function getAttributes($cID, $cvID, $method = 'getValue') {
 		$db = Loader::db();
 		$values = $db->GetAll("select akID, avID from CollectionAttributeValues where cID = ? and cvID = ?", array($cID, $cvID));
 		$avl = new AttributeValueList();
 		foreach($values as $val) {
 			$ak = CollectionAttributeKey::getByID($val['akID']);
-			$value = $ak->getAttributeValue($val['avID']);
+			$value = $ak->getAttributeValue($val['avID'], $method);
 			$avl->addAttributeValue($ak, $value);
-		}		
+		}
 		return $avl;
 	}
 	
-	public function getAttributeValue($avID) {
+	public function getAttributeValue($avID, $method = 'getValue') {
 		$av = CollectionAttributeValue::getByID($avID);
 		$av->setAttributeKey($this);
-		return $av->getValue();
+		return call_user_func_array(array($av, $method), array());
 	}
 	
 	public static function getByID($akID) {
@@ -87,7 +91,6 @@ class CollectionAttributeKey extends AttributeKey {
 	}
 	
 	public function add($akHandle, $akName, $akIsSearchable, $atID, $akIsAutoCreated = false, $akIsEditable = true) {
-
 		$ak = parent::add('collection', $akHandle, $akName, $akIsSearchable, $akIsAutoCreated, $akIsEditable, $atID);
 		return $ak;
 	}
@@ -100,7 +103,6 @@ class CollectionAttributeKey extends AttributeKey {
 			$db->Execute('delete from AttributeValues where avID = ?', array($row['avID']));
 		}
 		$db->Execute('delete from CollectionAttributeValues where akID = ?', array($this->getAttributeKeyID()));
-		$db->Execute('delete from PageSearchIndexAttributes where akID = ?', array($this->getAttributeKeyID()));
 		$db->Execute('delete from PageTypeAttributes where akID = ?', array($this->getAttributeKeyID()));
 	}
 

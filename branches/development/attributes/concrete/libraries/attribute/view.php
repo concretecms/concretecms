@@ -60,8 +60,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		/** 
 		 * Renders a particular view for an attribute
 		 */
-		public function render($view) {
-
+		public function render($view, $return = false) {
+			
+			if ($return) {
+				ob_start();
+			}
+			
 			if (file_exists(DIR_FILES_ELEMENTS . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_header.php')) {
 				include(DIR_FILES_ELEMENTS . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_header.php');
 			} else if (file_exists(DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_header.php')) {
@@ -104,6 +108,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			} else if (file_exists(DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_footer.php')) {
 				include(DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_footer.php');
 			}
-
+			
+			if ($return) {
+				$contents = ob_get_contents();
+				ob_end_clean();
+				return $contents;
+			}			
 		}		
 	}

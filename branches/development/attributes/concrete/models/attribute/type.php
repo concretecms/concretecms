@@ -40,11 +40,14 @@ class AttributeType extends Object {
 		return $cnt->getValue($avID);
 	}
 	
-	public function render($view, $ak = false, $value = false) {
+	public function render($view, $ak = false, $value = false, $return = false) {
 		// local scope
 		Loader::library('attribute/view');
-		$av = new AttributeTypeView($this, $ak, $value);		
-		$av->render($view);
+		$av = new AttributeTypeView($this, $ak, $value);	
+		$resp = $av->render($view, $return);
+		if ($return) {
+			return $resp;
+		}
 	}
 	
 	protected function loadController() {

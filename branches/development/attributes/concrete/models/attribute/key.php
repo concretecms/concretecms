@@ -26,6 +26,11 @@ class AttributeKey extends Object {
 	 * Returns whether the attribute key is one that was automatically created by a process. 
 	 */
 	public function isAttributeKeyAutoCreated() {return $this->akIsAutoCreated;}
+
+	/** 
+	 * Returns whether the attribute key is one that can be edited through the frontend. 
+	 */
+	public function isAttributeKeyEditable() {return $this->akIsEditable;}
 	
 	/** 
 	 * Loads the required attribute fields for this instantiated attribute
@@ -46,11 +51,11 @@ class AttributeKey extends Object {
 	/** 
 	 * Returns a list of all attributes of this category
 	 */
-	protected static function getList($akCategoryHandle, $searchableOnly = false) {
+	protected static function getList($akCategoryHandle, $filters = array()) {
 		$db = Loader::db();
 		$q = 'select akID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akCategoryHandle = ?';
-		if ($searchableOnly) {
-			$q .= ' and akIsSearchable = 1 ';
+		foreach($filters as $key => $value) {
+			$q .= ' and ' . $key . ' = ' . $value . ' ';
 		}
 		$r = $db->Execute($q, array($akCategoryHandle));
 		$list = array();
@@ -93,6 +98,11 @@ class AttributeKey extends Object {
 			$className = $akCategoryHandle . 'AttributeKey';
 			$ak = new $className();
 			$ak->load($akID);
+			$at = $ak->getAttributeType();
+			$cnt = $at->getController();
+			$cnt->setAttributeKey($ak);
+			$cnt->saveKey();
+			$ak->updateSearchIndex();
 			return $ak;
 		}
 	}
@@ -101,22 +111,59 @@ class AttributeKey extends Object {
 	 * Updates an attribute key. 
 	 */
 	public function update($akHandle, $akName, $akIsSearchable) {
+		$prevHandle = $this->getAttributeKeyHandle();
+		
 		if (!$akIsSearchable) {
 			$akIsSearchable = 0;
 		}
 		$db = Loader::db();
-		$akCategoryID = $db->GetOne("select akCategoryHandle from AttributeKeyCategories inner join AttributeKeys on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akID = ?", $this->getAttributeKeyID());
+		$akCategoryHandle = $db->GetOne("select akCategoryHandle from AttributeKeyCategories inner join AttributeKeys on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akID = ?", $this->getAttributeKeyID());
 		$a = array($akHandle, $akName, $akIsSearchable, $this->getAttributeKeyID());
 		$r = $db->query("update AttributeKeys set akHandle = ?, akName = ?, akIsSearchable = ? where akID = ?", $a);
 		
 		if ($r) {
 			$className = $akCategoryHandle . 'AttributeKey';
 			$ak = new $className();
-			$ak->load($ak->getAttributeKeyID());
+			$ak->load($this->getAttributeKeyID());
+			$at = $ak->getAttributeType();
+			$cnt = $at->getController();
+			$cnt->setAttributeKey($ak);
+			$cnt->saveKey();
+			$ak->updateSearchIndex($prevHandle);
 			return $ak;
 		}
 	}
-
+	
+	public function updateSearchIndex($prevHandle = false) {
+		$type = $this->getAttributeType();
+		$cnt = $type->getController();
+		if ($cnt->getSearchIndexFieldDefinition() == false) {
+			return false;
+		}
+		$field = $this->akHandle . ' ' . $cnt->getSearchIndexFieldDefinition();
+		
+		$db = Loader::db();
+		$columns = $db->MetaColumns($this->getIndexedSearchTable());
+		$dba = NewDataDictionary($db, DB_TYPE);
+		
+		$addColumn = true;
+		
+		if ($prevHandle != false) {
+			if ($columns[strtoupper($prevHandle)]) {
+				$q = $dba->RenameColumnSQL($this->getIndexedSearchTable(), $prevHandle, $this->akHandle, $field);
+				$db->Execute($q[0]);
+				$addColumn = false;
+			}
+		}
+		
+		if ($addColumn) {
+			if (!$columns[strtoupper($this->akHandle)]) {
+				$q = $dba->AddColumnSQL($this->getIndexedSearchTable(), $field);
+				$db->Execute($q[0]);
+			}
+		}
+	}
+	
 	public function delete() {
 		$at = $this->getAttributeType();
 		$at->controller->setAttributeKey($this);
@@ -125,6 +172,17 @@ class AttributeKey extends Object {
 		$db = Loader::db();
 		$db->Execute('delete from AttributeKeys where akID = ?', array($this->getAttributeKeyID()));
 		$db->Execute('delete from AttributeSetKeys where akID = ?', array($this->getAttributeKeyID()));
+
+		if ($this->getIndexedSearchTable()) {
+			$columns = $db->MetaColumns($this->getIndexedSearchTable());
+			$dba = NewDataDictionary($db, DB_TYPE);
+			
+			if ($columns[strtoupper($this->akHandle)]) {
+				$q = $dba->DropColumnSQL($this->getIndexedSearchTable(), $this->akHandle);
+				$db->Execute($q[0]);
+				$addColumn = false;
+			}
+		}
 	}
 	
 	public function getAttributeValueIDList() {
@@ -159,9 +217,12 @@ class AttributeKey extends Object {
 	 * Additionally, an attribute does not have to have its own interface. If it doesn't, then whatever
 	 * is printed in the corresponding $view function in the attribute's controller is printed out.
 	 */
-	public function render($view = 'view', $value = false) {
+	public function render($view = 'view', $value = false, $return = false) {
 		$at = AttributeType::getByHandle($this->atHandle);
-		$at->render($view, $this, $value);
+		$resp = $at->render($view, $this, $value, $return);
+		if ($return) {
+			return $resp;
+		}
 	}
 	
 	/** 

@@ -55,30 +55,12 @@ class FileVersion extends Object {
 	 * Gets an attribute for the file. If "nice mode" is set, we display it nicely
 	 * for use in the file attributes table 
 	 */
-	public function getAttribute($item, $displayNiceMode = false) {
-		$akHandle = (is_object($item)) ? $item->getAttributeKeyHandle() : $item;
-		$value = $this->attributes[$akHandle];
-		
-		if ($displayNiceMode && is_object($item)) {
-			switch($item->getAttributeKeyType()) {
-				case 'BOOLEAN':
-					return ($value == 1) ? t('Yes') : t('No');
-					break;
-				case 'SELECT_MULTIPLE':
-					return nl2br($value);
-					break;
-				case 'RATING':
-					$rt = Loader::helper('rating');
-					return $rt->output($akHandle . time(), $value);
-					break;
-				default:
-					return $value;
-					break;
-			}
-		} else {
-			return $value;
-		}
+	 
+	public function getAttribute($ak, $mode = false) {
+		$ak = (is_object($ak)) ? $ak->getAttributeKeyHandle() : $ak;
+		return $this->attributes->getAttribute($ak, $mode = false);
 	}
+
 
 	public function getMimeType() {
 		$h = Loader::helper('mime');
@@ -177,13 +159,13 @@ class FileVersion extends Object {
 		
 		$this->deny();
 		
-		$r = $db->Execute('select fvID, fakID, value from FileAttributeValues where fID = ? and fvID = ?', array($this->getFileID(), $this->fvID));
+		$r = $db->Execute('select fvID, akID, avID from FileAttributeValues where fID = ? and fvID = ?', array($this->getFileID(), $this->fvID));
 		while ($row = $r->fetchRow()) {
-			$db->Execute("insert into FileAttributeValues (fID, fvID, fakID, value) values (?, ?, ?, ?)", array(
+			$db->Execute("insert into FileAttributeValues (fID, fvID, akID, avID) values (?, ?, ?, ?)", array(
 				$this->fID, 
 				$fvID,
-				$row['fakID'], 
-				$row['value']
+				$row['akID'], 
+				$row['avID']
 			));
 		}
 		$fv2 = $f->getVersion($fvID);
@@ -229,7 +211,7 @@ class FileVersion extends Object {
 					$updates[] = t('Tags');
 					break;
 				case FileVersion::UT_EXTENDED_ATTRIBUTE:
-					$updates[] = $db->GetOne("select akName from FileAttributeKeys where fakID = ?", array($a['fvUpdateTypeAttributeID']));
+					$updates[] = $db->GetOne("select akName from AttributeKeys where akID = ?", array($a['fvUpdateTypeAttributeID']));
 					break;
 			}
 		}
@@ -278,6 +260,7 @@ class FileVersion extends Object {
 		$db->Execute("update FileVersions set fvIsApproved = 1 where fID = ? and fvID = ?", array($this->getFileID(), $this->getFileVersionID()));
 
 		$fo = $this->getFile();
+		$fo->reindex();
 		$fo->refreshCache();
 	}
 
@@ -433,6 +416,8 @@ class FileVersion extends Object {
 			}
 		}
 		$this->refreshThumbnails();
+		$f = $this->getFile();
+		$f->reindex();
 	}
 
 	public function createThumbnailDirectories(){

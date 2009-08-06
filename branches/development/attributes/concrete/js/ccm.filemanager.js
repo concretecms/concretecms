@@ -3,7 +3,7 @@ var ccm_totalAdvancedSearchFields = 0;
 var ccm_alLaunchType;
 var ccm_alActiveAssetField = "";
 var ccm_alProcessorTarget = "";
-var ccm_alDebug = false;
+var ccm_alDebug = true;
 
 ccm_triggerSelectFile = function(fID, af) {
 	if (af == null) {
@@ -331,6 +331,7 @@ ccm_alSetupVersionSelector = function() {
 		var fvID = trow.attr('fvID');
 		var postStr = 'task=approve_version&fID=' + fID + '&fvID=' + fvID;
 		$.post(CCM_TOOLS_PATH + '/files/properties', postStr, function(resp) {
+			console.log(resp);
 			trow.addClass('ccm-file-versions-grid-active');
 			trow.find('td').show('highlight', {
 				color: '#FFF9BB'
@@ -581,6 +582,7 @@ ccm_activateFileManagerFields = function(fieldset) {
 		$("#ccm-file-search-field-set" + fieldset + " .ccm-search-option-type-rating input").rating();
 		
 	});
+
 	
 	// add the initial state of the latest select menu
 	var lastSelect = $("#ccm-file-search-field-set" + fieldset + " select[name=fvField]").eq($(".ccm-file-search-field select[name=fvField]").length-1);

@@ -3,6 +3,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class NumberAttributeTypeController extends AttributeTypeController  {
 
+	protected $searchIndexFieldDefinition = 'N 14.4 DEFAULT 0 NOTNULL';
+
 	public function getValue() {
 		$db = Loader::db();
 		$value = $db->GetOne("select value from atNumber where avID = ?", array($this->getAttributeValueID()));
@@ -14,6 +16,18 @@ class NumberAttributeTypeController extends AttributeTypeController  {
 			}
 		}
 		return round($value, $p);	
+	}
+	
+	public function searchForm($list) {
+		$numFrom = $this->request('from');
+		$numTo = $this->request('to');
+		if ($numFrom) {
+			$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $numFrom, '>=');
+		}
+		if ($numTo) {
+			$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $numTo, '<=');
+		}
+		return $list;
 	}
 	
 	public function search() {

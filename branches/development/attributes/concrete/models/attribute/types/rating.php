@@ -3,10 +3,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class RatingAttributeTypeController extends AttributeTypeController  {
 
+	protected $searchIndexFieldDefinition = 'N 14.4 DEFAULT 0 NOTNULL';
+
 	public function getValue() {
 		$db = Loader::db();
 		$value = $db->GetOne("select value from atNumber where avID = ?", array($this->getAttributeValueID()));
-		return round($value);	
+		return round($value);
+	}
+	
+	public function getDisplayValue() {
+		$value = $this->getValue();
+		$rt = Loader::helper('rating');
+		return $rt->output($akHandle . time(), $value);
 	}
 
 	public function form() {
@@ -15,9 +23,15 @@ class RatingAttributeTypeController extends AttributeTypeController  {
 			$caValue = $this->getValue();
 		}
 		$rt = Loader::helper('form/rating');
-		print $rt->rating($this->field('value'), $caValue, false);
+		print $rt->rating($this->field('value'), $caValue);
 	}
 
+	public function searchForm($list) {
+		$minRating = $this->request('value');
+		$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $minRating, '>=');
+		return $list;
+	}
+	
 	// run when we call setAttribute(), instead of saving through the UI
 	public function saveValue($rating) {
 		$db = Loader::db();
@@ -37,7 +51,8 @@ class RatingAttributeTypeController extends AttributeTypeController  {
 	}
 	
 	public function search() {
-		$this->form();
+		$rt = Loader::helper('form/rating');
+		print $rt->rating($this->field('value'), $caValue, false);
 	}
 	
 	public function deleteValue() {
