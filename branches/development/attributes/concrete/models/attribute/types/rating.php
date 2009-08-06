@@ -15,7 +15,7 @@ class RatingAttributeTypeController extends AttributeTypeController  {
 			$caValue = $this->getValue();
 		}
 		$rt = Loader::helper('form/rating');
-		print $rt->rating($this->field('value'), $caValue);
+		print $rt->rating($this->field('value'), $caValue, false);
 	}
 
 	// run when we call setAttribute(), instead of saving through the UI

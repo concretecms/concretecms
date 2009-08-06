@@ -22,7 +22,7 @@ ccm_deactivateSite = function(onDone) {
 	}
 	
 	if (ccm_animEffects) {				
-		$("#ccm-overlay").fadeIn(100, function() {
+		$("#ccm-overlay").fadeIn(60, function() {
 			ccm_siteActivated = false;
 			if (typeof onDone == 'function') {
 				onDone();
@@ -40,7 +40,7 @@ ccm_deactivateSite = function(onDone) {
 
 ccm_activateSite = function() {
 	if (ccm_animEffects) {
-		$("#ccm-overlay").fadeOut(100);
+		$("#ccm-overlay").fadeOut(60);
 	} else {
 		$("#ccm-overlay").hide();
 	}

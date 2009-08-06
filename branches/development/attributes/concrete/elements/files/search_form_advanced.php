@@ -35,7 +35,7 @@ $s1 = FileSet::getMySets();
 <? $form = Loader::helper('form'); ?>
 
 	
-	<div id="ccm-file-search-field-base-elements" style="">
+	<div id="ccm-file-search-field-base-elements" style="display: none">
 	
 		<span class="ccm-search-option" search-field="size">
 		<?=$form->text('size_from', array('style' => 'width: 30px'))?>
