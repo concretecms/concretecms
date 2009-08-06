@@ -3,7 +3,7 @@ var ccm_totalAdvancedSearchFields = 0;
 var ccm_alLaunchType;
 var ccm_alActiveAssetField = "";
 var ccm_alProcessorTarget = "";
-var ccm_alDebug = true;
+var ccm_alDebug = false;
 
 ccm_triggerSelectFile = function(fID, af) {
 	if (af == null) {

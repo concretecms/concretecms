@@ -170,6 +170,27 @@ class FileAttributeKey extends AttributeKey {
 		}
 	}	
 
+	function outputSearchHTML() {
+		$f = Loader::helper("form");
+		switch($this->getAttributeKeyType()) {
+			case 'NUMBER':
+				$html = $f->text('fakID_' . $this->getAttributeKeyID() . '_from');
+				$html .= ' ' . t('to') . ' ';
+				$html .= $f->text('fakID_' . $this->getAttributeKeyID() . '_to');
+				break;
+			case 'DATE':
+				$dt = Loader::helper('form/date_time');
+				$html = $dt->date('fakID_' . $this->getAttributeKeyID() . '_from', false, false);
+				$html .= ' ' . t('to') . ' ';
+				$html .= $dt->date('fakID_' . $this->getAttributeKeyID() . '_to', false, false);
+				break;
+			default:
+				return $this->outputHTML();
+				break;
+		}
+		return $html;	
+	}
+	
 	function outputHTML($fv = false) {
 		$f = Loader::helper("form");
 		$value = '';
