@@ -3,6 +3,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class DefaultAttributeTypeController extends AttributeTypeController  {
 
+	protected $searchIndexFieldDefinition = 'X NULL';
+
 	public function getValue() {
 		$db = Loader::db();
 		$value = $db->GetOne("select value from atDefault where avID = ?", array($this->getAttributeValueID()));
@@ -14,6 +16,12 @@ class DefaultAttributeTypeController extends AttributeTypeController  {
 			$value = $this->getAttributeValue()->getValue();
 		}
 		print '<textarea name="' . $this->field('value') . '" style="width: 100%; height: 40px">' . $value . '</textarea>';
+	}
+
+	public function searchForm($list) {
+		$db = Loader::db();
+		$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), '%' . $this->request('value') . '%', 'like');
+		return $list;
 	}
 	
 	public function search() {

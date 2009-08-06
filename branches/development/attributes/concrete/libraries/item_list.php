@@ -137,6 +137,18 @@ class DatabaseItemList extends ItemList {
 		$this->filters[] = array($column, $value, $comparison);
 	}
 	
+	protected function setupAttributeFilters($tbl) {
+		$db = Loader::db();
+		$i = 1;
+		$this->addToQuery("left join $tbl on ({$tbl}.fID = fv.fID)");
+		foreach($this->attributeFilters as $caf) {
+			$this->filter($tbl . '.' . $caf[0], $caf[1], $caf[2]);
+		}
+	}
+
+	public function filterByAttribute($column, $value, $comparison = '=') {
+		$this->attributeFilters[] = array($column, $value, $comparison);
+	}
 	
 
 }

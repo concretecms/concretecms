@@ -57,10 +57,26 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 			return parent::post($field);
 		}
+
+		public function request($field = false) {
+			if (is_object($this->attributeKey) && is_array($_REQUEST['akID'])) {
+				$p = $_REQUEST['akID'][$this->attributeKey->getAttributeKeyID()];
+				if ($field) {
+					return $p[$field];
+				}
+				return $p;
+			}
+			
+			return parent::request($field);
+		}
 		
 		public function getView() {
 			$av = new AttributeTypeView($this->attributeType, $this->attributeKey, $this->attributeValue);
 			return $av;
+		}
+		
+		public function getSearchIndexFieldDefinition() {
+			return $this->searchIndexFieldDefinition;
 		}
 		
 		public function setupAndRun($method) {

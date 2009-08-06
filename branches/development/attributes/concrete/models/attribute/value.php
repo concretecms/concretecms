@@ -69,8 +69,23 @@ class AttributeValue extends Object {
 		$this->attributeType->controller->setAttributeValue($this);
 	}
 	
-	public function getValue() {
+	public function getValue($mode = false) {
+		if ($mode != false) {
+			$th = Loader::helper('text');
+			$method = 'get' . $th->camelcase($mode) . 'Value';
+			if (method_exists($this->attributeType->controller, $method)) {
+				return call_user_func(array($this->attributeType->controller, $method));
+			}
+		}		
 		return $this->attributeType->controller->getValue();		
+	}
+
+	public function getSearchIndexValue() {
+		if (method_exists($this->attributeType->controller, 'getSearchIndexValue')) {
+			return $this->attributeType->controller->getSearchIndexValue();
+		} else {
+			return $this->attributeType->controller->getValue();
+		}
 	}
 	
 	public function delete() {

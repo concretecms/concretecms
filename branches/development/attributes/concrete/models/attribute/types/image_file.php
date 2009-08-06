@@ -3,12 +3,25 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class ImageFileAttributeTypeController extends AttributeTypeController  {
 
+	protected $searchIndexFieldDefinition = 'I DEFAULT 0 NOTNULL';
+
 	public function getValue() {
 		$db = Loader::db();
 		$value = $db->GetOne("select fID from atFile where avID = ?", array($this->getAttributeValueID()));
 		return $value;	
 	}
 
+	public function searchForm($list) {
+		$fileID = $this->request('value');
+		$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $fileID);
+		return $list;
+	}
+	
+	public function search() {
+		$al = Loader::helper('concrete/asset_library');
+		print $al->file('ccm-file-akID-' . $this->attributeKey->getAttributeKeyID(), $this->field('value'), t('Choose File'), $bf);
+	}
+	
 	public function form() {
 		$bf = false;
 		if ($this->getAttributeValueID() > 0) {

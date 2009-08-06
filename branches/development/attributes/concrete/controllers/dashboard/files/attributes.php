@@ -59,8 +59,6 @@ class DashboardFilesAttributesController extends Controller {
 			$this->set('error', $e);
 		} else {
 			$ak = FileAttributeKey::add($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), 0, 1, $this->post('atID'));
-			$cnt->setAttributeKey($ak);
-			$cnt->saveKey();
 			$this->redirect('/dashboard/files/attributes/', 'attribute_created');
 		}
 	}
@@ -108,7 +106,6 @@ class DashboardFilesAttributesController extends Controller {
 				$this->set('error', $e);
 			} else {
 				$key->update($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('atID'));
-				$cnt->saveKey();
 				$this->redirect('/dashboard/files/attributes', 'attribute_updated');
 			}
 		}

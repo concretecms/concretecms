@@ -47,6 +47,26 @@ class File extends Object {
 	public function refreshCache() {
 		Cache::delete('file_relative_path', $this->getFileID());
 	}
+	
+	public function reindex() {
+		$attribs = FileAttributeKey::getAttributes($this->getFileID(), $this->getFileVersionID(), 'getSearchIndexValue');
+		$db = Loader::db();
+
+		$db->Execute('delete from FileSearchIndexAttributes where fID = ?', array($this->getFileID()));
+		$searchableAttributes = array('fID' => $this->getFileID());
+		$columns = $db->MetaColumns('FileSearchIndexAttributes');
+		$rs = $db->Execute('select * from FileSearchIndexAttributes where fID = -1');
+
+		foreach($attribs as $akHandle => $value) {
+			$ak = FileAttributeKey::getByHandle($akHandle);
+			if ($ak->isAttributeKeySearchable() && isset($columns[strtoupper($akHandle)])) {
+				$searchableAttributes[$akHandle] = $value;
+			}
+		}
+
+		$q = $db->GetInsertSQL($rs, $searchableAttributes);
+		$db->Execute($q);
+	}
 
 	public static function getRelativePathFromID($fID) {
 		$path = Cache::get('file_relative_path', $fID);

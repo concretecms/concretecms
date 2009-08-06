@@ -20,6 +20,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  */
 class FileAttributeKey extends AttributeKey {
 
+	public function getIndexedSearchTable() {
+		return 'FileSearchIndexAttributes';
+	}
+	
 	/** 
 	 * Returns an attribute value list of attributes and values (duh) which a collection version can store 
 	 * against its object.
@@ -73,7 +77,15 @@ class FileAttributeKey extends AttributeKey {
 	}
 
 	public static function getSearchableList() {
-		return parent::getList('file', true);	
+		return parent::getList('file', array('akIsSearchable' => 1));	
+	}
+
+	public static function getImporterList() {
+		return parent::getList('file', array('akIsAutoCreated' => 1));	
+	}
+
+	public static function getUserAddedList() {
+		return parent::getList('file', array('akIsAutoCreated' => 0));	
 	}
 	
 	/** 
@@ -100,6 +112,9 @@ class FileAttributeKey extends AttributeKey {
 		if (is_object($ak)) {
 			$this->logVersionUpdate(FileVersion::UT_EXTENDED_ATTRIBUTE, $ak->getAttributeKeyID());
 		}
+		$fo = $f->getFile();
+		$fo->reindex();
+		$f->populateAttributes();
 	}
 	
 	public function add($akHandle, $akName, $akIsSearchable, $akIsAutoCreated, $akIsEditable, $atID) {

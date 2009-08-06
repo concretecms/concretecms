@@ -93,46 +93,11 @@ class DashboardFilesSearchController extends Controller {
 							Loader::model('file_attributes');
 							$akID = $item;
 							$fak = FileAttributeKey::get($akID);
-							switch($fak->getAttributeKeyType()) {
-								case 'NUMBER':
-									$numFrom = $_REQUEST['fakID_' . $akID . '_from'];
-									$numTo = $_REQUEST['fakID_' . $akID . '_to'];
-									if ($numFrom != '') {
-										$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $numFrom, '>=');
-									}
-									if ($numTo != '') {
-										$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $numTo, '<=');
-									}
-									break;
-								case 'DATE':
-									$dt = Loader::helper('form/date_time');
-									$dateFrom = $dt->translate('fakID_' . $akID . '_from', $_REQUEST);
-									$dateTo = $dt->translate('fakID_' . $akID . '_to', $_REQUEST);
-									if ($dateFrom != '') {
-										$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $dateFrom, '>=');
-									}
-									if ($dateTo != '') {
-										$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $dateTo, '<=');
-									}
-									break;
-								case 'BOOLEAN':
-									$numFrom = $_REQUEST['fakID_' . $akID];
-									$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), 1);
-									break;
-								case 'TEXT':
-									$value = '%' . $_REQUEST['fakID_' . $akID] . '%';
-									$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $value, 'like');
-									break;
-								case 'SELECT':
-									$value = $_REQUEST['fakID_' . $akID];
-									$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $value);
-									break;
-								case 'SELECT_MULTIPLE':
-									$values = $_REQUEST['fakID_' . $akID];
-									$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $values);
-									break;
-
-							}						
+							$type = $fak->getAttributeType();
+							$cnt = $type->getController();
+							$cnt->setAttributeKey($fak);
+							$cnt->searchForm($fileList);
+							break;
 					}
 				}
 			}

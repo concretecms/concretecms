@@ -121,7 +121,27 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$db->query("delete from CollectionAttributeValues where cID = ? and cvID = ?", $v2);
 			}
 		}
+		
+		public function reindex() {
+			Loader::model('attribute/categories/collection');
+			$attribs = CollectionAttributeKey::getAttributes($this->getCollectionID(), $this->getVersionID(), 'getSearchIndexValue');
+			$db = Loader::db();
 	
+			$db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
+			$searchableAttributes = array('cID' => $this->getCollectionID());
+			$columns = $db->MetaColumns('CollectionSearchIndexAttributes');
+			$rs = $db->Execute('select * from CollectionSearchIndexAttributes where cID = -1');
+	
+			foreach($attribs as $akHandle => $value) {
+				$ak = CollectionAttributeKey::getByHandle($akHandle);
+				if ($ak->isAttributeKeySearchable() && isset($columns[strtoupper($akHandle)])) {
+					$searchableAttributes[$akHandle] = $value;
+				}
+			}
+	
+			$q = $db->GetInsertSQL($rs, $searchableAttributes);
+			$db->Execute($q);
+		}
 		
 		public function getAttributeValueObject($ak, $createIfNotFound = false) {
 			$db = Loader::db();

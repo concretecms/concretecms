@@ -6,6 +6,8 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 	private $akSelectAllowMultipleValues;
 	private $akSelectAllowOtherValues;
 	private $akSelectOptionDisplayOrder;
+
+	protected $searchIndexFieldDefinition = 'X NULL';
 	
 	public function type_form() {
 		$path1 = $this->getView()->getAttributeTypeURL('type_form.js');
@@ -132,9 +134,49 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 	
 	}
 	
+	public function getDisplayValue() {
+		$list = $this->getSelectedOptions();
+		$html = '';
+		foreach($list as $l) {
+			$html .= $l . '<br/>';
+		}
+		return $html;
+	}
+	
+	public function searchForm($list) {
+		$options = $this->request('atSelectOptionID');
+		$optionText = array();
+		$db = Loader::db();
+		$tbl = $this->attributeKey->getIndexedSearchTable();
+		foreach($options as $id) {
+			$opt = SelectAttributeTypeOption::getByID($id);
+			$optionText[] = $opt->getSelectAttributeOptionValue();
+		}
+		$i = 0;
+		foreach($optionText as $val) {
+			$val = $db->quote('%' . $val . '||%');
+			$multiString .= 'REPLACE(' . $tbl . '.' . $this->attributeKey->getAttributeKeyHandle() . ', "\n", "||") like ' . $val . ' ';
+			if (($i + 1) < count($optionText)) {
+				$multiString .= 'OR ';
+			}
+			$i++;
+		}
+		$list->filter(false, $multiString);
+		return $list;
+	}
+	
 	public function getValue() {
 		$list = $this->getSelectedOptions();
 		return $list;	
+	}
+	
+	public function getSearchIndexValue() {
+		$str = "\n";
+		$list = $this->getSelectedOptions();
+		foreach($list as $l) {
+			$str .= $l . "\n";
+		}
+		return $str;
 	}
 	
 	public function getSelectedOptions() {

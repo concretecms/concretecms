@@ -5,6 +5,8 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 
 	public $helpers = array('form');
 	
+	protected $searchIndexFieldDefinition = 'T NULL';
+
 	public function saveKey() {
 		$ak = $this->getAttributeKey();
 		
@@ -21,6 +23,32 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 	
 	public function type_form() {
 		$this->load();
+	}
+
+	public function getDisplayValue() {
+		$v = $this->getValue();
+		$v2 = date('H:i:s', strtotime($v));
+		$r = '';
+		if ($v2 != '00:00:00') {
+			$r .= date(t('g:i A'), strtotime($v));
+			$r .= t(' on ' );
+		}
+		$r .= date(t('m/d/Y'), strtotime($v));
+		return $r;
+	}
+	
+	public function searchForm($list) {
+		$dateFrom = $this->request('from');
+		$dateTo = $this->request('to');
+		if ($dateFrom) {
+			$dateFrom = date('Y-m-d', strtotime($dateFrom));
+			$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $dateFrom, '>=');
+		}
+		if ($dateTo) {
+			$dateTo = date('Y-m-d', strtotime($dateTo));
+			$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $dateTo, '<=');
+		}
+		return $list;
 	}
 	
 	public function form() {
@@ -41,7 +69,6 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 	}
 
 	public function search() {
-		print 'COMEON';
 		$dt = Loader::helper('form/date_time');
 		$html = $dt->date($this->field('from'), false, false);
 		$html .= ' ' . t('to') . ' ';
