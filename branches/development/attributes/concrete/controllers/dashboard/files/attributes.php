@@ -1,114 +1,117 @@
-<?
+<?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
-Loader::model('file_attributes');
+Loader::model('attribute/categories/file');
 
 class DashboardFilesAttributesController extends Controller {
-
+	
+	public $helpers = array('form');
+	
+	public function __construct() {
+		parent::__construct();
+		$otypes = AttributeType::getList();
+		$types = array();
+		foreach($otypes as $at) {
+			$types[$at->getAttributeTypeID()] = $at->getAttributeTypeName();
+		}
+		$this->set('types', $types);
+	}
+	
+	public function delete($akID, $token = null){
+		try {
+			$ak = FileAttributeKey::getByID($akID); 
+				
+			if(!($ak instanceof FileAttributeKey)) {
+				throw new Exception(t('Invalid attribute ID.'));
+			}
+	
+			$valt = Loader::helper('validation/token');
+			if (!$valt->validate('delete_attribute', $token)) {
+				throw new Exception($valt->getErrorMessage());
+			}
+			
+			$ak->delete();
+			
+			$this->redirect("/dashboard/files/attributes", 'attribute_deleted');
+		} catch (Exception $e) {
+			$this->set('error', $e);
+		}
+	}
+	
+	public function select_type() {
+		$atID = $this->request('atID');
+		$at = AttributeType::getByID($atID);
+		$this->set('type', $at);
+		$this->set('category', AttributeKeyCategory::getByHandle('file'));
+	}
+	
 	public function view() {
-		$this->set( "attribs", FileAttributeKey::getList() );
-		
-		if ($_REQUEST['attribute_deleted']) {
-			$message = t('File Attribute Deleted.');
-		}elseif($_REQUEST['attribute_created']) {
-			$message = t("File Attribute Key Created.");		
-		}if($_REQUEST['attribute_updated']) {
-			$message = t("File Attribute Key Updated.");		
+		$attribs = FileAttributeKey::getList();
+		$this->set('attribs', $attribs);
+	}
+	
+	public function add() {
+		$this->select_type();
+		$type = $this->get('type');
+		$cnt = $type->getController();
+		$e = $cnt->validateKey();
+		if ($e->has()) {
+			$this->set('error', $e);
+		} else {
+			$ak = FileAttributeKey::add($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), 0, 1, $this->post('atID'));
+			$cnt->setAttributeKey($ak);
+			$cnt->saveKey();
+			$this->redirect('/dashboard/files/attributes/', 'attribute_created');
 		}
-		$this->set( "message", $message );
-		$this->set("showUserAdded", false);	
 	}
-	
-	public function show_user_added() {
-		$this->set( "attribs", FileAttributeKey::getUserAddedList() );
-		$this->set("showUserAdded", true);
-	}
-	
-	public function add(){
-		$this->set( "pageMode", 'add' );
-		
-		if($_POST['submitted']) $this->save();		
-	}	
 
-	public function edit(){
-		$fak=FileAttributeKey::get( intval($_REQUEST['fakID']) );
-		if(!$fak)
-			throw new Exception( t('No file attribute key specified') );
-		$this->set( "fak", $fak );
-		$this->set( "pageMode", 'edit' );
-		
-		if($_POST['submitted']) $this->save($fak);
+	public function attribute_deleted() {
+		$this->set('message', t('File Attribute Deleted.'));
 	}
 	
-	private function save($fak=NULL){
-		$txt = Loader::helper('text');
-		$valt = Loader::helper('validation/token');
-		
-		$akHandle = $txt->sanitize($_POST['akHandle']);
-		$akName = $txt->sanitize($_POST['akName']); 
-		$akType = $txt->sanitize($_POST['akType']);
-		$akSearchable = $_POST['akSearchable'] ? 1 : 0;
-		
-		//grab the attribute key possible values
-		$akValuesArray=array(); 
-		foreach($_POST as $key=>$newVal){ 
-			if( !strstr($key,'akValue_') || $newVal=='TEMPLATE' ) continue; 
-			$originalVal=$_REQUEST['akValueOriginal_'.str_replace('akValue_','',$key)];		
-			$akValuesArray[]=$newVal; 
-			//change all previous answers
-			if($fak && $originalVal) $fak->renameValue($originalVal,$newVal);
-		} 
-		$akValuesArray=array_unique($akValuesArray);
-		$akValues=join("\n",$akValuesArray);
-		
-		$error = array();
-		if (!$akHandle) {
-			$error[] = t("Handle required.");
-		}
-		if (!$akName) {
-			$error[] = t("Name required.");
-		}
-		if (!$akType) {
-			$error[] = t("Type required.");
-		}
-		if ($akType == 'SELECT' && !$akValues) {
-			$error[] = t("A select attribute must have at least one option.");
-		}
-		
-		if (!$valt->validate('add_or_update_attribute')) {
-			$error[] = $valt->getErrorMessage();
-		}
-		
-		if (FileAttributeKey::inUse($akHandle)) {
-			if ((!is_object($fak)) || ($fak->getAttributeKeyHandle() != $akHandle)) {
-				$error[] = t("An attribute with the handle %s already exists.", $akHandle);
-			}
-		}
-		
-		if( count($error) == 0 ){
-			if($fak && $_REQUEST['edit']){ 
-				$fak = $fak->update($akHandle, $akName, $akValues, $akType); 
-				$this->redirect('/dashboard/files/attributes/?attribute_updated=1');
-			}elseif($_REQUEST['add']){
-				$fak = FileAttributeKey::add($akHandle, $akName, $akValues, $akType, 0);
-				$this->redirect('/dashboard/files/attributes/?attribute_created=1');				
-			}
-		}	
-		
-		$this->set( "error", $error );	
+	public function attribute_created() {
+		$this->set('message', t('File Attribute Created.'));
+	}
+
+	public function attribute_updated() {
+		$this->set('message', t('File Attribute Updated.'));
 	}
 	
-	public function delete(){
-		$valt = Loader::helper('validation/token');
-		if ( $valt->validate('delete_attribute') ) { 
-			$fa = FileAttributeKey::get( intval($_REQUEST['fakID']) );
-			if (is_object($fa)) {
-				$fa->delete();
-				$this->redirect('/dashboard/files/attributes/?attribute_deleted=1');
+	public function attribute_type_passthru($atID, $method) {
+		$args = func_get_args();
+		$type = AttributeType::getByID($atID);
+		$cnt = $type->getController();
+		
+		$method = $args[1];
+		
+		array_shift($args);
+		array_shift($args);
+		
+		call_user_func_array(array($cnt, 'action_' . $method), $args);
+	}
+	
+	public function edit($akID = 0) {
+		if ($this->post('akID')) {
+			$akID = $this->post('akID');
+		}
+		$key = FileAttributeKey::getByID($akID);
+		$type = $key->getAttributeType();
+		$this->set('key', $key);
+		$this->set('type', $type);
+		$this->set('category', AttributeKeyCategory::getByHandle('file'));
+		
+		if ($this->isPost()) {
+			$cnt = $type->getController();
+			$cnt->setAttributeKey($key);
+			$e = $cnt->validateKey();
+			if ($e->has()) {
+				$this->set('error', $e);
+			} else {
+				$key->update($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('atID'));
+				$cnt->saveKey();
+				$this->redirect('/dashboard/files/attributes', 'attribute_updated');
 			}
 		}
-		$this->redirect('/dashboard/files/attributes/');
 	}
+	
 }
-
-?>

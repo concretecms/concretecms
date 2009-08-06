@@ -15,7 +15,12 @@ class DefaultAttributeTypeController extends AttributeTypeController  {
 		}
 		print '<textarea name="' . $this->field('value') . '" style="width: 100%; height: 40px">' . $value . '</textarea>';
 	}
-
+	
+	public function search() {
+		$f = Loader::helper('form');
+		print $f->text($this->field('value'), $value);
+	}
+	
 	// run when we call setAttribute(), instead of saving through the UI
 	public function saveValue($value) {
 		$db = Loader::db();

@@ -3,7 +3,7 @@ var ccm_totalAdvancedSearchFields = 0;
 var ccm_alLaunchType;
 var ccm_alActiveAssetField = "";
 var ccm_alProcessorTarget = "";
-var ccm_alDebug = false;
+var ccm_alDebug = true;
 
 ccm_triggerSelectFile = function(fID, af) {
 	if (af == null) {
@@ -553,13 +553,13 @@ ccm_activateFileManagerFields = function(fieldset) {
 		//$(this).parents('tr').find('.ccm-file-search-option').hide();
 		
 		//all of the options are predefined above, this will copy it
-		var itemToCopy = $('#ccm-file-search-field-base-elements .ccm-file-search-option[search-field=' + selected + ']');
+		var itemToCopy = $('#ccm-file-search-field-base-elements span[search-field=' + selected + ']');
 		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-selected-field-content").html('');
 		itemToCopy.clone().appendTo("#ccm-file-search-field-set" + fieldset + " .ccm-file-selected-field-content");
 		
-		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-selected-field-content .ccm-file-search-option").show();
+		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-selected-field-content .ccm-search-option").show();
 
-		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option[search-field=date_added] input").each(function() {
+		$("#ccm-file-search-field-set" + fieldset + " .ccm-search-option[search-field=date_added] input").each(function() {
 			if ($(this).attr('id') == 'date_from') {
 				$(this).attr('id', 'date_from' + fieldset);
 			} else if ($(this).attr('id') == 'date_to') {
@@ -567,15 +567,15 @@ ccm_activateFileManagerFields = function(fieldset) {
 			}
 		});
 	
-		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option-type-date input").each(function() {
+		$("#ccm-file-search-field-set" + fieldset + " .ccm-search-option-type-date input").each(function() {
 			$(this).attr('id', $(this).attr('id') + fieldset);
 		});
 		
 		
-		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option[search-field=date_added] input").datepicker({
+		$("#ccm-file-search-field-set" + fieldset + " .ccm-search-option[search-field=date_added] input").datepicker({
 			showAnim: 'fadeIn'
 		});
-		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option-type-date input").datepicker({
+		$("#ccm-file-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").datepicker({
 			showAnim: 'fadeIn'
 		});
 		

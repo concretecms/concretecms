@@ -19,6 +19,11 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 		$cb = Loader::helper('form')->checkbox($this->field('value'), 1, $checked);
 		print $cb . ' ' . t('Yes');
 	}
+	
+	public function search() {
+		$this->form();
+	}
+
 
 	// run when we call setAttribute(), instead of saving through the UI
 	public function saveValue($value) {

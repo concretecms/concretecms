@@ -11,7 +11,7 @@ $searchFields = array(
 );
 
 Loader::model('file_attributes');
-//$searchFieldAttributes = FileAttributeKey::getList();
+$searchFieldAttributes = FileAttributeKey::getSearchableList();
 foreach($searchFieldAttributes as $ak) {
 	$searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyName();
 }
@@ -37,32 +37,31 @@ $s1 = FileSet::getMySets();
 	
 	<div id="ccm-file-search-field-base-elements" style="display: none">
 	
-		<span class="ccm-file-search-option" search-field="size">
+		<span class="ccm-search-option" search-field="size">
 		<?=$form->text('size_from', array('style' => 'width: 30px'))?>
 		<?=t('to')?>
 		<?=$form->text('size_to', array('style' => 'width: 30px'))?>
 		KB
 		</span>
 	
-		<span class="ccm-file-search-option"  search-field="type">
+		<span class="ccm-search-option"  search-field="type">
 		<?=$form->select('type', $types)?>
 		</span>
 	
-		<span class="ccm-file-search-option"  search-field="extension">
+		<span class="ccm-search-option"  search-field="extension">
 		<?=$form->select('extension', $extensions)?>
 		</span>
 
-		<span class="ccm-file-search-option"  search-field="date_added">
+		<span class="ccm-search-option"  search-field="date_added">
 		<?=$form->text('date_from', array('style' => 'width: 86px'))?>
 		<?=t('to')?>
 		<?=$form->text('date_to', array('style' => 'width: 86px'))?>
 		</span>
 		
-		<? foreach($searchFieldAttributes as $sfa) { ?>
-			<span class="ccm-file-search-option ccm-file-search-option-type-<?=strtolower($sfa->getAttributeKeyType())?>" search-field="<?=$sfa->getAttributeKeyID()?>">
-			<?=$sfa->outputSearchHTML()?>
-			</span>
-		<? } ?>	
+		<? foreach($searchFieldAttributes as $sfa) { 
+			$sfa->render('search'); ?>
+		<? } ?>
+		
 	</div>
 	
 	<form method="get" class="ccm-dashboard-file-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">

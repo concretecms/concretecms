@@ -22,7 +22,7 @@ if (is_object($key)) {
 <tr>
 	<td style="padding-right: 15px"><?=$form->text('akHandle', $akHandle, array('style' => 'width: 100%'))?></td>
 	<td style="padding-right: 15px"><?=$form->text('akName', $akName, array('style' => 'width: 100%'))?></td>
-	<td style="padding-right: 10px"><?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <?=t('Yes, include this field in the search index.');?></td>
+	<td style="padding-right: 10px"><?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <?=t('Yes, include this field in the search interface.');?></td>
 </tr>
 </table>
 

@@ -18,15 +18,21 @@ class AttributeKey extends Object {
 	public function getAttributeKeyID() {return $this->akID;}
 	
 	/** 
-	 * Returns whether the attribute key is searchable */
+	 * Returns whether the attribute key is searchable 
+	 */
 	public function isAttributeKeySearchable() {return $this->akIsSearchable;}
+
+	/** 
+	 * Returns whether the attribute key is one that was automatically created by a process. 
+	 */
+	public function isAttributeKeyAutoCreated() {return $this->akIsAutoCreated;}
 	
 	/** 
 	 * Loads the required attribute fields for this instantiated attribute
 	 */
 	protected function load($akID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsSearchable, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ?', array($akID));
+		$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsSearchable, akIsAutoCreated, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ?', array($akID));
 		$this->setPropertiesFromArray($row);
 	}
 
@@ -40,9 +46,13 @@ class AttributeKey extends Object {
 	/** 
 	 * Returns a list of all attributes of this category
 	 */
-	protected static function getList($akCategoryHandle) {
+	protected static function getList($akCategoryHandle, $searchableOnly = false) {
 		$db = Loader::db();
-		$r = $db->Execute('select akID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akCategoryHandle = ?', array($akCategoryHandle));
+		$q = 'select akID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akCategoryHandle = ?';
+		if ($searchableOnly) {
+			$q .= ' and akIsSearchable = 1 ';
+		}
+		$r = $db->Execute($q, array($akCategoryHandle));
 		$list = array();
 		$txt = Loader::helper('text');
 		$className = $txt->camelcase($akCategoryHandle);
@@ -58,14 +68,25 @@ class AttributeKey extends Object {
 	/** 
 	 * Adds an attribute key. 
 	 */
-	protected function add($akCategoryHandle, $akHandle, $akName, $akIsSearchable, $atID) {
+	protected function add($akCategoryHandle, $akHandle, $akName, $akIsSearchable, $akIsAutoCreated, $akIsEditable, $atID) {
+		$_akIsSearchable = 1;
+		$_akIsAutoCreated = 1;
+		$_akIsEditable = 1;
+		
 		if (!$akIsSearchable) {
-			$akIsSearchable = 0;
+			$_akIsSearchable = 0;
 		}
+		if (!$akIsAutoCreated) {
+			$_akIsAutoCreated = 0;
+		}
+		if (!$akIsEditable) {
+			$_akIsEditable = 0;
+		}
+		
 		$db = Loader::db();
 		$akCategoryID = $db->GetOne("select akCategoryID from AttributeKeyCategories where akCategoryHandle = ?", $akCategoryHandle);
-		$a = array($akHandle, $akName, $akIsSearchable, $atID, $akCategoryID);
-		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, atID, akCategoryID) values (?, ?, ?, ?, ?)", $a);
+		$a = array($akHandle, $akName, $_akIsSearchable, $_akIsAutoCreated, $_akIsEditable, $atID, $akCategoryID);
+		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsAutoCreated, akIsEditable, atID, akCategoryID) values (?, ?, ?, ?, ?, ?, ?)", $a);
 		
 		if ($r) {
 			$akID = $db->Insert_ID();
@@ -157,4 +178,19 @@ class AttributeKey extends Object {
 		}
 		return $av;
 	}
+
+	/** 
+	 * Saves an attribute using its stock form.
+	 */
+	public function saveAttributeForm($obj) {
+		$this->saveAttribute($obj);
+	}
+	
+	/** 
+	 * Sets an attribute directly with a passed value.
+	 */
+	public function setAttribute($obj, $value) {
+		$this->saveAttribute($obj, $value);
+	}
+
 }

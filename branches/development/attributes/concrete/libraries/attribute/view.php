@@ -61,6 +61,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * Renders a particular view for an attribute
 		 */
 		public function render($view) {
+
+			if (file_exists(DIR_FILES_ELEMENTS . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_header.php')) {
+				include(DIR_FILES_ELEMENTS . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_header.php');
+			} else if (file_exists(DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_header.php')) {
+				include(DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_header.php');
+			}
+			
 			$this->controller->setupAndRun($view);
 			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
@@ -69,7 +76,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (is_object($attributeKey)) {
 				$this->controller->set('akID', $this->attributeKey->getAttributeKeyID());
 			}
-			
+
 			if (file_exists(DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php')) {
 				$file = DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $view . '.php';
 			}
@@ -90,6 +97,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 			if (isset($file)) {
 				include($file);
-			}	
+			}
+
+			if (file_exists(DIR_FILES_ELEMENTS . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_footer.php')) {
+				include(DIR_FILES_ELEMENTS . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_footer.php');
+			} else if (file_exists(DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_footer.php')) {
+				include(DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_footer.php');
+			}
+
 		}		
 	}
