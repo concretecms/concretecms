@@ -216,19 +216,10 @@ class FileList extends DatabaseItemList {
 	}
 	
 	//$key can be handle or fak id
-	public function sortByAttributeKey($key,$order='asc'){
-		if(!is_int($key) && intval($key)!=0){
-			$fak = FileAttributeKey::getByHandle($key);
-			if(!$fak)
-				throw new Exception('File list sorting attribute key not found - '.$key );
-			$sortFileAttrKeyId=$fak->getAttributeKeyID();
-		}else{
-			$sortFileAttrKeyId=intval($key);	
-		} 
-		$this->addToQuery(' left join FileAttributeValues sortAttr on (sortAttr.fID = fv.fID and fv.fvID = sortAttr.fvID and sortAttr.fakID = '.$sortFileAttrKeyId.') ');
-		$this->sortBy('sortAttr.value ', $order);	
-	} 
-	
+	public function sortByAttributeKey($key,$order='asc') {
+		$this->sortBy($key, $order); // this is handled natively now
+	}
+			
 	public static function getExtensionList() {
 		$db = Loader::db();
 		$col = $db->GetCol('select distinct(trim(fvExtension)) as extension from FileVersions where fvIsApproved = 1 and fvExtension <> ""');
