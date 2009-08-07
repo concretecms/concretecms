@@ -43,8 +43,10 @@ class FileAttributeKey extends AttributeKey {
 	
 	public function getAttributeValue($avID) {
 		$av = FileAttributeValue::getByID($avID);
-		$av->setAttributeKey($this);
-		return $av->getValue();
+		if (is_object($av)) {
+			$av->setAttributeKey($this);
+			return $av->getValue();
+		}
 	}
 	
 	public static function getByID($akID) {
@@ -151,7 +153,7 @@ class FileAttributeValue extends AttributeValue {
 		$db = Loader::db();
 		$db->Execute('delete from FileAttributeValues where fID = ? and fvID = ? and akID = ? and avID = ?', array(
 			$this->f->getFileID(), 
-			$this->c->getFileVersionID(),
+			$this->f->getFileVersionID(),
 			$this->attributeKey->getAttributeKeyID(),
 			$this->getAttributeValueID()
 		));

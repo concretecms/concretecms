@@ -98,7 +98,8 @@ div#ccm-file-properties table th, div#ccm-file-properties table td {vertical-ali
 div#ccm-file-properties table th {text-align: right}
 div#ccm-file-properties table th a { color: #999;text-decoration: underline}
 div#ccm-file-properties table td.ccm-file-manager-editable-field-central {border-right: 0px}
-div#ccm-file-properties table td.ccm-file-manager-editable-field-save img {display: none}
+div#ccm-file-properties table img.ccm-file-manager-editable-field-save-button {display: none}
+div#ccm-file-properties table img.ccm-file-manager-editable-field-loading {display: none}
 div#ccm-file-properties table div.ccm-file-manager-field-none {color: #aaa;}
 tr.ccm-file-manager-editable-field textarea {width: 100%}
 tr.ccm-file-manager-editable-field textarea {height: 100px}

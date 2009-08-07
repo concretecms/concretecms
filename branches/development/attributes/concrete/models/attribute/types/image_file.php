@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class ImageFileAttributeTypeController extends AttributeTypeController  {
 
-	protected $searchIndexFieldDefinition = 'I DEFAULT 0 NOTNULL';
+	protected $searchIndexFieldDefinition = 'I DEFAULT 0 NULL';
 
 	public function getValue() {
 		$db = Loader::db();

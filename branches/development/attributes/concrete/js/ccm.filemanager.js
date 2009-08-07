@@ -618,6 +618,7 @@ ccm_alActiveEditableProperties = function() {
 		var trow = $(this);
 		$(this).find('a').click(function() {
 			trow.find('.ccm-file-manager-editable-field-text').hide();
+			trow.find('.ccm-file-manager-editable-field-clear-button').hide();
 			trow.find('.ccm-file-manager-editable-field-form').show();
 			trow.find('.ccm-file-manager-editable-field-save-button').show();
 		});
@@ -627,14 +628,23 @@ ccm_alActiveEditableProperties = function() {
 			return false;
 		});
 		
-		trow.find('.ccm-file-manager-editable-field-save a').click(function() {
+		trow.find('.ccm-file-manager-editable-field-save-button').parent().click(function() {
 			ccm_alSubmitEditableProperty(trow);
 		});
+
+		trow.find('.ccm-file-manager-editable-field-clear-button').parent().unbind();
+		trow.find('.ccm-file-manager-editable-field-clear-button').parent().click(function() {
+			trow.find('form input[name=task]').val('clear_extended_attribute');
+			ccm_alSubmitEditableProperty(trow);
+			return false;
+		});
+
 	});
 }
 
 ccm_alSubmitEditableProperty = function(trow) {
 	trow.find('.ccm-file-manager-editable-field-save-button').hide();
+	trow.find('.ccm-file-manager-editable-field-clear-button').hide();
 	trow.find('.ccm-file-manager-editable-field-loading').show();
 	trow.find('form').ajaxSubmit(function(resp) {
 		// resp is new HTML to display in the div
@@ -644,6 +654,7 @@ ccm_alSubmitEditableProperty = function(trow) {
 		trow.find('.ccm-file-manager-editable-field-form').hide();
 		trow.find('.ccm-file-manager-editable-field-save-button').hide();
 		trow.find('.ccm-file-manager-editable-field-text').show();
+		trow.find('.ccm-file-manager-editable-field-clear-button').show();
 		trow.find('td').show('highlight', {
 			color: '#FFF9BB'
 		});

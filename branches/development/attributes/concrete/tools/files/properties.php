@@ -69,6 +69,19 @@ if ($_POST['task'] == 'update_extended_attribute' && $fp->canWrite() && (!$previ
 	exit;
 }
 
+if ($_POST['task'] == 'clear_extended_attribute' && $fp->canWrite() && (!$previewMode)) {
+	$fv = $f->getVersionToModify();
+	$fakID = $_REQUEST['fakID'];
+	$value = '';
+	$ak = FileAttributeKey::get($fakID);
+	$fv->clearAttribute($ak);
+	
+	$val = $fv->getAttributeValueObject($ak);
+	print '<div class="ccm-file-manager-field-none">' . t('None') . '</div>';
+	exit;
+}
+
+
 function printCorePropertyRow($title, $field, $value, $formText) {
 	global $previewMode, $f, $fp;
 	if ($value == '') {
@@ -138,6 +151,7 @@ function printFileAttributeRow($ak, $fv) {
 		</form>
 		</td>
 		<td class="ccm-file-manager-editable-field-save"><a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/edit_small.png" width="16" height="16" class="ccm-file-manager-editable-field-save-button" /></a>
+		<a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/close.png" width="16" height="16" class="ccm-file-manager-editable-field-clear-button" /></a>
 		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-file-manager-editable-field-loading" />
 		</td>
 	</tr>';

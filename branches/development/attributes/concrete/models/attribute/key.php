@@ -164,7 +164,7 @@ class AttributeKey extends Object {
 		$addColumn = true;
 		
 		if ($prevHandle != false) {
-			if ($columns[strtoupper($prevHandle)]) {
+			if ($columns[strtoupper('ak_' . $prevHandle)]) {
 				$q = $dba->RenameColumnSQL($this->getIndexedSearchTable(), 'ak_' . $prevHandle, 'ak_' . $this->akHandle, $field);
 				$db->Execute($q[0]);
 				$addColumn = false;
@@ -172,7 +172,7 @@ class AttributeKey extends Object {
 		}
 		
 		if ($addColumn) {
-			if (!$columns[strtoupper($this->akHandle)]) {
+			if (!$columns[strtoupper('ak_' . $this->akHandle)]) {
 				$q = $dba->AddColumnSQL($this->getIndexedSearchTable(), 'ak_' . $field);
 				$db->Execute($q[0]);
 			}
