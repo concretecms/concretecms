@@ -58,9 +58,10 @@ class File extends Object {
 		$rs = $db->Execute('select * from FileSearchIndexAttributes where fID = -1');
 
 		foreach($attribs as $akHandle => $value) {
+			$column = 'ak_' . $akHandle;
 			$ak = FileAttributeKey::getByHandle($akHandle);
-			if ($ak->isAttributeKeySearchable() && isset($columns[strtoupper($akHandle)])) {
-				$searchableAttributes[$akHandle] = $value;
+			if ($ak->isAttributeKeySearchable() && isset($columns[strtoupper($column)])) {
+				$searchableAttributes[$column] = $value;
 			}
 		}
 

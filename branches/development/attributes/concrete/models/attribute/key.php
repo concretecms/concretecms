@@ -28,6 +28,11 @@ class AttributeKey extends Object {
 	public function isAttributeKeyAutoCreated() {return $this->akIsAutoCreated;}
 
 	/** 
+	 * Returns whether the attribute key is included in the standard search for this category. 
+	 */
+	public function isAttributeKeyColumnHeader() {return $this->akIsColumnHeader;}
+
+	/** 
 	 * Returns whether the attribute key is one that can be edited through the frontend. 
 	 */
 	public function isAttributeKeyEditable() {return $this->akIsEditable;}
@@ -37,7 +42,7 @@ class AttributeKey extends Object {
 	 */
 	protected function load($akID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsSearchable, akIsAutoCreated, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ?', array($akID));
+		$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsSearchable, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ?', array($akID));
 		$this->setPropertiesFromArray($row);
 	}
 
@@ -46,6 +51,10 @@ class AttributeKey extends Object {
 	 */
 	public function getAttributeType() {
 		return AttributeType::getByID($this->atID);
+	}
+	
+	public static function getColumnHeaderList() {
+		return self::getList('file', array('akIsColumnHeader' => 1));	
 	}
 
 	/** 
@@ -134,6 +143,12 @@ class AttributeKey extends Object {
 		}
 	}
 	
+	public function setAttributeKeyColumnHeader($r) {
+		$db = Loader::db();
+		$r = ($r == true) ? 1 : 0;
+		$db->Execute('update AttributeKeys set akIsColumnHeader = ? where akID = ?', array($r, $this->getAttributeKeyID()));
+	}
+	
 	public function updateSearchIndex($prevHandle = false) {
 		$type = $this->getAttributeType();
 		$cnt = $type->getController();
@@ -150,7 +165,7 @@ class AttributeKey extends Object {
 		
 		if ($prevHandle != false) {
 			if ($columns[strtoupper($prevHandle)]) {
-				$q = $dba->RenameColumnSQL($this->getIndexedSearchTable(), $prevHandle, $this->akHandle, $field);
+				$q = $dba->RenameColumnSQL($this->getIndexedSearchTable(), 'ak_' . $prevHandle, 'ak_' . $this->akHandle, $field);
 				$db->Execute($q[0]);
 				$addColumn = false;
 			}
@@ -158,7 +173,7 @@ class AttributeKey extends Object {
 		
 		if ($addColumn) {
 			if (!$columns[strtoupper($this->akHandle)]) {
-				$q = $dba->AddColumnSQL($this->getIndexedSearchTable(), $field);
+				$q = $dba->AddColumnSQL($this->getIndexedSearchTable(), 'ak_' . $field);
 				$db->Execute($q[0]);
 			}
 		}
@@ -178,7 +193,7 @@ class AttributeKey extends Object {
 			$dba = NewDataDictionary($db, DB_TYPE);
 			
 			if ($columns[strtoupper($this->akHandle)]) {
-				$q = $dba->DropColumnSQL($this->getIndexedSearchTable(), $this->akHandle);
+				$q = $dba->DropColumnSQL($this->getIndexedSearchTable(), 'ak_' . $this->akHandle);
 				$db->Execute($q[0]);
 				$addColumn = false;
 			}

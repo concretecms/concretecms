@@ -99,6 +99,17 @@ class DatabaseItemList extends ItemList {
 		}
 	}
 	
+	protected function setupAttributeSort() {
+		$l = call_user_func(array($this->attributeClass, 'getColumnHeaderList'));
+		foreach($l as $ak) {
+			$this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();
+		}
+		
+		if ($this->sortBy != '' && in_array('ak_' . $this->sortBy, $this->autoSortColumns)) {
+			$this->sortBy = 'ak_' . $this->sortBy;
+		}
+	}
+	
 	/** 
 	 * Returns an array of whatever objects extends this class (e.g. PageList returns a list of pages).
 	 */
@@ -107,6 +118,7 @@ class DatabaseItemList extends ItemList {
 		$q = $arr[0];
 		$v = $arr[1];
 		// handle order by
+		$this->setupAttributeSort();
 		$this->setupAutoSort();
 		$this->setupSortByString();
 		if ($this->sortByString != '') {
@@ -137,9 +149,31 @@ class DatabaseItemList extends ItemList {
 		$this->filters[] = array($column, $value, $comparison);
 	}
 	
-	protected function setupAttributeFilters($tbl) {
+	public function getSearchResultsClass($field) {
+		if ($field instanceof AttributeKey) {
+			$field = 'ak_' . $field->getAttributeKeyHandle();
+		}
+		return parent::getSearchResultsClass($field);
+	}
+
+	public function sortBy($key, $dir) {
+		if ($key instanceof AttributeKey) {
+			$key = 'ak_' . $key->getAttributeKeyHandle();
+		}
+		parent::sortBy($key, $dir);
+	}
+	
+	public function getSortByURL($column, $dir = 'asc', $baseURL = false) {
+		if ($column instanceof AttributeKey) {
+			$column = 'ak_' . $column->getAttributeKeyHandle();
+		}
+		return parent::getSortByURL($column, $dir, $baseURL);
+	}
+	
+	protected function setupAttributeFilters() {
 		$db = Loader::db();
 		$i = 1;
+		$tbl = call_user_func(array($this->attributeClass, 'getIndexedSearchTable'));
 		$this->addToQuery("left join $tbl on ({$tbl}.fID = fv.fID)");
 		foreach($this->attributeFilters as $caf) {
 			$this->filter($tbl . '.' . $caf[0], $caf[1], $caf[2]);
@@ -147,7 +181,7 @@ class DatabaseItemList extends ItemList {
 	}
 
 	public function filterByAttribute($column, $value, $comparison = '=') {
-		$this->attributeFilters[] = array($column, $value, $comparison);
+		$this->attributeFilters[] = array('ak_' . $column, $value, $comparison);
 	}
 	
 

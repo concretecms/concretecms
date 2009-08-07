@@ -32,12 +32,14 @@
 			<th class="ccm-file-list-filename <?=$fileList->getSearchResultsClass('fvTitle')?>"><a href="<?=$fileList->getSortByURL('fvTitle', 'asc', $bu)?>"><?=t('Title')?></a></th>
 			<th class="<?=$fileList->getSearchResultsClass('fDateAdded')?>"><a href="<?=$fileList->getSortByURL('fDateAdded', 'asc', $bu)?>"><?=t('Added')?></a></th>
 			<th class="<?=$fileList->getSearchResultsClass('fvDateAdded')?>"><a href="<?=$fileList->getSortByURL('fvDateAdded', 'asc', $bu)?>"><?=t('Active Version')?></a></th>
-			<th class="<?=$fileList->getSearchResultsClass('fvSize')?>"><a href="<?=$fileList->getSortByURL('fvSize', 'asc', $bu)?>"><?=t('Size')?></a> <a href="javascript:void(0)" id="ccm-file-search-add-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" style="float: right"/></a></th>
+			<th class="<?=$fileList->getSearchResultsClass('fvSize')?>"><a href="<?=$fileList->getSortByURL('fvSize', 'asc', $bu)?>"><?=t('Size')?></a></th>
+			<? 
+			$slist = FileAttributeKey::getColumnHeaderList();
+			foreach($slist as $ak) { ?>
+				<th class="<?=$fileList->getSearchResultsClass($ak)?>"><a href="<?=$fileList->getSortByURL($ak, 'asc', $bu)?>"><?=$ak->getAttributeKeyName()?></a></th>
+			<? } ?>			
+			<th class="ccm-file-search-add-column-header"><a href="javascript:void(0)" id="ccm-file-search-add-column"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a></th>
 		</tr>
-		
-	
-	
-	
 	<?
 		foreach($files as $f) {
 			$pf = new Permissions($f);
@@ -69,7 +71,17 @@
 			<td><?=date('M d, Y g:ia', strtotime($f->getDateAdded()))?></td>
 			<td><?=date('M d, Y g:ia', strtotime($fv->getDateAdded()))?></td>
 			<td><?=$fv->getSize()?></td>
-						
+			<? 
+			$slist = FileAttributeKey::getColumnHeaderList();
+			foreach($slist as $ak) { ?>
+				<td><?
+				$vo = $fv->getAttributeValueObject($ak);
+				if (is_object($vo)) {
+					print $vo->getValue('display');
+				}
+				?></td>
+			<? } ?>		
+			<td>&nbsp;</td>		
 			<?
 		}
 
