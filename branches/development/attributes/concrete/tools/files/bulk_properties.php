@@ -109,23 +109,13 @@ if ($_POST['task'] == 'update_extended_attribute' && $fp->canWrite() && (!$previ
 	$value = ''; 
 	
 	$ak = FileAttributeKey::get($fakID);
-	
-	if ($ak->getAttributeKeyType() == 'DATE') {
-		$dt = Loader::helper('form/date_time');
-		$value = $dt->translate('fakID_' . $fakID);
-	} else if (is_array($_REQUEST['fakID_' . $fakID])) {
-		foreach($_REQUEST['fakID_' . $fakID] as $val) {
-			$value .= $val  . "\n";
-		}
-	} else {
-		$value = $_REQUEST['fakID_' . $fakID] ;
-	}
 	foreach($files as $f){
 		$fv=$f->getVersionToModify();
-		$fv->setAttribute($ak, $value);
+		$ak->saveAttributeForm($fv);
 	}
 	$fv->populateAttributes();
-	print $fv->getAttribute($ak, true) ;
+	$val = $fv->getAttributeValueObject($ak);
+	print $val->getValue('display');
 	
 	exit;
 } 
@@ -176,15 +166,19 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 
 function printFileAttributeRow($ak, $fv) {
 	global $previewMode, $f, $fp, $files, $form, $defaultPropertyVals; 
-	//$value = $fv->getAttribute($ak, true);
-	$value = $defaultPropertyVals['ak'.$ak->getAttributeKeyID()];
+	$vo = $fv->getAttributeValueObject($ak);
+	$value = '';
+	if (is_object($vo)) {
+		$value = $vo->getValue('display');
+	}
+	
 	if ($value == '') {
 		$text = '<div class="ccm-file-manager-field-none">' . t('None') . '</div>';
 	} else {
 		$text = $value;
 	}
 	if ($ak->isAttributeKeyEditable() && $fp->canWrite() && (!$previewMode)) { 
-	
+	$type = $ak->getAttributeType();
 	$hiddenFIDfields='';
 	foreach($files as $f) {
 		$hiddenFIDfields.=' '.$form->hidden('fID[]' , $f->getFileID()).' ';
@@ -198,8 +192,8 @@ function printFileAttributeRow($ak, $fv) {
 			<input type="hidden" name="fakID" value="' . $ak->getAttributeKeyID() . '" />
 			'.$hiddenFIDfields.'
 			<input type="hidden" name="task" value="update_extended_attribute" />
-			<div class="ccm-file-manager-editable-field-form ccm-file-manager-editable-field-type-' . strtolower($ak->getAttributeKeyType()) . '">
-			' . $ak->outputHTML($fv) . '
+			<div class="ccm-file-manager-editable-field-form ccm-file-manager-editable-field-type-' . strtolower($type->getAttributeTypeHandle()) . '">
+			' . $ak->render('form', $vo, true) . '
 			</div>
 		</form>
 		</td>

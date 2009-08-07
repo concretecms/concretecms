@@ -97,7 +97,7 @@ class FileVersion extends Object {
 		return $this->fvExtension;
 	}
 	
-	protected function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0) {
+	public function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0) {
 		$db = Loader::db();
 		$db->Execute('insert into FileVersionLog (fID, fvID, fvUpdateTypeID, fvUpdateTypeAttributeID) values (?, ?, ?, ?)', array(
 			$this->getFileID(),
@@ -211,12 +211,20 @@ class FileVersion extends Object {
 					$updates[] = t('Tags');
 					break;
 				case FileVersion::UT_EXTENDED_ATTRIBUTE:
-					$updates[] = $db->GetOne("select akName from AttributeKeys where akID = ?", array($a['fvUpdateTypeAttributeID']));
+					$val = $db->GetOne("select akName from AttributeKeys where akID = ?", array($a['fvUpdateTypeAttributeID']));
+					if ($val != '') {
+						$updates[] = $val;
+					}
 					break;
 			}
 		}
 		$updates = array_unique($updates);
-		return $updates;
+		$updates1 = array();
+		foreach($updates as $val) {
+			// normalize the keys
+			$updates1[] = $val;
+		}
+		return $updates1;
 	}
 	
 	public function updateTitle($title) {
@@ -451,9 +459,11 @@ class FileVersion extends Object {
 		if (!is_object($ak)) {
 			$ak = FileAttributeKey::getByHandle($ak);
 		}
-		$ak->setAttribute($this, $value);
-		$fo = $this->getFile();
-		$fo->refreshCache();
+		if (is_object($ak)) {
+			$ak->setAttribute($this, $value);
+			$fo = $this->getFile();
+			$fo->refreshCache();
+		}
 	}
 
 	public function getAttributeValueObject($ak, $createIfNotFound = false) {

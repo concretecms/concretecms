@@ -109,9 +109,7 @@ class FileAttributeKey extends AttributeKey {
 			'akID' => $this->getAttributeKeyID(), 
 			'avID' => $av->getAttributeValueID()
 		), array('fID', 'fvID', 'akID'));
-		if (is_object($ak)) {
-			$this->logVersionUpdate(FileVersion::UT_EXTENDED_ATTRIBUTE, $ak->getAttributeKeyID());
-		}
+		$f->logVersionUpdate(FileVersion::UT_EXTENDED_ATTRIBUTE, $this->getAttributeKeyID());
 		$fo = $f->getFile();
 		$fo->reindex();
 		$f->populateAttributes();
