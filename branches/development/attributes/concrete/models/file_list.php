@@ -13,6 +13,7 @@ class FileList extends DatabaseItemList {
 	protected $attributeFilters = array();
 	protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fDateAdded', 'fvDateAdded', 'fvSize');
 	protected $itemsPerPage = 10;
+	protected $attributeClass = 'FileAttributeKey';
 	
 	/* magic method for filtering by page attributes. */
 	public function __call($nm, $a) {
@@ -208,7 +209,7 @@ class FileList extends DatabaseItemList {
 		if(!$this->queryCreated){
 			$this->setBaseQuery();
 			$this->filter('fvIsApproved', 1);
-			$this->setupAttributeFilters(FileAttributeKey::getIndexedSearchTable());
+			$this->setupAttributeFilters();
 			$this->setupFilePermissions();
 			$this->queryCreated=1;
 		}

@@ -22,6 +22,7 @@ var ccmi18n = {
 	marketplaceLoginSuccessMsg: '<?=t('<p>You have successfully logged into the concrete5 Marketplace.</p>')?>',
 	marketplaceLogoutSuccessMsg: '<?=t('<p>You are now logged out of concrete5 Marketplace.</p>')?>',
 	deleteAttributeValue: '<?=t('Are you sure you want to remove this value?')?>',
+	customizeSearch: '<?=t('Customize Search')?>',
 	ok: '<?=t('Ok')?>'
 	
 }

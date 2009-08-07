@@ -26,6 +26,11 @@ class AttributeKeyCategory extends Object {
 	
 	public function getAttributeKeyCategoryID() {return $this->akCategoryID;}
 	public function getAttributeKeyCategoryHandle() {return $this->akCategoryHandle;}
+	
+	public function clearAttributeKeyCategoryColumnHeaders() {
+		$db = Loader::db();
+		$db->Execute('update AttributeKeys set akIsColumnHeader = 0 where akCategoryID = ?', $this->akCategoryID);
+	}
 		
 
 }

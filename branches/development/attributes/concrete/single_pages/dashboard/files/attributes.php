@@ -1,6 +1,6 @@
 
 <? if ($this->controller->getTask() != 'select_type' && $this->controller->getTask() != 'add' && $this->controller->getTask() != 'edit') { ?>
-	<h1><span><?=t('Page Attributes')?></span></h1>
+	<h1><span><?=t('Attributes')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	<?
 	$attribs = FileAttributeKey::getList();
@@ -13,7 +13,7 @@
 
 <? if (isset($key)) { ?>
 
-<h1><span><?=t('Edit Page Attribute')?></span></h1>
+<h1><span><?=t('Edit Attribute')?></span></h1>
 <div class="ccm-dashboard-inner">
 
 <h2><?=t('Attribute Type')?></h2>

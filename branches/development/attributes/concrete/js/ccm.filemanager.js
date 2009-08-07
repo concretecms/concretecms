@@ -83,6 +83,7 @@ ccm_activateFileManager = function(altype) {
 			}
 	});
 	ccm_alSetupInPagePaginationAndSorting();
+	ccm_alSetupSortableColumnSelection();
 	ccm_alSetupCheckboxes();
 	ccm_alSetupFileProcessor();
 	ccm_alSetupSingleUploadForm();
@@ -407,6 +408,7 @@ ccm_activateSearchResults = function() {
 	$("#ccm-file-search-loading").hide();
 	$("#ccm-search-files").attr('disabled', false);
 	ccm_alSetupInPagePaginationAndSorting();
+	ccm_alSetupSortableColumnSelection();
 	ccm_alSetupCheckboxes();
 }
 
@@ -542,6 +544,19 @@ ccm_alSetupInPagePaginationAndSorting = function() {
 			$("div.ccm-dialog-content").attr('scrollTop', 0);
 		});
 		return false;
+	});
+}
+
+ccm_alSetupSortableColumnSelection = function() {
+	$("#ccm-file-search-add-column").unbind();
+	$("#ccm-file-search-add-column").click(function() {
+		jQuery.fn.dialog.open({
+			width: 400,
+			height: 350,
+			modal: false,
+			href: CCM_TOOLS_PATH + '/files/customize_search_columns/',
+			title: ccmi18n.customizeSearch				
+		});
 	});
 }
 

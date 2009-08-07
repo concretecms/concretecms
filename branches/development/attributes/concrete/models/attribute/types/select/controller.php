@@ -155,7 +155,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		$i = 0;
 		foreach($optionText as $val) {
 			$val = $db->quote('%' . $val . '||%');
-			$multiString .= 'REPLACE(' . $tbl . '.' . $this->attributeKey->getAttributeKeyHandle() . ', "\n", "||") like ' . $val . ' ';
+			$multiString .= 'REPLACE(' . $tbl . '.ak_' . $this->attributeKey->getAttributeKeyHandle() . ', "\n", "||") like ' . $val . ' ';
 			if (($i + 1) < count($optionText)) {
 				$multiString .= 'OR ';
 			}
