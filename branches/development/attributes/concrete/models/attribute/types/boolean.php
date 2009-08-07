@@ -6,7 +6,7 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 	// Field definition in the ADODB Format. We omit the first column (name) though, since it's
 	// automatically generated
 	
-	protected $searchIndexFieldDefinition = 'I1 DEFAULT 0 NOTNULL';
+	protected $searchIndexFieldDefinition = 'I1 DEFAULT 0 NULL';
 	
 	public function searchForm($list) {
 		$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), 1);

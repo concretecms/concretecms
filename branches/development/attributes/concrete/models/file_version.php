@@ -455,15 +455,14 @@ class FileVersion extends Object {
 		return false;
 	}
 
-	public function setAttribute($ak, $value) {
-		if (!is_object($ak)) {
-			$ak = FileAttributeKey::getByHandle($ak);
+	public function clearAttribute($ak) {
+		$db = Loader::db();
+		$cav = $this->getAttributeValueObject($ak);
+		if (is_object($cav)) {
+			$cav->delete();
 		}
-		if (is_object($ak)) {
-			$ak->setAttribute($this, $value);
-			$fo = $this->getFile();
-			$fo->refreshCache();
-		}
+		$fo = $this->getFile();
+		$fo->refreshCache();
 	}
 
 	public function getAttributeValueObject($ak, $createIfNotFound = false) {

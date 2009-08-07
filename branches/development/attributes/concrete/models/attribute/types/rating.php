@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class RatingAttributeTypeController extends AttributeTypeController  {
 
-	protected $searchIndexFieldDefinition = 'N 14.4 DEFAULT 0 NOTNULL';
+	protected $searchIndexFieldDefinition = 'N 14.4 DEFAULT 0 NULL';
 
 	public function getValue() {
 		$db = Loader::db();
