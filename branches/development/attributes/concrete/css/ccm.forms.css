@@ -125,6 +125,7 @@ ul.ccm-dialog-tabs li {border-right: 1px solid #dedede }
 
 .ccm-input-text, div.ccm-field-meta input, div.ccm-field-meta textarea, .ccm-input-date, .ccm-input-password {font-size: 12px; border: 1px solid #aaa; color: #444; padding: 4px}
 .ccm-input-date-wrapper input {width: 100px}
+.ccm-input-checkbox {vertical-align: middle}
 
 /* user search */
 form#ccm-user-search label {
