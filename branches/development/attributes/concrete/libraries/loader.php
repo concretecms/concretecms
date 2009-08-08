@@ -97,7 +97,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 			if (file_exists(DIR_FILES_ELEMENTS . '/' . $file . '.php')) {
 				include(DIR_FILES_ELEMENTS . '/' . $file . '.php');
-			} else {
+			} else if (file_exists(DIR_FILES_ELEMENTS_CORE . '/' . $file . '.php')) {
 				include(DIR_FILES_ELEMENTS_CORE . '/' . $file . '.php');
 			}
 		}

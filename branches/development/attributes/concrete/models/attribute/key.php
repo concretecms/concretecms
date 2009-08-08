@@ -192,7 +192,7 @@ class AttributeKey extends Object {
 			$columns = $db->MetaColumns($this->getIndexedSearchTable());
 			$dba = NewDataDictionary($db, DB_TYPE);
 			
-			if ($columns[strtoupper($this->akHandle)]) {
+			if ($columns[strtoupper('ak_' . $this->akHandle)]) {
 				$q = $dba->DropColumnSQL($this->getIndexedSearchTable(), 'ak_' . $this->akHandle);
 				$db->Execute($q[0]);
 				$addColumn = false;

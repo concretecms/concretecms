@@ -119,7 +119,7 @@ class FormHelper {
 			$checked = 'checked="checked" ';
 		}
 		
-		$str = '<input type="checkbox" name="' . $field . '" id="' . $field . '" value="' . $value . '" ' . $checked . ' ' . $mf . ' />';
+		$str = '<input type="checkbox" class="ccm-input-checkbox" name="' . $field . '" id="' . $field . '" value="' . $value . '" ' . $checked . ' ' . $mf . ' />';
 		return $str;
 	}
 
