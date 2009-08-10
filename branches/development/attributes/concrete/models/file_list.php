@@ -21,9 +21,9 @@ class FileList extends DatabaseItemList {
 			$txt = Loader::helper('text');
 			$attrib = $txt->uncamelcase(substr($nm, 8));
 			if (count($a) == 2) {
-				$this->filterByFileAttribute($attrib, $a[0], $a[1]);
+				$this->filterByAttribute($attrib, $a[0], $a[1]);
 			} else {
-				$this->filterByFileAttribute($attrib, $a[0]);
+				$this->filterByAttribute($attrib, $a[0]);
 			}
 		}			
 	}
@@ -209,7 +209,7 @@ class FileList extends DatabaseItemList {
 		if(!$this->queryCreated){
 			$this->setBaseQuery();
 			$this->filter('fvIsApproved', 1);
-			$this->setupAttributeFilters();
+			$this->setupAttributeFilters("left join FileSearchIndexAttributes on (fv.fID = FileSearchIndexAttributes.fID)");
 			$this->setupFilePermissions();
 			$this->queryCreated=1;
 		}

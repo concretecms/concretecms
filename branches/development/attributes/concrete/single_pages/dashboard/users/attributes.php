@@ -6,7 +6,28 @@
 	$attribs = UserAttributeKey::getList();
 	Loader::element('dashboard/attributes_table', array('attribs'=> $attribs, 'editURL' => '/dashboard/users/attributes')); ?>
 
-</div>
+	</div>
+
+<script type="text/javascript">
+$(function() {
+	$("div.ccm-attributes-list").sortable({
+		handle: 'img.ccm-attribute-icon',
+		cursor: 'move',
+		opacity: 0.5,
+		stop: function() {
+			var ualist = $(this).sortable('serialize');
+			$.post('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/dashboard/user_attributes_update.php', ualist, function(r) {
+
+			});
+		}
+	});
+});
+
+</script>
+
+<style type="text/css">
+img.ccm-attribute-icon:hover {cursor: move}
+</style>
 
 <? } ?>
 

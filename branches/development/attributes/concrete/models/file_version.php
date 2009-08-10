@@ -277,6 +277,18 @@ class FileVersion extends Object {
 		$db = Loader::db();
 		$db->Execute("update FileVersions set fvIsApproved = 0 where fID = ? and fvID = ?", array($this->getFileID(), $this->getFileVersionID()));
 	}
+
+
+	public function setAttribute($ak, $value) {
+		if (!is_object($ak)) {
+			$ak = FileAttributeKey::getByHandle($ak);
+		}
+		$ak->setAttribute($this, $value);
+		$fo = $this->getFile();
+		$fo->refreshCache();
+	}
+	
+
 	
 	/** 
 	 * Removes a version of a file

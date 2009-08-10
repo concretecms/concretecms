@@ -45,7 +45,12 @@ class AttributeKey extends Object {
 		$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsSearchable, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ?', array($akID));
 		$this->setPropertiesFromArray($row);
 	}
-
+	
+	public function getPackageID() { return $this->pkgID;}
+	public function getPackageHandle() {
+		return PackageList::getHandle($this->pkgID);
+	}
+	
 	/** 
 	 * Returns an attribute type object 
 	 */
@@ -53,10 +58,6 @@ class AttributeKey extends Object {
 		return AttributeType::getByID($this->atID);
 	}
 	
-	public static function getColumnHeaderList() {
-		return self::getList('file', array('akIsColumnHeader' => 1));	
-	}
-
 	/** 
 	 * Returns a list of all attributes of this category
 	 */
@@ -225,6 +226,23 @@ class AttributeKey extends Object {
 		return AttributeValue::getByID($avID);
 	}
 	
+	public function getAttributeKeyIconSRC() {
+		$ff = '/' . FILENAME_BLOCK_ICON;
+		$type = $this->getAttributeType();
+		if ($this->getPackageID() > 0) {
+			$db = Loader::db();
+			$h = $this->getPackageHandle();
+			$url = (is_dir(DIR_PACKAGES . '/' . $h)) ? BASE_URL . DIR_REL : ASSETS_URL; 
+			$url = $url . '/' . DIRNAME_PACKAGES . '/' . $h . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $type->getAttributeTypeHandle() . $ff;
+		} else if (file_exists(DIR_MODELS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $type->getAttributeTypeHandle() . $ff)) {
+			$url = ASSETS_URL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $type->getAttributeTypeHandle() . $ff;
+		} else if (file_exists(DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $type->getAttributeTypeHandle() . $ff)) {
+			$url = BASE_URL . DIR_REL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $type->getAttributeTypeHandle() . $ff;
+		} else {
+			$url = ASSETS_URL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/default' . $ff;		
+		}
+		return $url;
+	}
 	
 	/** 
 	 * Renders a view for this attribute key. If no view is default we display it's "view"
@@ -254,6 +272,16 @@ class AttributeKey extends Object {
 		}
 		return $av;
 	}
+	
+	public function validateAttributeForm($h = false) {
+		$at = $this->getAttributeType();
+		$at->controller->setAttributeKey($this);
+		$e = true;
+		if (method_exists($at->controller, 'validateForm')) {
+			$e = $at->controller->validateForm($at->controller->post());
+		}
+		return $e;
+	}
 
 	/** 
 	 * Saves an attribute using its stock form.
@@ -268,5 +296,19 @@ class AttributeKey extends Object {
 	public function setAttribute($obj, $value) {
 		$this->saveAttribute($obj, $value);
 	}
+	
+	// deprecated
+	public function getKeyName() { return $this->getAttributeKeyName();}
+
+	/** 
+	 * Returns the handle for this attribute key
+	 */
+	public function getKeyHandle() { return $this->getAttributeKeyHandle();}
+	
+	/** 
+	 * Returns the ID for this attribute key
+	 */
+	public function getKeyID() {return $this->getAttributeKeyID();}
+	
 
 }

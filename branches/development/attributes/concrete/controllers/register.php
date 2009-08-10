@@ -109,10 +109,18 @@ class RegisterController extends Controller {
 				$e->add(t('The two passwords provided do not match.'));
 			}
 		}
-	
-		$invalidFields = UserAttributeKey::validateSubmittedRequest();
-		foreach($invalidFields as $field) {
-			$e->add(t("The field %s is required.", $field));
+		
+		$aks = UserAttributeKey::getRegistrationList();
+
+		foreach($aks as $uak) {
+			if ($uak->isAttributeKeyRequired()) {
+				$e1 = $uak->validateAttributeForm();
+				if ($e1 == false) {
+					$e->add(t('The field "%s" is required', $uak->getAttributeKeyName()));
+				} else if ($e1 instanceof ValidationErrorHelper) {
+					$e->add($e1);
+				}
+			}
 		}
 
 		if (!$e->has()) {
@@ -125,8 +133,10 @@ class RegisterController extends Controller {
 
 			$process = UserInfo::register($data);
 			if (is_object($process)) {
-
-				$process->updateUserAttributes($data);
+				
+				foreach($aks as $uak) {
+					$uak->saveAttributeForm($process);				
+				}
 				
 				// now we log the user in
 

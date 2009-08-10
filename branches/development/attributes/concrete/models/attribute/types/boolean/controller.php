@@ -60,6 +60,11 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 		$this->saveValue($data['value']);
 	}
 	
+	// if this gets run we assume we need it to be validated/checked
+	public function validateForm($data) {
+		return $data['value'] == 1;
+	}
+	
 	public function deleteValue() {
 		$db = Loader::db();
 		$db->Execute('delete from atBoolean where avID = ?', array($this->getAttributeValueID()));

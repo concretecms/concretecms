@@ -77,7 +77,7 @@ if ($_POST['task'] == 'clear_extended_attribute' && $fp->canWrite() && (!$previe
 	$fv->clearAttribute($ak);
 	
 	$val = $fv->getAttributeValueObject($ak);
-	print '<div class="ccm-file-manager-field-none">' . t('None') . '</div>';
+	print '<div class="ccm-attribute-field-none">' . t('None') . '</div>';
 	exit;
 }
 
@@ -85,7 +85,7 @@ if ($_POST['task'] == 'clear_extended_attribute' && $fp->canWrite() && (!$previe
 function printCorePropertyRow($title, $field, $value, $formText) {
 	global $previewMode, $f, $fp;
 	if ($value == '') {
-		$text = '<div class="ccm-file-manager-field-none">' . t('None') . '</div>';
+		$text = '<div class="ccm-attribute-field-none">' . t('None') . '</div>';
 	} else { 
 		$text = htmlentities( $value, ENT_QUOTES, APP_CHARSET);
 	}
@@ -93,20 +93,20 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 	if ($fp->canWrite() && (!$previewMode)) {
 	
 	$html = '
-	<tr class="ccm-file-manager-editable-field">
+	<tr class="ccm-attribute-editable-field">
 		<th><a href="javascript:void(0)">' . $title . '</a></th>
-		<td width="100%" class="ccm-file-manager-editable-field-central"><div class="ccm-file-manager-editable-field-text">' . $text . '</div>
+		<td width="100%" class="ccm-attribute-editable-field-central"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
 		<form method="post" action="' . REL_DIR_FILES_TOOLS_REQUIRED . '/files/properties">
 		<input type="hidden" name="attributeField" value="' . $field . '" />
 		<input type="hidden" name="fID" value="' . $f->getFileID() . '" />
 		<input type="hidden" name="task" value="update_core" />
-		<div class="ccm-file-manager-editable-field-form ccm-file-manager-editable-field-type-text">
+		<div class="ccm-attribute-editable-field-form ccm-attribute-editable-field-type-text">
 		' . $formText . '
 		</div>
 		</form>
 		</td>
-		<td class="ccm-file-manager-editable-field-save"><a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/edit_small.png" width="16" height="16" class="ccm-file-manager-editable-field-save-button" /></a>
-		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-file-manager-editable-field-loading" />
+		<td class="ccm-attribute-editable-field-save"><a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/edit_small.png" width="16" height="16" class="ccm-attribute-editable-field-save-button" /></a>
+		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-attribute-editable-field-loading" />
 		</td>
 	</tr>';
 	
@@ -130,7 +130,7 @@ function printFileAttributeRow($ak, $fv) {
 	}
 	
 	if ($value == '') {
-		$text = '<div class="ccm-file-manager-field-none">' . t('None') . '</div>';
+		$text = '<div class="ccm-attribute-field-none">' . t('None') . '</div>';
 	} else {
 		$text = $value;
 	}
@@ -138,21 +138,21 @@ function printFileAttributeRow($ak, $fv) {
 	$type = $ak->getAttributeType();
 	
 	$html = '
-	<tr class="ccm-file-manager-editable-field">
+	<tr class="ccm-attribute-editable-field">
 		<th><a href="javascript:void(0)">' . $ak->getAttributeKeyName() . '</a></th>
-		<td width="100%" class="ccm-file-manager-editable-field-central"><div class="ccm-file-manager-editable-field-text">' . $text . '</div>
+		<td width="100%" class="ccm-attribute-editable-field-central"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
 		<form method="post" action="' . REL_DIR_FILES_TOOLS_REQUIRED . '/files/properties">
 		<input type="hidden" name="fakID" value="' . $ak->getAttributeKeyID() . '" />
 		<input type="hidden" name="fID" value="' . $f->getFileID() . '" />
 		<input type="hidden" name="task" value="update_extended_attribute" />
-		<div class="ccm-file-manager-editable-field-form ccm-file-manager-editable-field-type-' . strtolower($type->getAttributeTypeHandle()) . '">
+		<div class="ccm-attribute-editable-field-form ccm-attribute-editable-field-type-' . strtolower($type->getAttributeTypeHandle()) . '">
 		' . $ak->render('form', $vo, true) . '
 		</div>
 		</form>
 		</td>
-		<td class="ccm-file-manager-editable-field-save"><a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/edit_small.png" width="16" height="16" class="ccm-file-manager-editable-field-save-button" /></a>
-		<a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/close.png" width="16" height="16" class="ccm-file-manager-editable-field-clear-button" /></a>
-		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-file-manager-editable-field-loading" />
+		<td class="ccm-attribute-editable-field-save"><a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/edit_small.png" width="16" height="16" class="ccm-attribute-editable-field-save-button" /></a>
+		<a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/close.png" width="16" height="16" class="ccm-attribute-editable-field-clear-button" /></a>
+		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-attribute-editable-field-loading" />
 		</td>
 	</tr>';
 	

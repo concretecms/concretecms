@@ -43,6 +43,10 @@ class CollectionAttributeKey extends AttributeKey {
 		return $avl;
 	}
 	
+	public static function getColumnHeaderList() {
+		return self::getList('collection', array('akIsColumnHeader' => 1));	
+	}
+
 	public function getAttributeValue($avID, $method = 'getValue') {
 		$av = CollectionAttributeValue::getByID($avID);
 		$av->setAttributeKey($this);

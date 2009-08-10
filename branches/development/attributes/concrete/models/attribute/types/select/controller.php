@@ -143,6 +143,11 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		return $html;
 	}
 	
+	public function validateForm($p) {
+		$options = $this->request('atSelectOptionID');
+		return count($options) > 0;
+	}
+	
 	public function searchForm($list) {
 		$options = $this->request('atSelectOptionID');
 		$optionText = array();

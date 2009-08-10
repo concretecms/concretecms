@@ -100,13 +100,15 @@ class DatabaseItemList extends ItemList {
 	}
 	
 	protected function setupAttributeSort() {
-		$l = call_user_func(array($this->attributeClass, 'getColumnHeaderList'));
-		foreach($l as $ak) {
-			$this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();
-		}
-		
-		if ($this->sortBy != '' && in_array('ak_' . $this->sortBy, $this->autoSortColumns)) {
-			$this->sortBy = 'ak_' . $this->sortBy;
+		if (method_exists($this->attributeClass, 'getColumnHeaderList')) {
+			$l = call_user_func(array($this->attributeClass, 'getColumnHeaderList'));
+			foreach($l as $ak) {
+				$this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();
+			}
+			
+			if ($this->sortBy != '' && in_array('ak_' . $this->sortBy, $this->autoSortColumns)) {
+				$this->sortBy = 'ak_' . $this->sortBy;
+			}
 		}
 	}
 	
@@ -170,13 +172,12 @@ class DatabaseItemList extends ItemList {
 		return parent::getSortByURL($column, $dir, $baseURL);
 	}
 	
-	protected function setupAttributeFilters() {
+	protected function setupAttributeFilters($join) {
 		$db = Loader::db();
 		$i = 1;
-		$tbl = call_user_func(array($this->attributeClass, 'getIndexedSearchTable'));
-		$this->addToQuery("left join $tbl on ({$tbl}.fID = fv.fID)");
+		$this->addToQuery($join);
 		foreach($this->attributeFilters as $caf) {
-			$this->filter($tbl . '.' . $caf[0], $caf[1], $caf[2]);
+			$this->filter($caf[0], $caf[1], $caf[2]);
 		}
 	}
 

@@ -59,17 +59,15 @@ if($success) {
 	<?
 	
 	$attribs = UserAttributeKey::getRegistrationList();
-	foreach($attribs as $ak) { 
-		if ($ak->getKeyType() == 'HTML') { ?>
-			<div><?=$ak->outputHTML()?></div>
-		<? } else { ?>
-			<div>
-			<?=$form->label($ak->getFormElementName(), $ak->getKeyName())?> <? if ($ak->isKeyRequired()) { ?><span class="required">*</span><? } ?>
-			<?=$ak->outputHTML()?>
-			</div>
-			<br/>
-			
-		<? } ?>
+	foreach($attribs as $ak) { ?>
+		
+		<div><? $ak->render('label')?>
+		<? if ($ak->isAttributeKeyRequired()) { ?><span class="ccm-required">*</span><? } ?>
+		</div>
+		
+		
+		<? $ak->render('form', $caValue, false, array('includeLabel' => true)); ?>			
+		<br/><br/>
 	<? } ?>
 	
 	<div>

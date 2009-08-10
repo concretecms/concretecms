@@ -29,8 +29,8 @@ class DashboardFilesSearchController extends Controller {
 			$fileList->filterByKeywords($keywords);
 		}
 
-		if ($_REQUEST['fNumResults']) {
-			$fileList->setItemsPerPage($_REQUEST['fNumResults']);
+		if ($_REQUEST['numResults']) {
+			$fileList->setItemsPerPage($_REQUEST['numResults']);
 		}
 		
 		if (isset($_GET['fsIDNone']) && $_GET['fsIDNone'] == 1) { 
@@ -54,9 +54,9 @@ class DashboardFilesSearchController extends Controller {
 		}
 		
 		$selectedSets = array();
-		
-		if (is_array($_REQUEST['fvSelectedField'])) {
-			foreach($_REQUEST['fvSelectedField'] as $i => $item) {
+
+		if (is_array($_REQUEST['selectedSearchField'])) {
+			foreach($_REQUEST['selectedSearchField'] as $i => $item) {
 				// due to the way the form is setup, index will always be one more than the arrays
 				if ($item != '') {
 					switch($item) {
