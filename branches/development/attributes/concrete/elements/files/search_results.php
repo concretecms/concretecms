@@ -16,7 +16,7 @@
 	if (count($files) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-file-list" class="ccm-results-list">
 		<tr>
-			<th><input id="ccm-list-cb-all" type="checkbox" /></td>
+			<th><input id="ccm-file-list-cb-all" type="checkbox" /></td>
 			<th><select id="ccm-file-list-multiple-operations" disabled>
 				<option value="">**</option>
 				<option value="download"><?=t('Download')?></option>
@@ -54,7 +54,7 @@
 			$canEdit = ($fv->canEdit() && $pf->canWrite()) ? 1 : 0;
 			?>
 			<tr class="ccm-list-record <?=$striped?>" ccm-file-manager-can-admin="<?=($pf->canAdmin())?>" ccm-file-manager-can-delete="<?=$pf->canAdmin()?>" ccm-file-manager-can-view="<?=$canViewInline?>" ccm-file-manager-can-replace="<?=$pf->canWrite()?>" ccm-file-manager-can-edit="<?=$canEdit?>" fID="<?=$f->getFileID()?>" id="fID<?=$f->getFileID()?>">
-			<td class="ccm-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$f->getFileID()?>" /></td>
+			<td class="ccm-file-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$f->getFileID()?>" /></td>
 			<td>
 				<div class="ccm-file-list-thumbnail">
 					<div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><table border="0" cellspacing="0" cellpadding="0" height="70" width="100%"><tr><td align="center" fID="<?=$f->getFileID()?>" style="padding: 0px"><?=$fv->getThumbnail(1)?></td></tr></table></div>

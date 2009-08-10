@@ -376,20 +376,20 @@ ccm_alSetupSelectFiles = function() {
 }
 
 ccm_alSetupCheckboxes = function() {
-	$("#ccm-list-cb-all").click(function() {
+	$("#ccm-file-list-cb-all").click(function() {
 		if ($(this).attr('checked') == true) {
-			$('.ccm-list-record td.ccm-list-cb input[type=checkbox]').attr('checked', true);
+			$('.ccm-list-record td.ccm-file-list-cb input[type=checkbox]').attr('checked', true);
 			$("#ccm-file-list-multiple-operations").attr('disabled', false);
 		} else {
-			$('.ccm-list-record td.ccm-list-cb input[type=checkbox]').attr('checked', false);
+			$('.ccm-list-record td.ccm-file-list-cb input[type=checkbox]').attr('checked', false);
 			$("#ccm-file-list-multiple-operations").attr('disabled', true);
 		}
 	});
-	$(".ccm-list-record td.ccm-list-cb input[type=checkbox]").click(function(e) {
+	$(".ccm-list-record td.ccm-file-list-cb input[type=checkbox]").click(function(e) {
 		e.stopPropagation();
 		ccm_alRescanMultiFileMenu();
 	});
-	$(".ccm-list-record td.ccm-list-cb").click(function(e) {
+	$(".ccm-list-record td.ccm-file-list-cb").click(function(e) {
 		e.stopPropagation();
 		$(this).find('input[type=checkbox]').click();
 		ccm_alRescanMultiFileMenu();
@@ -406,7 +406,7 @@ ccm_alSetupCheckboxes = function() {
 		switch(action) {
 			case 'choose':
 				var fIDs = new Array();
-				$(".ccm-list-record td.ccm-list-cb input[type=checkbox]:checked").each(function() {
+				$(".ccm-list-record td.ccm-file-list-cb input[type=checkbox]:checked").each(function() {
 					fIDs.push($(this).val());
 				});
 				ccm_alSelectFile(fIDs, true);
@@ -477,14 +477,14 @@ ccm_alSetupCheckboxes = function() {
 
 ccm_alGetSelectedFileIDs = function() {
 	var fidstr = '';
-	$(".ccm-list-record td.ccm-list-cb input[type=checkbox]:checked").each(function() {
+	$(".ccm-list-record td.ccm-file-list-cb input[type=checkbox]:checked").each(function() {
 		fidstr += 'fID[]=' + $(this).val() + '&';
 	});
 	return fidstr;
 }
 
 ccm_alRescanMultiFileMenu = function() {
-	if ($(".ccm-list-record td.ccm-list-cb input[type=checkbox]:checked").length > 0) {
+	if ($(".ccm-list-record td.ccm-file-list-cb input[type=checkbox]:checked").length > 0) {
 		$("#ccm-file-list-multiple-operations").attr('disabled', false);
 	} else {
 		$("#ccm-file-list-multiple-operations").attr('disabled', true);
