@@ -48,6 +48,10 @@ class DefaultAttributeTypeController extends AttributeTypeController  {
 		}
 	}
 
+	public function validateForm($data) {
+		return $data['value'] != '';
+	}
+
 	public function deleteValue() {
 		$db = Loader::db();
 		$db->Execute('delete from atDefault where avID = ?', array($this->getAttributeValueID()));

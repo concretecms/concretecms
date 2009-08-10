@@ -62,6 +62,10 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 		}
 	}
 
+	public function validateForm($data) {
+		return $data['value'] != '';
+	}
+
 	public function getValue() {
 		$db = Loader::db();
 		$value = $db->GetOne("select value from atDateTime where avID = ?", array($this->getAttributeValueID()));

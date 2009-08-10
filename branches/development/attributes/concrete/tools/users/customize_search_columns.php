@@ -1,26 +1,28 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied."));
-$u = new User();
+Loader::model('user_attributes');
 $form = Loader::helper('form');
-Loader::model('attribute/categories/file');
-$fp = FilePermissions::getGlobal();
-if (!$fp->canAccessFileManager()) {
+$c1 = Page::getByPath('/dashboard/users');
+$cp1 = new Permissions($c1);
+$c2 = Page::getByPath('/dashboard/users/groups');
+$cp2 = new Permissions($c2);
+if ((!$cp1->canRead()) && (!$cp2->canRead())) {
 	die(_("Access Denied."));
 }
 
 $selectedAKIDs = array();
-$slist = FileAttributeKey::getColumnHeaderList();
+$slist = UserAttributeKey::getColumnHeaderList();
 foreach($slist as $sk) {
 	$selectedAKIDs[] = $sk->getAttributeKeyID();
 }
 
 if ($_POST['task'] == 'update_columns') {
 	Loader::model('attribute/category');
-	$sc = AttributeKeyCategory::getByHandle('file');
+	$sc = AttributeKeyCategory::getByHandle('user');
 	$sc->clearAttributeKeyCategoryColumnHeaders();
 	
 	if (is_array($_POST['akID'])) {
 		foreach($_POST['akID'] as $akID) {
-			$ak = FileAttributeKey::getByID($akID);
+			$ak = UserAttributeKey::getByID($akID);
 			$ak->setAttributeKeyColumnHeader(1);
 		}
 	}
@@ -28,11 +30,11 @@ if ($_POST['task'] == 'update_columns') {
 	exit;
 }
 
-$list = FileAttributeKey::getList();
+$list = UserAttributeKey::getList();
 
 ?>
 
-<form method="post" id="ccm-file-customize-search-columns-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/customize_search_columns/">
+<form method="post" id="ccm-user-customize-search-columns-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/customize_search_columns/">
 <?=$form->hidden('task', 'update_columns')?>
 
 <h1><?=t('Additional Searchable Attributes')?></h1>
@@ -57,9 +59,9 @@ print $b1;
 <script type="text/javascript">
 ccm_submitCustomizeSearchColumnsForm = function() {
 	ccm_deactivateSearchResults();
-	$("#ccm-file-customize-search-columns-form").ajaxSubmit(function(resp) {
+	$("#ccm-user-customize-search-columns-form").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
-		$("#ccm-file-advanced-search").ajaxSubmit(function(resp) {
+		$("#ccm-user-advanced-search").ajaxSubmit(function(resp) {
 			ccm_parseAdvancedSearchResponse(resp);
 		});
 	});

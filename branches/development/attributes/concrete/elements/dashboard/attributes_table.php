@@ -8,27 +8,17 @@ if (count($attribs) > 0) {
 	
 	?>
 	
+	<div class="ccm-attributes-list">
 	
-	<div style="margin:0px; padding:0px; width:100%; height:auto" >	
-	<table border="0" cellspacing="1" cellpadding="0" class="grid-list">
-	<tr>
-		<td class="subheader" width="100%"><?=t('Name')?></td>
-		<td class="subheader"><?=t('Handle')?></td>
-		<td class="subheader"><div style="width: 60px"></div></td>
-		<td class="subheader"><div style="width: 70px"></div></td>
-	</tr>
 	<?
 	foreach($attribs as $ak) { ?>
-		<tr>
-			<td><?=$ak->getAttributeKeyName()?></td>
-			<td style="white-space: nowrap"><?=$ak->getAttributeKeyHandle()?></td>
-			<td><? print $ih->button(t('Edit'), $this->url($editURL, 'edit', $ak->getAttributeKeyID()));?>
-			</td>
-			<td><? print $ih->button_js(t('Delete'), "javascript:if (confirm('".t('Are you sure you wish to delete this attribute?')."')) { location.href='" . $this->url($editURL, 'delete', $ak->getAttributeKeyID(), $valt->generate('delete_attribute')) . "' }")?></td>
-		</tr>
+	<div class="ccm-attribute" id="akID_<?=$ak->getAttributeKeyID()?>">
+		<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /><a href="<?=$this->url($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=$ak->getAttributeKeyName()?></a>
+	</div>
+	
 	<? } ?>
-	</table>
-	</div>	
+
+	</div>
 
 <? } else { ?>
 	

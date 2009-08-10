@@ -122,6 +122,11 @@ class FileAttributeKey extends AttributeKey {
 		return $ak;
 	}
 	
+	public static function getColumnHeaderList() {
+		return parent::getList('file', array('akIsColumnHeader' => 1));	
+	}
+
+	
 	public function delete() {
 		parent::delete();
 		$db = Loader::db();

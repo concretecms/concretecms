@@ -1,10 +1,81 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-
+Loader::model('attribute/categories/user');
+Loader::model('user_list');
 class DashboardUsersSearchController extends Controller {
 
+	public function view() {
+		$html = Loader::helper('html');
+		$form = Loader::helper('form');
+		$this->set('form', $form);
+		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_setupAdvancedSearch(\'user\'); });</script>');
+		$userList = $this->getRequestedSearchResults();
+		$users = $userList->getPage();
+				
+		$this->set('userList', $userList);		
+		$this->set('users', $users);		
+		$this->set('pagination', $userList->getPagination());
+		
 
-	public function sign_in_as_user($uID, $token = null) {
+	}
+	
+	public function getRequestedSearchResults() {
+		$userList = new UserList();
+		$keywords = htmlentities($_GET['keywords'], ENT_QUOTES, APP_CHARSET);
+		$userList->sortBy('uDateAdded', 'desc');
+		$userList->showInactiveUsers = true;
+		$userList->showInvalidatedUsers = true;
+		
+		if ($keywords != '') {
+			$userList->filterByKeywords($keywords);
+		}
+
+		if ($_REQUEST['numResults']) {
+			$userList->setItemsPerPage($_REQUEST['numResults']);
+		}
+		
+		if (isset($_REQUEST['gID']) && is_array($_REQUEST['gID'])) {
+			foreach($_REQUEST['gID'] as $gID) {
+				$userList->filterByGroupID($gID);
+			}
+		}
+		if (is_array($_REQUEST['selectedSearchField'])) {
+			foreach($_REQUEST['selectedSearchField'] as $i => $item) {
+				// due to the way the form is setup, index will always be one more than the arrays
+				if ($item != '') {
+					switch($item) {
+						case "date_added":
+							$dateFrom = $_REQUEST['date_from'];
+							$dateTo = $_REQUEST['date_to'];
+							if ($dateFrom != '') {
+								$dateFrom = date('Y-m-d', strtotime($dateFrom));
+								$userList->filterByDateAdded($dateFrom, '>=');
+								$dateFrom .= ' 00:00:00';
+							}
+							if ($dateTo != '') {
+								$dateTo = date('Y-m-d', strtotime($dateTo));
+								$dateTo .= ' 23:59:59';
+								
+								$userList->filterByDateAdded($dateTo, '<=');
+							}
+							break;
+
+						default:
+							$akID = $item;
+							$fak = UserAttributeKey::get($akID);
+							$type = $fak->getAttributeType();
+							$cnt = $type->getController();
+							$cnt->setAttributeKey($fak);
+							$cnt->searchForm($userList);
+							break;
+					}
+				}
+			}
+		}
+		return $userList;
+	}
+	
+		public function sign_in_as_user($uID, $token = null) {
 		try {
 			$u = new User();
 			
@@ -28,6 +99,26 @@ class DashboardUsersSearchController extends Controller {
 			
 		} catch(Exception $e) {
 			$this->set('error', $e);
+		}
+	}
+	
+	public function edit_attribute() {
+		$uo = UserInfo::getByID($_POST['uID']);
+		$akID = $_REQUEST['uakID'];
+		$ak = UserAttributeKey::get($akID);
+
+		if ($_POST['task'] == 'update_extended_attribute') { 
+			$ak->saveAttributeForm($uo);
+			$val = $uo->getAttributeValueObject($ak);
+			print $val->getValue('display');
+			exit;
+		}
+		
+		if ($_POST['task'] == 'clear_extended_attribute') {
+			$uo->clearAttribute($ak);			
+			$val = $uo->getAttributeValueObject($ak);
+			print '<div class="ccm-attribute-field-none">' . t('None') . '</div>';
+			exit;
 		}
 	}
 	
@@ -68,7 +159,10 @@ class DashboardUsersSearchController extends Controller {
 		} catch (Exception $e) {
 			$this->set('error', $e);
 		}
+		$this->view();
+
 	}
+
 }
 
 ?>

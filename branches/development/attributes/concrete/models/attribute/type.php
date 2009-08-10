@@ -80,7 +80,7 @@ class AttributeType extends Object {
 			}
 		}
 		if (!isset($file)) {
-			$file = DIR_MODELS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . 'default.php';
+			$file = DIR_MODELS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/default/' . FILENAME_ATTRIBUTE_CONTROLLER;
 			$className = 'DefaultAttributeTypeController';
 		}
 		require_once($file);

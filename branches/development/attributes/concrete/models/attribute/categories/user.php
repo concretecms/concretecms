@@ -11,13 +11,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  */
 class UserAttributeKey extends AttributeKey {
 
-	protected function getIndexedSearchTable() {
+	public function getIndexedSearchTable() {
 		return 'UserSearchIndexAttributes';
 	}
 
 	public function getAttributes($uID, $method = 'getValue') {
 		$db = Loader::db();
-		$values = $db->GetAll("select uID from UserAttributeValues where uID = ?", array($uID));
+		$values = $db->GetAll("select avID, akID from UserAttributeValues where uID = ?", array($uID));
 		$avl = new AttributeValueList();
 		foreach($values as $val) {
 			$ak = UserAttributeKey::getByID($val['akID']);
@@ -26,6 +26,9 @@ class UserAttributeKey extends AttributeKey {
 		}
 		return $avl;
 	}
+	
+	public function getAttributeKeyDisplayOrder() {return $this->displayOrder;}
+
 	
 	public function load($akID) {
 		parent::load($akID);
@@ -67,8 +70,18 @@ class UserAttributeKey extends AttributeKey {
 		return $this->uakHidden;
 	}
 	
+	public function sortListByDisplayOrder($a, $b) {
+		if ($a->getAttributeKeyDisplayOrder() == $b->getAttributeKeyDisplayOrder()) {
+			return 0;
+		} else {
+			return ($a->getAttributeKeyDisplayOrder() < $b->getAttributeKeyDisplayOrder()) ? -1 : 1;
+		}
+	}
+	
 	public static function getList() {
-		return parent::getList('user');	
+		$list = parent::getList('user');	
+		usort($list, array('UserAttributeKey', 'sortListByDisplayOrder'));
+		return $list;
 	}
 	
 	/** 
@@ -91,6 +104,8 @@ class UserAttributeKey extends AttributeKey {
 			'akID' => $this->getAttributeKeyID(), 
 			'avID' => $av->getAttributeValueID()
 		), array('cID', 'cvID', 'akID'));
+		
+		$uo->reindex();
 	}
 	
 	public function add($akHandle, $akName, $akIsSearchable, $atID, $uakRequired, $uakDisplayedOnRegister, $uakPrivate, $uakHidden, $akIsAutoCreated = false, $akIsEditable = true) {
@@ -154,6 +169,45 @@ class UserAttributeKey extends AttributeKey {
 		$db->Execute('delete from UserAttributeValues where akID = ?', array($this->getAttributeKeyID()));
 	}
 
+	public static function getColumnHeaderList() {
+		return parent::getList('user', array('akIsColumnHeader' => 1));	
+	}
+	public static function getSearchableList() {
+		return parent::getList('user', array('akIsSearchable' => 1));	
+	}
+
+	public static function getImporterList() {
+		return parent::getList('user', array('akIsAutoCreated' => 1));	
+	}
+
+	public static function getRegistrationList() {
+		$tattribs = self::getList();
+		$attribs = array();
+		foreach($tattribs as $uak) {
+			if (!$uak->isAttributeKeyDisplayedOnRegister()) {
+				continue;
+			}
+			
+			$attribs[] = $uak;
+		}
+		unset($tattribs);
+		return $attribs;
+	}
+
+	public static function getUserAddedList() {
+		return parent::getList('user', array('akIsAutoCreated' => 0));	
+	}
+
+
+	function updateAttributesDisplayOrder($uats) {
+		$db = Loader::db();
+		for ($i = 0; $i < count($uats); $i++) {
+			$v = array($uats[$i]);
+			$db->query("update UserAttributeKeys set displayOrder = {$i} where akID = ?", $v);
+		}
+	}
+
+
 }
 
 class UserAttributeValue extends AttributeValue {
@@ -174,7 +228,7 @@ class UserAttributeValue extends AttributeValue {
 		parent::delete();
 		$db = Loader::db();
 		$db->Execute('delete from UserAttributeValues where uID = ? and akID = ? and avID = ?', array(
-			$this->uo>getUserID(), 
+			$this->u->getUserID(), 
 			$this->attributeKey->getAttributeKeyID(),
 			$this->getAttributeValueID()
 		));

@@ -354,6 +354,7 @@ ccm_triggerSelectUser = function(uID, uName) {
 	alert(uName);
 }
 
+/*
 ccm_setupUserSearch = function() {
 	$('#ccm-user-search-results a').each(function(i) {
 		var linkParts = $(this).attr('href').split('#')
@@ -377,7 +378,6 @@ ccm_setupUserSearch = function() {
 		}
 	});
 	
-	/* setup paging */
 	$("div#ccm-user-paging a").click(function() {
 		$("#ccm-user-search-wrapper").html("");	
 		$.ajax({
@@ -389,6 +389,15 @@ ccm_setupUserSearch = function() {
 			}
 		});
 		return false;
+	});
+}
+*/
+
+
+ccm_setupUserSearch = function() {
+	$("div.ccm-user-search-advanced-groups-cb input[type=checkbox]").unbind();
+	$("div.ccm-user-search-advanced-groups-cb input[type=checkbox]").click(function() {
+		$("#ccm-user-advanced-search").submit();
 	});
 }
 

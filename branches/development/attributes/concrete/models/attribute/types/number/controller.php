@@ -44,6 +44,10 @@ class NumberAttributeTypeController extends AttributeTypeController  {
 		}
 		print Loader::helper('form')->text($this->field('value'), $value, array('style' => 'width:80px'));
 	}
+	
+	public function validateForm($p) {
+		return $p['value'] != false;
+	}
 
 	// run when we call setAttribute(), instead of saving through the UI
 	public function saveValue($value) {

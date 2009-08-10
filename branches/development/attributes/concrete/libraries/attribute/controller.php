@@ -37,7 +37,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return 'akID[' . $this->attributeKey->getAttributeKeyID() . '][' . $fieldName . ']';
 		}
 
-
+		public function label() {
+			print Loader::helper('form')->label($this->field('value'), t($this->attributeKey->getAttributeKeyName()));
+		}
+		
 		public function __construct($attributeType) {
 			$this->identifier = $attributeType->getAttributeTypeID();
 			$this->attributeType = $attributeType;
