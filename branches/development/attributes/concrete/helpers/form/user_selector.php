@@ -50,7 +50,7 @@ class FormUserSelectorHelper {
 		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedUID . '">';
 		$html .= '</div>'; 
 		$html .= '<script type="text/javascript"> 
-		ccm_triggerSelectUser = function(uID, uName) { ';
+		ccm_triggerSelectUser = function(uID, uName, uEmail) { ';
 		if($javascriptFunc=='' || $javascriptFunc=='ccm_triggerSelectUser'){
 			$html .= '
 			var par = $(ccmActiveUserField).parent().find(\'.ccm-summary-selected-item-label\');
@@ -73,11 +73,8 @@ class FormUserSelectorHelper {
 		$html .= '<th>' . t('Username') . '</th>';
 		$html .= '<th>' . t('Email Address') . '</th>';
 		$html .= '<th><a class="ccm-user-select-item dialog-launch" onclick="ccmActiveUserField=this" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/users/search_dialog?mode=choose_multiple"><img src="' . ASSETS_URL_IMAGES . '/icons/add.png" width="16" height="16" /></a></th>';
-		$html .= '</tr><tbody>';
-		Loader::model('user_list');
-		$ul = new UserList();
-		$ul1 = $ul->get();
-		for ($i = 0; $i < $ul->getTotal(); $i++ ) {
+		$html .= '</tr><tbody id="ccmUserSelect' . $fieldName . '_body" >';
+		/* for ($i = 0; $i < $ul->getTotal(); $i++ ) {
 			$ui = $ul1[$i];
 			$class = $i % 2 == 0 ? 'ccm-row-alt' : '';
 			$html .= '<tr id="ccmUserSelect' . $fieldName . '_' . $ui->getUserID() . '" class="ccm-list-record ' . $class . '">';
@@ -85,15 +82,33 @@ class FormUserSelectorHelper {
 			$html .= '<td>' . $ui->getUserEmail() . '</td>';
 			$html .= '<td><a href="javascript:void(0)" class="ccm-user-list-clear"><img src="' . ASSETS_URL_IMAGES . '/icons/close.png" width="16" height="16" class="ccm-user-list-clear-button" /></a>';
 			$html .= '</tr>';		
-		}
+		}*/
+		$html .= '<tr class="ccm-user-selected-item-none"><td colspan="3">' . t('No users selected.') . '</td></tr>';
 		$html .= '</tbody></table><script type="text/javascript">
 		$(function() {
 			$("#ccmUserSelect' . $fieldName . ' .ccm-user-select-item").dialog();
 			$("a.ccm-user-list-clear").click(function() {
 				$(this).parents(\'tr\').remove();
 				ccm_setupGridStriping(\'ccmUserSelect' . $fieldName . '\');
-			});		
+			});
 		});
+		
+		ccm_triggerSelectUser = function(uID, uName, uEmail) {
+			$("tr.ccm-user-selected-item-none").hide();
+			if ($("#ccmUserSelect' . $fieldName . '_" + uID).length < 1) {
+				var html = "";
+				html += "<tr id=\"ccmUserSelect' . $fieldName . '_" + uID + "\" class=\"ccm-list-record\"><td><input type=\"hidden\" name=\"' . $fieldName . '[]\" value=\"" + uID + "\" />" + uName + "</td>";
+				html += "<td>" + uEmail + "</td>";
+				html += "<td><a href=\"javascript:void(0)\" class=\"ccm-user-list-clear\"><img src=\"' . ASSETS_URL_IMAGES . '/icons/close.png\" width=\"16\" height=\"16\" class=\"ccm-user-list-clear-button\" /></a>";
+				html += "</tr>";
+				$("#ccmUserSelect' . $fieldName . '_body").append(html);
+			}
+			ccm_setupGridStriping(\'ccmUserSelect' . $fieldName . '\');
+			$("a.ccm-user-list-clear").click(function() {
+				$(this).parents(\'tr\').remove();
+				ccm_setupGridStriping(\'ccmUserSelect' . $fieldName . '\');
+			});
+		}
 		</script>';	
 		return $html;
 	}

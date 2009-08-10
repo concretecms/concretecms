@@ -2,7 +2,27 @@
 
 <div id="ccm-list-wrapper">
 <?
-	$userList->displaySummary();
+	if (!$mode) {
+		$mode = $_REQUEST['mode'];
+	}
+	
+	?>
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+	<td width="100%"><?=$userList->displaySummary();?></td>
+	<? if ($mode == 'choose_multiple') { ?>
+		<td style="white-space: nowrap"><?=t('With Selected: ')?>&nbsp;</td>
+		<td align="right">
+		<select id="ccm-user-list-multiple-operations" disabled>
+					<option value="">**</option>
+					<option value="choose"><?=t('Choose')?></option>
+				</select>
+		</td>
+	<? } ?>
+	</tr>
+	</table>
+	
+	<?
 	$txt = Loader::helper('text');
 	$keywords = $_REQUEST['keywords'];
 	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/users/search_results';
@@ -10,6 +30,9 @@
 	if (count($users) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-user-list" class="ccm-results-list">
 		<tr>
+			<? if ($mode == 'choose_multiple') { ?>
+			<th><input id="ccm-user-list-cb-all" type="checkbox" /></td>
+			<? } ?>
 			<th class="<?=$userList->getSearchResultsClass('uName')?>"><a href="<?=$userList->getSortByURL('uName', 'asc', $bu)?>"><?=t('Username')?></a></th>
 			<th class="<?=$userList->getSearchResultsClass('uEmail')?>"><a href="<?=$userList->getSortByURL('uEmail', 'asc', $bu)?>"><?=t('Email Address')?></a></th>
 			<th class="<?=$userList->getSearchResultsClass('uDateAdded')?>"><a href="<?=$userList->getSortByURL('uDateAdded', 'asc', $bu)?>"><?=t('Date Added')?></a></th>
@@ -38,7 +61,9 @@
 			?>
 		
 			<tr class="ccm-list-record <?=$striped?>">
-			
+			<? if ($mode == 'choose_multiple') { ?>
+				<td class="ccm-user-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$ui->getUserID()?>" user-email="<?=$ui->getUserEmail()?>" user-name="<?=$ui->getUserName()?>" /></td>
+			<? } ?>
 			<td><a href="<?=$action?>"><?=$txt->highlightSearch($ui->getUserName(), $keywords)?></a></td>
 			<td><a href="mailto:<?=$ui->getUserEmail()?>"><?=$txt->highlightSearch($ui->getUserEmail(), $keywords)?></a></td>
 			<td><?=date(t('M d, Y g:ia'), strtotime($ui->getUserDateAdded()))?></td>
@@ -73,3 +98,9 @@
 	$userList->displayPaging($bu); ?>
 	
 </div>
+
+<script type="text/javascript">
+$(function() { 
+	ccm_setupUserSearch(); 
+});
+</script>
