@@ -12,12 +12,14 @@
 	function processMetaData($nvc){			
 		Loader::model('collection_attributes');
 		$nvc->clearCollectionAttributes($_POST['selectedAKIDs']);
-		foreach($_POST['selectedAKIDs'] as $akID) {
-			if ($akID > 0) {
-				$ak = CollectionAttributeKey::getByID($akID);
-				$ak->saveAttributeForm($nvc);
-			}
-		} 
+		if (is_array($_POST['selectedAKIDs'])) {
+			foreach($_POST['selectedAKIDs'] as $akID) {
+				if ($akID > 0) {
+					$ak = CollectionAttributeKey::getByID($akID);
+					$ak->saveAttributeForm($nvc);
+				}
+			} 
+		}
 	}
 	
 	// Modification for step editing

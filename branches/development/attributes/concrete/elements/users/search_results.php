@@ -23,6 +23,12 @@
 		</tr>
 	<?
 		foreach($users as $ui) { 
+			$action = View::url('/dashboard/users/search?uID=' . $ui->getUserID());
+			
+			if ($mode == 'choose_one') {
+				$action = 'javascript:void(0); ccm_triggerSelectUser(' . $ui->getUserID() . ',\'' . $ui->getUserName() . '\'); jQuery.fn.dialog.closeTop();';
+			}
+			
 			if (!isset($striped) || $striped == 'ccm-list-record-alt') {
 				$striped = '';
 			} else if ($striped == '') { 
@@ -33,7 +39,7 @@
 		
 			<tr class="ccm-list-record <?=$striped?>">
 			
-			<td><a href="<?=View::url('/dashboard/users/search?uID=' . $ui->getUserID())?>"><?=$txt->highlightSearch($ui->getUserName(), $keywords)?></a></td>
+			<td><a href="<?=$action?>"><?=$txt->highlightSearch($ui->getUserName(), $keywords)?></a></td>
 			<td><a href="mailto:<?=$ui->getUserEmail()?>"><?=$txt->highlightSearch($ui->getUserEmail(), $keywords)?></a></td>
 			<td><?=date(t('M d, Y g:ia'), strtotime($ui->getUserDateAdded()))?></td>
 			<td><?=$ui->getNumLogins()?></td>
