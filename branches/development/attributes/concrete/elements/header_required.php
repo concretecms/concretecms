@@ -24,18 +24,18 @@ $akk = $c->getCollectionAttributeValue('meta_keywords');
 
 if ($akt) { 
 	$pageTitle = $akt; 
-	?><title><?=$akt?></title>
+	?><title><?=htmlspecialchars($akt, ENT_COMPAT, APP_CHARSET)?></title>
 <? } else { 
-	$pageTitle = $c->getCollectionName();
+	$pageTitle = htmlspecialchars($c->getCollectionName(), ENT_COMPAT, APP_CHARSET);
 	?><title><?=sprintf(PAGE_TITLE_FORMAT, SITE, $pageTitle)?></title>
 <? } 
 
 if ($akd) { 
-?><meta name="description" content="<?=htmlspecialchars($akd)?>" />
+?><meta name="description" content="<?=htmlspecialchars($akd, ENT_COMPAT, APP_CHARSET)?>" />
 <? } else { 
-?><meta name="description" content="<?=htmlspecialchars($pageDescription)?>" />
+?><meta name="description" content="<?=htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET)?>" />
 <? }
-if ($akk) { ?><meta name="keywords" content="<?=htmlspecialchars($akk)?>" />
+if ($akk) { ?><meta name="keywords" content="<?=htmlspecialchars($akk, ENT_COMPAT, APP_CHARSET)?>" />
 <? } ?>
 <meta name="generator" content="concrete5 - <?=APP_VERSION ?>" />
 

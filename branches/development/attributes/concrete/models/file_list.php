@@ -15,7 +15,7 @@ class FileList extends DatabaseItemList {
 	protected $itemsPerPage = 10;
 	protected $attributeClass = 'FileAttributeKey';
 	
-	/* magic method for filtering by page attributes. */
+	/* magic method for filtering by attributes. */
 	public function __call($nm, $a) {
 		if (substr($nm, 0, 8) == 'filterBy') {
 			$txt = Loader::helper('text');

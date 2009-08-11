@@ -46,8 +46,10 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 	}
 	
 	public function saveForm($data) {
-		$f = File::getByID($data['value']);
-		$this->saveValue($f);
+		if ($data['value'] > 0) {
+			$f = File::getByID($data['value']);
+			$this->saveValue($f);
+		}
 	}
 	
 	public function deleteValue() {
