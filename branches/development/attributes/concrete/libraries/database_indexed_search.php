@@ -137,18 +137,7 @@ class IndexedSearch {
 				$v = array($row['cID'], $c->getCollectionName(), $c->getCollectionDescription(), $c->getCollectionPath(), $c->getCollectionDatePublic(), $this->getBodyContentFromPage($c));
 				$db->Execute("insert into PageSearchIndex (cID, cName, cDescription, cPath, cDatePublic, content) values (?, ?, ?, ?, ?, ?)", $v);
 				unset($v);
-				/*
-				$attributes=$c->getSetCollectionAttributes();
-				foreach($attributes as $attribute){
-					if ($attribute->isCollectionAttributeKeySearchable()) {
-						$val = $db->GetOne("select value from CollectionAttributeValues where cID = ? and cvID = ? and akID = ?", array($c->getCollectionID(), $c->getVersionID(), $attribute->getCollectionAttributeKeyID()));
-						$v = array($row['cID'], $attribute->getAttributeKeyID(), $attribute->getAttributeKeyHandle(), $val);
-						$db->Execute("insert into PageSearchIndexAttributes (cID, akID, akHandle, value) values (?, ?, ?, ?)", $v);
-					}
-				}
-				
-				unset($v);
-				*/
+				$c->reindex();
 				$num++;
 			}
 			
