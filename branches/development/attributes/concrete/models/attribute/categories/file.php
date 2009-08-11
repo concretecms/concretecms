@@ -35,8 +35,10 @@ class FileAttributeKey extends AttributeKey {
 		$avl = new AttributeValueList();
 		foreach($values as $val) {
 			$ak = FileAttributeKey::getByID($val['akID']);
-			$value = $ak->getAttributeValue($val['avID']);
-			$avl->addAttributeValue($ak, $value);
+			if (is_object($ak)) {
+				$value = $ak->getAttributeValue($val['avID']);
+				$avl->addAttributeValue($ak, $value);
+			}
 		}		
 		return $avl;
 	}
@@ -52,7 +54,9 @@ class FileAttributeKey extends AttributeKey {
 	public static function getByID($akID) {
 		$ak = new FileAttributeKey();
 		$ak->load($akID);
-		return $ak;	
+		if ($ak->getAttributeKeyID() > 0) {
+			return $ak;	
+		}
 	}
 
 	public static function getByHandle($akHandle) {
@@ -61,7 +65,9 @@ class FileAttributeKey extends AttributeKey {
 		if ($akID > 0) {
 			$ak = new FileAttributeKey();
 			$ak->load($akID);
-			return $ak;
+			if ($ak->getAttributeKeyID() > 0) {
+				return $ak;	
+			}
 		} else {
 			 // else we check to see if it's listed in the initial registry
 			 $ia = FileTypeList::getImporterAttribute($akHandle);

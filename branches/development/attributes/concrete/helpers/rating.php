@@ -19,8 +19,29 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class RatingHelper {
 	
-	public function output($field, $value, $isEditableField = false, $includeJS = true) {
+	public function outputDisplay($value) {
 		$html = '';
+		$star1 = ($value >= 20) ? 'rating-star-on' : 'rating-star-off';
+		$star2 = ($value >= 40) ? 'rating-star-on' : 'rating-star-off';
+		$star3 = ($value >= 60) ? 'rating-star-on' : 'rating-star-off';
+		$star4 = ($value >= 80) ? 'rating-star-on' : 'rating-star-off';
+		$star5 = ($value >= 100) ? 'rating-star-on' : 'rating-star-off';
+		
+		$html .= '<div class="ccm-rating">';
+		$html .= '<div class="rating-star rating-star-readonly ' . $star1 . '"><a href="javascript:void(0)"></a></div>';		
+		$html .= '<div class="rating-star rating-star-readonly ' . $star2 . '"><a href="javascript:void(0)"></a></div>';		
+		$html .= '<div class="rating-star rating-star-readonly ' . $star3 . '"><a href="javascript:void(0)"></a></div>';		
+		$html .= '<div class="rating-star rating-star-readonly ' . $star4 . '"><a href="javascript:void(0)"></a></div>';		
+		$html .= '<div class="rating-star rating-star-readonly ' . $star5 . '"><a href="javascript:void(0)"></a></div>';		
+		$html .= '</div>';
+		return $html;
+	}
+	
+	public function output($field, $value, $isEditableField = false, $includeJS = true) {
+		if ($isEditableField == false) {
+			return $this->outputDisplay($value);
+		}
+		
 		$html = '';
 		$checked1 = ($value == 20) ? 'checked' : '';
 		$checked2 = ($value == 40) ? 'checked' : '';

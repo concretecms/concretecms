@@ -21,8 +21,10 @@ class UserAttributeKey extends AttributeKey {
 		$avl = new AttributeValueList();
 		foreach($values as $val) {
 			$ak = UserAttributeKey::getByID($val['akID']);
-			$value = $ak->getAttributeValue($val['avID'], $method);
-			$avl->addAttributeValue($ak, $value);
+			if (is_object($ak)) {
+				$value = $ak->getAttributeValue($val['avID']);
+				$avl->addAttributeValue($ak, $value);
+			}
 		}
 		return $avl;
 	}
@@ -46,7 +48,9 @@ class UserAttributeKey extends AttributeKey {
 	public static function getByID($akID) {
 		$ak = new UserAttributeKey();
 		$ak->load($akID);
-		return $ak;
+		if ($ak->getAttributeKeyID() > 0) {
+			return $ak;	
+		}
 	}
 
 	public static function getByHandle($akHandle) {
@@ -54,7 +58,9 @@ class UserAttributeKey extends AttributeKey {
 		$akID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', array($akHandle));
 		$ak = new UserAttributeKey();
 		$ak->load($akID);
-		return $ak;
+		if ($ak->getAttributeKeyID() > 0) {
+			return $ak;	
+		}
 	}
 	
 	public function isAttributeKeyRequired() {
