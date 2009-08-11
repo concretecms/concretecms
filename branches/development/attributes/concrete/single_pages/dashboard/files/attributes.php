@@ -30,6 +30,26 @@
 
 </div>
 
+<h1><span><?=t('Delete Attribute')?></span></h1>
+
+<div class="ccm-dashboard-inner">
+	<?
+	$valt = Loader::helper('validation/token');
+	$ih = Loader::helper('concrete/interface');
+	$delConfirmJS = t('Are you sure you want to remove this attribute?');
+	?>
+	<script type="text/javascript">
+	deleteAttribute = function() {
+		if (confirm('<?=$delConfirmJS?>')) { 
+			location.href = "<?=$this->url('/dashboard/files/attributes', 'delete', $key->getAttributeKeyID(), $valt->generate('delete_attribute'))?>";				
+		}
+	}
+	</script>
+	<? print $ih->button_js(t('Delete Attribute'), "deleteAttribute()", 'left');?>
+
+	<div class="ccm-spacer"></div>
+</div>
+
 <? } else { ?>
 
 <h1><span><?=t('Add File Attribute')?></span></h1>

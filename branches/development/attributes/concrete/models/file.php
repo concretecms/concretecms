@@ -60,7 +60,7 @@ class File extends Object {
 		foreach($attribs as $akHandle => $value) {
 			$column = 'ak_' . $akHandle;
 			$ak = FileAttributeKey::getByHandle($akHandle);
-			if ($ak->isAttributeKeySearchable() && isset($columns[strtoupper($column)])) {
+			if (isset($columns[strtoupper($column)])) {
 				$searchableAttributes[$column] = $value;
 			}
 		}
