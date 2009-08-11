@@ -150,7 +150,7 @@ $saveMsg = t('Save permissions first.');
 		<h1 style="margin-bottom: 0px">Page Permissions</h1>
 
 		<div class="ccm-buttons" style="width: 140px; float: right" id="ccm-page-permissions-select-user-group"> 
-		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-modal="false" dialog-width="600" dialog-title="<?=t('Add User/Group')?>"  dialog-height="400" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add"><?=t('Add User/Group')?></em></span></a>
+		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Add User/Group')?>"  dialog-height="70%" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add"><?=t('Add User/Group')?></em></span></a>
 		</div>		
 
 		<div style="float: left; width: 450px; padding-top: 15px">

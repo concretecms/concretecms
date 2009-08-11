@@ -14,7 +14,7 @@
 		<form method="post" id="file-access-permissions" action="<?=$this->url('/dashboard/files/access', 'save_global_permissions')?>">
 			<?=$validation_token->output('file_permissions');?>
 
-			<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector" id="ug-selector" dialog-modal="false" dialog-width="600" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="400" class="ccm-button-right dialog-launch"><span><em><?=t('Add Group or User')?></em></span></a>
+			<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector" id="ug-selector" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="70%" class="ccm-button-right dialog-launch"><span><em><?=t('Add Group or User')?></em></span></a>
 
 			<p>
 			<?=t('Add users or groups to determine access to the file manager.');?>

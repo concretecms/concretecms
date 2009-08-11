@@ -33,7 +33,7 @@ foreach($searchFieldAttributes as $ak) {
 	
 	<form method="get" id="ccm-user-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results">
 	<?=$form->hidden('mode', $mode); ?>
-<div id="ccm-user-search-advanced-fields" class="ccm-search-advanced-fields" >
+	<div id="ccm-user-search-advanced-fields" class="ccm-search-advanced-fields" >
 	
 		<input type="hidden" name="search" value="1" />
 		<div id="ccm-search-box-title">
