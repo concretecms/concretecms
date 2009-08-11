@@ -48,7 +48,7 @@
 		foreach($users as $ui) { 
 			$action = View::url('/dashboard/users/search?uID=' . $ui->getUserID());
 			
-			if ($mode == 'choose_one') {
+			if ($mode == 'choose_one' || $mode == 'choose_multiple') {
 				$action = 'javascript:void(0); ccm_triggerSelectUser(' . $ui->getUserID() . ',\'' . $ui->getUserName() . '\'); jQuery.fn.dialog.closeTop();';
 			}
 			

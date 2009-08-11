@@ -10,6 +10,9 @@ $cnt = Loader::controller('/dashboard/users/search');
 $userList = $cnt->getRequestedSearchResults();
 $users = $userList->getPage();
 $pagination = $userList->getPagination();
+if (!isset($mode)) {
+	$mode = $_REQUEST['mode'];
+}
 ?>
 
 <div id="ccm-search-overlay" >
@@ -17,7 +20,7 @@ $pagination = $userList->getPagination();
 		<table id="ccm-search-form-table" >
 			<tr>
 				<td valign="top" class="ccm-search-form-advanced-col">
-					<? Loader::element('users/search_form_advanced'); ?>
+					<? Loader::element('users/search_form_advanced', array('mode' => $mode)) ; ?>
 				</td>		
 				<? /* <div id="ccm-file-search-advanced-fields-gutter">&nbsp;</div> */ ?>		
 				<td valign="top" width="100%">	
@@ -26,7 +29,7 @@ $pagination = $userList->getPagination();
 					
 						<div id="ccm-search-results">
 						
-							<? Loader::element('users/search_results', array('mode' => $_REQUEST['mode'], 'users' => $users, 'userList' => $userList, 'pagination' => $pagination)); ?>
+							<? Loader::element('users/search_results', array('mode' => $mode, 'users' => $users, 'userList' => $userList, 'pagination' => $pagination)); ?>
 						
 						</div>
 					
