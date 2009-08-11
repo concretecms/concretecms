@@ -475,6 +475,7 @@ class FileVersion extends Object {
 		}
 		$fo = $this->getFile();
 		$fo->refreshCache();
+		$fo->reindex();
 	}
 
 	public function getAttributeValueObject($ak, $createIfNotFound = false) {

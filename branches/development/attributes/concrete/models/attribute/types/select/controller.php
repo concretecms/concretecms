@@ -128,11 +128,37 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 	// Sets select options for a particular attribute
 	// If the $value == string, then 1 item is selected
 	// if array, then multiple, but only if the attribute in question is a select multiple
-	// In all cases, if new items that don't appear in the list of available options are
-	// specified, if the attribute is setup to accept new input, they will be added, otherwise they will be ignored
-	public function setValue($value) {
-	
+	// Note, items CANNOT be added to the pool (even if the attribute allows it) through this process.
+	public function saveValue($value) {
+		$db = Loader::db();
+		$this->load();
+		$options = array();		
+		
+		if (is_array($value) && $this->akSelectAllowMultipleValues) {
+			foreach($value as $v) {
+				$opt = SelectAttributeTypeOption::getByValue($v);
+				if (is_object($opt)) {
+					$options[] = $opt;	
+				}
+			}
+		} else {
+			$opt = SelectAttributeTypeOption::getByValue($value);
+			if (is_object($opt)) {
+				$options[] = $opt;	
+			}
+		}
+		
+		$db->Execute('delete from atSelectOptionsSelected where avID = ?', array($this->getAttributeValueID()));
+		if (count($options) > 0) {
+			foreach($options as $opt) {
+				$db->Execute('insert into atSelectOptionsSelected (avID, atSelectOptionID) values (?, ?)', array($this->getAttributeValueID(), $opt->getSelectAttributeOptionID()));
+				if ($this->akSelectAllowMultipleValues == false) {
+					break;
+				}
+			}
+		}
 	}
+
 	
 	public function getDisplayValue() {
 		$list = $this->getSelectedOptions();
@@ -335,7 +361,16 @@ class SelectAttributeTypeOption extends Object {
 	public static function getByID($id) {
 		$db = Loader::db();
 		$row = $db->GetRow("select ID, displayOrder, value from atSelectOptions where ID = ?", array($id));
-		if (is_array($row)) {
+		if (isset($row['ID'])) {
+			$obj = new SelectAttributeTypeOption($row['ID'], $row['value'], $row['displayOrder']);
+			return $obj;
+		}
+	}
+	
+	public static function getByValue($value) {
+		$db = Loader::db();
+		$row = $db->GetRow("select ID, displayOrder, value from atSelectOptions where value = ?", array($value));
+		if (isset($row['ID'])) {
 			$obj = new SelectAttributeTypeOption($row['ID'], $row['value'], $row['displayOrder']);
 			return $obj;
 		}

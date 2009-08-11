@@ -120,6 +120,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$v2 = array($this->getCollectionID(), $this->getVersionID());
 				$db->query("delete from CollectionAttributeValues where cID = ? and cvID = ?", $v2);
 			}
+			$this->reindex();
 		}
 		
 		public function reindex() {
@@ -133,9 +134,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$rs = $db->Execute('select * from CollectionSearchIndexAttributes where cID = -1');
 	
 			foreach($attribs as $akHandle => $value) {
+				$column = 'ak_' . $akHandle;
 				$ak = CollectionAttributeKey::getByHandle($akHandle);
-				if ($ak->isAttributeKeySearchable() && isset($columns[strtoupper($akHandle)])) {
-					$searchableAttributes[$akHandle] = $value;
+				if (isset($columns[strtoupper($column)])) {
+					$searchableAttributes[$column] = $value;
 				}
 			}
 	
@@ -176,6 +178,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$ak = CollectionAttributeKey::getByHandle($akHandle);
 			$ak->setAttribute($this, $value);			
 			$this->refreshCache();
+			$this->reindex();
 		}
 		
 		// get's an array of collection attribute objects that are attached to this collection. Does not get values

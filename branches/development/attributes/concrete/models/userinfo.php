@@ -222,14 +222,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		/** 
 		 * Sets the attribute of a user info object to the specified value, and saves it in the database 
 		 */
-		public function setAttribute($attributeHandle, $value) {
-			Loader::model('user_attributes');
-			$uk = UserAttributeKey::getByHandle($attributeHandle);
-			if (is_object($uk)) {
-				$uk->saveValue($this->getUserID(), $value);
-			} else {
-				throw new Exception(t('Invalid user attribute key.'));
+		public function setAttribute($ak, $value) {
+			Loader::model('attribute/categories/user');
+			if (!is_object($ak)) {
+				$ak = UserAttributeKey::getByHandle($ak);
 			}
+			$ak->setAttribute($this, $value);
+			$this->reindex();
 		}
 
 		public function clearAttribute($ak) {
@@ -238,6 +237,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (is_object($cav)) {
 				$cav->delete();
 			}
+			$this->reindex();
 		}
 		
 		public function reindex() {
@@ -252,7 +252,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			foreach($attribs as $akHandle => $value) {
 				$column = 'ak_' . $akHandle;
 				$ak = UserAttributeKey::getByHandle($akHandle);
-				if ($ak->isAttributeKeySearchable() && isset($columns[strtoupper($column)])) {
+				if (isset($columns[strtoupper($column)])) {
 					$searchableAttributes[$column] = $value;
 				}
 			}
