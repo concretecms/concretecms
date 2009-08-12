@@ -43,11 +43,8 @@ class FileVersion extends Object {
 	public function getAttributeList() {
 		$db = Loader::db();
 		$v = array($this->fID, $this->fvID);
-		$r = $db->Execute("select FileAttributeKeys.akHandle, FileAttributeValues.value from FileAttributeKeys inner join FileAttributeValues on FileAttributeKeys.fakID = FileAttributeValues.fakID where FileAttributeValues.fID = ? and FileAttributeValues.fvID = ?", $v);
-		$attributes = array();
-		while ($row = $r->FetchRow()) {
-			$attributes[$row['akHandle']] = $row['value'];
-		}
+		Loader::model('attribute/categories/file');
+		$attributes = FileAttributeKey::getAttributes($this->fID, $this->fvID);
 		return $attributes;
 	}
 	

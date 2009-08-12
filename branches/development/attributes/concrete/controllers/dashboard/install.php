@@ -17,12 +17,9 @@ class DashboardInstallController extends Controller {
 		}
 		
 		$subnav = array(
-			array(View::url('/dashboard/install'), t('Installed and Available'), $addFuncSelected)
+			array(View::url('/dashboard/install'), t('Installed and Available'), $addFuncSelected),
+			array(View::url('/dashboard/install', 'update'), t('Update Add-Ons'), $updateSelected)
 		);
-		
-		if (ENABLE_MARKETPLACE_SUPPORT) {		
-			$subnav[] = array(View::url('/dashboard/install', 'update'), t('Check for Updates'), $updateSelected);
-		}
 		$this->set('subnav', $subnav);
 	}
 
@@ -30,9 +27,22 @@ class DashboardInstallController extends Controller {
 
 	}
 	
-	public function update() {
-		if (!ENABLE_MARKETPLACE_SUPPORT) {
-			$this->redirect('/dashboard/install');
+	public function update($pkgHandle = false) {
+		if ($pkgHandle) {
+			$tests = Package::testForInstall($pkgHandle, false);
+			if (is_array($tests)) {
+				$tests = Package::mapError($tests);
+				$this->set('error', $tests);
+			} else {
+				$p = Package::getByHandle($pkgHandle);
+				try {
+					$p->upgradeCoreData();
+					$p->upgrade();
+					$this->set('message', t('The package has been updated successfully.'));
+				} catch(Exception $e) {
+					$this->set('error', $e);
+				}
+			}
 		}
 	}
 	
@@ -186,12 +196,15 @@ class DashboardInstallController extends Controller {
 		}
     }
 
-    public function remote_upgrade($remoteCID=null){
+    public function remote_upgrade($remoteCID, $pkgHandle){
     	$ph = Loader::helper('package');
-    	$errors = $ph->upgrade_remote('purchase', $remoteCID, false);
+    	$errors = $ph->upgrade_remote('purchase', $remoteCID, $pkgHandle);
 		if (is_array($errors)) {
 			$errors = Package::mapError($errors);
 			$this->set('error', $errors);
+		} else {
+			$this->set('message', t('Upgrade Complete!'));
+			$this->update();
 		}
     }
 

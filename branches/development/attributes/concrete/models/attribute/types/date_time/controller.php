@@ -13,6 +13,9 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 		$db = Loader::db();
 
 		$akDateDisplayMode = $this->post('akDateDisplayMode');
+		if (!$akDateDisplayMode) {
+			$akDateDisplayMode = 'date_time';
+		}
 				
 		// now we have a collection attribute key object above.
 		$db->Replace('atDateTimeSettings', array(

@@ -115,7 +115,7 @@ class UserAttributeKey extends AttributeKey {
 	}
 	
 	public function add($akHandle, $akName, $akIsSearchable, $atID, $uakRequired, $uakDisplayedOnRegister, $uakPrivate, $uakHidden, $akIsAutoCreated = false, $akIsEditable = true) {
-		$ak = parent::add('user', $akHandle, $akName, $akIsSearchable, $akIsAutoCreated, $akIsEditable, $atID);
+		$ak = parent::add('user', $akHandle, $akName, $akIsSearchable, false, $akIsAutoCreated, $akIsEditable, $atID);
 		
 		if ($uakRequired != 1) {
 			$uakRequired = 0;
