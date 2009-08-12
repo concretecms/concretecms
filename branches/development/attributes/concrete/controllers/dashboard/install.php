@@ -6,9 +6,34 @@ class DashboardInstallController extends Controller {
 	public function __construct() {
 		$this->error = Loader::helper('validation/error');
 	}
-	
+		
+	public function on_start() {
+		$addFuncSelected = true;
+		$updateSelected = false;
+		
+		if ($this->getTask() == 'update') {
+			$updateSelected = true;
+			$addFuncSelected = false;
+		}
+		
+		$subnav = array(
+			array(View::url('/dashboard/install'), t('Installed and Available'), $addFuncSelected)
+		);
+		
+		if (ENABLE_MARKETPLACE_SUPPORT) {		
+			$subnav[] = array(View::url('/dashboard/install', 'update'), t('Check for Updates'), $updateSelected);
+		}
+		$this->set('subnav', $subnav);
+	}
+
 	public function view() {
 
+	}
+	
+	public function update() {
+		if (!ENABLE_MARKETPLACE_SUPPORT) {
+			$this->redirect('/dashboard/install');
+		}
 	}
 	
 	public function refresh_block_type($btID = 0) {
@@ -155,6 +180,15 @@ class DashboardInstallController extends Controller {
     public function remote_purchase($remoteCID=null){
     	$ph = Loader::helper('package');
     	$errors = $ph->install_remote('purchase', $remoteCID, false);
+		if (is_array($errors)) {
+			$errors = Package::mapError($errors);
+			$this->set('error', $errors);
+		}
+    }
+
+    public function remote_upgrade($remoteCID=null){
+    	$ph = Loader::helper('package');
+    	$errors = $ph->upgrade_remote('purchase', $remoteCID, false);
 		if (is_array($errors)) {
 			$errors = Package::mapError($errors);
 			$this->set('error', $errors);

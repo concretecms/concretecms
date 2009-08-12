@@ -62,7 +62,7 @@ class ConcreteMarketplaceBlocksHelper {
 						$blockType->isPurchase($list == 'marketplace_purchases_list' ? 1 : 0);
 						$remoteCID = $blockType->getRemoteCollectionID();
 						if (!empty($remoteCID)) {
-							$blockTypes['cid-'.$remoteCID] = $blockType;
+							$blockTypes[$blockType->getHandle()] = $blockType;
 						}
 					}
 				} catch (Exception $e) {}
