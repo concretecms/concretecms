@@ -28,6 +28,7 @@ class BlockTypeRemote extends BlockType{
 		if($options['file']) $this->remoteFileURL= (string) $options['file']; 
 		if($options['icon']) $this->remoteIconURL= (string) $options['icon']; 
 		if($options['price']) $this->price= (string) $options['price']; 
+		if($options['version']) $this->version = (string) $options['version'];
 	}	
 
 	public function getHandle() { return $this->btHandle; }
@@ -37,6 +38,7 @@ class BlockTypeRemote extends BlockType{
 	public function getRemoteURL(){ return $this->remoteURL; }
 	public function getRemoteFileURL(){ return $this->remoteFileURL; }
 	public function getRemoteIconURL(){ return $this->remoteIconURL; }
+	public function getVersion() {return $this->version;}
 	public function isPurchase($value=null) {
 		if ($value !== null) {
 			$this->isPurchase = $value;

@@ -290,6 +290,16 @@ class Package extends Object {
 			return $pkg;
 		}
 	}
+
+	public function getByHandle($pkgHandle) {
+		$db = Loader::db();
+		$row = $db->GetRow("select * from Packages where pkgHandle = ?", array($pkgHandle));
+		if ($row) {
+			$pkg = Loader::package($row['pkgHandle']);
+			$pkg->setPropertiesFromArray($row);
+			return $pkg;
+		}
+	}
 	
 	protected function install() {
 		$db = Loader::db();
