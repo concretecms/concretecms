@@ -398,7 +398,7 @@ ccm_alSetupCheckboxes = function() {
 	// if we're not in the dashboard, add to the multiple operations select menu
 	if (ccm_alLaunchType != 'DASHBOARD') {
 		var chooseText = ccmi18n_filemanager.select;
-		$("#ccm-list-multiple-operations option:eq(0)").after("<option value=\"choose\">" + chooseText + "</option>");
+		$("#ccm-file-list-multiple-operations option:eq(0)").after("<option value=\"choose\">" + chooseText + "</option>");
 	}
 	$("#ccm-file-list-multiple-operations").change(function() {
 		var action = $(this).val();
@@ -659,7 +659,6 @@ ccm_alHighlightFileIDArray = function(ids) {
 ccm_alSelectFile = function(fID) {
 	
 	if (typeof(ccm_chooseAsset) == 'function') {
-
 		var qstring = '';
 		if (typeof(fID) == 'object') {
 			for (i = 0; i < fID.length; i++) {

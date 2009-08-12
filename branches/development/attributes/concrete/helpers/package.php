@@ -35,6 +35,59 @@ class PackageHelper {
 		$fileURL .= "&auth_token={$authData['auth_token']}&auth_uname={$authData['auth_uname']}&auth_timestamp={$authData['auth_timestamp']}";
 		return $fileURL;
 	}
+	
+	public function upgrade_remote($type, $remoteCID, $handle) {
+		$item = $this->get_remote_purchase($remoteCID);
+		
+		if (empty($item)) {
+			return array(Package::E_PACKAGE_NOT_FOUND);
+		}
+		
+		// backup the old package
+		$pkg = Package::getByHandle($handle);
+		$r = $pkg->backup();
+		if (is_array($r)) {
+			return $r;
+		}
+		
+		$fileURL = $item->getRemoteFileURL();
+		if (empty($fileURL)) {
+			return array(Package::E_PACKAGE_NOT_FOUND);
+		}
+
+		$authData = UserInfo::getAuthData();
+		$fileURL .= "&auth_token={$authData['auth_token']}&auth_uname={$authData['auth_uname']}&auth_timestamp={$authData['auth_timestamp']}";
+
+		$file = $this->download_remote_package($fileURL);
+		if (empty($file) || $file == Package::E_PACKAGE_DOWNLOAD) {
+			return array(Package::E_PACKAGE_DOWNLOAD);
+		} else if ($file == Package::E_PACKAGE_SAVE) {
+			return array($file);
+		}
+		
+		try {
+			Loader::model('package_archive');
+			$am = new PackageArchive($item->getHandle());
+			$am->install($file, true);
+		} catch (Exception $e) {
+			return array($e->getMessage());
+		}
+
+		$tests = Package::testForInstall($item->getHandle(), false);
+		if (is_array($tests)) {
+			return $tests;
+		} else {
+			$p = Package::getByHandle($item->getHandle());
+			try {
+				$p->upgradeCoreData();
+				$p->upgrade();
+			} catch(Exception $e) {
+				return array(Package::E_PACKAGE_INSTALL);
+			}
+		}
+		
+		return true;
+	}
 
 	public function install_remote($type, $remoteCID=null, $install=false){
 		$item = $this->get_remote_item($type, $remoteCID);
@@ -103,6 +156,16 @@ class PackageHelper {
 		return $file;
 	}
 
+	private function get_remote_purchase($cID) {
+		$helper = Loader::helper("concrete/marketplace/blocks");
+		$list = $helper->getPurchasesList(false);
+		foreach ($list as $item) {
+			if ($cID == $item->getRemoteCollectionID()) {
+				return $item;
+			}
+		}
+	}
+	
 	private function get_remote_item($type, $remoteCID) {
 		if (empty($remoteCID)) {
 			return "";

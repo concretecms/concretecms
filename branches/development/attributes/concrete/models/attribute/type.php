@@ -27,6 +27,14 @@ class AttributeType extends Object {
 	}
 	
 	public static function getByHandle($atHandle) {
+		
+		// Handle legacy handles
+		switch($atHandle) {
+			case 'date':
+				$atHandle = 'date_time';
+				break;
+		}
+		
 		$db = Loader::db();
 		$row = $db->GetRow('select atID, pkgID, atHandle, atName from AttributeTypes where atHandle = ?', array($atHandle));
 		$at = new AttributeType();

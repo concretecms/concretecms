@@ -197,10 +197,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$vo = $this->getVersionObject();
 			$cvID = $vo->getVersionID();
 
-			$v = array($this->getCollectionID(), $cvID, $ak->getCollectionAttributeKeyID());
+			$v = array($this->getCollectionID(), $cvID, $ak->getAttributeKeyID());
 			$db->query("delete from CollectionAttributeValues where cID = ? and cvID = ? and akID = ?", $v);
 
-			$v3 = array($this->getCollectionID(), $cvID, $ak->getCollectionAttributeKeyID(), $value);
+			$v3 = array($this->getCollectionID(), $cvID, $ak->getAttributeKeyID(), $value);
 			$db->query("insert into CollectionAttributeValues (cID, cvID, akID, value) values (?, ?, ?, ?)", $v3);
 			
 			unset($v); unset($v3);

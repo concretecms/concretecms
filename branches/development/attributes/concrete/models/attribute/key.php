@@ -83,7 +83,15 @@ class AttributeKey extends Object {
 	/** 
 	 * Adds an attribute key. 
 	 */
-	protected function add($akCategoryHandle, $akHandle, $akName, $akIsSearchable, $akIsAutoCreated, $akIsEditable, $atID) {
+	protected function add($akCategoryHandle, $akHandle, $akName, $akIsSearchable, $passthru, $akIsAutoCreated, $akIsEditable, $atID) {
+		
+		$vn = Loader::helper('validation/numbers');
+		if (!$vn->integer($atID)) {
+			// The passed item is not an integer. It is probably something like 'DATE'
+			$type = AttributeType::getByHandle(strtolower($atID));
+			$atID = $type->getAttributeTypeID();
+		}
+		
 		$_akIsSearchable = 1;
 		$_akIsAutoCreated = 1;
 		$_akIsEditable = 1;
@@ -111,7 +119,7 @@ class AttributeKey extends Object {
 			$at = $ak->getAttributeType();
 			$cnt = $at->getController();
 			$cnt->setAttributeKey($ak);
-			$cnt->saveKey();
+			$cnt->saveKey($passthru);
 			$ak->updateSearchIndex();
 			return $ak;
 		}

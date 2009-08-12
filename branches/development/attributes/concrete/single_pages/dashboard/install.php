@@ -5,10 +5,41 @@ $ci = Loader::helper('concrete/urls');
 $ch = Loader::helper('concrete/interface');
 
 if ($this->controller->getTask() == 'update') { 
-	$thisURL = $this->url('/dashboard/install', 'update');
-	?>
 
-<h1><span><?=t('Update Your Add-Ons')?></span></h1>
+	$pkgAvailableArray = Package::getLocalUpgradeablePackages();
+	$thisURL = $this->url('/dashboard/install', 'update');
+	
+	if (count($pkgAvailableArray) > 0) { 
+	
+	?>
+	
+	<h1><span><?=t('Downloaded and Ready to Install')?></span></h1>
+	
+	
+	<div class="ccm-dashboard-inner">
+	<? foreach ($pkgAvailableArray as $pkg) {  ?>
+		<div class="ccm-addon-list">
+			<table cellspacing="0" cellpadding="0">		
+			<tr>
+				<td class="ccm-installed-items-icon"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
+				<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></a></h3><?=$pkg->getPackageDescription()?>
+				<br/><br/>
+				<strong><?=t('Current Version: %s', $pkg->getPackageCurrentlyInstalledVersion())?></strong><br/>
+				<strong><?=t('New Version: %s', $pkg->getPackageVersion())?></strong><br/>
+				</td>
+				<td><?=$ch->button(t("Update"), View::url('/dashboard/install', 'update', $pkg->getPackageHandle()), "right")?></td>					
+			</tr>
+			</table>
+			</div>
+		<? } ?>			
+	</div>
+
+
+<? } ?>
+<? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
+
+<h1><span><?=t('Available for Download')?></span></h1>
+
 
 <div class="ccm-dashboard-inner">
 	<? if (!UserInfo::isRemotelyLoggedIn()) { ?> 
@@ -28,47 +59,59 @@ if ($this->controller->getTask() == 'update') {
 
 	
 
-<h2><?=t('The Following Updates are Available')?></h2>
-
-<?
-$mh = Loader::helper('concrete/marketplace/blocks');
-$purchased = $mh->getPurchasesList(false);
-$pkgArray = Package::getInstalledList();
-
-foreach ($pkgArray as $pkg) { 
-	$rpkg = $purchased[$pkg->getPackageHandle()];
-	if (version_compare($rpkg->getVersion(), $pkg->getPackageVersion(), '>')) { 
-		?>
-		<div class="ccm-addon-list">
-		<table cellspacing="0" cellpadding="0">		
-		<tr>
-			<td class="ccm-installed-items-icon"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
-			<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></a></h3><?=$pkg->getPackageDescription()?>
-			<br/><br/>
-			<strong><?=t('Current Version: %s', $pkg->getPackageVersion())?></strong><br/>
-			<strong><?=t('New Version: %s', $rpkg->getVersion())?></strong><br/>
-			<a target="_blank" href="<?=$rpkg->getRemoteURL()?>"><?=t('More Information')?></a>
-			</td>
-			<td><?=$ch->button(t("Download and Install"), View::url('/dashboard/install', 'remote_upgrade', $rpkg->getRemoteCollectionID()), "right")?></td>					
-		</tr>
-		</table>
-		</div>
-	<? } ?>			
-<? } ?>
-
-
+	<h2><?=t('The Following Updates are Available')?></h2>
+	
+	<?
+	$mh = Loader::helper('concrete/marketplace/blocks');
+	$purchased = $mh->getPurchasesList(false);
+	$i = 0;
+	
+	foreach ($pkgArray as $pkg) { 
+		$rpkg = $purchased[$pkg->getPackageHandle()];
+		if (version_compare($rpkg->getVersion(), $pkg->getPackageVersion(), '>')) { 
+			$i++;
+			
+			?>
+			<div class="ccm-addon-list">
+			<table cellspacing="0" cellpadding="0">		
+			<tr>
+				<td class="ccm-installed-items-icon"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
+				<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></a></h3><?=$pkg->getPackageDescription()?>
+				<br/><br/>
+				<strong><?=t('Current Version: %s', $pkg->getPackageVersion())?></strong><br/>
+				<strong><?=t('New Version: %s', $rpkg->getVersion())?></strong><br/>
+				<a target="_blank" href="<?=$rpkg->getRemoteURL()?>"><?=t('More Information')?></a>
+				</td>
+				<td><?=$ch->button(t("Download and Install"), View::url('/dashboard/install', 'remote_upgrade', $rpkg->getRemoteCollectionID(), $pkg->getPackageHandle()), "right")?></td>					
+			</tr>
+			</table>
+			</div>
+		<? } ?>			
+	<? }
+		
+		if ($i == 0) { ?>
+			
+			<p><?=t('There are no updates for your add-ons currently available from the marketplace.')?></p>
+			
+			
+		<? } ?>
+	
 	<? } ?>
-
 </div>
+
+<? } ?>
 
 <? 
 } else { 
+
+	$pkgAvailableArray = Package::getAvailablePackages();
+	$pkgArray = Package::getInstalledList();
+
+
 	$thisURL = $this->url('/dashboard/install');
 
 	$btArray = BlockTypeList::getInstalledList();
 	$btAvailableArray = BlockTypeList::getAvailableList();
-	$pkgArray = Package::getInstalledList();
-	$pkgAvailableArray = Package::getAvailablePackages();
 	
 	$coreBlockTypes = array();
 	$webBlockTypes = array();
@@ -244,7 +287,9 @@ foreach ($pkgArray as $pkg) {
 					<table cellspacing="0" cellpadding="0">		
 					<tr>
 						<td class="ccm-installed-items-icon"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
-						<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></a></h3><?=$pkg->getPackageDescription()?></td>
+						<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?> - <?=$pkg->getPackageVersion()?></a></h3><?=$pkg->getPackageDescription()?>
+
+						</td>
 						<td><?=$ch->button(t("Edit"), View::url('/dashboard/install', 'inspect_package', $pkg->getPackageID()), "right")?></td>					
 					</tr>
 					</table>
