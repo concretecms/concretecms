@@ -255,6 +255,18 @@ class InstallController extends Controller {
 						$data['ctID'] = $rst->getCollectionTypeID();
 						$home->update($data);
 						
+						AttributeKeyCategory::add('collection');
+						AttributeKeyCategory::add('user');
+						AttributeKeyCategory::add('file');
+						
+						AttributeType::add('text', t('Text'));
+						AttributeType::add('boolean', t('Checkbox'));
+						AttributeType::add('date_time', t('Date/Time'));
+						AttributeType::add('image_file', t('Image/File'));
+						AttributeType::add('number', t('Number'));
+						AttributeType::add('rating', t('Rating'));
+						AttributeType::add('select', t('Select'));
+						
 						// install everything into db
 
 						// Add default page attributes
@@ -281,9 +293,8 @@ class InstallController extends Controller {
 						$nst->assignCollectionAttribute($cab2);
 						$nst->assignCollectionAttribute($cab3);
 						$nst->assignCollectionAttribute($cab4); 
-						
-						// Add default user attributes
-						UserAttributeKey::add('date_of_birth', t('Date of Birth'), 0, 1, 1, 0, null, "TEXT");
+
+						UserAttributeKey::add('date_of_birth', t('Date of Birth'), 1, "date_time", 0, 1, 0, 0);
 						
 						// Add our core views
 						SinglePage::add('/login');

@@ -265,13 +265,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * Gets the value of the attribute for the user
 		 */
 		public function getAttribute($attributeHandle) {
+			Loader::model('attribute/categories/user');
 			$ak = UserAttributeKey::getByHandle($attributeHandle);
-			$av = $this->getAttributeValueObject($ak);
-			if (is_object($av)) {
-				return $av->getValue();
+			if (is_object($ak)) {
+				$av = $this->getAttributeValueObject($ak);
+				if (is_object($av)) {
+					return $av->getValue();
+				}
 			}
 		}
-
+		
 		public function getAttributeValueObject($ak, $createIfNotFound = false) {
 			$db = Loader::db();
 			$av = false;

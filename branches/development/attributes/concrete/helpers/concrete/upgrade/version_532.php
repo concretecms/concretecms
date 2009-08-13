@@ -33,6 +33,16 @@ class ConcreteUpgradeVersion532Helper {
 		if( !intval($cak->getAttributeKeyID()) ) [
 			$cak = CollectionAttributeKey::add('exclude_sitemapxml', t('Exclude From sitemap.xml'), true, null, 'BOOLEAN');
 		}
+		
+		
+		$db = Loader::db();
+		$db->RenameTableSQL('UserAttributeKeys', '_UserAttributeKeys');
+		$db->RenameTableSQL('CollectionAttributeKeys', '_CollectionAttributeKeys');
+		$db->RenameTableSQL('FileAttributeKeys', '_FileAttributeKeys');
+		$db->RenameTableSQL('CollectionAttributeValues', '_CollectionAttributeValues');
+		$db->RenameTableSQL('UserAttributeValues', '_UserAttributeValues');
+		$db->RenameTableSQL('FileAttributeValues', '_FileAttributeValues');
+		$db->RenameTableSQL('PageSearchIndexAttributes', '_PageSearchIndexAttributes');
 	}
 	
 }
