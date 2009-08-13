@@ -1197,25 +1197,33 @@
       <KEY/>
       <UNSIGNED />
     </field>
-    <field name="uakRequired" type="I1" size="1">
+    <field name="uakProfileDisplay" type="I1" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="uakDisplayedOnRegister" type="I1" size="1">
+    <field name="uakProfileEdit" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+    <field name="uakProfileEditRequired" type="I1" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="uakPrivate" type="I1" size="1">
+    <field name="uakRegisterEdit" type="I1" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="uakHidden" type="I1" size="1">
+    <field name="uakRegisterEditRequired" type="I1" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
     <field name="displayOrder" type="I" size="10">
       <UNSIGNED />
       <DEFAULT value="0"/>
+    </field>
+    <field name="uakIsActive" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
     </field>
   </table>
   <table name="UserAttributeValues">

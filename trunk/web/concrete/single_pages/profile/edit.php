@@ -39,7 +39,7 @@
         <h1><?=t('Edit Profile')?></h1>
         <div class="ccm-form">
             <form method="post" action="<?=$this->action('save')?>" id="profile-edit-form">
-            <? $attribs = UserAttributeKey::getRegistrationList(); 
+            <? $attribs = UserAttributeKey::getEditableInProfileList(); 
             if(is_array($attribs) && count($attribs)) { 
             ?>
                 <fieldset>
@@ -48,16 +48,10 @@
                     <span class="required">*</span> <?=$form->text('uEmail',$ui->getUserEmail())?>
                 </div>	
                 <?
-                foreach($attribs as $ak) { 
-                    if ($ak->getKeyType() == 'HTML') { ?>
-                        <div><?=$ak->outputHTML()?></div>
-                    <? } else { ?>
-                        <div>
-                            <?=$form->label($ak->getFormElementName(), $ak->getKeyName())?> <? if ($ak->isKeyRequired()) { ?><span class="required">*</span><? } ?>
-                            <?=$ak->outputHTML($ui->getUserID())?>
-                        </div>
-                    <? } ?>
-                <? } ?>
+                foreach($attribs as $ak) {
+                	$ak->render('label');
+                	$ak->render('form'); 
+                } ?>
                 </fieldset>
             <? } ?>
             <h3><?=t('Change Password')?></h3>

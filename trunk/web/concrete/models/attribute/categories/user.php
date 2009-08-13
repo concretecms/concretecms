@@ -35,7 +35,7 @@ class UserAttributeKey extends AttributeKey {
 	public function load($akID) {
 		parent::load($akID);
 		$db = Loader::db();
-		$row = $db->GetRow("select uakHidden, displayOrder, uakRequired, uakPrivate, uakDisplayedOnRegister from UserAttributeKeys where akID = ?", array($akID));
+		$row = $db->GetRow("select uakProfileDisplay, displayOrder, uakProfileEdit, uakProfileEditRequired, uakRegisterEdit, uakRegisterEditRequired, uakIsActive from UserAttributeKeys where akID = ?", array($akID));
 		$this->setPropertiesFromArray($row);
 	}
 	
@@ -63,17 +63,23 @@ class UserAttributeKey extends AttributeKey {
 		}
 	}
 	
-	public function isAttributeKeyRequired() {
-		return $this->uakRequired;
+	public function isAttributeKeyDisplayedOnProfile() {
+		return $this->uakProfileDisplay;
 	}
-	public function isAttributeKeyDisplayedOnRegister() {
-		return $this->uakDisplayedOnRegister;
+	public function isAttributeKeyEditableOnProfile() {
+		return $this->uakProfileEdit;
 	}
-	public function isAttributeKeyPrivate() {
-		return $this->uakPrivate;
+	public function isAttributeKeyRequiredOnProfile() {
+		return $this->uakProfileEditRequired;
 	}
-	public function isAttributeKeyHidden() {
-		return $this->uakHidden;
+	public function isAttributeKeyEditableOnRegister() {
+		return $this->uakRegisterEdit;
+	}
+	public function isAttributeKeyRequiredOnRegister() {
+		return $this->uakRegisterEditRequired;
+	}	
+	public function isAttributeKeyActive() {
+		return $this->uakIsActive;
 	}
 	
 	public function sortListByDisplayOrder($a, $b) {
@@ -82,6 +88,16 @@ class UserAttributeKey extends AttributeKey {
 		} else {
 			return ($a->getAttributeKeyDisplayOrder() < $b->getAttributeKeyDisplayOrder()) ? -1 : 1;
 		}
+	}
+	
+	public function activate() {
+		$db = Loader::db();
+		$db->Execute('update UserAttributeKeys set uakIsActive = 1 where akID = ?', array($this->akID));
+	}
+	
+	public function deactivate() {
+		$db = Loader::db();
+		$db->Execute('update UserAttributeKeys set uakIsActive = 0 where akID = ?', array($this->akID));
 	}
 	
 	public static function getList() {
@@ -114,20 +130,23 @@ class UserAttributeKey extends AttributeKey {
 		$uo->reindex();
 	}
 	
-	public function add($akHandle, $akName, $akIsSearchable, $atID, $uakRequired, $uakDisplayedOnRegister, $uakPrivate, $uakHidden, $akIsAutoCreated = false, $akIsEditable = true) {
+	public function add($akHandle, $akName, $akIsSearchable, $atID, $uakProfileDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired, $akIsAutoCreated = false, $akIsEditable = true) {
 		$ak = parent::add('user', $akHandle, $akName, $akIsSearchable, false, $akIsAutoCreated, $akIsEditable, $atID);
 		
-		if ($uakRequired != 1) {
-			$uakRequired = 0;
+		if ($uakProfileDisplay != 1) {
+			$uakProfileDisplay = 0;
 		}
-		if ($uakDisplayedOnRegister != 1) {
-			$uakDisplayedOnRegister = 0;
+		if ($uakProfileEdit != 1) {
+			$uakProfileEdit = 0;
 		}
-		if ($uakPrivate != 1) {
-			$uakPrivate = 0;
+		if ($uakProfileEditRequired != 1) {
+			$uakProfileEditRequired = 0;
 		}
-		if ($uakHidden != 1) {
-			$uakHidden = 0;
+		if ($uakRegisterEdit != 1) {
+			$uakRegisterEdit = 0;
+		}
+		if ($uakRegisterEditRequired != 1) {
+			$uakRegisterEditRequired = 0;
 		}
 		$db = Loader::db();
 		$displayOrder = $db->GetOne('select max(displayOrder) from UserAttributeKeys');
@@ -135,31 +154,34 @@ class UserAttributeKey extends AttributeKey {
 			$displayOrder = 0;
 		}
 		$displayOrder++;
-		$v = array($ak->getAttributeKeyID(), $uakRequired, $uakDisplayedOnRegister, $uakPrivate, $uakHidden, $displayOrder);
-		$db->Execute('insert into UserAttributeKeys (akID, uakRequired, uakDisplayedOnRegister, uakPrivate, uakHidden, displayOrder) values (?, ?, ?, ?, ?, ?)', $v);
+		$v = array($ak->getAttributeKeyID(), $uakProfileDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired, $displayOrder, 1);
+		$db->Execute('insert into UserAttributeKeys (akID, uakProfileDisplay, uakProfileEdit, uakProfileEditRequired, uakRegisterEdit, uakRegisterEditRequired, displayOrder, uakIsActive) values (?, ?, ?, ?, ?, ?, ?, ?)', $v);
 		
 		$nak = new UserAttributeKey();
 		$nak->load($ak->getAttributeKeyID());
 		return $nak;
 	}
 	
-	public function update($akHandle, $akName, $akIsSearchable, $uakRequired, $uakDisplayedOnRegister, $uakPrivate, $uakHidden) {
+	public function update($akHandle, $akName, $akIsSearchable, $uakProfileDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired) {
 		$ak = parent::update($akHandle, $akName, $akIsSearchable);
-		if ($uakRequired != 1) {
-			$uakRequired = 0;
+		if ($uakProfileDisplay != 1) {
+			$uakProfileDisplay = 0;
 		}
-		if ($uakDisplayedOnRegister != 1) {
-			$uakDisplayedOnRegister = 0;
+		if ($uakProfileEdit != 1) {
+			$uakProfileEdit = 0;
 		}
-		if ($uakPrivate != 1) {
-			$uakPrivate = 0;
+		if ($uakProfileEditRequired != 1) {
+			$uakProfileEditRequired = 0;
 		}
-		if ($uakHidden != 1) {
-			$uakHidden = 0;
+		if ($uakRegisterEdit != 1) {
+			$uakRegisterEdit = 0;
+		}
+		if ($uakRegisterEditRequired != 1) {
+			$uakRegisterEditRequired = 0;
 		}
 		$db = Loader::db();
-		$v = array($uakRequired, $uakDisplayedOnRegister, $uakPrivate, $uakHidden, $ak->getAttributeKeyID());
-		$db->Execute('update UserAttributeKeys set uakRequired = ?, uakDisplayedOnRegister= ?, uakPrivate = ?, uakHidden = ? where akID = ?', $v);
+		$v = array($uakProfileDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired, $ak->getAttributeKeyID());
+		$db->Execute('update UserAttributeKeys set uakProfileDisplay = ?, uakProfileEdit= ?, uakProfileEditRequired = ?, uakRegisterEdit = ?, uakRegisterEditRequired = ? where akID = ?', $v);
 	}
 	
 	
@@ -185,21 +207,46 @@ class UserAttributeKey extends AttributeKey {
 	public static function getImporterList() {
 		return parent::getList('user', array('akIsAutoCreated' => 1));	
 	}
-
-	public static function getRegistrationList() {
+	
+	public static function getPublicProfileList() {
 		$tattribs = self::getList();
 		$attribs = array();
 		foreach($tattribs as $uak) {
-			if (!$uak->isAttributeKeyDisplayedOnRegister()) {
+			if ((!$uak->isAttributeKeyDisplayedOnProfile()) || (!$uak->isAttributeKeyActive())) {
 				continue;
-			}
-			
+			}			
 			$attribs[] = $uak;
 		}
 		unset($tattribs);
 		return $attribs;
 	}
 
+	public static function getRegistrationList() {
+		$tattribs = self::getList();
+		$attribs = array();
+		foreach($tattribs as $uak) {
+			if ((!$uak->isAttributeKeyEditableOnRegister()) || (!$uak->isAttributeKeyActive())) {
+				continue;
+			}			
+			$attribs[] = $uak;
+		}
+		unset($tattribs);
+		return $attribs;
+	}
+	
+	public static function getEditableInProfileList() {
+		$tattribs = self::getList();
+		$attribs = array();
+		foreach($tattribs as $uak) {
+			if ((!$uak->isAttributeKeyEditableOnProfile()) || (!$uak->isAttributeKeyActive())) {
+				continue;
+			}			
+			$attribs[] = $uak;
+		}
+		unset($tattribs);
+		return $attribs;
+	}
+	
 	public static function getUserAddedList() {
 		return parent::getList('user', array('akIsAutoCreated' => 0));	
 	}

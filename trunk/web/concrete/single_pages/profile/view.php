@@ -45,11 +45,11 @@
     <div id="ccm-profile-body" style="float:left; width:70%;">	
         <h1><?=$profile->getUserName()?></h1>
         <?
-        $uaks = UserAttributeKey::getList();
+        $uaks = UserAttributeKey::getPublicProfileList();
         foreach($uaks as $ua) { ?>
             <div>
                 <label><?=$ua->getKeyName()?></label>
-                <?= $ua->getUserValue($profile->getUserID()); ?>
+                <?=$profile->getAttribute($ua); ?>
             </div>
         <? } ?>		
     </div>

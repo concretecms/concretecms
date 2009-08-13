@@ -8,16 +8,16 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 	protected $searchIndexFieldDefinition = 'T NULL';
 
 	public function saveKey() {
-		$ak = $this->getAttributeKey();
-		
-		$db = Loader::db();
-
 		$akDateDisplayMode = $this->post('akDateDisplayMode');
 		if (!$akDateDisplayMode) {
 			$akDateDisplayMode = 'date_time';
 		}
-				
-		// now we have a collection attribute key object above.
+		$this->setDisplayMode($akDateDisplayMode);
+	}
+	
+	public function setDisplayMode($akDateDisplayMode) {
+		$db = Loader::db();
+		$ak = $this->getAttributeKey();
 		$db->Replace('atDateTimeSettings', array(
 			'akID' => $ak->getAttributeKeyID(), 
 			'akDateDisplayMode' => $akDateDisplayMode
@@ -58,10 +58,17 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 		$this->load();
 		$dt = Loader::helper('form/date_time');
 		$caValue = $this->getValue();
-		if ($this->akDateDisplayMode == 'date') {
-			print $dt->date($this->field('value'), $caValue);
-		} else {
-			print $dt->datetime($this->field('value'), $caValue);
+		switch($this->akDateDisplayMode) {
+			case 'text':
+				$form = Loader::helper('form');
+				print $form->text($this->field('value'), $caValue);
+				break;
+			case 'date':
+				print $dt->date($this->field('value'), $caValue);
+				break;
+			default:
+				print $dt->datetime($this->field('value'), $caValue);
+				break;
 		}
 	}
 
