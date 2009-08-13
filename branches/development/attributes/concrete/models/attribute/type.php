@@ -43,6 +43,17 @@ class AttributeType extends Object {
 		return $at;
 	}
 	
+	public static function add($atHandle, $atName, $pkg = false) {
+		$pkgID = 0;
+		if (is_object($pkg)) {
+			$pkgID = $pkg->getPackageID();
+		}
+		$db = Loader::db();
+		$db->Execute('insert into AttributeTypes (atHandle, atName) values (?, ?)', array($atHandle, $atName));
+		$id = $db->Insert_ID();
+		return AttributeType::getByID($id);
+	}
+	
 	public function getValue($avID) {
 		$cnt = $this->getController();
 		return $cnt->getValue($avID);

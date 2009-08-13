@@ -4,6 +4,8 @@ $valt = Loader::helper('validation/token');
 $ci = Loader::helper('concrete/urls');
 $ch = Loader::helper('concrete/interface');
 
+$pkgArray = Package::getInstalledList();
+
 if ($this->controller->getTask() == 'update') { 
 
 	$pkgAvailableArray = Package::getLocalUpgradeablePackages();
@@ -105,7 +107,6 @@ if ($this->controller->getTask() == 'update') {
 } else { 
 
 	$pkgAvailableArray = Package::getAvailablePackages();
-	$pkgArray = Package::getInstalledList();
 
 
 	$thisURL = $this->url('/dashboard/install');

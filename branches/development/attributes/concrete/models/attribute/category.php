@@ -32,5 +32,11 @@ class AttributeKeyCategory extends Object {
 		$db->Execute('update AttributeKeys set akIsColumnHeader = 0 where akCategoryID = ?', $this->akCategoryID);
 	}
 		
+	public static function add($akCategoryHandle) {
+		$db = Loader::db();
+		$db->Execute('insert into AttributeKeyCategories (akCategoryHandle) values (?)', array($akCategoryHandle));
+		$id = $db->Insert_ID();
+		return AttributeKeyCategory::getByID($id);
+	}
 
 }
