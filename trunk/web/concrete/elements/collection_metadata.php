@@ -4,6 +4,7 @@ global $c;
 Loader::model('collection_types');
 Loader::model('collection_attributes');
 $dt = Loader::helper('form/date_time');
+$uh = Loader::helper('form/user_selector');
 
 if ($cp->canAdminPage()) {
 	$ctArray = CollectionType::getList();
@@ -69,24 +70,11 @@ if ($cp->canAdminPage()) {
 	
 	<div class="ccm-field-two">
 	<label><?=t('Owner')?></label>
+	
 		<? 
-		$ui = UserInfo::getByID($c->getCollectionUserID());
-		if (is_object($ui)) {
-			$currentUName = $ui->getUserName();
-		} else {
-			$currentUName = "(None)";
-		}
-		print '<div style="padding-top: 4px;font-size: 12px"><span id="ccm-uName">' . $currentUName . '</span>';
-		if ($cp->canAdminPage()) { ?>
-		(<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_user.php" id="ccm-edit-page-user" dialog-modal="false" dialog-width="600" dialog-height="400" dialog-title="<?=t('Choose User')?>"><?=t('Edit')?></a>)
-		<input type="hidden" name="uID" value="<?=$c->getCollectionUserID()?>" id="ccm-uID" />
+		print $uh->selectUser('uID', $c->getCollectionUserID());
+		?>
 		
-		<script type="text/javascript">$(function() {
-			$("#ccm-edit-page-user").dialog();
-		})</script>
-		<? } ?>
-		</div>
-
 	</div>
 		
 	

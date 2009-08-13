@@ -22,15 +22,24 @@ class ConcreteUpgradeVersion532Helper {
 
 	//run before the db.xml changes take place
 	public function prepare() {
-		
+		// Handle new attribute stuff
+		$db = Loader::db();
+		$db->RenameTableSQL('UserAttributeKeys', '_UserAttributeKeys');
+		$db->RenameTableSQL('CollectionAttributeKeys', '_CollectionAttributeKeys');
+		$db->RenameTableSQL('FileAttributeKeys', '_FileAttributeKeys');
+		$db->RenameTableSQL('CollectionAttributeValues', '_CollectionAttributeValues');
+		$db->RenameTableSQL('UserAttributeValues', '_UserAttributeValues');
+		$db->RenameTableSQL('FileAttributeValues', '_FileAttributeValues');
+		$db->RenameTableSQL('PageSearchIndexAttributes', '_PageSearchIndexAttributes');
 	}
 	
 	public function run() {
 		Loader::model('collection_attributes');
 		//add the new collection attribute keys
+
 		
 		$cak=CollectionAttributeKey::getByHandle('exclude_sitemapxml');
-		if( !intval($cak->getAttributeKeyID()) ) [
+		if( !intval($cak->getAttributeKeyID())) {
 			$cak = CollectionAttributeKey::add('exclude_sitemapxml', t('Exclude From sitemap.xml'), true, null, 'BOOLEAN');
 		}
 		
@@ -43,10 +52,12 @@ class ConcreteUpgradeVersion532Helper {
 		//profile friends page install	
 		Loader::model('single_page');
 		$friendsPage=Page::getByPath('/profile/friends');
-		if( !intval($friendsPage->cID) ) 
+		if( !intval($friendsPage->cID)) {
 			SinglePage::add('/profile/friends');
+		}
+		
 	}
-	
+		
 }
 		
 	

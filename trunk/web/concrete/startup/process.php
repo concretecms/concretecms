@@ -10,50 +10,17 @@
 	
 	//just trying to prevent duplication of this code
 	function processMetaData($nvc){			
-		/* update meta data */
 		Loader::model('collection_attributes');
-		Loader::model('collection_types');		
-			
-		foreach($_POST['selectedAKIDs'] as $akID) {
-			if ($akID > 0) {
-				$ak = CollectionAttributeKey::getByID($akID);
-				$existingOptions = explode("\n", $ak->getCollectionAttributeKeyValues());
-				$submittedValue = $ak->getValueFromPost();
-				$otherSubmittedVal=trim($_POST['akID_'.$akID.'_other']); 
-				
-				//Multi Select List
-				if( is_array($submittedValue) ){													
-					//add new options to list if allowed
-					if( $ak->getAllowOtherValues() ){
-						$newValues=array();
-						foreach($submittedValue as $val)
-							if( !in_array($val,$existingOptions) && strlen(trim($val))  ) 
-								$newValues[]=$val; 
-						$akValues=join("\n",array_merge($existingOptions,$newValues));
-						$ak->updateValues($akValues);
-					}							
-					$submittedValue=join("\n",$submittedValue);
-					
-				//Single Select - New Value
-				}elseif( strlen($otherSubmittedVal) && 
-						 $otherSubmittedVal!=CollectionAttributeKey::getNewValueEmptyFieldTxt() && 
-						 $ak->getAllowOtherValues() ){
-						 
-					$submittedValue=$otherSubmittedVal;
-					
-					//add the new value to possible values
-					if( !in_array($otherSubmittedVal,$existingOptions) ){
-						$existingOptions[]=$otherSubmittedVal;
-						$akValues=join("\n",$existingOptions);
-						$ak->updateValues($akValues);
-					}
+		$nvc->clearCollectionAttributes($_POST['selectedAKIDs']);
+		if (is_array($_POST['selectedAKIDs'])) {
+			foreach($_POST['selectedAKIDs'] as $akID) {
+				if ($akID > 0) {
+					$ak = CollectionAttributeKey::getByID($akID);
+					$ak->saveAttributeForm($nvc);
 				}
-				if (isset($submittedValue)) {
-					$nvc->addAttribute($ak, $submittedValue);
-				}
-			}
-		} 
-	}	
+			} 
+		}
+	}
 	
 	// Modification for step editing
 	$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
@@ -608,8 +575,6 @@
 				}
 				
 				$nvc->update($data);
-				$nvc->clearCollectionAttributes();			
-				
 				processMetaData($nvc);
 				
 				if ($_POST['rel'] == 'SITEMAP') { 

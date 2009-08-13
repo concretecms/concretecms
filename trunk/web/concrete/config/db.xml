@@ -72,6 +72,98 @@
       <UNSIGNED/>
     </field>
   </table>
+  <table name="AttributeKeys">
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED />
+    </field>
+    <field name="akHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="akName" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="akIsSearchable" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="akIsAutoCreated" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="akIsColumnHeader" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="akIsEditable" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="atID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+    <field name="akCategoryID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+    <index name="akHandle">
+      <UNIQUE/>
+      <col>akHandle</col>
+      <col>akCategoryID</col>
+    </index>
+  </table>
+  <table name="AttributeKeyCategories">
+    <field name="akCategoryID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED />
+    </field>
+    <field name="akCategoryHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+  </table>
+  <table name="AttributeTypes">
+    <field name="atID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED />
+    </field>
+    <field name="atHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="atName" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+  </table>
+  <table name="AttributeValues">
+    <field name="avID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED />
+      <AUTOINCREMENT />
+    </field>
+    <field name="akID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+    <field name="avDateAdded" type="T">
+      <NOTNULL/>
+      <DEFAULT value="0000-00-00 00:00:00"/>
+    </field>
+    <field name="uID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+    <field name="atID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+  </table>
   <table name="BlockRelations">
     <field name="brID" type="I" size="10">
       <KEY/>
@@ -170,36 +262,6 @@
       <UNSIGNED/>
     </field>
   </table>
-  <table name="CollectionAttributeKeys">
-    <field name="akID" type="I" size="10">
-      <KEY/>
-      <AUTOINCREMENT/>
-      <UNSIGNED />
-    </field>
-    <field name="akHandle" type="C" size="255">
-      <NOTNULL/>
-    </field>
-    <field name="akName" type="C" size="255">
-      <NOTNULL/>
-    </field>
-    <field name="akSearchable" type="I1" size="1">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-    <field name="akValues" type="X"/>
-    <field name="akAllowOtherValues" type="I1" size="1">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>	
-    <field name="akType" type="C" size="255">
-      <NOTNULL/>
-      <DEFAULT value="TEXT"/>
-    </field>
-    <index name="akHandle">
-      <UNIQUE/>
-      <col>akHandle</col>
-    </index>
-  </table>
   <table name="CollectionAttributeValues">
     <field name="cID" type="I" size="10">
       <KEY/>
@@ -216,7 +278,11 @@
       <DEFAULT value="0"/>
       <UNSIGNED />
     </field>
-    <field name="value" type="X"/>
+    <field name="avID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED />
+    </field>
   </table>
   <table name="CollectionVersionBlockPermissions">
     <field name="cID" type="I" size="10">
@@ -325,6 +391,12 @@
       <col>cvIsApproved</col>
     </index>
   </table>
+  <table name="CollectionSearchIndexAttributes">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED/>
+    </field>
+  </table>
   <table name="Collections">
     <field name="cID" type="I" size="10">
       <KEY/>
@@ -404,36 +476,6 @@
       <DEFTIMESTAMP/>
     </field>		
   </table>  
-  
-  <table name="FileAttributeKeys">
-    <field name="fakID" type="I" size="10">
-      <KEY/>
-      <AUTOINCREMENT/>
-      <UNSIGNED/>
-    </field>
-    <field name="akHandle" type="C" size="255">
-      <NOTNULL/>
-    </field>
-    <field name="akName" type="C" size="255">
-      <NOTNULL/>
-    </field>
-    <field name="akValues" type="X"/>
-    <field name="akType" type="C" size="255">
-      <DEFAULT value="TEXT"/>
-    </field>
-    <field name="akIsImporterAttribute" type="I" size="1">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-    <field name="akIsEditable" type="I" size="1">
-      <NOTNULL/>
-      <DEFAULT value="1"/>
-    </field>
-    <index name="akHandle">
-      <UNIQUE/>
-      <col>akHandle</col>
-    </index>
-  </table>
   <table name="FileAttributeValues">
     <field name="fID" type="I" size="10">
       <KEY/>
@@ -445,12 +487,16 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="fakID" type="I" size="10">
+    <field name="akID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="value" type="X"/>
+    <field name="avID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
   </table>
   <table name="FilePermissionFileTypes">
     <field name="fsID" type="I" size="10">
@@ -662,6 +708,12 @@
       <NOTNULL/>
     </field>
   </table>
+  <table name="FileSearchIndexAttributes">
+    <field name="fID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED/>
+    </field>
+  </table>
   <table name="Files">
     <field name="fID" type="I" size="10">
       <KEY/>
@@ -837,22 +889,6 @@
       <col>content</col>
       <FULLTEXT />
 	</index>
-  </table>
-  <table name="PageSearchIndexAttributes">
-    <field name="cID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="akID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="akHandle" type="C" size="255">
-      <NOTNULL/>
-    </field>
-    <field name="value" type="X"/>
   </table>
   <table name="PagePermissionPageTypes">
     <field name="cID" type="I" size="10">
@@ -1157,46 +1193,30 @@
     </field>
   </table>
   <table name="UserAttributeKeys">
-    <field name="ukID" type="I" size="10">
+    <field name="akID" type="I" size="10">
       <KEY/>
-      <AUTOINCREMENT/>
       <UNSIGNED />
     </field>
-    <field name="ukHandle" type="C" size="255">
-      <NOTNULL/>
-    </field>
-    <field name="ukName" type="C" size="255">
-      <NOTNULL/>
-    </field>
-    <field name="ukHidden" type="I1" size="1">
+    <field name="uakRequired" type="I1" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="ukValues" type="X"/>
-    <field name="ukType" type="C" size="255">
+    <field name="uakDisplayedOnRegister" type="I1" size="1">
       <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="uakPrivate" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="uakHidden" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
     </field>
     <field name="displayOrder" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="ukRequired" type="I1" size="1">
-      <NOTNULL/>
+      <UNSIGNED />
       <DEFAULT value="0"/>
     </field>
-    <field name="ukPrivate" type="I1" size="1">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-    <field name="ukDisplayedOnRegister" type="I1" size="1">
-      <NOTNULL/>
-      <DEFAULT value="1"/>
-    </field>
-    <index name="ukHandle">
-      <UNIQUE/>
-      <col>ukHandle</col>
-    </index>
   </table>
   <table name="UserAttributeValues">
     <field name="uID" type="I" size="10">
@@ -1204,15 +1224,15 @@
       <DEFAULT value="0"/>
       <UNSIGNED />
     </field>
-    <field name="ukID" type="I" size="10">
+    <field name="akID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED />
     </field>
-    <field name="value" type="X"/>
-    <field name="timestamp" type="T">
-      <NOTNULL/>
-      <DEFTIMESTAMP/>
+    <field name="avID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED />
     </field>
   </table>
   <table name="UserBannedIPs">
@@ -1344,6 +1364,12 @@
     <index name="uID">
       <col>uID</col>
     </index>
+  </table>
+  <table name="UserSearchIndexAttributes">
+    <field name="uID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED/>
+    </field>
   </table>
   <table name="Users">
     <field name="uID" type="I" size="10">
@@ -1492,4 +1518,103 @@
     <index name="fsID">
       <col>fsID</col>
     </index>
-  </table></schema>
+  </table>
+    <table name="atBoolean">
+    <field name="avID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED />
+    </field>
+    <field name="value" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+  <table name="atDateTimeSettings">
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED />
+    </field>
+    <field name="akDateDisplayMode" type="C" size="255" />
+  </table>
+  <table name="atDateTime">
+    <field name="avID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED />
+    </field>
+    <field name="value" type="T">
+      <DEFAULT value="0000-00-00 00:00:00"/>
+    </field>
+  </table>
+    <table name="atDefault">
+    <field name="avID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED />
+    </field>
+    <field name="value" type="X2" />
+  </table>
+  <table name="atFile">
+    <field name="avID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED />
+    </field>
+    <field name="fID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED />
+    </field>
+  </table>
+  <table name="atNumber">
+    <field name="avID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED />
+    </field>
+    <field name="value" type="N" size="14.4">
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+   <table name="atSelectSettings">
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED />
+    </field>
+    <field name="akSelectAllowMultipleValues" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="akSelectOptionDisplayOrder" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="akSelectAllowOtherValues" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+   <table name="atSelectOptions">
+    <field name="ID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED />
+      <AUTOINCREMENT />
+    </field>
+    <field name="akID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+    <field name="value" type="C" size="255" />
+    <field name="displayOrder" type="I" size="10">
+      <UNSIGNED />
+    </field>
+    <field name="isEndUserAdded" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+ <table name="atSelectOptionsSelected">
+    <field name="avID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED />
+    </field>
+    <field name="atSelectOptionID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED />
+    </field>
+  </table>
+  </schema>

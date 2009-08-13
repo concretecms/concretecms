@@ -145,7 +145,7 @@ ccm_deleteBlock = function(bID, aID, arHandle, msg) {
  		url: CCM_DISPATCHER_FILENAME,
  		data: 'cID=' + CCM_CID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + arHandle,
  		success: function(resp) {
- 			$("#b" + bID + '-' + aID).fadeOut(300);
+ 			$("#b" + bID + '-' + aID).fadeOut(100);
  		}});		
 	}
 }
@@ -251,7 +251,7 @@ ccm_hidePane = function(onDone) {
 	var wrappane = $("#ccm-page-detail");
 	$("li.ccm-nav-active").removeClass('ccm-nav-active');
 	if (ccm_animEffects) {
-		wrappane.fadeOut(120, function() {
+		wrappane.fadeOut(60, function() {
 			if(!ccm_onPaneCloseObj) ccm_activateSite();
 			else ccm_siteActivated = true;
 			$(window).unbind('keypress');
@@ -337,7 +337,7 @@ ccm_doShowPane = function(obj, targetURL) {
 				conpane.html(msg);
 				$("#ccm-page-detail-content .dialog-launch").dialog();			
 				if (ccm_animEffects) {
-					wrappane.fadeIn(120, function() {
+					wrappane.fadeIn(60, function() {
 						ccm_removeHeaderLoading();
 					});
 				} else {
@@ -349,47 +349,52 @@ ccm_doShowPane = function(obj, targetURL) {
 	});
 }
 
-ccm_triggerSelectUser = function(uID, uName) {
+ccm_triggerSelectUser = function(uID, uName, uEmail) {
 	alert(uID);
 	alert(uName);
+	alert(uEmail);
 }
 
 ccm_setupUserSearch = function() {
-	$('#ccm-user-search-results a').each(function(i) {
-		var linkParts = $(this).attr('href').split('#')
-		if(linkParts[1]) {
-			if (linkParts[1].substring(0, 3) == 'sel') {
-				var uIDuName = linkParts[1].substring(3).split('-');
-				$(this).click(function() {
-					ccm_triggerSelectUser(uIDuName[0], uIDuName[1]);
-					$.fn.dialog.closeTop();
-					return false;
-				});
-			}
+	$("#ccm-user-list-cb-all").click(function() {
+		if ($(this).attr('checked') == true) {
+			$('.ccm-list-record td.ccm-user-list-cb input[type=checkbox]').attr('checked', true);
+			$("#ccm-user-list-multiple-operations").attr('disabled', false);
+		} else {
+			$('.ccm-list-record td.ccm-user-list-cb input[type=checkbox]').attr('checked', false);
+			$("#ccm-user-list-multiple-operations").attr('disabled', true);
 		}
-	});	
-	$("#ccm-user-search").ajaxForm({
-		beforeSubmit: function() {
-			$("#ccm-user-search-wrapper").html("");	
-		},
-		success: function(resp) {
-			$("#ccm-user-search-wrapper").html(resp);	
+	});
+	$("td.ccm-user-list-cb input[type=checkbox]").click(function(e) {
+		if ($("td.ccm-user-list-cb input[type=checkbox]:checked").length > 0) {
+			$("#ccm-user-list-multiple-operations").attr('disabled', false);
+		} else {
+			$("#ccm-user-list-multiple-operations").attr('disabled', true);
 		}
 	});
 	
-	/* setup paging */
-	$("div#ccm-user-paging a").click(function() {
-		$("#ccm-user-search-wrapper").html("");	
-		$.ajax({
-			type: "GET",
-			url: $(this).attr('href'),
-			success: function(resp) {
-				//$("#ccm-dialog-throbber").css('visibility','hidden');
-				$("#ccm-user-search-wrapper").html(resp);
-			}
-		});
-		return false;
+	// if we're not in the dashboard, add to the multiple operations select menu
+
+	$("#ccm-user-list-multiple-operations").change(function() {
+		var action = $(this).val();
+		switch(action) {
+			case 'choose':
+				var idstr = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					ccm_triggerSelectUser($(this).val(), $(this).attr('user-name'), $(this).attr('user-email'));
+				});
+				jQuery.fn.dialog.closeTop();
+				break;
+		}
+		
+		$(this).get(0).selectedIndex = 0;
 	});
+
+	$("div.ccm-user-search-advanced-groups-cb input[type=checkbox]").unbind();
+	$("div.ccm-user-search-advanced-groups-cb input[type=checkbox]").click(function() {
+		$("#ccm-user-advanced-search").submit();
+	});
+
 }
 
 ccm_triggerSelectGroup = function(gID, gName) {
@@ -523,7 +528,7 @@ ccm_fadeInMenu = function(bobj, e) {
 	bobj.css("left", posX + "px");
 	
 	if (ccm_animEffects) {
-		bobj.fadeIn(180);
+		bobj.fadeIn(60);
 	} else {
 		bobj.show();
 	}

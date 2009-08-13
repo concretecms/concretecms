@@ -62,30 +62,15 @@ ccm_activateFileManager = function(altype) {
 	}
 	ccm_alLaunchType = altype;
 	
-	$("#ccm-file-search-add-option").click(function() {
-		ccm_totalAdvancedSearchFields++;
-		$("#ccm-file-search-fields-wrapper").append('<div class="ccm-file-search-field" id="ccm-file-search-field-set' + ccm_totalAdvancedSearchFields + '">' + $("#ccm-file-search-field-base").html() + '<\/div>');
-		ccm_activateFileManagerFields(ccm_totalAdvancedSearchFields);
-	});
-	
-	$(".ccm-dashboard-file-search").ajaxForm({
-		beforeSubmit: function() {
-			ccm_deactivateSearchResults();
-		},
-			/*beforeSubmit: function() {
-				ccm_alShowLoader();
-				$("#ccm-al-search-results").html('');
-				return true;
-			},*/
-			
-			success: function(resp) {
-				ccm_alParseSearchResponse(resp);
-			}
-	});
-	ccm_alSetupInPagePaginationAndSorting();
+	ccm_setupAdvancedSearch('file');
 	ccm_alSetupCheckboxes();
 	ccm_alSetupFileProcessor();
 	ccm_alSetupSingleUploadForm();
+	
+	ccm_searchActivatePostFunction = function() {
+		ccm_alSetupCheckboxes();
+		ccm_alSetupSelectFiles();
+	}
 	// setup upload form
 }
 
@@ -148,8 +133,8 @@ ccm_alSubmitSetsForm = function() {
 	ccm_deactivateSearchResults();
 	$("#ccm-file-add-to-set-form").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
-		$(".ccm-dashboard-file-search").ajaxSubmit(function(resp) {
-			ccm_alParseSearchResponse(resp);
+		$("#ccm-file-advanced-search").ajaxSubmit(function(resp) {
+			ccm_parseAdvancedSearchResponse(resp);
 		});
 	});
 }
@@ -158,8 +143,8 @@ ccm_alSubmitPasswordForm = function() {
 	ccm_deactivateSearchResults();
 	$("#ccm-file-password-form").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
-		$(".ccm-dashboard-file-search").ajaxSubmit(function(resp) {
-			ccm_alParseSearchResponse(resp);
+		$("#ccm-file-advanced-search").ajaxSubmit(function(resp) {
+			ccm_parseAdvancedSearchResponse(resp);
 		});
 	});
 }
@@ -168,8 +153,8 @@ ccm_alSubmitStorageForm = function() {
 	ccm_deactivateSearchResults();
 	$("#ccm-file-storage-form").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
-		$(".ccm-dashboard-file-search").ajaxSubmit(function(resp) {
-			ccm_alParseSearchResponse(resp);
+		$("#ccm-file-advanced-search").ajaxSubmit(function(resp) {
+			ccm_parseAdvancedSearchResponse(resp);
 		});
 	});
 }
@@ -178,8 +163,8 @@ ccm_alSubmitPermissionsForm = function() {
 	ccm_deactivateSearchResults();
 	$("#ccm-file-permissions-form").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
-		$(".ccm-dashboard-file-search").ajaxSubmit(function(resp) {
-			ccm_alParseSearchResponse(resp);
+		$("#ccm-file-advanced-search").ajaxSubmit(function(resp) {
+			ccm_parseAdvancedSearchResponse(resp);
 		});
 	});
 }
@@ -315,13 +300,6 @@ ccm_alActivateFilePermissionsSelector = function() {
 	});
 }
 
-
-ccm_alParseSearchResponse = function(resp) {
-	$("#ccm-file-search-results").html(resp);
-	ccm_activateSearchResults();
-	ccm_alSetupSelectFiles();
-}
-
 ccm_alSetupVersionSelector = function() {
 	$("#ccm-file-versions-grid input[type=radio]").click(function() {
 		$('#ccm-file-versions-grid tr').removeClass('ccm-file-versions-grid-active');
@@ -331,6 +309,7 @@ ccm_alSetupVersionSelector = function() {
 		var fvID = trow.attr('fvID');
 		var postStr = 'task=approve_version&fID=' + fID + '&fvID=' + fvID;
 		$.post(CCM_TOOLS_PATH + '/files/properties', postStr, function(resp) {
+			console.log(resp);
 			trow.addClass('ccm-file-versions-grid-active');
 			trow.find('td').show('highlight', {
 				color: '#FFF9BB'
@@ -357,8 +336,8 @@ ccm_alDeleteFiles = function() {
 		ccm_parseJSON(resp, function() {	
 			jQuery.fn.dialog.closeTop();
 			ccm_deactivateSearchResults();
-			$(".ccm-dashboard-file-search").ajaxSubmit(function(resp) {
-				ccm_alParseSearchResponse(resp);
+			$("#ccm-file-advanced-search").ajaxSubmit(function(resp) {
+				ccm_parseAdvancedSearchResponse(resp);
 			});
 		});
 	});
@@ -368,12 +347,12 @@ ccm_alSetupSelectFiles = function() {
 	$('#ccm-file-list').click(function(e){
 		e.stopPropagation();
 		if ($(e.target).is('img.ccm-star')) {	
-			var fID = $(e.target).parents('tr.ccm-file-list-record')[0].id;
+			var fID = $(e.target).parents('tr.ccm-list-record')[0].id;
 			fID = fID.substring(3);
 			ccm_starFile(e.target,fID);
 		}
 		else{
-			$(e.target).parents('tr.ccm-file-list-record').each(function(){
+			$(e.target).parents('tr.ccm-list-record').each(function(){
 				ccm_alActivateMenu($(this), e);		
 			});
 		}
@@ -395,35 +374,22 @@ ccm_alSetupSelectFiles = function() {
 		tdiv.hide(); 
 	});
 }
-ccm_deactivateSearchResults = function() {
-	//$("#ccm-file-list-wrapper").css('opacity','0.5');//buggy on IE7
-	$("#ccm-search-files").attr('disabled', true);
-	$("#ccm-file-search-loading").show();
-}
-
-ccm_activateSearchResults = function() {
-	//$("#ccm-file-list-wrapper").css('opacity','1');//buggy on IE7
-	$("#ccm-file-search-loading").hide();
-	$("#ccm-search-files").attr('disabled', false);
-	ccm_alSetupInPagePaginationAndSorting();
-	ccm_alSetupCheckboxes();
-}
 
 ccm_alSetupCheckboxes = function() {
 	$("#ccm-file-list-cb-all").click(function() {
 		if ($(this).attr('checked') == true) {
-			$('.ccm-file-list-record td.ccm-file-list-cb input[type=checkbox]').attr('checked', true);
+			$('.ccm-list-record td.ccm-file-list-cb input[type=checkbox]').attr('checked', true);
 			$("#ccm-file-list-multiple-operations").attr('disabled', false);
 		} else {
-			$('.ccm-file-list-record td.ccm-file-list-cb input[type=checkbox]').attr('checked', false);
+			$('.ccm-list-record td.ccm-file-list-cb input[type=checkbox]').attr('checked', false);
 			$("#ccm-file-list-multiple-operations").attr('disabled', true);
 		}
 	});
-	$(".ccm-file-list-record td.ccm-file-list-cb input[type=checkbox]").click(function(e) {
+	$(".ccm-list-record td.ccm-file-list-cb input[type=checkbox]").click(function(e) {
 		e.stopPropagation();
 		ccm_alRescanMultiFileMenu();
 	});
-	$(".ccm-file-list-record td.ccm-file-list-cb").click(function(e) {
+	$(".ccm-list-record td.ccm-file-list-cb").click(function(e) {
 		e.stopPropagation();
 		$(this).find('input[type=checkbox]').click();
 		ccm_alRescanMultiFileMenu();
@@ -440,7 +406,7 @@ ccm_alSetupCheckboxes = function() {
 		switch(action) {
 			case 'choose':
 				var fIDs = new Array();
-				$(".ccm-file-list-record td.ccm-file-list-cb input[type=checkbox]:checked").each(function() {
+				$(".ccm-list-record td.ccm-file-list-cb input[type=checkbox]:checked").each(function() {
 					fIDs.push($(this).val());
 				});
 				ccm_alSelectFile(fIDs, true);
@@ -465,8 +431,8 @@ ccm_alSetupCheckboxes = function() {
 				break;
 			case "properties": 
 				jQuery.fn.dialog.open({
-					width: 350,
-					height: 200,
+					width: 630,
+					height: 450,
 					modal: false,
 					href: CCM_TOOLS_PATH + '/files/bulk_properties?' + fIDstring,
 					title: ccmi18n_filemanager.properties				
@@ -493,7 +459,7 @@ ccm_alSetupCheckboxes = function() {
 	$("div.ccm-file-search-advanced-sets-cb input[type=checkbox]").unbind();
 	$("div.ccm-file-search-advanced-sets-cb input[type=checkbox]").click(function() {
 		$("input[name=fsIDNone]").attr('checked', false);
-		$(".ccm-dashboard-file-search").submit();
+		$("#ccm-file-advanced-search").submit();
 	});
 	
 	$("input[name=fsIDNone]").unbind();
@@ -504,104 +470,35 @@ ccm_alSetupCheckboxes = function() {
 		} else {
 			$("div.ccm-file-search-advanced-sets-cb input[type=checkbox]").attr('disabled', false);
 		}
-		$(".ccm-dashboard-file-search").submit();
+		$("#ccm-file-advanced-search").submit();
 	});
 
 }
 
 ccm_alGetSelectedFileIDs = function() {
 	var fidstr = '';
-	$(".ccm-file-list-record td.ccm-file-list-cb input[type=checkbox]:checked").each(function() {
+	$(".ccm-list-record td.ccm-file-list-cb input[type=checkbox]:checked").each(function() {
 		fidstr += 'fID[]=' + $(this).val() + '&';
 	});
 	return fidstr;
 }
 
 ccm_alRescanMultiFileMenu = function() {
-	if ($(".ccm-file-list-record td.ccm-file-list-cb input[type=checkbox]:checked").length > 0) {
+	if ($(".ccm-list-record td.ccm-file-list-cb input[type=checkbox]:checked").length > 0) {
 		$("#ccm-file-list-multiple-operations").attr('disabled', false);
 	} else {
 		$("#ccm-file-list-multiple-operations").attr('disabled', true);
 	}
 }
-ccm_alSetupInPagePaginationAndSorting = function() {
-	$("#ccm-file-list th a").click(function() {
-		ccm_deactivateSearchResults();
-		$("#ccm-file-search-results").load($(this).attr('href'), false, function() {
-			ccm_activateSearchResults();
-			ccm_alSetupSelectFiles();
-		});
-		return false;
-	});
-	$("div.ccm-pagination a").click(function() {
-		ccm_deactivateSearchResults();
-		$("#ccm-file-search-results").load($(this).attr('href'), false, function() {
-			ccm_activateSearchResults();
-			ccm_alSetupSelectFiles();
-			$("div.ccm-dialog-content").attr('scrollTop', 0);
-		});
-		return false;
-	});
-}
-
-ccm_activateFileManagerFields = function(fieldset) {
-	$("#ccm-file-search-field-set" + fieldset + " select[name=fvField]").unbind();
-	$("#ccm-file-search-field-set" + fieldset + " select[name=fvField]").change(function() {
-		var selected = $(this).find(':selected').val(); 
-		$(this).next('input.ccm-file-selected-field').val(selected);
-		
-		//$(this).parents('tr').find('.ccm-file-search-option').hide();
-		
-		//all of the options are predefined above, this will copy it
-		var itemToCopy = $('#ccm-file-search-field-base-elements .ccm-file-search-option[search-field=' + selected + ']');
-		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-selected-field-content").html('');
-		itemToCopy.clone().appendTo("#ccm-file-search-field-set" + fieldset + " .ccm-file-selected-field-content");
-		
-		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-selected-field-content .ccm-file-search-option").show();
-
-		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option[search-field=date_added] input").each(function() {
-			if ($(this).attr('id') == 'date_from') {
-				$(this).attr('id', 'date_from' + fieldset);
-			} else if ($(this).attr('id') == 'date_to') {
-				$(this).attr('id', 'date_to' + fieldset);
-			}
-		});
-	
-		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option-type-date input").each(function() {
-			$(this).attr('id', $(this).attr('id') + fieldset);
-		});
-		
-		
-		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option[search-field=date_added] input").datepicker({
-			showAnim: 'fadeIn'
-		});
-		$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-option-type-date input").datepicker({
-			showAnim: 'fadeIn'
-		});
-		
-	});
-	
-	// add the initial state of the latest select menu
-	var lastSelect = $("#ccm-file-search-field-set" + fieldset + " select[name=fvField]").eq($(".ccm-file-search-field select[name=fvField]").length-1);
-	var selected = lastSelect.find(':selected').val();
-	lastSelect.next('input.ccm-file-selected-field').val(selected);
-
-	
-	$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-remove-option").unbind();
-	$("#ccm-file-search-field-set" + fieldset + " .ccm-file-search-remove-option").click(function() {
-		$(this).parents('div.ccm-file-search-field').remove();
-		//ccm_totalAdvancedSearchFields--;
-	});
-	
-}
 
 ccm_alActiveEditableProperties = function() {
-	$("tr.ccm-file-manager-editable-field").each(function() {
+	$("div#ccm-file-properties tr.ccm-attribute-editable-field").each(function() {
 		var trow = $(this);
 		$(this).find('a').click(function() {
-			trow.find('.ccm-file-manager-editable-field-text').hide();
-			trow.find('.ccm-file-manager-editable-field-form').show();
-			trow.find('.ccm-file-manager-editable-field-save-button').show();
+			trow.find('.ccm-attribute-editable-field-text').hide();
+			trow.find('.ccm-attribute-editable-field-clear-button').hide();
+			trow.find('.ccm-attribute-editable-field-form').show();
+			trow.find('.ccm-attribute-editable-field-save-button').show();
 		});
 		
 		trow.find('form').submit(function() {
@@ -609,23 +506,33 @@ ccm_alActiveEditableProperties = function() {
 			return false;
 		});
 		
-		trow.find('.ccm-file-manager-editable-field-save a').click(function() {
+		trow.find('.ccm-attribute-editable-field-save-button').parent().click(function() {
 			ccm_alSubmitEditableProperty(trow);
 		});
+
+		trow.find('.ccm-attribute-editable-field-clear-button').parent().unbind();
+		trow.find('.ccm-attribute-editable-field-clear-button').parent().click(function() {
+			trow.find('form input[name=task]').val('clear_extended_attribute');
+			ccm_alSubmitEditableProperty(trow);
+			return false;
+		});
+
 	});
 }
 
 ccm_alSubmitEditableProperty = function(trow) {
-	trow.find('.ccm-file-manager-editable-field-save-button').hide();
-	trow.find('.ccm-file-manager-editable-field-loading').show();
+	trow.find('.ccm-attribute-editable-field-save-button').hide();
+	trow.find('.ccm-attribute-editable-field-clear-button').hide();
+	trow.find('.ccm-attribute-editable-field-loading').show();
 	trow.find('form').ajaxSubmit(function(resp) {
 		// resp is new HTML to display in the div
-		trow.find('.ccm-file-manager-editable-field-loading').hide();
-		trow.find('.ccm-file-manager-editable-field-save-button').show();
-		trow.find('.ccm-file-manager-editable-field-text').html(resp);
-		trow.find('.ccm-file-manager-editable-field-form').hide();
-		trow.find('.ccm-file-manager-editable-field-save-button').hide();
-		trow.find('.ccm-file-manager-editable-field-text').show();
+		trow.find('.ccm-attribute-editable-field-loading').hide();
+		trow.find('.ccm-attribute-editable-field-save-button').show();
+		trow.find('.ccm-attribute-editable-field-text').html(resp);
+		trow.find('.ccm-attribute-editable-field-form').hide();
+		trow.find('.ccm-attribute-editable-field-save-button').hide();
+		trow.find('.ccm-attribute-editable-field-text').show();
+		trow.find('.ccm-attribute-editable-field-clear-button').show();
 		trow.find('td').show('highlight', {
 			color: '#FFF9BB'
 		});
@@ -687,7 +594,7 @@ ccm_filesUploadedDialog = function(){
 		width: 350,
 		height: 120,
 		modal: false,
-		href: CCM_TOOLS_PATH + '/files/importers/uploaded/?'+fIDstring,
+		href: CCM_TOOLS_PATH + '/files/add_to_complete/?'+fIDstring,
 		title: ccmi18n_filemanager.uploadComplete				
 	});
 	ccm_uploadedFiles=[];
@@ -705,7 +612,7 @@ ccm_filesApplySetsToUploaded = function(fIDs){
 	});
 }
 ccm_filesApplyPropertiesToUploaded = function(fIDs){
-	var fIDstring='',url='/files/bulk_properties?',popupW=350,popupH=200; 
+	var fIDstring='',url='/files/bulk_properties?',popupW=630,popupH=450; 
 	if(fIDs.length==1){
 		fIDstring='&fID='+fIDs[0];
 		url='/files/properties?';
@@ -727,7 +634,7 @@ ccm_filesApplyPropertiesToUploaded = function(fIDs){
 ccm_alRefresh = function(highlightFIDs, fileSelector) {
 	var ids = highlightFIDs;
 	ccm_deactivateSearchResults();
-	$("#ccm-file-search-results").load(CCM_TOOLS_PATH + '/files/search_results', {
+	$("#ccm-search-results").load(CCM_TOOLS_PATH + '/files/search_results', {
 		'ccm_order_by': 'fvDateAdded',
 		'ccm_order_dir': 'desc', 
 		'fileSelector': fileSelector
@@ -752,7 +659,6 @@ ccm_alHighlightFileIDArray = function(ids) {
 ccm_alSelectFile = function(fID) {
 	
 	if (typeof(ccm_chooseAsset) == 'function') {
-
 		var qstring = '';
 		if (typeof(fID) == 'object') {
 			for (i = 0; i < fID.length; i++) {

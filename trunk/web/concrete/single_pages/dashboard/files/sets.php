@@ -23,7 +23,7 @@
 						<?=t('Enable custom permissions for this file set.')?>
 						
 						<div id="ccm-file-set-permissions-wrapper" <? if (!$file_set->overrideGlobalPermissions()) { ?> style="display: none" <? } ?>>
-						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector" id="ug-selector" dialog-width="600" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="400" class="ccm-button-right dialog-launch"><span><em><?=t('Add Group or User')?></em></span></a>
+						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector" id="ug-selector" dialog-width="90%" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="70%" class="ccm-button-right dialog-launch"><span><em><?=t('Add Group or User')?></em></span></a>
 			
 						<p>
 						<?=t('Add users or groups to determine access to the file manager. These permissions affect only this set.');?>
@@ -59,7 +59,7 @@
 						<? } ?>
 						<? foreach($uArray as $ui) { ?>
 							
-							<? print print $ph->getFileAccessRow('SET','uID_' . $ui->getUserID(), $ui->getUserName(), $ui->getFileSearchLevel(), $ui->getFileReadLevel(), $ui->getFileWriteLevel(), $ui->getFileAdminLevel(), $ui->getFileAddLevel(), $ui->getAllowedFileExtensions()); ?>
+							<? print $ph->getFileAccessRow('SET','uID_' . $ui->getUserID(), $ui->getUserName(), $ui->getFileSearchLevel(), $ui->getFileReadLevel(), $ui->getFileWriteLevel(), $ui->getFileAdminLevel(), $ui->getFileAddLevel(), $ui->getAllowedFileExtensions()); ?>
 						
 						<? } ?>
 						</div>

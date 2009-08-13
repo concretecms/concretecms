@@ -29,8 +29,8 @@ class DashboardFilesSearchController extends Controller {
 			$fileList->filterByKeywords($keywords);
 		}
 
-		if ($_REQUEST['fNumResults']) {
-			$fileList->setItemsPerPage($_REQUEST['fNumResults']);
+		if ($_REQUEST['numResults']) {
+			$fileList->setItemsPerPage($_REQUEST['numResults']);
 		}
 		
 		if (isset($_GET['fsIDNone']) && $_GET['fsIDNone'] == 1) { 
@@ -54,9 +54,9 @@ class DashboardFilesSearchController extends Controller {
 		}
 		
 		$selectedSets = array();
-		
-		if (is_array($_REQUEST['fvSelectedField'])) {
-			foreach($_REQUEST['fvSelectedField'] as $i => $item) {
+
+		if (is_array($_REQUEST['selectedSearchField'])) {
+			foreach($_REQUEST['selectedSearchField'] as $i => $item) {
 				// due to the way the form is setup, index will always be one more than the arrays
 				if ($item != '') {
 					switch($item) {
@@ -93,46 +93,11 @@ class DashboardFilesSearchController extends Controller {
 							Loader::model('file_attributes');
 							$akID = $item;
 							$fak = FileAttributeKey::get($akID);
-							switch($fak->getAttributeKeyType()) {
-								case 'NUMBER':
-									$numFrom = $_REQUEST['fakID_' . $akID . '_from'];
-									$numTo = $_REQUEST['fakID_' . $akID . '_to'];
-									if ($numFrom != '') {
-										$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $numFrom, '>=');
-									}
-									if ($numTo != '') {
-										$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $numTo, '<=');
-									}
-									break;
-								case 'DATE':
-									$dt = Loader::helper('form/date_time');
-									$dateFrom = $dt->translate('fakID_' . $akID . '_from', $_REQUEST);
-									$dateTo = $dt->translate('fakID_' . $akID . '_to', $_REQUEST);
-									if ($dateFrom != '') {
-										$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $dateFrom, '>=');
-									}
-									if ($dateTo != '') {
-										$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $dateTo, '<=');
-									}
-									break;
-								case 'BOOLEAN':
-									$numFrom = $_REQUEST['fakID_' . $akID];
-									$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), 1);
-									break;
-								case 'TEXT':
-									$value = '%' . $_REQUEST['fakID_' . $akID] . '%';
-									$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $value, 'like');
-									break;
-								case 'SELECT':
-									$value = $_REQUEST['fakID_' . $akID];
-									$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $value);
-									break;
-								case 'SELECT_MULTIPLE':
-									$values = $_REQUEST['fakID_' . $akID];
-									$fileList->filterByFileAttribute($fak->getAttributeKeyHandle(), $values);
-									break;
-
-							}						
+							$type = $fak->getAttributeType();
+							$cnt = $type->getController();
+							$cnt->setAttributeKey($fak);
+							$cnt->searchForm($fileList);
+							break;
 					}
 				}
 			}

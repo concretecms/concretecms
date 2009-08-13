@@ -119,7 +119,7 @@ class FormHelper {
 			$checked = 'checked="checked" ';
 		}
 		
-		$str = '<input type="checkbox" name="' . $field . '" id="' . $field . '" value="' . $value . '" ' . $checked . ' ' . $mf . ' />';
+		$str = '<input type="checkbox" class="ccm-input-checkbox" name="' . $field . '" id="' . $field . '" value="' . $value . '" ' . $checked . ' ' . $mf . ' />';
 		return $str;
 	}
 
@@ -202,7 +202,8 @@ class FormHelper {
 		// to the tag. If there's only one, then it's the array
 		
 		if (count($a) == 3) {
-			$str .= 'value="' . $a[1] . '" ';
+			$val = (isset($_REQUEST[$a[0]])) ? $_REQUEST[$a[0]] : $a[1];
+			$str .= 'value="' . $val . '" ';
 			$miscFields = $a[2];
 			foreach($a[2] as $key => $value) {
 				$str .= $key . '="' . $value . '" ';

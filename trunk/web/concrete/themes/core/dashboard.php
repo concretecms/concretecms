@@ -19,6 +19,7 @@ $v->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_R
 $v->addHeaderItem($html->javascript('jquery.rating.js'));
 $v->addHeaderItem($html->javascript('jquery.form.js'));
 $v->addHeaderItem($html->javascript('ccm.ui.js'));
+$v->addHeaderItem($html->javascript('ccm.search.js'));
 $v->addHeaderItem($html->javascript('ccm.filemanager.js'));
 $v->addHeaderItem($html->javascript('ccm.themes.js'));
 $v->addHeaderItem($html->javascript('jquery.ui.js'));
@@ -34,6 +35,7 @@ $v->addHeaderItem($html->css('ccm.dashboard.css'));
 $v->addHeaderItem($html->css('ccm.colorpicker.css'));
 $v->addHeaderItem($html->css('ccm.menus.css'));
 $v->addHeaderItem($html->css('ccm.forms.css'));
+$v->addHeaderItem($html->css('ccm.search.css'));
 $v->addHeaderItem($html->css('ccm.filemanager.css'));
 $v->addHeaderItem($html->css('ccm.calendar.css'));
 $v->addHeaderItem($html->css('ccm.dialog.css'));
@@ -165,11 +167,16 @@ foreach($nav as $n2) {
 		<? 
 		if ($error instanceof Exception) {
 			$_error[] = $error->getMessage();
-		} else if ($error instanceof ValidationErrorHelper) { 
-			$_error = $error->getList();
+		} else if ($error instanceof ValidationErrorHelper) {
+			$_error = array();
+			if ($error->has()) {
+				$_error = $error->getList();
+			}
 		} else {
 			$_error = $error;
 		}
+		
+		if (count($_error) > 0) {
 			?>
 			<div class="message error">
 			<strong><?=t('The following errors occurred when attempting to process your request:')?></strong>
@@ -178,6 +185,7 @@ foreach($nav as $n2) {
 			</ul>
 			</div>
 		<? 
+		}
 	}
 	
 	if (isset($message)) { ?>

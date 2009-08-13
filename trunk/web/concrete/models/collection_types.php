@@ -219,7 +219,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function assignCollectionAttribute($ak) {
 			// object
 			$db = Loader::db();
-			$db->query("insert into PageTypeAttributes (ctID, akID) values (?, ?)", array($this->getCollectionTypeID(), $ak->getCollectionAttributeKeyID()));
+			$db->query("insert into PageTypeAttributes (ctID, akID) values (?, ?)", array($this->getCollectionTypeID(), $ak->getAttributeKeyID()));
 		}
 		
 		public function populateAvailableAttributeKeys() {
@@ -259,7 +259,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 			$objArray = array();
 			foreach($this->akIDArray as $akID) {
-				$objArray[] = CollectionAttributeKey::get($akID);
+				$objArray[] = CollectionAttributeKey::getByID($akID);
 			}
 			return $objArray;
 		}

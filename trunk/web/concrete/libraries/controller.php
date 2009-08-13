@@ -228,6 +228,8 @@ class Controller {
 	 * @return void
 	 */
 	public function set($key, $val) {
+		$loc = CacheLocal::get();
+		$loc->cache['controllerSets'][$key] = $val;
 		$this->sets[$key] = $val;
 	}
 	
@@ -342,7 +344,13 @@ class Controller {
 	 * Gets the array of items that have been set using set()
 	 * @return array
 	 */
-	public function getSets() { return $this->sets; }
+	public function getSets() { 
+		$loc = CacheLocal::get();
+		if (isset($loc->cache['controllerSets'])) {
+			return $loc->cache['controllerSets'];
+		}
+		return array();
+	}
 	
 	/** 
 	 * Gets an array of helper objects that have been set using the $helpers array

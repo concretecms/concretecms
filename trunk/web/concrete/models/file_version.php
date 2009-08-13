@@ -43,11 +43,8 @@ class FileVersion extends Object {
 	public function getAttributeList() {
 		$db = Loader::db();
 		$v = array($this->fID, $this->fvID);
-		$r = $db->Execute("select FileAttributeKeys.akHandle, FileAttributeValues.value from FileAttributeKeys inner join FileAttributeValues on FileAttributeKeys.fakID = FileAttributeValues.fakID where FileAttributeValues.fID = ? and FileAttributeValues.fvID = ?", $v);
-		$attributes = array();
-		while ($row = $r->FetchRow()) {
-			$attributes[$row['akHandle']] = $row['value'];
-		}
+		Loader::model('attribute/categories/file');
+		$attributes = FileAttributeKey::getAttributes($this->fID, $this->fvID);
 		return $attributes;
 	}
 	
@@ -55,30 +52,12 @@ class FileVersion extends Object {
 	 * Gets an attribute for the file. If "nice mode" is set, we display it nicely
 	 * for use in the file attributes table 
 	 */
-	public function getAttribute($item, $displayNiceMode = false) {
-		$akHandle = (is_object($item)) ? $item->getAttributeKeyHandle() : $item;
-		$value = $this->attributes[$akHandle];
-		
-		if ($displayNiceMode && is_object($item)) {
-			switch($item->getAttributeKeyType()) {
-				case 'BOOLEAN':
-					return ($value == 1) ? t('Yes') : t('No');
-					break;
-				case 'SELECT_MULTIPLE':
-					return nl2br($value);
-					break;
-				case 'RATING':
-					$rt = Loader::helper('rating');
-					return $rt->output($akHandle . time(), $value);
-					break;
-				default:
-					return $value;
-					break;
-			}
-		} else {
-			return $value;
-		}
+	 
+	public function getAttribute($ak, $mode = false) {
+		$ak = (is_object($ak)) ? $ak->getAttributeKeyHandle() : $ak;
+		return $this->attributes->getAttribute($ak, $mode = false);
 	}
+
 
 	public function getMimeType() {
 		$h = Loader::helper('mime');
@@ -89,18 +68,8 @@ class FileVersion extends Object {
 	
 	public function populateAttributes() {
 		// load the attributes for a particular version object
-		$db = Loader::db();
-		$v = array($this->fID, $this->fvID);
-		$r = $db->Execute('select akHandle, value, akType from FileAttributeValues inner join FileAttributeKeys on FileAttributeKeys.fakID = FileAttributeValues.fakID where fID = ? and fvID = ?', $v);
-		while ($row = $r->fetchRow()) {
-			
-			switch($row['akType']) {
-				default:
-					$v = $row['value'];
-					break;
-			}
-			$this->attributes[$row['akHandle']] = $v;
-		}
+		Loader::model('attribute/categories/file');			
+		$this->attributes = FileAttributeKey::getAttributes($this->fID, $this->fvID);
 	}
 	
 	public function getSize() {
@@ -125,7 +94,7 @@ class FileVersion extends Object {
 		return $this->fvExtension;
 	}
 	
-	protected function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0) {
+	public function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0) {
 		$db = Loader::db();
 		$db->Execute('insert into FileVersionLog (fID, fvID, fvUpdateTypeID, fvUpdateTypeAttributeID) values (?, ?, ?, ?)', array(
 			$this->getFileID(),
@@ -187,13 +156,13 @@ class FileVersion extends Object {
 		
 		$this->deny();
 		
-		$r = $db->Execute('select fvID, fakID, value from FileAttributeValues where fID = ? and fvID = ?', array($this->getFileID(), $this->fvID));
+		$r = $db->Execute('select fvID, akID, avID from FileAttributeValues where fID = ? and fvID = ?', array($this->getFileID(), $this->fvID));
 		while ($row = $r->fetchRow()) {
-			$db->Execute("insert into FileAttributeValues (fID, fvID, fakID, value) values (?, ?, ?, ?)", array(
+			$db->Execute("insert into FileAttributeValues (fID, fvID, akID, avID) values (?, ?, ?, ?)", array(
 				$this->fID, 
 				$fvID,
-				$row['fakID'], 
-				$row['value']
+				$row['akID'], 
+				$row['avID']
 			));
 		}
 		$fv2 = $f->getVersion($fvID);
@@ -239,12 +208,20 @@ class FileVersion extends Object {
 					$updates[] = t('Tags');
 					break;
 				case FileVersion::UT_EXTENDED_ATTRIBUTE:
-					$updates[] = $db->GetOne("select akName from FileAttributeKeys where fakID = ?", array($a['fvUpdateTypeAttributeID']));
+					$val = $db->GetOne("select akName from AttributeKeys where akID = ?", array($a['fvUpdateTypeAttributeID']));
+					if ($val != '') {
+						$updates[] = $val;
+					}
 					break;
 			}
 		}
 		$updates = array_unique($updates);
-		return $updates;
+		$updates1 = array();
+		foreach($updates as $val) {
+			// normalize the keys
+			$updates1[] = $val;
+		}
+		return $updates1;
 	}
 	
 	public function updateTitle($title) {
@@ -288,6 +265,7 @@ class FileVersion extends Object {
 		$db->Execute("update FileVersions set fvIsApproved = 1 where fID = ? and fvID = ?", array($this->getFileID(), $this->getFileVersionID()));
 
 		$fo = $this->getFile();
+		$fo->reindex();
 		$fo->refreshCache();
 	}
 
@@ -296,6 +274,18 @@ class FileVersion extends Object {
 		$db = Loader::db();
 		$db->Execute("update FileVersions set fvIsApproved = 0 where fID = ? and fvID = ?", array($this->getFileID(), $this->getFileVersionID()));
 	}
+
+
+	public function setAttribute($ak, $value) {
+		if (!is_object($ak)) {
+			$ak = FileAttributeKey::getByHandle($ak);
+		}
+		$ak->setAttribute($this, $value);
+		$fo = $this->getFile();
+		$fo->refreshCache();
+	}
+	
+
 	
 	/** 
 	 * Removes a version of a file
@@ -443,6 +433,8 @@ class FileVersion extends Object {
 			}
 		}
 		$this->refreshThumbnails();
+		$f = $this->getFile();
+		$f->reindex();
 	}
 
 	public function createThumbnailDirectories(){
@@ -471,24 +463,45 @@ class FileVersion extends Object {
 		}
 		return false;
 	}
-	
-	public function setAttribute($ak, $value) {
-		$akHandle = (is_object($ak)) ? $ak->getAttributeKeyHandle() : $ak;
+
+	public function clearAttribute($ak) {
 		$db = Loader::db();
-		$fakID = $db->GetOne("select fakID from FileAttributeKeys where akHandle = ?", array($akHandle));
-		if ($fakID > 0) {
-			$db->Replace('FileAttributeValues', array(
-				'fID' => $this->fID,
-				'fvID' => $this->getFileVersionID(),
-				'fakID' => $fakID,
-				'value' => $value
-			),
-			array('fID', 'fvID', 'fakID'), true);
-			if (is_object($ak)) {
-				$this->logVersionUpdate(FileVersion::UT_EXTENDED_ATTRIBUTE, $ak->getAttributeKeyID());
+		$cav = $this->getAttributeValueObject($ak);
+		if (is_object($cav)) {
+			$cav->delete();
+		}
+		$fo = $this->getFile();
+		$fo->refreshCache();
+		$fo->reindex();
+	}
+
+	public function getAttributeValueObject($ak, $createIfNotFound = false) {
+		$db = Loader::db();
+		$av = false;
+		$v = array($this->getFileID(), $this->getFileVersionID(), $ak->getAttributeKeyID());
+		$avID = $db->GetOne("select avID from FileAttributeValues where fID = ? and fvID = ? and akID = ?", $v);
+		if ($avID > 0) {
+			$av = FileAttributeValue::getByID($avID);
+			if (is_object($av)) {
+				$av->setFile($this->getFile());
+				$av->setAttributeKey($ak);
 			}
 		}
 		
+		if ($createIfNotFound) {
+			$cnt = 0;
+		
+			// Is this avID in use ?
+			if (is_object($av)) {
+				$cnt = $db->GetOne("select count(avID) from FileAttributeValues where avID = ?", $av->getAttributeValueID());
+			}
+			
+			if ((!is_object($av)) || ($cnt > 1)) {
+				$av = $ak->addAttributeValue();
+			}
+		}
+		
+		return $av;
 	}
 	
 	//takes a string of comma or new line delimited tags, and puts them in the appropriate format
