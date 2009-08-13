@@ -31,6 +31,7 @@ class ProfileController extends Controller {
 			$canEdit = true;
 		} else {
 			$this->set('intro_msg', t('You must sign in order to access this page!'));
+			Loader::controller('/login');
 			$this->render('/login');
 		}
 		$this->set('profile', $profile);

@@ -30,6 +30,9 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 
 	public function getDisplayValue() {
 		$v = $this->getValue();
+		if ($v == '' || $v == false) {
+			return '';
+		}
 		$v2 = date('H:i:s', strtotime($v));
 		$r = '';
 		if ($v2 != '00:00:00') {
@@ -61,7 +64,7 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 		switch($this->akDateDisplayMode) {
 			case 'text':
 				$form = Loader::helper('form');
-				print $form->text($this->field('value'), $caValue);
+				print $form->text($this->field('value'), $this->getDisplayValue());
 				break;
 			case 'date':
 				print $dt->date($this->field('value'), $caValue);
@@ -99,12 +102,14 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 	
 	public function saveForm($data) {
 		$this->load();
-		$dt = Loader::helper('form/date_time');
-		if ($this->akDateDisplayMode == 'date') {
-			$this->saveValue($data['value']);
-		} else {
-			$value = $dt->translate('value', $data);
-			$this->saveValue($value);
+		switch($this->akDateDisplayMode) {
+			case 'text':
+			case 'date':
+				$this->saveValue($data['value']);
+				break;
+			case 'date_time':
+				$value = $dt->translate('value', $data);
+				$this->saveValue($value);
 		}
 	}
 	

@@ -11,6 +11,7 @@ class ProfileEditController extends Controller {
 		$u = new User();
 		if (!$u->isRegistered()) {
 			$this->set('intro_msg', t('You must sign in order to access this page!'));
+			Loader::controller('/login');
 			$this->render('/login');
 		}
 		$this->set('ui', UserInfo::getByID($u->getUserID()));

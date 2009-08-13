@@ -113,7 +113,7 @@ class RegisterController extends Controller {
 		$aks = UserAttributeKey::getRegistrationList();
 
 		foreach($aks as $uak) {
-			if ($uak->isAttributeKeyRequired()) {
+			if ($uak->isAttributeKeyRequiredOnRegister()) {
 				$e1 = $uak->validateAttributeForm();
 				if ($e1 == false) {
 					$e->add(t('The field "%s" is required', $uak->getAttributeKeyName()));

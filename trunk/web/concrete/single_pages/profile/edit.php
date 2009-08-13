@@ -43,14 +43,18 @@
             if(is_array($attribs) && count($attribs)) { 
             ?>
                 <fieldset>
-                <div>
-                    <?=$form->label('uEmail', t('Email'))?>
-                    <span class="required">*</span> <?=$form->text('uEmail',$ui->getUserEmail())?>
+                <div class="ccm-profile-attribute">
+                    <?=$form->label('uEmail', t('Email'))?> <span class="ccm-required">*</span><br/>
+                    <?=$form->text('uEmail',$ui->getUserEmail())?>
                 </div>	
                 <?
                 foreach($attribs as $ak) {
+                	print '<div class="ccm-profile-attribute">';
+                	$value = $ui->getAttributeValueObject($ak);
                 	$ak->render('label');
-                	$ak->render('form'); 
+                	print '<br/>';
+                	$ak->render('form', $value); 
+                	print '</div>';
                 } ?>
                 </fieldset>
             <? } ?>

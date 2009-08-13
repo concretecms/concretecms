@@ -62,7 +62,7 @@ if($success) {
 	foreach($attribs as $ak) { ?>
 		
 		<div><? $ak->render('label')?>
-		<? if ($ak->isAttributeKeyRequired()) { ?><span class="ccm-required">*</span><? } ?>
+		<? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="ccm-required">*</span><? } ?>
 		</div>
 		
 		

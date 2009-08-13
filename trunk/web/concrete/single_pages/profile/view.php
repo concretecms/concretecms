@@ -49,7 +49,7 @@
         foreach($uaks as $ua) { ?>
             <div>
                 <label><?=$ua->getKeyName()?></label>
-                <?=$profile->getAttribute($ua); ?>
+                <?=$profile->getAttribute($ua, 'display'); ?>
             </div>
         <? } ?>		
     </div>
