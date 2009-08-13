@@ -38,6 +38,45 @@ class DashboardUsersAttributesController extends Controller {
 		}
 	}
 	
+	public function activate($akID, $token = null) {
+		try {
+			$ak = UserAttributeKey::getByID($akID); 
+				
+			if(!($ak instanceof UserAttributeKey)) {
+				throw new Exception(t('Invalid attribute ID.'));
+			}
+	
+			$valt = Loader::helper('validation/token');
+			if (!$valt->validate('attribute_activate', $token)) {
+				throw new Exception($valt->getErrorMessage());
+			}
+			
+			$ak->activate();
+			
+			$this->redirect("/dashboard/users/attributes", 'edit', $akID);
+			
+		} catch (Exception $e) {
+			$this->set('error', $e);
+		}
+	}
+	
+	public function deactivate($akID, $token = null) {
+			$ak = UserAttributeKey::getByID($akID); 
+				
+			if(!($ak instanceof UserAttributeKey)) {
+				throw new Exception(t('Invalid attribute ID.'));
+			}
+	
+			$valt = Loader::helper('validation/token');
+			if (!$valt->validate('attribute_deactivate', $token)) {
+				throw new Exception($valt->getErrorMessage());
+			}
+			
+			$ak->deactivate();
+			
+			$this->redirect("/dashboard/users/attributes", 'edit', $akID);
+	}
+	
 	public function select_type() {
 		$atID = $this->request('atID');
 		$at = AttributeType::getByID($atID);
@@ -58,7 +97,7 @@ class DashboardUsersAttributesController extends Controller {
 		if ($e->has()) {
 			$this->set('error', $e);
 		} else {
-			$ak = UserAttributeKey::add($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('atID'), $this->post('uakRequired'), $this->post('uakDisplayedOnRegister'), $this->post('uakPrivate'), $this->post('uakHidden'));
+			$ak = UserAttributeKey::add($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('atID'), $this->post('uakProfileDisplay'), $this->post('uakProfileEdit'), $this->post('uakProfileEditRequired'), $this->post('uakRegisterEdit'), $this->post('uakRegisterEditRequired'));
 			$this->redirect('/dashboard/users/attributes/', 'attribute_created');
 		}
 	}
@@ -105,7 +144,7 @@ class DashboardUsersAttributesController extends Controller {
 			if ($e->has()) {
 				$this->set('error', $e);
 			} else {
-				$key->update($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('atID'), $this->post('uakRequired'), $this->post('uakDisplayedOnRegister'), $this->post('uakPrivate'), $this->post('uakHidden'));
+				$key->update($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('uakProfileDisplay'), $this->post('uakProfileEdit'), $this->post('uakProfileEditRequired'), $this->post('uakRegisterEdit'), $this->post('uakRegisterEditRequired'));
 				$this->redirect('/dashboard/users/attributes', 'attribute_updated');
 			}
 		}

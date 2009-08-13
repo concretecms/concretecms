@@ -6,7 +6,9 @@
 	<? 
 	$akDateDisplayModeOptions = array(
 		'date_time' => t('Both Date and Time'),
-		'date' => t('Date Only')
+		'date' => t('Date Only'),
+		'text' => t('Text Input Field')
+
 	);
 	?>
 	<td><?=$form->select('akDateDisplayMode', $akDateDisplayModeOptions, $akDateDisplayMode)?></td>

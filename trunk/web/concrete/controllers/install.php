@@ -294,8 +294,11 @@ class InstallController extends Controller {
 						$nst->assignCollectionAttribute($cab3);
 						$nst->assignCollectionAttribute($cab4); 
 
-						UserAttributeKey::add('date_of_birth', t('Date of Birth'), 1, "date_time", 0, 1, 0, 0);
-						
+						$uakdob = UserAttributeKey::add('date_of_birth', t('Date of Birth'), 1, "date_time", 0, 1, 0, 1, 0);
+						$dobcnt = $uakdob->getAttributeType()->getController();
+						$dobcnt->setAttributeKey($uakdob);
+						$dobcnt->setDisplayMode('text');
+
 						// Add our core views
 						SinglePage::add('/login');
 						SinglePage::add('/register');

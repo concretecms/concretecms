@@ -195,7 +195,6 @@ class AttributeKey extends Object {
 		
 		$db = Loader::db();
 		$db->Execute('delete from AttributeKeys where akID = ?', array($this->getAttributeKeyID()));
-		$db->Execute('delete from AttributeSetKeys where akID = ?', array($this->getAttributeKeyID()));
 
 		if ($this->getIndexedSearchTable()) {
 			$columns = $db->MetaColumns($this->getIndexedSearchTable());

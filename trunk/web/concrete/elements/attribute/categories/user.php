@@ -1,24 +1,69 @@
 <?
 if (is_object($key)) {
-	$uakRequired = $key->isAttributeKeyRequired();
-	$uakDisplayedOnRegister = $key->isAttributeKeyDisplayedOnRegister();
-	$uakPrivate = $key->isAttributeKeyPrivate();
-	$uakHidden = $key->isAttributeKeyHidden();
+	$uakProfileDisplay = $key->isAttributeKeyDisplayedOnProfile();
+	$uakProfileEdit = $key->isAttributeKeyEditableOnProfile();
+	$uakProfileEditRequired = $key->isAttributeKeyRequiredOnProfile();
+	$uakRegisterEdit = $key->isAttributeKeyEditableOnRegister();
+	$uakRegisterEditRequired = $key->isAttributeKeyRequiredOnRegister();
+	$uakIsActive = $key->isAttributeKeyActive();
 }
 ?>
-
 <? $form = Loader::helper('form'); ?>
 <table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="subheader" style="width: 25%"><?=t('Required')?></td>
-	<td class="subheader" style="width: 25%"><?=t('Registration')?></td>
-	<td class="subheader" style="width: 25%"><?=t('Private')?></td>
-	<td class="subheader" style="width: 25%"><?=t('Hidden')?></td>
+	<td class="subheader" style="width: 34%"><?=t('Profile View')?></td>
+	<td class="subheader" style="width: 33%"><?=t('Profile Edit')?></td>
+	<td class="subheader" style="width: 33%"><?=t('Registration')?></td>
 </tr>	
 <tr>
-	<td><?=$form->checkbox('uakRequired', 1, $uakRequired)?> <?=t('Required on Registration page.');?></td>
-	<td><?=$form->checkbox('uakDisplayedOnRegister', 1, $uakDisplayedOnRegister)?> <?=t('Displayed on Registration page.');?></td>
-	<td><?=$form->checkbox('uakPrivate', 1, $uakPrivate)?> <?=t('Private to user.');?></td>
-	<td><?=$form->checkbox('uakHidden', 1, $uakHidden)?> <?=t('Disable attribute. No longer in use.');?></td>
+	<td valign="top">
+	<?=$form->checkbox('uakProfileDisplay', 1, $uakProfileDisplay)?> <?=t('Displayed in Public Profile.');?>
+	</td>
+	<td valign="top">
+		<?=$form->checkbox('uakProfileEdit', 1, $uakProfileEdit)?> <?=t('Editable in Profile.');?><Br/>
+		<?=$form->checkbox('uakProfileEditRequired', 1, $uakProfileEditRequired)?> <?=t('Editable and Required in Profile.');?>
+	</td>
+	<td valign="top">
+		<?=$form->checkbox('uakRegisterEdit', 1, $uakRegisterEdit)?> <?=t('Show on Registration Form.');?><Br/>
+		<?=$form->checkbox('uakRegisterEditRequired', 1, $uakRegisterEditRequired)?> <?=t('Require on Registration Form.');?>
+	</td>
 </tr>
 </table>
+
+<script type="text/javascript">
+$(function() {
+	$('input[name=uakProfileEdit]').click(function() {
+		if ($(this).attr('checked')) {
+			$('input[name=uakProfileEditRequired]').attr('disabled', false);
+		} else {
+			$('input[name=uakProfileEditRequired]').attr('checked', false);
+			$('input[name=uakProfileEditRequired]').attr('disabled', true);		
+		}
+	});
+
+	$('input[name=uakRegisterEdit]').click(function() {
+		if ($(this).attr('checked')) {
+			$('input[name=uakRegisterEditRequired]').attr('disabled', false);
+		} else {
+			$('input[name=uakRegisterEditRequired]').attr('checked', false);
+			$('input[name=uakRegisterEditRequired]').attr('disabled', true);		
+		}
+	});
+	
+
+	if ($('input[name=uakProfileEdit]').attr('checked')) {
+		$('input[name=uakProfileEditRequired]').attr('disabled', false);
+	} else {
+		$('input[name=uakProfileEditRequired]').attr('checked', false);
+		$('input[name=uakProfileEditRequired]').attr('disabled', true);		
+	}	
+
+	if ($('input[name=uakRegisterEdit]').attr('checked')) {
+		$('input[name=uakRegisterEditRequired]').attr('disabled', false);
+	} else {
+		$('input[name=uakRegisterEditRequired]').attr('checked', false);
+		$('input[name=uakRegisterEditRequired]').attr('disabled', true);		
+	}	
+
+});
+</script>

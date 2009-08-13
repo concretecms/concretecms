@@ -34,8 +34,18 @@ img.ccm-attribute-icon:hover {cursor: move}
 
 <? if (isset($key)) { ?>
 
+<? $valt = Loader::helper('validation/token'); ?>
+<? $ih = Loader::helper('concrete/interface'); ?>
+
 <h1><span><?=t('Edit Attribute')?></span></h1>
 <div class="ccm-dashboard-inner">
+
+<? if ($key->isAttributeKeyActive()) { ?>
+	<? print $ih->button(t('Deactivate'), $this->url('/dashboard/users/attributes', 'deactivate', $key->getAttributeKeyID(), $valt->generate('attribute_deactivate')));?>
+<? } else { ?>
+	<? print $ih->button(t('Activate'), $this->url('/dashboard/users/attributes', 'activate', $key->getAttributeKeyID(), $valt->generate('attribute_activate')));?>
+<? } ?>
+
 
 <h2><?=t('Attribute Type')?></h2>
 
@@ -55,8 +65,6 @@ img.ccm-attribute-icon:hover {cursor: move}
 
 <div class="ccm-dashboard-inner">
 	<?
-	$valt = Loader::helper('validation/token');
-	$ih = Loader::helper('concrete/interface');
 	$delConfirmJS = t('Are you sure you want to remove this attribute?');
 	?>
 	<script type="text/javascript">
