@@ -26,7 +26,15 @@ class LogEntry extends Object {
 	public function getText() {return $this->logText;}
 	public function getID() {return $this->logID;}
 	
-	public function getTimestamp() {return $this->timestamp;}
+	public function getTimestamp($type = 'system') {
+		if(ENABLE_USER_TIMEZONES && $type == 'user') {
+			$dh = Loader::helper('date');
+			$timestamp = $dh->getLocalDateTime($this->timestamp);
+		} else {
+			$timestamp = $this->timestamp;
+		}
+		return $timestamp;
+	}
 
 	/** 
 	 * Returns a log entry by ID

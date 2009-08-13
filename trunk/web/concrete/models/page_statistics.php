@@ -69,9 +69,15 @@ class PageStatistics {
 	 * Returns the datetime of the last edit to the site. Used in the dashboard
 	 * @return datetime
 	 */
-	public static function getSiteLastEdit() {
+	public static function getSiteLastEdit($type = 'system') {
 		$db = Loader::db();
-		return $db->GetOne("select max(Collections.cDateModified) from Collections");
+		$cDateModified = $db->GetOne("select max(Collections.cDateModified) from Collections");
+		if(ENABLE_USER_TIMEZONES && $type == 'user') {
+			$dh = Loader::helper('date');
+			return $dh->getLocalDateTime($cDateModified);
+		} else {
+			return $cDateModified;
+		}
 	}
 	
 	/**

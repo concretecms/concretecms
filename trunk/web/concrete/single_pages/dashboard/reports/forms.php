@@ -92,13 +92,15 @@ function toggleQuestions(qsID,trigger){
 			<div class="spacer"></div>
 		</div>
 	
-		<? foreach($answerSets as $answerSetId=>$answerSet){ ?>
+		<? 
+		$dh = Loader::helper('date');
+		foreach($answerSets as $answerSetId=>$answerSet){ ?>
 			
 			<div style="margin:0px; padding:0px; width:100%; height:auto" >
 			<table class="entry-form" width="100%" style="margin-bottom:2px">
 				<tr>
 					<td class="header"><?=t('Submitted Date')?></td>
-					<td class="header"><?=$answerSet['created']?></td>
+					<td class="header"><?=$dh->getLocalDateTime($answerSet['created'])?></td>
 				</tr>
 				<? 
 				$questionNumber=0;

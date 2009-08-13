@@ -11,12 +11,12 @@ class ActivityDashboardModuleController extends Controller {
 		$ui = UserInfo::getByID($u->getUserID());
 		$us = new UserStatistics($ui);
 		$this->set('uLastActivity', $us->getPreviousSessionPageViews());
-		$this->set('uLastLogin', strftime('%x ' . t('at') . ' %l:%M %p', $ui->getLastLogin()));
+		$this->set('uLastLogin', strftime('%x ' . t('at') . ' %l:%M %p', $ui->getLastLogin('user')));
 		$this->set('uName', $ui->getUserName());
 		$this->set('totalViews', PageStatistics::getTotalPageViewsForOthers($u));
 		$this->set('totalVersions', PageStatistics::getTotalPageVersions());
 		
-		$this->set('lastEditSite', strftime('%x ' . t('at') . ' %l:%M %p', strtotime(PageStatistics::getSiteLastEdit())));
+		$this->set('lastEditSite', strftime('%x ' . t('at') . ' %l:%M %p', strtotime(PageStatistics::getSiteLastEdit('user'))));
 		$llu = UserStatistics::getLastLoggedInUser();
 		if ($llu->getUserID() == $u->getUserID()) {
 			$this->set('lastLoginSite', t('Your login is the most recent.'));		

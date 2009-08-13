@@ -6,6 +6,8 @@ Loader::block('survey');
 	Example Input:  2009-03-11 15:00:00 
 	Example Output: 3/11/2009 at 3:20 pm */
 function formatDate($InputTime) {
+	$dh = Loader::helper('date');
+	$InputTime = $dh->getLocalDateTime($InputTime);
 	$timestamp = strtotime($InputTime);
 	if ($timestamp) { // If today
 		if ($timestamp >= strtotime(date('n/d/y'))) {

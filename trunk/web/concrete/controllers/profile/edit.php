@@ -1,9 +1,10 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('user_attributes');
+Loader::model('attribute/categories/collection');
 class ProfileEditController extends Controller {
 
-	var $helpers = array('html', 'form');
+	var $helpers = array('html', 'form', 'date');
 	
 	public function __construct() {
 		$html = Loader::helper('html');
@@ -71,6 +72,9 @@ class ProfileEditController extends Controller {
 
 		if (!$e->has()) {		
 			$data['uEmail'] = $email;		
+			if(ENABLE_USER_TIMEZONES) {
+				$data['uTimezone'] = $this->post('uTimezone');
+			}
 			
 			$ui->update($data);
 			$ui->updateUserAttributes($data);
