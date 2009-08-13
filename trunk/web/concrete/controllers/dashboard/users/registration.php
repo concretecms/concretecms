@@ -1,20 +1,19 @@
-<?
-
+<?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class DashboardUsersRegistrationController extends Controller {
 
 	var $helpers = array('form'); 
 	
-	public function __construct(){ 
+	public function __construct() { 
 		$this->token = Loader::helper('validation/token');
-		
 		$html = Loader::helper('html');		
 		$this->addHeaderItem($html->javascript('ccm.sitemap.js'));		
 		
 		$this->set('enable_openID',ENABLE_OPENID_AUTHENTICATION);
 		$this->set('public_profiles',ENABLE_USER_PROFILES);
 		$this->set('email_as_username', USER_REGISTRATION_WITH_EMAIL_ADDRESS);
-		$this->set('registration_type',REGISTRATION_TYPE);	
+		$this->set('registration_type',REGISTRATION_TYPE);
+		$this->set('user_timezones',ENABLE_USER_TIMEZONES);	
 		
 		//login redirection
 		$this->set('site_login_redirect', Config::get('LOGIN_REDIRECT') );
@@ -80,6 +79,16 @@ class DashboardUsersRegistrationController extends Controller {
 			$this->set('error', array($this->token->getErrorMessage()));
 		}	
 	}	
+	
+	public function update_user_timezones() { 
+		if ($this->isPost()) {
+			Config::save('ENABLE_USER_TIMEZONES', ($this->post('user_timezones')?true:false));
+			$message = ($this->post('user_timezones')?t('User time zones have been enabled'):t('User time zones have been disabled.'));
+			$this->redirect('/dashboard/users/registration',$message);
+		}
+	}
+
+	
 	
 	public function view($message = NULL) {
 		if($message) {

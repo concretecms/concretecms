@@ -1,4 +1,4 @@
-<?
+<?php
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 /**
@@ -68,7 +68,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		private function get($where, $var, $userPermissionsArray = null) {
 			$db = Loader::db();
-			$q = "select Users.uID, Users.uLastLogin, Users.uIsValidated, Users.uPreviousLogin, Users.uIsFullRecord, Users.uNumLogins, Users.uDateAdded, Users.uIsActive, Users.uLastOnline, Users.uHasAvatar, Users.uName, Users.uEmail, Users.uPassword from Users " . $where;
+			$q = "select Users.uID, Users.uLastLogin, Users.uIsValidated, Users.uPreviousLogin, Users.uIsFullRecord, Users.uNumLogins, Users.uDateAdded, Users.uIsActive, Users.uLastOnline, Users.uHasAvatar, Users.uName, Users.uEmail, Users.uPassword, Users.uTimezone from Users " . $where;
 			$r = $db->query($q, array($var));
 			if ($r && $r->numRows() > 0) {
 				$ui = new UserInfo;
@@ -108,7 +108,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$options = is_array($options) ? $options : array();
 			$db = Loader::db();
 			$dh = Loader::helper('date');
-			$uDateAdded = $dh->getLocalDateTime();
+			$uDateAdded = $dh->getSystemDateTime();
 			
 			if ($data['uIsValidated'] == 1) {
 				$uIsValidated = 1;
@@ -147,7 +147,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function addSuperUser($uPasswordEncrypted, $uEmail) {
 			$db = Loader::db();
 			$dh = Loader::helper('date');
-			$uDateAdded = $dh->getLocalDateTime();
+			$uDateAdded = $dh->getSystemDateTime();
 			
 			$v = array(USER_SUPER_ID, USER_SUPER, $uEmail, $uPasswordEncrypted, 1, $uDateAdded);
 			$r = $db->prepare("insert into Users (uID, uName, uEmail, uPassword, uIsActive, uDateAdded) values (?, ?, ?, ?, ?, ?)");
@@ -312,6 +312,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$uName = $this->getUserName();
 				$uEmail = $this->getUserEmail();
 				$uHasAvatar = $this->hasAvatar();
+				$uHasAvatar = $this->getUserTimezone();
 				if (isset($data['uName'])) {
 					$uName = $data['uName'];
 				}
@@ -321,13 +322,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				if (isset($data['uHasAvatar'])) {
 					$uHasAvatar = $data['uHasAvatar'];
 				}
+				if( isset($data['uTimezone'])) { 
+					$uTimezone = $data['uTimezone'];
+				}
 				
 				$testChange = false;
 				
 				if ($data['uPassword'] != null) {
 					if (User::encryptPassword($data['uPassword']) == User::encryptPassword($data['uPasswordConfirm'])) {
-						$v = array($uName, $uEmail, User::encryptPassword($data['uPassword']), $uHasAvatar, $this->uID);
-						$r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ? where uID = ?");
+						$v = array($uName, $uEmail, User::encryptPassword($data['uPassword']), $uHasAvatar, $uTimezone, $this->uID);
+						$r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ?, uTimezone = ? where uID = ?");
 						$res = $db->execute($r, $v);
 						
 						$testChange = true;
@@ -336,8 +340,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						$updateGroups = false;
 					}
 				} else {
-					$v = array($uName, $uEmail, $uHasAvatar, $this->uID);
-					$r = $db->prepare("update Users set uName = ?, uEmail = ?, uHasAvatar = ? where uID = ?");
+					$v = array($uName, $uEmail, $uHasAvatar, $uTimezone, $this->uID);
+					$r = $db->prepare("update Users set uName = ?, uEmail = ?, uHasAvatar = ?, uTimezone = ? where uID = ?");
 					$res = $db->execute($r, $v);
 				}
 
@@ -370,7 +374,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 			$dh = Loader::helper('date');
 				
-			$datetime = $dh->getLocalDateTime();
+			$datetime = $dh->getSystemDateTime();
 			if (is_array($groupArray)) {
 				foreach ($groupArray as $gID) {
 					$key = array_search($gID, $existingGIDArray);
@@ -515,8 +519,27 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return $this->uEmail;
 		}
 
-		function getUserDateAdded() {
-			return $this->uDateAdded;
+		/* 
+		 * returns the user's timezone
+		 * @return string timezone
+		*/
+		function getUserTimezone() {
+			return $this->uTimezone;
+		}
+		
+		/**
+		* Gets the date a user was added to the system, 
+		* if user is specified, returns in the current user's timezone
+		* @param string $type (system || user)
+		* @return string date formated like: 2009-01-01 00:00:00 
+		*/
+		function getUserDateAdded($type = 'system') {
+			if(ENABLE_USER_TIMEZONES && $type == 'user') {
+				$dh = Loader::helper('date');
+				return $dh->getLocalDateTime($this->uDateAdded);
+			} else {
+				return $this->uDateAdded;
+			}
 		}
 
 		/* userinfo permissions modifications - since users can now have their own permissions on a collection, block ,etc..*/
@@ -594,21 +617,40 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return $this->permissions['canAddExtensions'];
 		}
 
-		function getUserStartDate() {
+		function getUserStartDate($type = 'system') {
 			// time-release permissions for users
-			return $this->upStartDate;
+			if(ENABLE_USER_TIMEZONES && $type == 'user') {
+				$dh = Loader::helper('date');
+				return $dh->getLocalDateTime($this->upStartDate);
+			} else {
+				return $this->upStartDate;
+			}
 		}
 
-		function getLastOnline() {
-			return $this->uLastOnline;
+		/**
+		* Gets the date a user was last active on the site 
+		* if user is specified, returns in the current user's timezone
+		* @param string $type (system || user)
+		* @return string date formated like: 2009-01-01 00:00:00 
+		*/
+		function getLastOnline($type = 'system') {
+			if(ENABLE_USER_TIMEZONES && $type == 'user') {
+				$dh = Loader::helper('date');
+				return $dh->getLocalDateTime($this->uLastOnline);
+			} else {
+				return $this->uLastOnline;
+			}
 		}
-
-		function getUserEndDate() {
-			return $this->upEndDate;
+		
+		
+		function getUserEndDate($type = 'system') {
+			if(ENABLE_USER_TIMEZONES && $type == 'user') {
+				$dh = Loader::helper('date');
+				return $dh->getLocalDateTime($this->upEndDate);
+			} else {
+				return $this->upEndDate;
+			}
 		}
-		
-		
-		
 		
 		//Remote Authentication Stuff
 		//****************************

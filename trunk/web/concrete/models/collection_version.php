@@ -139,7 +139,21 @@
 		function getVersionApproverUserID() {return $this->cvApproverUID;}
 		function getVersionAuthorUserName() {return $this->cvAuthorUname;}
 		function getVersionApproverUserName() {return $this->cvApproverUname;}
-		function getVersionDateCreated() {return $this->cvDateCreated;}
+		
+		/**
+		 * Gets the date the collection version was created 
+		 * if user is specified, returns in the current user's timezone
+		 * @param string $type (system || user)
+		 * @return string date formated like: 2009-01-01 00:00:00 
+		*/
+		function getVersionDateCreated($type = 'system') {
+			if(ENABLE_USER_TIMEZONES && $type == 'user') {
+				$dh = Loader::helper('date');
+				return $dh->getLocalDateTime($this->cvDateCreated);
+			} else {
+				return $this->cvDateCreated;
+			}
+		}
 		
 		function canWrite() {return $this->cvCanWrite;}
 		
@@ -163,7 +177,7 @@
 			$versionComments = (!$versionComments) ? t("New Version %s", $newVID) : $versionComments;
 			
 			$dh = Loader::helper('date');
-			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getLocalDateTime(), $versionComments, $u->getUserID(), 1);
+			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), 1);
 			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew)
 				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				

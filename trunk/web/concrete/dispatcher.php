@@ -144,6 +144,10 @@
 		## Check to see whether this is an external alias or a header 301 redirect. If so we go there.
 		include(dirname(__FILE__) . '/startup/external_link.php');
 		
+		## Setup timzone support
+		require(dirname(__FILE__) . '/startup/timezone.php');
+		
+		
 		## Get a permissions object for this particular collection.
 		$cp = new Permissions($c);
 	

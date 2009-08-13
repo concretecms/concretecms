@@ -171,3 +171,7 @@ if (!defined('REGISTRATION_TYPE')) {
 if (!defined('ENABLE_REGISTRATION')) {
 	Config::getOrDefine('ENABLE_REGISTRATION', false);	
 }
+
+if (!defined('ENABLE_USER_TIMEZONES')) {
+	Config::getOrDefine('ENABLE_USER_TIMEZONES', false);	
+}

@@ -65,7 +65,7 @@ if ($cp->canAdminPage()) {
 	
 	<label><?=t('Public Date/Time')?></label> 
 	<? 
-	print $dt->datetime('cDatePublic', $c->getCollectionDatePublic()); ?>
+	print $dt->datetime('cDatePublic', $c->getCollectionDatePublic('user')); ?>
 	</div>
 	
 	<div class="ccm-field-two">

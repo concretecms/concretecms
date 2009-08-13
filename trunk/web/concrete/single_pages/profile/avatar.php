@@ -6,7 +6,7 @@
             <a href="<?=View::url('/profile',$ui->getUserID())?>"><?= $ui->getUsername()?></a>
         </div>
         <h4 style="margin-top: 0px"><?=t('Member Since')?></h4>
-        <?=date('F d, Y', strtotime($ui->getUserDateAdded()))?>
+        <?=date('F d, Y', strtotime($ui->getUserDateAdded('user')))?>
 		
 		<style>
 		#ccm-profile-sidebar ul.nav { list-style:none; margin:0px; padding:0px; margin-top:16px;}

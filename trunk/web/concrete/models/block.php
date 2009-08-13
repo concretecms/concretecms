@@ -284,7 +284,7 @@ class Block extends Object {
 
 		$db = Loader::db();
 		$dh = Loader::helper('date');
-		$bDateModified = $dh->getLocalDateTime();
+		$bDateModified = $dh->getSystemDateTime();
 		$bID = $this->bID;
 
 		$v = array($bDateModified, $bID);
@@ -407,7 +407,7 @@ class Block extends Object {
 		$bc = new $blockTypeClass($this);
 		if(!$bc) return false;
 					
-		$bDate = $dh->getLocalDateTime();
+		$bDate = $dh->getSystemDateTime();
 		$v = array($this->bName, $bDate, $bDate, $this->bFilename, $this->btID, $this->uID);
 		$q = "insert into Blocks (bName, bDateAdded, bDateModified, bFilename, btID, uID) values (?, ?, ?, ?, ?, ?)";
 		$r = $db->prepare($q);
@@ -506,8 +506,19 @@ class Block extends Object {
 		return $this->bName;
 	}
 
-	function getBlockDateAdded() {
-		return $this->bDateAdded;
+	/**
+	 * Gets the date the block was added
+	 * if user is specified, returns in the current user's timezone
+	 * @param string $type (system || user)
+	 * @return string date formated like: 2009-01-01 00:00:00 
+	*/
+	function getBlockDateAdded($type = 'system') {
+		if(ENABLE_USER_TIMEZONES && $type == 'user') {
+			$dh = Loader::helper('date');
+			return $dh->getLocalDateTime($this->bDateAdded);
+		} else {
+			return $this->bDateAdded;
+		}
 	}
 
 	function getBlockDateLastModified() {
@@ -883,7 +894,7 @@ class Block extends Object {
 		// this is the function that updates a block's information, like its block filename, and block name
 		$db = Loader::db();
 		$dh = Loader::helper('date');
-		$dt = $dh->getLocalDateTime();
+		$dt = $dh->getSystemDateTime();
 		
 		$bName = $this->bName;
 		$bFilename = $this->bFilename;

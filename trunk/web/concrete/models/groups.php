@@ -393,14 +393,36 @@
 			return $this->gDescription;
 		}
 		
-		function getGroupStartDate() {
-			return $this->cgStartDate;
+		/**
+		 * Gets the group start date
+		 * if user is specified, returns in the current user's timezone
+		 * @param string $type (system || user)
+		 * @return string date formated like: 2009-01-01 00:00:00 
+		*/
+		function getGroupStartDate($type = 'system') {
+			if(ENABLE_USER_TIMEZONES && $type == 'user') {
+				$dh = Loader::helper('date');
+				return $dh->getLocalDateTime($this->cgStartDate);
+			} else {
+				return $this->cgEndDate;
+			}
 		}
-		
-		function getGroupEndDate() {
-			return $this->cgEndDate;
+
+		/**
+		 * Gets the group end date 
+		 * if user is specified, returns in the current user's timezone
+		 * @param string $type (system || user)
+		 * @return string date formated like: 2009-01-01 00:00:00 
+		*/
+		function getGroupEndDate($type = 'system') {
+			if(ENABLE_USER_TIMEZONES && $type == 'user') {
+				$dh = Loader::helper('date');
+				return $dh->getLocalDateTime($this->cgEndDate);
+			} else {
+				return $this->cgEndDate;
+			}
 		}
-		
+
 		function canRead() {
 			return strpos($this->permissionSet, 'r') > -1;
 		}

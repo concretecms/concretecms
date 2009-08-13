@@ -243,7 +243,7 @@ class File extends Object {
 	public static function add($filename, $prefix, $data = array()) {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
-		$date = $dh->getLocalDateTime(); 
+		$date = $dh->getSystemDateTime(); 
 		
 		$uID = 0;
 		$u = new User();
@@ -279,7 +279,7 @@ class File extends Object {
 
 		$db = Loader::db();
 		$dh = Loader::helper('date');
-		$date = $dh->getLocalDateTime();
+		$date = $dh->getSystemDateTime();
 		
 		$fvID = $db->GetOne("select max(fvID) from FileVersions where fID = ?", array($this->fID));
 		if ($fvID > 0) {

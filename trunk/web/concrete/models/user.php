@@ -1,5 +1,4 @@
-<?
-
+<?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 /**
@@ -26,11 +25,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		var $uName = '';
 		var $uGroups = array();
 		var $superUser = false;
+		var $uTimezone = NULL;
 		
 		function getByUserID($uID, $login = false) {
 			$db = Loader::db();
 			$v = array($uID);
-			$q = "select uID, uName, uIsActive, uLastOnline from Users where uID = ?";
+			$q = "SELECT uID, uName, uIsActive, uLastOnline, uTimezone FROM Users WHERE uID = ?";
 			$r = $db->query($q, $v);
 			if ($r) {
 				$row = $r->fetchRow();
@@ -39,6 +39,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$nu->uName = $row['uName'];
 				$nu->uIsActive = $row['uIsActive'];
 				$nu->uLastLogin = $row['uLastLogin'];
+				$nu->uTimezone = $row['uTimezone'];
 				$nu->uGroups = $nu->_getUserGroups(true);
 				if ($login) {
 					$_SESSION['uID'] = $row['uID'];
@@ -46,6 +47,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$_SESSION['uBlockTypesSet'] = false;
 					$_SESSION['uGroups'] = $nu->uGroups;
 					$_SESSION['uLastOnline'] = $row['uLastOnline'];
+					$_SESSION['uTimezone'] = $row['uTimezone'];
 					$nu->recordLogin();
 				}
 			}
@@ -94,9 +96,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$password = User::encryptPassword($password, PASSWORD_SALT);
 				$v = array($username, $password);
 				if (defined('USER_REGISTRATION_WITH_EMAIL_ADDRESS') && USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
-					$q = "select uID, uName, uIsActive, uIsValidated from Users where uEmail = ? and uPassword = ?";
+					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone from Users where uEmail = ? and uPassword = ?";
 				} else {
-					$q = "select uID, uName, uIsActive, uIsValidated from Users where uName = ? and uPassword = ?";
+					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone from Users where uName = ? and uPassword = ?";
 				}
 				$r = $db->query($q, $v);
 				if ($r) {
@@ -107,6 +109,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						$this->uID = $row['uID'];
 						$this->uName = $row['uName'];
 						$this->uIsActive = $row['uIsActive'];
+						$this->uTimezone = $row['uTimezone'];
 						$this->uGroups = $this->_getUserGroups($args[2]);
 						if ($row['uID'] == USER_SUPER_ID) {
 							$this->superUser = true;
@@ -120,6 +123,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 							$_SESSION['superUser'] = $this->superUser;
 							$_SESSION['uBlockTypesSet'] = false;
 							$_SESSION['uGroups'] = $this->uGroups;
+							$_SESSION['uTimezone'] = $this->uTimezone;
 						}
 					} else if ($row['uID'] && !$row['uIsActive']) {
 						$this->loadError(USER_INACTIVE);
@@ -139,6 +143,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$_SESSION['uGroups'] = $this->uGroups;
 				}
 				$this->superUser = ($_SESSION['uID'] == USER_SUPER_ID) ? true : false;
+				$this->uTimezone = $_SESSION['uTimezone'];
 			}
 			
 			return $this;
@@ -190,6 +195,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		function getUserID() {
 			return $this->uID;
+		}
+		
+		function getUserTimezone() {
+			return $this->uTimezone;
 		}
 		
 		function logout() {
@@ -271,7 +280,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					'uID' => $this->getUserID(),
 					'gID' => $g->getGroupID(),
 					'type' => $joinType,
-					'ugEntered' => $dt->getLocalDateTime()
+					'ugEntered' => $dt->getSystemDateTime()
 				),
 				array('uID', 'gID'), true);
 			}
@@ -281,7 +290,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if ($g instanceof Group) {
 				$db = Loader::db();
 				$dt = Loader::helper('date');
-				$db->Execute('update UserGroups set type = ?, ugEntered = ? where uID = ? and gID = ?', array($joinType, $dt->getLocalDateTime(), $this->uID, $g->getGroupID()));
+				$db->Execute('update UserGroups set type = ?, ugEntered = ? where uID = ? and gID = ?', array($joinType, $dt->getSystemDateTime(), $this->uID, $g->getGroupID()));
 			}
 		}
 		
@@ -343,7 +352,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$_SESSION['editCID'] = $cID;
 					$uID = $this->getUserID();
 					$dh = Loader::helper('date');
-					$datetime = $dh->getLocalDateTime();
+					$datetime = $dh->getSystemDateTime();
 					$q2 = "update Pages set cIsCheckedOut = 1, cCheckedOutUID = '{$uID}', cCheckedOutDatetime = '{$datetime}', cCheckedOutDatetimeLastEdit = '{$datetime}' where cID = '{$cID}'";
 					$r2 = $db->query($q2);
 					
@@ -390,7 +399,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$cID = $c->getCollectionID();
 				
 				$dh = Loader::helper('date');
-				$datetime = $dh->getLocalDateTime();
+				$datetime = $dh->getSystemDateTime();
 					
 				$q = "update Pages set cCheckedOutDatetimeLastEdit = '{$datetime}' where cID = '{$cID}'";
 				$r = $db->query($q);

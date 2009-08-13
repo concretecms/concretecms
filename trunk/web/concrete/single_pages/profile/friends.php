@@ -6,7 +6,7 @@
             <a href="<?=View::url('/profile',$profile->getUserID())?>"><?= $profile->getUsername()?></a>
         </div>
         <div style="margin-top:16px; padding-bottom:4px; margin-bottom:0px; font-weight:bold"><?=t('Member Since')?></div>
-        <?=date('F d, Y', strtotime($profile->getUserDateAdded()))?> 
+        <?=date('F d, Y', strtotime($profile->getUserDateAdded('user')))?> 
 		
 		<style>
 		#ccm-profile-sidebar ul.nav { list-style:none; margin:0px; padding:0px; margin-top:16px;}
@@ -44,7 +44,7 @@
 				<div >
 					<a href="<?=View::url('/profile',$friendUID) ?>"><?= $friendUI->getUsername(); ?></a>
 					<div style=" font-size:90%; line-height:90%; margin-top:4px;">
-					<?=t('Member Since') ?> <?=date('F d, Y', strtotime($friendUI->getUserDateAdded()))?>
+					<?=t('Member Since') ?> <?=date('F d, Y', strtotime($friendUI->getUserDateAdded('user')))?>
 					</div>
 				</div>
 				<div class="ccm-spacer"></div>

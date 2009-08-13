@@ -98,7 +98,22 @@ class Package extends Object {
 	public function getPackageName() {return t($this->pkgName);}
 	public function getPackageDescription() {return t($this->pkgDescription);}
 	public function getPackageHandle() {return $this->pkgHandle;}
-	public function getPackageDateInstalled() {return $this->pkgDateInstalled;}
+	
+	/**
+	 * Gets the date the package was added to the system, 
+	 * if user is specified, returns in the current user's timezone
+	 * @param string $type (system || user)
+	 * @return string date formated like: 2009-01-01 00:00:00 
+	*/
+	function getPackageDateInstalled($type = 'system') {
+		if(ENABLE_USER_TIMEZONES && $type == 'user') {
+			$dh = Loader::helper('date');
+			return $dh->getLocalDateTime($this->pkgDateInstalled);
+		} else {
+			return $this->pkgDateInstalled;
+		}
+	}
+	
 	public function getPackageVersion() {return $this->pkgVersion;}
 	public function getPackageCurrentlyInstalledVersion() {return $this->pkgCurrentVersion;}
 	public function isPackageInstalled() { return $this->pkgIsInstalled;}
@@ -309,7 +324,7 @@ class Package extends Object {
 	protected function install() {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
-		$v = array($this->getPackageName(), $this->getPackageDescription(), $this->getPackageVersion(), $this->getPackageHandle(), 1, $dh->getLocalDateTime());
+		$v = array($this->getPackageName(), $this->getPackageDescription(), $this->getPackageVersion(), $this->getPackageHandle(), 1, $dh->getSystemDateTime());
 		$db->query("insert into Packages (pkgName, pkgDescription, pkgVersion, pkgHandle, pkgIsInstalled, pkgDateInstalled) values (?, ?, ?, ?, ?, ?)", $v);
 		
 		$pkg = Package::getByID($db->Insert_ID());

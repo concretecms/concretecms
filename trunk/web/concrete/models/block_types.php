@@ -628,7 +628,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 			$btID = $this->btID;
 			$dh = Loader::helper('date');
-			$bDate = $dh->getLocalDateTime();
+			$bDate = $dh->getSystemDateTime();
 			$bIsActive = ($this->btActiveWhenAdded == 1) ? 1 : 0;
 			
 			$v = array($_POST['bName'], $bDate, $bDate, $bIsActive, $btID, $uID);

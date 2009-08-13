@@ -569,7 +569,8 @@
 				}
 				
 				$dt = Loader::helper('form/date_time');
-				$data['cDatePublic'] = $dt->translate('cDatePublic');
+				$dh = Loader::helper('date');
+				$data['cDatePublic'] = $dh->getSystemDateTime($dt->translate('cDatePublic'));
 				if ($cp->canAdminPage()) {
 					$data['uID'] = $_POST['uID'];
 				}
