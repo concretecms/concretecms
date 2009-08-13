@@ -4,11 +4,12 @@ body {/* customize_background */ background-color: #ffffff; /* customize_backgro
 img {border: 0px}
 a { cursor:pointer}
 
-label { font-weight:bold; display:block; padding-top: 10px; }
+label { font-weight:bold;}
 fieldset { border:1px solid #ccc;}
 
 /* error text class optionally provided by theme */
 div.ccm-error-response {color: #f00; margin-bottom: 12px}
+div.ccm-profile-attribute {padding-bottom: 8px}
 
 /* Page Structure / Navigation */
 #page{ width:800px; margin:auto; text-align:left }
