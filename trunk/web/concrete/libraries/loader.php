@@ -40,6 +40,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * Loads a model from either an application, the site, or the core Concrete directory
 		 */
 		public function model($mod, $pkgHandle = null) {
+			
+			$ret = Loader::legacyModel($mod);
+			if ($ret) {
+				return;
+			}
+			
 			if ($pkgHandle) {
 				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
 				require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . $mod . '.php');
