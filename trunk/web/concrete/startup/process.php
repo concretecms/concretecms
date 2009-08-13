@@ -645,10 +645,12 @@
 				// the $c below identifies that we're adding a collection _to_ that particular collection object
 				//$newCollectionID = $ct->addCollection($c);				
 				
+				$dt = Loader::helper('form/date_time');
+				$dh = Loader::helper('date');
+				
 				$data = $_POST;
 				$data['cvIsApproved'] = 0;
-				$dt = Loader::helper('form/date_time');
-				$data['cDatePublic'] = $dt->translate('cDatePublic');				
+				$data['cDatePublic'] = $dh->getSystemDateTime($dt->translate('cDatePublic'));	
 				
 				$nc = $c->add($ct, $data);
 				
