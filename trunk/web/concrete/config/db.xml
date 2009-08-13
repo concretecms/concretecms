@@ -1434,6 +1434,7 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+	<field name="uTimezone" type="C" size="255"></field>
     <index name="uName">
       <UNIQUE/>
       <col>uName</col>

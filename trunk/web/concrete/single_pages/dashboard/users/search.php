@@ -8,6 +8,7 @@ $vals = Loader::helper('validation/strings');
 $valt = Loader::helper('validation/token');
 $valc = Loader::helper('concrete/validation');
 $dtt = Loader::helper('form/date_time');
+$dh = Loader::helper('date');
 $form = Loader::helper('form');
 $ih = Loader::helper('concrete/interface');
 $av = Loader::helper('concrete/avatar'); 
@@ -263,13 +264,30 @@ if (is_object($uo)) {
 		<tr>
 			<td class="subheader"><?=t('Password')?></td>
 			<td class="subheader" colspan="2"><?=t('Password (Confirm)')?></td>
-		</tr>	
-		<tr>
+		</tr>
+        <tr>
 			<td><input type="password" name="uPassword" autocomplete="off" value="" style="width: 94%"></td>
 			<td><input type="password" name="uPasswordConfirm" autocomplete="off" value="" style="width: 94%"></td>
 			<td><?=t('(Leave these fields blank to keep the same password)')?></td>
 		</tr>
-		<tr>
+		<? if(ENABLE_USER_TIMEZONES) { ?>
+        <tr>
+			<td colspan="3" class="header"><?=t('Localization')?></td>
+		</tr>
+        <tr>
+        	<td class="subheader" colspan="3"><?=t('Time Zone')?></td>
+        </tr>
+        <tr>
+			<td colspan="3">
+            	<?php 
+				echo $form->select('uTimezone', 
+						$dh->getTimezones(), 
+						($uo->getUserTimezone()?$uo->getUserTimezone():date_default_timezone_get())
+					); ?>
+            </td>
+		</tr>
+        <?php } ?>
+        <tr>
 			<td colspan="3" class="header">
 				<a id="groupSelector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups" dialog-title="<?=t('Add Groups')?>" dialog-modal="false" style="float: right"><?=t('Add Group')?></a>
 				<?=t('Groups')?>
@@ -378,7 +396,9 @@ if (is_object($uo)) {
 			<td><?=$av->outputUserAvatar($uo)?></td>
 			<td><?=$uo->getUserName()?><br/>
 			<a href="mailto:<?=$uo->getUserEmail()?>"><?=$uo->getUserEmail()?></a><br/>
-			<?=$uo->getUserDateAdded()?>
+			<?=$uo->getUserDateAdded('user')?>
+			<?=(ENABLE_USER_TIMEZONES && strlen($uo->getUserTimezone())?"<br />".t('Timezone').": ".$uo->getUserTimezone():"")?>
+            
 			<? if (USER_VALIDATE_EMAIL) { ?><br/>
 				<?=t('Full Record')?>: <strong><?= ($uo->isFullRecord()) ? "Yes" : "No" ?></strong>
 				&nbsp;&nbsp;

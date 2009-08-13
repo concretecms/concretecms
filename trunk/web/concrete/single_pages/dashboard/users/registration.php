@@ -78,9 +78,22 @@ $h = Loader::helper('concrete/interface');
 			<br class="clear" />    
 		</div>
     </form>		
+
+    <form method="post" id="user-timezone-form" action="<?=$this->url('/dashboard/users/registration', 'update_user_timezones')?>">
+		<h1><span><?=t('Time Zone Support')?></span></h1>
+		<div class="ccm-dashboard-inner">
+			
+			<div class="ccm-dashboard-checkbox"><input type="checkbox" name="user_timezones" value="1" style="vertical-align: middle" <? if ($user_timezones) { ?> checked <? } ?> /> <?=t('Enable user defined time zones.')?></div>
+			<div class="ccm-dashboard-description"><?=t('Allows site members to display date/time information in their time zone.')?></div>
+			
+			<?
+			$b1 = $h->submit(t('Save'), 'user-timezone-form');
+			print $h->buttons($b1);
+			?>
+			<br class="clear" />    
+		</div>
+    </form>		
 </div>
-
-
 
 <div class="ccm-module">
 

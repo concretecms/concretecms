@@ -261,15 +261,20 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		function getCollectionID() {
 			return $this->cID;
 		}
-
-		function getCollectionDateLastModified($mask = null) {
-			if ($mask == null) {
-				return $this->cDateModified;
+		
+		function getCollectionDateLastModified($mask = null, $type="system") {
+			if(ENABLE_USER_TIMEZONES && $type == 'user') {
+				$dh = Loader::helper('date');
+				$cDateModified = $dh->getLocalDateTime($this->cDateModified);
 			} else {
-				return date($mask, strtotime($this->cDateModified));
+				$cDateModified = $this->cDateModified;
+			}
+			if ($mask == null) {
+				return $cDateModified;
+			} else {
+				return date($mask, strtotime($cDateModified));
 			}
 		}
-
 
 		function getVersionObject() {
 			return $this->vObj;
@@ -279,11 +284,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return $this->cHandle;
 		}
 
-		function getCollectionDateAdded($mask = null) {
-			if ($mask == null) {
-				return $this->cDateAdded;
+		function getCollectionDateAdded($mask = null,$type = 'system') {
+			if(ENABLE_USER_TIMEZONES && $type == 'user') {
+				$dh = Loader::helper('date');
+				$cDateAdded = $dh->getLocalDateTime($this->cDateAdded);
 			} else {
-				return date($mask, strtotime($this->cDateAdded));
+				$cDateAdded = $this->cDateAdded;
+			}
+			
+			if ($mask == null) {
+				return $cDateAdded;
+			} else {
+				return date($mask, strtotime($cDateAdded));
 			}
 		}
 
@@ -461,7 +473,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function add($data) {
 			$db = Loader::db();
 			$dh = Loader::helper('date');
-			$cDate = $dh->getLocalDateTime(); 
+			$cDate = $dh->getSystemDateTime(); 
 			$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : $cDate;
 			
 			if (isset($data['cID'])) {
@@ -490,7 +502,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			// marks this collection as newly modified
 			$db = Loader::db();
 			$dh = Loader::helper('date');
-			$cDateModified = $dh->getLocalDateTime();
+			$cDateModified = $dh->getSystemDateTime();
 
 			$v = array($cDateModified, $this->cID);
 			$q = "update Collections set cDateModified = ? where cID = ?";
@@ -523,7 +535,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function duplicate() {
 			$db = Loader::db();
 			$dh = Loader::helper('date');
-			$cDate = $dh->getLocalDateTime();
+			$cDate = $dh->getSystemDateTime();
 			
 			$v = array($cDate, $cDate, $this->cHandle);
 			$r = $db->query("insert into Collections (cDateAdded, cDateModified, cHandle) values (?, ?, ?)", $v);

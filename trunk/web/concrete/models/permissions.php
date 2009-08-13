@@ -514,7 +514,7 @@ class CollectionPermissions extends Permissions {
 		if ($r) {
 			while ($row = $r->fetchRow()) {
 				$dh = Loader::helper('date');
-				$time = strtotime($dh->getLocalDateTime());
+				$time = strtotime($dh->getSystemDateTime());
 				if ((!$row['cgStartDate'] && !$row['cgEndDate']) || ($row['cgStartDate'] && !$row['cgEndDate'] && $time >= strtotime($row['cgStartDate'])) 
 					 || (!$row['cgStartDate'] && $row['cgEndDate'] && $time <= strtotime($row['cgEndDate']))
 					 || ($row['cgStartDate'] && $row['cgEndDate'] && $time >= strtotime($row['cgStartDate']) && $time <= strtotime($row['cgEndDate']))) {

@@ -162,7 +162,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				
 				// now that we've created the collection type, we create the master collection
 				$dh = Loader::helper('date');
-				$cDate = $dh->getLocalDateTime();
+				$cDate = $dh->getSystemDateTime();
 				
 				$cobj = Collection::add($data);
 				$cID = $cobj->getCollectionID();

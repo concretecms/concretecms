@@ -20,27 +20,63 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class DateHelper {
 
 	/** 
-	 * Gets the date time for the local time zone/area. 
-	 * @todo: This currently doesn't hook into any kind of useful setting, and it probably should
-	 * @param string $dateMask
+	 * Gets the date time for the local time zone/area if user timezones are enabled, if not returns system datetime
+	 * @param string $systemDateTime
 	 * @return string $datetime
 	 */
-	function getLocalDateTime($dateMask = null) {
-		/*$current_hour = substr(date('O'), 0, strlen(date('0')) - 3);
-		$current_time = getdate();
-		
-		if ($dateMask) {
-			return date($dateMask,mktime($current_time['hours'] + $current_hour, $current_time['minutes'], $curent_time['seconds'], $current_time['mon'], $current_time['mday'], $current_time['year']));
+	public function getLocalDateTime($systemDateTime = NULL) {
+		if(isset($systemDateTime)) {
+			$datetime = new DateTime($systemDateTime);
 		} else {
-			// we return standard mysql datetime
-			return date('Y-m-d H:i:s',mktime($current_time['hours'] + $current_hour, $current_time['minutes'], $current_time['seconds'], $current_time['mon'], $current_time['mday'], $current_time['year']));
-		}*/
+			$datetime = new DateTime();
+		}
 		
-		return date('Y-m-d H:i:s');
+		if(defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
+			$u = new User();
+			if($u && $u->isRegistered()) {
+				$utz = $u->getUserTimezone();
+				if($utz) {
+					$tz = new DateTimeZone($utz);
+					$datetime->setTimezone($tz);
+				}
+			}
+		}
+		return $datetime->format('Y-m-d H:i:s');
 	}
 
+	/** 
+	 * Converts a user entered datetime to the system datetime
+	 * @param string $userDateTime
+	 * @return string $datetime
+	 */
+	public function getSystemDateTime($userDateTime = NULL) {
+		if(isset($userDateTime)) {
+			$datetime = new DateTime($userDateTime);
+			if(defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
+				$u = new User();
+				if($u && $u->isRegistered()) {
+					$utz = $u->getUserTimezone();
+					if($utz) {			
+						$tz = new DateTimeZone($utz);
+						$datetime = new DateTime($userDateTime,$tz); // create the in the user's timezone 
+						
+						$stz = new DateTimeZone(date_default_timezone_get()); // grab the default timezone
+						$datetime->setTimeZone($stz); // convert the datetime object to the current timezone
+					} 
+				}
+			}
+		} else {
+			$datetime = new DateTime();
+		}
+		
+		return $datetime->format('Y-m-d H:i:s');
+	}
 
-	function timeSince($posttime,$precise=0){
+	public function getTimezones() {
+		return array_combine(DateTimeZone::listIdentifiers(),DateTimeZone::listIdentifiers());
+	}
+
+	public function timeSince($posttime,$precise=0){
 		$timeRemaining=0;
 		$diff=date("U")-$posttime;
 		$days=intval($diff/(24*60*60));

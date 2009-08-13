@@ -383,7 +383,7 @@ $("input[name=vRemove]").click(function() {
 			print $v->getVersionApproverUserName();
 			
 			?></td>
-		<td><?=date('m/d/Y g:i A', strtotime($v->getVersionDateCreated()))?></td>
+		<td><?=date('m/d/Y g:i A', strtotime($v->getVersionDateCreated('user')))?></td>
 	</tr>	
 	<? } ?>
 	</table>

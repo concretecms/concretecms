@@ -178,7 +178,7 @@ $ppWhere = '';
 		
 		$dh = Loader::helper('date');
 				
-		$q = "select cIsCheckedOut, UNIX_TIMESTAMP('" . $dh->getLocalDateTime() . "') - UNIX_TIMESTAMP(cCheckedOutDatetimeLastEdit) as timeout from Pages where cID = '{$this->cID}'";
+		$q = "select cIsCheckedOut, UNIX_TIMESTAMP('" . $dh->getSystemDateTime() . "') - UNIX_TIMESTAMP(cCheckedOutDatetimeLastEdit) as timeout from Pages where cID = '{$this->cID}'";
 		$r = $db->query($q);
 		if ($r) {
 			$row = $r->fetchRow();
@@ -360,8 +360,8 @@ $ppWhere = '';
 		
 		$dh = Loader::helper('date');
 				
-		$cDate = $dh->getLocalDateTime();
-		$cDatePublic = $dh->getLocalDateTime();
+		$cDate = $dh->getSystemDateTime();
+		$cDatePublic = $dh->getSystemDateTime();
 		$handle = $this->getCollectionHandle();
 
 		$_cParentID = $c->getCollectionID();
@@ -419,8 +419,8 @@ $ppWhere = '';
 		$uID = $u->getUserID();
 		$ctID = 0;
 				
-		$cDate = $dh->getLocalDateTime();
-		$cDatePublic = $dh->getLocalDateTime();
+		$cDate = $dh->getSystemDateTime();
+		$cDatePublic = $dh->getSystemDateTime();
 		$handle = $this->getCollectionHandle();
 		
 		// make the handle out of the title
@@ -616,9 +616,20 @@ $ppWhere = '';
 	function getCollectionFilename() {
 		return $this->cFilename;
 	}
-
-	function getCollectionDatePublic($dateFormat = null) {
-		return ($dateFormat) ? date($dateFormat, strtotime($this->vObj->cvDatePublic)) : $this->vObj->cvDatePublic;
+	
+	/**
+	 * Gets the date a the current version was made public, 
+	 * if user is specified, returns in the current user's timezone
+	 * @param string $type (system || user)
+	 * @return string date formated like: 2009-01-01 00:00:00 
+	*/
+	function getCollectionDatePublic($type='system') {
+		if(ENABLE_USER_TIMEZONES && $type == 'user') {
+			$dh = Loader::helper('date');
+			return $dh->getLocalDateTime($this->vObj->cvDatePublic);
+		} else {
+			return $this->vObj->cvDatePublic;
+		}
 	}
 
 	function getCollectionDescription() {
@@ -651,10 +662,21 @@ $ppWhere = '';
 		return $this->cPendingActionUID;
 	}
 
-	function getPendingActionDateTime() {
-		return $this->cPendingActionDatetime;
-	}
-
+	/**
+	 * Gets the pending action date, 
+	 * if user is specified, returns in the current user's timezone
+	 * @param string $type (system || user)
+	 * @return string date formated like: 2009-01-01 00:00:00 
+	*/
+	function getPendingActionDateTime($type = 'system') {
+		if(ENABLE_USER_TIMEZONES && $type == 'user') {
+			$dh = Loader::helper('date');
+			return $dh->getLocalDateTime($this->cPendingActionDatetime);
+		} else {
+			return $this->cPendingActionDatetime;
+		}
+	}	
+	
 	function getPendingActionTargetCollectionID() {
 		return $this->cPendingActionTargetCID;
 	}
@@ -803,7 +825,7 @@ $ppWhere = '';
 		
 		$cName = $this->getCollectionName();
 		$cDescription = $this->getCollectionDescription();
-		$cDatePublic = $this->getCollectionDatePublic;
+		$cDatePublic = $this->getCollectionDatePublic();
 		$ctID = $this->getCollectionTypeID();
 		$uID = $this->getCollectionUserID();
 		$pkgID = $this->getPackageID();
@@ -1047,7 +1069,7 @@ $ppWhere = '';
 		PageStatistics::decrementParents($this->cID);
 		parent::refreshCache();
 		
-		$cDateModified = $dh->getLocalDateTime();
+		$cDateModified = $dh->getSystemDateTime();
 		if ($this->getPermissionsCollectionID() != $this->getCollectionID() && $this->getPermissionsCollectionID() != $this->getMasterCollectionID()) {
 			// implicitly, we're set to inherit the permissions of wherever we are in the site.
 			// as such, we'll change to inherit whatever permissions our new parent has
@@ -1120,7 +1142,7 @@ $ppWhere = '';
 		$u = new User();
 		$uID = $u->getUserID();
 		$dh = Loader::helper('date');			
-		$cDate = $dh->getLocalDateTime();
+		$cDate = $dh->getSystemDateTime();
 		
 		$cobj = parent::getByID($this->cID);
 		$newC = $cobj->duplicate();
@@ -1260,7 +1282,7 @@ $ppWhere = '';
 			$uID = $u->getUserID();
 			$cID = $this->getCollectionID();
 			$dh = Loader::helper('date');
-			$dateTime = $dh->getLocalDateTime();
+			$dateTime = $dh->getSystemDateTime();
 			$targetCID = (is_object($targetC)) ? $targetC->getCollectionID() : "";
 			
 			$this->cPendingAction = $action;
@@ -1680,8 +1702,8 @@ $ppWhere = '';
 		//$ctID = HOME_CTID;
 		$ctID = 0;
 		
-		$cDate = $dh->getLocalDateTime();
-		$cDatePublic = $dh->getLocalDateTime();
+		$cDate = $dh->getSystemDateTime();
+		$cDatePublic = $dh->getSystemDateTime();
 		
 		$v = array($cID, $ctID, $cParentID, $uID, 'OVERRIDE', 1, 1, 0);
 		$q = "insert into Pages (cID, ctID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -1739,7 +1761,7 @@ $ppWhere = '';
 		
 		$data['handle'] = $handle;
 		$dh = Loader::helper('date');
-		$cDate = $dh->getLocalDateTime();
+		$cDate = $dh->getSystemDateTime();
 		$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;		
 		
 		parent::refreshCache();
