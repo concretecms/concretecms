@@ -219,8 +219,8 @@ $saveMsg = t('Save permissions first.');
                    		<td class="permissions"><input type="checkbox" name="collectionAdmin[]" value="gID:<?=$g->getGroupID()?>"<? if ($g->canAdminCollection()) { ?> checked<? } ?>></td>
                    		
                    		<td class="subpage"><? foreach ($ctArray as $ct) { ?><div style="white-space: nowrap; width: auto; float: left; margin-right: 5px; min-width: 90px"><input type="checkbox" name="collectionAddSubCollection[<?=$ct->getCollectionTypeID()?>][]" value="gID:<?=$g->getGroupID()?>"<? if ($ct->canAddSubCollection($g)) { ?> checked<? } ?>>&nbsp;<?=$ct->getCollectionTypeName()?></div><? } ?><div class="ccm-spacer">&nbsp;</div></td>
-						<td class="datetime"><?	print $dt->datetime('cgStartDate_gID:' . $g->getGroupID(), $g->getGroupStartDate(), true); ?>
-						<td class="datetime"><?	print $dt->datetime('cgEndDate_gID:' . $g->getGroupID(), $g->getGroupEndDate(), true); ?>
+						<td class="datetime"><?	print $dt->datetime('cgStartDate_gID:' . $g->getGroupID(), $g->getGroupStartDate('user'), true); ?>
+						<td class="datetime"><?	print $dt->datetime('cgEndDate_gID:' . $g->getGroupID(), $g->getGroupEndDate('user'), true); ?>
 				
                   
                   </tr>

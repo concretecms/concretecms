@@ -12,7 +12,11 @@ $dh = Loader::helper('concrete/dashboard/sitemap');
 if ($_REQUEST['search']) {
 
 	Loader::model('search/collection');
+	$dateHelper = Loader::helper('date');
 	$searchArray = $_GET;
+	$searchArray['cStartDate'] = $dateHelper->getSystemDateTime($_GET['cStartDate'],'m/d/y');
+	$searchArray['cEndDate'] = $dateHelper->getSystemDateTime($_GET['cEndDate'],'m/d/y');
+	
 	$s = new CollectionSearch($searchArray);
 
 	if($_GET['sort'] == 'cvDateCreated') { $_GET['order'] = "desc"; }

@@ -1585,9 +1585,10 @@ $ppWhere = '';
 
 		// now we iterate through, and add the permissions
 		$dt = Loader::helper('form/date_time');
+		$dh = Loader::helper('date');
 		foreach ($gIDArray as $gID => $perms) {
-			$cgStartDate = $dt->translate('cgStartDate_gID:' . $gID, $args);
-			$cgEndDate = $dt->translate('cgEndDate_gID:' . $gID, $args);
+			$cgStartDate = $dh->getSystemDateTime($dt->translate('cgStartDate_gID:' . $gID, $args));
+			$cgEndDate = $dh->getSystemDateTime($dt->translate('cgEndDate_gID:' . $gID, $args));
 			
 		   // since this can now be either groups or users, we have prepended gID or uID to each gID value
 			// we have to trim the trailing colon, if there is one

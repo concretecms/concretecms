@@ -22,9 +22,14 @@ class DateHelper {
 	/** 
 	 * Gets the date time for the local time zone/area if user timezones are enabled, if not returns system datetime
 	 * @param string $systemDateTime
+	 * @param string $format
 	 * @return string $datetime
 	 */
-	public function getLocalDateTime($systemDateTime = NULL) {
+	public function getLocalDateTime($systemDateTime = NULL, $mask = NULL) {
+		if(!isset($mask) || !strlen($mask)) {
+			$mask = 'Y-m-d H:i:s';
+		}
+		
 		if(isset($systemDateTime)) {
 			$datetime = new DateTime($systemDateTime);
 		} else {
@@ -41,15 +46,20 @@ class DateHelper {
 				}
 			}
 		}
-		return $datetime->format('Y-m-d H:i:s');
+		return $datetime->format($mask);
 	}
 
 	/** 
 	 * Converts a user entered datetime to the system datetime
 	 * @param string $userDateTime
+	 * @param string $systemDateTime
 	 * @return string $datetime
 	 */
-	public function getSystemDateTime($userDateTime = NULL) {
+	public function getSystemDateTime($userDateTime = NULL, $mask = NULL) {
+		if(!isset($mask) || !strlen($mask)) {
+			$mask = 'Y-m-d H:i:s';
+		}
+		
 		if(isset($userDateTime)) {
 			$datetime = new DateTime($userDateTime);
 			if(defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
@@ -68,8 +78,7 @@ class DateHelper {
 		} else {
 			$datetime = new DateTime();
 		}
-		
-		return $datetime->format('Y-m-d H:i:s');
+		return $datetime->format($mask);
 	}
 
 	public function getTimezones() {
