@@ -42,6 +42,10 @@
 	
 	## Load required models ##
 	Loader::model('area');
+	Loader::model('attribute/key');
+	Loader::model('attribute/value');
+	Loader::model('attribute/category');
+	Loader::model('attribute/type');
 	Loader::model('block');
 	Loader::model('file');
 	Loader::model('file_version');

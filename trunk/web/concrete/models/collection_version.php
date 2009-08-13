@@ -111,26 +111,9 @@
 			}
 			
 			// load the attributes for a particular version object
-			$db = Loader::db();
-			$v = array($c->getCollectionID(), $cv->getVersionID());
-			$r = $db->Execute('select akHandle, value, akType from CollectionAttributeValues inner join CollectionAttributeKeys on CollectionAttributeKeys.akID = CollectionAttributeValues.akID where cID = ? and cvID = ?', $v);
-			while ($row = $r->fetchRow()) {
-				switch($row['akType']) {
-					case "IMAGE_FILE":
-						if ($row['value'] > 0) {
-							Loader::block('library_file');
-							$v = File::getByID($row['value']);
-						}
-						break;
-					default:
-						$v = $row['value'];
-						break;
-				}
-				$attributes[$row['akHandle']] = $v;
-			}
+			Loader::model('attribute/categories/collection');			
+			$cv->attributes = CollectionAttributeKey::getAttributes($c->getCollectionID(), $cvID);
 			
-			$cv->setAttributeArray($attributes);
-
 			$cv->cID = $c->getCollectionID();			
 			$cv->cvIsMostRecent = $cv->_checkRecent();
 			
@@ -140,10 +123,6 @@
 			return $cv;
 		}
 
-		public function setAttributeArray($arr) {
-			$this->attributes = $arr;
-		}
-		
 		public function getAttribute($ak) {
 			if (is_object($this->attributes)) {
 				return $this->attributes->getAttribute($ak);
