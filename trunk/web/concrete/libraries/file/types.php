@@ -43,7 +43,7 @@ class FileTypeList {
 			$ft->extension = $e;
 			$ft->customImporter = $customImporter;
 			$ft->editor = $editor;
-			$ft->type = $type;
+			$ft->type = strtolower($type);
 			$ft->view = $inlineFileViewer;
 			$this->types[$e] = $ft;
 		}

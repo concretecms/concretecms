@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
-
+Loader::model('attribute/categories/file');
 /**
 *
 * An object that allows a filtered list of files to be returned.
@@ -10,19 +10,20 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 */
 class FileList extends DatabaseItemList { 
 
-	private $fileAttributeFilters = array();
+	protected $attributeFilters = array();
 	protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fDateAdded', 'fvDateAdded', 'fvSize');
 	protected $itemsPerPage = 10;
+	protected $attributeClass = 'FileAttributeKey';
 	
-	/* magic method for filtering by page attributes. */
+	/* magic method for filtering by attributes. */
 	public function __call($nm, $a) {
 		if (substr($nm, 0, 8) == 'filterBy') {
 			$txt = Loader::helper('text');
 			$attrib = $txt->uncamelcase(substr($nm, 8));
 			if (count($a) == 2) {
-				$this->filterByFileAttribute($attrib, $a[0], $a[1]);
+				$this->filterByAttribute($attrib, $a[0], $a[1]);
 			} else {
-				$this->filterByFileAttribute($attrib, $a[0]);
+				$this->filterByAttribute($attrib, $a[0]);
 			}
 		}			
 	}
@@ -103,16 +104,6 @@ class FileList extends DatabaseItemList {
 	}	
 	
 	/** 
-	 * Filters the list by collection attribute
-	 * @param string $handle Collection Attribute Handle
-	 * @param string $value
-	 */
-	public function filterByFileAttribute($handle, $value, $comparison = '=') {
-		$ak = FileAttributeKey::getByHandle($handle);
-		$this->fileAttributeFilters[] = array($handle, $value, $comparison, $ak->getAttributeKeyType());
-	}
-	
-	/** 
 	 * If true, pages will be checked for permissions prior to being returned
 	 * @param bool $checkForPermissions
 	 */
@@ -191,49 +182,6 @@ class FileList extends DatabaseItemList {
 		}
 	}
 	
-	protected function setupFileAttributeFilters() {
-		$db = Loader::db();
-		$i = 1;
-		foreach($this->fileAttributeFilters as $caf) {
-			$fakID = $db->GetOne("select fakID from FileAttributeKeys where akHandle = ?", array($caf[0]));
-			$tbl = "fav_{$i}";
-			$this->addToQuery("left join FileAttributeValues $tbl on ({$tbl}.fID = fv.fID and fv.fvID = {$tbl}.fvID and {$tbl}.fakID = {$fakID})");
-			switch($caf[3]) {
-				case 'NUMBER':
-					$val = $db->quote($caf[1]);
-					$this->filter(false, 'CAST(' . $tbl . '.value as unsigned) ' . $caf[2] . ' ' . $val);
-					break;
-				case 'DATE':
-					$val = $db->quote($caf[1]);
-					$this->filter(false, 'CAST(' . $tbl . '.value as date) ' . $caf[2] . ' ' . $val);
-					break;
-				case 'SELECT_MULTIPLE':
-					$multiString = '(';
-					$i = 0;
-					if(!is_array($caf[1])) $caf[1]=array($caf[1]); 
-					foreach($caf[1] as $val) {
-						$val = $db->quote('%' . $val . '||%');
-						$multiString .= 'REPLACE(' . $tbl . '.value, "\n", "||") like ' . $val . ' ';
-						if (($i + 1) < count($caf[1])) {
-							$multiString .= 'OR ';
-						}
-						$i++;
-					}
-					$multiString .= ')';
-					$this->filter(false, $multiString);
-					break;
-				case 'TEXT':
-					$val = $db->quote($caf[1]);
-					$this->filter(false, $tbl . '.value ' . $caf[2] . ' ' . $val);
-					break;
-				default:
-					$this->filter($tbl . '.value', $caf[1], $caf[2]);
-					break;
-			}
-			$i++;
-		}
-	}
-	
 	/** 
 	 * Returns an array of page objects based on current settings
 	 */
@@ -261,26 +209,17 @@ class FileList extends DatabaseItemList {
 		if(!$this->queryCreated){
 			$this->setBaseQuery();
 			$this->filter('fvIsApproved', 1);
-			$this->setupFileAttributeFilters();
+			$this->setupAttributeFilters("left join FileSearchIndexAttributes on (fv.fID = FileSearchIndexAttributes.fID)");
 			$this->setupFilePermissions();
 			$this->queryCreated=1;
 		}
 	}
 	
 	//$key can be handle or fak id
-	public function sortByAttributeKey($key,$order='asc'){
-		if(!is_int($key) && intval($key)!=0){
-			$fak = FileAttributeKey::getByHandle($key);
-			if(!$fak)
-				throw new Exception('File list sorting attribute key not found - '.$key );
-			$sortFileAttrKeyId=$fak->getAttributeKeyID();
-		}else{
-			$sortFileAttrKeyId=intval($key);	
-		} 
-		$this->addToQuery(' left join FileAttributeValues sortAttr on (sortAttr.fID = fv.fID and fv.fvID = sortAttr.fvID and sortAttr.fakID = '.$sortFileAttrKeyId.') ');
-		$this->sortBy('sortAttr.value ', $order);	
-	} 
-	
+	public function sortByAttributeKey($key,$order='asc') {
+		$this->sortBy($key, $order); // this is handled natively now
+	}
+			
 	public static function getExtensionList() {
 		$db = Loader::db();
 		$col = $db->GetCol('select distinct(trim(fvExtension)) as extension from FileVersions where fvIsApproved = 1 and fvExtension <> ""');

@@ -26,7 +26,9 @@
 		 * @return void
 		 */
 		public function add($e) {
-			if (is_object($e) && ($e instanceof Exception)) {
+			if ($e instanceof ValidationErrorHelper) {
+				$this->error = array_merge($e->getList(), $this->error);			
+			} else if (is_object($e) && ($e instanceof Exception)) {
 				$this->error[] = $e->getMessage();
 			} else {
 				$this->error[] = $e;

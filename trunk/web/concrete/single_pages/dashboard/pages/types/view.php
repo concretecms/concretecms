@@ -80,15 +80,6 @@ if ($_REQUEST['created']) {
 	$message = t('Page Type updated.');
 }
 
-if ($_REQUEST['attribute_updated']) {
-	$message = t('Page Attribute Updated.');
-}
-if ($_REQUEST['attribute_created']) {
-	$message = t('Page Attribute Created.');
-}
-if ($_REQUEST['attribute_deleted']) {
-	$message = t('Page Attribute Deleted.');
-}
 
 ?>
 
@@ -179,7 +170,7 @@ if ($ctEditMode) {
 			<tr>
 		<? } ?>
 		
-		<td><input type="checkbox" name="akID[]" value="<?=$ak->getCollectionAttributeKeyID()?>" <? if (($this->controller->isPost() && in_array($ak->getCollectionAttributeKeyID(), $akIDArray))) { ?> checked <? } else if ((!$this->controller->isPost()) && $ct->isAvailableCollectionTypeAttribute($ak->getCollectionAttributeKeyID())) { ?> checked <? } ?> /> <?=$ak->getCollectionAttributeKeyName()?></td>
+		<td><input type="checkbox" name="akID[]" value="<?=$ak->getAttributeKeyID()?>" <? if (($this->controller->isPost() && in_array($ak->getAttributeKeyID(), $akIDArray))) { ?> checked <? } else if ((!$this->controller->isPost()) && $ct->isAvailableCollectionTypeAttribute($ak->getAttributeKeyID())) { ?> checked <? } ?> /> <?=$ak->getAttributeKeyName()?></td>
 		
 		<? $i++;
 		
@@ -324,7 +315,7 @@ if ($ctEditMode) {
 			<tr>
 		<? } ?>
 		
-		<td><input type="checkbox" name="akID[]" value="<?=$ak->getCollectionAttributeKeyID()?>" /> <?=$ak->getCollectionAttributeKeyName()?></td>
+		<td><input type="checkbox" name="akID[]" value="<?=$ak->getAttributeKeyID()?>" /> <?=$ak->getAttributeKeyName()?></td>
 		
 		<? $i++;
 		
@@ -424,7 +415,7 @@ if ($ctEditMode) {
 	<h1><span><?=t('Page Attributes')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
-	<?= Loader::element('dashboard/attributes_table', array('attribs'=>$attribs) ); ?>
+	<?= Loader::element('dashboard/attributes_table', array('attribs'=>$attribs, 'editURL' => '/dashboard/pages/types/attributes')); ?>
 	
 	<br/>
 	<div class="ccm-buttons">

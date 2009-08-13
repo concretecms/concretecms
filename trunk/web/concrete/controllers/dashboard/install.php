@@ -6,9 +6,44 @@ class DashboardInstallController extends Controller {
 	public function __construct() {
 		$this->error = Loader::helper('validation/error');
 	}
-	
+		
+	public function on_start() {
+		$addFuncSelected = true;
+		$updateSelected = false;
+		
+		if ($this->getTask() == 'update') {
+			$updateSelected = true;
+			$addFuncSelected = false;
+		}
+		
+		$subnav = array(
+			array(View::url('/dashboard/install'), t('Installed and Available'), $addFuncSelected),
+			array(View::url('/dashboard/install', 'update'), t('Update Add-Ons'), $updateSelected)
+		);
+		$this->set('subnav', $subnav);
+	}
+
 	public function view() {
 
+	}
+	
+	public function update($pkgHandle = false) {
+		if ($pkgHandle) {
+			$tests = Package::testForInstall($pkgHandle, false);
+			if (is_array($tests)) {
+				$tests = Package::mapError($tests);
+				$this->set('error', $tests);
+			} else {
+				$p = Package::getByHandle($pkgHandle);
+				try {
+					$p->upgradeCoreData();
+					$p->upgrade();
+					$this->set('message', t('The package has been updated successfully.'));
+				} catch(Exception $e) {
+					$this->set('error', $e);
+				}
+			}
+		}
 	}
 	
 	public function refresh_block_type($btID = 0) {
@@ -157,6 +192,18 @@ class DashboardInstallController extends Controller {
 		if (is_array($errors)) {
 			$errors = Package::mapError($errors);
 			$this->set('error', $errors);
+		}
+    }
+
+    public function remote_upgrade($remoteCID, $pkgHandle){
+    	$ph = Loader::helper('package');
+    	$errors = $ph->upgrade_remote('purchase', $remoteCID, $pkgHandle);
+		if (is_array($errors)) {
+			$errors = Package::mapError($errors);
+			$this->set('error', $errors);
+		} else {
+			$this->set('message', t('Upgrade Complete!'));
+			$this->update();
 		}
     }
 

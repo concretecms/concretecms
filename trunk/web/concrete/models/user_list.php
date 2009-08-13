@@ -15,13 +15,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('userinfo');
 Loader::model('groups');
 Loader::model('user_attributes');
+Loader::model('attribute/categories/user');
 
 class UserList extends DatabaseItemList { 
 
-	private $userAttributeFilters = array();
-	protected $autoSortColumns = array('uName', 'uEmail', 'fvDateAdded', 'uLastLogin');
+	protected $attributeFilters = array();
+	protected $autoSortColumns = array('uName', 'uEmail', 'uDateAdded', 'uLastLogin', 'uNumLogins');
 	protected $itemsPerPage = 10;
-	public $keywordFilterAttrHandles=array();
+	protected $attributeClass = 'UserAttributeKey';
 	
 	public $showInactiveUsers=0;
 	public $showInvalidatedUsers=0;
@@ -32,44 +33,14 @@ class UserList extends DatabaseItemList {
 		$this->filter('u.uName', $type, '=');
 	}
 	
-	// this lets you specify additional user attributes to search against
-	public function addKeywordSearchAttributes($akHandle=''){
-		$this->keywordFilterAttrHandles[]=$akHandle;
-	}
-	
 	// Filters by "keywords"
 	public function filterByKeywords($keywords) {
 		$db = Loader::db();
 		$keywordsExact = $db->quote($keywords);
 		$keywords = $db->quote('%' . $keywords . '%');
+		$emailSearchStr=' OR u.uEmail like '.$keywords.' ';
 		
-		if($this->searchAgainstEmail){
-			$emailSearchStr=' OR u.uEmail like '.$keywords.' ';
-		}
-		
-		$i=0; 
-		foreach($this->keywordFilterAttrHandles as $akHandle){
-			$ukID = $db->GetOne("select ukID from UserAttributeKeys where ukHandle = ?", array($akHandle) );
-			$tbl = "uavKeywords_{$i}";
-			$this->addToQuery("left join UserAttributeValues $tbl on ({$tbl}.uID = u.uID and {$tbl}.ukID = {$ukID})");		
-			$attrClauses.=" OR {$tbl}.value like ".$keywords;
-			$i++;
-		}		
-		
-		$this->filter(false, '( u.uName like ' . $keywords . $emailSearchStr . $attrClauses . ')');
-	}
-	
-	/** 
-	 * Filters the list by user attribute
-	 * @param string $handle User Attribute Handle
-	 * @param string $value
-	 */
-	public function filterByUserAttribute($handle, $value, $comparison = '=') {
-		$ak = UserAttributeKey::getByHandle($handle);
-		if(!$ak) {
-			throw new Exception(t("The user attribute \"%s\" does not exist",$handle)); 
-		}
-		$this->userAttributeFilters[] = array($handle, $value, $comparison, $ak->getKeyType());
+		$this->filter(false, '( u.uName like ' . $keywords . $emailSearchStr . ')');
 	}
 	
 	public function filterByGroup($groupName=''){ 
@@ -77,6 +48,16 @@ class UserList extends DatabaseItemList {
 		$tbl='ug_'.$group->getGroupID();
 		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");			
 		$this->filter(false, "{$tbl}.gID=".intval($group->getGroupID()) );
+	}
+
+	public function filterByGroupID($gID){ 
+		$tbl='ug_'.$gID;
+		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");			
+		$this->filter(false, "{$tbl}.gID=".$gID);
+	}
+
+	public function filterByDateAdded($date, $comparison = '=') {
+		$this->filter('u.uDateAdded', $date, $comparison);
 	}
 	
 	// Returns an array of userInfo objects based on current filter settings
@@ -100,10 +81,9 @@ class UserList extends DatabaseItemList {
 	protected function createQuery(){
 		if(!$this->queryCreated){
 			$this->setBaseQuery();
-			if( !$this->showInactiveUsers) $this->filter('u.uIsActive', 1);
-			if( !$this->showInvalidatedUsers) $this->filter('u.uIsValidated', 0, '!=');
-			$this->setupAttributeFilters();
-			//$this->setupFilePermissions();			
+			if(!$this->showInactiveUsers) $this->filter('u.uIsActive', 1);
+			if(!$this->showInvalidatedUsers) $this->filter('u.uIsValidated', 0, '!=');
+			$this->setupAttributeFilters("left join UserSearchIndexAttributes on (UserSearchIndexAttributes.uID = u.uID)");
 			$this->queryCreated=1;
 		}
 	}	
@@ -118,56 +98,12 @@ class UserList extends DatabaseItemList {
 			$txt = Loader::helper('text');
 			$attrib = $txt->uncamelcase(substr($nm, 8));
 			if (count($a) == 2) {
-				$this->filterByUserAttribute($attrib, $a[0], $a[1]);
+				$this->filterByAttribute($attrib, $a[0], $a[1]);
 			} else {
-				$this->filterByUserAttribute($attrib, $a[0]);
+				$this->filterByAttribute($attrib, $a[0]);
 			}
 		}			
 	}
-	
-	protected function setupAttributeFilters() {
-		$db = Loader::db();
-		$i = 1;
-		foreach($this->userAttributeFilters as $caf) {
-			$ukID = $db->GetOne("select ukID from UserAttributeKeys where ukHandle = ?", array($caf[0]));
-			$tbl = "uav_{$i}";
-			$this->addToQuery("left join UserAttributeValues $tbl on ({$tbl}.uID = u.uID and {$tbl}.ukID = {$ukID})");
-			switch($caf[3]) { 		
-				case 'NUMBER':
-					$val = $db->quote($caf[1]);
-					$this->filter(false, 'CAST(' . $tbl . '.value as unsigned) ' . $caf[2] . ' ' . $val);
-					break;
-				case 'DATE':
-					$val = $db->quote($caf[1]);
-					$this->filter(false, 'CAST(' . $tbl . '.value as date) ' . $caf[2] . ' ' . $val);
-					break;
-				case 'SELECT_MULTIPLE':
-					$multiString = '(';
-					$i = 0;
-					if(!is_array($caf[1])) $caf[1]=array($caf[1]); 
-					foreach($caf[1] as $val) {
-						$val = $db->quote('%' . $val . '||%');
-						$multiString .= 'REPLACE(' . $tbl . '.value, "\n", "||") like ' . $val . ' ';
-						if (($i + 1) < count($caf[1])) {
-							$multiString .= 'OR ';
-						}
-						$i++;
-					}
-					$multiString .= ')';
-					$this->filter(false, $multiString);
-					break;
-				case 'TEXT':
-					$val = $db->quote($caf[1]);
-					$this->filter(false, $tbl . '.value ' . $caf[2] . ' ' . $val);
-					break;
-				default:
-					$this->filter($tbl . '.value', $caf[1], $caf[2]);
-					break;
-			}
-			$i++;
-		}
-	}
-	
 
 }
 

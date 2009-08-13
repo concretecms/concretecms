@@ -62,27 +62,30 @@ if ($_POST['task'] == 'update_extended_attribute' && $fp->canWrite() && (!$previ
 	$fakID = $_REQUEST['fakID'];
 	$value = '';
 	$ak = FileAttributeKey::get($fakID);
+	$ak->saveAttributeForm($fv);
 	
-	if ($ak->getAttributeKeyType() == 'DATE') {
-		$dt = Loader::helper('form/date_time');
-		$value = $dt->translate('fakID_' . $fakID);
-	} else if (is_array($_REQUEST['fakID_' . $fakID])) {
-		foreach($_REQUEST['fakID_' . $fakID] as $val) {
-			$value .= $val  . "\n";
-		}
-	} else {
-		$value = $_REQUEST['fakID_' . $fakID] ;
-	}
-	$fv->setAttribute($ak, $value);
-	$fv->populateAttributes();	
-	print $fv->getAttribute($ak, true) ;	
+	$val = $fv->getAttributeValueObject($ak);
+	print $val->getValue('display');
 	exit;
 }
+
+if ($_POST['task'] == 'clear_extended_attribute' && $fp->canWrite() && (!$previewMode)) {
+	$fv = $f->getVersionToModify();
+	$fakID = $_REQUEST['fakID'];
+	$value = '';
+	$ak = FileAttributeKey::get($fakID);
+	$fv->clearAttribute($ak);
+	
+	$val = $fv->getAttributeValueObject($ak);
+	print '<div class="ccm-attribute-field-none">' . t('None') . '</div>';
+	exit;
+}
+
 
 function printCorePropertyRow($title, $field, $value, $formText) {
 	global $previewMode, $f, $fp;
 	if ($value == '') {
-		$text = '<div class="ccm-file-manager-field-none">' . t('None') . '</div>';
+		$text = '<div class="ccm-attribute-field-none">' . t('None') . '</div>';
 	} else { 
 		$text = htmlentities( $value, ENT_QUOTES, APP_CHARSET);
 	}
@@ -90,20 +93,20 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 	if ($fp->canWrite() && (!$previewMode)) {
 	
 	$html = '
-	<tr class="ccm-file-manager-editable-field">
+	<tr class="ccm-attribute-editable-field">
 		<th><a href="javascript:void(0)">' . $title . '</a></th>
-		<td width="100%" class="ccm-file-manager-editable-field-central"><div class="ccm-file-manager-editable-field-text">' . $text . '</div>
+		<td width="100%" class="ccm-attribute-editable-field-central"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
 		<form method="post" action="' . REL_DIR_FILES_TOOLS_REQUIRED . '/files/properties">
 		<input type="hidden" name="attributeField" value="' . $field . '" />
 		<input type="hidden" name="fID" value="' . $f->getFileID() . '" />
 		<input type="hidden" name="task" value="update_core" />
-		<div class="ccm-file-manager-editable-field-form ccm-file-manager-editable-field-type-text">
+		<div class="ccm-attribute-editable-field-form ccm-attribute-editable-field-type-text">
 		' . $formText . '
 		</div>
 		</form>
 		</td>
-		<td class="ccm-file-manager-editable-field-save"><a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/edit_small.png" width="16" height="16" class="ccm-file-manager-editable-field-save-button" /></a>
-		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-file-manager-editable-field-loading" />
+		<td class="ccm-attribute-editable-field-save"><a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/edit_small.png" width="16" height="16" class="ccm-attribute-editable-field-save-button" /></a>
+		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-attribute-editable-field-loading" />
 		</td>
 	</tr>';
 	
@@ -120,29 +123,36 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 
 function printFileAttributeRow($ak, $fv) {
 	global $previewMode, $f, $fp;
-	$value = $fv->getAttribute($ak, true);
+	$vo = $fv->getAttributeValueObject($ak);
+	$value = '';
+	if (is_object($vo)) {
+		$value = $vo->getValue('display');
+	}
+	
 	if ($value == '') {
-		$text = '<div class="ccm-file-manager-field-none">' . t('None') . '</div>';
+		$text = '<div class="ccm-attribute-field-none">' . t('None') . '</div>';
 	} else {
 		$text = $value;
 	}
 	if ($ak->isAttributeKeyEditable() && $fp->canWrite() && (!$previewMode)) { 
+	$type = $ak->getAttributeType();
 	
 	$html = '
-	<tr class="ccm-file-manager-editable-field">
+	<tr class="ccm-attribute-editable-field">
 		<th><a href="javascript:void(0)">' . $ak->getAttributeKeyName() . '</a></th>
-		<td width="100%" class="ccm-file-manager-editable-field-central"><div class="ccm-file-manager-editable-field-text">' . $text . '</div>
+		<td width="100%" class="ccm-attribute-editable-field-central"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
 		<form method="post" action="' . REL_DIR_FILES_TOOLS_REQUIRED . '/files/properties">
 		<input type="hidden" name="fakID" value="' . $ak->getAttributeKeyID() . '" />
 		<input type="hidden" name="fID" value="' . $f->getFileID() . '" />
 		<input type="hidden" name="task" value="update_extended_attribute" />
-		<div class="ccm-file-manager-editable-field-form ccm-file-manager-editable-field-type-' . strtolower($ak->getAttributeKeyType()) . '">
-		' . $ak->outputHTML($fv) . '
+		<div class="ccm-attribute-editable-field-form ccm-attribute-editable-field-type-' . strtolower($type->getAttributeTypeHandle()) . '">
+		' . $ak->render('form', $vo, true) . '
 		</div>
 		</form>
 		</td>
-		<td class="ccm-file-manager-editable-field-save"><a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/edit_small.png" width="16" height="16" class="ccm-file-manager-editable-field-save-button" /></a>
-		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-file-manager-editable-field-loading" />
+		<td class="ccm-attribute-editable-field-save"><a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/edit_small.png" width="16" height="16" class="ccm-attribute-editable-field-save-button" /></a>
+		<a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/close.png" width="16" height="16" class="ccm-attribute-editable-field-clear-button" /></a>
+		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-attribute-editable-field-loading" />
 		</td>
 	</tr>';
 	

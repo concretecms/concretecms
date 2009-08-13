@@ -145,7 +145,9 @@
 		}
 		
 		public function getAttribute($ak) {
-			return $this->attributes[$ak];
+			if (is_object($this->attributes)) {
+				return $this->attributes->getAttribute($ak);
+			}
 		}
 
 		function isApproved() {return $this->cvIsApproved;}
@@ -186,12 +188,12 @@
 			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew)
 				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				
-			$q2 = "select akID, value from CollectionAttributeValues where cID = ? and cvID = ?";
+			$q2 = "select akID, avID from CollectionAttributeValues where cID = ? and cvID = ?";
 			$v2 = array($c->getCollectionID(), $this->getVersionID());
 			$r2 = $db->query($q2, $v2);
 			while ($row2 = $r2->fetchRow()) {
-				$v3 = array($c->getCollectionID(), $newVID, $row2['akID'], $row2['value']);
-				$db->query("insert into CollectionAttributeValues (cID, cvID, akID, value) values (?, ?, ?, ?)", $v3);
+				$v3 = array($c->getCollectionID(), $newVID, $row2['akID'], $row2['avID']);
+				$db->query("insert into CollectionAttributeValues (cID, cvID, akID, avID) values (?, ?, ?, ?)", $v3);
 				
 			}
 			
@@ -244,6 +246,7 @@
 			if (($oldHandle != $newHandle) && (!$c->isGeneratedCollection())) {
 				$c->rescanCollectionPath();
 			}
+			$c->reindex();
 			$this->refreshCache();
 		}
 		
@@ -301,8 +304,14 @@
 				}
 			}
 			
-			$q = "delete from CollectionAttributeValues where cID = '{$cID}' and cvID = '{$cvID}'";
-			$r = $db->query($q);
+			$r = $db->Execute('select avID, akID from CollectionAttributeValues where cID = ? and cvID = ?', array($cID, $cvID));
+			while ($row = $r->FetchRow()) {
+				$cak = CollectionAttributeKey::getByID($row['akID']);
+				$cav = $c->getAttributeValueObject($cak);
+				if (is_object($cav)) {
+					$cav->delete();
+				}
+			}
 			
 			$q = "delete from CollectionVersions where cID = '{$cID}' and cvID='{$cvID}'";
 			$r = $db->query($q);

@@ -99,6 +99,19 @@ class DatabaseItemList extends ItemList {
 		}
 	}
 	
+	protected function setupAttributeSort() {
+		if (method_exists($this->attributeClass, 'getColumnHeaderList')) {
+			$l = call_user_func(array($this->attributeClass, 'getColumnHeaderList'));
+			foreach($l as $ak) {
+				$this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();
+			}
+			
+			if ($this->sortBy != '' && in_array('ak_' . $this->sortBy, $this->autoSortColumns)) {
+				$this->sortBy = 'ak_' . $this->sortBy;
+			}
+		}
+	}
+	
 	/** 
 	 * Returns an array of whatever objects extends this class (e.g. PageList returns a list of pages).
 	 */
@@ -107,6 +120,7 @@ class DatabaseItemList extends ItemList {
 		$q = $arr[0];
 		$v = $arr[1];
 		// handle order by
+		$this->setupAttributeSort();
 		$this->setupAutoSort();
 		$this->setupSortByString();
 		if ($this->sortByString != '') {
@@ -137,6 +151,39 @@ class DatabaseItemList extends ItemList {
 		$this->filters[] = array($column, $value, $comparison);
 	}
 	
+	public function getSearchResultsClass($field) {
+		if ($field instanceof AttributeKey) {
+			$field = 'ak_' . $field->getAttributeKeyHandle();
+		}
+		return parent::getSearchResultsClass($field);
+	}
+
+	public function sortBy($key, $dir) {
+		if ($key instanceof AttributeKey) {
+			$key = 'ak_' . $key->getAttributeKeyHandle();
+		}
+		parent::sortBy($key, $dir);
+	}
+	
+	public function getSortByURL($column, $dir = 'asc', $baseURL = false) {
+		if ($column instanceof AttributeKey) {
+			$column = 'ak_' . $column->getAttributeKeyHandle();
+		}
+		return parent::getSortByURL($column, $dir, $baseURL);
+	}
+	
+	protected function setupAttributeFilters($join) {
+		$db = Loader::db();
+		$i = 1;
+		$this->addToQuery($join);
+		foreach($this->attributeFilters as $caf) {
+			$this->filter($caf[0], $caf[1], $caf[2]);
+		}
+	}
+
+	public function filterByAttribute($column, $value, $comparison = '=') {
+		$this->attributeFilters[] = array('ak_' . $column, $value, $comparison);
+	}
 	
 
 }

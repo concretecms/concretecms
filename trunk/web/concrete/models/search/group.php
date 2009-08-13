@@ -34,7 +34,7 @@ class GroupSearch extends DatabaseItemList {
 	
 	function __construct() {
 		$this->setQuery("select Groups.gID, Groups.gName, Groups.gDescription from Groups");
-		$this->sortBy('gName');
+		$this->sortBy('gName', 'asc');
 	}
 	
 	public function getPage() {

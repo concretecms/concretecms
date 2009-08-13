@@ -102,65 +102,83 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function getCollectionAttributeValue($ak) {
 			if (is_object($this->vObj)) {
 				if (is_object($ak)) {
-					return $this->vObj->getAttribute($ak->getCollectionAttributeKeyHandle());
+					return $this->vObj->getAttribute($ak->getAttributeKeyHandle());
 				} else {
 					return $this->vObj->getAttribute($ak);
 				}
 			}
 		}
-		
-		/*
-		
-		function getCollectionAttributeValue($ak) {
+
+		// remove the collection attributes for this version of a page
+		public function clearCollectionAttributes($retainAKIDs = array()) {
 			$db = Loader::db();
-			if (is_object($ak)) {
-				$v = array($this->getCollectionID(), $this->getVersionID(), $ak->getCollectionAttributeKeyID());
-				$q = "select value from CollectionAttributeValues where cID = ? and cvID = ? and akID = ?";		
-				$value = $db->GetOne($q, $v);
-				$akType = $ak->getCollectionAttributeKeyType();
-			} else if (is_string($ak)) {
-				$db = Loader::db();
-				$v = array($this->getCollectionID(), $this->getVersionID(), $ak);
-				$q = "select cak.akType, cav.value from CollectionAttributeValues cav inner join CollectionAttributeKeys cak on cav.akID = cak.akID where cID = ? and cvID = ? and cak.akHandle = ?";
-				$r = $db->getRow($q, $v);
-				$value = $r['value'];
-				$akType = $r['akType'];
+			if (count($retainAKIDs) > 0) {
+				$akIDStr = implode(',', $retainAKIDs);
+				$v2 = array($this->getCollectionID(), $this->getVersionID());
+				$db->query("delete from CollectionAttributeValues where cID = ? and cvID = ? and akID not in ({$akIDStr})", $v2);
+			} else {
+				$v2 = array($this->getCollectionID(), $this->getVersionID());
+				$db->query("delete from CollectionAttributeValues where cID = ? and cvID = ?", $v2);
 			}
-			$v = false;
-			switch($akType) {
-				case "IMAGE_FILE":
-					if ($value > 0) {
-						Loader::block('library_file');
-						$v = LibraryFileBlockController::getFile($value);
-					}
-					break;
-				default:
-					$v = $value;
-					break;
-			}
-			return $v;
+			$this->reindex();
 		}
 		
-		public function getAttribute($akHandle) {
-			return $this->getCollectionAttributeValue($akHandle);
-		}
-		*/
-		
-		
-		public function setAttribute($akHandle, $value) {
+		public function reindex() {
+			Loader::model('attribute/categories/collection');
+			$attribs = CollectionAttributeKey::getAttributes($this->getCollectionID(), $this->getVersionID(), 'getSearchIndexValue');
 			$db = Loader::db();
-			$akID = $db->GetOne("select akID from CollectionAttributeKeys where akHandle = ?", array($akHandle));
-			if ($akID > 0) {
-				$db->Replace('CollectionAttributeValues', array(
-					'cID' => $this->cID,
-					'cvID' => $this->getVersionID(),
-					'akID' => $akID,
-					'value' => $value
-				),
-				array('cID', 'cvID', 'akID'), true);
+	
+			$db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
+			$searchableAttributes = array('cID' => $this->getCollectionID());
+			$columns = $db->MetaColumns('CollectionSearchIndexAttributes');
+			$rs = $db->Execute('select * from CollectionSearchIndexAttributes where cID = -1');
+	
+			foreach($attribs as $akHandle => $value) {
+				$column = 'ak_' . $akHandle;
+				$ak = CollectionAttributeKey::getByHandle($akHandle);
+				if (isset($columns[strtoupper($column)])) {
+					$searchableAttributes[$column] = $value;
+				}
+			}
+	
+			$q = $db->GetInsertSQL($rs, $searchableAttributes);
+			$db->Execute($q);
+		}
+		
+		public function getAttributeValueObject($ak, $createIfNotFound = false) {
+			$db = Loader::db();
+			$av = false;
+			$v = array($this->getCollectionID(), $this->getVersionID(), $ak->getAttributeKeyID());
+			$avID = $db->GetOne("select avID from CollectionAttributeValues where cID = ? and cvID = ? and akID = ?", $v);
+			if ($avID > 0) {
+				$av = CollectionAttributeValue::getByID($avID);
+				if (is_object($av)) {
+					$av->setCollection($this);
+					$av->setAttributeKey($ak);
+				}
 			}
 			
+			if ($createIfNotFound) {
+				$cnt = 0;
+			
+				// Is this avID in use ?
+				if (is_object($av)) {
+					$cnt = $db->GetOne("select count(avID) from CollectionAttributeValues where avID = ?", $av->getAttributeValueID());
+				}
+				
+				if ((!is_object($av)) || ($cnt > 1)) {
+					$av = $ak->addAttributeValue();
+				}
+			}
+			
+			return $av;
+		}
+		
+		public function setAttribute($akHandle, $value) {
+			$ak = CollectionAttributeKey::getByHandle($akHandle);
+			$ak->setAttribute($this, $value);			
 			$this->refreshCache();
+			$this->reindex();
 		}
 		
 		// get's an array of collection attribute objects that are attached to this collection. Does not get values
@@ -179,10 +197,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$vo = $this->getVersionObject();
 			$cvID = $vo->getVersionID();
 
-			$v = array($this->getCollectionID(), $cvID, $ak->getCollectionAttributeKeyID());
+			$v = array($this->getCollectionID(), $cvID, $ak->getAttributeKeyID());
 			$db->query("delete from CollectionAttributeValues where cID = ? and cvID = ? and akID = ?", $v);
 
-			$v3 = array($this->getCollectionID(), $cvID, $ak->getCollectionAttributeKeyID(), $value);
+			$v3 = array($this->getCollectionID(), $cvID, $ak->getAttributeKeyID(), $value);
 			$db->query("insert into CollectionAttributeValues (cID, cvID, akID, value) values (?, ?, ?, ?)", $v3);
 			
 			unset($v); unset($v3);

@@ -175,10 +175,19 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 			
 			$db = Loader::db();  
+
+			$r = $db->Execute('select avID, akID from UserAttributeValues where uID = ?', array($this->uID));
+			while ($row = $r->FetchRow()) {
+				$uak = UserAttributeKey::getByID($row['akID']);
+				$av = $this->getAttributeValueObject($uak);
+				if (is_object($av)) {
+					$av->delete();
+				}
+			}
+
 			$r = $db->query("DELETE FROM UserGroups WHERE uID = ?",array(intval($this->uID)) );
 			$r = $db->query("DELETE FROM Users WHERE uID = ?",array(intval($this->uID)));
 			$r = $db->query("DELETE FROM UserValidationHashes WHERE uID = ?",array(intval($this->uID)));
-			$r = $db->query("DELETE FROM UserAttributeValues WHERE uID = ?",array(intval($this->uID)));
 			
 			$r = $db->query("DELETE FROM AreaGroupBlockTypes WHERE uID = ?",array(intval($this->uID)));
 			$r = $db->query("DELETE FROM CollectionVersionBlockPermissions WHERE uID = ?",array(intval($this->uID)));
@@ -188,7 +197,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$r = $db->query("DELETE FROM Piles WHERE uID = ?",array(intval($this->uID)));
 			
 			$r = $db->query("UPDATE Blocks set uID=? WHERE uID = ?",array( intval(USER_SUPER_ID), intval($this->uID)));
-			$r = $db->query("UPDATE Pages set uID=? WHERE uID = ?",array( intval(USER_SUPER_ID), intval($this->uID)));			
+			$r = $db->query("UPDATE Pages set uID=? WHERE uID = ?",array( intval(USER_SUPER_ID), intval($this->uID)));
 		}
 
 		/**
@@ -210,61 +219,89 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return $nu;
 		}
 
-		/* TODO: cleanup this and make more usable */
-		
-		public function updateUserAttributes($data) {
-			Loader::model('user_attributes');
-			$db = Loader::db();
-			$keys = UserAttributeKey::getList();
-			foreach($keys as $v) {
-				$db->query("delete from UserAttributeValues where uID = {$this->uID} and ukID = " . $v->getKeyID());
-
-				if ($data['uak_' . $v->getKeyID()]) {
-					$v2 = array($this->uID, $v->getKeyID(), $data['uak_' . $v->getKeyID()]);
-					$db->query("insert into UserAttributeValues (uID, ukID, value) values (?, ?, ?)", $v2);
-				}
-			}
-		}
-		
-		public function updateSelectedUserAttributes($keyArray, $data) {
-			Loader::model('user_attributes');
-			if (is_array($keyArray)) {
-				$db = Loader::db();
-				$keys = UserAttributeKey::getList();   
-				foreach($keys as $v) {
-					if (in_array($v->getKeyID(), $keyArray) || in_array($v->getKeyHandle(), $keyArray)) {
-						$db->query("delete from UserAttributeValues where uID = {$this->uID} and ukID = " . $v->getKeyID());
-		
-						if ($data['uak_' . $v->getKeyID()]) {
-							$v2 = array($this->uID, $v->getKeyID(), $data['uak_' . $v->getKeyID()]);
-							$db->query("insert into UserAttributeValues (uID, ukID, value) values (?, ?, ?)", $v2);
-						}
-					}
-				}
-			}
-		}
-		
 		/** 
 		 * Sets the attribute of a user info object to the specified value, and saves it in the database 
 		 */
-		public function setAttribute($attributeHandle, $value) {
-			Loader::model('user_attributes');
-			$uk = UserAttributeKey::getByHandle($attributeHandle);
-			if (is_object($uk)) {
-				$uk->saveValue($this->getUserID(), $value);
-			} else {
-				throw new Exception(t('Invalid user attribute key.'));
+		public function setAttribute($ak, $value) {
+			Loader::model('attribute/categories/user');
+			if (!is_object($ak)) {
+				$ak = UserAttributeKey::getByHandle($ak);
 			}
+			$ak->setAttribute($this, $value);
+			$this->reindex();
+		}
+
+		public function clearAttribute($ak) {
+			$db = Loader::db();
+			$cav = $this->getAttributeValueObject($ak);
+			if (is_object($cav)) {
+				$cav->delete();
+			}
+			$this->reindex();
+		}
+		
+		public function reindex() {
+			$attribs = UserAttributeKey::getAttributes($this->getUserID(), 'getSearchIndexValue');
+			$db = Loader::db();
+	
+			$db->Execute('delete from UserSearchIndexAttributes where uID = ?', array($this->getUserID()));
+			$searchableAttributes = array('uID' => $this->getUserID());
+			$columns = $db->MetaColumns('UserSearchIndexAttributes');
+			$rs = $db->Execute('select * from UserSearchIndexAttributes where uID = -1');
+	
+			foreach($attribs as $akHandle => $value) {
+				$column = 'ak_' . $akHandle;
+				$ak = UserAttributeKey::getByHandle($akHandle);
+				if (isset($columns[strtoupper($column)])) {
+					$searchableAttributes[$column] = $value;
+				}
+			}
+	
+			$q = $db->GetInsertSQL($rs, $searchableAttributes);
+			$db->Execute($q);
 		}
 		
 		/** 
 		 * Gets the value of the attribute for the user
 		 */
 		public function getAttribute($attributeHandle) {
+			Loader::model('attribute/categories/user');
+			$ak = UserAttributeKey::getByHandle($attributeHandle);
+			if (is_object($ak)) {
+				$av = $this->getAttributeValueObject($ak);
+				if (is_object($av)) {
+					return $av->getValue();
+				}
+			}
+		}
+		
+		public function getAttributeValueObject($ak, $createIfNotFound = false) {
 			$db = Loader::db();
-			$v = array($this->uID, $attributeHandle);
-			$r = $db->getOne("select value from UserAttributeValues inner join UserAttributeKeys on UserAttributeValues.ukID = UserAttributeKeys.ukID where uID = ? and UserAttributeKeys.ukHandle = ?", $v);
-			return $r;
+			$av = false;
+			$v = array($this->getUserID(), $ak->getAttributeKeyID());
+			$avID = $db->GetOne("select avID from UserAttributeValues where uID = ? and akID = ?", $v);
+			if ($avID > 0) {
+				$av = UserAttributeValue::getByID($avID);
+				if (is_object($av)) {
+					$av->setUser($this);
+					$av->setAttributeKey($ak);
+				}
+			}
+			
+			if ($createIfNotFound) {
+				$cnt = 0;
+			
+				// Is this avID in use ?
+				if (is_object($av)) {
+					$cnt = $db->GetOne("select count(avID) from UserAttributeValues where avID = ?", $av->getAttributeValueID());
+				}
+				
+				if ((!is_object($av)) || ($cnt > 1)) {
+					$av = $ak->addAttributeValue();
+				}
+			}
+			
+			return $av;
 		}
 		
 		public function update($data) {

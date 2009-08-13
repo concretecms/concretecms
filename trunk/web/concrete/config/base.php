@@ -163,6 +163,8 @@ define('DIRNAME_BLOCKS', 'blocks');
 define('DIRNAME_PAGES', 'single_pages');
 define('DIRNAME_PACKAGES', 'packages');
 define('DIRNAME_MODELS', 'models');
+define('DIRNAME_ATTRIBUTES', 'attribute');
+define('DIRNAME_ATTRIBUTE_TYPES', 'types');
 define('DIRNAME_LIBRARIES', 'libraries');
 define('DIRNAME_PAGE_TYPES', 'page_types');
 define('DIRNAME_ELEMENTS', 'elements');
@@ -234,6 +236,7 @@ define('DIR_FILES_CONTROLLERS', DIR_BASE . '/controllers');
 define('FILENAME_COLLECTION_CONTROLLER', 'controller.php');
 define('DIRNAME_CONTROLLERS', 'controllers');
 define('DIR_FILES_CONTROLLERS_REQUIRED', DIR_BASE_CORE . '/controllers');
+define('FILENAME_ATTRIBUTE_CONTROLLER', 'controller.php');
 
 # Elements
 define('DIR_FILES_ELEMENTS', DIR_BASE . '/elements');
@@ -402,7 +405,7 @@ if (!defined("API_KEY_PICNIK")) {
 $ADODB_ASSOC_CASE =  2;
 $ADODB_ACTIVE_CACHESECS = 300;
 $ADODB_CACHE_DIR = DIR_FILES_CACHE_DB;
-define('APP_VERSION', '5.3.2.1b1');
+define('APP_VERSION', '5.3.3b1');
 define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the latest version (this is seconds)
 define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_version_number');
 define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');

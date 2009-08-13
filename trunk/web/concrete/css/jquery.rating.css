@@ -14,3 +14,4 @@ input.rating-star-control {display: none}
 .rating-cancel {display: none !important}
 
 div.ccm-rating input {display: none}
+div.ccm-rating {white-space: nowrap}

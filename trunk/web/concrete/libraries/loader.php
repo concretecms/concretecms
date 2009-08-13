@@ -50,6 +50,26 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 		
+		protected function legacyModel($model) {
+			switch($model) {
+				case 'collection_attributes':
+					Loader::model('attribute/categories/collection');
+					return true;
+					break;
+				case 'user_attributes':
+					Loader::model('attribute/categories/user');
+					return true;
+					break;
+				case 'file_attributes':
+					Loader::model('attribute/categories/file');
+					return true;
+					break;
+				default:
+					return false;
+					break;
+			}
+		}
+		
 		/** 
 		 * @access private
 		 */
@@ -70,7 +90,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 			if (file_exists(DIR_FILES_ELEMENTS . '/' . $file . '.php')) {
 				include(DIR_FILES_ELEMENTS . '/' . $file . '.php');
-			} else {
+			} else if (file_exists(DIR_FILES_ELEMENTS_CORE . '/' . $file . '.php')) {
 				include(DIR_FILES_ELEMENTS_CORE . '/' . $file . '.php');
 			}
 		}

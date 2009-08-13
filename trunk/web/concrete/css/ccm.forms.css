@@ -33,7 +33,7 @@ div#ccm-page-types, div#ccm-required-meta-add {height: 180px}
 div#ccm-required-meta, div#ccm-move-page, div#ccm-required-meta-add {-webkit-border-radius: 12px; -moz-border-radius: 12px; border: 2px solid #bababa; background: white; padding: 8px}
 div#ccm-optional-meta, div#ccm-delete-page, div#ccm-page-types {border: 2px solid #bababa; padding: 8px; background: white; -webkit-border-radius: 12px; -moz-border-radius: 12px;}
 
-div#ccm-required-meta input.ccm-input-text {width: 272px !important}
+div#ccm-properties-standard-tab input.ccm-input-text, div#ccm-page-paths-tab input.ccm-input-text {width: 272px !important}
 
 div.ccm-form-area {border: 2px solid #bababa; padding: 8px; background: white; -webkit-border-radius: 12px; -moz-border-radius: 12px;}
 
@@ -125,21 +125,8 @@ ul.ccm-dialog-tabs li {border-right: 1px solid #dedede }
 
 .ccm-input-text, div.ccm-field-meta input, div.ccm-field-meta textarea, .ccm-input-date, .ccm-input-password {font-size: 12px; border: 1px solid #aaa; color: #444; padding: 4px}
 .ccm-input-date-wrapper input {width: 100px}
+.ccm-input-checkbox {vertical-align: middle}
 
-/* user search */
-form#ccm-user-search label {
-	font-weight: bold; color: #555;
-	margin: 0px 4px 0px 0px;
-	vertical-align: middle
-}
-
-form#ccm-user-search input, form#ccm-user-search select {
-	font-size: 10px;
-	margin-right: 10px;
-}
-
-form#ccm-user-search input.ccm-text {width: 100px}
-div#ccm-user-search-fields {margin: 10px 0px 10px 0px}
 
 /* grid list */
 table.ccm-grid-list {border-right: 1px solid #aaa; border-bottom: 1px solid #aaa; width: 100%}
@@ -183,7 +170,7 @@ div.ccm-editor-controls ul li a {color: #333; text-decoration: none; display: bl
 div.ccm-editor-controls ul li a:hover {text-decoration: underline}
 
 /* page selector in blocks */
-div.ccm-summary-selected-page {border: 1px solid #dedede; margin-top: 8px; margin-bottom: 8px; padding: 10px}
+div.ccm-summary-selected-item {border: 1px solid #dedede; margin-top: 8px; margin-bottom: 8px; padding: 10px}
 
 /* blocks */
 div.ccm-block-field-group {margin-bottom: 10px; border-bottom: 1px dotted #aaa; padding-bottom: 10px}
