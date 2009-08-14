@@ -25,12 +25,14 @@ class DateHelper {
 	 * @param string $format
 	 * @return string $datetime
 	 */
-	public function getLocalDateTime($systemDateTime = NULL, $mask = NULL) {
+	public function getLocalDateTime($systemDateTime = 'now', $mask = NULL) {
 		if(!isset($mask) || !strlen($mask)) {
 			$mask = 'Y-m-d H:i:s';
 		}
 		
-		if(isset($systemDateTime)) {
+		if(!isset($systemDateTime) || !strlen($systemDateTime)) {
+			return NULL; // if passed a null value, pass it back
+		} elseif(strlen($systemDateTime)) {
 			$datetime = new DateTime($systemDateTime);
 		} else {
 			$datetime = new DateTime();
@@ -55,12 +57,14 @@ class DateHelper {
 	 * @param string $systemDateTime
 	 * @return string $datetime
 	 */
-	public function getSystemDateTime($userDateTime = NULL, $mask = NULL) {
+	public function getSystemDateTime($userDateTime = 'now', $mask = NULL) {
 		if(!isset($mask) || !strlen($mask)) {
 			$mask = 'Y-m-d H:i:s';
 		}
 		
-		if(isset($userDateTime)) {
+		if(!isset($userDateTime) || !strlen($userDateTime)) {
+			return NULL; // if passed a null value, pass it back
+		} elseif(strlen($userDateTime)) {
 			$datetime = new DateTime($userDateTime);
 			if(defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
 				$u = new User();
