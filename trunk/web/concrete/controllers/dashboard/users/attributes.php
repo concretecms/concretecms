@@ -97,7 +97,7 @@ class DashboardUsersAttributesController extends Controller {
 		if ($e->has()) {
 			$this->set('error', $e);
 		} else {
-			$ak = UserAttributeKey::add($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('atID'), $this->post('uakProfileDisplay'), $this->post('uakProfileEdit'), $this->post('uakProfileEditRequired'), $this->post('uakRegisterEdit'), $this->post('uakRegisterEditRequired'));
+			$ak = UserAttributeKey::add($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('akIsSearchableIndexed'), $this->post('atID'), $this->post('uakProfileDisplay'), $this->post('uakMemberListDisplay'), $this->post('uakProfileEdit'), $this->post('uakProfileEditRequired'), $this->post('uakRegisterEdit'), $this->post('uakRegisterEditRequired'));
 			$this->redirect('/dashboard/users/attributes/', 'attribute_created');
 		}
 	}
@@ -144,7 +144,7 @@ class DashboardUsersAttributesController extends Controller {
 			if ($e->has()) {
 				$this->set('error', $e);
 			} else {
-				$key->update($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('uakProfileDisplay'), $this->post('uakProfileEdit'), $this->post('uakProfileEditRequired'), $this->post('uakRegisterEdit'), $this->post('uakRegisterEditRequired'));
+				$key->update($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('akIsSearchableIndexed'), $this->post('uakProfileDisplay'), $this->post('uakMemberListDisplay'), $this->post('uakProfileEdit'), $this->post('uakProfileEditRequired'), $this->post('uakRegisterEdit'), $this->post('uakRegisterEditRequired'));
 				$this->redirect('/dashboard/users/attributes', 'attribute_updated');
 			}
 		}

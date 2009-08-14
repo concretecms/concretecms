@@ -38,9 +38,14 @@ class UserList extends DatabaseItemList {
 		$db = Loader::db();
 		$keywordsExact = $db->quote($keywords);
 		$keywords = $db->quote('%' . $keywords . '%');
-		$emailSearchStr=' OR u.uEmail like '.$keywords.' ';
+		$emailSearchStr=' OR u.uEmail like '.$keywords.' ';	
 		
-		$this->filter(false, '( u.uName like ' . $keywords . $emailSearchStr . ')');
+		$keys = UserAttributeKey::getSearchableIndexedList();
+		$attribsStr = '';
+		foreach ($keys as $ak) {
+			$attribsStr=' OR ak_' . $ak->getAttributeKeyHandle() . ' like '.$keywords.' ';	
+		}
+		$this->filter(false, '( u.uName like ' . $keywords . $emailSearchStr . $attribsStr . ')');
 	}
 	
 	public function filterByGroup($groupName=''){ 

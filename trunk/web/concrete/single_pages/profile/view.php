@@ -10,7 +10,7 @@
 		
 		<? 
 		$u = new User();
-		if( $u && $u->uID!=$profile->getUserID() ){ ?>
+		if( $u->isRegistered() && $u->uID!=$profile->getUserID() ){ ?>
 		<div style="margin-top:16px;">
 			<? if( !UsersFriends::isFriend( $profile->getUserID(), $u->uID ) ){ ?>
 				<a href="<?=View::url($c->getCollectionPath(),'add_friend','?fuID='.$profile->getUserID())?>">

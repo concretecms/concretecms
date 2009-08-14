@@ -94,7 +94,11 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 	}
 	
 	public function saveValue($value) {
-		$value = date('Y-m-d H:i:s', strtotime($value));
+		if ($value != '') {
+			$value = date('Y-m-d H:i:s', strtotime($value));
+		} else {
+			$value = null;
+		}
 		
 		$db = Loader::db();
 		$db->Replace('atDateTime', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);

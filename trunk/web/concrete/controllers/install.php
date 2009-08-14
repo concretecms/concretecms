@@ -294,7 +294,7 @@ class InstallController extends Controller {
 						$nst->assignCollectionAttribute($cab3);
 						$nst->assignCollectionAttribute($cab4); 
 
-						$uakdob = UserAttributeKey::add('date_of_birth', t('Date of Birth'), 1, "date_time", 0, 1, 0, 1, 0);
+						$uakdob = UserAttributeKey::add('date_of_birth', t('Date of Birth'), 1, 0, "date_time", 0, 1, 0, 1, 0, 0);
 						$dobcnt = $uakdob->getAttributeType()->getController();
 						$dobcnt->setAttributeKey($uakdob);
 						$dobcnt->setDisplayMode('text');
@@ -304,6 +304,7 @@ class InstallController extends Controller {
 						SinglePage::add('/register');
 						SinglePage::add('/profile');
 						SinglePage::add('/profile/edit');
+						SinglePage::add('/profile/members');
 						SinglePage::add('/profile/avatar');
 						SinglePage::add('/profile/friends');
 						SinglePage::add('/page_not_found');
