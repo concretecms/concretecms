@@ -29,7 +29,7 @@
 		</style>		
         <div>
         <? 
-		if($canEdit) {
+		if($u->getUserID() == $profile->getUserID()) {
 			$bt = BlockType::getByHandle('autonav');
 			$bt->controller->displayPages = 'below';
 			$bt->controller->orderBy = 'display_asc';
