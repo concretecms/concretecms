@@ -21,13 +21,12 @@ class DashboardUsersSearchController extends Controller {
 	
 	public function getRequestedSearchResults() {
 		$userList = new UserList();
-		$keywords = htmlentities($_GET['keywords'], ENT_QUOTES, APP_CHARSET);
 		$userList->sortBy('uDateAdded', 'desc');
 		$userList->showInactiveUsers = true;
 		$userList->showInvalidatedUsers = true;
 		
-		if ($keywords != '') {
-			$userList->filterByKeywords($keywords);
+		if ($_GET['keywords'] != '') {
+			$userList->filterByKeywords($_GET['keywords']);
 		}
 
 		if ($_REQUEST['numResults']) {

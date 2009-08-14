@@ -75,7 +75,7 @@ class FileAttributeKey extends AttributeKey {
 			 	// we create this attribute and return it.
 			 	$at = AttributeType::getByHandle($ia->akType);
 			 	$atID = $at->getAttributeTypeID();
-			 	return FileAttributeKey::add($akHandle, $ia->akName, 1, 1, $ia->akIsEditable, $atID);
+			 	return FileAttributeKey::add($akHandle, $ia->akName, 1, 1, $ia->akIsEditable, 0, $atID);
 			 }
 		}	
 	}
@@ -123,8 +123,8 @@ class FileAttributeKey extends AttributeKey {
 		$f->populateAttributes();
 	}
 	
-	public function add($akHandle, $akName, $akIsSearchable, $akIsAutoCreated, $akIsEditable, $atID) {
-		$ak = parent::add('file', $akHandle, $akName, $akIsSearchable, false, $akIsAutoCreated, $akIsEditable, $atID);
+	public function add($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed, $akIsAutoCreated, $akIsEditable, $atID) {
+		$ak = parent::add('file', $akHandle, $akName, $akIsSearchable, false, $akIsSearchableIndexed, $akIsAutoCreated, $akIsEditable, $atID);
 		return $ak;
 	}
 	

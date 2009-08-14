@@ -439,7 +439,7 @@
 							$tc = Page::getByID($row['cID'], "ACTIVE");
 						}
 						
-						if ($tc->isSystemPage() && (!$this->displaySystemPages)) { 
+						if ($tc->isSystemPage() && (!$this->displaySystemPages) && (!$tc->isAlias())) {
 							continue; 
 						}
 						

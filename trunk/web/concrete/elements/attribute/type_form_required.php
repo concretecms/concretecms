@@ -10,6 +10,7 @@ if (is_object($key)) {
 	$akHandle = $key->getAttributeKeyHandle();
 	$akName = $key->getAttributeKeyName();
 	$akIsSearchable = $key->isAttributeKeySearchable();
+	$akIsSearchableIndexed = $key->isAttributeKeyContentIndexed();
 	print $form->hidden('akID', $key->getAttributeKeyID());
 }
 ?>
@@ -20,9 +21,12 @@ if (is_object($key)) {
 	<td class="subheader" width="33%"><?=t("Searchable")?></td>
 </tr>	
 <tr>
-	<td style="padding-right: 15px"><?=$form->text('akHandle', $akHandle, array('style' => 'width: 100%'))?></td>
-	<td style="padding-right: 15px"><?=$form->text('akName', $akName, array('style' => 'width: 100%'))?></td>
-	<td style="padding-right: 10px"><?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <?=t('Yes, include this field in the search interface.');?></td>
+	<td style="padding-right: 15px" valign="top"><?=$form->text('akHandle', $akHandle, array('style' => 'width: 100%'))?></td>
+	<td style="padding-right: 15px" valign="top"><?=$form->text('akName', $akName, array('style' => 'width: 100%'))?></td>
+	<td style="padding-right: 10px" valign="top">
+	<?=$form->checkbox('akIsSearchableIndexed', 1, $akIsSearchableIndexed)?> <?=t('Content included in "Keyword Search".');?><br/>
+	<?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <?=t('Field available in "Advanced Search".');?>
+	</td>
 </tr>
 </table>
 

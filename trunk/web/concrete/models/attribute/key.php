@@ -23,6 +23,11 @@ class AttributeKey extends Object {
 	public function isAttributeKeySearchable() {return $this->akIsSearchable;}
 
 	/** 
+	 * Returns whether the attribute key is indexed as a "keyword search" field. 
+	 */
+	public function isAttributeKeyContentIndexed() {return $this->akIsSearchableIndexed;}
+
+	/** 
 	 * Returns whether the attribute key is one that was automatically created by a process. 
 	 */
 	public function isAttributeKeyAutoCreated() {return $this->akIsAutoCreated;}
@@ -42,7 +47,7 @@ class AttributeKey extends Object {
 	 */
 	protected function load($akID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsSearchable, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ?', array($akID));
+		$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ?', array($akID));
 		$this->setPropertiesFromArray($row);
 	}
 	
@@ -83,7 +88,7 @@ class AttributeKey extends Object {
 	/** 
 	 * Adds an attribute key. 
 	 */
-	protected function add($akCategoryHandle, $akHandle, $akName, $akIsSearchable, $passthru, $akIsAutoCreated, $akIsEditable, $atID) {
+	protected function add($akCategoryHandle, $akHandle, $akName, $akIsSearchable, $passthru, $akIsSearchableIndexed, $akIsAutoCreated, $akIsEditable, $atID) {
 		
 		$vn = Loader::helper('validation/numbers');
 		if (!$vn->integer($atID)) {
@@ -93,11 +98,15 @@ class AttributeKey extends Object {
 		}
 		
 		$_akIsSearchable = 1;
+		$_akIsSearchableIndexed = 1;
 		$_akIsAutoCreated = 1;
 		$_akIsEditable = 1;
 		
 		if (!$akIsSearchable) {
 			$_akIsSearchable = 0;
+		}
+		if (!$akIsSearchableIndexed) {
+			$_akIsSearchableIndexed = 0;
 		}
 		if (!$akIsAutoCreated) {
 			$_akIsAutoCreated = 0;
@@ -108,8 +117,8 @@ class AttributeKey extends Object {
 		
 		$db = Loader::db();
 		$akCategoryID = $db->GetOne("select akCategoryID from AttributeKeyCategories where akCategoryHandle = ?", $akCategoryHandle);
-		$a = array($akHandle, $akName, $_akIsSearchable, $_akIsAutoCreated, $_akIsEditable, $atID, $akCategoryID);
-		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsAutoCreated, akIsEditable, atID, akCategoryID) values (?, ?, ?, ?, ?, ?, ?)", $a);
+		$a = array($akHandle, $akName, $_akIsSearchable, $_akIsSearchable, $_akIsAutoCreated, $_akIsEditable, $atID, $akCategoryID);
+		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsEditable, atID, akCategoryID) values (?, ?, ?, ?, ?, ?, ?, ?)", $a);
 		
 		if ($r) {
 			$akID = $db->Insert_ID();
@@ -128,16 +137,19 @@ class AttributeKey extends Object {
 	/** 
 	 * Updates an attribute key. 
 	 */
-	public function update($akHandle, $akName, $akIsSearchable) {
+	public function update($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed) {
 		$prevHandle = $this->getAttributeKeyHandle();
 		
 		if (!$akIsSearchable) {
 			$akIsSearchable = 0;
 		}
+		if (!$akIsSearchableIndexed) {
+			$akIsSearchableIndexed = 0;
+		}
 		$db = Loader::db();
 		$akCategoryHandle = $db->GetOne("select akCategoryHandle from AttributeKeyCategories inner join AttributeKeys on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akID = ?", $this->getAttributeKeyID());
-		$a = array($akHandle, $akName, $akIsSearchable, $this->getAttributeKeyID());
-		$r = $db->query("update AttributeKeys set akHandle = ?, akName = ?, akIsSearchable = ? where akID = ?", $a);
+		$a = array($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed, $this->getAttributeKeyID());
+		$r = $db->query("update AttributeKeys set akHandle = ?, akName = ?, akIsSearchable = ?, akIsSearchableIndexed = ? where akID = ?", $a);
 		
 		if ($r) {
 			$className = $akCategoryHandle . 'AttributeKey';

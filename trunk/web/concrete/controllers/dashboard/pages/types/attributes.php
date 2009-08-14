@@ -52,7 +52,7 @@ class DashboardPagesTypesAttributesController extends Controller {
 		if ($e->has()) {
 			$this->set('error', $e);
 		} else {
-			$ak = CollectionAttributeKey::add($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), false, $this->post('atID'));
+			$ak = CollectionAttributeKey::add($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), false, $this->post('akIsSearchableIndexed'), $this->post('atID'));
 			$this->redirect('/dashboard/pages/types/', 'attribute_created');
 		}
 	}
@@ -87,7 +87,7 @@ class DashboardPagesTypesAttributesController extends Controller {
 			if ($e->has()) {
 				$this->set('error', $e);
 			} else {
-				$key->update($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('atID'));
+				$key->update($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('akIsSearchableIndexed'), $this->post('atID'));
 				$this->redirect('/dashboard/pages/types/', 'attribute_updated');
 			}
 		}
