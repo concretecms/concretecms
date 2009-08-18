@@ -1251,6 +1251,74 @@
       <UNSIGNED />
     </field>
   </table>
+<table name="UserPrivateMessages">
+    <field name="msgID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="uAuthorID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="msgDateCreated" type="T">
+      <NOTNULL/>
+    </field>
+    <field name="msgSubject" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="msgBody" type="X"/>
+    <field name="uToID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  <table name="UserPrivateMessagesTo">
+    <field name="msgID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uAuthorID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="msgMailboxID" type="I" size="11">
+      <NOTNULL/>
+    </field>
+    <field name="msgIsNew" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="msgIsUnread" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="msgIsReplied" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="uID">
+      <col>uID</col>
+    </index>
+    <index name="uAuthorID">
+      <col>uAuthorID</col>
+    </index>
+    <index name="msgFolderID">
+      <col>msgMailboxID</col>
+    </index>
+    <index name="msgIsNew">
+      <col>msgIsNew</col>
+    </index>
+  </table>
   <table name="UserBannedIPs">
     <field name="ipFrom" type="I" size="10">
       <KEY/>
