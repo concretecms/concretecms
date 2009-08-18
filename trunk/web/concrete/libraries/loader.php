@@ -293,6 +293,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 			Loader::model('collection_types');
 			$ct = CollectionType::getByHandle($ctHandle);
+			if (!is_object($ct)) {
+				return false;
+			}
 			$pkgHandle = $ct->getPackageHandle();
 
 			if ($pkgHandle != '') {

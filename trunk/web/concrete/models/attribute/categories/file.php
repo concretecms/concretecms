@@ -123,8 +123,8 @@ class FileAttributeKey extends AttributeKey {
 		$f->populateAttributes();
 	}
 	
-	public function add($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed, $akIsAutoCreated, $akIsEditable, $atID) {
-		$ak = parent::add('file', $akHandle, $akName, $akIsSearchable, false, $akIsSearchableIndexed, $akIsAutoCreated, $akIsEditable, $atID);
+	public function add($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed, $akIsAutoCreated, $akIsEditable, $atID, $pkg = false) {
+		$ak = parent::add('file', $akHandle, $akName, $akIsSearchable, false, $akIsSearchableIndexed, $akIsAutoCreated, $akIsEditable, $atID, $pkg = false);
 		return $ak;
 	}
 	

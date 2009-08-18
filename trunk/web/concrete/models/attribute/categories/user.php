@@ -135,9 +135,9 @@ class UserAttributeKey extends AttributeKey {
 		$uo->reindex();
 	}
 	
-	public function add($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed, $atID, $uakProfileDisplay, $uakMemberListDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired, $akIsAutoCreated = false, $akIsEditable = true) {
-		$ak = parent::add('user', $akHandle, $akName, $akIsSearchable, false, $akIsSearchableIndexed, $akIsAutoCreated, $akIsEditable, $atID);
-		
+	public function add($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed, $atID, $uakProfileDisplay, $uakMemberListDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired, $akIsAutoCreated = false, $akIsEditable = true, $pkg = false) {
+		$ak = parent::add('user', $akHandle, $akName, $akIsSearchable, false, $akIsSearchableIndexed, $akIsAutoCreated, $akIsEditable, $atID, $pkg);
+
 		if ($uakProfileDisplay != 1) {
 			$uakProfileDisplay = 0;
 		}
