@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 Loader::model('user_list');  
 
-class ProfileMembersController extends Controller {
+class MembersController extends Controller {
 
 	public function view() {
 		$userList = new UserList(); 
@@ -17,6 +17,7 @@ class ProfileMembersController extends Controller {
 		$this->set('users', $users);
 		$this->set('attribs', UserAttributeKey::getMemberListList());
 		$this->set('keywords', htmlentities($keywords, ENT_COMPAT, APP_CHARSET));
+		$this->addHeaderItem(Loader::helper('html')->css('ccm.profile.css'));
 	}
 
 }

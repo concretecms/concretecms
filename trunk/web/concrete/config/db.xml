@@ -1546,6 +1546,16 @@
       <DEFAULT value="0"/>
     </field>
   </table>
+    <table name="atBooleanSettings">
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <UNSIGNED />
+    </field>
+    <field name="akCheckedByDefault" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
   <table name="atDateTimeSettings">
     <field name="akID" type="I" size="10">
       <KEY/>

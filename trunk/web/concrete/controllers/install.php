@@ -294,18 +294,22 @@ class InstallController extends Controller {
 						$nst->assignCollectionAttribute($cab3);
 						$nst->assignCollectionAttribute($cab4); 
 
-						$uakdob = UserAttributeKey::add('date_of_birth', t('Date of Birth'), 1, 0, "date_time", 0, 1, 0, 1, 0, 0);
+						$uakdob = UserAttributeKey::add('date_of_birth', t('Date of Birth'), 1, 0, "date_time", 0, 0, 1, 0, 0, 0);
 						$dobcnt = $uakdob->getAttributeType()->getController();
 						$dobcnt->setAttributeKey($uakdob);
 						$dobcnt->setDisplayMode('text');
+
+						UserAttributeKey::add('profile_private_messages_enabled', t('I would like to receive private messages.'), 1, 0, "boolean", 0, 0, 1, 0, 0, 0);
+						UserAttributeKey::add('profile_private_messages_notification_enabled', t('Send me email notifications when I receive a private message.'), 1, 0, "boolean", 0, 0, 1, 0, 0, 0);
 
 						// Add our core views
 						SinglePage::add('/login');
 						SinglePage::add('/register');
 						SinglePage::add('/profile');
 						SinglePage::add('/profile/edit');
-						SinglePage::add('/profile/members');
+						SinglePage::add('/members');
 						SinglePage::add('/profile/avatar');
+						SinglePage::add('/profile/messages');
 						SinglePage::add('/profile/friends');
 						SinglePage::add('/page_not_found');
 						SinglePage::add('/page_forbidden');

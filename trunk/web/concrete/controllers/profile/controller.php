@@ -10,6 +10,7 @@ class ProfileController extends Controller {
 	
 	public function on_start(){
 		$this->error = Loader::helper('validation/error');
+		$this->addHeaderItem(Loader::helper('html')->css('ccm.profile.css'));
 	}
 	
 	public function view($userID = 0) {

@@ -130,7 +130,7 @@ class UserAttributeKey extends AttributeKey {
 			'uID' => $uo->getUserID(), 
 			'akID' => $this->getAttributeKeyID(), 
 			'avID' => $av->getAttributeValueID()
-		), array('cID', 'cvID', 'akID'));
+		), array('uID', 'akID'));
 		
 		$uo->reindex();
 	}

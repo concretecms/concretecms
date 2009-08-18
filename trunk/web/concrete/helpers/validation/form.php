@@ -37,6 +37,7 @@
 		const VALID_UPLOADED_IMAGE_REQUIRED = 11;
 		const VALID_UPLOADED_FILE = 20;
 		const VALID_UPLOADED_FILE_REQUIRED = 25;
+		const VALID_TOKEN = 30;
 
 		public function __construct() {
 			$this->error = Loader::helper('validation/error');
@@ -95,6 +96,15 @@
 			$this->fields[] = $obj;
 		}
 		
+		public function addRequiredToken($value, $errorMsg = null) {
+			$obj = new stdClass;
+		 	$vt = Loader::helper('validation/token');
+			$obj->message = ($errorMsg == null) ? $vt->getErrorMessage() : $errorMsg;
+			$obj->value = $value;
+			$obj->validate = ValidationFormHelper::VALID_TOKEN;
+			$this->fields[] = $obj;
+		}
+		
 		/** 
 		 * Adds a required email address to the suite of tests to be run.
 		 * @param string $field
@@ -148,6 +158,12 @@
 				switch($validate) {
 					case ValidationFormHelper::VALID_NOT_EMPTY:
 						if (!$val->notempty($this->data[$field])) {
+							$this->fieldsInvalid[] = $f;
+						}
+						break;
+					case ValidationFormHelper::VALID_TOKEN:
+						$vt = Loader::helper('validation/token');
+						if (!$vt->validate($f->value)) {
 							$this->fieldsInvalid[] = $f;
 						}
 						break;

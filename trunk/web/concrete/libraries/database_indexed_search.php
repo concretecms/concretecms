@@ -107,8 +107,17 @@ class IndexedSearch {
 	 * Reindexes the search engine.
 	 */
 	public function reindex($search_index_group_id=0) {
+		Loader::model('attribute/categories/collection');
+		Loader::model('attribute/categories/file');
+		Loader::model('attribute/categories/user');
 		Cache::disableLocalCache();
-
+		$attributes = CollectionAttributeKey::getList();
+		$attributes = array_merge($attributes, FileAttributeKey::getList());
+		$attributes = array_merge($attributes, UserAttributeKey::getList());
+		foreach($attributes as $ak) {
+			$ak->updateSearchIndex();
+		}
+		
 		$db = Loader::db();
 		$collection_attributes = Loader::model('collection_attributes');
 		$r = $db->query("select cID from Pages order by cID asc");
