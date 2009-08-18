@@ -212,6 +212,48 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function getGroupMemberType() {
 			return $this->gMemberType;
 		}
+
+		public function canReadPrivateMessage($msg) {
+			return $msg->getMessageUserID() == $this->getUserID();
+		}
+		
+		public function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = false) {
+			Loader::model('user_private_message');
+			$subject = ($subject == '') ? t('(No Subject)') : $subject;
+			$db = Loader::db();
+			$dt = Loader::helper('date');
+			$v = array($this->getUserID(), $dt->getLocalDateTime(), $subject, $text, $recipient->getUserID());
+			$db->Execute('insert into UserPrivateMessages (uAuthorID, msgDateCreated, msgSubject, msgBody, uToID) values (?, ?, ?, ?, ?)', $v);
+			
+			$msgID = $db->Insert_ID();
+			
+			if ($msgID > 0) {
+				// we add the private message to the sent box of the sender, and the inbox of the recipient
+				$v = array($db->Insert_ID(), $this->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_SENT, 0, 1);
+				$db->Execute('insert into UserPrivateMessagesTo (msgID, uID, uAuthorID, msgMailboxID, msgIsNew, msgIsUnread) values (?, ?, ?, ?, ?, ?)', $v);
+				$v = array($db->Insert_ID(), $recipient->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_INBOX, 1, 1);
+				$db->Execute('insert into UserPrivateMessagesTo (msgID, uID, uAuthorID, msgMailboxID, msgIsNew, msgIsUnread) values (?, ?, ?, ?, ?, ?)', $v);
+			}
+			
+			// If the message is in reply to another message, we make a note of that here
+			if (is_object($inReplyTo)) {
+				$db->Execute('update UserPrivateMessagesTo set msgIsReplied = 1 where uID = ? and msgID = ?', array($this->getUserID(), $inReplyTo->getMessageID()));
+			}
+			
+			// send the email notification
+			if ($recipient->getAttribute('profile_private_messages_notification_enabled')) {
+				$mh = Loader::helper('mail');
+				$mh->addParameter('msgSubject', $subject);
+				$mh->addParameter('msgBody', $text);
+				$mh->addParameter('msgAuthor', $this->getUserName());
+				$mh->addParameter('msgDateCreated', $msgDateCreated);
+				$mh->addParameter('profileURL', BASE_URL . View::url('/profile', 'view', $this->getUserID()));
+				$mh->addParameter('profilePreferencesURL', BASE_URL . View::url('/profile/edit'));
+				$mh->to($recipient->getUserEmail());
+				$mh->load('private_message');
+				$mh->sendMail();				
+			}
+		}
 		
 		public function getUserObject() {
 			// returns a full user object - groups and everything - for this userinfo object
@@ -312,7 +354,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$uName = $this->getUserName();
 				$uEmail = $this->getUserEmail();
 				$uHasAvatar = $this->hasAvatar();
-				$uHasAvatar = $this->getUserTimezone();
+				$uTimezone = $this->getUserTimezone();
 				if (isset($data['uName'])) {
 					$uName = $data['uName'];
 				}

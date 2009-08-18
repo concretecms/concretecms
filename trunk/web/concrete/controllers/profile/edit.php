@@ -18,6 +18,10 @@ class ProfileEditController extends Controller {
 		$this->set('ui', UserInfo::getByID($u->getUserID()));
 		$this->set('av', Loader::helper('concrete/avatar'));
 	}
+	
+	public function on_start() {
+		$this->addHeaderItem(Loader::helper('html')->css('ccm.profile.css'));
+	}
 
 	public function save() { 
 		$ui = $this->get('ui');
@@ -84,7 +88,6 @@ class ProfileEditController extends Controller {
 			}
 			
 			$ui->update($data);
-			$ui->updateUserAttributes($data);
 			
 			foreach($aks as $uak) {
 				$uak->saveAttributeForm($ui);				

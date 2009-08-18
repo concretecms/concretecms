@@ -24,13 +24,30 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 		return ($v == 1) ? t('Yes') : t('No');
 	}
 
+	protected function load() {
+		$ak = $this->getAttributeKey();
+		if (!is_object($ak)) {
+			return false;
+		}
+		
+		$db = Loader::db();
+		$row = $db->GetRow('select akCheckedByDefault from atBooleanSettings where akID = ?', $ak->getAttributeKeyID());
+		$this->akCheckedByDefault = $row['akCheckedByDefault'];
+		$this->set('akCheckedByDefault', $this->akCheckedByDefault);
+	}
+
 	public function form() {
 
 		if (is_object($this->attributeValue)) {
 			$value = $this->getAttributeValue()->getValue();
+			$checked = $value == 1 ? true : false;
+		} else {
+			$this->load();
+			if ($this->akCheckedByDefault) {
+				$checked = true;
+			}
 		}
-
-		$checked = $value == 1 ? true : false;
+		
 		$cb = Loader::helper('form')->checkbox($this->field('value'), 1, $checked);
 		print $cb . ' ' . t('Yes');
 	}
@@ -39,7 +56,11 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 		$this->form();
 	}
 
-
+	public function type_form() {
+		$this->set('form', Loader::helper('form'));	
+		$this->load();
+	}
+	
 	// run when we call setAttribute(), instead of saving through the UI
 	public function saveValue($value) {
 		$db = Loader::db();
@@ -53,6 +74,21 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 		foreach($arr as $id) {
 			$db->Execute('delete from atBoolean where avID = ?', array($id));
 		}
+	}
+	
+	public function saveKey() {
+		$ak = $this->getAttributeKey();
+		$db = Loader::db();
+		$akCheckedByDefault = $this->post('akCheckedByDefault');
+		
+		if ($this->post('akCheckedByDefault') != 1) {
+			$akCheckedByDefault = 0;
+		}
+
+		$db->Replace('atBooleanSettings', array(
+			'akID' => $ak->getAttributeKeyID(), 
+			'akCheckedByDefault' => $akCheckedByDefault
+		), array('akID'), true);
 	}
 	
 	public function saveForm($data) {

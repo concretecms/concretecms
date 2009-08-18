@@ -444,9 +444,9 @@ if (is_object($uo)) {
 			<? if (is_object($uk3)) { ?><td  style="width: 33%"class="subheader"><?=$uk3->getAttributeKeyName()?></td><? } else { ?><td style="width: 33%" class="subheader">&nbsp;</td><? } ?>
 		</tr>
 		<tr>
-			<td><?=$uo->getAttribute($uk->getAttributeKeyHandle())?></td>
-			<? if (is_object($uk2)) { ?><td><?=$uo->getAttribute($uk2->getAttributeKeyHandle())?></td><? } else { ?><td style="width: 33%">&nbsp;</td><? } ?>
-			<? if (is_object($uk3)) { ?><td><?=$uo->getAttribute($uk3->getAttributeKeyHandle())?></td><? } else { ?><td>&nbsp;</td><? } ?>
+			<td><?=$uo->getAttribute($uk->getAttributeKeyHandle(), 'display')?></td>
+			<? if (is_object($uk2)) { ?><td><?=$uo->getAttribute($uk2->getAttributeKeyHandle(), 'display')?></td><? } else { ?><td style="width: 33%">&nbsp;</td><? } ?>
+			<? if (is_object($uk3)) { ?><td><?=$uo->getAttribute($uk3->getAttributeKeyHandle(), 'display')?></td><? } else { ?><td>&nbsp;</td><? } ?>
 		</tr>
 		<? } ?>
 		
