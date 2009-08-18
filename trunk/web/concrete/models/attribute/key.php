@@ -88,13 +88,18 @@ class AttributeKey extends Object {
 	/** 
 	 * Adds an attribute key. 
 	 */
-	protected function add($akCategoryHandle, $akHandle, $akName, $akIsSearchable, $passthru, $akIsSearchableIndexed, $akIsAutoCreated, $akIsEditable, $atID) {
+	protected function add($akCategoryHandle, $akHandle, $akName, $akIsSearchable, $passthru, $akIsSearchableIndexed, $akIsAutoCreated, $akIsEditable, $atID, $pkg = false) {
 		
 		$vn = Loader::helper('validation/numbers');
 		if (!$vn->integer($atID)) {
 			// The passed item is not an integer. It is probably something like 'DATE'
 			$type = AttributeType::getByHandle(strtolower($atID));
 			$atID = $type->getAttributeTypeID();
+		}
+		
+		$pkgID = 0;
+		if (is_object($pkg)) {
+			$pkgID = $pkg->getPackageID();
 		}
 		
 		$_akIsSearchable = 1;
@@ -117,8 +122,8 @@ class AttributeKey extends Object {
 		
 		$db = Loader::db();
 		$akCategoryID = $db->GetOne("select akCategoryID from AttributeKeyCategories where akCategoryHandle = ?", $akCategoryHandle);
-		$a = array($akHandle, $akName, $_akIsSearchable, $_akIsSearchable, $_akIsAutoCreated, $_akIsEditable, $atID, $akCategoryID);
-		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsEditable, atID, akCategoryID) values (?, ?, ?, ?, ?, ?, ?, ?)", $a);
+		$a = array($akHandle, $akName, $_akIsSearchable, $_akIsSearchable, $_akIsAutoCreated, $_akIsEditable, $atID, $akCategoryID, $pkgID);
+		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsEditable, atID, akCategoryID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", $a);
 		
 		if ($r) {
 			$akID = $db->Insert_ID();
