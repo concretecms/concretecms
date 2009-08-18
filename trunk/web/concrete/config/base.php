@@ -30,7 +30,7 @@ if (!defined('REDIRECT_TO_BASE_URL')) {
 }
 
 if (!defined('ENABLE_DEVELOPER_OPTIONS')) {
-	define("ENABLE_DEVELOPER_OPTIONS", false);
+	define("ENABLE_DEVELOPER_OPTIONS", true);
 }
 
 /*
