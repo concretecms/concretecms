@@ -52,7 +52,14 @@ $this->inc('elements/header.php'); ?>
 			<?
 			$u = new User();
 			if ($u->isRegistered()) { ?>
-				<span class="sign-in"><?=t('Currently logged in as <b>%s</b>.', $u->getUserName())?> <a href="<?=$this->url('/login', 'logout')?>"><?=t('Sign Out')?></a></span>
+				<? 
+				if (Config::get("ENABLE_USER_PROFILES")) {
+					$userName = '<a href="' . $this->url('/profile') . '">' . $u->getUserName() . '</a>';
+				} else {
+					$userName = $u->getUserName();
+				}
+				?>
+				<span class="sign-in"><?=t('Currently logged in as <b>%s</b>.', $userName)?> <a href="<?=$this->url('/login', 'logout')?>"><?=t('Sign Out')?></a></span>
 			<? } else { ?>
 				<span class="sign-in"><a href="<?=$this->url('/login')?>"><?=t('Sign In to Edit this Site')?></a></span>
 			<? } ?>
