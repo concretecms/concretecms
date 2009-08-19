@@ -58,7 +58,17 @@ class DashboardFilesAttributesController extends Controller {
 		if ($e->has()) {
 			$this->set('error', $e);
 		} else {
-			$ak = FileAttributeKey::add($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('akIsSearchableIndexed'), 0, 1, $this->post('atID'));
+			$type = AttributeType::getByID($this->post('atID'));
+			$args = array(
+				'akHandle' => $this->post('akHandle'),
+				'akName' => $this->post('akName'),
+				'akIsSearchable' => $this->post('akIsSearchable'),
+				'akIsSearchableIndexed' => $this->post('akIsSearchableIndexed'), 
+				'akIsAutoCreated' => 0,
+				'akIsEditable' => 1
+			);
+
+			$ak = FileAttributeKey::add($type, $args);
 			$this->redirect('/dashboard/files/attributes/', 'attribute_created');
 		}
 	}
@@ -105,7 +115,16 @@ class DashboardFilesAttributesController extends Controller {
 			if ($e->has()) {
 				$this->set('error', $e);
 			} else {
-				$key->update($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('akIsSearchableIndexed'), $this->post('atID'));
+				$type = AttributeType::getByID($this->post('atID'));
+				$args = array(
+					'akHandle' => $this->post('akHandle'),
+					'akName' => $this->post('akName'),
+					'akIsSearchable' => $this->post('akIsSearchable'),
+					'akIsSearchableIndexed' => $this->post('akIsSearchableIndexed'), 
+					'akIsAutoCreated' => 0,
+					'akIsEditable' => 1
+				);	
+				$key->update($args);
 				$this->redirect('/dashboard/files/attributes', 'attribute_updated');
 			}
 		}

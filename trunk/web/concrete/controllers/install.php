@@ -255,29 +255,54 @@ class InstallController extends Controller {
 						$data['ctID'] = $rst->getCollectionTypeID();
 						$home->update($data);
 						
-						AttributeKeyCategory::add('collection');
-						AttributeKeyCategory::add('user');
-						AttributeKeyCategory::add('file');
+						$cakc = AttributeKeyCategory::add('collection');
+						$uakc = AttributeKeyCategory::add('user');
+						$fakc = AttributeKeyCategory::add('file');
 						
-						AttributeType::add('text', t('Text'));
-						AttributeType::add('boolean', t('Checkbox'));
-						AttributeType::add('date_time', t('Date/Time'));
-						AttributeType::add('image_file', t('Image/File'));
-						AttributeType::add('number', t('Number'));
-						AttributeType::add('rating', t('Rating'));
-						AttributeType::add('select', t('Select'));
+						$tt = AttributeType::add('text', t('Text'));
+						$boolt = AttributeType::add('boolean', t('Checkbox'));
+						$dtt = AttributeType::add('date_time', t('Date/Time'));
+						$ift = AttributeType::add('image_file', t('Image/File'));
+						$nt = AttributeType::add('number', t('Number'));
+						$rt = AttributeType::add('rating', t('Rating'));
+						$st = AttributeType::add('select', t('Select'));
+						
+						// assign collection attributes
+						$cakc->associateAttributeKeyType($tt);
+						$cakc->associateAttributeKeyType($boolt);
+						$cakc->associateAttributeKeyType($dtt);
+						$cakc->associateAttributeKeyType($ift);
+						$cakc->associateAttributeKeyType($nt);
+						$cakc->associateAttributeKeyType($rt);
+						$cakc->associateAttributeKeyType($st);
+
+						// assign user attributes
+						$uakc->associateAttributeKeyType($tt);
+						$uakc->associateAttributeKeyType($boolt);
+						$uakc->associateAttributeKeyType($dtt);
+						$uakc->associateAttributeKeyType($nt);
+						$uakc->associateAttributeKeyType($st);
+
+						// assign file attributes
+						$fakc->associateAttributeKeyType($tt);
+						$fakc->associateAttributeKeyType($boolt);
+						$fakc->associateAttributeKeyType($dtt);
+						$fakc->associateAttributeKeyType($nt);
+						$fakc->associateAttributeKeyType($rt);
+						$fakc->associateAttributeKeyType($st);
 						
 						// install everything into db
 
 						// Add default page attributes
-						$cab1 = CollectionAttributeKey::add('meta_title', t('Meta Title'), true, null, 'TEXT');
-						$cab2 = CollectionAttributeKey::add('meta_description', t('Meta Description'), true, null, 'TEXT');
-						$cab3 = CollectionAttributeKey::add('meta_keywords', t('Meta Keywords'), true, null, 'TEXT');
-						$cab4 = CollectionAttributeKey::add('exclude_nav', t('Exclude From Nav'), true, null, 'BOOLEAN');
+						//$cab1 = CollectionAttributeKey::add('meta_title', t('Meta Title'), true, null, 'TEXT');
+						$cab1 = CollectionAttributeKey::add($tt, array('akHandle' => 'meta_title', 'akName' => t('Meta Title'), 'akIsSearchable' => true));
+						$cab2 = CollectionAttributeKey::add($tt, array('akHandle' => 'meta_description', 'akName' => t('Meta Description'), 'akIsSearchable' => true));
+						$cab3 = CollectionAttributeKey::add($tt, array('akHandle' => 'meta_keywords', 'akName' => t('Meta Keywords'), 'akIsSearchable' => true, null));
+						$cab4 = CollectionAttributeKey::add($boolt, array('akHandle' => 'exclude_nav', 'akName' => t('Exclude From Nav'), 'akIsSearchable' => true));
 						
-						$cab5 = CollectionAttributeKey::add('header_extra_content', t('Header Extra Content'), true, null, 'TEXT');
-						$cab6 = CollectionAttributeKey::add('exclude_search_index', t('Exclude From Search Index'), true, null, 'BOOLEAN');
-						$cab7 = CollectionAttributeKey::add('exclude_sitemapxml', t('Exclude From sitemap.xml'), true, null, 'BOOLEAN');
+						$cab5 = CollectionAttributeKey::add($tt, array('akHandle' => 'header_extra_content', 'akName' => t('Header Extra Content'), 'akIsSearchable' => true));
+						$cab6 = CollectionAttributeKey::add($boolt, array('akHandle' => 'exclude_search_index', 'akName' => t('Exclude From Search Index'), 'akIsSearchable' => true));
+						$cab7 = CollectionAttributeKey::add($boolt, array('akHandle' => 'exclude_sitemapxml', 'akName' => t('Exclude From sitemap.xml'), 'akIsSearchable' => true, null));
 						
 						$dt->assignCollectionAttribute($cab1);
 						$dt->assignCollectionAttribute($cab2);
@@ -294,14 +319,14 @@ class InstallController extends Controller {
 						$nst->assignCollectionAttribute($cab3);
 						$nst->assignCollectionAttribute($cab4); 
 
-						$uakdob = UserAttributeKey::add('date_of_birth', t('Date of Birth'), 1, 0, "date_time", 0, 0, 1, 0, 0, 0);
+						$uakdob = UserAttributeKey::add($dtt, array('akHandle' => 'date_of_birth', 'akName' => t('Date of Birth'), 'akIsSearchable' => true, 'uakProfileEdit' => true));
 						$dobcnt = $uakdob->getAttributeType()->getController();
 						$dobcnt->setAttributeKey($uakdob);
 						$dobcnt->setDisplayMode('text');
 
-						UserAttributeKey::add('profile_private_messages_enabled', t('I would like to receive private messages.'), 1, 0, "boolean", 0, 0, 1, 0, 0, 0);
-						UserAttributeKey::add('profile_private_messages_notification_enabled', t('Send me email notifications when I receive a private message.'), 1, 0, "boolean", 0, 0, 1, 0, 0, 0);
-
+						UserAttributeKey::add($boolt, array('akHandle' => 'profile_private_messages_enabled', 'akName' => t('I would like to receive private messages.'), 'akIsSearchable' => true));
+						UserAttributeKey::add($boolt, array('akHandle' => 'profile_private_messages_notification_enabled', 'akName' => t('Send me email notifications when I receive a private message.'), 'akIsSearchable' => true));
+						
 						// Add our core views
 						SinglePage::add('/login');
 						SinglePage::add('/register');

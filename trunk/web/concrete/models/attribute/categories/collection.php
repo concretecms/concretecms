@@ -101,8 +101,18 @@ class CollectionAttributeKey extends AttributeKey {
 		), array('cID', 'cvID', 'akID'));
 	}
 	
-	public function add($akHandle, $akName, $akIsSearchable, $passthru, $atID, $akIsSearchableIndexed = false, $akIsAutoCreated = false, $akIsEditable = true, $pkg = false) {
-		$ak = parent::add('collection', $akHandle, $akName, $akIsSearchable, $passthru, $akIsSearchableIndexed, $akIsAutoCreated, $akIsEditable, $atID, $pkg);
+	public function add($at, $args, $pkg = false) {
+
+		// legacy check
+		$fargs = func_get_args();
+		if (count($fargs) >= 5) {
+			$at = $fargs[4];
+			$pkg = false;
+			$args = array('akHandle' => $fargs[0], 'akName' => $fargs[1], 'akIsSearchable' => $fargs[2]);
+		}
+
+	
+		$ak = parent::add('collection', $at, $args, $pkg);
 		return $ak;
 	}
 	
