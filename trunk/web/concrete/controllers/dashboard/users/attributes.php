@@ -97,7 +97,22 @@ class DashboardUsersAttributesController extends Controller {
 		if ($e->has()) {
 			$this->set('error', $e);
 		} else {
-			$ak = UserAttributeKey::add($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('akIsSearchableIndexed'), $this->post('atID'), $this->post('uakProfileDisplay'), $this->post('uakMemberListDisplay'), $this->post('uakProfileEdit'), $this->post('uakProfileEditRequired'), $this->post('uakRegisterEdit'), $this->post('uakRegisterEditRequired'));
+			$type = AttributeType::getByID($this->post('atID'));
+			$args = array(
+				'akHandle' => $this->post('akHandle'),
+				'akName' => $this->post('akName'),
+				'akIsSearchable' => $this->post('akIsSearchable'),
+				'akIsSearchableIndexed' => $this->post('akIsSearchableIndexed'),
+				'uakProfileDisplay' => $this->post('uakProfileDisplay'),
+				'uakMemberListDisplay' => $this->post('uakMemberListDisplay'),
+				'uakProfileEdit' => $this->post('uakProfileEdit'),
+				'uakProfileEditRequired' => $this->post('uakProfileEditRequired'),
+				'uakRegisterEdit' => $this->post('uakRegisterEdit'),
+				'uakRegisterEditRequired' => $this->post('uakRegisterEditRequired'),				
+				'akIsAutoCreated' => 0,
+				'akIsEditable' => 1
+			);
+			$ak = UserAttributeKey::add($type, $args);
 			$this->redirect('/dashboard/users/attributes/', 'attribute_created');
 		}
 	}
@@ -144,7 +159,22 @@ class DashboardUsersAttributesController extends Controller {
 			if ($e->has()) {
 				$this->set('error', $e);
 			} else {
-				$key->update($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('akIsSearchableIndexed'), $this->post('uakProfileDisplay'), $this->post('uakMemberListDisplay'), $this->post('uakProfileEdit'), $this->post('uakProfileEditRequired'), $this->post('uakRegisterEdit'), $this->post('uakRegisterEditRequired'));
+				$args = array(
+					'akHandle' => $this->post('akHandle'),
+					'akName' => $this->post('akName'),
+					'akIsSearchable' => $this->post('akIsSearchable'),
+					'akIsSearchableIndexed' => $this->post('akIsSearchableIndexed'),
+					'uakProfileDisplay' => $this->post('uakProfileDisplay'),
+					'uakMemberListDisplay' => $this->post('uakMemberListDisplay'),
+					'uakProfileEdit' => $this->post('uakProfileEdit'),
+					'uakProfileEditRequired' => $this->post('uakProfileEditRequired'),
+					'uakRegisterEdit' => $this->post('uakRegisterEdit'),
+					'uakRegisterEditRequired' => $this->post('uakRegisterEditRequired'),				
+					'akIsAutoCreated' => 0,
+					'akIsEditable' => 1
+				);
+	
+				$key->update($args);
 				$this->redirect('/dashboard/users/attributes', 'attribute_updated');
 			}
 		}

@@ -135,9 +135,11 @@ class UserAttributeKey extends AttributeKey {
 		$uo->reindex();
 	}
 	
-	public function add($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed, $atID, $uakProfileDisplay, $uakMemberListDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired, $akIsAutoCreated = false, $akIsEditable = true, $pkg = false) {
-		$ak = parent::add('user', $akHandle, $akName, $akIsSearchable, false, $akIsSearchableIndexed, $akIsAutoCreated, $akIsEditable, $atID, $pkg);
-
+	public function add($type, $args, $pkg = false) {
+		$ak = parent::add('user', $type, $args, $pkg);
+		
+		extract($args);
+		
 		if ($uakProfileDisplay != 1) {
 			$uakProfileDisplay = 0;
 		}
@@ -156,6 +158,7 @@ class UserAttributeKey extends AttributeKey {
 		if ($uakRegisterEditRequired != 1) {
 			$uakRegisterEditRequired = 0;
 		}
+		
 		$db = Loader::db();
 		$displayOrder = $db->GetOne('select max(displayOrder) from UserAttributeKeys');
 		if (!$displayOrder) {
@@ -170,8 +173,11 @@ class UserAttributeKey extends AttributeKey {
 		return $nak;
 	}
 	
-	public function update($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed, $uakProfileDisplay, $uakMemberListDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired) {
-		$ak = parent::update($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed);
+	public function update($args) {
+		$ak = parent::update($args);
+
+		extract($args);
+
 		if ($uakProfileDisplay != 1) {
 			$uakProfileDisplay = 0;
 		}

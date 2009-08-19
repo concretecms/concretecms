@@ -52,7 +52,16 @@ class DashboardPagesTypesAttributesController extends Controller {
 		if ($e->has()) {
 			$this->set('error', $e);
 		} else {
-			$ak = CollectionAttributeKey::add($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), false, $this->post('akIsSearchableIndexed'), $this->post('atID'));
+			$type = AttributeType::getByID($this->post('atID'));
+			$args = array(
+				'akHandle' => $this->post('akHandle'),
+				'akName' => $this->post('akName'),
+				'akIsSearchable' => $this->post('akIsSearchable'),
+				'akIsSearchableIndexed' => $this->post('akIsSearchableIndexed'),
+				'akIsAutoCreated' => 0,
+				'akIsEditable' => 1
+			);
+			$ak = CollectionAttributeKey::add($type, $args);
 			$this->redirect('/dashboard/pages/types/', 'attribute_created');
 		}
 	}
@@ -87,7 +96,16 @@ class DashboardPagesTypesAttributesController extends Controller {
 			if ($e->has()) {
 				$this->set('error', $e);
 			} else {
-				$key->update($this->post('akHandle'), $this->post('akName'), $this->post('akIsSearchable'), $this->post('akIsSearchableIndexed'), $this->post('atID'));
+				$type = AttributeType::getByID($this->post('atID'));
+				$args = array(
+					'akHandle' => $this->post('akHandle'),
+					'akName' => $this->post('akName'),
+					'akIsSearchable' => $this->post('akIsSearchable'),
+					'akIsSearchableIndexed' => $this->post('akIsSearchableIndexed'),
+					'akIsAutoCreated' => 0,
+					'akIsEditable' => 1
+				);
+				$key->update($args);
 				$this->redirect('/dashboard/pages/types/', 'attribute_updated');
 			}
 		}

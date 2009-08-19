@@ -88,19 +88,21 @@ class AttributeKey extends Object {
 	/** 
 	 * Adds an attribute key. 
 	 */
-	protected function add($akCategoryHandle, $akHandle, $akName, $akIsSearchable, $passthru, $akIsSearchableIndexed, $akIsAutoCreated, $akIsEditable, $atID, $pkg = false) {
+	protected function add($akCategoryHandle, $type, $args, $pkg = false) {
 		
 		$vn = Loader::helper('validation/numbers');
-		if (!$vn->integer($atID)) {
+		if (!is_object($type)) {
 			// The passed item is not an integer. It is probably something like 'DATE'
-			$type = AttributeType::getByHandle(strtolower($atID));
-			$atID = $type->getAttributeTypeID();
+			$type = AttributeType::getByHandle(strtolower($type));
 		}
-		
+		$atID = $type->getAttributeTypeID();
+
 		$pkgID = 0;
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
 		}
+		
+		extract($args);
 		
 		$_akIsSearchable = 1;
 		$_akIsSearchableIndexed = 1;
@@ -116,13 +118,13 @@ class AttributeKey extends Object {
 		if (!$akIsAutoCreated) {
 			$_akIsAutoCreated = 0;
 		}
-		if (!$akIsEditable) {
+		if (isset($akIsEditable) && (!$akIsEditable)) {
 			$_akIsEditable = 0;
 		}
 		
 		$db = Loader::db();
 		$akCategoryID = $db->GetOne("select akCategoryID from AttributeKeyCategories where akCategoryHandle = ?", $akCategoryHandle);
-		$a = array($akHandle, $akName, $_akIsSearchable, $_akIsSearchable, $_akIsAutoCreated, $_akIsEditable, $atID, $akCategoryID, $pkgID);
+		$a = array($akHandle, $akName, $_akIsSearchable, $_akIsSearchableIndexed, $_akIsAutoCreated, $_akIsEditable, $atID, $akCategoryID, $pkgID);
 		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsEditable, atID, akCategoryID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", $a);
 		
 		if ($r) {
@@ -133,7 +135,7 @@ class AttributeKey extends Object {
 			$at = $ak->getAttributeType();
 			$cnt = $at->getController();
 			$cnt->setAttributeKey($ak);
-			$cnt->saveKey($passthru);
+			$cnt->saveKey($args);
 			$ak->updateSearchIndex();
 			return $ak;
 		}
@@ -142,9 +144,11 @@ class AttributeKey extends Object {
 	/** 
 	 * Updates an attribute key. 
 	 */
-	public function update($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed) {
+	public function update($args) {
 		$prevHandle = $this->getAttributeKeyHandle();
-		
+
+		extract($args);
+
 		if (!$akIsSearchable) {
 			$akIsSearchable = 0;
 		}
@@ -152,6 +156,7 @@ class AttributeKey extends Object {
 			$akIsSearchableIndexed = 0;
 		}
 		$db = Loader::db();
+
 		$akCategoryHandle = $db->GetOne("select akCategoryHandle from AttributeKeyCategories inner join AttributeKeys on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akID = ?", $this->getAttributeKeyID());
 		$a = array($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed, $this->getAttributeKeyID());
 		$r = $db->query("update AttributeKeys set akHandle = ?, akName = ?, akIsSearchable = ?, akIsSearchableIndexed = ? where akID = ?", $a);
@@ -163,7 +168,7 @@ class AttributeKey extends Object {
 			$at = $ak->getAttributeType();
 			$cnt = $at->getController();
 			$cnt->setAttributeKey($ak);
-			$cnt->saveKey();
+			$cnt->saveKey($args);
 			$ak->updateSearchIndex($prevHandle);
 			return $ak;
 		}
