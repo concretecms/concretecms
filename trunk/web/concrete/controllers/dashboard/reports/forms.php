@@ -130,16 +130,28 @@ class DashboardReportsFormsController extends Controller {
 		$c=$this->getCollectionObject();
 		$db = Loader::db();
 		$tempMiniSurvey = new MiniSurvey();
-		$pageBase=DIR_REL.'/index.php?cID='.$c->getCollectionID();
+		$pageBase=DIR_REL.'/index.php?cID='.$c->getCollectionID();	
+
+		if( $_REQUEST['action'] == 'deleteForm' ){
+			$this->deleteForm($_REQUEST['bID'], $_REQUEST['qsID']);
+		}	
+		
+		if( $_REQUEST['action'] == 'deleteResponse' ){
+			$this->deleteAnswers($_REQUEST['asid']);
+		}		
 		
 		//load surveys
 		$surveysRS=FormBlockStatistics::loadSurveys($tempMiniSurvey);
 		
 		//index surveys by question set id
 		$surveys=array();
-		while($survey=$surveysRS->fetchRow())
-			$surveys[ $survey['questionSetId'] ] = $survey;	
+		while($survey=$surveysRS->fetchRow()){
+			//get Survey Answers
+			$survey['answerSetCount'] = MiniSurvey::getAnswerCount( $survey['questionSetId'] );
+			$surveys[ $survey['questionSetId'] ] = $survey;			
+		}		
 	
+			
 		//load requested survey response
 		if( strlen($_REQUEST['qsid'])>0 ){
 			$questionSet=preg_replace('/[^[:alnum:]]/','',$_REQUEST['qsid']);
@@ -171,6 +183,40 @@ class DashboardReportsFormsController extends Controller {
 		$this->set('questionSet',$questionSet);
 		$this->set('surveys',$surveys);  			
 	}
+	// SET UP DELETE FUNCTIONS HERE
+	// DELETE SUBMISSIONS
+	private function deleteAnswers($asID){
+		$db = Loader::db();
+		$v = array(intval($asID));
+		$q = 'DELETE FROM btFormAnswers WHERE asID = ?';		
+		$r = $db->query($q, $v);
+		
+		$q = 'DELETE FROM btFormAnswerSet WHERE asID = ?';		
+		$r = $db->query($q, $v);
+	}
+	//DELETE FORMS AND ALL SUBMISSIONS
+	private function deleteForm($bID, $qsID){
+		$db = Loader::db();
+		$v = array(intval($qsID));
+		$q = 'SELECT asID FROM btFormAnswerSet WHERE questionSetId = ?';
+				
+		$r = $db->query($q, $v);
+		while ($row = $r->fetchRow()) {
+			$asID = $row['asID'];
+			$this->deleteAnswers($asID);
+		}
+		
+		$v = array(intval($bID));
+		$q = 'DELETE FROM btFormQuestions WHERE bID = ?';		
+		$r = $db->query($q, $v);
+		
+		$q = 'DELETE FROM btForm WHERE bID = ?';		
+		$r = $db->query($q, $v);
+		
+		$q = 'DELETE FROM Blocks WHERE bID = ?';		
+		$r = $db->query($q, $v);
+		
+	}	
 }
 
 ?>

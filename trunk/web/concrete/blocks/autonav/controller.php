@@ -186,25 +186,27 @@
 		// TODO - Implement displayUnavailablePages in the btNavigation table, and in the frontend of the autonav block
 
 		function __construct($obj = null) {
-			switch(strtolower(get_class($obj))) {
-				case "blocktype":
-					// instantiating autonav on a particular collection page, instead of adding
-					// it through the block interface
-					$this->bID = null;
-					$c = Page::getCurrentPage();
-					if (is_object($c)) {
-						$this->cID = $c->getCollectionID();
-						$this->cParentID = $c->getCollectionParentID();
-					}
-					break;
-				case "block": // block
-					// standard block object
-					$this->bID = $obj->bID;
-					$cobj = $obj->getBlockCollectionObject();
-					$this->cID = ($cobj->getCollectionPointerID()) ? $cobj->getCollectionPointerOriginalID() : $cobj->getCollectionID();
-					$this->displayCID = $cobj->getCollectionID();
-					$this->cParentID = $cobj->cParentID;
-					break;
+			if($obj){
+				switch(strtolower(get_class($obj))) {
+					case "blocktype":
+						// instantiating autonav on a particular collection page, instead of adding
+						// it through the block interface
+						$this->bID = null;
+						$c = Page::getCurrentPage();
+						if (is_object($c)) {
+							$this->cID = $c->getCollectionID();
+							$this->cParentID = $c->getCollectionParentID();
+						}
+						break;
+					case "block": // block
+						// standard block object
+						$this->bID = $obj->bID;
+						$cobj = $obj->getBlockCollectionObject();
+						$this->cID = ($cobj->getCollectionPointerID()) ? $cobj->getCollectionPointerOriginalID() : $cobj->getCollectionID();
+						$this->displayCID = $cobj->getCollectionID();
+						$this->cParentID = $cobj->cParentID;
+						break;
+				}
 			}
 			
 			parent::__construct($obj);

@@ -17,9 +17,14 @@ class FileVersion extends Object {
 	public function getPrefix() {return $this->fvPrefix;}
 	public function getFileName() {return $this->fvFilename;}
 	public function getTitle() {return $this->fvTitle;}
-	public function getTags() {return $this->fvTags;}
+	public function getTags() {return $this->fvTags;} 
 	public function getDescription() {return $this->fvDescription;}
 	public function isApproved() {return $this->fvIsApproved;}
+	
+	public function getGenericTypeText() {
+		$to = $this->getTypeObject();
+		return $to->getGenericTypeText( $to->getGenericType() );
+	}	
 
 	public function getFile() {
 		$fo = File::getByID($this->fID);
