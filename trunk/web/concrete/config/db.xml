@@ -132,6 +132,18 @@
       <UNSIGNED />
     </field>
   </table>
+  <table name="AttributeTypeCategories">
+    <field name="atID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="akCategoryID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
   <table name="AttributeTypes">
     <field name="atID" type="I" size="10">
       <KEY/>

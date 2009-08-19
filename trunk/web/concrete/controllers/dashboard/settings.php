@@ -80,7 +80,7 @@ class DashboardSettingsController extends Controller {
 			}
 		}
 	}
-
+	
 	public function update_maintenance() { 
 		$this->set_permissions();
 		if ($this->token->validate("update_maintenance")) {
@@ -407,6 +407,42 @@ class DashboardSettingsController extends Controller {
 		}
 	}
 	
+	public function add_attribute_type() {
+		$pat = PendingAttributeType::getByHandle($this->post('atHandle'));
+		if (is_object($pat)) {
+			$pat->install();
+		}
+		$this->redirect('dashboard/settings', 'manage_attribute_types', 'attribute_type_added');
+	}
+	
+	public function save_attribute_type_associations($saved = false) {
+		$list = AttributeKeyCategory::getList();
+		foreach($list as $cat) {
+			$cat->clearAttributeKeyCategoryTypes();
+			if (is_array($this->post($cat->getAttributeKeyCategoryHandle()))) {
+				foreach($this->post($cat->getAttributeKeyCategoryHandle()) as $id) {
+					$type = AttributeType::getByID($id);
+					$cat->associateAttributeKeyType($type);
+				}
+			}
+		}
+		
+		$this->redirect('dashboard/settings', 'manage_attribute_types', 'associations_updated');
+	}
+
+	public function manage_attribute_types($mode = false) {
+				
+		if ($mode != false) {
+			switch($mode) {
+				case 'associations_updated':
+					$this->set('message', 'Attribute Types saved.');
+					break;
+				case 'attribute_type_added':
+					$this->set('message', 'Attribute Type added.');
+					break;
+			}
+		}
+	}
 	
 	public function on_start() {
 		$prefsSelected = false;
@@ -423,7 +459,7 @@ class DashboardSettingsController extends Controller {
 			case "set_permissions":
 				$permsSelected = true;
 				break;
-			default:
+			case 'view':
 				$globalSelected = true;
 				break;
 		}					

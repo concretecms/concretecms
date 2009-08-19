@@ -412,7 +412,8 @@ if ($ctEditMode) {
 	</div>
 	
 	
-	<h1><span><?=t('Page Attributes')?></span></h1>
+	<h1><a class="ccm-dashboard-header-option" href="<?=$this->url('/dashboard/settings/', 'manage_attribute_types')?>">Manage Attribute Types</a>
+	<span><?=t('Page Attributes')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
 	<?= Loader::element('dashboard/attributes_table', array('attribs'=>$attribs, 'editURL' => '/dashboard/pages/types/attributes')); ?>
