@@ -8,8 +8,76 @@ $h = Loader::helper('concrete/interface'); ?>
 .ccm-module form div.ccm-dashboard-inner{ margin-bottom:0px !important; }
 </style>
 
+<? if ($this->controller->getTask() == 'manage_attribute_types') { 
 
-<? if ($this->controller->getTask() == 'export_database_schema') { ?>
+$types = AttributeType::getList();
+$categories = AttributeKeyCategory::getList();
+$txt = Loader::helper('text');
+?>
+
+<div style="width: 600px">
+<form method="post" id="attribute_type_associations_form" action="<?=$this->action('save_attribute_type_associations')?>">
+<h1><span><?=t('Attribute Type Associations')?></span></h1>
+<div class="ccm-dashboard-inner">
+<Table border="0" cellspacing="1" cellpadding="0" border="0" class="grid-list">
+<tr>
+	<td class="header"><?=t('Name')?></td>
+	<? foreach($categories as $cat) { ?>
+		<td class="header" width="22%"><?=$txt->unhandle($cat->getAttributeKeyCategoryHandle())?></td>
+	<? } ?>
+
+<?
+
+foreach($types as $at) { ?>
+
+<tr>
+<td><strong><?=$at->getAttributeTypeName()?></strong></td>
+<? foreach($categories as $cat) { ?>
+	<td><?=$form->checkbox($cat->getAttributeKeyCategoryHandle() . '[]', $at->getAttributeTypeID(), $at->isAssociatedWithCategory($cat))?></td>
+<? } ?>
+</tr>
+
+
+<? } ?>
+
+</table>
+<br/>
+	<?
+	$b1 = $h->submit(t('Save'), 'attribute_type_associations_form');
+	print $h->buttons($b1);
+	?>
+</div>
+
+</form>
+
+
+<h1><span><?=t('Custom Attribute Types')?></span></h1>
+<div class="ccm-dashboard-inner">
+<? $types = PendingAttributeType::getList(); ?>
+<? if (count($types) == 0) { ?>
+	<?=t('There are no available attribute types awaiting installation.')?>
+<? } else { ?>
+	<table border="0" cellspacing="0" cellpadding="0">
+	<? foreach($types as $at) { ?>
+	<tr>
+		<td style="padding: 0px 10px 10px 0px"><img src="<?=$at->getAttributeTypeIconSRC()?>" />
+		<td style="padding:  0px 10px 10px 0px"><?=$at->getAttributeTypeName()?></td>
+		<td style="padding:  0px 10px 10px 0px"><form id="attribute_type_install_form_<?=$at->getAttributeTypeHandle()?>" method="post" action="<?=$this->action('add_attribute_type')?>"><?
+			print $form->hidden("atHandle", $at->getAttributeTypeHandle());
+			$b1 = $h->submit(t('Install'), 'attribute_type_install_form_' . $at->getAttributeTypeHandle());
+			print $b1;
+			?>
+			</form></td>
+	</tr>
+	<? } ?>
+	</table>
+<? } ?>
+</div>
+
+
+</div>
+
+<? } else if ($this->controller->getTask() == 'export_database_schema') { ?>
 
 <h1><span><?=t('Database Schema')?></span></h1>
 <div class="ccm-dashboard-inner">

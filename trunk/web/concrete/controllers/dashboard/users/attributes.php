@@ -9,7 +9,7 @@ class DashboardUsersAttributesController extends Controller {
 	
 	public function __construct() {
 		parent::__construct();
-		$otypes = AttributeType::getList();
+		$otypes = AttributeType::getList('user');
 		$types = array();
 		foreach($otypes as $at) {
 			$types[$at->getAttributeTypeID()] = $at->getAttributeTypeName();

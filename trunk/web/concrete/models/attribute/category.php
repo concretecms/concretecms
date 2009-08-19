@@ -31,7 +31,27 @@ class AttributeKeyCategory extends Object {
 		$db = Loader::db();
 		$db->Execute('update AttributeKeys set akIsColumnHeader = 0 where akCategoryID = ?', $this->akCategoryID);
 	}
+	
+	public function associateAttributeKeyType($at) {
+		$db = Loader::db();
+		$db->Execute('insert into AttributeTypeCategories (atID, akCategoryID) values (?, ?)', array($at->getAttributeTypeID(), $this->akCategoryID));
+	}
+	
+	public function clearAttributeKeyCategoryTypes() {
+		$db = Loader::db();
+		$db->Execute('delete from AttributeTypeCategories where akCategoryID = ?', $this->akCategoryID);
+	}
 		
+	public function getList() {
+		$db = Loader::db();
+		$cats = array();
+		$r = $db->Execute('select akCategoryID from AttributeKeyCategories order by akCategoryID asc');
+		while ($row = $r->FetchRow()) {
+			$cats[] = AttributeKeyCategory::getByID($row['akCategoryID']);
+		}
+		return $cats;
+	}
+	
 	public static function add($akCategoryHandle) {
 		$db = Loader::db();
 		$db->Execute('insert into AttributeKeyCategories (akCategoryHandle) values (?)', array($akCategoryHandle));

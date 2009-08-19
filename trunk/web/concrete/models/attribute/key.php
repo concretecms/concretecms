@@ -251,21 +251,8 @@ class AttributeKey extends Object {
 	}
 	
 	public function getAttributeKeyIconSRC() {
-		$ff = '/' . FILENAME_BLOCK_ICON;
 		$type = $this->getAttributeType();
-		if ($this->getPackageID() > 0) {
-			$db = Loader::db();
-			$h = $this->getPackageHandle();
-			$url = (is_dir(DIR_PACKAGES . '/' . $h)) ? BASE_URL . DIR_REL : ASSETS_URL; 
-			$url = $url . '/' . DIRNAME_PACKAGES . '/' . $h . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $type->getAttributeTypeHandle() . $ff;
-		} else if (file_exists(DIR_MODELS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $type->getAttributeTypeHandle() . $ff)) {
-			$url = ASSETS_URL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $type->getAttributeTypeHandle() . $ff;
-		} else if (file_exists(DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $type->getAttributeTypeHandle() . $ff)) {
-			$url = BASE_URL . DIR_REL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $type->getAttributeTypeHandle() . $ff;
-		} else {
-			$url = ASSETS_URL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/default' . $ff;		
-		}
-		return $url;
+		return $type->getAttributeTypeIconSRC();
 	}
 	
 	/** 
