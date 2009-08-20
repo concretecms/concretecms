@@ -66,7 +66,16 @@ class File extends Object {
 		}
 
 		$q = $db->GetInsertSQL($rs, $searchableAttributes);
-		$db->Execute($q);
+		$r = $db->Execute($q);
+		
+		unset($q);
+		$r->Close();
+		unset($r);
+		$rs->Close();
+		unset($rs);
+		unset($columns);
+		unset($searchableAttributes);
+
 	}
 
 	public static function getRelativePathFromID($fID) {

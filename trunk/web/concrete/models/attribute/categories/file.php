@@ -127,6 +127,9 @@ class FileAttributeKey extends AttributeKey {
 		$fo = $f->getFile();
 		$fo->reindex();
 		$f->populateAttributes();
+		unset($av);
+		unset($fo);
+		unset($f);
 	}
 
 	public function add($at, $args, $pkg = false) {

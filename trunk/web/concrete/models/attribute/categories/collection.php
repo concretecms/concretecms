@@ -99,6 +99,7 @@ class CollectionAttributeKey extends AttributeKey {
 			'akID' => $this->getAttributeKeyID(), 
 			'avID' => $av->getAttributeValueID()
 		), array('cID', 'cvID', 'akID'));
+		unset($av);
 	}
 	
 	public function add($at, $args, $pkg = false) {

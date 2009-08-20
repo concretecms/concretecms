@@ -82,6 +82,7 @@ class AttributeKey extends Object {
 			$c1a->load($row['akID']);
 			$list[] = $c1a;
 		}
+		$r->Close();
 		return $list;
 	}
 	
@@ -137,6 +138,10 @@ class AttributeKey extends Object {
 			$cnt->setAttributeKey($ak);
 			$cnt->saveKey($args);
 			$ak->updateSearchIndex();
+			
+			$at->__destruct();
+			unset($at);
+			unset($cnt);		
 			return $ak;
 		}
 	}
@@ -237,6 +242,7 @@ class AttributeKey extends Object {
 		while ($row = $r->FetchRow()) {
 			$ids[] = $row['avID'];
 		}
+		$r->Close();
 		return $ids;
 	}
 
@@ -286,7 +292,8 @@ class AttributeKey extends Object {
 		} else {
 			$at->controller->saveForm($at->controller->post());
 		}
-		return $av;
+		$at->__destruct();
+		unset($at);
 	}
 	
 	public function validateAttributeForm($h = false) {

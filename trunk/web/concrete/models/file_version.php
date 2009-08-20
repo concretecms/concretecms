@@ -300,6 +300,7 @@ class FileVersion extends Object {
 		$fo = $this->getFile();
 		$fo->refreshCache();
 		$fo->reindex();
+		unset($ak);
 	}
 	
 	
