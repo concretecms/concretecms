@@ -112,6 +112,9 @@ $ppWhere = '';
 			// we don't do this on the front page
 			$this->loadVersionObject($cvID);
 		}
+		
+		unset($r);
+		
 	}		
 
 	public function isEditMode() {

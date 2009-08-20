@@ -16,6 +16,10 @@ class AttributeType extends Object {
 		return $at;
 	}
 	
+	public function __destruct() {
+		unset($this->controller);
+	}
+	
 	public static function getList($akCategoryHandle = false) {
 		$db = Loader::db();
 		$list = array();
@@ -28,6 +32,7 @@ class AttributeType extends Object {
 		while ($row = $r->FetchRow()) {
 			$list[] = AttributeType::getByID($row['atID']);
 		}
+		$r->Close();
 		return $list;
 	}
 	

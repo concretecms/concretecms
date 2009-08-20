@@ -135,7 +135,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	
 			foreach($attribs as $akHandle => $value) {
 				$column = 'ak_' . $akHandle;
-				$ak = CollectionAttributeKey::getByHandle($akHandle);
 				if (isset($columns[strtoupper($column)])) {
 					$searchableAttributes[$column] = $value;
 				}
@@ -143,6 +142,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	
 			$q = $db->GetInsertSQL($rs, $searchableAttributes);
 			$db->Execute($q);
+			$rs->Close();
+			unset($rs);
+			unset($attribs);
+			unset($columns);
+			unset($searchableAttributes);
 		}
 		
 		public function getAttributeValueObject($ak, $createIfNotFound = false) {
@@ -178,7 +182,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (!is_object($ak)) {
 				$ak = CollectionAttributeKey::getByHandle($ak);
 			}
-			$ak->setAttribute($this, $value);			
+			$ak->setAttribute($this, $value);
+			unset($ak);
 			$this->refreshCache();
 			$this->reindex();
 		}

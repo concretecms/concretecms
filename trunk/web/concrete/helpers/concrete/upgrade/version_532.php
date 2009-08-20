@@ -20,11 +20,20 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class ConcreteUpgradeVersion532Helper {
 
+	protected $numImported = 0;
+
+	protected function incrementImported() {
+		$this->numImported++;
+		if ($this->numImported > 3000) {
+			die("3000 records imported. Please re-run the upgrade script until this message goes away.");
+		}
+	}
+	
 	//run before the db.xml changes take place
-	public function prepare() {
+	public function prepare($cnt) {
 		// Handle new attribute stuff
 		$db = Loader::db();
-		$dict = NewDataDictionary($db->db);
+		$dict = NewDataDictionary($db->db, DB_TYPE);
 		$tables = $db->MetaTables();
 		if (!in_array('_UserAttributeKeys', $tables)) {
 			$dict->ExecuteSQLArray($dict->RenameTableSQL('UserAttributeKeys', '_UserAttributeKeys'));
@@ -34,6 +43,18 @@ class ConcreteUpgradeVersion532Helper {
 			$dict->ExecuteSQLArray($dict->RenameTableSQL('UserAttributeValues', '_UserAttributeValues'));
 			$dict->ExecuteSQLArray($dict->RenameTableSQL('FileAttributeValues', '_FileAttributeValues'));
 			$dict->ExecuteSQLArray($dict->RenameTableSQL('PageSearchIndexAttributes', '_PageSearchIndexAttributes'));
+		}
+
+		$columns = $db->MetaColumns('_UserAttributeValues');
+		if (!isset($columns['ISIMPORTED'])) {
+			$q = $dict->AddColumnSQL('_UserAttributeValues', 'isImported I1 DEFAULT 0 NULL');
+			$db->Execute($q[0]);
+			$q = $dict->AddColumnSQL('_FileAttributeValues', 'isImported I1 DEFAULT 0 NULL');
+			$db->Execute($q[0]);
+			$q = $dict->AddColumnSQL('_CollectionAttributeValues', 'isImported I1 DEFAULT 0 NULL');
+			$db->Execute($q[0]);
+		} else {
+			$cnt->upgrade_db = false;
 		}
 	}
 	
@@ -65,11 +86,26 @@ class ConcreteUpgradeVersion532Helper {
 		if( !intval($friendsPage->cID)) {
 			SinglePage::add('/profile/friends');
 		}
+
+		$membersPage =Page::getByPath('/members');
+		if( !intval($membersPage->cID)) {
+			SinglePage::add('/members');
+		}
+
+		$messagesPage =Page::getByPath('/profile/messages');
+		if( !intval($messagesPage->cID)) {
+			SinglePage::add('/profile/messages');
+		}
 		
 		Cache::enableLocalCache();
 	}
 	
 	protected function installCoreAttributeItems() {
+		$cakc = AttributeKeyCategory::getByHandle('collection');
+		if (is_object($cakc)) {
+			return false;
+		}
+		
 		$cakc = AttributeKeyCategory::add('collection');
 		$uakc = AttributeKeyCategory::add('user');
 		$fakc = AttributeKeyCategory::add('file');
@@ -110,146 +146,207 @@ class ConcreteUpgradeVersion532Helper {
 	protected function upgradeCollectionAttributes() {
 		Loader::model('attribute/categories/collection');
 		$db = Loader::db();
-		$r = $db->Execute('select * from _CollectionAttributeKeys order by akID asc');
+		$r = $db->Execute('select _CollectionAttributeKeys.* from _CollectionAttributeKeys order by _CollectionAttributeKeys.akID asc');
 		while ($row = $r->FetchRow()) {
-			$args = array(
-				'akHandle' => $row['akHandle'], 
-				'akIsSearchable' => $row['akSearchable'],
-				'akName' => $row['akName']			
-			);
-			$sttype = $row['akType'];
-			switch($row['akType']) {
-				case 'SELECT':
-					if ($row['akAllowOtherValues']) {
+			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', $row['akHandle']);
+			if ($existingAKID < 1) {
+				$args = array(
+					'akHandle' => $row['akHandle'], 
+					'akIsSearchable' => $row['akSearchable'],
+					'akName' => $row['akName']			
+				);
+				$sttype = $row['akType'];
+				switch($row['akType']) {
+					case 'SELECT':
+						if ($row['akAllowOtherValues']) {
+							$args['akSelectAllowMultipleValues'] = 1;
+						}
+						break;
+					case 'SELECT_MULTIPLE':
+						$sttype = 'SELECT';
 						$args['akSelectAllowMultipleValues'] = 1;
-					}
-					break;
-				case 'SELECT_MULTIPLE':
-					$sttype = 'SELECT';
-					$args['akSelectAllowMultipleValues'] = 1;
-					if ($row['akAllowOtherValues']) {
-						$args['akSelectAllowMultipleValues'] = 1;
-					}
-					break;
-			}
-			
-			$type = AttributeType::getByHandle(strtolower($sttype));
-			$ak = CollectionAttributeKey::add($type, $args);
-			if ($sttype == 'SELECT') {
-				$selectOptions = explode("\n", $row['akValues']);
-				foreach($selectOptions as $so) {
-					if ($so != '') {
-						SelectAttributeTypeOption::add($ak, $so);
+						if ($row['akAllowOtherValues']) {
+							$args['akSelectAllowMultipleValues'] = 1;
+						}
+						break;
+				}
+				
+				$type = AttributeType::getByHandle(strtolower($sttype));
+				$ak = CollectionAttributeKey::add($type, $args);
+				if ($sttype == 'SELECT') {
+					$selectOptions = explode("\n", $row['akValues']);
+					foreach($selectOptions as $so) {
+						if ($so != '') {
+							SelectAttributeTypeOption::add($ak, $so);
+						}
 					}
 				}
+			} else {
+				$ak = CollectionAttributeKey::getByID($existingAKID);
 			}
 			
-			$r2 = $db->Execute('select * from _CollectionAttributeValues where akID = ?', $row['akID']);
+			$r2 = $db->Execute('select * from _CollectionAttributeValues where akID = ? and isImported = 0', $row['akID']);
 			while ($row2 = $r2->FetchRow()) {
 				$nc = Page::getByID($row2['cID'], $row2['cvID']);
 				$value = $row2['value'];
 				if ($row['akType'] == 'SELECT' || $row['akType'] == 'SELECT_MULTIPLE') {
-					$value = explode("\n", $value);					
+					$value = explode("\n", $value);
+					$nc->setAttribute($ak, $value);
 				} else if ($row['akType'] == 'IMAGE_FILE') {
 					$value = File::getByID($value);
-				}
-				$nc->setAttribute($ak, $value);
+					if (is_object($value) && $value->getFileID() > 0) {
+						$nc->setAttribute($ak, $value);
+					}
+				} else {
+					$nc->setAttribute($ak, $value);
+				}				
+				unset($nc);
+				$db->Execute('update _CollectionAttributeValues set isImported = 1 where akID = ? and cvID = ? and cID = ?', array($row['akID'], $row2['cvID'], $row2['cID']));
+				$this->incrementImported();
 			}
+			
+			unset($ak);
+			unset($row2);
+			$r2->Close();
+			unset($r2);
 		}
+		
+		unset($row);
+		$r->Close();
+		unset($r);
 	}
 
 	protected function upgradeFileAttributes() {
 		Loader::model('attribute/categories/file');
 		$db = Loader::db();
-		$r = $db->Execute('select * from _FileAttributeKeys order by fakID asc');
+		$r = $db->Execute('select _FileAttributeKeys.* from _FileAttributeKeys order by fakID asc');
 		while ($row = $r->FetchRow()) {
-			$args = array(
-				'akHandle' => $row['akHandle'], 
-				'akIsSearchable' => $row['akSearchable'],
-				'akIsAutoCreated' => $row['akIsImporterAttribute'],
-				'akIsEditable' => $row['akIsEditable'],
-				'akName' => $row['akName']			
-			);
-			$sttype = $row['akType'];
-			switch($row['akType']) {
-				case 'SELECT':
-					if ($row['akAllowOtherValues']) {
+			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', $row['akHandle']);
+			if ($existingAKID < 1) {
+				$args = array(
+					'akHandle' => $row['akHandle'], 
+					'akIsSearchable' => $row['akSearchable'],
+					'akIsAutoCreated' => $row['akIsImporterAttribute'],
+					'akIsEditable' => $row['akIsEditable'],
+					'akName' => $row['akName']			
+				);
+				$sttype = $row['akType'];
+				switch($row['akType']) {
+					case 'SELECT':
+					case 'SELECT_ADD':
+						if ($row['akAllowOtherValues']) {
+							$args['akSelectAllowMultipleValues'] = 1;
+						}
+						break;
+					case 'SELECT_MULTIPLE':
+						$sttype = 'SELECT';
 						$args['akSelectAllowMultipleValues'] = 1;
-					}
-					break;
-				case 'SELECT_MULTIPLE':
-					$sttype = 'SELECT';
-					$args['akSelectAllowMultipleValues'] = 1;
-					if ($row['akAllowOtherValues']) {
-						$args['akSelectAllowMultipleValues'] = 1;
-					}
-					break;
-			}
-			
-			$type = AttributeType::getByHandle(strtolower($sttype));
-			$ak = FileAttributeKey::add($type, $args);
-			if ($sttype == 'SELECT') {
-				$selectOptions = explode("\n", $row['akValues']);
-				foreach($selectOptions as $so) {
-					if ($so != '') {
-						SelectAttributeTypeOption::add($ak, $so);
+						if ($row['akAllowOtherValues']) {
+							$args['akSelectAllowMultipleValues'] = 1;
+						}
+						break;
+				}
+				
+				$type = AttributeType::getByHandle(strtolower($sttype));
+				$ak = FileAttributeKey::add($type, $args);
+				if ($sttype == 'SELECT') {
+					$selectOptions = explode("\n", $row['akValues']);
+					foreach($selectOptions as $so) {
+						if ($so != '') {
+							SelectAttributeTypeOption::add($ak, $so);
+						}
 					}
 				}
+			} else {
+				$ak = FileAttributeKey::getByID($existingAKID);
 			}
 			
-			$r2 = $db->Execute('select * from _FileAttributeValues where fakID = ?', $row['fakID']);
+			$r2 = $db->Execute('select * from _FileAttributeValues where fakID = ? and isImported = 0', $row['fakID']);
 			while ($row2 = $r2->FetchRow()) {
 				$f = File::getByID($row2['fID']);
 				$fv = $f->getVersion($row2['fvID']);
 				$value = $row2['value'];
-				if ($row['akType'] == 'SELECT' || $row['akType'] == 'SELECT_MULTIPLE') {
+				if ($row['akType'] == 'SELECT' || $row['akType'] == 'SELECT_MULTIPLE' || $row['akType'] == 'SELECT_ADD') {
 					$value = explode("\n", $value);					
 				}
 				$fv->setAttribute($ak, $value);
+				unset($f);
+				unset($fv);
+
+				$db->Execute('update _FileAttributeValues set isImported = 1 where fakID = ? and fvID = ? and fID = ?', array($row['fakID'], $row2['fvID'], $row2['fID']));
+				$this->incrementImported();
 			}
+			
+			unset($ak);
+			unset($row2);
+			$r2->Close();
+			unset($r2);
 		}
+		
+		unset($row);
+		$r->Close();
+		unset($r);
 	}
 
 	protected function upgradeUserAttributes() {
 		Loader::model('attribute/categories/user');
 		$db = Loader::db();
-		$r = $db->Execute('select * from _UserAttributeKeys order by displayOrder asc');
+		$r = $db->Execute('select _UserAttributeKeys.* from _UserAttributeKeys order by displayOrder asc');
 		while ($row = $r->FetchRow()) {
-			$args = array(
-				'akHandle' => $row['ukHandle'], 
-				'akIsSearchable' => 1,
-				'akIsEditable' => 1,
-				'akName' => $row['ukName'],
-				'uakIsActive' => $row['ukHidden'],
-				'uakProfileEditRequired' => $row['ukRequired'],
-				'uakProfileDisplay' => ($row['ukPrivate'] == 0),
-				'uakRegisterEdit' => $row['ukDisplayedOnRegister']
-			);
-			$sttype = $row['ukType'];
-			if ($sttype == 'TEXTAREA') {
-				$sttype = 'TEXT';
-			}
-			if ($sttype == 'RADIO') {
-				$sttype = 'SELECT';
-			}
-			$type = AttributeType::getByHandle(strtolower($sttype));
-			$ak = UserAttributeKey::add($type, $args);
-			if ($sttype == 'SELECT') {
-				$selectOptions = explode("\n", $row['ukValues']);
-				foreach($selectOptions as $so) {
-					if ($so != '') {
-						SelectAttributeTypeOption::add($ak, $so);
+			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', $row['ukHandle']);
+			if ($existingAKID < 1) {
+				$args = array(
+					'akHandle' => $row['ukHandle'], 
+					'akIsSearchable' => 1,
+					'akIsEditable' => 1,
+					'akName' => $row['ukName'],
+					'uakIsActive' => $row['ukHidden'],
+					'uakProfileEditRequired' => $row['ukRequired'],
+					'uakProfileDisplay' => ($row['ukPrivate'] == 0),
+					'uakRegisterEdit' => $row['ukDisplayedOnRegister']
+				);
+				$sttype = $row['ukType'];
+				if ($sttype == 'TEXTAREA') {
+					$sttype = 'TEXT';
+				}
+				if ($sttype == 'RADIO') {
+					$sttype = 'SELECT';
+				}
+				$type = AttributeType::getByHandle(strtolower($sttype));
+				$ak = UserAttributeKey::add($type, $args);
+				if ($sttype == 'SELECT') {
+					$selectOptions = explode("\n", $row['ukValues']);
+					foreach($selectOptions as $so) {
+						if ($so != '') {
+							SelectAttributeTypeOption::add($ak, $so);
+						}
 					}
 				}
+			} else {
+				$ak = UserAttributeKey::getByID($existingAKID);
 			}
 			
-			$r2 = $db->Execute('select * from _UserAttributeValues where ukID = ?', $row['ukID']);
+			$r2 = $db->Execute('select * from _UserAttributeValues where ukID = ? and isImported = 0', $row['ukID']);
 			while ($row2 = $r2->FetchRow()) {
 				$ui = UserInfo::getByID($row2['uID']);
 				$value = $row2['value'];
 				$ui->setAttribute($ak, $value);
+				unset($ui);
+				
+				$db->Execute('update _UserAttributeValues set isImported = 1 where ukID = ? and uID = ?', array($row['ukID'], $row2['uID']));
+				$this->incrementImported();
+
 			}
+			
+			unset($ak);
+			unset($row2);
+			$r2->Close();
+			unset($r2);
 		}
+		
+		unset($row);
+		$r->Close();
+		unset($r);
 	}
 		
 }

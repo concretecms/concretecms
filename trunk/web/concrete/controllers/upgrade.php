@@ -2,11 +2,15 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 error_reporting(E_ALL ^ E_NOTICE);
 ini_set('display_errors', 1);
+if (!ini_get('safe_mode')) {
+	@set_time_limit(0);
+}
 class UpgradeController extends Controller {
 
 	private $notes = array();
 	private $upgrades = array();
 	private $site_version = null;
+	public $upgrade_db = true;
 	
 	public function on_start() {
 		$this->site_version = Config::get('SITE_APP_VERSION');
@@ -108,18 +112,20 @@ class UpgradeController extends Controller {
 	}
 	
 	public function refresh_schema() {
-		$installDirectory = DIR_BASE_CORE . '/config';
-		$file = $installDirectory . '/db.xml';
-		if (!file_exists($file)) {
-			throw new Exception(t('Unable to locate database import file.'));
-		}		
-		$err = Package::installDB($file);
-		
-		// now we refresh the block schema
-		$btl = new BlockTypeList();
-		$btArray = $btl->getInstalledList();
-		foreach($btArray as $bt) {
-			$bt->refresh();
+		if ($this->upgrade_db) {
+			$installDirectory = DIR_BASE_CORE . '/config';
+			$file = $installDirectory . '/db.xml';
+			if (!file_exists($file)) {
+				throw new Exception(t('Unable to locate database import file.'));
+			}		
+			$err = Package::installDB($file);
+			
+			// now we refresh the block schema
+			$btl = new BlockTypeList();
+			$btArray = $btl->getInstalledList();
+			foreach($btArray as $bt) {
+				$bt->refresh();
+			}
 		}
 	}
 	
@@ -128,7 +134,7 @@ class UpgradeController extends Controller {
 			$this->set_upgrades();
 			foreach($this->upgrades as $ugh) {
 				if (method_exists($ugh, 'prepare')) {
-					$ugh->prepare();
+					$ugh->prepare($this);
 				}
 			}
 			$this->refresh_schema();

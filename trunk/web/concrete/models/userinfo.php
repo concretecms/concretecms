@@ -270,6 +270,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$ak = UserAttributeKey::getByHandle($ak);
 			}
 			$ak->setAttribute($this, $value);
+			unset($ak);
 			$this->reindex();
 		}
 
@@ -293,14 +294,20 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	
 			foreach($attribs as $akHandle => $value) {
 				$column = 'ak_' . $akHandle;
-				$ak = UserAttributeKey::getByHandle($akHandle);
 				if (isset($columns[strtoupper($column)])) {
 					$searchableAttributes[$column] = $value;
 				}
 			}
 	
 			$q = $db->GetInsertSQL($rs, $searchableAttributes);
-			$db->Execute($q);
+			$r = $db->Execute($q);
+			unset($q);
+			$r->Close();
+			unset($r);
+			$rs->Close();
+			unset($rs);
+			unset($columns);
+			unset($searchableAttributes);
 		}
 		
 		/** 

@@ -5,17 +5,21 @@ class AttributeKeyCategory extends Object {
 	public static function getByID($akCategoryID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select akCategoryID, akCategoryHandle from AttributeKeyCategories where akCategoryID = ?', array($akCategoryID));
-		$akc = new AttributeKeyCategory();
-		$akc->setPropertiesFromArray($row);
-		return $akc;
+		if (isset($row['akCategoryID'])) {
+			$akc = new AttributeKeyCategory();
+			$akc->setPropertiesFromArray($row);
+			return $akc;
+		}
 	}
 	
 	public static function getByHandle($akCategoryHandle) {
 		$db = Loader::db();
 		$row = $db->GetRow('select akCategoryID, akCategoryHandle from AttributeKeyCategories where akCategoryHandle = ?', array($akCategoryHandle));
-		$akc = new AttributeKeyCategory();
-		$akc->setPropertiesFromArray($row);
-		return $akc;
+		if (isset($row['akCategoryID'])) {
+			$akc = new AttributeKeyCategory();
+			$akc->setPropertiesFromArray($row);
+			return $akc;
+		}
 	}
 	
 	public function handleExists($akHandle) {

@@ -22,7 +22,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  */
 class Database {
 
-	protected $db;
+	public $db;
 	
 	/** 
 	 * Checks to see whether query caching is enabled, and, if it is, uses ADODB's CacheExecute function. Otherwise a regular query is used.

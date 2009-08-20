@@ -133,6 +133,7 @@ class UserAttributeKey extends AttributeKey {
 		), array('uID', 'akID'));
 		
 		$uo->reindex();
+		unset($uo);
 	}
 	
 	public function add($type, $args, $pkg = false) {
