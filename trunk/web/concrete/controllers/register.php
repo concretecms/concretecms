@@ -148,15 +148,9 @@ class RegisterController extends Controller {
 				if (!$nh->integer($rcID)) {
 					$rcID = 0;
 				}
-				if(defined('USER_REGISTRATION_APPROVAL_REQUIRED') && USER_REGISTRATION_APPROVAL_REQUIRED) {
-					$ui = UserInfo::getByID($u->getUserID());
-					$ui->deactivate();
-					//$this->redirect('/register', 'register_pending', $rcID);
-					$redirectMethod='register_pending';
-					$registerData['msg']=$this->getRegisterPendingMsg();
-					
+				
 				// now we check whether we need to validate this user's email address
-				} elseif (defined("USER_VALIDATE_EMAIL")) {
+				if (defined("USER_VALIDATE_EMAIL") && USER_VALIDATE_EMAIL) {
 					if (USER_VALIDATE_EMAIL > 0) {
 						$uHash = $process->setupValidation();
 						
@@ -170,7 +164,17 @@ class RegisterController extends Controller {
 						//$this->redirect('/register', 'register_success_validate', $rcID);
 						$redirectMethod='register_success_validate';
 						$registerData['msg']= join('<br><br>',$this->getRegisterSuccessValidateMsgs());
+						
+						$u->logout();
+
 					}
+				} else if(defined('USER_REGISTRATION_APPROVAL_REQUIRED') && USER_REGISTRATION_APPROVAL_REQUIRED) {
+					$ui = UserInfo::getByID($u->getUserID());
+					$ui->deactivate();
+					//$this->redirect('/register', 'register_pending', $rcID);
+					$redirectMethod='register_pending';
+					$registerData['msg']=$this->getRegisterPendingMsg();
+					$u->logout();
 				}
 				
 				if (!$u->isError()) {

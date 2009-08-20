@@ -142,6 +142,10 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 				}
 			}
 		} else {
+			if (is_array($value)) {
+				$value = $value[0];
+			}
+			
 			$opt = SelectAttributeTypeOption::getByValue($value);
 			if (is_object($opt)) {
 				$options[] = $opt;	
@@ -274,7 +278,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		return $e;
 	}
 	
-	public function saveKey() {
+	public function saveKey($data) {
 		$ak = $this->getAttributeKey();
 		
 		$db = Loader::db();
@@ -282,17 +286,17 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		$initialOptionSet = $this->getOptions();
 		$selectedPostValues = $this->getSelectValuesFromPost();
 		
-		$akSelectAllowMultipleValues = $this->post('akSelectAllowMultipleValues');
-		$akSelectAllowOtherValues = $this->post('akSelectAllowOtherValues');
-		$akSelectOptionDisplayOrder = $this->post('akSelectOptionDisplayOrder');
+		$akSelectAllowMultipleValues = $data['akSelectAllowMultipleValues'];
+		$akSelectAllowOtherValues = $data['akSelectAllowOtherValues'];
+		$akSelectOptionDisplayOrder = $data['akSelectOptionDisplayOrder'];
 		
-		if ($this->post('akSelectAllowMultipleValues') != 1) {
+		if ($data['akSelectAllowMultipleValues'] != 1) {
 			$akSelectAllowMultipleValues = 0;
 		}
-		if ($this->post('akSelectAllowOtherValues') != 1) {
+		if ($data['akSelectAllowOtherValues'] != 1) {
 			$akSelectAllowOtherValues = 0;
 		}
-		if (!in_array($this->post('akSelectOptionDisplayOrder'), array('display_asc', 'alpha_asc', 'popularity_desc'))) {
+		if (!in_array($data['akSelectOptionDisplayOrder'], array('display_asc', 'alpha_asc', 'popularity_desc'))) {
 			$akSelectOptionDisplayOrder = 'display_asc';
 		}
 				

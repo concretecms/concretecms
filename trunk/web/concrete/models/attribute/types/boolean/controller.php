@@ -76,12 +76,12 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 		}
 	}
 	
-	public function saveKey() {
+	public function saveKey($data) {
 		$ak = $this->getAttributeKey();
 		$db = Loader::db();
-		$akCheckedByDefault = $this->post('akCheckedByDefault');
+		$akCheckedByDefault = $data['akCheckedByDefault'];
 		
-		if ($this->post('akCheckedByDefault') != 1) {
+		if ($data['akCheckedByDefault'] != 1) {
 			$akCheckedByDefault = 0;
 		}
 

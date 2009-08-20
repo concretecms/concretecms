@@ -299,9 +299,9 @@ class FileVersion extends Object {
 		$ak->setAttribute($this, $value);
 		$fo = $this->getFile();
 		$fo->refreshCache();
+		$fo->reindex();
 	}
 	
-
 	
 	/** 
 	 * Removes a version of a file

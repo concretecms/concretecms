@@ -186,7 +186,7 @@
 		// TODO - Implement displayUnavailablePages in the btNavigation table, and in the frontend of the autonav block
 
 		function __construct($obj = null) {
-			if($obj){
+			if (is_object($obj)) {
 				switch(strtolower(get_class($obj))) {
 					case "blocktype":
 						// instantiating autonav on a particular collection page, instead of adding
