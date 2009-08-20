@@ -7,8 +7,8 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 	
 	protected $searchIndexFieldDefinition = 'T NULL';
 
-	public function saveKey() {
-		$akDateDisplayMode = $this->post('akDateDisplayMode');
+	public function saveKey($data) {
+		$akDateDisplayMode = $data['akDateDisplayMode'];
 		if (!$akDateDisplayMode) {
 			$akDateDisplayMode = 'date_time';
 		}

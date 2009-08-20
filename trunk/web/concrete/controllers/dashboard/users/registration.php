@@ -33,12 +33,14 @@ class DashboardUsersRegistrationController extends Controller {
 					Config::save('ENABLE_REGISTRATION', true);
 					Config::save('USER_VALIDATE_EMAIL', false);	
 					Config::save('USER_VALIDATE_EMAIL_REQUIRED', false);
+					Config::save('USER_REGISTRATION_APPROVAL_REQUIRED', false);
 				break;
 				
 				case "validate_email":
 					Config::save('ENABLE_REGISTRATION', true);
 					Config::save('USER_VALIDATE_EMAIL', true);	
 					Config::save('USER_VALIDATE_EMAIL_REQUIRED', true);
+					Config::save('USER_REGISTRATION_APPROVAL_REQUIRED', false);
 				break;
 				
 				case "manual_approve":

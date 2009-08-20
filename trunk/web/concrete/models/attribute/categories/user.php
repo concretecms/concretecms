@@ -159,13 +159,19 @@ class UserAttributeKey extends AttributeKey {
 			$uakRegisterEditRequired = 0;
 		}
 		
+		if (isset($uakIsActive) && (!$uakIsActive)) {
+			$uakIsActive = 0;
+		} else {
+			$uakIsActive = 1;
+		}
+		
 		$db = Loader::db();
 		$displayOrder = $db->GetOne('select max(displayOrder) from UserAttributeKeys');
 		if (!$displayOrder) {
 			$displayOrder = 0;
 		}
 		$displayOrder++;
-		$v = array($ak->getAttributeKeyID(), $uakProfileDisplay, $uakMemberListDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired, $displayOrder, 1);
+		$v = array($ak->getAttributeKeyID(), $uakProfileDisplay, $uakMemberListDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired, $displayOrder, $uakIsActive);
 		$db->Execute('insert into UserAttributeKeys (akID, uakProfileDisplay, uakMemberListDisplay, uakProfileEdit, uakProfileEditRequired, uakRegisterEdit, uakRegisterEditRequired, displayOrder, uakIsActive) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
 		
 		$nak = new UserAttributeKey();

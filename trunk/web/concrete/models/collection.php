@@ -174,8 +174,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return $av;
 		}
 		
-		public function setAttribute($akHandle, $value) {
-			$ak = CollectionAttributeKey::getByHandle($akHandle);
+		public function setAttribute($ak, $value) {
+			if (!is_object($ak)) {
+				$ak = CollectionAttributeKey::getByHandle($ak);
+			}
 			$ak->setAttribute($this, $value);			
 			$this->refreshCache();
 			$this->reindex();
