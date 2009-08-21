@@ -1,5 +1,7 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 
+<div style="position: relative">
+
 <h1><?=t('Sign in to %s', SITE)?></h1>
 
 <? if( $passwordChanged ){ ?>
@@ -108,6 +110,8 @@
 <? } ?>
 
 <div class="ccm-form">
+<? if (ENABLE_REGISTRATION == 1) { ?><div style="position: absolute; top: 36px; right: 0px; font-size: 11px"><?=t('Not a member?')?> <a href="<?=$this->url('/register')?>"><?=t('Register here!')?></a></div><? } ?>
+
 <form method="post" action="<?=$this->url('/login', 'do_login')?>">
 	<div>
 	<label for="uName"><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?>
@@ -174,4 +178,6 @@
 </script>
 
 <? } ?>
+
+</div>
 

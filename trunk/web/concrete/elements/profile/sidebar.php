@@ -13,22 +13,23 @@
 	<div style="margin-top:16px;">
 		<div>
 		<? if( !UsersFriends::isFriend( $profile->getUserID(), $u->uID ) ){ ?>
-			<a href="<?=View::url('/profile/friends','add_friend','?fuID='.$profile->getUserID())?>">
-				<?=t('Make this person my friend') ?>
+			<a href="<?=View::url('/profile/friends','add_friend', $profile->getUserID())?>">
+				<?=t('Add to My Friends') ?>
 			</a>
 		<? }else{ ?>
-			<a href="<?=View::url('/profile/friends','remove_friend','?fuID='.$profile->getUserID() )?>">
-				<?=t('Unfriend this person') ?>
+			<a href="<?=View::url('/profile/friends','remove_friend', $profile->getUserID() )?>">
+				<?=t('Remove from My Friends') ?>
 			</a>
 		<? } ?>
 		
 		</div>
 		<? if ($profile->getUserProfilePrivateMessagesEnabled() == 1) { ?>
-			<a href="<?=$this->url('/profile/messages', 'write', $profile->getUserID())?>"><?=t('Send a private message to %s', $profile->getUserName())?></a>	
+			<a href="<?=$this->url('/profile/messages', 'write', $profile->getUserID())?>"><?=t('Send Private Message')?></a>	
 		<? } ?>
 		
 	</div>
 	<? } ?>
+
 	
 	<div>
 	<? 
@@ -45,4 +46,16 @@
 	}
 	?>
 	</div>
+
+		<form method="get" action="<?=$this->url('/members')?>">
+		<h4><?=t('Search Members')?></h4>
+		<?
+		$form = Loader::helper('form');
+		print $form->text('keywords', array('style' => 'width: 80px'));
+		print '&nbsp;&nbsp;';
+		print $form->submit('submit', t('Search'));
+		?>
+		
+		</form>
+
 </div>
