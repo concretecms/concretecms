@@ -18,9 +18,9 @@ class ProfileAvatarController extends ProfileEditController {
 			$t = Loader::helper('validation/identifier');
 			$filename = $t->getString(32);
 			
-			copy($_FILES['uAvatar']['tmp_name'], DIR_FILES_UPLOADED . "/up_tmp/" . $filename);
+			copy($_FILES['uAvatar']['tmp_name'], DIR_FILES_CACHE . "/" . $filename);
 
-			print(BASE_URL.DIR_REL.'/files/up_tmp/'. $filename);
+			print(BASE_URL.DIR_REL.'/files/cache/'. $filename);
 			exit;
 		}
 	
@@ -40,7 +40,7 @@ class ProfileAvatarController extends ProfileEditController {
 		}	
 		// remove the uploaded tmp image
 		if(strlen($_POST['tmp_avatar'])) {
-			unlink(DIR_FILES_UPLOADED . '/up_tmp/' . $_POST['tmp_avatar']);
+			unlink(DIR_FILES_CACHE . '/' . $_POST['tmp_avatar']);
 		}
 		
 		$this->redirect('/profile/avatar', 'saved');

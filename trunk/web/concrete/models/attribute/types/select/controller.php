@@ -202,6 +202,9 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 	
 	public function getValue() {
 		$list = $this->getSelectedOptions();
+		if (count($list) == 1) {
+			return $list->get(0);
+		}
 		return $list;	
 	}
 	
@@ -436,6 +439,10 @@ class SelectAttributeTypeOptionList extends Object implements Iterator {
 		}
 		
 		return false;
+	}
+	
+	public function get($index) {
+		return $this->options[$index];
 	}
 	
 	public function __toString() {

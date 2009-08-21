@@ -200,33 +200,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 
 		function addAttribute($ak, $value) {
-			$db = Loader::db();
-			$vo = $this->getVersionObject();
-			$cvID = $vo->getVersionID();
-
-			$v = array($this->getCollectionID(), $cvID, $ak->getAttributeKeyID());
-			$db->query("delete from CollectionAttributeValues where cID = ? and cvID = ? and akID = ?", $v);
-
-			$v3 = array($this->getCollectionID(), $cvID, $ak->getAttributeKeyID(), $value);
-			$db->query("insert into CollectionAttributeValues (cID, cvID, akID, value) values (?, ?, ?, ?)", $v3);
-			
-			unset($v); unset($v3);
-			
-			// deal with arrays as values by storing them funky. we should probably just use serialize.
-			
-			if (is_array($value)) {
-				$_sub = array();
-				foreach($value as $sub) {
-					$sub = trim($sub);
-					if ($sub) {
-						$_sub[] = $sub;
-					}
-				}
-				if (count($_sub) > 0) { 
-					$value = implode("[|]", $_sub);
-				}
-			}
-			$this->refreshCache();
+			$this->setAttribute($ak, $value);
 		}
 
 		/* area stuff */

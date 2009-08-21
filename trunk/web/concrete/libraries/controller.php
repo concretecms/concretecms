@@ -104,16 +104,22 @@ class Controller {
 		if ($method) {
 			$this->task = $method;
 		}
-		if (method_exists($this, 'on_start')) {
-			call_user_func_array(array($this, 'on_start'), array($method));
-		}
+		
+		$this->on_start();
+		
 		if ($method) {
 			$this->runTask($method, $data);
 		}
 		
-		if (method_exists($this, 'on_before_render')) {
-			call_user_func_array(array($this, 'on_before_render'), array($method));
-		}
+		$this->on_before_render();
+	}
+	
+	protected function on_start() {
+	
+	}
+	
+	protected function on_before_render() {
+	
 	}
 	
 	/** 
