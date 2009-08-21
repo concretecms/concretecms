@@ -116,9 +116,10 @@ class RatingHelper {
 	public function getAverageChildRating($cItem, $akHandle) {
 		$cID = (is_object($cItem)) ? $cItem->getCollectionID() : $cItem;
 		$db = Loader::db();
-		$akID = $db->GetOne("select akID from CollectionAttributeKeys where akHandle = ?", array($akHandle));
-		if ($akID > 0) {
-			$val = $db->GetOne('select avg(value) from CollectionAttributeValues cav inner join CollectionVersions cv on cav.cID = cv.cID and cav.cvID = cv.cvID and cv.cvIsApproved = 1 inner join Pages p on p.cID = cv.cID where p.cParentID = ?', array($cID));
+		Loader::model('attribute/categories/collection');
+		$ak = CollectionAttributeKey::getByHandle('rating');
+		if (is_object($ak)) {
+			$val = $db->GetOne('select avg(ak_rating) from CollectionSearchIndexAttributes c inner join Pages p on p.cID = c.cID where p.cParentID = ?', array($cID));
 			return $val;
 		}		
 	}
