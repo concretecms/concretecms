@@ -97,6 +97,15 @@ class ConcreteUpgradeVersion532Helper {
 			SinglePage::add('/profile/messages');
 		}
 		
+		$ppme = UserAttributeKey::getByHandle('profile_private_messages_enabled');
+		if (!is_object($ppme)) {
+			UserAttributeKey::add('BOOLEAN', array('akHandle' => 'profile_private_messages_enabled', 'akName' => t('I would like to receive private messages.'), 'akIsSearchable' => true));
+		}
+		$ppmne = UserAttributeKey::getByHandle('profile_private_messages_notification_enabled');
+		if (!is_object($ppmne)) {
+			UserAttributeKey::add('BOOLEAN', array('akHandle' => 'profile_private_messages_notification_enabled', 'akName' => t('Send me email notifications when I receive a private message.'), 'akIsSearchable' => true));
+		}
+		
 		Cache::enableLocalCache();
 	}
 	

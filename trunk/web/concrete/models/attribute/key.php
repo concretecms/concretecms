@@ -266,6 +266,13 @@ class AttributeKey extends Object {
 		return $type->getAttributeTypeIconSRC();
 	}
 	
+	public function getController() {
+		$at = AttributeType::getByHandle($this->atHandle);
+		$cnt = $at->getController();
+		$cnt->setAttributeKey($this);
+		return $cnt;
+	}
+	
 	/** 
 	 * Renders a view for this attribute key. If no view is default we display it's "view"
 	 * Valid views are "view", "form" or a custom view (if the attribute has one in its directory)

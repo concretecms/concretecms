@@ -10,5 +10,9 @@ function __autoload($class) {
 		$class = substr($class, 0, strpos($class, 'Helper'));
 		$handle = $txt->uncamelcase($class);
 		Loader::helper($handle);
+	} else if (strpos($class, 'AttributeType') > 0) {
+		$class = substr($class, 0, strpos($class, 'AttributeType'));
+		$handle = $txt->uncamelcase($class);
+		Loader::model('attribute/types/' . $handle . '/controller');
 	}
 }
