@@ -250,7 +250,20 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$mh->addParameter('profileURL', BASE_URL . View::url('/profile', 'view', $this->getUserID()));
 				$mh->addParameter('profilePreferencesURL', BASE_URL . View::url('/profile/edit'));
 				$mh->to($recipient->getUserEmail());
-				$mh->load('private_message');
+				
+				Loader::library('mail/importer');
+				$mi = MailImporter::getByHandle("private_message");
+				if (is_object($mi) && $mi->isMailImporterEnabled()) {
+					$mh->load('private_message_response_enabled');
+					// we store information ABOUT the message here. The mail handler has to know how to handle this.
+					$data = new stdClass;
+					$data->msgID = $msgID;
+					$data->toUID = $recipient->getUserID();
+					$data->fromUID = $this->getUserID();
+					$mh->enableMailResponseProcessing($mi, $data);
+				} else {
+					$mh->load('private_message');
+				}
 				$mh->sendMail();				
 			}
 		}
@@ -270,7 +283,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$ak = UserAttributeKey::getByHandle($ak);
 			}
 			$ak->setAttribute($this, $value);
-			unset($ak);
 			$this->reindex();
 		}
 
@@ -301,13 +313,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	
 			$q = $db->GetInsertSQL($rs, $searchableAttributes);
 			$r = $db->Execute($q);
-			unset($q);
 			$r->Close();
-			unset($r);
 			$rs->Close();
-			unset($rs);
-			unset($columns);
-			unset($searchableAttributes);
 		}
 		
 		/** 

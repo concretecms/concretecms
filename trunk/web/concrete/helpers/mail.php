@@ -75,6 +75,17 @@ class MailHelper {
 		$this->subject = $subject;
 	}	
 	
+	public function getSubject() {return $this->subject;}
+	public function getBody() {return $this->body;}
+	
+	public function enableMailResponseProcessing($importer, $data) {
+		foreach($this->to as $em) {
+			$importer->setupValidation($em[0], $data);
+		}
+		$this->from($importer->getMailImporterEmail());
+		$this->body = $importer->setupBody($this->body);		
+	}
+	
 	protected function generateEmailStrings($arr) {
 		$str = '';
 		for ($i = 0; $i < count($arr); $i++) {
@@ -122,7 +133,7 @@ class MailHelper {
 			$header  = "MIME-Version: 1.0\n";
 			$header .= "Content-type: text/plain; charset=" . APP_CHARSET . "\n";
 			if ($from == '') {
-				$from = 'concrete5@' . str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', BASE_URL);
+				$from = 'concrete5-noreply@' . str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', BASE_URL);
 			}
 			$header .= "From: {$from}\n";
 			$subject = $this->subject;

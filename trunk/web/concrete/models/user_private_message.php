@@ -132,7 +132,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 		public function getMessageRelevantUserName() {
 			$ui = UserInfo::getByID($this->getMessageRelevantUserID());
-			return $ui->getUserName();
+			if (is_object($ui)) {
+				return $ui->getUserName();
+			}
 		}
 		
 		public function getMessageAuthorName() {

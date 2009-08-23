@@ -26,8 +26,8 @@ class ConcreteAvatarHelper {
 		return $aDir;			
 	}
 
-	function outputUserAvatar($uo, $suppressNone = false, $aspectRatio = 1.0) {			
-		if ($uo->hasAvatar()) {
+	function outputUserAvatar($uo, $suppressNone = false, $aspectRatio = 1.0) {	
+		if (is_object($uo) && $uo->hasAvatar()) {
 			if (file_exists(DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg')) {
 				$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
 				$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';

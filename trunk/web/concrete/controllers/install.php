@@ -218,6 +218,10 @@ class InstallController extends Controller {
 						// Add the home page to the system
 						$home = Page::addHomePage();
 
+						// Email
+						Loader::library('mail/importer');
+						MailImporter::add(array('miHandle' => 'private_message'));
+						
 						// create the groups our site users
 						// have to add these in the right order so their IDs get set
 						// starting at 1 w/autoincrement
@@ -401,6 +405,10 @@ class InstallController extends Controller {
 						$d9 = SinglePage::add('/dashboard/jobs');
 						$d10 = SinglePage::add('/dashboard/settings');
 						
+						$d11 = SinglePage::add('/dashboard/mail');
+						$d12 = SinglePage::add('/dashboard/mail/importers');
+						
+						
 						// add home page
 						$dl1 = SinglePage::add('/download_file');
 						$dl1->update(array('cName' => t('Download File')));
@@ -431,6 +439,8 @@ class InstallController extends Controller {
 						$d8->update(array('cName'=>t('Add Functionality'), 'cDescription'=>t('Install functionality to extend your site.')));
 						$d9->update(array('cName'=>t('Maintenance'), 'cDescription'=>t('Run common cleanup tasks.')));
 						$d10->update(array('cName'=>t('Sitewide Settings'), 'cDescription'=>t('Secure and setup your site.')));
+
+						$d11->update(array('cName'=>t('Mail Setup'), 'cDescription'=>t('Enable post via email and other settings.')));
 				
 						// dashboard homepage
 						$dh2 = new DashboardHomepageView();
@@ -764,6 +774,8 @@ class InstallController extends Controller {
 						// Install & Run Jobs  
 						Job::installByHandle('index_search');
 						Job::installByHandle('generate_sitemap');
+						Job::installByHandle('process_email');
+						
 						// NOTE: This is too memory intensive to run during initial install. Let's not run it and just give nicer feedback
 						//Job::runAllJobs();
 
