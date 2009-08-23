@@ -33,9 +33,12 @@
 				<? if ($msg->getMessageAuthorID() != $ui->getUserID()) { ?>
 					<? 
 					$mui = $msg->getMessageRelevantUserObject();
-					if ($mui->getUserProfilePrivateMessagesEnabled()) { ?>
-						<?=$form->submit('button_submit', t('Reply'))?>
-					<? } ?>
+					if (is_object($mui)) { 
+						if ($mui->getUserProfilePrivateMessagesEnabled()) { ?>
+							<?=$form->submit('button_submit', t('Reply'))?>
+						<? } 
+						
+					}?>
 				<? } ?>
 				<?=$form->submit('button_delete', t('Delete'), array('onclick' => 'if(confirm(\'' . t('Delete this message?') . '\')) { window.location.href=\'' . $deleteURL . '\'}; return false'))?>
 				<?=$form->submit('button_cancel', t('Back'), array('onclick' => 'window.location.href=\'' . $backURL . '\'; return false'))?>

@@ -87,6 +87,7 @@ class ConcreteUpgradeVersion532Helper {
 			SinglePage::add('/profile/friends');
 		}
 
+
 		$membersPage =Page::getByPath('/members');
 		if( !intval($membersPage->cID)) {
 			SinglePage::add('/members');
@@ -105,7 +106,27 @@ class ConcreteUpgradeVersion532Helper {
 		if (!is_object($ppmne)) {
 			UserAttributeKey::add('BOOLEAN', array('akHandle' => 'profile_private_messages_notification_enabled', 'akName' => t('Send me email notifications when I receive a private message.'), 'akIsSearchable' => true));
 		}
+
+		$em1=Page::getByPath('/dashboard/mail');
+		$em2=Page::getByPath('/dashboard/mail/importers');
+		if ($em1->isError()) {
+			$em1 = SinglePage::add('/dashboard/mail');
+			$em1->update(array('cName'=>t('Mail Setup'), 'cDescription'=>t('Enable post via email and other settings.')));
+		}
 		
+		if ($em2->isError()) {
+			$em2 = SinglePage::add('/dashboard/mail/importers');
+		}
+
+		Loader::library('mail/importer');
+		$mi = MailImporter::getByHandle("private_message");
+		if (!is_object($mi)) {
+			MailImporter::add(array('miHandle' => 'private_message'));
+		}
+
+		Loader::model("job");
+		Job::installByHandle('process_email');		
+
 		Cache::enableLocalCache();
 	}
 	
