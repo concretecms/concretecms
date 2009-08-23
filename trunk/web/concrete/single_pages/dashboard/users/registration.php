@@ -106,6 +106,8 @@ $h = Loader::helper('concrete/interface');
 			<div class="ccm-dashboard-radio"><input type="radio" name="registration_type" value="enabled" style="vertical-align: middle" <? if ($registration_type == "enabled") { ?> checked <? } ?> /> <?=t('Registration is enabled.')?></div>
 				
 			<br />
+			<div class="ccm-dashboard-checkbox"><input type="checkbox" name="enable_registration_captcha" value="1" style="vertical-align: middle" <? if ($enable_registration_captcha) { ?> checked <? } ?> /> <?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> is required to register.', 'http://en.wikipedia.org/wiki/Captcha')?></div>
+			<br />
 			
 			<div class="ccm-dashboard-checkbox"><input type="checkbox" name="enable_openID" value="1" style="vertical-align: middle" <? if ($enable_openID) { ?> checked <? } ?> /> <?=t('Enable OpenID')?></div>
 			<br />
@@ -117,5 +119,23 @@ $h = Loader::helper('concrete/interface');
 			?>
 			<br class="clear" />	   
 		</div>
-    </form> 		
+    </form> 	
+    
+   
+ <script type="text/javascript">
+ $(function() {
+ 	var val = $("input[name=registration_type]:checked").val();
+	if (val == 'disabled') {
+		$("input[name=enable_registration_captcha]").attr('disabled', true);
+	}
+	$("input[name=registration_type]").click(function() {
+		if ($(this).val() == 'disabled') { 
+			$("input[name=enable_registration_captcha]").attr('disabled', true);
+			$("input[name=enable_registration_captcha]").attr('checked', false);
+		} else {
+			$("input[name=enable_registration_captcha]").attr('disabled', false);
+		}	
+	});
+ });
+ </script>
 </div>

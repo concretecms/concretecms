@@ -90,6 +90,10 @@ if (!defined('ENABLE_OPENID_AUTHENTICATION')) {
 	Config::getOrDefine('ENABLE_OPENID_AUTHENTICATION', false);
 }
 
+if (!defined('ENABLE_REGISTRATION_CAPTCHA')) { 
+	Config::getOrDefine('ENABLE_REGISTRATION_CAPTCHA', true);
+}
+
 if (!defined('ENABLE_USER_PROFILES')) { 
 	Config::getOrDefine('ENABLE_USER_PROFILES', false);
 }

@@ -52,9 +52,9 @@ class MailImporter extends Object {
 	
 	public static function getByID($miID) {
 		$db = Loader::db();
-		$row = $db->GetRow("select miID, miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort from MailImporters where miID = ?", $miID);
+		$row = $db->GetRow("select miID, miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, Packages.pkgID, pkgHandle from MailImporters left join Packages on MailImporters.pkgID = Packages.pkgID where miID = ?", $miID);
 		if (isset($row['miID'])) {
-			Loader::library('mail/importers/' . $row['miHandle']);
+			Loader::library('mail/importers/' . $row['miHandle'], $row['pkgHandle']);
 			$txt = Loader::helper('text');
 			$className = $txt->camelcase($row['miHandle']) . 'MailImporter';
 			$mi = new $className();
@@ -82,8 +82,12 @@ class MailImporter extends Object {
 	public function getMailImporterEmail() {return $this->miEmail;}
 	public function getMailImporterPort() {return $this->miPort;}
 	public function isMailImporterEnabled() {return $this->miIsEnabled;}
-	
-	public function add($args) {
+	public function getPackageID() { return $this->pkgID;}
+	public function getPackageHandle() {
+		return PackageList::getHandle($this->pkgID);
+	}
+
+	public function add($args, $pkg = null) {
 		$db = Loader::db();
 		extract($args);
 		
@@ -99,7 +103,9 @@ class MailImporter extends Object {
 			$miEncryption == null;
 		}
 		
-		$db->Execute('insert into MailImporters (miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort) values (?, ?, ?, ?, ?, ?, ?, ?)', 
+		$pkgID = ($pkg == null) ? 0 : $pkg->getPackageID();
+		
+		$db->Execute('insert into MailImporters (miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', 
 			array(
 				$miHandle,
 				$miServer,
@@ -108,7 +114,8 @@ class MailImporter extends Object {
 				$miEncryption,
 				$miIsEnabled,
 				$miEmail, 
-				$miPort
+				$miPort, 
+				$pkgID
 			));
 		
 		$miID = $db->Insert_ID();

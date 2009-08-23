@@ -1463,6 +1463,9 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+   <field name="pkgID" type="I" size="10">
+      <UNSIGNED />
+    </field>
   </table>
   <table name="MailValidationHashes">
     <field name="mvhID" type="I" size="10">
