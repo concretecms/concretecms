@@ -14,6 +14,7 @@ class DashboardUsersRegistrationController extends Controller {
 		$this->set('email_as_username', USER_REGISTRATION_WITH_EMAIL_ADDRESS);
 		$this->set('registration_type',REGISTRATION_TYPE);
 		$this->set('user_timezones',ENABLE_USER_TIMEZONES);	
+		$this->set('enable_registration_captcha',ENABLE_REGISTRATION_CAPTCHA);
 		
 		//login redirection
 		$this->set('site_login_redirect', Config::get('LOGIN_REDIRECT') );
@@ -28,6 +29,8 @@ class DashboardUsersRegistrationController extends Controller {
 			Config::save('USER_REGISTRATION_WITH_EMAIL_ADDRESS', ($this->post('email_as_username')?true:false));
 			
 			Config::save('REGISTRATION_TYPE',$this->post('registration_type'));
+			Config::save('ENABLE_REGISTRATION_CAPTCHA', ($this->post('enable_registration_captcha')) ? true : false);
+			
 			switch($this->post('registration_type')) {
 				case "enabled":
 					Config::save('ENABLE_REGISTRATION', true);
