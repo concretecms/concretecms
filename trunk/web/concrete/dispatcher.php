@@ -1,5 +1,4 @@
-<?
-
+<?php
 	## This constant ensures that we're operating inside dispatcher.php. There is a LATER check to ensure that dispatcher.php is being called correctly. ##
 	define('C5_EXECUTE', true);
 
@@ -61,9 +60,12 @@
 	Loader::model('user');
 	Loader::model('userinfo');
 
+	## Setup timzone support
+	require(dirname(__FILE__) . '/startup/timezone.php'); // must be included before any date related functions are called (php 5.3 +)
+
 	## Startup cache ##
 	Loader::library('cache/abstract');	
-	Loader::library('cache/' . CACHE_LIBRARY);	
+	Loader::library('cache/' . CACHE_LIBRARY);
 	Cache::startup();
 	
 	## Startup check, install ##	
@@ -143,10 +145,6 @@
 		
 		## Check to see whether this is an external alias or a header 301 redirect. If so we go there.
 		include(dirname(__FILE__) . '/startup/external_link.php');
-		
-		## Setup timzone support
-		require(dirname(__FILE__) . '/startup/timezone.php');
-		
 		
 		## Get a permissions object for this particular collection.
 		$cp = new Permissions($c);

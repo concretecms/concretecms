@@ -82,9 +82,9 @@
 				return false;
 			}
 			if(USER_USERNAME_ALLOW_SPACES) {
-				$resp = eregi("[^A-Za-z0-9 ]", $username);
+				$resp = preg_match("[^A-Za-z0-9 ]", $username);
 			} else {
-				$resp = eregi("[^A-Za-z0-9 ]", $username);
+				$resp = preg_match("[^A-Za-z0-9 ]", $username);
 			}
 
 			if ($resp > 0) {

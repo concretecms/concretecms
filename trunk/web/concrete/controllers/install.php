@@ -1,10 +1,13 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 ini_set('display_errors', 1);
 if (!ini_get('safe_mode')) {
 	@set_time_limit(120);
 }
+
+date_default_timezone_set(@date_default_timezone_get());
+
 define('ENABLE_CACHE', false);
 define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.jpg;');
 define('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED_STANDARD);
@@ -344,23 +347,23 @@ class InstallController extends Controller {
 						SinglePage::add('/page_forbidden');
 				
 						// Install our blocks
-						BlockType::installBlockType('content');
-						BlockType::installBlockType('html');
-						BlockType::installBlockType('autonav');
-						BlockType::installBlockType('external_form');
-						BlockType::installBlockType('form');
-						BlockType::installBlockType('page_list');
-						BlockType::installBlockType('file');
-						BlockType::installBlockType('image');			
-						BlockType::installBlockType('flash_content');			
-						BlockType::installBlockType('guestbook');			
-						BlockType::installBlockType('slideshow');			
-						BlockType::installBlockType('search');			
-						BlockType::installBlockType('google_map');			
-						BlockType::installBlockType('video');			
-						BlockType::installBlockType('rss_displayer');			
-						BlockType::installBlockType('youtube');			
-						BlockType::installBlockType('survey');			
+						$res = BlockType::installBlockType('content'); 			if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('html'); 			if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('autonav'); 			if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('external_form'); 	if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('form'); 			if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('page_list'); 		if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('file'); 			if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('image'); 			if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('flash_content'); 	if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('guestbook'); 		if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('slideshow'); 		if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('search'); 			if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('google_map'); 		if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('video'); 			if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('rss_displayer'); 	if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('youtube'); 			if(strlen($res)) { throw new Exception($res);}
+						$res = BlockType::installBlockType('survey'); 			if(strlen($res)) { throw new Exception($res);}
 						
 						// Setup the default Theme
 						$pl = PageTheme::add('default');

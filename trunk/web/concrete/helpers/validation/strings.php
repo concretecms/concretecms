@@ -28,7 +28,7 @@
 		 * @return bool $isvalid
 		 */
 		public function email($em) {
-			return eregi("^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$", $em);
+			return preg_match("/^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$/", $em);
 		}
 		
 		/**
@@ -38,9 +38,9 @@
 		 */
 		public function alphanum($field, $allow_spaces = false) {
 			if($allow_spaces) {
-				return !eregi("[^A-Za-z0-9 ]", $field);
+				return !preg_match("/[^A-Za-z0-9 ]/", $field);
 			} else {
-				return !eregi('[^A-Za-z0-9]', $field);
+				return !preg_match('/[^A-Za-z0-9]/', $field);
 			}
 		}
 		
