@@ -61,7 +61,7 @@ class DashboardPagesTypesAttributesController extends Controller {
 				'akIsAutoCreated' => 0,
 				'akIsEditable' => 1
 			);
-			$ak = CollectionAttributeKey::add($type, $args);
+			$ak = CollectionAttributeKey::add($type, $this->post());
 			$this->redirect('/dashboard/pages/types/', 'attribute_created');
 		}
 	}
@@ -105,7 +105,7 @@ class DashboardPagesTypesAttributesController extends Controller {
 					'akIsAutoCreated' => 0,
 					'akIsEditable' => 1
 				);
-				$key->update($args);
+				$key->update($this->post());
 				$this->redirect('/dashboard/pages/types/', 'attribute_updated');
 			}
 		}
