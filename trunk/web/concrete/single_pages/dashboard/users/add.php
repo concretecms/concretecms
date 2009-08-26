@@ -67,6 +67,20 @@ if ($_POST['create']) {
 	if (!$valt->validate('create_account')) {
 		$error[] = $valt->getErrorMessage();
 	}
+
+	Loader::model("attribute/categories/user");
+	$aks = UserAttributeKey::getRegistrationList();
+
+	foreach($aks as $uak) {
+		if ($uak->isAttributeKeyRequiredOnRegister()) {
+			$e1 = $uak->validateAttributeForm();
+			if ($e1 == false) {
+				$error[] = t('The field "%s" is required', $uak->getAttributeKeyName());
+			} else if ($e1 instanceof ValidationErrorHelper) {
+				$error[] = $e1->getList();
+			}
+		}
+	}
 	
 	if (!$error) {
 		// do the registration
@@ -79,7 +93,10 @@ if ($_POST['create']) {
 				$uHasAvatar = $av->updateUserAvatar($_FILES['uAvatar']['tmp_name'], $uo->getUserID());
 			}
 			
-			$uo->updateSelectedUserAttributes($data['editAKID'], $_POST);
+			foreach($aks as $uak) {
+				$uak->saveAttributeForm($uo);				
+			}
+
 			$uo->updateGroups($_POST['gID']);
 			$uID = $uo->getUserID();
 			$this->controller->redirect('/dashboard/users/search?uID=' . $uID . '&user_created=1');
@@ -126,11 +143,59 @@ if ($_POST['create']) {
 	</tr>
 	</table>
 	</div>
+
+	<?
+	Loader::model('attribute/categories/user');
+	$attribs = UserAttributeKey::getRegistrationList();
+	if (count($attribs) > 0) { ?>
 	
-	<h2><?=t('Groups')?></h2>
+	<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
+	<tr>
+		<td class="header"><?=t('Registration Data')?></td>
+	</tr>
+	<? foreach($attribs as $ak) { ?>
+	<tr>
+		<td class="subheader"><?=$ak->getAttributeKeyName()?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="ccm-required">*</span><? } ?></td>
+	</tr>
+	<tr>
+		<td width="100%"><? $ak->render('form', $caValue, false)?></td>
+	</tr>
+	<? } ?>
+	</table>
 	
-	<p><?=t('Once you create the account you may assign it to groups.')?></p>
 	
+	<? } ?>
+<?
+	Loader::model("search/group");
+	$gl = new GroupSearch();
+	if ($gl->getTotal() < 1000) { ?>
+		<h2><?=t('Groups')?></h2>
+		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
+		<tr>
+			<td class="header">
+				<?=t('Groups')?>
+			</td>
+		</tr>
+		<? 
+		$gArray = $gl->getPage(); ?>
+		<tr>
+			<td>
+			<? foreach ($gArray as $g) { ?>
+				<input type="checkbox" name="gID[]" value="<?=$g['gID']?>" style="vertical-align: middle" <? 
+					if (is_array($_POST['gID'])) {
+						if (in_array($g['gID'], $_POST['gID'])) {
+							echo(' checked ');
+						}
+					}
+				?> /> <?=$g['gName']?><br>
+			<? } ?>
+			
+			<div id="ccm-additional-groups"></div>
+			
+			</td>
+		</tr>
+		</table>
+	<? } ?>	
 
 	<div class="ccm-buttons">
 		<input type="hidden" name="create" value="1" />

@@ -112,7 +112,7 @@ class DashboardUsersAttributesController extends Controller {
 				'akIsAutoCreated' => 0,
 				'akIsEditable' => 1
 			);
-			$ak = UserAttributeKey::add($type, $args);
+			$ak = UserAttributeKey::add($type, $this->post());
 			$this->redirect('/dashboard/users/attributes/', 'attribute_created');
 		}
 	}
@@ -174,7 +174,7 @@ class DashboardUsersAttributesController extends Controller {
 					'akIsEditable' => 1
 				);
 	
-				$key->update($args);
+				$key->update($this->post());
 				$this->redirect('/dashboard/users/attributes', 'attribute_updated');
 			}
 		}

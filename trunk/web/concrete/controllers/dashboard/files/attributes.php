@@ -68,7 +68,7 @@ class DashboardFilesAttributesController extends Controller {
 				'akIsEditable' => 1
 			);
 
-			$ak = FileAttributeKey::add($type, $args);
+			$ak = FileAttributeKey::add($type, $this->post());
 			$this->redirect('/dashboard/files/attributes/', 'attribute_created');
 		}
 	}
@@ -124,7 +124,7 @@ class DashboardFilesAttributesController extends Controller {
 					'akIsAutoCreated' => 0,
 					'akIsEditable' => 1
 				);	
-				$key->update($args);
+				$key->update($this->post());
 				$this->redirect('/dashboard/files/attributes', 'attribute_updated');
 			}
 		}

@@ -1,6 +1,11 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
+if (!defined('E_DEPRECATED')) {
+	error_reporting(E_ALL ^ E_NOTICE);
+} else {
+	error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
+}
+
 ini_set('display_errors', 1);
 if (!ini_get('safe_mode')) {
 	@set_time_limit(120);
@@ -331,8 +336,8 @@ class InstallController extends Controller {
 						$dobcnt->setAttributeKey($uakdob);
 						$dobcnt->setDisplayMode('text');
 
-						UserAttributeKey::add($boolt, array('akHandle' => 'profile_private_messages_enabled', 'akName' => t('I would like to receive private messages.'), 'akIsSearchable' => true));
-						UserAttributeKey::add($boolt, array('akHandle' => 'profile_private_messages_notification_enabled', 'akName' => t('Send me email notifications when I receive a private message.'), 'akIsSearchable' => true));
+						UserAttributeKey::add($boolt, array('akHandle' => 'profile_private_messages_enabled', 'akName' => t('I would like to receive private messages.'), 'akIsSearchable' => true, 'uakProfileEdit' => true, 'uakRegisterEdit' => true, 'akCheckedByDefault' => true));
+						UserAttributeKey::add($boolt, array('akHandle' => 'profile_private_messages_notification_enabled', 'akName' => t('Send me email notifications when I receive a private message.'), 'akIsSearchable' => true, 'uakProfileEdit' => true, 'uakRegisterEdit' => true, 'akCheckedByDefault' => true));
 						
 						// Add our core views
 						SinglePage::add('/login');
