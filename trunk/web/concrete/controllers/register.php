@@ -46,7 +46,7 @@ class RegisterController extends Controller {
 		
 		// clean the username
 		$username = trim($username);
-		$username = ereg_replace(" +", " ", $username);
+		$username = preg_replace(" +", " ", $username);
 		
 		
 		if (!$ip->check()) {

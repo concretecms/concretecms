@@ -65,7 +65,7 @@ class File extends Object {
 			}
 		}
 
-		$q = $db->GetInsertSQL($rs, $searchableAttributes);
+		$q = $db->GetInsertSQL(&$rs, $searchableAttributes);
 		$r = $db->Execute($q);
 		
 		unset($q);

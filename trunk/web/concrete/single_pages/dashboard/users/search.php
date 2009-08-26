@@ -105,9 +105,9 @@ if (intval($_GET['uID'])) {
 		
 		if ($_POST['edit']) {
 			
-			$username = $_POST['uName'];
-			$username = trim($username);
-			$username = ereg_replace(" +", " ", $username);
+			$username = trim($_POST['uName']);
+			$username = preg_replace("/\s+/", " ", $username);
+			$_POST['uName'] = $username;
 			
 			$password = $_POST['uPassword'];
 			$passwordConfirm = $_POST['uPasswordConfirm'];

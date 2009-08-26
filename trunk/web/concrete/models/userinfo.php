@@ -311,7 +311,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				}
 			}
 	
-			$q = $db->GetInsertSQL($rs, $searchableAttributes);
+			$q = $db->GetInsertSQL(&$rs, $searchableAttributes);
 			$r = $db->Execute($q);
 			$r->Close();
 			$rs->Close();
