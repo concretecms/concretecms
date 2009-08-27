@@ -550,6 +550,11 @@ class Block extends Object {
 		$str = $this->_getBlockAction();
 		return $str . '&amp;btask=mc_alias';
 	}
+	
+	function getBlockUpdateCssAction() {
+		$str = $this->_getBlockAction();
+		return $str . '&amp;btask=update_block_css';
+	}	
 
 	function getBlockPassThruAction() {
 		$str = $this->_getBlockAction();

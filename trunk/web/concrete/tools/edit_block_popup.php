@@ -34,7 +34,12 @@ if($isGlobal){
 }  
 
 if (is_object($b)) {
-	switch($_REQUEST['btask']) { 
+	switch($_REQUEST['btask']) {
+		case 'block_css': 		
+			if ($bp->canWrite()) {
+				$bv->renderElement('block_custom_css', array('b' => $b, 'rcID'=>$rcID, 'c' => $c, 'a' => $a) );
+			}
+			break;	 
 		case 'template': 		
 			if ($bp->canWrite()) {
 				$bv->renderElement('block_custom_template', array('b' => $b, 'rcID'=>$rcID));

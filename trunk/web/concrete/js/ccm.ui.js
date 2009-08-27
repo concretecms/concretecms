@@ -68,12 +68,13 @@ ccm_showBlockMenu = function(obj, e) {
 		}
 		if (obj.canDelete) {
 			html += '<li><a class="ccm-icon" id="menuDelete' + obj.bID + '-' + obj.aID + '" href="#" onclick="javascript:ccm_deleteBlock(' + obj.bID + ',' + obj.aID + ', \'' + obj.arHandle + '\', \'' + obj.deleteMessage + '\');return false;"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n.deleteBlock + '</span></a></li>';
-		}
+		} 		
 		if (obj.canModifyGroups || obj.canAliasBlockOut) {
 			html += '<li class="header"></li>';
 		}
 		if (obj.canWrite) {
 			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.changeBlockTemplate + '" dialog-width="300" dialog-height="100" id="menuChangeTemplate' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + CCM_CID + '&bID=' + obj.bID + '&isGlobal=' + obj.isGlobal + '&arHandle=' + obj.arHandle + '&btask=template&modal=true&width=300&height=100" title="' + ccmi18n.changeBlockTemplate + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/wrench.png)">' + ccmi18n.changeBlockTemplate + '</span></a></li>';
+			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.changeBlockBaseStyle + '" dialog-width="450" dialog-height="350" id="menuChangeCSS' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + CCM_CID + '&bID=' + obj.bID + '&isGlobal=' + obj.isGlobal + '&arHandle=' + obj.arHandle + '&btask=block_css&modal=true&width=300&height=100" title="' + ccmi18n.changeBlockCSS + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/design_small.png)">' + ccmi18n.changeBlockCSS + '</span></a></li>';
 		}
 		if (obj.canModifyGroups) {
 			html += '<li><a title="' + ccmi18n.setBlockPermissions + '" class="ccm-icon" dialog-width="400" dialog-height="380" id="menuBlockGroups' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + CCM_CID + '&bID=' + obj.bID + '&arHandle=' + obj.arHandle + '&btask=groups" dialog-title="' + ccmi18n.setBlockPermissions + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + ccmi18n.setBlockPermissions + '</span></a></li>';
@@ -81,6 +82,7 @@ ccm_showBlockMenu = function(obj, e) {
 		if (obj.canAliasBlockOut) {
 			html += '<li><a class="ccm-icon" dialog-width="550" dialog-height="450" id="menuBlockAliasOut' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + CCM_CID + '&bID=' + obj.bID + '&arHandle=' + obj.arHandle + '&btask=child_pages" dialog-title="' + ccmi18n.setBlockAlias + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/template_block.png)">' + ccmi18n.setBlockAlias + '</span></a></li>';
 		}
+		
 
 		html += '</ul>';
 		html += '</div></div>';
@@ -90,9 +92,8 @@ ccm_showBlockMenu = function(obj, e) {
 		// add dialog elements where necessary
 		if (obj.canWrite && (!obj.editInline)) {
 			$('a#menuEdit' + obj.bID + '-' + obj.aID).dialog();
-		}
-		if (obj.canWrite && (!obj.editInline)) {
 			$('a#menuChangeTemplate' + obj.bID + '-' + obj.aID).dialog();
+			$('a#menuChangeCSS' + obj.bID + '-' + obj.aID).dialog();	
 		}
 		if (obj.canAliasBlockOut) {
 			$('a#menuBlockAliasOut' + obj.bID + '-' + obj.aID).dialog();
@@ -100,8 +101,7 @@ ccm_showBlockMenu = function(obj, e) {
 		if (obj.canModifyGroups) {
 			$("#menuBlockGroups" + obj.bID + '-' + obj.aID).dialog();
 		}
-		$("#menuAddToScrapbook" + obj.bID + '-' + obj.aID).dialog();
-		
+		$("#menuAddToScrapbook" + obj.bID + '-' + obj.aID).dialog(); 
 
 	} else {
 		bobj = $("#ccm-block-menu" + obj.bID + '-' + obj.aID);
@@ -754,6 +754,24 @@ $(function(){
 	}
 });
 
+
+/* Block Styles Customization Popup */
+var ccmCustomBlockCss = {  
+	tabs:function(aLink,tab){
+		$('.ccm-blockEditPane').hide();
+		$('#ccm-blockEditPane-'+tab).show();
+		$(aLink.parentNode.parentNode).find('li').removeClass('ccm-nav-active');
+		$(aLink.parentNode).addClass('ccm-nav-active');
+		return false;
+	},
+	resetAll:function(){
+		if( !confirm( ccmi18n.confirmBlockCssReset ) ) return false;
+		$('#ccm-reset-block-css').val(1);
+		$('#ccmCustomCssForm').get(0).submit();
+		return true;
+	}
+}
+
 /* SUPPORT SECTION */
 
 var ccm_support = {    
@@ -814,26 +832,7 @@ var ccm_support = {
 				}
 			}	
 		});	
-	},
-	
-	/*
-	//this was making my server crash - only god knows why
-	checkedLogged:function(){
-		$.ajax({
-			type: 'GET',
-			url: CCM_TOOLS_PATH + '/support/auth/', 
-			success: function(resp) {
-				if(!resp) return false; 
-				eval('var jObj='+resp);
-				if(jObj.loggedIn==1){
-					ccm_support.isLoggedIn=1;
-				}else{
-					ccm_support.isLoggedIn=0;
-				}
-			}	
-		});
-	},
-	*/
+	}, 
 	searchAnswers:function(form){
 		this.showLoading();
 		try{  

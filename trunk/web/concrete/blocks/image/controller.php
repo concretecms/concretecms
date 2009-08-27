@@ -41,8 +41,8 @@
 		public function save($args) {		
 			$args['fOnstateID'] = ($args['fOnstateID'] != '') ? $args['fOnstateID'] : 0;
 			$args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;
-			$args['maxWidth'] = ($args['maxWidth'] > 0) ? $args['maxWidth'] : 0;
-			$args['maxHeight'] = ($args['maxHeight'] > 0) ? $args['maxHeight'] : 0;
+			$args['maxWidth'] = (intval($args['maxWidth']) > 0) ? intval($args['maxWidth']) : 0;
+			$args['maxHeight'] = (intval($args['maxHeight']) > 0) ? intval($args['maxHeight']) : 0;
 			parent::save($args);
 		}
 
