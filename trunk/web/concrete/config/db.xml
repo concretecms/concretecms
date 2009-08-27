@@ -373,7 +373,6 @@
     <field name="cvbsID" type="I" size="10">
 	  <AUTOINCREMENT/> 
       <KEY/>
-      <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
     <field name="bID" type="I" size="10"> 
