@@ -52,7 +52,7 @@ class MailImporter extends Object {
 	
 	public static function getByID($miID) {
 		$db = Loader::db();
-		$row = $db->GetRow("select miID, miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, Packages.pkgID, pkgHandle from MailImporters left join Packages on MailImporters.pkgID = Packages.pkgID where miID = ?", $miID);
+		$row = $db->GetRow("select miID, miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, Packages.pkgID, pkgHandle from MailImporters left join Packages on MailImporters.pkgID = Packages.pkgID where miID = ?", array($miID));
 		if (isset($row['miID'])) {
 			Loader::library('mail/importers/' . $row['miHandle'], $row['pkgHandle']);
 			$txt = Loader::helper('text');

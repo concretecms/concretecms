@@ -1,10 +1,17 @@
-<?
+<?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
-error_reporting(E_ALL ^ E_NOTICE);
+if (!defined('E_DEPRECATED')) {
+	error_reporting(E_ALL ^ E_NOTICE);
+} else {
+	error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
+}
 ini_set('display_errors', 1);
 if (!ini_get('safe_mode')) {
 	@set_time_limit(0);
 }
+
+date_default_timezone_set(@date_default_timezone_get());
+
 class UpgradeController extends Controller {
 
 	private $notes = array();
