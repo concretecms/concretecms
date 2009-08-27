@@ -139,11 +139,19 @@
 	top: 112px;
 	left: 282px;
 }
+input.colorpicker_none {
+	position: absolute;
+	left: 290px;
+	top: 145px;
+	width: 20px;
+	padding: 0px;
+	font-size: 10px; 
+}
 input.colorpicker_submit {
 	position: absolute;
-	left: 298px;
+	left: 314px;
 	top: 145px;
-	width: 36px;
+	width: 32px;
 	padding: 0px;
 	font-size: 10px; 
 }

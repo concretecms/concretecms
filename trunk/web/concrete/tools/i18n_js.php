@@ -10,6 +10,9 @@ var ccmi18n = {
 	arrangeBlock: '<?=t('Move')?>',
 	copyBlockToScrapbook: '<?=t('Copy to Scrapbook')?>',
 	changeBlockTemplate: '<?=t('Set Custom Template')?>',
+	changeBlockCSS: "<?=t("Set Block Styles")?>",
+	changeBlockBaseStyle: "<?=t("Set Block's Base Styles")?>",
+	confirmBlockCssReset: "<?=t("Are you sure you want to remove all of this block's styles?")?>",
 	setBlockPermissions: '<?=t('Set Permissions')?>',
 	setBlockAlias: '<?=t('Setup on Child Pages')?>',	
 	helpPopup: '<?=t('Help')?>',
@@ -23,8 +26,8 @@ var ccmi18n = {
 	marketplaceLogoutSuccessMsg: '<?=t('<p>You are now logged out of concrete5 Marketplace.</p>')?>',
 	deleteAttributeValue: '<?=t('Are you sure you want to remove this value?')?>',
 	customizeSearch: '<?=t('Customize Search')?>',
-	ok: '<?=t('Ok')?>'
-	
+	ok: '<?=t('Ok')?>',
+	x: '<?=t('x')?>'
 }
 
 var ccmi18n_sitemap = {

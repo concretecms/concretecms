@@ -52,6 +52,10 @@ class FormColorHelper {
 							$('input[name=" . $fieldFormName . "]').val('#' + hex);				
 							$('div#f" . $fieldFormName. "').css('backgroundColor', '#' + hex); 
 							cal.hide();
+						},  
+						onNone: function(cal) {  
+							$('input[name=" . $fieldFormName . "]').val('');		
+							$('div#f" . $fieldFormName. "').css('backgroundColor',''); 
 						}
 					});
 				

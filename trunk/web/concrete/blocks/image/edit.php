@@ -42,10 +42,10 @@ if ($controller->getFileOnstateID() > 0) {
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td><?=t('Width')?>&nbsp;</td>
-<td><?= $form->text('maxWidth', $maxWidth, array('style' => 'width: 60px')); ?></td>
+<td><?= $form->text('maxWidth', intval($maxWidth), array('style' => 'width: 60px')); ?></td>
 <td>&nbsp;&nbsp;</td>
 <td><?=t('Height')?>&nbsp;</td>
-<td><?= $form->text('maxHeight', $maxHeight, array('style' => 'width: 60px')); ?></td>
+<td><?= $form->text('maxHeight', intval($maxHeight), array('style' => 'width: 60px')); ?></td>
 </tr>
 </table>
 

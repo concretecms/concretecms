@@ -368,6 +368,29 @@
       <col>cbIncludeAll</col>
     </index>
   </table>
+
+  <table name="CollectionVersionBlockStyles">
+    <field name="cvbsID" type="I" size="10">
+	  <AUTOINCREMENT/> 
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="bID" type="I" size="10"> 
+      <KEY/>
+      <DEFAULT value="1"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="1"/>
+      <UNSIGNED/>
+    </field>	
+	<field name="css_class" type="C" size="255" />
+	<field name="css_serialized" type="X" />
+	<field name="css_custom" type="X" />
+  </table>
+  
   <table name="CollectionVersions">
     <field name="cID" type="I" size="10">
       <KEY/>

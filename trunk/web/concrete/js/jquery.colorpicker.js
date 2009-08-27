@@ -11,12 +11,14 @@
 			inAction,
 			charMin = 65,
 			visible,
-			tpl = '<div class="colorpicker"><div class="colorpicker_color"><div><div></div></div></div><div class="colorpicker_hue"><div></div></div><div class="colorpicker_new_color"></div><div class="colorpicker_current_color"></div><div class="colorpicker_hex"><input type="text" class="text" maxlength="6" size="6" /></div><div class="colorpicker_rgb_r colorpicker_field"><input type="text" class="text" maxlength="3" size="3" /><span></span></div><div class="colorpicker_rgb_g colorpicker_field"><input type="text" class="text" maxlength="3" size="3" /><span></span></div><div class="colorpicker_rgb_b colorpicker_field"><input type="text" class="text" maxlength="3" size="3" /><span></span></div><div class="colorpicker_hsb_h colorpicker_field"><input type="text" class="text" maxlength="3" size="3" /><span></span></div><div class="colorpicker_hsb_s colorpicker_field"><input type="text" class="text" maxlength="3" size="3" /><span></span></div><div class="colorpicker_hsb_b colorpicker_field"><input type="text" class="text" maxlength="3" size="3" /><span></span></div><input type="button" class="colorpicker_submit" name="save" value="' + ccmi18n.ok + '" /></div>',
+			tpl = '<div class="colorpicker"><div class="colorpicker_color"><div><div></div></div></div><div class="colorpicker_hue"><div></div></div><div class="colorpicker_new_color"></div><div class="colorpicker_current_color"></div><div class="colorpicker_hex"><input type="text" class="text" maxlength="6" size="6" /></div><div class="colorpicker_rgb_r colorpicker_field"><input type="text" class="text" maxlength="3" size="3" /><span></span></div><div class="colorpicker_rgb_g colorpicker_field"><input type="text" class="text" maxlength="3" size="3" /><span></span></div><div class="colorpicker_rgb_b colorpicker_field"><input type="text" class="text" maxlength="3" size="3" /><span></span></div><div class="colorpicker_hsb_h colorpicker_field"><input type="text" class="text" maxlength="3" size="3" /><span></span></div><div class="colorpicker_hsb_s colorpicker_field"><input type="text" class="text" maxlength="3" size="3" /><span></span></div><div class="colorpicker_hsb_b colorpicker_field"><input type="text" class="text" maxlength="3" size="3" /><span></span></div><input type="button" class="colorpicker_none" name="none" value="' + ccmi18n.x + '" /><input type="button" class="colorpicker_submit" name="save" value="' + ccmi18n.ok + '" /></div>',
+			
 			defaults = {
 				eventName: 'click',
 				onShow: function () {},
 				onBeforeShow: function(){},
 				onHide: function () {},
+				onNone: function () {},
 				onChange: function () {},
 				onSubmit: function () {},
 				color: 'ff0000',
@@ -200,6 +202,11 @@
 				var cal2 = $('#' + $(this).data('colorpickerId'));
 				cal.data('colorpicker').onSubmit(col, HSBToHex(col), HSBToRGB(col), cal);
 			},
+			clickNone = function (ev) {  
+				var cal = $(this).parent();
+				cal.data('colorpicker').onNone(cal);
+				cal.hide(); 
+			},			
 			show = function (ev) {
 				var cal = $('#' + $(this).data('colorpickerId'));
 				cal.data('colorpicker').onBeforeShow.apply(this, [cal.get(0)]);
@@ -379,6 +386,15 @@
 						options.newColor = cal.find('div.colorpicker_new_color');
 						options.currentColor = cal.find('div.colorpicker_current_color');
 						cal.data('colorpicker', options);
+						/*
+						var noneBTN = cal.find('input.colorpicker_none');
+						noneBTN.get(0).cal=cal.get(0);
+						noneBTN.click( function(){ 
+								
+								cal.hide();
+							}); 
+						*/
+						cal.find('input.colorpicker_none').bind('click', clickNone);
 						cal.find('input.colorpicker_submit')
 							.bind('click', clickSubmit);
 							/*

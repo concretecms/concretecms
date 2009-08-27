@@ -46,6 +46,7 @@
 	Loader::model('attribute/category');
 	Loader::model('attribute/type');
 	Loader::model('block');
+	Loader::model('block_styles');
 	Loader::model('file');
 	Loader::model('file_version');
 	Loader::model('block_types');

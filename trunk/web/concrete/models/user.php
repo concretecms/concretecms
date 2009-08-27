@@ -204,8 +204,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		function logout() {
 			// First, we check to see if we have any collection in edit mode
 			$this->unloadCollectionEdit();
-			session_unset();
-			session_destroy();
+			@session_unset();
+			@session_destroy();
 			
 			if ($_COOKIE['ccmUserHash']) {
 				setcookie("ccmUserHash", "", 315532800, DIR_REL . '/');

@@ -52,7 +52,7 @@
 					$b = Block::getByID($_REQUEST['bID'], $c, $a);
 					$p = new Permissions($b); // might be block-level, or it might be area level
 					// we're removing a particular block of content
-					if ($p->canDeleteBlock()) {
+					if ($p->canDeleteBlock()){
 						$nvc = $c->getVersionToModify();
 						$b->loadNewCollection($nvc);
 						
@@ -65,6 +65,42 @@
 						
 						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
 						exit;
+					}
+				}
+				break;
+			case 'update_block_css': 
+				$a = Area::get($c, $_REQUEST['arHandle']);
+				if (is_object($a)) {
+					$b = Block::getByID($_REQUEST['bID'], $c, $a);
+					$p = new Permissions($b);
+					if ($p->canWrite()){ 					
+					
+						Loader::model('block_styles');						
+						
+						$cssData=array();
+						$cssData['bID'] = $b->bID;
+						$cssData['cID'] = $c->cID;
+						
+						if($_POST['reset_block_css']!=1){ 
+							$cssData['css_class'] = str_replace( array('"', "'", ';', "<", ">"), '', $_POST['css_class_name']);
+							$cssData['css_custom'] = str_replace( '"' , "'", $_POST['css_custom'] );						
+						
+							$blockStylesKeys=array('font_family','color','font_size','line_height','text_align','background_color','border_style',
+								'border_color','border_width','border_position','margin_top','margin_right','margin_bottom','margin_left',
+								'padding_top','padding_right','padding_bottom','padding_left');
+								
+							$cssDataRaw=array();
+							foreach($blockStylesKeys as $blockStyleKey){
+								$cssDataRaw[$blockStyleKey]=$_POST[$blockStyleKey];
+							}
+							$cssData['css_unserialized']=$cssDataRaw;
+						}						
+						
+						$blockStyles = new BlockStyles();
+						$blockStyles->setData( $cssData );
+						$blockStyles->save();
+												
+						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);				
 					}
 				}
 				break;
