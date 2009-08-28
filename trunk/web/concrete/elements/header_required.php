@@ -92,6 +92,4 @@ if (is_object($cp)) {
 
 print $this->controller->outputHeaderItems();
 
-echo $c->getCollectionAttributeValue('header_extra_content'); 
-
-
+echo $c->getCollectionAttributeValue('header_extra_content');

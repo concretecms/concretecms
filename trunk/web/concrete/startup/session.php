@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 // Start the session
 ini_set('session.use_trans_sid',0);  
-session_set_cookie_params(0, rawurlencode(DIR_REL) . '/'); 
+session_set_cookie_params(0, str_replace(' ', '%20', DIR_REL) . '/'); 
 /* ini_set('session.save_path', DIR_SESSIONS); */
 ini_set('session.gc_maxlifetime', SESSION_MAX_LIFETIME);
 
