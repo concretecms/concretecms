@@ -14,7 +14,7 @@
 		<td align="right">
 		<select id="ccm-user-list-multiple-operations" disabled>
 					<option value="">**</option>
-					<option value="edit"><?=t('Edit')?></option>
+					<option value="properties"><?=t('Edit Properties')?></option>
 				<? if ($mode == 'choose_multiple') { ?>
 					<option value="choose"><?=t('Choose')?></option>
 				<? } ?>

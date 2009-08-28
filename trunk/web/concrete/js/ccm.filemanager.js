@@ -435,7 +435,7 @@ ccm_alSetupCheckboxes = function() {
 					height: 450,
 					modal: false,
 					href: CCM_TOOLS_PATH + '/files/bulk_properties?' + fIDstring,
-					title: ccmi18n_filemanager.properties				
+					title: ccmi18n.properties				
 				});
 				break;				
 			case "rescan":

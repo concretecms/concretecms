@@ -26,6 +26,7 @@ var ccmi18n = {
 	marketplaceLogoutSuccessMsg: '<?=t('<p>You are now logged out of concrete5 Marketplace.</p>')?>',
 	deleteAttributeValue: '<?=t('Are you sure you want to remove this value?')?>',
 	customizeSearch: '<?=t('Customize Search')?>',
+	properties: '<?=t('Properties')?>',
 	ok: '<?=t('Ok')?>',
 	x: '<?=t('x')?>'
 }
@@ -81,7 +82,6 @@ var ccmi18n_filemanager = {
 	edit: '<?=t('Edit')?>',
 	replace: '<?=t('Replace')?>',
 	chooseNew: '<?=t('Choose New File')?>',
-	properties: '<?=t('Properties')?>',
 	sets: '<?=t('Sets')?>',
 	permissions: '<?=t('Access & Permissions')?>',
 	deleteFile: '<?=t('Delete')?>',

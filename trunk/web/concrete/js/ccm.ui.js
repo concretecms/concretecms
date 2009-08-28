@@ -385,6 +385,19 @@ ccm_setupUserSearch = function() {
 				});
 				jQuery.fn.dialog.closeTop();
 				break;
+			case "properties": 
+				uIDstring = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					uIDstring=uIDstring+'&uID[]='+$(this).val();
+				});
+				jQuery.fn.dialog.open({
+					width: 630,
+					height: 450,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/users/bulk_properties?' + uIDstring,
+					title: ccmi18n.properties				
+				});
+				break;				
 		}
 		
 		$(this).get(0).selectedIndex = 0;
