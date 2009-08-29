@@ -224,6 +224,9 @@ class UserAttributeKey extends AttributeKey {
 	public static function getColumnHeaderList() {
 		return parent::getList('user', array('akIsColumnHeader' => 1));	
 	}
+	public static function getEditableList() {
+		return parent::getList('user', array('akIsEditable' => 1));	
+	}
 	public static function getSearchableList() {
 		return parent::getList('user', array('akIsSearchable' => 1));	
 	}
