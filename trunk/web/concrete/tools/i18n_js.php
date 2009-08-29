@@ -84,6 +84,7 @@ var ccmi18n_filemanager = {
 	chooseNew: '<?=t('Choose New File')?>',
 	sets: '<?=t('Sets')?>',
 	permissions: '<?=t('Access & Permissions')?>',
+	properties: '<?=t('Properties')?>',
 	deleteFile: '<?=t('Delete')?>',
 	title: '<?=t('File Manager')?>',
 	uploadErrorChooseFile: '<?=t('You must choose a file.')?>',

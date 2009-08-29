@@ -26,16 +26,14 @@ ccm_parseAdvancedSearchResponse = function(resp) {
 	ccm_activateSearchResults();
 }
 
-
-
 ccm_deactivateSearchResults = function() {
-	$("#ccm-search-files").attr('disabled', true);
+	$("#ccm-search-fields-submit input").attr('disabled', true);
 	$("#ccm-search-loading").show();
 }
 
 ccm_activateSearchResults = function() {
 	$("#ccm-search-loading").hide();
-	$("#ccm-search-files").attr('disabled', false);
+	$("#ccm-search-fields-submit input").attr('disabled', false);
 	ccm_setupInPagePaginationAndSorting();
 	ccm_setupSortableColumnSelection();
 	if(typeof(ccm_searchActivatePostFunction) == 'function') {
@@ -48,7 +46,6 @@ ccm_setupInPagePaginationAndSorting = function() {
 		ccm_deactivateSearchResults();
 		$("#ccm-search-results").load($(this).attr('href'), false, function() {
 			ccm_activateSearchResults();
-			ccm_alSetupSelectFiles();
 		});
 		return false;
 	});
@@ -56,7 +53,6 @@ ccm_setupInPagePaginationAndSorting = function() {
 		ccm_deactivateSearchResults();
 		$("#ccm-search-results").load($(this).attr('href'), false, function() {
 			ccm_activateSearchResults();
-			ccm_alSetupSelectFiles();
 			$("div.ccm-dialog-content").attr('scrollTop', 0);
 		});
 		return false;
@@ -126,4 +122,55 @@ ccm_activateAdvancedSearchFields = function(searchType, fieldset) {
 	});
 	
 }
+
+
+ccm_activateEditablePropertiesGrid = function() {
+	$("tr.ccm-attribute-editable-field").each(function() {
+		var trow = $(this);
+		$(this).find('a').click(function() {
+			trow.find('.ccm-attribute-editable-field-text').hide();
+			trow.find('.ccm-attribute-editable-field-clear-button').hide();
+			trow.find('.ccm-attribute-editable-field-form').show();
+			trow.find('.ccm-attribute-editable-field-save-button').show();
+		});
+		
+		trow.find('form').submit(function() {
+			ccm_submitEditablePropertiesGrid(trow);
+			return false;
+		});
+		
+		trow.find('.ccm-attribute-editable-field-save-button').parent().click(function() {
+			ccm_submitEditablePropertiesGrid(trow);
+		});
+
+		trow.find('.ccm-attribute-editable-field-clear-button').parent().unbind();
+		trow.find('.ccm-attribute-editable-field-clear-button').parent().click(function() {
+			trow.find('form input[name=task]').val('clear_extended_attribute');
+			ccm_submitEditablePropertiesGrid(trow);
+			return false;
+		});
+
+	});
+}
+
+ccm_submitEditablePropertiesGrid = function(trow) {
+	trow.find('.ccm-attribute-editable-field-save-button').hide();
+	trow.find('.ccm-attribute-editable-field-clear-button').hide();
+	trow.find('.ccm-attribute-editable-field-loading').show();
+	trow.find('form').ajaxSubmit(function(resp) {
+		// resp is new HTML to display in the div
+		trow.find('.ccm-attribute-editable-field-loading').hide();
+		trow.find('.ccm-attribute-editable-field-save-button').show();
+		trow.find('.ccm-attribute-editable-field-text').html(resp);
+		trow.find('.ccm-attribute-editable-field-form').hide();
+		trow.find('.ccm-attribute-editable-field-save-button').hide();
+		trow.find('.ccm-attribute-editable-field-text').show();
+		trow.find('.ccm-attribute-editable-field-clear-button').show();
+		trow.find('td').show('highlight', {
+			color: '#FFF9BB'
+		});
+
+	});
+}
+
 

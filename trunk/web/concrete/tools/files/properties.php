@@ -423,7 +423,7 @@ foreach($attribs as $at) {
 
 <script type="text/javascript">
 $(function() { 
-	ccm_alActiveEditableProperties(); 
+	ccm_activateEditablePropertiesGrid(); 
 	ccm_alSetupVersionSelector();
 });
 </script>
