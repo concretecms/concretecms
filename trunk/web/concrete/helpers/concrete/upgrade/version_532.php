@@ -64,11 +64,19 @@ class ConcreteUpgradeVersion532Helper {
 		Loader::model('collection_attributes');
 		//add the new collection attribute keys
 		$this->installCoreAttributeItems();
-		$this->upgradeCollectionAttributes();
-		$this->upgradeFileAttributes();
-		$this->upgradeUserAttributes();
-
 		
+		$dict = NewDataDictionary($db->db, DB_TYPE);
+		$tables = $db->MetaTables();
+		if (in_array('_CollectionAttributeKeys', $tables)) {
+			$this->upgradeCollectionAttributes();
+		}
+		if (in_array('_FileAttributeKeys', $tables)) {
+			$this->upgradeFileAttributes();
+		}
+		if (in_array('_UserAttributeKeys', $tables)) {
+			$this->upgradeUserAttributes();
+		}
+
 		$cak=CollectionAttributeKey::getByHandle('exclude_sitemapxml');
 		if (!is_object($cak)) {
 			$cak = CollectionAttributeKey::add('exclude_sitemapxml', t('Exclude From sitemap.xml'), true, null, 'BOOLEAN');
