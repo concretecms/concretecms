@@ -403,7 +403,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 				// now we check to see if the user is updated his or her own logged in record
 				if (isset($_SESSION['uID']) && $_SESSION['uID'] == $this->uID) {
-					$_SESSION['uName'] = $data['uName']; // make sure to keep the new uName in there
+					$_SESSION['uName'] = $uName; // make sure to keep the new uName in there
 				}
 
 				// run any internal event we have for user update

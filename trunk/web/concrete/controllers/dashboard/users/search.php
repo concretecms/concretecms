@@ -27,8 +27,8 @@ class DashboardUsersSearchController extends Controller {
 		
 		if ($_GET['keywords'] != '') {
 			$userList->filterByKeywords($_GET['keywords']);
-		}
-
+		}	
+		
 		if ($_REQUEST['numResults']) {
 			$userList->setItemsPerPage($_REQUEST['numResults']);
 		}
@@ -43,6 +43,13 @@ class DashboardUsersSearchController extends Controller {
 				// due to the way the form is setup, index will always be one more than the arrays
 				if ($item != '') {
 					switch($item) {
+						case 'is_active':
+							if ($_GET['active'] === '0') {
+								$userList->filterByIsActive(0);
+							} else if ($_GET['active'] === '1') {
+								$userList->filterByIsActive(1);
+							}
+							break;
 						case "date_added":
 							$dateFrom = $_REQUEST['date_from'];
 							$dateTo = $_REQUEST['date_to'];

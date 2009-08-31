@@ -327,6 +327,12 @@ class AttributeKey extends Object {
 		$this->saveAttribute($obj, $value);
 	}
 	
+	/** 
+	 * @deprecated */
+	public function outputSearchHTML() {
+		$this->render('search');
+	}
+	
 	// deprecated
 	public function getKeyName() { return $this->getAttributeKeyName();}
 
