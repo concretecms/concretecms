@@ -36,17 +36,26 @@ class ConcreteUpgradeVersion532Helper {
 		$dict = NewDataDictionary($db->db, DB_TYPE);
 		$tables = $db->MetaTables();
 		if (!in_array('_UserAttributeKeys', $tables)) {
-			$dict->ExecuteSQLArray($dict->RenameTableSQL('UserAttributeKeys', '_UserAttributeKeys'));
-			$dict->ExecuteSQLArray($dict->RenameTableSQL('CollectionAttributeKeys', '_CollectionAttributeKeys'));
-			$dict->ExecuteSQLArray($dict->RenameTableSQL('FileAttributeKeys', '_FileAttributeKeys'));
-			$dict->ExecuteSQLArray($dict->RenameTableSQL('CollectionAttributeValues', '_CollectionAttributeValues'));
-			$dict->ExecuteSQLArray($dict->RenameTableSQL('UserAttributeValues', '_UserAttributeValues'));
+			if(in_array('UserAttributeKeys', $tables)) 		
+				$dict->ExecuteSQLArray($dict->RenameTableSQL('UserAttributeKeys', '_UserAttributeKeys'));
+			if(in_array('CollectionAttributeKeys', $tables)) 
+				$dict->ExecuteSQLArray($dict->RenameTableSQL('CollectionAttributeKeys', '_CollectionAttributeKeys'));
+			if(in_array('FileAttributeKeys', $tables)) 		
+				$dict->ExecuteSQLArray($dict->RenameTableSQL('FileAttributeKeys', '_FileAttributeKeys'));
+			if(in_array('CollectionAttributeValues', $tables)) 	
+				$dict->ExecuteSQLArray($dict->RenameTableSQL('CollectionAttributeValues', '_CollectionAttributeValues'));
+			if(in_array('UserAttributeValues', $tables)) 	
+				$dict->ExecuteSQLArray($dict->RenameTableSQL('UserAttributeValues', '_UserAttributeValues'));
+			if(in_array('FileAttributeValues', $tables)) 					
 			$dict->ExecuteSQLArray($dict->RenameTableSQL('FileAttributeValues', '_FileAttributeValues'));
-			$dict->ExecuteSQLArray($dict->RenameTableSQL('PageSearchIndexAttributes', '_PageSearchIndexAttributes'));
+			if(in_array('PageSearchIndexAttributes', $tables)) 				
+				$dict->ExecuteSQLArray($dict->RenameTableSQL('PageSearchIndexAttributes', '_PageSearchIndexAttributes'));
 		}
 
-		$columns = $db->MetaColumns('_UserAttributeValues');
-		if (!isset($columns['ISIMPORTED'])) {
+		$tables = $db->MetaTables();
+		if(in_array('_UserAttributeValues', $tables)) 
+			$columns = $db->MetaColumns('_UserAttributeValues');
+		if (in_array('_UserAttributeValues', $tables) && !isset($columns['ISIMPORTED'])) {
 			$q = $dict->AddColumnSQL('_UserAttributeValues', 'isImported I1 DEFAULT 0 NULL');
 			$db->Execute($q[0]);
 			$q = $dict->AddColumnSQL('_FileAttributeValues', 'isImported I1 DEFAULT 0 NULL');
@@ -59,23 +68,26 @@ class ConcreteUpgradeVersion532Helper {
 	}
 	
 	public function run() {
+		$db = Loader::db();
+		
 		Cache::disableLocalCache();
 		
 		Loader::model('collection_attributes');
 		//add the new collection attribute keys
-		$this->installCoreAttributeItems();
+		$this->installCoreAttributeItems();	
 		
 		$dict = NewDataDictionary($db->db, DB_TYPE);
-		$tables = $db->MetaTables();
+		$tables = $db->MetaTables();			
+		
 		if (in_array('_CollectionAttributeKeys', $tables)) {
 			$this->upgradeCollectionAttributes();
-		}
+		}		
 		if (in_array('_FileAttributeKeys', $tables)) {
 			$this->upgradeFileAttributes();
-		}
+		}			
 		if (in_array('_UserAttributeKeys', $tables)) {
 			$this->upgradeUserAttributes();
-		}
+		} 
 
 		$cak=CollectionAttributeKey::getByHandle('exclude_sitemapxml');
 		if (!is_object($cak)) {
@@ -186,7 +198,7 @@ class ConcreteUpgradeVersion532Helper {
 		$db = Loader::db();
 		$r = $db->Execute('select _CollectionAttributeKeys.* from _CollectionAttributeKeys order by _CollectionAttributeKeys.akID asc');
 		while ($row = $r->FetchRow()) {
-			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', $row['akHandle']);
+			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', array($row['akHandle']) );
 			if ($existingAKID < 1) {
 				$args = array(
 					'akHandle' => $row['akHandle'], 
@@ -259,7 +271,7 @@ class ConcreteUpgradeVersion532Helper {
 		$db = Loader::db();
 		$r = $db->Execute('select _FileAttributeKeys.* from _FileAttributeKeys order by fakID asc');
 		while ($row = $r->FetchRow()) {
-			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', $row['akHandle']);
+			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?',  array($row['akHandle']) );
 			if ($existingAKID < 1) {
 				$args = array(
 					'akHandle' => $row['akHandle'], 
@@ -331,8 +343,9 @@ class ConcreteUpgradeVersion532Helper {
 		$db = Loader::db();
 		$r = $db->Execute('select _UserAttributeKeys.* from _UserAttributeKeys order by displayOrder asc');
 		while ($row = $r->FetchRow()) {
-			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', $row['ukHandle']);
+			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?',  array($row['ukHandle']) );
 			if ($existingAKID < 1) {
+				if(!$row['ukHandle']) continue; 
 				$args = array(
 					'akHandle' => $row['ukHandle'], 
 					'akIsSearchable' => 1,

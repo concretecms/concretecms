@@ -310,6 +310,11 @@ class Area extends Object {
 	
 	function display(&$c, $alternateBlockArray = null) {
 
+		if(!intval($c->cID)){
+			//Invalid Collection
+			return false;
+		}
+
 		$ourArea = Area::getOrCreate($c, $this->arHandle);
 		if (count($this->customTemplateArray) > 0) {
 			$ourArea->customTemplateArray = $this->customTemplateArray;

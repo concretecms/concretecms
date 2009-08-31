@@ -77,9 +77,12 @@
 					
 						Loader::model('block_styles');						
 						
+						$nvc = $c->getVersionToModify();
+						$b->loadNewCollection($nvc);
+						
 						$cssData=array();
 						$cssData['bID'] = $b->bID;
-						$cssData['cID'] = $c->cID;
+						$cssData['cID'] = $nvc->cID;
 						
 						if($_POST['reset_block_css']!=1){ 
 							$cssData['css_class'] = str_replace( array('"', "'", ';', "<", ">"), '', $_POST['css_class_name']);

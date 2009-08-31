@@ -37,7 +37,7 @@
 					<? } ?>
 					</div>					
 				</div>
-				<div class="spacer"></div>
+				<div class="ccm-spacer"></div>
 			</div>	
 		
 		

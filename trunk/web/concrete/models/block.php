@@ -453,6 +453,14 @@ class Block extends Object {
 		$r2 = $db->prepare($q2);
 		$res2 = $db->execute($r2, $v2);
 		$nb = Block::getByID($newBID, $nc, $this->arHandle);
+		
+		//now we need to duplicate the associated CollectionVersionBlockStyles
+		$blockStyles = BlockStyles::retrieve($this->bID,$ocID);
+		if($blockStyles){
+			$blockStyles->setBID( $newBID ); 
+			$blockStyles->setCID( $ncID ); 
+			$blockStyles->save();
+		}
 
 		return $nb;
 	}
