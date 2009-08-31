@@ -333,7 +333,7 @@ if (is_object($uo)) {
 		</tr>
 		<?
 	
-		$attribs = UserAttributeKey::getList();
+		$attribs = UserAttributeKey::getEditableList();
 		foreach($attribs as $ak) { 
 			printAttributeRow($ak, $uo);
 		} ?>

@@ -2,7 +2,8 @@
 <?
 $searchFields = array(
 	'' => '** ' . t('Fields'),
-	'date_added' => t('Registered Between')
+	'date_added' => t('Registered Between'),
+	'is_active' => t('Activated Users')
 );
 
 Loader::model('user_attributes');
@@ -23,6 +24,10 @@ foreach($searchFieldAttributes as $ak) {
 		<?=$form->text('date_from', array('style' => 'width: 86px'))?>
 		<?=t('to')?>
 		<?=$form->text('date_to', array('style' => 'width: 86px'))?>
+		</span>
+
+		<span class="ccm-search-option"  search-field="is_active">
+		<?=$form->select('active', array('0' => t('Inactive Users'), '1' => t('Active Users')), array('style' => 'vertical-align: middle'))?>
 		</span>
 		
 		<? foreach($searchFieldAttributes as $sfa) { 

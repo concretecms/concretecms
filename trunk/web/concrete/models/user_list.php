@@ -24,7 +24,7 @@ class UserList extends DatabaseItemList {
 	protected $itemsPerPage = 10;
 	protected $attributeClass = 'UserAttributeKey';
 	
-	public $showInactiveUsers=0;
+	public $showInactiveUsers;
 	public $showInvalidatedUsers=0;
 	public $searchAgainstEmail=0;
 	
@@ -82,11 +82,16 @@ class UserList extends DatabaseItemList {
 		return parent::getTotal();
 	}	
 	
+	public function filterByIsActive($val) {
+		$this->showInactiveUsers = $val;
+		$this->filter('u.uIsActive', $val);
+	}	
+	
 	//this was added because calling both getTotal() and get() was duplicating some of the query components
 	protected function createQuery(){
 		if(!$this->queryCreated){
 			$this->setBaseQuery();
-			if(!$this->showInactiveUsers) $this->filter('u.uIsActive', 1);
+			if(!isset($this->showInactiveUsers)) $this->filter('u.uIsActive', 1);
 			if(!$this->showInvalidatedUsers) $this->filter('u.uIsValidated', 0, '!=');
 			$this->setupAttributeFilters("left join UserSearchIndexAttributes on (UserSearchIndexAttributes.uID = u.uID)");
 			$this->queryCreated=1;
