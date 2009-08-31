@@ -9,7 +9,7 @@ if( method_exists($b,'getBlockCollectionObject') ){
 
 if($blockStyles){ 
 	//var_dump($blockStyles->getStylesArray());
-	echo 'TO DO: block duplication, caching, add ID field.';
+	echo 'TO DO: block deletion, caching, add ID field.';
 	?>
 <div class="<?=$blockStyles->getClassName() ?>ccm-block-styles" <?=$blockStyles->getStylesTag()?> >
 <? } ?>

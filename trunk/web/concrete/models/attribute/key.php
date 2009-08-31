@@ -62,6 +62,8 @@ class AttributeKey extends Object {
 	public function getAttributeType() {
 		return AttributeType::getByID($this->atID);
 	}
+	//deprecated
+	public function getAttributeKeyType(){ return $this->getAttributeType(); }	
 	
 	/** 
 	 * Returns a list of all attributes of this category
