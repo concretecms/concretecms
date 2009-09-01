@@ -80,13 +80,21 @@
 						$nvc = $c->getVersionToModify();
 						$b->loadNewCollection($nvc);
 						
+						//if this block is being changed, make sure it's a new version of the block.
+						if ($b->isAlias() ) { 
+							$nb = $b->duplicate($nvc);
+							$b->deleteBlock(); 
+							$b = $nb; 					
+						}			
+						
 						$cssData=array();
 						$cssData['bID'] = $b->bID;
 						$cssData['cID'] = $nvc->cID;
 						
 						if($_POST['reset_block_css']!=1){ 
+							$cssData['css_id'] = str_replace( array('"', "'", ';', "<", ">"), '', $_POST['css_id']);							
 							$cssData['css_class'] = str_replace( array('"', "'", ';', "<", ">"), '', $_POST['css_class_name']);
-							$cssData['css_custom'] = str_replace( '"' , "'", $_POST['css_custom'] );						
+							$cssData['css_custom'] = str_replace( '"' , "'", $_POST['css_custom'] );	
 						
 							$blockStylesKeys=array('font_family','color','font_size','line_height','text_align','background_color','border_style',
 								'border_color','border_width','border_position','margin_top','margin_right','margin_bottom','margin_left',
@@ -101,7 +109,7 @@
 						
 						$blockStyles = new BlockStyles();
 						$blockStyles->setData( $cssData );
-						$blockStyles->save();
+						$blockStyles->save( $nvc );
 												
 						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);				
 					}

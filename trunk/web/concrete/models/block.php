@@ -172,6 +172,11 @@ class Block extends Object {
 		
 		$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
 		$globalScrapbookC = $scrapbookHelper->getGlobalScrapbookPage(); 
+		
+		//this should be sufficient by itself shouldn't it?  
+		//trying to cut down on unnecessary db calls
+		if( $this->cID ) return intval($this->cID==$globalScrapbookC->cID);
+		
 		$q = "SELECT b.bID FROM Blocks AS b, CollectionVersionBlocks AS cvb ".
 			 "WHERE b.bID = '{$this->bID}' AND cvb.bID=b.bID AND cvb.cID=".intval($globalScrapbookC->getCollectionId())." LIMIT 1";
 			 
@@ -455,11 +460,11 @@ class Block extends Object {
 		$nb = Block::getByID($newBID, $nc, $this->arHandle);
 		
 		//now we need to duplicate the associated CollectionVersionBlockStyles
-		$blockStyles = BlockStyles::retrieve($this->bID,$ocID);
+		$blockStyles = BlockStyles::retrieve( $this->bID , $oc );
 		if($blockStyles){
 			$blockStyles->setBID( $newBID ); 
 			$blockStyles->setCID( $ncID ); 
-			$blockStyles->save();
+			$blockStyles->save( $nc );
 		}
 
 		return $nb;
@@ -602,7 +607,6 @@ class Block extends Object {
 
 		// if this block is located in a master collection, we're going to delete all the instances of the block,
 		// regardless
-
 		if (($c instanceof Page && $c->isMasterCollection() && !$this->isAlias()) || $forceDelete) {
 			// forceDelete is used by the administration console
 
@@ -612,6 +616,9 @@ class Block extends Object {
 
 			$q = "delete from CollectionVersionBlockPermissions where bID = '$bID'";
 			$r = $db->query($q);
+			
+			$q = "delete from CollectionVersionBlockStyles where bID = ".intval($bID);
+			$r = $db->query($q);			
 		} else {
 			$q = "delete from CollectionVersionBlocks where cID = '$cID' and (cvID = '$cvID' or cbIncludeAll=1) and bID = '$bID' and arHandle = '$arHandle'";
 			$r = $db->query($q);
@@ -619,6 +626,9 @@ class Block extends Object {
 			// next, we delete the groups instance of this block
 			$q = "delete from CollectionVersionBlockPermissions where bID = '$bID' and cvID = '$cvID' and cID = '$cID'";
 			$r = $db->query($q);
+			
+			$q = "delete from CollectionVersionBlockStyles where bID = ".intval($bID)." AND cID = ".intval($cID);
+			//$r = $db->query($q);				
 		}
 
 		//then, we see whether or not this block is aliased to anything else

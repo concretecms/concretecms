@@ -768,7 +768,7 @@ $(function(){
 
 
 /* Block Styles Customization Popup */
-var ccmCustomBlockCss = {  
+var ccmCustomBlockCss = {   
 	tabs:function(aLink,tab){
 		$('.ccm-blockEditPane').hide();
 		$('#ccm-blockEditPane-'+tab).show();
@@ -781,6 +781,14 @@ var ccmCustomBlockCss = {
 		$('#ccm-reset-block-css').val(1);
 		$('#ccmCustomCssForm').get(0).submit();
 		return true;
+	},
+	validIdCheck:function(el,prevID){
+		var selEl = $('#'+el.value); 
+		if( selEl && selEl.get(0) && selEl.get(0).id!=prevID ){		
+			$('#ccm-block-styles-invalid-id').css('display','block');
+		}else{
+			$('#ccm-block-styles-invalid-id').css('display','none');
+		}
 	}
 }
 

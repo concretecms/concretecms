@@ -8,15 +8,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
- 
- 
-/*
-To Do List:
 
-Make this duplicate when duplicating a block!
-
-Cache: preferrably cache all of collections blocks at once, in one query, and store in array.  
-*/
 
 class BlockStyles extends Object {
 
@@ -24,19 +16,79 @@ class BlockStyles extends Object {
 	protected $cID=0;
 	protected $css_data=array();
 	protected $unserialized_styles=array();
-	protected $db;
+	protected $db;	
+	protected static $headerStylesAdded=0;
 	
-	static public function retrieve($bID=0,$cID=0){	
+	//adds styles to header for all blocks with this cID
+	static public function addHeaderItems($c){
+		if( self::$headerStylesAdded || !intval($c->cID) ) return;
+		
+		//check the cache for the master list of this page version's blockStyles 
+		$blockStylesObjs = Cache::get( 'pagesBlockStyles', intval($c->cID).'_'.intval($c->getVersionID()) );
+		if( !is_array($blockStylesObjs) ){	 
+			
+			//query this pages block style records
+			$blockStylesObjs=array(); 
+			$db = Loader::db(); 
+			$sql = 'SELECT bs.*, b.bID, cvb.cID FROM CollectionVersionBlocks AS cvb INNER JOIN Blocks AS b ON (cvb.bID = b.bID) 
+					LEFT JOIN CollectionVersionBlockStyles AS bs ON bs.bID=b.bID
+					WHERE cvb.cID = ? AND (cvb.cvID = ? OR cvb.cbIncludeAll=1)'; 
+			$blockStylesData = $db->getAll( $sql, array( $c->cID, $c->getVersionID() ) ); 			
+			
+			//load the block style objects
+			foreach($blockStylesData as $data){ 
+				$blockStyles = new BlockStyles();
+				$blockStyles->setData( $data ); 
+				$blockStylesObjs[]=$blockStyles;
+			}
+			
+			Cache::set( 'pagesBlockStyles', intval($c->cID).'_'.intval($c->getVersionID()), $blockStylesObjs, false, true); 
+		}
+		
+		//get the header style rules
+		$blockStylesHeader='';
+		foreach($blockStylesObjs as $blockStyles){
+			$blockStyles->addToRuntimeCache(); 
+			if($blockStyles->getCssID(1)) 
+				$blockStylesHeader.='#'.$blockStyles->getCssID(1).' {'.$blockStyles->getStyleRules()."} \r\n";  
+		} 
+		
+		//add to header
+		$v = View::getInstance();
+		$v->addHeaderItem("<style> \r\n".$blockStylesHeader.'</style>', 'CONTROLLER');			
+		self::$headerStylesAdded=1;
+	} 
 	
-	    //this should have caching!!!
+	//This runtime cache should load all the block styles with just one db call :-) 
+	//(or with just one file system call if that query is ROM cached, which it should be) 
+	protected static $runtimeCache=array(); 
+	static public function retrieveFromRuntimeCache( $bID=0, $cID=0 ){ 
+		if(!intval($bID) || !intval($cID)) return; 
+		foreach(BlockStyles::$runtimeCache as $bs){ 
+			if ( $bs->getCID()==$cID && $bs->getBID()==$bID )
+				return $bs; 
+		} 			
+	}	
+	protected function addToRuntimeCache(){
+		self::$runtimeCache[ $this->getCID().'-'.$this->getBID() ] = $this;	
+	}
+	
+	static public function retrieve( $bID, $c ){
+		$cID = intval($c->cID);
+		if(!intval($bID) || !$cID ) return; 
+	 		
+		$cachedObj=self::retrieveFromRuntimeCache( $bID, $cID);
+		if( $cachedObj ) return $cachedObj; 
 	
 		$db = Loader::db();	
-		$vals = array( intval($bID), intval($cID));
+		$vals = array( intval($bID), $cID );
 		$sql = 'SELECT * FROM CollectionVersionBlockStyles WHERE bID=? AND cID=?';
 		$blockStylesData = $db->getRow($sql,$vals);
 		if( !$blockStylesData || !count($blockStylesData) ) return false; 
 		$blockStyles = new BlockStyles();
 		$blockStyles->setData( $blockStylesData ); 
+		$blockStyles->addToRuntimeCache();
+		
 		return $blockStyles;
 	}	
 	
@@ -50,9 +102,16 @@ class BlockStyles extends Object {
 	public function getCID(){ return intval($this->cID); }
 	public function setCID($v){ $this->cID = intval($v); }	
 	
+	public function getCssID($withAutoID=false){
+		if( strlen(trim($this->css_data['css_id'])) ) 
+			 return trim($this->css_data['css_id']);
+		elseif($withAutoID && $this->getID()) return 'blockStyles' . $this->getID();
+		else return '';
+	}
+	
 	public function getClassName(){
-		if(strlen($this->css_data['css_class'])) 
-			return $this->css_data['css_class'].' ';
+		if(strlen(trim($this->css_data['css_class']))) 
+			return trim($this->css_data['css_class']).' ';
 		else return '';
 	}
 	
@@ -77,7 +136,7 @@ class BlockStyles extends Object {
 		'Verdana'=>"Verdana, Arial, Helvetica, sans-serif"		
 	);			 
 	
-	public function getStylesTag(){
+	public function getStyleRules(){
 		$stylesStr=''; 
 		$tempStyles=array();
 		$styles=$this->getStylesArray();
@@ -142,33 +201,27 @@ class BlockStyles extends Object {
 		
 		if( !strlen(trim($stylesStr)) && !strlen(trim($this->getCustomCSS())) ) return '';
 		$styleRules= str_replace( array("\n","\r"),'', $stylesStr.$this->getCustomCSS() ); 
-		return ' style="'.$styleRules.'"';
+		return $styleRules;
 	}
-	
-	/*
-	public function hasPadding(){
-		$us=$this->unserialized_styles;
-		if( strlen(trim($us['padding_top'])) ) return true;
-		if( strlen(trim($us['padding_right'])) ) return true;
-		if( strlen(trim($us['padding_bottom'])) ) return true;
-		if( strlen(trim($us['padding_left'])) ) return true;
-		return false;
-	}
-	*/ 
 	
 	//adds or updates
-	public function save(){
+	public function save( $c ){
 		if( !intval( $this->bID ) ) return false;
-		if( !intval( $this->cID ) ) return false;
+		if( !intval( $c->cID ) ) return false;
 		
 		$css = $this->css_data;
-		$vals = array( $css['css_class'].'', $css['css_serialized'].'', $css['css_custom'].'', $this->cID, $this->bID );
-		if( self::recordExists($this->bID,$this->cID) ){
-			$sql = 'UPDATE CollectionVersionBlockStyles SET css_class=?, css_serialized=?, css_custom=? WHERE cID=? AND bID=?'; 
+		$vals = array( $css['css_class'].'', $css['css_id'].'', $css['css_serialized'].'', $css['css_custom'].'', $c->cID, $this->bID );
+		if( self::recordExists($this->bID,$c->cID) ){
+			$sql = 'UPDATE CollectionVersionBlockStyles SET css_class=?, css_id=?, css_serialized=?, css_custom=? WHERE cID=? AND bID=?'; 
 		}else{  
-			$sql = 'INSERT INTO CollectionVersionBlockStyles ( css_class, css_serialized, css_custom, cID, bID ) values (?, ?, ?, ?, ?)'; 
+			$sql = 'INSERT INTO CollectionVersionBlockStyles ( css_class, css_id, css_serialized, css_custom, cID, bID ) values (?, ?, ?, ?, ?, ?)'; 
 		}			
-		$this->db->query($sql,$vals); 
+		$this->db->query($sql,$vals);		
+		$this->addToRuntimeCache();
+		
+		//remove this pages block styles cache
+		Cache::delete( 'pagesBlockStyles', intval($c->cID).'_'.intval($c->getVersionID())  ); 
+		
 		return true;
 	}	
 	
@@ -176,13 +229,15 @@ class BlockStyles extends Object {
 		$db = Loader::db();	
 		$vals = array(intval($bID),intval($cID));
 		$sql = 'SELECT count(*) FROM CollectionVersionBlockStyles WHERE bID=? AND cID=?';
-		return ( intval($db->getOne($sql,$vals)) ) ? true : false; 
+		return ( intval($db->getOne($sql,$vals))>0 ) ? true : false; 
 	}
 	
 	public function setData( $data=array() ){
 		$this->bID=intval($data['bID']);
 		$this->cID=intval($data['cID']);
+		$this->cvbsID = intval($data['cvbsID']);
 		
+		$this->css_data['css_id']=$data['css_id'];
 		$this->css_data['css_class']=$data['css_class'];
 		$this->css_data['css_custom']=$data['css_custom'];
 		
@@ -195,6 +250,17 @@ class BlockStyles extends Object {
 		}
 	}	
 	
+
+	/*
+	public function hasPadding(){
+		$us=$this->unserialized_styles;
+		if( strlen(trim($us['padding_top'])) ) return true;
+		if( strlen(trim($us['padding_right'])) ) return true;
+		if( strlen(trim($us['padding_bottom'])) ) return true;
+		if( strlen(trim($us['padding_left'])) ) return true;
+		return false;
+	}
+	*/ 	
 }
 
 ?>
