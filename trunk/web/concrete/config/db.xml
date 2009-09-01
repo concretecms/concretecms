@@ -386,8 +386,7 @@
       <UNSIGNED/>
     </field>	
 	<field name="css_id" type="C" size="128" /> 
-	<field name="css_class" type="C" size="128" /> 
-	<field name="css_class" type="C" size="255" /> 
+	<field name="css_class" type="C" size="128" />  
 	<field name="css_serialized" type="X" /> 
 	<field name="css_custom" type="X" /> 
   </table>

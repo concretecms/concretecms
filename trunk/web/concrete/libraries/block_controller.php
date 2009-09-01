@@ -199,6 +199,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$this->addHeaderItem($h);
 				}
 			}
+			
+			$c = $this->getCollectionObject();
+			BlockStyles::addHeaderItems($c);
 		}
 		
 		public function setupAndRun($method) {

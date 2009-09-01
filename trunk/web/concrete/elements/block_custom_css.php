@@ -6,7 +6,7 @@ $bt = BlockType::getByID($b->getBlockTypeID());
 $txt = Loader::helper('text');
 $fh = Loader::helper('form/color'); 
 
-$blockStyles = BlockStyles::retrieve($b->bID,$c->cID);
+$blockStyles = BlockStyles::retrieve($b->bID,$c);
 if(!$blockStyles) $blockStyles = new BlockStyles();
 $blockCssData=$blockStyles->getStylesArray();
 ?>
@@ -227,9 +227,19 @@ $blockCssData=$blockStyles->getStylesArray();
 		</div>
 	</div>		
 	
-	<div id="ccm-blockEditPane-css" class="ccm-blockEditPane" style="display:none">		
+	<div id="ccm-blockEditPane-css" class="ccm-blockEditPane" style="display:none">	 
+	
 		<div class="ccm-block-field-group">
-		  <h2><?php echo t('Class Name: ')?></h2>  
+		  <h2><?php echo t('CSS ID')?></h2>  
+		  <input name="css_id" type="text" value="<?=htmlentities(trim($blockStyles->getCssID()), ENT_COMPAT, APP_CHARSET) ?>" style="width:99%" 
+		   onkeyup="ccmCustomBlockCss.validIdCheck(this,'<?=str_replace(array("'",'"'),'',$blockStyles->getCssID()) ?>')" /> 
+		  <div id="ccm-block-styles-invalid-id" class="ccm-error" style="display:none; padding-top:4px;">
+		  	<?=t('Invalid ID.  This id is currently being used by another element on this page.')?>
+		  </div>
+		</div>	
+	
+		<div class="ccm-block-field-group">
+		  <h2><?php echo t('CSS Class Name')?></h2>  
 		  <input name="css_class_name" type="text" value="<?=htmlentities(trim($blockStyles->getClassName()), ENT_COMPAT, APP_CHARSET) ?>" style="width:99%" />		  		
 		</div>
 		

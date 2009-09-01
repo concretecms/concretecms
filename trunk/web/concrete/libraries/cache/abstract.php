@@ -16,8 +16,7 @@
 		}
 	}
 		
-	abstract class CacheTemplate {
-		
+	abstract class CacheTemplate {		
 		
 		protected function key($type, $id) {
 			return md5(strtolower($type . ':' . $id));
