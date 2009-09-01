@@ -206,7 +206,7 @@ class Search {
 		// first, we split the 'validSortColumns' variable into an array, if it exists
 		// then we check to see if the provided column exists within the list. If not
 		// then it gets the first column (the default.)		
-		$sArray = preg_split(',', $this->validSortColumns);
+		$sArray = preg_split('/,/', $this->validSortColumns);
 		if (@in_array($sort, $sArray)) {
 			$this->sort = $sort;
 			return $sort;

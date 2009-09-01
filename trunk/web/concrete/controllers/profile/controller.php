@@ -15,6 +15,7 @@ class ProfileController extends Controller {
 	
 	public function view($userID = 0) {
 		if(!ENABLE_USER_PROFILES) {
+			header("HTTP/1.0 404 Not Found");
 			$this->render("/page_not_found");
 		}
 		
