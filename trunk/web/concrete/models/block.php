@@ -173,9 +173,7 @@ class Block extends Object {
 		$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
 		$globalScrapbookC = $scrapbookHelper->getGlobalScrapbookPage(); 
 		
-		//this should be sufficient by itself shouldn't it?  
-		//trying to cut down on unnecessary db calls
-		if( $this->cID ) return intval($this->cID==$globalScrapbookC->cID);
+		if( $this->cID==$globalScrapbookC->cID ) return true;
 		
 		$q = "SELECT b.bID FROM Blocks AS b, CollectionVersionBlocks AS cvb ".
 			 "WHERE b.bID = '{$this->bID}' AND cvb.bID=b.bID AND cvb.cID=".intval($globalScrapbookC->getCollectionId())." LIMIT 1";
