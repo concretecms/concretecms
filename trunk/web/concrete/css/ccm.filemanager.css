@@ -88,5 +88,5 @@ div.ccm-file-selected-wrapper:hover {background-color: #E6F2F3; cursor:pointer}
 
 div.ccm-file-manager-pre-filter {margin-bottom: 10px; font-size: 14px; color: #888; font-weight: bold; }
 div.ccm-file-selected-thumbnail {width: 60px; margin-right: 10px; float: left}
-div.ccm-file-selected-data {width: 100px; padding-top: 0px; float: left}
+div.ccm-file-selected-data {padding-top: 0px; float: left}
 div.ccm-file-selected-data div {font-size: 11px; word-wrap: break-word}

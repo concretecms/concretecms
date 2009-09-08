@@ -19,11 +19,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		public function action($action) {
-			$v = View::getInstance();
+			$uh = Loader::helper('concrete/urls');
 			$a = func_get_args();
-			array_unshift($a, $this->controller->attributeType->getAttributeTypeID());
-			array_unshift($a, 'attribute_type_passthru');
-			return call_user_func_array(array($v, 'action'), $a);
+			$args = '';
+			for ($i = 1; $i < count($a); $i++) {
+				$args .= '&args[]=' . $a[$i];
+			}
+			$action = $uh->getToolsURL('attribute_type_actions') . '?atID=' . $this->controller->attributeType->getAttributeTypeID() . '&action=' . $action . $args;
+			return $action;
 		}
 		
 		public function getAttributeTypeURL($filename = false) {
@@ -66,12 +69,19 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				ob_start();
 			}
 			
-			if (file_exists(DIR_FILES_ELEMENTS . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_header.php')) {
-				include(DIR_FILES_ELEMENTS . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_header.php');
-			} else if (file_exists(DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_header.php')) {
-				include(DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_header.php');
-			}
+			Loader::element(DIRNAME_ATTRIBUTES . '/' . $view . '_header', array('type' => $this->attributeType));
 			
+			$js = $this->attributeType->getAttributeTypeFileURL($view . '.js');
+			$css = $this->attributeType->getAttributeTypeFileURL($view . '.css');
+			
+			$html = Loader::helper('html');
+			if ($js != false) { 
+				$this->controller->addHeaderItem($html->javascript($js));
+			}
+			if ($css != false) { 
+				$this->controller->addHeaderItem($html->css($css));
+			}
+
 			$this->controller->setupAndRun($view);
 			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
@@ -103,11 +113,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				include($file);
 			}
 
-			if (file_exists(DIR_FILES_ELEMENTS . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_footer.php')) {
-				include(DIR_FILES_ELEMENTS . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_footer.php');
-			} else if (file_exists(DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_footer.php')) {
-				include(DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . $view . '_footer.php');
-			}
+			Loader::element(DIRNAME_ATTRIBUTES . '/' . $view . '_footer', array('type' => $this->attributeType));
 			
 			if ($return) {
 				$contents = ob_get_contents();

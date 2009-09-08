@@ -301,20 +301,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	
 			$db->Execute('delete from UserSearchIndexAttributes where uID = ?', array($this->getUserID()));
 			$searchableAttributes = array('uID' => $this->getUserID());
-			$columns = $db->MetaColumns('UserSearchIndexAttributes');
 			$rs = $db->Execute('select * from UserSearchIndexAttributes where uID = -1');
-	
-			foreach($attribs as $akHandle => $value) {
-				$column = 'ak_' . $akHandle;
-				if (isset($columns[strtoupper($column)])) {
-					$searchableAttributes[$column] = $value;
-				}
-			}
-	
-			$q = $db->GetInsertSQL(&$rs, $searchableAttributes);
-			$r = $db->Execute($q);
-			$r->Close();
-			$rs->Close();
+			AttributeKey::reindex('UserSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
 		}
 		
 		/** 

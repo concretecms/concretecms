@@ -29,6 +29,9 @@ class DashboardPagesThemesInspectController extends Controller {
 		if ($v->has()) {
 			$this->set('error', $v);
 		}
+
+		$this->set('disableThirdLevelNav', true);
+
 	}
 	
 	public function activate_files($ptID) {

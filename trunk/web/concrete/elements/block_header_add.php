@@ -8,11 +8,29 @@ if ($action == null) {
 
 <a name="_add<?=$bt->getBlockTypeID()?>"></a>
 
+<script type="text/javascript">
+
 <? $ci = Loader::helper("concrete/urls"); ?>
 <? $url = $ci->getBlockTypeJavaScriptURL($bt); 
 if ($url != '') { ?>
-	<script type="text/javascript" src="<?=$url?>"></script>
-<? } ?>
+	ccm_addHeaderItem("<?=$url?>", 'JAVASCRIPT');
+<? } 
+
+$identifier = strtoupper('BLOCK_CONTROLLER_' . $btHandle);
+if (is_array($headerItems[$identifier])) {
+	foreach($headerItems[$identifier] as $item) { 
+		if ($item instanceof CSSOutputObject) {
+			$type = 'CSS';
+		} else {
+			$type = 'JAVASCRIPT';
+		}
+		?>
+		ccm_addHeaderItem("<?=$item->file?>", '<?=$type?>');
+	<?
+	}
+}
+?>
+</script>
 
 <input type="hidden" name="ccm-block-pane-action" value="<?=$_SERVER['REQUEST_URI']?>" />
 

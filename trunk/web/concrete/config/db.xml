@@ -430,12 +430,6 @@
       <col>cvIsApproved</col>
     </index>
   </table>
-  <table name="CollectionSearchIndexAttributes">
-    <field name="cID" type="I" size="10">
-      <KEY/>
-      <UNSIGNED/>
-    </field>
-  </table>
   <table name="Collections">
     <field name="cID" type="I" size="10">
       <KEY/>
@@ -745,12 +739,6 @@
     </field>
     <field name="fslDirectory" type="C" size="255">
       <NOTNULL/>
-    </field>
-  </table>
-  <table name="FileSearchIndexAttributes">
-    <field name="fID" type="I" size="10">
-      <KEY/>
-      <UNSIGNED/>
     </field>
   </table>
   <table name="Files">
@@ -1540,12 +1528,6 @@
       <col>uID</col>
     </index>
   </table>
-  <table name="UserSearchIndexAttributes">
-    <field name="uID" type="I" size="10">
-      <KEY/>
-      <UNSIGNED/>
-    </field>
-  </table>
   <table name="Users">
     <field name="uID" type="I" size="10">
       <KEY/>
@@ -1766,9 +1748,9 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="akSelectOptionDisplayOrder" type="I1" size="1">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
+    <field name="akSelectOptionDisplayOrder" type="C" size="255">
+		<NOTNULL />
+		<DEFAULT VALUE="display_asc" />
     </field>
     <field name="akSelectAllowOtherValues" type="I1" size="1">
       <NOTNULL/>

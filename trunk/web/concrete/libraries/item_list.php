@@ -182,6 +182,9 @@ class DatabaseItemList extends ItemList {
 	}
 
 	public function filterByAttribute($column, $value, $comparison = '=') {
+		if (is_array($column)) {
+			$column = $column[key($column)] . '_' . key($column);
+		}
 		$this->attributeFilters[] = array('ak_' . $column, $value, $comparison);
 	}
 	

@@ -22,9 +22,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  */
 class CollectionAttributeKey extends AttributeKey {
 
-	protected function getIndexedSearchTable() {
+	public function getIndexedSearchTable() {
 		return 'CollectionSearchIndexAttributes';
 	}
+
+	protected $searchIndexFieldDefinition = 'cID I(11) UNSIGNED NOTNULL DEFAULT 0 PRIMARY';
 
 	/** 
 	 * Returns an attribute value list of attributes and values (duh) which a collection version can store 

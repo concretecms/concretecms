@@ -33,6 +33,10 @@
 			$resetDisplay = 'block';
 			$fileID = 0;
 			
+			if (isset($_POST[$postname])) {
+				$bf = File::getByID($_POST[$postname]);
+			}
+			
 			if (is_object($bf) && (!$bf->isError())) {
 				$fileID = $bf->getFileID();
 				$selectedDisplay = 'block';

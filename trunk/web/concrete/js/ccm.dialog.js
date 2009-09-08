@@ -37,6 +37,11 @@ jQuery.fn.dialog.open = function(settings) {
 
 }
 
+jQuery.fn.dialog.replaceTop = function(html) {
+	var num = jQuery.fn.dialog.totalDialogs-1;
+	$("#ccm-dialog-content" + num).html(html);
+}
+
 jQuery.fn.dialog.getOptions = function(settings, node) {
 
 	var options = jQuery.extend({}, jQuery.fn.dialog.defaults, settings);

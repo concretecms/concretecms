@@ -168,7 +168,9 @@ if ($_POST['create']) {
 <?
 	Loader::model("search/group");
 	$gl = new GroupSearch();
-	if ($gl->getTotal() < 1000) { ?>
+	if ($gl->getTotal() < 1000) { 
+		$gl->setItemsPerPage(1000);
+		?>
 		<h2><?=t('Groups')?></h2>
 		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 		<tr>

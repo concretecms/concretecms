@@ -15,6 +15,8 @@ class UserAttributeKey extends AttributeKey {
 		return 'UserSearchIndexAttributes';
 	}
 
+	protected $searchIndexFieldDefinition = 'uID I(11) UNSIGNED NOTNULL DEFAULT 0 PRIMARY';
+
 	public function getAttributes($uID, $method = 'getValue') {
 		$db = Loader::db();
 		$values = $db->GetAll("select avID, akID from UserAttributeValues where uID = ?", array($uID));
@@ -22,7 +24,7 @@ class UserAttributeKey extends AttributeKey {
 		foreach($values as $val) {
 			$ak = UserAttributeKey::getByID($val['akID']);
 			if (is_object($ak)) {
-				$value = $ak->getAttributeValue($val['avID']);
+				$value = $ak->getAttributeValue($val['avID'], $method);
 				$avl->addAttributeValue($ak, $value);
 			}
 		}

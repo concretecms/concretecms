@@ -52,6 +52,11 @@ class DashboardFilesSearchController extends Controller {
 			$type = $_REQUEST['fType'];
 			$fileList->filterByType($type);
 		}
+
+		if (isset($_GET['fExtension']) && $_GET['fExtension'] != '') {
+			$ext = $_REQUEST['fExtension'];
+			$fileList->filterByExtension($ext);
+		}
 		
 		$selectedSets = array();
 

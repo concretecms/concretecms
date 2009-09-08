@@ -10,6 +10,13 @@ $searchFields = array(
 	'date_added' => t('Added Between'),
 );
 
+if ($_REQUEST['fType'] != false) {
+	unset($searchFields['type']);
+}
+if ($_REQUEST['fExtension'] != false) {
+	unset($searchFields['extension']);
+}
+
 Loader::model('file_attributes');
 $searchFieldAttributes = FileAttributeKey::getSearchableList();
 foreach($searchFieldAttributes as $ak) {
@@ -73,11 +80,14 @@ $s1 = FileSet::getMySets();
 		 * Here are all the things that could be passed through the asset library that we need to account for, as hidden form fields
 		 */
 		print $form->hidden('fType'); 
+		print $form->hidden('fExtension'); 
 		print $form->hidden('fileSelector', $fileSelector); 
 	?>	
 		<div id="ccm-search-box-title">
 			<? if ($_REQUEST['fType'] != false) { ?>
 				<div class="ccm-file-manager-pre-filter"><?=t('Only displaying %s files.', FileType::getGenericTypeText($_REQUEST['fType']))?></div>
+			<? } else if ($_REQUEST['fExtension'] != false) { ?>
+				<div class="ccm-file-manager-pre-filter"><?=t('Only displaying files with extension .%s.', $_REQUEST['fExtension'])?></div>
 			<? } ?>
 	
 			<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" id="ccm-search-loading" />

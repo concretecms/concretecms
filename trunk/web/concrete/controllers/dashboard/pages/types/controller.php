@@ -22,6 +22,10 @@ public function attribute_deleted() {
 	$this->set('message', t('Page Attribute Deleted.'));
 }
 
+public function on_start() {
+	$this->set('disableThirdLevelNav', true);
+}
+
 public function delete($ctID, $token = '') {
 	$db = Loader::db();
 	$valt = Loader::helper('validation/token');

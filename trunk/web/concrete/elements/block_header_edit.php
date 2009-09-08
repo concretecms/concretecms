@@ -4,12 +4,32 @@ global $c; ?>
 
 <a name="_edit<?=$b->getBlockID()?>"></a>
 
-<? $ci = Loader::helper("concrete/urls"); ?>
 <? $bt = $b->getBlockTypeObject(); ?>
+
+<script type="text/javascript">
+
+<? $ci = Loader::helper("concrete/urls"); ?>
 <? $url = $ci->getBlockTypeJavaScriptURL($bt); 
 if ($url != '') { ?>
-	<script type="text/javascript" src="<?=$url?>"></script>
-<? } ?>
+	ccm_addHeaderItem("<?=$url?>", 'JAVASCRIPT');
+<? } 
+
+$identifier = strtoupper('BLOCK_CONTROLLER_' . $btHandle);
+if (is_array($headerItems[$identifier])) {
+	foreach($headerItems[$identifier] as $item) { 
+		if ($item instanceof CSSOutputObject) {
+			$type = 'CSS';
+		} else {
+			$type = 'JAVASCRIPT';
+		}
+		?>
+		ccm_addHeaderItem("<?=$item->file?>", '<?=$type?>');
+	<?
+	}
+}
+?>
+</script>
+
 <form method="post" id="ccm-block-form" class="validate" action="<?=$b->getBlockEditAction()?>&rcID=<?=intval($rcID)?>" enctype="multipart/form-data">
 
 <? foreach($this->controller->getJavaScriptStrings() as $key => $val) { ?>

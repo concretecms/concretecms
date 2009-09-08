@@ -9,6 +9,8 @@ class DashboardPagesThemesAddController extends Controller {
 		
 		$v = Loader::helper('validation/error');
 		Loader::model('page_theme_archive');
+
+		$this->set('disableThirdLevelNav', true);
 		
 		if ($arg == 'install') {
 			try {

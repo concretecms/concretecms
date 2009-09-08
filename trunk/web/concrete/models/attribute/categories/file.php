@@ -23,31 +23,33 @@ class FileAttributeKey extends AttributeKey {
 	public function getIndexedSearchTable() {
 		return 'FileSearchIndexAttributes';
 	}
+
+	protected $searchIndexFieldDefinition = 'fID I(11) UNSIGNED NOTNULL DEFAULT 0 PRIMARY';
 	
 	/** 
 	 * Returns an attribute value list of attributes and values (duh) which a collection version can store 
 	 * against its object.
 	 * @return AttributeValueList
 	 */
-	public function getAttributes($fID, $fvID) {
+	public function getAttributes($fID, $fvID, $method = 'getValue') {
 		$db = Loader::db();
 		$values = $db->GetAll("select akID, avID from FileAttributeValues where fID = ? and fvID = ?", array($fID, $fvID));
 		$avl = new AttributeValueList();
 		foreach($values as $val) {
 			$ak = FileAttributeKey::getByID($val['akID']);
 			if (is_object($ak)) {
-				$value = $ak->getAttributeValue($val['avID']);
+				$value = $ak->getAttributeValue($val['avID'], $method);
 				$avl->addAttributeValue($ak, $value);
 			}
 		}		
 		return $avl;
 	}
 	
-	public function getAttributeValue($avID) {
+	public function getAttributeValue($avID, $method = 'getValue') {
 		$av = FileAttributeValue::getByID($avID);
 		if (is_object($av)) {
 			$av->setAttributeKey($this);
-			return $av->getValue();
+			return call_user_func_array(array($av, $method), array());
 		}
 	}
 	

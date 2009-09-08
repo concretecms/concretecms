@@ -4,9 +4,11 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=<?=APP_CHARSET?>" />
 <!-- insert CSS for Default Concrete Theme //-->
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.js"></script>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.default.theme.css";</style>
-
+<? 
+$v = View::getInstance();
+$v->disableEditing();
+Loader::element('header_required')?>
 </head>
 <body>
 
