@@ -60,6 +60,13 @@ class AttributeKeyCategory extends Object {
 		$db = Loader::db();
 		$db->Execute('insert into AttributeKeyCategories (akCategoryHandle) values (?)', array($akCategoryHandle));
 		$id = $db->Insert_ID();
+		
+		Loader::model('attribute/categories/' . $akCategoryHandle);
+		$txt = Loader::helper("text");
+		$class = $txt->unhandle($akCategoryHandle) . 'AttributeKey';
+		$obj = new $class;
+		$obj->createIndexedSearchTable();
+		
 		return AttributeKeyCategory::getByID($id);
 	}
 

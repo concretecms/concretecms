@@ -172,7 +172,6 @@ if (intval($_GET['uID'])) {
 		
 			if (!$error) {
 				// do the registration
-				$pr2 = $uo->updateUserAttributes($_POST);
 				$process = $uo->update($_POST);
 				
 				//$db = Loader::db();
@@ -181,7 +180,6 @@ if (intval($_GET['uID'])) {
 						$uHasAvatar = $av->updateUserAvatar($_FILES['uAvatar']['tmp_name'], $uo->getUserID());
 					}
 					
-					$uo->updateSelectedUserAttributes($data['editAKID'], $_POST);
 					$uo->updateGroups($_POST['gID']);
 
 					$message = t("User updated successfully. ");

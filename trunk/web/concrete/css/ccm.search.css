@@ -12,6 +12,7 @@ div#ccm-search-advanced-results-wrapper {display: block; width: 100%; /* positio
 table.ccm-results-list {width: 100%; border-left: 1px solid #ffffff}
 table.ccm-results-list th, table.ccm-results-list td {padding: 4px 8px 4px 8px; font-size: 11px}
 table.ccm-results-list tr th {font-size: 11px;background-color: #efefef; text-align: left; padding-left: 8px; white-space: nowrap; color: #666}
+table.ccm-results-list select, table.ccm-results-list input {font-size: 10px}
 
 table.ccm-results-list tr th a {color: #666; padding-right: 14px; text-decoration: none}
 table.ccm-results-list tr th a:hover {color: #333;}
@@ -43,8 +44,10 @@ div#ccm-search-field-base {display: none}
 div.ccm-search-field input, div.ccm-search-field select, div.ccm-search-field td {font-size: 10px !important}
 
 .ccm-search-option-type-number input.ccm-input-text {width: 30px !important}
-.ccm-search-option-type-text input.ccm-input-text {width: 86px !important}
-.ccm-search-option-type-date input.ccm-input-date {width: 86px !important}
+.ccm-search-option input.ccm-input-text {width: 86px !important}
+.ccm-search-option input.ccm-input-date {width: 86px !important}
+.ccm-search-option select.ccm-input-select {width: 86px !important}
+.ccm-search-option fieldset {border: none !important; padding: 0px !important; margin: 0px !important}
 #ccm-search-fields-submit {text-align: right; padding-top: 8px}
 
 /* properties */

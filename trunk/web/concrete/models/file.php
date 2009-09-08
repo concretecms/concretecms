@@ -54,28 +54,8 @@ class File extends Object {
 
 		$db->Execute('delete from FileSearchIndexAttributes where fID = ?', array($this->getFileID()));
 		$searchableAttributes = array('fID' => $this->getFileID());
-		$columns = $db->MetaColumns('FileSearchIndexAttributes');
 		$rs = $db->Execute('select * from FileSearchIndexAttributes where fID = -1');
-
-		foreach($attribs as $akHandle => $value) {
-			$column = 'ak_' . $akHandle;
-			$ak = FileAttributeKey::getByHandle($akHandle);
-			if (isset($columns[strtoupper($column)])) {
-				$searchableAttributes[$column] = $value;
-			}
-		}
-
-		$q = $db->GetInsertSQL(&$rs, $searchableAttributes);
-		$r = $db->Execute($q);
-		
-		unset($q);
-		$r->Close();
-		unset($r);
-		$rs->Close();
-		unset($rs);
-		unset($columns);
-		unset($searchableAttributes);
-
+		AttributeKey::reindex('FileSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
 	}
 
 	public static function getRelativePathFromID($fID) {

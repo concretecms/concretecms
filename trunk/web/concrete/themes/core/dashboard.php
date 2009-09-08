@@ -121,6 +121,7 @@ foreach($nav as $n2) {
 	// if we're right under the dashboard, we get items beneath us. If not we get items at our same level
 	$pcs = $nh->getTrailToCollection($c);
 	$pcs = array_reverse($pcs);
+	
 	if (count($pcs) == 2) {
 		$parent = $c;
 	} else {
@@ -134,12 +135,22 @@ foreach($nav as $n2) {
 		if ($cp->canRead()) { 
 			$subpagesP[] = $sc;
 		}
+	
+		
 	}
 	
 	if (count($subpagesP) > 0) { 
 	?>	
 		<div id="ccm-dashboard-subnav">
-		<ul><? foreach($subpagesP as $sc) { ?><li <? if ($sc->getCollectionID() == $c->getCollectionID()) { ?> class="nav-selected" <? } ?>><a href="<?=$nh->getLinkToCollection($sc, false, true)?>"><?=t($sc->getCollectionName())?></a></li><? } ?></ul>
+		<ul><? foreach($subpagesP as $sc) { 
+		
+			if ($c->getCollectionPath() == $sc->getCollectionPath() || (strpos($c->getCollectionPath(), $sc->getCollectionPath()) == 0) && strpos($c->getCollectionPath(), $sc->getCollectionPath()) !== false) {
+				$isActive = true;
+			} else {
+				$isActive = false;
+			}
+			
+		?><li <? if ($isActive) { ?> class="nav-selected" <? } ?>><a href="<?=$nh->getLinkToCollection($sc, false, true)?>"><?=t($sc->getCollectionName())?></a></li><? } ?></ul>
 		<br/><div class="ccm-spacer">&nbsp;</div>
 		</div>
 	
@@ -159,6 +170,43 @@ foreach($nav as $n2) {
 	<?= t('Version') ?>: <?=APP_VERSION ?>
 </div>
 <? } ?>
+
+<? if (count($pcs) > 2 && (!$disableThirdLevelNav)) { 
+
+	if (count($pcs) == 3) {
+		$parent = $c;
+	} else {
+		$parent = $pcs[3];
+	}
+	$subpages = AutonavBlockController::getChildPages($parent);
+	$subpagesP = array();
+	foreach($subpages as $sc) {
+		$cp = new Permissions($sc);
+		if ($cp->canRead()) { 
+			$subpagesP[] = $sc;
+		}	
+	}
+	
+	if (count($subpagesP) > 0) { 
+	?>	
+	<div id="ccm-dashboard-subnav-third">
+		<ul><? foreach($subpagesP as $sc) { 
+		
+			if ($c->getCollectionPath() == $sc->getCollectionPath() || (strpos($c->getCollectionPath(), $sc->getCollectionPath()) == 0) && strpos($c->getCollectionPath(), $sc->getCollectionPath()) !== false) {
+				$isActive = true;
+			} else {
+				$isActive = false;
+			}
+			
+		?><li <? if ($isActive) { ?> class="nav-selected" <? } ?>><a href="<?=$nh->getLinkToCollection($sc, false, true)?>"><?=t($sc->getCollectionName())?></a></li><? } ?></ul>
+	</div>
+	
+	
+	<?
+	}
+}
+
+?>
 
 <div id="ccm-dashboard-content">
 

@@ -48,6 +48,22 @@ ccm_activateSite = function() {
 	ccm_topPaneDeactivated = false;
 }
 
+ccm_addHeaderItem = function(item, type) {
+	$.ajax({
+		url: item,
+		async: false,
+		success: function(data) {
+			switch(type) {
+				case 'CSS':
+					$('head').append('<style type="text/css">' + data + '</style>');
+					break;
+				case 'JAVASCRIPT':
+					$('head').append('<script type="text/javascript">' + data + '</script>');
+					break;
+			}
+		}
+	});
+}
 
 // called in versions popup
 ccm_disableLinks = function() {

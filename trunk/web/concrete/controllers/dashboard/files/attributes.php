@@ -85,19 +85,6 @@ class DashboardFilesAttributesController extends Controller {
 		$this->set('message', t('File Attribute Updated.'));
 	}
 	
-	public function attribute_type_passthru($atID, $method) {
-		$args = func_get_args();
-		$type = AttributeType::getByID($atID);
-		$cnt = $type->getController();
-		
-		$method = $args[1];
-		
-		array_shift($args);
-		array_shift($args);
-		
-		call_user_func_array(array($cnt, 'action_' . $method), $args);
-	}
-	
 	public function edit($akID = 0) {
 		if ($this->post('akID')) {
 			$akID = $this->post('akID');

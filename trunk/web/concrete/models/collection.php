@@ -130,23 +130,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	
 			$db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
 			$searchableAttributes = array('cID' => $this->getCollectionID());
-			$columns = $db->MetaColumns('CollectionSearchIndexAttributes');
-			$rs = $db->Execute('select * from CollectionSearchIndexAttributes where cID = -1');
-	
-			foreach($attribs as $akHandle => $value) {
-				$column = 'ak_' . $akHandle;
-				if (isset($columns[strtoupper($column)])) {
-					$searchableAttributes[$column] = $value;
-				}
-			}
-	
-			$q = $db->GetInsertSQL(&$rs, $searchableAttributes);
-			$db->Execute($q);
-			$rs->Close();
-			unset($rs);
-			unset($attribs);
-			unset($columns);
-			unset($searchableAttributes);
+			$rs = $db->Execute('select * from CollectionAttributeValues where cID = -1');
+			AttributeKey::reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
 		}
 		
 		public function getAttributeValueObject($ak, $createIfNotFound = false) {

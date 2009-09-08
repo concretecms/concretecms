@@ -69,7 +69,6 @@ function getAttributeOptionHTML($v){
 <tr>
 	<td colspan="3">
 	<div id="attributeValuesInterface">
-	<input type="hidden" id="akSelectValueSortableTarget" name="akSelectValueSortableTarget" value="<?=$this->action('sort_options', 'test')?>" />
 	<div id="attributeValuesWrap">
 	<?
 	Loader::helper('text');

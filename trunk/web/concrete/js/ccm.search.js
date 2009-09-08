@@ -1,6 +1,7 @@
 var ccm_searchActivatePostFunction = false;
 
 ccm_setupAdvancedSearch = function(searchType) {
+	$("#ccm-" + searchType + "-search-add-option").unbind();
 	$("#ccm-" + searchType + "-search-add-option").click(function() {
 		ccm_totalAdvancedSearchFields++;
 		$("#ccm-search-fields-wrapper").append('<div class="ccm-search-field" id="ccm-' + searchType + '-search-field-set' + ccm_totalAdvancedSearchFields + '">' + $("#ccm-search-field-base").html() + '<\/div>');

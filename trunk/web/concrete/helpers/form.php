@@ -250,8 +250,10 @@ class FormHelper {
 
 		if (is_array($valueOrArray)) {
 			$miscFields = $valueOrArray;
+		} else {
+			$miscFields['ccm-passed-value'] = $valueOrArray;	
 		}
-
+		
 		if (is_array($miscFields)) {
 			foreach($miscFields as $k => $value) {
 				$str .= $k . '="' . $value . '" ';

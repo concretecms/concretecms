@@ -94,6 +94,7 @@ class AttributeKey extends Object {
 	protected function add($akCategoryHandle, $type, $args, $pkg = false) {
 		
 		$vn = Loader::helper('validation/numbers');
+		$txt = Loader::helper('text');
 		if (!is_object($type)) {
 			// The passed item is not an integer. It is probably something like 'DATE'
 			$type = AttributeType::getByHandle(strtolower($type));
@@ -132,7 +133,7 @@ class AttributeKey extends Object {
 		
 		if ($r) {
 			$akID = $db->Insert_ID();
-			$className = $akCategoryHandle . 'AttributeKey';
+			$className = $txt->camelcase($akCategoryHandle) . 'AttributeKey';
 			$ak = new $className();
 			$ak->load($akID);
 			$at = $ak->getAttributeType();
@@ -169,7 +170,8 @@ class AttributeKey extends Object {
 		$r = $db->query("update AttributeKeys set akHandle = ?, akName = ?, akIsSearchable = ?, akIsSearchableIndexed = ? where akID = ?", $a);
 		
 		if ($r) {
-			$className = $akCategoryHandle . 'AttributeKey';
+			$txt = Loader::helper('text');
+			$className = $txt->camelcase($akCategoryHandle) . 'AttributeKey';
 			$ak = new $className();
 			$ak->load($this->getAttributeKeyID());
 			$at = $ak->getAttributeType();
@@ -187,33 +189,86 @@ class AttributeKey extends Object {
 		$db->Execute('update AttributeKeys set akIsColumnHeader = ? where akID = ?', array($r, $this->getAttributeKeyID()));
 	}
 	
+	public function reindex($tbl, $columnHeaders, $attribs, $rs) {
+		$db = Loader::db();
+		$columns = $db->MetaColumns($tbl);
+		
+		foreach($attribs as $akHandle => $value) {
+			if (is_array($value)) {
+				foreach($value as $key => $v) {
+					$column = 'ak_' . $akHandle . '_' . $key;
+					if (isset($columns[strtoupper($column)])) {
+						$columnHeaders[$column] = $v;
+					}
+				}
+			} else {
+				$column = 'ak_' . $akHandle;
+				if (isset($columns[strtoupper($column)])) {
+					$columnHeaders[$column] = $value;
+				}
+			}
+		}
+		
+		$q = $db->GetInsertSQL(&$rs, $columnHeaders);
+		$r = $db->Execute($q);
+		$r->Close();
+		$rs->Close();
+	}
+	
 	public function updateSearchIndex($prevHandle = false) {
 		$type = $this->getAttributeType();
 		$cnt = $type->getController();
 		if ($cnt->getSearchIndexFieldDefinition() == false) {
 			return false;
 		}
-		$field = $this->akHandle . ' ' . $cnt->getSearchIndexFieldDefinition();
+		
+		$fields = array();
+		if (!is_array($cnt->getSearchIndexFieldDefinition())) {
+			$fields[] = $this->akHandle . ' ' . $cnt->getSearchIndexFieldDefinition();
+		} else {
+			foreach($cnt->getSearchIndexFieldDefinition() as $col => $def) {
+				$fields[$col] = $this->akHandle . '_' . $col . ' ' . $def;
+			}
+		}
 		
 		$db = Loader::db();
 		$columns = $db->MetaColumns($this->getIndexedSearchTable());
 		$dba = NewDataDictionary($db, DB_TYPE);
 		
-		$addColumn = true;
-		
-		if ($prevHandle != false) {
-			if ($columns[strtoupper('ak_' . $prevHandle)]) {
-				$q = $dba->RenameColumnSQL($this->getIndexedSearchTable(), 'ak_' . $prevHandle, 'ak_' . $this->akHandle, $field);
-				$db->Execute($q[0]);
-				$addColumn = false;
+		foreach($fields as $col => $field) {
+
+			$addColumn = true;
+
+			$field = 'ak_' . $field;
+			
+			if (!is_int($col)) {
+				$column = 'ak_' . $this->akHandle . '_' . $col;
+			} else {
+				$column = 'ak_' . $this->akHandle;
 			}
-		}
-		
-		if ($addColumn) {
-			if (!$columns[strtoupper('ak_' . $this->akHandle)]) {
-				$q = $dba->AddColumnSQL($this->getIndexedSearchTable(), 'ak_' . $field);
-				$db->Execute($q[0]);
+			if ($prevHandle != false) {
+				if (!is_int($col)) {
+					$prevColumn = 'ak_' . $prevHandle . '_' . $col;
+				} else {
+					$prevColumn = 'ak_' . $prevHandle;
+				}
 			}
+			
+			if ($prevColumn != false) {
+				if ($columns[strtoupper($prevColumn)]) {
+					$q = $dba->RenameColumnSQL($this->getIndexedSearchTable(), $prevColumn, $column, $field);
+					$db->Execute($q[0]);
+					$addColumn = false;
+				}
+			}
+			
+			if ($addColumn) {
+				if (!$columns[strtoupper($column)]) {
+					$q = $dba->AddColumnSQL($this->getIndexedSearchTable(), $field);
+					$db->Execute($q[0]);
+				}
+			}
+			
 		}
 	}
 	
@@ -221,6 +276,7 @@ class AttributeKey extends Object {
 		$at = $this->getAttributeType();
 		$at->controller->setAttributeKey($this);
 		$at->controller->deleteKey();
+		$cnt = $this->getController();
 		
 		$db = Loader::db();
 		$db->Execute('delete from AttributeKeys where akID = ?', array($this->getAttributeKeyID()));
@@ -229,10 +285,20 @@ class AttributeKey extends Object {
 			$columns = $db->MetaColumns($this->getIndexedSearchTable());
 			$dba = NewDataDictionary($db, DB_TYPE);
 			
-			if ($columns[strtoupper('ak_' . $this->akHandle)]) {
-				$q = $dba->DropColumnSQL($this->getIndexedSearchTable(), 'ak_' . $this->akHandle);
-				$db->Execute($q[0]);
-				$addColumn = false;
+			$fields = array();
+			if (!is_array($cnt->getSearchIndexFieldDefinition())) {
+				$dropColumns[] = 'ak_' . $this->akHandle;
+			} else {
+				foreach($cnt->getSearchIndexFieldDefinition() as $col => $def) {
+					$dropColumns[] = 'ak_' . $this->akHandle . '_' . $col;
+				}
+			}
+			
+			foreach($dropColumns as $dc) {
+				if ($columns[strtoupper($dc)]) {
+					$q = $dba->DropColumnSQL($this->getIndexedSearchTable(), $dc);
+					$db->Execute($q[0]);
+				}
 			}
 		}
 	}
@@ -313,6 +379,14 @@ class AttributeKey extends Object {
 			$e = $at->controller->validateForm($at->controller->post());
 		}
 		return $e;
+	}
+
+
+	public function createIndexedSearchTable() {
+		$db = Loader::db();
+		$dba = NewDataDictionary($db, DB_TYPE);
+		$sqa = $dba->CreateTableSQL($this->getIndexedSearchTable(), $this->searchIndexFieldDefinition);
+		$dba->ExecuteSQLArray($sqa);
 	}
 
 	/** 

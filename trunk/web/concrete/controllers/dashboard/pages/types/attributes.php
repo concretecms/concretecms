@@ -15,6 +15,10 @@ class DashboardPagesTypesAttributesController extends Controller {
 		}
 		$this->set('types', $types);
 	}
+
+	public function on_start() {
+		$this->set('disableThirdLevelNav', true);
+	}
 	
 	public function delete($akID, $token = null){
 		try {
@@ -64,19 +68,6 @@ class DashboardPagesTypesAttributesController extends Controller {
 			$ak = CollectionAttributeKey::add($type, $this->post());
 			$this->redirect('/dashboard/pages/types/', 'attribute_created');
 		}
-	}
-	
-	public function attribute_type_passthru($atID, $method) {
-		$args = func_get_args();
-		$type = AttributeType::getByID($atID);
-		$cnt = $type->getController();
-		
-		$method = $args[1];
-		
-		array_shift($args);
-		array_shift($args);
-		
-		call_user_func_array(array($cnt, 'action_' . $method), $args);
 	}
 	
 	public function edit($akID = 0) {

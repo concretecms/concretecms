@@ -202,6 +202,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$this->controller->setupAndRun($_action);
 			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
+			$headerItems = $this->controller->headerItems;
 			extract($args);
 			
 			if ($this->controller->getRenderOverride() != '') { 

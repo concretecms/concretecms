@@ -9,6 +9,7 @@ if ($akSelectAllowMultipleValues) { ?>
 
 <? } else { ?>
 	<select name="<?=$this->field('atSelectOptionID')?>[]">
+		<option value=""><?=t('** None')?></option>
 	<? foreach($options as $opt) { ?>
 		<option value="<?=$opt->getSelectAttributeOptionID()?>" <? if (in_array($opt->getSelectAttributeOptionID(), $selectedOptions)) { ?> selected <? } ?>><?=$opt->getSelectAttributeOptionValue()?></option>	
 	<? } ?>
