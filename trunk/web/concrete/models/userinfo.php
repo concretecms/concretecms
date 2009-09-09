@@ -321,6 +321,15 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 		
+		public function getAttributeField($ak) {
+			Loader::model('attribute/categories/user');
+			if (!is_object($ak)) {
+				$ak = UserAttributeKey::getByHandle($ak);
+			}
+			$value = $this->getAttributeValueObject($ak);
+			$ak->render('form', $value);
+		}		
+		
 		public function getAttributeValueObject($ak, $createIfNotFound = false) {
 			$db = Loader::db();
 			$av = false;

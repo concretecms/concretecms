@@ -59,19 +59,12 @@ if($success) {
 	<?
 	
 	$attribs = UserAttributeKey::getRegistrationList();
-	foreach($attribs as $ak) { ?>
-		
-		<div><? $ak->render('label')?>
-		<? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="ccm-required">*</span><? } ?>
-		</div>
-		
-		
-		<? $ak->render('form', $caValue, false, array('includeLabel' => true)); ?>			
-		<br/><br/>
-	<? } ?>
+	$af = Loader::helper('form/attribute');
 	
-	<div>
-	<?
+	foreach($attribs as $ak) { 
+		print $af->display($ak, $ak->isAttributeKeyRequiredOnRegister());	
+		print '<br/><br/>';
+	}
 	
 	if (ENABLE_REGISTRATION_CAPTCHA) { 
 		print $form->label('captcha', t('Please type the letters and numbers shown in the image.'));
@@ -79,7 +72,6 @@ if($success) {
 		$captcha = Loader::helper('validation/captcha');				
 		$captcha->display();
 		?>
-		</div>
 		
 		<div><? $captcha->showInput();?> </div>
 	<? } ?>

@@ -1,4 +1,6 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+<? Loader::library('authentication/open_id');?>
+<? $form = Loader::helper('form'); ?>
 
 <div style="position: relative">
 
