@@ -161,6 +161,7 @@ class ConcreteUpgradeVersion532Helper {
 		$fakc = AttributeKeyCategory::add('file');
 		
 		$tt = AttributeType::add('text', t('Text'));
+		$textareat = AttributeType::add('textarea', t('Text Area'));
 		$boolt = AttributeType::add('boolean', t('Checkbox'));
 		$dtt = AttributeType::add('date_time', t('Date/Time'));
 		$ift = AttributeType::add('image_file', t('Image/File'));
@@ -170,6 +171,7 @@ class ConcreteUpgradeVersion532Helper {
 		
 		// assign collection attributes
 		$cakc->associateAttributeKeyType($tt);
+		$cakc->associateAttributeKeyType($textareat);
 		$cakc->associateAttributeKeyType($boolt);
 		$cakc->associateAttributeKeyType($dtt);
 		$cakc->associateAttributeKeyType($ift);
@@ -179,6 +181,7 @@ class ConcreteUpgradeVersion532Helper {
 		
 		// assign user attributes
 		$uakc->associateAttributeKeyType($tt);
+		$uakc->associateAttributeKeyType($textareat);
 		$uakc->associateAttributeKeyType($boolt);
 		$uakc->associateAttributeKeyType($dtt);
 		$uakc->associateAttributeKeyType($nt);
@@ -186,6 +189,7 @@ class ConcreteUpgradeVersion532Helper {
 		
 		// assign file attributes
 		$fakc->associateAttributeKeyType($tt);
+		$fakc->associateAttributeKeyType($textareat);
 		$fakc->associateAttributeKeyType($boolt);
 		$fakc->associateAttributeKeyType($dtt);
 		$fakc->associateAttributeKeyType($nt);

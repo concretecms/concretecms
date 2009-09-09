@@ -41,6 +41,10 @@ class FormHelper {
 	 */	 
 	public function submit($name, $value, $fields = array(), $additionalClasses='') {
 		$_fields = '';
+		if (isset($fields['class'])) {
+			$additionalClasses = $fields['class'];
+			unset($fields['class']);
+		}
 		foreach($fields as $key => $fieldvalue) {
 			$_fields .= $key . '="' . $fieldvalue . '" ';
 		}

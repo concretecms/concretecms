@@ -272,6 +272,7 @@ class InstallController extends Controller {
 						$fakc = AttributeKeyCategory::add('file');
 						
 						$tt = AttributeType::add('text', t('Text'));
+						$textareat = AttributeType::add('textarea', t('Text Area'));
 						$boolt = AttributeType::add('boolean', t('Checkbox'));
 						$dtt = AttributeType::add('date_time', t('Date/Time'));
 						$ift = AttributeType::add('image_file', t('Image/File'));
@@ -281,6 +282,7 @@ class InstallController extends Controller {
 						
 						// assign collection attributes
 						$cakc->associateAttributeKeyType($tt);
+						$cakc->associateAttributeKeyType($textareat);
 						$cakc->associateAttributeKeyType($boolt);
 						$cakc->associateAttributeKeyType($dtt);
 						$cakc->associateAttributeKeyType($ift);
@@ -290,6 +292,7 @@ class InstallController extends Controller {
 
 						// assign user attributes
 						$uakc->associateAttributeKeyType($tt);
+						$uakc->associateAttributeKeyType($textareat);
 						$uakc->associateAttributeKeyType($boolt);
 						$uakc->associateAttributeKeyType($dtt);
 						$uakc->associateAttributeKeyType($nt);
@@ -297,6 +300,7 @@ class InstallController extends Controller {
 
 						// assign file attributes
 						$fakc->associateAttributeKeyType($tt);
+						$fakc->associateAttributeKeyType($textareat);
 						$fakc->associateAttributeKeyType($boolt);
 						$fakc->associateAttributeKeyType($dtt);
 						$fakc->associateAttributeKeyType($nt);
@@ -308,11 +312,11 @@ class InstallController extends Controller {
 						// Add default page attributes
 						//$cab1 = CollectionAttributeKey::add('meta_title', t('Meta Title'), true, null, 'TEXT');
 						$cab1 = CollectionAttributeKey::add($tt, array('akHandle' => 'meta_title', 'akName' => t('Meta Title'), 'akIsSearchable' => true));
-						$cab2 = CollectionAttributeKey::add($tt, array('akHandle' => 'meta_description', 'akName' => t('Meta Description'), 'akIsSearchable' => true));
-						$cab3 = CollectionAttributeKey::add($tt, array('akHandle' => 'meta_keywords', 'akName' => t('Meta Keywords'), 'akIsSearchable' => true, null));
+						$cab2 = CollectionAttributeKey::add($textareat, array('akHandle' => 'meta_description', 'akName' => t('Meta Description'), 'akIsSearchable' => true));
+						$cab3 = CollectionAttributeKey::add($textareat, array('akHandle' => 'meta_keywords', 'akName' => t('Meta Keywords'), 'akIsSearchable' => true, null));
 						$cab4 = CollectionAttributeKey::add($boolt, array('akHandle' => 'exclude_nav', 'akName' => t('Exclude From Nav'), 'akIsSearchable' => true));
 						
-						$cab5 = CollectionAttributeKey::add($tt, array('akHandle' => 'header_extra_content', 'akName' => t('Header Extra Content'), 'akIsSearchable' => true));
+						$cab5 = CollectionAttributeKey::add($textareat, array('akHandle' => 'header_extra_content', 'akName' => t('Header Extra Content'), 'akIsSearchable' => true));
 						$cab6 = CollectionAttributeKey::add($boolt, array('akHandle' => 'exclude_search_index', 'akName' => t('Exclude From Search Index'), 'akIsSearchable' => true));
 						$cab7 = CollectionAttributeKey::add($boolt, array('akHandle' => 'exclude_sitemapxml', 'akName' => t('Exclude From sitemap.xml'), 'akIsSearchable' => true, null));
 						

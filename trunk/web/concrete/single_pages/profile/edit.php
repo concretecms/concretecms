@@ -36,15 +36,11 @@
                     </div>
  				<? } ?>               
                 <?
+                $af = Loader::helper('form/attribute');
+                $af->setAttributeObject($ui);
                 foreach($attribs as $ak) {
                 	print '<div class="ccm-profile-attribute">';
-                	$value = $ui->getAttributeValueObject($ak);
-                	$ak->render('label');
-                	if ($ak->isAttributeKeyRequiredOnProfile()) { ?>
-                		 <span class="ccm-required">*</span>
-                	<? }
-                	print '<br/>';
-                	$ak->render('form', $value); 
+                	print $af->display($ak, $ak->isAttributeKeyRequiredOnProfile());
                 	print '</div>';
                 } ?>
                 </fieldset>
