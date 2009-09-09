@@ -6,9 +6,14 @@
 <!-- insert CSS for Default Concrete Theme //-->
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.default.theme.css";</style>
 <? 
-$v = View::getInstance();
-$v->disableEditing();
-Loader::element('header_required')?>
+if (is_object($c)) {
+	$v = View::getInstance();
+	$v->disableEditing();
+ 	Loader::element('header_required');
+} else { 
+	print Loader::helper('html')->javascript('jquery.js');
+}
+?>
 </head>
 <body>
 
