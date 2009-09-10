@@ -23,6 +23,11 @@ class FormAttributeHelper {
 			}
 			$obj = call_user_func_array(array($class, 'getByHandle'), array($key));
 		}
+		
+		if (!is_object($obj)) {
+			return false;
+		}
+		
 		if (is_object($this->obj)) {
 			$value = $this->obj->getAttributeValueObject($obj);
 		}
