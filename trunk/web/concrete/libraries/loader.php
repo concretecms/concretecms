@@ -316,9 +316,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * Loads a controller for either a page or view
 		 */
 		public function controller($item) {
-		
+			$db = Loader::db();
+			
 			if (is_string($item)) {
-				$item = Page::getByPath($item);
+				if (is_object($db)) {
+					$item = Page::getByPath($item);
+				} else {
+					$path = $item;
+				}
 			}
 			
 			if ($item instanceof Page) {
