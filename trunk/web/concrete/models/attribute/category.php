@@ -56,14 +56,21 @@ class AttributeKeyCategory extends Object {
 		return $cats;
 	}
 	
-	public static function add($akCategoryHandle) {
+	public static function add($akCategoryHandle, $pkg = false) {
 		$db = Loader::db();
-		$db->Execute('insert into AttributeKeyCategories (akCategoryHandle) values (?)', array($akCategoryHandle));
+		if (is_object($pkg)) {
+			$pkgID = $pkg->getPackageID();
+		}
+		$db->Execute('insert into AttributeKeyCategories (akCategoryHandle, pkgID) values (?, ?)', array($akCategoryHandle, $pkgID));
 		$id = $db->Insert_ID();
 		
-		Loader::model('attribute/categories/' . $akCategoryHandle);
+		if ($pkgID > 0) {
+			Loader::model('attribute/categories/' . $akCategoryHandle, $pkg->getPackageHandle());
+		} else {
+			Loader::model('attribute/categories/' . $akCategoryHandle);
+		}		
 		$txt = Loader::helper("text");
-		$class = $txt->unhandle($akCategoryHandle) . 'AttributeKey';
+		$class = $txt->camelcase($akCategoryHandle) . 'AttributeKey';
 		$obj = new $class;
 		$obj->createIndexedSearchTable();
 		

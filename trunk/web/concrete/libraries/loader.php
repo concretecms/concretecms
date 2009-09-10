@@ -316,6 +316,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * Loads a controller for either a page or view
 		 */
 		public function controller($item) {
+		
+			if (is_string($item)) {
+				$item = Page::getByPath($item);
+			}
+			
 			if ($item instanceof Page) {
 				$c = $item;
 				if ($c->getCollectionTypeID() > 0) {					
@@ -353,8 +358,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$c = $item->getBlockCollectionObject();
 				}
 				
-			} else {
-				$path = $item;
 			}
 			
 			$controllerFile = $path . '.php';
