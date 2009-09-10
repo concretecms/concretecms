@@ -104,6 +104,9 @@
 	## Specific site routes for various content items (if they exist) ##
 	@include('config/site_file_types.php');
 
+	## Package events
+	require(dirname(__FILE__) . '/startup/packages.php');
+
 	// Now we check to see if we're including CSS, Javascript, etc...
 	// Include Tools. Format: index.php?task=include_frontend&fType=TOOL&filename=test.php
 	require(dirname(__FILE__) . '/startup/tools.php');
@@ -114,8 +117,6 @@
 		@include('config/site_events.php');
 	}
 	
-	## Package events
-	require(dirname(__FILE__) . '/startup/packages.php');
 	
 	## Check online, user-related startup routines
 	require(dirname(__FILE__) . '/startup/user.php');
