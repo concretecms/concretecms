@@ -70,6 +70,9 @@ if ($this->controller->getTask() == 'update') {
 	
 	foreach ($pkgArray as $pkg) { 
 		$rpkg = $purchased[$pkg->getPackageHandle()];
+		if (!is_object($rpkg)) {
+			continue;
+		}
 		if (version_compare($rpkg->getVersion(), $pkg->getPackageVersion(), '>')) { 
 			$i++;
 			

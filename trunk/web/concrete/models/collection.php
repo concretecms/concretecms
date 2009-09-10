@@ -130,7 +130,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	
 			$db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
 			$searchableAttributes = array('cID' => $this->getCollectionID());
-			$rs = $db->Execute('select * from CollectionAttributeValues where cID = -1');
+			$rs = $db->Execute('select * from CollectionSearchIndexAttributes where cID = -1');
 			AttributeKey::reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
 		}
 		

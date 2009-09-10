@@ -168,6 +168,7 @@ class ConcreteUpgradeVersion532Helper {
 		$nt = AttributeType::add('number', t('Number'));
 		$rt = AttributeType::add('rating', t('Rating'));
 		$st = AttributeType::add('select', t('Select'));
+		$addresst = AttributeType::add('address', t('Address'));
 		
 		// assign collection attributes
 		$cakc->associateAttributeKeyType($tt);
@@ -186,6 +187,7 @@ class ConcreteUpgradeVersion532Helper {
 		$uakc->associateAttributeKeyType($dtt);
 		$uakc->associateAttributeKeyType($nt);
 		$uakc->associateAttributeKeyType($st);
+		$uakc->associateAttributeKeyType($addresst);
 		
 		// assign file attributes
 		$fakc->associateAttributeKeyType($tt);
