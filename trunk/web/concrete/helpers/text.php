@@ -26,6 +26,7 @@ class TextHelper {
 	 */
 	function sanitizeFileSystem($handle, $leaveSlashes=false) {
 		$handle = trim($handle);
+		$handle = str_replace(PAGE_PATH_SEPARATOR, '-', $handle);
 		$searchMulti = array(
 			"ä",
 			"ö",
@@ -54,7 +55,7 @@ class TextHelper {
 
 		$searchNormal = array("/[&]/", "/[\s|.]+/", "/[^0-9A-Za-z-_]/", "/-+/");
 		$searchSlashes = array("/[&]/", "/[\s|.]+/", "/[^0-9A-Za-z-_\/]/", "/-+/");
-		$replace = array("and", "_", "", "-");
+		$replace = array("and", "-", "", "-");
 		
 		$search = $searchNormal;
 		if ($leaveSlashes) {
@@ -68,6 +69,7 @@ class TextHelper {
 			$handle = strtolower($handle);
 		}
 		$handle = trim($handle, '-');
+		$handle = str_replace('-', PAGE_PATH_SEPARATOR, $handle);
 		return $handle;
 	}
 

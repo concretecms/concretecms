@@ -58,6 +58,10 @@ if (!defined("PAGE_TITLE_FORMAT")) {
 	define('PAGE_TITLE_FORMAT', '%1$s :: %2$s');
 }
 
+if (!defined("PAGE_PATH_SEPARATOR")) {
+	define('PAGE_PATH_SEPARATOR', '-');
+}
+
 if (!defined('ENABLE_ASSET_COMPRESSION')) {
 	define('ENABLE_ASSET_COMPRESSION', false);
 }

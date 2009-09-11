@@ -4,8 +4,7 @@
 <script type="text/javascript">
 	function makeAlias(value, formInputID) {
 		alias = value.replace(/[&]/gi, "and");
-		alias = alias.replace(/[\s|.]+/gi, "-");
-		alias = alias.replace('/ä/i', 'a');
+		alias = alias.replace(/[\s|.]+/gi, "<?=PAGE_PATH_SEPARATOR?>");
 		
 		// thanks fernandos
         alias = alias.replace(/[\u00C4\u00E4]/gi, "ae");            // Ää    
@@ -17,12 +16,12 @@
         alias = alias.replace(/[\u00C5\u00E5]/gi, "aa");            // Åå    
         alias = alias.replace(/[\u00E8\u00C8\u00E9\u00C9]/gi, "e"); // éÉèÈ 
 		
-		alias = alias.replace(/[^0-9A-Za-z-]/gi, "-");
-		alias = alias.replace(/-+/gi, '-');
-		if (alias.charAt(alias.length-1) == '-') {
+		alias = alias.replace(/[^0-9A-Za-z]/gi, "<?=PAGE_PATH_SEPARATOR?>");
+		alias = alias.replace(/<?=PAGE_PATH_SEPARATOR?>+/gi, '<?=PAGE_PATH_SEPARATOR?>');
+		if (alias.charAt(alias.length-1) == '<?=PAGE_PATH_SEPARATOR?>') {
 			alias = alias.substring(0,alias.length-1);
 		}
-		if (alias.charAt(0) == '-') {
+		if (alias.charAt(0) == '<?=PAGE_PATH_SEPARATOR?>') {
 			alias = alias.substring(1,alias.length);
 		}
 		alias = alias.toLowerCase();
