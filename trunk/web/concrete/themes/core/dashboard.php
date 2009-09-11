@@ -3,7 +3,6 @@
         "http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?=APP_CHARSET?>">
 <?
 $html = Loader::helper('html');
 $v = View::getInstance();
@@ -12,6 +11,7 @@ $v->disableEditing();
 // Required JavaScript
 
 $v->addHeaderItem($html->javascript('jquery.js'));
+$v->addHeaderItem($html->javascript('jquery.ui.js'));
 $v->addHeaderItem($html->javascript('ccm.dialog.js'));
 $v->addHeaderItem($html->javascript('ccm.base.js'));
 $v->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
