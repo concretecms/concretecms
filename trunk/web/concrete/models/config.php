@@ -84,6 +84,12 @@ class Config extends Object {
 		define($key, $val);
 	}
 	
+	public function clear($cfKey) {
+		$db = Loader::db();
+		Cache::delete('config_option', $cfKey);
+		$db->Execute('delete from Config where cfKey = ?', $cfKey);		
+	}
+	
 	public function save($cfKey, $cfValue) {
 		$db = Loader::db();
 		Cache::delete('config_option', $cfKey);

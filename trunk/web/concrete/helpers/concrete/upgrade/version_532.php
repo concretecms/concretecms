@@ -128,7 +128,6 @@ class ConcreteUpgradeVersion532Helper {
 		}
 
 		$em1=Page::getByPath('/dashboard/mail');
-		$em2=Page::getByPath('/dashboard/mail/importers');
 		if ($em1->isError()) {
 			$em1 = SinglePage::add('/dashboard/mail');
 			$em1->update(array('cName'=>t('Mail Setup'), 'cDescription'=>t('Enable post via email and other settings.')));

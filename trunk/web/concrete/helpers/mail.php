@@ -109,8 +109,7 @@ class MailHelper {
 	 * @return void
 	 */
 	public function from($email, $name = null) {
-		$this->from=array();
-		$this->from[] = array($email, $name);
+		$this->from = array($email, $name);
 	}
 	
 	/** 
@@ -127,25 +126,45 @@ class MailHelper {
 	 * Sends the email
 	 */
 	public function sendMail() {
-		$from = $this->generateEmailStrings($this->from);
-		$to = $this->generateEmailStrings($this->to);
+		$fromStr = $this->generateEmailStrings($this->from);
+		$toStr = $this->generateEmailStrings($this->to);
 		if (ENABLE_EMAILS) {
-			$header  = "MIME-Version: 1.0\n";
-			$header .= "Content-type: text/plain; charset=" . APP_CHARSET . "\n";
-			if ($from == '') {
-				$from = 'concrete5-noreply@' . str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', BASE_URL);
+			Loader::library('3rdparty/Zend/Mail');
+			$mail = new Zend_Mail(APP_CHARSET);
+			if (is_array($this->from)) {
+				if ($this->from[0] != '') {
+					$from = $this->from;
+				}
 			}
-			$header .= "From: {$from}\n";
-			$subject = $this->subject;
-			/*
-			if (function_exists('mb_encode_mimeheader')) {
-				$subject = mb_encode_mimeheader($subject, APP_CHARSET);
+			if (!isset($from)) {
+				$from = array('concrete5-noreply@' . str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', BASE_URL), '');
 			}
-			*/
-			if (function_exists('mb_send_mail')) {
-				mb_send_mail($to, $subject, $this->body, $header); 
+
+			if (MAIL_SEND_METHOD == "SMTP") {
+				Loader::library('3rdparty/Zend/Mail/Transport/Smtp');
+				$username = Config::get('MAIL_SEND_METHOD_SMTP_USERNAME');
+				$password = Config::get('MAIL_SEND_METHOD_SMTP_PASSWORD');
+				$port = Config::get('MAIL_SEND_METHOD_SMTP_PORT');
+				if ($username != '') {
+					$config = array('auth' => 'login', 'username' => $username, 'password' => $password);
+					if ($port != '') {
+						$config['port'] = $port;
+					}
+					$transport = new Zend_Mail_Transport_Smtp(Config::get('MAIL_SEND_METHOD_SMTP_SERVER'), $config);					
+				} else {
+					$transport = new Zend_Mail_Transport_Smtp(Config::get('MAIL_SEND_METHOD_SMTP_SERVER'));					
+				}
+			}
+			$mail->setFrom($from[0], $from[1]);
+			$mail->setSubject($this->subject);
+			foreach($this->to as $to) {
+				$mail->addTo($to[0], $to[1]);
+			}
+			$mail->setBodyText($this->body);
+			if (MAIL_SEND_METHOD == "SMTP") {
+				$mail->send($transport);
 			} else {
-				mail($to, $subject, $this->body, $header); 
+				$mail->send();
 			}
 		}
 		
@@ -158,8 +177,8 @@ class MailHelper {
 				$l->write('**' . t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT') . '**');
 			}
 			$l->write(t('Template Used') . ': ' . $this->template);
-			$l->write(t('To') . ': ' . $to);
-			$l->write(t('From') . ': ' . $from);
+			$l->write(t('To') . ': ' . $toStr);
+			$l->write(t('From') . ': ' . $fromStr);
 			$l->write(t('Subject') . ': ' . $this->subject);
 			$l->write(t('Body') . ': ' . $this->body);
 			$l->close();
