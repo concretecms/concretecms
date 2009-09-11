@@ -420,7 +420,6 @@ class InstallController extends Controller {
 						$d10 = SinglePage::add('/dashboard/settings');
 						
 						$d11 = SinglePage::add('/dashboard/mail');
-						$d12 = SinglePage::add('/dashboard/mail/importers');
 						
 						
 						// add home page
