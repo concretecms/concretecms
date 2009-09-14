@@ -779,6 +779,18 @@
     <field name="gDescription" type="C" size="255">
       <NOTNULL/>
     </field>
+    <field name="gUserExpirationIsEnabled" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="gUserExpirationMethod" type="C" size="12"/>
+    <field name="gUserExpirationSetDateTime" type="T"/>
+    <field name="gUserExpirationInterval" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="gUserExpirationAction" type="C" size="20"/>
     <index name="gName">
       <UNIQUE/>
       <col>gName</col>

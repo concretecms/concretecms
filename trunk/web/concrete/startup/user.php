@@ -1,15 +1,20 @@
 <?
 	defined('C5_EXECUTE') or die(_("Access Denied."));
-	if (User::isLoggedIn()) {
-		
+	if (!User::isLoggedIn()) {
+		User::checkUserForeverCookie();
+	}
+	
+	if (User::isLoggedIn()) {		
 		// check to see if this is a valid user account
 		$u = new User();
 		if (!$u->checkLogin()) {
-			$u = $u->logout();
+			$u->logout();
 			$v = View::getInstance();
 			$v->setTheme(VIEW_CORE_THEME);
-			$v->render("/user_error");		
+			if (!$u->isActive()) {
+				Loader::controller('/login')->redirect("/login", "account_deactivated");		
+			} else {
+				$v->render("/user_error");		
+			}
 		}
-	} else {
-		User::checkUserForeverCookie();
 	}
