@@ -197,13 +197,12 @@ class DashboardInstallController extends Controller {
 
     public function remote_upgrade($remoteCID, $pkgHandle){
     	$ph = Loader::helper('package');
-    	$errors = $ph->upgrade_remote('purchase', $remoteCID, $pkgHandle);
+    	$errors = $ph->prepare_remote_upgrade('purchase', $remoteCID, $pkgHandle);
 		if (is_array($errors)) {
 			$errors = Package::mapError($errors);
 			$this->set('error', $errors);
 		} else {
-			$this->set('message', t('Upgrade Complete!'));
-			$this->update();
+			$this->redirect('/dashboard/install', 'update', $pkgHandle);
 		}
     }
 

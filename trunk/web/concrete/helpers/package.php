@@ -36,7 +36,7 @@ class PackageHelper {
 		return $fileURL;
 	}
 	
-	public function upgrade_remote($type, $remoteCID, $handle) {
+	public function prepare_remote_upgrade($type, $remoteCID, $handle) {
 		$item = $this->get_remote_purchase($remoteCID);
 		
 		if (empty($item)) {
@@ -72,7 +72,8 @@ class PackageHelper {
 		} catch (Exception $e) {
 			return array($e->getMessage());
 		}
-
+		
+		/*
 		$tests = Package::testForInstall($item->getHandle(), false);
 		if (is_array($tests)) {
 			return $tests;
@@ -85,6 +86,7 @@ class PackageHelper {
 				return array(Package::E_PACKAGE_INSTALL);
 			}
 		}
+		*/
 		
 		return true;
 	}
