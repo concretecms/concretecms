@@ -99,7 +99,10 @@ class LoginController extends Controller {
 		$this->set('oa', $oa);		
 	}
 	
-
+	public function account_deactivated() {
+		$this->error->add(t('This user is inactive. Please contact us regarding this account.'));
+	}
+	
 	public function do_login() { 
 		$ip = Loader::helper('validation/ip');
 		$vs = Loader::helper('validation/strings');

@@ -2,6 +2,22 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 $section = 'groups';
 
+function checkExpirationOptions($g) {
+	if ($_POST['gUserExpirationIsEnabled']) {
+		$date = Loader::helper('form/date_time');
+		switch($_POST['gUserExpirationMethod']) {
+			case 'SET_TIME':
+				$g->setGroupExpirationByDateTime($date->translate('gUserExpirationSetDateTime'), $_POST['gUserExpirationAction']);
+				break;
+			case 'INTERVAL':
+				$g->setGroupExpirationByInterval($_POST['gUserExpirationIntervalDays'], $_POST['gUserExpirationIntervalHours'], $_POST['gUserExpirationIntervalMinutes'], $_POST['gUserExpirationAction']);
+				break;
+		}
+	} else {
+		$g->removeGroupExpiration();
+	}
+}
+
 if ($_REQUEST['task'] == 'edit') {
 	$g = Group::getByID(intval($_REQUEST['gID']));
 	if (is_object($g)) { 		
@@ -49,11 +65,14 @@ if ($_POST['add'] || $_POST['update']) {
 	if (count($error) == 0) {
 		if ($_POST['add']) {
 			$g = Group::add($gName, $_POST['gDescription']);
+			checkExpirationOptions($g);
 			$this->controller->redirect('/dashboard/users/groups?created=1');
 		} else if (is_object($g)) {
 			$g->update($gName, $_POST['gDescription']);
+			checkExpirationOptions($g);
 			$this->controller->redirect('/dashboard/users/groups?updated=1');
-		}		
+		}	
+		
 		exit;
 	}
 }
@@ -120,27 +139,67 @@ foreach ($gResults as $g) { ?>
 <div style="margin:0px; padding:0px; width:100%; height:auto" >	
 <table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 <tr>
-	<td class="subheader" colspan="3"><?=t('Name')?> <span class="required">*</span></td>
+	<td class="subheader"><?=t('Name')?> <span class="required">*</span></td>
 </tr>
 <tr>
-	<td colspan="3"><input type="text" name="gName" style="width: 100%" value="<?=htmlentities($_POST['gName'])?>" /></td>
+	<td><input type="text" name="gName" style="width: 100%" value="<?=htmlentities($_POST['gName'])?>" /></td>
 </tr>
 <tr>
-	<td class="subheader" colspan="3"><?=t('Description')?></td>
+	<td class="subheader"><?=t('Description')?></td>
 </tr>
 <tr>
-	<td colspan="3"><textarea name="gDescription" style="width: 100%; height: 120px"><?=$_POST['gDescription']?></textarea></td>
+	<td><textarea name="gDescription" style="width: 100%; height: 120px"><?=$_POST['gDescription']?></textarea></td>
 </tr>
 <tr>
-	<td colspan="3" class="header"><input type="hidden" name="add" value="1" /><?=$ih->submit(t('Add'), 'add-group-form')?></td>
+	<td class="subheader"><?=t("Group Expiration Options")?></td>
+</tr>
+<? $form = Loader::helper('form'); ?>
+<? $date = Loader::helper('form/date_time'); ?>
+<tr>	
+	<td><?=$form->checkbox('gUserExpirationIsEnabled', 1, false)?>
+	<?=t('Automatically remove users from this group')?>
+	
+	<?=$form->select("gUserExpirationMethod", array(
+		'SET_TIME' => t('at a specific date and time'),
+			'INTERVAL' => t('once a certain amount of time has passed')
+		
+	), array('disabled' => true));?>	
+	
+	<div id="gUserExpirationSetTimeOptions" style="display: none">
+	<br/>
+	<h2><?=t('Expiration Date')?></h2>
+	<?=$date->datetime('gUserExpirationSetDateTime')?>
+	</div>
+	<div id="gUserExpirationIntervalOptions" style="display: none">
+	<br/>
+	<h2><?=t('Expire Accounts After')?></h2>
+	<?=$form->text('gUserExpirationIntervalDays', t('Days'), array('style' => 'width: 60px; color: #aaa'))?>
+	:
+	<?=$form->text('gUserExpirationIntervalHours', t('Hours'), array('style' => 'width: 60px; color: #aaa'))?>
+	:
+	<?=$form->text('gUserExpirationIntervalMinutes', t('Minutes'), array('style' => 'width: 60px; color: #aaa'))?>
+	</div>
+	<div id="gUserExpirationAction" style="display: none">
+	<br/>
+	<h2><?=t('Expiration Action')?></h2>
+		<?=$form->select("gUserExpirationAction", array(
+		'REMOVE' => t('Remove the user from this group.'),
+			'DEACTIVATE' => t('Deactivate the user account.'),
+			'REMOVE_DEACTIVATE' => t('Remove the user from the group and deactivate the account.')
+		
+	));?>	
+
+	</div>
+	</td>
+</tr>
+<tr>
+	<td class="header"><input type="hidden" name="add" value="1" /><?=$ih->submit(t('Add'), 'add-group-form')?></td>
 </tr>
 </table>
 </div>
 <br>
 </form>	
 </div>
-
-
 
 <? } else { ?>
 	<h1><span><?=t('Edit Group')?></span></h1>
@@ -154,19 +213,75 @@ foreach ($gResults as $g) { ?>
 		<div style="margin:0px; padding:0px; width:100%; height:auto" >	
 		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 		<tr>
-			<td class="subheader" colspan="3"><?=t('Name')?> <span class="required">*</span></td>
+			<td class="subheader"><?=t('Name')?> <span class="required">*</span></td>
 		</tr>
 		<tr>
-			<td colspan="3"><input type="text" name="gName" style="width: 100%" value="<?=$gName?>" /></td>
+			<td><input type="text" name="gName" style="width: 100%" value="<?=$gName?>" /></td>
 		</tr>
 		<tr>
-			<td class="subheader" colspan="3"><?=t('Description')?></td>
+			<td class="subheader"><?=t('Description')?></td>
 		</tr>
 		<tr>
-			<td colspan="3"><textarea name="gDescription" style="width: 100%; height: 120px"><?=$gDescription?></textarea></td>
+			<td><textarea name="gDescription" style="width: 100%; height: 120px"><?=$gDescription?></textarea></td>
 		</tr>
 		<tr>
-			<td colspan="3" class="header">
+	<td class="subheader"><?=t("Group Expiration Options")?></td>
+</tr>
+<? $form = Loader::helper('form'); ?>
+<? $date = Loader::helper('form/date_time'); ?>
+<tr>	
+	<td><?=$form->checkbox('gUserExpirationIsEnabled', 1, $g->isGroupExpirationEnabled())?>
+	<?=t('Automatically remove users from this group')?>
+	
+	<?=$form->select("gUserExpirationMethod", array(
+		'SET_TIME' => t('at a specific date and time'),
+			'INTERVAL' => t('once a certain amount of time has passed')
+		
+	), $g->getGroupExpirationMethod(), array('disabled' => true));?>	
+	
+	<div id="gUserExpirationSetTimeOptions" style="display: none">
+	<br/>
+	<h2><?=t('Expiration Date')?></h2>
+	<?=$date->datetime('gUserExpirationSetDateTime', $g->getGroupExpirationDateTime())?>
+	</div>
+	<div id="gUserExpirationIntervalOptions" style="display: none">
+	<br/>
+	<h2><?=t('Expire Accounts After')?></h2>
+	<?
+	$days = $g->getGroupExpirationIntervalDays();
+	$hours = $g->getGroupExpirationIntervalHours();
+	$minutes = $g->getGroupExpirationIntervalMinutes();
+	if ($days == 0 && $hours == 0 && $minutes == 0) {
+		$days = t('Days');
+		$hours = t('Hours');
+		$minutes =t('Minutes');
+		$style = 'width: 60px; color: #aaa';
+	} else {
+		$style = 'width: 60px';
+	}
+	?>
+	<?=$form->text('gUserExpirationIntervalDays', $days, array('style' => $style))?>
+	:
+	<?=$form->text('gUserExpirationIntervalHours', $hours, array('style' => $style))?>
+	:
+	<?=$form->text('gUserExpirationIntervalMinutes', $minutes, array('style' => $style))?>
+	</div>
+	<div id="gUserExpirationAction" style="display: none">
+	<br/>
+	<h2><?=t('Expiration Action')?></h2>
+		<?=$form->select("gUserExpirationAction", array(
+		'REMOVE' => t('Remove the user from this group.'),
+			'DEACTIVATE' => t('Deactivate the user account.'),
+			'REMOVE_DEACTIVATE' => t('Remove the user from the group and deactivate the account.')
+		
+	), $g->getGroupExpirationAction());?>	
+
+	</div>
+	</td>
+</tr>
+
+		<tr>
+			<td class="header">
 			<input type="hidden" name="update" value="1" />
 			<?=$ih->submit(t('Update'), 'update-group-form')?>
 			<?=$ih->button(t('Cancel'), $this->url('/dashboard/users/groups'), 'left')?>
@@ -205,3 +320,46 @@ foreach ($gResults as $g) { ?>
 	</div>	
 	<?   
 }
+
+?>
+
+<script type="text/javascript">
+ccm_checkGroupExpirationOptions = function() {
+	var sel = $("select[name=gUserExpirationMethod]");
+	var cb = $("input[name=gUserExpirationIsEnabled]");
+	if (cb.attr('checked')) {
+		sel.attr('disabled', false);
+		switch(sel.val()) {
+			case 'SET_TIME':
+				$("#gUserExpirationSetTimeOptions").show();
+				$("#gUserExpirationIntervalOptions").hide();
+				break;
+			case 'INTERVAL': 
+				$("#gUserExpirationSetTimeOptions").hide();
+				$("#gUserExpirationIntervalOptions").show();
+				break;				
+		}
+		$("#gUserExpirationAction").show();
+	} else {
+		sel.attr('disabled', true);	
+		$("#gUserExpirationSetTimeOptions").hide();
+		$("#gUserExpirationIntervalOptions").hide();
+		$("#gUserExpirationAction").hide();
+	}
+}
+
+$(function() {
+	$("input[name=gUserExpirationIsEnabled]").click(ccm_checkGroupExpirationOptions);
+	$("select[name=gUserExpirationMethod]").change(ccm_checkGroupExpirationOptions);
+	ccm_checkGroupExpirationOptions();
+	$("div#gUserExpirationIntervalOptions input").focus(function() {
+		if ($('input[name=gUserExpirationIntervalDays]').val() == '<?=t("Days")?>' &&
+			$('input[name=gUserExpirationIntervalHours]').val() == '<?=t("Hours")?>' &&
+			$('input[name=gUserExpirationIntervalMinutes]').val() == '<?=t("Minutes")?>') {
+			$("div#gUserExpirationIntervalOptions input").val("");
+			$("div#gUserExpirationIntervalOptions input").css('color', '#000');
+		}
+	});
+});
+</script>
+

@@ -65,8 +65,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function checkLogin() {
 			if ($_SESSION['uID'] > 0) {
 				$db = Loader::db();
-				$checkUID = $db->GetOne("select uID from Users where uID = ? and uName = ?", array($_SESSION['uID'], $_SESSION['uName']));
+				$row = $db->GetRow("select uID, uIsActive from Users where uID = ? and uName = ?", array($_SESSION['uID'], $_SESSION['uName']));
+				$checkUID = $row['uID'];
 				if ($checkUID == $_SESSION['uID']) {
+					if (!$row['uIsActive']) {
+						return false;
+					}
 					$_SESSION['uOnlineCheck'] = time();
 					if (($_SESSION['uOnlineCheck'] - $_SESSION['uLastOnline']) > (ONLINE_NOW_TIMEOUT / 2)) {
 						$db = Loader::db();
@@ -249,12 +253,37 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					//$_SESSION['uGroups'][REGISTERED_GROUP_ID] = REGISTERED_GROUP_NAME;
 
 					$uID = $this->uID;
-					$q = "select Groups.gID, Groups.gName from UserGroups inner join Groups on (UserGroups.gID = Groups.gID) where UserGroups.uID = '$uID'";
+					$q = "select Groups.gID, Groups.gName, Groups.gUserExpirationIsEnabled, Groups.gUserExpirationSetDateTime, Groups.gUserExpirationInterval, Groups.gUserExpirationAction, Groups.gUserExpirationMethod, UserGroups.ugEntered from UserGroups inner join Groups on (UserGroups.gID = Groups.gID) where UserGroups.uID = '$uID'";
 					$r = $db->query($q);
 					if ($r) {
 						while ($row = $r->fetchRow()) {
-							$ug[$row['gID']] = $row['gName'];
-							//$_SESSION['uGroups'][$row['gID']] = $row['gName'];
+							$expire = false;					
+							if ($row['gUserExpirationIsEnabled']) {
+								switch($row['gUserExpirationMethod']) {
+									case 'SET_TIME':
+										if (time() > strtotime($row['gUserExpirationSetDateTime'])) {
+											$expire = true;
+										}
+										break;
+									case 'INTERVAL':
+										if (time() > strtotime($row['ugEntered']) + ($row['gUserExpirationInterval'] * 60)) {
+											$expire = true;
+										}
+										break;
+								}	
+							}
+							
+							if ($expire) {
+								if ($row['gUserExpirationAction'] == 'REMOVE' || $row['gUserExpirationAction'] == 'REMOVE_DEACTIVATE') {
+									$db->Execute('delete from UserGroups where uID = ? and gID = ?', array($uID, $row['gID']));
+								}
+								if ($row['gUserExpirationAction'] == 'DEACTIVATE' || $row['gUserExpirationAction'] == 'REMOVE_DEACTIVATE') {
+									$db->Execute('update Users set uIsActive = 0 where uID = ?', array($uID));
+								}
+							} else {
+								$ug[$row['gID']] = $row['gName'];
+							}
+							
 						}
 						$r->free();
 					}
