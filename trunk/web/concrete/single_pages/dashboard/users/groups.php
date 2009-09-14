@@ -155,6 +155,9 @@ foreach ($gResults as $g) { ?>
 </tr>
 <? $form = Loader::helper('form'); ?>
 <? $date = Loader::helper('form/date_time'); ?>
+<?
+$style = 'width: 60px';
+?>
 <tr>	
 	<td><?=$form->checkbox('gUserExpirationIsEnabled', 1, false)?>
 	<?=t('Automatically remove users from this group')?>
@@ -172,20 +175,28 @@ foreach ($gResults as $g) { ?>
 	</div>
 	<div id="gUserExpirationIntervalOptions" style="display: none">
 	<br/>
-	<h2><?=t('Expire Accounts After')?></h2>
-	<?=$form->text('gUserExpirationIntervalDays', t('Days'), array('style' => 'width: 60px; color: #aaa'))?>
-	:
-	<?=$form->text('gUserExpirationIntervalHours', t('Hours'), array('style' => 'width: 60px; color: #aaa'))?>
-	:
-	<?=$form->text('gUserExpirationIntervalMinutes', t('Minutes'), array('style' => 'width: 60px; color: #aaa'))?>
+	<h2><?=t('Accounts will Expire After')?></h2>
+	<table border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td valign="top"><strong><?=t('Days')?></strong><br/>
+		<?=$form->text('gUserExpirationIntervalDays', array('style' => $style))?>
+		</td>
+		<td valign="top"><strong><?=t('Hours')?></strong><br/>
+		<?=$form->text('gUserExpirationIntervalHours', array('style' => $style))?>
+		</td>
+		<td valign="top"><strong><?=t('Minutes')?></strong><br/>
+		<?=$form->text('gUserExpirationIntervalMinutes', array('style' => $style))?>
+		</td>
+	</tr>
+	</table>
 	</div>
 	<div id="gUserExpirationAction" style="display: none">
 	<br/>
 	<h2><?=t('Expiration Action')?></h2>
 		<?=$form->select("gUserExpirationAction", array(
-		'REMOVE' => t('Remove the user from this group.'),
-			'DEACTIVATE' => t('Deactivate the user account.'),
-			'REMOVE_DEACTIVATE' => t('Remove the user from the group and deactivate the account.')
+		'REMOVE' => t('Remove the user from this group'),
+			'DEACTIVATE' => t('Deactivate the user account'),
+			'REMOVE_DEACTIVATE' => t('Remove the user from the group and deactivate the account')
 		
 	));?>	
 
@@ -246,11 +257,13 @@ foreach ($gResults as $g) { ?>
 	</div>
 	<div id="gUserExpirationIntervalOptions" style="display: none">
 	<br/>
-	<h2><?=t('Expire Accounts After')?></h2>
+	<h2><?=t('Accounts will Expire After')?></h2>
 	<?
 	$days = $g->getGroupExpirationIntervalDays();
 	$hours = $g->getGroupExpirationIntervalHours();
 	$minutes = $g->getGroupExpirationIntervalMinutes();
+	
+	/*
 	if ($days == 0 && $hours == 0 && $minutes == 0) {
 		$days = t('Days');
 		$hours = t('Hours');
@@ -259,20 +272,30 @@ foreach ($gResults as $g) { ?>
 	} else {
 		$style = 'width: 60px';
 	}
+	*/
+	$style = 'width: 60px';
 	?>
-	<?=$form->text('gUserExpirationIntervalDays', $days, array('style' => $style))?>
-	:
-	<?=$form->text('gUserExpirationIntervalHours', $hours, array('style' => $style))?>
-	:
-	<?=$form->text('gUserExpirationIntervalMinutes', $minutes, array('style' => $style))?>
+	<table border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td valign="top"><strong><?=t('Days')?></strong><br/>
+		<?=$form->text('gUserExpirationIntervalDays', $days, array('style' => $style))?>
+		</td>
+		<td valign="top"><strong><?=t('Hours')?></strong><br/>
+		<?=$form->text('gUserExpirationIntervalHours', $hours, array('style' => $style))?>
+		</td>
+		<td valign="top"><strong><?=t('Minutes')?></strong><br/>
+		<?=$form->text('gUserExpirationIntervalMinutes', $minutes, array('style' => $style))?>
+		</td>
+	</tr>
+	</table>
 	</div>
 	<div id="gUserExpirationAction" style="display: none">
 	<br/>
 	<h2><?=t('Expiration Action')?></h2>
 		<?=$form->select("gUserExpirationAction", array(
-		'REMOVE' => t('Remove the user from this group.'),
-			'DEACTIVATE' => t('Deactivate the user account.'),
-			'REMOVE_DEACTIVATE' => t('Remove the user from the group and deactivate the account.')
+		'REMOVE' => t('Remove the user from this group'),
+			'DEACTIVATE' => t('Deactivate the user account'),
+			'REMOVE_DEACTIVATE' => t('Remove the user from the group and deactivate the account')
 		
 	), $g->getGroupExpirationAction());?>	
 
@@ -352,6 +375,7 @@ $(function() {
 	$("input[name=gUserExpirationIsEnabled]").click(ccm_checkGroupExpirationOptions);
 	$("select[name=gUserExpirationMethod]").change(ccm_checkGroupExpirationOptions);
 	ccm_checkGroupExpirationOptions();
+	/*
 	$("div#gUserExpirationIntervalOptions input").focus(function() {
 		if ($('input[name=gUserExpirationIntervalDays]').val() == '<?=t("Days")?>' &&
 			$('input[name=gUserExpirationIntervalHours]').val() == '<?=t("Hours")?>' &&
@@ -360,6 +384,17 @@ $(function() {
 			$("div#gUserExpirationIntervalOptions input").css('color', '#000');
 		}
 	});
+	$("div#gUserExpirationIntervalOptions input").blur(function() {
+		if ($('input[name=gUserExpirationIntervalDays]').val() == '' &&
+			$('input[name=gUserExpirationIntervalHours]').val() == '' &&
+			$('input[name=gUserExpirationIntervalMinutes]').val() == '') {
+			$('input[name=gUserExpirationIntervalDays]').val('<?=t("Days")?>');
+			$('input[name=gUserExpirationIntervalHours]').val('<?=t("Hours")?>');
+			$('input[name=gUserExpirationIntervalMinutes]').val('<?=t("Minutes")?>');
+			$("div#gUserExpirationIntervalOptions input").css('color', '#aaa');
+		}
+	});
+	*/
 });
 </script>
 
