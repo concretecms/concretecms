@@ -126,15 +126,16 @@ class ConcreteUpgradeVersion532Helper {
 		if (!is_object($ppmne)) {
 			UserAttributeKey::add('BOOLEAN', array('akHandle' => 'profile_private_messages_notification_enabled', 'akName' => t('Send me email notifications when I receive a private message.'), 'akIsSearchable' => true));
 		}
-
-		$em1=Page::getByPath('/dashboard/mail');
-		if ($em1->isError()) {
-			$em1 = SinglePage::add('/dashboard/mail');
-			$em1->update(array('cName'=>t('Mail Setup'), 'cDescription'=>t('Enable post via email and other settings.')));
+		
+		$em = SinglePage::getByPath('/dashboard/settings');
+		if (!$em->isError()) {
+			$em->refresh();
 		}
 		
-		if ($em2->isError()) {
-			$em2 = SinglePage::add('/dashboard/mail/importers');
+		$em1=Page::getByPath('/dashboard/settings/mail');
+		if ($em1->isError()) {
+			$em1 = SinglePage::add('/dashboard/settings/mail');
+			$em1->update(array('cName'=>t('Email'), 'cDescription'=>t('Enable post via email and other settings.')));
 		}
 
 		Loader::library('mail/importer');
