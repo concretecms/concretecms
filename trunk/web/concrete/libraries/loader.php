@@ -323,6 +323,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$_item = Page::getByPath($item);
 					if ($_item->isError()) {
 						$path = $item;
+					} else {
+						$item = $_item;
 					}
 				} else {
 					$path = $item;
