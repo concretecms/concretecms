@@ -127,8 +127,9 @@ class ConcreteUpgradeVersion532Helper {
 			UserAttributeKey::add('BOOLEAN', array('akHandle' => 'profile_private_messages_notification_enabled', 'akName' => t('Send me email notifications when I receive a private message.'), 'akIsSearchable' => true));
 		}
 		
-		$em = SinglePage::getByPath('/dashboard/settings');
+		$em = Page::getByPath('/dashboard/settings');
 		if (!$em->isError()) {
+			$em = SinglePage::getByID($em->getCollectionID());
 			$em->refresh();
 		}
 		
