@@ -3,10 +3,17 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 Loader::library('mail/importer');
 
-class DashboardMailController extends Controller {
+class DashboardSettingsMailController extends Controller {
 
 	public function on_start() {
 		$this->set('importers', MailImporter::getList());
+		$subnav = array(
+			array(View::url('/dashboard/settings'), t('General')),
+			array(View::url('/dashboard/settings/mail'), t('Email'), true),
+			array(View::url('/dashboard/settings', 'set_permissions'), t('Access')),
+			array(View::url('/dashboard/settings', 'set_developer'), t('Debug'))
+		);
+		$this->set('subnav', $subnav);
 	}
 
 	public function edit_importer($miID = false) {
@@ -19,13 +26,12 @@ class DashboardMailController extends Controller {
 		$mi = MailImporter::getByID($miID);
 		if (is_object($mi)) {
 			$mi->update($this->post());
-			$this->redirect('/dashboard/mail', 'importer_updated');
+			$this->redirect('/dashboard/settings/mail', 'importer_updated');
 		}
 	}
 	
 	public function importer_updated() {
 		$this->set('message', t('Importer saved.'));
-		$this->view();
 	}
 	
 	public function settings_updated() {
@@ -45,7 +51,7 @@ class DashboardMailController extends Controller {
 			Config::clear('MAIL_SEND_METHOD_SMTP_PASSWORD');
 			Config::clear('MAIL_SEND_METHOD_SMTP_PORT');
 		}
-		$this->redirect("/dashboard/mail", "settings_updated");
+		$this->redirect("/dashboard/settings/mail", "settings_updated");
 	}
 
 		

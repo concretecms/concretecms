@@ -13,7 +13,7 @@ $form = Loader::helper('form');
 	<h1><span><?=t('Edit Importer')?></span></h1>
 	<div class="ccm-dashboard-inner">
 
-	<form method="post" id="mail-importer-form" action="<?=$this->url('/dashboard/mail', 'save_importer')?>">
+	<form method="post" id="mail-importer-form" action="<?=$this->url('/dashboard/settings/mail', 'save_importer')?>">
 	<?=$form->hidden('miID', $mi->getMailImporterID())?>
 	<table class="entry-form" border="0" cellspacing="1" cellpadding="0" width="600">
 	<tr>
@@ -144,7 +144,7 @@ $form = Loader::helper('form');
 			<td><?=$mi->getMailImporterEmail()?></td>
 			<td><?=$mi->isMailImporterEnabled() ? t('Yes') : t('No')?></td>
 			<td width="1"><?
-				print $ih->button(t('Edit'), $this->url('/dashboard/mail', 'edit_importer', $mi->getMailImporterID()), 'left');		
+				print $ih->button(t('Edit'), $this->url('/dashboard/settings/mail', 'edit_importer', $mi->getMailImporterID()), 'left');		
 			?>
 		</tr>
 	<? } ?>

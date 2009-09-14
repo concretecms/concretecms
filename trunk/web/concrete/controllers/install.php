@@ -418,8 +418,7 @@ class InstallController extends Controller {
 						$d8 = SinglePage::add('/dashboard/install');
 						$d9 = SinglePage::add('/dashboard/jobs');
 						$d10 = SinglePage::add('/dashboard/settings');
-						
-						$d11 = SinglePage::add('/dashboard/mail');
+						$d11 = SinglePage::add('/dashboard/settings/mail');
 						
 						
 						// add home page
@@ -453,7 +452,7 @@ class InstallController extends Controller {
 						$d9->update(array('cName'=>t('Maintenance'), 'cDescription'=>t('Run common cleanup tasks.')));
 						$d10->update(array('cName'=>t('Sitewide Settings'), 'cDescription'=>t('Secure and setup your site.')));
 
-						$d11->update(array('cName'=>t('Mail Setup'), 'cDescription'=>t('Enable post via email and other settings.')));
+						$d11->update(array('cName'=>t('Email'), 'cDescription'=>t('Enable post via email and other settings.')));
 				
 						// dashboard homepage
 						$dh2 = new DashboardHomepageView();
