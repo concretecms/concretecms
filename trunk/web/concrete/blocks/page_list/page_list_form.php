@@ -1,4 +1,5 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
+<? $c = Page::getCurrentPage(); ?>
 <ul id="ccm-pagelist-tabs" class="ccm-dialog-tabs">
 	<li class="ccm-nav-active"><a id="ccm-pagelist-tab-add" href="javascript:void(0);"><?=($bID>0)? t('Edit') : t('Add') ?></a></li>
 	<li class=""><a id="ccm-pagelist-tab-preview"  href="javascript:void(0);"><?=t('Preview')?></a></li>
@@ -24,9 +25,23 @@
 		<? } ?>
 	  </select>
 	  <? } ?>
-	  <input type="checkbox" name="displayFeaturedOnly" value="1" <? if ($displayFeaturedOnly == 1) { ?> checked <? } ?> style="vertical-align: middle" />
+	  
+	  <h2><?=t('Filter')?></h2>
+	  
+	  <?
+	  Loader::model('attribute/categories/collection');
+	  $cadf = CollectionAttributeKey::getByHandle('is_featured');
+	  ?>
+	  <input <? if (!is_object($cadf)) { ?> disabled <? } ?> type="checkbox" name="displayFeaturedOnly" value="1" <? if ($displayFeaturedOnly == 1) { ?> checked <? } ?> style="vertical-align: middle" />
 	  <?=t('Featured pages only.')?>
-
+		<? if (!is_object($cadf)) { ?>
+			 <?=t('(<strong>Note</strong>: You must create the "is_featured" page attribute first.)');?></span>
+		<? } ?>
+		<br/>
+		<input type="checkbox" name="displayAliases" value="1" <? if ($displayAliases == 1) { ?> checked <? } ?> />
+		<?=t('Display page aliases.')?>
+		<br/>
+		
 	</div>
 	<div class="ccm-block-field-group">
 		<h2><?=t('Pagination')?></h2>
@@ -42,7 +57,7 @@
 			<?=t('everywhere')?>
 			
 			&nbsp;&nbsp; 
-			<input type="radio" name="cParentID" id="cThisPageField" value="<?=$c->getCollectionID()?>" <? if ($bCID == $cParentID || $cThis) { ?> checked<? } ?>>
+			<input type="radio" name="cParentID" id="cThisPageField" value="<?=$c->getCollectionID()?>" <? if ($cParentID == $c->getCollectionID() || $cThis) { ?> checked<? } ?>>
 			<?=t('beneath this page')?>
 			
 			&nbsp;&nbsp;

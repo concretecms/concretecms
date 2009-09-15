@@ -29,7 +29,7 @@
 			$db = Loader::db();
 			$bID = $this->bID;
 			if ($this->bID) {
-				$q = "select num, cParentID, cThis, orderBy, ctID, rss from btPageList where bID = '$bID'";
+				$q = "select num, cParentID, cThis, orderBy, ctID, displayAliases, rss from btPageList where bID = '$bID'";
 				$r = $db->query($q);
 				if ($r) {
 					$row = $r->fetchRow();
@@ -83,9 +83,15 @@
 			$cParentID = ($row['cThis']) ? $this->cID : $row['cParentID'];
 			
 			if ($this->displayFeaturedOnly == 1) {
-				$pl->filterByIsFeatured(1);
+				Loader::model('attribute/categories/collection');
+				$cak = CollectionAttributeKey::getByHandle('is_featured');
+				if (is_object($cak)) {
+					$pl->filterByIsFeatured(1);
+				}
 			}
-			
+			if (!$row['displayAliases']) {
+				$pl->filterByIsAlias(0);
+			}
 			$pl->filter('cvName', '', '!=');			
 		
 			if ($row['ctID']) {
@@ -118,6 +124,32 @@
 			$this->set('cArray', $cArray);
 		}
 		
+		public function add() {
+			Loader::model("collection_types");
+			$c = Page::getCurrentPage();
+			$uh = Loader::helper('concrete/urls');
+			//	echo $rssUrl;
+			$this->set('c', $c);
+			$this->set('uh', $uh);
+			$this->set('bt', BlockType::getByHandle('page_list'));
+			$this->set('displayAliases', true);
+		}
+	
+		public function edit() {
+			$b = $this->getBlockObject();
+			$bCID = $b->getBlockCollectionID();
+			$bID=$b->getBlockID();
+			$this->set('bID', $bID);
+			$c = Page::getCurrentPage();
+			if ($c->getCollectionID() != $this->cParentID && (!$this->cThis) && ($this->cParentID != 0)) { 
+				$isOtherPage = true;
+				$this->set('isOtherPage', true);
+			}
+			$uh = Loader::helper('concrete/urls');
+			$this->set('uh', $uh);
+			$this->set('bt', BlockType::getByHandle('page_list'));
+		}
+		
 		function save($args) {
 			// If we've gotten to the process() function for this class, we assume that we're in
 			// the clear, as far as permissions are concerned (since we check permissions at several
@@ -135,6 +167,7 @@
 			$args['cParentID'] = ($args['cParentID'] == 'OTHER') ? $args['cParentIDValue'] : $args['cParentID'];
 			$args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
 			$args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
+			$args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
 			$args['truncateChars'] = intval($args['truncateChars']); 
 			$args['paginate'] = intval($args['paginate']); 
 

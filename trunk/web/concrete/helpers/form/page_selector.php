@@ -39,7 +39,7 @@ class FormPageSelectorHelper {
 		}
 
 		$html = '';
-		$html .= '<div class="ccm-summary-selected-page"><div class="ccm-summary-selected-page-inner"><strong class="ccm-summary-selected-page-label">';
+		$html .= '<div class="ccm-summary-selected-item"><div class="ccm-summary-selected-item-inner"><strong class="ccm-summary-selected-item-label">';
 		if ($selectedCID > 0) {
 			$oc = Page::getByID($selectedCID);
 			$html .= $oc->getCollectionName();
@@ -52,7 +52,7 @@ class FormPageSelectorHelper {
 		ccm_selectSitemapNode = function(cID, cName) { ';
 		if($javascriptFunc=='' || $javascriptFunc=='ccm_selectSitemapNode'){
 			$html .= '
-			var par = $(ccmActivePageField).parent().find(\'.ccm-summary-selected-page-label\');
+			var par = $(ccmActivePageField).parent().find(\'.ccm-summary-selected-item-label\');
 			var pari = $(ccmActivePageField).parent().find(\'[name=' . $fieldName . ']\');
 			par.html(cName);
 			pari.val(cID);
