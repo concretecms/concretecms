@@ -20,6 +20,7 @@
 <h1><span><?=t('Delete Attribute')?></span></h1>
 
 <div class="ccm-dashboard-inner">
+	<div class="ccm-spacer"></div>
 	<?
 	$valt = Loader::helper('validation/token');
 	$ih = Loader::helper('concrete/interface');

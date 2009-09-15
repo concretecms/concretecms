@@ -49,7 +49,11 @@ class FormUserSelectorHelper {
 		$html .= '<a class="ccm-sitemap-select-item dialog-launch" onclick="ccmActiveUserField=this" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/users/search_dialog?mode=choose_one">' . t('Select User') . '</a>';
 		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedUID . '">';
 		$html .= '</div>'; 
-		$html .= '<script type="text/javascript"> 
+		$html .= '<script type="text/javascript">';
+		$html .= 'if (typeof(ccmActiveUserField) == "undefined") {';
+		$html .= 'var ccmActiveUserField;';		
+		$html .= '}';
+		$html .= '
 		ccm_triggerSelectUser = function(uID, uName, uEmail) { ';
 		if($javascriptFunc=='' || $javascriptFunc=='ccm_triggerSelectUser'){
 			$html .= '

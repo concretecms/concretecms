@@ -64,6 +64,7 @@ img.ccm-attribute-icon:hover {cursor: move}
 <h1><span><?=t('Delete Attribute')?></span></h1>
 
 <div class="ccm-dashboard-inner">
+	<div class="ccm-spacer"></div>
 	<?
 	$delConfirmJS = t('Are you sure you want to remove this attribute?');
 	?>

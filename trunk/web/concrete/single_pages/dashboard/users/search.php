@@ -492,6 +492,7 @@ if (is_object($uo)) {
 	<h1><span><?=t('Delete User')?></span></h1>
 	
 	<div class="ccm-dashboard-inner">
+		<div class="ccm-spacer"></div>
 		<?
 		$delConfirmJS = t('Are you sure you want to permanently remove this user?');
 		if ($uo->getUserID() == USER_SUPER_ID) { ?>
