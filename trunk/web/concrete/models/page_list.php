@@ -126,6 +126,15 @@ class PageList extends DatabaseItemList {
 		$this->filter(false, "(p1.uID = $uID or p2.uID = $uID)");
 	}
 
+	
+	public function filterByIsAlias($ia) {
+		if ($ia == true) {
+			$this->filter(false, "(p2.cPointerID is not null)");
+		} else {
+			$this->filter(false, "(p2.cPointerID is null)");
+		}
+	}
+	
 	/** 
 	 * Filters by type of collection (using the handle field)
 	 * @param mixed $ctID

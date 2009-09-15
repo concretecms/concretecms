@@ -27,6 +27,12 @@
 			<notnull />
 			<default value="0" />
 		</field>
+		<field name="displayAliases" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="1" />
+		</field>
+		
 		<field name="ctID" type="I2">
 			<unsigned />
 		</field>
