@@ -295,7 +295,7 @@ ccmChangeDisplayedScrapbook = function(sel){
 				row3Cell2.width = '100%';
 				row3Cell2.innerHTML = '<div style="width: 460px;">';
 				<? foreach ($btArray as $bt) { ?>
-					row3Cell2.innerHTML += '<div style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="' + rowValue + '" />&nbsp;<?=$bt->getBlockTypeName()?></div>';
+					row3Cell2.innerHTML += '<div style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="' + rowValue + '" />&nbsp;<?=htmlspecialchars($bt->getBlockTypeName(), ENT_QUOTES, APP_CHARSET)?></div>';
 				<? } ?>		
 				row3Cell2.innerHTML += '</div>';
 			}
@@ -358,7 +358,7 @@ ccmChangeDisplayedScrapbook = function(sel){
 				row3Cell2.width = '100%';
 				row3Cell2.innerHTML = '<div style="width: 460px;">';
 				<? foreach ($btArray as $bt) { ?>
-					row3Cell2.innerHTML += '<div style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="' + rowValue + '" />&nbsp;<?=$bt->getBlockTypeName()?></div>';
+					row3Cell2.innerHTML += '<div style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="' + rowValue + '" />&nbsp;<?=htmlspecialchars($bt->getBlockTypeName(), ENT_QUOTES, APP_CHARSET)?></div>';
 				<? } ?>		
 				row3Cell2.innerHTML += '</div>';
 				
