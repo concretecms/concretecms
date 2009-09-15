@@ -83,16 +83,16 @@ $form = Loader::helper('form');
 		<td class="header" width="50%"><?=t('Username')?></td>
 	</tr>
 	<tr>
-		<td><?=$form->text('MAIL_SEND_METHOD_SMTP_SERVER', Config::get('MAIL_SEND_METHOD_SMTP_SERVER'), array('style' => 'width: 100%'))?></td>
-		<td><?=$form->text('MAIL_SEND_METHOD_SMTP_USERNAME', Config::get('MAIL_SEND_METHOD_SMTP_USERNAME'),  array('style' => 'width: 100%'))?></td>
+		<td><?=$form->text('MAIL_SEND_METHOD_SMTP_SERVER', Config::get('MAIL_SEND_METHOD_SMTP_SERVER'), array('style' => 'width: 300px'))?></td>
+		<td><?=$form->text('MAIL_SEND_METHOD_SMTP_USERNAME', Config::get('MAIL_SEND_METHOD_SMTP_USERNAME'),  array('style' => 'width: 300px'))?></td>
 	</tr>
 	<tr>
 		<td class="header" width="50%"><?=t('Password')?></td>
 		<td class="header" width="50%"><?=t('Port (Leave blank for default)')?></td>
 	</tr>
 	<tr>
-		<td><?=$form->password('MAIL_SEND_METHOD_SMTP_PASSWORD', Config::get('MAIL_SEND_METHOD_SMTP_PASSWORD'),  array('style' => 'width: 100%'))?></td>
-		<td><?=$form->text('MAIL_SEND_METHOD_SMTP_PORT', Config::get('MAIL_SEND_METHOD_SMTP_PORT'),  array('style' => 'width: 100%'))?></td>
+		<td><?=$form->password('MAIL_SEND_METHOD_SMTP_PASSWORD', Config::get('MAIL_SEND_METHOD_SMTP_PASSWORD'),  array('style' => 'width: 300px'))?></td>
+		<td><?=$form->text('MAIL_SEND_METHOD_SMTP_PORT', Config::get('MAIL_SEND_METHOD_SMTP_PORT'),  array('style' => 'width: 300px'))?></td>
 	</tr>
 	</table>
 	</div>
@@ -143,7 +143,7 @@ $form = Loader::helper('form');
 			<td><?=$mi->getMailImporterServer()?></td>
 			<td><?=$mi->getMailImporterEmail()?></td>
 			<td><?=$mi->isMailImporterEnabled() ? t('Yes') : t('No')?></td>
-			<td width="1"><?
+			<td width="60"><?
 				print $ih->button(t('Edit'), $this->url('/dashboard/settings/mail', 'edit_importer', $mi->getMailImporterID()), 'left');		
 			?>
 		</tr>
