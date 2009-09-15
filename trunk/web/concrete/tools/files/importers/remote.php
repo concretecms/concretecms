@@ -82,7 +82,7 @@ if (count($errors) < 1) {
 					do {
 						// make up a filename based on the current date/time, a random int, and the extension from the mime-type
 						$fname = date('d-m-Y_H:i_') . mt_rand(100, 999) . '.' . $fextension;
-					} while (file_exists($fpath.$fname));
+					} while (file_exists($fpath.'/'.$fname));
 				}
 			} //else {
 				// if we can't get the filename from the file itself OR from the mime-type I'm not sure there's much else we can do 
@@ -90,14 +90,14 @@ if (count($errors) < 1) {
 			
 			if (strlen($fname)) {
 				// write the downloaded file to a temporary location on disk
-				$handle = fopen($fpath.$fname, "w");
+				$handle = fopen($fpath.'/'.$fname, "w");
 				fwrite($handle, $response->getBody());
 				fclose($handle);
 				
 				// import the file into concrete
 				if ($fp->canAddFileType($cf->getExtension($fname))) {
 					$fi = new FileImporter();
-					$resp = $fi->import($fpath.$fname, $fname, $fr);
+					$resp = $fi->import($fpath.'/'.$fname, $fname, $fr);
 				} else {
 					$resp = FileImporter::E_FILE_INVALID_EXTENSION;
 				}
@@ -108,7 +108,7 @@ if (count($errors) < 1) {
 				}
 				
 				// clean up the file
-				unlink($fpath.$fname);
+				unlink($fpath.'/'.$fname);
 			} else {
 				// could not figure out a file name
 				$errors[] = t('Could not determine the name of the file at ') . $this_url;

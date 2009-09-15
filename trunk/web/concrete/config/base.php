@@ -132,10 +132,6 @@ if (!is_dir(DIR_BASE . '/' . DIRNAME_APP)) {
 # (gzip encoding?)
 define('OB_INITIAL_LEVEL', ob_get_level());
 
-# Sessions/TMP directories
-define('DIR_SESSIONS', '/tmp');
-define('DISPATCHER_FILENAME_CORE', 'dispatcher.php');
-
 # Used by the loader to load core libraries
 define('DIR_LIBRARIES', DIR_BASE . '/libraries'); // front-end
 define('DIR_LIBRARIES_CORE', DIR_BASE_CORE . '/libraries'); // front-end
@@ -293,6 +289,13 @@ if (!is_dir(DIR_FILES_CACHE)) {
 	@mkdir(DIR_FILES_CACHE);
 	@chmod(DIR_FILES_CACHE, 0777);
 }
+
+# Sessions/TMP directories
+if (!defined('DIR_TMP')) {
+	define('DIR_TMP', DIR_BASE . '/files/tmp');
+}
+define('DISPATCHER_FILENAME_CORE', 'dispatcher.php');
+
 
 define('DIR_FILES_CACHE_DB', DIR_FILES_CACHE);
 define('DIR_FILES_CACHE_CORE', DIR_BASE . '/files/cache_objects');
