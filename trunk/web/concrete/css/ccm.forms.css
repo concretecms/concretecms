@@ -11,8 +11,8 @@ div.ccm-dialog-window div.ccm-pane-header {display: none}
 
 div.ccm-pane-controls h2, div.ccm-dialog-window h2 {color: #666; font-size: 14px; line-height: 14px;  margin-bottom: 8px; margin-top: 4px}
 div.ccm-pane-controls div.ccm-field {clear: both; padding-bottom: 8px; border-bottom: 1px solid #ddd; margin-bottom: 8px}
-div.ccm-pane-controls div.ccm-field-meta {clear: both; margin: 0px auto 8px auto; position: relative; width: 400px; padding-bottom: 8px; border-bottom: 1px solid #ddd}
-div.ccm-field-meta a.ccm-meta-close {position: absolute; top: 0px; right: 0px; font-weight: bold; color: #bababa; font-size: 10px}
+div.ccm-pane-controls div.ccm-field-meta {clear: both; margin: 0px auto 8px auto; width: 400px; padding-bottom: 8px; border-bottom: 1px solid #ddd}
+div.ccm-field-meta a.ccm-meta-close {float: right; font-weight: bold; color: #bababa; font-size: 10px}
 span.ccm-meta-path {display:  block; margin-bottom: 8px}
 div.ccm-field a.ccm-meta-path-add, div.ccm-field a.ccm-meta-path-del {font-weight: bold; color: #bababa; font-size: 10px}
 div.ccm-pane-controls label {display: block; color: #000; margin-bottom: 3px; font-weight: bold !important}
@@ -56,7 +56,7 @@ a.ccm-button-left {float: left; }
 a.ccm-button {float: left; margin-right: 10px}
 a.ccm-button-right {float: right}
 
-div.ccm-button, a.ccm-button-right, a.ccm-button-left, a.ccm-button {display: block; text-decoration: none !important; height: 38px !important; position: relative; background: transparent url(../images/button_l.png) no-repeat;}
+div.ccm-button, a.ccm-button-right, a.ccm-button-left, a.ccm-button {display: block; text-decoration: none !important; height: 38px !important; background: transparent url(../images/button_l.png) no-repeat;}
 a.ccm-button-right:hover, a.ccm-button-left:hover, a.ccm-button:hover {background: transparent url(../images/button_l_active.png) no-repeat scroll;}
 
 div.ccm-button span,a.ccm-button-left span, a.ccm-button-right span, a.ccm-button span {white-space: nowrap; height: 12px; display: block; float: left; padding-top: 11px; padding-bottom: 15px; margin-left: 15px; padding-right: 16px; font-size: 11px; color: #535353; background: transparent url(../images/button_r.png) repeat-y scroll right top;}

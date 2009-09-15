@@ -36,6 +36,9 @@ $u = new User();
 .ccm-scrapbookNameWrap .edit { display:none }
 .ccm-scrapbookNameWrap.editMode .view { display:none }
 .ccm-scrapbookNameWrap.editMode .edit { display:block }
+
+div.ccm-scrapbook-item-handle:hover {cursor: move}
+
 </style> 
 
 <script>
@@ -45,7 +48,7 @@ var GlobalScrapbook = {
 	},  
 	enableSorting:function(){ 
 		$("div#ccm-scrapbook-list").sortable({
-			handle: '.handle',
+			handle: 'div.ccm-scrapbook-item-handle',
 			cursor: 'move',
 			opacity: 0.5,
 			stop: function() {
@@ -239,8 +242,8 @@ $(function(){ GlobalScrapbook.init(); });
 						</div> 
 						
 						<div class="ccm-block-type-inner">
-							<div class="ccm-block-type-inner-icon handle" style="background: url(<?=$btIcon?>) no-repeat center left;">
-							
+							<div class="ccm-block-type-inner-icon ccm-scrapbook-item-handle" style="background: url(<?=$btIcon?>) no-repeat center left;">
+							<img src="<?=ASSETS_URL_IMAGES?>/spacer.gif" width="16" height="16" />
 							</div>
 							<div class="view">
 								<a><?=$bt->getBlockTypeName()?></a>													
@@ -314,8 +317,8 @@ $(function(){ GlobalScrapbook.init(); });
 							</a> 
 						</div>  
 						<div id="ccm-block-type-inner<?=intval($b->bID)?>" class="ccm-block-type-inner">
-							<div class="ccm-block-type-inner-icon handle" style="background: url(<?=$btIcon?>) no-repeat center left;">
-							
+							<div class="ccm-block-type-inner-icon ccm-scrapbook-item-handle" style="background: url(<?=$btIcon?>) no-repeat center left;">
+							<img src="<?=ASSETS_URL_IMAGES?>/spacer.gif" width="16" height="16" />
 							</div>
 							<div class="view">
 								<a onclick="GlobalScrapbook.toggleRename(<?=intval($b->bID) ?>)" >
