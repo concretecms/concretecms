@@ -21,7 +21,7 @@ if ($this->controller->getTask() == 'update') {
 	<div class="ccm-dashboard-inner">
 	<? foreach ($pkgAvailableArray as $pkg) {  ?>
 		<div class="ccm-addon-list">
-			<table cellspacing="0" cellpadding="0">		
+			<table cellspacing="0" cellpadding="0" border="0">		
 			<tr>
 				<td class="ccm-installed-items-icon"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
 				<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></a></h3><?=$pkg->getPackageDescription()?>
@@ -78,16 +78,16 @@ if ($this->controller->getTask() == 'update') {
 			
 			?>
 			<div class="ccm-addon-list">
-			<table cellspacing="0" cellpadding="0">		
+			<table cellspacing="0" cellpadding="0" border="0" style="width: auto !important">		
 			<tr>
-				<td class="ccm-installed-items-icon"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
-				<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></a></h3><?=$pkg->getPackageDescription()?>
+				<td valign="top" class="ccm-installed-items-icon"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
+				<td valign="top" class="ccm-addon-list-description" style="width: 400px"><h3><?=$pkg->getPackageName()?></a></h3><?=$pkg->getPackageDescription()?>
 				<br/><br/>
 				<strong><?=t('Current Version: %s', $pkg->getPackageVersion())?></strong><br/>
 				<strong><?=t('New Version: %s', $rpkg->getVersion())?></strong><br/>
 				<a target="_blank" href="<?=$rpkg->getRemoteURL()?>"><?=t('More Information')?></a>
 				</td>
-				<td><?=$ch->button(t("Download and Install"), View::url('/dashboard/install', 'remote_upgrade', $rpkg->getRemoteCollectionID(), $pkg->getPackageHandle()), "right")?></td>					
+				<td valign="top"><?=$ch->button(t("Download and Install"), View::url('/dashboard/install', 'remote_upgrade', $rpkg->getRemoteCollectionID(), $pkg->getPackageHandle()), "right")?></td>					
 			</tr>
 			</table>
 			</div>
@@ -189,7 +189,7 @@ if ($this->controller->getTask() == 'update') {
 				<? foreach($blocks as $bt) { ?>
 	
 					<div class="ccm-addon-list">
-					<table cellspacing="0" cellpadding="0">		
+					<table cellspacing="0" cellpadding="0" border="0">		
 					<tr>
 						<td class="ccm-installed-items-icon"><img src="<?=$ci->getBlockTypeIconURL($bt)?>" /></td>
 						<td class="ccm-addon-list-description"><h3><?=$bt->getBlockTypeName()?></a></h3><?=$bt->getBlockTypeDescription()?></td>
@@ -380,7 +380,7 @@ if ($this->controller->getTask() == 'update') {
 			<? } ?>
 			<?	foreach ($availableArray as $obj) { ?>
 				<div class="ccm-addon-list">
-				<table cellspacing="0" cellpadding="0">
+				<table cellspacing="0" cellpadding="0" border="0">
 				<tr>
 				<? if (get_class($obj) == "BlockType") { ?>
 					<td><img src="<?=$ci->getBlockTypeIconURL($obj)?>" /></td>
@@ -413,7 +413,7 @@ if ($this->controller->getTask() == 'update') {
 					<td class="ccm-addon-list-description"><h3><?=$pb->btName?></h3>
 					<?=$pb->btDescription?>
 					</td>
-					<td><?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getRemoteCollectionID()), "right")?></td>
+					<td width="120"><?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getRemoteCollectionID()), "right")?></td>
 				</tr>
 				</table>
 				</div>

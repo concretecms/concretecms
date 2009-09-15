@@ -758,6 +758,7 @@ $(function() {
  
 
 //make sure the user isn't using internet explorer 6
+/*
 $(function(){
 	if( $.browser.msie ){
 		var versionParts = jQuery.browser.version.split('.'); 
@@ -765,7 +766,7 @@ $(function(){
 			alert( ccmi18n.noIE6 );
 	}
 });
-
+*/
 
 /* Block Styles Customization Popup */
 var ccmCustomBlockCss = {   
