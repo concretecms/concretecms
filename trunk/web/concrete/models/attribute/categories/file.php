@@ -95,6 +95,9 @@ class FileAttributeKey extends AttributeKey {
 	public static function getSearchableList() {
 		return parent::getList('file', array('akIsSearchable' => 1));	
 	}
+	public static function getSearchableIndexedList() {
+		return parent::getList('file', array('akIsSearchableIndexed' => 1));	
+	}
 
 	public static function getImporterList() {
 		return parent::getList('file', array('akIsAutoCreated' => 1));	

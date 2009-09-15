@@ -789,7 +789,7 @@ class InstallController extends Controller {
 						Job::installByHandle('process_email');
 						
 						// NOTE: This is too memory intensive to run during initial install. Let's not run it and just give nicer feedback
-						//Job::runAllJobs();
+						Job::runAllJobs();
 
 						// write the config file
 						$configuration = "<?php\n";

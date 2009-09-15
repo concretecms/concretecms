@@ -124,6 +124,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		public function reindex() {
+			if ($this->isAlias()) {
+				return false;
+			}
+			
 			Loader::model('attribute/categories/collection');
 			$attribs = CollectionAttributeKey::getAttributes($this->getCollectionID(), $this->getVersionID(), 'getSearchIndexValue');
 			$db = Loader::db();
@@ -132,6 +136,17 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$searchableAttributes = array('cID' => $this->getCollectionID());
 			$rs = $db->Execute('select * from CollectionSearchIndexAttributes where cID = -1');
 			AttributeKey::reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
+			
+			Loader::library('database_indexed_search');
+			$is = new IndexedSearch();
+			$db->Replace('PageSearchIndex', array(
+				'cID' => $this->getCollectionID(), 
+				'cName' => $this->getCollectionName(), 
+				'cDescription' => $this->getCollectionDescription(), 
+				'cPath' => $this->getCollectionPath(),
+				'cDatePublic' => $this->getCollectionDatePublic(), 
+				'content' => $is->getBodyContentFromPage($this)
+			), array('cID'), true);			
 		}
 		
 		public function getAttributeValueObject($ak, $createIfNotFound = false) {
