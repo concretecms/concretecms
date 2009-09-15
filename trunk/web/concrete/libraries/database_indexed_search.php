@@ -34,10 +34,23 @@ class IndexedPageList extends DatabaseItemList {
 	protected $itemsPerPage = 10;
 	
 	public function filterByKeywordsBoolean($kw) {
+		return $this->filterByKeywords($kw);
+	}
+	
+	public function filterByKeywords($kw) {
 		$db = Loader::db();
 		$kw = $db->quote($kw);
-		$this->addToQuery("select PageSearchIndex.*, match(cName, cDescription, content) against ({$kw} in boolean mode) as score from PageSearchIndex");
-		$this->filter(false, "match(cName, cDescription, content) against ({$kw} in boolean mode)");
+		$this->addToQuery("select PageSearchIndex.*, match(cName, cDescription, content) against ({$kw} in boolean mode) as score from PageSearchIndex inner join Pages on PageSearchIndex.cID = Pages.cID inner join CollectionSearchIndexAttributes on PageSearchIndex.cID = CollectionSearchIndexAttributes.cID");
+		Loader::model('attribute/categories/collection');
+		
+		$keys = CollectionAttributeKey::getSearchableIndexedList();
+		$attribsStr = '';
+		foreach ($keys as $ak) {
+			$attribsStr=' OR ak_' . $ak->getAttributeKeyHandle() . ' like '.$kw.' ';	
+		}
+
+		$this->filter(false, "(match(cName, cDescription, content) against ({$kw} in boolean mode) {$attribsStr})");
+
 	}
 	
 	private $searchPaths = array();
@@ -45,9 +58,31 @@ class IndexedPageList extends DatabaseItemList {
 	public function addSearchPath($path) {
 		$this->searchPaths[] = $path;
 	}
+
+	public function setupPermissions() {
+		$u = new User();
+		if ($u->isSuperUser()) {
+			return; // super user always sees everything. no need to limit
+		}
+		
+		$groups = $u->getUserGroups();
+		$groupIDs = array();
+		foreach($groups as $key => $value) {
+			$groupIDs[] = $key;
+		}
+		
+		$uID = -1;
+		if ($u->isRegistered()) {
+			$uID = $u->getUserID();
+		}
+
+		$this->addToQuery('left join PagePermissions pp1 on (pp1.cID = Pages.cInheritPermissionsFromCID)');
+		$this->filter(false, "(pp1.cgPermissions like 'r%' and (pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID}))");
+	}
 	
 	public function getPage() {
 		$db = Loader::db(); 
+		$this->setupPermissions();
 		
 		if (count($this->searchPaths) > 0) { 
 			$i = 0;
@@ -70,7 +105,7 @@ class IndexedPageList extends DatabaseItemList {
 
 /**
 *
-* A wrapper class for the search engine that Concrete integrates (currently Lucene as implemented by the Zend Framework.)
+* A wrapper class for the search engine that Concrete integrates
 * @package Utilities
 * @subpackage Search
 */
@@ -83,7 +118,7 @@ class IndexedSearch {
 		$this->searchableAreaNames[] = $arr;
 	}
 	
-	private function getBodyContentFromPage($c) {
+	public function getBodyContentFromPage($c) {
 		$searchableAreaNames=$this->searchableAreaNames;
 		$blarray=array();
 		foreach($searchableAreaNames as $searchableAreaName){
@@ -106,22 +141,12 @@ class IndexedSearch {
 	/** 
 	 * Reindexes the search engine.
 	 */
-	public function reindex($search_index_group_id=0) {
-		Loader::model('attribute/categories/collection');
-		Loader::model('attribute/categories/file');
-		Loader::model('attribute/categories/user');
+	public function reindexAll() {
 		Cache::disableLocalCache();
-		$attributes = CollectionAttributeKey::getList();
-		$attributes = array_merge($attributes, FileAttributeKey::getList());
-		$attributes = array_merge($attributes, UserAttributeKey::getList());
-		foreach($attributes as $ak) {
-			$ak->updateSearchIndex();
-		}
 		
 		$db = Loader::db();
-		$collection_attributes = Loader::model('collection_attributes');
+		Loader::model('collection_attributes');
 		$r = $db->query("select cID from Pages order by cID asc");
-		$g = Group::getByID($search_index_group_id);
 		$nh = Loader::helper('navigation');
 		
 		$db->Execute("truncate table PageSearchIndex");
@@ -140,16 +165,9 @@ class IndexedSearch {
 				continue;
 			}		
 			
-			$themeObject = $c->getCollectionThemeObject();
-			$g->setPermissionsForObject($c);
-			if ($g->canRead()) {
-				$v = array($row['cID'], $c->getCollectionName(), $c->getCollectionDescription(), $c->getCollectionPath(), $c->getCollectionDatePublic(), $this->getBodyContentFromPage($c));
-				$db->Execute("insert into PageSearchIndex (cID, cName, cDescription, cPath, cDatePublic, content) values (?, ?, ?, ?, ?, ?)", $v);
-				unset($v);
-				$c->reindex();
-				$num++;
-			}
-			
+			$c->reindex();
+			$num++;
+		
 			unset($c);
 		}
 		

@@ -50,6 +50,9 @@ class CollectionAttributeKey extends AttributeKey {
 	public static function getColumnHeaderList() {
 		return self::getList('collection', array('akIsColumnHeader' => 1));	
 	}
+	public static function getSearchableIndexedList() {
+		return parent::getList('collection', array('akIsSearchableIndexed' => 1));	
+	}
 
 	public function getAttributeValue($avID, $method = 'getValue') {
 		$av = CollectionAttributeValue::getByID($avID);
