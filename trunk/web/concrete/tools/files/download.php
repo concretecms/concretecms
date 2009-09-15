@@ -18,7 +18,7 @@ if (isset($_REQUEST['fID']) && is_array($_REQUEST['fID'])) {
 
 	// zipem up
 	
-	$filename = $fh->getTemporaryDirectory() . $vh->getString() . '.zip';
+	$filename = $fh->getTemporaryDirectory() . '/' . $vh->getString() . '.zip';
 	$files = '';
 	$filenames = array();
 	foreach($_REQUEST['fID'] as $fID) {

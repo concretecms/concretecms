@@ -146,7 +146,7 @@ class PackageHelper {
 
 		$file = time();
 		// Use the same method as the Archive library to build a temporary file name.
-		$tmpFile = $fh->getTemporaryDirectory() . $file . '.zip';
+		$tmpFile = $fh->getTemporaryDirectory() . '/' . $file . '.zip';
 		$fp = fopen($tmpFile, "wb");
 		if ($fp) {
 			fwrite($fp, $pkg);
