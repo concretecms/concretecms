@@ -64,7 +64,6 @@ class IndexedPageList extends DatabaseItemList {
 		if ($u->isSuperUser()) {
 			return; // super user always sees everything. no need to limit
 		}
-		
 		$groups = $u->getUserGroups();
 		$groupIDs = array();
 		foreach($groups as $key => $value) {
@@ -83,11 +82,14 @@ class IndexedPageList extends DatabaseItemList {
 	public function getPage() {
 		$db = Loader::db(); 
 		$this->setupPermissions();
-		
+
 		if (count($this->searchPaths) > 0) { 
 			$i = 0;
 			$subfilter = '';
 			foreach($this->searchPaths as $sp) {
+				if ($sp == '') {
+					continue;
+				}
 				$sp = $db->quote($sp . '%');
 				$subfilter .= "cPath like {$sp} ";
 				if (($i+1) < count($this->searchPaths)) {
@@ -95,7 +97,9 @@ class IndexedPageList extends DatabaseItemList {
 				}
 				$i++;
 			}
-			$this->filter(false, $subfilter);
+			if ($subfilter != '') {
+				$this->filter(false, $subfilter);
+			}
 		}
 
 		$this->sortByMultiple('score desc', 'cDatePublic desc');
