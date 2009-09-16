@@ -106,6 +106,7 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 	
 	public function saveForm($data) {
 		$this->load();
+		$dt = Loader::helper('form/date_time');
 		switch($this->akDateDisplayMode) {
 			case 'text':
 			case 'date':
