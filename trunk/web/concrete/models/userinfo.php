@@ -288,6 +288,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 		public function clearAttribute($ak) {
 			$db = Loader::db();
+			if (!is_object($ak)) {
+				$ak = UserAttributeKey::getByHandle($ak);
+			}
 			$cav = $this->getAttributeValueObject($ak);
 			if (is_object($cav)) {
 				$cav->delete();

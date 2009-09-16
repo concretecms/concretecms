@@ -77,11 +77,13 @@ class ConcreteUpgradeVersion530Helper {
 		}
 		//add the new collection attribute keys
 		$cak=CollectionAttributeKey::getByHandle('header_extra_content');
-		if( !intval($cak->getAttributeKeyID()) )
+		if(!is_object($cak)) {
 			CollectionAttributeKey::add('header_extra_content', t('Header Extra Content'), true, null, 'TEXT');
+		}
 		$cak=CollectionAttributeKey::getByHandle('exclude_search_index');
-		if( !intval($cak->getAttributeKeyID()) )
+		if (!is_object($cak)) {
 			CollectionAttributeKey::add('exclude_search_index', t('Exclude From Search Index'), true, null, 'BOOLEAN');
+		}
 		
 		//convert file tags to new format, cleaned up with leading and trailing line breaks  
 		$fileVersionsData=$db->GetAll('SELECT fID, fvID, fvTags FROM FileVersions');

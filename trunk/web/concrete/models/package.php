@@ -400,6 +400,25 @@ class Package extends Object {
 			}
 		}
 	}
+
+
+	public function config($cfKey, $getFullObject = false) {
+		$co = new Config();
+		$co->setPackageObject($this);
+		return $co->get($cfKey, $getFullObject);
+	}
+	
+	public function saveConfig($cfKey, $value) {
+		$co = new Config();
+		$co->setPackageObject($this);
+		return $co->save($cfKey, $value);
+	}
+
+	public function clearConfig($cfKey) {
+		$co = new Config();
+		$co->setPackageObject($this);
+		return $co->clear($cfKey);
+	}
 	
 	public static function getAvailablePackages($filterInstalled = true) {
 		$dh = Loader::helper('file');
