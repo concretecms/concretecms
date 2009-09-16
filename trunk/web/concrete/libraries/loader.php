@@ -158,7 +158,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$dsn = DB_TYPE . '://' . $username . ':' . $password . '@' . $server . '/' . $database;
 				}
 
-				if ($dsn) {
+				if (isset($dsn) && $dsn) {
 					$_dba = @NewADOConnection($dsn);
 					if (is_object($_dba)) {
 						if (DB_CHARSET != '') {
