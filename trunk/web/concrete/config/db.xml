@@ -460,6 +460,11 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <index name="uID">
       <col>uID</col>
     </index>

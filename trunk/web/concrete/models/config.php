@@ -33,7 +33,11 @@ class ConfigValue extends Object {
 class Config extends Object {
 	
 	private $props = array();
+	private $pkg = false;
 	
+	public function setPackageObject($pkg) {
+		$this->pkg = $pkg;
+	}
 	public function get($cfKey, $getFullObject = false) {
 		static $instance;
 		if (!isset($instance)) {
@@ -42,14 +46,26 @@ class Config extends Object {
 		}
 
 		$ca = new Cache();
+		$pkgID = '';
+		if (isset($this) && is_object($this->pkg)) {
+			$pkgID = $this->pkg->getPackageID();
+		}
+		
 		if ($cfKey != 'ENABLE_CACHE') {
-			$cv = $ca->get('config_option', $cfKey);
+			$cv = $ca->get('config_option' . $pkgID, $cfKey);
 		}
 		if ((!isset($cv)) || (!($cv instanceof ConfigValue))) {
 			$db = Loader::db();
-			$val = @$db->GetRow("select timestamp, cfValue from Config where cfKey = ?", array($cfKey));
+			$v = array($cfKey);
+			$qs = '';
+			if ($pkgID > 0) {
+				$v[] = $pkgID;
+				$qs = ' and pkgID = ?';
+			}
+			
+			$val = @$db->GetRow("select timestamp, cfValue from Config where cfKey = ?" . $qs, $v);
 			if (!$val) {
-				$val = $db->GetRow("select cfValue from Config where cfKey = ?", array($cfKey));
+				$val = $db->GetRow("select cfValue from Config where cfKey = ?" . $qs, $v);
 			}
 			
 			$cfValue = '';
@@ -66,7 +82,7 @@ class Config extends Object {
 			$cv->key = $cfKey;
 			$cv->timestamp = $timestamp;
 
-			$ca->set('config_option', $cfKey, $cv);		
+			$ca->set('config_option' . $pkgID, $cfKey, $cv);		
 		}
 
 		if (!$getFullObject) {
@@ -86,14 +102,26 @@ class Config extends Object {
 	
 	public function clear($cfKey) {
 		$db = Loader::db();
-		Cache::delete('config_option', $cfKey);
-		$db->Execute('delete from Config where cfKey = ?', $cfKey);		
+		$pkgID = '';
+		if (isset($this) && is_object($this->pkg)) {
+			$pkgID = $this->pkg->getPackageID();
+			$db->query("delete from Config where cfKey = ? and pkgID = ?", array($cfKey, $pkgID));
+		} else {
+			$db->query("delete from Config where cfKey = ?", array($cfKey));
+		}
+		Cache::delete('config_option' . $pkgID, $cfKey);
 	}
 	
 	public function save($cfKey, $cfValue) {
 		$db = Loader::db();
-		Cache::delete('config_option', $cfKey);
-		$db->query("replace into Config (cfKey, cfValue) values (?, ?)", array($cfKey, $cfValue));
-	}	
+		$pkgID = '';
+		if (isset($this) && is_object($this->pkg)) {
+			$pkgID = $this->pkg->getPackageID();
+			$db->query("replace into Config (cfKey, cfValue, pkgID) values (?, ?, ?)", array($cfKey, $cfValue, $pkgID));
+		} else {
+			$db->query("replace into Config (cfKey, cfValue) values (?, ?)", array($cfKey, $cfValue));
+		}
+		Cache::delete('config_option' . $pkgID, $cfKey);
+	}
 	
 }

@@ -84,6 +84,9 @@ class AddressAttributeTypeController extends AttributeTypeController  {
 	
 	public function saveValue($data) {
 		$db = Loader::db();
+		if ($data instanceof AddressAttributeTypeValue) {
+			$data = (array) $data;
+		}
 		extract($data);
 		$db->Replace('atAddress', array('avID' => $this->getAttributeValueID(),
 			'address1' => $address1,
