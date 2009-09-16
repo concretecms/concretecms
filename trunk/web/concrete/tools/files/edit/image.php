@@ -25,7 +25,43 @@ $export = BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/files/importers/remote';
 
 $valt = Loader::helper('validation/token');
 
-$url = $service . '?_apikey=' . $apiKey . '&_export=' . $export . '&' . $valt->getParameter('import_remote') . '&task=update_file&fID=' . $_REQUEST['fID'] . '&_export_field=url_upload_1&_export_agent=browser&_import=' . rawurlencode($image);
+// $strPicnikUrl is the URL that we use to launch Picnik.
+$strPicnikUrl = "http://www.picnik.com/service?".$valt->getParameter('import_remote');
+
+// $aPicnikParams collects together all the params we'll give Picnik.  Start with an API key
+$aPicnikParams['_apikey'] = $apiKey;
+
+// tell Picnik where to send the exported image
+$aPicnikParams['_export'] = $export;
+
+$aPicnikParams['task'] = "update_file";
+
+$aPicnikParams['fID'] = $_REQUEST['fID'];
+
+$aPicnikParams['_export_field'] = "url_upload_1";
+
+$aPicnikParams['_export_agent'] = "browser";
+
+$aPicnikParams['_returntype'] = "text";
+
+$aPicnikParams['_import'] = "image_file";
+
+$aPicnikParams['image_file'] = "@".$fv->getPath();
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_VERBOSE, 0);
+curl_setopt($ch, CURLOPT_URL, $strPicnikUrl);
+//Don't ask me what this does, I just know that without this funny header, the whole thing doesn't work!
+curl_setopt($ch, CURLOPT_HTTPHEADER,array('Expect:'));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+curl_setopt($ch, CURLOPT_POST, 1 );
+
+//seems no need to tell it enctype='multipart/data' it already knows
+curl_setopt($ch, CURLOPT_POSTFIELDS, $aPicnikParams );
+
+$url = curl_exec( $ch );
+curl_close ($ch);
 
 ?>
 
