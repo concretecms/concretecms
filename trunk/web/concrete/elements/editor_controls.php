@@ -2,8 +2,8 @@
 <div class="ccm-editor-controls">
 <div class="ccm-editor-controls-right-cap">
 <ul>
-<li ccm-file-manager-field="rich-text-editor-image"><a class="ccm-file-manager-launch" onclick="ccm_editorCurrentAuxTool='image'; setBookMark();" href="#"><?=t('Add Image')?></a></li>
-<li><a class="ccm-file-manager-launch" onclick="ccm_editorCurrentAuxTool='file'; setBookMark();" href="#"><?=t('Add File')?></a></li>
+<li ccm-file-manager-field="rich-text-editor-image"><a class="ccm-file-manager-launch" onclick="ccm_editorCurrentAuxTool='image'; setBookMark();return false;" href="#"><?=t('Add Image')?></a></li>
+<li><a class="ccm-file-manager-launch" onclick="ccm_editorCurrentAuxTool='file'; setBookMark();return false;" href="#"><?=t('Add File')?></a></li>
 <li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay.php?sitemap_mode=select_page" onclick="setBookMark();" class="dialog-launch" dialog-modal="false" ><?=t('Insert Link to Page')?></a></li>
 <li><a style="float: right" href="<?=View::url('/dashboard/settings')?>"><?=t('Customize Toolbar')?></a></li>
 </ul>
