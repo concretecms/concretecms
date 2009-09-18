@@ -516,7 +516,11 @@ order by constraint_name, referenced_table_name, keyno";
 	// returns true or false, newconnect supported since php 5.1.0.
 	function _connect($argHostname, $argUsername, $argPassword, $argDatabasename,$newconnect=false)
 	{
-		if (!function_exists('mssql_pconnect')) return null;
+		if (!function_exists('mssql_connect')) return null;
+		// Task 2270 fix: the port is required for mssql_connect to work, even the default port
+		if (!empty($this->port)) {
+			$argHostname .= ':' . $this->port;
+		}
 		$this->_connectionID = mssql_connect($argHostname,$argUsername,$argPassword,$newconnect);
 		if ($this->_connectionID === false) return false;
 		if ($argDatabasename) return $this->SelectDB($argDatabasename);
