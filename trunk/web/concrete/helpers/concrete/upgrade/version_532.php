@@ -141,6 +141,7 @@ class ConcreteUpgradeVersion532Helper {
 
 		$databaseReports = Page::getByPath('/dashboard/reports/database');
 		$databaseReports->delete();
+		@$db->query('DROP TABLE adodb_logsql');	
 
 		Loader::library('mail/importer');
 		$mi = MailImporter::getByHandle("private_message");
