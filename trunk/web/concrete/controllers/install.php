@@ -396,7 +396,6 @@ class InstallController extends Controller {
 						$d3a = SinglePage::add('/dashboard/reports/forms');
 						$d3b = SinglePage::add('/dashboard/reports/surveys');
 						$d3c = SinglePage::add('/dashboard/reports/logs');
-						$d3d = SinglePage::add('/dashboard/reports/database');
 						$d4 = SinglePage::add('/dashboard/users');
 						$d4a = SinglePage::add('/dashboard/users/search');
 						$d4b = SinglePage::add('/dashboard/users/add');
@@ -435,7 +434,6 @@ class InstallController extends Controller {
 						$d3a->update(array('cName'=>t('Form Results'), 'cDescription'=>t('Get submission data.')));
 						$d3b->update(array('cName'=>t('Surveys')));
 						$d3c->update(array('cName'=>t('Logs')));
-						$d3d->update(array('cName'=>t('Database')));						
 						$d4->update(array('cName'=>t('Users and Groups'), 'cDescription'=>t('Add and manage people.')));
 						$d4a->update(array('cName'=>t('Find Users')));
 						$d4b->update(array('cName'=>t('Add User')));

@@ -29,10 +29,6 @@ if (!defined('ENABLE_LOG_ERRORS')) {
 	Config::getOrDefine('ENABLE_LOG_ERRORS', true);
 }
 
-if (!defined('ENABLE_LOG_DATABASE_QUERIES')) {
-	Config::getOrDefine('ENABLE_LOG_DATABASE_QUERIES', false);
-}
-
 # Default URL rewriting setting
 if (!defined('URL_REWRITING')) {
 	Config::getOrDefine('URL_REWRITING', false);
