@@ -139,6 +139,9 @@ class ConcreteUpgradeVersion532Helper {
 			$em1->update(array('cName'=>t('Email'), 'cDescription'=>t('Enable post via email and other settings.')));
 		}
 
+		$databaseReports = Page::getByPath('/dashboard/reports/database');
+		$databaseReports->delete();
+
 		Loader::library('mail/importer');
 		$mi = MailImporter::getByHandle("private_message");
 		if (!is_object($mi)) {

@@ -11,8 +11,3 @@ switch($debug_level) {
 		ini_set('display_errors', 0);
 		break;
 }
-
-if (ENABLE_LOG_DATABASE_QUERIES) {
-	$db = Loader::db();
-	$db->setLogging(true);
-}

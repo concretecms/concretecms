@@ -168,10 +168,7 @@ foreach($types as $at) { ?>
 	<div class="ccm-dashboard-inner">
 	<div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOG_ERRORS', 1, $enable_log_errors)?> <?=t('Log Application Exceptions')?></div>
 	<div class="ccm-dashboard-description"><?=t('Saves application exceptions to logs.')?></div>
-	<div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOG_DATABASE_QUERIES', 1, $enable_log_database_queries)?> <?=t('Log Database Activity')?></div>
-	<div class="ccm-dashboard-description"><?=t('Logs SQL queries for application profiling.')?><br />
-		<?=t('Warning: this may make your database huge!');?></div>
-	<div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOG_EMAILS', 1, $enable_log_emails)?> <?=t('Log Emails Sent')?></div>
+		<div class="ccm-dashboard-radio"><?=$form->checkbox('ENABLE_LOG_EMAILS', 1, $enable_log_emails)?> <?=t('Log Emails Sent')?></div>
 	<div class="ccm-dashboard-description">
 		<?=t('Enables saving records of emails being sent out. This will save records even if actual email delivery is disabled on your site.')?>
 	</div>

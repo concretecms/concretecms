@@ -1524,14 +1524,6 @@
     </field>
     <field name="data" type="X"/>
   </table>
-  <table name="adodb_logsql">
-    <field name="created" type="C" size="50"/>
-    <field name="sql0" type="C" size="250"/>
-    <field name="sql1" type="C" size="4000"/>
-    <field name="params" type="C" size="3000"/>
-    <field name="tracer" type="C" size="500"/>
-    <field name="timer" type="N" size="16"/>
-  </table>
    <table name="UserOpenIDs">
     <field name="uID" type="I" size="10">
       <NOTNULL/>

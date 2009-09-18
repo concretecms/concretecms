@@ -53,48 +53,6 @@ class LogEntry extends Object {
 	
 }
 
-/**
- * An object that represents a log entry dealing specifically with a database query. This item is populated by ADODB.
- * @package Utilities
- * @author Andrew Embler <andrew@concrete5.org>
- * @category Concrete
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
- 
-class DatabaseLogEntry extends LogEntry {
-	
-	public function getQuery() {return $this->query;}
-	public function getParameters() {return $this->params;}
-	public function getTrace() {return $this->tracer;}
-	
-	public static function getTotal() {
-		$db = Loader::db();
-		return $db->GetOne("select count(created) from adodb_logsql");
-	}
-	
-	public static function clear() {
-		$db = Loader::db();
-		$db->Execute("delete from adodb_logsql");
-	}
-	
-	public function getTimestamp() { return $this->created; }
-	
-	public static function getList($limit) {
-		$entries = array();
-		$db = Loader::db();
-		$r = $db->GetAll("select sql1 as query, created, params, tracer from adodb_logsql order by created desc limit " . $limit);
-		foreach($r as $row) {
-			$dle = new DatabaseLogEntry();
-			$dle->setPropertiesFromArray($row);
-			$entries[] = $dle;
-		}		
-		return $entries;
-	}
-	
-}
-
 
 /**
  * A library for dealing with searchable logs.
