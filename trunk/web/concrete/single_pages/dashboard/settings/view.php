@@ -60,7 +60,7 @@ foreach($types as $at) { ?>
 	<table border="0" cellspacing="0" cellpadding="0">
 	<? foreach($types as $at) { ?>
 	<tr>
-		<td style="padding: 0px 10px 10px 0px"><img src="<?=$at->getAttributeTypeIconSRC()?>" />
+		<td style="padding: 0px 10px 10px 0px"><img src="<?=$at->getAttributeTypeIconSRC()?>" /></td>
 		<td style="padding:  0px 10px 10px 0px"><?=$at->getAttributeTypeName()?></td>
 		<td style="padding:  0px 10px 10px 0px"><form id="attribute_type_install_form_<?=$at->getAttributeTypeHandle()?>" method="post" action="<?=$this->action('add_attribute_type')?>"><?
 			print $form->hidden("atHandle", $at->getAttributeTypeHandle());

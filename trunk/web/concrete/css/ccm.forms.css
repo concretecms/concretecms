@@ -2,7 +2,7 @@
 div#ccm-edit-collection {width: 600px; margin: 0px auto 0px auto}
 div#ccm-edit-collection-design {width: 640px; margin: 0px auto 0px auto; -khtml-user-select: none; -moz-user-select: none}
 div.ccm-pane-controls a {color: #003C8A; cursor:pointer}
-div.ccm-pane-controls *, div.ccm-dialog-window * {font-family: "Helvetica Neue", Arial, Helvetica, sans-serif}
+div.ccm-pane-controls *, div.ccm-dialog-window * {font-family: "Helvetica Neue", Arial, Helvetica, sans-serif; color: #333}
 div.ccm-pane-controls {text-align: left; font-size: 12px}
 
 div.ccm-pane-controls h1, div.ccm-dialog-window h1 {color: rgb(0, 60, 138); position: static !important; font-size: 18px; margin-bottom: 16px; margin-top: 16px}
