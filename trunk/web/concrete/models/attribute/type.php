@@ -70,9 +70,15 @@ class AttributeType extends Object {
 			$pkgID = $pkg->getPackageID();
 		}
 		$db = Loader::db();
-		$db->Execute('insert into AttributeTypes (atHandle, atName) values (?, ?)', array($atHandle, $atName));
+		$db->Execute('insert into AttributeTypes (atHandle, atName, pkgID) values (?, ?, ?)', array($atHandle, $atName, $pkgID));
 		$id = $db->Insert_ID();
-		return AttributeType::getByID($id);
+		$est = AttributeType::getByID($id);
+		
+		$path = $est->getAttributeTypeFilePath(FILENAME_ATTRIBUTE_DB);
+		if ($path) {
+			Package::installDB($path);
+		}
+		return $est;
 	}
 	
 	public function getValue($avID) {
@@ -134,11 +140,11 @@ class AttributeType extends Object {
 		if (!isset($file) && $pkgID > 0) {
 			$pkgHandle = PackageList::getHandle($pkgID);
 			$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
-			if (file_exists($dirp . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $_file)) {
-				$file = $dirp . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $_file;
+			if (file_exists($dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $_file)) {
+				$file = $dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $_file;
 				$url = BASE_URL . DIR_REL . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $_file;
-			} else if ($_file == FILENAME_ATTRIBUTE_CONTROLLER && file_exists($dirp . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '.php')) {
-				$file = $dirp . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '.php';
+			} else if ($_file == FILENAME_ATTRIBUTE_CONTROLLER && file_exists($dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '.php')) {
+				$file = $dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '.php';
 			}
 		}
 		
@@ -211,10 +217,6 @@ class PendingAttributeType extends AttributeType {
 	
 	public function install() {
 		$at = parent::add($this->atHandle, $this->atName);
-		$path = $this->getAttributeTypeFilePath(FILENAME_ATTRIBUTE_DB);
-		if ($path) {
-			Package::installDB($path);
-		}
 	}
 
 }

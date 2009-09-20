@@ -4,7 +4,7 @@ class AttributeKeyCategory extends Object {
 
 	public static function getByID($akCategoryID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select akCategoryID, akCategoryHandle from AttributeKeyCategories where akCategoryID = ?', array($akCategoryID));
+		$row = $db->GetRow('select akCategoryID, akCategoryHandle, pkgID from AttributeKeyCategories where akCategoryID = ?', array($akCategoryID));
 		if (isset($row['akCategoryID'])) {
 			$akc = new AttributeKeyCategory();
 			$akc->setPropertiesFromArray($row);
@@ -14,7 +14,7 @@ class AttributeKeyCategory extends Object {
 	
 	public static function getByHandle($akCategoryHandle) {
 		$db = Loader::db();
-		$row = $db->GetRow('select akCategoryID, akCategoryHandle from AttributeKeyCategories where akCategoryHandle = ?', array($akCategoryHandle));
+		$row = $db->GetRow('select akCategoryID, akCategoryHandle, pkgID from AttributeKeyCategories where akCategoryHandle = ?', array($akCategoryHandle));
 		if (isset($row['akCategoryID'])) {
 			$akc = new AttributeKeyCategory();
 			$akc->setPropertiesFromArray($row);
@@ -30,6 +30,8 @@ class AttributeKeyCategory extends Object {
 	
 	public function getAttributeKeyCategoryID() {return $this->akCategoryID;}
 	public function getAttributeKeyCategoryHandle() {return $this->akCategoryHandle;}
+	public function getPackageID() {return $this->pkgID;}
+	public function getPackageHandle() {return PackageList::getHandle($this->pkgID);}
 	
 	public function clearAttributeKeyCategoryColumnHeaders() {
 		$db = Loader::db();
