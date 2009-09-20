@@ -84,7 +84,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				extract($args);
 			}
 			$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-			include($dir . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . $file . '.php');
+			if (file_exists($dir . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . $file . '.php')) {
+				include($dir . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . $file . '.php');
+			}
 		}
 
 		/** 
@@ -196,8 +198,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			// loads and instantiates the object
 			if ($pkgHandle != false) {
 				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-				$class = Object::camelcase($file) . "Helper";
 				require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_HELPERS . '/' . $file . '.php');
+				$class = Object::camelcase($pkgHandle . '_' . $file) . "Helper";
+				if (!class_exists($class, false)) {
+					$class = Object::camelcase($file) . "Helper";
+				}
 			} else if (file_exists(DIR_HELPERS . '/' . $file . '.php')) {
 				// first we check if there's an object of the SAME kind in the core. If so, then we load the core first, then, we load the second one (site)
 				// and we hope the second one EXTENDS the first

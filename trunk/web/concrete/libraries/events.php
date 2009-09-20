@@ -141,8 +141,8 @@ class Events {
 				
 				if ($proceed) {
 					if ($ev[3] != false) {
-						if (strpos($ev[3], DIR_BASE) === 0) {	
-							// then this means that our path ALREADY has DIR_BASE in it
+						if (substr($ev[3], 0, 1) == '/') {
+							// then this means that our path is a full one
 							require_once($ev[3]);
 						} else {
 							require_once(DIR_BASE . '/' . $ev[3]);
@@ -154,7 +154,7 @@ class Events {
 					$params = array_merge($args, $params);
 	
 					if (method_exists($ev[1], $ev[2])) {
-						call_user_func_array(array($ev[1], $ev[2]), $params);
+						return call_user_func_array(array($ev[1], $ev[2]), $params);
 					}				
 				}
 			}

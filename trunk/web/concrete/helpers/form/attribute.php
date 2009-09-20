@@ -18,7 +18,7 @@ class FormAttributeHelper {
 					$class = 'UserAttributeKey';
 					break;
 				default:
-					$class = $oClass . 'AttributeKey';
+					$class = $oclass . 'AttributeKey';
 					break;
 			}
 			$obj = call_user_func_array(array($class, 'getByHandle'), array($key));

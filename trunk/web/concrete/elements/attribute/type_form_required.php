@@ -33,7 +33,13 @@ if (is_object($key)) {
 <?=$form->hidden('atID', $type->getAttributeTypeID())?>
 <?=$form->hidden('akCategoryID', $category->getAttributeKeyCategoryID()); ?>
 <?=$valt->output('add_or_update_attribute')?>
-<? Loader::element('attribute/categories/' . $category->getAttributeKeyCategoryHandle(), array('key' => $key)); ?>
+<? 
+if ($category->getPackageID() > 0) { 
+	Loader::packageElement('attribute/categories/' . $category->getAttributeKeyCategoryHandle(), $category->getPackageHandle(), array('key' => $key));
+} else {
+	Loader::element('attribute/categories/' . $category->getAttributeKeyCategoryHandle(), array('key' => $key));
+}
+?>
 <? $type->render('type_form', $key); ?>
 
 <? if (is_object($key)) { ?>

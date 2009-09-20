@@ -56,8 +56,10 @@ class CollectionAttributeKey extends AttributeKey {
 
 	public function getAttributeValue($avID, $method = 'getValue') {
 		$av = CollectionAttributeValue::getByID($avID);
-		$av->setAttributeKey($this);
-		return call_user_func_array(array($av, $method), array());
+		if (is_object($av)) {
+			$av->setAttributeKey($this);
+			return call_user_func_array(array($av, $method), array());
+		}
 	}
 	
 	public static function getByID($akID) {
