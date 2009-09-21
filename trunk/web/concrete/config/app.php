@@ -133,6 +133,9 @@ define('UVTYPE_CHANGE_PASSWORD', 1);
 
 if (!defined('UPLOAD_FILE_EXTENSIONS_ALLOWED')) {
 	Config::getOrDefine('UPLOAD_FILE_EXTENSIONS_ALLOWED','*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.mp4;*.mp3;*.qt;*.ppt;*.kml');
+	define('UPLOAD_FILE_EXTENSIONS_CONFIGURABLE', true);
+} else {
+	define('UPLOAD_FILE_EXTENSIONS_CONFIGURABLE', false);
 }
 
 define('BLOCK_NOT_AVAILABLE_TEXT', t('This block is no longer available.'));
