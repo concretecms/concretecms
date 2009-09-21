@@ -89,7 +89,7 @@ if ($cp->canAdminPage()) {
 		<div class="ccm-field">
 		<label><?= t('Canonical URL')?></label>
 		<?php if (!$c->isGeneratedCollection()) { ?>
-			<?=BASE_URL . substr($c->getCollectionPath(), 0, -1 * strlen($c->getCollectionHandle()))?><input s type="text" name="cHandle" class="ccm-input-text" value="<?php echo $c->getCollectionHandle()?>" id="cHandle"><input type="hidden" name="oldCHandle" value="<?php echo $c->getCollectionHandle()?>"><br /><br />
+			<?=BASE_URL . DIR_REL . substr($c->getCollectionPath(), 0, -1 * strlen($c->getCollectionHandle()))?><input s type="text" name="cHandle" class="ccm-input-text" value="<?php echo $c->getCollectionHandle()?>" id="cHandle"><input type="hidden" name="oldCHandle" value="<?php echo $c->getCollectionHandle()?>"><br /><br />
 		<?php  } else { ?>
 			<?php echo $c->getCollectionHandle()?><br /><br />
 		<?php  } ?>
