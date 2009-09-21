@@ -402,15 +402,12 @@ class PageTheme extends Object {
 	 * Parses the style declaration found in the stylesheet to return the type of editable style
 	 */
 	private function getEditableStyleType($value) {
-		$value = trim($value);
-		$value = substr($value, 0, strpos($value, ':'));
-		if ($value == 'font') {
+		if (preg_match('/^\s*font\s*:/',$value)) {
 			return PageThemeEditableStyle::TSTYPE_FONT;
 		}
-		if ($value == 'color' || strpos($value, '-color') > -1) {
+		if (preg_match('/^\s*([a-z]+-)*color\s*:/',$value)) {
 			return PageThemeEditableStyle::TSTYPE_COLOR;
 		}
-
 		return PageThemeEditableStyle::TSTYPE_CUSTOM;
 
 	}
