@@ -402,6 +402,7 @@ class PageTheme extends Object {
 	 * Parses the style declaration found in the stylesheet to return the type of editable style
 	 */
 	private function getEditableStyleType($value) {
+		// thx yamanoi
 		if (preg_match('/^\s*font\s*:/',$value)) {
 			return PageThemeEditableStyle::TSTYPE_FONT;
 		}
