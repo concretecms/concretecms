@@ -138,6 +138,8 @@ class UpgradeController extends Controller {
 	
 	private function do_upgrade() {
 		try {
+			$ca = new Cache();
+			$ca->flush();
 			$this->set_upgrades();
 			foreach($this->upgrades as $ugh) {
 				if (method_exists($ugh, 'prepare')) {
@@ -145,8 +147,6 @@ class UpgradeController extends Controller {
 				}
 			}
 			$this->refresh_schema();
-			$ca = new Cache();
-			$ca->flush();
 			foreach($this->upgrades as $ugh) {
 				$ugh->run();
 			}
