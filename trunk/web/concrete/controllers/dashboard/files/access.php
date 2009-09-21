@@ -7,7 +7,8 @@ class DashboardFilesAccessController extends Controller {
 	public function view($updated=false) {
 		$helper_file = Loader::helper('concrete/file');
 		
-		$file_access_file_types = Config::get('UPLOAD_FILE_EXTENSIONS_ALLOWED');
+		$file_access_file_types = UPLOAD_FILE_EXTENSIONS_ALLOWED;
+		
 		//is nothing's been defined, display the constant value
 		if (!$file_access_file_types) {
 			$file_access_file_types = $helper_file->unserializeUploadFileExtensions(UPLOAD_FILE_EXTENSIONS_ALLOWED);

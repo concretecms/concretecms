@@ -67,12 +67,16 @@
 			Separate extensions with commas. Periods and spaces will be
 			ignored.')?>
 			</p>
-			<?=$form->textarea('file-access-file-types',$file_access_file_types,array('rows'=>'5','style'=>'width:100%'));?>
-			<div class="ccm-spacer">&nbsp;</div><br/>
-			<?php		
-				$b1 = $concrete_interface->submit(t('Save'), 'file-access-extensions');
-				print $concrete_interface->buttons($b1);
-			?>		
+			<? if (UPLOAD_FILE_EXTENSIONS_CONFIGURABLE) { ?>
+				<?=$form->textarea('file-access-file-types',$file_access_file_types,array('rows'=>'5','style'=>'width:100%'));?>
+				<div class="ccm-spacer">&nbsp;</div><br/>
+				<?php		
+					$b1 = $concrete_interface->submit(t('Save'), 'file-access-extensions');
+					print $concrete_interface->buttons($b1);
+				?>
+			<? } else { ?>
+				<?=$file_access_file_types?>
+			<? } ?>
 		</form>
 	</div>
 	<br/>
