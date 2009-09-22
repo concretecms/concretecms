@@ -711,7 +711,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						if('Controller' != get_class($btc)){
 							$btc->outputAutoHeaderItems();
 						}
-						$btc->runTask('on_page_view', $view);
+						$btc->runTask('on_page_view', array($view));
 					}
 				}
 	
