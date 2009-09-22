@@ -128,6 +128,9 @@ class Controller {
 	 */
 	public function runTask($method, $params) {
 		if (method_exists($this, $method)) {
+			if(!is_array($params)) {
+				$params = array($params);
+			}
 			$ret = call_user_func_array(array($this, $method), $params);
 		}
 		return $ret;
