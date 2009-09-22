@@ -8,7 +8,10 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 	public function getValue() {
 		$db = Loader::db();
 		$value = $db->GetOne("select fID from atFile where avID = ?", array($this->getAttributeValueID()));
-		return $value;	
+		if ($value > 0) {
+			$f = File::getByID($value);
+			return $f;
+		}
 	}
 
 	public function searchForm($list) {
@@ -25,7 +28,7 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 	public function form() {
 		$bf = false;
 		if ($this->getAttributeValueID() > 0) {
-			$bf = File::getByID($this->getValue());
+			$bf = $this->getValue();
 		}
 		$al = Loader::helper('concrete/asset_library');
 		print $al->file('ccm-file-akID-' . $this->attributeKey->getAttributeKeyID(), $this->field('value'), t('Choose File'), $bf);
@@ -49,6 +52,9 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 		if ($data['value'] > 0) {
 			$f = File::getByID($data['value']);
 			$this->saveValue($f);
+		} else {
+			$db = Loader::db();
+			$db->Replace('atFile', array('avID' => $this->getAttributeValueID(), 'fID' => 0), 'avID', true);	
 		}
 	}
 	

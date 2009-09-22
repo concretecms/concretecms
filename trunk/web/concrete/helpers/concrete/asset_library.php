@@ -37,7 +37,7 @@
 				$bf = File::getByID($_POST[$postname]);
 			}
 			
-			if (is_object($bf) && (!$bf->isError())) {
+			if (is_object($bf) && (!$bf->isError()) && $bf->getFileID() > 0) {
 				$fileID = $bf->getFileID();
 				$selectedDisplay = 'block';
 				$resetDisplay = 'none';
@@ -54,7 +54,7 @@
 			}
 			$html .= '</div><input id="' . $id . '-fm-value" type="hidden" name="' . $postname . '" value="' . $fileID . '" />';
 
-			if (is_object($bf) && (!$bf->isError())) {
+			if (is_object($bf) && (!$bf->isError()) && $bf->getFileID() > 0) {
 				$html .= '<script type="text/javascript">$(function() { ccm_triggerSelectFile(' . $fileID . ', \'' . $id . '\'); });</script>';
 			}
 			
