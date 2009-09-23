@@ -64,5 +64,21 @@ class FormPageSelectorHelper {
 		return $html;
 	}
 	
+	/* Embed a sitemap in javascript dialog.  Supports the following args:
+     *  'node_action'   - path to script containing code to be execute when user clicks on a node in the sitemap
+     *  'dialog_title'  - dialog title
+     *  'dialog_height' - dialog height (default: 350px) 
+     *  'dialog_width'  - dialog width (default: 350px)
+     *  'target_id'     - id of the (hidden) field on the parent page that is to receive the CID of the chosen page
+	 *                    (do not include the '#')
+     *  (any other arguments the dashboard/sitemap element supports)
+	 */
+	public function sitemap($args) {
+    	$args['sitemap_mode'] = 'move_copy_delete';
+		if (empty($args['node_action'])) {
+			$args['node_action'] = '<none>';
+		}
+    	Loader::element('dashboard/sitemap', $args);
+	}
 	
 }
