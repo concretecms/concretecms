@@ -134,13 +134,10 @@ class FormHelper {
 	 */
 	 public function textarea($key) {
 	 	$a = func_get_args();
-		$str = '<textarea class="ccm-input-textarea" id="' . $key . '" name="' . $key . '" ';
+		$str = '<textarea id="' . $key . '" name="' . $key . '" ';
 		if (count($a) == 3) {
 			$innerValue = $a[1];
 			$miscFields = $a[2];
-			foreach($a[2] as $key => $value) {
-				$str .= $key . '="' . $value . '" ';
-			}
 		} else {
 			if (is_array($a[1])) {
 				$innerValue .= $_REQUEST[$a[0]];
@@ -152,6 +149,12 @@ class FormHelper {
 		}
 		
 		if (is_array($miscFields)) {
+			if (empty($miscFields['class'])) {
+				$miscFields['class'] = "ccm-input-textarea";
+			} else {
+				$miscFields['class'] .= " ccm-input-textarea";
+			}
+
 			foreach($miscFields as $key => $value) {
 				$str .= $key . '="' . $value . '" ';
 			}
