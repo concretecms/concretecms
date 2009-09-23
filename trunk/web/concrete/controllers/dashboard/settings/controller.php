@@ -447,6 +447,9 @@ class DashboardSettingsController extends Controller {
 		$this->token = Loader::helper('validation/token');
 		
 		switch($this->getTask()) {
+			case 'manage_attribute_types':
+				$attrSelected = true;
+				break;
 			case "set_developer":
 			case "export_database_schema":
 			case "refresh_database_schema":
@@ -463,7 +466,8 @@ class DashboardSettingsController extends Controller {
 			array(View::url('/dashboard/settings'), t('General'), $globalSelected),
 			array(View::url('/dashboard/settings/mail'), t('Email')),
 			array(View::url('/dashboard/settings', 'set_permissions'), t('Access'), $permsSelected),
-			array(View::url('/dashboard/settings', 'set_developer'), t('Debug'), $devSelected)
+			array(View::url('/dashboard/settings', 'set_developer'), t('Debug'), $devSelected),
+			array(View::url('/dashboard/settings', 'manage_attribute_types'), t('Attributes'), $attrSelected)
 		);
 		$this->set('subnav', $subnav);
 	}

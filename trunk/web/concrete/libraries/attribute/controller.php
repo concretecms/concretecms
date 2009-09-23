@@ -107,10 +107,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		/* Automatically run when an attribute key is added or updated
 		* @return ValidationError
 		*/		
-		public function validateKey() {
+		public function validateKey($args = false) {
+			if ($args == false) {
+				$args =  $this->post();
+			}
 			$val = Loader::helper('validation/form');
 			$valt = Loader::helper('validation/token');
-			$val->setData($this->post());
+			$val->setData($args);
 			$val->addRequired("akHandle", t("Handle required."));
 			$val->addRequired("akName", t('Name required.'));
 			$val->addRequired("atID", t('Type required.'));
@@ -121,12 +124,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$error->add($valt->getErrorMessage());
 			}
 			
-			$akc = AttributeKeyCategory::getByID($this->post('akCategoryID'));
-			if ($akc->handleExists($this->post('akHandle'))) {
-				if ((!is_object($this->attributeKey)) || ($this->attributeKey->getAttributeKeyHandle() != $this->post('akHandle'))) {
-					$error->add(t("An attribute with the handle %s already exists.", $akHandle));
+			$akc = AttributeKeyCategory::getByID($args['akCategoryID']);
+			if (is_object($akc)) {
+				if ($akc->handleExists($args['akHandle'])) {
+					if ((!is_object($this->attributeKey)) || ($this->attributeKey->getAttributeKeyHandle() != $args['akHandle'])) {
+						$error->add(t("An attribute with the handle %s already exists.", $akHandle));
+					}
 				}
-			}		
+			} else {
+				$error->add('Invalid attribute category.');
+			}
 			
 			return $error;			
 		}
