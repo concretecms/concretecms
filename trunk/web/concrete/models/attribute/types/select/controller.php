@@ -174,8 +174,16 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 	}
 	
 	public function validateForm($p) {
+		$this->load();
 		$options = $this->request('atSelectOptionID');
-		return count($options) > 0;
+		if ($this->akSelectAllowMultipleValues) {
+			return count($options) > 0;
+		} else {
+			if ($options[0] != false) {
+				return $options[0] > 0;
+			}
+		}
+		return false;
 	}
 	
 	public function searchForm($list) {
@@ -267,8 +275,8 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		return $options;
 	}
 		
-	public function validateKey() {
-		$e = parent::validateKey();
+	public function validateKey($args) {
+		$e = parent::validateKey($args);
 		
 		// additional validation for select type
 		
@@ -280,7 +288,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		
 		return $e;
 	}
-	
+
 	public function saveKey($data) {
 		$ak = $this->getAttributeKey();
 		

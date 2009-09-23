@@ -28,6 +28,14 @@ class AttributeKeyCategory extends Object {
 		return $r > 0;
 	}
 	
+	public function getAttributeKeyByHandle($akHandle) {
+		$txt = Loader::helper('text');
+		$className = $txt->camelcase($this->akCategoryHandle);
+		$c1 = $className . 'AttributeKey';
+		$ak = call_user_func_array(array($c1, 'getByHandle'), array($akHandle));
+		return $ak;
+	}
+	
 	public function getAttributeKeyCategoryID() {return $this->akCategoryID;}
 	public function getAttributeKeyCategoryHandle() {return $this->akCategoryHandle;}
 	public function getPackageID() {return $this->pkgID;}
