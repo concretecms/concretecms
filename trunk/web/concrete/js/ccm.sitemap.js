@@ -326,13 +326,23 @@ parseTree = function(node, nodeID, deactivateSubNodes) {
 
 selectMoveCopyTarget = function(destCID) {
 	var origCID = CCM_CID;
+	var dialog_title = ccmi18n_sitemap.moveCopyPage;
+	var dialog_url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request.php?origCID=' + origCID + '&sitemap_mode=' + CCM_SITEMAP_MODE + '&destCID=' + destCID;
+	var dialog_height = 350;
+
+	if (CCM_NODE_ACTION!='')
+		dialog_url = CCM_NODE_ACTION+'?destCID='+destCID;
+	if (CCM_DIALOG_TITLE!='')
+		dialog_title = CCM_DIALOG_TITLE;
+	if (CCM_DIALOG_HEIGHT != '')
+		dialog_height = CCM_DIALOG_HEIGHT;
 		
 	$.fn.dialog.open({
-		title: ccmi18n_sitemap.moveCopyPage,
-		href: CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request.php?origCID=' + origCID + '&sitemap_mode=' + CCM_SITEMAP_MODE + '&destCID=' + destCID,
+		title: dialog_title,
+		href: dialog_url,
 		width: 350,
 		modal: false,
-		height: 350,
+		height: dialog_height,
 		onClose: function() {
 			//$("#tree").fadeIn(200);
 			if (tr_moveCopyMode == true) {

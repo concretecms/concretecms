@@ -19,7 +19,9 @@ if (isset($reveal)) {
 <script type="text/javascript">
 var CCM_SITEMAP_MODE = "<?=$sitemap_mode?>";
 var CCM_BACK_TITLE = "<?=$previous_title?>";
-var CCM_NODE_ACTION = "<?=node_action?>";
+var CCM_NODE_ACTION = "<?=$node_action?>";
+var CCM_DIALOG_TITLE = "<?=$dialog_title?>";
+var CCM_DIALOG_HEIGHT = "<?=$dialog_height?>";
 </script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.sitemap.js"></script>
 
