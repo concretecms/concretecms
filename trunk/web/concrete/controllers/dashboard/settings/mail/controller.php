@@ -11,7 +11,8 @@ class DashboardSettingsMailController extends Controller {
 			array(View::url('/dashboard/settings'), t('General')),
 			array(View::url('/dashboard/settings/mail'), t('Email'), true),
 			array(View::url('/dashboard/settings', 'set_permissions'), t('Access')),
-			array(View::url('/dashboard/settings', 'set_developer'), t('Debug'))
+			array(View::url('/dashboard/settings', 'set_developer'), t('Debug')),
+			array(View::url('/dashboard/settings', 'manage_attribute_types'), t('Attributes'))
 		);
 		$this->set('subnav', $subnav);
 	}

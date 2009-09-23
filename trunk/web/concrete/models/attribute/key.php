@@ -1,7 +1,9 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class AttributeKey extends Object {
-
+	
+	public function getIndexedSearchTable() {return false;}
+	
 	/** 
 	 * Returns the name for this attribute key
 	 */
@@ -218,6 +220,9 @@ class AttributeKey extends Object {
 	public function updateSearchIndex($prevHandle = false) {
 		$type = $this->getAttributeType();
 		$cnt = $type->getController();
+		if ($this->getIndexedSearchTable() == false) {
+			return false;
+		}
 		if ($cnt->getSearchIndexFieldDefinition() == false) {
 			return false;
 		}
@@ -383,10 +388,12 @@ class AttributeKey extends Object {
 
 
 	public function createIndexedSearchTable() {
-		$db = Loader::db();
-		$dba = NewDataDictionary($db, DB_TYPE);
-		$sqa = $dba->CreateTableSQL($this->getIndexedSearchTable(), $this->searchIndexFieldDefinition);
-		$dba->ExecuteSQLArray($sqa);
+		if ($this->getIndexedSearchTable() != false) {
+			$db = Loader::db();
+			$dba = NewDataDictionary($db, DB_TYPE);
+			$sqa = $dba->CreateTableSQL($this->getIndexedSearchTable(), $this->searchIndexFieldDefinition);
+			$dba->ExecuteSQLArray($sqa);
+		}
 	}
 
 	/** 
