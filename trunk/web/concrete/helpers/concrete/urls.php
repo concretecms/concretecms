@@ -44,8 +44,7 @@ class ConcreteUrlsHelper {
 	 */
 	public function getToolsURL($tool, $pkgHandle = null) {
 		if ($pkgHandle != null) {
-			$url = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? BASE_URL . DIR_REL : ASSETS_URL; 
-			$url .= REL_DIR_FILES_TOOLS_PACKAGES . '/' . $pkgHandle . '/' . $tool;
+			$url = REL_DIR_FILES_TOOLS_PACKAGES . '/' . $pkgHandle . '/' . $tool;
 			return $url;
 		} else {
 			if (file_exists(DIR_BASE . '/' . DIRNAME_TOOLS . '/' . $tool . '.php')) {
