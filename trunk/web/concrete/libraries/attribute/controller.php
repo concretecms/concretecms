@@ -127,7 +127,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$akc = AttributeKeyCategory::getByID($args['akCategoryID']);
 			if (is_object($akc)) {
 				if ($akc->handleExists($args['akHandle'])) {
-					if ((!is_object($this->attributeKey)) || ($this->attributeKey->getAttributeKeyHandle() != $args['akHandle'])) {
+					if (is_object($this->attributeKey)) {
+						$ak2 = $akc->getAttributeKeyByHandle($args['akHandle']);
+						if ($ak2->getAttributeKeyID() != $this->attributeKey->getAttributeKeyID()) {
+							$error->add(t("An attribute with the handle %s already exists.", $akHandle));
+						}
+					} else {
 						$error->add(t("An attribute with the handle %s already exists.", $akHandle));
 					}
 				}
