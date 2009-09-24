@@ -72,15 +72,21 @@ class SlideshowBlockController extends BlockController {
 		if (intval($this->fsID) < 1) {
 			return false;
 		}
-        $f = Loader::helper('concrete/file');
-
+        Loader::helper('concrete/file');
 		Loader::model('file_attributes');
-		$fak = FileAttributeKey::getByHandle('height');
+		Loader::library('file/types');
+		Loader::model('file_list');
+		Loader::model('file_set');
+		
+		$ak = FileAttributeKey::getByHandle('height');
 
-		$sql = "SELECT fsf.fID, fv.fvFilename, fv.fvPrefix, fav.value FROM FileSetFiles fsf, FileVersions fv, FileAttributeValues fav " .
-		       "WHERE fsf.fsID = ? AND fsf.fID = fv.fID AND fvIsApproved = 1 AND fav.fID = fv.fID AND fav.fvID = fv.fvID AND fav.fakID = ?";
-		$files = $this->db->getAll($sql, array($this->fsID, $fak->getAttributeKeyID())); 
-
+		$fs = FileSet::getByID($this->fsID);
+		$fileList = new FileList();		
+		$fileList->filterBySet($fs);
+		$fileList->filterByType(FileType::T_IMAGE);	
+		$files = $fileList->get(1000,0);
+		
+		
 		$image = array();
 		$image['duration'] = $this->duration;
 		$image['fadeDuration'] = $this->fadeDuration;
@@ -88,17 +94,26 @@ class SlideshowBlockController extends BlockController {
 		$image['url'] = '';
 		$images = array();
 		$maxHeight = 0;
-		foreach ($files as $file) {
-			$image['fID'] = $file['fID']; 
-			$image['fileName'] = $file['fvFilename'];
-			$image['fullFilePath'] = $f->getFileRelativePath($file['fvPrefix'], $file['fvFilename']);
-			$image['imgHeight'] = $file['value'];
-			if ($maxHeight == 0 || $file['value'] > $maxHeight) {
-				$maxHeight = $file['value'];
+		foreach ($files as $f) {
+			$fp = new Permissions($f);
+			if(!$fp->canRead()) { continue; }
+			$image['fID'] 			= $f->getFileID();
+			$image['fileName'] 		= $f->getFileName();
+			$image['fullFilePath'] 	= $f->getPath();
+			$image['url']			= $f->getRelativePath();
+			
+			// find the max height of all the images so slideshow doesn't bounce around while rotating
+			$vo = $f->getAttributeValueObject($ak);
+			if (is_object($vo)) {
+				$image['imgHeight'] = $vo->getValue('height');
+			}
+			if ($maxHeight == 0 || $image['imgHeight'] > $maxHeight) {
+				$maxHeight = $image['imgHeight'];
 			}
 			$images[] = $image;
 		}
 		$this->images = $images;
+	
 	}
 
 	function loadImages(){
