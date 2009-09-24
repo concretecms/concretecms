@@ -42,6 +42,12 @@ class RatingHelper {
 			return $this->outputDisplay($value);
 		}
 		
+		$form = Loader::helper("form");
+		$v = $form->getRequestValue($field);
+		if ($v !== false) {
+			$value = $v;
+		}
+		
 		$html = '';
 		$checked1 = ($value == 20) ? 'checked' : '';
 		$checked2 = ($value == 40) ? 'checked' : '';
