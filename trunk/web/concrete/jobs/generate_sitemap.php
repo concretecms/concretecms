@@ -42,7 +42,7 @@ class GenerateSitemap extends Job {
 		$home .= "</url>\n";
 		$xmlFoot = "</urlset>\n";
 		
-		if (!file_exists($xmlFile)) touch($xmlFile);
+		if (!file_exists($xmlFile)) @touch($xmlFile);
 		
 		if (is_writable($xmlFile)) {
 			if (!$handle = fopen($xmlFile, 'w')) {

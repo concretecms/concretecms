@@ -113,9 +113,9 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 			}
 		}
 
+		$db = Loader::db();
+		$db->Execute('delete from atSelectOptionsSelected where avID = ?', array($this->getAttributeValueID()));
 		if (is_array($data['atSelectOptionID'])) {
-			$db = Loader::db();
-			$db->Execute('delete from atSelectOptionsSelected where avID = ?', array($this->getAttributeValueID()));
 			foreach($data['atSelectOptionID'] as $optID) {
 				$db->Execute('insert into atSelectOptionsSelected (avID, atSelectOptionID) values (?, ?)', array($this->getAttributeValueID(), $optID));
 				if ($this->akSelectAllowMultipleValues == false) {

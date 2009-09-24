@@ -52,7 +52,7 @@ class DashboardPagesTypesAttributesController extends Controller {
 		$this->select_type();
 		$type = $this->get('type');
 		$cnt = $type->getController();
-		$e = $cnt->validateKey();
+		$e = $cnt->validateKey($this->post());
 		if ($e->has()) {
 			$this->set('error', $e);
 		} else {
@@ -83,7 +83,7 @@ class DashboardPagesTypesAttributesController extends Controller {
 		if ($this->isPost()) {
 			$cnt = $type->getController();
 			$cnt->setAttributeKey($key);
-			$e = $cnt->validateKey();
+			$e = $cnt->validateKey($this->post());
 			if ($e->has()) {
 				$this->set('error', $e);
 			} else {
