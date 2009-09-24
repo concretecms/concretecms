@@ -27,7 +27,7 @@ $v->addHeaderItem($html->javascript('jquery.colorpicker.js'));
 $v->addHeaderItem($html->javascript('ccm.popup_login.js'));
 
 if (LANGUAGE != 'en') {
-	$v->addHeaderItem($html->javascript('i18n/ui.datepicker-<?=LANGUAGE?>.js'));
+	$v->addHeaderItem($html->javascript('i18n/ui.datepicker-'.LANGUAGE.'.js'));
 }
 
 // Require CSS
