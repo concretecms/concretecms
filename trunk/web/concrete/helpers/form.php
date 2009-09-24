@@ -78,13 +78,11 @@ class FormHelper {
 	 * @param string $value
 	 */
 	public function hidden($key, $value = null) {
-		$val = '';
-		if ($value != null) {
-			$val = $value;
-		} else if (isset($_REQUEST[$key])) {
-			$val = $_REQUEST[$key];
+		$val = $this->getRequestValue($key);
+		if ($val !== false) {
+			$value = $val;
 		}
-		$str = '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . $val . '" />';
+		$str = '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . $value . '" />';
 		return $str;
 	}
 	
@@ -111,11 +109,11 @@ class FormHelper {
 			$_array = true;
 		}
 
-		if ($isChecked && (!isset($_REQUEST[$_field]))) {
+		if ($isChecked && (!isset($_REQUEST[$_field])) && ($_SERVER['REQUEST_METHOD'] != 'POST')) {
 			$checked = true;
-		} else if ($_REQUEST[$_field] == $value) {
+		} else if ($this->getRequestValue($field) == $value) {
 			$checked = true;
-		} else if (is_array($_REQUEST[$_field]) && in_array($value, $_REQUEST[$_field])) {
+		} else if (is_array($this->getRequestValue($field)) && in_array($value, $this->getRequestValue($field))) {
 			$checked = true;
 		}
 			
@@ -134,17 +132,23 @@ class FormHelper {
 	 */
 	 public function textarea($key) {
 	 	$a = func_get_args();
+		
 		$str = '<textarea id="' . $key . '" name="' . $key . '" ';
+		$rv = $this->getRequestValue($key);
+		
 		if (count($a) == 3) {
-			$innerValue = $a[1];
+			$innerValue = ($rv !== false) ? $rv : $a[1];
+
 			$miscFields = $a[2];
 		} else {
+			
 			if (is_array($a[1])) {
-				$innerValue .= $_REQUEST[$a[0]];
+				$innerValue = ($rv !== false) ? $rv : $a[1];
 				$miscFields = $a[1];
 			} else {
+				
 				// we ignore this second value if a post is set with this guy in it
-				$innerValue = (isset($_REQUEST[$a[0]])) ? $_REQUEST[$a[0]] : $a[1];
+				$innerValue = ($rv !== false) ? $rv : $a[1];
 			}
 		}
 		
@@ -193,6 +197,28 @@ class FormHelper {
 		return $str;
 	}
 	
+	// checks the request based on the key passed. Does things like turn the key into arrays if the key has text versions of [ and ] in it, etc..
+	public function getRequestValue($key) {
+		if (strpos($key, '[') !== false) {
+			// we've got something like 'akID[34]['value'] here, which we need to get data from
+			if (substr($key, -2) == '[]') {
+				eval('if (is_array($_REQUEST[' . preg_replace('/\[/', '][', substr($key, 0, strlen($key)-2), 1) . ')) { $v2 = $_REQUEST[' . preg_replace('/\[/', '][', substr($key, 0, strlen($key)-2), 1) . ';}');
+
+			} else {			
+				eval('if (isset($_REQUEST[' . preg_replace('/\[/', '][', $key, 1) . ')) { $v2 = $_REQUEST[' . preg_replace('/\[/', '][', $key, 1) . ';}');
+			}
+
+			if (isset($v2)) {
+				return $v2;
+			}
+		}			
+		if (isset($_REQUEST[$key])) {
+			return $_REQUEST[$key];
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Renders a text input field. Second argument is either the value of the field (and if it's blank we check post) or a misc. array of fields
 	 * @param string $key
@@ -200,6 +226,8 @@ class FormHelper {
 	 */
 	public function text($key) {
 		$a = func_get_args();
+		$val = $this->getRequestValue($key);
+
 		// index 0 is always the key
 		// need to figure out a good way to get a unique ID
 		$str = '<input class="ccm-input-text" id="' . $key . '" type="text" name="' . $key . '" ';
@@ -207,9 +235,8 @@ class FormHelper {
 		// if there are two more values, then we treat index 1 as the value in the
 		// value field, and index 2 as an assoc. array of other stuff to add
 		// to the tag. If there's only one, then it's the array
-		
 		if (count($a) == 3) {
-			$val = (isset($_REQUEST[$a[0]])) ? $_REQUEST[$a[0]] : $a[1];
+			$val = ($val !== false) ? $val : $a[1];
 			$str .= 'value="' . $val . '" ';
 			$miscFields = $a[2];
 			foreach($a[2] as $key => $value) {
@@ -217,11 +244,11 @@ class FormHelper {
 			}
 		} else {
 			if (is_array($a[1])) {
-				$str .= 'value="' . $_REQUEST[$a[0]] . '" ';
+				$str .= 'value="' . $val . '" ';
 				$miscFields = $a[1];
 			} else {
 				// we ignore this second value if a post is set with this guy in it
-				$val = (isset($_REQUEST[$a[0]])) ? $_REQUEST[$a[0]] : $a[1];
+				$val = ($val !== false) ? $val : $a[1];
 				$str .= 'value="' . $val . '" ';
 			}
 		}
@@ -244,7 +271,11 @@ class FormHelper {
 	 * @return $html
 	 */
 	public function select($key, $values, $valueOrArray = false, $miscFields = array()) {
-
+		$val = $this->getRequestValue($key);
+		if (is_array($val)) {
+			$valueOrArray = $val[0];
+		}
+		
 		if ((strpos($key, '[]') + 2) == strlen($key)) {
 			$_key = substr($key, 0, strpos($key, '[]'));
 			$id = $_key . $this->selectIndex;
@@ -272,7 +303,7 @@ class FormHelper {
 
 		foreach($values as $k => $value) { 
 			$selected = "";
-			if ($valueOrArray == $k && !isset($_REQUEST[$_key]) || (isset($_REQUEST[$_key]) && $_REQUEST[$_key] == $k) || (is_array($_REQUEST[$_key]) && (in_array($k, $_REQUEST[$_key])))) {
+			if ($valueOrArray == $k && !isset($_REQUEST[$_key]) || ($val !== false && $val == $k) || (is_array($_REQUEST[$_key]) && (in_array($k, $_REQUEST[$_key])))) {
 				$selected = 'selected';
 			}
 			$str .= '<option value="' . $k . '" ' . $selected . '>' . $value . '</option>';

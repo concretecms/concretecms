@@ -18,6 +18,17 @@
 
 <div class="ccm-attribute-address-line ccm-attribute-address-state-province">
 <?=$f->label($this->field('state_province'), t('State/Province'))?>
+<?
+$spreq = $f->getRequestValue($this->field('state_province'));
+if ($spreq != false) {
+	$state_province = $spreq;
+}
+$creq = $f->getRequestValue($this->field('country'));
+if ($creq != false) {
+	$country = $creq;
+}
+
+?>
 <?=$f->select($this->field('state_province_select'), array('' => t('Choose State/Province')), $state_province, array('ccm-attribute-address-field-name' => $this->field('state_province')))?>
 <?=$f->text($this->field('state_province_text'), $state_province, array('style' => 'display: none', 'ccm-attribute-address-field-name' => $this->field('state_province')))?>
 </div>

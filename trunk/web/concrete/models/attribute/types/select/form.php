@@ -1,19 +1,23 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <?
 $options = $this->controller->getOptions();
+$form = Loader::helper('form');
 if ($akSelectAllowMultipleValues) { ?>
 
 	<? foreach($options as $opt) { ?>
-		<div><input type="checkbox" name="<?=$this->field('atSelectOptionID')?>[]" value="<?=$opt->getSelectAttributeOptionID()?>" <? if (in_array($opt->getSelectAttributeOptionID(), $selectedOptions)) { ?> checked <? } ?> /><?=$opt->getSelectAttributeOptionValue()?></div>
+		<div>
+			<?=$form->checkbox($this->field('atSelectOptionID') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptions)); ?>
+			<?=$opt->getSelectAttributeOptionValue()?></div>
+			
 	<? } ?>
 
-<? } else { ?>
-	<select name="<?=$this->field('atSelectOptionID')?>[]">
-		<option value=""><?=t('** None')?></option>
-	<? foreach($options as $opt) { ?>
-		<option value="<?=$opt->getSelectAttributeOptionID()?>" <? if (in_array($opt->getSelectAttributeOptionID(), $selectedOptions)) { ?> selected <? } ?>><?=$opt->getSelectAttributeOptionValue()?></option>	
-	<? } ?>
-	</select>
+<? } else { 
+	$opts = array('' => t('** None'));
+	foreach($options as $opt) { 
+		$opts[$opt->getSelectAttributeOptionID()] = $opt->getSelectAttributeOptionValue();
+	}
+	?>
+	<?=$form->select($this->field('atSelectOptionID') . '[]', $opts, $selectedOptions[0]); ?>
 
 <? } 
 

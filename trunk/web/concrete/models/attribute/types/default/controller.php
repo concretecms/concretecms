@@ -15,7 +15,7 @@ class DefaultAttributeTypeController extends AttributeTypeController  {
 		if (is_object($this->attributeValue)) {
 			$value = $this->getAttributeValue()->getValue();
 		}
-		print '<textarea name="' . $this->field('value') . '" style="width: 100%; height: 40px">' . $value . '</textarea>';
+		print Loader::helper('form')->textarea($this->field('value'), $value);
 	}
 
 	public function searchForm($list) {
