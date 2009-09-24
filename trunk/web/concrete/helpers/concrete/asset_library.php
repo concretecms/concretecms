@@ -46,7 +46,7 @@
 			$html = '<div id="' . $id . '-fm-selected" class="ccm-file-selected-wrapper" style="display: ' . $selectedDisplay . '"><img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" /></div>';
 			
 			$html .= '<div class="ccm-file-manager-select" id="' . $id . '-fm-display" ccm-file-manager-field="' . $id . '" style="display: ' . $resetDisplay . '">';
-			$html .= '<a href="javascript:void(0)" class="ccm-file-manager-launch">' . $chooseText . '</a>';
+			$html .= '<a href="javascript:void(0)" class="ccm-file-manager-launch" onclick="ccm_chooseAsset=false">' . $chooseText . '</a>';
 			if ($filterArgs != false) {
 				foreach($filterArgs as $key => $value) {
 					$html .= '<input type="hidden" class="ccm-file-manager-filter" name="' . $key . '" value="' . $value . '" />';
