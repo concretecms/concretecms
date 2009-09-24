@@ -202,8 +202,11 @@ class FormHelper {
 		if (strpos($key, '[') !== false) {
 			// we've got something like 'akID[34]['value'] here, which we need to get data from
 			if (substr($key, -2) == '[]') {
-				eval('if (is_array($_REQUEST[' . preg_replace('/\[/', '][', substr($key, 0, strlen($key)-2), 1) . ')) { $v2 = $_REQUEST[' . preg_replace('/\[/', '][', substr($key, 0, strlen($key)-2), 1) . ';}');
-
+				$field = preg_replace('/\[/', '][', substr($key, 0, strlen($key)-2), 1);
+				if (substr($field, -1) != ']') {
+					$field .= ']';
+				}
+				eval('if (is_array($_REQUEST[' . $field . ')) { $v2 = $_REQUEST[' . $field . ';}');
 			} else {			
 				eval('if (isset($_REQUEST[' . preg_replace('/\[/', '][', $key, 1) . ')) { $v2 = $_REQUEST[' . preg_replace('/\[/', '][', $key, 1) . ';}');
 			}
