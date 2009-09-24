@@ -89,6 +89,10 @@ class ImageHelper {
 		} else {
 			$path = $obj;
 		}		
+		
+		if (!file_exists($path)) {
+			return false;
+		}
 
 		// first we check to see if a file with these dimensions exists
 		$filename = md5($path . ':' . $maxWidth . ':' . $maxHeight . ':' . filemtime($path)) . '.jpg';
