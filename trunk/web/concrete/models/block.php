@@ -265,7 +265,11 @@ class Block extends Object {
 	public function getInstance() {
 		return $this->instance;
 	}
-
+	
+	public function getController() {
+		return $this->instance;
+	}
+	
 	function getCollectionList() {
 		// gets a list of collections that include this block, along with area name, etc...
 		// used in the block_details.php page in the admin control panel
