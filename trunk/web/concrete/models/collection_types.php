@@ -235,19 +235,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		public function getIcons() {
+			$f = Loader::helper('file');
 			Loader::model('file_list');
 			Loader::model('file_set');
 			$fileList = new FileList();
-			$fs = FileSet::getByName(t('Page Type Icons'));
-			//echo var_dump($fs); exit;
+			$fs = FileSet::getByName(t('Page Type Icons'));		
 			if(!$fs) {
-				$f = Loader::helper('file');
 				return $f->getDirectoryContents(DIR_FILES_COLLECTION_TYPE_ICONS);				
 			} else { 
 				$fileList->filterBySet($fs);
 				$icons = $fileList->get(100);
 				if(!count($icons)) {
-					$ctIcons = $f->getDirectoryContents(DIR_FILES_COLLECTION_TYPE_ICONS);
+					$icons = $f->getDirectoryContents(DIR_FILES_COLLECTION_TYPE_ICONS);
 				}
 				return $icons;
 			}
