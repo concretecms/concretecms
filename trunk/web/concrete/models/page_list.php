@@ -16,6 +16,7 @@ class PageList extends DatabaseItemList {
 	private $systemPagesToExclude = array('login.php', 'register.php', 'download_file.php', 'profile/%', 'dashboard/%');
 	private $filterByCParentID = 0;
 	private $ignorePermissions = false;
+	protected $attributeClass = 'CollectionAttributeKey';
 	
 	/* magic method for filtering by page attributes. */
 	
