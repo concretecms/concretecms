@@ -186,6 +186,7 @@ class DatabaseItemList extends ItemList {
 			$column = $column[key($column)] . '_' . key($column);
 		}
 		$this->attributeFilters[] = array('ak_' . $column, $value, $comparison);
+		print_r($this->attributeFilters);
 	}
 	
 
