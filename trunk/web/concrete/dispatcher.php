@@ -11,9 +11,6 @@
 	## First we ensure that dispatcher is not being called directly
 	require(dirname(__FILE__) . '/startup/file_access_check.php');
 	
-	## Check host for redirection ##	
-	require(dirname(__FILE__) . '/startup/url_check.php');
-	
 	## Load the database ##
 	Loader::database();
 
@@ -89,6 +86,9 @@
 	
 	## User level config ##	
 	require(dirname(__FILE__) . '/config/app.php');
+	
+	## Check host for redirection ##	
+	require(dirname(__FILE__) . '/startup/url_check.php');
 	
 	## Site-level config POST user/app config ##
 	if (file_exists(DIR_BASE . '/config/site_post.php')) {
