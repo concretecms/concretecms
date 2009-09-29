@@ -146,18 +146,21 @@ class UpgradeController extends Controller {
 			$this->set_upgrades();
 			foreach($this->upgrades as $ugh) {
 				if (method_exists($ugh, 'prepare')) {
-					$ugh->prepare($this);
+					$prepareMessages[] = $ugh->prepare($this);
 				}
 			}
 			$this->refresh_schema();
 			foreach($this->upgrades as $ugh) {
-				$ugh->run();
+				$runMessages[] = $ugh->run();
 			}
-
+			
+			$message .= implode("<br/>",$prepareMessages);
+			$message .= implode("<br/>",$runMessages);
+			
 			$upgrade = true;
 		} catch(Exception $e) {
 			$upgrade = false;
-			$message = t('Error occurred while upgrading: %s', $e->getMessage());
+			$message .= t('Error occurred while upgrading: %s', $e->getMessage());
 		}
 		
 		if ($upgrade) { 
