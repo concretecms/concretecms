@@ -41,6 +41,7 @@
 	Loader::model('attribute/key');
 	Loader::model('attribute/value');
 	Loader::model('attribute/category');
+	Loader::model('attribute/set');
 	Loader::model('attribute/type');
 	Loader::model('block');
 	Loader::model('block_styles');

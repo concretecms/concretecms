@@ -4,7 +4,7 @@
 	<div class="ccm-dashboard-inner">
 	<?
 	$attribs = UserAttributeKey::getList();
-	Loader::element('dashboard/attributes_table', array('attribs'=> $attribs, 'editURL' => '/dashboard/users/attributes')); ?>
+	Loader::element('dashboard/attributes_table', array('category' => $category, 'attribs'=> $attribs, 'editURL' => '/dashboard/users/attributes')); ?>
 
 	</div>
 
@@ -26,7 +26,7 @@ $(function() {
 </script>
 
 <style type="text/css">
-img.ccm-attribute-icon:hover {cursor: move}
+div.ccm-attributes-list img.ccm-attribute-icon:hover {cursor: move}
 </style>
 
 <? } ?>

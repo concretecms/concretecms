@@ -38,6 +38,10 @@ class DashboardUsersAttributesController extends Controller {
 		}
 	}
 	
+	public function on_start() {
+		$this->set('category', AttributeKeyCategory::getByHandle('user'));
+	}
+	
 	public function activate($akID, $token = null) {
 		try {
 			$ak = UserAttributeKey::getByID($akID); 
@@ -81,7 +85,6 @@ class DashboardUsersAttributesController extends Controller {
 		$atID = $this->request('atID');
 		$at = AttributeType::getByID($atID);
 		$this->set('type', $at);
-		$this->set('category', AttributeKeyCategory::getByHandle('user'));
 	}
 	
 	public function view() {
@@ -137,7 +140,6 @@ class DashboardUsersAttributesController extends Controller {
 		$type = $key->getAttributeType();
 		$this->set('key', $key);
 		$this->set('type', $type);
-		$this->set('category', AttributeKeyCategory::getByHandle('user'));
 		
 		if ($this->isPost()) {
 			$cnt = $type->getController();
