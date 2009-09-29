@@ -77,7 +77,7 @@ class ConcreteUpgradeVersion532Helper {
 		$this->installCoreAttributeItems();	
 		
 		$dict = NewDataDictionary($db->db, DB_TYPE);
-		$tables = $db->MetaTables();			
+		$tables = $db->MetaTables();
 		
 		if (in_array('_CollectionAttributeKeys', $tables)) {
 			$this->upgradeCollectionAttributes();
@@ -139,10 +139,15 @@ class ConcreteUpgradeVersion532Helper {
 			$em1->update(array('cName'=>t('Email'), 'cDescription'=>t('Enable post via email and other settings.')));
 		}
 
+		// remove adodb database logs
 		$databaseReports = Page::getByPath('/dashboard/reports/database');
-		$databaseReports->delete();
-		@$db->query('DROP TABLE adodb_logsql');	
-
+		if (!$databaseReports->isError()) {
+			$databaseReports->delete();
+		}
+		if (in_array('adodb_logsql', $tables)) {			
+			@$db->query('DROP TABLE adodb_logsql');	
+		}
+		
 		Loader::library('mail/importer');
 		$mi = MailImporter::getByHandle("private_message");
 		if (!is_object($mi)) {
@@ -211,8 +216,9 @@ class ConcreteUpgradeVersion532Helper {
 		while ($row = $r->FetchRow()) {
 			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', array($row['akHandle']) );
 			if ($existingAKID < 1) {
+				$cleanHandle = preg_replace("/[^A-Za-z0-9\_]/",'',$row['akHandle']); // remove spaces, chars that'll mess up our index tables
 				$args = array(
-					'akHandle' => $row['akHandle'], 
+					'akHandle' => $cleanHandle, 
 					'akIsSearchable' => $row['akSearchable'],
 					'akName' => $row['akName']			
 				);
@@ -283,9 +289,11 @@ class ConcreteUpgradeVersion532Helper {
 		$r = $db->Execute('select _FileAttributeKeys.* from _FileAttributeKeys order by fakID asc');
 		while ($row = $r->FetchRow()) {
 			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?',  array($row['akHandle']) );
+			
 			if ($existingAKID < 1) {
+				$cleanHandle = preg_replace("/[^A-Za-z0-9\_]/",'',$row['akHandle']); // remove spaces, chars that'll mess up our index tables
 				$args = array(
-					'akHandle' => $row['akHandle'], 
+					'akHandle' => $cleanHandle,
 					'akIsSearchable' => $row['akSearchable'],
 					'akIsAutoCreated' => $row['akIsImporterAttribute'],
 					'akIsEditable' => $row['akIsEditable'],
@@ -357,12 +365,13 @@ class ConcreteUpgradeVersion532Helper {
 			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?',  array($row['ukHandle']) );
 			if ($existingAKID < 1) {
 				if(!$row['ukHandle']) continue; 
+				$cleanHandle = preg_replace("/[^A-Za-z0-9\_]/",'',$row['ukHandle']); // remove spaces, chars that'll mess up our index tables
 				$args = array(
-					'akHandle' => $row['ukHandle'], 
+					'akHandle' => $cleanHandle, 
 					'akIsSearchable' => 1,
 					'akIsEditable' => 1,
 					'akName' => $row['ukName'],
-					'uakIsActive' => $row['ukHidden'],
+					'uakIsActive' => ($row['ukHidden']?0:1),
 					'uakProfileEditRequired' => $row['ukRequired'],
 					'uakProfileDisplay' => ($row['ukPrivate'] == 0),
 					'uakRegisterEdit' => $row['ukDisplayedOnRegister']

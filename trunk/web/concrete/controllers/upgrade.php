@@ -20,14 +20,17 @@ class UpgradeController extends Controller {
 	public $upgrade_db = true;
 	
 	public function on_start() {
+		// if you just reverted, but didn't manually clear out your files - cache would be a prob here.
+		$ca = new Cache();
+		$ca->flush();
+		
 		$this->site_version = Config::get('SITE_APP_VERSION');
 	}
 	
 	public function view() {
 		if ($this->get('force') == 1) {
 			$this->do_upgrade();
-		} else {
-		
+		} else {	
 			$sav = $this->site_version;
 	
 			if (!$sav) {
