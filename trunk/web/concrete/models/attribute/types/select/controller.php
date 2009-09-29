@@ -210,7 +210,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 	
 	public function getValue() {
 		$list = $this->getSelectedOptions();
-		if (count($list) == 1) {
+		if ($list->count() == 1) {
 			return $list->get(0);
 		}
 		return $list;	
