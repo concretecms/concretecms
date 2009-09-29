@@ -136,6 +136,7 @@ class UpgradeController extends Controller {
 			foreach($btArray as $bt) {
 				$bt->refresh();
 			}
+			$this->upgrade_db = false;
 		}
 	}
 	
@@ -148,9 +149,7 @@ class UpgradeController extends Controller {
 				if (method_exists($ugh, 'prepare')) {
 					$prepareMessages[] = $ugh->prepare($this);
 				}
-			}
-			$this->refresh_schema();
-			foreach($this->upgrades as $ugh) {
+				$this->refresh_schema();
 				$runMessages[] = $ugh->run();
 			}
 			

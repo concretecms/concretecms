@@ -325,11 +325,15 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 			if (is_string($item)) {
 				if (is_object($db)) {
-					$_item = Page::getByPath($item);
-					if ($_item->isError()) {
+					try {
+						$_item = Page::getByPath($item);
+						if ($_item->isError()) {
+							$path = $item;
+						} else {
+							$item = $_item;
+						}
+					} catch(Exception $e) {
 						$path = $item;
-					} else {
-						$item = $_item;
 					}
 				} else {
 					$path = $item;
