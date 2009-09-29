@@ -124,6 +124,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$error->add($valt->getErrorMessage());
 			}
 			
+			if(preg_match("/[^A-Za-z0-9\_]/", $args['akHandle'])) {
+				$error->add(t('Attribute handles may only contain letters, numbers and underscore "_" characters'));
+			}
+			
 			$akc = AttributeKeyCategory::getByID($args['akCategoryID']);
 			if (is_object($akc)) {
 				if ($akc->handleExists($args['akHandle'])) {
