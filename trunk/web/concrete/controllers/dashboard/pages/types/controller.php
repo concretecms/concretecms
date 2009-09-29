@@ -24,6 +24,7 @@ public function attribute_deleted() {
 
 public function on_start() {
 	$this->set('disableThirdLevelNav', true);
+	$this->set('category', AttributeKeyCategory::getByHandle('collection'));
 }
 
 public function delete($ctID, $token = '') {

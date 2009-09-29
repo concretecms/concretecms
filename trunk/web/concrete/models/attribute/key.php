@@ -133,11 +133,21 @@ class AttributeKey extends Object {
 		$a = array($akHandle, $akName, $_akIsSearchable, $_akIsSearchableIndexed, $_akIsAutoCreated, $_akIsEditable, $atID, $akCategoryID, $pkgID);
 		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsEditable, atID, akCategoryID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", $a);
 		
+		$category = AttributeKeyCategory::getByID($akCategoryID);
+		
 		if ($r) {
 			$akID = $db->Insert_ID();
 			$className = $txt->camelcase($akCategoryHandle) . 'AttributeKey';
 			$ak = new $className();
 			$ak->load($akID);
+			switch($category->allowAttributeSets()) {
+				case AttributeKeyCategory::ASET_ALLOW_SINGLE:
+					if ($asID > 0) {
+						$ak->setAttributeSet(AttributeSet::getByID($asID));			
+					}
+					break;
+			}
+
 			$at = $ak->getAttributeType();
 			$cnt = $at->getController();
 			$cnt->setAttributeKey($ak);
@@ -170,6 +180,16 @@ class AttributeKey extends Object {
 		$akCategoryHandle = $db->GetOne("select akCategoryHandle from AttributeKeyCategories inner join AttributeKeys on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akID = ?", $this->getAttributeKeyID());
 		$a = array($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed, $this->getAttributeKeyID());
 		$r = $db->query("update AttributeKeys set akHandle = ?, akName = ?, akIsSearchable = ?, akIsSearchableIndexed = ? where akID = ?", $a);
+		
+		$category = AttributeKeyCategory::getByID($this->akCategoryID);
+		switch($category->allowAttributeSets()) {
+			case AttributeKeyCategory::ASET_ALLOW_SINGLE:
+				$this->clearAttributeSets();
+				if ($asID > 0) {
+					$this->setAttributeSet(AttributeSet::getByID($asID));			
+				}
+				break;
+		}
 		
 		if ($r) {
 			$txt = Loader::helper('text');
@@ -285,6 +305,7 @@ class AttributeKey extends Object {
 		
 		$db = Loader::db();
 		$db->Execute('delete from AttributeKeys where akID = ?', array($this->getAttributeKeyID()));
+		$db->Execute('delete from AttributeSetKeys where akID = ?', array($this->getAttributeKeyID()));
 
 		if ($this->getIndexedSearchTable()) {
 			$columns = $db->MetaColumns($this->getIndexedSearchTable());
@@ -396,6 +417,28 @@ class AttributeKey extends Object {
 		}
 	}
 
+	public function setAttributeSet($as) {
+		if (!is_object($as)) {
+			$as = AttributeSet::getByHandle($as);
+		}
+		$as->addKey($this);
+	}
+	
+	public function clearAttributeSets() {
+		$db = Loader::db();
+		$db->Execute('delete from AttributeSetKeys where akID = ?', $this->akID);
+	}
+	
+	public function getAttributeSets() {
+		$db = Loader::db();
+		$sets = array();
+		$r = $db->Execute('select asID from AttributeSetKeys where akID = ?', $this->akID);
+		while ($row = $r->FetchRow()) {
+			$sets[] = AttributeSet::getByID($row['asID']);
+		}
+		return $sets;
+	}
+	
 	/** 
 	 * Saves an attribute using its stock form.
 	 */

@@ -72,6 +72,45 @@
       <UNSIGNED/>
     </field>
   </table>
+   <table name="AttributeSetKeys">
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="asID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="displayOrder" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  <table name="AttributeSets">
+    <field name="asID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="asName" type="C" size="255"/>
+    <field name="asHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="akCategoryID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
   <table name="AttributeKeys">
     <field name="akID" type="I" size="10">
       <KEY/>
@@ -127,6 +166,10 @@
     </field>
     <field name="akCategoryHandle" type="C" size="255">
       <NOTNULL/>
+    </field>
+    <field name="akCategoryAllowSets" type="I2" size="4">
+    	<notnull />
+    	<default value="0" />
     </field>
     <field name="pkgID" type="I" size="10">
       <UNSIGNED />

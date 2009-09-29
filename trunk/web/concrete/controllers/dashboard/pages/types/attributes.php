@@ -18,6 +18,7 @@ class DashboardPagesTypesAttributesController extends Controller {
 
 	public function on_start() {
 		$this->set('disableThirdLevelNav', true);
+		$this->set('category', AttributeKeyCategory::getByHandle('collection'));
 	}
 	
 	public function delete($akID, $token = null){
@@ -45,7 +46,6 @@ class DashboardPagesTypesAttributesController extends Controller {
 		$atID = $this->request('atID');
 		$at = AttributeType::getByID($atID);
 		$this->set('type', $at);
-		$this->set('category', AttributeKeyCategory::getByHandle('collection'));
 	}
 	
 	public function add() {
@@ -78,7 +78,6 @@ class DashboardPagesTypesAttributesController extends Controller {
 		$type = $key->getAttributeType();
 		$this->set('key', $key);
 		$this->set('type', $type);
-		$this->set('category', AttributeKeyCategory::getByHandle('collection'));
 		
 		if ($this->isPost()) {
 			$cnt = $type->getController();

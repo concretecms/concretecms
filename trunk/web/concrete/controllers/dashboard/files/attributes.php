@@ -42,12 +42,15 @@ class DashboardFilesAttributesController extends Controller {
 		$atID = $this->request('atID');
 		$at = AttributeType::getByID($atID);
 		$this->set('type', $at);
-		$this->set('category', AttributeKeyCategory::getByHandle('file'));
 	}
 	
 	public function view() {
 		$attribs = FileAttributeKey::getList();
 		$this->set('attribs', $attribs);
+	}
+	
+	public function on_start() {
+		$this->set('category', AttributeKeyCategory::getByHandle('file'));
 	}
 	
 	public function add() {
@@ -93,7 +96,6 @@ class DashboardFilesAttributesController extends Controller {
 		$type = $key->getAttributeType();
 		$this->set('key', $key);
 		$this->set('type', $type);
-		$this->set('category', AttributeKeyCategory::getByHandle('file'));
 		
 		if ($this->isPost()) {
 			$cnt = $type->getController();

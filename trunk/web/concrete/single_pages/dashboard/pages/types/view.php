@@ -416,7 +416,7 @@ if ($ctEditMode) {
 	<span><?=t('Page Attributes')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	
-	<?= Loader::element('dashboard/attributes_table', array('attribs'=>$attribs, 'editURL' => '/dashboard/pages/types/attributes')); ?>
+	<?= Loader::element('dashboard/attributes_table', array('category' => $category, 'attribs'=>$attribs, 'editURL' => '/dashboard/pages/types/attributes')); ?>
 	
 	<br/>
 	<div class="ccm-buttons">

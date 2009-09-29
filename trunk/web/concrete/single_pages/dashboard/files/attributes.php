@@ -4,7 +4,7 @@
 	<div class="ccm-dashboard-inner">
 	<?
 	$attribs = FileAttributeKey::getList();
-	Loader::element('dashboard/attributes_table', array('attribs'=> $attribs, 'editURL' => '/dashboard/files/attributes')); ?>
+	Loader::element('dashboard/attributes_table', array('category' => $category, 'attribs'=> $attribs, 'editURL' => '/dashboard/files/attributes')); ?>
 
 </div>
 
