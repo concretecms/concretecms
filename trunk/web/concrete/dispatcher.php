@@ -99,6 +99,8 @@
 	## Set debug-related and logging activities
 	require(dirname(__FILE__) . '/startup/debug_logging.php');
 
+	require(dirname(__FILE__) . '/startup/tools_upgrade_check.php');
+
 	## Specific site routes for various content items (if they exist) ##
 	@include('config/site_theme_paths.php');
 
