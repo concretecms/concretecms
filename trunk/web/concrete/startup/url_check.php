@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 if (REDIRECT_TO_BASE_URL == true) {
 	$protocol = 'http://';
 	$base_url = BASE_URL;
-	if (($_SERVER['HTTPS']) && ($base_url_ssl = Config::get('BASE_URL_SSL'))) {
+	if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']) && ($base_url_ssl = Config::get('BASE_URL_SSL'))) {
 		$protocol = 'https://';
 		$base_url = $base_url_ssl;
 	}
