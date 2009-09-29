@@ -80,7 +80,7 @@ class ConcreteUpgradeVersion532Helper {
 		$tables = $db->MetaTables();
 		
 		if (in_array('_CollectionAttributeKeys', $tables)) {
-			$this->upgradeCollectionAttributes();
+			$collectionErrors = $this->upgradeCollectionAttributes();
 		}		
 		if (in_array('_FileAttributeKeys', $tables)) {
 			$this->upgradeFileAttributes();
@@ -210,6 +210,7 @@ class ConcreteUpgradeVersion532Helper {
 	}
 	
 	protected function upgradeCollectionAttributes() {
+		$messages = array();
 		Loader::model('attribute/categories/collection');
 		$db = Loader::db();
 		$r = $db->Execute('select _CollectionAttributeKeys.* from _CollectionAttributeKeys order by _CollectionAttributeKeys.akID asc');
@@ -254,22 +255,28 @@ class ConcreteUpgradeVersion532Helper {
 			
 			$r2 = $db->Execute('select * from _CollectionAttributeValues where akID = ? and isImported = 0', $row['akID']);
 			while ($row2 = $r2->FetchRow()) {
-				$nc = Page::getByID($row2['cID'], $row2['cvID']);
-				$value = $row2['value'];
-				if ($row['akType'] == 'SELECT' || $row['akType'] == 'SELECT_MULTIPLE') {
-					$value = explode("\n", $value);
-					$nc->setAttribute($ak, $value);
-				} else if ($row['akType'] == 'IMAGE_FILE') {
-					$value = File::getByID($value);
-					if (is_object($value) && $value->getFileID() > 0) {
+				try {
+					$nc = Page::getByID($row2['cID'], $row2['cvID']);
+					$value = $row2['value'];
+					if ($row['akType'] == 'SELECT' || $row['akType'] == 'SELECT_MULTIPLE') {
+						$value = explode("\n", $value);
 						$nc->setAttribute($ak, $value);
-					}
-				} else {
-					$nc->setAttribute($ak, $value);
-				}				
-				unset($nc);
-				$db->Execute('update _CollectionAttributeValues set isImported = 1 where akID = ? and cvID = ? and cID = ?', array($row['akID'], $row2['cvID'], $row2['cID']));
-				$this->incrementImported();
+					} else if ($row['akType'] == 'IMAGE_FILE') {
+						$value = File::getByID($value);
+						if (is_object($value) && $value->getFileID() > 0) {
+							$nc->setAttribute($ak, $value);
+						}
+					} else {
+						$nc->setAttribute($ak, $value);
+					}				
+					unset($nc);
+					$db->Execute('update _CollectionAttributeValues set isImported = 1 where akID = ? and cvID = ? and cID = ?', array($row['akID'], $row2['cvID'], $row2['cID']));
+					$this->incrementImported();
+				} catch (Exception $e) {
+					$messages[] = t('An error occured while converting the attributes on cID: %s with the error: %s', $row['cID'], $e->getMessage());
+				 	continue;
+				}
+			
 			}
 			
 			unset($ak);
@@ -281,6 +288,8 @@ class ConcreteUpgradeVersion532Helper {
 		unset($row);
 		$r->Close();
 		unset($r);
+	
+		return $messages;
 	}
 
 	protected function upgradeFileAttributes() {
