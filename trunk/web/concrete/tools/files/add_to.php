@@ -94,7 +94,7 @@ if ($_POST['task'] == 'add_to_sets') {
 	if ($_POST['fsNew']) {
 		$type = ($_POST['fsNewShare'] == 1) ? FileSet::TYPE_PUBLIC : FileSet::TYPE_PRIVATE;
 		$fs = FileSet::createAndGetSet($_POST['fsNewText'], $type);
-		print_r($fs);
+		//print_r($fs);
 		foreach($files as $f) {
 			$fs->addFileToSet($f);
 		}
@@ -130,7 +130,7 @@ $(function() {
 <form method="post" id="ccm-file-add-to-set-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/add_to/">
 <?=$form->hidden('task', 'add_to_sets')?>
 <? foreach($files as $f) { ?>
-	<?=$form->hidden('fID[]' , $f->getFileID())?>
+	<input type="hidden" name="fID[]" value="<?=$f->getFileID();?>" />
 <? } ?>
 <h1><?=t('File Sets')?></h1>
 
