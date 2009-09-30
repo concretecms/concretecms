@@ -91,8 +91,10 @@ class ConcreteUpgradeVersion532Helper {
 		$db = Loader::db();
 		
 		Cache::disableLocalCache();
-		
 		Loader::model('collection_attributes');
+		$collectionErrors = array();
+		$fileErrors = array();
+		$userErrors = array();
 		//add the new collection attribute keys
 		$this->installCoreAttributeItems();	
 		
@@ -178,7 +180,7 @@ class ConcreteUpgradeVersion532Helper {
 
 		Cache::enableLocalCache();
 	
-		return $collectionErrors + $fileErrors + $userErrors;
+		return array_merge($collectionErrors, $fileErrors, $userErrors);
 	}
 	
 	protected function installCoreAttributeItems() {
