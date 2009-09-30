@@ -398,7 +398,7 @@ class SelectAttributeTypeOption extends Object {
 	}
 	
 	public function saveOrCreate($ak) {
-		if ($this->tempID != false) {
+		if ($this->tempID != false || $this->ID==0) {
 			return SelectAttributeTypeOption::add($ak, $this->value);
 		} else {
 			$db = Loader::db();
