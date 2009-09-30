@@ -1,13 +1,16 @@
 var ccm_searchActivatePostFunction = false;
 
-ccm_setupAdvancedSearch = function(searchType) {
+ccm_setupAdvancedSearchFields = function(searchType) {
 	$("#ccm-" + searchType + "-search-add-option").unbind();
 	$("#ccm-" + searchType + "-search-add-option").click(function() {
 		ccm_totalAdvancedSearchFields++;
 		$("#ccm-search-fields-wrapper").append('<div class="ccm-search-field" id="ccm-' + searchType + '-search-field-set' + ccm_totalAdvancedSearchFields + '">' + $("#ccm-search-field-base").html() + '<\/div>');
 		ccm_activateAdvancedSearchFields(searchType, ccm_totalAdvancedSearchFields);
 	});
-	
+}
+
+ccm_setupAdvancedSearch = function(searchType) {
+	ccm_setupAdvancedSearchFields(searchType);
 	$("#ccm-" + searchType + "-advanced-search").ajaxForm({
 		beforeSubmit: function() {
 			ccm_deactivateSearchResults();
