@@ -55,12 +55,13 @@ class SlideshowBlockController extends BlockController {
 		$this->set('bID', $this->bID);			
 	}	
 	
-	function view(){
-	}
+	function view() { }
 	
-	public function on_page_view() {
+	function on_page_view() {
+		/*
 		$html = Loader::helper('html');
 		$this->addHeaderItem($html->javascript('jquery.js'));
+		*/
 	}
 	
 	function getFileSetName(){

@@ -1,7 +1,6 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 
-<script>
-
+<script type="text/javascript">
 var ccmSlideShowHelper<?=intval($bID)?> = {
 
 	bID:<?=intval($bID)?>,
@@ -10,7 +9,7 @@ var ccmSlideShowHelper<?=intval($bID)?> = {
 	init:function(){
 		this.displayWrap=$('#ccm-SlideshowBlock-display'+this.bID); 
 		if(this.imgInfos.length==0){
-			//alert('There are no images in this slideshow');
+			alert('There are no images in this slideshow');
 			return false;
 		}
 		var maxHeight=0;
@@ -21,6 +20,7 @@ var ccmSlideShowHelper<?=intval($bID)?> = {
 		}
 		this.displayWrap.css('height',maxHeight);
 
+		
 		//center images
 		for(var i=0;i<this.imgInfos.length;i++){ 
 			if( this.imgInfos[i].imgHeight < maxHeight){
@@ -96,7 +96,7 @@ var ccmSlideShowHelper<?=intval($bID)?> = {
 		} ?>
 	]
 }
-$(function(){ccmSlideShowHelper<?=intval($bID)?>.init()}); 
+$(function(){ccmSlideShowHelper<?=intval($bID)?>.init();}); 
 </script>
 
 <style>
