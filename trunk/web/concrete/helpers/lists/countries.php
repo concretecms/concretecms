@@ -196,6 +196,7 @@ class ListsCountriesHelper {
 	'PM' => 'St. Pierre and Miquelon',
 	'PN' => 'Pitcairn',
 	'PR' => 'Puerto Rico',
+	'PS' => 'Palestine',
 	'PT' => 'Portugal',
 	'PW' => 'Palau',
 	'PY' => 'Paraguay',
@@ -269,7 +270,7 @@ class ListsCountriesHelper {
 	 * Returns an array of Countries with their short name as the key and their full name as the value
 	 * @return array
 	 */
-	public function getCountries() {return $this->countries;}
+	public function getCountries() { asort($this->countries); return $this->countries;}
 
 	/** 
 	 * Gets a country full name given its index
