@@ -9,7 +9,7 @@ var ccmSlideShowHelper<?=intval($bID)?> = {
 	init:function(){
 		this.displayWrap=$('#ccm-SlideshowBlock-display'+this.bID); 
 		if(this.imgInfos.length==0){
-			alert('There are no images in this slideshow');
+			//alert('There are no images in this slideshow');
 			return false;
 		}
 		var maxHeight=0;
