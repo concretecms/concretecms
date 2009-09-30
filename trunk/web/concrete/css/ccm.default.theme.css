@@ -40,7 +40,7 @@ div#ccm-install-check-items div.fail {background-image: url(../images/icons/erro
 div#ccm-install-check-items h2 {margin-bottom: 3px; margin-top: 20px}
 div#ccm-install-note a {text-decoration: none}
 div#ccm-install-note a:hover {text-decoration: underline}
-div#ccm-install-note {font-size: 12px; margin-top: 10px; text-align: center}
+div#ccm-install-note {font-size: 12px; margin-top: 10px; text-align: center; line-height: 18px}
 div.ccm-install-info {display: none; font-size: 12px; font-weight: normal; color: #000; line-height: 18px; margin-bottom: 20px}
 a.ccm-install-tooltip img {position: absolute; top: 7px; right: 21px}
 div#ccm-install-check-items div.passed a.ccm-install-tooltip {display: none}
