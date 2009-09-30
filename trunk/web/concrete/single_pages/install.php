@@ -194,7 +194,7 @@ $(function() {
 	<div class="ccm-button">
 	<?=$form->submit('submit', t('Install Concrete').' &gt;', array('disabled'=> 1))?>
 	</div>
-	
+	<br/><br/>
 
 </form>
 </div>
