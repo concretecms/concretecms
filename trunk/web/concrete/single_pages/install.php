@@ -183,6 +183,12 @@ $(function() {
 	
 	<label for="DB_DATABASE"><?=t('Database Name')?></label><br/>
 	<?=$form->text('DB_DATABASE', array('disabled'=> 1)); ?>
+	<br/><br/>
+	
+	<h2><?=t('Sample Content')?></h2>
+	
+	<?=$form->checkbox('INSTALL_SAMPLE_CONTENT',1,true); ?>
+	<label for="INSTALL_SAMPLE_CONTENT"><?=t('Install sample content')?></label><br/>	
 	<br/>
 	
 	<div class="ccm-button">
