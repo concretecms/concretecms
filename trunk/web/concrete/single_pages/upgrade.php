@@ -13,7 +13,6 @@
 <?=$completeMessage?>
 
 <? if ($do_upgrade) { ?>
-
 	<?=t('To proceed with the upgrade, click below.')?>
 
 	<div class="ccm-form">
@@ -26,9 +25,10 @@
 <? } else { ?>
     <br/>
     <a href="<?=DIR_REL?>/"><?=t('Back to Home')?></a>.
-    <p>
-    <?=t('If you would like to attempt to import attributes that failed on a previous attempt')?><br />
-	<a href="<?=DIR_REL?>/index.php/tools/required/upgrade?force=1"><?=t('click here')?></a>
-    </p>
-    
+    <?php if(!isset($hide_force) || !$hide_force) { ?>
+        <p>
+        <a href="<?=DIR_REL?>/index.php/tools/required/upgrade?force=1"><?=t('click here')?></a>
+        <?=t('If you would like to re-run this script.')?>
+        </p>
+    <? } ?>
 <? } ?>
