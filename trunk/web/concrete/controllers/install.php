@@ -699,6 +699,11 @@ class InstallController extends Controller {
 							$jsData['fadeDuration'] = array(2, 2, 2);
 							$aboutPage->addBlock($jsBT, "Header", $jsData);
 							//about page done
+
+							$fs = FileSet::getGlobal();
+							$fs->setPermissions($g1, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE);
+							$fs->setPermissions($g2, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE);
+							$fs->setPermissions($g3, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL);
 							
 								//press room
 								$data = array();
