@@ -43,8 +43,8 @@ div#ccm-dashboard-content {width:auto; height:auto; padding:0px; overflow:hidden
 div#ccm-dashboard-content {width:auto; position: absolute; left:225px; top:70px; margin-bottom:30px; margin-right:30px; padding:0px  }
 */
 
-div#ccm-dashboard-content { width:auto; margin: 70px 30px 30px 225px; padding:0px; height:auto; }
-div.ccm-dashboard-inner {background-color: #fff; color: #666; border: 1px solid #ccc; padding: 8px; margin-bottom: 20px;  font-size: 12px; position:relative;  overflow-x: auto; overflow-y: hidden /* note: the hidden y overflow is needed for IE */}
+div#ccm-dashboard-content { width:auto; margin: 70px 30px 30px 225px; padding:0px; height:auto }
+div.ccm-dashboard-inner {background-color: #fff; color: #666; border: 1px solid #ccc; padding: 8px; margin-bottom: 20px;  font-size: 12px; position:relative; }
 div.ccm-dashboard-inner td {font-size: 12px}
 
 
