@@ -1,8 +1,16 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <h1><?=t('Upgrade Concrete5')?></h1>
-
+<p>
 <?=$message?>
+</p>
 
+<? if($had_failures) { ?>
+<div class="ccm-error" style="padding:12px 0 12px 0">
+	<?=t('These errors are most likely related to incompatible add-ons, please upgrade any add-ons and re-run to this script to complete the conversion of your data.')?>
+</div>
+<? } ?>
+
+<?=$completeMessage?>
 
 <? if ($do_upgrade) { ?>
 
@@ -15,8 +23,12 @@
 	</form>
 	</div>
 	</div>
-	
 <? } else { ?>
-<br/><br/>
-<a href="<?=DIR_REL?>/"><?=t('Back to Home')?></a>.
+    <br/>
+    <a href="<?=DIR_REL?>/"><?=t('Back to Home')?></a>.
+    <p>
+    <?=t('If you would like to attempt to import attributes that failed on a previous attempt')?><br />
+	<a href="<?=DIR_REL?>/index.php/tools/required/upgrade?force=1"><?=t('click here')?></a>
+    </p>
+    
 <? } ?>
