@@ -68,7 +68,7 @@
 			ignored.')?>
 			</p>
 			<? if (UPLOAD_FILE_EXTENSIONS_CONFIGURABLE) { ?>
-				<?=$form->textarea('file-access-file-types',$file_access_file_types,array('rows'=>'5','style'=>'width:100%'));?>
+				<?=$form->textarea('file-access-file-types',$file_access_file_types,array('rows'=>'5','style'=>'width:270px'));?>
 				<div class="ccm-spacer">&nbsp;</div><br/>
 				<?php		
 					$b1 = $concrete_interface->submit(t('Save'), 'file-access-extensions');
@@ -86,7 +86,7 @@
 			<?=$validation_token->output('file_storage');?>
 			<h2><?=t('Standard File Location')?></h2>
 			<p><?=t('Enter the directory where files will be stored on this server by default.')?></p>
-			<?=$form->textarea('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED, array('rows'=>'2','style' => 'width:280px'))?>
+			<?=$form->textarea('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED, array('rows'=>'2','style' => 'width:270px'))?>
 			<div class="ccm-spacer">&nbsp;</div><br/>
 			
 			<h2><?=t('Alternate Storage Directory')?></h2>
@@ -95,7 +95,7 @@
 			<label for="alternate_storage_directory_name"><strong><?=t('Location Name')?></strong></label>
 			<?=$form->text('fslName', $fslName, array('style' => 'width:270px'))?>
 			<label for="alternate_storage_directory_name"><strong><?=t('Path')?></strong></label>
-			<?=$form->textarea('fslDirectory', $fslDirectory, array('rows' => '2', 'style' => 'width:280px'))?>
+			<?=$form->textarea('fslDirectory', $fslDirectory, array('rows' => '2', 'style' => 'width:270px'))?>
 			<?php		
 				$b1 = $concrete_interface->submit(t('Save'), 'file-storage');
 				print $concrete_interface->buttons($b1);
