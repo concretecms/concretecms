@@ -522,7 +522,7 @@ if (is_object($uo)) {
 
 
 ccm_activateEditableProperties = function() {
-	$("#ccm-user-form tr.ccm-attribute-editable-field").each(function() {
+	$("tr.ccm-attribute-editable-field").each(function() {
 		var trow = $(this);
 		$(this).find('a').click(function() {
 			trow.find('.ccm-attribute-editable-field-text').hide();
