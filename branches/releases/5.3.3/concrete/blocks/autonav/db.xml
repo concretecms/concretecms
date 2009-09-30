@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btNavigation">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="orderBy" type="C" size="255">
+			<descr></descr>
+			<default value="alpha_asc" />
+		</field>
+		<field name="displayPages" type="C" size="255">
+			<descr>was enum('top','current','above','below','custom')</descr>
+			<default value="top" />
+		</field>
+		<field name="displayPagesCID" type="I">
+			<unsigned />
+			<notnull />
+			<default value="1" />
+		</field>
+		<field name="displayPagesIncludeSelf" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="0" />
+		</field>
+		<field name="displaySubPages" type="C" size="255">
+			<descr>was enum('none','all','relevant','relevant_breadcrumb')</descr>
+			<default value="none" />
+		</field>
+		<field name="displaySubPageLevels" type="C" size="255">
+			<descr>was enum('all','none','enough','enough_plus1','custom')</descr>
+			<default value="none" />
+		</field>
+		<field name="displaySubPageLevelsNum" type="I2">
+			<unsigned />
+			<notnull />
+			<default value="0" />
+		</field>
+		<field name="displayUnavailablePages" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="0" />
+		</field>
+	</table>
+</schema>
