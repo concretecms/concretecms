@@ -41,7 +41,7 @@ $list = FileAttributeKey::getList();
 
 <? foreach($list as $ak) { ?>
 
-	<div><?=$form->checkbox('akID[]', $ak->getAttributeKeyID(), in_array($ak->getAttributeKeyID(), $selectedAKIDs), array('style' => 'vertical-align: middle'))?> <?=$ak->getAttributeKeyName()?></div>
+	<div><?=$form->checkbox('akID[]', $ak->getAttributeKeyID(), in_array($ak->getAttributeKeyID(), $selectedAKIDs), array('style' => 'vertical-align: middle'))?> <?=$ak->getAttributeKeyDisplayHandle()?></div>
 	
 <? } ?>
 

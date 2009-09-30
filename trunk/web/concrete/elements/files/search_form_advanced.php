@@ -20,7 +20,7 @@ if ($_REQUEST['fExtension'] != false) {
 Loader::model('file_attributes');
 $searchFieldAttributes = FileAttributeKey::getSearchableList();
 foreach($searchFieldAttributes as $ak) {
-	$searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyName();
+	$searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayHandle();
 }
 
 $ext1 = FileList::getExtensionList();
