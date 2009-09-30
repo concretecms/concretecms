@@ -230,10 +230,11 @@ class FormHelper {
 	public function text($key) {
 		$a = func_get_args();
 		$val = $this->getRequestValue($key);
+		$class = "ccm-input-text";
 
 		// index 0 is always the key
 		// need to figure out a good way to get a unique ID
-		$str = '<input class="ccm-input-text" id="' . $key . '" type="text" name="' . $key . '" ';
+		$str = '<input id="' . $key . '" type="text" name="' . $key . '" ';
 		
 		// if there are two more values, then we treat index 1 as the value in the
 		// value field, and index 2 as an assoc. array of other stuff to add
@@ -258,10 +259,14 @@ class FormHelper {
 		
 		if (is_array($miscFields)) {
 			foreach($miscFields as $key => $value) {
-				$str .= $key . '="' . $value . '" ';
+				if ($key == 'class') {
+					$class .= ' ' . $value;
+				} else {
+					$str .= $key . '="' . $value . '" ';
+				}
 			}
 		}
-		$str .= ' />';
+		$str .= 'class="'.$class.'" />';
 		
 		return $str;
 		
