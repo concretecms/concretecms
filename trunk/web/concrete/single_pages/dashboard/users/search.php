@@ -35,7 +35,7 @@ function printAttributeRow($ak, $uo) {
 	
 	$html = '
 	<tr class="ccm-attribute-editable-field">
-		<td style="white-space: nowrap; padding-right: 20px"><strong><a href="javascript:void(0)">' . $ak->getAttributeKeyName() . '</a></strong></td>
+		<td style="white-space: nowrap; padding-right: 20px"><strong><a href="javascript:void(0)">' . $ak->getAttributeKeyDisplayHandle() . '</a></strong></td>
 		<td width="100%" class="ccm-attribute-editable-field-central"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
 		<form method="post" action="' . View::url('/dashboard/users/search', 'edit_attribute') . '">
 		<input type="hidden" name="uakID" value="' . $ak->getAttributeKeyID() . '" />
@@ -56,7 +56,7 @@ function printAttributeRow($ak, $uo) {
 
 	$html = '
 	<tr>
-		<th>' . $ak->getAttributeKeyName() . '</th>
+		<th>' . $ak->getAttributeKeyDisplayHandle() . '</th>
 		<td width="100%" colspan="2">' . $text . '</td>
 	</tr>';	
 	}
@@ -437,9 +437,9 @@ if (is_object($uo)) {
 			?>
 			
 		<tr>
-			<td class="subheader" style="width: 33%"><?=$uk->getAttributeKeyName()?></td>
-			<? if (is_object($uk2)) { ?><td  style="width: 33%" class="subheader"><?=$uk2->getAttributeKeyName()?></td><? } else { ?><td  style="width: 33%" class="subheader">&nbsp;</td><? } ?>
-			<? if (is_object($uk3)) { ?><td  style="width: 33%"class="subheader"><?=$uk3->getAttributeKeyName()?></td><? } else { ?><td style="width: 33%" class="subheader">&nbsp;</td><? } ?>
+			<td class="subheader" style="width: 33%"><?=$uk->getAttributeKeyDisplayHandle()?></td>
+			<? if (is_object($uk2)) { ?><td  style="width: 33%" class="subheader"><?=$uk2->getAttributeKeyDisplayHandle()?></td><? } else { ?><td  style="width: 33%" class="subheader">&nbsp;</td><? } ?>
+			<? if (is_object($uk3)) { ?><td  style="width: 33%"class="subheader"><?=$uk3->getAttributeKeyDisplayHandle()?></td><? } else { ?><td style="width: 33%" class="subheader">&nbsp;</td><? } ?>
 		</tr>
 		<tr>
 			<td><?=$uo->getAttribute($uk->getAttributeKeyHandle(), 'display')?></td>

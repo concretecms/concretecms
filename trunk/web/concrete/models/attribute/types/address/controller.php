@@ -5,6 +5,18 @@ class AddressAttributeTypeController extends AttributeTypeController  {
 
 	public $helpers = array('form');
 	
+	public function searchKeywords($keywords) {
+		$db = Loader::db();
+		$qkeywords = $db->quote('%' . $keywords . '%');
+		// todo make this less hardcoded (with ak_ in front of it)
+		$str = '(ak_' . $this->attributeKey->getAttributeKeyHandle() . '_address1 like '.$qkeywords.' or ';
+		$str .= 'ak_' . $this->attributeKey->getAttributeKeyHandle() . '_address2 like '.$qkeywords.' or ';
+		$str .= 'ak_' . $this->attributeKey->getAttributeKeyHandle() . '_city like '.$qkeywords.' or ';
+		$str .= 'ak_' . $this->attributeKey->getAttributeKeyHandle() . '_state_province like '.$qkeywords.' or ';
+		$str .= 'ak_' . $this->attributeKey->getAttributeKeyHandle() . '_postal_code like '.$qkeywords.' or ';
+		$str .= 'ak_' . $this->attributeKey->getAttributeKeyHandle() . '_country like '.$qkeywords.' )';
+		return $str;
+	}
 	
 	public function searchForm($list) {
 		$address1 = $this->request('address1');

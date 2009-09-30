@@ -50,14 +50,14 @@ class FileList extends DatabaseItemList {
 	public function filterByKeywords($keywords) {
 		$db = Loader::db();
 		$keywordsExact = $db->quote($keywords);
-		$keywords = $db->quote('%' . $keywords . '%');
-
+		$qkeywords = $db->quote('%' . $keywords . '%');
 		$keys = FileAttributeKey::getSearchableIndexedList();
 		$attribsStr = '';
 		foreach ($keys as $ak) {
-			$attribsStr=' OR ak_' . $ak->getAttributeKeyHandle() . ' like '.$keywords.' ';	
+			$cnt = $ak->getController();			
+			$attribsStr.=' OR ' . $cnt->searchKeywords($keywords);
 		}
-		$this->filter(false, '(fvFilename like ' . $keywords . ' or fvTitle like ' . $keywords . ' or fvTags like ' . $keywords . ' or u.uName = ' . $keywordsExact . $attribsStr . ')');
+		$this->filter(false, '(fvFilename like ' . $qkeywords . ' or fvTitle like ' . $qkeywords . ' or fvTags like ' . $qkeywords . ' or u.uName = ' . $keywordsExact . $attribsStr . ')');
 	}
 	
 	/** 
