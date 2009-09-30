@@ -29,42 +29,62 @@ class ConcreteUpgradeVersion532Helper {
 		}
 	}
 	
-	//run before the db.xml changes take place
 	public function prepare($cnt) {
 		// Handle new attribute stuff
 		$db = Loader::db();
+		
 		$dict = NewDataDictionary($db->db, DB_TYPE);
 		$tables = $db->MetaTables();
-		if (!in_array('_UserAttributeKeys', $tables)) {
-			if(in_array('UserAttributeKeys', $tables)) 		
-				$dict->ExecuteSQLArray($dict->RenameTableSQL('UserAttributeKeys', '_UserAttributeKeys'));
-			if(in_array('CollectionAttributeKeys', $tables)) 
-				$dict->ExecuteSQLArray($dict->RenameTableSQL('CollectionAttributeKeys', '_CollectionAttributeKeys'));
-			if(in_array('FileAttributeKeys', $tables)) 		
-				$dict->ExecuteSQLArray($dict->RenameTableSQL('FileAttributeKeys', '_FileAttributeKeys'));
-			if(in_array('CollectionAttributeValues', $tables)) 	
-				$dict->ExecuteSQLArray($dict->RenameTableSQL('CollectionAttributeValues', '_CollectionAttributeValues'));
-			if(in_array('UserAttributeValues', $tables)) 	
-				$dict->ExecuteSQLArray($dict->RenameTableSQL('UserAttributeValues', '_UserAttributeValues'));
-			if(in_array('FileAttributeValues', $tables)) 					
+		if (!in_array('_UserAttributeKeys', $tables) && in_array('UserAttributeKeys', $tables)) { 		
+			$dict->ExecuteSQLArray($dict->RenameTableSQL('UserAttributeKeys', '_UserAttributeKeys'));
+		}
+		if(!in_array('_CollectionAttributeKeys',$tables) && in_array('CollectionAttributeKeys', $tables)) { 
+			$dict->ExecuteSQLArray($dict->RenameTableSQL('CollectionAttributeKeys', '_CollectionAttributeKeys'));
+		}
+		if(!in_array('_FileAttributeKeys',$tables) && in_array('FileAttributeKeys', $tables)) {
+			$dict->ExecuteSQLArray($dict->RenameTableSQL('FileAttributeKeys', '_FileAttributeKeys'));
+		}
+		if(!in_array('_CollectionAttributeValues', $tables) && in_array('CollectionAttributeValues', $tables)) {
+			$dict->ExecuteSQLArray($dict->RenameTableSQL('CollectionAttributeValues', '_CollectionAttributeValues'));
+		}
+		if(!in_array('_UserAttributeValues', $tables) && in_array('UserAttributeValues', $tables)) {
+			$dict->ExecuteSQLArray($dict->RenameTableSQL('UserAttributeValues', '_UserAttributeValues'));
+		}
+		if(!in_array('_FileAttributeValues', $tables) && in_array('FileAttributeValues', $tables)) {			
 			$dict->ExecuteSQLArray($dict->RenameTableSQL('FileAttributeValues', '_FileAttributeValues'));
-			if(in_array('PageSearchIndexAttributes', $tables)) 				
-				$dict->ExecuteSQLArray($dict->RenameTableSQL('PageSearchIndexAttributes', '_PageSearchIndexAttributes'));
+		}
+		if(!in_array('_PageSearchIndexAttributes', $tables) && in_array('PageSearchIndexAttributes', $tables)) {
+			$dict->ExecuteSQLArray($dict->RenameTableSQL('PageSearchIndexAttributes', '_PageSearchIndexAttributes'));
 		}
 
 		$tables = $db->MetaTables();
-		if(in_array('_UserAttributeValues', $tables)) 
+		if(in_array('_UserAttributeValues', $tables)) {
 			$columns = $db->MetaColumns('_UserAttributeValues');
-		if (in_array('_UserAttributeValues', $tables) && !isset($columns['ISIMPORTED'])) {
-			$q = $dict->AddColumnSQL('_UserAttributeValues', 'isImported I1 DEFAULT 0 NULL');
-			$db->Execute($q[0]);
-			$q = $dict->AddColumnSQL('_FileAttributeValues', 'isImported I1 DEFAULT 0 NULL');
-			$db->Execute($q[0]);
-			$q = $dict->AddColumnSQL('_CollectionAttributeValues', 'isImported I1 DEFAULT 0 NULL');
-			$db->Execute($q[0]);
-		} else {
-			$cnt->upgrade_db = false;
+			if (in_array('_UserAttributeValues', $tables) && !isset($columns['ISIMPORTED'])) {
+				$q = $dict->AddColumnSQL('_UserAttributeValues', 'isImported I1 DEFAULT 0 NULL');
+				$db->Execute($q[0]);
+			}
 		}
+		
+		if(in_array('_FileAttributeValues', $tables)) {
+			$columns = $db->MetaColumns('_FileAttributeValues');
+			if (in_array('_FileAttributeValues', $tables) && !isset($columns['ISIMPORTED'])) {
+				$q = $dict->AddColumnSQL('_FileAttributeValues', 'isImported I1 DEFAULT 0 NULL');
+				$db->Execute($q[0]);
+			}
+		}
+		
+		if(in_array('_CollectionAttributeValues', $tables)) {
+			$columns = $db->MetaColumns('_CollectionAttributeValues');
+			if (in_array('_CollectionAttributeValues', $tables) && !isset($columns['ISIMPORTED'])) {
+				$q = $dict->AddColumnSQL('_CollectionAttributeValues', 'isImported I1 DEFAULT 0 NULL');
+				$db->Execute($q[0]);
+			}
+		}
+		
+		//$cnt->upgrade_db = false; // schema refresh allways
+		
+		$cnt->refresh_schema();// refresh the db schema to match 5.3.3 - moved here so it's not called with each upgrade, just the 5.3.3
 	}
 	
 	public function run() {
@@ -83,10 +103,10 @@ class ConcreteUpgradeVersion532Helper {
 			$collectionErrors = $this->upgradeCollectionAttributes();
 		}		
 		if (in_array('_FileAttributeKeys', $tables)) {
-			$this->upgradeFileAttributes();
+			$fileErrors = $this->upgradeFileAttributes();
 		}			
 		if (in_array('_UserAttributeKeys', $tables)) {
-			$this->upgradeUserAttributes();
+			$userErrors = $this->upgradeUserAttributes();
 		} 
 
 		$cak=CollectionAttributeKey::getByHandle('exclude_sitemapxml');
@@ -106,7 +126,6 @@ class ConcreteUpgradeVersion532Helper {
 		if( !intval($friendsPage->cID)) {
 			SinglePage::add('/profile/friends');
 		}
-
 
 		$membersPage =Page::getByPath('/members');
 		if( !intval($membersPage->cID)) {
@@ -158,6 +177,8 @@ class ConcreteUpgradeVersion532Helper {
 		Job::installByHandle('process_email');		
 
 		Cache::enableLocalCache();
+	
+		return $collectionErrors + $fileErrors + $userErrors;
 	}
 	
 	protected function installCoreAttributeItems() {
@@ -215,9 +236,9 @@ class ConcreteUpgradeVersion532Helper {
 		$db = Loader::db();
 		$r = $db->Execute('select _CollectionAttributeKeys.* from _CollectionAttributeKeys order by _CollectionAttributeKeys.akID asc');
 		while ($row = $r->FetchRow()) {
-			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', array($row['akHandle']) );
+			$cleanHandle = preg_replace("/[^A-Za-z0-9\_]/",'',$row['akHandle']); // remove spaces, chars that'll mess up our index tables
+			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', array($cleanHandle) );
 			if ($existingAKID < 1) {
-				$cleanHandle = preg_replace("/[^A-Za-z0-9\_]/",'',$row['akHandle']); // remove spaces, chars that'll mess up our index tables
 				$args = array(
 					'akHandle' => $cleanHandle, 
 					'akIsSearchable' => $row['akSearchable'],
@@ -273,10 +294,9 @@ class ConcreteUpgradeVersion532Helper {
 					$db->Execute('update _CollectionAttributeValues set isImported = 1 where akID = ? and cvID = ? and cID = ?', array($row['akID'], $row2['cvID'], $row2['cID']));
 					$this->incrementImported();
 				} catch (Exception $e) {
-					$messages[] = t('An error occured while converting the attributes on cID: %s with the error: %s', $row['cID'], $e->getMessage());
+					$messages[] = t('Error while converting the attributes on cID: %s Error:<br/>%s', $row2['cID'], $e->getMessage());
 				 	continue;
 				}
-			
 			}
 			
 			unset($ak);
@@ -293,14 +313,14 @@ class ConcreteUpgradeVersion532Helper {
 	}
 
 	protected function upgradeFileAttributes() {
+		$messages = array();
 		Loader::model('attribute/categories/file');
 		$db = Loader::db();
 		$r = $db->Execute('select _FileAttributeKeys.* from _FileAttributeKeys order by fakID asc');
 		while ($row = $r->FetchRow()) {
-			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?',  array($row['akHandle']) );
-			
+			$cleanHandle = preg_replace("/[^A-Za-z0-9\_]/",'',$row['akHandle']); // remove spaces, chars that'll mess up our index tables
+			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?',  array($cleanHandle) );
 			if ($existingAKID < 1) {
-				$cleanHandle = preg_replace("/[^A-Za-z0-9\_]/",'',$row['akHandle']); // remove spaces, chars that'll mess up our index tables
 				$args = array(
 					'akHandle' => $cleanHandle,
 					'akIsSearchable' => $row['akSearchable'],
@@ -364,17 +384,19 @@ class ConcreteUpgradeVersion532Helper {
 		unset($row);
 		$r->Close();
 		unset($r);
+		return $messages;
 	}
 
 	protected function upgradeUserAttributes() {
+		$messages = array();
 		Loader::model('attribute/categories/user');
 		$db = Loader::db();
 		$r = $db->Execute('select _UserAttributeKeys.* from _UserAttributeKeys order by displayOrder asc');
 		while ($row = $r->FetchRow()) {
-			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?',  array($row['ukHandle']) );
+			$cleanHandle = preg_replace("/[^A-Za-z0-9\_]/",'',$row['ukHandle']); // remove spaces, chars that'll mess up our index tables
+			$existingAKID = $db->GetOne('select akID from AttributeKeys where akHandle = ?',  array($cleanHandle) );
 			if ($existingAKID < 1) {
 				if(!$row['ukHandle']) continue; 
-				$cleanHandle = preg_replace("/[^A-Za-z0-9\_]/",'',$row['ukHandle']); // remove spaces, chars that'll mess up our index tables
 				$args = array(
 					'akHandle' => $cleanHandle, 
 					'akIsSearchable' => 1,
@@ -427,6 +449,7 @@ class ConcreteUpgradeVersion532Helper {
 		unset($row);
 		$r->Close();
 		unset($r);
+		return $messages;
 	}
 		
 }

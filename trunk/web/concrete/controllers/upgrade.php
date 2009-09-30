@@ -44,11 +44,9 @@ class UpgradeController extends Controller {
 			} else if (version_compare($sav, APP_VERSION, '=')) {
 				$this->set('message', t('Your site is already up to date! The current version of Concrete5 is <b>%s</b>. You should remove this file for security.', APP_VERSION));
 			} else {
-				
 				if ($this->post('do_upgrade')) {
 					$this->do_upgrade();
 				} else {
-					
 					// do the upgrade
 					$this->set_upgrades();
 					$allnotes = array();
@@ -66,7 +64,7 @@ class UpgradeController extends Controller {
 					}
 					
 					$message = '';
-					$message = t('Upgrading from <b>%s</b>', $sav) . '<br/>';
+					$message .= t('Upgrading from <b>%s</b>', $sav) . '<br/>';
 					$message .= t('Upgrading to <b>%s</b>', APP_VERSION) . '<br/><br/>';
 	
 					if (count($allnotes) > 0) { 
@@ -141,35 +139,52 @@ class UpgradeController extends Controller {
 	}
 	
 	private function do_upgrade() {
+		$runMessages = array();
+		$prepareMessages = array();
 		try {
 			$ca = new Cache();
 			$ca->flush();
 			$this->set_upgrades();
 			foreach($this->upgrades as $ugh) {
 				if (method_exists($ugh, 'prepare')) {
-					$prepareMessages[] = $ugh->prepare($this);
+					$prepareMessages[] =$ugh->prepare($this);
 				}
-				$this->refresh_schema();
 				$runMessages[] = $ugh->run();
 			}
 			
-			$message .= implode("<br/>",$prepareMessages);
-			$message .= implode("<br/>",$runMessages);
+			$message = '';
+			if(is_array($prepareMessages) && count($prepareMessages)) {
+				foreach($prepareMessages as $m) {
+					if(is_array($m)) {
+						$message .= implode("<br/>",$m);
+					}	
+				}
+			}
 			
+			if(is_array($runMessages) && count($runMessages)) {
+				foreach($runMessages as $m) {
+					if(is_array($m)) {
+						$message .= implode("<br/>",$m);
+					}	
+				}
+				
+				if(strlen($message)) {
+					$this->set('had_failures',true);
+				}
+			
+			}			
 			$upgrade = true;
 		} catch(Exception $e) {
 			$upgrade = false;
-			$message .= t('Error occurred while upgrading: %s', $e->getMessage());
+			$message .= t('An Unexpected Error occurred while upgrading: %s', $e->getMessage());
 		}
 		
-		if ($upgrade) { 
-			$message .= t('Upgrade to <b>%s</b> complete!', APP_VERSION) . '<br/><br/>';
+		if ($upgrade) {
+			$completeMessage .= t('Upgrade to <b>%s</b> complete!', APP_VERSION) . '<br/><br/>';
 			Config::save('SITE_APP_VERSION', APP_VERSION);
 		}
-		
+		$this->set('completeMessage',$completeMessage);	
 		$this->set('message', $message);
-
 	}
-	
 }
 	
