@@ -14,6 +14,10 @@ class AttributeKey extends Object {
 	 */
 	public function getAttributeKeyHandle() { return $this->akHandle;}
 	
+	public function getAttributeKeyDisplayHandle() {
+		return Loader::helper('text')->unhandle($this->akHandle);
+	}
+	
 	/** 
 	 * Returns the ID for this attribute key
 	 */
