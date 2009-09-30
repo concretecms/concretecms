@@ -188,9 +188,12 @@ class AttributeKey extends Object {
 		$category = AttributeKeyCategory::getByID($this->akCategoryID);
 		switch($category->allowAttributeSets()) {
 			case AttributeKeyCategory::ASET_ALLOW_SINGLE:
-				$this->clearAttributeSets();
 				if ($asID > 0) {
-					$this->setAttributeSet(AttributeSet::getByID($asID));			
+					$as = AttributeSet::getByID($asID);
+					if ((!$this->inAttributeSet($as)) && is_object($as)) {
+						$this->clearAttributeSets();
+						$this->setAttributeSet($as);
+					}
 				}
 				break;
 		}
@@ -206,6 +209,12 @@ class AttributeKey extends Object {
 			$cnt->saveKey($args);
 			$ak->updateSearchIndex($prevHandle);
 			return $ak;
+		}
+	}
+	
+	public function inAttributeSet($as) {
+		if (is_object($as)) {
+			return $as->contains($this);
 		}
 	}
 	

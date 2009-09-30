@@ -53,6 +53,12 @@ class AttributeSet extends Object {
 		return $keys;		
 	}
 	
+	public function contains($ak) {
+		$db = Loader::db();
+		$r = $db->GetOne('select count(akID) from AttributeSetKeys where asID = ? and akID = ?', array($this->getAttributeSetID(), $ak->getAttributeKeyID()));
+		return $r > 0;
+	}	
+	
 	public function deleteKey($ak) {
 		$db = Loader::db();
 		$db->Execute('delete from AttributeSetKeys where asID = ? and akID = ?', array($this->getAttributeSetID(), $ak->getAttributeKeyID()));
