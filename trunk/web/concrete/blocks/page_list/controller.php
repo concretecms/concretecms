@@ -104,8 +104,9 @@
 			$pl->filter(false, '(cafefn.value = 0 or cafefn.value is null)');
 			*/
 			$pl->filter(false, '(ak_exclude_nav = 0 or ak_exclude_nav is null)');
-			if ($row['cParentID'] != 0) {
-				$pl->filterByParentID($cParentID);
+			
+			if ( intval($row['cParentID']) != 0) {
+				$pl->filterByParentID( intval($row['cParentID']) );
 			}
 
 			if ($num > 0) {
