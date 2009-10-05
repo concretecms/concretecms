@@ -17,6 +17,10 @@
  */
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
+
+// Load a compatiblity class for pre php 5.2 installs
+Loader::library('datetime_compat');
+
 class DateHelper {
 
 	/** 

@@ -100,6 +100,14 @@ class InstallController extends Controller {
 		} else {
 			$this->set('diffTest', false);
 		}
+		
+		if (version_compare(PHP_VERSION, '5.2.0', '>')) {
+			$phpVtest = true;
+		} else {
+			$phpVtest = false;
+		}
+		$this->set('phpVtest',$phpVtest);
+		
 	}
 	
 	public function passedRequiredItems() {

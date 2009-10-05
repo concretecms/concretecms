@@ -74,8 +74,12 @@ $(function() {
 
 <div id="ccm-install-check-items">
 <h2 style="margin-top: 0px"><?=t('Testing Required Items')?></h2>
+<div class="test <? if ($phpVtest) { ?>passed<? } else { ?>warning<? } ?>"><?=t('PHP 5.1 Available')?>
+<a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
+<div class="ccm-install-info"><?=t('PHP 5.2 or greater is recommended<br />
+ for timezone support.')?></div>
+</div>
 
-<div class="test passed" id="ccm-test-php"><?=t('PHP 5.0 Available')?></div>
 <div id="ccm-test-js" class="test fail"><?=t('JavaScript Enabled')?>
 
 <noscript>
