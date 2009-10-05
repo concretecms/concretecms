@@ -565,11 +565,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				// duplicate any attributes belonging to the collection
 				
 				$v = array($this->getCollectionID());
-				$q = "select akID, cvID, value from CollectionAttributeValues where cID = ?";
+				$q = "select akID, cvID, avID from CollectionAttributeValues where cID = ?";
 				$r = $db->query($q, $v);
 				while ($row = $r->fetchRow()) {
-					$v2 = array($row['akID'], $row['cvID'], $row['value'], $newCID);
-					$db->query("insert into CollectionAttributeValues (akID, cvID, value, cID) values (?, ?, ?, ?)", $v2);
+					$v2 = array($row['akID'], $row['cvID'], $row['avID'], $newCID);
+					$db->query("insert into CollectionAttributeValues (akID, cvID, avID, cID) values (?, ?, ?, ?)", $v2);
 				}			
 				return Collection::getByID($newCID);
 			}
