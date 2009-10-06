@@ -83,7 +83,7 @@ if (is_object($cp)) {
 	if ($this->editingEnabled()) {
 		Loader::element('page_controls_header', array('cp' => $cp, 'c' => $c));
 	}
-	
+
 	if ($this->areLinksDisabled()) { 
 		$this->addHeaderItem('<script type="text/javascript">window.onload = function() {ccm_disableLinks()}</script>', 'CORE');
 	}
@@ -91,5 +91,4 @@ if (is_object($cp)) {
 }
 
 print $this->controller->outputHeaderItems();
-
 echo $c->getCollectionAttributeValue('header_extra_content');
