@@ -126,7 +126,8 @@ class MailHelper {
 	 * Sends the email
 	 */
 	public function sendMail() {
-		$fromStr = $this->generateEmailStrings($this->from);
+		$_from[] = $this->from;
+		$fromStr = $this->generateEmailStrings($_from);
 		$toStr = $this->generateEmailStrings($this->to);
 		if (ENABLE_EMAILS) {
 			Loader::library('3rdparty/Zend/Mail');
@@ -161,10 +162,25 @@ class MailHelper {
 				$mail->addTo($to[0], $to[1]);
 			}
 			$mail->setBodyText($this->body);
-			if (MAIL_SEND_METHOD == "SMTP") {
-				$mail->send($transport);
-			} else {
-				$mail->send();
+			try {
+				if (MAIL_SEND_METHOD == "SMTP") {
+					$mail->send($transport);
+				} else {
+					$mail->send();
+				}
+			} catch(Zend_Mail_Transport_Exception $e) {
+				$l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
+				$l->write(t('Mail Exception Occurred. Unable to send mail: ') . $e->getMessage());
+				$l->write($e->getTraceAsString());
+				if (ENABLE_LOG_EMAILS) {
+					$l->write(t('Template Used') . ': ' . $this->template);
+					$l->write(t('To') . ': ' . $toStr);
+					$l->write(t('From') . ': ' . $fromStr);
+					$l->write(t('Subject') . ': ' . $this->subject);
+					$l->write(t('Body') . ': ' . $this->body);
+				}				
+				$l->close();
+				throw new Exception($e->getMessage());
 			}
 		}
 		

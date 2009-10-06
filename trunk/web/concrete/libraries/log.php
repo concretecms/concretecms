@@ -120,7 +120,7 @@ class Log {
 
 	
 	public function close() {
-		$v = array($this->log, $this->sessionText, $this->isInternal);
+		$v = array($this->log, htmlentities($this->sessionText, ENT_COMPAT, APP_CHARSET), $this->isInternal);
 		$db = Loader::db();
 		$db->Execute("insert into Logs (logType, logText, logIsInternal) values (?, ?, ?)", $v);
 		$this->sessionText = '';
