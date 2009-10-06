@@ -165,7 +165,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			*/
 			
 			foreach($items as $hi) {
-				print $hi . "\n";
+				print $hi; // caled on two seperate lines because of pre php 5.2 __toString issues
+				print "\n";
 			}
 			
 			
