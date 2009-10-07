@@ -46,6 +46,7 @@ class ProfileController extends Controller {
 		$this->set('error', $this->error);
 	}	
 	
+	/*
 	public function add_friend(){
 		UsersFriends::addFriend( intval($_REQUEST['fuID']) );
 		$this->view( intval($_REQUEST['fuID']) );
@@ -55,4 +56,5 @@ class ProfileController extends Controller {
 		UsersFriends::removeFriend( intval($_REQUEST['fuID']) );
 		$this->view( intval($_REQUEST['fuID']) );
 	}	
+	*/
 }

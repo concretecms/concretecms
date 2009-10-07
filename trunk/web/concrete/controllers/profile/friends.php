@@ -40,4 +40,14 @@ class ProfileFriendsController extends Controller {
 		$this->set('t', Loader::helper('text'));
 		$this->set('canEdit',$canEdit);
 	}
+	
+	public function add_friend($fuID=0){
+		UsersFriends::addFriend( intval($fuID) );
+		$this->view( );
+	}
+	
+	public function remove_friend($fuID=0){
+		UsersFriends::removeFriend( intval($fuID) );
+		$this->view( );
+	}
 }
