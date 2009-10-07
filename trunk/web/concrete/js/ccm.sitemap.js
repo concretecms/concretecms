@@ -618,7 +618,7 @@ toggleCopy = function() {
 }
 
 ccmExitSearchResults = function(){
-	$("#ccm-search-results").slideUp(180, function() {
+	$("#ccm-sitemap-search-results").slideUp(180, function() {
 		this.style.display='none';
 		$("#tree").show();			
 	});
@@ -629,7 +629,7 @@ setupSearch = function() {
 			$("#ccm-sitemap-search-inner").slideDown(300);
 			$(this).html('&lt; ' + ccmi18n_sitemap.backToSitemap);			
 		} else {
-			$("#ccm-search-results").hide();
+			$("#ccm-sitemap-search-results").hide();
 			$("#ccm-sitemap-search-inner").slideUp(180, function() {
 				$("#tree").show();			
 			});
@@ -642,8 +642,8 @@ setupSearch = function() {
 			$("#tree").hide();
 			$("h1").html('<span>' + ccmi18n_sitemap.searchResults + '</span>'); 
 			$("#ccm-sitemap-throbber").show();
-			$("#ccm-search-results-list").html('');
-			$("#ccm-search-results-total").hide();
+			$("#ccm-sitemap-search-results-list").html('');
+			$("#ccm-sitemap-search-results-total").hide();
 
 		},
 		success: function(resp) {
@@ -651,8 +651,8 @@ setupSearch = function() {
 			$("#ccm-sitemap-throbber").hide();
 			parseResults(resp);
 			activateLabels();
-			$("#ccm-search-results").show();
-			$("#ccm-search-results-total").show();
+			$("#ccm-sitemap-search-results").show();
+			$("#ccm-sitemap-search-results-total").show();
 		}
 	
 	});
@@ -667,7 +667,7 @@ setupSearch = function() {
 
 parseResults = function(node) {
 	var node = eval(node);
-	var container = $("#ccm-search-results-list");
+	var container = $("#ccm-sitemap-search-results-list");
 	if (node.length == tr_maxSearchResults) {
 		var navHTML= ccmi18n_sitemap.viewing + " <b>" + tr_maxSearchResults + "</b> " + ccmi18n_sitemap.results + " (<b>" + tr_maxSearchResults + "</b> " + ccmi18n_sitemap.max + ")"; 
 	} else if (node.length > 0) {
@@ -678,9 +678,9 @@ parseResults = function(node) {
 	navHTML='<div id="returnToSitemap"><a href="#" onclick="ccmExitSearchResults();return false;">&laquo; ' + ccmi18n_sitemap.backToSitemap + '</a></div>'+navHTML;
 
 
-	$("#ccm-search-results-total").html(navHTML);
+	$("#ccm-sitemap-search-results-total").html(navHTML);
 	
-	$("#ccm-search-results-total").show();
+	$("#ccm-sitemap-search-results-total").show();
 	
 	for (var i = 0; i < node.length; i++) {
 		var html = "";
