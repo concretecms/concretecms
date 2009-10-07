@@ -152,7 +152,6 @@ class CollectionAttributeValue extends AttributeValue {
 	}
 
 	public function delete() {
-		parent::delete();
 		$db = Loader::db();
 		$db->Execute('delete from CollectionAttributeValues where cID = ? and cvID = ? and akID = ? and avID = ?', array(
 			$this->c->getCollectionID(), 
@@ -160,5 +159,12 @@ class CollectionAttributeValue extends AttributeValue {
 			$this->attributeKey->getAttributeKeyID(),
 			$this->getAttributeValueID()
 		));
+		
+		// Before we run delete() on the parent object, we make sure that attribute value isn't being referenced in the table anywhere else
+		$num = $db->GetOne('select count(avID) from CollectionAttributeValues where avID = ?', array($this->getAttributeValueID()));
+		if ($num < 1) {
+			parent::delete();
+		}
+		
 	}
 }
