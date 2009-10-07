@@ -65,9 +65,10 @@ function printAttributeRow($ak, $uo) {
 
 
 if (intval($_GET['uID'])) {
+	
 	$uo = UserInfo::getByID(intval($_GET['uID']));
 	if (is_object($uo)) {
-		$uID = intval($_REQUEST['uID']);
+		$uID = intval($_REQUEST['uID']);		
 		
 		if ($_GET['task'] == 'activate') {
 			if( !$valt->validate("user_activate") ){
@@ -102,8 +103,7 @@ if (intval($_GET['uID'])) {
 			}
 		}
 		
-		
-		if ($_POST['edit']) {
+		if ($_POST['edit']) { 
 			
 			$username = trim($_POST['uName']);
 			$username = preg_replace("/\s+/", " ", $username);
@@ -313,10 +313,12 @@ if (is_object($uo)) {
 			</td>
 		</tr>
 		</table>
+        
+        <input type="hidden" name="edit" value="1" />
 		</form>
 
 		<div class="ccm-buttons">
-		<input type="hidden" name="edit" value="1" />
+		
 		<a href="<?=$this->url('/dashboard/users/search?uID=' . intval($_GET['uID']))?>" class="ccm-button-left cancel"><span><?=t('Back')?></span></a>
 		<a href="javascript:void(0)" onclick="$('#ccm-user-form').get(0).submit()" class="ccm-button-right accept"><span><?=t('Update User')?></span></a>
 		</div>	
