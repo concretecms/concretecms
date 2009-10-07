@@ -210,7 +210,7 @@ class BlockStyles extends Object {
 		if( !intval( $c->cID ) ) return false;
 		
 		$css = $this->css_data;
-		$vals = array( $css['css_class'].'', $css['css_id'].'', $css['css_serialized'].'', $css['css_custom'].'', $c->cID, $this->bID );
+		$vals = array( str_replace('.','',$css['css_class']).'', str_replace('#','',$css['css_id']).'', $css['css_serialized'].'', $css['css_custom'].'', $c->cID, $this->bID );
 		if( self::recordExists($this->bID,$c->cID) ){
 			$sql = 'UPDATE CollectionVersionBlockStyles SET css_class=?, css_id=?, css_serialized=?, css_custom=? WHERE cID=? AND bID=?'; 
 		}else{  

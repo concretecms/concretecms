@@ -239,7 +239,7 @@ $blockCssData=$blockStyles->getStylesArray();
 		</div>	
 	
 		<div class="ccm-block-field-group">
-		  <h2><?php echo t('CSS Class Name')?></h2>  
+		  <h2><?php echo t('CSS Class Name(s)')?></h2>  
 		  <input name="css_class_name" type="text" value="<?=htmlentities(trim($blockStyles->getClassName()), ENT_COMPAT, APP_CHARSET) ?>" style="width:99%" />		  		
 		</div>
 		

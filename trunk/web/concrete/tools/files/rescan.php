@@ -19,7 +19,7 @@ $form = Loader::helper('form');
 
 print '<ol>';
 $fcnt = 0;
-foreach($_REQUEST['fID'] as $fID) {
+if(is_array($_REQUEST['fID'])) foreach($_REQUEST['fID'] as $fID) {
 	$f = File::getByID($fID);
 	$fp = new Permissions($f);
 	if ($fp->canWrite()) {
