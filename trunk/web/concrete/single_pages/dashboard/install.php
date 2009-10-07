@@ -139,7 +139,11 @@ if ($this->controller->getTask() == 'update') {
 	
 	if(ENABLE_MARKETPLACE_SUPPORT){
 		$blocksHelper = Loader::helper('concrete/marketplace/blocks');
+		if ($_REQUEST['reloadCache']) {
+			$blocksHelper->reloadCache = true;
+		} 
 		$purchasedBlocksSource = $blocksHelper->getPurchasesList();
+		
 	}else{
 		$purchasedBlocksSource = array();
 	}
@@ -361,8 +365,9 @@ if ($this->controller->getTask() == 'update') {
 				<?=t('You have connected this website to the concrete5 marketplace as  ');?>
 				  <a href="<?=CONCRETE5_ORG_URL ?>/profile/-/<?=UserInfo::getRemoteAuthUserId() ?>/" target="_blank" ><?=UserInfo::getRemoteAuthUserName() ?></a>
 				  <?=t('(Not your account? <a href="#" onclick="ccm_support.signOut(logoutSuccess)">Sign Out</a>)')?>
+                  <div style="padding-top:4px;"><?=t('Something Missing?')?> <a href="<?=$this->url('/dashboard/install')?>?reloadCache=1"><?=t('Refresh this list')?></a></div>
 			<? } ?>
-			
+				<div style="clear:both"></div>
 			</div>
 			
 			<? } ?>

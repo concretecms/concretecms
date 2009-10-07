@@ -4,6 +4,8 @@ Loader::model('block_types');
 Loader::model('block_type_remote');
 
 class ConcreteMarketplaceBlocksHelper { 
+	
+	public $reloadCache = false;
 
 	function getCombinedList($filterInstalled=true) {
 		$previewList = $this->getList('marketplace_previewable_list', $filterInstalled);
@@ -33,8 +35,11 @@ class ConcreteMarketplaceBlocksHelper {
 				return array();
 			}
 		}
-
-		$blockTypes = Cache::get($list.$cacheKey, false, false, true);
+		
+		if(!$this->reloadCache) {
+			$blockTypes = Cache::get($list.$cacheKey, false, false, true);
+		}
+		
 		if (!is_array($blockTypes)) {
 			$fh = Loader::helper('file'); 
 			if (!$fh) return array();
