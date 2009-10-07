@@ -13,10 +13,6 @@ $av = Loader::helper('concrete/avatar');
 
 if ($_POST['create']) {
 
-	if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
-		$_POST['uName'] = $_POST['uEmail'];
-	}
-	
 	$username = trim($_POST['uName']);
 	$username = preg_replace("/\s+/", " ", $username);
 	$_POST['uName'] = $username;	
@@ -29,28 +25,26 @@ if ($_POST['create']) {
 		$error[] = t("The email address '%s' is already in use. Please choose another.",$_POST['uEmail']);
 	}
 	
-	if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) {
-		if (strlen($username) < USER_USERNAME_MINIMUM) {
-			$error[] = t('A username must be between at least %s characters long.',USER_USERNAME_MINIMUM);
-		}
-
-		if (strlen($username) > USER_USERNAME_MAXIMUM) {
-			$error[] = t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM);
-		}
-
-		if (strlen($username) >= USER_USERNAME_MINIMUM && !$valc->username($username)) {
-			if(USER_USERNAME_ALLOW_SPACES) {
-				$error[] = t('A username may only contain letters, numbers and spaces.');
-			} else {
-				$error[] = t('A username may only contain letters or numbers.');
-			}
-		}
-
-		if (!$valc->isUniqueUsername($username)) {
-			$error[] = t("The username '%s' already exists. Please choose another",$username);
-		}		
+	if (strlen($username) < USER_USERNAME_MINIMUM) {
+		$error[] = t('A username must be between at least %s characters long.',USER_USERNAME_MINIMUM);
 	}
-	
+
+	if (strlen($username) > USER_USERNAME_MAXIMUM) {
+		$error[] = t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM);
+	}
+
+	if (strlen($username) >= USER_USERNAME_MINIMUM && !$valc->username($username)) {
+		if(USER_USERNAME_ALLOW_SPACES) {
+			$error[] = t('A username may only contain letters, numbers and spaces.');
+		} else {
+			$error[] = t('A username may only contain letters or numbers.');
+		}
+	}
+
+	if (!$valc->isUniqueUsername($username)) {
+		$error[] = t("The username '%s' already exists. Please choose another",$username);
+	}		
+
 	if ($username == USER_SUPER) {
 		$error[] = t('Invalid Username');
 	}
@@ -126,19 +120,19 @@ if ($_POST['create']) {
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >
 	<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 	<tr>
-		<td class="subheader" width="50%"><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) { ?><?=t('Username')?> <span class="required">*</span><? } else { ?><?=t('Email Address')?> <span class="required">*</span><? } ?></td>
+		<td class="subheader" width="50%"><?=t('Username')?> <span class="required">*</span></td>
 		<td class="subheader" width="50%"><?=t('Password')?> <span class="required">*</span></td>
 	</tr>
 	<tr>
-		<td><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) { ?><input type="text" name="uName" autocomplete="off" value="<?=$_POST['uName']?>" style="width: 95%"><? } else { ?><input type="text" name="uEmail" autocomplete="off" value="<?=$_POST['uEmail']?>" style="width: 95%"><? } ?></td>
+		<td><input type="text" name="uName" autocomplete="off" value="<?=$_POST['uName']?>" style="width: 95%"></td>
 		<td><input type="password" autocomplete="off" name="uPassword" value="" style="width: 95%"></td>
 	</tr>
 	<tr>
-		<td class="subheader"><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?>&nbsp;<? } else { ?><?=t('Email Address')?> <span class="required">*</span><? } ?></td>
+		<td class="subheader"><?=t('Email Address')?> <span class="required">*</span></td>
 		<td class="subheader"><?=t('User Avatar')?></td>
 	</tr>	
 	<tr>
-		<td><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?>&nbsp;<? } else { ?><input type="text" name="uEmail" autocomplete="off" value="<?=$_POST['uEmail']?>" style="width: 95%"><? } ?></td>
+		<td><input type="text" name="uEmail" autocomplete="off" value="<?=$_POST['uEmail']?>" style="width: 95%"></td>
 		<td><input type="file" name="uAvatar" style="width: 95%"/></td>
 	</tr>
 	</table>
