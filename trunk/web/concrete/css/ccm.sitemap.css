@@ -43,14 +43,14 @@ div#ccm-sitemap-search div.fieldRow{margin-bottom:8px}
 
 a#ccm-sitemap-search-toggle {font-size: 12px}
 div#ccm-sitemap-throbber {z-index: 30; margin-top: 20px; text-align: center; display: none;}
-div#ccm-search-results {display: none;}
-div#ccm-search-results ul {margin: 0px; padding: 0px}
-div#ccm-search-results li {margin-bottom: 2px; padding-top: 0px; padding-bottom: 4px; border-bottom: 1px dotted #ddd; position: relative; list-style-type: none}
-div#ccm-search-results div.search-result-meta {position: absolute; font-size: 10px; bottom: 4px; color: #bebebe; right: 0px}
+div#ccm-sitemap-search-results {display: none;}
+div#ccm-sitemap-search-results ul {margin: 0px; padding: 0px}
+div#ccm-sitemap-search-results li {margin-bottom: 2px; padding-top: 0px; padding-bottom: 4px; border-bottom: 1px dotted #ddd; position: relative; list-style-type: none}
+div#ccm-sitemap-search-results div.search-result-meta {position: absolute; font-size: 10px; bottom: 4px; color: #bebebe; right: 0px}
 li.search-result {position: relative; background-color: transparent; padding: 0px; margin: 0px; background-repeat: no-repeat; background-attachment: scroll; background-position: left center; background-image: url(../images/dashboard/sitemap/document.png)}
 div.search-result-bc {font-size: 10px; padding-left: 18px; padding-top: 21px; color: #999}
 
-div#ccm-search-results-total {padding-top: 3px; padding-bottom: 8px; font-size: 11px; text-align: center; display: none; margin-right:100px}
-div#ccm-search-results-total div#returnToSitemap{float:left; width:100px; white-space:nowrap; overflow:visible}
+div#ccm-sitemap-search-results-total {padding-top: 3px; padding-bottom: 8px; font-size: 11px; text-align: center; display: none; margin-right:100px}
+div#ccm-sitemap-search-results-total div#returnToSitemap{float:left; width:100px; white-space:nowrap; overflow:visible}
 
 div#ccm-show-all-pages { position: relative; clear:right}
