@@ -210,7 +210,7 @@ foreach($nav as $n2) {
 
 <div id="ccm-dashboard-content">
 
-	<div style="margin:0px; padding:0px; width:100%; ">
+	<div id="ccm-dashboard-content-inner">
 	<? if (isset($error)) { ?>
 		<? 
 		if ($error instanceof Exception) {
