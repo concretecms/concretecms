@@ -244,7 +244,7 @@ class AttributeKey extends Object {
 			}
 		}
 		
-		$q = $db->GetInsertSQL(&$rs, $columnHeaders);
+		$q = $db->db->GetInsertSQL($rs, $columnHeaders);
 		$r = $db->Execute($q);
 		$r->Close();
 		$rs->Close();
