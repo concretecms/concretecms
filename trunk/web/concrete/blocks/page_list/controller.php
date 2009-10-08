@@ -82,8 +82,8 @@
 			}
 			$cParentID = ($row['cThis']) ? $this->cID : $row['cParentID'];
 			
+			Loader::model('attribute/categories/collection');
 			if ($this->displayFeaturedOnly == 1) {
-				Loader::model('attribute/categories/collection');
 				$cak = CollectionAttributeKey::getByHandle('is_featured');
 				if (is_object($cak)) {
 					$pl->filterByIsFeatured(1);
@@ -98,12 +98,10 @@
 				$pl->filterByCollectionTypeID($row['ctID']);
 			}
 			
-			/*
-			$akID = $db->GetOne("select akID from CollectionAttributeKeys where akHandle = 'exclude_nav'");
-			$pl->addToQuery("left join CollectionAttributeValues cafefn on cafefn.cID = if(p2.cID is null, p1.cID, p2.cID) and cafefn.akID = {$akID} and cv.cvID = cafefn.cvID");
-			$pl->filter(false, '(cafefn.value = 0 or cafefn.value is null)');
-			*/
-			$pl->filter(false, '(ak_exclude_nav = 0 or ak_exclude_nav is null)');
+			$columns = $db->MetaColumns(CollectionAttributeKey::getIndexedSearchTable());
+			if (isset($columns['AK_EXCLUDE_PAGE_LIST'])) {
+				$pl->filter(false, '(ak_exclude_page_list = 0 or ak_exclude_page_list is null)');
+			}
 			
 			if ( intval($row['cParentID']) != 0) {
 				$pl->filterByParentID( intval($row['cParentID']) );

@@ -105,7 +105,7 @@ class AttributeKeyCategory extends Object {
 		return $cats;
 	}
 	
-	public static function add($akCategoryHandle, $akCategoryAllowSets = ASET_ALLOW_NONE, $pkg = false) {
+	public static function add($akCategoryHandle, $akCategoryAllowSets = AttributeKeyCategory::ASET_ALLOW_NONE, $pkg = false) {
 		$db = Loader::db();
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
