@@ -79,7 +79,7 @@ class FormHelper {
 	 */
 	public function hidden($key, $value = null) {
 		$val = $this->getRequestValue($key);
-		if ($val !== false) {
+		if ($val !== false && (!is_array($val))) {
 			$value = $val;
 		}
 		$str = '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . $value . '" />';
