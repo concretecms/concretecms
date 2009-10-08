@@ -31,7 +31,7 @@
 			<th class="ccm-file-list-starred">&nbsp;</th>			
 			<th class="ccm-file-list-filename <?=$fileList->getSearchResultsClass('fvTitle')?>"><a href="<?=$fileList->getSortByURL('fvTitle', 'asc', $bu)?>"><?=t('Title')?></a></th>
 			<th class="<?=$fileList->getSearchResultsClass('fDateAdded')?>"><a href="<?=$fileList->getSortByURL('fDateAdded', 'asc', $bu)?>"><?=t('Added')?></a></th>
-			<th class="<?=$fileList->getSearchResultsClass('fvDateAdded')?>"><a href="<?=$fileList->getSortByURL('fvDateAdded', 'asc', $bu)?>"><?=t('Active Version')?></a></th>
+			<th class="<?=$fileList->getSearchResultsClass('fvDateAdded')?>"><a href="<?=$fileList->getSortByURL('fvDateAdded', 'asc', $bu)?>"><?=t('Active')?></a></th>
 			<th class="<?=$fileList->getSearchResultsClass('fvSize')?>"><a href="<?=$fileList->getSortByURL('fvSize', 'asc', $bu)?>"><?=t('Size')?></a></th>
 			<? 
 			$slist = FileAttributeKey::getColumnHeaderList();
