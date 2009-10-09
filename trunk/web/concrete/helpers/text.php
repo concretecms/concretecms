@@ -94,6 +94,13 @@ class TextHelper {
 		return $text;
 	}
 
+	/**
+	 * always use in place of htmlentites(), so it works with different langugages
+	**/
+	public function entites($v){
+		return htmlentities( $v, ENT_COMPAT, APP_CHARSET); 
+	}
+	 
 	 
 	/**
 	 * Like sanitize, but requiring a certain number characters, and assuming a tail
