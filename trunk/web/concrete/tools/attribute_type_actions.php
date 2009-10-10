@@ -3,5 +3,10 @@
 	$at = AttributeType::getByID($_REQUEST['atID']);
 	if (is_object($at)) {
 		$cnt = $at->getController();
-		call_user_func_array(array($cnt, 'action_' . $_REQUEST['action']), $_REQUEST['args']);
+		if (isset($_REQUEST['args']) && is_array($_REQUEST['args'])) {
+			$args = $_REQUEST['args'];
+		} else {  
+			$args = array(); 
+		}
+		call_user_func_array(array($cnt, 'action_' . $_REQUEST['action']), $args);
 	}
