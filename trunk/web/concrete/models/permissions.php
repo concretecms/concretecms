@@ -247,7 +247,7 @@ class Permissions extends Object {
 		$permissionSetArray = @explode(':', $permissionSet);
 
 		// now we remove the duplicate values
-		$permissionSetUnique = array_unique($permissionSetArray, SORT_STRING);
+		$permissionSetUnique = array_unique($permissionSetArray);
 		
 		// now we re-output to a string
 		$i = 0;
