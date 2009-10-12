@@ -58,7 +58,7 @@ var ccmSlideShowHelper<?=intval($bID)?> = {
 			 imgURL=this.imgInfos[num].fullFilePath;
 		else imgURL='<?=REL_DIR_FILES_UPLOADED?>/'+this.imgInfos[num].fileName; 
 		//el.innerHTML='<img src="'+imgURL+'" >';
-		el.innerHTML='<div style="height:'+this.imgInfos[num].imgHeight+'px; background:url(\''+imgURL+'\') center no-repeat">&nbsp;</div>';
+		el.innerHTML='<div style="height:'+this.imgInfos[num].imgHeight+'px; background:url(\''+escape(imgURL)+'\') center no-repeat">&nbsp;</div>';
 		//alert(imgURL);
 		if(this.imgInfos[num].url.length>0) {
 			//el.linkURL=this.imgInfos[num].url;
