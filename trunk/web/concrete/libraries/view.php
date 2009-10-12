@@ -115,7 +115,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$a3 = (is_array($this->headerItems['CONTROLLER'])) ? $this->headerItems['CONTROLLER'] : array();
 			
 			$items = array_merge($a1, $a2, $a3);
-			$items = array_unique($items);
+			$items = array_unique($items, SORT_STRING);
 			
 			// Loop through all items
 			// If it is a header output object, place each item in a separate array for its container directory

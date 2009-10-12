@@ -31,7 +31,7 @@ if (is_array($_REQUEST['fID'])) {
 	}
 }
 
-$extensions = array_unique($extensions);
+$extensions = array_unique($extensions, SORT_STRING);
 $sets = array();
 // tri state checkbox
 // state 0 - none of the selected files are in the set

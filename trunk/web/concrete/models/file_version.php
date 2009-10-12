@@ -231,7 +231,7 @@ class FileVersion extends Object {
 					break;
 			}
 		}
-		$updates = array_unique($updates);
+		$updates = array_unique($updates, SORT_STRING);
 		$updates1 = array();
 		foreach($updates as $val) {
 			// normalize the keys
