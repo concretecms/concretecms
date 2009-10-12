@@ -90,7 +90,7 @@ $generated = SinglePage::getList();
 		<table border="0" cellspacing="0" cellpadding="0">
 		<tr>
 		<td>
-		<?=BASE_URL?>/<input type="text" name="pageURL" value="<?=$_POST['pageURL']?>" style="width: 200px" /></td>
+		<?=BASE_URL . DIR_REL?>/<input type="text" name="pageURL" value="<?=$_POST['pageURL']?>" style="width: 200px" /></td>
 		<td>
 		<? print $ih->submit(t('Add'), 'add_static_page_form', 'left');?></td>
 		</tr>
