@@ -200,6 +200,10 @@ class InstallController extends Controller {
 					mkdir($this->installData['DIR_FILES_AVATARS']);
 				}
 				
+				if (isset($_POST['uPasswordForce'])) {
+					$this->installData['uPassword'] = $_POST['uPasswordForce'];
+				}
+				
 				$this->installDB();
 
 				$vh = Loader::helper('validation/identifier');
