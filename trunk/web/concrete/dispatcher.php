@@ -114,7 +114,6 @@
 	// Include Tools. Format: index.php?task=include_frontend&fType=TOOL&filename=test.php
 	require(dirname(__FILE__) . '/startup/tools.php');
 
-	## Specific site/app events if they are enabled ##
 	## This must come before packages ##
 	if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true) {
 		@include('config/site_events.php');
