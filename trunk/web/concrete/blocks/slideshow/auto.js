@@ -42,7 +42,7 @@ var SlideshowBlock = {
 		imgRow.className='ccm-slideshowBlock-imgRow';
 		document.getElementById('ccm-slideshowBlock-imgRows').appendChild(imgRow);
 		var bgRow=$('#ccm-slideshowBlock-imgRow'+parseInt(fID)+' .backgroundRow');
-		bgRow.css('background','url('+thumbPath+') no-repeat left top');
+		bgRow.css('background','url('+escape(thumbPath)+') no-repeat left top');
 	},
 	
 	removeImage: function(fID){
