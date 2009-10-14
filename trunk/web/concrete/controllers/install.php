@@ -203,6 +203,10 @@ class InstallController extends Controller {
 				if (isset($_POST['uPasswordForce'])) {
 					$this->installData['uPassword'] = $_POST['uPasswordForce'];
 				}
+
+				if (isset($_POST['packages'])) {
+					$this->installData['packages'] = $_POST['packages'];
+				}
 				
 				$this->installDB();
 
@@ -912,7 +916,14 @@ class InstallController extends Controller {
 						
 						// NOTE: This is too memory intensive to run during initial install. Let's not run it and just give nicer feedback
 						Job::runAllJobs();
-
+						
+						if (is_array($this->installData['packages'])) {
+							foreach($this->installData['packages'] as $pkgHandle) {
+								$p = Loader::package($pkgHandle);
+								$p->install();
+							}
+						}
+						
 						// write the config file
 						$configuration = "<?php\n";
 						$configuration .= "define('DB_SERVER', '" . addslashes($_POST['DB_SERVER']) . "');\n";
