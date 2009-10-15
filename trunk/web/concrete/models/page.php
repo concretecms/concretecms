@@ -1289,17 +1289,17 @@ $ppWhere = '';
 			$cID = $this->getCollectionID();
 			$dh = Loader::helper('date');
 			$dateTime = $dh->getSystemDateTime();
-			$targetCID = (is_object($targetC)) ? $targetC->getCollectionID() : "";
+			$targetCID = (is_object($targetC)) ? $targetC->getCollectionID() : 0;
 			
 			$this->cPendingAction = $action;
 			$this->cPendingActionUID = $uID;
 			$this->cPendingActionDateTime = $dateTime;
 			$this->cPendingActionTargetCID = $targetCID;
 			
-			$q = "update Pages set cPendingAction = '{$action}', cPendingActionUID = {$uID},  cPendingActionDatetime = '{$dateTime}', cPendingActionTargetCID = '{$targetCID}' where cID = {$cID}";
-			$r = $db->query($q);
+			$v = array($action, $uID, $dateTime, $targetCID, $cID);
+			$q = "update Pages set cPendingAction = ?, cPendingActionUID = ?,  cPendingActionDatetime = ?, cPendingActionTargetCID = ? where cID = ?";
+			$r = $db->query($q, $v);
 			parent::refreshCache();
-
 		}
 	}
 	
