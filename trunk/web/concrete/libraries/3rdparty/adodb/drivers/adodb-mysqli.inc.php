@@ -228,6 +228,7 @@ class ADODB_mysqli extends ADOConnection {
 	  return "'$s'";
 	}
 	
+	/*
 	function _insertid()
 	{
 	  $result = @mysqli_insert_id($this->_connectionID);
@@ -235,7 +236,14 @@ class ADODB_mysqli extends ADOConnection {
 	      if ($this->debug) ADOConnection::outp("mysqli_insert_id() failed : "  . $this->ErrorMsg());
 	  }
 	  return $result;
+	}*/
+	
+	function _insertid()
+	{
+		return ADOConnection::GetOne('SELECT LAST_INSERT_ID()');
+		//return mysql_insert_id($this->_connectionID);
 	}
+
 	
 	// Only works for INSERT, UPDATE and DELETE query's
 	function _affectedrows()
