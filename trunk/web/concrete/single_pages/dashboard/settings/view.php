@@ -613,17 +613,7 @@ $(document).ready(function(){
 	<h2><?=t('Required Code')?></h2>
 	<p><?=t("You must copy the lines of code below and place them in your server's configuration file or .htaccess file.")?></p>
 	
-	<textarea style="width: 97%; height: 140px;" onclick="this.select()">
-	<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteBase <?=DIR_REL?>/
-	
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	
-	RewriteRule ^(.*)$ index.php/$1 [L]
-	</IfModule>
-	</textarea>
+	<textarea style="width: 97%; height: 140px;" onclick="this.select()"><?=$rewriteRules?></textarea>
 	<br/>
 	<br/>
 	<? } ?>

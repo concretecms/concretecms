@@ -5,8 +5,18 @@ class DashboardSettingsController extends Controller {
 
 	var $helpers = array('form'); 
 
-	
-	public function view($updated = false) {
+	protected function getRewriteRules() {
+		$rewriteRules = "<IfModule mod_rewrite.c>\n";
+		$rewriteRules .= "RewriteEngine On\n";
+		$rewriteRules .= "RewriteBase " . DIR_REL . "/\n";
+		$rewriteRules .= "RewriteCond %{REQUEST_FILENAME} !-f\n";
+		$rewriteRules .= "RewriteCond %{REQUEST_FILENAME} !-d\n";
+		$rewriteRules .= "RewriteRule ^(.*)$ index.php/$1 [L]\n";
+		$rewriteRules .= "</IfModule>";
+		return $rewriteRules;
+	}
+
+	public function view($updated = false, $aux = false) {
 		$u = new User();		
 		 
 		$this->set('site_tracking_code', Config::get('SITE_TRACKING_CODE') );		
@@ -18,7 +28,7 @@ class DashboardSettingsController extends Controller {
 		
 		$txtEditorMode = Config::get('CONTENTS_TXT_EDITOR_MODE');
 		$this->set( 'txtEditorMode', $txtEditorMode ); 
-		
+		$this->set('rewriteRules', $this->getRewriteRules());
 		$textEditorWidth = Config::get('CONTENTS_TXT_EDITOR_WIDTH');
 		$this->set( 'textEditorWidth', $textEditorWidth );
 		$textEditorHeight = Config::get('CONTENTS_TXT_EDITOR_HEIGHT');
@@ -72,7 +82,11 @@ class DashboardSettingsController extends Controller {
 					break;														
 				case "rewriting_saved":
 					if (URL_REWRITING) {
-						$this->set('message', t('URL rewriting enabled. Make sure you copy the lines below these URL Rewriting settings area and place them in your .htaccess or web server configuration file.'));
+						if ($aux == 0) {
+							$this->set('message', t('URL rewriting enabled. Make sure you copy the lines below these URL Rewriting settings area and place them in your .htaccess or web server configuration file.'));
+						} else {
+							$this->set('message', t('URL rewriting enabled. .htaccess file updated.'));
+						}
 					} else {
 						$this->set('message', t('URL rewriting disabled.'));
 					}
@@ -369,9 +383,35 @@ class DashboardSettingsController extends Controller {
 	}
 
 	public function update_rewriting() {
+		$this->set('rewriteRules', $this->getRewriteRules());
+		$start = '# -- concrete5 urls start --';
+		$end = '# -- concrete5 urls end --';
+		$rules = $start . "\n" . $this->getRewriteRules() . "\n" . $end;
+		$htu = 0;
 		if ($this->isPost()) {
 			Config::save('URL_REWRITING', $this->post('URL_REWRITING'));
-			$this->redirect('/dashboard/settings','rewriting_saved');
+			
+			if ($this->post('URL_REWRITING') == 1) { 
+				if (file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE . '/.htaccess')) {		
+					if (file_put_contents(DIR_BASE . '/.htaccess', "\n" . $rules, FILE_APPEND)) {
+						$htu = 1;
+					}
+				} else if (!file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE)) {		
+					if (file_put_contents(DIR_BASE . '/.htaccess', $rules)) {
+						$htu = 1;
+					}
+				}
+			} else {
+				if (file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE . '/.htaccess')) {
+					$fh = Loader::helper('file');
+					$contents = $fh->getContents(DIR_BASE . '/.htaccess');
+					if (file_put_contents(DIR_BASE . '/.htaccess', str_replace($rules, '', $contents))) {
+						$htu = 1;
+					}
+				}
+			}
+			
+			$this->redirect('/dashboard/settings','rewriting_saved', $htu);
 		}
 	}	
 	
