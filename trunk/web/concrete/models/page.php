@@ -626,12 +626,15 @@ $ppWhere = '';
 	 * @param string $type (system || user)
 	 * @return string date formated like: 2009-01-01 00:00:00 
 	*/
-	function getCollectionDatePublic($type='system') {
+	function getCollectionDatePublic($dateFormat = null, $type='system') {
+		if(!$dateFormat) {
+			$dateFormat = 'Y-m-d H:i:s';
+		}
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
 			$dh = Loader::helper('date');
-			return $dh->getLocalDateTime($this->vObj->cvDatePublic);
+			return $dh->getLocalDateTime($this->vObj->cvDatePublic, $dateFormat);
 		} else {
-			return $this->vObj->cvDatePublic;
+			return date($dateFormat, strtotime($this->vObj->cvDatePublic));
 		}
 	}
 
