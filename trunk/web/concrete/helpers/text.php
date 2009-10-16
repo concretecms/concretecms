@@ -97,7 +97,7 @@ class TextHelper {
 	/**
 	 * always use in place of htmlentites(), so it works with different langugages
 	**/
-	public function entites($v){
+	public function entities($v){
 		return htmlentities( $v, ENT_COMPAT, APP_CHARSET); 
 	}
 	 
