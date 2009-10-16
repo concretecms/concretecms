@@ -337,6 +337,7 @@ class ConcreteUpgradeVersion532Helper {
 						if ($row['akAllowOtherValues']) {
 							$args['akSelectAllowMultipleValues'] = 1;
 						}
+						$sttype = 'SELECT';
 						break;
 					case 'SELECT_MULTIPLE':
 						$sttype = 'SELECT';
