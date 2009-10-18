@@ -13,6 +13,11 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 			return $f;
 		}
 	}
+	
+	public function getDisplayValue() {
+		$f = $this->getValue();
+		return '<a href="' . $f->getDownloadURL() . '">' . $f->getTitle() . '</a>';
+	}
 
 	public function searchForm($list) {
 		$fileID = $this->request('value');
