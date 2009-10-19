@@ -330,24 +330,28 @@ selectMoveCopyTarget = function(destCID) {
 	var dialog_url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request.php?origCID=' + origCID + '&sitemap_mode=' + CCM_SITEMAP_MODE + '&destCID=' + destCID;
 	var dialog_height = 350;
 	var dialog_width = 350;
-
-	if (CCM_NODE_ACTION == '<none>') {
-		if (CCM_TARGET_ID != '') {
-			$('#'+CCM_TARGET_ID).val(destCID);
+	
+	try {
+		if (CCM_NODE_ACTION == '<none>') {
+			if (CCM_TARGET_ID != '') {
+				$('#'+CCM_TARGET_ID).val(destCID);
+			}
+			$.fn.dialog.closeTop();
+			return;
 		}
-		$.fn.dialog.closeTop();
-		return;
+	
+		if (CCM_NODE_ACTION != '')
+			dialog_url = CCM_NODE_ACTION+'?destCID='+destCID;
+		if (CCM_DIALOG_TITLE != '')
+			dialog_title = CCM_DIALOG_TITLE;
+		if (CCM_DIALOG_HEIGHT != '')
+			dialog_height = CCM_DIALOG_HEIGHT;
+		if (CCM_DIALOG_WIDTH != '')
+			dialog_width = CCM_DIALOG_WIDTH;
+	} catch(e) {
+	
 	}
-
-	if (CCM_NODE_ACTION != '')
-		dialog_url = CCM_NODE_ACTION+'?destCID='+destCID;
-	if (CCM_DIALOG_TITLE != '')
-		dialog_title = CCM_DIALOG_TITLE;
-	if (CCM_DIALOG_HEIGHT != '')
-		dialog_height = CCM_DIALOG_HEIGHT;
-	if (CCM_DIALOG_WIDTH != '')
-		dialog_width = CCM_DIALOG_WIDTH;
-		
+	
 	$.fn.dialog.open({
 		title: dialog_title,
 		href: dialog_url,
@@ -356,7 +360,7 @@ selectMoveCopyTarget = function(destCID) {
 		height: dialog_height,
 		onClose: function() {
 			//$("#tree").fadeIn(200);
-			if (CCM_TARGET_ID != '') {
+			if (typeof(CCM_TARGET_ID) != "undefined" && CCM_TARGET_ID != '') {
 				$('#'+CCM_TARGET_ID).val(destCID);
 			}
 			if (tr_moveCopyMode == true) {
