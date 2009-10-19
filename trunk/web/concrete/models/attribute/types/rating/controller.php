@@ -34,6 +34,9 @@ class RatingAttributeTypeController extends AttributeTypeController  {
 	
 	// run when we call setAttribute(), instead of saving through the UI
 	public function saveValue($rating) {
+		if ($rating == '') {
+			$rating = 0;
+		}
 		$db = Loader::db();
 		$db->Replace('atNumber', array('avID' => $this->getAttributeValueID(), 'value' => $rating), 'avID', true);
 	}
