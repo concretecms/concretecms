@@ -22,7 +22,20 @@ if (isset($au->theme) && isset($au->file)) {
 				Cache::set($au->theme, $au->file, $style, 10800, true);
 			}
 		
-			print $style;
+			//if we're doing a cache refresh, we need to print the css still 
+			$noCache = ($_SERVER['HTTP_PRAGMA'] == 'no-cache'); 
+			
+			//see if we have a cache time to check 
+			$moded = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) : false; 
+			
+			//if we have are cache refreshing || the browser cache has expired 
+			if ($noCache || $moded || $stat > $moded) { 
+				header('Last-Modified: '.gmdate('D, d M Y H:i:s', $stat).' GMT'); 
+				echo $style; 
+			} else { 
+				header('HTTP/1.1 304 Not Modified'); 
+			} 
+
 		}
 	}
 }
