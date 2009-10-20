@@ -117,9 +117,11 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		$db->Execute('delete from atSelectOptionsSelected where avID = ?', array($this->getAttributeValueID()));
 		if (is_array($data['atSelectOptionID'])) {
 			foreach($data['atSelectOptionID'] as $optID) {
-				$db->Execute('insert into atSelectOptionsSelected (avID, atSelectOptionID) values (?, ?)', array($this->getAttributeValueID(), $optID));
-				if ($this->akSelectAllowMultipleValues == false) {
-					break;
+				if ($optID > 0) {
+					$db->Execute('insert into atSelectOptionsSelected (avID, atSelectOptionID) values (?, ?)', array($this->getAttributeValueID(), $optID));
+					if ($this->akSelectAllowMultipleValues == false) {
+						break;
+					}
 				}
 			}
 		}
