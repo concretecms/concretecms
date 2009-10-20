@@ -936,6 +936,11 @@ class InstallController extends Controller {
 							$configuration .= "define('PERMISSIONS_MODEL', '" . addslashes($setPermissionsModel) . "');\n";
 						}
 						$configuration .= "define('PASSWORD_SALT', '{$salt}');\n";
+						if (is_array($_POST['SITE_CONFIG'])) {
+							foreach($_POST['SITE_CONFIG'] as $key => $value) { 
+								$configuration .= "define('" . $key . "', '" . $value . "');\n";
+							}
+						}
 						$configuration .= "?" . ">";
 						$res = fwrite($this->fp, $configuration);
 						fclose($this->fp);
