@@ -5,7 +5,11 @@ header('Content-type: text/javascript');?>
 var menuHTML = '';
 
 <?
-$c = Page::getByID($_REQUEST['cID'], $_REQUEST['cvID']);
+if ($_REQUEST['cvID'] > 0) {
+	$c = Page::getByID($_REQUEST['cID'], $_REQUEST['cvID']);
+} else {
+	$c = Page::getByID($_REQUEST['cID']);
+}
 $cp = new Permissions($c);
 
 $valt = Loader::helper('validation/token');
