@@ -277,8 +277,8 @@ class File extends Object {
 			$fvID = 1;
 		}
 		
-		$db->Execute('insert into FileVersions (fID, fvID, fvFilename, fvPrefix, fvDateAdded, fvIsApproved, fvApproverUID, fvAuthorUID, fvActivateDateTime, fvTitle, fvDescription, fvTags) 
-		values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', array(
+		$db->Execute('insert into FileVersions (fID, fvID, fvFilename, fvPrefix, fvDateAdded, fvIsApproved, fvApproverUID, fvAuthorUID, fvActivateDateTime, fvTitle, fvDescription, fvTags, fvExtension) 
+		values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', array(
 			$this->fID, 
 			$fvID,
 			$filename,
@@ -290,7 +290,8 @@ class File extends Object {
 			$date,
 			$fvTitle,
 			$fvDescription, 
-			$fvTags));
+			$fvTags,
+			''));;
 			
 		$fv = $this->getVersion($fvID);
 		return $fv;
