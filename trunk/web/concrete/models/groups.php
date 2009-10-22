@@ -547,7 +547,7 @@
 		
 		public function removeGroupExpiration() {
 			$db = Loader::db();
-			$db->Execute('update Groups set gUserExpirationIsEnabled = 0, gUserExpirationMethod = null, gUserExpirationSetDateTime = null, gUserExpirationInterval = null, gUserExpirationAction = null where gID = ?', array($this->getGroupID()));
+			$db->Execute('update Groups set gUserExpirationIsEnabled = 0, gUserExpirationMethod = null, gUserExpirationSetDateTime = null, gUserExpirationInterval = 0, gUserExpirationAction = null where gID = ?', array($this->getGroupID()));
 		}
 		
 		public function setGroupExpirationByDateTime($datetime, $action) {
