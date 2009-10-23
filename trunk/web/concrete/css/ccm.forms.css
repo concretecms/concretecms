@@ -147,7 +147,7 @@ div.ccm-group a.ccm-group-inner-atag:hover {color: #666; font-size: 14px; paddin
 div.ccm-group {position: relative; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px}
 div.ccm-group a.ccm-group-inner:hover {background-color: #d9e7ff; border: 1px solid #94a7c7}
 div.ccm-group-description {padding-left: 30px; color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
-span.ccm-group-description {color: #aaa; font-size: 12p; padding-top: 2px; padding-bottom: 6px}
+span.ccm-group-description {color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
 form#ccm-group-search {width: 200px; text-align: right; padding-right: 10px; float: right; position: relative; top: -40px; font-size: 10px}
 form#ccm-group-search input {font-size: 10px}
 form#ccm-group-search label {font-weight: bold}
