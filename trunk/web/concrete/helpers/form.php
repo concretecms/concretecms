@@ -143,7 +143,7 @@ class FormHelper {
 		} else {
 			
 			if (is_array($a[1])) {
-				$innerValue = ($rv !== false) ? $rv : $a[1];
+				$innerValue = ($rv !== false) ? $rv : '';
 				$miscFields = $a[1];
 			} else {
 				
