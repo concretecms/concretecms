@@ -95,6 +95,11 @@
 	if (file_exists(DIR_BASE . '/config/site_post.php')) {
 		require(DIR_BASE . '/config/site_post.php');
 	}
+	
+	## Site-level config POST user/app config - managed by c5, do NOT add your own stuff here ##
+	if (file_exists(DIR_BASE . '/config/site_post_restricted.php')) {
+		require(DIR_BASE . '/config/site_post_restricted.php');
+	}
 
 	## Set debug-related and logging activities
 	require(dirname(__FILE__) . '/startup/debug_logging.php');

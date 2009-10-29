@@ -402,6 +402,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					} else if ($item->getPackageID() > 0 && (file_exists(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $path . '/'. FILENAME_COLLECTION_CONTROLLER))) {
 						include(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $path . '/'. FILENAME_COLLECTION_CONTROLLER);
 						$include = true;
+					} else if ($item->getPackageID() > 0 && (file_exists(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $controllerFile))) {
+						include(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $controllerFile);
+						$include = true;
+					} else if ($item->getPackageID() > 0 && (file_exists(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $path . '/'. FILENAME_COLLECTION_CONTROLLER))) {
+						include(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $path . '/'. FILENAME_COLLECTION_CONTROLLER);
+						$include = true;
 					}
 				}
 				
