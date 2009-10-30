@@ -24,8 +24,8 @@ class ConcreteUpgradeVersion532Helper {
 
 	protected function incrementImported() {
 		$this->numImported++;
-		if ($this->numImported > 3000) {
-			die("3000 records imported. Please re-run the upgrade script until this message goes away.");
+		if ($this->numImported > 2000) {
+			die("2000 records imported. Please re-run the upgrade script until this message goes away.");
 		}
 	}
 	
