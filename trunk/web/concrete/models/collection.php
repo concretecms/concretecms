@@ -125,7 +125,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$this->reindex();
 		}
 		
-		public function reindex() {
+		public function reindex($index = false) {
 			if ($this->isAlias()) {
 				return false;
 			}
@@ -139,15 +139,17 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$rs = $db->Execute('select * from CollectionSearchIndexAttributes where cID = -1');
 			AttributeKey::reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
 			
-			Loader::library('database_indexed_search');
-			$is = new IndexedSearch();
+			if ($index == false) {
+				Loader::library('database_indexed_search');
+				$index = new IndexedSearch();
+			}
 			$db->Replace('PageSearchIndex', array(
 				'cID' => $this->getCollectionID(), 
 				'cName' => $this->getCollectionName(), 
 				'cDescription' => $this->getCollectionDescription(), 
 				'cPath' => $this->getCollectionPath(),
 				'cDatePublic' => $this->getCollectionDatePublic(), 
-				'content' => $is->getBodyContentFromPage($this)
+				'content' => $index->getBodyContentFromPage($this)
 			), array('cID'), true);			
 		}
 		

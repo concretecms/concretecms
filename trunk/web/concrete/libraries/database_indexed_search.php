@@ -169,7 +169,7 @@ class IndexedSearch {
 				continue;
 			}		
 			
-			$c->reindex();
+			$c->reindex($this);
 			$num++;
 		
 			unset($c);
