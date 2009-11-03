@@ -99,8 +99,20 @@ class FileAttributeKey extends AttributeKey {
 		return parent::getList('file', array('akIsSearchableIndexed' => 1));	
 	}
 
-	public static function getImporterList() {
-		return parent::getList('file', array('akIsAutoCreated' => 1));	
+	public static function getImporterList($fv = false) {
+		$list = parent::getList('file', array('akIsAutoCreated' => 1));	
+		if ($fv == false) {
+			return $list;
+		}
+		$list2 = array();
+		$db = Loader::db();
+		foreach($list as $l) {
+			$r = $db->GetOne('select count(akID) from FileAttributeValues where fID = ? and fvID = ? and akID = ?', array($fv->getFileID(), $fv->getFileVersionID(), $l->getAttributeKeyID()));
+			if ($r > 0) {
+				$list2[] = $l;
+			}
+		}
+		return $list2;
 	}
 
 	public static function getUserAddedList() {
