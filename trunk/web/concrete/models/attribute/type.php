@@ -36,6 +36,26 @@ class AttributeType extends Object {
 		return $list;
 	}
 	
+	public function delete() {
+		$db = Loader::db();
+		if (method_exists($this->controller, 'deleteType')) {
+			$this->controller->deleteType();
+		}
+		
+		$db->Execute("delete from AttributeTypes where atID = ?", array($this->atID));
+	}
+	
+	public static function getListByPackage($pkg) {
+		$db = Loader::db();
+		$list = array();
+		$r = $db->Execute('select atID from AttributeTypes where pkgID = ? order by atID asc', array($pkg->getPackageID()));
+		while ($row = $r->FetchRow()) {
+			$list[] = AttributeType::getByID($row['atID']);
+		}
+		$r->Close();
+		return $list;
+	}	
+	
 	public function getPackageID() { return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);

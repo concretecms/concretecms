@@ -14,6 +14,7 @@ class FileList extends DatabaseItemList {
 	protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fDateAdded', 'fvDateAdded', 'fvSize');
 	protected $itemsPerPage = 10;
 	protected $attributeClass = 'FileAttributeKey';
+	protected $permissionLevel = 'canSearch';
 	
 	/* magic method for filtering by attributes. */
 	public function __call($nm, $a) {
@@ -99,7 +100,10 @@ class FileList extends DatabaseItemList {
 		$this->filter('f.fDateAdded', $date, $comparison);
 	}
 	
-
+	public function setPermissionLevel($plevel) {
+		$this->permissionLevel = $plevel;
+	}
+	
 	/** 
 	 * Filters by tag
 	 * @param string $tag
@@ -108,14 +112,6 @@ class FileList extends DatabaseItemList {
 		$db=Loader::db();  
 		$this->filter(false, "( fv.fvTags like ".$db->qstr("%\n".$tag."\n%")."  )");
 	}	
-	
-	/** 
-	 * If true, pages will be checked for permissions prior to being returned
-	 * @param bool $checkForPermissions
-	 */
-	public function displayOnlyPermittedPages($checkForPermissions) {
-		$this->displayOnlyPermittedPages = $checkForPermissions;
-	}
 	
 	protected function setBaseQuery() {
 		$this->setQuery('SELECT DISTINCT f.fID, u.uName as fvAuthorName
@@ -127,12 +123,12 @@ class FileList extends DatabaseItemList {
 	protected function setupFilePermissions() {
 		
 		$u = new User();
-		if ($u->isSuperUser()) {
+		if ($this->permissionLevel == false || $u->isSuperUser()) {
 			return false;
 		}
-		$vs = FileSetPermissions::getOverriddenSets('canSearch', FilePermissions::PTYPE_ALL);
-		$nvs = FileSetPermissions::getOverriddenSets('canSearch', FilePermissions::PTYPE_NONE);
-		$vsm = FileSetPermissions::getOverriddenSets('canSearch', FilePermissions::PTYPE_MINE);
+		$vs = FileSetPermissions::getOverriddenSets($this->permissionLevel, FilePermissions::PTYPE_ALL);
+		$nvs = FileSetPermissions::getOverriddenSets($this->permissionLevel, FilePermissions::PTYPE_NONE);
+		$vsm = FileSetPermissions::getOverriddenSets($this->permissionLevel, FilePermissions::PTYPE_MINE);
 		
 		// we remove all the items from nonviewableSets that appear in viewableSets because viewing trumps non-viewing
 		
@@ -181,7 +177,7 @@ class FileList extends DatabaseItemList {
 			// There is a really stupid MySQL bug that, if the subquery returns null, the entire query is nullified
 			// So I have to do this query OUTSIDE of MySQL and give it to mysql
 			$db = Loader::db();
-			$fIDs = $db->GetCol("select Files.fID from Files inner join FilePermissions on FilePermissions.fID = Files.fID where fOverrideSetPermissions = 1 and (FilePermissions.gID in (" . implode(',', $groupIDs) . ") or FilePermissions.uID = {$uID}) having max(canSearch) = 0");
+			$fIDs = $db->GetCol("select Files.fID from Files inner join FilePermissions on FilePermissions.fID = Files.fID where fOverrideSetPermissions = 1 and (FilePermissions.gID in (" . implode(',', $groupIDs) . ") or FilePermissions.uID = {$uID}) having max(" . $this->permissionLevel. ") = 0");
 			if (count($fIDs) > 0) {
 				$this->filter(false, "(f.fID not in (" . implode(',', $fIDs) . "))");
 			}			

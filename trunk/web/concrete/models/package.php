@@ -198,7 +198,7 @@ class Package extends Object {
 		$items = array_merge(BlockTypeList::getByPackage($this), $items);
 		$items = array_merge(PageTheme::getListByPackage($this), $items);
 		$items = array_merge(SinglePage::getListByPackage($this), $items);
-		
+		$items = array_merge(AttributeType::getListByPackage($this), $items);		
 		return $items;
 	}
 
@@ -220,6 +220,9 @@ class Package extends Object {
 					break;
 				case 'SinglePage':
 					@$item->delete(); // we suppress errors because sometimes the wrapper pages can delete first.
+					break;
+				case 'AttributeType':
+					$item->delete();
 					break;
 			}
 		}
