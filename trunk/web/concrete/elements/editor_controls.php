@@ -28,4 +28,6 @@ function ccmEditorSitemapOverlay() {
         height: '400'
     });
 };
+
+ccm_activateFileSelectors();
 </script>
