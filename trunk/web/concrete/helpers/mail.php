@@ -96,7 +96,7 @@ class MailHelper {
 				$str .= $v[0];
 			}
 			if (($i + 1) < count($arr)) {
-				$str .= ',';
+				$str .= ', ';
 			}
 		}
 		return $str;
@@ -119,7 +119,14 @@ class MailHelper {
 	 * @return void
 	 */
 	public function to($email, $name = null) {
-		$this->to[] = array($email, $name);
+		if (strpos($email, ',') > 0) {
+			$email = explode(',', $email);
+			foreach($email as $em) {
+				$this->to[] = array($em, $name);
+			}
+		} else {
+			$this->to[] = array($email, $name);	
+		}
 	}
 		
 	/** 
