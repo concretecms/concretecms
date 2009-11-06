@@ -98,6 +98,7 @@ foreach($searchFieldAttributes as $ak) {
 			</div>
 			
 			<div id="ccm-search-fields-submit">
+				<div id="ccm-search-export"><a href="javascript:void(0)" onclick="$('#ccm-user-advanced-search').attr('action', '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results_export'); $('#ccm-user-advanced-search').get(0).submit(); $('#ccm-user-advanced-search').attr('action', '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results');"><?=t('Export All')?></a></div>
 				<?=$form->submit('ccm-search-users', 'Search')?>
 			</div>
 		</div>
