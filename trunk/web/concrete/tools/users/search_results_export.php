@@ -43,6 +43,8 @@ foreach($users as $ui) {
 		echo("<td>" . $ui->getAttribute($ak, 'display') . "</td>");
 	}
 	echo("</tr>");
+	unset($ui);
+	unset($ak);
 }
 echo("</table>");
 exit;
