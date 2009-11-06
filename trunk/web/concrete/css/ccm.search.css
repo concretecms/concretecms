@@ -61,3 +61,6 @@ img.ccm-attribute-editable-field-loading {display: none}
 div.ccm-attribute-editable-field-form {display: none}
 div.ccm-attribute-editable-field-type-text input {width: 100%}
 div.ccm-attribute-editable-field-type-number input {width: 60px}
+
+div#ccm-search-export {float: left; width: 80px; text-align: left; background: transparent url(../images/icons/excel.png) no-repeat; padding-left: 22px; margin-top: 2px; padding-top: 3px; padding-bottom: 10px}
+div#ccm-search-export a {font-size: 11px}
