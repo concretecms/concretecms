@@ -56,6 +56,7 @@ class AddressAttributeTypeController extends AttributeTypeController  {
 	);
 	
 	public function search() {
+		$this->load();
 		print $this->form();
 		$v = $this->getView();
 		$this->set('search', true);
@@ -135,7 +136,87 @@ class AddressAttributeTypeController extends AttributeTypeController  {
 		print "'";
 	}
 	
+	public function validateKey($data) {
+		$e = parent::validateKey($data);
+		
+		// additional validation for select type
+		$akCustomCountries = $data['akCustomCountries'];
+		$akHasCustomCountries = $data['akHasCustomCountries'];
+		if ($data['akHasCustomCountries'] != 1) {
+			$akHasCustomCountries = 0;
+		}
+
+		if (!is_array($data['akCustomCountries'])) {
+			$akCustomCountries = array();
+		}
+		
+		if ($akHasCustomCountries && (count($akCustomCountries) == 0)) {
+			$e->add(t('You must specify at least one country.'));
+		} else if ($akHasCustomCountries && $data['akDefaultCountry'] != '' && (!in_array($data['akDefaultCountry'], $akCustomCountries))) {
+			$e->add(t('The default country must be in the list of custom countries.'));
+		}
+		
+		return $e;
+	}
+
+	public function saveKey($data) {
+		$e = Loader::helper('validation/error');
+		
+		$ak = $this->getAttributeKey();
+		$db = Loader::db();
+
+		$akCustomCountries = $data['akCustomCountries'];
+		$akHasCustomCountries = $data['akHasCustomCountries'];
+		if ($data['akHasCustomCountries'] != 1) {
+			$akHasCustomCountries = 0;
+		}		
+		if (!is_array($data['akCustomCountries'])) {
+			$akCustomCountries = array();
+		}		
+		if (!$e->has()) {
+			$db->Replace('atAddressSettings', array(
+				'akID' => $ak->getAttributeKeyID(), 
+				'akHasCustomCountries' => $akHasCustomCountries,
+				'akDefaultCountry' => $data['akDefaultCountry']			
+			), array('akID'), true);
+	
+			$db->Execute('delete from atAddressCustomCountries where akID = ?', array($ak->getAttributeKeyID()));
+			if (count($akCustomCountries)) {
+				foreach($akCustomCountries as $cnt) {
+					$db->Execute('insert into atAddressCustomCountries (akID, country) values (?, ?)', array($ak->getAttributeKeyID(), $cnt));
+				}
+			}
+		} else {
+			return $e;
+		}
+	}
+	
+	protected function load() {
+		$ak = $this->getAttributeKey();
+		if (!is_object($ak)) {
+			return false;
+		}
+		
+		$db = Loader::db();
+		$row = $db->GetRow('select akHasCustomCountries, akDefaultCountry from atAddressSettings where akID = ?', $ak->getAttributeKeyID());
+		$countries = array();
+		if ($row['akHasCustomCountries'] == 1) { 
+			$countries = $db->GetCol('select country from atAddressCustomCountries where akID = ?', $ak->getAttributeKeyID());
+		}
+		$this->akHasCustomCountries = $row['akHasCustomCountries'];
+		$this->akDefaultCountry = $row['akDefaultCountry'];
+		$this->akCustomCountries = $countries;
+		$this->set('akDefaultCountry', $this->akDefaultCountry);
+		$this->set('akHasCustomCountries', $this->akHasCustomCountries);
+		$this->set('akCustomCountries', $countries);
+	}
+
+	public function type_form() {
+		$this->load();
+	}
+	
 	public function form() {
+		$this->load();
 		if (is_object($this->attributeValue)) {
 			$value = $this->getAttributeValue()->getValue();
 			$this->set('address1', $value->getAddress1());
