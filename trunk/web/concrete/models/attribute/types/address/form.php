@@ -32,11 +32,24 @@ if ($creq != false) {
 <?=$f->select($this->field('state_province_select'), array('' => t('Choose State/Province')), $state_province, array('ccm-attribute-address-field-name' => $this->field('state_province')))?>
 <?=$f->text($this->field('state_province_text'), $state_province, array('style' => 'display: none', 'ccm-attribute-address-field-name' => $this->field('state_province')))?>
 </div>
-<? if (!$country && !$search) {
-	$country = 'US';
+<? 
+
+if (!$country && !$search) {
+	if ($akDefaultCountry != '') {
+		$country = $akDefaultCountry;
+	} else {
+		$country = 'US';
+	}
 } 
 
-$countries = array_merge(array('' => t('Choose Country')), $co->getCountries());
+$countriesTmp = $co->getCountries();
+$countries = array();
+foreach($countriesTmp as $_key => $_value) {
+	if ((!$akHasCustomCountries) || ($akHasCustomCountries && in_array($_key, $akCustomCountries))) {
+		$countries[$_key] = $_value;
+	}
+}
+$countries = array_merge(array('' => t('Choose Country')), $countries);
 ?>
 
 <div class="ccm-attribute-address-line ccm-attribute-address-country">
