@@ -90,13 +90,12 @@ class ImageHelper {
 			$path = $obj;
 		}		
 		
-		if (!file_exists($path)) {
-			return false;
+		if (file_exists($path)) {
+			$filename = md5($path . ':' . $maxWidth . ':' . $maxHeight . ':' . filemtime($path)) . '.jpg';
+		} else {
+			$filename = md5($path . ':' . $maxWidth . ':' . $maxHeight . ':') . '.jpg';
 		}
 
-		// first we check to see if a file with these dimensions exists
-		$filename = md5($path . ':' . $maxWidth . ':' . $maxHeight . ':' . filemtime($path)) . '.jpg';
-		
 		if (!file_exists(DIR_FILES_CACHE . '/' . $filename)) {
 			// create image there
 			$this->create($path, DIR_FILES_CACHE . '/' . $filename, $maxWidth, $maxHeight);
