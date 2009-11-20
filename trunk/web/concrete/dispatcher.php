@@ -14,6 +14,10 @@
 	## Load the database ##
 	Loader::database();
 
+	## Startup cache ##
+	Loader::library('cache');	
+	Cache::startup();
+	
 	## Load required libraries ##
 	Loader::library('object');
 	Loader::library('log');
@@ -62,11 +66,6 @@
 	## Setup timzone support
 	require(dirname(__FILE__) . '/startup/timezone.php'); // must be included before any date related functions are called (php 5.3 +)
 
-	## Startup cache ##
-	Loader::library('cache/abstract');	
-	Loader::library('cache/' . CACHE_LIBRARY);
-	Cache::startup();
-	
 	## Startup check, install ##	
 	require(dirname(__FILE__) . '/startup/magic_quotes_gpc_check.php');
 

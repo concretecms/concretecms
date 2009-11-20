@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $c = Page::getByID($_REQUEST['cID']);
 $cp = new Permissions($c);
 if (!$cp->canWrite()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 $a = Area::get($c, $_GET['arHandle']);

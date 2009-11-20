@@ -255,6 +255,10 @@ jQuery.fn.dialog.position = function(fnd) {
 	fnd.modifiedWidth = parseInt(fnd.width) + 30;
 	fnd.modifiedHeight = parseInt(fnd.height)  + 40;
 	fnd.contentWidth = fnd.modifiedWidth - 44;
+	
+	if (!ccm_dialogCanTransparent) {
+		fnd.contentWidth = fnd.contentWidth + 24;
+	}
 	fnd.contentHeight = fnd.modifiedHeight;
 	
 	$("#ccm-dialog-window" + fnd.n).css({marginLeft: '-' + parseInt((fnd.modifiedWidth / 2),10) + 'px', width: fnd.modifiedWidth + 'px'});
@@ -320,8 +324,13 @@ jQuery.fn.dialog.overlay = function(fnd) {
 		sz = jQuery.fn.dialog.startZindex + fnd.n;
 	}
 	
+	if (ccm_dialogCanTransparent) {
+		var transparentClass = 'ccm-dialog-window-transparent';
+	} else {
+		var transparentClass = 'ccm-dialog-window-no-transparent';
+	}
 	fnd.realZ = sz;
-	$("body").append("<div class=\"" + fnd.wrapperClass + "\"><div class='ccm-dialog-window' id='ccm-dialog-window" + fnd.n + "' style='display: none; z-index: " + sz + "'></div>");
+	$("body").append("<div class=\"" + fnd.wrapperClass + " " + transparentClass + " \"><div class='ccm-dialog-window' id='ccm-dialog-window" + fnd.n + "' style='display: none; z-index: " + sz + "'></div>");
 
 	if(jQuery.fn.dialog.isMacFF(fnd)){
 		$("#TB_overlay" + fnd.n).addClass("TB_overlayMacFFBGHack");//use png overlay so hide flash
@@ -356,6 +365,10 @@ jQuery.fn.dialog.loaderImage = CCM_IMAGE_PATH + "/throbber_white_32.gif";
 var ccm_initialHeaderDeactivated;
 var ccm_initialOverlay;
 var ccm_dialogCanDrag = (typeof($.fn.draggable) == 'function');
+var ccm_dialogCanTransparent = true;
+if (jQuery.browser.msie && jQuery.browser.version.substring(0, 1) == 6) {
+	var ccm_dialogCanTransparent = false;
+}
 var imgLoader;
 
 var ccmAlert = {  

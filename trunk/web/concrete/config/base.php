@@ -99,10 +99,6 @@ if (!defined("LANGUAGE")) {
 
 define("LANGUAGE_DOMAIN_CORE", "messages");
 
-if (!defined('CACHE_LIBRARY')) {
-	define('CACHE_LIBRARY', 'default');
-}
-
 # Debug Menu - Determines whether a "Submit Feedback/Bug/Question" is active */
 # Currently Concrete5 does not include this capability but it will likely come back.
 define('MENU_FEEDBACK_DISPLAY', 1);
