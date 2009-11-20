@@ -132,9 +132,10 @@ class Events {
 				if ($type == Events::EVENT_TYPE_PAGETYPE) {
 					// then the first argument in the event fire() method will be the page
 					// that this applies to. We check to see if the page type is the right type
+					$proceed = false;
 					if (is_object($args[0]) && $args[0] instanceof Page && $args[0]->getCollectionTypeID() > 0) {
-						if ($ev[3] != Loader::pageTypeControllerPath($args[0]->getCollectionTypeHandle())) {
-							$proceed = false;
+						if ($ev[3] == Loader::pageTypeControllerPath($args[0]->getCollectionTypeHandle())) {
+							$proceed = true;
 						}
 					}
 				}

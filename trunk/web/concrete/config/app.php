@@ -12,6 +12,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 if (!defined('ENABLE_CACHE')) {
 	Config::getOrDefine('ENABLE_CACHE', true); 
 }
+if (!ENABLE_CACHE) {
+	Cache::disableCache();
+}
 # permissions model - valid options are 'advanced' or 'simple'
 if (!defined('PERMISSIONS_MODEL')) {
 	Config::getOrDefine('PERMISSIONS_MODEL', 'simple');

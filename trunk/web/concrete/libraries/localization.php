@@ -2,55 +2,45 @@
 	
 	class Localization {
 	
-		public function isAvailable() {
-			return function_exists('textdomain');
-		}
+		public function init() {Localization::getTranslate();}
 		
-		public function setDomain($path) {
-			if (Localization::isAvailable()) {
-				if (is_dir($path . '/' . DIRNAME_LANGUAGES)) {
-					bindtextdomain(LANGUAGE_DOMAIN_CORE, $path . '/' . DIRNAME_LANGUAGES);
-					textdomain(LANGUAGE_DOMAIN_CORE);	
-					bind_textdomain_codeset(LANGUAGE_DOMAIN_CORE, APP_CHARSET);				
+		public function getTranslate() {
+			static $translate;
+			if (!isset($translate)) {
+				Loader::library('3rdparty/Zend/Translate');
+				$cache = Cache::getLibrary();
+				Zend_Translate::setCache($cache);
+				if (LOCALE != 'en_US') {
+					if (is_dir(DIR_BASE . '/languages/' . LOCALE)) {
+						$translate = new Zend_Translate('gettext', DIR_BASE . '/languages/' . LOCALE);
+					} else {
+						$translate = new Zend_Translate('gettext', DIR_BASE . '/languages');
+					}
 				}
 			}
-		}
-		
-		/** 
-		 * Resets the text domain to the default localization. This should be called after we branch out to any blocks, etc...
-		 */
-		public function reset() {
-			if (Localization::isAvailable()) {
-				Localization::setDomain(DIR_BASE);
-			}
-		}
-		
-		public function init() {
-			if (Localization::isAvailable()) {
-				$l = explode(',', str_replace(' ', '', LOCALE));
-				setlocale(LC_ALL, $l);
-				if (!ini_get('safe_mode')) {
-					putenv('LC_ALL=' . LOCALE);
-				}
-				Localization::reset();		
-			}
+			return $translate;
 		}
 	}
 	
 	Localization::init();
-	if (!Localization::isAvailable()) {
-		function gettext($string) {return $string;}
-		function _($string) {return $string;}
-	}
 
 	function t($text) {
+		$zt = Localization::getTranslate();
 		if (func_num_args() == 1) {
-			return gettext($text);
+			if (is_object($zt)) {
+				return $zt->_($text);
+			} else {
+				return $text;
+			}
 		}
 		
 		$arg = array();
 	    for($i = 1 ; $i < func_num_args(); $i++) {
 	        $arg[] = func_get_arg($i); 
 	    }
-	    return vsprintf(gettext($text), $arg);
+		if (is_object($zt)) {
+			return vsprintf($zt->_($text), $arg);
+		} else {
+			return vsprintf($text, $arg);
+		}
 	}

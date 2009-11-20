@@ -453,8 +453,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					require_once($dir . '/' . $btHandle . '/' . FILENAME_BLOCK_CONTROLLER);
 				}
 				
-				Localization::setDomain($dir . '/' . $btHandle);
-
 				if (!class_exists($class)) {
 					throw new Exception(t("%s not found. Please check that the block controller file contains the correct class name.", $class));
 				}

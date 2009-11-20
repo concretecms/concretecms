@@ -21,6 +21,10 @@
 	width:380px;
 }
 
+
+.ccm-dialog-window-no-transparent .ccm-dialog-window {border: 2px solid #333}
+.ccm-dialog-window-no-transparent .ccm-dialog-title-bar a.ccm-dialog-close {right: 10px; top: 10px}
+
 .ccm-dialog-title-bar a.ccm-dialog-close {
 	position: absolute;
 	top: 8px; 
@@ -46,10 +50,22 @@
 }
 
 
-.ccm-dialog-title-bar-l {background: transparent url(../images/bg_dialog_tl.png) no-repeat scroll 0 0; padding-left: 22px;}
-.ccm-dialog-title-bar-r {background: transparent url(../images/bg_dialog_tr.png) no-repeat scroll 100% 0; padding-right: 22px}
+.ccm-dialog-window-no-transparent .ccm-dialog-title-bar-l {}
+.ccm-dialog-window-no-transparent .ccm-dialog-title-bar-r {}
 
-.ccm-dialog-title-bar {
+.ccm-dialog-window-no-transparent .ccm-dialog-title-bar {
+	background:#eee;
+	height:30px;
+	color: #666666;
+	font-weight: bold;
+	padding: 4px 10px 0px 10px;
+	font-size: 12px;
+}
+
+.ccm-dialog-window-transparent .ccm-dialog-title-bar-l {background: transparent url(../images/bg_dialog_tl.png) no-repeat scroll 0 0; padding-left: 22px;}
+.ccm-dialog-window-transparent .ccm-dialog-title-bar-r {background: transparent url(../images/bg_dialog_tr.png) no-repeat scroll 100% 0; padding-right: 22px}
+
+.ccm-dialog-window-transparent .ccm-dialog-title-bar {
 	background:#eee url(../images/bg_dialog_t.png) right repeat-x;
 	height:30px;
 	color: #666666;
@@ -57,14 +73,18 @@
 	font-size: 12px;
 }
 
-.ccm-dialog-content-b {background: transparent url(../images/bg_dialog_b.png) repeat-x scroll 0 0; height: 27px}
-.ccm-dialog-content-bl {background: transparent url(../images/bg_dialog_bl.png) no-repeat scroll 0 100%; padding-left: 22px;}
-.ccm-dialog-content-br {background: transparent url(../images/bg_dialog_br.png) no-repeat scroll 100% 100%; padding-right: 22px}
+.ccm-dialog-window-transparent .ccm-dialog-content-b {background: transparent url(../images/bg_dialog_b.png) repeat-x scroll 0 0; height: 27px}
+.ccm-dialog-window-transparent .ccm-dialog-content-bl {background: transparent url(../images/bg_dialog_bl.png) no-repeat scroll 0 100%; padding-left: 22px;}
+.ccm-dialog-window-transparent .ccm-dialog-content-br {background: transparent url(../images/bg_dialog_br.png) no-repeat scroll 100% 100%; padding-right: 22px}
+.ccm-dialog-window-transparent .ccm-dialog-content-l {background: transparent url(../images/bg_dialog_l.png) repeat-y scroll 0 0; padding-left: 22px;}
+.ccm-dialog-window-transparent .ccm-dialog-content-r {background: transparent url(../images/bg_dialog_r.png) repeat-y scroll 100% 0; padding-right: 22px}
+
+.ccm-dialog-window-no-transparent .ccm-dialog-content-bl {background: #fafafa;}
+.ccm-dialog-window-no-transparent .ccm-dialog-content-br {background: #fafafa;}
+.ccm-dialog-window-no-transparent .ccm-dialog-content-l {background: #fafafa; padding-left: 12px;}
+.ccm-dialog-window-no-transparent .ccm-dialog-content-r {background: #fafafa;}
 
 .ccm-dialog-title-bar a.ccm-button-right span {color: #fff; font-size: 10px}
-
-.ccm-dialog-content-l {background: transparent url(../images/bg_dialog_l.png) repeat-y scroll 0 0; padding-left: 22px;}
-.ccm-dialog-content-r {background: transparent url(../images/bg_dialog_r.png) repeat-y scroll 100% 0; padding-right: 22px}
 
 .ccm-dialog-content {
 	clear:both;

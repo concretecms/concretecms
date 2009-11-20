@@ -189,6 +189,16 @@ class Package extends Object {
 	
 	}
 	
+	public function setupPackageLocalization() {
+		$translate = Localization::getTranslate();
+		if (is_object($translate)) {
+			$path = $this->getPackagePath() . '/' . DIRNAME_LANGUAGES;
+			if (file_exists($path)) {
+				$translate->addTranslation($path);
+			}
+		}
+	}
+	
 	/** 
 	 * Returns an array of package items (e.g. blocks, themes)
 	 */

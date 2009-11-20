@@ -92,7 +92,8 @@ class InstallController extends Controller {
 	private function setOptionalItems() {
 		// no longer need lucene
 		//$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower') && (@preg_match('/\pL/u', 'a') == 1));
-		$this->set('langTest', Localization::isAvailable() && (!ini_get('safe_mode')));
+		// no longer need built-in gettext
+		//$this->set('langTest', Localization::isAvailable() && (!ini_get('safe_mode')));
 		$diffExecTest = is_executable($this->installData['DIR_FILES_BIN_HTMLDIFF']);
 		$diffSystem = (!ini_get('safe_mode'));
 		if ($diffExecTest && $diffSystem) {

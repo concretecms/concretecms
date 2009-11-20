@@ -122,13 +122,13 @@ $(function() {
 </div>
 
 <h2><?=t('Testing Optional Items')?></h2>
+<? /*
 <div class="test <? if ($langTest) { ?>passed<? } else { ?>warning<? } ?>"><?=t('Multilingual Support')?>
 
 <a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
 <div class="ccm-install-info"><?=t('Multilingual support requires the gettext PHP extension and may not work with safe mode enabled.')?></div>
 
 </div>
-<? /*
 <div class="test <? if ($searchTest) { ?>passed<? } else { ?>warning<? } ?>"><?=t('Search Indexing Available')?>
 
 <a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>

@@ -189,7 +189,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}				
 			
 			$btHandle = $obj->getBlockTypeHandle();
-			Localization::setDomain($base);
 			
 			if (!isset($this->controller)) {
 				$this->controller = Loader::controller($obj);
@@ -272,7 +271,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$this->header = $header;
 			$this->footer = $footer;
 			
-			Localization::reset();
 			
 		}
 	}
