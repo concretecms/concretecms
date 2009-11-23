@@ -2,6 +2,9 @@
 <div id="ccm-profile-wrapper">
     <? Loader::element('profile/sidebar', array('profile'=> $profile)); ?>    
     <div id="ccm-profile-body">	
+    	<div id="ccm-profile-body-attributes">
+    	<div class="ccm-profile-body-item">
+    	
         <h1><?=$profile->getUserName()?></h1>
         <?
         $uaks = UserAttributeKey::getPublicProfileList();
@@ -11,7 +14,21 @@
                 <?=$profile->getAttribute($ua, 'display'); ?>
             </div>
         <? } ?>		
+        
+        </div>
+
+		</div>
+		
+		<? 
+			$a = new Area('Main'); 
+			$a->setAttribute('profile', $profile); 
+			$a->setBlockWrapperStart('<div class="ccm-profile-body-item">');
+			$a->setBlockWrapperEnd('</div>');
+			$a->display($c); 
+		?>
+		
     </div>
 	
 	<div class="ccm-spacer"></div>
+	
 </div>
