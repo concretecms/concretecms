@@ -202,14 +202,14 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		}
 		$i = 0;
 		foreach($optionText as $val) {
-			$val = $db->quote('%' . $val . '||%');
+			$val = $db->quote('%||' . $val . '||%');
 			$multiString .= 'REPLACE(' . $tbl . '.ak_' . $this->attributeKey->getAttributeKeyHandle() . ', "\n", "||") like ' . $val . ' ';
 			if (($i + 1) < count($optionText)) {
 				$multiString .= 'OR ';
 			}
 			$i++;
 		}
-		$list->filter(false, $multiString);
+		$list->filter(false, '(' . $multiString . ')');
 		return $list;
 	}
 	
