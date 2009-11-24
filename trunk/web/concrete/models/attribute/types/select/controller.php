@@ -193,6 +193,9 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		$optionText = array();
 		$db = Loader::db();
 		$tbl = $this->attributeKey->getIndexedSearchTable();
+		if (!is_array($options)) {
+			return $list;
+		}
 		foreach($options as $id) {
 			$opt = SelectAttributeTypeOption::getByID($id);
 			$optionText[] = $opt->getSelectAttributeOptionValue();
