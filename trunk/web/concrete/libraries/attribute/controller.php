@@ -104,6 +104,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		}
 		
+		public function duplicateKey() {
+		
+		}
+		
 		// return a string we can use to search by
 		public function searchKeywords($keywords, $list = false) {
 			$db = Loader::db();

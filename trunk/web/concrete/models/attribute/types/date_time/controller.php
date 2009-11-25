@@ -103,6 +103,12 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 		$db = Loader::db();
 		$db->Replace('atDateTime', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
 	}
+
+	public function duplicateKey($newAK) {
+		$this->load();
+		$db = Loader::db();
+		$db->Execute('insert into atDateTimeSettings (akID, akDateDisplayMode) values (?, ?)', array($newAK->getAttributeKeyID(), $this->akDateDisplayMode));	
+	}
 	
 	public function saveForm($data) {
 		$this->load();

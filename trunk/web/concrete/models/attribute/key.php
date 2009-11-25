@@ -212,6 +212,29 @@ class AttributeKey extends Object {
 		}
 	}
 	
+	/** 
+	 * Duplicates an attribute key 
+	 */
+	public function duplicate($args = array()) {
+		$ar = new ADODB_Active_Record('AttributeKeys');
+		$ar->Load('akID=?', array($this->akID));
+		
+		$ar2 = clone $ar;
+		$ar2->akID = null;
+		foreach($args as $key=>$value) {
+			$ar2->{$key} = $value;
+		}
+		$ar2->Insert();
+		$db = Loader::db();
+		$ak = new AttributeKey();
+		$ak->load($db->Insert_ID());
+		
+		// now we duplicate the specific category fields
+		$this->getController()->duplicateKey($ak);
+		
+		return $ak;
+	}
+	
 	public function inAttributeSet($as) {
 		if (is_object($as)) {
 			return $as->contains($this);
