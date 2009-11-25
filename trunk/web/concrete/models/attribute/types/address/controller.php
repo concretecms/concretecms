@@ -159,6 +159,17 @@ class AddressAttributeTypeController extends AttributeTypeController  {
 		return $e;
 	}
 
+	public function duplicateKey($newAK) {
+		$this->load();
+		$db = Loader::db();
+		$db->Execute('insert into atAddressSettings (akID, akHasCustomCountries, akDefaultCountry) values (?, ?, ?)', array($newAK->getAttributeKeyID(), $this->akHasCustomCountries, $this->akDefaultCountry));	
+		if ($this->akHasCustomCountries) {
+			foreach($this->akCustomCountries as $country) {
+				$db->Execute('insert into atAddressCustomCountries (akID, country) values (?, ?)', array($newAK->getAttributeKeyID(), $country));
+			}
+		}
+	}
+
 	public function saveKey($data) {
 		$e = Loader::helper('validation/error');
 		

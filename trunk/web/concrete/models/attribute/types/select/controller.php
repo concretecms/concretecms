@@ -45,7 +45,21 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		$this->set('akSelectAllowMultipleValues', $this->akSelectAllowMultipleValues);
 		$this->set('akSelectAllowOtherValues', $this->akSelectAllowOtherValues);			
 		$this->set('akSelectOptionDisplayOrder', $this->akSelectOptionDisplayOrder);			
+	}
 
+	public function duplicateKey($newAK) {
+		$this->load();
+		$db = Loader::db();
+		$db->Execute('insert into atSelectSettings (akID, akSelectAllowMultipleValues, akSelectOptionDisplayOrder, akSelectAllowOtherValues) values (?, ?, ?, ?)', array($newAK->getAttributeKeyID(), $this->akSelectAllowMultipleValues, $this->akSelectOptionDisplayOrder, $this->akSelectAllowOtherValues));	
+		$r = $db->Execute('select value, displayOrder, isEndUserAdded from atSelectOptions where akID = ?', $this->getAttributeKey()->getAttributeKeyID());
+		while ($row = $r->FetchRow()) {
+			$db->Execute('insert into atSelectOptions (akID, value, displayOrder, isEndUserAdded) values (?, ?, ?, ?)', array(
+				$newAK->getAttributeKeyID(),
+				$row['value'],
+				$row['displayOrder'],
+				$row['isEndUserAdded']
+			));
+		}
 	}
 	
 	private function getSelectValuesFromPost() {
