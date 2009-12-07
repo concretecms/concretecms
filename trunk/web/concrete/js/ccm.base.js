@@ -21,6 +21,11 @@ ccm_deactivateSite = function(onDone) {
 		$(document.body).append('<div id="ccm-overlay"></div>');
 	}
 	
+	$("embed,object").each(function() {
+		$(this).attr('ccm-style-old-visibility', $(this).css('visibility'));
+		$(this).css('visibility', 'hidden');
+	});
+	
 	if (ccm_animEffects) {				
 		$("#ccm-overlay").fadeIn(60, function() {
 			ccm_siteActivated = false;
@@ -44,6 +49,11 @@ ccm_activateSite = function() {
 	} else {
 		$("#ccm-overlay").hide();
 	}
+
+	$("embed,object").each(function() {
+		$(this).css('visibility', $(this).attr('ccm-style-old-visibility'));
+	});
+
 	ccm_siteActivated = true;
 	ccm_topPaneDeactivated = false;
 }

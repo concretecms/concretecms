@@ -583,9 +583,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$this->controller->setupAndRun();
 				}
 				
-				extract($this->controller->getSets());
-				extract($this->controller->getHelperObjects());
-				
 				// Determine which inner item to load, load it, and stick it in $innerContent
 				$content = false;
 								
@@ -718,6 +715,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	
 				// finally, we include the theme (which was set by setTheme and will automatically include innerContent)
 				// disconnect from our db and exit
+
+				$this->controller->on_before_render();
+				extract($this->controller->getSets());
+				extract($this->controller->getHelperObjects());
+
 				if ($content != false) {
 					include($content);
 				}
