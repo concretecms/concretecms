@@ -110,15 +110,13 @@ class Controller {
 		if ($method) {
 			$this->runTask($method, $data);
 		}
-		
-		$this->on_before_render();
 	}
 	
-	protected function on_start() {
+	public function on_start() {
 	
 	}
 	
-	protected function on_before_render() {
+	public function on_before_render() {
 	
 	}
 	

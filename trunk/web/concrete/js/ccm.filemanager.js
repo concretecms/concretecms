@@ -102,6 +102,7 @@ ccm_alLaunchSelectorFileManager = function(selector) {
 	ccm_launchFileManager(filterStr);
 }
 
+// public method - do not remove or rename
 ccm_launchFileManager = function(filters) {
 	$.fn.dialog.open({
 		width: '90%',
