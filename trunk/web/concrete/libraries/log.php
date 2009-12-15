@@ -91,8 +91,8 @@ class Log {
 		}
 	}
 
-	public static function addEntry($message) {
-		$l = new Log();
+	public static function addEntry($message, $namespace = null) {
+		$l = new Log($namespace);
 		$l->write($message);
 	}
 	

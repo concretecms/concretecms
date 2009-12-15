@@ -197,8 +197,8 @@ class FormHelper {
 		return $str;
 	}
 	
-	// checks the request based on the key passed. Does things like turn the key into arrays if the key has text versions of [ and ] in it, etc..
-	public function getRequestValue($key) {
+	protected function processRequestValue($key, $type = "post") {
+		$arr = ($type == 'post') ? $_POST : $_GET;
 		if (strpos($key, '[') !== false) {
 			// we've got something like 'akID[34]['value'] here, which we need to get data from
 			if (substr($key, -2) == '[]') {
@@ -206,22 +206,44 @@ class FormHelper {
 				if (substr($field, -1) != ']') {
 					$field .= ']';
 				}
-				eval('if (is_array($_REQUEST[' . $field . ')) { $v2 = $_REQUEST[' . $field . ';}');
+				eval('if (is_array($arr[' . $field . ')) { $v2 = $arr[' . $field . ';}');
 			} else {			
-				eval('if (isset($_REQUEST[' . preg_replace('/\[/', '][', $key, 1) . ')) { $v2 = $_REQUEST[' . preg_replace('/\[/', '][', $key, 1) . ';}');
+				eval('if (isset($arr[' . preg_replace('/\[/', '][', $key, 1) . ')) { $v2 = $arr[' . preg_replace('/\[/', '][', $key, 1) . ';}');
 			}
 
 			if (isset($v2)) {
-				return $v2;
+				// if the type if GET, we make sure to strip it of any nasties
+				// POST we will let stay unfiltered
+				if ($type == 'post') { 
+					return $v2;
+				} else {
+					return preg_replace('/<|>|;|\//','', $v2);
+				}
 			}
 		}			
-		if (isset($_REQUEST[$key])) {
-			return $_REQUEST[$key];
+		if (isset($arr[$key])) {
+			// if the type if GET, we make sure to strip it of any nasties
+			// POST we will let stay unfiltered
+			if ($type == 'post') { 
+				return $arr[$key];
+			} else {
+				return preg_replace('/<|>|;|\//','', $arr[$key]);
+			}
 		}
 		
 		return false;
 	}
 	
+	// checks the request based on the key passed. Does things like turn the key into arrays if the key has text versions of [ and ] in it, etc..
+	public function getRequestValue($key) {
+		$val = $this->processRequestValue($key, 'post');
+		if ($val !== false) {
+			return $val;
+		} else {
+			return $this->processRequestValue($key, 'get');
+		}
+	}
+
 	/**
 	 * Renders a text input field. Second argument is either the value of the field (and if it's blank we check post) or a misc. array of fields
 	 * @param string $key
@@ -333,37 +355,45 @@ class FormHelper {
 	 */
 	public function password($key) {
 		$a = func_get_args();
+		$val = $this->getRequestValue($key);
+		$class = "ccm-input-password";
+
 		// index 0 is always the key
 		// need to figure out a good way to get a unique ID
-		$str = '<input class="ccm-input-password" id="' . $key . '" type="password" name="' . $key . '" ';
+		$str = '<input id="' . $key . '" type="password" name="' . $key . '" ';
 		
 		// if there are two more values, then we treat index 1 as the value in the
 		// value field, and index 2 as an assoc. array of other stuff to add
 		// to the tag. If there's only one, then it's the array
 		
 		if (count($a) == 3) {
-			$str .= 'value="' . $a[1] . '" ';
+			$val = ($val !== false) ? $val : $a[1];
+			$str .= 'value="' . $val . '" ';
 			$miscFields = $a[2];
 			foreach($a[2] as $key => $value) {
 				$str .= $key . '="' . $value . '" ';
 			}
 		} else {
 			if (is_array($a[1])) {
-				$str .= 'value="' . $_REQUEST[$a[0]] . '" ';
+				$str .= 'value="' . $val . '" ';
 				$miscFields = $a[1];
 			} else {
 				// we ignore this second value if a post is set with this guy in it
-				$val = (isset($_REQUEST[$a[0]])) ? $_REQUEST[$a[0]] : $a[1];
+				$val = ($val !== false) ? $val : $a[1];
 				$str .= 'value="' . $val . '" ';
 			}
 		}
 		
 		if (is_array($miscFields)) {
 			foreach($miscFields as $key => $value) {
-				$str .= $key . '="' . $value . '" ';
+				if ($key == 'class') {
+					$class .= ' ' . $value;
+				} else {
+					$str .= $key . '="' . $value . '" ';
+				}
 			}
 		}
-		$str .= ' />';
+		$str .= 'class="'.$class.'" />';
 		
 		return $str;
 		
