@@ -76,7 +76,7 @@
 				$pl->setItemsPerPage($num);
 			}
 
-			$c = $this->getCollectionObject();
+			$c = Page::getCurrentPage();
 			if (is_object($c)) {
 				$this->cID = $c->getCollectionID();
 			}
@@ -104,7 +104,7 @@
 			}
 			
 			if ( intval($row['cParentID']) != 0) {
-				$pl->filterByParentID( intval($row['cParentID']) );
+				$pl->filterByParentID($cParentID);
 			}
 
 			if ($num > 0) {
