@@ -142,9 +142,8 @@
 	<div class="ccm-button">
 	<?=$form->submit('submit', t('Sign In') . ' &gt;')?>
 	</div>
-	
-	<?=$form->hidden('rcID', $rcID); ?>
-
+	<? $rcID = isset($_REQUEST['rcID']) ? preg_replace('/<|>/', '', $_REQUEST['rcID']) : $rcID; ?>
+	<input type="hidden" name="rcID" value="<?=$rcID?>" />
 </form>
 </div>
 
@@ -163,7 +162,7 @@
 <form method="post" action="<?=$this->url('/login', 'forgot_password')?>">
 	
 	<label for="uEmail"><?=t('Email Address')?></label><br/>
-	<?=$form->hidden('rcID', $rcID); ?>
+	<input type="hidden" name="rcID" value="<?=$rcID?>" />
 	<input type="text" name="uEmail" value="" class="ccm-input-text" >
 
 	<div class="ccm-button">
