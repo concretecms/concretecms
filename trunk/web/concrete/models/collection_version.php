@@ -239,6 +239,7 @@
 			if (($oldHandle != $newHandle) && (!$c->isGeneratedCollection())) {
 				$c->rescanCollectionPath();
 			}
+			Events::fire('on_page_version_approve', $c);
 			$c->reindex();
 			$this->refreshCache();
 		}
