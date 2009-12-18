@@ -404,7 +404,7 @@
 				$dh = Loader::helper('date');
 				return $dh->getLocalDateTime($this->cgStartDate);
 			} else {
-				return $this->cgEndDate;
+				return $this->cgStartDate;
 			}
 		}
 
