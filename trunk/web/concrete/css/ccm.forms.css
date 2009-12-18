@@ -13,7 +13,7 @@ div.ccm-pane-controls strong, div.ccm-dialog-window strong {color: #666; font-we
 div.ccm-pane-controls h2, div.ccm-dialog-window h2 {color: #666; font-weight: bold;  font-size: 14px; line-height: 14px;  margin-bottom: 8px; margin-top: 4px}
 div.ccm-pane-controls h3, div.ccm-dialog-window h3 {color: #666; font-weight: bold; font-size: 12px; line-height: 12px;  margin-bottom: 6px; margin-top: 4px}
 div.ccm-pane-controls div.ccm-field {clear: both; padding-bottom: 8px; border-bottom: 1px solid #ddd; margin-bottom: 8px}
-div.ccm-pane-controls div.ccm-field-meta {clear: both; margin: 0px auto 8px auto; width: 400px; padding-bottom: 8px; border-bottom: 1px solid #ddd}
+div.ccm-pane-controls div.ccm-field-meta {clear: both; margin: 0px auto 8px auto; width: auto; padding-bottom: 8px; border-bottom: 1px solid #ddd}
 div.ccm-field-meta a.ccm-meta-close {float: right; font-weight: bold; color: #bababa; font-size: 10px}
 span.ccm-meta-path {display:  block; margin-bottom: 8px}
 div.ccm-field a.ccm-meta-path-add, div.ccm-field a.ccm-meta-path-del {font-weight: bold; color: #bababa; font-size: 10px}
