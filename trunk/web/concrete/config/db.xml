@@ -1808,6 +1808,14 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+  </table> 
+  <table name="atTextareaSettings">
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="akTextareaDisplayMode" type="C" size="255"/>
   </table>
    <table name="atSelectOptions">
     <field name="ID" type="I" size="10">
