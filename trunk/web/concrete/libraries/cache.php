@@ -86,6 +86,18 @@ class Cache {
 		}
 			
 		$cache = Cache::getLibrary();
+		
+		// if mustBeNewerThan is set, we check the cache mtime
+		// if mustBeNewerThan is newer than that time, we relinquish
+		if ($mustBeNewerThan != false) {
+			$metadata = $cache->getMetadatas(Cache::key($type, $id));
+			if ($metadata['mtime'] < $mustBeNewerThan) {
+				// clear cache record and return false
+				Cache::getLibrary()->remove(Cache::key($type, $id));
+				return false;
+			}
+		}
+		
 		return $cache->load(Cache::key($type, $id));
 	}
 	
