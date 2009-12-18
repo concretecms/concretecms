@@ -56,8 +56,32 @@ class PageList extends DatabaseItemList {
 			$uID = $u->getUserID();
 		}
 		
+		$date = Loader::helper('date')->getLocalDateTime();
+		
 		$this->addToQuery('left join PagePermissions pp1 on (pp1.cID = p1.cInheritPermissionsFromCID) left join PagePermissions pp2 on (pp2.cID = p2.cInheritPermissionsFromCID)');
-		$this->filter(false, "((pp1.cgPermissions like 'r%' and (pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID})) or (pp2.cgPermissions like 'r%' and (pp2.gID in (" . implode(',', $groupIDs) .  ") or pp2.uID = {$uID})) or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL ))");
+		if (PERMISSIONS_MODEL != 'simple') {
+			// support timed release
+
+			$this->filter(false, "(
+				(pp1.cgPermissions like 'r%' and (
+					(pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID})
+					and 
+						(pp1.cgStartDate is null or pp1.cgStartDate <= '{$date}')
+					and 
+						(pp1.cgEndDate is null or pp1.cgEndDate >= '{$date}')
+				))			
+				or (pp2.cgPermissions like 'r%' and (
+					(pp2.gID in (" . implode(',', $groupIDs) . ") or pp2.uID = {$uID})
+					and 
+						(pp2.cgStartDate is null or pp2.cgStartDate <= '{$date}')
+					and 
+						(pp2.cgEndDate is null or pp2.cgEndDate >= '{$date}')
+				))
+				or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL )
+			)");
+		} else {
+			$this->filter(false, "((pp1.cgPermissions like 'r%' and (pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID})) or (pp2.cgPermissions like 'r%' and (pp2.gID in (" . implode(',', $groupIDs) .  ") or pp2.uID = {$uID})) or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL ))");	
+		}
 	}
 
 	/** 
