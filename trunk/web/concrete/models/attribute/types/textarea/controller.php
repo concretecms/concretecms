@@ -21,13 +21,10 @@ class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 		// switch display type here
 		switch($this->akTextareaDisplayMode) {
 			case "rich_text":
-				//print '<div style="width:580px">';
 				Loader::element('editor_init');
 				Loader::element('editor_config');
 				Loader::element('editor_controls', array('mode'=>'full'));
-				//print $form->textarea('prDescription', $prDescription, array('style' => 'width: 100%; height: 150px', 'class' => 'ccm-advanced-editor'));
 				print Loader::helper('form')->textarea($this->field('value'), $value, array('class' => 'ccm-advanced-editor'));
-				//print "</div>";
 			break;
 			case "text":
 			default:
@@ -63,6 +60,9 @@ class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 		$db->Execute('delete from atTextareaSettings where akID = ?', array($this->attributeKey->getAttributeKeyID()));
 	}
 	
+	public function type_form() {
+		$this->load();
+	}
 	
 	protected function load() {
 		$ak = $this->getAttributeKey();
@@ -74,5 +74,14 @@ class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 		$row = $db->GetRow('select akTextareaDisplayMode from atTextareaSettings where akID = ?', $ak->getAttributeKeyID());
 		$this->akTextareaDisplayMode = $row['akTextareaDisplayMode'];
 		$this->set('akTextareaDisplayMode', $this->akTextareaDisplayMode);
+	}
+	
+	public function duplicateKey($newAK) {
+		$this->load();
+		$db = Loader::db();
+		$db->Replace('atTextareaSettings', array(
+			'akID' => $newAK->getAttributeKeyID(), 
+			'akTextareaDisplayMode' => $this->akDateDisplayMode
+		), array('akID'), true);
 	}
 }
