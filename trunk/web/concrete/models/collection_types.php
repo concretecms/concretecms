@@ -29,6 +29,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		var $addCTGArray = array();
 		var $akIDArray = array();
 		
+		/**
+		 * @description returns a collection type object for the given CollectionType handle
+		 * @param string $ctHandle
+		 * @return CollectionType
+		*/
 		public static function getByHandle($ctHandle) {
 			$db = Loader::db();
 			$q = "SELECT ctID, ctHandle, ctName, ctIcon, pkgID from PageTypes where ctHandle = ?";
