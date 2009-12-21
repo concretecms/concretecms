@@ -433,8 +433,10 @@ class ConcreteUpgradeVersion532Helper {
 			$r2 = $db->Execute('select * from _UserAttributeValues where ukID = ? and isImported = 0', $row['ukID']);
 			while ($row2 = $r2->FetchRow()) {
 				$ui = UserInfo::getByID($row2['uID']);
-				$value = $row2['value'];
-				$ui->setAttribute($ak, $value);
+				if(is_object($ui)) {
+					$value = $row2['value'];
+					$ui->setAttribute($ak, $value);
+				}
 				unset($ui);
 				
 				$db->Execute('update _UserAttributeValues set isImported = 1 where ukID = ? and uID = ?', array($row['ukID'], $row2['uID']));
