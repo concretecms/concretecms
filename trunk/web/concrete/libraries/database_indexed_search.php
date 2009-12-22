@@ -37,18 +37,18 @@ class IndexedPageList extends DatabaseItemList {
 		return $this->filterByKeywords($kw);
 	}
 	
-	public function filterByKeywords($kw) {
+	public function filterByKeywords($keywords) {
 		$db = Loader::db();
-		$kw = $db->quote($kw);
+		$kw = $db->quote($keywords);
 		$this->addToQuery("select distinct PageSearchIndex.cID, PageSearchIndex.content, PageSearchIndex.cName, PageSearchIndex.cDescription, PageSearchIndex.cPath, PageSearchIndex.cDatePublic, match(cName, cDescription, content) against ({$kw} in boolean mode) as score from PageSearchIndex inner join Pages on PageSearchIndex.cID = Pages.cID inner join CollectionSearchIndexAttributes on PageSearchIndex.cID = CollectionSearchIndexAttributes.cID");
 		Loader::model('attribute/categories/collection');
 		
 		$keys = CollectionAttributeKey::getSearchableIndexedList();
 		$attribsStr = '';
 		foreach ($keys as $ak) {
-			$attribsStr=' OR ak_' . $ak->getAttributeKeyHandle() . ' like '.$kw.' ';	
+			$cnt = $ak->getController();			
+			$attribsStr.=' OR ' . $cnt->searchKeywords($keywords);
 		}
-
 		$this->filter(false, "(match(cName, cDescription, content) against ({$kw} in boolean mode) {$attribsStr})");
 
 	}
