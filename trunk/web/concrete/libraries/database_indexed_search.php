@@ -10,7 +10,6 @@ Loader::model('page_list');
 
 class IndexedSearchResult {
 
-
 	public function __construct($id, $name, $description, $score, $cPath, $content) {
 		$this->cID = $id;
 		$this->cName = $name;

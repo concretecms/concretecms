@@ -17,6 +17,7 @@ class PageList extends DatabaseItemList {
 	private $filterByCParentID = 0;
 	private $ignorePermissions = false;
 	protected $attributeClass = 'CollectionAttributeKey';
+	protected $autoSortColumns = array('cvName', 'cvDatePublic', 'cDateAdded');
 	
 	/* magic method for filtering by page attributes. */
 	
@@ -198,7 +199,7 @@ class PageList extends DatabaseItemList {
 	}
 	
 	protected function setBaseQuery($additionalFields = '') {
-		$this->setQuery('select distinct p1.cID, if(p2.cID is null, pt1.ctHandle, pt2.ctHandle) as ctHandle ' . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PageTypes pt1 on (pt1.ctID = p1.ctID) left join PageTypes pt2 on (pt2.ctID = p2.ctID) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID))');
+		$this->setQuery('select distinct p1.cID, if(p2.cID is null, pt1.ctHandle, pt2.ctHandle) as ctHandle ' . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PageTypes pt1 on (pt1.ctID = p1.ctID) left join PageTypes pt2 on (pt2.ctID = p2.ctID) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
 	}
 	
 	protected function setupSystemPagesToExclude() {
