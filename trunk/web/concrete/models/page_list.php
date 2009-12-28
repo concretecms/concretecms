@@ -15,6 +15,7 @@ class PageList extends DatabaseItemList {
 	private $displayOnlyPermittedPages = false;
 	private $systemPagesToExclude = array('login.php', 'register.php', 'download_file.php', 'profile/%', 'dashboard/%');
 	private $filterByCParentID = 0;
+	private $filterByCT = false;
 	private $ignorePermissions = false;
 	protected $attributeClass = 'CollectionAttributeKey';
 	protected $autoSortColumns = array('cvName', 'cvDatePublic', 'cDateAdded');
@@ -141,6 +142,7 @@ class PageList extends DatabaseItemList {
 	 * @param mixed $ctID
 	 */
 	public function filterByCollectionTypeID($ctID) {
+		$this->filterByCT = true;
 		$this->filter(false, "(p1.ctID = $ctID or p2.ctID = $ctID)");
 	}
 
@@ -167,6 +169,7 @@ class PageList extends DatabaseItemList {
 	 */
 	public function filterByCollectionTypeHandle($ctHandle) {
 		$db = Loader::db();
+		$this->filterByCT = true;
 		if (is_array($ctHandle)) {
 			$cth = '(';
 			for ($i = 0; $i < count($ctHandle); $i++) {
@@ -203,7 +206,7 @@ class PageList extends DatabaseItemList {
 	}
 	
 	protected function setupSystemPagesToExclude() {
-		if ($this->filterByCParentID > 1) {
+		if ($this->filterByCParentID > 1 || $this->filterByCT == true) {
 			return false;
 		}
 		$cIDs = Cache::get('page_list_exclude_ids', false);
