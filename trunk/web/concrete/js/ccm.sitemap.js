@@ -760,7 +760,7 @@ function addResortDroppable(nodeID){
 
 $(function() {
 	$(document).ajaxError(function(event, request, settings) {
-		alert(ccmi18n_sitemap.loadError + request.responseText);
+		ccmAlert.notice(ccmi18n_sitemap.loadErrorTitle, request.responseText);
 	});
 	
 	$.getJSON(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php", {'mode' : CCM_SITEMAP_MODE}, function(resp) {  
