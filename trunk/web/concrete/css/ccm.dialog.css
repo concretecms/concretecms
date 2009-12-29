@@ -111,16 +111,22 @@
 
 .ccm-dialog-window h1 {background: none}
 
-#ccm-dialog-loader {
+#ccm-dialog-loader-wrapper {
 	position: fixed;
 	display:none;
-	height:32px;
-	width:32px;
+	height:60px;
+	width:60px;
 	z-index:300;
 	top: 50%;
 	left: 50%;
-	margin: 16px 0 0 -16px;
+	margin: -16px 0 0 -16px;
+	border: 3px solid #afafaf;
+	background-color: #fefefe;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
 }
+
+#ccm-dialog-loader {margin-top: 14px; margin-left: 14px}
 
 
 #TB_HideSelect{

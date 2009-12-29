@@ -14,8 +14,10 @@ var ccm_dialogOpen=0;
 
 jQuery.fn.dialog._create = function(opts) {
 	jQuery.fn.dialog.overlay(opts);
+	jQuery.fn.dialog.showLoader(opts);
+	
 	jQuery.fn.dialog.position(opts);
-	jQuery.fn.dialog.loadShell(opts);	
+	
 	if (jQuery.fn.dialog.totalDialogs > 0) {
 		jQuery.fn.dialog.deactivate(jQuery.fn.dialog.totalDialogs-1);
 	}
@@ -25,7 +27,6 @@ jQuery.fn.dialog._create = function(opts) {
 	}
 	*/
 	
-	jQuery.fn.dialog.showLoader(opts);
 	jQuery.fn.dialog.load(opts);
 	jQuery.fn.dialog.dialogs.push(opts);
 	jQuery.fn.dialog.totalDialogs++;
@@ -153,40 +154,50 @@ jQuery.fn.dialog.load = function(fnd) {
 		if (fnd.href.indexOf('?') > -1) {
 			qsi = '&';
 		}
-		var url = encodeURI(fnd.href);
+		var durl = encodeURI(fnd.href) + qsi + 'random=' + (new Date().getTime());
 		
-		$("#ccm-dialog-content" + fnd.n).load(url += qsi + "random=" + (new Date().getTime()),function(){//to do a post change this load method
-			jQuery.fn.dialog.position(fnd);
-			jQuery.fn.dialog.hideLoader();
-			$("#ccm-dialog-content" + fnd.n + " .ccm-dialog-close").click(function() {
-				jQuery.fn.dialog.close(fnd);
-			});
-			$("#ccm-dialog-content" + fnd.n + " .dialog-launch").dialog();
-
-			if (typeof fnd.onOpen != "undefined") {
-				if ((typeof fnd.onOpen) == 'function') {
-					fnd.onOpen();
-				} else {
-					eval(fnd.onOpen);
+		$.ajax({
+			type: 'GET',
+			url: durl,
+			success: function(resp) {
+				jQuery.fn.dialog.loadShell(fnd);
+				jQuery.fn.dialog.position(fnd);
+				jQuery.fn.dialog.hideLoader();
+				$("#ccm-dialog-content" + fnd.n).html(resp);
+				$("#ccm-dialog-content" + fnd.n + " .ccm-dialog-close").click(function() {
+					jQuery.fn.dialog.close(fnd);
+				});
+				$("#ccm-dialog-content" + fnd.n + " .dialog-launch").dialog();
+	
+				if (typeof fnd.onOpen != "undefined") {
+					if ((typeof fnd.onOpen) == 'function') {
+						fnd.onOpen();
+					} else {
+						eval(fnd.onOpen);
+					}
 				}
+				
 			}
 		});
 	}
+	
 	if (typeof(fnd.onLoad) == 'function') {
 		fnd.onLoad();
 	}
 }
 
 jQuery.fn.dialog.hideLoader = function() {
-	$("#ccm-dialog-loader").hide();
+	$("#ccm-dialog-loader-wrapper").hide();
 }
 
 jQuery.fn.dialog.showLoader = function(fnd) {
 	if (typeof(imgLoader)=='undefined' || !imgLoader || !imgLoader.src) return false; 
 	if ($('#ccm-dialog-loader').length < 1) {
-		$("body").append("<img id='ccm-dialog-loader' src='"+imgLoader.src+"' />");//add loader to the page
+		$("body").append("<div id='ccm-dialog-loader-wrapper'><img id='ccm-dialog-loader' src='"+imgLoader.src+"' /></div>");//add loader to the page
 	}
-	$('#ccm-dialog-loader').show();//show loader
+	$('#ccm-dialog-loader-wrapper').css('opacity', 1);
+	$('#ccm-dialog-loader-wrapper').show();//show loader
+	$('#ccm-dialog-loader-wrapper').fadeTo('slow', 0.2);
 }
 
 jQuery.fn.dialog.deactivate = function(w) {
