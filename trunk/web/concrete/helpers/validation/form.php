@@ -77,7 +77,7 @@
 		 */
 		public function addInteger($field, $errorMsg = null, $emptyIsOk = true) {
 			$const = ($emptyIsOk) ? ValidationFormHelper::VALID_INTEGER : ValidationFormHelper::VALID_INTEGER_REQUIRED;
-			$this->addRequired($field, $errorMsg, ValidationFormHelper::VALID_INTEGER);
+			$this->addRequired($field, $errorMsg, $const);
 		}
 
 		/** 
