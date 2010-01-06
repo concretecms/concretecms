@@ -22,7 +22,10 @@ if (!$bp->canWrite()) {
 	die(_("Access Denied."));
 }
 
-include(DIR_FILES_ELEMENTS_CORE . '/dialog_header.php');
+if ($_REQUEST['btask'] != 'view' && $_REQUEST['btask'] != 'view_edit_mode') { 
+	include(DIR_FILES_ELEMENTS_CORE . '/dialog_header.php');
+}
+
 $bv = new BlockView();
 			
 if($isGlobal){
@@ -43,6 +46,30 @@ if (is_object($b)) {
 		case 'template': 		
 			if ($bp->canWrite()) {
 				$bv->renderElement('block_custom_template', array('b' => $b, 'rcID'=>$rcID));
+			}
+			break;
+		case 'view':
+			if ($bp->canRead()) {
+				$bv->render($b, 'view', array(
+					'c' => $c,
+					'a' => $a
+				));
+			}
+			break;
+		case 'view_edit_mode':
+			if ($bp->canWrite()) {
+				$bv->renderElement('block_controls', array(
+					'a' => $a,
+					'b' => $b,
+					'p' => $bp
+				));
+				$bv->renderElement('block_header', array(
+					'a' => $a,
+					'b' => $b,
+					'p' => $bp
+				));
+				$bv->render($b);
+				$bv->renderElement('block_footer');
 			}
 			break;
 		case 'groups':
@@ -67,4 +94,6 @@ if (is_object($b)) {
 	}
 }
 
-include(DIR_FILES_ELEMENTS_CORE . '/dialog_footer.php');
+if ($_REQUEST['btask'] != 'view' && $_REQUEST['btask'] != 'view_edit_mode') { 
+	include(DIR_FILES_ELEMENTS_CORE . '/dialog_footer.php');
+}

@@ -18,7 +18,7 @@
 	
 	<!-- we do it this way so we still trip javascript validation. stupid javascript. //-->
 	
-	<input type="submit" name="submit" value="submit" style="display: none" id="ccm-form-submit-button" />
+	<input type="submit" name="ccm-add-block-submit" value="submit" style="display: none" id="ccm-form-submit-button" />
 	
 	</div>
 

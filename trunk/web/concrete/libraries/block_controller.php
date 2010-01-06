@@ -99,6 +99,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$this->renderOverride = $view;
 		}
 		
+		public function validate($args) {
+			return true;
+		}
+		
 		/**
 		 * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
 		 * @param array $args

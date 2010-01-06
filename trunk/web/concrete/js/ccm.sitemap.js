@@ -102,6 +102,8 @@ deletePage = function(cID) {
 		$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_delete_request.php', {'cID': cID, 'ccm_token': CCM_SECURITY_TOKEN}, function(resp) {
 			ccm_parseJSON(resp, function() {
 				deleteBranchFade(cID);
+	 			ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
+
 			});
 		});
 	}

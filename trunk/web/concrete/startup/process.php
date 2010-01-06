@@ -183,9 +183,17 @@
 					$b->refreshCacheAll();
 					
 					$redirectCID = (intval($_REQUEST['rcID'])) ? intval($_REQUEST['rcID']) : intval($_REQUEST['cID']);
+					$obj = new stdClass;
+					$obj->bID = $b->getBlockID();
+					$obj->aID = $a->getAreaID();
+					$obj->arHandle= $a->getAreaHandle();
+					$obj->error = false;
 					
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $redirectCID . '&mode=edit' . $step);
+					print Loader::helper('json')->encode($obj);
 					exit;
+					
+					//header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $redirectCID . '&mode=edit' . $step);
+					//exit;
 				}
 				break;
 			case 'passthru':
@@ -381,32 +389,53 @@
 			
 			$b = Block::getByID($_REQUEST['bID'], $c, $a);
 			$p = new Permissions($b);
+			
 			if ($p->canWrite()) {
-				$bt = BlockType::getByHandle($b->getBlockTypeHandle());
-				if (!$bt->includeAll()) {
-					// we make sure to create a new version, if necessary				
-					$nvc = $c->getVersionToModify();
-				} else {
-					$nvc = $c; // keep the same one
-				}
-				$ob = $b;
-				// replace the block with the version of the block in the later version (if applicable)
-				$b = Block::getByID($_REQUEST['bID'], $nvc, $a);
-				
-				
-				if ($b->isAlias()) {
 
-					// then this means that the block we're updating is an alias. If you update an alias, you're actually going
-					// to duplicate the original block, and update the newly created block. If you update an original, your changes
-					// propagate to the aliases
-					$nb = $ob->duplicate($nvc);
-					$b->deleteBlock();
-					$b = &$nb;
+				$bi = $b->getInstance();
+				$e = $bi->validate($_POST);
+				$obj = new stdClass;
+				$obj->aID = $a->getAreaID();
+				$obj->arHandle = $a->getAreaHandle();
+				$obj->cID = $c->getCollectionID();
+			
+				if ((!is_object($e)) || (($e instanceof ValidationErrorHelper) && (!$e->has()))) {
+					$bt = BlockType::getByHandle($b->getBlockTypeHandle());
+					if (!$bt->includeAll()) {
+						// we make sure to create a new version, if necessary				
+						$nvc = $c->getVersionToModify();
+					} else {
+						$nvc = $c; // keep the same one
+					}
+					$ob = $b;
+					// replace the block with the version of the block in the later version (if applicable)
+					$b = Block::getByID($_REQUEST['bID'], $nvc, $a);
 					
+					
+					if ($b->isAlias()) {
+	
+						// then this means that the block we're updating is an alias. If you update an alias, you're actually going
+						// to duplicate the original block, and update the newly created block. If you update an original, your changes
+						// propagate to the aliases
+						$nb = $ob->duplicate($nvc);
+						$b->deleteBlock();
+						$b = &$nb;
+						
+					}
+					
+					// we can update the block that we're submitting
+					$b->update($_POST);
+					$obj->error = false;
+					$obj->bID = $b->getBlockID();
+				} else {
+					$obj->error = true;
+					$obj->response = $e->getList();
 				}
 				
-				// we can update the block that we're submitting
-				$b->update($_POST);
+				print Loader::helper('json')->encode($obj);
+				exit;
+				
+				/*
 					
 				$redirectCID = (intval($_REQUEST['rcID'])) ? intval($_REQUEST['rcID']) : intval($_REQUEST['cID']);
 					
@@ -414,6 +443,7 @@
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $redirectCID . $edit . $step);
 					exit;
 				}
+				*/
 			}
 						
 		} else if ($_REQUEST['add'] || $_REQUEST['_add']) {
@@ -451,8 +481,9 @@
 						}
 					} else if (isset($_REQUEST['bID'])) {
 						$b = Block::getByID($_REQUEST['bID']); 
-						if($_REQUEST['globalBlock'])
+						if($_REQUEST['globalBlock']) {
 							$b->setBlockAreaObject($a);
+						}
 						$bt = BlockType::getByHandle($b->getBlockTypeHandle());						
 						if ($ap->canAddBlock($bt)) {
 							if (!$bt->includeAll()) {
@@ -463,33 +494,52 @@
 							}
 						}					
 					}
-					if ($_REQUEST['isAjax']) {
-						exit;
-					}
-					
-					if (!$_SESSION['disableRedirect']) {
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_REQUEST['cID'] . $edit . $step);
-						exit;				
-					}
+
+					$obj = new stdClass;
+					$obj->aID = $a->getAreaID();
+					$obj->arHandle = $a->getAreaHandle();
+					$obj->cID = $c->getCollectionID();
+					$obj->bID = $b->getBlockID();
+					$obj->error = false;
+					print Loader::helper('json')->encode($obj);
+					exit;
 				} else { 
 
 					$bt = BlockType::getByID($_REQUEST['btID']);			
 					if ($ap->canAddBlock($bt)) {
 						$data = $_POST;
 						$data['uID'] = $u->getUserID();
-						if (!$bt->includeAll()) {
-							$nvc = $c->getVersionToModify();
-							$nb = $nvc->addBlock($bt, $a, $data);
+
+						$class = $bt->getBlockTypeClass();
+						$bi = new $class($bt);
+						$e = $bi->validate($data);
+						$obj = new stdClass;
+						$obj->aID = $a->getAreaID();
+						$obj->arHandle = $a->getAreaHandle();
+						$obj->cID = $c->getCollectionID();
+					
+						if ((!is_object($e)) || (($e instanceof ValidationErrorHelper) && (!$e->has()))) {
+
+							if (!$bt->includeAll()) {
+								$nvc = $c->getVersionToModify();
+								$nb = $nvc->addBlock($bt, $a, $data);
+							} else {
+								// if we apply to all, then we don't worry about a new version of the page
+								$nb = $c->addBlock($bt, $a, $data);
+							}
+
+							$obj->error = false;
+							$obj->bID = $nb->getBlockID();
+							
 						} else {
-							// if we apply to all, then we don't worry about a new version of the page
-							$nb = $c->addBlock($bt, $a, $data);
+							
+							$obj->error = true;
+							$obj->response = $e->getList();
+						
 						}
 						
-					
-						if (!$_SESSION['disableRedirect']) {
-							header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_REQUEST['cID'] . $edit . $step);
-							exit;
-						}
+						print Loader::helper('json')->encode($obj);
+						exit;
 					}
 				}
 			}

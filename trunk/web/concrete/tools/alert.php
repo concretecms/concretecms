@@ -7,5 +7,5 @@ Loader::library('view');
 <div id="ccm-popup-alert">
 	<div id="ccm-popup-alert-message"></div>
 	<hr />
-	<a href="javascript:void(0)" class="ccm-button-right ccm-dialog-close"><span><?=t('Okay')?></span></a>
+	<a href="javascript:void(0)" class="ccm-button-right ccm-dialog-close"><span><?=t('Close')?></span></a>
 </div>

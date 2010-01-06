@@ -26,6 +26,13 @@ class IndexedSearchResult {
 	public function getCollectionPath() {return $this->cPath;}
 	public function getCpath() {return $this->cPath;}
 	public function getBodyContent() {return $this->content;}
+	public function getDate($mask = '') {
+		if ($mask == '') {
+			$mask = t('Y-m-d H:i:s');
+		}
+		return date($mask, strtotime($this->cDate));
+	}
+	public function setDate($date) { $this->cDate = $date;}
 }
 
 class IndexedPageList extends DatabaseItemList {
