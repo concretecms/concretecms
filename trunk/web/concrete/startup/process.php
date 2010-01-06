@@ -130,9 +130,13 @@
 							$b->updateBlockGroups();
 						}
 						
-						$redirectCID = (intval($_REQUEST['rcID'])) ? intval($_REQUEST['rcID']) : intval($_REQUEST['cID']);
-					
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $redirectCID . '&mode=edit' . $step);
+						$obj = new stdClass;
+						$obj->bID = $b->getBlockID();
+						$obj->aID = $a->getAreaID();
+						$obj->arHandle= $a->getAreaHandle();
+						$obj->error = false;
+						
+						print Loader::helper('json')->encode($obj);
 						exit;
 					}
 				}
@@ -163,7 +167,15 @@
 								
 							}
 						}
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
+
+
+						$obj = new stdClass;
+						$obj->bID = $b->getBlockID();
+						$obj->aID = $a->getAreaID();
+						$obj->arHandle= $a->getAreaHandle();
+						$obj->error = false;
+						
+						print Loader::helper('json')->encode($obj);
 						exit;
 					}
 				}
@@ -182,7 +194,6 @@
 					$b->updateBlockInformation($data);
 					$b->refreshCacheAll();
 					
-					$redirectCID = (intval($_REQUEST['rcID'])) ? intval($_REQUEST['rcID']) : intval($_REQUEST['cID']);
 					$obj = new stdClass;
 					$obj->bID = $b->getBlockID();
 					$obj->aID = $a->getAreaID();

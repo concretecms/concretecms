@@ -139,6 +139,7 @@ jQuery.fn.dialog.getTotalOpen = function() {
 jQuery.fn.dialog.load = function(fnd) {
 	if (fnd.element != null) {
 		// we are loading some content on the page rather than through AJAX
+		jQuery.fn.dialog.loadShell(fnd);
 		jQuery.fn.dialog.position(fnd);
 		jQuery.fn.dialog.hideLoader();
 		$("#ccm-dialog-content" + fnd.n).append($(fnd.element));

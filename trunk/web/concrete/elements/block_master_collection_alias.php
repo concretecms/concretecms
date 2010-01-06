@@ -49,7 +49,7 @@ $cList = $ct->getPages();
 	
 	<div class="ccm-buttons">
 	<a href="#" class="ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
-	<a href="javascript:$('#ccmBlockMasterCollectionForm').get(0).submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
+	<a href="javascript:$('#ccmBlockMasterCollectionForm').submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
 	</div>
 
 <script type="text/javascript">
@@ -65,6 +65,10 @@ $(function() {
 			});
 		}
 	});
+	$('#ccmBlockMasterCollectionForm').each(function() {
+		ccm_setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
+	});
+
 });
 
 </script>
