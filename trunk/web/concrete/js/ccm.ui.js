@@ -72,13 +72,16 @@ ccm_showBlockMenu = function(obj, e) {
 		if (obj.canDelete) {
 			html += '<li><a class="ccm-icon" id="menuDelete' + obj.bID + '-' + obj.aID + '" href="#" onclick="javascript:ccm_deleteBlock(' + obj.bID + ',' + obj.aID + ', \'' + obj.arHandle + '\', \'' + obj.deleteMessage + '\');return false;"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n.deleteBlock + '</span></a></li>';
 		} 		
-		if (obj.canModifyGroups || obj.canAliasBlockOut) {
-			html += '<li class="header"></li>';
-		}
 		if (obj.canWrite) {
+			html += '<li class="header"></li>';
 			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.changeBlockBaseStyle + '" dialog-width="450" dialog-height="350" id="menuChangeCSS' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + CCM_CID + '&bID=' + obj.bID + '&isGlobal=' + obj.isGlobal + '&arHandle=' + obj.arHandle + '&btask=block_css&modal=true&width=300&height=100" title="' + ccmi18n.changeBlockCSS + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/design_small.png)">' + ccmi18n.changeBlockCSS + '</span></a></li>';
 			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.changeBlockTemplate + '" dialog-width="300" dialog-height="100" id="menuChangeTemplate' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + CCM_CID + '&bID=' + obj.bID + '&isGlobal=' + obj.isGlobal + '&arHandle=' + obj.arHandle + '&btask=template&modal=true&width=300&height=100" title="' + ccmi18n.changeBlockTemplate + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/wrench.png)">' + ccmi18n.changeBlockTemplate + '</span></a></li>';
 		}
+
+		if (obj.canModifyGroups || obj.canAliasBlockOut) {
+			html += '<li class="header"></li>';
+		}
+
 		if (obj.canModifyGroups) {
 			html += '<li><a title="' + ccmi18n.setBlockPermissions + '" class="ccm-icon" dialog-width="400" dialog-height="380" id="menuBlockGroups' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + CCM_CID + '&bID=' + obj.bID + '&arHandle=' + obj.arHandle + '&btask=groups" dialog-title="' + ccmi18n.setBlockPermissions + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + ccmi18n.setBlockPermissions + '</span></a></li>';
 		}
@@ -863,7 +866,11 @@ var ccmCustomBlockCss = {
 		return false;
 	},
 	resetAll:function(){
-		if( !confirm( ccmi18n.confirmBlockCssReset ) ) return false;
+		if (!confirm( ccmi18n.confirmBlockCssReset)) {
+			return false;
+		}
+		jQuery.fn.dialog.showLoader();
+
 		$('#ccm-reset-block-css').val(1);
 		$('#ccmCustomCssForm').get(0).submit();
 		return true;

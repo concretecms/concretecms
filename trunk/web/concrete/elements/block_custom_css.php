@@ -11,7 +11,7 @@ if(!$blockStyles) $blockStyles = new BlockStyles();
 $blockCssData=$blockStyles->getStylesArray();
 ?>
 
-<form method="post" id="ccmCustomCssForm" action="<?=$b->getBlockUpdateCssAction()?>&rcID=<?=intval($rcID) ?>" style="width:96%; margin:auto;">
+<form method="post" id="ccmCustomCssForm" action="<?=$b->getBlockUpdateCssAction()?>&rcID=<?=intval($rcID) ?>" onsubmit="jQuery.fn.dialog.showLoader();" style="width:96%; margin:auto;">
 
 	<input id="ccm-reset-block-css" name="reset_block_css" type="hidden" value="0" />
 	
@@ -252,7 +252,7 @@ $blockCssData=$blockStyles->getStylesArray();
 	<div class="ccm-buttons">
 	<a href="#" class="ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
 	
-	<a href="javascript:$('#ccmCustomCssForm').get(0).submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.showLoader();$('#ccmCustomCssForm').submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
 	<a onclick="return ccmCustomBlockCss.resetAll();" class="ccm-button-right accept" style="margin-right:8px; "><span><?=t('Reset')?></span></a>
 	</div>
 	

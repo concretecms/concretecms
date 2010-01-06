@@ -175,7 +175,7 @@ class MailHelper {
 				} else {
 					$mail->send();
 				}
-			} catch(Zend_Mail_Transport_Exception $e) {
+			} catch(Exception $e) {
 				$l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
 				$l->write(t('Mail Exception Occurred. Unable to send mail: ') . $e->getMessage());
 				$l->write($e->getTraceAsString());
@@ -187,7 +187,6 @@ class MailHelper {
 					$l->write(t('Body') . ': ' . $this->body);
 				}				
 				$l->close();
-				throw new Exception($e->getMessage());
 			}
 		}
 		

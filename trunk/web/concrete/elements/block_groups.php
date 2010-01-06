@@ -27,20 +27,20 @@
 			ff.value = '0';
 			<? if ($numChildren) { ?>
 			if (confirm("<?=$applyMSG?>")) {
-				document.forms['permissionForm'].action = document.forms['permissionForm'].action + "&applyToAll=1";
+				document.forms['ccmBlockPermissionForm'].action = document.forms['ccmBlockPermissionForm'].action + "&applyToAll=1";
 			}
 			<? } ?>
-			document.forms['permissionForm'].submit();
+			document.forms['ccmBlockPermissionForm'].submit();
 			location.href='<?=$_SERVER['PHP_SELF']?>?close=1';
 		}
 		
 		<? if ($numChildren) { ?>
 		function applyToAll() {
 			if (confirm("<?=$applyMSG?>")) {
-				document.forms['permissionForm'].action = document.forms['permissionForm'].action + "&applyToAll=1";
-				document.forms['permissionForm'].submit();
+				document.forms['ccmBlockPermissionForm'].action = document.forms['ccmBlockPermissionForm'].action + "&applyToAll=1";
+				$('#ccmBlockPermissionForm').submit();
 			} else {
-				document.forms['permissionForm'].submit();
+				$('#ccmBlockPermissionForm').submit();
 			}
 		}
 		<? } ?>
@@ -115,7 +115,7 @@
 	
 <? global $c;?>
 <h1><?=t('Block Permissions')?></h1>
-<form method="post" name="permissionForm" action="<?=$gl->getGroupUpdateAction($b)?>&rcID=<?=intval($rcID)?>">
+<form method="post" name="ccmBlockPermissionForm" id="ccmBlockPermissionForm" action="<?=$gl->getGroupUpdateAction($b)?>&rcID=<?=intval($rcID)?>">
 	<span class="ccm-important">
 	<? if (!$b->overrideAreaPermissions()) { ?>
 		<?=t('Permissions for this block are currently dependent on the area containing this block. If you override those permissions here, they will not match those of the area.')?><br/><br/>
@@ -182,7 +182,7 @@
 		<input type="hidden" name="cbOverrideAreaPermissions" value="1" id="cbOverrideAreaPermissions">
 
 		<div class="ccm-buttons">
-		<a href="javascript:void(0)" onclick="<? if ($numChildren) { ?>applyToAll();<? } ?> $('form[name=permissionForm]').get(0).submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
+		<a href="javascript:void(0)" onclick="<? if ($numChildren) { ?>applyToAll();<? } else { ?>$('#ccmBlockPermissionForm').submit()<? } ?>" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
 		<a href="javascript:void(0)" class="ccm-button-left cancel ccm-dialog-close"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
 		</div>
 <?
@@ -190,3 +190,11 @@ $valt = Loader::helper('validation/token');
 $valt->output();
 ?>
 </form>
+
+<script type="text/javascript">
+$(function() {
+	$('#ccmBlockPermissionForm').each(function() {
+		ccm_setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
+	});
+});
+</script>

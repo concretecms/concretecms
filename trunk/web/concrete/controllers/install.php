@@ -254,6 +254,10 @@ class InstallController extends Controller {
 						$g2 = Group::add(t("Registered Users"), t("The registered users group represents all user accounts."));
 						$g3 = Group::add(t("Administrators"), "");
 						
+						$cakc = AttributeKeyCategory::add('collection');
+						$uakc = AttributeKeyCategory::add('user');
+						$fakc = AttributeKeyCategory::add('file');
+						
 						// Now the default site!
 						// Add our right nav page type
 						$data = array();
@@ -283,10 +287,6 @@ class InstallController extends Controller {
 						$data = array();
 						$data['ctID'] = $rst->getCollectionTypeID();
 						$home->update($data);
-						
-						$cakc = AttributeKeyCategory::add('collection');
-						$uakc = AttributeKeyCategory::add('user');
-						$fakc = AttributeKeyCategory::add('file');
 						
 						$tt = AttributeType::add('text', t('Text'));
 						$textareat = AttributeType::add('textarea', t('Text Area'));
@@ -914,8 +914,6 @@ class InstallController extends Controller {
 						Job::installByHandle('index_search');
 						Job::installByHandle('generate_sitemap');
 						Job::installByHandle('process_email');
-						
-						// NOTE: This is too memory intensive to run during initial install. Let's not run it and just give nicer feedback
 						Job::runAllJobs();
 						
 						if (is_array($this->installData['packages'])) {
