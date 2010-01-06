@@ -23,7 +23,17 @@
 			return array('file-required' => t('You must select a file.'));	
 		}
 		
-
+		public function validate($args) {
+			$e = Loader::helper('validation/error');
+			if ($args['fID'] < 1) {
+				$e->add(t('You must select a file.'));
+			}
+			if ($args['fileLinkText'] == '') {
+				$e->add(t('You must give your file a link.'));
+			}
+			return $e;
+		}
+		
 		function getFileID() {return $this->fID;}
 		
 		function getFileObject() {

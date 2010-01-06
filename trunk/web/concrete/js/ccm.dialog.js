@@ -228,15 +228,16 @@ jQuery.fn.dialog.close = function(fnd) {
 
 	if (fnd.onDestroy == "undefined" && ccm_animEffects) {
 		$("#ccm-dialog-window" + jQuery.fn.dialog.totalDialogs).fadeOut("fast",function(){
-			$('#ccm-dialog-window' + jQuery.fn.dialog.totalDialogs).trigger("unload").unbind().remove();
+			$('#ccm-dialog-window' + jQuery.fn.dialog.totalDialogs).remove();
 		});
 	} else {
 		$("#ccm-dialog-window" + jQuery.fn.dialog.totalDialogs).hide();
-		$('#ccm-dialog-window' + jQuery.fn.dialog.totalDialogs).trigger("unload").unbind().remove();
+		$('#ccm-dialog-window' + jQuery.fn.dialog.totalDialogs).remove();
 	}
 	
 	if (jQuery.fn.dialog.totalDialogs == 0) {
 		$("#TB_HideSelect").trigger("unload").unbind().remove();
+		$("div." + fnd.wrapperClass).remove();
 		if (ccm_initialSiteActivated) {
 			ccm_activateSite();
 		}
@@ -395,6 +396,31 @@ var ccmAlert = {
 			},
 			onDestroy: onCloseFn
         }); 
+    },
+    
+    hud: function(message, time, icon, title) {
+    	if ($('#ccm-notification-inner').length == 0) { 
+    		$(document.body).append('<div id="ccm-notification"><div id="ccm-notification-inner"></div></div>');
+    	}
+    	
+    	if (icon == null) {
+    		icon = 'edit_small';
+    	}
+    	
+    	if (title == null) {	
+	    	var messageText = message;
+	    } else {
+	    	var messageText = '<h3>' + title + '</h3>' + message;
+	    }
+    	$('#ccm-notification-inner').html('<table border="0" cellspacing="0" cellpadding="0"><tr><td valign="top"><img id="ccm-notification-icon" src="' + CCM_IMAGE_PATH + '/icons/' + icon + '.png" width="16" height="16" /></td><td valign="top">' + messageText + '</td></tr></table>');
+		
+		$('#ccm-notification').fadeIn({easing: 'easeInQuart', duration: 100});
+    	if (time > 0) {
+    		setTimeout(function() {
+    			$('#ccm-notification').fadeOut({easing: 'easeOutExpo', duration: 800});
+    		}, time);
+    	}
+    	
     }
 }       
 

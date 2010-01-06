@@ -317,6 +317,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES)) {
 				$templates = array_merge($templates, $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES));
 			}
+
+			$templates = array_unique($templates);
 	
 			return $templates;
 		}

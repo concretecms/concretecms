@@ -889,6 +889,7 @@ $ppWhere = '';
 		$db->query("update Pages set uID = ?, ctID = ?, pkgID = ?, cFilename = ? where cID = ?", array($uID, $ctID, $pkgID, $cFilename, $this->cID));
 
 		// run any internal event we have for page update
+		$this->reindex();
 		$ret = Events::fire('on_page_update', $this);
 	}
 	
@@ -1362,7 +1363,8 @@ $ppWhere = '';
 
 			// Now we perform the collection path function on the current cID
 			$np = $this->rescanCollectionPathIndividual($this->cID, $cPath);
-
+			$this->cPath = $np;
+			
 			// Now we start with the recursive collection path scanning, armed with our prefix (from the level above what we're scanning)
 			if ($np) {
 				$this->rescanCollectionPathChildren($this->cID, $np);

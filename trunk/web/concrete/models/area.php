@@ -360,6 +360,7 @@ class Area extends Object {
 						'p' => $p
 					));
 				}
+
 				$bv->render($b);
 				if ($includeEditStrip) {
 					$bv->renderElement('block_footer');

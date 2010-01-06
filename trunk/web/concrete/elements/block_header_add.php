@@ -30,6 +30,13 @@ if (is_array($headerItems[$identifier])) {
 	}
 }
 ?>
+
+$(function() {
+	$('#ccm-block-form').each(function() {
+		ccm_setupBlockForm($(this), false, 'add');
+	});
+});
+
 </script>
 
 <input type="hidden" name="ccm-block-pane-action" value="<?=$_SERVER['REQUEST_URI']?>" />

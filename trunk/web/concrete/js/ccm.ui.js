@@ -10,6 +10,7 @@ var ccm_blockError = "";
 var ccm_menuActivated = false;
 var ccm_bcEnabled = false;
 var ccm_bcEnabledTimer = false;
+var ccm_arrangeMode = false;
 
 ccm_menuInit = function(obj) {
 	
@@ -64,7 +65,9 @@ ccm_showBlockMenu = function(obj, e) {
 		html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.copyBlockToScrapbook + '" dialog-modal="false" dialog-width="250" dialog-height="100" id="menuAddToScrapbook' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/pile_manager.php?cID=' + CCM_CID + '&bID=' + obj.bID + '&arHandle=' + obj.arHandle + '&btask=add"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/paste_small.png)">' + ccmi18n.copyBlockToScrapbook + '</span></a></li>';
 
 		if (obj.canArrange) {
-			html += '<li><a class="ccm-icon" id="menuArrange' + obj.bID + '-' + obj.aID + '" href="' + CCM_DISPATCHER_FILENAME + '?cID=' + CCM_CID + '&btask=arrange"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n.arrangeBlock + '</span></a></li>';
+			html += '<li><a class="ccm-icon" id="menuArrange' + obj.bID + '-' + obj.aID + '" href="javascript:ccm_arrangeInit()"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n.arrangeBlock + '</span></a></li>';
+
+			//html += '<li><a class="ccm-icon" id="menuArrange' + obj.bID + '-' + obj.aID + '" href="' + CCM_DISPATCHER_FILENAME + '?cID=' + CCM_CID + '&btask=arrange"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n.arrangeBlock + '</span></a></li>';
 		}
 		if (obj.canDelete) {
 			html += '<li><a class="ccm-icon" id="menuDelete' + obj.bID + '-' + obj.aID + '" href="#" onclick="javascript:ccm_deleteBlock(' + obj.bID + ',' + obj.aID + ', \'' + obj.arHandle + '\', \'' + obj.deleteMessage + '\');return false;"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n.deleteBlock + '</span></a></li>';
@@ -140,12 +143,17 @@ ccm_deleteBlock = function(bID, aID, arHandle, msg) {
 	if (confirm(msg)) {
 		// got to grab the message too, eventually
 		ccm_hideHighlighter();
+		ccm_menuActivated = true;
 		$.ajax({
  		type: 'POST',
  		url: CCM_DISPATCHER_FILENAME,
  		data: 'cID=' + CCM_CID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + arHandle,
  		success: function(resp) {
- 			$("#b" + bID + '-' + aID).fadeOut(100);
+ 			ccm_hideHighlighter();
+ 			$("#b" + bID + '-' + aID).fadeOut(100, function() {
+ 				ccm_menuActivated = false;
+ 			});
+ 			ccmAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
  		}});		
 	}
 }
@@ -156,8 +164,65 @@ ccm_hideMenus = function() {
 	ccm_menuActivated = false;
 }
 
+ccm_parseBlockResponse = function(r, currentBlockID, task) {
+	resp = eval('(' + r + ')');
+	if (resp.error == true) {
+		var message = '<ul>'
+		for (i = 0; i < resp.response.length; i++) {						
+			message += '<li>' + resp.response[i] + '<\/li>';
+		}
+		message += '<\/ul>';
+		ccmAlert.notice(ccmi18n.error, message);
+	} else {
+		jQuery.fn.dialog.closeTop();
+		var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + resp.bID + '&arHandle=' + resp.arHandle + '&btask=view_edit_mode';				
+		$.get(action, 		
+			function(r) {
+				if (task == 'add') {
+					$('#a' + resp.aID).append(r);
+				} else {
+					$('#b' + currentBlockID + '-' + resp.aID).before(r).remove();
+				}
+				jQuery.fn.dialog.hideLoader();
+				setTimeout(function() {
+					ccm_menuActivated = false;
+				}, 200);
+				if (task == 'add') {
+					ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'add', ccmi18n.addBlock);
+					// second closetop. Not very elegant
+					jQuery.fn.dialog.closeTop();
+				} else {
+					ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'success', ccmi18n.updateBlock);
+				}
+			}
+		);
+	}
+}
+
+ccm_setupBlockForm = function(form, currentBlockID, task) {
+	form.ajaxForm({
+		type: 'POST',
+		iframe: true,
+		beforeSubmit: function() {
+			ccm_hideHighlighter();
+			jQuery.fn.dialog.showLoader();
+			ccm_menuActivated = true;
+			return ccm_blockFormSubmit();
+		},
+		success: function(r) {
+			ccm_parseBlockResponse(r, currentBlockID, task);
+		}
+	});
+}
+
+
+
 ccm_activate = function(obj, domID) { 
 	if (ccm_topPaneDeactivated) {
+		return false;
+	}
+	
+	if (ccm_arrangeMode) {
 		return false;
 	}
 	
@@ -468,25 +533,46 @@ ccm_saveArrangement = function() {
  		url: CCM_DISPATCHER_FILENAME,
  		data: 'cID=' + CCM_CID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + serial,
  		success: function(msg) {
-			location.href= CCM_DISPATCHER_FILENAME + "?cID=" + CCM_CID;
+			$("div.ccm-area").removeClass('ccm-move-mode');
+			$('div.ccm-block-arrange').each(function() {
+				$(this).addClass('ccm-block');
+				$(this).removeClass('ccm-block-arrange');
+			});
+			ccm_arrangeMode = false;
+			$("li.ccm-main-nav-arrange-option").fadeOut(300, function() {
+				$("li.ccm-main-nav-non-arrange-option").fadeIn(300, function() {
+					ccm_removeHeaderLoading();
+				});
+			});
+ 			ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
  		}});
- 		
 }
 
 ccm_arrangeInit = function() {
 	//$(document.body).append('<img src="' + CCM_IMAGE_PATH + '/topbar_throbber.gif" width="16" height="16" id="ccm-topbar-loader" />');
-	$("a").click(function(e) {
-		ccm_hideMenus();
-		return false;	
+	
+	ccm_arrangeMode = true;
+	
+	ccm_hideHighlighter();
+	ccm_menuActivated = true;
+	
+	$('div.ccm-block').each(function() {
+		$(this).addClass('ccm-block-arrange');
+		$(this).removeClass('ccm-block');
 	});
 	
 	ccm_setupHeaderMenu();
-	$("div.ccm-area").each(function() {
-		$(this).sortable({
-		connectWith: $("div.ccm-area"),
-		accept: 'div.ccm-block-arrange',
-		opacity: 0.5
+	$("li.ccm-main-nav-non-arrange-option").fadeOut(300, function() {
+		$("li.ccm-main-nav-arrange-option").fadeIn(300);
 	});
+	
+	$("div.ccm-area").each(function() {
+		$(this).addClass('ccm-move-mode');
+		$(this).sortable({
+			connectWith: $("div.ccm-area"),
+			accept: 'div.ccm-block-arrange',
+			opacity: 0.5
+		});
 	});
 	
 	$("a#ccm-nav-save-arrange").click(function() {
@@ -551,19 +637,18 @@ ccm_blockWindowClose = function() {
 	ccmValidateBlockForm = function() {return true;}
 }
 
-ccm_blockFormInit = function() {
-	$("form.validate").submit(function() {
+ccm_blockFormSubmit = function() {
 	if (typeof window.ccmValidateBlockForm == 'function') {
 		window.ccmValidateBlockForm();
 		if (ccm_isBlockError) {
-			if(ccm_blockError) 
-				alert(ccm_blockError);
+			if(ccm_blockError) {
+				ccmAlert.notice(ccmi18n.error, '<ul><li>' + ccm_blockError + '</li></ul>');
+			}
 			ccm_resetBlockErrors();
 			return false;
 		}
 	}
 	return true;
-	});
 }
 
 ccm_setupGridStriping = function(tbl) {

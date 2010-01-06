@@ -2,12 +2,19 @@
 
 var ccmi18n = { 
 	
+	error: '<?=t('Error')?>',
 	deleteBlock: '<?=t('Delete')?>',
+	deleteBlockMsg: '<?=t('The block has been removed successfully.')?>',
+	addBlock: '<?=t('Add Block')?>',
+	addBlockMsg: '<?=t('The block has been added successfully.')?>',
+	updateBlock: '<?=t('Update Block')?>',
+	updateBlockMsg: '<?=t('The block has been saved successfully.')?>',
 	closeWindow: '<?=t('Close')?>',
 	editBlock: '<?=t('Edit')?>',
 	compareVersions: '<?=t('Compare Versions')?>',
 	blockAreaMenu: '<?=t("Add Block")?>',
 	arrangeBlock: '<?=t('Move')?>',
+	arrangeBlockMsg: '<?=t('Blocks arranged successfully.')?>',
 	copyBlockToScrapbook: '<?=t('Copy to Scrapbook')?>',
 	changeBlockTemplate: '<?=t('Custom Template')?>',
 	changeBlockCSS: "<?=t("Design")?>",
@@ -45,6 +52,7 @@ var ccmi18n_sitemap = {
 	pageDesign: '<?=t('Design')?>',
 	pageVersions: '<?=t('Versions')?>',
 	deletePage: '<?=t('Delete')?>',
+	deletePageSuccessMsg: '<?=t('The page has been removed successfully.')?>',
 	addPage: '<?=t('Add Page')?>',
 	moveCopyPage: '<?=t('Move/Copy')?>',
 	reorderPage: '<?=t('Change Page Order')?>',
