@@ -101,6 +101,15 @@ class FileHelper {
 		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 		header("Cache-Control: private",false);
 		header("Content-Transfer-Encoding: binary");
+		
+		// This code isn't ready yet. It will allow us to no longer force download
+		
+		/*
+		$h = Loader::helper('mime');
+		$mimeType = $h->mimeFromExtension($this->getExtension($file));
+		header('Content-type: ' . $mimeType);
+		*/
+		
 	
 		$buffer = '';
 		$chunk = 1024*1024;

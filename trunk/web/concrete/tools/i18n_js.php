@@ -35,6 +35,7 @@ var ccmi18n = {
 	deleteAttributeValue: '<?=t('Are you sure you want to remove this value?')?>',
 	customizeSearch: '<?=t('Customize Search')?>',
 	properties: '<?=t('Properties')?>',
+	savePropertiesMsg: '<?=t('Page Properties saved.')?>',
 	ok: '<?=t('Ok')?>',
 	x: '<?=t('x')?>'
 }
@@ -49,6 +50,7 @@ var ccmi18n_sitemap = {
 	visitPage: '<?=t('Visit')?>',
 	pageProperties: '<?=t('Properties')?>',
 	setPagePermissions: '<?=t('Set Permissions')?>',
+	setPagePermissionsMsg: '<?=t('Page permissions updated successfully.')?>',
 	pageDesign: '<?=t('Design')?>',
 	pageVersions: '<?=t('Versions')?>',
 	deletePage: '<?=t('Delete')?>',

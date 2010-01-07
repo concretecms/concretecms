@@ -146,7 +146,7 @@ for ($i = 0; $i < count($ctArray); $i++) {
 
 	<div class="ccm-buttons">
 	<!--	<a href="javascript:void(0)" onclick="ccm_hidePane()" class="ccm-button-left cancel"><span><em class="ccm-button-close">Cancel</em></span></a>//-->
-	<a href="javascript:void(0)" onclick="ccm_doAddSubmit()" class="ccm-button-right accept"><span><?=t('Add')?></span></a>
+	<a href="javascript:void(0)" onclick="$('#ccmAddPage').submit()" class="ccm-button-right accept"><span><?=t('Add')?></span></a>
 	</div>	
 	<input type="hidden" name="add" value="1" />
 	<input type="hidden" name="processCollection" value="1">
@@ -213,14 +213,13 @@ $(function() {
 	}
 	
 	$("#ccmAddPage").submit(function() {
-		return ccm_testAddSubmit();
-	});
-	
-	ccm_doAddSubmit = function() {
 		if (ccm_testAddSubmit()) {
-			$("#ccmAddPage").get(0).submit();
+			jQuery.fn.dialog.showLoader();
+			return true;
+		} else {
+			return false;
 		}
-	}
+	});
 	
 	$('a.ccm-scroller-l').click(function() {
 		var item = $(this).parent().children('div.ccm-scroller-inner').children('ul');

@@ -31,6 +31,22 @@ if ($cp->canAdminPage()) {
 			$(this).parent().addClass("ccm-nav-active");
 			$("#" + ccm_activePropertiesTab + "-tab").show();
 		});
+		
+		$(function() {
+			$("#ccmMetadataForm").ajaxForm({
+				type: 'POST',
+				iframe: true,
+				beforeSubmit: function() {
+					jQuery.fn.dialog.showLoader();
+				},
+				success: function(r) {
+					ccm_hidePane(function() {
+						jQuery.fn.dialog.hideLoader();						
+						ccmAlert.hud(ccmi18n.savePropertiesMsg, 2000, 'success', ccmi18n.properties);
+					});
+				}
+			});
+		});
 	</script>
 	
 	<style>
@@ -133,5 +149,5 @@ if ($cp->canAdminPage()) {
 </div>
 	<div class="ccm-buttons">
 <!--	<a href="javascript:void(0)" onclick="ccm_hidePane()" class="ccm-button-left cancel"><span><em class="ccm-button-close">Cancel</em></span></a>//-->
-	<a href="javascript:void(0)" onclick="$('#ccmMetadataForm').get(0).submit()" class="ccm-button-right accept"><span><?=t('Save')?></span></a>
+	<a href="javascript:void(0)" onclick="$('#ccmMetadataForm').submit()" class="ccm-button-right accept"><span><?=t('Save')?></span></a>
 	</div>
