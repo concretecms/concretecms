@@ -543,7 +543,7 @@ ccm_saveArrangement = function() {
 			});
 			ccm_arrangeMode = false;
 			$("li.ccm-main-nav-arrange-option").fadeOut(300, function() {
-				$("li.ccm-main-nav-non-arrange-option").fadeIn(300, function() {
+				$("li.ccm-main-nav-edit-option").fadeIn(300, function() {
 					ccm_removeHeaderLoading();
 				});
 			});
@@ -565,7 +565,7 @@ ccm_arrangeInit = function() {
 	});
 	
 	ccm_setupHeaderMenu();
-	$("li.ccm-main-nav-non-arrange-option").fadeOut(300, function() {
+	$("li.ccm-main-nav-edit-option").fadeOut(300, function() {
 		$("li.ccm-main-nav-arrange-option").fadeIn(300);
 	});
 	

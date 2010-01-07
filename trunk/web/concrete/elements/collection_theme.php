@@ -78,7 +78,7 @@ $(document).ready(function(){
  
  	<h1><?=t('Design')?></h1>
 
-		<form method="post" name="ccmPermissionsForm" action="<?=$c->getCollectionAction()?>">
+		<form method="post" name="ccmThemeForm" action="<?=$c->getCollectionAction()?>">
 			<input type="hidden" name="plID" value="<?=$c->getCollectionThemeID()?>" />
 			<input type="hidden" name="ctID" value="<?=$c->getCollectionTypeID()?>" />
 			<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
@@ -181,7 +181,7 @@ $(document).ready(function(){
 	
 			<div class="ccm-buttons">
 			<!--	<a href="javascript:void(0)" onclick="ccm_hidePane()" class="ccm-button-left cancel"><span><em class="ccm-button-close">Cancel</em></span></a>//-->
-				<a href="javascript:void(0)" onclick="ccm_submit()" class="ccm-button-right accept"><span><?=t('Save')?></span></a>
+				<a href="javascript:void(0)" onclick="$('form[name=ccmThemeForm]').submit()" class="ccm-button-right accept"><span><?=t('Save')?></span></a>
 			</div>	
 			<input type="hidden" name="update_theme" value="1" class="accept">
 			<input type="hidden" name="processCollection" value="1">
@@ -201,11 +201,6 @@ $(".ccm-area-theme-tabs a").click(function() {
 	$('.ccm-area-theme-tabs .'+this.id).parent().addClass("ccm-nav-active");
 	$("#" + ccm_areaActiveThemeTab + "-tab").show();
 });
-
-ccm_submit = function() {
-	//ccm_showTopbarLoader();
-	$('form[name=ccmPermissionsForm]').get(0).submit();
-} 
 
 ccm_enable_scrollers = function() {
 	$("a.ccm-scroller-l").hover(function() {
@@ -298,7 +293,9 @@ ccm_enable_scrollers = function() {
 
 $(function() {
 	ccm_enable_scrollers();
-
+	$('form[name=ccmThemeForm]').submit(function() {
+		jQuery.fn.dialog.showLoader();
+	});
 	$("#ccm-select-page-type a").click(function() {
 		$("#ccm-select-page-type li").each(function() {
 			$(this).removeClass('ccm-item-selected');

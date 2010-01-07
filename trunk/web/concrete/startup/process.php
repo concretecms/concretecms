@@ -697,8 +697,8 @@
 					header('Location: ' . URL_SITEMAP);
 					exit;
 				} else {
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
-					exit;
+					//header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
+					//exit;
 				}
 			}	
 		} else if ($_POST['update_external']) {
@@ -740,8 +740,8 @@
 					header('Location: ' . URL_SITEMAP);
 					exit;
 				} else {
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
-					exit;
+					//header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
+					//exit;
 				}
 			}	
 		} else if ($_POST['add']) { 
