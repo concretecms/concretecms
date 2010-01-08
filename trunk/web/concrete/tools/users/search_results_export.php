@@ -1,5 +1,6 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
+ini_set('memory_limit', -1);
 $c1 = Page::getByPath('/dashboard/users');
 $cp1 = new Permissions($c1);
 $c2 = Page::getByPath('/dashboard/users/groups');
