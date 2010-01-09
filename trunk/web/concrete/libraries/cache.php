@@ -101,6 +101,12 @@ class Cache {
 		return $cache->load(Cache::key($type, $id));
 	}
 	
+	public function deleteType($type) {
+		Cache::getLibrary()->clean('matchingTag', array($type));
+		$loc = CacheLocal::get();
+		$loc->enabled = false;
+	}
+	
 	/** 
 	 * Removes an item from the cache
 	 */	
