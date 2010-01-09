@@ -46,6 +46,9 @@ class PackageList extends Object {
 	}
 	
 	public static function getHandle($pkgID) {
+		if ($pkgID < 1) {
+			return false;
+		}
 		$pkgHandle = Cache::get('pkgHandle', $pkgID);
 		if ($pkgHandle != false) {
 			return $pkgHandle;
@@ -66,7 +69,15 @@ class PackageList extends Object {
 		return $handle;
 	}
 	
+	public static function refreshCache() {
+		Cache::deleteType('pkgList');
+	}
+	
 	public static function get($pkgIsInstalled = 1) {
+		$pkgList = Cache::get('pkgList', $pkgIsInstalled);
+		if ($pkgList != false) {
+			return $pkgList;
+		}
 		
 		$db = Loader::db();
 		$r = $db->query("select pkgID, pkgName, pkgIsInstalled, pkgDescription, pkgVersion, pkgHandle, pkgDateInstalled from Packages where pkgIsInstalled = ? order by pkgID asc", array($pkgIsInstalled));
@@ -76,6 +87,8 @@ class PackageList extends Object {
 			$pkg->setPropertiesFromArray($row);
 			$list->add($pkg);
 		}
+		
+		Cache::set('pkgList', $pkgIsInstalled, $list);
 
 		return $list;
 	}
@@ -237,6 +250,7 @@ class Package extends Object {
 			}
 		}
 		$db->Execute("delete from Packages where pkgID = ?", array($this->pkgID));
+		PackageList::refreshCache();
 	}
 	
 	public function testForInstall($package, $testForAlreadyInstalled = true) {
@@ -342,6 +356,7 @@ class Package extends Object {
 		
 		$pkg = Package::getByID($db->Insert_ID());
 		Package::installDB($pkg->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+		PackageList::refreshCache();
 		
 		return $pkg;
 	}
@@ -351,6 +366,7 @@ class Package extends Object {
 		$p1 = Loader::package($this->getPackageHandle());
 		$v = array($p1->getPackageName(), $p1->getPackageDescription(), $p1->getPackageVersion(), $this->getPackageID());
 		$db->query("update Packages set pkgName = ?, pkgDescription = ?, pkgVersion = ? where pkgID = ?", $v);
+		PackageList::refreshCache();
 	}
 	
 	public function upgrade() {
