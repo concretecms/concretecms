@@ -245,6 +245,8 @@ class FileVersion extends Object {
 		$db->Execute("update FileVersions set fvTitle = ? where fID = ? and fvID = ?", array($title, $this->getFileID(), $this->getFileVersionID()));
 		$this->logVersionUpdate(FileVersion::UT_TITLE);
 		$this->fvTitle = $title;
+		$fo = $this->getFile();
+		$fo->refreshCache();
 	}
 
 	public function updateTags($tags) {
@@ -253,6 +255,8 @@ class FileVersion extends Object {
 		$db->Execute("update FileVersions set fvTags = ? where fID = ? and fvID = ?", array($tags, $this->getFileID(), $this->getFileVersionID()));
 		$this->logVersionUpdate(FileVersion::UT_TAGS);
 		$this->fvTitle = $tags;
+		$fo = $this->getFile();
+		$fo->refreshCache();
 	}
 
 
@@ -261,6 +265,8 @@ class FileVersion extends Object {
 		$db->Execute("update FileVersions set fvDescription = ? where fID = ? and fvID = ?", array($descr, $this->getFileID(), $this->getFileVersionID()));
 		$this->logVersionUpdate(FileVersion::UT_DESCRIPTION);
 		$this->fvTitle = $descr;
+		$fo = $this->getFile();
+		$fo->refreshCache();
 	}
 
 	public function updateFile($filename, $prefix) {

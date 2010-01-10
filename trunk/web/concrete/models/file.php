@@ -9,6 +9,11 @@ class File extends Object {
 	const F_ERROR_FILE_NOT_FOUND = 2;
 	
 	public function getByID($fID) {
+		$f = Cache::get('file_approved', $fID);
+		if (is_object($f)) {
+			return $f;
+		}
+		
 		Loader::model('file_set');
 		$db = Loader::db();
 		$f = new File();
@@ -17,6 +22,7 @@ class File extends Object {
 		WHERE Files.fID = ?", array($fID));
 		if ($row['fID'] == $fID) {
 			$f->setPropertiesFromArray($row);
+			Cache::set('file_approved', $fID, $f);
 		} else {
 			$f->error = File::F_ERROR_INVALID_FILE;
 		}
@@ -46,6 +52,8 @@ class File extends Object {
 	
 	public function refreshCache() {
 		Cache::delete('file_relative_path', $this->getFileID());
+		Cache::delete('file_approved', $this->getFileID());
+		Cache::deleteType('file_version_' . $this->getFileID(), $this->getFileVersionID());
 	}
 	
 	public function reindex() {
@@ -349,7 +357,8 @@ class File extends Object {
 		$db->Execute("delete from FileVersions where fID = ?", array($this->fID));
 		$db->Execute("delete from FileAttributeValues where fID = ?", array($this->fID));
 		$db->Execute("delete from FileSetFiles where fID = ?", array($this->fID));
-		$db->Execute("delete from FileVersionLog where fID = ?", array($this->fID));			
+		$db->Execute("delete from FileVersionLog where fID = ?", array($this->fID));
+		$this->refreshCache();
 	}
 	
 
@@ -363,6 +372,12 @@ class File extends Object {
 		if ($fvID == null) {
 			$fvID = $this->fvID; // approved version
 		}
+		
+		$fv = Cache::get('file_version_' . $this->getFileID(), $fvID);
+		if (is_object($fv)) {
+			return $fv;
+		}
+		
 		$db = Loader::db();
 		$row = $db->GetRow("select * from FileVersions where fvID = ? and fID = ?", array($fvID, $this->fID));
 		$row['fvAuthorName'] = $db->GetOne("select uName from Users where uID = ?", array($row['fvAuthorUID']));
@@ -372,6 +387,7 @@ class File extends Object {
 		$fv->setPropertiesFromArray($row);
 		$fv->populateAttributes();
 		
+		Cache::set('file_version_' . $this->getFileID(), $fvID, $fv);		
 		return $fv;
 	}
 	
