@@ -142,6 +142,7 @@ class FileAttributeKey extends AttributeKey {
 		), array('fID', 'fvID', 'akID'));
 		$f->logVersionUpdate(FileVersion::UT_EXTENDED_ATTRIBUTE, $this->getAttributeKeyID());
 		$fo = $f->getFile();
+		$fo->refreshCache();
 		$fo->reindex();
 		$f->populateAttributes();
 		unset($av);
