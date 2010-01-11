@@ -115,10 +115,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$a3 = (is_array($this->headerItems['CONTROLLER'])) ? $this->headerItems['CONTROLLER'] : array();
 			
 			$items = array_merge($a1, $a2, $a3);
-			if (version_compare(PHP_VERSION, '5.2.9', '>')) {
-				$items = array_unique($items, SORT_STRING);
-			} else {
+			if (version_compare(PHP_VERSION, '5.2.9', '<')) {
 				$items = array_unique($items);
+			} else {
+				// stupid PHP
+				$items = array_unique($items, SORT_STRING);
 			}
 			
 			// Loop through all items
