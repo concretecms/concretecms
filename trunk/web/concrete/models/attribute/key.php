@@ -86,8 +86,7 @@ class AttributeKey extends Object {
 		$className = $txt->camelcase($akCategoryHandle);
 		while ($row = $r->FetchRow()) {
 			$c1 = $className . 'AttributeKey';
-			$c1a = new $c1();
-			$c1a->load($row['akID']);
+			$c1a = call_user_func_array(array($c1, 'getByID'), array($row['akID']));
 			$list[] = $c1a;
 		}
 		$r->Close();
@@ -165,6 +164,10 @@ class AttributeKey extends Object {
 		}
 	}
 
+	public function refreshCache() {
+		Cache::delete('attribute_key', $this->getAttributeKeyID());
+	}
+	
 	/** 
 	 * Updates an attribute key. 
 	 */
@@ -197,6 +200,7 @@ class AttributeKey extends Object {
 				}
 				break;
 		}
+
 		
 		if ($r) {
 			$txt = Loader::helper('text');
@@ -207,6 +211,7 @@ class AttributeKey extends Object {
 			$cnt = $at->getController();
 			$cnt->setAttributeKey($ak);
 			$cnt->saveKey($args);
+			$this->refreshCache();
 			$ak->updateSearchIndex($prevHandle);
 			return $ak;
 		}
@@ -363,6 +368,8 @@ class AttributeKey extends Object {
 				}
 			}
 		}
+		$this->refreshCache();
+
 	}
 	
 	public function getAttributeValueIDList() {
