@@ -48,9 +48,15 @@ class UserAttributeKey extends AttributeKey {
 	}
 	
 	public static function getByID($akID) {
+		$ak = Cache::get('attribute_key', $akID);
+		if (is_object($ak)) {
+			return $ak;
+		}
+		
 		$ak = new UserAttributeKey();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
+			Cache::set('attribute_key', $akID, $ak);
 			return $ak;	
 		}
 	}
@@ -58,11 +64,8 @@ class UserAttributeKey extends AttributeKey {
 	public static function getByHandle($akHandle) {
 		$db = Loader::db();
 		$akID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', array($akHandle));
-		$ak = new UserAttributeKey();
-		$ak->load($akID);
-		if ($ak->getAttributeKeyID() > 0) {
-			return $ak;	
-		}
+		$ak = UserAttributeKey::getByID($akID);
+		return $ak;
 	}
 	
 	public function isAttributeKeyDisplayedOnProfile() {
@@ -99,11 +102,13 @@ class UserAttributeKey extends AttributeKey {
 	
 	public function activate() {
 		$db = Loader::db();
+		$this->refreshCache();
 		$db->Execute('update UserAttributeKeys set uakIsActive = 1 where akID = ?', array($this->akID));
 	}
 	
 	public function deactivate() {
 		$db = Loader::db();
+		$this->refreshCache();
 		$db->Execute('update UserAttributeKeys set uakIsActive = 0 where akID = ?', array($this->akID));
 	}
 	
@@ -302,6 +307,8 @@ class UserAttributeKey extends AttributeKey {
 			$v = array($uats[$i]);
 			$db->query("update UserAttributeKeys set displayOrder = {$i} where akID = ?", $v);
 		}
+		$this->refreshCache();
+
 	}
 
 

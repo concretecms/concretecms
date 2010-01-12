@@ -295,6 +295,8 @@ class FileVersion extends Object {
 	public function deny() {
 		$db = Loader::db();
 		$db->Execute("update FileVersions set fvIsApproved = 0 where fID = ? and fvID = ?", array($this->getFileID(), $this->getFileVersionID()));
+		$fo = $this->getFile();
+		$fo->refreshCache();
 	}
 
 

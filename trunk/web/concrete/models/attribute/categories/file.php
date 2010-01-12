@@ -54,22 +54,25 @@ class FileAttributeKey extends AttributeKey {
 	}
 	
 	public static function getByID($akID) {
+		$fak = Cache::get('attribute_key', $akID);
+		if (is_object($fak)) {
+			return $fak;
+		}
+		
 		$ak = new FileAttributeKey();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
+			Cache::set('attribute_key', $akID, $ak);
 			return $ak;	
-		}
+		}	
 	}
 
 	public static function getByHandle($akHandle) {
 		$db = Loader::db();
 		$akID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', array($akHandle));
 		if ($akID > 0) {
-			$ak = new FileAttributeKey();
-			$ak->load($akID);
-			if ($ak->getAttributeKeyID() > 0) {
-				return $ak;	
-			}
+			$ak = FileAttributeKey::getByID($akID);
+			return $ak;
 		} else {
 			 // else we check to see if it's listed in the initial registry
 			 $ia = FileTypeList::getImporterAttribute($akHandle);
