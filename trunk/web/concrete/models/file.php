@@ -57,6 +57,7 @@ class File extends Object {
 	}
 	
 	public function reindex() {
+		Loader::model('attribute/categories/file');
 		$attribs = FileAttributeKey::getAttributes($this->getFileID(), $this->getFileVersionID(), 'getSearchIndexValue');
 		$db = Loader::db();
 
@@ -108,6 +109,7 @@ class File extends Object {
 		$db = Loader::db();
 		$db->Execute("update Files set fPassword = ? where fID = ?", array($pw, $this->getFileID()));
 		$this->fPassword = $pw;
+		$this->refreshCache();
 	}
 	
 	public function overrideFileSetPermissions() {
@@ -257,7 +259,8 @@ class File extends Object {
 		$f = File::getByID($fID);
 		
 		$fv = $f->addVersion($filename, $prefix, $data);
-		
+		$f->refreshCache();
+			
 		return $fv;
 	}
 	
