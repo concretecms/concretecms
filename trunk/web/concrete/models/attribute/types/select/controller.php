@@ -99,7 +99,12 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 	}
 	
 	public function search() {
-		$this->form();
+		$this->load();	
+		$selectedOptions = $this->request('atSelectOptionID');
+		if (!is_array($selectedOptions)) {
+			$selectedOptions = array();
+		}
+		$this->set('selectedOptions', $selectedOptions);
 	}
 	
 	public function deleteValue() {
@@ -211,9 +216,15 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 			return $list;
 		}
 		foreach($options as $id) {
-			$opt = SelectAttributeTypeOption::getByID($id);
-			$optionText[] = $opt->getSelectAttributeOptionValue();
+			if ($id > 0) {
+				$opt = SelectAttributeTypeOption::getByID($id);
+				$optionText[] = $opt->getSelectAttributeOptionValue();
+			}
 		}
+		if (count($optionText) == 0) {
+			return false;
+		}
+		
 		$i = 0;
 		foreach($optionText as $val) {
 			$val = $db->quote('%||' . $val . '||%');

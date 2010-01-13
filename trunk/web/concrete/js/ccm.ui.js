@@ -168,37 +168,41 @@ ccm_hideMenus = function() {
 }
 
 ccm_parseBlockResponse = function(r, currentBlockID, task) {
-	resp = eval('(' + r + ')');
-	if (resp.error == true) {
-		var message = '<ul>'
-		for (i = 0; i < resp.response.length; i++) {						
-			message += '<li>' + resp.response[i] + '<\/li>';
-		}
-		message += '<\/ul>';
-		ccmAlert.notice(ccmi18n.error, message);
-	} else {
-		jQuery.fn.dialog.closeTop();
-		var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + resp.bID + '&arHandle=' + resp.arHandle + '&btask=view_edit_mode';				
-		$.get(action, 		
-			function(r) {
-				if (task == 'add') {
-					$('#a' + resp.aID).append(r);
-				} else {
-					$('#b' + currentBlockID + '-' + resp.aID).before(r).remove();
-				}
-				jQuery.fn.dialog.hideLoader();
-				setTimeout(function() {
-					ccm_menuActivated = false;
-				}, 200);
-				if (task == 'add') {
-					ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'add', ccmi18n.addBlock);
-					// second closetop. Not very elegant
-					jQuery.fn.dialog.closeTop();
-				} else {
-					ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'success', ccmi18n.updateBlock);
-				}
+	try {
+		resp = eval('(' + r + ')');
+		if (resp.error == true) {
+			var message = '<ul>'
+			for (i = 0; i < resp.response.length; i++) {						
+				message += '<li>' + resp.response[i] + '<\/li>';
 			}
-		);
+			message += '<\/ul>';
+			ccmAlert.notice(ccmi18n.error, message);
+		} else {
+			jQuery.fn.dialog.closeTop();
+			var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + resp.bID + '&arHandle=' + resp.arHandle + '&btask=view_edit_mode';				
+			$.get(action, 		
+				function(r) {
+					if (task == 'add') {
+						$('#a' + resp.aID).append(r);
+					} else {
+						$('#b' + currentBlockID + '-' + resp.aID).before(r).remove();
+					}
+					jQuery.fn.dialog.hideLoader();
+					setTimeout(function() {
+						ccm_menuActivated = false;
+					}, 200);
+					if (task == 'add') {
+						ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'add', ccmi18n.addBlock);
+						// second closetop. Not very elegant
+						jQuery.fn.dialog.closeTop();
+					} else {
+						ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'success', ccmi18n.updateBlock);
+					}
+				}
+			);
+		}
+	} catch(e) {
+		alert(r);
 	}
 }
 

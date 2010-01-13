@@ -296,14 +296,16 @@ var ccmPopupLogin = {
 		dialogWrap.css('position','relative');
 		dialogWrap.css('top',0);
 		dialogWrap.css('left',0);
-		$('#ccm-popupLoginThrobber').css('display','block');
+		jQuery.fn.dialog.showLoader();
+		//$('#ccm-popupLoginThrobber').css('display','block');
 	},
 	
 	hideLoading:function(){
+		jQuery.fn.dialog.hideLoader();
 		$('#ccm-popupLoginWrap').fadeTo(200,1);
 		$('#ccm-popupForgotPasswordWrap').fadeTo(200,1);
 		$('#ccm-popupRegisterWrap').fadeTo(200,1);
-		$('#ccm-popupLoginThrobber').css('display','none');
+		//$('#ccm-popupLoginThrobber').css('display','none');
 	},
 	
 	hideMsgs:function(){
