@@ -581,6 +581,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				}
 				
 				$wrapTemplateInTheme = false;
+
+				Events::fire('on_start', $this);
 				
 				// Extract controller information from the view, and put it in the current context
 				if (!isset($this->controller)) {
