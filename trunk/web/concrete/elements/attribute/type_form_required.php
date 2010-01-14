@@ -2,13 +2,14 @@
 $form = Loader::helper('form'); 
 $ih = Loader::helper("concrete/interface");
 $valt = Loader::helper('validation/token');
-$akHandle = '';
 $akName = '';
 $akIsSearchable = 0;
 $asID = 0;
 
 if (is_object($key)) {
-	$akHandle = $key->getAttributeKeyHandle();
+	if (!isset($akHandle)) {
+		$akHandle = $key->getAttributeKeyHandle();
+	}
 	$akName = $key->getAttributeKeyName();
 	$akIsSearchable = $key->isAttributeKeySearchable();
 	$akIsSearchableIndexed = $key->isAttributeKeyContentIndexed();
