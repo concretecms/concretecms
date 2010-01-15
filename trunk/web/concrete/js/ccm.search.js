@@ -1,11 +1,20 @@
 var ccm_searchActivatePostFunction = false;
 
 ccm_setupAdvancedSearchFields = function(searchType) {
+	ccm_totalAdvancedSearchFields = $('.ccm-search-request-field-set').length;
 	$("#ccm-" + searchType + "-search-add-option").unbind();
 	$("#ccm-" + searchType + "-search-add-option").click(function() {
 		ccm_totalAdvancedSearchFields++;
 		$("#ccm-search-fields-wrapper").append('<div class="ccm-search-field" id="ccm-' + searchType + '-search-field-set' + ccm_totalAdvancedSearchFields + '">' + $("#ccm-search-field-base").html() + '<\/div>');
 		ccm_activateAdvancedSearchFields(searchType, ccm_totalAdvancedSearchFields);
+	});
+	
+	// we have to activate any of the fields that were here based on the request
+	// these fields show up after a page is reloaded but we want to keep showing the request fields
+	var i = 1;
+	$('.ccm-search-request-field-set').each(function() {
+		ccm_activateAdvancedSearchFields(searchType, i);
+		i++;
 	});
 }
 
@@ -77,9 +86,33 @@ ccm_setupSortableColumnSelection = function() {
 	});
 }
 
+ccm_checkSelectedAdvancedSearchField = function(searchType, fieldset) {
+	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option[search-field=date_added] input").each(function() {
+		if ($(this).attr('id') == 'date_from') {
+			$(this).attr('id', 'date_from' + fieldset);
+		} else if ($(this).attr('id') == 'date_to') {
+			$(this).attr('id', 'date_to' + fieldset);
+		}
+	});
+
+	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").each(function() {
+		$(this).attr('id', $(this).attr('id') + fieldset);
+	});
+	
+	
+	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option[search-field=date_added] input").datepicker({
+		showAnim: 'fadeIn'
+	});
+	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").datepicker({
+		showAnim: 'fadeIn'
+	});
+	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-rating input").rating();		
+}
+
 ccm_activateAdvancedSearchFields = function(searchType, fieldset) {
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " select[name=searchField]").unbind();
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " select[name=searchField]").change(function() {
+	var selTag = $("#ccm-" + searchType + "-search-field-set" + fieldset + " select:first");
+	selTag.unbind();
+	selTag.change(function() {
 		var selected = $(this).find(':selected').val(); 
 		$(this).next('input.ccm-' + searchType + '-selected-field').val(selected);
 		
@@ -88,42 +121,24 @@ ccm_activateAdvancedSearchFields = function(searchType, fieldset) {
 		itemToCopy.clone().appendTo("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-selected-field-content");
 		
 		$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-selected-field-content .ccm-search-option").show();
-
-		$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option[search-field=date_added] input").each(function() {
-			if ($(this).attr('id') == 'date_from') {
-				$(this).attr('id', 'date_from' + fieldset);
-			} else if ($(this).attr('id') == 'date_to') {
-				$(this).attr('id', 'date_to' + fieldset);
-			}
-		});
-	
-		$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").each(function() {
-			$(this).attr('id', $(this).attr('id') + fieldset);
-		});
-		
-		
-		$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option[search-field=date_added] input").datepicker({
-			showAnim: 'fadeIn'
-		});
-		$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").datepicker({
-			showAnim: 'fadeIn'
-		});
-		$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-rating input").rating();
-		
+		ccm_checkSelectedAdvancedSearchField(searchType, fieldset);
 	});
 
 	
 	// add the initial state of the latest select menu
-	var lastSelect = $("#ccm-" + searchType + "-search-field-set" + fieldset + " select[name=searchField]").eq($(".ccm-" + searchType + "-search-field select[name=searchField]").length-1);
+	/*
+	var lastSelect = $("#ccm-" + searchType + "-search-field-set" + fieldset + " select[ccm-advanced-search-selector=1]").eq($(".ccm-" + searchType + "-search-field select[ccm-advanced-search-selector=1]").length-1);
 	var selected = lastSelect.find(':selected').val();
 	lastSelect.next('input.ccm-" + searchType + "-selected-field').val(selected);
-
+	*/
 	
 	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-remove-option").unbind();
 	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-remove-option").click(function() {
 		$(this).parents('div.ccm-search-field').remove();
 		//ccm_totalAdvancedSearchFields--;
 	});
+	
+	ccm_checkSelectedAdvancedSearchField(searchType, fieldset);
 	
 }
 

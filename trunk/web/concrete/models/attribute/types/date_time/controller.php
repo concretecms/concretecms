@@ -87,9 +87,9 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 
 	public function search() {
 		$dt = Loader::helper('form/date_time');
-		$html = $dt->date($this->field('from'), false, false);
+		$html = $dt->date($this->field('from'), $this->request('from'), false);
 		$html .= ' ' . t('to') . ' ';
-		$html .= $dt->date($this->field('to'), false, false);
+		$html .= $dt->date($this->field('to'), $this->request('to'), false);
 		print $html;
 	}
 	

@@ -10,7 +10,15 @@
 <?
 	$fileList->displaySummary();
 	$txt = Loader::helper('text');
-	$keywords = $_REQUEST['fKeywords'];
+	$keywords = $searchRequest['fKeywords'];
+	/*
+	if ($searchType == 'DASHBOARD') {
+		$bu = false;
+	} else {
+		$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/files/search_results';
+	}
+	*/
+	
 	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/files/search_results';
 	
 	if (count($files) > 0) { ?>	

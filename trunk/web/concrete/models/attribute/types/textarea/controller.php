@@ -33,6 +33,18 @@ class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 		}
 	}
 
+	public function searchForm($list) {
+		$db = Loader::db();
+		$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), '%' . $this->request('value') . '%', 'like');
+		return $list;
+	}
+	
+	public function search() {
+		$f = Loader::helper('form');
+		print $f->text($this->field('value'), $this->request('value'));
+	}
+	
+
 	public function setDisplayMode($akTextareaDisplayMode) {
 		$db = Loader::db();
 		$ak = $this->getAttributeKey();

@@ -70,17 +70,29 @@ $s1 = FileSet::getMySets();
 		<? } ?>
 		
 	</div>
+	<? /*
 	
-	<form method="get" id="ccm-file-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
+	<? if ($searchType == 'DASHBOARD') { ?>
+		<form method="get" id="ccm-file-advanced-search" action="<?=$this->url('/dashboard/files/search')?>">
+	<? } else { ?>
+		<form method="get" id="ccm-file-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
+	<? } ?>
+	
+	*/
+	?>
 
+	<form method="get" id="ccm-file-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
+	
 <div id="ccm-file-search-advanced-fields" class="ccm-search-advanced-fields" >
 	
-		<input type="hidden" name="search" value="1" />
+		<input type="hidden" name="submit_search" value="1" />
 	<?	/** 
 		 * Here are all the things that could be passed through the asset library that we need to account for, as hidden form fields
 		 */
 		print $form->hidden('fType'); 
 		print $form->hidden('fExtension'); 
+		print $form->hidden('ccm_order_dir', $searchRequest['ccm_order_dir']); 
+		print $form->hidden('ccm_order_by', $searchRequest['ccm_order_by']); 
 		print $form->hidden('fileSelector', $fileSelector); 
 	?>	
 		<div id="ccm-search-box-title">
@@ -100,7 +112,7 @@ $s1 = FileSet::getMySets();
 				<table border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td width="100%">
-					<?=$form->text('fKeywords', array('style' => 'width:200px')); ?>
+					<?=$form->text('fKeywords', $searchRequest['fKeywords'], array('style' => 'width:200px')); ?>
 					</td>
 				</tr>
 				</table>
@@ -117,7 +129,7 @@ $s1 = FileSet::getMySets();
 							'50' => '50',
 							'100' => '100',
 							'500' => '500'
-						), false, array('style' => 'width:65px'))?>
+						), $searchRequest['numResults'], array('style' => 'width:65px'))?>
 					</td>
 					<td><a href="javascript:void(0)" id="ccm-file-search-add-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a></td>
 				</tr>	
@@ -142,7 +154,75 @@ $s1 = FileSet::getMySets();
 				</table>
 			</div>
 			
-			<div id="ccm-search-fields-wrapper">			
+			<div id="ccm-search-fields-wrapper">
+			<? 
+			$i = 1;
+			if (is_array($searchRequest['selectedSearchField'])) { 
+				foreach($searchRequest['selectedSearchField'] as $req) { 
+					
+					if ($req == '') {
+						continue;
+					}
+					
+					?>
+					
+					<div class="ccm-search-field ccm-search-request-field-set" ccm-search-type="<?=$req?>" id="ccm-file-search-field-set<?=$i?>">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td valign="top" style="padding-right: 4px">
+							<?=$form->select('searchField' . $i, $searchFields, $req, array('style' => 'width: 85px')); ?>
+							<input type="hidden" value="<?=$req?>" class="ccm-file-selected-field" name="selectedSearchField[]" />
+							</td>
+							<td width="100%" valign="top" class="ccm-selected-field-content">
+							<? if ($req == 'size') { ?>
+								<span class="ccm-search-option" search-field="size">
+								<?=$form->text('size_from', $searchRequest['size_from'], array('style' => 'width: 30px'))?>
+								<?=t('to')?>
+								<?=$form->text('size_to', $searchRequest['size_to'], array('style' => 'width: 30px'))?>
+								KB
+								</span>
+							<? } ?>
+							
+							<? if ($req == 'type') { ?>
+								<span class="ccm-search-option"  search-field="type">
+								<?=$form->select('type', $types, $searchRequest['type'])?>
+								</span>
+							<? } ?>
+							
+							<? if ($req == 'extension') { ?>
+								<span class="ccm-search-option"  search-field="extension">
+								<?=$form->select('extension', $extensions, $searchRequest['extension'])?>
+								</span>
+							<? } ?>
+							
+							<? if ($req == 'date_added') { ?>
+								<span class="ccm-search-option"  search-field="date_added">
+								<?=$form->text('date_from', $searchRequest['date_from'], array('style' => 'width: 86px'))?>
+								<?=t('to')?>
+								<?=$form->text('date_to', $searchRequest['date_to'], array('style' => 'width: 86px'))?>
+								</span>
+							<? } ?>
+							
+							<? foreach($searchFieldAttributes as $sfa) { 
+								if ($sfa->getAttributeKeyID() == $req) {
+									$at = $sfa->getAttributeType();
+									$at->controller->setRequestArray($searchRequest);
+									$at->render('search', $sfa);
+								}
+							} ?>
+							</td>
+							<td valign="top">
+							<a href="javascript:void(0)" class="ccm-search-remove-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" /></a>
+							</td>
+						</tr>
+					</table>
+					</div>
+					
+				<? 
+					$i++;
+				}
+			}?>
+			
 			</div>
 			
 			<div id="ccm-search-fields-submit">
@@ -158,13 +238,13 @@ $s1 = FileSet::getMySets();
 	<h2><?=t('Filter by File Set')?></h2>
 	<div style="max-height: 200px; overflow: auto">
 	<? foreach($s1 as $fs) { ?>
-		<div class="ccm-file-search-advanced-sets-cb"><?=$form->checkbox('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetID())?> <?=$form->label('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetName())?></div>
+		<div class="ccm-file-search-advanced-sets-cb"><?=$form->checkbox('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetID(), (is_array($searchRequest['fsID']) && in_array($fs->getFileSetID(), $searchRequest['fsID'])))?> <?=$form->label('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetName())?></div>
 	<? } ?>
 	</div>
 	
 	<hr/>
 	
-	<div><?=$form->checkbox('fsIDNone', '1')?> <?=$form->label('fsIDNone', t('Display files in no sets.'))?></div>
+	<div><?=$form->checkbox('fsIDNone', '1', $searchRequest['fsIDNone'] == 1)?> <?=$form->label('fsIDNone', t('Display files in no sets.'))?></div>
 </div>
 
 <? } ?>
