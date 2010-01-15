@@ -6,7 +6,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		protected $identifier;
 		protected static $sets = array();
 	 	protected $attributeKey;
-	 	
+		protected $requestArray = false;
+		
+		public function setRequestArray($array) {
+			$this->requestArray = $array;
+		}
+		
 	 	public function setAttributeKey($attributeKey) {
 	 		$this->attributeKey = $attributeKey;
 	 	}
@@ -50,20 +55,22 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		public function post($field = false) {
 			// the only post that matters is the one for this attribute's name space
-			if (is_object($this->attributeKey) && is_array($_POST['akID'])) {
-				$p = $_POST['akID'][$this->attributeKey->getAttributeKeyID()];
+			$req = ($this->requestArray == false) ? $_POST : $this->requestArray;
+			if (is_object($this->attributeKey) && is_array($req['akID'])) {
+				$p = $req['akID'][$this->attributeKey->getAttributeKeyID()];
 				if ($field) {
 					return $p[$field];
 				}
 				return $p;
-			}
-			
+			}			
 			return parent::post($field);
 		}
 
 		public function request($field = false) {
-			if (is_object($this->attributeKey) && is_array($_REQUEST['akID'])) {
-				$p = $_REQUEST['akID'][$this->attributeKey->getAttributeKeyID()];
+			$req = ($this->requestArray == false) ? $_REQUEST : $this->requestArray;
+			
+			if (is_object($this->attributeKey) && is_array($req['akID'])) {
+				$p = $req['akID'][$this->attributeKey->getAttributeKeyID()];
 				if ($field) {
 					return $p[$field];
 				}

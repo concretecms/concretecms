@@ -84,7 +84,6 @@ class AttributeKey extends Object {
 		$list = array();
 		$txt = Loader::helper('text');
 		$className = $txt->camelcase($akCategoryHandle);
-		Loader::model('attribute/categories/' . $className);
 		while ($row = $r->FetchRow()) {
 			$c1 = $className . 'AttributeKey';
 			$c1a = call_user_func_array(array($c1, 'getByID'), array($row['akID']));

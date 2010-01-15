@@ -32,9 +32,9 @@ class NumberAttributeTypeController extends AttributeTypeController  {
 	
 	public function search() {
 		$f = Loader::helper('form');
-		$html = $f->text($this->field('from'));
+		$html = $f->text($this->field('from'), $this->request('from'));
 		$html .= ' ' . t('to') . ' ';
-		$html .= $f->text($this->field('to'));
+		$html .= $f->text($this->field('to'), $this->request('to'));
 		print $html;
 	}
 	

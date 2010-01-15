@@ -259,7 +259,6 @@ class File extends Object {
 		$f = File::getByID($fID);
 		
 		$fv = $f->addVersion($filename, $prefix, $data);
-		$f->refreshCache();
 			
 		return $fv;
 	}

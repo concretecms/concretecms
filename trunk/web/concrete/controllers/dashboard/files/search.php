@@ -15,67 +15,88 @@ class DashboardFilesSearchController extends Controller {
 		$this->set('fileList', $fileList);		
 		$this->set('files', $files);		
 		$this->set('pagination', $fileList->getPagination());
+	}
+	
+	public function getSearchRequest() {
+		if (!is_array($_SESSION['fileSearchFields'])) {
+			$_SESSION['fileSearchFields'] = array();
+		}
 		
-
+		$validSearchKeys = array('fKeywords', 'numResults', 'fsIDNone', 'fsID', 'ccm_order_dir', 'ccm_order_by', 'size_from', 'size_to', 'type', 'extension', 'date_from', 'date_to', 'searchField', 'selectedSearchField', 'akID');
+		
+		foreach($_REQUEST as $key => $value) {
+			if (in_array($key, $validSearchKeys)) {
+				$_SESSION['fileSearchFields'][$key] = $value;
+			}
+		}		
+		$this->set('searchRequest', $_SESSION['fileSearchFields']);
+		return $_SESSION['fileSearchFields'];
 	}
 	
 	public function getRequestedSearchResults() {
 		$fileList = new FileList();
-		$keywords = htmlentities($_GET['fKeywords'], ENT_QUOTES, APP_CHARSET);
-		$fileList->sortBy('fvDateAdded', 'desc');
 		Loader::model('file_set');
+		
+		if ($_REQUEST['submit_search']) {
+			$_SESSION['fileSearchFields'] = array();
+		}
+
+		$req = $this->getSearchRequest();
+		$fileList->sortBy($req['ccm_order_by'], $req['ccm_order_dir']);
+		
+		$keywords = htmlentities($req['fKeywords'], ENT_QUOTES, APP_CHARSET);
 		
 		if ($keywords != '') {
 			$fileList->filterByKeywords($keywords);
 		}
 
-		if ($_REQUEST['numResults']) {
-			$fileList->setItemsPerPage($_REQUEST['numResults']);
+		if ($req['numResults']) {
+			$fileList->setItemsPerPage($req['numResults']);
 		}
 		
-		if (isset($_GET['fsIDNone']) && $_GET['fsIDNone'] == 1) { 
+		if (isset($req['fsIDNone']) && $req['fsIDNone'] == 1) { 
 			$fileList->filterBySet(false);
 		} else {
-			if (is_array($_GET['fsID'])) {
-				foreach($_GET['fsID'] as $fsID) {
+			if (is_array($req['fsID'])) {
+				foreach($req['fsID'] as $fsID) {
 					$fs = FileSet::getByID($fsID);
 					$fileList->filterBySet($fs);
 				}
-			} else if (isset($_GET['fsID']) && $_GET['fsID'] != '' && $_GET['fsID'] > 0) {
-				$set = $_REQUEST['fsID'];
+			} else if (isset($req['fsID']) && $req['fsID'] != '' && $req['fsID'] > 0) {
+				$set = $req['fsID'];
 				$fs = FileSet::getByID($set);
 				$fileList->filterBySet($fs);
 			}
 		}
 		
 		if (isset($_GET['fType']) && $_GET['fType'] != '') {
-			$type = $_REQUEST['fType'];
+			$type = $_GET['fType'];
 			$fileList->filterByType($type);
 		}
 
 		if (isset($_GET['fExtension']) && $_GET['fExtension'] != '') {
-			$ext = $_REQUEST['fExtension'];
+			$ext = $_GET['fExtension'];
 			$fileList->filterByExtension($ext);
 		}
 		
 		$selectedSets = array();
 
-		if (is_array($_REQUEST['selectedSearchField'])) {
-			foreach($_REQUEST['selectedSearchField'] as $i => $item) {
+		if (is_array($req['selectedSearchField'])) {
+			foreach($req['selectedSearchField'] as $i => $item) {
 				// due to the way the form is setup, index will always be one more than the arrays
 				if ($item != '') {
 					switch($item) {
 						case "extension":
-							$extension = $_REQUEST['extension'];
+							$extension = $req['extension'];
 							$fileList->filterByExtension($extension);
 							break;
 						case "type":
-							$type = $_REQUEST['type'];
+							$type = $req['type'];
 							$fileList->filterByType($type);
 							break;
 						case "date_added":
-							$dateFrom = $_REQUEST['date_from'];
-							$dateTo = $_REQUEST['date_to'];
+							$dateFrom = $req['date_from'];
+							$dateTo = $req['date_to'];
 							if ($dateFrom != '') {
 								$dateFrom = date('Y-m-d', strtotime($dateFrom));
 								$fileList->filterByDateAdded($dateFrom, '>=');
@@ -90,8 +111,8 @@ class DashboardFilesSearchController extends Controller {
 							break;
 
 						case "size":
-							$from = $_REQUEST['size_from'];
-							$to = $_REQUEST['size_to'];
+							$from = $req['size_from'];
+							$to = $req['size_to'];
 							$fileList->filterBySize($from, $to);
 							break;
 						default:
@@ -100,12 +121,16 @@ class DashboardFilesSearchController extends Controller {
 							$fak = FileAttributeKey::get($akID);
 							$type = $fak->getAttributeType();
 							$cnt = $type->getController();
+							$cnt->setRequestArray($req);
 							$cnt->setAttributeKey($fak);
 							$cnt->searchForm($fileList);
 							break;
 					}
 				}
 			}
+		}
+		if (isset($req['numResults'])) {
+			$fileList->setItemsPerPage($req['numResults']);
 		}
 		return $fileList;
 	}

@@ -55,7 +55,7 @@ class RatingAttributeTypeController extends AttributeTypeController  {
 	
 	public function search() {
 		$rt = Loader::helper('form/rating');
-		print $rt->rating($this->field('value'), $caValue, false);
+		print $rt->rating($this->field('value'), $this->request('value'), false);
 	}
 	
 	public function deleteValue() {

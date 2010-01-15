@@ -12,6 +12,7 @@ $cnt = Loader::controller('/dashboard/files/search');
 $fileList = $cnt->getRequestedSearchResults();
 $files = $fileList->getPage();
 $pagination = $fileList->getPagination();
+$searchRequest = $cnt->getSearchRequest();
 ?>
 
 <div id="ccm-search-overlay" >
@@ -19,10 +20,10 @@ $pagination = $fileList->getPagination();
 		<table id="ccm-search-form-table" >
 			<tr>
 				<td valign="top" class="ccm-search-form-advanced-col">
-					<? Loader::element('files/search_form_advanced'); ?>
+					<? Loader::element('files/search_form_advanced', array('searchRequest' => $searchRequest)); ?>
 				</td>		
 				<? /* <div id="ccm-file-search-advanced-fields-gutter">&nbsp;</div> */ ?>		
-				<td valign="top">	
+				<td valign="top" width="100%">	
 					
 					<div id="ccm-search-advanced-results-wrapper">
 					

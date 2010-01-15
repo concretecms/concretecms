@@ -104,6 +104,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		if (!is_array($selectedOptions)) {
 			$selectedOptions = array();
 		}
+		print_r($this->requestArray);
 		$this->set('selectedOptions', $selectedOptions);
 	}
 	

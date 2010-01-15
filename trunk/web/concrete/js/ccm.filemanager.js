@@ -56,13 +56,15 @@ ccm_activateFileManager = function(altype) {
 		e.stopPropagation();
 		ccm_alSelectNone();
 	});
+
+	ccm_setupAdvancedSearch('file');
 	
 	if (altype == 'DASHBOARD') {
 		$(".dialog-launch").dialog();
 	}
+	
 	ccm_alLaunchType = altype;
 	
-	ccm_setupAdvancedSearch('file');
 	ccm_alSetupCheckboxes();
 	ccm_alSetupFileProcessor();
 	ccm_alSetupSingleUploadForm();

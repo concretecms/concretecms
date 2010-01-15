@@ -314,7 +314,6 @@ class FormHelper {
 			$id = $key;
 		}
 
-		$str = '<select class="ccm-input-select" name="' . $key . '" id="' . $id . '" ';
 
 		if (is_array($valueOrArray)) {
 			$miscFields = $valueOrArray;
@@ -322,6 +321,13 @@ class FormHelper {
 			$miscFields['ccm-passed-value'] = $valueOrArray;	
 		}
 		
+		$_class = '';
+		if (is_array($miscFields) && isset($miscFields['class'])) {
+			$_class = ' ' . $miscFields['class'];
+		}
+		unset($miscFields['class']);
+		$str = '<select class="ccm-input-select' . $_class . '" name="' . $key . '" id="' . $id . '" ';
+
 		if (is_array($miscFields)) {
 			foreach($miscFields as $k => $value) {
 				$str .= $k . '="' . $value . '" ';

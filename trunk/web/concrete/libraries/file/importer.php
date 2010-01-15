@@ -135,6 +135,7 @@ class FileImporter {
 			// we have to create a new file object for this file version
 			$fv = File::add($filename, $prefix);
 			$fv->refreshAttributes(true);
+			$fr = $fv->getFile();
 		} else {
 			// We get a new version to modify
 			$fv = $fr->getVersionToModify(true);
@@ -142,6 +143,7 @@ class FileImporter {
 			$fv->refreshAttributes();
 		}
 
+		$fr->refreshCache();
 		return $fv;
 	}
 	
