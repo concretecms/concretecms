@@ -31,7 +31,6 @@
 			}
 			<? } ?>
 			document.forms['ccmBlockPermissionForm'].submit();
-			location.href='<?=$_SERVER['PHP_SELF']?>?close=1';
 		}
 		
 		<? if ($numChildren) { ?>
