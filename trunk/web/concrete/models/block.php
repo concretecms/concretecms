@@ -817,18 +817,19 @@ class Block extends Object {
 									foreach ($gIDArray as $gID => $perms) {
 										// we have to trim the trailing colon, if there is one
 										$permissions = (strrpos($perms, ':') == (strlen($perms) - 1)) ? substr($perms, 0, strlen($perms) - 1) : $perms;
-										$v = array($cvRow['cID'], $cvRow['cvID'], $this->bID, $gID, $permissions);
-										$q = "insert into CollectionVersionBlockPermissions (cID, cvID, bID, gID, cbgPermissions) values (?, ?, ?, ?, ?)";
-										$r = $db->prepare($q);
-										$res = $db->execute($r, $v);
+										// we call a replace here because there is a concrete5 bug which could lead to us inserting multiple rows.
+										// we SHOULDN'T be but that's because we're not tracking arHandle in this table at all. That is a problem. This is a 
+										// quick fix to work around it but that needs to be addressed.
+										$db->Replace('CollectionVersionBlockPermissions', 
+											array('cID' => $cvRow['cID'], 'cvID' => $cvRow['cvID'], 'bID' => $this->bID, 'gID' => $gID, 'cbgPermissions' => $permissions),
+											array('cID', 'cvID', 'bID', 'gID'), true);
 									}
 									foreach ($uIDArray as $uID => $perms) {
 										// we have to trim the trailing colon, if there is one
 										$permissions = (strrpos($perms, ':') == (strlen($perms) - 1)) ? substr($perms, 0, strlen($perms) - 1) : $perms;
-										$v = array($cvRow['cID'], $cvRow['cvID'], $this->bID, $uID, $permissions);
-										$q = "insert into CollectionVersionBlockPermissions (cID, cvID, bID, uID, cbgPermissions) values (?, ?, ?, ?, ?)";
-										$r = $db->prepare($q);
-										$res = $db->execute($r, $v);
+										$db->Replace('CollectionVersionBlockPermissions', 
+											array('cID' => $cvRow['cID'], 'cvID' => $cvRow['cvID'], 'bID' => $this->bID, 'uID' => $uID, 'cbgPermissions' => $permissions),
+											array('cID', 'cvID', 'bID', 'uID'), true);
 									}
 								}
 							}
