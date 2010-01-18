@@ -559,9 +559,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						$q2 = "select gID, uID, cbgPermissions from CollectionVersionBlockPermissions where cID = '{$this->cID}' and bID = '{$row['bID']}' and cvID = '{$row['cvID']}'";
 						$r2 = $db->query($q2);
 						while ($row2 = $r2->fetchRow()) {
-							$v3 = array($newCID, $row['cvID'], $row['bID'], $row2['gID'], $row2['uID'], $row2['cbgPermissions']);
-							$q3 = "insert into CollectionVersionBlockPermissions (cID, cvID, bID, gID, uID, cbgPermissions) values (?, ?, ?, ?, ?, ?)";
-							$db->query($q3, $v3);
+							$db->Replace('CollectionVersionBlockPermissions', 
+								array('cID' => $newCID, 'cvID' => $row['cvID'], 'bID' => $row['bID'], 'gID' => $row2['gID'], 'uID' => $row2['uID'], 'cbgPermissions' => $row2['cbgPermissions']),
+								array('cID', 'cvID', 'bID', 'gID', 'uID'), true);
 						}
 					}
 				}

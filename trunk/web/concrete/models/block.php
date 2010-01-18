@@ -380,8 +380,9 @@ class Block extends Object {
 
 				if ($ra) {
 					while ($row_a = $ra->fetchRow()) {
-						$qa2 = "insert into CollectionVersionBlockPermissions (cID, cvID, bID, gID, uID, cbgPermissions) values ('{$cID}', '{$cvID}', '{$this->bID}', '{$row_a['gID']}', '{$row_a['uID']}', '{$row_a['cbgPermissions']}')";
-						$ra2 = $db->query($qa2);
+						$db->Replace('CollectionVersionBlockPermissions', 
+							array('cID' => $cID, 'cvID' => $cvID, 'bID' => $this->bID, 'gID' => $row_a['gID'], 'uID' => $row_a['uID'], 'cbgPermissions' => $row_a['cbgPermissions']),
+							array('cID', 'cvID', 'bID', 'gID', 'uID'), true);
 					}
 					$ra->free();
 				}
@@ -433,8 +434,10 @@ class Block extends Object {
 		$r = $db->query($q);
 		if ($r) {
 			while ($row = $r->fetchRow()) {
-				$q = "insert into CollectionVersionBlockPermissions (cID, cvID, bID, gID, uID, cbgPermissions) values ('$ncID', '$nvID', '{$newBID}', '{$row['gID']}', '{$row['uID']}', '{$row['cbgPermissions']}')";
-				$r2 = $db->query($q);
+				$db->Replace('CollectionVersionBlockPermissions', 
+					array('cID' => $ncID, 'cvID' => $nvID, 'bID' => $newBID, 'gID' => $row['gID'], 'uID' => $row['uID'], 'cbgPermissions' => $row['cbgPermissions']),
+					array('cID', 'cvID', 'bID', 'gID', 'uID'), true);
+
 			}
 			$r->free();
 		}
