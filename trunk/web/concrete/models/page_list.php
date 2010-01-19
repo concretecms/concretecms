@@ -37,7 +37,25 @@ class PageList extends DatabaseItemList {
 	public function ignorePermissions() {
 		$this->ignorePermissions = true;
 	}
-	
+
+	/** 
+	 * Filters by "keywords" (which searches everything including filenames, title, tags, users who uploaded the file, tags)
+	 */
+	public function filterByKeywords($keywords) {
+		$db = Loader::db();
+		$kw = $db->quote($keywords);
+		$qk = $db->quote('%' . $keywords . '%');
+		Loader::model('attribute/categories/collection');		
+		$keys = CollectionAttributeKey::getSearchableIndexedList();
+		$attribsStr = '';
+		foreach ($keys as $ak) {
+			$cnt = $ak->getController();			
+			$attribsStr.=' OR ' . $cnt->searchKeywords($keywords);
+		}
+		$this->filter(false, "(psi.cName like {$qk} or psi.cDescription like {$qk} or (match(psi.cName, psi.cDescription, psi.content) against ({$kw} in boolean mode))
+		{$attribsStr})");
+	}
+
 	/** 
 	 * Sets up a list to only return items the proper user can access 
 	 */
@@ -202,7 +220,7 @@ class PageList extends DatabaseItemList {
 	}
 	
 	protected function setBaseQuery($additionalFields = '') {
-		$this->setQuery('select distinct p1.cID, if(p2.cID is null, pt1.ctHandle, pt2.ctHandle) as ctHandle ' . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PageTypes pt1 on (pt1.ctID = p1.ctID) left join PageTypes pt2 on (pt2.ctID = p2.ctID) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
+		$this->setQuery('select distinct p1.cID, if(p2.cID is null, pt1.ctHandle, pt2.ctHandle) as ctHandle ' . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PageTypes pt1 on (pt1.ctID = p1.ctID) left join PageTypes pt2 on (pt2.ctID = p2.ctID) left join PageSearchIndex psi on (psi.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
 	}
 	
 	protected function setupSystemPagesToExclude() {
