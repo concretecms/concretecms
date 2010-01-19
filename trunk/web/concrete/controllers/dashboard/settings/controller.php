@@ -727,7 +727,7 @@ class DashboardSettingsController extends Controller {
 		?>
 theme : "concrete", 
 plugins: "inlinepopups,spellchecker,safari,advlink",
-editor_selector : "advancedEditor",
+editor_selector : "ccm-advanced-editor",
 spellchecker_languages : "+English=en",	
 theme_concrete_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,hr,|,styleselect,formatselect,fontsizeselect",
 theme_concrete_buttons2 : "bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,forecolor",
@@ -741,7 +741,7 @@ spellchecker_languages : "+English=en"
 /*
 // Use the advanced theme for more than two rows of content
 plugins: "inlinepopups,spellchecker,safari,advlink,table,advhr,xhtmlxtras,emotions,insertdatetime,paste,visualchars,nonbreaking,pagebreak,style",
-editor_selector : "advancedEditor",
+editor_selector : "ccm-advanced-editor",
 theme : "advanced",
 theme_advanced_buttons1 : "cut,copy,paste,pastetext,pasteword,|,undo,redo,|,styleselect,formatselect,fontsizeselect,fontselect",
 theme_advanced_buttons2 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,|,outdent,indent,blockquote,|,link,unlink,anchor,|,forecolor,backcolor,|,image,charmap,emotions",
