@@ -110,7 +110,7 @@ class Events {
 	 * @return void
 	 */
 	public static function fire($event) {
-		if (ENABLE_APPLICATION_EVENTS == false) {
+		if ((!defined('ENABLE_APPLICATION_EVENTS')) || (ENABLE_APPLICATION_EVENTS == false)) {
 			return;
 		}
 		
