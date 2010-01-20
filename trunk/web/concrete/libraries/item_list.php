@@ -44,8 +44,9 @@ class DatabaseItemList extends ItemList {
 
 	private function setupAutoSort() {
 		if (count($this->autoSortColumns) > 0) {
-			if (in_array($_REQUEST[$this->queryStringSortVariable], $this->autoSortColumns)) {
-				$this->sortBy($_REQUEST[$this->queryStringSortVariable], $_REQUEST[$this->queryStringSortDirectionVariable]);
+			$req = $this->getSearchRequest();
+			if (in_array($req[$this->queryStringSortVariable], $this->autoSortColumns)) {
+				$this->sortBy($req[$this->queryStringSortVariable], $req[$this->queryStringSortDirectionVariable]);
 			}
 		}
 	}
@@ -209,6 +210,24 @@ class ItemList {
 	protected $queryStringSortDirectionVariable = 'ccm_order_dir';
 	
 	private $items = array();
+	
+	public function resetSearchRequest() {
+		$_SESSION[get_class($this) . 'SearchFields'] = array();
+	}
+
+	public function getSearchRequest() {
+		if (!is_array($_SESSION[get_class($this) . 'SearchFields'])) {
+			$_SESSION[get_class($this) . 'SearchFields'] = array();
+		}
+		
+		// i don't believe we need this approach particularly, and it's a pain in the ass
+		//$validSearchKeys = array('fKeywords', 'numResults', 'fsIDNone', 'fsID', 'ccm_order_dir', 'ccm_order_by', 'size_from', 'size_to', 'type', 'extension', 'date_from', 'date_to', 'searchField', 'selectedSearchField', 'akID');
+		
+		foreach($_REQUEST as $key => $value) {
+			$_SESSION[get_class($this) . 'SearchFields'][$key] = $value;
+		}		
+		return $_SESSION[get_class($this) . 'SearchFields'];
+	}
 	
 	public function setItemsPerPage($num) {
 		$this->itemsPerPage = $num;

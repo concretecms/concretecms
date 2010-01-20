@@ -17,32 +17,18 @@ class DashboardFilesSearchController extends Controller {
 		$this->set('pagination', $fileList->getPagination());
 	}
 	
-	public function getSearchRequest() {
-		if (!is_array($_SESSION['fileSearchFields'])) {
-			$_SESSION['fileSearchFields'] = array();
-		}
-		
-		$validSearchKeys = array('fKeywords', 'numResults', 'fsIDNone', 'fsID', 'ccm_order_dir', 'ccm_order_by', 'size_from', 'size_to', 'type', 'extension', 'date_from', 'date_to', 'searchField', 'selectedSearchField', 'akID');
-		
-		foreach($_REQUEST as $key => $value) {
-			if (in_array($key, $validSearchKeys)) {
-				$_SESSION['fileSearchFields'][$key] = $value;
-			}
-		}		
-		$this->set('searchRequest', $_SESSION['fileSearchFields']);
-		return $_SESSION['fileSearchFields'];
-	}
-	
 	public function getRequestedSearchResults() {
 		$fileList = new FileList();
 		Loader::model('file_set');
 		
 		if ($_REQUEST['submit_search']) {
-			$_SESSION['fileSearchFields'] = array();
+			$fileList->resetSearchRequest();
 		}
 
-		$req = $this->getSearchRequest();
-		$fileList->sortBy($req['ccm_order_by'], $req['ccm_order_dir']);
+		$req = $fileList->getSearchRequest();
+		$this->set('searchRequest', $req);
+		
+		//$fileList->sortBy($req['ccm_order_by'], $req['ccm_order_dir']);
 		
 		$keywords = htmlentities($req['fKeywords'], ENT_QUOTES, APP_CHARSET);
 		

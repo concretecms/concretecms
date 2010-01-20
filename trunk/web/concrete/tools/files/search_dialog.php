@@ -12,7 +12,7 @@ $cnt = Loader::controller('/dashboard/files/search');
 $fileList = $cnt->getRequestedSearchResults();
 $files = $fileList->getPage();
 $pagination = $fileList->getPagination();
-$searchRequest = $cnt->getSearchRequest();
+$searchRequest = $fileList->getSearchRequest();
 ?>
 
 <div id="ccm-search-overlay" >
