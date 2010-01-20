@@ -58,6 +58,30 @@ if (is_object($b)) {
 			break;
 		case 'view_edit_mode':
 			if ($bp->canWrite()) {
+
+				$btc = Loader::controller($b);
+				// now we inject any custom template CSS and JavaScript into the header
+				if('Controller' != get_class($btc)){
+					$btc->outputAutoHeaderItems();
+				}
+				$btc->runTask('on_page_view', array($bv));
+				
+				$v = View::getInstance();
+				
+				$items = $v->getHeaderItems();
+				if (count($items) > 0) { ?>
+				<script type="text/javascript">				
+				<?
+				foreach($items as $item) { 
+					if ($item instanceof CSSOutputObject) { ?>
+						// we only support CSS here
+						ccm_addHeaderItem("<?=$item->href?>", 'CSS');
+					<? }
+				
+				} ?>
+				</script>
+				<? }
+				
 				$bv->renderElement('block_controls', array(
 					'a' => $a,
 					'b' => $b,

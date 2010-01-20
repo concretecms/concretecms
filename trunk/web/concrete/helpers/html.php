@@ -56,6 +56,12 @@ class HtmlHelper {
 				$css->file = ASSETS_URL_CSS . '/' . $file;
 			}
 		}
+		
+		// for the javascript addHeaderItem we need to have a full href available
+		$css->href = $css->file;
+		if (substr($css->file, 0, 4) != 'http') {
+			$css->href = ASSETS_URL_WEB_FULL . $css->file;
+		}
 		return $css;
 	}
 	
@@ -157,6 +163,7 @@ class HtmlHelper {
 class HeaderOutputObject {
 
 	public $file = '';
+	public $href = '';
 	public $compress = true;
 
 }

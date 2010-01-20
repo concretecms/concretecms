@@ -195,7 +195,9 @@ define('FILENAME_BLOCK_DB', 'db.xml');
 # Hosted assets are assets shared amongst all Concrete5 installations on a single machine.
 if (defined('MULTI_SITE') && MULTI_SITE == 1) {
 	define('ASSETS_URL_WEB', BASE_URL);
+	define('ASSETS_URL_WEB_FULL', BASE_URL);
 } else {
+	define('ASSETS_URL_WEB_FULL', BASE_URL . DIR_REL);
 	define('ASSETS_URL_WEB', DIR_REL);
 	define('MULTI_SITE', 0);
 }
