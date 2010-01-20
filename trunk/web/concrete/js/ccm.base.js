@@ -59,20 +59,32 @@ ccm_activateSite = function() {
 }
 
 ccm_addHeaderItem = function(item, type) {
-	$.ajax({
-		url: item,
-		async: false,
-		success: function(data) {
-			switch(type) {
-				case 'CSS':
-					$('head').append('<style type="text/css">' + data + '</style>');
-					break;
-				case 'JAVASCRIPT':
-					$('head').append('<script type="text/javascript">' + data + '</script>');
-					break;
+	var doLoad = true;
+	if (type == 'CSS') {
+		for (i = 0; i < document.styleSheets.length; i++) {
+			ss = document.styleSheets[i];			
+			if (ss.href == item) {
+				doLoad = false;
+				break;
 			}
 		}
-	});
+	}
+	if (doLoad) {
+		$.ajax({
+			url: item,
+			async: false,
+			success: function(data) {
+				switch(type) {
+					case 'CSS':
+						$('head').append('<style type="text/css">' + data + '</style>');
+						break;
+					case 'JAVASCRIPT':
+						$('head').append('<script type="text/javascript">' + data + '</script>');
+						break;
+				}
+			}
+		});
+	}
 }
 
 // called in versions popup

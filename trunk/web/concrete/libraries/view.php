@@ -104,12 +104,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$this->headerItems[$namespace][] = $item;
 		}
 		
-		/** 
-		 * Function responsible for outputting header items
-		 * @access private
-		 */
-		public function outputHeaderItems() {
-			
+		public function getHeaderItems() {
 			$a1 = (is_array($this->headerItems['CORE'])) ? $this->headerItems['CORE'] : array();
 			$a2 = (is_array($this->headerItems['VIEW'])) ? $this->headerItems['VIEW'] : array();
 			$a3 = (is_array($this->headerItems['CONTROLLER'])) ? $this->headerItems['CONTROLLER'] : array();
@@ -121,6 +116,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				// stupid PHP
 				$items = array_unique($items, SORT_STRING);
 			}
+			return $items;
+		}
+		
+		/** 
+		 * Function responsible for outputting header items
+		 * @access private
+		 */
+		public function outputHeaderItems() {
+			
+			$items = $this->getHeaderItems();
 			
 			// Loop through all items
 			// If it is a header output object, place each item in a separate array for its container directory
