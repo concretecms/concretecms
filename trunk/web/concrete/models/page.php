@@ -285,8 +285,8 @@ $ppWhere = '';
 			$q = "delete from PagePermissions where cID = '{$this->cID}' and gID = " . GUEST_GROUP_ID;
 			$r = $db->query($q);
 			if ($permissions != '') {
-				$v = array($this->cID, GUEST_GROUP_ID, $permissions);
-				$q = "insert into PagePermissions (cID, gID, cgPermissions) values (?, ?, ?)";
+				$v = array($this->cID, GUEST_GROUP_ID, $permissions, $px->guests['cgStartDate'], $px->guests['cgEndDate']);
+				$q = "insert into PagePermissions (cID, gID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?)";
 				$db->query($q, $v);
 			}
 			
@@ -296,8 +296,8 @@ $ppWhere = '';
 			$q = "delete from PagePermissions where cID = '{$this->cID}' and gID = " . REGISTERED_GROUP_ID;
 			$r = $db->query($q);
 			if ($permissions != '') {
-				$v = array($this->cID, REGISTERED_GROUP_ID, $permissions);
-				$q = "insert into PagePermissions (cID, gID, cgPermissions) values (?, ?, ?)";
+				$v = array($this->cID, REGISTERED_GROUP_ID, $permissions, $px->registered['cgStartDate'], $px->registered['cgEndDate']);
+				$q = "insert into PagePermissions (cID, gID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?)";
 				$db->query($q, $v);
 			}
 		}
@@ -306,8 +306,8 @@ $ppWhere = '';
 			$q = "delete from PagePermissions where cID = '{$this->cID}' and gID = " . ADMIN_GROUP_ID;
 			$r = $db->query($q);
 			if ($permissions != '') {
-				$v = array($this->cID, ADMIN_GROUP_ID, $permissions);
-				$q = "insert into PagePermissions (cID, gID, cgPermissions) values (?, ?, ?)";
+				$v = array($this->cID, ADMIN_GROUP_ID, $permissions, $px->administrators['cgStartDate'], $px->administrators['cgEndDate']);
+				$q = "insert into PagePermissions (cID, gID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?)";
 				$db->query($q, $v);
 			}
 		}		
@@ -323,8 +323,8 @@ $ppWhere = '';
 				$q = "delete from PagePermissions where cID = '{$this->cID}' and gID = " . $gID;
 				$r = $db->query($q);
 				if ($permissions != '') {
-					$v = array($this->cID, $gID, $permissions);
-					$q = "insert into PagePermissions (cID, gID, cgPermissions) values (?, ?, ?)";
+					$v = array($this->cID, $gID, $permissions, $g['cgStartDate'], $g['cgEndDate']);
+					$q = "insert into PagePermissions (cID, gID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?)";
 					$db->query($q, $v);
 				}
 			
@@ -343,8 +343,8 @@ $ppWhere = '';
 				$q = "delete from PagePermissions where cID = '{$this->cID}' and uID = " . $uID;
 				$r = $db->query($q);
 				if ($permissions != '') {
-					$v = array($this->cID, $uID, $permissions);
-					$q = "insert into PagePermissions (cID, uID, cgPermissions) values (?, ?, ?)";
+					$v = array($this->cID, $uID, $permissions, $_u['cgStartDate'], $_u['cgEndDate']);
+					$q = "insert into PagePermissions (cID, uID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?)";
 					$db->query($q, $v);
 				}
 			
