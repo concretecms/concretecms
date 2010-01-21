@@ -241,7 +241,7 @@ ccm_activate = function(obj, domID) {
 	aobj.addClass('selected');
 	ccm_selectedDomID = domID;
 	
-	offs = aobj.offset({padding: true});
+	offs = aobj.offset();
 
 	/* put highlighter over item. THanks dimensions plugin! */
 	
