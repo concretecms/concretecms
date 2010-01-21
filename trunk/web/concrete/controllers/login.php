@@ -379,8 +379,6 @@ class LoginController extends Controller {
 				$adminUser = UserInfo::getByID(USER_SUPER_ID);
 				if (is_object($adminUser)) {
 					$mh->from($adminUser->getUserEmail(),  t('Forgot Password'));
-				} else {
-					$mh->from('info@concrete5.org', t('Forgot Password'));
 				}
 			}
 			$mh->load('forgot_password');
