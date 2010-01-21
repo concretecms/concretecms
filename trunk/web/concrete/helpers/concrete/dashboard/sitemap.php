@@ -120,7 +120,7 @@ class ConcreteDashboardSitemapHelper {
 			'selected'=>$selected
 		);
 		
-		if ($nodeOpen && $autoOpenNodes) {
+		if ($cID == 1 || ($nodeOpen && $autoOpenNodes)) {
 			// We open another level
 			$node['subnodes'] = ConcreteDashboardSitemapHelper::getSubNodes($cID, $level, false, $autoOpenNodes);
 		}
@@ -137,7 +137,7 @@ class ConcreteDashboardSitemapHelper {
 			$q1 = $db->quote('%' . $keywords . '%');
 			$path = $db->quote($nc->getCollectionPath() . '%');
 			
-			$q = "select Pages.cID from Pages inner join PagePaths pp on Pages.cID = pp.cID inner join CollectionVersions cv on Pages.cID = cv.cID and cv.cvID = (select max(cvID) from CollectionVersions where cID = Pages.cID) where cPath like $path and (cvName like $q1 or cvDescription like $q1)";
+			$q = "select Pages.cID from Pages inner join PagePaths pp on Pages.cID = pp.cID inner join CollectionVersions cv on Pages.cID = cv.cID and cv.cvID = (select max(cvID) from CollectionVersions where cID = Pages.cID) where cPath like $path and (cvName like $q1) and Pages.cID <> $cID";
 			$r = $db->query($q);
 		} else {
 			$v = array($cID);		
