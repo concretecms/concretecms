@@ -42,7 +42,7 @@ var ccmAttributesHelper={
 	makeSortable: function() {
 		$("div#attributeValuesWrap").sortable({
 			cursor: 'move',
-			opacity: 0.5,
+			opacity: 0.5
 		});
 	},
 	
