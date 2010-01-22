@@ -13,6 +13,7 @@ class PageList extends DatabaseItemList {
 	private $includeSystemPages = false;
 	protected $attributeFilters = array();
 	private $displayOnlyPermittedPages = false;
+	private $displayOnlyApprovedPages = true;
 	private $systemPagesToExclude = array('login.php', 'register.php', 'download_file.php', 'profile/%', 'dashboard/%');
 	private $filterByCParentID = 0;
 	private $filterByCT = false;
@@ -36,6 +37,10 @@ class PageList extends DatabaseItemList {
 	
 	public function ignorePermissions() {
 		$this->ignorePermissions = true;
+	}
+	
+	public function displayUnapprovedPages() {
+		$this->displayOnlyApprovedPages = false;
 	}
 
 	/** 
@@ -259,7 +264,9 @@ class PageList extends DatabaseItemList {
 		if ($this->getQuery() == '') {
 			$this->setBaseQuery();
 		}		
-		$this->filter('cvIsApproved', 1);
+		if ($this->displayOnlyApprovedPages) {
+			$this->filter('cvIsApproved', 1);
+		}
 		$this->filter(false, "(p1.cIsTemplate = 0 or p2.cIsTemplate = 0)");
 		$this->setItemsPerPage($itemsToGet);
 		$this->setupPermissions();
@@ -268,7 +275,11 @@ class PageList extends DatabaseItemList {
 		$r = parent::get($itemsToGet, $offset);
 		foreach($r as $row) {
 			$nc = $this->loadPageID($row['cID']);
-			$nc->loadVersionObject();
+			if (!$this->displayOnlyApprovedPages) {
+				$nc->loadVersionObject('RECENT');
+			} else {
+				$nc->loadVersionObject();
+			}
 			$pages[] = $nc;
 		}
 		return $pages;

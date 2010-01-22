@@ -244,7 +244,7 @@ rescanDisplayOrder = function(nodeID) {
 var SITEMAP_LAST_DIALOGUE_URL='';
 var ccm_sitemap_html = '';
 
-parseTree = function(node, nodeID, deactivateSubNodes) { 
+parseTree = function(node, nodeID, deactivateSubNodes, totalPagesAtLevel) { 
 
 	if (!node) {
 		return false;
@@ -292,10 +292,10 @@ parseTree = function(node, nodeID, deactivateSubNodes) {
 			ccm_sitemap_html += '<a href="javascript:void(0)" onclick="closeSub(' + node[i].id + ')" class="ccm-tree-search-close"><img src="' + CCM_IMAGE_PATH + '/icons/close.png" /></a>';
 			ccm_sitemap_html += '<input type="text" name="submit" name="q" /> <a href="javascript:void(0)" onclick="searchSitemapNode(' + node[i].id + ')">';
 			ccm_sitemap_html += '<img src="' + CCM_IMAGE_PATH + '/icons/magnifying.png" /></a></form>';
-			ccm_sitemap_html += '<li><ul tree-root-state="closed" tree-root-node-id="' + node[i].id + '" id="tree-root' + node[i].id + '">';
+			ccm_sitemap_html += '<li><ul tree-root-state="closed" tree-root-node-id="' + node[i].id + '" tree-root-num-subpages="' + node[i].numSubpages + '" id="tree-root' + node[i].id + '">';
 			if (tr_parseSubnodes) {
-				parseTree(node[i].subnodes, node[i].id, deactivateSubNodes);
-			}		
+				parseTree(node[i].subnodes, node[i].id, deactivateSubNodes, node[i].numSubpages);
+			}
 			ccm_sitemap_html += '<\/ul>';
 		} else {
 			ccm_sitemap_html += '<div tree-node-title="' + escape(node[i].cvName) + '" tree-node-children="' + escape(node[i].numSubpages) + '" ';
@@ -304,7 +304,7 @@ parseTree = function(node, nodeID, deactivateSubNodes) {
 			ccm_sitemap_html += '<img src="' + CCM_IMAGE_PATH + '/spacer.gif" width="16" height="16" class="handle ' + moveableClass + '" /><span>' + node[i].cvName + '</span><\/div>';
 		}
 		ccm_sitemap_html += '</li><div class="dropzone tree-dz' + nodeID + '" tree-parent="' + nodeID + '" id="tree-dz' + node[i].id + '"><\/div>';
-
+		
 		if (node[i].selected == true) {
 			$("#tree-label" + node[i].id).addClass('tree-label-selected-onload');
 			if (CCM_SITEMAP_MODE == 'move_copy_delete') {
@@ -312,6 +312,10 @@ parseTree = function(node, nodeID, deactivateSubNodes) {
 			}
 		}
 		
+	}
+	
+	if (totalPagesAtLevel > node.length && nodeID > 1) {
+		ccm_sitemap_html += '<li>More</li>';
 	}
  
 	container.html(ccm_sitemap_html);
@@ -544,7 +548,7 @@ openSub = function(nodeID, onComplete) {
 	cancelReorder();
 	ccm_sitemap_html = '';
 	$.getJSON(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?node=" + nodeID, function(resp) {
-		parseTree(resp, nodeID, false);	
+		parseTree(resp, nodeID, false, container.attr('tree-root-num-subpages'));	
 		activateLabels();
 
 		if (CCM_SITEMAP_MODE == 'move_copy_delete') {
