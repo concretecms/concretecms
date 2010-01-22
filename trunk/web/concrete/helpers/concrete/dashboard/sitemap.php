@@ -18,6 +18,7 @@
  */
  
 defined('C5_EXECUTE') or die(_("Access Denied."));
+Loader::model('page_list');
 class ConcreteDashboardSitemapHelper {
 
 	// todo: implement aliasing support in getnode
@@ -50,7 +51,16 @@ class ConcreteDashboardSitemapHelper {
 		return ($_SESSION['dsbSitemapActiveNode'] == $cID);
 	}
 	
-	function getNode($cID, $level = 0, $autoOpenNodes = true) {
+	function getNode($cItem, $level = 0, $autoOpenNodes = true) {
+		if (!is_object($cItem)) {
+			$cID = $cItem;
+			$c = Page::getByID($cID, 'RECENT');
+		} else {
+			$cID = $cItem->getCollectionID();
+			$c = $cItem;
+		}
+		
+		/*
 		$db = Loader::db();
 		$v = array($cID);
 		$q = "select cPointerID from Pages where cID = ?";
@@ -65,9 +75,12 @@ class ConcreteDashboardSitemapHelper {
 		//$r = $db->query($q, $v);
 		//$row = $r->fetchRow();
 		
-		$c = Page::getByID($cID, 'RECENT');
+		*/
+		
+		
 		$cp = new Permissions($c);
 		
+		/*
 		if ($c->isSystemPage() && (!ConcreteDashboardSitemapHelper::showSystemPages())) {
 			return false;
 		}
@@ -75,6 +88,7 @@ class ConcreteDashboardSitemapHelper {
 		if ((!$cp->canRead()) && ($c->getCollectionPointerExternalLink() == null)) {
 			return false;
 		}
+		*/
 		
 		$canWrite = ($cp->canWrite()) ? true : false;
 		
@@ -139,20 +153,20 @@ class ConcreteDashboardSitemapHelper {
 			
 			$q = "select Pages.cID from Pages inner join PagePaths pp on Pages.cID = pp.cID inner join CollectionVersions cv on Pages.cID = cv.cID and cv.cvID = (select max(cvID) from CollectionVersions where cID = Pages.cID) where cPath like $path and (cvName like $q1) and Pages.cID <> $cID";
 			$r = $db->query($q);
-		} else {
-			$v = array($cID);		
-			// why the interesting join? We want to prevent items that are in the core set of pages from showing up here
-			// ok we're commenting that out for a moment	
-			//if (ConcreteDashboardSitemapHelper::showSystemPages()) {
-				$q = "select cID from Pages where cParentID = ? and cIsTemplate = 0 order by cDisplayOrder asc ";
-			//} else {
-			//	$q = "select cID from Pages left join Packages on Pages.pkgID = Packages.pkgID where cParentID = ? and cIsTemplate = 0 and (Packages.pkgHandle <> 'core' or pkgHandle is null or Pages.ctID > 0) order by cDisplayOrder asc ";
-			//}
-			$r = $db->query($q, $v);
+		} else {			
+			$pl = new PageList();
+			$pl->sortByDisplayOrder();
+			$pl->filterByParentID($cID);
+			$pl->displayUnapprovedPages();
+			if ($cID == 1) {
+				$results = $pl->get();			
+			} else {
+				$results = $pl->get();			
+			}
 		}
-		$nodes = array();
-		while ($row = $r->fetchRow()) {
-			$n = ConcreteDashboardSitemapHelper::getNode($row['cID'], $level+1, $autoOpenNodes);
+
+		foreach($results as $c) {
+			$n = ConcreteDashboardSitemapHelper::getNode($c, $level+1, $autoOpenNodes);
 			if ($n != false) {
 				$nodes[] = $n;
 			}
