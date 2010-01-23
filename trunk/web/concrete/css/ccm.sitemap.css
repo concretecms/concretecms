@@ -54,3 +54,5 @@ div#ccm-sitemap-search-results-total {padding-top: 3px; padding-bottom: 8px; fon
 div#ccm-sitemap-search-results-total div#returnToSitemap{float:left; width:100px; white-space:nowrap; overflow:visible}
 
 div#ccm-show-all-pages { position: relative; clear:right}
+
+li.ccm-sitemap-more-results {font-weight: bold; border: 1px solid #dedede; padding: 5px 5px 5px 5px !important}

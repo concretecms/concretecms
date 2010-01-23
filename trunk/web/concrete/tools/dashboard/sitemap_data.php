@@ -107,6 +107,6 @@ if ($_REQUEST['search']) {
 }
 
 $js = Loader::helper('json');
-print $js->encode($nodes);
+print $dh->outputRequestHTML($_REQUEST['mode'], $nodes);
 $dh->clearOneTimeActiveNodes();
 ?>

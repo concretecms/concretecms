@@ -87,7 +87,9 @@ class AttributeKey extends Object {
 		while ($row = $r->FetchRow()) {
 			$c1 = $className . 'AttributeKey';
 			$c1a = call_user_func_array(array($c1, 'getByID'), array($row['akID']));
-			$list[] = $c1a;
+			if (is_object($c1a)) {
+				$list[] = $c1a;
+			}
 		}
 		$r->Close();
 		return $list;

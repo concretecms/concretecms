@@ -73,8 +73,7 @@ var ccmi18n_sitemap = {
 	areYouSure: '<?=t('Are you sure?')?>',
 	loadError: '<?=t('Unable to load sitemap data. Response received: ')?>',
 	loadErrorTitle: '<?=t('Unable to load sitemap data.')?>',
-	on: '<?=t('on')?>'
-	
+	on: '<?=t('on')?>'	
 	
 }
 
