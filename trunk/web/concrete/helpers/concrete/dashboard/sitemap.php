@@ -25,6 +25,8 @@ class ConcreteDashboardSitemapHelper {
 	// getnode needs to check against the session array, to see if it should open a node, and get subnodes
 	// integrate droppables
 	
+	public $html = '';
+	
 	function addOpenNode($cID) {
 		if (is_array($_SESSION['dsbSitemapNodes'])) {
 			if (in_array($cID, $_SESSION['dsbSitemapNodes'])) {
@@ -148,23 +150,27 @@ class ConcreteDashboardSitemapHelper {
 		
 		if ($keywords != '' && $keywords != false) {
 			$nc = Page::getByID($cID, 'RECENT');
-			$q1 = $db->quote('%' . $keywords . '%');
-			$path = $db->quote($nc->getCollectionPath() . '%');
-			
-			$q = "select Pages.cID from Pages inner join PagePaths pp on Pages.cID = pp.cID inner join CollectionVersions cv on Pages.cID = cv.cID and cv.cvID = (select max(cvID) from CollectionVersions where cID = Pages.cID) where cPath like $path and (cvName like $q1) and Pages.cID <> $cID";
-			$r = $db->query($q);
+			$pl = new PageList();
+			$pl->filterByName($keywords);
+			$pl->filterByPath($nc->getCollectionPath());
+			$pl->displayUnapprovedPages();
+			$pl->sortByDisplayOrder();
+			$results = $pl->get(100);
+			$total = $pl->getTotal();
 		} else {			
 			$pl = new PageList();
 			$pl->sortByDisplayOrder();
 			$pl->filterByParentID($cID);
 			$pl->displayUnapprovedPages();
+			$total = $pl->getTotal();
 			if ($cID == 1) {
 				$results = $pl->get();			
 			} else {
-				$results = $pl->get();			
+				$results = $pl->get(100);
 			}
 		}
-
+		
+		$nodes = array();
 		foreach($results as $c) {
 			$n = ConcreteDashboardSitemapHelper::getNode($c, $level+1, $autoOpenNodes);
 			if ($n != false) {
@@ -172,7 +178,83 @@ class ConcreteDashboardSitemapHelper {
 			}
 		}
 		
-		return $nodes;
+		$obj->total = $total;
+		$obj->nodeID = $cID;
+		$obj->results = $nodes;
+		return $obj;
+	}
+	
+	public function outputRequestHTML($mode, $req) {
+		$nodeID = $req->nodeID;
+		$this->html = '<div class="dropzone tree-dz' . $nodeID . '" tree-parent="' . $nodeID . '" id="tree-dz' . $nodeID . '-sub"></div>';
+		$moveableClass = '';
+		for ($i = 0; $i < count($req->results); $i++) {
+			$ri = $req->results[$i];
+			$typeClass = 'tree-node-document';
+			$treeNodeType = 'document';
+			$labelClass = "tree-label";
+			if ($ri['numSubpages'] > 0) {
+				$typeClass = 'tree-node-folder';
+				$treeNodeType = 'folder';
+			}
+			$customIconSrc = "";
+			if ($ri['cIcon']) {
+				$customIconSrc = ' style="background-image: url(' . $ri['cIcon'] . ')"';
+			}
+			$cAlias = $ri['cAlias'];
+			$canWrite = $ri['canWrite'];
+			$canDrag = ($ri['id'] > 1) ? "true" : "false";
+			$this->html .= '<li tree-node-type="' . $treeNodeType . '" draggable="' . $canDrag . '" class="tree-node ' . $typeClass . ' tree-branch' . $nodeID . '" id="tree-node' . $ri['id'] . '"' . $customIconSrc . '>';
+			
+			if ($ri['numSubpages'] > 0) {
+				$subPageStr = ($ri['id'] == 1) ? '' : ' (' . $ri['numSubpages'] . ')';
+				if ($mode == 'explore') {
+					$this->html .= '<a href="' . View::url('/dashboard/sitemap/explore', $ri['id']) . '">';
+				}
+				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/spacer.gif" width="16" height="16" class="handle ' . $moveableClass . '" />';
+				if ($mode == 'explore') {
+					$this->html .= '</a>';
+				}
+				if ($mode != 'explore') {
+					$this->html .= '<a href="javascript:toggleSub(' . $ri['id'] . ')">';
+					$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/dashboard/plus.jpg" width="9" height="9" class="tree-plus" id="tree-collapse' . $ri['id'] . '" /></a>';
+				}
+				$this->html .= '<div rel="' . DIR_REL . '/index.php?cID=' . $ri['id'] . '" class="' . $labelClass . '" tree-node-alias="' . $cAlias . '" ';
+				$this->html .= 'tree-node-canwrite="' . $canWrite . '" tree-node-children="' . $ri['numSubpages'] . '" ';
+				$this->html .= 'tree-node-title="' . htmlspecialchars($ri['cvName']) . '" id="tree-label' . $ri['id'] . '" ';
+				if ($ri['selected']) {
+					$this->html .= 'class="tree-label-selected-onload" ';
+				}
+				$this->html .= '>';
+				$this->html .= '<span>' . $ri['cvName'] . $subPageStr . '</span><a class="ccm-tree-search-trigger" href="javascript:void(0)" onclick="searchSubPages(' . $ri['id'] . ')">';
+				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/icons/magnifying.png" /></a></div>';
+				$this->html .= '<form onsubmit="return searchSitemapNode(' . $ri['id'] . ')" id="ccm-tree-search' . $ri['id'] . '" class="ccm-tree-search">';
+				$this->html .= '<a href="javascript:void(0)" onclick="closeSub(' . $ri['id'] . ')" class="ccm-tree-search-close"><img src="' . ASSETS_URL_IMAGES . '/icons/close.png" /></a>';
+				$this->html .= '<input type="text" name="submit" name="q" /> <a href="javascript:void(0)" onclick="searchSitemapNode(' . $ri['id'] . ')">';
+				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/icons/magnifying.png" /></a></form>';
+				$this->html .= '<li><ul tree-root-state="closed" tree-root-node-id="' . $ri['id'] . '" tree-root-num-subpages="' . $ri['numSubpages'] . '" id="tree-root' . $ri['id'] . '">';
+				if ($mode != 'explore') {
+					if (is_array($ri['subnodes']) && count($ri['subnodes']) > 0) {
+						$this->outputRequestHTML($ri['subnodes']['results'], $ri['id'], $deactivateSubNodes, $ri['subnodes']['total']);
+					}
+				}
+				$this->html .= '</ul>';
+			} else {
+				$this->html .= '<div tree-node-title="' . htmlspecialchars($ri['cvName']) . '" tree-node-children="' . $ri['numSubpages'] . '" ';
+				$this->html .= 'class="' . $labelClass . '" tree-node-alias="' . $cAlias . '" tree-node-canwrite="' . $canWrite . '" ';
+				$this->html .= 'id="tree-label' . $ri['id'] . '" rel="' . DIR_REL . '/index.php?cID=' . $ri['id'] . '">';
+				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/spacer.gif" width="16" height="16" class="handle ' . $moveableClass . '" /><span>' . $ri['cvName'] . '</span></div>';
+			}
+			
+			$this->html .= '</li><div class="dropzone tree-dz' . $nodeID . '" tree-parent="' . $nodeID . '" id="tree-dz' . $ri['id'] . '"></div>';
+		}
+		
+		if ($req->total > count($req->results) && $nodeID > 1) {
+			$drillDownAction = ($req->keywords != null) ? View::url('/dashboard/sitemap/search?cvName=' . $req->keywords . '&cParentID=' . $nodeID) : View::url('/dashboard/sitemap/explore', $nodeID);
+			$this->html .= '<li class="ccm-sitemap-more-results">' . t('%s more to display. <a href="%s">View All</a>',  $req->total - count($req->results), $drillDownAction) . '</a></li>';
+		}
+		
+		return $this->html;
 	}
 	
 	function getDroppables($cID) {
