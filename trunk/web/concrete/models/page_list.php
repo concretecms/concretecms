@@ -194,6 +194,9 @@ class PageList extends DatabaseItemList {
 		$this->filter(false, "(p1.uID = $uID or p2.uID = $uID)");
 	}
 
+	public function filterByIsApproved($cvIsApproved) {
+		$this->filter('cv.cvIsApproved', $cvIsApproved);	
+	}
 	
 	public function filterByIsAlias($ia) {
 		if ($ia == true) {
@@ -223,6 +226,21 @@ class PageList extends DatabaseItemList {
 		} else {
 			$this->filter(false, "(pt1.ctHandle = " . $db->quote($ctHandle) . " or pt2.ctHandle = " . $db->quote($ctHandle) . ")");
 		}
+	}
+
+	/** 
+	 * Filters by date added
+	 * @param string $date
+	 */
+	public function filterByDateAdded($date, $comparison = '=') {
+		$this->filter('c.cDateAdded', $date, $comparison);
+	}
+	
+	public function filterByNumberOfChildren($num, $comparison = '>') {
+		if (!Loader::helper('validation/numbers')->integer($num)) {
+			$num = 0;
+		}
+		$this->filter(false, '(p1.cChildren ' . $comparison . ' ' . $num . ' or p2.cChildren ' . $comparison . ' ' . $num . ')');
 	}
 
 	/** 

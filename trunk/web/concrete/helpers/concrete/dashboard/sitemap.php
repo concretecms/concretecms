@@ -249,7 +249,7 @@ class ConcreteDashboardSitemapHelper {
 			$this->html .= '</li><div class="dropzone tree-dz' . $nodeID . '" tree-parent="' . $nodeID . '" id="tree-dz' . $ri['id'] . '"></div>';
 		}
 		
-		if ($req->total > count($req->results) && $nodeID > 1) {
+		if ($req->total > count($req->results) && $nodeID > 1 && $mode != 'explore') {
 			$drillDownAction = ($req->keywords != null) ? View::url('/dashboard/sitemap/search?cvName=' . $req->keywords . '&cParentID=' . $nodeID) : View::url('/dashboard/sitemap/explore', $nodeID);
 			$this->html .= '<li class="ccm-sitemap-more-results">' . t('%s more to display. <a href="%s">View All</a>',  $req->total - count($req->results), $drillDownAction) . '</a></li>';
 		}
