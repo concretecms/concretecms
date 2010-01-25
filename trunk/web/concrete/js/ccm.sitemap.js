@@ -714,6 +714,8 @@ $(function() {
 				$('.ccm-tree-search-trigger').show();
 			}
 		});
+	} else {
+		activateLabels();
 	}
 	
 	$(document).click(function() {
