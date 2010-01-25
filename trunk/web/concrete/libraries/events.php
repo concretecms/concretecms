@@ -142,7 +142,9 @@ class Events {
 				
 				if ($proceed) {
 					if ($ev[3] != false) {
-						if (substr($ev[3], 0, 1) == '/') {
+						// HACK - second part is for windows and its paths
+					
+						if (substr($ev[3], 0, 1) == '/' || substr($ev[3], 1, 1) == ':') {
 							// then this means that our path is a full one
 							require_once($ev[3]);
 						} else {
