@@ -19,7 +19,7 @@ class PageList extends DatabaseItemList {
 	private $filterByCT = false;
 	private $ignorePermissions = false;
 	protected $attributeClass = 'CollectionAttributeKey';
-	protected $autoSortColumns = array('cvName', 'cvDatePublic', 'cDateAdded');
+	protected $autoSortColumns = array('cvName', 'cvDatePublic', 'cDateAdded', 'cDateModified');
 	
 	/* magic method for filtering by page attributes. */
 	
@@ -99,30 +99,19 @@ class PageList extends DatabaseItemList {
 		}
 		
 		$date = Loader::helper('date')->getLocalDateTime();
-		
-		$this->addToQuery('left join PagePermissions pp1 on (pp1.cID = p1.cInheritPermissionsFromCID) left join PagePermissions pp2 on (pp2.cID = p2.cInheritPermissionsFromCID)');
+
 		if (PERMISSIONS_MODEL != 'simple') {
 			// support timed release
-
-			$this->filter(false, "(
-				(pp1.cgPermissions like 'r%' and (
+			$this->filter(false, "((select count(cID) from PagePermissions pp1 where pp1.cID = if(p2.cID is null, p1.cInheritPermissionsFromCID, p2.cInheritPermissionsFromCID) and
+				pp1.cgPermissions like 'r%' and (
 					(pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID})
 					and 
 						(pp1.cgStartDate is null or pp1.cgStartDate <= '{$date}')
 					and 
 						(pp1.cgEndDate is null or pp1.cgEndDate >= '{$date}')
-				))			
-				or (pp2.cgPermissions like 'r%' and (
-					(pp2.gID in (" . implode(',', $groupIDs) . ") or pp2.uID = {$uID})
-					and 
-						(pp2.cgStartDate is null or pp2.cgStartDate <= '{$date}')
-					and 
-						(pp2.cgEndDate is null or pp2.cgEndDate >= '{$date}')
-				))
-				or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL )
-			)");
+				)) > 0 or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL ))");
 		} else {
-			$this->filter(false, "((pp1.cgPermissions like 'r%' and (pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID})) or (pp2.cgPermissions like 'r%' and (pp2.gID in (" . implode(',', $groupIDs) .  ") or pp2.uID = {$uID})) or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL ))");	
+			$this->filter(false, "((select count(cID) from PagePermissions pp1 where pp1.cID = if(p2.cID is null, p1.cInheritPermissionsFromCID, p2.cInheritPermissionsFromCID) and pp1.cgPermissions like 'r%' and (pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID})) or (pp2.cgPermissions like 'r%' and (pp2.gID in (" . implode(',', $groupIDs) .  ") or pp2.uID = {$uID})) > 0 or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL)");	
 		}
 	}
 
@@ -183,7 +172,7 @@ class PageList extends DatabaseItemList {
 	 */
 	public function filterByCollectionTypeID($ctID) {
 		$this->filterByCT = true;
-		$this->filter(false, "(p1.ctID = $ctID or p2.ctID = $ctID)");
+		$this->filter("pt.cID", $ctID);
 	}
 
 	/** 
@@ -222,9 +211,9 @@ class PageList extends DatabaseItemList {
 				$cth .= $db->quote($ctHandle[$i]);
 			}
 			$cth .= ')';
-			$this->filter(false, "(pt1.ctHandle in {$cth} or pt2.ctHandle in {$cth})");
+			$this->filter(false, "(pt.ctHandle in {$cth})");
 		} else {
-			$this->filter(false, "(pt1.ctHandle = " . $db->quote($ctHandle) . " or pt2.ctHandle = " . $db->quote($ctHandle) . ")");
+			$this->filter('pt.ctHandle', $ctHandle);
 		}
 	}
 
@@ -260,7 +249,7 @@ class PageList extends DatabaseItemList {
 	}
 	
 	protected function setBaseQuery($additionalFields = '') {
-		$this->setQuery('select distinct p1.cID, if(p2.cID is null, pt1.ctHandle, pt2.ctHandle) as ctHandle ' . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PagePaths on PagePaths.cID = p1.cID left join PageTypes pt1 on (pt1.ctID = p1.ctID) left join PageTypes pt2 on (pt2.ctID = p2.ctID) left join PageSearchIndex psi on (psi.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
+		$this->setQuery('select p1.cID, pt.ctHandle ' . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PageTypes pt on (pt.ctID = (if (p2.cID is null, p1.ctID, p2.cID))) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID) and cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)) inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
 	}
 	
 	protected function setupSystemPagesToExclude() {

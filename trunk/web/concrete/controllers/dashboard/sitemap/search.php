@@ -118,7 +118,6 @@ class DashboardSitemapSearchController extends Controller {
 		}
 
 		$this->set('searchRequest', $req);
-
 		return $pageList;
 	}
 }
