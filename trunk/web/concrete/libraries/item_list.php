@@ -330,6 +330,11 @@ class ItemList {
 		return $this->sortByDirection;
 	}
 	
+	public function requiresPaging() {
+		$summary = $this->getSummary();
+		return $summary->pages > 1;
+	}
+	
 	public function getPagination($url = false) {
 		$pagination = Loader::helper('pagination');
 		if ($this->currentPage == false) {
@@ -342,16 +347,23 @@ class ItemList {
 	
 	/** 
 	 * Gets standard HTML to display paging */
-	public function displayPaging($script = false) {
+	public function displayPaging($script = false, $return = false) {
 		$summary = $this->getSummary();
 		$paginator = $this->getPagination($script);
 		if ($summary->pages > 1) {
-			print '<div class="ccm-spacer"></div>';
-			print '<div class="ccm-pagination">';
-			print '<span class="ccm-page-left">' . $paginator->getPrevious() . '</span>';
-			print '<span class="ccm-page-right">' . $paginator->getNext() . '</span>';
-			print $paginator->getPages();
-			print '</div>';	
+			$html = '<div class="ccm-spacer"></div>';
+			$html .= '<div class="ccm-pagination">';
+			$html .= '<span class="ccm-page-left">' . $paginator->getPrevious() . '</span>';
+			$html .= '<span class="ccm-page-right">' . $paginator->getNext() . '</span>';
+			$html .= $paginator->getPages();
+			$html .= '</div>';
+		}
+		if (isset($html)) {
+			if ($return) {
+				return $html;
+			} else {
+				print $html;
+			}
 		}
 	}
 	/** 

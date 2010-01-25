@@ -11,7 +11,7 @@
 	
 	<div id="ccm-sitemap-message"></div>
 
-	<div id="tree" style="margin-left: 0px !important">
+	<div id="tree" class="ccm-sitemap-explore">
 		<ul id="tree-root0">
 		<?=$listHTML?>
 		</ul>
