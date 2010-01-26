@@ -191,6 +191,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$this->refreshCache();
 			$this->reindex();
 		}
+
+		public function clearAttribute($ak) {
+			$db = Loader::db();
+			$cav = $this->getAttributeValueObject($ak);
+			if (is_object($cav)) {
+				$cav->delete();
+			}
+			$this->refreshCache();
+			$this->reindex();
+		}
 		
 		// get's an array of collection attribute objects that are attached to this collection. Does not get values
 		public function getSetCollectionAttributes() {

@@ -26,8 +26,9 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 	}
 	
 	public function search() {
-		$al = Loader::helper('concrete/asset_library');
-		print $al->file('ccm-file-akID-' . $this->attributeKey->getAttributeKeyID(), $this->field('value'), t('Choose File'), $bf);
+		// search by file causes too many problems
+		//$al = Loader::helper('concrete/asset_library');
+		//print $al->file('ccm-file-akID-' . $this->attributeKey->getAttributeKeyID(), $this->field('value'), t('Choose File'), $bf);
 	}
 	
 	public function form() {

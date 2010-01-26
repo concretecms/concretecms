@@ -790,7 +790,9 @@
 							if ($_POST['mode'] == 'explore' ) {
 								header('Location: ' . BASE_URL . View::url('/dashboard/sitemap/explore', $c->getCollectionID()));
 								exit;
-								
+							} else if ($_POST['mode'] == 'search') {
+								header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $nc->getCollectionID() . '&mode=edit&ctask=check-out-first' . $step . $token);
+								exit;
 							} else {
 								header('Location: ' . URL_SITEMAP);
 								exit;							

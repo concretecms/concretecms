@@ -69,7 +69,7 @@ ccm_activateFileManager = function(altype) {
 	ccm_alSetupFileProcessor();
 	ccm_alSetupSingleUploadForm();
 	
-	ccm_searchActivatePostFunction = function() {
+	ccm_searchActivatePostFunction['file'] = function() {
 		ccm_alSetupCheckboxes();
 		ccm_alSetupSelectFiles();
 	}
