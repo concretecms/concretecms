@@ -172,7 +172,7 @@ class PageList extends DatabaseItemList {
 	 */
 	public function filterByCollectionTypeID($ctID) {
 		$this->filterByCT = true;
-		$this->filter("pt.cID", $ctID);
+		$this->filter("pt.ctID", $ctID);
 	}
 
 	/** 

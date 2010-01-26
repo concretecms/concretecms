@@ -1,4 +1,8 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-Loader::element('dashboard/sitemap', $_REQUEST);
+
+
+$args = $_REQUEST;
+$args['reveal'] = $_REQUEST['cID'];
+Loader::element('dashboard/sitemap', $args);
 ?>

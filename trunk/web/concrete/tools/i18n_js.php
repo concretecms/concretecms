@@ -51,6 +51,7 @@ var ccmi18n_sitemap = {
 	pageProperties: '<?=t('Properties')?>',
 	setPagePermissions: '<?=t('Set Permissions')?>',
 	setPagePermissionsMsg: '<?=t('Page permissions updated successfully.')?>',
+	pageDesignMsg: '<?=t('Theme and page type updated successfully.')?>',
 	pageDesign: '<?=t('Design')?>',
 	pageVersions: '<?=t('Versions')?>',
 	deletePage: '<?=t('Delete')?>',

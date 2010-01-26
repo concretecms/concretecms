@@ -19,6 +19,8 @@ class DashboardFilesSearchController extends Controller {
 	
 	public function getRequestedSearchResults() {
 		$fileList = new FileList();
+		$fileList->enableStickySearchRequest();
+		
 		Loader::model('file_set');
 		
 		if ($_REQUEST['submit_search']) {

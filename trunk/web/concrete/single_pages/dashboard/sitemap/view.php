@@ -22,6 +22,9 @@ if (isset($_REQUEST['reveal'])) {
 
 <script type="text/javascript">
 	var CCM_SITEMAP_MODE = 'full';
+	$(function() {
+		ccmSitemapLoad('full');
+	});
 </script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.sitemap.js"></script>
 
@@ -36,7 +39,7 @@ if (isset($_REQUEST['reveal'])) {
 	<td style="width: 100%" valign="top">
 	
 	<div id="tree">
-		<ul id="tree-root0">
+		<ul id="tree-root0" tree-root-node-id="0" sitemap-mode="full">
 		</ul>
 	</div>
 

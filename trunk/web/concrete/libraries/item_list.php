@@ -208,25 +208,36 @@ class ItemList {
 	protected $queryStringPagingVariable = 'ccm_paging_p';
 	protected $queryStringSortVariable = 'ccm_order_by';
 	protected $queryStringSortDirectionVariable = 'ccm_order_dir';
+	protected $enableStickySearchRequest = false;
 	
 	private $items = array();
 	
+	public function enableStickySearchRequest() {
+		$this->enableStickySearchRequest = true;
+	}
+	
 	public function resetSearchRequest() {
-		$_SESSION[get_class($this) . 'SearchFields'] = array();
+		if ($this->enableStickySearchRequest) {
+			$_SESSION[get_class($this) . 'SearchFields'] = array();
+		}
 	}
 
 	public function getSearchRequest() {
-		if (!is_array($_SESSION[get_class($this) . 'SearchFields'])) {
-			$_SESSION[get_class($this) . 'SearchFields'] = array();
+		if ($this->enableStickySearchRequest) {
+			if (!is_array($_SESSION[get_class($this) . 'SearchFields'])) {
+				$_SESSION[get_class($this) . 'SearchFields'] = array();
+			}
+			
+			// i don't believe we need this approach particularly, and it's a pain in the ass
+			//$validSearchKeys = array('fKeywords', 'numResults', 'fsIDNone', 'fsID', 'ccm_order_dir', 'ccm_order_by', 'size_from', 'size_to', 'type', 'extension', 'date_from', 'date_to', 'searchField', 'selectedSearchField', 'akID');
+			
+			foreach($_REQUEST as $key => $value) {
+				$_SESSION[get_class($this) . 'SearchFields'][$key] = $value;
+			}		
+			return $_SESSION[get_class($this) . 'SearchFields'];
+		} else {
+			return $_REQUEST;
 		}
-		
-		// i don't believe we need this approach particularly, and it's a pain in the ass
-		//$validSearchKeys = array('fKeywords', 'numResults', 'fsIDNone', 'fsID', 'ccm_order_dir', 'ccm_order_by', 'size_from', 'size_to', 'type', 'extension', 'date_from', 'date_to', 'searchField', 'selectedSearchField', 'akID');
-		
-		foreach($_REQUEST as $key => $value) {
-			$_SESSION[get_class($this) . 'SearchFields'][$key] = $value;
-		}		
-		return $_SESSION[get_class($this) . 'SearchFields'];
 	}
 	
 	public function setItemsPerPage($num) {

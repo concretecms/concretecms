@@ -293,9 +293,33 @@ ccm_enable_scrollers = function() {
 
 $(function() {
 	ccm_enable_scrollers();
-	$('form[name=ccmThemeForm]').submit(function() {
-		jQuery.fn.dialog.showLoader();
+	<? if ($_REQUEST['rel'] == 'SITEMAP') { ?>
+		$("form[name=ccmThemeForm]").ajaxForm({
+		type: 'POST',
+		iframe: true,
+		beforeSubmit: function() {
+			jQuery.fn.dialog.showLoader();
+		},
+		success: function(r) {
+			var r = eval('(' + r + ')');
+			if (r != null && r.rel == 'SITEMAP') {
+				jQuery.fn.dialog.hideLoader();
+				jQuery.fn.dialog.closeTop();
+				ccmSitemapHighlightPageLabel(r.cID);
+			} else {
+				ccm_hidePane(function() {
+					jQuery.fn.dialog.hideLoader();						
+				});
+			}
+			ccmAlert.hud(ccmi18n_sitemap.pageDesignMsg, 2000, 'success', ccmi18n_sitemap.pageDesign);
+		}
 	});
+
+	<? } else { ?>
+		$('form[name=ccmThemeForm]').submit(function() {
+			jQuery.fn.dialog.showLoader();
+		});
+	<? } ?>
 	$("#ccm-select-page-type a").click(function() {
 		$("#ccm-select-page-type li").each(function() {
 			$(this).removeClass('ccm-item-selected');

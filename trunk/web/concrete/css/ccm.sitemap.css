@@ -11,9 +11,15 @@ div#ccm-sitemap-message {display: none}
 div.ccm-sitemap-explore {margin-left: 16px !important}
 div.ccm-sitemap-explore ul li {padding-bottom: 4px !important; border-bottom: 1px solid #ededed; margin-bottom: 4px !important; padding-left: 20px !important}
 div.ccm-sitemap-explore ul li.ccm-sitemap-navigate-up {margin-left: -16px !important; background: transparent url(../images/dashboard/sitemap/up.png) no-repeat scroll; padding-top: 2px !important; font-weight: bold; margin-bottom: 20px !important}
+div.ccm-sitemap-explore ul li.ccm-sitemap-navigate-up span {text-decoration: underline}
+div.ccm-dialog-window li.ccm-sitemap-navigate-up a span,
+div.ccm-pane-controls li.ccm-sitemap-navigate-up a span {color: rgb(0, 60, 138)}
+
 div.ccm-sitemap-explore ul li.ccm-sitemap-current-level-title {padding-left: 0px !important; margin-left: -16px !important; border-bottom: 0px; }
-div.ccm-sitemap-explore ul li.ccm-sitemap-current-level-title h2 {margin-bottom: 6px}
+div.ccm-sitemap-explore ul li.ccm-sitemap-current-level-title h2 {margin-bottom: 6px !important}
+div.ccm-sitemap-explore ul li.ccm-sitemap-current-level-title h2 div {font-size: 14px !important}
 div.ccm-sitemap-explore ul li.ccm-sitemap-explore-paging {border-bottom: 0px; margin-top: 16px; font-weight: bold}
+li.ccm-sitemap-current-level-title div.tree-label span {text-decoration: underline !important; color: inherit !important}
 
 a.ccm-icon-sitemap-search span {background-position: 9px 6px !important}
 a.ccm-tree-search-trigger {display: none; vertical-align: middle; margin-left: 3px}

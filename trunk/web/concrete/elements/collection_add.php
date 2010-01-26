@@ -54,6 +54,8 @@ for ($i = 0; $i < count($ctArray); $i++) {
 
 	<form method="post" action="<?=$c->getCollectionAction()?>" id="ccmAddPage">		
 	<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
+	<? // sitemap mode ?>
+	<input type="hidden" name="mode" value="<?=$_REQUEST['mode']?>" />
 	<input type="hidden" name="ctID" value="0" />
 	 
 	<div class="ccm-form-area">
