@@ -2,8 +2,11 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::helper('concrete/dashboard/sitemap');
 
+$cID = 1;
+
 if (isset($reveal)) {
 	$nc = Page::getByID($reveal);
+	$cID = $nc->getCollectionID();
 	$node = $nc->getCollectionParentID();
 	if ($node < 1) {
 		$node = 1;
@@ -37,6 +40,6 @@ var CCM_SITEMAP_EXPLORE_NODE = "<?=$node?>";
 
 <script type="text/javascript">
 $(function() {
-	ccmSitemapLoad('move_copy_delete', '<?=$node?>');
+	ccmSitemapLoad('move_copy_delete', '<?=$node?>', '<?=$cID?>');
 });
 </script>

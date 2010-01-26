@@ -121,23 +121,6 @@ cancelReorder = function() {
 	}
 }
 
-/*
-activateMoveCopy = function(cID) {
-	$(".ccm-tree-search-trigger").show();
-	showSitemapMessage(ccmi18n_sitemap.moveCopyPageMessage);
-	CCM_CID = cID;
-	tr_moveCopyMode = true;
-}
-
-deactivateMoveCopy = function() {
-	tr_moveCopyMode = false;
-	CCM_SITEMAP_MODE = 'full';
-	hideSitemapMessage();
-	$(".ccm-tree-search-trigger").hide();
-
-}
-*/
-
 searchSubPages = function(cID) {
 	$("#ccm-tree-search-trigger" + cID).hide();
 	if (ccm_animEffects) {
@@ -251,10 +234,12 @@ parseSitemapResponse = function(mode, nodeID, resp) {
 	}
 }
 
-selectMoveCopyTarget = function(destCID) {
-	var origCID = CCM_CID;
+selectMoveCopyTarget = function(destCID, origCID) {
+	if (!origCID) {
+		var origCID = CCM_CID;
+	}
 	var dialog_title = ccmi18n_sitemap.moveCopyPage;
-	var dialog_url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request.php?origCID=' + origCID + '&sitemap_mode=' + CCM_SITEMAP_MODE + '&destCID=' + destCID;
+	var dialog_url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request.php?origCID=' + origCID + '&sitemap_mode=move_copy_delete&destCID=' + destCID;
 	var dialog_height = 350;
 	var dialog_width = 350;
 	
@@ -302,7 +287,8 @@ selectLabel = function(e, node) {
 	var cNumChildren = node.attr('tree-node-children');
 	if (node.attr('sitemap-mode') == "move_copy_delete" || tr_moveCopyMode == true) {
 		var destCID = node.attr('id').substring(10);
-		selectMoveCopyTarget(destCID);
+		var origCID = node.attr('selected-page-id');
+		selectMoveCopyTarget(destCID, origCID);
 	} else if (node.attr('sitemap-mode') == 'select_page') {
 		ccm_selectSitemapNode(node.attr('id').substring(10), unescape(node.attr('tree-node-title')));
 		jQuery.fn.dialog.closeTop();
@@ -448,7 +434,7 @@ searchSitemapNode = function(cID) {
 
 toggleSub = function(nodeID) {
 	ccm_hideMenus();
-	var container = $("ul[#tree-root" + nodeID);
+	var container = $("ul[tree-root-node-id=" + nodeID + "]");
 	if (container.attr('tree-root-state') == 'closed') {
 		openSub(nodeID);
 	} else {
@@ -473,7 +459,7 @@ openSub = function(nodeID, onComplete) {
 	var container = $("#tree-root" + nodeID);
 	cancelReorder();
 	ccm_sitemap_html = '';
-	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?node=" + nodeID, function(resp) {
+	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?node=" + nodeID + "&mode=full", function(resp) {
 		parseSitemapResponse('full', nodeID, resp);
 		activateLabels('full');
 
@@ -599,9 +585,9 @@ function addResortDroppable(nodeID){
 		});
 }
 
-ccmSitemapExploreNode = function(mode, cID) {
+ccmSitemapExploreNode = function(mode, cID, selectedPageID) {
 	jQuery.fn.dialog.showLoader();
-	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php", {'mode' : mode, 'node': cID}, function(resp) {  
+	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php", {'mode' : mode, 'node': cID, 'selectedPageID': selectedPageID}, function(resp) {  
 		parseSitemapResponse(mode, 0, resp);
 		activateLabels(mode);
 		jQuery.fn.dialog.hideLoader();
@@ -609,7 +595,7 @@ ccmSitemapExploreNode = function(mode, cID) {
 	});
 }
 
-ccmSitemapLoad = function(mode, node) {
+ccmSitemapLoad = function(mode, node, selectedPageID) {
 	if (mode == 'full') {
 		ccm_hidePane = function() {
 			// overrides the typically UI hidepane because we're only seeing these on thickbox elements
@@ -622,8 +608,8 @@ ccmSitemapLoad = function(mode, node) {
 			tr_parseSubnodes = false;
 			ccm_sitemap_html = '';
 		});
-	} else if (mode == 'move_copy_delete') {
-		ccmSitemapExploreNode(mode, node);
+	} else if (mode == 'move_copy_delete') {		
+		ccmSitemapExploreNode(mode, node, selectedPageID);
 	} else {
 		activateLabels(mode);
 	}
