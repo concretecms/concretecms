@@ -21,7 +21,7 @@ table.ccm-results-list tr th.ccm-results-list-active-sort-desc a {background: #e
 table.ccm-results-list tr th.ccm-results-list-active-sort-asc a {background: #efefef url(../images/icons/arrow_up_black.png) no-repeat scroll right 4px}
 
 table.ccm-results-list tr.ccm-list-record-alt td, table.ccm-results-list tr.ccm-row-alt td {background-color: #ECFBFF}
-table#ccm-file-list tr.ccm-list-record:hover td {cursor: pointer;background-color: #DDECF0 !important}
+table.ccm-results-list tr.ccm-list-record:hover td {cursor: pointer;background-color: #DDECF0 !important}
 
 img#ccm-search-loading { display: none; float:right; }
 div.ccm-results-list-none { font-weight: bold}

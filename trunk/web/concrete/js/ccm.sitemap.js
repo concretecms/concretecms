@@ -38,7 +38,7 @@ showPageMenu = function(obj, e) {
 			if (obj.cAlias == 'LINK') {
 				html += '<li><a class="ccm-icon" dialog-width="350" dialog-height="300" dialog-title="' + ccmi18n_sitemap.editExternalLink + '" dialog-modal="false" id="menuLink' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=edit_external"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n_sitemap.editExternalLink + '<\/span><\/a><\/li>';
 			}
-			html += '<li><a class="ccm-icon" id="menuDelete' + obj.cID + '" href="javascript:deletePage(' + obj.cID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n_sitemap.deleteExternalLink + '<\/span><\/a><\/li>';
+			html += '<li><a class="ccm-icon" id="menuDelete' + obj.cID + '" href="javascript:deletePage(' + obj.cID + ',\'' + obj.mode + '\')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n_sitemap.deleteExternalLink + '<\/span><\/a><\/li>';
 
 		
 		} else if (obj.canWrite == 'false') {
@@ -53,15 +53,16 @@ showPageMenu = function(obj, e) {
 			html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="310" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.setPagePermissions + '" id="menuPermissions' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=edit_permissions"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + ccmi18n_sitemap.setPagePermissions + '<\/span><\/a><\/li>';
 			html += '<li><a class="ccm-icon" dialog-width="680" dialog-height="420" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageDesign + '" id="menuDesign' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=set_theme"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/design_small.png)">' + ccmi18n_sitemap.pageDesign + '<\/span><\/a><\/li>';
 			html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageVersions + '" id="menuVersions' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/versions.php?rel=SITEMAP&cID=' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/versions_small.png)">' + ccmi18n_sitemap.pageVersions + '<\/span><\/a><\/li>';
-			html += '<li><a class="ccm-icon" id="menuDelete' + obj.cID + '" href="javascript:deletePage(' + obj.cID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n_sitemap.deletePage + '<\/span><\/a><\/li>';
+			html += '<li><a class="ccm-icon" id="menuDelete' + obj.cID + '" href="javascript:deletePage(' + obj.cID + ',\'' + obj.mode + '\')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n_sitemap.deletePage + '<\/span><\/a><\/li>';
 			html += '<li class=\"header\"><\/li>';
 			if (obj.mode != 'explore') {
 				html += '<li><a class="ccm-icon" id="menuReorder' + obj.cID + '" href="javascript:activateReorder(' + obj.cID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n_sitemap.reorderPage + '<\/span><\/a><\/li>';
 			}
 			html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.moveCopyPage + '" id="menuMoveCopy' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/sitemap_overlay?sitemap_mode=move_copy_delete&cID=' + obj.cID + '" id="menuMoveCopy' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n_sitemap.moveCopyPage + '<\/span><\/a><\/li>';
 			html += '<li class=\"header\"><\/li>';
-			if (obj.mode != 'explore' && obj.cNumChildren > 0 && obj.cID > 1) {
-				html += '<li><a class="ccm-icon ccm-icon-sitemap-search" id="menuSearch' + obj.cID + '" href="javascript:searchSubPages(' + obj.cID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/magnifying.png)">' + ccmi18n_sitemap.searchPages + '<\/span><\/a><\/li>';
+			if (obj.cNumChildren > 0 && obj.cID > 1) {
+				var searchURL = (obj.mode == 'explore') ? CCM_REL + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/search/?selectedSearchField[]=parent&cParentAll=1&cParentID=' + obj.cID : 'javascript:searchSubPages(' + obj.cID + ')';
+				html += '<li><a class="ccm-icon ccm-icon-sitemap-search" id="menuSearch' + obj.cID + '" href="' + searchURL + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/magnifying.png)">' + ccmi18n_sitemap.searchPages + '<\/span><\/a><\/li>';
 			}
 			html += '<li><a class="ccm-icon" dialog-width="680" dialog-modal="false" dialog-height="440" dialog-title="' + ccmi18n_sitemap.addPage + '" id="menuSubPage' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&mode=' + obj.mode + '&cID=' + obj.cID + '&ctask=add"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n_sitemap.addPage + '<\/span><\/a><\/li>';
 			html += '<li><a class="ccm-icon" dialog-width="350" dialog-modal="false" dialog-height="160" dialog-title="' + ccmi18n_sitemap.addExternalLink + '" dialog-modal="false" id="menuLink' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=add_external"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n_sitemap.addExternalLink + '<\/span><\/a><\/li>';
@@ -91,12 +92,18 @@ showPageMenu = function(obj, e) {
 	
 }
 
-deletePage = function(cID) {
+deletePage = function(cID, mode) {
 	ccm_hideMenus();
 	if (confirm(ccmi18n_sitemap.areYouSure)) {
+		jQuery.fn.dialog.showLoader();
 		$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_delete_request.php', {'cID': cID, 'ccm_token': CCM_SECURITY_TOKEN}, function(resp) {
 			ccm_parseJSON(resp, function() {
-				deleteBranchFade(cID);
+				jQuery.fn.dialog.hideLoader();
+				if (mode == 'explore') {
+					ccmSitemapExploreNode('explore', resp.cParentID);
+				} else {
+					deleteBranchFade(cID);
+				}
 	 			ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
 
 			});
@@ -404,8 +411,16 @@ moveCopyAliasNode = function(reloadPage) {
 			alert(resp.message);
 			
 			if (reloadPage == true) {
-				window.location.href = CCM_REL + "/index.php?cID=" + resp.cID;
-				return false;
+				if (typeof(CCM_LAUNCHER_SITEMAP) != 'undefined') {
+					if (CCM_LAUNCHER_SITEMAP == 'explore') {
+						// we are in the dashboard and we need to actually go to the explore node
+						window.location.href = CCM_REL + "/index.php/dashboard/sitemap/explore/-/" + destCID;
+						return false;
+					}
+				} else {
+					window.location.href = CCM_REL + "/index.php?cID=" + resp.cID;
+					return false;
+				}
 			}
 			
 			switch(ctask) {
@@ -420,6 +435,7 @@ moveCopyAliasNode = function(reloadPage) {
 			}
 			
 			openSub(destParentID, function() {openSub(destCID)});
+			jQuery.fn.dialog.closeTop();
 			jQuery.fn.dialog.closeTop();
 		});
 	});	
@@ -613,6 +629,15 @@ ccmSitemapLoad = function(mode, node, selectedPageID) {
 	} else {
 		activateLabels(mode);
 	}
+}
+
+ccm_sitemapSetupSearch = function() {
+	ccm_setupAdvancedSearch('page'); 
+	$('#ccm-sitemap-page-list tr').click(function(e){
+		var node = $(this);
+		params = {'cID': node.attr('cID'), 'mode': node.attr('sitemap-mode'), 'canWrite': node.attr('canWrite'), 'cNumChildren': node.attr('cNumChildren'), 'cAlias': node.attr('cAlias')};		
+		showPageMenu(params, e);
+	});
 }
 
 $(function() {

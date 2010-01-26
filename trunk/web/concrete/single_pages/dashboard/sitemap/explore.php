@@ -1,6 +1,9 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 
 <script type="text/javascript">
+
+CCM_LAUNCHER_SITEMAP = 'explore'; // we need this for when we are moving and copying
+
 $(function() {
 	ccmSitemapLoad('explore');
 });
