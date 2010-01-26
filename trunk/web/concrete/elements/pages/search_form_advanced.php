@@ -7,7 +7,8 @@ $searchFields = array(
 	'date_public' => t('Public Date'),
 	'owner' => t('Page Owner'),
 	'num_children' => t('# Children'),
-	'version_status' => t('Approved Version')
+	'version_status' => t('Approved Version'),
+	'parent' => t('Parent Page')
 );
 
 Loader::model('attribute/categories/collection');
@@ -43,6 +44,16 @@ foreach($searchFieldAttributes as $ak) {
 		<div><?=$form->radio('cvIsApproved', 1, false)?> <?=$form->label("cvIsApproved2", t('Approved'))?></div>
 		</span>
 
+		<span class="ccm-search-option" search-field="parent">
+		<div style="width: 100px">
+		<strong><?=t('Search All Children')?></strong><br/>
+		<div><?=$form->radio('cParentAll', 1)?> <?=$form->label("cParentAll3", t('Yes'))?></div>
+		<div><?=$form->radio('cParentAll', 0, 0)?> <?=$form->label("cParentAll4", t('No'))?></div>
+		<? $ps = Loader::helper("form/page_selector");
+		print $ps->selectPage('cParentID');
+		?>
+		</div>
+		</span>
 		<span class="ccm-search-option"  search-field="num_children">
 			<select name="cChildrenSelect" style="width: 45px">
 				<option value="gt"<? if ($req['cChildrenSelect'] == 'gt') { ?> selected <? } ?>><?=t('More Than')?></option>
@@ -213,6 +224,19 @@ foreach($searchFieldAttributes as $ak) {
 								<?=$form->radio('_cvIsApproved', 1, $searchRequest['cvIsApproved'])?> <?=$form->label("cvIsApproved2", t('Approved'))?>
 								</div>
 								</span>
+							<? } ?>
+							
+							<? if ($req == 'parent') { ?>
+							<span class="ccm-search-option" search-field="parent">
+							<div style="width: 100px">
+							<strong><?=t('Search All Children')?></strong><br/>
+							<div><?=$form->radio('_cParentAll', 1, $searchRequest['cParentAll'])?> <?=$form->label("cParentAll3", t('Yes'))?></div>
+							<div><?=$form->radio('_cParentAll', 0, $searchRequest['cParentAll'])?> <?=$form->label("cParentAll4", t('No'))?></div>
+							<? $ps = Loader::helper("form/page_selector");
+							print $ps->selectPage('cParentID', $searchRequest['cParentID']);
+							?>
+							</div>
+							</span>
 							<? } ?>
 							
 							<? foreach($searchFieldAttributes as $sfa) { 

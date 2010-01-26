@@ -34,12 +34,13 @@ var CCM_SITEMAP_EXPLORE_NODE = "<?=$node?>";
 <h1 id="ccm-sitemap-title"><?=t('Sitemap')?></h1>
 
 <div id="tree" class="ccm-sitemap-explore">
-	<ul id="tree-root0" tree-root-node-id="0" sitemap-mode="move_copy_delete" >
+	<ul id="tree-root0" tree-root-node-id="0" sitemap-mode="<?=$sitemap_mode?>" >
 	</ul>
 </div>
 
 <script type="text/javascript">
 $(function() {
-	ccmSitemapLoad('move_copy_delete', '<?=$node?>', '<?=$cID?>');
+	ccmSitemapLoad('<?=$sitemap_mode?>', '<?=$node?>', '<?=$cID?>');
 });
 </script>
+

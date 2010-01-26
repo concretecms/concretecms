@@ -58,7 +58,7 @@ showPageMenu = function(obj, e) {
 			if (obj.mode != 'explore') {
 				html += '<li><a class="ccm-icon" id="menuReorder' + obj.cID + '" href="javascript:activateReorder(' + obj.cID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n_sitemap.reorderPage + '<\/span><\/a><\/li>';
 			}
-			html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.moveCopyPage + '" id="menuMoveCopy' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/sitemap_overlay?cID=' + obj.cID + '" id="menuMoveCopy' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n_sitemap.moveCopyPage + '<\/span><\/a><\/li>';
+			html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.moveCopyPage + '" id="menuMoveCopy' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/sitemap_overlay?sitemap_mode=move_copy_delete&cID=' + obj.cID + '" id="menuMoveCopy' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n_sitemap.moveCopyPage + '<\/span><\/a><\/li>';
 			html += '<li class=\"header\"><\/li>';
 			if (obj.mode != 'explore' && obj.cNumChildren > 0 && obj.cID > 1) {
 				html += '<li><a class="ccm-icon ccm-icon-sitemap-search" id="menuSearch' + obj.cID + '" href="javascript:searchSubPages(' + obj.cID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/magnifying.png)">' + ccmi18n_sitemap.searchPages + '<\/span><\/a><\/li>';
@@ -479,8 +479,8 @@ openSubSearch = function(nodeID, query, onComplete) {
 	container.html('');
 	container.addClass('ccm-sitemap-search-results');
 	cancelReorder();
-	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?node=" + nodeID, {'keywords': query}, function(resp) {
-		parseSitemapResponse(nodeID, resp);	
+	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?node=" + nodeID, {'keywords': query, 'mode': 'full'}, function(resp) {
+		parseSitemapResponse('full', nodeID, resp);	
 		activateLabels('full');
 		setTimeout(function() {
 			removeLoading(nodeID);
@@ -608,7 +608,7 @@ ccmSitemapLoad = function(mode, node, selectedPageID) {
 			tr_parseSubnodes = false;
 			ccm_sitemap_html = '';
 		});
-	} else if (mode == 'move_copy_delete') {		
+	} else if (mode == 'move_copy_delete' || mode == 'select_page') {		
 		ccmSitemapExploreNode(mode, node, selectedPageID);
 	} else {
 		activateLabels(mode);
