@@ -147,10 +147,11 @@ class ConcreteDashboardSitemapHelper {
 	function getSubNodes($cID, $level = 0, $keywords = '', $autoOpenNodes = true) {
 		$db = Loader::db();
 		
-		
+		$obj = new stdClass;
 		if ($keywords != '' && $keywords != false) {
 			$nc = Page::getByID($cID, 'RECENT');
 			$pl = new PageList();
+			$obj->keywords = $keywords;
 			$pl->filterByName($keywords);
 			$pl->filterByPath($nc->getCollectionPath());
 			$pl->displayUnapprovedPages();
@@ -190,7 +191,7 @@ class ConcreteDashboardSitemapHelper {
 		$nodeID = $req->nodeID;
 		$spID = ($this->selectedPageID > 0) ? $this->selectedPageID : 'false';
 		$c = Page::getByID($req->nodeID, 'ACTIVE');
-		if ($mode == 'explore' || $mode == 'move_copy_delete') {
+		if ($mode == 'explore' || $mode == 'move_copy_delete' || $mode == 'select_page') {
 			if ($nodeID > 1) {
 				$nav = Loader::helper('navigation');
 				$parent = Page::getByID($c->getCollectionParentID(), 'ACTIVE');
@@ -231,11 +232,11 @@ class ConcreteDashboardSitemapHelper {
 			
 			if ($ri['numSubpages'] > 0) {
 				$subPageStr = ($ri['id'] == 1) ? '' : ' (' . $ri['numSubpages'] . ')';
-				if ($mode == 'explore' || $mode == 'move_copy_delete') {
+				if ($mode == 'explore' || $mode == 'move_copy_delete' || $mode == 'select_page') {
 					$this->html .= ($mode == 'explore') ? '<a href="' . View::url('/dashboard/sitemap/explore', $ri['id']) . '">' : '<a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $mode . '\', ' . $ri["id"] . ',' . $spID . ')">';
 				}
 				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/spacer.gif" width="16" height="16" class="handle ' . $moveableClass . '" />';
-				if ($mode == 'explore' || $mode == 'move_copy_delete') {
+				if ($mode == 'explore' || $mode == 'move_copy_delete' || $mode == 'select_page') {
 					$this->html .= '</a>';
 				}
 				if ($mode == 'full' || $mode == '') {
@@ -280,10 +281,10 @@ class ConcreteDashboardSitemapHelper {
 		}
 		
 		if ($req->total > count($req->results) && $nodeID > 1) {
-			if ($mode == 'explore' || $mode == 'move_copy_delete') {
+			if ($mode == 'explore' || $mode == 'move_copy_delete' || $mode == 'select_page') {
 				$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPaging(false, true) . '</li>';
 			} else {
-				$drillDownAction = ($req->keywords != null) ? View::url('/dashboard/sitemap/search?cvName=' . $req->keywords . '&cParentID=' . $nodeID) : View::url('/dashboard/sitemap/explore', $nodeID);
+				$drillDownAction = ($req->keywords != null) ? View::url('/dashboard/sitemap/search?cvName=' . $req->keywords . '&selectedSearchField[]=parent&numResults=50&ccm_paging_p=2&cParentAll=1&ccm_order_by=cDisplayOrder&cParentID=' . $nodeID) : View::url('/dashboard/sitemap/explore', $nodeID);
 				$this->html .= '<li class="ccm-sitemap-more-results">' . t('%s more to display. <a href="%s">View All</a>',  $req->total - count($req->results), $drillDownAction) . '</a></li>';
 			}
 		}

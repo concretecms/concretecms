@@ -68,6 +68,20 @@ class DashboardSitemapSearchController extends Controller {
 								$pageList->filterByUserID(-1);
 							}
 							break;
+						case 'parent':
+							if (isset($req['_cParentAll'])) {
+								$req['cParentAll'] = $req['_cParentAll'];
+							}
+							if ($req['cParentID'] > 0) {
+								if ($req['cParentAll'] == 1) {
+									$pc = Page::getByID($req['cParentID']);
+									$cPath = $pc->getCollectionPath();
+									$pageList->filterByPath($cPath);
+								} else {
+									$pageList->filterByParentID($req['cParentID']);
+								}
+							}
+							break;
 						case 'version_status':
 							if (isset($req['_cvIsApproved'])) {
 								$req['cvIsApproved'] = $req['_cvIsApproved'];
