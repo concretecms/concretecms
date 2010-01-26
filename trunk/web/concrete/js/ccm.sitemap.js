@@ -60,12 +60,21 @@ showPageMenu = function(obj, e) {
 			}
 			html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.moveCopyPage + '" id="menuMoveCopy' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/sitemap_overlay?sitemap_mode=move_copy_delete&cID=' + obj.cID + '" id="menuMoveCopy' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n_sitemap.moveCopyPage + '<\/span><\/a><\/li>';
 			html += '<li class=\"header\"><\/li>';
-			if (obj.cNumChildren > 0 && obj.cID > 1) {
+			if (obj.cNumChildren > 0) {
 				var searchURL = (obj.mode == 'explore') ? CCM_REL + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/search/?selectedSearchField[]=parent&cParentAll=1&cParentID=' + obj.cID : 'javascript:searchSubPages(' + obj.cID + ')';
-				html += '<li><a class="ccm-icon ccm-icon-sitemap-search" id="menuSearch' + obj.cID + '" href="' + searchURL + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/magnifying.png)">' + ccmi18n_sitemap.searchPages + '<\/span><\/a><\/li>';
+				if (obj.mode == 'full' || obj.mode == '' || obj.mode == 'explore') {
+					html += '<li><a class="ccm-icon ccm-icon-sitemap-search" id="menuSearch' + obj.cID + '" href="' + searchURL + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/magnifying.png)">' + ccmi18n_sitemap.searchPages + '<\/span><\/a><\/li>';
+				}
+				if (obj.mode != 'explore') {
+					html += '<li><a class="ccm-icon ccm-icon-sitemap-explore" id="menuExplore' + obj.cID + '" href="' + CCM_REL + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/explore/-/' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/magnifying.png)">' + ccmi18n_sitemap.explorePages + '<\/span><\/a><\/li>';
+				}
+				html += '<li class=\"header\"><\/li>';
+				
 			}
 			html += '<li><a class="ccm-icon" dialog-width="680" dialog-modal="false" dialog-height="440" dialog-title="' + ccmi18n_sitemap.addPage + '" id="menuSubPage' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&mode=' + obj.mode + '&cID=' + obj.cID + '&ctask=add"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n_sitemap.addPage + '<\/span><\/a><\/li>';
-			html += '<li><a class="ccm-icon" dialog-width="350" dialog-modal="false" dialog-height="160" dialog-title="' + ccmi18n_sitemap.addExternalLink + '" dialog-modal="false" id="menuLink' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=add_external"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n_sitemap.addExternalLink + '<\/span><\/a><\/li>';
+			if (obj.mode != 'search') {
+				html += '<li><a class="ccm-icon" dialog-width="350" dialog-modal="false" dialog-height="160" dialog-title="' + ccmi18n_sitemap.addExternalLink + '" dialog-modal="false" id="menuLink' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=add_external"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n_sitemap.addExternalLink + '<\/span><\/a><\/li>';
+			}
 
 		} 
 		
@@ -314,10 +323,21 @@ selectLabel = function(e, node) {
 
 ccmSitemapHighlightPageLabel = function(cID, name) {
 	var sp = $("#tree-node" + cID + " span");
-	if (name != null) {
-		sp.html(name);
+
+	if (sp.length == 0) {
+		var sp = $("tr.ccm-list-record[cID=" + cID + "]");
+		if (sp.length > 0) {
+			$("#ccm-page-advanced-search").submit();
+			
+		}
+	} else {
+		if (name != null) {
+			sp.html(name);
+		}
 	}
+	
 	sp.show('highlight');
+
 }
 
 activateLabels = function(mode) {
@@ -633,11 +653,65 @@ ccmSitemapLoad = function(mode, node, selectedPageID) {
 
 ccm_sitemapSetupSearch = function() {
 	ccm_setupAdvancedSearch('page'); 
-	$('#ccm-sitemap-page-list tr').click(function(e){
+	ccm_sitemapSetupSearchPages();
+	ccm_searchActivatePostFunction['page'] = function() {
+		ccm_sitemapSetupSearchPages();
+		ccm_sitemapSearchSetupCheckboxes();	
+	}
+	ccm_sitemapSearchSetupCheckboxes();	
+}
+
+ccm_sitemapSearchSetupCheckboxes = function() {
+	$("#ccm-page-list-cb-all").click(function(e) {
+		e.stopPropagation();
+		if ($(this).attr('checked') == true) {
+			$('.ccm-list-record td.ccm-page-list-cb input[type=checkbox]').attr('checked', true);
+			$("#ccm-page-list-multiple-operations").attr('disabled', false);
+		} else {
+			$('.ccm-list-record td.ccm-page-list-cb input[type=checkbox]').attr('checked', false);
+			$("#ccm-page-list-multiple-operations").attr('disabled', true);
+		}
+	});
+	$("td.ccm-page-list-cb input[type=checkbox]").click(function(e) {
+		e.stopPropagation();
+		if ($("td.ccm-page-list-cb input[type=checkbox]:checked").length > 0) {
+			$("#ccm-page-list-multiple-operations").attr('disabled', false);
+		} else {
+			$("#ccm-page-list-multiple-operations").attr('disabled', true);
+		}
+	});
+	
+	// if we're not in the dashboard, add to the multiple operations select menu
+
+	$("#ccm-page-list-multiple-operations").change(function() {
+		var action = $(this).val();
+		switch(action) {
+			case "properties": 
+				cIDstring = '';
+				$("td.ccm-page-list-cb input[type=checkbox]:checked").each(function() {
+					cIDstring=cIDstring+'&cID[]='+$(this).val();
+				});
+				jQuery.fn.dialog.open({
+					width: 630,
+					height: 450,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/pages/bulk_metadata_update?' + cIDstring,
+					title: ccmi18n.properties				
+				});
+				break;				
+		}
+		
+		$(this).get(0).selectedIndex = 0;
+	});
+}
+
+ccm_sitemapSetupSearchPages = function() {
+	$('#ccm-page-list tr').click(function(e){
 		var node = $(this);
 		params = {'cID': node.attr('cID'), 'mode': node.attr('sitemap-mode'), 'canWrite': node.attr('canWrite'), 'cNumChildren': node.attr('cNumChildren'), 'cAlias': node.attr('cAlias')};		
 		showPageMenu(params, e);
 	});
+
 }
 
 $(function() {

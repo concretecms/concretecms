@@ -102,7 +102,7 @@ $s1 = FileSet::getMySets();
 				<div class="ccm-file-manager-pre-filter"><?=t('Only displaying files with extension .%s.', $_REQUEST['fExtension'])?></div>
 			<? } ?>
 	
-			<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" id="ccm-search-loading" />
+			<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" class="ccm-search-loading" id="ccm-file-search-loading" />
 			
 			<h2><?=t('Search')?></h2>			
 		</div>

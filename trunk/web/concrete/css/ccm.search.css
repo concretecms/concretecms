@@ -23,7 +23,7 @@ table.ccm-results-list tr th.ccm-results-list-active-sort-asc a {background: #ef
 table.ccm-results-list tr.ccm-list-record-alt td, table.ccm-results-list tr.ccm-row-alt td {background-color: #ECFBFF}
 table.ccm-results-list tr.ccm-list-record:hover td {cursor: pointer;background-color: #DDECF0 !important}
 
-img#ccm-search-loading { display: none; float:right; }
+img#ccm-search-loading,img.ccm-search-loading { display: none; float:right; }
 div.ccm-results-list-none { font-weight: bold}
 
 div#ccm-search-overlay {display: block; width: 100%; font-size: 11px; padding:0px; margin:0px; height:auto; overflow:hidden }

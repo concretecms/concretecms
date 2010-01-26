@@ -1,4 +1,4 @@
-var ccm_searchActivatePostFunction = false;
+var ccm_searchActivatePostFunction = new Array();
 
 ccm_setupAdvancedSearchFields = function(searchType) {
 	ccm_totalAdvancedSearchFields = $('.ccm-search-request-field-set').length;
@@ -22,57 +22,85 @@ ccm_setupAdvancedSearch = function(searchType) {
 	ccm_setupAdvancedSearchFields(searchType);
 	$("#ccm-" + searchType + "-advanced-search").ajaxForm({
 		beforeSubmit: function() {
-			ccm_deactivateSearchResults();
+			ccm_deactivateSearchResults(searchType);
 		},
 		
 		success: function(resp) {
-			ccm_parseAdvancedSearchResponse(resp);
+			ccm_parseAdvancedSearchResponse(resp, searchType);
 		}
 	});
-	ccm_setupInPagePaginationAndSorting();
-	ccm_setupSortableColumnSelection();
+	ccm_setupInPagePaginationAndSorting(searchType);
+	ccm_setupSortableColumnSelection(searchType);
 	
 }
 
-ccm_parseAdvancedSearchResponse = function(resp) {
-	$("#ccm-search-results").html(resp);
-	ccm_activateSearchResults();
+ccm_parseAdvancedSearchResponse = function(resp, searchType) {
+	var obj = $("#ccm-" + searchType + "-search-results");
+	if (obj.length == 0 || searchType == null) {
+		obj = $("#ccm-search-results");
+	}
+	obj.html(resp);
+	ccm_activateSearchResults(searchType);
 }
 
-ccm_deactivateSearchResults = function() {
-	$("#ccm-search-fields-submit input").attr('disabled', true);
-	$("#ccm-search-loading").show();
+ccm_deactivateSearchResults = function(searchType) {
+	var obj = $("#ccm-" + searchType + "-search-fields-submit");
+	if (obj.length == 0 || searchType == null) {
+		obj = $("#ccm-search-fields-submit");
+	}
+	obj.attr('disabled', true);
+	var obj = $("#ccm-" + searchType + "-search-loading");
+	if (obj.length == 0 || searchType == null) {
+		obj = $("#ccm-search-loading");
+	}
+	obj.show();
 }
 
-ccm_activateSearchResults = function() {
-	$("#ccm-search-loading").hide();
-	$("#ccm-search-fields-submit input").attr('disabled', false);
-	ccm_setupInPagePaginationAndSorting();
-	ccm_setupSortableColumnSelection();
-	if(typeof(ccm_searchActivatePostFunction) == 'function') {
-		ccm_searchActivatePostFunction();
+ccm_activateSearchResults = function(searchType) {
+	var obj = $("#ccm-" + searchType + "-search-loading");
+	if (obj.length == 0 || searchType == null) {
+		obj = $("#ccm-search-loading");
+	}
+	obj.hide();
+	var obj = $("#ccm-" + searchType + "-search-fields-submit");
+	if (obj.length == 0 || searchType == null) {
+		obj = $("#ccm-search-fields-submit");
+	}
+	obj.attr('disabled', false);
+	ccm_setupInPagePaginationAndSorting(searchType);
+	ccm_setupSortableColumnSelection(searchType);
+	if(typeof(ccm_searchActivatePostFunction[searchType]) == 'function') {
+		ccm_searchActivatePostFunction[searchType]();
 	}
 }
 
-ccm_setupInPagePaginationAndSorting = function() {
+ccm_setupInPagePaginationAndSorting = function(searchType) {
 	$(".ccm-results-list th a").click(function() {
-		ccm_deactivateSearchResults();
-		$("#ccm-search-results").load($(this).attr('href'), false, function() {
-			ccm_activateSearchResults();
+		ccm_deactivateSearchResults(searchType);
+		var obj = $("#ccm-" + searchType + "-search-results");
+		if (obj.length == 0) {
+			obj = $("#ccm-search-results");
+		}
+		obj.load($(this).attr('href'), false, function() {
+			ccm_activateSearchResults(searchType);
 		});
 		return false;
 	});
 	$("div.ccm-pagination a").click(function() {
-		ccm_deactivateSearchResults();
-		$("#ccm-search-results").load($(this).attr('href'), false, function() {
-			ccm_activateSearchResults();
+		ccm_deactivateSearchResults(searchType);
+		var obj = $("#ccm-" + searchType + "-search-results");
+		if (obj.length == 0) {
+			obj = $("#ccm-search-results");
+		}
+		obj.load($(this).attr('href'), false, function() {
+			ccm_activateSearchResults(searchType);
 			$("div.ccm-dialog-content").attr('scrollTop', 0);
 		});
 		return false;
 	});
 }
 
-ccm_setupSortableColumnSelection = function() {
+ccm_setupSortableColumnSelection = function(searchType) {
 	$("#ccm-search-add-column").unbind();
 	$("#ccm-search-add-column").click(function() {
 		jQuery.fn.dialog.open({

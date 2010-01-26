@@ -79,7 +79,7 @@ foreach($searchFieldAttributes as $ak) {
 		print $form->hidden('ccm_order_by', $searchRequest['ccm_order_by']); 
 	?>	
 		<div id="ccm-search-box-title">
-			<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" id="ccm-search-loading" />
+			<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" class="ccm-search-loading" id="ccm-page-search-loading" />
 			<h2><?=t('Search')?></h2>			
 		</div>
 		

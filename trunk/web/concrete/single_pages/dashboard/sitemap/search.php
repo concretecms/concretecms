@@ -11,7 +11,7 @@
 				
 				<div id="ccm-search-advanced-results-wrapper">
 				
-					<div id="ccm-search-results">
+					<div id="ccm-page-search-results">
 					
 						<? Loader::element('pages/search_results', array('searchType' => 'DASHBOARD', 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
 					

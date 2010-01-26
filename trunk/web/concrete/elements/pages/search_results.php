@@ -1,19 +1,16 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
 
-<div id="ccm-list-wrapper"><a name="ccm-file-list-wrapper-anchor"></a>
+<div id="ccm-list-wrapper"><a name="ccm-page-list-wrapper-anchor"></a>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr>
 <td width="100%"><?=$pageList->displaySummary();?></td>
 	<td style="white-space: nowrap"><?=t('With Selected: ')?>&nbsp;</td>
 	<td align="right">
-	<select id="ccm-user-list-multiple-operations" disabled>
-				<option value="">**</option>
-				<option value="properties"><?=t('Edit Properties')?></option>
-			<? if ($mode == 'choose_multiple') { ?>
-				<option value="choose"><?=t('Choose')?></option>
-			<? } ?>
-			</select>
+	<select id="ccm-page-list-multiple-operations" disabled>
+		<option value="">**</option>
+		<option value="properties"><?=t('Edit Properties')?></option>
+	</select>
 	</td>
 </tr>
 </table>
@@ -23,9 +20,9 @@
 	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/pages/search_results';
 	
 	if (count($pages) > 0) { ?>	
-		<table border="0" cellspacing="0" cellpadding="0" id="ccm-sitemap-page-list" class="ccm-results-list">
+		<table border="0" cellspacing="0" cellpadding="0" id="ccm-page-list" class="ccm-results-list">
 		<tr>
-			<th><input id="ccm-file-list-cb-all" type="checkbox" /></td>
+			<th><input id="ccm-page-list-cb-all" type="checkbox" /></td>
 			<th><?=t('Type')?></th>
 
 			<th class="ccm-page-list-name <?=$pageList->getSearchResultsClass('cvName')?>"><a href="<?=$pageList->getSortByURL('cvName', 'asc', $bu)?>"><?=t('Name')?></a></th>
@@ -49,8 +46,8 @@
 			}
 
 			?>
-			<tr class="ccm-list-record <?=$striped?>" cID="<?=$cobj->getCollectionID()?>" sitemap-mode="" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
-			<td class="ccm-file-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td>
+			<tr class="ccm-list-record <?=$striped?>" cID="<?=$cobj->getCollectionID()?>" sitemap-mode="search" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
+			<td class="ccm-page-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td>
 			<td><?=$cobj->getCollectionTypeName()?></td>
 			<td class="ccm-page-list-name"><?=$txt->highlightSearch(wordwrap($cobj->getCollectionName(), 15, "\n", true), $keywords)?></td>
 			<td><?=date('M d, Y g:ia', strtotime($cobj->getCollectionDatePublic()))?></td>

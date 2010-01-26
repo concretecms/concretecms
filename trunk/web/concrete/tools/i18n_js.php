@@ -63,6 +63,7 @@ var ccmi18n_sitemap = {
 	moveCopyPageMessage: '<?=t('Choose a new parent page from the sitemap.')?>',
 	
 	searchPages: '<?=t('Search Pages')?>',
+	explorePages: '<?=t('Explore Folder')?>',
 	backToSitemap: '<?=t('Back to Sitemap')?>',
 	searchResults: '<?=t('Search Results')?>',
 	createdBy: '<?=t('Created By')?>',

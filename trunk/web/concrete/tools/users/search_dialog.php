@@ -27,7 +27,7 @@ if (!isset($mode)) {
 					
 					<div id="ccm-search-advanced-results-wrapper">
 					
-						<div id="ccm-search-results">
+						<div id="ccm-user-search-results">
 						
 							<? Loader::element('users/search_results', array('mode' => $mode, 'users' => $users, 'userList' => $userList, 'pagination' => $pagination)); ?>
 						

@@ -29,7 +29,7 @@ $searchRequest = $fileList->getSearchRequest();
 					
 						<? Loader::element('files/upload_single'); ?>
 						
-						<div id="ccm-search-results">
+						<div id="ccm-file-search-results">
 						
 							<? Loader::element('files/search_results', array('files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
 						
