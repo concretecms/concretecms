@@ -5,7 +5,10 @@ $cnt = Loader::controller('/dashboard/sitemap/search');
 $pageList = $cnt->getRequestedSearchResults();
 $pages = $pageList->getPage();
 $pagination = $pageList->getPagination();
-
+$sitemap_mode = $_REQUEST['sitemap_mode'];
+if (!$_REQUEST['sitemap_mode']) {
+	$sitemap_mode = 'move_copy_delete';
+}
 $searchRequest = $pageList->getSearchRequest();
 ?>
 
@@ -23,7 +26,7 @@ $searchRequest = $pageList->getSearchRequest();
 		<table id="ccm-search-form-table" >
 			<tr>
 				<td valign="top" class="ccm-search-form-advanced-col">
-					<? Loader::element('pages/search_form_advanced', array('searchDialog' => true, 'searchRequest' => $searchRequest)); ?>
+					<? Loader::element('pages/search_form_advanced', array('sitemap_mode' => $sitemap_mode, 'searchDialog' => true, 'searchRequest' => $searchRequest)); ?>
 				</td>		
 				<td valign="top" width="100%">	
 					
@@ -31,7 +34,7 @@ $searchRequest = $pageList->getSearchRequest();
 					
 						<div id="ccm-page-search-results">
 						
-							<? Loader::element('pages/search_results', array('searchDialog' => true, 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
+							<? Loader::element('pages/search_results', array('sitemap_mode' => $sitemap_mode, 'searchDialog' => true, 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
 						
 						</div>
 					

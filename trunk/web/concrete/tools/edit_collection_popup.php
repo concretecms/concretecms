@@ -22,6 +22,7 @@ switch($_GET['ctask']) {
 	case 'mcd':
 		$toolSection = "collection_mcd";
 		$canViewPane = $cp->canWrite();
+		$divID = "ccm-collection-mcd";
 		break;
 	case 'set_theme':
 		$toolSection = "collection_theme";
