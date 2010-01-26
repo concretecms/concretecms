@@ -18,6 +18,7 @@ class DashboardSitemapSearchController extends Controller {
 	
 	public function getRequestedSearchResults() {
 		$pageList = new PageList();
+		$pageList->enableStickySearchRequest();
 		
 		if ($_REQUEST['submit_search']) {
 			$pageList->resetSearchRequest();

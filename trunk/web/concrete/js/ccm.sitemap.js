@@ -1,13 +1,12 @@
 var tr_activeNode = false;
-var tr_doAnim = false; // we initial set it to false, but once we're done loading the initial state we can make it true
+//var tr_doAnim = false; // we initial set it to false, but once we're done loading the initial state we can make it true
+if (typeof(tr_doAnim) == 'undefined') {
+	var tr_doAnim = false; // we initial set it to false, but once we're done loading the initial state we can make it true
+}
 var tr_parseSubnodes = true;
 var tr_maxSearchResults = 50;
 var tr_reorderMode = false;
 var	tr_moveCopyMode = false;
-
-if (CCM_SITEMAP_MODE == false) {
-	var CCM_SITEMAP_MODE = 'full';
-}
 
 showPageMenu = function(obj, e) {
 	ccm_hideMenus();
@@ -56,13 +55,15 @@ showPageMenu = function(obj, e) {
 			html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageVersions + '" id="menuVersions' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/versions.php?rel=SITEMAP&cID=' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/versions_small.png)">' + ccmi18n_sitemap.pageVersions + '<\/span><\/a><\/li>';
 			html += '<li><a class="ccm-icon" id="menuDelete' + obj.cID + '" href="javascript:deletePage(' + obj.cID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n_sitemap.deletePage + '<\/span><\/a><\/li>';
 			html += '<li class=\"header\"><\/li>';
-			html += '<li><a class="ccm-icon" id="menuReorder' + obj.cID + '" href="javascript:activateReorder(' + obj.cID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n_sitemap.reorderPage + '<\/span><\/a><\/li>';
-			html += '<li><a class="ccm-icon" id="menuMoveCopy' + obj.cID + '" href="javascript:activateMoveCopy(' + obj.cID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n_sitemap.moveCopyPage + '<\/span><\/a><\/li>';
+			if (obj.mode != 'explore') {
+				html += '<li><a class="ccm-icon" id="menuReorder' + obj.cID + '" href="javascript:activateReorder(' + obj.cID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n_sitemap.reorderPage + '<\/span><\/a><\/li>';
+			}
+			html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.moveCopyPage + '" id="menuMoveCopy' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/sitemap_overlay?cID=' + obj.cID + '" id="menuMoveCopy' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n_sitemap.moveCopyPage + '<\/span><\/a><\/li>';
 			html += '<li class=\"header\"><\/li>';
-			if (obj.cNumChildren > 0 && obj.cID > 1) {
+			if (obj.mode != 'explore' && obj.cNumChildren > 0 && obj.cID > 1) {
 				html += '<li><a class="ccm-icon ccm-icon-sitemap-search" id="menuSearch' + obj.cID + '" href="javascript:searchSubPages(' + obj.cID + ')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/magnifying.png)">' + ccmi18n_sitemap.searchPages + '<\/span><\/a><\/li>';
 			}
-			html += '<li><a class="ccm-icon" dialog-width="680" dialog-modal="false" dialog-height="440" dialog-title="' + ccmi18n_sitemap.addPage + '" id="menuSubPage' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=add"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n_sitemap.addPage + '<\/span><\/a><\/li>';
+			html += '<li><a class="ccm-icon" dialog-width="680" dialog-modal="false" dialog-height="440" dialog-title="' + ccmi18n_sitemap.addPage + '" id="menuSubPage' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&mode=' + obj.mode + '&cID=' + obj.cID + '&ctask=add"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n_sitemap.addPage + '<\/span><\/a><\/li>';
 			html += '<li><a class="ccm-icon" dialog-width="350" dialog-modal="false" dialog-height="160" dialog-title="' + ccmi18n_sitemap.addExternalLink + '" dialog-modal="false" id="menuLink' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=add_external"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n_sitemap.addExternalLink + '<\/span><\/a><\/li>';
 
 		} 
@@ -80,6 +81,7 @@ showPageMenu = function(obj, e) {
 		$("#menuLink" + obj.cID).dialog();
 		$("#menuVersions" + obj.cID).dialog();
 		$("#menuPermissions" + obj.cID).dialog();
+		$("#menuMoveCopy" + obj.cID).dialog();
 
 	} else {
 		bobj = $("#ccm-page-menu" + obj.cID);
@@ -87,13 +89,6 @@ showPageMenu = function(obj, e) {
 	
 	ccm_fadeInMenu(bobj, e);
 	
-}
-
-if (CCM_SITEMAP_MODE == 'full') {
-	ccm_hidePane = function() {
-		// overrides the typically UI hidepane because we're only seeing these on thickbox elements
-		jQuery.fn.dialog.closeTop();
-	}
 }
 
 deletePage = function(cID) {
@@ -126,6 +121,7 @@ cancelReorder = function() {
 	}
 }
 
+/*
 activateMoveCopy = function(cID) {
 	$(".ccm-tree-search-trigger").show();
 	showSitemapMessage(ccmi18n_sitemap.moveCopyPageMessage);
@@ -140,6 +136,7 @@ deactivateMoveCopy = function() {
 	$(".ccm-tree-search-trigger").hide();
 
 }
+*/
 
 searchSubPages = function(cID) {
 	$("#ccm-tree-search-trigger" + cID).hide();
@@ -244,8 +241,8 @@ rescanDisplayOrder = function(nodeID) {
 var SITEMAP_LAST_DIALOGUE_URL='';
 var ccm_sitemap_html = '';
 
-parseSitemapResponse = function(nodeID, resp) { 
-	var container = $("#tree-root" + nodeID);
+parseSitemapResponse = function(mode, nodeID, resp) { 
+	var container = $("ul[tree-root-node-id=" + nodeID + "][sitemap-mode=" + mode + "]");
 	container.html(resp);
 	if (!tr_doAnim) {
 		container.show();
@@ -303,10 +300,10 @@ selectMoveCopyTarget = function(destCID) {
 
 selectLabel = function(e, node) {
 	var cNumChildren = node.attr('tree-node-children');
-	if (CCM_SITEMAP_MODE == "move_copy_delete" || tr_moveCopyMode == true) {
+	if (node.attr('sitemap-mode') == "move_copy_delete" || tr_moveCopyMode == true) {
 		var destCID = node.attr('id').substring(10);
 		selectMoveCopyTarget(destCID);
-	} else if (CCM_SITEMAP_MODE == 'select_page') {
+	} else if (node.attr('sitemap-mode') == 'select_page') {
 		ccm_selectSitemapNode(node.attr('id').substring(10), unescape(node.attr('tree-node-title')));
 		jQuery.fn.dialog.closeTop();
 	} else {
@@ -316,20 +313,28 @@ selectLabel = function(e, node) {
 				tr_activeNode.removeClass('tree-label-selected');
 			}
 		}
-		params = {'cID': node.attr('id').substring(10), 'canWrite': node.attr('tree-node-canwrite'), 'cNumChildren': node.attr('tree-node-children'), 'cAlias': node.attr('tree-node-alias')};
+		params = {'cID': node.attr('id').substring(10), 'mode': node.attr('sitemap-mode'), 'canWrite': node.attr('tree-node-canwrite'), 'cNumChildren': node.attr('tree-node-children'), 'cAlias': node.attr('tree-node-alias')};
 		showPageMenu(params, e);
 		tr_activeNode = node;
 	}
 }
 
-activateLabels = function() {
+ccmSitemapHighlightPageLabel = function(cID, name) {
+	var sp = $("#tree-node" + cID + " span");
+	if (name != null) {
+		sp.html(name);
+	}
+	sp.show('highlight');
+}
+
+activateLabels = function(mode) {
 	$('div.tree-label span').unbind();
 	$('div.tree-label span').click(function(e) {
 		selectLabel(e, $(this).parent())
 	}); 
 	
 	// now we make sure that all the items that are open are registered as open
-	if (CCM_SITEMAP_MODE != 'explore') {
+	if ($(this).parent().attr('sitemap-mode') != 'explore') {
 		$("ul[tree-root-state=closed]").each(function() {
 			var container = $(this);
 			var nodeID = $(this).attr('tree-root-node-id');
@@ -340,7 +345,7 @@ activateLabels = function() {
 		});
 	}
 
-	if (CCM_SITEMAP_MODE == 'full') {
+	if (mode == 'full') {
 		$('img.handle').addClass('moveable');
 
 		//drop onto a page
@@ -443,7 +448,7 @@ searchSitemapNode = function(cID) {
 
 toggleSub = function(nodeID) {
 	ccm_hideMenus();
-	var container = $("#tree-root" + nodeID);
+	var container = $("ul[#tree-root" + nodeID);
 	if (container.attr('tree-root-state') == 'closed') {
 		openSub(nodeID);
 	} else {
@@ -469,13 +474,8 @@ openSub = function(nodeID, onComplete) {
 	cancelReorder();
 	ccm_sitemap_html = '';
 	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?node=" + nodeID, function(resp) {
-		parseSitemapResponse(nodeID, resp);
-		activateLabels();
-
-		if (CCM_SITEMAP_MODE == 'move_copy_delete') {
-			container.find('.ccm-tree-search-trigger').show();
-		}
-
+		parseSitemapResponse('full', nodeID, resp);
+		activateLabels('full');
 
 		setTimeout(function() {
 			removeLoading(nodeID);
@@ -495,7 +495,7 @@ openSubSearch = function(nodeID, query, onComplete) {
 	cancelReorder();
 	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?node=" + nodeID, {'keywords': query}, function(resp) {
 		parseSitemapResponse(nodeID, resp);	
-		activateLabels();
+		activateLabels('full');
 		setTimeout(function() {
 			removeLoading(nodeID);
 			if (onComplete != null) {
@@ -556,100 +556,6 @@ toggleCopy = function() {
 	}
 }
 
-ccmExitSearchResults = function(){
-	$("#ccm-sitemap-search-results").slideUp(180, function() {
-		this.style.display='none';
-		$("#tree").show();			
-	});
-}
-setupSearch = function() {
-	$("#ccm-sitemap-search-toggle").click(function() {
-		if ($(this).html() == ccmi18n_sitemap.searchPages) {	
-			$("#ccm-sitemap-search-inner").slideDown(300);
-			$(this).html('&lt; ' + ccmi18n_sitemap.backToSitemap);			
-		} else {
-			$("#ccm-sitemap-search-results").hide();
-			$("#ccm-sitemap-search-inner").slideUp(180, function() {
-				$("#tree").show();			
-			});
-			$(this).html(ccmi18n_sitemap.searchPages);	
-		}
-	});
-	
-	$("#ccm-dashboard-search").ajaxForm({
-		beforeSubmit: function() {
-			$("#tree").hide();
-			$("h1").html('<span>' + ccmi18n_sitemap.searchResults + '</span>'); 
-			$("#ccm-sitemap-throbber").show();
-			$("#ccm-sitemap-search-results-list").html('');
-			$("#ccm-sitemap-search-results-total").hide();
-
-		},
-		success: function(resp) {
-			$("#tree").hide();
-			$("#ccm-sitemap-throbber").hide();
-			parseResults(resp);
-			activateLabels();
-			$("#ccm-sitemap-search-results").show();
-			$("#ccm-sitemap-search-results-total").show();
-		}
-	
-	});
-	
-	$("input[name=cStartDate]").datepicker({
-		showAnim: 'fadeIn'
-	});
-	$("input[name=cEndDate]").datepicker({
-		showAnim: 'fadeIn'
-	});
-}
-
-parseResults = function(node) {
-	var node = eval(node);
-	var container = $("#ccm-sitemap-search-results-list");
-	if (node.length == tr_maxSearchResults) {
-		var navHTML= ccmi18n_sitemap.viewing + " <b>" + tr_maxSearchResults + "</b> " + ccmi18n_sitemap.results + " (<b>" + tr_maxSearchResults + "</b> " + ccmi18n_sitemap.max + ")"; 
-	} else if (node.length > 0) {
-		var navHTML= ccmi18n_sitemap.viewing + " <b>" + node.length + "</b> " + ccmi18n_sitemap.results;
-	} else {
-		var navHTML= ccmi18n_sitemap.noResults;
-	}
-	navHTML='<div id="returnToSitemap"><a href="#" onclick="ccmExitSearchResults();return false;">&laquo; ' + ccmi18n_sitemap.backToSitemap + '</a></div>'+navHTML;
-
-
-	$("#ccm-sitemap-search-results-total").html(navHTML);
-	
-	$("#ccm-sitemap-search-results-total").show();
-	
-	for (var i = 0; i < node.length; i++) {
-		var html = "";
-		var typeClass = 'tree-node-document';
-		var treeNodeType = 'document';
-		var labelClass = "tree-label";
-		var nodeID = node[i].cID;
-
-		html += '<li class="search-result" id="search-result' + node[i].cID + '">';
-		if (node[i].breadcrumb) {
-			if (node[i].breadcrumb.length > 0) {
-				html += '<div class="search-result-bc">';
-				for (j = 0; j < node[i].breadcrumb.length; j++) {
-					html += node[i].breadcrumb[j].cvName + " &gt; ";
-				}
-				html += '</div>';
-			}
-		}
-		
-		html += '<div class="search-result-meta">' + ccmi18n_sitemap.createdBy + ' <b>' + node[i].uName + '</b> ' + ccmi18n_sitemap.on + ' ' + node[i].cDateAdded + '</div>';
-		
-		html += '<div tree-node-title="' + escape(node[i].cvName) + '" class="' + labelClass + '" id="tree-label' + node[i].id + '" rel="' + CCM_REL + '/index.php?cID=' + node[i].id + '"><img src="' + CCM_IMAGE_PATH + '/spacer.gif" width="16" height="16" class="handle" /><span>' + node[i].cvName + '</span><\/div>';
-		html += '<\/li><div class="dropzone tree-dz' + nodeID + '" tree-parent="' + nodeID + '" id="tree-dz' + node[i].id + '"><\/div>';
-		
-		existingHTML = container.html();
-		container.html(existingHTML + html);
-		
-	}
-}
-	
 showSitemapMessage = function(msg) {
 	$("#ccm-sitemap-message").addClass('message');
 	$("#ccm-sitemap-message").html(msg);
@@ -693,38 +599,48 @@ function addResortDroppable(nodeID){
 		});
 }
 
+ccmSitemapExploreNode = function(mode, cID) {
+	jQuery.fn.dialog.showLoader();
+	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php", {'mode' : mode, 'node': cID}, function(resp) {  
+		parseSitemapResponse(mode, 0, resp);
+		activateLabels(mode);
+		jQuery.fn.dialog.hideLoader();
+		ccm_sitemap_html = '';
+	});
+}
+
+ccmSitemapLoad = function(mode, node) {
+	if (mode == 'full') {
+		ccm_hidePane = function() {
+			// overrides the typically UI hidepane because we're only seeing these on thickbox elements
+			jQuery.fn.dialog.closeTop();
+		}
+		$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php", {'mode' : mode, 'node': 0}, function(resp) {  
+			parseSitemapResponse(mode, 0, resp);
+			activateLabels(mode);
+			tr_doAnim = true;
+			tr_parseSubnodes = false;
+			ccm_sitemap_html = '';
+		});
+	} else if (mode == 'move_copy_delete') {
+		ccmSitemapExploreNode(mode, node);
+	} else {
+		activateLabels(mode);
+	}
+}
+
 $(function() {
 	$(document).ajaxError(function(event, request, settings) {
 		ccmAlert.notice(ccmi18n_sitemap.loadErrorTitle, request.responseText);
 	});
 	
-	var node = 0;
-	if (typeof(CCM_SITEMAP_EXPLORE_NODE) != 'undefined') {
-		node = CCM_SITEMAP_EXPLORE_NODE;
-	}
-	
-	if (CCM_SITEMAP_MODE != 'explore') {
-		$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php", {'mode' : CCM_SITEMAP_MODE, 'node': node}, function(resp) {  
-			parseSitemapResponse(node, resp);
-			activateLabels();
-			tr_doAnim = true;
-			tr_parseSubnodes = false;
-			ccm_sitemap_html = '';
-			if (CCM_SITEMAP_MODE == 'move_copy_delete') {
-				$('.ccm-tree-search-trigger').show();
-			}
-		});
-	} else {
-		activateLabels();
-	}
 	
 	$(document).click(function() {
 		ccm_hideMenus();
 		$("div.tree-label").removeClass('tree-label-selected');
-		if (CCM_SITEMAP_MODE == 'full') {
-			$("div.tree-label").removeClass('tree-label-selected-onload');	
-		}
 	});
+
+	/*
 	
 	setupSearch();
 	
@@ -734,6 +650,7 @@ $(function() {
 			location.reload();
 		});
 	});
+	*/
 	
 
 });

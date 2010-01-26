@@ -12,7 +12,7 @@ if ($cp->canAdminPage()) {
 ?>
 <div class="ccm-pane-controls">
 <form method="post" name="permissionForm" id="ccmMetadataForm" action="<?=$c->getCollectionAction()?>">
-			<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
+<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 
 	<script type="text/javascript"> 
 		
@@ -40,10 +40,17 @@ if ($cp->canAdminPage()) {
 					jQuery.fn.dialog.showLoader();
 				},
 				success: function(r) {
-					ccm_hidePane(function() {
-						jQuery.fn.dialog.hideLoader();						
-						ccmAlert.hud(ccmi18n.savePropertiesMsg, 2000, 'success', ccmi18n.properties);
-					});
+					var r = eval('(' + r + ')');
+					if (r != null && r.rel == 'SITEMAP') {
+						jQuery.fn.dialog.hideLoader();
+						jQuery.fn.dialog.closeTop();
+						ccmSitemapHighlightPageLabel(r.cID, r.name);
+					} else {
+						ccm_hidePane(function() {
+							jQuery.fn.dialog.hideLoader();						
+						});
+					}
+					ccmAlert.hud(ccmi18n.savePropertiesMsg, 2000, 'success', ccmi18n.properties);
 				}
 			});
 		});

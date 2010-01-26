@@ -650,13 +650,15 @@
 				}
 				
 				if ($_POST['rel'] == 'SITEMAP') { 
-					header('Location: ' . URL_SITEMAP);
+					$obj = new stdClass;
+					$obj->rel = 'SITEMAP';
+					$obj->cID = $c->getCollectionID();
+					print Loader::helper('json')->encode($obj);
 					exit;
 				} else {
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
 					exit;
 				}
-				
 			}		
 		} else if ($_POST['update_metadata']) { 
 			// updating a collection
@@ -686,20 +688,26 @@
 				$nvc->update($data);
 				processMetaData($nvc);
 				
+				$obj = new stdClass;
+
 				if ($_POST['rel'] == 'SITEMAP') { 
+					$obj->rel = $_POST['rel'];
 					if ($cp->canApproveCollection()) {
 						$v = CollectionVersion::get($c, "RECENT");
 						$v->approve();
 						$u = new User();
 						$u->unloadCollectionEdit($c);
+						$obj->name = $v->getVersionName();
 					}
 					
-					header('Location: ' . URL_SITEMAP);
-					exit;
 				} else {
 					//header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
 					//exit;
 				}
+
+				$obj->cID = $c->getCollectionID();
+				print Loader::helper('json')->encode($obj);
+				exit;
 			}	
 		} else if ($_POST['update_external']) {
 			if ($cp->canWrite()) {
@@ -733,16 +741,22 @@
 				} else {
 					$c->updatePermissions();
 				}
+
+				$obj = new stdClass;
+
 				if ($_POST['rel'] == 'SITEMAP') { 
 					$u = new User();
 					$u->unloadCollectionEdit($c);
-
-					header('Location: ' . URL_SITEMAP);
-					exit;
+					$obj->rel = 'SITEMAP';
 				} else {
 					//header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
 					//exit;
 				}
+
+				$obj->cID = $c->getCollectionID();
+				print Loader::helper('json')->encode($obj);
+				exit;
+
 			}	
 		} else if ($_POST['add']) { 
 			// adding a collection to a collection
@@ -772,9 +786,16 @@
 							$v->approve();
 							$u = new User();
 							$u->unloadCollectionEdit($nc);
+
+							if ($_POST['mode'] == 'explore' ) {
+								header('Location: ' . BASE_URL . View::url('/dashboard/sitemap/explore', $c->getCollectionID()));
+								exit;
+								
+							} else {
+								header('Location: ' . URL_SITEMAP);
+								exit;							
+							}
 						}
-						header('Location: ' . URL_SITEMAP);
-						exit;
 					} else {
 						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $nc->getCollectionID() . '&mode=edit&ctask=check-out-first' . $step . $token);
 						exit;
