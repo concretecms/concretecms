@@ -4,7 +4,6 @@ if (typeof(tr_doAnim) == 'undefined') {
 	var tr_doAnim = false; // we initial set it to false, but once we're done loading the initial state we can make it true
 }
 var tr_parseSubnodes = true;
-var tr_maxSearchResults = 50;
 var tr_reorderMode = false;
 var	tr_moveCopyMode = false;
 
@@ -708,8 +707,13 @@ ccm_sitemapSearchSetupCheckboxes = function() {
 ccm_sitemapSetupSearchPages = function() {
 	$('#ccm-page-list tr').click(function(e){
 		var node = $(this);
-		params = {'cID': node.attr('cID'), 'mode': node.attr('sitemap-mode'), 'canWrite': node.attr('canWrite'), 'cNumChildren': node.attr('cNumChildren'), 'cAlias': node.attr('cAlias')};		
-		showPageMenu(params, e);
+		if (node.attr('chooseOnly')) {
+			ccm_selectSitemapNode(node.attr('cID'), unescape(node.attr('cName')));
+			jQuery.fn.dialog.closeTop();
+		} else {
+			params = {'cID': node.attr('cID'), 'mode': node.attr('sitemap-mode'), 'canWrite': node.attr('canWrite'), 'cNumChildren': node.attr('cNumChildren'), 'cAlias': node.attr('cAlias')};		
+			showPageMenu(params, e);
+		}
 	});
 
 }
@@ -725,17 +729,12 @@ $(function() {
 		$("div.tree-label").removeClass('tree-label-selected');
 	});
 
-	/*
-	
-	setupSearch();
-	
 	$("#ccm-show-all-pages-cb").click(function() {
 		var showSystemPages = $(this).get(0).checked == true ? 1 : 0;
 		$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?show_system=" + showSystemPages, function(resp) {
 			location.reload();
 		});
 	});
-	*/
 	
 
 });

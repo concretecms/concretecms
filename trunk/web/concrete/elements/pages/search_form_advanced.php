@@ -7,9 +7,12 @@ $searchFields = array(
 	'date_public' => t('Public Date'),
 	'owner' => t('Page Owner'),
 	'num_children' => t('# Children'),
-	'version_status' => t('Approved Version'),
-	'parent' => t('Parent Page')
+	'version_status' => t('Approved Version')
 );
+
+if (!$searchDialog) {
+	$searchFields['parent'] = t('Parent Page');
+}
 
 Loader::model('attribute/categories/collection');
 $searchFieldAttributes = CollectionAttributeKey::getSearchableList();
@@ -43,7 +46,8 @@ foreach($searchFieldAttributes as $ak) {
 		<div><?=$form->radio('cvIsApproved', 0, false)?> <?=$form->label("cvIsApproved1", t('Unapproved'))?></div>
 		<div><?=$form->radio('cvIsApproved', 1, false)?> <?=$form->label("cvIsApproved2", t('Approved'))?></div>
 		</span>
-
+			
+		<? if (!$searchDialog) { ?>
 		<span class="ccm-search-option" search-field="parent">
 		<div style="width: 100px">
 		<strong><?=t('Search All Children')?></strong><br/>
@@ -54,6 +58,7 @@ foreach($searchFieldAttributes as $ak) {
 		?>
 		</div>
 		</span>
+		<? } ?>
 		<span class="ccm-search-option"  search-field="num_children">
 			<select name="cChildrenSelect" style="width: 45px">
 				<option value="gt"<? if ($req['cChildrenSelect'] == 'gt') { ?> selected <? } ?>><?=t('More Than')?></option>
@@ -77,6 +82,9 @@ foreach($searchFieldAttributes as $ak) {
 	<?	
 		print $form->hidden('ccm_order_dir', $searchRequest['ccm_order_dir']); 
 		print $form->hidden('ccm_order_by', $searchRequest['ccm_order_by']); 
+		if ($searchDialog) {
+			print $form->hidden('searchDialog', true);
+		}
 	?>	
 		<div id="ccm-search-box-title">
 			<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" class="ccm-search-loading" id="ccm-page-search-loading" />
@@ -226,7 +234,7 @@ foreach($searchFieldAttributes as $ak) {
 								</span>
 							<? } ?>
 							
-							<? if ($req == 'parent') { ?>
+							<? if ((!$searchDialog) && $req == 'parent') { ?>
 							<span class="ccm-search-option" search-field="parent">
 							<div style="width: 100px">
 							<strong><?=t('Search All Children')?></strong><br/>

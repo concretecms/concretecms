@@ -161,6 +161,9 @@ class ConcreteDashboardSitemapHelper {
 		} else {			
 			$pl = new PageList();
 			$pl->sortByDisplayOrder();
+			if (ConcreteDashboardSitemapHelper::showSystemPages()) {
+				$pl->includeSystemPages();
+			}
 			$pl->filterByParentID($cID);
 			$pl->displayUnapprovedPages();
 			$total = $pl->getTotal();
