@@ -707,9 +707,13 @@ ccm_sitemapSearchSetupCheckboxes = function() {
 ccm_sitemapSetupSearchPages = function() {
 	$('#ccm-page-list tr').click(function(e){
 		var node = $(this);
-		if (node.attr('chooseOnly')) {
+		if (node.attr('sitemap-mode') == 'select_page') {
 			ccm_selectSitemapNode(node.attr('cID'), unescape(node.attr('cName')));
 			jQuery.fn.dialog.closeTop();
+		} else if (node.attr('sitemap-mode') == 'move_copy_delete') {
+			var destCID = node.attr('cID');
+			var origCID = node.attr('selected-page-id');
+			selectMoveCopyTarget(destCID, origCID);
 		} else {
 			params = {'cID': node.attr('cID'), 'mode': node.attr('sitemap-mode'), 'canWrite': node.attr('canWrite'), 'cNumChildren': node.attr('cNumChildren'), 'cAlias': node.attr('cAlias')};		
 			showPageMenu(params, e);

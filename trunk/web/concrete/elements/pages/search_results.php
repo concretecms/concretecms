@@ -3,6 +3,14 @@
 if (isset($_REQUEST['searchDialog'])) {
 	$searchDialog = true;
 }
+if (!isset($sitemap_mode)) {
+	if (isset($_REQUEST['sitemap_mode'])) {
+		$sitemap_mode = $_REQUEST['sitemap_mode'];
+	} else {
+		$sitemap_mode = 'search';
+	}
+}
+
 ?>
 
 <div id="ccm-list-wrapper"><a name="ccm-page-list-wrapper-anchor"></a>
@@ -54,7 +62,7 @@ if (isset($_REQUEST['searchDialog'])) {
 			}
 
 			?>
-			<tr class="ccm-list-record <?=$striped?>" chooseOnly="<?=$searchDialog?>" cName="<?=htmlentities($cobj->getCollectionName(), ENT_QUOTES, APP_CHARSET)?>" cID="<?=$cobj->getCollectionID()?>" sitemap-mode="search" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
+			<tr class="ccm-list-record <?=$striped?>" cName="<?=htmlentities($cobj->getCollectionName(), ENT_QUOTES, APP_CHARSET)?>" cID="<?=$cobj->getCollectionID()?>" sitemap-mode="<?=$sitemap_mode?>" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
 			<? if (!$searchDialog) { ?><td class="ccm-page-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td><? } ?>
 			<td><?=$cobj->getCollectionTypeName()?></td>
 			<td class="ccm-page-list-name"><?=$txt->highlightSearch(wordwrap($cobj->getCollectionName(), 15, "\n", true), $keywords)?></td>
