@@ -1,7 +1,6 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::library('search');
-Loader::model('search/collection');
 Loader::helper('concrete/dashboard/sitemap');
 
 if (isset($_REQUEST['reveal'])) {
@@ -43,12 +42,8 @@ if (isset($_REQUEST['reveal'])) {
 		</ul>
 	</div>
 
-	<? Loader::element('dashboard/sitemap_search_results') ?>	
-
 	</td>
 	<td valign="top">
-	
-	<? Loader::element('dashboard/sitemap_search') ?>
 	
 	<div id="ccm-show-all-pages">
 	<input type="checkbox" id="ccm-show-all-pages-cb" <? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?> checked <? } ?> />
