@@ -8,6 +8,9 @@ if (!$chp->canRead()) {
 }
 
 $dh = Loader::helper('concrete/dashboard/sitemap');
+if (isset($_REQUEST['selectedPageID'])) {
+	$dh->setSelectedPageID($_REQUEST['selectedPageID']);
+}
 
 if ($_REQUEST['search']) {
 

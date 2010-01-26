@@ -188,6 +188,7 @@ class ConcreteDashboardSitemapHelper {
 	
 	public function outputRequestHTML($mode, $req) {
 		$nodeID = $req->nodeID;
+		$spID = ($this->selectedPageID > 0) ? $this->selectedPageID : 'false';
 		$c = Page::getByID($req->nodeID, 'ACTIVE');
 		if ($mode == 'explore' || $mode == 'move_copy_delete') {
 			if ($nodeID > 1) {
@@ -196,13 +197,13 @@ class ConcreteDashboardSitemapHelper {
 				if ($mode == 'explore') {
 					$this->html .= '<li class="ccm-sitemap-navigate-up"><a href="' . View::url('/dashboard/sitemap/explore', $parent->getCollectionID()) . '">' . t('Back to <span>%s</span>', $parent->getCollectionName()) . '</a></li>';
 				} else {
-					$this->html .= '<li class="ccm-sitemap-navigate-up"><a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\''. $mode . '\', ' . $parent->getCollectionID() . ')">' . t('Back to <span>%s</span>', $parent->getCollectionName()) . '</a></li>';
+					$this->html .= '<li class="ccm-sitemap-navigate-up"><a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\''. $mode . '\', ' . $parent->getCollectionID() . ',' . $spID . ')">' . t('Back to <span>%s</span>', $parent->getCollectionName()) . '</a></li>';
 				}
 			}
 			$cp = new Permissions($c);
 			$this->html .= '<li class="ccm-sitemap-current-level-title">';
 			$this->html .= '<h2><div sitemap-mode="' . $mode . '" class="tree-label" rel="' . DIR_REL . '/index.php?cID=' . $c->getCollectionID() . '" tree-node-alias="0" ';
-			$this->html .= 'tree-node-canwrite="' . $cp->canWrite() . '" tree-node-children="' . $c->getNumChildren() . '" ';
+			$this->html .= 'selected-page-id="' . $this->selectedPageID . '" tree-node-canwrite="' . $cp->canWrite() . '" tree-node-children="' . $c->getNumChildren() . '" ';
 			$this->html .= 'tree-node-title="' . htmlspecialchars($c->getCollectionName()) . '" id="tree-label' . $c->getCollectionID() . '">';
 			$this->html .= t('Currently Viewing: <span>%s</span>', $c->getCollectionName()) . '</div></h2></li>';
 		}
@@ -231,7 +232,7 @@ class ConcreteDashboardSitemapHelper {
 			if ($ri['numSubpages'] > 0) {
 				$subPageStr = ($ri['id'] == 1) ? '' : ' (' . $ri['numSubpages'] . ')';
 				if ($mode == 'explore' || $mode == 'move_copy_delete') {
-					$this->html .= ($mode == 'explore') ? '<a href="' . View::url('/dashboard/sitemap/explore', $ri['id']) . '">' : '<a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $mode . '\', ' . $ri["id"] . ')">';
+					$this->html .= ($mode == 'explore') ? '<a href="' . View::url('/dashboard/sitemap/explore', $ri['id']) . '">' : '<a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $mode . '\', ' . $ri["id"] . ',' . $spID . ')">';
 				}
 				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/spacer.gif" width="16" height="16" class="handle ' . $moveableClass . '" />';
 				if ($mode == 'explore' || $mode == 'move_copy_delete') {
@@ -242,7 +243,7 @@ class ConcreteDashboardSitemapHelper {
 					$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/dashboard/plus.jpg" width="9" height="9" class="tree-plus" id="tree-collapse' . $ri['id'] . '" /></a>';
 				}
 				$this->html .= '<div rel="' . DIR_REL . '/index.php?cID=' . $ri['id'] . '" class="' . $labelClass . '" tree-node-alias="' . $cAlias . '" ';
-				$this->html .= 'sitemap-mode="' . $mode . '" tree-node-canwrite="' . $canWrite . '" tree-node-children="' . $ri['numSubpages'] . '" ';
+				$this->html .= 'selected-page-id="' . $this->selectedPageID . '" sitemap-mode="' . $mode . '" tree-node-canwrite="' . $canWrite . '" tree-node-children="' . $ri['numSubpages'] . '" ';
 				$this->html .= 'tree-node-title="' . htmlspecialchars($ri['cvName']) . '" id="tree-label' . $ri['id'] . '" ';
 				if ($ri['selected']) {
 					$this->html .= 'class="tree-label-selected-onload" ';
@@ -268,7 +269,7 @@ class ConcreteDashboardSitemapHelper {
 			} else {
 				$this->html .= '<div tree-node-title="' . htmlspecialchars($ri['cvName']) . '" tree-node-children="' . $ri['numSubpages'] . '" ';
 				$this->html .= 'class="' . $labelClass . '" tree-node-alias="' . $cAlias . '" tree-node-canwrite="' . $canWrite . '" ';
-				$this->html .= 'sitemap-mode="' . $mode . '" id="tree-label' . $ri['id'] . '" rel="' . DIR_REL . '/index.php?cID=' . $ri['id'] . '">';
+				$this->html .= 'selected-page-id="' . $this->selectedPageID . '" sitemap-mode="' . $mode . '" id="tree-label' . $ri['id'] . '" rel="' . DIR_REL . '/index.php?cID=' . $ri['id'] . '">';
 				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/spacer.gif" width="16" height="16" class="handle ' . $moveableClass . '" /><span>' . $ri['cvName'] . '</span></div>';
 			}
 			
@@ -288,6 +289,10 @@ class ConcreteDashboardSitemapHelper {
 		}
 
 		return $this->html;
+	}
+	
+	public function setSelectedPageID($cID) {
+		$this->selectedPageID = $cID;
 	}
 	
 	function getDroppables($cID) {
