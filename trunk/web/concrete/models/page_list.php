@@ -39,6 +39,9 @@ class PageList extends DatabaseItemList {
 		$this->ignorePermissions = true;
 	}
 	
+	public function includeSystemPages() {
+		$this->includeSystemPages = true;
+	}
 	public function displayUnapprovedPages() {
 		$this->displayOnlyApprovedPages = false;
 	}
@@ -253,7 +256,7 @@ class PageList extends DatabaseItemList {
 	}
 	
 	protected function setupSystemPagesToExclude() {
-		if ($this->filterByCParentID > 1 || $this->filterByCT == true) {
+		if ($this->includeSystemPages || $this->filterByCParentID > 1 || $this->filterByCT == true) {
 			return false;
 		}
 		$cIDs = Cache::get('page_list_exclude_ids', false);

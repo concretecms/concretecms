@@ -1,6 +1,13 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
+<?
+if (isset($_REQUEST['searchDialog'])) {
+	$searchDialog = true;
+}
+?>
 
 <div id="ccm-list-wrapper"><a name="ccm-page-list-wrapper-anchor"></a>
+
+<? if (!$searchDialog) { ?>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr>
@@ -14,6 +21,7 @@
 	</td>
 </tr>
 </table>
+<? } ?>
 <?
 	$txt = Loader::helper('text');
 	$keywords = $searchRequest['keywords'];
@@ -22,7 +30,7 @@
 	if (count($pages) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-page-list" class="ccm-results-list">
 		<tr>
-			<th><input id="ccm-page-list-cb-all" type="checkbox" /></td>
+			<? if (!$searchDialog) { ?><th><input id="ccm-page-list-cb-all" type="checkbox" /></th><? } ?>
 			<th><?=t('Type')?></th>
 
 			<th class="ccm-page-list-name <?=$pageList->getSearchResultsClass('cvName')?>"><a href="<?=$pageList->getSortByURL('cvName', 'asc', $bu)?>"><?=t('Name')?></a></th>
@@ -46,8 +54,8 @@
 			}
 
 			?>
-			<tr class="ccm-list-record <?=$striped?>" cID="<?=$cobj->getCollectionID()?>" sitemap-mode="search" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
-			<td class="ccm-page-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td>
+			<tr class="ccm-list-record <?=$striped?>" chooseOnly="<?=$searchDialog?>" cName="<?=htmlentities($cobj->getCollectionName(), ENT_QUOTES, APP_CHARSET)?>" cID="<?=$cobj->getCollectionID()?>" sitemap-mode="search" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
+			<? if (!$searchDialog) { ?><td class="ccm-page-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td><? } ?>
 			<td><?=$cobj->getCollectionTypeName()?></td>
 			<td class="ccm-page-list-name"><?=$txt->highlightSearch(wordwrap($cobj->getCollectionName(), 15, "\n", true), $keywords)?></td>
 			<td><?=date('M d, Y g:ia', strtotime($cobj->getCollectionDatePublic()))?></td>
