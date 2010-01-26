@@ -23,7 +23,7 @@
 	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/pages/search_results';
 	
 	if (count($pages) > 0) { ?>	
-		<table border="0" cellspacing="0" cellpadding="0" id="ccm-file-list" class="ccm-results-list">
+		<table border="0" cellspacing="0" cellpadding="0" id="ccm-sitemap-page-list" class="ccm-results-list">
 		<tr>
 			<th><input id="ccm-file-list-cb-all" type="checkbox" /></td>
 			<th><?=t('Type')?></th>
@@ -49,7 +49,7 @@
 			}
 
 			?>
-			<tr class="ccm-list-record <?=$striped?>">
+			<tr class="ccm-list-record <?=$striped?>" cID="<?=$cobj->getCollectionID()?>" sitemap-mode="" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
 			<td class="ccm-file-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td>
 			<td><?=$cobj->getCollectionTypeName()?></td>
 			<td class="ccm-page-list-name"><?=$txt->highlightSearch(wordwrap($cobj->getCollectionName(), 15, "\n", true), $keywords)?></td>

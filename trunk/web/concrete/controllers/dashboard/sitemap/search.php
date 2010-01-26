@@ -8,7 +8,8 @@ class DashboardSitemapSearchController extends Controller {
 		$form = Loader::helper('form');
 		$this->set('form', $form);
 		$pageList = $this->getRequestedSearchResults();
-		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_setupAdvancedSearch(\'page\'); });</script>');
+		$this->addHeaderItem(Loader::helper('html')->javascript('ccm.sitemap.js'));
+		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_sitemapSetupSearch(); });</script>');
 		$pages = $pageList->getPage();
 				
 		$this->set('pageList', $pageList);		
@@ -18,6 +19,7 @@ class DashboardSitemapSearchController extends Controller {
 	
 	public function getRequestedSearchResults() {
 		$pageList = new PageList();
+		$pageList->filterByIsAlias(0);
 		$pageList->enableStickySearchRequest();
 		
 		if ($_REQUEST['submit_search']) {

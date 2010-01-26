@@ -14,11 +14,13 @@ $u = new User();
 $json = array();
 $json['error'] = false;
 $json['message'] = false;
+$json['cParentID'] = false;
 
 if ($valt->validate()) {
 	
 	if (isset($_REQUEST['cID'] ) && is_numeric($_REQUEST['cID'])) {
 		$c = Page::getByID($_REQUEST['cID']);
+		$json['cParentID'] = $c->getCollectionParentID();
 	} else {
 		$error = t('Invalid ID passed');
 	}

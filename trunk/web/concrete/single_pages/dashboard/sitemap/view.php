@@ -21,7 +21,7 @@ if (isset($_REQUEST['reveal'])) {
 
 
 <script type="text/javascript">
-	var CCM_SITEMAP_MODE = 'full';
+	var CCM_LAUNCHER_SITEMAP = 'full';
 	$(function() {
 		ccmSitemapLoad('full');
 	});
