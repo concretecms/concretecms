@@ -289,9 +289,13 @@ class ConcreteDashboardSitemapHelper {
 		
 		if ($req->total > count($req->results) && $nodeID > 1) {
 			if ($mode == 'explore' || $mode == 'move_copy_delete' || $mode == 'select_page') {
-				$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPaging(false, true) . '</li>';
+				if ($mode == 'explore') { 
+					$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPaging(false, true) . '</li>';
+				} else {
+					$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPaging(REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_data', true) . '</li>';
+				}
 			} else {
-				$drillDownAction = ($req->keywords != null) ? View::url('/dashboard/sitemap/search?cvName=' . $req->keywords . '&selectedSearchField[]=parent&numResults=50&ccm_paging_p=2&cParentAll=1&ccm_order_by=cDisplayOrder&cParentID=' . $nodeID) : View::url('/dashboard/sitemap/explore', $nodeID);
+				$drillDownAction = ($req->keywords != null) ? View::url('/dashboard/sitemap/search?cvName=' . $req->keywords . '&selectedSearchField[]=parent&numResults=50&ccm_paging_p=2&cParentAll=1&ccm_order_by=cDisplayOrder&cParentIDSearchField=' . $nodeID) : View::url('/dashboard/sitemap/explore', $nodeID);
 				$this->html .= '<li class="ccm-sitemap-more-results">' . t('%s more to display. <a href="%s">View All</a>',  $req->total - count($req->results), $drillDownAction) . '</a></li>';
 			}
 		}
