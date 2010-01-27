@@ -60,7 +60,7 @@ showPageMenu = function(obj, e) {
 			html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.moveCopyPage + '" id="menuMoveCopy' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/sitemap_overlay?sitemap_mode=move_copy_delete&cID=' + obj.cID + '" id="menuMoveCopy' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n_sitemap.moveCopyPage + '<\/span><\/a><\/li>';
 			html += '<li class=\"header\"><\/li>';
 			if (obj.cNumChildren > 0) {
-				var searchURL = (obj.mode == 'explore') ? CCM_REL + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/search/?selectedSearchField[]=parent&cParentAll=1&cParentID=' + obj.cID : 'javascript:searchSubPages(' + obj.cID + ')';
+				var searchURL = (obj.mode == 'explore') ? CCM_REL + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/search/?selectedSearchField[]=parent&cParentAll=1&cParentIDSearchField=' + obj.cID : 'javascript:searchSubPages(' + obj.cID + ')';
 				if (obj.mode == 'full' || obj.mode == '' || obj.mode == 'explore') {
 					html += '<li><a class="ccm-icon ccm-icon-sitemap-search" id="menuSearch' + obj.cID + '" href="' + searchURL + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/magnifying.png)">' + ccmi18n_sitemap.searchPages + '<\/span><\/a><\/li>';
 				}
@@ -356,7 +356,22 @@ activateLabels = function(mode) {
 			}
 		});
 	}
-
+	
+	if (mode == 'select_page' || mode == 'move_copy_delete') {
+		$("li.ccm-sitemap-explore-paging a").each(function() {
+			$(this).click(function() {
+				jQuery.fn.dialog.showLoader();
+				$.get($(this).attr('href'), function(r) {
+					parseSitemapResponse(mode, 0, r);
+					activateLabels(mode);
+					jQuery.fn.dialog.hideLoader();
+				});			
+				
+				return false;
+			});
+		});
+	}
+	
 	if (mode == 'full') {
 		$('img.handle').addClass('moveable');
 
