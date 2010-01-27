@@ -25,7 +25,8 @@ a.ccm-icon-sitemap-search span {background-position: 9px 6px !important}
 a.ccm-tree-search-trigger {display: none; vertical-align: middle; margin-left: 3px}
 
 li.tree-node-document {background-image: url(../images/dashboard/sitemap/document.png)}
-li.tree-node-folder {background-image: url(../images/dashboard/sitemap/folder.png)}
+li.tree-node-folder, li.tree-node-folder-explore {background-image: url(../images/dashboard/sitemap/folder.png)}
+li.tree-node-folder-explore img:hover {background-image: url(../images/dashboard/sitemap/folder_into.png)}
 li.tree-node-loading {background-image: url(../images/dashboard/sitemap/loading.gif) !important}
 
 ul.ccm-sitemap-search-results {margin-left: 17px !important}

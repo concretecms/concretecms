@@ -30,7 +30,7 @@ class DashboardFilesSearchController extends Controller {
 		$req = $fileList->getSearchRequest();
 		$this->set('searchRequest', $req);
 		
-		//$fileList->sortBy($req['ccm_order_by'], $req['ccm_order_dir']);
+		$fileList->sortBy('fDateAdded', 'desc');
 		
 		$keywords = htmlentities($req['fKeywords'], ENT_QUOTES, APP_CHARSET);
 		

@@ -10,14 +10,15 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 */
 class PageList extends DatabaseItemList {
 
-	private $includeSystemPages = false;
+	protected $includeSystemPages = false;
 	protected $attributeFilters = array();
-	private $displayOnlyPermittedPages = false;
-	private $displayOnlyApprovedPages = true;
-	private $systemPagesToExclude = array('login.php', 'register.php', 'download_file.php', 'profile/%', 'dashboard/%');
-	private $filterByCParentID = 0;
-	private $filterByCT = false;
-	private $ignorePermissions = false;
+	protected $includeAliases = true;
+	protected $displayOnlyPermittedPages = false;
+	protected $displayOnlyApprovedPages = true;
+	protected $systemPagesToExclude = array('login.php', 'register.php', 'download_file.php', 'profile/%', 'dashboard/%');
+	protected $filterByCParentID = 0;
+	protected $filterByCT = false;
+	protected $ignorePermissions = false;
 	protected $attributeClass = 'CollectionAttributeKey';
 	protected $autoSortColumns = array('cvName', 'cvDatePublic', 'cDateAdded', 'cDateModified');
 	
@@ -37,6 +38,10 @@ class PageList extends DatabaseItemList {
 	
 	public function ignorePermissions() {
 		$this->ignorePermissions = true;
+	}
+	
+	public function ignoreAliases() {
+		$this->includeAliases = false;
 	}
 	
 	public function includeSystemPages() {
@@ -102,10 +107,15 @@ class PageList extends DatabaseItemList {
 		}
 		
 		$date = Loader::helper('date')->getLocalDateTime();
-
+		
+		if ($this->includeAliases) {
+			$cInheritPermissionsFromCID = 'if(p2.cID is null, p1.cInheritPermissionsFromCID, p2.cInheritPermissionsFromCID)';
+		} else {
+			$cInheritPermissionsFromCID = 'p1.cInheritPermissionsFromCID';
+		}
 		if (PERMISSIONS_MODEL != 'simple') {
 			// support timed release
-			$this->filter(false, "((select count(cID) from PagePermissions pp1 where pp1.cID = if(p2.cID is null, p1.cInheritPermissionsFromCID, p2.cInheritPermissionsFromCID) and
+			$this->filter(false, "((select count(cID) from PagePermissions pp1 where pp1.cID = {$cInheritPermissionsFromCID} and
 				pp1.cgPermissions like 'r%' and (
 					(pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID})
 					and 
@@ -114,7 +124,7 @@ class PageList extends DatabaseItemList {
 						(pp1.cgEndDate is null or pp1.cgEndDate >= '{$date}')
 				)) > 0 or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL ))");
 		} else {
-			$this->filter(false, "((select count(cID) from PagePermissions pp1 where pp1.cID = if(p2.cID is null, p1.cInheritPermissionsFromCID, p2.cInheritPermissionsFromCID) and pp1.cgPermissions like 'r%' and (pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID}))) > 0 or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL)");	
+			$this->filter(false, "((select count(cID) from PagePermissions pp1 where pp1.cID = {$cInheritPermissionsFromCID} and pp1.cgPermissions like 'r%' and (pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID}))) > 0 or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL)");	
 		}
 	}
 
@@ -183,7 +193,11 @@ class PageList extends DatabaseItemList {
 	 * @param mixed $ctID
 	 */
 	public function filterByUserID($uID) {
-		$this->filter(false, "(p1.uID = $uID or p2.uID = $uID)");
+		if ($this->includeAliases) {
+			$this->filter(false, "(p1.uID = $uID or p2.uID = $uID)");
+		} else {
+			$this->filter('p1.uID', $uID);
+		}
 	}
 
 	public function filterByIsApproved($cvIsApproved) {
@@ -191,10 +205,12 @@ class PageList extends DatabaseItemList {
 	}
 	
 	public function filterByIsAlias($ia) {
-		if ($ia == true) {
-			$this->filter(false, "(p2.cPointerID is not null)");
-		} else {
-			$this->filter(false, "(p2.cPointerID is null)");
+		if ($this->includeAliases) {
+			if ($ia == true) {
+				$this->filter(false, "(p2.cPointerID is not null)");
+			} else {
+				$this->filter(false, "(p2.cPointerID is null)");
+			}
 		}
 	}
 	
@@ -232,7 +248,11 @@ class PageList extends DatabaseItemList {
 		if (!Loader::helper('validation/numbers')->integer($num)) {
 			$num = 0;
 		}
-		$this->filter(false, '(p1.cChildren ' . $comparison . ' ' . $num . ' or p2.cChildren ' . $comparison . ' ' . $num . ')');
+		if ($this->includeAliases) {
+			$this->filter(false, '(p1.cChildren ' . $comparison . ' ' . $num . ' or p2.cChildren ' . $comparison . ' ' . $num . ')');
+		} else {
+			$this->filter('p1.cChildren', $num, $comparison);
+		}
 	}
 
 	/** 
@@ -252,7 +272,11 @@ class PageList extends DatabaseItemList {
 	}
 	
 	protected function setBaseQuery($additionalFields = '') {
-		$this->setQuery('select p1.cID, pt.ctHandle ' . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PageTypes pt on (pt.ctID = (if (p2.cID is null, p1.ctID, p2.cID))) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID) and cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)) inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
+		if ($this->includeAliases) {
+			$this->setQuery('select p1.cID, pt.ctHandle ' . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PageTypes pt on (pt.ctID = (if (p2.cID is null, p1.ctID, p2.cID))) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID) and cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)) inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
+		} else {
+			$this->setQuery('select p1.cID, pt.ctHandle ' . $additionalFields . ' from Pages p1 left join PageTypes pt on (pt.ctID = p1.ctID) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = p1.cID) inner join CollectionVersions cv on (cv.cID = p1.cID and cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)) inner join Collections c on (c.cID = p1.cID)');
+		}
 	}
 	
 	protected function setupSystemPagesToExclude() {
@@ -276,7 +300,11 @@ class PageList extends DatabaseItemList {
 			}
 		}
 		$cIDStr = implode(',', $cIDs);
-		$this->filter(false, "(p1.cID not in ({$cIDStr}) or p2.cID not in ({$cIDStr}))");
+		if ($this->includeAliases) {
+			$this->filter(false, "(p1.cID not in ({$cIDStr}) or p2.cID not in ({$cIDStr}))");
+		} else {
+			$this->filter(false, "(p1.cID not in ({$cIDStr}))");
+		}
 	}
 	
 	protected function loadPageID($cID) {
@@ -301,10 +329,18 @@ class PageList extends DatabaseItemList {
 		if ($this->displayOnlyApprovedPages) {
 			$this->filter('cvIsApproved', 1);
 		}
-		$this->filter(false, "(p1.cIsTemplate = 0 or p2.cIsTemplate = 0)");
+		if ($this->includeAliases) {
+			$this->filter(false, "(p1.cIsTemplate = 0 or p2.cIsTemplate = 0)");
+		} else {
+			$this->filter('p1.cIsTemplate', 0);
+		}
 		$this->setItemsPerPage($itemsToGet);
 		$this->setupPermissions();
-		$this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = if (p2.cID is null, p1.cID, p2.cID))");
+		if ($this->includeAliases) {
+			$this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = if (p2.cID is null, p1.cID, p2.cID))");
+		} else {
+			$this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = p1.cID)");
+		}
 		$this->setupSystemPagesToExclude();
 		$r = parent::get($itemsToGet, $offset);
 		foreach($r as $row) {

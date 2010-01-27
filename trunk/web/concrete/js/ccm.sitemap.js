@@ -632,17 +632,18 @@ ccmSitemapExploreNode = function(mode, cID, selectedPageID) {
 
 ccmSitemapLoad = function(mode, node, selectedPageID) {
 	if (mode == 'full') {
+
 		ccm_hidePane = function() {
 			// overrides the typically UI hidepane because we're only seeing these on thickbox elements
 			jQuery.fn.dialog.closeTop();
 		}
-		$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php", {'mode' : mode, 'node': 0}, function(resp) {  
-			parseSitemapResponse(mode, 0, resp);
-			activateLabels(mode);
-			tr_doAnim = true;
-			tr_parseSubnodes = false;
-			ccm_sitemap_html = '';
-		});
+
+		activateLabels('full');
+
+		tr_doAnim = true;
+		tr_parseSubnodes = false;
+		ccm_sitemap_html = '';
+
 	} else if (mode == 'move_copy_delete' || mode == 'select_page') {		
 		ccmSitemapExploreNode(mode, node, selectedPageID);
 	} else {
@@ -707,6 +708,10 @@ ccm_sitemapSearchSetupCheckboxes = function() {
 ccm_sitemapSetupSearchPages = function() {
 	$('#ccm-page-list tr').click(function(e){
 		var node = $(this);
+		if (node.hasClass('ccm-results-list-header')) {
+			return false;
+		}
+		
 		if (node.attr('sitemap-mode') == 'select_page') {
 			ccm_selectSitemapNode(node.attr('cID'), unescape(node.attr('cName')));
 			jQuery.fn.dialog.closeTop();

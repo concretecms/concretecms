@@ -37,7 +37,7 @@ if (!isset($sitemap_mode)) {
 	
 	if (count($pages) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-page-list" class="ccm-results-list">
-		<tr>
+		<tr class="ccm-results-list-header">
 			<? if (!$searchDialog) { ?><th><input id="ccm-page-list-cb-all" type="checkbox" /></th><? } ?>
 			<th><?=t('Type')?></th>
 

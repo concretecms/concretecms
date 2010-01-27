@@ -221,8 +221,12 @@ class ConcreteDashboardSitemapHelper {
 			$treeNodeType = 'document';
 			$labelClass = "tree-label";
 			if ($ri['numSubpages'] > 0) {
-				$typeClass = 'tree-node-folder';
 				$treeNodeType = 'folder';
+				if ($mode == 'full' || $mode == '') {
+					$typeClass = 'tree-node-folder';
+				} else {
+					$typeClass = 'tree-node-folder-explore';
+				}
 			}
 			$customIconSrc = "";
 			if ($ri['cIcon']) {
