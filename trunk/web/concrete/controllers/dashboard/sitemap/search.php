@@ -7,17 +7,26 @@ class DashboardSitemapSearchController extends Controller {
 		$html = Loader::helper('html');
 		$form = Loader::helper('form');
 		$this->set('form', $form);
+
 		$pageList = $this->getRequestedSearchResults();
-		$this->addHeaderItem(Loader::helper('html')->javascript('ccm.sitemap.js'));
-		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_sitemapSetupSearch(); });</script>');
-		$pages = $pageList->getPage();
-				
-		$this->set('pageList', $pageList);		
-		$this->set('pages', $pages);		
-		$this->set('pagination', $pageList->getPagination());
+		if (is_object($pageList)) {
+			$this->addHeaderItem(Loader::helper('html')->javascript('ccm.sitemap.js'));
+			$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_sitemapSetupSearch(); });</script>');
+			$pages = $pageList->getPage();
+					
+			$this->set('pageList', $pageList);		
+			$this->set('pages', $pages);		
+			$this->set('pagination', $pageList->getPagination());
+		}
 	}
 	
 	public function getRequestedSearchResults() {
+	
+		$dh = Loader::helper('concrete/dashboard/sitemap');
+		if (!$dh->canRead()) {
+			return false;
+		}
+		
 		$pageList = new PageList();
 		$pageList->filterByIsAlias(0);
 		$pageList->enableStickySearchRequest();

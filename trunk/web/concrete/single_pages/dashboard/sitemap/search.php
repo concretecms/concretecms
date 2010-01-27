@@ -1,6 +1,10 @@
 <h1><span><?=t('Search Pages')?></span></h1>
 
 <div class="ccm-dashboard-inner">
+	
+	<?
+	$dh = Loader::helper('concrete/dashboard/sitemap');
+	if ($dh->canRead()) { ?>
 
 	<table id="ccm-search-form-table" >
 		<tr>
@@ -22,5 +26,11 @@
 			</td>	
 		</tr>
 	</table>		
+	
+	<? } else { ?>
+	
+		<p><?=t("You must have access to the dashboard sitemap to search pages.")?></p>
+	
+	<? } ?>	
 	
 </div>

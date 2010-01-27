@@ -80,6 +80,10 @@
 					}
 					$where = "fsID in (" . implode(',', $fsIDs) . ")";
 					break;
+				case 'concretedashboardsitemaphelper':
+					$table = 'SitemapPermissions';
+					$where = 'gID > 0';
+					break;
 				case 'file':
 					$table = 'FilePermissions';
 					$fID = $obj->getFileID();
@@ -253,6 +257,13 @@
 
 					$this->permissions = $p;
 
+					break;
+				case 'concretedashboardsitemaphelper':
+					$q = "select uID, canRead from SitemapPermissions where gID = ?";
+					$permissions = $db->GetRow($q, array($this->gID));
+					if ($permissions) {
+						$this->permissions = $permissions;
+					}
 					break;
 				case 'fileset':
 					$fsID = $obj->getFileSetID();

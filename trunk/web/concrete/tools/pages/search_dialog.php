@@ -1,6 +1,11 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
+$sh = Loader::helper('concrete/dashboard/sitemap');
+if (!$sh->canRead()) {
+	die(t('Access Denied'));
+}
+
 $cnt = Loader::controller('/dashboard/sitemap/search');
 $pageList = $cnt->getRequestedSearchResults();
 $pages = $pageList->getPage();

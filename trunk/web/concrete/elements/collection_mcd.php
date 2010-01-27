@@ -17,26 +17,36 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 div#ccm-mc-page h1#ccm-sitemap-title {display: none}
 </style>
 
-<? if ($sh->canRead()) { ?>
-
 <h1><?=t('Move, Copy or Delete this Page')?></h1>
 
 <div class="ccm-form-area" id="ccm-mc-page">	
 	<h2><?=t('Move/Copy Page')?></h2>
-	<p><?=t("Click below to move or copy the current page to a particular spot in your site.")?></p>
-	
 
 	<? 
+	if ($sh->canRead()) { ?>
 	
-	$sitemap_mode = 'move_copy_delete';
-	include(DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector.php');
+	<p><?=t("Click below to move or copy the current page to a particular spot in your site.")?></p>
+
+	<?
+		$sitemap_mode = 'move_copy_delete';
+		include(DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector.php');
 	
+	} else {
+		?>
+		<p><?
+		print t('You do not have access to the sitemap. You must have access to move or copy this page.');
+		?></p>
+		
+		
+		<?
+	
+	}
 	
 	?>
 
 	<div class="ccm-spacer">&nbsp;</div>
 </div>
-<? }
+<?
 
 if ($cp->canDeleteCollection()) { ?>
 

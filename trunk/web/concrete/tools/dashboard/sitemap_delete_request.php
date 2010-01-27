@@ -1,10 +1,9 @@
 <?
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$ch = Page::getByPath("/dashboard/sitemap");
-$chp = new Permissions($ch);
-if (!$chp->canRead()) {
-	die(_("Access Denied."));
+$sh = Loader::helper('concrete/dashboard/sitemap');
+if (!$sh->canRead()) {
+	die(t('Access Denied'));
 }
 
 $valt = Loader::helper('validation/token');

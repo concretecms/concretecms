@@ -9,13 +9,6 @@ div.ccm-file-list-thumbnail-hover div {display: none;z-index: 105;position: abso
 table.ccm-results-list th.ccm-file-list-starred, table.ccm-results-list td.ccm-file-list-starred {padding: 0 4px 0 0;margin:0; text-align: center;}
 
 /* file permissions */
-
-div#ccm-file-permissions-entities-wrapper {padding-bottom: 10px; border-bottom: 1px dotted #aaa; margin-bottom: 10px}
-div#ccm-file-permissions-entities-wrapper h2 {margin-bottom: 10px; border-bottom: 1px dotted #aaa; padding-bottom: 4px}
-div#ccm-file-permissions-entities-wrapper th {text-align: left; vertical-align: top; width: 120px}
-div#ccm-file-permissions-entities-wrapper td {vertical-align: top; padding: 0px 30px 0px 0px}
-div#ccm-file-permissions-entities-wrapper h2 img {float: right}
-div#ccm-file-permissions-entity-base {display: none}
 div.ccm-file-access-add-extensions-header {border-top: 1px solid #cecece; border-left: 1px solid #cecece; border-right: 1px solid #cecece; background: #D3E4F0; padding: 4px}
 div.ccm-file-access-extensions {border: 1px solid #cecece; padding: 4px; height: 120px; overflow: auto; margin-bottom: 20px}
 

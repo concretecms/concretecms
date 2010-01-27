@@ -311,13 +311,53 @@ class ConcreteDashboardSitemapHelper {
 		return $drops;
 	}
 	
+	public function resetPermissions() {
+		$db = Loader::db();
+		$db->Execute('delete from SitemapPermissions');
+	}
+	
+	public function setPermissions($obj, $canRead) {
+		$uID = 0;
+		$gID = 0;
+		$db = Loader::db();
+		if (is_a($obj, 'UserInfo')) {
+			$uID = $obj->getUserID();
+		} else {
+			$gID = $obj->getGroupID();
+		}
+		
+		$db->Replace('SitemapPermissions', array(
+			'uID' => $uID, 
+			'gID' => $gID,
+			'canRead' => $canRead
+		), 
+		array('gID', 'uID'), true);
+	}	
+
 	function canRead() {
-		$sm = Page::getByPath('/dashboard/sitemap');
-		$smp = new Permissions($sm);
-		return $smp->canRead();
+		$u = new User();
+		if ($u->isSuperUser()) {
+			return true;
+		}
+		
+		$db = Loader::db();
+
+		$groups = $u->getUserGroups();
+		$groupIDs = array();
+		foreach($groups as $key => $value) {
+			$groupIDs[] = $key;
+		}
+		
+		$uID = -1;
+		if ($u->isRegistered()) {
+			$uID = $u->getUserID();
+		}
+
+		// checks based on uID and gIDs
+		$r = $db->GetOne("select count(*) from SitemapPermissions where canRead = 1 and (gID in (" . implode(',', $groupIDs) . ") or uID = " . $uID . ")");
+		
+		return $r > 0;
 	}
 
 
 }
-
-?>
