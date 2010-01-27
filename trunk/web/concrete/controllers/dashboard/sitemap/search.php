@@ -28,7 +28,7 @@ class DashboardSitemapSearchController extends Controller {
 		}
 		
 		$pageList = new PageList();
-		$pageList->filterByIsAlias(0);
+		$pageList->ignoreAliases();
 		$pageList->enableStickySearchRequest();
 		
 		if ($_REQUEST['submit_search']) {
@@ -37,6 +37,8 @@ class DashboardSitemapSearchController extends Controller {
 
 		$req = $pageList->getSearchRequest();
 		$pageList->displayUnapprovedPages();
+
+		$pageList->sortBy('cDateModified', 'desc');
 		
 		$keywords = htmlentities($req['keywords'], ENT_QUOTES, APP_CHARSET);
 		$cvName = htmlentities($req['cvName'], ENT_QUOTES, APP_CHARSET);

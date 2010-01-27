@@ -14,6 +14,9 @@ if (isset($_REQUEST['reveal'])) {
 	ConcreteDashboardSitemapHelper::addOneTimeActiveNode($_REQUEST['reveal']);
 }
 
+$nodes = $sh->getSubNodes(0, 1, false, true);
+$listHTML = $sh->outputRequestHTML('full', $nodes);
+
 ?>
 
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.sitemap.css";</style>
@@ -41,6 +44,7 @@ if (isset($_REQUEST['reveal'])) {
 		
 		<div id="tree">
 			<ul id="tree-root0" tree-root-node-id="0" sitemap-mode="full">
+			<?=$listHTML?>
 			</ul>
 		</div>
 	
