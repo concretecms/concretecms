@@ -54,7 +54,7 @@ foreach($searchFieldAttributes as $ak) {
 		<div><?=$form->radio('cParentAll', 1)?> <?=$form->label("cParentAll3", t('Yes'))?></div>
 		<div><?=$form->radio('cParentAll', 0, 0)?> <?=$form->label("cParentAll4", t('No'))?></div>
 		<? $ps = Loader::helper("form/page_selector");
-		print $ps->selectPage('cParentID');
+		print $ps->selectPage('cParentIDSearchField');
 		?>
 		</div>
 		</span>
@@ -244,7 +244,7 @@ foreach($searchFieldAttributes as $ak) {
 							<div><?=$form->radio('_cParentAll', 1, $searchRequest['cParentAll'])?> <?=$form->label("cParentAll3", t('Yes'))?></div>
 							<div><?=$form->radio('_cParentAll', 0, $searchRequest['cParentAll'])?> <?=$form->label("cParentAll4", t('No'))?></div>
 							<? $ps = Loader::helper("form/page_selector");
-							print $ps->selectPage('cParentID', $searchRequest['cParentID']);
+							print $ps->selectPage('cParentIDSearchField', $searchRequest['cParentIDSearchField']);
 							?>
 							</div>
 							</span>

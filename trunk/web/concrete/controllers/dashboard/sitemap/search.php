@@ -85,13 +85,13 @@ class DashboardSitemapSearchController extends Controller {
 							if (isset($req['_cParentAll'])) {
 								$req['cParentAll'] = $req['_cParentAll'];
 							}
-							if ($req['cParentID'] > 0) {
+							if ($req['cParentIDSearchField'] > 0) {
 								if ($req['cParentAll'] == 1) {
-									$pc = Page::getByID($req['cParentID']);
+									$pc = Page::getByID($req['cParentIDSearchField']);
 									$cPath = $pc->getCollectionPath();
 									$pageList->filterByPath($cPath);
 								} else {
-									$pageList->filterByParentID($req['cParentID']);
+									$pageList->filterByParentID($req['cParentIDSearchField']);
 								}
 							}
 							break;
