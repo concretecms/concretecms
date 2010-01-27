@@ -1,22 +1,9 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-
-/*
-
-if ($_REQUEST['mode'] == 'users') {
-	$displayGroups = false;
-} else if ($_REQUEST['mode'] == 'groups') {
-	$displayUsers = false;
+$sh = Loader::helper('concrete/dashboard/sitemap');
+if (!$sh->canRead()) {
+	die(t('Access Denied. You do not have access to sitemap permissions.'));
 }
-
-$c1 = Page::getByPath('/dashboard/users');
-$cp1 = new Permissions($c1);
-$c2 = Page::getByPath('/dashboard/users/groups');
-$cp2 = new Permissions($c2);
-if ((!$cp1->canRead()) && (!$cp2->canRead())) {
-	die(_("Access Denied."));
-}
-*/
 
 ?>
 <div>

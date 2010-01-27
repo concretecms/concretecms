@@ -1,13 +1,11 @@
 <?
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$ch = Page::getByPath("/dashboard/sitemap");
-$chp = new Permissions($ch);
-if (!$chp->canRead()) {
+$dh = Loader::helper('concrete/dashboard/sitemap');
+if (!$dh->canRead()) {
 	die(_("Access Denied."));
 }
 
-$dh = Loader::helper('concrete/dashboard/sitemap');
 if (isset($_REQUEST['selectedPageID'])) {
 	$dh->setSelectedPageID($_REQUEST['selectedPageID']);
 }

@@ -841,6 +841,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						}
 					}
 					break;
+				case 'concretedashboardsitemaphelper':
+					$q = "select uID, canRead from SitemapPermissions where uID > 0";
+					$r = $db->Execute($q);
+					while ($row = $r->FetchRow()) {
+						$userPermissionsArray['permissions'] = $row;
+						$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
+						if( !$ui || !method_exists($ui,'getUserID') ) continue;
+						$this->uiArray[]=$ui;
+					}
+					break;
 				case 'filesetlist':
 					$fsIDs = array();
 					foreach($obj->sets as $fs) {

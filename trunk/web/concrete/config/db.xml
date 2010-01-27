@@ -635,6 +635,19 @@
       <DEFAULT value="0"/>
     </field>
   </table>
+  <table name="SitemapPermissions">
+    <field name="gID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="canRead" type="I" size="4"/>
+  </table>
   <table name="FileSetPermissions">
     <field name="fsID" type="I" size="10">
       <KEY/>

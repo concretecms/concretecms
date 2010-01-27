@@ -405,8 +405,10 @@ class InstallController extends Controller {
 						$d0 = SinglePage::add('/dashboard');
 				
 						$d1 = SinglePage::add('/dashboard/sitemap');
-						$d1a = SinglePage::add('/dashboard/sitemap/explore');
-						$d1b = SinglePage::add('/dashboard/sitemap/search');
+						$d1a = SinglePage::add('/dashboard/sitemap/full');
+						$d1b = SinglePage::add('/dashboard/sitemap/explore');
+						$d1c = SinglePage::add('/dashboard/sitemap/search');
+						$d1d = SinglePage::add('/dashboard/sitemap/access');
 						$d2 = SinglePage::add('/dashboard/files');
 						$d2a = SinglePage::add('/dashboard/files/search');
 						$d2b = SinglePage::add('/dashboard/files/attributes');
@@ -445,6 +447,10 @@ class InstallController extends Controller {
 						$dl1->update(array('cName' => t('Download File')));
 						
 						$d1->update(array('cName'=>t('Sitemap'), 'cDescription'=>t('Whole world at a glance.')));
+						$d1a->update(array('cName'=>t('Full Sitemap')));
+						$d1b->update(array('cName'=>t('Folder View')));
+						$d1c->update(array('cName'=>t('Page Search')));
+
 						$d2->update(array('cName'=>t('File Manager'), 'cDescription'=>t('All documents and images.')));
 						$d2a->update(array('cName'=>t('Search')));
 						$d2b->update(array('cName'=>t('Attributes')));
