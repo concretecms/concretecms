@@ -5,6 +5,10 @@ if (!defined('DIR_BASE')) {
 }
 
 # The core concrete directory. Either one per install or one per server
-define('DIRNAME_APP', 'concrete');
+if (!defined('DIRNAME_APP')) {
+	define('DIRNAME_APP', 'concrete');
+}
 
-define('DIRNAME_UPDATES', 'updates');
+if (!defined('DIRNAME_UPDATES')) {
+	define('DIRNAME_UPDATES', 'updates');
+}
