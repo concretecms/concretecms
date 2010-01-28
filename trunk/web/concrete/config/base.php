@@ -108,7 +108,9 @@ if (!defined("MENU_HELP_URL")) {
 }
 
 # Path to the core files shared between all concrete 5 installations
-define('DIR_BASE_CORE', dirname(__FILE__) . '/..');
+if (!defined('DIR_BASE_CORE')) {
+	define('DIR_BASE_CORE', dirname(__FILE__) . '/..');
+}
 
 # Path to the base directory of THIS install
 if (!defined('DIR_BASE')) {

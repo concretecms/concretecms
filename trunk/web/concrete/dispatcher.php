@@ -1,10 +1,16 @@
 <?php
 	## This constant ensures that we're operating inside dispatcher.php. There is a LATER check to ensure that dispatcher.php is being called correctly. ##
-	define('C5_EXECUTE', true);
-
+	if (!defined("C5_EXECUTE")) {
+		define('C5_EXECUTE', true);
+	}
+	
 	## Startup check ##	
 	require(dirname(__FILE__) . '/startup/config_check.php');
-
+	
+	if (defined('DIR_BASE_CORE') && DIR_BASE_CORE != dirname(__FILE__)) {	
+		require(DIR_BASE_CORE . '/dispatcher.php');
+	}
+	
 	## Load the base config file ##
 	require(dirname(__FILE__) . '/config/base.php');
 
