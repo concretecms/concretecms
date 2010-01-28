@@ -8,7 +8,7 @@ class DashboardSystemUpdateController extends Controller {
 		$upd = new Update();
 		$updates = $upd->getLocalAvailableUpdates();
 		
-		$this->set('updates', $update);
+		$this->set('updates', $updates);
 	}
 	
 }
