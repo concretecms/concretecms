@@ -437,7 +437,10 @@ class InstallController extends Controller {
 						$d7g = SinglePage::add('/dashboard/pages/single');
 
 						$d8 = SinglePage::add('/dashboard/install');
-						$d9 = SinglePage::add('/dashboard/jobs');
+						$d9 = SinglePage::add('/dashboard/system');
+						$d9a = SinglePage::add('/dashboard/system/jobs');
+						$d9b = SinglePage::add('/dashboard/system/backup');
+						$d9c = SinglePage::add('/dashboard/system/update');
 						$d10 = SinglePage::add('/dashboard/settings');
 						$d11 = SinglePage::add('/dashboard/settings/mail');
 						
@@ -473,7 +476,7 @@ class InstallController extends Controller {
 						$d7g->update(array('cName'=>t('Single Pages')));	
 
 						$d8->update(array('cName'=>t('Add Functionality'), 'cDescription'=>t('Install functionality to extend your site.')));
-						$d9->update(array('cName'=>t('Maintenance'), 'cDescription'=>t('Run common cleanup tasks.')));
+						$d9->update(array('cName'=>t('System & Maintenance'), 'cDescription'=>t('Backup, cleanup and update.')));
 						$d10->update(array('cName'=>t('Sitewide Settings'), 'cDescription'=>t('Secure and setup your site.')));
 
 						$d11->update(array('cName'=>t('Email'), 'cDescription'=>t('Enable post via email and other settings.')));

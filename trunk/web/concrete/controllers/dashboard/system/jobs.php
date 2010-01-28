@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
-class DashboardJobsController extends Controller { 	 
+class DashboardSystemJobsController extends Controller { 	 
 	
 	function view(){  
 		$jobObj = Loader::model("job"); 
@@ -14,7 +14,7 @@ class DashboardJobsController extends Controller {
 	function install(){
 		$jobObj = Loader::model("job");
 		Job::installByHandle($_POST['jHandle']);
-		$this->redirect('/dashboard/jobs');
+		$this->redirect('/dashboard/system/jobs');
 	}
 	
 	function uninstall(){
@@ -23,7 +23,7 @@ class DashboardJobsController extends Controller {
 		if( $jobObj && !$jobObj->jNotUninstallable ){
 			$jobObj->uninstall();
 		}		
-		$this->redirect('/dashboard/jobs');
+		$this->redirect('/dashboard/system/jobs');
 	}
 }
 

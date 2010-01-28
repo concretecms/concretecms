@@ -158,7 +158,7 @@ $ih = Loader::helper('concrete/interface');
 			<td id="jLastStatusText<?=$jobItem['jID']?>" class="jLastStatusText"><?=$jobItem['jLastStatusText']?></td>
 			<td class="center">
 				<? if(!$jobItem['jNotUninstallable']){ ?>
-				<form method="post" action="<?=$this->url('/dashboard/jobs', 'uninstall')?>" onsubmit="return Jobs.confirmUninstall();">
+				<form method="post" action="<?=$this->url('/dashboard/system/jobs', 'uninstall')?>" onsubmit="return Jobs.confirmUninstall();">
 					<input name="jID" type="hidden" value="<?=$jobItem['jID'] ?>" />
 					<input name="Remove" type="Submit" value="<?=t('Remove')?>" />
 				</form>
@@ -194,7 +194,7 @@ $ih = Loader::helper('concrete/interface');
 			<td><?=$availableJobObj->getJobDescription() ?></td> 
 			<td class="center">
 				<? if(!$availableJobObj->invalid){ ?>
-				<form method="post" action="<?=$this->url('/dashboard/jobs', 'install')?>">
+				<form method="post" action="<?=$this->url('/dashboard/system/jobs', 'install')?>">
 					<input name="jHandle" type="hidden" value="<?=$availableJobObj->jHandle ?>" />
 					<input name="Install" type="Submit" value="Install" />
 				</form>

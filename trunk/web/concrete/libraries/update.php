@@ -63,5 +63,16 @@ class Update {
 	}
 
 
+	/** 
+	 * Looks in the designated updates location for all directories, ascertains what
+	 * version they represent, and finds all versions greater than the currently installed version of
+	 * concrete5
+	 */
+	public function getLocalAvailableUpdates() {
+		$fh = Loader::helper('file');
+		print DIR_APP_UPDATES;
+		$contents = $fh->getDirectoryContents(DIR_APP_UPDATES);
+	}
+
 
 }
