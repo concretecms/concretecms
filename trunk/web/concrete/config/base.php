@@ -195,12 +195,17 @@ if (defined('MULTI_SITE') && MULTI_SITE == 1) {
 	define('ASSETS_URL_WEB', DIR_REL);
 	define('MULTI_SITE', 0);
 }
+if (defined('DIRNAME_APP_UPDATED')) {
+ 	$ap = ASSETS_URL_WEB . '/' . DIRNAME_UPDATES . '/' . DIRNAME_APP_UPDATED . '/' . DIRNAME_APP;
+} else {
+	$ap = ASSETS_URL_WEB . '/' . DIRNAME_APP;
+}
 
-define('ASSETS_URL', ASSETS_URL_WEB . '/concrete');
-define('ASSETS_URL_CSS', ASSETS_URL_WEB . '/concrete/css');
-define('ASSETS_URL_JAVASCRIPT', ASSETS_URL_WEB . '/concrete/js');
-define('ASSETS_URL_IMAGES', ASSETS_URL_WEB . '/concrete/images');
-define('ASSETS_URL_FLASH', ASSETS_URL_WEB . '/concrete/flash');
+define('ASSETS_URL', $ap);
+define('ASSETS_URL_CSS', $ap . '/css');
+define('ASSETS_URL_JAVASCRIPT', $ap . '/js');
+define('ASSETS_URL_IMAGES', $ap . '/images');
+define('ASSETS_URL_FLASH', $ap . 'flash');
 
 # Pages/Collections
 define('FILENAME_COLLECTION_VIEW', 'view.php');
