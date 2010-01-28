@@ -112,14 +112,6 @@ if (!defined('DIR_BASE_CORE')) {
 	define('DIR_BASE_CORE', dirname(__FILE__) . '/..');
 }
 
-# Path to the base directory of THIS install
-if (!defined('DIR_BASE')) {
-	define('DIR_BASE', dirname($_SERVER['SCRIPT_FILENAME']));
-}
-
-# The core concrete directory. Either one per install or one per server
-define('DIRNAME_APP', 'concrete');
-
 # if "concrete/" does NOT exist in DIR_BASE then we set multi_site to on
 if (!is_dir(DIR_BASE . '/' . DIRNAME_APP)) {
 	define("MULTI_SITE", 1);
