@@ -7,10 +7,10 @@
 	## Startup check ##	
 	require(dirname(__FILE__) . '/startup/config_check.php');
 	
-	if (defined('DIR_BASE_CORE') && DIR_BASE_CORE != dirname(__FILE__)) {	
-		require(DIR_BASE_CORE . '/dispatcher.php');
+	if (defined('ALTERNATE_CORE') && dirname(__FILE__) != dirname($_SERVER['SCRIPT_FILENAME']) . '/core/' . ALTERNATE_CORE . '/concrete') {
+		require(dirname($_SERVER['SCRIPT_FILENAME']) . '/core/' . ALTERNATE_CORE . '/concrete/' . 'dispatcher.php');
 	}
-	
+
 	## Load the base config file ##
 	require(dirname(__FILE__) . '/config/base.php');
 
