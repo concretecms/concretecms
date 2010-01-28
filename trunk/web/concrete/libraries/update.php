@@ -70,9 +70,37 @@ class Update {
 	 */
 	public function getLocalAvailableUpdates() {
 		$fh = Loader::helper('file');
-		print DIR_APP_UPDATES;
+		$updates = array();
 		$contents = $fh->getDirectoryContents(DIR_APP_UPDATES);
+		foreach($contents as $con) {
+			if (strpos($con, DIRNAME_APP) === 0) {
+				$obj = ApplicationUpdate::get($con);
+				if (is_object($obj)) {
+					$updates[] = $obj;
+				}
+			}				
+		}		
 	}
 
+
+}
+
+class ApplicationUpdate {
+
+	protected $version;
+	
+	public function getUpdateVersion() {return $this->version;}
+	
+	public function get($dir) {
+		$APP_VERSION = false;
+		// given a directory, we figure out what version of the system this is
+		$version = DIR_APP_UPDATES . '/' . $dir . '/' . DIRNAME_APP . '/config/version.php';
+		@include($version);
+		if ($APP_VERSION != false) {
+			$obj = new ApplicationUpdate();
+			$obj->version = $APP_VERSION;			
+			return $obj;
+		}		
+	}
 
 }
