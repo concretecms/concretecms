@@ -190,10 +190,8 @@ define('FILENAME_BLOCK_DB', 'db.xml');
 if (defined('MULTI_SITE') && MULTI_SITE == 1) {
 	define('ASSETS_URL_WEB', BASE_URL);
 	define('ASSETS_URL_WEB_FULL', BASE_URL);
-	$cwd = getcwd();
-	chdir(DIRNAME_UPDATES);
-	define('DIR_APP_UPDATES', getcwd());
-	chdir($cwd);
+	require(DIRNAME_UPDATES . '/index.php');
+	define('DIR_APP_UPDATES', $DIR_APP_UPDATES);
 } else {
 	define('DIR_APP_UPDATES', DIR_BASE . '/' . DIRNAME_UPDATES);
 	define('ASSETS_URL_WEB_FULL', BASE_URL . DIR_REL);
