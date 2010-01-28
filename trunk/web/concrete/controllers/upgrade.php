@@ -28,7 +28,7 @@ class UpgradeController extends Controller {
 	}
 	
 	public function view() {
-		if ($this->get('force') == 1) {
+		if ($this->get('force') == 1 || $this->get('source') == 'dashboard_update') {
 			$this->do_upgrade();
 		} else {	
 			$sav = $this->site_version;

@@ -76,10 +76,13 @@ class Update {
 			if (strpos($con, DIRNAME_APP) === 0) {
 				$obj = ApplicationUpdate::get($con);
 				if (is_object($obj)) {
-					$updates[] = $obj;
+					if (version_compare($obj->getUpdateVersion(), APP_VERSION, '>')) {
+						$updates[] = $obj;
+					}
 				}
 			}				
-		}		
+		}
+		return $updates;
 	}
 
 
@@ -88,8 +91,48 @@ class Update {
 class ApplicationUpdate {
 
 	protected $version;
+	protected $identifier;
+	
+	const E_UPDATE_WRITE_CONFIG = 10;
 	
 	public function getUpdateVersion() {return $this->version;}
+	public function getUpdateIdentifier() {return $this->identifier;}
+	
+	public static function getByVersionNumber($version) {
+		$upd = new Update();
+		$updates = $upd->getLocalAvailableUpdates();
+		foreach($updates as $up) {
+			if ($up->getUpdateVersion() == $version) {
+				return $up;
+			}
+		}
+	}
+	
+	/** 
+	 * Writes the core pointer into config/site.php
+	 */
+	public function apply() {
+		if (!is_writable(DIR_BASE . '/config/site.php')) {
+			return self::E_UPDATE_WRITE_CONFIG;
+		}
+		
+		$configFile = DIR_BASE . '/config/site.php';
+		$contents = Loader::helper('file')->getContents($configFile);
+		$contents = trim($contents);
+		// remove any instances of app pointer
+		
+		$contents = preg_replace("/<\?php define\('DIRNAME_APP_UPDATED', '(.+)'\);\?>/i", "", $contents);
+		
+		file_put_contents($configFile, $contents);
+		
+		if (substr($contents, -2) == '?>') {
+			file_put_contents($configFile, "<?php define('DIRNAME_APP_UPDATED', '" . $this->getUpdateIdentifier() . "');?>", FILE_APPEND);
+		} else {
+			file_put_contents($configFile, "?><?php define('DIRNAME_APP_UPDATED', '" . $this->getUpdateIdentifier() . "');?>", FILE_APPEND);
+		}
+		
+		return true;
+	}	
 	
 	public function get($dir) {
 		$APP_VERSION = false;
@@ -98,7 +141,8 @@ class ApplicationUpdate {
 		@include($version);
 		if ($APP_VERSION != false) {
 			$obj = new ApplicationUpdate();
-			$obj->version = $APP_VERSION;			
+			$obj->version = $APP_VERSION;
+			$obj->identifier = $dir;
 			return $obj;
 		}		
 	}
