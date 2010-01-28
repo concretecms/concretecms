@@ -5,12 +5,14 @@
 	}
 	
 	## Startup check ##	
+	require(dirname(__FILE__) . '/config/base_pre.php');
+
+	## Startup check ##	
 	require(dirname(__FILE__) . '/startup/config_check.php');
 	
-	if (defined('ALTERNATE_CORE') && dirname(__FILE__) != dirname($_SERVER['SCRIPT_FILENAME']) . '/core/' . ALTERNATE_CORE . '/concrete') {
-		require(dirname($_SERVER['SCRIPT_FILENAME']) . '/core/' . ALTERNATE_CORE . '/concrete/' . 'dispatcher.php');
-	}
-
+	## Check to see if, based on a config variable, we need to point to an alternate core ##
+	require(dirname(__FILE__) . '/startup/updated_core_check.php');
+	
 	## Load the base config file ##
 	require(dirname(__FILE__) . '/config/base.php');
 
