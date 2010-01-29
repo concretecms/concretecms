@@ -2,6 +2,21 @@
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::library('update');
+Loader::library('archive');
+
+class UpdateArchive extends Archive {
+	
+	public function __construct() {
+		parent::__construct();
+		$this->targetDirectory = DIR_APP_UPDATES;
+	}
+
+	public function install($file) {
+		parent::install($file, true);
+	}
+	
+}
+
 class DashboardSystemUpdateController extends Controller { 	 
 	
 	function view() {  
@@ -9,7 +24,7 @@ class DashboardSystemUpdateController extends Controller {
 		$updates = $upd->getLocalAvailableUpdates();
 		$remote = $upd->getApplicationUpdateInformation();
 		$this->set('updates', $updates);
-		if (is_object($remote) && version_compare($remote->version, APP_VERSION, '>')) {
+		if (MULTI_SITE == 0 && is_object($remote) && version_compare($remote->version, APP_VERSION, '>')) {
 			$this->set('downloadableUpgradeAvailable', true);
 			$this->set('update', $remote);
 		} else {
@@ -26,6 +41,10 @@ class DashboardSystemUpdateController extends Controller {
 	}
 	
 	public function download_update() {
+		if (MULTI_SITE == 1) {
+			return false;
+		}
+		
 		$ph = Loader::helper('package');
 		$vt = Loader::helper('validation/token');
 		if (!$vt->validate('download_update')) {
@@ -39,7 +58,7 @@ class DashboardSystemUpdateController extends Controller {
 			if (empty($r) || $r == Package::E_PACKAGE_DOWNLOAD) {
 				$response = array(Package::E_PACKAGE_DOWNLOAD);
 			} else if ($r == Package::E_PACKAGE_SAVE) {
-				$response = array($file);
+				$response = array($r);
 			}
 			
 			if (isset($response)) {
@@ -50,7 +69,15 @@ class DashboardSystemUpdateController extends Controller {
 			}
 			
 			if (!$this->error->has()) {
-				
+				// the file exists in the right spot
+				Loader::library('archive');
+				$ar = new UpdateArchive();
+				try {
+					$ar->install($r);
+				} catch(Exception $e) {
+					$this->error->add($e->getMessage());
+				}
+					
 			}
 		} else {
 			$this->error->add(t('Unable to retrieve update location.'));

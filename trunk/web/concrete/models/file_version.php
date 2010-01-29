@@ -358,12 +358,16 @@ class FileVersion extends Object {
 		return BASE_URL . View::url('/download_file', $this->getFileID());
 	}
 	
-	public function getRelativePath() {
+	public function getRelativePath($fullurl = false) {
 		$f = Loader::helper('concrete/file');
 		if ($this->fslID > 0) {
 			$path = BASE_URL . View::url('/download_file', 'view_inline', $this->getFileID());
 		} else {
-			$path = $f->getFileRelativePath($this->fvPrefix, $this->fvFilename );
+			if ($fullurl) {
+				$path = BASE_URL . $f->getFileRelativePath($this->fvPrefix, $this->fvFilename );
+			} else {
+				$path = $f->getFileRelativePath($this->fvPrefix, $this->fvFilename );
+			}
 		}		
 		return $path;
 	}

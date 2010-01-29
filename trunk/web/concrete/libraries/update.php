@@ -59,7 +59,7 @@ class Update {
 	public function getApplicationUpdateInformation() {
 		$r = Cache::get('APP_UPDATE_INFO', false);
 		if (!is_object($r)) {
-			$r = $this->getLatestAvailableUpdate();
+			$r = Update::getLatestAvailableUpdate();
 		}
 		return $r;
 	}

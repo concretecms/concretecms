@@ -217,6 +217,10 @@ if (!$previewMode) {
 	<td width="100%" colspan="2"><?=$fv->getFileName()?></td>
 </tr>
 <tr>
+	<th><?=t('URL to File')?></th>
+	<td width="100%" colspan="2"><?=$fv->getRelativePath(true)?></td>
+</tr>
+<tr>
 	<th><?=t('Type')?></th>
 	<td colspan="2"><?=$fv->getType()?></td>
 </tr>
