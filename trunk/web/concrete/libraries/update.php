@@ -16,10 +16,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  * @license    http://www.concrete5.org/license/     MIT License
  */
 class Update {
-	
+
 	public function getLatestAvailableVersionNumber() {
 		$d = Loader::helper('date');
-		
 		// first, we check session
 		$queryWS = false;
 		Cache::disableCache();
@@ -28,6 +27,11 @@ class Update {
 		if (is_object($vNum)) {
 			$seconds = strtotime($vNum->timestamp);
 			$version = $vNum->value;
+			if (is_object($version)) {
+				$versionNum = $version->version;
+			} else {
+				$versionNum = $version;
+			}
 			$diff = time() - $seconds;
 			if ($diff > APP_VERSION_LATEST_THRESHOLD) {
 				// we grab a new value from the service
@@ -38,30 +42,63 @@ class Update {
 		}
 		
 		if ($queryWS) {
+			$update = Update::getLatestAvailableUpdate();
+			$versionNum = $update->version;
 			
-			if (function_exists('curl_init')) {
-				$curl_handle = @curl_init();
-				@curl_setopt($curl_handle, CURLOPT_URL, APP_VERSION_LATEST_WS);
-				@curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
-				@curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-				@curl_setopt($curl_handle, CURLOPT_POST, true);
-				@curl_setopt($curl_handle, CURLOPT_POSTFIELDS, 'BASE_URL_FULL=' . BASE_URL . '/' . DIR_REL . '&APP_VERSION=' . APP_VERSION);
-				$version = @curl_exec($curl_handle);
-			} else {
-				$version = APP_VERSION;
-			}
-			
-			if ($version) {
-				Config::save('APP_VERSION_LATEST', $version);
+			if ($versionNum) {
+				Config::save('APP_VERSION_LATEST', $versionNum);
 			} else {
 				// we don't know so we're going to assume we're it
 				Config::save('APP_VERSION_LATEST', APP_VERSION);
-			}		
+			}
 		}
 		
-		return $version;
+		return $versionNum;
 	}
+	
+	public function getApplicationUpdateInformation() {
+		$r = Cache::get('APP_UPDATE_INFO', false);
+		if (!is_object($r)) {
+			$r = $this->getLatestAvailableUpdate();
+		}
+		return $r;
+	}
+		
+	protected function getLatestAvailableUpdate() {
+		$obj = new stdClass;
+		$obj->notes = false;
+		$obj->url = false;
+		$obj->date = false;
+		
+		if (function_exists('curl_init')) {
+			$curl_handle = @curl_init();
+			@curl_setopt($curl_handle, CURLOPT_URL, APP_VERSION_LATEST_WS);
+			@curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
+			@curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+			@curl_setopt($curl_handle, CURLOPT_POST, true);
+			@curl_setopt($curl_handle, CURLOPT_POSTFIELDS, 'LOCALE=' . LOCALE . '&BASE_URL_FULL=' . BASE_URL . '/' . DIR_REL . '&APP_VERSION=' . APP_VERSION);
+			$resp = @curl_exec($curl_handle);
+			
+			$xml = @simplexml_load_string($resp);
+			if ($xml === false) {
+				// invalid. That means it's old and it's just the version
+				$obj->version = trim($resp);
+			} else {
+				$obj = new stdClass;
+				$obj->version = (string) $xml->version;
+				$obj->notes = (string) $xml->notes;
+				$obj->url = (string) $xml->url;
+				$obj->date = (string) $xml->date;
+			}		
 
+			Cache::set('APP_UPDATE_INFO', false, $obj);
+
+		} else {
+			$obj->version = APP_VERSION;
+		}
+		
+		return $obj;
+	}
 
 	/** 
 	 * Looks in the designated updates location for all directories, ascertains what

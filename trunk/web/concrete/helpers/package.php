@@ -137,7 +137,7 @@ class PackageHelper {
 		return true;
 	}
 
-	private function download_remote_package($fileURL) {
+	public function download_remote_package($fileURL) {
 		$fh = Loader::helper('file');
 		$pkg = $fh->getContents($fileURL);
 		if (empty($pkg)) {

@@ -142,10 +142,7 @@ jQuery.fn.dialog.load = function(fnd) {
 		jQuery.fn.dialog.loadShell(fnd);
 		jQuery.fn.dialog.position(fnd);
 		jQuery.fn.dialog.hideLoader();
-		$("#ccm-dialog-content" + fnd.n).append($(fnd.element));
-		if ($(fnd.element).css('display') == 'none') {
-			$(fnd.element).show();
-		}
+		$("#ccm-dialog-content" + fnd.n).append($(fnd.element).html());
 		$("#ccm-dialog-content" + fnd.n + " .ccm-dialog-close").click(function() {
 			jQuery.fn.dialog.close(fnd);
 		});

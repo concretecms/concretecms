@@ -417,7 +417,7 @@ $ADODB_CACHE_DIR = DIR_FILES_CACHE_DB;
 require(dirname(__FILE__) . '/version.php');
 define('APP_VERSION', $APP_VERSION);
 define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the latest version (this is seconds)
-define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_version_number');
+define('APP_VERSION_LATEST_WS', 'http://c5org/tools/get_latest_version_number');
 define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
 
 //Main Concrete Site - For Marketplace, Knowledge Base, etc.
