@@ -6,8 +6,15 @@ class DashboardSystemUpdateController extends Controller {
 	
 	function view() {  
 		$upd = new Update();
-		$updates = $upd->getLocalAvailableUpdates();		
+		$updates = $upd->getLocalAvailableUpdates();
+		$remote = $upd->getApplicationUpdateInformation();
 		$this->set('updates', $updates);
+		if (is_object($remote) && version_compare($remote->version, APP_VERSION, '>')) {
+			$this->set('downloadableUpgradeAvailable', true);
+			$this->set('update', $remote);
+		} else {
+			$this->set('downloadableUpgradeAvailable', false);
+		}
 	}
 	
 	public function on_start() {
@@ -16,6 +23,39 @@ class DashboardSystemUpdateController extends Controller {
 
 	public function on_before_render() {
 		$this->set('error', $this->error);
+	}
+	
+	public function download_update() {
+		$ph = Loader::helper('package');
+		$vt = Loader::helper('validation/token');
+		if (!$vt->validate('download_update')) {
+			$this->error->add($vt->getErrorMessage());
+		}
+		
+		$remote = Update::getApplicationUpdateInformation();
+		if (is_object($remote)) {
+			// try to download
+			$r = $ph->download_remote_package($remote->url);
+			if (empty($r) || $r == Package::E_PACKAGE_DOWNLOAD) {
+				$response = array(Package::E_PACKAGE_DOWNLOAD);
+			} else if ($r == Package::E_PACKAGE_SAVE) {
+				$response = array($file);
+			}
+			
+			if (isset($response)) {
+				$errors = Package::mapError($response);
+				foreach($errors as $e) {
+					$this->error->add($e);
+				}
+			}
+			
+			if (!$this->error->has()) {
+				
+			}
+		} else {
+			$this->error->add(t('Unable to retrieve update location.'));
+		}
+		$this->view();
 	}
 	
 	public function do_update() {
@@ -46,5 +86,7 @@ class DashboardSystemUpdateController extends Controller {
 				$this->redirect(REL_DIR_FILES_TOOLS_REQUIRED . '/upgrade?source=dashboard_update');
 			}
 		}
+		$this->view();
+
 	}
 }
