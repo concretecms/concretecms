@@ -1,27 +1,34 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 
-<? if ($downloadableUpgradeAvailable) { ?>
-<h1><span><?=t('Update Available for Download')?></span></h1>
+<? if ($showDownloadBox) { ?>
+<h1><span><?=t('Download Update')?></span></h1>
 <div class="ccm-dashboard-inner">
-<form method="post" action="<?=$this->action('download_update')?>" id="ccm-download-update-form">
+	<? if ($downloadableUpgradeAvailable) { ?>
+	<form method="post" action="<?=$this->action('download_update')?>" id="ccm-download-update-form">
+	
+		<?=Loader::helper('validation/token')->output('download_update')?>
+		<?=Loader::helper('concrete/interface')->submit(t('Download'), 'ccm-download-update-form')?>
+	
+		<h2><?=t('Version: %s', $update->version)?>. <?=t('Release Date: %s', date(t('F d, Y'), strtotime($update->date)))?></h2>
+		<div><a href="javascript:void(0)" onclick="jQuery.fn.dialog.open({modal: false, title: '<?=t("Release Notes")?>', width: 500, height: 400, element: $('#ccm-release-notes')})"><?=t('View Full Release Notes &gt;')?></a></div>
+		<br/>
+		<span class="notes"><?=t('Note: Downloading an update will NOT automatically install it.')?></span>
+	
+	<div id="ccm-release-notes" style="display: none">
+	<?=$update->notes?>
+	<br/><br/>
+	<?=Loader::helper('concrete/interface')->button_js(t('Close'), 'javascript:jQuery.fn.dialog.closeTop()', 'left');?>
+	</div>
+	
+	
+	<? } else { ?>
+		<p><?=t('All available updates have been either downloaded or applied.')?></p>
+	<? } ?>
 
-	<?=Loader::helper('validation/token')->output('download_update')?>
-	<?=Loader::helper('concrete/interface')->submit(t('Download'), 'ccm-download-update-form')?>
-
-	<h2><?=t('Version: %s', $update->version)?>. <?=t('Release Date: %s', date(t('F d, Y'), strtotime($update->date)))?></h2>
-	<div><a href="javascript:void(0)" onclick="jQuery.fn.dialog.open({modal: false, title: '<?=t("Release Notes")?>', width: 500, height: 400, element: $('#ccm-release-notes')})"><?=t('View Full Release Notes &gt;')?></a></div>
-	<br/>
-	<span class="notes"><?=t('Note: Downloading an update will NOT automatically install it.')?></span>
-</div>
-
-<div id="ccm-release-notes" style="display: none">
-<?=$update->notes?>
-<br/><br/>
-<?=Loader::helper('concrete/interface')->button_js(t('Close'), 'javascript:jQuery.fn.dialog.closeTop()', 'left');?>
-</div>
-
-
+	</div>
 <? } ?>
+
+<? if (count($updates) > 0) { ?>
 
 <h1><span><?=t('Install Local Update')?></span></h1>
 <div class="ccm-dashboard-inner">
@@ -46,7 +53,7 @@ switch(count($updates)) {
 	<?	
 		break;
 	case '0':
-		print t('There are no downloaded updates available.');	
+		print '<h2>' . t('You are currently up to date!') . '</h2>';	
 		break;
 	default: ?>
 	
@@ -83,3 +90,12 @@ switch(count($updates)) {
 }
 ?>
 </div>
+
+<? } else if (!$downloadableUpgradeAvailable) { ?>
+
+<h1><span><?=t('Update concrete5')?></span></h1>
+<div class="ccm-dashboard-inner">
+	<h2><?=t('You are currently up to date!')?></h2>
+</div>
+
+<? } ?>

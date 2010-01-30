@@ -24,8 +24,24 @@ class DashboardSystemUpdateController extends Controller {
 		$updates = $upd->getLocalAvailableUpdates();
 		$remote = $upd->getApplicationUpdateInformation();
 		$this->set('updates', $updates);
-		if (MULTI_SITE == 0 && is_object($remote) && version_compare($remote->version, APP_VERSION, '>')) {
-			$this->set('downloadableUpgradeAvailable', true);
+		if (MULTI_SITE == 0) {
+			$this->set('showDownloadBox', true);
+		} else {
+			$this->set('showDownloadBox', false);
+		}
+		if (is_object($remote) && version_compare($remote->version, APP_VERSION, '>')) {
+			// loop through local updates
+			$downloadableUpgradeAvailable = true;
+			foreach($updates as $upd) {
+				if ($upd->getUpdateVersion() == $remote->version) {
+					// we have a LOCAL version ready to install that is the same, so we abort
+					$downloadableUpgradeAvailable = false;
+					$this->set('showDownloadBox', false);
+					break;
+				}
+			}
+			
+			$this->set('downloadableUpgradeAvailable', $downloadableUpgradeAvailable);
 			$this->set('update', $remote);
 		} else {
 			$this->set('downloadableUpgradeAvailable', false);
@@ -50,37 +66,44 @@ class DashboardSystemUpdateController extends Controller {
 		if (!$vt->validate('download_update')) {
 			$this->error->add($vt->getErrorMessage());
 		}
+		if (!is_dir(DIR_APP_UPDATES)) {
+			$this->error->add(t('The directory %s does not exist.', DIR_APP_UPDATES));
+		} else if (!is_writable(DIR_APP_UPDATES)) {
+			$this->error->add(t('The directory %s must be writable by the web server.', DIR_APP_UPDATES));
+		}
 		
-		$remote = Update::getApplicationUpdateInformation();
-		if (is_object($remote)) {
-			// try to download
-			$r = $ph->download_remote_package($remote->url);
-			if (empty($r) || $r == Package::E_PACKAGE_DOWNLOAD) {
-				$response = array(Package::E_PACKAGE_DOWNLOAD);
-			} else if ($r == Package::E_PACKAGE_SAVE) {
-				$response = array($r);
-			}
-			
-			if (isset($response)) {
-				$errors = Package::mapError($response);
-				foreach($errors as $e) {
-					$this->error->add($e);
+		if (!$this->error->has()) {
+			$remote = Update::getApplicationUpdateInformation();
+			if (is_object($remote)) {
+				// try to download
+				$r = $ph->download_remote_package($remote->url);
+				if (empty($r) || $r == Package::E_PACKAGE_DOWNLOAD) {
+					$response = array(Package::E_PACKAGE_DOWNLOAD);
+				} else if ($r == Package::E_PACKAGE_SAVE) {
+					$response = array($r);
 				}
-			}
-			
-			if (!$this->error->has()) {
-				// the file exists in the right spot
-				Loader::library('archive');
-				$ar = new UpdateArchive();
-				try {
-					$ar->install($r);
-				} catch(Exception $e) {
-					$this->error->add($e->getMessage());
+				
+				if (isset($response)) {
+					$errors = Package::mapError($response);
+					foreach($errors as $e) {
+						$this->error->add($e);
+					}
 				}
-					
+				
+				if (!$this->error->has()) {
+					// the file exists in the right spot
+					Loader::library('archive');
+					$ar = new UpdateArchive();
+					try {
+						$ar->install($r);
+					} catch(Exception $e) {
+						$this->error->add($e->getMessage());
+					}
+						
+				}
+			} else {
+				$this->error->add(t('Unable to retrieve software from update server.'));
 			}
-		} else {
-			$this->error->add(t('Unable to retrieve update location.'));
 		}
 		$this->view();
 	}

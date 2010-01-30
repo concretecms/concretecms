@@ -108,7 +108,7 @@ class Update {
 	public function getLocalAvailableUpdates() {
 		$fh = Loader::helper('file');
 		$updates = array();
-		$contents = $fh->getDirectoryContents(DIR_APP_UPDATES);
+		$contents = @$fh->getDirectoryContents(DIR_APP_UPDATES);
 		foreach($contents as $con) {
 			if (strpos($con, DIRNAME_APP) === 0) {
 				$obj = ApplicationUpdate::get($con);
