@@ -70,8 +70,8 @@ ul#ccm-main-nav a#ccm-nav-edit.ccm-nav-loading {background-position: center 8px 
 ul#ccm-main-nav a#ccm-nav-add {background-image: url(../images/icons/icon_header_add.png); background-position: center 8px !important}
 ul#ccm-main-nav a#ccm-nav-add.ccm-nav-loading {background-position: center 9px !important}
 
-ul#ccm-main-nav a#ccm-nav-exit-edit {background-image: url(../images/icons/icon_header_exit_edit_mode.png); background-position: center 8px !important}
-ul#ccm-main-nav a#ccm-nav-exit-edit.ccm-nav-loading {background-position: center 9px !important}
+ul#ccm-main-nav a#ccm-nav-exit-edit-direct, ul#ccm-main-nav a#ccm-nav-exit-edit {background-image: url(../images/icons/icon_header_exit_edit_mode.png); background-position: center 8px !important}
+ul#ccm-main-nav a#ccm-nav-exit-edit-direct.ccm-nav-loading, ul#ccm-main-nav a#ccm-nav-exit-edit.ccm-nav-loading {background-position: center 9px !important}
 
 ul#ccm-main-nav a#ccm-nav-properties {background-image: url(../images/icons/icon_header_properties.png); background-position: center 7px !important}
 ul#ccm-main-nav a#ccm-nav-properties.ccm-nav-loading {background-position: center 9px !important}

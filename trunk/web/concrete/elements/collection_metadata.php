@@ -46,6 +46,7 @@ if ($cp->canAdminPage()) {
 						jQuery.fn.dialog.closeTop();
 						ccmSitemapHighlightPageLabel(r.cID, r.name);
 					} else {
+						ccm_mainNavDisableDirectExit();
 						ccm_hidePane(function() {
 							jQuery.fn.dialog.hideLoader();						
 						});
