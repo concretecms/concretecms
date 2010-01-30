@@ -179,7 +179,7 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 			ccmAlert.notice(ccmi18n.error, message);
 		} else {
 			jQuery.fn.dialog.closeTop();
-			var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + resp.bID + '&arHandle=' + resp.arHandle + '&btask=view_edit_mode';				
+			var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + resp.bID + '&arHandle=' + resp.arHandle + '&btask=view_edit_mode';	
 			$.get(action, 		
 				function(r) {
 					if (task == 'add') {
@@ -188,6 +188,7 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 						$('#b' + currentBlockID + '-' + resp.aID).before(r).remove();
 					}
 					jQuery.fn.dialog.hideLoader();
+					ccm_mainNavDisableDirectExit();
 					setTimeout(function() {
 						ccm_menuActivated = false;
 					}, 200);
@@ -204,6 +205,12 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 	} catch(e) {
 		alert(r);
 	}
+}
+
+ccm_mainNavDisableDirectExit = function() {
+	// make sure that exit edit mode is enabled
+	$("li.ccm-main-nav-exit-edit-mode-direct").hide();
+	$("li.ccm-main-nav-exit-edit-mode").show();
 }
 
 ccm_setupBlockForm = function(form, currentBlockID, task) {
@@ -305,6 +312,11 @@ ccm_editInit = function() {
 		ccm_showPane(this, CCM_TOOLS_PATH + "/check_in.php?cID=" + CCM_CID);
 	});
 	
+	$("a#ccm-nav-exit-edit-direct").click(function() {
+		window.location.href=$(this).attr('href');
+	});
+	
+
 	$("a#ccm-nav-permissions").click(function() {
 		ccm_showPane(this, CCM_TOOLS_PATH + "/edit_collection_popup.php?ctask=edit_permissions&cID=" + CCM_CID);
 	});
