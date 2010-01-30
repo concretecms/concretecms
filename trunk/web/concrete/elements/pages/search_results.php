@@ -45,6 +45,10 @@ if (!isset($sitemap_mode)) {
 			<th class="<?=$pageList->getSearchResultsClass('cvDatePublic')?>"><a href="<?=$pageList->getSortByURL('cvDatePublic', 'asc', $bu)?>"><?=t('Public Date')?></a></th>
 			<th class="<?=$pageList->getSearchResultsClass('cDateModified')?>"><a href="<?=$pageList->getSortByURL('cDateModified', 'asc', $bu)?>"><?=t('Date Modified')?></a></th>
 			<th><?=t('Owner')?></th>
+			<? if ($pageList->isIndexedSearch()) { ?>
+				<th class="<?=$pageList->getSearchResultsClass('cIndexScore')?>"><a href="<?=$pageList->getSortByURL('cIndexScore', 'desc', $bu)?>"><?=t('Score')?></a></th>
+			<? } ?>
+
 			<? 
 			$slist = CollectionAttributeKey::getColumnHeaderList();
 			foreach($slist as $ak) { ?>
@@ -72,6 +76,9 @@ if (!isset($sitemap_mode)) {
 				$ui = UserInfo::getByID($cobj->getCollectionUserID());
 				print $ui->getUserName();
 			?></td>
+			<? if ($pageList->isIndexedSearch()) { ?>
+				<td><?=$cobj->getPageIndexScore()?></td>
+			<? } ?>
 			
 			<? 
 			$slist = CollectionAttributeKey::getColumnHeaderList();

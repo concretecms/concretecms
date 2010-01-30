@@ -21,6 +21,7 @@ class PageList extends DatabaseItemList {
 	protected $ignorePermissions = false;
 	protected $attributeClass = 'CollectionAttributeKey';
 	protected $autoSortColumns = array('cvName', 'cvDatePublic', 'cDateAdded', 'cDateModified');
+	protected $indexedSearch = false;
 	
 	/* magic method for filtering by page attributes. */
 	
@@ -50,7 +51,8 @@ class PageList extends DatabaseItemList {
 	public function displayUnapprovedPages() {
 		$this->displayOnlyApprovedPages = false;
 	}
-
+	
+	public function isIndexedSearch() {return $this->indexedSearch;}
 	/** 
 	 * Filters by "keywords" (which searches everything including filenames, title, tags, users who uploaded the file, tags)
 	 */
@@ -58,6 +60,9 @@ class PageList extends DatabaseItemList {
 		$db = Loader::db();
 		$kw = $db->quote($keywords);
 		$qk = $db->quote('%' . $keywords . '%');
+		$this->indexedSearch = true;
+		$this->indexedKeywords = $keywords;
+		$this->autoSortColumns[] = 'cIndexScore';
 		Loader::model('attribute/categories/collection');		
 		$keys = CollectionAttributeKey::getSearchableIndexedList();
 		$attribsStr = '';
@@ -65,8 +70,7 @@ class PageList extends DatabaseItemList {
 			$cnt = $ak->getController();			
 			$attribsStr.=' OR ' . $cnt->searchKeywords($keywords);
 		}
-		$this->filter(false, "(psi.cName like {$qk} or psi.cDescription like {$qk} or (match(psi.cName, psi.cDescription, psi.content) against ({$kw} in boolean mode))
-		{$attribsStr})");
+		$this->filter(false, "((match(psi.cName, psi.cDescription, psi.content) against ({$kw})) {$attribsStr})");
 	}
 
 	public function filterByName($name, $exact = false) {
@@ -272,10 +276,14 @@ class PageList extends DatabaseItemList {
 	}
 	
 	protected function setBaseQuery($additionalFields = '') {
+		if ($this->isIndexedSearch()) {
+			$db = Loader::db();
+			$ik = ', match(psi.cName, psi.cDescription, psi.content) against (' . $db->quote($this->indexedKeywords) . ') as cIndexScore ';
+		}
 		if ($this->includeAliases) {
-			$this->setQuery('select p1.cID, pt.ctHandle ' . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PageTypes pt on (pt.ctID = (if (p2.cID is null, p1.ctID, p2.cID))) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID) and cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)) inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
+			$this->setQuery('select p1.cID, pt.ctHandle ' . $ik . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PageTypes pt on (pt.ctID = (if (p2.cID is null, p1.ctID, p2.cID))) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID) and cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)) inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
 		} else {
-			$this->setQuery('select p1.cID, pt.ctHandle ' . $additionalFields . ' from Pages p1 left join PageTypes pt on (pt.ctID = p1.ctID) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = p1.cID) inner join CollectionVersions cv on (cv.cID = p1.cID and cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)) inner join Collections c on (c.cID = p1.cID)');
+			$this->setQuery('select p1.cID, pt.ctHandle ' . $ik . $additionalFields . ' from Pages p1 left join PageTypes pt on (pt.ctID = p1.ctID) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = p1.cID) inner join CollectionVersions cv on (cv.cID = p1.cID and cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)) inner join Collections c on (c.cID = p1.cID)');
 		}
 	}
 	
@@ -350,6 +358,7 @@ class PageList extends DatabaseItemList {
 			} else {
 				$nc->loadVersionObject();
 			}
+			$nc->setPageIndexScore($row['cIndexScore']);
 			$pages[] = $nc;
 		}
 		return $pages;

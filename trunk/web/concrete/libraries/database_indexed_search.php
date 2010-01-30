@@ -46,7 +46,7 @@ class IndexedPageList extends DatabaseItemList {
 	public function filterByKeywords($keywords) {
 		$db = Loader::db();
 		$kw = $db->quote($keywords);
-		$this->addToQuery("select distinct PageSearchIndex.cID, PageSearchIndex.content, PageSearchIndex.cName, PageSearchIndex.cDescription, PageSearchIndex.cPath, PageSearchIndex.cDatePublic, match(cName, cDescription, content) against ({$kw} in boolean mode) as score from PageSearchIndex inner join Pages on PageSearchIndex.cID = Pages.cID inner join CollectionSearchIndexAttributes on PageSearchIndex.cID = CollectionSearchIndexAttributes.cID");
+		$this->addToQuery("select distinct PageSearchIndex.cID, PageSearchIndex.content, PageSearchIndex.cName, PageSearchIndex.cDescription, PageSearchIndex.cPath, PageSearchIndex.cDatePublic, round(match(cName, cDescription, content) against ({$kw}) as score from PageSearchIndex inner join Pages on PageSearchIndex.cID = Pages.cID inner join CollectionSearchIndexAttributes on PageSearchIndex.cID = CollectionSearchIndexAttributes.cID");
 		Loader::model('attribute/categories/collection');
 		
 		$keys = CollectionAttributeKey::getSearchableIndexedList();
