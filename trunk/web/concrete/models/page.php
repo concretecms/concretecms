@@ -1432,6 +1432,14 @@ $ppWhere = '';
 		}
 		$r->free();
 	}
+	
+	public function setPageIndexScore($score) {
+		$this->cIndexScore = $score;
+	}
+	
+	public function getPageIndexScore() {
+		return round($this->cIndexScore, 2);
+	}
 
 	function rescanCollectionPathChildren($cID, $cPath) {
 		$db = Loader::db();
