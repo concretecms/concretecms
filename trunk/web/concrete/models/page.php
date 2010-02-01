@@ -162,7 +162,7 @@ $ppWhere = '';
 					if (intval($bID) > 0) {
 						$v = array($startDO, $arHandle, $bID, $this->getCollectionID(), $this->getVersionID());
 						try {
-							$db->query("update CollectionVersionBlocks set cbDisplayOrder = ?, arHandle = ? where bID = ? and cID = ? and cvID = ?", $v);
+							$db->query("update CollectionVersionBlocks set cbDisplayOrder = ?, arHandle = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll = 1)", $v);
 						} catch(Exception $e) {}
 						
 						$startDO++;

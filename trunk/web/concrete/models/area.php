@@ -347,7 +347,9 @@ class Area extends Object {
 			}
 
 			if ($p->canRead()) {
-				echo $this->enclosingStart;
+				if (!$c->isEditMode()) {
+					echo $this->enclosingStart;
+				}
 				if ($includeEditStrip) {
 					$bv->renderElement('block_controls', array(
 						'a' => $ourArea,
@@ -365,7 +367,9 @@ class Area extends Object {
 				if ($includeEditStrip) {
 					$bv->renderElement('block_footer');
 				}
-				echo $this->enclosingEnd;
+				if (!$c->isEditMode()) {
+					echo $this->enclosingEnd;
+				}
 			}
 		}
 
