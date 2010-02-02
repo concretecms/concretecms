@@ -157,7 +157,9 @@ class Block extends Object {
 		if ($c) {
 			$db = Loader::db();
 			$cID = $c->getCollectionID();
-			$q = "select bID from CollectionVersionBlocks where bID = '{$this->bID}' and cID='{$cID}' and isOriginal = 0";
+			$vo = $c->getVersionObject();
+			$cvID = $vo->getVersionID();
+			$q = "select bID from CollectionVersionBlocks where bID = '{$this->bID}' and cID='{$cID}' and isOriginal = 0 and cvID = $cvID";
 			$r = $db->query($q);
 			if ($r) {
 				return ($r->numRows() > 0);

@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $al = Loader::helper('concrete/asset_library');
 $ah = Loader::helper('concrete/interface');
 ?>
-<style>
+<style type="text/css">
 #ccm-slideshowBlock-imgRows a{cursor:pointer}
 #ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow,
 #ccm-slideshowBlock-fsRow {margin-bottom:16px;clear:both;padding:7px;background-color:#eee}

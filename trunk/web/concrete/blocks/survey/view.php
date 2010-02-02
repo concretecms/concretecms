@@ -4,7 +4,7 @@
 	$u = new User();
 	$uID=$u->getUserID();
 ?>
-<style>
+<style type="text/css">
 #surveyResults .surveySwatch {
 	background:#999999 none repeat scroll 0%;
 	border:1px solid #666666;

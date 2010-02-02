@@ -99,7 +99,7 @@ var ccmSlideShowHelper<?=intval($bID)?> = {
 $(function(){ccmSlideShowHelper<?=intval($bID)?>.init();}); 
 </script>
 
-<style>
+<style type="text/css">
 .ccm-SlideshowBlock-display{ position:relative; width:100%; height:auto; }
 .ccm-SlideshowBlock-display .slideImgWrap{ position:absolute; width:100%; height:auto; top:0px; left:0px; }
 </style>

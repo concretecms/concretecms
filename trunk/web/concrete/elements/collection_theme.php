@@ -33,7 +33,7 @@ if ($plID == 0) {
 }
 ?>
 
-<style>
+<style type="text/css">
 ul.ccm-area-theme-tabs.ccm-dialog-tabs{height:23px; margin-bottom:16px; padding-right:8px}
 ul.ccm-area-theme-tabs.ccm-dialog-tabs li{ float:right; border-right:1px solid #ddd; }
 

@@ -72,7 +72,7 @@ var Jobs = {
 
 </script>
 
-<style>
+<style type="text/css">
 tr div.runningThrobber{ background:#f00; display:none; width:80px; margin:auto }
 tr.running div.runningThrobber{ background:#f00; display:block; background: url(<?=ASSETS_URL_IMAGES?>/dashboard/sitemap/loading.gif) no-repeat center; height:20px }
 tr .runJobCheckboxWrap{ height:20px; width:80px; margin:auto;  }

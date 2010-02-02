@@ -102,7 +102,7 @@
 	   </div>
 	</div>
 	
-	<style>
+	<style type="text/css">
 	#ccm-pagelist-truncateTxt.faintText{ color:#999; }
 	<? if(truncateChars==0 && !$truncateSummaries) $truncateChars=128; ?>
 	</style>
