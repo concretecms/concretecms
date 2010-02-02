@@ -32,6 +32,18 @@ class Cache {
 			$backendOptions = array(
 				'cache_dir' => DIR_BASE . '/files/cache'			
 			);
+			if (defined('CACHE_BACKEND_OPTIONS')) {
+				$opts = unserialize(CACHE_BACKEND_OPTIONS);
+				foreach($opts as $k => $v) {
+					$backendOptions[$k] = $v;
+				}
+			}
+			if (defined('CACHE_FRONTEND_OPTIONS')) {
+				$opts = unserialize(CACHE_FRONTEND_OPTIONS);
+				foreach($opts as $k => $v) {
+					$frontendOptions[$k] = $v;
+				}
+			}
 			if (!defined('CACHE_LIBRARY') || (defined("CACHE_LIBRARY") && CACHE_LIBRARY == "default")) {
 				define('CACHE_LIBRARY', 'File');
 			}
