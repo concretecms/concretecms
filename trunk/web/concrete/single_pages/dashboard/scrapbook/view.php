@@ -3,7 +3,7 @@ $ih = Loader::helper('concrete/interface');
 $ci = Loader::helper('concrete/urls');
 $u = new User();
 ?> 
-<style>
+<style type="text/css">
 #ccm-scrapbook-list { margin-top:32px; margin-bottom:32px; } 
 #ccm-scrapbook-list .ccm-block-type{border:none 0px}
 #ccm-scrapbook-list .ccm-block-type .options { float:right; padding:8px }

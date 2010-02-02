@@ -6,7 +6,7 @@ $miniSurvey=new MiniSurvey($b);
 $miniSurvey->frontEndMode=true;
 ?>
 
-<style>
+<style type="text/css">
 .miniSurveyView{ margin-bottom:16px}
 .miniSurveyView #msg{ background:#FFFF99; color: #000; padding:2px; border:1px solid #999; margin:8px 0px 8px 0px}
 .miniSurveyView table.formBlockSurveyTable td{ padding-bottom:4px }

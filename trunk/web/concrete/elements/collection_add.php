@@ -135,7 +135,7 @@ for ($i = 0; $i < count($ctArray); $i++) {
 			<label><?=t('Description')?></label> <textarea name="cDescription" style="width: 100%; height: 80px"></textarea>
 		</div>
 		
-		<style>
+		<style type="text/css">
 		#ccm-metadata-fields{display:none; }
 		</style>
 		<?

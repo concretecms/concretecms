@@ -10,7 +10,7 @@ if ($c->isEditMode()) { ?>
 
 <? } else { ?>
 	
-	<style>
+	<style type="text/css">
 	.googleMapCanvas{ width:100%; border:0px none; height: 400px;}
 	</style>
 	

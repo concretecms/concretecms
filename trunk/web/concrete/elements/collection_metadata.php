@@ -57,7 +57,7 @@ if ($cp->canAdminPage()) {
 		});
 	</script>
 	
-	<style>
+	<style type="text/css">
 	.ccm-field-meta #newAttrValueRows{ margin-top:4px; }
 	.ccm-field-meta .newAttrValueRow{margin-top:4px}	
 	.ccm-field-meta input.faint{ color:#999 }

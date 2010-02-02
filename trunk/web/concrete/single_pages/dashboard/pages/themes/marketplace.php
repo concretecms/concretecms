@@ -1,4 +1,4 @@
-<style>
+<style type="text/css">
 table#themesGrid td{ padding:8px 30px 15px 8px; text-align:center  } 
 table#themesGrid td .name{ font-weight:bold; margin-top:4px; font-size:14px; margin-left:20px; }
 table#themesGrid td .desc{ margin-bottom:4px; line-height: 16px; }

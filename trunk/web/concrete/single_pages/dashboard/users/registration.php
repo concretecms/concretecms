@@ -2,7 +2,7 @@
 $h = Loader::helper('concrete/interface');
 ?>
 
-<style>
+<style type="text/css">
 .ccm-module form{ width:auto; height:auto; padding:0px; padding-bottom:10px; display:block; }
 .ccm-module form div.ccm-dashboard-inner{ margin-bottom:0px !important; }
 </style>

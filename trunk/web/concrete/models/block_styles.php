@@ -55,7 +55,7 @@ class BlockStyles extends Object {
 		
 		//add to header
 		$v = View::getInstance();
-		$v->addHeaderItem("<style> \r\n".$blockStylesHeader.'</style>', 'CONTROLLER');			
+		$v->addHeaderItem("<style type=\"text/css\"> \r\n".$blockStylesHeader.'</style>', 'CONTROLLER');			
 		self::$headerStylesAdded=1;
 	} 
 	
