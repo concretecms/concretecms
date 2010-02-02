@@ -35,8 +35,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$url = BASE_URL . DIR_REL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $filename;
 			}
 			
-			if (!isset($file) && $this->pkgID > 0) {
-				$pkgHandle = PackageList::getHandle($pkgID);
+			if (!isset($file) && $this->attributeType->getPackageID() > 0) {
+				$pkgHandle = PackageList::getHandle($this->attributeType->getPackageID());
 				$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
 				$rdirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? BASE_URL . DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle : ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle;
 				if (file_exists($dirp . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $filename)) {
@@ -95,8 +95,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$file = DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $view . '.php';
 			}
 			
-			if (!isset($file) && $this->pkgID > 0) {
-				$pkgHandle = PackageList::getHandle($pkgID);
+			if (!isset($file) && $this->attributeType->getPackageID() > 0) {
+				$pkgHandle = PackageList::getHandle($this->attributeType->getPackageID());
 				$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
 				if (file_exists($dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php')) {
 					$file = $dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php';
