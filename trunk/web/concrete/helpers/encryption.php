@@ -23,5 +23,9 @@ class EncryptionHelper {
         }
         return $text;
     }
+    
+    public function isAvailable() {
+    	return function_exists('mcrypt_encrypt');
+    }
 
 }

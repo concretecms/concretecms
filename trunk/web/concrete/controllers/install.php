@@ -477,6 +477,7 @@ class InstallController extends Controller {
 
 						$d8->update(array('cName'=>t('Add Functionality'), 'cDescription'=>t('Install functionality to extend your site.')));
 						$d9->update(array('cName'=>t('System & Maintenance'), 'cDescription'=>t('Backup, cleanup and update.')));
+						$d9b->update(array('cName'=>t('Backup & Restore')));	
 						$d10->update(array('cName'=>t('Sitewide Settings'), 'cDescription'=>t('Secure and setup your site.')));
 
 						$d11->update(array('cName'=>t('Email'), 'cDescription'=>t('Enable post via email and other settings.')));
