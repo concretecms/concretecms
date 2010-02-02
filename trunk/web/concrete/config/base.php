@@ -150,6 +150,7 @@ define('DIRNAME_PACKAGE_CORE', 'core');
 define('DIR_PACKAGE_CORE', DIR_BASE_CORE . '/packages/' . DIRNAME_PACKAGE_CORE);
 
 define('DIRNAME_BLOCKS', 'blocks');
+define('DIRNAME_BACKUPS', 'backups');
 define('DIRNAME_PAGES', 'single_pages');
 define('DIRNAME_PACKAGES', 'packages');
 define('DIRNAME_MODELS', 'models');
@@ -275,6 +276,9 @@ define('DIR_FILES_UPLOADED_STANDARD', DIR_BASE . '/files');
 define('DIR_FILES_TRASH_STANDARD', DIR_BASE . '/files/trash');
 define('REL_DIR_FILES_UPLOADED', DIR_REL . '/files');
 
+if (!defined('DIR_FILES_BACKUPS')) {
+	define('DIR_FILES_BACKUPS', DIR_BASE . '/files/backups');
+}
 define('DIR_FILES_UPLOADED_THUMBNAILS', DIR_BASE . '/files/thumbnails');
 define('REL_DIR_FILES_UPLOADED_THUMBNAILS', DIR_REL . '/files/thumbnails');
 define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_BASE . '/files/thumbnails/level2');
