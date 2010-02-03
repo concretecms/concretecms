@@ -20,6 +20,7 @@ $c = $a->getAreaCollectionObject();
 $cID = $c->getCollectionID();
 $u = new User();
 $ap = new Permissions($a);
+$cp = new Permissions($c);
 
 if ($a->areaAcceptsBlocks()) { ?>
 
@@ -31,7 +32,7 @@ if ($a->areaAcceptsBlocks()) { ?>
 	ccm_areaMenuObj<?=$a->getAreaID()?>.arHandle = "<?=$arHandle?>";
 	ccm_areaMenuObj<?=$a->getAreaID()?>.canAddBlocks = <?=$ap->canAddBlocks()?>;
 	ccm_areaMenuObj<?=$a->getAreaID()?>.canWrite = <?=$ap->canWrite()?>;
-	<? if ($ap->canAdmin() && PERMISSIONS_MODEL != 'simple') { ?>
+	<? if ($cp->canAdmin() && PERMISSIONS_MODEL != 'simple') { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canModifyGroups = true;
 	<? } ?>
 	$(function() {ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>)});
