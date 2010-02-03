@@ -427,10 +427,10 @@ $(document).ready(function(){
 	imgLoader.src = jQuery.fn.dialog.loaderImage;
 	
 	$(document.body).keypress(function(e) {
-		if (e.keyCode == 27 && ccm_dialogOpen > 0) {
+		if (e.keyCode == 27 && jQuery.fn.dialog.totalDialogs > 0) {
 			var obj = jQuery.fn.dialog.dialogs[jQuery.fn.dialog.totalDialogs-1];
 			if (!obj.modal) {
-				jQuery.fn.dialog.close(obj);
+				jQuery.fn.dialog.closeTop();
 			}
 		}
 	});
