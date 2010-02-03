@@ -75,7 +75,7 @@
 					$p = new Permissions($b);
 					if ($p->canWrite()){ 					
 					
-						Loader::model('block_styles');						
+						Loader::model('custom_style');						
 						
 						$nvc = $c->getVersionToModify();
 						$b->loadNewCollection($nvc);
@@ -87,30 +87,13 @@
 							$b = $nb; 					
 						}			
 						
-						$cssData=array();
-						$cssData['bID'] = $b->bID;
-						$cssData['cID'] = $nvc->cID;
-						
-						if($_POST['reset_block_css']!=1){ 
-							$cssData['css_id'] = str_replace( array('"', "'", ';', "<", ">"), '', $_POST['css_id']);							
-							$cssData['css_class'] = str_replace( array('"', "'", ';', "<", ">"), '', $_POST['css_class_name']);
-							$cssData['css_custom'] = str_replace( '"' , "'", $_POST['css_custom'] );	
-						
-							$blockStylesKeys=array('font_family','color','font_size','line_height','text_align','background_color','border_style',
-								'border_color','border_width','border_position','margin_top','margin_right','margin_bottom','margin_left',
-								'padding_top','padding_right','padding_bottom','padding_left');
-								
-							$cssDataRaw=array();
-							foreach($blockStylesKeys as $blockStyleKey){
-								$cssDataRaw[$blockStyleKey]=$_POST[$blockStyleKey];
-							}
-							$cssData['css_unserialized']=$cssDataRaw;
-						}						
-						
-						$blockStyles = new BlockStyles();
-						$blockStyles->setData( $cssData );
-						$blockStyles->save( $nvc );
-												
+						if ($_POST['reset_block_css']) {
+							$b->resetBlockCustomStyle();
+						} else {
+							$csr = CustomStyleRule::add($_POST['css_id'], $_POST['css_class_name'], $_POST['css_custom'], $_POST);
+							$b->setBlockCustomStyle($csr);
+						}
+
 						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);				
 					}
 				}

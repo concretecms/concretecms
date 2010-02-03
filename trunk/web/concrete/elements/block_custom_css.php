@@ -6,10 +6,14 @@ $bt = BlockType::getByID($b->getBlockTypeID());
 $txt = Loader::helper('text');
 $fh = Loader::helper('form/color'); 
 
-$blockStyles = BlockStyles::retrieve($b->bID,$c);
-if(!$blockStyles) $blockStyles = new BlockStyles();
-$blockCssData=$blockStyles->getStylesArray();
+$style = $b->getBlockCustomStyleRule();
+if(!$style) $style = new CustomStyleRule();
+$blockCssData= $style->getCustomStyleRuleCustomStylesArray();
 ?>
+
+<style type="text/css">
+table.ccm-style-property-table td {padding-right: 8px; padding-bottom: 8px}
+</style>
 
 <form method="post" id="ccmCustomCssForm" action="<?=$b->getBlockUpdateCssAction()?>&rcID=<?=intval($rcID) ?>" onsubmit="jQuery.fn.dialog.showLoader();" style="width:96%; margin:auto;">
 
@@ -25,7 +29,7 @@ $blockCssData=$blockStyles->getStylesArray();
 	<div id="ccm-blockEditPane-fonts" class="ccm-blockEditPane">	
 		<div class="ccm-block-field-group"> 
 			<h2><?php echo t('Fonts')?></h2> 
-			<table>
+			<table class="ccm-style-property-table" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td>
 					<?=t('Face')?>
@@ -41,14 +45,6 @@ $blockCssData=$blockStyles->getStylesArray();
 					</select>
 					</td>
 				</tr>				
-				<tr>
-					<td> 
-					<?=t('Color')?> 
-					</td>
-					<td>
-					<?=$fh->output( 'color', '', $blockCssData['color']) ?> 
-					</td>
-				</tr>
 				<tr>
 					<td> 
 					<?=t('Size')?> 
@@ -79,6 +75,14 @@ $blockCssData=$blockStyles->getStylesArray();
 					</select>
 					</td>
 				</tr>											
+				<tr>
+					<td> 
+					<?=t('Color')?> 
+					</td>
+					<td>
+					<?=$fh->output( 'color', '', $blockCssData['color']) ?> 
+					</td>
+				</tr>
 			</table>
 		</div> 
 	</div>	
@@ -93,7 +97,7 @@ $blockCssData=$blockStyles->getStylesArray();
 		
 		<div class="ccm-block-field-group">
 		  <h2><?php echo t('Border')?></h2>  
-		  <table>  
+			<table class="ccm-style-property-table" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td> 
 					<?=t('Style')?>
@@ -111,14 +115,6 @@ $blockCssData=$blockStyles->getStylesArray();
 						<option <?=($blockCssData['border_style']=='ridge')?'selected':'' ?> value="ridge"><?=t('ridge')?></option>
 					</select>
 					</td>
-				</tr>
-				<tr>
-					<td>
-						<?=t('Color')?>
-					</td>
-					<td>
-					<?=$fh->output( 'border_color', '', $blockCssData['border_color']) ?> 
-					</td> 
 				</tr>
 				<tr>
 					<td>
@@ -142,6 +138,14 @@ $blockCssData=$blockStyles->getStylesArray();
 					</select>
 					</td>
 				</tr>	
+				<tr>
+					<td>
+						<?=t('Color')?>
+					</td>
+					<td>
+					<?=$fh->output( 'border_color', '', $blockCssData['border_color']) ?> 
+					</td> 
+				</tr>
 			</table>	  
 		</div>		
 	
@@ -149,10 +153,10 @@ $blockCssData=$blockStyles->getStylesArray();
 	
 	<div id="ccm-blockEditPane-spacing" class="ccm-blockEditPane" style="display:none">		
 		<div class="ccm-block-field-group">
-		<table style="width:100%"><tr><td style="width:50%">		
+		<table style="width:100%" border="0" cellspacing="0" cellpadding="0"><tr><td style="width:50%" valign="top">		
 		
-		  <h2><?php echo t('Margin ')?></h2>
-			<table>  
+		  <h2 style="margin-top: 0px"><?php echo t('Margin ')?></h2>
+			<table class="ccm-style-property-table" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td> 
 					<?=t('Top')?>
@@ -186,9 +190,9 @@ $blockCssData=$blockStyles->getStylesArray();
 					</td>
 				</tr>												
 			</table>	 
-		</td><td>		 
-			<h2><?php echo t('Padding ')?></h2>
-			<table>  
+		</td><td valign="top">		 
+			<h2 style="margin-top: 0px"><?php echo t('Padding ')?></h2>
+			<table class="ccm-style-property-table" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td> 
 					<?=t('Top')?>
@@ -231,8 +235,8 @@ $blockCssData=$blockStyles->getStylesArray();
 	
 		<div class="ccm-block-field-group">
 		  <h2><?php echo t('CSS ID')?></h2>  
-		  <input name="css_id" type="text" value="<?=htmlentities(trim($blockStyles->getCssID()), ENT_COMPAT, APP_CHARSET) ?>" style="width:99%" 
-		   onkeyup="ccmCustomBlockCss.validIdCheck(this,'<?=str_replace(array("'",'"'),'',$blockStyles->getCssID()) ?>')" /> 
+		  <input name="css_id" type="text" value="<?=htmlentities(trim($style->getCustomStyleRuleCSSID()), ENT_COMPAT, APP_CHARSET) ?>" style="width:99%" 
+		   onkeyup="ccmCustomBlockCss.validIdCheck(this,'<?=str_replace(array("'",'"'),'',$style->getCustomStyleRuleCSSID()) ?>')" /> 
 		  <div id="ccm-block-styles-invalid-id" class="ccm-error" style="display:none; padding-top:4px;">
 		  	<?=t('Invalid ID.  This id is currently being used by another element on this page.')?>
 		  </div>
@@ -240,12 +244,12 @@ $blockCssData=$blockStyles->getStylesArray();
 	
 		<div class="ccm-block-field-group">
 		  <h2><?php echo t('CSS Class Name(s)')?></h2>  
-		  <input name="css_class_name" type="text" value="<?=htmlentities(trim($blockStyles->getClassName()), ENT_COMPAT, APP_CHARSET) ?>" style="width:99%" />		  		
+		  <input name="css_class_name" type="text" value="<?=htmlentities(trim($style->getCustomStyleRuleClassName()), ENT_COMPAT, APP_CHARSET) ?>" style="width:99%" />		  		
 		</div>
 		
 		<div class="ccm-block-field-group">
 		  <h2><?php echo t('Additional CSS')?></h2> 
-		  <textarea name="css_custom" cols="50" rows="4" style="width:99%"><?=htmlentities($blockStyles->getCustomCSS(), ENT_COMPAT, APP_CHARSET) ?></textarea>		
+		  <textarea name="css_custom" cols="50" rows="4" style="width:99%"><?=htmlentities($style->getCustomStyleRuleCSSCustom(), ENT_COMPAT, APP_CHARSET) ?></textarea>		
 		</div>	
 	</div>
 	

@@ -413,25 +413,50 @@
   </table>
 
   <table name="CollectionVersionBlockStyles">
-    <field name="cvbsID" type="I" size="10">
-	  <AUTOINCREMENT/> 
-      <KEY/>
-      <UNSIGNED/>
-    </field>
-    <field name="bID" type="I" size="10"> 
-      <KEY/>
-      <DEFAULT value="1"/>
-      <UNSIGNED/>
-    </field>
     <field name="cID" type="I" size="10">
       <KEY/>
-      <DEFAULT value="1"/>
+      <DEFAULT value="0"/>
       <UNSIGNED/>
-    </field>	
-	<field name="css_id" type="C" size="128" /> 
-	<field name="css_class" type="C" size="128" />  
-	<field name="css_serialized" type="X" /> 
-	<field name="css_custom" type="X" /> 
+    </field>
+    <field name="cvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="bID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="arHandle" type="C" size="255">
+      <KEY/>
+    </field>
+    <field name="csrID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  
+  <table name="CollectionVersionAreaStyles">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="arHandle" type="C" size="255">
+      <KEY/>
+    </field>
+    <field name="csrID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
   </table>
   
   <table name="CollectionVersions">
@@ -598,6 +623,33 @@
     <field name="extension" type="C" size="32">
       <KEY/>
     </field>
+  </table>
+  
+   <table name="CustomStylePresets">
+    <field name="cspID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="cspName" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="csrID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  <table name="CustomStyleRules">
+    <field name="csrID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="css_id" type="C" size="128"/>
+    <field name="css_class" type="C" size="128"/>
+    <field name="css_serialized" type="X"/>
+    <field name="css_custom" type="X"/>
   </table>
   <table name="FilePermissions">
     <field name="fID" type="I" size="10">
