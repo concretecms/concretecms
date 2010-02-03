@@ -123,7 +123,7 @@ ccm_showAreaMenu = function(obj, e) {
 	if (e.shiftKey) {
 		$.fn.dialog.open({
 			title: ccmi18n.blockAreaMenu,
-			href: CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + obj.arHandle + '&addOnly=' + addOnly,
+			href: CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&atask=add&arHandle=' + obj.arHandle + '&addOnly=' + addOnly,
 			width: 550,
 			modal: false,
 			height: 380
@@ -167,7 +167,7 @@ ccm_showAreaMenu = function(obj, e) {
 				html += '<li class="header"></li>';			
 			}
 			if (obj.canModifyGroups) {
-				html += '<li><a title="' + ccmi18n.setAreaPermissions + '" dialog-modal="true" class="ccm-icon" dialog-width="400" dialog-height="380" id="menuAreaGroups' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + obj.arHandle + '&atask=groups" dialog-title="' + ccmi18n.setAreaPermissions + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + ccmi18n.setAreaPermissions + '</span></a></li>';
+				html += '<li><a title="' + ccmi18n.setAreaPermissions + '" dialog-modal="false" class="ccm-icon" dialog-width="580" dialog-height="420" id="menuAreaGroups' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + obj.arHandle + '&atask=groups" dialog-title="' + ccmi18n.setAreaPermissions + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + ccmi18n.setAreaPermissions + '</span></a></li>';
 			}
 			
 			html += '</ul>';
