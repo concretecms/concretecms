@@ -723,6 +723,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						}
 						$btc->runTask('on_page_view', array($view));
 					}
+					
+					// now, we output all the custom style records for the design tab in blocks/areas on the page
+					$c = $this->getCollectionObject();
+					$view->outputCustomStyleHeaderItems();
 				}
 	
 				// finally, we include the theme (which was set by setTheme and will automatically include innerContent)

@@ -56,7 +56,7 @@
 	Loader::model('attribute/set');
 	Loader::model('attribute/type');
 	Loader::model('block');
-	Loader::model('block_styles');
+	Loader::model('custom_style');
 	Loader::model('file');
 	Loader::model('file_version');
 	Loader::model('block_types');

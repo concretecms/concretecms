@@ -308,6 +308,9 @@
 				}
 			}
 			
+			$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($cID, $cvID));
+			$db->Execute('delete from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($cID, $cvID));
+			
 			$q = "delete from CollectionVersions where cID = '{$cID}' and cvID='{$cvID}'";
 			$r = $db->query($q);
 			$this->refreshCache();

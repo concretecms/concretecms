@@ -101,6 +101,12 @@ class Block extends Object {
 		
 		if (is_array($row)) {
 			$b->setPropertiesFromArray($row);
+			$b->csrID = $db->GetOne('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', array(
+				$cID, 
+				$cvID,
+				$b->arHandle,
+				$bID
+			));
 			$r->free();
 			
 			$bt = BlockType::getByID($b->getBlockTypeID());
@@ -370,7 +376,15 @@ class Block extends Object {
 			$q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions) values (?, ?, ?, ?, ?, ?, ?)";
 			$r = $db->prepare($q);
 			$res = $db->execute($r, $v);
-
+			
+			// styles
+			$db->Execute('insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)', array(
+				$cID, 
+				$cvID,
+				$this->bID,
+				$this->getAreaHandle(),
+				$this->csrID
+			));
 			if ($res) {
 				// now we grab the permissions from the block we're aliasing from
 				$oc = $this->getBlockCollectionObject();
@@ -466,15 +480,45 @@ class Block extends Object {
 		$res2 = $db->execute($r2, $v2);
 		$nb = Block::getByID($newBID, $nc, $this->arHandle);
 		
-		//now we need to duplicate the associated CollectionVersionBlockStyles
-		$blockStyles = BlockStyles::retrieve( $this->bID , $oc );
-		if($blockStyles){
-			$blockStyles->setBID( $newBID ); 
-			$blockStyles->setCID( $ncID ); 
-			$blockStyles->save( $nc );
-		}
-
+		$v = array($ncID, $nvID, $newBID, $this->arHandle, $this->csrID);
+		$db->Execute('insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)', $v);
+		
 		return $nb;
+	}
+	
+	public function getBlockCustomStyleRule() {
+		$db = Loader::db();
+		$csrID = $this->csrID;
+		if ($csrID > 0) {
+			Loader::model('custom_style');
+			$csr = CustomStyleRule::getByID($csrID);
+			if (is_object($csr)) {
+				$csr->setCustomStyleNameSpace('blockStyle');
+				return $csr;
+			}
+		}
+	}
+	
+	public function resetBlockCustomStyle() {
+		$db = Loader::db();
+		$c = $this->getBlockCollectionObject();
+		$cvID = $c->getVersionID();
+		$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', array(
+			$this->getBlockCollectionID(),
+			$cvID,
+			$this->getAreaHandle(),
+			$this->bID
+		));
+	}
+	
+	public function setBlockCustomStyle($csr) {
+		$db = Loader::db();
+		$c = $this->getBlockCollectionObject();
+		$cvID = $c->getVersionID();
+		$db->Replace('CollectionVersionBlockStyles', 
+			array('cID' => $this->getBlockCollectionID(), 'cvID' => $cvID, 'arHandle' => $this->getAreaHandle(), 'bID' => $this->bID, 'csrID' => $csr->getCustomStyleRuleID()),
+			array('cID', 'cvID', 'bID', 'arHandle'), true
+		);
 	}
 
 	function getBlockCollectionObject() {
@@ -634,7 +678,7 @@ class Block extends Object {
 			$q = "delete from CollectionVersionBlockPermissions where bID = '$bID' and cvID = '$cvID' and cID = '$cID'";
 			$r = $db->query($q);
 			
-			$q = "delete from CollectionVersionBlockStyles where bID = ".intval($bID)." AND cID = ".intval($cID);
+			$q = "delete from CollectionVersionBlockStyles where cID = '$cID' and cvID = '$cvID' and bID = '$bID' and arHandle = '$arHandle'";
 			//$r = $db->query($q);				
 		}
 

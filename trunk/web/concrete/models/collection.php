@@ -328,6 +328,41 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 	}
+	
+	/** 
+	 * Retrieves all custom style rules that should be inserted into the header on a page, whether they are defined in areas
+	 * or blocks
+	 */
+	public function outputCustomStyleHeaderItems() {
+		$db = Loader::db();
+		$csrs = array();
+		$r1 = $db->GetCol('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
+		$r2 = $db->GetCol('select csrID from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
+		foreach($r1 as $csrID) {
+			$obj = CustomStyleRule::getByID($csrID);
+			if (is_object($obj)) {
+				$obj->setCustomStyleNameSpace('blockStyle');
+				$csrs[] = $obj;
+			}
+		}
+		foreach($r2 as $csrID) {
+			$obj = CustomStyleRule::getByID($csrID);
+			if (is_object($obj)) {
+				$obj->setCustomStyleNameSpace('areaStyle');
+				$csrs[] = $obj;
+			}
+		}
+		//get the header style rules
+		$styleHeader = '';
+		foreach($csrs as $st) {
+			if ($st->getCustomStyleRuleCSSID(true)) { 
+				$styleHeader .= '#'.$st->getCustomStyleRuleCSSID(1).' {'. $st->getCustomStyleRuleText(). "} \r\n";  
+			}
+		}
+		
+		$v = View::getInstance();
+		$v->addHeaderItem("<style type=\"text/css\"> \r\n".$styleHeader.'</style>', 'VIEW');
+	}
 
 	function rescanDisplayOrder($areaName) {
 		// this collection function fixes the display order properties for all the blocks within the collection/area. We select all the items
