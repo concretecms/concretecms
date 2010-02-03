@@ -425,6 +425,15 @@ var ccmAlert = {
 $(document).ready(function(){   
 	imgLoader = new Image();// preload image
 	imgLoader.src = jQuery.fn.dialog.loaderImage;
+	
+	$(document.body).keypress(function(e) {
+		if (e.keyCode == 27 && ccm_dialogOpen > 0) {
+			var obj = jQuery.fn.dialog.dialogs[jQuery.fn.dialog.totalDialogs-1];
+			if (!obj.modal) {
+				jQuery.fn.dialog.close(obj);
+			}
+		}
+	});
 
 	// preload assets for the dialog window
 	i1 = new Image();// preload image
