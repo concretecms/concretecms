@@ -4,6 +4,9 @@ $c = Page::getByID($_REQUEST['cID']);
 $a = Area::get($c, $_GET['arHandle']);
 $cp = new Permissions($c);
 $ap = new Permissions($a);
+$valt = Loader::helper('validation/token');
+$token = '&' . $valt->getParameter();
+
 if (!$cp->canWrite()) {
 	die(t("Access Denied."));
 }
@@ -27,7 +30,7 @@ switch($_GET['atask']) {
 		break;
 	case 'groups':
 		$toolSection = "block_area_groups";
-		$canViewPane = $ap->canAdmin();
+		$canViewPane = $cp->canAdmin();
 		break;
 }
 
@@ -37,4 +40,4 @@ if (!$canViewPane) {
 
 ?>
 
-<? Loader::element($toolSection, array('c'=>$c, 'a' => $a, 'cp' => $cp, 'ap' => $ap));
+<? Loader::element($toolSection, array('c'=>$c, 'a' => $a, 'cp' => $cp, 'ap' => $ap, 'token' => $token));

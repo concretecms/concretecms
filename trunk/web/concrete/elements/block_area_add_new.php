@@ -1,7 +1,5 @@
 <? 
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$valt = Loader::helper('validation/token');
-$token = '&' . $valt->getParameter();
 $btl = $a->getAddBlockTypes($c, $ap );
 $blockTypes = $btl->getBlockTypeList();
 $ci = Loader::helper('concrete/urls');
