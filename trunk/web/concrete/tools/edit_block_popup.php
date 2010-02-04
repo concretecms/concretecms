@@ -42,8 +42,12 @@ if (is_object($b)) {
 			if ($bp->canWrite()) {
 				$style = $b->getBlockCustomStyleRule();
 				$action = $b->getBlockUpdateCssAction();
-
-				$bv->renderElement('custom_style', array('b' => $b, 'rcID'=>$rcID, 'c' => $c, 'a' => $a, 'style' => $style, 'action' => $action) );
+				if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
+					$styleToDelete = CustomStylePreset::getByID($_REQUEST['deleteCspID']);
+					$styleToDelete->delete();
+				}
+				$refreshAction = REL_DIR_FILES_TOOLS_REQUIRED . '/edit_block_popup?btask=block_css&cID=' . $c->getCollectionID() . '&arHandle=' . $a->getAreaHandle() . '&bID=' . $b->getBlockID() . '&isGlobal=' . $_REQUEST['isGlobal'] . '&refresh=1';
+				$bv->renderElement('custom_style', array('b' => $b, 'rcID'=>$rcID, 'c' => $c, 'a' => $a, 'style' => $style, 'action' => $action, 'refreshAction' => $refreshAction) );
 			}
 			break;	 
 		case 'template': 		

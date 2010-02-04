@@ -24,6 +24,8 @@
 		var $cvIsApproved;
 		var $cID;
 		protected $attributes = array();
+		public $customAreaStyles = array();
+		
 		
 		/** 
 		 * Returns the actual cvID numerical value for a particular cID/cvID combo
@@ -116,6 +118,11 @@
 			
 			$cv->cID = $c->getCollectionID();			
 			$cv->cvIsMostRecent = $cv->_checkRecent();
+			
+			$r = $db->GetAll('select csrID, arHandle from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($c->getCollectionID(), $cvID));
+			foreach($r as $styles) {
+				$cv->customAreaStyles[$styles['arHandle']] = $styles['csrID'];
+			}
 			
 			$ca = new Cache();
 			$ca->set('collection_version', $c->getCollectionID() . ':' . $cvID, $cv);

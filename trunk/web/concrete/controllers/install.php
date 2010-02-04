@@ -231,6 +231,8 @@ class InstallController extends Controller {
 	
 					$this->fp = @fopen($this->installData['DIR_BASE'] . '/config/site.php', 'w+');
 					if ($this->fp) {
+					
+						Cache::flush();
 						
 						Loader::model('single_page');
 						Loader::model('dashboard/homepage');

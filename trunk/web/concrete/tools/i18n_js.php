@@ -23,6 +23,7 @@ var ccmi18n = {
 	copyBlockToScrapbook: '<?=t('Copy to Scrapbook')?>',
 	changeBlockTemplate: '<?=t('Custom Template')?>',
 	changeBlockCSS: "<?=t("Design")?>",
+	errorCustomStylePresetNoName: "<?=t('You must give your custom style preset a name.')?>",
 	changeBlockBaseStyle: "<?=t("Set Block Styles")?>",
 	confirmCssReset: "<?=t("Are you sure you want to remove all of these custom styles?")?>",
 	setBlockPermissions: '<?=t('Set Permissions')?>',

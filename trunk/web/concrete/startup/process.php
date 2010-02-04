@@ -90,8 +90,21 @@
 						if ($_POST['reset_css']) {
 							$b->resetBlockCustomStyle();
 						} else {
-							$csr = CustomStyleRule::add($_POST['css_id'], $_POST['css_class_name'], $_POST['css_custom'], $_POST);
-							$b->setBlockCustomStyle($csr);
+							
+							if ($_POST['cspID'] > 0 && (!$_POST['cspCreateNew'])) {
+								$csp = CustomStylePreset::getByID($_POST['cspID']);
+								$csr = $csp->getCustomStylePresetRuleObject();
+								// we update the csr in case anything has been changed
+								$csr->update($_POST['css_id'], $_POST['css_class_name'], $_POST['css_custom'], $_POST);
+								$b->setBlockCustomStyle($csr);
+							} else {
+								$csr = CustomStyleRule::add($_POST['css_id'], $_POST['css_class_name'], $_POST['css_custom'], $_POST);
+								$b->setBlockCustomStyle($csr);
+							}
+							
+							if ($_POST['cspCreateNew']) {
+								CustomStylePreset::add($_POST['cspName'], $csr);
+							}
 						}
 
 						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);				
@@ -229,12 +242,25 @@
 					Loader::model('custom_style');				
 					
 					$nvc = $c->getVersionToModify();
-					
+
 					if ($_POST['reset_css']) {
 						$nvc->resetAreaCustomStyle($area);
 					} else {
-						$csr = CustomStyleRule::add($_POST['css_id'], $_POST['css_class_name'], $_POST['css_custom'], $_POST);
-						$nvc->setAreaCustomStyle($area, $csr);
+						
+						if ($_POST['cspID'] > 0 && (!$_POST['cspCreateNew'])) {
+							$csp = CustomStylePreset::getByID($_POST['cspID']);
+							$csr = $csp->getCustomStylePresetRuleObject();
+							// we update the csr in case anything has been changed
+							$csr->update($_POST['css_id'], $_POST['css_class_name'], $_POST['css_custom'], $_POST);
+							$nvc->setAreaCustomStyle($area, $csr);
+						} else {
+							$csr = CustomStyleRule::add($_POST['css_id'], $_POST['css_class_name'], $_POST['css_custom'], $_POST);
+							$nvc->setAreaCustomStyle($area, $csr);
+						}
+						
+						if ($_POST['cspCreateNew']) {
+							CustomStylePreset::add($_POST['cspName'], $csr);
+						}
 					}
 
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);

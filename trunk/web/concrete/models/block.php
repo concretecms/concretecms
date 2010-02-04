@@ -509,6 +509,7 @@ class Block extends Object {
 			$this->getAreaHandle(),
 			$this->bID
 		));
+		$this->refreshCache();
 	}
 	
 	public function setBlockCustomStyle($csr) {
@@ -519,6 +520,7 @@ class Block extends Object {
 			array('cID' => $this->getBlockCollectionID(), 'cvID' => $cvID, 'arHandle' => $this->getAreaHandle(), 'bID' => $this->bID, 'csrID' => $csr->getCustomStyleRuleID()),
 			array('cID', 'cvID', 'bID', 'arHandle'), true
 		);
+		$this->refreshCache();
 	}
 
 	function getBlockCollectionObject() {

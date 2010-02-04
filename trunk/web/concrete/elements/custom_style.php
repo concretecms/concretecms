@@ -3,20 +3,60 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 global $c;?>
 <?
 $txt = Loader::helper('text');
+$form = Loader::helper('form');
 $fh = Loader::helper('form/color'); 
 
+
+if (isset($_REQUEST['cspID']) && $_REQUEST['cspID'] > 0) {
+	$csp = CustomStylePreset::getByID($_REQUEST['cspID']);
+	if (is_object($csp)) {
+		$style = $csp->getCustomStylePresetRuleObject();
+	}
+} else if (is_object($style)) {
+	$selectedCsrID = $style->getCustomStyleRuleID();
+}
+
 if(!$style) $style = new CustomStyleRule();
+
 $cssData = $style->getCustomStyleRuleCustomStylesArray();
+
+$presets = CustomStylePreset::getList();
+$presetsArray = array();
+foreach($presets as $csp) {
+	$presetsArray[$csp->getCustomStylePresetID()] = $csp->getCustomStylePresetName();
+}
+
+$presetsArray[0] = t('** Custom (No Preset)');
+
+if (!isset($_REQUEST['csrID'])) {
+	$cspID = $style->getCustomStylePresetID();
+}
+
+if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
+	$cspID = 0;
+}
 ?>
 
-<style type="text/css">
-table.ccm-style-property-table td {padding-right: 8px; padding-bottom: 8px}
-</style>
+<? if (!$_REQUEST['refresh']) { ?>
+<div id="ccm-custom-style-wrapper">
+<? } ?>
 
-<form method="post" id="ccmCustomCssForm" action="<?=$action?>" onsubmit="jQuery.fn.dialog.showLoader();" style="width:96%; margin:auto;">
+<form method="post" id="ccmCustomCssForm" action="<?=$action?>" style="width:96%; margin:auto;">
 
 	<input id="ccm-reset-style" name="reset_css" type="hidden" value="0" />
 	
+	<? if (count($presets) > 0) { ?>
+		<h2><?=t('Saved Presets')?></h2>
+	
+		<?=$form->select('cspID', $presetsArray, $cspID, array('style' => 'vertical-align: middle'))?>
+		<a href="javascript:void(0)" id="ccm-style-delete-preset" style="display: none" onclick="ccmCustomStyle.deletePreset()"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" style="vertical-align: middle" width="16" height="16" border="0" /></a>
+		
+		<br/><br/>
+		
+		<input type="hidden" id="ccm-custom-style-refresh-action" value="<?=$refreshAction?>" />
+	<? } ?>
+	
+	<input type="hidden" name="selectedCsrID" value="<?=$selectedCsrID?>" />
 	<ul id="ccm-styleEditPane-tabs" class="ccm-dialog-tabs" style="margin-bottom:16px; margin-top:4px;">
 		<li class="ccm-nav-active"><a id="ccm-styleEditPane-tab-fonts" href="#" onclick="return ccmCustomStyle.tabs(this,'fonts');"><?=t('Fonts') ?></a></li>
 		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'region');"><?=t('Region') ?></a></li>
@@ -42,8 +82,7 @@ table.ccm-style-property-table td {padding-right: 8px; padding-bottom: 8px}
 						<option <?=($cssData['font_family']=='Verdana')?'selected':'' ?> value="Verdana">Verdana</option>
 					</select>
 					</td>
-				</tr>				
-				<tr>
+					<td rowspan="99"><div style="width: 30px">&nbsp;</div></td>
 					<td> 
 					<?=t('Size')?> 
 					</td>
@@ -58,7 +97,14 @@ table.ccm-style-property-table td {padding-right: 8px; padding-bottom: 8px}
 					<td>
 						<input name="line_height" type="text" value="<?=htmlentities( $cssData['line_height'], ENT_COMPAT, APP_CHARSET) ?>" size=2 />	
 					</td>
-				</tr>	
+					<td> 
+					<?=t('Color')?> 
+					</td>
+					<td>
+					<?=$fh->output( 'color', '', $cssData['color']) ?> 
+					</td>
+
+				</tr>											
 				<tr>
 					<td> 
 					<?=t('Alignment')?> 
@@ -72,14 +118,7 @@ table.ccm-style-property-table td {padding-right: 8px; padding-bottom: 8px}
 						<option <?=($cssData['text_align']=='justify')?'selected':'' ?> value="justify"><?=t('Justify')?></option>
 					</select>
 					</td>
-				</tr>											
-				<tr>
-					<td> 
-					<?=t('Color')?> 
-					</td>
-					<td>
-					<?=$fh->output( 'color', '', $cssData['color']) ?> 
-					</td>
+					<td colspan="2">&nbsp;</td>
 				</tr>
 			</table>
 		</div> 
@@ -87,12 +126,6 @@ table.ccm-style-property-table td {padding-right: 8px; padding-bottom: 8px}
 	
 	<div id="ccm-styleEditPane-region" class="ccm-styleEditPane" style="display:none">
 	
-		<div class="ccm-block-field-group">
-		  <h2><?php echo t('Background')?></h2> 		
-		  <?=$fh->output( 'background_color', '', $cssData['background_color']) ?> 
-		  <div class="ccm-spacer"></div>
-		</div>
-		
 		<div class="ccm-block-field-group">
 		  <h2><?php echo t('Border')?></h2>  
 			<table class="ccm-style-property-table" border="0" cellspacing="0" cellpadding="0">
@@ -113,8 +146,8 @@ table.ccm-style-property-table td {padding-right: 8px; padding-bottom: 8px}
 						<option <?=($cssData['border_style']=='ridge')?'selected':'' ?> value="ridge"><?=t('ridge')?></option>
 					</select>
 					</td>
-				</tr>
-				<tr>
+					<td rowspan="99"><div style="width: 30px">&nbsp;</div></td>
+
 					<td>
 						<?=t('Width')?>
 					</td> 				
@@ -135,8 +168,7 @@ table.ccm-style-property-table td {padding-right: 8px; padding-bottom: 8px}
 						<option <?=($cssData['border_position']=='left')?'selected':'' ?> value="left"><?=t('Left')?></option> 
 					</select>
 					</td>
-				</tr>	
-				<tr>
+
 					<td>
 						<?=t('Color')?>
 					</td>
@@ -146,6 +178,12 @@ table.ccm-style-property-table td {padding-right: 8px; padding-bottom: 8px}
 				</tr>
 			</table>	  
 		</div>		
+		<div class="ccm-block-field-group">
+		  <h2><?php echo t('Background')?></h2> 		
+		  <?=$fh->output( 'background_color', '', $cssData['background_color']) ?> 
+		  <div class="ccm-spacer"></div>
+		</div>
+		
 	
 	</div>
 	
@@ -251,11 +289,16 @@ table.ccm-style-property-table td {padding-right: 8px; padding-bottom: 8px}
 		</div>	
 	</div>
 	
-	<div class="ccm-buttons">
-	<a href="#" class="ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
+	<div><?=$form->checkbox('cspCreateNew', 1)?> <label for="cspCreateNew" style="display: inline; color: #555"><?=t('Save this style as a new preset.')?></label><span style="margin-left: 10px"><?=$form->text('cspName', array('style' => 'width:  127px', 'disabled' => true))?></span></div>
+	<br/>
 	
-	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.showLoader();$('#ccmCustomCssForm').submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
-	<a onclick="return ccmCustomStyle.resetAll();" class="ccm-button-right accept" style="margin-right:8px; "><span><?=t('Reset')?></span></a>
+	<div class="ccm-buttons">
+	<a href="#" class="ccm-button-left cancel" onclick="jQuery.fn.dialog.closeTop()"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
+	
+	<a href="javascript:void(0)" onclick="$('#ccmCustomCssForm').submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
+	<? if ($cspID < 1) { ?>
+		<a onclick="return ccmCustomStyle.resetAll();" id="ccm-reset-style-button" class="ccm-button-right accept" style="margin-right:8px; "><span><?=t('Reset')?></span></a>
+	<? } ?>
 	</div>
 	
 	<div class="ccm-spacer"></div> 
@@ -269,3 +312,13 @@ $valt = Loader::helper('validation/token');
 $valt->output();
 ?>
 </form>
+
+<script type="text/javascript">
+$(function() {
+	ccmCustomStyle.initForm();
+});
+</script>
+
+<? if (!$_REQUEST['refresh']) { ?>
+</div
+<? } ?>

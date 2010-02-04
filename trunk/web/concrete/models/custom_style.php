@@ -15,6 +15,9 @@ class CustomStyleRule extends Object {
 	protected $customStyleNameSpace = 'customStyle';
 	
 	public function getCustomStyleRuleID() {return $this->csrID;}
+	public function getCustomStylePresetID() {
+		return $this->cspID;
+	}
 	public function getCustomStyleRuleCSSID($withAutoID=false) {
 		if( strlen(trim($this->css_id))) {
 			return $this->css_id;
@@ -107,7 +110,7 @@ class CustomStyleRule extends Object {
 		return $styleRules;	
 	}
 	
-	public function add($id, $class, $custom, $keys) {
+	protected function sanitize($id, $class, $custom, $keys) {
 		$cssData = array();
 		$id = str_replace( array('"', "'", ';', "<", ">", "#"), '', $id);							
 		$class = str_replace( array('"', "'", ';', "<", ">", "."), '', $class);
@@ -123,10 +126,27 @@ class CustomStyleRule extends Object {
 		}
 		
 		$cssData = serialize($cssDataRaw);
+		
+		$obj = new stdClass;
+		$obj->id = $id;
+		$obj->class = $class;
+		$obj->custom = $custom;
+		$obj->cssData = $cssData;
+		return $obj;
+	}
+	
+	public function add($id, $class, $custom, $keys) {
+		$obj = CustomStyleRule::sanitize($id, $class, $custom, $keys);
 		$db = Loader::db();
-		$db->Execute('insert into CustomStyleRules (css_id, css_class, css_custom, css_serialized) values (?, ?, ?, ?)', array($id, $class, $custom, $cssData));
+		$db->Execute('insert into CustomStyleRules (css_id, css_class, css_custom, css_serialized) values (?, ?, ?, ?)', array($obj->id, $obj->class, $obj->custom, $obj->cssData));
 		$csrID = $db->Insert_ID();
 		return CustomStyleRule::getByID($csrID);		
+	}
+	
+	public function update($id, $class, $custom, $keys) {
+		$obj = $this->sanitize($id, $class, $custom, $keys);
+		$db = Loader::db();
+		$db->Execute('update CustomStyleRules set css_id = ?, css_class = ?, css_custom = ?, css_serialized = ? where csrID = ?', array($obj->id, $obj->class, $obj->custom, $obj->cssData, $this->getCustomStyleRuleID()));
 	}
 	
 	public function getByID($csrID) {
@@ -139,7 +159,7 @@ class CustomStyleRule extends Object {
 	
 	public function load($csrID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select * from CustomStyleRules where csrID = ?', array($csrID));
+		$r = $db->GetRow('select CustomStyleRules.*, CustomStylePresets.cspID from CustomStyleRules left join CustomStylePresets on CustomStyleRules.csrID = CustomStylePresets.csrID where CustomStyleRules.csrID = ?', array($csrID));
 		if (is_array($r) && $r['csrID'] > 0) {
 			$this->setPropertiesFromArray($r);
 		}
@@ -150,6 +170,54 @@ class CustomStyleRule extends Object {
 
 class CustomStylePreset extends Object {
 
+	public function getList() {
+		$db = Loader::db();
+		$r = $db->Execute('select cspID, cspName, csrID from CustomStylePresets order by cspName asc');
+		$presets = array();
+		while ($row = $r->FetchRow()) {
+			$obj = new CustomStylePreset();
+			$obj->setPropertiesFromArray($row);
+			$presets[] = $obj;
+		}
+		return $presets;
+	}
 
+	public function getCustomStylePresetID() {return $this->cspID;}
+	public function getCustomStylePresetName() {return $this->cspName;}
+	public function getCustomStylePresetRuleID() {return $this->csrID;}
+	public function getCustomStylePresetRuleObject() {return CustomStyleRule::getByID($this->csrID);}
 
+	public static function getByID($cspID) {
+		$csp = new CustomStylePreset();
+		$csp->load($cspID);
+		if (is_object($csp) && $csp->getCustomStylePresetID() == $cspID) {
+			return $csp;
+		}
+	}
+	
+	public function load($cspID) {
+		$db = Loader::db();
+		$r = $db->GetRow('select cspID, cspName, csrID from CustomStylePresets where cspID  = ?', array($cspID));
+		if (is_array($r) && $r['cspID'] > 0) {
+			$this->setPropertiesFromArray($r);
+		}
+	}
+	
+	/** 
+	 * Removes a preset. Does NOT remove the associated rule
+	 */
+	public function delete() {
+		$db = Loader::db();
+		$db->Execute('delete from CustomStylePresets where cspID = ?', array($this->cspID));
+	}
+	
+	public function add($cspName, $csr) {
+		$db = Loader::db();
+		$db->Execute('insert into CustomStylePresets (cspName, csrID) values (?, ?)', array(
+			$cspName,
+			$csr->getCustomStyleRuleID()
+		));
+	
+	}
+	
 }
