@@ -11,6 +11,8 @@ if (!$cp->canWrite()) {
 	die(t("Access Denied."));
 }
 
+$args = array('c'=>$c, 'a' => $a, 'cp' => $cp, 'ap' => $ap, 'token' => $token);
+
 switch($_GET['atask']) {
 	case 'add':
 		$toolSection = "block_area_add_new";
@@ -20,12 +22,14 @@ switch($_GET['atask']) {
 		$toolSection = "block_area_add_scrapbook";
 		$canViewPane = $ap->canAddBlocks();
 		break;
-	case 'design':
-		$toolSection = "block_area_design";
-		$canViewPane = $ap->canWrite();
-		break;
 	case 'layout':
 		$toolSection = "block_area_layout";
+		$canViewPane = $ap->canWrite();
+		break;
+	case 'design':
+		$toolSection = 'custom_style';
+		$args['style'] = $a->getAreaCustomStyleRule();
+		$args['action'] = $a->getAreaUpdateAction('design');
 		$canViewPane = $ap->canWrite();
 		break;
 	case 'groups':
@@ -40,4 +44,4 @@ if (!$canViewPane) {
 
 ?>
 
-<? Loader::element($toolSection, array('c'=>$c, 'a' => $a, 'cp' => $cp, 'ap' => $ap, 'token' => $token));
+<? Loader::element($toolSection, $args);

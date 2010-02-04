@@ -100,17 +100,58 @@ class Area extends Object {
 		return (($this->maximumBlocks > $this->totalBlocks) || ($this->maximumBlocks == -1));
 	}
 
+	public function getAreaCustomStyleRule() {
+		$db = Loader::db();
+		$c = $this->getAreaCollectionObject();
+		
+		$csrID = $db->GetOne('select csrID from CollectionVersionAreaStyles where cID = ? and cvID = ? and arHandle = ?', array(
+			$this->cID, 
+			$c->getVersionID(),
+			$this->arHandle
+		));
+		
+		if ($csrID > 0) {
+			Loader::model('custom_style');
+			$csr = CustomStyleRule::getByID($csrID);
+			if (is_object($csr)) {
+				$csr->setCustomStyleNameSpace('areaStyle');
+				return $csr;
+			}
+		}
+	}
+
+	public function resetAreaCustomStyle() {
+		$db = Loader::db();
+		$c = $this->getAreaCollectionObject();
+		$cvID = $c->getVersionID();
+		$db->Execute('delete from CollectionVersionAreaStyles where cID = ? and cvID = ? and arHandle = ?', array(
+			$this->getCollectionID(),
+			$cvID,
+			$this->getAreaHandle()
+		));
+	}
+	
+	public function setAreaCustomStyle($csr) {
+		$db = Loader::db();
+		$c = $this->getAreaCollectionObject();
+		$cvID = $c->getVersionID();
+		$db->Replace('CollectionVersionAreaStyles', 
+			array('cID' => $this->getCollectionID(), 'cvID' => $cvID, 'arHandle' => $this->getAreaHandle(), 'csrID' => $csr->getCustomStyleRuleID()),
+			array('cID', 'cvID', 'arHandle'), true
+		);
+	}
+
 	function getMaximumBlocks() {return $this->maximumBlocks;}
 	
-	function getAreaUpdateAction($alternateHandler = null) {
+	function getAreaUpdateAction($task = 'update', $alternateHandler = null) {
 		$valt = Loader::helper('validation/token');
 		$token = '&' . $valt->getParameter();
 		$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
 		$c = $this->getAreaCollectionObject();
 		if ($alternateHandler) {
-			$str = $alternateHandler . "?atask=update&cID=" . $c->getCollectionID() . "&arHandle=" . $this->getAreaHandle() . $step . $token;
+			$str = $alternateHandler . "?atask={$task}&cID=" . $c->getCollectionID() . "&arHandle=" . $this->getAreaHandle() . $step . $token;
 		} else {
-			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?atask=update&cID=" . $c->getCollectionID() . "&arHandle=" . $this->getAreaHandle() . $step . $token;
+			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?atask=" . $task . "&cID=" . $c->getCollectionID() . "&arHandle=" . $this->getAreaHandle() . $step . $token;
 		}
 		return $str;
 	}
@@ -338,6 +379,8 @@ class Area extends Object {
 			$bv->renderElement('block_area_header', array('a' => $ourArea));	
 		}
 
+		$bv->renderElement('block_area_header_view', array('a' => $ourArea));	
+
 		foreach ($blocksToDisplay as $b) {
 			$bv = new BlockView();
 			$bv->setAreaObject($ourArea); 
@@ -372,6 +415,8 @@ class Area extends Object {
 				}
 			}
 		}
+
+		$bv->renderElement('block_area_footer_view', array('a' => $ourArea));	
 
 		if (($this->showControls) && ($c->isEditMode() && ($ap->canAddBlocks() || $u->isSuperUser()))) {
 			$bv->renderElement('block_area_footer', array('a' => $ourArea));	
