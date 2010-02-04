@@ -87,7 +87,7 @@
 							$b = $nb; 					
 						}			
 						
-						if ($_POST['reset_block_css']) {
+						if ($_POST['reset_css']) {
 							$b->resetBlockCustomStyle();
 						} else {
 							$csr = CustomStyleRule::add($_POST['css_id'], $_POST['css_class_name'], $_POST['css_custom'], $_POST);
@@ -221,6 +221,25 @@
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
 					exit;
 				}				
+				break;
+			case 'design':
+				$area = Area::get($c, $_GET['arHandle']);
+				$ap = new Permissions($area);
+				if ($ap->canWrite() ) {
+					Loader::model('custom_style');				
+					
+					$nvc = $c->getVersionToModify();
+					
+					if ($_POST['reset_css']) {
+						$area->resetAreaCustomStyle();
+					} else {
+						$csr = CustomStyleRule::add($_POST['css_id'], $_POST['css_class_name'], $_POST['css_custom'], $_POST);
+						$area->setAreaCustomStyle($csr);
+					}
+
+					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
+					exit;
+				}
 				break;
 		}
 	}

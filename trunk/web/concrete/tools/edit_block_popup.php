@@ -40,7 +40,10 @@ if (is_object($b)) {
 	switch($_REQUEST['btask']) {
 		case 'block_css': 		
 			if ($bp->canWrite()) {
-				$bv->renderElement('block_custom_css', array('b' => $b, 'rcID'=>$rcID, 'c' => $c, 'a' => $a) );
+				$style = $b->getBlockCustomStyleRule();
+				$action = $b->getBlockUpdateCssAction();
+
+				$bv->renderElement('custom_style', array('b' => $b, 'rcID'=>$rcID, 'c' => $c, 'a' => $a, 'style' => $style, 'action' => $action) );
 			}
 			break;	 
 		case 'template': 		
