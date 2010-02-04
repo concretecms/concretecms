@@ -231,10 +231,10 @@
 					$nvc = $c->getVersionToModify();
 					
 					if ($_POST['reset_css']) {
-						$area->resetAreaCustomStyle();
+						$nvc->resetAreaCustomStyle($area);
 					} else {
 						$csr = CustomStyleRule::add($_POST['css_id'], $_POST['css_class_name'], $_POST['css_custom'], $_POST);
-						$area->setAreaCustomStyle($csr);
+						$nvc->setAreaCustomStyle($area, $csr);
 					}
 
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);

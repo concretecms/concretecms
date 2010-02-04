@@ -100,47 +100,6 @@ class Area extends Object {
 		return (($this->maximumBlocks > $this->totalBlocks) || ($this->maximumBlocks == -1));
 	}
 
-	public function getAreaCustomStyleRule() {
-		$db = Loader::db();
-		$c = $this->getAreaCollectionObject();
-		
-		$csrID = $db->GetOne('select csrID from CollectionVersionAreaStyles where cID = ? and cvID = ? and arHandle = ?', array(
-			$this->cID, 
-			$c->getVersionID(),
-			$this->arHandle
-		));
-		
-		if ($csrID > 0) {
-			Loader::model('custom_style');
-			$csr = CustomStyleRule::getByID($csrID);
-			if (is_object($csr)) {
-				$csr->setCustomStyleNameSpace('areaStyle');
-				return $csr;
-			}
-		}
-	}
-
-	public function resetAreaCustomStyle() {
-		$db = Loader::db();
-		$c = $this->getAreaCollectionObject();
-		$cvID = $c->getVersionID();
-		$db->Execute('delete from CollectionVersionAreaStyles where cID = ? and cvID = ? and arHandle = ?', array(
-			$this->getCollectionID(),
-			$cvID,
-			$this->getAreaHandle()
-		));
-	}
-	
-	public function setAreaCustomStyle($csr) {
-		$db = Loader::db();
-		$c = $this->getAreaCollectionObject();
-		$cvID = $c->getVersionID();
-		$db->Replace('CollectionVersionAreaStyles', 
-			array('cID' => $this->getCollectionID(), 'cvID' => $cvID, 'arHandle' => $this->getAreaHandle(), 'csrID' => $csr->getCustomStyleRuleID()),
-			array('cID', 'cvID', 'arHandle'), true
-		);
-	}
-
 	function getMaximumBlocks() {return $this->maximumBlocks;}
 	
 	function getAreaUpdateAction($task = 'update', $alternateHandler = null) {
