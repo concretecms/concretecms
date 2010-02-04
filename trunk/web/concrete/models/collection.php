@@ -364,6 +364,42 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		$v->addHeaderItem("<style type=\"text/css\"> \r\n".$styleHeader.'</style>', 'VIEW');
 	}
 
+	public function getAreaCustomStyleRule($area) {
+		$db = Loader::db();
+		
+		$csrID = $db->GetOne('select csrID from CollectionVersionAreaStyles where cID = ? and cvID = ? and arHandle = ?', array(
+			$this->cID, 
+			$this->getVersionID(),
+			$area->getAreaHandle()
+		));
+		
+		if ($csrID > 0) {
+			Loader::model('custom_style');
+			$csr = CustomStyleRule::getByID($csrID);
+			if (is_object($csr)) {
+				$csr->setCustomStyleNameSpace('areaStyle');
+				return $csr;
+			}
+		}
+	}
+
+	public function resetAreaCustomStyle($area) {
+		$db = Loader::db();
+		$db->Execute('delete from CollectionVersionAreaStyles where cID = ? and cvID = ? and arHandle = ?', array(
+			$this->getCollectionID(),
+			$this->getVersionID(),
+			$area->getAreaHandle()
+		));
+	}
+	
+	public function setAreaCustomStyle($area, $csr) {
+		$db = Loader::db();
+		$db->Replace('CollectionVersionAreaStyles', 
+			array('cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'arHandle' => $area->getAreaHandle(), 'csrID' => $csr->getCustomStyleRuleID()),
+			array('cID', 'cvID', 'arHandle'), true
+		);
+	}
+	
 	function rescanDisplayOrder($areaName) {
 		// this collection function fixes the display order properties for all the blocks within the collection/area. We select all the items
 		// order by display order, and fix the sequence

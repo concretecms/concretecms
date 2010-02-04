@@ -28,7 +28,7 @@ switch($_GET['atask']) {
 		break;
 	case 'design':
 		$toolSection = 'custom_style';
-		$args['style'] = $a->getAreaCustomStyleRule();
+		$args['style'] = $c->getAreaCustomStyleRule($a);
 		$args['action'] = $a->getAreaUpdateAction('design');
 		$canViewPane = $ap->canWrite();
 		break;
