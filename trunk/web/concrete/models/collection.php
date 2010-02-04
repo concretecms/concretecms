@@ -367,11 +367,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	public function getAreaCustomStyleRule($area) {
 		$db = Loader::db();
 		
-		$csrID = $db->GetOne('select csrID from CollectionVersionAreaStyles where cID = ? and cvID = ? and arHandle = ?', array(
-			$this->cID, 
-			$this->getVersionID(),
-			$area->getAreaHandle()
-		));
+		$csrID = $this->vObj->customAreaStyles[$area->getAreaHandle()];
 		
 		if ($csrID > 0) {
 			Loader::model('custom_style');
@@ -390,6 +386,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$this->getVersionID(),
 			$area->getAreaHandle()
 		));
+		$this->refreshCache();
 	}
 	
 	public function setAreaCustomStyle($area, $csr) {
@@ -398,6 +395,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			array('cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'arHandle' => $area->getAreaHandle(), 'csrID' => $csr->getCustomStyleRuleID()),
 			array('cID', 'cvID', 'arHandle'), true
 		);
+		$this->refreshCache();
 	}
 	
 	function rescanDisplayOrder($areaName) {
