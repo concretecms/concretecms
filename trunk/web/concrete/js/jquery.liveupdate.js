@@ -46,8 +46,8 @@
 		
 		displayResults: function(scores) {
 			var self = this;
-			this.list.children('li').hide();
-			$.each(scores, function(i, score) { self.rows[score[1]].show(); });
+			this.list.children('li').removeClass('ccm-block-type-available');
+			$.each(scores, function(i, score) { self.rows[score[1]].addClass('ccm-block-type-available'); });
 		},
 		
 		getScores: function(term) {
