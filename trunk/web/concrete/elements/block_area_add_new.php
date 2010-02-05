@@ -128,8 +128,24 @@ ccmBlockTypeSearchResultsSelect = function(which, e) {
 		
 		var currObj = $("li.ccm-block-type-selected");
 		// handle scrolling
+		// this is buggy. needs fixing
+		/*
 		var currPos = currObj.position();
-		console.log(currPos);
+		var currDialog = currObj.parents('div.ccm-dialog-content');
+		var docViewTop = currDialog.scrollTop() + 80;
+		var docViewBottom = docViewTop + currDialog.innerHeight();
+	
+		var elemTop = currObj.offset().top;
+		var elemBottom = elemTop + currObj.innerHeight();
+
+		console.log(elemBottom);
+		console.log(docViewBottom);
+		if ((elemBottom - docViewBottom)) {
+			var cd = currDialog.get(0);
+			cd.scrollTop += 50;
+		}
+		*/
+
 	}	
 	return true;
 	
