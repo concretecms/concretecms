@@ -104,6 +104,7 @@ if (typeof(ccmBlockTypeBound) == 'undefined') {
 }
 ccmBlockTypeSearchResultsSelect = function(which, e) {
 	e.preventDefault();
+	e.stopPropagation();
 	$("input[name=ccmBlockTypeSearch]").blur();
 	// find the currently selected item
 	var obj = $("li.ccm-block-type-selected");
@@ -124,15 +125,33 @@ ccmBlockTypeSearchResultsSelect = function(which, e) {
 				$(prevObj[0]).addClass('ccm-block-type-selected');
 			}
 		}
+		
+		var currObj = $("li.ccm-block-type-selected");
+		// handle scrolling
+		var currPos = currObj.position();
+		console.log(currPos);
 	}	
-	return false;
+	return true;
 	
 }
 
 $(function() {
 	if (!ccmBlockTypeBound) {
 		ccmBlockTypeBound = true;
-		$(document.body).keydown(function(e) {
+		$(window).css('overflow', 'hidden');
+		$(window).keydown(function(e) {
+			if (e.keyCode == 9) {
+				e.stopPropagation();
+				e.preventDefault();
+				$("input[name=ccmBlockTypeSearch]").focus();
+				return true;
+			}
+			if (e.keyCode == 8) {
+				$("input[name=ccmBlockTypeSearch]").val('');
+				e.stopPropagation();
+				e.preventDefault();
+				return true;
+			}
 			if (e.keyCode == 40) {
 				ccmBlockTypeSearchResultsSelect('next', e);
 			} else if (e.keyCode == 38) {
