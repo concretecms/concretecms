@@ -115,13 +115,16 @@ ccmBlockTypeSearchResultsSelect = function(which, e) {
 	var obj = $("li.ccm-block-type-selected");
 	var foundblock = false;
 	if (obj.length == 0) {
-		$("#ccm-block-type-list li.ccm-block-type").each(function() {
-			if ($(this).css('display') != 'none' && (!foundblock)) {
-				foundblock = true;
-				$(this).addClass('ccm-block-type-selected');
-			}
-		});
-	}
+		$($("#ccm-block-type-list li.ccm-block-type-available")[0]).addClass('ccm-block-type-selected');
+	} else {
+		if (which == 'next') {
+			obj.removeClass('ccm-block-type-selected');
+			obj.next('li.ccm-block-type-available').addClass('ccm-block-type-selected');
+		} else if (which == 'previous') {
+			obj.removeClass('ccm-block-type-selected');
+			obj.prev('li.ccm-block-type-available').addClass('ccm-block-type-selected');
+		}
+	}	
 	return false;
 	
 }
