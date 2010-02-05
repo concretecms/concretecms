@@ -621,7 +621,10 @@ ccm_saveArrangement = function() {
 		for (i = 0; i < bArray.length; i++ ) {
 			if (bArray[i] != '' && bArray[i].substring(0, 1) == 'b') {
 				// make sure to only go from b to -, meaning b28-9 becomes "28"
-				serial += areaStr + bArray[i].substring(1, bArray[i].indexOf('-'));
+				var bID = bArray[i].substring(1, bArray[i].indexOf('-'));
+				var bObj = $('#' + bArray[i]);
+				bID += '-' + bObj.attr('custom-style');
+				serial += areaStr + bID;
 			}
 		}
 	});
