@@ -99,7 +99,10 @@ ccmBlockTypeSearchClear = function() {
 }
 
 var ccmLiveSearchActive = false;
-
+if (typeof(ccmBlockTypeBound) == 'undefined') {
+	alert('huh');
+	var ccmBlockTypeBound = false;
+}
 ccmBlockTypeSearchResultsSelect = function(which, e) {
 	e.preventDefault();
 	$("input[name=ccmBlockTypeSearch]").blur();
@@ -128,18 +131,21 @@ ccmBlockTypeSearchResultsSelect = function(which, e) {
 }
 
 $(function() {
-	$(document.body).keydown(function(e) {
-		if (e.keyCode == 40) {
-			ccmBlockTypeSearchResultsSelect('next', e);
-		} else if (e.keyCode == 38) {
-			ccmBlockTypeSearchResultsSelect('previous', e);
-		} else if (e.keyCode == 13) {
-			var obj = $("li.ccm-block-type-selected");
-			if (obj.length > 0) {
-				obj.find('a').click();
+	if (!ccmBlockTypeBound) {
+		ccmBlockTypeBound = true;
+		$(document.body).keydown(function(e) {
+			if (e.keyCode == 40) {
+				ccmBlockTypeSearchResultsSelect('next', e);
+			} else if (e.keyCode == 38) {
+				ccmBlockTypeSearchResultsSelect('previous', e);
+			} else if (e.keyCode == 13) {
+				var obj = $("li.ccm-block-type-selected");
+				if (obj.length > 0) {
+					obj.find('a').click();
+				}
 			}
-		}
-	}); 
+		}); 
+	}
 });
 
 </script>
