@@ -91,7 +91,7 @@ $('input[name=ccmBlockTypeSearch]').focus(function() {
 ccmBlockTypeSearchFormCheckResults = function() {
 	var num = 0;
 	var vobj = false;
-	$("#ccm-block-type-list li").each(function() {
+	$("#ccm-block-type-list li.ccm-block-type").each(function() {
 		if ($(this).css('display') != 'none' && vobj == false) {
 			vobj = $(this);
 		}
@@ -109,7 +109,31 @@ ccmBlockTypeSearchClear = function() {
 
 var ccmLiveSearchActive = false;
 
+ccmBlockTypeSearchResultsSelect = function(which, e) {
+	e.preventDefault();
+	// find the currently selected item
+	var obj = $("li.ccm-block-type-selected");
+	var foundblock = false;
+	if (obj.length == 0) {
+		$("#ccm-block-type-list li.ccm-block-type").each(function() {
+			if ($(this).css('display') != 'none' && (!foundblock)) {
+				foundblock = true;
+				$(this).addClass('ccm-block-type-selected');
+			}
+		});
+	}
+	return false;
+	
+}
+
 $(function() {
+	$(document.body).keydown(function(e) {
+		if (e.keyCode == 40) {
+			ccmBlockTypeSearchResultsSelect('next', e);
+		} else if (e.keyCode == 38) {
+			ccmBlockTypeSearchResultsSelect('previous', e);
+		}
+	}); 
 });
 
 </script>
@@ -126,7 +150,7 @@ $(function() {
 	<div class="ccm-block-type-search-wrapper">
 		<form onsubmit="return ccmBlockTypeSearchFormCheckResults()">
 		<div class="ccm-block-type-search">
-		<?=$form->text('ccmBlockTypeSearch', t('Search'), array('autocomplete' => 'off', 'style' => 'width: 168px'))?>
+		<?=$form->text('ccmBlockTypeSearch', t('Search'), array('tabindex' => 1, 'autocomplete' => 'off', 'style' => 'width: 168px'))?>
 		<a href="javascript:void(0)" id="ccm-block-type-clear-search" onclick="ccmBlockTypeSearchClear()"><img width="16" height="16" src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" border="0" style="vertical-align: middle" /></a>
 		</div>
 		<div class="ccm-block-type-filter">
