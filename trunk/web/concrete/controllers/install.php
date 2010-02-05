@@ -445,6 +445,7 @@ class InstallController extends Controller {
 						$d9c = SinglePage::add('/dashboard/system/update');
 						$d10 = SinglePage::add('/dashboard/settings');
 						$d11 = SinglePage::add('/dashboard/settings/mail');
+						$d12 = SinglePage::add('/dashboard/settings/marketplace');
 						
 						
 						// add home page

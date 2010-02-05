@@ -49,41 +49,46 @@ class CustomStyleRule extends Object {
 		foreach($styles as $key=>$val){
 			if( !trim($key) ) continue;
 			switch($key){ 					
-				case 'border_position';	
-				case 'border_color';	
-				case 'border_style';	
+				case 'border_position':	
+				case 'border_color':	
+				case 'border_style':	
 					$tempStyles[$key]=$val;
 					break;					
 								
-				case 'border_width';
-				case 'padding_left';
-				case 'padding_top';
-				case 'padding_right';
-				case 'padding_bottom';
-				case 'margin_left';
-				case 'margin_top';
-				case 'margin_right';
-				case 'margin_bottom';				
+				case 'border_width':
+				case 'padding_left':
+				case 'padding_top':
+				case 'padding_right':
+				case 'padding_bottom':
+				case 'margin_left':
+				case 'margin_top':
+				case 'margin_right':
+				case 'margin_bottom':				
 					if( !strlen(trim($val)) ) $val=0;
 					if( strlen(trim($val))==strlen(intval($val)) && intval($val) )
 						$val=intval($val).'px';
 					$tempStyles[$key]=$val;
 					break;
 					
-				case 'line_height';	
-				case 'font_size';	
+				case 'line_height':	
+				case 'font_size':	
 					if( !strlen(trim($val)) || !$val ) continue; 
 					if( strlen(trim($val))==strlen(intval($val)) && intval($val) )
 						$val=intval($val).'px';					
 					$stylesStr.=str_replace('_','-',$key).':'.$val.'; ';
 					break;
 				
-				case 'font_family';						
+				case 'font_family':						
 					if( $val=='inherit' ) continue;
 					$val=self::$fontFamilies[$val];
 					$stylesStr.=str_replace('_','-',$key).':'.$val.'; ';
 					break;
-					
+				case 'background_image':
+					if ($val > 0) {
+						$bf = File::getByID($val);
+						$stylesStr.=str_replace('_','-',$key).': url(\'' . $bf->getRelativePath() . '\'); ';
+					}
+					break;
 				default:
 					if( !strlen(trim($val)) ) continue;
 					$stylesStr.=str_replace('_','-',$key).':'.$val.'; ';
@@ -118,7 +123,7 @@ class CustomStyleRule extends Object {
 	
 		$styleKeys=array('font_family','color','font_size','line_height','text_align','background_color','border_style',
 			'border_color','border_width','border_position','margin_top','margin_right','margin_bottom','margin_left',
-			'padding_top','padding_right','padding_bottom','padding_left');
+			'padding_top','padding_right','padding_bottom','padding_left', 'background_image', 'background_repeat');
 			
 		$cssDataRaw=array();
 		foreach($styleKeys as $styleKey){
