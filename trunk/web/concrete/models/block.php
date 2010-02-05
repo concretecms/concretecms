@@ -499,6 +499,9 @@ class Block extends Object {
 		}
 	}
 	
+	public function getBlockCustomStyleRuleID() {return $this->csrID;}
+	
+	
 	public function resetBlockCustomStyle() {
 		$db = Loader::db();
 		$c = $this->getBlockCollectionObject();
