@@ -100,7 +100,6 @@ ccmBlockTypeSearchClear = function() {
 
 var ccmLiveSearchActive = false;
 if (typeof(ccmBlockTypeBound) == 'undefined') {
-	alert('huh');
 	var ccmBlockTypeBound = false;
 }
 ccmBlockTypeSearchResultsSelect = function(which, e) {
