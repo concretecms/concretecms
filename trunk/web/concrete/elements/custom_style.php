@@ -5,7 +5,7 @@ global $c;?>
 $txt = Loader::helper('text');
 $form = Loader::helper('form');
 $fh = Loader::helper('form/color'); 
-
+$ah = Loader::helper("concrete/asset_library");
 
 if (isset($_REQUEST['cspID']) && $_REQUEST['cspID'] > 0) {
 	$csp = CustomStylePreset::getByID($_REQUEST['cspID']);
@@ -169,9 +169,7 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 					</select>
 					</td>
 
-					<td>
-						<?=t('Color')?>
-					</td>
+					<td><?=t('Color')?></td>
 					<td>
 					<?=$fh->output( 'border_color', '', $cssData['border_color']) ?> 
 					</td> 
@@ -179,8 +177,26 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 			</table>	  
 		</div>		
 		<div class="ccm-block-field-group">
-		  <h2><?php echo t('Background')?></h2> 		
-		  <?=$fh->output( 'background_color', '', $cssData['background_color']) ?> 
+		  <h2><?php echo t('Background')?></h2> 
+		  <table border="0" cellspacing="0" cellpadding="0" class="ccm-style-property-table">
+		  <tr>
+		  	<td><?=$fh->output( 'background_color', '', $cssData['background_color']) ?></td>
+		  	<? 
+		  	$bf = false;
+		  	if ($cssData['background_image'] > 0) {
+		  		$bf = File::getByID($cssData['background_image']);
+		  	} ?>
+		  	<td><?=$ah->image('background_image', 'background_image', t('Background Image'), $bf)?></td>
+		  </tr>
+		  <tr>
+		  	<td>&nbsp;</td>
+		  	<td><strong>Repeat</strong>:<br/>
+		  	<input type="radio" value="no-repeat" name="background_repeat" <? if ($cssData['background_repeat'] == 'no-repeat' || !$cssData['backgroundImageRepeat']) { ?> checked <? } ?> /> None
+		  	<input type="radio" value="repeat-x" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat-x') { ?> checked <? } ?> /> Horizontal
+		  	<input type="radio" value="repeat-y" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat-y') { ?> checked <? } ?>/> Vertical
+		  	<input type="radio" value="repeat" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat') { ?> checked <? } ?>/> All
+		  	
+		  </table>
 		  <div class="ccm-spacer"></div>
 		</div>
 		

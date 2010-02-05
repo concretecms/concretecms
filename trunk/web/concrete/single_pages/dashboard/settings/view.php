@@ -505,25 +505,34 @@ $(document).ready(function(){
 <form method="post" id="marketplace-support-form" action="<?=$this->url('/dashboard/settings', 'update_marketplace_support')?>" enctype="multipart/form-data" >
 	<?=$this->controller->token->output('update_marketplace_support')?>
 
-	<h1><span><?=t('Marketplace Integration')?> </span></h1>
+	<h1><span><?=t('Connect to Community')?> </span></h1>
 	
 	<div class="ccm-dashboard-inner">	
 		 
-		<? if( MARKETPLACE_CONFIG_OVERRIDE ){ ?>
+		<? if(defined('ENABLE_MARKETPLACE_SUPPORT') && ENABLE_MARKETPLACE_SUPPORT == FALSE ){ ?>
 		
-			<div class="ccm-dashboard-description"><?=t("The marketplace has been manually set in the site's configuration files.")?></div>
+			<div class="ccm-dashboard-description"><?=t("The marketplace has been manually disabled in the site's configuration files.")?></div>
 		
-		<? }else{ ?>
+		<? }else { ?>
 				
-			<div class="ccm-dashboard-radio"><?=$form->checkbox('MARKETPLACE_ENABLED', 1, $marketplace_enabled_in_config)?> <?=t('Marketplace Enabled')?></div>
-			<div class="ccm-dashboard-description"><?= t("Show me themes and add-ons available for Concrete5.") ?></div>
+			<? 
+			Loader::library('marketplace');
+			if (Marketplace::isConnected()) { ?>
+				
+				<?=t('Your site is currently connect to the concrete5 community.')?>
 			
 			<?
-			$b1 = $h->submit( t('Save'), 'marketplace-support-form');
-			print $h->buttons($b1);
-			?> 
+			
+			} else { ?>
+			
+				<?=t('Your site is <strong>not</strong> connected to the concrete5 community.')?>
+				<br/><br/>
+				<? print $h->button(t('Connect to Community'), $this->url('/dashboard/settings/marketplace'))?>
+				
+				<?			
+			}
 		
-		<? } ?>
+		 } ?>
 		<br class="clear" />
 	</div>
 </form>
