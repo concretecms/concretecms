@@ -89,28 +89,20 @@ $('input[name=ccmBlockTypeSearch]').focus(function() {
 });
 
 ccmBlockTypeSearchFormCheckResults = function() {
-	var num = 0;
-	var vobj = false;
-	$("#ccm-block-type-list li.ccm-block-type").each(function() {
-		if ($(this).css('display') != 'none' && vobj == false) {
-			vobj = $(this);
-		}
-	});
-
-	if (vobj != false) {
-		vobj.find('a').click();
-	}
+	return false;
 }
 
 ccmBlockTypeSearchClear = function() {
 	$("input[name=ccmBlockTypeSearch]").val('');
-	$("#ccm-block-type-list li").show();
+	$("#ccm-block-type-list li.ccm-block-type").addClass("ccm-block-type-available");
+	$("#ccm-block-type-list li.ccm-block-type").removeClass("ccm-block-type-selected");
 }
 
 var ccmLiveSearchActive = false;
 
 ccmBlockTypeSearchResultsSelect = function(which, e) {
 	e.preventDefault();
+	$("input[name=ccmBlockTypeSearch]").blur();
 	// find the currently selected item
 	var obj = $("li.ccm-block-type-selected");
 	var foundblock = false;
@@ -118,11 +110,17 @@ ccmBlockTypeSearchResultsSelect = function(which, e) {
 		$($("#ccm-block-type-list li.ccm-block-type-available")[0]).addClass('ccm-block-type-selected');
 	} else {
 		if (which == 'next') {
-			obj.removeClass('ccm-block-type-selected');
-			obj.next('li.ccm-block-type-available').addClass('ccm-block-type-selected');
+			var nextObj = obj.nextAll('li.ccm-block-type-available');
+			if (nextObj.length > 0) {
+				obj.removeClass('ccm-block-type-selected');
+				$(nextObj[0]).addClass('ccm-block-type-selected');
+			}
 		} else if (which == 'previous') {
-			obj.removeClass('ccm-block-type-selected');
-			obj.prev('li.ccm-block-type-available').addClass('ccm-block-type-selected');
+			var prevObj = obj.prevAll('li.ccm-block-type-available');
+			if (prevObj.length > 0) {
+				obj.removeClass('ccm-block-type-selected');
+				$(prevObj[0]).addClass('ccm-block-type-selected');
+			}
 		}
 	}	
 	return false;
@@ -135,6 +133,11 @@ $(function() {
 			ccmBlockTypeSearchResultsSelect('next', e);
 		} else if (e.keyCode == 38) {
 			ccmBlockTypeSearchResultsSelect('previous', e);
+		} else if (e.keyCode == 13) {
+			var obj = $("li.ccm-block-type-selected");
+			if (obj.length > 0) {
+				obj.find('a').click();
+			}
 		}
 	}); 
 });

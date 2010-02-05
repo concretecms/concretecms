@@ -29,7 +29,11 @@
 		},
 		
 		filter: function() {
-			if ($.trim(this.field.val()) == '') { this.list.children('li').show(); return; }
+			if ($.trim(this.field.val()) == '') { 
+				this.list.children('li').addClass('ccm-block-type-available'); 
+				this.list.children('li').removeClass('ccm-block-type-selected'); 
+				return; 
+			}
 			this.displayResults(this.getScores(this.field.val().toLowerCase()));
 		},
 		
@@ -47,7 +51,9 @@
 		displayResults: function(scores) {
 			var self = this;
 			this.list.children('li').removeClass('ccm-block-type-available');
+			this.list.children('li').removeClass('ccm-block-type-selected');
 			$.each(scores, function(i, score) { self.rows[score[1]].addClass('ccm-block-type-available'); });
+			$(this.list.find('li.ccm-block-type-available')[0]).addClass('ccm-block-type-selected');
 		},
 		
 		getScores: function(term) {
