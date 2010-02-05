@@ -178,22 +178,35 @@ div.ccm-editor-controls ul li a:hover {text-decoration: underline}
 div.ccm-summary-selected-item {border: 1px solid #dedede; margin-top: 8px; margin-bottom: 8px; padding: 10px}
 
 /* blocks */
-div.ccm-block-field-group {margin-bottom: 10px; border-bottom: 1px dotted #aaa; padding-bottom: 10px}
+div.ccm-block-field-group {margin-bottom: 10px; border-bottom: 1px dotted #aaa; padding-bottom: 10px}rou
 div.ccm-block-field-group h2 {margin-bottom: 6px}
 
-div#ccm-block-type-list {padding-top: 2px}
-div.ccm-block-type a.ccm-block-type-help {float:right; margin-right:10px; margin-top:10px; position: static; text-decoration:none; }
-div.ccm-block-type a.ccm-scrapbook-delete {top: 8px; right: 10px; position: absolute}
-div.ccm-block-type a.ccm-block-type-inner, div.ccm-block-type p.ccm-block-type-inner, div.ccm-block-type div.ccm-block-type-inner {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
-div.ccm-block-type a.ccm-block-type-inner-nobkgd, div.ccm-block-type p.ccm-block-type-inner-nobkgd, div.ccm-block-type div.ccm-block-type-inner-nobkgd {color: #666; display: block; font-size: 14px; text-decoration: none; border: 1px solid #fff}
-div.ccm-block-type p.ccm-block-type-inner {margin: 0px}
-div.ccm-block-type a.ccm-block-type-inner:hover {background-color: #d9e7ff; border: 1px solid #94a7c7}
-div.ccm-block-type {position: static; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px; left:0px; top:0px; width:auto; height:auto;}
-div.ccm-block-type div.ccm-block-type-description {display: none; padding-left: 30px; color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
-div.ccm-block-type.ccm-external-block-type div.ccm-block-price{ float:right; margin:10px 10px 0px 10px; font-weight: bold; color: #205334; text-transform: uppercase}
-div.ccm-block-type.ccm-external-block-type div.ccm-block-type-description{display:block; padding-left: 0px;}
+ul#ccm-block-type-list {padding: 2px 0px 0px 0px; margin: 0px}
+ul#ccm-block-type-list li {margin-left: 0px; list-style-type: none}
+li.ccm-block-type a.ccm-block-type-help {float:right; margin-right:10px; margin-top:10px; position: static; text-decoration:none; }
+li.ccm-block-type a.ccm-scrapbook-delete {top: 8px; right: 10px; position: absolute}
+li.ccm-block-type a.ccm-block-type-inner, li.ccm-block-type p.ccm-block-type-inner, li.ccm-block-type li.ccm-block-type-inner {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
+li.ccm-block-type a.ccm-block-type-inner-nobkgd, li.ccm-block-type p.ccm-block-type-inner-nobkgd, li.ccm-block-type li.ccm-block-type-inner-nobkgd {color: #666; display: block; font-size: 14px; text-decoration: none; border: 1px solid #fff}
+li.ccm-block-type p.ccm-block-type-inner {margin: 0px}
+li.ccm-block-type a.ccm-block-type-inner:hover {background-color: #d9e7ff; border: 1px solid #94a7c7}
+li.ccm-block-type {position: static; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px; left:0px; top:0px; width:auto; height:auto;}
+li.ccm-block-type div.ccm-block-type-description {display: none; padding-left: 30px; color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
+li.ccm-block-type.ccm-external-block-type li.ccm-block-price{ float:right; margin:10px 10px 0px 10px; font-weight: bold; color: #205334; text-transform: uppercase}
+li.ccm-block-type.ccm-external-block-type li.ccm-block-type-description{display:block; padding-left: 0px;}
  
 table.ccm-block-type-table {border-collapse: collapse;width: 100%}
 table.ccm-block-type-table div.ccm-block-type-inner {color: #666; display: block; font-size: 14px; text-decoration: none; border: 1px solid #fff}
 table.ccm-block-type-table div.ccm-block-type-description {color: #aaa; font-size: 12px; padding-top: 10px}
 table.ccm-block-type-table td {padding: 8px 2px 8px; border-bottom: 1px solid #DEDEDE}
+
+/* block type grid */
+
+/*
+div#ccm-block-type-grid div.ccm-block-type-grid-entry a {width: 60px; height: 30px; margin-right: 10px; margin-bottom: 10px; overflow: hidden; float: left; border: 1px solid #d7d7d7; -webkit-border-radius: 4px; -moz-border-radius: 4px; text-decoration: none; display: block; padding: 30px 4px 4px 4px; text-align: center;  background-color: #fff; background-repeat: no-repeat; background-position: center 10px}
+div#ccm-block-type-grid div.ccm-block-type-grid-entry a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7} */
+
+
+div.ccm-block-type-search-wrapper {margin-top: 12px}
+div.ccm-block-type-search {margin-left: 10px}
+div.ccm-block-type-search input.ccm-input-text {color: #aaa}
+a#ccm-block-type-clear-search {margin-left: 2px; display: none}

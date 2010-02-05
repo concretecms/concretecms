@@ -4,10 +4,17 @@ $btl = $a->getAddBlockTypes($c, $ap );
 $blockTypes = $btl->getBlockTypeList();
 $ci = Loader::helper('concrete/urls');
 $ch = Loader::helper('concrete/interface');
+$form = Loader::helper('form');
 
 ?>
 
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/quicksilver.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.liveupdate.js"></script>
+
+
 <script type="text/javascript">
+<? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
+
 ccm_isRemotelyLoggedIn = '<?=UserInfo::isRemotelyLoggedIn()?>';
 ccm_remoteUID = <?=UserInfo::getRemoteAuthUserId() ?>;
 ccm_remoteUName = '<?=UserInfo::getRemoteAuthUserName()?>';
@@ -65,7 +72,48 @@ $("#ccm-area-tabs a").click(function() {
 $(document).ready(function(){
 	ccm_updateMarketplaceTab();
 });
+
+<? } ?>
+
+$('input[name=ccmBlockTypeSearch]').focus(function() {
+	if ($(this).val() == '<?=t("Search")?>') {
+		$(this).val('');
+	}
+	$(this).css('color', '#000');
+
+	if (!ccmLiveSearchActive) {
+		$('#ccmBlockTypeSearch').liveUpdate('ccm-block-type-list');
+		ccmLiveSearchActive = true;
+		$("#ccm-block-type-clear-search").show();
+	}
+});
+
+ccmBlockTypeSearchFormCheckResults = function() {
+	var num = 0;
+	var vobj = false;
+	$("#ccm-block-type-list li").each(function() {
+		if ($(this).css('display') != 'none' && vobj == false) {
+			vobj = $(this);
+		}
+	});
+
+	if (vobj != false) {
+		vobj.find('a').click();
+	}
+}
+
+ccmBlockTypeSearchClear = function() {
+	$("input[name=ccmBlockTypeSearch]").val('');
+	$("#ccm-block-type-list li").show();
+}
+
+var ccmLiveSearchActive = false;
+
+$(function() {
+});
+
 </script>
+
 
 <? if (ENABLE_MARKETPLACE_SUPPORT && $_REQUEST['addOnly'] != 1) { ?>
 <ul class="ccm-dialog-tabs" id="ccm-area-tabs">
@@ -75,22 +123,41 @@ $(document).ready(function(){
 <? } ?>
 
 <div id="ccm-add-tab">
-	<h1><?=t('Add New Block')?></h1>
-	<div id="ccm-block-type-list">
+	<div class="ccm-block-type-search-wrapper">
+		<form onsubmit="return ccmBlockTypeSearchFormCheckResults()">
+		<div class="ccm-block-type-search">
+		<?=$form->text('ccmBlockTypeSearch', t('Search'), array('autocomplete' => 'off', 'style' => 'width: 168px'))?>
+		<a href="javascript:void(0)" id="ccm-block-type-clear-search" onclick="ccmBlockTypeSearchClear()"><img width="16" height="16" src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" border="0" style="vertical-align: middle" /></a>
+		</div>
+		<div class="ccm-block-type-filter">
+		
+		</div>
+		</form>
+		
+	</div>
+	
+	<ul id="ccm-block-type-list">
 	<? if (count($blockTypes) > 0) { 
 		foreach($blockTypes as $bt) { 
 			$btIcon = $ci->getBlockTypeIconURL($bt);
 			?>	
-			<div class="ccm-block-type">
+			<li class="ccm-block-type">
 				<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescription(<?=$bt->getBlockTypeID()?>)" title="<?=t('Learn more about this block type.')?>" id="ccm-bt-help-trigger<?=$bt->getBlockTypeID()?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/help.png" width="14" height="14" /></a>
 				<a class="dialog-launch ccm-block-type-inner" dialog-modal="false" dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" style="background-image: url(<?=$btIcon?>)" dialog-title="<?=t('Add')?> <?=$bt->getBlockTypeName()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/add_block_popup.php?cID=<?=$c->getCollectionID()?>&btID=<?=$bt->getBlockTypeID()?>&arHandle=<?=$a->getAreaHandle()?>"><?=$bt->getBlockTypeName()?></a>
 				<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>"><?=$bt->getBlockTypeDescription()?></div>
-			</div>
+			</li>
+			<?
+			
+			/* ?>	
+			<div class="ccm-block-type-grid-entry">
+				<a class="dialog-launch ccm-block-type-inner" dialog-modal="false" dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" style="background-image: url(<?=$btIcon?>)" dialog-title="<?=t('Add')?> <?=$bt->getBlockTypeName()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/add_block_popup.php?cID=<?=$c->getCollectionID()?>&btID=<?=$bt->getBlockTypeID()?>&arHandle=<?=$a->getAreaHandle()?>"><?=$bt->getBlockTypeName()?></a>
+			</div> <? */ ?>
+			
 		<? }
 	} else { ?>
 		<p><?=t('No block types can be added to this area.')?></p>
 	<? } ?>
-	</div>
+	</ul>
 </div>
 
 <? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
