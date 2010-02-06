@@ -247,8 +247,8 @@ jQuery.fn.dialog.close = function(fnd) {
 		jQuery.fn.dialog.activate(jQuery.fn.dialog.totalDialogs-1);
 	}
 
-	document.onkeydown = "";
-	document.onkeyup = ""; 
+	//document.onkeydown = "";
+	//document.onkeyup = ""; 
 	ccm_dialogOpen=0;
 
 	if (typeof fnd.onDestroy != "undefined") {
