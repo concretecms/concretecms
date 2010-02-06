@@ -9,8 +9,11 @@ if (!$sh->canRead()) {
 $args = $_REQUEST;
 $args['reveal'] = $_REQUEST['cID'];
 $args['sitemapCombinedMode'] = $sitemapCombinedMode;
-if (!isset($args['sitemap_mode'])) {
-	$args['sitemap_mode'] = 'move_copy_delete';
+if (!isset($args['select_mode'])) {
+	$args['select_mode'] = 'select_mode';
 }
+
+$args['display_mode'] = 'full';
+$args['instance_id'] = time();
 Loader::element('dashboard/sitemap', $args);
 ?>

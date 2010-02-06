@@ -61,5 +61,5 @@ if ($_REQUEST['mode'] == 'move_copy_delete') {
 }
 
 $js = Loader::helper('json');
-print $dh->outputRequestHTML($_REQUEST['mode'], $nodes);
+print $dh->outputRequestHTML($_REQUEST['instance_id'], $_REQUEST['display_mode'], $_REQUEST['select_mode'], $nodes);
 $dh->clearOneTimeActiveNodes();

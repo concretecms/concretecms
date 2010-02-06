@@ -10,7 +10,9 @@ class DashboardSitemapExploreController extends Controller {
 			$this->addHeaderItem(Loader::helper('html')->javascript('ccm.sitemap.js'));
 			
 			$nodes = $dh->getSubNodes($nodeID, 1, false, false);
-			$this->set('listHTML', $dh->outputRequestHTML('explore', $nodes));
+			$instanceID = time();
+			$this->set('listHTML', $dh->outputRequestHTML($instanceID, 'explore', false, $nodes));
+			$this->set('instanceID', $instanceID);
 		}
 		$this->set('dh', $dh);
 	}

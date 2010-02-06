@@ -15,17 +15,17 @@ if (isset($_REQUEST['reveal'])) {
 }
 
 $nodes = $sh->getSubNodes(0, 1, false, true);
-$listHTML = $sh->outputRequestHTML('full', $nodes);
+$instanceID = time();
+$listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 
 ?>
 
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.sitemap.css";</style>
 
-
 <script type="text/javascript">
 	var CCM_LAUNCHER_SITEMAP = 'full';
 	$(function() {
-		ccmSitemapLoad('full');
+		ccmSitemapLoad('<?=$instanceID?>', 'full');
 	});
 </script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.sitemap.js"></script>
@@ -43,7 +43,7 @@ $listHTML = $sh->outputRequestHTML('full', $nodes);
 		<td style="width: 100%" valign="top">
 		
 		<div id="tree">
-			<ul id="tree-root0" tree-root-node-id="0" sitemap-mode="full">
+			<ul id="tree-root0" tree-root-node-id="0" sitemap-mode="full" sitemap-instance-id="<?=$instanceID?>">
 			<?=$listHTML?>
 			</ul>
 		</div>
