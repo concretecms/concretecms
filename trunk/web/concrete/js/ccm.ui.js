@@ -986,7 +986,9 @@ var ccmCustomStyle = {
 		if (cspID > 0) {
 			var action = $('#ccm-custom-style-refresh-action').val() + '&deleteCspID=' + cspID + '&subtask=delete_custom_style_preset';
 			jQuery.fn.dialog.showLoader();
-			$("#ccm-custom-style-wrapper").load(action, function() {
+			
+			$.get(action, function(r) {
+				$("#ccm-custom-style-wrapper").html(r);
 				jQuery.fn.dialog.hideLoader();
 			});
 		}
