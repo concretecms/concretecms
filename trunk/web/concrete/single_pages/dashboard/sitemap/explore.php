@@ -5,7 +5,7 @@
 CCM_LAUNCHER_SITEMAP = 'explore'; // we need this for when we are moving and copying
 
 $(function() {
-	ccmSitemapLoad('explore');
+	ccmSitemapLoad('<?=$instanceID?>', 'explore');
 });
 </script>
 
@@ -17,7 +17,7 @@ $(function() {
 		<div id="ccm-sitemap-message"></div>
 	
 		<div id="tree" class="ccm-sitemap-explore">
-			<ul id="tree-root0" tree-root-node-id="0" sitemap-mode="explore" >
+			<ul id="tree-root0" tree-root-node-id="0" sitemap-display-mode="explore" sitemap-instance-id="<?=$instanceID?>">
 			<?=$listHTML?>
 			</ul>
 		</div>

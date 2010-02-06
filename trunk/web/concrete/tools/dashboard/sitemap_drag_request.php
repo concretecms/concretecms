@@ -82,11 +82,11 @@ if (!$error) {
 	}
 }
 
-
 if ($successMessage) {
 	$json['error'] = false;
 	$json['message'] = $successMessage;
 	$json['cID'] = $newCID;
+	$json['instance_id'] = $_REQUEST['instance_id'];
 	$js = Loader::helper('json');
 	print $js->encode($json);
 	exit;
@@ -113,6 +113,7 @@ if ($successMessage) {
 		<input type="hidden" name="origCID" id="origCID" value="<?=$_REQUEST['origCID']?>" />
 		<input type="hidden" name="destParentID" id="destParentID" value="<?=$dc->getCollectionParentID()?>" />
 		<input type="hidden" name="destCID" id="destCID" value="<?=$_REQUEST['destCID']?>" />
+		<input type="hidden" name="instance_id" id="instance_id" value="<?=$_REQUEST['instance_id']?>" />
 
 		<input type="radio" checked style="vertical-align: middle" id="ctaskMove" name="ctask" value="MOVE" onclick="toggleMove()" />
 		<strong><?=t('Move')?></strong> "<?=$oc->getCollectionName()?>" <?=t('beneath')?> "<?=$dc->getCollectionName()?>"
