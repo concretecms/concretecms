@@ -71,7 +71,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$cID = $this->getCollectionID();
 			$cvID = $vObj->getVersionID();
 			$q = "select bID, arHandle from CollectionVersionBlocks where cID = '$cID' and cvID = '$cvID' and cbIncludeAll=0 order by cbDisplayOrder asc";
-		//	echo $q;
 			$r = $db->query($q);
 			if ($r) {
 				while ($row = $r->fetchRow()) {
@@ -83,6 +82,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 						$b->alias($nc);
 					}
 				}
+			}
+			
+			// duplicate any area styles
+			$q = "select csrID, arHandle from CollectionVersionAreaStyles where cID = '$cID' and cvID = '$cvID'";
+			$r = $db->query($q);
+			while ($row = $r->FetchRow()) {
+				$db->Execute('insert into CollectionVersionAreaStyles (cID, cvID, arHandle, csrID) values (?, ?, ?, ?)', array(
+					$this->getCollectionID(),
+					$nvObj->getVersionID(),
+					$row['arHandle'],
+					$row['csrID']
+				));
 			}
 
 			// now that we've duplicated all the blocks for the collection, we return the new
