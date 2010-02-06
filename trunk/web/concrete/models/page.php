@@ -1460,6 +1460,12 @@ $ppWhere = '';
 		return round($this->cIndexScore, 2);
 	}
 
+	public function getPageIndexContent() {
+		$db = Loader::db();
+		return $db->GetOne('select content from PageSearchIndex where cID = ?', array($this->cID));
+	}
+
+
 	function rescanCollectionPathChildren($cID, $cPath) {
 		$db = Loader::db();
 		$q = "select cID from Pages where cParentID = $cID";
