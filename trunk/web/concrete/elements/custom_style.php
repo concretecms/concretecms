@@ -59,14 +59,15 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 	<input type="hidden" name="selectedCsrID" value="<?=$selectedCsrID?>" />
 	<ul id="ccm-styleEditPane-tabs" class="ccm-dialog-tabs" style="margin-bottom:16px; margin-top:4px;">
 		<li class="ccm-nav-active"><a id="ccm-styleEditPane-tab-fonts" href="#" onclick="return ccmCustomStyle.tabs(this,'fonts');"><?=t('Fonts') ?></a></li>
-		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'region');"><?=t('Region') ?></a></li>
+		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'background');"><?=t('Background') ?></a></li>
+		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'border');"><?=t('Border') ?></a></li>
 		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'spacing');"><?=t('Spacing') ?></a></li>
 		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'css');"><?=t('CSS')?></a></li> 
 	</ul>		
 	
 	<div id="ccm-styleEditPane-fonts" class="ccm-styleEditPane">	
-		<div class="ccm-block-field-group"> 
-			<h2><?php echo t('Fonts')?></h2> 
+		<div>
+		<h2><?php echo t('Fonts')?></h2> 
 			<table class="ccm-style-property-table" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td>
@@ -124,9 +125,37 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 		</div> 
 	</div>	
 	
-	<div id="ccm-styleEditPane-region" class="ccm-styleEditPane" style="display:none">
+	<div id="ccm-styleEditPane-background" class="ccm-styleEditPane" style="display:none">
+		<div>
+		<h2><?php echo t('Background')?></h2> 
+		  <table border="0" cellspacing="0" cellpadding="0" class="ccm-style-property-table">
+		  <tr>
+		  	<td><?=$fh->output( 'background_color', '', $cssData['background_color']) ?></td>
+		  	<? 
+		  	$bf = false;
+		  	if ($cssData['background_image'] > 0) {
+		  		$bf = File::getByID($cssData['background_image']);
+		  	} ?>
+		  	<td><?=$ah->image('background_image', 'background_image', t('Background Image'), $bf)?></td>
+		  </tr>
+		  <tr>
+		  	<td>&nbsp;</td>
+		  	<td><strong>Repeat</strong>:<br/>
+		  	<input type="radio" value="no-repeat" name="background_repeat" <? if ($cssData['background_repeat'] == 'no-repeat' || !$cssData['backgroundImageRepeat']) { ?> checked <? } ?> /> None
+		  	<input type="radio" value="repeat-x" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat-x') { ?> checked <? } ?> /> Horizontal
+		  	<input type="radio" value="repeat-y" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat-y') { ?> checked <? } ?>/> Vertical
+		  	<input type="radio" value="repeat" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat') { ?> checked <? } ?>/> All
+		  	
+		  </table>
+		  <div class="ccm-spacer"></div>
+		</div>
+			
+	</div>
 	
-		<div class="ccm-block-field-group">
+	
+	<div id="ccm-styleEditPane-border" class="ccm-styleEditPane" style="display:none">
+	
+		<div>
 		  <h2><?php echo t('Border')?></h2>  
 			<table class="ccm-style-property-table" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -176,35 +205,12 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 				</tr>
 			</table>	  
 		</div>		
-		<div class="ccm-block-field-group">
-		  <h2><?php echo t('Background')?></h2> 
-		  <table border="0" cellspacing="0" cellpadding="0" class="ccm-style-property-table">
-		  <tr>
-		  	<td><?=$fh->output( 'background_color', '', $cssData['background_color']) ?></td>
-		  	<? 
-		  	$bf = false;
-		  	if ($cssData['background_image'] > 0) {
-		  		$bf = File::getByID($cssData['background_image']);
-		  	} ?>
-		  	<td><?=$ah->image('background_image', 'background_image', t('Background Image'), $bf)?></td>
-		  </tr>
-		  <tr>
-		  	<td>&nbsp;</td>
-		  	<td><strong>Repeat</strong>:<br/>
-		  	<input type="radio" value="no-repeat" name="background_repeat" <? if ($cssData['background_repeat'] == 'no-repeat' || !$cssData['backgroundImageRepeat']) { ?> checked <? } ?> /> None
-		  	<input type="radio" value="repeat-x" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat-x') { ?> checked <? } ?> /> Horizontal
-		  	<input type="radio" value="repeat-y" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat-y') { ?> checked <? } ?>/> Vertical
-		  	<input type="radio" value="repeat" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat') { ?> checked <? } ?>/> All
-		  	
-		  </table>
-		  <div class="ccm-spacer"></div>
-		</div>
-		
+
 	
 	</div>
 	
 	<div id="ccm-styleEditPane-spacing" class="ccm-styleEditPane" style="display:none">		
-		<div class="ccm-block-field-group">
+		<div>
 		<table style="width:100%" border="0" cellspacing="0" cellpadding="0"><tr><td style="width:50%" valign="top">		
 		
 		  <h2 style="margin-top: 0px"><?php echo t('Margin ')?></h2>
@@ -285,25 +291,32 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 	
 	<div id="ccm-styleEditPane-css" class="ccm-styleEditPane" style="display:none">	 
 	
-		<div class="ccm-block-field-group">
-		  <h2><?php echo t('CSS ID')?></h2>  
+		<div>
+		<table class="ccm-style-property-table" border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td style="width: 50%" valign="top">
+		  <h2 style="margin-top: 0px"><?php echo t('CSS ID')?></h2>  
 		  <input name="css_id" type="text" value="<?=htmlentities(trim($style->getCustomStyleRuleCSSID()), ENT_COMPAT, APP_CHARSET) ?>" style="width:99%" 
 		   onkeyup="ccmCustomStyle.validIdCheck(this,'<?=str_replace(array("'",'"'),'',$style->getCustomStyleRuleCSSID()) ?>')" /> 
 		  <div id="ccm-styles-invalid-id" class="ccm-error" style="display:none; padding-top:4px;">
 		  	<?=t('Invalid ID.  This id is currently being used by another element on this page.')?>
 		  </div>
 		</div>	
-	
-		<div class="ccm-block-field-group">
-		  <h2><?php echo t('CSS Class Name(s)')?></h2>  
+		</td>
+		<td valign="top" style="width: 50%">
+		  <h2 style="margin-top: 0px"><?php echo t('CSS Class Name(s)')?></h2>  
 		  <input name="css_class_name" type="text" value="<?=htmlentities(trim($style->getCustomStyleRuleClassName()), ENT_COMPAT, APP_CHARSET) ?>" style="width:99%" />		  		
+		</td>
+		</tr>
+		</table>
 		</div>
 		
-		<div class="ccm-block-field-group">
+		<div>
 		  <h2><?php echo t('Additional CSS')?></h2> 
 		  <textarea name="css_custom" cols="50" rows="4" style="width:99%"><?=htmlentities($style->getCustomStyleRuleCSSCustom(), ENT_COMPAT, APP_CHARSET) ?></textarea>		
 		</div>	
 	</div>
+	<br/>
 	
 	<div><?=$form->checkbox('cspCreateNew', 1)?> <label for="cspCreateNew" style="display: inline; color: #555"><?=t('Save this style as a new preset.')?></label><span style="margin-left: 10px"><?=$form->text('cspName', array('style' => 'width:  127px', 'disabled' => true))?></span></div>
 	<br/>
@@ -336,5 +349,5 @@ $(function() {
 </script>
 
 <? if (!$_REQUEST['refresh']) { ?>
-</div
+</div>
 <? } ?>

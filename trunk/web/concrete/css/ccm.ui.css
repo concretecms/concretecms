@@ -227,3 +227,6 @@ div.ccm-edit-mode-disabled-item{background: #ddd; color:#aaa; border:1px solid #
 .ccm-notification { background:#FFFFCC; color:#555; padding:4px; margin-bottom:8px; border:1px solid #ddd;  }
 
 .ccm-style-property-table td {padding-right: 8px !important; padding-bottom: 8px !important}
+
+div.ccm-styleEditPane {background-color: #efefef; border-left: 1px solid #dedede; border-right: 1px solid #dedede; border-bottom: 1px solid #dedede; padding: 8px}
+ul#ccm-styleEditPane-tabs {margin-bottom: 0px !important}
