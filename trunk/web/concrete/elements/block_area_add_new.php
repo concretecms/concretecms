@@ -99,9 +99,6 @@ ccmBlockTypeSearchClear = function() {
 }
 
 var ccmLiveSearchActive = false;
-if (typeof(ccmBlockTypeBound) == 'undefined') {
-	var ccmBlockTypeBound = false;
-}
 ccmBlockTypeSearchResultsSelect = function(which, e) {
 	e.preventDefault();
 	e.stopPropagation();
@@ -140,8 +137,6 @@ ccmBlockTypeSearchResultsSelect = function(which, e) {
 	var elemTop = currObj.position().top;
 	var elemBottom = elemTop + docViewTop + currObj.innerHeight();
 
-	console.log(elemTop + '-' + docViewTop + '-' + elemBottom + '-' + docViewBottom);
-	
 	if ((docViewBottom - elemBottom) < 0) {
 		currDialog.get(0).scrollTop += currDialog.get(0).scrollTop + currObj.height();
 	} else if (elemTop < 0) {
@@ -153,35 +148,41 @@ ccmBlockTypeSearchResultsSelect = function(which, e) {
 	
 }
 
-$(function() {
-	if (!ccmBlockTypeBound) {
-		ccmBlockTypeBound = true;
-		$(window).css('overflow', 'hidden');
-		$(window).keydown(function(e) {
-			if (e.keyCode == 9) {
-				e.stopPropagation();
-				e.preventDefault();
-				$("input[name=ccmBlockTypeSearch]").focus();
-				return true;
-			}
-			if (e.keyCode == 8) {
-				$("input[name=ccmBlockTypeSearch]").val('');
-				e.stopPropagation();
-				e.preventDefault();
-				return true;
-			}
-			if (e.keyCode == 40) {
-				ccmBlockTypeSearchResultsSelect('next', e);
-			} else if (e.keyCode == 38) {
-				ccmBlockTypeSearchResultsSelect('previous', e);
-			} else if (e.keyCode == 13) {
-				var obj = $("li.ccm-block-type-selected");
-				if (obj.length > 0) {
-					obj.find('a').click();
-				}
-			}
-		}); 
+ccmBlockTypeDoMapKeys = function(e) {
+	if (e.keyCode == 9) {
+		e.stopPropagation();
+		e.preventDefault();
+		$("input[name=ccmBlockTypeSearch]").focus();
+		return true;
 	}
+	if (e.keyCode == 8) {
+		$("input[name=ccmBlockTypeSearch]").val('');
+		e.stopPropagation();
+		e.preventDefault();
+		return true;
+	}
+	if (e.keyCode == 40) {
+		ccmBlockTypeSearchResultsSelect('next', e);
+	} else if (e.keyCode == 38) {
+		ccmBlockTypeSearchResultsSelect('previous', e);
+	} else if (e.keyCode == 13) {
+		var obj = $("li.ccm-block-type-selected");
+		if (obj.length > 0) {
+			obj.find('a').click();
+		}
+	}
+}
+ccmBlockTypeMapKeys = function() {
+	$(window).bind('keydown.blocktypes', ccmBlockTypeDoMapKeys);
+}
+ccmBlockTypeResetKeys = function() {
+	$(window).unbind('keydown.blocktypes');
+}
+
+$(function() {
+	$(window).css('overflow', 'hidden');
+	$(window).unbind('keydown.blocktypes');
+	ccmBlockTypeMapKeys();
 });
 
 </script>
@@ -215,7 +216,7 @@ $(function() {
 			?>	
 			<li class="ccm-block-type ccm-block-type-available">
 				<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescription(<?=$bt->getBlockTypeID()?>)" title="<?=t('Learn more about this block type.')?>" id="ccm-bt-help-trigger<?=$bt->getBlockTypeID()?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/help.png" width="14" height="14" /></a>
-				<a class="dialog-launch ccm-block-type-inner" dialog-modal="false" dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" style="background-image: url(<?=$btIcon?>)" dialog-title="<?=t('Add')?> <?=$bt->getBlockTypeName()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/add_block_popup.php?cID=<?=$c->getCollectionID()?>&btID=<?=$bt->getBlockTypeID()?>&arHandle=<?=$a->getAreaHandle()?>"><?=$bt->getBlockTypeName()?></a>
+				<a onclick="ccmBlockTypeResetKeys()" dialog-on-destroy="ccmBlockTypeMapKeys()" class="dialog-launch ccm-block-type-inner" dialog-modal="false" dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" style="background-image: url(<?=$btIcon?>)" dialog-title="<?=t('Add')?> <?=$bt->getBlockTypeName()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/add_block_popup.php?cID=<?=$c->getCollectionID()?>&btID=<?=$bt->getBlockTypeID()?>&arHandle=<?=$a->getAreaHandle()?>"><?=$bt->getBlockTypeName()?></a>
 				<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>"><?=$bt->getBlockTypeDescription()?></div>
 			</li>
 			<?
