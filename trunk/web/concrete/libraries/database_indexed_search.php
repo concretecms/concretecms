@@ -35,81 +35,20 @@ class IndexedSearchResult {
 	public function setDate($date) { $this->cDate = $date;}
 }
 
-class IndexedPageList extends DatabaseItemList {
+/** 
+ * @DEPRECATED.
+ * Just use PageList with filterByKeywords instead. We'll keep this around so people know what to expect
+ */
+class IndexedPageList extends PageList {
 
-	protected $itemsPerPage = 10;
-	
-	public function filterByKeywordsBoolean($kw) {
-		return $this->filterByKeywords($kw);
-	}
-	
-	public function filterByKeywords($keywords) {
-		$db = Loader::db();
-		$kw = $db->quote($keywords);
-		$this->addToQuery("select distinct PageSearchIndex.cID, PageSearchIndex.content, PageSearchIndex.cName, PageSearchIndex.cDescription, PageSearchIndex.cPath, PageSearchIndex.cDatePublic, round(match(cName, cDescription, content) against ({$kw}) as score from PageSearchIndex inner join Pages on PageSearchIndex.cID = Pages.cID inner join CollectionSearchIndexAttributes on PageSearchIndex.cID = CollectionSearchIndexAttributes.cID");
-		Loader::model('attribute/categories/collection');
-		
-		$keys = CollectionAttributeKey::getSearchableIndexedList();
-		$attribsStr = '';
-		foreach ($keys as $ak) {
-			$cnt = $ak->getController();			
-			$attribsStr.=' OR ' . $cnt->searchKeywords($keywords);
-		}
-		$this->filter(false, "(match(cName, cDescription, content) against ({$kw} in boolean mode) {$attribsStr})");
-
-	}
-	
-	private $searchPaths = array();
-	
-	public function addSearchPath($path) {
-		$this->searchPaths[] = $path;
-	}
-
-	public function setupPermissions() {
-		$u = new User();
-		if ($u->isSuperUser()) {
-			return; // super user always sees everything. no need to limit
-		}
-		$groups = $u->getUserGroups();
-		$groupIDs = array();
-		foreach($groups as $key => $value) {
-			$groupIDs[] = $key;
-		}
-		
-		$uID = -1;
-		if ($u->isRegistered()) {
-			$uID = $u->getUserID();
-		}
-
-		$this->addToQuery('left join PagePermissions pp1 on (pp1.cID = Pages.cInheritPermissionsFromCID)');
-		$this->filter(false, "(pp1.cgPermissions like 'r%' and (pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID}))");
-	}
-	
 	public function getPage() {
-		$db = Loader::db(); 
-		$this->setupPermissions();
-
-		if (count($this->searchPaths) > 0) { 
-			$i = 0;
-			$subfilter = '';
-			foreach($this->searchPaths as $sp) {
-				if ($sp == '') {
-					continue;
-				}
-				$sp = $db->quote($sp . '%');
-				$subfilter .= "cPath like {$sp} ";
-				if (($i+1) < count($this->searchPaths)) {
-					$subfilter .= "or ";
-				}
-				$i++;
-			}
-			if ($subfilter != '') {
-				$this->filter(false, $subfilter);
-			}
+		$this->sortByMultiple('cIndexScore desc', 'cDatePublic desc');
+		$r = parent::getPage();
+		$results = array();
+		foreach($r as $c) {
+			$results[] = array('cID' => $c->getCollectionID(), 'cName' => $c->getCollectionName(), 'cDescription' => $c->getCollectionDescription(), 'score' => $c->getPageIndexScore(), 'cPath' => $c->getCollectionPath(), 'content' => $c->getPageIndexContent());
 		}
-
-		$this->sortByMultiple('score desc', 'cDatePublic desc');
-		return parent::getPage();
+		return $results;
 	}
 }
 
