@@ -183,17 +183,17 @@ div.ccm-block-field-group h2 {margin-bottom: 6px}
 
 ul#ccm-block-type-list {padding: 2px 0px 0px 0px; margin: 0px}
 ul#ccm-block-type-list li {margin-left: 0px; list-style-type: none; display: none !important}
-li.ccm-block-type a.ccm-block-type-help {float:right; margin-right:10px; margin-top:10px; position: static; text-decoration:none; }
-li.ccm-block-type a.ccm-scrapbook-delete {top: 8px; right: 10px; position: absolute}
-li.ccm-block-type a.ccm-block-type-inner, li.ccm-block-type p.ccm-block-type-inner, li.ccm-block-type li.ccm-block-type-inner {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
-li.ccm-block-type a.ccm-block-type-inner-nobkgd, li.ccm-block-type p.ccm-block-type-inner-nobkgd, li.ccm-block-type li.ccm-block-type-inner-nobkgd {color: #666; display: block; font-size: 14px; text-decoration: none; border: 1px solid #fff}
-li.ccm-block-type p.ccm-block-type-inner {margin: 0px}
-li.ccm-block-type-selected a.ccm-block-type-inner {background-color: #BDD5FD; border: 1px solid #255E8A !important}
-li.ccm-block-type a.ccm-block-type-inner:hover {background-color: #d9e7ff; border: 1px solid #94a7c7 !important}
-li.ccm-block-type {position: static; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px; left:0px; top:0px; width:auto; height:auto;}
-li.ccm-block-type div.ccm-block-type-description {display: none; padding-left: 30px; color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
-li.ccm-block-type.ccm-external-block-type li.ccm-block-price{ float:right; margin:10px 10px 0px 10px; font-weight: bold; color: #205334; text-transform: uppercase}
-li.ccm-block-type.ccm-external-block-type li.ccm-block-type-description{display:block; padding-left: 0px;}
+.ccm-block-type a.ccm-block-type-help {float:right; margin-right:10px; margin-top:10px; position: static; text-decoration:none; }
+.ccm-block-type a.ccm-scrapbook-delete {top: 8px; right: 10px; position: absolute}
+.ccm-block-type a.ccm-block-type-inner, .ccm-block-type p.ccm-block-type-inner, .ccm-block-type .ccm-block-type-inner {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
+.ccm-block-type a.ccm-block-type-inner-nobkgd, .ccm-block-type p.ccm-block-type-inner-nobkgd, .ccm-block-type .ccm-block-type-inner-nobkgd {color: #666; display: block; font-size: 14px; text-decoration: none; border: 1px solid #fff}
+.ccm-block-type p.ccm-block-type-inner {margin: 0px}
+.ccm-block-type-selected a.ccm-block-type-inner {background-color: #BDD5FD; border: 1px solid #255E8A !important}
+.ccm-block-type a.ccm-block-type-inner:hover {background-color: #d9e7ff; border: 1px solid #94a7c7 !important}
+.ccm-block-type {position: static; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px; left:0px; top:0px; width:auto; height:auto;}
+.ccm-block-type div.ccm-block-type-description {display: none; padding-left: 30px; color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
+.ccm-block-type.ccm-external-block-type li.ccm-block-price{ float:right; margin:10px 10px 0px 10px; font-weight: bold; color: #205334; text-transform: uppercase}
+.ccm-block-type.ccm-external-block-type .ccm-block-type-description{display:block; padding-left: 0px;}
  
 table.ccm-block-type-table {border-collapse: collapse;width: 100%}
 table.ccm-block-type-table div.ccm-block-type-inner {color: #666; display: block; font-size: 14px; text-decoration: none; border: 1px solid #fff}
@@ -209,6 +209,6 @@ div#ccm-block-type-grid div.ccm-block-type-grid-entry a:hover {background-color:
 
 div.ccm-block-type-search-wrapper {margin-top: 12px; margin-bottom: 8px}
 div.ccm-block-type-search {margin-left: 10px}
-ul#ccm-block-type-list li.ccm-block-type-available {display: list-item !important}
+ul#ccm-block-type-list .ccm-block-type-available {display: list-item !important}
 div.ccm-block-type-search input.ccm-input-text {color: #aaa}
 a#ccm-block-type-clear-search {margin-left: 2px; display: none}
