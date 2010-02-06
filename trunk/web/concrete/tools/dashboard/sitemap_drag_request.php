@@ -114,6 +114,8 @@ if ($successMessage) {
 		<input type="hidden" name="destParentID" id="destParentID" value="<?=$dc->getCollectionParentID()?>" />
 		<input type="hidden" name="destCID" id="destCID" value="<?=$_REQUEST['destCID']?>" />
 		<input type="hidden" name="instance_id" id="instance_id" value="<?=$_REQUEST['instance_id']?>" />
+		<input type="hidden" name="select_mode" id="select_mode" value="<?=$_REQUEST['select_mode']?>" />
+		<input type="hidden" name="display_mode" id="display_mode" value="<?=$_REQUEST['display_mode']?>" />
 
 		<input type="radio" checked style="vertical-align: middle" id="ctaskMove" name="ctask" value="MOVE" onclick="toggleMove()" />
 		<strong><?=t('Move')?></strong> "<?=$oc->getCollectionName()?>" <?=t('beneath')?> "<?=$dc->getCollectionName()?>"

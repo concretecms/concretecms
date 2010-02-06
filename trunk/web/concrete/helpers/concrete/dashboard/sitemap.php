@@ -196,7 +196,7 @@ class ConcreteDashboardSitemapHelper {
 		$nodeID = $req->nodeID;
 		$spID = ($this->selectedPageID > 0) ? $this->selectedPageID : 'false';
 		$c = Page::getByID($req->nodeID, 'ACTIVE');
-		if ($display_mode == 'explore' || $select_mode == 'move_copy_delete' || $select_mode == 'select_page') {
+		if ($display_mode == 'explore') {
 			if ($nodeID > 1) {
 				$nav = Loader::helper('navigation');
 				$parent = Page::getByID($c->getCollectionParentID(), 'ACTIVE');
@@ -249,7 +249,7 @@ class ConcreteDashboardSitemapHelper {
 					$this->html .= '</a>';
 				}
 				if ($display_mode == 'full' || $display_mode == '') {
-					$this->html .= '<a href="javascript:toggleSub(\'' . $instanceID . '\',' . $ri['id'] . ')">';
+					$this->html .= '<a href="javascript:toggleSub(\'' . $instanceID . '\',\'' . $ri['id'] . '\',\'' . $display_mode . '\',\'' . $select_mode . '\')">';
 					$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/dashboard/plus.jpg" width="9" height="9" class="tree-plus" id="tree-collapse' . $ri['id'] . '" /></a>';
 				}
 				$this->html .= '<div rel="' . DIR_REL . '/index.php?cID=' . $ri['id'] . '" class="' . $labelClass . '" tree-node-alias="' . $cAlias . '" ';
@@ -270,7 +270,7 @@ class ConcreteDashboardSitemapHelper {
 					$this->html .= '<a href="javascript:void(0)" onclick="closeSub(' . $ri['id'] . ')" class="ccm-tree-search-close"><img src="' . ASSETS_URL_IMAGES . '/icons/close.png" /></a>';
 					$this->html .= '<input type="text" name="submit" name="q" /> <a href="javascript:void(0)" onclick="searchSitemapNode(' . $ri['id'] . ')">';
 					$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/icons/magnifying.png" /></a></form>';
-					$this->html .= '<li><ul tree-root-state="closed" tree-root-node-id="' . $ri['id'] . '" tree-root-num-subpages="' . $ri['numSubpages'] . '" id="tree-root' . $ri['id'] . '" sitemap-instance-id="' . $instanceID . '" sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '">';
+					$this->html .= '<li><ul tree-root-state="closed" tree-root-node-id="' . $ri['id'] . '" tree-root-num-subpages="' . $ri['numSubpages'] . '" id="tree-root' . $ri['id'] . '" selected-page-id="' . $this->selectedPageID . '" sitemap-instance-id="' . $instanceID . '" sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '">';
 					if (is_object($ri['subnodes']) && count($ri['subnodes']->results) > 0) {
 						$this->outputRequestHTML($instanceID, $display_mode, $select_mode, $ri['subnodes']);
 					}

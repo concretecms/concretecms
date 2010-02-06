@@ -7,7 +7,7 @@ if (!$sh->canRead()) {
 }
 
 $args = $_REQUEST;
-$args['reveal'] = $_REQUEST['cID'];
+$args['selectedPageID'] = $_REQUEST['cID'];
 $args['sitemapCombinedMode'] = $sitemapCombinedMode;
 if (!isset($args['select_mode'])) {
 	$args['select_mode'] = 'select_mode';
@@ -15,5 +15,6 @@ if (!isset($args['select_mode'])) {
 
 $args['display_mode'] = 'full';
 $args['instance_id'] = time();
+$args['node'] = 0;
 Loader::element('dashboard/sitemap', $args);
 ?>
