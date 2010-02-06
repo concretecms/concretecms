@@ -2,6 +2,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::helper('concrete/dashboard/sitemap');
 
+/*
 $cID = 1;
 
 if (isset($reveal)) {
@@ -11,6 +12,12 @@ if (isset($reveal)) {
 	if ($node < 1) {
 		$node = 1;
 	}
+}
+*/
+
+$cID = 1;
+if (isset($selectedPageID)) {
+	$cID = $selectedPageID;
 }
 
 if (!isset($node)) {
