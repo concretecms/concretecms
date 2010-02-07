@@ -20,9 +20,6 @@ if (isset($selectedPageID)) {
 	$cID = $selectedPageID;
 }
 
-if (!isset($node)) {
-	$node = 1;
-}
 ?>
 <div class="ccm-pane-controls">
 
@@ -45,10 +42,31 @@ var CCM_SITEMAP_EXPLORE_NODE = "<?=$node?>";
 	<h1 id="ccm-sitemap-title"><?=t('Sitemap')?></h1>
 <? } ?>
 
-<div id="tree" class="ccm-sitemap<? if ($display_mode == 'explore') { ?>-explore<? } ?>">
+<div id="ccm-dashboard-select-display-mode">
+<form>
+<? 
+$u = new User();
+$sitemapOverlayPreference = $u->config('SITEMAP_OVERLAY_DISPLAY_MODE');
+$display_mode = $sitemapOverlayPreference;
+$node = 1;
+
+if ($sitemapOverlayPreference != 'explore') {
+	$sitemapOverlayPreference = 'full';
+	$display_mode = 'full';
+}
+?>
+<input type="radio" name="ccm-dashboard-display-mode" value="full" <? if ($sitemapOverlayPreference == 'full') { ?> checked <? } ?> onclick="ccm_sitemapSelectDisplayMode('<?=$instance_id?>', 'full', '<?=$select_mode?>', '<?=$cID?>')" /> <?=t('Full Sitemap')?>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="radio" name="ccm-dashboard-display-mode" value="explore" <? if ($sitemapOverlayPreference == 'explore') { ?> checked <? } ?> onclick="ccm_sitemapSelectDisplayMode('<?=$instance_id?>', 'explore', '<?=$select_mode?>', '<?=$cID?>')" /> <?=t('One Level Only')?>
+</form>
+</div>
+
+<div id="tree" sitemap-wrapper="1" sitemap-instance-id="<?=$instance_id?>" <? if ($display_mode == 'explore') { ?>class="ccm-sitemap-explore<? } ?>">
 	<ul id="tree-root0" tree-root-node-id="0" sitemap-display-mode="<?=$display_mode?>" sitemap-select-mode="<?=$select_mode?>" sitemap-instance-id="<?=$instance_id?>">
 	</ul>
 </div>
+
+</td>
 
 <script type="text/javascript">
 $(function() {

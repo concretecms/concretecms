@@ -368,7 +368,7 @@ activateLabels = function(instance_id, display_mode, select_mode) {
 			$(this).click(function() {
 				jQuery.fn.dialog.showLoader();
 				$.get($(this).attr('href'), function(r) {
-					parseSitemapResponse(instance_id, display_mode, select_mode, r);
+					parseSitemapResponse(instance_id, display_mode, select_mode, 0, r);
 					activateLabels(instance_id, display_mode, select_mode);
 					jQuery.fn.dialog.hideLoader();
 				});			
@@ -650,7 +650,7 @@ function addResortDroppable(nodeID){
 
 ccmSitemapExploreNode = function(instance_id, display_mode, select_mode, cID, selectedPageID) {
 	jQuery.fn.dialog.showLoader();
-	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php", {'instance_id': instance_id, 'select_mode' : select_mode, 'node': cID, 'selectedPageID': selectedPageID}, function(resp) {  
+	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php", {'instance_id': instance_id, 'display_mode': display_mode, 'select_mode' : select_mode, 'node': cID, 'selectedPageID': selectedPageID}, function(resp) {  
 		parseSitemapResponse(instance_id, 'explore', select_mode, 0, resp);
 		activateLabels(instance_id, 'explore', select_mode);
 		jQuery.fn.dialog.hideLoader();
@@ -658,9 +658,8 @@ ccmSitemapExploreNode = function(instance_id, display_mode, select_mode, cID, se
 	});
 }
 
-ccmSitemapLoad = function(instance_id, display_mode, select_mode, node, selectedPageID) {
-
-	if (select_mode == 'move_copy_delete' || select_mode == 'select_page') {		
+ccmSitemapLoad = function(instance_id, display_mode, select_mode, node, selectedPageID, onComplete) {
+	if (select_mode == 'move_copy_delete' || select_mode == 'select_page') {
 		ccmSitemapExploreNode(instance_id, display_mode, select_mode, node, selectedPageID);
 	} else if (display_mode == 'full') {
 
@@ -680,7 +679,10 @@ ccmSitemapLoad = function(instance_id, display_mode, select_mode, node, selected
 	} else {
 		activateLabels(instance_id, display_mode, select_mode);
 	}
-
+	
+	if (onComplete) {
+		onComplete();	
+	}
 }
 
 ccm_sitemapSetupSearch = function() {
@@ -757,6 +759,28 @@ ccm_sitemapSetupSearchPages = function() {
 		}
 	});
 
+}
+
+ccm_sitemapSelectDisplayMode = function(instance_id, display_mode, select_mode, selectedPageID) {
+	// finds the selector for the instance of the sitemap and reloads it to be this mode
+	
+	// styling tweak
+		
+	var ul = $("ul[sitemap-instance-id=" + instance_id + "]");
+	ul.html('');
+	ul.attr('sitemap-display-mode', display_mode);
+	ul.attr('sitemap-select-mode', select_mode);
+	ul.attr('sitemap-display-mode', display_mode);
+	ccmSitemapLoad(instance_id, display_mode, select_mode, 1, selectedPageID, function() {
+		if (display_mode == 'explore') {
+			$("div[sitemap-wrapper=1][sitemap-instance-id=" + instance_id + "]").addClass("ccm-sitemap-explore");
+		} else {
+			$("div[sitemap-wrapper=1][sitemap-instance-id=" + instance_id + "]").removeClass("ccm-sitemap-explore");
+		}
+	});
+	
+	// now we save the preference	
+	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?task=save_sitemap_display_mode&display_mode=" + display_mode);
 }
 
 $(function() {

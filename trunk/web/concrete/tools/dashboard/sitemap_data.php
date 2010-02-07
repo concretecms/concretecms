@@ -10,6 +10,12 @@ if (isset($_REQUEST['selectedPageID'])) {
 	$dh->setSelectedPageID($_REQUEST['selectedPageID']);
 }
 
+if (isset($_REQUEST['task']) && $_REQUEST['task'] == 'save_sitemap_display_mode') {
+	$u = new User();
+	$u->saveConfig('SITEMAP_OVERLAY_DISPLAY_MODE', $_REQUEST['display_mode']);
+	exit;
+}
+
 
 if (isset($_REQUEST['show_system'])) {
 	$_SESSION['dsbSitemapShowSystem'] = $_REQUEST['show_system'];

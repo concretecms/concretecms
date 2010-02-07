@@ -197,21 +197,24 @@ class ConcreteDashboardSitemapHelper {
 		$spID = ($this->selectedPageID > 0) ? $this->selectedPageID : 'false';
 		$c = Page::getByID($req->nodeID, 'ACTIVE');
 		if ($display_mode == 'explore') {
-			if ($nodeID > 1) {
-				$nav = Loader::helper('navigation');
-				$parent = Page::getByID($c->getCollectionParentID(), 'ACTIVE');
-				if ($display_mode == 'explore') {
-					$this->html .= '<li class="ccm-sitemap-navigate-up"><a href="' . View::url('/dashboard/sitemap/explore', $parent->getCollectionID()) . '">' . t('Back to <span>%s</span>', $parent->getCollectionName()) . '</a></li>';
+			$nav = Loader::helper('navigation');
+			$trail = $nav->getTrailToCollection($c);
+			$trail = array_reverse($trail);
+			$this->html .= '<div id="ccm-sitemap-bc"><ul>';
+			foreach($trail as $t) {
+				if ($select_mode == '') {
+					$this->html .= '<li><a href="' . View::url('/dashboard/sitemap/explore', $t->getCollectionID()) . '"><span>' . $t->getCollectionName() . '</span></a></li>';
 				} else {
-					$this->html .= '<li class="ccm-sitemap-navigate-up"><a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \''. $display_mode . '\', \'' . $select_mode . '\',' . $parent->getCollectionID() . ',' . $spID . ')">' . t('Back to <span>%s</span>', $parent->getCollectionName()) . '</a></li>';
+					$this->html .= '<li><a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \''. $display_mode . '\', \'' . $select_mode . '\',' . $t->getCollectionID() . ',' . $spID . ')">' . $t->getCollectionName() . '</a></li>';
 				}
 			}
 			$cp = new Permissions($c);
 			$this->html .= '<li class="ccm-sitemap-current-level-title">';
-			$this->html .= '<h2><div sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '" sitemap-instance-id="' . $instanceID . '" class="tree-label" rel="' . DIR_REL . '/index.php?cID=' . $c->getCollectionID() . '" tree-node-alias="0" ';
+			$this->html .= '<div sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '" sitemap-instance-id="' . $instanceID . '" class="tree-label" rel="' . DIR_REL . '/index.php?cID=' . $c->getCollectionID() . '" tree-node-alias="0" ';
 			$this->html .= 'selected-page-id="' . $this->selectedPageID . '" tree-node-canwrite="' . $cp->canWrite() . '" tree-node-children="' . $c->getNumChildren() . '" ';
 			$this->html .= 'tree-node-title="' . htmlspecialchars($c->getCollectionName()) . '" id="tree-label' . $c->getCollectionID() . '">';
-			$this->html .= t('Currently Viewing: <span>%s</span>', $c->getCollectionName()) . '</div></h2></li>';
+			$this->html .= '<span>' . $c->getCollectionName() . '</span></div></li>';
+			$this->html .= '</ul></div>';
 		}
 		if ($display_mode == 'full' || $display_mode == '') {
 			$this->html .= '<div class="dropzone tree-dz' . $nodeID . '" tree-parent="' . $nodeID . '" id="tree-dz' . $nodeID . '-sub"></div>';
@@ -241,8 +244,8 @@ class ConcreteDashboardSitemapHelper {
 			
 			if ($ri['numSubpages'] > 0) {
 				$subPageStr = ($ri['id'] == 1) ? '' : ' (' . $ri['numSubpages'] . ')';
-				if ($display_mode == 'explore' || $select_mode == 'move_copy_delete' || $select_mode == 'select_page') {
-					$this->html .= ($display_mode == 'explore') ? '<a href="' . View::url('/dashboard/sitemap/explore', $ri['id']) . '">' : '<a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \'' . $display_mode . '\', \'' . $select_mode . '\', ' . $ri["id"] . ',' . $spID . ')">';
+				if ($display_mode == 'explore') {
+					$this->html .= ($select_mode == 'move_copy_delete' || $select_mode == 'select_page') ? '<a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \'' . $display_mode . '\', \'' . $select_mode . '\', ' . $ri["id"] . ',' . $spID . ')">' : '<a href="' . View::url('/dashboard/sitemap/explore', $ri['id']) . '">' ;
 				}
 				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/spacer.gif" width="16" height="16" class="handle ' . $moveableClass . '" />';
 				if ($display_mode == 'explore' || $select_mode == 'move_copy_delete' || $select_mode == 'select_page') {
@@ -260,16 +263,21 @@ class ConcreteDashboardSitemapHelper {
 				}
 				$this->html .= '>';
 				$this->html .= '<span>' . $ri['cvName'] . $subPageStr . '</span>';
+				/*
 				if ($display_mode == 'full' || $display_mode == '') {
 					$this->html .= '<a class="ccm-tree-search-trigger" href="javascript:void(0)" onclick="searchSubPages(' . $ri['id'] . ')">';
 					$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/icons/magnifying.png" /></a>';
 				}
+				*/
 				$this->html .= '</div>';
 				if ($display_mode == 'full' || $display_mode == '') {
+					/*
 					$this->html .= '<form onsubmit="return searchSitemapNode(' . $ri['id'] . ')" id="ccm-tree-search' . $ri['id'] . '" class="ccm-tree-search">';
 					$this->html .= '<a href="javascript:void(0)" onclick="closeSub(' . $ri['id'] . ')" class="ccm-tree-search-close"><img src="' . ASSETS_URL_IMAGES . '/icons/close.png" /></a>';
 					$this->html .= '<input type="text" name="submit" name="q" /> <a href="javascript:void(0)" onclick="searchSitemapNode(' . $ri['id'] . ')">';
 					$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/icons/magnifying.png" /></a></form>';
+					*/
+					
 					$this->html .= '<li><ul tree-root-state="closed" tree-root-node-id="' . $ri['id'] . '" tree-root-num-subpages="' . $ri['numSubpages'] . '" id="tree-root' . $ri['id'] . '" selected-page-id="' . $this->selectedPageID . '" sitemap-instance-id="' . $instanceID . '" sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '">';
 					if (is_object($ri['subnodes']) && count($ri['subnodes']->results) > 0) {
 						$this->outputRequestHTML($instanceID, $display_mode, $select_mode, $ri['subnodes']);
