@@ -42,7 +42,7 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 		<tr>
 		<td style="width: 100%" valign="top">
 		
-		<div id="tree">
+		<div id="tree" sitemap-instance-id="<?=$instance_id?>">
 			<ul id="tree-root0" tree-root-node-id="0" sitemap-mode="full" sitemap-instance-id="<?=$instanceID?>">
 			<?=$listHTML?>
 			</ul>
