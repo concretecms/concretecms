@@ -10,7 +10,6 @@ var	tr_moveCopyMode = false;
 showPageMenu = function(obj, e) {
 	ccm_hideMenus();
 	e.stopPropagation();
-	
 	/* now, check to see if this menu has been made */
 	var bobj = $("#ccm-page-menu" + obj.cID);
 	
@@ -54,7 +53,7 @@ showPageMenu = function(obj, e) {
 			html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageVersions + '" id="menuVersions' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/versions.php?rel=SITEMAP&cID=' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/versions_small.png)">' + ccmi18n_sitemap.pageVersions + '<\/span><\/a><\/li>';
 			html += '<li><a class="ccm-icon" id="menuDelete' + obj.cID + '" href="javascript:deletePage(' + obj.cID + ',\'' + obj.instance_id + '\',\'' + obj.display_mode + '\', \'' + obj.select_mode + '\')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n_sitemap.deletePage + '<\/span><\/a><\/li>';
 			html += '<li class=\"header\"><\/li>';
-			if (obj.display_mode == 'explore') {
+			if (obj.display_mode == 'explore' || obj.display_mode == 'search') {
 				html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.moveCopyPage + '" id="menuMoveCopy' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/sitemap_overlay?instance_id=' + obj.instance_id + '&display_mode=' + obj.display_mode + '&select_mode=move_copy_delete&cID=' + obj.cID + '" id="menuMoveCopy' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/up_down.png)">' + ccmi18n_sitemap.moveCopyPage + '<\/span><\/a><\/li>';
 				if (obj.cNumChildren == 0) {
 					html += '<li class=\"header\"><\/li>';
@@ -754,7 +753,7 @@ ccm_sitemapSetupSearchPages = function(instance_id) {
 			var origCID = node.attr('selected-page-id');
 			selectMoveCopyTarget(node.attr('sitemap-instance-id'), node.attr('sitemap-display-mode'), node.attr('sitemap-select-mode'), destCID, origCID);
 		} else {
-			params = {'cID': node.attr('cID'), 'select-mode': node.attr('sitemap-select-mode'), 'display-mode': node.attr('sitemap-display-mode'), 'instance-id': node.attr('sitemap-instance-id'), 'canWrite': node.attr('canWrite'), 'cNumChildren': node.attr('cNumChildren'), 'cAlias': node.attr('cAlias')};		
+			params = {'cID': node.attr('cID'), 'select_mode': node.attr('sitemap-select-mode'), 'display_mode': node.attr('sitemap-display-mode'), 'instance_id': node.attr('sitemap-instance-id'), 'canWrite': node.attr('canWrite'), 'cNumChildren': node.attr('cNumChildren'), 'cAlias': node.attr('cAlias')};		
 			showPageMenu(params, e);
 		}
 	});
