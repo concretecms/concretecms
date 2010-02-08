@@ -67,7 +67,8 @@ class ValidationIdentifierHelper {
 	}
 	
 	public function getString($length = 12) {
-		$hash = substr(str_shuffle($this->letters), 0, $length);
+		$str = str_repeat($this->letters, 10);
+		$hash = substr(str_shuffle($str), 0, $length);
 		return $hash;
 	}
 	
