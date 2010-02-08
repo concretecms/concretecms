@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::helper('concrete/dashboard/sitemap');
 
-/*
+
 $cID = 1;
 
 if (isset($reveal)) {
@@ -13,7 +13,6 @@ if (isset($reveal)) {
 		$node = 1;
 	}
 }
-*/
 
 $cID = 1;
 if (isset($selectedPageID)) {
@@ -48,11 +47,13 @@ var CCM_SITEMAP_EXPLORE_NODE = "<?=$node?>";
 $u = new User();
 $sitemapOverlayPreference = $u->config('SITEMAP_OVERLAY_DISPLAY_MODE');
 $display_mode = $sitemapOverlayPreference;
-$node = 1;
 
 if ($sitemapOverlayPreference != 'explore') {
 	$sitemapOverlayPreference = 'full';
 	$display_mode = 'full';
+	$node = 0;
+} else if (!isset($node)) {
+	$node = 1;
 }
 ?>
 <input type="radio" name="ccm-dashboard-display-mode" value="full" <? if ($sitemapOverlayPreference == 'full') { ?> checked <? } ?> onclick="ccm_sitemapSelectDisplayMode('<?=$instance_id?>', 'full', '<?=$select_mode?>', '<?=$cID?>')" /> <?=t('Full Sitemap')?>
