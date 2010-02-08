@@ -8,7 +8,12 @@ class Marketplace {
 	
 		return false;
 	}
-
+	
+	public function generateSiteToken() {
+		$fh = Loader::helper('file');
+		$token = $fh->getContents(MARKETPLACE_URL_CONNECT_TOKEN_NEW);
+		return $token;	
+	}
 
 
 }
