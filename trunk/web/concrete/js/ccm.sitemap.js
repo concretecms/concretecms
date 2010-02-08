@@ -669,7 +669,7 @@ ccmSitemapLoad = function(instance_id, display_mode, select_mode, node, selected
 		}
 
 		activateLabels(instance_id, display_mode, select_mode);
-		if (select_mode == false) {
+		if (select_mode != 'move_copy_delete' && select_mode != 'select_page') {
 			activateReorder();
 		}
 		tr_doAnim = true;
@@ -764,14 +764,17 @@ ccm_sitemapSetupSearchPages = function() {
 ccm_sitemapSelectDisplayMode = function(instance_id, display_mode, select_mode, selectedPageID) {
 	// finds the selector for the instance of the sitemap and reloads it to be this mode
 	
-	// styling tweak
-		
 	var ul = $("ul[sitemap-instance-id=" + instance_id + "]");
 	ul.html('');
 	ul.attr('sitemap-display-mode', display_mode);
 	ul.attr('sitemap-select-mode', select_mode);
 	ul.attr('sitemap-display-mode', display_mode);
-	ccmSitemapLoad(instance_id, display_mode, select_mode, 1, selectedPageID, function() {
+	if (display_mode == 'explore') {
+		var node =1;
+	} else {
+		var node = 0;
+	}
+	ccmSitemapLoad(instance_id, display_mode, select_mode, node, selectedPageID, function() {
 		if (display_mode == 'explore') {
 			$("div[sitemap-wrapper=1][sitemap-instance-id=" + instance_id + "]").addClass("ccm-sitemap-explore");
 		} else {
