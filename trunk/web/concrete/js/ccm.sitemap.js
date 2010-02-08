@@ -685,44 +685,44 @@ ccmSitemapLoad = function(instance_id, display_mode, select_mode, node, selected
 	}
 }
 
-ccm_sitemapSetupSearch = function() {
-	ccm_setupAdvancedSearch('page'); 
-	ccm_sitemapSetupSearchPages();
-	ccm_searchActivatePostFunction['page'] = function() {
-		ccm_sitemapSetupSearchPages();
-		ccm_sitemapSearchSetupCheckboxes();	
+ccm_sitemapSetupSearch = function(instance_id) {
+	ccm_setupAdvancedSearch(instance_id); 
+	ccm_sitemapSetupSearchPages(instance_id);
+	ccm_searchActivatePostFunction[instance_id] = function() {
+		ccm_sitemapSetupSearchPages(instance_id);
+		ccm_sitemapSearchSetupCheckboxes(instance_id);	
 	}
-	ccm_sitemapSearchSetupCheckboxes();	
+	ccm_sitemapSearchSetupCheckboxes(instance_id);	
 }
 
-ccm_sitemapSearchSetupCheckboxes = function() {
-	$("#ccm-page-list-cb-all").click(function(e) {
+ccm_sitemapSearchSetupCheckboxes = function(instance_id) {
+	$("#ccm-" + instance_id + "-list-cb-all").click(function(e) {
 		e.stopPropagation();
 		if ($(this).attr('checked') == true) {
-			$('.ccm-list-record td.ccm-page-list-cb input[type=checkbox]').attr('checked', true);
-			$("#ccm-page-list-multiple-operations").attr('disabled', false);
+			$('.ccm-list-record td.ccm-' + instance_id + '-list-cb input[type=checkbox]').attr('checked', true);
+			$("#ccm-" + instance_id + "-list-multiple-operations").attr('disabled', false);
 		} else {
-			$('.ccm-list-record td.ccm-page-list-cb input[type=checkbox]').attr('checked', false);
-			$("#ccm-page-list-multiple-operations").attr('disabled', true);
+			$('.ccm-list-record td.ccm-' + instance_id + '-list-cb input[type=checkbox]').attr('checked', false);
+			$("#ccm-" + instance_id + "-list-multiple-operations").attr('disabled', true);
 		}
 	});
-	$("td.ccm-page-list-cb input[type=checkbox]").click(function(e) {
+	$("td.ccm-" + instance_id + "-list-cb input[type=checkbox]").click(function(e) {
 		e.stopPropagation();
-		if ($("td.ccm-page-list-cb input[type=checkbox]:checked").length > 0) {
-			$("#ccm-page-list-multiple-operations").attr('disabled', false);
+		if ($("td.ccm-" + instance_id + "-list-cb input[type=checkbox]:checked").length > 0) {
+			$("#ccm-" + instance_id + "-list-multiple-operations").attr('disabled', false);
 		} else {
-			$("#ccm-page-list-multiple-operations").attr('disabled', true);
+			$("#ccm-" + instance_id + "-list-multiple-operations").attr('disabled', true);
 		}
 	});
 	
 	// if we're not in the dashboard, add to the multiple operations select menu
 
-	$("#ccm-page-list-multiple-operations").change(function() {
+	$("#ccm-" + instance_id + "-list-multiple-operations").change(function() {
 		var action = $(this).val();
 		switch(action) {
 			case "properties": 
 				cIDstring = '';
-				$("td.ccm-page-list-cb input[type=checkbox]:checked").each(function() {
+				$("td.ccm-" + instance_id + "-list-cb input[type=checkbox]:checked").each(function() {
 					cIDstring=cIDstring+'&cID[]='+$(this).val();
 				});
 				jQuery.fn.dialog.open({
@@ -739,8 +739,8 @@ ccm_sitemapSearchSetupCheckboxes = function() {
 	});
 }
 
-ccm_sitemapSetupSearchPages = function() {
-	$('#ccm-page-list tr').click(function(e){
+ccm_sitemapSetupSearchPages = function(instance_id) {
+	$('#ccm-' + instance_id + '-list tr').click(function(e){
 		var node = $(this);
 		if (node.hasClass('ccm-results-list-header')) {
 			return false;
