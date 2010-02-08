@@ -3,17 +3,18 @@
 if (isset($_REQUEST['searchDialog'])) {
 	$searchDialog = true;
 }
-if (!isset($sitemap_mode)) {
-	if (isset($_REQUEST['sitemap_mode'])) {
-		$sitemap_mode = $_REQUEST['sitemap_mode'];
-	} else {
-		$sitemap_mode = 'search';
+if (!isset($sitemap_select_mode)) {
+	if (isset($_REQUEST['sitemap_select_mode'])) {
+		$sitemap_select_mode = $_REQUEST['sitemap_select_mode'];
 	}
 }
 
+if (isset($_REQUEST['searchInstance'])) {
+	$searchInstance = $_REQUEST['searchInstance'];
+}
 ?>
 
-<div id="ccm-list-wrapper"><a name="ccm-page-list-wrapper-anchor"></a>
+<div id="ccm-list-wrapper"><a name="ccm-<?=$searchInstance?>-list-wrapper-anchor"></a>
 
 <? if (!$searchDialog) { ?>
 
@@ -22,7 +23,7 @@ if (!isset($sitemap_mode)) {
 <td width="100%"><?=$pageList->displaySummary();?></td>
 	<td style="white-space: nowrap"><?=t('With Selected: ')?>&nbsp;</td>
 	<td align="right">
-	<select id="ccm-page-list-multiple-operations" disabled>
+	<select id="ccm-<?=$searchInstance?>-list-multiple-operations" disabled>
 		<option value="">**</option>
 		<option value="properties"><?=t('Edit Properties')?></option>
 	</select>
@@ -36,9 +37,9 @@ if (!isset($sitemap_mode)) {
 	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/pages/search_results';
 	
 	if (count($pages) > 0) { ?>	
-		<table border="0" cellspacing="0" cellpadding="0" id="ccm-page-list" class="ccm-results-list">
+		<table border="0" cellspacing="0" cellpadding="0" id="ccm-<?=$searchInstance?>-list" class="ccm-results-list">
 		<tr class="ccm-results-list-header">
-			<? if (!$searchDialog) { ?><th><input id="ccm-page-list-cb-all" type="checkbox" /></th><? } ?>
+			<? if (!$searchDialog) { ?><th><input id="ccm-<?=$searchInstance?>-list-cb-all" type="checkbox" /></th><? } ?>
 			<th><?=t('Type')?></th>
 
 			<th class="ccm-page-list-name <?=$pageList->getSearchResultsClass('cvName')?>"><a href="<?=$pageList->getSortByURL('cvName', 'asc', $bu)?>"><?=t('Name')?></a></th>
@@ -66,8 +67,8 @@ if (!isset($sitemap_mode)) {
 			}
 
 			?>
-			<tr class="ccm-list-record <?=$striped?>" cName="<?=htmlentities($cobj->getCollectionName(), ENT_QUOTES, APP_CHARSET)?>" cID="<?=$cobj->getCollectionID()?>" sitemap-mode="<?=$sitemap_mode?>" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
-			<? if (!$searchDialog) { ?><td class="ccm-page-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td><? } ?>
+			<tr class="ccm-list-record <?=$striped?>" cName="<?=htmlentities($cobj->getCollectionName(), ENT_QUOTES, APP_CHARSET)?>" cID="<?=$cobj->getCollectionID()?>" sitemap-select-mode="<?=$sitemap_select_mode?>" sitemap-display-mode="search" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
+			<? if (!$searchDialog) { ?><td class="ccm-<?=$searchInstance?>-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td><? } ?>
 			<td><?=$cobj->getCollectionTypeName()?></td>
 			<td class="ccm-page-list-name"><?=$txt->highlightSearch(wordwrap($cobj->getCollectionName(), 15, "\n", true), $keywords)?></td>
 			<td><?=date('M d, Y g:ia', strtotime($cobj->getCollectionDatePublic()))?></td>

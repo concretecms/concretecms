@@ -9,15 +9,15 @@
 	<table id="ccm-search-form-table" >
 		<tr>
 			<td valign="top" class="ccm-search-form-advanced-col">
-				<? Loader::element('pages/search_form_advanced', array('searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
+				<? Loader::element('pages/search_form_advanced', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
 			</td>		
 			<td valign="top" width="100%">	
 				
 				<div id="ccm-search-advanced-results-wrapper">
 				
-					<div id="ccm-page-search-results">
+						<div id="ccm-<?=$searchInstance?>-search-results">
 					
-						<? Loader::element('pages/search_results', array('searchType' => 'DASHBOARD', 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
+						<? Loader::element('pages/search_results', array('searchInstance' => $searchInstance, 'searchType' => 'DASHBOARD', 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
 					
 					</div>
 				

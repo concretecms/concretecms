@@ -24,7 +24,7 @@ foreach($searchFieldAttributes as $ak) {
 
 <? $form = Loader::helper('form'); ?>
 	
-	<div id="ccm-page-search-field-base-elements" style="display: none">
+	<div id="ccm-<?=$searchInstance?>-search-field-base-elements" style="display: none">
 	
 		<span class="ccm-search-option ccm-search-option-type-date_time"  search-field="date_public">
 		<?=$form->text('date_public_from', array('style' => 'width: 86px'))?>
@@ -74,9 +74,11 @@ foreach($searchFieldAttributes as $ak) {
 		
 	</div>
 
-	<form method="get" id="ccm-page-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/search_results">
-	
-<div id="ccm-page-search-advanced-fields" class="ccm-search-advanced-fields" >
+	<form method="get" id="ccm-<?=$searchInstance?>-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/search_results">
+
+<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
+
+<div id="ccm-<?=$searchInstance?>-search-advanced-fields" class="ccm-search-advanced-fields" >
 	
 		<input type="hidden" name="submit_search" value="1" />
 	<?	
@@ -90,7 +92,7 @@ foreach($searchFieldAttributes as $ak) {
 		}
 	?>	
 		<div id="ccm-search-box-title">
-			<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" class="ccm-search-loading" id="ccm-page-search-loading" />
+			<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" class="ccm-search-loading" id="ccm-<?=$searchInstance?>-search-loading" />
 			<h2><?=t('Search')?></h2>			
 		</div>
 		
@@ -149,7 +151,7 @@ foreach($searchFieldAttributes as $ak) {
 							'500' => '500'
 						), $searchRequest['numResults'], array('style' => 'width:65px'))?>
 					</td>
-					<td><a href="javascript:void(0)" id="ccm-page-search-add-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a></td>
+					<td><a href="javascript:void(0)" id="ccm-<?=$searchInstance?>-search-add-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a></td>
 				</tr>	
 				</table>
 			</div>
@@ -184,7 +186,7 @@ foreach($searchFieldAttributes as $ak) {
 					
 					?>
 					
-					<div class="ccm-search-field ccm-search-request-field-set" ccm-search-type="<?=$req?>" id="ccm-page-search-field-set<?=$i?>">
+					<div class="ccm-search-field ccm-search-request-field-set" ccm-search-type="<?=$req?>" id="ccm-<?=$searchInstance?>-search-field-set<?=$i?>">
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td valign="top" style="padding-right: 4px">

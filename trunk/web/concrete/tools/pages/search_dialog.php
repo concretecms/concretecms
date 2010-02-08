@@ -14,6 +14,7 @@ $sitemap_mode = $_REQUEST['sitemap_mode'];
 if (!$_REQUEST['sitemap_mode']) {
 	$sitemap_mode = 'move_copy_delete';
 }
+$searchInstance = $page . time();
 $searchRequest = $pageList->getSearchRequest();
 ?>
 
@@ -22,7 +23,7 @@ $searchRequest = $pageList->getSearchRequest();
 	<script type="text/javascript" src="<?=ASSETS_URL_CSS?>/ccm.sitemap.css"></script>
 <? } ?>
 <script type="text/javascript">$(function() {
-	ccm_sitemapSetupSearch();
+	ccm_sitemapSetupSearch('<?=$searchInstance?>');
 });
 </script>
 
@@ -31,15 +32,15 @@ $searchRequest = $pageList->getSearchRequest();
 		<table id="ccm-search-form-table" >
 			<tr>
 				<td valign="top" class="ccm-search-form-advanced-col">
-					<? Loader::element('pages/search_form_advanced', array('sitemap_mode' => $sitemap_mode, 'searchDialog' => true, 'searchRequest' => $searchRequest)); ?>
+					<? Loader::element('pages/search_form_advanced', array('searchInstance' => $searchInstance, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'searchRequest' => $searchRequest)); ?>
 				</td>		
 				<td valign="top" width="100%">	
 					
 					<div id="ccm-search-advanced-results-wrapper">
 					
-						<div id="ccm-page-search-results">
+						<div id="ccm-<?=$searchInstance?>-search-results">
 						
-							<? Loader::element('pages/search_results', array('sitemap_mode' => $sitemap_mode, 'searchDialog' => true, 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
+							<? Loader::element('pages/search_results', array('searchInstance' => $searchInstance, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
 						
 						</div>
 					
