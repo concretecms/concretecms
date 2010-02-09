@@ -4,8 +4,12 @@
 <? 
 	if (Marketplace::isConnected()) { ?>
 		
-		<?=t('Your site is currently connect to the concrete5 community.')?>
-	
+		<? if ($isNew) { ?>
+			<?=t('Your site is now connected to the concrete5 community!')?>
+		<? } else { ?>
+			<?=t('Your site is currently connected to the concrete5 community.')?>
+		<? } ?>
+		
 	<?
 	
 	} else { ?>
