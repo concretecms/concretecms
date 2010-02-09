@@ -91,7 +91,7 @@
 							$b->resetBlockCustomStyle();
 						} else {
 							
-							if ($_POST['cspID'] > 0 && (!$_POST['cspCreateNew'])) {
+							if ($_POST['cspID'] > 0 && ($_POST['cspPresetAction'] == 'update_existing_preset')) {
 								$csp = CustomStylePreset::getByID($_POST['cspID']);
 								$csr = $csp->getCustomStylePresetRuleObject();
 								// we update the csr in case anything has been changed
@@ -102,7 +102,7 @@
 								$b->setBlockCustomStyle($csr);
 							}
 							
-							if ($_POST['cspCreateNew']) {
+							if ($_POST['cspPresetAction'] == 'create_new_preset') {
 								CustomStylePreset::add($_POST['cspName'], $csr);
 							}
 						}
@@ -247,7 +247,7 @@
 						$nvc->resetAreaCustomStyle($area);
 					} else {
 						
-						if ($_POST['cspID'] > 0 && (!$_POST['cspCreateNew'])) {
+						if ($_POST['cspID'] > 0 && ($_POST['cspPresetAction'] == 'update_existing_preset')) {
 							$csp = CustomStylePreset::getByID($_POST['cspID']);
 							$csr = $csp->getCustomStylePresetRuleObject();
 							// we update the csr in case anything has been changed
@@ -258,7 +258,7 @@
 							$nvc->setAreaCustomStyle($area, $csr);
 						}
 						
-						if ($_POST['cspCreateNew']) {
+						if ($_POST['cspPresetAction'] == 'create_new_preset') {
 							CustomStylePreset::add($_POST['cspName'], $csr);
 						}
 					}
