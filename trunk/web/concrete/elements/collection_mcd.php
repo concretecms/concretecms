@@ -19,7 +19,7 @@ div#ccm-mc-page h1#ccm-sitemap-title {display: none}
 	<p><?=t("Click below to move or copy the current page to a particular spot in your site.")?></p>
 
 	<?
-		$sitemap_mode = 'move_copy_delete';
+		$select_mode = 'move_copy_delete';
 		include(DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector.php');
 	
 	} else {

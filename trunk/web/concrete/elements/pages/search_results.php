@@ -34,6 +34,10 @@ if (isset($_REQUEST['searchInstance'])) {
 <?
 	$txt = Loader::helper('text');
 	$keywords = $searchRequest['keywords'];
+	$soargs = array();
+	$soargs['searchInstance'] = $searchInstance;
+	$soargs['sitemap_select_mode'] = $sitemap_select_mode;
+	$soargs['searchDialog'] = $searchDialog;
 	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/pages/search_results';
 	
 	if (count($pages) > 0) { ?>	
@@ -42,18 +46,18 @@ if (isset($_REQUEST['searchInstance'])) {
 			<? if (!$searchDialog) { ?><th><input id="ccm-<?=$searchInstance?>-list-cb-all" type="checkbox" /></th><? } ?>
 			<th><?=t('Type')?></th>
 
-			<th class="ccm-page-list-name <?=$pageList->getSearchResultsClass('cvName')?>"><a href="<?=$pageList->getSortByURL('cvName', 'asc', $bu)?>"><?=t('Name')?></a></th>
-			<th class="<?=$pageList->getSearchResultsClass('cvDatePublic')?>"><a href="<?=$pageList->getSortByURL('cvDatePublic', 'asc', $bu)?>"><?=t('Public Date')?></a></th>
-			<th class="<?=$pageList->getSearchResultsClass('cDateModified')?>"><a href="<?=$pageList->getSortByURL('cDateModified', 'asc', $bu)?>"><?=t('Date Modified')?></a></th>
+			<th class="ccm-page-list-name <?=$pageList->getSearchResultsClass('cvName')?>"><a href="<?=$pageList->getSortByURL('cvName', 'asc', $bu, $soargs)?>"><?=t('Name')?></a></th>
+			<th class="<?=$pageList->getSearchResultsClass('cvDatePublic')?>"><a href="<?=$pageList->getSortByURL('cvDatePublic', 'asc', $bu, $soargs)?>"><?=t('Public Date')?></a></th>
+			<th class="<?=$pageList->getSearchResultsClass('cDateModified')?>"><a href="<?=$pageList->getSortByURL('cDateModified', 'asc', $bu, $soargs)?>"><?=t('Date Modified')?></a></th>
 			<th><?=t('Owner')?></th>
 			<? if ($pageList->isIndexedSearch()) { ?>
-				<th class="<?=$pageList->getSearchResultsClass('cIndexScore')?>"><a href="<?=$pageList->getSortByURL('cIndexScore', 'desc', $bu)?>"><?=t('Score')?></a></th>
+				<th class="<?=$pageList->getSearchResultsClass('cIndexScore')?>"><a href="<?=$pageList->getSortByURL('cIndexScore', 'desc', $bu, $soargs)?>"><?=t('Score')?></a></th>
 			<? } ?>
 
 			<? 
 			$slist = CollectionAttributeKey::getColumnHeaderList();
 			foreach($slist as $ak) { ?>
-				<th class="<?=$pageList->getSearchResultsClass($ak)?>"><a href="<?=$pageList->getSortByURL($ak, 'asc', $bu)?>"><?=$ak->getAttributeKeyDisplayHandle()?></a></th>
+				<th class="<?=$pageList->getSearchResultsClass($ak)?>"><a href="<?=$pageList->getSortByURL($ak, 'asc', $bu, $soargs)?>"><?=$ak->getAttributeKeyDisplayHandle()?></a></th>
 			<? } ?>			
 			<th class="ccm-search-add-column-header"><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/customize_search_columns" id="ccm-search-add-column"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a></th>
 		</tr>

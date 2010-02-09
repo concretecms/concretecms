@@ -87,10 +87,13 @@ foreach($searchFieldAttributes as $ak) {
 		if ($searchDialog) {
 			print $form->hidden('searchDialog', true);
 		}
-		if ($sitemap_mode) {
-			print $form->hidden('sitemap_mode', $sitemap_mode);
+		if ($sitemap_select_mode) {
+			print $form->hidden('sitemap_select_mode', $sitemap_select_mode);
 		}
-	?>	
+		if ($sitemap_display_mode) {
+			print $form->hidden('sitemap_display_mode', $sitemap_display_mode);
+		}
+	?>
 		<div id="ccm-search-box-title">
 			<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" class="ccm-search-loading" id="ccm-<?=$searchInstance?>-search-loading" />
 			<h2><?=t('Search')?></h2>			

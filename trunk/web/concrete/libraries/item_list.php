@@ -166,11 +166,11 @@ class DatabaseItemList extends ItemList {
 		parent::sortBy($key, $dir);
 	}
 	
-	public function getSortByURL($column, $dir = 'asc', $baseURL = false) {
+	public function getSortByURL($column, $dir = 'asc', $baseURL = false, $additionalVars = array()) {
 		if ($column instanceof AttributeKey) {
 			$column = 'ak_' . $column->getAttributeKeyHandle();
 		}
-		return parent::getSortByURL($column, $dir, $baseURL);
+		return parent::getSortByURL($column, $dir, $baseURL, $additionalVars);
 	}
 	
 	protected function setupAttributeFilters($join) {
@@ -315,17 +315,22 @@ class ItemList {
 		return $class;
 	}	
 
-	public function getSortByURL($column, $dir = 'asc', $baseURL = false) {
+	public function getSortByURL($column, $dir = 'asc', $baseURL = false, $additionalVars = array()) {
 		$uh = Loader::helper('url');
 		
 		// we switch it up if this column is the currently active column and the direction is currently the case
 		if ($_REQUEST[$this->queryStringSortVariable] == $column && $_REQUEST[$this->queryStringSortDirectionVariable] == $dir) {
 			$dir = ($dir == 'asc') ? 'desc' : 'asc';
 		}
-		$url = $uh->setVariable(array(
+		$args = array(
 			$this->queryStringSortVariable => $column,
 			$this->queryStringSortDirectionVariable => $dir
-		), false, $baseURL);
+		);
+
+		foreach($additionalVars as $k => $v) {
+			$args[$k] = $v;
+		}
+		$url = $uh->setVariable($args, false, $baseURL);
 		print $url;
 	}
 	

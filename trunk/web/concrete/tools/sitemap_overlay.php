@@ -7,6 +7,9 @@ if (!$sh->canRead()) {
 }
 
 $args = $_REQUEST;
+if (isset($select_mode)) {
+	$args['select_mode'] = $select_mode;
+}
 $args['selectedPageID'] = $_REQUEST['cID'];
 $args['sitemapCombinedMode'] = $sitemapCombinedMode;
 if (!isset($args['select_mode'])) {
