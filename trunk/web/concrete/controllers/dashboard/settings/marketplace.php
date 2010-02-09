@@ -17,11 +17,23 @@ class DashboardSettingsMarketplaceController extends Controller {
 		$this->set('subnav', $subnav);
 	}
 	
-	public function view() {
+	public function view($isNew = false) {
 		if (!Marketplace::isConnected()) {
 			$url = MARKETPLACE_URL_CONNECT;
 			$csToken = Marketplace::generateSiteToken();
-			$this->set('url', $url . '?ts=' . time() . '&csToken=' . $csToken . '&csName=' . htmlspecialchars(SITE, ENT_QUOTES, APP_CHARSET));
+			$csReferrer = urlencode(BASE_URL . View::url('/dashboard/settings/marketplace', 'connect_complete'));
+			$csiURL = urlencode(BASE_URL . DIR_REL);
+			$this->set('url', $url . '?ts=' . time() . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(SITE, ENT_QUOTES, APP_CHARSET));
+		}
+		$this->set('isNew', $isNew);
+	}
+	
+	public function connect_complete() {
+		if (!$_POST['csToken']) {
+			$this->set('error', t('An unexpected error occurred when connecting your site to the marketplace.'));
+		} else {
+			Config::save('MARKETPLACE_SITE_TOKEN', $_POST['csToken']);
+			$this->redirect('/dashboard/settings/marketplace', 'view', 1);
 		}
 	}
 
