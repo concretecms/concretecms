@@ -65,6 +65,8 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'css');"><?=t('CSS')?></a></li> 
 	</ul>		
 	
+	<div id="ccmCustomCssFormTabs">
+	
 	<div id="ccm-styleEditPane-fonts" class="ccm-styleEditPane">	
 		<div>
 		<h2><?php echo t('Fonts')?></h2> 
@@ -316,9 +318,20 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 		  <textarea name="css_custom" cols="50" rows="4" style="width:99%"><?=htmlentities($style->getCustomStyleRuleCSSCustom(), ENT_COMPAT, APP_CHARSET) ?></textarea>		
 		</div>	
 	</div>
+	</div>
+	
 	<br/>
 	
-	<div><?=$form->checkbox('cspCreateNew', 1)?> <label for="cspCreateNew" style="display: inline; color: #555"><?=t('Save this style as a new preset.')?></label><span style="margin-left: 10px"><?=$form->text('cspName', array('style' => 'width:  127px', 'disabled' => true))?></span></div>
+	<? if ($cspID > 1) { ?>
+	<div id="cspFooterPreset" style="display: none">
+		<div><?=$form->radio('cspPresetAction', 'update_existing_preset', true)?> <?=t('Update "%s" preset everywhere it is used?', $csp->getCustomStylePresetName())?></div>
+		<div><?=$form->radio('cspPresetAction', 'save_as_custom_style')?> <?=t('Use this style here, and leave "%s" unchanged?', $csp->getCustomStylePresetName())?></div>
+		<div><?=$form->radio('cspPresetAction', 'create_new_preset')?> <?=t('Save this style as a new preset?')?><br/><span style="margin-left: 20px"><?=$form->text('cspName', array('style' => 'width:  127px', 'disabled' => true))?></span></div>
+	</div>
+	<? } ?>
+	
+	<div id="cspFooterNoPreset" ><?=$form->checkbox('cspPresetAction', 'create_new_preset')?> <label for="cspPresetAction" style="display: inline; color: #555"><?=t('Save this style as a new preset.')?></label><span style="margin-left: 10px"><?=$form->text('cspName', array('style' => 'width:  127px', 'disabled' => true))?></span></div>
+	
 	<br/>
 	
 	<div class="ccm-buttons">
