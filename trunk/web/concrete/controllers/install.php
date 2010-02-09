@@ -70,6 +70,12 @@ class InstallController extends Controller {
 
 	}
 	
+	protected function installDBPost() {
+		// we can't seem to add this in db.xml *sigh*
+		$db = Loader::db();
+		$db->Execute('alter table PagePaths add index cPath (cPath(128))');
+	}
+	
 	public function test_url($num1, $num2) {
 		$js = Loader::helper('json');
 		$num = $num1 + $num2;
@@ -210,6 +216,7 @@ class InstallController extends Controller {
 				}
 				
 				$this->installDB();
+				$this->installDBPost();
 
 				$vh = Loader::helper('validation/identifier');
 				
