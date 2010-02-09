@@ -41,6 +41,7 @@ $("#ccm-ss-tabs a").click(function() {
 <div id="ccm-show-search-tab" style="display: none">
 
 <? 
+$sitemap_select_mode = $select_mode;
 include(DIR_FILES_TOOLS_REQUIRED . '/pages/search_dialog.php'); ?>
 
 

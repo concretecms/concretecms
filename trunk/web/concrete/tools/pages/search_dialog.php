@@ -10,9 +10,11 @@ $cnt = Loader::controller('/dashboard/sitemap/search');
 $pageList = $cnt->getRequestedSearchResults();
 $pages = $pageList->getPage();
 $pagination = $pageList->getPagination();
-$sitemap_mode = $_REQUEST['sitemap_mode'];
-if (!$_REQUEST['sitemap_mode']) {
-	$sitemap_mode = 'move_copy_delete';
+if (!isset($sitemap_select_mode)) {
+	$sitemap_select_mode = $_REQUEST['sitemap_select_mode'];
+	if (!$_REQUEST['sitemap_select_mode']) {
+		$sitemap_select_mode = 'move_copy_delete';
+	}
 }
 $searchInstance = $page . time();
 $searchRequest = $pageList->getSearchRequest();
