@@ -61,14 +61,47 @@ class IndexedPageList extends PageList {
 class IndexedSearch {
 	
 	private $cPathSections = array();
-	private $searchableAreaNames = array('Main Content', 'Main');
+	private $searchableAreaNamesManual = array();
 	
 	public function addSearchableArea($arr) {
-		$this->searchableAreaNames[] = $arr;
+		$this->searchableAreaNamesManual[] = $arr;
+	}
+	
+	public function getSearchableAreaAction() {
+		$action = Config::get('SEARCH_INDEX_AREA_METHOD');
+		if (!$action) {
+			$action = 'whitelist';
+		}
+		return $action;
+	}
+	
+	public function getSavedSearchableAreas() {
+		$areas = Config::get('SEARCH_INDEX_AREA_LIST');
+		$areas = unserialize($areas);
+		if (!is_array($areas)) {
+			$areas = array();
+		}
+		return $areas;
 	}
 	
 	public function getBodyContentFromPage($c) {
-		$searchableAreaNames=$this->searchableAreaNames;
+		$searchableAreaNamesInitial=$this->getSavedSearchableAreas();
+		foreach($this->searchableAreaNamesManual as $sm) {
+			$searchableAreaNamesInitial[] = $sm;
+		}
+		
+		$searchableAreaNames = array();
+		if ($this->getSearchableAreaAction() == 'blacklist') {
+			$areas = Area::getHandleList();
+			foreach($areas as $arHandle) {
+				if (!in_array($arHandle, $searchableAreaNamesInitial)) {
+					$searchableAreaNames[] = $arHandle;
+				}
+			}
+		} else {
+			$searchableAreaNames = $searchableAreaNamesInitial;
+		}		
+
 		$blarray=array();
 		foreach($searchableAreaNames as $searchableAreaName){
 		 	$blarray = array_merge( $blarray, $c->getBlocks($searchableAreaName) );

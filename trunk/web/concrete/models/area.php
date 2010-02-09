@@ -199,6 +199,12 @@ class Area extends Object {
 		return $bt;
 	}
 	
+	public function getHandleList() {
+		$db = Loader::db();
+		$handles = $db->GetCol('select distinct arHandle from Areas order by arHandle asc');
+		return $handles;
+	}
+	
 	function revertToPagePermissions() {
 		// this function removes all permissions records for a particular area on this page
 		// and sets it to inherit from the page above
