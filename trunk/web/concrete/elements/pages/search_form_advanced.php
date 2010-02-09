@@ -115,6 +115,9 @@ foreach($searchFieldAttributes as $ak) {
 				<table border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td width="100%">
+					<? if ($searchType == 'DASHBOARD') { ?>
+						<a style="float: right; font-weight: bold" href="<?=$this->url('/dashboard/sitemap/search', 'manage_index')?>"><?=t('Setup Index')?></a>
+					<? } ?>
 					<strong><?=$form->label('keywords', t('Full Page Index'))?></strong>
 					<?=$form->text('keywords', $searchRequest['keywords'], array('style' => 'width:200px')); ?>
 					</td>
