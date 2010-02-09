@@ -252,7 +252,11 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 			$.get(action, 		
 				function(r) {
 					if (task == 'add') {
-						$('#a' + resp.aID).append(r);
+						if ($("#a" + resp.aID + " div.ccm-area-styles").length > 0) {
+							$("#a" + resp.aID + " div.ccm-area-styles").append(r);
+						} else {
+							$("#a" + resp.aID).append(r);
+						}
 					} else {
 						$('#b' + currentBlockID + '-' + resp.aID).before(r).remove();
 					}
