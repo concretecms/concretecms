@@ -23,6 +23,10 @@ class DashboardSitemapSearchController extends Controller {
 		}
 	}
 	
+	public function manage_index() {
+	
+	}
+	
 	public function getRequestedSearchResults() {
 	
 		$dh = Loader::helper('concrete/dashboard/sitemap');
