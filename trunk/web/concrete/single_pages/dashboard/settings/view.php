@@ -519,7 +519,7 @@ $(document).ready(function(){
 			Loader::library('marketplace');
 			if (Marketplace::isConnected()) { ?>
 				
-				<?=t('Your site is currently connected to the concrete5 community.')?>
+				<?=t('Your site is currently connected to the concrete5 community. <a href="%s">Visit project page</a>.', $marketplacePageURL)?>
 			
 			<?
 			

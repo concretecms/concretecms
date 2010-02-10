@@ -13,7 +13,7 @@ class Page extends Collection {
 
 	public static function getByPath($path, $version = 'RECENT', $setRequestMvc = false) {
 		$db = Loader::db();
-		if (ENABLE_LEGACY_CONTROLLER_URLS) {
+		if (ENABLE_LEGACY_CONTROLLER_URLS || (!$setRequestMvc)) {
 			$cID = $db->GetOne("select cID from PagePaths where cPath = ?", array($path));
 		} else {
 			// Get the longest path (viz most specific match) that is contained
