@@ -207,8 +207,8 @@ div#ccm-block-type-grid div.ccm-block-type-grid-entry a {width: 60px; height: 30
 div#ccm-block-type-grid div.ccm-block-type-grid-entry a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7} */
 
 
-div.ccm-block-type-search-wrapper {margin-top: 12px; margin-bottom: 8px}
-div.ccm-block-type-search {margin-left: 10px}
+div.ccm-block-type-search-wrapper {}
+div.ccm-block-type-search {}
 ul#ccm-block-type-list .ccm-block-type-available {display: list-item !important}
-div.ccm-block-type-search input.ccm-input-text {color: #aaa}
+div.ccm-block-type-search {background: #E4F4FF url(../images/icons/search.png) no-repeat scroll 8px 14px; border-bottom: 1px solid #dedede; padding-bottom: 10px; padding-top: 10px; padding-left: 32px}
 a#ccm-block-type-clear-search {margin-left: 2px; display: none}

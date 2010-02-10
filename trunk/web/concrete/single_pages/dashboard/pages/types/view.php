@@ -160,7 +160,7 @@ if ($ctEditMode) {
 		</td>
 	</tr>
 	<tr>
-		<td colspan="3" class="header" class="subheader"><?=t('Available Metadata Attributes')?></td>
+		<td colspan="3" class="header" class="subheader"><?=t('Default Attributes')?></td>
 	</tr>
 	<?
 		$attribs = CollectionAttributeKey::getList();
@@ -305,7 +305,7 @@ if ($ctEditMode) {
         </td>
 	</tr>
 	<tr>
-		<td colspan="3" class="subheader"><?=t('Available Metadata Attributes')?></td>
+		<td colspan="3" class="subheader"><?=t('Default Attributes')?></td>
 	</tr>
 	<?
 		$attribs = CollectionAttributeKey::getList();
