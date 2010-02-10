@@ -38,7 +38,11 @@ class DashboardSettingsController extends Controller {
 		if( !strlen($txtEditorCstmCode) || $txtEditorMode!='CUSTOM' )
 			$txtEditorCstmCode=$this->get_txt_editor_default();
 		$this->set('txtEditorCstmCode', $txtEditorCstmCode );
-				
+		
+		Loader::library('marketplace');
+		if (Marketplace::isConnected()) {
+			$this->set('marketplacePageURL', Marketplace::getSitePageURL());
+		}
 		if ($updated) {
 			switch($updated) {
 				case "tracking_code_saved";

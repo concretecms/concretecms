@@ -433,6 +433,8 @@ if (!defined('CONCRETE5_ORG_URL')) {
 	define('CONCRETE5_ORG_URL', 'http://c5org');
 }
 
+define('MARKETPLACE_BASE_URL_SITE_PAGE', CONCRETE5_ORG_URL.'/private/sites');
+
 define('MARKETPLACE_URL_CONNECT', CONCRETE5_ORG_URL.'/marketplace/connect');
 define('MARKETPLACE_URL_CONNECT_TOKEN_NEW', CONCRETE5_ORG_URL.'/marketplace/connect/-/generate_token');
 
