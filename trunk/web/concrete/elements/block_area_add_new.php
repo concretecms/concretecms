@@ -156,13 +156,14 @@ ccmBlockTypeDoMapKeys = function(e) {
 		$("input[name=ccmBlockTypeSearch]").focus();
 		return true;
 	}
-	*/
 	if (e.keyCode == 8) {
 		$("input[name=ccmBlockTypeSearch]").val('');
 		e.stopPropagation();
 		e.preventDefault();
 		return true;
 	}
+	*/
+
 	if (e.keyCode == 40) {
 		ccmBlockTypeSearchResultsSelect('next', e);
 	} else if (e.keyCode == 38) {
