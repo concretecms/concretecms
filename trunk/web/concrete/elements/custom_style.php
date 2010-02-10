@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-global $c;?>
-<?
+global $c;
+
 $txt = Loader::helper('text');
 $form = Loader::helper('form');
 $fh = Loader::helper('form/color'); 

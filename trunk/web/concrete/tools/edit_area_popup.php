@@ -25,6 +25,7 @@ switch($_GET['atask']) {
 	case 'layout':
 		$toolSection = "block_area_layout";
 		$canViewPane = $ap->canWrite();
+		$args['action'] = $a->getAreaUpdateAction('layout');
 		break;
 	case 'design':
 		$toolSection = 'custom_style';
@@ -35,7 +36,7 @@ switch($_GET['atask']) {
 		if ($canViewPane) {
 			if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 				$styleToDelete = CustomStylePreset::getByID($_REQUEST['deleteCspID']);
-				$styleToDelete->delete();
+				$styleToDelete->delete(); 
 			}
 		}		
 		break;
@@ -46,7 +47,7 @@ switch($_GET['atask']) {
 }
 
 if (!$canViewPane) {
-	die(_("Access Denied."));
+	die(_("Access Denied.")); 
 }
 
 ?>

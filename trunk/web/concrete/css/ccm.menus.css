@@ -31,9 +31,8 @@ div.ccm-menu a {
 	margin: 0px;
 }
 
-div.ccm-menu a.ccm-icon {
-	padding: 0px;
-}
+div.ccm-menu a.ccm-icon { padding: 0px; }
+div.ccm-menu a.ccm-icon-disabled { /* filter:alpha(opacity=50); opacity: 0.5; */ color: #aaa; }
 
 
 div.ccm-menu a:hover {

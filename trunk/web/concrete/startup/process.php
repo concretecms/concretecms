@@ -219,7 +219,7 @@
 	}
 	
 	if ($_GET['atask'] && $valt->validate()) {
-		switch($_GET['atask']) {
+		switch($_GET['atask']) { 		
 			case 'update':
 				if ($cp->canAdminPage()) {
 					$area = Area::get($c, $_GET['arHandle']);
@@ -266,7 +266,33 @@
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
 					exit;
 				}
-				break;
+				break; 
+			case 'layout':
+				$area = Area::get($c, $_GET['arHandle']);
+				$ap = new Permissions($area);
+				if ($ap->canWrite() ) {
+					Loader::model('custom_style');				
+					
+					$nvc = $c->getVersionToModify();
+					
+					//ToDo: check that this layout id has the correct area and collection, to prevent hacks 
+
+					Loader::model('layout'); 
+					$params = array('type'=>'table',
+									'rows'=>intval($_REQUEST['layout_rows']),
+									'columns'=>intval($_REQUEST['layout_columns']),  
+									'locked'=>intval($_REQUEST['locked']),  
+									'layoutID'=>intval($_REQUEST['layoutID']) );  
+					
+					$layout = new Layout( $params ); 
+					
+					
+					$layout->save( $nvc );
+
+					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
+					exit;
+				}				
+				break;					
 		}
 	}
 	

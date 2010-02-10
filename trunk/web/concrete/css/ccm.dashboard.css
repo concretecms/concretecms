@@ -34,7 +34,7 @@ div#ccm-dashboard-nav li {display: block; width: 200px; background: #ededed url(
 div#ccm-dashboard-nav li a {color: #787878; font-weight: bold; display: block; font-size: 13px; height: 40px; overflow: hidden; padding: 6px 11px 0px 12px; text-decoration: none}
 div#ccm-dashboard-nav li a:hover {background: #A2DAFD url(../images/bg_header_active.png) repeat-x scroll;}
 div#ccm-dashboard-nav li.ccm-nav-active a {background: #cdd9dd url(../images/dashboard/bg_nav_active.png) repeat-x scroll bottom right}
-div#ccm-dashboard-nav li a span {font-family: "Helvetica Neue", Arial, Helvetica; font-size: 11px; color: #a8a8a8; height: 12px; overflow: hidden; font-weight: normal; display: block; margin-top: 1px}
+div#ccm-dashboard-nav li a span {font-family: "Helvetica Neue", Arial, Helvetica; font-size: 11px; color: #a8a8a8; height: 14px; overflow: hidden; font-weight: normal; display: block; margin-top: 1px}
 
 /*
 div#ccm-dashboard-page{ width:auto; padding-left:225px; margin:0px; padding-right:20px; padding-top:70px; padding-bottom:30px  }

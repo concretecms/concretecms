@@ -1,0 +1,41 @@
+.ccm-layout{ font-size:12px; list-style:14px; }
+.ccm-layout .ccm-layout-row{ margin-bottom:16px;}
+.ccm-layout .ccm-layout-cell { border:0px none !important; }
+.ccm-layout.ccm-edit-mode .ccm-layout-cell{ overflow:hidden; }
+
+/* Table Layout */
+.ccm-layout-type-table{}
+.ccm-layout-type-table .ccm-layout-col {float:left}
+
+/* Item List Layout */
+.ccm-layout-type-itemlist .ccm-layout-cell{text-align:left}
+.ccm-layout-type-itemlist .ccm-layout-cell-left{float:left; width:33% }
+.ccm-layout-type-itemlist .ccm-layout-cell-right{float:right; width:66% }
+
+/* Staggard Layout */
+.ccm-layout-type-staggered .ccm-layout-row-odd .ccm-layout-cell-short{float:left; width:33% }
+.ccm-layout-type-staggered .ccm-layout-row-odd .ccm-layout-cell-long{float:right; width:66% }
+.ccm-layout-type-staggered .ccm-layout-row-even .ccm-layout-cell-short{float:right; width:33%; text-align:right}
+.ccm-layout-type-staggered .ccm-layout-row-even .ccm-layout-cell-long{float:left; width:66% }
+
+/* Column Layout */
+.ccm-layout-type-columns .ccm-layout-col { float:left; }
+/* .ccm-layout-type-columns .ccm-layout-cell-col-last{ text-align:right } */
+
+
+/* Custom Layout Form Area */
+/*
+#customizeLayoutWrap{border:1px solid #ccc; background:#f6f6f6; padding:8px; margin-bottom:16px; position:relative; width:auto; height:auto; top:0px; right:0px }
+#customizeLayoutWrap .fieldPair{margin-bottom:16px;}
+#customizeLayoutWrap .fieldPair label{float:left; width:25%}
+#customizeLayoutWrap .inlinefieldPair{float:left; width:auto; padding-right:16px; padding-left:8px}
+#customizeLayoutWrap #generateButtonWrap{ float:right;width:auto; height:auto; text-align:right}
+*/ 
+
+.ccm-layout-controls { position:relative; top:0px; left:0px; width:100%; height:auto; padding-top:2px; }
+.ccm-layout-controls .ccm-slider{border:1px solid #aaa; border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px; height:8px; 
+width:100%; background:#f6f6f6; margin-bottom:8px; position:relative; left:0px; top:0px; z-index:1; }
+.ccm-layout-controls .ccm-slider a{ position:absolute; top:-5px; left:0px; width:8px; height:16px; background:#bbb; border:1px solid #999; margin-left:-4px; cursor:move}
+.ccm-layout-controls .ui-state-disabled a { cursor:default;  }
+
+.ccm-layout-controls .ccm-layout-menu-button { width:14px; height:14px; position:absolute; left:0px; top:0px; background:url(../images/icons/add.png) no-repeat center; z-index:2; cursor:pointer;  }
