@@ -24,12 +24,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class Controller {
 
+	public $theme = null;
+	protected $sendUndefinedTasksToView = true;
 	// sets is an array of items set by the set() method. Whew.
 	private $sets = array();
 	private $helperObjects = array();
-	public $theme = null;
 	private $c; // collection
-
 	
 	/**
 	 * Items in here CANNOT be called through the URL
@@ -68,7 +68,7 @@ class Controller {
 		
 		unset($tmpArray);
 		
-		if (!method_exists($this, $task) && $task != '') {
+		if (!is_callable(array($this, $task)) && $task != '') {
 			array_unshift($data, $task);
 		}
 		
@@ -82,14 +82,26 @@ class Controller {
 	 * 2. Pass a method that's in the restrictedMethods array
 	 */
 	private function setupRequestTask($method) {
-		if (method_exists($this, $method) && (strpos($method, 'on_') !== 0) && (!in_array($method, $this->restrictedMethods))) {
-			return $method;			
-		} else if (is_object($this->c) && method_exists($this, $this->c->getCollectionHandle())) {
-			return $this->c->getCollectionHandle();
-		} else if (method_exists($this, 'view')) {
-			return 'view';
+		if ($method == '') {
+			if (is_object($this->c) && is_callable(array($this, $this->c->getCollectionHandle()))) {
+				return $this->c->getCollectionHandle();
+			} else {
+				$method = 'view';
+			}
 		}
-	}
+		if (is_callable(array($this, $method)) && (strpos($method, 'on_') !== 0) && (!in_array($method, $this->restrictedMethods))) {
+			return $method;
+		} else {
+			if ($method != 'view' && $this->sendUndefinedTasksToView == false) {
+				$v = View::getInstance();
+				$v->setCollectionObject($c);
+				$v->render('/page_not_found');
+				exit;
+ 			} else {
+ 				return 'view';
+ 			}
+ 		}
+ 	}
 	
 	/** 
 	 * Based on the current request, the Controller object is loaded with the parameters and task requested
@@ -125,7 +137,7 @@ class Controller {
 	 * @return void
 	 */
 	public function runTask($method, $params) {
-		if (method_exists($this, $method)) {
+		if (is_callable(array($this, $method))) {
 			if(!is_array($params)) {
 				$params = array($params);
 			}
@@ -139,7 +151,7 @@ class Controller {
 			return false;
 		}
 		
-		if (method_exists($this, $method)) {
+		if (is_callable(array($this, $method))) {
 			return true;
 		}
 	}
