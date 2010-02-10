@@ -438,6 +438,29 @@
     </field>
   </table>
   
+  
+  <table name="CollectionVersionAreaLayouts">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="arHandle" type="C" size="255">
+      <KEY/>
+    </field>
+    <field name="layoutID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>  
+  
+  
   <table name="CollectionVersionAreaStyles">
     <field name="cID" type="I" size="10">
       <KEY/>
@@ -967,6 +990,36 @@
       <DEFAULT value="0"/>
     </field>
   </table>
+  
+  <table name="Layouts">
+		<field name="layoutID" type="I">
+			<key />
+			<unsigned />
+			<AUTOINCREMENT/>
+		</field> 
+		
+		<field name="rows" type="i" size="5">
+			<NOTNULL/>
+			<DEFAULT value="3"/>
+		</field>
+		
+		<field name="columns" type="i" size="3">
+			<NOTNULL/>
+			<DEFAULT value="3"/>
+		</field>
+		
+		<field name="breakpoints" type="C" size="255">
+			<DEFAULT value=""/>
+			<NOTNULL/>
+		</field>
+		
+		<field name="locked" type="I1" size="1">
+		  <NOTNULL/>
+		  <DEFAULT value="0"/>
+		</field>		
+  </table>
+  
+  
   <table name="Packages">
     <field name="pkgID" type="I" size="10">
       <KEY/>

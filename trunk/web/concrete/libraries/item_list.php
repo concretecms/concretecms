@@ -127,7 +127,7 @@ class DatabaseItemList extends ItemList {
 		if ($this->sortByString != '') {
 			$q .= 'order by ' . $this->sortByString . ' ';
 		}
-		if ($this->itemsPerPage > 0) {
+		if ($this->itemsPerPage > 0 && (intval($itemsToGet) || intval($offset)) ) {
 			$q .= 'limit ' . $offset . ',' . $itemsToGet . ' ';
 		}
 		
