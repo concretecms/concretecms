@@ -1214,6 +1214,23 @@ $ppWhere = '';
 		$cDate = $dh->getSystemDateTime();
 		
 		$cobj = parent::getByID($this->cID);
+		// create new name
+		
+		$newCollectionName = $this->getCollectionName();
+		$index = 1;
+		$nameCount = 1;
+		
+		while ($nameCount > 0) {
+			// if we have a node at the new level with the same name, we keep incrementing til we don't
+			$nameCount = $db->GetOne('select count(Pages.cID) from CollectionVersions inner join Pages on (CollectionVersions.cID = Pages.cID and CollectionVersions.cvIsApproved = 1) where Pages.cParentID = ? and CollectionVersions.cvName = ?',
+				array($cParentID, $newCollectionName)
+			);
+			if ($nameCount > 0) {
+				$index++;
+				$newCollectionName = $this->getCollectionName() . ' ' . $index;
+			}
+		}
+		
 		$newC = $cobj->duplicate();
 		$newCID = $newC->getCollectionID();
 		
@@ -1266,6 +1283,11 @@ $ppWhere = '';
 			// rescan the collection path
 			$nc->refreshCache();
 			$nc2 = Page::getByID($newCID);
+			if ($index > 1) {
+				$args['cName'] = $newCollectionName;
+				$args['cHandle'] = $nc2->getCollectionHandle() . '-' . $index;
+			}
+			$nc2->update($args);
 			
 			// arguments for event
 			// 1. new page
