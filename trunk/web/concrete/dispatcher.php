@@ -140,7 +140,11 @@
 		// figure out where we need to go
 		$req = Request::get();
 		if ($req->getRequestCollectionPath() != '') {
-			$c = Page::getByPath($req->getRequestCollectionPath(), false);		
+			if (ENABLE_LEGACY_CONTROLLER_URLS) {
+				$c = Page::getByPath($req->getRequestCollectionPath(), false);		
+			} else {
+				$c = Page::getByPath($req->getRequestCollectionPath(), false, true);		
+			}
 		} else {
 			$c = Page::getByID($req->getRequestCollectionID(), false);
 		}

@@ -417,7 +417,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 			
 			if ($task != null) {
-				$_action .= '-/' . $task;
+				if (ENABLE_LEGACY_CONTROLLER_URLS) {
+					$_action .= '-/' . $task;
+				} else {
+					$_action .= $task;			
+				}
 				$args = func_get_args();
 				if (count($args) > 2) {
 					for ($i = 2; $i < count($args); $i++){

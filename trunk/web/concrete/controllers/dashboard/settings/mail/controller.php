@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::library('mail/importer');
 
 class DashboardSettingsMailController extends Controller {
-
+	protected $sendUndefinedTasksToView = false;
 	public function on_start() {
 		$this->set('importers', MailImporter::getList());
 		$subnav = array(
