@@ -620,7 +620,10 @@
 			}
 
 		}
-
+		
+		/** 
+		 * heh. probably should've gone the simpler route and named this getGrandparentID()
+		 */
 		function getParentParentID() {
 			// this has to be the stupidest name of a function I've ever created. sigh
 			$db = Loader::db();
