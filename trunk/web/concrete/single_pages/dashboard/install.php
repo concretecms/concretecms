@@ -109,6 +109,12 @@ if ($this->controller->getTask() == 'update') {
 <? 
 } else { 
 
+	function sortAvailableArray($obj1, $obj2) {
+		$name1 = ($obj1 instanceof Package) ? $obj1->getPackageName() : $obj1->getBlockTypeName();
+		$name2 = ($obj2 instanceof Package) ? $obj2->getPackageName() : $obj2->getBlockTypeName();
+		return strcasecmp($name1, $name2);
+	}
+
 	$pkgAvailableArray = Package::getAvailablePackages();
 
 
@@ -130,7 +136,7 @@ if ($this->controller->getTask() == 'update') {
 		}
 	}
 	$availableArray = array_merge($btAvailableArray, $pkgAvailableArray);
-	ksort($availableArray);
+	usort($availableArray, 'sortAvailableArray');
 	
 	/* Load featured add-ons from the marketplace.
 	 */
@@ -138,11 +144,7 @@ if ($this->controller->getTask() == 'update') {
 	$db = Loader::db();
 	
 	if(ENABLE_MARKETPLACE_SUPPORT){
-		$blocksHelper = Loader::helper('concrete/marketplace/blocks');
-		if ($_REQUEST['reloadCache']) {
-			$blocksHelper->reloadCache = true;
-		} 
-		$purchasedBlocksSource = $blocksHelper->getPurchasesList();
+		$purchasedBlocksSource = Marketplace::getAvailableMarketplaceItems();
 		
 	}else{
 		$purchasedBlocksSource = array();
@@ -154,7 +156,7 @@ if ($this->controller->getTask() == 'update') {
 	$skipHandles = array();
 	foreach($availableArray as $ava) {
 		foreach($purchasedBlocksSource as $pi) {
-			if ($pi->getBlockTypeHandle() == $ava->getPackageHandle()) {
+			if ($pi->getHandle() == $ava->getPackageHandle()) {
 				$skipHandles[] = $ava->getPackageHandle();
 			}
 		}
@@ -162,7 +164,7 @@ if ($this->controller->getTask() == 'update') {
 	
 	$purchasedBlocks = array();
 	foreach($purchasedBlocksSource as $pb) {
-		if (!in_array($pb->getBlockTypeHandle(), $skipHandles)) {
+		if (!in_array($pb->getHandle(), $skipHandles)) {
 			$purchasedBlocks[] = $pb;
 		}
 	}
@@ -353,21 +355,26 @@ if ($this->controller->getTask() == 'update') {
 			<div class="ccm-dashboard-inner">
 			 
 			<? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
-			<p>		
-			<?=t('You can safely and easily extend your website without touching a line of code. Connect to the <a href="%s" target="_blank">concrete5.org marketplace</a>, and you can automatically install your themes and add-ons right here!', MARKETPLACE_URL_LANDING)?>
-			</p>
 					
 			<div class="ccm-addon-marketplace-account">
-	
-			<? if (!UserInfo::isRemotelyLoggedIn()) { ?> 
-				<a href="#" onclick="ccmPopupLogin.show('', loginSuccess, '', 1)">Sign in or create an account.</a>
-			<? } else { ?> 
-				<?=t('You have connected this website to the concrete5 marketplace as  ');?>
-				  <a href="<?=CONCRETE5_ORG_URL ?>/profile/-/<?=UserInfo::getRemoteAuthUserId() ?>/" target="_blank" ><?=UserInfo::getRemoteAuthUserName() ?></a>
-				  <?=t('(Not your account? <a href="#" onclick="ccm_support.signOut(logoutSuccess)">Sign Out</a>)')?>
-                  <div style="padding-top:4px;"><?=t('Something Missing?')?> <a href="<?=$this->url('/dashboard/install')?>?reloadCache=1"><?=t('Refresh this list')?></a></div>
-			<? } ?>
-				<div style="clear:both"></div>
+			<? 
+			Loader::library('marketplace');
+			if (Marketplace::isConnected()) { ?>
+				
+				<?=t('Your site is currently connected to the concrete5 community. <a href="%s">Visit project page</a>.', $marketplacePageURL)?>
+			
+			<?
+			
+			} else { ?>
+			
+				<?=t('Your site is <strong>not</strong> connected to the concrete5 community.')?>
+				<br/><br/>
+				<? print $h->button(t('Connect to Community'), $this->url('/dashboard/settings/marketplace'))?>
+				
+				<?			
+			}
+			?>
+			
 			</div>
 			
 			<? } ?>
@@ -418,7 +425,7 @@ if ($this->controller->getTask() == 'update') {
 					<td class="ccm-addon-list-description"><h3><?=$pb->btName?></h3>
 					<?=$pb->btDescription?>
 					</td>
-					<td width="120"><?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getRemoteCollectionID()), "right")?></td>
+					<td width="120"><?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getMarketplaceItemID()), "right")?></td>
 				</tr>
 				</table>
 				</div>
