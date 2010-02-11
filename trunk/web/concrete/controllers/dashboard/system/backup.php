@@ -23,20 +23,25 @@ class DashboardSystemBackupController extends Controller {
 		if (count($arr_bckups) > 0) {
 		 foreach ($arr_bckups as $bkupfile) {
 			preg_match('/[0-9]+/',$bkupfile,$timestamp);
-			$arr_backupfileinfo[] = Array("file" => $bkupfile,  "date" =>  date("n-j-Y H:i",$timestamp[0]));
+			$arr_backupfileinfo[] = Array("file" => $bkupfile,  "date" =>  date("Y-m-d H:i:s",$timestamp[0]));
 		 }
 		 $this->set('backups',$arr_backupfileinfo);
 		}
 	}
 	
 	public function download($file) {
-		chmod(DIR_FILES_BACKUPS . '/'. $file, 0666);
-		if (file_exists(DIR_FILES_BACKUPS . '/' . $file)) {
-			$f = Loader::helper('file');
-			$f->forceDownload(DIR_FILES_BACKUPS . '/' . $file);
-			exit;
+		if (file_exists(DIR_FILES_BACKUPS . '/'. $file)) {
+			chmod(DIR_FILES_BACKUPS . '/'. $file, 0666);
+			if (file_exists(DIR_FILES_BACKUPS . '/' . $file)) {
+				$f = Loader::helper('file');
+				$f->forceDownload(DIR_FILES_BACKUPS . '/' . $file);
+				exit;
+			}
+			chmod(DIR_FILES_BACKUPS . '/'. $file, 000);
+		} else {
+			$this->set('error', array(t('Unable to locate file %s', DIR_FILES_BACKUPS . '/' . $file)));
+			$this->view();
 		}
-		chmod(DIR_FILES_BACKUPS . '/'. $file, 000);
 	}
 	
 	public function delete_backup($str_fname) {
