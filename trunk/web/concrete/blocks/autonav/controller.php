@@ -606,10 +606,7 @@
 		function populateParentIDArray($cID) {
 			// returns an array of collection IDs going from the top level to the current item
 			$db = Loader::db();
-			$q = "select cParentID from Pages where cID = '$cID'";
-			$r = $db->querycache(10, $q);
-			$row = $r->fetchRow();
-			$cParentID = $row['cParentID'];
+			$cParentID = Page::getCollectionParentIDFromChildID($cID);
 			if ($cParentID > -1) {
 				if ($cParentID != $stopAt) {
 					if (!in_array($cParentID, $this->cParentIDArray)) {
@@ -626,11 +623,7 @@
 		 */
 		function getParentParentID() {
 			// this has to be the stupidest name of a function I've ever created. sigh
-			$db = Loader::db();
-			$q = "select cParentID from Pages where cID = '{$this->cParentID}'";
-			$r = $db->querycache(10, $q);
-			$row = $r->fetchRow();
-			$cParentID = $row['cParentID'];
+			$cParentID = Page::getCollectionParentIDFromChildID($this->cParentID);
 			return ($cParentID) ? $cParentID : 0;
 		}
 	}
