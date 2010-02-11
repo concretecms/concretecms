@@ -23,7 +23,7 @@ $form = Loader::helper('form');
 <input type="hidden" name="autonavPreviewPane" value="<?=REL_DIR_FILES_TOOLS_BLOCKS?>/<?=$this->getBlockTypeHandle()?>/preview_pane.php" />
 
 <strong><?=t('Pages Should Appear')?></strong><br>
-<select name="orderBy" onchange="reloadPreview(this.form)">
+<select name="orderBy">
 	<option value="display_asc" <? if ($info['orderBy'] == 'display_asc') { ?> selected<? } ?>><?=t('in their sitemap order.')?></option>
 	<option value="chrono_desc" <? if ($info['orderBy'] == 'chrono_desc') { ?> selected<? } ?>><?=t('with the most recent first.')?></option>
     <option value="chrono_asc" <? if ($info['orderBy'] == 'chrono_asc') { ?> selected<? } ?>><?=t('with the earliest first.')?></option>
@@ -37,7 +37,7 @@ $form = Loader::helper('form');
 <?=t('Display pages to users even when those users cannot access those pages.')?>
 <br/><br/>
 <strong><?=t('Display Pages')?></strong><br>
-<select name="displayPages" onchange="toggleCustomPage(this.value); reloadPreview(this.form);">
+<select name="displayPages" onchange="toggleCustomPage(this.value);">
 	<option value="top"<? if ($info['displayPages'] == 'top') { ?> selected<? } ?>><?=t('at the top level.')?></option>
 	<option value="second_level"<? if ($info['displayPages'] == 'second_level') { ?> selected<? } ?>><?=t('at the second level.')?></option>
 	<option value="third_level"<? if ($info['displayPages'] == 'third_level') { ?> selected<? } ?>><?=t('at the third level.')?></option>
@@ -56,7 +56,7 @@ print $form->selectPage('displayPagesCID', $info['displayPagesCID']);
 <br><br>
 
 <strong><?=t('Sub Pages to Display')?></strong><br>
-<select name="displaySubPages" onchange="toggleSubPageLevels(this.value); reloadPreview(this.form);">
+<select name="displaySubPages" onchange="toggleSubPageLevels(this.value);">
 	<option value="none"<? if ($info['displaySubPages'] == 'none') { ?> selected<? } ?>><?=t('None')?></option>
 	<option value="relevant"<? if ($info['displaySubPages'] == 'relevant') { ?> selected<? } ?>><?=t('Relevant sub pages.')?></option>
 	<option value="relevant_breadcrumb"<? if ($info['displaySubPages'] == 'relevant_breadcrumb') { ?> selected<? } ?>><?=t('Display breadcrumb trail.')?></option>
@@ -65,7 +65,7 @@ print $form->selectPage('displayPagesCID', $info['displayPagesCID']);
 <br><br>
 
 <strong><?=t('Sub-Page Levels')?></strong><br>
-<select id="displaySubPageLevels" name="displaySubPageLevels" <? if ($info['displaySubPages'] == 'none') { ?> disabled <? } ?> onchange="toggleSubPageLevelsNum(this.value); reloadPreview(this.form);">
+<select id="displaySubPageLevels" name="displaySubPageLevels" <? if ($info['displaySubPages'] == 'none') { ?> disabled <? } ?> onchange="toggleSubPageLevelsNum(this.value);">
 	<option value="enough"<? if ($info['displaySubPageLevels'] == 'enough') { ?> selected<? } ?>><?=t('Display sub pages to current.')?></option>
 	<option value="enough_plus1"<? if ($info['displaySubPageLevels'] == 'enough_plus1') { ?> selected<? } ?>><?=t('Display sub pages to current +1.')?></option>
 	<option value="all"<? if ($info['displaySubPageLevels'] == 'all') { ?> selected<? } ?>><?=t('Display all.')?></option>
@@ -73,7 +73,7 @@ print $form->selectPage('displayPagesCID', $info['displayPagesCID']);
 </select>
 <div id="divSubPageLevelsNum"<? if ($info['displaySubPageLevels'] != 'custom') { ?> style="display: none"<? } ?>>
 	<br>
-	<input type="text" name="displaySubPageLevelsNum" onchange="reloadPreview(this.form)" value="<?=$info['displaySubPageLevelsNum']?>" style="width: 30px; vertical-align: middle">
+	<input type="text" name="displaySubPageLevelsNum" value="<?=$info['displaySubPageLevelsNum']?>" style="width: 30px; vertical-align: middle">
 	&nbsp;<?=t('levels')?>
 </div>
 </div>

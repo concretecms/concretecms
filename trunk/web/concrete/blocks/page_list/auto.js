@@ -19,7 +19,6 @@ var pageList ={
 		this.truncateSwitch.change(function(){ pageList.truncationShown(this); });
 		
 		this.tabSetup();
-		this.loadPreview();
 	},	
 	tabSetup: function(){
 		$('ul#ccm-pagelist-tabs li a').each( function(num,el){ 

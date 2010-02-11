@@ -76,7 +76,5 @@
 	
 	$(function() {	
 		autonavTabSetup();		
-		reloadPreview(document.blockForm);
-		}
-	);
+	});
 
