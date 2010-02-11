@@ -20,6 +20,8 @@
  
  layout delete: what to do with lost blocks? provide popup option? 
  
+ add check in quick save to make sure layout belongs to that area 
+ 
  
  */
  
@@ -112,9 +114,7 @@
 	}
 	
 	//adds or updates
-	public function save( $c ){
-		
-		if( !intval( $c->cID ) ) return false; 
+	public function save(  ){ 
 		
 		if( !is_array($this->breakpoints) ) $this->breakpoints = explode(',',$this->breakpoints); 
 		$vals = array( intval($this->columns), intval($this->rows), intval($this->locked), join(',',$this->breakpoints)  );
