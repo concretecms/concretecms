@@ -11,52 +11,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 */
 class Page extends Collection {
 
-	public static function getByPath($path, $version = 'RECENT', $setRequestMvc = false) {
+	public static function getByPath($path, $version = 'RECENT') {
 		$db = Loader::db();
-		if (ENABLE_LEGACY_CONTROLLER_URLS || (!$setRequestMvc)) {
-			$cID = $db->GetOne("select cID from PagePaths where cPath = ?", array($path));
-		} else {
-			// Get the longest path (viz most specific match) that is contained
-			// within the request path
-			$cID = $db->Execute("select cID,cPath from PagePaths where ? LIKE CONCAT(cPath,'%') ORDER BY LENGTH(cPath) DESC LIMIT 0,1", array($path));
-			$cID = $cID->FetchRow();
-			if ($cID) {
-				$req = Request::get();
-				$cPath = $cID['cPath'];
-				$cID = $cID['cID'];
-				$req->setCollectionPath($cPath);
-				
-				// This means the task and params should be set in the request
-				// object
-				if ($setRequestMvc) {
-					
-					// The task and params is the part of the request path minus
-					// the part of the path that was matched in the PagePaths
-					// table.
-					$task = substr($path, strlen($cPath));
-					$task = trim($task, '/');
-					$task = explode('/', $task);
-					
-					// Support old style requests with a hyphen separating the
-					// task.  Simply can be gotten rid of.
-					if ($task[0] == '-') {
-						array_shift($task);
-					}
-					
-					// If there is a task, set it in the request
-					if (isset($task[0]) && $task[0]) {
-						$req->setRequestTask($task[0]);
-						
-						// If there are params, set them in the request
-						if (isset($task[1])) {
-							array_shift($task);
-							$params = implode('/', $task);
-							$req->setRequestTaskParameters($params);
-						}
-					}
-				}
-			}
-		}
+		$cID = $db->GetOne("select cID from PagePaths where cPath = ?", array($path));
 		return Page::getByID($cID, $version);
 	}
 	

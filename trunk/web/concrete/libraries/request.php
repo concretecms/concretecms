@@ -78,6 +78,57 @@ class Request {
 		return $req;
 	}
 	
+	/** 
+	 * our new MVC way of doing things. Parses the collection path using like to find
+	 * where the path stops and the parameters start. Enables us to use urls without a
+	 * task/param separator in them
+	 */
+	public function getRequestedPage() {
+		$db = Loader::db();
+		$path = $this->getRequestCollectionPath();
+		// Get the longest path (viz most specific match) that is contained
+		// within the request path
+		$cID = $db->Execute("select cID,cPath from PagePaths where ? LIKE CONCAT(cPath,'%') ORDER BY LENGTH(cPath) DESC LIMIT 0,1", array($this->getRequestCollectionPath()));
+		$cID = $cID->FetchRow();
+		if ($cID) {
+			$req = Request::get();
+			$cPath = $cID['cPath'];
+			$cID = $cID['cID'];
+			$req->setCollectionPath($cPath);			
+				
+			// The task and params is the part of the request path minus
+			// the part of the path that was matched in the PagePaths
+			// table.
+			$task = substr($path, strlen($cPath));
+			$task = trim($task, '/');
+			$task = explode('/', $task);
+			
+			// Support old style requests with a hyphen separating the
+			// task.  Simply can be gotten rid of.
+			if ($task[0] == '-') {
+				array_shift($task);
+			}
+			
+			// If there is a task, set it in the request
+			if (isset($task[0]) && $task[0]) {
+				$req->setRequestTask($task[0]);
+				
+				// If there are params, set them in the request
+				if (isset($task[1])) {
+					array_shift($task);
+					$params = implode('/', $task);
+					$req->setRequestTaskParameters($params);
+				}
+			}
+			
+			$c = Page::getByID($cID);
+		} else {
+			$c = new Page();
+			$c->loadError(COLLECTION_NOT_FOUND);
+		}
+		return $c;
+	}
+	
 	private function parse() {
 		
 		$path = $this->requestPath;
@@ -176,8 +227,8 @@ class Request {
 
 		
 		// just path
-		if (preg_match("/^(.[^\.]*)/i", $path, $matches)) {
-			$this->cPath = $matches[1];
+		if ($path != '') {
+			$this->cPath = $path;
 			return;
 		}		
 	}
