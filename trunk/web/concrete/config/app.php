@@ -129,6 +129,10 @@ if (!defined('ENABLE_REGISTRATION')) {
 	Config::getOrDefine('ENABLE_REGISTRATION', false);	
 }
 
+if (!defined('ENABLE_USER_TIMEZONES')) {
+	Config::getOrDefine('ENABLE_USER_TIMEZONES', false);	
+}
+
 //these are the hashkey types for registration related authentication
 define('UVTYPE_REGISTER', 0);
 define('UVTYPE_CHANGE_PASSWORD', 1);
@@ -145,41 +149,3 @@ define('BLOCK_NOT_AVAILABLE_TEXT', t('This block is no longer available.'));
 define('GUEST_GROUP_NAME', t('Guest'));
 define('REGISTERED_GROUP_NAME', t('Registered Users'));
 define('ADMIN_GROUP_NAME', t('Admin'));
-
-# User & Registration Settings
-
-if (!defined('ENABLE_OPENID_AUTHENTICATION')) { 
-	Config::getOrDefine('ENABLE_OPENID_AUTHENTICATION', false);
-}
-if (!defined('ENABLE_USER_PROFILES')) { 
-	Config::getOrDefine('ENABLE_USER_PROFILES', false);
-}
-
-# If user registration with email address is true we don't use username's - we just use uEmail and we populate uName with the email address
-if (!defined('USER_REGISTRATION_WITH_EMAIL_ADDRESS')) {
-	Config::getOrDefine('USER_REGISTRATION_WITH_EMAIL_ADDRESS', false);
-}
-
-if (!defined('USER_VALIDATE_EMAIL')) {
-	Config::getOrDefine('USER_VALIDATE_EMAIL', false);	
-}
-
-if (!defined('USER_VALIDATE_EMAIL_REQUIRED')) {
-	Config::getOrDefine('USER_VALIDATE_EMAIL_REQUIRED', false);	
-}
-
-if (!defined('USER_REGISTRATION_APPROVAL_REQUIRED')) {
-	Config::getOrDefine('USER_REGISTRATION_APPROVAL_REQUIRED', false);
-}
-
-if (!defined('REGISTRATION_TYPE')) {
-	Config::getOrDefine('REGISTRATION_TYPE', 'disabled');	
-}
-
-if (!defined('ENABLE_REGISTRATION')) {
-	Config::getOrDefine('ENABLE_REGISTRATION', false);	
-}
-
-if (!defined('ENABLE_USER_TIMEZONES')) {
-	Config::getOrDefine('ENABLE_USER_TIMEZONES', false);	
-}
