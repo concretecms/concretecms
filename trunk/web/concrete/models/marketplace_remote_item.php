@@ -10,7 +10,7 @@
 * @category Concrete
 */
 
-class BlockTypeRemote extends BlockType{
+class MarketplaceRemoteItem extends Object {
 
 	protected $isPurchase=false;
 	protected $price=0.00;	
@@ -20,9 +20,10 @@ class BlockTypeRemote extends BlockType{
 	protected $remoteIconURL='';
 
 	function loadFromXML( $options=array() ){
-		if($options['name']) $this->btName=(string) $options['name'];
+		if($options['mpID']) $this->mpID=(string) $options['mpID'];
+		if($options['name']) $this->name=(string) $options['name'];
 		if($options['cID']) $this->remoteCID=(string) $options['cID'];
-		if($options['handle']) $this->btHandle= (string) $options['handle'];
+		if($options['handle']) $this->handle= (string) $options['handle'];
 		if($options['description']) $this->btDescription= (string) $options['description'];
 		if($options['url']) $this->remoteURL= (string) $options['url']; 
 		if($options['file']) $this->remoteFileURL= (string) $options['file']; 
@@ -31,8 +32,9 @@ class BlockTypeRemote extends BlockType{
 		if($options['version']) $this->version = (string) $options['version'];
 	}	
 
-	public function getHandle() { return $this->btHandle; }
-	public function getName(){ return $this->btName; }
+	public function getMarketplaceItemID() {return $this->mpID;}
+	public function getHandle() { return $this->handle; }
+	public function getName(){ return $this->name; }
 	public function getPrice(){ return sprintf("%.2f",floatval($this->price)); }
 	public function getRemoteCollectionID(){ return $this->remoteCID; }
 	public function getRemoteURL(){ return $this->remoteURL; }

@@ -88,7 +88,7 @@ class Request {
 		$path = $this->getRequestCollectionPath();
 		// Get the longest path (viz most specific match) that is contained
 		// within the request path
-		$cID = $db->Execute("select cID,cPath from PagePaths where ? LIKE CONCAT(cPath,'%') ORDER BY LENGTH(cPath) DESC LIMIT 0,1", array($this->getRequestCollectionPath()));
+		$cID = $db->Execute("select cID,cPath from PagePaths where ? LIKE CONCAT(replace(cPath, '_','\_'),'%') ORDER BY LENGTH(cPath) DESC LIMIT 0,1", array($this->getRequestCollectionPath()));
 		$cID = $cID->FetchRow();
 		if ($cID) {
 			$req = Request::get();

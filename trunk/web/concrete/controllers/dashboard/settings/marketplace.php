@@ -33,6 +33,7 @@ class DashboardSettingsMarketplaceController extends Controller {
 			$this->set('error', t('An unexpected error occurred when connecting your site to the marketplace.'));
 		} else {
 			Config::save('MARKETPLACE_SITE_TOKEN', $_POST['csToken']);
+			Config::save('MARKETPLACE_SITE_URL_TOKEN', $_POST['csURLToken']);
 			$this->redirect('/dashboard/settings/marketplace', 'view', 1);
 		}
 	}

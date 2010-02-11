@@ -21,6 +21,11 @@ class DashboardInstallController extends Controller {
 			array(View::url('/dashboard/install', 'update'), t('Update Add-Ons'), $updateSelected)
 		);
 		$this->set('subnav', $subnav);
+		Loader::library('marketplace');
+		if (Marketplace::isConnected()) {
+			$this->set('marketplacePageURL', Marketplace::getSitePageURL());
+		}
+
 	}
 
 	public function view() {
@@ -186,7 +191,7 @@ class DashboardInstallController extends Controller {
 		}
 	}
 
-    public function remote_purchase($remoteCID=null){
+    public function remote_purchase($remoteMPID=null){
     	$ph = Loader::helper('package');
     	$errors = $ph->install_remote('purchase', $remoteCID, false);
 		if (is_array($errors)) {

@@ -53,11 +53,14 @@ class ValidationIdentifierHelper {
 	 * @param string key
 	 * @param int length
 	 */
-	public function generate($table, $key, $length = 12) {
+	public function generate($table, $key, $length = 12, $lowercase = false) {
 		$foundHash = false;
 		$db = Loader::db();
 		while ($foundHash == false) {
 			$string = $this->getString($length);
+			if ($lowercase) {
+				$string = strtolower($string);
+			}
 			$cnt = $db->GetOne("select count(" . $key . ") as total from " . $table . " where " . $key . " = ?", array($string));
 			if ($cnt < 1) {
 				$foundHash = true;
