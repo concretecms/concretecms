@@ -35,20 +35,22 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * @return CollectionType
 		*/
 		public static function getByHandle($ctHandle) {
-			$db = Loader::db();
-			$q = "SELECT ctID, ctHandle, ctName, ctIcon, pkgID from PageTypes where ctHandle = ?";
-			$r = $db->query($q, array($ctHandle));
-			if ($r) {
-				$row = $r->fetchRow();
-				$r->free();
-				if (is_array($row)) {
-					$ct = new CollectionType; 
-					$row['mcID'] = $db->GetOne("select cID from Pages where ctID = ? and cIsTemplate = 1", array($row['ctID']));
-					$ct = new CollectionType; 
-					$ct->setPropertiesFromArray($row);
-				}					
+			$ct = Cache::get('pageTypeByHandle', $ctHandle);
+			if (!is_object($ct)) {
+				$db = Loader::db();
+				$q = "SELECT ctID, ctHandle, ctName, ctIcon, pkgID from PageTypes where ctHandle = ?";
+				$r = $db->query($q, array($ctHandle));
+				if ($r) {
+					$row = $r->fetchRow();
+					$r->free();
+					if (is_array($row)) {
+						$ct = new CollectionType; 
+						$row['mcID'] = $db->GetOne("select cID from Pages where ctID = ? and cIsTemplate = 1", array($row['ctID']));
+						$ct->setPropertiesFromArray($row);
+					}					
+				}
+				Cache::set('pageTypeByHandle', $ctHandle, $ct);
 			}
-
 			return $ct;
 		}
 		
@@ -66,6 +68,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 
 		public static function getByID($ctID, $obj = null) {
+			if ($obj == null) {
+				$ct = Cache::get('pageTypeByID', $ctID);
+				if (is_object($ct)) {
+					return $ct;
+				}
+			}
+			
 			$db = Loader::db();
 			$q = "SELECT ctID, ctHandle, ctName, ctIcon, pkgID from PageTypes where PageTypes.ctID = ?";
 			$r = $db->query($q, array($ctID));
@@ -78,10 +87,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$ct->setPropertiesFromArray($row);
 					if ($obj) {
 						$ct->limit($obj);
+					} else {
+						Cache::set('pageTypeByID', $ctID, $ct);
 					}
 				}
 			}
-
 			
 			return $ct;
 		}
@@ -106,6 +116,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 
+		public function refreshCache() {
+			Cache::delete('pageTypeByID', $this->ctID);
+			Cache::delete('pageTyByHandle', $this->ctHandle);
+			Cache::delete('pageTypeList');
+		}
+		
 		public static function getList($limiterType = null) {
 			$db = Loader::db();
 
@@ -179,6 +195,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$r2 = $db->prepare($q2);
 				$res2 = $db->execute($r2, $v2);
 				if ($res2) {
+					Cache::delete('pageTypeList');
 					return CollectionType::getByID($ctID);
 				}
 			}
@@ -219,6 +236,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$db->query("insert into PageTypeAttributes (ctID, akID) values (?, ?)", $v3);
 				}
 			}
+			
+			$this->refreshCache();
 		}
 		
 		public function assignCollectionAttribute($ak) {
