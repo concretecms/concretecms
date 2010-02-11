@@ -9,6 +9,7 @@ function ccmLayout( layout_id, area, locked ){
 	this.locked = locked;
 	this.area = area;
 	
+	
 	this.init = function(){ 
 	
 		this.ccmControls=$("#ccm-layout-controls-"+this.layout_id);
@@ -20,6 +21,7 @@ function ccmLayout( layout_id, area, locked ){
 	
 		this.gridSizing();
 	}
+	
 	
 	this.optionsMenu=function(e){ 
 		
@@ -50,13 +52,10 @@ function ccmLayout( layout_id, area, locked ){
 			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuEditLayout' + this.layout_id + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
 			
 			
-			if(this.locked){
-				html += '<li><a class="ccm-icon ccm-icon-disabled" id="menuAreaLayoutLock' + this.layout_id + '" href="#"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + ccmi18n.areaLayoutLocked + '</span></a></li>';
-			}else{
-				html += '<li><a class="ccm-icon" id="menuAreaLayoutLock' + this.layout_id + '" href=""><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + ccmi18n.lockAreaLayout + '</span></a></li>';
-			}
+			var lockText = (this.locked) ? ccmi18n.unlockAreaLayout : ccmi18n.lockAreaLayout ; 
+			html += '<li><a class="ccm-icon" id="menuAreaLayoutLock' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + lockText + '</span></a></li>';
 			
-			html += '<li><a class="ccm-icon" id="menuAreaLayouDelete' + this.layout_id + '" href="#"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n.deleteLayout + '</span></a></li>';
+			html += '<li><a class="ccm-icon" id="menuAreaLayouDelete' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n.deleteLayout + '</span></a></li>';
 			
 			html += '</ul>';
 			html += '</div></div>';
@@ -66,6 +65,10 @@ function ccmLayout( layout_id, area, locked ){
 			var aJQobj = $(aobj);
 			
 			aJQobj.find('#menuEditLayout' + this.layout_id).dialog(); 
+			
+			//lock click
+			var layoutObj=this;
+			aJQobj.find('#menuAreaLayoutLock' + this.layout_id).click( function(){ layoutObj.lock(); } ); 
 			
 			//delete click
 			aJQobj.find('#menuAreaLayouDelete' + this.layout_id).click(function(){
@@ -85,9 +88,53 @@ function ccmLayout( layout_id, area, locked ){
 		ccm_fadeInMenu(aobj, e);		
 	}
 	
-	this.quickSave=function(){
-		alert('quick save');	
+	
+	this.lock=function(lock){ 
+	 
+		var a = $('#menuAreaLayoutLock' + this.layout_id); 
+		this.locked = !this.locked;
+		if( this.locked ){ 
+			a.find('span').html(ccmi18n.unlockAreaLayout);
+			if(this.s) this.s.slider( 'disable' ); 
+		}else{ 
+			a.find('span').html(ccmi18n.lockAreaLayout);
+			if(this.s) this.s.slider( 'enable');
+		}
+		
+		var lock = (this.locked) ? 1 : 0;
+		this.servicesAjax = $.ajax({ 
+			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&task=lock&lock=' + lock,
+			success: function(response){  
+				eval('var jObj='+response); 
+				if(parseInt(jObj.success)!=1){ 
+					alert(jObj.msg);
+				}else{    
+					//success
+				}
+			}
+		});	
+		
 	}
+	
+	
+	this.quickSave=function(){ 
+	
+		var breakPoints=this.ccmControls.find('.layout_col_break_points').val();
+	
+		this.servicesAjax = $.ajax({ 
+			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&task=quicksave&breakpoints='+encodeURI(breakPoints),
+			success: function(response){  
+				eval('var jObj='+response); 
+				if(parseInt(jObj.success)!=1){ 
+					alert(jObj.msg);
+				}else{    
+					//success
+				}
+			}
+		});
+		
+	}
+
 
 	this.gridSizing = function(){
 		this.ccmGrid=$("#ccm-layout-"+this.layout_id); 
@@ -98,54 +145,62 @@ function ccmLayout( layout_id, area, locked ){
 		if(cols>1){
 			var startPoints=this.ccmControls.find('.layout_col_break_points').val().replace(/%/g,'').split('|');  
 			
-			var s = this.ccmControls.find(".ccm-layout-controls-slider");
+			this.s = this.ccmControls.find(".ccm-layout-controls-slider");
 			
-			s.get(0).layoutObj=this;
-			s.get(0).ccmGrid=this.ccmGrid;
+			this.s.get(0).layoutObj=this;
+			this.s.get(0).ccmGrid=this.ccmGrid;
 			
-			s.slider( { 
+			this.s.slider( { 
 				step: 1, 
 				values: startPoints,
 				change: function(){  
+					this.layoutObj.resizeGrid(this.childNodes); 
 					var breakPoints=[];			
 					for(var i=0;i<this.childNodes.length;i++)
 						breakPoints.push(this.childNodes[i].style.left); 
-					parseInt( this.layoutObj.ccmControls.find('.layout_col_break_points').val( breakPoints.join('|') )); 
+					this.layoutObj.ccmControls.find('.layout_col_break_points').val( breakPoints.join('|') ); 
 					this.layoutObj.quickSave();
 				},
-				slide:function(){ 				
-					//item list type
-					var pos=parseInt(this.childNodes[0].style.left.replace('%',''));
-					if(this.ccmGrid.hasClass('ccm-layout-type-itemlist')){ 
-						this.ccmGrid.find('.ccm-layout-cell-left').css('width',pos+'%');
-						this.ccmGrid.find('.ccm-layout-cell-right').css('width',(99-pos)+'%');
-					}
-					
-					//staggered type 
-					if(this.ccmGrid.hasClass('ccm-layout-type-staggered')){ 
-						this.ccmGrid.find('.ccm-layout-row-odd .ccm-layout-cell-short').css('width',pos+'%');
-						this.ccmGrid.find('.ccm-layout-row-odd .ccm-layout-cell-long').css('width',(99-pos)+'%');
-						var pos2=parseInt(this.childNodes[1].style.left.replace('%',''));
-						this.ccmGrid.find('.ccm-layout-row-even .ccm-layout-cell-long').css('width',pos2+'%');
-						this.ccmGrid.find('.ccm-layout-row-even .ccm-layout-cell-short').css('width',(99-pos2)+'%');
-					}			
-
-					//column & table type
-					if(this.ccmGrid.hasClass('ccm-layout-type-columns') || this.ccmGrid.hasClass('ccm-layout-type-table')){ 
-						var prevW=0;
-						var i; 					
-						for(i=0;i<this.childNodes.length;i++){
-							var pos=parseInt(this.childNodes[i].style.left.replace('%',''));
-							var w=pos-prevW;
-							prevW+=w;
-							this.ccmGrid.find('.ccm-layout-col-'+(i+1)).css('width',w+'%');						
-						}
-						this.ccmGrid.find('.ccm-layout-col-'+(i+1)).css('width',(100-prevW)+'%');  
-					}
+				slide:function(){ 			 
+					this.layoutObj.resizeGrid(this.childNodes); 
 				}
 			});
-			if( parseInt(this.ccmControls.find('.layout_locked').val()) ) s.slider( 'disable' );
+			if( parseInt(this.ccmControls.find('.layout_locked').val()) ) this.s.slider( 'disable' );
 		}	
 	}
 		
-}
+		
+	this.resizeGrid=function(childNodes){	
+		//item list type 
+		var pos=parseInt(childNodes[0].style.left.replace('%',''));
+		if(this.ccmGrid.hasClass('ccm-layout-type-itemlist')){ 
+			this.ccmGrid.find('.ccm-layout-cell-left').css('width',pos+'%');
+			this.ccmGrid.find('.ccm-layout-cell-right').css('width',(99-pos)+'%');
+		}
+		
+		//staggered type 
+		if(this.ccmGrid.hasClass('ccm-layout-type-staggered')){ 
+			this.ccmGrid.find('.ccm-layout-row-odd .ccm-layout-cell-short').css('width',pos+'%');
+			this.ccmGrid.find('.ccm-layout-row-odd .ccm-layout-cell-long').css('width',(99-pos)+'%');
+			var pos2=parseInt(childNodes[1].style.left.replace('%',''));
+			this.ccmGrid.find('.ccm-layout-row-even .ccm-layout-cell-long').css('width',pos2+'%');
+			this.ccmGrid.find('.ccm-layout-row-even .ccm-layout-cell-short').css('width',(99-pos2)+'%');
+		}			
+
+		//column & table type
+		if(this.ccmGrid.hasClass('ccm-layout-type-columns') || this.ccmGrid.hasClass('ccm-layout-type-table')){ 
+			var prevW=0;
+			var i; 					
+			for(i=0;i<childNodes.length;i++){
+				var pos=parseInt(childNodes[i].style.left.replace('%',''));
+				var w=pos-prevW;
+				prevW+=w;
+				this.ccmGrid.find('.ccm-layout-col-'+(i+1)).css('width',w+'%');						
+			}
+			this.ccmGrid.find('.ccm-layout-col-'+(i+1)).css('width',(100-prevW)+'%');  
+		}
+	}
+	
+	
+	
+} 
