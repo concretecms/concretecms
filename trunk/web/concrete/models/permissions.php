@@ -233,6 +233,38 @@ class Permissions extends Object {
 		return $this->originalObj;
 	}
 	
+	public function populateAllPageTypes() {
+		$ca = new Cache();
+		$pageTypes = $ca->get('pageTypeList', false);
+		if (is_array($pageTypes)) {
+			$this->addCollectionTypes = $pageTypes;
+		} else {
+			$db = Loader::db();
+			$q = "select ctID from PageTypes";
+			$r = $db->query($q);
+			while($row = $r->fetchRow()) {
+				$this->addCollectionTypes[] = $row['ctID'];
+			}
+			$ca->set('pageTypeList', false, $this->addCollectionTypes);
+		}
+	}
+	
+	public function populateAllBlockTypes() {
+		$ca = new Cache();
+		$blockTypes = $ca->get('blockTypeList', false);
+		if (is_array($blockTypes)) {
+			$this->addBlockTypes = $blockTypes;
+		} else {
+			$db = Loader::db();
+			$q = "select btID from BlockTypes where btIsInternal = 0";
+			$r = $db->query($q);
+			while($row = $r->fetchRow()) {
+				$this->addBlockTypes[] = $row['btID'];
+			}
+			$ca->set('blockTypeList', false, $this->addBlockTypes);
+		}
+	}
+	
 	function mergePermissions($permissions) {
 		// given an array of different permission sets, we merge them (additive) into one set, and return
 		// first we concatenate all the permissions together
@@ -454,21 +486,9 @@ class CollectionPermissions extends Permissions {
 				*/
 
 				$this->permissionSet = 'r:rv:wa:av:cp:dc:db:adm';
+				$this->populateAllPageTypes();
+				$this->populateAllBlockTypes();
 
-				
-				$db = Loader::db();
-				$q = "select ctID from PageTypes";
-				$r = $db->querycache(10, $q);
-				while($row = $r->fetchRow()) {
-					$this->addCollectionTypes[] = $row['ctID'];
-				}
-				
-				$db = Loader::db();
-				$q = "select btID from BlockTypes where btIsInternal = 0";
-				$r = $db->querycache(10, $q);
-				while($row = $r->fetchRow()) {
-					$this->addBlockTypes[] = $row['btID'];
-				}
 			} else {
 				// a bunch of database group permission stuff
 				$this->permissionSet = $this->setGroupAccess($cObj, $u);
@@ -551,22 +571,12 @@ class CollectionPermissions extends Permissions {
 		}
 		
 		if ($canWriteToPage) {
-			if (PERMISSIONS_MODEL == 'simple') { 
-				// we allow all pages to be added as subpages
-				$q = "select ctID from PageTypes";
-				$r = $db->querycache(10, $q);
-				while($row = $r->fetchRow()) {
-					$this->addCollectionTypes[] = $row['ctID'];
-				}
-				
+			if (PERMISSIONS_MODEL == 'simple') {
+				$this->populateAllPageTypes();
 				// we add delete block to the permission set, since for some reason it's a separate permissions call than delete collection (which we should've already added)
 				$permissions[] = "db";
 			}
-			$q = "select btID from BlockTypes where btIsInternal = 0";
-				$r = $db->querycache(10, $q);
-			while($row = $r->fetchRow()) {
-				$this->addBlockTypes[] = $row['btID'];
-			}
+			$this->populateAllBlockTypes();
 			// the block types directive above may be overridden by area-specific permissions
 		}
 		
@@ -612,12 +622,7 @@ class AreaPermissions extends Permissions {
 				$this->permissionSet = 'r:rb:wa:db';
 			}
 			
-			$db = Loader::db();
-			$q = "select btID from BlockTypes where btIsInternal = 0";
-			$r = $db->querycache(10, $q);
-			while($row = $r->fetchRow()) {
-				$this->addBlockTypes[] = $row['btID'];
-			}
+			$this->populateAllBlockTypes();
 		} else {
 			$this->permissionSet = $this->setGroupAccess($aObj, $u);
 		}
