@@ -422,8 +422,8 @@ if ($this->controller->getTask() == 'update') {
 				<table cellspacing="0" cellpadding="0">
 				<tr>
 					<td><img src="<?=$pb->getRemoteIconURL()?>" /></td>
-					<td class="ccm-addon-list-description"><h3><?=$pb->btName?></h3>
-					<?=$pb->btDescription?>
+					<td class="ccm-addon-list-description"><h3><?=$pb->getName()?></h3>
+					<?=$pb->getDescription()?>
 					</td>
 					<td width="120"><?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getMarketplaceItemID()), "right")?></td>
 				</tr>

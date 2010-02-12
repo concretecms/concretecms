@@ -24,7 +24,7 @@ class MarketplaceRemoteItem extends Object {
 		if($options['name']) $this->name=(string) $options['name'];
 		if($options['cID']) $this->remoteCID=(string) $options['cID'];
 		if($options['handle']) $this->handle= (string) $options['handle'];
-		if($options['description']) $this->btDescription= (string) $options['description'];
+		if($options['description']) $this->description= (string) $options['description'];
 		if($options['url']) $this->remoteURL= (string) $options['url']; 
 		if($options['file']) $this->remoteFileURL= (string) $options['file']; 
 		if($options['icon']) $this->remoteIconURL= (string) $options['icon']; 
@@ -35,6 +35,7 @@ class MarketplaceRemoteItem extends Object {
 	public function getMarketplaceItemID() {return $this->mpID;}
 	public function getHandle() { return $this->handle; }
 	public function getName(){ return $this->name; }
+	public function getDescription() {return $this->description;}
 	public function getPrice(){ return sprintf("%.2f",floatval($this->price)); }
 	public function getRemoteCollectionID(){ return $this->remoteCID; }
 	public function getRemoteURL(){ return $this->remoteURL; }
