@@ -1019,6 +1019,28 @@
 		</field>		
   </table>
   
+  <table name="SystemNotifications">
+    <field name="snID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="snTypeID" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="snNotificationText" type="C" size="160"/>
+    <field name="snNotificationAdditionalText" type="X"/>
+    <field name="snOffsiteURL" type="X"/>
+    <field name="snDateTime" type="T">
+      <NOTNULL/>
+    </field>
+    <field name="snIsArchived" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
   
   <table name="Packages">
     <field name="pkgID" type="I" size="10">
@@ -1040,6 +1062,7 @@
       <NOTNULL/>
       <DEFAULT value="1"/>
     </field>
+    <field name="pkgVersion" type="C" size="32"/>
     <field name="pkgVersion" type="C" size="32"/>
     <index name="pkgHandle">
       <UNIQUE/>

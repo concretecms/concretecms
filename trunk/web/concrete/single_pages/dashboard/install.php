@@ -425,7 +425,7 @@ if ($this->controller->getTask() == 'update') {
 					<td class="ccm-addon-list-description"><h3><?=$pb->getName()?></h3>
 					<?=$pb->getDescription()?>
 					</td>
-					<td width="120"><?=$ch->button(t("Download"), View::url('/dashboard/install', 'remote_purchase', $pb->getMarketplaceItemID()), "right")?></td>
+					<td width="120"><?=$ch->button(t("Download"), View::url('/dashboard/install', 'download', $pb->getMarketplaceItemID()), "right")?></td>
 				</tr>
 				</table>
 				</div>

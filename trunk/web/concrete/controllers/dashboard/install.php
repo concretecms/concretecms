@@ -191,12 +191,26 @@ class DashboardInstallController extends Controller {
 		}
 	}
 
-    public function remote_purchase($remoteMPID=null){
+    public function download($remoteMPID=null) {
     	$ph = Loader::helper('package');
-    	$errors = $ph->install_remote('purchase', $remoteCID, false);
-		if (is_array($errors)) {
-			$errors = Package::mapError($errors);
-			$this->set('error', $errors);
+    	Loader::model('marketplace_remote_item');
+		$mri = MarketplaceRemoteItem::getByID($remoteMPID);
+		
+		if (!is_object($mri)) {
+			$this->set('error', array(t('Invalid marketplace item ID.')));
+			return;
+		}
+		
+		$r = $mri->download();
+		if ($r != false) {
+			if (!is_array($r)) {
+				$this->set('error', array($r));
+			} else {
+				$errors = Package::mapError($r);
+				$this->set('error', $errors);
+			}
+		} else {
+			$this->set('message', t('Marketplace item %s downloaded successfully.', $mri->getHandle()));
 		}
     }
 

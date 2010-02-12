@@ -91,52 +91,7 @@ class PackageHelper {
 		return true;
 	}
 
-	public function install_remote($type, $remoteCID=null, $install=false){
-		$item = $this->get_remote_item($type, $remoteCID);
-		if (empty($item)) {
-			return array(Package::E_PACKAGE_NOT_FOUND);
-		}
-
-		$fileURL = $item->getRemoteFileURL();
-		if (empty($fileURL)) {
-			return array(Package::E_PACKAGE_NOT_FOUND);
-		}
-
-		$authData = UserInfo::getAuthData();
-		$fileURL .= "&auth_token={$authData['auth_token']}&auth_uname={$authData['auth_uname']}&auth_timestamp={$authData['auth_timestamp']}";
-
-		$file = $this->download_remote_package($fileURL);
-		if (empty($file) || $file == Package::E_PACKAGE_DOWNLOAD) {
-			return array(Package::E_PACKAGE_DOWNLOAD);
-		} else if ($file == Package::E_PACKAGE_SAVE) {
-			return array($file);
-		}
-
-		try {
-			Loader::model('package_archive');
-			$am = new PackageArchive($item->getHandle());
-			$am->install($file, true);
-		} catch (Exception $e) {
-			return array($e->getMessage());
-		}
-
-		if ($install) {
-        	$tests = Package::testForInstall($item->getHandle());
-        	if (is_array($tests)) {
-				return $tests;
-        	} else {
-            	$p = Loader::package($item->getHandle());
-            	try {
-                	$p->install();
-            	} catch(Exception $e) {
-					return array(Package::E_PACKAGE_INSTALL);
-            	}
-			}
-        }
-
-		return true;
-	}
-
+/*
 	public function download_remote_package($fileURL) {
 		$fh = Loader::helper('file');
 		$pkg = $fh->getContents($fileURL);
@@ -157,7 +112,7 @@ class PackageHelper {
 
 		return $file;
 	}
-
+*/
 	private function get_remote_purchase($cID) {
 		$helper = Loader::helper("concrete/marketplace/blocks");
 		$list = $helper->getPurchasesList(false);
@@ -167,7 +122,8 @@ class PackageHelper {
 			}
 		}
 	}
-	
+
+	/*	
 	private function get_remote_item($type, $remoteCID) {
 		if (empty($remoteCID)) {
 			return "";
@@ -187,4 +143,5 @@ class PackageHelper {
 		}
 		return $item;
 	}
+	*/
 }
