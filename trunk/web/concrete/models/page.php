@@ -13,7 +13,11 @@ class Page extends Collection {
 
 	public static function getByPath($path, $version = 'RECENT') {
 		$db = Loader::db();
-		$cID = $db->GetOne("select cID from PagePaths where cPath = ?", array($path));
+		$cID = Cache::get('page_id_from_path', $path);
+		if ($cID == false) {
+			$cID = $db->GetOne("select cID from PagePaths where cPath = ?", array($path));
+			Cache::set("page_id_from_path", $path, $cID);
+		}
 		return Page::getByID($cID, $version);
 	}
 	
