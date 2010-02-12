@@ -54,6 +54,7 @@ class Block extends Object {
 			$cID = 0;
 			$arHandle = "";
 			$cvID = 0;
+			$b = Cache::get('block', $bID);
 		} else {
 			if (is_object($a)) {
 				$arHandle = $a->getAreaHandle();
@@ -63,14 +64,16 @@ class Block extends Object {
 			}
 			$cID = $c->getCollectionID();
 			$cvID = $c->getVersionID();
+			$b = Cache::get('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle);
+			if ($b instanceof Block) {
+				return $b;
+			}
 		}
 
-		$ca = new Cache(); 
-		
-		$b = $ca->get('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle);
 		if ($b instanceof Block) {
 			return $b;
 		}
+
 		$db = Loader::db();
 
 		$b = new Block;
@@ -122,6 +125,9 @@ class Block extends Object {
 			if ($c != null || $a != null) {
 				$ca = new Cache();
 				$ca->set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
+			} else {
+				$ca = new Cache();
+				$ca->set('block', $bID, $b);
 			}
 			return $b;				
 
@@ -960,6 +966,7 @@ class Block extends Object {
 		if (is_object($c) && is_object($a)) {
 			Cache::delete('block', $this->getBlockID() . ':' . $c->getCollectionID() . ':' . $c->getVersionID() . ':' . $a->getAreaHandle());
 		}
+		Cache::delete('block', $this->getBlockID());		
 	}
 	
 	public function refreshCacheAll(){
