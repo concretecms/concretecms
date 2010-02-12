@@ -162,8 +162,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 				if (isset($dsn) && $dsn) {
 					$_dba = @NewADOConnection($dsn);
-					$_dba->setFetchMode(ADODB_FETCH_ASSOC);
 					if (is_object($_dba)) {
+						$_dba->setFetchMode(ADODB_FETCH_ASSOC);
 						if (DB_CHARSET != '') {
 							$names = 'SET NAMES \'' . DB_CHARSET . '\'';
 							if (DB_COLLATE != '') {
