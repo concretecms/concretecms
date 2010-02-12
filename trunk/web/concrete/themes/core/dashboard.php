@@ -57,9 +57,11 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 
 <script type="text/javascript">
 $(function() {
-	$("div.message").show('highlight', {
-		color: '#ffffff'
-	});
+	$("div.message").animate({
+		backgroundColor: 'white'
+	}, 'fast').animate({
+		backgroundColor: '#eeeeee'
+	}, 'fast');
 	
 	ccm_setupDashboardHeaderMenu();
 });

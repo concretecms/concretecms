@@ -48,6 +48,66 @@ class MarketplaceRemoteItem extends Object {
 		}
 		return $this->isPurchase;
 	}
+
+	public function download() {
+		Loader::model('marketplace_remote_item');
+		$file = Marketplace::downloadRemoteFile($this->getRemoteFileURL());
+		if (empty($file) || $file == Package::E_PACKAGE_DOWNLOAD) {
+			return array(Package::E_PACKAGE_DOWNLOAD);
+		} else if ($file == Package::E_PACKAGE_SAVE) {
+			return array($file);
+		}
+	
+		try {
+			Loader::model('package_archive');
+			$am = new PackageArchive($this->getHandle());
+			$am->install($file, true);
+		} catch (Exception $e) {
+			return array($e->getMessage());
+		}
+	
+		if ($install) {
+			$tests = Package::testForInstall($this->getHandle());
+			if (is_array($tests)) {
+				return $tests;
+			} else {
+				$p = Loader::package($this->getHandle());
+				try {
+					$p->install();
+				} catch(Exception $e) {
+					return array(Package::E_PACKAGE_INSTALL);
+				}
+			}
+		}
+	}
+	
+	public static function getByID($mpID) {
+		$fh = Loader::helper('file');
+
+		// Retrieve the URL contents 
+		$csToken = Config::get('MARKETPLACE_SITE_TOKEN');
+		$url = MARKETPLACE_PURCHASES_LIST_WS."?csToken={$csToken}";
+		$xml = $fh->getContents($url);
+
+		try {
+			// Parse the returned XML file
+			$enc = mb_detect_encoding($xml);
+			$xml = mb_convert_encoding($xml, 'UTF-8', $enc); 
+			
+			libxml_use_internal_errors(true);
+			$xmlObj = new SimpleXMLElement($xml);
+			foreach($xmlObj->addon as $addon) {
+				$mi = new MarketplaceRemoteItem();
+				$mi->loadFromXML($addon);
+				$mi->isPurchase(1);
+				if ($mi->getMarketplaceItemID() == $mpID) {
+					return $mi;
+				}
+			}
+		} catch (Exception $e) {
+			throw new Exception(t('Unable to connect to marketplace to retrieve item'));
+		}
+	}
 }	
 
 ?>
