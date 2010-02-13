@@ -42,6 +42,10 @@ class Update {
 		}
 		
 		if ($queryWS) {
+			Loader::library('marketplace');
+			if (Marketplace::isConnected()) {
+				Marketplace::checkPackageUpdates();
+			}
 			$update = Update::getLatestAvailableUpdate();
 			$versionNum = $update->version;
 			

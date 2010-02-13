@@ -361,6 +361,13 @@ class Package extends Object {
 		return $pkg;
 	}
 	
+	public function updateAvailableVersionNumber($vNum) {
+		$db = Loader::db();
+		$v = array($vNum, $this->getPackageID());
+		$db->query("update Packages set pkgAvailableVersion = ? where pkgID = ?", $v);
+		PackageList::refreshCache();
+	}
+	
 	public function upgradeCoreData() {
 		$db = Loader::db();
 		$p1 = Loader::package($this->getPackageHandle());
