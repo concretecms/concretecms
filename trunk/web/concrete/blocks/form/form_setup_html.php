@@ -58,6 +58,21 @@ $uh = Loader::helper('concrete/urls'); ?>
         <input name="displayCaptcha" value="1" <?php echo (intval($miniSurveyInfo['displayCaptcha'])>=1)?'checked="checked"':''?> type="checkbox" />
 	</div>	
 	
+	<div class="fieldRow">
+		<?php echo t('Redirect to another page after form submission?');?>
+		<input id="ccm-form-redirect" name="redirect" value="1" <?php echo (intval($miniSurveyInfo['redirectCID'])>=1)?'checked="checked"':''?> type="checkbox" />
+		<div id="ccm-form-redirect-page" <?php echo (intval($miniSurveyInfo['redirectCID'])>=1)?'':'style="display:none"'; ?>>
+		<?php
+		$form = Loader::helper('form/page_selector');
+		if ($miniSurveyInfo['redirectCID']) {
+			print $form->selectPage('redirectCID', $miniSurveyInfo['redirectCID']);
+		} else {
+			print $form->selectPage('redirectCID');
+		}
+		?>
+		</div>
+	</div>
+	
 </div> 
 
 <input type="hidden" id="qsID" name="qsID" type="text" value="<?php echo intval($miniSurveyInfo['questionSetId'])?>" />

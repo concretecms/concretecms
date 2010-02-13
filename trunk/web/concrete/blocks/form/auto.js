@@ -264,4 +264,14 @@ var miniSurvey ={
 	}
 }
 ccmValidateBlockForm = function() { return miniSurvey.validate(); }
-//$(document).ready(function(){miniSurvey.init()});
+$(document).ready(function(){
+	//miniSurvey.init();
+	$('#ccm-form-redirect').change(function() {
+		if($(this).is(':checked')) {
+			$('#ccm-form-redirect-page').show();
+		} else {
+			$('#ccm-form-redirect-page').hide();
+		}
+	});
+		
+});
