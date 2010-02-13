@@ -37,7 +37,7 @@ class FormBlockController extends BlockController {
 	public function __construct($b = null){ 
 		parent::__construct($b);
 		//$this->bID = intval($this->_bID);
-		if(!strlen($this->thankyouMsg)){ 
+		if(is_string($this->thankyouMsg) && !strlen($this->thankyouMsg)){ 
 			$this->thankyouMsg = $this->getDefaultThankYouMsg();
 		}
 	}
@@ -70,13 +70,19 @@ class FormBlockController extends BlockController {
 		if(!$data['oldQsID']) $data['oldQsID']=$data['qsID']; 
 		$data['bID']=intval($this->bID); 
 		
-		$v = array( $data['qsID'], $data['surveyName'], intval($data['notifyMeOnSubmission']), $data['recipientEmail'], $data['thankyouMsg'], intval($data['displayCaptcha']), intval($this->bID) );
+		if(!isset($data['redirect']) || $data['redirect'] <= 0) {
+			$data['redirectCID'] = 0;
+		} 
+		
+		
+		
+		$v = array( $data['qsID'], $data['surveyName'], intval($data['notifyMeOnSubmission']), $data['recipientEmail'], $data['thankyouMsg'], intval($data['displayCaptcha']), intval($data['redirectCID']), intval($this->bID) );
  		
 		//is it new? 
 		if( intval($total)==0 ){ 
-			$q = "insert into {$this->btTable} (questionSetId, surveyName, notifyMeOnSubmission, recipientEmail, thankyouMsg, displayCaptcha, bID) values (?, ?, ?, ?, ?, ?, ?)";		
+			$q = "insert into {$this->btTable} (questionSetId, surveyName, notifyMeOnSubmission, recipientEmail, thankyouMsg, displayCaptcha, redirectCID, bID) values (?, ?, ?, ?, ?, ?, ?, ?)";		
 		}else{
-			$q = "update {$this->btTable} set questionSetId = ?, surveyName=?, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=?, displayCaptcha=? where bID = ? AND questionSetId=".$data['qsID'];
+			$q = "update {$this->btTable} set questionSetId = ?, surveyName=?, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=?, displayCaptcha=?, redirectCID=? where bID = ? AND questionSetId=".$data['qsID'];
 		}		
 		
 		$rs = $db->query($q,$v);  
@@ -329,7 +335,18 @@ class FormBlockController extends BlockController {
 				@$mh->sendMail(); 
 			} 
 			//$_REQUEST=array();	
-			if(!$this->noSubmitFormRedirect){
+			
+			if($this->redirectCID > 0) {
+				$pg = Page::getByID($this->redirectCID);
+				if(is_object($pg)) {
+					$this->redirect($pg->getCollectionPath());
+				} else { // page didn't exist, we'll just do the default action
+					header("Location: ".$refer_uri."&surveySuccess=1&qsid=".$this->questionSetId);
+					exit;
+				}
+			}
+			
+			if(!$this->noSubmitFormRedirect){ // not sure if this is used, but someone must be depending on it??
 				header("Location: ".$refer_uri."&surveySuccess=1&qsid=".$this->questionSetId);
 				die;
 			}

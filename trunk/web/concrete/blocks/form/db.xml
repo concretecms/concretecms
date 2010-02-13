@@ -26,9 +26,12 @@
 		</field>		
 		<field name="displayCaptcha" type="i">
 			<default value="1"/>
+		</field>
+		<field name="redirectCID" type="i">
+			<default value="0"/>
 		</field>      		
 	</table>
-
+	
 	<table name="btFormQuestions"> 
 		<field name="qID" type="I">
 			<key />
