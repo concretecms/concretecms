@@ -1040,6 +1040,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="snIsNew" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
   </table>
   
   <table name="Packages">
