@@ -369,12 +369,12 @@ if ($this->controller->getTask() == 'update') {
 			
 				<?=t('Your site is <strong>not</strong> connected to the concrete5 community.')?>
 				<br/><br/>
-				<? print $h->button(t('Connect to Community'), $this->url('/dashboard/settings/marketplace'))?>
+				<? print $ch->button(t('Connect to Community'), $this->url('/dashboard/settings/marketplace'))?>
 				
 				<?			
 			}
 			?>
-			
+				<div class="ccm-spacer">&nbsp;</div>
 			</div>
 			
 			<? } ?>

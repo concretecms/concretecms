@@ -195,7 +195,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$r2 = $db->prepare($q2);
 				$res2 = $db->execute($r2, $v2);
 				if ($res2) {
-					Cache::delete('pageTypeList');
+					Cache::delete('pageTypeList', false);
 					return CollectionType::getByID($ctID);
 				}
 			}

@@ -93,10 +93,6 @@ if (strpos(LOCALE, '_') > -1) {
 	}
 }
 
-if (!defined('ENABLE_LEGACY_CONTROLLER_URLS')) {
-	define('ENABLE_LEGACY_CONTROLLER_URLS', false);
-}
-
 if (!defined("LANGUAGE")) {
 	define("LANGUAGE", LOCALE);
 }

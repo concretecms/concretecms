@@ -55,6 +55,11 @@ if (!defined('URL_REWRITING_ALL')) {
 	define("URL_REWRITING_ALL", false);
 }
 
+if (!defined('ENABLE_LEGACY_CONTROLLER_URLS')) {
+	define('ENABLE_LEGACY_CONTROLLER_URLS', false);
+}
+
+
 if (URL_REWRITING_ALL == true) {
 	define('URL_SITEMAP', BASE_URL . DIR_REL . '/dashboard/sitemap');
 	define('REL_DIR_FILES_TOOLS', DIR_REL . '/tools');
