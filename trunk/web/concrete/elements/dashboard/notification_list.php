@@ -33,6 +33,7 @@ function getNotificationClassName($n) {
 <ul id="ccm-dashboard-notification-list">
 <? 
 $lastDate = false;
+$txt = Loader::helper('text');
 foreach($notifications as $n) { 
 	$date = date('Y-m-d', strtotime($n->getSystemNotificationDateTime()));
 	$time = date('g:i A', strtotime($n->getSystemNotificationDateTime()));
@@ -52,7 +53,13 @@ foreach($notifications as $n) {
 	<li class="<?=getNotificationClassName($n)?>">
 	
 	<h3><?=$n->getSystemNotificationTitle()?> <span class="ccm-dashboard-notification-time"><?=$time?></h3>
-	<? if (!$isDashboardModule) { ?>
+	<? if ($isDashboardModule && in_array($n->getSystemNotificationTypeID(), array(
+		SystemNotification::SN_TYPE_CORE_MESSAGE_HELP,
+		SystemNotification::SN_TYPE_CORE_MESSAGE_NEWS,
+		SystemNotification::SN_TYPE_CORE_MESSAGE_OTHER
+	))) { ?>
+		<p><?=$txt->shorten(strip_tags($n->getSystemNotificationDescription()), 64)?></p>
+	<? } else { ?>
 		<p><?=$n->getSystemNotificationDescription()?></p>
 	<? } ?>
 	
