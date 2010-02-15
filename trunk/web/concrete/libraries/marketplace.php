@@ -45,10 +45,12 @@ class Marketplace {
 	 * Runs through all packages on the marketplace, sees if they're installed here, and updates the available version number for them
 	 */
 	public static function checkPackageUpdates() {
+		Loader::model('system_notification');
 		$items = Marketplace::getAvailableMarketplaceItems(false);
 		foreach($items as $i) {
 			$p = Package::getByHandle($i->getHandle());
 			$p->updateAvailableVersionNumber($i->getVersion());
+			SystemNotification::add(SystemNotification::SN_TYPE_ADDON_UPDATE, t('%s version %s is now available.', $i->getName(), $i->getVersion()), t('Read more at <a target="_blank" href="%s">%s</a>', $i->getRemoteURL(), $i->getRemoteURL()), View::url('/dashboard/install', 'update'));
 		}
 	}
 
