@@ -1019,7 +1019,7 @@
 		</field>		
   </table>
   
-  <table name="SystemNotifications">
+<table name="SystemNotifications">
     <field name="snID" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -1030,8 +1030,6 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="snNotificationText" type="C" size="160"/>
-    <field name="snNotificationAdditionalText" type="X"/>
     <field name="snURL" type="X"/>
     <field name="snDateTime" type="T">
       <NOTNULL/>
@@ -1044,8 +1042,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-  </table>
-  
+    <field name="snTitle" type="C" size="255"/>
+    <field name="snDescription" type="X"/>
+    <field name="snBody" type="X"/>
+  </table>  
   <table name="Packages">
     <field name="pkgID" type="I" size="10">
       <KEY/>

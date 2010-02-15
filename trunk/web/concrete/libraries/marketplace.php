@@ -50,7 +50,7 @@ class Marketplace {
 		foreach($items as $i) {
 			$p = Package::getByHandle($i->getHandle());
 			$p->updateAvailableVersionNumber($i->getVersion());
-			SystemNotification::add(SystemNotification::SN_TYPE_ADDON_UPDATE, t('%s version %s is now available.', $i->getName(), $i->getVersion()), t('Read more at <a target="_blank" href="%s">%s</a>', $i->getRemoteURL(), $i->getRemoteURL()), View::url('/dashboard/install', 'update'));
+			SystemNotification::add(SystemNotification::SN_TYPE_ADDON_UPDATE, t('%s version %s is now available.', $i->getName(), $i->getVersion()), t('Read more at <a target="_blank" href="%s">%s</a>', $i->getRemoteURL(), $i->getRemoteURL()), '', View::url('/dashboard/install', 'update'));
 		}
 	}
 
