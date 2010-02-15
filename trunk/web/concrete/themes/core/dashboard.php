@@ -1,4 +1,11 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+<? 
+Loader::block('autonav');
+$supportHelper=Loader::helper('concrete/support'); 
+$nh = Loader::helper('navigation');
+$dashboard = Page::getByPath("/dashboard");
+$nav = AutonavBlockController::getChildPages($dashboard);
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-transitional.dtd">
 <html>
@@ -64,6 +71,9 @@ $(function() {
 	}, 'fast');
 	
 	ccm_setupDashboardHeaderMenu();
+	<? if ($dashboard->getCollectionID() == $c->getCollectionID()) { ?>
+		ccm_dashboardRequestRemoteInformation();
+	<? } ?>
 });
 </script>
 </head>
@@ -74,14 +84,6 @@ $(function() {
 <div id="ccm-dashboard-header">
 <a href="<?=$this->url('/dashboard/')?>"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" height="49" width="49" alt="Concrete5" /></a>
 </div>
-
-<? 
-Loader::block('autonav');
-$supportHelper=Loader::helper('concrete/support'); 
-$nh = Loader::helper('navigation');
-$dashboard = Page::getByPath("/dashboard");
-$nav = AutonavBlockController::getChildPages($dashboard);
-?>
 
 <div id="ccm-system-nav-wrapper1">
 <div id="ccm-system-nav-wrapper2">
