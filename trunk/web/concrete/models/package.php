@@ -128,6 +128,7 @@ class Package extends Object {
 	}
 	
 	public function getPackageVersion() {return $this->pkgVersion;}
+	public function getPackageVersionUpdateAvailable() {return $this->pkgAvailableVersion;}
 	public function getPackageCurrentlyInstalledVersion() {return $this->pkgCurrentVersion;}
 	public function isPackageInstalled() { return $this->pkgIsInstalled;}
 	
@@ -425,6 +426,18 @@ class Package extends Object {
 		}
 		return $upgradeables;		
 	}
+
+	public static function getRemotelyUpgradeablePackages() {
+		$packages = Package::getInstalledList();
+		$upgradeables = array();
+		$db = Loader::db();
+		foreach($packages as $p) {
+			if (version_compare($p->getPackageVersion(), $p->getPackageVersionUpdateAvailable(), '<')) {
+				$upgradeables[] = $p;
+			}
+		}
+		return $upgradeables;		
+	}	
 	
 	public function backup() {
 		// you can only backup root level packages.

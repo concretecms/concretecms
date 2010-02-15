@@ -36,6 +36,8 @@ class PackageHelper {
 		return $fileURL;
 	}
 	
+	/*
+	
 	public function prepare_remote_upgrade($type, $remoteCID, $handle) {
 		$item = $this->get_remote_purchase($remoteCID);
 		
@@ -89,7 +91,11 @@ class PackageHelper {
 		*/
 		
 		return true;
-	}
+
+/*
+}
+	
+	*/
 
 /*
 	public function download_remote_package($fileURL) {
@@ -112,7 +118,7 @@ class PackageHelper {
 
 		return $file;
 	}
-*/
+	
 	private function get_remote_purchase($cID) {
 		$helper = Loader::helper("concrete/marketplace/blocks");
 		$list = $helper->getPurchasesList(false);

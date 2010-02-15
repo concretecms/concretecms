@@ -48,9 +48,38 @@ class MarketplaceRemoteItem extends Object {
 		}
 		return $this->isPurchase;
 	}
+	
+	public function downloadUpdate() {
+		// backup the old package
+		$pkg = Package::getByHandle($this->getHandle());
+		$r = $pkg->backup();
+		if (is_array($r)) {
+			return $r;
+		}
+
+		$fileURL = $this->getRemoteFileURL();
+		if (empty($fileURL)) {
+			return array(Package::E_PACKAGE_NOT_FOUND);
+		}
+
+		$file = Marketplace::downloadRemoteFile($this->getRemoteFileURL());
+		if (empty($file) || $file == Package::E_PACKAGE_DOWNLOAD) {
+			return array(Package::E_PACKAGE_DOWNLOAD);
+		} else if ($file == Package::E_PACKAGE_SAVE) {
+			return array($file);
+		}
+			
+		try {
+			Loader::model('package_archive');
+			$am = new PackageArchive($this->getHandle());
+			$am->install($file, true);
+		} catch (Exception $e) {
+			return array($e->getMessage());
+		}
+
+	}
 
 	public function download() {
-		Loader::model('marketplace_remote_item');
 		$file = Marketplace::downloadRemoteFile($this->getRemoteFileURL());
 		if (empty($file) || $file == Package::E_PACKAGE_DOWNLOAD) {
 			return array(Package::E_PACKAGE_DOWNLOAD);
@@ -81,7 +110,7 @@ class MarketplaceRemoteItem extends Object {
 		}
 	}
 	
-	public static function getByID($mpID) {
+	protected static function getRemotePackageObject($method, $identifier) {
 		$fh = Loader::helper('file');
 
 		// Retrieve the URL contents 
@@ -100,13 +129,30 @@ class MarketplaceRemoteItem extends Object {
 				$mi = new MarketplaceRemoteItem();
 				$mi->loadFromXML($addon);
 				$mi->isPurchase(1);
-				if ($mi->getMarketplaceItemID() == $mpID) {
-					return $mi;
-				}
+				switch($method) {
+					case 'mpHandle':
+						if ($mi->getHandle() == $identifier) {
+							return $mi;
+						}
+						break;
+					default:
+						if ($mi->getMarketplaceItemID() == $identifier) {
+							return $mi;
+						}
+						break;
+				}	
 			}
 		} catch (Exception $e) {
 			throw new Exception(t('Unable to connect to marketplace to retrieve item'));
 		}
+	}
+	
+	public static function getByHandle($mpHandle) {
+		return MarketplaceRemoteItem::getRemotePackageObject('mpHandle', $mpHandle);
+	}
+	
+	public static function getByID($mpID) {
+		return MarketplaceRemoteItem::getRemotePackageObject('mpID', $mpID);
 	}
 }	
 

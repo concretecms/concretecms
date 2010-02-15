@@ -44,50 +44,45 @@ if ($this->controller->getTask() == 'update') {
 
 
 <div class="ccm-dashboard-inner">
-	<? if (!UserInfo::isRemotelyLoggedIn()) { ?> 
+	<? if (!Marketplace::isConnected()) { ?> 
 	<div class="ccm-addon-marketplace-account">
 	
-		<?=t('You must sign in to the concrete5.org marketplace to check for updates to your add-ons.')?><br/><br/>
-		<a href="#" onclick="ccmPopupLogin.show('', loginSuccess, '', 1)">Sign in or create an account.</a>
+		<?=t('Your site is <strong>not</strong> connected to the concrete5 community.')?>
+		<br/><br/>
+		<? print $ch->button(t('Connect to Community'), $this->url('/dashboard/settings/marketplace'))?>
+		
 		
 	</div>
 	
-	<? } else { ?> 
-	<div class="ccm-addon-marketplace-account">
-		<?=t('You have connected this website to the concrete5 marketplace as  ');?>
-		  <a href="<?=CONCRETE5_ORG_URL ?>/profile/-/<?=UserInfo::getRemoteAuthUserId() ?>/" target="_blank" ><?=UserInfo::getRemoteAuthUserName() ?></a>
-		  <?=t('(Not your account? <a href="#" onclick="ccm_support.signOut(logoutSuccess)">Sign Out</a>)')?>
-	</div>
-
+	<? } ?>
 	
 
 	<h2><?=t('The Following Updates are Available')?></h2>
 	
 	<?
-	$mh = Loader::helper('concrete/marketplace/blocks');
-	$purchased = $mh->getPurchasesList(false);
 	$i = 0;
-	
+	Loader::model('marketplace_remote_item');
 	foreach ($pkgArray as $pkg) { 
-		$rpkg = $purchased[$pkg->getPackageHandle()];
-		if (!is_object($rpkg)) {
+		if (!is_object($pkg)) {
 			continue;
 		}
-		if (version_compare($rpkg->getVersion(), $pkg->getPackageVersion(), '>')) { 
+		if ($pkg->isPackageInstalled() && version_compare($pkg->getPackageVersion(), $pkg->getPackageVersionUpdateAvailable(), '<')) { 
 			$i++;
+			
+			$rpkg = MarketplaceRemoteItem::getByHandle($pkg->getPackageHandle());
 			
 			?>
 			<div class="ccm-addon-list">
 			<table cellspacing="0" cellpadding="0" border="0" style="width: auto !important">		
 			<tr>
 				<td valign="top" class="ccm-installed-items-icon"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
-				<td valign="top" class="ccm-addon-list-description" style="width: 400px"><h3><?=$pkg->getPackageName()?></a></h3><?=$pkg->getPackageDescription()?>
+				<td valign="top" class="ccm-addon-list-description" style="width: 100%"><h3><?=$pkg->getPackageName()?></a></h3><?=$pkg->getPackageDescription()?>
 				<br/><br/>
 				<strong><?=t('Current Version: %s', $pkg->getPackageVersion())?></strong><br/>
-				<strong><?=t('New Version: %s', $rpkg->getVersion())?></strong><br/>
+				<strong><?=t('New Version: %s', $pkg->getPackageVersionUpdateAvailable())?></strong><br/>
 				<a target="_blank" href="<?=$rpkg->getRemoteURL()?>"><?=t('More Information')?></a>
 				</td>
-				<td valign="top"><?=$ch->button(t("Download and Install"), View::url('/dashboard/install', 'remote_upgrade', $rpkg->getRemoteCollectionID(), $pkg->getPackageHandle()), "right")?></td>					
+				<td valign="top"><?=$ch->button(t("Download and Install"), View::url('/dashboard/install', 'prepare_remote_upgrade', $rpkg->getMarketplaceItemID()), "right")?></td>					
 			</tr>
 			</table>
 			</div>
@@ -101,7 +96,8 @@ if ($this->controller->getTask() == 'update') {
 			
 		<? } ?>
 	
-	<? } ?>
+
+
 </div>
 
 <? } ?>
@@ -114,7 +110,27 @@ if ($this->controller->getTask() == 'update') {
 		$name2 = ($obj2 instanceof Package) ? $obj2->getPackageName() : $obj2->getBlockTypeName();
 		return strcasecmp($name1, $name2);
 	}
-
+	
+	// grab the total numbers of updates.
+	// this consists of 
+	// 1. All packages that have greater pkgAvailableVersions than pkgVersion
+	// 2. All packages that have greater pkgVersion than getPackageCurrentlyInstalledVersion
+	$local = Package::getLocalUpgradeablePackages();
+	$remote = Package::getRemotelyUpgradeablePackages();
+	
+	// now we strip out any dupes for the total
+	$updates = 0;
+	$localHandles = array();
+	foreach($local as $_pkg) {
+		$updates++;
+		$localHandles[] = $_pkg->getPackageHandle();
+	}
+	foreach($remote as $_pkg) {
+		if (!in_array($_pkg->getPackageHandle(), $localHandles)) {
+			$updates++;
+		}
+	}
+	
 	$pkgAvailableArray = Package::getAvailablePackages();
 
 
@@ -144,8 +160,7 @@ if ($this->controller->getTask() == 'update') {
 	$db = Loader::db();
 	
 	if(ENABLE_MARKETPLACE_SUPPORT){
-		$purchasedBlocksSource = Marketplace::getAvailableMarketplaceItems();
-		
+		$purchasedBlocksSource = Marketplace::getAvailableMarketplaceItems();		
 	}else{
 		$purchasedBlocksSource = array();
 	}
@@ -286,7 +301,7 @@ if ($this->controller->getTask() == 'update') {
 		<![endif]-->
 		<div style="width: 720px">
 		<div class="ccm-module" style="width: 350px; margin-bottom: 20px">
-	
+			
 			<h1><span><?=t('Currently Installed')?></span></h1>
 			<div class="ccm-dashboard-inner">
 			<? if (count($pkgArray) > 0) { ?>
@@ -350,7 +365,21 @@ if ($this->controller->getTask() == 'update') {
 		</div>
 	
 		<div class="ccm-module" style="width: 350px; margin-bottom: 20px">
-	
+				<? if ($updates > 0) { ?>
+				<h1><span><?=t('Updates')?></span></h1>
+				<div class="ccm-dashboard-inner">
+					<?=t('There are currently <strong>%s</strong> updates available.', $updates)?>
+					<? print $ch->button(t('Update Addons'), $this->url('/dashboard/install/update'))?>
+					
+					<div class="ccm-spacer">&nbsp;</div>
+				
+				</div>
+				
+			
+			<? } ?>
+			<br/>
+			
+
 			<h1><span><?=t('New')?></span></h1>
 			<div class="ccm-dashboard-inner">
 			 

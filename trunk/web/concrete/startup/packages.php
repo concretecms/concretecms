@@ -6,9 +6,11 @@ $pl = $pla->getPackages();
 foreach($pl as $p) {
 	if ($p->isPackageInstalled()) {
 		$pkg = Loader::package($p->getPackageHandle());
-		$pkg->setupPackageLocalization();
-		if (method_exists($pkg, 'on_start')) {
-			call_user_func(array($pkg, 'on_start'));
+		if (is_object($pkg)) {
+			$pkg->setupPackageLocalization();
+			if (method_exists($pkg, 'on_start')) {
+				call_user_func(array($pkg, 'on_start'));
+			}
 		}
 	}
 }
