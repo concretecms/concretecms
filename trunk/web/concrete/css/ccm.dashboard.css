@@ -59,6 +59,7 @@ h1 a.ccm-dashboard-header-option {font-size: 11px; position: absolute; top: 7px;
 
 form {margin: 0px}
 a {text-decoration: none; color: #5377A9;}
+a:hover {text-decoration: underline}
 .required {color: #009}
 .error {color: #f00}
 .success {color: #666}
@@ -449,6 +450,28 @@ div.ccm-permissions-entities-wrapper th {text-align: left; vertical-align: top; 
 div.ccm-permissions-entities-wrapper td {vertical-align: top; padding: 0px 30px 0px 0px}
 div.ccm-permissions-entities-wrapper h2 img {float: right}
 div.ccm-permissions-entity-base {display: none}
+
+/* notifications */
+ul#ccm-dashboard-notification-list {margin: 0px 0px 0px 0px; padding: 0px}
+ul#ccm-dashboard-notification-list h3 {color: #999; margin-bottom: 2px}
+ul#ccm-dashboard-notification-list h3 a {color: #999;}
+ul#ccm-dashboard-notification-list li {position: relative; color: #ccc}
+ul#ccm-dashboard-notification-list li.ccm-dashboard-notification-list-date:first-child {margin-top: 0px}
+ul#ccm-dashboard-notification-list li.ccm-dashboard-notification-list-date {margin-top: 20px; border-bottom: 1px dotted #aaa !important; padding-left: 0px !important}
+ul#ccm-dashboard-notification-list li.ccm-dashboard-notification-list-date h2 {margin-bottom: 0px; font-size: 12px}
+
+ul#ccm-dashboard-notification-list p {color: #aaa; line-height: 16px; margin-top: 0px; margin-bottom: 2px}
+ul#ccm-dashboard-notification-list a:hover {text-decoration: underline}
+a.ccm-dashboard-notification-read-more {font-size: 11px; color: #77B2DA; position: static; display: inline;}
+span.ccm-dashboard-notification-time {font-size: 10px; font-weight: normal; color: #bbb; white-space: nowrap}
+ul#ccm-dashboard-notification-list li {background-repeat: no-repeat; list-style-type: none; padding: 0px 0px 6px 23px; min-height: 14px; margin: 0px 0px 6px 0px; border-bottom: 1px dotted #dedede;}
+li.ccm-dashboard-notification-generic {background-image: url(../images/dashboard/notification_icons/information.png);} 
+li.ccm-dashboard-notification-core-update {background-image: url(../images/dashboard/notification_icons/concrete5.png);} 
+li.ccm-dashboard-notification-addon-update {background-image: url(../images/dashboard/notification_icons/gear_new.png);} 
+li.ccm-dashboard-notification-critical {background-image: url(../images/dashboard/notification_icons/warning.png);} 
+li.ccm-dashboard-notification-addon-message {background-image: url(../images/dashboard/notification_icons/gears_view.png);} 
+li.ccm-dashboard-notification-core-message-help {background-image: url(../images/dashboard/notification_icons/lightbulb_on.png);} 
+li.ccm-dashboard-notification-core-message-news {background-image: url(../images/dashboard/notification_icons/document_info.png);} 
 
 /* addon list */
 

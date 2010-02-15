@@ -50,7 +50,7 @@ class Marketplace {
 		foreach($items as $i) {
 			$p = Package::getByHandle($i->getHandle());
 			$p->updateAvailableVersionNumber($i->getVersion());
-			SystemNotification::add(SystemNotification::SN_TYPE_ADDON_UPDATE, t('%s version %s is now available.', $i->getName(), $i->getVersion()), t('Read more at <a target="_blank" href="%s">%s</a>', $i->getRemoteURL(), $i->getRemoteURL()), '', View::url('/dashboard/install', 'update'));
+			SystemNotification::add(SystemNotification::SN_TYPE_ADDON_UPDATE, t('An updated version of %s is available.', $i->getName()), t('New Version: %s.', $i->getVersion()), '', View::url('/dashboard/install', 'update'), $i->getRemoteURL());
 		}
 	}
 
@@ -66,7 +66,8 @@ class Marketplace {
 
 			// Retrieve the URL contents 
 			$csToken = Config::get('MARKETPLACE_SITE_TOKEN');
-			$url = MARKETPLACE_PURCHASES_LIST_WS."?csToken={$csToken}";
+			$csiURL = urlencode(BASE_URL . DIR_REL);
+			$url = MARKETPLACE_PURCHASES_LIST_WS."?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
 			$xml = $fh->getContents($url);
 
 			$addons=array();

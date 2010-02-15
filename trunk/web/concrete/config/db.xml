@@ -1031,6 +1031,7 @@
       <UNSIGNED/>
     </field>
     <field name="snURL" type="X"/>
+    <field name="snURL2" type="X"/>
     <field name="snDateTime" type="T">
       <NOTNULL/>
     </field>
