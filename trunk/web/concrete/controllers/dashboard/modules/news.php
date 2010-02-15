@@ -7,11 +7,11 @@ class NewsDashboardModuleController extends Controller {
 	const FEED_READ_MORE = "http://www.concrete5.org/community/";
 	
 	public function __construct() {
-		Loader::helper('feed');
-		$posts = Cache::get('dashboard_feed', 'news');
-		if (!is_array($posts)) {
-			$posts = array();
-		}
+		Loader::model('system_notification');
+		$snl = new SystemNotificationList();
+		$snl->filterByType(SystemNotification::SN_TYPE_CORE_MESSAGE_NEWS);
+		$snl->setItemsPerPage(2);
+		$posts = $snl->getPage();
 		$this->set('posts', $posts);
 		$this->set('feed_read_more', NewsDashboardModuleController::FEED_READ_MORE);
 	}
