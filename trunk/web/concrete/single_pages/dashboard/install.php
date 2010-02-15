@@ -368,7 +368,11 @@ if ($this->controller->getTask() == 'update') {
 				<? if ($updates > 0) { ?>
 				<h1><span><?=t('Updates')?></span></h1>
 				<div class="ccm-dashboard-inner">
-					<?=t('There are currently <strong>%s</strong> updates available.', $updates)?>
+					<? if ($updates == 1) { ?>
+						<?=t('There is currently <strong>1</strong> update available.')?>
+					<? } else { ?>
+						<?=t('There are currently <strong>%s</strong> updates available.', $updates)?>
+					<? } ?>
 					<? print $ch->button(t('Update Addons'), $this->url('/dashboard/install/update'))?>
 					
 					<div class="ccm-spacer">&nbsp;</div>
