@@ -322,7 +322,7 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 	
 	<br/>
 	
-	<? if ($cspID > 1) { ?>
+	<? if ($cspID > 0) { ?>
 	<div id="cspFooterPreset" style="display: none">
 		<div><?=$form->radio('cspPresetAction', 'update_existing_preset', true)?> <?=t('Update "%s" preset everywhere it is used?', $csp->getCustomStylePresetName())?></div>
 		<div><?=$form->radio('cspPresetAction', 'save_as_custom_style')?> <?=t('Use this style here, and leave "%s" unchanged?', $csp->getCustomStylePresetName())?></div>
