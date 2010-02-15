@@ -797,6 +797,9 @@ ccm_setupDashboardHeaderMenu = function(){
 	});		
 }
 
+ccm_dashboardRequestRemoteInformation = function() {
+	$.get(CCM_TOOLS_PATH + '/dashboard/get_remote_information');
+}
 
 ccm_setupHeaderMenu = function() {
 	

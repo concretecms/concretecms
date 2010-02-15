@@ -3,15 +3,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class DashboardController extends Controller {
 
 	public function view() {
-		Loader::library('update');
-		$lv = Update::getLatestAvailableVersionNumber();
-		$this->set('latest_version', $lv);
+		$this->set('latest_version', Config::get('APP_VERSION_LATEST'));
 		Loader::model('dashboard/homepage');
 		$dh = new DashboardHomepageView();
 		$modules = $dh->getModules();
 		$this->set('dh', $dh);
-		$this->set('modules', $modules);
-		
+		$this->set('modules', $modules);		
 		$html = Loader::helper('html');
 		$this->addHeaderItem($html->javascript('swfobject.js'));
 	}

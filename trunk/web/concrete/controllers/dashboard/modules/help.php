@@ -6,10 +6,11 @@ class HelpDashboardModuleController extends Controller {
 	const FEED = 'http://www.concrete5.org/community/updates/help/feed';
 	
 	public function __construct() {
-		$fp = Loader::helper("feed");
-		$feed = $fp->load(HelpDashboardModuleController::FEED);
-		$feed->set_timeout(3);
-		$posts = $feed->get_items(0, 2);
+		Loader::helper('feed');
+		$posts = Cache::get('dashboard_feed', 'help');
+		if (!is_array($posts)) {
+			$posts = array();
+		}
 		$this->set('posts', $posts);
 	}
 }
