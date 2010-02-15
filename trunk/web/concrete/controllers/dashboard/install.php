@@ -29,7 +29,7 @@ class DashboardInstallController extends Controller {
 	}
 	
 	public function browse() {
-	
+		$this->set('marketplaceBrowseURL', MARKETPLACE_URL_LANDING);	
 	}
 
 	public function view() {

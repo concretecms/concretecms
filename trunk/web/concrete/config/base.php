@@ -437,7 +437,7 @@ define('MARKETPLACE_URL_CONNECT_TOKEN_NEW', CONCRETE5_ORG_URL.'/marketplace/conn
 
 # Marketplace Vars
 if (!defined("MARKETPLACE_URL_LANDING")) {
-	define('MARKETPLACE_URL_LANDING', CONCRETE5_ORG_URL.'/marketplace/');
+	define('MARKETPLACE_URL_LANDING', CONCRETE5_ORG_URL.'/marketplace/remote');
 }
 if (!defined('MARKETPLACE_BLOCK_LIST_WS')) {
 	define('MARKETPLACE_BLOCK_LIST_WS', CONCRETE5_ORG_URL.'/marketplace/addons/-/get_remote_list');

@@ -6,7 +6,34 @@ $ch = Loader::helper('concrete/interface');
 
 $pkgArray = Package::getInstalledList();
 
-if ($this->controller->getTask() == 'update') { 
+if ($this->controller->getTask() == 'browse') { ?>
+
+<h1><span><?=t("Connect to the Community")?></span>
+<div class="ccm-dashboard-inner">
+<? 
+	if (!Marketplace::isConnected()) { ?>
+		
+		<?=t('Your site is <strong>not</strong> connected to the concrete5 community.')?>
+		<br/><br/>
+		<? print $ch->button(t('Connect to Community'), $this->url('/dashboard/settings/marketplace'))?>
+		
+	<?
+	
+	} else { ?>
+		
+			<iframe width="100%" height="530px" style="border: 0px" src="<?=$marketplaceBrowseURL?>"></iframe>
+		
+		<?			
+	}
+?>
+
+	<div class="ccm-spacer">&nbsp;</div>
+
+</div>
+
+
+
+<? } else if ($this->controller->getTask() == 'update') { 
 
 	$pkgAvailableArray = Package::getLocalUpgradeablePackages();
 	$thisURL = $this->url('/dashboard/install', 'update');
@@ -478,28 +505,4 @@ if ($this->controller->getTask() == 'update') {
 		</div>
 	
 	<? } ?>
-<? }
-
-
-$mtitle = t('Marketplace Login');
-$mlogouttitle = t('Marketplace Logout');
-$mmsg = t("You've successfully connected this website to your concrete5 Marketplace account. Featured items will be visible to you while using this site. You can browse the complete marketplace at <a href='%s' target='_blank'>concrete5.org/marketplace</a>", 'http://www.concrete5.org/marketplace/');
-$mlogoutmsg = t("You have disconnected this site from the marketplace.");
-
-?>
-
-<script type="text/javascript">
-function loginSuccess() {
-	jQuery.fn.dialog.closeTop();
-	ccmAlert.notice("<?=$mtitle?>", "<?=$mmsg?>", 
-		function() {
-			location.href = '<?=$this->url($thisURL)?>?ts=<?=time()?>';		
-		});
-}
-function logoutSuccess() {
-	ccmAlert.notice("<?=$mlogouttitle?>", "<?=$mlogoutmsg?>", 
-		function() {
-			location.href = '<?=$this->url($thisURL)?>?ts=<?=time()?>';		
-		});
-}
-</script>
+<? } ?>

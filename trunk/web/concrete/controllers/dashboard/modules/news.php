@@ -9,10 +9,9 @@ class NewsDashboardModuleController extends Controller {
 	public function __construct() {
 		Loader::model('system_notification');
 		$snl = new SystemNotificationList();
-		$snl->filterByType(SystemNotification::SN_TYPE_CORE_MESSAGE_NEWS);
-		$snl->setItemsPerPage(2);
-		$posts = $snl->getPage();
-		$this->set('posts', $posts);
-		$this->set('feed_read_more', NewsDashboardModuleController::FEED_READ_MORE);
+		$snl->setItemsPerPage(4);
+		$notifications = $snl->getPage();
+		$this->set('notifications', $notifications);
+		$this->set('total', $snl->getTotal());
 	}
 }

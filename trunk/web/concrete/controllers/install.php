@@ -450,6 +450,7 @@ class InstallController extends Controller {
 						$d9a = SinglePage::add('/dashboard/system/jobs');
 						$d9b = SinglePage::add('/dashboard/system/backup');
 						$d9c = SinglePage::add('/dashboard/system/update');
+						$d9d = SinglePage::add('/dashboard/system/notifications');
 						$d10 = SinglePage::add('/dashboard/settings');
 						$d11 = SinglePage::add('/dashboard/settings/mail');
 						$d12 = SinglePage::add('/dashboard/settings/marketplace');
