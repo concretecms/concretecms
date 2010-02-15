@@ -11,14 +11,14 @@ class DashboardInstallController extends Controller {
 		$addFuncSelected = true;
 		$updateSelected = false;
 		
-		if ($this->getTask() == 'update') {
-			$updateSelected = true;
+		if ($this->getTask() == 'browse') {
+			$browseSelected = true;
 			$addFuncSelected = false;
 		}
 		
 		$subnav = array(
 			array(View::url('/dashboard/install'), t('Installed and Available'), $addFuncSelected),
-			array(View::url('/dashboard/install', 'update'), t('Update Add-Ons'), $updateSelected)
+			array(View::url('/dashboard/install', 'browse'), t('Browse Marketplace'), $browseSelected)
 		);
 		$this->set('subnav', $subnav);
 		Loader::library('marketplace');
@@ -26,6 +26,10 @@ class DashboardInstallController extends Controller {
 			$this->set('marketplacePageURL', Marketplace::getSitePageURL());
 		}
 
+	}
+	
+	public function browse() {
+	
 	}
 
 	public function view() {
@@ -214,14 +218,32 @@ class DashboardInstallController extends Controller {
 		}
     }
 
-    public function remote_upgrade($remoteCID, $pkgHandle){
-    	$ph = Loader::helper('package');
-    	$errors = $ph->prepare_remote_upgrade('purchase', $remoteCID, $pkgHandle);
-		if (is_array($errors)) {
-			$errors = Package::mapError($errors);
-			$this->set('error', $errors);
+    public function prepare_remote_upgrade($remoteMPID){
+    	Loader::model('marketplace_remote_item');
+		$mri = MarketplaceRemoteItem::getByID($remoteMPID);
+
+		if (!is_object($mri)) {
+			$this->set('error', array(t('Invalid marketplace item ID.')));
+			return;
+		}
+		
+		$local = Package::getbyHandle($mri->getHandle());
+		if (!is_object($local) || $local->isPackageInstalled() == false) {
+			$this->set('error', array(Package::E_PACKAGE_NOT_FOUND));
+			return;
+		}		
+		
+    	$r = $mri->downloadUpdate();
+
+		if ($r != false) {
+			if (!is_array($r)) {
+				$this->set('error', array($r));
+			} else {
+				$errors = Package::mapError($r);
+				$this->set('error', $errors);
+			}
 		} else {
-			$this->redirect('/dashboard/install', 'update', $pkgHandle);
+			$this->redirect('/dashboard/install', 'update', $mri->getHandle());
 		}
     }
 
