@@ -25,6 +25,12 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 		return $list;
 	}
 	
+	public function getSearchIndexValue() {
+		$db = Loader::db();
+		$value = $db->GetOne("select fID from atFile where avID = ?", array($this->getAttributeValueID()));
+		return $value;	
+	}
+	
 	public function search() {
 		// search by file causes too many problems
 		//$al = Loader::helper('concrete/asset_library');
