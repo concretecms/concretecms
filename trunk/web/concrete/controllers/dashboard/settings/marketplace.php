@@ -18,7 +18,7 @@ class DashboardSettingsMarketplaceController extends Controller {
 	}
 	
 	public function view($isNew = false) {
-		$mi = new Marketplace();
+		$mi = Marketplace::getInstance();
 		if ($mi->isConnected()) {
 			$url = MARKETPLACE_URL_CONNECT;
 			$csToken = Marketplace::generateSiteToken();

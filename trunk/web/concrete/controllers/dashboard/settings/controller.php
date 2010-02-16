@@ -40,7 +40,7 @@ class DashboardSettingsController extends Controller {
 		$this->set('txtEditorCstmCode', $txtEditorCstmCode );
 		
 		Loader::library('marketplace');
-		$mi = new Marketplace();
+		$mi = Marketplace::getInstance();
 		if ($mi->isConnected()) {
 			$this->set('marketplacePageURL', Marketplace::getSitePageURL());
 		}

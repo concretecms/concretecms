@@ -508,32 +508,19 @@ $(document).ready(function(){
 	<h1><span><?=t('Connect to Community')?> </span></h1>
 	
 	<div class="ccm-dashboard-inner">	
-		 
-		<? if(defined('ENABLE_MARKETPLACE_SUPPORT') && ENABLE_MARKETPLACE_SUPPORT == FALSE ){ ?>
-		
-			<div class="ccm-dashboard-description"><?=t("The marketplace has been manually disabled in the site's configuration files.")?></div>
-		
-		<? }else { ?>
-				
-			<? 
-			Loader::library('marketplace');
-			$mi = new Marketplace();
-			if ($mi->isConnected()) { ?>
-				
-				<?=t('Your site is currently connected to the concrete5 community. <a href="%s">Visit project page</a>.', $marketplacePageURL)?>
+		<? 
+		Loader::library('marketplace');
+		$mi = Marketplace::getInstance();
+		if ($mi->isConnected()) { ?>
 			
-			<?
-			
-			} else { ?>
-			
-				<?=t('Your site is <strong>not</strong> connected to the concrete5 community.')?>
-				<br/><br/>
-				<? print $h->button(t('Connect to Community'), $this->url('/dashboard/settings/marketplace'))?>
-				
-				<?			
-			}
+			<?=t('Your site is currently connected to the concrete5 community. <a href="%s">Visit project page</a>.', $marketplacePageURL)?>
 		
-		 } ?>
+		<?
+		
+		} else { 
+			Loader::element('dashboard/marketplace_connect_failed');
+		}
+		?>
 		<br class="clear" />
 	</div>
 </form>
