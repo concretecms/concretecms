@@ -45,6 +45,9 @@ foreach($files as $f) {
 		$fcnt++;
 	}
 }
+
+$searchInstance = $_REQUEST['searchInstance'];
+
 ?>
 
 <h1><?=t('Delete Files')?></h1>
@@ -55,9 +58,9 @@ foreach($files as $f) {
 
 	<?=t('Are you sure you want to delete the following files?')?><br/><br/>
 
-	<form id="ccm-delete-files-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete">
+	<form id="ccm-<?=$searchInstance?>-delete-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete">
 	<?=$form->hidden('task', 'delete_files')?>
-	<table id="ccm-file-list" border="0" cellspacing="0" cellpadding="0">
+	<table id="ccm-file-list" border="0" cellspacing="0" cellpadding="0" width="100%">
 	
 	<? foreach($files as $f) { 
 		$fp = new Permissions($f);
@@ -85,7 +88,7 @@ foreach($files as $f) {
 	</form>
 	<br/>
 	<? $ih = Loader::helper('concrete/interface')?>
-	<?=$ih->button_js(t('Delete'), 'ccm_alDeleteFiles()')?>
+	<?=$ih->button_js(t('Delete'), 'ccm_alDeleteFiles(\'' . $searchInstance . '\')')?>
 	<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left')?>	
 		
 		

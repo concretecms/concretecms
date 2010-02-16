@@ -136,7 +136,7 @@ if(count($errors)) {
 			highlight.push(<?=$r->getFileID()?>);
 			window.parent.ccm_uploadedFiles.push(<?=intval($r->getFileID())?>);
 	<?	} ?>		
-		window.parent.ccm_filesUploadedDialog();	
+		window.parent.ccm_filesUploadedDialog('<?=$searchInstance?>');	
 		window.parent.ccm_alRefresh(highlight, '<?=$searchInstance?>');
 <? } ?>
 		</script>

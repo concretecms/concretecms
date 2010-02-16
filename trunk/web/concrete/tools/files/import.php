@@ -139,7 +139,7 @@ $(function() {
 		queue_complete_handler : function(file){
 			// queueComplete() from swfupload.handlers.js
 			queueComplete();		
-			ccm_filesUploadedDialog(); 
+			ccm_filesUploadedDialog('<?=$searchInstance?>'); 
 		}				
 	});
 
