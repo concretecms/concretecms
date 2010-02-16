@@ -13,6 +13,8 @@ foreach($slist as $sk) {
 	$selectedAKIDs[] = $sk->getAttributeKeyID();
 }
 
+$searchInstance = $_REQUEST['searchInstance'];
+
 if ($_POST['task'] == 'update_columns') {
 	Loader::model('attribute/category');
 	$sc = AttributeKeyCategory::getByHandle('file');
@@ -32,7 +34,7 @@ $list = FileAttributeKey::getList();
 
 ?>
 
-<form method="post" id="ccm-file-customize-search-columns-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/customize_search_columns/">
+<form method="post" id="ccm-<?=$searchInstance?>-customize-search-columns-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/customize_search_columns/">
 <?=$form->hidden('task', 'update_columns')?>
 
 <h1><?=t('Additional Searchable Attributes')?></h1>
@@ -56,17 +58,17 @@ print $b1;
 
 <script type="text/javascript">
 ccm_submitCustomizeSearchColumnsForm = function() {
-	ccm_deactivateSearchResults();
-	$("#ccm-file-customize-search-columns-form").ajaxSubmit(function(resp) {
+	ccm_deactivateSearchResults('<?=$searchInstance?>');
+	$("#ccm-<?=$searchInstance?>-customize-search-columns-form").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
-		$("#ccm-file-advanced-search").ajaxSubmit(function(resp) {
-			ccm_parseAdvancedSearchResponse(resp);
+		$("#ccm-<?=$searchInstance?>-advanced-search").ajaxSubmit(function(resp) {
+			ccm_parseAdvancedSearchResponse(resp, '<?=$searchInstance?>');
 		});
 	});
 }
 
 $(function() {
-	$('#ccm-file-customize-search-columns-form').submit(function() {
+	$('#ccm-<?=$searchInstance?>-customize-search-columns-form').submit(function() {
 		ccm_submitCustomizeSearchColumnsForm();
 	});
 });
