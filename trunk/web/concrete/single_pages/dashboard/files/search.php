@@ -11,14 +11,14 @@ if ($fp->canSearchFiles()) { ?>
 				<td valign="top" class="ccm-search-form-advanced-col">
 					<? Loader::element('files/search_form_advanced', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
 				</td>		
-				<? /* <div id="ccm-file-search-advanced-fields-gutter">&nbsp;</div> */ ?>		
+				<? /* <div id="ccm-<?=$searchInstance?>-search-advanced-fields-gutter">&nbsp;</div> */ ?>		
 				<td valign="top" width="100%">	
 					
 					<div id="ccm-search-advanced-results-wrapper">
 					
-						<? Loader::element('files/upload_single'); ?>
+						<? Loader::element('files/upload_single', array('searchInstance' => $searchInstance)); ?>
 						
-						<div id="ccm-file-search-results">
+						<div id="ccm-<?=$searchInstance?>-search-results" class="ccm-file-list">
 						
 							<? Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'searchType' => 'DASHBOARD', 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
 						

@@ -19,6 +19,8 @@ if (isset($_POST['fID'])) {
 	$fr = false;
 }
 
+$searchInstance = $_POST['searchInstance'];
+
 $files = array();
 if ($valt->validate('import_incoming')) {
 	if( !empty($_POST) ) {
@@ -60,7 +62,7 @@ if ($valt->validate('import_incoming')) {
 		<? } ?>
 		window.parent.jQuery.fn.dialog.closeTop();
 		window.parent.ccm_filesUploadedDialog();		
-		window.parent.ccm_alRefresh(highlight);		
+		window.parent.ccm_alRefresh(highlight, '<?=$searchInstance?>');		
 	<? } ?>
 </script>
 </head>

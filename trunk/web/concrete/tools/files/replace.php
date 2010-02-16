@@ -12,7 +12,8 @@ if (!$fp->canWrite()) {
 	die(t('Access Denied.'));
 }
 
-Loader::element('files/upload_single', array('mode' => 'replace', 'fID' => $f->getFileID())); 
+$searchInstance = $_REQUEST['searchInstance'];
+Loader::element('files/upload_single', , array('searchInstance' => $searchInstance, 'mode' => 'replace', 'fID' => $f->getFileID())); 
 
 ?>
 
