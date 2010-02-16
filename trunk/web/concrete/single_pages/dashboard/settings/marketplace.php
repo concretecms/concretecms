@@ -2,7 +2,7 @@
 <h1><span><?=t("Connect to the Community")?></span>
 <div class="ccm-dashboard-inner">
 <? 
-	$mi = new Marketplace();
+	$mi = Marketplace::getInstance();
 	if ($mi->isConnected()) { ?>
 		
 		<? if ($isNew) { ?>

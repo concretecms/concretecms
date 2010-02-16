@@ -5,10 +5,26 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class Marketplace {
 	
 	const E_INVALID_BASE_URL = 20;
+	const E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED = 21;
+
 	protected $isConnected = false;
 	protected $connectionError = false;
 	
+	public static function getInstance() {
+		static $instance;
+		if (!isset($instance)) {
+			$m = __CLASS__;
+			$instance = new $m;
+		}
+		return $instance;
+	}
+	
 	public function __construct() {
+		if (defined('ENABLE_MARKETPLACE_SUPPORT') && ENABLE_MARKETPLACE_SUPPORT == false) {
+			$this->connectionError = Marketplace::E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED;
+			return;
+		}
+
 		$csToken = Config::get('MARKETPLACE_SITE_TOKEN');
 		if ($csToken != '') {
 
