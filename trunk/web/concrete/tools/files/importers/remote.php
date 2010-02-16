@@ -16,6 +16,7 @@ if (isset($_REQUEST['fID'])) {
 	$fr = false;
 }
 
+$searchInstance = $_POST['searchInstance'];
 
 $valt = Loader::helper('validation/token');
 Loader::library("file/importer");
@@ -136,7 +137,7 @@ if(count($errors)) {
 			window.parent.ccm_uploadedFiles.push(<?=intval($r->getFileID())?>);
 	<?	} ?>		
 		window.parent.ccm_filesUploadedDialog();	
-		window.parent.ccm_alRefresh(highlight);
+		window.parent.ccm_alRefresh(highlight, '<?=$searchInstance?>');
 <? } ?>
 		</script>
 	</head>

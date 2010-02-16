@@ -82,6 +82,8 @@ $s1 = FileSet::getMySets();
 	?>
 
 	<form method="get" id="ccm-<?=$searchInstance?>-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
+
+<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
 	
 <div id="ccm-<?=$searchInstance?>-search-advanced-fields" class="ccm-search-advanced-fields" >
 	
@@ -244,7 +246,7 @@ $s1 = FileSet::getMySets();
 	
 	<hr/>
 	
-	<div><?=$form->checkbox('fsIDNone', '1', $searchRequest['fsIDNone'] == 1)?> <?=$form->label('fsIDNone', t('Display files in no sets.'))?></div>
+	<div><?=$form->checkbox('fsIDNone', '1', $searchRequest['fsIDNone'] == 1, array('instance' => $searchInstance))?> <?=$form->label('fsIDNone', t('Display files in no sets.'))?></div>
 </div>
 
 <? } ?>

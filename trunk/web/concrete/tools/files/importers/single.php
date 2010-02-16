@@ -21,6 +21,8 @@ if (isset($_POST['fID'])) {
 	$fr = false;
 }
 
+$searchInstance = $_POST['searchInstance'];
+
 if ($valt->validate('upload')) {
 	if (isset($_FILES['Filedata']) && (is_uploaded_file($_FILES['Filedata']['tmp_name']))) {
 		if (!$fp->canAddFileType($cf->getExtension($_FILES['Filedata']['name']))) {
@@ -57,7 +59,7 @@ if ($errorCode > -1 && $error == '') {
 	<? } else { ?>
 		highlight = new Array();
 		highlight.push(<?=$resp->getFileID()?>);
-		window.parent.ccm_alRefresh(highlight);
+		window.parent.ccm_alRefresh(highlight, '<?=$searchInstance?>');
 		
 		<? if (is_object($fr)) { ?>
 			window.parent.jQuery.fn.dialog.closeTop();
