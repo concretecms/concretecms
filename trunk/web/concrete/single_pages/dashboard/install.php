@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $valt = Loader::helper('validation/token');
 $ci = Loader::helper('concrete/urls');
 $ch = Loader::helper('concrete/interface');
-
+$mi = new Marketplace();
 $pkgArray = Package::getInstalledList();
 
 if ($this->controller->getTask() == 'browse') { ?>
@@ -11,7 +11,7 @@ if ($this->controller->getTask() == 'browse') { ?>
 <h1><span><?=t("Connect to the Community")?></span>
 <div class="ccm-dashboard-inner">
 <? 
-	if (!Marketplace::isConnected()) { ?>
+	if (!$mi->isConnected()) { ?>
 		
 		<?=t('Your site is <strong>not</strong> connected to the concrete5 community.')?>
 		<br/><br/>
@@ -71,7 +71,7 @@ if ($this->controller->getTask() == 'browse') { ?>
 
 
 <div class="ccm-dashboard-inner">
-	<? if (!Marketplace::isConnected()) { ?> 
+	<? if (!$mi->isConnected()) { ?>
 	<div class="ccm-addon-marketplace-account">
 	
 		<?=t('Your site is <strong>not</strong> connected to the concrete5 community.')?>
@@ -407,8 +407,8 @@ if ($this->controller->getTask() == 'browse') { ?>
 				</div>
 				
 			
-			<? } ?>
 			<br/>
+			<? } ?>
 			
 
 			<h1><span><?=t('New')?></span></h1>
@@ -419,10 +419,8 @@ if ($this->controller->getTask() == 'browse') { ?>
 			<div class="ccm-addon-marketplace-account">
 			<? 
 			Loader::library('marketplace');
-			if (Marketplace::isConnected()) { ?>
-				
-				<?=t('Your site is currently connected to the concrete5 community. <a href="%s">Visit project page</a>.', $marketplacePageURL)?>
-			
+			if ($mi->isConnected()) { ?>				
+				<?=t('Your site is currently connected to the concrete5 community. <a href="%s">Visit project page</a>.', $mi->getSitePageURL())?>
 			<?
 			
 			} else { ?>

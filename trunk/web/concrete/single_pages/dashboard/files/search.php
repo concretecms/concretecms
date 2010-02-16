@@ -9,7 +9,7 @@ if ($fp->canSearchFiles()) { ?>
 		<table id="ccm-search-form-table" >
 			<tr>
 				<td valign="top" class="ccm-search-form-advanced-col">
-					<? Loader::element('files/search_form_advanced', array('searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
+					<? Loader::element('files/search_form_advanced', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
 				</td>		
 				<? /* <div id="ccm-file-search-advanced-fields-gutter">&nbsp;</div> */ ?>		
 				<td valign="top" width="100%">	
@@ -20,7 +20,7 @@ if ($fp->canSearchFiles()) { ?>
 						
 						<div id="ccm-file-search-results">
 						
-							<? Loader::element('files/search_results', array('searchType' => 'DASHBOARD', 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
+							<? Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'searchType' => 'DASHBOARD', 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
 						
 						</div>
 					

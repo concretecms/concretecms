@@ -115,7 +115,8 @@ class MarketplaceRemoteItem extends Object {
 
 		// Retrieve the URL contents 
 		$csToken = Config::get('MARKETPLACE_SITE_TOKEN');
-		$url = MARKETPLACE_PURCHASES_LIST_WS."?csToken={$csToken}";
+		$csiURL = urlencode(BASE_URL . DIR_REL);
+		$url = MARKETPLACE_PURCHASES_LIST_WS."?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
 		$xml = $fh->getContents($url);
 
 		try {

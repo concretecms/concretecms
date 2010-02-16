@@ -1,4 +1,9 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
+<?
+if (isset($_REQUEST['searchInstance'])) {
+	$searchInstance = $_REQUEST['searchInstance'];
+}
+?>
 <script type="text/javascript">
 	var CCM_STAR_STATES = {
 		'unstarred':'star_grey.png',
@@ -6,7 +11,7 @@
 	};
 	var CCM_STAR_ACTION    = 'files/star.php';
 </script>
-<div id="ccm-list-wrapper"><a name="ccm-file-list-wrapper-anchor"></a>
+<div id="ccm-list-wrapper"><a name="ccm-<?=$searchInstance?>-list-wrapper-anchor"></a>
 <?
 	$fileList->displaySummary();
 	$txt = Loader::helper('text');
@@ -22,10 +27,10 @@
 	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/files/search_results';
 	
 	if (count($files) > 0) { ?>	
-		<table border="0" cellspacing="0" cellpadding="0" id="ccm-file-list" class="ccm-results-list">
+		<table border="0" cellspacing="0" cellpadding="0" id="ccm-<?=$searchInstance?>-list" class="ccm-results-list">
 		<tr>
-			<th><input id="ccm-file-list-cb-all" type="checkbox" /></td>
-			<th><select id="ccm-file-list-multiple-operations" disabled>
+			<th><input id="ccm-<?=$searchInstance?>-list-cb-all" type="checkbox" /></td>
+			<th><select id="ccm-<?=$searchInstance?>-list-multiple-operations" disabled>
 				<option value="">**</option>
 				<option value="download"><?=t('Download')?></option>
 				<option value="sets"><?=t('Sets')?></option>

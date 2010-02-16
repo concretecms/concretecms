@@ -8,6 +8,8 @@ if (!$cp->canAccessFileManager()) {
 
 Loader::model('file_list');
 
+$searchInstance = $page . time();
+
 $cnt = Loader::controller('/dashboard/files/search');
 $fileList = $cnt->getRequestedSearchResults();
 $files = $fileList->getPage();
@@ -20,7 +22,7 @@ $searchRequest = $fileList->getSearchRequest();
 		<table id="ccm-search-form-table" >
 			<tr>
 				<td valign="top" class="ccm-search-form-advanced-col">
-					<? Loader::element('files/search_form_advanced', array('searchRequest' => $searchRequest)); ?>
+					<? Loader::element('files/search_form_advanced', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest)); ?>
 				</td>		
 				<? /* <div id="ccm-file-search-advanced-fields-gutter">&nbsp;</div> */ ?>		
 				<td valign="top" width="100%">	
@@ -31,7 +33,7 @@ $searchRequest = $fileList->getSearchRequest();
 						
 						<div id="ccm-file-search-results">
 						
-							<? Loader::element('files/search_results', array('files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
+							<? Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
 						
 						</div>
 					
@@ -46,7 +48,7 @@ $searchRequest = $fileList->getSearchRequest();
 <?
 print '<script type="text/javascript">
 $(function() {
-	ccm_activateFileManager();
+	ccm_activateFileManager(false, \'' . $searchInstance . '\');
 });
 </script>';
 ?>
