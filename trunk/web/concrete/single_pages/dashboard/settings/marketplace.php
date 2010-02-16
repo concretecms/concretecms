@@ -2,7 +2,8 @@
 <h1><span><?=t("Connect to the Community")?></span>
 <div class="ccm-dashboard-inner">
 <? 
-	if (Marketplace::isConnected()) { ?>
+	$mi = new Marketplace();
+	if ($mi->isConnected()) { ?>
 		
 		<? if ($isNew) { ?>
 			<?=t('Your site is now connected to the concrete5 community!')?>

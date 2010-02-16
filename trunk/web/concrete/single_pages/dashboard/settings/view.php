@@ -517,7 +517,8 @@ $(document).ready(function(){
 				
 			<? 
 			Loader::library('marketplace');
-			if (Marketplace::isConnected()) { ?>
+			$mi = new Marketplace();
+			if ($mi->isConnected()) { ?>
 				
 				<?=t('Your site is currently connected to the concrete5 community. <a href="%s">Visit project page</a>.', $marketplacePageURL)?>
 			

@@ -22,9 +22,6 @@ class DashboardInstallController extends Controller {
 		);
 		$this->set('subnav', $subnav);
 		Loader::library('marketplace');
-		if (Marketplace::isConnected()) {
-			$this->set('marketplacePageURL', Marketplace::getSitePageURL());
-		}
 
 	}
 	
@@ -196,7 +193,6 @@ class DashboardInstallController extends Controller {
 	}
 
     public function download($remoteMPID=null) {
-    	$ph = Loader::helper('package');
     	Loader::model('marketplace_remote_item');
 		$mri = MarketplaceRemoteItem::getByID($remoteMPID);
 		

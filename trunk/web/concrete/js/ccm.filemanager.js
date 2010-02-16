@@ -47,17 +47,17 @@ ccm_clearFile = function(e, af) {
 	dobj.show();
 }
 
-ccm_activateFileManager = function(altype) {
+ccm_activateFileManager = function(altype, searchInstance) {
 	//delegate event handling to table container so clicks
 	//to our star don't interfer with clicks to our rows
-	ccm_alSetupSelectFiles();
+	ccm_alSetupSelectFiles(searchInstance);
 	
 	$(document).click(function(e) {		
 		e.stopPropagation();
 		ccm_alSelectNone();
 	});
 
-	ccm_setupAdvancedSearch('file');
+	ccm_setupAdvancedSearch(searchInstance);
 	
 	if (altype == 'DASHBOARD') {
 		$(".dialog-launch").dialog();
@@ -69,7 +69,7 @@ ccm_activateFileManager = function(altype) {
 	ccm_alSetupFileProcessor();
 	ccm_alSetupSingleUploadForm();
 	
-	ccm_searchActivatePostFunction['file'] = function() {
+	ccm_searchActivatePostFunction[searchInstance] = function() {
 		ccm_alSetupCheckboxes();
 		ccm_alSetupSelectFiles();
 	}

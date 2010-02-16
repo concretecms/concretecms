@@ -42,7 +42,7 @@ $s1 = FileSet::getMySets();
 <? $form = Loader::helper('form'); ?>
 
 	
-	<div id="ccm-file-search-field-base-elements" style="display: none">
+	<div id="ccm-<?=$searchInstance?>-search-field-base-elements" style="display: none">
 	
 		<span class="ccm-search-option" search-field="size">
 		<?=$form->text('size_from', array('style' => 'width: 30px'))?>
@@ -81,9 +81,9 @@ $s1 = FileSet::getMySets();
 	*/
 	?>
 
-	<form method="get" id="ccm-file-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
+	<form method="get" id="ccm-<?=$searchInstance?>-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
 	
-<div id="ccm-file-search-advanced-fields" class="ccm-search-advanced-fields" >
+<div id="ccm-<?=$searchInstance?>-search-advanced-fields" class="ccm-search-advanced-fields" >
 	
 		<input type="hidden" name="submit_search" value="1" />
 	<?	/** 
@@ -102,7 +102,7 @@ $s1 = FileSet::getMySets();
 				<div class="ccm-file-manager-pre-filter"><?=t('Only displaying files with extension .%s.', $_REQUEST['fExtension'])?></div>
 			<? } ?>
 	
-			<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" class="ccm-search-loading" id="ccm-file-search-loading" />
+			<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" class="ccm-search-loading" id="ccm-<?=$searchInstance?>-search-loading" />
 			
 			<h2><?=t('Search')?></h2>			
 		</div>
@@ -131,7 +131,7 @@ $s1 = FileSet::getMySets();
 							'500' => '500'
 						), $searchRequest['numResults'], array('style' => 'width:65px'))?>
 					</td>
-					<td><a href="javascript:void(0)" id="ccm-file-search-add-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a></td>
+					<td><a href="javascript:void(0)" id="ccm-<?=$searchInstance?>-search-add-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a></td>
 				</tr>	
 				</table>
 			</div>
@@ -142,7 +142,7 @@ $s1 = FileSet::getMySets();
 						<td valign="top" style="padding-right: 4px">
 						<?=$form->select('searchField', $searchFields, array('style' => 'width: 85px'));
 						?>
-						<input type="hidden" value="" class="ccm-file-selected-field" name="selectedSearchField[]" />
+						<input type="hidden" value="" class="ccm-<?=$searchInstance?>-selected-field" name="selectedSearchField[]" />
 						</td>
 						<td width="100%" valign="top" class="ccm-selected-field-content">
 						<?=t('Select Search Field.')?>
@@ -166,12 +166,12 @@ $s1 = FileSet::getMySets();
 					
 					?>
 					
-					<div class="ccm-search-field ccm-search-request-field-set" ccm-search-type="<?=$req?>" id="ccm-file-search-field-set<?=$i?>">
+					<div class="ccm-search-field ccm-search-request-field-set" ccm-search-type="<?=$req?>" id="ccm-<?=$searchInstance?>-search-field-set<?=$i?>">
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td valign="top" style="padding-right: 4px">
 							<?=$form->select('searchField' . $i, $searchFields, $req, array('style' => 'width: 85px')); ?>
-							<input type="hidden" value="<?=$req?>" class="ccm-file-selected-field" name="selectedSearchField[]" />
+							<input type="hidden" value="<?=$req?>" class="ccm-<?=$searchInstance?>-selected-field" name="selectedSearchField[]" />
 							</td>
 							<td width="100%" valign="top" class="ccm-selected-field-content">
 							<? if ($req == 'size') { ?>
@@ -238,7 +238,7 @@ $s1 = FileSet::getMySets();
 	<h2><?=t('Filter by File Set')?></h2>
 	<div style="max-height: 200px; overflow: auto">
 	<? foreach($s1 as $fs) { ?>
-		<div class="ccm-file-search-advanced-sets-cb"><?=$form->checkbox('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetID(), (is_array($searchRequest['fsID']) && in_array($fs->getFileSetID(), $searchRequest['fsID'])))?> <?=$form->label('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetName())?></div>
+		<div class="ccm-<?=$searchInstance?>-search-advanced-sets-cb"><?=$form->checkbox('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetID(), (is_array($searchRequest['fsID']) && in_array($fs->getFileSetID(), $searchRequest['fsID'])))?> <?=$form->label('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetName())?></div>
 	<? } ?>
 	</div>
 	

@@ -4,9 +4,37 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class Marketplace {
 	
+	const E_INVALID_BASE_URL = 20;
+	protected $isConnected = false;
+	protected $connectionError = false;
+	
+	public function __construct() {
+		$csToken = Config::get('MARKETPLACE_SITE_TOKEN');
+		if ($csToken != '') {
+
+			$fh = Loader::helper('file');
+			$csiURL = urlencode(BASE_URL . DIR_REL);
+			$url = MARKETPLACE_URL_CONNECT_VALIDATE."?csToken={$csToken}&csiURL=" . $csiURL;
+			$r = $fh->getContents($url);
+			if ($r == false) {
+				$this->isConnected = true;
+			} else {
+				$this->isConnected = false;
+				$this->connectionError = $r;
+			}
+		}		
+	}
+	
 	public function isConnected() {
-		$token = Config::get('MARKETPLACE_SITE_TOKEN');
-		return $token != '';
+		return $this->isConnected;
+	}
+	
+	public function hasConnectionError() {
+		return $this->connectionError != false;
+	}
+	
+	public function getConnectionError() {
+		return $this->connectionError;
 	}
 	
 	public function generateSiteToken() {

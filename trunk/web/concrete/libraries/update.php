@@ -43,7 +43,8 @@ class Update {
 		
 		if ($queryWS) {
 			Loader::library('marketplace');
-			if (Marketplace::isConnected()) {
+			$mi = new Marketplace();
+			if ($mi->isConnected()) {
 				Marketplace::checkPackageUpdates();
 			}
 			$update = Update::getLatestAvailableUpdate();

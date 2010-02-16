@@ -8,12 +8,14 @@ class DashboardFilesSearchController extends Controller {
 		$html = Loader::helper('html');
 		$form = Loader::helper('form');
 		$this->set('form', $form);
-		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_activateFileManager(\'DASHBOARD\'); });</script>');
+		$searchInstance = 'file' . time();
+		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_activateFileManager(\'DASHBOARD\', \'' . $searchInstance . '\'); });</script>');
 		$fileList = $this->getRequestedSearchResults();
 		$files = $fileList->getPage();
 				
 		$this->set('fileList', $fileList);		
 		$this->set('files', $files);		
+		$this->set('searchInstance', $searchInstance);		
 		$this->set('pagination', $fileList->getPagination());
 	}
 	
