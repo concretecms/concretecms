@@ -112,8 +112,9 @@
 			        $cnt = 0;
 					
 					while (($file = readdir($incoming_file_handle)) !== false) {
-						if($file == '.' || $file == '..')
+						if (substr($file, 0, 1) == '.') {
 							continue;
+						}
 						
 						$current_file_stats = array();
 						$current_file_stats = stat(DIR_FILES_INCOMING .'/'. $file);
