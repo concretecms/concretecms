@@ -32,6 +32,7 @@ class PaginationHelper {
 	var $URL=''; //%pageNum% for page number
 	var $jsFunctionCall='';
 	var $queryStringPagingVariable = 'ccm_paging_p';
+	var $additionalVars = array();
 	
 	function PaginationHelper(){
 	
@@ -59,7 +60,18 @@ class PaginationHelper {
 	
 	private function getBaseURL($url = false) {
 		$uh = Loader::helper('url');
-		return $uh->setVariable($this->queryStringPagingVariable, '%pageNum%', $url);
+		$args = array($this->queryStringPagingVariable => '%pageNum%');
+		if (count($this->additionalVars) > 0) {			
+			foreach($this->additionalVars as $k => $v) {
+				$args[$k] = $v;
+			}
+		}
+		$url = $uh->setVariable($args, false, $url);
+		return $url;
+	}
+	
+	public function setAdditionalQueryStringVariables($args) {
+		$this->additionalVars = $args;
 	}
 	
 	function recalc($num_results){

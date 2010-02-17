@@ -16,6 +16,9 @@ if (isset($_REQUEST['searchInstance'])) {
 	$fileList->displaySummary();
 	$txt = Loader::helper('text');
 	$keywords = $searchRequest['fKeywords'];
+	$soargs = array();
+	$soargs['searchInstance'] = $searchInstance;
+
 	/*
 	if ($searchType == 'DASHBOARD') {
 		$bu = false;
@@ -42,14 +45,14 @@ if (isset($_REQUEST['searchInstance'])) {
 			<th>Type</th>
 
 			<th class="ccm-file-list-starred">&nbsp;</th>			
-			<th class="ccm-file-list-filename <?=$fileList->getSearchResultsClass('fvTitle')?>"><a href="<?=$fileList->getSortByURL('fvTitle', 'asc', $bu)?>"><?=t('Title')?></a></th>
-			<th class="<?=$fileList->getSearchResultsClass('fDateAdded')?>"><a href="<?=$fileList->getSortByURL('fDateAdded', 'asc', $bu)?>"><?=t('Added')?></a></th>
-			<th class="<?=$fileList->getSearchResultsClass('fvDateAdded')?>"><a href="<?=$fileList->getSortByURL('fvDateAdded', 'asc', $bu)?>"><?=t('Active')?></a></th>
-			<th class="<?=$fileList->getSearchResultsClass('fvSize')?>"><a href="<?=$fileList->getSortByURL('fvSize', 'asc', $bu)?>"><?=t('Size')?></a></th>
+			<th class="ccm-file-list-filename <?=$fileList->getSearchResultsClass('fvTitle')?>"><a href="<?=$fileList->getSortByURL('fvTitle', 'asc', $bu, $soargs)?>"><?=t('Title')?></a></th>
+			<th class="<?=$fileList->getSearchResultsClass('fDateAdded')?>"><a href="<?=$fileList->getSortByURL('fDateAdded', 'asc', $bu, $soargs)?>"><?=t('Added')?></a></th>
+			<th class="<?=$fileList->getSearchResultsClass('fvDateAdded')?>"><a href="<?=$fileList->getSortByURL('fvDateAdded', 'asc', $bu, $soargs)?>"><?=t('Active')?></a></th>
+			<th class="<?=$fileList->getSearchResultsClass('fvSize')?>"><a href="<?=$fileList->getSortByURL('fvSize', 'asc', $bu, $soargs)?>"><?=t('Size')?></a></th>
 			<? 
 			$slist = FileAttributeKey::getColumnHeaderList();
 			foreach($slist as $ak) { ?>
-				<th class="<?=$fileList->getSearchResultsClass($ak)?>"><a href="<?=$fileList->getSortByURL($ak, 'asc', $bu)?>"><?=$ak->getAttributeKeyDisplayHandle()?></a></th>
+				<th class="<?=$fileList->getSearchResultsClass($ak)?>"><a href="<?=$fileList->getSortByURL($ak, 'asc', $bu, $soargs)?>"><?=$ak->getAttributeKeyDisplayHandle()?></a></th>
 			<? } ?>			
 			<th class="ccm-search-add-column-header"><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-search-add-column"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a></th>
 		</tr>
@@ -112,6 +115,6 @@ if (isset($_REQUEST['searchInstance'])) {
 		
 	
 	<? } 
-	$fileList->displayPaging($bu); ?>
+	$fileList->displayPaging($bu, false, $soargs); ?>
 	
 </div>
