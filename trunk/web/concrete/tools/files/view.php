@@ -27,10 +27,12 @@ if (!$fp->canRead()) {
 <div style="text-align: center">
 
 <?
-
 $to = $fv->getTypeObject();
-Loader::element('files/view/' . $to->getView(), array('fv' => $fv));
-
+if ($to->getPackageHandle() != '') {
+	Loader::packageElement('files/view/' . $to->getView(), $to->getPackageHandle(), array('fv' => $fv));
+} else {
+	Loader::element('files/view/' . $to->getView(), array('fv' => $fv));
+}
 ?>
 </div>
 

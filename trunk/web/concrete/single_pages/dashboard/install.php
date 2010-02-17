@@ -8,24 +8,14 @@ $pkgArray = Package::getInstalledList();
 
 if ($this->controller->getTask() == 'browse') { ?>
 
-<h1><span><?=t("Connect to the Community")?></span>
+<h1><span><?=t("Browse the Marketplace")?></span>
 <div class="ccm-dashboard-inner">
 <? 
 	if (!$mi->isConnected()) { ?>
-		
-		<?=t('Your site is <strong>not</strong> connected to the concrete5 community.')?>
-		<br/><br/>
-		<? print $ch->button(t('Connect to Community'), $this->url('/dashboard/settings/marketplace'))?>
-		
-	<?
-	
-	} else { ?>
-		
-			<iframe width="100%" height="530px" style="border: 0px" src="<?=$marketplaceBrowseURL?>"></iframe>
-		
-		<?			
-	}
-?>
+		<? Loader::element('dashboard/marketplace_connect_failed')?>
+	<? } else { ?>
+		<iframe width="100%" height="530px" style="border: 0px" src="<?=$marketplaceBrowseURL?>"></iframe>
+	<? } ?>
 
 	<div class="ccm-spacer">&nbsp;</div>
 

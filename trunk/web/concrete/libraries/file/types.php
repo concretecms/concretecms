@@ -35,7 +35,7 @@ class FileTypeList {
 	private $types = array();
 	private $importerAttributes = array();
 	
-	public function define($extension, $name, $type, $customImporter = false, $inlineFileViewer = false, $editor = false) {
+	public function define($extension, $name, $type, $customImporter = false, $inlineFileViewer = false, $editor = false, $pkgHandle = false) {
 		$ext = explode(',', $extension);
 		foreach($ext as $e) {
 			$ft = new FileType();
@@ -45,6 +45,7 @@ class FileTypeList {
 			$ft->editor = $editor;
 			$ft->type = strtolower($type);
 			$ft->view = $inlineFileViewer;
+			$ft->pkgHandle = $pkgHandle;
 			$this->types[$e] = $ft;
 		}
 	}
@@ -97,11 +98,14 @@ class FileType {
 	const T_APPLICATION = 6;
 	const T_UNKNOWN = 99;
 	
+	public $pkgHandle = false;
+	
 	public function __construct() {
 		$this->type = FileType::T_UNKNOWN;
 		$this->name = $this->mapGenericTypeText($this->type);
 	}
 	
+	public function getPackageHandle() {return $this->pkgHandle;}
 	public function getName() {return $this->name;}
 	public function getExtension() {return $this->extension;}
 	public function getCustomImporter() {return $this->customImporter;}
@@ -146,7 +150,11 @@ class FileType {
 	
 	public function getCustomInspector() {
 		$script = 'file/types/' . $this->getCustomImporter();
-		Loader::library($script);		
+		if ($this->pkgHandle != false) {
+			Loader::library($script, $this->pkgHandle);
+		} else {
+			Loader::library($script);
+		}
 		$class = Object::camelcase($this->getCustomImporter()) . 'FileTypeInspector';
 		$cl = new $class;
 		return $cl;
