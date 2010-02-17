@@ -60,7 +60,7 @@ $searchInstance = $_REQUEST['searchInstance'];
 
 	<form id="ccm-<?=$searchInstance?>-delete-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete">
 	<?=$form->hidden('task', 'delete_files')?>
-	<table id="ccm-file-list" border="0" cellspacing="0" cellpadding="0" width="100%">
+	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="ccm-results-list">
 	
 	<? foreach($files as $f) { 
 		$fp = new Permissions($f);
@@ -70,9 +70,13 @@ $searchInstance = $_REQUEST['searchInstance'];
 			
 			<?=$form->hidden('fID[]', $f->getFileID())?>		
 			
-			<tr class="" style="font-weight: bold">
-				<td><div class="ccm-file-list-thumbnail"><div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><?=$fv->getThumbnail(1)?></div></div></td>
-	
+			<tr>
+				<td>
+				<div class="ccm-file-list-thumbnail">
+					<div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><table border="0" cellspacing="0" cellpadding="0" height="70" width="100%"><tr><td align="center" fID="<?=$f->getFileID()?>" style="padding: 0px"><?=$fv->getThumbnail(1)?></td></tr></table></div>
+				</div>
+				</td>
+		
 				<td><?=$fv->getType()?></td>
 				<td class="ccm-file-list-filename"><?=wordwrap($fv->getTitle(), 25, "\n", true)?></td>
 				<td><?=date('M d, Y g:ia', strtotime($f->getDateAdded()))?></td>
