@@ -113,6 +113,6 @@ if (isset($_REQUEST['searchInstance'])) {
 		
 	
 	<? } 
-	$pageList->displayPaging($bu); ?>
+	$pageList->displayPaging($bu, false, $soargs); ?>
 	
 </div>
