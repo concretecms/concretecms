@@ -12,10 +12,9 @@ if (!$fp->canWrite()) {
 	die(_("Access Denied."));
 }
 
-
 $to = $fv->getTypeObject();
-
-$url = $ci->getToolsURL('files/edit/' . $to->getEditor()) . '?fID=' . $_REQUEST['fID'];
-
-?>
-<iframe class="ccm-file-editor-wrapper" id="ccm-file-editor-wrapper<?=time()?>" style="padding: 0px; border: 0px; margin: 0px" width="100%" height="100%" frameborder="0" border="0" src="<?=$url?>"></iframe>
+if ($to->getPackageHandle() != '') {
+	Loader::packageElement('files/edit/' . $to->getEditor(), $to->getPackageHandle(), array('fv' => $fv));
+} else {
+	Loader::element('files/edit/' . $to->getEditor(), array('fv' => $fv));
+}
