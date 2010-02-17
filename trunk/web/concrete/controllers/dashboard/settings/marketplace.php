@@ -19,11 +19,16 @@ class DashboardSettingsMarketplaceController extends Controller {
 	
 	public function view($isNew = false) {
 		$mi = Marketplace::getInstance();
-		if ($mi->isConnected()) {
+		if (!$mi->isConnected()) {
 			$url = MARKETPLACE_URL_CONNECT;
-			$csToken = Marketplace::generateSiteToken();
 			$csReferrer = urlencode(BASE_URL . View::url('/dashboard/settings/marketplace', 'connect_complete'));
 			$csiURL = urlencode(BASE_URL . DIR_REL);
+			if ($mi->hasConnectionError()) {
+				$csToken = $mi->getSiteToken();
+			} else {
+				// new connection 
+				$csToken = Marketplace::generateSiteToken();
+			}
 			$this->set('url', $url . '?ts=' . time() . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(SITE, ENT_QUOTES, APP_CHARSET));
 		}
 		$this->set('isNew', $isNew);

@@ -58,6 +58,11 @@ class Marketplace {
 		$token = $fh->getContents(MARKETPLACE_URL_CONNECT_TOKEN_NEW);
 		return $token;	
 	}
+
+	public function getSiteToken() {
+		$token = Config::get('MARKETPLACE_SITE_TOKEN');
+		return $token;
+	}
 	
 	public function getSitePageURL() {
 		$token = Config::get('MARKETPLACE_SITE_URL_TOKEN');
