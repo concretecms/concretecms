@@ -243,13 +243,18 @@ class Area extends Object {
 		// first, we obtain the inheritance of permissions for this particular collection
 		$areac = $this->getAreaCollectionObject();
 		if (is_a($areac, 'Page')) {
-			if ($areac->getCollectionInheritance() == 'PARENT') {
-				
-				// now we go up the tree
-				
+			if ($areac->getCollectionInheritance() == 'PARENT') {				
 				
 				$cIDToCheck = $areac->getCollectionParentID();
+				// first, we temporarily set the arInheritPermissionsFromAreaOnCID to whatever the arInheritPermissionsFromAreaOnCID is set to
+				// in the immediate parent collection
+				$arInheritPermissionsFromAreaOnCID = $db->getOne("select a.arInheritPermissionsFromAreaOnCID from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?", array($cIDToCheck, $this->getAreaHandle()));
+				if ($arInheritPermissionsFromAreaOnCID > 0) {
+					$db->query("update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?", array($arInheritPermissionsFromAreaOnCID, $this->getAreaID()));
+				}
 				
+				// now we do the recursive rescan to see if any areas themselves override collection permissions
+
 				while ($cIDToCheck > 0) {
 					$row = $db->getRow("select c.cParentID, c.cID, a.arHandle, a.arOverrideCollectionPermissions, a.arID from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?", array($cIDToCheck, $this->getAreaHandle()));
 					if ($row['arOverrideCollectionPermissions'] == 1) {
