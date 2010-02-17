@@ -313,10 +313,9 @@ class FileVersion extends Object {
 	
 	
 	/** 
-	 * Removes a version of a file
+	 * Removes a version of a file. Note, does NOT remove the file because we don't know where the file might elsewhere be used/referenced.
 	 */
 	public function delete() {
-		// first, we remove all files from the drive
 		if ($this->fvIsApproved == 1) {
 			return false; // can only delete non-live files
 		}
