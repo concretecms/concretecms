@@ -34,12 +34,8 @@ ccm_marketplaceRefreshInstalledBlockTypes = function() {
 		$btButton = t("Download");
 		$btClass = "";
 		$btDesc = $bt->getDescription();
-		if (!$bt->purchaseRequired()) {
-			$btButton = t("Install");
-			$btClass = ' class="ccm-button-marketplace-install"';
-		} else {
- 			$btButton = t("Purchase");
-		}
+		$btButton = t("Get");
+
 
 		?>	
 		<tr class="ccm-block-type-row">

@@ -17,7 +17,8 @@ class MarketplaceRemoteItem extends Object {
 	protected $remoteURL='';
 	protected $remoteFileURL='';
 	protected $remoteIconURL='';
-
+	protected $isLicensedToSite = false;
+	
 	function loadFromXML( $options=array() ){
 		if($options['mpID']) $this->mpID=(string) $options['mpID'];
 		if($options['name']) $this->name=(string) $options['name'];
@@ -30,6 +31,7 @@ class MarketplaceRemoteItem extends Object {
 		if($options['price']) $this->price= (string) $options['price']; 
 		if($options['version']) $this->version = (string) $options['version'];
 		if($options['listicon']) $this->remoteListIconURL = (string) $options['listicon'];
+		if($options['islicensed']) $this->isLicensedToSite = true;
 	}	
 
 	public function getMarketplaceItemID() {return $this->mpID;}
@@ -42,9 +44,12 @@ class MarketplaceRemoteItem extends Object {
 	public function getRemoteFileURL(){ return $this->remoteFileURL; }
 	public function getRemoteIconURL(){ return $this->remoteIconURL; }
 	public function getRemoteListIconURL() {return $this->remoteListIconURL;}
+	public function isLicensedToSite() {return $this->isLicensedToSite;}
 	public function purchaseRequired() {
 		if ($this->price == '' || $this->price == '0' || $this->price == '0.00') {
 			return false;
+		} else if ($this->isLicensedToSite) {
+			return false;	
 		} else {
 			return true;
 		}
