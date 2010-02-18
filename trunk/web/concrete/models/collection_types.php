@@ -96,6 +96,22 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return $ct;
 		}
 		
+		public function delete() {
+			$db = Loader::db();
+			$template_cID = $db->getOne("SELECT cID FROM Pages WHERE cIsTemplate = 1 and ctID = ?",array($this->ctID));
+			
+			if($template_cID) {
+				$template = Page::getByID($template_cID);
+				if($template->getCollectionID() > 1) {
+					$template->delete();	
+				}
+			}
+			
+			$db->query("DELETE FROM PageTypes WHERE ctID = ?",array($this->ctID));
+			$db->query("DELETE FROM PageTypeAttributes WHERE ctID = ?",array($this->ctID));
+			$this->refreshCache();
+		}
+		
 		public function limit($obj) {
 			// $obj is most likely a collection. We're going to get an array of users and an array of
 			// groups who can add this collection type beneath this particular collection
@@ -115,11 +131,23 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				}
 			}
 		}
+		
+		public static function getListByPackage($pkg) {
+			$db = Loader::db();
+			$list = array();
+			$r = $db->Execute('select ctID from PageTypes where pkgID = ? order by ctName asc', array($pkg->getPackageID()));
+			while ($row = $r->FetchRow()) {
+				$list[] = CollectionType::getByID($row['ctID']);
+			}
+			$r->Close();
+			return $list;
+		}	
+		
 
 		public function refreshCache() {
 			Cache::delete('pageTypeByID', $this->ctID);
-			Cache::delete('pageTyByHandle', $this->ctHandle);
-			Cache::delete('pageTypeList');
+			Cache::delete('pageTypeByHandle', $this->ctHandle);
+			Cache::delete('pageTypeList', false);
 		}
 		
 		public static function getList($limiterType = null) {

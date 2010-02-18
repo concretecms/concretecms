@@ -8,7 +8,7 @@ $pkgArray = Package::getInstalledList();
 
 if ($this->controller->getTask() == 'browse') { ?>
 
-<h1><span><?=t("Browse the Marketplace")?></span>
+<h1><span><?=t("Browse the Marketplace")?></span></h1>
 <div class="ccm-dashboard-inner">
 <? 
 	if (!$mi->isConnected()) { ?>
@@ -21,7 +21,64 @@ if ($this->controller->getTask() == 'browse') { ?>
 
 </div>
 
+<? } else if ($this->controller->getTask() == 'uninstall') { ?>
 
+<div style="width: 760px">
+<h1><span><?=t("Uninstall Package")?></span></h1>
+<div class="ccm-dashboard-inner">
+	
+	<p><?=t('Uninstalling %s will remove the following data from your system.', $pkg->getPackageName())?></p>
+		
+		<table border="0" class="grid-list" cellspacing="1" cellpadding="0">
+		<tr>
+			<td class="header"><?=t('Remove')?></td>
+			<td class="header" width="100%"><?=t('Item')?></td>
+		</tr>
+		<? foreach($items as $k => $itemArray) { 
+			if (count($itemArray) == 0) {
+				continue;
+			}
+			?>
+		<tr>
+			<td style="text-align: center" valign="top"><input type="checkbox" checked disabled /></td>
+			<td><h2><?=$text->unhandle($k)?></h2><? foreach($itemArray as $item) { ?>
+				<?=Package::getItemName($item)?><br/>			
+			<? } ?></td>
+		</tr>
+		<? } ?>
+		</table>
+		<br/>
+		
+<?
+		$u = new User();
+		$buttons[] = $ch->button(t('Cancel'), $this->url('/dashboard/install', 'inspect_package', $pkg->getPackageID()), 'left');
+
+		if ($u->isSuperUser()) {
+		
+			$removeBTConfirm = t('This will remove all elements associated with the %s package. This cannot be undone. Are you sure?', $pkg->getPackageHandle());
+			
+			$buttons[] = $ch->button_js(t('Uninstall Package'), 'javascript:removePackage()', 'right');?>
+
+			<script type="text/javascript">
+			removePackage = function() {
+				if (confirm('<?=$removeBTConfirm?>')) { 
+					location.href = "<?=$this->url('/dashboard/install', 'do_uninstall_package', $pkg->getPackageID(), $valt->generate('uninstall'))?>";				
+				}
+			}
+			</script>
+
+		<? } else { 
+		
+			$buttons[] = $ch->button(t('Remove'), 'alert(\'' . t('Only the super user may remove packages.') . '\')', 'right', 'ccm-button-inactive');?>
+		<? } 
+		
+		print $ch->buttons($buttons);
+		?>
+		
+		<div class="ccm-spacer">&nbsp;</div>
+
+</div>
+</div>
 
 <? } else if ($this->controller->getTask() == 'update') { 
 
@@ -238,23 +295,9 @@ if ($this->controller->getTask() == 'browse') { ?>
 			$u = new User();
 			if ($u->isSuperUser()) {
 			
-				$removeBTConfirm = t('This will remove all elements associated with the %s package. This cannot be undone. Are you sure?', $pkg->getPackageHandle());
-				
-				$buttons[] = $ch->button_js(t('Uninstall Package'), 'removePackage()', 'left');?>
-	
-				<script type="text/javascript">
-				removePackage = function() {
-					if (confirm('<?=$removeBTConfirm?>')) { 
-						location.href = "<?=$this->url('/dashboard/install', 'uninstall_package', $pkg->getPackageID(), $valt->generate('uninstall'))?>";				
-					}
-				}
-				</script>
-	
-			<? } else { ?>
-				<? $buttons[] = $ch->button_js(t('Remove'), 'alert(\'' . t('Only the super user may remove packages.') . '\')', 'left', 'ccm-button-inactive');?>
-			<? }
-	
-			print $ch->buttons($buttons); ?>
+				$buttons[] = $ch->button(t('Uninstall Package'), $this->url('/dashboard/install', 'uninstall', $pkg->getPackageID()), 'left');
+				print $ch->buttons($buttons); 
+			} ?>
 			
 		</div>
 		

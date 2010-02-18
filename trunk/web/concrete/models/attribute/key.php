@@ -22,6 +22,7 @@ class AttributeKey extends Object {
 	 * Returns the ID for this attribute key
 	 */
 	public function getAttributeKeyID() {return $this->akID;}
+	public function getAttributeKeyCategoryID() {return $this->akCategoryID;}
 	
 	/** 
 	 * Returns whether the attribute key is searchable 
@@ -94,6 +95,40 @@ class AttributeKey extends Object {
 		$r->Close();
 		return $list;
 	}
+
+	/** 
+	 * Note, this queries both the pkgID found on the AttributeKeys table AND any attribute keys of a special type
+	 * installed by that package, and any in categories by that package.
+	 * That's because a special type, if the package is uninstalled, is going to be unusable
+	 * by attribute keys that still remain.
+	 */
+	public static function getListByPackage($pkg) {
+		$db = Loader::db();
+		$list = array();
+		$tina[] = '-1';
+		$tinb = $db->GetCol('select atID from AttributeTypes where pkgID = ?', $pkg->getPackageID());
+		if (is_array($tinb)) {
+			$tina = array_merge($tina, $tinb);
+		}
+		$tinstr = implode(',', $tina);
+
+		$kina[] = '-1';
+		$kinb = $db->GetCol('select akCategoryID from AttributeKeyCategories where pkgID = ?', $pkg->getPackageID());
+		if (is_array($kinb)) {
+			$kina = array_merge($kina, $kinb);
+		}
+		$kinstr = implode(',', $kina);
+
+
+		$r = $db->Execute('select akID, akCategoryID from AttributeKeys where (pkgID = ? or atID in (' . $tinstr . ') or akCategoryID in (' . $kinstr . ')) order by akID asc', array($pkg->getPackageID()));
+		while ($row = $r->FetchRow()) {
+			$akc = AttributeKeyCategory::getByID($row['akCategoryID']);
+			$ak = $akc->getAttributeKeyByID($row['akID']);
+			$list[] = $ak;
+		}
+		$r->Close();
+		return $list;
+	}	
 	
 	/** 
 	 * Adds an attribute key. 

@@ -92,6 +92,17 @@ class Config extends Object {
 		}
 	}
 	
+	public static function getListByPackage($pkg) {
+		$db = Loader::db();
+		$list = array();
+		$r = $db->Execute('select cfKey from Config where pkgID = ? order by cfKey asc', array($pkg->getPackageID()));
+		while ($row = $r->FetchRow()) {
+			$list[] = $pkg->config($row['cfKey'], true);
+		}
+		$r->Close();
+		return $list;
+	}	
+	
 	public function getOrDefine($key, $defaultValue) {
 		$val = Config::get($key);
 		if ($val == null) {

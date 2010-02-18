@@ -70,7 +70,8 @@ class PackageList extends Object {
 	}
 	
 	public static function refreshCache() {
-		Cache::deleteType('pkgList');
+		Cache::delete('pkgList', 1);
+		Cache::delete('pkgList', 0);
 	}
 	
 	public static function get($pkgIsInstalled = 1) {
@@ -219,11 +220,53 @@ class Package extends Object {
 	public function getPackageItems() {
 		$items = array();
 		Loader::model('single_page');
-		$items = array_merge(BlockTypeList::getByPackage($this), $items);
-		$items = array_merge(PageTheme::getListByPackage($this), $items);
-		$items = array_merge(SinglePage::getListByPackage($this), $items);
-		$items = array_merge(AttributeType::getListByPackage($this), $items);		
+		Loader::model('dashboard/homepage');
+		Loader::library('mail/importer');
+		Loader::model('collection_types');
+		$items['attribute_categories'] = AttributeKeyCategory::getListByPackage($this);
+		$items['attribute_keys'] = AttributeKey::getListByPackage($this);
+		$items['attribute_sets'] = AttributeSet::getListByPackage($this);
+		$items['page_types'] = CollectionType::getListByPackage($this);
+		$items['mail_importers'] = MailImporter::getListByPackage($this);
+		$items['dashboard_modules'] = DashboardHomepageView::getModules($this);
+		$items['configuration_values'] = Config::getListByPackage($this);
+		$items['block_types'] = BlockTypeList::getByPackage($this);
+		$items['page_themes'] = PageTheme::getListByPackage($this);
+		$items['single_pages'] = SinglePage::getListByPackage($this);
+		$items['attribute_types'] = AttributeType::getListByPackage($this);		
+		ksort($items);
 		return $items;
+	}
+	
+	public static function getItemName($item) {
+		$txt = Loader::helper('text');
+		Loader::model('single_page');
+		Loader::model('dashboard/homepage');
+		if ($item instanceof BlockType) {
+			return $item->getBlockTypeName();
+		} else if ($item instanceof PageTheme) {
+			return $item->getPageThemeName();
+		} else if ($item instanceof CollectionType) {
+			return $item->getCollectionTypeName();
+		} else if ($item instanceof MailImporter) {
+			return $item->getMailImporterName();		
+		} else if ($item instanceof SinglePage) {
+			return $item->getCollectionPath();
+		} else if ($item instanceof AttributeType) {
+			return $item->getAttributeTypeName();
+		} else if ($item instanceof AttributeKeyCategory) {
+			return $txt->unhandle($item->getAttributeKeyCategoryHandle());
+		} else if ($item instanceof AttributeSet) {
+			$at = AttributeKeyCategory::getByID($item->getAttributeSetKeyCategoryID());
+			return t('%s (%s)', $item->getAttributeSetName(), $txt->unhandle($at->getAttributeKeyCategoryHandle()));
+		} else if (is_a($item, 'AttributeKey')) {
+			$akc = AttributeKeyCategory::getByID($item->getAttributeKeyCategoryID());
+			return t(' %s (%s)', $txt->unhandle($item->getAttributeKeyHandle()), $txt->unhandle($akc->getAttributeKeyCategoryHandle()));
+		} else if ($item instanceof ConfigValue) {
+			return ucwords(strtolower($txt->unhandle($item->key)));
+		} else if ($item instanceof DashboardHomepage) {
+			return t('%s (%s)', $item->dbhDisplayName, $txt->unhandle($item->dbhModule));
+		}
 	}
 
 	/** 
@@ -234,20 +277,42 @@ class Package extends Object {
 		
 		$items = $this->getPackageItems();
 
-		foreach($items as $item) {
-			switch(get_class($item)) {
-				case 'BlockType':
-					$item->delete();	
-					break;
-				case 'PageTheme':
-					$item->uninstall();	
-					break;
-				case 'SinglePage':
-					@$item->delete(); // we suppress errors because sometimes the wrapper pages can delete first.
-					break;
-				case 'AttributeType':
+		foreach($items as $k => $array) {
+			foreach($array as $item) {
+				if (is_a($item, 'AttributeKey')) {
 					$item->delete();
-					break;
+				} else {
+					switch(get_class($item)) {
+						case 'BlockType':
+							$item->delete();	
+							break;
+						case 'PageTheme':
+							$item->uninstall();	
+							break;
+						case 'SinglePage':
+							@$item->delete(); // we suppress errors because sometimes the wrapper pages can delete first.
+							break;
+						case 'CollectionType':
+							$item->delete();
+							break;
+						case 'MailImporter':
+							$item->delete();
+							break;
+						case 'ConfigValue':
+							$co = new Config();
+							$co->setPackageObject($this);
+							$co->clear($item->key);
+							break;
+						case 'DashboardHomepage':
+							$item->Delete();
+							break;
+						case 'AttributeKeyCategory':
+						case 'AttributeSet':
+						case 'AttributeType':
+							$item->delete();
+							break;
+					}
+				}
 			}
 		}
 		$db->Execute("delete from Packages where pkgID = ?", array($this->pkgID));
@@ -381,12 +446,8 @@ class Package extends Object {
 		Package::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);		
 		// now we refresh all blocks
 		$items = $this->getPackageItems();
-		foreach($items as $item) {
-			switch(get_class($item)) {
-				case 'BlockType':
-					$item->refresh();
-					break;
-			}
+		foreach($items['blockTypes'] as $item) {
+			$item->refresh();
 		}
 	}
 	
