@@ -50,9 +50,13 @@ class DashboardHomepageView extends View {
 		return $th;		
 	}
 	
-	public function getModules() {
+	public function getModules($pkg = false) {
 		$dbh = new DashboardHomepage();
-		$modules = $dbh->Find('1=1 order by dbhDisplayOrder asc');
+		$pkgs = '';
+		if ($pkg != false) {
+			$pkgs = ' and pkgID = ' . $pkg->getPackageID();
+		}
+		$modules = $dbh->Find('1=1 ' . $pkgs . '  order by dbhDisplayOrder asc');
 		return $modules;
 	}
 

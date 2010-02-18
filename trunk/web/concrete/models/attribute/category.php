@@ -33,6 +33,11 @@ class AttributeKeyCategory extends Object {
 	}
 	
 	public function getAttributeKeyByHandle($akHandle) {
+		if ($this->pkgID > 0) {
+			Loader::model('attribute/categories/' . $this->akCategoryHandle, $this->getPackageHandle());
+		} else {
+			Loader::model('attribute/categories/' . $this->akCategoryHandle);
+		}		
 		$txt = Loader::helper('text');
 		$className = $txt->camelcase($this->akCategoryHandle);
 		$c1 = $className . 'AttributeKey';
@@ -41,6 +46,11 @@ class AttributeKeyCategory extends Object {
 	}
 
 	public function getAttributeKeyByID($akID) {
+		if ($this->pkgID > 0) {
+			Loader::model('attribute/categories/' . $this->akCategoryHandle, $this->getPackageHandle());
+		} else {
+			Loader::model('attribute/categories/' . $this->akCategoryHandle);
+		}		
 		$txt = Loader::helper('text');
 		$className = $txt->camelcase($this->akCategoryHandle);
 		$c1 = $className . 'AttributeKey';
@@ -57,6 +67,17 @@ class AttributeKeyCategory extends Object {
 			$keys[] = $cat->getAttributeKeyByID($row['akID']);
 		}
 		return $keys;		
+	}	
+
+	public static function getListByPackage($pkg) {
+		$db = Loader::db();
+		$list = array();
+		$r = $db->Execute('select akCategoryID from AttributeKeyCategories where pkgID = ? order by akCategoryID asc', array($pkg->getPackageID()));
+		while ($row = $r->FetchRow()) {
+			$list[] = AttributeKeyCategory::getByID($row['akCategoryID']);
+		}
+		$r->Close();
+		return $list;
 	}	
 	
 	public function getAttributeKeyCategoryID() {return $this->akCategoryID;}
@@ -94,7 +115,17 @@ class AttributeKeyCategory extends Object {
 		$db = Loader::db();
 		$db->Execute('delete from AttributeTypeCategories where akCategoryID = ?', $this->akCategoryID);
 	}
-		
+
+	/** 
+	 * note, this does not remove anything but the direct data associated with the category
+	 */
+	public function delete() {
+		$db = Loader::db();
+		$this->clearAttributeKeyCategoryTypes();
+		$this->clearAttributeKeyCategoryColumnHeaders();
+		$db->Execute('delete from AttributeKeyCategories where akCategoryID = ?', $this->akCategoryID);		
+	}
+	
 	public function getList() {
 		$db = Loader::db();
 		$cats = array();

@@ -113,8 +113,18 @@ class DashboardInstallController extends Controller {
 		$this->inspect_block_type($btID);
 
 	}
+	
+	public function uninstall($pkgID) {
+		$pkg = Package::getByID($pkgID);
+		if (!is_object($pkg)) {
+			$this->redirect("/dashboard/install");
+		}
+		$this->set('text', Loader::helper('text'));
+		$this->set('pkg', $pkg);
+		$this->set('items', $pkg->getPackageItems());
+	}
 
-	public function uninstall_package($pkgID = 0, $token = '') {
+	public function do_uninstall_package($pkgID = 0, $token = '') {
 		$valt = Loader::helper('validation/token');
 
 		if ($pkgID > 0) {
@@ -191,6 +201,7 @@ class DashboardInstallController extends Controller {
 			}
 		}
 	}
+	
 
     public function download($remoteMPID=null) {
     	Loader::model('marketplace_remote_item');

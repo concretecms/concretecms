@@ -21,6 +21,17 @@ class AttributeSet extends Object {
 			return $akc;
 		}
 	}
+
+	public static function getListByPackage($pkg) {
+		$db = Loader::db();
+		$list = array();
+		$r = $db->Execute('select asID from AttributeSets where pkgID = ? order by asID asc', array($pkg->getPackageID()));
+		while ($row = $r->FetchRow()) {
+			$list[] = AttributeSet::getByID($row['asID']);
+		}
+		$r->Close();
+		return $list;
+	}	
 	
 	public function getAttributeSetID() {return $this->asID;}
 	public function getAttributeSetHandle() {return $this->asHandle;}
@@ -58,6 +69,15 @@ class AttributeSet extends Object {
 		$r = $db->GetOne('select count(akID) from AttributeSetKeys where asID = ? and akID = ?', array($this->getAttributeSetID(), $ak->getAttributeKeyID()));
 		return $r > 0;
 	}	
+	
+	/** 
+	 * Removes an attribute set and sets all keys within to have a set ID of 0.
+	 */
+	public function delete() {
+		$db = Loader::db();
+		$db->Execute('delete from AttributeSets where asID = ?', array($this->getAttributeSetID()));
+		$db->Execute('delete from AttributeSetKeys where asID = ?', array($this->getAttributeSetID()));
+	}
 	
 	public function deleteKey($ak) {
 		$db = Loader::db();
