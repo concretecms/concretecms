@@ -12,7 +12,6 @@
 
 class MarketplaceRemoteItem extends Object {
 
-	protected $isPurchase=false;
 	protected $price=0.00;	
 	protected $remoteCID=0;
 	protected $remoteURL='';
@@ -30,6 +29,7 @@ class MarketplaceRemoteItem extends Object {
 		if($options['icon']) $this->remoteIconURL= (string) $options['icon']; 
 		if($options['price']) $this->price= (string) $options['price']; 
 		if($options['version']) $this->version = (string) $options['version'];
+		if($options['listicon']) $this->remoteListIconURL = (string) $options['listicon'];
 	}	
 
 	public function getMarketplaceItemID() {return $this->mpID;}
@@ -41,13 +41,16 @@ class MarketplaceRemoteItem extends Object {
 	public function getRemoteURL(){ return $this->remoteURL; }
 	public function getRemoteFileURL(){ return $this->remoteFileURL; }
 	public function getRemoteIconURL(){ return $this->remoteIconURL; }
-	public function getVersion() {return $this->version;}
-	public function isPurchase($value=null) {
-		if ($value !== null) {
-			$this->isPurchase = $value;
+	public function getRemoteListIconURL() {return $this->remoteListIconURL;}
+	public function purchaseRequired() {
+		if ($this->price == '' || $this->price == '0' || $this->price == '0.00') {
+			return false;
+		} else {
+			return true;
 		}
-		return $this->isPurchase;
 	}
+	
+	public function getVersion() {return $this->version;}
 	
 	public function downloadUpdate() {
 		// backup the old package
@@ -116,7 +119,7 @@ class MarketplaceRemoteItem extends Object {
 		// Retrieve the URL contents 
 		$csToken = Config::get('MARKETPLACE_SITE_TOKEN');
 		$csiURL = urlencode(BASE_URL . DIR_REL);
-		$url = MARKETPLACE_PURCHASES_LIST_WS."?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
+		$url = MARKETPLACE_ITEM_INFORMATION_WS."?" . $method . "=" . $identifier . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
 		$xml = $fh->getContents($url);
 
 		try {
@@ -126,22 +129,10 @@ class MarketplaceRemoteItem extends Object {
 			
 			libxml_use_internal_errors(true);
 			$xmlObj = new SimpleXMLElement($xml);
-			foreach($xmlObj->addon as $addon) {
-				$mi = new MarketplaceRemoteItem();
-				$mi->loadFromXML($addon);
-				$mi->isPurchase(1);
-				switch($method) {
-					case 'mpHandle':
-						if ($mi->getHandle() == $identifier) {
-							return $mi;
-						}
-						break;
-					default:
-						if ($mi->getMarketplaceItemID() == $identifier) {
-							return $mi;
-						}
-						break;
-				}	
+			$mi = new MarketplaceRemoteItem();
+			$mi->loadFromXML($xmlObj);
+			if (is_object($mi) && $mi->getMarketplaceItemID() > 0) {
+				return $mi;
 			}
 		} catch (Exception $e) {
 			throw new Exception(t('Unable to connect to marketplace to retrieve item'));

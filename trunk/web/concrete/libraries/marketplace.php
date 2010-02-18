@@ -90,6 +90,29 @@ class Marketplace {
 		return $file;
 	}
 	
+	public function outputMarketplaceFrame($width = '100%', $height = '530', $completeURL = false) {
+		// if $mpID is passed, we are going to either
+		// a. go to its purchase page
+		// b. pass you through to the page AFTER connecting.
+		if (!$this->isConnected()) {
+			$url = MARKETPLACE_URL_CONNECT;
+			if (!$completeURL) {
+				$completeURL = BASE_URL . View::url('/dashboard/settings/marketplace', 'connect_complete');
+			}
+			$csReferrer = urlencode($completeURL);
+			$csiURL = urlencode(BASE_URL . DIR_REL);
+			if ($this->hasConnectionError()) {
+				$csToken = $this->getSiteToken();
+			} else {
+				// new connection 
+				$csToken = Marketplace::generateSiteToken();
+			}
+			$url = $url . '?ts=' . time() . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(SITE, ENT_QUOTES, APP_CHARSET);
+		}
+		print '<iframe id="ccm-marketplace-frame-' . time() . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+	}
+	
+	
 	/** 
 	 * Runs through all packages on the marketplace, sees if they're installed here, and updates the available version number for them
 	 */
@@ -131,7 +154,6 @@ class Marketplace {
 					foreach($xmlObj->addon as $addon){
 						$mi = new MarketplaceRemoteItem();
 						$mi->loadFromXML($addon);
-						$mi->isPurchase(1);
 						$remoteCID = $mi->getRemoteCollectionID();
 						if (!empty($remoteCID)) {
 							$addons[$mi->getHandle()] = $mi;

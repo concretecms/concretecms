@@ -801,6 +801,35 @@ ccm_dashboardRequestRemoteInformation = function() {
 	$.get(CCM_TOOLS_PATH + '/dashboard/get_remote_information');
 }
 
+ccm_getMarketplaceItem = function(mpID, closeTop) {
+	if (closeTop) {
+		jQuery.fn.dialog.closeTop(); // this is here due to a weird safari behavior
+	}
+	jQuery.fn.dialog.showLoader();
+	// first, we check our local install to ensure that we're connected to the
+	// marketplace, etc..
+	params = {'mpID': mpID};
+	$.getJSON(CCM_TOOLS_PATH + '/marketplace/connect', params, function(resp) {
+		jQuery.fn.dialog.hideLoader();
+		if (resp.isConnected) {
+			if (resp.purchaseRequired) {
+				alert("buy it foo");			
+			} else {
+				alert('download');		
+			}
+
+		} else {
+			$.fn.dialog.open({
+				title: ccmi18n.community,
+				href:  CCM_TOOLS_PATH + '/marketplace/frame?mpID=' + mpID,
+				width: '90%',
+				modal: false,
+				height: '70%',
+			});
+		}
+	});
+}
+
 ccm_setupHeaderMenu = function() {
 	
 	ccm_headerMenuPreloads();

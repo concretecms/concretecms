@@ -24,10 +24,10 @@ if (ENABLE_MARKETPLACE_SUPPORT) {
 				<ul id="ccm-select-marketplace-theme" style="width: <?=count($availableThemes) * 132?>px">			
 				<? foreach($availableThemes as $availableTheme){ ?>
 					<li class="themeWrap">
-						<span class="ccm-button-marketplace-install"><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED.'/package_install?type=theme&install=1&cID='.$availableTheme->getRemoteCollectionID()?>" title="<?=t('Install theme')?>"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a></span>
-							<a title="<?=t('Preview')?>" onclick="ccm_previewMarketplaceTheme(<?=$_REQUEST['cID']?>, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" href="javascript:void(0)" class="preview">
+						<span class="ccm-button-marketplace-install"><a href="javascript:void(0)" onclick="ccm_getMarketplaceItem('<?=$availableTheme->getMarketplaceItemID()?>')" title="<?=t('Install theme')?>"><img src="<?=$availableTheme->getRemoteListIconURL() ?>" width="120" height="90" /></a></span>
+							<a title="<?=t('Preview')?>" onclick="ccm_previewMarketplaceTheme(<?=$_REQUEST['cID']?>, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getName()) ?>','<?=addslashes($availableTheme->getHandle()) ?>')" href="javascript:void(0)" class="preview">
 							<img src="<?=ASSETS_URL_IMAGES?>/icons/magnifying.png" alt="<?=t('Preview')?>" class="ccm-preview" /></a>
-						<div class="ccm-theme-name" ><a target="_blank" href="<?=$availableTheme->getThemeURL() ?>"><?=$availableTheme->getThemeName() ?></a></div>
+						<div class="ccm-theme-name" ><a target="_blank" href="<?=$availableTheme->getRemoteURL() ?>"><?=$availableTheme->getName() ?></a></div>
 					</li>
 				<? } ?> 
 				</ul>

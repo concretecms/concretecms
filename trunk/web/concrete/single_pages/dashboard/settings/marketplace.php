@@ -13,11 +13,8 @@
 		
 	<?
 	
-	} else { ?>
-	
-			<iframe width="100%" height="530px" style="border: 0px" src="<?=$url?>"></iframe>
-		
-		<?			
+	} else {
+		$mi->outputMarketplaceFrame();
 	}
 ?>
 

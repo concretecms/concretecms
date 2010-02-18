@@ -53,25 +53,26 @@ ccm_loginInstallSuccessFn = function() {
 ccm_isRemotelyLoggedIn = '<?php echo UserInfo::isRemotelyLoggedIn()?>';
 ccm_remoteUID = <?php echo UserInfo::getRemoteAuthUserId() ?>;
 ccm_remoteUName = '<?php echo UserInfo::getRemoteAuthUserName()?>';
+var ccm_themesLoaded = false;
 
 function ccm_updateMoreThemesTab() {
-    $("#ccm-more-themes-interface-tab").html(ccmi18n.marketplaceLoadingMsg);
-    $.ajax({
-        url: CCM_TOOLS_PATH + '/marketplace/refresh_theme',
-        type: 'POST',
-		data: 'cID=<?=$c->getCollectionID()?>',
-        success: function(html){
-            $("#ccm-more-themes-interface-tab").html(html);
-
-			ccm_enable_scrollers();
-			ccmLoginHelper.bindInstallLinks();
-        },
-    });
+	if (!ccm_themesLoaded) {
+        $("#ccm-more-themes-interface-tab").html('<div style="height: 204px">&nbsp;<\/div>');
+		jQuery.fn.dialog.showLoader();
+		$.ajax({
+			url: CCM_TOOLS_PATH + '/marketplace/refresh_theme',
+			type: 'POST',
+			data: 'cID=<?=$c->getCollectionID()?>',
+			success: function(html){
+				jQuery.fn.dialog.hideLoader();
+		        $("#ccm-more-themes-interface-tab").html(html);
+				ccm_enable_scrollers();
+			},
+		});
+		ccm_themesLoaded = true;
+	}
 }
 
-$(document).ready(function(){
-    ccm_updateMoreThemesTab();
-});
 </script>
 
 <div class="ccm-pane-controls">
@@ -165,14 +166,6 @@ $(document).ready(function(){
 			<div id="ccm-more-themes-interface-tab" style="display:none">	 
 			 
 				<h2><?=t('Themes')?></h2> 
-				<? /* 			
-				<ul class="ccm-dialog-tabs ccm-area-theme-tabs">
-					<li><a href="javascript:void(0)" class="ccm-more-themes-interface" id="ccm-more-themes-interface"><?=t('Get More Themes')?></a></li>				
-					<li class="ccm-nav-active"><a href="javascript:void(0)" class="ccm-current-themes-interface" id="ccm-current-themes-interface"><?=t('Current Themes')?></a></li>
-				</ul>
-				*/ ?>	
-			
-				<p><?=t('Unable to connect to the Concrete5 Marketplace.')?></p>
 
 			</div> 				
 				
@@ -200,6 +193,9 @@ $(".ccm-area-theme-tabs a").click(function() {
 	ccm_areaActiveThemeTab = $(this).attr('id'); 
 	$('.ccm-area-theme-tabs .'+this.id).parent().addClass("ccm-nav-active");
 	$("#" + ccm_areaActiveThemeTab + "-tab").show();
+	if (ccm_areaActiveThemeTab == 'ccm-more-themes-interface') {
+		ccm_updateMoreThemesTab();	
+	}
 });
 
 ccm_enable_scrollers = function() {
