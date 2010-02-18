@@ -7,18 +7,8 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 
 ?>
 
-<script type="text/javascript">
-ccm_isRemotelyLoggedIn = '<?php echo UserInfo::isRemotelyLoggedIn()?>';
-ccm_remoteUID = <?php echo UserInfo::getRemoteAuthUserId() ?>;
-ccm_remoteUName = '<?php echo UserInfo::getRemoteAuthUserName()?>';
-ccm_loginInstallSuccessFn = function() { str=unescape(window.location.pathname); window.location.href = str.replace(/\/-\/.*/, ''); };
-
-$(document).ready(function(){
-	ccmLoginHelper.bindInstallLinks();
-});
-</script>
 <h1><span><?=t('Themes')?></span></h1>
-	<div class="ccm-dashboard-inner">
+<div class="ccm-dashboard-inner">
 	
 	
 	<? if (isset($activate_confirm)) { ?>
@@ -87,53 +77,10 @@ $(document).ready(function(){
 	
 	</div>
 	
-<? if (ENABLE_MARKETPLACE_SUPPORT == true && (!isset($activate_confirm))) { ?>
-<style type="text/css">
-	table#themesGrid td{ padding:8px 30px 15px 8px; text-align:center  } 
-	table#themesGrid td .name{ font-weight:bold; margin-top:4px; font-size:14px; margin-left:20px; }
-	table#themesGrid td .desc{ margin-bottom:4px; line-height: 16px; }
-	</style>
-	
-	<h1><span><?=t('Get More Themes')?></span></h1>
-	
-	<div class="ccm-dashboard-inner">
-		<div class="ccm-button-marketplace-install">
-			
-		<? if( !count($availableThemes) ){ ?>
-			<div><?=t('Unable to connect to the marketplace.')?></div>
-		<? }else{ ?>
-			<table id="themesGrid" width="100%">
-				<tr>
-				<?
-				$numCols=4;
-				$colCount=0;
-				foreach($availableThemes as $availableTheme){ 
-					if($colCount==$numCols){
-						echo '</tr><tr>';
-						$colCount=0;
-					}
-					?>
-					<td valign="top" width="<?=round(100/$numCols)?>%"> 
-						<a href="<?=$availableTheme->getThemeURL() ?>" class="do-default" target="_blank"><img src="<?=$availableTheme->getThemeThumbnail() ?>" /></a>		
-						<div class="name">
-                        <a href="<?=$availableTheme->getThemeURL() ?>" class="do-default" target="_blank"><?=$availableTheme->getThemeName() ?></a>
-						<a title="<?=t('Preview')?>" class="do-default preview"
-                        	onclick="ccm_previewMarketplaceTheme(1, <?=intval($availableTheme->getRemoteCollectionID())?>,'<?=addslashes($availableTheme->getThemeName()) ?>','<?=addslashes($availableTheme->getThemeHandle()) ?>')" 
-                            href="javascript:void(0)"><img src="<?=ASSETS_URL_IMAGES?>/icons/magnifying.png" alt="<?=t('Preview')?>" /></a>
-                           </div>
-						<div class="desc"><?=$availableTheme->getThemeDescription() ?></div>
-						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED.'/package_install?type=theme&install=1&cID='.$availableTheme->getRemoteCollectionID()?>"><?=t('Install Theme')?> &raquo;</a>
-					</td>
-				<?  $colCount++;
-				}
-				for($i=$colCount;$i<$numCols;$i++){
-					echo '<td>&nbsp;</td>'; 
-				} 
-				?>
-				</tr>
-			</table>
-		<? } ?>
-		
-		</div>
-	</div>
+<? if (ENABLE_MARKETPLACE_SUPPORT == true) { ?>
+
+<h1><span><?=t('More Themes')?></span></h1>
+<div class="ccm-dashboard-inner">
+<a href="<?=$this->url('/dashboard/install', 'browse', 'themes')?>"><?=t("Download more themes from the concrete5.org marketplace.")?></a>
+</div>
 <? } ?>

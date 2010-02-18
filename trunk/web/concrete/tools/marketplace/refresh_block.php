@@ -5,61 +5,56 @@ $ch = Loader::helper('concrete/interface');
 //marketplace
 if(ENABLE_MARKETPLACE_SUPPORT){
 	$marketplaceBlocksHelper = Loader::helper('concrete/marketplace/blocks'); 
-	$marketplaceBlockTypes = $marketplaceBlocksHelper->getCombinedList();
+	$marketplaceBlockTypes = $marketplaceBlocksHelper->getPreviewableList();
 }else{
 	$marketplaceBlockTypes=array();
 }
 
 ?>
+
+<script type="text/javascript">
+ccm_marketplaceRefreshInstalledBlockTypes = function() {
+	jQuery.fn.dialog.closeTop();
+	setTimeout(function() {
+	<? if ($_REQUEST['arHandle']) { ?>
+		ccm_openAreaAddBlock('<?=$_REQUEST['arHandle']?>');
+	<? } ?>
+	}, 500);
+	jQuery.fn.dialog.closeTop();
+}
+</script>
+
 <? if (count($marketplaceBlockTypes) > 0) { ?>
 
 	<table class="ccm-block-type-table">
 
 	<? foreach($marketplaceBlockTypes as $bt) { 
-		$btIcon = $bt->getRemoteIconURL();
-		$btFile = $bt->getRemoteFileURL();
-		if (empty($btFile)) continue;
+		$btIcon = $bt->getRemoteListIconURL();
+
 		$btButton = t("Download");
 		$btClass = "";
-		$btDesc = $bt->getBlockTypeDescription();
-		if (!empty($btFile)) {
-			if (intval($bt->getPrice()) == 0 || $bt->isPurchase()) {
-				$btButton = t("Install");
-				$btClass = ' class="ccm-button-marketplace-install"';
-			} else {
- 				$btButton = t("Purchase");
-			}
-		}
-		if (!empty($btFile) && (intval($bt->getPrice()) == 0 || $bt->isPurchase())) {
-			$btLink = REL_DIR_FILES_TOOLS_REQUIRED.'/package_install?type=addon&install=1&cID=' . $bt->getRemoteCollectionID();
- 			$btTarget = '';
+		$btDesc = $bt->getDescription();
+		if (!$bt->purchaseRequired()) {
+			$btButton = t("Install");
+			$btClass = ' class="ccm-button-marketplace-install"';
 		} else {
-			$btLink = $bt->getRemoteURL();
- 			$btTarget = ' target="_blank"';
+ 			$btButton = t("Purchase");
 		}
+
 		?>	
 		<tr class="ccm-block-type-row">
 			<td<?=!empty($btDesc)?' valign="top"':''?>><img src="<?=$btIcon?>" /></td>
 			<td width="90%">
-				<div class="ccm-block-type-inner"><?=$bt->getBlockTypeName()?></div>
+				<div class="ccm-block-type-inner"><?=$bt->getName()?></div>
 			<? if (!empty($btDesc)) { ?>
-				<div class="ccm-block-type-description" id="ccm-bt-help<?=$bt->getBlockTypeHandle()?>"><?=$btDesc?></div>
+				<div class="ccm-block-type-description" id="ccm-bt-help<?=$bt->getHandle()?>"><?=$btDesc?></div>
 			<? } ?>
 			</td>
 			<td><div class="ccm-block-price"><? if ($bt->getPrice() == '0.00') { print t('Free'); } else { print '$' . $bt->getPrice(); } ?></div></td>
-			<td<?=$btClass?>><?=$ch->button($btButton, $btLink, "right", NULL, array('target'=>'_blank') );?></td>
+			<td<?=$btClass?>><?=$ch->button_js($btButton, 'ccm_getMarketplaceItem({mpID: \'' . $bt->getMarketplaceItemID() . '\', onComplete: function() {ccm_marketplaceRefreshInstalledBlockTypes()}})', "right", NULL);?></td>
 		</tr>
 	<? } ?>
 		</table>
 <? } else { ?>
 		<p><?=t('Unable to connect to the marketplace.')?></p>
 <? } ?>
-
-	<div id="ccm-marketplace-logged-out">
-		<p><?=t('You are not currently signed in to the marketplace.')?> <a onclick="ccmPopupLogin.show('', ccm_loginSuccess, '', 1)"><?=t('Click here to sign in or create an account.')?></a></p>
-	</div>
-	<div id="ccm-marketplace-logged-in">
-		<p><?=t('You are currently signed in to the marketplace as ');?>
-          	<a href="<?=CONCRETE5_ORG_URL ?>/profile/-/<?=UserInfo::getRemoteAuthUserId() ?>/" ><?=UserInfo::getRemoteAuthUserName() ?></a>
-		  	<?=t('(Not your account? <a onclick="ccm_support.signOut(ccm_logoutSuccess)">Sign Out</a>)')?></p>
-	</div>

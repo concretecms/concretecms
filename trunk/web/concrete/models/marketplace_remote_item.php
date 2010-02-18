@@ -113,6 +113,14 @@ class MarketplaceRemoteItem extends Object {
 		}
 	}
 	
+	public function enableFreeLicense() {
+		$fh = Loader::helper('file');
+		$csToken = Config::get('MARKETPLACE_SITE_TOKEN');
+		$csiURL = urlencode(BASE_URL . DIR_REL);
+		$url = MARKETPLACE_ITEM_FREE_LICENSE_WS."?mpID=" . $this->mpID . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
+		$fh->getContents($url);
+	}
+	
 	protected static function getRemotePackageObject($method, $identifier) {
 		$fh = Loader::helper('file');
 

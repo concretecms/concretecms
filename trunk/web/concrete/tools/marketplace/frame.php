@@ -10,7 +10,7 @@ if ($_REQUEST['complete']) {
 	?>
 	<script type="text/javascript">
 		<? if ($_REQUEST['mpID']) { ?>
-			parent.ccm_getMarketplaceItem(<?=$_REQUEST['mpID']?>, true);
+			parent.ccm_getMarketplaceItem({mpID: '<?=$_REQUEST['mpID']?>', closeTop: true});
 		<? } ?>
 	</script>
 <? } else {

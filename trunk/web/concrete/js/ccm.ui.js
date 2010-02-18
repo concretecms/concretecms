@@ -117,17 +117,25 @@ ccm_showBlockMenu = function(obj, e) {
 
 }
 
+ccm_openAreaAddBlock = function(arHandle, addOnly) {
+	if (!addOnly) {	
+		addOnly = 0;
+	}
+	
+	$.fn.dialog.open({
+		title: ccmi18n.blockAreaMenu,
+		href: CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&atask=add&arHandle=' + arHandle + '&addOnly=' + addOnly,
+		width: 550,
+		modal: false,
+		height: 380
+	});
+}
+
 ccm_showAreaMenu = function(obj, e) {
 	var addOnly = (obj.addOnly)?1:0;
 
 	if (e.shiftKey) {
-		$.fn.dialog.open({
-			title: ccmi18n.blockAreaMenu,
-			href: CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&atask=add&arHandle=' + obj.arHandle + '&addOnly=' + addOnly,
-			width: 550,
-			modal: false,
-			height: 380
-		});
+		ccm_openAreaAddBlock(obj.arHandle, addOnly);
 	} else {
 		ccm_hideMenus();
 		e.stopPropagation();
@@ -801,7 +809,17 @@ ccm_dashboardRequestRemoteInformation = function() {
 	$.get(CCM_TOOLS_PATH + '/dashboard/get_remote_information');
 }
 
-ccm_getMarketplaceItem = function(mpID, closeTop) {
+
+ccm_getMarketplaceItem = function(args) {
+	var mpID = args.mpID;
+	var closeTop = args.closeTop;
+	
+	this.onComplete = function() { }
+
+	if (args.onComplete) {
+		ccm_getMarketplaceItem.onComplete = args.onComplete;
+	}
+	
 	if (closeTop) {
 		jQuery.fn.dialog.closeTop(); // this is here due to a weird safari behavior
 	}
@@ -815,7 +833,13 @@ ccm_getMarketplaceItem = function(mpID, closeTop) {
 			if (resp.purchaseRequired) {
 				alert("buy it foo");			
 			} else {
-				alert('download');		
+				$.fn.dialog.open({
+					title: ccmi18n.community,
+					href:  CCM_TOOLS_PATH + '/marketplace/download?install=1&mpID=' + mpID,
+					width: 350,
+					modal: false,
+					height: 240,
+				});
 			}
 
 		} else {
