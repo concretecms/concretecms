@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-Loader::model('page_theme_remote');
+Loader::model('marketplace_remote_item');
 
 class ConcreteMarketplaceThemesHelper  {
 
@@ -26,7 +26,7 @@ class ConcreteMarketplaceThemesHelper  {
 					libxml_use_internal_errors(true);
 					$xmlObj = new SimpleXMLElement($xml);
 					foreach($xmlObj->theme as $theme) {
-						$pgTheme = new PageThemeRemote();
+						$pgTheme = new MarketplaceRemoteItem();
 						$pgTheme->loadFromXML($theme);
 						$pageThemes[]=$pgTheme;
 					}

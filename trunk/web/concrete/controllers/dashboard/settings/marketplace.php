@@ -18,19 +18,6 @@ class DashboardSettingsMarketplaceController extends Controller {
 	}
 	
 	public function view($isNew = false) {
-		$mi = Marketplace::getInstance();
-		if (!$mi->isConnected()) {
-			$url = MARKETPLACE_URL_CONNECT;
-			$csReferrer = urlencode(BASE_URL . View::url('/dashboard/settings/marketplace', 'connect_complete'));
-			$csiURL = urlencode(BASE_URL . DIR_REL);
-			if ($mi->hasConnectionError()) {
-				$csToken = $mi->getSiteToken();
-			} else {
-				// new connection 
-				$csToken = Marketplace::generateSiteToken();
-			}
-			$this->set('url', $url . '?ts=' . time() . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(SITE, ENT_QUOTES, APP_CHARSET));
-		}
 		$this->set('isNew', $isNew);
 	}
 	
@@ -40,7 +27,8 @@ class DashboardSettingsMarketplaceController extends Controller {
 		} else {
 			Config::save('MARKETPLACE_SITE_TOKEN', $_POST['csToken']);
 			Config::save('MARKETPLACE_SITE_URL_TOKEN', $_POST['csURLToken']);
-			$this->redirect('/dashboard/settings/marketplace', 'view', 1);
+			print '<script type="text/javascript">parent.window.location.href=\'' . View::url('/dashboard/settings/marketplace', 'view', 1) . '\';</script>';
+			exit;
 		}
 	}
 
