@@ -95,32 +95,6 @@ class Request {
 			$cPath = $cID['cPath'];
 			$cID = $cID['cID'];
 			$req->setCollectionPath($cPath);			
-				
-			// The task and params is the part of the request path minus
-			// the part of the path that was matched in the PagePaths
-			// table.
-			$task = substr($path, strlen($cPath));
-			$task = trim($task, '/');
-			$task = explode('/', $task);
-			
-			// Support old style requests with a hyphen separating the
-			// task.  Simply can be gotten rid of.
-			if ($task[0] == '-') {
-				array_shift($task);
-			}
-			
-			// If there is a task, set it in the request
-			if (isset($task[0]) && $task[0]) {
-				$req->setRequestTask($task[0]);
-				
-				// If there are params, set them in the request
-				if (isset($task[1])) {
-					array_shift($task);
-					$params = implode('/', $task);
-					$req->setRequestTaskParameters($params);
-				}
-			}
-			
 			$c = Page::getByID($cID);
 		} else {
 			$c = new Page();

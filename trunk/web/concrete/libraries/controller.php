@@ -25,11 +25,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class Controller {
 
 	public $theme = null;
-	protected $sendUndefinedTasksToView = true;
 	// sets is an array of items set by the set() method. Whew.
 	private $sets = array();
-	private $helperObjects = array();
-	private $c; // collection
+	protected $helperObjects = array();
+	protected $c; // collection
+	protected $task = false;
+	protected $parameters = false;
+	
 	
 	/**
 	 * Items in here CANNOT be called through the URL
@@ -56,51 +58,94 @@ class Controller {
 	}
 	
 	
-	private function setupQueryParameters($task, $params) {
-		$tmpArray = explode('/', $params);
-		$data = array();
-
-		foreach($tmpArray as $d) {
-			if (isset($d) && $d != '') {
-				$data[] = $d;
-			}
-		}
-		
-		unset($tmpArray);
-		
-		if (!is_callable(array($this, $task)) && $task != '') {
-			array_unshift($data, $task);
-		}
-		
-		return $data;
-	}
-	
-	
 	/** 
 	 * Is responsible for taking a method passed and ensuring that it is valid for the current request. You can't
 	 * 1. Pass a method that starts with "on_"
 	 * 2. Pass a method that's in the restrictedMethods array
 	 */
-	private function setupRequestTask($method) {
+	private function setupRequestTask() {
+		
+		$req = Request::get();
+		
+		// we are already on the right page now
+		// let's grab the right method as well.
+		$task = substr($req->getRequestPath(), strlen($req->getRequestCollectionPath()));
+		
+		// remove legacy separaters
+		$task = str_replace('-/', '', $task);
+		
+		// grab the whole shebang
+		$taskparts = explode('/', $task);
+		
+		if (isset($taskparts[0]) && $taskparts[0] != '') {
+			$method = $taskparts[0];
+		}
+
 		if ($method == '') {
 			if (is_object($this->c) && is_callable(array($this, $this->c->getCollectionHandle()))) {
-				return $this->c->getCollectionHandle();
+				$method = $this->c->getCollectionHandle();
 			} else {
 				$method = 'view';
 			}
+			$this->parameters = array();
+			
 		}
+		
 		if (is_callable(array($this, $method)) && (strpos($method, 'on_') !== 0) && (!in_array($method, $this->restrictedMethods))) {
-			return $method;
+		
+			$this->task = $method;
+			if (!is_array($this->parameters)) {
+				$this->parameters = array();
+				if (isset($taskparts[1])) {
+					array_shift($taskparts);
+					$this->parameters = $taskparts;
+				}
+			}
+		
 		} else {
-			if ($method != 'view' && $this->sendUndefinedTasksToView == false) {
+
+ 			$this->task = 'view';
+			if (!is_array($this->parameters)) {
+				$this->parameters = array();
+				if (isset($taskparts[0])) {
+					$this->parameters = $taskparts;
+				}
+			}
+			
+			// finally we do a 404 check in this instance
+			// if the particular controller does NOT have a view method but DOES have arguments passed
+			// we call 404
+			
+			$do404 = false;
+			if (!is_callable(array($this, $this->task)) && count($this->parameters) > 0) {
+				$do404 = true;
+			} else if (is_callable(array($this, $this->task))) {
+				// we use reflection to see if the task itself, which now much exist, takes fewer arguments than 
+				// what is specified
+				$r = new ReflectionMethod(get_class($this), $this->task);
+				if ($r->getNumberOfParameters() < count($this->parameters)) {
+					$do404 = true;
+				}
+			}
+			
+
+			if ($do404) {
+				
+				// this is hacky, the global part
+				global $c;
 				$v = View::getInstance();
+				$c = new Page();
+				$c->loadError(COLLECTION_NOT_FOUND);
 				$v->setCollectionObject($c);
+				$this->c = $c;
+				$v->setController($this);
+				
+				
 				$v->render('/page_not_found');
-				exit;
- 			} else {
- 				return 'view';
- 			}
+			}
  		}
+
+ 		
  	}
 	
 	/** 
@@ -110,17 +155,11 @@ class Controller {
 	 */	
 	public function setupAndRun() {
 		$req = Request::get();
-		$data = $this->setupQueryParameters($req->getRequestTask(), $req->getRequestTaskParameters());
-		$method = $this->setupRequestTask($req->getRequestTask());
-
-		if ($method) {
-			$this->task = $method;
-		}
-		
+		$this->setupRequestTask();
 		$this->on_start();
 		
-		if ($method) {
-			$this->runTask($method, $data);
+		if ($this->task) {
+			$this->runTask($this->task, $this->parameters);
 		}
 	}
 	
