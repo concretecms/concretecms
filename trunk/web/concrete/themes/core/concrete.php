@@ -20,7 +20,7 @@ if (is_object($c)) {
 
 <div id="ccm-theme-wrapper">
 
-<? if (isset($error)) { ?>
+<? if (isset($error) && $error != '') { ?>
 	<? 
 	if ($error instanceof Exception) {
 		$_error[] = $error->getMessage();
