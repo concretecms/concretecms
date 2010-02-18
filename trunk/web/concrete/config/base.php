@@ -435,11 +435,15 @@ define('MARKETPLACE_URL_CONNECT', CONCRETE5_ORG_URL.'/marketplace/connect');
 define('MARKETPLACE_URL_CONNECT_VALIDATE', CONCRETE5_ORG_URL.'/marketplace/connect/-/validate');
 define('MARKETPLACE_PURCHASES_LIST_WS', CONCRETE5_ORG_URL . '/marketplace/connect/-/get_available_licenses');
 define('MARKETPLACE_ITEM_INFORMATION_WS', CONCRETE5_ORG_URL . '/marketplace/connect/-/get_item_information');
+define('MARKETPLACE_ITEM_FREE_LICENSE_WS', CONCRETE5_ORG_URL . '/marketplace/connect/-/enable_free_license');
 define('MARKETPLACE_URL_CONNECT_TOKEN_NEW', CONCRETE5_ORG_URL.'/marketplace/connect/-/generate_token');
 
 # Marketplace Vars
-if (!defined("MARKETPLACE_URL_LANDING")) {
-	define('MARKETPLACE_URL_LANDING', CONCRETE5_ORG_URL.'/marketplace/remote');
+if (!defined("MARKETPLACE_URL_ADDONS_LANDING")) {
+	define('MARKETPLACE_URL_ADDONS_LANDING', CONCRETE5_ORG_URL.'/marketplace/addons/remote');
+}
+if (!defined("MARKETPLACE_URL_THEMES_LANDING")) {
+	define('MARKETPLACE_URL_THEMES_LANDING', CONCRETE5_ORG_URL.'/marketplace/themes/remote');
 }
 if (!defined('MARKETPLACE_BLOCK_LIST_WS')) {
 	define('MARKETPLACE_BLOCK_LIST_WS', CONCRETE5_ORG_URL.'/marketplace/addons/-/get_remote_list');

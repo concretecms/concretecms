@@ -245,7 +245,7 @@ class Package extends Object {
 		if ($item instanceof BlockType) {
 			return $item->getBlockTypeName();
 		} else if ($item instanceof PageTheme) {
-			return $item->getPageThemeName();
+			return $item->getThemeName();
 		} else if ($item instanceof CollectionType) {
 			return $item->getCollectionTypeName();
 		} else if ($item instanceof MailImporter) {

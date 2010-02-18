@@ -24,12 +24,6 @@ class DashboardPagesThemesController extends Controller {
 		$this->set('siteThemeID', $siteThemeID);
 		$this->set('activate', View::url('/dashboard/pages/themes', 'activate'));		
 		$this->set('install', View::url('/dashboard/pages/themes', 'install'));		
-		
-		if (ENABLE_MARKETPLACE_SUPPORT == true) {
-			$themesHelper = Loader::helper('concrete/marketplace/themes'); 			
-			$availableThemes=$themesHelper->getPreviewableList();
-			$this->set('availableThemes', $availableThemes);
-		}
 	}
 
 	public function on_start() {

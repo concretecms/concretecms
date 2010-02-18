@@ -15,45 +15,26 @@ $form = Loader::helper('form');
 <script type="text/javascript">
 <? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
 
-ccm_isRemotelyLoggedIn = '<?=UserInfo::isRemotelyLoggedIn()?>';
-ccm_remoteUID = <?=UserInfo::getRemoteAuthUserId() ?>;
-ccm_remoteUName = '<?=UserInfo::getRemoteAuthUserName()?>';
-ccm_loginInstallSuccessFn = function() { jQuery.fn.dialog.closeTop(); };
-
-function ccm_loginSuccess(jsObj) {
-	ccm_isRemotelyLoggedIn = true;
-	ccm_remoteUID = jsObj.uID;
-	ccm_remoteUName = jsObj.uName;
-	jQuery.fn.dialog.closeTop();
-	ccm_updateMarketplaceTab();
-	ccmAlert.notice('Marketplace Login', ccmi18n.marketplaceLoginSuccessMsg);
-}
-function ccm_logoutSuccess() {
-	ccm_isRemotelyLoggedIn = false;
-	ccm_updateMarketplaceTab();
-	ccmAlert.notice('Marketplace Logout', ccmi18n.marketplaceLogoutSuccessMsg);
-}
-function ccm_updateLoginArea() {
-	if (ccm_isRemotelyLoggedIn) {
-		$("#ccm-marketplace-logged-in").show();
-		$("#ccm-marketplace-logged-out").hide();
-	} else {
-		$("#ccm-marketplace-logged-in").hide();
-		$("#ccm-marketplace-logged-out").show();
+function ccm_updateMarketplaceTab() {
+	if (!ccm_blocksLoaded) {
+		$("#ccm-add-marketplace-tab div.ccm-block-type-list").html('');
+		jQuery.fn.dialog.showLoader();
+		$.ajax({
+			url: CCM_TOOLS_PATH+'/marketplace/refresh_block',
+			type: 'POST',
+			data: {'arHandle': '<?=$a->getAreaHandle()?>'},
+			success: function(html) {
+				jQuery.fn.dialog.hideLoader();
+				$("#ccm-add-marketplace-tab div.ccm-block-type-list").html(html);
+			},
+		});
+		ccm_blocksLoaded = true;
 	}
 }
-function ccm_updateMarketplaceTab() {
-	$("#ccm-add-marketplace-tab div.ccm-block-type-list").html(ccmi18n.marketplaceLoadingMsg);
-	$.ajax({
-        url: CCM_TOOLS_PATH+'/marketplace/refresh_block',
-        type: 'POST',
-        success: function(html){
-			$("#ccm-add-marketplace-tab div.ccm-block-type-list").html(html);
-			ccm_updateLoginArea();
-			ccmLoginHelper.bindInstallLinks();
-        },
-	});
-}
+
+var ccm_blocksLoaded = false;
+
+<? } ?>
 
 ccm_showBlockTypeDescription = function(btID) {
 	$("#ccm-bt-help" + btID).show();
@@ -67,13 +48,10 @@ $("#ccm-area-tabs a").click(function() {
 	ccm_areaActiveTab = $(this).attr('id');
 	$(this).parent().addClass("ccm-nav-active");
 	$("#" + ccm_areaActiveTab + "-tab").show();
+	if (ccm_areaActiveTab == 'ccm-add-marketplace') {
+		ccm_updateMarketplaceTab();	
+	}
 });
-
-$(document).ready(function(){
-	ccm_updateMarketplaceTab();
-});
-
-<? } ?>
 
 $('input[name=ccmBlockTypeSearch]').focus(function() {
 	if ($(this).val() == '<?=t("Search")?>') {
@@ -239,9 +217,8 @@ $(function() {
 
 <? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
 <div id="ccm-add-marketplace-tab" style="display: none">
-	<h1><?=t('Add From Marketplace')?></h1>
 	<div class="ccm-block-type-list">
-		<p><?=t('Unable to connect to the Concrete5 Marketplace.')?></p>
+
 	</div>
 </div>
 <? } ?>

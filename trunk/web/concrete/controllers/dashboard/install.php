@@ -11,24 +11,34 @@ class DashboardInstallController extends Controller {
 		$addFuncSelected = true;
 		$updateSelected = false;
 		
-		if ($this->getTask() == 'browse') {
-			$browseSelected = true;
-			$addFuncSelected = false;
-		}
-		
 		$subnav = array(
-			array(View::url('/dashboard/install'), t('Installed and Available'), $addFuncSelected),
-			array(View::url('/dashboard/install', 'browse'), t('Browse Marketplace'), $browseSelected)
+			array(View::url('/dashboard/install'), t('Installed and Available'), true),
+			array(View::url('/dashboard/install', 'browse', 'themes'), t('More Themes'), false),
+			array(View::url('/dashboard/install', 'browse', 'addons'), t('More Addons'), false)
 		);
 		$this->set('subnav', $subnav);
 		Loader::library('marketplace');
 
 	}
 	
-	public function browse() {
-		$this->set('marketplaceBrowseURL', MARKETPLACE_URL_LANDING);	
+	public function browse($what = 'themes') {
+		
+		$subnav = array(
+			array(View::url('/dashboard/install'), t('Installed and Available'), false),
+			array(View::url('/dashboard/install', 'browse', 'themes'), t('More Themes'), $what == 'themes'),
+			array(View::url('/dashboard/install', 'browse', 'addons'), t('More Addons'), $what == 'addons')
+		);
+		
+		$url = MARKETPLACE_URL_THEMES_LANDING;
+		if ($what == 'addons') {
+			$url = MARKETPLACE_URL_ADDONS_LANDING;
+		}
+		
+		$this->set('url', $url);
+		$this->set('subnav', $subnav);
+		$this->set('browse', $what);
 	}
-
+	
 	public function view() {
 
 	}

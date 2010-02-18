@@ -47,12 +47,6 @@ ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 </style>
 
 <script type="text/javascript">
-ccm_loginInstallSuccessFn = function() {
-	ccm_hidePane(ccm_showPane(this, CCM_TOOLS_PATH + "/edit_collection_popup.php?ctask=set_theme&cID=" + CCM_CID));
-};
-ccm_isRemotelyLoggedIn = '<?php echo UserInfo::isRemotelyLoggedIn()?>';
-ccm_remoteUID = <?php echo UserInfo::getRemoteAuthUserId() ?>;
-ccm_remoteUName = '<?php echo UserInfo::getRemoteAuthUserName()?>';
 var ccm_themesLoaded = false;
 
 function ccm_updateMoreThemesTab() {
