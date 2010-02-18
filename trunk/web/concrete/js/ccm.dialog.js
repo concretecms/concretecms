@@ -193,9 +193,9 @@ jQuery.fn.dialog.showLoader = function(fnd) {
 	if ($('#ccm-dialog-loader').length < 1) {
 		$("body").append("<div id='ccm-dialog-loader-wrapper'><img id='ccm-dialog-loader' src='"+imgLoader.src+"' /></div>");//add loader to the page
 	}
-	$('#ccm-dialog-loader-wrapper').css('opacity', 1);
+	$('#ccm-dialog-loader-wrapper').css('opacity', 0.8);
 	$('#ccm-dialog-loader-wrapper').show();//show loader
-	$('#ccm-dialog-loader-wrapper').fadeTo('slow', 0.2);
+	//$('#ccm-dialog-loader-wrapper').fadeTo('slow', 0.2);
 }
 
 jQuery.fn.dialog.deactivate = function(w) {
