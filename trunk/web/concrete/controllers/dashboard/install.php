@@ -124,25 +124,31 @@ class DashboardInstallController extends Controller {
 		$this->set('items', $pkg->getPackageItems());
 	}
 
-	public function do_uninstall_package($pkgID = 0, $token = '') {
+	public function do_uninstall_package() {
+		$pkgID = $this->post('pkgID');
+
 		$valt = Loader::helper('validation/token');
 
 		if ($pkgID > 0) {
 			$pkg = Package::getByID($pkgID);
 		}
 		
+		if (!$valt->validate('uninstall')) {
+			$this->error->add($valt->getErrorMessage());
+		}
+		
 		$u = new User();
 		if (!$u->isSuperUser()) {
 			$this->error->add(t('Only the super user may remove packages.'));
-		} else if (isset($pkg) && ($pkg instanceof Package)) {
-			if (!$valt->validate('uninstall', $token)) {
-				$this->error->add($valt->getErrorMessage());
-			} else {
-				$pkg->uninstall();
-				$this->redirect('/dashboard/install', 'package_uninstalled');
-			}
-		} else {
-			$this->error->add('Invalid package.');
+		}
+
+		if (!is_object($pkg)) {
+			$this->error->add(t('Invalid package.'));
+		}
+		
+		if (!$this->error->has()) {
+			$pkg->uninstall();
+			$this->redirect('/dashboard/install', 'package_uninstalled');
 		}
 		
 		if ($this->error->has()) {
