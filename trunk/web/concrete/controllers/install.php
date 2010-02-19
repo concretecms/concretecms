@@ -553,13 +553,10 @@ class InstallController extends Controller {
 						$tp5 = TaskPermissions::addTask('backup', t('Perform Full Database Backups'), false);
 						$tp6 = TaskPermissions::addTask('sudo', t('Sign in as User'), false);
 						
-						$tp0->addAccess($g3);
 						$tp1->addAccess($g3);
 						$tp2->addAccess($g3);
 						$tp3->addAccess($g3);
-						$tp4->addAccess($g3);
 						$tp5->addAccess($g3);
-						$tp6->addAccess($g3);
 						
 						/* install default content */	
 						if ($_POST['INSTALL_SAMPLE_CONTENT']) {

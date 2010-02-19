@@ -1,13 +1,12 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 $form = Loader::helper('form');
-$c1 = Page::getByPath('/dashboard/users');
-Loader::model('attribute/categories/user');
-$cp1 = new Permissions($c1);
-if ((!$cp1->canRead())) {
+$tp = new TaskPermission();
+if (!$tp->canAccessUserSearch()) { 
 	die(_("Access Denied."));
 }
 
+Loader::model('attribute/categories/user');
 $attribs = UserAttributeKey::getEditableList();
 
 $users = array();

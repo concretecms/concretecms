@@ -16,6 +16,17 @@ class TaskPermissionList extends Object {
 		return $tps;
 	}
 	
+	public function populatePackagePermissions($pkg) {
+		$db = Loader::db();
+		$r = $db->Execute('select tpID from TaskPermissions where pkgID = ? order by tpID asc', array($pkg->getPackageID()));
+		$this->tasks = array();
+		while ($row = $r->FetchRow()) {
+			$this->tasks[] = TaskPermission::getByID($row['tpID']);
+		}
+		$r->Close();
+		return $this->tasks;
+	}
+	
 	public function getTaskPermissions() {return $this->tasks;}
 	
 }
@@ -38,17 +49,6 @@ class TaskPermission extends Object {
 		$db = Loader::db();
 		$db->Execute('delete from TaskPermissions where tpID = ?', $this->tpID);
 		$db->Execute('delete from TaskPermissionUserGroups where tpID = ?', $this->tpID);
-	}
-	
-	public static function getListByPackage($pkg) {
-		$db = Loader::db();
-		$list = array();
-		$r = $db->Execute('select tpID from TaskPermissions where pkgID = ? order by tpID asc', array($pkg->getPackageID()));
-		while ($row = $r->FetchRow()) {
-			$list[] = self::getByID($row['tpID']);
-		}
-		$r->Close();
-		return $list;
 	}
 	
 	public static function getByHandle($tpHandle) {
@@ -163,7 +163,11 @@ class TaskPermission extends Object {
 			$txt = Loader::helper('text');
 			$permission = $txt->uncamelcase(substr($nm, 3));
 			$tp = TaskPermission::getByHandle($permission);
-			return $tp->can();
+			if (is_object($tp)) {
+				return $tp->can();
+			} else {
+				throw new Exception(t('Invalid task permission.'));
+			}
 		}
 	}
 

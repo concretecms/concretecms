@@ -1,11 +1,8 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('user_attributes');
 $form = Loader::helper('form');
-$c1 = Page::getByPath('/dashboard/users');
-$cp1 = new Permissions($c1);
-$c2 = Page::getByPath('/dashboard/users/groups');
-$cp2 = new Permissions($c2);
-if ((!$cp1->canRead()) && (!$cp2->canRead())) {
+$tp = new TaskPermission();
+if (!$tp->canAccessUserSearch()) { 
 	die(_("Access Denied."));
 }
 
