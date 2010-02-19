@@ -31,7 +31,7 @@ class MarketplaceRemoteItem extends Object {
 		if($options['price']) $this->price= (string) $options['price']; 
 		if($options['version']) $this->version = (string) $options['version'];
 		if($options['listicon']) $this->remoteListIconURL = (string) $options['listicon'];
-		if($options['islicensed']) $this->isLicensedToSite = true;
+		if($options['islicensed'] == 1) $this->isLicensedToSite = true;
 	}	
 
 	public function getMarketplaceItemID() {return $this->mpID;}

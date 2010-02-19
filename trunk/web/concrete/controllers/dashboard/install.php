@@ -34,6 +34,8 @@ class DashboardInstallController extends Controller {
 			$url = MARKETPLACE_URL_ADDONS_LANDING;
 		}
 		
+		$url .= '?csToken=' . Config::get('MARKETPLACE_SITE_TOKEN') . '&ccm_external=1';
+		
 		$this->set('url', $url);
 		$this->set('subnav', $subnav);
 		$this->set('browse', $what);

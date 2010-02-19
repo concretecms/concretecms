@@ -440,10 +440,10 @@ define('MARKETPLACE_URL_CONNECT_TOKEN_NEW', CONCRETE5_ORG_URL.'/marketplace/conn
 
 # Marketplace Vars
 if (!defined("MARKETPLACE_URL_ADDONS_LANDING")) {
-	define('MARKETPLACE_URL_ADDONS_LANDING', CONCRETE5_ORG_URL.'/marketplace/addons/remote');
+	define('MARKETPLACE_URL_ADDONS_LANDING', CONCRETE5_ORG_URL.'/marketplace/remote/addons');
 }
 if (!defined("MARKETPLACE_URL_THEMES_LANDING")) {
-	define('MARKETPLACE_URL_THEMES_LANDING', CONCRETE5_ORG_URL.'/marketplace/themes/remote');
+	define('MARKETPLACE_URL_THEMES_LANDING', CONCRETE5_ORG_URL.'/marketplace/remote/themes');
 }
 if (!defined('MARKETPLACE_BLOCK_LIST_WS')) {
 	define('MARKETPLACE_BLOCK_LIST_WS', CONCRETE5_ORG_URL.'/marketplace/addons/-/get_remote_list');
