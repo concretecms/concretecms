@@ -19,7 +19,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 class ListsStatesProvincesHelper {
 	
-	private $stateProvinces = array(
+	protected $stateProvinces = array(
 	'US' => array(
 		'AL' => 'Alabama',
 		'AK' => 'Alaska',
