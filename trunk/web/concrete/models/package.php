@@ -232,6 +232,7 @@ class Package extends Object {
 		$items['configuration_values'] = Config::getListByPackage($this);
 		$items['block_types'] = BlockTypeList::getByPackage($this);
 		$items['page_themes'] = PageTheme::getListByPackage($this);
+		$items['task_permissions'] = TaskPermissions::getListByPackage($this);
 		$items['single_pages'] = SinglePage::getListByPackage($this);
 		$items['attribute_types'] = AttributeType::getListByPackage($this);		
 		ksort($items);
@@ -266,6 +267,8 @@ class Package extends Object {
 			return ucwords(strtolower($txt->unhandle($item->key)));
 		} else if ($item instanceof DashboardHomepage) {
 			return t('%s (%s)', $item->dbhDisplayName, $txt->unhandle($item->dbhModule));
+		} else if (is_a($item, 'TaskPermissions')) {
+			return $item->getTaskPermissionName();			
 		}
 	}
 

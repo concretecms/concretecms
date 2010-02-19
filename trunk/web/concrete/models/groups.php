@@ -80,9 +80,10 @@
 					}
 					$where = "fsID in (" . implode(',', $fsIDs) . ")";
 					break;
-				case 'concretedashboardsitemaphelper':
-					$table = 'SitemapPermissions';
-					$where = 'gID > 0';
+				case 'taskpermissionlist':
+					$tpis = $obj->getTaskPermissionIDs();
+					$table = 'TaskPermissionUserGroups';
+					$where = "tpID in (" . implode(',', $tpis) . ")";
 					break;
 				case 'file':
 					$table = 'FilePermissions';
@@ -258,9 +259,9 @@
 					$this->permissions = $p;
 
 					break;
-				case 'concretedashboardsitemaphelper':
-					$q = "select uID, canRead from SitemapPermissions where gID = ?";
-					$permissions = $db->GetRow($q, array($this->gID));
+				case 'taskpermission':
+					$q = "select canRead from TaskPermissionUserGroups where tpID = ? and gID = ?";
+					$permissions = $db->GetRow($q, array($obj->getTaskPermissionID(), $this->gID));
 					if ($permissions) {
 						$this->permissions = $permissions;
 					}

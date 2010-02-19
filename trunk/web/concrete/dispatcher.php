@@ -70,6 +70,7 @@
 	Loader::model('permissions');
 	Loader::model('user');
 	Loader::model('userinfo');
+	Loader::model('task_permission');
 
 	## Setup timzone support
 	require(dirname(__FILE__) . '/startup/timezone.php'); // must be included before any date related functions are called (php 5.3 +)
