@@ -545,13 +545,14 @@ class InstallController extends Controller {
 						$fs->setPermissions($g2, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE);
 						$fs->setPermissions($g3, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL);
 						
-						$tp0 = TaskPermissions::addTask('access_task_permissions', t('Change Task Permissions'), false);
-						$tp1 = TaskPermissions::addTask('access_sitemap', t('Access Sitemap and Page Search'), false);
-						$tp2 = TaskPermissions::addTask('access_user_search', t('Access User Search'), false);
-						$tp3 = TaskPermissions::addTask('access_group_search', t('Access Group Search'), false);
-						$tp4 = TaskPermissions::addTask('access_page_defaults', t('Change Content on Page Type Default Pages'), false);
-						$tp5 = TaskPermissions::addTask('backup', t('Perform Full Database Backups'), false);
-						$tp6 = TaskPermissions::addTask('sudo', t('Sign in as User'), false);
+						$tp0 = TaskPermission::addTask('access_task_permissions', t('Change Task Permissions'), false);
+						$tp1 = TaskPermission::addTask('access_sitemap', t('Access Sitemap and Page Search'), false);
+						$tp2 = TaskPermission::addTask('access_user_search', t('Access User Search'), false);
+						$tp3 = TaskPermission::addTask('access_group_search', t('Access Group Search'), false);
+						$tp4 = TaskPermission::addTask('access_page_defaults', t('Change Content on Page Type Default Pages'), false);
+						$tp5 = TaskPermission::addTask('backup', t('Perform Full Database Backups'), false);
+						$tp6 = TaskPermission::addTask('sudo', t('Sign in as User'), false);
+						$tp7 = TaskPermission::addTask('uninstall_packages', t('Uninstall Packages'), false);
 						
 						$tp1->addAccess($g3);
 						$tp2->addAccess($g3);
