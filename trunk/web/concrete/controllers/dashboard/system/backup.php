@@ -11,25 +11,37 @@ class DashboardSystemBackupController extends Controller {
 
 
 	public function run_backup($encrypt = false) {
-      $encrypt = (bool) $encrypt;
-      $backup = Backup::execute($encrypt);   
-      $this->view();
+	  $tp = new TaskPermission();
+  	  if ($tp->canBackup()) {		
+          $encrypt = (bool) $encrypt;
+          $backup = Backup::execute($encrypt);   
+          $this->view();
+		}
 	}
 
 	public function view() {
-		$fh = Loader::helper('file');
-		$arr_bckups = $fh->getDirectoryContents(DIR_FILES_BACKUPS);
-		$arr_backupfileinfo = Array();
-		if (count($arr_bckups) > 0) {
-		 foreach ($arr_bckups as $bkupfile) {
-			preg_match('/[0-9]+/',$bkupfile,$timestamp);
-			$arr_backupfileinfo[] = Array("file" => $bkupfile,  "date" =>  date("Y-m-d H:i:s",$timestamp[0]));
-		 }
-		 $this->set('backups',$arr_backupfileinfo);
+		$tp = new TaskPermission();
+		if ($tp->canBackup()) {		
+			$fh = Loader::helper('file');
+			$arr_bckups = $fh->getDirectoryContents(DIR_FILES_BACKUPS);
+			$arr_backupfileinfo = Array();
+			if (count($arr_bckups) > 0) {
+			 foreach ($arr_bckups as $bkupfile) {
+				preg_match('/[0-9]+/',$bkupfile,$timestamp);
+				$arr_backupfileinfo[] = Array("file" => $bkupfile,  "date" =>  date("Y-m-d H:i:s",$timestamp[0]));
+			 }
+			 $this->set('backups',$arr_backupfileinfo);
+			}
+		
 		}
 	}
 	
 	public function download($file) {
+		$tp = new TaskPermission();
+		  if (!$tp->canBackup()) {
+			return false;
+		}
+		
 		if (file_exists(DIR_FILES_BACKUPS . '/'. $file)) {
 			chmod(DIR_FILES_BACKUPS . '/'. $file, 0666);
 			if (file_exists(DIR_FILES_BACKUPS . '/' . $file)) {
@@ -45,6 +57,10 @@ class DashboardSystemBackupController extends Controller {
 	}
 	
 	public function delete_backup($str_fname) {
+		$tp = new TaskPermission();
+		  if (!$tp->canBackup()) {
+			return false;
+		}
 	  //For Security reasons...  allow only known characters in the string e.g no / \ so you can't exploit this
 	  $int_mResult = preg_match('/[0-9A-Za-z._]+/',$str_fname,$ar_matches);
 	  $str_fname = $ar_matches[0];
@@ -56,6 +72,11 @@ class DashboardSystemBackupController extends Controller {
 	}
 
 	public function restore_backup($file) {
+		$tp = new TaskPermission();
+		  if (!$tp->canBackup()) {
+			return false;
+		}
+		
 		$db = Loader::db(); 
 		chmod(DIR_FILES_BACKUPS . '/'. $file, 0666);
 		$str_restSql = file_get_contents(DIR_FILES_BACKUPS . '/' . $file);

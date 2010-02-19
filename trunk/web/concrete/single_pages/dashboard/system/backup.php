@@ -102,6 +102,10 @@ $(document).ready( function() {
 
 <div style="width: 760px">
 
+<?
+$tp = new TaskPermission();
+if ($tp->canBackup()) { ?>
+
 <h1><span><?=t('Existing Backups')?></span></h1>
 <div class="ccm-dashboard-inner">
 <?php 
@@ -168,4 +172,13 @@ $crypt = Loader::helper('encryption');
 	</div>
 
 </div>
+
+<? } else { ?>
+
+<h1><span><?=t('Backup')?></span></h1>
+<div class="ccm-dashboard-inner">
+<p><?=t('You do not have permission to create or administer backups.')?></p>
+</div>
+
+<? } ?>
 </div>

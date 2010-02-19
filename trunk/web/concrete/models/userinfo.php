@@ -843,7 +843,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					break;
 				case 'taskpermissionlist':
 					$tpis = $obj->getTaskPermissionIDs();
-					$q = "select uID, canRead from TaskPermissionUserGroups where tpID in (" . implode(',', $tpis) . ") and uID > 0";
+					$q = "select distinct uID from TaskPermissionUserGroups where tpID in (" . implode(',', $tpis) . ") and uID > 0";
 					$r = $db->Execute($q);
 					while ($row = $r->FetchRow()) {
 						$userPermissionsArray['permissions'] = $row;
