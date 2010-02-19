@@ -710,7 +710,12 @@
       <DEFAULT value="0"/>
     </field>
   </table>
-  <table name="SitemapPermissions">
+ <table name="TaskPermissionUserGroups">
+    <field name="tpID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <field name="gID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -721,7 +726,29 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="canRead" type="I" size="4"/>
+    <field name="canRead" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+  <table name="TaskPermissions">
+    <field name="tpID" type="I" size="10">
+  	  <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="tpHandle" type="C" size="255"/>
+    <field name="tpName" type="C" size="255"/>
+    <field name="tpDescription" type="X"/>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="tpHandle">
+      <UNIQUE/>
+      <col>tpHandle</col>
+    </index>
   </table>
   <table name="FileSetPermissions">
     <field name="fsID" type="I" size="10">
