@@ -383,12 +383,14 @@ if ($ctEditMode) {
 			?></td>
 		<td>
 		<? if ($ct->getMasterCollectionID()) {?>
-			<? if ($u->getUserID() == USER_SUPER_ID) { ?>
+			<?
+			$tp = new TaskPermission();
+			if ($tp->canAccessPageDefaults()) { ?>
 				<? print $ih->button_js(t('Defaults'), "window.open('" . $this->url('/dashboard/pages/types?cID=' . $ct->getMasterCollectionID() . '&task=load_master')."')", 'left', false, array('title'=>t('Lets you set default permissions and blocks for a particular page type.')) );?>
 			<? } else { 
-				$defaultsErrMsg = t('You must be logged in as %s to edit default content on page types.', USER_SUPER);
+				$defaultsErrMsg = t('You do not have access to page type default content.');
 				?>
-				<? print $ih->button_js(t('Defaults'), "alert('" . $defaultsErrMsg . "')", 'left', false, array('title'=>t('Lets you set default permissions and blocks for a particular page type.')) );?>
+				<? print $ih->button_js(t('Defaults'), "alert('" . $defaultsErrMsg . "')", 'left', 'ccm-button-inactive', array('title'=>t('Lets you set default permissions and blocks for a particular page type.')) );?>
 			<? } ?>
 		<? } ?>
 	

@@ -367,9 +367,10 @@ if (is_object($uo)) {
 				<? print $ih->button(t('Activate User'), $this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=activate&ccm_token='.$valt->generate('user_activate')), 'left');?>
 			<? } ?>
 			
-			<? if ($u->isSuperUser()) { ?>
-				<? 
-				
+			<?
+			$tp = new TaskPermission();
+			if ($tp->canSudo()) { 
+			
 				$loginAsUserConfirm = t('This will end your current session and sign you in as %s', $uo->getUserName());
 				
 				print $ih->button_js(t('Sign In as User'), 'loginAsUser()', 'left');?>
@@ -383,7 +384,7 @@ if (is_object($uo)) {
 				</script>
 
 			<? } else { ?>
-				<? print $ih->button_js(t('Sign In as User'), 'alert(\'' . t('Only the super user may sign in as another account.') . '\')', 'left', 'ccm-button-inactive');?>
+				<? print $ih->button_js(t('Sign In as User'), 'alert(\'' . t('You do not have permission to sign in as other users.') . '\')', 'left', 'ccm-button-inactive');?>
 			<? } ?>
 
 		</div>

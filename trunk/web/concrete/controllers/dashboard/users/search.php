@@ -85,7 +85,8 @@ class DashboardUsersSearchController extends Controller {
 		try {
 			$u = new User();
 			
-			if(!$u->isSuperUser()) {
+			$tp = new TaskPermission();
+			if (!$tp->canSudo()) { 
 				throw new Exception(t('You do not have permission to perform this action.'));
 			}
 	
@@ -105,6 +106,7 @@ class DashboardUsersSearchController extends Controller {
 			
 		} catch(Exception $e) {
 			$this->set('error', $e);
+			$this->view();
 		}
 	}
 	

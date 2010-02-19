@@ -499,7 +499,11 @@ class CollectionPermissions extends Permissions {
 		}
 		
 		if ($cObj->isMasterCollection()) {
-			if (!$adm || ($_SESSION['mcEditID'] != $cObj->getCollectionID())) {
+			$canEditMaster = TaskPermission::getByHandle('access_page_defaults')->can();
+			if ($canEditMaster && $_SESSION['mcEditID'] == $cObj->getCollectionID()) {
+				$this->permissionSet = 'r:rv:wa:av:cp:dc:db:adm';
+				$this->permError = false;
+			} else {
 				$this->permError = COLLECTION_FORBIDDEN;
 			}
 		}
