@@ -1,9 +1,9 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$ch = Page::getByPath("/dashboard/users");
-$chp = new Permissions($ch);
-if (!$chp->canRead()) {
-	die(_("Access Denied."));
+
+$tp = new TaskPermission();
+if (!$tp->canAccessUserSearch()) { 
+	die(_("You have no access to users."));
 }
 
 // this should be cleaned up.... yeah

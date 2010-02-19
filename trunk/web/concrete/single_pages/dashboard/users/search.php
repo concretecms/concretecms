@@ -592,6 +592,12 @@ $(function() {
 
 <div class="ccm-dashboard-inner">
 
+	<?
+	$tp = new TaskPermission();
+	if ($tp->canAccessUserSearch()) { 
+	
+	?>
+
 	<table id="ccm-search-form-table" >
 		<tr>
 			<td valign="top" class="ccm-search-form-advanced-col">
@@ -613,6 +619,10 @@ $(function() {
 			</td>	
 		</tr>
 	</table>		
+
+	<? } else { ?>
+		<p><?=t('You do not have access to user search. This setting may be changed in the access section of the dashboard settings page.')?></p>
+	<? } ?>
 	
 </div>
 

@@ -8,7 +8,56 @@ $h = Loader::helper('concrete/interface'); ?>
 .ccm-module form div.ccm-dashboard-inner{ margin-bottom:0px !important; }
 </style>
 
-<? if ($this->controller->getTask() == 'manage_attribute_types') { 
+<? if ($this->controller->getTask() == 'access_task_permissions' || $this->controller->getTask() == 'save_task_permissions') { ?>
+
+<div style="width: 760px">
+
+<?
+$tp1 = TaskPermission::getByHandle('access_task_permissions');
+if ($tp1->can()) { 
+	$ih = Loader::helper('concrete/interface');
+	$tps = array(
+		TaskPermission::getByHandle('access_task_permissions'),
+		TaskPermission::getByHandle('access_user_search'),
+		TaskPermission::getByHandle('access_group_search'),
+		TaskPermission::getByHandle('access_page_defaults'),
+		TaskPermission::getByHandle('backup'),
+		TaskPermission::getByHandle('sudo')		
+	);
+	$tpl = new TaskPermissionList();
+	foreach($tps as $tp) {
+		$tpl->add($tp);
+	}
+	?>
+	
+	<h1><span><?=t('Task Permissions')?></span></h1>
+	<div class="ccm-dashboard-inner">
+		<form method="post" id="ccm-task-permissions" action="<?=$this->url('/dashboard/settings', 'save_task_permissions')?>">
+			<?=$this->controller->token->output('update_permissions');?>
+	
+			<? print Loader::helper('concrete/dashboard/task_permissions')->getForm($tpl, t('Set permissions for common concrete5 tasks.')); ?>
+			
+			<div class="ccm-spacer">&nbsp;</div>
+			
+			
+			<? print $ih->submit(t('Save'), 'ccm-task-permissions'); ?>
+	
+			<div class="ccm-spacer">&nbsp;</div>
+		</form>
+	</div>
+<? } else { ?>
+	<h1><span><?=t('Task Permissions')?></span></h1>
+	<div class="ccm-dashboard-inner">
+	<?=t('You are not allowed to change these permissions.')?>
+	</div>
+<? } ?>
+
+	</div>
+
+
+
+
+<? } else if ($this->controller->getTask() == 'manage_attribute_types') { 
 
 $types = AttributeType::getList();
 $categories = AttributeKeyCategory::getList();
@@ -233,7 +282,7 @@ foreach($types as $at) { ?>
 
 <? } else if ($this->controller->getTask() == 'set_permissions') { ?>
 
-<h1><span><?=t('Site Permissions')?></span></h1>
+<h1><span><?=t('Site Content Permissions')?></span></h1>
 <div class="ccm-dashboard-inner">
 
 
@@ -290,6 +339,19 @@ foreach($types as $at) { ?>
 </div>
 
 
+
+<?
+$tp = new TaskPermission();
+if ($tp->canAccessTaskPermissions()) { ?>
+
+<h1><span><?=t('Other Permissions')?></span></h1>
+<div class="ccm-dashboard-inner">
+	
+<a href="<?=$this->url('/dashboard/settings/', 'access_task_permissions')?>"><?=t('Click here to modify other permissions.')?></a>
+
+</div>
+
+<? } ?>
 
 
 

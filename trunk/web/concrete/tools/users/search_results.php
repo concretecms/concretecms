@@ -1,11 +1,9 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c1 = Page::getByPath('/dashboard/users');
-$cp1 = new Permissions($c1);
-$c2 = Page::getByPath('/dashboard/users/groups');
-$cp2 = new Permissions($c2);
-if ((!$cp1->canRead()) && (!$cp2->canRead())) {
-	die(_("Access Denied."));
+
+$tp = new TaskPermission();
+if (!$tp->canAccessUserSearch()) { 
+	die(_("You have no access to users."));
 }
 
 $u = new User();

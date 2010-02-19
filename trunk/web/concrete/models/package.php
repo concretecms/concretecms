@@ -232,7 +232,8 @@ class Package extends Object {
 		$items['configuration_values'] = Config::getListByPackage($this);
 		$items['block_types'] = BlockTypeList::getByPackage($this);
 		$items['page_themes'] = PageTheme::getListByPackage($this);
-		$items['task_permissions'] = TaskPermissions::getListByPackage($this);
+		$tp = new TaskPermissionList();		
+		$items['task_permissions'] = $tp->populatePackagePermissions($this);
 		$items['single_pages'] = SinglePage::getListByPackage($this);
 		$items['attribute_types'] = AttributeType::getListByPackage($this);		
 		ksort($items);
