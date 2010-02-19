@@ -268,7 +268,7 @@ class Package extends Object {
 			return ucwords(strtolower($txt->unhandle($item->key)));
 		} else if ($item instanceof DashboardHomepage) {
 			return t('%s (%s)', $item->dbhDisplayName, $txt->unhandle($item->dbhModule));
-		} else if (is_a($item, 'TaskPermissions')) {
+		} else if (is_a($item, 'TaskPermission')) {
 			return $item->getTaskPermissionName();			
 		}
 	}
@@ -313,6 +313,7 @@ class Package extends Object {
 						case 'AttributeKeyCategory':
 						case 'AttributeSet':
 						case 'AttributeType':
+						case 'TaskPermission':
 							$item->delete();
 							break;
 					}
