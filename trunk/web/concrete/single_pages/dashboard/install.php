@@ -6,6 +6,8 @@ $ch = Loader::helper('concrete/interface');
 $mi = Marketplace::getInstance();
 $pkgArray = Package::getInstalledList();
 
+$tp = new TaskPermission();
+
 if ($this->controller->getTask() == 'browse') { ?>
 
 <h1><span><?=t("Browse the Marketplace")?></span></h1>
@@ -21,7 +23,7 @@ if ($this->controller->getTask() == 'browse') { ?>
 
 </div>
 
-<? } else if ($this->controller->getTask() == 'uninstall') { ?>
+<? } else if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) { ?>
 
 <div style="width: 760px">
 <h1><span><?=t("Uninstall Package")?></span></h1>
@@ -58,12 +60,7 @@ if ($this->controller->getTask() == 'browse') { ?>
 <?
 		$u = new User();
 		$buttons[] = $ch->button(t('Cancel'), $this->url('/dashboard/install', 'inspect_package', $pkg->getPackageID()), 'left');
-
-		if ($u->isSuperUser()) {
-			$buttons[] = $ch->submit(t('Uninstall Package'), 'ccm-uninstall-form', 'right');?>
-		<? } else { 
-			$buttons[] = $ch->button(t('Remove'), 'alert(\'' . t('Only the super user may remove packages.') . '\')', 'right', 'ccm-button-inactive');?>
-		<? } 
+		$buttons[] = $ch->submit(t('Uninstall Package'), 'ccm-uninstall-form', 'right');
 		
 		print $ch->buttons($buttons);
 		?>
@@ -284,13 +281,18 @@ if ($this->controller->getTask() == 'browse') { ?>
 				
 				<? } ?>		
 				<br/><br/>
-			<? }
+			<? } ?>
 			
-			$u = new User();
-			if ($u->isSuperUser()) {
+			<div class="ccm-spacer">&nbsp;</div>
+			
+			<? 
+			
+			$tp = new TaskPermission();
+			if ($tp->canUninstallPackages()) { 
 			
 				$buttons[] = $ch->button(t('Uninstall Package'), $this->url('/dashboard/install', 'uninstall', $pkg->getPackageID()), 'left');
 				print $ch->buttons($buttons); 
+
 			} ?>
 			
 		</div>

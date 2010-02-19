@@ -125,6 +125,11 @@ class DashboardInstallController extends Controller {
 	}
 	
 	public function uninstall($pkgID) {
+		$tp = new TaskPermission();
+		if (!$tp->canUninstallPackages()) {
+			return false;
+		}
+		
 		$pkg = Package::getByID($pkgID);
 		if (!is_object($pkg)) {
 			$this->redirect("/dashboard/install");
@@ -147,11 +152,11 @@ class DashboardInstallController extends Controller {
 			$this->error->add($valt->getErrorMessage());
 		}
 		
-		$u = new User();
-		if (!$u->isSuperUser()) {
-			$this->error->add(t('Only the super user may remove packages.'));
+		$tp = new TaskPermission();
+		if (!$tp->canUninstallPackages()) {
+			$this->error->add(t('You do not have permission to uninstall packages.'));
 		}
-
+		
 		if (!is_object($pkg)) {
 			$this->error->add(t('Invalid package.'));
 		}
