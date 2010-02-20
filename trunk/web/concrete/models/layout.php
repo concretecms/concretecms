@@ -14,14 +14,30 @@
  
  add check to make sure edit interface is editing a layout for the area in question 
  
- make getAreaObj pull from correct area 
- 
  fix problem with clicking on slider, and with delayed drag update 
  
  layout delete: what to do with lost blocks? provide popup option? 
  
- add check in quick save to make sure layout belongs to that area 
+ change search indexing to blacklist approach instead of whitelist approach
  
+ in process, when adding layout, check that this layout id has the correct area and collection, to prevent hacks
+ 
+ 
+ add to top or add to bottom option when adding new layout,
+     ->if adding to bottom, and blocks are in bottom layout, then 2 layouts are created, with blocks moved to the first 1x1 layout 
+ 
+ 
+ when quicksaving, locking, or deleting a layout, make sure that layout belongs to that area 
+ 
+  
+ 
+ orphaned layout cleanup process?
+ 
+ saving layout from overlay shouldn't loose previous grid sizings
+ 
+ add layout css to page even if not in edit mode 
+ 
+ make sure new tables have good indexes on them 
  
  */
  
@@ -39,6 +55,23 @@
 	public $locked=0;	
 	public $layoutTypes=array('area','table','columns','itemlist','staggered');
 	public $breakpoints=array();
+	public $areaNameNumber=0;
+	
+	//position is a property of the collectionVersionAreaLayout join, set when being loaded for an area, not with layout object itself 
+	public $position=1000;
+	
+	function __construct( $params=array() ){ 
+		$this->fill($params); 
+	}	
+	
+	public function getLayoutID(){ return intval($this->layoutID); }
+	
+	public function setAreaNameNumber($v){ $this->areaNameNumber = intval($v); }
+	public function getAreaNameNumber(){ return intval($this->areaNameNumber); } 
+	
+	public function getLayoutNameDivider(){ return ' : '; }
+	public function getLayoutNameTxt(){ return t('Layout'); }
+	public function getLayoutName(){ return $this->getAreaHandle().$this->getLayoutNameDivider().' '.$this->getLayoutNameTxt().' '.$this->getAreaNameNumber(); }
 	
 	public static function getById( $layoutID ){ 
 		if(!intval($layoutID) ) return false; 
@@ -57,20 +90,23 @@
 		return $layout;
 	}
 	
-	function __construct( $params=array() ){ 
-	
-		$this->fill($params); 
+	//when editing a layout, it should be the only one tied to that collection version. Used in process->atask=layout->edit 
+	public function isUniqueToCollectionVersion($c){
+		$db = Loader::db();	
+		$vals = array( intval($c->cID), $this->getLayoutID() );
+		$sql = 'SELECT count(*) FROM CollectionVersionAreaLayouts WHERE cID=? AND layoutID=?'; 
+		return ( intval($db->getOne($sql,$vals))==1) ? true:false; 
 	}
 	
 	//breakpoints an optional array of percentages, for the break points between columns, 
 	//for a three column layout, you could for instance set the column breaks like array('25%','75%')
-	function fill( $params=array('type'=>'table','rows'=>3,'columns'=>3, 'breakpoints'=>array(), 'layoutID'=>0, 'locked'=>0 ) ){		
-		$this->layoutName=(!strlen(trim($params['layoutName']))) ? t('Layout') : $params['layoutName']; 
+	function fill( $params=array( 'layoutID'=>0, 'type'=>'table','rows'=>3,'columns'=>3, 'breakpoints'=>array(), 'locked'=>0 ) ){		
 		$this->layoutID=intval($params['layoutID']); 
 		$this->locked=intval($params['locked']); 
 		$this->type = (!in_array($params['type'],$this->layoutTypes))?'table':$params['type'];
 		$this->rows=(intval($params['rows'])<1)?3:$params['rows']; 
 		$this->columns=(intval($params['columns'])<1)?3:$params['columns']; 
+		if(intval($params['areaNameNumber'])) $this->areaNameNumber = intval($params['areaNameNumber']); 
 		
 		if( !is_array($params['breakpoints']) && strlen($this->breakpoints) ) $this->breakpoints = explode(',',$params['breakpoints']); 
 		elseif(is_array($this->breakpoints)) $this->breakpoints=$params['breakpoints']; 
@@ -87,13 +123,16 @@
 		
 		$this->cleanBreakPoints();
 	}
+
+	public function setAreaObj($a){
+		$this->areaObj=$a;
+	}
 	
-	//!!!!!!!!!!!!!!!!!!!!!!!
-	public function getAreaObj(){ 
-		//THIS IS JUST TEMPORARY
-		if(!$this->areaObj) $this->areaObj = new Area('Main');
+	public function getAreaObj(){  
+		if(!$this->areaObj) throw new Exception( t('Error: no area assigned to layout') );
 		return $this->areaObj;
 	}
+	
 	
 	public function getAreaHandle(){
 		$a = $this->getAreaObj();
@@ -101,39 +140,46 @@
 		return '';
 	}
 	
-	protected function cleanBreakPoints(){
-		$cleanBreakPoints=array();
-		foreach($this->breakpoints as $breakPoint){ 
-			$cleanBreakPoints[]=($breakPoint);
-		}
-		$this->breakpoints=$cleanBreakPoints;
-		
-		if( count($this->breakpoints)==0 || (count($this->breakpoints)!=($this->columns-1) && count($this->breakpoints)!=$this->columns) ){
-			$this->setDefaultBreaks(); 
-		}
-	}
+	
 	
 	//adds or updates
-	public function save(  ){ 
+	public function save(){ 
 		
 		if( !is_array($this->breakpoints) ) $this->breakpoints = explode(',',$this->breakpoints); 
 		$vals = array( intval($this->columns), intval($this->rows), intval($this->locked), join(',',$this->breakpoints)  );
 		
 		
 		if( intval($this->layoutID) ){ 
-			$sql = 'UPDATE Layouts SET columns=?, rows=?, locked=?, breakpoints=? WHERE layoutID=' . intval($this->layoutID); 
+			$sql = 'UPDATE Layouts SET columns=?, rows=?, locked=?, breakpoints=? WHERE layoutID=' . $this->getLayoutId() ; 
 		}else{   
 			$sql = 'INSERT INTO Layouts ( columns, rows, locked, breakpoints ) values (?, ?, ?, ?)'; 
 		}			
 		
 		$db = Loader::db();
-		$db->query($sql,$vals);		
+		$db->query($sql,$vals);	
+		
+		if( !$this->getLayoutId() ) 
+			$this->layoutID = intval($db->Insert_ID()); 
+		
 		//$this->addToRuntimeCache();
 		
 		//remove from cache
 		//Cache::delete( 'pagesBlockStyles', intval($c->cID).'_'.intval($c->getVersionID())  ); 
 		
 		return true;
+	}	
+	
+	protected function cleanBreakPoints(){
+		$cleanBreakPoints=array();
+		foreach($this->breakpoints as $breakPoint){
+			if( floatval($breakPoint) )
+				$cleanBreakPoints[]=floatval($breakPoint).'%';
+		}
+		$this->breakpoints=$cleanBreakPoints; 
+		
+		if( count($this->breakpoints)==0 || (count($this->breakpoints)!=($this->columns-1) && count($this->breakpoints)!=$this->columns) ){ 
+			$this->setDefaultBreaks(); 
+		} 
 	}	
 	
 	function setDefaultBreaks(){ 
@@ -147,11 +193,13 @@
 		}
 	}
 	
-	function display( $c=NULL ){ 
+	function display( $c=NULL, $a=NULL ){ 
 	
 		if(!$c) global $c;
 		
-		if(!in_array($this->type,$this->layoutTypes)) $this->layoutType='area'; 
+		if(!$a) global $a;
+		
+		if(!in_array($this->type,$this->layoutTypes)) $this->layoutType='table'; 
 		
 		
 		
@@ -160,8 +208,8 @@
 			Loader::element('block_area_layout_controls', $args); 
 		}
 		
-		
-		
+		$this->displayTableGrid($this->rows,$this->columns); 
+		/*
 		switch($this->type){		
 			case 'staggered':
 				$this->displayStaggeredGrid($this->rows);
@@ -178,7 +226,8 @@
 			case 'area':
 			default:
 				$this->displayAreaGrid();
-		}		
+		}
+		*/ 
 	}
 	
 	protected function getNextColWidth($zeroIndexedColNum=0,$cumulativeWidth=0){
@@ -198,38 +247,49 @@
 		}
 		return $colWidth;
 	}
-	
+	/*
 	protected function displayAreaGrid($c=NULL){
 		if(!$c) global $c;  
 		if($c->isEditMode()) $editMode='ccm-edit-mode';
 		echo '<div id="ccm-layout-'.$this->layoutID.'" class="ccm-layout ccm-layout-type-area ccm-layout-name-'.TextHelper::camelcase($this->layoutName).'">';
 			echo '<div class="ccm-layout-row">'; 
 				echo '<div class="ccm-layout-cell">';
-				$a = new Area($this->layoutName.' Cell '.$this->getCellNumber());
+				$a = new Area($this->layoutName.' '.t('Cell').' '.$this->getCellNumber());
 				$a->display($c);			
 				echo '</div>';	
 				echo '<div class="ccm-spacer"></div>';			
 			echo '</div>';
 		echo '</div>';
 	}	
+	*/ 
+	
+	public function getCellAreaHandle( $cellNumber=0 ){  
+		return $this->getLayoutName().$this->getLayoutNameDivider().' Cell '.intval($cellNumber); 
+	}
+	
 	
 	protected function displayTableGrid($rows=3,$columns=3,$c=NULL){
 		if(!$c) global $c;
 		if($c->isEditMode()) $editMode='ccm-edit-mode';
 		if(!intval($rows)) $rows=3;
 		if(!intval($columns)) $columns=3;
-		echo '<div id="ccm-layout-'.$this->layoutID.'" class="ccm-layout ccm-layout-type-table ccm-layout-name-'.TextHelper::camelcase($this->layoutName).' '.$editMode.'">';
+		$layoutNameClass = 'ccm-layout-name-'.TextHelper::camelcase($this->getAreaHandle()).'-'.TextHelper::camelcase($this->getLayoutNameTxt()).'-'.$this->getAreaNameNumber();
+		echo '<div id="ccm-layout-'.$this->layoutID.'" class="ccm-layout ccm-layout-type-table  '.$layoutNameClass.' '.$editMode.'">';
 		for( $i=0; $i<$rows; $i++ ){
 			echo '<div class="ccm-layout-row ccm-layout-row-'.($i+1).'">';
 				$cumulativeWidth=0;
-				for( $j=0; $j<$columns; $j++ ){	
-					//$colWidth=floor(100/$columns);
-					//if($colWidth*$columns==100 && ($j+1)==$columns) $colWidth--; 
-					$colWidth=$this->getNextColWidth($j,$cumulativeWidth);
+				for( $j=0; $j<$columns; $j++ ){	 
+					$colWidth=($columns==1)?'100%':$this->getNextColWidth($j,$cumulativeWidth);
 					$cumulativeWidth += intval(str_replace(array('px','%'),'',strtolower($colWidth)));
-					echo '<div class="ccm-layout-cell ccm-layout-col ccm-layout-col-'.($j+1).'" style="width:'.$colWidth.'">';
-					$a = new Area($this->layoutName.' Cell '.$this->getCellNumber());
+					$columnn_id = 'ccm-layout-'.intval($this->layoutID).'-col-'.($j+1);
+					echo '<div id="'.$columnn_id.'" class="ccm-layout-cell ccm-layout-col ccm-layout-col-'.($j+1).'" style="width:'.$colWidth.'">';
+					$a = new Area( $this->getCellAreaHandle($this->getCellNumber()) );
+					ob_start();
 					$a->display($c);			
+					$areaHTML = ob_get_contents();
+					ob_end_clean();
+					if(strlen($areaHTML)) echo $areaHTML;
+					else echo '&nbsp;';
 					echo '</div>';				
 				}
 				echo '<div class="ccm-spacer"></div>';			
@@ -237,12 +297,12 @@
 		}
 		echo '</div>';
 	}	
-	
+	/* 
 	protected function displayColumnsGrid($columns=3,$c=NULL){
 		if(!$c) global $c;
 		if($c->isEditMode()) $editMode='ccm-edit-mode';
 		if(!intval($columns)) $columns=3; 
-		echo '<div id="ccm-layout-'.$this->layoutID.'" class="ccm-layout ccm-layout-type-columns ccm-layout-name-'.TextHelper::camelcase($this->layoutName).' '.$editMode.'">';
+		echo '<div id="ccm-layout-'.$this->layoutID.'" class="ccm-layout ccm-layout-type-columns ccm-layout-name-'.TextHelper::camelcase($this->getLayoutName()).' '.$editMode.'">';
 			echo '<div class="ccm-layout-row">';
 				$cumulativeWidth=0;
 				for( $j=0; $j<$columns; $j++ ){	 
@@ -250,7 +310,7 @@
 					$cumulativeWidth += intval(str_replace(array('px','%'),'',strtolower($colWidth))); 
 					$endColClass=(($j+1)==$columns)?'ccm-layout-cell-col-last':'';					
 					echo '<div class="ccm-layout-cell ccm-layout-col ccm-layout-col-'.($j+1).' '.$endColClass.'" style="width:'.$colWidth.'">';
-					$a = new Area($this->layoutName.' Cell '.$this->getCellNumber());
+					$a = new Area($this->getLayoutName().' Cell '.$this->getCellNumber());
 					$a->display($c);			
 					echo '</div>';									
 				}
@@ -263,7 +323,7 @@
 		if(!$c) global $c;
 		if($c->isEditMode()) $editMode='ccm-edit-mode';
 		if(!intval($rows)) $rows=3;
-		echo '<div id="ccm-layout-'.$this->layoutID.'" class="ccm-layout ccm-layout-type-itemlist ccm-layout-name-'.TextHelper::camelcase($this->layoutName).' '.$editMode.'">';
+		echo '<div id="ccm-layout-'.$this->layoutID.'" class="ccm-layout ccm-layout-type-itemlist ccm-layout-name-'.TextHelper::camelcase($this->getLayoutName()).' '.$editMode.'">';
 		$cumulativeWidth=0;
 		$colWidth=$this->getNextColWidth(0,$cumulativeWidth);
 		$cumulativeWidth += intval(str_replace(array('px','%'),'',strtolower($colWidth)));
@@ -271,11 +331,11 @@
 		for( $i=0; $i<$rows; $i++ ){				
 			echo '<div class="ccm-layout-row ccm-layout-row-'.($i+1).'">';
 				echo '<div class="ccm-layout-cell ccm-layout-cell-left" style="width:'.$colWidth.'">';
-					$a = new Area($this->layoutName.' Cell '.$this->getCellNumber());
+					$a = new Area($this->getLayoutName().' Cell '.$this->getCellNumber());
 					$a->display($c); 			
 				echo '</div>';
 				echo '<div class="ccm-layout-cell ccm-layout-cell-right" style="width:'.$colWidth2.'">';
-					$a = new Area($this->layoutName.' Cell '.$this->getCellNumber());
+					$a = new Area($this->getLayoutName().' Cell '.$this->getCellNumber());
 					$a->display($c);			
 				echo '</div>';	
 				echo '<div class="ccm-spacer"></div>';			
@@ -288,7 +348,7 @@
 		if(!$c) global $c;
 		if($c->isEditMode()) $editMode='ccm-edit-mode';
 		if(!intval($rows)) $rows=3;
-		echo '<div id="ccm-layout-'.$this->layoutID.'" class="ccm-layout ccm-layout-type-staggered ccm-layout-name-'.TextHelper::camelcase($this->layoutName).' '.$editMode.'">';
+		echo '<div id="ccm-layout-'.$this->layoutID.'" class="ccm-layout ccm-layout-type-staggered ccm-layout-name-'.TextHelper::camelcase($this->getLayoutName()).' '.$editMode.'">';
 		$colWidth=$this->getNextColWidth(0,0);
 		$cumulativeWidth1 = intval(str_replace(array('px','%'),'',strtolower($colWidth))); 
 		$colWidth2=$this->getNextColWidth(1,$cumulativeWidth1);
@@ -307,11 +367,11 @@
 			}	
 			echo '<div class="ccm-layout-row ccm-layout-row-'.$oddEven.'">';
 				echo '<div class="ccm-layout-cell ccm-layout-cell-short" style="width:'.$shortWidth.'">';
-				$a = new Area($this->layoutName.' Cell '.$this->getCellNumber());
+				$a = new Area($this->getLayoutName().' Cell '.$this->getCellNumber());
 				$a->display($c);			
 				echo '</div>';
 				echo '<div class="ccm-layout-cell ccm-layout-cell-long" style="width:'.$longWidth.'">';
-				$a = new Area($this->layoutName.' Cell '.$this->getCellNumber());
+				$a = new Area($this->getLayoutName().' Cell '.$this->getCellNumber());
 				$a->display($c);			
 				echo '</div>';	
 				echo '<div class="ccm-spacer"></div>';			
@@ -319,7 +379,7 @@
 		}
 		echo '</div>';	
 	}
-	
+	*/
 	
 	protected $cellNum=0;
 	protected function getCellNumber(){

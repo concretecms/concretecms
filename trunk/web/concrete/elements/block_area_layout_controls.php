@@ -3,7 +3,7 @@
 
 	<input class="layout_column_count" name="layout_column_count" type="hidden" value="<?=intval($layout->columns) ?>" /> 
 	
-	<input class="layout_col_break_points" name="layout_col_break_points" type="hidden" value="<?= htmlspecialchars(join('|',$layout->breakpoints )) ?>" />
+	<input id="layout_col_break_points_<?=intval($layout->layoutID) ?>" class="layout_col_break_points" name="layout_col_break_points" type="hidden" value="<?= htmlspecialchars(join('|',$layout->breakpoints )) ?>" />
 	
 	<input class="layout_locked" name="layout_locked" type="hidden" value="<?= intval($layout->locked) ?>" />
 	

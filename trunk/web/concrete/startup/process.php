@@ -275,19 +275,38 @@
 					
 					$nvc = $c->getVersionToModify();
 					
-					//ToDo: check that this layout id has the correct area and collection, to prevent hacks 
-
 					Loader::model('layout'); 
+					$layoutID = intval($_REQUEST['layoutID']); 
 					$params = array('type'=>'table',
 									'rows'=>intval($_REQUEST['layout_rows']),
 									'columns'=>intval($_REQUEST['layout_columns']),  
 									'locked'=>intval($_REQUEST['locked']),  
-									'layoutID'=>intval($_REQUEST['layoutID']) );  
+									'layoutID'=>$layoutID );					
 					
-					$layout = new Layout( $params ); 
+					//is this an existing layout? 
+					if($layoutID){ 
+						$layout = Layout::getById($layoutID);
+						
+						//ToDo: check that this layout id has the correct area and collection, to prevent hacks 
+
+						$layout->fill( $params );
+						//if there's no unique layout record for this collection version, then treat this as a new record 
+						//this should be bypassed if editing a preset
+						if( !$layout->isUniqueToCollectionVersion($nvc) ){ 
+							$oldLayoutId=$layout->layoutID;
+							$layout->layoutID=0;
+						}
+						$layout->save( $nvc ); 
+						if($oldLayoutId) $nvc->updateAreaLayoutId($area, $oldLayoutId, $layout->layoutID); 
+						
+					}else{ //new layout 
 					
-					
-					$layout->save( $nvc );
+						//add to top or bottom with sandwich logic goes here  
+						$position = ( $_REQUEST['add_to_position']=='top' ) ? 'top' : 'bottom'; 
+						$layout = new Layout( $params ); 
+						$layout->save( $nvc ); 
+						$nvc->addAreaLayout($area, $layout, $position);  
+					} 
 
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
 					exit;
