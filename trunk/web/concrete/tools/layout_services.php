@@ -1,20 +1,24 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
+
 $c = Page::getByID($_REQUEST['cID']);
 $a = Area::get($c, $_GET['arHandle']);
+
 $cp = new Permissions($c);
 $ap = new Permissions($a);
+
 $valt = Loader::helper('validation/token');
 $token = '&' . $valt->getParameter();
 
-$jsonData = array('success'=>'0','msg'=>''); 
+ 
 
-Loader::model('layout'); 
-$layout = Layout::getById(intval($_REQUEST['layoutID']));
+Loader::model('layout');  
+$layoutID = intval($_REQUEST['layoutID']);
+$layout = Layout::getById($layoutID);
 
+$jsonData = array('success'=>'0','msg'=>'', 'layoutID'=>$layoutID);
 
-//ADD A CHECK TO MAKE SURE LAYOUT BELONGS TO AREA!!!!!!!!
-
+//ADD A CHECK TO MAKE SURE LAYOUT BELONGS TO AREA!!!!!!!!  
 
 if ( !$cp->canWrite() || !$ap->canWrite()  ) {
 	$jsonData['msg']=t('Access Denied.'); 
@@ -32,8 +36,10 @@ if ( !$cp->canWrite() || !$ap->canWrite()  ) {
 			$jsonData['success'] = intval($saved); 
 			break;
 			
-		case 'delete':
-			
+		case 'delete': 
+			$nvc = $c->getVersionToModify(); 
+			$nvc->deleteAreaLayout( $a, $layout); 
+			$jsonData['success'] = intval(1); 
 			break;	
 			
 		case 'quicksave': 
@@ -46,7 +52,15 @@ if ( !$cp->canWrite() || !$ap->canWrite()  ) {
 			if( count($layout->breakpoints) != ($layout->columns-1) )
 				 $jsonData['msg']=t('Error: Invalid column count. Please refresh your page.'); 
 			else{
+				$nvc = $c->getVersionToModify(); 
+				if( !$layout->isUniqueToCollectionVersion($nvc) ){
+					$oldLayoutId=$layout->layoutID;
+					$layout->layoutID=0;
+				}
 				$saved = $layout->save();
+				if($oldLayoutId) $nvc->updateAreaLayoutId($a, $oldLayoutId, $layout->layoutID ); 
+				
+				$jsonData['layoutID'] = $layout->getLayoutID(); 
 				$jsonData['success'] = intval($saved); 
 			}
 			break;				

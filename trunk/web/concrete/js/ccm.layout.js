@@ -49,7 +49,7 @@ function ccmLayout( layout_id, area, locked ){
 			html += '<ul>';
 			
 			
-			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuEditLayout' + this.layout_id + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
+			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuEditLayout' + this.layout_id + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/layout_small.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
 			
 			
 			var lockText = (this.locked) ? ccmi18n.unlockAreaLayout : ccmi18n.lockAreaLayout ; 
@@ -71,15 +71,7 @@ function ccmLayout( layout_id, area, locked ){
 			aJQobj.find('#menuAreaLayoutLock' + this.layout_id).click( function(){ layoutObj.lock(); } ); 
 			
 			//delete click
-			aJQobj.find('#menuAreaLayouDelete' + this.layout_id).click(function(){
-				ccm_hideMenus();
-				if( !confirm(ccmi18n.deleteLayoutConfirmMsg) ){ 
-					return false;
-				}
-				alert('delete logic here');
-				return false;
-			}); 
-			
+			aJQobj.find('#menuAreaLayouDelete' + this.layout_id).click(function(){ layoutObj.deleteLayout(); }); 
 		
 		} else {
 			aobj = $("#ccm-layout-options-menu-" + this.layout_id);
@@ -89,8 +81,7 @@ function ccmLayout( layout_id, area, locked ){
 	}
 	
 	
-	this.lock=function(lock){ 
-	 
+	this.lock=function(lock){  
 		var a = $('#menuAreaLayoutLock' + this.layout_id); 
 		this.locked = !this.locked;
 		if( this.locked ){ 
@@ -112,28 +103,62 @@ function ccmLayout( layout_id, area, locked ){
 					//success
 				}
 			}
-		});	
-		
+		});	 
 	}
 	
-	
-	this.quickSave=function(){ 
-	
-		var breakPoints=this.ccmControls.find('.layout_col_break_points').val();
-	
-		this.servicesAjax = $.ajax({ 
-			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&task=quicksave&breakpoints='+encodeURI(breakPoints),
+	this.hasBeenQuickSaved=0;
+	this.quickSaveLayoutId=0;
+	this.quickSave=function(){  
+		var breakPoints=this.ccmControls.find('#layout_col_break_points_'+this.layout_id).val();  
+		clearTimeout(this.secondSavePauseTmr);
+		if(!this.hasBeenQuickSaved && this.quickSaveInProgress){
+			quickSaveLayoutObj=this;
+			this.secondSavePauseTmr=setTimeout('quickSaveLayoutObj.quickSave()',100);
+			return;
+		}
+		this.quickSaveInProgress=1;
+		var layoutObj = this; 
+		var modifyLayoutId = (this.quickSaveLayoutId) ? this.quickSaveLayoutId : this.layout_id; 
+		this.quickSaveAjax  = $.ajax({ 
+			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + modifyLayoutId +  '&task=quicksave&breakpoints='+encodeURI(breakPoints),
 			success: function(response){  
 				eval('var jObj='+response); 
 				if(parseInt(jObj.success)!=1){ 
 					alert(jObj.msg);
 				}else{    
 					//success
+					layoutObj.hasBeenQuickSaved=1;
+					layoutObj.quickSaveInProgress=0;
+					if(jObj.layoutID){
+						layoutObj.quickSaveLayoutId = jObj.layoutID;
+					}
 				}
 			}
-		});
-		
+		}); 
 	}
+	
+	this.deleteLayout=function(){  
+															
+		ccm_hideMenus();  
+		 
+		if( !confirm( ccmi18n.deleteLayoutConfirmMsg ) ) return false; 
+		 
+		var layoutId = this.layout_id;
+		this.servicesAjax = $.ajax({ 
+			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&task=delete',
+			success: function(response){  
+				eval('var jObj='+response); 
+				if(parseInt(jObj.success)!=1){ 
+					alert(jObj.msg);
+				}else{    
+					//success
+					$('#ccm-layout-'+layoutId).remove();
+					$('#ccm-layout-controls-'+layoutId).remove();
+				}
+			}
+		});	
+		
+	}	
 
 
 	this.gridSizing = function(){
@@ -142,8 +167,8 @@ function ccmLayout( layout_id, area, locked ){
 		//append layout id to start of all selectors
 		var cols=parseInt( this.ccmControls.find('.layout_column_count').val() );  
 		
-		if(cols>1){
-			var startPoints=this.ccmControls.find('.layout_col_break_points').val().replace(/%/g,'').split('|');  
+		if(cols>1){ 
+			var startPoints=this.ccmControls.find('#layout_col_break_points_'+this.layout_id).val().replace(/%/g,'').split('|');  
 			
 			this.s = this.ccmControls.find(".ccm-layout-controls-slider");
 			
@@ -171,6 +196,7 @@ function ccmLayout( layout_id, area, locked ){
 		
 		
 	this.resizeGrid=function(childNodes){	
+		/*
 		//item list type 
 		var pos=parseInt(childNodes[0].style.left.replace('%',''));
 		if(this.ccmGrid.hasClass('ccm-layout-type-itemlist')){ 
@@ -185,22 +211,23 @@ function ccmLayout( layout_id, area, locked ){
 			var pos2=parseInt(childNodes[1].style.left.replace('%',''));
 			this.ccmGrid.find('.ccm-layout-row-even .ccm-layout-cell-long').css('width',pos2+'%');
 			this.ccmGrid.find('.ccm-layout-row-even .ccm-layout-cell-short').css('width',(99-pos2)+'%');
-		}			
+		}
+		*/
 
 		//column & table type
-		if(this.ccmGrid.hasClass('ccm-layout-type-columns') || this.ccmGrid.hasClass('ccm-layout-type-table')){ 
+		//if(this.ccmGrid.hasClass('ccm-layout-type-columns') || this.ccmGrid.hasClass('ccm-layout-type-table')){ 
 			var prevW=0;
 			var i; 					
-			for(i=0;i<childNodes.length;i++){
+			for(i=0;i<childNodes.length;i++){ 
 				var pos=parseInt(childNodes[i].style.left.replace('%',''));
 				var w=pos-prevW;
 				prevW+=w;
-				this.ccmGrid.find('.ccm-layout-col-'+(i+1)).css('width',w+'%');						
+				this.ccmGrid.find('#ccm-layout-'+this.layout_id+'-col-'+(i+1)).css('width',w+'%');						
 			}
-			this.ccmGrid.find('.ccm-layout-col-'+(i+1)).css('width',(100-prevW)+'%');  
-		}
+			this.ccmGrid.find('#ccm-layout-'+this.layout_id+'-col-'+(i+1)).css('width',(100-prevW)+'%');  
+		//}
 	}
 	
-	
-	
 } 
+
+var quickSaveLayoutObj;

@@ -95,6 +95,20 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$row['csrID']
 				));
 			}
+			
+			// duplicate any area layout joins
+			$q = "select * from CollectionVersionAreaLayouts where cID = '$cID' and cvID = '$cvID'";
+			$r = $db->query($q);
+			while ($row = $r->FetchRow()) {
+				$db->Execute('insert into CollectionVersionAreaLayouts (cID, cvID, arHandle, layoutID, areaNameNumber, position) values (?, ?, ?, ?, ?, ?)', array(
+					$this->getCollectionID(),
+					$nvObj->getVersionID(),
+					$row['arHandle'],
+					$row['layoutID'],
+					$row['areaNameNumber'],
+					$row['position']
+				));
+			}			
 
 			// now that we've duplicated all the blocks for the collection, we return the new
 			// collection
@@ -409,7 +423,77 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		$this->refreshCache();
 	}
 	
-	function rescanDisplayOrder($areaName) {
+	
+	public function addAreaLayout($area, $layout, $addToPosition='bottom' ) {  
+		$db = Loader::db();
+		
+		//get max layout name number, for fixed autonaming of layouts 
+		$vals = array( intval($this->cID), $this->getVersionID(), $area->getAreaHandle() );
+		$sql = 'SELECT MAX(areaNameNumber) FROM CollectionVersionAreaLayouts WHERE cID=? AND cvID=? AND arHandle=?';
+		$nextNumber = intval($db->getOne($sql,$vals))+1;  
+		
+		if($addToPosition=='top'){  
+			$position=-1; 
+		}else{ 
+		
+			//does the main area already have blocks in it? 
+			$areaBlocks = $area->getAreaBlocksArray($this); 
+			
+			//then copy those blocks from that area into a newly created 1x1 layout, so it can be above out new layout 
+			if( count($areaBlocks) ){  
+			
+				//creat new 1x1 layout to hold existing parent area blocks
+				Loader::model('layout'); 
+				$placeHolderLayout = new Layout( array('rows'=>1,'columns'=>1) );  
+				$placeHolderLayout->save( $this );  
+				$vals = array( $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle(), $placeHolderLayout->getLayoutID(), $nextNumber, 10000 );
+				$sql = 'INSERT INTO CollectionVersionAreaLayouts ( cID, cvID, arHandle, layoutID, areaNameNumber, position ) values (?, ?, ?, ?, ?, ?)';
+				$db->query($sql,$vals);	 
+				
+				//add parent area blocks to this new layout
+				$placeHolderLayout->setAreaObj($area);
+				$placeHolderLayout->setAreaNameNumber($nextNumber); 
+				$placeHolderLayoutArea = new Area( $placeHolderLayout->getCellAreaHandle(1) ); 
+				foreach($areaBlocks as $b){ 
+					$b->move($this, $placeHolderLayoutArea); 
+				}
+				
+				$nextNumber++; 
+			}
+			
+			$position=10001; 
+		}
+		
+		
+		$vals = array( $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle(), $layout->getLayoutID(), $nextNumber, $position );
+		$sql = 'INSERT INTO CollectionVersionAreaLayouts ( cID, cvID, arHandle, layoutID, areaNameNumber, position ) values (?, ?, ?, ?, ?, ?)';
+		$db->query($sql,$vals);	
+		
+		$layout->setAreaNameNumber($nextNumber);
+		
+		$this->refreshCache();
+	}
+	
+	
+	public function updateAreaLayoutId($area, $oldLayoutId=0, $newLayoutId=0){ 
+		$db = Loader::db();
+		$vals = array( $newLayoutId, $oldLayoutId, $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle() );
+		$sql = 'UPDATE CollectionVersionAreaLayouts SET layoutID=? WHERE layoutID=? AND cID=? AND  cvID=? AND arHandle=?';  
+		$db->query($sql,$vals);	 
+		
+		$this->refreshCache();		
+	}	
+	
+	
+	public function deleteAreaLayout($area, $layout){
+		$db = Loader::db();
+		$vals = array( $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle(), $layout->getLayoutID() );
+		$db->Execute('delete from CollectionVersionAreaLayouts WHERE cID = ? AND cvID = ? AND arHandle = ? AND layoutID = ? LIMIT 1', $vals ); 
+		$this->refreshCache();
+	} 
+	
+	
+	public function rescanDisplayOrder($areaName) {
 		// this collection function fixes the display order properties for all the blocks within the collection/area. We select all the items
 		// order by display order, and fix the sequence
 

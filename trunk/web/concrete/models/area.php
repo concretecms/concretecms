@@ -325,6 +325,13 @@ class Area extends Object {
 			//Invalid Collection
 			return false;
 		}
+		
+		//display layouts tied to this area 
+		//Might need to move this to a better position  
+		$areaLayouts = $this->getAreaLayouts($c);
+		if(is_array($areaLayouts)) foreach($areaLayouts as $layout){  
+			$layout->display($c,$this); 
+		}	
 
 		$ourArea = Area::getOrCreate($c, $this->arHandle);
 		if (count($this->customTemplateArray) > 0) {
@@ -392,6 +399,50 @@ class Area extends Object {
 			$bv->renderElement('block_area_footer', array('a' => $ourArea));	
 		}
 	}
+	
+	/** 
+	 * Load all layout grid objects for a collection 
+	 */	
+	function getAreaLayouts($c){ 
+		
+		if( !intval($c->cID) ){
+			//Invalid Collection
+			return false;
+		}
+		
+		$db = Loader::db();
+		$vals = array( intval($c->cID), $c->getVersionID(), $this->getAreaHandle() );
+		$sql = 'SELECT * FROM CollectionVersionAreaLayouts WHERE cID=? AND cvID=? AND arHandle=? ORDER BY position ASC, cvalID ASC';
+		$rows = $db->getArray($sql,$vals); 
+		
+		$layouts=array();
+		$i=0;
+		if(is_array($rows)) foreach($rows as $row){ 
+			$layout = Layout::getById( intval($row['layoutID']) );
+			if( is_object($layout) ){  
+				
+				$i++; 
+			
+				//check position is correct, update if not 
+				if( $i != $row['position'] || $renumbering ){  
+					$renumbering=1;
+					$db->query( 'UPDATE CollectionVersionAreaLayouts SET position=? WHERE cvalID=?' , array($i, $row['cvalID']) ); 
+				}
+				$layout->position=$i;
+				
+				
+				$layout->setAreaObj( $this );
+				
+				$layout->setAreaNameNumber( intval($row['areaNameNumber']) );
+				
+				$layouts[]=$layout; 
+			} 
+		}
+		
+		return $layouts; 
+	}
+	
+	
 
 	/** 
 	 * Specify HTML to automatically print before blocks contained within the area

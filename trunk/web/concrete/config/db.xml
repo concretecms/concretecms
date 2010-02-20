@@ -440,24 +440,33 @@
   
   
   <table name="CollectionVersionAreaLayouts">
-    <field name="cID" type="I" size="10">
-      <KEY/>
+    <field name="cvalID" type="I" size="10">
+	  <AUTOINCREMENT/>
+      <KEY/> 
+      <UNSIGNED/>
+    </field>  
+    <field name="cID" type="I" size="10"> 
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="cvID" type="I" size="10">
-      <KEY/>
+    <field name="cvID" type="I" size="10"> 
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="arHandle" type="C" size="255">
-      <KEY/>
+    <field name="arHandle" type="C" size="255"> 
     </field>
     <field name="layoutID" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="position" type="I" size="10"> 
+      <DEFAULT value="1000"/>
+    </field>	
+    <field name="areaNameNumber" type="I" size="10"> 
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>	
   </table>  
   
   
@@ -1043,7 +1052,17 @@
 		<field name="locked" type="I1" size="1">
 		  <NOTNULL/>
 		  <DEFAULT value="0"/>
-		</field>		
+		</field>
+		
+		<field name="locked" type="I1" size="1">
+		  <NOTNULL/>
+		  <DEFAULT value="0"/>
+		</field>
+		
+		<field name="locked" type="I1" size="1">
+		  <NOTNULL/>
+		  <DEFAULT value="0"/>
+		</field>						
   </table>
   
 <table name="SystemNotifications">

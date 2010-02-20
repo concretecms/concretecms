@@ -53,6 +53,18 @@ if(!$layout ){
 		<input name="locked" type="checkbox" value="1" <?= ( intval($layout->locked) ) ? 'checked="checked"' : '' ?> />
 		<?= t('Lock Widths') ?>
 	</div>
+	
+	
+	<? 
+	//To Do: only provide this option if there's 1) blocks in the main area, or 2) existing layouts 
+	if( !intval($layout->layoutID) ){ ?>
+	<div style="margin:16px 0px"> 
+		<?= t('Add layout to: ') ?> 
+		<input name="add_to_position" type="radio" value="top" /> <?=t('top') ?>&nbsp; 
+		<input name="add_to_position" type="radio" value="bottom" checked="checked" /> <?=t('bottom') ?> 
+	</div>
+	<? } ?>
+	
 
 	<div style="margin-bottom:16px;"> 
 		<?=$form->checkbox('cspCreateNew', 1)?> 
