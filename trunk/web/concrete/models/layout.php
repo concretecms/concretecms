@@ -22,18 +22,13 @@
  
  in process, when adding layout, check that this layout id has the correct area and collection, to prevent hacks
  
- 
- add to top or add to bottom option when adding new layout,
-     ->if adding to bottom, and blocks are in bottom layout, then 2 layouts are created, with blocks moved to the first 1x1 layout 
- 
- 
  when quicksaving, locking, or deleting a layout, make sure that layout belongs to that area 
- 
   
+ move layout up and down 
  
  orphaned layout cleanup process?
  
- saving layout from overlay shouldn't loose previous grid sizings
+ saving layout from overlay shouldn't loose previous grid sizings!!!!!
  
  add layout css to page even if not in edit mode 
  

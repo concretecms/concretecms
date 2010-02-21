@@ -443,7 +443,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if( count($areaBlocks) ){  
 			
 				//creat new 1x1 layout to hold existing parent area blocks
-				Loader::model('layout'); 
+				//Loader::model('layout'); 
 				$placeHolderLayout = new Layout( array('rows'=>1,'columns'=>1) );  
 				$placeHolderLayout->save( $this );  
 				$vals = array( $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle(), $placeHolderLayout->getLayoutID(), $nextNumber, 10000 );

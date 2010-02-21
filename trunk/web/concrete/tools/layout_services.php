@@ -12,7 +12,7 @@ $token = '&' . $valt->getParameter();
 
  
 
-Loader::model('layout');  
+//Loader::model('layout');  
 $layoutID = intval($_REQUEST['layoutID']);
 $layout = Layout::getById($layoutID);
 
