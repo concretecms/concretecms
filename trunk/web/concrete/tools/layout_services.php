@@ -60,15 +60,16 @@ if ( !$cp->canWrite() || !$ap->canWrite()  ) {
 						$sql = 'UPDATE CollectionVersionAreaLayouts SET position=? WHERE cvalID=? ';  
 						$db->query($sql,$vals); 
 						$siblingMoved=1;
-					}  
+					} 
 					if($siblingMoved==1){
 						$sql = 'UPDATE CollectionVersionAreaLayouts SET position=? WHERE cvalID=? ';  
 						$db->query($sql, array( $layout->position, $layout->cvalID ));
-						$jsonData['success'] = 1;						
+										
 					} 
 					break;
 				} 
 			} 
+			$jsonData['success'] = 1; 
 			break;	
 
 		case 'delete': 
