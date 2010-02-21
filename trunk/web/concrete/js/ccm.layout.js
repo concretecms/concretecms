@@ -12,16 +12,36 @@ function ccmLayout( layout_id, area, locked ){
 	
 	this.init = function(){ 
 	
-		this.ccmControls=$("#ccm-layout-controls-"+this.layout_id);
-	 
-	 	var layoutOut=this;
+		var layoutObj=this;
+		this.layoutWrapper = $('#ccm-layout-wrapper-'+this.layout_id); 
+		this.ccmControls = this.layoutWrapper.find("#ccm-layout-controls-"+this.layout_id);
+	
+		/*
+		this.layoutWrapper.mouseover(function(){
+			layoutObj.ccmControls.show(200);
+		})
+		
+		this.ccmControls.mouseout(function(){
+			layoutObj.ccmControls.hide(200).delay(5000);
+		});
+		*/
+		
+		this.ccmControls.mouseover(function(){ layoutObj.highlightAreas(1); });
+		
+		this.ccmControls.mouseout(function(){ layoutObj.highlightAreas(0); });
+	 	
 		this.ccmControls.find('.ccm-layout-menu-button').click(function(e){ 
-			layoutOut.optionsMenu(e);
+			layoutObj.optionsMenu(e);
 		})
 	
 		this.gridSizing();
 	}
 	
+	this.highlightAreas=function(show){
+		var els=this.layoutWrapper.find('.ccm-add-block');
+		if(show) els.addClass('ccm-layout-area-highlight'); 
+		else els.removeClass('ccm-layout-area-highlight'); 
+	} 
 	
 	this.optionsMenu=function(e){ 
 		
@@ -51,11 +71,14 @@ function ccmLayout( layout_id, area, locked ){
 			
 			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuEditLayout' + this.layout_id + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/layout_small.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
 			
+			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveUp' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/arrow_up.png)">' + ccmi18n.moveLayoutUp + '</span></a></li>';
+						
+			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveDown' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/arrow_down.png)">' + ccmi18n.moveLayoutDown + '</span></a></li>';
 			
 			var lockText = (this.locked) ? ccmi18n.unlockAreaLayout : ccmi18n.lockAreaLayout ; 
 			html += '<li><a class="ccm-icon" id="menuAreaLayoutLock' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + lockText + '</span></a></li>';
 			
-			html += '<li><a class="ccm-icon" id="menuAreaLayouDelete' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n.deleteLayout + '</span></a></li>';
+			html += '<li><a class="ccm-icon" id="menuAreaLayoutDelete' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n.deleteLayout + '</span></a></li>';
 			
 			html += '</ul>';
 			html += '</div></div>';
@@ -63,15 +86,21 @@ function ccmLayout( layout_id, area, locked ){
 			aobj.append(html);
 			
 			var aJQobj = $(aobj);
+			var layoutObj=this;
 			
 			aJQobj.find('#menuEditLayout' + this.layout_id).dialog(); 
 			
-			//lock click
-			var layoutObj=this;
+			aJQobj.find('#menuAreaLayoutMoveUp' + this.layout_id).click(function(){ layoutObj.moveLayout('up'); }); 
+			
+			aJQobj.find('#menuAreaLayoutMoveDown' + this.layout_id).click(function(){ layoutObj.moveLayout('down'); }); 
+			
+			//lock click 
 			aJQobj.find('#menuAreaLayoutLock' + this.layout_id).click( function(){ layoutObj.lock(); } ); 
 			
 			//delete click
-			aJQobj.find('#menuAreaLayouDelete' + this.layout_id).click(function(){ layoutObj.deleteLayout(); }); 
+			aJQobj.find('#menuAreaLayoutDelete' + this.layout_id).click(function(){ layoutObj.deleteLayout(); }); 
+			
+			
 		
 		} else {
 			aobj = $("#ccm-layout-options-menu-" + this.layout_id);
@@ -80,6 +109,48 @@ function ccmLayout( layout_id, area, locked ){
 		ccm_fadeInMenu(aobj, e);		
 	}
 	
+	this.moveLayout=function(direction){ 
+	
+		
+		
+		this.servicesAjax = $.ajax({ 
+			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&task=move&direction=' + direction,
+			success: function(response){  
+				eval('var jObj='+response); 
+				if(parseInt(jObj.success)!=1){ 
+					alert(jObj.msg);
+				}else{    
+					//success
+				}
+			}
+		});		
+		
+		
+		var el = $('#ccm-layout-wrapper-'+this.layout_id); 
+		
+		
+		if(direction=='down'){
+			var nextLayout = el.next();
+			if( nextLayout.hasClass('ccm-layout-wrapper') ){
+				el.slideUp(600,function(){
+					el.insertAfter(nextLayout);
+					el.slideDown(600); 
+				})
+				return;
+			}
+		}else if(direction=='up'){
+			var previousLayout = el.prev();
+			if( previousLayout.hasClass('ccm-layout-wrapper') ){ 
+				el.slideUp(600,function(){
+					el.insertBefore(previousLayout);
+					el.slideDown(600); 
+				})
+				return;
+			} 
+		}
+		
+		//at boundary, can't move further. 
+	}
 	
 	this.lock=function(lock){  
 		var a = $('#menuAreaLayoutLock' + this.layout_id); 
@@ -142,6 +213,8 @@ function ccmLayout( layout_id, area, locked ){
 		ccm_hideMenus();  
 		 
 		if( !confirm( ccmi18n.deleteLayoutConfirmMsg ) ) return false; 
+		
+		this.layoutWrapper.slideUp(300); 
 		 
 		var layoutId = this.layout_id;
 		this.servicesAjax = $.ajax({ 
@@ -152,8 +225,7 @@ function ccmLayout( layout_id, area, locked ){
 					alert(jObj.msg);
 				}else{    
 					//success
-					$('#ccm-layout-'+layoutId).remove();
-					$('#ccm-layout-controls-'+layoutId).remove();
+					$('#ccm-layout-wrapper-'+layoutId).remove();
 				}
 			}
 		});	
