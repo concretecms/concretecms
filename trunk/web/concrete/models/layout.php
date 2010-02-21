@@ -28,7 +28,7 @@
  
  orphaned layout cleanup process?
  
- saving layout from overlay shouldn't loose previous grid sizings!!!!!
+ saving layout from overlay shouldn't loose previous grid sizings!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  
  add layout css to page even if not in edit mode 
  
@@ -52,8 +52,10 @@
 	public $breakpoints=array();
 	public $areaNameNumber=0;
 	
-	//position is a property of the collectionVersionAreaLayout join, set when being loaded for an area, not with layout object itself 
+	
+	//position and cvalID are properties of the collectionVersionAreaLayout join, set when being loaded for an area, not with layout object itself 
 	public $position=1000;
+	public $cvalID=0;
 	
 	function __construct( $params=array() ){ 
 		$this->fill($params); 
@@ -196,7 +198,7 @@
 		
 		if(!in_array($this->type,$this->layoutTypes)) $this->layoutType='table'; 
 		
-		
+		echo '<div id="ccm-layout-wrapper-'.$this->layoutID.'" class="ccm-layout-wrapper">';
 		
 		if ($c->isEditMode()) { 
 			$args = array('layout'=>$this);
@@ -223,6 +225,8 @@
 				$this->displayAreaGrid();
 		}
 		*/ 
+		
+		echo '</div>';
 	}
 	
 	protected function getNextColWidth($zeroIndexedColNum=0,$cumulativeWidth=0){

@@ -329,8 +329,9 @@ class Area extends Object {
 		//display layouts tied to this area 
 		//Might need to move this to a better position  
 		$areaLayouts = $this->getAreaLayouts($c);
-		if(is_array($areaLayouts)) foreach($areaLayouts as $layout){  
-			$layout->display($c,$this); 
+		if(is_array($areaLayouts) && count($areaLayouts)){ 
+			foreach($areaLayouts as $layout)
+				$layout->display($c,$this);  
 		}	
 
 		$ourArea = Area::getOrCreate($c, $this->arHandle);
@@ -428,8 +429,9 @@ class Area extends Object {
 					$renumbering=1;
 					$db->query( 'UPDATE CollectionVersionAreaLayouts SET position=? WHERE cvalID=?' , array($i, $row['cvalID']) ); 
 				}
-				$layout->position=$i;
+				$layout->position=$i; 
 				
+				$layout->cvalID = intval($row['cvalID']); 
 				
 				$layout->setAreaObj( $this );
 				

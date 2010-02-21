@@ -1,5 +1,5 @@
 .ccm-layout{ font-size:12px; list-style:14px; }
-.ccm-layout .ccm-layout-row{ margin-bottom:16px;}
+.ccm-layout .ccm-layout-row{ margin-bottom:0px;}
 .ccm-layout .ccm-layout-cell { border:0px none !important; }
 .ccm-layout.ccm-edit-mode .ccm-layout-cell{ overflow:hidden; }
 
@@ -35,8 +35,10 @@
 #customizeLayoutWrap .inlinefieldPair{float:left; width:auto; padding-right:16px; padding-left:8px}
 #customizeLayoutWrap #generateButtonWrap{ float:right;width:auto; height:auto; text-align:right}
 */ 
+ 
+.ccm-layout div.ccm-layout-area-highlight { border-color: #1c1;  }
 
-.ccm-layout-controls { position:relative; top:0px; left:0px; width:100%; height:auto; padding-top:4px; }
+.ccm-layout-controls { position:relative; top:0px; left:0px; width:100%; height:auto; padding-top:4px; margin-top:2px }
 .ccm-layout-controls .ccm-slider{border:1px solid #aaa; border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px; height:8px; 
 width:100%; background:#f6f6f6; margin-bottom:8px; position:relative; left:0px; top:0px; z-index:1; }
 .ccm-layout-controls .ccm-slider a{ position:absolute; top:-5px; left:0px; width:8px; height:16px; background:#bbb; border:1px solid #999; margin-left:-6px; cursor:move}
