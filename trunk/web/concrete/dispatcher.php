@@ -64,6 +64,7 @@
 	Loader::model('collection_version');
 	Loader::model('config');
 	Loader::model('groups');
+	Loader::model('layout');  
 	Loader::model('package');
 	Loader::model('page');
 	Loader::model('page_theme');

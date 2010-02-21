@@ -275,7 +275,7 @@
 					
 					$nvc = $c->getVersionToModify();
 					
-					Loader::model('layout'); 
+					//Loader::model('layout'); 
 					$layoutID = intval($_REQUEST['layoutID']); 
 					$params = array('type'=>'table',
 									'rows'=>intval($_REQUEST['layout_rows']),

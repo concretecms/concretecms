@@ -4,7 +4,7 @@ global $c;
 
 $form = Loader::helper('form'); 
 
-Loader::model('layout'); 
+//Loader::model('layout'); 
 
 
 
