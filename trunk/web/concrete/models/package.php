@@ -451,7 +451,7 @@ class Package extends Object {
 		Package::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);		
 		// now we refresh all blocks
 		$items = $this->getPackageItems();
-		if(is_array($items)) {
+		if (is_array($items['block_types'])) {
 			foreach($items['block_types'] as $item) {
 				$item->refresh();
 			}
