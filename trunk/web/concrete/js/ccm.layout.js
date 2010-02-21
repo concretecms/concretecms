@@ -111,8 +111,7 @@ function ccmLayout( layout_id, area, locked ){
 	
 	this.moveLayout=function(direction){ 
 	
-		
-		
+		this.highlightAreas(1);
 		this.servicesAjax = $.ajax({ 
 			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&task=move&direction=' + direction,
 			success: function(response){  
@@ -125,16 +124,14 @@ function ccmLayout( layout_id, area, locked ){
 			}
 		});		
 		
-		
-		var el = $('#ccm-layout-wrapper-'+this.layout_id); 
-		
-		
+		var el = $('#ccm-layout-wrapper-'+this.layout_id);
+		var layoutObj = this;
 		if(direction=='down'){
 			var nextLayout = el.next();
 			if( nextLayout.hasClass('ccm-layout-wrapper') ){
 				el.slideUp(600,function(){
 					el.insertAfter(nextLayout);
-					el.slideDown(600); 
+					el.slideDown(600,function(){ layoutObj.highlightAreas(0); }); 
 				})
 				return;
 			}
@@ -143,7 +140,7 @@ function ccmLayout( layout_id, area, locked ){
 			if( previousLayout.hasClass('ccm-layout-wrapper') ){ 
 				el.slideUp(600,function(){
 					el.insertBefore(previousLayout);
-					el.slideDown(600); 
+					el.slideDown(600,function(){ layoutObj.highlightAreas(0); }); 
 				})
 				return;
 			} 
