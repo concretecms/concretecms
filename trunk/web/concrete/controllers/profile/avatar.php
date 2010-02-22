@@ -12,22 +12,12 @@ class ProfileAvatarController extends ProfileEditController {
 	}
 
 	
-	public function upload() {
-
-		if (is_uploaded_file($_FILES['uAvatar']['tmp_name'])) {
-			$t = Loader::helper('validation/identifier');
-			$filename = $t->getString(32);
-			
-			copy($_FILES['uAvatar']['tmp_name'], DIR_FILES_CACHE . "/" . $filename);
-
-			print(BASE_URL.DIR_REL.'/files/cache/'. $filename);
-			exit;
-		}
-	
-	}
-	
 	public function save_thumb(){
 		$ui = $this->get('ui');
+		if (!is_object($ui) || $ui->getUserID() < 1) {
+			return false;
+		}
+		
 		if(isset($_POST['thumbnail']) && strlen($_POST['thumbnail'])) {
 			$thumb = base64_decode($_POST['thumbnail']);
 			$fp = fopen(DIR_FILES_AVATARS."/".$ui->getUserID().".jpg","w");
