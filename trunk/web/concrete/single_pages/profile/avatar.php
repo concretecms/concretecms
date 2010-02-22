@@ -8,26 +8,35 @@
         
                     
         <div style="position:relative; width:100%; height:500px ;">		
-            <div style="position: absolute; left:-40px; top:0px; width:450px; height:500px;">
-            <div id="discussion-profile-avatar"> 	
-                <div style="margin-left: 40px">
+            <div id="profile-avatar"> 	
                 <?=t('You need the Adobe Flash plugin installed on your computer to upload and crop your user profile picture.')?>
                 <br /><br />
                 <a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">Download the Flash Player here</a>.
-                </div>
             </div>
             <? if ($ui->hasAvatar()) { ?>
-                <div style="margin-left:40px;">
+				<br/><br/>
                 <a href="<?=$this->action('delete')?>"><?=t('Remove your user avatar &gt;')?></a>
-                </div>
+
             <? } ?>	
-            </div>
         
             <div class="spacer"></div>
             
             <script>
             $(function(){   
+                var params = { 
+                    bgcolor: "#ffffff",
+                    wmode:  "transparent",
+                    quality:  "high" 
+                };
+				var flashvars = {
+                    width: '<?=AVATAR_WIDTH?>',
+                    height: '<?=AVATAR_HEIGHT?>',
+                    image: '<?=$av->getImagePath($ui)?>',
+                    save: "<?=$this->url($c->getCollectionPath(), 'save_thumb')?>"
+                };
+				swfobject.embedSWF ("<?=DIR_REL?>/concrete/flash/thumbnail_editor_2.swf", "profile-avatar", "500", "400", "10,0,0,0", "includes/expressInstall.swf", flashvars, params);
         
+       			/*
                 //SWF OBJECT 2.0 Method
                 var params = { 
                     bgcolor: "#ffffff",
@@ -37,15 +46,15 @@
                 var flashvars = { 
                     bgcolor: "#ffffff",
                     base_url: "<?=BASE_URL?>",
-                    image: "<?=$_REQUEST['tmp_avatar']?REL_DIR_FILES_UPLOADED ."/up_tmp/".$_REQUEST['tmp_avatar']: $av->getImagePath($ui)?>",
                     session: "<?=session_id()?>",
-                    thumbwidth: <?=AVATAR_WIDTH?>,
-                    thumbheight: <?=AVATAR_HEIGHT?>,
-                    uploadscript: "<?=$this->url($c->getCollectionPath(), 'upload')?>",
                     "export": "<?=$this->url($c->getCollectionPath(), 'save_thumb')?>" 
                 };
                 swfobject.embedSWF("<?=DIR_REL?>/concrete/flash/thumbnail_editor.swf", "discussion-profile-avatar", "450", "500", "8.0", false, flashvars, params);
-            });
+           		
+           		*/
+           		
+           		
+           });
             </script>
         </div>
 	</div>

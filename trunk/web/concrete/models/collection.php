@@ -208,6 +208,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		public function setAttribute($ak, $value) {
+			Loader::model('attribute/categories/collection');
 			if (!is_object($ak)) {
 				$ak = CollectionAttributeKey::getByHandle($ak);
 			}
