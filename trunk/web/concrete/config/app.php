@@ -96,6 +96,9 @@ if (!defined('DATE_APP_SURVEY_RESULTS')) {
 	// NO DEFINE HERE, JUST PLACING HERE TO MAKE A NOTE OF IT
 }
 
+if (!defined('DATE_FORM_HELPER_FORMAT_HOUR')) {
+	define('DATE_FORM_HELPER_FORMAT_HOUR', '12'); // can be 12 or 24
+}
 
 # Default marketplace support
 if (!defined('ENABLE_MARKETPLACE_SUPPORT')){  

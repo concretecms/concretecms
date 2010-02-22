@@ -34,7 +34,11 @@ class FormDateTimeHelper {
 		
 		if (isset($arr[$field . '_dt'])) {
 			$dt = date('Y-m-d', strtotime($arr[$field . '_dt']));
-			$str = $dt . ' ' . $arr[$field . '_h'] . ':' . $arr[$field . '_m'] . ' ' . $arr[$field . '_a'];
+			if (DATE_FORM_HELPER_FORMAT_HOUR == '12') {
+				$str = $dt . ' ' . $arr[$field . '_h'] . ':' . $arr[$field . '_m'] . ' ' . $arr[$field . '_a'];
+			} else {
+				$str = $dt . ' ' . $arr[$field . '_h'] . ':' . $arr[$field . '_m'];
+			}
 			return date('Y-m-d H:i:s', strtotime($str));
 		} else if (isset($arr[$field . '_d'])) {
 			$dt = date('Y-m-d', strtotime($arr[$field . '_d']));
@@ -70,14 +74,17 @@ class FormDateTimeHelper {
 			$_a = $prefix . '_a';
 		}
 		
+		$dfh = (DATE_FORM_HELPER_FORMAT_HOUR == '12') ? 'h' : 'H';
+		$dfhe = (DATE_FORM_HELPER_FORMAT_HOUR == '12') ? '12' : '23';
+		$dfhs = (DATE_FORM_HELPER_FORMAT_HOUR == '12') ? '1' : '0';
 		if ($value != null) {
-			$dt = date('m/d/Y', strtotime($value));
-			$h = date('h', strtotime($value));
+			$dt = date(DATE_APP_GENERIC_MDY, strtotime($value));
+			$h = date($dfh, strtotime($value));
 			$m = date('i', strtotime($value));
 			$a = date('A', strtotime($value));
 		} else {
-			$dt = date('m/d/Y');
-			$h = date('h');
+			$dt = date(DATE_APP_GENERIC_MDY);
+			$h = date($dfh);
 			$m = date('i');
 			$a = date('A');
 		}
@@ -96,7 +103,7 @@ class FormDateTimeHelper {
 		$html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_dt" name="' . $_dt . '" class="ccm-input-date" value="' . $dt . '" ' . $disabled . ' /></span>';
 		$html .= '<span class="ccm-input-time-wrapper" id="' . $id . '_tw">';
 		$html .= '<select id="' . $id . '_h" name="' . $_h . '" ' . $disabled . '>';
-		for ($i = 1; $i <= 12; $i++) {
+		for ($i = $dfhs; $i <= $dfhe; $i++) {
 			if ($h == $i) {
 				$selected = 'selected';
 			} else {
@@ -115,18 +122,20 @@ class FormDateTimeHelper {
 			$html .= '<option value="' . sprintf('%02d', $i) . '"' . $selected . '>' . sprintf('%02d', $i) . '</option>';
 		}
 		$html .= '</select>';
-		$html .= '<select id="' . $id . '_a" name="' . $_a . '" ' . $disabled . '>';
-		$html .= '<option value="AM" ';
-		if ($a == 'AM') {
-			$html .= 'selected';
+		if (DATE_FORM_HELPER_FORMAT_HOUR == '12') {
+			$html .= '<select id="' . $id . '_a" name="' . $_a . '" ' . $disabled . '>';
+			$html .= '<option value="AM" ';
+			if ($a == 'AM') {
+				$html .= 'selected';
+			}
+			$html .= '>AM</option>';
+			$html .= '<option value="PM" ';
+			if ($a == 'PM') {
+				$html .= 'selected';
+			}
+			$html .= '>PM</option>';
+			$html .= '</select>';
 		}
-		$html .= '>AM</option>';
-		$html .= '<option value="PM" ';
-		if ($a == 'PM') {
-			$html .= 'selected';
-		}
-		$html .= '>PM</option>';
-		$html .= '</select>';
 		$html .= '</span>';
 		if ($calendarAutoStart) { 
 			$html .= '<script type="text/javascript">$(function() { $("#' . $id . '_dt").datepicker({ changeYear: true, showAnim: \'fadeIn\' }); });</script>';
