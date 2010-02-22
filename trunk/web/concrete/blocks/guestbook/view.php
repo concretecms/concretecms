@@ -53,6 +53,9 @@ div.guestBook-entry {
 <? } ?>
 <?
 $u = new User();
+if (!$dateFormat) {
+	$dateFormat = t('M jS, Y');
+}
 $posts = $controller->getEntries();
 $bp = $controller->getPermissionsObject(); 
 foreach($posts as $p) { ?>
@@ -83,7 +86,7 @@ foreach($posts as $p) { ?>
 				</span> 
 				<?=t('on')?>
 				<span class="contentDate">
-					<?=date("M jS, Y",strtotime($p['entryDate']));?>
+					<?=date($dateFormat,strtotime($p['entryDate']));?>
 				</span>
 			</div>
 			<?=nl2br($p['commentText'])?>

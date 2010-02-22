@@ -54,14 +54,14 @@ if( strlen($_REQUEST['jHandle'])>0 || intval($_REQUEST['jID'])>0 ){
 		if( $jobObj->isError() ) 
 			$jsonErrorCode = $jobObj->getError();		
 	} 
-	$runTime=date('n/j/y \a\t g:i A', strtotime($jsonJDateLastRun));
+	$runTime=date(DATE_APP_GENERIC_MDYT, strtotime($jsonJDateLastRun));
 //run all jobs - default
 }else{ 
 	Job::runAllJobs();
 	if(!$_REQUEST['debug']) 
 		$outputDisabled=1;
 	$jsonMessage=t('All Jobs Run Successfully');
-	$runTime=date('n/j/y \a\t g:i A');
+	$runTime=date(DATE_APP_GENERIC_MDYT);
 	$jsonJHandle ='All Jobs';	
 }
 

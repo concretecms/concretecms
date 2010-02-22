@@ -17,6 +17,10 @@
 $rssObj=$controller;
 $textHelper = Loader::helper("text"); 
 
+if (!$dateFormat) {
+	$dateFormat = t('F jS');
+}
+
 if( strlen($errorMsg)>0 ){
 	echo $errorMsg;
 }else{
@@ -32,7 +36,7 @@ if( strlen($errorMsg)>0 ){
 					<?= $item->get_title(); ?>
 				</a>
 			</div>
-			<div class="rssItemDate"><?= $item->get_date('F jS'); ?></div>
+			<div class="rssItemDate"><?= $item->get_date($dateFormat); ?></div>
 			<div class="rssItemSummary">
 				<?
 				if( $rssObj->showSummary ){

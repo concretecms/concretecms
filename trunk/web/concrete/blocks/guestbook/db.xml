@@ -11,6 +11,8 @@
 		<field name="title" type="C" size="100">
 			<default value="Comments"/>
 		</field>
+		<field name="dateFormat" type="C" size="100">
+		</field>
 		<field name="displayGuestBookForm" type="i">
 			<default value="1"/>
 		</field>

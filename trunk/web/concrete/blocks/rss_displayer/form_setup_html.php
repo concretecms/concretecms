@@ -5,11 +5,23 @@ table#rssDisplayerSetup td{ font-size:12px }
 
 </style> 
 
+<?
+
+if (!$dateFormat) {
+	$dateFormat = t('F jS');
+}
+?>
+
 <table id="rssDisplayerSetup" width="100%">
 	<tr>
 		<th><?=t('Feed URL')?>:</th>
 		<td width="100%"><input id="ccm_rss_displayer_url" name="url" value="<?=$rssObj->url?>" maxlength="255" type="text" style="width:95%"></td>
 	</tr>
+	<tr>
+		<th><?=t('Date Format')?>:</th>
+		<td><input type="text" name="dateFormat" value="<?=$dateFormat?>" style="width: 95%" />
+			<div class="ccm-note">(<?=t('Enter a <a href="%s" target="_blank">PHP date string</a> here.', 'http://www.php.net/date')?>)</div>
+		</td>
 	<tr>
 		<th><?=t('Feed Title')?>: (<?=t('Optional')?>)</th>
 		<td><input id="ccm_rss_displayer_title" name="title" value="<?=$rssObj->title?>" maxlength="255" type="text" style="width:95%"></td>

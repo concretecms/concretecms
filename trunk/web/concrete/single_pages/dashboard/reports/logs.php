@@ -24,8 +24,8 @@ $th = Loader::helper('text');
 	</tr>
 	<? foreach($entries as $ent) { ?>
 	<tr>
-		<td valign="top" style="white-space: nowrap" class="active"><?=date('g:i:s', strtotime($ent->getTimestamp('user')))?><? if (date('m-d-y') != date('m-d-y', strtotime($ent->getTimestamp('user')))) { ?>
-			<?=date('m/d/y', strtotime($ent->getTimestamp('user')))?>
+		<td valign="top" style="white-space: nowrap" class="active"><?=date(DATE_APP_GENERIC_TS, strtotime($ent->getTimestamp('user')))?><? if (date('m-d-y') != date('m-d-y', strtotime($ent->getTimestamp('user')))) { ?>
+			<?=t(' at ')?><?=date(DATE_APP_GENERIC_MDY, strtotime($ent->getTimestamp('user')))?>
 		<? } ?></td>
 		<td valign="top"><strong><?=$ent->getType()?></strong></td>
 		<td style="width: 100%"><?=$th->makenice($ent->getText())?></td>

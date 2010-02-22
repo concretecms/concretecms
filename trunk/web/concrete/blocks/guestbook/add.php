@@ -3,6 +3,11 @@
 <?=t('Title')?><br />
 <input type="text" name="title" value="<?=t('Comments')?>:" /><br /><br />
 
+<?=t('Date Format')?><br/>
+<input type="text" name="dateFormat" value="<?=t('M jS, Y')?>" />
+<div class="ccm-note">(<?=t('Enter a <a href="%s" target="_blank">PHP date string</a> here.', 'http://www.php.net/date')?>)</div>
+<br/>
+
 <?=t('Comments Require Moderator Approval?')?><br/>
 <input type="radio" name="requireApproval" value="1" /> <?=t('Yes')?><br />
 <input type="radio" name="requireApproval" value="0" checked="checked" /> <?=t('No')?><br /><br />

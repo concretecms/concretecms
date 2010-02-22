@@ -100,7 +100,7 @@ class DateHelper {
 		$hoursInSecs=$diff-($days*(24*60*60));
 		$hours=intval($hoursInSecs/(60*60));
 		if ($hours<=0) $hours=$hours+24;           
-		if ($posttime>date("U")) return date("n/j/y",$posttime);
+		if ($posttime>date("U")) return date(DATE_APP_GENERIC_MDY,$posttime);
 		else{
 			if ($diff>86400){
 					$diff=$diff+86400;

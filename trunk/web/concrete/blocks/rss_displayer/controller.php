@@ -51,6 +51,7 @@
 		
 		function save($data) { 
 			$args['url'] = isset($data['url']) ? $data['url'] : '';
+			$args['dateFormat'] = $data['dateFormat'];
 			$args['itemsToDisplay'] = (intval($data['itemsToDisplay'])>0) ? intval($data['itemsToDisplay']) : 5 ;
 			$args['showSummary'] = ($data['showSummary']==1) ? 1 : 0;
 			$args['launchInNewWindow'] = ($data['launchInNewWindow']==1) ? 1 : 0;

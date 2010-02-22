@@ -5,7 +5,7 @@
 		<a href="<?=View::url('/profile',$profile->getUserID())?>"><?= $profile->getUsername()?></a>
 	</div>
 	<div style="margin-top:16px; padding-bottom:4px; margin-bottom:0px; font-weight:bold"><?=t('Member Since')?></div>
-	<?=date('F d, Y', strtotime($profile->getUserDateAdded('user')))?>
+	<?=date(DATE_APP_GENERIC_MDY_FULL, strtotime($profile->getUserDateAdded('user')))?>
 	
 	<? 
 	$u = new User();

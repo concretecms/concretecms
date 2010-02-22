@@ -383,7 +383,7 @@ $("input[name=vRemove]").click(function() {
 			print $v->getVersionApproverUserName();
 			
 			?></td>
-		<td><?=date('m/d/Y g:i A', strtotime($v->getVersionDateCreated('user')))?></td>
+		<td><?=date(DATE_APP_PAGE_VERSIONS, strtotime($v->getVersionDateCreated('user')))?></td>
 	</tr>	
 	<? } ?>
 	</table>
@@ -403,7 +403,7 @@ $("input[name=vRemove]").click(function() {
 
 			<div>
 				<strong class="important"><?=t('DELETION')?></strong>
-				<?=t('(Marked by: <strong>%s</strong> at <strong>%s</strong>)',$ud->getUserName(),$c->getPendingActionDateTime())?>
+				<?=t('(Marked by: <strong>%s</strong> on <strong>%s</strong>)',$ud->getUserName(), date(DATE_APP_PAGE_VERSIONS, strtotime($c->getPendingActionDateTime())))?>
 			</div>
 
 			<? if ($cp->canApproveCollection()) { ?>
@@ -439,7 +439,7 @@ $("input[name=vRemove]").click(function() {
 
 			<div>
 				<strong class="important"><?=t('MOVE')?></strong>  
-				<?=t('(Marked by: <strong>%s</strong> at <strong>%s</strong>)',$ud->getUserName(),$c->getPendingActionDateTime() )?>
+				<?=t('(Marked by: <strong>%s</strong> on <strong>%s</strong>)',$ud->getUserName(), date(DATE_APP_PAGE_VERSIONS, strtotime($c->getPendingActionDateTime()) ))?>
 			</div>
 			<? $nc = Page::getByID($c->getPendingActionTargetCollectionID(), 'ACTIVE'); ?>
 				<? if (is_object($nc)) { ?>
