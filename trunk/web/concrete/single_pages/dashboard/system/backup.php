@@ -122,7 +122,7 @@ if (count($backups) > 0) {
 </tr>
    <?php  foreach ($backups as $arr_bkupInf) { ?>
    <tr> 
-      <td style="white-space: nowrap"><?= date('F, j Y \a\t g:i a', strtotime($arr_bkupInf['date'])) ?></td>
+      <td style="white-space: nowrap"><?= date(DATE_APP_GENERIC_MDYT_FULL, strtotime($arr_bkupInf['date'])) ?></td>
       <td width="100%"><?= $arr_bkupInf['file'];?></td>
       <td><?=$ifHelper->button_js(t('Download'), 'window.location.href=\'' . $this->action('download', $arr_bkupInf['file']) . '\''); ?></td>
       <td>

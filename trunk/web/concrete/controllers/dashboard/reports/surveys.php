@@ -7,6 +7,10 @@ Loader::block('survey');
 	Example Output: 3/11/2009 at 3:20 pm */
 function formatDate($InputTime) {
 	$dh = Loader::helper('date');
+	if (defined('DATE_APP_SURVEY_RESULTS')) {
+		return date(DATE_APP_SURVEY_RESULTS, strtotime($InputTime));
+	}
+	
 	$InputTime = $dh->getLocalDateTime($InputTime);
 	$timestamp = strtotime($InputTime);
 	if ($timestamp) { // If today

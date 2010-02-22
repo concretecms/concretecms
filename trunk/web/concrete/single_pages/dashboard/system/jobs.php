@@ -143,14 +143,14 @@ $ih = Loader::helper('concrete/interface');
 			<td id="jDateLastRun<?=$jobItem['jID']?>">
 				<?
 				if($jobItem['jStatus']=='RUNNING'){
-					$runtime=date('H:i:s A', strtotime($jobItem['jDateLastRun']) );
+					$runtime=date(DATE_APP_GENERIC_TS, strtotime($jobItem['jDateLastRun']) );
 					echo ("<strong>");
 					echo t("Currently Running (Since %s)",$runtime);					
 					echo ("</strong>");
 				}elseif($jobItem['jDateLastRun'] == '' || substr($jobItem['jDateLastRun'],0,4)=='0000'){
 					echo t('Never');
 				}else{
-					$runtime=date('n/j/y \a\t g:i A', strtotime($jobItem['jDateLastRun']) );
+					$runtime=date(DATE_APP_GENERIC_MDY . t(' \a\t ') . DATE_APP_GENERIC_TS, strtotime($jobItem['jDateLastRun']) );
 					echo $runtime;
 				}
 				?>

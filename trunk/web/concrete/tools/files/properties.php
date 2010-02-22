@@ -230,7 +230,7 @@ if (!$previewMode) {
 </tr>
 <tr>
 	<th><?=t('Date Added')?></th>
-	<td colspan="2"><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $f->getDateAdded())?></td>
+	<td colspan="2"><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), date(DATE_APP_FILE_PROPERTIES, strtotime($f->getDateAdded())))?></td>
 </tr>
 <?
 Loader::model("file_storage_location");
@@ -365,7 +365,7 @@ foreach($attribs as $at) {
 					?>
 					</td>
 				<td><?=$fvv->getAuthorName()?></td>
-				<td><?=$fvv->getDateAdded()?></td>
+				<td><?=date(DATE_APP_FILE_VERSIONS, strtotime($fvv->getDateAdded()))?></td>
 				<? if ($fp->canAdmin()) { ?>
 					<? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?>
 						<td>&nbsp;</td>
@@ -416,7 +416,7 @@ foreach($attribs as $at) {
 				} 
 				?>
 			</td>
-			<td><?=$download['timestamp']?></td>
+			<td><?=date(DATE_APP_FILE_DOWNLOAD, strtotime($download['timestamp']))?></td>
 			<td><?=intval($download['fvID'])?></td>
 		</tr>
 		<? } ?>

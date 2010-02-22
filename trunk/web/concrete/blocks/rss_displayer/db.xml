@@ -9,6 +9,8 @@
 		</field> 			
 		<field name="url" type="C" size="255">
 		</field> 		
+		<field name="dateFormat" type="C" size="100">
+		</field> 		
 		<field name="itemsToDisplay" type="I">
 			<unsigned />
 			<default value="5" />

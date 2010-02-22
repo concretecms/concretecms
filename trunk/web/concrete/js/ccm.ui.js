@@ -210,8 +210,12 @@ ccm_hideHighlighter = function() {
 }
 
 ccm_addError = function(err) {
+	if (!ccm_isBlockError) {
+		ccm_blockError += '<ul>';
+	}
+	
 	ccm_isBlockError = true;
-	ccm_blockError += err;
+	ccm_blockError += "<li>" + err + "</li>";;
 }
 
 ccm_resetBlockErrors = function() {
@@ -760,7 +764,7 @@ ccm_blockFormSubmit = function() {
 		window.ccmValidateBlockForm();
 		if (ccm_isBlockError) {
 			if(ccm_blockError) {
-				ccmAlert.notice(ccmi18n.error, '<ul><li>' + ccm_blockError + '</li></ul>');
+				ccmAlert.notice(ccmi18n.error, ccm_blockError + '</ul>');
 			}
 			ccm_resetBlockErrors();
 			return false;

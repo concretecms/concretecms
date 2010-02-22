@@ -75,8 +75,8 @@ if (isset($_REQUEST['searchInstance'])) {
 			<? if (!$searchDialog) { ?><td class="ccm-<?=$searchInstance?>-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td><? } ?>
 			<td><?=$cobj->getCollectionTypeName()?></td>
 			<td class="ccm-page-list-name"><?=$txt->highlightSearch(wordwrap($cobj->getCollectionName(), 15, "\n", true), $keywords)?></td>
-			<td><?=date('M d, Y g:ia', strtotime($cobj->getCollectionDatePublic()))?></td>
-			<td><?=date('M d, Y g:ia', strtotime($cobj->getCollectionDateLastModified()))?></td>
+			<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES, strtotime($cobj->getCollectionDatePublic()))?></td>
+			<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES, strtotime($cobj->getCollectionDateLastModified()))?></td>
 			<td><?
 				$ui = UserInfo::getByID($cobj->getCollectionUserID());
 				print $ui->getUserName();

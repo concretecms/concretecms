@@ -2,6 +2,7 @@
 <div class="ccm-pane-controls">
 <?
 $sh = Loader::helper('concrete/dashboard/sitemap');
+$numChildren = $c->getNumChildren();
 ?>
 
 <style type="text/css">
@@ -56,7 +57,7 @@ if ($cp->canDeleteCollection()) { ?>
 					
 					if ($puID == $c->getPendingActionUserID()) { ?>
 						<br><br>
-						<?=t('You marked this page for deletion on <strong>%s</strong>', $c->getPendingActionDateTime())?><br><br>
+						<?=t('You marked this page for deletion on <strong>%s</strong>', date(DATE_APP_PAGE_VERSIONS, strtotime($c->getPendingActionDateTime())))?><br><br>
 						<form method="get" id="ccmDeletePageForm" action="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>">
 							<a href="javascript:void(0)" onclick="$('#ccmDeletePageForm').get(0).submit()" class="ccm-button-left"><span><?=t('Cancel')?></span></a>
 							<input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">

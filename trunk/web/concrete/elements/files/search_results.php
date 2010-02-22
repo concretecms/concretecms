@@ -84,8 +84,8 @@ if (isset($_REQUEST['searchInstance'])) {
 			<td><?=$fv->getType()?></td>
 			<td class="ccm-file-list-starred"><img src="<?=ASSETS_URL_IMAGES?>/icons/<?=$star_icon?>" height="16" width="16" border="0" class="ccm-star" /></td>			
 			<td class="ccm-file-list-filename"><?=$txt->highlightSearch(wordwrap($fv->getTitle(), 15, "\n", true), $keywords)?></td>
-			<td><?=date('M d, Y g:ia', strtotime($f->getDateAdded()))?></td>
-			<td><?=date('M d, Y g:ia', strtotime($fv->getDateAdded()))?></td>
+			<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, strtotime($f->getDateAdded()))?></td>
+			<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, strtotime($fv->getDateAdded()))?></td>
 			<td><?=$fv->getSize()?></td>
 			<? 
 			$slist = FileAttributeKey::getColumnHeaderList();
