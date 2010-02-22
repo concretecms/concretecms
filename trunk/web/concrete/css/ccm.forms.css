@@ -212,3 +212,9 @@ div.ccm-block-type-search {}
 ul#ccm-block-type-list .ccm-block-type-available {display: list-item !important}
 div.ccm-block-type-search {background: #E4F4FF url(../images/icons/search.png) no-repeat scroll 8px 14px; border-bottom: 1px solid #dedede; padding-bottom: 10px; padding-top: 10px; padding-left: 32px}
 a#ccm-block-type-clear-search {margin-left: 2px; display: none}
+
+
+.ccm-style-property-table td {padding-right: 8px !important; padding-bottom: 8px !important}
+
+div.ccm-styleEditPane {background-color: #efefef; border-left: 1px solid #dedede; border-right: 1px solid #dedede; border-bottom: 1px solid #dedede; padding: 8px}
+ul#ccm-styleEditPane-tabs {margin-bottom: 0px !important}

@@ -259,6 +259,10 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 			var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + resp.bID + '&arHandle=' + resp.arHandle + '&btask=view_edit_mode';	
 			$.get(action, 		
 				function(r) {
+					if ($("#ccm-scrapbook-list").length > 0) {
+						window.location.reload();
+					}
+
 					if (task == 'add') {
 						if ($("#a" + resp.aID + " div.ccm-area-styles").length > 0) {
 							$("#a" + resp.aID + " div.ccm-area-styles").append(r);
