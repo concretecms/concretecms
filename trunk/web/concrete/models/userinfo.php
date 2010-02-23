@@ -319,7 +319,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (is_object($ak)) {
 				$av = $this->getAttributeValueObject($ak);
 				if (is_object($av)) {
-					return $av->getValue($displayMode);
+					$args = func_get_args();
+					if (count($args) > 1) {
+						array_shift($args);
+						return call_user_func_array(array($av, 'getValue'), $args);						
+					} else {
+						return $av->getValue($displayMode);
+					}
 				}
 			}
 		}

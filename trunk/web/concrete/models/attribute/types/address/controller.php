@@ -119,7 +119,7 @@ class AddressAttributeTypeController extends AttributeTypeController  {
 	}
 	
 	public function getDisplayValue() {
-		$v = $this->getValue();
+		$v = Loader::helper('text')->entities($this->getValue());
 		$ret = nl2br($v);
 		return $ret;
 	}

@@ -11,7 +11,7 @@
         foreach($uaks as $ua) { ?>
             <div>
                 <label><?=$ua->getKeyName()?></label>
-                <?=$profile->getAttribute($ua, 'display'); ?>
+                <?=$profile->getAttribute($ua, 'displaySanitized', 'display'); ?>
             </div>
         <? } ?>		
         
