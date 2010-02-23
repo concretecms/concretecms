@@ -129,41 +129,29 @@ class Marketplace {
 
 	public function getAvailableMarketplaceItems($filterInstalled=true) {
 		Loader::model('marketplace_remote_item');
-		if (!function_exists('mb_detect_encoding')) {
-			return array();
-		}
 		
-		if (!is_array($addons)) {
-			$fh = Loader::helper('file'); 
-			if (!$fh) return array();
+		$fh = Loader::helper('file'); 
+		if (!$fh) return array();
 
-			// Retrieve the URL contents 
-			$csToken = Config::get('MARKETPLACE_SITE_TOKEN');
-			$csiURL = urlencode(BASE_URL . DIR_REL);
-			$url = MARKETPLACE_PURCHASES_LIST_WS."?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
-			$xml = $fh->getContents($url);
+		// Retrieve the URL contents 
+		$csToken = Config::get('MARKETPLACE_SITE_TOKEN');
+		$csiURL = urlencode(BASE_URL . DIR_REL);
+		$url = MARKETPLACE_PURCHASES_LIST_WS."?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
+		$json = $fh->getContents($url);
 
-			$addons=array();
-			if( $xml || strlen($xml) ) {
-				// Parse the returned XML file
-				$enc = mb_detect_encoding($xml);
-				$xml = mb_convert_encoding($xml, 'UTF-8', $enc); 
-				
-				try {
-					libxml_use_internal_errors(true);
-					$xmlObj = new SimpleXMLElement($xml);
-					foreach($xmlObj->addon as $addon){
-						$mi = new MarketplaceRemoteItem();
-						$mi->loadFromXML($addon);
-						$remoteCID = $mi->getRemoteCollectionID();
-						if (!empty($remoteCID)) {
-							$addons[$mi->getHandle()] = $mi;
-						}
-					}
-				} catch (Exception $e) {}
+		$addons=array();
+		
+		$objects = @Loader::helper('json')->decode($json);
+		try {
+			foreach($objects as $addon){
+				$mi = new MarketplaceRemoteItem();
+				$mi->setPropertiesFromJSONObject($addon);
+				$remoteCID = $mi->getRemoteCollectionID();
+				if (!empty($remoteCID)) {
+					$addons[$mi->getHandle()] = $mi;
+				}
 			}
-
-		}
+		} catch (Exception $e) {}
 
 		if ($filterInstalled && is_array($addons)) {
 			Loader::model('package');

@@ -21,7 +21,7 @@ class DashboardInstallController extends Controller {
 
 	}
 	
-	public function browse($what = 'themes') {
+	public function browse($what = 'themes', $set = 0) {
 		
 		$subnav = array(
 			array(View::url('/dashboard/install'), t('Installed and Available'), false),
@@ -32,7 +32,7 @@ class DashboardInstallController extends Controller {
 		Loader::model('marketplace_remote_item');
 		
 		$mri = new MarketplaceRemoteItemList();
-		
+		$mri->setItemsPerPage(9);
 		if ($what == 'addons') {
 			$sets = MarketplaceRemoteItemList::getItemSets('addons');
 		} else { 
@@ -47,16 +47,22 @@ class DashboardInstallController extends Controller {
 			}
 		}
 		
-		$mri->setIncludePreviouslyPurchasedItems(false);
+		$mri->setIncludeInstalledItems(false);
+		if ($set > 0) {
+			$mri->filterBySet($set);
+		}
 		$mri->setType($what);
 		$mri->execute();
 		
 		$items = $mri->getPage();
-		
-		exit;
+
+		$this->set('selectedSet', $set);
+		$this->set('list', $mri);
+		$this->set('items', $items);
 		$this->set('form', Loader::helper('form'));
 		$this->set('sets', $setsel);
 		$this->set('subnav', $subnav);
+		$this->set('type', $what);
 	}
 	
 	public function view() {
@@ -179,6 +185,18 @@ class DashboardInstallController extends Controller {
 		
 		if (!is_object($pkg)) {
 			$this->error->add(t('Invalid package.'));
+		}
+		
+		if (!$this->error->has()) {
+			if ($this->post('pkgMoveToTrash')) {
+				$r = $pkg->backup();
+				if (is_array($r)) {
+					$pe = Package::mapError($r);
+					foreach($pe as $ei) {
+						$this->error->add($ei);
+					}
+				}
+			}
 		}
 		
 		if (!$this->error->has()) {
