@@ -7,6 +7,9 @@ div.ccm-pagination { text-align:center; position: relative}
 div.ccm-pagination span.ccm-page-right {position: absolute; top: 0px; right: 0px;}
 div.ccm-pagination span.ccm-page-left {position: absolute; top: 0px; left: 0px}
 
+/* Layout */ 
+.ccm-layout .ccm-layout-cell{ overflow:hidden; }
+.ccm-layout-table .ccm-layout-col {float:left}
 
 /* global error styles */
 .ccm-error {font-weight: bold; color: #f00}
