@@ -47,6 +47,13 @@ class DashboardInstallController extends Controller {
 			}
 		}
 		
+		$mri->setIncludePreviouslyPurchasedItems(false);
+		$mri->setType($what);
+		$mri->execute();
+		
+		$items = $mri->getPage();
+		
+		exit;
 		$this->set('form', Loader::helper('form'));
 		$this->set('sets', $setsel);
 		$this->set('subnav', $subnav);

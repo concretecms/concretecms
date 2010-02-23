@@ -4,8 +4,11 @@ $ch = Loader::helper('concrete/interface');
 
 //marketplace
 if (ENABLE_MARKETPLACE_SUPPORT) {
-	$themesHelper = Loader::helper('concrete/marketplace/themes'); 
-	$availableThemes=$themesHelper->getPreviewableList();
+	Loader::model('marketplace_remote_item');
+	$mri = new MarketplaceRemoteItemList();
+	$mri->setType('themes');
+	$mri->execute();
+	$availableThemes = $mri->getPage();
 } else {
 	$availableThemes=array();
 }
