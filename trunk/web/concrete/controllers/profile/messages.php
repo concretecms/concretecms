@@ -13,6 +13,7 @@ class ProfileMessagesController extends ProfileEditController {
 		parent::on_start();
 		$this->error = Loader::helper('validation/error');
 		$this->set('vt', Loader::helper('validation/token'));
+		$this->set('text', Loader::helper('text'));
 	}
 	
 	public function view() {
