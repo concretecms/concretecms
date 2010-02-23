@@ -443,24 +443,4 @@ define('MARKETPLACE_CONTENT_LATEST_THRESHOLD', 10800); // every three hours
 define('MARKETPLACE_DIRNAME_THEME_PREVIEW', 'previewable_themes');
 define('MARKETPLACE_THEME_PREVIEW_ASSETS_URL', CONCRETE5_ORG_URL ."/". MARKETPLACE_DIRNAME_THEME_PREVIEW);
 
-
-# Knowledge Base Vars
-// REMOVE
-if (!defined('KNOWLEDGE_BASE_URL')){
-	define('KNOWLEDGE_BASE_URL', CONCRETE5_ORG_URL.'/help/kb/');
-}
-if (!defined('KNOWLEDGE_BASE_POST_URL')) {
-	define('KNOWLEDGE_BASE_POST_URL', CONCRETE5_ORG_URL.'/tools/open_support_ticket/');
-}
-if (!defined('KNOWLEDGE_BASE_TICKET_LIST_URL')) {
-	define('KNOWLEDGE_BASE_TICKET_LIST_URL', CONCRETE5_ORG_URL.'/tools/get_support_ticket_list/');
-}
-if (!defined('KNOWLEDGE_BASE_AUTH_URL')) {
-	define('KNOWLEDGE_BASE_AUTH_URL', CONCRETE5_ORG_URL.'/tools/authenticate_user/');
-}
-if (!defined('KNOWLEDGE_BASE_SUPPORT_LEARN_MORE_URL')) {
-	define('KNOWLEDGE_BASE_SUPPORT_LEARN_MORE_URL', CONCRETE5_ORG_URL.'/support/owner_support/');
-}
-// END REMOVE
-
 require_once(DIR_LIBRARIES_CORE . '/loader.php');

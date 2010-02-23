@@ -142,19 +142,3 @@
 	height:100%;
 	width:100%;
 }
-
-
-/* Help System */
-#ccm-supportWrap a { cursor:pointer }
-#ccm-supportWrap #answers{border:1px solid #999; height:300px; overflow:scroll; overflow-y:scroll; overflow-x:hidden}
-#ccm-supportWrap #answers a {color:inherit}
-#ccm-supportWrap #answers a .answer{border-bottom: 1px solid #ccc; padding:12px;}
-#ccm-supportWrap #answers a:hover .answer{ background:#eee }
-#ccm-supportWrap #answers .answer .title{font-weight:bold}
-#ccm-supportWrap .bigButtonWrap{margin: auto; text-align: center; width: 220px;}
-#ccm-supportWrap .bigButtonWrap span{width:190px}
-#ccm-supportWrap .alertMsg{ border:1px solid #999; background:#ffffaa; padding:4px }
-#ccm-supportWrap .ccm-throbber{width:20px; height:20px; background:url(../images/throbber_white_16.gif) center no-repeat; margin:10px; display:none; }
-#ccm-supportWrap table.ccm-dataGrid {background:#ddd}
-#ccm-supportWrap table.ccm-dataGrid td{ padding:2px; background:#fafafa; }
-#ccm-supportWrap table.ccm-dataGrid tr.header td{background:#eee; font-weight:bold}

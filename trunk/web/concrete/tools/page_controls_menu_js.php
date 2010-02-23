@@ -15,7 +15,6 @@ $cp = new Permissions($c);
 $valt = Loader::helper('validation/token');
 $sh = Loader::helper('concrete/dashboard/sitemap');
 $dh = Loader::helper('concrete/dashboard');
-$supportHelper=Loader::helper('concrete/support');
 $token = '&' . $valt->getParameter();
 
 if (isset($cp)) {

@@ -1,7 +1,6 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <? 
 Loader::block('autonav');
-$supportHelper=Loader::helper('concrete/support'); 
 $nh = Loader::helper('navigation');
 $dashboard = Page::getByPath("/dashboard");
 $nav = AutonavBlockController::getChildPages($dashboard);
@@ -31,7 +30,6 @@ $v->addHeaderItem($html->javascript('ccm.filemanager.js'));
 $v->addHeaderItem($html->javascript('ccm.themes.js'));
 $v->addHeaderItem($html->javascript('jquery.ui.js'));
 $v->addHeaderItem($html->javascript('jquery.colorpicker.js'));
-$v->addHeaderItem($html->javascript('ccm.popup_login.js'));
 
 if (LANGUAGE != 'en') {
 	$v->addHeaderItem($html->javascript('i18n/ui.datepicker-'.LANGUAGE.'.js'));
@@ -48,7 +46,6 @@ $v->addHeaderItem($html->css('ccm.calendar.css'));
 $v->addHeaderItem($html->css('ccm.dialog.css'));
 $v->addHeaderItem($html->css('jquery.rating.css'));
 $v->addHeaderItem($html->css('jquery.ui.css'));
-$v->addHeaderItem($html->css('ccm.popup_login.css'));
 
 require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); 
 

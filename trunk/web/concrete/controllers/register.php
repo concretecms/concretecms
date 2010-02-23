@@ -189,18 +189,6 @@ class RegisterController extends Controller {
 						$registerData['msg']=$this->getRegisterSuccessMsg();
 					}
 					$registerData['uID']=intval($u->uID);		
-					
-					if($_REQUEST['remote'] && intval($_REQUEST['timestamp'])){ 
-						$registerData['auth_token'] = 	UserInfo::generateAuthToken( $u->getUserName(), intval($_REQUEST['timestamp']) );
-						//is this user in a support group? 
-						foreach( RemoteMarketplaceHelper::getSupportGroups() as $group){
-							if($u->inGroup($group)){
-								$inValidSupportGroup=1;
-								break;
-							}
-						}
-						$registerData['in_support_group'] = intval($inValidSupportGroup);						
-					}
 				}
 				
 				$registerData['success']=1;
