@@ -28,7 +28,7 @@
  
  make sure new tables have good indexes on them 
  
- fix dragging one slider over the next issue !!!!!!
+ fix dragging one slider over the next issue !!!!!!!!!!!
  
  */
  

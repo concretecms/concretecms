@@ -252,8 +252,11 @@ function ccmLayout( layout_id, area, locked ){
 					this.layoutObj.resizeGrid(this.childNodes); 
 					var breakPoints=[];			
 					for(var i=0;i<this.childNodes.length;i++)
-						breakPoints.push(this.childNodes[i].style.left); 
-					this.layoutObj.ccmControls.find('.layout_col_break_points').val( breakPoints.join('|') ); 
+						breakPoints.push( parseFloat(this.childNodes[i].style.left.replace('%','')) );
+						
+					breakPoints.sort( function(a, b){ return (a-b); } );
+						
+					this.layoutObj.ccmControls.find('.layout_col_break_points').val( breakPoints.join('%|')+'%' ); 
 					this.layoutObj.quickSave();
 				},
 				slide:function(){ 			 
@@ -286,10 +289,17 @@ function ccmLayout( layout_id, area, locked ){
 
 		//column & table type
 		//if(this.ccmGrid.hasClass('ccm-layout-type-columns') || this.ccmGrid.hasClass('ccm-layout-type-table')){ 
+			var i, positions=[]; 					
+			for(i=0;i<childNodes.length;i++){ 
+				var pos=parseFloat(childNodes[i].style.left.replace('%',''));
+				positions.push(pos);
+			}
+			positions.sort( function(a, b){ return (a-b); } );
+		
 			var prevW=0;
 			var i; 					
-			for(i=0;i<childNodes.length;i++){ 
-				var pos=parseInt(childNodes[i].style.left.replace('%',''));
+			for(i=0;i<positions.length;i++){ 
+				var pos=positions[i];
 				var w=pos-prevW;
 				prevW+=w;
 				this.ccmGrid.find('#ccm-layout-'+this.layout_id+'-col-'+(i+1)).css('width',w+'%');						
