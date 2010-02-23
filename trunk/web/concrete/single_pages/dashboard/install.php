@@ -16,7 +16,16 @@ if ($this->controller->getTask() == 'browse') { ?>
 	if (!$mi->isConnected()) { ?>
 		<? Loader::element('dashboard/marketplace_connect_failed')?>
 	<? } else { ?>
-		<iframe width="100%" height="530px" style="border: 0px" src="<?=$url?>"></iframe>
+		
+		<form method="get">
+			
+			<div style="float: right"><h2><?=t('Filter By')?></h2>
+				<?=$form->select('marketplaceRemoteItemSetID', $sets)?>
+			</div>
+		
+		
+		</form>
+
 	<? } ?>
 
 	<div class="ccm-spacer">&nbsp;</div>

@@ -438,19 +438,19 @@ define('MARKETPLACE_ITEM_INFORMATION_WS', CONCRETE5_ORG_URL . '/marketplace/conn
 define('MARKETPLACE_ITEM_FREE_LICENSE_WS', CONCRETE5_ORG_URL . '/marketplace/connect/-/enable_free_license');
 define('MARKETPLACE_URL_CONNECT_TOKEN_NEW', CONCRETE5_ORG_URL.'/marketplace/connect/-/generate_token');
 
-# Marketplace Vars
-if (!defined("MARKETPLACE_URL_ADDONS_LANDING")) {
-	define('MARKETPLACE_URL_ADDONS_LANDING', CONCRETE5_ORG_URL.'/marketplace/remote/addons');
-}
-if (!defined("MARKETPLACE_URL_THEMES_LANDING")) {
-	define('MARKETPLACE_URL_THEMES_LANDING', CONCRETE5_ORG_URL.'/marketplace/remote/themes');
-}
+
+// REMOVE THESE
 if (!defined('MARKETPLACE_BLOCK_LIST_WS')) {
 	define('MARKETPLACE_BLOCK_LIST_WS', CONCRETE5_ORG_URL.'/marketplace/addons/-/get_remote_list');
 }
 if (!defined('MARKETPLACE_THEME_LIST_WS')) {
 	define('MARKETPLACE_THEME_LIST_WS', CONCRETE5_ORG_URL.'/marketplace/themes/-/get_remote_list/');
 }
+// END REMOVE
+
+
+define('MARKETPLACE_REMOTE_ITEM_LIST_WS', CONCRETE5_ORG_URL.'/marketplace/');
+
 if (!defined('MARKETPLACE_THEME_PREVIEW_URL')) {
 	define('MARKETPLACE_THEME_PREVIEW_URL', CONCRETE5_ORG_URL.'/tools/preview_theme/');
 }

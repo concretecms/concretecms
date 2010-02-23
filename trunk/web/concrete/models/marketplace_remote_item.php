@@ -159,6 +159,34 @@ class MarketplaceRemoteItem extends Object {
 	public static function getByID($mpID) {
 		return MarketplaceRemoteItem::getRemotePackageObject('mpID', $mpID);
 	}
-}	
+}
 
-?>
+class MarketplaceRemoteItemList extends ItemList {
+
+	public static function getItemSets($type) {
+		$url = MARKETPLACE_REMOTE_ITEM_LIST_WS;
+		$url .= $type . '/-/get_remote_item_sets';
+		$contents = Loader::helper("file")->getContents($url);
+		$sets = array();
+		if ($contents != '') {
+			$objects = @Loader::helper('json')->decode($contents);
+			if (is_array($objects)) {
+				foreach($objects as $obj) {
+					$mr = new MarketplaceRemoteItemSet();
+					$mr->id = $obj->marketplaceItemSetID;
+					$mr->name = $obj->marketplaceItemSetName;
+					$sets[] = $mr;
+				}
+			}
+		}
+		return $sets;
+	}	
+}
+
+class MarketplaceRemoteItemSet extends Object {
+	
+	public function getMarketplaceRemoteSetName() {return $this->name;}
+	public function getMarketplaceRemoteSetID() {return $this->id;}
+	
+
+}

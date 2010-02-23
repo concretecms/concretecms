@@ -838,9 +838,7 @@ ccm_getMarketplaceItem = function(args) {
 	$.getJSON(CCM_TOOLS_PATH + '/marketplace/connect', params, function(resp) {
 		jQuery.fn.dialog.hideLoader();
 		if (resp.isConnected) {
-			if (resp.purchaseRequired) {
-				alert("buy it foo");			
-			} else {
+			if (!resp.purchaseRequired) {
 				$.fn.dialog.open({
 					title: ccmi18n.community,
 					href:  CCM_TOOLS_PATH + '/marketplace/download?install=1&mpID=' + mpID,
