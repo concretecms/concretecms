@@ -39,7 +39,7 @@ class MarketplaceRemoteItem extends Object {
 	public function purchaseRequired() {
 		if ($this->price == '' || $this->price == '0' || $this->price == '0.00') {
 			return false;
-		} else if ($this->isLicensedToSite) {
+		} else if ($this->isLicensedToSite()) {
 			return false;	
 		} else {
 			return true;
@@ -152,7 +152,7 @@ class MarketplaceRemoteItem extends Object {
 
 class MarketplaceRemoteItemList extends ItemList {
 	
-	protected $includePreviouslyPurchasedItems = false;
+	protected $includeInstalledItems = true;
 	protected $params = array();
 	protected $type = 'themes';
 	protected $itemsPerPage = 20;
@@ -176,8 +176,8 @@ class MarketplaceRemoteItemList extends ItemList {
 		return $sets;
 	}	
 	
-	public function setIncludePreviouslyPurchasedItems($pp) {
-		$this->includePreviouslyPurchasedItems = $pp;
+	public function setIncludeInstalledItems($pp) {
+		$this->includeInstalledItems = $pp;
 	}
 	
 	public function setType($type) {
@@ -192,32 +192,46 @@ class MarketplaceRemoteItemList extends ItemList {
 		$params = $this->params;
 		$params['version'] = APP_VERSION;
 		$params['itemsPerPage'] = $this->itemsPerPage;
-		if ($this->includePreviouslyPurchasedItems) {
-			$params['includePreviouslyPurchased'] = 1;
+		Loader::library("marketplace");
+		$mi = Marketplace::getInstance();
+		$params['csToken'] = $mi->getSiteToken();
+		
+		if ($this->includeInstalledItems) {
+			$params['includeInstalledItems'] = 1;
 		} else {
-			$params['includePreviouslyPurchased'] = 0;
+			$params['includeInstalledItems'] = 0;
+			$list = Package::getInstalledList();
+			foreach($list as $pkg) {
+				$params['installedPackages'][] = $pkg->getPackageHandle();
+			}
+		}
+
+		if (isset($_REQUEST[$this->queryStringPagingVariable])) {
+			$params[$this->queryStringPagingVariable] = $_REQUEST[$this->queryStringPagingVariable];
 		}
 		
-		$url = MARKETPLACE_REMOTE_ITEM_LIST_WS . $this->type . '/-/get_remote_list';
-		$i = 0; 
-		foreach($params as $key => $value) {
-			$url .= ($i == 0) ? '?' : '&';
-			$url .= $key . '=' . $value;
-			$i++;
-		}
+		$uh = Loader::helper('url');
 		
+		$url = $uh->buildQuery(MARKETPLACE_REMOTE_ITEM_LIST_WS . $this->type . '/-/get_remote_list', $params);
+
 		$r = Loader::helper('file')->getContents($url);
-		$items = @Loader::helper('json')->decode($r);
+		$r2 = @Loader::helper('json')->decode($r);
+				
+		$total = 0;
+		$items = array();
 		
-		if (!is_array($items)) {
-			$items = array();
+		if (is_object($r2)) {
+			$items = $r2->items;
+			$total = $r2->total;
 		}
-		
+
+		$this->total = $total;
 		$this->setItems($items);
 	}
 	
 	public function get($itemsToGet = 0, $offset = 0) {
-		$items = parent::get($itemsToGet, $offset);
+		$this->start = $offset;
+		$items = $this->items;
 		$marketplaceItems = array();
 		foreach($items as $stdObj) {
 			$mi = new MarketplaceRemoteItem();

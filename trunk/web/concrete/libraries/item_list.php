@@ -209,8 +209,7 @@ class ItemList {
 	protected $queryStringSortVariable = 'ccm_order_by';
 	protected $queryStringSortDirectionVariable = 'ccm_order_dir';
 	protected $enableStickySearchRequest = false;
-	
-	private $items = array();
+	protected $items = array();
 	
 	public function enableStickySearchRequest() {
 		$this->enableStickySearchRequest = true;

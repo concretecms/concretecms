@@ -8,7 +8,7 @@ if(ENABLE_MARKETPLACE_SUPPORT){
 	$mri = new MarketplaceRemoteItemList();
 	$mri->setType('addons');
 	$mri->execute();
-	$mri->setIncludePreviouslyPurchasedItems(true);
+	$mri->setIncludeInstalledItems(true);
 	$marketplaceBlockTypes = $mri->getPage();
 }else{
 	$marketplaceBlockTypes=array();

@@ -19,10 +19,65 @@ if ($this->controller->getTask() == 'browse') { ?>
 		
 		<form method="get">
 			
-			<div style="float: right"><h2><?=t('Filter By')?></h2>
-				<?=$form->select('marketplaceRemoteItemSetID', $sets)?>
+			<div><h3><?=t('Filter By')?></h3>
+				<?=$form->select('marketplaceRemoteItemSetID', $sets, $selectedSet, array('onchange' => 'window.location.href=\'' . $this->url('/dashboard/install/', 'browse', $type) . '\' + this.value'))?>
 			</div>
-		
+			
+			<br/><br/>
+			
+			<? if ($list->getTotal() > 0) { ?>
+				<?=$list->displaySummary()?>
+					
+				<table border="0" cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+					<?php 
+					$numCols=3;
+					$colCount=0;
+					foreach($items as $item){ 
+						if($colCount==$numCols){
+							echo '</tr><tr>';
+							$colCount=0;
+						}
+						if ($item->purchaseRequired()) {
+							$buttonText = t('Purchase');
+							$buttonAction = 'javascript:window.open(\'' . $item->getRemoteURL() . '\')';
+						} else {
+							$buttonText = t('Install');
+							if ($type == 'themes') {
+								$buttonAction = 'javascript:ccm_getMarketplaceItem({mpID: \'' . $item->getMarketplaceItemID() . '\', onComplete: function() {window.location.href=\'' . $this->url('/dashboard/pages/themes') . '\'}})';
+							} else {
+								$buttonAction = 'javascript:ccm_getMarketplaceItem({mpID: \'' . $item->getMarketplaceItemID() . '\', onComplete: function() {window.location.href=\'' . $this->url('/dashboard/install') . '\'}})';					
+							}
+						}
+						?>
+						<td valign="top" width="<?php echo round(100/$numCols)?>%" style="padding-bottom: 20px"> 
+							<div><img style="margin-bottom: 8px" src="<?php echo $item->getRemoteIconURL() ?>" /></div>
+							<h2><?php echo $item->getName() ?>
+							<? if ($type == 'themes') { ?>
+							<a title="<?php echo t('Preview')?>" onclick="ccm_previewMarketplaceTheme(1, <?php echo intval($item->getRemoteCollectionID())?>,'<?php echo addslashes($item->getName()) ?>','<?php echo addslashes($item->getHandle()) ?>')" 
+								href="javascript:void(0)" class="preview"><img src="<?php echo ASSETS_URL_IMAGES?>/icons/magnifying.png" alt="<?php echo t('Preview')?>" /></a>
+							<? } ?>
+							</h2>						
+							<div><?php echo $item->getDescription() ?></div>
+							<div style="margin-top: 8px"><strong><?=t('Price')?></strong> <?=((float) $item->getPrice() == 0) ? t('Free!') : $item->getPrice()?></div>
+							<div style="margin-top: 8px">
+							<?=$ch->button_js(t('More Information'), 'window.open(\'' . $item->getRemoteURL() . '\')', 'left');?>
+							<?=$ch->button_js($buttonText, $buttonAction, 'left')?>
+							</div>
+						</td>
+					<?php   $colCount++;
+					}
+					for($i=$colCount;$i<$numCols;$i++){
+						echo '<td>&nbsp;</td>'; 
+					} 
+					?>
+					</tr>
+				</table>
+			
+				<? $list->displayPaging()?>
+			<? } else { ?>
+				<p><?=t('No results found.')?></p>
+			<? } ?>
 		
 		</form>
 
@@ -46,6 +101,8 @@ if ($this->controller->getTask() == 'browse') { ?>
 	<?=$valt->output('uninstall')?>
 	<input type="hidden" name="pkgID" value="<?=$pkg->getPackageID()?>" />
 	
+	<h2><?=t('Items To Uninstall')?></h2>
+	
 	<p><?=t('Uninstalling %s will remove the following data from your system.', $pkg->getPackageName())?></p>
 		
 		<? foreach($items as $k => $itemArray) { 
@@ -53,7 +110,7 @@ if ($this->controller->getTask() == 'browse') { ?>
 				continue;
 			}
 			?>
-			<h2><?=$text->unhandle($k)?></h2>
+			<h3><?=$text->unhandle($k)?></h3>
 			
 			<? foreach($itemArray as $item) { ?>
 				<?=Package::getItemName($item)?><br/>			
@@ -63,6 +120,11 @@ if ($this->controller->getTask() == 'browse') { ?>
 			
 		<? } ?>
 
+
+		<h2><?=t('Move package to trash directory on server?')?></h2>
+		<p><?=Loader::helper('form')->checkbox('pkgMoveToTrash', 1)?> <?=Loader::helper('form')->label('pkgMoveToTrash', t('Yes, remove the package\'s directory from of the installation directory.'))?></p>
+		
+		
 		<? Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle()); ?>
 		
 		
