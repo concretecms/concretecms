@@ -796,21 +796,7 @@ ccm_headerMenuPreloads = function(){
 
 ccm_setupDashboardHeaderMenu = function(){	
 	ccm_headerMenuPreloads();
-	
-	var helpEl=$("a#ccm-nav-dashboard-help");
-	if(!helpEl || !helpEl.html()) return false;
-	
-	if(helpEl.attr('helpwaiting')==1) 
-		setTimeout('ccm_support.helpPulse();',1500);
-	helpEl.click(function() { 
-		$(this).addClass('ccm-nav-loading'); 
-		try{
-			if($(this).attr('helpwaiting')==1) 
-				 ccm_support.showMyTickets();
-			else ccm_support.show();
-		}catch(e){alert(e.message);}
-		return false;
-	});		
+	$("#ccm-nav-dashboard-help").dialog();
 }
 
 ccm_dashboardRequestRemoteInformation = function() {
@@ -872,6 +858,7 @@ ccm_setupHeaderMenu = function() {
 	$("ul#ccm-system-nav a").click(function() {
 		$(this).addClass('ccm-nav-loading');
 	});
+	$("#ccm-nav-help").dialog();
 	$("a#ccm-nav-dashboard").click(function() {
 		var dash = $(this).attr('href');
 		setTimeout(function() {
@@ -880,16 +867,6 @@ ccm_setupHeaderMenu = function() {
 		}, 50);
 		
 	});
-	
-	var helpEl=$("a#ccm-nav-help");
-	if(helpEl.attr('helpwaiting')==1) 
-		setTimeout('ccm_support.helpPulse()',1500);
-	helpEl.click(function() { 
-		$(this).addClass('ccm-nav-loading'); 
-		if($(this).attr('helpwaiting')==1) 
-			 ccm_support.showMyTickets();
-		else ccm_support.show();
-	});	
 	
 	$("a#ccm-nav-logout").click(function() {
 		var href = $(this).attr('href');
@@ -1297,9 +1274,6 @@ var ccm_support = {
 	helpIconOrigClr:'',
 	helpPulse:function(){
 		var el=document.getElementById('ccm-nav-help');
-		if(!el) el=document.getElementById('ccm-nav-dashboard-help'); 
-		el=$(el);
-		this.helpIconOrigClr=el.css('background-color');
 		
 		el.css('background-color','#fafafa');
 		el.animate({backgroundColor:"#ffa"},'','',function(){

@@ -44,11 +44,6 @@ if ($akk) { ?><meta name="keywords" content="<?=htmlspecialchars($akk, ENT_COMPA
 <?
 	echo("var CCM_DISPATCHER_FILENAME = '" . DIR_REL . '/' . DISPATCHER_FILENAME . "';\r");
 	echo("var CCM_CID = ".($cID?$cID:0).";\r");
-	if (MENU_FEEDBACK_DISPLAY) {
-		echo("var CCM_FEEDBACK = true;\r");
-	} else {
-		echo("var CCM_FEEDBACK = false;\r");
-	}
 	if (isset($isEditMode)) {
 		echo("var CCM_EDIT_MODE = {$isEditMode};\r");
 	}

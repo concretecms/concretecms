@@ -86,7 +86,7 @@ menuHTML += '<ul id="ccm-system-nav">';
 <? if ($dh->canRead()) { ?>
 	menuHTML += '<li><a id="ccm-nav-dashboard" href="<?=View::url('/dashboard')?>"><?=t('Dashboard')?></a></li>';
 <? } ?>
-menuHTML += '<li><a id="ccm-nav-help" helpurl="<?=MENU_HELP_URL?>" href="javascript:void(0)" helpwaiting="<?=ConcreteSupportHelper::hasNewHelpResponse() ?>"><?=t('Help')?></a></li>';
+menuHTML += '<li><a id="ccm-nav-help" dialog-title="<?=t('Help')?>" dialog-on-open="$(\'#ccm-nav-help\').removeClass(\'ccm-nav-loading\')" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/help/" dialog-width="500" dialog-height="350" dialog-modal="false"><?=t('Help')?></a></li>';
 menuHTML += '<li class="ccm-last"><a id="ccm-nav-logout" href="<?=View::url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>';
 menuHTML += '</ul>';
 menuHTML += '</div>';
