@@ -89,7 +89,7 @@ $(function() {
 <div id="ccm-system-nav-wrapper2">
 <ul id="ccm-system-nav">
 <li><a id="ccm-nav-return" href="<?=$this->url('/')?>"><?=t('Return to Website')?></a></li>
-<li><a id="ccm-nav-dashboard-help" href="<?=MENU_HELP_URL?>"  helpwaiting="<?=(ConcreteSupportHelper::hasNewHelpResponse())?1:0 ?>"><?=t('Help')?></a></li>
+<li><a id="ccm-nav-dashboard-help" dialog-title="<?=t('Help')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/help/" dialog-width="500" dialog-height="350" dialog-modal="false"><?=t('Help')?></a></li>
 <li class="ccm-last"><a id="ccm-nav-logout" href="<?=$this->url('/login/', 'logout')?>"><?=t('Sign Out')?></a></li>
 </ul>
 </div>

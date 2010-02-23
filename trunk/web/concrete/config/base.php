@@ -99,14 +99,6 @@ if (!defined("LANGUAGE")) {
 
 define("LANGUAGE_DOMAIN_CORE", "messages");
 
-# Debug Menu - Determines whether a "Submit Feedback/Bug/Question" is active */
-# Currently Concrete5 does not include this capability but it will likely come back.
-define('MENU_FEEDBACK_DISPLAY', 1);
-define('MENU_FEEDBACK_URL', 'http://www.concretecms.com/tools/process_feedback.php');
-if (!defined("MENU_HELP_URL")) {
-	define('MENU_HELP_URL', 'http://www.concrete5.org/help/');
-}
-
 # Path to the core files shared between all concrete 5 installations
 if (!defined('DIR_BASE_CORE')) {
 	define('DIR_BASE_CORE', dirname(__FILE__) . '/..');
@@ -437,19 +429,11 @@ define('MARKETPLACE_PURCHASES_LIST_WS', CONCRETE5_ORG_URL . '/marketplace/connec
 define('MARKETPLACE_ITEM_INFORMATION_WS', CONCRETE5_ORG_URL . '/marketplace/connect/-/get_item_information');
 define('MARKETPLACE_ITEM_FREE_LICENSE_WS', CONCRETE5_ORG_URL . '/marketplace/connect/-/enable_free_license');
 define('MARKETPLACE_URL_CONNECT_TOKEN_NEW', CONCRETE5_ORG_URL.'/marketplace/connect/-/generate_token');
-
-
-// REMOVE THESE
-if (!defined('MARKETPLACE_BLOCK_LIST_WS')) {
-	define('MARKETPLACE_BLOCK_LIST_WS', CONCRETE5_ORG_URL.'/marketplace/addons/-/get_remote_list');
-}
-if (!defined('MARKETPLACE_THEME_LIST_WS')) {
-	define('MARKETPLACE_THEME_LIST_WS', CONCRETE5_ORG_URL.'/marketplace/themes/-/get_remote_list/');
-}
-// END REMOVE
-
-
 define('MARKETPLACE_REMOTE_ITEM_LIST_WS', CONCRETE5_ORG_URL.'/marketplace/');
+
+if (!defined("MENU_HELP_URL")) {
+	define('MENU_HELP_URL', CONCRETE5_ORG_URL . '/tools/help_overlay/');
+}
 
 if (!defined('MARKETPLACE_THEME_PREVIEW_URL')) {
 	define('MARKETPLACE_THEME_PREVIEW_URL', CONCRETE5_ORG_URL.'/tools/preview_theme/');
@@ -459,7 +443,9 @@ define('MARKETPLACE_CONTENT_LATEST_THRESHOLD', 10800); // every three hours
 define('MARKETPLACE_DIRNAME_THEME_PREVIEW', 'previewable_themes');
 define('MARKETPLACE_THEME_PREVIEW_ASSETS_URL', CONCRETE5_ORG_URL ."/". MARKETPLACE_DIRNAME_THEME_PREVIEW);
 
+
 # Knowledge Base Vars
+// REMOVE
 if (!defined('KNOWLEDGE_BASE_URL')){
 	define('KNOWLEDGE_BASE_URL', CONCRETE5_ORG_URL.'/help/kb/');
 }
@@ -475,5 +461,6 @@ if (!defined('KNOWLEDGE_BASE_AUTH_URL')) {
 if (!defined('KNOWLEDGE_BASE_SUPPORT_LEARN_MORE_URL')) {
 	define('KNOWLEDGE_BASE_SUPPORT_LEARN_MORE_URL', CONCRETE5_ORG_URL.'/support/owner_support/');
 }
+// END REMOVE
 
 require_once(DIR_LIBRARIES_CORE . '/loader.php');
