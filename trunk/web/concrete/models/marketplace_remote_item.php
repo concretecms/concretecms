@@ -19,32 +19,23 @@ class MarketplaceRemoteItem extends Object {
 	protected $remoteIconURL='';
 	protected $isLicensedToSite = false;
 	
-	function loadFromXML( $options=array() ){
-		if($options['mpID']) $this->mpID=(string) $options['mpID'];
-		if($options['name']) $this->name=(string) $options['name'];
-		if($options['cID']) $this->remoteCID=(string) $options['cID'];
-		if($options['handle']) $this->handle= (string) $options['handle'];
-		if($options['description']) $this->description= (string) $options['description'];
-		if($options['url']) $this->remoteURL= (string) $options['url']; 
-		if($options['file']) $this->remoteFileURL= (string) $options['file']; 
-		if($options['icon']) $this->remoteIconURL= (string) $options['icon']; 
-		if($options['price']) $this->price= (string) $options['price']; 
-		if($options['version']) $this->version = (string) $options['version'];
-		if($options['listicon']) $this->remoteListIconURL = (string) $options['listicon'];
-		if($options['islicensed'] == 1) $this->isLicensedToSite = true;
-	}	
+	public function setPropertiesFromJSONObject($obj) {
+		foreach($obj as $prop => $value) {
+			$this->{$prop} = $value;
+		}
+	}
 
 	public function getMarketplaceItemID() {return $this->mpID;}
 	public function getHandle() { return $this->handle; }
 	public function getName(){ return $this->name; }
 	public function getDescription() {return $this->description;}
 	public function getPrice(){ return sprintf("%.2f",floatval($this->price)); }
-	public function getRemoteCollectionID(){ return $this->remoteCID; }
-	public function getRemoteURL(){ return $this->remoteURL; }
-	public function getRemoteFileURL(){ return $this->remoteFileURL; }
-	public function getRemoteIconURL(){ return $this->remoteIconURL; }
-	public function getRemoteListIconURL() {return $this->remoteListIconURL;}
-	public function isLicensedToSite() {return $this->isLicensedToSite;}
+	public function getRemoteCollectionID(){ return $this->cID; }
+	public function getRemoteURL(){ return $this->url; }
+	public function getRemoteFileURL(){ return $this->file; }
+	public function getRemoteIconURL(){ return $this->icon; }
+	public function getRemoteListIconURL() {return $this->listicon;}
+	public function isLicensedToSite() {return $this->islicensed;}
 	public function purchaseRequired() {
 		if ($this->price == '' || $this->price == '0' || $this->price == '0.00') {
 			return false;
@@ -133,19 +124,17 @@ class MarketplaceRemoteItem extends Object {
 		$csToken = Config::get('MARKETPLACE_SITE_TOKEN');
 		$csiURL = urlencode(BASE_URL . DIR_REL);
 		$url = MARKETPLACE_ITEM_INFORMATION_WS."?" . $method . "=" . $identifier . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
-		$xml = $fh->getContents($url);
+		$json = $fh->getContents($url);
 
 		try {
 			// Parse the returned XML file
-			$enc = mb_detect_encoding($xml);
-			$xml = mb_convert_encoding($xml, 'UTF-8', $enc); 
-			
-			libxml_use_internal_errors(true);
-			$xmlObj = new SimpleXMLElement($xml);
-			$mi = new MarketplaceRemoteItem();
-			$mi->loadFromXML($xmlObj);
-			if (is_object($mi) && $mi->getMarketplaceItemID() > 0) {
-				return $mi;
+			$obj = @Loader::helper('json')->decode($json);
+			if (is_object($obj)) {
+				$mi = new MarketplaceRemoteItem();
+				$mi->setPropertiesFromJSONObject($obj);
+				if ($mi->getMarketplaceItemID() > 0) {
+					return $mi;
+				}
 			}
 		} catch (Exception $e) {
 			throw new Exception(t('Unable to connect to marketplace to retrieve item'));
@@ -164,6 +153,9 @@ class MarketplaceRemoteItem extends Object {
 class MarketplaceRemoteItemList extends ItemList {
 	
 	protected $includePreviouslyPurchasedItems = false;
+	protected $params = array();
+	protected $type = 'themes';
+	protected $itemsPerPage = 20;
 	
 	public static function getItemSets($type) {
 		$url = MARKETPLACE_REMOTE_ITEM_LIST_WS;
@@ -184,9 +176,58 @@ class MarketplaceRemoteItemList extends ItemList {
 		return $sets;
 	}	
 	
-	public function setInludePreviouslyPurchasedItems($pp) {
-		$this->previouslyPurchasedItems = $pp;
+	public function setIncludePreviouslyPurchasedItems($pp) {
+		$this->includePreviouslyPurchasedItems = $pp;
 	}
+	
+	public function setType($type) {
+		$this->type = $type;
+	}
+	
+	public function filterBySet($set) {
+		$this->params['set'] = $set;
+	}
+	
+	public function execute() {
+		$params = $this->params;
+		$params['version'] = APP_VERSION;
+		$params['itemsPerPage'] = $this->itemsPerPage;
+		if ($this->includePreviouslyPurchasedItems) {
+			$params['includePreviouslyPurchased'] = 1;
+		} else {
+			$params['includePreviouslyPurchased'] = 0;
+		}
+		
+		$url = MARKETPLACE_REMOTE_ITEM_LIST_WS . $this->type . '/-/get_remote_list';
+		$i = 0; 
+		foreach($params as $key => $value) {
+			$url .= ($i == 0) ? '?' : '&';
+			$url .= $key . '=' . $value;
+			$i++;
+		}
+		
+		$r = Loader::helper('file')->getContents($url);
+		$items = @Loader::helper('json')->decode($r);
+		
+		if (!is_array($items)) {
+			$items = array();
+		}
+		
+		$this->setItems($items);
+	}
+	
+	public function get($itemsToGet = 0, $offset = 0) {
+		$items = parent::get($itemsToGet, $offset);
+		$marketplaceItems = array();
+		foreach($items as $stdObj) {
+			$mi = new MarketplaceRemoteItem();
+			$mi->setPropertiesFromJSONObject($stdObj);
+			$marketplaceItems[] = $mi;
+		}
+		return $marketplaceItems;
+	}
+	
+	
 	
 }
 

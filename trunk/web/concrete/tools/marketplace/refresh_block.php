@@ -4,8 +4,12 @@ $ch = Loader::helper('concrete/interface');
 
 //marketplace
 if(ENABLE_MARKETPLACE_SUPPORT){
-	$marketplaceBlocksHelper = Loader::helper('concrete/marketplace/blocks'); 
-	$marketplaceBlockTypes = $marketplaceBlocksHelper->getPreviewableList();
+	Loader::model('marketplace_remote_item');
+	$mri = new MarketplaceRemoteItemList();
+	$mri->setType('addons');
+	$mri->execute();
+	$mri->setIncludePreviouslyPurchasedItems(true);
+	$marketplaceBlockTypes = $mri->getPage();
 }else{
 	$marketplaceBlockTypes=array();
 }
