@@ -162,7 +162,9 @@ class MarketplaceRemoteItem extends Object {
 }
 
 class MarketplaceRemoteItemList extends ItemList {
-
+	
+	protected $includePreviouslyPurchasedItems = false;
+	
 	public static function getItemSets($type) {
 		$url = MARKETPLACE_REMOTE_ITEM_LIST_WS;
 		$url .= $type . '/-/get_remote_item_sets';
@@ -181,6 +183,11 @@ class MarketplaceRemoteItemList extends ItemList {
 		}
 		return $sets;
 	}	
+	
+	public function setInludePreviouslyPurchasedItems($pp) {
+		$this->previouslyPurchasedItems = $pp;
+	}
+	
 }
 
 class MarketplaceRemoteItemSet extends Object {

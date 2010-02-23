@@ -103,14 +103,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 */		
 		public function getFormattedMessageBody() {
 			$msgBody = $this->getMessageBody();
-			$msgBody = nl2br($msgBody);
+			$txt = Loader::helper('text');
 			
 			$repliedPos = strpos($msgBody, $this->getMessageDelimiter());
 			if ($repliedPos > -1) {
 				$repliedText = substr($msgBody, $repliedPos);
 				$messageText = substr($msgBody, 0, $repliedPos);
-				$msgBody = $messageText . '<div class="ccm-profile-message-replied">' . $repliedText . '</div>';
+				$msgBody = $messageText . '<div class="ccm-profile-message-replied">' . nl2br($txt->entities($repliedText)) . '</div>';
 				$msgBody = str_replace($this->getMessageDelimiter(), '<hr />', $msgBody);
+			} else {
+			    $msgBody = nl2br($txt->entities($msgBody));		
 			}
 			
 			return $msgBody;
