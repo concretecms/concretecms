@@ -15,6 +15,7 @@ if ($mi->isConnected() && isset($_REQUEST['mpID'])) {
 	if (is_object($mr)) {
 		$obj->purchaseRequired = $mr->purchaseRequired();
 	}
+	$obj->remoteURL = $mr->getRemoteURL();
 	// if purchase is NOT required then we also try and add a license
 	// don't worry - this is also verified on the server
 	if (!$mr->purchaseRequired()) {

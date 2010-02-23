@@ -29,16 +29,27 @@ class DashboardInstallController extends Controller {
 			array(View::url('/dashboard/install', 'browse', 'addons'), t('More Addons'), $what == 'addons')
 		);
 		
-		$url = MARKETPLACE_URL_THEMES_LANDING;
+		Loader::model('marketplace_remote_item');
+		
+		$mri = new MarketplaceRemoteItemList();
+		
 		if ($what == 'addons') {
-			$url = MARKETPLACE_URL_ADDONS_LANDING;
+			$sets = MarketplaceRemoteItemList::getItemSets('addons');
+		} else { 
+			// themes
+			$sets = MarketplaceRemoteItemList::getItemSets('themes');
 		}
 		
-		$url .= '?csToken=' . Config::get('MARKETPLACE_SITE_TOKEN') . '&ccm_external=1';
+		$setsel = array('0' => t('Featured Items'));
+		if (is_array($sets)) {
+			foreach($sets as $s) {
+				$setsel[$s->getMarketplaceRemoteSetID()] = $s->getMarketplaceRemoteSetName();
+			}
+		}
 		
-		$this->set('url', $url);
+		$this->set('form', Loader::helper('form'));
+		$this->set('sets', $setsel);
 		$this->set('subnav', $subnav);
-		$this->set('browse', $what);
 	}
 	
 	public function view() {

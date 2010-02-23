@@ -30,11 +30,13 @@ ccm_marketplaceRefreshInstalledBlockTypes = function() {
 
 	<? foreach($marketplaceBlockTypes as $bt) { 
 		$btIcon = $bt->getRemoteListIconURL();
-
-		$btButton = t("Download");
+		if ($bt->purchaseRequired()) { 
+			$btButton = t("Purchase");
+		} else {
+			$btButton = t("Download");
+		}
 		$btClass = "";
 		$btDesc = $bt->getDescription();
-		$btButton = t("Get");
 
 
 		?>	
@@ -47,7 +49,11 @@ ccm_marketplaceRefreshInstalledBlockTypes = function() {
 			<? } ?>
 			</td>
 			<td><div class="ccm-block-price"><? if ($bt->getPrice() == '0.00') { print t('Free'); } else { print '$' . $bt->getPrice(); } ?></div></td>
-			<td<?=$btClass?>><?=$ch->button_js($btButton, 'ccm_getMarketplaceItem({mpID: \'' . $bt->getMarketplaceItemID() . '\', onComplete: function() {ccm_marketplaceRefreshInstalledBlockTypes()}})', "right", NULL);?></td>
+			<? if (!$bt->purchaseRequired()) { ?>
+				<td<?=$btClass?>><?=$ch->button_js($btButton, 'ccm_getMarketplaceItem({mpID: \'' . $bt->getMarketplaceItemID() . '\', onComplete: function() {ccm_marketplaceRefreshInstalledBlockTypes()}})', "right", NULL);?></td>
+			<? } else { ?>
+				<td<?=$btClass?>><?=$ch->button_js($btButton, 'window.open(\'' . $bt->getRemoteURL() . '\')', "right", NULL);?></td>
+			<? } ?>
 		</tr>
 	<? } ?>
 		</table>
