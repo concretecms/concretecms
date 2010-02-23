@@ -16,23 +16,19 @@
  
  fix problem with clicking on slider, and with delayed drag update 
  
- layout delete: what to do with lost blocks? provide popup option? 
+ layout delete: what to do with lost blocks? provide popup option?  !!!!!!!!
  
- change search indexing to blacklist approach instead of whitelist approach
+ change search indexing to blacklist approach instead of whitelist approach  !!!!!!
  
  in process, when adding layout, check that this layout id has the correct area and collection, to prevent hacks
  
- when quicksaving, locking, or deleting a layout, make sure that layout belongs to that area 
-  
- move layout up and down 
+ when quicksaving, locking, or deleting a layout, make sure that layout belongs to that area  
  
- orphaned layout cleanup process?
- 
- saving layout from overlay shouldn't loose previous grid sizings!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- 
- add layout css to page even if not in edit mode 
+ orphaned layout cleanup process? 
  
  make sure new tables have good indexes on them 
+ 
+ fix dragging one slider over the next issue !!!!!!
  
  */
  
@@ -97,28 +93,19 @@
 	
 	//breakpoints an optional array of percentages, for the break points between columns, 
 	//for a three column layout, you could for instance set the column breaks like array('25%','75%')
-	function fill( $params=array( 'layoutID'=>0, 'type'=>'table','rows'=>3,'columns'=>3, 'breakpoints'=>array(), 'locked'=>0 ) ){		
+	function fill( $params=array( 'layoutID'=>0, 'type'=>'table','rows'=>3,'columns'=>3, 'breakpoints'=>array(), 'locked'=>0 ) ){ 
+	
 		$this->layoutID=intval($params['layoutID']); 
 		$this->locked=intval($params['locked']); 
 		$this->type = (!in_array($params['type'],$this->layoutTypes))?'table':$params['type'];
 		$this->rows=(intval($params['rows'])<1)?3:$params['rows']; 
 		$this->columns=(intval($params['columns'])<1)?3:$params['columns']; 
-		if(intval($params['areaNameNumber'])) $this->areaNameNumber = intval($params['areaNameNumber']); 
+		if(intval($params['areaNameNumber'])) $this->areaNameNumber = intval($params['areaNameNumber']);  
 		
-		if( !is_array($params['breakpoints']) && strlen($this->breakpoints) ) $this->breakpoints = explode(',',$params['breakpoints']); 
-		elseif(is_array($this->breakpoints)) $this->breakpoints=$params['breakpoints']; 
+		if( !is_array($params['breakpoints']) && strlen(trim($params['breakpoints'])) ) $this->breakpoints = explode(',',$params['breakpoints']); 
+		elseif(is_array($params['breakpoints']) && (count($params['breakpoints']) || $this->columns==1)) $this->breakpoints=$params['breakpoints']; 
 		
-		if($this->type=='itemlist'){
-			$this->columns=2;
-			if(count($this->breakpoints)>1) 
-				$this->breakpoints=array_slice($this->breakpoints,0,1);
-		}elseif($this->type=='staggered'){
-			$this->columns=3; 
-			if(count($this->breakpoints)>2) 
-				$this->breakpoints=array_slice($this->breakpoints,0,2);
-		}
-		
-		$this->cleanBreakPoints();
+		$this->cleanBreakPoints(); 
 	}
 
 	public function setAreaObj($a){
@@ -174,20 +161,16 @@
 		}
 		$this->breakpoints=$cleanBreakPoints; 
 		
-		if( count($this->breakpoints)==0 || (count($this->breakpoints)!=($this->columns-1) && count($this->breakpoints)!=$this->columns) ){ 
+		if( count($this->breakpoints)==0 || (count($this->breakpoints)!=($this->columns-1) && count($this->breakpoints)!=$this->columns) ){  
 			$this->setDefaultBreaks(); 
 		} 
 	}	
 	
-	function setDefaultBreaks(){ 
-		if($this->type=='itemlist'){
-			$this->breakpoints=array('33%'); 
-		}else{
-			$colWidth=100/$this->columns;
-			$this->breakpoints=array(); 
-			for( $i=1; $i<($this->columns); $i++ ) 
-				$this->breakpoints[] = ($i*$colWidth).'%'; 
-		}
+	function setDefaultBreaks(){  
+		$colWidth=100/$this->columns;
+		$this->breakpoints=array(); 
+		for( $i=1; $i<($this->columns); $i++ ) 
+			$this->breakpoints[] = ($i*$colWidth).'%';  
 	}
 	
 	function display( $c=NULL, $a=NULL ){ 

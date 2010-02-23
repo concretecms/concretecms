@@ -283,19 +283,18 @@
 									'locked'=>intval($_REQUEST['locked']),  
 									'layoutID'=>$layoutID );					
 					
-					//is this an existing layout? 
+					//is this an existing layout?  
 					if($layoutID){ 
 						$layout = Layout::getById($layoutID);
 						
-						//ToDo: check that this layout id has the correct area and collection, to prevent hacks 
-
-						$layout->fill( $params );
+						//ToDo: check that this layout id has the correct area and collection, to prevent hacks  
+						$layout->fill( $params ); 
 						//if there's no unique layout record for this collection version, then treat this as a new record 
 						//this should be bypassed if editing a preset
 						if( !$layout->isUniqueToCollectionVersion($nvc) ){ 
 							$oldLayoutId=$layout->layoutID;
 							$layout->layoutID=0;
-						}
+						} 
 						$layout->save( $nvc ); 
 						if($oldLayoutId) $nvc->updateAreaLayoutId($area, $oldLayoutId, $layout->layoutID); 
 						
