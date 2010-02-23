@@ -32,7 +32,7 @@
 					<?
 					foreach($attribs as $ak) { ?>
 						<div>
-							<?=$user->getAttribute($ak, 'display'); ?>
+							<?=$user->getAttribute($ak, 'displaySanitized', 'display'); ?>
 						</div>
 					<? } ?>
 					</div>					

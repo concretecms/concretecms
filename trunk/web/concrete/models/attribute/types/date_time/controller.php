@@ -36,10 +36,10 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 		$v2 = date('H:i:s', strtotime($v));
 		$r = '';
 		if ($v2 != '00:00:00') {
-			$r .= date(t('g:i A'), strtotime($v));
+			$r .= date(DATE_APP_DATE_ATTRIBUTE_TYPE_T, strtotime($v));
 			$r .= t(' on ' );
 		}
-		$r .= date(t('m/d/Y'), strtotime($v));
+		$r .= date(DATE_APP_DATE_ATTRIBUTE_TYPE_MDY, strtotime($v));
 		return $r;
 	}
 	

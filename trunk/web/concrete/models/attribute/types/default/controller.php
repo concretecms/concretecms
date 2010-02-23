@@ -24,6 +24,10 @@ class DefaultAttributeTypeController extends AttributeTypeController  {
 		return $list;
 	}
 	
+	public function getDisplaySanitizedValue() {
+		return Loader::helper('text')->entities($this->getValue());
+	}
+	
 	public function search() {
 		$f = Loader::helper('form');
 		print $f->text($this->field('value'), $value);
