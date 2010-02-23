@@ -37,6 +37,7 @@ $this->addHeaderItem($html->javascript('ccm.themes.js'));
 $this->addHeaderItem($html->javascript('ccm.filemanager.js'));
 $this->addHeaderItem($html->javascript('ccm.search.js'));
 $this->addHeaderItem($html->javascript('ccm.ui.js'));
+$this->addHeaderItem($html->javascript('ccm.layout.js'));
 $this->addHeaderItem($html->javascript('tiny_mce/tiny_mce.js'));
 
 $this->addHeaderItem($html->css('jquery.rating.css'));

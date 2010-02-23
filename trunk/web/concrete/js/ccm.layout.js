@@ -28,7 +28,7 @@ function ccmLayout( layout_id, area, locked ){
 		
 		this.ccmControls.mouseover(function(){ layoutObj.highlightAreas(1); });
 		
-		this.ccmControls.mouseout(function(){ layoutObj.highlightAreas(0); });
+		this.ccmControls.mouseout(function(){ if(!layoutObj.moving) layoutObj.highlightAreas(0); });
 	 	
 		this.ccmControls.find('.ccm-layout-menu-button').click(function(e){ 
 			layoutObj.optionsMenu(e);
@@ -111,6 +111,7 @@ function ccmLayout( layout_id, area, locked ){
 	
 	this.moveLayout=function(direction){ 
 	
+		this.moving=1;
 		this.highlightAreas(1);
 		this.servicesAjax = $.ajax({ 
 			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&task=move&direction=' + direction,
@@ -131,7 +132,7 @@ function ccmLayout( layout_id, area, locked ){
 			if( nextLayout.hasClass('ccm-layout-wrapper') ){
 				el.slideUp(600,function(){
 					el.insertAfter(nextLayout);
-					el.slideDown(600,function(){ layoutObj.highlightAreas(0); }); 
+					el.slideDown(600,function(){ layoutObj.highlightAreas(0); layoutObj.moving=0; }); 
 				})
 				return;
 			}
@@ -140,7 +141,7 @@ function ccmLayout( layout_id, area, locked ){
 			if( previousLayout.hasClass('ccm-layout-wrapper') ){ 
 				el.slideUp(600,function(){
 					el.insertBefore(previousLayout);
-					el.slideDown(600,function(){ layoutObj.highlightAreas(0); }); 
+					el.slideDown(600,function(){ layoutObj.highlightAreas(0); layoutObj.moving=0; }); 
 				})
 				return;
 			} 
