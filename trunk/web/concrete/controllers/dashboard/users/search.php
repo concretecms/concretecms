@@ -112,6 +112,11 @@ class DashboardUsersSearchController extends Controller {
 	
 	public function edit_attribute() {
 		$uo = UserInfo::getByID($_POST['uID']);
+		$u = new User();
+		if ($uo->getUserID() == USER_SUPER_ID && (!$u->isSuperUser())) {
+			throw new Exception(t('Only the super user may edit this account.'));
+		}
+		
 		$akID = $_REQUEST['uakID'];
 		$ak = UserAttributeKey::get($akID);
 
