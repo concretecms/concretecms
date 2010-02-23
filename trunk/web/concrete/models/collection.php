@@ -454,9 +454,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				//add parent area blocks to this new layout
 				$placeHolderLayout->setAreaObj($area);
 				$placeHolderLayout->setAreaNameNumber($nextNumber); 
-				$placeHolderLayoutArea = new Area( $placeHolderLayout->getCellAreaHandle(1) ); 
+				$placeHolderLayoutArea = new Area( $placeHolderLayout->getCellAreaHandle(1) );  
 				foreach($areaBlocks as $b){ 
-					$b->move($this, $placeHolderLayoutArea); 
+					$newBlock=$b->duplicate($this); 
+					$newBlock->move($this, $placeHolderLayoutArea); 
+					$newBlock->refreshCacheAll(); 
+					$b->delete();
+					$b->refreshCacheAll();
 				}
 				
 				$nextNumber++; 
