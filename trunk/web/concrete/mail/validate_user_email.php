@@ -2,7 +2,6 @@
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
-$from = array('info@concrete5.org', t('Validate Email Address'));
 $subject = SITE . " " . t("Registration - Validate Email Address");
 $body = t("
 
