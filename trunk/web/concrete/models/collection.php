@@ -438,7 +438,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}else{ 
 		
 			//does the main area already have blocks in it? 
-			$areaBlocks = $area->getAreaBlocksArray($this); 
+			//$areaBlocks = $area->getAreaBlocksArray($this); 
+			$areaBlocks = $this->getBlocks( $area->getAreaHandle() );
 			
 			//then copy those blocks from that area into a newly created 1x1 layout, so it can be above out new layout 
 			if( count($areaBlocks) ){  
@@ -454,14 +455,25 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				//add parent area blocks to this new layout
 				$placeHolderLayout->setAreaObj($area);
 				$placeHolderLayout->setAreaNameNumber($nextNumber); 
-				$placeHolderLayoutArea = new Area( $placeHolderLayout->getCellAreaHandle(1) );  
+				//$placeHolderLayoutArea = new Area(  );  
+				$placeHolderLayoutAreaHandle = $placeHolderLayout->getCellAreaHandle(1);
 				foreach($areaBlocks as $b){ 
-					$newBlock=$b->duplicate($this); 
-					$newBlock->move($this, $placeHolderLayoutArea); 
-					$newBlock->refreshCacheAll(); 
-					$b->delete();
-					$b->refreshCacheAll();
+					//$newBlock=$b->duplicate($this); 
+					//$newBlock->move($this, $placeHolderLayoutArea); 
+					//$newBlock->refreshCacheAll(); 
+					//$b->delete();
+					//$b->move($this, $placeHolderLayoutArea); 
+					//$b->refreshCacheAll();
+					
+					$v = array( $placeHolderLayoutAreaHandle, $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle() );
+					$db->Execute('update CollectionVersionBlocks set arHandle=? WHERE cID=? AND cvID=? AND arHandle=?', $v);
 				}
+				
+				//there was an issue with duplicates being left in the main area, so this cleans those up. 
+				//foreach( $this->getBlocks($area->getAreaHandle()) as $b ){
+					//$b->delete();
+					//$b->refreshCacheAll(); 
+				//}
 				
 				$nextNumber++; 
 			}
@@ -494,6 +506,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		$db = Loader::db();
 		$vals = array( $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle(), $layout->getLayoutID() );
 		$db->Execute('delete from CollectionVersionAreaLayouts WHERE cID = ? AND cvID = ? AND arHandle = ? AND layoutID = ? LIMIT 1', $vals ); 
+		
+		//also delete this layouts blocks
+		$layout->setAreaObj($area);
+		$maxCell = $layout->getMaxCellNumber(); 
+		for( $i=1; $i<=$maxCell; $i++ ) 
+			 $layout->deleteCellsBlocks($this,$i);   
 		$this->refreshCache();
 	} 
 	

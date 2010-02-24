@@ -71,9 +71,9 @@ function ccmLayout( layout_id, area, locked ){
 			
 			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuEditLayout' + this.layout_id + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/layout_small.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
 			
-			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveUp' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/arrow_up.png)">' + ccmi18n.moveLayoutUp + '</span></a></li>';
+			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveUp' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/icon_move_up.png)">' + ccmi18n.moveLayoutUp + '</span></a></li>';
 						
-			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveDown' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/arrow_down.png)">' + ccmi18n.moveLayoutDown + '</span></a></li>';
+			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveDown' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/icon_move_down.png)">' + ccmi18n.moveLayoutDown + '</span></a></li>';
 			
 			var lockText = (this.locked) ? ccmi18n.unlockAreaLayout : ccmi18n.lockAreaLayout ; 
 			html += '<li><a class="ccm-icon" id="menuAreaLayoutLock' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + lockText + '</span></a></li>';
@@ -268,44 +268,24 @@ function ccmLayout( layout_id, area, locked ){
 	}
 		
 		
-	this.resizeGrid=function(childNodes){	
-		/*
-		//item list type 
-		var pos=parseInt(childNodes[0].style.left.replace('%',''));
-		if(this.ccmGrid.hasClass('ccm-layout-type-itemlist')){ 
-			this.ccmGrid.find('.ccm-layout-cell-left').css('width',pos+'%');
-			this.ccmGrid.find('.ccm-layout-cell-right').css('width',(99-pos)+'%');
-		}
-		
-		//staggered type 
-		if(this.ccmGrid.hasClass('ccm-layout-type-staggered')){ 
-			this.ccmGrid.find('.ccm-layout-row-odd .ccm-layout-cell-short').css('width',pos+'%');
-			this.ccmGrid.find('.ccm-layout-row-odd .ccm-layout-cell-long').css('width',(99-pos)+'%');
-			var pos2=parseInt(childNodes[1].style.left.replace('%',''));
-			this.ccmGrid.find('.ccm-layout-row-even .ccm-layout-cell-long').css('width',pos2+'%');
-			this.ccmGrid.find('.ccm-layout-row-even .ccm-layout-cell-short').css('width',(99-pos2)+'%');
-		}
-		*/
+	this.resizeGrid=function(childNodes){	 
 
-		//column & table type
-		//if(this.ccmGrid.hasClass('ccm-layout-type-columns') || this.ccmGrid.hasClass('ccm-layout-type-table')){ 
-			var i, positions=[]; 					
-			for(i=0;i<childNodes.length;i++){ 
-				var pos=parseFloat(childNodes[i].style.left.replace('%',''));
-				positions.push(pos);
-			}
-			positions.sort( function(a, b){ return (a-b); } );
-		
-			var prevW=0;
-			var i; 					
-			for(i=0;i<positions.length;i++){ 
-				var pos=positions[i];
-				var w=pos-prevW;
-				prevW+=w;
-				this.ccmGrid.find('#ccm-layout-'+this.layout_id+'-col-'+(i+1)).css('width',w+'%');						
-			}
-			this.ccmGrid.find('#ccm-layout-'+this.layout_id+'-col-'+(i+1)).css('width',(100-prevW)+'%');  
-		//}
+		var i, positions=[]; 					
+		for(i=0;i<childNodes.length;i++){ 
+			var pos=parseFloat(childNodes[i].style.left.replace('%',''));
+			positions.push(pos);
+		}
+		positions.sort( function(a, b){ return (a-b); } );
+	
+		var prevW=0;
+		var i; 					
+		for(i=0;i<positions.length;i++){ 
+			var pos=positions[i];
+			var w=pos-prevW;
+			prevW+=w;
+			this.ccmGrid.find('#ccm-layout-'+this.layout_id+'-col-'+(i+1)).css('width',w+'%');						
+		}
+		this.ccmGrid.find('#ccm-layout-'+this.layout_id+'-col-'+(i+1)).css('width',(100-prevW)+'%'); 
 	}
 	
 } 

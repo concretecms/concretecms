@@ -12,23 +12,15 @@
  
  NOTES:
  
- add check to make sure edit interface is editing a layout for the area in question 
- 
  fix problem with clicking on slider, and with delayed drag update 
  
- layout delete: what to do with lost blocks? provide popup option?  !!!!!!!!
- 
- change search indexing to blacklist approach instead of whitelist approach  !!!!!!
- 
- in process, when adding layout, check that this layout id has the correct area and collection, to prevent hacks
- 
- when quicksaving, locking, or deleting a layout, make sure that layout belongs to that area  
+ layout delete: what to do with lost blocks? provide popup option?  !!!!!!!! 
  
  orphaned layout cleanup process? 
  
- make sure new tables have good indexes on them 
+ make sure new tables have good indexes on them  
  
- fix dragging one slider over the next issue !!!!!!!!!!!
+ move layout down -> blocks in area below should pop off into new layout 
  
  */
  
@@ -98,7 +90,7 @@
 		$this->layoutID=intval($params['layoutID']); 
 		$this->locked=intval($params['locked']); 
 		$this->type = (!in_array($params['type'],$this->layoutTypes))?'table':$params['type'];
-		$this->rows=(intval($params['rows'])<1)?3:$params['rows']; 
+		$this->rows=(intval($params['rows'])<1)?1:$params['rows']; 
 		$this->columns=(intval($params['columns'])<1)?3:$params['columns']; 
 		if(intval($params['areaNameNumber'])) $this->areaNameNumber = intval($params['areaNameNumber']);  
 		
@@ -161,7 +153,7 @@
 		}
 		$this->breakpoints=$cleanBreakPoints; 
 		
-		if( count($this->breakpoints)==0 || (count($this->breakpoints)!=($this->columns-1) && count($this->breakpoints)!=$this->columns) ){  
+		if( count($this->breakpoints)==0 || (count($this->breakpoints)!=($this->columns-1)) ){  
 			$this->setDefaultBreaks(); 
 		} 
 	}	
@@ -249,11 +241,14 @@
 		return $this->getLayoutName().$this->getLayoutNameDivider().' Cell '.intval($cellNumber); 
 	}
 	
+	public function getMaxCellNumber(){ 
+		return intval($this->rows)*intval($this->columns);
+	}
 	
 	protected function displayTableGrid($rows=3,$columns=3,$c=NULL){
 		if(!$c) global $c;
 		if($c->isEditMode()) $editMode='ccm-edit-mode';
-		if(!intval($rows)) $rows=3;
+		if(!intval($rows)) $rows=1;
 		if(!intval($columns)) $columns=3;
 		$layoutNameClass = 'ccm-layout-name-'.TextHelper::camelcase($this->getAreaHandle()).'-'.TextHelper::camelcase($this->getLayoutNameTxt()).'-'.$this->getAreaNameNumber();
 		echo '<div id="ccm-layout-'.$this->layoutID.'" class="ccm-layout ccm-layout-table  '.$layoutNameClass.' '.$editMode.'">';
@@ -368,8 +363,14 @@
 		$this->cellNum++;
 		return $this->cellNum;
 	}
-	protected function resetCellNumber(){ $this->cellNum=0; }
+	protected function resetCellNumber(){ $this->cellNum=0; } 
 	 
+	 
+	public function deleteCellsBlocks($c,$cellNumber=0){  
+		$blocks = $c->getBlocks( $this->getCellAreaHandle(intval($cellNumber)) );
+		foreach($blocks as $block) 
+			$block->delete();
+	}
  }
  
  ?>

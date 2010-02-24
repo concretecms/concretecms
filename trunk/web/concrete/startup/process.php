@@ -284,20 +284,26 @@
 									'layoutID'=>$layoutID );					
 					
 					//is this an existing layout?  
-					if($layoutID){ 
+					if($layoutID){  
+						
+						//security check: make sure this layout belongs to this area & collection
+						$db = Loader::db();
+						$vals = array( $layoutID, $area->getAreaHandle(), intval($nvc->cID), intval($c->getVersionID()), intval($nvc->getVersionID())  ); 
+						$validLayout = intval($db->getOne('SELECT count(*) FROM CollectionVersionAreaLayouts WHERE layoutID=? AND arHandle=? AND cID=? AND cvID IN (?,?)',$vals))?1:0;
+
 						$layout = Layout::getById($layoutID);
 						
-						//ToDo: check that this layout id has the correct area and collection, to prevent hacks  
-						$layout->fill( $params ); 
-						//if there's no unique layout record for this collection version, then treat this as a new record 
-						//this should be bypassed if editing a preset
-						if( !$layout->isUniqueToCollectionVersion($nvc) ){ 
-							$oldLayoutId=$layout->layoutID;
-							$layout->layoutID=0;
-						} 
-						$layout->save( $nvc ); 
-						if($oldLayoutId) $nvc->updateAreaLayoutId($area, $oldLayoutId, $layout->layoutID); 
-						
+						if( $validLayout && is_object($layout) ){ 
+							$layout->fill( $params ); 
+							//if there's no unique layout record for this collection version, then treat this as a new record 
+							//this should be bypassed if editing a preset
+							if( !$layout->isUniqueToCollectionVersion($nvc) ){ 
+								$oldLayoutId=$layout->layoutID;
+								$layout->layoutID=0;
+							} 
+							$layout->save( $nvc ); 
+							if($oldLayoutId) $nvc->updateAreaLayoutId($area, $oldLayoutId, $layout->layoutID);  
+						}else throw new Exception(t('Access Denied: Invalid Layout'));
 					}else{ //new layout 
 					
 						//add to top or bottom with sandwich logic goes here  

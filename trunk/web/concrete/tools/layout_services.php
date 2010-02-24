@@ -4,13 +4,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $c = Page::getByID($_REQUEST['cID']);
 $a = Area::get($c, $_GET['arHandle']);
 
+$nvc = $c->getVersionToModify(); 
+
 $cp = new Permissions($c);
 $ap = new Permissions($a);
 
 $valt = Loader::helper('validation/token');
 $token = '&' . $valt->getParameter();
-
- 
 
 //Loader::model('layout');  
 $layoutID = intval($_REQUEST['layoutID']);
@@ -18,9 +18,16 @@ $layout = Layout::getById($layoutID);
 
 $jsonData = array('success'=>'0','msg'=>'', 'layoutID'=>$layoutID);
 
-//ADD A CHECK TO MAKE SURE LAYOUT BELONGS TO AREA!!!!!!!!  
+//security checks: make sure this layout belongs to this area & collection
+if ( is_object($layout) && is_object($a) && is_object($c) ){ 
+	$db = Loader::db();
+	$vals = array( $layoutID, $a->getAreaHandle(), intval($nvc->cID), intval($c->getVersionID()), intval($nvc->getVersionID())  ); 
+	$areaLayoutData = $db->getRow('SELECT * FROM CollectionVersionAreaLayouts WHERE layoutID=? AND arHandle=? AND cID=? AND cvID IN (?,?)',$vals);
+	$layout->setAreaNameNumber( $areaLayoutData['areaNameNumber'] );
+	$validLayout = (intval($areaLayoutData['layoutID'])>0) ? true : false;
+}
 
-if ( !$cp->canWrite() || !$ap->canWrite()  ) {
+if ( !$validLayout || !$cp->canWrite() || !$ap->canWrite()  ) {
 	$jsonData['msg']=t('Access Denied.'); 
 	
 }elseif ( !is_object($layout) ) {
@@ -38,7 +45,6 @@ if ( !$cp->canWrite() || !$ap->canWrite()  ) {
 			
 		case 'move': 
 			$db = Loader::db();
-			$nvc = $c->getVersionToModify(); 
 			$layouts = $a->getAreaLayouts($nvc);
 			$direction = $_REQUEST['direction']; 
 			for($i=0; $i<count($layouts); $i++){  
@@ -72,8 +78,7 @@ if ( !$cp->canWrite() || !$ap->canWrite()  ) {
 			$jsonData['success'] = 1; 
 			break;	
 
-		case 'delete': 
-			$nvc = $c->getVersionToModify(); 
+		case 'delete':  
 			$nvc->deleteAreaLayout( $a, $layout); 
 			$jsonData['success'] = 1; 
 			break;	
@@ -85,10 +90,9 @@ if ( !$cp->canWrite() || !$ap->canWrite()  ) {
 				$cleanBreakPoints[]= floatval(str_replace('%','',$breakPoint)).'%';
 			} 
 			$layout->breakpoints = $cleanBreakPoints;
-			if( count($layout->breakpoints) != ($layout->columns-1) )
+			if( count($layout->breakpoints) != ($layout->columns-1) ){
 				 $jsonData['msg']=t('Error: Invalid column count. Please refresh your page.'); 
-			else{
-				$nvc = $c->getVersionToModify(); 
+			}else{ 
 				if( !$layout->isUniqueToCollectionVersion($nvc) ){
 					$oldLayoutId=$layout->layoutID;
 					$layout->layoutID=0;
