@@ -160,6 +160,9 @@ class RegisterController extends Controller {
 						$uHash = $process->setupValidation();
 						
 						$mh = Loader::helper('mail');
+						if (defined('EMAIL_ADDRESS_VALIDATE')) {
+							$mh->from(EMAIL_ADDRESS_VALIDATE,  t('Validate Email Address'));
+						}
 						$mh->addParameter('uEmail', $_POST['uEmail']);
 						$mh->addParameter('uHash', $uHash);
 						$mh->to($_POST['uEmail']);
