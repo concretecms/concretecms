@@ -127,7 +127,10 @@ ccm_openAreaAddBlock = function(arHandle, addOnly) {
 		href: CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&atask=add&arHandle=' + arHandle + '&addOnly=' + addOnly,
 		width: 550,
 		modal: false,
-		height: 380
+		height: 380,
+		onClose: function() {
+			ccm_activateHeader();
+		}
 	});
 }
 
@@ -296,10 +299,12 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 	}
 }
 
-ccm_mainNavDisableDirectExit = function() {
+ccm_mainNavDisableDirectExit = function(disableShow) {
 	// make sure that exit edit mode is enabled
-	$("li.ccm-main-nav-exit-edit-mode-direct").hide();
-	$("li.ccm-main-nav-exit-edit-mode").show();
+	$("li.ccm-main-nav-exit-edit-mode-direct").remove();
+	if (!disableShow) {
+		$("li.ccm-main-nav-exit-edit-mode").show();
+	}
 }
 
 ccm_setupBlockForm = function(form, currentBlockID, task) {
@@ -633,6 +638,7 @@ ccm_setupGroupSearch = function() {
 
 ccm_saveArrangement = function() {
 	
+	ccm_mainNavDisableDirectExit(true);
 	var serial = '';
 	$('div.ccm-area').each(function() {
 		areaStr = '&area[' + $(this).attr('id').substring(1) + '][]=';
