@@ -42,6 +42,10 @@
 			
 			$hi = Loader::helper('file');
 			$path = $this->mapSystemPath($prefix, $filename, $createDirectories, $base);
+			if (!file_exists($path)) {
+				$filename = $hi->replaceExtension($filename, 'jpg');
+				$path = $this->mapSystemPath($prefix, $filename, $createDirectories, $base);
+			}
 			return $path;
 		}
 
