@@ -103,39 +103,84 @@ class ListsStatesProvincesHelper {
 	),
 
 	'UK' => array(
-		'AVON' => 'Avon',
+		'ANGLES' => 'Anglesey',
+		'BRECK' => 'Brecknockshire',
+		'CAERN' => 'Caernarfonshire',
+		'CARMA' => 'Carmathenshire',
+		'CARDIG' => 'Cardiganshire',
+		'DENBIG' => 'Denbighshire',
+		'FLINTS' => 'Flintshire',
+		'GLAMO' => 'Glamorgan',
+		'MERION' => 'Merioneth',
+		'MONMOUTH' => 'Monmouthshire',
+		'MONTG' => 'Mongtomeryshire',
+		'PEMBR' => 'Pembrokeshire',
+		'RADNOR' => 'Radnorshire',
+		
+		'ARBERD' => 'Aberdeenshire',
+		'ANGUS' => 'Angus',
+		'ARGYLL' => 'Argyllshire',
+		'AYRSH' => 'Ayrshire',
+		'BANFF' => 'Banffshire',
+		'BERWICK' => 'Berwickshire',
+		'BUTE' => 'Buteshire',
+		'CROMART' => 'Cromartyshire',
+		'CAITH' => 'Caithness',
+		'CLACKM' => 'Clackmannanshire',
+		'DUMFR' => 'Dumfriesshire',
+		'DUNBART' => 'Dunbartonshire',
+		'EASTL' => 'East Lothian',
+		'FIFE' => 'Fife',
+		'INVERN' => 'Inverness-shire',
+		'KINCARD' => 'Kincardineshire',
+		'KINROSS' => 'Kinross-shire',
+		'KIRKCUD' => 'Kircudbrightshire',
+		'LANARK' => 'Lanarkshire',
+		'MIDLOTH' => 'Midlothian',
+		'MORAY' => 'Morayshire',
+		'NAIRN' => 'Nairnshire',
+		'ORKNEY' => 'Orkeny',
+		'PEEBLESS' => 'Peeblesshire',
+		'PERTH' => 'Perthshire',
+		'RENFREW' => 'Renfrewshire',
+		'ROSSSH' => 'Ross-shire',
+		'ROXBURGH' => 'Roxburghshire',
+		'SELKIRK' => 'Selkirkshire',
+		'SHETLAND' => 'Shetland',
+		'STIRLING' => 'Stirlingshire',
+		'SUTHER' => 'Sutherland',
+		'WESTL' => 'West Lothian',
+		'WIGTOWN' => 'Wigtownshire',
+		
+		
 		'BEDS' => 'Bedfordshire',
 		'BERKS' => 'Berkshire',
 		'BUCKS' => 'Buckinghamshire',
 		'CAMBS' => 'Cambridgeshire',
 		'CHESH' => 'Cheshire',
-		'CLEVE' => 'Cleveland',
 		'CORN' => 'Cornwall',
-		'CUMB' => 'Cumbria',
+		'CUMB' => 'Cumberland',
 		'DERBY' => 'Derbyshire',
 		'DEVON' => 'Devon',
 		'DORSET' => 'Dorset',
 		'DURHAM' => 'Durham',
 		'ESSEX' => 'Essex',
 		'GLOUS' => 'Gloucestershire',
-		'GLONDON' => 'Greater London',
-		'GMANCH' => 'Greater Manchester',
 		'HANTS' => 'Hampshire',
-		'HERWOR' => 'Hereford & Worcestershire',
+		'HEREF' => 'Herefordshire',
 		'HERTS' => 'Hertfordshire',
-		'HUMBER' => 'Humberside',
-		'IOM' => 'Isle of Man',
-		'IOW' => 'Isle of Wight',
+		'HUNTS' => 'Huntingdonshire',
 		'KENT' => 'Kent',
 		'LANCS' => 'Lancashire',
 		'LEICS' => 'Leicestershire',
 		'LINCS' => 'Lincolnshire',
-		'MERSEY' => 'Merseyside',
+		'MIDDLE' => 'Middlesex',
 		'NORF' => 'Norfolk',
 		'NHANTS' => 'Northamptonshire',
 		'NTHUMB' => 'Northumberland',
 		'NOTTS' => 'Nottinghamshire',
 		'OXON' => 'Oxfordshire',
+		'RUTL' => 'Rutland',
 		'SHROPS' => 'Shropshire',
 		'SOM' => 'Somerset',
 		'STAFFS' => 'Staffordshire',
@@ -143,12 +188,13 @@ class ListsStatesProvincesHelper {
 		'SURREY' => 'Surrey',
 		'SUSS' => 'Sussex',
 		'WARKS' => 'Warwickshire',
-		'WMID' => 'West Midlands',
+		'WESTMOR' => 'Westmorland',
 		'WILTS' => 'Wiltshire',
+		'WORCES' => 'Worcestershire',
 		'YORK' => 'Yorkshire'
 	),
 	
-	'EI' => array(
+	'IE' => array(
 		'CO ANTRIM' => 'County Antrim',
 		'CO ARMAGH' => 'County Armagh',
 		'CO DOWN' => 'County Down',
@@ -233,6 +279,9 @@ class ListsStatesProvincesHelper {
 	)
 	);
 	
+	public function __construct() {
+		$this->stateProvinces['GB'] = $this->stateProvinces['UK'];
+	}
 	public function getStateProvinceName($v, $country) {
 		foreach($this->stateProvinces as $countryKey => $countries) {
 			foreach($countries as $key => $value) {
@@ -244,11 +293,17 @@ class ListsStatesProvincesHelper {
 	}
 	
 	public function getStateProvinceArray($k) {
-		return $this->stateProvinces[$k];
+		$a = $this->stateProvinces[$k];
+		asort($a);
+		return $a;
 	}
 	
 	public function getAll() {
-		return $this->stateProvinces;
+		$sp = $this->stateProvinces;
+		foreach($sp as $p => $pv) {
+			asort($sp[$p]);
+		}
+		return $sp;
 	}
 	
 	/** 
