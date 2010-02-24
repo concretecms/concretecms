@@ -407,7 +407,7 @@ class FileVersion extends Object {
 	}
 	
 	// 
-	public function refreshThumbnails() {
+	public function refreshThumbnails($refreshCache = true) {
 		$db = Loader::db();
 		$f = Loader::helper('concrete/file');
 		for ($i = 1; $i <= $this->numThumbnailLevels; $i++) {
@@ -417,6 +417,11 @@ class FileVersion extends Object {
 				$hasThumbnail = 1;
 			}
 			$db->Execute("update FileVersions set fvHasThumbnail" . $i . "= ? where fID = ? and fvID = ?", array($hasThumbnail, $this->fID, $this->fvID));
+		}
+		
+		if ($refreshCache) {
+			$fo = $this->getFile();
+			$fo->refreshCache();
 		}
 	}
 	
@@ -460,8 +465,9 @@ class FileVersion extends Object {
 				
 			}
 		}
-		$this->refreshThumbnails();
+		$this->refreshThumbnails(false);
 		$f = $this->getFile();
+		$f->refreshCache();
 		$f->reindex();
 	}
 

@@ -142,31 +142,33 @@ class Marketplace {
 		$addons=array();
 		
 		$objects = @Loader::helper('json')->decode($json);
-		try {
-			foreach($objects as $addon){
-				$mi = new MarketplaceRemoteItem();
-				$mi->setPropertiesFromJSONObject($addon);
-				$remoteCID = $mi->getRemoteCollectionID();
-				if (!empty($remoteCID)) {
-					$addons[$mi->getHandle()] = $mi;
-				}
-			}
-		} catch (Exception $e) {}
-
-		if ($filterInstalled && is_array($addons)) {
-			Loader::model('package');
-			$handles = Package::getInstalledHandles();
-			if (is_array($handles)) {
-				$adlist = array();
-				foreach($addons as $key=>$ad) {
-					if (!in_array($ad->getHandle(), $handles)) {
-						$adlist[$key] = $ad;
+		if (is_array($objects)) {
+			try {
+				foreach($objects as $addon){
+					$mi = new MarketplaceRemoteItem();
+					$mi->setPropertiesFromJSONObject($addon);
+					$remoteCID = $mi->getRemoteCollectionID();
+					if (!empty($remoteCID)) {
+						$addons[$mi->getHandle()] = $mi;
 					}
 				}
-				$addons = $adlist;
+			} catch (Exception $e) {}
+	
+			if ($filterInstalled && is_array($addons)) {
+				Loader::model('package');
+				$handles = Package::getInstalledHandles();
+				if (is_array($handles)) {
+					$adlist = array();
+					foreach($addons as $key=>$ad) {
+						if (!in_array($ad->getHandle(), $handles)) {
+							$adlist[$key] = $ad;
+						}
+					}
+					$addons = $adlist;
+				}
 			}
 		}
-
+		
 		return $addons;
 	}
 
