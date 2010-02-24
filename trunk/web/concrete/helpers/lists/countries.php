@@ -259,7 +259,6 @@ class ListsCountriesHelper {
 	'WS' => 'Samoa',
 	'YE' => 'Yemen',
 	'YT' => 'Mayotte',
-	'YU' => 'Yugoslavia',
 	'ZA' => 'South Africa',
 	'ZM' => 'Zambia',
 	'ZR' => 'Zaire',
