@@ -273,7 +273,7 @@ class AddressAttributeTypeValue extends Object {
 	}
 	public function getFullStateProvince() {
 		$h = Loader::helper('lists/states_provinces');
-		$val = $h->getStateProvinceName($this->state_province);
+		$val = $h->getStateProvinceName($this->state_province, $this->country);
 		if ($val == '') {
 			return $this->state_province;
 		} else {

@@ -233,10 +233,10 @@ class ListsStatesProvincesHelper {
 	)
 	);
 	
-	public function getStateProvinceName($v) {
-		foreach($this->stateProvinces as $countries) {
+	public function getStateProvinceName($v, $country) {
+		foreach($this->stateProvinces as $countryKey => $countries) {
 			foreach($countries as $key => $value) {
-				if ($key == $v) {
+				if ($key == $v && $country == $countryKey) {
 					return $value;
 				}
 			}
