@@ -414,11 +414,9 @@ $ppWhere = '';
 		PageStatistics::incrementParents($newCID);
 
 		
-		if ($cPath) {
-			$q2 = "insert into PagePaths (cID, cPath) values (?, ?)";
-			$v2 = array($newCID, $cPath . '/' . $handle);
-			$db->query($q2, $v2);
-		}
+		$q2 = "insert into PagePaths (cID, cPath) values (?, ?)";
+		$v2 = array($newCID, $cPath . '/' . $handle);
+		$db->query($q2, $v2);
 		
 		$c->refreshCache();
 

@@ -21,7 +21,7 @@ class DashboardInstallController extends Controller {
 
 	}
 	
-	public function browse($what = 'themes', $set = 0) {
+	public function browse($what = 'themes') {
 		
 		$subnav = array(
 			array(View::url('/dashboard/install'), t('Installed and Available'), false),
@@ -48,6 +48,18 @@ class DashboardInstallController extends Controller {
 		}
 		
 		$mri->setIncludeInstalledItems(false);
+		if (isset($_REQUEST['marketplaceRemoteItemSetID'])) {
+			$set = $_REQUEST['marketplaceRemoteItemSetID'];
+		}
+
+		if (isset($_REQUEST['marketplaceRemoteItemKeywords'])) {
+			$keywords = $_REQUEST['marketplaceRemoteItemKeywords'];
+		}
+		
+		if ($keywords != '') {
+			$mri->filterByKeywords($keywords);
+		}
+		
 		if ($set > 0) {
 			$mri->filterBySet($set);
 		}

@@ -19,11 +19,13 @@ if ($this->controller->getTask() == 'browse') { ?>
 		
 		<form method="get">
 			
-			<div><h3><?=t('Filter By')?></h3>
-				<?=$form->select('marketplaceRemoteItemSetID', $sets, $selectedSet, array('onchange' => 'window.location.href=\'' . $this->url('/dashboard/install/', 'browse', $type) . '\' + this.value'))?>
+			<div style="border-bottom: 1px dotted #dedede; padding-bottom: 0px; margin-bottom: 8px"><h3><?=t('Search')?>
+				<?=$form->text('marketplaceRemoteItemKeywords', array('style' => 'width: 100px'))?>
+				<?=t('in')?>
+				<?=$form->select('marketplaceRemoteItemSetID', $sets, $selectedSet)?>
+				<?=$form->submit('submit', t('Search'))?>
+				</h3>
 			</div>
-			
-			<br/><br/>
 			
 			<? if ($list->getTotal() > 0) { ?>
 				<?=$list->displaySummary()?>
@@ -51,7 +53,8 @@ if ($this->controller->getTask() == 'browse') { ?>
 						}
 						?>
 						<td valign="top" width="<?php echo round(100/$numCols)?>%" style="padding-bottom: 20px"> 
-							<div><img style="margin-bottom: 8px" src="<?php echo $item->getRemoteIconURL() ?>" /></div>
+							<div><? if ($type == 'themes') { ?><a title="<?php echo t('Preview')?>" onclick="ccm_previewMarketplaceTheme(1, <?php echo intval($item->getRemoteCollectionID())?>,'<?php echo addslashes($item->getName()) ?>','<?php echo addslashes($item->getHandle()) ?>')" 
+								href="javascript:void(0)" class="preview"><? } ?><img style="margin-bottom: 8px" src="<?php echo $item->getRemoteIconURL() ?>" /><? if ($type == 'themes') { ?></a><? } ?></div>
 							<h2><?php echo $item->getName() ?>
 							<? if ($type == 'themes') { ?>
 							<a title="<?php echo t('Preview')?>" onclick="ccm_previewMarketplaceTheme(1, <?php echo intval($item->getRemoteCollectionID())?>,'<?php echo addslashes($item->getName()) ?>','<?php echo addslashes($item->getHandle()) ?>')" 
