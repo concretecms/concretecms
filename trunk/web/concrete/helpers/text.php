@@ -177,6 +177,20 @@ class TextHelper {
 	}
 	
 	/** 
+	 * A wrapper for PHP's fnmatch() function, which some installations don't have.
+	 */
+	public function fnmatch($pattern, $string) {
+		if(!function_exists('fnmatch')) {
+			function fnmatch($pattern, $string) {
+				return preg_match("#^".strtr(preg_quote($pattern, '#'), array('\*' => '.*', '\?' => '.', '\[' => '[', '\]' => ']'))."$#i", $string);
+			} // end
+		} else {
+			return fnmatch($pattern, $string);
+		}
+	}
+	
+	
+	/** 
 	 * Takes a CamelCase string and turns it into camel_case
 	 */
 	public function uncamelcase($string) {

@@ -73,8 +73,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		private function getThemeFromPath($path) {
 			// there's probably a more efficient way to do this
 			$theme = false;
+			$txt = Loader::helper('text');
 			foreach($this->themePaths as $lp => $layout) {
-				if (preg_match('/^\\' . $lp . '(.*)/', $path)) {
+				if ($txt->fnmatch($lp, $path)) {
 					$theme = $layout;
 					break;
 				}

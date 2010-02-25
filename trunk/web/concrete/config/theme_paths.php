@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $v = View::getInstance();
 // TODO - make this honor * better, actually work for more than just dashboard
 $v->setThemeByPath('/dashboard', 'dashboard');
+$v->setThemeByPath('/dashboard/*', 'dashboard');
 
 $v->setThemeByPath('/page_forbidden', VIEW_CORE_THEME);
 $v->setThemeByPath('/page_not_found', VIEW_CORE_THEME);
