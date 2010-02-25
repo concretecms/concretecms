@@ -37,10 +37,14 @@ class MailHelper {
 			$username = Config::get('MAIL_SEND_METHOD_SMTP_USERNAME');
 			$password = Config::get('MAIL_SEND_METHOD_SMTP_PASSWORD');
 			$port = Config::get('MAIL_SEND_METHOD_SMTP_PORT');
+			$encr = Config::get('MAIL_SEND_METHOD_SMTP_ENCRYPTION');
 			if ($username != '') {
 				$config = array('auth' => 'login', 'username' => $username, 'password' => $password);
 				if ($port != '') {
 					$config['port'] = $port;
+				}
+				if ($encr != '') {
+					$config['ssl'] = $encr;
 				}
 				$transport = new Zend_Mail_Transport_Smtp(Config::get('MAIL_SEND_METHOD_SMTP_SERVER'), $config);					
 			} else {
