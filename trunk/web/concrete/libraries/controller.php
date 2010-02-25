@@ -123,7 +123,7 @@ class Controller {
 				// we use reflection to see if the task itself, which now much exist, takes fewer arguments than 
 				// what is specified
 				$r = new ReflectionMethod(get_class($this), $this->task);
-				if ($r->getNumberOfParameters() < count($this->parameters)) {
+				if (get_class($this) != 'PageForbiddenController' && $r->getNumberOfParameters() < count($this->parameters)) {
 					$do404 = true;
 				}
 			}
