@@ -18,9 +18,9 @@
  
  orphaned layout cleanup process? 
  
- make sure new tables have good indexes on them  
- 
  move layout down -> blocks in area below should pop off into new layout 
+ 
+ presets 
  
  */
  
@@ -371,6 +371,61 @@
 		foreach($blocks as $block) 
 			$block->delete();
 	}
+	
+	static function cleanupOrphans(){
+		$db = Loader::db();
+		$sql = 'SELECT l.layoutID FROM Layouts AS l LEFT JOIN CollectionVersionAreaLayouts AS cval ON l.layoutID=cval.layoutID WHERE cval.layoutID IS NULL';
+ 		$layoutIds = $db->getCol( $sql );
+		foreach($layoutIds as $layoutId){ 
+			$db->query('DELETE FROM Layouts WHERE layoutID='.intval($layoutId));
+		}
+	}
  }
+ 
+ 
+
+
+ 
+class LayoutPreset extends Object{
+	 
+	public function getLayoutPresetID(){ return $this->lpID; }
+	public function getLayoutPresetName(){ return $this->lpName; }
+	public function getLayoutID(){ return $this->layoutID; }
+	public function getLayoutObject() { return Layout::getById($this->layoutID); }	 
+ 	
+	static public function getList() {
+		$db = Loader::db();
+		$r = $db->Execute('select * from LayoutPresets order by lpName asc');
+		$presets = array();
+		while ($row = $r->FetchRow()) {
+			$layoutPreset = new LayoutPreset();
+			$layoutPreset->setPropertiesFromArray($row);
+			$presets[] = $layoutPreset;
+		}
+		return $presets;
+	}
+ 	
+	public static function getByID($lpID) { 
+		$db = Loader::db();
+		$r = $db->GetRow('SELECT * FROM LayoutPresets where lpID  = '.intval($lpID));
+		if(is_array($r) && intval($r['lpID']) ) {
+			$LayoutPreset = new LayoutPreset(); 
+			$layoutPreset->setPropertiesFromArray($r);
+			return $layoutPreset;
+		} 
+		return false; 
+	}
+	
+	//Removes a preset. Does NOT remove the associated rule
+	public function delete() {
+		$db = Loader::db();
+		$db->Execute('delete from LayoutPresets where lpID = '.intval($this->lpID) );
+	}	 
+	
+	public function add($lpName, $layout) {
+		$db = Loader::db();
+		$db->Execute('insert into LayoutPresets (lpName, layoutID) values (?, ?)', array( $lpName, $layout->getLayoutID() )  ); 
+	} 
+} 
  
  ?>

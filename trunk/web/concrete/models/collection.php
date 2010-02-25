@@ -454,8 +454,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				
 				//add parent area blocks to this new layout
 				$placeHolderLayout->setAreaObj($area);
-				$placeHolderLayout->setAreaNameNumber($nextNumber); 
-				//$placeHolderLayoutArea = new Area(  );  
+				$placeHolderLayout->setAreaNameNumber($nextNumber);   
 				$placeHolderLayoutAreaHandle = $placeHolderLayout->getCellAreaHandle(1);
 				foreach($areaBlocks as $b){ 
 					//$newBlock=$b->duplicate($this); 
@@ -463,17 +462,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					//$newBlock->refreshCacheAll(); 
 					//$b->delete();
 					//$b->move($this, $placeHolderLayoutArea); 
-					//$b->refreshCacheAll();
-					
+					//$b->refreshCacheAll(); 
 					$v = array( $placeHolderLayoutAreaHandle, $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle() );
 					$db->Execute('update CollectionVersionBlocks set arHandle=? WHERE cID=? AND cvID=? AND arHandle=?', $v);
-				}
-				
-				//there was an issue with duplicates being left in the main area, so this cleans those up. 
-				//foreach( $this->getBlocks($area->getAreaHandle()) as $b ){
-					//$b->delete();
-					//$b->refreshCacheAll(); 
-				//}
+				} 
 				
 				$nextNumber++; 
 			}
@@ -509,9 +501,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		//also delete this layouts blocks
 		$layout->setAreaObj($area);
-		$maxCell = $layout->getMaxCellNumber(); 
+		//we'll try to grab more areas than necessary, just incase the layout size had been reduced at some point. 
+		$maxCell = $layout->getMaxCellNumber()+20; 
 		for( $i=1; $i<=$maxCell; $i++ ) 
-			 $layout->deleteCellsBlocks($this,$i);   
+			 $layout->deleteCellsBlocks($this,$i);  
+			 
+		Layout::cleanupOrphans();	 
+			 
 		$this->refreshCache();
 	} 
 	
