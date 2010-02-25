@@ -16,16 +16,23 @@ if(intval($_REQUEST['layoutID'])){
 if(!$layout ){ 
 	echo t('Error: Layout not found');
 	
-}else{ ?>
+}else{
+	
+	$layoutPresets=LayoutPreset::getList();
+	
+	?>
 
 
 <form method="post" id="ccmAreaLayoutForm" action="<?=$action?>" style="width:96%; margin:auto;"> 
 
-	<? if (count($presets) > 0) { ?>
+	<? if (count($layoutPresets) > 0) { ?>
 		<h2><?=t('Saved Presets')?></h2>
-	
-		<?=$form->select('cspID', $presetsArray, $cspID, array('style' => 'vertical-align: middle'))?>
-		<a href="javascript:void(0)" id="ccm-style-delete-preset" style="display: none" onclick="ccmCustomStyle.deletePreset()"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" style="vertical-align: middle" width="16" height="16" border="0" /></a>
+		
+		<select id="lpID" name="lpID">
+		
+		</select>
+		<? /*$form->select('lpID', $layoutPresets, $lpID, array('style' => 'vertical-align: middle'))*/ ?>
+		<a href="javascript:void(0)" id="ccm-layout-delete-preset" style="display: none" onclick="ccmLayout.deletePreset()"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" style="vertical-align: middle" width="16" height="16" border="0" /></a>
 		
 		<br/><br/>
 		
