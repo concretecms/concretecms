@@ -61,7 +61,6 @@ class DashboardSystemUpdateController extends Controller {
 			return false;
 		}
 		
-		$ph = Loader::helper('package');
 		$vt = Loader::helper('validation/token');
 		if (!$vt->validate('download_update')) {
 			$this->error->add($vt->getErrorMessage());
@@ -76,7 +75,8 @@ class DashboardSystemUpdateController extends Controller {
 			$remote = Update::getApplicationUpdateInformation();
 			if (is_object($remote)) {
 				// try to download
-				$r = $ph->download_remote_package($remote->url);
+				Loader::library("marketplace");
+				$r = Marketplace::downloadRemoteFile($remote->url);
 				if (empty($r) || $r == Package::E_PACKAGE_DOWNLOAD) {
 					$response = array(Package::E_PACKAGE_DOWNLOAD);
 				} else if ($r == Package::E_PACKAGE_SAVE) {

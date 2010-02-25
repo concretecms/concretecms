@@ -200,6 +200,7 @@ class DashboardInstallController extends Controller {
 		}
 		
 		if (!$this->error->has()) {
+			$pkg->uninstall();
 			if ($this->post('pkgMoveToTrash')) {
 				$r = $pkg->backup();
 				if (is_array($r)) {
@@ -209,11 +210,9 @@ class DashboardInstallController extends Controller {
 					}
 				}
 			}
-		}
-		
-		if (!$this->error->has()) {
-			$pkg->uninstall();
-			$this->redirect('/dashboard/install', 'package_uninstalled');
+			if (!$this->error->has()) { 
+				$this->redirect('/dashboard/install', 'package_uninstalled');
+			}
 		}
 		
 		if ($this->error->has()) {
