@@ -404,8 +404,10 @@ class Package extends Object {
 		$row = $db->GetRow("select * from Packages where pkgID = ?", array($pkgID));
 		if ($row) {
 			$pkg = Loader::package($row['pkgHandle']);
-			$pkg->setPropertiesFromArray($row);
-			return $pkg;
+			if (is_object($pkg)) {
+				$pkg->setPropertiesFromArray($row);
+				return $pkg;
+			}
 		}
 	}
 
