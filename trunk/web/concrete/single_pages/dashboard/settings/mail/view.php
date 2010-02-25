@@ -76,25 +76,30 @@ $form = Loader::helper('form');
 	
 	<div id="ccm-settings-mail-smtp">
 	<h3><?=t('SMTP Settings')?></h3>
-	
+
 	<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 	<tr>
-		<td class="header" width="50%"><?=t('Server')?></td>
-		<td class="header" width="50%"><?=t('Username')?></td>
+		<td class="header" width="33%"><?=t('Mail Server')?></td>
+		<td class="header" width="34%"><?=t('Username')?></td>
+		<td class="header" width="33%"><?=t('Password')?></td>
 	</tr>
 	<tr>
-		<td><?=$form->text('MAIL_SEND_METHOD_SMTP_SERVER', Config::get('MAIL_SEND_METHOD_SMTP_SERVER'), array('style' => 'width: 300px'))?></td>
-		<td><?=$form->text('MAIL_SEND_METHOD_SMTP_USERNAME', Config::get('MAIL_SEND_METHOD_SMTP_USERNAME'),  array('style' => 'width: 300px'))?></td>
+		<td><?=$form->text('MAIL_SEND_METHOD_SMTP_SERVER', Config::get('MAIL_SEND_METHOD_SMTP_SERVER'), array('style' => 'width: 100%'))?></td>
+		<td><?=$form->text('MAIL_SEND_METHOD_SMTP_USERNAME', Config::get('MAIL_SEND_METHOD_SMTP_USERNAME'),  array('style' => 'width: 100%'))?></td>
+		<td><?=$form->password('MAIL_SEND_METHOD_SMTP_PASSWORD', Config::get('MAIL_SEND_METHOD_SMTP_PASSWORD'),  array('style' => 'width: 100%'))?></td>
 	</tr>
 	<tr>
-		<td class="header" width="50%"><?=t('Password')?></td>
-		<td class="header" width="50%"><?=t('Port (Leave blank for default)')?></td>
+		<td class="header"><?=t('Encryption')?></td>
+		<td class="header"><?=t('Port (Leave blank for default)')?></td>
+		<td class="header">&nbsp;</td>
 	</tr>
 	<tr>
-		<td><?=$form->password('MAIL_SEND_METHOD_SMTP_PASSWORD', Config::get('MAIL_SEND_METHOD_SMTP_PASSWORD'),  array('style' => 'width: 300px'))?></td>
-		<td><?=$form->text('MAIL_SEND_METHOD_SMTP_PORT', Config::get('MAIL_SEND_METHOD_SMTP_PORT'),  array('style' => 'width: 300px'))?></td>
+		<td><?=$form->select('MAIL_SEND_METHOD_SMTP_ENCRYPTION', $secureVals, Config::get('MAIL_SEND_METHOD_SMTP_ENCRYPTION'), array('style' => 'width: 100%'))?></td>
+		<td><?=$form->text('MAIL_SEND_METHOD_SMTP_PORT', Config::get('MAIL_SEND_METHOD_SMTP_PORT'),  array('style' => 'width: 100%'))?></td>
+		<td>&nbsp;</td>
 	</tr>
 	</table>
+	
 	</div>
 	
 	<?=$ih->submit(t('Save'), 'mail-settings-form')?>
