@@ -184,6 +184,10 @@ class MarketplaceRemoteItemList extends ItemList {
 		$this->type = $type;
 	}
 	
+	public function filterByKeywords($keywords) {
+		$this->params['keywords'] = $keywords;
+	}
+	
 	public function filterBySet($set) {
 		$this->params['set'] = $set;
 	}

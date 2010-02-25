@@ -524,6 +524,9 @@ openSub = function(instanceID, nodeID, display_mode, select_mode, onComplete) {
 	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?instance_id=" + instanceID + "&node=" + nodeID + "&display_mode=" + display_mode + "&select_mode=" + select_mode + "&selectedPageID=" + container.attr('selected-page-id'), function(resp) {
 		parseSitemapResponse(instanceID, 'full', false, nodeID, resp);
 		activateLabels(instanceID, 'full');
+		if (select_mode != 'move_copy_delete' && select_mode != 'select_page') {
+			activateReorder();
+		}
 
 		setTimeout(function() {
 			removeLoading(nodeID);

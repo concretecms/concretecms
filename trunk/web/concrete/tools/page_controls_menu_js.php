@@ -33,7 +33,7 @@ if (isset($cp)) {
 	
 	if ($c->getCollectionPointerID() > 0) {
 		$statusMessage .= t("This page is an alias of one that actually appears elsewhere. ");
-		$statusMessage .= "<br/><a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent'>" . t('View/Edit Original') . "</a>";
+		$statusMessage .= "<br/><a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "'>" . t('View/Edit Original') . "</a>";
 		if ($cp->canApproveCollection()) {
 			$statusMessage .= "&nbsp;|&nbsp;";
 			$statusMessage .= "<a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionPointerOriginalID() . "&ctask=remove-alias" . $token . "'>" . t('Remove Alias') . "</a>";
@@ -92,6 +92,7 @@ menuHTML += '</div>';
 menuHTML += '</div>';
 
 menuHTML += '<ul id="ccm-main-nav">';
+<? if (!$c->isAlias()) { ?>
 menuHTML += '<li class="ccm-main-nav-view-option" <? if ($c->isEditMode()) { ?> style="display: none" <? } ?>><? if ($cantCheckOut) { ?><span id="ccm-nav-edit"><?=t('Edit Page')?></span><? } else if ($cp->canWrite()) { ?><a href="javascript:void(0)" id="ccm-nav-edit"><?=t('Edit Page')?></a><? } ?></li>';
 <? if ($cp->canAddSubContent()) { ?>
 	menuHTML += '<li class="ccm-main-nav-view-option" <? if ($c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-add"><?=t('Add Page')?></a></li>';
@@ -109,6 +110,7 @@ menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?>
 <? } ?>
 <? if ($sh->canRead() || $cp->canDeleteCollection()) { ?>
 	menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-mcd"><?=t('Move/Delete')?></a></li>';
+<? } ?>
 <? } ?>
 menuHTML += '</ul>';
 menuHTML += '</div>';
