@@ -29,7 +29,10 @@ if(!$layout ){
 		<h2><?=t('Saved Presets')?></h2>
 		
 		<select id="lpID" name="lpID">
-		
+			<option value="<?=$layoutPreset->lpID?>"><?=t('** Custom (No Preset)') ?></option>
+			<? foreach($layoutPresets as $layoutPreset){ ?>
+				<option value="<?=$layoutPreset->lpID?>"><?=$layoutPreset->lpName ?></option>
+			<? } ?>
 		</select>
 		<? /*$form->select('lpID', $layoutPresets, $lpID, array('style' => 'vertical-align: middle'))*/ ?>
 		<a href="javascript:void(0)" id="ccm-layout-delete-preset" style="display: none" onclick="ccmLayout.deletePreset()"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" style="vertical-align: middle" width="16" height="16" border="0" /></a>

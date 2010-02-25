@@ -325,14 +325,6 @@ class Area extends Object {
 			//Invalid Collection
 			return false;
 		}
-		
-		//display layouts tied to this area 
-		//Might need to move this to a better position  
-		$areaLayouts = $this->getAreaLayouts($c);
-		if(is_array($areaLayouts) && count($areaLayouts)){ 
-			foreach($areaLayouts as $layout)
-				$layout->display($c,$this);  
-		}	
 
 		$ourArea = Area::getOrCreate($c, $this->arHandle);
 		if (count($this->customTemplateArray) > 0) {
@@ -358,6 +350,15 @@ class Area extends Object {
 		}
 
 		$bv->renderElement('block_area_header_view', array('a' => $ourArea));	
+
+		//display layouts tied to this area 
+		//Might need to move this to a better position  
+		$areaLayouts = $this->getAreaLayouts($c);
+		if(is_array($areaLayouts) && count($areaLayouts)){ 
+			foreach($areaLayouts as $layout)
+				$layout->display($c,$this);  
+		}	
+
 
 		foreach ($blocksToDisplay as $b) {
 			$bv = new BlockView();
