@@ -12,17 +12,9 @@
  
  NOTES:
  
- fix problem with clicking on slider, and with delayed drag update 
+ fix problem with clicking on slider, and with delayed drag update  
  
- layout delete: what to do with lost blocks? provide popup option?  !!!!!!!! 
- 
- orphaned layout cleanup process? 
- 
- move layout down -> blocks in area below should pop off into new layout 
- 
- presets 
- 
- should the parent area design wrap its sub layouts too?  i think yes. 
+ move layout down -> blocks in area below should pop off into new layout   
  
  */
  
