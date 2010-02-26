@@ -12,19 +12,27 @@ $ap = new Permissions($a);
 $valt = Loader::helper('validation/token');
 $token = '&' . $valt->getParameter();
 
-//Loader::model('layout');  
-$layoutID = intval($_REQUEST['layoutID']);
-$layout = Layout::getById($layoutID);
+if($_GET['task']=='deletePreset'){
+	$layoutPreset = LayoutPreset::getByID($_REQUEST['lpID']);
+	if(is_object($layoutPreset)){
+		$layout = $layoutPreset->getLayoutObject(); 
+		$layoutID = $layout->layoutID;
+	}
+}else{
+	$layoutID = intval($_REQUEST['layoutID']); 
+	$layout = Layout::getById($layoutID);
+	$layoutPreset = $layoutPreset = $layout->getLayoutPresetObj();
+} 
 
-$jsonData = array('success'=>'0','msg'=>'', 'layoutID'=>$layoutID);
+$jsonData = array('success'=>'0','msg'=>'', 'layoutID'=>intval($layoutID));
 
 //security checks: make sure this layout belongs to this area & collection
-if ( is_object($layout) && is_object($a) && is_object($c) ){ 
+if ( is_object($layout) && is_object($a) && is_object($c) ){  
 	$db = Loader::db();
 	$vals = array( $layoutID, $a->getAreaHandle(), intval($nvc->cID), intval($c->getVersionID()), intval($nvc->getVersionID())  ); 
 	$areaLayoutData = $db->getRow('SELECT * FROM CollectionVersionAreaLayouts WHERE layoutID=? AND arHandle=? AND cID=? AND cvID IN (?,?)',$vals);
 	$layout->setAreaNameNumber( $areaLayoutData['areaNameNumber'] );
-	$validLayout = (intval($areaLayoutData['layoutID'])>0) ? true : false;
+	$validLayout = (intval($areaLayoutData['layoutID'])>0 || is_object($layoutPreset)) ? true : false; 
 }
 
 if ( !$validLayout || !$cp->canWrite() || !$ap->canWrite()  ) {
@@ -44,12 +52,13 @@ if ( !$validLayout || !$cp->canWrite() || !$ap->canWrite()  ) {
 			break;
 			
 		case 'move': 
+			$cvalID=intval($_REQUEST['cvalID']);
 			$db = Loader::db();
 			$layouts = $a->getAreaLayouts($nvc);
 			$direction = $_REQUEST['direction']; 
 			for($i=0; $i<count($layouts); $i++){  
 				$layout=$layouts[$i]; 
-				if($layout->layoutID==$layoutID){
+				if($layout->cvalID==$cvalID ){
 					if( $direction=='up' && $i>0 ){
 						$prevLayout=$layouts[$i-1];
 						$layout->position = $prevLayout->position;
@@ -83,6 +92,11 @@ if ( !$validLayout || !$cp->canWrite() || !$ap->canWrite()  ) {
 			$jsonData['success'] = 1; 
 			break;	
 			
+		case 'deletePreset':
+			if(is_object($layoutPreset)) $layoutPreset->delete(); 
+			$jsonData['success'] = 1; 
+			break;
+			
 		case 'quicksave': 
 			$breakPoints = explode('|',$_REQUEST['breakpoints']); 
 			$cleanBreakPoints = array();
@@ -93,12 +107,12 @@ if ( !$validLayout || !$cp->canWrite() || !$ap->canWrite()  ) {
 			if( count($layout->breakpoints) != ($layout->columns-1) ){
 				 $jsonData['msg']=t('Error: Invalid column count. Please refresh your page.'); 
 			}else{ 
-				if( !$layout->isUniqueToCollectionVersion($nvc) ){
+				if( !$layout->isUniqueToCollectionVersion($nvc) && !$layoutPreset ){
 					$oldLayoutId=$layout->layoutID;
 					$layout->layoutID=0;
 				}
 				$saved = $layout->save();
-				if($oldLayoutId) $nvc->updateAreaLayoutId($a, $oldLayoutId, $layout->layoutID ); 
+				if( $oldLayoutId && !$layoutPreset ) $nvc->updateAreaLayoutId($a, $oldLayoutId, $layout->layoutID ); 
 				
 				$jsonData['layoutID'] = $layout->getLayoutID(); 
 				$jsonData['success'] = intval($saved); 

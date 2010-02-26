@@ -355,8 +355,9 @@ class Area extends Object {
 		//Might need to move this to a better position  
 		$areaLayouts = $this->getAreaLayouts($c);
 		if(is_array($areaLayouts) && count($areaLayouts)){ 
-			foreach($areaLayouts as $layout)
+			foreach($areaLayouts as $layout){
 				$layout->display($c,$this);  
+			}
 		}	
 
 
@@ -419,7 +420,7 @@ class Area extends Object {
 		
 		$layouts=array();
 		$i=0;
-		if(is_array($rows)) foreach($rows as $row){ 
+		if(is_array($rows)) foreach($rows as $row){  
 			$layout = Layout::getById( intval($row['layoutID']) );
 			if( is_object($layout) ){  
 				

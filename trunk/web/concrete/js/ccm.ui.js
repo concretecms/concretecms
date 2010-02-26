@@ -1014,7 +1014,7 @@ var ccmCustomStyle = {
 		return false;
 	},
 	resetAll:function(){
-		if (!confirm( ccmi18n.confirmCssReset)) {
+		if (!confirm( ccmi18n.confirmCssReset)) {  
 			return false;
 		}
 		jQuery.fn.dialog.showLoader();
@@ -1033,6 +1033,9 @@ var ccmCustomStyle = {
 	deletePreset: function() {
 		var cspID = $('select[name=cspID]').val();
 		if (cspID > 0) {
+			
+			if( !confirm(ccmi18n.confirmCssPresetDelete) ) return false;
+			
 			var action = $('#ccm-custom-style-refresh-action').val() + '&deleteCspID=' + cspID + '&subtask=delete_custom_style_preset';
 			jQuery.fn.dialog.showLoader();
 			
@@ -1052,15 +1055,13 @@ var ccmCustomStyle = {
 		}
 		$('input[name=cspPresetAction]').click(function() {
 			if ($(this).val() == 'create_new_preset' && $(this).attr('checked')) {
-				$('input[name=cspName]').attr('disabled', false);
-				$('input[name=cspName]').focus();
+				$('input[name=cspName]').attr('disabled', false).focus();
 			} else {
-				$('input[name=cspName]').val('');
-				$('input[name=cspName]').attr('disabled', true);
+				$('input[name=cspName]').val('').attr('disabled', true); 
 			}
 		});
 		ccmCustomStyle.showPresetDeleteIcon();
-		$('select[name=cspID]').change(function() {
+		$('select[name=cspID]').change(function(){ 
 			var cspID = $(this).val();
 			var selectedCsrID = $('input[name=selectedCsrID]').val();
 			

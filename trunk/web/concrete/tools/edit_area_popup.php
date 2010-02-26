@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-$c = Page::getByID($_REQUEST['cID']);
+$c = Page::getByID($_REQUEST['cID']); 
 $a = Area::get($c, $_GET['arHandle']);
 $cp = new Permissions($c);
 $ap = new Permissions($a);
@@ -23,9 +23,11 @@ switch($_GET['atask']) {
 		$canViewPane = $ap->canAddBlocks();
 		break;
 	case 'layout':
+		$originalLayoutId = (intval($_REQUEST['originalLayoutID'])) ? intval($_REQUEST['originalLayoutID']) : intval($_REQUEST['layoutID']);
+		$args['refreshAction'] = REL_DIR_FILES_TOOLS_REQUIRED . '/edit_area_popup?atask=layout&cID=' . $c->getCollectionID() . '&arHandle=' . $a->getAreaHandle() . '&refresh=1&originalLayoutID='.$originalLayoutId.'&cvalID='.$_REQUEST['cvalID'];
 		$toolSection = "block_area_layout";
 		$canViewPane = $ap->canWrite();
-		$args['action'] = $a->getAreaUpdateAction('layout');
+		$args['action'] = $a->getAreaUpdateAction('layout').'&originalLayoutID='.$originalLayoutId.'&cvalID='.intval($_REQUEST['cvalID']);
 		break;
 	case 'design':
 		$toolSection = 'custom_style';
