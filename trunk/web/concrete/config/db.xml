@@ -1067,16 +1067,18 @@
 			<unsigned />
 			<AUTOINCREMENT/>
 		</field> 
-		
 		<field name="lpName" type="C" size="128">
 		  <NOTNULL/>
-		</field>
-		
+		</field> 
 		<field name="layoutID" type="I" size="10">
 		  <NOTNULL/>
 		  <DEFAULT value="0"/>
 		  <UNSIGNED/>			
-		</field>		
+		</field> 
+		<index name="layoutID">
+		  <UNIQUE/>
+		  <col>layoutID</col>
+		</index>				
   </table>  
   
 <table name="SystemNotifications">

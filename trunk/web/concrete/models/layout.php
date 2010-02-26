@@ -59,16 +59,18 @@
 	public function getLayoutNameDivider(){ return ' : '; }
 	public function getLayoutNameTxt(){ return t('Layout'); }
 	public function getLayoutName(){ return $this->getAreaHandle().$this->getLayoutNameDivider().' '.$this->getLayoutNameTxt().' '.$this->getAreaNameNumber(); }
+	public function getLayoutPresetId(){ return intval($this->lpID); }
+	public function getLayoutPresetObj(){ return LayoutPreset::getByID($this->lpID); }
 	
 	public static function getById( $layoutID ){ 
 		if(!intval($layoutID) ) return false; 
 	 		
 		//$cachedObj=self::retrieveFromRuntimeCache( $layoutID );
-		//if( $cachedObj ) return $cachedObj; 
+		//if( $cachedObj ) return $cachedObj;  
 	
 		$db = Loader::db();	
 		$vals = array( intval($layoutID) );
-		$sql = 'SELECT * FROM Layouts WHERE layoutID=?';
+		$sql = 'SELECT l.*, lp.lpName, lp.lpID FROM Layouts AS l LEFT JOIN LayoutPresets AS lp ON l.layoutID = lp.layoutID WHERE l.layoutID=?';
 		$data = $db->getRow($sql,$vals); 
 		if( !$data || !count($data) ) return false;  
 		$layout = new Layout( $data ); 
@@ -87,14 +89,16 @@
 	
 	//breakpoints an optional array of percentages, for the break points between columns, 
 	//for a three column layout, you could for instance set the column breaks like array('25%','75%')
-	function fill( $params=array( 'layoutID'=>0, 'type'=>'table','rows'=>3,'columns'=>3, 'breakpoints'=>array(), 'locked'=>0 ) ){ 
-	
+	function fill( $params=array( 'layoutID'=>0, 'type'=>'table','rows'=>3,'columns'=>3, 'breakpoints'=>array(), 'locked'=>0, 'lpID'=>0, 'lpName'=>'' ) ){  
+		
 		$this->layoutID=intval($params['layoutID']); 
 		$this->locked=intval($params['locked']); 
 		$this->type = (!in_array($params['type'],$this->layoutTypes))?'table':$params['type'];
 		$this->rows=(intval($params['rows'])<1)?1:$params['rows']; 
 		$this->columns=(intval($params['columns'])<1)?3:$params['columns']; 
 		if(intval($params['areaNameNumber'])) $this->areaNameNumber = intval($params['areaNameNumber']);  
+		$this->lpID=intval($params['lpID']);
+		$this->lpName=$params['lpName'];
 		
 		if( !is_array($params['breakpoints']) && strlen(trim($params['breakpoints'])) ) $this->breakpoints = explode(',',$params['breakpoints']); 
 		elseif(is_array($params['breakpoints']) && (count($params['breakpoints']) || $this->columns==1)) $this->breakpoints=$params['breakpoints']; 
@@ -175,7 +179,7 @@
 		
 		if(!in_array($this->type,$this->layoutTypes)) $this->layoutType='table'; 
 		
-		echo '<div id="ccm-layout-wrapper-'.$this->layoutID.'" class="ccm-layout-wrapper">';
+		echo '<div id="ccm-layout-wrapper-'.$this->cvalID.'" class="ccm-layout-wrapper">';
 		
 		if ($c->isEditMode()) { 
 			$args = array('layout'=>$this);
@@ -261,7 +265,7 @@
 					$colWidth=($columns==1)?'100%':$this->getNextColWidth($j,$cumulativeWidth);
 					$cumulativeWidth += intval(str_replace(array('px','%'),'',strtolower($colWidth)));
 					$columnn_id = 'ccm-layout-'.intval($this->layoutID).'-col-'.($j+1);
-					echo '<div id="'.$columnn_id.'" class="ccm-layout-cell ccm-layout-col ccm-layout-col-'.($j+1).'" style="width:'.$colWidth.'">';
+					echo '<div class="'.$columnn_id.' ccm-layout-cell ccm-layout-col ccm-layout-col-'.($j+1).'" style="width:'.$colWidth.'">';
 					$a = new Area( $this->getCellAreaHandle($this->getCellNumber()) );
 					ob_start();
 					$a->display($c);			
@@ -376,7 +380,9 @@
 	
 	static function cleanupOrphans(){
 		$db = Loader::db();
-		$sql = 'SELECT l.layoutID FROM Layouts AS l LEFT JOIN CollectionVersionAreaLayouts AS cval ON l.layoutID=cval.layoutID WHERE cval.layoutID IS NULL';
+		$sql = 'SELECT l.layoutID FROM Layouts AS l LEFT JOIN CollectionVersionAreaLayouts AS cval ON l.layoutID=cval.layoutID '. 
+			   'LEFT JOIN LayoutPresets AS lp ON l.layoutID=lp.layoutID '.
+			   'WHERE cval.layoutID IS NULL AND lp.lpID IS NULL';
  		$layoutIds = $db->getCol( $sql );
 		foreach($layoutIds as $layoutId){ 
 			$db->query('DELETE FROM Layouts WHERE layoutID='.intval($layoutId));
@@ -389,6 +395,10 @@
 
  
 class LayoutPreset extends Object{
+	
+	protected $lpID=0;
+	protected $lpName='';
+	protected $layoutID=0;
 	 
 	public function getLayoutPresetID(){ return $this->lpID; }
 	public function getLayoutPresetName(){ return $this->lpName; }
@@ -397,7 +407,7 @@ class LayoutPreset extends Object{
  	
 	static public function getList() {
 		$db = Loader::db();
-		$r = $db->Execute('select * from LayoutPresets order by lpName asc');
+		$r = $db->Execute('select lp.* FROM LayoutPresets AS lp, Layouts AS l WHERE lp.layoutID=l.layoutID order by lpName asc');
 		$presets = array();
 		while ($row = $r->FetchRow()) {
 			$layoutPreset = new LayoutPreset();
@@ -409,9 +419,9 @@ class LayoutPreset extends Object{
  	
 	public static function getByID($lpID) { 
 		$db = Loader::db();
-		$r = $db->GetRow('SELECT * FROM LayoutPresets where lpID  = '.intval($lpID));
+		$r = $db->GetRow('SELECT lp.* FROM LayoutPresets AS lp, Layouts AS l WHERE lp.layoutID=l.layoutID AND lp.lpID  = '.intval($lpID));
 		if(is_array($r) && intval($r['lpID']) ) {
-			$LayoutPreset = new LayoutPreset(); 
+			$layoutPreset = new LayoutPreset(); 
 			$layoutPreset->setPropertiesFromArray($r);
 			return $layoutPreset;
 		} 

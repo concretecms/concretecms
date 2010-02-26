@@ -53,7 +53,7 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 		
 		<br/><br/>
 		
-		<input type="hidden" id="ccm-custom-style-refresh-action" value="<?=$refreshAction?>" />
+		<input type="hidden" id="ccm-custom-style-refresh-action" value="<?=$refreshAction?>" /> 
 	<? } ?>
 	
 	<input type="hidden" name="selectedCsrID" value="<?=$selectedCsrID?>" />

@@ -276,6 +276,7 @@
 					$nvc = $c->getVersionToModify();
 					
 					//Loader::model('layout'); 
+					$originalLayoutID = intval($_REQUEST['originalLayoutID']);
 					$layoutID = intval($_REQUEST['layoutID']); 
 					$params = array('type'=>'table',
 									'rows'=>intval($_REQUEST['layout_rows']),
@@ -283,35 +284,63 @@
 									'locked'=>intval($_REQUEST['locked']),  
 									'layoutID'=>$layoutID );					
 					
+					
+					//Save Existing layout preset 
+					
+					$lpID = intval($_REQUEST['lpID']);
+					if($lpID && $_POST['layoutPresetAction']=='update_existing_preset'){
+						$layoutPreset = LayoutPreset::getByID($lpID);
+						if($layoutPreset) $layout = $layoutPreset->getLayoutObject();
+						if(!$layout || !intval($layout->layoutID)) throw new Exception(t('Layout preset not found'));
+						$layoutID = intval($layout->layoutID);
+						if($layoutID!=$originalLayoutID) $updateLayoutId=1;
+					} 
+					
 					//is this an existing layout?  
 					if($layoutID){  
-						
 						//security check: make sure this layout belongs to this area & collection
 						$db = Loader::db();
 						$vals = array( $layoutID, $area->getAreaHandle(), intval($nvc->cID), intval($c->getVersionID()), intval($nvc->getVersionID())  ); 
-						$validLayout = intval($db->getOne('SELECT count(*) FROM CollectionVersionAreaLayouts WHERE layoutID=? AND arHandle=? AND cID=? AND cvID IN (?,?)',$vals))?1:0;
+						$layoutExistsInArea = intval($db->getOne('SELECT count(*) FROM CollectionVersionAreaLayouts WHERE layoutID=? AND arHandle=? AND cID=? AND cvID IN (?,?)',$vals))?1:0;
+						$validLayout = ($layoutExistsInArea)?1:0;
 
-						$layout = Layout::getById($layoutID);
+						if(!$layout) $layout = Layout::getById($layoutID); 
 						
-						if( $validLayout && is_object($layout) ){ 
-							$layout->fill( $params ); 
-							//if there's no unique layout record for this collection version, then treat this as a new record 
-							//this should be bypassed if editing a preset
-							if( !$layout->isUniqueToCollectionVersion($nvc) ){ 
-								$oldLayoutId=$layout->layoutID;
+						if( is_object($layout) && (in_array($_POST['layoutPresetAction'],array('update_existing_preset','create_new_preset')) || $validLayout) ){ 
+							
+							$layout->fill( $params );
+							
+							// if there's no unique layout record for this collection version, and it's not a preset, then treat this as a new record 
+							// bypassed if editing a preset or creating a new one 
+							if( (!$layoutPreset && !$layout->isUniqueToCollectionVersion($nvc)) || $_POST['layoutPresetAction']=='create_new_preset' || $_POST['layoutPresetAction']=='save_as_custom'){ 
+								$updateLayoutId=1;
 								$layout->layoutID=0;
 							} 
+							
 							$layout->save( $nvc ); 
-							if($oldLayoutId) $nvc->updateAreaLayoutId($area, $oldLayoutId, $layout->layoutID);  
+							//if($oldLayoutId) $nvc->updateAreaLayoutId($area, $oldLayoutId, $layout->layoutID);  
 						}else throw new Exception(t('Access Denied: Invalid Layout'));
-					}else{ //new layout 
-					
-						//add to top or bottom with sandwich logic goes here  
-						$position = ( $_REQUEST['add_to_position']=='top' ) ? 'top' : 'bottom'; 
-						$layout = new Layout( $params ); 
+						
+					}else{ //new layout  
+						$layout = new Layout( $params );   
+						$position = ( $_REQUEST['add_to_position']=='top' ) ? 'top' : 'bottom';  
 						$layout->save( $nvc ); 
-						$nvc->addAreaLayout($area, $layout, $position);  
+						//$nvc->addAreaLayout($area, $layout, $position);  
 					} 
+					
+					//are we adding a new layout to an area, or updating an existing one? 
+					$cvalID=intval($_REQUEST['cvalID']);
+					if( $cvalID ){
+						if($updateLayoutId) $nvc->updateAreaLayoutId( $cvalID, $layout->layoutID);  
+					}else{ 
+						$nvc->addAreaLayout($area, $layout, $position);  
+					}
+					
+					
+					if ( $_POST['layoutPresetAction']=='create_new_preset' ) { 
+						$newPresetName = (strlen($_POST['layoutPresetNameAlt']))?$_POST['layoutPresetNameAlt']:$_POST['layoutPresetName'];
+						if(strlen(trim($newPresetName))) LayoutPreset::add(trim($newPresetName), $layout);
+					}	
 
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
 					exit;

@@ -484,10 +484,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	}
 	
 	
-	public function updateAreaLayoutId($area, $oldLayoutId=0, $newLayoutId=0){ 
+	public function updateAreaLayoutId( $cvalID=0, $newLayoutId=0){ 
 		$db = Loader::db();
-		$vals = array( $newLayoutId, $oldLayoutId, $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle() );
-		$sql = 'UPDATE CollectionVersionAreaLayouts SET layoutID=? WHERE layoutID=? AND cID=? AND  cvID=? AND arHandle=?';  
+		//$vals = array( $newLayoutId, $oldLayoutId, $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle() );
+		//$sql = 'UPDATE CollectionVersionAreaLayouts SET layoutID=? WHERE layoutID=? AND cID=? AND  cvID=? AND arHandle=?'; 
+		$vals = array( $newLayoutId, $cvalID ); 
+		$sql = 'UPDATE CollectionVersionAreaLayouts SET layoutID=? WHERE cvalID=?'; 
 		$db->query($sql,$vals);	 
 		
 		$this->refreshCache();		

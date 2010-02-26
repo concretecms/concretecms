@@ -3,19 +3,19 @@
 // use as an object: 
 // var myLayout = new ccmLayout();
 
-function ccmLayout( layout_id, area, locked ){
+function ccmLayout( cvalID, layout_id, area, locked ){
 	
 	this.layout_id = layout_id;
+	this.cvalID = cvalID;
 	this.locked = locked;
 	this.area = area;
-	
 	
 	this.init = function(){ 
 	
 		var layoutObj=this;
-		this.layoutWrapper = $('#ccm-layout-wrapper-'+this.layout_id); 
-		this.ccmControls = this.layoutWrapper.find("#ccm-layout-controls-"+this.layout_id);
-	
+		this.layoutWrapper = $('#ccm-layout-wrapper-'+this.cvalID); 
+		this.ccmControls = this.layoutWrapper.find("#ccm-layout-controls-"+this.cvalID);
+		this.ccmControls.get(0).layoutObj=this;
 		/*
 		this.layoutWrapper.mouseover(function(){
 			layoutObj.ccmControls.show(200);
@@ -26,7 +26,7 @@ function ccmLayout( layout_id, area, locked ){
 		});
 		*/
 		
-		this.ccmControls.mouseover(function(){ layoutObj.highlightAreas(1); });
+		this.ccmControls.mouseover(function(){ layoutObj.dontUpdateTwins=0; layoutObj.highlightAreas(1); });
 		
 		this.ccmControls.mouseout(function(){ if(!layoutObj.moving) layoutObj.highlightAreas(0); });
 	 	
@@ -50,12 +50,12 @@ function ccmLayout( layout_id, area, locked ){
 		ccm_menuActivated = true;  
 		
 		// now, check to see if this menu has been made
-		var aobj = document.getElementById("ccm-layout-options-menu-" + this.layout_id);
+		var aobj = document.getElementById("ccm-layout-options-menu-" + this.cvalID);
 		
 		if (!aobj) {
 			// create the 1st instance of the menu
 			el = document.createElement("DIV");
-			el.id = "ccm-layout-options-menu-" + this.layout_id;
+			el.id = "ccm-layout-options-menu-" + this.cvalID;
 			el.className = "ccm-menu";
 			el.style.display = "none";
 			document.body.appendChild(el);
@@ -69,16 +69,16 @@ function ccmLayout( layout_id, area, locked ){
 			html += '<ul>';
 			
 			
-			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuEditLayout' + this.layout_id + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/layout_small.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
+			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="230" id="menuEditLayout' + this.cvalID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/layout_small.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
 			
-			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveUp' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/icon_move_up.png)">' + ccmi18n.moveLayoutUp + '</span></a></li>';
+			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveUp' + this.cvalID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/icon_move_up.png)">' + ccmi18n.moveLayoutUp + '</span></a></li>';
 						
-			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveDown' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/icon_move_down.png)">' + ccmi18n.moveLayoutDown + '</span></a></li>';
+			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveDown' + this.cvalID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/icon_move_down.png)">' + ccmi18n.moveLayoutDown + '</span></a></li>';
 			
 			var lockText = (this.locked) ? ccmi18n.unlockAreaLayout : ccmi18n.lockAreaLayout ; 
-			html += '<li><a class="ccm-icon" id="menuAreaLayoutLock' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + lockText + '</span></a></li>';
+			html += '<li><a class="ccm-icon" id="menuAreaLayoutLock' + this.cvalID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + lockText + '</span></a></li>';
 			
-			html += '<li><a class="ccm-icon" id="menuAreaLayoutDelete' + this.layout_id + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n.deleteLayout + '</span></a></li>';
+			html += '<li><a class="ccm-icon" id="menuAreaLayoutDelete' + this.cvalID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n.deleteLayout + '</span></a></li>';
 			
 			html += '</ul>';
 			html += '</div></div>';
@@ -88,22 +88,22 @@ function ccmLayout( layout_id, area, locked ){
 			var aJQobj = $(aobj);
 			var layoutObj=this;
 			
-			aJQobj.find('#menuEditLayout' + this.layout_id).dialog(); 
+			aJQobj.find('#menuEditLayout' + this.cvalID).dialog(); 
 			
-			aJQobj.find('#menuAreaLayoutMoveUp' + this.layout_id).click(function(){ layoutObj.moveLayout('up'); }); 
+			aJQobj.find('#menuAreaLayoutMoveUp' + this.cvalID).click(function(){ layoutObj.moveLayout('up'); }); 
 			
-			aJQobj.find('#menuAreaLayoutMoveDown' + this.layout_id).click(function(){ layoutObj.moveLayout('down'); }); 
+			aJQobj.find('#menuAreaLayoutMoveDown' + this.cvalID).click(function(){ layoutObj.moveLayout('down'); }); 
 			
 			//lock click 
-			aJQobj.find('#menuAreaLayoutLock' + this.layout_id).click( function(){ layoutObj.lock(); } ); 
+			aJQobj.find('#menuAreaLayoutLock' + this.cvalID).click( function(){ layoutObj.lock(); } ); 
 			
 			//delete click
-			aJQobj.find('#menuAreaLayoutDelete' + this.layout_id).click(function(){ layoutObj.deleteLayout(); }); 
+			aJQobj.find('#menuAreaLayoutDelete' + this.cvalID).click(function(){ layoutObj.deleteLayout(); }); 
 			
 			
 		
 		} else {
-			aobj = $("#ccm-layout-options-menu-" + this.layout_id);
+			aobj = $("#ccm-layout-options-menu-" + this.cvalID);
 		}
 
 		ccm_fadeInMenu(aobj, e);		
@@ -112,9 +112,10 @@ function ccmLayout( layout_id, area, locked ){
 	this.moveLayout=function(direction){ 
 	
 		this.moving=1;
+		ccm_hideHighlighter();
 		this.highlightAreas(1);
 		this.servicesAjax = $.ajax({ 
-			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&task=move&direction=' + direction,
+			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&task=move&direction=' + direction,
 			success: function(response){  
 				eval('var jObj='+response); 
 				if(parseInt(jObj.success)!=1){ 
@@ -125,7 +126,7 @@ function ccmLayout( layout_id, area, locked ){
 			}
 		});		
 		
-		var el = $('#ccm-layout-wrapper-'+this.layout_id);
+		var el = $('#ccm-layout-wrapper-'+this.cvalID);
 		var layoutObj = this;
 		if(direction=='down'){
 			var nextLayout = el.next();
@@ -178,7 +179,7 @@ function ccmLayout( layout_id, area, locked ){
 	this.hasBeenQuickSaved=0;
 	this.quickSaveLayoutId=0;
 	this.quickSave=function(){  
-		var breakPoints=this.ccmControls.find('#layout_col_break_points_'+this.layout_id).val();  
+		var breakPoints=this.ccmControls.find('#layout_col_break_points_'+this.cvalID).val();  
 		clearTimeout(this.secondSavePauseTmr);
 		if(!this.hasBeenQuickSaved && this.quickSaveInProgress){
 			quickSaveLayoutObj=this;
@@ -214,7 +215,7 @@ function ccmLayout( layout_id, area, locked ){
 		
 		this.layoutWrapper.slideUp(300); 
 		 
-		var layoutId = this.layout_id;
+		var cvalID = this.cvalID;
 		this.servicesAjax = $.ajax({ 
 			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&task=delete',
 			success: function(response){  
@@ -223,7 +224,8 @@ function ccmLayout( layout_id, area, locked ){
 					alert(jObj.msg);
 				}else{    
 					//success
-					$('#ccm-layout-wrapper-'+layoutId).remove();
+					$('#ccm-layout-wrapper-'+cvalID).remove();
+					ccm_hideHighlighter();
 				}
 			}
 		});	
@@ -238,7 +240,7 @@ function ccmLayout( layout_id, area, locked ){
 		var cols=parseInt( this.ccmControls.find('.layout_column_count').val() );  
 		
 		if(cols>1){ 
-			var startPoints=this.ccmControls.find('#layout_col_break_points_'+this.layout_id).val().replace(/%/g,'').split('|');  
+			var startPoints=this.ccmControls.find('#layout_col_break_points_'+this.cvalID).val().replace(/%/g,'').split('|');  
 			
 			this.s = this.ccmControls.find(".ccm-layout-controls-slider");
 			
@@ -249,33 +251,71 @@ function ccmLayout( layout_id, area, locked ){
 				step: 1, 
 				values: startPoints,
 				change: function(){  
+					if(this.layoutObj.dontUpdateTwins) return;
 					this.layoutObj.resizeGrid(this.childNodes); 
 					var breakPoints=[];			
-					for(var i=0;i<this.childNodes.length;i++)
-						breakPoints.push( parseFloat(this.childNodes[i].style.left.replace('%','')) );
+					for(var z=0;z<this.childNodes.length;z++)
+						breakPoints.push( parseFloat(this.childNodes[z].style.left.replace('%','')) );
 						
 					breakPoints.sort( function(a, b){ return (a-b); } );
 						
 					this.layoutObj.ccmControls.find('.layout_col_break_points').val( breakPoints.join('%|')+'%' ); 
-					this.layoutObj.quickSave();
+					this.layoutObj.quickSave(); 
+					/*
+					if(this.layoutObj.layoutTwinObjs){ 
+						for(var z=0;z<this.layoutObj.layoutTwinObjs.length;z++){ 
+							//this.layoutObj.layoutTwinObjs[z].s.slider('destroy');
+							this.layoutObj.layoutTwinObjs[z].s.css('border','1px solid red');
+							//this.layoutTwinObjs[i].gridSizing();
+							//this.layoutObj.layoutTwinObjs[z].s.slider('values',1,10);
+						}
+					}
+					*/ 
 				},
-				slide:function(){ 			 
+				slide:function(){ 	
+					if(this.layoutObj.dontUpdateTwins) return; 
 					this.layoutObj.resizeGrid(this.childNodes); 
 				}
-			});
+			}); 
+			
 			if( parseInt(this.ccmControls.find('.layout_locked').val()) ) this.s.slider( 'disable' );
 		}	
 	}
 		
 		
 	this.resizeGrid=function(childNodes){	 
-
-		var i, positions=[]; 					
-		for(i=0;i<childNodes.length;i++){ 
-			var pos=parseFloat(childNodes[i].style.left.replace('%',''));
+	
+		var positions=[]; //, percentPositions=[];
+	
+		if(!this.layoutTwins){ 
+			this.layoutTwins = $('.ccm-layout-controls-layoutID-'+this.layout_id).not(this.ccmControls);
+			this.layoutTwinObjs=[]; 
+			for(var q=0;q<this.layoutTwins.length;q++){ 
+				//var cvalID = parseInt(this.layoutTwins[q].id.replace('ccm-layout-controls-','')); 
+				//alert(cvalID);  
+				this.layoutTwinObjs.push( this.layoutTwins[q].layoutObj ); 
+				//eval('var siblingLayoutObj = ccmLayout'+cvalID); 
+				//this.layoutTwinObjs.push(siblingLayoutObj); 
+				this.layoutTwins[q].handles = $(this.layoutTwins[q]).find('.ui-slider-handle');
+				//this.layoutTwins[q].s = this.layoutTwins[q].find('.ccm-layout-controls-slider');
+				//
+				
+			}
+		}  
+		 					
+		for(var y=0;y<childNodes.length;y++){ 
+			var pos=parseFloat(childNodes[y].style.left.replace('%',''));
 			positions.push(pos);
+			//percentPositions.push(pos+'%');
+			if(!this.dontUpdateTwins) for(var w=0;w<this.layoutTwinObjs.length;w++){
+				//this.layoutTwins[j].s.slider( 'values', i, pos); 
+				//alert( this.layoutTwins[j].s.slider( 'values') );
+				this.layoutTwinObjs[w].dontUpdateTwins=1;
+				this.layoutTwinObjs[w].s.slider('values',y,pos);
+				//this.layoutTwinObjs[w].dontUpdateTwins=0;
+			}
 		}
-		positions.sort( function(a, b){ return (a-b); } );
+		positions.sort( function(a, b){ return (a-b); } ); 
 	
 		var prevW=0;
 		var i; 					
@@ -283,11 +323,100 @@ function ccmLayout( layout_id, area, locked ){
 			var pos=positions[i];
 			var w=pos-prevW;
 			prevW+=w;
-			this.ccmGrid.find('#ccm-layout-'+this.layout_id+'-col-'+(i+1)).css('width',w+'%');						
+			$('.ccm-layout-'+this.layout_id+'-col-'+(i+1)).css('width',w+'%');	
+			
+			if(!this.dontUpdateTwins) for(j=0;j<this.layoutTwins.length;j++)
+				this.layoutTwins[j].handles[i].style.left=pos+'%'; 
 		}
-		this.ccmGrid.find('#ccm-layout-'+this.layout_id+'-col-'+(i+1)).css('width',(100-prevW)+'%'); 
+		$('.ccm-layout-'+this.layout_id+'-col-'+(i+1)).css('width',(100-prevW)+'%'); 
 	}
 	
 } 
 
 var quickSaveLayoutObj;
+
+
+var ccmLayoutEdit = {
+	
+	init:function(){
+		
+		this.showPresetDeleteIcon();
+		
+		//change preset selector
+		$('#ccmLayoutPresentIdSelector').change(function(){
+			//ccmLayoutEdit.showPresetDeleteIcon();
+			
+			var lpID = parseInt($(this).val());
+			var layoutID = $('#ccmAreaLayoutForm_layoutID').val();
+			
+			jQuery.fn.dialog.showLoader();
+			if (lpID > 0) {
+				var action = $('#ccm-layout-refresh-action').val() + '&lpID=' + lpID;
+			} else {
+				var action = $('#ccm-layout-refresh-action').val() + '&layoutID=' + layoutID;
+			}
+			
+			$.get(action, function(r) {
+				$("#ccm-layout-edit-wrapper").html(r);
+				jQuery.fn.dialog.hideLoader();
+				ccmLayoutEdit.showPresetDeleteIcon();
+			});
+		})
+		
+		$('#layoutPresetActionNew input[name=layoutPresetAction]').click(function() {
+			if ($(this).val() == 'create_new_preset' && $(this).attr('checked')) {
+				$('input[name=layoutPresetName]').attr('disabled', false).focus();
+			} else {
+				$('input[name=layoutPresetName]').val('').attr('disabled', true);
+			}
+		});
+		
+		$('#layoutPresetActions input[name=layoutPresetAction]').click(function() {
+			if ($(this).val() == 'create_new_preset' && $(this).attr('checked')) {
+				$('input[name=layoutPresetNameAlt]').attr('disabled', false).focus();
+			} else {
+				$('input[name=layoutPresetNameAlt]').val('').attr('disabled', true);
+			}
+		});		
+		
+		if ($("#layoutPresetActions").length > 0) {
+			$("#ccmLayoutConfigOptions input, #ccmLayoutConfigOptions select").bind('change click', function(){
+				//if( $('#ccmLayoutPresentIdSelector').val() > 0 ){ 
+					$("#layoutPresetActions").show();
+					$("#layoutPresetActionNew").hide();
+					$("#ccmLayoutConfigOptions input, #ccmLayoutConfigOptions select").unbind('change click'); 
+				//}
+			});		
+		}		
+	},
+	
+	showPresetDeleteIcon: function() {
+		if ($('#ccmLayoutPresentIdSelector').val() > 0) {
+			$("#ccm-layout-delete-preset").show();		
+		} else {
+			$("#ccm-layout-delete-preset").hide();
+		}	
+	},
+	
+	deletePreset: function() {
+		var lpID = parseInt($('#ccmLayoutPresentIdSelector').val());
+		if (lpID > 0) { 
+			if( !confirm(ccmi18n.confirmLayoutPresetDelete) ) return false;
+			
+			jQuery.fn.dialog.showLoader();
+			var area=$('#ccmAreaLayoutForm_arHandle').val(); 
+			var url = CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + area + '&task=deletePreset&lpID=' + lpID
+			$.get(url, function(r) {
+				eval('var jObj='+r); 
+				if(parseInt(jObj.success)!=1){ 
+					alert(jObj.msg);
+				}else{    
+					//success 
+					$("#ccmLayoutPresentIdSelector option[value='"+lpID+"']").remove();
+				}
+				jQuery.fn.dialog.hideLoader();
+			});  
+			
+		}
+	}
+}
