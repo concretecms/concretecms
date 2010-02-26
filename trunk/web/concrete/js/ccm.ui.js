@@ -268,11 +268,10 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 				function(r) {
 					if ($("#ccm-scrapbook-list").length > 0) {
 						window.location.reload();
-					}
-
+					} 
 					if (task == 'add') {
-						if ($("#a" + resp.aID + " div.ccm-area-styles").length > 0) {
-							$("#a" + resp.aID + " div.ccm-area-styles").append(r);
+						if ($("#a" + resp.aID + " div.ccm-area-styles-a"+ resp.aID).length > 0) {
+							$("#a" + resp.aID + " div.ccm-area-styles-a"+ resp.aID).append(r);
 						} else {
 							$("#a" + resp.aID).append(r);
 						}
