@@ -151,8 +151,8 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 		//at boundary, can't move further. 
 	}
 	
-	this.lock=function(lock){  
-		var a = $('#menuAreaLayoutLock' + this.layout_id); 
+	this.lock=function(lock,twinLock){  
+		var a = $('#menuAreaLayoutLock' + this.cvalID); 
 		this.locked = !this.locked;
 		if( this.locked ){ 
 			a.find('span').html(ccmi18n.unlockAreaLayout);
@@ -163,17 +163,24 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 		}
 		
 		var lock = (this.locked) ? 1 : 0;
-		this.servicesAjax = $.ajax({ 
-			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&task=lock&lock=' + lock,
-			success: function(response){  
-				eval('var jObj='+response); 
-				if(parseInt(jObj.success)!=1){ 
-					alert(jObj.msg);
-				}else{    
-					//success
+		if(!twinLock){
+			
+			this.servicesAjax = $.ajax({ 
+				url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&task=lock&lock=' + lock,
+				success: function(response){  
+					eval('var jObj='+response); 
+					if(parseInt(jObj.success)!=1){ 
+						alert(jObj.msg);
+					}else{    
+						//success
+					}
 				}
-			}
-		});	 
+			});	
+			
+			this.getTwins();
+			for(var i=0;i<this.layoutTwinObjs.length;i++) 
+				this.layoutTwinObjs[i].lock(lock,1);
+		}
 	}
 	
 	this.hasBeenQuickSaved=0;
@@ -261,20 +268,15 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 						
 					this.layoutObj.ccmControls.find('.layout_col_break_points').val( breakPoints.join('%|')+'%' ); 
 					this.layoutObj.quickSave(); 
-					/*
-					if(this.layoutObj.layoutTwinObjs){ 
-						for(var z=0;z<this.layoutObj.layoutTwinObjs.length;z++){ 
-							//this.layoutObj.layoutTwinObjs[z].s.slider('destroy');
-							this.layoutObj.layoutTwinObjs[z].s.css('border','1px solid red');
-							//this.layoutTwinObjs[i].gridSizing();
-							//this.layoutObj.layoutTwinObjs[z].s.slider('values',1,10);
-						}
-					}
-					*/ 
+					ccm_arrangeMode=0;
+					this.layoutObj.moving=0;
+					this.layoutObj.highlightAreas(0);
 				},
 				slide:function(){ 	
+					ccm_arrangeMode=1;
+					this.layoutObj.moving=1;
 					if(this.layoutObj.dontUpdateTwins) return; 
-					this.layoutObj.resizeGrid(this.childNodes); 
+					this.layoutObj.resizeGrid(this.childNodes);  
 				}
 			}); 
 			
@@ -282,37 +284,30 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 		}	
 	}
 		
-		
-	this.resizeGrid=function(childNodes){	 
-	
-		var positions=[]; //, percentPositions=[];
-	
+	this.getTwins=function(){
 		if(!this.layoutTwins){ 
 			this.layoutTwins = $('.ccm-layout-controls-layoutID-'+this.layout_id).not(this.ccmControls);
 			this.layoutTwinObjs=[]; 
-			for(var q=0;q<this.layoutTwins.length;q++){ 
-				//var cvalID = parseInt(this.layoutTwins[q].id.replace('ccm-layout-controls-','')); 
-				//alert(cvalID);  
-				this.layoutTwinObjs.push( this.layoutTwins[q].layoutObj ); 
-				//eval('var siblingLayoutObj = ccmLayout'+cvalID); 
-				//this.layoutTwinObjs.push(siblingLayoutObj); 
-				this.layoutTwins[q].handles = $(this.layoutTwins[q]).find('.ui-slider-handle');
-				//this.layoutTwins[q].s = this.layoutTwins[q].find('.ccm-layout-controls-slider');
-				//
-				
+			for(var q=0;q<this.layoutTwins.length;q++){  
+				this.layoutTwinObjs.push( this.layoutTwins[q].layoutObj );  
+				this.layoutTwins[q].handles = $(this.layoutTwins[q]).find('.ui-slider-handle');  
 			}
 		}  
+		return this.layoutTwins;
+	}
+		
+	this.resizeGrid=function(childNodes){	 
+	
+		var positions=[];
+	
+		this.getTwins();
 		 					
 		for(var y=0;y<childNodes.length;y++){ 
 			var pos=parseFloat(childNodes[y].style.left.replace('%',''));
-			positions.push(pos);
-			//percentPositions.push(pos+'%');
-			if(!this.dontUpdateTwins) for(var w=0;w<this.layoutTwinObjs.length;w++){
-				//this.layoutTwins[j].s.slider( 'values', i, pos); 
-				//alert( this.layoutTwins[j].s.slider( 'values') );
+			positions.push(pos); 
+			if(!this.dontUpdateTwins) for(var w=0;w<this.layoutTwinObjs.length;w++){ 
 				this.layoutTwinObjs[w].dontUpdateTwins=1;
-				this.layoutTwinObjs[w].s.slider('values',y,pos);
-				//this.layoutTwinObjs[w].dontUpdateTwins=0;
+				this.layoutTwinObjs[w].s.slider('values',y,pos); 
 			}
 		}
 		positions.sort( function(a, b){ return (a-b); } ); 
