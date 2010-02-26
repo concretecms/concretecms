@@ -285,6 +285,27 @@ class PageList extends DatabaseItemList {
 		} else {
 			$this->setQuery('select p1.cID, pt.ctHandle ' . $ik . $additionalFields . ' from Pages p1 left join PageTypes pt on (pt.ctID = p1.ctID) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = p1.cID) inner join CollectionVersions cv on (cv.cID = p1.cID and cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)) inner join Collections c on (c.cID = p1.cID)');
 		}
+		
+		
+		if ($this->displayOnlyApprovedPages) {
+			$this->filter('cvIsApproved', 1);
+		}
+		if ($this->includeAliases) {
+			$this->filter(false, "(p1.cIsTemplate = 0 or p2.cIsTemplate = 0)");
+		} else {
+			$this->filter('p1.cIsTemplate', 0);
+		}
+		
+		$this->setupPermissions();
+		
+		if ($this->includeAliases) {
+			$this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = if (p2.cID is null, p1.cID, p2.cID))");
+		} else {
+			$this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = p1.cID)");
+		}
+		
+		$this->setupSystemPagesToExclude();
+		
 	}
 	
 	protected function setupSystemPagesToExclude() {
@@ -334,22 +355,9 @@ class PageList extends DatabaseItemList {
 		if ($this->getQuery() == '') {
 			$this->setBaseQuery();
 		}		
-		if ($this->displayOnlyApprovedPages) {
-			$this->filter('cvIsApproved', 1);
-		}
-		if ($this->includeAliases) {
-			$this->filter(false, "(p1.cIsTemplate = 0 or p2.cIsTemplate = 0)");
-		} else {
-			$this->filter('p1.cIsTemplate', 0);
-		}
+		
 		$this->setItemsPerPage($itemsToGet);
-		$this->setupPermissions();
-		if ($this->includeAliases) {
-			$this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = if (p2.cID is null, p1.cID, p2.cID))");
-		} else {
-			$this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = p1.cID)");
-		}
-		$this->setupSystemPagesToExclude();
+		
 		$r = parent::get($itemsToGet, $offset);
 		foreach($r as $row) {
 			$nc = $this->loadPageID($row['cID']);

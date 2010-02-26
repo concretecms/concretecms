@@ -54,15 +54,17 @@ $generated = SinglePage::getList();
 		<td class="subheader"><div style="width: 90px"></div></td>
 	</tr>
 	<? if (count($generated) == 0) { ?>
-		<td colspan="4"><?=t('No pages found.')?></td>
+		<tr><td colspan="4"><?=t('No pages found.')?></td></tr>
 	<? } else { ?>
 	
 	<? foreach ($generated as $p) { ?>
 	<?
 		if ($p->getPackageID() > 0) {
 			$package = Package::getByID($p->getPackageID());
-			$packageHandle = $package->getPackageHandle();
-			$packageName = $package->getPackageName();
+			if(is_object($package)) {
+				$packageHandle = $package->getPackageHandle();
+				$packageName = $package->getPackageName();
+			}
 		} else {
 			$packageName = t('None');
 		}
