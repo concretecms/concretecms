@@ -57,7 +57,7 @@ tinyMCE.init({
 		theme_advanced_resizing : true				
 	<? }else{ //simple ?>
 		theme : "concrete", 
-		plugins: "inlinepopups,spellchecker,safari,advlink",
+		plugins: "inlinepopups,spellchecker,paste,safari,advlink",
 		editor_selector : "ccm-advanced-editor",
 		spellchecker_languages : "+English=en"		
 	<? } ?>

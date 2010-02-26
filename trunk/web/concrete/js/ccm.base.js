@@ -70,20 +70,14 @@ ccm_addHeaderItem = function(item, type) {
 		}
 	}
 	if (doLoad) {
-		$.ajax({
-			url: item,
-			async: false,
-			success: function(data) {
-				switch(type) {
-					case 'CSS':
-						$('head').append('<style type="text/css">' + data + '</style>');
-						break;
-					case 'JAVASCRIPT':
-						$('head').append('<script type="text/javascript">' + data + '</script>');
-						break;
-				}
-			}
-		});
+		switch(type) {
+			case 'CSS':
+				$('head').append('<style type="text/css">@import "' + item + '";</style>');
+				break;
+			case 'JAVASCRIPT':
+				$('head').append('<script type="text/javascript" src="' + item + '"></script>');
+				break;
+		}
 	}
 }
 
