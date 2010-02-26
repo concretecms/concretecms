@@ -6,10 +6,11 @@ body {
 
 img {border: 0px}
 a,a:visited,a:active {
-	/* customize_link */ color: #66aa33; /* customize_link */
+	/* customize_link */ color: #614F3F; /* customize_link */
+	text-decoration:none;
 }
 a:hover {
-	/* customize_link_hover */ color: #66CC00; /* customize_link_hover */
+	/* customize_link_hover */ color: #81613F; /* customize_link_hover */ text-decoration:underline;
 } 
 
 h1,h2,h3,h4,h5{ margin:0px 0px 4px 0px; padding:4px 0px; margin-top:8px }
