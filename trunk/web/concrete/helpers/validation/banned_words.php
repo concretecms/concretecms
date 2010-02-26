@@ -206,19 +206,3 @@ class ValidationBannedWordsHelper{
 	}
 
 }
-
-/*
-    EXAMPLE
-$s = new SwearWordFilter;
-$msg = $s->loadBannedWords();
-if ($msg) print $msg . "\n";
-else print_r($s->bannedWords) . "\n";
-
-$string = "This ShiT is rEaLly poopy, you cunt. PicKle.";
-print "$string\n";
-$r = $s->hasBannedWords($string);
-var_dump($r);
-print "\n";
-print "$string\n";
-*/
-?>
