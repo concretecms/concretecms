@@ -228,6 +228,7 @@ ccm_resetBlockErrors = function() {
 
 ccm_deleteBlock = function(bID, aID, arHandle, msg) {
 	if (confirm(msg)) {
+		ccm_mainNavDisableDirectExit();
 		// got to grab the message too, eventually
 		ccm_hideHighlighter();
 		ccm_menuActivated = true;
