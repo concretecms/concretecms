@@ -462,7 +462,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function renderError($title, $error, $errorObj = null) {
 			$innerContent = $error;
 			$titleContent = $title; 
-			if (!isset($this->theme) || (!$this->theme)) {
+			if (!isset($this->theme) || (!$this->theme) || (!file_exists($this->theme))) {
 				$this->setThemeForView(DIRNAME_THEMES_CORE, FILENAME_THEMES_ERROR . '.php', true);
 				include($this->theme);	
 			} else {
@@ -757,8 +757,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					header("Content-Type: text/html; charset=" . APP_CHARSET);
 				}
 				
-				
-				include($this->theme);
+				if (file_exists($this->theme)) {
+					include($this->theme);
+				} else {
+					throw new Exception(t('File %s not found. All themes need default.php and view.php files in them. Consult concrete5 documentation on how to create these files.', $this->theme));
+				}
 				
 				Events::fire('on_render_complete', $this);
 				
