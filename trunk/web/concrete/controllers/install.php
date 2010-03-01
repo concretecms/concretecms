@@ -411,6 +411,9 @@ class InstallController extends Controller {
 						$salad = PageTheme::add('greensalad');
 						$darkc = PageTheme::add('dark_chocolate');
 						
+						// add the dark chocolate theme 						
+						$chocolate = PageTheme::add('dark_chocolate');
+						
 						// Add our dashboard items and their navs
 						$d0 = SinglePage::add('/dashboard');
 				

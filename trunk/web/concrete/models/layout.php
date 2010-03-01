@@ -50,7 +50,7 @@
 	
 	public function getLayoutNameDivider(){ return ' : '; }
 	public function getLayoutNameTxt(){ return t('Layout'); }
-	public function getLayoutName(){ return $this->getAreaHandle().$this->getLayoutNameDivider().' '.$this->getLayoutNameTxt().' '.$this->getAreaNameNumber(); }
+	public function getLayoutName(){ return $this->getAreaHandle().$this->getLayoutNameDivider().$this->getLayoutNameTxt().' '.$this->getAreaNameNumber(); }
 	public function getLayoutPresetId(){ return intval($this->lpID); }
 	public function getLayoutPresetObj(){ return LayoutPreset::getByID($this->lpID); }
 	
@@ -236,7 +236,7 @@
 	*/ 
 	
 	public function getCellAreaHandle( $cellNumber=0 ){  
-		return $this->getLayoutName().$this->getLayoutNameDivider().' Cell '.intval($cellNumber); 
+		return $this->getLayoutName().$this->getLayoutNameDivider().'Cell '.intval($cellNumber); 
 	}
 	
 	public function getMaxCellNumber(){ 
