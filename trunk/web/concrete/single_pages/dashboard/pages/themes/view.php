@@ -45,9 +45,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 			<?=$bt->button(t("Inspect"), $this->url('/dashboard/pages/themes/inspect', $t->getThemeID()), "left");?>
 			<?=$bt->button(t("Customize"), $this->url('/dashboard/pages/themes/customize', $t->getThemeID()), "left");?>
 			
-			<? if ($t->isUninstallable()) { ?>
-				<?=$bt->button(t("Remove"), $this->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), "left");?>
-			<? } ?>
+			<?=$bt->button(t("Remove"), $this->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), "left");?>
 			</td>
 		</tr>
 		<? }
