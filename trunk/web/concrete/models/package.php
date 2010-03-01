@@ -283,7 +283,7 @@ class Package extends Object {
 
 		foreach($items as $k => $array) {
 			foreach($array as $item) {
-				if (is_a($item, 'AttributeKey')) {
+				if (is_a($item, 'AttributeKey') || is_a($item, 'MailImporter')) {
 					$item->delete();
 				} else {
 					switch(get_class($item)) {

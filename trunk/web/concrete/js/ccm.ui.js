@@ -295,7 +295,7 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 			);
 		}
 	} catch(e) {
-		alert(r);
+		ccmAlert.notice(ccmi18n.error, r);
 	}
 }
 
