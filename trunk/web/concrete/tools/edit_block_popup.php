@@ -20,13 +20,13 @@ if($_REQUEST['isGlobal'] && ($_REQUEST['btask']=='edit' || $_REQUEST['btask']=='
 $bp = new Permissions($b);
 if (!$bp->canWrite()) {
 	die(_("Access Denied."));
-}
+} 
 
 if ($_REQUEST['btask'] != 'view' && $_REQUEST['btask'] != 'view_edit_mode') { 
 	include(DIR_FILES_ELEMENTS_CORE . '/dialog_header.php');
 }
 
-$bv = new BlockView();
+$bv = new BlockView(); 
 			
 if($isGlobal){
 	echo '<div class="ccm-notification">';

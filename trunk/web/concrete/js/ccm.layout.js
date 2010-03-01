@@ -12,6 +12,8 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 	
 	this.init = function(){ 
 	
+		//ccmAlert.hud( 'test3', 2000, 'add', 'test2');
+	
 		var layoutObj=this;
 		this.layoutWrapper = $('#ccm-layout-wrapper-'+this.cvalID); 
 		this.ccmControls = this.layoutWrapper.find("#ccm-layout-controls-"+this.cvalID);
@@ -69,7 +71,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 			html += '<ul>';
 			
 			
-			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="230" id="menuEditLayout' + this.cvalID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/layout_small.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
+			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="230" id="menuEditLayout' + this.cvalID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + encodeURI(this.area) + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/layout_small.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
 			
 			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveUp' + this.cvalID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/icon_move_up.png)">' + ccmi18n.moveLayoutUp + '</span></a></li>';
 						
@@ -115,7 +117,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 		ccm_hideHighlighter();
 		this.highlightAreas(1);
 		this.servicesAjax = $.ajax({ 
-			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&task=move&direction=' + direction,
+			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + encodeURI(this.area) + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&task=move&direction=' + direction,
 			success: function(response){  
 				eval('var jObj='+response); 
 				if(parseInt(jObj.success)!=1){ 
@@ -400,7 +402,7 @@ var ccmLayoutEdit = {
 			
 			jQuery.fn.dialog.showLoader();
 			var area=$('#ccmAreaLayoutForm_arHandle').val(); 
-			var url = CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + area + '&task=deletePreset&lpID=' + lpID
+			var url = CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + encodeURI(area) + '&task=deletePreset&lpID=' + lpID
 			$.get(url, function(r) {
 				eval('var jObj='+r); 
 				if(parseInt(jObj.success)!=1){ 
