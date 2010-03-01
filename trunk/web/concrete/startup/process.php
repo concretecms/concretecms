@@ -408,7 +408,7 @@
 				break;
 			case 'check-out':
 			case 'check-out-first':
-				if ($cp->canWrite()) {
+				if ($cp->canWrite() || $cp->canApproveCollection()) {
 					// checking out the collection for editing
 					$u = new User();
 					$u->loadCollectionEdit($c);
@@ -423,7 +423,7 @@
 				}
 				break;
 			case 'check-in':
-				if ($cp->canWrite()) {
+				if ($cp->canWrite() || $cp->canApproveCollection()) {
 					// checking out the collection for editing
 					$v = CollectionVersion::get($c, "RECENT");
 					

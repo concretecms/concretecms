@@ -75,7 +75,7 @@ if (isset($cp)) {
 	
 	}
 
-	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage()) { ?>
+	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { ?>
 
 menuHTML += '<div id="ccm-page-controls">';
 menuHTML += '<div id="ccm-logo-wrapper"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" width="49" height="49" id="ccm-logo" /></div>';
@@ -93,14 +93,16 @@ menuHTML += '</div>';
 
 menuHTML += '<ul id="ccm-main-nav">';
 <? if (!$c->isAlias()) { ?>
-menuHTML += '<li class="ccm-main-nav-view-option" <? if ($c->isEditMode()) { ?> style="display: none" <? } ?>><? if ($cantCheckOut) { ?><span id="ccm-nav-edit"><?=t('Edit Page')?></span><? } else if ($cp->canWrite()) { ?><a href="javascript:void(0)" id="ccm-nav-edit"><?=t('Edit Page')?></a><? } ?></li>';
+menuHTML += '<li class="ccm-main-nav-view-option" <? if ($c->isEditMode()) { ?> style="display: none" <? } ?>><? if ($cantCheckOut) { ?><span id="ccm-nav-edit"><?=t('Edit Page')?></span><? } else if ($cp->canWrite() || $cp->canApproveCollection()) { ?><a href="javascript:void(0)" id="ccm-nav-edit"><?=t('Edit Page')?></a><? } ?></li>';
 <? if ($cp->canAddSubContent()) { ?>
 	menuHTML += '<li class="ccm-main-nav-view-option" <? if ($c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-add"><?=t('Add Page')?></a></li>';
 <? } ?>
 menuHTML += '<li class="ccm-main-nav-arrange-option" <? if (!$c->isArrangeMode()) { ?> style="display: none" <? } ?>><a href="#" id="ccm-nav-save-arrange"><?=t('Save Positioning')?></a></li>';
 menuHTML += '<li class="ccm-main-nav-edit-option ccm-main-nav-exit-edit-mode-direct" <? if (!$c->isEditMode() || ($vo->isNew()))  { ?> style="display: none" <? } ?>><a href="<?=DIR_REL?>/index.php?cID=<?=$c->getCollectionID()?>&ctask=check-in<?=$token?>" id="ccm-nav-exit-edit-direct"><?=t('Exit Edit Mode')?></a></li>';
 menuHTML += '<li class="ccm-main-nav-edit-option ccm-main-nav-exit-edit-mode" <? if (!$c->isEditMode() || (!$vo->isNew())) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-exit-edit"><?=t('Exit Edit Mode')?></a></li>';
-menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-properties"><?=t('Properties')?></a></li>';
+<? if ($cp->canWrite()) { ?>
+	menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-properties"><?=t('Properties')?></a></li>';
+<? } ?>
 <? if ($cp->canAdminPage()) { ?>
 menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-design"><?=t('Design')?></a></li>';
 menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-permissions"><?=t('Permissions')?></a></li>';

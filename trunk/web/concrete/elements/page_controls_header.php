@@ -5,7 +5,7 @@ $token = '&' . $valt->getParameter();
 $html = Loader::helper('html');
 
 if (isset($cp)) {
-	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage()) {
+	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) {
 
 $this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 $this->addHeaderItem($html->javascript('jquery.js'));
