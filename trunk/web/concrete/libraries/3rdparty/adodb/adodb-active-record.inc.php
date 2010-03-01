@@ -629,7 +629,8 @@ class ADODB_Active_Record {
 		case 'N':
 		case 'C':
 		case 'X':
-			if (is_null($val)) return 'null';
+			// concrete5 modification - empty strings should evaluate to null.
+			if (is_null($val) || $val === '') return 'null';
 			
 			if (strlen($val)>1 && 
 				(strncmp($val,"'",1) != 0 || substr($val,strlen($val)-1,1) != "'")) { 
