@@ -151,7 +151,7 @@ $(function() {
 
 </style>
 
-<form id="form1" action="index.php" method="post" enctype="multipart/form-data">
+<form id="form1" action="<?=DISPATCHER_FILENAME?>" method="post" enctype="multipart/form-data">
 		
 		<table border="0" width="100%" cellspacing="0" cellpadding="0" id="ccm-file-upload-multiple-list">
 		<tr>

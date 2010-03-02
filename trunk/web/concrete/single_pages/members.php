@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 <div id="ccm-profile-wrapper">
-	<form method="get" action="<?=DIR_REL?>/index.php">
+	<form method="get" action="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>">
 			Search  		
 			<input type="hidden" name="cID" value="<?=$c->getCollectionID()?>" />
 			<input name="keywords" type="text" value="<?=$keywords?>" size="20" />		

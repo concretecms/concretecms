@@ -130,7 +130,7 @@ class DashboardReportsFormsController extends Controller {
 		$c=$this->getCollectionObject();
 		$db = Loader::db();
 		$tempMiniSurvey = new MiniSurvey();
-		$pageBase=DIR_REL.'/index.php?cID='.$c->getCollectionID();	
+		$pageBase=DIR_REL.'/' . DISPATCHER_FILENAME . '?cID='.$c->getCollectionID();	
 
 		if( $_REQUEST['action'] == 'deleteForm' ){
 			$this->deleteForm($_REQUEST['bID'], $_REQUEST['qsID']);

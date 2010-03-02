@@ -667,7 +667,7 @@ $(document).ready(function(){
 	<div class="ccm-dashboard-inner">
 	
 	<div class="ccm-dashboard-radio"><?=$form->checkbox('URL_REWRITING', 1, $url_rewriting)?> <?=t('Enable Pretty URLs')?></div>
-	<div class="ccm-dashboard-description"><?=t("Automatically translates your path-based Concrete5 URLs so that they don't include 'index.php'.")?></div>
+	<div class="ccm-dashboard-description"><?=t("Automatically translates your path-based Concrete5 URLs so that they don't include %s.", DISPATCHER_FILENAME)?></div>
 	
 	<? if (URL_REWRITING) { ?>
 	<h2><?=t('Required Code')?></h2>

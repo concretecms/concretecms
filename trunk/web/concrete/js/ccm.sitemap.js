@@ -32,7 +32,7 @@ showPageMenu = function(obj, e) {
 		
 		if (obj.cAlias == 'LINK' || obj.cAlias == 'POINTER') {
 		
-			html += '<li><a class="ccm-icon" id="menuVisit' + obj.cID + '" href="' + CCM_REL + '/index.php?cID=' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">' + ccmi18n_sitemap.visitExternalLink + '<\/span><\/a><\/li>';
+			html += '<li><a class="ccm-icon" id="menuVisit' + obj.cID + '" href="' + CCM_REL + '/' + CCM_DISPATCHER_FILENAME + '?cID=' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">' + ccmi18n_sitemap.visitExternalLink + '<\/span><\/a><\/li>';
 			if (obj.cAlias == 'LINK') {
 				html += '<li><a class="ccm-icon" dialog-width="350" dialog-height="300" dialog-title="' + ccmi18n_sitemap.editExternalLink + '" dialog-modal="false" id="menuLink' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=edit_external"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n_sitemap.editExternalLink + '<\/span><\/a><\/li>';
 			}
@@ -41,12 +41,12 @@ showPageMenu = function(obj, e) {
 		
 		} else if (obj.canWrite == 'false') {
 		
-			html += '<li><a class="ccm-icon" id="menuVisit' + obj.cID + '" href="' + CCM_REL + '/index.php?cID=' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">' + ccmi18n_sitemap.visitPage + '<\/span><\/a><\/li>';
+			html += '<li><a class="ccm-icon" id="menuVisit' + obj.cID + '" href="' + CCM_REL + '/' + CCM_DISPATCHER_FILENAME + '?cID=' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">' + ccmi18n_sitemap.visitPage + '<\/span><\/a><\/li>';
 
 		
 		} else {
 		
-			html += '<li><a class="ccm-icon" id="menuVisit' + obj.cID + '" href="' + CCM_REL + '/index.php?cID=' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">' + ccmi18n_sitemap.visitPage + '<\/span><\/a><\/li>';
+			html += '<li><a class="ccm-icon" id="menuVisit' + obj.cID + '" href="' + CCM_REL + '/' + CCM_DISPATCHER_FILENAME + '?cID=' + obj.cID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">' + ccmi18n_sitemap.visitPage + '<\/span><\/a><\/li>';
 			html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="310" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageProperties + '" id="menuProperties' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=edit_metadata"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/edit_small.png)">' + ccmi18n_sitemap.pageProperties + '<\/span><\/a><\/li>';
 			html += '<li><a class="ccm-icon" dialog-width="640" dialog-height="310" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.setPagePermissions + '" id="menuPermissions' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=edit_permissions"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + ccmi18n_sitemap.setPagePermissions + '<\/span><\/a><\/li>';
 			html += '<li><a class="ccm-icon" dialog-width="680" dialog-height="420" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageDesign + '" id="menuDesign' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=set_theme"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/design_small.png)">' + ccmi18n_sitemap.pageDesign + '<\/span><\/a><\/li>';
@@ -459,11 +459,11 @@ moveCopyAliasNode = function(reloadPage) {
 				if (typeof(CCM_LAUNCHER_SITEMAP) != 'undefined') {
 					if (CCM_LAUNCHER_SITEMAP == 'explore') {
 						// we are in the dashboard and we need to actually go to the explore node
-						window.location.href = CCM_REL + "/index.php/dashboard/sitemap/explore/-/" + destCID;
+						window.location.href = CCM_REL + "/" + CCM_DISPATCHER_FILENAME + "/dashboard/sitemap/explore/-/" + destCID;
 						return false;
 					}
 				} else {
-					window.location.href = CCM_REL + "/index.php?cID=" + resp.cID;
+					window.location.href = CCM_REL + "/" + CCM_DISPATCHER_FILENAME + "?cID=" + resp.cID;
 					return false;
 				}
 			}

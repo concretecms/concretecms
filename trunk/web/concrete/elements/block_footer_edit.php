@@ -13,7 +13,7 @@ $closeWindowCID=(intval($rcID))?intval($rcID):$c->getCollectionID();
 	<? } ?>
 	
 	<div class="ccm-buttons">
-	<a href="javascript:void(0)" <? if ($replaceOnUnload) { ?>onclick="location.href='<?=DIR_REL?>/index.php?cID=<?=$closeWindowCID ?><?=$step?>'; return true" class="ccm-button-left cancel"<? } else { ?>class="ccm-button-left cancel" onclick="ccm_blockWindowClose()" <? } ?>><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
+	<a href="javascript:void(0)" <? if ($replaceOnUnload) { ?>onclick="location.href='<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$closeWindowCID ?><?=$step?>'; return true" class="ccm-button-left cancel"<? } else { ?>class="ccm-button-left cancel" onclick="ccm_blockWindowClose()" <? } ?>><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
 	<a href="javascript:clickedButton = true;$('#ccm-form-submit-button').get(0).click()" class="ccm-button-right accept"><span><em class="ccm-button-update"><?=t('Update')?></em></span></a>
 	</div>	
 

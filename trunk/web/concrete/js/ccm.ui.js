@@ -716,7 +716,7 @@ ccm_init = function() {
 		if (!ccm_topPaneDeactivated) {
 			setTimeout(function() {
 				// stupid safari? wtf?
-				window.location.href = CCM_REL + '/index.php?cID=' + CCM_CID + '&ctask=check-out&ccm_token=' + CCM_SECURITY_TOKEN;
+				window.location.href = CCM_REL + '/' + CCM_DISPATCHER_FILENAME + '?cID=' + CCM_CID + '&ctask=check-out&ccm_token=' + CCM_SECURITY_TOKEN;
 			}, 50);
 		}
 	});

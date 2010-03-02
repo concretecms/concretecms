@@ -63,12 +63,12 @@ function deleteForm(dLink){
 				<td><?php echo $survey['surveyName']?></td>
 				<td><?php echo $survey['answerSetCount']?></td>
 				<td>
-					<a href="<?php echo DIR_REL?>/index.php?cID=<?php echo $c->getCollectionId()?>&qsid=<?php echo $thisQuestionSetId?>"><?php echo t('View Responses')?></a>
+					<a href="<?php echo DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?php echo $c->getCollectionId()?>&qsid=<?php echo $thisQuestionSetId?>"><?php echo t('View Responses')?></a>
 					|
-					<a href="<?php echo DIR_REL?>/index.php?cID=<?php echo $ocID?>"><?php echo t('Open Page')?></a>	
+					<a href="<?php echo DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?php echo $ocID?>"><?php echo t('Open Page')?></a>	
 					<? if(!intval($blockActiveOnNumPages)){ ?>
 					| 
-					<a onclick="return deleteForm()" href="<?php echo DIR_REL?>/index.php?cID=<?php echo $c->getCollectionId()?>&bID=<?php echo $survey['bID']?>&qsID=<?php echo $thisQuestionSetId?>&action=deleteForm"><?php echo t('Delete Unused Form')?></a>
+					<a onclick="return deleteForm()" href="<?php echo DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?php echo $c->getCollectionId()?>&bID=<?php echo $survey['bID']?>&qsID=<?php echo $thisQuestionSetId?>&action=deleteForm"><?php echo t('Delete Unused Form')?></a>
 					<? } ?>
 				</td>				
 			</tr>
@@ -165,7 +165,7 @@ function deleteForm(dLink){
 			</div>
 			
 			<div style="text-align:right; margin-bottom:16px">
-			<a onclick="return deleteResponse()" href="<?php echo DIR_REL?>/index.php?cID=<?php echo $c->getCollectionId()?>&qsid=<?php echo $answerSet['questionSetId']?>&asid=<?php echo $answerSet['asID']?>&action=deleteResponse"><?=t("Delete Response")?></a>
+			<a onclick="return deleteResponse()" href="<?php echo DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?php echo $c->getCollectionId()?>&qsid=<?php echo $answerSet['questionSetId']?>&asid=<?php echo $answerSet['asID']?>&action=deleteResponse"><?=t("Delete Response")?></a>
 			&nbsp;|&nbsp;
 			<?php  if( count($questions)>$numQuestionsToShow ){ ?>
 				<a onclick="toggleQuestions(<?php echo $answerSetId?>,this)"><?php echo $toggleQuestionsShowText?></a>

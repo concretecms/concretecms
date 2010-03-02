@@ -35,7 +35,7 @@ $cList = $ct->getPages();
 		foreach($cList as $p) { ?>
 			<tr class="active">
 			<td><?=$p->getCollectionID()?></td>
-			<td><a href="<?=DIR_REL?>/index.php?cID=<?=$p->getCollectionID()?>" target="_blank"><?=$p->getCollectionName()?></a></td>
+			<td><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$p->getCollectionID()?>" target="_blank"><?=$p->getCollectionName()?></a></td>
 			<td style="text-align: center"><?=$p->getCollectionDateAdded('m/d/Y','user')?></td>
 			<td style="text-align: center"><? if ($b->isAlias($p)) { ?> <input type="hidden" name="checkedCIDs[]" value="<?=$p->getCollectionID()?>" /><? } ?><?=$p->getCollectionDateLastModified('m/d/Y','user')?></td>
 			<td style="text-align: center"><input class="mc-cb" type="checkbox" name="cIDs[]" value="<?=$p->getCollectionID()?>" <? if ($b->isAlias($p)) { ?> checked <? } ?> /></td>

@@ -210,7 +210,7 @@ class ConcreteDashboardSitemapHelper {
 			}
 			$cp = new Permissions($c);
 			$this->html .= '<li class="ccm-sitemap-current-level-title">';
-			$this->html .= '<div sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '" sitemap-instance-id="' . $instanceID . '" class="tree-label" rel="' . DIR_REL . '/index.php?cID=' . $c->getCollectionID() . '" tree-node-alias="0" ';
+			$this->html .= '<div sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '" sitemap-instance-id="' . $instanceID . '" class="tree-label" rel="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '" tree-node-alias="0" ';
 			$this->html .= 'selected-page-id="' . $this->selectedPageID . '" tree-node-canwrite="' . $cp->canWrite() . '" tree-node-children="' . $c->getNumChildren() . '" ';
 			$this->html .= 'tree-node-title="' . htmlspecialchars($c->getCollectionName()) . '" id="tree-label' . $c->getCollectionID() . '">';
 			$this->html .= '<span>' . $c->getCollectionName() . '</span></div></li>';
@@ -255,7 +255,7 @@ class ConcreteDashboardSitemapHelper {
 					$this->html .= '<a href="javascript:toggleSub(\'' . $instanceID . '\',\'' . $ri['id'] . '\',\'' . $display_mode . '\',\'' . $select_mode . '\')">';
 					$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/dashboard/plus.jpg" width="9" height="9" class="tree-plus" id="tree-collapse' . $ri['id'] . '" /></a>';
 				}
-				$this->html .= '<div rel="' . DIR_REL . '/index.php?cID=' . $ri['id'] . '" class="' . $labelClass . '" tree-node-alias="' . $cAlias . '" ';
+				$this->html .= '<div rel="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $ri['id'] . '" class="' . $labelClass . '" tree-node-alias="' . $cAlias . '" ';
 				$this->html .= 'selected-page-id="' . $this->selectedPageID . '" sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '" sitemap-instance-id="' . $instanceID . '" tree-node-canwrite="' . $canWrite . '" tree-node-children="' . $ri['numSubpages'] . '" ';
 				$this->html .= 'tree-node-title="' . htmlspecialchars($ri['cvName']) . '" id="tree-label' . $ri['id'] . '" ';
 				if ($ri['selected']) {
@@ -287,7 +287,7 @@ class ConcreteDashboardSitemapHelper {
 			} else {
 				$this->html .= '<div tree-node-title="' . htmlspecialchars($ri['cvName']) . '" tree-node-children="' . $ri['numSubpages'] . '" ';
 				$this->html .= 'class="' . $labelClass . '" tree-node-alias="' . $cAlias . '" tree-node-canwrite="' . $canWrite . '" ';
-				$this->html .= 'selected-page-id="' . $this->selectedPageID . '" sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '" sitemap-instance-id="' . $instanceID . '" id="tree-label' . $ri['id'] . '" rel="' . DIR_REL . '/index.php?cID=' . $ri['id'] . '">';
+				$this->html .= 'selected-page-id="' . $this->selectedPageID . '" sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '" sitemap-instance-id="' . $instanceID . '" id="tree-label' . $ri['id'] . '" rel="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $ri['id'] . '">';
 				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/spacer.gif" width="16" height="16" class="handle ' . $moveableClass . '" /><span>' . $ri['cvName'] . '</span></div>';
 			}
 			
