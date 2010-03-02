@@ -45,6 +45,9 @@ class Request {
 		}
 		$path = str_replace($replace, '', $path);
 		$path = trim($path, '/');
+		if (defined('ENABLE_CMS_FOR_PATH') && ENABLE_CMS_FOR_PATH != '') {
+			$path = ENABLE_CMS_FOR_PATH . '/' . $path;
+		}
 		return $path;
 	}
 	
