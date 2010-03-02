@@ -116,10 +116,10 @@
 	require(dirname(__FILE__) . '/startup/tools_upgrade_check.php');
 
 	## Specific site routes for various content items (if they exist) ##
-	@include('config/site_theme_paths.php');
+	@include(DIR_CONFIG_SITE . '/site_theme_paths.php');
 
 	## Specific site routes for various content items (if they exist) ##
-	@include('config/site_file_types.php');
+	@include(DIR_CONFIG_SITE . '/site_file_types.php');
 
 	## Package events
 	require(dirname(__FILE__) . '/startup/packages.php');
@@ -130,7 +130,7 @@
 
 	## This must come before packages ##
 	if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true) {
-		@include('config/site_events.php');
+		@include(DIR_CONFIG_SITE . '/site_events.php');
 	}
 	
 	

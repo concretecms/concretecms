@@ -1,6 +1,8 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
-define('DISPATCHER_FILENAME', 'index.php');
+if (!defined('DISPATCHER_FILENAME')) {
+	define('DISPATCHER_FILENAME', 'index.php');
+}
 if (!defined('C5_ENVIRONMENT_ONLY')) {
 	define('C5_ENVIRONMENT_ONLY', false);
 }
@@ -136,7 +138,9 @@ define('DIR_FILES_TOOLS', DIR_BASE . '/tools'); // front-end
 define('DIR_FILES_TOOLS_REQUIRED', DIR_BASE_CORE . '/tools'); // global
 
 # Packages 
-define('DIR_PACKAGES', DIR_BASE . '/packages');
+if (!defined('DIR_PACKAGES')) {
+	define('DIR_PACKAGES', DIR_BASE . '/packages');
+}
 define('DIR_PACKAGES_CORE', DIR_BASE_CORE . '/packages');
 define('DIRNAME_PACKAGE_CORE', 'core');
 define('DIR_PACKAGE_CORE', DIR_BASE_CORE . '/packages/' . DIRNAME_PACKAGE_CORE);
@@ -183,8 +187,10 @@ define('FILENAME_BLOCK_DB', 'db.xml');
 if (defined('MULTI_SITE') && MULTI_SITE == 1) {
 	define('ASSETS_URL_WEB', BASE_URL);
 	define('ASSETS_URL_WEB_FULL', BASE_URL);
-	require(DIRNAME_UPDATES . '/index.php');
-	define('DIR_APP_UPDATES', $DIR_APP_UPDATES);
+	@include(DIRNAME_UPDATES . '/index.php');
+	if (isset($DIR_APP_UPDATES)) {
+		define('DIR_APP_UPDATES', $DIR_APP_UPDATES);
+	}
 } else {
 	define('DIR_APP_UPDATES', DIR_BASE . '/' . DIRNAME_UPDATES);
 	define('ASSETS_URL_WEB_FULL', BASE_URL . DIR_REL);
@@ -237,7 +243,9 @@ define('DIR_FILES_ELEMENTS', DIR_BASE . '/elements');
 define('DIR_FILES_ELEMENTS_CORE', DIR_BASE_CORE . '/elements');
 
 # Jobs
-define('DIR_FILES_JOBS', DIR_BASE . '/jobs');
+if (!defined('DIR_FILES_JOBS')) {
+	define('DIR_FILES_JOBS', DIR_BASE . '/jobs');
+}
 define('DIR_FILES_JOBS_CORE', DIR_BASE_CORE . '/jobs');
 
 # Themes
@@ -271,16 +279,15 @@ define('REL_DIR_FILES_UPLOADED', DIR_REL . '/files');
 if (!defined('DIR_FILES_BACKUPS')) {
 	define('DIR_FILES_BACKUPS', DIR_BASE . '/files/backups');
 }
-define('DIR_FILES_UPLOADED_THUMBNAILS', DIR_BASE . '/files/thumbnails');
 define('REL_DIR_FILES_UPLOADED_THUMBNAILS', DIR_REL . '/files/thumbnails');
-define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_BASE . '/files/thumbnails/level2');
 define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_REL . '/files/thumbnails/level2');
-define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_BASE . '/files/thumbnails/level3');
 define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_REL . '/files/thumbnails/level3');
 define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED . '/cache');
 
 #Cache
-define('DIR_FILES_CACHE', DIR_BASE . '/files/cache');
+if (!defined('DIR_FILES_CACHE')) {
+	define('DIR_FILES_CACHE', DIR_BASE . '/files/cache');
+}
 if (!is_dir(DIR_FILES_CACHE)) {
 	@mkdir(DIR_FILES_CACHE);
 	@chmod(DIR_FILES_CACHE, 0777);
@@ -294,7 +301,6 @@ define('DISPATCHER_FILENAME_CORE', 'dispatcher.php');
 
 
 define('DIR_FILES_CACHE_DB', DIR_FILES_CACHE);
-define('DIR_FILES_CACHE_CORE', DIR_BASE . '/files/cache_objects');
 define('DIR_FILES_CACHE_PAGES', DIR_FILES_CACHE . '/lucene.pages');
 define('ON_WINDOWS', intval(substr(PHP_OS,0,3)=='WIN') );
 
@@ -364,7 +370,6 @@ if (!defined('AVATAR_WIDTH') && !defined('AVATAR_HEIGHT')) {
 	define('AVATAR_HEIGHT', 80);
 }
 
-define('DIR_FILES_AVATARS', DIR_BASE . '/files/avatars');
 define('REL_DIR_FILES_AVATARS', REL_DIR_FILES_UPLOADED . '/avatars');
 if (!defined('AVATAR_NONE')) {
 	define('AVATAR_NONE', ASSETS_URL_IMAGES . '/spacer.gif');
