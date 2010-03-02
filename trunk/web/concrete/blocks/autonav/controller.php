@@ -80,7 +80,7 @@
 		function getURL() {
 			$dispatcher = '';
 			if (!URL_REWRITING) {
-				$dispatcher = '/index.php';
+				$dispatcher = '/' . DISPATCHER_FILENAME;
 			}
 			if ($this->cPointerExternalLink != '') {
 				$link = $this->cPointerExternalLink;

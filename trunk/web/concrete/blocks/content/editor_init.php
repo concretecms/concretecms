@@ -15,7 +15,7 @@ setBookMark = function () {
 
 ccm_selectSitemapNode = function(cID, cName) {
 	var mceEd = tinyMCE.activeEditor;	
-	var url = '<?=BASE_URL . DIR_REL?>/index.php?cID=' + cID;
+	var url = '<?=BASE_URL . DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=' + cID;
 	
 	mceEd.selection.moveToBookmark(bm);
 	var selectedText = mceEd.selection.getContent();
@@ -28,7 +28,7 @@ ccm_selectSitemapNode = function(cID, cName) {
 			'class' : null
 		});
 	} else {
-		var selectedText = '<a href="<?=BASE_URL . DIR_REL?>/index.php?cID=' + cID + '" title="' + cName + '">' + cName + '<\/a>';
+		var selectedText = '<a href="<?=BASE_URL . DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=' + cID + '" title="' + cName + '">' + cName + '<\/a>';
 		tinyMCE.execCommand('mceInsertRawHTML', false, selectedText, true); 
 	}
 	

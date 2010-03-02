@@ -222,7 +222,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		<p>
 		<?=t("The following area permissions are inherited from an area set on ")?>
-		<a href="<?=DIR_REL?>/index.php?cID=<?=$areac->getCollectionID()?>"><?=$areac->getCollectionName()?></a>. 
+		<a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$areac->getCollectionID()?>"><?=$areac->getCollectionName()?></a>. 
 		<?=t("To change them everywhere, edit this area on that page. To override them here and on all sub-pages, edit below.")?>
 		</p>
 

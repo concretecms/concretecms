@@ -36,7 +36,7 @@ if (strlen($query)) {
 		<? foreach($results as $r) { 
 			$currentPageBody = $this->controller->highlightedExtendedMarkup($r->getBodyContent(), $query);?>
 			<div class="searchResult">
-				<h3><a href="<?=DIR_REL?>/index.php?cID=<?=$r->getID()?>"><?=$r->getName()?></a></h3>
+				<h3><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$r->getID()?>"><?=$r->getName()?></a></h3>
 				<p>
 					<?php echo ($currentPageBody ? $currentPageBody .'<br />' : '')?>
 					<?php echo $this->controller->highlightedMarkup($tt->shortText($r->getDescription()),$query)?>

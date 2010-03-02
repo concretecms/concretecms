@@ -30,7 +30,7 @@ class NavigationHelper {
 		$dispatcher = '';
 		if (!defined('URL_REWRITING_ALL') || URL_REWRITING_ALL == false) {
 			if ((!URL_REWRITING) || $ignoreUrlRewriting) {
-				$dispatcher = '/index.php';
+				$dispatcher = '/' . DISPATCHER_FILENAME;
 			}
 		}
 		if ($cObj->getCollectionPath() != null) {

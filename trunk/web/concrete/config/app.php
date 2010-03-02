@@ -135,9 +135,9 @@ if (URL_REWRITING_ALL == true) {
 	define('REL_DIR_FILES_TOOLS', DIR_REL . '/tools');
 	define('REL_DIR_FILES_TOOLS_REQUIRED', DIR_REL . '/tools/required'); // front-end
 } else {
-	define('URL_SITEMAP', BASE_URL . DIR_REL . '/index.php/dashboard/sitemap');
-	define('REL_DIR_FILES_TOOLS', DIR_REL . '/index.php/tools');
-	define('REL_DIR_FILES_TOOLS_REQUIRED', DIR_REL . '/index.php/tools/required'); // front-end
+	define('URL_SITEMAP', BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '/dashboard/sitemap');
+	define('REL_DIR_FILES_TOOLS', DIR_REL . '/' . DISPATCHER_FILENAME . '/tools');
+	define('REL_DIR_FILES_TOOLS_REQUIRED', DIR_REL . '/' . DISPATCHER_FILENAME . '/tools/required'); // front-end
 }
 
 define('REL_DIR_FILES_TOOLS_BLOCKS', REL_DIR_FILES_TOOLS . '/blocks'); // this maps to the /tools/ directory in the blocks subdir
