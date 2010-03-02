@@ -409,7 +409,6 @@ class InstallController extends Controller {
 						
 						// add the greensalad theme 						
 						$salad = PageTheme::add('greensalad');
-						$darkc = PageTheme::add('dark_chocolate');
 						
 						// add the dark chocolate theme 						
 						$chocolate = PageTheme::add('dark_chocolate');
