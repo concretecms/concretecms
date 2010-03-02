@@ -40,18 +40,22 @@ if ($cp->canAdminPage()) {
 					jQuery.fn.dialog.showLoader();
 				},
 				success: function(r) {
-					var r = eval('(' + r + ')');
-					if (r != null && r.rel == 'SITEMAP') {
-						jQuery.fn.dialog.hideLoader();
-						jQuery.fn.dialog.closeTop();
-						ccmSitemapHighlightPageLabel(r.cID, r.name);
-					} else {
-						ccm_mainNavDisableDirectExit();
-						ccm_hidePane(function() {
-							jQuery.fn.dialog.hideLoader();						
-						});
+					try {
+						var r = eval('(' + r + ')');
+						if (r != null && r.rel == 'SITEMAP') {
+							jQuery.fn.dialog.hideLoader();
+							jQuery.fn.dialog.closeTop();
+							ccmSitemapHighlightPageLabel(r.cID, r.name);
+						} else {
+							ccm_mainNavDisableDirectExit();
+							ccm_hidePane(function() {
+								jQuery.fn.dialog.hideLoader();						
+							});
+						}
+						ccmAlert.hud(ccmi18n.savePropertiesMsg, 2000, 'success', ccmi18n.properties);
+					} catch(e) {
+						alert(r);
 					}
-					ccmAlert.hud(ccmi18n.savePropertiesMsg, 2000, 'success', ccmi18n.properties);
 				}
 			});
 		});
