@@ -53,7 +53,7 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 	}
 	
 	public function search() {
-		$this->form();
+		print Loader::helper('form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . t('Yes');
 	}
 
 	public function type_form() {

@@ -168,7 +168,7 @@ foreach($searchFieldAttributes as $ak) {
 						<td valign="top" style="padding-right: 4px">
 						<?=$form->select('searchField', $searchFields, array('style' => 'width: 85px'));
 						?>
-						<input type="hidden" value="" class="ccm-page-selected-field" name="selectedSearchField[]" />
+						<input type="hidden" value="" class="ccm-<?=$searchInstance?>-selected-field" name="selectedSearchField[]" />
 						</td>
 						<td width="100%" valign="top" class="ccm-selected-field-content">
 						<?=t('Select Search Field.')?>
