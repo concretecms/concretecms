@@ -7,6 +7,10 @@ if (!defined('C5_ENVIRONMENT_ONLY')) {
 	define('C5_ENVIRONMENT_ONLY', false);
 }
 
+if (!defined('ENABLE_CMS_FOR_DIRECTORY')) {
+	define('ENABLE_CMS_FOR_DIRECTORY', true);
+}
+
 # These items should be set by site.php in config/ but if they're not that means we're installing and we need something there
 if (!defined('BASE_URL')) {
 	define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST']);
