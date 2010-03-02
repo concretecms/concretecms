@@ -30,7 +30,7 @@ class Cache {
 				'automatic_serialization' => true			
 			);
 			$backendOptions = array(
-				'cache_dir' => DIR_BASE . '/files/cache'			
+				'cache_dir' => DIR_FILES_CACHE
 			);
 			if (defined('CACHE_BACKEND_OPTIONS')) {
 				$opts = unserialize(CACHE_BACKEND_OPTIONS);

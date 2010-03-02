@@ -15,9 +15,12 @@ date_default_timezone_set(@date_default_timezone_get());
 
 define('ENABLE_CACHE', false);
 define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.jpg;');
-define('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED_STANDARD);
-define('DIR_FILES_TRASH', DIR_FILES_TRASH_STANDARD);
-
+if (!defined('DIR_FILES_UPLOADED')) {
+	define('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED_STANDARD);
+}
+if (!defined('DIR_FILES_TRASH')) {
+	define('DIR_FILES_TRASH', DIR_FILES_TRASH_STANDARD);
+}
 class InstallController extends Controller {
 
 	public $helpers = array('form', 'html');
@@ -30,12 +33,12 @@ class InstallController extends Controller {
 			"DIR_BASE"=>DIR_BASE,
 			"DIR_REL"=>DIR_REL,
 			"BASE_URL"=>BASE_URL,
-			"DIR_FILES_UPLOADED"=>DIR_FILES_UPLOADED_STANDARD,
+			"DIR_CONFIG_SITE" => DIR_CONFIG_SITE,
+			"DIR_FILES_UPLOADED"=>DIR_FILES_UPLOADED,
 			"DIR_FILES_UPLOADED_THUMBNAILS"=>DIR_FILES_UPLOADED_THUMBNAILS,
 			"DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2" => DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2,
-			"DIR_FILES_TRASH"=>DIR_FILES_TRASH_STANDARD,
+			"DIR_FILES_TRASH"=>DIR_FILES_TRASH,
 			"DIR_FILES_CACHE"=>DIR_FILES_CACHE,
-			"DIR_FILES_CACHE_CORE"=>DIR_FILES_CACHE_CORE,
 			"DIR_FILES_CACHE_DB"=>DIR_FILES_CACHE_DB,
 			"DIR_FILES_AVATARS"=>DIR_FILES_AVATARS,
 			"DIR_PACKAGES"=>DIR_PACKAGES,
@@ -126,7 +129,7 @@ class InstallController extends Controller {
 	private function testFileWritePermissions() {
 		$e = Loader::helper('validation/error');
 
-		if (!is_writable($this->installData['DIR_BASE'] . '/config')) {
+		if (!is_writable($this->installData['DIR_CONFIG_SITE'])) {
 			$e->add(t('Your configuration directory config/ does not appear to be writable by the web server.'));
 		}
 
@@ -197,9 +200,6 @@ class InstallController extends Controller {
 				if (!is_dir($this->installData['DIR_FILES_CACHE'])) {
 					mkdir($this->installData['DIR_FILES_CACHE']);
 				}
-				if (!is_dir($this->installData['DIR_FILES_CACHE_CORE'])) {
-					mkdir($this->installData['DIR_FILES_CACHE_CORE']);
-				}
 				if (!is_dir($this->installData['DIR_FILES_CACHE_DB'])) {
 					mkdir($this->installData['DIR_FILES_CACHE_DB']);
 				}
@@ -234,9 +234,9 @@ class InstallController extends Controller {
 					$setPermissionsModel = PERMISSIONS_MODEL;
 				}
 				
-				if (file_exists($this->installData['DIR_BASE'] . '/config')) {
+				if (file_exists($this->installData['DIR_CONFIG_SITE'])) {
 	
-					$this->fp = @fopen($this->installData['DIR_BASE'] . '/config/site.php', 'w+');
+					$this->fp = @fopen($this->installData['DIR_CONFIG_SITE'] . '/site.php', 'w+');
 					if ($this->fp) {
 					
 						Cache::flush();
@@ -983,7 +983,7 @@ class InstallController extends Controller {
 						$configuration .= "?" . ">";
 						$res = fwrite($this->fp, $configuration);
 						fclose($this->fp);
-						chmod($this->installData['DIR_BASE'] . '/config/site.php', 0777);
+						chmod($this->installData['DIR_CONFIG_SITE'] . '/site.php', 0777);
 						
 						// save some options into the database
 						Config::save('SITE', $_POST['SITE']);
@@ -1021,8 +1021,8 @@ class InstallController extends Controller {
 			if (is_resource($this->fp)) {
 				fclose($this->fp);
 			}
-			if (file_exists($this->installData['DIR_BASE'] . '/config/site.php')) {
-				unlink($this->installData['DIR_BASE'] . '/config/site.php');
+			if (file_exists($this->installData['DIR_CONFIG_SITE'] . '/site.php')) {
+				unlink($this->installData['DIR_CONFIG_SITE'] . '/site.php');
 			}
 			$this->set('error', $e);
 		}
