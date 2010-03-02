@@ -100,6 +100,9 @@
 	## Check host for redirection ##	
 	require(dirname(__FILE__) . '/startup/url_check.php');
 	
+	## Set debug-related and logging activities
+	require(dirname(__FILE__) . '/startup/debug_logging.php');
+
 	## Site-level config POST user/app config ##
 	if (file_exists(DIR_BASE . '/config/site_post.php')) {
 		require(DIR_BASE . '/config/site_post.php');
@@ -109,9 +112,6 @@
 	if (file_exists(DIR_BASE . '/config/site_post_restricted.php')) {
 		require(DIR_BASE . '/config/site_post_restricted.php');
 	}
-
-	## Set debug-related and logging activities
-	require(dirname(__FILE__) . '/startup/debug_logging.php');
 
 	require(dirname(__FILE__) . '/startup/tools_upgrade_check.php');
 
@@ -216,6 +216,11 @@
 			}
 		}
 		
+		## Any custom site-related process
+		if (file_exists(DIR_BASE . '/config/site_process.php')) {
+			require(DIR_BASE . '/config/site_process.php');
+		}
+
 		## Make sure that any submitted forms, etc... are handled correctly
 		## This is legacy cms specific stuff, like adding pages
 		require(dirname(__FILE__) . '/startup/process.php');
