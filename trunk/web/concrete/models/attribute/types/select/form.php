@@ -8,9 +8,7 @@ if ($akSelectAllowMultipleValues) { ?>
 		<div>
 			<?=$form->checkbox($this->field('atSelectOptionID') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptions)); ?>
 			<?=$opt->getSelectAttributeOptionValue()?></div>
-			
 	<? } ?>
-
 <? } else { 
 	$opts = array('' => t('** None'));
 	foreach($options as $opt) { 
