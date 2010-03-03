@@ -450,7 +450,7 @@ class InstallController extends Controller {
 						$d7c = SinglePage::add('/dashboard/pages/themes/customize');
 						$d7d = SinglePage::add('/dashboard/pages/themes/marketplace');
 						$d7e = SinglePage::add('/dashboard/pages/types');
-						$d7f = SinglePage::add('/dashboard/pages/types/attributes');
+						$d7f = SinglePage::add('/dashboard/pages/attributes');
 						$d7g = SinglePage::add('/dashboard/pages/single');
 
 						$d8 = SinglePage::add('/dashboard/install');

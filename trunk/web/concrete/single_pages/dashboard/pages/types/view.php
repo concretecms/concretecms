@@ -1,7 +1,6 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
-$attribs = CollectionAttributeKey::getList();
 $ih = Loader::helper('concrete/interface');
 $valt = Loader::helper('validation/token');
 
@@ -408,21 +407,6 @@ if ($ctEditMode) {
 	<br/>
 	<div class="ccm-buttons">
 		<a class="ccm-button" href="<?=$this->url('/dashboard/pages/types?task=add')?>"><span><em class="ccm-button-add"><?=t('Add a Page Type')?></em></span></a>	
-	</div>
-	<div class="ccm-spacer">&nbsp;</div>
-
-	</div>
-	
-	
-	<h1><a class="ccm-dashboard-header-option" href="<?=$this->url('/dashboard/settings/', 'manage_attribute_types')?>">Manage Attribute Types</a>
-	<span><?=t('Page Attributes')?></span></h1>
-	<div class="ccm-dashboard-inner">
-	
-	<?= Loader::element('dashboard/attributes_table', array('category' => $category, 'attribs'=>$attribs, 'editURL' => '/dashboard/pages/types/attributes')); ?>
-	
-	<br/>
-	<div class="ccm-buttons">
-		<a class="ccm-button" href="<?=$this->url('/dashboard/pages/types/attributes')?>"><span><?=t('Add Page Attribute')?></span></a>	
 	</div>
 	<div class="ccm-spacer">&nbsp;</div>
 
