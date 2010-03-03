@@ -10,21 +10,8 @@ public function view() {
 	$this->set("icons", CollectionType::getIcons());
 }	
 
-public function attribute_updated() {
-	$this->set('message', t('Page Attribute Updated.'));
-}
-
-public function attribute_created() {
-	$this->set('message', t('Page Attribute Created.'));
-}
-
-public function attribute_deleted() {
-	$this->set('message', t('Page Attribute Deleted.'));
-}
-
 public function on_start() {
 	$this->set('disableThirdLevelNav', true);
-	$this->set('category', AttributeKeyCategory::getByHandle('collection'));
 }
 
 public function delete($ctID, $token = '') {
