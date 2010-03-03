@@ -21,6 +21,11 @@ if (!defined('DIR_FILES_UPLOADED')) {
 if (!defined('DIR_FILES_TRASH')) {
 	define('DIR_FILES_TRASH', DIR_FILES_TRASH_STANDARD);
 }
+define('DIR_FILES_UPLOADED_THUMBNAILS', DIR_FILES_UPLOADED . '/thumbnails');
+define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_FILES_UPLOADED . '/thumbnails/level2');
+define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_FILES_UPLOADED . '/thumbnails/level3');
+define('DIR_FILES_AVATARS', DIR_FILES_UPLOADED . '/avatars');
+
 class InstallController extends Controller {
 
 	public $helpers = array('form', 'html');
