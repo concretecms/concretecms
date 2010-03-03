@@ -162,6 +162,8 @@ class FormHelper {
 			foreach($miscFields as $key => $value) {
 				$str .= $key . '="' . $value . '" ';
 			}
+		} else {
+			$str .= ' class="ccm-input-textarea" ';
 		}
 		
 		$str .= '>' . $innerValue . '</textarea>';
