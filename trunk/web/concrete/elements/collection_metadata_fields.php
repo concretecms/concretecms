@@ -77,9 +77,9 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 ?>
 
 	<h2>
-		<?=t('Custom Fields')?> 
+		<?=t('Custom Attributes')?> 
 		<select id="ccm-meta-custom-fields">
-			<option value="">** <?=t('Add Field')?></option>
+			<option value="">** <?=t('Add Attribute')?></option>
 			<? $cAttributes = CollectionAttributeKey::getList(); 
 			foreach($cAttributes as $ck) { 
 				if (!in_array($ck->getAttributeKeyID(), $usedKeysCombined) || $c->getCollectionTypeID()==0) {?>
@@ -101,7 +101,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 			<input type="hidden" class="ccm-meta-field-selected" id="ccm-meta-field-selected<?=$ak->getAttributeKeyID()?>" name="selectedAKIDs[]" value="<? if (!in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>0<? } else { ?><?=$ak->getAttributeKeyID()?><? } ?>" />
 			
 			<a href="javascript:void(0)" class="ccm-meta-close" ccm-meta-name="<?=$ak->getAttributeKeyName()?>" id="ccm-remove-field-ak<?=$ak->getAttributeKeyID()?>"
-			  style="display:<?=(!in_array($ak->getAttributeKeyID(), $requiredKeys))?'block':'none'?>" ><?=t('Remove Field')?></a>
+			  style="display:<?=(!in_array($ak->getAttributeKeyID(), $requiredKeys))?'block':'none'?>" ><?=t('Remove Attribute')?></a>
 	
 			
 			<label><?=$ak->getAttributeKeyName()?></label>

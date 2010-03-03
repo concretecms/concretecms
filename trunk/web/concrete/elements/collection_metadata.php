@@ -80,7 +80,7 @@ if ($cp->canAdminPage()) {
 	<ul class="ccm-dialog-tabs" id="ccm-properties-tabs">
 		<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-properties-standard"><?=t('Standard Properties')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-page-paths"><?=t('Page Paths and Location')?></a></li>
-		<li><a href="javascript:void(0)" id="ccm-properties-custom"><?=t('Custom Fields')?></a></li>
+		<li><a href="javascript:void(0)" id="ccm-properties-custom"><?=t('Custom Attributes')?></a></li>
 	</ul>
 
 	<div id="ccm-properties-standard-tab">
