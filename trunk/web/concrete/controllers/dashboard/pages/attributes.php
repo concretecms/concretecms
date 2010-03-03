@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 Loader::model('attribute/categories/collection');
-class DashboardPagesTypesAttributesController extends Controller {
+class DashboardPagesAttributesController extends Controller {
 	
 	public $helpers = array('form');
 	
@@ -14,6 +14,18 @@ class DashboardPagesTypesAttributesController extends Controller {
 			$types[$at->getAttributeTypeID()] = $at->getAttributeTypeName();
 		}
 		$this->set('types', $types);
+	}
+
+	public function attribute_updated() {
+		$this->set('message', t('Page Attribute Updated.'));
+	}
+	
+	public function attribute_created() {
+		$this->set('message', t('Page Attribute Created.'));
+	}
+	
+	public function attribute_deleted() {
+		$this->set('message', t('Page Attribute Deleted.'));
 	}
 
 	public function on_start() {
@@ -36,7 +48,7 @@ class DashboardPagesTypesAttributesController extends Controller {
 			
 			$ak->delete();
 			
-			$this->redirect("/dashboard/pages/types", 'attribute_deleted');
+			$this->redirect("/dashboard/pages/attributes", 'attribute_deleted');
 		} catch (Exception $e) {
 			$this->set('error', $e);
 		}
@@ -66,7 +78,7 @@ class DashboardPagesTypesAttributesController extends Controller {
 				'akIsEditable' => 1
 			);
 			$ak = CollectionAttributeKey::add($type, $this->post());
-			$this->redirect('/dashboard/pages/types/', 'attribute_created');
+			$this->redirect('/dashboard/pages/attributes/', 'attribute_created');
 		}
 	}
 	
@@ -96,7 +108,7 @@ class DashboardPagesTypesAttributesController extends Controller {
 					'akIsEditable' => 1
 				);
 				$key->update($this->post());
-				$this->redirect('/dashboard/pages/types/', 'attribute_updated');
+				$this->redirect('/dashboard/pages/attributes/', 'attribute_updated');
 			}
 		}
 	}
