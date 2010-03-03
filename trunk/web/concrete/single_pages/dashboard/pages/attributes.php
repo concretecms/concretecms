@@ -29,7 +29,7 @@
 	<script type="text/javascript">
 	deleteAttribute = function() {
 		if (confirm('<?=$delConfirmJS?>')) { 
-			location.href = "<?=$this->url('/dashboard/pages/types/attributes', 'delete', $key->getAttributeKeyID(), $valt->generate('delete_attribute'))?>";				
+			location.href = "<?=$this->url('/dashboard/pages/attributes', 'delete', $key->getAttributeKeyID(), $valt->generate('delete_attribute'))?>";				
 		}
 	}
 	</script>
@@ -39,6 +39,20 @@
 </div>
 
 <? } else { ?>
+
+<? if ($this->controller->getTask() != 'select_type' && $this->controller->getTask() != 'add') { ?>
+	<h1><a class="ccm-dashboard-header-option" href="<?=$this->url('/dashboard/settings/', 'manage_attribute_types')?>">Manage Attribute Types</a>
+	<span><?=t('Page Attributes')?></span></h1>
+	<div class="ccm-dashboard-inner">
+	<? $attribs = CollectionAttributeKey::getList(); ?>
+	<?= Loader::element('dashboard/attributes_table', array('category' => $category, 'attribs'=>$attribs, 'editURL' => '/dashboard/pages/attributes')); ?>
+	
+	<br/>
+	<div class="ccm-spacer">&nbsp;</div>
+	
+	</div>
+<? } ?>
+
 
 <h1><span><?=t('Add Page Attribute')?></span></h1>
 <div class="ccm-dashboard-inner">
