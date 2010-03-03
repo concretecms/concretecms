@@ -132,6 +132,9 @@ ul.ccm-dialog-tabs li {border-right: 1px solid #dedede }
 .ccm-input-date-wrapper input {width: 100px}
 .ccm-input-checkbox {vertical-align: middle}
 
+div.ccm-field-meta input.ccm-input-text, div.ccm-field-meta textarea.ccm-input-textarea {width: 570px;}
+div.ccm-field-meta textarea.ccm-input-textarea {height: 100px}
+
 
 /* grid list */
 table.ccm-grid-list {border-right: 1px solid #aaa; border-bottom: 1px solid #aaa; width: 100%}
