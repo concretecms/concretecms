@@ -82,6 +82,7 @@ class InstallController extends Controller {
 		// we can't seem to add this in db.xml *sigh*
 		$db = Loader::db();
 		$db->Execute('alter table PagePaths add index cPath (cPath(128))');
+		$db->Execute('alter table CollectionVersions add index cvName (cvName(128))');
 	}
 	
 	public function test_url($num1, $num2) {

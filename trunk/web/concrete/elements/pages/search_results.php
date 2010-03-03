@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
 <?
-if (isset($_REQUEST['searchDialog'])) {
+if ($_REQUEST['searchDialog'] == 1) {
 	$searchDialog = true;
 }
 if (!isset($sitemap_select_mode)) {

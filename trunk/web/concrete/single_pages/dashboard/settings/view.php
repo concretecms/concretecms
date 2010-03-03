@@ -352,6 +352,14 @@ if ($tp->canAccessTaskPermissions()) { ?>
 
 </div>
 
+<? } else { ?>
+
+<h1><span><?=t('Other Permissions')?></span></h1>
+<div class="ccm-dashboard-inner">
+	
+<?=t('These permissions include specifying who may login as other users, search users, access page defaults, and more. You do not have access to see or change these permissions.')?>
+</div>
+
 <? } ?>
 
 
