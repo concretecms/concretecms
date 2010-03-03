@@ -550,6 +550,12 @@
       <DEFAULT value="0000-00-00 00:00:00"/>
     </field>
     <field name="cHandle" type="C" size="255"/>
+    <index name="cDateModified">
+      <col>cDateModified</col>
+    </index>
+    <index name="cDateAdded">
+      <col>cDateAdded</col>
+    </index>
   </table>
   <table name="Config">
     <field name="cfKey" type="C" size="64">
