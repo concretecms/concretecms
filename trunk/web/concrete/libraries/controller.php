@@ -117,13 +117,16 @@ class Controller {
 			// we call 404
 			
 			$do404 = false;
-			if (!is_callable(array($this, $this->task)) && count($this->parameters) > 0) {
+			if (!is_object($this->c)) {
+				// this means we're calling the render directly, so we never 404
+				$do404 = false;
+			} else if (!is_callable(array($this, $this->task)) && count($this->parameters) > 0) {
 				$do404 = true;
 			} else if (is_callable(array($this, $this->task))) {
 				// we use reflection to see if the task itself, which now much exist, takes fewer arguments than 
 				// what is specified
 				$r = new ReflectionMethod(get_class($this), $this->task);
-				if (get_class($this) != 'PageForbiddenController' && $r->getNumberOfParameters() < count($this->parameters)) {
+				if ($r->getNumberOfParameters() < count($this->parameters)) {
 					$do404 = true;
 				}
 			}

@@ -133,7 +133,8 @@ class DashboardSystemUpdateController extends Controller {
 						break;
 				}
 			} else {
-				$this->redirect(REL_DIR_FILES_TOOLS_REQUIRED . '/upgrade?source=dashboard_update');
+				header('Location: ' . BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED .  '/upgrade?source=dashboard_update');
+				exit;
 			}
 		}
 		$this->view();
