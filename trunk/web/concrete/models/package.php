@@ -222,6 +222,7 @@ class Package extends Object {
 		Loader::model('single_page');
 		Loader::model('dashboard/homepage');
 		Loader::library('mail/importer');
+		Loader::model('job');
 		Loader::model('collection_types');
 		$items['attribute_categories'] = AttributeKeyCategory::getListByPackage($this);
 		$items['attribute_keys'] = AttributeKey::getListByPackage($this);
@@ -236,6 +237,7 @@ class Package extends Object {
 		$items['task_permissions'] = $tp->populatePackagePermissions($this);
 		$items['single_pages'] = SinglePage::getListByPackage($this);
 		$items['attribute_types'] = AttributeType::getListByPackage($this);		
+		$items['jobs'] = Job::getListByPackage($this);		
 		ksort($items);
 		return $items;
 	}
@@ -270,6 +272,8 @@ class Package extends Object {
 			return t('%s (%s)', $item->dbhDisplayName, $txt->unhandle($item->dbhModule));
 		} else if (is_a($item, 'TaskPermission')) {
 			return $item->getTaskPermissionName();			
+		} else if (is_a($item, 'Job')) {
+			return $item->getJobName();
 		}
 	}
 
@@ -283,7 +287,9 @@ class Package extends Object {
 
 		foreach($items as $k => $array) {
 			foreach($array as $item) {
-				if (is_a($item, 'AttributeKey') || is_a($item, 'MailImporter')) {
+				if (is_a($item, 'Job')) {
+					$item->uninstall();
+				} else if (is_a($item, 'AttributeKey') || is_a($item, 'MailImporter')) {
 					$item->delete();
 				} else {
 					switch(get_class($item)) {

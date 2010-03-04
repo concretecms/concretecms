@@ -105,8 +105,22 @@ class Job extends Object {
 	}
 	
 	final static function getJobObjByHandle( $jHandle='', $jobData=array() ){
+		$jcl = Job::jobClassLocations();
+		
 		//check for the job file in the various locations
-		foreach( Job::jobClassLocations() as $jobClassLocation ){
+		$db = Loader::db();
+		$pkgID = $db->GetOne('select pkgID from Jobs where jHandle = ?', $jHandle);
+		if ($pkgID > 0) {
+			$pkgHandle = PackageList::getHandle($pkgID);
+			if ($pkgHandle) {
+				
+				$jcl[] = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JOBS;
+				$jcl[] = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_JOBS;
+				
+			}
+		}
+
+		foreach( $jcl as $jobClassLocation ){
 			//load the file & class, then run the job
 			$path=$jobClassLocation.'/'.$jHandle.'.php';	
 			if( file_exists($path) ){ 
@@ -126,6 +140,7 @@ class Job extends Object {
 				return $j;
 			}
 		}
+		
 		return NULL;
 	}
 	
@@ -244,6 +259,32 @@ class Job extends Object {
 		foreach( $availableJobs as $availableJobHandle=>$availableJobObj ){
 			if( $availableJobObj->jHandle!=$jHandle ) continue;
 			$availableJobObj->install();
+		}
+	}
+
+	public static function getListByPackage($pkg) {
+		$db = Loader::db();
+		$list = array();
+		$r = $db->Execute('select jHandle from Jobs where pkgID = ? order by jHandle asc', array($pkg->getPackageID()));
+		while ($row = $r->FetchRow()) {
+			$list[] = Job::getJobObjByHandle($row['jHandle']);
+		}
+		$r->Close();
+		return $list;
+	}	
+	
+	
+	final public function installByPackage($jHandle, $pkg) {
+		$dir = is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle()) ? DIR_PACKAGES . '/' . $pkg->getPackageHandle() : DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle();
+		require_once( $dir .'/'. DIRNAME_JOBS . '/' . $jHandle . '.php');
+		$className=Object::camelcase( $jHandle  );
+		if(class_exists($className)){
+			$j = new $className();
+			$db = Loader::db();
+			$db->Execute('insert into Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle, pkgID) values (?, ?, ?, ?, ?, ?)', 
+				array($j->getJobName(), $j->getJobDescription(), Loader::helper('date')->getLocalDateTime(), 0, $jHandle, $pkg->getPackageID()));
+			
+			return $j;
 		}
 	}
  
