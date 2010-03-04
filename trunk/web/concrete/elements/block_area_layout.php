@@ -83,11 +83,15 @@ if(!$layout ){
 	<? 
 	//To Do: only provide this option if there's 1) blocks in the main area, or 2) existing layouts 
 	if( !intval($layout->layoutID) ){ ?>
+	<? /*
 	<div style="margin:16px 0px"> 
 		<?= t('Add layout to: ') ?> 
 		<input name="add_to_position" type="radio" value="top" /> <?=t('top') ?>&nbsp; 
 		<input name="add_to_position" type="radio" value="bottom" checked="checked" /> <?=t('bottom') ?> 
 	</div>
+	*/ ?>
+	<input type="hidden" name="add_to_position" value="bottom" />
+	
 	<? } ?>
 	
 	
