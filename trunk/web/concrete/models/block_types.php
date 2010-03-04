@@ -207,6 +207,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$bt = BlockType::get($where, array($handle));
 				$ca->set('blockTypeByHandle', $handle, $bt);
 			}
+			$bt->controller = Loader::controller($bt);
 			return $bt;
 		}
 
@@ -218,6 +219,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$bt = BlockType::get($where, array($btID));			
 				$ca->set('blockTypeByID', $btID, $bt);
 			}
+			$bt->controller = Loader::controller($bt);
 			return $bt;
 		}
 		
@@ -231,7 +233,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$row = $r->fetchRow();
 				$bt = new BlockType;
 				$bt->setPropertiesFromArray($row);
-				$bt->controller = Loader::controller($bt);
 				return $bt;
 			}
 			
