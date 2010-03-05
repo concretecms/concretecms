@@ -50,8 +50,8 @@ class FileList extends DatabaseItemList {
 	 */
 	public function filterByKeywords($keywords) {
 		$db = Loader::db();
-		$keywordsExact = $this->sanitize($keywords);
-		$qkeywords = $this->sanitize('%' . $keywords . '%');
+		$keywordsExact = $db->quote($keywords);
+		$qkeywords = $db->quote('%' . $keywords . '%');
 		$keys = FileAttributeKey::getSearchableIndexedList();
 		$attribsStr = '';
 		foreach ($keys as $ak) {
