@@ -373,6 +373,8 @@ $ppWhere = '';
 			
 			}
 		}
+		
+		$this->refreshCache();
 	}
 
 	function addCollectionAlias($c) {
