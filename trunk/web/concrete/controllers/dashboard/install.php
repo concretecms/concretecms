@@ -77,8 +77,10 @@ class DashboardInstallController extends Controller {
 		$this->set('type', $what);
 	}
 	
-	public function view() {
-
+	public function view($status = false) {
+		if ($status == 'community_connect_success') {
+			$this->set('message', t('Your site is now connected to the concrete5 community.'));
+		}
 	}
 	
 	public function update($pkgHandle = false) {
