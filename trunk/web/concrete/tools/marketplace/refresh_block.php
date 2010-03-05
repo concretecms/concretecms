@@ -46,8 +46,9 @@ ccm_marketplaceRefreshInstalledBlockTypes = function() {
 		?>	
 		<tr class="ccm-block-type-row">
 			<td<?=!empty($btDesc)?' valign="top"':''?>><img src="<?=$btIcon?>" /></td>
+			<td><div style="width: 7px">&nbsp;</td>
 			<td width="90%">
-				<div class="ccm-block-type-inner"><?=$bt->getName()?></div>
+				<div class="ccm-block-type-inner" style="border: 0px"><?=$bt->getName()?></div>
 			<? if (!empty($btDesc)) { ?>
 				<div class="ccm-block-type-description" id="ccm-bt-help<?=$bt->getHandle()?>"><?=$btDesc?></div>
 			<? } ?>

@@ -51,9 +51,13 @@ class File extends Object {
 	}
 	
 	public function refreshCache() {
+		$db = Loader::db();
 		Cache::delete('file_relative_path', $this->getFileID());
 		Cache::delete('file_approved', $this->getFileID());
-		Cache::deleteType('file_version_' . $this->getFileID(), $this->getFileVersionID());
+		$r = $db->GetCol('select fvID from FileVersions where fID = ?', array($this->getFileID()));
+		foreach($r as $fvID) {
+			Cache::delete('file_version_' . $this->getFileID(), $fvID);	
+		}
 	}
 	
 	public function reindex() {
