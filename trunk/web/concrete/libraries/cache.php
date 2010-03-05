@@ -112,12 +112,17 @@ class Cache {
 		
 		return $cache->load(Cache::key($type, $id));
 	}
-	
+
+	/** 
+	 * not used. Good idea but doesn't work with all cache layers and on large caches is VERY slow.
+
 	public function deleteType($type) {
 		Cache::getLibrary()->clean('matchingTag', array($type));
 		$loc = CacheLocal::get();
 		$loc->enabled = false;
 	}
+	
+	*/
 	
 	/** 
 	 * Removes an item from the cache
