@@ -27,7 +27,7 @@ class DashboardSettingsMarketplaceController extends Controller {
 		} else {
 			Config::save('MARKETPLACE_SITE_TOKEN', $_POST['csToken']);
 			Config::save('MARKETPLACE_SITE_URL_TOKEN', $_POST['csURLToken']);
-			print '<script type="text/javascript">parent.window.location.href=\'' . View::url('/dashboard/settings/marketplace', 'view', 1) . '\';</script>';
+			print '<script type="text/javascript">parent.window.location.href=\'' . View::url('/dashboard/install', 'view', 'community_connect_success') . '\';</script>';
 			exit;
 		}
 	}
