@@ -495,7 +495,7 @@ class InstallController extends Controller {
 						$d7e->update(array('cName'=>t('Page Types'), 'cDescription'=>t('What goes in your site.')));	
 						$d7g->update(array('cName'=>t('Single Pages')));	
 
-						$d8->update(array('cName'=>t('Add Functionality'), 'cDescription'=>t('Install functionality to extend your site.')));
+						$d8->update(array('cName'=>t('Add Functionality'), 'cDescription'=>t('Install addons & themes.')));
 						$d9->update(array('cName'=>t('System & Maintenance'), 'cDescription'=>t('Backup, cleanup and update.')));
 						$d9b->update(array('cName'=>t('Backup & Restore')));	
 						$d10->update(array('cName'=>t('Sitewide Settings'), 'cDescription'=>t('Secure and setup your site.')));
