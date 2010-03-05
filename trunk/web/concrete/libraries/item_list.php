@@ -24,7 +24,12 @@ class DatabaseItemList extends ItemList {
 		}		
 		return $this->total;
 	}
-
+	
+	public function sanitize($q) {
+		$db = Loader::db();
+		$q = str_replace('?', '', $q);
+		return $db->quote($q);
+	}
 
 	public function debug($dbg = true) {
 		$this->debug = $dbg;

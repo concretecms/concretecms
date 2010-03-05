@@ -58,8 +58,8 @@ class PageList extends DatabaseItemList {
 	 */
 	public function filterByKeywords($keywords) {
 		$db = Loader::db();
-		$kw = $db->quote($keywords);
-		$qk = $db->quote('%' . $keywords . '%');
+		$kw = $this->sanitize($keywords);
+		$qk = $this->sanitize('%' . $keywords . '%');
 		$this->indexedSearch = true;
 		$this->indexedKeywords = $keywords;
 		$this->autoSortColumns[] = 'cIndexScore';
@@ -231,7 +231,7 @@ class PageList extends DatabaseItemList {
 				if ($i > 0) {
 					$cth .= ',';
 				}
-				$cth .= $db->quote($ctHandle[$i]);
+				$cth .= $this->sanitize($ctHandle[$i]);
 			}
 			$cth .= ')';
 			$this->filter(false, "(pt.ctHandle in {$cth})");
@@ -278,7 +278,7 @@ class PageList extends DatabaseItemList {
 	protected function setBaseQuery($additionalFields = '') {
 		if ($this->isIndexedSearch()) {
 			$db = Loader::db();
-			$ik = ', match(psi.cName, psi.cDescription, psi.content) against (' . $db->quote($this->indexedKeywords) . ') as cIndexScore ';
+			$ik = ', match(psi.cName, psi.cDescription, psi.content) against (' . $this->sanitize($this->indexedKeywords) . ') as cIndexScore ';
 		}
 		if ($this->includeAliases) {
 			$this->setQuery('select p1.cID, pt.ctHandle ' . $ik . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PageTypes pt on (pt.ctID = (if (p2.cID is null, p1.ctID, p2.cID))) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID) and cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)) inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
