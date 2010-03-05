@@ -232,6 +232,10 @@ foreach($types as $at) { ?>
 	</div>
 </form>
 
+<h1><span><?=t('Environment')?></span></h1>
+<div class="ccm-dashboard-inner">
+<textarea style="width: 97%; height: 140px;" onclick="this.select()"><?=$environmentMessage?></textarea>
+</div>
 
 <? if (ENABLE_DEVELOPER_OPTIONS) { ?>
 	
