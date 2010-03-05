@@ -25,10 +25,22 @@ if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MAR
 		?>
 		</div>
 		<?
-	}
-	?>
+	} else { ?>
+		
+		<?=t('Setting up a project page for your site on concrete5.org is safe and private, and gives you lots of benefits including:')?><br/>
+		
+		<ul>
+			<li><?=t('Automatically install add-ons and themes with a mouse click.')?></li>
+			<li><?=t('Ensure your software is up to date and stable.')?></li>
+			<li><?=t('Get support from developers.')?></li>
+			<li><?=t('And much more!')?></li>
+		</ul>
+		
+		<?=t('It only takes a moment and you don\'t even have to leave your site.')?>
 	
-	<br/>
+	<? } ?>
+	
+	<br/><br/>
 	
 	<? print $h->button(t('Connect to Community'), $this->url('/dashboard/settings/marketplace'))?>
 <? } ?>

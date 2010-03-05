@@ -518,7 +518,7 @@ if ($this->controller->getTask() == 'browse') { ?>
 			<? 
 			Loader::library('marketplace');
 			if ($mi->isConnected()) { ?>				
-				<?=t('Your site is currently connected to the concrete5 community. <a href="%s">Visit project page</a>.', $mi->getSitePageURL())?>
+				<?=t('Your site is currently connected to the concrete5 community.<br/><br/>There appears to be nothing currently available to install from your <a href="%s" target="_blank">project page</a>. <br/><br/>Browse more <a href="%s">add-ons</a> and <a href="%s">themes</a>, and check on your <a href="%s" target="_blank">project page</a>.', $mi->getSitePageURL(), $this->url('/dashboard/install/', 'browse', 'addons'), $this->url('/dashboard/install', 'browse', 'themes'), $mi->getSitePageURL())?>
 			<?
 			
 			} else {
@@ -531,9 +531,11 @@ if ($this->controller->getTask() == 'browse') { ?>
 			<? } ?>
 			
 		<? if (count($availableArray) == 0 && count($purchasedBlocks) == 0) { ?>
-	
-			<?=t('Nothing currently available to install.')?>
-		
+			
+			<? if (!$mi->isConnected()) { ?>
+				<?=t('Nothing currently available to install.')?>
+			<? } ?>
+			
 		<? } else { ?>
 	
 			<div class="ccm-addon-list-wrapper">
