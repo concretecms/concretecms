@@ -40,7 +40,7 @@ ul.ccm-area-theme-tabs.ccm-dialog-tabs li{ float:right; border-right:1px solid #
 li.themeWrap{text-align:center;white-space:normal}
 li.themeWrap img.ccm-preview {float:right; padding-top:2px;}
 div.ccm-scroller-inner ul li.themeWrap .preview-wrap img{border:0px none}
-li.themeWrap .ccm-theme-name { width:auto; margin:0px 20px;}
+li.themeWrap .ccm-theme-name { width:auto; margin:2px 20px; line-height: 14px; font-size: 12px}
 li.themeWrap .ccm-theme-name a{text-decoration:none}
 li.themeWrap .ccm-theme-name a:hover{ text-decoration:underline} 
 ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
