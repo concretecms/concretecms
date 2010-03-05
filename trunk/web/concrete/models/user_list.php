@@ -35,7 +35,7 @@ class UserList extends DatabaseItemList {
 	
 	public function filterByKeywords($keywords) {
 		$db = Loader::db();
-		$qkeywords = $db->quote('%' . $keywords . '%');
+		$qkeywords = $this->sanitize('%' . $keywords . '%');
 		$keys = UserAttributeKey::getSearchableIndexedList();
 		$emailSearchStr=' OR u.uEmail like '.$qkeywords.' ';	
 		$attribsStr = '';
