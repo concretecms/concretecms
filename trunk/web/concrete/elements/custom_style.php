@@ -1,5 +1,9 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
+if (ENABLE_CUSTOM_DESIGN == false) {
+	die(t('Custom design options have been disabled.'));
+}
+
 global $c;
 
 $txt = Loader::helper('text');

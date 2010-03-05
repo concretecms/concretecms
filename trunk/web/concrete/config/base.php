@@ -48,6 +48,12 @@ if (!defined('ENABLE_EMAILS')) {
 	define('ENABLE_EMAILS', true);
 }
 
+if (!defined("ENABLE_AREA_LAYOUTS")) {
+	define('ENABLE_AREA_LAYOUTS', true);
+}
+if (!defined("ENABLE_CUSTOM_DESIGN")) {
+	define('ENABLE_CUSTOM_DESIGN', true);
+}
 if (!defined('ENABLE_DEFINABLE_USER_ATTRIBUTES')) {
 	define('ENABLE_DEFINABLE_USER_ATTRIBUTES', true);
 }

@@ -1,5 +1,8 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));
+if (ENABLE_AREA_LAYOUTS == false) {
+	die(t('Area layouts have been disabled.'));
+}
 global $c;
 
 $form = Loader::helper('form'); 
