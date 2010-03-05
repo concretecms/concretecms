@@ -1,5 +1,7 @@
 body {background: #efefef url(../images/dashboard/bg.png) repeat-y scroll; padding: 0px; margin: 0px}
 ul, li {margin: 0px; padding: 0px}
+div.ccm-module ul { margin-top: 12px; margin-bottom: 12px}
+div.ccm-module li {margin-left: 28px}
 body, ul, td, div, h1, h2, h3, h4, h5 {font-family: "Helvetica Neue", Arial, Helvetica, sans-serif}
 img {border: 0px}
 
