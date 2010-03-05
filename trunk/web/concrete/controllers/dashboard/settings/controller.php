@@ -453,7 +453,52 @@ class DashboardSettingsController extends Controller {
 		}
 		$this->set('debug_level', $debug_level);		
 		$this->set('enable_log_emails', $enable_log_emails);		
-		$this->set('enable_log_errors', $enable_log_errors);		
+		$this->set('enable_log_errors', $enable_log_errors);	
+		
+		ob_start();
+		phpinfo();
+		$phpinfo = array('phpinfo' => array());
+		if(preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s', ob_get_clean(), $matches, PREG_SET_ORDER))
+		foreach($matches as $match) {
+			if(strlen($match[1])) {
+				$phpinfo[$match[1]] = array();
+			} else if(isset($match[3])) {
+				$phpinfo[end(array_keys($phpinfo))][$match[2]] = isset($match[4]) ? array($match[3], $match[4]) : $match[3];
+			} else {
+				$phpinfo[end(array_keys($phpinfo))][] = $match[2];
+			}
+		}
+
+		$environmentMessage = '# ' . t('PHP Version') . "\n" . PHP_VERSION . "\n\n";
+		$environmentMessage .= '# ' . t('Server Software') . "\n" . $_SERVER['SERVER_SOFTWARE'] . "\n\n";
+		$environmentMessage .= '# ' . t('Server API') . "\n" . php_sapi_name() . "\n\n";
+		$environmentMessage .= '# ' . t('Loaded Extensions') . "\n";
+		if (function_exists('get_loaded_extensions')) {
+			$gle = @get_loaded_extensions();
+			natcasesort($gle);
+			$environmentMessage .= implode(', ', $gle);
+			$environmentMessage .= ".\n";
+		} else {
+			$environmentMessage .= t('Unable to determine.') . "\n";
+		}
+
+		$environmentMessage .= "\n# " . t('Limits') . "\n";
+
+		foreach($phpinfo as $name => $section) {
+			foreach($section as $key => $val) {
+				if (!preg_match('/.*limit.*/', $key) && !preg_match('/.*safe.*/', $key) && !preg_match('/.*max.*/', $key)) {
+					continue;
+				}
+				if(is_array($val)) {
+					$environmentMessage .= "$key - $val[0]\n";
+				} else if(is_string($key)) {
+					$environmentMessage .= "$key - $val\n";
+				} else {
+					$environmentMessage .= "$val\n";
+				}
+			}
+		}		
+		$this->set('environmentMessage', $environmentMessage);
 		if ($updated) {
 			switch($updated) {
 				case "debug_saved":
