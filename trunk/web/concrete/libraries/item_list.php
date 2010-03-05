@@ -19,18 +19,12 @@ class DatabaseItemList extends ItemList {
 		if ($this->total == -1) {
 			$db = Loader::db();
 			$arr = $this->executeBase(); // returns an associated array of query/placeholder values
-			$r = $db->Execute($arr[0], $arr[1]);
+			$r = $db->Execute($arr);
 			$this->total = $r->NumRows();
 		}		
 		return $this->total;
 	}
 	
-	public function sanitize($q) {
-		$db = Loader::db();
-		$q = str_replace('?', '', $q);
-		return $db->quote($q);
-	}
-
 	public function debug($dbg = true) {
 		$this->debug = $dbg;
 	}
@@ -57,7 +51,7 @@ class DatabaseItemList extends ItemList {
 	}
 	
 	private function executeBase() {
-		$v = array();		
+		$db = Loader::db();
 		$q = $this->query . $this->userQuery . ' where 1=1 ';
 		foreach($this->filters as $f) {
 			$column = $f[0];
@@ -81,13 +75,11 @@ class DatabaseItemList extends ItemList {
 						if ($i > 0) {
 							$q .= ',';
 						}
-						$q .= '?';
-						$v[] = $value[$i];
+						$q .= $db->quote($value[$i]);
 					}
 					$q .= ') ';			
 				} else { 
-					$q .= 'and ' . $column . ' ' . $comp . ' ? ';
-					$v[] = $value;
+					$q .= 'and ' . $column . ' ' . $comp . ' ' . $db->quote($value) . ' ';
 				}
 			}
 		}
@@ -96,7 +88,7 @@ class DatabaseItemList extends ItemList {
 			$q .= ' ' . $this->userPostQuery . ' ';
 		}
 		
-		return array($q, $v);
+		return $q;
 	}
 	
 	protected function setupSortByString() {
@@ -122,9 +114,7 @@ class DatabaseItemList extends ItemList {
 	 * Returns an array of whatever objects extends this class (e.g. PageList returns a list of pages).
 	 */
 	public function get($itemsToGet = 0, $offset = 0) {
-		$arr = $this->executeBase(); // returns an associated array of query/placeholder values
-		$q = $arr[0];
-		$v = $arr[1];
+		$q = $this->executeBase();
 		// handle order by
 		$this->setupAttributeSort();
 		$this->setupAutoSort();
@@ -141,7 +131,7 @@ class DatabaseItemList extends ItemList {
 			$db->setDebug(true);
 		}
 		//echo $q.'<br>'; 
-		$resp = $db->GetAll($q, $v);
+		$resp = $db->GetAll($q);
 		if ($this->debug) { 
 			$db->setDebug(false);
 		}
