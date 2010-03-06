@@ -378,6 +378,7 @@ class DashboardSettingsController extends Controller {
 			if ($this->isPost()) {
 				$u = new User();
 				$eca = $this->post('ENABLE_CACHE') == 1 ? 1 : 0; 
+				Cache::flush();
 				Config::save('ENABLE_CACHE', $eca);
 				$this->redirect('/dashboard/settings', 'set_developer', 'cache_updated');
 			}
