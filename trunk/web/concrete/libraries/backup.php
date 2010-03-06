@@ -52,7 +52,7 @@ class BackupTable {
 	**/
 	public function __construct($table)	{
 		$this->db = Loader::db();
-		$this->db->setFetchMode(ADODB_FETCH_BOTH);
+		$this->db->setFetchMode(ADODB_ASSOC_BOTH);
 		if (trim($table) == "") {
 			return false;
 		}
@@ -105,7 +105,7 @@ class BackupTable {
 			print "Error while retrieving table creation SQL";
 		}
 		else {
-			$this->str_createTableSql = preg_replace('/CREATE TABLE/','CREATE TABLE IF NOT EXISTS',$rs_createsql->fields[1]). ";";x;
+			$this->str_createTableSql = preg_replace('/CREATE TABLE/','CREATE TABLE IF NOT EXISTS',$rs_createsql->fields['Create Table']). ";";x;
 			$rs_createsql->close();
 		}
 	}
@@ -118,15 +118,18 @@ class BackupTable {
 				$obj_fld = $this->rs_table->FetchField($int_cflds);
 				$str_fieldtype = $this->rs_table->MetaType($obj_fld->type);
 				if ($this->isQuotedType($str_fieldtype)) {
-					$str_fieldData = $this->db->qstr($this->rs_table->fields[$int_cflds]);
+					$str_fieldData = $this->db->qstr($this->rs_table->fields[$obj_fld->name]);
+					if ($str_fieldData == "") {
+					   $str_fieldData = "''";
+					}
 				} 
 				else {
-					$str_fieldData = $this->rs_table->fields[$int_cflds];
+					$str_fieldData = $this->rs_table->fields[$obj_fld->name];
+					if ($str_fieldData == "") {
+					   $str_fieldData = "NULL";
+					}
 				}
-            if ($str_fieldData == "") {
-               $str_fieldData = "''";
-            }
-            $arr_rowData[] = $str_fieldData;
+	            $arr_rowData[] = $str_fieldData;
 			}
 			if ($this->str_insertionSql == "") {
 				$this->str_insertionSql = "INSERT INTO ". $this->str_tablename ." VALUES(".implode(",",$arr_rowData).")";
