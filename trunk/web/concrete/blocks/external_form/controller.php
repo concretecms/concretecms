@@ -38,7 +38,7 @@
 		// if they're not implemented here, we attempt to find them in the
 		// controller for that specific custom form block
 		
-		private function getController() {
+		private function getControllerFile() {
 			if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS . '/' . $this->filename)) {
 				$filename = DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS . '/' . $this->filename;
 				$class = Object::camelcase(substr($this->filename, 0, strrpos($this->filename, '.php')));
@@ -58,8 +58,12 @@
 			}
 		}
 		
+		public function view() {
+		
+		}
+		
 		public function __call($nm, $a) {
-			$cnt = $this->getController();
+			$cnt = $this->getControllerFile();
 			return $cnt->runTask($nm, $a);
 		}
 
