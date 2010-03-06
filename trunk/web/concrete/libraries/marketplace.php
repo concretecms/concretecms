@@ -6,6 +6,7 @@ class Marketplace {
 	
 	const E_INVALID_BASE_URL = 20;
 	const E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED = 21;
+	const E_GENERAL_CONNECTION_ERROR = 99;
 
 	protected $isConnected = false;
 	protected $connectionError = false;
@@ -31,12 +32,16 @@ class Marketplace {
 			$fh = Loader::helper('file');
 			$csiURL = urlencode(BASE_URL . DIR_REL);
 			$url = MARKETPLACE_URL_CONNECT_VALIDATE."?csToken={$csToken}&csiURL=" . $csiURL;
+			$vn = Loader::helper('validation/numbers');
 			$r = $fh->getContents($url);
 			if ($r == false) {
 				$this->isConnected = true;
-			} else {
+			} else if ($vn->integer($r)) {
 				$this->isConnected = false;
 				$this->connectionError = $r;
+			} else {
+				$this->isConnected = false;
+				$this->connectionError = self::E_GENERAL_CONNECTION_ERROR;
 			}
 		}		
 	}

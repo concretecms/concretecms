@@ -15,13 +15,14 @@ if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MAR
 		<div class="ccm-error"><br/>
 		<?
 		switch($mi->getConnectionError()) {
-			default:
-				case Marketplace::E_INVALID_BASE_URL:
-					print t('The base URL of your site does not match a registered instance of the site. Please click below to authenticate your site again.');
-					
-					break;
-	
-		}
+			case Marketplace::E_INVALID_BASE_URL:
+				print t('The base URL of your site does not match a registered instance of the site. Please click below to authenticate your site again.');
+				break;
+			case Marketplace::E_GENERAL_CONNECTION_ERROR:
+				print t('Error establishing connection to the concrete5 community. Please check that curl and other required libraries are enabled.');
+				break;
+
+	}
 		?>
 		</div>
 		<?
