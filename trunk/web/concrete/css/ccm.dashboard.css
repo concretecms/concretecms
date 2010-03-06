@@ -183,6 +183,7 @@ div#ccm-dashboard-subnav-third ul li a:hover {
 }
 
 /* groups */
+ul.ccm-dashboard-list, ul.ccm-dashboard-list li {margin: 0px; padding: 0px}
 ul.ccm-dashboard-list li {list-style-type: none; padding-top: 10px; padding-bottom: 10px; border-bottom: 1px dotted #ccc}
 
 form#ccm-log-search {position: absolute; top: -22px; font-size: 10px; right: 10px}
