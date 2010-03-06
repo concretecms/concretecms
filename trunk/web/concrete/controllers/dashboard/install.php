@@ -293,7 +293,7 @@ class DashboardInstallController extends Controller {
 				$this->set('error', $errors);
 			}
 		} else {
-			$this->set('message', t('Marketplace item %s downloaded successfully.', $mri->getHandle()));
+			$this->set('message', t('Marketplace item %s downloaded successfully.', $mri->getName()));
 		}
     }
 
