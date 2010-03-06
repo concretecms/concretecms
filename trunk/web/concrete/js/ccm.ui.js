@@ -267,7 +267,7 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 			message += '<\/ul>';
 			ccmAlert.notice(ccmi18n.error, message);
 		} else {
-			jQuery.fn.dialog.closeTop(); 
+			ccm_blockWindowClose();
 			var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + resp.bID + '&arHandle=' + encodeURI(resp.arHandle) + '&btask=view_edit_mode';	 
 			$.get(action, 		
 				function(r) { 
