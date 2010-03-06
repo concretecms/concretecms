@@ -52,6 +52,7 @@ class BackupTable {
 	**/
 	public function __construct($table)	{
 		$this->db = Loader::db();
+		$this->db->setFetchMode(ADODB_FETCH_BOTH);
 		if (trim($table) == "") {
 			return false;
 		}
