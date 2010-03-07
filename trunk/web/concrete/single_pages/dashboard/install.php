@@ -333,10 +333,8 @@ if ($this->controller->getTask() == 'browse') { ?>
 			
 			$items = $pkg->getPackageItems();
 			$blocks = array();
-			foreach($items as $_b) {
-				if ($_b instanceof BlockType) {
-					$blocks[] = $_b;
-				}
+			if (isset($items['block_types']) && is_array($items['block_types'])) {
+				$blocks = $items['block_types'];
 			}
 			
 			if (count($blocks) > 0) { ?>
