@@ -107,6 +107,7 @@ class File extends Object {
 			$db = Loader::db();
 			$db->Execute('update Files set fslID = ? where fID = ?', array($itemID, $this->fID));
 		}
+		$this->refreshCache();
 	}
 	
 	public function setPassword($pw) {
