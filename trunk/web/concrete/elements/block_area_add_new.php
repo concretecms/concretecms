@@ -26,7 +26,7 @@ function ccm_updateMarketplaceTab() {
 			success: function(html) {
 				jQuery.fn.dialog.hideLoader();
 				$("#ccm-add-marketplace-tab div.ccm-block-type-list").html(html);
-			},
+			}
 		});
 		ccm_blocksLoaded = true;
 	}
@@ -38,6 +38,10 @@ var ccm_blocksLoaded = false;
 
 ccm_showBlockTypeDescription = function(btID) {
 	$("#ccm-bt-help" + btID).show();
+}
+
+ccm_showBlockTypeDescriptions = function() {
+	$(".ccm-block-type-description").show();
 }
 
 var ccm_areaActiveTab = "ccm-add";
@@ -179,11 +183,15 @@ $(function() {
 
 <div id="ccm-add-tab">
 	<div class="ccm-block-type-search-wrapper">
+
+		<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescriptions()" title="<?=t('Learn more about this block type.')?>" id="ccm-bt-help-trigger-all"><img src="<?=ASSETS_URL_IMAGES?>/icons/icon_header_help.png" width="17" height="20" /></a>
+
 		<form onsubmit="return ccmBlockTypeSearchFormCheckResults()">
 		<div class="ccm-block-type-search">
 		<?=$form->text('ccmBlockTypeSearch', array('tabindex' => 1, 'autocomplete' => 'off', 'style' => 'width: 168px'))?>
 		<a href="javascript:void(0)" id="ccm-block-type-clear-search" onclick="ccmBlockTypeSearchClear()"><img width="16" height="16" src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" border="0" style="vertical-align: middle" /></a>
 		</div>
+		
 		<div class="ccm-block-type-filter">
 		
 		</div>
@@ -197,7 +205,6 @@ $(function() {
 			$btIcon = $ci->getBlockTypeIconURL($bt);
 			?>	
 			<li class="ccm-block-type ccm-block-type-available">
-				<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescription(<?=$bt->getBlockTypeID()?>)" title="<?=t('Learn more about this block type.')?>" id="ccm-bt-help-trigger<?=$bt->getBlockTypeID()?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/help.png" width="14" height="14" /></a>
 				<a onclick="ccmBlockTypeResetKeys()" dialog-on-destroy="ccmBlockTypeMapKeys()" class="dialog-launch ccm-block-type-inner" dialog-modal="false" dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" style="background-image: url(<?=$btIcon?>)" dialog-title="<?=t('Add')?> <?=$bt->getBlockTypeName()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/add_block_popup.php?cID=<?=$c->getCollectionID()?>&btID=<?=$bt->getBlockTypeID()?>&arHandle=<?=$a->getAreaHandle()?>"><?=$bt->getBlockTypeName()?></a>
 				<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>"><?=$bt->getBlockTypeDescription()?></div>
 			</li>
