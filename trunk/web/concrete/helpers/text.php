@@ -181,9 +181,7 @@ class TextHelper {
 	 */
 	public function fnmatch($pattern, $string) {
 		if(!function_exists('fnmatch')) {
-			function fnmatch($pattern, $string) {
-				return preg_match("#^".strtr(preg_quote($pattern, '#'), array('\*' => '.*', '\?' => '.', '\[' => '[', '\]' => ']'))."$#i", $string);
-			} // end
+			return preg_match("#^".strtr(preg_quote($pattern, '#'), array('\*' => '.*', '\?' => '.', '\[' => '[', '\]' => ']'))."$#i", $string);
 		} else {
 			return fnmatch($pattern, $string);
 		}
