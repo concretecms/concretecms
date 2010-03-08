@@ -2,9 +2,8 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 ?>
 <h2><?=t('Search Documentation')?></h2>
-<form method="post" action="http://www.concrete5.org/search/">
+<form method="get" action="http://www.concrete5.org/search/">
 <input type="text" name="query" style="width: 130px" />
-<input name="search_paths[]" type="hidden" value="/help" />
 <input type="hidden" name="do" value="search" />
 <input type="submit" value="<?=t('Search')?>" />
 </form>
