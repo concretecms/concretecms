@@ -14,6 +14,7 @@ ul#ccm-system-nav {height: 45px; border-left: 1px solid #d7d7d7; float:right;}
 ul#ccm-system-nav li {
 	float: left;
 	border-right: 1px solid #d7d7d7;
+	line-height: 15px;
 	margin: 0px 0px 0px 0px !important;
 	background: transparent url(../images/bg_header_rib.png) repeat-x scroll;
 	padding: 0px 0px 1px 0px !important;
