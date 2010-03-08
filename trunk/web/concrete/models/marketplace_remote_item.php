@@ -46,7 +46,7 @@ class MarketplaceRemoteItem extends Object {
 		}
 	}
 	
-	public function getVersion() {return $this->version;}
+	public function getVersion() {return $this->pkgVersion;}
 	
 	public function downloadUpdate() {
 		// backup the old package
