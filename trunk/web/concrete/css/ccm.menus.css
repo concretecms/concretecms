@@ -39,7 +39,7 @@ div.ccm-menu a:hover {
 	background: transparent url(../images/bg_menu_active.png) repeat-x scroll;
 }
 
-div.ccm-menu li.header {font-size: 0px; height: 1px; background-color: #afafaf !important; margin: 4px 0px 4px 0px !important}
+div.ccm-menu li.header {font-size: 0px; height: 1px; background-color: #afafaf !important; line-height: 1px !important; margin: 4px 0px 4px 0px !important; border: 0px !important}
 
 div.ccm-menu ul {margin: 0px 12px 0px 12px; padding: 0px !important; background-color: #ededed}
 div.ccm-menu ul li {line-height: 16px; margin: 0px !important; background-color: #ededed !important; display: block; text-align: left; list-style-type: none; font-size: 10px; padding: 0px !important}

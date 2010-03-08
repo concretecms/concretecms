@@ -35,12 +35,12 @@ if ($a->areaAcceptsBlocks()) { ?>
 	<? if ($cp->canAdmin() && PERMISSIONS_MODEL != 'simple') { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canModifyGroups = true;
 	<? } ?>
-	<? if ($ap->canWrite() && ENABLE_AREA_LAYOUTS == true) { ?>
+	<? if ($ap->canWrite() && ENABLE_AREA_LAYOUTS == true && (!$c->isMasterCollection())) { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canLayout = true;
 	<? } else { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canLayout = false;
 	<? } ?>
-	<? if ($ap->canWrite() && ENABLE_CUSTOM_DESIGN == true) { ?>
+	<? if ($ap->canWrite() && ENABLE_CUSTOM_DESIGN == true && (!$c->isMasterCollection())) { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canDesign = true;
 	<? } else { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canDesign = false;

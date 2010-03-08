@@ -840,7 +840,7 @@ ccm_getMarketplaceItem = function(args) {
 					href:  CCM_TOOLS_PATH + '/marketplace/download?install=1&mpID=' + mpID,
 					width: 350,
 					modal: false,
-					height: 240,
+					height: 240
 				});
 			}
 
@@ -850,7 +850,7 @@ ccm_getMarketplaceItem = function(args) {
 				href:  CCM_TOOLS_PATH + '/marketplace/frame?mpID=' + mpID,
 				width: '90%',
 				modal: false,
-				height: '70%',
+				height: '70%'
 			});
 		}
 	});
