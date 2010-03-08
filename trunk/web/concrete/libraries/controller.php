@@ -67,10 +67,6 @@ class Controller {
 		
 		$req = Request::get();
 		
-		if ($req->isIncludeRequest()) {
-			return false;
-		}
-		
 		// we are already on the right page now
 		// let's grab the right method as well.
 		$task = substr($req->getRequestPath(), strlen($req->getRequestCollectionPath()));
@@ -135,6 +131,11 @@ class Controller {
 				}
 			}
 			
+			if ($req->isIncludeRequest()) {
+				$do404 = false;
+			}
+		
+
 
 			if ($do404) {
 				
