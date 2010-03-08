@@ -14,7 +14,7 @@ class DashboardInstallController extends Controller {
 		$subnav = array(
 			array(View::url('/dashboard/install'), t('Installed and Available'), true),
 			array(View::url('/dashboard/install', 'browse', 'themes'), t('More Themes'), false),
-			array(View::url('/dashboard/install', 'browse', 'addons'), t('More Addons'), false)
+			array(View::url('/dashboard/install', 'browse', 'addons'), t('More Add-Ons'), false)
 		);
 		$this->set('subnav', $subnav);
 		Loader::library('marketplace');
@@ -26,7 +26,7 @@ class DashboardInstallController extends Controller {
 		$subnav = array(
 			array(View::url('/dashboard/install'), t('Installed and Available'), false),
 			array(View::url('/dashboard/install', 'browse', 'themes'), t('More Themes'), $what == 'themes'),
-			array(View::url('/dashboard/install', 'browse', 'addons'), t('More Addons'), $what == 'addons')
+			array(View::url('/dashboard/install', 'browse', 'addons'), t('More Add-Ons'), $what == 'addons')
 		);
 		
 		Loader::model('marketplace_remote_item');
@@ -40,7 +40,7 @@ class DashboardInstallController extends Controller {
 			$sets = MarketplaceRemoteItemList::getItemSets('themes');
 		}
 		
-		$setsel = array('0' => t('Featured Items'));
+		$setsel = array('' => t('All Items'), 'FEATURED' => t('Featured Items'));
 		if (is_array($sets)) {
 			foreach($sets as $s) {
 				$setsel[$s->getMarketplaceRemoteSetID()] = $s->getMarketplaceRemoteSetName();
@@ -60,9 +60,12 @@ class DashboardInstallController extends Controller {
 			$mri->filterByKeywords($keywords);
 		}
 		
-		if ($set > 0) {
+		if ($set == 'FEATURED') {
+			$mri->filterByIsFeaturedRemotely(1);
+		} else if ($set > 0) {
 			$mri->filterBySet($set);
 		}
+		
 		$mri->setType($what);
 		$mri->execute();
 		

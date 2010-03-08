@@ -132,6 +132,13 @@ class PageList extends DatabaseItemList {
 		}
 	}
 
+	public function sortByRelevance() {
+		if ($this->indexedSearch) {
+			parent::sortBy('cIndexScore', 'desc');
+		}
+	}
+	
+
 	/** 
 	 * Sorts this list by display order 
 	 */

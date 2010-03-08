@@ -6,6 +6,7 @@ $ch = Loader::helper('concrete/interface');
 if (ENABLE_MARKETPLACE_SUPPORT) {
 	Loader::model('marketplace_remote_item');
 	$mri = new MarketplaceRemoteItemList();
+	$mri->filterByIsFeaturedRemotely(1);
 	$mri->setType('themes');
 	$mri->execute();
 	$availableThemes = $mri->getPage();

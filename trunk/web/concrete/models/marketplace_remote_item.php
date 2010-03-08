@@ -191,6 +191,10 @@ class MarketplaceRemoteItemList extends ItemList {
 	public function filterBySet($set) {
 		$this->params['set'] = $set;
 	}
+
+	public function filterByIsFeaturedRemotely($r) {
+		$this->params['is_featured_remotely'] = $r;
+	}
 	
 	public function execute() {
 		$params = $this->params;
