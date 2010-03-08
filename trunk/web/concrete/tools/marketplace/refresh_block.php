@@ -6,9 +6,10 @@ $ch = Loader::helper('concrete/interface');
 if(ENABLE_MARKETPLACE_SUPPORT){
 	Loader::model('marketplace_remote_item');
 	$mri = new MarketplaceRemoteItemList();
+	$mri->filterByIsFeaturedRemotely(1);
+	$mri->setIncludeInstalledItems(true);
 	$mri->setType('addons');
 	$mri->execute();
-	$mri->setIncludeInstalledItems(true);
 	$marketplaceBlockTypes = $mri->getPage();
 }else{
 	$marketplaceBlockTypes=array();
