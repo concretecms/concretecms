@@ -2,7 +2,7 @@ div#tree {margin-left: 24px; -khtml-user-select: none; -moz-user-select: none;  
 div#tree img {border: 0px}
 div#tree ul, div#tree li {list-style-type: none}
 div#tree ul {padding: 0px; margin: 0px}
-div#tree ul li {padding-top: 0px; padding-bottom: 0px; padding-left: 17px; margin-bottom: 0px; line-height: 12px; font-size: 12px}
+div#tree ul li {padding-top: 0px; padding-bottom: 0px; padding-left: 17px; margin-bottom: 0px; line-height: 10px; font-size: 12px}
 div#tree ul li img.handle {position: absolute; top: 0px; left: 0px;}
 div#tree ul li img.moveable {cursor: move}
 li.tree-node {position: relative; background-color: transparent; background-repeat: no-repeat; width: 100%; background-attachment: scroll; height:auto;}

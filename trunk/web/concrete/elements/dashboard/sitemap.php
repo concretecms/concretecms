@@ -62,12 +62,10 @@ if ($sitemapOverlayPreference != 'explore') {
 </form>
 </div>
 
-<div id="tree" sitemap-wrapper="1" sitemap-instance-id="<?=$instance_id?>" <? if ($display_mode == 'explore') { ?>class="ccm-sitemap-explore<? } ?>">
+<div id="tree" sitemap-wrapper="1" sitemap-instance-id="<?=$instance_id?>" <? if ($display_mode == 'explore') { ?>class="ccm-sitemap-explore"<? } ?>>
 	<ul id="tree-root0" tree-root-node-id="0" sitemap-display-mode="<?=$display_mode?>" sitemap-select-mode="<?=$select_mode?>" sitemap-instance-id="<?=$instance_id?>">
 	</ul>
 </div>
-
-</td>
 
 <script type="text/javascript">
 $(function() {
