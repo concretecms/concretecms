@@ -5,16 +5,6 @@ $survey=$controller;
 $miniSurvey=new MiniSurvey($b);
 $miniSurvey->frontEndMode=true;
 ?>
-
-<style type="text/css">
-.miniSurveyView{ margin-bottom:16px}
-.miniSurveyView #msg{ background:#FFFF99; color: #000; padding:2px; border:1px solid #999; margin:8px 0px 8px 0px}
-.miniSurveyView table.formBlockSurveyTable td{ padding-bottom:4px }
-.miniSurveyView td.question {padding-right: 12px}
-.miniSurveyView #msg .error{padding-left:16px; color:#cc0000}
-.miniSurveyView table.formBlockSurveyTable td img.ccm-captcha-image{float:none}
-.miniSurveyView .required{ color:#cc0000 }
-</style>
 <?php if ($invalidIP) { ?>
 <div class="ccm-error"><p><?=$invalidIP?></p></div>
 <? } ?>
