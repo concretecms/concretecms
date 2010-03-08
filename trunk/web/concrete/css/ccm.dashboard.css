@@ -69,7 +69,7 @@ a:hover {text-decoration: underline}
 .success {color: #666}
 .deem {color: #aaa; }
 
-h1, h2, h3, h4, h5 {color: #666; margin: 0px}
+h1, h2, h3, h4, h5 {color: #555; margin: 0px}
 h1 {font-size: 16px; margin: 0px}
 h2 {font-size: 14px; color: #457da5; margin-bottom: 8px}
 h3 {margin-bottom: 8px; font-size: 13px}
@@ -458,17 +458,17 @@ div.ccm-permissions-entity-base {display: none}
 
 /* notifications */
 ul#ccm-dashboard-notification-list {margin: 0px 0px 0px 0px; padding: 0px}
-ul#ccm-dashboard-notification-list h3 {color: #999; margin-bottom: 2px}
-ul#ccm-dashboard-notification-list h3 a {color: #999;}
+ul#ccm-dashboard-notification-list h3 {color: #555; margin-bottom: 2px}
+ul#ccm-dashboard-notification-list h3 a {color: #555;}
 ul#ccm-dashboard-notification-list li {position: relative; color: #ccc}
 ul#ccm-dashboard-notification-list li.ccm-dashboard-notification-list-date:first-child {margin-top: 0px}
 ul#ccm-dashboard-notification-list li.ccm-dashboard-notification-list-date {margin-top: 20px; border-bottom: 1px dotted #aaa !important; padding-left: 0px !important}
 ul#ccm-dashboard-notification-list li.ccm-dashboard-notification-list-date h2 {margin-bottom: 0px; font-size: 12px}
 
-ul#ccm-dashboard-notification-list p {color: #aaa; line-height: 16px; margin-top: 0px; margin-bottom: 2px}
+ul#ccm-dashboard-notification-list p {color: #666; line-height: 16px; margin-top: 0px; margin-bottom: 2px}
 ul#ccm-dashboard-notification-list a:hover {text-decoration: underline}
 a.ccm-dashboard-notification-read-more {font-size: 11px; color: #77B2DA; position: static; display: inline;}
-span.ccm-dashboard-notification-time {font-size: 10px; font-weight: normal; color: #bbb; white-space: nowrap}
+span.ccm-dashboard-notification-time {font-size: 10px; font-weight: normal; color: #aaa; white-space: nowrap}
 ul#ccm-dashboard-notification-list li {background-repeat: no-repeat; list-style-type: none; padding: 0px 0px 6px 23px; min-height: 14px; margin: 0px 0px 6px 0px; border-bottom: 1px dotted #dedede;}
 li.ccm-dashboard-notification-generic {background-image: url(../images/dashboard/notification_icons/information.png);} 
 li.ccm-dashboard-notification-core-update {background-image: url(../images/dashboard/notification_icons/concrete5.png);} 

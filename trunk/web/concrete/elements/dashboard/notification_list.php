@@ -52,7 +52,7 @@ foreach($notifications as $n) {
 	
 	<li class="<?=getNotificationClassName($n)?>">
 	
-	<h3><?=$n->getSystemNotificationTitle()?> <span class="ccm-dashboard-notification-time"><?=$time?></h3>
+	<h3><?=$n->getSystemNotificationTitle()?> <span class="ccm-dashboard-notification-time"><?=$time?></span></h3>
 	<? if ($isDashboardModule && in_array($n->getSystemNotificationTypeID(), array(
 		SystemNotification::SN_TYPE_CORE_MESSAGE_HELP,
 		SystemNotification::SN_TYPE_CORE_MESSAGE_NEWS,
