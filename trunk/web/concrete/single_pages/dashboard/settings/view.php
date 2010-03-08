@@ -730,7 +730,7 @@ $(document).ready(function(){
 		
 		<table border="0" cellspacing="0" cellpadding="0">
 		<tr>
-		<td valign="top">
+		<td valign="top" width="50%">
 
 		<h2>Toolbar Set</h2>
 		
@@ -742,14 +742,9 @@ $(document).ready(function(){
 		
 		<div class="ccm-dashboard-radio"><input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="CUSTOM" style="vertical-align: middle" <?=($txtEditorMode=='CUSTOM')?'checked':'' ?> /> <?=t('Custom')?></div>
 		
-		<div id="cstmEditorTxtAreaWrap" style=" display:<?=($txtEditorMode=='CUSTOM')?'block':'none' ?>" >
-			<textarea wrap="off" name="CONTENTS_TXT_EDITOR_CUSTOM_CODE" cols="25" rows="20" style="width: 97%; height: 250px;"><?=$txtEditorCstmCode?></textarea>
-			<div class="ccm-note"><a target="_blank" href="http://tinymce.moxiecode.com/"><?=t('TinyMCE Reference')?></a></div>
-		</div>
-
 		</td>
 		<td><div style="width: 50px">&nbsp;</div></td>
-		<td valign="top">
+		<td valign="top" width="50%">
 		
 		<h2>Editor Dimensions</h2>
 		
@@ -766,6 +761,16 @@ $(document).ready(function(){
 		
 		</td>
 		</tr>
+		<tr>
+			<td colspan="3">
+			
+			<div id="cstmEditorTxtAreaWrap" style=" display:<?=($txtEditorMode=='CUSTOM')?'block':'none' ?>" >
+				<textarea wrap="off" name="CONTENTS_TXT_EDITOR_CUSTOM_CODE" cols="25" rows="20" style="width: 97%; height: 250px;"><?=$txtEditorCstmCode?></textarea>
+				<div class="ccm-note"><a target="_blank" href="http://tinymce.moxiecode.com/"><?=t('TinyMCE Reference')?></a></div>
+			</div>
+			</td>
+		</tr>
+		
 		</table>
 		
 		<?
