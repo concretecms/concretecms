@@ -171,12 +171,14 @@
 		
 		if(!in_array($this->type,$this->layoutTypes)) $this->layoutType='table'; 
 		
-		echo '<div id="ccm-layout-wrapper-'.$this->cvalID.'" class="ccm-layout-wrapper">';
+		echo '<div id="ccm-layout-wrapper-'.intval($this->cvalID).'" class="ccm-layout-wrapper">';
 		
 		if ($c->isEditMode()) { 
 			$args = array('layout'=>$this);
 			Loader::element('block_area_layout_controls', $args); 
 		}
+		
+		//echo intval($this->cvalID).' '.$this->layoutID.'<br>';
 		
 		$this->displayTableGrid($this->rows,$this->columns); 
 		/*

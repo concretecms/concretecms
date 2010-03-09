@@ -61,8 +61,9 @@
 .defaultSkin .mceOldBoxModel .mceListBox .mceOpen {width:11px; height:22px;}
 .defaultSkin select.mceNativeListBox {font-family:'MS Sans Serif',sans-serif,Verdana,Arial; font-size:7pt; background:#F0F0EE; border:1px solid gray; margin-right:2px;}
 
-/* SplitButton */
-.defaultSkin .mceSplitButton {width:32px; height:20px; direction:ltr}
+/* SplitButton */ 
+.defaultSkin .mceSplitButton {width:32px; height:20px; direction:ltr; font-size:9px; line-height:11px; }
+.defaultSkin .mceSplitButton div {font-size:9px; line-height:11px;}
 .defaultSkin .mceSplitButton a, .defaultSkin .mceSplitButton span {height:20px; display:block}
 .defaultSkin .mceSplitButton a.mceAction {width:20px; border:1px solid #F0F0EE; border-right:0;}
 .defaultSkin .mceSplitButton span.mceAction {width:20px; background:url(../../img/icons.gif) 20px 20px;}

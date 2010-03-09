@@ -1060,14 +1060,20 @@ var ccmCustomStyle = {
 		$('input[name=cspPresetAction]').click(function() {
 			if ($(this).val() == 'create_new_preset' && $(this).attr('checked')) {
 				$('input[name=cspName]').attr('disabled', false).focus();
-			} else {
+			} else { 
 				$('input[name=cspName]').val('').attr('disabled', true); 
 			}
 		});
 		ccmCustomStyle.showPresetDeleteIcon();
+		
+		ccmCustomStyle.lastPresetID=parseInt($('select[name=cspID]').val());
+		
 		$('select[name=cspID]').change(function(){ 
-			var cspID = $(this).val();
-			var selectedCsrID = $('input[name=selectedCsrID]').val();
+			var cspID = parseInt($(this).val());
+			var selectedCsrID = parseInt($('input[name=selectedCsrID]').val());
+			
+			if(ccmCustomStyle.lastPresetID==cspID) return false;
+			ccmCustomStyle.lastPresetID=cspID;
 			
 			jQuery.fn.dialog.showLoader();
 			if (cspID > 0) {
@@ -1096,6 +1102,10 @@ var ccmCustomStyle = {
 			jQuery.fn.dialog.showLoader();		
 			return true;
 		});
+		
+		//IE bug fix 0 can't focus on txt fields if new block just added 
+		if(!parseInt(ccmCustomStyle.lastPresetID))  
+			setTimeout('$("#ccmCustomCssFormTabs input").attr("disabled", false).get(0).focus()',500);
 	},
 	validIdCheck:function(el,prevID){
 		var selEl = $('#'+el.value); 
