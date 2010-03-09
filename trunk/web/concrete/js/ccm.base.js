@@ -72,7 +72,7 @@ ccm_addHeaderItem = function(item, type) {
 	if (doLoad) {
 		switch(type) {
 			case 'CSS':
-				$('head').append('<style type="text/css">@import "' + item + '";</style>');
+				$('head').append('<link rel="stylesheet" type="text/css" href="' + item + '" />');
 				break;
 			case 'JAVASCRIPT':
 				$('head').append('<script type="text/javascript" src="' + item + '"></script>');
