@@ -208,7 +208,7 @@ deleteBranchFade = function(nodeID) {
 			$("#tree-dz" + nodeID).remove();
 		});
 	} else {
-		deleteBranchDirect();
+		deleteBranchDirect(nodeID);
 	}	
 }
 
