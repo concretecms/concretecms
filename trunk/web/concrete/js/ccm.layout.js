@@ -211,6 +211,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 					if(jObj.layoutID){
 						layoutObj.quickSaveLayoutId = jObj.layoutID;
 					}
+					ccm_mainNavDisableDirectExit(); 
 				}
 			}
 		}); 

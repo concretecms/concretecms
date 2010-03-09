@@ -69,7 +69,10 @@
 				}
 			},
 			change = function (ev) {
-				var cal = $(this).parent().parent(), col;
+				var cal = $(this).parent().parent(), col; 
+				
+				if(!cal.data('colorpicker') || !cal.data('colorpicker').fields) return; 
+				
 				if (this.parentNode.className.indexOf('_hex') > 0) {
 					cal.data('colorpicker').color = col = HexToHSB(fixHex(this.value));
 				} else if (this.parentNode.className.indexOf('_hsb') > 0) {
@@ -97,11 +100,16 @@
 			},
 			blur = function (ev) {
 				var cal = $(this).parent().parent();
-				cal.data('colorpicker').fields.parent().removeClass('colorpicker_focus')
+				var colorpicker = cal.data('colorpicker')
+				if(colorpicker && colorpicker.fields) 
+					colorpicker.fields.parent().removeClass('colorpicker_focus')
 			},
 			focus = function () {
 				charMin = this.parentNode.className.indexOf('_hex') > 0 ? 70 : 65;
-				$(this).parent().parent().data('colorpicker').fields.parent().removeClass('colorpicker_focus');
+				//alert(this.parentNode.innerHTML+' '+this.parentNode.id);
+				var colorpicker = $(this).parent().parent().data('colorpicker')
+				if(colorpicker && colorpicker.fields) 
+					colorpicker.fields.parent().removeClass('colorpicker_focus');
 				$(this).parent().addClass('colorpicker_focus');
 			},
 			downIncrement = function (ev) {
@@ -365,8 +373,12 @@
 				return this.each(function () {
 					if (!$(this).data('colorpickerId')) {
 						var id = 'collorpicker_' + parseInt(Math.random() * 1000);
+						
+						//alert(id);
+						
 						$(this).data('colorpickerId', id);
-						var cal = $(tpl).attr('id', id);
+						var cal = $(tpl).attr('id', id); 
+						
 						if (options.flat) {
 							cal.appendTo(this).show();
 						} else {
@@ -385,7 +397,8 @@
 						cal.find('div.colorpicker_hue').bind('mousedown', downHue);
 						options.newColor = cal.find('div.colorpicker_new_color');
 						options.currentColor = cal.find('div.colorpicker_current_color');
-						cal.data('colorpicker', options);
+						cal.data('colorpicker', options); 
+						
 						/*
 						var noneBTN = cal.find('input.colorpicker_none');
 						noneBTN.get(0).cal=cal.get(0);

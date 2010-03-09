@@ -29,10 +29,11 @@ $jsonData = array('success'=>'0','msg'=>'', 'layoutID'=>intval($layoutID));
 //security checks: make sure this layout belongs to this area & collection
 if ( is_object($layout) && is_object($a) && is_object($c) ){  
 	$db = Loader::db();
-	$vals = array( $layoutID, $a->getAreaHandle(), intval($nvc->cID), intval($c->getVersionID()), intval($nvc->getVersionID())  ); 
-	$areaLayoutData = $db->getRow('SELECT * FROM CollectionVersionAreaLayouts WHERE layoutID=? AND arHandle=? AND cID=? AND cvID IN (?,?)',$vals);
+	$vals = array( $layoutID, $a->getAreaHandle(), intval($nvc->cID), intval($nvc->getVersionID())  ); 
+	$areaLayoutData = $db->getRow('SELECT * FROM CollectionVersionAreaLayouts WHERE layoutID=? AND arHandle=? AND cID=? AND cvID=?',$vals);
 	$layout->setAreaNameNumber( $areaLayoutData['areaNameNumber'] );
 	$validLayout = (intval($areaLayoutData['layoutID'])>0 || is_object($layoutPreset)) ? true : false; 
+	if($validLayout) $cvalID = intval($areaLayoutData['cvalID']);
 }
 
 if ( !$validLayout || !$cp->canWrite() || !$ap->canWrite()  ) {
@@ -103,20 +104,25 @@ if ( !$validLayout || !$cp->canWrite() || !$ap->canWrite()  ) {
 			foreach($breakPoints as $breakPoint){
 				$cleanBreakPoints[]= floatval(str_replace('%','',$breakPoint)).'%';
 			} 
-			$layout->breakpoints = $cleanBreakPoints;
+			$layout->breakpoints = $cleanBreakPoints; 
+			
 			if( count($layout->breakpoints) != ($layout->columns-1) ){
 				 $jsonData['msg']=t('Error: Invalid column count. Please refresh your page.'); 
 			}else{ 
+			
 				if( !$layout->isUniqueToCollectionVersion($nvc) && !$layoutPreset ){
 					$oldLayoutId=$layout->layoutID;
+					$oldLayout_cvalID=$layout->cvalID;
 					$layout->layoutID=0;
-				}
-				$saved = $layout->save();
-				if( $oldLayoutId && !$layoutPreset ) $nvc->updateAreaLayoutId($a, $oldLayoutId, $layout->layoutID ); 
+				}  
 				
+				$saved = $layout->save();  
+				if( $oldLayoutId && !$layoutPreset ) $nvc->updateAreaLayoutId( intval($cvalID), $layout->layoutID ); 
+
 				$jsonData['layoutID'] = $layout->getLayoutID(); 
 				$jsonData['success'] = intval($saved); 
-			}
+			} 			
+			
 			break;				
 			
 		default:

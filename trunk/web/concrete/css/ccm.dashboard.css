@@ -195,10 +195,10 @@ form#ccm-log-search input.ccm-input-text, form#ccm-log-search input.ccm-input-se
 
 /* homepage modules */
 
-div#ccm-module-wrapper {min-width: 778px}
+div#ccm-module-wrapper {min-width: 778px; }
 div#ccm-module-row1 div.ccm-module {width: 375px; min-height: 300px; }
-div#ccm-module-row2 div.ccm-module {width: 247px; min-height: 220px}
-div.ccm-module div.ccm-dashboard-inner {margin-bottom: 0px}
+div#ccm-module-row2 div.ccm-module {width: 247px; min-height: 220px; }
+div.ccm-module div.ccm-dashboard-inner {margin-bottom: 0px; white-space:normal;} 
 div.ccm-module {margin-bottom: 10px; margin-right: 10px; float: left; font-size: 12px}
 div#ccm-module-row2 {clear: both}
 
@@ -461,12 +461,13 @@ div.ccm-permissions-entity-base {display: none}
 ul#ccm-dashboard-notification-list {margin: 0px 0px 0px 0px; padding: 0px}
 ul#ccm-dashboard-notification-list h3 {color: #555; margin-bottom: 2px}
 ul#ccm-dashboard-notification-list h3 a {color: #555;}
-ul#ccm-dashboard-notification-list li {position: relative; color: #ccc}
+ul#ccm-dashboard-notification-list li {position: relative; color: #ccc; white-space:normal; }
 ul#ccm-dashboard-notification-list li.ccm-dashboard-notification-list-date:first-child {margin-top: 0px}
 ul#ccm-dashboard-notification-list li.ccm-dashboard-notification-list-date {margin-top: 20px; border-bottom: 1px dotted #aaa !important; padding-left: 0px !important}
 ul#ccm-dashboard-notification-list li.ccm-dashboard-notification-list-date h2 {margin-bottom: 0px; font-size: 12px}
 
-ul#ccm-dashboard-notification-list p {color: #666; line-height: 16px; margin-top: 0px; margin-bottom: 2px}
+
+ul#ccm-dashboard-notification-list p {color: #666; line-height: 16px; margin-top: 0px; margin-bottom: 2px; white-space:normal; }
 ul#ccm-dashboard-notification-list a:hover {text-decoration: underline}
 a.ccm-dashboard-notification-read-more {font-size: 11px; color: #77B2DA; position: static; display: inline;}
 span.ccm-dashboard-notification-time {font-size: 10px; font-weight: normal; color: #aaa; white-space: nowrap}
