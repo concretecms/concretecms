@@ -124,6 +124,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 					alert(jObj.msg);
 				}else{    
 					//success
+					ccm_mainNavDisableDirectExit();  
 				}
 			}
 		});		
@@ -138,7 +139,10 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 					el.slideDown(600,function(){ layoutObj.highlightAreas(0); layoutObj.moving=0; }); 
 				})
 				return;
-			}
+			} 
+			//at boundry
+			ccmAlert.hud( ccmi18n.moveLayoutAtBoundary, 4000, 'icon_move_down', ccmi18n.moveLayoutDown); 
+			
 		}else if(direction=='up'){
 			var previousLayout = el.prev();
 			if( previousLayout.hasClass('ccm-layout-wrapper') ){ 
@@ -148,9 +152,9 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 				})
 				return;
 			} 
+			//at boundry
+			ccmAlert.hud( ccmi18n.moveLayoutAtBoundary, 4000, 'icon_move_up', ccmi18n.moveLayoutUp); 
 		}
-		
-		//at boundary, can't move further. 
 	}
 	
 	this.lock=function(lock,twinLock){  
@@ -236,6 +240,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 					//success
 					$('#ccm-layout-wrapper-'+cvalID).remove();
 					ccm_hideHighlighter();
+					ccm_mainNavDisableDirectExit(); 
 				}
 			}
 		});	

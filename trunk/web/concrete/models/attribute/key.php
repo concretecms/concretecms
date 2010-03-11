@@ -309,7 +309,10 @@ class AttributeKey extends Object {
 			}
 		}
 		
-		$q = $db->db->GetInsertSQL($rs, $columnHeaders);
+		//this shouldn't be necessary, but i had a saying telling me that the static variable 'db' was protected, 
+		//even though it was declared as public 
+		$db_db=$db->getDatabaseObject();
+		$q = $db_db->GetInsertSQL($rs, $columnHeaders);
 		$r = $db->Execute($q);
 		$r->Close();
 		$rs->Close();
