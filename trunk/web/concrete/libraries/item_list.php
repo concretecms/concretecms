@@ -12,13 +12,14 @@ class DatabaseItemList extends ItemList {
 	private $debug = false;
 	private $filters = array();
 	protected $sortByString = '';
+	protected $groupByString = '';  
 	protected $autoSortColumns = array();
 	protected $userPostQuery = '';
 	
 	public function getTotal() {
 		if ($this->total == -1) {
 			$db = Loader::db();
-			$arr = $this->executeBase(); // returns an associated array of query/placeholder values
+			$arr = $this->executeBase(); // returns an associated array of query/placeholder values				
 			$r = $db->Execute($arr);
 			$this->total = $r->NumRows();
 		}		
@@ -88,6 +89,10 @@ class DatabaseItemList extends ItemList {
 			$q .= ' ' . $this->userPostQuery . ' ';
 		}
 		
+		if ($this->groupByString != '') {
+			$q .= 'group by ' . $this->groupByString . ' ';
+		}		
+		
 		return $q;
 	}
 	
@@ -119,9 +124,10 @@ class DatabaseItemList extends ItemList {
 		$this->setupAttributeSort();
 		$this->setupAutoSort();
 		$this->setupSortByString();
+		
 		if ($this->sortByString != '') {
 			$q .= 'order by ' . $this->sortByString . ' ';
-		}
+		}	
 		if ($this->itemsPerPage > 0 && (intval($itemsToGet) || intval($offset)) ) {
 			$q .= 'limit ' . $offset . ',' . $itemsToGet . ' ';
 		}
@@ -160,6 +166,13 @@ class DatabaseItemList extends ItemList {
 		}
 		parent::sortBy($key, $dir);
 	}
+	
+	public function groupBy($key) {
+		if ($key instanceof AttributeKey) {
+			$key = 'ak_' . $key->getAttributeKeyHandle();
+		}
+		$this->groupByString = $key;
+	}	
 	
 	public function getSortByURL($column, $dir = 'asc', $baseURL = false, $additionalVars = array()) {
 		if ($column instanceof AttributeKey) {
@@ -415,7 +428,7 @@ class ItemList {
 	public function sortBy($column, $direction = 'asc') {
 		$this->sortBy = $column;
 		$this->sortByDirection = $direction;
-	}
+	} 
 
 	/** 
 	 * Sets up a column to sort by

@@ -13,6 +13,7 @@ var ccmi18n = {
 	addAreaLayout: "<?=t('Add Layout')?>",
 	moveLayoutUp: "<?=t('Move Up')?>",
 	moveLayoutDown: "<?=t('Move Down')?>",
+	moveLayoutAtBoundary: "<?=t('This layout section can not be moved further in this direction.')?>", 
 	lockAreaLayout: "<?=t('Lock Layout')?>", 
 	unlockAreaLayout: "<?=t('Unlock Layout')?>", 
 	deleteLayout: '<?=t('Delete')?>',
