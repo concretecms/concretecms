@@ -870,6 +870,9 @@ $ppWhere = '';
 		$uID = $this->getCollectionUserID();
 		$pkgID = $this->getPackageID();
 		$cFilename = $this->getCollectionFilename();
+		
+		$rescanTemplatePermissions = false;
+		
 		if (isset($data['cName'])) {
 			$cName = $data['cName'];
 		}
@@ -886,6 +889,7 @@ $ppWhere = '';
 			$ctID = $data['ctID'];
 			// we grab the package that this ct belongs to
 			$pkgID = $db->GetOne("select pkgID from PageTypes where ctID = ?", array($data['ctID']));
+			$rescanTemplatePermissions = true;
 		}
 
 		$txt = Loader::helper('text');
@@ -922,6 +926,14 @@ $ppWhere = '';
 
 		$db->query("update Pages set uID = ?, ctID = ?, pkgID = ?, cFilename = ? where cID = ?", array($uID, $ctID, $pkgID, $cFilename, $this->cID));
 
+		if ($rescanTemplatePermissions) {
+			if ($this->cInheritPermissionsFrom == 'TEMPLATE') {
+				// we make sure to update the cInheritPermissionsFromCID value
+				$ct = CollectionType::getByID($ctID);
+				$masterC = $ct->getMasterTemplate();
+				$db->Execute('update Pages set cInheritPermissionsFromCID = ? where cID = ?', array($masterC->getCollectionID(), $this->getCollectioniD()));
+			}
+		}
 		// run any internal event we have for page update
 		$this->reindex();
 		$ret = Events::fire('on_page_update', $this);
@@ -1059,7 +1071,10 @@ $ppWhere = '';
 			// want any orphaned groups
 			$this->clearGroups();
 		}
-		$v = array($args['cOverrideTemplatePermissions'], $this->cID);
+
+		$cOverrideTemplatePermissions = ($args['cOverrideTemplatePermissions'] == 1) ? 1 : 0;
+
+		$v = array($cOverrideTemplatePermissions, $this->cID);
 		$q = "update Pages set cOverrideTemplatePermissions = ? where cID = ?";
 		$db->query($q, $v);
 		parent::refreshCache();
