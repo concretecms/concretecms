@@ -24,30 +24,32 @@ class Cache {
 	public function getLibrary() {
 		static $cache;
 		if (!isset($cache)) {
-			Loader::library('3rdparty/Zend/Cache');
-			$frontendOptions = array(
-				'lifetime' => 7200,
-				'automatic_serialization' => true			
-			);
-			$backendOptions = array(
-				'cache_dir' => DIR_FILES_CACHE
-			);
-			if (defined('CACHE_BACKEND_OPTIONS')) {
-				$opts = unserialize(CACHE_BACKEND_OPTIONS);
-				foreach($opts as $k => $v) {
-					$backendOptions[$k] = $v;
+			if (is_dir(DIR_FILES_CACHE) && is_writable(DIR_FILES_CACHE)) {
+				Loader::library('3rdparty/Zend/Cache');
+				$frontendOptions = array(
+					'lifetime' => 7200,
+					'automatic_serialization' => true			
+				);
+				$backendOptions = array(
+					'cache_dir' => DIR_FILES_CACHE
+				);
+				if (defined('CACHE_BACKEND_OPTIONS')) {
+					$opts = unserialize(CACHE_BACKEND_OPTIONS);
+					foreach($opts as $k => $v) {
+						$backendOptions[$k] = $v;
+					}
 				}
-			}
-			if (defined('CACHE_FRONTEND_OPTIONS')) {
-				$opts = unserialize(CACHE_FRONTEND_OPTIONS);
-				foreach($opts as $k => $v) {
-					$frontendOptions[$k] = $v;
+				if (defined('CACHE_FRONTEND_OPTIONS')) {
+					$opts = unserialize(CACHE_FRONTEND_OPTIONS);
+					foreach($opts as $k => $v) {
+						$frontendOptions[$k] = $v;
+					}
 				}
+				if (!defined('CACHE_LIBRARY') || (defined("CACHE_LIBRARY") && CACHE_LIBRARY == "default")) {
+					define('CACHE_LIBRARY', 'File');
+				}
+				$cache = Zend_Cache::factory('Core', CACHE_LIBRARY, $frontendOptions, $backendOptions);
 			}
-			if (!defined('CACHE_LIBRARY') || (defined("CACHE_LIBRARY") && CACHE_LIBRARY == "default")) {
-				define('CACHE_LIBRARY', 'File');
-			}
-			$cache = Zend_Cache::factory('Core', CACHE_LIBRARY, $frontendOptions, $backendOptions);
 		}
 		return $cache;
 	}
