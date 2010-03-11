@@ -62,7 +62,7 @@ class ConcreteInterfaceHelper {
 		return $this->generateButton($href, $onclick, $text, $buttonAlign, $innerClass, $args);
 	}
 	
-	private function generateButton($href, $onclick, $text, $buttonAlign, $innerClass, $args) {
+	protected function generateButton($href, $onclick, $text, $buttonAlign, $innerClass, $args) {
 		switch($buttonAlign) {
 			case "left";
 				$class = 'ccm-button';
