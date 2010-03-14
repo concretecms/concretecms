@@ -86,9 +86,15 @@
 		$this->layoutID=intval($params['layoutID']); 
 		$this->locked=intval($params['locked']); 
 		$this->type = (!in_array($params['type'],$this->layoutTypes))?'table':$params['type'];
-		$this->rows=(intval($params['rows'])<1)?1:$params['rows']; 
-		$this->columns=(intval($params['columns'])<1)?3:$params['columns']; 
+		
+		if(intval($params['layout_rows'])) $this->rows=intval($params['layout_rows']); 
+		else $this->rows=(intval($params['rows'])<1)?1:$params['rows']; 
+		
+		if(intval($params['layout_columns'])) $this->columns=intval($params['layout_columns']); 
+		else $this->columns=(intval($params['columns'])<1)?3:$params['columns']; 
+		
 		if(intval($params['areaNameNumber'])) $this->areaNameNumber = intval($params['areaNameNumber']);  
+		
 		$this->lpID=intval($params['lpID']);
 		$this->lpName=$params['lpName'];
 		
@@ -124,9 +130,9 @@
 		
 		
 		if( intval($this->layoutID) ){ 
-			$sql = 'UPDATE Layouts SET columns=?, rows=?, locked=?, breakpoints=? WHERE layoutID=' . $this->getLayoutId() ; 
+			$sql = 'UPDATE Layouts SET layout_columns=?, layout_rows=?, locked=?, breakpoints=? WHERE layoutID=' . $this->getLayoutId() ; 
 		}else{   
-			$sql = 'INSERT INTO Layouts ( columns, rows, locked, breakpoints ) values (?, ?, ?, ?)'; 
+			$sql = 'INSERT INTO Layouts ( layout_columns, layout_rows, locked, breakpoints ) values (?, ?, ?, ?)'; 
 		}			
 		
 		$db = Loader::db();
@@ -180,7 +186,7 @@
 		
 		//echo intval($this->cvalID).' '.$this->layoutID.'<br>';
 		
-		$this->displayTableGrid($this->rows,$this->columns); 
+		$this->displayTableGrid($this->rows,$this->columns,$c); 
 		/*
 		switch($this->type){		
 			case 'staggered':
