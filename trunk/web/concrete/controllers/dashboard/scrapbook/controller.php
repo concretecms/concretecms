@@ -102,7 +102,7 @@ class DashboardScrapbookController extends Controller {
 		$bID=intval($_REQUEST['bID']); 
 		$globalScrapbookC=$this->getCollectionObject(); 
 		$scrapbookName = $_REQUEST['scrapbookName']; 
-		$globalScrapbookArea = new Area( $scrapbookName );
+		$globalScrapbookArea = Area::getOrCreate( $globalScrapbookC, $scrapbookName );
 		$block=Block::getById($bID, $globalScrapbookC, $globalScrapbookArea); 		
 		if($block && strlen($_POST['bName']) ){  //&& $block->getAreaHandle()=='Global Scrapbook'		
 			//this is needed so the cache clears correctly
