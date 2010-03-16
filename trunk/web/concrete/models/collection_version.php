@@ -25,7 +25,7 @@
 		var $cID;
 		protected $attributes = array();
 		public $customAreaStyles = array();
-		
+		public $layoutStyles = array();
 		
 		/** 
 		 * Returns the actual cvID numerical value for a particular cID/cvID combo

@@ -28,6 +28,7 @@
 	//public $layoutName='Layout';
 	public $type='table';
 	public $columns=3;
+	public $spacing=0;
 	public $rows=3;	
 	public $locked=0;	
 	public $layoutTypes=array('area','table','columns','itemlist','staggered');
@@ -81,7 +82,7 @@
 	
 	//breakpoints an optional array of percentages, for the break points between columns, 
 	//for a three column layout, you could for instance set the column breaks like array('25%','75%')
-	function fill( $params=array( 'layoutID'=>0, 'type'=>'table','rows'=>3,'columns'=>3, 'breakpoints'=>array(), 'locked'=>0, 'lpID'=>0, 'lpName'=>'' ) ){  
+	function fill( $params=array( 'layoutID'=>0, 'type'=>'table','rows'=>3,'columns'=>3, 'breakpoints'=>array(), 'locked'=>0, 'lpID'=>0, 'lpName'=>'', 'spacing'=>0 ) ){  
 		
 		$this->layoutID=intval($params['layoutID']); 
 		$this->locked=intval($params['locked']); 
@@ -97,6 +98,8 @@
 		
 		$this->lpID=intval($params['lpID']);
 		$this->lpName=$params['lpName'];
+		
+		if( strlen($params['spacing']) ) $this->spacing=$params['spacing'];
 		
 		if( !is_array($params['breakpoints']) && strlen(trim($params['breakpoints'])) ) $this->breakpoints = explode(',',$params['breakpoints']); 
 		elseif(is_array($params['breakpoints']) && (count($params['breakpoints']) || $this->columns==1)) $this->breakpoints=$params['breakpoints']; 
@@ -126,13 +129,13 @@
 	public function save(){ 
 		
 		if( !is_array($this->breakpoints) ) $this->breakpoints = explode(',',$this->breakpoints); 
-		$vals = array( intval($this->columns), intval($this->rows), intval($this->locked), join(',',$this->breakpoints)  );
+		$vals = array( intval($this->columns), intval($this->rows), intval($this->locked), join(',',$this->breakpoints), $this->spacing );
 		
 		
 		if( intval($this->layoutID) ){ 
-			$sql = 'UPDATE Layouts SET layout_columns=?, layout_rows=?, locked=?, breakpoints=? WHERE layoutID=' . $this->getLayoutId() ; 
+			$sql = 'UPDATE Layouts SET layout_columns=?, layout_rows=?, locked=?, breakpoints=?, spacing=? WHERE layoutID=' . $this->getLayoutId() ; 
 		}else{   
-			$sql = 'INSERT INTO Layouts ( layout_columns, layout_rows, locked, breakpoints ) values (?, ?, ?, ?)'; 
+			$sql = 'INSERT INTO Layouts ( layout_columns, layout_rows, locked, breakpoints, spacing ) values (?, ?, ?, ?, ?)'; 
 		}			
 		
 		$db = Loader::db();
@@ -265,13 +268,23 @@
 					$colWidth=($columns==1)?'100%':$this->getNextColWidth($j,$cumulativeWidth);
 					$cumulativeWidth += intval(str_replace(array('px','%'),'',strtolower($colWidth)));
 					$columnn_id = 'ccm-layout-'.intval($this->layoutID).'-col-'.($j+1);
-					echo '<div class="'.$columnn_id.' ccm-layout-cell ccm-layout-col ccm-layout-col-'.($j+1).'" style="width:'.$colWidth.'">';
+					
+					if($j==0) $positionTag='first';
+					elseif($j==($columns-1)) $positionTag='last';
+					else $positionTag = '';
+					
+					echo '<div class="'.$columnn_id.' ccm-layout-cell ccm-layout-col ccm-layout-col-'.($j+1).' '.$positionTag.'" style="width:'.$colWidth.'">';
 					$a = new Area( $this->getCellAreaHandle($this->getCellNumber()) );
 					ob_start();
 					$a->display($c);			
 					$areaHTML = ob_get_contents();
-					ob_end_clean();
-					if(strlen($areaHTML)) echo $areaHTML;
+					ob_end_clean(); 
+				
+					if(strlen($areaHTML)){
+						if( intval($this->spacing) )  
+							$areaHTML='<div class="ccm-layout-col-spacing">'.$areaHTML.'</div>';							
+						echo $areaHTML; 
+					}
 					else echo '&nbsp;';
 					echo '</div>';				
 				}

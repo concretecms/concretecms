@@ -1055,6 +1055,11 @@
 			<DEFAULT value="3"/>
 		</field>
 		
+		<field name="spacing" type="i" size="3">
+			<NOTNULL/>
+			<DEFAULT value="3"/>
+		</field>		
+		
 		<field name="breakpoints" type="C" size="255">
 			<DEFAULT value=""/>
 			<NOTNULL/>

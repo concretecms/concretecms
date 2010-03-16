@@ -36,6 +36,12 @@ if(!$layout ){
 <div id="ccm-layout-edit-wrapper">
 <? } ?>
 
+<style>
+#ccmLayoutConfigOptions { margin-top:12px; }
+#ccmLayoutConfigOptions table td { padding-bottom:4px; vertical-align:top; padding-bottom:12px; padding-right:12px; } 
+#ccmLayoutConfigOptions table td.padBottom {  }
+</style>
+
 <form method="post" id="ccmAreaLayoutForm" action="<?=$action?>" style="width:96%; margin:auto;"> 
 
 	<input id="ccmAreaLayoutForm_layoutID" name="layoutID" type="hidden" value="<?=intval( $layout->layoutID ) ?>" />  
@@ -62,23 +68,34 @@ if(!$layout ){
 	
 		<table> 
 			<tr>
-				<td><?=t('Columns')?></td>
-				<td>
+				<td class="label"><?=t('Columns')?></td>
+				<td class="val">
 					<input name="layout_columns" type="text" value="<?=intval($layout->columns) ?>" size=2 />
 				</td>
+				
 			</tr>
 			<tr>
-				<td><?=t('Rows')?></td>
-				<td>
+				<td class="label padBottom"><?=t('Rows')?></td>
+				<td class="val padBottom">
 					<input name="layout_rows" type="text" value="<?=intval($layout->rows) ?>" size=2 />
 				</td>
-			</tr>		
-		</table>
-	
-		<div style="margin:16px 0px">
-			<input name="locked" type="checkbox" value="1" <?= ( intval($layout->locked) ) ? 'checked="checked"' : '' ?> />
-			<?= t('Lock Widths') ?>
-		</div>
+			</tr>
+			
+			<tr>	
+				<td class="label padBottom"><?=t('Spacing')?></td>
+				<td class="val padBottom">
+					<input name="spacing" type="text" value="<?=intval($layout->spacing) ?>" size=2 /> <?=t('px')?>
+				</td>				
+			</tr>			
+			
+			<tr>
+				<td class="label padBottom"><?= t('Lock Widths') ?></td>
+				<td class="val padBottom">
+					<input name="locked" type="checkbox" value="1" <?= ( intval($layout->locked) ) ? 'checked="checked"' : '' ?> />
+				</td>				
+			</tr>			
+							
+		</table> 
 	
 	</div>	
 	

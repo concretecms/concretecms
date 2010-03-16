@@ -359,7 +359,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	 * Retrieves all custom style rules that should be inserted into the header on a page, whether they are defined in areas
 	 * or blocks
 	 */
-	public function outputCustomStyleHeaderItems() {
+	public function outputCustomStyleHeaderItems() {	
+		
 		$db = Loader::db();
 		$csrs = array();
 		$r1 = $db->GetCol('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
@@ -379,16 +380,23 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 		}
 		//get the header style rules
-		$styleHeader = '';
-		foreach($csrs as $st) {
+		$styleHeader = ''; 
+		foreach($csrs as $st) { 
 			if ($st->getCustomStyleRuleCSSID(true)) { 
 				$styleHeader .= '#'.$st->getCustomStyleRuleCSSID(1).' {'. $st->getCustomStyleRuleText(). "} \r\n";  
 			}
-		}
+		} 		
+		  
+		$r3 = $db->GetAll('select l.layoutID, l.spacing from CollectionVersionAreaLayouts cval LEFT JOIN LAYOUTS AS l ON  cval.layoutID=l.layoutID WHERE cval.cID = ? and cval.cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
+		foreach($r3 as $data){  
+			if(!intval($data['spacing'])) continue; 
+			$layoutStyleRules='#ccm-layout-'.intval($data['layoutID']).' .ccm-layout-col-spacing { margin:0px '.ceil(floatval($data['spacing'])/2).'px }';
+			$styleHeader .= $layoutStyleRules . " \r\n";  
+		}  
 		
 		$v = View::getInstance();
 		$v->addHeaderItem("<style type=\"text/css\"> \r\n".$styleHeader.'</style>', 'VIEW');
-	}
+	} 
 
 	public function getAreaCustomStyleRule($area) {
 		$db = Loader::db();
