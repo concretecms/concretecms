@@ -282,6 +282,7 @@
 									'rows'=>intval($_REQUEST['layout_rows']),
 									'columns'=>intval($_REQUEST['layout_columns']),  
 									'locked'=>intval($_REQUEST['locked']),  
+									'spacing'=>intval($_REQUEST['spacing']),  
 									'layoutID'=>$layoutID );					
 					
 					

@@ -576,7 +576,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * @param array $args
 		 * @return void
 		*/	
-		public function render($view, $args = null) {
+		public function render($view, $args = null) { 
 			
 			try {			
 				if (is_array($args)) {
@@ -717,7 +717,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				// Now, if we're on an actual page, we retrieve all the blocks on the page
 				// and store their view states in the local cache (for the page). That way
 				// we can add header items and have them show up in the header BEFORE
-				// the block itself is actually loaded
+				// the block itself is actually loaded 			
+				
 				if ($view instanceof Page) {
 					$blocks = $view->getBlocks();
 					foreach($blocks as $b1) {
@@ -731,7 +732,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					
 					// now, we output all the custom style records for the design tab in blocks/areas on the page
 					$c = $this->getCollectionObject();
-					$view->outputCustomStyleHeaderItems();
+					$view->outputCustomStyleHeaderItems(); 				
 				}
 	
 				// finally, we include the theme (which was set by setTheme and will automatically include innerContent)

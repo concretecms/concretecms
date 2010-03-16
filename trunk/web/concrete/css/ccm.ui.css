@@ -139,8 +139,9 @@ div.ccm-add-block {
 	padding: 2px;
 	font-size: 11px;
 	white-space: nowrap;
-	font-weight: bold;
-	border: 2px dotted #ccc;
+	font-weight: bold; 
+	border: 2px dotted #ccc; 
+	overflow:hidden; 
 }
 
 div.ccm-add-block.selected {
