@@ -86,10 +86,16 @@ if ( !$validLayout || !$cp->canWrite() || !$ap->canWrite()  ) {
 				} 
 			} 
 			$jsonData['success'] = 1; 
-			break;	
+			break;	 
+			
+		case 'deleteOpts':
+			Loader::element('block_area_layout_delete_opts', array('cvalID'=>$layout->cvalID));
+			die;
+			break;
 
 		case 'delete':  
-			$nvc->deleteAreaLayout( $a, $layout); 
+			$nvc->deleteAreaLayout( $a, $layout, intval($_REQUEST['deleteBlocks'])); 
+			$jsonData['refreshPage'] = (intval($_REQUEST['deleteBlocks']))?0:1;  
 			$jsonData['success'] = 1; 
 			break;	
 			
@@ -136,6 +142,7 @@ if ( !$validLayout || !$cp->canWrite() || !$ap->canWrite()  ) {
 if( !$jsonData['msg'] && !intval($jsonData['success']) ) $jsonData['msg']=t('Unknown Error'); 
 if( !$jsonData['msg'] && intval($jsonData['success']) ) $jsonData['msg']=t('Success');
 
-$json = Loader::helper('json'); 
-echo $json->encode( $jsonData );
+$json = Loader::helper('json');
+if( $_GET['task']=='deleteOpts') echo $jsonData['msg'];
+else echo $json->encode( $jsonData );
 ?>

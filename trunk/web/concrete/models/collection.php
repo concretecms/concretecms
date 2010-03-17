@@ -464,16 +464,17 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$placeHolderLayout->setAreaObj($area);
 				$placeHolderLayout->setAreaNameNumber($nextNumber);   
 				$placeHolderLayoutAreaHandle = $placeHolderLayout->getCellAreaHandle(1);
-				foreach($areaBlocks as $b){ 
+				//foreach($areaBlocks as $b){ 
 					//$newBlock=$b->duplicate($this); 
 					//$newBlock->move($this, $placeHolderLayoutArea); 
 					//$newBlock->refreshCacheAll(); 
 					//$b->delete();
 					//$b->move($this, $placeHolderLayoutArea); 
 					//$b->refreshCacheAll(); 
-					$v = array( $placeHolderLayoutAreaHandle, $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle() );
-					$db->Execute('update CollectionVersionBlocks set arHandle=? WHERE cID=? AND cvID=? AND arHandle=?', $v);
-				} 
+					
+				//} 
+				$v = array( $placeHolderLayoutAreaHandle, $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle() );
+				$db->Execute('update CollectionVersionBlocks set arHandle=? WHERE cID=? AND cvID=? AND arHandle=?', $v);				
 				
 				$nextNumber++; 
 			}
@@ -504,7 +505,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	}	
 	
 	
-	public function deleteAreaLayout($area, $layout){
+	public function deleteAreaLayout($area, $layout, $deleteBlocks=0){
 		$db = Loader::db();
 		$vals = array( $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle(), $layout->getLayoutID() );
 		$db->Execute('delete from CollectionVersionAreaLayouts WHERE cID = ? AND cvID = ? AND arHandle = ? AND layoutID = ? LIMIT 1', $vals ); 
@@ -513,9 +514,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		$layout->setAreaObj($area);
 		//we'll try to grab more areas than necessary, just incase the layout size had been reduced at some point. 
 		$maxCell = $layout->getMaxCellNumber()+20; 
-		for( $i=1; $i<=$maxCell; $i++ ) 
-			 $layout->deleteCellsBlocks($this,$i);  
-			 
+		for( $i=1; $i<=$maxCell; $i++ ){ 
+			if($deleteBlocks) $layout->deleteCellsBlocks($this,$i);  
+			else $layout->moveCellsBlocksToParent($this,$i);  
+		}
+		
 		Layout::cleanupOrphans();	 
 			 
 		$this->refreshCache();

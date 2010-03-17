@@ -391,6 +391,17 @@
 			$block->delete();
 	}
 	
+	public function moveCellsBlocksToParent($c,$cellNumber=0){
+		$blocks = $c->getBlocks(  );
+		$i=1000;
+		foreach($blocks as $block){  
+			$i++;
+			$db = Loader::db();
+			$v = array( $this->getAreaHandle(), $i, $block->bID, $c->getCollectionID(), $c->getVersionID(), $this->getCellAreaHandle(intval($cellNumber)) );
+			$db->Execute('update CollectionVersionBlocks set arHandle=?, cbDisplayOrder=? WHERE bID=? AND cID=? AND cvID=? AND arHandle=?', $v);
+		}
+	}
+	
 	static function cleanupOrphans(){
 		$db = Loader::db();
 		$sql = 'SELECT l.layoutID FROM Layouts AS l LEFT JOIN CollectionVersionAreaLayouts AS cval ON l.layoutID=cval.layoutID '. 

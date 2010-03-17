@@ -71,7 +71,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 			html += '<ul>';
 			
 			
-			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="230" id="menuEditLayout' + this.cvalID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + encodeURI(this.area) + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/layout_small.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
+			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="280" id="menuEditLayout' + this.cvalID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + encodeURI(this.area) + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/layout_small.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
 			
 			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveUp' + this.cvalID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/icon_move_up.png)">' + ccmi18n.moveLayoutUp + '</span></a></li>';
 						
@@ -100,7 +100,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 			aJQobj.find('#menuAreaLayoutLock' + this.cvalID).click( function(){ layoutObj.lock(); } ); 
 			
 			//delete click
-			aJQobj.find('#menuAreaLayoutDelete' + this.cvalID).click(function(){ layoutObj.deleteLayout(); }); 
+			aJQobj.find('#menuAreaLayoutDelete' + this.cvalID).click(function(){ layoutObj.deleteLayoutOptions(); }); 
 			
 			
 		
@@ -221,26 +221,51 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 		}); 
 	}
 	
-	this.deleteLayout=function(){  
+	this.deleteLayoutOptions=function(){ 
+		var hasBlocks=0;
+		deleteLayoutObj=this;
+		this.layoutWrapper.find('.ccm-block').each(function(i,el){
+			if(el.style.display!='none')  hasBlocks=1;													
+		})
+		if( hasBlocks ){   
+			$.fn.dialog.open({
+				title: ccmi18n.deleteLayoutOptsTitle,
+				href:  CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&task=deleteOpts',
+				width: '340px',
+				modal: false,
+				height: '120px'
+			});			
+		}else{
+			if( confirm(ccmi18n.deleteLayoutNoBlocksConfirmMsg) ) this.deleteLayout(1); 
+		}
+	}
+	
+	this.deleteLayout=function(deleteBlocks){   
 															
-		ccm_hideMenus();  
-		 
-		if( !confirm( ccmi18n.deleteLayoutConfirmMsg ) ) return false; 
+		ccm_hideMenus();   
+		
+		jQuery.fn.dialog.closeTop();
 		
 		this.layoutWrapper.slideUp(300); 
+		
+		jQuery.fn.dialog.showLoader(); 
 		 
 		var cvalID = this.cvalID;
 		this.servicesAjax = $.ajax({ 
-			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&task=delete',
+			url: CCM_TOOLS_PATH + '/layout_services.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id +  '&task=delete&deleteBlocks='+parseInt(deleteBlocks),
 			success: function(response){  
 				eval('var jObj='+response); 
 				if(parseInt(jObj.success)!=1){ 
 					alert(jObj.msg);
+					jQuery.fn.dialog.hideLoader();
 				}else{    
 					//success
 					$('#ccm-layout-wrapper-'+cvalID).remove();
 					ccm_hideHighlighter();
 					ccm_mainNavDisableDirectExit(); 
+					
+					if(jObj.refreshPage) window.location = window.location;
+					else jQuery.fn.dialog.hideLoader(); 
 				}
 			}
 		});	
@@ -337,6 +362,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 } 
 
 var quickSaveLayoutObj;
+var deleteLayoutObj;
 
 
 var ccmLayoutEdit = {
