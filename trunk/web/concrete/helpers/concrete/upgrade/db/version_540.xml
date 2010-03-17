@@ -161,15 +161,20 @@
 			<AUTOINCREMENT/>
 		</field> 
 		
-		<field name="rows" type="i" size="5">
+		<field name="layout_rows" type="i" size="5">
 			<NOTNULL/>
 			<DEFAULT value="3"/>
 		</field>
 		
-		<field name="columns" type="i" size="3">
+		<field name="layout_columns" type="i" size="3">
 			<NOTNULL/>
 			<DEFAULT value="3"/>
 		</field>
+		
+		<field name="spacing" type="i" size="3">
+			<NOTNULL/>
+			<DEFAULT value="3"/>
+		</field>		
 		
 		<field name="breakpoints" type="C" size="255">
 			<DEFAULT value=""/>
@@ -180,7 +185,6 @@
 		  <NOTNULL/>
 		  <DEFAULT value="0"/>
 		</field> 
-								
   </table>
   
   <table name="LayoutPresets">
