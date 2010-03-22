@@ -102,6 +102,11 @@ class DashboardInstallController extends Controller {
 					$this->set('error', $e);
 				}
 			}
+		} else {
+			$mi = Marketplace::getInstance();
+			if ($mi->isConnected()) {
+				Marketplace::checkPackageUpdates();
+			}
 		}
 	}
 	
