@@ -97,6 +97,12 @@ class HtmlHelper {
 				$js->file = ASSETS_URL_JAVASCRIPT . '/' . $file;
 			}
 		}
+
+		// for the javascript addHeaderItem we need to have a full href available
+		$js->href = $css->file;
+		if (substr($js->file, 0, 4) != 'http') {
+			$js->href = ASSETS_URL_WEB_FULL . $js->file;
+		}
 		return $js;
 	}
 	

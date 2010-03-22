@@ -83,6 +83,8 @@ if (is_object($b)) {
 					if ($item instanceof CSSOutputObject) { ?>
 						// we only support CSS here
 						ccm_addHeaderItem("<?=$item->href?>", 'CSS');
+					<? } else if ($item instanceof JavaScriptOutputObject) { ?>
+						ccm_addHeaderItem("<?=$item->href?>", 'JAVASCRIPT');
 					<? }
 				
 				} ?>
