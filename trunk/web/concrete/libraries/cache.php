@@ -85,6 +85,9 @@ class Cache {
 			$loc->cache[Cache::key($type, $id)] = $obj;
 		}
 		$cache = Cache::getLibrary();
+		if (!$cache) {
+			return false;
+		}
 		$cache->save($obj, Cache::key($type, $id), array($type), $expire);
 	}
 	
@@ -100,6 +103,9 @@ class Cache {
 		}
 			
 		$cache = Cache::getLibrary();
+		if (!$cache) {
+			return false;
+		}
 		
 		// if mustBeNewerThan is set, we check the cache mtime
 		// if mustBeNewerThan is newer than that time, we relinquish
@@ -130,7 +136,12 @@ class Cache {
 	 * Removes an item from the cache
 	 */	
 	public function delete($type, $id){
-		Cache::getLibrary()->remove(Cache::key($type, $id));
+		$cache = Cache::getLibrary();
+		if (!$cache) {
+			return false;
+		}
+
+		$cache->remove(Cache::key($type, $id));
 		$loc = CacheLocal::get();
 		if ($loc->enabled && isset($loc->cache[Cache::key($type, $id)])) {
 			unset($loc->cache[Cache::key($type, $id)]);
