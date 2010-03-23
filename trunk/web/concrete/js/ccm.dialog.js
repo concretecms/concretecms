@@ -377,7 +377,7 @@ jQuery.fn.dialog.loaderImage = CCM_IMAGE_PATH + "/throbber_white_32.gif";
 
 var ccm_initialHeaderDeactivated;
 var ccm_initialOverlay;
-var ccm_dialogCanDrag = (typeof($.fn.draggable) == 'function');
+var ccm_dialogCanDrag = (typeof($.fn.draggable) == 'function' && (!jQuery.browser.safari));
 var ccm_dialogCanTransparent = true;
 if (jQuery.browser.msie && jQuery.browser.version.substring(0, 1) == 6) {
 	var ccm_dialogCanTransparent = false;
