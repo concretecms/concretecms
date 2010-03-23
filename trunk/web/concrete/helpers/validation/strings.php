@@ -28,8 +28,17 @@ class ValidationStringsHelper {
 	 * @param string $address
 	 * @return bool $isvalid
 	 */
-	public function email($em) {
-		return preg_match("/^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]*\.)+[a-zA-Z]{2,6}$/", $em);
+	public function email($em, $testMXRecord = false) {
+		if (preg_match('/^([a-zA-Z0-9\._\+-]+)\@((\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,7}|[0-9]{1,3})(\]?))$/', $em, $matches)) {
+			if ($testMXRecord) {
+				list($username, $domain) = split("@", $em);
+				return getmxrr($domain, $mxrecords);
+			} else {
+				return true;
+			}
+		} else {
+			return false;
+		}
 	}
 	
 	/**
