@@ -144,7 +144,7 @@ class SearchBlockController extends BlockController {
 			$results[] = new IndexedSearchResult($r['cID'], $r['cName'], $r['cDescription'], $r['score'], $r['cPath'], $r['content']);
 		}
 		
-		$this->set('query', htmlentities($q, ENT_COMPAT, APP_CHARSET));
+		$this->set('query', $q);
 		$this->set('paginator', $ipl->getPagination());
 		$this->set('results', $results);
 	}		
