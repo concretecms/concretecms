@@ -73,7 +73,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 			$js = $this->attributeType->getAttributeTypeFileURL($view . '.js');
 			$css = $this->attributeType->getAttributeTypeFileURL($view . '.css');
-			
+
 			$html = Loader::helper('html');
 			if ($js != false) { 
 				$this->controller->addHeaderItem($html->javascript($js));
