@@ -305,7 +305,6 @@ ccm_alSetupVersionSelector = function() {
 		var fvID = trow.attr('fvID');
 		var postStr = 'task=approve_version&fID=' + fID + '&fvID=' + fvID;
 		$.post(CCM_TOOLS_PATH + '/files/properties', postStr, function(resp) {
-			console.log(resp);
 			trow.addClass('ccm-file-versions-grid-active');
 			trow.find('td').show('highlight', {
 				color: '#FFF9BB'
