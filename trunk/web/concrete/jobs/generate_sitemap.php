@@ -70,6 +70,9 @@ class GenerateSitemap extends Job {
 					continue;
 				}
 				
+				if($c->isExternalLink()) {
+					continue;
+				} 
 				
 				if ($g->canRead()) {			
 	
