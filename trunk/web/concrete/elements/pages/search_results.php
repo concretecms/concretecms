@@ -79,7 +79,9 @@ if (isset($_REQUEST['searchInstance'])) {
 			<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES, strtotime($cobj->getCollectionDateLastModified()))?></td>
 			<td><?
 				$ui = UserInfo::getByID($cobj->getCollectionUserID());
-				print $ui->getUserName();
+				if (is_object($ui)) {
+					print $ui->getUserName();
+				}
 			?></td>
 			<? if ($pageList->isIndexedSearch()) { ?>
 				<td><?=$cobj->getPageIndexScore()?></td>
