@@ -46,11 +46,16 @@ class UserList extends DatabaseItemList {
 		$this->filter(false, '( u.uName like ' . $qkeywords . $emailSearchStr . $attribsStr . ')');
 	}
 	
-	public function filterByGroup($groupName=''){ 
+	public function filterByGroup($groupName='', $inGroup = true){ 
 		$group=Group::getByName($groupName); 
 		$tbl='ug_'.$group->getGroupID();
-		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");			
-		$this->filter(false, "{$tbl}.gID=".intval($group->getGroupID()) );
+		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");	
+		if ($inGroup) {
+			$this->filter(false, "{$tbl}.gID=".intval($group->getGroupID()) );
+		} else {
+			$this->filter(false, "{$tbl}.gID is null");
+		}
+		$this->debug();
 	}
 
 	public function filterByGroupID($gID){ 
