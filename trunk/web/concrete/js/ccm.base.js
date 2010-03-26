@@ -68,6 +68,13 @@ ccm_addHeaderItem = function(item, type) {
 				break;
 			}
 		}
+	} else if (type == 'JAVASCRIPT') {
+		$("script").each(function(i, obj) {
+			var src = $(obj).attr('src');
+			if (src == item) {
+				doLoad = false;
+			}
+		});
 	}
 	if (doLoad) {
 		switch(type) {

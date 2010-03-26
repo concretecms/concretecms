@@ -99,10 +99,14 @@ class HtmlHelper {
 		}
 
 		// for the javascript addHeaderItem we need to have a full href available
-		$js->href = $css->file;
+		$js->href = $js->file;
+		/*
+		 // this currently messes up the check on whether a given item is already loaded
+		 
 		if (substr($js->file, 0, 4) != 'http') {
 			$js->href = ASSETS_URL_WEB_FULL . $js->file;
 		}
+		*/
 		return $js;
 	}
 	

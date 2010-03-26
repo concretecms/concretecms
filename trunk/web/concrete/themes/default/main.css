@@ -17,7 +17,7 @@ div.ccm-error-response {color: #f00; margin-bottom: 12px}
 #page #header #logo{ color:#999; font-size:32px; 
 	font-family:Arial, Helvetica, sans-serif; 
 	line-height: auto; 
-	margin-bottom: 0px; padding: 0px; margin-top:8px; cursor:pointer;  left:0px ; z-index:10; width:auto; float:left; position: relative }
+	margin-bottom: 0px; padding: 0px; margin-top:8px; cursor:pointer;  left:0px ; z-index:1; width:auto; float:left; position: relative }
 #page #header #logo a{ /* customize_header_logo */color:#999; /* customize_header_logo */ text-decoration:none;}
 #page #header #logo p{ display:inline; line-height:inherit; font-size:inherit; padding:inherit; margin:inherit; color:inherit }
 
