@@ -358,6 +358,8 @@ class Area extends Object {
 			foreach($areaLayouts as $layout){
 				$layout->display($c,$this);  
 			}
+			if($c->isArrangeMode() || $c->isEditMode()) 
+				echo '<div class="ccm-layouts-block-arrange-placeholder ccm-block-arrange"></div>';
 		}	
 
 

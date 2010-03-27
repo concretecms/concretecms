@@ -177,6 +177,9 @@ width:99%; background: #f6f6f6 url(../images/slider_bg.png) repeat center; margi
 .ccm-layout .ccm-layout-cell { /*border:0px none !important;*/ } 
 
 
+.ccm-layouts-block-arrange-placeholder { display:none; }
+.ccm-move-mode .ccm-layouts-block-arrange-placeholder { height:0px !important; min-height:0px; padding:0px !important; border:0px none; cursor:default; padding-top:4px !important; display:block; }
+
 
 /* theme selector in pane */
 div.ccm-theme-selector {width: 124px; height: 120px; float: left; text-align: center; margin-right: 15px}
