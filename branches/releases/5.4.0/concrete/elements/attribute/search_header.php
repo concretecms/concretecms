@@ -1,0 +1,1 @@
+<span class="ccm-search-option ccm-search-option-type-<?php echo strtolower($this->attributeType->getAttributeTypeHandle())?>" search-field="<?php echo $this->attributeKey->getAttributeKeyID()?>">
