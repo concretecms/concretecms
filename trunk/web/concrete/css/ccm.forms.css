@@ -162,7 +162,7 @@ a.ccm-scroller-l {z-index: 100; position: absolute; top: 20px; left: 10px}
 a.ccm-scroller-r {z-index: 100; position: absolute; top: 20px; right: 10px}
 div.ccm-scroller-inner {width: 520px; margin-left: 40px; height: 130px; overflow: hidden; position: relative}
 div.ccm-scroller-inner ul {position: absolute; list-style: none; overflow: hidden; white-space: nowrap; padding: 0px; margin: 0px;}
-div.ccm-scroller-inner ul li {float: left; width: 124px; margin-right: 8px;}
+div.ccm-scroller-inner ul li {float: left; width: 124px; margin-left: 0px; padding: 0px; margin-right: 8px;}
 div.ccm-scroller-inner ul li span {display: block; text-align: center; font-size: 12px; padding-top: 1px;}
 div.ccm-scroller-inner img {margin: 2px}
 div.ccm-scroller-inner ul li.ccm-item-selected {font-weight: bold;}
