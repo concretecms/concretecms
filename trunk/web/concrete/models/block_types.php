@@ -691,6 +691,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				}
 				$bc->save($data);
 				
+				// the previous version of the block above is cached without the values				
+				$nb->refreshCache();
+				
 				return Block::getByID($bIDnew);
 				
 			}
