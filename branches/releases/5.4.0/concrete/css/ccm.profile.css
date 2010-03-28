@@ -1,0 +1,39 @@
+div.ccm-profile-attribute {padding-bottom: 8px}
+div#ccm-profile-body div.message { border: 1px solid #ccc; padding: 8px}
+img.u-avatar {margin-bottom: 8px}
+div.ccm-profile-member {margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #ccc}
+div.ccm-profile-member-avatar {width: 100px; float: left}
+
+div#ccm-profile-sidebar {float:left; width:20%; margin-right:5%}
+div#ccm-profile-body {float:left; width:70%;}
+
+div.ccm-profile-section {border-bottom: 1px solid #ccc; padding-bottom: 12px; margin-bottom: 12px; padding-right: 12px}
+div.ccm-profile-section-bare { padding-right: 12px}
+div.ccm-profile-buttons input#button_cancel {float: left}
+div.ccm-profile-buttons input#button_submit {float: right}
+div.ccm-profile-buttons input#button_delete {float: right}
+
+
+div.ccm-profile-detail {border: 1px solid #ccc; background: #E9F1F3; color: #444; padding: 8px; margin-bottom: 12px}
+div.ccm-profile-detail div.ccm-profile-message-replied {color: #999}
+div.ccm-profile-detail div.ccm-profile-message-replied hr {border-top: 0px; border-left: 0px; border-right: 0px; border-bottom: 1px dotted #999}
+
+div#ccm-profile-message-compose input.ccm-input-text {width: 100%}
+div#ccm-profile-message-compose textarea {width: 100%; height: 250px}
+
+/* Inboxes */
+table.ccm-profile-messages-list {border: 1px solid #AEAEAE; width: 100%;}
+table.ccm-profile-messages-list th {font-weight: bold; background-color: #DAE6D9; border-bottom: 1px solid #cecece; padding: 12px}
+table.ccm-profile-messages-list td { padding: 12px; text-align: center; border-bottom: 1px solid #dedede}
+table.ccm-profile-messages-list td.ccm-profile-messages-item-name {width: 66%; text-align: left;}
+table.ccm-profile-messages-list td.ccm-profile-mailbox-last-message {width: 33%; text-align: left; font-size: 10px; white-space: normal}
+table.ccm-profile-messages-list h2 {font-size: 14px; font-weight: bold; line-height: 14px; margin: 0px}
+table.ccm-profile-messages-list h2 a {text-decoration: none}
+table.ccm-profile-messages-list p {margin: 0px}
+
+td.ccm-profile-message-from {text-align: center; padding-right: 10px}
+td.ccm-profile-message-from img {display: block; margin: 0px auto 10px auto}
+
+#ccm-profile-sidebar ul.nav { list-style:none; margin:0px; padding:0px; margin-top:16px;}
+
+div.ccm-profile-body-item {margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #dedede}

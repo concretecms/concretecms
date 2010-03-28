@@ -1,0 +1,2 @@
+Dark Chocolate
+Dark Chocolate is Concrete's default theme in black.
