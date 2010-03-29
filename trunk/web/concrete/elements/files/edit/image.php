@@ -45,7 +45,6 @@ curl_setopt($ch, CURLOPT_URL, $strPicnikUrl);
 //Don't ask me what this does, I just know that without this funny header, the whole thing doesn't work!
 curl_setopt($ch, CURLOPT_HTTPHEADER,array('Expect:'));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_POST, 1 );
 
 //seems no need to tell it enctype='multipart/data' it already knows
