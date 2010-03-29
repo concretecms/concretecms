@@ -119,7 +119,7 @@ class Update {
 		$updates = array();
 		$contents = @$fh->getDirectoryContents(DIR_APP_UPDATES);
 		foreach($contents as $con) {
-			if (strpos($con, DIRNAME_APP) === 0) {
+			if (is_dir(DIR_APP_UPDATES . '/' . $con)) {
 				$obj = ApplicationUpdate::get($con);
 				if (is_object($obj)) {
 					if (version_compare($obj->getUpdateVersion(), APP_VERSION, '>')) {
