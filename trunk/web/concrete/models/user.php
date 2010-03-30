@@ -27,6 +27,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		var $superUser = false;
 		var $uTimezone = NULL;
 		
+		/**
+		 * @param int $uID
+		 * @param boolean $login
+		 * @return User
+		 */
 		function getByUserID($uID, $login = false) {
 			$db = Loader::db();
 			$v = array($uID);
@@ -54,6 +59,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return $nu;
 		}
 		
+		/**
+		 * @param int $uID
+		 * @return User
+		 */
 		function loginByUserID($uID) {
 			return User::getByUserID($uID, true);
 		}

@@ -549,6 +549,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 		/* new cleaned up API below */
 
+		/**
+		 * @param int $cID
+		 * @param mixed $version 'RECENT'|'ACTIVE'|version id  
+		 * @return Collection
+		 */
 		public static function getByID($cID, $version = 'RECENT') {
 			$db = Loader::db(); 
 			$q = "select Collections.cDateAdded, Collections.cDateModified, Collections.cID from Collections where cID = ?";
@@ -565,8 +570,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return $c;
 		}	
 		
-		/* This function is slightly misnamed: it should be getOrCreateByHandle($handle) but I wanted to keep it brief */
-		
+		/* This function is slightly misnamed: it should be getOrCreateByHandle($handle) but I wanted to keep it brief 
+		 * @param string $handle
+		 * @return Collection
+		 */
 		public static function getByHandle($handle) {
 			$db = Loader::db();
 			

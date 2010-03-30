@@ -11,6 +11,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 */
 class Page extends Collection {
 
+	/**
+	 * @param string $path
+	 * @param unknown_type $version
+	 * @return Page
+	 */
 	public static function getByPath($path, $version = 'RECENT') {
 		$db = Loader::db();
 		$cID = Cache::get('page_id_from_path', $path);
@@ -21,6 +26,11 @@ class Page extends Collection {
 		return Page::getByID($cID, $version);
 	}
 	
+	/**
+	 * @param int $cID
+	 * @param unknown_type $versionOrig
+	 * @return Page
+	 */
 	public static function getByID($cID, $versionOrig = 'RECENT') {
 		if ($versionOrig) {
 			$version = CollectionVersion::getNumericalVersionID($cID, $versionOrig);
