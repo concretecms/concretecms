@@ -128,7 +128,7 @@ class PageList extends DatabaseItemList {
 						(pp1.cgEndDate is null or pp1.cgEndDate >= '{$date}')
 				)) > 0 or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL ))");
 		} else {
-			$this->filter(false, "((select count(cID) from PagePermissions pp1 where pp1.cID = {$cInheritPermissionsFromCID} and pp1.cgPermissions like 'r%' and (pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID}))) > 0 or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL)");	
+			$this->filter(false, "(((select count(cID) from PagePermissions pp1 where pp1.cID = {$cInheritPermissionsFromCID} and pp1.cgPermissions like 'r%' and (pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID}))) > 0 or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL))");	
 		}
 	}
 
