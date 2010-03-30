@@ -82,9 +82,17 @@ class FormPageSelectorHelper {
      *  (any other arguments the dashboard/sitemap element supports)
 	 */
 	public function sitemap($args) {
-    	$args['sitemap_select_mode'] = 'move_copy_delete';
+		if (!isset($args['select_mode'])) {
+			$args['select_mode'] = 'move_copy_delete';
+		}
 		if (empty($args['node_action'])) {
 			$args['node_action'] = '<none>';
+		}
+		if (empty($args['display_mode'])) {
+			$args['display_mode'] = 'full';
+		}
+		if (empty($args['instance_id'])) {
+			$args['instance_id'] = time();
 		}
     	Loader::element('dashboard/sitemap', $args);
 	}
