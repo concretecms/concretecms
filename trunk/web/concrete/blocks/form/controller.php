@@ -341,13 +341,13 @@ class FormBlockController extends BlockController {
 				if(is_object($pg)) {
 					$this->redirect($pg->getCollectionPath());
 				} else { // page didn't exist, we'll just do the default action
-					header("Location: ".$refer_uri."&surveySuccess=1&qsid=".$this->questionSetId);
+					header("Location: ".$refer_uri."&surveySuccess=1&qsid=".$this->questionSetId."#".$this->questionSetId);
 					exit;
 				}
 			}
 			
 			if(!$this->noSubmitFormRedirect){ // not sure if this is used, but someone must be depending on it??
-				header("Location: ".$refer_uri."&surveySuccess=1&qsid=".$this->questionSetId);
+				header("Location: ".$refer_uri."&surveySuccess=1&qsid=".$this->questionSetId."#".$this->questionSetId);
 				die;
 			}
 		}

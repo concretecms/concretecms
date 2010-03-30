@@ -10,6 +10,7 @@ $miniSurvey->frontEndMode=true;
 <? } ?>
 <form enctype="multipart/form-data" id="miniSurveyView<?=intval($bID)?>" class="miniSurveyView" method="post" action="<?php echo $this->action('submit_form')?>">
 	<?php  if( $_GET['surveySuccess'] && $_GET['qsid']==intval($survey->questionSetId) ){ ?>
+		<a name="<?php echo $survey->questionSetId ?>"></a><br/>
 		<div id="msg"><?php echo $survey->thankyouMsg ?></div> 
 	<?php  }elseif(strlen($formResponse)){ ?>
 		<div id="msg">
