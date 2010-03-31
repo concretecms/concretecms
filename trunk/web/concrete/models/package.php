@@ -405,6 +405,11 @@ class Package extends Object {
 	}
 	
 	
+	/**
+	 * returns a Package object for the given package id, null if not found
+	 * @param int $pkgID
+	 * @return Package
+	 */
 	public function getByID($pkgID) {
 		$db = Loader::db();
 		$row = $db->GetRow("select * from Packages where pkgID = ?", array($pkgID));
@@ -417,6 +422,11 @@ class Package extends Object {
 		}
 	}
 
+	/**
+	 * returns a Package object for the given package handle, null if not found
+	 * @param string $pkgHandle
+	 * @return Package
+	 */
 	public function getByHandle($pkgHandle) {
 		$db = Loader::db();
 		$row = $db->GetRow("select * from Packages where pkgHandle = ?", array($pkgHandle));
@@ -429,6 +439,9 @@ class Package extends Object {
 		}
 	}
 	
+	/**
+	 * @return Package
+	 */
 	protected function install() {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
