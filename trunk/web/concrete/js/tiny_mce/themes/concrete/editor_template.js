@@ -5,13 +5,14 @@
  * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
-(function() {
+(function(tinymce) {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, extend = tinymce.extend, each = tinymce.each, Cookie = tinymce.util.Cookie, lastExtID, explode = tinymce.explode;
 
 	// Tell it to load theme specific language pack(s)
 	tinymce.ThemeManager.requireLangPack('concrete');
 
 	tinymce.create('tinymce.themes.ConcreteTheme', {
+		sizes : [8, 10, 12, 14, 18, 24, 36],
 		// Control name lookup, format: title, command
 		controls : {
 			bold : ['bold_desc', 'Bold'],
@@ -50,7 +51,7 @@
 		stateControls : ['bold', 'italic', 'underline', 'strikethrough', 'bullist', 'numlist', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'blockquote'],
 
 		init : function(ed, url) {
-			var t = this, s, v;
+			var t = this, s, v, o;
 	
 			t.editor = ed;
 			t.url = url;
@@ -76,12 +77,45 @@
 			if ((v = s.theme_concrete_path_location) && v != 'none')
 				s.theme_concrete_statusbar_location = s.theme_concrete_path_location;
 
+			// Setup default font_size_style_values
+			if (!s.font_size_style_values)
+				s.font_size_style_values = "8pt,10pt,12pt,14pt,18pt,24pt,36pt";
+
+			if (tinymce.is(s.theme_concrete_font_sizes, 'string')) {
+				s.font_size_style_values = tinymce.explode(s.font_size_style_values);
+				s.font_size_classes = tinymce.explode(s.font_size_classes || '');
+
+				// Parse string value
+				o = {};
+				ed.settings.theme_concrete_font_sizes = s.theme_concrete_font_sizes;
+				each(ed.getParam('theme_concrete_font_sizes', '', 'hash'), function(v, k) {
+					var cl;
+
+					if (k == v && v >= 1 && v <= 7) {
+						k = v + ' (' + t.sizes[v - 1] + 'pt)';
+						cl = s.font_size_classes[v - 1];
+						v = s.font_size_style_values[v - 1] || (t.sizes[v - 1] + 'pt');
+					}
+
+					if (/^\s*\./.test(v))
+						cl = v.replace(/\./g, '');
+
+					o[k] = cl ? {'class' : cl} : {fontSize : v};
+				});
+
+				s.theme_concrete_font_sizes = o;
+			}
+
+			if ((v = s.theme_concrete_path_location) && v != 'none')
+				s.theme_concrete_statusbar_location = s.theme_concrete_path_location;
+
 			if (s.theme_concrete_statusbar_location == 'none')
 				s.theme_concrete_statusbar_location = 0;
 
 			// Init editor
 			ed.onInit.add(function() {
-				ed.onNodeChange.add(t._nodeChanged, t);
+				if (!ed.settings.readonly)
+					ed.onNodeChange.add(t._nodeChanged, t);
 
 				if (ed.settings.content_css !== false)
 					ed.dom.loadCSS(ed.baseURI.toAbsolute("themes/concrete/skins/" + ed.settings.skin + "/content.css"));
@@ -153,48 +187,99 @@
 			return false;
 		},
 
-		_importClasses : function() {
-			var ed = this.editor, c = ed.controlManager.get('styleselect');
+		_importClasses : function(e) {
+			var ed = this.editor, ctrl = ed.controlManager.get('styleselect');
 
-			if (c.getLength() == 0) {
-				each(ed.dom.getClasses(), function(o) {
-					c.add(o['class'], o['class']);
+			if (ctrl.getLength() == 0) {
+				each(ed.dom.getClasses(), function(o, idx) {
+					var name = 'style_' + idx;
+
+					ed.formatter.register(name, {
+						inline : 'span',
+						classes : o['class']
+					});
+
+					ctrl.add(o['class'], name);
 				});
 			}
 		},
 
 		_createStyleSelect : function(n) {
-			var t = this, ed = t.editor, cf = ed.controlManager, c = cf.createListBox('styleselect', {
-				title : 'styles',
-				onselect : function(v) {
-					if (c.selectedValue === v) {
-						ed.execCommand('mceSetStyleInfo', 0, {command : 'removeformat'});
-						c.select();
-						return false;
-					} else
-						ed.execCommand('mceSetCSSClass', 0, v);
+			var t = this, ed = t.editor, ctrlMan = ed.controlManager, ctrl;
+
+			// Setup style select box
+			ctrl = ctrlMan.createListBox('styleselect', {
+				title : 'concrete.style_select',
+				onselect : function(name) {
+					ed.focus();
+					ed.formatter.toggle(name);
+
+					return false; // No auto select
 				}
 			});
 
-			if (c) {
-				each(ed.getParam('theme_concrete_styles', '', 'hash'), function(v, k) {
-					if (v)
-						c.add(t.editor.translate(k), v);
-				});
+			// Handle specified format
+			ed.onInit.add(function() {
+				var counter = 0, formats = ed.getParam('style_formats');
 
-				c.onPostRender.add(function(ed, n) {
-					Event.add(n, 'focus', t._importClasses, t);
-					Event.add(n, 'mousedown', t._importClasses, t);
+				if (formats) {
+					each(formats, function(fmt) {
+						var name, keys = 0;
+
+						each(fmt, function() {keys++;});
+
+						if (keys > 1) {
+							name = fmt.name = fmt.name || 'style_' + (counter++);
+							ed.formatter.register(name, fmt);
+							ctrl.add(fmt.title, name);
+						} else
+							ctrl.add(fmt.title);
+					});
+				} else {
+					each(ed.getParam('theme_concrete_styles', '', 'hash'), function(val, key) {
+						var name;
+
+						if (val) {
+							name = 'style_' + (counter++);
+
+							ed.formatter.register(name, {
+								inline : 'span',
+								classes : val
+							});
+
+							ctrl.add(t.editor.translate(key), name);
+						}
+					});
+				}
+			});
+
+			// Auto import classes if the ctrl box is empty
+			if (ctrl.getLength() == 0) {
+				ctrl.onPostRender.add(function(ed, n) {
+					if (!ctrl.NativeListBox) {
+						Event.add(n.id + '_text', 'focus', t._importClasses, t);
+						Event.add(n.id + '_text', 'mousedown', t._importClasses, t);
+						Event.add(n.id + '_open', 'focus', t._importClasses, t);
+						Event.add(n.id + '_open', 'mousedown', t._importClasses, t);
+					} else
+						Event.add(n.id, 'focus', t._importClasses, t);
 				});
 			}
 
-			return c;
+			return ctrl;
 		},
 
 		_createFontSelect : function() {
 			var c, t = this, ed = t.editor;
 
-			c = ed.controlManager.createListBox('fontselect', {title : 'concrete.fontdefault', cmd : 'FontName'});
+			c = ed.controlManager.createListBox('fontselect', {
+				title : 'concrete.fontdefault',
+				onselect : function(v) {
+					ed.execCommand('FontName', false, v);
+					return false; // No auto select
+				}
+			});
+
 			if (c) {
 				each(ed.getParam('theme_concrete_fonts', t.settings.theme_concrete_fonts, 'hash'), function(v, k) {
 					c.add(ed.translate(k), v, {style : v.indexOf('dings') == -1 ? 'font-family:' + v : ''});
@@ -205,20 +290,31 @@
 		},
 
 		_createFontSizeSelect : function() {
-			var c, t = this, lo = [
-				"8 px",
-				"10 px",
-				"12 px",
-				"14 px",
-				"18 px",
-				"24 px",
-				"36 px"
-			], fz = [8, 10, 12, 14, 18, 24, 36];
+			var t = this, ed = t.editor, c, i = 0, cl = [];
 
-			c = t.editor.controlManager.createListBox('fontsizeselect', {title : 'Font Size', cmd : 'FontSize'});
+			c = ed.controlManager.createListBox('fontsizeselect', {title : 'concrete.font_size', onselect : function(v) {
+				if (v.fontSize)
+					ed.execCommand('FontSize', false, v.fontSize);
+				else {
+					each(t.settings.theme_concrete_font_sizes, function(v, k) {
+						if (v['class'])
+							cl.push(v['class']);
+					});
+
+					ed.editorCommands._applyInlineStyle('span', {'class' : v['class']}, {check_classes : cl});
+				}
+
+				return false; // No auto select
+			}});
+
 			if (c) {
-				each(explode(t.settings.theme_concrete_font_sizes), function(v) {
-					c.add(lo[parseInt(v) - 1], v, {'style' : 'font-size:' + fz[v - 1] + 'px', 'class' : 'mceFontSize' + v});
+				each(t.settings.theme_concrete_font_sizes, function(v, k) {
+					var fz = v.fontSize;
+
+					if (fz >= 1 && fz <= 7)
+						fz = t.sizes[parseInt(fz) - 1] + 'pt';
+
+					c.add(k, v, {'style' : 'font-size:' + fz, 'class' : 'mceFontSize' + (i++) + (' ' + (v['class'] || ''))});
 				});
 			}
 
@@ -227,25 +323,24 @@
 
 		_createBlockFormats : function() {
 			var c, fmts = {
-				p : 'paragraph',
-				address : 'address',
-				pre : 'pre',
-				h1 : 'h1',
-				h2 : 'h2',
-				h3 : 'h3',
-				h4 : 'h4',
-				h5 : 'h5',
-				h6 : 'h6',
-				div : 'div',
-				blockquote : 'blockquote',
-				code : 'code',
-				dt : 'dt',
-				dd : 'dd',
-				samp : 'samp',
-				cite : 'cite'
+				p : 'concrete.paragraph',
+				address : 'concrete.address',
+				pre : 'concrete.pre',
+				h1 : 'concrete.h1',
+				h2 : 'concrete.h2',
+				h3 : 'concrete.h3',
+				h4 : 'concrete.h4',
+				h5 : 'concrete.h5',
+				h6 : 'concrete.h6',
+				div : 'concrete.div',
+				blockquote : 'concrete.blockquote',
+				code : 'concrete.code',
+				dt : 'concrete.dt',
+				dd : 'concrete.dd',
+				samp : 'concrete.samp'
 			}, t = this;
 
-			c = t.editor.controlManager.createListBox('formatselect', {title : 'format', cmd : 'FormatBlock'});
+			c = t.editor.controlManager.createListBox('formatselect', {title : 'concrete.block', cmd : 'FormatBlock'});
 			if (c) {
 				each(t.editor.getParam('theme_concrete_blockformats', t.settings.theme_concrete_blockformats, 'hash'), function(v, k) {
 					c.add(t.editor.translate(k != v ? k : fmts[v]), v, {'class' : 'mce_formatPreview mce_' + v});
@@ -272,6 +367,9 @@
 			if (v = s.theme_concrete_text_colors)
 				o.colors = v;
 
+			if (s.theme_concrete_default_foreground_color)
+				o.default_color = s.theme_concrete_default_foreground_color;
+
 			o.title = 'concrete.forecolor_desc';
 			o.cmd = 'ForeColor';
 			o.scope = this;
@@ -297,6 +395,9 @@
 
 			if (v = s.theme_concrete_background_colors)
 				o.colors = v;
+
+			if (s.theme_concrete_default_background_color)
+				o.default_color = s.theme_concrete_default_background_color;
 
 			o.title = 'concrete.backcolor_desc';
 			o.cmd = 'HiliteColor';
@@ -443,6 +544,12 @@
 		_simpleLayout : function(s, tb, o, p) {
 			var t = this, ed = t.editor, lo = s.theme_concrete_toolbar_location, sl = s.theme_concrete_statusbar_location, n, ic, etb, c;
 
+			if (s.readonly) {
+				n = DOM.add(tb, 'tr');
+				n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer'});
+				return ic;
+			}
+
 			// Create toolbar container at top
 			if (lo == 'top')
 				t._addToolbars(tb, o);
@@ -515,7 +622,7 @@
 			each(explode(s.theme_concrete_containers || ''), function(c, i) {
 				var v = s['theme_concrete_container_' + c] || '';
 
-				switch (c.toLowerCase()) {
+				switch (v.toLowerCase()) {
 					case 'mceeditor':
 						n = DOM.add(tb, 'tr');
 						n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer'});
@@ -526,7 +633,7 @@
 						break;
 
 					default:
-						a = s['theme_concrete_container_' + c + '_align'].toLowerCase();
+						a = (s['theme_concrete_container_' + c + '_align'] || da).toLowerCase();
 						a = 'mce' + t._ufirst(a);
 
 						n = DOM.add(DOM.add(tb, 'tr'), 'td', {
@@ -736,19 +843,34 @@
 			n = tb = null;
 		},
 
-		_nodeChanged : function(ed, cm, n, co) {
-			var t = this, p, de = 0, v, c, s = t.settings;
+		_nodeChanged : function(ed, cm, n, co, ob) {
+			var t = this, p, de = 0, v, c, s = t.settings, cl, fz, fn;
 
 			tinymce.each(t.stateControls, function(c) {
 				cm.setActive(c, ed.queryCommandState(t.controls[c][1]));
 			});
+
+			function getParent(name) {
+				var i, parents = ob.parents, func = name;
+
+				if (typeof(name) == 'string') {
+					func = function(node) {
+						return node.nodeName == name;
+					};
+				}
+
+				for (i = 0; i < parents.length; i++) {
+					if (func(parents[i]))
+						return parents[i];
+				}
+			};
 
 			cm.setActive('visualaid', ed.hasVisual);
 			cm.setDisabled('undo', !ed.undoManager.hasUndo() && !ed.typing);
 			cm.setDisabled('redo', !ed.undoManager.hasRedo());
 			cm.setDisabled('outdent', !ed.queryCommandState('Outdent'));
 
-			p = DOM.getParent(n, 'A');
+			p = getParent('A');
 			if (c = cm.get('link')) {
 				if (!p || !p.name) {
 					c.setDisabled(!p && co);
@@ -763,47 +885,74 @@
 
 			if (c = cm.get('anchor')) {
 				c.setActive(!!p && p.name);
-
-				if (tinymce.isWebKit) {
-					p = DOM.getParent(n, 'IMG');
-					c.setActive(!!p && DOM.getAttrib(p, 'mce_name') == 'a');
-				}
 			}
 
-			p = DOM.getParent(n, 'IMG');
+			p = getParent('IMG');
 			if (c = cm.get('image'))
 				c.setActive(!!p && n.className.indexOf('mceItem') == -1);
 
 			if (c = cm.get('styleselect')) {
-				if (n.className) {
-					t._importClasses();
-					c.select(n.className);
-				} else
-					c.select();
+				t._importClasses();
+
+				// Check each format and update
+				c.select(function(fmt) {
+					return !!ed.formatter.match(fmt);
+				});
 			}
 
 			if (c = cm.get('formatselect')) {
-				p = DOM.getParent(n, DOM.isBlock);
+				p = getParent(DOM.isBlock);
 
 				if (p)
 					c.select(p.nodeName.toLowerCase());
 			}
 
-			if (c = cm.get('fontselect'))
-				c.select(ed.queryCommandValue('FontName'));
+			// Find out current fontSize, fontFamily and fontClass
+			getParent(function(n) {
+				if (n.nodeName === 'SPAN') {
+					if (!cl && n.className)
+						cl = n.className;
 
-			if (c = cm.get('fontsizeselect'))
-				c.select(ed.queryCommandValue('FontSize'));
+					if (!fz && n.style.fontSize)
+						fz = n.style.fontSize;
+
+					if (!fn && n.style.fontFamily)
+						fn = n.style.fontFamily.replace(/[\"\']+/g, '').replace(/^([^,]+).*/, '$1').toLowerCase();
+				}
+
+				return false;
+			});
+
+			if (c = cm.get('fontselect')) {
+				c.select(function(v) {
+					return v.replace(/^([^,]+).*/, '$1').toLowerCase() == fn;
+				});
+			}
+
+			// Select font size
+			if (c = cm.get('fontsizeselect')) {
+				// Use computed style
+				if (s.theme_concrete_runtime_fontsize && !fz && !cl)
+					fz = ed.dom.getStyle(n, 'fontSize', true);
+
+				c.select(function(v) {
+					if (v.fontSize && v.fontSize === fz)
+						return true;
+
+					if (v['class'] && v['class'] === cl)
+						return true;
+				});
+			}
 
 			if (s.theme_concrete_path && s.theme_concrete_statusbar_location) {
 				p = DOM.get(ed.id + '_path') || DOM.add(ed.id + '_path_row', 'span', {id : ed.id + '_path'});
 				DOM.setHTML(p, '');
 
-				ed.dom.getParent(n, function(n) {
+				getParent(function(n) {
 					var na = n.nodeName.toLowerCase(), u, pi, ti = '';
 
 					// Ignore non element and hidden elements
-					if (n.nodeType != 1 || (DOM.hasClass(n, 'mceItemHidden') || DOM.hasClass(n, 'mceItemRemoved')))
+					if (n.nodeType != 1 || n.nodeName === 'BR' || (DOM.hasClass(n, 'mceItemHidden') || DOM.hasClass(n, 'mceItemRemoved')))
 						return;
 
 					// Fake name
@@ -845,9 +994,6 @@
 							break;
 
 						case 'font':
-							if (s.convert_fonts_to_spans)
-								na = 'span';
-
 							if (v = DOM.getAttrib(n, 'face'))
 								ti += 'font: ' + v + ' ';
 
@@ -870,9 +1016,9 @@
 						ti += 'id: ' + v + ' ';
 
 					if (v = n.className) {
-						v = v.replace(/(webkit-[\w\-]+|Apple-[\w\-]+|mceItem\w+|mceVisualAid)/g, '');
+						v = v.replace(/\b\s*(webkit|mce|Apple-)\w+\s*\b/g, '')
 
-						if (v && v.indexOf('mceItem') == -1) {
+						if (v) {
 							ti += 'class: ' + v + ' ';
 
 							if (DOM.isBlock(n) || na == 'img' || na == 'span')
@@ -975,28 +1121,7 @@
 				theme_url : this.url
 			});
 		},
-		
-		/*
 
-		_mceImage : function(ui, val) {
-			var ed = this.editor;
-
-			// Internal image object like a flash placeholder
-			if (ed.dom.getAttrib(ed.selection.getNode(), 'class').indexOf('mceItem') != -1)
-				return;
-
-			ed.windowManager.open({
-				url : '/tools/required/mce_image.php',
-				width : 650 + parseInt(ed.getLang('concrete.image_delta_width', 0)),
-				height : 450 + parseInt(ed.getLang('concrete.image_delta_height', 0)),
-				inline : true
-			}, {
-				theme_url : this.url
-			});
-		},
-		
-		*/
-		
 		_mceImage : function(ui, val) {
 			var ed = this.editor;
 
@@ -1014,37 +1139,13 @@
 			});
 		},
 
-		/*
-		
 		_mceLink : function(ui, val) {
 			var ed = this.editor;
-			ed.windowManager.open({			
-				url : '/tools/required/mce_link.php',
-				width : 400 + parseInt(ed.getLang('concrete.link_delta_width', 0)),
-				height : 460 + parseInt(ed.getLang('concrete.link_delta_height', 0)),
-				inline : true
-			}, {
-				scrollbars : "yes",
-				theme_url : this.url
-			});
-						
-			ed.windowManager.open({			
-				url : tinymce.baseURL + '/themes/concrete/link.php',
-				width : 400 + parseInt(ed.getLang('concrete.link_delta_width', 0)),
-				height : 400 + parseInt(ed.getLang('concrete.link_delta_height', 0)),
-				inline : true
-			}, {
-				theme_url : this.url
-			});
-		},
-			*/
 
-		_mceLink : function(ui, val) {
-			var ed = this.editor;
-			ed.windowManager.open({			
+			ed.windowManager.open({
 				url : tinymce.baseURL + '/themes/concrete/link.htm',
-				width : 320 + parseInt(ed.getLang('concrete.link_delta_width', 0)),
-				height : 300 + parseInt(ed.getLang('concrete.link_delta_height', 0)),
+				width : 310 + parseInt(ed.getLang('concrete.link_delta_width', 0)),
+				height : 200 + parseInt(ed.getLang('concrete.link_delta_height', 0)),
 				inline : true
 			}, {
 				scrollbars : "no",
@@ -1066,7 +1167,9 @@
 			var t = this;
 
 			this._mceColorPicker(0, {
+				color: t.fgColor,
 				func : function(co) {
+					t.fgColor = co;
 					t.editor.execCommand('ForeColor', false, co);
 				}
 			});
@@ -1076,7 +1179,9 @@
 			var t = this;
 
 			this._mceColorPicker(0, {
+				color: t.bgColor,
 				func : function(co) {
+					t.bgColor = co;
 					t.editor.execCommand('HiliteColor', false, co);
 				}
 			});
@@ -1088,4 +1193,4 @@
 	});
 
 	tinymce.ThemeManager.add('concrete', tinymce.themes.ConcreteTheme);
-}());
+}(tinymce));
