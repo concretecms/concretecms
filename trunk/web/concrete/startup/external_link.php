@@ -3,7 +3,7 @@
 	$req = Request::get();
 	if (($req->getRequestCollectionPath() != '') && ($req->getRequestCollectionPath() != $c->getCollectionPath())) {
 		// canonnical paths do not match requested path
-		header('Location: ' . BASE_URL . View::url($c->getCollectionPath()), true, 301);
+		header('Location: ' . Loader::helper('navigation')->getLinkToCollection($c, true), true, 301);
 		exit;
 	}
 	if ($c->getCollectionPointerExternalLink() != '' && (!$_POST['processCollection'])) {
