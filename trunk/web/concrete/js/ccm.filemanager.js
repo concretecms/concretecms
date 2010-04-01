@@ -374,6 +374,7 @@ ccm_alSetupSelectFiles = function() {
 ccm_alSetupCheckboxes = function(searchInstance) {
 	$("#ccm-" + searchInstance + "-list-cb-all").unbind();	
 	$("#ccm-" + searchInstance + "-list-cb-all").click(function() {
+		ccm_hideMenus();
 		if ($(this).attr('checked') == true) {
 			$('#ccm-' + searchInstance + '-search-results td.ccm-file-list-cb input[type=checkbox]').attr('checked', true);
 			$("#ccm-" + searchInstance + "-list-multiple-operations").attr('disabled', false);
@@ -384,10 +385,12 @@ ccm_alSetupCheckboxes = function(searchInstance) {
 	});
 	$("#ccm-" + searchInstance + "-search-results td.ccm-file-list-cb input[type=checkbox]").click(function(e) {
 		e.stopPropagation();
+		ccm_hideMenus();
 		ccm_alRescanMultiFileMenu(searchInstance);
 	});
 	$("#ccm-" + searchInstance + "-search-results td.ccm-file-list-cb").click(function(e) {
 		e.stopPropagation();
+		ccm_hideMenus();
 		$(this).find('input[type=checkbox]').click();
 		ccm_alRescanMultiFileMenu(searchInstance);
 	});
