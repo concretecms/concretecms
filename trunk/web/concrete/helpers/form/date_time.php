@@ -40,8 +40,8 @@ class FormDateTimeHelper {
 				$str = $dt . ' ' . $arr[$field . '_h'] . ':' . $arr[$field . '_m'];
 			}
 			return date('Y-m-d H:i:s', strtotime($str));
-		} else if (isset($arr[$field . '_d'])) {
-			$dt = date('Y-m-d', strtotime($arr[$field . '_d']));
+		} else if (isset($arr[$field])) {
+			$dt = date('Y-m-d', strtotime($arr[$field]));
 			return $dt;
 		} else {
 			return false;
