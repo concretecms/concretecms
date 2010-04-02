@@ -304,11 +304,11 @@ class UserAttributeKey extends AttributeKey {
 	function updateAttributesDisplayOrder($uats) {
 		$db = Loader::db();
 		for ($i = 0; $i < count($uats); $i++) {
+			$uak = UserAttributeKey::getByID($uats[$i]);
+			$uak->refreshCache();			
 			$v = array($uats[$i]);
 			$db->query("update UserAttributeKeys set displayOrder = {$i} where akID = ?", $v);
 		}
-		$this->refreshCache();
-
 	}
 
 
