@@ -58,7 +58,7 @@ var CCM_REL = "<?=DIR_REL?>";
 </script>
 
 <?
-$html = Loader::helper('html/v2');
+$html = Loader::helper('html');
 $this->addHeaderItem($html->css('ccm.base.css'), 'CORE');
 $this->addHeaderItem($html->javascript('jquery.js'), 'CORE');
 $this->addHeaderItem($html->javascript('ccm.base.js'), 'CORE');
