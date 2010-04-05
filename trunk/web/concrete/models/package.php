@@ -208,7 +208,7 @@ class Package extends Object {
 		$translate = Localization::getTranslate();
 		if (is_object($translate)) {
 			$path = $this->getPackagePath() . '/' . DIRNAME_LANGUAGES;
-			if (file_exists($path)) {
+			if (file_exists($path . '/' . LOCALE)) {
 				$translate->addTranslation($path);
 			}
 		}
