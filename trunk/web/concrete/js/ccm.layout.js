@@ -192,7 +192,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 	this.hasBeenQuickSaved=0;
 	this.quickSaveLayoutId=0;
 	this.quickSave=function(){  
-		var breakPoints=this.ccmControls.find('#layout_col_break_points_'+this.cvalID).val();  
+		var breakPoints=this.ccmControls.find('#layout_col_break_points_'+this.cvalID).val().replace(/%/g,''); 
 		clearTimeout(this.secondSavePauseTmr);
 		if(!this.hasBeenQuickSaved && this.quickSaveInProgress){
 			quickSaveLayoutObj=this;
@@ -203,7 +203,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 		var layoutObj = this; 
 		var modifyLayoutId = (this.quickSaveLayoutId) ? this.quickSaveLayoutId : this.layout_id; 
 		this.quickSaveAjax  = $.ajax({ 
-			url: CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + modifyLayoutId +  '&task=quicksave&breakpoints='+encodeURI(breakPoints),
+			url: CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + modifyLayoutId +  '&task=quicksave&breakpoints='+encodeURIComponent(breakPoints), 
 			success: function(response){  
 				eval('var jObj='+response); 
 				if(parseInt(jObj.success)!=1){ 
