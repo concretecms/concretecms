@@ -21,7 +21,7 @@ ccm_attributeTypeAddressSelectCountry = function(cls, country) {
 			}
 			ss.show();
 			ss.attr('name', si.attr('ccm-attribute-address-field-name'));		
-			ss.append('<option value=' + jQuery.trim(sa[1]) + '>' + jQuery.trim(sa[2]) + '</option');
+			ss.append('<option value="' + jQuery.trim(sa[1]) + '">' + jQuery.trim(sa[2]) + '</option>');
 		}
 	}
 	
