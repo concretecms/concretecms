@@ -165,7 +165,7 @@
 					} 
 					$mh = Loader::helper('mail');
 					$mh->to( $this->notifyEmail ); 
-					$mh->addParameter('guestbookURL', BASE_URL.DIR_REL.$c->getCollectionPath() ); 
+					$mh->addParameter('guestbookURL', Loader::helper('navigation')->getLinkToCollection($c, true)); 
 					$mh->addParameter('comment',  $_POST['commentText'] );  
 					$mh->from($fromEmail,$fromName);
 					$mh->load('block_guestbook_notification');

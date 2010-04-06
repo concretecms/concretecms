@@ -146,9 +146,8 @@ class Controller {
 				$c->loadError(COLLECTION_NOT_FOUND);
 				$v->setCollectionObject($c);
 				$this->c = $c;
-				$v->setController($this);
-				
-				
+				$cont = Loader::controller("/page_not_found");
+				$v->setController($cont);				
 				$v->render('/page_not_found');
 			}
  		}
