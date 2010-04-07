@@ -101,7 +101,7 @@ class HtmlHelper {
 		}
 
 		$js->file .= (strpos($js->file, '?') > -1) ? '&' : '?';
-		$js->file .= 'v=' . APP_VERSION;
+		$js->file .= 'v=' . md5(APP_VERSION . PASSWORD_SALT);
 		
 		// for the javascript addHeaderItem we need to have a full href available
 		$js->href = $js->file;
