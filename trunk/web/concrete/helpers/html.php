@@ -58,8 +58,7 @@ class HtmlHelper {
 		}
 
 		$css->file .= (strpos($css->file, '?') > -1) ? '&' : '?';
-		$css->file .= 'v=' . APP_VERSION;
-		
+		$css->file .= 'v=' . md5(APP_VERSION . PASSWORD_SALT);		
 		// for the javascript addHeaderItem we need to have a full href available
 		$css->href = $css->file;
 		if (substr($css->file, 0, 4) != 'http') {
