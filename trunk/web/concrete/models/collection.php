@@ -394,8 +394,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$styleHeader .= $layoutStyleRules . " \r\n";  
 		}  
 		
-		$v = View::getInstance();
-		$v->addHeaderItem("<style type=\"text/css\"> \r\n".$styleHeader.'</style>', 'VIEW');
+		if(strlen(trim($styleHeader))) {
+			$v = View::getInstance();
+			$v->addHeaderItem("<style type=\"text/css\"> \r\n".$styleHeader.'</style>', 'VIEW');
+		}
 	} 
 
 	public function getAreaCustomStyleRule($area) {
