@@ -14,7 +14,7 @@
 				}
 				if (LOCALE != 'en_US') {
 					if (is_dir(DIR_BASE . '/languages/' . LOCALE)) {
-						$translate = new Zend_Translate('gettext', DIR_BASE . '/languages/' . LOCALE);
+						$translate = new Zend_Translate('gettext', DIR_BASE . '/languages/' . LOCALE, LOCALE);
 					}
 				}
 			}
