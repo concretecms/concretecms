@@ -140,7 +140,7 @@ class ConcreteDashboardSitemapHelper {
 		
 		if ($cID == 1 || ($nodeOpen && $autoOpenNodes)) {
 			// We open another level
-			$node['subnodes'] = ConcreteDashboardSitemapHelper::getSubNodes($cID, $level, false, $autoOpenNodes);
+			$node['subnodes'] = $this->getSubNodes($cID, $level, false, $autoOpenNodes);
 		}
 		
 		return $node;
