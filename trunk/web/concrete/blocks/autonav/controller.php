@@ -21,6 +21,7 @@
  *
  */
 	defined('C5_EXECUTE') or die(_("Access Denied."));
+	Loader::model('page_list');
 	class AutonavBlockItem {
 
 		private $level;
@@ -441,37 +442,30 @@
 			$navObjectNames = $this->navObjectNames;
 
 			$allowedParentIDs = ($allowedParentIDs) ? $allowedParentIDs : array();
-			$q = "select Pages.cID from Pages where cIsTemplate = 0 and cParentID = '{$cParentID}' {$orderBy}";
-			$r = $db->query($q);
-			if ($r) {
-				while ($row = $r->fetchRow()) {
-					if ($this->displaySubPages != 'relevant_breadcrumb' || (in_array($row['cID'], $this->cParentIDArray) || $row['cID'] == $this->cID)) {
-						/*
-						if ($this->haveRetrievedSelf) {
-							// since we've already retrieved self, and we're going through again, we set plus 1
-							$this->haveRetrievedSelfPlus1 = true;
-						} else 
-						*/
+			$pl = new PageList();
+			$pl->filterByAttribute('exclude_nav',0);
+			if ($this->displayUnapproved) {
+				$pl->displayUnapprovedPages();
+			}
+			$pl->filterByParentID($cParentID);
+			$pages = $pl->get(); 
+			if ($pages) {
+				foreach ($pages as $tc) {
+					if ($this->displaySubPages != 'relevant_breadcrumb' || (in_array($tc->getCollectionID(), $this->cParentIDArray) || $tc->getCollectionID() == $this->cID)) {
 						
 						if ($this->haveRetrievedSelf && $cParentID == $this->cID) {
 							$this->haveRetrievedSelfPlus1 = true;
-						} else if ($row['cID'] == $this->cID) {
+						} else if ($tc->getCollectionID() == $this->cID) {
 							$this->haveRetrievedSelf = true;
 						}
 						
 						$displayPage = true;
-						if ($this->displayUnapproved) {
-							$tc = Page::getByID($row['cID'], "RECENT");
-						} else {
-							$tc = Page::getByID($row['cID'], "ACTIVE");
-						}
-						
 						$displayPage = $this->displayPage($tc);
 						
 						if ($displayPage) {
 							$niRow = array();
 							$niRow['cvName'] = $tc->getCollectionName();
-							$niRow['cID'] = $row['cID'];
+							$niRow['cID'] = $tc->getCollectionID();
 							$niRow['cvDescription'] = $tc->getCollectionDescription();
 							$niRow['cPath'] = $tc->getCollectionPath();
 							$niRow['cPointerExternalLink'] = $tc->getCollectionPointerExternalLink();
