@@ -437,13 +437,18 @@
 
 		function getNavigationArray($cParentID, $orderBy, $currentLevel) {
 			$db = Loader::db();
+			Loader::model('attribute/categories/collection');
 			$navSort = $this->navSort;
 			$sorted_array = $this->sorted_array;
 			$navObjectNames = $this->navObjectNames;
-
 			$allowedParentIDs = ($allowedParentIDs) ? $allowedParentIDs : array();
+			
 			$pl = new PageList();
-			$pl->filterByAttribute('exclude_nav',0);
+			$columns = $db->MetaColumns(CollectionAttributeKey::getIndexedSearchTable());
+			if (isset($columns['AK_EXCLUDE_NAV'])) {
+				$pl->filter(false, '(ak_exclude_nav = 0 or ak_exclude_nav is null)');
+			}
+			
 			if ($this->displayUnapproved) {
 				$pl->displayUnapprovedPages();
 			}
