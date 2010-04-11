@@ -123,7 +123,7 @@ class DashboardUsersSearchController extends Controller {
 		if ($_POST['task'] == 'update_extended_attribute') { 
 			$ak->saveAttributeForm($uo);
 			$val = $uo->getAttributeValueObject($ak);
-			print $val->getValue('display');
+			print $val->getValue('displaySanitized');
 			exit;
 		}
 		

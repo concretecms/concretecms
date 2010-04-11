@@ -110,13 +110,13 @@ class Request {
 		
 		$path = $this->requestPath;
 		
-		if ($_REQUEST['cID'] && intval($_REQUEST['cID']) > 0) {
+		if (isset($_REQUEST['cID']) && intval($_REQUEST['cID']) > 0) {
 			$this->cID = $_REQUEST['cID'];
 		} else {
 			$this->cID = HOME_CID;
 		}
 		// home page w/param and task
-		if (ENABLE_LEGACY_CONTROLLER_URLS == true) {
+		if (defined('ENABLE_LEGACY_CONTROLLER_URLS') && ENABLE_LEGACY_CONTROLLER_URLS == true) {
 			if (preg_match("/^\-\/(.[^\/]*)\/(.*)/i", $path, $matches)) {
 				$this->task = $matches[1];
 				$this->params = $matches[2];
