@@ -67,7 +67,7 @@ class ListsCountriesHelper {
 	'CN' => 'China',
 	'CO' => 'Colombia',
 	'CR' => 'Costa Rica',
-	'CS' => 'Czechoslovakia (former)',
+	'CS' => 'Serbia and Montenegro',
 	'CU' => 'Cuba',
 	'CV' => 'Cape Verde',
 	'CX' => 'Christmas Island',
