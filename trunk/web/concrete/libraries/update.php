@@ -172,9 +172,9 @@ class ApplicationUpdate {
 		file_put_contents($configFile, $contents);
 		
 		if (substr($contents, -2) == '?>') {
-			file_put_contents($configFile, "<?php define('DIRNAME_APP_UPDATED', '" . $this->getUpdateIdentifier() . "');?>", FILE_APPEND);
+			file_put_contents($configFile, "<" . "?" . "p" . "hp define('DIRNAME_APP_UPDATED', '" . $this->getUpdateIdentifier() . "');?>", FILE_APPEND);
 		} else {
-			file_put_contents($configFile, "?><?php define('DIRNAME_APP_UPDATED', '" . $this->getUpdateIdentifier() . "');?>", FILE_APPEND);
+			file_put_contents($configFile, "?><" . "?" . "p" . "hp define('DIRNAME_APP_UPDATED', '" . $this->getUpdateIdentifier() . "');?>", FILE_APPEND);
 		}
 		
 		return true;
