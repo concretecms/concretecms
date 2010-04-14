@@ -16,10 +16,10 @@ if (isset($au->theme) && isset($au->file)) {
 				}
 			}
 			$stat = filemtime($pt->getThemeDirectory() . '/' . $au->file);
-			$style = Cache::get($au->theme, $au->file, $stat);
+			$style = Cache::get(str_replace('-','_', $au->theme), $au->file, $stat);
 			if ($style == '') {
 				$style = $pt->parseStyleSheet($au->file);
-				Cache::set($au->theme, $au->file, $style, 10800, true);
+				Cache::set(str_replace('-','_', $au->theme), $au->file, $style, 10800, true);
 			}
 		
 			//if we're doing a cache refresh, we need to print the css still 
