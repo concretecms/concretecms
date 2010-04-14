@@ -1886,7 +1886,7 @@ $ppWhere = '';
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 
-		$newCID = $db->Insert_ID();
+		$newCID = $cID;
 
 		if ($res) {
 			// Collection added with no problem -- update cChildren on parrent
