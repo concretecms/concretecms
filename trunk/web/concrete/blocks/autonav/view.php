@@ -2,7 +2,7 @@
 	defined('C5_EXECUTE') or die(_("Access Denied."));
 	$aBlocks = $controller->generateNav();
 	$c = Page::getCurrentPage();
-	echo("<ul class=\"nav\">");
+	$containsPages = false;
 	
 	$nh = Loader::helper('navigation');
 	
@@ -23,6 +23,12 @@
 	foreach($aBlocks as $ni) {
 		$_c = $ni->getCollectionObject();
 		if (!$_c->getCollectionAttributeValue('exclude_nav')) {
+			if (!$containsPages) {
+				// this is the first time we've entered the loop so we print out the UL tag
+				echo("<ul class=\"nav\">");
+			}
+			
+			$containsPages = true;
 			
 			$thisLevel = $ni->getLevel();
 			if ($thisLevel > $lastLevel) {
@@ -67,8 +73,10 @@
 	}
 	
 	$thisLevel = 0;
-	for ($i = $thisLevel; $i <= $lastLevel; $i++) {
-		echo("</li></ul>");
+	if ($containsPages) {
+		for ($i = $thisLevel; $i <= $lastLevel; $i++) {
+			echo("</li></ul>");
+		}
 	}
 
 ?>
