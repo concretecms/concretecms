@@ -23,7 +23,7 @@ class Cache {
 	
 	public function getLibrary() {
 		static $cache;
-		if (!isset($cache)) {
+		if (!isset($cache) && defined('DIR_FILES_CACHE')) {
 			if (is_dir(DIR_FILES_CACHE) && is_writable(DIR_FILES_CACHE)) {
 				Loader::library('3rdparty/Zend/Cache');
 				$frontendOptions = array(
@@ -59,8 +59,12 @@ class Cache {
 	}
 	
 	public function disableCache() {
-		Cache::getLibrary()->setOption('caching', false);
+		$ca = Cache::getLibrary();
+		if (is_object($ca)) {
+			$ca->setOption('caching', false);
+		}
 	}
+	
 	public function enableCache() {
 		if (defined('ENABLE_CACHE') && ENABLE_CACHE == TRUE) {
 			Cache::getLibrary()->setOption('caching', true);
@@ -153,6 +157,9 @@ class Cache {
 	 */	
 	public function flush() {
 		$cache = Cache::getLibrary();
+		if (!$cache) {
+			return false;
+		}
 		$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
 		return true;
 	}
