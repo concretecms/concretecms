@@ -158,7 +158,7 @@ class ConcreteDashboardSitemapHelper {
 			$pl->filterByPath($nc->getCollectionPath());
 			$pl->displayUnapprovedPages();
 			$pl->sortByDisplayOrder();
-			$results = $pl->get(50);
+			$results = $pl->get(SITEMAP_PAGES_LIMIT);
 			$total = $pl->getTotal();
 		} else {			
 			$pl = new PageList();
@@ -172,7 +172,7 @@ class ConcreteDashboardSitemapHelper {
 			if ($cID == 1) {
 				$results = $pl->get();			
 			} else {
-				$pl->setItemsPerPage(50);
+				$pl->setItemsPerPage(SITEMAP_PAGES_LIMIT);
 				$results = $pl->getPage();
 			}
 		}
@@ -305,7 +305,7 @@ class ConcreteDashboardSitemapHelper {
 					$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPaging(REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_data', true) . '</li>';
 				}
 			} else {
-				$drillDownAction = ($req->keywords != null) ? View::url('/dashboard/sitemap/search?cvName=' . $req->keywords . '&selectedSearchField[]=parent&numResults=50&ccm_paging_p=2&cParentAll=1&ccm_order_by=cDisplayOrder&cParentIDSearchField=' . $nodeID) : View::url('/dashboard/sitemap/explore', $nodeID);
+				$drillDownAction = ($req->keywords != null) ? View::url('/dashboard/sitemap/search?cvName=' . $req->keywords . '&selectedSearchField[]=parent&numResults=' . SITEMAP_PAGES_LIMIT . '&ccm_paging_p=2&cParentAll=1&ccm_order_by=cDisplayOrder&cParentIDSearchField=' . $nodeID) : View::url('/dashboard/sitemap/explore', $nodeID);
 				$this->html .= '<li class="ccm-sitemap-more-results">' . t('%s more to display. <a href="%s">View All</a>',  $req->total - count($req->results), $drillDownAction) . '</a></li>';
 			}
 		}

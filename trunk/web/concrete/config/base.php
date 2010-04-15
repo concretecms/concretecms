@@ -48,6 +48,10 @@ if (!defined('ENABLE_EMAILS')) {
 	define('ENABLE_EMAILS', true);
 }
 
+if (!defined('SITEMAP_PAGES_LIMIT')) {
+	define('SITEMAP_PAGES_LIMIT', 100);
+}
+
 if (!defined("ENABLE_AREA_LAYOUTS")) {
 	define('ENABLE_AREA_LAYOUTS', true);
 }
