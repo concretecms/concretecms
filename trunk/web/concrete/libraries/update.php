@@ -18,6 +18,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class Update {
 
 	public function getLatestAvailableVersionNumber() {
+		if (defined('MULTI_SITE') && MULTI_SITE == 1) {
+			$updates = Update::getLocalAvailableUpdates();
+			$multiSiteVersion = 0;
+			foreach($updates as $up) {
+				if (version_compare($up->getUpdateVersion(), $multiSiteVersion, '>')) {
+					$multiSiteVersion = $up->getUpdateVersion();
+				}	
+			}
+			Config::save('APP_VERSION_LATEST', $multiSiteVersion);
+			return $multiSiteVersion;
+		}
+		
 		$d = Loader::helper('date');
 		// first, we check session
 		$queryWS = false;
