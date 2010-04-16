@@ -1,0 +1,308 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+
+  <table name="CollectionVersionBlockStyles">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="bID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="arHandle" type="C" size="255">
+      <KEY/>
+    </field>
+    <field name="csrID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
+
+  <table name="CollectionVersionAreaLayouts">
+    <field name="cvalID" type="I" size="10">
+	  <AUTOINCREMENT/>
+      <KEY/> 
+      <UNSIGNED/>
+    </field>  
+    <field name="cID" type="I" size="10"> 
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvID" type="I" size="10"> 
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="arHandle" type="C" size="255"> 
+    </field>
+    <field name="layoutID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="position" type="I" size="10"> 
+      <DEFAULT value="1000"/>
+    </field>	
+    <field name="areaNameNumber" type="I" size="10"> 
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field> 
+	<index name="areaLayoutsIndex"> 
+	  <col>cID</col>
+      <col>cvID</col> 
+      <col>arHandle</col>
+    </index> 
+  </table>  
+  
+  
+  <table name="CollectionVersionAreaStyles">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="arHandle" type="C" size="255">
+      <KEY/>
+    </field>
+    <field name="csrID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  
+   <table name="CustomStylePresets">
+    <field name="cspID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="cspName" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="csrID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  <table name="CustomStyleRules">
+    <field name="csrID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="css_id" type="C" size="128"/>
+    <field name="css_class" type="C" size="128"/>
+    <field name="css_serialized" type="X"/>
+    <field name="css_custom" type="X"/>
+  </table>
+  
+   <table name="TaskPermissionUserGroups">
+    <field name="tpID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="gID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="canRead" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+  <table name="TaskPermissions">
+    <field name="tpID" type="I" size="10">
+  	  <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="tpHandle" type="C" size="255"/>
+    <field name="tpName" type="C" size="255"/>
+    <field name="tpDescription" type="X"/>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="tpHandle">
+      <UNIQUE/>
+      <col>tpHandle</col>
+    </index>
+  </table>
+
+  
+  <table name="Layouts">
+		<field name="layoutID" type="I">
+			<key />
+			<unsigned />
+			<AUTOINCREMENT/>
+		</field> 
+		
+		<field name="layout_rows" type="i" size="5">
+			<NOTNULL/>
+			<DEFAULT value="3"/>
+		</field>
+		
+		<field name="layout_columns" type="i" size="3">
+			<NOTNULL/>
+			<DEFAULT value="3"/>
+		</field>
+		
+		<field name="spacing" type="i" size="3">
+			<NOTNULL/>
+			<DEFAULT value="3"/>
+		</field>		
+		
+		<field name="breakpoints" type="C" size="255">
+			<DEFAULT value=""/>
+			<NOTNULL/>
+		</field>
+		
+		<field name="locked" type="I1" size="1">
+		  <NOTNULL/>
+		  <DEFAULT value="0"/>
+		</field> 
+  </table>
+  
+  <table name="LayoutPresets">
+		<field name="lpID" type="I">
+			<key />
+			<unsigned />
+			<AUTOINCREMENT/>
+		</field> 
+		<field name="lpName" type="C" size="128">
+		  <NOTNULL/>
+		</field> 
+		<field name="layoutID" type="I" size="10">
+		  <NOTNULL/>
+		  <DEFAULT value="0"/>
+		  <UNSIGNED/>			
+		</field> 
+		<index name="layoutID">
+		  <UNIQUE/>
+		  <col>layoutID</col>
+		</index>				
+  </table>  
+  
+<table name="SystemNotifications">
+    <field name="snID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="snTypeID" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="snURL" type="X"/>
+    <field name="snURL2" type="X"/>
+    <field name="snDateTime" type="T">
+      <NOTNULL/>
+    </field>
+    <field name="snIsArchived" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="snIsNew" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="snTitle" type="C" size="255"/>
+    <field name="snDescription" type="X"/>
+    <field name="snBody" type="X"/>
+  </table>  
+
+  <table name="Packages">
+    <field name="pkgID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="pkgName" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="pkgHandle" type="C" size="64">
+      <NOTNULL/>
+    </field>
+    <field name="pkgDescription" type="X"/>
+    <field name="pkgDateInstalled" type="T">
+      <NOTNULL/>
+    </field>
+    <field name="pkgIsInstalled" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+    <field name="pkgVersion" type="C" size="32"/>
+    <field name="pkgAvailableVersion" type="C" size="32"/>
+    <index name="pkgHandle">
+      <UNIQUE/>
+      <col>pkgHandle</col>
+    </index>
+  </table>
+
+
+  <table name="atTextareaSettings">
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="akTextareaDisplayMode" type="C" size="255"/>
+  </table>
+
+
+<table name="atAddressCustomCountries">
+    <field name="atAddressCustomCountryID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="akID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="country" type="C" size="5">
+      <NOTNULL/>
+    </field>
+  </table>
+  <table name="atAddressSettings">
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="akHasCustomCountries" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="akDefaultCountry" type="C" size="12"/>
+  </table>
+
+  
+
+</schema>
