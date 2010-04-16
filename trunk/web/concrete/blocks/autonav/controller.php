@@ -1,4 +1,4 @@
-<?php
+<?
 /**
  * @package Blocks
  * @subpackage BlockTypes
@@ -411,10 +411,12 @@
 			$allowedParentIDs = ($allowedParentIDs) ? $allowedParentIDs : array();
 			
 			$pl = new PageList();
+			/*
 			$columns = $db->MetaColumns(CollectionAttributeKey::getIndexedSearchTable());
 			if (isset($columns['AK_EXCLUDE_NAV'])) {
 				$pl->filter(false, '(ak_exclude_nav = 0 or ak_exclude_nav is null)');
 			}
+			*/
 			switch($this->orderBy) {
 				case 'display_asc':
 					$pl->sortByDisplayOrder();

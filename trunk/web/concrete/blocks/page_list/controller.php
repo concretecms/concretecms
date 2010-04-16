@@ -181,7 +181,7 @@
 			$bt = BlockType::getByID($btID);
 			$c = $b->getBlockCollectionObject();
 			$a = $b->getBlockAreaObject();
-			$rssUrl = $uh->getBlockTypeToolsURL($bt)."/rss?bID=".$b->getBlockID()."&cID=".$c->getCollectionID()."&arHandle=" . $a->getAreaHandle();
+			$rssUrl = $uh->getBlockTypeToolsURL($bt)."/rss?bID=".$b->getBlockID()."&amp;cID=".$c->getCollectionID()."&amp;arHandle=" . $a->getAreaHandle();
 			return $rssUrl;
 		}
 	}
