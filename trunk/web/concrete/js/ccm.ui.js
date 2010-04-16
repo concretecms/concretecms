@@ -608,6 +608,7 @@ ccm_triggerSelectGroup = function(gID, gName) {
 }
 
 ccm_setupGroupSearch = function() {
+	$('div.ccm-group a').unbind();
 	$('div.ccm-group a').each(function(i) {
 		var gla = $(this);
 		$(this).click(function() {
