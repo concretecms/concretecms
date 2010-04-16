@@ -6,6 +6,9 @@
 		$mode = $_REQUEST['mode'];
 	}
 	
+	$soargs = array();
+	$soargs['mode'] = $mode;
+
 	?>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr>
@@ -92,7 +95,7 @@
 		
 	
 	<? } 
-	$userList->displayPaging($bu); ?>
+	$userList->displayPaging($bu, false, $soargs); ?>
 	
 </div>
 
