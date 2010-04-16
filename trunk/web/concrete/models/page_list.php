@@ -1,4 +1,4 @@
-<?
+<?php
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
@@ -150,7 +150,7 @@ class PageList extends DatabaseItemList {
 	 * Sorts this list by display order descending 
 	 */
 	public function sortByDisplayOrderDescending() {
-		parent::sortBy('cDisplayOrder', 'desc');
+		parent::sortBy('p1.cDisplayOrder', 'desc');
 	}
 	
 	/** 
