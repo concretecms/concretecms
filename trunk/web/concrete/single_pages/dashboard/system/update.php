@@ -35,6 +35,8 @@
 <h1><span><?=t('Install Local Update')?></span></h1>
 <div class="ccm-dashboard-inner">
 <?
+
+print '<strong>' . t('Make sure you <a href="%s">backup your database</a> before updating.', $this->url('/dashboard/system/backup')) . '</strong><br/>';
 $ih = Loader::helper('concrete/interface');
 
 switch(count($updates)) {
