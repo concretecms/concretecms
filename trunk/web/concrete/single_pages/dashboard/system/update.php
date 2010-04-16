@@ -20,6 +20,8 @@
 	<?=Loader::helper('concrete/interface')->button_js(t('Close'), 'javascript:jQuery.fn.dialog.closeTop()', 'left');?>
 	</div>
 	
+	</form>
+	
 	
 	<? } else { ?>
 		<p><?=t('All available updates have been either downloaded or applied.')?></p>
