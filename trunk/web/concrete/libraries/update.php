@@ -179,7 +179,7 @@ class ApplicationUpdate {
 		$contents = trim($contents);
 		// remove any instances of app pointer
 		
-		$contents = preg_replace("/<\?php define\('DIRNAME_APP_UPDATED', '(.+)'\);\?>/i", "", $contents);
+		$contents = preg_replace("/define\('DIRNAME_APP_UPDATED', '(.+)'\);/i", "", $contents);
 		
 		file_put_contents($configFile, $contents);
 		
