@@ -64,6 +64,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$this->response = new stdClass;
 		}
 		
+		public function reinstatePreviousRequest() {
+			$preq = unserialize($_SESSION['uOpenIDPreviousPostArray']);
+			if (is_array($preq)) {
+				foreach($preq as $key => $value) {
+					$_POST[$key] = $value;
+					$_REQUEST[$key] = $value;
+				}
+			}
+		}
+		
 		public function getReturnURL() {
 			return $this->returnTo;
 		}
@@ -87,6 +97,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
     	public function request($identifier) {
+    		$_SESSION['uOpenIDPreviousPostArray'] = serialize($_POST);
     		$response = $this->consumer->begin($identifier);
 			if (!$response) {
 				$this->response->code = OpenIDAuth::E_INVALID_OPENID;
@@ -206,6 +217,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				// Ok, there IS a user on the site who matches the open ID. That means we're all good
 				$this->response->code = OpenIDAuth::S_USER_AUTHENTICATED;
 				$this->response->message = $ui->getUserID();
+				$this->response->openid = $openid;
 			}
 		}		
 	}
