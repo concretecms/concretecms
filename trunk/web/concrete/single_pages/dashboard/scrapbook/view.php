@@ -153,7 +153,7 @@ $(function(){ GlobalScrapbook.init(); });
 					</a>
 				</td>
 				<td class="options">
-					<a href="<?=View::url($cPath,'view','?scrapbookName=userScrapbook' ) ?>">View</a> &nbsp; 
+					<a href="<?=View::url($cPath,'view','?scrapbookName=userScrapbook' ) ?>"><?=t('View')?></a> &nbsp; 
 				</td>
 			</tr>			
 			<? if(is_array($availableScrapbooks)) 

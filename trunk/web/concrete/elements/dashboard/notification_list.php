@@ -102,6 +102,6 @@ foreach($notifications as $n) {
 
 <script type="text/javascript">
 ccmDisplayNotificationBody = function(snID) {
-	jQuery.fn.dialog.open({modal: false, title: '<?=t("More Information")?>', width: 500, height: 400, element: $('#ccmSystenNotificationBody' + snID)});
+	jQuery.fn.dialog.open({modal: false, title: "<?=t('More Information')?>", width: 500, height: 400, element: $('#ccmSystenNotificationBody' + snID)});
 }
 </script>
