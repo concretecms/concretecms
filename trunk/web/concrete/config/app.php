@@ -47,7 +47,7 @@ if (!defined('DATE_APP_GENERIC_MDYT')) {
 }
 
 if (!defined('DATE_APP_GENERIC_MDY')) {
-	define('DATE_APP_GENERIC_MDY', 'n/j/Y');
+	define('DATE_APP_GENERIC_MDY', t('n/j/Y'));
 }
 
 if (!defined('DATE_APP_GENERIC_MDY_FULL')) {
@@ -55,15 +55,15 @@ if (!defined('DATE_APP_GENERIC_MDY_FULL')) {
 }
 
 if (!defined('DATE_APP_GENERIC_T')) {
-	define('DATE_APP_GENERIC_T', 'g:i A');
+	define('DATE_APP_GENERIC_T', t('g:i A'));
 }
 
 if (!defined('DATE_APP_GENERIC_TS')) {
-	define('DATE_APP_GENERIC_TS', 'g:i:s A');
+	define('DATE_APP_GENERIC_TS', t('g:i:s A'));
 }
 
 if (!defined('DATE_APP_FILENAME')) {
-	define('DATE_APP_FILENAME', 'd-m-Y_H:i_'); // used when dates are used to start filenames
+	define('DATE_APP_FILENAME', t('d-m-Y_H:i_')); // used when dates are used to start filenames
 }
 
 if (!defined('DATE_APP_FILE_PROPERTIES')) {
