@@ -21,7 +21,6 @@
  *
  */
 	defined('C5_EXECUTE') or die(_("Access Denied."));
-	Loader::model('page_list');
 	class AutonavBlockItem {
 
 		private $level;
@@ -167,6 +166,10 @@
 		var $navArray = array();
 		var $cParentIDArray = array();
 
+		var $sorted_array = array();
+		var $navSort = array();
+		var $navObjectNames = array();
+
 		var $displayPages, $displayPagesCID, $displayPagesIncludeSelf, $displaySubPages, $displaySubPageLevels, $displaySubPageLevelsNum, $orderBy, $displayUnavailablePages;
 		var $haveRetrievedSelf = false;
 		var $haveRetrievedSelfPlus1 = false;
@@ -242,6 +245,38 @@
 			$db = Loader::db();
 			// now we proceed, with information obtained either from the database, or passed manually from
 			$orderBy = "";
+			/*switch($this->orderBy) {
+			switch($this->orderBy) {
+				case 'display_asc':
+					$orderBy = "order by Collections.cDisplayOrder asc";
+					break;
+				case 'display_desc':
+					$orderBy = "order by Collections.cDisplayOrder desc";
+					break;
+				case 'chrono_asc':
+					$orderBy = "order by cvDatePublic asc";
+					break;
+				case 'chrono_desc':
+					$orderBy = "order by cvDatePublic desc";
+					break;
+				case 'alpha_desc':
+					$orderBy = "order by cvName desc";
+					break;
+				default:
+					$orderBy = "order by cvName asc";
+					break;
+			}*/
+			switch($this->orderBy) {
+				case 'display_asc':
+					$orderBy = "order by Pages.cDisplayOrder asc";
+					break;
+				case 'display_desc':
+					$orderBy = "order by Pages.cDisplayOrder desc";
+					break;
+				default:
+					$orderBy = '';
+					break;
+			}
 			$level = 0;
 			$cParentID = 0;
 			switch($this->displayPages) {
@@ -308,7 +343,7 @@
 					$this->populateParentIDArray($this->cID);
 				}
 				
-				$this->getNavigationArray($cParentID, $level);
+				$this->getNavigationArray($cParentID, $orderBy, $level);
 				
 				// if we're at the top level we add home to the beginning
 				if ($cParentID == 1) {
@@ -399,66 +434,44 @@
 			return true;
 		}
 
-
-		function getNavigationArray($cParentID, $currentLevel) {
+		function getNavigationArray($cParentID, $orderBy, $currentLevel) {
 			$db = Loader::db();
-			Loader::model('attribute/categories/collection');
-
 			$navSort = $this->navSort;
 			$sorted_array = $this->sorted_array;
 			$navObjectNames = $this->navObjectNames;
 
 			$allowedParentIDs = ($allowedParentIDs) ? $allowedParentIDs : array();
-			
-			$pl = new PageList();
-			/*
-			$columns = $db->MetaColumns(CollectionAttributeKey::getIndexedSearchTable());
-			if (isset($columns['AK_EXCLUDE_NAV'])) {
-				$pl->filter(false, '(ak_exclude_nav = 0 or ak_exclude_nav is null)');
-			}
-			*/
-			switch($this->orderBy) {
-				case 'display_asc':
-					$pl->sortByDisplayOrder();
-					break;
-				case 'display_desc':
-					$pl->sortByDisplayOrderDescending();
-					break;
-				case 'chrono_asc':
-					$pl->sortByPublicDate();
-					break;
-				case 'chrono_desc':
-					$pl->sortByPublicDateDescending();
-					break;
-				case 'alpha_desc':
-					$pl->sortByNameDescending();
-					break;
-				default:
-					$pl->sortByName();
-					break;
-			}
-			if ($this->displayUnapproved) {
-				$pl->displayUnapprovedPages();
-			}
-			$pl->filterByParentID($cParentID);
-			$pages = $pl->get(); 
-			if ($pages) {
-				foreach ($pages as $tc) {
-					if ($this->displaySubPages != 'relevant_breadcrumb' || (in_array($tc->getCollectionID(), $this->cParentIDArray) || $tc->getCollectionID() == $this->cID)) {
+			$q = "select Pages.cID from Pages where cIsTemplate = 0 and cParentID = '{$cParentID}' {$orderBy}";
+			$r = $db->query($q);
+			if ($r) {
+				while ($row = $r->fetchRow()) {
+					if ($this->displaySubPages != 'relevant_breadcrumb' || (in_array($row['cID'], $this->cParentIDArray) || $row['cID'] == $this->cID)) {
+						/*
+						if ($this->haveRetrievedSelf) {
+							// since we've already retrieved self, and we're going through again, we set plus 1
+							$this->haveRetrievedSelfPlus1 = true;
+						} else 
+						*/
 						
 						if ($this->haveRetrievedSelf && $cParentID == $this->cID) {
 							$this->haveRetrievedSelfPlus1 = true;
-						} else if ($tc->getCollectionID() == $this->cID) {
+						} else if ($row['cID'] == $this->cID) {
 							$this->haveRetrievedSelf = true;
 						}
 						
 						$displayPage = true;
+						if ($this->displayUnapproved) {
+							$tc = Page::getByID($row['cID'], "RECENT");
+						} else {
+							$tc = Page::getByID($row['cID'], "ACTIVE");
+						}
+						
 						$displayPage = $this->displayPage($tc);
 						
 						if ($displayPage) {
 							$niRow = array();
 							$niRow['cvName'] = $tc->getCollectionName();
-							$niRow['cID'] = $tc->getCollectionID();
+							$niRow['cID'] = $row['cID'];
 							$niRow['cvDescription'] = $tc->getCollectionDescription();
 							$niRow['cPath'] = $tc->getCollectionPath();
 							$niRow['cPointerExternalLink'] = $tc->getCollectionPointerExternalLink();
@@ -466,8 +479,32 @@
 
 							$ni = new AutonavBlockItem($niRow, $currentLevel);
 							$ni->setCollectionObject($tc);
-							$this->navArray[] = $ni;
-							
+							// $this->navArray[] = $ni;
+							$navSort[$niRow['cID']] = $dateKey;
+							$sorted_array[$niRow['cID']] = $ni;
+
+							$_c = $ni->getCollectionObject();
+							$object_name = $_c->getCollectionName();
+							$navObjectNames[$niRow['cID']] = $object_name;
+
+						}
+
+					}
+				}
+				// end while -- sort navSort
+
+				// Joshua's Huge Sorting Crap
+				if($navSort) {
+					$sortit=0;
+					if($this->orderBy == "chrono_asc") { asort($navSort); $sortit=1; }
+					if($this->orderBy == "chrono_desc") { arsort($navSort); $sortit=1; }
+
+					if($sortit) {
+						foreach($navSort as $sortCID => $sortdatewhocares) {
+							// create sorted_array
+							$this->navArray[] = $sorted_array[$sortCID];
+
+							#############start_recursive_crap
 							$retrieveMore = false;
 							if ($this->displaySubPages == 'all') {
 								if ($this->displaySubPageLevels == 'all' || ($this->displaySubPageLevels == 'custom' && $this->displaySubPageLevelsNum > $currentLevel)) {
@@ -483,13 +520,85 @@
 								}
 							}
 							if ($retrieveMore) {
-								$this->getNavigationArray($ni->getCollectionID(), $currentLevel + 1);
+								$this->getNavigationArray($sortCID, $orderBy, $currentLevel + 1);
 							}
-							
+							#############end_recursive_crap
 						}
+					}
 
+					$sortit=0;
+					if($this->orderBy == "alpha_desc") { 
+						$navObjectNames = array_map('strtolower',$navObjectNames);
+						arsort($navObjectNames);						
+						$sortit=1; 						
+					}
+					
+					if($this->orderBy == "alpha_asc") { 
+						$navObjectNames = array_map('strtolower',$navObjectNames);
+						asort($navObjectNames); 
+						$sortit=1; 
+					}
+
+					if($sortit) {
+						foreach($navObjectNames as $sortCID => $sortnameaction) {
+							// create sorted_array
+							$this->navArray[] = $sorted_array[$sortCID];
+
+							#############start_recursive_crap
+							$retrieveMore = false;
+							if ($this->displaySubPages == 'all') {
+								if ($this->displaySubPageLevels == 'all' || ($this->displaySubPageLevels == 'custom' && $this->displaySubPageLevelsNum > $currentLevel)) {
+									$retrieveMore = true;
+								}
+							} else if (($this->displaySubPages == "relevant" || $this->displaySubPages == "relevant_breadcrumb") && (in_array($sortCID, $this->cParentIDArray) || $sortCID == $this->cID)) {
+								if ($this->displaySubPageLevels == "enough" && $this->haveRetrievedSelf == false) {
+									$retrieveMore = true;
+								} else if ($this->displaySubPageLevels == "enough_plus1" && $this->haveRetrievedSelfPlus1 == false) {
+									$retrieveMore = true;
+								} else if ($this->displaySubPageLevels == 'all' || ($this->displaySubPageLevels == 'custom' && $this->displaySubPageLevelsNum > $currentLevel)) {
+									$retrieveMore = true;
+								}
+							}
+							if ($retrieveMore) {
+								$this->getNavigationArray($sortCID, $orderBy, $currentLevel + 1);
+							}
+							#############end_recursive_crap
+						}
+					}
+
+					$sortit=0;
+					if($this->orderBy == "display_desc") { $sortit=1; }
+					if($this->orderBy == "display_asc") { $sortit=1; }
+
+					if($sortit) {
+						// for display order? this stuff is already sorted...
+						foreach($navObjectNames as $sortCID => $sortnameaction) {
+							// create sorted_array
+							$this->navArray[] = $sorted_array[$sortCID];
+
+							#############start_recursive_crap
+							$retrieveMore = false;
+							if ($this->displaySubPages == 'all') {
+								if ($this->displaySubPageLevels == 'all' || ($this->displaySubPageLevels == 'custom' && $this->displaySubPageLevelsNum > $currentLevel)) {
+									$retrieveMore = true;
+								}
+							} else if (($this->displaySubPages == "relevant" || $this->displaySubPages == "relevant_breadcrumb") && (in_array($sortCID, $this->cParentIDArray) || $sortCID == $this->cID)) {
+								if ($this->displaySubPageLevels == "enough" && $this->haveRetrievedSelf == false) {
+									$retrieveMore = true;
+								} else if ($this->displaySubPageLevels == "enough_plus1" && $this->haveRetrievedSelfPlus1 == false) {
+									$retrieveMore = true;
+								} else if ($this->displaySubPageLevels == 'all' || ($this->displaySubPageLevels == 'custom' && $this->displaySubPageLevelsNum > $currentLevel)) {
+									$retrieveMore = true;
+								}
+							}
+							if ($retrieveMore) {
+								$this->getNavigationArray($sortCID, $orderBy, $currentLevel + 1);
+							}
+							#############end_recursive_crap
+						}
 					}
 				}
+				// End Joshua's Huge Sorting Crap
 
 			}
 		}
