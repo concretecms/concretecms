@@ -45,6 +45,7 @@ class LoginController extends Controller {
 				$oa = new OpenIDAuth();
 				$ui = $oa->registerUser($_SESSION['uOpenIDRequested'], $email);
 				User::loginByUserID($ui->getUserID());
+				$oa->reinstatePreviousRequest();
 				$this->finishLogin();
 			}
 		}
@@ -78,6 +79,8 @@ class LoginController extends Controller {
         		case OpenIDAuth::S_USER_AUTHENTICATED:
 					if ($v->integer($response->message)) {
 						User::loginByUserID($response->message);
+						$this->set('uOpenID', $response->openid);
+						$oa->reinstatePreviousRequest();
 						$this->finishLogin();
 					}
         			break;
@@ -192,6 +195,54 @@ class LoginController extends Controller {
 		if ($this->post('uMaintainLogin')) {
 			$u->setUserForeverCookie();
 		}
+		
+		// Verify that the user has filled out all
+		// required items that are required on register
+		// That means users logging in after new user attributes
+		// have been created and required will be prompted here to 
+		// finish their profile
+		
+		$this->set('invalidRegistrationFields', false);
+		Loader::model('attribute/categories/user');
+		$ui = UserInfo::getByID($u->getUserID());
+		$aks = UserAttributeKey::getRegistrationList();
+
+		$unfilledAttributes = array();
+		foreach($aks as $uak) {
+			if ($uak->isAttributeKeyRequiredOnRegister()) {
+				$av = $ui->getAttributeValueObject($uak);
+				if (!is_object($av)) {
+					$unfilledAttributes[] = $uak;
+				}
+			}
+		}
+
+		if ($this->post('completePartialProfile')) { 
+			foreach($unfilledAttributes as $uak) { 
+				$e1 = $uak->validateAttributeForm();
+				if ($e1 == false) {
+					$this->error->add(t('The field "%s" is required', $uak->getAttributeKeyName()));
+				} else if ($e1 instanceof ValidationErrorHelper) {
+					$this->error->add($e1);
+				}
+			}
+	
+			if (!$this->error->has()) { 
+				// the user has needed to complete a partial profile, and they have done so,
+				// and they have no errors. So we save our profile data against the account.
+				foreach($unfilledAttributes as $uak) { 
+					$uak->saveAttributeForm($ui);
+					$unfilledAttributes = array();
+				}
+			}
+		}
+		
+		if (count($unfilledAttributes) > 0) { 
+			$u->logout();
+			$this->set('invalidRegistrationFields', true);
+			$this->set('unfilledAttributes', $unfilledAttributes);
+		}
+
 		$rcID = $this->post('rcID');
 		$nh = Loader::helper('validation/numbers');
 
@@ -228,32 +279,35 @@ class LoginController extends Controller {
 		//should administrator be redirected to dashboard?  defaults to yes if not set. 
 		$adminToDash=intval(Config::get('LOGIN_ADMIN_TO_DASHBOARD'));  	
 		
-		//Full page login, standard redirection			
-		if ($loginData['redirectURL']) {
-			//make double secretly sure there's no caching going on
-			header("Cache-Control: no-store, no-cache, must-revalidate");
-			header("Pragma: no-cache");
-			header('Expires: Fri, 30 Oct 1998 14:19:41 GMT'); //in the past		
-			$this->externalRedirect( $loginData['redirectURL'] );
-		}else if ( $dbp->canRead() && $adminToDash ) {
-			$this->redirect('/dashboard');
-		} else {
-			//options set in dashboard/users/registration
-			$login_redirect_cid=intval(Config::get('LOGIN_REDIRECT_CID'));
-			$login_redirect_mode=Config::get('LOGIN_REDIRECT');		
-			
-			//redirect to user profile
-			if( $login_redirect_mode=='PROFILE' && ENABLE_USER_PROFILES ){ 			
-				$this->redirect( '/profile/', $u->uID ); 				
+		//Full page login, standard redirection	
+		$u = new User(); // added for the required registration attribute change above. We recalc the user and make sure they're still logged in
+		if ($u->isRegistered()) { 
+			if ($loginData['redirectURL']) {
+				//make double secretly sure there's no caching going on
+				header("Cache-Control: no-store, no-cache, must-revalidate");
+				header("Pragma: no-cache");
+				header('Expires: Fri, 30 Oct 1998 14:19:41 GMT'); //in the past		
+				$this->externalRedirect( $loginData['redirectURL'] );
+			}else if ( $dbp->canRead() && $adminToDash ) {
+				$this->redirect('/dashboard');
+			} else {
+				//options set in dashboard/users/registration
+				$login_redirect_cid=intval(Config::get('LOGIN_REDIRECT_CID'));
+				$login_redirect_mode=Config::get('LOGIN_REDIRECT');		
 				
-			//redirect to custom page	
-			}elseif( $login_redirect_mode=='CUSTOM' && $login_redirect_cid > 0 ){ 
-				$redirectTarget = Page::getByID( $login_redirect_cid ); 
-				if(intval($redirectTarget->cID)>0) $this->redirect( $redirectTarget->getCollectionPath() );
-				else $this->redirect('/');		
-						
-			//redirect home
-			}else $this->redirect('/');
+				//redirect to user profile
+				if( $login_redirect_mode=='PROFILE' && ENABLE_USER_PROFILES ){ 			
+					$this->redirect( '/profile/', $u->uID ); 				
+					
+				//redirect to custom page	
+				}elseif( $login_redirect_mode=='CUSTOM' && $login_redirect_cid > 0 ){ 
+					$redirectTarget = Page::getByID( $login_redirect_cid ); 
+					if(intval($redirectTarget->cID)>0) $this->redirect( $redirectTarget->getCollectionPath() );
+					else $this->redirect('/');		
+							
+				//redirect home
+				}else $this->redirect('/');
+			}
 		}
 	}
 
@@ -314,7 +368,11 @@ class LoginController extends Controller {
 						$this->set('passwordChanged', true);
 						
 						$u = $ui->getUserObject();
-						$_POST['uName'] =  $u->getUserName();
+						if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
+							$_POST['uName'] =  $ui->getUserEmail();
+						} else {
+							$_POST['uName'] =  $u->getUserName();
+						}
 						$this->do_login();
 							
 						return;
