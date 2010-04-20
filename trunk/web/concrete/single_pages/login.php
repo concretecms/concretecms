@@ -107,6 +107,8 @@
 
 <? } else if ($invalidRegistrationFields == true) { ?>
 
+<div class="ccm-form">
+
 	<p><?=t('You must provide the following information before you may login.')?></p>
 	
 <form method="post" action="<?=$this->url('/login', 'do_login')?>">
@@ -135,7 +137,7 @@
 	</div>
 	
 </form>
-	
+</div>	
 
 <? } else { ?>
 
