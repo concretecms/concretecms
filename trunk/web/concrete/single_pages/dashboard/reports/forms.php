@@ -125,7 +125,17 @@ function deleteForm(dLink){
 					<td class="header"><?=t('Submitted Date')?></td>
 					<td class="header"><?=$dh->getLocalDateTime($answerSet['created'])?></td>
 				</tr>
-				<? 
+				<? if ($answerSet['uID'] > 0) { ?>
+				<tr>
+					<td class="subheader"><?=t('Submitted By User')?></td>
+					<td class="subheader"><? 
+						$ui = UserInfo::getByID($answerSet['uID']);
+						if (is_object($ui)) {
+							print $ui->getUserName();
+						}
+						print ' ' . t('(User ID: %s)', $answerSet['uID']);
+					} ?></td>
+				</tr>				<? 
 				$questionNumber=0;
 				$numQuestionsToShow=2;
 				foreach($questions as $questionId=>$question){ 
