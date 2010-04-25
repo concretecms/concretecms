@@ -88,7 +88,7 @@ class HtmlV2Helper extends HtmlHelper {
 				// The following code blocks are mostly copied straight from the CORE HtmlHelper
 				$v = View::getInstance();
 				
-				if (file_exists($v->getThemeDirectory() . '/' . $css->url)) { // checking the theme directory for it. It's just in the root.
+				if ($v->getThemeDirectory() != '' && file_exists($v->getThemeDirectory() . '/' . $css->url)) { // checking the theme directory for it. It's just in the root.
 					$css->file = $v->getThemePath() . '/' . $css->url;
 					$css->rel = $v->getThemePath() . '/';
 					$css->abs = $v->getThemeDirectory() . '/' . $css->url;
@@ -166,8 +166,8 @@ class HtmlV2Helper extends HtmlHelper {
 				
 				// The following code blocks are mostly copied straight from the CORE HtmlHelper
 				$v = View::getInstance();
-
-				if (file_exists($v->getThemeDirectory() . '/' . $js->url)) { // checking the theme directory for it. It's just in the root.
+				
+				if ($v->getThemeDirectory() != '' && file_exists($v->getThemeDirectory() . '/' . $js->url)) {
 					$js->file = $v->getThemePath() . '/' . $js->url;
 					$js->abs = $v->getThemeDirectory() . '/' . $js->url;
 				} else if ($pkgHandle != null) {

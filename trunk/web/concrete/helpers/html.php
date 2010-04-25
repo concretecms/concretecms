@@ -39,7 +39,7 @@ class HtmlHelper {
 		
 		$v = View::getInstance();
 		// checking the theme directory for it. It's just in the root.
-		if (file_exists($v->getThemeDirectory() . '/' . $file)) {
+		if ($v->getThemeDirectory() != '' && file_exists($v->getThemeDirectory() . '/' . $file)) {
 			$css->file = $v->getThemePath() . '/' . $file;
 		} else if ($pkgHandle != null) {
 			if (file_exists(DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file)) {
