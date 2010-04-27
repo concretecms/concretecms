@@ -88,6 +88,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function getMessageID() {return $this->msgID;}
 		public function getMessageUserID() {return $this->uID;}
 		public function getMessageAuthorObject() {return UserInfo::getByID($this->uAuthorID);}
+		public function getMessageUserToID() {return $this->uToID;}
 		public function getMessageRelevantUserID() {
 			if (is_object($this->mailbox)) {
 				if ($this->mailbox->getMailboxID() == UserPrivateMessageMailbox::MBTYPE_SENT) {
