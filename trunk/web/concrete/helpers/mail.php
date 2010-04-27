@@ -26,6 +26,7 @@ class MailHelper {
 	protected $subject = '';
 	public $body = '';
 	protected $template; 
+	protected $bodyHTML = false;
 	
 	public static function getMailerObject(){
 		Loader::library('3rdparty/Zend/Mail');
@@ -107,7 +108,9 @@ class MailHelper {
 	
 	public function getSubject() {return $this->subject;}
 	public function getBody() {return $this->body;}
-	
+	public function setBodyHTML($html) {
+		$this->bodyHTML = $html;
+	}	
 	public function enableMailResponseProcessing($importer, $data) {
 		foreach($this->to as $em) {
 			$importer->setupValidation($em[0], $data);
@@ -187,6 +190,9 @@ class MailHelper {
 				$mail->addTo($to[0], $to[1]);
 			}
 			$mail->setBodyText($this->body);
+			if ($this->bodyHTML != false) {
+				$mail->setBodyHTML($this->bodyHTML);
+			}
 			try {
 				$mail->send($transport);
 					
