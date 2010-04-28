@@ -37,7 +37,7 @@ foreach($users as $ui) {
 	echo("<td>{$ui->getUserName()}</td>");
 	echo("<td>{$ui->getUserEmail()}</td>");
 	echo("<td>{$ui->getUserDateAdded()}</td>");
-	echo("<td>{$ui->getUserNumLogins()}</td>");
+	echo("<td>{$ui->getNumLogins()}</td>");
 	foreach($attribs as $ak) {
 		echo("<td>" . $ui->getAttribute($ak, 'display') . "</td>");
 	}
