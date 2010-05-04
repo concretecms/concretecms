@@ -71,7 +71,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 			html += '<ul>';
 			
 			
-			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="280" id="menuEditLayout' + this.cvalID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + encodeURI(this.area) + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/layout_small.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
+			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="280" id="menuEditLayout' + this.cvalID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/layout_small.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
 			
 			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveUp' + this.cvalID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/icon_move_up.png)">' + ccmi18n.moveLayoutUp + '</span></a></li>';
 						
@@ -117,7 +117,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 		ccm_hideHighlighter();
 		this.highlightAreas(1);
 		this.servicesAjax = $.ajax({ 
-			url: CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + encodeURI(this.area) + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&task=move&direction=' + direction,
+			url: CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&task=move&direction=' + direction,
 			success: function(response){  
 				eval('var jObj='+response); 
 				if(parseInt(jObj.success)!=1){ 
