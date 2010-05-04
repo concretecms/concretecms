@@ -70,9 +70,9 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 			html += '<div class="ccm-menu-l"><div class="ccm-menu-r">';
 			html += '<ul>';
 			
-			
+			//the arHandle here should be encoded with encodeURIComponent(), but it leads to a double encoding issue in ccm.dialog.js 
 			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="280" id="menuEditLayout' + this.cvalID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/layout_small.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
-			
+
 			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveUp' + this.cvalID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/icon_move_up.png)">' + ccmi18n.moveLayoutUp + '</span></a></li>';
 						
 			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveDown' + this.cvalID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/icon_move_down.png)">' + ccmi18n.moveLayoutDown + '</span></a></li>';
@@ -116,8 +116,8 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 		this.moving=1;
 		ccm_hideHighlighter();
 		this.highlightAreas(1);
-		this.servicesAjax = $.ajax({ 
-			url: CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + this.area + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&task=move&direction=' + direction,
+		this.servicesAjax = $.ajax({  
+			url: CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(this.area) + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&task=move&direction=' + direction,
 			success: function(response){  
 				eval('var jObj='+response); 
 				if(parseInt(jObj.success)!=1){ 
@@ -433,7 +433,7 @@ var ccmLayoutEdit = {
 			
 			jQuery.fn.dialog.showLoader();
 			var area=$('#ccmAreaLayoutForm_arHandle').val(); 
-			var url = CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + encodeURI(area) + '&task=deletePreset&lpID=' + lpID
+			var url = CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(area) + '&task=deletePreset&lpID=' + lpID
 			$.get(url, function(r) {
 				eval('var jObj='+r); 
 				if(parseInt(jObj.success)!=1){ 

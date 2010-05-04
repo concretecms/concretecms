@@ -155,6 +155,8 @@ jQuery.fn.dialog.load = function(fnd) {
 		if (fnd.href.indexOf('?') > -1) {
 			qsi = '&';
 		}
+		
+		//this encodeURI may lead to double encoding problems, especially ampersands & spaces. recommend removal - Tony   
 		var durl = encodeURI(fnd.href) + qsi + 'random=' + (new Date().getTime());
 		
 		$.ajax({
