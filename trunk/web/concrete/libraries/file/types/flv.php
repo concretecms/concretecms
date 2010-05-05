@@ -23,12 +23,12 @@ class FlvFileTypeInspector extends FileTypeInspector {
 		@fseek($fp,8,SEEK_CUR);
 		$width = array_shift(unpack('d',strrev(fread($fp,8))));
 		
-		fseek($fp,9,SEEK_CUR);
-		@$height = array_shift(unpack('d',strrev(fread($fp,8))));
+		@fseek($fp,9,SEEK_CUR);
+		$height = array_shift(unpack('d',strrev(fread($fp,8))));
 		
 		$fv->setAttribute($at1, $duration);
 		$fv->setAttribute($at2, $width);
-		$fv->setAttribute($at3, $width);
+		$fv->setAttribute($at3, $height);
 				
 	}
 	
