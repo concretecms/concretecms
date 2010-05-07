@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
-<h1><span><?=t("Connect to the Community")?></span>
+<h1><span><?=t("Connect to the Community")?></span></h1>
 <div class="ccm-dashboard-inner">
 <? 
 	$mi = Marketplace::getInstance();
@@ -14,7 +14,7 @@
 	<?
 	
 	} else {
-		$mi->outputMarketplaceFrame();
+		print $mi->getMarketplaceFrame();
 	}
 ?>
 

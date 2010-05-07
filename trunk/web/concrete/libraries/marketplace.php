@@ -96,7 +96,7 @@ class Marketplace {
 		return $file;
 	}
 	
-	public function outputMarketplaceFrame($width = '100%', $height = '530', $completeURL = false) {
+	public function getMarketplaceFrame($width = '100%', $height = '530', $completeURL = false) {
 		// if $mpID is passed, we are going to either
 		// a. go to its purchase page
 		// b. pass you through to the page AFTER connecting.
@@ -115,7 +115,11 @@ class Marketplace {
 			}
 			$url = $url . '?ts=' . time() . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(SITE, ENT_QUOTES, APP_CHARSET);
 		}
-		print '<iframe id="ccm-marketplace-frame-' . time() . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+		if ($csToken == false) {
+			return '<div class="ccm-error">' . t('Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that curl is enabled on your server.') . '</div>';
+		} else {
+			return '<iframe id="ccm-marketplace-frame-' . time() . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+		}
 	}
 	
 	
