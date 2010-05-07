@@ -161,6 +161,23 @@ class MailHelper {
 			$this->to[] = array($email, $name);	
 		}
 	}
+
+	/*	
+	 * Sets the reply-to address on the email about to be sent out
+	 * @param string $email
+	 * @param string $name
+	 * @return void
+	 */
+	public function replyto($email, $name = null) {
+		if (strpos($email, ',') > 0) {
+			$email = explode(',', $email);
+			foreach($email as $em) {
+				$this->replyto[] = array($em, $name);
+			}
+		} else {
+			$this->replyto[] = array($email, $name);	
+		}
+	}
 		
 	/** 
 	 * Sends the email
@@ -169,6 +186,7 @@ class MailHelper {
 		$_from[] = $this->from;
 		$fromStr = $this->generateEmailStrings($_from);
 		$toStr = $this->generateEmailStrings($this->to);
+		$replyStr = $this->generateEmailStrings($this->replyto);
 		if (ENABLE_EMAILS) {
 			
 			$zendMailData = self::getMailerObject();
@@ -184,6 +202,16 @@ class MailHelper {
 				$from = array('concrete5-noreply@' . str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', BASE_URL), '');
 			}
 			
+			// The currently included Zend library has a bug in setReplyTo that
+			// adds the Reply-To address as a recipient of the email. We must
+			// set the Reply-To before any header with addresses and then clear
+			// all recipients so that a copy is not sent to the Reply-To address.
+			foreach ($this->replyto as $reply) {
+				$mail->setReplyTo($reply[0], $reply[1]);
+			}
+			$mail->clearRecipients();
+			
+
 			$mail->setFrom($from[0], $from[1]);
 			$mail->setSubject($this->subject);
 			foreach($this->to as $to) {
@@ -204,6 +232,9 @@ class MailHelper {
 					$l->write(t('Template Used') . ': ' . $this->template);
 					$l->write(t('To') . ': ' . $toStr);
 					$l->write(t('From') . ': ' . $fromStr);
+					if (isset($this->replyto)) {
+						$l->write(t('Reply-To') . ': ' . $replyStr);
+					}
 					$l->write(t('Subject') . ': ' . $this->subject);
 					$l->write(t('Body') . ': ' . $this->body);
 				}				
@@ -222,6 +253,9 @@ class MailHelper {
 			$l->write(t('Template Used') . ': ' . $this->template);
 			$l->write(t('To') . ': ' . $toStr);
 			$l->write(t('From') . ': ' . $fromStr);
+			if (isset($this->replyto)) {
+				$l->write(t('Reply-To') . ': ' . $replyStr);
+			}
 			$l->write(t('Subject') . ': ' . $this->subject);
 			$l->write(t('Body') . ': ' . $this->body);
 			$l->close();
