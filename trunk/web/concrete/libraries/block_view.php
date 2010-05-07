@@ -143,6 +143,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$this->area = $a;
 		}
 		
+		public function getThemePath() {
+			$v = View::getInstance();
+			return $v->getThemePath();
+		}
 		
 		/** 
 		 * Returns the template used in the block view
