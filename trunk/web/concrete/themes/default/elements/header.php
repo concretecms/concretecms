@@ -5,8 +5,8 @@
 <head>
 	
 <!-- Site Header Content //-->
-<link rel="stylesheet" media="screen" type="text/css" href="<?=$this->getStyleSheet('main.css')?>" />
-<link rel="stylesheet" media="screen" type="text/css" href="<?=$this->getStyleSheet('typography.css')?>" />
+<link rel="stylesheet" media="screen" type="text/css" href="<?=$this->getThemePath()?>/main.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="<?=$this->getThemePath()?>/typography.css" />
 
 <? Loader::element('header_required'); ?>
 
