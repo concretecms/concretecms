@@ -26,14 +26,23 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * Loads a library file, either from the site's files or from Concrete's
 		 */
 		public function library($lib, $pkgHandle = null) {
-			if ($pkgHandle) {
+		
+			if (file_exists(DIR_LIBRARIES . '/' . $lib . '.php')) {
+				require_once(DIR_LIBRARIES . '/' . $lib . '.php');
+				return;
+			}
+			
+			if ($pkgHandle == null && file_exists(DIR_LIBRARIES_CORE . '/' . $lib . '.php')) {
+				require_once(DIR_LIBRARIES_CORE . '/' . $lib . '.php');
+				return;
+			}
+			
+			if ($pkgHandle != null) {			
 				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
 				require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_LIBRARIES . '/' . $lib . '.php');
-			} else if (file_exists(DIR_LIBRARIES . '/' . $lib . '.php')) {
-				require_once(DIR_LIBRARIES . '/' . $lib . '.php');
-			} else {
-				require_once(DIR_LIBRARIES_CORE . '/' . $lib . '.php');
+				return;
 			}
+			
 		}
 
 		/** 
@@ -41,19 +50,22 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 */
 		public function model($mod, $pkgHandle = null) {
 			
-			$ret = Loader::legacyModel($mod);
-			if ($ret) {
+			if (file_exists(DIR_MODELS . '/' . $mod . '.php')) {
+				require_once(DIR_MODELS . '/' . $mod . '.php');
 				return;
 			}
 			
-			if ($pkgHandle) {
+			if ($pkgHandle == null && file_exists(DIR_MODELS_CORE . '/' . $mod . '.php')) {
+				require_once(DIR_MODELS_CORE . '/' . $mod . '.php');
+				return;
+			}
+			
+			if ($pkgHandle != null) {
 				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
 				require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . $mod . '.php');
-			} else if (file_exists(DIR_MODELS . '/' . $mod . '.php')) {
-				require_once(DIR_MODELS . '/' . $mod . '.php');
-			} else {
-				require_once(DIR_MODELS_CORE . '/' . $mod . '.php');
 			}
+			
+			Loader::legacyModel($mod);
 		}
 		
 		protected function legacyModel($model) {
@@ -436,14 +448,4 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return $controller;
 		}
 
-		/**
-		* Instantiates one of our Soap Client Singletons
-		*/		
-		public function soapClient($client) {			
-			Loader::library('soap_clients');
-			$client .= 'SoapClient';			
-			$api = call_user_func_array($client.'::getInstance',Array());					
-			$api->setup();
-			return $api;
-		}
 	}

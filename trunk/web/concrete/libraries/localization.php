@@ -17,6 +17,10 @@
 						$translate = new Zend_Translate('gettext', DIR_BASE . '/languages/' . LOCALE, LOCALE);
 					}
 				}
+				
+				if (!isset($translate)) {
+					$translate = false;
+				}
 			}
 			return $translate;
 		}
