@@ -13,7 +13,7 @@ class Backup {
 		$arr_tables = $db->getCol("SHOW TABLES FROM " . DB_DATABASE); 
 		foreach ($arr_tables as $bkuptable) {
 			$tableobj = new BackupTable($bkuptable);
-			$str_backupdata .= "DROP TABLE $bkuptable;\n\n";
+			$str_backupdata .= "DROP TABLE IF EXISTS $bkuptable;\n\n";
 			$str_backupdata .= $tableobj->str_createTableSql . "\n\n";
 			if ($tableobj->str_createTableSql != "" ) {
 				$str_backupdata .= $tableobj->str_insertionSql . "\n\n";
