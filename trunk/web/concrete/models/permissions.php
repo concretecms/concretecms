@@ -18,7 +18,7 @@ class PermissionsCache {
 	
 	function getIdentifier($obj) {
 		if (is_a($obj, "Page")) {
-			$id = $obj->getCollectionID();
+			$id = $obj->getPermissionsCollectionID();
 			$prefix = 'page';
 		} else if (is_a($obj, "Block")) {
 			$id = $obj->getBlockID();
