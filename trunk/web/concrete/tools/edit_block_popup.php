@@ -66,7 +66,7 @@ if (is_object($b)) {
 		case 'view_edit_mode':
 			if ($bp->canWrite()) {
 
-				$btc = Loader::controller($b);
+				$btc = $b->getInstance();
 				// now we inject any custom template CSS and JavaScript into the header
 				if('Controller' != get_class($btc)){
 					$btc->outputAutoHeaderItems();

@@ -363,8 +363,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		$db = Loader::db();
 		$csrs = array();
-		$r1 = $db->GetCol('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
-		$r2 = $db->GetCol('select csrID from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
+		$r1 = $db->GetCol('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($this->getCollectionID(), $this->getVersionID()));
+		$r2 = $db->GetCol('select csrID from CollectionVersionAreaStyles where cID = ? and cvID = ? and csrID > 0', array($this->getCollectionID(), $this->getVersionID()));
 		foreach($r1 as $csrID) {
 			$obj = CustomStyleRule::getByID($csrID);
 			if (is_object($obj)) {

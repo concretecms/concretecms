@@ -1982,22 +1982,6 @@ $ppWhere = '';
 		return $paths;
 	}
 
-	const BLOCK_HANDLE_GUEST 	= 'guestbook';
-	function populateGuestbookInformation(){
-		$this->guestbook_id = 0;
-		$blocks = $this->getBlocks();
-		foreach($blocks as $block){
-			if ($block->btHandle == self::BLOCK_HANDLE_GUEST){
-				$this->guestbook_id    = $block->bID;
-				$ca = new Cache();
-				$this->guestbook_count = $ca->get('GuestBookCount',$block->bID);
-				$this->guestbook_count = $this->guestbook_count ? $this->guestbook_count : '0';
-				
-				break; //break out of foreach after you've found a guestbook
-			}
-		}		
-	}
-
 	/*
 	 * returns an instance of the current page object 
 	 *
@@ -2008,5 +1992,3 @@ $ppWhere = '';
 	}
 
 }
-
-?>

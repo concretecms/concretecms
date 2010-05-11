@@ -103,6 +103,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return true;
 		}
 		
+		public function getBlockControllerData() {
+			return $this->record;
+		}
+		
 		/**
 		 * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
 		 * @param array $args
