@@ -277,11 +277,14 @@ class Block extends Object {
 	}
 	
 	public function getInstance() {
+		if (!is_object($this->instance->getBlockControllerData())) {
+			$this->instance = Loader::controller($this);
+		}
 		return $this->instance;
 	}
 	
 	public function getController() {
-		return $this->instance;
+		return $this->getInstance();
 	}
 	
 	function getCollectionList() {

@@ -722,7 +722,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				if ($view instanceof Page) {
 					$blocks = $view->getBlocks();
 					foreach($blocks as $b1) {
-						$btc = Loader::controller($b1);
+						$btc = $b1->getInstance();
 						// now we inject any custom template CSS and JavaScript into the header
 						if('Controller' != get_class($btc)){
 							$btc->outputAutoHeaderItems();
