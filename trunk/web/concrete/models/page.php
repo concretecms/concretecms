@@ -1904,13 +1904,6 @@ $ppWhere = '';
 
 			// run any internal event we have for page addition
 			Events::fire('on_page_add', $pc);
-
-			// if there is a path specified, we create a new collection object of the one we just made
-			// and rescan its path, to grab the path of its parent
-
-			if ($handle) {
-				$pc->rescanCollectionPath();
-			}
 		}
 		
 		return $pc;

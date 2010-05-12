@@ -213,6 +213,15 @@
 					// the collection is not the most recent version. We're not going to allow any writing to the collection
 					$cp->disableWrite();
 					break;
+				case COLLECTION_NOT_FOUND:
+					$v = View::getInstance();
+					$v->render('/page_not_found');
+					break;
+				case COLLECTION_FORBIDDEN:
+					$v = View::getInstance();
+					$v->setCollectionObject($c);
+					$v->render('/page_forbidden');
+					break;
 			}
 		}
 		
