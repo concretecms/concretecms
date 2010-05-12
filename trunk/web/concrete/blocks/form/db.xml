@@ -92,6 +92,10 @@
 		<field name="created" type="T">
 			<deftimestamp />
 		</field>
+		<field name="uID" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
 	</table>
 	
 	<table name="btFormAnswers">

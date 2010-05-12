@@ -1167,6 +1167,9 @@
     <index name="cID">
       <col>cID</col>
     </index>
+    <index name="ppIsCanonical">
+      <col>ppIsCanonical</col>
+    </index>
   </table>
   <table name="PageSearchIndex">
     <opt platform="MYSQL">ENGINE=MYISAM</opt>
