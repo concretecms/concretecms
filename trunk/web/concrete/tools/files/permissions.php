@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 $u = new User();
 $form = Loader::helper('form');
-
+$searchInstance = $_REQUEST['searchInstance'];
 $ih = Loader::helper('concrete/interface'); 
 $f = File::getByID($_REQUEST['fID']);
 $cp = new Permissions($f);
@@ -76,7 +76,7 @@ if ($_POST['task'] == 'set_advanced_permissions') {
 
 <h2><?=t('File Permissions')?></h2>
 
-<form method="post" id="ccm-file-permissions-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions/">
+<form method="post" id="ccm-<?=$searchInstance?>-permissions-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions/">
 <?=$form->hidden('task', 'set_advanced_permissions')?>
 <?=$form->hidden('fID', $f->getFileID())?>
 
@@ -176,9 +176,9 @@ $uArray = $ul->getUserInfoList();
 	<div class="ccm-buttons">
 	<? if ($f->overrideFileSetPermissions()) { ?>
 		<input type="hidden" name="fRevertToSetPermissions" id="fRevertToSetPermissions" value="0" />
-		<a href="javascript:void(0)" onclick="$('#fRevertToSetPermissions').val(1);ccm_alSubmitPermissionsForm()" class="ccm-button-left cancel"><span><?=t('Revert Permissions')?></span></a>
+		<a href="javascript:void(0)" onclick="$('#fRevertToSetPermissions').val(1);ccm_alSubmitPermissionsForm('<?=$searchInstance?>')" class="ccm-button-left cancel"><span><?=t('Revert Permissions')?></span></a>
 	<? } ?>
-	<?=$ih->button_js(t('Update'), 'ccm_alSubmitPermissionsForm()')?>
+	<?=$ih->button_js(t('Update'), 'ccm_alSubmitPermissionsForm(\'' . $searchInstance . '\')')?>
 	</div>
 
 
@@ -194,10 +194,10 @@ $uArray = $ul->getUserInfoList();
 
 <p><?=t('Leave the following form field blank in order to allow everyone to download this file.')?></p>
 
-<form method="post" id="ccm-file-password-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions/">
+<form method="post" id="ccm-<?=$searchInstance?>-password-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions/">
 <?=$form->hidden('task', 'set_password')?>
 <?=$form->hidden('fID', $f->getFileID())?>
-<?=$ih->button_js(t('Save Password'), 'ccm_alSubmitPasswordForm()')?>
+<?=$ih->button_js(t('Save Password'), 'ccm_alSubmitPasswordForm(\'' . $searchInstance . '\')')?>
 <?=$form->text('fPassword', $f->getPassword(), array('style' => 'width: 250px'))?>
 
 </form>
@@ -214,7 +214,7 @@ $uArray = $ul->getUserInfoList();
 
 <h2><?=t('Choose File Storage Location')?></h2>
 
-<form method="post" id="ccm-file-storage-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions/">
+<form method="post" id="ccm-<?=$searchInstance?>-storage-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions/">
 <?=$form->hidden('task', 'set_location')?>
 <?=$form->hidden('fID', $f->getFileID())?>
 <div><?=$form->radio('fslID', 0, $f->getStorageLocationID()) ?> <?=t('Default Location')?> (<?=DIR_FILES_UPLOADED?>)</div>
@@ -227,7 +227,7 @@ if (is_object($fsl)) { ?>
 </form>
 
 <div class="ccm-spacer">&nbsp;</div>
-<?=$ih->button_js(t('Save Location'), 'ccm_alSubmitStorageForm()')?>
+<?=$ih->button_js(t('Save Location'), 'ccm_alSubmitStorageForm(\'' . $searchInstance . '\')')?>
 <div class="ccm-spacer">&nbsp;</div>
 
 <br/>
@@ -322,8 +322,16 @@ $("#ccm-file-permissions-tabs a").click(function() {
 	
 	$(function() {
 		ccm_setupGridStriping('ccmPermissionsTable');
-		$("#ccm-file-password-form").submit(function() {
-			ccm_alSubmitPermissionsForm();
+		$("#ccm-<?=$searchInstance?>-storage-form").submit(function() {
+			ccm_alSubmitStorageForm('<?=$searchInstance?>');
+			return false;
+		});
+		$("#ccm-<?=$searchInstance?>-password-form").submit(function() {
+			ccm_alSubmitPasswordForm('<?=$searchInstance?>');
+			return false;
+		});
+		$("#ccm-<?=$searchInstance?>-permissions-form").submit(function() {
+			ccm_alSubmitPermissionsForm('<?=$searchInstance?>');
 			return false;
 		});
 	});
