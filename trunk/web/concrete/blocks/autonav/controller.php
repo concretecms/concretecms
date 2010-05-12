@@ -23,9 +23,10 @@
 	defined('C5_EXECUTE') or die(_("Access Denied."));
 	class AutonavBlockItem {
 
-		private $level;
-		private $isActive = false;
-		private $_c;
+		protected $level;
+		protected $isActive = false;
+		protected $_c;
+		public $hasChildren = false;
 		
 		/**
 		 * Instantiates an Autonav Block Item. 
@@ -50,7 +51,7 @@
 		 * @return int
 		 */
 		function hasChildren() {
-			return count($this->subNavigationItems);
+			return $this->hasChildren;
 		}
 		
 		/**
@@ -435,6 +436,14 @@
 		}
 
 		function getNavigationArray($cParentID, $orderBy, $currentLevel) {
+			// increment all items in the nav array with a greater $currentLevel
+			
+			foreach($this->navArray as $ni) {
+				if ($ni->getLevel() + 1 < $currentLevel) {
+					$ni->hasChildren = true;
+				}
+			}
+			
 			$db = Loader::db();
 			$navSort = $this->navSort;
 			$sorted_array = $this->sorted_array;

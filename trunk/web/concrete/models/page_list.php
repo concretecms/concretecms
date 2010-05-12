@@ -15,7 +15,7 @@ class PageList extends DatabaseItemList {
 	protected $includeAliases = true;
 	protected $displayOnlyPermittedPages = false;
 	protected $displayOnlyApprovedPages = true;
-	protected $systemPagesToExclude = array('login.php', 'register.php', 'download_file.php', 'profile/%', 'dashboard/%');
+	protected $systemPagesToExclude = array('login.php', 'page_not_found.php', 'page_forbidden.php','register.php', 'download_file.php', 'profile/%', 'dashboard/%');
 	protected $filterByCParentID = 0;
 	protected $filterByCT = false;
 	protected $ignorePermissions = false;
