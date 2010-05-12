@@ -3,7 +3,7 @@
 class CacheLocal {
 
 	public $cache = array();
-	public $enabled = false; // disabled because of weird annoying race conditions. This will slow things down but only if you don't have zend cache active.
+	public $enabled = true; // disabled because of weird annoying race conditions. This will slow things down but only if you don't have zend cache active.
 	
 	public static function get() {
 		static $instance;
@@ -86,7 +86,12 @@ class Cache {
 	public function set($type, $id, $obj, $expire = false) {
 		$loc = CacheLocal::get();
 		if ($loc->enabled) {
-			$loc->cache[Cache::key($type, $id)] = $obj;
+			if (is_object($obj)) {
+				$r = clone $obj;
+			} else {
+				$r = $obj;
+			}
+			$loc->cache[Cache::key($type, $id)] = $r;
 		}
 		$cache = Cache::getLibrary();
 		if (!$cache) {
