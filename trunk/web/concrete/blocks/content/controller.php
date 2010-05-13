@@ -97,6 +97,13 @@
 
 			// now we add in support for the files
 			
+			
+			$text = preg_replace_callback(
+				'/<img [^>]*src\s*=\s*"{CCM:FID_([0-9]+)}"[^>]*>/i',
+				array('ContentBlockController', 'replaceImageID'),				
+				$text);
+			
+			
 			$text = preg_replace_callback(
 				'/{CCM:FID_([0-9]+)}/i',
 				array('ContentBlockController', 'replaceFileID'),				
@@ -114,6 +121,27 @@
 			}
 		}
 
+		private function replaceImageID($match) {
+			$fID = $match[1];
+			if ($fID > 0) {
+				preg_match('/width\s*="([0-9]+)"/',$match[0],$matchWidth);
+				preg_match('/height\s*="([0-9]+)"/',$match[0],$matchHeight);
+				$file = File::getByID($fID);
+				$imgHelper = Loader::helper('image');
+				$maxWidth = ($matchWidth[1]) ? $matchWidth[1] : $file->width;
+				$maxHeight = ($matchHeight[1]) ? $matchHeight[1] : $file->height;
+				$thumb = $imgHelper->getThumbnail($file, $maxWidth, $maxHeight);
+				$r = preg_replace(
+				array(
+					'/{CCM:FID_([0-9]+)}/i'
+				),
+				array(
+					$thumb->src)
+				, $match[0]);
+				return $r;
+			}
+		}
+		
 		private function replaceFileIDInEditMode($match) {
 			$fID = $match[1];
 			return View::url('/download_file', 'view_inline', $fID);
