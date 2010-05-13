@@ -8,7 +8,9 @@ div.ccm-pagination span.ccm-page-right {position: absolute; top: 0px; right: 0px
 div.ccm-pagination span.ccm-page-left {position: absolute; top: 0px; left: 0px}
 
 /* Layout */ 
+/*
 .ccm-layout .ccm-layout-cell{ overflow:hidden; }
+*/
 .ccm-layout-table .ccm-layout-col {float:left}
 .ccm-layout .first .ccm-layout-col-spacing { margin-left:0px !important } 
 .ccm-layout .last .ccm-layout-col-spacing { margin-right:0px !important } 
