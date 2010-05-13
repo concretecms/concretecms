@@ -165,10 +165,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * @return void
 		 */
 		protected function load() {
-			$attribs = $this->record->getAttributeNames();
-			foreach($attribs as $key) {
-				$this->{$key} = $this->record->$key;
-				$this->set($key, $this->record->$key);
+			if (is_object($this->record)) {
+				foreach($this->record as $key => $value) {
+					$this->{$key} = $value;
+					$this->set($key, $value);
+				}
 			}
 		}
 		
@@ -220,6 +221,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if ($method) {
 				$this->task = $method;
 			}
+			$this->load();
 			if (method_exists($this, 'on_start')) {
 				call_user_func_array(array($this, 'on_start'), array($method));
 			}
