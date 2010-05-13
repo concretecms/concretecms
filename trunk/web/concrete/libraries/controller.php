@@ -391,7 +391,7 @@ class Controller {
 	 * Gets the current controller's page object.
 	 * @return Page
 	 */
-	public function getCollectionObject() {return $this->c;}
+	public function getCollectionObject() {$c = Page::getCurrentPage(); return $c;}
 	
 	/** 
 	 * Gets the current view for the controller (typically the page's handle)
