@@ -124,10 +124,12 @@
 			}
 			
 			if(count($errors)){
+				$txt = Loader::helper('text');
+
 				$E = new GuestBookBlockEntry($this->bID);
-				$E->user_name = $_POST['name'].'';
-				$E->user_email = $_POST['email'].'';
-				$E->commentText = $_POST['commentText'];
+				$E->user_name = $txt->sanitize($_POST['name']).'';
+				$E->user_email = $txt->sanitize($_POST['email']).'';
+				$E->commentText = $txt->sanitize($_POST['commentText']);
 				$E->uID			= $uID;
 				
 				$E->entryID = ($_POST['entryID']?$_POST['entryID']:NULL);
