@@ -59,7 +59,7 @@
 		}
 		
 		public function view() {
-		
+			$this->set('controller', $this);		
 		}
 		
 		public function __call($nm, $a) {
