@@ -1904,6 +1904,11 @@ $ppWhere = '';
 
 			// run any internal event we have for page addition
 			Events::fire('on_page_add', $pc);
+			
+			if ($handle) {
+				$pc->rescanCollectionPath();
+			}
+
 		}
 		
 		return $pc;
