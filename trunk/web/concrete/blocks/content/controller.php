@@ -95,18 +95,17 @@
 				array('ContentBlockController', 'replaceCollectionID'),				
 				$text);
 
-			// now we add in support for the files
-			
-			
-			$text = preg_replace_callback(
-				'/<img [^>]*src\s*=\s*"{CCM:FID_([0-9]+)}"[^>]*>/i',
-				array('ContentBlockController', 'replaceImageID'),				
-				$text);
-			
-			
+			// now we add in support for the files that we view inline			
 			$text = preg_replace_callback(
 				'/{CCM:FID_([0-9]+)}/i',
 				array('ContentBlockController', 'replaceFileID'),				
+				$text);
+
+			// now files we download
+			
+			$text = preg_replace_callback(
+				'/{CCM:FID_DL_([0-9]+)}/i',
+				array('ContentBlockController', 'replaceDownloadFileID'),				
 				$text);
 			
 
@@ -121,27 +120,14 @@
 			}
 		}
 
-		private function replaceImageID($match) {
+		private function replaceDownloadFileID($match) {
 			$fID = $match[1];
 			if ($fID > 0) {
-				preg_match('/width\s*="([0-9]+)"/',$match[0],$matchWidth);
-				preg_match('/height\s*="([0-9]+)"/',$match[0],$matchHeight);
-				$file = File::getByID($fID);
-				$imgHelper = Loader::helper('image');
-				$maxWidth = ($matchWidth[1]) ? $matchWidth[1] : $file->width;
-				$maxHeight = ($matchHeight[1]) ? $matchHeight[1] : $file->height;
-				$thumb = $imgHelper->getThumbnail($file, $maxWidth, $maxHeight);
-				$r = preg_replace(
-				array(
-					'/{CCM:FID_([0-9]+)}/i'
-				),
-				array(
-					$thumb->src)
-				, $match[0]);
-				return $r;
+				$c = Page::getCurrentPage();
+				return View::url('/download_file', 'view', $fID, $c->getCollectionID());
 			}
 		}
-		
+
 		private function replaceFileIDInEditMode($match) {
 			$fID = $match[1];
 			return View::url('/download_file', 'view_inline', $fID);
@@ -150,13 +136,8 @@
 		private function replaceCollectionID($match) {
 			$cID = $match[1];
 			if ($cID > 0) {
-				$path = Page::getCollectionPathFromID($cID);
-				if (URL_REWRITING == true) {
-					$path = DIR_REL . $path;
-				} else {
-					$path = DIR_REL . '/' . DISPATCHER_FILENAME . $path;
-				}
-				return $path;
+				$c = Page::getByID($cID, 'APPROVED');
+				return Loader::helper("navigation")->getLinkToCollection($c);
 			}
 		}
 		
@@ -167,14 +148,19 @@
 			$url3 = View::url('/download_file', 'view_inline');
 			$url3 = str_replace('/', '\/', $url3);
 			$url3 = str_replace('-', '\-', $url3);
+			$url4 = View::url('/download_file', 'view');
+			$url4 = str_replace('/', '\/', $url4);
+			$url4 = str_replace('-', '\-', $url4);
 			$text = preg_replace(
 				array(
 					'/' . $url1 . '\?cID=([0-9]+)/i', 
 					'/' . $url3 . '([0-9]+)\//i', 
+					'/' . $url4 . '([0-9]+)\//i', 
 					'/' . $url2 . '/i'),
 				array(
 					'{CCM:CID_\\1}',
 					'{CCM:FID_\\1}',
+					'{CCM:FID_DL_\\1}',
 					'{CCM:BASE_URL}')
 				, $text);
 			return $text;
