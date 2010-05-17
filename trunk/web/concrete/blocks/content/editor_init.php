@@ -58,13 +58,13 @@ ccm_chooseAsset = function(obj) {
 			
 			if(selectedText != '') { // make a link, let mce deal with the text of the link..
 				mceEd.execCommand('mceInsertLink', false, {
-					href : obj.filePath+CCM_CID,
+					href : obj.filePath,
 					title : obj.title,
 					target : null,
 					'class' :  null
 				});
 			} else { // insert a normal link
-				var html = '<a href="' + obj.filePath+CCM_CID + '">' + obj.title + '<\/a>';
+				var html = '<a href="' + obj.filePath + '">' + obj.title + '<\/a>';
 				tinyMCE.execCommand('mceInsertRawHTML', false, html, true); 
 			}
 		break;
