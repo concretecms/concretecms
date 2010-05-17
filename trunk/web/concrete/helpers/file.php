@@ -132,6 +132,7 @@ class FileHelper {
 	public function getTemporaryDirectory() {
 		if (!is_dir(DIR_TMP)) {
 			mkdir(DIR_TMP, 0777);
+			touch(DIR_TMP . '/index.html');
 		}
 		return DIR_TMP;
 		
