@@ -197,6 +197,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (!isset($this->controller)) {
 				if ($obj instanceof Block) {
 					$this->controller = $obj->getInstance();
+					$this->controller->setCollectionObject($b->getBlockCollectionObject());
 				} else {
 					$this->controller = Loader::controller($obj);
 				}
