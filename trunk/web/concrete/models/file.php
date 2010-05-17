@@ -416,13 +416,22 @@ class File extends Object {
 		return $db->getAll("SELECT * FROM DownloadStatistics WHERE fID = ? ORDER BY timestamp desc", array($this->getFileID()));
 	}
 	
-	public function trackDownload(){ 
+	
+	/**
+	 * Tracks File Download, takes the cID of the page that the file was downloaded from 
+	 * @param int $rcID
+	 * @return void
+	 */
+	public function trackDownload($rcID=NULL){ 
 		$u = new User();
 		$uID = intval( $u->getUserID() );
 		$fv = $this->getVersion();
 		$fvID = $fv->getFileVersionID();
+		if(!isset($rcID) || !is_numeric($rcID)) {
+			$rcID = 0;
+		}
 		
 		$db = Loader::db();
-		$db->Execute('insert into DownloadStatistics (fID, fvID, uID) values (?, ?, ?)',  array( $this->fID, intval($fvID), $uID ) );		
+		$db->Execute('insert into DownloadStatistics (fID, fvID, uID, rcID) values (?, ?, ?, ?)',  array( $this->fID, intval($fvID), $uID, $rcID ) );		
 	}
 }
