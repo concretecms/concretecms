@@ -10,7 +10,7 @@ class DownloadFileController extends Controller {
 		Loader::block('file');
 	}
 
-	public function view($fID = 0) {
+	public function view($fID = 0, $rcID=NULL) {
 		// get the block
 		if ($fID > 0) {
 			$file = File::getByID($fID);			
@@ -23,9 +23,10 @@ class DownloadFileController extends Controller {
 				
 				// if block password is blank download
 				if (!$file->getPassword()) {
-					return $this->download($file);			
+					return $this->download($file,$rcID);			
 				}
 				// otherwise show the form
+				$this->set('rcID',$rcID);
 				$this->set('fID', $fID);
 				$this->set('filename', $file->getFilename());
 				$this->set('filesize', filesize( $file->getPath() ) );
@@ -58,12 +59,12 @@ class DownloadFileController extends Controller {
 		$this->view($fID);
 	}
 	
-	private function download($file) {
+	private function download($file,$rcID=NULL) {
 		//$mime_type = finfo_file(DIR_FILES_UPLOADED."/".$filename);
 		//header('Content-type: $mime_type');
 		// everything else lets just download
 		$filename = $file->getFilename();
-		$file->trackDownload();
+		$file->trackDownload($rcID);
 		$ci = Loader::helper('file');
 		$ci->forceDownload($file->getPath());		
 	}

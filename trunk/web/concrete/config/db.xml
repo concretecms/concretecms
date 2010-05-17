@@ -620,6 +620,10 @@
       <NOTNULL/>
       <UNSIGNED />
     </field>
+    <field name="rcID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED />
+    </field>
     <field name="timestamp" type="T">
       <NOTNULL/>
       <DEFTIMESTAMP/>

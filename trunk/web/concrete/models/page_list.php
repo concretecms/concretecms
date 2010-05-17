@@ -48,6 +48,7 @@ class PageList extends DatabaseItemList {
 	public function includeSystemPages() {
 		$this->includeSystemPages = true;
 	}
+	
 	public function displayUnapprovedPages() {
 		$this->displayOnlyApprovedPages = false;
 	}
