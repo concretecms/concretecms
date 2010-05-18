@@ -206,8 +206,10 @@ class MailHelper {
 			// adds the Reply-To address as a recipient of the email. We must
 			// set the Reply-To before any header with addresses and then clear
 			// all recipients so that a copy is not sent to the Reply-To address.
-			foreach ($this->replyto as $reply) {
-				$mail->setReplyTo($reply[0], $reply[1]);
+			if(is_array($this->replyto)) {
+				foreach ($this->replyto as $reply) {
+					$mail->setReplyTo($reply[0], $reply[1]);
+				}
 			}
 			$mail->clearRecipients();
 			
