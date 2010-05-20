@@ -29,6 +29,10 @@ class HtmlBlockController extends BlockController {
 		$this->set('content', $this->content); 
 	} 
 	
+	public function getSearchableContent() {
+		return $this->content;
+	}
+	
 	public function save($data) { 
 		$args['content'] = isset($data['content']) ? $data['content'] : '';
 		parent::save($args);
