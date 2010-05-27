@@ -256,11 +256,13 @@ class LoginController extends Controller {
 			$loginData['redirectURL'] = $rcID;
 		}
 		
+		/*
 		//full page login redirect (non-ajax login)
 		if( strlen($loginData['redirectURL']) && $_REQUEST['format']!='JSON' ){ 
 			header('Location: ' . $loginData['redirectURL']);
 			exit;	
 		}
+		*/
 		
 		//not sure why there's this second redirect approach, but oh well...
 		if ($this->post('redirect') != '' && $this->isValidExternalUrl($this->post('redirect'))) {
@@ -268,7 +270,7 @@ class LoginController extends Controller {
 		}
 		
 		$dash = Page::getByPath("/dashboard", "RECENT");
-		$dbp = new Permissions($dash);		
+		$dbp = new Permissions($dash);
 		
 		Events::fire('on_user_login',$this);
 		
