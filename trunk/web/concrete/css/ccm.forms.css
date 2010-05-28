@@ -24,6 +24,7 @@ div.ccm-pane-controls div.ccm-field-one {width: 280px; float: left; margin-right
 div.ccm-pane-controls div.ccm-field-two {width: 280px; float: left; padding-bottom: 8px}
 div.ccm-note { font-size:10px; color:#999999; font-weight:normal }
 div.ccm-block-field-note {font-size: 10px; padding-top: 3px; color: #999}
+div.ccm-note-important {border: 1px solid #777; padding: 8px; background-color: #DBEEF3}
 
 /* meta dropdown */
 /*
