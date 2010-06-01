@@ -53,8 +53,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * @access private
 		 */
 		public function renderElement($element, $args = array()) {
-			extract($args);
-			include(DIR_FILES_ELEMENTS_CORE . '/' . $element . '.php');
+			Loader::element($element, $args);
 		}
 		
 		/**
