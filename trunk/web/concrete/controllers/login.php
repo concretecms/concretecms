@@ -264,11 +264,6 @@ class LoginController extends Controller {
 		}
 		*/
 		
-		//not sure why there's this second redirect approach, but oh well...
-		if ($this->post('redirect') != '' && $this->isValidExternalUrl($this->post('redirect'))) {
-			$loginData['redirectURL']=$this->post('redirect');
-		}
-		
 		$dash = Page::getByPath("/dashboard", "RECENT");
 		$dbp = new Permissions($dash);
 		

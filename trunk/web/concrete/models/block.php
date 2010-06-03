@@ -279,7 +279,10 @@ class Block extends Object {
 	public function getInstance() {
 		if (!is_object($this->instance->getBlockControllerData())) {
 			$this->instance = Loader::controller($this);
+		} else {
+			$this->instance->__construct();
 		}
+		
 		return $this->instance;
 	}
 	

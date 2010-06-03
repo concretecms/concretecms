@@ -186,6 +186,33 @@
 		// or whether they display them, but then restrict them when the page is actually visited
 		// TODO - Implement displayUnavailablePages in the btNavigation table, and in the frontend of the autonav block
 
+		function __construct($obj = null) {
+			if (is_object($obj)) {
+				switch(strtolower(get_class($obj))) {
+					case "blocktype":
+						// instantiating autonav on a particular collection page, instead of adding
+						// it through the block interface
+						$this->bID = null;
+						$c = Page::getCurrentPage();
+						if (is_object($c)) {
+							$this->cID = $c->getCollectionID();
+							$this->cParentID = $c->getCollectionParentID();
+						}
+						break;
+					case "block": // block
+						// standard block object
+						$this->bID = $obj->bID;
+						$cobj = $obj->getBlockCollectionObject();
+						$this->cID = ($cobj->getCollectionPointerID()) ? $cobj->getCollectionPointerOriginalID() : $cobj->getCollectionID();
+						$this->displayCID = $cobj->getCollectionID();
+						$this->cParentID = $cobj->cParentID;
+						break;
+				}
+			}
+			
+			parent::__construct($obj);
+		}
+		
 		function save($args) {
 			$args['displayPagesIncludeSelf'] = isset($args['displayPagesIncludeSelf']) ? 1 : 0;
 			$args['displayPagesCID'] = isset($args['displayPagesCID']) ? $args['displayPagesCID'] : 0;
@@ -253,13 +280,9 @@
 			}
 			$level = 0;
 			$cParentID = 0;
-			
-			$c = Page::getCurrentPage();
-			$cID = ($c->getCollectionPointerID()) ? $c->getCollectionPointerOriginalID() : $c->getCollectionID();
-			
 			switch($this->displayPages) {
 				case 'current':
-					$cParentID = $c->getCollectionParentID();
+					$cParentID = $this->cParentID;
 					if ($cParentID < 1) {
 						$cParentID = 1;
 					}
@@ -272,7 +295,7 @@
 					$cParentID = $this->getParentParentID();
 					break;
 				case 'below':
-					$cParentID = $c->getCollectionID();
+					$cParentID = $this->cID;
 					break;
 				case 'second_level':
 					$cParentID = $this->getParentAtLevel(2);
@@ -318,7 +341,7 @@
 				*/
 				
 				if ($this->displaySubPages == 'relevant' || $this->displaySubPages == 'relevant_breadcrumb') {
-					$this->populateParentIDArray($cID);
+					$this->populateParentIDArray($this->cID);
 				}
 				
 				$this->getNavigationArray($cParentID, $orderBy, $level);
@@ -368,10 +391,8 @@
 			// this function works in the following way
 			// we go from the current collection up to the top level. Then we find the parent Id at the particular level specified, and begin our
 			// autonav from that point
-			
-			$c = Page::getCurrentPage();
-			$cID = ($c->getCollectionPointerID()) ? $c->getCollectionPointerOriginalID() : $c->getCollectionID();
-			$this->populateParentIDArray($cID);
+
+			$this->populateParentIDArray($this->cID);
 
 			$idArray = array_reverse($this->cParentIDArray);
 			$this->cParentIDArray = array();
@@ -379,7 +400,7 @@
 				// This means that the parent ID array is one less than the item
 				// we're trying to grab - so we return our CURRENT page as the item to get
 				// things under
-				return $cID;
+				return $this->cID;
 			}
 			
 			if (isset($idArray[$level])) {
@@ -424,9 +445,6 @@
 			}
 			
 			$db = Loader::db();
-			$c = Page::getCurrentPage();
-			$cID = ($c->getCollectionPointerID()) ? $c->getCollectionPointerOriginalID() : $c->getCollectionID();
-			
 			$navSort = $this->navSort;
 			$sorted_array = $this->sorted_array;
 			$navObjectNames = $this->navObjectNames;
@@ -436,7 +454,7 @@
 			$r = $db->query($q);
 			if ($r) {
 				while ($row = $r->fetchRow()) {
-					if ($this->displaySubPages != 'relevant_breadcrumb' || (in_array($row['cID'], $this->cParentIDArray) || $row['cID'] == $cID)) {
+					if ($this->displaySubPages != 'relevant_breadcrumb' || (in_array($row['cID'], $this->cParentIDArray) || $row['cID'] == $this->cID)) {
 						/*
 						if ($this->haveRetrievedSelf) {
 							// since we've already retrieved self, and we're going through again, we set plus 1
@@ -444,9 +462,9 @@
 						} else 
 						*/
 						
-						if ($this->haveRetrievedSelf && $cParentID == $cID) {
+						if ($this->haveRetrievedSelf && $cParentID == $this->cID) {
 							$this->haveRetrievedSelfPlus1 = true;
-						} else if ($row['cID'] == $cID) {
+						} else if ($row['cID'] == $this->cID) {
 							$this->haveRetrievedSelf = true;
 						}
 						
@@ -501,7 +519,7 @@
 								if ($this->displaySubPageLevels == 'all' || ($this->displaySubPageLevels == 'custom' && $this->displaySubPageLevelsNum > $currentLevel)) {
 									$retrieveMore = true;
 								}
-							} else if (($this->displaySubPages == "relevant" || $this->displaySubPages == "relevant_breadcrumb") && (in_array($sortCID, $this->cParentIDArray) || $sortCID == $cID)) {
+							} else if (($this->displaySubPages == "relevant" || $this->displaySubPages == "relevant_breadcrumb") && (in_array($sortCID, $this->cParentIDArray) || $sortCID == $this->cID)) {
 								if ($this->displaySubPageLevels == "enough" && $this->haveRetrievedSelf == false) {
 									$retrieveMore = true;
 								} else if ($this->displaySubPageLevels == "enough_plus1" && $this->haveRetrievedSelfPlus1 == false) {
@@ -541,7 +559,7 @@
 								if ($this->displaySubPageLevels == 'all' || ($this->displaySubPageLevels == 'custom' && $this->displaySubPageLevelsNum > $currentLevel)) {
 									$retrieveMore = true;
 								}
-							} else if (($this->displaySubPages == "relevant" || $this->displaySubPages == "relevant_breadcrumb") && (in_array($sortCID, $this->cParentIDArray) || $sortCID == $cID)) {
+							} else if (($this->displaySubPages == "relevant" || $this->displaySubPages == "relevant_breadcrumb") && (in_array($sortCID, $this->cParentIDArray) || $sortCID == $this->cID)) {
 								if ($this->displaySubPageLevels == "enough" && $this->haveRetrievedSelf == false) {
 									$retrieveMore = true;
 								} else if ($this->displaySubPageLevels == "enough_plus1" && $this->haveRetrievedSelfPlus1 == false) {
@@ -573,7 +591,7 @@
 								if ($this->displaySubPageLevels == 'all' || ($this->displaySubPageLevels == 'custom' && $this->displaySubPageLevelsNum > $currentLevel)) {
 									$retrieveMore = true;
 								}
-							} else if (($this->displaySubPages == "relevant" || $this->displaySubPages == "relevant_breadcrumb") && (in_array($sortCID, $this->cParentIDArray) || $sortCID == $cID)) {
+							} else if (($this->displaySubPages == "relevant" || $this->displaySubPages == "relevant_breadcrumb") && (in_array($sortCID, $this->cParentIDArray) || $sortCID == $this->cID)) {
 								if ($this->displaySubPageLevels == "enough" && $this->haveRetrievedSelf == false) {
 									$retrieveMore = true;
 								} else if ($this->displaySubPageLevels == "enough_plus1" && $this->haveRetrievedSelfPlus1 == false) {
@@ -614,8 +632,7 @@
 		 */
 		function getParentParentID() {
 			// this has to be the stupidest name of a function I've ever created. sigh
-			$c = Page::getCurrentPage();
-			$cParentID = Page::getCollectionParentIDFromChildID($c->getCollectionParentID());
+			$cParentID = Page::getCollectionParentIDFromChildID($this->cParentID);
 			return ($cParentID) ? $cParentID : 0;
 		}
 	}
