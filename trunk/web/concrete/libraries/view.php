@@ -696,6 +696,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				
 				if (is_object($this->c)) {
 					$c = $this->c;
+					if (is_object($db) && $view == '/page_not_found') {
+						$view = $c;
+					}
 				}
 				
 				// Determine which outer item/theme to load
