@@ -352,6 +352,10 @@ define('DIR_AL_ICONS', DIR_BASE_CORE . '/images/icons/filetypes');
 define('REL_DIR_AL_ICONS', ASSETS_URL_IMAGES . '/icons/filetypes');
 define('AL_ICON_DEFAULT', ASSETS_URL_IMAGES . '/icons/filetypes/default.png');
 
+if (!defined('AL_THUMBNAIL_JPEG_COMPRESSION')){ 
+	define('AL_THUMBNAIL_JPEG_COMPRESSION', 80); 
+}
+
 # This is the max size of any image in the system
 define('IMAGE_MAX_WIDTH','1200'); // this is the max - can't be any higher, this overrides area settings
 define('IMAGE_MAX_HEIGHT','1200');

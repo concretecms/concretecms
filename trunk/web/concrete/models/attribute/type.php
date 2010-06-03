@@ -187,7 +187,7 @@ class AttributeType extends Object {
 		}
 	}
 	
-	protected function loadController() {
+	protected function loadController() { 
 		// local scope
 		$atHandle = $this->atHandle;
 		$txt = Loader::helper('text');
