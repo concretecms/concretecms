@@ -167,9 +167,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		protected function load() {
 			if (is_object($this->record)) {
 				foreach($this->record as $key => $value) {
-					if (empty($this->{$key})) {
-						$this->{$key} = $value;
-					}
+					$this->{$key} = $value;
 					$this->set($key, $value);
 				}
 			}
