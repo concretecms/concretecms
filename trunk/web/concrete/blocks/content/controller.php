@@ -7,6 +7,7 @@
 		protected $btTable = 'btContentLocal';
 		protected $btInterfaceWidth = "600";
 		protected $btInterfaceHeight = "465";
+		protected $btCacheBlockRecord = true;
 		
 		public function getBlockTypeDescription() {
 			return t("HTML/WYSIWYG Editor Content.");

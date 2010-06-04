@@ -276,15 +276,15 @@ class Block extends Object {
 		return @call_user_func_array(array($bc, $method), array());
 	}
 	
-	public function getInstance() {
-		if (!is_object($this->instance->getBlockControllerData())) {
-			$this->instance = Loader::controller($this);
-		} else {
+	public function getInstance() {		
+		if ($this->instance->cacheBlockRecord() && is_object($this->instance->getBlockControllerData())) {
 			$this->instance->__construct();
-		}
-		
+		} else {
+			$this->instance = Loader::controller($this);
+		}		
 		return $this->instance;
 	}
+	
 	
 	public function getController() {
 		return $this->getInstance();
