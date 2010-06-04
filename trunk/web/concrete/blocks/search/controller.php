@@ -8,6 +8,7 @@ class SearchBlockController extends BlockController {
 	protected $btTable = 'btSearch';
 	protected $btInterfaceWidth = "400";
 	protected $btInterfaceHeight = "170";
+	protected $btCacheBlockRecord = true;
 	
 	public $title = "";
 	public $buttonText = ">"; 

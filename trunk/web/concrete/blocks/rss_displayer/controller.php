@@ -6,6 +6,7 @@
 
 		protected $btTable = 'btRssDisplay';
 		protected $btInterfaceWidth = "400";
+		protected $btCacheBlockRecord = true;
 		protected $btInterfaceHeight = "170";
 		
 		public $itemsToDisplay = "5";

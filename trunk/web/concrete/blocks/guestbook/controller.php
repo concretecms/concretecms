@@ -26,6 +26,7 @@
 		protected $btTable = 'btGuestBook';
 		protected $btInterfaceWidth = "300";
 		protected $btInterfaceHeight = "260";	
+		protected $btCacheBlockRecord = true;
 		
 		protected $btIncludeAll = 1;
 		

@@ -14,6 +14,7 @@
 		protected $btInterfaceWidth = 300;
 		protected $btInterfaceHeight = 200;
 		protected $btTable = 'btVideo';
+		protected $btCacheBlockRecord = true;
 		
 		public $width  = '';
 		public $height = '';

@@ -5,6 +5,7 @@
 
 		protected $btTable = 'btPageList';
 		protected $btInterfaceWidth = "500";
+		protected $btCacheBlockRecord = true;
 		protected $btInterfaceHeight = "350";
 		
 		/** 
