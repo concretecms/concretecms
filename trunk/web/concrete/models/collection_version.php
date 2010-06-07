@@ -243,9 +243,7 @@
 			$r = $db->query($q2, $v2);
 			
 			// next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection
-			if (($oldHandle != $newHandle) && (!$c->isGeneratedCollection())) {
-				$c->rescanCollectionPath();
-			}
+			$c->rescanCollectionPath();
 			Events::fire('on_page_version_approve', $c);
 			$c->reindex();
 			$this->refreshCache();

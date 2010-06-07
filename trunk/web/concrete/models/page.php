@@ -1468,6 +1468,9 @@ $ppWhere = '';
 		if (!$r) return;
 
 		$row = $r->fetchRow();
+		if (!$row['cvHandle']) {
+			$row['cvHandle'] = $row['cID'];
+		}
 		if ($row['cvHandle']) {
 			$origPath = $cPath . '/' . $row['cvHandle'];
 
@@ -1904,10 +1907,7 @@ $ppWhere = '';
 
 			// run any internal event we have for page addition
 			Events::fire('on_page_add', $pc);
-			
-			if ($handle) {
-				$pc->rescanCollectionPath();
-			}
+			$pc->rescanCollectionPath();
 
 		}
 		
@@ -1954,13 +1954,9 @@ $ppWhere = '';
 		}
 			
 
-		if ($handle) {
-			$pc = Page::getByID($cID);
-			$pc->rescanCollectionPath();
-		}
-		
-		$collection = Page::getByID($cID);
-		return $collection;
+		$pc = Page::getByID($cID);
+		$pc->rescanCollectionPath();
+		return $pc;
 				
 	}
 	
