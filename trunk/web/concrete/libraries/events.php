@@ -125,6 +125,8 @@ class Events {
 
 		$ce = Events::getInstance();
 		$events = $ce->registeredEvents[$event];
+		$eventReturn = false;
+		
 		if (is_array($events)) {
 			foreach($events as $ev) {
 				$type = $ev[0];
@@ -157,11 +159,13 @@ class Events {
 					$params = array_merge($args, $params);
 	
 					if (method_exists($ev[1], $ev[2])) {
-						return call_user_func_array(array($ev[1], $ev[2]), $params);
-					}				
+						// Note: DO NOT DO RETURN HERE BECAUSE THEN MULTIPLE EVENTS WON'T WORK
+						$eventReturn = call_user_func_array(array($ev[1], $ev[2]), $params);
+					}
 				}
 			}
-		}
+		}		
+		return $eventReturn;
 	}
 }
 
