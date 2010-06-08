@@ -166,10 +166,6 @@
 		}
 		
 		function save($data) {
-			$b = $this->getBlockObject();
-			if (is_object($b)) {
-				Cache::delete('content_block_content', $b->getBlockID());
-			}			
 			$content = $this->translateTo($data['content']);
 			$args['content'] = $content;
 			parent::save($args);

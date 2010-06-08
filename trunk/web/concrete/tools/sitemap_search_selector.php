@@ -8,8 +8,8 @@ if (!$sh->canRead()) {
 ?>
 <div>
 
-<link href="<?=ASSETS_URL_CSS?>/ccm.sitemap.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.sitemap.js"></script>
+<?=Loader::helper('html')->css('ccm.sitemap.css')?>
+<?=Loader::helper('html')->javascript('ccm.sitemap.js')?>
 
 
 <script type="text/javascript">
