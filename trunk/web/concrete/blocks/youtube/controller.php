@@ -6,7 +6,6 @@
 		 
 		protected $btTable = 'btYouTube';
 		protected $btInterfaceWidth = "400";
-		protected $btCacheBlockRecord = true;
 		protected $btInterfaceHeight = "170";
 		
 		public $title = '';

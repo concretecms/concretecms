@@ -194,12 +194,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$btHandle = $obj->getBlockTypeHandle();
 			
 			if (!isset($this->controller)) {
-				if ($obj instanceof Block) {
-					$this->controller = $obj->getInstance();
-					$this->controller->setCollectionObject($b->getBlockCollectionObject());
-				} else {
-					$this->controller = Loader::controller($obj);
-				}
+				$this->controller = Loader::controller($obj);
 			}
 			if (in_array($view, array('view', 'add', 'edit'))) {
 				$_action = $view;

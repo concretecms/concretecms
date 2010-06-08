@@ -7,8 +7,7 @@
 		protected $btTable = 'btGoogleMap';
 		protected $btInterfaceWidth = "400";
 		protected $btInterfaceHeight = "220";
-		protected $btCacheBlockRecord = true;
-		
+
 		public $title = "";
 		public $api_key = "";
 		public $location = "";

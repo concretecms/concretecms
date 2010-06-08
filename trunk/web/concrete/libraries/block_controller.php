@@ -38,8 +38,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		protected $btInterfaceWidth = "400";
 		protected $btInterfaceHeight = "400";
 		protected $btHasRendered = false;
-		protected $btCacheBlockRecord = false;
-		
 		public $headerItems = array();
 
 		protected $identifier;
@@ -105,10 +103,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return true;
 		}
 		
-		public function getBlockControllerData() {
-			return $this->record;
-		}
-		
 		/**
 		 * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
 		 * @param array $args
@@ -151,10 +145,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$this->__construct();
 		}
 		
-		public function cacheBlockRecord() {
-			return $this->btCacheBlockRecord;
-		}
-		
 		
 		/**
 		 * Automatically run when a block is deleted. This removes the special data from the block's specific database table. If a block needs to do more than this this method should be overridden.
@@ -171,11 +161,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * @return void
 		 */
 		protected function load() {
-			if (is_object($this->record)) {
-				foreach($this->record as $key => $value) {
-					$this->{$key} = $value;
-					$this->set($key, $value);
-				}
+			$attribs = $this->record->getAttributeNames();
+			foreach($attribs as $key) {
+				$this->{$key} = $this->record->$key;
+				$this->set($key, $this->record->$key);
 			}
 		}
 		
@@ -226,9 +215,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		public function setupAndRun($method) {
 			if ($method) {
 				$this->task = $method;
-			}
-			if ($this->btCacheBlockRecord) {
-				$this->load();
 			}
 			if (method_exists($this, 'on_start')) {
 				call_user_func_array(array($this, 'on_start'), array($method));
