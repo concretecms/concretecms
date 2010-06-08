@@ -21,8 +21,8 @@ $searchRequest = $pageList->getSearchRequest();
 ?>
 
 <? if (!$sitemapCombinedMode) { ?>
-	<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm.sitemap.js"></script>
-	<script type="text/javascript" src="<?=ASSETS_URL_CSS?>/ccm.sitemap.css"></script>
+<?=Loader::helper('html')->css('ccm.sitemap.css')?>
+<?=Loader::helper('html')->javascript('ccm.sitemap.js')?>
 <? } ?>
 <script type="text/javascript">$(function() {
 	ccm_sitemapSetupSearch('<?=$searchInstance?>');

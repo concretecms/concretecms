@@ -21,9 +21,9 @@ if (isset($message)) { ?>
 activateInstallForm = function() {
 	$("#ccm-install-form input").each(function() {
 		$(this).attr('disabled', false);
-		$('#ccm-form-intro').html('<?=$introMsg?>');
-		$("#ccm-form-intro").removeClass('ccm-error');
 	});
+	$('#ccm-form-intro').html('<?=$introMsg?>');
+	$("#ccm-form-intro").removeClass('ccm-error');
 }
 
 <? if ($this->controller->passedRequiredItems()) { ?>
