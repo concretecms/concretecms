@@ -6,7 +6,6 @@
 		protected $btInterfaceWidth = 300;
 		protected $btInterfaceHeight = 440;
 		protected $btTable = 'btContentImage';
-		protected $btCacheBlockRecord = true;
 
 		/** 
 		 * Used for localization. If we want to localize the name/description we have to include this

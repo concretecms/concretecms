@@ -6,7 +6,6 @@ class FormBlockController extends BlockController {
 	public $btQuestionsTablename = 'btFormQuestions';
 	public $btAnswerSetTablename = 'btFormAnswerSet';
 	public $btAnswersTablename = 'btFormAnswers'; 	
-	protected $btCacheBlockRecord = true;
 	public $btInterfaceWidth = '420';
 	public $btInterfaceHeight = '430';
 	public $thankyouMsg=''; 

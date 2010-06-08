@@ -4,7 +4,6 @@
 		
 		protected $btTable = 'btExternalForm';
 		protected $btInterfaceWidth = "300";
-		protected $btCacheBlockRecord = true;
 		protected $btInterfaceHeight = "200";
 		public $helpers = array('file');
 		
