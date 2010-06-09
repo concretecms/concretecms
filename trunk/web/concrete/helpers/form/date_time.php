@@ -136,9 +136,12 @@ class FormDateTimeHelper {
 			$html .= '>PM</option>';
 			$html .= '</select>';
 		}
+		if (LOCALE != 'en_US') {
+			$dateFormat = "dateFormat: 'yy-mm-dd',";
+		}
 		$html .= '</span>';
 		if ($calendarAutoStart) { 
-			$html .= '<script type="text/javascript">$(function() { $("#' . $id . '_dt").datepicker({ changeYear: true, showAnim: \'fadeIn\' }); });</script>';
+			$html .= '<script type="text/javascript">$(function() { $("#' . $id . '_dt").datepicker({ ' . $dateFormat . ' changeYear: true, showAnim: \'fadeIn\' }); });</script>';
 		}
 		// first we add a calendar input
 		
@@ -193,9 +196,12 @@ EOS;
 		//$id = preg_replace("/[^0-9A-Za-z-]/", "_", $prefix);
 		$html = '';
 		$html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '" name="' . $field . '" class="ccm-input-date" value="' . $dt . '"  /></span>';
+		if (LOCALE != 'en_US') {
+			$dateFormat = "dateFormat: 'yy-mm-dd',";
+		}
 
 		if ($calendarAutoStart) { 
-			$html .= '<script type="text/javascript">$(function() { $("#' . $id . '").datepicker({ changeYear: true, showAnim: \'fadeIn\' }); });</script>';
+			$html .= '<script type="text/javascript">$(function() { $("#' . $id . '").datepicker({ ' . $dateFormat . ' changeYear: true, showAnim: \'fadeIn\' }); });</script>';
 		}
 		return $html;
 	
