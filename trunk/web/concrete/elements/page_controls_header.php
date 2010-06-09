@@ -38,6 +38,7 @@ $this->addHeaderItem($html->javascript('jquery.colorpicker.js'));
 	
 if (LANGUAGE != 'en') {
 	$this->addHeaderItem($html->javascript('i18n/ui.datepicker-' . LANGUAGE . '.js'));
+	$this->addHeaderItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');
 }
 
 $this->addHeaderItem($html->javascript('ccm.dialog.js'));
