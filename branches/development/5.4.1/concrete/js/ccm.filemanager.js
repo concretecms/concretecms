@@ -338,6 +338,28 @@ ccm_alDeleteFiles = function(searchInstance) {
 	});
 }
 
+ccm_alDuplicateFiles = function(searchInstance) {
+	$("#ccm-" + searchInstance + "-duplicate-form").ajaxSubmit(function(resp) {
+		ccm_parseJSON(resp, function() {	
+			jQuery.fn.dialog.closeTop();
+			ccm_deactivateSearchResults(searchInstance);
+			var r = eval('(' + resp + ')');
+
+			$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
+				ccm_parseAdvancedSearchResponse(resp, searchInstance);
+				var highlight = new Array();
+				for (i = 0; i < r.fID.length; i++ ){
+					fID = r.fID[i];
+					ccm_uploadedFiles.push(fID);
+					highlight.push(fID);
+				}
+				ccm_alRefresh(highlight, searchInstance);
+				ccm_filesUploadedDialog(searchInstance);				
+			});
+		});
+	});
+}
+
 ccm_alSetupSelectFiles = function() {
 	$('.ccm-file-list').unbind();
 	$('.ccm-file-list').click(function(e){
@@ -418,6 +440,15 @@ ccm_alSetupCheckboxes = function(searchInstance) {
 					modal: false,
 					href: CCM_TOOLS_PATH + '/files/delete?' + fIDstring + '&searchInstance=' + searchInstance,
 					title: ccmi18n_filemanager.deleteFile				
+				});
+				break;
+			case "duplicate":
+				jQuery.fn.dialog.open({
+					width: 500,
+					height: 400,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/files/duplicate?' + fIDstring + '&searchInstance=' + searchInstance,
+					title: ccmi18n_filemanager.duplicateFile				
 				});
 				break;
 			case "sets":
@@ -714,6 +745,9 @@ ccm_alActivateMenu = function(obj, e) {
 		if ($(obj).attr('ccm-file-manager-can-replace') == '1') {
 			html += '<li><a class="ccm-icon dialog-launch" dialog-modal="false" dialog-width="300" dialog-height="250" dialog-title="' + ccmi18n_filemanager.replace + '" id="menuFileReplace' + fID + '" href="' + CCM_TOOLS_PATH + '/files/replace?searchInstance=' + searchInstance + '&fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/paste_small.png)">'+ ccmi18n_filemanager.replace + '<\/span><\/a><\/li>';
 		}
+		if ($(obj).attr('ccm-file-manager-can-duplicate') == '1') {
+			html += '<li><a class="ccm-icon" id="menuFileDuplicate' + fID + '" onclick="ccm_alDuplicateFile(' + fID + ',\'' + searchInstance + '\')"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">'+ ccmi18n_filemanager.duplicate + '<\/span><\/a><\/li>';
+		}
 		html += '<li><a class="ccm-icon dialog-launch" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.sets + '" id="menuFileSets' + fID + '" href="' + CCM_TOOLS_PATH + '/files/add_to?searchInstance=' + searchInstance + '&fID=' + fID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/window_new.png)">'+ ccmi18n_filemanager.sets + '<\/span><\/a><\/li>';
 		if ($(obj).attr('ccm-file-manager-can-admin') == '1' || $(obj).attr('ccm-file-manager-can-delete') == '1') {
 			html += '<li class="header"></li>';
@@ -767,6 +801,27 @@ toggleCheckboxStatus = function(form) {
 		checkbox_status = true;	
 	}
 }	
+
+ccm_alDuplicateFile = function(fID, searchInstance) {
+	var postStr = 'fID=' + fID + '&searchInstance=' + searchInstance;
+	
+	$.post(CCM_TOOLS_PATH + '/files/duplicate', postStr, function(resp) {
+		console.log(resp);
+		var r = eval('(' + resp + ')');
+		
+		if (r.error == 1) {
+		 	ccmAlert.notice(ccmi18n.error, r.message);		
+		 	return false;
+		 }
+		
+		
+		var highlight = new Array();
+		highlight.push(fID);
+		ccm_alRefresh(highlight, searchInstance);
+		ccm_uploadedFiles.push(fID);
+		ccm_filesUploadedDialog(searchInstance);
+	});
+}
 
 ccm_alSelectMultipleIncomingFiles = function(obj) {
 	if ($(obj).attr('checked')) {

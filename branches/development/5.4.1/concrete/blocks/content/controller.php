@@ -18,21 +18,7 @@
 		}
 		
 		function getContent() {
-			$b = $this->getBlockObject();
-			$content != false;
-			
-			if (is_object($b)) {
-				$content = Cache::get('content_block_content', $b->getBlockID());
-			}
-			if ($content != false) {
-				return $content;
-			}
-			
 			$content = $this->translateFrom($this->content);
-
-			if (is_object($b)) {
-				Cache::set('content_block_content', $b->getBlockID(), $text);
-			}
 			return $content;				
 		}
 		
@@ -181,10 +167,6 @@
 		}
 		
 		function save($data) {
-			$b = $this->getBlockObject();
-			if (is_object($b)) {
-				Cache::delete('content_block_content', $b->getBlockID());
-			}			
 			$content = $this->translateTo($data['content']);
 			$args['content'] = $content;
 			parent::save($args);
