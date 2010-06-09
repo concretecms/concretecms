@@ -130,7 +130,9 @@ ccm_alSubmitSetsForm = function(searchInstance) {
 	$("#ccm-" + searchInstance + "-add-to-set-form").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
 		$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
-			ccm_parseAdvancedSearchResponse(resp, searchInstance);
+			$("#ccm-" + searchInstance + "-sets-search-wrapper").load(CCM_TOOLS_PATH + '/files/search_sets_reload', {'searchInstance': searchInstance}, function() {
+				ccm_parseAdvancedSearchResponse(resp, searchInstance);
+			});
 		});
 	});
 }
@@ -167,8 +169,11 @@ ccm_alSubmitPermissionsForm = function(searchInstance) {
 
 		
 ccm_alSetupSetsForm = function(searchInstance) {
+	// activate file set search
+	$('#fsAddToSearchName').liveUpdate('ccm-file-search-add-to-sets-list', 'fileset');
+
 	// Setup the tri-state checkboxes
-	$("div.ccm-file-set-add-cb a").each(function() {
+	$(".ccm-file-set-add-cb a").each(function() {
 		var cb = $(this);
 		var startingState = cb.attr("ccm-tri-state-startup");
 		$(this).click(function() {
@@ -490,23 +495,30 @@ ccm_alSetupCheckboxes = function(searchInstance) {
 	});
 
 	// activate the file sets checkboxes
-	$("div.ccm-" + searchInstance + "-search-advanced-sets-cb input[type=checkbox]").unbind();
-	$("div.ccm-" + searchInstance + "-search-advanced-sets-cb input[type=checkbox]").click(function() {
+	ccm_alSetupFileSetSearch(searchInstance);
+
+}
+
+ccm_alSetupFileSetSearch = function(searchInstance) {
+	$(".ccm-" + searchInstance + "-search-advanced-sets-cb input[type=checkbox]").unbind();
+	$(".ccm-" + searchInstance + "-search-advanced-sets-cb input[type=checkbox]").click(function() {
 		$("input[name=fsIDNone][instance=" + searchInstance + "]").attr('checked', false);
 		$("#ccm-" + searchInstance + "-advanced-search").submit();
 	});
 	
+	// activate file set search
+	$('div.ccm-file-sets-search-wrapper-input input').liveUpdate('ccm-file-search-advanced-sets-list', 'fileset');
+	
 	$("input[name=fsIDNone][instance=" + searchInstance + "]").unbind();
 	$("input[name=fsIDNone][instance=" + searchInstance + "]").click(function() {
 		if ($(this).attr('checked')) {
-			$("div.ccm-" + searchInstance + "-search-advanced-sets-cb input[type=checkbox]").attr('checked', false);
-			$("div.ccm-" + searchInstance + "-search-advanced-sets-cb input[type=checkbox]").attr('disabled', true);
+			$(".ccm-" + searchInstance + "-search-advanced-sets-cb input[type=checkbox]").attr('checked', false);
+			$(".ccm-" + searchInstance + "-search-advanced-sets-cb input[type=checkbox]").attr('disabled', true);
 		} else {
-			$("div.ccm-" + searchInstance + "-search-advanced-sets-cb input[type=checkbox]").attr('disabled', false);
+			$(".ccm-" + searchInstance + "-search-advanced-sets-cb input[type=checkbox]").attr('disabled', false);
 		}
 		$("#ccm-" + searchInstance + "-advanced-search").submit();
 	});
-
 }
 
 ccm_alGetSelectedFileIDs = function(searchInstance) {
@@ -806,7 +818,6 @@ ccm_alDuplicateFile = function(fID, searchInstance) {
 	var postStr = 'fID=' + fID + '&searchInstance=' + searchInstance;
 	
 	$.post(CCM_TOOLS_PATH + '/files/duplicate', postStr, function(resp) {
-		console.log(resp);
 		var r = eval('(' + resp + ')');
 		
 		if (r.error == 1) {

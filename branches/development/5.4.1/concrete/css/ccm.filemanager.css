@@ -8,6 +8,14 @@ div.ccm-file-list-thumbnail-hover div {display: none;z-index: 105;position: abso
 #ccm-file-list-multiple-operations {font-size: 10px}
 table.ccm-results-list th.ccm-file-list-starred, table.ccm-results-list td.ccm-file-list-starred {padding: 0 4px 0 0;margin:0; text-align: center;}
 
+div.ccm-file-sets-search-wrapper-input {background: transparent url(../images/icons/search.png) no-repeat scroll 8px 4px; padding-left: 32px}
+div.ccm-file-sets-search-wrapper-input input {width: 100px; font-size: 10px}
+table#ccm-file-search-advanced-sets-header {margin-bottom: 12px}
+table#ccm-file-search-advanced-sets-header h2, table#ccm-file-search-advanced-sets-header h1 {margin: 0px}
+div.ccm-file-search-advanced-sets-results {max-height: 200px; overflow: auto; border: 2px solid rgba(200,200,200,0.2); padding: 4px}
+div.ccm-file-search-advanced-sets-results ul, div.ccm-file-search-advanced-sets-results li {margin: 0px; padding: 0px; list-style-type: none}
+
+
 /* file permissions */
 div.ccm-file-access-add-extensions-header {border-top: 1px solid #cecece; border-left: 1px solid #cecece; border-right: 1px solid #cecece; background: #D3E4F0; padding: 4px}
 div.ccm-file-access-extensions {border: 1px solid #cecece; padding: 4px; height: 120px; overflow: auto; margin-bottom: 20px}
@@ -31,8 +39,9 @@ img.ccm-generic-thumbnail {border: 0px}
 div#ccm-file-add-to-set-tab h2 {margin-bottom: 10px}
 div#ccm-file-add-to-set-tab hr {border: 0px; background: #aaa; margin: 8px 0px 8px 0px; height: 1px}
 
-div.ccm-file-set-add-cb {margin-top: 8px}
-div.ccm-file-set-add-cb img {vertical-align: middle;}
+div.ccm-file-search-advanced-sets-results li.ccm-file-set-add-cb {margin-bottom: 8px}
+
+.ccm-file-set-add-cb img {vertical-align: middle;}
 
 /* properties */
 div#ccm-file-properties table th {white-space: nowrap;}
