@@ -52,7 +52,7 @@ div.ccm-search-field input, div.ccm-search-field select, div.ccm-search-field td
 #ccm-search-fields-submit {text-align: right; padding-top: 8px}
 
 /* properties */
-td.ccm-attribute-editable-field-central {border-right: 0px}
+td.ccm-attribute-editable-field-central {border-right: 0px !important; padding-right: 40px}
 img.ccm-attribute-editable-field-save-button {display: none}
 img.ccm-attribute-editable-field-loading {display: none}
  div.ccm-attribute-field-none {color: #aaa;}
