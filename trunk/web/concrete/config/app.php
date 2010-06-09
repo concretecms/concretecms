@@ -46,6 +46,10 @@ if (!defined('DATE_APP_GENERIC_MDYT')) {
 	define('DATE_APP_GENERIC_MDYT', t('n/j/Y \a\t g:i A'));
 }
 
+if (LOCALE != 'en_US') {
+	define('DATE_APP_GENERIC_MDY', 'Y-m-d');
+}
+
 if (!defined('DATE_APP_GENERIC_MDY')) {
 	define('DATE_APP_GENERIC_MDY', t('n/j/Y'));
 }
