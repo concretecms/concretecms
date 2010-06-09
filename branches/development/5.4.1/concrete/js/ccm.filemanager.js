@@ -588,43 +588,30 @@ ccm_filesUploadedDialog = function(searchInstance) {
 	for( var i=0; i< ccm_uploadedFiles.length; i++ )
 		fIDstring=fIDstring+'&fID[]='+ccm_uploadedFiles[i];
 	jQuery.fn.dialog.open({
-		width: 350,
-		height: 120,
-		modal: false,
+		width: 630,
+		height: 550,
+		modal: true,
 		href: CCM_TOOLS_PATH + '/files/add_to_complete/?'+fIDstring + '&searchInstance=' + searchInstance,
 		title: ccmi18n_filemanager.uploadComplete				
 	});
 	ccm_uploadedFiles=[];
 }
-ccm_filesApplySetsToUploaded = function(fIDs, searchInstance) {
-	var fIDstring='';
-	for( var i=0; i< fIDs.length; i++ )
-		fIDstring=fIDstring+'&fID[]='+fIDs[i];	
-	jQuery.fn.dialog.open({
-		width: 500,
-		height: 400,
-		modal: false,
-		href: CCM_TOOLS_PATH + '/files/add_to?' + fIDstring + '&searchInstance=' + searchInstance,
-		title: ccmi18n_filemanager.sets				
+
+ccm_alSetupUploadDetailsForm = function(searchInstance) {
+	$("#ccm-" + searchInstance + "-update-uploaded-details-form").submit(function() {
+		ccm_alSubmitUploadDetailsForm(searchInstance);
+		return false;
 	});
 }
-ccm_filesApplyPropertiesToUploaded = function(fIDs, searchInstance) {
-	var fIDstring='',url='/files/bulk_properties?',popupW=630,popupH=450; 
-	if(fIDs.length==1){
-		fIDstring='&fID='+fIDs[0];
-		url='/files/properties?';
-		popupW=500
-		popupH=400; 
-	}else{	
-		for( var i=0; i< fIDs.length; i++ )
-			fIDstring=fIDstring+'&fID[]='+fIDs[i];		
-	}
-	jQuery.fn.dialog.open({
-		width: popupW,
-		height: popupH,
-		modal: false,
-		href: CCM_TOOLS_PATH + url + fIDstring + '&searchInstance=' + searchInstance,
-		title: ccmi18n_filemanager.properties				
+
+ccm_alSubmitUploadDetailsForm = function(searchInstance) {
+	$("#ccm-" + searchInstance + "-update-uploaded-details-form").ajaxSubmit(function() {
+		jQuery.fn.dialog.closeTop();
+		$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
+			$("#ccm-" + searchInstance + "-sets-search-wrapper").load(CCM_TOOLS_PATH + '/files/search_sets_reload', {'searchInstance': searchInstance}, function() {
+				ccm_parseAdvancedSearchResponse(resp, searchInstance);
+			});
+		});
 	});
 }
 
