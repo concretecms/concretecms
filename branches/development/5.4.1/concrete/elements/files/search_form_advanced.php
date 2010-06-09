@@ -35,8 +35,6 @@ foreach($t1 as $value) {
 	$types[$value] = FileType::getGenericTypeText($value);
 }
 
-$s1 = FileSet::getMySets();
-
 ?>
 
 <? $form = Loader::helper('form'); ?>
@@ -234,20 +232,8 @@ $s1 = FileSet::getMySets();
 	
 </div>
 
-<? if (count($s1) > 0) { ?>
-
-<div id="ccm-search-advanced-sets">
-	<h2><?=t('Filter by File Set')?></h2>
-	<div style="max-height: 200px; overflow: auto">
-	<? foreach($s1 as $fs) { ?>
-		<div class="ccm-<?=$searchInstance?>-search-advanced-sets-cb"><?=$form->checkbox('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetID(), (is_array($searchRequest['fsID']) && in_array($fs->getFileSetID(), $searchRequest['fsID'])))?> <?=$form->label('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetName())?></div>
-	<? } ?>
-	</div>
-	
-	<hr/>
-	
-	<div><?=$form->checkbox('fsIDNone', '1', $searchRequest['fsIDNone'] == 1, array('instance' => $searchInstance))?> <?=$form->label('fsIDNone', t('Display files in no sets.'))?></div>
+<div id="ccm-<?=$searchInstance?>-sets-search-wrapper">
+	<? Loader::element('files/search_form_sets', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest)) ?>
 </div>
 
-<? } ?>
 </form>	

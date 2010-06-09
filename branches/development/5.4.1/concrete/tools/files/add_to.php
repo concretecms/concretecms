@@ -133,7 +133,25 @@ $(function() {
 <? foreach($files as $f) { ?>
 	<input type="hidden" name="fID[]" value="<?=$f->getFileID();?>" />
 <? } ?>
-<h1><?=t('File Sets')?></h1>
+
+	<div style="margin-top: 12px">
+	<table border="0" cellspacing="0" cellpadding="0" id="ccm-file-search-advanced-sets-header">
+	<tr>
+		<td width="100%"><h1><?=t('Set')?></h1></td>
+		<td>
+
+		<div class="ccm-file-sets-search-wrapper-input">
+			<?=$form->text('fsAddToSearchName', $searchRequest['fsSearchName'], array('autocomplete' => 'off'))?>
+		</div>
+		
+		</td>
+	</tr>
+	</table>
+	</div>
+
+	<div class="ccm-file-search-advanced-sets-results">
+	<ul id="ccm-file-search-add-to-sets-list">
+
 
 <? $s1 = FileSet::getMySets(); ?>
 <? foreach($sets as $s) { 
@@ -153,12 +171,15 @@ $(function() {
 	if ($displaySet) {
 	?>
 
-	<div class="ccm-file-set-add-cb">
-		<?=checkbox('fsID', $s->getFileSetID(), $s->state)?> <?=$s->getFileSetName()?>
-	</div>
+	<li class="ccm-file-set-add-cb">
+		<?=checkbox('fsID', $s->getFileSetID(), $s->state)?> <label><?=$s->getFileSetName()?></label>
+	</li>
 <? } 
+} ?>
 
-}?>
+	</ul>
+	</div>
+
 
 <? if (count($extensions) > 1) { ?>
 
@@ -171,7 +192,7 @@ $(function() {
 
 <h2><?=t('Add to New Set')?></h2>
 
-<?=$form->checkbox('fsNew', 1)?> <?=$form->text('fsNewText', array('style' => 'width: 250px'))?> <?=$form->checkbox('fsNewShare', 1, true)?> <?=t('Make set public')?>
+<?=$form->checkbox('fsNew', 1)?> <?=$form->text('fsNewText', array('style' => 'width: 250px', 'onclick' => '$(\'input[name=fsNew]\').attr(\'checked\',true)'))?> <?=$form->checkbox('fsNewShare', 1, true)?> <?=t('Make set public')?>
 
 <br/><br/>
 <?
