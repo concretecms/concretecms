@@ -11,7 +11,7 @@ if (count($s1) > 0) { ?>
 	<div>
 	<table border="0" cellspacing="0" cellpadding="0" id="ccm-file-search-advanced-sets-header">
 	<tr>
-		<td width="100%"><h2><?=t('Set')?></h2></td>
+		<td width="100%"><h2><?=t('Sets')?></h2></td>
 		<td>
 
 		<div class="ccm-file-sets-search-wrapper-input">
@@ -41,10 +41,14 @@ if (count($s1) > 0) { ?>
 	<? } ?>
 	</ul>
 	</div>
+
+	<div style="padding-left: 6px; padding-top: 6px" class="ccm-note"><?=$form->checkbox('fsIDNone', '1', $searchRequest['fsIDNone'] == 1, array('instance' => $searchInstance))?> <?=$form->label('fsIDNone', t('Display files in no sets.'))?></div>
 	
-	<hr/>
+	<hr />
 	
-	<div><?=$form->checkbox('fsIDNone', '1', $searchRequest['fsIDNone'] == 1, array('instance' => $searchInstance))?> <?=$form->label('fsIDNone', t('Display files in no sets.'))?></div>
+	<h2><?=t('Saved Searches')?></h2>
+	
+	
 </div>
 
 	<script type="text/javascript">
