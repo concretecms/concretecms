@@ -20,6 +20,26 @@ div.ccm-file-search-advanced-sets-results li input {position: absolute; top: 0px
 div.ccm-file-search-advanced-sets-results li div.ccm-file-search-advanced-set-controls {display: none; position: absolute; top: 0px; right: 0px; z-index: 10}
 div.ccm-file-search-advanced-sets-results li:hover div.ccm-file-search-advanced-set-controls {display: block}
 
+ul.ccm-file-set-file-list {margin: 0px; padding: 0px}
+ul.ccm-file-set-file-list li {
+	width: 100px;
+	min-height: 80px;   
+	border: 2px solid #aaa;
+	border-radius: 6px;
+	padding: 6px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	display: -moz-inline-stack;
+	display: inline-block;
+	vertical-align: top;
+	margin: 5px;
+	zoom: 1;
+	text-align: center;
+	*display: inline;
+	_height: 250px;
+}
+
+ul.ccm-file-set-file-list span {font-size: 9px; display: block}
 
 /* file permissions */
 div.ccm-file-access-add-extensions-header {border-top: 1px solid #cecece; border-left: 1px solid #cecece; border-right: 1px solid #cecece; background: #D3E4F0; padding: 4px}

@@ -32,7 +32,7 @@ if (count($s1) > 0) { ?>
 		?>
 		<li class="ccm-<?=$searchInstance?>-search-advanced-sets-cb">
 		<div class="ccm-file-search-advanced-set-controls">
-			<a href="<?=View::url('/dashboard/files/sets', 'file_sets_edit_or_delete', $fs->getFileSetID())?>"><?=$html->image('icons/wrench.png')?></a>
+			<a href="<?=View::url('/dashboard/files/sets', 'view_detail', $fs->getFileSetID())?>"><?=$html->image('icons/wrench.png')?></a>
 			<? if ($pfs->canDeleteFileSet()) { ?>
 				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete_set?fsID=<?=$fs->getFileSetID()?>&searchInstance=<?=$searchInstance?>" class="ccm-file-set-delete-window" dialog-title="<?=t('Delete File Set')?>" dialog-width="320" dialog-height="200" dialog-modal="false"><?=$html->image('icons/delete_small.png')?></a>
 			<? } ?>
