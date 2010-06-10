@@ -1,10 +1,4 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
-<script type="text/javascript">
-$(function() {
-	ccm_alSetupSetsForm('<?=$searchInstance?>');
-});
-</script>
-
 <? $form = Loader::helper('form'); ?>
 <?
 
@@ -77,9 +71,60 @@ foreach($s1 as $fs) {
 	$fs->state = $state;
 	$sets[] = $fs;
 }
+
+
+if ($_POST['task'] == 'add_to_sets') {
+	
+	foreach($_POST as $key => $value) {
+	
+		if (preg_match('/fsID:/', $key)) {
+			$fsIDst = explode(':', $key);
+			$fsID = $fsIDst[1];
+			
+			// so the affected file set is $fsID, the state of the thing is $value
+			$fs = FileSet::getByID($fsID);
+			$fsp = new Permissions($fs);
+			if ($fsp->canAddFile($f)) {
+				switch($value) {
+					case '0':
+						foreach($files as $f) {
+							$fs->removeFileFromSet($f);
+						}
+						break;
+					case '1':
+						// do nothing
+						break;
+					case '2':
+						foreach($files as $f) {
+							$fs->addFileToSet($f);
+						}
+						break;
+				}		
+			}			
+		}
+	}
+
+	if ($_POST['fsNew']) {
+		$type = ($_POST['fsNewShare'] == 1) ? FileSet::TYPE_PUBLIC : FileSet::TYPE_PRIVATE;
+		$fs = FileSet::createAndGetSet($_POST['fsNewText'], $type);
+		//print_r($fs);
+		foreach($files as $f) {
+			$fs->addFileToSet($f);
+		}
+	}
+	exit;
+}
 ?>
+
+<script type="text/javascript">
+$(function() {
+	ccm_alSetupSetsForm('<?=$searchInstance?>');
+});
+</script>
+
+
 <? if (!$disableForm) { ?>
-	<form method="post" id="ccm-<?=$searchInstance?>-add-to-set-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/add_to/">
+	<form method="post" id="ccm-<?=$searchInstance?>-add-to-set-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/add_to/" onsubmit="return ccm_alSubmitSetsForm('<?=$searchInstance?>')">
 	<?=$form->hidden('task', 'add_to_sets')?>
 	<? foreach($files as $f) { ?>
 		<input type="hidden" name="fID[]" value="<?=$f->getFileID();?>" />
@@ -152,7 +197,7 @@ foreach($s1 as $fs) {
 	<br/><br/>
 	<?
 	$h = Loader::helper('concrete/interface');
-	$b1 = $h->button_js(t('Update'), 'ccm_alSubmitSetsForm(\'' . $searchInstance . '\')', 'left');
+	$b1 = $h->submit(t('Update'), false, 'left');
 	print $b1;
 	?>
 	</form>

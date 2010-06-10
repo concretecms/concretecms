@@ -30,9 +30,10 @@ class ConcreteInterfaceHelper {
 	 * @return string
 	 */
 	public function submit($text, $formID, $buttonAlign = 'right', $innerClass = null, $args = array()) {
-		$onclick = '$(\'#' . $formID . '\').get(0).submit()';
-		$href = "javascript:void(0)";
-		return $this->generateButton($href, $onclick, $text, $buttonAlign, $innerClass, $args);
+		if ($buttonAlign == 'right') {
+			$align = 'style="float: right"';
+		}
+		return '<input type="submit" class="ccm-button-v2" value="' . $text . '" id="ccm-submit-' . $formID . '" name="ccm-submit-' . $formID . '" ' . $align . ' />';
 	}
 	
 	/** 
@@ -45,7 +46,10 @@ class ConcreteInterfaceHelper {
 	 * @return string
 	 */
 	public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = array(), $onclick='') { 
-		return $this->generateButton($href, $onclick, $text, $buttonAlign, $innerClass, $args);
+		if ($buttonAlign == 'right') {
+			$align = 'style="float: right"';
+		}
+		return '<input type="button" class="ccm-button-v2" value="' . $text . '" onclick="window.location.href=\'' . $href . '\'" ' . $align . ' />';
 	}
 
 	/** 
@@ -53,39 +57,16 @@ class ConcreteInterfaceHelper {
 	 * @param string $text The text of the button
 	 * @param string $onclick
 	 * @param string $buttonAlign
-	 * @param string $innerClass
+	 * @param string $innerClass - no longer used
 	 * @param array $args Extra args passed to the link
 	 * @return string
 	 */
 	public function button_js($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = array()) {
 		$href = 'javascript:void(0)';
-		return $this->generateButton($href, $onclick, $text, $buttonAlign, $innerClass, $args);
-	}
-	
-	protected function generateButton($href, $onclick, $text, $buttonAlign, $innerClass, $args) {
-		switch($buttonAlign) {
-			case "left";
-				$class = 'ccm-button';
-				break;
-			default: 
-				$class = 'ccm-button-right';
-				break;
+		if ($buttonAlign == 'right') {
+			$align = 'style="float: right"';
 		}
-		if (count($args) > 0) {
-			$attr = '';
-			foreach($args as $key => $val) {
-				$attr .= $key . '="' . $val . '" ';
-			}
-		}
-		$html = '<a href="' . $href . '" onclick="' . $onclick . '" class="' . $class . '" ' . $attr . '><span>';
-		if ($innerClass != null) {
-			$html .= '<em class="' . $innerClass . '">' . $text . '</em>';
-		} else {
-			$html .= $text;
-		}
-		$html .= '</span></a>';
-		return $html;
-	
+		return '<input type="button" class="ccm-button-v2" value="' . $text . '" onclick="' . $onclick . '" ' . $align . ' />';
 	}
 	
 	/** 
