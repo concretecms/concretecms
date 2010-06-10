@@ -158,6 +158,11 @@ class HtmlHelper {
 				$width = $s[0];
 				$height = $s[1];
 				$src = DIR_REL . '/' . DIRNAME_IMAGES . '/' . $src;
+			} else if (file_exists(DIR_BASE_CORE . '/' . DIRNAME_IMAGES . '/' . $src)) {
+				$s = getimagesize(DIR_BASE_CORE . '/'  . DIRNAME_IMAGES . '/' . $src);
+				$width = $s[0];
+				$height = $s[1];
+				$src = ASSETS_URL_IMAGES . '/' . $src;
 			}
 		}
 		

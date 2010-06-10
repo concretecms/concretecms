@@ -29,9 +29,12 @@ class ConcreteInterfaceHelper {
 	 * @param array $args Extra args passed to the link
 	 * @return string
 	 */
-	public function submit($text, $formID, $buttonAlign = 'right', $innerClass = null, $args = array()) {
+	public function submit($text, $formID = false, $buttonAlign = 'right', $innerClass = null, $args = array()) {
 		if ($buttonAlign == 'right') {
 			$align = 'style="float: right"';
+		}
+		if (!$formID) {
+			$formID = 'button';
 		}
 		$argsstr = '';
 		foreach($args as $k => $v) {

@@ -169,7 +169,7 @@ $(function() {
 	if ($displaySet) {
 	?>
 
-	<li class="ccm-file-set-add-cb">
+	<li class="ccm-file-set-add-cb" style="padding-left: 0px">
 		<?=checkbox('fsID', $s->getFileSetID(), $s->state)?> <label><?=$s->getFileSetName()?></label>
 	</li>
 <? } 

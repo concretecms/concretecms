@@ -3,6 +3,7 @@
 
 $s1 = FileSet::getMySets();
 $form = Loader::helper('form');
+$html = Loader::helper('html');
 
 if (count($s1) > 0) { ?>
 
@@ -25,8 +26,18 @@ if (count($s1) > 0) { ?>
 		
 	<div class="ccm-file-search-advanced-sets-results">
 	<ul id="ccm-file-search-advanced-sets-list">
-	<? foreach($s1 as $fs) { ?>
-		<li class="ccm-<?=$searchInstance?>-search-advanced-sets-cb"><?=$form->checkbox('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetID(), (is_array($searchRequest['fsID']) && in_array($fs->getFileSetID(), $searchRequest['fsID'])))?> <?=$form->label('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetName())?></li>
+	<? foreach($s1 as $fs) { 
+		$pfs = new Permissions($fs);
+		
+		?>
+		<li class="ccm-<?=$searchInstance?>-search-advanced-sets-cb">
+		<div class="ccm-file-search-advanced-set-controls">
+			<a href="<?=View::url('/dashboard/files/sets', 'file_sets_edit_or_delete', $fs->getFileSetID())?>"><?=$html->image('icons/wrench.png')?></a>
+			<? if ($pfs->canDeleteFileSet()) { ?>
+				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete_set?fsID=<?=$fs->getFileSetID()?>&searchInstance=<?=$searchInstance?>" class="ccm-file-set-delete-window" dialog-title="<?=t('Delete File Set')?>" dialog-width="320" dialog-height="200" dialog-modal="false"><?=$html->image('icons/delete_small.png')?></a>
+			<? } ?>
+		</div>
+		<?=$form->checkbox('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetID(), (is_array($searchRequest['fsID']) && in_array($fs->getFileSetID(), $searchRequest['fsID'])))?> <?=$form->label('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetName())?></li>
 	<? } ?>
 	</ul>
 	</div>
@@ -36,4 +47,9 @@ if (count($s1) > 0) { ?>
 	<div><?=$form->checkbox('fsIDNone', '1', $searchRequest['fsIDNone'] == 1, array('instance' => $searchInstance))?> <?=$form->label('fsIDNone', t('Display files in no sets.'))?></div>
 </div>
 
+	<script type="text/javascript">
+	$(function() {
+		$('a.ccm-file-set-delete-window').dialog();
+	});	
+	</script>
 <? } ?>
