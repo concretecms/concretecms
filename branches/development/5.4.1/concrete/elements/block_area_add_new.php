@@ -8,10 +8,6 @@ $form = Loader::helper('form');
 
 ?>
 
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/quicksilver.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.liveupdate.js"></script>
-
-
 <script type="text/javascript">
 <? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
 

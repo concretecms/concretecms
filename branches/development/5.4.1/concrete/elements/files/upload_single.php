@@ -29,11 +29,12 @@ if ($fp->canAddFiles()) {
     <input type="file" name="Filedata" class="ccm-al-upload-single-file" />
     <input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
     <?=$valt->output('upload');?>
+    <input type="hidden" name="ocID" value="<?=$ocID?>" />
     <img class="ccm-al-upload-single-loader" style="display:none;" src="<?=ASSETS_URL_IMAGES?>/dashboard/sitemap/loading.gif" />
     <input class="ccm-al-upload-single-submit" type="submit" value="<?=t('Upload')?>" />    
 </form>
 
-<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import?searchInstance=<?=$searchInstance?>" class="dialog-launch" dialog-title="<?=t('Add Files')?>" dialog-on-close="if(swfu && swfu.highlight) { ccm_alRefresh(swfu.highlight, '<?=$searchInstance?>') }" dialog-modal="false" dialog-width="450" dialog-height="350"><?=t('More')?></a>
+<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import?ocID=<?=$ocID?>&searchInstance=<?=$searchInstance?>" class="dialog-launch" dialog-title="<?=t('Add Files')?>" dialog-on-close="if(swfu && swfu.highlight) { ccm_alRefresh(swfu.highlight, '<?=$searchInstance?>') }" dialog-modal="false" dialog-width="450" dialog-height="350"><?=t('More')?></a>
 </div>
 
 <? } 

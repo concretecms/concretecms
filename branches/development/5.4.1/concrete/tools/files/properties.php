@@ -220,6 +220,24 @@ if (!$previewMode) {
 	<th><?=t('URL to File')?></th>
 	<td width="100%" colspan="2"><?=$fv->getRelativePath(true)?></td>
 </tr>
+<?
+$oc = $f->getOriginalPageObject();
+if (is_object($oc)) { 
+	$fileManager = Page::getByPath('/dashboard/files/search'); 
+	$ocName = $oc->getCollectionName();
+	if (is_object($fileManager) && !$fileManager->isError()) {
+		if ($fileManager->getCollectionID() == $oc->getCollectionID()) {
+			$ocName = t('Dashboard File Manager');
+		}
+	}
+	?>
+
+<tr>
+	<th><?=t('Page Added To')?></th>
+	<td width="100%" colspan="2"><a href="<?=Loader::helper('navigation')->getLinkToCollection($oc)?>" target="_blank"><?=$ocName?></a></td>
+</tr>
+<? } ?>
+
 <tr>
 	<th><?=t('Type')?></th>
 	<td colspan="2"><?=$fv->getType()?></td>

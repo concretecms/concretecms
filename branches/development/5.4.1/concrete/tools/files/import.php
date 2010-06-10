@@ -12,6 +12,7 @@ if (!$fp->canAddFiles()) {
 
 $types = $fp->getAllowedFileExtensions();
 $searchInstance = $_REQUEST['searchInstance'];
+$ocID = $_REQUEST['ocID'];
 $types = $ch->serializeUploadFileExtensions($types);
 $valt = Loader::helper('validation/token');
 ?>
@@ -62,7 +63,7 @@ $(function() {
 
 		flash_url : "<?=ASSETS_URL_FLASH?>/swfupload/swfupload.swf",
 		upload_url : "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/multiple",
-		post_params: {'ccm-session' : "<?php echo session_id(); ?>",'searchInstance': '<?=$searchInstance?>', 'ccm_token' : '<?=$valt->generate("upload")?>'},
+		post_params: {'ccm-session' : "<?php echo session_id(); ?>",'searchInstance': '<?=$searchInstance?>', 'ocID' : '<?=$ocID?>', 'ccm_token' : '<?=$valt->generate("upload")?>'},
 		file_size_limit : "<?=$umf?>",
 		file_types : "<?=$types?>",
 		button_window_mode : SWFUpload.WINDOW_MODE.TRANSPARENT,
@@ -180,7 +181,7 @@ $(function() {
 			<?
 			
 			print $h->button_js(t('Start Uploads'), 'swfu.startUpload()');
-			print $h->button_js(t('Cancel All Uploads'), 'swfu.cancelQueue()', 'left', null,array('id'=>'ccm-file-upload-multiple-btnCancel'));
+			print $h->button_js(t('Cancel All Uploads'), 'swfu.cancelQueue()', 'left', null,array('id'=>'ccm-file-upload-multiple-btnCancel', 'disabled' => 1));
 			
 			?>
 		</div>
@@ -209,6 +210,7 @@ $(function() {
 <?php if(!empty($incoming_contents)) { ?>
 <form id="ccm-file-manager-multiple-incoming" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
 	<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
+    <input type="hidden" name="ocID" value="<?=$ocID?>" />
 		<table id="incoming_file_table" width="100%" cellpadding="0" cellspacing="0">
 			<tr>
 				<td width="10%" valign="middle" class="center theader"><input type="checkbox" id="check_all_imports" name="check_all_imports" onclick="ccm_alSelectMultipleIncomingFiles(this);" value="" /></td>
@@ -260,6 +262,7 @@ $(function() {
 <h1><?=t('Add From Remote URL')?></h1>
 <form method="POST" id="ccm-file-manager-multiple-remote" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/remote">
 	<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
+    <input type="hidden" name="ocID" value="<?=$ocID?>" />
 	<h3><?=t('Enter URL to valid file(s)')?></h3>
 	<?=$valt->output('import_remote');?>
 
