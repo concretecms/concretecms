@@ -15,7 +15,11 @@
 	$.liveUpdate = function (e, list, type) {
 		this.field = $(e);
 		this.list  = $('#' + list);
-		this.lutype = type;
+		this.lutype = 'blocktypes';
+		if (typeof(type) != 'undefined') {
+			this.lutype = type;
+		}
+
 		if (this.list.length > 0) {
 			this.init();
 		}

@@ -85,6 +85,13 @@ if ($_POST['task'] == 'update_uploaded_details') {
 			$fs->addFileToSet($f);
 		}
 	}
+	
+	$js = Loader::helper('json');
+	$json = array();
+	foreach($files as $f) {
+		$json[] = $f->getFileID();
+	}
+	print $js->encode($json);
 	exit;
 }
 
@@ -94,12 +101,12 @@ if (!isset($_REQUEST['reload'])) { ?>
 
 <script type="text/javascript">
 $(function() {
-	$("div.message").show('highlight');
+	$("div.ccm-message").show('highlight');
 });
 </script>
 
 <style type="text/css">
-div.ccm-add-files-complete div.message {margin-bottom: 0px}
+div.ccm-add-files-complete div.ccm-message {margin-bottom: 0px}
 table.ccm-grid input.ccm-input-text, table.ccm-grid textarea {width: 100%}
 table.ccm-grid td {padding-right: 20px; width: 230px}
 table.ccm-grid th {width: 70px}
@@ -113,9 +120,9 @@ table.ccm-grid th {width: 70px}
 <tr>
 	<td width="100%">
 	<? if (count($_REQUEST['fID']) == 1) { ?>
-		<div class="message"><strong><?=t('1 file uploaded successfully.')?></strong></div>
+		<div class="ccm-message"><strong><?=t('1 file uploaded successfully.')?></strong></div>
 	<? } else { ?>
-		<div class="message"><strong><?=t('%s files uploaded successfully.', count($_REQUEST['fID']))?></strong></div>
+		<div class="ccm-message"><strong><?=t('%s files uploaded successfully.', count($_REQUEST['fID']))?></strong></div>
 	<? } ?>
 	</td>
 	<td><div style="width: 20px">&nbsp;</div></td>

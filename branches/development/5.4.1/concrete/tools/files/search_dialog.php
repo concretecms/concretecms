@@ -9,6 +9,7 @@ if (!$cp->canAccessFileManager()) {
 Loader::model('file_list');
 
 $searchInstance = $page . time();
+$ocID = $_REQUEST['ocID'];
 
 $cnt = Loader::controller('/dashboard/files/search');
 $fileList = $cnt->getRequestedSearchResults();
@@ -29,7 +30,7 @@ $searchRequest = $fileList->getSearchRequest();
 					
 					<div id="ccm-search-advanced-results-wrapper">
 					
-						<? Loader::element('files/upload_single', array('searchInstance' => $searchInstance)); ?>
+						<? Loader::element('files/upload_single', array('searchInstance' => $searchInstance, 'ocID' => $ocID)); ?>
 						
 						<div id="ccm-<?=$searchInstance?>-search-results" class="ccm-file-list">
 						

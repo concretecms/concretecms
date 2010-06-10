@@ -945,6 +945,11 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="ocID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED />
+    </field>
+
     <field name="fOverrideSetPermissions" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>

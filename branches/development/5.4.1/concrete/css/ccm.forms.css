@@ -108,6 +108,15 @@ a.ccm-button em.ccm-button-close {background-image: url(../images/icons/close.pn
 	cursor: pointer
 }
 
+.ccm-button-v2:disabled {
+	color: #999;
+}
+.ccm-button-v2:disabled:hover {
+	color: #999;
+	cursor: inherit;
+	background: transparent url(../images/bg_button.png) repeat-x right top; 
+}
+
 .ccm-button-v2:hover, .ccm-button-v2:active {
 	background: transparent url(../images/bg_button_active.png) repeat-x right top;
 	border: 1px solid #9ca8aa;

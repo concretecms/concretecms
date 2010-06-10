@@ -27,6 +27,10 @@ if ($valt->validate('upload')) {
 		}
 		if (!($resp instanceof FileVersion)) {
 			$errorCode = $resp;
+		} else if (!is_object($fr)) {
+			// we check $fr because we don't want to set it if we are replacing an existing file
+			$respf = $resp->getFile();
+			$respf->setOriginalPage($_POST['ocID']);
 		}
 	} else {
 		$errorCode = $_FILES['Filedata']['error'];

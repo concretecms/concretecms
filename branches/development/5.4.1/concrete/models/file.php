@@ -117,6 +117,25 @@ class File extends Object {
 		$this->refreshCache();
 	}
 	
+	public function setOriginalPage($ocID) {
+		if ($ocID < 1) {
+			return false;
+		}
+		
+		$db = Loader::db();
+		$db->Execute("update Files set ocID = ? where fID = ?", array($ocID, $this->getFileID()));
+		$this->refreshCache();
+	}
+	
+	public function getOriginalPageObject() {
+		if ($this->ocID > 0) {
+			$c = Page::getByID($this->ocID);
+			if (is_object($c) && !$c->isError()) {
+				return $c;
+			}
+		}
+	}
+	
 	public function overrideFileSetPermissions() {
 		return $this->fOverrideSetPermissions;
 	}

@@ -110,7 +110,7 @@ ccm_launchFileManager = function(filters) {
 		width: '90%',
 		height: '70%',
 		modal: false,
-		href: CCM_TOOLS_PATH + "/files/search_dialog?search=1" + filters,
+		href: CCM_TOOLS_PATH + "/files/search_dialog?ocID=" + CCM_CID + "&search=1" + filters,
 		title: ccmi18n_filemanager.title
 	});
 }
@@ -605,11 +605,15 @@ ccm_alSetupUploadDetailsForm = function(searchInstance) {
 }
 
 ccm_alSubmitUploadDetailsForm = function(searchInstance) {
+	jQuery.fn.dialog.showLoader();
 	$("#ccm-" + searchInstance + "-update-uploaded-details-form").ajaxSubmit(function(r1) {
-		jQuery.fn.dialog.closeTop();
+		var r1a = eval('(' + r1 + ')');
 		$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
 			$("#ccm-" + searchInstance + "-sets-search-wrapper").load(CCM_TOOLS_PATH + '/files/search_sets_reload', {'searchInstance': searchInstance}, function() {
+				jQuery.fn.dialog.hideLoader();
+				jQuery.fn.dialog.closeTop();
 				ccm_parseAdvancedSearchResponse(resp, searchInstance);
+				ccm_alHighlightFileIDArray(r1a);
 			});
 		});
 	});
@@ -625,7 +629,6 @@ ccm_alRefresh = function(highlightFIDs, searchInstance, fileSelector) {
 		'searchInstance': searchInstance
 	}, function() {
 		ccm_activateSearchResults(searchInstance);
-		ccm_alResetSingle();
 		if (ids != false) {
 			ccm_alHighlightFileIDArray(ids);
 		}
@@ -636,8 +639,9 @@ ccm_alRefresh = function(highlightFIDs, searchInstance, fileSelector) {
 
 ccm_alHighlightFileIDArray = function(ids) {
 	for (i = 0; i < ids.length; i++) {
-		var oldBG = $("#fID" + ids[i] + ' td').css('backgroundColor');
-		$("#fID" + ids[i] + ' td').animate({ backgroundColor: '#FFF9BB'}, { queue: true, duration: 300 }).animate( {backgroundColor: oldBG}, 500);
+		var td = $('tr[fID=' + ids[i] + '] td');
+		var oldBG = td.css('backgroundColor');
+		td.animate({ backgroundColor: '#FFF9BB'}, { queue: true, duration: 1000 }).animate( {backgroundColor: oldBG}, 500);
 	}
 }
 

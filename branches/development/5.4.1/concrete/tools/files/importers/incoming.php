@@ -34,10 +34,17 @@ if ($valt->validate('import_incoming')) {
 				}
 				if (!($resp instanceof FileVersion)) {
 					$error .= $name . ': ' . FileImporter::getErrorMessage($resp) . "\n";
+				
 				} else {
 					$files[] = $resp;
 					if ($_POST['removeFilesAfterPost'] == 1) {
 						unlink(DIR_FILES_INCOMING .'/'. $name);
+					}
+					
+					if (!is_object($fr)) {
+						// we check $fr because we don't want to set it if we are replacing an existing file
+						$respf = $resp->getFile();
+						$respf->setOriginalPage($_POST['ocID']);
 					}
 				}
 			}
@@ -62,7 +69,6 @@ if ($valt->validate('import_incoming')) {
 		<? } ?>
 		window.parent.jQuery.fn.dialog.closeTop();
 		window.parent.ccm_filesUploadedDialog('<?=$searchInstance?>');		
-		window.parent.ccm_alRefresh(highlight, '<?=$searchInstance?>');		
 	<? } ?>
 </script>
 </head>
