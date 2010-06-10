@@ -8,6 +8,7 @@ $searchFields = array(
 	'type' => t('Type'),
 	'extension' => t('Extension'),
 	'date_added' => t('Added Between'),
+	'added_to' => t('Added to Page')
 );
 
 if ($_REQUEST['fType'] != false) {
@@ -61,6 +62,14 @@ foreach($t1 as $value) {
 		<?=$form->text('date_from', array('style' => 'width: 86px'))?>
 		<?=t('to')?>
 		<?=$form->text('date_to', array('style' => 'width: 86px'))?>
+		</span>
+
+		<span class="ccm-search-option" search-field="added_to">
+		<div style="width: 100px">
+		<? $ps = Loader::helper("form/page_selector");
+		print $ps->selectPage('ocIDSearchField');
+		?>
+		</div>
 		</span>
 		
 		<? foreach($searchFieldAttributes as $sfa) { 
@@ -201,6 +210,16 @@ foreach($t1 as $value) {
 								<?=t('to')?>
 								<?=$form->text('date_to', $searchRequest['date_to'], array('style' => 'width: 86px'))?>
 								</span>
+							<? } ?>
+
+							<? if ($req == 'added_to') { ?>
+							<span class="ccm-search-option" search-field="parent">
+							<div style="width: 100px">
+							<? $ps = Loader::helper("form/page_selector");
+							print $ps->selectPage('ocIDSearchField', $searchRequest['ocIDSearchField']);
+							?>
+							</div>
+							</span>
 							<? } ?>
 							
 							<? foreach($searchFieldAttributes as $sfa) { 

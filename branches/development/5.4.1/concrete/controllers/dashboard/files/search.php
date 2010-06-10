@@ -99,7 +99,12 @@ class DashboardFilesSearchController extends Controller {
 								$fileList->filterByDateAdded($dateTo, '<=');
 							}
 							break;
-
+						case 'added_to':
+							$ocID = $req['ocIDSearchField'];
+							if ($ocID > 0) {
+								$fileList->filterByOriginalPageID($ocID);							
+							}
+							break;
 						case "size":
 							$from = $req['size_from'];
 							$to = $req['size_to'];

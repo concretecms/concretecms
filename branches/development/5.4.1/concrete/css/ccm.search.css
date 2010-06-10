@@ -44,6 +44,8 @@ div.ccm-search-advanced-fields div.ccm-search-field {margin-bottom:8px}
 div#ccm-search-field-base {display: none}
 div.ccm-search-field input, div.ccm-search-field select, div.ccm-search-field td {font-size: 10px !important}
 
+.ccm-search-option .ccm-summary-selected-item {border: 0px; padding: 0px; margin: 0px}
+
 .ccm-search-option-type-number input.ccm-input-text {width: 30px !important}
 .ccm-search-option input.ccm-input-text {width: 86px !important}
 .ccm-search-option input.ccm-input-date {width: 86px !important}
