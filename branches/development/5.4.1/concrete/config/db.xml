@@ -1956,6 +1956,10 @@
       <NOTNULL/>
       <DEFTIMESTAMP/>
     </field>
+    <field name="fsDisplayOrder" type="I" size="10">
+      <UNSIGNED/>
+      <NOTNULL/>
+    </field>
      <index name="fID">
       <col>fID</col>
     </index>

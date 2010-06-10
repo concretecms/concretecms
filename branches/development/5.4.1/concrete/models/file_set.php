@@ -1,11 +1,42 @@
 <?php
 
-	/** 
-	 * @access private
-	 * Internal object used to pass an array for filesets to group and user lists
-	 */
-	class FileSetList {
+
+	class FileSetList extends DatabaseItemList {
+	
 		public $sets = array();	
+		protected $itemsPerPage = 10;
+		
+		public function filterByKeywords($kw) {
+			$db = Loader::db();
+			$this->filter(false, "(FileSets.fsName like " . $db->qstr('%' . $kw . '%') . ")");
+		}
+		
+		function __construct() {
+			$this->setQuery("select FileSets.fsID from FileSets");
+			$this->sortBy('fsName', 'asc');
+		}
+		
+		public function filterByType($fsType) {
+			switch($fsType) {
+				case FileSet::TYPE_PRIVATE:
+					$u = new User();
+					$this->filter('FileSets.uID', $u->getUserID());
+					break;
+			}
+			$this->filter('FileSets.fsType', $fsType);
+		}
+		
+		public function get($itemsToGet = 0, $offset = 0) {
+			$r = parent::get($itemsToGet, $offset);
+			foreach($r as $row) {
+				$fs = FileSet::getByID($row['fsID']);
+				if (is_object($fs)) {
+					$this->sets[] = $fs;
+				}
+			}
+			return $this->sets;
+		}
+
 	}
 	
 	class FileSet extends Model {
@@ -26,7 +57,7 @@
 		}
 		
 		public function getFileSetUserID() {return $this->uID;}
-		public function getFileSetType() {return $This->fsType;}
+		public function getFileSetType() {return $this->fsType;}
 		
 		public function getMySets($u = false) {
 			if ($u == false) {
@@ -46,6 +77,16 @@
 				}
 			}
 			return $sets;
+		}
+		
+		public function updateFileSetDisplayOrder($files) {
+			$db = Loader::db();
+			$db->Execute('update FileSetFiles set fsDisplayOrder = 0 where fsID = ?', $this->getFileSetID());
+			$i = 0;
+			foreach($files as $fID) {
+				$db->Execute('update FileSetFiles set fsDisplayOrder = ? where fsID = ? and fID = ?', array($i, $this->getFileSetID(), $fID));
+				$i++;
+			}
 		}
 		
 		public function getByID($fsID) {
@@ -223,10 +264,13 @@
 			else{
 				//AS: Adodb Active record is complaining a ?/value array mismatch unless
 				//we explicatly set the primary key ID field to null
+				$db = Loader::db();
+				$fsDisplayOrder = $db->GetOne('select count(fID) from FileSetFiles where fsID = ?', $fs_id);
 				$file_set_file->fsfID = null;
 				$file_set_file->fID =  $f_id;			
 				$file_set_file->fsID = $fs_id;
 				$file_set_file->timestamp = null;
+				$file_set_file->fsDisplayOrder = $fsDisplayOrder;
 				$file_set_file->Save();
 				return $file_set_file;
 			}			

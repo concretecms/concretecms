@@ -55,6 +55,8 @@ class SlideshowBlockController extends BlockController {
 		$fileList = new FileList();		
 		$fileList->filterBySet($fs);
 		$fileList->filterByType(FileType::T_IMAGE);	
+		$fileList->sortByFileSetDisplayOrder();
+		
 		$files = $fileList->get(1000,0);
 		
 		

@@ -225,7 +225,11 @@ class FileList extends DatabaseItemList {
 	public function sortByAttributeKey($key,$order='asc') {
 		$this->sortBy($key, $order); // this is handled natively now
 	}
-			
+	
+	public function sortByFileSetDisplayOrder() {
+		$this->sortByMultiple('fsDisplayOrder asc', 'fID asc');
+	}
+	
 	public static function getExtensionList() {
 		$db = Loader::db();
 		$col = $db->GetCol('select distinct(trim(fvExtension)) as extension from FileVersions where fvIsApproved = 1 and fvExtension <> ""');

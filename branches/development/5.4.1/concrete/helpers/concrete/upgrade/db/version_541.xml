@@ -35,4 +35,34 @@
     </index>
   </table>
 
+  <table name="FileSetFiles">
+    <field name="fsfID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>  
+    <field name="fID" type="I" size="10">
+      <UNSIGNED/>
+      <NOTNULL/>
+    </field>
+    <field name="fsID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED/>
+    </field>
+    <field name="timestamp" type="T">
+      <NOTNULL/>
+      <DEFTIMESTAMP/>
+    </field>
+    <field name="fsDisplayOrder" type="I" size="10">
+      <UNSIGNED/>
+      <NOTNULL/>
+    </field>
+     <index name="fID">
+      <col>fID</col>
+    </index>
+    <index name="fsID">
+      <col>fsID</col>
+    </index>
+  </table>
+
 </schema>
