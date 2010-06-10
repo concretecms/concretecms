@@ -25,6 +25,9 @@
 			return $fs;
 		}
 		
+		public function getFileSetUserID() {return $this->uID;}
+		public function getFileSetType() {return $This->fsType;}
+		
 		public function getMySets($u = false) {
 			if ($u == false) {
 				$u = new User();

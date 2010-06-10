@@ -382,6 +382,22 @@ class Permissions extends Object {
 	public function canAccessFileManager() {
 		return $this->permissions['canSearch'];
 	}
+	
+	/** 
+	 * Hack until there is a better way
+	 */
+	public function canDeleteFileSet() {
+		$fs = $this->originalObj;
+		$u = new User();
+		if ($fs->getFileSetType() == FileSet::TYPE_PRIVATE && $fs->getFileSetUserID() == $u->getUserID()) {
+			return true;
+		}
+		$c = Page::getByPath('/dashboard/files/sets');
+		if (is_object($c) && !$c->isError()) {
+			$cp = new Permissions($c);
+			return $cp->canRead();
+		}
+	}
 
 	public function getFileSearchLevel() {
 		return $this->permissions['canSearch'];

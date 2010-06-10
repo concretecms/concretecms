@@ -30,8 +30,8 @@
 						</p>
 						<div class="ccm-spacer">&nbsp;</div><br/>
 
-						<div id="ccm-file-permissions-entities-wrapper">			
-						<div id="ccm-file-permissions-entity-base">
+						<div id="ccm-file-permissions-entities-wrapper" class="ccm-permissions-entities-wrapper">			
+						<div id="ccm-file-permissions-entity-base" class="ccm-permissions-entity-base">
 						
 							<? print $ph->getFileAccessRow('SET'); ?>
 							

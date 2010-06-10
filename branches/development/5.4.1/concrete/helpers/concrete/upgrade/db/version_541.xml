@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+
+<!-- add uID and indexes //-->
+
+  <table name="Files">
+    <field name="fID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="fDateAdded" type="T"/>
+    <field name="uID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fslID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ocID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED />
+    </field>
+
+    <field name="fOverrideSetPermissions" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="fPassword" type="C" size="255"/>
+    <index name="fOverrideSetPermissions">
+      <col>fOverrideSetPermissions</col>
+    </index>
+  </table>
+
+</schema>
