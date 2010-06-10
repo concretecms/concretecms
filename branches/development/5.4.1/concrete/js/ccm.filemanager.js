@@ -605,7 +605,7 @@ ccm_alSetupUploadDetailsForm = function(searchInstance) {
 }
 
 ccm_alSubmitUploadDetailsForm = function(searchInstance) {
-	$("#ccm-" + searchInstance + "-update-uploaded-details-form").ajaxSubmit(function() {
+	$("#ccm-" + searchInstance + "-update-uploaded-details-form").ajaxSubmit(function(r1) {
 		jQuery.fn.dialog.closeTop();
 		$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
 			$("#ccm-" + searchInstance + "-sets-search-wrapper").load(CCM_TOOLS_PATH + '/files/search_sets_reload', {'searchInstance': searchInstance}, function() {
