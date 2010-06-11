@@ -11,6 +11,7 @@ class HtmlBlockController extends BlockController {
 	protected $btInterfaceWidth = "600";
 	protected $btInterfaceHeight = "465";
 	protected $btCacheBlockRecord = true;
+	protected $btCacheBlockOutput = true;
 	
 	public $content = "";	
 	

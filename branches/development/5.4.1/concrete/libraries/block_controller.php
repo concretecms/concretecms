@@ -39,6 +39,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		protected $btInterfaceHeight = "400";
 		protected $btHasRendered = false;
 		protected $btCacheBlockRecord = false;
+		protected $btCacheBlockOutput = false;
+		protected $btCacheBlockOutputLifetime = 1800; // seconds, half an hour 
 		
 		public $headerItems = array();
 
@@ -153,6 +155,14 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		public function cacheBlockRecord() {
 			return $this->btCacheBlockRecord;
+		}
+
+		public function cacheBlockOutput() {
+			return $this->btCacheBlockOutput;
+		}
+
+		public function getBlockTypeCacheOutputLifetime() {
+			return $this->btCacheBlockOutputLifetime;
 		}
 		
 		

@@ -8,6 +8,8 @@
 		protected $btInterfaceWidth = "600";
 		protected $btInterfaceHeight = "465";
 		protected $btCacheBlockRecord = true;
+		protected $btCacheBlockOutput = true;
+		protected $btCacheBlockOutputLifetime = 300;
 		
 		public function getBlockTypeDescription() {
 			return t("HTML/WYSIWYG Editor Content.");

@@ -7,6 +7,7 @@
 		protected $btInterfaceWidth = 300;
 		protected $btInterfaceHeight = 240;
 		protected $btCacheBlockRecord = true;
+		protected $btCacheBlockOutput = true;
 		protected $btTable = 'btFlashContent';
 		
 		/** 
