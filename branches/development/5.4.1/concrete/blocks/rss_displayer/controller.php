@@ -8,6 +8,8 @@
 		protected $btInterfaceWidth = "400";
 		protected $btCacheBlockRecord = true;
 		protected $btInterfaceHeight = "170";
+		protected $btCacheBlockOutputOnPost = true;
+		protected $btCacheBlockOutputForRegisteredUsers = true;
 		
 		public $itemsToDisplay = "5";
 		public $showSummary = "1"; 

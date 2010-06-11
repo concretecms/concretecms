@@ -16,6 +16,8 @@
 		protected $btTable = 'btVideo';
 		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
+		protected $btCacheBlockOutputOnPost = true;
+		protected $btCacheBlockOutputForRegisteredUsers = true;
 		
 		public $width  = '';
 		public $height = '';

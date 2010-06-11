@@ -9,6 +9,8 @@
 		protected $btInterfaceHeight = "220";
 		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
+		protected $btCacheBlockOutputOnPost = true;
+		protected $btCacheBlockOutputForRegisteredUsers = true;
 		
 		public $title = "";
 		public $api_key = "";
