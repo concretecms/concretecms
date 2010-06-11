@@ -156,6 +156,9 @@
 		protected $btInterfaceWidth = "500";
 		protected $btInterfaceHeight = "350";
 		protected $btCacheBlockRecord = true;
+		protected $btCacheBlockOutput = true;
+		protected $btCacheBlockOutputOnPost = true;
+		protected $btCacheBlockOutputForRegisteredUsers = false;
 		
 		public function getBlockTypeDescription() {
 			return t("Creates navigation trees and sitemaps.");

@@ -12,6 +12,8 @@ class HtmlBlockController extends BlockController {
 	protected $btInterfaceHeight = "465";
 	protected $btCacheBlockRecord = true;
 	protected $btCacheBlockOutput = true;
+	protected $btCacheBlockOutputOnPost = true;
+	protected $btCacheBlockOutputForRegisteredUsers = true;
 	
 	public $content = "";	
 	

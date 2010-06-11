@@ -7,6 +7,8 @@
 		protected $btInterfaceWidth = "500";
 		protected $btCacheBlockRecord = true;
 		protected $btInterfaceHeight = "350";
+		protected $btCacheBlockOutputOnPost = true;
+		protected $btCacheBlockOutputForRegisteredUsers = false;
 		
 		/** 
 		 * Used for localization. If we want to localize the name/description we have to include this

@@ -9,6 +9,8 @@ class SlideshowBlockController extends BlockController {
 	protected $btInterfaceHeight = "400";
 	protected $btCacheBlockRecord = true;
 	protected $btCacheBlockOutput = true;
+	protected $btCacheBlockOutputOnPost = true;
+	protected $btCacheBlockOutputForRegisteredUsers = true;
 
 	public $defaultDuration = 5;	
 	public $defaultFadeDuration = 2;	

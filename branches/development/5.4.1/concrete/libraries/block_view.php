@@ -207,12 +207,22 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$_action = 'view';
 			}
 			
+			$u = new User();
+			
 			$outputContent = false;
+			$useCache = false;
+			
 			if ($view == 'view') {
 				if ($this->controller->cacheBlockOutput()) {
-					$outputContent = Cache::get('block_view_output', $obj->getBlockID());
+					if ((!$u->isRegistered() || ($this->controller->cacheBlockOutputForRegisteredUsers())) &&
+						(($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->controller->cacheBlockOutputOnPost() == true)))) {
+							$useCache = true;
+					}
+					if ($useCache) {
+						$outputContent = Cache::get('block_view_output', $obj->getBlockCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle());
+					}
 				}
-			}			
+			}
 			if ($outputContent == false) {
 				$this->controller->setupAndRun($_action);
 			}
@@ -279,7 +289,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (isset($header)) {
 				include($header);
 			}
-			if ($outputContent != false) {
+			if ($outputContent) {
 				print $outputContent;			
 			} else if ($template) {
 				
@@ -289,13 +299,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				
 				include($template);
 				
-				if ($view == 'view' && $this->controller->cacheBlockOutput()) {
+				if ($useCache) {
 					$outputContent = ob_get_contents();
 					ob_end_clean();					
 					print $outputContent;
 				}
 				
-				Cache::set('block_view_output', $obj->getBlockID(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
+				Cache::set('block_view_output', $obj->getBlockCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
 			}
 			if (isset($footer)) {
 				include($footer);
