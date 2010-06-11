@@ -8,6 +8,7 @@ class SlideshowBlockController extends BlockController {
 	protected $btInterfaceWidth = "550";
 	protected $btInterfaceHeight = "400";
 	protected $btCacheBlockRecord = true;
+	protected $btCacheBlockOutput = true;
 
 	public $defaultDuration = 5;	
 	public $defaultFadeDuration = 2;	

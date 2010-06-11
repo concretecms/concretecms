@@ -8,7 +8,8 @@
 		protected $btInterfaceWidth = "400";
 		protected $btCacheBlockRecord = true;
 		protected $btInterfaceHeight = "170";
-		
+		protected $btCacheBlockOutput = true;
+
 		public $title = '';
 		public $videoURL = "";
 		public $mode = "youtube";
