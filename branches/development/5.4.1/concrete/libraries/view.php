@@ -663,9 +663,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					// if we're passing a view but our render override is not null, that means that we're passing 
 					// a new view from within a controller. If that's the case, then we DON'T override the viewPath, we want to keep it
 					
-					$db = Loader::db();
 					// In order to enable editable 404 pages, other editable pages that we render without actually visiting
-					if (is_object($db) && $view == '/page_not_found') {
+					if (defined('DB_DATABASE') && $view == '/page_not_found') {
 						$pp = Page::getByPath($view);
 						if (!$pp->isError()) {
 							$this->c = $pp;

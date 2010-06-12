@@ -1561,6 +1561,8 @@ $ppWhere = '';
 
 		$q2 = "delete from PagePermissionPageTypes where cID = '{$this->cID}'";
 		$r2 = $db->query($q2);
+		
+		Cache::delete("page_permission_set_guest", $this->getCollectionID());
 	}
 
 	/**
@@ -1739,6 +1741,7 @@ $ppWhere = '';
 		//we have to update the existing collection with the info for the new
 		//as well as all collections beneath it that are set to inherit from this parent
 		$this->updateGroupsSubCollection($this->getCollectionID());
+		Cache::delete("page_permission_set_guest", $this->getCollectionID());
 	}
 	
 	function _associateMasterCollectionBlocks($newCID, $masterCID) {
