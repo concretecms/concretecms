@@ -628,7 +628,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$blockIDs = Cache::get('collection_blocks_' . $this->getCollectionID() . '_' . $this->getVersionID(), false);		
 			}
 			
-			if ($blockIDs == false) {
+			if (!is_array($blockIDs)) {
 				$db = Loader::db();
 				$q = "select Blocks.bID, CollectionVersionBlocks.arHandle ";
 				$q .= "from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) ";
@@ -638,6 +638,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$q .= "order by CollectionVersionBlocks.cbDisplayOrder asc";
 	
 				$blockIDs = $db->GetAll($q, $v);
+				if (!$blockIDs) {
+					$blockIDs = array();
+				}
 				Cache::set('collection_blocks_' . $this->getCollectionID() . '_' . $this->getVersionID(), $arHandle, $blockIDs);
 			}
 			
@@ -651,10 +654,17 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		public function testBlocksForPageCache($blocks) {
-			foreach($blocks as $b) {
-			
-			
+			$u = new User();
+			if ($u->isRegistered() || $_SERVER['REQUEST_METHOD'] == 'POST') {
+				return false;
 			}
+			foreach($blocks as $b) {
+				$controller = $b->getInstance();
+				if (!$controller->cacheBlockOutput()) {
+					return false;
+				}
+			}
+			return true;
 		}
 			
 		public function addBlock($bt, $a, $data) {

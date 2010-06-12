@@ -1916,7 +1916,19 @@ $ppWhere = '';
 		
 		return $pc;
 	}
-
+	
+	public function addToPageCache($content) {
+		Cache::set('page_content', $this->getCollectionID(), $content);
+	}
+	
+	public function renderFromCache() {
+		$content = Cache::get('page_content', $this->getCollectionID());
+		if ($content != false) {
+			print $content;
+			exit;
+		}
+	}
+	
 	public function addStatic($data) {
 		$db = Loader::db();
 		$cParentID = $this->getCollectionID();

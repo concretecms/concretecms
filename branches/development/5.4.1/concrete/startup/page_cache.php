@@ -11,6 +11,6 @@ if (is_object($c)) {
 	// now we just do the standard block-based full content caching
 	$blocks = $c->getBlocks();
 	if ($c->testBlocksForPageCache($blocks)) {
-
+		$c->renderFromCache();
 	}
 }
