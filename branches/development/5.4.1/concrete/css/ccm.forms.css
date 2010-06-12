@@ -103,6 +103,7 @@ a.ccm-button em.ccm-button-close {background-image: url(../images/icons/close.pn
 	font-size: 11px !important;
 	height: 38px !important;
 	color: #535353; 
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	border: 1px solid #a8a8a8;
 	position: relative;
 	cursor: pointer
