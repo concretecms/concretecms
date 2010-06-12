@@ -165,7 +165,11 @@ class Cache {
 		if (!$cache) {
 			return false;
 		}
+		$cache->setOption('caching', true);
 		$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+		if (!ENABLE_CACHE) {
+			Cache::disableCache();
+		}		
 		return true;
 	}
 		

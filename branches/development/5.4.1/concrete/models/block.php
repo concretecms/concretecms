@@ -120,6 +120,7 @@ class Block extends Object {
 			}
 			
 			$b->instance = new $class($b);
+			$b->populateIsGlobal();
 			
 			
 			if ($c != null || $a != null) {
@@ -181,7 +182,11 @@ class Block extends Object {
 		}
 	}
 	
-	public function isGlobal(){
+	public function isGlobal() {
+		return $this->bIsGlobal;
+	}
+	
+	public function populateIsGlobal() {
 		$db = Loader::db();
 		
 		$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
@@ -193,9 +198,11 @@ class Block extends Object {
 			 "WHERE b.bID = '{$this->bID}' AND cvb.bID=b.bID AND cvb.cID=".intval($globalScrapbookC->getCollectionId())." LIMIT 1";
 			 
 		$r = $db->query($q);
-		if ($r) {
-			return ($r->numRows() > 0)?1:0;
-		}			
+		if ($r->numRows() > 0) {
+			$this->bIsGlobal = 1;
+		} else {
+			$this->bIsGlobal = 0;
+		}
 		return 0;
 	}
 

@@ -618,29 +618,43 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		public function getBlocks($arHandle = false) {
 			
-			$db = Loader::db();
-			
 			$v = array($this->getCollectionID(), $this->getVersionID());
-			if ($arHandle != false) {
-				$v[] = $arHandle;
-			}
-			$q = "select Blocks.bID, CollectionVersionBlocks.arHandle ";
-			$q .= "from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) ";
-			if ($arHandle != false) {
-				$q .= 'and CollectionVersionBlocks.arHandle = ? ';
-			}
-			$q .= "order by CollectionVersionBlocks.cbDisplayOrder asc";
-
-			$r = $db->query($q, $v);
 			$blocks = array();
-			while ($row = $r->fetchRow()) {
+
+			if ($arHandle != false) {
+				$blockIDs = Cache::get('collection_blocks_' . $this->getCollectionID() . '_' . $this->getVersionID(), $arHandle);
+				$v[] = $arHandle;
+			} else {
+				$blockIDs = Cache::get('collection_blocks_' . $this->getCollectionID() . '_' . $this->getVersionID(), false);		
+			}
+			
+			if ($blockIDs == false) {
+				$db = Loader::db();
+				$q = "select Blocks.bID, CollectionVersionBlocks.arHandle ";
+				$q .= "from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) ";
+				if ($arHandle != false) {
+					$q .= 'and CollectionVersionBlocks.arHandle = ? ';
+				}
+				$q .= "order by CollectionVersionBlocks.cbDisplayOrder asc";
+	
+				$blockIDs = $db->GetAll($q, $v);
+				Cache::set('collection_blocks_' . $this->getCollectionID() . '_' . $this->getVersionID(), $arHandle, $blockIDs);
+			}
+			
+			foreach($blockIDs as $row) {
 				$ab = Block::getByID($row['bID'], $this, $row['arHandle']);
 				if (is_object($ab)) {
 					$blocks[] = $ab;
 				}
 			}
-			$r->free();
 			return $blocks;
+		}
+		
+		public function testBlocksForPageCache($blocks) {
+			foreach($blocks as $b) {
+			
+			
+			}
 		}
 			
 		public function addBlock($bt, $a, $data) {
