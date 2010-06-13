@@ -163,9 +163,6 @@
 		}
 
 		## Check maintenance mode
-		require(dirname(__FILE__) . '/startup/page_cache.php');
-	
-		## Check maintenance mode
 		require(dirname(__FILE__) . '/startup/maintenance_mode_check.php');
 		
 		## Check to see whether this is an external alias or a header 301 redirect. If so we go there.
@@ -239,7 +236,7 @@
 
 		## Record the view
 		if (STATISTICS_TRACK_PAGE_VIEWS == true) {
-			$u->recordView($c);
+			//$u->recordView($c);
 		}
 		
 		## now we display (provided we've gotten this far)

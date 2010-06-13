@@ -458,15 +458,29 @@ class PageTheme extends Object {
 	}
 	
 	public function getByHandle($ptHandle) {
+		$pt = Cache::get('page_theme_by_handle', $ptHandle);
+		if ($pt instanceof PageTheme) {
+			return $pt;
+		}
+		
 		$where = 'ptHandle = ?';
 		$args = array($ptHandle);
-		return PageTheme::populateThemeQuery($where, $args);
+		$pt = PageTheme::populateThemeQuery($where, $args);
+		Cache::set('page_theme_by_handle', $ptHandle, $pt);
+		return $pt;
 	}
 	
 	public function getByID($ptID) {
+		$pt = Cache::get('page_theme_by_id', $ptID);
+		if ($pt instanceof PageTheme) {
+			return $pt;
+		}
+		
 		$where = 'ptID = ?';
 		$args = array($ptID);
-		return PageTheme::populateThemeQuery($where, $args);
+		$pt = PageTheme::populateThemeQuery($where, $args);
+		Cache::set('page_theme_by_id', $ptID, $pt);
+		return $pt;
 	}
 	
 	protected function populateThemeQuery($where, $args) {
@@ -619,8 +633,8 @@ class PageTheme extends Object {
 	public function getSiteTheme() {
 		// returns cLayout on the home collection
 		$db = Loader::db();
-		$r = $db->getOne("select ptID from Pages where cID = 1");
-		return PageTheme::getByID($r);
+		$c = Page::getByID(HOME_CID);
+		return PageTheme::getByID($c->getCollectionThemeID());
 	}
 	
 	public function uninstall() {
@@ -629,7 +643,8 @@ class PageTheme extends Object {
 		//$pla = new PageThemeArchive($this->ptHandle);
 		//$pla->uninstall();
 		$db->query("delete from PageThemes where ptID = ?", array($this->ptID));
-		
+		Cache::delete('page_theme_by_id', $this->ptID);
+		Cache::delete('page_theme_by_handle', $this->ptHandle);
 	}
 
 }

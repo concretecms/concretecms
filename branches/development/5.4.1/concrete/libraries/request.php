@@ -87,16 +87,23 @@ class Request {
 	 * task/param separator in them
 	 */
 	public function getRequestedPage() {
-		$db = Loader::db();
 		$path = $this->getRequestCollectionPath();
-		// Get the longest path (viz most specific match) that is contained
-		// within the request path
-		$cID = $db->Execute("select cID,cPath from PagePaths where ? LIKE CONCAT(replace(cPath, '_','\_'),'%') ORDER BY LENGTH(cPath) DESC LIMIT 0,1", array($this->getRequestCollectionPath()));
-		$cID = $cID->FetchRow();
-		if ($cID) {
+		$r = Cache::get('request_path_page', $path);
+		if ($r == false) {
+			// Get the longest path (viz most specific match) that is contained
+			// within the request path
+			$db = Loader::db();
+			$r = $db->Execute("select cID,cPath from PagePaths where ? LIKE CONCAT(replace(cPath, '_','\_'),'%') ORDER BY LENGTH(cPath) DESC LIMIT 0,1", array($this->getRequestCollectionPath()));
+			$r = $r->FetchRow();
+			if (is_array($r)) {
+				Cache::set('request_path_page', $path, $r);
+			}			
+		}	
+		
+		if (is_array($r)) {
 			$req = Request::get();
-			$cPath = $cID['cPath'];
-			$cID = $cID['cID'];
+			$cPath = $r['cPath'];
+			$cID = $r['cID'];
 			$req->setCollectionPath($cPath);			
 			$c = Page::getByID($cID);
 		} else {
