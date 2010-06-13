@@ -58,7 +58,7 @@ class FileList extends DatabaseItemList {
 			$cnt = $ak->getController();			
 			$attribsStr.=' OR ' . $cnt->searchKeywords($keywords);
 		}
-		$this->filter(false, '(fvFilename like ' . $qkeywords . ' or fvTitle like ' . $qkeywords . ' or fvTags like ' . $qkeywords . ' or u.uName = ' . $keywordsExact . $attribsStr . ')');
+		$this->filter(false, '(fvFilename like ' . $qkeywords . ' or fvDescription like ' . $qkeywords . ' or fvTitle like ' . $qkeywords . ' or fvTags like ' . $qkeywords . ' or u.uName = ' . $keywordsExact . $attribsStr . ')');
 	}
 	
 	/** 

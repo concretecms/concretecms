@@ -1,6 +1,3 @@
-<?
-defined('C5_EXECUTE') or die(_("Access Denied."));
-$searchObj=$controller;
+<?php defined('C5_EXECUTE') or die(_("Access Denied."));
+$this->inc('form_setup_html.php', array('c' => $c,'searchObj'=>$controller));
 ?>
-
-<? include($this->getBlockPath() .'/form_setup_html.php'); ?> 
