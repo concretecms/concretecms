@@ -35,7 +35,6 @@ if (isset($au->theme) && isset($au->file)) {
 			} else { 
 				header('HTTP/1.1 304 Not Modified'); 
 			} 
-
 		}
 	}
 }

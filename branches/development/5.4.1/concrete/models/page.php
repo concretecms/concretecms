@@ -550,6 +550,7 @@ $ppWhere = '';
 
 			Cache::delete('page', $this->getCollectionPointerOriginalID()  );
 			Cache::delete('page_path', $this->getCollectionPointerOriginalID()  );
+			Cache::delete('request_path_page', $this->getCollectionPointerOriginalID()  );
 
 			return $cIDRedir;
 		}
@@ -605,8 +606,9 @@ $ppWhere = '';
 
 	function getCollectionThemeID() {
 		$db = Loader::db();
-		if ($this->ptID < 1) {
-			return $db->GetOne("select ptID from Pages where cID = 1");
+		if ($this->ptID < 1 && $this->cID != HOME_CID) {
+			$c = Page::getByID(HOME_CID);
+			return $c->getCollectionThemeID();
 		} else {
 			return $this->ptID;
 		}	
@@ -616,7 +618,6 @@ $ppWhere = '';
 		if ($this->ptID < 1) {
 			return PageTheme::getSiteTheme();
 		} else {
-			// this is probably not terribly efficient
 			$pl = PageTheme::getByID($this->ptID);
 			return $pl;
 		}		

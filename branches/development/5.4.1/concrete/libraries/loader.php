@@ -174,9 +174,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * $db->query($sql);
 		 * </code>
 		 */
-		public function db($server = null, $username = null, $password = null, $database = null, $create = false) {
+		public function db($server = null, $username = null, $password = null, $database = null, $create = false, $autoconnect = true) {
 			static $_db;
-			if (!isset($_db) || $create) {
+			if ((!isset($_db) || $create) && ($autoconnect)) {
 				if ($server == null && defined('DB_SERVER')) {	
 					$dsn = DB_TYPE . '://' . DB_USERNAME . ':' . rawurlencode(DB_PASSWORD) . '@' . rawurlencode(DB_SERVER) . '/' . DB_DATABASE;
 				} else if ($server) {
@@ -346,9 +346,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * Loads a controller for either a page or view
 		 */
 		public function controller($item) {
-			$db = Loader::db();
 			
 			if (is_string($item)) {
+				$db = Loader::db();
 				if (is_object($db)) {
 					try {
 						$_item = Page::getByPath($item);
