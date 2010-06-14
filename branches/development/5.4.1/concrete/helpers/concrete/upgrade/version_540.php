@@ -85,7 +85,7 @@ class ConcreteUpgradeVersion540Helper {
 		$sp = Page::getByPath('/dashboard/sitemap/explore');
 		if ($sp->isError()) {
 			$d1b = SinglePage::add('/dashboard/sitemap/explore');
-			$d1b->update(array('cName'=>t('Folder View')));
+			$d1b->update(array('cName'=>t('Flat View')));
 		}
 		$sp = Page::getByPath('/dashboard/sitemap/search');
 		if ($sp->isError()) {
