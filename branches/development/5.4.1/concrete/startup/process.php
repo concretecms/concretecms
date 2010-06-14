@@ -777,6 +777,9 @@
 				$data['cName'] = $_POST['cName'];
 				$data['cDescription'] = $_POST['cDescription'];
 				$data['cHandle'] = $_POST['cHandle'];
+				$data['cCacheFullPageContent'] = $_POST['cCacheFullPageContent'];
+				$data['cCacheFullPageContentLifetimeCustom'] = $_POST['cCacheFullPageContentLifetimeCustom'];
+				$data['cCacheFullPageContentOverrideLifetime'] = $_POST['cCacheFullPageContentOverrideLifetime'];				
 
 				$data['ppURL'] = array();
 				foreach ($_POST as $key=>$value) {

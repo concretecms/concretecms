@@ -689,7 +689,7 @@ $(document).ready(function(){
 	
 	<div class="ccm-dashboard-radio"><input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="default" <? if (FULL_PAGE_CACHE_LIFETIME == 'default') { ?> checked <? } ?> /> <?=t('Default - %s minutes', CACHE_LIFETIME / 60)?></div>
 	<div class="ccm-dashboard-radio"><input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="custom" <? if (FULL_PAGE_CACHE_LIFETIME == 'custom') { ?> checked <? } ?> /> <?=t('Custom - ')?>
-		<?=$form->text('FULL_PAGE_CACHE_LIFETIME_CUSTOM', 0, array('style' => 'width: 40px'))?> <?=t('minutes')?>		
+		<?=$form->text('FULL_PAGE_CACHE_LIFETIME_CUSTOM', Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM'), array('style' => 'width: 40px'))?> <?=t('minutes')?>		
 	</div>
 	<div class="ccm-dashboard-radio"><input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="forever" <? if (FULL_PAGE_CACHE_LIFETIME == 'forever') { ?> checked <? } ?> /> <?=t('Until manually cleared')?></div>
 	
@@ -814,7 +814,6 @@ $(document).ready(function(){
 			var obj2 = $('input[name=FULL_PAGE_CACHE_LIFETIME]:checked');
 			if (obj2.val() == 'custom') {
 				$('input[name=FULL_PAGE_CACHE_LIFETIME_CUSTOM]').attr('disabled', false);
-				$('input[name=FULL_PAGE_CACHE_LIFETIME_CUSTOM]').get(0).focus();
 			} else {
 				$('input[name=FULL_PAGE_CACHE_LIFETIME_CUSTOM]').attr('disabled', true);
 				$('input[name=FULL_PAGE_CACHE_LIFETIME_CUSTOM]').val('');
@@ -830,6 +829,9 @@ $(document).ready(function(){
 			});
 			$("input[name=FULL_PAGE_CACHE_LIFETIME]").click(function() {
 				ccm_settingsSetupCacheForm();
+			});
+			$("input[name=FULL_PAGE_CACHE_LIFETIME][value=custom]").click(function() {
+				$('input[name=FULL_PAGE_CACHE_LIFETIME_CUSTOM]').get(0).focus();
 			});
 			ccm_settingsSetupCacheForm();
 		});

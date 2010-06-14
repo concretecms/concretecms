@@ -723,7 +723,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				
 				if ($view instanceof Page) {
 					$blocks = $view->getBlocks();
-					if ($view->testBlocksForPageCache($blocks)) {
+					if ($view->supportsPageCache($blocks)) {
 						$view->renderFromCache();
 					}
 					
@@ -773,7 +773,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					print $pageContent;
 					
 					if ($view instanceof Page) {
-						if ($view->testBlocksForPageCache($blocks)) {
+						if ($view->supportsPageCache($blocks)) {
 							$view->addToPageCache($pageContent);
 						}
 					}
