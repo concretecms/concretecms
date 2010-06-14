@@ -245,6 +245,7 @@ foreach($t1 as $value) {
 			</div>
 			
 			<div id="ccm-search-fields-submit">
+				<div id="ccm-search-save"><a href="javascript:void(0)"><?=t('Save Search')?></a></div>
 				<?=$form->submit('ccm-search-files', 'Search')?>
 			</div>
 		</div>
