@@ -66,10 +66,6 @@ if (!defined('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL')) {
 	define('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL', false);
 }
 
-if (!defined('STATISTICS_TRACK_PAGE_VIEWS')) {
-	define('STATISTICS_TRACK_PAGE_VIEWS', true);
-}
-
 if (!defined("PAGE_TITLE_FORMAT")) {
 	define('PAGE_TITLE_FORMAT', '%1$s :: %2$s');
 }
