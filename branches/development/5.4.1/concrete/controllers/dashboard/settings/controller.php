@@ -106,6 +106,12 @@ class DashboardSettingsController extends Controller {
 				case "debug_saved":
 					$this->set('message', t('Debug configuration saved.'));
 					break;
+				case "cache_cleared";
+					$this->set('message', t('Cached files removed.'));	
+					break;
+				case "cache_updated";
+					$this->set('message', t('Cache settings saved.'));	
+					break;
 				case "txt_editor_config_saved":
 					$this->set('message', t('Content text editor settings saved.'));
 					break;														
@@ -353,8 +359,22 @@ class DashboardSettingsController extends Controller {
 		if ($this->token->validate("clear_cache")) {
 			if ($this->isPost()) {
 				if (Cache::flush()) {
-					$this->redirect('/dashboard/settings', 'set_developer', 'cache_cleared');
+					$this->redirect('/dashboard/settings', 'cache_cleared');
 				}
+			}
+		} else {
+			$this->set('error', array($this->token->getErrorMessage()));
+		}
+	}
+
+	public function update_cache() {
+		if ($this->token->validate("update_cache")) {
+			if ($this->isPost()) {
+				$u = new User();
+				$eca = $this->post('ENABLE_CACHE') == 1 ? 1 : 0; 
+				Cache::flush();
+				Config::save('ENABLE_CACHE', $eca);
+				$this->redirect('/dashboard/settings', 'cache_updated');
 			}
 		} else {
 			$this->set('error', array($this->token->getErrorMessage()));
@@ -373,19 +393,6 @@ class DashboardSettingsController extends Controller {
 		}
 	}
 
-	public function update_cache() {
-		if ($this->token->validate("update_cache")) {
-			if ($this->isPost()) {
-				$u = new User();
-				$eca = $this->post('ENABLE_CACHE') == 1 ? 1 : 0; 
-				Cache::flush();
-				Config::save('ENABLE_CACHE', $eca);
-				$this->redirect('/dashboard/settings', 'set_developer', 'cache_updated');
-			}
-		} else {
-			$this->set('error', array($this->token->getErrorMessage()));
-		}
-	}
 	public function update_debug() {
 		if ($this->token->validate("update_debug")) {
 			if ($this->isPost()) {
@@ -596,12 +603,6 @@ class DashboardSettingsController extends Controller {
 					break;
 				case "logging_saved":
 					$this->set('message', t('Logging configuration saved.'));	
-					break;
-				case "cache_cleared";
-					$this->set('message', t('Cached files removed.'));	
-					break;
-				case "cache_updated";
-					$this->set('message', t('Cache settings saved.'));	
 					break;
 			}
 		}

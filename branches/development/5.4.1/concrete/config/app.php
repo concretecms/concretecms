@@ -15,6 +15,13 @@ if (!defined('ENABLE_CACHE')) {
 if (!ENABLE_CACHE) {
 	Cache::disableCache();
 }
+
+if (ENABLE_CACHE) {
+	Config::getOrDefine('FULL_PAGE_CACHE_GLOBAL', 'blocks');	
+}
+
+Config::getOrDefine('FULL_PAGE_CACHE_LIFETIME', 'default');	
+
 # permissions model - valid options are 'advanced' or 'simple'
 if (!defined('PERMISSIONS_MODEL')) {
 	Config::getOrDefine('PERMISSIONS_MODEL', 'simple');

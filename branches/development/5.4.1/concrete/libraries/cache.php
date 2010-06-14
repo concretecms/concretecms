@@ -27,7 +27,7 @@ class Cache {
 			if (is_dir(DIR_FILES_CACHE) && is_writable(DIR_FILES_CACHE)) {
 				Loader::library('3rdparty/Zend/Cache');
 				$frontendOptions = array(
-					'lifetime' => 7200,
+					'lifetime' => CACHE_LIFETIME,
 					'automatic_serialization' => true			
 				);
 				$backendOptions = array(

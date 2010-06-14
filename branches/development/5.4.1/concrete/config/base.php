@@ -322,6 +322,10 @@ if (defined('DIR_FILES_CACHE')) {
 	$ADODB_CACHE_DIR = DIR_FILES_CACHE_DB;
 }
 
+if (!defined('CACHE_LIFETIME')) {
+	define('CACHE_LIFETIME', 7200);
+}
+
 define('ON_WINDOWS', intval(substr(PHP_OS,0,3)=='WIN') );
 
 # Binaries used by the system
