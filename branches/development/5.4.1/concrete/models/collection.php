@@ -612,6 +612,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			Cache::delete('request_path_page', $this->getCollectionPath()  );
 			Cache::delete('page_id_from_path', $this->getCollectionPath());
 			Cache::delete('parent_id', $this->getCollectionID());
+			Cache::delete('page_content', $this->getCollectionID());
 			if (is_object($vo)) {
 				$vo->refreshCache();
 			}

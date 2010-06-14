@@ -1919,7 +1919,7 @@ $ppWhere = '';
 	}
 	
 	public function addToPageCache($content) {
-		Cache::set('page_content', $this->getCollectionID(), $content);
+		Cache::set('page_content', $this->getCollectionID(), $content, 86400);
 	}
 	
 	public function renderFromCache() {
