@@ -70,6 +70,9 @@ class DashboardSettingsController extends Controller {
 		}
 		if ($updated) {
 			switch($updated) {
+				case 'statistics_saved':
+					$this->set('message', t('Statistics tracking preference saved.'));
+					break;
 				case "tracking_code_saved";
 					$this->set('message', t('Your tracking code has been saved.'));	
 					break;			
@@ -452,6 +455,14 @@ class DashboardSettingsController extends Controller {
 			}
 			
 			$this->redirect('/dashboard/settings','rewriting_saved', $htu);
+		}
+	}	
+	
+	public function update_statistics() {
+		if ($this->isPost()) {
+			$sv = $this->post('STATISTICS_TRACK_PAGE_VIEWS') == 1 ? 1 : 0;
+			Config::save('STATISTICS_TRACK_PAGE_VIEWS', $sv);
+			$this->redirect('/dashboard/settings','statistics_saved');
 		}
 	}	
 	

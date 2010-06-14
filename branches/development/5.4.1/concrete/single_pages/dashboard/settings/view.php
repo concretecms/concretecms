@@ -659,6 +659,27 @@ $(document).ready(function(){
 
 </form>
 
+<form method="post" id="url-form" action="<?=$this->url('/dashboard/settings', 'update_statistics')?>">
+	<?=$this->controller->token->output('update_statistics')?>
+	
+	<h1><span><?=t('Track Statistics')?></span></h1>
+	
+	<div class="ccm-dashboard-inner">
+	
+	<div class="ccm-dashboard-radio"><?=$form->checkbox('STATISTICS_TRACK_PAGE_VIEWS', 1, STATISTICS_TRACK_PAGE_VIEWS)?> <?=t('Track page view statistics.')?></div>
+	<div class="ccm-dashboard-description"><?=t("Tracks page views in concrete5. Disabling this may increase site performance, but you will have to get statistics information from elsewhere.")?></div>
+	
+
+	<?
+	$b1 = $h->submit(t('Save'));
+	print $h->buttons($b1);
+	?>
+	<br class="clear" />
+	</div>
+
+</form>
+
+
 
 
 <h1><span><?=t('Speed Settings')?></span></h1>

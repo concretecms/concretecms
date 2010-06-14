@@ -235,8 +235,8 @@
 		require(dirname(__FILE__) . '/startup/process.php');
 
 		## Record the view
-		if (STATISTICS_TRACK_PAGE_VIEWS == true) {
-			//$u->recordView($c);
+		if (STATISTICS_TRACK_PAGE_VIEWS == 1) {
+			$u->recordView($c);
 		}
 		
 		## now we display (provided we've gotten this far)
