@@ -10,7 +10,7 @@
 		protected $btInterfaceHeight = "170";
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
-		protected $btCacheBlockOutputForRegisteredUsers = true;
+		protected $btCacheBlockOutputForRegisteredUsers = false;
 
 		public $title = '';
 		public $videoURL = "";
