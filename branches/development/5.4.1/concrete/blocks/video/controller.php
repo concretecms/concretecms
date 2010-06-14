@@ -17,7 +17,7 @@
 		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
-		protected $btCacheBlockOutputForRegisteredUsers = true;
+		protected $btCacheBlockOutputForRegisteredUsers = false;
 		
 		public $width  = '';
 		public $height = '';
