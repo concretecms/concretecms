@@ -305,7 +305,9 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					print $outputContent;
 				}
 				
-				Cache::set('block_view_output', $obj->getBlockCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
+				if ($view == 'view' && $this->controller->cacheBlockOutput()) {
+					Cache::set('block_view_output', $obj->getBlockCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
+				}
 			}
 			if (isset($footer)) {
 				include($footer);

@@ -58,7 +58,7 @@ class Page extends Collection {
 	protected function populatePage($cInfo, $where, $cvID) {
 		$db = Loader::db();
 		
-		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cFilename, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cPendingAction, cPendingActionUID, cPendingActionTargetCID, cPendingActionDatetime, cCheckedOutUID, cIsTemplate, uID, cPath, Pages.ctID, ctHandle, ctIcon, ptID, cParentID, cChildren, ctName from Pages inner join Collections on Pages.cID = Collections.cID left join PageTypes on (PageTypes.ctID = Pages.ctID) left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
+		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cFilename, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cPendingAction, cPendingActionUID, cPendingActionTargetCID, cPendingActionDatetime, cCheckedOutUID, cIsTemplate, uID, cPath, Pages.ctID, ctHandle, ctIcon, ptID, cParentID, cChildren, ctName, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PageTypes on (PageTypes.ctID = Pages.ctID) left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		$q2 = "select cParentID, cPointerID, cPath, Pages.cID from Pages left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 
 		if ($cInfo != 1) {
@@ -884,8 +884,21 @@ $ppWhere = '';
 		
 		$rescanTemplatePermissions = false;
 		
+		$cCacheFullPageContent = $this->cCacheFullPageContent;
+		$cCacheFullPageContentLifetimeCustom = $this->cCacheFullPageContentLifetimeCustom;
+		$cCacheFullPageContentOverrideLifetime = $this->cCacheFullPageContentOverrideLifetime;
+		
 		if (isset($data['cName'])) {
 			$cName = $data['cName'];
+		}
+		if (isset($data['cCacheFullPageContent'])) {
+			$cCacheFullPageContent = $data['cCacheFullPageContent'];
+		}
+		if (isset($data['cCacheFullPageContentLifetimeCustom'])) {
+			$cCacheFullPageContentLifetimeCustom = $data['cCacheFullPageContentLifetimeCustom'];
+		}
+		if (isset($data['cCacheFullPageContentOverrideLifetime'])) {
+			$cCacheFullPageContentOverrideLifetime = $data['cCacheFullPageContentOverrideLifetime'];
 		}
 		if (isset($data['cDescription'])) {
 			$cDescription = $data['cDescription'];
@@ -935,7 +948,7 @@ $ppWhere = '';
 			$res = $db->execute($r, $v);				
 		}
 
-		$db->query("update Pages set uID = ?, ctID = ?, pkgID = ?, cFilename = ? where cID = ?", array($uID, $ctID, $pkgID, $cFilename, $this->cID));
+		$db->query("update Pages set uID = ?, ctID = ?, pkgID = ?, cFilename = ?, cCacheFullPageContent = ?, cCacheFullPageContentLifetimeCustom = ?, cCacheFullPageContentOverrideLifetime = ? where cID = ?", array($uID, $ctID, $pkgID, $cFilename, $cCacheFullPageContent, $cCacheFullPageContentLifetimeCustom, $cCacheFullPageContentOverrideLifetime, $this->cID));
 
 		if ($rescanTemplatePermissions) {
 			if ($this->cInheritPermissionsFrom == 'TEMPLATE') {
@@ -1919,7 +1932,7 @@ $ppWhere = '';
 	}
 	
 	public function addToPageCache($content) {
-		Cache::set('page_content', $this->getCollectionID(), $content, 86400);
+		Cache::set('page_content', $this->getCollectionID(), $content, $this->getCollectionFullPageCachingLifetimeValue());
 	}
 	
 	public function renderFromCache() {
@@ -1929,6 +1942,64 @@ $ppWhere = '';
 			exit;
 		}
 	}
+
+	public function getCollectionFullPageCaching() {
+		return $this->cCacheFullPageContent;
+	}
+	
+	public function getCollectionFullPageCachingLifetime() {
+		return $this->cCacheFullPageContentOverrideLifetime;
+	}
+	
+	public function getCollectionFullPageCachingLifetimeCustomValue() {
+		return $this->cCacheFullPageContentLifetimeCustom;
+	}
+
+	public function getCollectionFullPageCachingLifetimeValue() {
+		if ($this->cCacheFullPageContentOverrideLifetime == 'default') {
+			$lifetime = CACHE_LIFETIME;
+		} else if ($this->cCacheFullPageContentOverrideLifetime == 'custom') {
+			$lifetime = $this->cCacheFullPageContentLifetimeCustom * 60;		
+		} else if ($this->cCacheFullPageContentOverrideLifetime == 'forever') {
+			$lifetime = 31536000; // 1 year
+		} else {
+			if (FULL_PAGE_CACHE_LIFETIME == 'custom') {
+				$lifetime = Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM') * 60;		
+			} else if (FULL_PAGE_CACHE_LIFETIME == 'forever') {
+				$lifetime = 31536000; // 1 year
+			} else {
+				$lifetime = CACHE_LIFETIME;
+			}
+		}
+		
+		return $lifetime;
+	}
+	
+	public function supportsPageCache($blocks) {
+		$u = new User();
+		if ($u->isRegistered() || $_SERVER['REQUEST_METHOD'] == 'POST') {
+			return false;
+		}
+		if ($this->cCacheFullPageContent || FULL_PAGE_CACHE_GLOBAL == 'all') {
+			// this cache page at the page level
+			// this overrides any global settings
+			return true;
+		}
+		
+		if (FULL_PAGE_CACHE_GLOBAL != 'blocks') {
+			// we are NOT specifically caching this page, and we don't 
+			return false;
+		}
+
+		foreach($blocks as $b) {
+			$controller = $b->getInstance();
+			if (!$controller->cacheBlockOutput()) {
+				return false;
+			}
+		}
+		return true;
+	}
+		
 	
 	public function addStatic($data) {
 		$db = Loader::db();

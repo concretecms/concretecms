@@ -1438,6 +1438,19 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="cCacheFullPageContent" type="I" size="4">
+      <NOTNULL/>
+      <DEFAULT value="-1"/>
+    </field>
+    <field name="cCacheFullPageContentOverrideLifetime" type="C" size="32">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="cCacheFullPageContentLifetimeCustom" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <index name="cParentID">
       <col>cParentID</col>
     </index>

@@ -655,20 +655,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			return $blocks;
 		}
 		
-		public function testBlocksForPageCache($blocks) {
-			$u = new User();
-			if ($u->isRegistered() || $_SERVER['REQUEST_METHOD'] == 'POST') {
-				return false;
-			}
-			foreach($blocks as $b) {
-				$controller = $b->getInstance();
-				if (!$controller->cacheBlockOutput()) {
-					return false;
-				}
-			}
-			return true;
-		}
-			
 		public function addBlock($bt, $a, $data) {
 			$db = Loader::db();
 			
