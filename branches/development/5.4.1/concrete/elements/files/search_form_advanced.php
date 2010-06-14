@@ -245,7 +245,7 @@ foreach($t1 as $value) {
 			</div>
 			
 			<div id="ccm-search-fields-submit">
-				<div id="ccm-search-save"><a href="javascript:void(0)"><?=t('Save Search')?></a></div>
+				<div id="ccm-search-save"><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/save_search?searchInstance=<?=$searchInstance?>" id="ccm-<?=$searchInstance?>-launch-save-search" dialog-title="<?=t('Save Search')?>" dialog-width="320" dialog-height="200" dialog-modal="false"><?=t('Save Search')?></a></div>
 				<?=$form->submit('ccm-search-files', 'Search')?>
 			</div>
 		</div>
@@ -257,3 +257,7 @@ foreach($t1 as $value) {
 </div>
 
 </form>	
+
+<script type="text/javascript">$(function() {
+	$('a#ccm-<?=$searchInstance?>-launch-save-search').dialog();
+});</script>
