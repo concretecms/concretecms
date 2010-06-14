@@ -631,8 +631,6 @@ class PageTheme extends Object {
 	}
 	
 	public function getSiteTheme() {
-		// returns cLayout on the home collection
-		$db = Loader::db();
 		$c = Page::getByID(HOME_CID);
 		return PageTheme::getByID($c->getCollectionThemeID());
 	}
