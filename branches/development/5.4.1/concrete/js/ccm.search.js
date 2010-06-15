@@ -104,7 +104,7 @@ ccm_setupSortableColumnSelection = function(searchType) {
 	$("#ccm-search-add-column").unbind();
 	$("#ccm-search-add-column").click(function() {
 		jQuery.fn.dialog.open({
-			width: 400,
+			width: 550,
 			height: 350,
 			modal: false,
 			href: $(this).attr('href'),

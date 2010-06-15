@@ -69,3 +69,7 @@ div#ccm-search-save, div#ccm-search-export {float: left; width: 80px; text-align
 div#ccm-search-export a, div#ccm-search-save a {font-size: 11px}
 div#ccm-search-export {background: transparent url(../images/icons/excel.png) no-repeat;padding-left: 22px; margin-top: 2px; padding-top: 3px; padding-bottom: 10px  }
 div#ccm-search-save {background: transparent url(../images/icons/save_search.png) no-repeat; padding-left: 20px; margin-top: 2px; padding-top: 1px; padding-bottom: 12px}
+
+ul.ccm-search-sortable-column-wrapper {border: 2px solid #dedede; padding: 0px; margin: 0px; padding-top: 8px}
+ul.ccm-search-sortable-column-wrapper li {padding: 2px 0px 4px 24px; margin-left: 4px; margin-bottom: 4px; background: transparent url(../images/icons/column.png) no-repeat scroll; list-style-type: none}
+ul.ccm-search-sortable-column-wrapper li:hover {cursor: move}
