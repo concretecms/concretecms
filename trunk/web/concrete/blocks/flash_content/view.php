@@ -1,14 +1,8 @@
 <?
 	defined('C5_EXECUTE') or die(_("Access Denied."));
 	$file = $controller->getFileObject();
-	$dimensions = @getimagesize($file->getPath());
-	if (is_array($dimensions)) {
-		$w = $dimensions[0];
-		$h = $dimensions[1];
-	} else {
-		$w = 300;
-		$h = 300;
-	}
+	$w = $file->getAttribute('width');
+	$h = $file->getAttribute('height');
 	
 $c = Page::getCurrentPage();
  
