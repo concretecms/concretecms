@@ -43,6 +43,7 @@
 		const TYPE_PRIVATE 	= 0;
 		const TYPE_PUBLIC 	= 1;
 		const TYPE_STARRED 	= 2;
+		const TYPE_SAVED_SEARCH = 3;
 		protected $fileSetFiles;
 	
 		/** 
@@ -58,6 +59,21 @@
 		
 		public function getFileSetUserID() {return $this->uID;}
 		public function getFileSetType() {return $this->fsType;}
+		
+		public function getSavedSearches() {
+			$db = Loader::db();
+			$sets = array();
+			$u = new User();
+			$r = $db->Execute('select * from FileSets where fsType = ? and uID = ? order by fsName asc', array(FileSet::TYPE_SAVED_SEARCH, $u->getUserID()));
+			while ($row = $r->FetchRow()) {
+				$fs = new FileSet();
+				foreach($row as $key => $value) {
+					$fs->{$key} = $value;
+				}
+				$sets[] = $fs;
+			}
+			return $sets;
+		}
 		
 		public function getMySets($u = false) {
 			if ($u == false) {
@@ -96,6 +112,11 @@
 				$fs = new FileSet();
 				foreach($row as $key => $value) {
 					$fs->{$key} = $value;
+				}
+				if ($row['fsType'] == FileSet::TYPE_SAVED_SEARCH) {
+					$row2 = $db->GetRow('select fsSearchRequest, fsResultColumns from FileSetSavedSearches where fsID = ?', array($fsID));
+					$fs->fsSearchRequest = @unserialize($row2['fsSearchRequest']);
+					$fs->fsResultColumns = @unserialize($row2['fsResultColumns']);
 				}
 				return $fs;
 			}
@@ -172,6 +193,13 @@
 			return $file_set_file;
 		}
 		
+		public function getSavedSearchRequest() {
+			return $this->fsSearchRequest;
+		}
+		
+		public function getSavedSearchColumns() {
+			return $this->fsResultColumns;
+		}
 		public function removeFileFromSet($f_id){
 			if (is_object($f_id)) {
 				$f_id = $f_id->fID;
@@ -203,7 +231,13 @@
 				}
 			}
 		}
-
+		
+		public function delete() {
+			parent::delete();
+			$db = Loader::db();
+			$db->Execute('delete from FileSetSavedSearches where fsID = ?', $this->fsID);
+		}
+		
 		public function resetPermissions() {
 			$db = Loader::db();
 			$db->Execute('delete from FileSetPermissions where fsID = ?', array($this->fsID));
@@ -275,6 +309,18 @@
 				return $file_set_file;
 			}			
 		}
+	}
+	
+	class FileSetSavedSearch extends FileSet {
+		
+		public static function add($name, $searchRequest, $searchColumnsObject) {
+			$fs = parent::createAndGetSet($name, FileSet::TYPE_SAVED_SEARCH);
+			$db = Loader::db();
+			$v = array($fs->getFileSetID(), serialize($searchRequest), serialize($searchColumnsObject));
+			$db->Execute('insert into FileSetSavedSearches (fsID, fsSearchRequest, fsResultColumns) values (?, ?, ?)', $v);
+			return $fs;
+		}
+	
 	}
 	
 	

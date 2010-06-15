@@ -245,29 +245,47 @@ class FileList extends DatabaseItemList {
 }
 
 class FileManagerDefaultColumnSet extends DatabaseItemListColumnSet {
+	protected $attributeClass = 'FileAttributeKey';	
+	
+	public static function getFileDateAdded($f) {
+		return date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, strtotime($f->getDateAdded()));
+	}
+
+	public static function getFileDateActivated($f) {
+		$fv = $f->getVersion();
+		return date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, strtotime($fv->getDateAdded()));
+	}
 	
 	public function __construct() {
-		$ak1 = FileAttributeKey::getByHandle('width');
-		$this->addColumn(new DatabaseItemListColumn('fvType', t('Type'), false));
-		$title = new DatabaseItemListColumn('fvTitle', t('Title'));
-		$this->addColumn($title);
-		$this->addColumn(new DatabaseItemListColumn('fDateAdded', t('Added')));
-		$this->addColumn(new DatabaseItemListAttributeKeyColumn($ak1));
-		$this->addColumn(new DatabaseItemListColumn('fvDateActive', t('Active')));
-		$this->addColumn(new DatabaseItemListColumn('fvSize', t('Size')));
-		$this->setDefaultSortColumn($title);
+		$this->addColumn(new DatabaseItemListColumn('fvType', t('Type'), 'getType', false));
+		$this->addColumn(new DatabaseItemListColumn('fvTitle', t('Title'), 'getTitle'));
+		$this->addColumn(new DatabaseItemListColumn('fDateAdded', t('Added'), array('FileManagerDefaultColumnSet', 'getFileDateAdded')));
+		$this->addColumn(new DatabaseItemListColumn('fvDateAdded', t('Active'), array('FileManagerDefaultColumnSet', 'getFileDateActivated')));
+		$this->addColumn(new DatabaseItemListColumn('fvSize', t('Size'), 'getSize'));
+		$title = $this->getColumnByKey('fDateAdded');
+		$this->setDefaultSortColumn($title, 'desc');
 	}
 }
 
-class FileManagerAvailableColumnSet extends DatabaseItemListColumnSet {
-
+class FileManagerAvailableColumnSet extends FileManagerDefaultColumnSet {
+	protected $attributeClass = 'FileAttributeKey';
 	public function __construct() {
-		$this->addColumn(new DatabaseItemListColumn('fvType', t('Type'), false));
-		$this->addColumn(new DatabaseItemListColumn('fvTitle', t('Title')));
-		$this->addColumn(new DatabaseItemListColumn('fvAuthorName', t('Author')));
-		$this->addColumn(new DatabaseItemListColumn('fDateAdded', t('Added')));
-		$this->addColumn(new DatabaseItemListColumn('fvDateActive', t('Active')));
-		$this->addColumn(new DatabaseItemListColumn('fvSize', t('Size')));
+		parent::__construct();
+		$this->addColumn(new DatabaseItemListColumn('fvAuthorName', t('Author'), 'getAuthorName'));
 	}
+}
 
+class FileManagerColumnSet extends DatabaseItemListColumnSet {
+	protected $attributeClass = 'FileAttributeKey';
+	public function getCurrent() {
+		$u = new User();
+		$fldc = $u->config('FILE_LIST_DEFAULT_COLUMNS');
+		if ($fldc != '') {
+			$fldc = @unserialize($fldc);
+		}
+		if (!($fldc instanceof DatabaseItemListColumnSet)) {
+			$fldc = new FileManagerDefaultColumnSet();
+		}
+		return $fldc;
+	}
 }
