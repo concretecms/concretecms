@@ -18,7 +18,7 @@ if (isset($_REQUEST['searchInstance'])) {
 	$keywords = $searchRequest['fKeywords'];
 	$soargs = array();
 	$soargs['searchInstance'] = $searchInstance;
-
+	
 	/*
 	if ($searchType == 'DASHBOARD') {
 		$bu = false;
@@ -43,18 +43,15 @@ if (isset($_REQUEST['searchInstance'])) {
 				<option value="delete"><?=t('Delete')?></option>
 			</select>
 			</th>
-			<th>Type</th>
 
-			<th class="ccm-file-list-starred">&nbsp;</th>			
-			<th class="ccm-file-list-filename <?=$fileList->getSearchResultsClass('fvTitle')?>"><a href="<?=$fileList->getSortByURL('fvTitle', 'asc', $bu, $soargs)?>"><?=t('Title')?></a></th>
-			<th class="<?=$fileList->getSearchResultsClass('fDateAdded')?>"><a href="<?=$fileList->getSortByURL('fDateAdded', 'asc', $bu, $soargs)?>"><?=t('Added')?></a></th>
-			<th class="<?=$fileList->getSearchResultsClass('fvDateAdded')?>"><a href="<?=$fileList->getSortByURL('fvDateAdded', 'asc', $bu, $soargs)?>"><?=t('Active')?></a></th>
-			<th class="<?=$fileList->getSearchResultsClass('fvSize')?>"><a href="<?=$fileList->getSortByURL('fvSize', 'asc', $bu, $soargs)?>"><?=t('Size')?></a></th>
-			<? 
-			$slist = FileAttributeKey::getColumnHeaderList();
-			foreach($slist as $ak) { ?>
-				<th class="<?=$fileList->getSearchResultsClass($ak)?>"><a href="<?=$fileList->getSortByURL($ak, 'asc', $bu, $soargs)?>"><?=$ak->getAttributeKeyDisplayHandle()?></a></th>
-			<? } ?>			
+			<th class="ccm-file-list-starred">&nbsp;</th>
+			<? foreach($columns->getColumns() as $col) { ?>
+				<? if ($col->isColumnSortable()) { ?>
+					<th class="<?=$fileList->getSearchResultsClass($col->getColumnKey())?>"><a href="<?=$fileList->getSortByURL($col->getColumnKey(), $col->getColumnDefaultSortDirection(), $bu, $soargs)?>"><?=$col->getColumnName()?></a></th>
+				<? } else { ?>
+					<th><?=t('Type')?></th>
+				<? } ?>
+			<? } ?>
 			<th class="ccm-search-add-column-header"><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-search-add-column"><img src="<?=ASSETS_URL_IMAGES?>/icons/column_preferences.png" width="16" height="16" /></a></th>
 		</tr>
 	<?
@@ -83,22 +80,20 @@ if (isset($_REQUEST['searchInstance'])) {
 			<? } ?>
 
 				</td>
-			<td><?=$fv->getType()?></td>
-			<td class="ccm-file-list-starred"><img src="<?=ASSETS_URL_IMAGES?>/icons/<?=$star_icon?>" height="16" width="16" border="0" class="ccm-star" /></td>			
-			<td class="ccm-file-list-filename"><div style="word-wrap: break-word; width: 100px"><?=$txt->highlightSearch($fv->getTitle(), $keywords)?></div></td>
-			<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, strtotime($f->getDateAdded()))?></td>
-			<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, strtotime($fv->getDateAdded()))?></td>
-			<td><?=$fv->getSize()?></td>
-			<? 
-			$slist = FileAttributeKey::getColumnHeaderList();
-			foreach($slist as $ak) { ?>
-				<td><?
-				$vo = $fv->getAttributeValueObject($ak);
-				if (is_object($vo)) {
-					print $vo->getValue('display');
-				}
-				?></td>
-			<? } ?>		
+			<td class="ccm-file-list-starred"><img src="<?=ASSETS_URL_IMAGES?>/icons/<?=$star_icon?>" height="16" width="16" border="0" class="ccm-star" /></td>
+			<? foreach($columns->getColumns() as $col) { ?>
+				<? // special one for keywords ?>				
+				<? if ($col->getColumnKey() == 'fvTitle') { ?>
+					<td class="ccm-file-list-filename"><div style="word-wrap: break-word; width: 100px"><?=$txt->highlightSearch($fv->getTitle(), $keywords)?></div></td>		
+				<? } else { ?>
+					<td><?=$col->getColumnValue($f)?></td>
+				<? } ?>
+			<? } ?>
+			
+			<? /*
+			
+			*/ ?>
+			
 			<td>&nbsp;</td>
 			
 			</tr>

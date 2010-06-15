@@ -22,7 +22,7 @@ class DashboardFilesSearchController extends Controller {
 	public function getRequestedSearchResults() {
 		$fileList = new FileList();
 		$fileList->enableStickySearchRequest();
-		
+				
 		Loader::model('file_set');
 		
 		if ($_REQUEST['submit_search']) {
@@ -30,9 +30,28 @@ class DashboardFilesSearchController extends Controller {
 		}
 
 		$req = $fileList->getSearchRequest();
-		$this->set('searchRequest', $req);
 		
-		$fileList->sortBy('fDateAdded', 'desc');
+		// first thing, we check to see if a saved search is being used
+		if (isset($_REQUEST['fssID'])) {
+			$fs = FileSet::getByID($_REQUEST['fssID']);
+			if ($fs->getFileSetType() == FileSet::TYPE_SAVED_SEARCH) {
+				$req = $fs->getSavedSearchRequest();
+				$columns = $fs->getSavedSearchColumns();
+				$colsort = $columns->getDefaultSortColumn();
+				$fileList->addToSearchRequest('ccm_order_dir', $colsort->getColumnDefaultSortDirection());
+				$fileList->addToSearchRequest('ccm_order_by', $colsort->getColumnKey());
+			}
+		}
+		
+		if (!isset($columns)) {
+			$columns = FileManagerColumnSet::getCurrent();
+		}
+
+		$this->set('searchRequest', $req);
+		$this->set('columns', $columns);
+
+		$col = $columns->getDefaultSortColumn();	
+		$fileList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
 		
 		$keywords = htmlentities($req['fKeywords'], ENT_QUOTES, APP_CHARSET);
 		

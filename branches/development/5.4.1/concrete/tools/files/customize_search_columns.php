@@ -11,27 +11,23 @@ if (!$fp->canAccessFileManager()) {
 Loader::model('file_list');
 $selectedAKIDs = array();
 
-$fldc = $u->config('FILE_LIST_DEFAULT_COLUMNS');
-if (!($fldc instanceof DatabaseItemListColumnSet)) {
-	$fldc = new FileManagerDefaultColumnSet();
-}
-
+$fldc = FileManagerColumnSet::getCurrent();
 $fldca = new FileManagerAvailableColumnSet();
 
-$searchInstance = $_REQUEST['searchInstance'];
 
+$searchInstance = $_REQUEST['searchInstance'];
 if ($_POST['task'] == 'update_columns') {
-	Loader::model('attribute/category');
-	$sc = AttributeKeyCategory::getByHandle('file');
-	$sc->clearAttributeKeyCategoryColumnHeaders();
 	
-	if (is_array($_POST['akID'])) {
-		foreach($_POST['akID'] as $akID) {
-			$ak = FileAttributeKey::getByID($akID);
-			$ak->setAttributeKeyColumnHeader(1);
-		}
-	}
+	$fdc = new FileManagerColumnSet();
+	foreach($_POST['column'] as $key) {
+		$fdc->addColumn($fldca->getColumnByKey($key));
+	}	
+	$sortCol = $fldca->getColumnByKey($_POST['fSearchDefaultSort']);
+	$fdc->setDefaultSortColumn($sortCol, $_POST['fSearchDefaultSortDirection']);
+	$u->saveConfig('FILE_LIST_DEFAULT_COLUMNS', serialize($fdc));
 	
+	$fileList = new FileList();
+	$fileList->resetSearchRequest();
 	exit;
 }
 
@@ -63,7 +59,7 @@ $list = FileAttributeKey::getList();
 	
 	<? foreach($list as $ak) { ?>
 	
-		<div><?=$form->checkbox('akID[]', $ak->getAttributeKeyID(), $fldc->contains($ak), array('style' => 'vertical-align: middle'))?> <label for="akID_<?=$ak->getAttributeKeyID()?>"><?=$ak->getAttributeKeyDisplayHandle()?></label></div>
+		<div><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak), array('style' => 'vertical-align: middle'))?> <label for="ak_<?=$ak->getAttributeKeyHandle()?>"><?=$ak->getAttributeKeyDisplayHandle()?></label></div>
 		
 	<? } ?>
 	
@@ -77,7 +73,7 @@ $list = FileAttributeKey::getList();
 	
 	<ul class="ccm-search-sortable-column-wrapper" id="ccm-<?=$searchInstance?>-sortable-column-wrapper">
 	<? foreach($fldc->getColumns() as $col) { ?>
-		<li id="field_<?=$col->getColumnKey()?>"><?=$col->getColumnName()?></li>	
+		<li id="field_<?=$col->getColumnKey()?>"><input type="hidden" name="column[]" value="<?=$col->getColumnKey()?>" /><?=$col->getColumnName()?></li>	
 	<? } ?>	
 	</ul>
 	
@@ -89,7 +85,7 @@ $list = FileAttributeKey::getList();
 	
 	<select <? if (count($fldc->getSortableColumns()) == 0) { ?>disabled="true"<? } ?> id="ccm-<?=$searchInstance?>-sortable-column-default" name="fSearchDefaultSort">
 	<? foreach($fldc->getSortableColumns() as $col) { ?>
-		<option id="opt_<?=$col->getColumnKey()?>" <? if ($col->getColumnKey() == $ds->getColumnKey()) { ?> selected="true" <? } ?>><?=$col->getColumnName()?></option>
+		<option id="opt_<?=$col->getColumnKey()?>" value="<?=$col->getColumnKey()?>" <? if ($col->getColumnKey() == $ds->getColumnKey()) { ?> selected="true" <? } ?>><?=$col->getColumnName()?></option>
 	<? } ?>	
 	</select>
 	<select <? if (count($fldc->getSortableColumns()) == 0) { ?>disabled="true"<? } ?> id="ccm-<?=$searchInstance?>-sortable-column-default-direction" name="fSearchDefaultSortDirection">
@@ -113,12 +109,12 @@ print $b1;
 
 <script type="text/javascript">
 ccm_submitCustomizeSearchColumnsForm = function() {
-	var fslist = $('#ccm-<?=$searchInstance?>-sortable-column-wrapper').sortable('serialize');
-	$('input[name=fSearchDisplayOrder]').val(fslist);
-	alert(fslist);
-		
-	ccm_deactivateSearchResults('<?=$searchInstance?>');
+	//ccm_deactivateSearchResults('<?=$searchInstance?>');
 	$("#ccm-<?=$searchInstance?>-customize-search-columns-form").ajaxSubmit(function(resp) {
+		var sortDirection = $("#ccm-<?=$searchInstance?>-customize-search-columns-form select[name=fSearchDefaultSortDirection]").val();
+		var sortCol = $("#ccm-<?=$searchInstance?>-customize-search-columns-form select[name=fSearchDefaultSort]").val();
+		$("#ccm-<?=$searchInstance?>-advanced-search input[name=ccm_order_dir]").val(sortDirection);
+		$("#ccm-<?=$searchInstance?>-advanced-search input[name=ccm_order_by]").val(sortCol);
 		jQuery.fn.dialog.closeTop();
 		$("#ccm-<?=$searchInstance?>-advanced-search").ajaxSubmit(function(resp) {
 			ccm_parseAdvancedSearchResponse(resp, '<?=$searchInstance?>');
@@ -132,13 +128,13 @@ $(function() {
 		opacity: 0.5
 	});
 	$('form#ccm-<?=$searchInstance?>-customize-search-columns-form input[type=checkbox]').click(function() {
-		var thisID = $(this).attr('id').replace(/_/,'');
 		var thisLabel = $(this).parent().find('label').html();
+		var thisID = $(this).attr('id');
 		if ($(this).attr('checked')) {
 			if ($('#field_' + thisID).length == 0) {
 				$('#ccm-<?=$searchInstance?>-sortable-column-default').append('<option value="' + thisID + '" id="opt_' + thisID + '">' + thisLabel + '<\/option>');
 				$('div.ccm-sortable-column-sort-controls select').attr('disabled', false);
-				$('#ccm-<?=$searchInstance?>-sortable-column-wrapper').append('<li id="field_' + thisID + '">' + thisLabel + '<\/li>');
+				$('#ccm-<?=$searchInstance?>-sortable-column-wrapper').append('<li id="field_' + thisID + '"><input type="hidden" name="column[]" value="' + thisID + '" />' + thisLabel + '<\/li>');
 			}
 		} else {
 			$('#field_' + thisID).remove();

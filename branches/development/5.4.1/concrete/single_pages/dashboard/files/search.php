@@ -22,7 +22,7 @@ if ($fp->canSearchFiles()) { ?>
 						
 						<div id="ccm-<?=$searchInstance?>-search-results" class="ccm-file-list">
 						
-							<? Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'searchType' => 'DASHBOARD', 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
+							<? Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'columns' => $columns, 'searchType' => 'DASHBOARD', 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
 						
 						</div>
 					

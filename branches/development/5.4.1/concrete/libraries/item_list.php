@@ -103,12 +103,11 @@ class DatabaseItemList extends ItemList {
 	}
 	
 	protected function setupAttributeSort() {
-		if (method_exists($this->attributeClass, 'getColumnHeaderList')) {
-			$l = call_user_func(array($this->attributeClass, 'getColumnHeaderList'));
+		if (method_exists($this->attributeClass, 'getList')) {
+			$l = call_user_func(array($this->attributeClass, 'getList'));
 			foreach($l as $ak) {
 				$this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();
 			}
-			
 			if ($this->sortBy != '' && in_array('ak_' . $this->sortBy, $this->autoSortColumns)) {
 				$this->sortBy = 'ak_' . $this->sortBy;
 			}
@@ -224,11 +223,13 @@ class ItemList {
 	}
 	
 	public function resetSearchRequest() {
-		if ($this->enableStickySearchRequest) {
-			$_SESSION[get_class($this) . 'SearchFields'] = array();
-		}
+		$_SESSION[get_class($this) . 'SearchFields'] = array();
 	}
-
+	
+	public function addToSearchRequest($key, $val) {
+		$_SESSION[get_class($this) . 'SearchFields'][$key] = $value;
+	}
+	
 	public function getSearchRequest() {
 		if ($this->enableStickySearchRequest) {
 			if (!is_array($_SESSION[get_class($this) . 'SearchFields'])) {
@@ -446,23 +447,45 @@ class ItemList {
 
 class DatabaseItemListColumn {
 
+	public function getColumnValue($obj) {
+		if (is_array($this->callback)) {
+			return call_user_func_array($this->callback, array($obj));
+		} else {
+			return call_user_func(array($obj, $this->callback));
+		}
+	}
+	
 	public function getColumnKey() {return $this->columnKey;}
 	public function getColumnName() {return $this->columnName;}
 	public function getColumnDefaultSortDirection() {return $this->defaultSortDirection;}
 	public function isColumnSortable() {return $this->isSortable;}
+	public function getColumnCallback() {return $this->callback;}
 	public function setColumnDefaultSortDirection($dir) {$this->defaultSortDirection = $dir;}
-	public function __construct($key, $name, $isSortable = true, $defaultSort = 'asc') {
+	public function __construct($key, $name, $callback, $isSortable = true, $defaultSort = 'asc') {
 		$this->columnKey = $key;
 		$this->columnName = $name;
 		$this->isSortable = $isSortable;
+		$this->callback = $callback;
 		$this->defaultSortDirection = $defaultSort;
 	}
 }
 
 class DatabaseItemListAttributeKeyColumn extends DatabaseItemListColumn{
 
+	protected $attributeKey = false;
+	
 	public function __construct($attributeKey, $isSortable = true, $defaultSort = 'asc') {
-		parent::__construct('ak_' . $attributeKey->getAttributeKeyHandle(), $attributeKey->getAttributeKeyName(), $isSortable, $defaultSort);
+		$this->attributeKey = $attributeKey;
+		parent::__construct('ak_' . $attributeKey->getAttributeKeyHandle(), $attributeKey->getAttributeKeyName(), false, $isSortable, $defaultSort);
+	}
+	
+	public function getColumnValue($obj) {
+		if (is_object($this->attributeKey)) {
+			$vo = $obj->getAttributeValueObject($this->attributeKey);
+			if (is_object($vo)) {
+				return $vo->getValue('display');
+			}
+		}
 	}
 }
 
@@ -471,7 +494,7 @@ class DatabaseItemListColumnSet {
 	protected $columns = array();
 	protected $defaultSortColumn;
 	
-	public function addColumn(DatabaseItemListColumn $col) {
+	public function addColumn($col) {
 		$this->columns[] = $col;
 	}
 	public function getSortableColumns() {
@@ -492,6 +515,19 @@ class DatabaseItemListColumnSet {
 	
 	public function getDefaultSortColumn() {
 		return $this->defaultSortColumn;
+	}
+	public function getColumnByKey($key) {
+		if (substr($key, 0, 3) == 'ak_') {
+			$ak = call_user_func_array(array($this->attributeClass, 'getByHandle'), array(substr($key, 3)));
+			$col = new DatabaseItemListAttributeKeyColumn($ak);
+			return $col;
+		} else {
+			foreach($this->columns as $col) {
+				if ($col->getColumnKey() == $key) {
+					return $col;			
+				}
+			}
+		}
 	}
 	public function getColumns() {return $this->columns;}
 	public function contains($col) {
