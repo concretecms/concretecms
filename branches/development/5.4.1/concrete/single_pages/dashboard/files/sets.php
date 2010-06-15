@@ -123,7 +123,7 @@
 		<li id="fID_<?=$f->getFileID()?>">
 			<div>
 				<?=$f->getThumbnail(1)?>				
-				<span><?=wordwrap($f->getTitle(), 15, "\n", true)?></span>
+				<span style="word-wrap: break-word"><?=$f->getTitle()?></span>
 			</div>
 		</li>
 			

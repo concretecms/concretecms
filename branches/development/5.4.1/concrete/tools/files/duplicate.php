@@ -99,7 +99,7 @@ if (!is_array($_REQUEST['fID'])) {
 					</td>
 			
 					<td><?=$fv->getType()?></td>
-					<td class="ccm-file-list-filename"><?=wordwrap($fv->getTitle(), 25, "\n", true)?></td>
+					<td class="ccm-file-list-filename" width="100%"><div style="width: 150px; word-wrap: break-word"><?=$fv->getTitle()?></td>
 					<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, strtotime($f->getDateAdded()))?></td>
 					<td><?=$fv->getSize()?></td>
 					<td><?=$fv->getAuthorName()?></td>
