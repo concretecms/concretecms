@@ -243,3 +243,31 @@ class FileList extends DatabaseItemList {
 	}
 
 }
+
+class FileManagerDefaultColumnSet extends DatabaseItemListColumnSet {
+	
+	public function __construct() {
+		$ak1 = FileAttributeKey::getByHandle('width');
+		$this->addColumn(new DatabaseItemListColumn('fvType', t('Type'), false));
+		$title = new DatabaseItemListColumn('fvTitle', t('Title'));
+		$this->addColumn($title);
+		$this->addColumn(new DatabaseItemListColumn('fDateAdded', t('Added')));
+		$this->addColumn(new DatabaseItemListAttributeKeyColumn($ak1));
+		$this->addColumn(new DatabaseItemListColumn('fvDateActive', t('Active')));
+		$this->addColumn(new DatabaseItemListColumn('fvSize', t('Size')));
+		$this->setDefaultSortColumn($title);
+	}
+}
+
+class FileManagerAvailableColumnSet extends DatabaseItemListColumnSet {
+
+	public function __construct() {
+		$this->addColumn(new DatabaseItemListColumn('fvType', t('Type'), false));
+		$this->addColumn(new DatabaseItemListColumn('fvTitle', t('Title')));
+		$this->addColumn(new DatabaseItemListColumn('fvAuthorName', t('Author')));
+		$this->addColumn(new DatabaseItemListColumn('fDateAdded', t('Added')));
+		$this->addColumn(new DatabaseItemListColumn('fvDateActive', t('Active')));
+		$this->addColumn(new DatabaseItemListColumn('fvSize', t('Size')));
+	}
+
+}

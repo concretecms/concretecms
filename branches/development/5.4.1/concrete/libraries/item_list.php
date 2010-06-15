@@ -442,5 +442,70 @@ class ItemList {
 			}
 		}
 	}
+}
 
+class DatabaseItemListColumn {
+
+	public function getColumnKey() {return $this->columnKey;}
+	public function getColumnName() {return $this->columnName;}
+	public function getColumnDefaultSortDirection() {return $this->defaultSortDirection;}
+	public function isColumnSortable() {return $this->isSortable;}
+	public function setColumnDefaultSortDirection($dir) {$this->defaultSortDirection = $dir;}
+	public function __construct($key, $name, $isSortable = true, $defaultSort = 'asc') {
+		$this->columnKey = $key;
+		$this->columnName = $name;
+		$this->isSortable = $isSortable;
+		$this->defaultSortDirection = $defaultSort;
+	}
+}
+
+class DatabaseItemListAttributeKeyColumn extends DatabaseItemListColumn{
+
+	public function __construct($attributeKey, $isSortable = true, $defaultSort = 'asc') {
+		parent::__construct('ak_' . $attributeKey->getAttributeKeyHandle(), $attributeKey->getAttributeKeyName(), $isSortable, $defaultSort);
+	}
+}
+
+class DatabaseItemListColumnSet {
+	
+	protected $columns = array();
+	protected $defaultSortColumn;
+	
+	public function addColumn(DatabaseItemListColumn $col) {
+		$this->columns[] = $col;
+	}
+	public function getSortableColumns() {
+		$tmp = array();
+		foreach($this->columns as $col) {
+			if ($col->isColumnSortable()) {
+				$tmp[] = $col;
+			}
+		}
+		return $tmp;
+	}
+	public function setDefaultSortColumn(DatabaseItemListColumn $col, $direction = false) {
+		if ($direction != false) {
+			$col->setColumnDefaultSortDirection($direction);
+		}
+		$this->defaultSortColumn = $col;
+	}
+	
+	public function getDefaultSortColumn() {
+		return $this->defaultSortColumn;
+	}
+	public function getColumns() {return $this->columns;}
+	public function contains($col) {
+		foreach($this->columns as $_col) {
+			if ($col instanceof DatabaseItemListColumn) {
+				if ($_col->getColumnKey() == $col->getColumnKey()) {
+					return true;
+				}
+			} else if (is_a($col, 'AttributeKey')) {
+				if ($_col->getColumnKey() == 'ak_' . $col->getAttributeKeyHandle()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }
