@@ -7,11 +7,16 @@ if (!$fp->canAccessFileManager()) {
 	die(_("Access Denied."));
 }
 
+
+Loader::model('file_list');
 $selectedAKIDs = array();
-$slist = FileAttributeKey::getColumnHeaderList();
-foreach($slist as $sk) {
-	$selectedAKIDs[] = $sk->getAttributeKeyID();
+
+$fldc = $u->config('FILE_LIST_DEFAULT_COLUMNS');
+if (!($fldc instanceof DatabaseItemListColumnSet)) {
+	$fldc = new FileManagerDefaultColumnSet();
 }
+
+$fldca = new FileManagerAvailableColumnSet();
 
 $searchInstance = $_REQUEST['searchInstance'];
 
@@ -44,20 +49,21 @@ $list = FileAttributeKey::getList();
 	
 	<h2><?=t('Standard Properties')?></h2>
 	
-		<div><?=$form->checkbox('fvType', 1, array('style' => 'vertical-align: middle'))?> <label for="fvType"><?=t('File Type')?></label></div>
-		<div><?=$form->checkbox('fvFilename', 1, array('style' => 'vertical-align: middle'))?> <label for="fvFilename"><?=t('Filename')?></label></div>
-		<div><?=$form->checkbox('fvAuthorName', 1, array('style' => 'vertical-align: middle'))?> <label for="fvAuthorName"><?=t('Author Name')?></label></div>
-		<div><?=$form->checkbox('fvTitle', 1, array('style' => 'vertical-align: middle'))?> <label for="fvTitle"><?=t('Title')?></label></div>
-		<div><?=$form->checkbox('fvDateAdded', 1, array('style' => 'vertical-align: middle'))?> <label for="fvDateAdded"><?=t('Date Active Version')?></label></div>
-		<div><?=$form->checkbox('fDateAdded', 1, array('style' => 'vertical-align: middle'))?> <label for="fDateAdded"><?=t('Date Added')?></label></div>
-		<div><?=$form->checkbox('fvSize', 1, array('style' => 'vertical-align: middle'))?> <label for="fvSize"><?=t('Size')?></label></div>
+	<?
+	$columns = $fldca->getColumns();
+	foreach($columns as $col) { 
+
+		?>
+
+		<div><?=$form->checkbox($col->getColumnKey(), 1, $fldc->contains($col), array('style' => 'vertical-align: middle'))?> <label for="<?=$col->getColumnKey()?>"><?=$col->getColumnName()?></label></div>
 	
-	<br/>
+	<? } ?>
+	
 	<h2><?=t('Additional Attributes')?></h2>
 	
 	<? foreach($list as $ak) { ?>
 	
-		<div><?=$form->checkbox('akID[]', $ak->getAttributeKeyID(), in_array($ak->getAttributeKeyID(), $selectedAKIDs), array('style' => 'vertical-align: middle'))?> <label for="akID_<?=$ak->getAttributeKeyID()?>"><?=$ak->getAttributeKeyDisplayHandle()?></label></div>
+		<div><?=$form->checkbox('akID[]', $ak->getAttributeKeyID(), $fldc->contains($ak), array('style' => 'vertical-align: middle'))?> <label for="akID_<?=$ak->getAttributeKeyID()?>"><?=$ak->getAttributeKeyDisplayHandle()?></label></div>
 		
 	<? } ?>
 	
@@ -69,25 +75,27 @@ $list = FileAttributeKey::getList();
 	
 	<p><?=t('Click and drag to change column order.')?></p>
 	
-	<input type="hidden" name="fSearchDisplayOrder" value="" />
-	
 	<ul class="ccm-search-sortable-column-wrapper" id="ccm-<?=$searchInstance?>-sortable-column-wrapper">
-	
+	<? foreach($fldc->getColumns() as $col) { ?>
+		<li id="field_<?=$col->getColumnKey()?>"><?=$col->getColumnName()?></li>	
+	<? } ?>	
 	</ul>
 	
 	<h1><?=t('Sort By')?></h1>
 	
 	<div class="ccm-sortable-column-sort-controls">
 	
-	<select disabled="true" id="ccm-<?=$searchInstance?>-sortable-column-default" name="fSearchDefaultSort">
+	<? $ds = $fldc->getDefaultSortColumn(); ?>
 	
-	
+	<select <? if (count($fldc->getSortableColumns()) == 0) { ?>disabled="true"<? } ?> id="ccm-<?=$searchInstance?>-sortable-column-default" name="fSearchDefaultSort">
+	<? foreach($fldc->getSortableColumns() as $col) { ?>
+		<option id="opt_<?=$col->getColumnKey()?>" <? if ($col->getColumnKey() == $ds->getColumnKey()) { ?> selected="true" <? } ?>><?=$col->getColumnName()?></option>
+	<? } ?>	
 	</select>
-	<select disabled="true" id="ccm-<?=$searchInstance?>-sortable-column-default-direction" name="fSearchDefaultSortDirection">
-		<option value="asc"><?=t('Ascending')?></option>
-		<option value="asc"><?=t('Descending')?></option>	
-	</select>
-	
+	<select <? if (count($fldc->getSortableColumns()) == 0) { ?>disabled="true"<? } ?> id="ccm-<?=$searchInstance?>-sortable-column-default-direction" name="fSearchDefaultSortDirection">
+		<option value="asc" <? if ($ds->getColumnDefaultSortDirection() == 'asc') { ?> selected="true" <? } ?>><?=t('Ascending')?></option>
+		<option value="desc" <? if ($ds->getColumnDefaultSortDirection() == 'desc') { ?> selected="true" <? } ?>><?=t('Descending')?></option>	
+	</select>	
 	</div>
 	
 	</td>
