@@ -15,7 +15,9 @@ $cnt = Loader::controller('/dashboard/files/search');
 $fileList = $cnt->getRequestedSearchResults();
 $files = $fileList->getPage();
 $pagination = $fileList->getPagination();
-$searchRequest = $fileList->getSearchRequest();
+$searchRequest = $cnt->get('searchRequest');
+$columns = $cnt->get('columns');
+
 ?>
 
 <div id="ccm-search-overlay" >
@@ -23,7 +25,7 @@ $searchRequest = $fileList->getSearchRequest();
 		<table id="ccm-search-form-table" >
 			<tr>
 				<td valign="top" class="ccm-search-form-advanced-col">
-					<? Loader::element('files/search_form_advanced', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest)); ?>
+					<? Loader::element('files/search_form_advanced', array('searchInstance' => $searchInstance, 'columns' => $columns, 'searchRequest' => $searchRequest)); ?>
 				</td>		
 				<? /* <div id="ccm-<?=$searchInstance?>-search-advanced-fields-gutter">&nbsp;</div> */ ?>		
 				<td valign="top" width="100%">	
@@ -34,7 +36,7 @@ $searchRequest = $fileList->getSearchRequest();
 						
 						<div id="ccm-<?=$searchInstance?>-search-results" class="ccm-file-list">
 						
-							<? Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
+							<? Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'columns' => $columns, 'searchRequest' => $searchRequest, 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
 						
 						</div>
 					
