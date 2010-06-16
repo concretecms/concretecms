@@ -237,6 +237,6 @@ a#ccm-block-type-clear-search {margin-left: 2px; display: none}
 
 
 .ccm-style-property-table td {padding-right: 8px !important; padding-bottom: 8px !important}
-
+.ccm-message {padding: 10px; border: 1px solid #94a7c7; background: #eee; margin-bottom: 20px; font-size: 13px; font-weight: bold;}
 div.ccm-styleEditPane {background-color: #efefef; border-left: 1px solid #dedede; border-right: 1px solid #dedede; border-bottom: 1px solid #dedede; padding: 8px}
 ul#ccm-styleEditPane-tabs {margin-bottom: 0px !important}

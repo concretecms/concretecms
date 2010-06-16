@@ -224,6 +224,8 @@ if ($cp->canAdminPage()) {
 			<div><?=$form->radio('cCacheFullPageContent', 0, $c->getCollectionFullPageCaching(), array('enable-cache' => 0))?> <?=t('Do not cache this page.')?></div>
 			<div><?=$form->radio('cCacheFullPageContent', 1, $c->getCollectionFullPageCaching(), array('enable-cache' => 1))?> <?=t('Cache this page.')?></div>
 			
+			<br/>
+			
 			<h3><?=t('Cache for how long?')?></h3>
 			
 			<div class="ccm-properties-cache-lifetime">
