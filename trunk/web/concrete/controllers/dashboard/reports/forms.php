@@ -16,6 +16,8 @@ class DashboardReportsFormsController extends Controller {
 	}
 
 	public function excel(){ 
+		$dateHelper = Loader::helper('date');
+		
 		$this->pageSize=0;
 		$this->loadSurveyResponses();
 		$textHelper = Loader::helper('text');
@@ -86,7 +88,7 @@ class DashboardReportsFormsController extends Controller {
 			$questionNumber=0;
 			$numQuestionsToShow=2;
 			echo "\t<tr>\r\n";
-			echo "\t\t<td>".$answerSet['created']."</td>\r\n";
+			echo "\t\t<td>". $dateHelper->getSystemDateTime($answerSet['created'])."</td>\r\n";
 			foreach($questions as $questionId=>$question){ 
 				$questionNumber++;
                 if ($question['inputType'] == 'checkboxlist'){

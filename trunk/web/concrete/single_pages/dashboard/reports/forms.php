@@ -123,7 +123,7 @@ function deleteForm(dLink){
 			<table class="entry-form" width="100%" style="margin-bottom:2px">
 				<tr>
 					<td class="header"><?=t('Submitted Date')?></td>
-					<td class="header"><?=$dh->getLocalDateTime($answerSet['created'])?></td>
+					<td class="header"><?=$dh->getSystemDateTime($answerSet['created'])?></td>
 				</tr>
 				<? if ($answerSet['uID'] > 0) { ?>
 				<tr>
