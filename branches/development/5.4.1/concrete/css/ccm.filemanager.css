@@ -43,6 +43,8 @@ ul.ccm-file-set-file-list li {
 	_height: 250px;
 }
 
+div.ccm-files-add-to-sets-wrapper {background-color: #efefef; border: 1px solid #dedede; padding: 7px 8px 8px 8px}
+
 ul.ccm-file-set-file-list span {font-size: 9px; display: block}
 
 /* file permissions */

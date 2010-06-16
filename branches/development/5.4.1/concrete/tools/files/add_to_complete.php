@@ -129,7 +129,7 @@ table.ccm-grid th {width: 70px}
 	<td>
 	<?
 	$ci = Loader::helper('concrete/interface');
-	print $ci->submit(t('Save Details and Sets'), 'ccm-' . $searchInstance . '-update-uploaded-details-form', 'left');
+	print $ci->submit(t('Save'), 'ccm-' . $searchInstance . '-update-uploaded-details-form', 'left');
 	?>
 	</td>
 </tr>
@@ -195,7 +195,10 @@ table.ccm-grid th {width: 70px}
 	<td><div style="width: 20px">&nbsp;</div></td>
 	<td valign="top">
 	
-	<? Loader::element('files/add_to_sets', array('disableForm' => true)) ?>
+	<div class="ccm-files-add-to-sets-wrapper"><? Loader::element('files/add_to_sets', array('disableForm' => true)) ?></div>
+	<br/>	
+	<div class="ccm-note"><?=t('You can assign multiple sets to help find these files later.')?></div>
+
 
 	</td>
 </tr>

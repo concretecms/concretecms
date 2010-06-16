@@ -69,10 +69,38 @@ ccm_activateFileManager = function(altype, searchInstance) {
 	ccm_alSetupFileProcessor();
 	ccm_alSetupSingleUploadForm();
 	
+	$("form#ccm-" + searchInstance + "-advanced-search select[name=fssID]").change(function() {
+		if (altype == 'DASHBOARD') { 
+			window.location.href = CCM_DISPATCHER_FILENAME + '/dashboard/files/search?fssID=' + $(this).val();
+		} else {
+			jQuery.fn.dialog.showLoader();
+			var url = $("div#ccm-" + searchInstance + "-overlay-wrapper input[name=dialogAction]").val() + "&refreshDialog=1&fssID=" + $(this).val();
+			$.get(url, function(resp) {
+				jQuery.fn.dialog.hideLoader();
+				$("div#ccm-" + searchInstance + "-overlay-wrapper").html(resp);
+			});
+		}
+	});
+
+	$("form#ccm-" + searchInstance + "-advanced-search a.ccm-search-saved-exit").click(function() {
+		if (altype == 'DASHBOARD') { 
+			window.location.href = CCM_DISPATCHER_FILENAME + '/dashboard/files/search';
+		} else {
+			jQuery.fn.dialog.showLoader();
+			var url = $("div#ccm-" + searchInstance + "-overlay-wrapper input[name=dialogAction]").val() + "&refreshDialog=1";
+			$.get(url, function(resp) {
+				jQuery.fn.dialog.hideLoader();
+				$("div#ccm-" + searchInstance + "-overlay-wrapper").html(resp);
+			});
+		}
+	});
+
 	ccm_searchActivatePostFunction[searchInstance] = function() {
 		ccm_alSetupCheckboxes(searchInstance);
 		ccm_alSetupSelectFiles();
 	}
+	
+	
 	// setup upload form
 }
 
@@ -127,8 +155,10 @@ ccm_launchFileSetPicker = function(fsID) {
 
 ccm_alSubmitSetsForm = function(searchInstance) {
 	ccm_deactivateSearchResults(searchInstance);
+	jQuery.fn.dialog.showLoader();
 	$("#ccm-" + searchInstance + "-add-to-set-form").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
+		jQuery.fn.dialog.hideLoader();		
 		$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
 			$("#ccm-" + searchInstance + "-sets-search-wrapper").load(CCM_TOOLS_PATH + '/files/search_sets_reload', {'searchInstance': searchInstance}, function() {
 				ccm_parseAdvancedSearchResponse(resp, searchInstance);
@@ -496,7 +526,6 @@ ccm_alSetupCheckboxes = function(searchInstance) {
 
 	// activate the file sets checkboxes
 	ccm_alSetupFileSetSearch(searchInstance);
-
 }
 
 ccm_alSetupFileSetSearch = function(searchInstance) {

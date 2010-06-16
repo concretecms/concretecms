@@ -80,6 +80,12 @@ $list = FileAttributeKey::getList();
 	<h1><?=t('Sort By')?></h1>
 	
 	<div class="ccm-sortable-column-sort-controls">
+	<?
+	$h = Loader::helper('concrete/interface');
+	$b1 = $h->button_js(t('Save'), 'ccm_submitCustomizeSearchColumnsForm()', 'right');
+	print $b1;
+	?>
+
 	
 	<? $ds = $fldc->getDefaultSortColumn(); ?>
 	
@@ -97,13 +103,6 @@ $list = FileAttributeKey::getList();
 	</td>
 </tr>
 </table>
-
-<br/><br/>
-<?
-$h = Loader::helper('concrete/interface');
-$b1 = $h->button_js(t('Save'), 'ccm_submitCustomizeSearchColumnsForm()');
-print $b1;
-?>
 
 </form>
 

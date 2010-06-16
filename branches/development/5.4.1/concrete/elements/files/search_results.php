@@ -52,7 +52,7 @@ if (isset($_REQUEST['searchInstance'])) {
 					<th><?=t('Type')?></th>
 				<? } ?>
 			<? } ?>
-			<th class="ccm-search-add-column-header"><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-search-add-column"><img src="<?=ASSETS_URL_IMAGES?>/icons/column_preferences.png" width="16" height="16" /></a></th>
+			<th class="ccm-search-add-column-header"><? if ($_REQUEST['fssID'] < 1) { ?><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-search-add-column"><img src="<?=ASSETS_URL_IMAGES?>/icons/column_preferences.png" width="16" height="16" /></a><? } ?></th>
 		</tr>
 	<?
 		foreach($files as $f) {
