@@ -180,5 +180,15 @@
       <col>cPointerID</col>
     </index>
   </table>
+  
+  <table name="FileSetSavedSearches">
+    <field name="fsID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fsSearchRequest" type="X"/>
+    <field name="fsResultColumns" type="X"/>
+  </table>
 
 </schema>
