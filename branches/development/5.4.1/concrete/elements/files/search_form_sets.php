@@ -2,7 +2,6 @@
 <?
 
 $s1 = FileSet::getMySets();
-$s2 = FileSet::getSavedSearches();
 $form = Loader::helper('form');
 $html = Loader::helper('html');
 
@@ -45,28 +44,6 @@ if (count($s1) > 0) { ?>
 
 	<div style="padding-left: 6px; padding-top: 6px" class="ccm-note"><?=$form->checkbox('fsIDNone', '1', $searchRequest['fsIDNone'] == 1, array('instance' => $searchInstance))?> <?=$form->label('fsIDNone', t('Display files in no sets.'))?></div>
 	
-	<hr />
-	
-	<? if (count($s2) > 0) { ?>
-	
-	<h2><?=t('Saved Searches')?></h2>
-
-	<div class="ccm-file-search-advanced-sets-results">
-	<ul id="ccm-file-search-advanced-saved-searches-list">
-	<? foreach($s2 as $fs) { ?>
-		<li class="ccm-<?=$searchInstance?>-search-advanced-sets-cb">
-		<div class="ccm-file-search-advanced-set-controls">
-			<? if ($pfs->canDeleteFileSet()) { ?>
-				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete_set?fsID=<?=$fs->getFileSetID()?>&searchInstance=<?=$searchInstance?>" class="ccm-file-set-delete-window" dialog-title="<?=t('Delete File Set')?>" dialog-width="320" dialog-height="200" dialog-modal="false"><?=$html->image('icons/delete_small.png')?></a>
-			<? } ?>
-		</div>
-		<a href="<?=View::url('/dashboard/files/search')?>?fssID=<?=$fs->getFileSetID()?>"><?=$fs->getFileSetName()?></a></li>
-		
-	<? } ?>
-	</ul>
-	</div>
-	
-	<? } ?>
 </div>
 
 	<script type="text/javascript">

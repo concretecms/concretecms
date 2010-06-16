@@ -20,6 +20,8 @@ div.ccm-file-search-advanced-sets-results li input {position: absolute; top: 0px
 div.ccm-file-search-advanced-sets-results li div.ccm-file-search-advanced-set-controls {display: none; position: absolute; top: 0px; right: 0px; z-index: 10}
 div.ccm-file-search-advanced-sets-results li:hover div.ccm-file-search-advanced-set-controls {display: block}
 
+td.ccm-file-list-filename div {font-size: 11px}
+
 ul#ccm-file-search-advanced-saved-searches-list li {padding: 2px}
 
 ul.ccm-file-set-file-list {margin: 0px; padding: 0px}

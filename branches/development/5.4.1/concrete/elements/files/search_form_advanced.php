@@ -90,6 +90,24 @@ foreach($t1 as $value) {
 
 	<form method="get" id="ccm-<?=$searchInstance?>-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
 
+<?
+$s2 = FileSet::getSavedSearches();
+if (count($s2) > 0) { 
+	$savedSearches = array('' => t('** Select a saved search.'));
+	foreach($s2 as $fss) {
+		$savedSearches[$fss->getFileSetID()] = $fss->getFileSetName();
+	}
+?>
+	<div class="ccm-search-advanced-fields">
+		<h2><?=t('Saved Searches')?></h2>
+		
+		<?=$form->select('fssID', $savedSearches, $fssID, array('style' => 'vertical-align: middle'))?>
+		<a href="javascript:void(0)" id="ccm-saved-search-delete-preset" style="display: none" onclick=""><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" style="vertical-align: middle" width="16" height="16" border="0" /></a>
+	</div>
+	<br/>
+	
+<? } ?>
+
 <input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
 	
 <div id="ccm-<?=$searchInstance?>-search-advanced-fields" class="ccm-search-advanced-fields" >
