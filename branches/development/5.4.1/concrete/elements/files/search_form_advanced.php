@@ -18,6 +18,8 @@ if ($_REQUEST['fExtension'] != false) {
 	unset($searchFields['extension']);
 }
 
+$html = Loader::helper('html');
+
 Loader::model('file_attributes');
 $searchFieldAttributes = FileAttributeKey::getSearchableList();
 foreach($searchFieldAttributes as $ak) {
@@ -93,7 +95,10 @@ foreach($t1 as $value) {
 <?
 $s2 = FileSet::getSavedSearches();
 if (count($s2) > 0) { 
-	$savedSearches = array('' => t('** Select a saved search.'));
+	if ($_REQUEST['fssID'] < 1) {
+		$savedSearches = array('' => t('** Select a saved search.'));
+	}
+	
 	foreach($s2 as $fss) {
 		$savedSearches[$fss->getFileSetID()] = $fss->getFileSetName();
 	}
@@ -102,7 +107,15 @@ if (count($s2) > 0) {
 		<h2><?=t('Saved Searches')?></h2>
 		
 		<?=$form->select('fssID', $savedSearches, $fssID, array('style' => 'vertical-align: middle'))?>
-		<a href="javascript:void(0)" id="ccm-saved-search-delete-preset" style="display: none" onclick=""><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" style="vertical-align: middle" width="16" height="16" border="0" /></a>
+		<? if (isset($_REQUEST['fssID'])) { ?>
+			<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete_set?fsID=<?=$_REQUEST['fssID']?>&searchInstance=<?=$searchInstance?>" class="ccm-file-set-delete-saved-search" dialog-title="<?=t('Delete File Set')?>" dialog-width="320" dialog-height="200" dialog-modal="false" style="vertical-align: middle"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" style="vertical-align: middle" width="16" height="16" border="0" /></a>
+		<? } ?>
+		
+		<? if (isset($_REQUEST['fssID'])) { ?>
+			<br/><br/>
+			
+			<a class="ccm-search-saved-exit" href="#" onclick="javascript:void(0)"><?=t("&lt; Exit Saved Search")?></a>
+		<? } ?>
 	</div>
 	<br/>
 	
@@ -158,7 +171,7 @@ if (count($s2) > 0) {
 							'500' => '500'
 						), $searchRequest['numResults'], array('style' => 'width:65px'))?>
 					</td>
-					<td><a href="javascript:void(0)" id="ccm-<?=$searchInstance?>-search-add-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a></td>
+					<td><? if ($_REQUEST['fssID'] < 1) { ?><a href="javascript:void(0)" id="ccm-<?=$searchInstance?>-search-add-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a><? } ?></td>
 				</tr>	
 				</table>
 			</div>
@@ -175,7 +188,7 @@ if (count($s2) > 0) {
 						<?=t('Select Search Field.')?>
 						</td>
 						<td valign="top">
-						<a href="javascript:void(0)" class="ccm-search-remove-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" /></a>
+						<? if ($_REQUEST['fssID'] < 1) { ?><a href="javascript:void(0)" class="ccm-search-remove-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" /></a><? } ?>
 						</td>
 					</tr>
 				</table>
@@ -249,7 +262,7 @@ if (count($s2) > 0) {
 							} ?>
 							</td>
 							<td valign="top">
-							<a href="javascript:void(0)" class="ccm-search-remove-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" /></a>
+							<? if ($_REQUEST['fssID'] < 1) { ?><a href="javascript:void(0)" class="ccm-search-remove-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" /></a><? } ?>
 							</td>
 						</tr>
 					</table>
@@ -263,7 +276,7 @@ if (count($s2) > 0) {
 			</div>
 			
 			<div id="ccm-search-fields-submit">
-				<div id="ccm-search-save"><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/save_search?searchInstance=<?=$searchInstance?>" id="ccm-<?=$searchInstance?>-launch-save-search" dialog-title="<?=t('Save Search')?>" dialog-width="320" dialog-height="200" dialog-modal="false"><?=t('Save Search')?></a></div>
+				<? if ($_REQUEST['fssID'] < 1) { ?><div id="ccm-search-save"><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/save_search?searchInstance=<?=$searchInstance?>" id="ccm-<?=$searchInstance?>-launch-save-search" dialog-title="<?=t('Save Search')?>" dialog-width="320" dialog-height="200" dialog-modal="false"><?=t('Save Search')?></a></div><? } ?>
 				<?=$form->submit('ccm-search-files', 'Search')?>
 			</div>
 		</div>
@@ -278,4 +291,12 @@ if (count($s2) > 0) {
 
 <script type="text/javascript">$(function() {
 	$('a#ccm-<?=$searchInstance?>-launch-save-search').dialog();
+	$('a.ccm-file-set-delete-saved-search').dialog();
+	
+	<? if ($_REQUEST['fssID'] > 0) { ?>
+	$('#ccm-<?=$searchInstance?>-advanced-search input, #ccm-<?=$searchInstance?>-advanced-search select, #ccm-<?=$searchInstance?>-advanced-search textarea').attr('disabled',true);
+	$('#ccm-<?=$searchInstance?>-advanced-search select[name=fssID]').attr('disabled', false);
+	<? } ?>
+	
+
 });</script>

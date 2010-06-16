@@ -16,10 +16,11 @@ if ($_POST['task'] == 'save_search') {
 	$req = $fileList->getSearchRequest();
 	$colset = FileManagerColumnSet::getCurrent();
 	
-	if (isset($req['ccm_order_by']) && isset($req['ccm_order_dir'])) {
+	if ($req['ccm_order_by'] != '' && $req['ccm_order_dir'] != '') {
 		$colset->setDefaultSortColumn($colset->getColumnByKey($req['ccm_order_by']), $req['ccm_order_dir']);
 	}
 	$fsa = FileSetSavedSearch::add($_POST['fsName'], $req, $colset);
+	print $fsa->getFileSetID();
 	exit;
 }
 
@@ -50,9 +51,15 @@ ccm_alSaveSearch = function(form) {
 		$(form).ajaxSubmit(function(r) { 
 			jQuery.fn.dialog.hideLoader(); 
 			jQuery.fn.dialog.closeTop();
-			$("#ccm-<?=$_REQUEST['searchInstance']?>-sets-search-wrapper").load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_sets_reload', {'searchInstance': '<?=$_REQUEST['searchInstance']?>'}, function() {
-				ccm_alSetupFileSetSearch('<?=$_REQUEST['searchInstance']?>');
-			});
+			if (ccm_alLaunchType['<?=$_REQUEST['searchInstance']?>'] == 'DASHBOARD') {
+				window.location.href = "<?=View::url('/dashboard/files/search')?>?fssID=" + r;			
+			} else {
+				var url = $("div#ccm-<?=$_REQUEST['searchInstance']?>-overlay-wrapper input[name=dialogAction]").val() + "&refreshDialog=1&fssID=" + r;
+				$.get(url, function(resp) {
+					jQuery.fn.dialog.hideLoader();
+					$("div#ccm-<?=$_REQUEST['searchInstance']?>-overlay-wrapper").html(resp);
+				});		
+			}
 		});
 	}
 	return false;

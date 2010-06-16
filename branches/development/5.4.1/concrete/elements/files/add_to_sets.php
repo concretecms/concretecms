@@ -124,7 +124,7 @@ $(function() {
 
 
 <? if (!$disableForm) { ?>
-	<form method="post" id="ccm-<?=$searchInstance?>-add-to-set-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/add_to/" onsubmit="return ccm_alSubmitSetsForm('<?=$searchInstance?>')">
+	<form method="post" id="ccm-<?=$searchInstance?>-add-to-set-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/add_to/">
 	<?=$form->hidden('task', 'add_to_sets')?>
 	<? foreach($files as $f) { ?>
 		<input type="hidden" name="fID[]" value="<?=$f->getFileID();?>" />
@@ -147,37 +147,41 @@ $(function() {
 	</table>
 	</div>
 
+
+	<? $s1 = FileSet::getMySets(); ?>
+	<? if (count($s1) > 0) { ?>
 	<div class="ccm-file-search-advanced-sets-results">
-	<ul id="ccm-file-search-add-to-sets-list">
-
-
-<? $s1 = FileSet::getMySets(); ?>
-<? foreach($sets as $s) { 
-	$displaySet = true;
+		<ul id="ccm-file-search-add-to-sets-list">
 	
-	$pf = new Permissions($s);
-	if (!$pf->canAddFiles()) { 
-		$displaySet = false;
-	} else {
-		foreach($extensions as $ext) {
-			if (!$pf->canAddFileType($ext)) {
-				$displaySet = false;
+	
+	<? foreach($sets as $s) { 
+		$displaySet = true;
+		
+		$pf = new Permissions($s);
+		if (!$pf->canAddFiles()) { 
+			$displaySet = false;
+		} else {
+			foreach($extensions as $ext) {
+				if (!$pf->canAddFileType($ext)) {
+					$displaySet = false;
+				}
 			}
 		}
-	}
+		
+		if ($displaySet) {
+		?>
 	
-	if ($displaySet) {
-	?>
-
-	<li class="ccm-file-set-add-cb" style="padding-left: 0px">
-		<?=checkbox('fsID', $s->getFileSetID(), $s->state)?> <label><?=$s->getFileSetName()?></label>
-	</li>
-<? } 
-} ?>
-
-	</ul>
+		<li class="ccm-file-set-add-cb" style="padding-left: 0px">
+			<?=checkbox('fsID', $s->getFileSetID(), $s->state)?> <label><?=$s->getFileSetName()?></label>
+		</li>
+	<? } 
+	} ?>
+	
+		</ul>
 	</div>
-
+	<? } else { ?>
+		<?=t('You have not created any file sets yet.')?>
+	<? } ?>
 
 <? if (count($extensions) > 1) { ?>
 
@@ -190,7 +194,7 @@ $(function() {
 
 <h2><?=t('Add to New Set')?></h2>
 
-<?=$form->checkbox('fsNew', 1)?> <?=$form->text('fsNewText', array('style' => 'width: 150px', 'onclick' => '$(\'input[name=fsNew]\').attr(\'checked\',true)'))?> <?=$form->checkbox('fsNewShare', 1, true)?> <?=t('Make set public')?>
+<?=$form->checkbox('fsNew', 1)?> <?=$form->text('fsNewText', array('style' => 'width: 120px', 'onclick' => '$(\'input[name=fsNew]\').attr(\'checked\',true)'))?> <?=$form->checkbox('fsNewShare', 1, true)?> <?=t('Make set public')?>
 
 <? if (!$disableForm) { ?>
 
