@@ -1980,7 +1980,16 @@ $ppWhere = '';
 		if ($u->isRegistered() || $_SERVER['REQUEST_METHOD'] == 'POST') {
 			return false;
 		}
-		if ($this->cCacheFullPageContent || FULL_PAGE_CACHE_GLOBAL == 'all') {
+		
+		// test get variables
+		$allowedGetVars = array('cid');
+		foreach($_GET as $key => $value) {
+			if (!in_array(strtolower($key), $allowedGetVars)) {
+				return false;
+			}
+		}
+		
+		if ($this->cCacheFullPageContent == 1 || FULL_PAGE_CACHE_GLOBAL == 'all') {
 			// this cache page at the page level
 			// this overrides any global settings
 			return true;
