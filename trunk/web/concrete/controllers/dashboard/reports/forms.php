@@ -97,11 +97,12 @@ class DashboardReportsFormsController extends Controller {
                     for ($i = 1; $i <= count($options); $i++)
                     {
 				        echo "\t\t<td align='center'>\r\n";
-                        if (in_array($options[$i-1], $subanswers))
+                        if (in_array(trim($options[$i-1]), $subanswers)) {
 				           // echo "\t\t\t".$options[$i-1]."\r\n";
-				           echo "&#10004;";
-                        else
+				           echo "x";
+				        } else {
 				            echo "\t\t\t&nbsp;\r\n";
+				        }
 				        echo "\t\t</td>\r\n";
                     }
 					
