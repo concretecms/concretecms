@@ -25,6 +25,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		public function __construct($tbl = null) {
 			if ($tbl) {
+				$db = Loader::db();
 				$this->_table = $tbl;
 				parent::__construct($tbl);
 			}
@@ -213,7 +214,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$useCache = false;
 			
 			if ($view == 'view') {
-				if ($this->controller->cacheBlockOutput()) {
+				if ($this->controller->cacheBlockOutput() && ($obj instanceof Block)) {
 					if ((!$u->isRegistered() || ($this->controller->cacheBlockOutputForRegisteredUsers())) &&
 						(($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->controller->cacheBlockOutputOnPost() == true)))) {
 							$useCache = true;
@@ -305,7 +306,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					print $outputContent;
 				}
 				
-				if ($view == 'view' && $this->controller->cacheBlockOutput()) {
+				if ($view == 'view' && $this->controller->cacheBlockOutput() && ($obj instanceof Block)) {
 					Cache::set('block_view_output', $obj->getBlockCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
 				}
 			}
