@@ -116,7 +116,7 @@ class Marketplace {
 			$url = $url . '?ts=' . time() . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(SITE, ENT_QUOTES, APP_CHARSET);
 		}
 		if ($csToken == false) {
-			return '<div class="ccm-error">' . t('Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that curl is enabled on your server.') . '</div>';
+			return '<div class="ccm-error">' . t('Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that curl is enabled on your server. If these are both true, it is possible that your server is being blocked by concrete5.org, or that concrete5.org is unavailable.') . '</div>';
 		} else {
 			return '<iframe id="ccm-marketplace-frame-' . time() . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
 		}
