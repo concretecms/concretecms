@@ -763,6 +763,15 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$qv = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 					$db->query($qv, $vv);
 				}
+				
+				// duplicate layout records 
+				$ql = "select * from CollectionVersionAreaLayouts where cID = '{$this->cID}' order by cvalID asc";
+				$rl = $db->query($ql);
+				while ($row = $rl->fetchRow()) { 
+					$vl = array( $newCID, $row['cvID'], $row['arHandle'], $row['layoutID'], $row['position'], $row['areaNameNumber'] );
+					$ql = "insert into CollectionVersionAreaLayouts (cID, cvID, arHandle, layoutID, position, areaNameNumber) values ( ?, ?, ?, ?, ?, ?)";
+					$db->query($ql, $vl);
+				}				
 	
 				// now we grab all the blocks we're going to need
 				$cvList = implode(',',$cvList);
