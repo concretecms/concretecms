@@ -294,7 +294,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				print $outputContent;			
 			} else if ($template) {
 				
-				if ($view == 'view' && $this->controller->cacheBlockOutput()) {
+				if ($view == 'view' && $this->controller->cacheBlockOutput() && ($obj instanceof Block)) {
 					ob_start();
 				}
 				
