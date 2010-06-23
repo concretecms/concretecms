@@ -18,6 +18,7 @@ class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 		if (is_object($this->attributeValue)) {
 			$value = $this->getAttributeValue()->getValue();
 		}
+		$this->addHeaderItem(Loader::helper('html')->javascript('tiny_mce/tiny_mce.js'));
 		// switch display type here
 		switch($this->akTextareaDisplayMode) {
 			case "rich_text":
