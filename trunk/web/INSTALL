@@ -1,4 +1,4 @@
-## Installation Instructions for Concrete5
+## Installation Instructions for concrete5
 
 	1.	Make sure your config/ directory is writable by a web server. (Note, this is the config/ directory in the root of the archive).
 	2.	Make sure files/ and its subdirectories are writable by the Apache process (or the world.)
@@ -8,7 +8,16 @@
 	
 You'll probably want to change your admin users password (which can be done in the dashboard). Also check out the settings page in the dashboard
 
-## Upgrading from a previous Version of Concrete5
+## Simpler Installation
+
+concrete5.org offers hosting and will pre-install and suppport concrete5 for you:
+
+	concrete5 Hosting
+	http://www.concrete5.org/hosting/
+	
+concrete5 can also be installed with one click on other web hosts by using Softaculous or SimpleScripts. Check with your web host to see if you have these services enabled.
+
+## Upgrading from a previous Version of concrete5
 
 	1. In the dashboard of your site, place your site into "Maintenance Mode." This will ensure your site does not appear down while upgrading.
 	2. Back up all site data thoroughly, including files and database tables, just in case.
@@ -17,12 +26,6 @@ You'll probably want to change your admin users password (which can be done in t
 	5. You should get some upgrade notes for the current version of Concrete. These might advise you to do current things for upgrading to go smoothly.
 	6. Click the upgrade button, and your site should be upgraded!
 	
-## IMPORTANT! FOR THOSE UPGRADING TO 5.3.x WITH NON ASCII CHARACTER SETS ##
-
-	If your database isn't setup for UTF-8 you may encounter problems. Please backup your database and run through the tutorials described here:
-
-	http://www.concrete5.org/community/forums/internationalization/upgrading_from_5_2_1_to_5_3
-
 ## Credits
 
 	Everyone in the concrete5 core beta team for lots of testing and feedback.

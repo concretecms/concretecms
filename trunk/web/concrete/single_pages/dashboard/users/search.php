@@ -571,6 +571,10 @@ ccm_submitEditableProperty = function(trow) {
 	trow.find('.ccm-attribute-editable-field-save-button').hide();
 	trow.find('.ccm-attribute-editable-field-clear-button').hide();
 	trow.find('.ccm-attribute-editable-field-loading').show();
+	try {
+		tinyMCE.triggerSave(true, true);
+	} catch(e) { }
+	
 	trow.find('form').ajaxSubmit(function(resp) {
 		// resp is new HTML to display in the div
 		trow.find('.ccm-attribute-editable-field-loading').hide();
