@@ -3,7 +3,11 @@
 	
 	$co = Request::get();
 	if ($co->isIncludeRequest() && $co->getFilename() == 'upgrade.php') {
-		include(DIR_FILES_TOOLS_REQUIRED . '/' .  $co->getFilename());
+		if (file_exists(DIR_FILES_TOOLS . '/' . $co->getFilename())) {
+			include(DIR_FILES_TOOLS . '/' . $co->getFilename());
+		} else if (file_exists(DIR_FILES_TOOLS_REQUIRED . '/' . $co->getFilename())) {
+			include(DIR_FILES_TOOLS_REQUIRED . '/' .  $co->getFilename());
+		}
 		require(DIR_BASE_CORE . '/startup/shutdown.php');
 		exit;
 	}
