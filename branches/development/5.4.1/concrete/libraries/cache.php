@@ -28,7 +28,8 @@ class Cache {
 				Loader::library('3rdparty/Zend/Cache');
 				$frontendOptions = array(
 					'lifetime' => CACHE_LIFETIME,
-					'automatic_serialization' => true			
+					'automatic_serialization' => true,
+					'cache_id_prefix' => CACHE_ID		
 				);
 				$backendOptions = array(
 					'cache_dir' => DIR_FILES_CACHE
