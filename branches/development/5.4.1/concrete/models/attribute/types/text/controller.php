@@ -9,7 +9,7 @@ class TextAttributeTypeController extends DefaultAttributeTypeController  {
 
 	public function form() {
 		if (is_object($this->attributeValue)) {
-			$value = $this->getAttributeValue()->getValue();
+			$value = Loader::helper('text')->entities($this->getAttributeValue()->getValue());
 		}
 		print Loader::helper('form')->text($this->field('value'), $value);
 	}

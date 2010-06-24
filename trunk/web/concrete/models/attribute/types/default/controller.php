@@ -13,7 +13,7 @@ class DefaultAttributeTypeController extends AttributeTypeController  {
 
 	public function form() {
 		if (is_object($this->attributeValue)) {
-			$value = $this->getAttributeValue()->getValue();
+			$value = Loader::helper('text')->entities($this->getAttributeValue()->getValue());
 		}
 		print Loader::helper('form')->textarea($this->field('value'), $value);
 	}
