@@ -18,7 +18,7 @@ class CacheLocal {
 class Cache {
 	
 	public function key($type, $id) {
-		return md5(CACHE_ID . $type . $id);
+		return md5($type . $id);
 	}
 	
 	public function getLibrary() {
@@ -28,7 +28,8 @@ class Cache {
 				Loader::library('3rdparty/Zend/Cache');
 				$frontendOptions = array(
 					'lifetime' => 7200,
-					'automatic_serialization' => true			
+					'automatic_serialization' => true,
+					'cache_id_prefix' => CACHE_ID
 				);
 				$backendOptions = array(
 					'cache_dir' => DIR_FILES_CACHE
