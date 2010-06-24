@@ -18,7 +18,7 @@ class CacheLocal {
 class Cache {
 	
 	public function key($type, $id) {
-		return md5($type . $id);
+		return md5(CACHE_ID . $type . $id);
 	}
 	
 	public function getLibrary() {

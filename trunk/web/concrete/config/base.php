@@ -303,6 +303,10 @@ if (!defined('DIR_FILES_CACHE')) {
 	define('DIR_FILES_CACHE', DIR_BASE . '/files/cache');
 }
 
+if (!defined('CACHE_ID')) {
+	define('CACHE_ID', BASE_URL . DIR_REL);
+}
+
 if (defined('DIR_FILES_CACHE') && !is_dir(DIR_FILES_CACHE)) {
 	@mkdir(DIR_FILES_CACHE);
 	@chmod(DIR_FILES_CACHE, 0777);
