@@ -17,7 +17,9 @@ class PrivateMessageMailImporter extends MailImporter {
 			if (is_object($upm)) {
 				$originalTo = UserInfo::getByID($do->toUID);
 				$originalFrom = UserInfo::getByID($do->fromUID);
-				$originalTo->sendPrivateMessage($originalFrom, $mail->getSubject(), $mail->getProcessedBody(), $upm);
+				if (is_object($originalTo) && is_object($originalFrom)) {
+					$originalTo->sendPrivateMessage($originalFrom, $mail->getSubject(), $mail->getProcessedBody(), $upm);
+				}
 			}			
 		}
 	}
