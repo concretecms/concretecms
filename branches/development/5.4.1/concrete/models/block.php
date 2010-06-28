@@ -978,6 +978,7 @@ class Block extends Object {
 		$a = $this->getBlockAreaObject();
 		if (is_object($c) && is_object($a)) {
 			Cache::delete('block', $this->getBlockID() . ':' . $c->getCollectionID() . ':' . $c->getVersionID() . ':' . $a->getAreaHandle());
+			Cache::delete('block_view_output', $c->getCollectionID() . ':' . $this->getBlockID() . ':' . $a->getAreaHandle());
 		}
 		Cache::delete('block', $this->getBlockID());		
 	}
