@@ -43,6 +43,8 @@ $(function() {
 
 <form method="post" action="<?=$action?>" class="validate" id="ccm-block-form" enctype="multipart/form-data">
 
+<input type="hidden" name="ccm-block-form-method" value="REGULAR" />
+
 <? foreach($this->controller->getJavaScriptStrings() as $key => $val) { ?>
 	<input type="hidden" name="ccm-string-<?=$key?>" value="<?=$val?>" />
 <? } ?>

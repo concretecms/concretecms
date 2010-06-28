@@ -16,7 +16,9 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 	
 	public function getDisplayValue() {
 		$f = $this->getValue();
-		return '<a href="' . $f->getDownloadURL() . '">' . $f->getTitle() . '</a>';
+		if (is_object($f)) {
+			return '<a href="' . $f->getDownloadURL() . '">' . $f->getTitle() . '</a>';
+		}
 	}
 
 	public function searchForm($list) {
