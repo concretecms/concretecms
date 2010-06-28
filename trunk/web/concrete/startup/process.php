@@ -551,18 +551,14 @@
 					$obj->response = $e->getList();
 				}
 				
-				print Loader::helper('json')->encode($obj);
-				exit;
-				
-				/*
-					
-				$redirectCID = (intval($_REQUEST['rcID'])) ? intval($_REQUEST['rcID']) : intval($_REQUEST['cID']);
-					
-				if (!$_SESSION['disableRedirect']) {
+				if ($_POST['ccm-block-form-method'] == 'AJAX') { 
+					print Loader::helper('json')->encode($obj);
+					exit;
+				} else {
+					$redirectCID = (intval($_REQUEST['rcID'])) ? intval($_REQUEST['rcID']) : intval($_REQUEST['cID']);
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $redirectCID . $edit . $step);
 					exit;
 				}
-				*/
 			}
 						
 		} else if ($_REQUEST['add'] || $_REQUEST['_add']) {
@@ -656,9 +652,14 @@
 							$obj->response = $e->getList();
 						
 						}
-						
-						print Loader::helper('json')->encode($obj);
-						exit;
+
+						if ($_POST['ccm-block-form-method'] == 'AJAX') { 
+							print Loader::helper('json')->encode($obj);
+							exit;
+						} else {
+							header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+							exit;
+						}
 					}
 				}
 			}

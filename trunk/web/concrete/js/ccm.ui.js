@@ -317,6 +317,7 @@ ccm_setupBlockForm = function(form, currentBlockID, task) {
 		iframe: true,
 		beforeSubmit: function() {
 			ccm_hideHighlighter();
+			$('input[name=ccm-block-form-method]').val('AJAX');
 			jQuery.fn.dialog.showLoader();
 			ccm_menuActivated = true;
 			return ccm_blockFormSubmit();
