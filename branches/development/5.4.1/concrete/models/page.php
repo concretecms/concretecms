@@ -1475,6 +1475,34 @@ $ppWhere = '';
 		$this->refreshCache();
 	}
 	
+	public function movePageDisplayOrderToTop() {
+		// first, we take the current collection, stick it at the beginning of an array, then get all other items from the current level that aren't that cID, order by display order, and then update
+		$db = Loader::db();
+		$nodes = array();
+		$nodes[] = $this->getCollectionID();
+		$r = $db->GetCol('select cID from Pages where cParentID = ? and cID <> ? order by cDisplayOrder asc', array($this->getCollectionParentID(), $this->getCollectionID()));
+		$nodes = array_merge($nodes, $r);
+		$displayOrder = 0;
+		foreach($nodes as $do) {
+			$co = Page::getByID($do);
+			$co->updateDisplayOrder($displayOrder);
+			$displayOrder++;			
+		}
+	}
+	
+	public function movePageDisplayOrderToBottom() {
+		// first, we take the current collection, stick it at the beginning of an array, then get all other items from the current level that aren't that cID, order by display order, and then update
+		$db = Loader::db();
+		$nodes = $db->GetCol('select cID from Pages where cParentID = ? and cID <> ? order by cDisplayOrder asc', array($this->getCollectionParentID(), $this->getCollectionID()));
+		$displayOrder = 0;
+		$nodes[] = $this->getCollectionID();
+		foreach($nodes as $do) {
+			$co = Page::getByID($do);
+			$co->updateDisplayOrder($displayOrder);
+			$displayOrder++;			
+		}
+	}
+	
 	function rescanCollectionPathIndividual($cID, $cPath) {
 		$db = Loader::db();
 		$q = "select CollectionVersions.cID, CollectionVersions.cvHandle, CollectionVersions.cvID, PagePaths.cID as cpcID from CollectionVersions left join PagePaths on (PagePaths.cID = CollectionVersions.cID) where CollectionVersions.cID = '{$cID}' and CollectionVersions.cvIsApproved = 1";

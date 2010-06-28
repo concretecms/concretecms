@@ -63,6 +63,8 @@ var ccmi18n_sitemap = {
 	editExternalLink: "<?=t('Edit External Link')?>",
 	deleteExternalLink: "<?=t('Delete')?>",
 	addExternalLink: "<?=t('Add External Link')?>",
+	sendToTop: "<?=t('Send To Top')?>",
+	sendToBottom: "<?=t('Send To Bottom')?>",
 	
 	visitPage: "<?=t('Visit')?>",
 	pageProperties: "<?=t('Properties')?>",
