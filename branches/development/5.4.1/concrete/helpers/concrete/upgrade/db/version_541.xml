@@ -123,6 +123,11 @@
       <UNSIGNED/>
     </field>
     <field name="cPointerExternalLink" type="C" size="255"/>
+    <field name="cPointerExternalLinkNewWindow" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+
     <field name="cChildren" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>

@@ -11,9 +11,10 @@
 	<?
 	for ($i = 0; $i < count($cArray); $i++ ) {
 		$cobj = $cArray[$i]; 
+		$target = $cobj->getAttribute('nav_target');
 		$title = $cobj->getCollectionName(); ?>
 	
-	<h3 class="ccm-page-list-title"><a href="<?=$nh->getLinkToCollection($cobj)?>"><?=$title?></a></h3>
+	<h3 class="ccm-page-list-title"><a target="<?=$target?>" href="<?=$nh->getLinkToCollection($cobj)?>"><?=$title?></a></h3>
 	<? if ($cobj->getCollectionTypeHandle()=="Press Release") { ?>
 		<h4><? echo $cobj->getCollectionAttributeValue('Press_Release_Type'); ?> - for release on <? echo strftime("%x %l:%M%p",strtotime($cobj->getCollectionAttributeValue('Release_Date'))); ?></h4>
 	<? } ?>

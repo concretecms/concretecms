@@ -822,7 +822,7 @@
 			}	
 		} else if ($_POST['update_external']) {
 			if ($cp->canWrite()) {
-				$ncID = $c->updateCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink']);						
+				$ncID = $c->updateCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink'], $_POST['cExternalLinkNewWindow']);						
 				header('Location: ' . URL_SITEMAP);
 				exit;
 			}
@@ -919,7 +919,7 @@
 			// adding a collection to a collection
 			Loader::model('collection_types');
 			if ($cp->canWrite()) {
-				$ncID = $c->addCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink']);						
+				$ncID = $c->addCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink'], $_POST['cExternalLinkNewWindow']);						
 				header('Location: ' . URL_SITEMAP);
 				exit;
 			}

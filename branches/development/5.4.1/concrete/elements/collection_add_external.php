@@ -24,6 +24,13 @@ $dh = Loader::helper('date');
 	<label><?=t('URL')?></label> <input type="text" name="cExternalLink" style="width: 100%" value="http://">
 
 	</div>
+
+	<div class="ccm-field">
+
+	<label for="cExternalLinkNewWindow"><input type="checkbox" value="1" name="cExternalLinkNewWindow" id="cExternalLinkNewWindow" style="vertical-align: middle" /> <?=t('Open Link in New Window')?></label>
+
+	</div>
+	
 	
 	<div class="ccm-spacer">&nbsp;</div>
 	</div>
