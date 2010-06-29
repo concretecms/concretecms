@@ -11,6 +11,8 @@
 		$_c = $ni->getCollectionObject();
 		if (!$_c->getCollectionAttributeValue('exclude_nav')) {
 		
+			$target = $ni->getTarget();
+
 			if ($ni->isActive($c) || strpos($c->getCollectionPath(), $_c->getCollectionPath()) === 0) {
 				$navSelected='nav-selected';
 			} else {
@@ -36,9 +38,9 @@
 			echo '<li class="'.$navSelected.' '.$isFirstClass.'">';
 			
 			if ($c->getCollectionID() == $_c->getCollectionID()) { 
-				echo('<a class="nav-selected" href="' . $pageLink . '">' . $ni->getName() . '</a>');
+				echo('<a class="nav-selected" href="' . $pageLink . '"  target="' . $target . '">' . $ni->getName() . '</a>');
 			} else {
-				echo('<a href="' . $pageLink . '">' . $ni->getName() . '</a>');
+				echo('<a href="' . $pageLink . '"  target="' . $target . '">' . $ni->getName() . '</a>');
 			}	
 			
 			echo('</li>');

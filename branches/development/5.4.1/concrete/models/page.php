@@ -58,7 +58,7 @@ class Page extends Collection {
 	protected function populatePage($cInfo, $where, $cvID) {
 		$db = Loader::db();
 		
-		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cFilename, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cPendingAction, cPendingActionUID, cPendingActionTargetCID, cPendingActionDatetime, cCheckedOutUID, cIsTemplate, uID, cPath, Pages.ctID, ctHandle, ctIcon, ptID, cParentID, cChildren, ctName, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PageTypes on (PageTypes.ctID = Pages.ctID) left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
+		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cPendingAction, cPendingActionUID, cPendingActionTargetCID, cPendingActionDatetime, cCheckedOutUID, cIsTemplate, uID, cPath, Pages.ctID, ctHandle, ctIcon, ptID, cParentID, cChildren, ctName, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PageTypes on (PageTypes.ctID = Pages.ctID) left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		$q2 = "select cParentID, cPointerID, cPath, Pages.cID from Pages left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 
 		if ($cInfo != 1) {
@@ -435,16 +435,17 @@ $ppWhere = '';
 		return $newCID;
 	}
 	
-	function updateCollectionAliasExternal($cName, $cLink) {
+	function updateCollectionAliasExternal($cName, $cLink, $newWindow = 0) {
 		if ($this->cPointerExternalLink != '') {
 			$db = Loader::db();
 			$this->markModified();
 			$db->query("update CollectionVersions set cvName = ? where cID = ?", array($cName, $this->cID));
-			$db->query("update Pages set cPointerExternalLink = ? where cID = ?", array($cLink, $this->cID));
+			$db->query("update Pages set cPointerExternalLink = ?, cPointerExternalLinkNewWindow = ? where cID = ?", array($cLink, $newWindow, $this->cID));
+			$this->refreshCache();
 		}
 	}
 	
-	function addCollectionAliasExternal($cName, $cLink) {
+	function addCollectionAliasExternal($cName, $cLink, $newWindow = 0) {
 
 		$db = Loader::db();
 		$dh = Loader::helper('date');
@@ -467,8 +468,8 @@ $ppWhere = '';
 		$cobj = parent::add($data);
 		$newCID = $cobj->getCollectionID();
 		
-		$v = array($newCID, $ctID, $cParentID, $uID, $cLink);
-		$q = "insert into Pages (cID, ctID, cParentID, uID, cPointerExternalLink) values (?, ?, ?, ?, ?)";
+		$v = array($newCID, $ctID, $cParentID, $uID, $cLink, $newWindow);
+		$q = "insert into Pages (cID, ctID, cParentID, uID, cPointerExternalLink, cPointerExternalLinkNewWindow) values (?, ?, ?, ?, ?, ?)";
 		$r = $db->prepare($q);
 		
 		$res = $db->execute($r, $v);
@@ -636,6 +637,10 @@ $ppWhere = '';
 
 	function getCollectionPointerExternalLink() {
 		return $this->cPointerExternalLink;
+	}
+
+	function openCollectionPointerExternalLinkInNewWindow() {
+		return $this->cPointerExternalLinkNewWindow;
 	}
 	
 	function isAlias() {
@@ -1245,8 +1250,8 @@ $ppWhere = '';
 		$newC = $cobj->duplicate();
 		$newCID = $newC->getCollectionID();
 		
-		$v = array($newCID, $this->getCollectionTypeID(), $cParentID, $uID, $this->overrideTemplatePermissions(), $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->cPointerID, $this->cPointerExternalLink, $this->ptID, $this->cDisplayOrder);
-		$q = "insert into Pages (cID, ctID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink, ptID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		$v = array($newCID, $this->getCollectionTypeID(), $cParentID, $uID, $this->overrideTemplatePermissions(), $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->cPointerID, $this->cPointerExternalLink, $this->cPointerExternalLinkNewWindow, $this->ptID, $this->cDisplayOrder);
+		$q = "insert into Pages (cID, ctID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink, cPointerExternalLinkNewWindow, ptID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$res = $db->query($q, $v);
 	
 		Loader::model('page_statistics');
