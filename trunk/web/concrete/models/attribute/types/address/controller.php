@@ -237,8 +237,8 @@ class AddressAttributeTypeController extends AttributeTypeController  {
 			$this->set('country', $value->getCountry());
 			$this->set('postal_code', $value->getPostalCode());
 		}
-		$this->addHeaderItem(Loader::helper('html')->javascript($this->attributeType->getAttributeTypeFileURL('country_state.js')));
 		$this->addHeaderItem(Loader::helper('html')->javascript($this->getView()->action('load_provinces_js')));
+		$this->addHeaderItem(Loader::helper('html')->javascript($this->attributeType->getAttributeTypeFileURL('country_state.js')));
 		$this->set('key', $this->attributeKey);
 	}
 
