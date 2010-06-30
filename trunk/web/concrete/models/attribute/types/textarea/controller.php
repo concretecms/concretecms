@@ -1,5 +1,6 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('attribute/types/default/controller');
+Loader::library('3rdparty/htmLawed');
 
 class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 	
@@ -12,6 +13,14 @@ class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 		}
 		$this->setDisplayMode($akTextareaDisplayMode);
 	}
+
+	public function getDisplaySanitizedValue() {
+		$this->load();
+		if ($this->akTextareaDisplayMode == 'text') {
+			return parent::getDisplaySanitizedValue();
+		}
+		return htmLawed(parent::getValue(), array('safe'=>1, 'deny_attribute'=>'style'));
+	}
 	
 	public function form() {
 		$this->load();
@@ -20,17 +29,16 @@ class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 		}
 		$this->addHeaderItem(Loader::helper('html')->javascript('tiny_mce/tiny_mce.js'));
 		// switch display type here
-		switch($this->akTextareaDisplayMode) {
-			case "rich_text":
-				Loader::element('editor_init');
-				Loader::element('editor_config');
+		if ($this->akTextareaDisplayMode == 'text') {
+			print Loader::helper('form')->textarea($this->field('value'), $value);
+		} else {
+			Loader::element('editor_init');
+			$editor_mode = strtoupper(str_replace('rich_text_', '', $this->akTextareaDisplayMode));
+			Loader::element('editor_config', array('editor_mode' => $editor_mode, 'editor_selector' => 'ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID()));
+			if (in_array($this->akTextareaDisplayMode, array('rich_text', 'rich_text_advanced', 'rich_text_office', 'rich_text_custom'))) {
 				Loader::element('editor_controls', array('mode'=>'full'));
-				print Loader::helper('form')->textarea($this->field('value'), $value, array('class' => 'ccm-advanced-editor'));
-			break;
-			case "text":
-			default:
-				print Loader::helper('form')->textarea($this->field('value'), $value);
-			break;
+			}
+			print Loader::helper('form')->textarea($this->field('value'), $value, array('class' => 'ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID()));
 		}
 	}
 

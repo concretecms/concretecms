@@ -30,6 +30,7 @@ $v->addHeaderItem($html->javascript('ccm.filemanager.js'));
 $v->addHeaderItem($html->javascript('ccm.themes.js'));
 $v->addHeaderItem($html->javascript('jquery.ui.js'));
 $v->addHeaderItem($html->javascript('jquery.colorpicker.js'));
+$v->addHeaderItem($html->javascript('tiny_mce/tiny_mce.js'));
 
 if (LANGUAGE != 'en') {
 	$v->addHeaderItem($html->javascript('i18n/ui.datepicker-'.LANGUAGE.'.js'));
