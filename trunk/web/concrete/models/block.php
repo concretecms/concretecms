@@ -143,11 +143,11 @@ class Block extends Object {
 		$db = Loader::db();
 		$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
 		$globalScrapbookPage=$scrapbookHelper->getGlobalScrapbookPage();
-		$bID = $db->getOne( 'SELECT b.bID FROM Blocks AS b, CollectionVersionBlocks AS cvb '.
+		$row = $db->getRow( 'SELECT b.bID, cvb.arHandle FROM Blocks AS b, CollectionVersionBlocks AS cvb '.
 						  'WHERE b.bName=? AND b.bID=cvb.bID AND cvb.cID=? ORDER BY cvb.cvID DESC', 
 						   array($globalBlockName, intval($globalScrapbookPage->getCollectionId()) ) ); 
-		if ($bID > 0) {
-			return Block::getByID( intval($bID) );
+		if ($row != false && isset($row['bID']) && $row['bID'] > 0) {
+			return Block::getByID( $row['bID'], $globalScrapbookPage, $row['arHandle'] );
 		} else {
 			return new Block();
 		}
