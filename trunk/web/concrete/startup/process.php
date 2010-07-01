@@ -517,7 +517,18 @@
 				$obj->aID = $a->getAreaID();
 				$obj->arHandle = $a->getAreaHandle();
 				$obj->cID = $c->getCollectionID();
-			
+				$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
+				$c1 = $scrapbookHelper->getGlobalScrapbookPage();					
+				if ($c1->getCollectionID() == $c->getCollectionID()) {
+					$obj->isGlobalBlock = true;
+					$obj->cID = $_REQUEST['rcID'];
+					$obj->arHandle = $_REQUEST['rarHandle'];
+					$a1 = Area::getOrCreate(Page::getByID($obj->cID), $obj->arHandle);
+					$obj->aID = $a1->getAreaID();
+				} else {
+					$obj->isGlobalBlock = false;
+				}
+				
 				if ((!is_object($e)) || (($e instanceof ValidationErrorHelper) && (!$e->has()))) {
 					$bt = BlockType::getByHandle($b->getBlockTypeHandle());
 					if (!$bt->includeAll()) {

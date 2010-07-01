@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die(_("Access Denied."));  
 
-if($_REQUEST['isGlobal'] && ($_REQUEST['btask']=='edit' || $_REQUEST['btask']=='template') ){
+if($_REQUEST['isGlobal'] && ($_REQUEST['btask']=='edit' || $_REQUEST['btask'] == 'view_edit_mode' || $_REQUEST['btask']=='template') ){
 	$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
 	$c = $scrapbookHelper->getGlobalScrapbookPage();					
 	$db = Loader::db();
@@ -11,6 +11,7 @@ if($_REQUEST['isGlobal'] && ($_REQUEST['btask']=='edit' || $_REQUEST['btask']=='
 	//redirect cID
 	$rcID = intval($_REQUEST['cID']);
 	$isGlobal=1;
+	$rarHandle = $_REQUEST['arHandle'];
 }else{
 	$c = Page::getByID($_REQUEST['cID']);
 	$a = Area::get($c, $_REQUEST['arHandle']);
@@ -28,7 +29,7 @@ if ($_REQUEST['btask'] != 'view' && $_REQUEST['btask'] != 'view_edit_mode') {
 
 $bv = new BlockView(); 
 			
-if($isGlobal){
+if($isGlobal && $_REQUEST['btask'] != 'view_edit_mode') {
 	echo '<div class="ccm-notification">';
 	echo t('This is a global block.  Editing it here will change all instances of this block throughout the site.');
 	//echo t('This is a global block.  Edit it from the <a href="%s">Global Scrapbook</a> in your dashboard.<br /><br /><br />', View::url('/dashboard/scrapbook/') );
@@ -64,7 +65,7 @@ if (is_object($b)) {
 			}
 			break;
 		case 'view_edit_mode':
-			if ($bp->canWrite()) {
+			if ($bp->canWrite() || ($c->canWrite() && $b->isGlobalBlock() && $b->canRead())) {
 
 				$btc = $b->getInstance();
 				// now we inject any custom template CSS and JavaScript into the header
@@ -120,7 +121,8 @@ if (is_object($b)) {
 				$bv->render($b, 'edit', array(
 					'c' => $c,
 					'a' => $a, 
-					'rcID'=>$rcID
+					'rcID'=>$rcID,
+					'rarHandle' => $rarHandle
 				));
 			} 
 			break;

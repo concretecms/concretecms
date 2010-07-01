@@ -268,7 +268,11 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 			ccmAlert.notice(ccmi18n.error, message);
 		} else {
 			ccm_blockWindowClose();
-			var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + resp.bID + '&arHandle=' + encodeURI(resp.arHandle) + '&btask=view_edit_mode';	 
+			var isGlobal = 0;
+			if (resp.isGlobalBlock == true) {
+				isGlobal = 1;
+			}
+			var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&isGlobal=' + isGlobal + '&bID=' + resp.bID + '&arHandle=' + encodeURIComponent(resp.arHandle) + '&btask=view_edit_mode';	 
 			$.get(action, 		
 				function(r) { 
 					if ($("#ccm-scrapbook-list").length > 0) {
