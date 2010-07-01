@@ -9,7 +9,7 @@
 		// thanks fernandos
         alias = alias.replace(/[\u00C4\u00E4]/gi, "ae");            // €Š    
         alias = alias.replace(/[\u00D6\u00F6]/gi, "oe");            // …š    
-        alias = alias.replace(/[\u00DF]/gi, "sz");                  // §    
+        alias = alias.replace(/[\u00DF]/gi, "ss");                  // §    
         alias = alias.replace(/[\u00DC\u00FC]/gi, "ue");            // †Ÿ
         alias = alias.replace(/[\u00C6\u00E6]/gi, "ae");            // ®¾ 
         alias = alias.replace(/[\u00D8\u00F8]/gi, "oe");            // ¿ 

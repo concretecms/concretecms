@@ -42,7 +42,7 @@ class TextHelper {
 		$replaceMulti = array(
 			'ae',
 			'oe',
-			'sz',
+			'ss',
 			'ue',
 			'ae',
 			'oe',
