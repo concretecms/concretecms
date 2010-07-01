@@ -13,9 +13,7 @@ $this->inc('elements/header.php'); ?>
 		
 		<div id="body">	
 			<?
-			$b = Block::getByName("prlist");
-			$b->display();
-			
+
 			$a = new Area('Main');
 			$a->display($c);			
 			?>
