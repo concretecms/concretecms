@@ -123,6 +123,16 @@
 			$this->set('cArray', $cArray);
 		}
 		
+		// this doesn't work yet
+		/*
+		public function on_page_view() {
+			if ($this->rss) {
+				$b = $this->getBlockObject();
+				$this->addHeaderItem('<link href="' . $this->getRssUrl($b) . '"  rel="alternate" type="application/rss+xml" title="' . $this->rssTitle . '" />');
+			}
+		}
+		*/
+		
 		public function add() {
 			Loader::model("collection_types");
 			$c = Page::getCurrentPage();

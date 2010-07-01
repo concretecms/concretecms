@@ -25,7 +25,7 @@ if($_GET['bID']) {
 		<rss version="2.0">
 		  <channel>
 			<title><?=$controller->rssTitle?></title>
-			<link><?=BASE_URL.DIR_REL.htmlspecialchars($rssUrl)?></link>
+			<link><?=BASE_URL.htmlspecialchars($rssUrl)?></link>
 			<description><?=$controller->rssDescription?></description> 
 <?
 		for ($i = 0; $i < count($cArray); $i++ ) {
