@@ -691,7 +691,7 @@ class Block extends Object {
 			$r = $db->query($q);
 			
 			$q = "delete from CollectionVersionBlockStyles where cID = '$cID' and cvID = '$cvID' and bID = '$bID' and arHandle = '$arHandle'";
-			//$r = $db->query($q);				
+			$r = $db->query($q);				
 		}
 
 		//then, we see whether or not this block is aliased to anything else
