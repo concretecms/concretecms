@@ -627,12 +627,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 			if (!is_array($blockIDs)) {
 				$db = Loader::db();
-				$q = "select Blocks.bID, CollectionVersionBlocks.arHandle ";
-				$q .= "from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) ";
-				if ($arHandle != false) {
-					$q .= 'and CollectionVersionBlocks.arHandle = ? ';
-				}
-				$q .= "order by CollectionVersionBlocks.cbDisplayOrder asc";
+				$q = "select Blocks.bID, CollectionVersionBlocks.arHandle from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) order by CollectionVersionBlocks.cbDisplayOrder asc";
 	
 				$blockIDs = $db->GetAll($q, $v);
 				$blockIDsTmp = array();
