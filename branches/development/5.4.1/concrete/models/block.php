@@ -388,6 +388,9 @@ class Block extends Object {
 		$cvID = $c->getVersionID();
 		$cID = $c->getCollectionID();
 		$v = array($cID, $cvID, $this->bID, $this->getAreaHandle());
+
+		Cache::delete('collection_blocks', $cID . ':' . $cvID);
+
 		$q = "select count(bID) from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?";
 		$total = $db->getOne($q, $v);
 		if ($total == 0) {
@@ -433,6 +436,8 @@ class Block extends Object {
 		$cID = $this->getBlockCollectionID();
 
 		$newBlockDisplayOrder = $nc->getCollectionAreaDisplayOrder($area->getAreaHandle());
+
+		Cache::delete('collection_blocks', $nc->getCollectionID() . ':' . $nc->getVersionID());
 		
 		$v = array($nc->getCollectionID(), $nc->getVersionID(), $area->getAreaHandle(), $newBlockDisplayOrder, $cID, $this->arHandle);
 		$db->Execute('update CollectionVersionBlocks set cID = ?, cvID = ?, arHandle = ?, cbDisplayOrder = ? where cID = ? and arHandle = ? and isOriginal = 1', $v);
@@ -501,6 +506,8 @@ class Block extends Object {
 		
 		$v = array($ncID, $nvID, $newBID, $this->arHandle, $this->csrID);
 		$db->Execute('insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)', $v);
+
+		Cache::delete('collection_blocks', $ncID . ':' . $nvID);
 		
 		return $nb;
 	}
