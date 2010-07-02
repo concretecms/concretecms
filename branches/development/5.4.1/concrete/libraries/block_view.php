@@ -294,17 +294,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				print $outputContent;			
 			} else if ($template) {
 				
-				if ($view == 'view' && $this->controller->cacheBlockOutput() && ($obj instanceof Block)) {
-					ob_start();
-				}
-				
+				ob_start();
 				include($template);
-				
-				if ($useCache) {
-					$outputContent = ob_get_contents();
-					ob_end_clean();					
-					print $outputContent;
-				}
+				$outputContent = ob_get_contents();
+				ob_end_clean();					
+				print $outputContent;
 				
 				if ($view == 'view' && $this->controller->cacheBlockOutput() && ($obj instanceof Block)) {
 					Cache::set('block_view_output', $obj->getBlockCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
