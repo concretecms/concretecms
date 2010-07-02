@@ -45,8 +45,7 @@ class FormPageSelectorHelper {
 			$html .= $oc->getCollectionName();
 		}
 		$html .= '</strong></div>';
-		$html .= '<a class="ccm-sitemap-select-page" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector.php?sitemap_select_mode=select_page&cID=' . $selectedCID . '">' . t('Select Page') . '</a>';
-		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedCID . '">';
+		$html .= '<a class="ccm-sitemap-select-page" dialog-sender="' . $fieldName . '" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector.php?sitemap_select_mode=select_page&cID=' . $selectedCID . '">' . t('Select Page') . '</a>';		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedCID . '">';
 		$html .= '</div>'; 
 		$html .= '<script type="text/javascript"> 
 		var ccmActivePageField;
@@ -60,8 +59,9 @@ class FormPageSelectorHelper {
 		ccm_selectSitemapNode = function(cID, cName) { ';
 		if($javascriptFunc=='' || $javascriptFunc=='ccm_selectSitemapNode'){
 			$html .= '
+			var fieldName = $(ccmActivePageField).attr("dialog-sender");
 			var par = $(ccmActivePageField).parent().find(\'.ccm-summary-selected-item-label\');
-			var pari = $(ccmActivePageField).parent().find(\'[name=' . $fieldName . ']\');
+			var pari = $(ccmActivePageField).parent().find("[name=\'"+fieldName+"\']");
 			par.html(cName);
 			pari.val(cID);
 			';
