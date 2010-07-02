@@ -73,6 +73,7 @@
 			foreach($cvIDs as $cvID) {
 				Cache::delete('page', $cID . ':' . $cvID);
 				Cache::delete('collection_version', $cID . ':' . $cvID);
+				Cache::delete('collection_blocks', $cID . ':' . $cvID);
 				Cache::delete('collection_version_id', $cID . ':' . $cvID);
 				Cache::delete('collection_version_id', $cID . ':RECENT');
 				Cache::delete('collection_version_id', $cID . ':ACTIVE');

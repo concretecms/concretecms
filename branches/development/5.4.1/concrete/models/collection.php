@@ -623,12 +623,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$v = array($this->getCollectionID(), $this->getVersionID());
 			$blocks = array();
 
-			if ($arHandle != false) {
-				$blockIDs = Cache::get('collection_blocks_' . $this->getCollectionID() . '_' . $this->getVersionID(), $arHandle);
-				$v[] = $arHandle;
-			} else {
-				$blockIDs = Cache::get('collection_blocks_' . $this->getCollectionID() . '_' . $this->getVersionID(), false);		
-			}
+			$blockIDs = Cache::get('collection_blocks', $this->getCollectionID() . ':' . $this->getVersionID());		
 			
 			if (!is_array($blockIDs)) {
 				$db = Loader::db();
@@ -640,16 +635,38 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				$q .= "order by CollectionVersionBlocks.cbDisplayOrder asc";
 	
 				$blockIDs = $db->GetAll($q, $v);
+				$blockIDsTmp = array();
 				if (!$blockIDs) {
-					$blockIDs = array();
+					$blockIDsTmp = array();
+				} else {
+					foreach($blockIDs as $bl) {
+						$blockIDsTmp[$bl['arHandle']][] = $bl;
+					}
 				}
-				Cache::set('collection_blocks_' . $this->getCollectionID() . '_' . $this->getVersionID(), $arHandle, $blockIDs);
+				Cache::set('collection_blocks', $this->getCollectionID() . ':' . $this->getVersionID(), $blockIDsTmp);
 			}
 			
-			foreach($blockIDs as $row) {
-				$ab = Block::getByID($row['bID'], $this, $row['arHandle']);
-				if (is_object($ab)) {
-					$blocks[] = $ab;
+			if ($arHandle != false) {
+				$blockIDsTmp = $blockIDs[$arHandle];
+				$blockIDs = $blockIDsTmp;
+			} else {
+			
+				$blockIDsTmp = $blockIDs;
+				$blockIDs = array();
+				foreach($blockIDsTmp as $row) {
+					if (!in_array($row, $blockIDs)) {
+						$blockIDs[] = $row;
+					}
+				}
+			}		
+			
+			$blocks = array();
+			if (is_array($blockIDs)) {
+				foreach($blockIDs as $row) {
+					$ab = Block::getByID($row['bID'], $this, $row['arHandle']);
+					if (is_object($ab)) {
+						$blocks[] = $ab;
+					}
 				}
 			}
 			return $blocks;
@@ -680,6 +697,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?)";
 
 			$res = $db->Execute($q, $v);
+
+			Cache::delete('collection_blocks', $cID . ':' . $vObj->getVersionID());
 			
 			return Block::getByID($nb->getBlockID(), $this, $a);
 		}
