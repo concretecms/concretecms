@@ -646,9 +646,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			
 				$blockIDsTmp = $blockIDs;
 				$blockIDs = array();
-				foreach($blockIDsTmp as $row) {
-					if (!in_array($row, $blockIDs)) {
-						$blockIDs[] = $row;
+				foreach($blockIDsTmp as $arHandle => $row) {
+					foreach($row as $brow) {
+						if (!in_array($brow, $blockIDs)) {
+							$blockIDs[] = $brow;
+						}
 					}
 				}
 			}		
