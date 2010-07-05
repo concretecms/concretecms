@@ -154,6 +154,7 @@ class ListsStatesProvincesHelper {
 		
 		
 		'BEDS' => 'Bedfordshire',
+		'LONDON' => 'London',
 		'BERKS' => 'Berkshire',
 		'BUCKS' => 'Buckinghamshire',
 		'CAMBS' => 'Cambridgeshire',
