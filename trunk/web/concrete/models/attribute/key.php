@@ -304,6 +304,9 @@ class AttributeKey extends Object {
 			} else {
 				$column = 'ak_' . $akHandle;
 				if (isset($columns[strtoupper($column)])) {
+					if (is_object($value)) {
+						$value = $value->__toString();
+					}
 					$columnHeaders[$column] = $value;
 				}
 			}
