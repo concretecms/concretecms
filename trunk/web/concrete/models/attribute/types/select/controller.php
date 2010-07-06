@@ -246,14 +246,15 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		return $list;	
 	}
 	
-	public function getSearchIndexValue() {
-		$str = "\n";
-		$list = $this->getSelectedOptions();
-		foreach($list as $l) {
-			$str .= $l . "\n";
-		}
-		return $str;
-	}
+    public function getSearchIndexValue() {
+        $str = "\n";
+        $list = $this->getSelectedOptions();
+        foreach($list as $l) {
+            $l = (is_object($l) && method_exists($l,'__toString')) ? $l->__toString() : $l;
+            $str .= $l . "\n";
+        }
+        return $str;
+    }
 	
 	public function getSelectedOptions() {
 		if (!isset($this->akSelectOptionDisplayOrder)) {
