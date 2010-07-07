@@ -1187,6 +1187,8 @@
     <field name="cDescription" type="X"/>
     <field name="cPath" type="X"/>
     <field name="cDatePublic" type="T"/>
+    <field name="cDateLastIndexed" type="T" />
+    <field name="cDateLastSitemapped" type="T" />
     <index name="cName">
       <col>cName</col>
       <FULLTEXT />
@@ -1204,6 +1206,12 @@
       <col>cDescription</col>
       <col>content</col>
       <FULLTEXT />
+	</index>
+    <index name="cDateLastIndexed">
+      <col>cDateLastIndexed</col>
+	</index>
+    <index name="cDateLastSitemapped">
+      <col>cDateLastSitemapped</col>
 	</index>
   </table>
   <table name="PagePermissionPageTypes">
