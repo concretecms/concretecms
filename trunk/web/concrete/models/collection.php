@@ -168,13 +168,16 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				Loader::library('database_indexed_search');
 				$index = new IndexedSearch();
 			}
+			$datetime = Loader::helper('date')->getSystemDateTime();
+			
 			$db->Replace('PageSearchIndex', array(
 				'cID' => $this->getCollectionID(), 
 				'cName' => $this->getCollectionName(), 
 				'cDescription' => $this->getCollectionDescription(), 
 				'cPath' => $this->getCollectionPath(),
 				'cDatePublic' => $this->getCollectionDatePublic(), 
-				'content' => $index->getBodyContentFromPage($this)
+				'content' => $index->getBodyContentFromPage($this),
+				'cDateLastIndexed' => $datetime
 			), array('cID'), true);			
 		}
 		
