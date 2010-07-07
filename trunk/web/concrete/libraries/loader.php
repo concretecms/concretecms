@@ -95,9 +95,13 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (is_array($args)) {
 				extract($args);
 			}
-			$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-			if (file_exists($dir . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . $file . '.php')) {
-				include($dir . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . $file . '.php');
+			if (file_exists(DIR_FILES_ELEMENTS . '/' . $file . '.php')) {
+				include(DIR_FILES_ELEMENTS . '/' . $file . '.php');
+			} else {
+				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+				if (file_exists($dir . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . $file . '.php')) {
+					include($dir . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . $file . '.php');
+				}
 			}
 		}
 
