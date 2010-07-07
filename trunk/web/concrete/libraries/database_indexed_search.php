@@ -17,6 +17,7 @@ class IndexedSearchResult {
 		$this->score = $score;
 		$this->cPath = $cPath;
 		$this->content = $content;
+		$this->nh = Loader::helper('navigation');
 	}
 
 	public function getID() {return $this->cID;}
@@ -32,6 +33,11 @@ class IndexedSearchResult {
 		}
 		return date($mask, strtotime($this->cDate));
 	}
+	public function getPath() {
+		$c = Page::getByID($this->cID);
+		return $this->nh->getLinkToCollection($c, true);
+	}
+	
 	public function setDate($date) { $this->cDate = $date;}
 }
 
@@ -40,6 +46,7 @@ class IndexedSearchResult {
  * Just use PageList with filterByKeywords instead. We'll keep this around so people know what to expect
  */
 class IndexedPageList extends PageList {
+
 
 	public function getPage() {
 		$this->sortByMultiple('cIndexScore desc', 'cDatePublic desc');
@@ -60,6 +67,9 @@ class IndexedPageList extends PageList {
 */
 class IndexedSearch {
 	
+	public $searchBatchSize = 200;
+	public $searchReindexTimeout = 259200;
+
 	private $cPathSections = array();
 	private $searchableAreaNamesManual = array();
 	
@@ -70,7 +80,7 @@ class IndexedSearch {
 	public function getSearchableAreaAction() {
 		$action = Config::get('SEARCH_INDEX_AREA_METHOD');
 		if (!$action) {
-			$action = 'whitelist';
+			$action = 'blacklist';
 		}
 		return $action;
 	}
@@ -123,37 +133,39 @@ class IndexedSearch {
 	/** 
 	 * Reindexes the search engine.
 	 */
-	public function reindexAll() {
+	public function reindexAll($fullReindex = false) {
 		Cache::disableLocalCache();
 		
 		$db = Loader::db();
 		Loader::model('collection_attributes');
-		$r = $db->query("select cID from Pages order by cID asc");
-		$nh = Loader::helper('navigation');
 		
-		$db->Execute("truncate table PageSearchIndex");
+		if ($fullReindex) {
+			$db->Execute("truncate table PageSearchIndex");
+		}
+		
+		$pl = new PageList();
+		$pl->ignoreAliases();
+		$pl->ignorePermissions();
+		$pl->sortByCollectionIDAscending();
+		$pl->filter(false, '(c.cDateModified > psi.cDateLastIndexed or UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(psi.cDateLastIndexed) > ' . $this->searchReindexTimeout . ' or psi.cID is null or psi.cDateLastIndexed is null)');
+		$pl->filter(false, '(ak_exclude_search_index is null or ak_exclude_search_index = 0)');
+		$pages = $pl->get($this->searchBatchSize);
 		
 		$num = 0;
-		while ($row = $r->fetchRow()) {
-			$c = Page::getByID($row['cID'], 'ACTIVE');
-			
-			if ($c->isSystemPage() || $c->getCollectionAttributeValue('exclude_search_index')) {
-				continue;
-			}
+		foreach($pages as $c) { 
 			
 			// make sure something is approved
 			$cv = $c->getVersionObject();
 			if(!$cv->cvIsApproved) { 
 				continue;
 			}		
-			
+
 			$c->reindex($this);
 			$num++;
 		
 			unset($c);
 		}
 		
-		$r->Close();
 		Cache::enableLocalCache();
 		$result = new stdClass;
 		$result->count = $num;

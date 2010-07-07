@@ -13,7 +13,7 @@ class PageList extends DatabaseItemList {
 	protected $includeSystemPages = false;
 	protected $attributeFilters = array();
 	protected $includeAliases = true;
-	protected $displayOnlyPermittedPages = false;
+	protected $displayOnlyPermittedPages = false; // not used.
 	protected $displayOnlyApprovedPages = true;
 	protected $systemPagesToExclude = array('login.php', 'page_not_found.php', 'page_forbidden.php','register.php', 'download_file.php', 'profile/%', 'dashboard/%');
 	protected $filterByCParentID = 0;
@@ -153,6 +153,10 @@ class PageList extends DatabaseItemList {
 	public function sortByDisplayOrderDescending() {
 		parent::sortBy('p1.cDisplayOrder', 'desc');
 	}
+
+	public function sortByCollectionIDAscending() {
+		parent::sortBy('p1.cID', 'asc');
+	}
 	
 	/** 
 	 * Sorts this list by public date ascending order 
@@ -280,7 +284,11 @@ class PageList extends DatabaseItemList {
 	 * @param bool $checkForPermissions
 	 */
 	public function displayOnlyPermittedPages($checkForPermissions) {
-		$this->displayOnlyPermittedPages = $checkForPermissions;
+		if ($checkForPermissions) {
+			$this->ignorePermissions = false;
+		} else {
+			$this->ignorePermissions = true;
+		}
 	}
 	
 	protected function setBaseQuery($additionalFields = '') {
@@ -288,7 +296,11 @@ class PageList extends DatabaseItemList {
 			$db = Loader::db();
 			$ik = ', match(psi.cName, psi.cDescription, psi.content) against (' . $db->quote($this->indexedKeywords) . ') as cIndexScore ';
 		}
-
+	
+		if (!$this->includeAliases) {
+			$this->filter(false, '(p1.cPointerID < 1 or p1.cPointerID is null)');
+		}
+		
 		$cvID = '(select max(cvID) from CollectionVersions where cID = cv.cID)';		
 		if ($this->displayOnlyApprovedPages) {
 			$cvID = '(select cvID from CollectionVersions where cvIsApproved = 1 and cID = cv.cID)';

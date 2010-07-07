@@ -36,11 +36,11 @@ if (strlen($query)) {
 		<? foreach($results as $r) { 
 			$currentPageBody = $this->controller->highlightedExtendedMarkup($r->getBodyContent(), $query);?>
 			<div class="searchResult">
-				<h3><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$r->getID()?>"><?=$r->getName()?></a></h3>
+				<h3><a href="<?=$r->getPath()?>"><?=$r->getName()?></a></h3>
 				<p>
 					<?php echo ($currentPageBody ? $currentPageBody .'<br />' : '')?>
 					<?php echo $this->controller->highlightedMarkup($tt->shortText($r->getDescription()),$query)?>
-					<span class="pageLink"><?php echo $this->controller->highlightedMarkup(BASE_URL.DIR_REL.$r->getCollectionPath(),$query)?></span>
+					<span class="pageLink"><?php echo $this->controller->highlightedMarkup($r->getPath(),$query)?></span>
 				</p>
 			</div>
 		<? 	}//foreach search result ?>
