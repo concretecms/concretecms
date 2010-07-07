@@ -231,6 +231,10 @@
 			$oldHandle = $ov->getCollectionHandle();
 			$newHandle = $this->cvHandle;
 
+			// update a collection updated record
+			$dh = Loader::helper('date');
+			$db->query('update Collections set cDateModified = ? where cID = ?', array($dh->getLocalDateTime(), $cID));
+
 			// first we remove approval for the other version of this collection
 			$v = array($cID);
 			$q = "update CollectionVersions set cvIsApproved = 0 where cID = ?";
@@ -269,6 +273,10 @@
 			$db = Loader::db();
 			$cvID = $this->cvID;
 			$cID = $this->cID;
+			
+			// first we update a collection updated record
+			$dh = Loader::helper('date');
+			$db->query('update Collections set cDateModified = ? where cID = ?', array($dh->getLocalDateTime(), $cID));
 			
 			// first we remove approval for all versions of this collection
 			$v = array($cID);
