@@ -1060,7 +1060,7 @@ var ccmCustomStyle = {
 	},
 	initForm: function() {
 		if ($("#cspFooterPreset").length > 0) {
-			$("#ccmCustomCssFormTabs input, #ccmCustomCssFormTabs select").bind('change click', function() {
+			$("#ccmCustomCssFormTabs input, #ccmCustomCssFormTabs select, #ccmCustomCssFormTabs textarea").bind('change click', function() {
 				$("#cspFooterPreset").show();
 				$("#cspFooterNoPreset").remove();
 				$("#ccmCustomCssFormTabs input, #ccmCustomCssFormTabs select").unbind('change click');
