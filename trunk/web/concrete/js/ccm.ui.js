@@ -316,19 +316,17 @@ ccm_mainNavDisableDirectExit = function(disableShow) {
 }
 
 ccm_setupBlockForm = function(form, currentBlockID, task) {
-	form.ajaxForm({
-		type: 'POST',
-		iframe: true,
-		beforeSubmit: function() {
-			ccm_hideHighlighter();
+	form.submit(function() {
+		ccm_hideHighlighter();
+		jQuery.fn.dialog.showLoader();
+		ccm_menuActivated = true;
+		if (ccm_blockFormSubmit()) {
 			$('input[name=ccm-block-form-method]').val('AJAX');
-			jQuery.fn.dialog.showLoader();
-			ccm_menuActivated = true;
-			return ccm_blockFormSubmit();
-		},
-		success: function(r) {
-			ccm_parseBlockResponse(r, currentBlockID, task);
+			$(this).ajaxSubmit({
+				success: function(r) {ccm_parseBlockResponse(r, currentBlockID, task); }
+			});
 		}
+		return false;
 	});
 }
 
