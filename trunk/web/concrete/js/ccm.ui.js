@@ -316,6 +316,24 @@ ccm_mainNavDisableDirectExit = function(disableShow) {
 }
 
 ccm_setupBlockForm = function(form, currentBlockID, task) {
+	form.ajaxForm({
+		type: 'POST',
+		iframe: true,
+		beforeSubmit: function() {
+			ccm_hideHighlighter();
+			$('input[name=ccm-block-form-method]').val('AJAX');
+			jQuery.fn.dialog.showLoader();
+			ccm_menuActivated = true;
+			return ccm_blockFormSubmit();
+		},
+		success: function(r) {
+			ccm_parseBlockResponse(r, currentBlockID, task);
+		}
+	});
+	
+	/*
+	
+	// this code works better but doesn't work with tinymce?
 	form.submit(function() {
 		ccm_hideHighlighter();
 		jQuery.fn.dialog.showLoader();
@@ -328,6 +346,8 @@ ccm_setupBlockForm = function(form, currentBlockID, task) {
 		}
 		return false;
 	});
+
+	*/
 }
 
 
