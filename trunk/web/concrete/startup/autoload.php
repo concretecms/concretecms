@@ -9,6 +9,7 @@ function __autoload($class) {
 	} else if (strpos($class, 'Helper') > 0) {
 		$class = substr($class, 0, strpos($class, 'Helper'));
 		$handle = $txt->uncamelcase($class);
+		$handle = preg_replace('/^site_/', '', $handle);
 		Loader::helper($handle);
 	} else if (strpos($class, 'AttributeType') > 0) {
 		$class = substr($class, 0, strpos($class, 'AttributeType'));
