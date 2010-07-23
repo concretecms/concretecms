@@ -2008,8 +2008,21 @@ $ppWhere = '';
 		return $lifetime;
 	}
 	
-	public function supportsPageCache($blocks) {
+	public function supportsPageCache($blocks, $controller = false) {
 		$u = new User();
+		
+		$allowedControllerActions = array('view');
+		if (is_object($controller)) {
+			if (!in_array($controller->getTask(), $allowedControllerActions)) {
+				return false;
+			}
+		}
+
+		if ($this->cCacheFullPageContent == 0) {
+			return false;
+		}
+		
+		
 		if ($u->isRegistered() || $_SERVER['REQUEST_METHOD'] == 'POST') {
 			return false;
 		}
@@ -2021,6 +2034,7 @@ $ppWhere = '';
 				return false;
 			}
 		}
+		
 		
 		if ($this->cCacheFullPageContent == 1 || FULL_PAGE_CACHE_GLOBAL == 'all') {
 			// this cache page at the page level
