@@ -16,6 +16,7 @@ if (REDIRECT_TO_BASE_URL == true) {
 	}
 
 	if (($base_url != $protocol . $_SERVER['HTTP_HOST']) && ($base_url . ':' . $_SERVER['SERVER_PORT'] != 'https://' . $_SERVER['HTTP_HOST'])) {
+		header('HTTP/1.1 301 Moved Permanently');  
 		header('Location: ' . $base_url . $uri);
 		exit;
 	}
