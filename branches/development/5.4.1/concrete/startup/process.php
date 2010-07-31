@@ -320,7 +320,11 @@
 							
 							$layout->save( $nvc ); 
 							//if($oldLayoutId) $nvc->updateAreaLayoutId($area, $oldLayoutId, $layout->layoutID);  
-						}else throw new Exception(t('Access Denied: Invalid Layout'));
+						}else{
+							//this may be triggered when there are two quick requests to the server, and the change has already been saved
+							$skipLayoutSave=1;
+							//throw new Exception(t('Access Denied: Invalid Layout'));
+						}
 						
 					}else{ //new layout  
 						$layout = new Layout( $params );   
@@ -331,14 +335,16 @@
 					
 					//are we adding a new layout to an area, or updating an existing one? 
 					$cvalID=intval($_REQUEST['cvalID']);
-					if( $cvalID ){
+					if($skipLayoutSave){
+						//see above
+					}elseif( $cvalID ){
 						//get the cval of the record that corresponds to this version & area 
 						$vals = array( $nvc->getCollectionID(), $nvc->getVersionID(), $_GET['arHandle'], intval($_REQUEST['layoutID']) );
 						$cvalID = intval($db->getOne('SELECT cvalID FROM CollectionVersionAreaLayouts WHERE cID=? AND cvID=? AND arHandle=? AND layoutID=? ',$vals));	
-						if($updateLayoutId) $nvc->updateAreaLayoutId( $cvalID, $layout->layoutID); 
-					}else{ 
+						if($updateLayoutId) $nvc->updateAreaLayoutId( $cvalID, $layout->layoutID);  
+					}else{  
 						$nvc->addAreaLayout($area, $layout, $position);  
-					}
+					} 
 					
 					
 					if ( $_POST['layoutPresetAction']=='create_new_preset' ) { 
