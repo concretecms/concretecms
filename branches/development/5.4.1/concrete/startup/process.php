@@ -332,6 +332,9 @@
 					//are we adding a new layout to an area, or updating an existing one? 
 					$cvalID=intval($_REQUEST['cvalID']);
 					if( $cvalID ){
+						//get the cval of the record that corresponds to this version & area 
+						$vals = array( $nvc->getCollectionID(), $nvc->getVersionID(), $_GET['arHandle'] );
+						$cvalID = intval($db->getOne('SELECT cvalID FROM CollectionVersionAreaLayouts WHERE cID=? AND cvID=? AND arHandle=? ',$vals));						
 						if($updateLayoutId) $nvc->updateAreaLayoutId( $cvalID, $layout->layoutID);  
 					}else{ 
 						$nvc->addAreaLayout($area, $layout, $position);  
