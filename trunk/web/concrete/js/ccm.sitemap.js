@@ -307,7 +307,11 @@ selectLabel = function(e, node) {
 		var origCID = node.attr('selected-page-id');
 		selectMoveCopyTarget(node.attr('sitemap-instance-id'), node.attr('sitemap-display-mode'), node.attr('sitemap-select-mode'), destCID, origCID);
 	} else if (node.attr('sitemap-select-mode') == 'select_page') {
-		ccm_selectSitemapNode(node.attr('id').substring(10), unescape(node.attr('tree-node-title')));
+		var callback = node.parents('[sitemap-wrapper=1]').attr('sitemap-select-callback');
+		if (callback == '' || typeof(callback) == 'undefined') {
+			callback = 'ccm_selectSitemapNode';
+		}
+		eval(callback + '(node.attr(\'id\').substring(10), unescape(node.attr(\'tree-node-title\')));');
 		jQuery.fn.dialog.closeTop();
 	} else {
 		node.addClass('tree-label-selected');

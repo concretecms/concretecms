@@ -22,7 +22,7 @@
 function ccmEditorSitemapOverlay() {
     $.fn.dialog.open({
         title: 'Choose A Page',
-        href: CCM_TOOLS_PATH + '/sitemap_overlay.php?sitemap_mode=select_page',
+        href: CCM_TOOLS_PATH + '/sitemap_overlay.php?sitemap_mode=select_page&callback=ccm_selectSitemapNode<?=$GLOBALS['CCM_EDITOR_SITEMAP_NODE_NUM']?>',
         width: '550',
         modal: false,
         height: '400'
