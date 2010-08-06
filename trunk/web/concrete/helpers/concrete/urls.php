@@ -80,7 +80,9 @@ class ConcreteUrlsHelper {
 			$ff = '/' . $file;
 		}
 		
-		if ($bt->getPackageID() > 0) {
+		if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $bt->getBlockTypeHandle() . $ff)) {
+			$url = BASE_URL . DIR_REL . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
+		} else if ($bt->getPackageID() > 0) {
 			$db = Loader::db();
 			$h = $bt->getPackageHandle();
 			$dirp = (is_dir(DIR_PACKAGES . '/' . $h)) ? DIR_PACKAGES . '/' . $h : DIR_PACKAGES_CORE . '/' . $h;
@@ -90,10 +92,7 @@ class ConcreteUrlsHelper {
 			}
 		} else if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . '/' . $bt->getBlockTypeHandle() . $ff)) {
 			$url = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
-		} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $bt->getBlockTypeHandle() . $ff)) {
-			$url = BASE_URL . DIR_REL . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
-		}
-		
+		}		
 		return $url;
 	}
 	

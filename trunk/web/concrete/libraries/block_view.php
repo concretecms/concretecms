@@ -96,16 +96,15 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 * @return string
 		*/
 		public function getBlockPath($filename = null) {
-
-			$obj = $this->blockObj;
-			if ($obj->getPackageID() > 0) {
+			$obj = $this->blockObj;			
+			if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $filename)) {
+				$base = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle();
+			} else if ($obj->getPackageID() > 0) {
 				if (is_dir(DIR_PACKAGES . '/' . $obj->getPackageHandle())) {
 					$base = DIR_PACKAGES . '/' . $obj->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
 				} else {
 					$base = DIR_PACKAGES_CORE . '/' . $obj->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
 				}
-			} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $filename)) {
-				$base = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle();
 			} else {
 				$base = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle();
 			}
