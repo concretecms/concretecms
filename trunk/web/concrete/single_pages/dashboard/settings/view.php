@@ -234,8 +234,15 @@ foreach($types as $at) { ?>
 
 <h1><span><?=t('Environment')?></span></h1>
 <div class="ccm-dashboard-inner">
-<textarea style="width: 97%; height: 140px;" onclick="this.select()"><?=$environmentMessage?></textarea>
+<textarea style="width: 97%; height: 140px;" onclick="this.select()" id="ccm-dashboard-environment-info"><?=t('Unable to load environment info')?></textarea>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#ccm-dashboard-environment-info').load('<?php echo $this->action('get_environment_info')?>');	
+});
+</script>
+
 
 <? if (ENABLE_DEVELOPER_OPTIONS) { ?>
 	

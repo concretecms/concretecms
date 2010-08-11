@@ -79,7 +79,7 @@ class IndexedSearch {
 	
 	public function getSearchableAreaAction() {
 		$action = Config::get('SEARCH_INDEX_AREA_METHOD');
-		if (!$action) {
+		if (!strlen($action)) {
 			$action = 'blacklist';
 		}
 		return $action;
@@ -111,7 +111,7 @@ class IndexedSearch {
 		} else {
 			$searchableAreaNames = $searchableAreaNamesInitial;
 		}		
-
+		
 		$blarray=array();
 		foreach($searchableAreaNames as $searchableAreaName){
 		 	$blarray = array_merge( $blarray, $c->getBlocks($searchableAreaName) );
