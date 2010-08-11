@@ -456,6 +456,28 @@ class DashboardSettingsController extends Controller {
 		$this->set('enable_log_emails', $enable_log_emails);		
 		$this->set('enable_log_errors', $enable_log_errors);	
 		
+		
+		if ($updated) {
+			switch($updated) {
+				case "debug_saved":
+					$this->set('message', t('Debug configuration saved.'));
+					break;
+				case "logging_saved":
+					$this->set('message', t('Logging configuration saved.'));	
+					break;
+				case "cache_cleared";
+					$this->set('message', t('Cached files removed.'));	
+					break;
+				case "cache_updated";
+					$this->set('message', t('Cache settings saved.'));	
+					break;
+			}
+		}
+	}
+	
+	
+	public function get_environment_info() {
+		set_time_limit(5);
 		ob_start();
 		phpinfo();
 		$phpinfo = array('phpinfo' => array());
@@ -588,24 +610,11 @@ class DashboardSettingsController extends Controller {
 				}
 			}
 		}		
-		$this->set('environmentMessage', $environmentMessage);
-		if ($updated) {
-			switch($updated) {
-				case "debug_saved":
-					$this->set('message', t('Debug configuration saved.'));
-					break;
-				case "logging_saved":
-					$this->set('message', t('Logging configuration saved.'));	
-					break;
-				case "cache_cleared";
-					$this->set('message', t('Cached files removed.'));	
-					break;
-				case "cache_updated";
-					$this->set('message', t('Cache settings saved.'));	
-					break;
-			}
-		}
+		//$this->set('environmentMessage', $environmentMessage);
+		echo $environmentMessage;
+		exit;
 	}
+	
 	
 	public function add_attribute_type() {
 		$pat = PendingAttributeType::getByHandle($this->post('atHandle'));

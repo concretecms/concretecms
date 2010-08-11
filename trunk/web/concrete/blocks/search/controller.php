@@ -132,8 +132,9 @@ class SearchBlockController extends BlockController {
 		$ipl->filterByKeywords($q);
 		
 		if( is_array($_REQUEST['search_paths']) ){ 
+			
 			foreach($_REQUEST['search_paths'] as $path) {
-				//if(!strlen($path)) continue;
+				if(!strlen($path)) continue;
 				$ipl->filterByPath($path);
 			}
 		}

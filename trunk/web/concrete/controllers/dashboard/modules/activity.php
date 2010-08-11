@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class ActivityDashboardModuleController extends Controller {
 
 	public function __construct() {
+		
 		Loader::model('user_statistics');
 		Loader::model('page_statistics');
 		
