@@ -2,6 +2,8 @@
 
 <? 
 $fp = FilePermissions::getGlobal();
+$c = Page::getCurrentPage();
+$ocID = $c->getCollectionID();
 if ($fp->canSearchFiles()) { ?>
 
 	<div class="ccm-dashboard-inner">
@@ -16,11 +18,11 @@ if ($fp->canSearchFiles()) { ?>
 					
 					<div id="ccm-search-advanced-results-wrapper">
 					
-						<? Loader::element('files/upload_single', array('searchInstance' => $searchInstance)); ?>
+						<? Loader::element('files/upload_single', array('searchInstance' => $searchInstance, 'ocID' => $ocID)); ?>
 						
 						<div id="ccm-<?=$searchInstance?>-search-results" class="ccm-file-list">
 						
-							<? Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'searchType' => 'DASHBOARD', 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
+							<? Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'columns' => $columns, 'searchType' => 'DASHBOARD', 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
 						
 						</div>
 					

@@ -14,6 +14,7 @@ $fileList = $cnt->getRequestedSearchResults();
 
 $files = $fileList->getPage();
 $pagination = $fileList->getPagination();
+$searchRequest = $cnt->get('searchRequest');
+$columns = $cnt->get('columns');
 
-
-Loader::element('files/search_results', array('files' => $files, 'fileList' => $fileList, 'pagination' => $pagination));
+Loader::element('files/search_results', array('files' => $files, 'columns' => $columns, 'searchRequest' => $searchRequest,  'fileList' => $fileList, 'pagination' => $pagination));

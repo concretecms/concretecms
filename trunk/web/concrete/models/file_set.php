@@ -1,17 +1,49 @@
 <?php
 
-	/** 
-	 * @access private
-	 * Internal object used to pass an array for filesets to group and user lists
-	 */
-	class FileSetList {
+
+	class FileSetList extends DatabaseItemList {
+	
 		public $sets = array();	
+		protected $itemsPerPage = 10;
+		
+		public function filterByKeywords($kw) {
+			$db = Loader::db();
+			$this->filter(false, "(FileSets.fsName like " . $db->qstr('%' . $kw . '%') . ")");
+		}
+		
+		function __construct() {
+			$this->setQuery("select FileSets.fsID from FileSets");
+			$this->sortBy('fsName', 'asc');
+		}
+		
+		public function filterByType($fsType) {
+			switch($fsType) {
+				case FileSet::TYPE_PRIVATE:
+					$u = new User();
+					$this->filter('FileSets.uID', $u->getUserID());
+					break;
+			}
+			$this->filter('FileSets.fsType', $fsType);
+		}
+		
+		public function get($itemsToGet = 0, $offset = 0) {
+			$r = parent::get($itemsToGet, $offset);
+			foreach($r as $row) {
+				$fs = FileSet::getByID($row['fsID']);
+				if (is_object($fs)) {
+					$this->sets[] = $fs;
+				}
+			}
+			return $this->sets;
+		}
+
 	}
 	
 	class FileSet extends Model {
 		const TYPE_PRIVATE 	= 0;
 		const TYPE_PUBLIC 	= 1;
 		const TYPE_STARRED 	= 2;
+		const TYPE_SAVED_SEARCH = 3;
 		protected $fileSetFiles;
 	
 		/** 
@@ -23,6 +55,24 @@
 			$fs = new FileSet;
 			$fs->fsID = 0;
 			return $fs;
+		}
+		
+		public function getFileSetUserID() {return $this->uID;}
+		public function getFileSetType() {return $this->fsType;}
+		
+		public function getSavedSearches() {
+			$db = Loader::db();
+			$sets = array();
+			$u = new User();
+			$r = $db->Execute('select * from FileSets where fsType = ? and uID = ? order by fsName asc', array(FileSet::TYPE_SAVED_SEARCH, $u->getUserID()));
+			while ($row = $r->FetchRow()) {
+				$fs = new FileSet();
+				foreach($row as $key => $value) {
+					$fs->{$key} = $value;
+				}
+				$sets[] = $fs;
+			}
+			return $sets;
 		}
 		
 		public function getMySets($u = false) {
@@ -45,6 +95,16 @@
 			return $sets;
 		}
 		
+		public function updateFileSetDisplayOrder($files) {
+			$db = Loader::db();
+			$db->Execute('update FileSetFiles set fsDisplayOrder = 0 where fsID = ?', $this->getFileSetID());
+			$i = 0;
+			foreach($files as $fID) {
+				$db->Execute('update FileSetFiles set fsDisplayOrder = ? where fsID = ? and fID = ?', array($i, $this->getFileSetID(), $fID));
+				$i++;
+			}
+		}
+		
 		public function getByID($fsID) {
 			$db = Loader::db();
 			$row = $db->GetRow('select * from FileSets where fsID = ?', array($fsID));
@@ -52,6 +112,11 @@
 				$fs = new FileSet();
 				foreach($row as $key => $value) {
 					$fs->{$key} = $value;
+				}
+				if ($row['fsType'] == FileSet::TYPE_SAVED_SEARCH) {
+					$row2 = $db->GetRow('select fsSearchRequest, fsResultColumns from FileSetSavedSearches where fsID = ?', array($fsID));
+					$fs->fsSearchRequest = @unserialize($row2['fsSearchRequest']);
+					$fs->fsResultColumns = @unserialize($row2['fsResultColumns']);
 				}
 				return $fs;
 			}
@@ -128,6 +193,13 @@
 			return $file_set_file;
 		}
 		
+		public function getSavedSearchRequest() {
+			return $this->fsSearchRequest;
+		}
+		
+		public function getSavedSearchColumns() {
+			return $this->fsResultColumns;
+		}
 		public function removeFileFromSet($f_id){
 			if (is_object($f_id)) {
 				$f_id = $f_id->fID;
@@ -159,7 +231,13 @@
 				}
 			}
 		}
-
+		
+		public function delete() {
+			parent::delete();
+			$db = Loader::db();
+			$db->Execute('delete from FileSetSavedSearches where fsID = ?', $this->fsID);
+		}
+		
 		public function resetPermissions() {
 			$db = Loader::db();
 			$db->Execute('delete from FileSetPermissions where fsID = ?', array($this->fsID));
@@ -220,14 +298,29 @@
 			else{
 				//AS: Adodb Active record is complaining a ?/value array mismatch unless
 				//we explicatly set the primary key ID field to null
+				$db = Loader::db();
+				$fsDisplayOrder = $db->GetOne('select count(fID) from FileSetFiles where fsID = ?', $fs_id);
 				$file_set_file->fsfID = null;
 				$file_set_file->fID =  $f_id;			
 				$file_set_file->fsID = $fs_id;
 				$file_set_file->timestamp = null;
+				$file_set_file->fsDisplayOrder = $fsDisplayOrder;
 				$file_set_file->Save();
 				return $file_set_file;
 			}			
 		}
+	}
+	
+	class FileSetSavedSearch extends FileSet {
+		
+		public static function add($name, $searchRequest, $searchColumnsObject) {
+			$fs = parent::createAndGetSet($name, FileSet::TYPE_SAVED_SEARCH);
+			$db = Loader::db();
+			$v = array($fs->getFileSetID(), serialize($searchRequest), serialize($searchColumnsObject));
+			$db->Execute('insert into FileSetSavedSearches (fsID, fsSearchRequest, fsResultColumns) values (?, ?, ?)', $v);
+			return $fs;
+		}
+	
 	}
 	
 	

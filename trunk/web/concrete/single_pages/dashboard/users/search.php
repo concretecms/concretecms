@@ -325,8 +325,9 @@ if (is_object($uo)) {
 
 		<div class="ccm-buttons">
 		
-		<a href="<?=$this->url('/dashboard/users/search?uID=' . intval($_GET['uID']))?>" class="ccm-button-left cancel"><span><?=t('Back')?></span></a>
-		<a href="javascript:void(0)" onclick="$('#ccm-user-form').get(0).submit()" class="ccm-button-right accept"><span><?=t('Update User')?></span></a>
+		<?=Loader::helper('concrete/interface')->button(t('Back'), $this->url('/dashboard/users/search?uID=' . intval($_GET['uID'])), 'left')?>
+		<?=Loader::helper('concrete/interface')->submit(t('Update User'))?>
+
 		</div>	
 
 		<div class="ccm-spacer">&nbsp;</div>

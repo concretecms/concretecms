@@ -101,11 +101,12 @@ class FormHelper {
 				$mf .= $k . '="' . $v . '" ';
 			}
 		}
-		
+		$id = $field;
 		$_field = $field;
 		$_array = false;
 		if ((strpos($field, '[]') + 2) == strlen($field)) {
 			$_field = substr($field, 0, strpos($field, '[]'));
+			$id = $_field . '_' . $value;
 			$_array = true;
 		}
 
@@ -121,7 +122,7 @@ class FormHelper {
 			$checked = 'checked="checked" ';
 		}
 		
-		$str = '<input type="checkbox" class="ccm-input-checkbox" name="' . $field . '" id="' . $field . '" value="' . $value . '" ' . $checked . ' ' . $mf . ' />';
+		$str = '<input type="checkbox" class="ccm-input-checkbox" name="' . $field . '" id="' . $id . '" value="' . $value . '" ' . $checked . ' ' . $mf . ' />';
 		return $str;
 	}
 

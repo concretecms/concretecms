@@ -471,7 +471,7 @@ class InstallController extends Controller {
 						
 						$d1->update(array('cName'=>t('Sitemap'), 'cDescription'=>t('Whole world at a glance.')));
 						$d1a->update(array('cName'=>t('Full Sitemap')));
-						$d1b->update(array('cName'=>t('Folder View')));
+						$d1b->update(array('cName'=>t('Flat View')));
 						$d1c->update(array('cName'=>t('Page Search')));
 
 						$d2->update(array('cName'=>t('File Manager'), 'cDescription'=>t('All documents and images.')));

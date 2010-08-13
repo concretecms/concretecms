@@ -75,6 +75,24 @@
 		}
 
 		/** 
+		 * Returns a target for the nav item
+		 */
+		public function getTarget() {
+			if ($this->cPointerExternalLink != '') {
+				if ($this->cPointerExternalLinkNewWindow) {
+					return '_blank';
+				}
+			}
+			
+			$_c = $this->getCollectionObject();
+			if (is_object($_c)) {
+				return $_c->getAttribute('nav_target');
+			}
+			
+			return '';
+		}
+		
+		/** 
 		 * Gets a URL that will take the user to this particular page. Checks against URL_REWRITING, the page's path, etc..
 		 * @return string $url
 		 */
@@ -155,6 +173,9 @@
 		protected $btTable = 'btNavigation';
 		protected $btInterfaceWidth = "500";
 		protected $btInterfaceHeight = "350";
+		protected $btCacheBlockOutput = true;
+		protected $btCacheBlockOutputOnPost = true;
+		protected $btCacheBlockOutputForRegisteredUsers = false;
 		
 		public function getBlockTypeDescription() {
 			return t("Creates navigation trees and sitemaps.");
@@ -484,6 +505,7 @@
 							$niRow['cvDescription'] = $tc->getCollectionDescription();
 							$niRow['cPath'] = $tc->getCollectionPath();
 							$niRow['cPointerExternalLink'] = $tc->getCollectionPointerExternalLink();
+							$niRow['cPointerExternalLinkNewWindow'] = $tc->openCollectionPointerExternalLinkInNewWindow();
 							$dateKey = strtotime($tc->getCollectionDatePublic());
 
 							$ni = new AutonavBlockItem($niRow, $currentLevel);

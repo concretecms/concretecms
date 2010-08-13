@@ -11,9 +11,11 @@
 	<?
 	for ($i = 0; $i < count($cArray); $i++ ) {
 		$cobj = $cArray[$i]; 
+		$target = $cobj->getAttribute('nav_target');
+
 		$title = $cobj->getCollectionName(); ?>
 	
-	<h3 class="ccm-page-list-title"><a href="<?=$nh->getLinkToCollection($cobj)?>"><?=$title?></a></h3>
+	<h3 class="ccm-page-list-title"><a target="<?=$target?>" href="<?=$nh->getLinkToCollection($cobj)?>"><?=$title?></a></h3>
 	<div class="ccm-page-list-description">
 		<?
 		if(!$controller->truncateSummaries){

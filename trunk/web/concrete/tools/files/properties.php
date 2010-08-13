@@ -220,6 +220,24 @@ if (!$previewMode) {
 	<th><?=t('URL to File')?></th>
 	<td width="100%" colspan="2"><?=$fv->getRelativePath(true)?></td>
 </tr>
+<?
+$oc = $f->getOriginalPageObject();
+if (is_object($oc)) { 
+	$fileManager = Page::getByPath('/dashboard/files/search'); 
+	$ocName = $oc->getCollectionName();
+	if (is_object($fileManager) && !$fileManager->isError()) {
+		if ($fileManager->getCollectionID() == $oc->getCollectionID()) {
+			$ocName = t('Dashboard File Manager');
+		}
+	}
+	?>
+
+<tr>
+	<th><?=t('Page Added To')?></th>
+	<td width="100%" colspan="2"><a href="<?=Loader::helper('navigation')->getLinkToCollection($oc)?>" target="_blank"><?=$ocName?></a></td>
+</tr>
+<? } ?>
+
 <tr>
 	<th><?=t('Type')?></th>
 	<td colspan="2"><?=$fv->getType()?></td>
@@ -340,13 +358,17 @@ foreach($attribs as $at) {
 				<td style="text-align: center">
 					<?=$form->radio('vlfvID', $fvv->getFileVersionID(), $fvv->getFileVersionID() == $fv->getFileVersionID())?>
 				</td>
-				<td>
+				<td width="100">
+					<div style="width: 150px; word-wrap: break-word">
 					<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/properties?fID=<?=$f->getFileID()?>&fvID=<?=$fvv->getFileVersionID()?>&task=preview_version" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="<?=t('Preview File')?>" class="dialog-launch">
-						<?=wordwrap($fvv->getFilename(),20,"\n",true) ?>
+						<?=$fvv->getFilename()?>
 					</a>
+					</div>
 				</td>
 				<td> 
-					<?=wordwrap($fvv->getTitle(),20,"\n",true) ?>
+					<div style="width: 150px; word-wrap: break-word">
+						<?=$fvv->getTitle()?>
+					</div>
 				</td>
 				<td><?
 					$comments = $fvv->getVersionLogComments();

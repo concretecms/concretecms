@@ -27,9 +27,9 @@ class Cache {
 			if (is_dir(DIR_FILES_CACHE) && is_writable(DIR_FILES_CACHE)) {
 				Loader::library('3rdparty/Zend/Cache');
 				$frontendOptions = array(
-					'lifetime' => 7200,
+					'lifetime' => CACHE_LIFETIME,
 					'automatic_serialization' => true,
-					'cache_id_prefix' => CACHE_ID
+					'cache_id_prefix' => CACHE_ID		
 				);
 				$backendOptions = array(
 					'cache_dir' => DIR_FILES_CACHE
@@ -166,7 +166,11 @@ class Cache {
 		if (!$cache) {
 			return false;
 		}
+		$cache->setOption('caching', true);
 		$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+		if (!ENABLE_CACHE) {
+			Cache::disableCache();
+		}		
 		return true;
 	}
 		

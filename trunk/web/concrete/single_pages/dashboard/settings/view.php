@@ -167,47 +167,14 @@ foreach($types as $at) { ?>
 
 </form>
 
+<h1><span><?=t('Environment')?></span></h1>
+<div class="ccm-dashboard-inner">
+<textarea style="width: 97%; height: 140px;" onclick="this.select()"><?=$environmentMessage?></textarea>
+</div>
 
-<h1><span><?=t('Caching')?></span></h1>
-	<div class="ccm-dashboard-inner">
 
-	<form method="post" id="update-cache-form" action="<?=$this->url('/dashboard/settings', 'update_cache')?>">
-
-	<?=$this->controller->token->output('update_cache')?>
-
-	<h2><?=t('Cache site for better performance?')?></h2>
-
-	<div class="ccm-dashboard-radio"><input type="radio" name="ENABLE_CACHE" value="0" <? if (ENABLE_CACHE == false) { ?> checked <? } ?> /> <?=t('Disabled')?> </div>
-	<div class="ccm-dashboard-description"><?=t('Your site content will not be cached. This may be useful while development is proceeding.')?></div>
 	
-	<div class="ccm-dashboard-radio"><input type="radio" name="ENABLE_CACHE" value="1" <? if (ENABLE_CACHE == true) { ?> checked <? } ?> /> <?=t('Enabled')?> </div>
-	<div class="ccm-dashboard-description"><?=t('Once your site is live, it is usually best to enable the cache.')?></div>
 
-	<?
-	$b1 = $h->submit(t('Update Cache'), 'update-cache-form');
-	print $h->buttons($b1);
-	?>
-	
-	</form>
-	
-	<form method="post" id="clear-cache-form" action="<?=$this->url('/dashboard/settings', 'clear_cache')?>">
-
-	<?=$this->controller->token->output('clear_cache')?>
-
-	<h2><?=t('Clear Cache')?></h2>
-	<p><?=t('If your site is displaying out-dated information, or behaving unexpectedly, it may help to clear your cache.')?></p>
-	
-	<?
-	$b1 = $h->submit(t('Clear Cache'), 'clear-cache-form');
-	print $h->buttons($b1);
-	?>
-	
-	</form>
-	
-	<br class="clear" />
-	</div>
-
-</form>
 
 </div>
 <div class="ccm-module">
@@ -227,8 +194,7 @@ foreach($types as $at) { ?>
 	$b1 = $h->submit(t('Save Logging Settings'), 'logging-form');
 	print $h->buttons($b1);
 	?>
-	
-	
+
 	</div>
 </form>
 
@@ -561,29 +527,6 @@ $(document).ready(function(){
 </form>
 
 
-
-
-
-<form method="post" id="tracking-code-form" action="<?=$this->url('/dashboard/settings', 'update_tracking_code')?>">
-	<?=$this->controller->token->output('update_tracking_code')?>
-
-	<h1><span><?=t('Tracking Code')?></span></h1>
-	
-	<div class="ccm-dashboard-inner">	
-		<textarea name="tracking_code" cols="50" rows="4" style="width:98%;height:100px;" ><?=$site_tracking_code ?></textarea>
-		
-		<div class="ccm-dashboard-description"><?=t('Any HTML you paste here will be inserted at the bottom of every page in your website automatically.')?></div>
-		
-		<?
-		$b1 = $h->submit( t('Save'), 'tracking-code-form');
-		print $h->buttons($b1);
-		?> 
-		<br class="clear" />
-	</div>
-
-</form>
-
-
 <form method="post" id="marketplace-support-form" action="<?=$this->url('/dashboard/settings', 'update_marketplace_support')?>" enctype="multipart/form-data" >
 	<?=$this->controller->token->output('update_marketplace_support')?>
 
@@ -605,6 +548,27 @@ $(document).ready(function(){
 		?>
 		<br class="clear" />
 	</div>
+</form>
+
+
+
+<form method="post" id="tracking-code-form" action="<?=$this->url('/dashboard/settings', 'update_tracking_code')?>">
+	<?=$this->controller->token->output('update_tracking_code')?>
+
+	<h1><span><?=t('Tracking Code')?></span></h1>
+	
+	<div class="ccm-dashboard-inner">	
+		<textarea name="tracking_code" cols="50" rows="4" style="width:98%;height:100px;" ><?=$site_tracking_code ?></textarea>
+		
+		<div class="ccm-dashboard-description"><?=t('Any HTML you paste here will be inserted at the bottom of every page in your website automatically.')?></div>
+		
+		<?
+		$b1 = $h->submit( t('Save'), 'tracking-code-form');
+		print $h->buttons($b1);
+		?> 
+		<br class="clear" />
+	</div>
+
 </form>
 
 
@@ -645,12 +609,6 @@ $(document).ready(function(){
 
 </form>
 
-
-</div>
-
-
-<div class="ccm-module" style="width: 380px; margin-bottom: 0px">
-
 <form method="post" id="user-settings-form" action="<?=$this->url('/dashboard/settings', 'update_user_settings')?>">
 	<?=$this->controller->token->output('update_user_settings')?>
 	
@@ -676,6 +634,13 @@ $(document).ready(function(){
 	</div>
 
 </form>
+
+
+
+</div>
+
+
+<div class="ccm-module" style="width: 380px; margin-bottom: 0px">
 
 
 <form method="post" id="url-form" action="<?=$this->url('/dashboard/settings', 'update_rewriting')?>">
@@ -705,6 +670,89 @@ $(document).ready(function(){
 	</div>
 
 </form>
+
+<form method="post" id="url-form" action="<?=$this->url('/dashboard/settings', 'update_statistics')?>">
+	<?=$this->controller->token->output('update_statistics')?>
+	
+	<h1><span><?=t('Track Statistics')?></span></h1>
+	
+	<div class="ccm-dashboard-inner">
+	
+	<div class="ccm-dashboard-radio"><?=$form->checkbox('STATISTICS_TRACK_PAGE_VIEWS', 1, STATISTICS_TRACK_PAGE_VIEWS)?> <?=t('Track page view statistics.')?></div>
+	<div class="ccm-dashboard-description"><?=t("Tracks page views in concrete5. Disabling this may increase site performance, but you will have to get statistics information from elsewhere.")?></div>
+	
+
+	<?
+	$b1 = $h->submit(t('Save'));
+	print $h->buttons($b1);
+	?>
+	<br class="clear" />
+	</div>
+
+</form>
+
+
+
+
+<h1><span><?=t('Speed Settings')?></span></h1>
+	<div class="ccm-dashboard-inner">
+
+	<form method="post" id="update-cache-form" action="<?=$this->url('/dashboard/settings', 'update_cache')?>">
+
+	<?=$this->controller->token->output('update_cache')?>
+		
+	<p><?=t('Caching stores frequently accessed data so it can be more quickly retrieved. Full page caching can dramatically lighten the load on your server and speed up your website, and is highly recommended in high traffic situations.')?></p>
+
+	<h2><?=t('Basic Cache')?></h2>
+
+	<div class="ccm-dashboard-radio"><input type="radio" name="ENABLE_CACHE" value="0" <? if (ENABLE_CACHE == false) { ?> checked <? } ?> /> <?=t('Disabled')?>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="radio" name="ENABLE_CACHE" value="1" <? if (ENABLE_CACHE == true) { ?> checked <? } ?> /> <?=t('Enabled')?>
+	</div>
+	<div class="ccm-cache-settings-full-page">
+
+	<h2><?=t('Full Page Caching')?></h2>
+	
+	<div class="ccm-dashboard-radio"><input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="0" <? if (FULL_PAGE_CACHE_GLOBAL == 0) { ?> checked <? } ?> /> <?=t('Disabled, unless specified at page level.')?></div>
+	<div class="ccm-dashboard-radio"><input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="blocks" <? if (FULL_PAGE_CACHE_GLOBAL == 'blocks') { ?> checked <? } ?> /> <?=t('Enabled if blocks allow it, unless specified at page level.')?></div>
+	<div class="ccm-dashboard-radio"><input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="all" <? if (FULL_PAGE_CACHE_GLOBAL == 'all') { ?> checked <? } ?> /> <?=t('Enabled in all cases (Emergency Cache Mode)')?></div>
+	
+	
+	<h3><?=t('Full Page Cache Lifetime')?></h3>
+	
+	<div class="ccm-dashboard-radio"><input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="default" <? if (FULL_PAGE_CACHE_LIFETIME == 'default') { ?> checked <? } ?> /> <?=t('Default - %s minutes', CACHE_LIFETIME / 60)?></div>
+	<div class="ccm-dashboard-radio"><input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="custom" <? if (FULL_PAGE_CACHE_LIFETIME == 'custom') { ?> checked <? } ?> /> <?=t('Custom - ')?>
+		<?=$form->text('FULL_PAGE_CACHE_LIFETIME_CUSTOM', Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM'), array('style' => 'width: 40px'))?> <?=t('minutes')?>		
+	</div>
+	<div class="ccm-dashboard-radio"><input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="forever" <? if (FULL_PAGE_CACHE_LIFETIME == 'forever') { ?> checked <? } ?> /> <?=t('Until manually cleared')?></div>
+	
+	</div>
+
+	<?
+	$b1 = $h->submit(t('Update Cache'), 'update-cache-form');
+	print $h->buttons($b1);
+	?>
+	
+	</form>
+	
+	<form method="post" id="clear-cache-form" action="<?=$this->url('/dashboard/settings', 'clear_cache')?>">
+
+	<?=$this->controller->token->output('clear_cache')?>
+
+	<h2><?=t('Clear Cache')?></h2>
+	<p><?=t('If your site is displaying out-dated information, or behaving unexpectedly, it may help to clear your cache.')?></p>
+	
+	<?
+	$b1 = $h->submit(t('Clear Cache'), 'clear-cache-form');
+	print $h->buttons($b1);
+	?>
+	
+	</form>
+	
+	<br class="clear" />
+	</form>
+	</div>
+
 
 <? /*
 <form method="post" id="image-editing-form" action="<?=$this->url('/dashboard/settings', 'update_image_editing')?>">
@@ -788,11 +836,38 @@ $(document).ready(function(){
 	</div>
 
 	<script>
+		ccm_settingsSetupCacheForm = function() {
+			var obj = $('input[name=ENABLE_CACHE]:checked');
+			if (obj.val() == 0) {
+				$('div.ccm-cache-settings-full-page input').attr('disabled', true);
+				$('input[name=FULL_PAGE_CACHE_LIFETIME][value=default]').attr('checked', true);
+			} else {
+				$('div.ccm-cache-settings-full-page input').attr('disabled', false);
+			}
+			var obj2 = $('input[name=FULL_PAGE_CACHE_LIFETIME]:checked');
+			if (obj2.val() == 'custom') {
+				$('input[name=FULL_PAGE_CACHE_LIFETIME_CUSTOM]').attr('disabled', false);
+			} else {
+				$('input[name=FULL_PAGE_CACHE_LIFETIME_CUSTOM]').attr('disabled', true);
+				$('input[name=FULL_PAGE_CACHE_LIFETIME_CUSTOM]').val('');
+			}			
+		}
+		
 		$(function(){ 
 			$("input[name='CONTENTS_TXT_EDITOR_MODE']").each(function(i,el){ 
 				el.onchange=function(){isTxtEditorModeCustom();}
 			})	 	
-		});	
+			$("input[name=ENABLE_CACHE]").click(function() {
+				ccm_settingsSetupCacheForm();
+			});
+			$("input[name=FULL_PAGE_CACHE_LIFETIME]").click(function() {
+				ccm_settingsSetupCacheForm();
+			});
+			$("input[name=FULL_PAGE_CACHE_LIFETIME][value=custom]").click(function() {
+				$('input[name=FULL_PAGE_CACHE_LIFETIME_CUSTOM]').get(0).focus();
+			});
+			ccm_settingsSetupCacheForm();
+		});
 		function isTxtEditorModeCustom(){
 			if($("input[name='CONTENTS_TXT_EDITOR_MODE']:checked").val()=='CUSTOM'){
 				$('#cstmEditorTxtAreaWrap').css('display','block');

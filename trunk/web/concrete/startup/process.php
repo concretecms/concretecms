@@ -797,6 +797,9 @@
 				$data['cName'] = $_POST['cName'];
 				$data['cDescription'] = $_POST['cDescription'];
 				$data['cHandle'] = $_POST['cHandle'];
+				$data['cCacheFullPageContent'] = $_POST['cCacheFullPageContent'];
+				$data['cCacheFullPageContentLifetimeCustom'] = $_POST['cCacheFullPageContentLifetimeCustom'];
+				$data['cCacheFullPageContentOverrideLifetime'] = $_POST['cCacheFullPageContentOverrideLifetime'];				
 
 				$data['ppURL'] = array();
 				foreach ($_POST as $key=>$value) {
@@ -839,7 +842,7 @@
 			}	
 		} else if ($_POST['update_external']) {
 			if ($cp->canWrite()) {
-				$ncID = $c->updateCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink']);						
+				$ncID = $c->updateCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink'], $_POST['cExternalLinkNewWindow']);						
 				header('Location: ' . URL_SITEMAP);
 				exit;
 			}
@@ -936,7 +939,7 @@
 			// adding a collection to a collection
 			Loader::model('collection_types');
 			if ($cp->canWrite()) {
-				$ncID = $c->addCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink']);						
+				$ncID = $c->addCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink'], $_POST['cExternalLinkNewWindow']);						
 				header('Location: ' . URL_SITEMAP);
 				exit;
 			}

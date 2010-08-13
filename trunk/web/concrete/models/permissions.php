@@ -382,6 +382,22 @@ class Permissions extends Object {
 	public function canAccessFileManager() {
 		return $this->permissions['canSearch'];
 	}
+	
+	/** 
+	 * Hack until there is a better way
+	 */
+	public function canDeleteFileSet() {
+		$fs = $this->originalObj;
+		$u = new User();
+		if ($fs->getFileSetType() == FileSet::TYPE_PRIVATE && $fs->getFileSetUserID() == $u->getUserID()) {
+			return true;
+		}
+		$c = Page::getByPath('/dashboard/files/sets');
+		if (is_object($c) && !$c->isError()) {
+			$cp = new Permissions($c);
+			return $cp->canRead();
+		}
+	}
 
 	public function getFileSearchLevel() {
 		return $this->permissions['canSearch'];
@@ -512,79 +528,87 @@ class CollectionPermissions extends Permissions {
 	}
 
 	function setGroupAccess(&$cObj, &$u) {
-		$db = Loader::db();
-		$groups = $u->getUserGroups();
-		
-		// now we get collection type permissions for all the groups that this user is in
-		
-		$inStr = '(';
-		$i = 0;
-		foreach ($groups as $key => $value) {
-			$inStr .= ($i != 0) ? ', ' : '';
-			$inStr .= $key;
-			$i++;
-		}
-		$inStr .= ')';
-		
-		$_uID = ($u->getUserID() > -1) ? " or uID = " . $u->getUserID() : "";
-		$_cID = $cObj->getPermissionsCollectionID();
-	
-		$q = "select cgPermissions, cgStartDate, cgEndDate, gID from PagePermissions where cID = '{$_cID}' and (gID in $inStr $_uID)";
 
-		$r = $db->query($q);
-		$groupSetAdditional = false;
-		$canWriteToPage = false;
-		$permissions = array();
-		if ($r) {
-			while ($row = $r->fetchRow()) {
-				$dh = Loader::helper('date');
-				$time = strtotime($dh->getSystemDateTime());
-				if ((!$row['cgStartDate'] && !$row['cgEndDate']) || ($row['cgStartDate'] && !$row['cgEndDate'] && $time >= strtotime($row['cgStartDate'])) 
-					 || (!$row['cgStartDate'] && $row['cgEndDate'] && $time <= strtotime($row['cgEndDate']))
-					 || ($row['cgStartDate'] && $row['cgEndDate'] && $time >= strtotime($row['cgStartDate']) && $time <= strtotime($row['cgEndDate']))) {
-						$permissions[] = $row['cgPermissions'];
-						if (strpos($row['cgPermissions'], 'wa') !== false && (!$canWriteToPage)) {
-							$canWriteToPage = true; // once this is set it can't be unset
-						}
-						
-						//if ($row['gID'] != GUEST_GROUP_ID && $row['gID'] != REGISTERED_GROUP_ID) {
-						if ($row['gID'] != GUEST_GROUP_ID) {
-							$groupSetAdditional = true;
-							if (PERMISSIONS_MODEL != 'simple') {
-								$q2 = "select ctID from PagePermissionPageTypes where cID = '{$_cID}' and (gID in $inStr $_uID)";
-								$r2 = $db->query($q2);
-								while($row2 = $r2->fetchRow()) {
-									$this->addCollectionTypes[] = $row2['ctID'];
-								}
-				
+		if (!$u->isRegistered()) {
+			$perms = Cache::get('page_permission_set_guest', $cObj->getCollectionID());
+		}
+		
+		if ($perms == false) {
+			$db = Loader::db();
+			$groups = $u->getUserGroups();
+			
+			// now we get collection type permissions for all the groups that this user is in
+			
+			$inStr = '(';
+			$i = 0;
+			foreach ($groups as $key => $value) {
+				$inStr .= ($i != 0) ? ', ' : '';
+				$inStr .= $key;
+				$i++;
+			}
+			$inStr .= ')';
+			
+			$_uID = ($u->getUserID() > -1) ? " or uID = " . $u->getUserID() : "";
+			$_cID = $cObj->getPermissionsCollectionID();
+		
+			$q = "select cgPermissions, cgStartDate, cgEndDate, gID from PagePermissions where cID = '{$_cID}' and (gID in $inStr $_uID)";
+	
+			$r = $db->query($q);
+			$groupSetAdditional = false;
+			$canWriteToPage = false;
+			$permissions = array();
+			if ($r) {
+				while ($row = $r->fetchRow()) {
+					$dh = Loader::helper('date');
+					$time = strtotime($dh->getSystemDateTime());
+					if ((!$row['cgStartDate'] && !$row['cgEndDate']) || ($row['cgStartDate'] && !$row['cgEndDate'] && $time >= strtotime($row['cgStartDate'])) 
+						 || (!$row['cgStartDate'] && $row['cgEndDate'] && $time <= strtotime($row['cgEndDate']))
+						 || ($row['cgStartDate'] && $row['cgEndDate'] && $time >= strtotime($row['cgStartDate']) && $time <= strtotime($row['cgEndDate']))) {
+							$permissions[] = $row['cgPermissions'];
+							if (strpos($row['cgPermissions'], 'wa') !== false && (!$canWriteToPage)) {
+								$canWriteToPage = true; // once this is set it can't be unset
 							}
-						}
+							
+							//if ($row['gID'] != GUEST_GROUP_ID && $row['gID'] != REGISTERED_GROUP_ID) {
+							if ($row['gID'] != GUEST_GROUP_ID) {
+								$groupSetAdditional = true;
+								if (PERMISSIONS_MODEL != 'simple') {
+									$q2 = "select ctID from PagePermissionPageTypes where cID = '{$_cID}' and (gID in $inStr $_uID)";
+									$r2 = $db->query($q2);
+									while($row2 = $r2->fetchRow()) {
+										$this->addCollectionTypes[] = $row2['ctID'];
+									}
+					
+								}
+							}
+					}
+				}
+				$r->free();
+			}
+			
+			if ($cObj->isExternalLink()) {
+				// then whether the person can delete/write to this page ACTUALLY dependent on whether the PARENT collection
+				// is writable
+				$cParentCollection = Page::getByID($cObj->getCollectionParentID(), "RECENT");
+				$cp2 = new Permissions($cParentCollection);
+				if ($cp2->canWrite()) {
+					$permissions[] = 'dc:wa';
 				}
 			}
-			$r->free();
-		}
-		
-		if ($cObj->isExternalLink()) {
-			// then whether the person can delete/write to this page ACTUALLY dependent on whether the PARENT collection
-			// is writable
-			$cParentCollection = Page::getByID($cObj->getCollectionParentID(), "RECENT");
-			$cp2 = new Permissions($cParentCollection);
-			if ($cp2->canWrite()) {
-				$permissions[] = 'dc:wa';
+			
+			if ($canWriteToPage) {
+				if (PERMISSIONS_MODEL == 'simple') {
+					$this->populateAllPageTypes();
+					// we add delete block to the permission set, since for some reason it's a separate permissions call than delete collection (which we should've already added)
+					$permissions[] = "db";
+				}
+				$this->populateAllBlockTypes();
+				// the block types directive above may be overridden by area-specific permissions
 			}
+			
+			$perms = $this->mergePermissions($permissions);
+			Cache::set('page_permission_set_guest', $cObj->getCollectionID(), $perms);
 		}
-		
-		if ($canWriteToPage) {
-			if (PERMISSIONS_MODEL == 'simple') {
-				$this->populateAllPageTypes();
-				// we add delete block to the permission set, since for some reason it's a separate permissions call than delete collection (which we should've already added)
-				$permissions[] = "db";
-			}
-			$this->populateAllBlockTypes();
-			// the block types directive above may be overridden by area-specific permissions
-		}
-		
-		$perms = $this->mergePermissions($permissions);
 		
 		$cv = $cObj->getVersionObject();
 		if (is_object($cv)) {

@@ -32,7 +32,36 @@ if ($cp->canAdminPage()) {
 			$("#" + ccm_activePropertiesTab + "-tab").show();
 		});
 		
+		ccm_settingsSetupCacheForm = function() {
+			var obj = $('input[name=cCacheFullPageContent]:checked');
+			if (obj.attr('enable-cache') == 1) {
+				$('div.ccm-properties-cache-lifetime input').attr('disabled', false);
+			} else {
+				$('div.ccm-properties-cache-lifetime input').attr('disabled', true);
+				$('input[name=cCacheFullPageContentOverrideLifetime][value=0]').attr('checked', true);
+			}
+
+			var obj2 = $('input[name=cCacheFullPageContentOverrideLifetime]:checked');
+			if (obj2.val() == 'custom') {
+				$('input[name=cCacheFullPageContentLifetimeCustom]').attr('disabled', false);
+			} else {
+				$('input[name=cCacheFullPageContentLifetimeCustom]').attr('disabled', true);
+				$('input[name=cCacheFullPageContentLifetimeCustom]').val('');
+			}
+
+		}
+		
 		$(function() {
+			$("input[name=cCacheFullPageContent]").click(function() {
+				ccm_settingsSetupCacheForm();
+			});
+			$("input[name=cCacheFullPageContentOverrideLifetime]").click(function() {
+				ccm_settingsSetupCacheForm();
+			});
+			$("input[name=cCacheFullPageContentOverrideLifetime][value=custom]").click(function() {
+				$('input[name=cCacheFullPageContentLifetimeCustom]').get(0).focus();
+			});
+			ccm_settingsSetupCacheForm();
 			$("#ccmMetadataForm").ajaxForm({
 				type: 'POST',
 				iframe: true,
@@ -81,6 +110,7 @@ if ($cp->canAdminPage()) {
 		<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-properties-standard"><?=t('Standard Properties')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-page-paths"><?=t('Page Paths and Location')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-properties-custom"><?=t('Custom Attributes')?></a></li>
+		<li><a href="javascript:void(0)" id="ccm-properties-cache"><?=t('Speed Settings')?></a></li>
 	</ul>
 
 	<div id="ccm-properties-standard-tab">
@@ -153,6 +183,61 @@ if ($cp->canAdminPage()) {
 	
 	<div id="ccm-properties-custom-tab" style="display: none">
 		<? Loader::element('collection_metadata_fields', array('c'=>$c ) ); ?>
+	</div>
+
+	<div id="ccm-properties-cache-tab" style="display: none">
+		<h2><?=t('Full Page Caching')?></h2>
+		<? if (!ENABLE_CACHE) {
+			print t('The cache has been disabled. Full page caching is not available.');
+		} else { ?>
+			<div>
+			<? $form = Loader::helper('form');?>
+			<?
+			switch(FULL_PAGE_CACHE_GLOBAL) {
+				case 'blocks':
+					$globalSetting = t('cache page if all blocks support it.');
+					$enableCache = 1;
+					break;
+				case 'all':
+					$globalSetting = t('enable full page cache.');
+					$enableCache = 1;
+					break;
+				case 0:
+					$globalSetting = t('disable full page cache.');
+					$enableCache = 0;
+					break;
+			}
+			switch(FULL_PAGE_CACHE_LIFETIME) {
+				case 'default':
+					$globalSettingLifetime = t('%s minutes', CACHE_LIFETIME / 60);
+					break;
+				case 'custom':
+					$custom = Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM');
+					$globalSettingLifetime = t('%s minutes', $custom);
+					break;
+				case 'forever':
+					$globalSettingLifetime = t('Until manually cleared');
+					break;
+			}
+			?>
+			<div><?=$form->radio('cCacheFullPageContent', -1, $c->getCollectionFullPageCaching(), array('enable-cache' => $enableCache))?> <?=t('Use global setting - %s', $globalSetting)?></div>
+			<div><?=$form->radio('cCacheFullPageContent', 0, $c->getCollectionFullPageCaching(), array('enable-cache' => 0))?> <?=t('Do not cache this page.')?></div>
+			<div><?=$form->radio('cCacheFullPageContent', 1, $c->getCollectionFullPageCaching(), array('enable-cache' => 1))?> <?=t('Cache this page.')?></div>
+			
+			<br/>
+			
+			<h3><?=t('Cache for how long?')?></h3>
+			
+			<div class="ccm-properties-cache-lifetime">
+				<? $val = ($c->getCollectionFullPageCachingLifetimeCustomValue() > 0 && $c->getCollectionFullPageCachingLifetime()) ? $c->getCollectionFullPageCachingLifetimeCustomValue() : ''; ?>
+				<div><?=$form->radio('cCacheFullPageContentOverrideLifetime', 0, $c->getCollectionFullPageCachingLifetime())?> <?=t('Use global setting - %s', $globalSettingLifetime)?></div>
+				<div><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'default', $c->getCollectionFullPageCachingLifetime())?> <?=t('Default - %s minutes', CACHE_LIFETIME / 60)?></div>
+				<div><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'custom', $c->getCollectionFullPageCachingLifetime())?> <?=t('Custom')?>
+					<?=$form->text('cCacheFullPageContentLifetimeCustom', $val, array('style' => 'width: 40px'))?> <?=t('minutes')?>		
+				</div>
+				<div><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'forever', $c->getCollectionFullPageCachingLifetime())?> <?=t('Until manually cleared')?></div>
+			</div>
+		<? } ?>
 	</div>
 	
 	

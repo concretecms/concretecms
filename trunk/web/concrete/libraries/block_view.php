@@ -25,6 +25,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		public function __construct($tbl = null) {
 			if ($tbl) {
+				$db = Loader::db();
 				$this->_table = $tbl;
 				parent::__construct($tbl);
 			}
@@ -200,7 +201,26 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			} else {
 				$_action = 'view';
 			}
-			$this->controller->setupAndRun($_action);
+			
+			$u = new User();
+			
+			$outputContent = false;
+			$useCache = false;
+			
+			if ($view == 'view') {
+				if ($this->controller->cacheBlockOutput() && ($obj instanceof Block)) {
+					if ((!$u->isRegistered() || ($this->controller->cacheBlockOutputForRegisteredUsers())) &&
+						(($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->controller->cacheBlockOutputOnPost() == true)))) {
+							$useCache = true;
+					}
+					if ($useCache) {
+						$outputContent = Cache::get('block_view_output', $obj->getBlockCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle());
+					}
+				}
+			}
+			if ($outputContent == false) {
+				$this->controller->setupAndRun($_action);
+			}
 			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
 			$headerItems = $this->controller->headerItems;
@@ -224,17 +244,19 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 			
 			switch($view) {
-				case 'view':
-					if (!isset($_filename)) {
-						$_filename = FILENAME_BLOCK_VIEW;
-					}					
-					$bvt = new BlockViewTemplate($obj);
-					if ($bFilename) {
-						$bvt->setBlockCustomTemplate($bFilename); // this is PROBABLY already set by the method above, but in the case that it's passed by area we have to set it here
-					} else if ($_filename != FILENAME_BLOCK_VIEW) {
-						$bvt->setBlockCustomRender($_filename); 
+				case 'view':				
+					if (!$outputContent) {
+						if (!isset($_filename)) {
+							$_filename = FILENAME_BLOCK_VIEW;
+						}					
+						$bvt = new BlockViewTemplate($obj);
+						if ($bFilename) {
+							$bvt->setBlockCustomTemplate($bFilename); // this is PROBABLY already set by the method above, but in the case that it's passed by area we have to set it here
+						} else if ($_filename != FILENAME_BLOCK_VIEW) {
+							$bvt->setBlockCustomRender($_filename); 
+						}
+						$template = $bvt->getTemplate();
 					}
-					$template = $bvt->getTemplate();
 					$header = DIR_FILES_ELEMENTS_CORE . '/block_header_view.php';
 					$footer = DIR_FILES_ELEMENTS_CORE . '/block_footer_view.php';										
 					break;
@@ -262,8 +284,19 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (isset($header)) {
 				include($header);
 			}
-			if ($template) {
+			if ($outputContent) {
+				print $outputContent;			
+			} else if ($template) {
+				
+				ob_start();
 				include($template);
+				$outputContent = ob_get_contents();
+				ob_end_clean();					
+				print $outputContent;
+				
+				if ($view == 'view' && $this->controller->cacheBlockOutput() && ($obj instanceof Block)) {
+					Cache::set('block_view_output', $obj->getBlockCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
+				}
 			}
 			if (isset($footer)) {
 				include($footer);
