@@ -44,6 +44,8 @@ div.ccm-search-advanced-fields div.ccm-search-field {margin-bottom:8px}
 div#ccm-search-field-base {display: none}
 div.ccm-search-field input, div.ccm-search-field select, div.ccm-search-field td {font-size: 10px !important}
 
+.ccm-search-option .ccm-summary-selected-item {border: 0px; padding: 0px; margin: 0px}
+
 .ccm-search-option-type-number input.ccm-input-text {width: 30px !important}
 .ccm-search-option input.ccm-input-text {width: 86px !important}
 .ccm-search-option input.ccm-input-date {width: 86px !important}
@@ -52,7 +54,7 @@ div.ccm-search-field input, div.ccm-search-field select, div.ccm-search-field td
 #ccm-search-fields-submit {text-align: right; padding-top: 8px}
 
 /* properties */
-td.ccm-attribute-editable-field-central {border-right: 0px}
+td.ccm-attribute-editable-field-central {border-right: 0px !important; padding-right: 40px}
 img.ccm-attribute-editable-field-save-button {display: none}
 img.ccm-attribute-editable-field-loading {display: none}
  div.ccm-attribute-field-none {color: #aaa;}
@@ -63,5 +65,11 @@ div.ccm-attribute-editable-field-form {display: none}
 div.ccm-attribute-editable-field-type-text input {width: 100%}
 div.ccm-attribute-editable-field-type-number input {width: 60px}
 
-div#ccm-search-export {float: left; width: 80px; text-align: left; background: transparent url(../images/icons/excel.png) no-repeat; padding-left: 22px; margin-top: 2px; padding-top: 3px; padding-bottom: 10px}
-div#ccm-search-export a {font-size: 11px}
+div#ccm-search-save, div#ccm-search-export {float: left; width: 80px; text-align: left;}
+div#ccm-search-export a, div#ccm-search-save a {font-size: 11px}
+div#ccm-search-export {background: transparent url(../images/icons/excel.png) no-repeat;padding-left: 22px; margin-top: 2px; padding-top: 3px; padding-bottom: 10px  }
+div#ccm-search-save {background: transparent url(../images/icons/save_search.png) no-repeat; padding-left: 20px; margin-top: 2px; padding-top: 1px; padding-bottom: 12px}
+
+ul.ccm-search-sortable-column-wrapper {border: 2px solid #dedede; padding: 0px; margin: 0px; padding-top: 8px}
+ul.ccm-search-sortable-column-wrapper li {padding: 2px 0px 4px 24px; margin-left: 4px; margin-bottom: 4px; background: transparent url(../images/icons/column.png) no-repeat scroll; list-style-type: none}
+ul.ccm-search-sortable-column-wrapper li:hover {cursor: move}

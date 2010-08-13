@@ -70,6 +70,9 @@ class DashboardSettingsController extends Controller {
 		}
 		if ($updated) {
 			switch($updated) {
+				case 'statistics_saved':
+					$this->set('message', t('Statistics tracking preference saved.'));
+					break;
 				case "tracking_code_saved";
 					$this->set('message', t('Your tracking code has been saved.'));	
 					break;			
@@ -105,6 +108,12 @@ class DashboardSettingsController extends Controller {
 					break;
 				case "debug_saved":
 					$this->set('message', t('Debug configuration saved.'));
+					break;
+				case "cache_cleared";
+					$this->set('message', t('Cached files removed.'));	
+					break;
+				case "cache_updated";
+					$this->set('message', t('Cache settings saved.'));	
 					break;
 				case "txt_editor_config_saved":
 					$this->set('message', t('Content text editor settings saved.'));
@@ -353,8 +362,25 @@ class DashboardSettingsController extends Controller {
 		if ($this->token->validate("clear_cache")) {
 			if ($this->isPost()) {
 				if (Cache::flush()) {
-					$this->redirect('/dashboard/settings', 'set_developer', 'cache_cleared');
+					$this->redirect('/dashboard/settings', 'cache_cleared');
 				}
+			}
+		} else {
+			$this->set('error', array($this->token->getErrorMessage()));
+		}
+	}
+
+	public function update_cache() {
+		if ($this->token->validate("update_cache")) {
+			if ($this->isPost()) {
+				$u = new User();
+				$eca = $this->post('ENABLE_CACHE') == 1 ? 1 : 0; 
+				Cache::flush();
+				Config::save('ENABLE_CACHE', $eca);
+				Config::save('FULL_PAGE_CACHE_GLOBAL', $this->post('FULL_PAGE_CACHE_GLOBAL'));
+				Config::save('FULL_PAGE_CACHE_LIFETIME', $this->post('FULL_PAGE_CACHE_LIFETIME'));
+				Config::save('FULL_PAGE_CACHE_LIFETIME_CUSTOM', $this->post('FULL_PAGE_CACHE_LIFETIME_CUSTOM'));				
+				$this->redirect('/dashboard/settings', 'cache_updated');
 			}
 		} else {
 			$this->set('error', array($this->token->getErrorMessage()));
@@ -373,19 +399,6 @@ class DashboardSettingsController extends Controller {
 		}
 	}
 
-	public function update_cache() {
-		if ($this->token->validate("update_cache")) {
-			if ($this->isPost()) {
-				$u = new User();
-				$eca = $this->post('ENABLE_CACHE') == 1 ? 1 : 0; 
-				Cache::flush();
-				Config::save('ENABLE_CACHE', $eca);
-				$this->redirect('/dashboard/settings', 'set_developer', 'cache_updated');
-			}
-		} else {
-			$this->set('error', array($this->token->getErrorMessage()));
-		}
-	}
 	public function update_debug() {
 		if ($this->token->validate("update_debug")) {
 			if ($this->isPost()) {
@@ -442,6 +455,14 @@ class DashboardSettingsController extends Controller {
 			}
 			
 			$this->redirect('/dashboard/settings','rewriting_saved', $htu);
+		}
+	}	
+	
+	public function update_statistics() {
+		if ($this->isPost()) {
+			$sv = $this->post('STATISTICS_TRACK_PAGE_VIEWS') == 1 ? 1 : 0;
+			Config::save('STATISTICS_TRACK_PAGE_VIEWS', $sv);
+			$this->redirect('/dashboard/settings','statistics_saved');
 		}
 	}	
 	
@@ -610,9 +631,6 @@ class DashboardSettingsController extends Controller {
 				}
 			}
 		}		
-		//$this->set('environmentMessage', $environmentMessage);
-		echo $environmentMessage;
-		exit;
 	}
 	
 	

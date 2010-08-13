@@ -51,9 +51,8 @@ class Config extends Object {
 			$pkgID = $this->pkg->getPackageID();
 		}
 		
-		if ($cfKey != 'ENABLE_CACHE') {
-			$cv = $ca->get('config_option' . $pkgID, $cfKey);
-		}
+		$cv = $ca->get('config_option' . $pkgID, $cfKey);
+		
 		if ((!isset($cv)) || (!($cv instanceof ConfigValue))) {
 			$db = Loader::db();
 			$v = array($cfKey);

@@ -7,6 +7,9 @@ class SlideshowBlockController extends BlockController {
 	protected $btTable = 'btSlideshow';
 	protected $btInterfaceWidth = "550";
 	protected $btInterfaceHeight = "400";
+	protected $btCacheBlockOutput = true;
+	protected $btCacheBlockOutputOnPost = true;
+	protected $btCacheBlockOutputForRegisteredUsers = true;
 
 	public $defaultDuration = 5;	
 	public $defaultFadeDuration = 2;	
@@ -54,6 +57,8 @@ class SlideshowBlockController extends BlockController {
 		$fileList = new FileList();		
 		$fileList->filterBySet($fs);
 		$fileList->filterByType(FileType::T_IMAGE);	
+		$fileList->sortByFileSetDisplayOrder();
+		
 		$files = $fileList->get(1000,0);
 		
 		

@@ -8,10 +8,6 @@ $form = Loader::helper('form');
 
 ?>
 
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/quicksilver.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.liveupdate.js"></script>
-
-
 <script type="text/javascript">
 <? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
 
@@ -192,9 +188,6 @@ $(function() {
 		<a href="javascript:void(0)" id="ccm-block-type-clear-search" onclick="ccmBlockTypeSearchClear()"><img width="16" height="16" src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" border="0" style="vertical-align: middle" /></a>
 		</div>
 		
-		<div class="ccm-block-type-filter">
-		
-		</div>
 		</form>
 		
 	</div>

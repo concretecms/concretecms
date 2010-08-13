@@ -25,6 +25,8 @@ $v->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_R
 $v->addHeaderItem($html->javascript('jquery.rating.js'));
 $v->addHeaderItem($html->javascript('jquery.form.js'));
 $v->addHeaderItem($html->javascript('ccm.ui.js'));
+$v->addHeaderItem($html->javascript('quicksilver.js'));
+$v->addHeaderItem($html->javascript('jquery.liveupdate.js'));
 $v->addHeaderItem($html->javascript('ccm.search.js'));
 $v->addHeaderItem($html->javascript('ccm.filemanager.js'));
 $v->addHeaderItem($html->javascript('ccm.themes.js'));

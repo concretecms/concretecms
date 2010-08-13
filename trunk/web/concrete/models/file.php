@@ -117,6 +117,25 @@ class File extends Object {
 		$this->refreshCache();
 	}
 	
+	public function setOriginalPage($ocID) {
+		if ($ocID < 1) {
+			return false;
+		}
+		
+		$db = Loader::db();
+		$db->Execute("update Files set ocID = ? where fID = ?", array($ocID, $this->getFileID()));
+		$this->refreshCache();
+	}
+	
+	public function getOriginalPageObject() {
+		if ($this->ocID > 0) {
+			$c = Page::getByID($this->ocID);
+			if (is_object($c) && !$c->isError()) {
+				return $c;
+			}
+		}
+	}
+	
 	public function overrideFileSetPermissions() {
 		return $this->fOverrideSetPermissions;
 	}
@@ -244,6 +263,43 @@ class File extends Object {
 	
 	public function getFileID() { return $this->fID;}
 	
+	public function duplicate() {
+		$dh = Loader::helper('date');
+		$db = Loader::db();
+		$date = $dh->getSystemDateTime(); 
+
+		$far = new ADODB_Active_Record('Files');
+		$far->Load('fID=?', array($this->fID));
+		
+		$far2 = clone $far;
+		$far2->fID = null;
+		$far2->fDateAdded = $date;
+		$far2->Insert();
+		$fIDNew = $db->Insert_ID();
+
+		$fvIDs = $db->GetCol('select fvID from FileVersions where fID = ?', $this->fID);
+		foreach($fvIDs as $fvID) {
+			$farv = new ADODB_Active_Record('FileVersions');
+			$farv->Load('fID=? and fvID = ?', array($this->fID, $fvID));
+	
+			$farv2 = clone $farv;
+			$farv2->fID = $fIDNew;
+			$farv2->fvActivateDatetime = $date;
+			$farv2->fvDateAdded = $date;
+			$farv2->Insert();
+		}		
+
+		$r = $db->Execute('select fvID, akID, avID from FileAttributeValues where fID = ?', array($this->getFileID()));
+		while ($row = $r->fetchRow()) {
+			$db->Execute("insert into FileAttributeValues (fID, fvID, akID, avID) values (?, ?, ?, ?)", array(
+				$fIDNew, 
+				$row['fvID'],
+				$row['akID'], 
+				$row['avID']
+			));
+		}
+	}
+	
 	public static function add($filename, $prefix, $data = array()) {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
@@ -337,25 +393,34 @@ class File extends Object {
 			$pathbase = $fsl->getDirectory();
 		}
 		foreach($r as $val) {
-			if ($pathbase != false) {
-				$path = $h->mapSystemPath($val['fvPrefix'], $val['fvFilename'], false, $pathbase);
-			} else {
-				$path = $h->mapSystemPath($val['fvPrefix'], $val['fvFilename'], false);
-			}
-			$t1 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 1);
-			$t2 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 2);
-			$t3 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 3);
-			if (file_exists($path)) {
-				unlink($path);
-			}
-			if (file_exists($t1)) {
-				unlink($t1);
-			}
-			if (file_exists($t2)) {
-				unlink($t2);
-			}
-			if (file_exists($t3)) {
-				unlink($t3);
+			
+			// Now, we make sure this file isn't referenced by something else. If it is we don't delete the file from the drive
+			$cnt = $db->GetOne('select count(*) as total from FileVersions where fID <> ? and fvFilename = ? and fvPrefix = ?', array(
+				$this->fID,
+				$val['fvFilename'],
+				$val['fvPrefix']
+			));
+			if ($cnt == 0) {
+				if ($pathbase != false) {
+					$path = $h->mapSystemPath($val['fvPrefix'], $val['fvFilename'], false, $pathbase);
+				} else {
+					$path = $h->mapSystemPath($val['fvPrefix'], $val['fvFilename'], false);
+				}
+				$t1 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 1);
+				$t2 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 2);
+				$t3 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 3);
+				if (file_exists($path)) {
+					unlink($path);
+				}
+				if (file_exists($t1)) {
+					unlink($t1);
+				}
+				if (file_exists($t2)) {
+					unlink($t2);
+				}
+				if (file_exists($t3)) {
+					unlink($t3);
+				}
 			}
 		}
 		

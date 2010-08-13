@@ -66,10 +66,6 @@ if (!defined('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL')) {
 	define('ENABLE_CUSTOM_USER_ATTRIBUTES_MODEL', false);
 }
 
-if (!defined('STATISTICS_TRACK_PAGE_VIEWS')) {
-	define('STATISTICS_TRACK_PAGE_VIEWS', true);
-}
-
 if (!defined("PAGE_TITLE_FORMAT")) {
 	define('PAGE_TITLE_FORMAT', '%1$s :: %2$s');
 }
@@ -324,6 +320,10 @@ if (defined('DIR_FILES_CACHE')) {
 	define('DIR_FILES_CACHE_PAGES', DIR_FILES_CACHE . '/lucene.pages');
 	$ADODB_ACTIVE_CACHESECS = 300;
 	$ADODB_CACHE_DIR = DIR_FILES_CACHE_DB;
+}
+
+if (!defined('CACHE_LIFETIME')) {
+	define('CACHE_LIFETIME', 7200);
 }
 
 define('ON_WINDOWS', intval(substr(PHP_OS,0,3)=='WIN') );

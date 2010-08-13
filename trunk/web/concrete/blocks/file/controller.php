@@ -5,6 +5,9 @@
 	class FileBlockController extends BlockController {
 
 		protected $btInterfaceWidth = 300;
+		protected $btCacheBlockOutput = true;
+		protected $btCacheBlockOutputOnPost = true;
+		protected $btCacheBlockOutputForRegisteredUsers = true;
 		protected $btInterfaceHeight = 250;
 		protected $btTable = 'btContentFile';
 

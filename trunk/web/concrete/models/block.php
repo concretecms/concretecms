@@ -120,6 +120,7 @@ class Block extends Object {
 			}
 			
 			$b->instance = new $class($b);
+			$b->populateIsGlobal();
 			
 			
 			if ($c != null || $a != null) {
@@ -181,7 +182,11 @@ class Block extends Object {
 		}
 	}
 	
-	public function isGlobal(){
+	public function isGlobal() {
+		return $this->bIsGlobal;
+	}
+	
+	public function populateIsGlobal() {
 		$db = Loader::db();
 		
 		$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
@@ -193,9 +198,11 @@ class Block extends Object {
 			 "WHERE b.bID = '{$this->bID}' AND cvb.bID=b.bID AND cvb.cID=".intval($globalScrapbookC->getCollectionId())." LIMIT 1";
 			 
 		$r = $db->query($q);
-		if ($r) {
-			return ($r->numRows() > 0)?1:0;
-		}			
+		if ($r->numRows() > 0) {
+			$this->bIsGlobal = 1;
+		} else {
+			$this->bIsGlobal = 0;
+		}
 		return 0;
 	}
 
@@ -376,6 +383,9 @@ class Block extends Object {
 		$cvID = $c->getVersionID();
 		$cID = $c->getCollectionID();
 		$v = array($cID, $cvID, $this->bID, $this->getAreaHandle());
+
+		Cache::delete('collection_blocks', $cID . ':' . $cvID);
+
 		$q = "select count(bID) from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?";
 		$total = $db->getOne($q, $v);
 		if ($total == 0) {
@@ -421,6 +431,8 @@ class Block extends Object {
 		$cID = $this->getBlockCollectionID();
 
 		$newBlockDisplayOrder = $nc->getCollectionAreaDisplayOrder($area->getAreaHandle());
+
+		Cache::delete('collection_blocks', $nc->getCollectionID() . ':' . $nc->getVersionID());
 		
 		$v = array($nc->getCollectionID(), $nc->getVersionID(), $area->getAreaHandle(), $newBlockDisplayOrder, $cID, $this->arHandle);
 		$db->Execute('update CollectionVersionBlocks set cID = ?, cvID = ?, arHandle = ?, cbDisplayOrder = ? where cID = ? and arHandle = ? and isOriginal = 1', $v);
@@ -489,6 +501,8 @@ class Block extends Object {
 		
 		$v = array($ncID, $nvID, $newBID, $this->arHandle, $this->csrID);
 		$db->Execute('insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)', $v);
+
+		Cache::delete('collection_blocks', $ncID . ':' . $nvID);
 		
 		return $nb;
 	}
@@ -966,6 +980,7 @@ class Block extends Object {
 		$a = $this->getBlockAreaObject();
 		if (is_object($c) && is_object($a)) {
 			Cache::delete('block', $this->getBlockID() . ':' . $c->getCollectionID() . ':' . $c->getVersionID() . ':' . $a->getAreaHandle());
+			Cache::delete('block_view_output', $c->getCollectionID() . ':' . $this->getBlockID() . ':' . $a->getAreaHandle());
 		}
 		Cache::delete('block', $this->getBlockID());		
 	}

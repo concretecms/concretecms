@@ -119,7 +119,7 @@ class SurveyBlockController extends BlockController {
 			$q = "insert into btSurveyResults (optionID, bID, uID, ipAddress, cID) values (?, ?, ?, ?, ?)";
 			$db->query($q, $v);
 			setcookie("ccmPoll" . $this->bID.'-'.$this->cID, "voted", time() + 1296000, DIR_REL . '/');
-			$this->redirect($c->getCollectionPath());
+			$this->redirect($c->getCollectionPath() . '?survey_voted=1');
 		}
 	}		
 

@@ -95,7 +95,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		
 		function User() {
 			$args = func_get_args();
-			$db = Loader::db();
 			
 			if ($args[1]) {
 				// first, we check to see if the username and password match the admin username and password
@@ -113,6 +112,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				} else {
 					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone from Users where uName = ? and uPassword = ?";
 				}
+				$db = Loader::db();
 				$r = $db->query($q, $v);
 				if ($r) {
 					$row = $r->fetchRow(); 
@@ -253,10 +253,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}
 		
 		function _getUserGroups($disableLogin = false) {
-			$db = Loader::db();
 			if ($_SESSION['uGroups'] && (!$disableLogin)) {
 				$ug = $_SESSION['uGroups'];
 			} else {
+				$db = Loader::db();
 				if ($this->uID) {
 					$ug[REGISTERED_GROUP_ID] = REGISTERED_GROUP_NAME;
 					//$_SESSION['uGroups'][REGISTERED_GROUP_ID] = REGISTERED_GROUP_NAME;

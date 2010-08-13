@@ -12,11 +12,20 @@ class DashboardFilesSetsController extends Controller {
 	
 	public function view() {
 		Loader::model('file_set');
-		$file_set = new FileSet();
-		
-		$file_sets = $file_set->Find('fsType = ' . FileSet::TYPE_PUBLIC);		
-		$this->set('file_sets',$file_sets);
-		$this->set('action',$this->post('file-sets-edit-or-delete-action'));
+		$fsl = new FileSetList();
+		if (isset($_REQUEST['fsKeywords'])) {
+			$fsl->filterByKeywords($_REQUEST['fsKeywords']);
+		}
+		if (isset($_REQUEST['fsType'])) {
+			$fsl->filterByType($_REQUEST['fsType']);
+			$this->set('fsType', $_REQUEST['fsType']);
+		} else {
+			$fsl->filterByType(FileSet::TYPE_PUBLIC);
+			$this->set('fsType', FileSet::TYPE_PUBLIC);
+		}
+		$fileSets = $fsl->getPage();
+		$this->set('fileSets',$fileSets);
+		$this->set('fsl', $fsl);
 	}
 
 	public function file_sets_add(){
@@ -46,39 +55,56 @@ class DashboardFilesSetsController extends Controller {
 		$file_set->uID		= $u->getUserID();
 		$file_set->fsOverrideGlobalPermissions = ($this->post('fsOverrideGlobalPermissions') == 1) ? 1 : 0;
 		$file_set->save();
-		
+		$this->redirect('/dashboard/files/sets', 'file_set_added');		
+	}
+	
+	public function file_set_added() {
+		$this->set('message', t('New file set added successfully.'));
 		$this->view();
 	}
 	
-	public function file_sets_edit_or_delete(){
-		extract($this->getHelperObjects());
-		
-		$ph = Loader::controller('/dashboard/files/access');
-		$this->set('ph', $ph);
-		
-		if (!$validation_token->validate("file_sets_edit_or_delete")) {			
-			$this->set('error', array($validation_token->getErrorMessage()));
-			$this->view();
-			return;
-		}
-		
-		if(!$this->post('fsID')){
-			$this->set('error', array(t('Invalid ID')));
-			$this->view();			
-		}
-		
-		
-		switch($this->post('file-sets-edit-or-delete-action')){
-			case 'edit-form':
-				$this->exportFileSet($this->post('fsID'));
-				break;
-			case 'delete':
-				$this->deleteFileSet($this->post('fsID'));
-				$this->set('message',t('Set Deleted'));
-				break;
-		}
-		
+	public function file_set_deleted() {
+		$this->set('message', t('File set deleted successfully.'));
 		$this->view();
+	}
+	
+	public function save_sort_order() {
+		Loader::model('file_set');
+		parse_str($this->post('fsDisplayOrder'));
+		$fsID = $this->post('fsID');
+		$fs = FileSet::getByID($this->post('fsID'));
+		$fs->updateFileSetDisplayOrder($fID);
+		$this->redirect('/dashboard/files/sets', 'view_detail', $fsID, 'file_set_order_saved');
+	}
+	
+	public function delete($fsID, $token = '') {
+
+		$u=new User();
+		Loader::model('file_set');
+		$fs = FileSet::getByID($fsID);
+		
+			
+		$valt = Loader::helper('validation/token');
+		if (!$valt->validate('delete_file_set', $token)) {
+			throw new Exception($valt->getErrorMessage());
+		}
+			
+		$fs->delete(); 
+		$this->redirect('/dashboard/files/sets', 'file_set_deleted');			
+	}
+	
+	public function view_detail($fsID, $action = false) {
+		Loader::model('file_set');
+		$fs = FileSet::getByID($fsID);
+		$ph = Loader::controller('/dashboard/files/access');
+		$this->set('ph', $ph);		
+		$this->set('fs', $fs);		
+		switch($action) {
+			case 'file_set_order_saved':
+				$this->set('message', t('File set order updated.'));
+				break;
+		}
+		$this->view();		
 	}		
 	
 	public function file_sets_edit(){
@@ -113,20 +139,6 @@ class DashboardFilesSetsController extends Controller {
 		$this->view();
 	}
 	
-	protected function exportFileSet($id){
-		Loader::model('file_set');	
-		$file_set = new FileSet();
-		$file_set->Load('fsID = ?',array($id));
-		$this->set('file_set',$file_set);
-	}
-	
-	protected function deleteFileSet($id){
-		Loader::model('file_set');	
-		$utility = new FileSet();
-		$file_sets = $utility->Find('fsID = ?',array($id));
-		$file_set = $file_sets[0];
-		$file_set->delete();
-	}
 }
 
 ?>

@@ -51,7 +51,7 @@ div#ccm-dialog-throbber {position: absolute; top: 50%; left: 50%; margin-top: -1
 hr {border: 1px solid #dedede; margin: 10px 0px 10px 0px;}
 
 
-/* buttons */
+/* legacy buttons */
 div.ccm-buttons {clear: both; padding-top: 8px}
 div.ccm-buttons * {}
 div.ccm-buttons .cancel {float: left}
@@ -65,17 +65,7 @@ div.ccm-button, a.ccm-button-right, a.ccm-button-left, a.ccm-button {display: bl
 a.ccm-button-right:hover, a.ccm-button-left:hover, a.ccm-button:hover {background: transparent url(../images/button_l_active.png) no-repeat scroll;}
 
 div.ccm-button span,a.ccm-button-left span, a.ccm-button-right span, a.ccm-button span {white-space: nowrap; height: 12px; display: block; float: left; padding-top: 11px; padding-bottom: 15px; margin-left: 15px; padding-right: 16px; font-size: 11px; color: #535353; background: transparent url(../images/button_r.png) repeat-y scroll right top;}
-/*
-div.ccm-buttons:after {
-	content: ".";
-	display: block;
-	clear: both; 
-	height: 0;
-	visibility: hidden;
-}
-*/
 a.ccm-button-left:hover span, a.ccm-button-right:hover span, a.ccm-button:hover span {background: transparent url(../images/button_r_active.png) repeat-y scroll right top;}
-
 a.ccm-button-left em, a.ccm-button-right em, a.ccm-button em {
 	padding-bottom: 2px; 
 	background-color: transparent; 
@@ -85,7 +75,6 @@ a.ccm-button-left em, a.ccm-button-right em, a.ccm-button em {
 	font-style: normal; 
 	display: block;
 }
-
 a.ccm-button-left em.ccm-button-inactive, a.ccm-button-right em.ccm-button-inactive, a.ccm-button em.ccm-button-inactive {
 	padding-bottom: 0px; 
 	background-color: transparent; 
@@ -98,14 +87,42 @@ a.ccm-button-left em.ccm-button-inactive, a.ccm-button-right em.ccm-button-inact
 	font-style: normal; 
 }
 
-/*
-em.ccm-button-add {background-image: url(../images/icons/add.png);}
-em.ccm-button-update {background-image: url(../images/icons/edit_small.png);}
-*/
 a.ccm-button em.ccm-button-close {background-image: url(../images/icons/close.png);
 	padding-left:20px;
 	padding-right: 0;
 }
+
+/* simpler css3 buttons */
+.ccm-button-v2 {
+	background: transparent url(../images/bg_button.png) repeat-x right top; 
+	display: inline-block; 
+	padding: 5px 10px 6px; 
+	text-decoration: none;
+	-moz-border-radius: 10px; 
+	-webkit-border-radius: 10px;
+	font-size: 11px !important;
+	height: 38px !important;
+	color: #535353; 
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	border: 1px solid #a8a8a8;
+	position: relative;
+	cursor: pointer
+}
+
+.ccm-button-v2:disabled {
+	color: #999;
+}
+.ccm-button-v2:disabled:hover {
+	color: #999;
+	cursor: inherit;
+	background: transparent url(../images/bg_button.png) repeat-x right top; 
+}
+
+.ccm-button-v2:hover, .ccm-button-v2:active {
+	background: transparent url(../images/bg_button_active.png) repeat-x right top;
+	border: 1px solid #9ca8aa;
+}
+
 
 th.ccm-permissions-header {text-align: left !important; white-space: nowrap}
 
@@ -214,11 +231,12 @@ div.ccm-block-type-search-wrapper {}
 div.ccm-block-type-search {}
 div.ccm-block-type-search-wrapper a.ccm-block-type-help img {float: right; margin-right: 10px; margin-top: 14px}
 ul#ccm-block-type-list .ccm-block-type-available {display: list-item !important}
-div.ccm-block-type-search {background: #E4F4FF url(../images/icons/search.png) no-repeat scroll 8px 14px; border-bottom: 1px solid #dedede; padding-bottom: 10px; padding-top: 10px; padding-left: 32px}
+div.ccm-search-bar, div.ccm-block-type-search {background: #F0F6FA url(../images/icons/search.png) no-repeat scroll 8px 14px; border-bottom: 1px solid #dedede; padding-bottom: 10px; padding-top: 10px; padding-left: 32px}
+div.ccm-search-bar {margin: -8px -8px 20px -8px}
 a#ccm-block-type-clear-search {margin-left: 2px; display: none}
 
 
 .ccm-style-property-table td {padding-right: 8px !important; padding-bottom: 8px !important}
-
+.ccm-message {padding: 10px; border: 1px solid #94a7c7; background: #eee; margin-bottom: 20px; font-size: 13px; font-weight: bold;}
 div.ccm-styleEditPane {background-color: #efefef; border-left: 1px solid #dedede; border-right: 1px solid #dedede; border-bottom: 1px solid #dedede; padding: 8px}
 ul#ccm-styleEditPane-tabs {margin-bottom: 0px !important}

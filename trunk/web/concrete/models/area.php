@@ -149,7 +149,6 @@ class Area extends Object {
 			different than get(), getOrCreate() is called by the templates. If no area record exists for the
 			permissions cID / handle combination, we create one. This is to make our lives easier
 		*/
-		$db = Loader::db();
 
 		$area = Area::get($c, $arHandle);
 		if (is_object($area)) {
@@ -162,6 +161,7 @@ class Area extends Object {
 		$cID = $c->getCollectionID();
 		$v = array($cID, $arHandle);
 		$q = "insert into Areas (cID, arHandle) values (?, ?)";
+		$db = Loader::db();
 		$db->query($q, $v);
 
 		$area = Area::get($c, $arHandle); // we're assuming the insert succeeded

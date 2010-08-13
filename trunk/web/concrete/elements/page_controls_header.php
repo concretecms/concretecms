@@ -33,6 +33,8 @@ $this->addHeaderItem($html->javascript('jquery.js'));
 $this->addHeaderItem($html->javascript('jquery.form.js'));
 $this->addHeaderItem($html->javascript('jquery.metadata.js'));
 $this->addHeaderItem($html->javascript('jquery.ui.js'));
+$this->addHeaderItem($html->javascript('quicksilver.js'));
+$this->addHeaderItem($html->javascript('jquery.liveupdate.js'));
 $this->addHeaderItem($html->javascript('jquery.rating.js'));
 $this->addHeaderItem($html->javascript('jquery.colorpicker.js'));
 	

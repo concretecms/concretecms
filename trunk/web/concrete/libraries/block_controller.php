@@ -38,6 +38,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		protected $btInterfaceWidth = "400";
 		protected $btInterfaceHeight = "400";
 		protected $btHasRendered = false;
+		protected $btCacheBlockRecord = false;
+		protected $btCacheBlockOutput = false;
+		protected $btCacheBlockOutputLifetime = 1800; // seconds, half an hour 
+		protected $btCacheBlockOutputOnPost = false;
+		protected $btCacheBlockOutputForRegisteredUsers = false;
 		public $headerItems = array();
 
 		protected $identifier;
@@ -145,6 +150,22 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			$this->__construct();
 		}
 		
+
+		public function cacheBlockOutput() {
+			return $this->btCacheBlockOutput;
+		}
+
+		public function cacheBlockOutputForRegisteredUsers() {
+			return $this->btCacheBlockOutputForRegisteredUsers;
+		}
+
+		public function cacheBlockOutputOnPost() {
+			return $this->btCacheBlockOutputOnPost;
+		}
+
+		public function getBlockTypeCacheOutputLifetime() {
+			return $this->btCacheBlockOutputLifetime;
+		}
 		
 		/**
 		 * Automatically run when a block is deleted. This removes the special data from the block's specific database table. If a block needs to do more than this this method should be overridden.

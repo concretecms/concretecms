@@ -161,7 +161,7 @@
 					break;
 			}
 		}
-	
+
 		## Check maintenance mode
 		require(dirname(__FILE__) . '/startup/maintenance_mode_check.php');
 		
@@ -233,9 +233,9 @@
 		## Make sure that any submitted forms, etc... are handled correctly
 		## This is legacy cms specific stuff, like adding pages
 		require(dirname(__FILE__) . '/startup/process.php');
-		
+
 		## Record the view
-		if (STATISTICS_TRACK_PAGE_VIEWS == true) {
+		if (STATISTICS_TRACK_PAGE_VIEWS == 1) {
 			$u->recordView($c);
 		}
 		

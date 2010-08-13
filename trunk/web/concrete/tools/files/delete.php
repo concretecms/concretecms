@@ -78,7 +78,7 @@ $searchInstance = $_REQUEST['searchInstance'];
 				</td>
 		
 				<td><?=$fv->getType()?></td>
-				<td class="ccm-file-list-filename"><?=wordwrap($fv->getTitle(), 25, "\n", true)?></td>
+				<td class="ccm-file-list-filename" width="100%"><div style="word-wrap: break-word; width: 150px"><?=$fv->getTitle()?></td>
 				<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, strtotime($f->getDateAdded()))?></td>
 				<td><?=$fv->getSize()?></td>
 				<td><?=$fv->getAuthorName()?></td>
