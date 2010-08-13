@@ -499,19 +499,6 @@ class DashboardSettingsController extends Controller {
 	
 	public function get_environment_info() {
 		set_time_limit(5);
-		ob_start();
-		phpinfo();
-		$phpinfo = array('phpinfo' => array());
-		if(preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s', ob_get_clean(), $matches, PREG_SET_ORDER))
-		foreach($matches as $match) {
-			if(strlen($match[1])) {
-				$phpinfo[$match[1]] = array();
-			} else if(isset($match[3])) {
-				$phpinfo[end(array_keys($phpinfo))][$match[2]] = isset($match[4]) ? array($match[3], $match[4]) : $match[3];
-			} else {
-				$phpinfo[end(array_keys($phpinfo))][] = $match[2];
-			}
-		}
 		
 		$environmentMessage = '# ' . t('concrete5 Version') . "\n" . APP_VERSION . "\n\n";
 		$environmentMessage .= '# ' . t('concrete5 Packages') . "\n";
@@ -601,8 +588,10 @@ class DashboardSettingsController extends Controller {
 			$environmentMessage .= t('None') . "\n";
 		}
 		$environmentMessage .= "\n";
+
+		print $environmentMessage;
 		
-		$environmentMessage .= '# ' . t('Server Software') . "\n" . $_SERVER['SERVER_SOFTWARE'] . "\n\n";
+		$environmentMessage = '# ' . t('Server Software') . "\n" . $_SERVER['SERVER_SOFTWARE'] . "\n\n";
 		$environmentMessage .= '# ' . t('Server API') . "\n" . php_sapi_name() . "\n\n";
 		$environmentMessage .= '# ' . t('PHP Version') . "\n" . PHP_VERSION . "\n\n";
 		$environmentMessage .= '# ' . t('PHP Extensions') . "\n";
@@ -615,7 +604,23 @@ class DashboardSettingsController extends Controller {
 			$environmentMessage .= t('Unable to determine.') . "\n";
 		}
 
-		$environmentMessage .= "\n# " . t('PHP Settings') . "\n";
+		print $environmentMessage;
+
+		ob_start();
+		phpinfo();
+		$phpinfo = array('phpinfo' => array());
+		if(preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s', ob_get_clean(), $matches, PREG_SET_ORDER))
+		foreach($matches as $match) {
+			if(strlen($match[1])) {
+				$phpinfo[$match[1]] = array();
+			} else if(isset($match[3])) {
+				$phpinfo[end(array_keys($phpinfo))][$match[2]] = isset($match[4]) ? array($match[3], $match[4]) : $match[3];
+			} else {
+				$phpinfo[end(array_keys($phpinfo))][] = $match[2];
+			}
+		}
+		
+		$environmentMessage = "\n# " . t('PHP Settings') . "\n";
 
 		foreach($phpinfo as $name => $section) {
 			foreach($section as $key => $val) {
@@ -630,7 +635,10 @@ class DashboardSettingsController extends Controller {
 					$environmentMessage .= "$val\n";
 				}
 			}
-		}		
+		}
+		
+		print $environmentMessage;
+		exit;
 	}
 	
 	
