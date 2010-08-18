@@ -147,8 +147,7 @@ for ($i = 0; $i < count($ctArray); $i++) {
 	
 
 	<div class="ccm-buttons">
-	<!--	<a href="javascript:void(0)" onclick="ccm_hidePane()" class="ccm-button-left cancel"><span><em class="ccm-button-close">Cancel</em></span></a>//-->
-	<a href="javascript:void(0)" onclick="$('#ccmAddPage').submit()" class="ccm-button-right accept"><span><?=t('Add')?></span></a>
+		<?=Loader::helper('concrete/interface')->submit(t('Add Page'),'ccmAddPage')?>
 	</div>	
 	<input type="hidden" name="add" value="1" />
 	<input type="hidden" name="processCollection" value="1">
