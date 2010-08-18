@@ -112,21 +112,28 @@ class IndexedSearch {
 			$searchableAreaNames = $searchableAreaNamesInitial;
 		}		
 		
-		$blarray=array();
-		foreach($searchableAreaNames as $searchableAreaName){
-		 	$blarray = array_merge( $blarray, $c->getBlocks($searchableAreaName) );
+		if (count($searchableAreaNames) == 0) {
+			return false;
 		}
+		
 		$text = '';
 		$tagsToSpaces=array('<br>','<br/>','<br />','<p>','</p>','</ p>','<div>','</div>','</ div>');
-		foreach($blarray as $b) { 
-			$bi = $b->getInstance();
-			if(method_exists($bi,'getSearchableContent')){
-				$searchableContent = $bi->getSearchableContent();  
-				if(strlen(trim($searchableContent))) 					
-					$text .= strip_tags(str_ireplace($tagsToSpaces,' ',$searchableContent)).' ';
-			}			
+		$blarray=array();
+		$db = Loader::db();
+		$r = $db->Execute('select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ?', array($c->getCollectionID(), $c->getVersionID()));
+		while ($row = $r->FetchRow()) {
+			if (in_array($row['arHandle'], $searchableAreaNames)) {
+				$b = Block::getByID($row['bID'], $c, $row['arHandle']);
+				$bi = $b->getInstance();
+				if(method_exists($bi,'getSearchableContent')){
+					$searchableContent = $bi->getSearchableContent();  
+					if(strlen(trim($searchableContent))) 					
+						$text .= strip_tags(str_ireplace($tagsToSpaces,' ',$searchableContent)).' ';
+				}
+				unset($b);
+				unset($bi);
+			}		
 		}
-		unset($blarray);
 		return $text;
 	}
 	

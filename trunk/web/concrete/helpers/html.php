@@ -84,7 +84,9 @@ class HtmlHelper {
 			$js->file = $file;
 		}
 
-		if ($pkgHandle != null) {
+		if (file_exists(DIR_BASE . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
+			$js->file = DIR_REL . '/' . DIRNAME_JAVASCRIPT . '/' . $file;
+		} else if ($pkgHandle != null) {
 			if (file_exists(DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
 				$js->file = DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file;
 			} else if (file_exists(DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
@@ -93,11 +95,7 @@ class HtmlHelper {
 		}
 			
 		if ($js->file == '') {
-			if (file_exists(DIR_BASE . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
-				$js->file = DIR_REL . '/' . DIRNAME_JAVASCRIPT . '/' . $file;
-			} else {
-				$js->file = ASSETS_URL_JAVASCRIPT . '/' . $file;
-			}
+			$js->file = ASSETS_URL_JAVASCRIPT . '/' . $file;
 		}
 
 		$js->file .= (strpos($js->file, '?') > -1) ? '&' : '?';

@@ -550,18 +550,17 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		private function _getClass() {
 			$btHandle = $this->btHandle;
 			$pkgHandle = $this->getPackageHandle();
-			if ($pkgHandle == null) {
-				if (file_exists(DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER)) {
-					$classfile = DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER;
-				} else if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER)) {
-					$classfile = DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER;
-				}
-
-			} else {
+			if (file_exists(DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER)) {
+				$classfile = DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER;
+			} else if ($pkgHandle != null) {
 				if (file_exists(DIR_PACKAGES . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER)) {
 					$classfile = DIR_PACKAGES . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER;
 				} else if (file_exists(DIR_PACKAGES_CORE . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER)) {
 					$classfile = DIR_PACKAGES_CORE . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER;
+				}
+			} else {			
+				if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER)) {
+					$classfile = DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER;
 				}
 			}
 			
