@@ -998,6 +998,7 @@ class InstallController extends Controller {
 						Config::save('SITE_DEBUG_LEVEL', $this->installData['DEBUG_DISPLAY_ERRORS']);
 						Config::save('ENABLE_LOG_EMAILS', 1);
 						Config::save('ENABLE_LOG_ERRORS', 1);
+						Config::save('FULL_PAGE_CACHE_GLOBAL', 0);
 						
 						// login 
 						define('PASSWORD_SALT', $salt);

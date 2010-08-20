@@ -1363,6 +1363,8 @@ $ppWhere = '';
 		
 		$q = "delete from Areas WHERE cID = '{$cID}'";
 		$r = $db->query($q);
+
+		$db->query('delete from PageSearchIndex where cID = ?', array($cID));
 		
 		$q = "select cID from Pages where cParentID = '{$cID}'";
 		$r = $db->query($q);

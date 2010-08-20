@@ -407,6 +407,9 @@ class ItemList {
 		
 		$ss->startAt = ($ss->startAt < $ss->chunk) ? '0' : $ss->startAt;
 		$itc = intval($ss->total / $ss->chunk);
+		if ($ss->total == $ss->chunk) {
+			$itc = 0;
+		}
 		$ss->pages = $itc + 1;
 		
 		if ($ss->startAt > 0) {

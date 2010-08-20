@@ -82,7 +82,7 @@
 	  <select name="orderBy">
 		<option value="display_asc" <? if ($orderBy == 'display_asc') { ?> selected <? } ?>><?=t('in their sitemap order')?></option>
 		<option value="chrono_desc" <? if ($orderBy == 'chrono_desc') { ?> selected <? } ?>><?=t('with the most recent first')?></option>
-		<option value="chrono_asc" <? if ($orderBy == 'chrono_asc') { ?> selected <? } ?>><?=t('with the earlist first')?></option>
+		<option value="chrono_asc" <? if ($orderBy == 'chrono_asc') { ?> selected <? } ?>><?=t('with the earliest first')?></option>
 		<option value="alpha_asc" <? if ($orderBy == 'alpha_asc') { ?> selected <? } ?>><?=t('in alphabetical order')?></option>
 		<option value="alpha_desc" <? if ($orderBy == 'alpha_desc') { ?> selected <? } ?>><?=t('in reverse alphabetical order')?></option>
 	  </select>

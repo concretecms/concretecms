@@ -460,7 +460,7 @@ moveCopyAliasNode = function(reloadPage) {
 		// parse response
 		ccm_parseJSON(resp, function() {
 			
-			alert(resp.message);
+ 			ccmAlert.hud(resp.message, 2000);
 			jQuery.fn.dialog.hideLoader();
 			
 			if (reloadPage == true) {
