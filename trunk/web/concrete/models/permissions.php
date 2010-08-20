@@ -607,7 +607,9 @@ class CollectionPermissions extends Permissions {
 			}
 			
 			$perms = $this->mergePermissions($permissions);
-			Cache::set('page_permission_set_guest', $cObj->getCollectionID(), $perms);
+			if (!$u->isRegistered()) {
+				Cache::set('page_permission_set_guest', $cObj->getCollectionID(), $perms);
+			}
 		}
 		
 		$cv = $cObj->getVersionObject();

@@ -379,6 +379,12 @@ define('USER_CHANGE_PASSWORD_URL_LIFETIME',  7200);
 
 # Default search size
 define('SEARCH_CHUNK_SIZE','20'); /* number of entries retrieved per page */
+if (!defined('PAGE_SEARCH_INDEX_LIFETIME')) {
+	define('PAGE_SEARCH_INDEX_LIFETIME', 259200);
+}
+if (!defined('PAGE_SEARCH_INDEX_BATCH_SIZE')) {
+	define('PAGE_SEARCH_INDEX_BATCH_SIZE', 200);
+}
 
 # Versioning/Editing defaults 
 define('CHECKOUT_TIMEOUT', 300); // # in seconds.

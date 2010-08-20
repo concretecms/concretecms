@@ -67,8 +67,8 @@ class IndexedPageList extends PageList {
 */
 class IndexedSearch {
 	
-	public $searchBatchSize = 200;
-	public $searchReindexTimeout = 259200;
+	public $searchBatchSize = PAGE_SEARCH_INDEX_BATCH_SIZE;
+	public $searchReindexTimeout = PAGE_SEARCH_INDEX_LIFETIME;
 
 	private $cPathSections = array();
 	private $searchableAreaNamesManual = array();
