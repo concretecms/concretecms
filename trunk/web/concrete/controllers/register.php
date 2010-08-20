@@ -139,6 +139,33 @@ class RegisterController extends Controller {
 				foreach($aks as $uak) {
 					$uak->saveAttributeForm($process);				
 				}
+
+				if (defined('EMAIL_ADDRESS_REGISTER_NOTIFICATION')) {
+					$mh = Loader::helper('mail');
+					if (defined('EMAIL_ADDRESS_REGISTER_NOTIFICATION_FROM')) {
+						$mh->from(EMAIL_ADDRESS_REGISTER_NOTIFICATION_FROM,  t('Website Registration Notification'));
+					} else {
+						$adminUser = UserInfo::getByID(USER_SUPER_ID);
+						if (is_object($adminUser)) {
+							$mh->from($adminUser->getUserEmail(),  t('Website Registration Notification'));
+						}
+					}
+					$mh->addParameter('uName', $process->getUserName());
+					$mh->addParameter('uID', $process->getUserID());
+					$mh->addParameter('uEmail', $process->getUserEmail());
+					$attribs = UserAttributeKey::getRegistrationList();
+					foreach($attribs as $ak) {
+						$attribValues[] = $ak->getAttributeKeyDisplayHandle() . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(), 'display');		
+					}						
+					$mh->addParameter('attribs', $attribValues);
+					$mh->to(EMAIL_ADDRESS_REGISTER_NOTIFICATION);
+					if (USER_REGISTRATION_APPROVAL_REQUIRED) {
+						$mh->load('user_register_approval_required');
+					} else {
+						$mh->load('user_register');
+					}
+					$mh->sendMail();
+				}
 				
 				// now we log the user in
 				if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
