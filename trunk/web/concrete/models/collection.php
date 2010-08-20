@@ -802,12 +802,18 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 					$db->query($ql, $vl);
 				}				
 
-				// duplicate layout records 
 				$ql = "select * from CollectionVersionBlockStyles where cID = '{$this->cID}'";
 				$rl = $db->query($ql);
 				while ($row = $rl->fetchRow()) { 
 					$vl = array( $newCID, $row['cvID'], $row['bID'], $row['arHandle'], $row['csrID'] );
 					$ql = "insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)";
+					$db->query($ql, $vl);
+				}
+				$ql = "select * from CollectionVersionAreaStyles where cID = '{$this->cID}'";
+				$rl = $db->query($ql);
+				while ($row = $rl->fetchRow()) { 
+					$vl = array( $newCID, $row['cvID'], $row['arHandle'], $row['csrID'] );
+					$ql = "insert into CollectionVersionAreaStyles (cID, cvID, arHandle, csrID) values (?, ?, ?, ?)";
 					$db->query($ql, $vl);
 				}
 	
