@@ -26,7 +26,7 @@ if ($fp->canAddFiles()) {
 <div id="ccm-files-add-asset">
 <h3><?=t('Add')?>:</h3>
 <form method="post" enctype="multipart/form-data" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/single" class="ccm-file-manager-submit-single">
-    <input type="file" name="Filedata" class="ccm-al-upload-single-file" style="width: 150px" />
+    <input type="file" name="Filedata" class="ccm-al-upload-single-file"  />
     <input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
     <?=$valt->output('upload');?>
     <input type="hidden" name="ocID" value="<?=$ocID?>" />
