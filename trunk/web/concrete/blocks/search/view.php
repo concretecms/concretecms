@@ -1,10 +1,4 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
-<style type="text/css">
-#searchResults .pageLink{ font-size:12px; color:#999; margin:2px 0px 8px 0px; padding:0px; display:block }
-#searchResults .searchResult{ margin-bottom:16px; margin-top:24px }
-#searchResults .searchResult h3{ margin-bottom:0px; padding-bottom:0px }
-#searchResults .searchResult p{margin-top:4px}
-</style>
 
 <? if (isset($error)) { ?>
 	<?=$error?><br/><br/>

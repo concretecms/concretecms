@@ -244,6 +244,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			}
 			
 			switch($view) {
+				case 'scrapbook':
+					$header = DIR_FILES_ELEMENTS_CORE . '/block_header_view.php';
+					$footer = DIR_FILES_ELEMENTS_CORE . '/block_footer_view.php';										
+					break;
 				case 'view':				
 					if (!$outputContent) {
 						if (!isset($_filename)) {

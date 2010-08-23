@@ -614,12 +614,17 @@
 							}
 						}
 					} else if (isset($_REQUEST['bID'])) {
-						$b = Block::getByID($_REQUEST['bID']); 
 						if($_REQUEST['globalBlock']) {
-							$b->setBlockAreaObject($a);
+							$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
+							$c1 = $scrapbookHelper->getGlobalScrapbookPage();			
+							$a1 = Area::get($c1, $_REQUEST['globalScrapbook']);
+							$b = Block::getByID($_REQUEST['bID'], $c1, $a1);
+						} else {
+							$b = Block::getByID($_REQUEST['bID']); 
 						}
 						$bt = BlockType::getByHandle($b->getBlockTypeHandle());						
 						if ($ap->canAddBlock($bt)) {
+							$b->setBlockAreaObject($a);
 							if (!$bt->includeAll()) {
 								$nvc = $c->getVersionToModify();
 								$b->alias($nvc);
