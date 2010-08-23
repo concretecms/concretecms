@@ -27,7 +27,7 @@ if ($akSelectAllowOtherValues) { ?>
 <? } ?>
 
 <script type="text/javascript">
-
+//<![CDATA[
 var ccmAttributeTypeSelectHelper={  
 	add:function(akID, field){
 		var newRow=document.createElement('div');
@@ -40,6 +40,5 @@ var ccmAttributeTypeSelectHelper={
 		$(a.parentNode).remove();			
 	}
 }
-
-
+//]]>
 </script>
