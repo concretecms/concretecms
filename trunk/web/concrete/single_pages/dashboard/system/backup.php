@@ -7,9 +7,7 @@ function confirmDelete(strFn) {
    //   var ele = $('#confirmDelete').clone().attr('id','confirmDelete'+dNum);
    //   $('body').append($('#confirmDelete'+dNum)); 
    $('#confirmDelete').clone().attr('id', 'confirmDelete'+dNum).appendTo('body');
-   var alink = $('#confirmDelete' + dNum + ' .confirmActionBtn a').attr('href'); 
-   alink += strFn; 
-    $('#confirmDelete' + dNum + ' .confirmActionBtn a').attr('href',alink); 
+   var alink = $('#confirmDelete' + dNum + ' input[name=backup_file]').val(strFn); 
    confirmdlg = $.fn.dialog.open({
             title: 'Are you sure?',
             'element': $('#confirmDelete' + dNum), 
@@ -25,8 +23,7 @@ function confirmRestore(strFn) {
    //   var ele = $('#confirmDelete').clone().attr('id','confirmDelete'+rNum);
    //   $('body').append($('#confirmDelete'+rNum)); 
    $('#confirmRestore').clone().attr('id', 'confirmRestore'+rNum).appendTo('body');
-   var alink = $('#confirmRestore' + rNum + ' .confirmActionBtn a').attr('href');
-   alink += strFn;
+   var alink = $('#confirmRestore' + rNum + ' input[name=backup_file]').val(strFn); 
    $('#confirmRestore' + rNum + ' .confirmActionBtn a').attr('href',alink); 
    confirmdlg = $.fn.dialog.open({
             title: 'Are you sure?',
@@ -66,9 +63,13 @@ $(document).ready(function () {
 <div id="confirmDelete" style="display:none"><?=t('This action <strong>cannot be undone</strong>. Are you sure?')?>
 
 <div class="ccm-buttons">
+<form method="post" action="<?=$this->action('delete_backup')?>">
+<input type="hidden" name="backup_file" value="" />
 <?=$ifHelper->button_js(t('Cancel'),"$.fn.dialog.close(0)", 'left');?>
 <span class="confirmActionBtn">
-<?=$ifHelper->button('Delete Backup',$this->action('delete_backup'),'right');?></span>
+<?=$ifHelper->submit('Delete Backup','right');?></span>
+
+</form>
 </div> 
 
 </div>
@@ -79,9 +80,12 @@ $(document).ready(function () {
 <div id="confirmRestore" style="display:none"><?=t('This action <strong>cannot be undone</strong>. Are you sure?')?>
 
 <div class="ccm-buttons">
+<form method="post" action="<?=$this->action('restore_backup')?>">
+<input type="hidden" name="backup_file" value="" />
 <?=$ifHelper->button_js(t('Cancel'),"$.fn.dialog.close(0)", 'left');?>
 <span class="confirmActionBtn">
-<?=$ifHelper->button('Restore Backup',$this->action('restore_backup'),'right');?></span>
+<?=$ifHelper->submit('Restore Backup','right');?></span>
+</form>
 </div> 
 
 </div>
@@ -147,10 +151,11 @@ $crypt = Loader::helper('encryption');
 <h1><span><?=t('Create New Backup')?></span></h1>
 <div class="ccm-dashboard-inner">
 
+<form method="post" action="<?=$this->action('run_backup')?>">
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td style="padding-right: 20px">
-		<?= $ifHelper->button(t("Run Backup"),$this->action('run_backup'),"left",null,array('id' => 'executeBackup'))?>
+		<?= $ifHelper->submit(t("Run Backup"))?>
 	</td>
 	<td>
 	<? if ($crypt->isAvailable()) { ?>
@@ -163,6 +168,7 @@ $crypt = Loader::helper('encryption');
 	</td>
 </tr>
 </table>
+</form>
 	<br/>
 
 	<h2><?=t('Important Information about Backup & Restore')?></h2>

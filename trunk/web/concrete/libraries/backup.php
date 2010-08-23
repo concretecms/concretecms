@@ -19,7 +19,10 @@ class Backup {
 				$str_backupdata .= $tableobj->str_insertionSql . "\n\n";
 			}
 		}
-		$fh_backupfile = fopen(DIR_FILES_BACKUPS . "/". $str_bkupfile,"w");
+		$fh_backupfile = @fopen(DIR_FILES_BACKUPS . "/". $str_bkupfile,"w");
+		if (!$fh_backupfile) {
+			throw new Exception(t('Unable to create backup file: %s', $str_bkupfile));
+		}
 		if ($encrypt == true) {
 			$crypt = Loader::helper('encryption');
 			fwrite($fh_backupfile,$crypt->encrypt($str_backupdata));
