@@ -59,32 +59,15 @@ ccm_activateSite = function() {
 }
 
 ccm_addHeaderItem = function(item, type) {
-	var doLoad = true;
 	if (type == 'CSS') {
-		for (i = 0; i < document.styleSheets.length; i++) {
-			ss = document.styleSheets[i];			
-			if (ss.href == item) {
-				doLoad = false;
-				break;
-			}
+		if (!($('head').children('link[href*=' + item + ']').length)) {
+			$('head').append('<link rel="stylesheet" type="text/css" href="' + item + '?ts=' + new Date().getTime() + '" />');
 		}
 	} else if (type == 'JAVASCRIPT') {
-		$("script").each(function(i, obj) {
-			var src = $(obj).attr('src');
-			if (src == item) {
-				doLoad = false;
-			}
-		});
-	}
-	if (doLoad) {
-		switch(type) {
-			case 'CSS':
-				$('head').append('<link rel="stylesheet" type="text/css" href="' + item + '?ts=' + new Date().getTime() + '" />');
-				break;
-			case 'JAVASCRIPT':
-				$('head').append('<script type="text/javascript" src="' + item + '?ts=' + new Date().getTime() + '"></script>');
-				break;
+		if (!($('head').children('script[src*=' + item + ']').length)) {
+			$('head').append('<script type="text/javascript" src="' + item + '?ts=' + new Date().getTime() + '"></script>');
 		}
+
 	}
 }
 
