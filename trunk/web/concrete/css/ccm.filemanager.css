@@ -53,7 +53,7 @@ div.ccm-file-access-extensions {border: 1px solid #cecece; padding: 4px; height:
 
 
 /* add asset */
-div#ccm-files-add-asset {float: right; padding-right: 20px; font-size: 11px; z-index: 10; /* position: relative */ }
+div#ccm-files-add-asset {float: right; text-align: right; font-size: 11px; z-index: 10; /* position: relative */ }
 div#ccm-files-add-asset h3 {float: left;margin-right: 4px;margin-top: 0px; padding-top: 4px; font-size: 11px}
 div#ccm-files-add-asset form {float: left}
 div#ccm-files-add-asset a {float: left;margin-left: 4px;margin-top: 4px}
