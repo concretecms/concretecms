@@ -113,8 +113,10 @@ function getAttributeOptionHTML($v){
 
 <? if ($akSelectOptionDisplayOrder == 'display_asc') { ?>
 <script type="text/javascript">
+//<![CDATA[
 $(function() {
 	ccmAttributesHelper.makeSortable();
 });
+//]]>
 </script>
 <? } ?>
