@@ -89,6 +89,16 @@ var GlobalScrapbook = {
 			height: 100
 		});		
 	},
+	editBlockDesign:function(bID){ 
+		var editBlockURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED ?>/edit_block_popup';
+		$.fn.dialog.open({
+			title: '<?=t("Design")?>',
+			href: editBlockURL+'?cID='+CCM_CID+'&bID='+bID+'&arHandle=<?=urlencode($scrapbookName)?>&btask=block_css',
+			width: 450,
+			modal: false,
+			height: 420
+		});		
+	},
 	editBlockPermissions:function(bID){ 
 		var editBlockURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED ?>/edit_block_popup';
 		$.fn.dialog.open({
@@ -318,6 +328,10 @@ $(function(){ GlobalScrapbook.init(); });
 							&nbsp;|&nbsp; 
 							<a href="javascript:void(0)" onclick="GlobalScrapbook.editBlockTemplate(<?=intval($b->bID) ?>)" ><?=t('Custom Template')?></a> 
 							&nbsp;|&nbsp; 
+							<? if (ENABLE_CUSTOM_DESIGN == true) { ?>
+							<a href="javascript:void(0)" onclick="GlobalScrapbook.editBlockDesign(<?=intval($b->bID) ?>)" ><?=t('Design')?></a> 
+							&nbsp;|&nbsp; 
+							<? } ?>
 							<a href="javascript:void(0)" onclick="GlobalScrapbook.editBlock(<?=intval($b->bID) ?>,<?=$bt->getBlockTypeInterfaceWidth()?> , <?=$bt->getBlockTypeInterfaceHeight()?> )" ><?=t('Edit')?></a> 
 							&nbsp;|&nbsp; 
 							

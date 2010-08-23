@@ -12,8 +12,8 @@ if ($c->isEditMode()) { ?>
 	</div>
 <? }else{ ?>
 <object width="<?=$vWidth?>" height="<?=$vHeight?>">
-	<param name="movie" value="http://www.youtube.com/v/<?=$query['v']?>&hl=en" />
+	<param name="movie" value="http://www.youtube.com/v/<?=$query['v']?>&amp;hl=en" />
 	<param name="wmode" value="transparent" />
-	<embed src="http://www.youtube.com/v/<?=$query['v']?>&hl=en" type="application/x-shockwave-flash" wmode="transparent" width="425" height="344" />
+	<embed src="http://www.youtube.com/v/<?=$query['v']?>&amp;hl=en" type="application/x-shockwave-flash" wmode="transparent" width="425" height="344" />
 </object>
 <? } ?>

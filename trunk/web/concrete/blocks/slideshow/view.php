@@ -1,6 +1,7 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
 
 <script type="text/javascript">
+//<![CDATA[
 var ccmSlideShowHelper<?=intval($bID)?> = {
 
 	bID:<?=intval($bID)?>,
@@ -97,12 +98,8 @@ var ccmSlideShowHelper<?=intval($bID)?> = {
 	]
 }
 $(function(){ccmSlideShowHelper<?=intval($bID)?>.init();}); 
+//]]>
 </script>
-
-<style type="text/css">
-.ccm-SlideshowBlock-display{ position:relative; width:100%; height:auto; }
-.ccm-SlideshowBlock-display .slideImgWrap{ position:absolute; width:100%; height:auto; top:0px; left:0px; }
-</style>
 
 <div id="ccm-SlideshowBlock-display<?=intval($bID)?>" class="ccm-SlideshowBlock-display">
 <div id="ccm-SlideshowBlock-heightSetter<?=intval($bID)?>" class="ccm-SlideshowBlock-heightSetter"></div>
