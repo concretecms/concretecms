@@ -10,12 +10,17 @@ class DashboardSystemBackupController extends Controller {
    } 
 
 
-	public function run_backup($encrypt = false) {
+	public function run_backup() {
+	  $encrypt = $this->post('useEncryption');
 	  $tp = new TaskPermission();
   	  if ($tp->canBackup()) {		
           $encrypt = (bool) $encrypt;
-          $backup = Backup::execute($encrypt);   
-          $this->view();
+          try {
+	          $backup = Backup::execute($encrypt);   
+ 			} catch(Exception $e) {
+ 				$this->set('error', $e);
+ 			}
+ 			$this->view();
 		}
 	}
 
@@ -23,7 +28,7 @@ class DashboardSystemBackupController extends Controller {
 		$tp = new TaskPermission();
 		if ($tp->canBackup()) {		
 			$fh = Loader::helper('file');
-			$arr_bckups = $fh->getDirectoryContents(DIR_FILES_BACKUPS);
+			$arr_bckups = @$fh->getDirectoryContents(DIR_FILES_BACKUPS);
 			$arr_backupfileinfo = Array();
 			if (count($arr_bckups) > 0) {
 			 foreach ($arr_bckups as $bkupfile) {
@@ -56,11 +61,12 @@ class DashboardSystemBackupController extends Controller {
 		}
 	}
 	
-	public function delete_backup($str_fname) {
+	public function delete_backup() {
 		$tp = new TaskPermission();
 		  if (!$tp->canBackup()) {
 			return false;
 		}
+		$str_fname = $this->post('backup_file');
 	  //For Security reasons...  allow only known characters in the string e.g no / \ so you can't exploit this
 	  $int_mResult = preg_match('/[0-9A-Za-z._]+/',$str_fname,$ar_matches);
 	  $str_fname = $ar_matches[0];
@@ -71,15 +77,22 @@ class DashboardSystemBackupController extends Controller {
 	  $this->view();
 	}
 
-	public function restore_backup($file) {
+	public function restore_backup() {
 		$tp = new TaskPermission();
 		  if (!$tp->canBackup()) {
 			return false;
 		}
+
+		$file = $this->post('backup_file');
 		
 		$db = Loader::db(); 
 		chmod(DIR_FILES_BACKUPS . '/'. $file, 0666);
 		$str_restSql = file_get_contents(DIR_FILES_BACKUPS . '/' . $file);
+		if (!$str_restSql) {
+			$this->set("error",array("There was an error trying to restore the database. This file was empty."));
+			$this->view();
+			return false;
+		}
 		$crypt = Loader::helper('encryption');
 		if ( !preg_match('/INSERT/m',$str_restSql) && !preg_match('/CREATE/m',$str_restSql) ) {	
 			$str_restSql = $crypt->decrypt($str_restSql);
