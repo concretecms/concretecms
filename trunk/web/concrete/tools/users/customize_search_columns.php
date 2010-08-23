@@ -47,7 +47,7 @@ $list = UserAttributeKey::getList();
 <br/><br/>
 <?
 $h = Loader::helper('concrete/interface');
-$b1 = $h->button_js(t('Save'), 'ccm_submitCustomizeSearchColumnsForm()', 'left');
+$b1 = $h->submit(t('Save'), 'save', 'left');
 print $b1;
 ?>
 
@@ -59,14 +59,15 @@ ccm_submitCustomizeSearchColumnsForm = function() {
 	$("#ccm-user-customize-search-columns-form").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
 		$("#ccm-user-advanced-search").ajaxSubmit(function(resp) {
-			ccm_parseAdvancedSearchResponse(resp);
+			ccm_parseAdvancedSearchResponse(resp, 'user');
 		});
 	});
+	return false;
 }
 
 $(function() {
-	$('#ccm-file-customize-search-columns-form').submit(function() {
-		ccm_submitCustomizeSearchColumnsForm();
+	$('#ccm-user-customize-search-columns-form').submit(function() {
+		return ccm_submitCustomizeSearchColumnsForm();
 	});
 });
 

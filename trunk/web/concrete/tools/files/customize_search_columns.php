@@ -82,7 +82,7 @@ $list = FileAttributeKey::getList();
 	<div class="ccm-sortable-column-sort-controls">
 	<?
 	$h = Loader::helper('concrete/interface');
-	$b1 = $h->button_js(t('Save'), 'ccm_submitCustomizeSearchColumnsForm()', 'right');
+	$b1 = $h->submit(t('Save'), 'save', 'right');
 	print $b1;
 	?>
 
@@ -119,6 +119,7 @@ ccm_submitCustomizeSearchColumnsForm = function() {
 			ccm_parseAdvancedSearchResponse(resp, '<?=$searchInstance?>');
 		});
 	});
+	return false;
 }
 
 $(function() {
@@ -144,7 +145,7 @@ $(function() {
 		}
 	});
 	$('#ccm-<?=$searchInstance?>-customize-search-columns-form').submit(function() {
-		ccm_submitCustomizeSearchColumnsForm();
+		return ccm_submitCustomizeSearchColumnsForm();
 	});
 });
 
