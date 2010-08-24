@@ -100,6 +100,11 @@
 				array('ContentBlockController', 'replaceCollectionID'),				
 				$text);
 
+			$text = preg_replace_callback(
+				'/<img [^>]*src\s*=\s*"{CCM:FID_([0-9]+)}"[^>]*>/i',
+				array('ContentBlockController', 'replaceImageID'),				
+				$text);
+
 			// now we add in support for the files that we view inline			
 			$text = preg_replace_callback(
 				'/{CCM:FID_([0-9]+)}/i',
@@ -121,6 +126,25 @@
 			if ($fID > 0) {
 				$path = File::getRelativePathFromID($fID);
 				return $path;
+			}
+		}
+		
+		private function replaceImageID($match) {
+			$fID = $match[1];
+			if ($fID > 0) {
+				preg_match('/width\s*="([0-9]+)"/',$match[0],$matchWidth);
+				preg_match('/height\s*="([0-9]+)"/',$match[0],$matchHeight);
+				$file = File::getByID($fID);
+				if (is_object($file) && (!$file->isError())) {
+					$imgHelper = Loader::helper('image');
+					$maxWidth = ($matchWidth[1]) ? $matchWidth[1] : $file->getAttribute('width');
+					$maxHeight = ($matchHeight[1]) ? $matchHeight[1] : $file->getAttribute('height');
+					if ($file->getAttribute('width') > $maxWidth || $file->getAttribute('height') > $maxHeight) {
+						$thumb = $imgHelper->getThumbnail($file, $maxWidth, $maxHeight);
+						return preg_replace('/{CCM:FID_([0-9]+)}/i', $thumb->src, $match[0]);
+					}
+				}
+				return $match[0];
 			}
 		}
 
