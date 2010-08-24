@@ -74,7 +74,14 @@
 					$b = Block::getByID($_REQUEST['bID'], $c, $a);
 					$p = new Permissions($b);
 					if ($p->canWrite()){ 					
-					
+						
+						$updateAll = false;
+						$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
+						$globalScrapbookC = $scrapbookHelper->getGlobalScrapbookPage();						
+						if ($globalScrapbookC->getCollectionID() == $c->getCollectionID()) {
+							$updateAll = true;
+						}
+						
 						Loader::model('custom_style');						
 						
 						$nvc = $c->getVersionToModify();
@@ -88,7 +95,7 @@
 						}			
 						
 						if ($_POST['reset_css']) {
-							$b->resetBlockCustomStyle();
+							$b->resetBlockCustomStyle($updateAll);
 						} else {
 							
 							if ($_POST['cspID'] > 0 && ($_POST['cspPresetAction'] == 'update_existing_preset')) {
@@ -96,10 +103,10 @@
 								$csr = $csp->getCustomStylePresetRuleObject();
 								// we update the csr in case anything has been changed
 								$csr->update($_POST['css_id'], $_POST['css_class_name'], $_POST['css_custom'], $_POST);
-								$b->setBlockCustomStyle($csr);
+								$b->setBlockCustomStyle($csr, $updateAll);
 							} else {
 								$csr = CustomStyleRule::add($_POST['css_id'], $_POST['css_class_name'], $_POST['css_custom'], $_POST);
-								$b->setBlockCustomStyle($csr);
+								$b->setBlockCustomStyle($csr, $updateAll);
 							}
 							
 							if ($_POST['cspPresetAction'] == 'create_new_preset') {

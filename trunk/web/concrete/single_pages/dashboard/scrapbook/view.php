@@ -73,7 +73,7 @@ var GlobalScrapbook = {
 		var editBlockURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED ?>/edit_block_popup';
 		$.fn.dialog.open({
 			title: ccmi18n.editBlock,
-			href: editBlockURL+'?cID='+CCM_CID+'&bID='+bID+'&arHandle=<?=urlencode($scrapbookName)?>&btask=edit',
+			href: editBlockURL+'?cID='+CCM_CID+'&bID='+bID+'&arHandle=<?=urlencode($scrapbookName)?>&btask=edit&isGlobal=1',
 			width: w,
 			modal: false,
 			height: h
