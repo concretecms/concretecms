@@ -26,6 +26,11 @@
 			return t("Youtube Video");
 		}
 		
+		function on_page_view() {
+			$html = Loader::helper('html');
+			$this->addHeaderItem($html->javascript('swfobject.js'));
+		}
+		
 		public function getJavaScriptStrings() {
 			return array('youtube-required' => t('Please enter a valid Youtube URL.'));
 		}
