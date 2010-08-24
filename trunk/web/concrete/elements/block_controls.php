@@ -35,6 +35,7 @@ ccm_menuObj<?=$id?>.bID = <?=$bID?>;
 ccm_menuObj<?=$id?>.isGlobal = <?=intval($isGlobal)?>;
 <? if ($b->isEditable() && $p->canWrite()) { ?>
 ccm_menuObj<?=$id?>.canWrite =true;
+ccm_menuObj<?=$id?>.btName = "<?=$btw->getBlockTypeName()?>";
 ccm_menuObj<?=$id?>.width = <?=$btw->getBlockTypeInterfaceWidth()?>;
 ccm_menuObj<?=$id?>.height = <?=(!$isGlobal)?$btw->getBlockTypeInterfaceHeight():$btw->getBlockTypeInterfaceHeight()+20 ?>;
 <? }
