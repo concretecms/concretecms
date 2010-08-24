@@ -45,6 +45,10 @@ if($scrapbookName && $scrapbookName!='userScrapbook'){
 	$globalScrapbookArea = new Area($scrapbookName); 
 	$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
 	$globalScrapbookC = $scrapbookHelper->getGlobalScrapbookPage(); 
+	$styleHeader = $globalScrapbookC->outputCustomStyleHeaderItems(true); 
+	if ($styleHeader) {
+		print '<style type="text/css">' . $styleHeader . '</style>';
+	}
 	$globalScrapbookBlocks = $globalScrapbookArea->getAreaBlocksArray( $globalScrapbookC ); 
 	if( !count($globalScrapbookBlocks) ){ ?> 
 		<div style="padding:16px 0px;"><?=t('No blocks have been added to this scrapbook.')?></div>	

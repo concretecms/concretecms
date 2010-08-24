@@ -362,7 +362,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	 * Retrieves all custom style rules that should be inserted into the header on a page, whether they are defined in areas
 	 * or blocks
 	 */
-	public function outputCustomStyleHeaderItems() {	
+	public function outputCustomStyleHeaderItems($return = false) {	
 		
 		$db = Loader::db();
 		$csrs = array();
@@ -398,8 +398,12 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		}  
 		
 		if(strlen(trim($styleHeader))) {
-			$v = View::getInstance();
-			$v->addHeaderItem("<style type=\"text/css\"> \r\n".$styleHeader.'</style>', 'VIEW');
+			if ($return == true) {
+				return $styleHeader;
+			} else {
+				$v = View::getInstance();
+				$v->addHeaderItem("<style type=\"text/css\"> \r\n".$styleHeader.'</style>', 'VIEW');
+			}
 		}
 	} 
 

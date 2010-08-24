@@ -523,28 +523,50 @@ class Block extends Object {
 	public function getBlockCustomStyleRuleID() {return $this->csrID;}
 	
 	
-	public function resetBlockCustomStyle() {
+	public function resetBlockCustomStyle($updateAll = false) {
 		$db = Loader::db();
 		$c = $this->getBlockCollectionObject();
 		$cvID = $c->getVersionID();
-		$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', array(
-			$this->getBlockCollectionID(),
-			$cvID,
-			$this->getAreaHandle(),
-			$this->bID
-		));
-		$this->refreshCache();
+		if ($updateAll) {
+			$r = $db->Execute('select cID, cvID, bID, arHandle from CollectionVersionBlockStyles where bID = ? and csrID = ?', array($this->bID, $this->csrID));
+			while ($row = $r->FetchRow()) {
+				$c1 = Page::getByID($row['cID'], $row['cvID']);
+				$b1 = Block::getByID($row['bID'], $c1, $row['arHandle']);
+				$b1->refreshCache();
+			}			
+			$db->Execute('delete from CollectionVersionBlockStyles where bID = ? and csrID = ?', array(
+				$this->bID,
+				$this->csrID
+			));
+		} else {
+			$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', array(
+				$this->getBlockCollectionID(),
+				$cvID,
+				$this->getAreaHandle(),
+				$this->bID
+			));
+			$this->refreshCache();
+		}
 	}
 	
-	public function setBlockCustomStyle($csr) {
+	public function setBlockCustomStyle($csr, $updateAll = false) {
 		$db = Loader::db();
 		$c = $this->getBlockCollectionObject();
 		$cvID = $c->getVersionID();
-		$db->Replace('CollectionVersionBlockStyles', 
-			array('cID' => $this->getBlockCollectionID(), 'cvID' => $cvID, 'arHandle' => $this->getAreaHandle(), 'bID' => $this->bID, 'csrID' => $csr->getCustomStyleRuleID()),
-			array('cID', 'cvID', 'bID', 'arHandle'), true
-		);
-		$this->refreshCache();
+		if ($updateAll) {
+			$r = $db->Execute('select cID, cvID, bID, arHandle from CollectionVersionBlocks where bID = ?', array($this->bID));
+			while ($row = $r->FetchRow()) {
+				$c1 = Page::getByID($row['cID'], $row['cvID']);
+				$b1 = Block::getByID($row['bID'], $c1, $row['arHandle']);
+				$b1->setBlockCustomStyle($csr, false);
+			}			
+		} else {
+			$db->Replace('CollectionVersionBlockStyles', 
+				array('cID' => $this->getBlockCollectionID(), 'cvID' => $cvID, 'arHandle' => $this->getAreaHandle(), 'bID' => $this->bID, 'csrID' => $csr->getCustomStyleRuleID()),
+				array('cID', 'cvID', 'bID', 'arHandle'), true
+			);
+			$this->refreshCache();
+		}
 	}
 
 	function getBlockCollectionObject() {
@@ -687,6 +709,11 @@ class Block extends Object {
 		if (($c instanceof Page && $c->isMasterCollection() && !$this->isAlias()) || $forceDelete) {
 			// forceDelete is used by the administration console
 
+			$r = $db->Execute('select cID, cvID from CollectionVersionBlocks where bID = ?', array($bID));
+			while ($row = $r->FetchRow()) {
+				Cache::delete('collection_blocks', $row['cID'] . ':' . $row['cvID']);
+			}
+
 			// this is an original. We're deleting it, and everything else having to do with it
 			$q = "delete from CollectionVersionBlocks where bID = '$bID'";
 			$r = $db->query($q);
@@ -695,7 +722,8 @@ class Block extends Object {
 			$r = $db->query($q);
 			
 			$q = "delete from CollectionVersionBlockStyles where bID = ".intval($bID);
-			$r = $db->query($q);			
+			$r = $db->query($q);
+			
 		} else {
 			$q = "delete from CollectionVersionBlocks where cID = '$cID' and (cvID = '$cvID' or cbIncludeAll=1) and bID = '$bID' and arHandle = '$arHandle'";
 			$r = $db->query($q);
@@ -981,6 +1009,7 @@ class Block extends Object {
 		if (is_object($c) && is_object($a)) {
 			Cache::delete('block', $this->getBlockID() . ':' . $c->getCollectionID() . ':' . $c->getVersionID() . ':' . $a->getAreaHandle());
 			Cache::delete('block_view_output', $c->getCollectionID() . ':' . $this->getBlockID() . ':' . $a->getAreaHandle());
+			Cache::delete('collection_blocks', $c->getCollectionID() . ':' . $c->getVersionID());
 		}
 		Cache::delete('block', $this->getBlockID());		
 	}
