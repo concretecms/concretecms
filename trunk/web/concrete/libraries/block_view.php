@@ -298,7 +298,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				ob_end_clean();					
 				print $outputContent;
 				
-				if ($view == 'view' && $this->controller->cacheBlockOutput() && ($obj instanceof Block)) {
+				if ($useCache) {
 					Cache::set('block_view_output', $obj->getBlockCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
 				}
 			}
