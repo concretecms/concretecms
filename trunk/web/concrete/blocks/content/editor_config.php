@@ -24,7 +24,7 @@ tinyMCE.init({
 		<?
 		echo Config::get('CONTENTS_TXT_EDITOR_CUSTOM_CODE').'';
 	}elseif($txtEditorMode=='ADVANCED'){ ?>
-		plugins: "inlinepopups,spellchecker,safari,advlink,table,advhr,xhtmlxtras,emotions,insertdatetime,paste,visualchars,nonbreaking,pagebreak,style",
+		plugins: "inlinepopups,spellchecker,safari,advlink,table,advhr,advimage,xhtmlxtras,emotions,insertdatetime,paste,visualchars,nonbreaking,pagebreak,style",
 		editor_selector : "ccm-advanced-editor",
 		theme : "advanced",
 		theme_advanced_buttons1 : "cut,copy,paste,pastetext,pasteword,|,undo,redo,|,styleselect,formatselect,fontsizeselect,fontselect",
@@ -58,7 +58,7 @@ tinyMCE.init({
 		theme_advanced_resizing : true				
 	<? }else{ //simple ?>
 		theme : "concrete", 
-		plugins: "paste,inlinepopups,spellchecker,safari,advlink",
+		plugins: "paste,inlinepopups,spellchecker,safari,advlink,advimage,advhr",
 		editor_selector : "ccm-advanced-editor",
 		spellchecker_languages : "+English=en"		
 	<? } ?>
