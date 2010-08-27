@@ -1538,9 +1538,8 @@ $ppWhere = '';
 				}
 			}
 
-			// If a page path already existed, keep it but mark it as non-canonical.
 			if ($row['cpcID']) {
-				$db->query("update PagePaths set ppIsCanonical = 0 where cID = {$cID}");
+				$db->query('delete from PagePaths where ppIsCanonical = 1 and cID = ?', array($row['cpcID']));	
 			}
 
 			// Check to see if a non-canonical page path already exists for the new location.
