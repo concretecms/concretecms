@@ -1,4 +1,6 @@
 <?
+header("Content-Type: text/css");
+
 $co = Request::get();
 $v = View::getInstance();
 $au = $co->getAuxiliaryData();
@@ -24,7 +26,6 @@ if (isset($au->theme) && isset($au->file)) {
 			}
 
 			header("Date: ". date("D, j M Y G:i:s", $stat) ." GMT");
-			header("Content-Type: text/css");
 			header("Expires: ". gmdate("D, j M Y H:i:s", time() + DAY) ." GMT");
 			header("Cache-Control: max-age=86400, must-revalidate"); // HTTP/1.1
 			header("Pragma: cache_asset");        // HTTP/1.0	
