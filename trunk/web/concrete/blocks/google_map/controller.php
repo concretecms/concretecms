@@ -102,8 +102,10 @@
 			$xml = $fh->getContents($url);
 			// Parse the returned XML file
 			//echo htmlspecialchars($xml); 
-			$enc = mb_detect_encoding($xml);
-			$xml = mb_convert_encoding($xml, APP_CHARSET, $enc);
+			if(function_exists('mb_detect_encoding')) {
+				$enc = mb_detect_encoding($xml);
+				$xml = mb_convert_encoding($xml, APP_CHARSET, $enc);
+			}
 			try {
 				$this->xmlObj = new SimpleXMLElement($xml);
 			} catch (Exception $e) {
