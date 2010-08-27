@@ -90,6 +90,9 @@ foreach($searchFieldAttributes as $ak) {
 		if ($sitemap_select_mode) {
 			print $form->hidden('sitemap_select_mode', $sitemap_select_mode);
 		}
+		if ($sitemap_select_callback) {
+			print $form->hidden('sitemap_select_callback', $sitemap_select_callback);
+		}
 		if ($sitemap_display_mode) {
 			print $form->hidden('sitemap_display_mode', $sitemap_display_mode);
 		}

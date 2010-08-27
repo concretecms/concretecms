@@ -758,6 +758,10 @@ ccm_selectSitemapNode = function(cID, cName) {
 	alert(cName);
 }
 
+ccm_goToSitemapNode = function(cID, cName) {
+	window.location.href= CCM_DISPATCHER_FILENAME + '?cID=' + cID;
+}
+
 ccm_fadeInMenu = function(bobj, e) {
 	var mwidth = bobj.width();
 	var mheight = bobj.height();
@@ -896,6 +900,8 @@ ccm_setupHeaderMenu = function() {
 		$(this).addClass('ccm-nav-loading');
 	});
 	$("#ccm-nav-help").dialog();
+	$("#ccm-nav-sitemap").dialog();
+	$("#ccm-nav-file-manager").dialog();
 	$("a#ccm-nav-dashboard").click(function() {
 		var dash = $(this).attr('href');
 		setTimeout(function() {

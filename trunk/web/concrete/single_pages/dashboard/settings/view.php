@@ -617,14 +617,20 @@ $(document).ready(function(){
 	<input type="checkbox" name="ui_breadcrumb" value="1"  <? if ($ui_breadcrumb == 1) { ?> checked <? } ?> /> 
 	<?=t('Display breadcrumb navigation bar on sub-pages when rolling over header menu.')?>
 	</div>
+	
+	<?
+	$sh = Loader::helper('concrete/dashboard/sitemap');
+	$fp = FilePermissions::getGlobal();
+	?>
+	
 
 	<div class="ccm-dashboard-radio">
-	<input type="checkbox" name="ui_sitemap" value="1"  <? if ($ui_sitemap == 1) { ?> checked <? } ?> /> 
+	<input type="checkbox" name="ui_sitemap" value="1" <? if ($sh->canRead()) { ?> <? if ($ui_sitemap == 1) { ?> checked <? } ?> <? } else { ?> disabled="disabled" <? } ?> /> 
 	<?=t('Include button for dashboard sitemap in header.')?>
 	</div>
 
 	<div class="ccm-dashboard-radio">
-	<input type="checkbox" name="ui_filemanager" value="1"  <? if ($ui_filemanager == 1) { ?> checked <? } ?> /> 
+	<input type="checkbox" name="ui_filemanager" value="1" <? if ($fp->canSearchFiles()) { ?> <? if ($ui_filemanager == 1) { ?> checked <? } ?> <? } else { ?> disabled="disabled" <? } ?> /> 
 	<?=t('Include button for file manager in header.')?>
 	</div>
 	
