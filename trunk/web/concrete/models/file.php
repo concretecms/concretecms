@@ -144,6 +144,7 @@ class File extends Object {
 		$db = Loader::db();
 		$db->Execute("delete from FilePermissions where fID = ?", array($this->fID));
 		$db->Execute("update Files set fOverrideSetPermissions = ? where fID = ?", array($fOverrideSetPermissions, $this->fID));
+		$this->refreshCache();
 	}
 	
 	public function setPermissions($obj, $canRead, $canSearch, $canWrite, $canAdmin) {
@@ -183,6 +184,7 @@ class File extends Object {
 			'canAdmin' => $canAdmin
 		), 
 		array('fID', 'gID', 'uID'), true);
+		$this->refreshCache();
 		
 	}
 	
