@@ -326,20 +326,6 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		return $options;
 	}
 		
-	public function validateKey($args) {
-		$e = parent::validateKey($args);
-		
-		// additional validation for select type
-		
-		$vals = $this->getSelectValuesFromPost();
-
-		if ($vals->count() < 2 && $this->post('akSelectAllowOtherValues') == 0) {
-			$e->add(t('A select attribute type must have at least two values, or must allow users to add to it.'));
-		}
-		
-		return $e;
-	}
-
 	public function saveKey($data) {
 		$ak = $this->getAttributeKey();
 		

@@ -8,7 +8,7 @@
 		protected $btInterfaceHeight = 240;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
-		protected $btCacheBlockOutputForRegisteredUsers = true;
+		protected $btCacheBlockOutputForRegisteredUsers = false;
 		protected $btTable = 'btFlashContent';
 		
 		/** 

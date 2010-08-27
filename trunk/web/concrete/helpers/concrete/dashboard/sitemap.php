@@ -277,8 +277,11 @@ class ConcreteDashboardSitemapHelper {
 					$this->html .= '<input type="text" name="submit" name="q" /> <a href="javascript:void(0)" onclick="searchSitemapNode(' . $ri['id'] . ')">';
 					$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/icons/magnifying.png" /></a></form>';
 					*/
-					
-					$this->html .= '<li><ul tree-root-state="closed" tree-root-node-id="' . $ri['id'] . '" tree-root-num-subpages="' . $ri['numSubpages'] . '" id="tree-root' . $ri['id'] . '" selected-page-id="' . $this->selectedPageID . '" sitemap-instance-id="' . $instanceID . '" sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '">';
+					// we HAVE to add another <LI> because of jQuery UI's weird drag and drop behavior on Windows
+					if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') > -1) {
+						$this->html .= '<li>';
+					}
+					$this->html .= '<ul tree-root-state="closed" tree-root-node-id="' . $ri['id'] . '" tree-root-num-subpages="' . $ri['numSubpages'] . '" id="tree-root' . $ri['id'] . '" selected-page-id="' . $this->selectedPageID . '" sitemap-instance-id="' . $instanceID . '" sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '">';
 					if (is_object($ri['subnodes']) && count($ri['subnodes']->results) > 0) {
 						$this->outputRequestHTML($instanceID, $display_mode, $select_mode, $ri['subnodes']);
 					}

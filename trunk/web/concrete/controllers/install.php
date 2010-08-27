@@ -21,6 +21,7 @@ if (!defined('DIR_FILES_UPLOADED')) {
 if (!defined('DIR_FILES_TRASH')) {
 	define('DIR_FILES_TRASH', DIR_FILES_TRASH_STANDARD);
 }
+define('DIR_FILES_INCOMING', DIR_FILES_UPLOADED . '/incoming');
 define('DIR_FILES_UPLOADED_THUMBNAILS', DIR_FILES_UPLOADED . '/thumbnails');
 define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_FILES_UPLOADED . '/thumbnails/level2');
 define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_FILES_UPLOADED . '/thumbnails/level3');
@@ -43,6 +44,7 @@ class InstallController extends Controller {
 			"DIR_FILES_UPLOADED_THUMBNAILS"=>DIR_FILES_UPLOADED_THUMBNAILS,
 			"DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2" => DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2,
 			"DIR_FILES_TRASH"=>DIR_FILES_TRASH,
+			"DIR_FILES_INCOMING" => DIR_FILES_INCOMING,
 			"DIR_FILES_CACHE"=>DIR_FILES_CACHE,
 			"DIR_FILES_CACHE_DB"=>DIR_FILES_CACHE_DB,
 			"DIR_FILES_AVATARS"=>DIR_FILES_AVATARS,
@@ -199,6 +201,9 @@ class InstallController extends Controller {
 				
 				if (!is_dir($this->installData['DIR_FILES_UPLOADED_THUMBNAILS'])) {
 					mkdir($this->installData['DIR_FILES_UPLOADED_THUMBNAILS']);
+				}
+				if (!is_dir($this->installData['DIR_FILES_INCOMING'])) {
+					mkdir($this->installData['DIR_FILES_INCOMING']);
 				}
 				if (!is_dir($this->installData['DIR_FILES_TRASH'])) {
 					mkdir($this->installData['DIR_FILES_TRASH']);
