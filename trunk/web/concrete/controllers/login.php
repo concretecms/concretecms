@@ -253,7 +253,12 @@ class LoginController extends Controller {
 			$url = $nh->getLinkToCollection($rc, true);
 			$loginData['redirectURL'] = $url;
 		}elseif( strlen($rcID) ){
-			$loginData['redirectURL'] = $rcID;
+			$rcID = trim($rcID, '/');
+			
+			$nc2 = Page::getByPath('/' . $rcID);
+			if (is_object($nc2) && !$nc2->isError()) {
+				$loginData['redirectURL'] = BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '/' . $rcID;
+			}
 		}
 		
 		/*
