@@ -49,7 +49,7 @@ $sitemapOverlayPreference = $u->config('SITEMAP_OVERLAY_DISPLAY_MODE');
 $display_mode = $sitemapOverlayPreference;
 
 if (!isset($callback)) {
-	$callback = 'ccm_selectSitemapNode';
+	$sitemap_select_callback = 'ccm_selectSitemapNode';
 }
 if ($sitemapOverlayPreference != 'explore') {
 	$sitemapOverlayPreference = 'full';
@@ -66,7 +66,7 @@ if ($sitemapOverlayPreference != 'explore') {
 </div>
 
 <div id="tree" sitemap-wrapper="1" sitemap-select-callback="<?=$callback?>" sitemap-instance-id="<?=$instance_id?>" <? if ($display_mode == 'explore') { ?>class="ccm-sitemap-explore"<? } ?>>
-	<ul id="tree-root0" tree-root-node-id="0" sitemap-select-callback="<?=$callback?>" sitemap-display-mode="<?=$display_mode?>" sitemap-select-mode="<?=$select_mode?>" sitemap-instance-id="<?=$instance_id?>">
+	<ul id="tree-root0" tree-root-node-id="0" sitemap-select-callback="<?=$sitemap_select_callback?>" sitemap-display-mode="<?=$display_mode?>" sitemap-select-mode="<?=$select_mode?>" sitemap-instance-id="<?=$instance_id?>">
 	</ul>
 </div>
 

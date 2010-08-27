@@ -312,7 +312,7 @@ selectLabel = function(e, node) {
 		selectMoveCopyTarget(node.attr('sitemap-instance-id'), node.attr('sitemap-display-mode'), node.attr('sitemap-select-mode'), destCID, origCID);
 	} else if (node.attr('sitemap-select-mode') == 'select_page') {
 		var callback = node.parents('[sitemap-wrapper=1]').attr('sitemap-select-callback');
-		if (callback == '' || typeof(callback) == 'undefined') {
+		if (callback == null || callback == '' || typeof(callback) == 'undefined') {
 			callback = 'ccm_selectSitemapNode';
 		}
 		eval(callback + '(node.attr(\'id\').substring(10), unescape(node.attr(\'tree-node-title\')));');
@@ -777,7 +777,11 @@ ccm_sitemapSetupSearchPages = function(instance_id) {
 		}
 		
 		if (node.attr('sitemap-select-mode') == 'select_page') {
-			ccm_selectSitemapNode(node.attr('cID'), unescape(node.attr('cName')));
+			var callback = node.attr('sitemap-select-callback');
+			if (callback == null || callback == '' || typeof(callback) == 'undefined') {
+				callback = 'ccm_selectSitemapNode';
+			}
+			eval(callback + '(node.attr(\'cID\'), unescape(node.attr(\'cName\')));');
 			jQuery.fn.dialog.closeTop();
 		} else if (node.attr('sitemap-select-mode') == 'move_copy_delete') {
 			var destCID = node.attr('cID');

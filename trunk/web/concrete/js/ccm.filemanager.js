@@ -78,6 +78,7 @@ ccm_activateFileManager = function(altype, searchInstance) {
 			$.get(url, function(resp) {
 				jQuery.fn.dialog.hideLoader();
 				$("div#ccm-" + searchInstance + "-overlay-wrapper").html(resp);
+				$("div#ccm-" + searchInstance + "-overlay-wrapper a.dialog-launch").dialog();
 			});
 		}
 	});
@@ -91,6 +92,7 @@ ccm_activateFileManager = function(altype, searchInstance) {
 			$.get(url, function(resp) {
 				jQuery.fn.dialog.hideLoader();
 				$("div#ccm-" + searchInstance + "-overlay-wrapper").html(resp);
+				$("div#ccm-" + searchInstance + "-overlay-wrapper a.dialog-launch").dialog();
 			});
 		}
 	});
@@ -453,7 +455,7 @@ ccm_alSetupCheckboxes = function(searchInstance) {
 	});
 	
 	// if we're not in the dashboard, add to the multiple operations select menu
-	if (ccm_alLaunchType[searchInstance] != 'DASHBOARD') {
+	if (ccm_alLaunchType[searchInstance] != 'DASHBOARD' && ccm_alLaunchType[searchInstance] != 'BROWSE') {
 		var chooseText = ccmi18n_filemanager.select;
 		$("#ccm-" + searchInstance + "-list-multiple-operations option:eq(0)").after("<option value=\"choose\">" + chooseText + "</option>");
 	}
@@ -752,7 +754,7 @@ ccm_alActivateMenu = function(obj, e) {
 		var html = '<div class="ccm-menu-tl"><div class="ccm-menu-tr"><div class="ccm-menu-t"></div></div></div>';
 		html += '<div class="ccm-menu-l"><div class="ccm-menu-r">';
 		html += '<ul>';
-		if (ccm_alLaunchType[searchInstance] != 'DASHBOARD') {
+		if (ccm_alLaunchType[searchInstance] != 'DASHBOARD' && ccm_alLaunchType[searchInstance] != 'BROWSE') {
 			// if we're launching this at the selector level, that means we've already chosen a file, and this should instead launch the library
 			var onclick = (selectedFile.length > 0) ? 'ccm_alLaunchSelectorFileManager(\'' + selector + '\')' : 'ccm_alSelectFile(' + fID + ')';
 			var chooseText = (selectedFile.length > 0) ? ccmi18n_filemanager.chooseNew : ccmi18n_filemanager.select;
@@ -762,7 +764,7 @@ ccm_alActivateMenu = function(obj, e) {
 			html += '<li><a class="ccm-icon" href="javascript:void(0)" id="menuClearFile' + fID + searchInstance + selector + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/remove.png)">'+ ccmi18n_filemanager.clear + '<\/span><\/a><\/li>';
 		}
 		
-		if (ccm_alLaunchType[searchInstance] != 'DASHBOARD' && selectedFile.length > 0) {
+		if (ccm_alLaunchType[searchInstance] != 'DASHBOARD'  && ccm_alLaunchType[searchInstance] != 'BROWSE' && selectedFile.length > 0) {
 			html += '<li class="header"></li>';	
 		}
 		if ($(obj).attr('ccm-file-manager-can-view') == '1') {

@@ -21,13 +21,17 @@ $pagination = $fileList->getPagination();
 $searchRequest = $cnt->get('searchRequest');
 $columns = $cnt->get('columns');
 
+$alType = 'false';
+if (isset($_REQUEST['disable_choose']) && $_REQUEST['disable_choose'] == 1) { 
+	$alType = 'BROWSE';
+}
 ?>
 
 <? if (!isset($_REQUEST['refreshDialog'])) { ?> 
 	<div id="ccm-<?=$searchInstance?>-overlay-wrapper">
 <? } ?>
 <div id="ccm-<?=$searchInstance?>-search-overlay">
-	<input type="hidden" name="dialogAction" value="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_dialog?ocID=<?=$_REQUEST['ocID']?>&searchInstance=<?=$searchInstance?>" />
+	<input type="hidden" name="dialogAction" value="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_dialog?ocID=<?=$_REQUEST['ocID']?>&searchInstance=<?=$searchInstance?>&disable_choose=<?=$_REQUEST['disable_choose']?>" />
 		
 		<table id="ccm-search-form-table" >
 			<tr>
@@ -61,7 +65,7 @@ $columns = $cnt->get('columns');
 <?
 print '<script type="text/javascript">
 $(function() {
-	ccm_activateFileManager(false, \'' . $searchInstance . '\');
+	ccm_activateFileManager(\'' . $alType . '\', \'' . $searchInstance . '\');
 });
 </script>';
 ?>

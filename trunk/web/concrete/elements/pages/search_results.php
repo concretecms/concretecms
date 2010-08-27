@@ -9,6 +9,11 @@ if (!isset($sitemap_select_mode)) {
 	}
 }
 
+if (!isset($sitemap_select_callback)) {
+	if (isset($_REQUEST['sitemap_select_callback'])) {
+		$sitemap_select_callback = $_REQUEST['sitemap_select_callback'];
+	}
+}
 if (isset($_REQUEST['searchInstance'])) {
 	$searchInstance = $_REQUEST['searchInstance'];
 }
@@ -37,6 +42,7 @@ if (isset($_REQUEST['searchInstance'])) {
 	$soargs = array();
 	$soargs['searchInstance'] = $searchInstance;
 	$soargs['sitemap_select_mode'] = $sitemap_select_mode;
+	$soargs['sitemap_select_callback'] = $sitemap_select_callback;
 	$soargs['searchDialog'] = $searchDialog;
 	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/pages/search_results';
 	
@@ -71,7 +77,7 @@ if (isset($_REQUEST['searchInstance'])) {
 			}
 
 			?>
-			<tr class="ccm-list-record <?=$striped?>" cName="<?=htmlentities($cobj->getCollectionName(), ENT_QUOTES, APP_CHARSET)?>" cID="<?=$cobj->getCollectionID()?>" sitemap-select-mode="<?=$sitemap_select_mode?>" sitemap-display-mode="search" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
+			<tr class="ccm-list-record <?=$striped?>" cName="<?=htmlentities($cobj->getCollectionName(), ENT_QUOTES, APP_CHARSET)?>" cID="<?=$cobj->getCollectionID()?>" sitemap-select-callback="<?=$sitemap_select_callback?>" sitemap-select-mode="<?=$sitemap_select_mode?>" sitemap-display-mode="search" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
 			<? if (!$searchDialog) { ?><td class="ccm-<?=$searchInstance?>-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td><? } ?>
 			<td><?=$cobj->getCollectionTypeName()?></td>
 			<td class="ccm-page-list-name"><div style="max-width: 150px; word-wrap: break-word"><?=$txt->highlightSearch($cobj->getCollectionName(), $keywords)?></div></td>
