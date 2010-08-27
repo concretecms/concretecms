@@ -129,6 +129,7 @@ class SearchBlockController extends BlockController {
 
 		Loader::library('database_indexed_search');
 		$ipl = new IndexedPageList();
+		$ipl->setSimpleIndexMode(true);
 		$ipl->filterByKeywords($q);
 		
 		if( is_array($_REQUEST['search_paths']) ){ 

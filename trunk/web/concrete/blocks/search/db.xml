@@ -12,6 +12,6 @@
 		<field name="baseSearchPath" type="C" size="255">
 		</field>	
 		<field name="resultsURL" type="C" size="255">
-		</field>			
+		</field>
 	</table>
 </schema>

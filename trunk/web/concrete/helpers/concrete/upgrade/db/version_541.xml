@@ -34,7 +34,7 @@
       <col>fOverrideSetPermissions</col>
     </index>
   </table>
-
+  
   <table name="FileSetFiles">
     <field name="fsfID" type="I" size="10">
       <KEY/>
