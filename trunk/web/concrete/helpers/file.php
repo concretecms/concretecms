@@ -202,8 +202,8 @@ class FileHelper {
 	 * Cleans up a filename and returns the cleaned up version
 	 */
 	public function sanitize($file) {
-		//return preg_replace(array("/[^0-9A-Za-z-.]/","/[\s]/"),"", $file);
-		$file = preg_replace("/[^0-9A-Z_a-z-.\s]/","", $file);
+		// $file = preg_replace("/[^0-9A-Z_a-z-.\s]/","", $file); // pre 5.4.1 allowed spaces
+		$file = preg_replace(array("/[\s]/","/[^0-9A-Z_a-z-.]/"),array("_",""), $file);
 		return trim($file);
 	}
 	

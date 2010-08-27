@@ -20,7 +20,7 @@ if($_REQUEST['isGlobal'] && ($_REQUEST['btask']=='edit' || $_REQUEST['btask'] ==
 
 $bp = new Permissions($b);
 if (!$bp->canWrite()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 } 
 
 if ($_REQUEST['btask'] != 'view' && $_REQUEST['btask'] != 'view_edit_mode') { 
