@@ -90,7 +90,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		 */
 		public function getStyleSheet($stylesheet) {
 			if ($this->isPreview()) {
-				return REL_DIR_FILES_TOOLS . '/css/' . DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . $stylesheet . '?mode=preview';
+				return REL_DIR_FILES_TOOLS . '/css/' . DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . $stylesheet . '?mode=preview&time=' . time();
 			} else {
 				return REL_DIR_FILES_TOOLS . '/css/' . DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . $stylesheet;
 			}

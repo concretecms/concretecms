@@ -1,5 +1,4 @@
 <?
-header("Content-Type: text/css");
 
 $co = Request::get();
 $v = View::getInstance();
@@ -12,6 +11,7 @@ if (isset($au->theme) && isset($au->file)) {
 			if ($_REQUEST['mode'] == 'preview') {
 				$val = Cache::get('preview_theme_style', $pt->getThemeID(), false, true);
 				if (is_array($val)) {
+					header("Content-Type: text/css");
 					$values = $pt->mergeStylesFromPost($val);
 					$pt->outputStyleSheet($au->file, $values);
 					exit;
@@ -24,7 +24,7 @@ if (isset($au->theme) && isset($au->file)) {
 				$style = $pt->parseStyleSheet($au->file);
 				Cache::set(str_replace('-','_', $au->theme), $au->file, $style, 10800, true);
 			}
-
+			header("Content-Type: text/css");
 			header("Date: ". date("D, j M Y G:i:s", $stat) ." GMT");
 			header("Expires: ". gmdate("D, j M Y H:i:s", time() + DAY) ." GMT");
 			header("Cache-Control: max-age=86400, must-revalidate"); // HTTP/1.1
