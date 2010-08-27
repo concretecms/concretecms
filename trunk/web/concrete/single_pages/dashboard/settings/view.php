@@ -615,10 +615,17 @@ $(document).ready(function(){
 	
 	<div class="ccm-dashboard-radio">
 	<input type="checkbox" name="ui_breadcrumb" value="1"  <? if ($ui_breadcrumb == 1) { ?> checked <? } ?> /> 
-	<?=t('Display breadcrumb navigation bar.')?>
+	<?=t('Display breadcrumb navigation bar on sub-pages when rolling over header menu.')?>
 	</div>
-	<div class="ccm-dashboard-description">
-	<?=t('When enabled, rolling your mouse over the editing bar will show the path to the current page.')?>
+
+	<div class="ccm-dashboard-radio">
+	<input type="checkbox" name="ui_sitemap" value="1"  <? if ($ui_sitemap == 1) { ?> checked <? } ?> /> 
+	<?=t('Include button for dashboard sitemap in header.')?>
+	</div>
+
+	<div class="ccm-dashboard-radio">
+	<input type="checkbox" name="ui_filemanager" value="1"  <? if ($ui_filemanager == 1) { ?> checked <? } ?> /> 
+	<?=t('Include button for file manager in header.')?>
 	</div>
 	
 	<?

@@ -48,6 +48,8 @@ class DashboardSettingsController extends Controller {
 		$this->set('marketplace_enabled_in_config', Config::get('ENABLE_MARKETPLACE_SUPPORT') );		
 		$this->set('site', SITE);
 		$this->set('ui_breadcrumb', $u->config('UI_BREADCRUMB'));
+		$this->set('ui_filemanager', $u->config('UI_FILEMANAGER'));
+		$this->set('ui_sitemap', $u->config('UI_SITEMAP'));
 		$this->set('api_key_picnik', Config::get('API_KEY_PICNIK'));
 		
 		$txtEditorMode = Config::get('CONTENTS_TXT_EDITOR_MODE');
@@ -392,6 +394,8 @@ class DashboardSettingsController extends Controller {
 			if ($this->isPost()) {
 				$u = new User();
 				$u->saveConfig('UI_BREADCRUMB', $this->post('ui_breadcrumb'));
+				$u->saveConfig('UI_FILEMANAGER', $this->post('ui_filemanager'));
+				$u->saveConfig('UI_SITEMAP', $this->post('ui_sitemap'));
 				$this->redirect('/dashboard/settings','editing_preferences_saved');
 			}
 		} else {
