@@ -91,7 +91,7 @@ class FileImporter {
 		if ($path == false) {
 			$path = $fi->mapSystemPath($prefix, $filename, true);
 		}
-		return copy($pointer, $path);
+		return @copy($pointer, $path);
 	}
 	
 	/** 

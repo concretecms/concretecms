@@ -93,13 +93,13 @@
 				
 				if ($createDirectories) { 
 					if (!is_dir($base . '/' . $d1)) { 
-						mkdir($base . '/' . $d1, 0777, TRUE); 
+						@mkdir($base . '/' . $d1, 0777, TRUE); 
 					} 
 					if (!is_dir($base . '/' . $d1 . '/' . $d2)) { 
-						mkdir($base . '/' . $d1 . '/' . $d2, 0777, TRUE); 
+						@mkdir($base . '/' . $d1 . '/' . $d2, 0777, TRUE); 
 					} 
 					if (!is_dir($base . '/' . $d1 . '/' . $d2 . '/' . $d3)) { 
-						mkdir($base . '/' . $d1 . '/' . $d2 . '/' . $d3, 0777, TRUE); 
+						@mkdir($base . '/' . $d1 . '/' . $d2 . '/' . $d3, 0777, TRUE); 
 					} 
 				}
 				
