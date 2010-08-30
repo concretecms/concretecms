@@ -14,7 +14,7 @@ if (!defined('ENABLE_CMS_FOR_DIRECTORY')) {
 # These items should be set by site.php in config/ but if they're not that means we're installing and we need something there
 /* https patch applied here */
 if (!defined('BASE_URL')) { 
-	if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'])) {
+	if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
 		define('BASE_URL', 'https://' . $_SERVER['HTTP_HOST']);
 	} else {
 		define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST']);
