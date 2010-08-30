@@ -126,11 +126,11 @@ class SearchBlockController extends BlockController {
 	
 	function do_search() {
 		$q = $_REQUEST['query'];
-
+		$_q = preg_replace('/[^A-Za-z\']/i', '', $_REQUEST['query']);
 		Loader::library('database_indexed_search');
 		$ipl = new IndexedPageList();
 		$ipl->setSimpleIndexMode(true);
-		$ipl->filterByKeywords($q);
+		$ipl->filterByKeywords($_q);
 		
 		if( is_array($_REQUEST['search_paths']) ){ 
 			
