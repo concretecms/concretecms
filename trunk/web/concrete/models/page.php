@@ -1266,7 +1266,7 @@ $ppWhere = '';
 				$qp = "insert into PagePermissions (cID, gID, uID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?, ?)";
 				$db->query($qp, $vp);
 			}
-			$q = "select cID, gID, ctID from PagePermissionPageTypes where cID = '{$this->cID}'";
+			$q = "select cID, gID, uID, ctID from PagePermissionPageTypes where cID = '{$this->cID}'";
 			$r = $db->query($q);
 			while ($row = $r->fetchRow()) {
 				$vp = array($newCID, $row['gID'], $row['uID'], $row['ctID']);
