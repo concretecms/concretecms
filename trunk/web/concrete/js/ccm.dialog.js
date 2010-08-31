@@ -157,7 +157,7 @@ jQuery.fn.dialog.load = function(fnd) {
 		}
 		
 		//this encodeURI may lead to double encoding problems, especially ampersands & spaces. recommend removal - Tony   
-		var durl = encodeURI(fnd.href) + qsi + 'random=' + (new Date().getTime());
+		var durl = fnd.href + qsi + 'random=' + (new Date().getTime());
 		
 		$.ajax({
 			type: 'GET',
