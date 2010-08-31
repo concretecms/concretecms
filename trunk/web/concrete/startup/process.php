@@ -30,8 +30,10 @@
 	$token = '&' . $valt->getParameter();
 	
 	// If the user has checked out something for editing, we'll increment the lastedit variable within the database
-	$u = new User();
-	$u->refreshCollectionEdit($c);
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		$u = new User();
+		$u->refreshCollectionEdit($c);
+	}
 	if ($_REQUEST['btask'] && $valt->validate()) {
 	
 		// these are tasks dealing with blocks (moving up, down, removing)
@@ -440,7 +442,13 @@
 				break;
 			case 'check-in':
 				if ($cp->canWrite() || $cp->canApproveCollection()) {
-					// checking out the collection for editing
+
+					if ($_REQUEST['approve'] == 'APPROVE' && $cp->canApproveCollection()) {
+						$u->unloadCollectionEdit(false);
+					} else {
+						$u->unloadCollectionEdit();
+					}
+
 					$v = CollectionVersion::get($c, "RECENT");
 					
 					$v->setComment($_REQUEST['comments']);
@@ -453,8 +461,6 @@
 					} else {
 						$v->removeNewStatus();
 					}
-					$u = new User();
-					$u->unloadCollectionEdit($c);
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . $step);
 					exit;
 				}
@@ -731,7 +737,7 @@
 					$nc = Page::getByID($_REQUEST['cParentID']);
 					$ncp = new Permissions($nc);
 
-					User::unloadCollectionEdit($c);
+					User::unloadCollectionEdit();
 					if ($ncp->canAddSubCollection($ct) && $c->canMoveCopyTo($nc)) {
 						$ncID = $c->addCollectionAlias($nc);						
 						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $ncID . $step);
@@ -839,7 +845,7 @@
 						$v = CollectionVersion::get($c, "RECENT");
 						$v->approve();
 						$u = new User();
-						$u->unloadCollectionEdit($c);
+						$u->unloadCollectionEdit();
 						$obj->name = $v->getVersionName();
 					}
 					
@@ -889,7 +895,7 @@
 
 				if ($_POST['rel'] == 'SITEMAP') { 
 					$u = new User();
-					$u->unloadCollectionEdit($c);
+					$u->unloadCollectionEdit();
 					$obj->rel = 'SITEMAP';
 				} else {
 					//header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
@@ -929,7 +935,7 @@
 							$v->approve();
 						}
 						$u = new User();
-						$u->unloadCollectionEdit($nc);
+						$u->unloadCollectionEdit();
 
 						if ($_POST['mode'] == 'explore' ) {
 							header('Location: ' . BASE_URL . View::url('/dashboard/sitemap/explore', $c->getCollectionID()));
