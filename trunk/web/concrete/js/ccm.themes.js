@@ -14,7 +14,7 @@ function ccm_previewMarketplaceTheme(cID, themeCID,themeName,themeHandle){
 	
 	$.fn.dialog.open({
 		title: themeName,
-		href: CCM_TOOLS_PATH + "/themes/preview?themeCID="+themeCID+'&previewCID='+cID+'&themeHandle='+themeHandle+'&ctID='+ctID,
+		href: CCM_TOOLS_PATH + "/themes/preview?themeCID="+themeCID+'&previewCID='+cID+'&themeHandle='+encodeURIComponent(themeHandle)+'&ctID='+ctID,
 		width: '85%',
 		modal: false,
 		height: '75%' 
