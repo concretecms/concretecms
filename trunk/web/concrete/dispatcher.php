@@ -236,6 +236,7 @@
 
 		## Record the view
 		if (STATISTICS_TRACK_PAGE_VIEWS == 1) {
+			$u = new User();
 			$u->recordView($c);
 		}
 		

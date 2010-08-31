@@ -623,6 +623,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if (is_object($vo)) {
 				$vo->refreshCache();
 			}
+			$db = Loader::db();
+			$areas = $db->GetCol('select arHandle from Areas where cID = ?', array($this->getCollectionID()));
+			foreach($areas as $arHandle) {
+				Cache::delete('area', $this->getCollectionID() . ':' . $arHandle);
+			}
 		}
 		
 		public function getBlocks($arHandle = false) {

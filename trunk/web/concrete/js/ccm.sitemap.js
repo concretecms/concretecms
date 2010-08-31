@@ -332,7 +332,7 @@ selectLabel = function(e, node) {
 }
 
 ccmSitemapHighlightPageLabel = function(cID, name) {
-	var sp = $("#tree-node" + cID + " span");
+	var sp = $("#tree-label" + cID + " span");
 
 	if (sp.length == 0) {
 		var sp = $("tr.ccm-list-record[cID=" + cID + "]");
