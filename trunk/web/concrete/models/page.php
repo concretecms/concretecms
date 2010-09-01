@@ -1067,6 +1067,7 @@ $ppWhere = '';
 		if (!is_array($args)) {
 			$args = $_POST; // legacy support
 		}
+		
 		if ($args['cInheritPermissionsFrom'] == 'OVERRIDE') {
 			// we're hitting manual override, which means we need to do permissions updates
 			if ($this->getPermissionsCollectionID() != $this->cID) {
@@ -1096,6 +1097,9 @@ $ppWhere = '';
 			$q = "update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?";
 			$r = $db->query($q, $v);
 
+			$this->cInheritPermissionsFrom = $args['cInheritPermissionsFrom'];
+			$this->cInheritPermissionsFromCID = $cpID;
+
 			// we do this because we may be going from a manual override to inheritance, and we don't
 			// want any orphaned groups
 			$this->clearGroups();
@@ -1105,6 +1109,15 @@ $ppWhere = '';
 
 		$v = array($cOverrideTemplatePermissions, $this->cID);
 		$q = "update Pages set cOverrideTemplatePermissions = ? where cID = ?";
+
+		$this->cOverrideTemplatePermissions = $cOverrideTemplatePermissions;
+		
+		$arHandles = $db->GetCol('select arHandle from Areas where cID = ?', $this->getCollectionID());
+		foreach($arHandles as $arHandle) {
+			$a = Area::getOrCreate($this, $arHandle);
+			$a->rescanAreaPermissionsChain();
+		}
+
 		$db->query($q, $v);
 		parent::refreshCache();
 	}
