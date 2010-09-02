@@ -271,9 +271,12 @@ jQuery.fn.dialog.position = function(fnd) {
 	fnd.modifiedHeight = parseInt(fnd.height)  + 40;
 	fnd.contentWidth = fnd.modifiedWidth - 44;
 	
-	if (!ccm_dialogCanTransparent) {
+	if (ccm_dialogSkinMode == 'basic') {
 		fnd.contentWidth = fnd.contentWidth + 24;
+	} else if (ccm_dialogSkinMode == 'v2') {
+		fnd.contentWidth = fnd.contentWidth + 26;
 	}
+	
 	fnd.contentHeight = fnd.modifiedHeight;
 	
 	$("#ccm-dialog-window" + fnd.n).css({marginLeft: '-' + parseInt((fnd.modifiedWidth / 2),10) + 'px', width: fnd.modifiedWidth + 'px'});
@@ -339,11 +342,14 @@ jQuery.fn.dialog.overlay = function(fnd) {
 		sz = jQuery.fn.dialog.startZindex + fnd.n;
 	}
 	
-	if (ccm_dialogCanTransparent) {
+	if (ccm_dialogSkinMode == 'v2') {
+		var transparentClass = 'ccm-dialog-window-transparent-v2';
+	} else if (ccm_dialogSkinMode == 'transparent') {
 		var transparentClass = 'ccm-dialog-window-transparent';
 	} else {
 		var transparentClass = 'ccm-dialog-window-no-transparent';
 	}
+	
 	fnd.realZ = sz;
 	$("body").append("<div class=\"" + fnd.wrapperClass + " " + transparentClass + " \"><div class='ccm-dialog-window' id='ccm-dialog-window" + fnd.n + "' style='display: none; z-index: " + sz + "'></div>");
 
@@ -380,12 +386,16 @@ jQuery.fn.dialog.loaderImage = CCM_IMAGE_PATH + "/throbber_white_32.gif";
 var ccm_initialHeaderDeactivated;
 var ccm_initialOverlay;
 var ccm_dialogCanDrag = (typeof($.fn.draggable) == 'function' && (!jQuery.browser.safari));
-var ccm_dialogCanTransparent = true;
-if (jQuery.browser.msie && jQuery.browser.version.substring(0, 1) == 6) {
-	var ccm_dialogCanTransparent = false;
-}
-var imgLoader;
+var ccm_dialogSkinMode = 'v2';
 
+if (jQuery.browser.msie) {
+	var ccm_dialogSkinMode = 'transparent';
+	if (jQuery.browser.version.substring(0, 1) == 6) {
+		var ccm_dialogSkinMode = 'basic';
+	}
+}
+
+var imgLoader;
 var ccmAlert = {  
     notice : function(title, message, onCloseFn) {
         $.fn.dialog.open({
@@ -441,21 +451,22 @@ $(document).ready(function(){
 	});
 
 	// preload assets for the dialog window
-	i1 = new Image();// preload image
-	i1.src = CCM_IMAGE_PATH + "/bg_dialog_br.png";
-	i2 = new Image();// preload image
-	i2.src = CCM_IMAGE_PATH + "/bg_dialog_b.png";
-	i3 = new Image();// preload image
-	i3.src = CCM_IMAGE_PATH + "/bg_dialog_bl.png";
-	i4 = new Image();// preload image
-	i4.src = CCM_IMAGE_PATH + "/bg_dialog_r.png";
-	i5 = new Image();// preload image
-	i5.src = CCM_IMAGE_PATH + "/bg_dialog_l.png";
-	i6 = new Image();// preload image
-	i6.src = CCM_IMAGE_PATH + "/bg_dialog_tr.png";
-	i7 = new Image();// preload image
-	i7.src = CCM_IMAGE_PATH + "/bg_dialog_t.png";
-	i8 = new Image();// preload image
-	i8.src = CCM_IMAGE_PATH + "/bg_dialog_tl.png";
-	
+	if (ccm_dialogSkinMode == 'transparent') {
+		i1 = new Image();// preload image
+		i1.src = CCM_IMAGE_PATH + "/bg_dialog_br.png";
+		i2 = new Image();// preload image
+		i2.src = CCM_IMAGE_PATH + "/bg_dialog_b.png";
+		i3 = new Image();// preload image
+		i3.src = CCM_IMAGE_PATH + "/bg_dialog_bl.png";
+		i4 = new Image();// preload image
+		i4.src = CCM_IMAGE_PATH + "/bg_dialog_r.png";
+		i5 = new Image();// preload image
+		i5.src = CCM_IMAGE_PATH + "/bg_dialog_l.png";
+		i6 = new Image();// preload image
+		i6.src = CCM_IMAGE_PATH + "/bg_dialog_tr.png";
+		i7 = new Image();// preload image
+		i7.src = CCM_IMAGE_PATH + "/bg_dialog_t.png";
+		i8 = new Image();// preload image
+		i8.src = CCM_IMAGE_PATH + "/bg_dialog_tl.png";
+	}
 });

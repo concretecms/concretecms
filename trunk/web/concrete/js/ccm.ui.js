@@ -988,6 +988,7 @@ ccm_t = function(key) {
 }
 
 $(function() {
+	/*
 	
 	b1 = new Image();// preload image
 	b1.src = CCM_IMAGE_PATH + "/button_l.png";
@@ -1019,7 +1020,9 @@ $(function() {
 	m7.src = CCM_IMAGE_PATH + "/bg_menu_t.png";
 	m8 = new Image();// preload image
 	m8.src = CCM_IMAGE_PATH + "/bg_menu_lt.png";
-
+		
+	*/
+	
 	if ($.browser.msie) {
 		ccm_animEffects = false;
 	} else {
