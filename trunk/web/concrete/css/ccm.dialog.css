@@ -24,6 +24,7 @@
 
 .ccm-dialog-window-no-transparent .ccm-dialog-window {border: 2px solid #333}
 .ccm-dialog-window-no-transparent .ccm-dialog-title-bar a.ccm-dialog-close {right: 10px; top: 10px}
+.ccm-dialog-window-transparent-v2 .ccm-dialog-title-bar a.ccm-dialog-close {right: 10px; top: 8px}
 
 .ccm-dialog-title-bar a.ccm-dialog-close {
 	position: absolute;
@@ -46,7 +47,7 @@
 	color: #666;
 	position: relative;
 	font-weight: bold !important;
-	font-family: "Lucida Grande", Arial, Helvetica;
+	font-family: "Helvetica Neue", Arial, Helvetica;
 }
 
 
@@ -65,13 +66,17 @@
 .ccm-dialog-window-transparent .ccm-dialog-title-bar-l {background: transparent url(../images/bg_dialog_tl.png) no-repeat scroll 0 0; padding-left: 22px;}
 .ccm-dialog-window-transparent .ccm-dialog-title-bar-r {background: transparent url(../images/bg_dialog_tr.png) no-repeat scroll 100% 0; padding-right: 22px}
 
-.ccm-dialog-window-transparent .ccm-dialog-title-bar {
+
+.ccm-dialog-window-transparent .ccm-dialog-title-bar, .ccm-dialog-window-transparent-v2 .ccm-dialog-title-bar {
 	background:#eee url(../images/bg_dialog_t.png) right repeat-x;
 	height:30px;
 	color: #666666;
 	font-weight: bold;
 	font-size: 12px;
 }
+
+.ccm-dialog-window-transparent-v2 .ccm-dialog-title-bar {border-top-right-radius: 10px;	border-top-left-radius: 10px; -moz-border-radius-topright: 10px; -moz-border-radius-topleft: 10px; -webkit-border-top-right-radius: 10px; -webkit-border-top-left-radius: 10px; padding-left: 10px; -webkit-box-shadow: 0px -8px 8px rgba(0,0,0,0.3), -8px 0px 8px rgba(0,0,0,0.3), 8px 0px 8px rgba(0,0,0,0.3); -moz-box-shadow: 0px -8px 8px rgba(0,0,0,0.3), -8px 0px 8px rgba(0,0,0,0.3), 8px 0px 8px rgba(0,0,0,0.3); box-shadow: 0px -8px 8px rgba(0,0,0,0.3), -8px 0px 8px rgba(0,0,0,0.3), 8px 0px 8px rgba(0,0,0,0.3)}
+.ccm-dialog-window-transparent-v2 .ccm-dialog-content {padding-left: 10px;  padding-bottom: 32px; width: 100%; -webkit-border-bottom-left-radius: 10px; -webkit-border-bottom-right-radius: 10px; -moz-border-radius-bottomleft: 10px; -moz-border-radius-bottomright: 10px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; -webkit-box-shadow: 8px 0px 8px rgba(0,0,0,0.3), 0px 8px 8px rgba(0,0,0,0.3); -moz-box-shadow: 8px 0px 8px rgba(0,0,0,0.3), 0px 8px 8px rgba(0,0,0,0.3); box-shadow: 8px 0px 8px rgba(0,0,0,0.3), 0px 8px 8px rgba(0,0,0,0.3)}
 
 .ccm-dialog-window-transparent .ccm-dialog-content-b {background: transparent url(../images/bg_dialog_b.png) repeat-x scroll 0 0; height: 27px}
 .ccm-dialog-window-transparent .ccm-dialog-content-bl {background: transparent url(../images/bg_dialog_bl.png) no-repeat scroll 0 100%; padding-left: 22px;}
@@ -95,7 +100,7 @@
 	text-align:left;
 	background-color: #fafafa;
 	line-height:1.4em;
-	font-family: "Lucida Grande", Arial, Helvetica;
+	font-family: "Helvetica Neue", Arial, Helvetica;
 	font-size: 12px;
 }
 

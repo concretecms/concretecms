@@ -1,3 +1,4 @@
+/*
 
 div.ccm-menu-l {background: transparent url(../images/bg_menu_l.png) repeat-y scroll 0 0; width:100%; height:auto; }
 div.ccm-menu-r {background: transparent url(../images/bg_menu_r.png) repeat-y scroll 100% 0; }
@@ -10,12 +11,21 @@ div.ccm-menu-t {background: transparent url(../images/bg_menu_t.png) repeat-x 0 
 div.ccm-menu-tl {background: transparent url(../images/bg_menu_lt.png) no-repeat 0 0; }
 div.ccm-menu-tr {background: transparent url(../images/bg_menu_rt.png) no-repeat 100% 0;}
 
+*/
+
+
 div.ccm-menu {
 	z-index: 500;
 	font-family: "Lucida Grande", Arial, Helvetica;
 	-khtml-user-select: none;
 	-moz-user-select: none;
 	width:180px;
+	background-color: #ededed;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px;
+	margin: 0px 0px 0px 10px;
+	-webkit-box-shadow: 4px 4px 10px rgba(0,0,0,0.2), -4px 0px 10px rgba(0,0,0,0.2); -moz-box-shadow: 4px 4px 10px rgba(0,0,0,0.2), -4px 0px 10px rgba(0,0,0,0.2); box-shadow: 4px 4px 10px rgba(0,0,0,0.2), -4px 0px 10px rgba(0,0,0,0.2);
+
 }
 
 div.ccm-menu * {
@@ -41,8 +51,8 @@ div.ccm-menu a:hover {
 
 div.ccm-menu li.header {font-size: 0px; height: 1px; background-color: #afafaf !important; line-height: 1px !important; margin: 4px 0px 4px 0px !important; border: 0px !important}
 
-div.ccm-menu ul {margin: 0px 12px 0px 12px; padding: 0px !important; background-color: #ededed}
-div.ccm-menu ul li {line-height: 16px; margin: 0px !important; background-color: #ededed !important; display: block; text-align: left; list-style-type: none; font-size: 10px; padding: 0px !important}
+div.ccm-menu ul {margin: 12px 0px 12px 0px; padding: 0px !important; }
+div.ccm-menu ul li {line-height: 16px; margin: 0px !important; display: block; text-align: left; list-style-type: none; font-size: 10px; padding: 0px !important}
 div.ccm-menu ul li a.ccm-icon span {display: block; background-color: transparent; background-repeat: no-repeat; background-position: 9px 4px; padding: 3px 10px 3px 30px !important;}
 
 div.ccm-page-type-icon {white-space: nowrap; width: auto; float: left; margin-right: 5px; min-width: 130px}
