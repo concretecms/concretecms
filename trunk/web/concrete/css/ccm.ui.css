@@ -110,7 +110,10 @@ div#ccm-page-detail {
 	width: 100%;
 	background: transparent;
 	display: none;
+	
 }
+
+/*
  
 div#ccm-page-detail-b {background: transparent url(../images/bg_pane_b.png) repeat-x 0 100%; height: 53px; margin-left: 28px; margin-right: 28px}
 div#ccm-page-detail-l {background: transparent url(../images/bg_pane_l.png) repeat-y scroll 0 0;}
@@ -118,7 +121,9 @@ div#ccm-page-detail-r {background: transparent url(../images/bg_pane_r.png) repe
 div#ccm-page-detail-bl {background: transparent url(../images/bg_pane_lb.png) no-repeat 0 100%; }
 div#ccm-page-detail-br {background: transparent url(../images/bg_pane_rb.png) no-repeat 100% 100%;}
 
-div#ccm-page-detail-content {font-family: "Helvetica Neue", Arial, Helvetica; background: #f2f2f2; position: relative; margin-left: 28px; margin-right: 28px; padding-top: 0; }
+*/
+div#ccm-page-detail-r {-webkit-box-shadow: 0px 8px 8px rgba(0,0,0,0.4); -moz-box-shadow: 0px 10px 10px rgba(0,0,0,0.4); box-shadow: 0px 10px 10px rgba(0,0,0,0.4); border-left: 5px solid #f3f3f3; border-bottom: 5px solid #f3f3f3; border-right: 5px solid #f3f3f3;  -webkit-border-bottom-left-radius: 20px; -webkit-border-bottom-right-radius: 20px;-moz-border-radius-bottomleft: 20px; -moz-border-radius-bottomright: 20px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; font-family: "Helvetica Neue", Arial, Helvetica; background: #f2f2f2; position: relative; margin-left: 10px; margin-right: 10px; padding-top: 0; }
+div#ccm-page-detail-content {border-left: 1px solid #c7c7c7; border-bottom: 1px solid #c7c7c7; border-right: 1px solid #c7c7c7;-webkit-border-bottom-left-radius: 20px; -webkit-border-bottom-right-radius: 20px;-moz-border-radius-bottomleft: 20px; -moz-border-radius-bottomright: 20px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; padding-bottom: 20px}
 div#ccm-page-detail-content div {font-family: "Helvetica Neue", Arial, Helvetica;}
 
 div.ccm-block-arrange, div.ccm-block {

@@ -154,8 +154,15 @@
 			}
 		}
 		
-		$vl = new VersionList($c);
+		$page = $_REQUEST['ccm_paging_p'];
+		if (!$page) {
+			$page = 1;
+		}
+		$vl = new VersionList($c, 20, $page);
+		$total = $vl->getVersionListCount();
 		$vArray = $vl->getVersionListArray();
+		$ph = Loader::helper('pagination');
+		$ph->init($page, $total, '', 20, 'ccm_goToVersionPage');
 	}
 
 
@@ -282,12 +289,25 @@ $("input[name=vCompare]").click(function() {
 $("input[name=vApprove]").click(function() {
 	
 	var cvID = $("input[type=checkbox]:checked").get(0).value;
-//	ccm_showTopbarLoader();
-	$("#ccm-versions-container").load(CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1&cID=<?=$c->getCollectionID()?>&cvID=' + cvID + '&vtask=approve<?=$token?>' );
+	jQuery.fn.dialog.showLoader();
+	$("#ccm-versions-container").load(CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1&cID=<?=$c->getCollectionID()?>&cvID=' + cvID + '&vtask=approve<?=$token?>', function() {
+		jQuery.fn.dialog.hideLoader();
+	});
 	
 });
 
+ccm_goToVersionPage = function(p, url) {
+	jQuery.fn.dialog.showLoader();
+	var dest = CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1&cID=<?=$c->getCollectionID()?>&ccm_paging_p=' + p;
+	$("#ccm-versions-container").load(dest, function() {
+		jQuery.fn.dialog.hideLoader();
+	});
+	return false;
+}
+
 $("input[name=vRemove]").click(function() {
+
+	jQuery.fn.dialog.showLoader();
 	
 	var cvIDs = $("input[type=checkbox]:checked");
 	var cvIDStr = '';
@@ -308,7 +328,9 @@ $("input[name=vRemove]").click(function() {
 		'cvIDs': cvIDStr
 	}
 	
-	$("#ccm-versions-container").load(CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1', params);
+	$("#ccm-versions-container").load(CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1', params, function() {
+		jQuery.fn.dialog.hideLoader();
+	});
 	
 });
 
@@ -387,6 +409,13 @@ $("input[name=vRemove]").click(function() {
 	</tr>	
 	<? } ?>
 	</table>
+	<? if ($total > 20 ) { ?>
+		<div class="ccm-pagination" style="margin-top: 8px">
+			<span class="ccm-page-left"><?=$ph->getPrevious()?></span>
+			<span class="ccm-page-right"><?=$ph->getNext()?></span>
+			<?=$ph->getPages()?>
+		</div>
+	<? } ?>
 	<br>
 	
 	<h2><?=t('Pending Actions')?></h2>
