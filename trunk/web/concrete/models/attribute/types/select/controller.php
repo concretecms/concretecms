@@ -383,7 +383,8 @@ class SelectAttributeTypeOption extends Object {
 
 	public function __construct($ID, $value, $displayOrder) {
 		$this->ID = $ID;
-		$this->value = $value;
+		$txt = Loader::helper('text');
+		$this->value = $txt->entities($value);
 		$this->displayOrder = $displayOrder;	
 	}
 	
