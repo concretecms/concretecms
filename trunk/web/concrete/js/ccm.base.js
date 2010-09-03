@@ -26,29 +26,15 @@ ccm_deactivateSite = function(onDone) {
 		$(this).css('visibility', 'hidden');
 	});
 	
-	if (ccm_animEffects) {				
-		$("#ccm-overlay").fadeIn(60, function() {
-			ccm_siteActivated = false;
-			if (typeof onDone == 'function') {
-				onDone();
-			}
-		});
-	
-	} else {
-		$("#ccm-overlay").show();
-		ccm_siteActivated = false;
-		if (typeof onDone == 'function') {
-			onDone();
-		}
+	$("#ccm-overlay").show();
+	ccm_siteActivated = false;
+	if (typeof onDone == 'function') {
+		onDone();
 	}
 }
 
 ccm_activateSite = function() {
-	if (ccm_animEffects) {
-		$("#ccm-overlay").fadeOut(60);
-	} else {
-		$("#ccm-overlay").hide();
-	}
+	$("#ccm-overlay").hide();
 
 	$("embed,object").each(function() {
 		$(this).css('visibility', $(this).attr('ccm-style-old-visibility'));
