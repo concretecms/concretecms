@@ -30,12 +30,14 @@ var ccmAttributesHelper={
 		}else{
 			$('#akSelectValueDisplay_'+val).css('display','block');
 			$('#akSelectValueEdit_'+val).css('display','none');
-			$('#akSelectValueField_'+val).val( $('#akSelectValueStatic_'+val).html() )
+			var txtValue =  $('#akSelectValueStatic_'+val).html();
+			$('#akSelectValueField_'+val).val( $('<div/>').html(txtValue).text());
 		}
 	},
 	
 	changeValue:function(val){ 
-		$('#akSelectValueStatic_'+val).html( $('#akSelectValueField_'+val).val() );
+		var txtValue = $('<div/>').text($('#akSelectValueField_'+val).val()).html();		
+		$('#akSelectValueStatic_'+val).html( txtValue );
 		this.editValue(val)
 	},
 	
@@ -48,7 +50,7 @@ var ccmAttributesHelper={
 	
 	saveNewOption:function(){
 		var newValF=$('#akSelectValueFieldNew');
-		var val=newValF.val();
+		var val = $('<div/>').text(newValF.val()).html();
 		if(val=='') {
 			return;
 		}

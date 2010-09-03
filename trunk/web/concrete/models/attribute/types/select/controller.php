@@ -218,7 +218,8 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		foreach($options as $id) {
 			if ($id > 0) {
 				$opt = SelectAttributeTypeOption::getByID($id);
-				$optionText[] = $opt->getSelectAttributeOptionValue();
+				$optionText[] = $opt->getSelectAttributeOptionValue(true);
+				$optionQuery[] = $opt->getSelectAttributeOptionValue(false);
 			}
 		}
 		if (count($optionText) == 0) {
@@ -226,10 +227,10 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		}
 		
 		$i = 0;
-		foreach($optionText as $val) {
+		foreach($optionQuery as $val) {
 			$val = $db->quote('%||' . $val . '||%');
 			$multiString .= 'REPLACE(' . $tbl . '.ak_' . $this->attributeKey->getAttributeKeyHandle() . ', "\n", "||") like ' . $val . ' ';
-			if (($i + 1) < count($optionText)) {
+			if (($i + 1) < count($optionQuery)) {
 				$multiString .= 'OR ';
 			}
 			$i++;
@@ -383,13 +384,19 @@ class SelectAttributeTypeOption extends Object {
 
 	public function __construct($ID, $value, $displayOrder) {
 		$this->ID = $ID;
-		$txt = Loader::helper('text');
-		$this->value = $txt->entities($value);
+		$this->value = $value;
+		$this->th = Loader::helper('text');
 		$this->displayOrder = $displayOrder;	
 	}
 	
 	public function getSelectAttributeOptionID() {return $this->ID;}
-	public function getSelectAttributeOptionValue() {return $this->value;}
+	public function getSelectAttributeOptionValue($sanitize = true) {
+		if (!$sanitize) {
+			return $this->value;
+		} else {
+			return $this->th->entities($this->value);
+		}
+	}
 	public function getSelectAttributeOptionDisplayOrder() {return $this->displayOrder;}
 	public function getSelectAttributeOptionTemporaryID() {return $this->tempID;}
 	
