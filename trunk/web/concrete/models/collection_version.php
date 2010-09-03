@@ -346,11 +346,20 @@
 	
 		var $vArray = array();
 		
-		function VersionList(&$c) {
+		function VersionList(&$c, $limit = -1, $page = false) {
 			$db = Loader::db();
 			
-			$cID = $c->getCollectionID();		
-			$q = "select cvID from CollectionVersions where cID = '$cID' order by cvID desc";
+			$cID = $c->getCollectionID();
+			$this->total = $db->GetOne('select count(cvID) from CollectionVersions where cID = ?', $cID);
+			$q = "select cvID from CollectionVersions where cID = '$cID' order by cvID desc ";
+			if ($page > 1) {
+				$pl = ($page-1) * $limit;
+			}			
+			if ($page > 1) {
+				$q .= "limit " . $pl . ',' . $limit;
+			} else if ($limit > -1) {
+				$q .= "limit " . $limit;
+			}
 			$r = $db->query($q);
 	
 			if ($r) {
@@ -368,7 +377,7 @@
 		}
 		
 		function getVersionListCount() {
-			return count($this->vArray);
+			return $this->total;
 		}
 	
 	}
