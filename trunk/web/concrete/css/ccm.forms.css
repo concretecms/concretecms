@@ -35,12 +35,12 @@ div#ccm-page-types {margin-right: 30px}
 div#ccm-page-types, div#ccm-required-meta-add {height: 180px}
 */
 
-div#ccm-required-meta, div#ccm-move-page, div#ccm-required-meta-add {-webkit-border-radius: 12px; -moz-border-radius: 12px; border: 2px solid #bababa; background: white; padding: 8px}
-div#ccm-optional-meta, div#ccm-delete-page, div#ccm-page-types {border: 2px solid #bababa; padding: 8px; background: white; -webkit-border-radius: 12px; -moz-border-radius: 12px;}
+div#ccm-required-meta, div#ccm-move-page, div#ccm-required-meta-add {border: 2px solid #bababa; background: white; padding: 8px}
+div#ccm-optional-meta, div#ccm-delete-page, div#ccm-page-types {border: 2px solid #bababa; padding: 8px; background: white;}
 
 div#ccm-properties-standard-tab input.ccm-input-text, div#ccm-page-paths-tab input.ccm-input-text {width: 272px !important}
 
-div.ccm-form-area {border: 2px solid #bababa; padding: 8px; background: white; -webkit-border-radius: 12px; -moz-border-radius: 12px;}
+div.ccm-form-area {border: 2px solid #bababa; padding: 8px; background: white;}
 
 div.ccm-spacer {font-size: 0px; line-height: 0px; clear: both; height: 0px}
 
@@ -100,6 +100,7 @@ a.ccm-button em.ccm-button-close {background-image: url(../images/icons/close.pn
 	text-decoration: none;
 	-moz-border-radius: 10px; 
 	-webkit-border-radius: 10px;
+	border-radius: 10px;
 	font-size: 11px !important;
 	height: 38px !important;
 	color: #535353; 
