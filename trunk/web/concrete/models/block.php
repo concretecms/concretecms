@@ -549,6 +549,12 @@ class Block extends Object {
 		}
 	}
 	
+	public function __destruct() {
+		unset($this->c);
+		unset($this->a);
+		unset($this->instance);
+	}
+	
 	public function setBlockCustomStyle($csr, $updateAll = false) {
 		$db = Loader::db();
 		$c = $this->getBlockCollectionObject();

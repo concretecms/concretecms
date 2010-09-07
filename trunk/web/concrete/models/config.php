@@ -85,7 +85,9 @@ class Config extends Object {
 		}
 
 		if (!$getFullObject) {
-			return $cv->value;
+			$value = $cv->value;
+			unset($cv);
+			return $value;
 		} else {
 			return $cv;
 		}

@@ -201,7 +201,14 @@ class Area extends Object {
 	
 	public function getHandleList() {
 		$db = Loader::db();
-		$handles = $db->GetCol('select distinct arHandle from Areas order by arHandle asc');
+		$r = $db->Execute('select distinct arHandle from Areas order by arHandle asc');
+		$handles = array();
+		while ($row = $r->FetchRow()) {
+			$handles[] = $row['arHandle'];
+		}
+		$r->Free();
+		unset($r);
+		unset($db);
 		return $handles;
 	}
 	
@@ -230,6 +237,10 @@ class Area extends Object {
 		
 		$ca = new Cache();
 		$a = Cache::delete('area', $this->getCollectionID() . ':' . $this->getAreaHandle());
+	}
+	
+	public function __destruct() {
+		unset($this->c);
 	}
 	
 	function rescanAreaPermissionsChain() {
