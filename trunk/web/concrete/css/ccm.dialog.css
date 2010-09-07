@@ -128,6 +128,7 @@
 	border: 3px solid #afafaf;
 	background-color: #fefefe;
 	-webkit-border-radius: 6px;
+	border-radius: 6px;
 	-moz-border-radius: 6px;
 	text-align:center;
 }
