@@ -126,6 +126,7 @@ class IndexedSearch {
 		}
 		
 		$text = '';
+
 		$tagsToSpaces=array('<br>','<br/>','<br />','<p>','</p>','</ p>','<div>','</div>','</ div>');
 		$blarray=array();
 		$db = Loader::db();
@@ -143,6 +144,7 @@ class IndexedSearch {
 				unset($bi);
 			}		
 		}
+		
 		return $text;
 	}
 	
@@ -178,7 +180,7 @@ class IndexedSearch {
 
 			$c->reindex($this);
 			$num++;
-		
+			
 			unset($c);
 		}
 		

@@ -480,6 +480,10 @@ class AttributeKey extends Object {
 		unset($at);
 	}
 	
+	public function __destruct() {
+
+	}
+	
 	public function validateAttributeForm($h = false) {
 		$at = $this->getAttributeType();
 		$at->controller->setAttributeKey($this);

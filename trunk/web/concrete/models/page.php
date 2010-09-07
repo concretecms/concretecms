@@ -1121,6 +1121,10 @@ $ppWhere = '';
 		$db->query($q, $v);
 		parent::refreshCache();
 	}
+	
+	public function __destruct() {
+		parent::__destruct();
+	}
 
 	function updatePermissionsCollectionID($cParentIDString, $npID) {
 		// now we iterate through
@@ -1164,7 +1168,10 @@ $ppWhere = '';
 		$dh = Loader::helper('date');
 
 		Loader::model('page_statistics');
-		PageStatistics::decrementParents($this->cID);
+
+		$cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
+
+		PageStatistics::decrementParents($cID);
 		parent::refreshCache();
 		
 		$cDateModified = $dh->getSystemDateTime();
@@ -1182,14 +1189,13 @@ $ppWhere = '';
 			}
 		}
 		
-		$db->query("update Collections set cDateModified = ? where cID = ?", array($cDateModified, $this->cID));
-		
-		$v = array($newCParentID, $this->cID);
+		$db->query("update Collections set cDateModified = ? where cID = ?", array($cDateModified, $cID));
+		$v = array($newCParentID, $cID);
 		$q = "update Pages set cParentID = ? where cID = ?";
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 
-		PageStatistics::incrementParents($this->cID);
+		PageStatistics::incrementParents($cID);
 		
 		// run any event we have for page move. Arguments are
 		// 1. current page being moved

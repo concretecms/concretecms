@@ -68,6 +68,13 @@ class AttributeValue extends Object {
 		$this->attributeType->controller->setAttributeKey($this->getAttributeKey());
 		$this->attributeType->controller->setAttributeValue($this);
 	}
+
+	public function __destruct() {
+		if (is_object($this->attributeType)) {
+			$this->attributeType->__destruct();
+			unset($this->attributeType);
+		}
+	}
 	
 	public function getValue($mode = false) {
 		if ($mode != false) {

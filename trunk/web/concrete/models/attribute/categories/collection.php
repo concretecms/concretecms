@@ -62,7 +62,10 @@ class CollectionAttributeKey extends AttributeKey {
 		$av = CollectionAttributeValue::getByID($avID);
 		if (is_object($av)) {
 			$av->setAttributeKey($this);
-			return call_user_func_array(array($av, $method), array());
+			$value = call_user_func_array(array($av, $method), array());
+			$av->__destruct();
+			unset($av);
+			return $value;
 		}
 	}
 	
@@ -155,6 +158,11 @@ class CollectionAttributeValue extends AttributeValue {
 		if ($cav->getAttributeValueID() == $avID) {
 			return $cav;
 		}
+	}
+
+	public function __destruct() {
+		parent::__destruct();
+		unset($this->c);
 	}
 
 	public function delete() {

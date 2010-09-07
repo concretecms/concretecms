@@ -154,10 +154,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			if ($this->isAlias()) {
 				return false;
 			}
+			$db = Loader::db();
 			
 			Loader::model('attribute/categories/collection');
 			$attribs = CollectionAttributeKey::getAttributes($this->getCollectionID(), $this->getVersionID(), 'getSearchIndexValue');
-			$db = Loader::db();
 	
 			$db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
 			$searchableAttributes = array('cID' => $this->getCollectionID());
@@ -168,6 +168,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 				Loader::library('database_indexed_search');
 				$index = new IndexedSearch();
 			}
+			
 			$datetime = Loader::helper('date')->getSystemDateTime();
 			
 			$db->Replace('PageSearchIndex', array(
@@ -327,6 +328,10 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 			// shortcut
 			return $this->vObj->cvID;
 		}
+		
+	public function __destruct() {
+		unset($this->vObj);
+	}
 
 	function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = false) {
 		// this function queries CollectionBlocks to grab the highest displayOrder value, then increments it, and returns
