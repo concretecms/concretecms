@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 
 $v = View::getInstance();
 // TODO - make this honor * better, actually work for more than just dashboard

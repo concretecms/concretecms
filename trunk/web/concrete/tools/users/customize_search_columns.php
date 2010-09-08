@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied."));
+<? defined('C5_EXECUTE') or die("Access Denied.");
 Loader::model('user_attributes');
 $form = Loader::helper('form');
 $tp = new TaskPermission();

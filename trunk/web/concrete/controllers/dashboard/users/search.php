@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 Loader::model('attribute/categories/user');
 Loader::model('user_list');
 class DashboardUsersSearchController extends Controller {

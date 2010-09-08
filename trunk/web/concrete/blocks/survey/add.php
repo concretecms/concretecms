@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
+<? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 <style type="text/css">
 div.survey-block-option {
 	position: relative; border-bottom: 1px solid #ddd; padding-bottom: 3px; padding-top: 3px;

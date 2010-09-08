@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
+<? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 <style type="text/css">
 table#videoBlockSetup {margin-top:16px}
 table#videoBlockSetup th {font-weight: bold; text-style: normal; padding-right: 8px; white-space: nowrap; vertical-align:top ; padding-bottom:8px}

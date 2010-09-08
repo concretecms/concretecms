@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $uh = Loader::helper('concrete/user');
 $txt = Loader::helper('text');

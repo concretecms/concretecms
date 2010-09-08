@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
+<? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 <div class="ccm-editor-controls">
 <div class="ccm-editor-controls-right-cap">
 <ul>

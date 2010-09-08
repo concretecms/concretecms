@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 if ((!$c->isAdminArea()) && ($c->getCollectionPath() != '/login')) {
 
 	$smm = Config::get('SITE_MAINTENANCE_MODE');

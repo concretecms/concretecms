@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?=t('Write notes to yourself using the text area below.');?>
 
 <br/><br/>

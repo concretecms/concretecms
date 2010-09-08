@@ -1,6 +1,6 @@
 <?
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 
 if (!ini_get('safe_mode')) {
 	@set_time_limit(0);

@@ -1,5 +1,5 @@
 <? 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
 	?>

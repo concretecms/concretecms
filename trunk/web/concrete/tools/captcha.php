@@ -1,6 +1,6 @@
 <?php
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 
 //this was added because the captcha wasn't printing when C5 was in development mode, because it 
 //allegedly 'contained errors' (probably some kind of suppressed warning) even though it worked 

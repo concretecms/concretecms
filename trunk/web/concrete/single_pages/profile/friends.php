@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div id="ccm-profile-wrapper">
    <? Loader::element('profile/sidebar', array('profile'=> $profile)); ?>    
     <div id="ccm-profile-body">	

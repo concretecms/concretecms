@@ -1,7 +1,7 @@
 <? 
 	$applyMSG = t('Apply these changes to all blocks aliased to this block? Note: This may take some time.');
 	
-	defined('C5_EXECUTE') or die(_("Access Denied."));
+	defined('C5_EXECUTE') or die("Access Denied.");
 	global $c;
 	global $a;
 	

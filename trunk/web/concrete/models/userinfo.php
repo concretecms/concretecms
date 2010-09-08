@@ -1,6 +1,6 @@
 <?php
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * @package Users
  * @author Andrew Embler <andrew@concrete5.org>

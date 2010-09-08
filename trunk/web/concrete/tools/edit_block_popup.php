@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));  
+defined('C5_EXECUTE') or die("Access Denied.");  
 
 if($_REQUEST['isGlobal'] && ($_REQUEST['btask']=='edit' || $_REQUEST['btask'] == 'view_edit_mode' || $_REQUEST['btask']=='template') ){
 	$scrapbookHelper=Loader::helper('concrete/scrapbook'); 

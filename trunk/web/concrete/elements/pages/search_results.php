@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
+<? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 <?
 if ($_REQUEST['searchDialog'] == 1) {
 	$searchDialog = true;

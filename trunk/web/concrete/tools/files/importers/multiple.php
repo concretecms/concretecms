@@ -1,5 +1,5 @@
 <?php
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 $jsh = Loader::helper("json");
 $cf = Loader::helper("file");
 $valt = Loader::helper('validation/token');

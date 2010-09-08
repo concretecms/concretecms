@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
+<? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 <? $c = Page::getCurrentPage(); ?>
 <ul id="ccm-pagelist-tabs" class="ccm-dialog-tabs">
 	<li class="ccm-nav-active"><a id="ccm-pagelist-tab-add" href="javascript:void(0);"><?=($bID>0)? t('Edit') : t('Add') ?></a></li>

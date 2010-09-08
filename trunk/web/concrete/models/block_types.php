@@ -1,6 +1,6 @@
 <?
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
  * Contains the blocktype object, the block type list (which is just a wrapper for querying the system for block types, and the block type

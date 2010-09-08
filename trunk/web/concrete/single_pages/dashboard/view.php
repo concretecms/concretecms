@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div id="ccm-module-wrapper">
 <div id="ccm-module-row1">
 	<? if (is_object($modules[0])) { ?>

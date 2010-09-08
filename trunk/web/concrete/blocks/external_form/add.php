@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <h2><?=t('External form file to include')?></h2>
 <?=t('The following is a list of all the files in your external forms directory.')?>
