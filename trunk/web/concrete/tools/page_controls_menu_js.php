@@ -90,7 +90,7 @@ if ($sh->canRead() && $u->config('UI_SITEMAP')) { ?>
 }
 $fp = FilePermissions::getGlobal();
 if ($fp->canSearchFiles() && $u->config('UI_FILEMANAGER')) { ?>
-	menuHTML += '<li><a id="ccm-nav-file-manager" dialog-title="<?=t('File Mnager')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_dialog?disable_choose=1" dialog-on-open="$(\'#ccm-nav-file-manager\').removeClass(\'ccm-nav-loading\')" dialog-width="90%" dialog-height="70%" dialog-modal="false"><?=t('File Manager')?></a></li>';
+	menuHTML += '<li><a id="ccm-nav-file-manager" dialog-title="<?=t('File Manager')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_dialog?disable_choose=1" dialog-on-open="$(\'#ccm-nav-file-manager\').removeClass(\'ccm-nav-loading\')" dialog-width="90%" dialog-height="70%" dialog-modal="false"><?=t('File Manager')?></a></li>';
 
 <?
 }
