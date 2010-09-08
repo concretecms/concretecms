@@ -1,6 +1,6 @@
 <?
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * A library for dealing with searchable logs.
  * @package Utilities

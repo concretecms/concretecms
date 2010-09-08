@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-pane-controls">
 
 <script type="text/javascript">

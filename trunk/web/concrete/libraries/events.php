@@ -19,7 +19,7 @@
  *
  */
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 class Events {
 	
 	const EVENT_TYPE_PAGETYPE = "page_type";

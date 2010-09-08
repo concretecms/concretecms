@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <h1><?=t('Upgrade Concrete5')?></h1>
 <p>
 <?=$message?>

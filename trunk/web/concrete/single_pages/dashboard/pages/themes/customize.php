@@ -1,5 +1,5 @@
 <? 
-defined('C5_EXECUTE') or die(_("Access Denied.")); 
+defined('C5_EXECUTE') or die("Access Denied."); 
 $vt = Loader::helper('validation/token');
 ?>
 <h1><span><?=t('Customize Theme')?></span></h1>

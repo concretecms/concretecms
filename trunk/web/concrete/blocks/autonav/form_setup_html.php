@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 ?>
 <ul id="ccm-autonav-tabs" class="ccm-dialog-tabs">

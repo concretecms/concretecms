@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * An object corresponding to a particular view of an attribute.
  *

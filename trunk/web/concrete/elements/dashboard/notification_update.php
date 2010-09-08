@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
+<? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 <? if (version_compare($latest_version, APP_VERSION, '>')) { ?>
 <div id="ccm-dashboard-notification">
 <?=t('The latest version of Concrete5 is <strong>%s</strong>. You are running %s. <a href="%s">Update Now</a>!', $latest_version, APP_VERSION, $this->url('/dashboard/system/update'))?>

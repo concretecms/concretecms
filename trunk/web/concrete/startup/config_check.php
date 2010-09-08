@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 $config_check_failed = false;
 
 if (version_compare(PHP_VERSION, '5.1.0', '<')) {

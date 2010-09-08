@@ -1,5 +1,5 @@
 <? 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 $c = $b->getBlockCollectionObject();
 $class = ($c->isArrangeMode()) ? "ccm-block-arrange" : "ccm-block";
 

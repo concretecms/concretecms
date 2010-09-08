@@ -8,7 +8,7 @@
 	 */
 	 
 	Loader::block('library_file');	
-	defined('C5_EXECUTE') or die(_("Access Denied."));
+	defined('C5_EXECUTE') or die("Access Denied.");
 	class VideoBlockController extends BlockController {
  
 		protected $btInterfaceWidth = 300;

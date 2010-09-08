@@ -1,5 +1,5 @@
 <?
-	defined('C5_EXECUTE') or die(_("Access Denied."));
+	defined('C5_EXECUTE') or die("Access Denied.");
 	$req = Request::get();
 	if (($req->getRequestCollectionPath() != '') && ($req->getRequestCollectionPath() != $c->getCollectionPath())) {
 		// canonnical paths do not match requested path

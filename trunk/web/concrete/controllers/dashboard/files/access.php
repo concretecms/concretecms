@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 class DashboardFilesAccessController extends Controller {
 
 	var $helpers = array('form','concrete/interface','validation/token', 'concrete/file');

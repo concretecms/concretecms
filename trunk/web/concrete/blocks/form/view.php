@@ -1,5 +1,5 @@
 <?php   
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 $survey=$controller;  
 //echo $survey->surveyName.'<br>';
 $miniSurvey=new MiniSurvey($b);

@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 if ($cp->canAdminPage()) {
 $gArray = array();
 $gl = new GroupList($c, false, true);

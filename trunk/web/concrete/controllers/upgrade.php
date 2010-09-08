@@ -1,5 +1,5 @@
 <?php
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 if (!defined('E_DEPRECATED')) {
 	error_reporting(E_ALL ^ E_NOTICE);
 } else {

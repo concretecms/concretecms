@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 
 $c = Page::getByID($_REQUEST['cID']);
 $a = Area::get($c, $_GET['arHandle']);

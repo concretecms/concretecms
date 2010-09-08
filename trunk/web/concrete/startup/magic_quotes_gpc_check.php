@@ -1,6 +1,6 @@
 <?
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
  * Checks to see if magic_quotes_gpc is enabled, if so we process all the input. Blah

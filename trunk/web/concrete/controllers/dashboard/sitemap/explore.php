@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 class DashboardSitemapExploreController extends Controller {
 
 	public function view($nodeID = 1, $auxMessage = false) {

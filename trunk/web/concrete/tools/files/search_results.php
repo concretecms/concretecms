@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {
 	die(_("Unable to access the file manager."));

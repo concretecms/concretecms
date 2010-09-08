@@ -1,5 +1,5 @@
 <?
-	defined('C5_EXECUTE') or die(_("Access Denied."));
+	defined('C5_EXECUTE') or die("Access Denied.");
 	$at = AttributeType::getByID($_REQUEST['atID']);
 	if (is_object($at)) {
 		$cnt = $at->getController();

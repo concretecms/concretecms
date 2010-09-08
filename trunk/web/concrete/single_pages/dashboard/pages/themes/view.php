@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 $bt = Loader::helper('concrete/interface');
 $valt = Loader::helper('validation/token');
 

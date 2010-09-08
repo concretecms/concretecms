@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * This class holds a list of attribute values for an object. Why do we need a special class to do this? Because 
  * class can be retrieved by handle

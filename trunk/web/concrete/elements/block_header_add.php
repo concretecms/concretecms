@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 if ($action == null) { 
 	// we can pass an action from the block, but in most instances we won't, we'll use the default
 	$action = $bt->getBlockAddAction($a);

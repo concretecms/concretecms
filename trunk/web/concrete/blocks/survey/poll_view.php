@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 
 $a2 = new Area('Poll');
 $aBlocks = $a2->getAreaBlocksArray($c);

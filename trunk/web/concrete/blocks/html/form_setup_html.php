@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>  
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>  
 
 <h2><?=t('Add your HTML below:')?></h2>
 

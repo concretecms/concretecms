@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied."));
+<? defined('C5_EXECUTE') or die("Access Denied.");
 
 if (!defined('DIR_BASE')) {
 	define('DIR_BASE', dirname($_SERVER['SCRIPT_FILENAME']));

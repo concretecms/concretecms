@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 Loader::model('collection_types');
 $dh = Loader::helper('date');
 $dt = Loader::helper('form/date_time');

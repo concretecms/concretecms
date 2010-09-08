@@ -7,7 +7,7 @@
  * 2. Item saved in database? Then it will be used.
  * 3. Otherwise, we setup the defaults below.
  **/
-defined('C5_EXECUTE') or die(_("Access Denied.")); 
+defined('C5_EXECUTE') or die("Access Denied."); 
 
 if (!defined('ENABLE_CACHE')) {
 	Config::getOrDefine('ENABLE_CACHE', true); 

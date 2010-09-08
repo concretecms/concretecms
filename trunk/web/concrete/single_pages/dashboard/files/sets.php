@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <? $ih = Loader::helper('concrete/interface'); ?>
 <? if ($this->controller->getTask() == 'view_detail') { ?>
 	<h1><span><?=t('Edit Set Details')?></span></h1>

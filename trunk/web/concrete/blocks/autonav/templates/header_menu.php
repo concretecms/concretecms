@@ -1,5 +1,5 @@
 <?
-	defined('C5_EXECUTE') or die(_("Access Denied."));
+	defined('C5_EXECUTE') or die("Access Denied.");
 	$aBlocks = $controller->generateNav();
 	$c = Page::getCurrentPage();
 	echo("<ul class=\"nav-header\">");

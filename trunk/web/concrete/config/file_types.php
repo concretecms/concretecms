@@ -10,7 +10,7 @@
  *
  */
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 
 $ft = FileTypeList::getInstance();
 $ft->define('jpg,jpeg,jpe', t('JPEG'), FileType::T_IMAGE, 'image', 'image', 'image');

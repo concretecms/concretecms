@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?
 if (isset($GLOBALS['CCM_SITEMAP_NODE_NUM'])) {

@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?> 
+<? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 <style type="text/css">
 table#searchBlockSetup th {font-weight: bold; text-style: normal; padding-right: 8px; white-space: nowrap; vertical-align:top }
 table#searchBlockSetup td{ font-size:12px; vertical-align:top }

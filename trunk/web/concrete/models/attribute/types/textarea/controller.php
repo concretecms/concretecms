@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied."));
+<? defined('C5_EXECUTE') or die("Access Denied.");
 Loader::model('attribute/types/default/controller');
 Loader::library('3rdparty/htmLawed');
 

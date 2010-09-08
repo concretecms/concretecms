@@ -1,6 +1,6 @@
 <?
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 $dh = Loader::helper('concrete/dashboard/sitemap');
 if (!$dh->canRead()) {
 	die(_("Access Denied."));

@@ -1,5 +1,5 @@
 <? 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 if (isset($_REQUEST['themeID'])) {
 	// internal theme
 	$url = REL_DIR_FILES_TOOLS_REQUIRED . '/themes/preview_internal?random=' . time() . '&themeID=' . intval($_REQUEST['themeID']) . '&previewCID=' . intval($_REQUEST['previewCID']) . '&ctID=' . intval($_REQUEST['ctID']);
