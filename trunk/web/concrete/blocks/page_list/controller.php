@@ -6,6 +6,7 @@
 		protected $btTable = 'btPageList';
 		protected $btInterfaceWidth = "500";
 		protected $btInterfaceHeight = "350";
+		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = false;
 		
