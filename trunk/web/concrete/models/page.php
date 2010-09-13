@@ -606,7 +606,6 @@ $ppWhere = '';
 	}
 
 	function getCollectionThemeID() {
-		$db = Loader::db();
 		if ($this->ptID < 1 && $this->cID != HOME_CID) {
 			$c = Page::getByID(HOME_CID);
 			return $c->getCollectionThemeID();

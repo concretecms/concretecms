@@ -176,6 +176,7 @@
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = false;
+		protected $btCacheBlockOutputLifetime = 300;
 		
 		public function getBlockTypeDescription() {
 			return t("Creates navigation trees and sitemaps.");
