@@ -341,11 +341,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		$cID = $this->cID;
 		$cvID = $this->vObj->cvID;
 		if ($ignoreVersions) {
-			$q = "select max(cbDisplayOrder) as cbdis from CollectionVersionBlocks where cID = '$cID' and arHandle='$arHandle'";
+			$q = "select max(cbDisplayOrder) as cbdis from CollectionVersionBlocks where cID = ? and arHandle = ?";
+			$v = array($cID, $arHandle);
 		} else {
-			$q = "select max(cbDisplayOrder) as cbdis from CollectionVersionBlocks where cID = '$cID' and cvID = '{$cvID}' and arHandle='$arHandle'";
+			$q = "select max(cbDisplayOrder) as cbdis from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle = ?";
+			$v = array($cID, $cvID, $arHandle);
 		}
-		$r = $db->query($q);
+		$r = $db->query($q, $v);
 		if ($r) {
 			if ($r->numRows() > 0) {
 				// then we know we got a value; we increment it and return
