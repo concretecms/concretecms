@@ -399,6 +399,7 @@ ccm_alDuplicateFiles = function(searchInstance) {
 
 ccm_alSetupSelectFiles = function() {
 	$('.ccm-file-list').unbind();
+	/*
 	$('.ccm-file-list').click(function(e){
 		e.stopPropagation();
 		if ($(e.target).is('img.ccm-star')) {	
@@ -411,6 +412,18 @@ ccm_alSetupSelectFiles = function() {
 				ccm_alActivateMenu($(this), e);		
 			});
 		}
+	});
+	*/
+	
+	$('.ccm-file-list tr.ccm-list-record td').click(function(e) {
+		e.stopPropagation();
+		ccm_alActivateMenu($(this).parent(), e);
+	});
+	$('.ccm-file-list img.ccm-star').click(function(e) {
+		e.stopPropagation();
+		var fID = $(e.target).parents('tr.ccm-list-record')[0].id;
+		fID = fID.substring(3);
+		ccm_starFile(e.target,fID);
 	});
 	$("div.ccm-file-list-thumbnail-image img").hover(function(e) { 
 		var fID = $(this).parent().attr('fID');

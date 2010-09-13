@@ -157,7 +157,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		function getBlockTypeAddAction(&$a) {
 			$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
-			$arHandle = $a->getAreaHandle();
+			$arHandle = urlencode($a->getAreaHandle());
 			$c = $a->getAreaCollectionObject();
 			$cID = $c->getCollectionID();
 			$valt = Loader::helper('validation/token');
@@ -167,7 +167,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		function getBlockTypeAliasAction(&$a) {
 			$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
-			$arHandle = $a->getAreaHandle();
+			$arHandle = urlencode($a->getAreaHandle());
 			$c = $a->getAreaCollectionObject();
 			$cID = $c->getCollectionID();
 			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;areaName={$arHandle}&amp;mode=edit&amp;btask=alias" . $step . '&' . $valt->getParameter();
@@ -717,7 +717,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';			
 			$c = $a->getAreaCollectionObject();
 			$cID = $c->getCollectionID();
-			$arHandle = $a->getAreaHandle();
+			$arHandle = urlencode($a->getAreaHandle());
 			$valt = Loader::helper('validation/token');
 			
 			

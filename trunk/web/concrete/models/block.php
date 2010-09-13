@@ -647,7 +647,7 @@ class Block extends Object {
 		$c = Page::getCurrentPage();
 		$cID = $c->getCollectionID();
 		$bID = $this->getBlockID();
-		$arHandle = $this->getAreaHandle();
+		$arHandle = urlencode($this->getAreaHandle());
 		$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
 		$valt = Loader::helper('validation/token');
 		$token = $valt->generate();

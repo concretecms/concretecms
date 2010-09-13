@@ -64,7 +64,7 @@ var GlobalScrapbook = {
 		<? if(!$globalScrapbookArea){ ?>
 		return false;
 		<? }else{ ?>
-		ccm_openAreaAddBlock("<?=$globalScrapbookArea->getAreaHandle() ?>", true);
+		ccm_openAreaAddBlock("<?=urlencode($globalScrapbookArea->getAreaHandle()) ?>", true);
 		<? } ?>
 	},
 	editBlock:function(bID,w,h){ 
@@ -179,7 +179,7 @@ $(function(){ GlobalScrapbook.init(); });
 						<div class="edit">
 							<form method="post" action="<?=$this->url($cPath, 'rename_scrapbook' )?>">
 								<input name="arID" type="hidden" value="<?=intval($availableScrapbook['arID']) ?>" /> 
-								<input name="scrapbookName" type="text" value="<?=addslashes($availableScrapbook['arHandle']) ?>" />
+								<input name="scrapbookName" type="text" value="<?=$availableScrapbook['arHandle'] ?>" />
 								<input name="Submit" type="submit" value="<?=t('Save')?>" />
 								<input onclick="GlobalScrapbook.toggleScrapbookRename(<?=intval($availableScrapbook['arID']) ?>)" name="cancel" type="button" value="<?=t('Cancel')?>" />
 								&nbsp;
@@ -363,7 +363,7 @@ $(function(){ GlobalScrapbook.init(); });
 							<div class="edit">
 								<form method="post" action="<?=$this->url($c->getCollectionPath(), 'rename_block' )?>">
 									<input name="bID" type="hidden" value="<?=intval($b->bID) ?>" />
-									<input name="scrapbookName" type="hidden" value="<?=addslashes($scrapbookName) ?>" />
+									<input name="scrapbookName" type="hidden" value="<?=$scrapbookName ?>" />
 									<input name="bName" type="text" value="<?=$b->getBlockName() ?>" />
 									<input name="Submit" type="submit" value="<?=t('Save')?>" />
 									<input onclick="GlobalScrapbook.toggleRename(<?=intval($b->bID) ?>)" name="cancel" type="button" value="<?=t('Cancel')?>" />
