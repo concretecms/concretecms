@@ -439,6 +439,11 @@ $ppWhere = '';
 		if ($this->cPointerExternalLink != '') {
 			$db = Loader::db();
 			$this->markModified();
+			if ($newWindow) {
+				$newWindow = 1;
+			} else {
+				$newWindow = 0;
+			}
 			$db->query("update CollectionVersions set cvName = ? where cID = ?", array($cName, $this->cID));
 			$db->query("update Pages set cPointerExternalLink = ?, cPointerExternalLinkNewWindow = ? where cID = ?", array($cLink, $newWindow, $this->cID));
 			$this->refreshCache();
@@ -467,6 +472,12 @@ $ppWhere = '';
 		
 		$cobj = parent::add($data);
 		$newCID = $cobj->getCollectionID();
+		
+		if ($newWindow) {
+			$newWindow = 1;
+		} else {
+			$newWindow = 0;
+		}
 		
 		$v = array($newCID, $ctID, $cParentID, $uID, $cLink, $newWindow);
 		$q = "insert into Pages (cID, ctID, cParentID, uID, cPointerExternalLink, cPointerExternalLinkNewWindow) values (?, ?, ?, ?, ?, ?)";
