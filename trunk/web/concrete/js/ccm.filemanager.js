@@ -415,9 +415,9 @@ ccm_alSetupSelectFiles = function() {
 	});
 	*/
 	
-	$('.ccm-file-list tr.ccm-list-record td').click(function(e) {
+	$('.ccm-file-list tr.ccm-list-record').click(function(e) {
 		e.stopPropagation();
-		ccm_alActivateMenu($(this).parent(), e);
+		ccm_alActivateMenu($(this), e);
 	});
 	$('.ccm-file-list img.ccm-star').click(function(e) {
 		e.stopPropagation();
