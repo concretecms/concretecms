@@ -15,7 +15,7 @@
 
 		$title = $cobj->getCollectionName(); ?>
 	
-	<h3 class="ccm-page-list-title"><a target="<?=$target?>" href="<?=$nh->getLinkToCollection($cobj)?>"><?=$title?></a></h3>
+	<h3 class="ccm-page-list-title"><a <? if ($target != '') { ?> target="<?=$target?>" <? } ?> href="<?=$nh->getLinkToCollection($cobj)?>"><?=$title?></a></h3>
 	<div class="ccm-page-list-description">
 		<?
 		if(!$controller->truncateSummaries){
