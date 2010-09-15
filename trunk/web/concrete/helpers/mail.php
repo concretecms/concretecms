@@ -199,7 +199,7 @@ class MailHelper {
 				}
 			}
 			if (!isset($from)) {
-				$from = array('concrete5-noreply@' . str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', BASE_URL), '');
+				$from = array(EMAIL_DEFAULT_FROM_ADDRESS, EMAIL_DEFAULT_FROM_NAME);
 			}
 			
 			// The currently included Zend library has a bug in setReplyTo that

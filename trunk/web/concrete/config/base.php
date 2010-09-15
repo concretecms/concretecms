@@ -53,6 +53,14 @@ if (!defined('ENABLE_EMAILS')) {
 	define('ENABLE_EMAILS', true);
 }
 
+if (!defined('EMAIL_DEFAULT_FROM_ADDRESS')) {
+	define('EMAIL_DEFAULT_FROM_ADDRESS', 'concrete5-noreply@' . str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', BASE_URL));
+}
+
+if (!defined('EMAIL_DEFAULT_FROM_NAME')) {
+	define('EMAIL_DEFAULT_FROM_NAME', '');
+}
+
 if (!defined('SITEMAP_PAGES_LIMIT')) {
 	define('SITEMAP_PAGES_LIMIT', 100);
 }
