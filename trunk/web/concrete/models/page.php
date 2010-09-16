@@ -941,6 +941,8 @@ $ppWhere = '';
             $cHandle = $txt->sanitizeFileSystem($data['cHandle']);
         }
 		
+		$cName = $txt->sanitize($cName);
+		
 		// Update the non-canonical page paths
 		if (isset($data['ppURL']))
 			$this->rescanPagePaths($data['ppURL']);
