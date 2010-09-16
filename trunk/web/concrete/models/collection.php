@@ -733,6 +733,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			$cvIsApproved = (isset($data['cvIsApproved']) && $data['cvIsApproved'] == 0) ? 0 : 1;
 			
+			$data['name'] = Loader::helper('text')->sanitize($data['name']);
+			
 			if ($res) {
 				// now we add a pending version to the collectionversions table
 				$v2 = array($newCID, 1, $data['name'], $data['handle'], $data['cDescription'], $cDatePublic, $cDate, VERSION_INITIAL_COMMENT, $data['uID'], $cvIsApproved);
