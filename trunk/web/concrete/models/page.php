@@ -1130,6 +1130,11 @@ $ppWhere = '';
 			$a->rescanAreaPermissionsChain();
 		}
 
+		$blocks = $this->getBlocks();
+		foreach($blocks as $b) {
+			$b->refreshCache();
+		}
+		
 		$db->query($q, $v);
 		parent::refreshCache();
 	}

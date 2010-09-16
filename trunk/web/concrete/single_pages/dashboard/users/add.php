@@ -195,7 +195,8 @@ if ($_POST['create']) {
 
 	<div class="ccm-buttons">
 		<input type="hidden" name="create" value="1" />
-		<a href="javascript:void(0)" onclick="$('#ccm-user-form').get(0).submit()" class="ccm-button-right accept"><span><?=t('Create User')?></span></a>
+		<?=$ih->submit(t('Create User'))?>
+
 	</div>	
 
 	<div class="ccm-spacer">&nbsp;</div>
