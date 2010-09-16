@@ -50,7 +50,6 @@
 		}
 
 		function getContentAndGenerate($align = false, $style = false, $id = null) {
-			$db = Loader::db();
 			$c = Page::getCurrentPage();
 			$bID = $this->bID;
 			
