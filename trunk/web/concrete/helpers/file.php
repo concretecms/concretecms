@@ -66,7 +66,7 @@ class FileHelper {
 			
 			$d = dir($source);
 			while (FALSE !== ($entry = $d->read())) {
-				if ( $entry == '.' || $entry == '..' ) {
+				if ( $entry == '.' || $entry == '..' || substr($entry, 0, 1) == '.') {
 					continue;
 				}
 			
