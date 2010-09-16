@@ -119,7 +119,7 @@ class UpgradeController extends Controller {
 		if (version_compare($sav, '5.3.3.1', '<')) { 
 			$ugvs[] = "version_533";
 		}
-		if (version_compare($sav, '5.4.0.5', '<')) { 
+		if (version_compare($sav, '5.4.0', '<')) { 
 			$ugvs[] = "version_5331";
 			$ugvs[] = "version_540";
 		}
