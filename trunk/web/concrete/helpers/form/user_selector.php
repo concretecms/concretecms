@@ -46,10 +46,11 @@ class FormUserSelectorHelper {
 			$html .= $ui->getUserName();
 		}
 		$html .= '</strong></div>';
-		$html .= '<a class="ccm-sitemap-select-item dialog-launch" onclick="ccmActiveUserField=this" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/users/search_dialog?mode=choose_one">' . t('Select User') . '</a>';
+		$html .= '<a class="ccm-sitemap-select-item" id="ccm-user-selector-' . $fieldName . '" onclick="ccmActiveUserField=this" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/users/search_dialog?mode=choose_one">' . t('Select User') . '</a>';
 		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedUID . '">';
 		$html .= '</div>'; 
 		$html .= '<script type="text/javascript">';
+		$html .= '$(function() { $("#ccm-user-selector-' . $fieldName . '").dialog(); });';
 		$html .= 'if (typeof(ccmActiveUserField) == "undefined") {';
 		$html .= 'var ccmActiveUserField;';		
 		$html .= '}';
