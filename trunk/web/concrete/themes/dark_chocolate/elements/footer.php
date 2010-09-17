@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 	<div id="footer">
-			<span class="powered-by"><a href="http://www.concrete5.org" title="<?=t('concrete5 open source CMS')?>"><?=t('concrete5 Content Management')?></a></span>
+			<span class="powered-by"><a href="http://www.concrete5.org" title="<?=t('concrete5 - open source content management system for PHP and MySQL')?>"><?=t('concrete5 - open source CMS')?></a></span>
 			&copy; <?=date('Y')?> <a href="<?=DIR_REL?>/"><?=SITE?></a>.
 			&nbsp;&nbsp;
 			<?=t('All rights reserved.')?>

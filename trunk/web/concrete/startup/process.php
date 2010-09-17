@@ -430,7 +430,8 @@
 					// checking out the collection for editing
 					$u = new User();
 					$u->loadCollectionEdit($c);
-
+					
+					/*
 					if ($_GET['ctask'] == 'check-out-first') {
 						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?ctask=first_run&cID=' . $c->getCollectionID() . $step);
 						exit;
@@ -438,6 +439,7 @@
 						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . $step);
 						exit;
 					}
+					*/
 				}
 				break;
 			case 'check-in':
