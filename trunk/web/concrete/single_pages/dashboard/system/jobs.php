@@ -106,7 +106,11 @@ $ih = Loader::helper('concrete/interface');
 		//print $ih->buttons($b1);
 		print '<div class="ccm-buttons"><a onclick="Jobs.runChecked()" href="javascript:void(0)"><div class="ccm-button"><span>'.t('Run Checked').'</span></div></a></div>';
 	?>
-
+	
+	<? 
+	$uh = Loader::helper('form/user_selector');
+	print $uh->selectUser('myUserID');
+	?>
 	<h2 style="padding-bottom:8px; padding-top:16px"><?=t('Installed Jobs')?></h2>
 	
 	<div class="ccm-spacer">&nbsp;</div>
