@@ -380,7 +380,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db = Loader::db();
 			$cID = $c->getCollectionID();
 			// first, we check to see if we have a collection in edit mode. If we do, we relinquish it
-			$this->unloadCollectionEdit();
+			$this->unloadCollectionEdit(false);
 			
 			$q = "select cIsCheckedOut, cCheckedOutDatetime from Pages where cID = '{$cID}'";
 			$r = $db->query($q);

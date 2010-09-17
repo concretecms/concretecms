@@ -41,7 +41,7 @@ $this->inc('elements/header.php'); ?>
 		<div class="spacer">&nbsp;</div>		
 	</div>
 	<div id="footer">
-			<span class="powered-by"><?=t('Built with concrete5')?> <a href="http://www.concrete5.org">CMS</a>.</span>
+			<span class="powered-by"><a href="http://www.concrete5.org" title="<?=t('concrete5 - open source content management system for PHP and MySQL')?>"><?=t('concrete5 - open source CMS')?></a></span>
 			&copy; <?=date('Y')?> <a href="<?=DIR_REL?>/"><?=SITE?></a>.
 			&nbsp;&nbsp;
 			<?=t('All rights reserved.')?>	
