@@ -77,8 +77,6 @@ foreach($postsByDate as $year=>$postsByMonth ){
 	//print the months that have postings
 	foreach($postsByMonth as $month=>$pagesArray){
 		
-		if($currentPageCID==$page->getCollectionId()) $currentPageFound=1;
-		
 		echo "\t <li class='month'> \r \n";
 		//$monthClosed=($currentMonth!=$month || $currentYear!=$year)?'closed':'';
 		echo "\t <div class='section trigger ".$monthClosed." month".$month.'_'.$year."'>".t(date($monthDisplayFormat,mktime(0,0,0,$month,1,$year)))."</div> \r \n"; 
@@ -88,6 +86,7 @@ foreach($postsByDate as $year=>$postsByMonth ){
 		echo "\t\t <ul class='monthsPages collapsible ".$monthClosed."'>";
 		$pagesPerNodeCount=0;
 		foreach($pagesArray as $page){
+			if($currentPageCID==$page->getCollectionId()) $currentPageFound=1;
 			$pagesPerNodeCount++;
 			$title = $page->getCollectionName();
 			$selected=( $page->getCollectionId()==$c->getCollectionID() ) ? 'selected':'';

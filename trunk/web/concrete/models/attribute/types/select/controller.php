@@ -1,5 +1,4 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 class SelectAttributeTypeController extends AttributeTypeController  {
 
@@ -94,7 +93,9 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		$selectedOptions = array();
 		foreach($options as $opt) {
 			$selectedOptions[] = $opt->getSelectAttributeOptionID();
+			$selectedOptionValues[$opt->getSelectAttributeOptionID()] = $opt->getSelectAttributeOptionValue();
 		}
+		$this->set('selectedOptionValues',$selectedOptionValues);
 		$this->set('selectedOptions', $selectedOptions);
 	}
 	
@@ -124,14 +125,30 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 
 	public function saveForm($data) {
 		$this->load();
-
+		
 		if ($this->akSelectAllowOtherValues && is_array($data['atSelectNewOption'])) {
+			$options = $this->getOptions();
+						
 			foreach($data['atSelectNewOption'] as $newoption) {
-				$optobj = SelectAttributeTypeOption::add($this->attributeKey, $newoption, 1);
-				$data['atSelectOptionID'][] = $optobj->getSelectAttributeOptionID();
+				// check for duplicates
+				$existing = false;
+				foreach($options as $opt) {
+					if(strtolower(trim($newoption)) == strtolower(trim($opt->getSelectAttributeOptionValue()))) {
+						$existing = $opt;
+						break;
+					}
+				}
+				if($existing instanceof SelectAttributeTypeOption) {
+					$data['atSelectOptionID'][] = $existing->getSelectAttributeOptionID();
+				} else {
+					$optobj = SelectAttributeTypeOption::add($this->attributeKey, $newoption, 1);
+					$data['atSelectOptionID'][] = $optobj->getSelectAttributeOptionID();
+				}
 			}
 		}
 
+		$data['atSelectOptionID'] = array_unique($data['atSelectOptionID']);
+		
 		$db = Loader::db();
 		$db->Execute('delete from atSelectOptionsSelected where avID = ?', array($this->getAttributeValueID()));
 		if (is_array($data['atSelectOptionID'])) {
