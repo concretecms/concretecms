@@ -159,6 +159,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		public function getMessageSubject() {return $this->msgSubject;}
+		public function getFormattedMessageSubject() {
+			$txt = Loader::helper('text');
+			return $txt->entities($this->msgSubject);
+		}
 		public function getMessageBody() {return $this->msgBody;}
 	}
 	
