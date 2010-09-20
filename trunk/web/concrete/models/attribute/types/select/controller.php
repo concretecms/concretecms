@@ -147,8 +147,9 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 			}
 		}
 
-		$data['atSelectOptionID'] = array_unique($data['atSelectOptionID']);
-		
+		if(is_array($data['atSelectOptionID'])) {
+			$data['atSelectOptionID'] = array_unique($data['atSelectOptionID']);
+		}		
 		$db = Loader::db();
 		$db->Execute('delete from atSelectOptionsSelected where avID = ?', array($this->getAttributeValueID()));
 		if (is_array($data['atSelectOptionID'])) {
