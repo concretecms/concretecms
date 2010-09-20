@@ -367,16 +367,17 @@ class Area extends Object {
 			foreach($areaLayouts as $layout){
 				$layout->display($c,$this);  
 			}
-			if($c->isArrangeMode() || $c->isEditMode()) 
+			if($this->showControls && ($c->isArrangeMode() || $c->isEditMode())) {
 				echo '<div class="ccm-layouts-block-arrange-placeholder ccm-block-arrange"></div>';
-		}	
+			}
+		}
 
 
 		foreach ($blocksToDisplay as $b) {
 			$bv = new BlockView();
 			$bv->setAreaObject($ourArea); 
 			$p = new Permissions($b);
-			if (($p->canWrite() || $p->canDeleteBlock()) && $c->isEditMode()) {
+			if (($p->canWrite() || $p->canDeleteBlock()) && $c->isEditMode() && $this->showControls) {
 				$includeEditStrip = true;
 			}
 
