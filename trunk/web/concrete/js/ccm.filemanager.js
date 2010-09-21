@@ -652,14 +652,20 @@ ccm_alSubmitUploadDetailsForm = function(searchInstance) {
 	jQuery.fn.dialog.showLoader();
 	$("#ccm-" + searchInstance + "-update-uploaded-details-form").ajaxSubmit(function(r1) {
 		var r1a = eval('(' + r1 + ')');
-		$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
-			$("#ccm-" + searchInstance + "-sets-search-wrapper").load(CCM_TOOLS_PATH + '/files/search_sets_reload', {'searchInstance': searchInstance}, function() {
-				jQuery.fn.dialog.hideLoader();
-				jQuery.fn.dialog.closeTop();
-				ccm_parseAdvancedSearchResponse(resp, searchInstance);
-				ccm_alHighlightFileIDArray(r1a);
+		var form = $("#ccm-" + searchInstance + "-advanced-search");
+		if (form.length > 0) {
+			form.ajaxSubmit(function(resp) {
+				$("#ccm-" + searchInstance + "-sets-search-wrapper").load(CCM_TOOLS_PATH + '/files/search_sets_reload', {'searchInstance': searchInstance}, function() {
+					jQuery.fn.dialog.hideLoader();
+					jQuery.fn.dialog.closeTop();
+					ccm_parseAdvancedSearchResponse(resp, searchInstance);
+					ccm_alHighlightFileIDArray(r1a);
+				});
 			});
-		});
+		} else {
+			jQuery.fn.dialog.hideLoader();
+			jQuery.fn.dialog.closeTop();
+		}
 	});
 }
 

@@ -139,7 +139,6 @@ $(function() {
 		upload_complete_handler : uploadComplete, 
 		queue_complete_handler : function(file){
 			// queueComplete() from swfupload.handlers.js
-			console.log(ccm_uploadedFiles.length);
 			if (ccm_uploadedFiles.length > 0) {
 				queueComplete();		
 				ccm_filesUploadedDialog('<?=$searchInstance?>'); 
