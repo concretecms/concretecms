@@ -26,7 +26,7 @@ class BlogEntryPageTypeController extends Controller {
 			foreach($blocks as $b) {
 				if($b->getBlockTypeHandle() == 'guestbook') {
 					$controller = $b->getInstance();
-					echo var_dump($controller);
+					//echo var_dump($controller);
 					$comment_bID = $b->bID;
 					$comments_enabled = true;
 					break;// stop at the fist guestbook block found
@@ -38,7 +38,7 @@ class BlogEntryPageTypeController extends Controller {
 			$ca = new Cache();		
 			//$ca->set('GuestBookCount',$comment_bID,1);
 			$count = $ca->get('GuestBookCount',$comment_bID);
-			echo var_dump($count);
+			//echo var_dump($count);
 		}
 		if($comments_enabled) {
 			echo $count; 
