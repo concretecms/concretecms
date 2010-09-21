@@ -10,20 +10,16 @@ $this->inc('elements/header.php'); ?>
 			?>		
 		</div>
 		
-		<div id="body">	
-			<?
-			$ai = new Area('Entry Info');
-			$ai->display($c);
-			
-			$a = new Area('Main');
-			$a->display($c);
-			
-			$am = new Area('Entry More');
-			$am->display($c);
-			
-			$ac = new Area('Entry Comments');
-			$ac->display($c);			
-			?>
+		<div id="body">
+			<div class="pageSection">
+				<?php $ai = new Area('Blog Post Header'); $ai->display($c); ?>
+			</div>
+			<div class="pageSection">
+				<?php $as = new Area('Blog Summary'); $as->display($c); ?>
+			</div>
+			<div class="pageSection">
+				<?php $a = new Area('Main'); $a->display($c); ?>
+			</div>
 		</div>
 		
 		<div class="spacer">&nbsp;</div>		

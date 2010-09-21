@@ -1,13 +1,10 @@
-<?php
-$ai = new Area('Entry Info');
-$ai->display($c);
-
-$a = new Area('Main');
-$a->display($c);
-
-$am = new Area('Entry More');
-$am->display($c);
-
-$ac = new Area('Entry Comments');
-$ac->display($c);
-?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<div class="pageSection">
+	<?php $ai = new Area('Blog Post Header'); $ai->display($c); ?>
+</div>
+<div class="pageSection">
+	<?php $as = new Area('Blog Summary'); $as->display($c); ?>
+</div>
+<div class="pageSection">
+	<?php $a = new Area('Main'); $a->display($c); ?>
+</div>

@@ -30,7 +30,8 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		</div>
 		<div class="excerpt">
 			<?php
-			$a = new Area('Main');
+			$a = new Area('Blog Summary');
+			$a->disableControls();
 			$a->display($cobj);
 			?>
 		</div>
