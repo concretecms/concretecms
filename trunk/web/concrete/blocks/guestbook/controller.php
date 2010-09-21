@@ -261,7 +261,8 @@
 				$this->set('response', t('The comment has been unapproved.') );
 			}
 		}
-	
+		
+		
 	} // end class def
 	
 	
@@ -349,8 +350,7 @@
 			$count = $ca->get('GuestBookCount',$this->bID);
 			if($count && $number){
 				$count += $number;				
-			}
-			else{
+			} else{
 				$q = 'SELECT count(bID) as count
 				FROM btGuestBookEntries
 				WHERE bID = ?
@@ -359,7 +359,7 @@
 				$rs = $db->query($q,$v);
 				$row = $rs->FetchRow();
 				$count = $row['count'];
-			}			
+			}
 			$ca->set('GuestBookCount',$this->bID,$count);
 		}
 		

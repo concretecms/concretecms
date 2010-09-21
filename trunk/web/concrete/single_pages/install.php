@@ -15,8 +15,8 @@ if (isset($message)) { ?>
 </div>
 
 <? } else { ?>
-
 <script type="text/javascript">
+
 
 activateInstallForm = function() {
 	$("#ccm-install-form input").each(function() {
