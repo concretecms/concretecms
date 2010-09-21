@@ -7,7 +7,9 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 	$attrKeyID = $this->attributeKey->getAttributeKeyID();
 	?>
 	<style type="text/css">
-		div.newAttrValue, div.existingAttrValue {display: inline;}
+	/*
+	div.newAttrValue, div.existingAttrValue {display: inline;}
+	*/
 	</style>
 	<div id="selectedAttrValueRows_<?php echo $attrKeyID;?>">
 		<?php 
@@ -22,8 +24,8 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 		} ?>
 	</div>
 	<?php 
-	echo $form->text('newAttrValueRows'.$attrKeyID, array('style'=>'position:relative; z-index: 260;'));
-	
+	echo $form->text('newAttrValueRows'.$attrKeyID, array('style'=>'position:relative; width: 200px; z-index: 260;'));
+	echo $form->submit(t('Add'), 'add', array('onclick' => 'ccmAttributeTypeSelectTagHelper' . $attrKeyID . '.addButtonClick(); return false'));
 	foreach($options as $op) {
 			$opt_values[] = (string) $op;	
 	};?>
@@ -53,6 +55,13 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 	});
 
 	var ccmAttributeTypeSelectTagHelper<?php echo $attrKeyID?>={  
+			addButtonClick: function() {
+				var valrow = $("input[name=newAttrValueRows<?=$attrKeyID?>]");
+				ccmAttributeTypeSelectTagHelper<?php echo $attrKeyID?>.add(valrow.val());
+				valrow.val('');
+				$("#newAttrValueRows<?php echo $this->attributeKey->getAttributeKeyID()?>").autocomplete( "close" );
+				return false;
+			},
 			add:function(value){
 				var newRow=document.createElement('div');
 				newRow.className='newAttrValue';

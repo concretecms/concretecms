@@ -20,7 +20,6 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 $this->addHeaderItem($html->css('ccm.ui.css'));
 $this->addHeaderItem($html->css('jquery.rating.css'));
 $this->addHeaderItem($html->css('ccm.dialog.css'));
-$this->addHeaderItem($html->css('ccm.calendar.css'));
 $this->addHeaderItem($html->css('ccm.menus.css'));
 $this->addHeaderItem($html->css('ccm.forms.css'));
 $this->addHeaderItem($html->css('ccm.search.css'));

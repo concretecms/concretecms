@@ -45,7 +45,6 @@ $v->addHeaderItem($html->css('ccm.menus.css'));
 $v->addHeaderItem($html->css('ccm.forms.css'));
 $v->addHeaderItem($html->css('ccm.search.css'));
 $v->addHeaderItem($html->css('ccm.filemanager.css'));
-$v->addHeaderItem($html->css('ccm.calendar.css'));
 $v->addHeaderItem($html->css('ccm.dialog.css'));
 $v->addHeaderItem($html->css('jquery.rating.css'));
 $v->addHeaderItem($html->css('jquery.ui.css'));
