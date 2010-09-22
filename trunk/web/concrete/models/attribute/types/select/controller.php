@@ -300,6 +300,26 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		return $list;
 	}
 	
+	public function getOptionUsageArray($parentPage = false) {
+		$db = Loader::db();
+		$q = "select atSelectOptions.value, atSelectOptionID, count(atSelectOptionID) as total from Pages inner join CollectionVersions on (Pages.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) inner join CollectionAttributeValues on (CollectionVersions.cID = CollectionAttributeValues.cID and CollectionVersions.cvID = CollectionAttributeValues.cvID) inner join atSelectOptionsSelected on (atSelectOptionsSelected.avID = CollectionAttributeValues.avID) inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where CollectionAttributeValues.akID = ? ";
+		$v = array($this->attributeKey->getAttributeKeyID());
+		if (is_object($parentPage)) {
+			$v[] = $parentPage->getCollectionID();
+			$q .= "and cParentID = ?";
+		}
+		$q .= " group by atSelectOptionID order by total desc";
+		$r = $db->Execute($q, $v);
+		$list = new SelectAttributeTypeOptionList();
+		$i = 0;
+		while ($row = $r->FetchRow()) {
+			$opt = new SelectAttributeTypeOption($row['atSelectOptionID'], $row['value'], $i, $row['total']);
+			$list->add($opt);
+			$i++;
+		}		
+		return $list;
+	}
+	
 	/**
 	 * returns a list of available options optionally filtered by an sql $like statement ex: startswith%
 	 * @param string $like
@@ -400,14 +420,16 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 
 class SelectAttributeTypeOption extends Object {
 
-	public function __construct($ID, $value, $displayOrder) {
+	public function __construct($ID, $value, $displayOrder, $usageCount = false) {
 		$this->ID = $ID;
 		$this->value = $value;
 		$this->th = Loader::helper('text');
 		$this->displayOrder = $displayOrder;	
+		$this->usageCount = $usageCount;	
 	}
 	
 	public function getSelectAttributeOptionID() {return $this->ID;}
+	public function getSelectAttributeOptionUsageCount() {return $this->usageCount;}
 	public function getSelectAttributeOptionValue($sanitize = true) {
 		if (!$sanitize) {
 			return $this->value;
