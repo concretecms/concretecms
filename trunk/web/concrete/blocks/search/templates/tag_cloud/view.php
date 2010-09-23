@@ -27,8 +27,12 @@
 	
 	
 	function setFontPx($weight) {
-		$em = ($weight * (11 - 1)) + 1;
-		$em = round($em) * 3;
+		$tagMinFontPx = '10';
+		$tagMaxFontPx = '24';
+
+		
+		$em = ($weight * ($tagMaxFontPx - $tagMinFontPx)) + $tagMinFontPx;
+		$em = round($em);
 		return $em;
 	}
 ?>
@@ -47,7 +51,7 @@
 		$akct = $tags[$i];
 		$qs = $akc->field('atSelectOptionID') . '[]=' . $akct->getSelectAttributeOptionID();
 		?>
-		<li><a style="font-size: <?=$tagSizes[$akct->getSelectAttributeOptionUsageCount()]?>px"href="<?=$this->url($resultTargetURL)?>?<?=$qs?>"><?=$akct->getSelectAttributeOptionValue()?></a>
+		<li><a style="font-size: <?=$tagSizes[$akct->getSelectAttributeOptionUsageCount()]?>px !important" href="<?=$this->url($resultTargetURL)?>?<?=$qs?>"><?=$akct->getSelectAttributeOptionValue()?></a>
 		<span>(<?=$akct->getSelectAttributeOptionUsageCount()?>)</span>
 		</li>
 <? } ?>
