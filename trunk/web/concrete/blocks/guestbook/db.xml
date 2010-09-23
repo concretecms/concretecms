@@ -50,5 +50,8 @@
 		<field name="approved" type="i">
 			<default value="1"/>
 		</field>
+		<index name="cID">
+			<col>cID</col>
+		</index>
 	</table>
 </schema>
