@@ -55,7 +55,15 @@ class UserList extends DatabaseItemList {
 		} else {
 			$this->filter(false, "{$tbl}.gID is null");
 		}
-		$this->debug();
+	}
+
+	public function excludeUsers($uo) {
+		if (is_object($uo)) {
+			$uID = $uo->getUserID();
+		} else {
+			$uID = $uo;
+		}
+		$this->filter('u.uID',$uID,'!=');
 	}
 
 	public function filterByGroupID($gID){ 
