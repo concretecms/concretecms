@@ -234,6 +234,9 @@ class AttributeKey extends Object {
 						$this->clearAttributeSets();
 						$this->setAttributeSet($as);
 					}
+				} else {
+					// clear set
+					$this->clearAttributeSets();
 				}
 				break;
 		}
