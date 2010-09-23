@@ -56,6 +56,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function set($key, $value) {
 			BlockController::$sets[$this->identifier][$key] = $value;		
 		}
+		
+		public function get($key) {
+			if (isset(BlockController::$sets[$this->identifier][$key])) {
+				return BlockController::$sets[$this->identifier][$key];
+			}
+			
+			return parent::get($key);
+		}
 
 		/** 
 		 * @access private

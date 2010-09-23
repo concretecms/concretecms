@@ -30,6 +30,8 @@ if ($_POST['task'] == 'update_extended_attribute') {
 		$cp = new Permissions($c);
 		if ($cp->canWrite()) {
 			$ak->saveAttributeForm($c);
+			$c->reindex();
+
 		}
 	}
 	$val = $c->getAttributeValueObject($ak);
@@ -47,6 +49,7 @@ if ($_POST['task'] == 'clear_extended_attribute') {
 		$cp = new Permissions($c);
 		if ($cp->canWrite()) {
 			$c->clearAttribute($ak);
+			$c->reindex();
 		}
 	}
 	

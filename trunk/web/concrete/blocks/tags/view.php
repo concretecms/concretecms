@@ -2,12 +2,19 @@
 <div class="ccm-tags-display">
 <h4><?php echo $title ?></h4>
 <?php
+$nh = Loader::helper("navigation");
+$c = Page::getCurrentPage();
 $av = $c->getAttributeValueObject($ak);
 $selectedOptions = $c->getAttribute($ak->getAttributeKeyHandle());
+$akc = $ak->getController();
 if($selectedOptions instanceof SelectAttributeTypeOptionList && $selectedOptions->count() > 0) {
 	?><ul>
 		<?php foreach($selectedOptions as $opt) {
-			?><li><?php echo $opt ?></li><?php 
+			$qs = $akc->field('atSelectOptionID') . '[]=' . $opt->getSelectAttributeOptionID();
+			?><li><? if ($targetCID > 0) {
+				$target = Page::getByID($targetCID); ?>
+				<a href="<?=$nh->getLinkToCollection($target)?>?<?=$qs?>">
+			<? } ?><?php echo $opt ?><? if ($targetCID > 0) { ?></a><? } ?></li><?php 
 		}?>	
 	</ul>
 <?php } ?>
