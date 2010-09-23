@@ -20,28 +20,20 @@ class BlogEntryPageTypeController extends Controller {
 		$comments_enabled = false;
 		
 		$c = $this->getCollectionObject();
-		$a = new Area('Main');
+		$a = new Area('Blog Post Footer');
 		$blocks = $a->getAreaBlocksArray($c);
 		if(is_array($blocks) && count($blocks) > 0) {
 			foreach($blocks as $b) {
 				if($b->getBlockTypeHandle() == 'guestbook') {
 					$controller = $b->getInstance();
-					//echo var_dump($controller);
-					$comment_bID = $b->bID;
+					$count = $controller->getEntryCount($c->getCollectionID());
 					$comments_enabled = true;
 					break;// stop at the fist guestbook block found
 				}	
 			}
 		}
 		
-		if(isset($comment_bID) && $comments_enabled) {
-			$ca = new Cache();		
-			//$ca->set('GuestBookCount',$comment_bID,1);
-			$count = $ca->get('GuestBookCount',$comment_bID);
-			//echo var_dump($count);
-		}
 		if($comments_enabled) {
-			echo $count; 
 			$format = ($count == 1 ? $singular_format : $plural_format);
 			return sprintf($format, $count);
 		} else {
