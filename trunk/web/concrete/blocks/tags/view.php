@@ -8,7 +8,7 @@ $av = $c->getAttributeValueObject($ak);
 $selectedOptions = $c->getAttribute($ak->getAttributeKeyHandle());
 $akc = $ak->getController();
 if($selectedOptions instanceof SelectAttributeTypeOptionList && $selectedOptions->count() > 0) {
-	?><ul>
+	?><ul class="ccm-tag-list">
 		<?php foreach($selectedOptions as $opt) {
 			$qs = $akc->field('atSelectOptionID') . '[]=' . $opt->getSelectAttributeOptionID();
 			?><li><? if ($targetCID > 0) {
