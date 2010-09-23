@@ -5,7 +5,6 @@
 			<key />
 			<unsigned />
 		</field>
-		<field name="attributeHandle" type="C" size="255"></field>
 		<field name="title" type="C" size="255"></field>
 		<field name="targetCID" type="I"></field>
 	</table>

@@ -7,9 +7,10 @@ class TagsBlockController extends BlockController {
 	protected $btInterfaceHeight = "350";
 	
 	// disable caching for development
-	protected $btCacheBlockOutput = true;
+	protected $btCacheBlockOutput = false;
 	protected $btCacheBlockOutputOnPost = false;
 	protected $btCacheBlockOutputForRegisteredUsers = false;
+	public $attributeHandle = 'tags';
 	
 	/** 
 	 * Used for localization. If we want to localize the name/description we have to include this
@@ -22,28 +23,31 @@ class TagsBlockController extends BlockController {
 		return t("Tags");
 	}
 	
-	protected function load() {
-		parent::load();
+	public function add() { 
+		$this->loadAttribute();
+	}
+	
+	protected function loadAttribute() {
 		Loader::model('attribute/categories/collection');
-		//$c = $this->getCollectionObject();
-		$c = Page::getCurrentPage();
 		$ak = CollectionAttributeKey::getByHandle($this->attributeHandle);
 		$this->set('ak',$ak);
-		$this->set('c',$c);
-	} 
+	}
 	
-	public function add() {  }
-	/*
-	public function edit() {  }
-	public function view() { }
-	*/
-
+	public function edit() { 
+		$this->loadAttribute();
+	}
+	
+	public function view() {
+		$this->loadAttribute();
+	}
+	
 	public function save($args) {
-		$c = Page::getCurrentPage();
-		$ak = CollectionAttributeKey::getByHandle($this->attributeHandle);
-		//$c->saveAttribute();
-		
+		$this->loadAttribute();
+		$c = Page::getByID($_REQUEST['cID'], 'RECENT');
+		$nvc = $c->getVersionToModify();
+		$ak = $this->get('ak');
+		$ak->saveAttributeForm($nvc);
+		$nvc->refreshCache();
 		parent::save($args);
 	}	
 }
-?>

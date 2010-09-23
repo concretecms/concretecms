@@ -10,18 +10,20 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 		<?php 
 		foreach($options as $opt) { 
 			if(in_array($opt->getSelectAttributeOptionID(), $selectedOptions)) { ?>
-			<div class="existingAttrValue ccm-tag-wrapper">
+			<div class="existingAttrValue">
 				<?=$form->hidden($this->field('atSelectOptionID') . '[]', $opt->getSelectAttributeOptionID(), array('style'=>'position:relative;')); ?>
-				<span class="ccm-tag"><?=$opt->getSelectAttributeOptionValue()?>
+				<?=$opt->getSelectAttributeOptionValue()?>
 				<a href="javascript:void(0);" onclick="$(this).parent().remove()">x</a>	
-				</span>
 			</div>
 		<?	} 
 		} ?>
 	</div>
 	<?php 
 	echo $form->text('newAttrValueRows'.$attrKeyID, array('style'=>'position:relative; width: 200px; z-index: 260;'));
-	echo $form->submit(t('Add'), 'add', array('onclick' => 'ccmAttributeTypeSelectTagHelper' . $attrKeyID . '.addButtonClick(); return false'));
+	?>
+	<input type="button" value="<?=t('Add')?>" onclick="ccmAttributeTypeSelectTagHelper<?=$attrKeyID?>.addButtonClick(); return false" />
+	<?
+	
 	foreach($options as $op) {
 			$opt_values[] = (string) $op;	
 	};?>
