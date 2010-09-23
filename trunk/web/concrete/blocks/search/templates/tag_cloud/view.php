@@ -6,27 +6,52 @@
 	$ak = CollectionAttributeKey::getByHandle('tags');
 	$akc = $ak->getController();
 	$pp = false;
+	
+	$tagCounts = array();
+	
 	if ($baseSearchPath != '') {
 		$pp = Page::getByPath($baseSearchPath);
 	}
-	$tags = $akc->getOptionUsageArray($pp);
-	$tagString = '';
-	for ($i = 0; $i < $tags->count(); $i++) {
-		$akct = $tags->get($i);
-		$tagString .= "{tag: \"" . $akct->getSelectAttributeOptionValue() . "\", count: " . $akct->getSelectAttributeOptionUsageCount() . "}";
-		if (($i + 1) < $tags->count()) {
-			$tagString .= ",";			
-		}
+	$ttags = $akc->getOptionUsageArray($pp);
+	$tags = array();
+	foreach($ttags as $t) {
+		$tagCounts[] = $t->getSelectAttributeOptionUsageCount();
+		$tags[] = $t;
+	}
+	shuffle($tags);
+	$tagSizes = array();
+	$count = count($tagCounts);
+	foreach($tagCounts as $tagCount => $pos) {
+		$tagSizes[$pos] = setFontPx(($pos + 1) / $count);
+	}
+	
+	
+	function setFontPx($weight) {
+		$em = ($weight * (11 - 1)) + 1;
+		$em = round($em) * 3;
+		return $em;
 	}
 ?>
 
-<div id="ccm-search-block-tag-cloud-<?=$bID?>"></div>
 
-<script type="text/javascript">
-var tags = [<?=$tagString?>];
-$("#ccm-search-block-tag-cloud-<?=$bID?>").tagCloud(tags, {
-	click: function(tag, event) {
-		window.location.href="<?=$this->url($resultTargetURL)?>?tag=" + tag;
-	}
-});
-</script>
+<? if ($title) { ?>
+	<h3><?=$title?></h3>
+<? } ?>
+
+<div class="ccm-search-block-tag-cloud-wrapper ">
+
+<ul id="ccm-search-block-tag-cloud-<?=$bID?>" class="ccm-search-block-tag-cloud">
+
+<?
+	for ($i = 0; $i < $ttags->count(); $i++) {
+		$akct = $tags[$i];
+		$qs = $akc->field('atSelectOptionID') . '[]=' . $akct->getSelectAttributeOptionID();
+		?>
+		<li><a style="font-size: <?=$tagSizes[$akct->getSelectAttributeOptionUsageCount()]?>px"href="<?=$this->url($resultTargetURL)?>?<?=$qs?>"><?=$akct->getSelectAttributeOptionValue()?></a>
+		<span>(<?=$akct->getSelectAttributeOptionUsageCount()?>)</span>
+		</li>
+<? } ?>
+</ul>
+
+<div class="ccm-spacer">&nbsp;</div>
+</div>

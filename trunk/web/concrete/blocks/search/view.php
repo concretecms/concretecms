@@ -22,7 +22,7 @@
 
 <? 
 $tt = Loader::helper('text');
-if (strlen($query)) { 
+if ($do_search) {
 	if(count($results)==0){ ?>
 		<h4 style="margin-top:32px"><?=t('There were no results found. Please try another keyword or phrase.')?></h4>	
 	<? }else{ ?>
