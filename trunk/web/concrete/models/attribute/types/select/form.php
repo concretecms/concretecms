@@ -6,19 +6,15 @@ $form = Loader::helper('form');
 if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display autocomplete form
 	$attrKeyID = $this->attributeKey->getAttributeKeyID();
 	?>
-	<style type="text/css">
-	/*
-	div.newAttrValue, div.existingAttrValue {display: inline;}
-	*/
-	</style>
 	<div id="selectedAttrValueRows_<?php echo $attrKeyID;?>">
 		<?php 
 		foreach($options as $opt) { 
 			if(in_array($opt->getSelectAttributeOptionID(), $selectedOptions)) { ?>
-			<div class="existingAttrValue">
+			<div class="existingAttrValue ccm-tag-wrapper">
 				<?=$form->hidden($this->field('atSelectOptionID') . '[]', $opt->getSelectAttributeOptionID(), array('style'=>'position:relative;')); ?>
-				<span><?=$opt->getSelectAttributeOptionValue()?></span>
+				<span class="ccm-tag"><?=$opt->getSelectAttributeOptionValue()?>
 				<a href="javascript:void(0);" onclick="$(this).parent().remove()">x</a>	
+				</span>
 			</div>
 		<?	} 
 		} ?>
