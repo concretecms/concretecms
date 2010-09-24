@@ -41,11 +41,8 @@ class SurveyBlockController extends BlockController {
 		return t("Survey");
 	} 
 	
-	//function __construct($obj = NULL) {
-	public function on_start() {
-		//parent::__construct($obj);
-		//$c = Page::getCurrentPage();
-		
+	function __construct($obj = NULL) {
+		parent::__construct($obj);
 		$c = $this->getCollectionObject();
 		
 		if (is_object($c)) {
@@ -61,6 +58,7 @@ class SurveyBlockController extends BlockController {
 				while ($row = $r->fetchRow()) {
 					$opt = new BlockPollOption;
 					$opt->optionID = $row['optionID'];
+					$opt->cID = $this->cID;
 					$opt->optionName = $row['optionName'];
 					$opt->displayOrder = $row['displayOrder'];
 					$this->options[] = $opt;
@@ -106,7 +104,7 @@ class SurveyBlockController extends BlockController {
 		$u = new User();
 		$db = Loader::db();
 		$bo = $this->getBlockObject();
-		$c = Page::getCurrentPage();
+		$c = $this->getCollectionObject();
 		if ($this->requiresRegistration()) {
 			if (!$u->isRegistered()) {
 				$this->redirect('/login');
@@ -287,9 +285,8 @@ class BlockPollOption {
 	function getOptionDisplayOrder() {return $this->displayOrder;}
 	
 	function getResults() {
-		$c = Page::getCurrentPage();
 		$db = Loader::db();
-		$v = array($this->optionID, intval($c->getCollectionID()) );
+		$v = array($this->optionID, intval($this->cID));
 		$q = "select count(resultID) from btSurveyResults where optionID = ? AND cID=?";
 		$result = $db->getOne($q, $v);
 		if ($result > 0) {

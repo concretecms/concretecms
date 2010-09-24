@@ -334,7 +334,8 @@ class Area extends Object {
 			//Invalid Collection
 			return false;
 		}
-
+		
+		$currentPage = Page::getCurrentPage();
 		$ourArea = Area::getOrCreate($c, $this->arHandle);
 		if (count($this->customTemplateArray) > 0) {
 			$ourArea->customTemplateArray = $this->customTemplateArray;
@@ -376,6 +377,12 @@ class Area extends Object {
 		foreach ($blocksToDisplay as $b) {
 			$bv = new BlockView();
 			$bv->setAreaObject($ourArea); 
+			
+			// this is useful for rendering areas from one page
+			// onto the next and including interactive elements
+			if ($currentPage->getCollectionID() != $c->getCollectionID()) {
+				$b->setBlockActionCollectionID($c->getCollectionID());
+			}
 			$p = new Permissions($b);
 			if (($p->canWrite() || $p->canDeleteBlock()) && $c->isEditMode() && $this->showControls) {
 				$includeEditStrip = true;

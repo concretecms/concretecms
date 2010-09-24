@@ -175,6 +175,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this->btCacheBlockOutputLifetime;
 		}
 		
+		public function getCollectionObject() {
+			if ($this->bActionCID > 0) {
+				return Page::getByID($this->bActionCID);
+			} 
+			return Page::getCurrentPage();
+		}
+		
 		/**
 		 * Automatically run when a block is deleted. This removes the special data from the block's specific database table. If a block needs to do more than this this method should be overridden.
 		 * @return $void
@@ -218,6 +225,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$this->load();
 				}
 				$this->btHandle = $obj->getBlockTypeHandle();
+				$this->bActionCID = $obj->getBlockActionCollectionID();
 			}
 			parent::__construct();
 			$this->set('controller', $this);
