@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");  
 $form = Loader::helper('form');
-		$c = Page::getCurrentPage();
+$c = Page::getCurrentPage();
 ?>
 <input type="hidden" name="attributeHandle" value="<?=$controller->attributeHandle?>" />
 <ul id="ccm-tags-tabs" class="ccm-dialog-tabs">
