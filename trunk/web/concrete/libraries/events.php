@@ -63,6 +63,7 @@ class Events {
 			Events::extendPageType($ctHandle, 'on_page_duplicate', $params);
 			Events::extendPageType($ctHandle, 'on_page_move', $params);
 			Events::extendPageType($ctHandle, 'on_page_view', $params);
+			Events::extendPageType($ctHandle, 'on_page_version_approve', $params);
 			Events::extendPageType($ctHandle, 'on_page_delete', $params);
 		} else {
 			$ce = Events::getInstance();
