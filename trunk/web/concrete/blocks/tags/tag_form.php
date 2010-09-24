@@ -1,7 +1,10 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");  
 $form = Loader::helper('form');
 $c = Page::getCurrentPage();
-?>
+
+if(!$ak instanceof CollectionAttributeKey) {?>
+	<div class="ccm-error"><?=t('Error: The required page attribute with the handle of: "%s" doesn\'t exist',$controller->attributeHandle)?><br/><br/></div>
+<? } else { ?>
 <input type="hidden" name="attributeHandle" value="<?=$controller->attributeHandle?>" />
 <ul id="ccm-tags-tabs" class="ccm-dialog-tabs">
 	<li class="ccm-nav-active"><a id="ccm-tags-tab-add" href="javascript:void(0);"><?=($bID>0)? t('Edit') : t('Add') ?></a></li>
@@ -34,3 +37,4 @@ $c = Page::getCurrentPage();
 		<br/><br/>
 	</div>
 </div>
+<?php } ?>
