@@ -4,7 +4,7 @@ class BlogEntryPageTypeController extends Controller {
 	
 	
 	public function on_page_add($c) {
-		// @todo make this work and scrape content for description		
+		Log::addEntry('added page');
 	}
 	
 	
