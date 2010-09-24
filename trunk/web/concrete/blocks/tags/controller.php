@@ -37,7 +37,7 @@ class TagsBlockController extends BlockController {
 	}
 	
 	public function view() {
-		$this->loadAttribute();
+		$this->loadAttribute();	
 	}
 	
 	public function save($args) {
