@@ -2,12 +2,6 @@
 
 class BlogEntryPageTypeController extends Controller {	
 	
-	
-	public function on_page_add($c) {
-		Log::addEntry('added page');
-	}
-	
-	
 	/**
 	 * Returns a formated text for the number of comments in the first comment block in the "Entry Comments" area
 	 * @param string $singular_format
