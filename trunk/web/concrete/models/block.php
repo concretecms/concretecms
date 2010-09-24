@@ -644,8 +644,7 @@ class Block extends Object {
 	}
 
 	function _getBlockAction() {
-		$c = Page::getCurrentPage();
-		$cID = $c->getCollectionID();
+		$cID = $this->getBlockActionCollectionID();
 		$bID = $this->getBlockID();
 		$arHandle = urlencode($this->getAreaHandle());
 		$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
@@ -654,7 +653,18 @@ class Block extends Object {
 		$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;bID={$bID}&amp;arHandle={$arHandle}" . $step . "&ccm_token=" . $token;
 		return $str;
 	}
-
+	
+	public function setBlockActionCollectionID($bActionCID) {
+		$this->bActionCID = $bActionCID;
+	}
+	
+	public function getBlockActionCollectionID() {
+		if ($this->bActionCID > 0) {
+			return $this->bActionCID;
+		}
+		$c = Page::getCurrentPage();
+		return $c->getCollectionID();
+	}
 	function getBlockEditAction() {
 		return $this->_getBlockAction();
 	}
