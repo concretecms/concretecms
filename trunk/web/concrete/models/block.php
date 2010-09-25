@@ -663,7 +663,11 @@ class Block extends Object {
 			return $this->bActionCID;
 		}
 		$c = Page::getCurrentPage();
-		return $c->getCollectionID();
+		if (is_object($c)) {
+			return $c->getCollectionID();
+		} else {
+			$this->getBlockCollectionObject();
+		}
 	}
 	function getBlockEditAction() {
 		return $this->_getBlockAction();

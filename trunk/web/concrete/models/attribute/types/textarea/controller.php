@@ -29,7 +29,7 @@ class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 		}
 		$this->addHeaderItem(Loader::helper('html')->javascript('tiny_mce/tiny_mce.js'));
 		// switch display type here
-		if ($this->akTextareaDisplayMode == 'text') {
+		if ($this->akTextareaDisplayMode == 'text' || $this->akTextareaDisplayMode == '') {
 			print Loader::helper('form')->textarea($this->field('value'), $value);
 		} else {
 			Loader::element('editor_init');

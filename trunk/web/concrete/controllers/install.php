@@ -70,25 +70,31 @@ class InstallController extends Controller {
 		
 		$installDirectory = $this->installData['DIR_BASE_CORE'] . '/config';
 		if ($_POST['INSTALL_SAMPLE_CONTENT']) {
-			$file = $installDirectory . '/install/sample_content.sql';
+			$contentfile = $installDirectory . '/install/sample_content.sql';
 		} else {
-			$file = $installDirectory . '/install/no_sample_content.sql';
+			$contentfile = $installDirectory . '/install/no_sample_content.sql';
 		}
 		
-		if (!file_exists($file)) {
+		if (!file_exists($contentfile)) {
 			throw new Exception(t('Unable to locate database import file.'));
 		}
 		
-		$sql = file_get_contents($file);
+		
+		$sql = file_get_contents($installDirectory . '/install/schema.sql');
+		$schema = explode("\n\n", $sql);
+		
+		$sql = file_get_contents($contentfile);
 		$sql = str_replace('{[CCM:SITE]}', $_POST['SITE'], $sql);
 		$statements = explode("\n\n", $sql);
 
+		$statements = array_merge($schema, $statements);
+		
 		$db = Loader::db();
 		foreach ($statements as $statement) {
 			if (trim($statement) != "") { 
 				$r = $db->execute($statement);
 				if (!$r) { 
-					throw new Exception(t('Unable to restore database: %s', $db->ErrorMsg()));
+					throw new Exception(t('Unable to install database: %s', $db->ErrorMsg()));
 				}
 			}
 		}
