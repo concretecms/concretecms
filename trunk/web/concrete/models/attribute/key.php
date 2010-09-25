@@ -3,7 +3,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class AttributeKey extends Object {
 	
 	public function getIndexedSearchTable() {return false;}
-	
+	public function getSearchIndexFieldDefinition() {
+		return $this->searchIndexFieldDefinition;
+	}
 	/** 
 	 * Returns the name for this attribute key
 	 */
