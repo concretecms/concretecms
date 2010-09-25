@@ -1,112 +1,64 @@
-DROP TABLE IF EXISTS AreaGroupBlockTypes;
-
-CREATE TABLE IF NOT EXISTS `AreaGroupBlockTypes` (
-  `cID` int(10) unsigned NOT NULL default '0',
-  `arHandle` varchar(255) NOT NULL,
-  `gID` int(10) unsigned NOT NULL default '0',
-  `uID` int(10) unsigned NOT NULL default '0',
-  `btID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`cID`,`arHandle`,`gID`,`uID`,`btID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS AreaGroups;
-
-CREATE TABLE IF NOT EXISTS `AreaGroups` (
-  `cID` int(10) unsigned NOT NULL default '0',
-  `arHandle` varchar(255) NOT NULL,
-  `gID` int(10) unsigned NOT NULL default '0',
-  `uID` int(10) unsigned NOT NULL default '0',
-  `agPermissions` varchar(64) NOT NULL,
-  PRIMARY KEY  (`cID`,`arHandle`,`gID`,`uID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS Areas;
-
-CREATE TABLE IF NOT EXISTS `Areas` (
-  `arID` int(10) unsigned NOT NULL auto_increment,
-  `cID` int(10) unsigned NOT NULL default '0',
-  `arHandle` varchar(255) NOT NULL,
-  `arOverrideCollectionPermissions` tinyint(1) NOT NULL default '0',
-  `arInheritPermissionsFromAreaOnCID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`arID`)
-) ENGINE=MyISAM AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
-
-INSERT INTO Areas VALUES(1,3,'Header Nav',0,0)
- ,(2,2,'Header Nav',0,0)
- ,(3,4,'Header Nav',0,0)
- ,(4,3,'Sidebar',0,0)
- ,(5,2,'Sidebar',0,0)
- ,(6,1,'Header',0,0)
- ,(7,3,'Header',0,0)
- ,(8,2,'Header',0,0)
- ,(9,4,'Header',0,0)
- ,(10,36,'Global Scrapbook',0,0)
- ,(11,1,'Main',0,0)
- ,(12,1,'Sidebar',0,0)
- ,(13,56,'Main',0,0)
- ,(14,56,'Header',0,0)
- ,(15,57,'Main',0,0)
- ,(16,58,'Header Nav',0,0)
- ,(17,58,'Sidebar',0,0)
- ,(18,58,'Header',0,0)
- ,(19,59,'Header Nav',0,0)
- ,(20,59,'Sidebar',0,0)
- ,(21,59,'Header',0,0)
- ,(22,59,'Main',0,0)
- ,(23,60,'Main',0,0)
- ,(24,60,'Sidebar',0,0)
- ,(25,61,'Main',0,0)
- ,(26,61,'Sidebar',0,0)
- ,(27,62,'Header Nav',0,0)
- ,(28,62,'Sidebar',0,0)
- ,(29,62,'Header',0,0)
- ,(30,62,'Main',0,0)
- ,(31,56,'Header Nav',0,0)
- ,(32,56,'Sidebar',0,0)
- ,(33,57,'Header Nav',0,0)
- ,(34,57,'Sidebar',0,0)
- ,(35,57,'Header',0,0)
- ,(36,60,'Header Nav',0,0)
- ,(37,60,'Header',0,0)
- ,(38,61,'Header Nav',0,0)
- ,(39,61,'Header',0,0)
- ,(40,1,'Header Nav',0,0);
-
-DROP TABLE IF EXISTS AttributeKeyCategories;
-
-CREATE TABLE IF NOT EXISTS `AttributeKeyCategories` (
-  `akCategoryID` int(10) unsigned NOT NULL auto_increment,
-  `akCategoryHandle` varchar(255) NOT NULL,
-  `akCategoryAllowSets` smallint(4) NOT NULL default '0',
-  `pkgID` int(10) unsigned default NULL,
-  PRIMARY KEY  (`akCategoryID`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+INSERT INTO Areas VALUES(1,1,'Header Nav',0,0)
+ ,(2,1,'Header',0,0)
+ ,(3,1,'Sidebar',0,0)
+ ,(4,1,'Main',0,0)
+ ,(5,2,'Header Nav',0,0)
+ ,(6,2,'Header',0,0)
+ ,(7,2,'Sidebar',0,0)
+ ,(8,2,'Main',0,0)
+ ,(9,64,'Header Nav',0,0)
+ ,(10,64,'Header',0,0)
+ ,(11,64,'Sidebar',0,0)
+ ,(12,64,'Main',0,0)
+ ,(13,65,'Header Nav',0,0)
+ ,(14,65,'Header',0,0)
+ ,(15,65,'Main',0,0)
+ ,(16,66,'Blog Post Header',0,0)
+ ,(17,66,'Main',0,0)
+ ,(18,66,'Blog Post More',0,0)
+ ,(19,66,'Blog Post Footer',0,0)
+ ,(20,66,'Header Nav',0,0)
+ ,(21,66,'Header',0,0)
+ ,(22,66,'Sidebar',0,0)
+ ,(23,67,'Header Nav',0,0)
+ ,(24,67,'Header',0,0)
+ ,(25,67,'Sidebar',0,0)
+ ,(26,67,'Main',0,0)
+ ,(27,68,'Header Nav',0,0)
+ ,(28,68,'Header',0,0)
+ ,(29,68,'Sidebar',0,0)
+ ,(30,68,'Main',0,0)
+ ,(31,69,'Header Nav',0,0)
+ ,(32,69,'Header',0,0)
+ ,(33,69,'Sidebar',0,0)
+ ,(34,69,'Main',0,0)
+ ,(35,70,'Header Nav',0,0)
+ ,(36,70,'Header',0,0)
+ ,(37,70,'Sidebar',0,0)
+ ,(38,70,'Main',0,0)
+ ,(39,71,'Header Nav',0,0)
+ ,(40,71,'Header',0,0)
+ ,(41,71,'Sidebar',0,0)
+ ,(42,71,'Main',0,0)
+ ,(43,72,'Header Nav',0,0)
+ ,(44,72,'Header',0,0)
+ ,(45,72,'Blog Post Header',0,0)
+ ,(46,72,'Main',0,0)
+ ,(47,72,'Blog Post More',0,0)
+ ,(48,72,'Blog Post Footer',0,0)
+ ,(49,72,'Sidebar',0,0)
+ ,(50,13,'Main',0,0)
+ ,(51,73,'Header Nav',0,0)
+ ,(52,73,'Header',0,0)
+ ,(53,73,'Blog Post Header',0,0)
+ ,(54,73,'Main',0,0)
+ ,(55,73,'Blog Post More',0,0)
+ ,(56,73,'Blog Post Footer',0,0)
+ ,(57,73,'Sidebar',0,0);
 
 INSERT INTO AttributeKeyCategories VALUES(1,'collection',0,NULL)
  ,(2,'user',0,NULL)
  ,(3,'file',0,NULL);
-
-DROP TABLE IF EXISTS AttributeKeys;
-
-CREATE TABLE IF NOT EXISTS `AttributeKeys` (
-  `akID` int(10) unsigned NOT NULL auto_increment,
-  `akHandle` varchar(255) NOT NULL,
-  `akName` varchar(255) NOT NULL,
-  `akIsSearchable` tinyint(1) NOT NULL default '0',
-  `akIsSearchableIndexed` tinyint(1) NOT NULL default '0',
-  `akIsAutoCreated` tinyint(1) NOT NULL default '0',
-  `akIsColumnHeader` tinyint(1) NOT NULL default '0',
-  `akIsEditable` tinyint(1) NOT NULL default '0',
-  `atID` int(10) unsigned default NULL,
-  `akCategoryID` int(10) unsigned default NULL,
-  `pkgID` int(10) unsigned default NULL,
-  PRIMARY KEY  (`akID`),
-  UNIQUE KEY `akHandle` (`akHandle`,`akCategoryID`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 INSERT INTO AttributeKeys VALUES(1,'meta_title','Meta Title',1,0,0,0,1,1,1,0)
  ,(2,'meta_description','Meta Description',1,0,0,0,1,2,1,0)
@@ -116,45 +68,10 @@ INSERT INTO AttributeKeys VALUES(1,'meta_title','Meta Title',1,0,0,0,1,1,1,0)
  ,(6,'header_extra_content','Header Extra Content',1,0,0,0,1,2,1,0)
  ,(7,'exclude_search_index','Exclude From Search Index',1,0,0,0,1,3,1,0)
  ,(8,'exclude_sitemapxml','Exclude From sitemap.xml',1,0,0,0,1,3,1,0)
- ,(9,'date_of_birth','Date of Birth',1,0,0,0,1,4,2,0)
- ,(10,'profile_private_messages_enabled','I would like to receive private messages.',1,0,0,0,1,3,2,0)
- ,(11,'profile_private_messages_notification_enabled','Send me email notifications when I receive a private message.',1,0,0,0,1,3,2,0)
- ,(12,'width','Width',1,0,1,0,0,6,3,0)
- ,(13,'height','Height',1,0,1,0,0,6,3,0)
- ,(14,'Release_Date','Release Date',1,0,0,0,1,4,1,0)
- ,(15,'Press_Release_Type','Press Release Type',1,0,0,0,1,8,1,0);
+ ,(9,'width','Width',1,0,1,0,0,6,3,0)
+ ,(10,'height','Height',1,0,1,0,0,6,3,0)
+ ,(11,'tags','Tags',0,0,0,0,1,8,1,0);
 
-DROP TABLE IF EXISTS AttributeSetKeys;
-
-CREATE TABLE IF NOT EXISTS `AttributeSetKeys` (
-  `akID` int(10) unsigned NOT NULL default '0',
-  `asID` int(10) unsigned NOT NULL default '0',
-  `displayOrder` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`akID`,`asID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS AttributeSets;
-
-CREATE TABLE IF NOT EXISTS `AttributeSets` (
-  `asID` int(10) unsigned NOT NULL auto_increment,
-  `asName` varchar(255) default NULL,
-  `asHandle` varchar(255) NOT NULL,
-  `akCategoryID` int(10) unsigned NOT NULL default '0',
-  `pkgID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`asID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS AttributeTypeCategories;
-
-CREATE TABLE IF NOT EXISTS `AttributeTypeCategories` (
-  `atID` int(10) unsigned NOT NULL default '0',
-  `akCategoryID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`atID`,`akCategoryID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO AttributeTypeCategories VALUES(1,1)
  ,(1,2)
@@ -179,16 +96,6 @@ INSERT INTO AttributeTypeCategories VALUES(1,1)
  ,(8,3)
  ,(9,2);
 
-DROP TABLE IF EXISTS AttributeTypes;
-
-CREATE TABLE IF NOT EXISTS `AttributeTypes` (
-  `atID` int(10) unsigned NOT NULL auto_increment,
-  `atHandle` varchar(255) NOT NULL,
-  `atName` varchar(255) NOT NULL,
-  `pkgID` int(10) unsigned default NULL,
-  PRIMARY KEY  (`atID`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
-
 INSERT INTO AttributeTypes VALUES(1,'text','Text',0)
  ,(2,'textarea','Text Area',0)
  ,(3,'boolean','Checkbox',0)
@@ -199,60 +106,59 @@ INSERT INTO AttributeTypes VALUES(1,'text','Text',0)
  ,(8,'select','Select',0)
  ,(9,'address','Address',0);
 
-DROP TABLE IF EXISTS AttributeValues;
+INSERT INTO AttributeValues VALUES(1,9,NOW(),1,6)
+ ,(2,10,NOW(),1,6)
+ ,(3,9,NOW(),1,6)
+ ,(4,10,NOW(),1,6)
+ ,(5,9,NOW(),1,6)
+ ,(6,10,NOW(),1,6)
+ ,(7,9,NOW(),1,6)
+ ,(8,10,NOW(),1,6)
+ ,(9,9,NOW(),1,6)
+ ,(10,10,NOW(),1,6)
+ ,(11,1,NOW(),1,1)
+ ,(12,2,NOW(),1,2)
+ ,(13,3,NOW(),1,2)
+ ,(14,4,NOW(),1,3)
+ ,(15,1,NOW(),1,1)
+ ,(16,2,NOW(),1,2)
+ ,(17,3,NOW(),1,2)
+ ,(18,4,NOW(),1,3)
+ ,(19,11,NOW(),1,8)
+ ,(20,1,NOW(),1,1)
+ ,(21,2,NOW(),1,2)
+ ,(22,3,NOW(),1,2)
+ ,(23,4,NOW(),1,3)
+ ,(24,1,NOW(),1,1)
+ ,(25,2,NOW(),1,2)
+ ,(26,3,NOW(),1,2)
+ ,(27,4,NOW(),1,3)
+ ,(28,1,NOW(),1,1)
+ ,(29,2,NOW(),1,2)
+ ,(30,3,NOW(),1,2)
+ ,(31,4,NOW(),1,3)
+ ,(32,1,NOW(),1,1)
+ ,(33,2,NOW(),1,2)
+ ,(34,3,NOW(),1,2)
+ ,(35,4,NOW(),1,3)
+ ,(36,1,NOW(),1,1)
+ ,(37,2,NOW(),1,2)
+ ,(38,3,NOW(),1,2)
+ ,(39,4,NOW(),1,3)
+ ,(40,11,NOW(),1,8)
+ ,(41,1,NOW(),1,1)
+ ,(42,2,NOW(),1,2)
+ ,(43,3,NOW(),1,2)
+ ,(44,4,NOW(),1,3)
+ ,(45,11,NOW(),1,8);
 
-CREATE TABLE IF NOT EXISTS `AttributeValues` (
-  `avID` int(10) unsigned NOT NULL auto_increment,
-  `akID` int(10) unsigned default NULL,
-  `avDateAdded` datetime NOT NULL default '0000-00-00 00:00:00',
-  `uID` int(10) unsigned default NULL,
-  `atID` int(10) unsigned default NULL,
-  PRIMARY KEY  (`avID`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
-
-INSERT INTO AttributeValues VALUES(1,12,NOW(),0,6)
- ,(2,13,NOW(),0,6)
- ,(3,12,NOW(),0,6)
- ,(4,13,NOW(),0,6)
- ,(5,12,NOW(),0,6)
- ,(6,13,NOW(),0,6)
- ,(7,12,NOW(),0,6)
- ,(8,13,NOW(),0,6)
- ,(9,12,NOW(),0,6)
- ,(10,13,NOW(),0,6)
- ,(11,14,NOW(),0,4)
- ,(12,15,NOW(),0,8)
- ,(13,4,NOW(),0,3);
-
-DROP TABLE IF EXISTS BlockRelations;
-
-CREATE TABLE IF NOT EXISTS `BlockRelations` (
-  `brID` int(10) unsigned NOT NULL auto_increment,
-  `bID` int(10) unsigned NOT NULL default '0',
-  `originalBID` int(10) unsigned NOT NULL default '0',
-  `relationType` varchar(50) NOT NULL,
-  PRIMARY KEY  (`brID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS BlockTypes;
-
-CREATE TABLE IF NOT EXISTS `BlockTypes` (
-  `btID` int(10) unsigned NOT NULL auto_increment,
-  `btHandle` varchar(32) NOT NULL,
-  `btName` varchar(128) NOT NULL,
-  `btDescription` text,
-  `btActiveWhenAdded` tinyint(1) NOT NULL default '1',
-  `btCopyWhenPropagate` tinyint(1) NOT NULL default '0',
-  `btIncludeAll` tinyint(1) NOT NULL default '0',
-  `btIsInternal` tinyint(1) NOT NULL default '0',
-  `btInterfaceWidth` int(10) unsigned NOT NULL default '400',
-  `btInterfaceHeight` int(10) unsigned NOT NULL default '400',
-  `pkgID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`btID`),
-  UNIQUE KEY `btHandle` (`btHandle`)
-) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+INSERT INTO BlockRelations VALUES(1,31,15,'DUPLICATE')
+ ,(2,32,16,'DUPLICATE')
+ ,(3,33,23,'DUPLICATE')
+ ,(4,34,31,'DUPLICATE')
+ ,(5,35,32,'DUPLICATE')
+ ,(6,36,15,'DUPLICATE')
+ ,(7,39,23,'DUPLICATE');
 
 INSERT INTO BlockTypes VALUES(1,'content','Content','HTML/WYSIWYG Editor Content.',1,0,0,0,600,465,0)
  ,(2,'html','HTML','For adding HTML by hand.',1,0,0,0,600,465,0)
@@ -270,295 +176,340 @@ INSERT INTO BlockTypes VALUES(1,'content','Content','HTML/WYSIWYG Editor Content
  ,(14,'video','Video Player','Embeds uploaded video into a web page. Supports AVI, WMV, Quicktime/MPEG4 and FLV formats.',1,0,0,0,300,200,0)
  ,(15,'rss_displayer','RSS Displayer','Fetch, parse and display the contents of an RSS or Atom feed.',1,0,0,0,400,170,0)
  ,(16,'youtube','Youtube Video','Embeds a Youtube Video in your web page.',1,0,0,0,400,170,0)
- ,(17,'survey','Survey','Provide a simple survey, along with results in a pie chart format.',1,0,1,0,420,300,0);
-
-DROP TABLE IF EXISTS Blocks;
-
-CREATE TABLE IF NOT EXISTS `Blocks` (
-  `bID` int(10) unsigned NOT NULL auto_increment,
-  `bName` varchar(60) default NULL,
-  `bDateAdded` datetime NOT NULL default '0000-00-00 00:00:00',
-  `bDateModified` datetime NOT NULL default '0000-00-00 00:00:00',
-  `bFilename` varchar(32) default NULL,
-  `bIsActive` varchar(1) NOT NULL default '1',
-  `btID` int(10) unsigned NOT NULL default '0',
-  `uID` int(10) unsigned default NULL,
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+ ,(17,'survey','Survey','Provide a simple survey, along with results in a pie chart format.',1,0,1,0,420,300,0)
+ ,(18,'date_nav','Date Navigation','A collapsible date based navigation tree',1,0,0,0,500,350,0)
+ ,(19,'next_previous','Next & Previous Nav','Navigate through sibling pages.',1,0,0,0,430,300,0)
+ ,(20,'tags','Tags','List pages based on type, area.',1,0,0,0,500,350,0);
 
 INSERT INTO Blocks VALUES(1,NULL,NOW(),NOW(),'header_menu.php','1',3,1)
- ,(2,NULL,NOW(),NOW(),'header_menu.php','1',3,1)
- ,(3,NULL,NOW(),NOW(),'header_menu.php','1',3,1)
- ,(4,NULL,NOW(),NOW(),NULL,'1',3,1)
- ,(5,NULL,NOW(),NOW(),NULL,'1',3,1)
- ,(15,NULL,NOW(),NOW(),NULL,'1',11,NULL)
- ,(7,NULL,NOW(),NOW(),NULL,'1',8,1)
+ ,(2,NULL,NOW(),NOW(),NULL,'1',11,1)
+ ,(3,NULL,NOW(),NOW(),NULL,'1',3,1)
+ ,(4,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(5,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(6,NULL,NOW(),NOW(),NULL,'1',16,1)
+ ,(7,NULL,NOW(),NOW(),'header_menu.php','1',3,1)
  ,(8,NULL,NOW(),NOW(),NULL,'1',8,1)
- ,(9,NULL,NOW(),NOW(),NULL,'1',8,1)
- ,(10,'My_Site_Name',NOW(),NOW(),NULL,'1',1,1)
- ,(11,NULL,NOW(),NOW(),NULL,'1',1,1)
- ,(12,NULL,NOW(),NOW(),NULL,'1',16,NULL)
- ,(13,NULL,NOW(),NOW(),NULL,'1',1,1)
- ,(14,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(9,NULL,NOW(),NOW(),NULL,'1',3,1)
+ ,(10,NULL,NOW(),NOW(),'header_menu.php','1',3,1)
+ ,(11,NULL,NOW(),NOW(),NULL,'1',8,1)
+ ,(12,NULL,NOW(),NOW(),'header_menu.php','1',3,1)
+ ,(13,NULL,NOW(),NOW(),NULL,'1',8,1)
+ ,(14,NULL,NOW(),NOW(),'breadcrumb.php','1',3,1)
+ ,(15,NULL,NOW(),NOW(),NULL,'1',1,1)
  ,(16,NULL,NOW(),NOW(),NULL,'1',1,1)
- ,(17,NULL,NOW(),NOW(),NULL,'1',1,1)
- ,(18,NULL,NOW(),NOW(),NULL,'1',5,1)
- ,(19,NULL,NOW(),NOW(),NULL,'1',11,NULL)
- ,(20,NULL,NOW(),NOW(),NULL,'1',1,1)
- ,(21,NULL,NOW(),NOW(),'custom.php','1',6,NULL)
- ,(22,NULL,NOW(),NOW(),'header_menu.php','1',3,1)
- ,(23,NULL,NOW(),NOW(),NULL,'1',3,1)
- ,(24,NULL,NOW(),NOW(),NULL,'1',8,1)
+ ,(17,NULL,NOW(),NOW(),NULL,'1',10,1)
+ ,(18,NULL,NOW(),NOW(),NULL,'1',18,1)
+ ,(19,NULL,NOW(),NOW(),NULL,'1',12,1)
+ ,(20,NULL,NOW(),NOW(),NULL,'1',3,1)
+ ,(21,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(22,NULL,NOW(),NOW(),NULL,'1',12,1)
+ ,(23,NULL,NOW(),NOW(),NULL,'1',20,1)
+ ,(24,NULL,NOW(),NOW(),NULL,'1',1,1)
  ,(25,NULL,NOW(),NOW(),NULL,'1',1,1)
  ,(26,NULL,NOW(),NOW(),NULL,'1',1,1)
- ,(27,NULL,NOW(),NOW(),NULL,'1',1,1)
- ,(28,NULL,NOW(),NOW(),NULL,'1',10,NULL)
- ,(29,NULL,NOW(),NOW(),NULL,'1',17,NULL)
- ,(30,NULL,NOW(),NOW(),NULL,'1',1,1)
- ,(31,NULL,NOW(),NOW(),NULL,'1',3,1)
- ,(32,NULL,NOW(),NOW(),NULL,'1',12,NULL)
- ,(33,NULL,NOW(),NOW(),NULL,'1',12,NULL);
+ ,(27,NULL,NOW(),NOW(),NULL,'1',10,1)
+ ,(28,NULL,NOW(),NOW(),NULL,'1',18,1)
+ ,(29,NULL,NOW(),NOW(),'tag_cloud','1',12,1)
+ ,(30,NULL,NOW(),NOW(),'blog_index.php','1',6,1)
+ ,(31,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(32,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(33,NULL,NOW(),NOW(),NULL,'1',20,1)
+ ,(34,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(35,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(36,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(37,NULL,NOW(),NOW(),NULL,'1',17,1)
+ ,(38,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(39,NULL,NOW(),NOW(),NULL,'1',20,1);
 
-DROP TABLE IF EXISTS CollectionAttributeValues;
+INSERT INTO CollectionAttributeValues VALUES(66,1,11,19)
+ ,(67,2,1,11)
+ ,(67,2,2,12)
+ ,(67,2,3,13)
+ ,(67,2,4,14)
+ ,(67,3,1,11)
+ ,(67,3,2,12)
+ ,(67,3,3,13)
+ ,(67,3,4,14)
+ ,(68,2,1,15)
+ ,(68,2,2,16)
+ ,(68,2,3,17)
+ ,(68,2,4,18)
+ ,(69,2,1,20)
+ ,(69,2,2,21)
+ ,(69,2,3,22)
+ ,(69,2,4,23)
+ ,(69,3,1,20)
+ ,(69,3,2,21)
+ ,(69,3,3,22)
+ ,(69,3,4,23)
+ ,(70,2,1,24)
+ ,(70,2,2,25)
+ ,(70,2,3,26)
+ ,(70,2,4,27)
+ ,(70,3,1,28)
+ ,(70,3,2,29)
+ ,(70,3,3,30)
+ ,(70,3,4,31)
+ ,(71,2,1,32)
+ ,(71,2,2,33)
+ ,(71,2,3,34)
+ ,(71,2,4,35)
+ ,(72,2,1,36)
+ ,(72,2,2,37)
+ ,(72,2,3,38)
+ ,(72,2,4,39)
+ ,(72,2,11,40)
+ ,(72,3,1,36)
+ ,(72,3,2,37)
+ ,(72,3,3,38)
+ ,(72,3,4,39)
+ ,(72,3,11,40)
+ ,(73,2,1,41)
+ ,(73,2,2,42)
+ ,(73,2,3,43)
+ ,(73,2,4,44)
+ ,(73,3,1,41)
+ ,(73,3,2,42)
+ ,(73,3,3,43)
+ ,(73,3,4,44)
+ ,(73,3,11,45);
 
-CREATE TABLE IF NOT EXISTS `CollectionAttributeValues` (
-  `cID` int(10) unsigned NOT NULL default '0',
-  `cvID` int(10) unsigned NOT NULL default '0',
-  `akID` int(10) unsigned NOT NULL default '0',
-  `avID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`cID`,`cvID`,`akID`,`avID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+INSERT INTO CollectionSearchIndexAttributes VALUES(2,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
+ ,(1,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
+ ,(65,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
+ ,(42,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
+ ,(67,'','','',0,0,NULL,0,0,NULL)
+ ,(68,'','','',1,0,NULL,0,0,NULL)
+ ,(66,NULL,NULL,NULL,0,0,NULL,0,0,'\n')
+ ,(69,'','','',0,0,NULL,0,0,NULL)
+ ,(70,'','','',0,0,NULL,0,0,NULL)
+ ,(71,'','','',0,0,NULL,0,0,NULL)
+ ,(72,'','','',0,0,NULL,0,0,'\nsample\nHello World\n')
+ ,(73,'','','',0,0,NULL,0,0,'\nsample\n');
 
-INSERT INTO CollectionAttributeValues VALUES(59,1,14,11)
- ,(59,1,15,12)
- ,(62,1,4,13);
+INSERT INTO CollectionVersionBlockStyles VALUES(1,2,1,'Header Nav',0)
+ ,(1,2,2,'Header',0)
+ ,(1,3,1,'Header Nav',0)
+ ,(1,3,2,'Header',0)
+ ,(67,1,7,'Header Nav',0)
+ ,(67,1,8,'Header',0)
+ ,(67,1,9,'Sidebar',0)
+ ,(67,2,7,'Header Nav',0)
+ ,(67,2,8,'Header',0)
+ ,(67,2,9,'Sidebar',0)
+ ,(68,1,7,'Header Nav',0)
+ ,(68,1,8,'Header',0)
+ ,(68,1,9,'Sidebar',0)
+ ,(68,2,7,'Header Nav',0)
+ ,(68,2,8,'Header',0)
+ ,(68,2,9,'Sidebar',0)
+ ,(69,1,8,'Header',0)
+ ,(69,1,7,'Header Nav',0)
+ ,(69,1,9,'Sidebar',0)
+ ,(69,2,7,'Header Nav',0)
+ ,(69,2,8,'Header',0)
+ ,(69,2,9,'Sidebar',0)
+ ,(69,3,7,'Header Nav',0)
+ ,(69,3,8,'Header',0)
+ ,(69,3,9,'Sidebar',0)
+ ,(69,3,24,'Main',0)
+ ,(70,1,7,'Header Nav',0)
+ ,(70,1,8,'Header',0)
+ ,(70,1,9,'Sidebar',0)
+ ,(70,2,7,'Header Nav',0)
+ ,(70,2,8,'Header',0)
+ ,(70,2,9,'Sidebar',0)
+ ,(70,3,7,'Header Nav',0)
+ ,(70,3,8,'Header',0)
+ ,(70,3,9,'Sidebar',0)
+ ,(70,3,26,'Main',0)
+ ,(71,1,1,'Header Nav',0)
+ ,(71,1,2,'Header',0)
+ ,(71,1,3,'Sidebar',0)
+ ,(71,2,1,'Header Nav',0)
+ ,(71,2,2,'Header',0)
+ ,(72,1,12,'Header Nav',0)
+ ,(72,1,13,'Header',0)
+ ,(72,1,14,'Blog Post Header',0)
+ ,(72,1,15,'Main',0)
+ ,(72,1,16,'Blog Post More',0)
+ ,(72,1,17,'Blog Post Footer',0)
+ ,(72,1,18,'Sidebar',0)
+ ,(72,1,23,'Sidebar',0)
+ ,(72,2,12,'Header Nav',0)
+ ,(72,2,13,'Header',0)
+ ,(72,2,14,'Blog Post Header',0)
+ ,(72,2,32,'Blog Post More',0)
+ ,(72,2,33,'Sidebar',0)
+ ,(72,2,17,'Blog Post Footer',0)
+ ,(72,2,18,'Sidebar',0)
+ ,(72,3,12,'Header Nav',0)
+ ,(72,2,31,'Main',0)
+ ,(72,3,13,'Header',0)
+ ,(72,3,14,'Blog Post Header',0)
+ ,(72,3,17,'Blog Post Footer',0)
+ ,(72,3,18,'Sidebar',0)
+ ,(72,3,35,'Blog Post More',0)
+ ,(73,1,12,'Header Nav',0)
+ ,(72,3,33,'Sidebar',0)
+ ,(72,3,34,'Main',0)
+ ,(73,1,13,'Header',0)
+ ,(73,1,14,'Blog Post Header',0)
+ ,(73,1,15,'Main',0)
+ ,(73,1,16,'Blog Post More',0)
+ ,(73,1,17,'Blog Post Footer',0)
+ ,(73,1,18,'Sidebar',0)
+ ,(73,1,23,'Sidebar',0)
+ ,(73,2,12,'Header Nav',0)
+ ,(73,2,13,'Header',0)
+ ,(73,2,14,'Blog Post Header',0)
+ ,(73,3,13,'Header',0)
+ ,(73,3,12,'Header Nav',0)
+ ,(73,2,17,'Blog Post Footer',0)
+ ,(73,2,18,'Sidebar',0)
+ ,(73,2,23,'Sidebar',0)
+ ,(73,2,36,'Main',0)
+ ,(73,3,14,'Blog Post Header',0)
+ ,(73,3,17,'Blog Post Footer',0)
+ ,(73,3,18,'Sidebar',0)
+ ,(73,3,36,'Main',0)
+ ,(73,3,38,'Blog Post More',0)
+ ,(73,3,39,'Sidebar',0);
 
-DROP TABLE IF EXISTS CollectionSearchIndexAttributes;
+INSERT INTO CollectionVersionBlocks VALUES(2,1,1,'Header Nav',0,'1',0,0)
+ ,(2,1,2,'Header',0,'1',0,0)
+ ,(2,1,3,'Sidebar',0,'1',0,0)
+ ,(1,2,1,'Header Nav',0,'0',0,0)
+ ,(1,2,2,'Header',0,'0',0,0)
+ ,(1,3,1,'Header Nav',0,'0',0,0)
+ ,(1,3,2,'Header',0,'0',0,0)
+ ,(1,3,4,'Sidebar',0,'1',0,0)
+ ,(1,3,5,'Main',0,'1',0,0)
+ ,(1,3,6,'Main',1,'1',0,0)
+ ,(64,1,7,'Header Nav',0,'1',0,0)
+ ,(64,1,8,'Header',0,'1',0,0)
+ ,(64,1,9,'Sidebar',0,'1',0,0)
+ ,(65,1,10,'Header Nav',0,'1',0,0)
+ ,(65,1,11,'Header',0,'1',0,0)
+ ,(66,1,12,'Header Nav',0,'1',0,0)
+ ,(66,1,13,'Header',0,'1',0,0)
+ ,(66,1,14,'Blog Post Header',0,'1',0,0)
+ ,(66,1,15,'Main',0,'1',0,0)
+ ,(66,1,16,'Blog Post More',0,'1',0,0)
+ ,(66,1,17,'Blog Post Footer',0,'1',0,1)
+ ,(66,1,18,'Sidebar',0,'1',0,0)
+ ,(67,1,7,'Header Nav',0,'0',0,0)
+ ,(67,1,8,'Header',0,'0',0,0)
+ ,(67,1,9,'Sidebar',0,'0',0,0)
+ ,(67,2,7,'Header Nav',0,'0',0,0)
+ ,(67,2,8,'Header',0,'0',0,0)
+ ,(67,2,9,'Sidebar',0,'0',0,0)
+ ,(68,1,7,'Header Nav',0,'0',0,0)
+ ,(68,1,8,'Header',0,'0',0,0)
+ ,(68,1,9,'Sidebar',0,'0',0,0)
+ ,(68,2,7,'Header Nav',0,'0',0,0)
+ ,(68,2,8,'Header',0,'0',0,0)
+ ,(68,2,9,'Sidebar',0,'0',0,0)
+ ,(68,2,19,'Main',0,'1',0,0)
+ ,(67,3,7,'Header Nav',0,'0',0,0)
+ ,(67,3,8,'Header',0,'0',0,0)
+ ,(67,3,22,'Sidebar',0,'1',0,0)
+ ,(67,3,20,'Main',1,'1',0,0)
+ ,(67,3,21,'Main',0,'1',0,0)
+ ,(66,1,23,'Sidebar',1,'1',0,0)
+ ,(69,1,7,'Header Nav',0,'0',0,0)
+ ,(69,1,8,'Header',0,'0',0,0)
+ ,(69,1,9,'Sidebar',0,'0',0,0)
+ ,(69,2,7,'Header Nav',0,'0',0,0)
+ ,(69,2,8,'Header',0,'0',0,0)
+ ,(69,2,9,'Sidebar',0,'0',0,0)
+ ,(69,2,24,'Main',0,'1',0,0)
+ ,(69,3,7,'Header Nav',0,'0',0,0)
+ ,(69,3,8,'Header',0,'0',0,0)
+ ,(69,3,9,'Sidebar',0,'0',0,0)
+ ,(69,3,24,'Main',0,'0',0,0)
+ ,(69,3,25,'Main',1,'1',0,0)
+ ,(70,1,7,'Header Nav',0,'0',0,0)
+ ,(70,1,8,'Header',0,'0',0,0)
+ ,(70,1,9,'Sidebar',0,'0',0,0)
+ ,(70,2,7,'Header Nav',0,'0',0,0)
+ ,(70,2,8,'Header',0,'0',0,0)
+ ,(70,2,9,'Sidebar',0,'0',0,0)
+ ,(70,2,26,'Main',0,'1',0,0)
+ ,(70,2,27,'Main',1,'1',0,1)
+ ,(70,3,7,'Header Nav',0,'0',0,0)
+ ,(70,3,8,'Header',0,'0',0,0)
+ ,(70,3,9,'Sidebar',0,'0',0,0)
+ ,(70,3,26,'Main',0,'0',0,0)
+ ,(71,1,1,'Header Nav',0,'0',0,0)
+ ,(71,1,2,'Header',0,'0',0,0)
+ ,(71,1,3,'Sidebar',0,'0',0,0)
+ ,(71,2,1,'Header Nav',0,'0',0,0)
+ ,(71,2,2,'Header',0,'0',0,0)
+ ,(71,2,28,'Sidebar',0,'1',0,0)
+ ,(71,2,29,'Sidebar',1,'1',0,0)
+ ,(71,2,30,'Main',0,'1',0,0)
+ ,(72,1,12,'Header Nav',0,'0',0,0)
+ ,(72,1,13,'Header',0,'0',0,0)
+ ,(72,1,14,'Blog Post Header',0,'0',0,0)
+ ,(72,1,15,'Main',0,'0',0,0)
+ ,(72,1,16,'Blog Post More',0,'0',0,0)
+ ,(72,1,17,'Blog Post Footer',0,'0',0,0)
+ ,(72,1,18,'Sidebar',0,'0',0,0)
+ ,(72,1,23,'Sidebar',1,'0',0,0)
+ ,(72,2,12,'Header Nav',0,'0',0,0)
+ ,(72,2,13,'Header',0,'0',0,0)
+ ,(72,2,14,'Blog Post Header',0,'0',0,0)
+ ,(72,2,32,'Blog Post More',0,'1',0,0)
+ ,(72,2,33,'Sidebar',1,'1',0,0)
+ ,(72,2,17,'Blog Post Footer',0,'0',0,0)
+ ,(72,2,18,'Sidebar',0,'0',0,0)
+ ,(72,3,12,'Header Nav',0,'0',0,0)
+ ,(72,2,31,'Main',0,'1',0,0)
+ ,(72,3,13,'Header',0,'0',0,0)
+ ,(72,3,14,'Blog Post Header',0,'0',0,0)
+ ,(72,3,17,'Blog Post Footer',0,'0',0,0)
+ ,(72,3,18,'Sidebar',0,'0',0,0)
+ ,(72,3,35,'Blog Post More',0,'1',0,0)
+ ,(73,1,12,'Header Nav',0,'0',0,0)
+ ,(72,3,33,'Sidebar',1,'0',0,0)
+ ,(72,3,34,'Main',0,'1',0,0)
+ ,(73,1,13,'Header',0,'0',0,0)
+ ,(73,1,14,'Blog Post Header',0,'0',0,0)
+ ,(73,1,15,'Main',0,'0',0,0)
+ ,(73,1,16,'Blog Post More',0,'0',0,0)
+ ,(73,1,17,'Blog Post Footer',0,'0',0,0)
+ ,(73,1,18,'Sidebar',0,'0',0,0)
+ ,(73,1,23,'Sidebar',1,'0',0,0)
+ ,(73,2,12,'Header Nav',0,'0',0,0)
+ ,(73,2,13,'Header',0,'0',0,0)
+ ,(73,2,14,'Blog Post Header',0,'0',0,0)
+ ,(73,2,38,'Blog Post More',0,'1',0,0)
+ ,(73,2,37,'Main',1,'1',0,1)
+ ,(73,2,17,'Blog Post Footer',0,'0',0,0)
+ ,(73,2,18,'Sidebar',0,'0',0,0)
+ ,(73,2,23,'Sidebar',1,'0',0,0)
+ ,(73,2,36,'Main',0,'1',0,0)
+ ,(73,3,12,'Header Nav',0,'0',0,0)
+ ,(73,3,13,'Header',0,'0',0,0)
+ ,(73,3,14,'Blog Post Header',0,'0',0,0)
+ ,(73,3,17,'Blog Post Footer',0,'0',0,0)
+ ,(73,3,18,'Sidebar',0,'0',0,0)
+ ,(73,3,36,'Main',0,'0',0,0)
+ ,(73,3,38,'Blog Post More',0,'0',0,0)
+ ,(73,3,39,'Sidebar',1,'1',0,0);
 
-CREATE TABLE IF NOT EXISTS `CollectionSearchIndexAttributes` (
-  `cID` int(11) unsigned NOT NULL default '0',
-  `ak_meta_title` text,
-  `ak_meta_description` text,
-  `ak_meta_keywords` text,
-  `ak_exclude_nav` tinyint(4) default '0',
-  `ak_exclude_page_list` tinyint(4) default '0',
-  `ak_header_extra_content` text,
-  `ak_exclude_search_index` tinyint(4) default '0',
-  `ak_exclude_sitemapxml` tinyint(4) default '0',
-  `ak_Release_Date` datetime default NULL,
-  `ak_Press_Release_Type` text,
-  PRIMARY KEY  (`cID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO CollectionSearchIndexAttributes VALUES(1,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(55,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(16,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(17,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(18,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(19,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(21,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(22,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(23,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(24,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(25,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(26,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(27,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(28,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(29,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(30,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(31,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(32,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(33,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(34,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(35,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(36,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(37,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(38,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(43,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(45,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(46,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(47,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(49,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(52,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(53,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(59,NULL,NULL,NULL,0,0,NULL,0,0,'2010-09-13 11:37:00','\nPress Release\n')
- ,(62,NULL,NULL,NULL,1,0,NULL,0,0,NULL,NULL)
- ,(9,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(42,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(56,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(57,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(60,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL)
- ,(61,NULL,NULL,NULL,0,0,NULL,0,0,NULL,NULL);
-
-DROP TABLE IF EXISTS CollectionVersionAreaLayouts;
-
-CREATE TABLE IF NOT EXISTS `CollectionVersionAreaLayouts` (
-  `cvalID` int(10) unsigned NOT NULL auto_increment,
-  `cID` int(10) unsigned default '0',
-  `cvID` int(10) unsigned default '0',
-  `arHandle` varchar(255) default NULL,
-  `layoutID` int(10) unsigned NOT NULL default '0',
-  `position` int(10) default '1000',
-  `areaNameNumber` int(10) unsigned default '0',
-  PRIMARY KEY  (`cvalID`),
-  KEY `areaLayoutsIndex` (`cID`,`cvID`,`arHandle`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS CollectionVersionAreaStyles;
-
-CREATE TABLE IF NOT EXISTS `CollectionVersionAreaStyles` (
-  `cID` int(10) unsigned NOT NULL default '0',
-  `cvID` int(10) unsigned NOT NULL default '0',
-  `arHandle` varchar(255) NOT NULL,
-  `csrID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`cID`,`cvID`,`arHandle`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS CollectionVersionBlockPermissions;
-
-CREATE TABLE IF NOT EXISTS `CollectionVersionBlockPermissions` (
-  `cID` int(10) unsigned NOT NULL default '0',
-  `cvID` int(10) unsigned NOT NULL default '1',
-  `bID` int(10) unsigned NOT NULL default '0',
-  `gID` int(10) unsigned NOT NULL default '0',
-  `uID` int(10) unsigned NOT NULL default '0',
-  `cbgPermissions` varchar(32) default NULL,
-  PRIMARY KEY  (`cID`,`cvID`,`bID`,`gID`,`uID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS CollectionVersionBlockStyles;
-
-CREATE TABLE IF NOT EXISTS `CollectionVersionBlockStyles` (
-  `cID` int(10) unsigned NOT NULL default '0',
-  `cvID` int(10) unsigned NOT NULL default '0',
-  `bID` int(10) unsigned NOT NULL default '0',
-  `arHandle` varchar(255) NOT NULL,
-  `csrID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`cID`,`cvID`,`bID`,`arHandle`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO CollectionVersionBlockStyles VALUES(1,1,1,'Header Nav',0)
- ,(56,1,1,'Header Nav',0)
- ,(56,1,4,'Sidebar',0)
- ,(57,1,1,'Header Nav',0)
- ,(57,1,4,'Sidebar',0)
- ,(57,1,7,'Header',0)
- ,(59,1,22,'Header Nav',0)
- ,(59,1,23,'Sidebar',0)
- ,(59,1,24,'Header',0)
- ,(60,1,1,'Header Nav',0)
- ,(60,1,4,'Sidebar',0)
- ,(60,1,7,'Header',0)
- ,(61,1,1,'Header Nav',0)
- ,(62,1,1,'Header Nav',0)
- ,(61,1,7,'Header',0)
- ,(62,1,7,'Header',0);
-
-DROP TABLE IF EXISTS CollectionVersionBlocks;
-
-CREATE TABLE IF NOT EXISTS `CollectionVersionBlocks` (
-  `cID` int(10) unsigned NOT NULL default '0',
-  `cvID` int(10) unsigned NOT NULL default '1',
-  `bID` int(10) unsigned NOT NULL default '0',
-  `arHandle` varchar(255) NOT NULL,
-  `cbDisplayOrder` int(10) unsigned NOT NULL default '0',
-  `isOriginal` varchar(1) NOT NULL default '0',
-  `cbOverrideAreaPermissions` tinyint(1) NOT NULL default '0',
-  `cbIncludeAll` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`cID`,`cvID`,`bID`,`arHandle`),
-  KEY `cbIncludeAll` (`cbIncludeAll`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO CollectionVersionBlocks VALUES(3,1,1,'Header Nav',0,'1',0,0)
- ,(2,1,2,'Header Nav',0,'1',0,0)
- ,(4,1,3,'Header Nav',0,'1',0,0)
- ,(3,1,4,'Sidebar',0,'1',0,0)
- ,(2,1,5,'Sidebar',0,'1',0,0)
- ,(1,1,1,'Header Nav',0,'0',0,0)
- ,(1,1,15,'Header',0,'1',0,0)
- ,(3,1,7,'Header',0,'1',0,0)
- ,(2,1,8,'Header',0,'1',0,0)
- ,(4,1,9,'Header',0,'1',0,0)
- ,(36,1,10,'Global Scrapbook',0,'1',0,0)
- ,(1,1,11,'Main',0,'1',0,0)
- ,(1,1,12,'Main',1,'1',0,0)
- ,(1,1,13,'Main',2,'1',0,0)
- ,(1,1,14,'Sidebar',0,'1',0,0)
- ,(56,1,1,'Header Nav',0,'0',0,0)
- ,(56,1,4,'Sidebar',0,'0',0,0)
- ,(56,1,19,'Header',0,'1',0,0)
- ,(56,1,16,'Main',0,'1',0,0)
- ,(56,1,17,'Main',1,'1',0,0)
- ,(56,1,18,'Main',2,'1',0,0)
- ,(57,1,1,'Header Nav',0,'0',0,0)
- ,(57,1,4,'Sidebar',0,'0',0,0)
- ,(57,1,7,'Header',0,'0',0,0)
- ,(57,1,20,'Main',0,'1',0,0)
- ,(57,1,21,'Main',1,'1',0,0)
- ,(58,1,22,'Header Nav',0,'1',0,0)
- ,(58,1,23,'Sidebar',0,'1',0,0)
- ,(58,1,24,'Header',0,'1',0,0)
- ,(59,1,22,'Header Nav',0,'0',0,0)
- ,(59,1,23,'Sidebar',0,'0',0,0)
- ,(59,1,24,'Header',0,'0',0,0)
- ,(59,1,25,'Main',0,'1',0,0)
- ,(59,1,26,'Main',1,'1',0,0)
- ,(60,1,1,'Header Nav',0,'0',0,0)
- ,(60,1,4,'Sidebar',0,'0',0,0)
- ,(60,1,7,'Header',0,'0',0,0)
- ,(60,1,27,'Main',0,'1',0,0)
- ,(60,1,28,'Main',1,'1',0,1)
- ,(60,1,29,'Sidebar',1,'1',0,1)
- ,(61,1,1,'Header Nav',0,'0',0,0)
- ,(62,1,1,'Header Nav',0,'0',0,0)
- ,(61,1,7,'Header',0,'0',0,0)
- ,(61,1,30,'Main',0,'1',0,0)
- ,(61,1,31,'Main',1,'1',0,0)
- ,(62,1,32,'Main',0,'1',0,0)
- ,(62,1,7,'Header',0,'0',0,0)
- ,(61,1,33,'Sidebar',0,'1',0,0);
-
-DROP TABLE IF EXISTS CollectionVersions;
-
-CREATE TABLE IF NOT EXISTS `CollectionVersions` (
-  `cID` int(10) unsigned NOT NULL default '0',
-  `cvID` int(10) unsigned NOT NULL default '1',
-  `cvName` text,
-  `cvHandle` varchar(64) default NULL,
-  `cvDescription` text,
-  `cvDatePublic` datetime default NULL,
-  `cvDateCreated` datetime NOT NULL default '0000-00-00 00:00:00',
-  `cvComments` varchar(255) default NULL,
-  `cvIsApproved` tinyint(1) NOT NULL default '0',
-  `cvIsNew` tinyint(1) NOT NULL default '0',
-  `cvAuthorUID` int(10) unsigned default NULL,
-  `cvApproverUID` int(10) unsigned default NULL,
-  `cvActivateDatetime` datetime default NULL,
-  PRIMARY KEY  (`cID`,`cvID`),
-  KEY `cvIsApproved` (`cvIsApproved`),
-  KEY `cvName` (`cvName`(128))
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO CollectionVersions VALUES(1,1,'Home','home',NULL,'2010-09-13 11:37:30','2010-09-13 11:37:30','Initial Version',1,0,1,NULL,NULL)
- ,(2,1,NULL,NULL,NULL,'2010-09-13 11:37:30','2010-09-13 11:37:30','Initial Version',1,0,1,NULL,NULL)
- ,(3,1,NULL,NULL,NULL,'2010-09-13 11:37:30','2010-09-13 11:37:30','Initial Version',1,0,1,NULL,NULL)
- ,(4,1,NULL,NULL,NULL,'2010-09-13 11:37:30','2010-09-13 11:37:30','Initial Version',1,0,1,NULL,NULL)
- ,(5,1,'Login','login',NULL,'2010-09-13 11:37:31','2010-09-13 11:37:31','Initial Version',1,0,1,NULL,NULL)
- ,(6,1,'Register','register',NULL,'2010-09-13 11:37:31','2010-09-13 11:37:31','Initial Version',1,0,1,NULL,NULL)
- ,(7,1,'Profile','profile',NULL,'2010-09-13 11:37:31','2010-09-13 11:37:31','Initial Version',1,0,1,NULL,NULL)
- ,(8,1,'Edit','edit',NULL,'2010-09-13 11:37:31','2010-09-13 11:37:31','Initial Version',1,0,1,NULL,NULL)
- ,(9,1,'Members','members',NULL,'2010-09-13 11:37:31','2010-09-13 11:37:31','Initial Version',1,0,1,NULL,NULL)
- ,(10,1,'Avatar','avatar',NULL,'2010-09-13 11:37:31','2010-09-13 11:37:31','Initial Version',1,0,1,NULL,NULL)
- ,(11,1,'Messages','messages',NULL,'2010-09-13 11:37:31','2010-09-13 11:37:31','Initial Version',1,0,1,NULL,NULL)
- ,(12,1,'Friends','friends',NULL,'2010-09-13 11:37:31','2010-09-13 11:37:31','Initial Version',1,0,1,NULL,NULL)
- ,(13,1,'Page Not Found','page_not_found',NULL,'2010-09-13 11:37:31','2010-09-13 11:37:31','Initial Version',1,0,1,NULL,NULL)
- ,(14,1,'Page Forbidden','page_forbidden',NULL,'2010-09-13 11:37:31','2010-09-13 11:37:31','Initial Version',1,0,1,NULL,NULL)
+INSERT INTO CollectionVersions VALUES(2,1,NULL,NULL,NULL,NOW(),NOW(),'Initial Version',1,0,1,1,NULL)
+ ,(1,2,'Home','home',NULL,NOW(),NOW(),'New Version 2',0,0,1,1,NULL)
+ ,(5,1,'Login','login',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(6,1,'Register','register',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(7,1,'Profile','profile',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(8,1,'Edit','edit',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(10,1,'Avatar','avatar',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(11,1,'Messages','messages',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(12,1,'Friends','friends',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(13,1,'Page Not Found','page_not_found',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(14,1,'Page Forbidden','page_forbidden',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(15,1,'Dashboard','dashboard',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(16,1,'Sitemap','sitemap','Whole world at a glance.',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(17,1,'Full Sitemap','full',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
@@ -600,41 +551,42 @@ INSERT INTO CollectionVersions VALUES(1,1,'Home','home',NULL,'2010-09-13 11:37:3
  ,(53,1,'Email','mail','Enable post via email and other settings.',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(54,1,'Marketplace','marketplace',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(55,1,'Download File','download_file',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
- ,(56,1,'About','about',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
- ,(57,1,'Press Room','press-room',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
- ,(58,1,NULL,NULL,NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
- ,(59,1,'Launch our new site!','launch-our-new-site','Neeto speedo! We just rebuilt our site in record time and now we can easily change EVERYTHING.',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
- ,(60,1,'Guestbook','guestbook','Neeto speedo! We just rebuilt our site in record time and now we can easily change EVERYTHING.',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
- ,(61,1,'Search','search',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
- ,(62,1,'Search Results','search-results',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
- ,(63,1,NULL,'uID=1',NULL,'2010-09-13 11:37:46','2010-09-13 11:37:46','Initial Version',1,0,NULL,NULL,NULL);
+ ,(63,1,NULL,'uID=1',NULL,NOW(),NOW(),'Initial Version',1,0,NULL,NULL,NULL)
+ ,(1,3,'Home','home',NULL,NOW(),NOW(),'New Version 3',1,0,1,1,NULL)
+ ,(64,1,'',NULL,NULL,NOW(),NOW(),'Initial Version',1,0,NULL,NULL,NULL)
+ ,(65,1,'',NULL,NULL,NOW(),NOW(),'Initial Version',1,0,NULL,1,NULL)
+ ,(66,1,'',NULL,NULL,NOW(),NOW(),'Initial Version',1,0,NULL,1,NULL)
+ ,(67,1,'Search','search','',NOW(),NOW(),'Initial Version',0,0,1,NULL,NULL)
+ ,(67,2,'Search','search','',NOW(),NOW(),'New Version 2',0,0,1,1,NULL)
+ ,(68,1,'Search Results','search-results','',NOW(),NOW(),'Initial Version',0,0,1,NULL,NULL)
+ ,(68,2,'Search Results','search-results','',NOW(),NOW(),'New Version 2',1,0,1,1,NULL)
+ ,(67,3,'Search','search','',NOW(),NOW(),'New Version 3',1,0,1,1,NULL)
+ ,(69,1,'About','about','',NOW(),NOW(),'Initial Version',0,0,1,NULL,NULL)
+ ,(69,2,'About','about','',NOW(),NOW(),'New Version 2',0,0,1,1,NULL)
+ ,(69,3,'About','about','',NOW(),NOW(),'New Version 3',1,0,1,1,NULL)
+ ,(70,1,'Guest Book','guest-book','',NOW(),NOW(),'Initial Version',0,0,1,NULL,NULL)
+ ,(70,2,'Guest Book','guest-book','',NOW(),NOW(),'New Version 2',0,0,1,1,NULL)
+ ,(70,3,'Guestbook','guest-book','',NOW(),NOW(),'New Version 3',1,0,1,1,NULL)
+ ,(71,1,'Blog','blog','',NOW(),NOW(),'Initial Version',0,0,1,NULL,NULL)
+ ,(71,2,'Blog','blog','',NOW(),NOW(),'Version 2',1,0,1,1,NULL)
+ ,(72,1,'My First Blog Post','my-first-blog-post','',NOW(),NOW(),'Initial Version',0,0,1,NULL,NULL)
+ ,(72,2,'My First Blog Post','my-first-blog-post','',NOW(),NOW(),'New Version 2',0,0,1,1,NULL)
+ ,(72,3,'My First Blog Post','my-first-blog-post','',NOW(),NOW(),'Version 3',1,0,1,1,NULL)
+ ,(73,1,'Adding a New Post','adding-a-new-post','',NOW(),NOW(),'Initial Version',0,0,1,NULL,NULL)
+ ,(73,2,'Adding a New Post','adding-a-new-post','',NOW(),NOW(),'New Version 2',0,0,1,1,NULL)
+ ,(73,3,'Adding a New Post','adding-a-new-post','',NOW(),NOW(),'New Version 3',1,0,1,1,NULL);
 
-DROP TABLE IF EXISTS Collections;
-
-CREATE TABLE IF NOT EXISTS `Collections` (
-  `cID` int(10) unsigned NOT NULL auto_increment,
-  `cDateAdded` datetime NOT NULL default '0000-00-00 00:00:00',
-  `cDateModified` datetime NOT NULL default '0000-00-00 00:00:00',
-  `cHandle` varchar(255) default NULL,
-  PRIMARY KEY  (`cID`),
-  KEY `cDateModified` (`cDateModified`),
-  KEY `cDateAdded` (`cDateAdded`)
-) ENGINE=MyISAM AUTO_INCREMENT=64 DEFAULT CHARSET=utf8;
-
-INSERT INTO Collections VALUES(1,'2010-09-13 11:37:30','2010-09-13 11:37:30','home')
- ,(2,'2010-09-13 11:37:30','2010-09-13 11:37:30',NULL)
- ,(3,'2010-09-13 11:37:30','2010-09-13 11:37:30',NULL)
- ,(4,'2010-09-13 11:37:30','2010-09-13 11:37:30',NULL)
- ,(5,'2010-09-13 11:37:31','2010-09-13 11:37:31','login')
- ,(6,'2010-09-13 11:37:31','2010-09-13 11:37:31','register')
- ,(7,'2010-09-13 11:37:31','2010-09-13 11:37:31','profile')
- ,(8,'2010-09-13 11:37:31','2010-09-13 11:37:31','edit')
- ,(9,'2010-09-13 11:37:31','2010-09-13 11:37:31','members')
- ,(10,'2010-09-13 11:37:31','2010-09-13 11:37:31','avatar')
- ,(11,'2010-09-13 11:37:31','2010-09-13 11:37:31','messages')
- ,(12,'2010-09-13 11:37:31','2010-09-13 11:37:31','friends')
- ,(13,'2010-09-13 11:37:31','2010-09-13 11:37:31','page_not_found')
- ,(14,'2010-09-13 11:37:31','2010-09-13 11:37:31','page_forbidden')
+INSERT INTO Collections VALUES(1,NOW(),NOW(),'home')
+ ,(2,NOW(),NOW(),NULL)
+ ,(5,NOW(),NOW(),'login')
+ ,(6,NOW(),NOW(),'register')
+ ,(7,NOW(),NOW(),'profile')
+ ,(8,NOW(),NOW(),'edit')
+ ,(10,NOW(),NOW(),'avatar')
+ ,(11,NOW(),NOW(),'messages')
+ ,(12,NOW(),NOW(),'friends')
+ ,(13,NOW(),NOW(),'page_not_found')
+ ,(14,NOW(),NOW(),'page_forbidden')
  ,(15,NOW(),NOW(),'dashboard')
  ,(16,NOW(),NOW(),'sitemap')
  ,(17,NOW(),NOW(),'full')
@@ -676,63 +628,19 @@ INSERT INTO Collections VALUES(1,'2010-09-13 11:37:30','2010-09-13 11:37:30','ho
  ,(53,NOW(),NOW(),'mail')
  ,(54,NOW(),NOW(),'marketplace')
  ,(55,NOW(),NOW(),'download_file')
- ,(56,NOW(),NOW(),'about')
- ,(57,NOW(),NOW(),'press-room')
- ,(58,NOW(),NOW(),NULL)
- ,(59,NOW(),NOW(),'launch-our-new-site')
- ,(60,NOW(),NOW(),'guestbook')
- ,(61,NOW(),NOW(),'search')
- ,(62,NOW(),NOW(),'search-results')
- ,(63,'2010-09-13 11:37:46','2010-09-13 11:37:46','uID=1');
+ ,(63,NOW(),NOW(),'uID=1')
+ ,(64,NOW(),NOW(),NULL)
+ ,(65,NOW(),NOW(),NULL)
+ ,(66,NOW(),NOW(),NULL)
+ ,(67,NOW(),NOW(),'search')
+ ,(68,NOW(),NOW(),'search-results')
+ ,(69,NOW(),NOW(),'about')
+ ,(70,NOW(),NOW(),'guest-book')
+ ,(71,NOW(),NOW(),'blog')
+ ,(72,NOW(),NOW(),'my-first-blog-post')
+ ,(73,NOW(),NOW(),'adding-a-new-post');
 
-DROP TABLE IF EXISTS Config;
-
-CREATE TABLE IF NOT EXISTS `Config` (
-  `cfKey` varchar(64) NOT NULL,
-  `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `cfValue` longtext,
-  `uID` int(10) unsigned NOT NULL default '0',
-  `pkgID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`cfKey`,`uID`),
-  KEY `uID` (`uID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO Config VALUES('SITE',NOW(),'{[CCM:SITE]}',0,0);
-
-DROP TABLE IF EXISTS CustomStylePresets;
-
-CREATE TABLE IF NOT EXISTS `CustomStylePresets` (
-  `cspID` int(10) unsigned NOT NULL auto_increment,
-  `cspName` varchar(255) NOT NULL,
-  `csrID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`cspID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS CustomStyleRules;
-
-CREATE TABLE IF NOT EXISTS `CustomStyleRules` (
-  `csrID` int(10) unsigned NOT NULL auto_increment,
-  `css_id` varchar(128) default NULL,
-  `css_class` varchar(128) default NULL,
-  `css_serialized` text,
-  `css_custom` text,
-  PRIMARY KEY  (`csrID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS DashboardHomepage;
-
-CREATE TABLE IF NOT EXISTS `DashboardHomepage` (
-  `dbhID` int(10) unsigned NOT NULL auto_increment,
-  `dbhModule` varchar(255) NOT NULL,
-  `dbhDisplayName` varchar(255) default NULL,
-  `dbhDisplayOrder` int(10) unsigned NOT NULL default '0',
-  `pkgID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`dbhID`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+INSERT INTO Config VALUES('SITE',NOW(),'{CCM:SITE}',0,0);
 
 INSERT INTO DashboardHomepage VALUES(1,'activity','Site Activity',0,0)
  ,(2,'reports','Statistics',0,0)
@@ -740,393 +648,81 @@ INSERT INTO DashboardHomepage VALUES(1,'activity','Site Activity',0,0)
  ,(4,'news','Latest News',0,0)
  ,(5,'notes','Notes',0,0);
 
-DROP TABLE IF EXISTS DownloadStatistics;
 
-CREATE TABLE IF NOT EXISTS `DownloadStatistics` (
-  `dsID` int(10) unsigned NOT NULL auto_increment,
-  `fID` int(10) unsigned NOT NULL,
-  `fvID` int(10) unsigned NOT NULL,
-  `uID` int(10) unsigned NOT NULL,
-  `rcID` int(10) unsigned NOT NULL,
-  `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`dsID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS FileAttributeValues;
-
-CREATE TABLE IF NOT EXISTS `FileAttributeValues` (
-  `fID` int(10) unsigned NOT NULL default '0',
-  `fvID` int(10) unsigned NOT NULL default '0',
-  `akID` int(10) unsigned NOT NULL default '0',
-  `avID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`fID`,`fvID`,`akID`,`avID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO FileAttributeValues VALUES(1,1,12,1)
- ,(1,1,13,2)
- ,(2,1,12,3)
- ,(2,1,13,4)
- ,(3,1,12,5)
- ,(3,1,13,6)
- ,(4,1,12,7)
- ,(4,1,13,8)
- ,(5,1,12,9)
- ,(5,1,13,10);
-
-DROP TABLE IF EXISTS FilePermissionFileTypes;
-
-CREATE TABLE IF NOT EXISTS `FilePermissionFileTypes` (
-  `fsID` int(10) unsigned NOT NULL default '0',
-  `gID` int(10) unsigned NOT NULL default '0',
-  `uID` int(10) unsigned NOT NULL default '0',
-  `extension` varchar(32) NOT NULL,
-  PRIMARY KEY  (`fsID`,`gID`,`uID`,`extension`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS FilePermissions;
-
-CREATE TABLE IF NOT EXISTS `FilePermissions` (
-  `fID` int(10) unsigned NOT NULL default '0',
-  `gID` int(10) unsigned NOT NULL default '0',
-  `uID` int(10) unsigned NOT NULL default '0',
-  `canRead` int(4) NOT NULL default '0',
-  `canWrite` int(4) NOT NULL default '0',
-  `canAdmin` int(4) NOT NULL default '0',
-  `canSearch` int(4) NOT NULL default '0',
-  PRIMARY KEY  (`fID`,`gID`,`uID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS FileSearchIndexAttributes;
-
-CREATE TABLE IF NOT EXISTS `FileSearchIndexAttributes` (
-  `fID` int(11) unsigned NOT NULL default '0',
-  `ak_width` decimal(14,4) default '0.0000',
-  `ak_height` decimal(14,4) default '0.0000',
-  PRIMARY KEY  (`fID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+INSERT INTO FileAttributeValues VALUES(1,1,9,1)
+ ,(1,1,10,2)
+ ,(2,1,9,3)
+ ,(2,1,10,4)
+ ,(3,1,9,5)
+ ,(3,1,10,6)
+ ,(4,1,9,7)
+ ,(4,1,10,8)
+ ,(5,1,9,9)
+ ,(5,1,10,10);
 
 INSERT INTO FileSearchIndexAttributes VALUES(1,800.0000,192.0000)
  ,(2,800.0000,192.0000)
  ,(3,800.0000,192.0000)
- ,(4,800.0000,192.0000)
- ,(5,800.0000,215.0000);
-
-DROP TABLE IF EXISTS FileSetFiles;
-
-CREATE TABLE IF NOT EXISTS `FileSetFiles` (
-  `fsfID` int(10) unsigned NOT NULL auto_increment,
-  `fID` int(10) unsigned NOT NULL,
-  `fsID` int(10) unsigned NOT NULL,
-  `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `fsDisplayOrder` int(10) unsigned NOT NULL,
-  PRIMARY KEY  (`fsfID`),
-  KEY `fID` (`fID`),
-  KEY `fsID` (`fsID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS FileSetPermissions;
-
-CREATE TABLE IF NOT EXISTS `FileSetPermissions` (
-  `fsID` int(10) unsigned NOT NULL default '0',
-  `gID` int(10) unsigned NOT NULL default '0',
-  `uID` int(10) unsigned NOT NULL default '0',
-  `canRead` int(4) default NULL,
-  `canWrite` int(4) default NULL,
-  `canAdmin` int(4) default NULL,
-  `canAdd` int(4) default NULL,
-  `canSearch` int(3) unsigned default NULL,
-  PRIMARY KEY  (`fsID`,`gID`,`uID`),
-  KEY `canRead` (`canRead`),
-  KEY `canWrite` (`canWrite`),
-  KEY `canAdmin` (`canAdmin`),
-  KEY `canSearch` (`canSearch`),
-  KEY `canAdd` (`canAdd`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+ ,(4,800.0000,215.0000)
+ ,(5,800.0000,192.0000);
 
 INSERT INTO FileSetPermissions VALUES(0,1,0,10,0,0,0,0)
  ,(0,2,0,10,0,0,0,0)
  ,(0,3,0,10,10,10,10,10);
 
-DROP TABLE IF EXISTS FileSetSavedSearches;
+INSERT INTO FileVersionLog VALUES(1,1,1,5,9)
+ ,(2,1,1,5,10)
+ ,(3,2,1,5,9)
+ ,(4,2,1,5,10)
+ ,(5,3,1,5,9)
+ ,(6,3,1,5,10)
+ ,(7,4,1,5,9)
+ ,(8,4,1,5,10)
+ ,(9,5,1,5,9)
+ ,(10,5,1,5,10)
+ ,(11,1,1,3,0)
+ ,(12,1,1,4,0)
+ ,(13,2,1,3,0)
+ ,(14,2,1,4,0)
+ ,(15,3,1,3,0)
+ ,(16,3,1,4,0)
+ ,(17,4,1,3,0)
+ ,(18,4,1,4,0)
+ ,(19,5,1,3,0)
+ ,(20,5,1,4,0);
 
-CREATE TABLE IF NOT EXISTS `FileSetSavedSearches` (
-  `fsID` int(10) unsigned NOT NULL default '0',
-  `fsSearchRequest` text,
-  `fsResultColumns` text,
-  PRIMARY KEY  (`fsID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+INSERT INTO FileVersions VALUES(1,1,'inneroptics_dot_net_aspens.jpg','371285369023',1,108199,'inneroptics_dot_net_aspens.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(2,1,'inneroptics_dot_net_canyonlands.jpg','911285369025',1,54531,'inneroptics_dot_net_canyonlands.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(3,1,'inneroptics_dot_net_new_zealand_sheep.jpg','851285369025',1,80735,'inneroptics_dot_net_new_zealand_sheep.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(4,1,'inneroptics_dot_net_portland.jpg','711285369026',1,55737,'inneroptics_dot_net_portland.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(5,1,'inneroptics_dot_net_starfish.jpg','701285369026',1,88621,'inneroptics_dot_net_starfish.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1);
 
-
-
-DROP TABLE IF EXISTS FileSets;
-
-CREATE TABLE IF NOT EXISTS `FileSets` (
-  `fsID` int(10) unsigned NOT NULL auto_increment,
-  `fsName` varchar(64) NOT NULL,
-  `uID` int(10) unsigned NOT NULL default '0',
-  `fsType` int(4) NOT NULL,
-  `fsOverrideGlobalPermissions` int(4) default NULL,
-  PRIMARY KEY  (`fsID`),
-  KEY `fsOverrideGlobalPermissions` (`fsOverrideGlobalPermissions`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS FileStorageLocations;
-
-CREATE TABLE IF NOT EXISTS `FileStorageLocations` (
-  `fslID` int(10) unsigned NOT NULL default '0',
-  `fslName` varchar(255) NOT NULL,
-  `fslDirectory` varchar(255) NOT NULL,
-  PRIMARY KEY  (`fslID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS FileVersionLog;
-
-CREATE TABLE IF NOT EXISTS `FileVersionLog` (
-  `fvlID` int(10) unsigned NOT NULL auto_increment,
-  `fID` int(10) unsigned NOT NULL default '0',
-  `fvID` int(10) unsigned NOT NULL default '0',
-  `fvUpdateTypeID` int(3) unsigned NOT NULL default '0',
-  `fvUpdateTypeAttributeID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`fvlID`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
-
-INSERT INTO FileVersionLog VALUES(1,1,1,5,12)
- ,(2,1,1,5,13)
- ,(3,2,1,5,12)
- ,(4,2,1,5,13)
- ,(5,3,1,5,12)
- ,(6,3,1,5,13)
- ,(7,4,1,5,12)
- ,(8,4,1,5,13)
- ,(9,5,1,5,12)
- ,(10,5,1,5,13);
-
-DROP TABLE IF EXISTS FileVersions;
-
-CREATE TABLE IF NOT EXISTS `FileVersions` (
-  `fID` int(10) unsigned NOT NULL default '0',
-  `fvID` int(10) unsigned NOT NULL default '0',
-  `fvFilename` varchar(255) NOT NULL,
-  `fvPrefix` varchar(12) default NULL,
-  `fvGenericType` int(3) unsigned NOT NULL default '0',
-  `fvSize` int(20) unsigned NOT NULL default '0',
-  `fvTitle` varchar(255) default NULL,
-  `fvDescription` text,
-  `fvTags` varchar(255) default NULL,
-  `fvIsApproved` int(10) unsigned NOT NULL default '1',
-  `fvDateAdded` datetime default NULL,
-  `fvApproverUID` int(10) unsigned NOT NULL default '0',
-  `fvAuthorUID` int(10) unsigned NOT NULL default '0',
-  `fvActivateDatetime` datetime default NULL,
-  `fvHasThumbnail1` int(1) NOT NULL default '0',
-  `fvHasThumbnail2` int(1) NOT NULL default '0',
-  `fvHasThumbnail3` int(1) NOT NULL default '0',
-  `fvExtension` varchar(32) default NULL,
-  `fvType` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`fID`,`fvID`),
-  KEY `fvExtension` (`fvType`),
-  KEY `fvTitle` (`fvTitle`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO FileVersions VALUES(1,1,'inneroptics_dot_net_aspens.jpg','000000000000',1,108199,'inneroptics_dot_net_aspens.jpg','','',1,NOW(),0,0,NOW(),1,1,0,'jpg',1)
- ,(2,1,'inneroptics_dot_net_canyonlands.jpg','000000000000',1,54531,'inneroptics_dot_net_canyonlands.jpg','','',1,NOW(),0,0,NOW(),1,1,0,'jpg',1)
- ,(3,1,'inneroptics_dot_net_new_zealand_sheep.jpg','000000000000',1,80735,'inneroptics_dot_net_new_zealand_sheep.jpg','','',1,NOW(),0,0,NOW(),1,1,0,'jpg',1)
- ,(4,1,'inneroptics_dot_net_starfish.jpg','000000000000',1,88621,'inneroptics_dot_net_starfish.jpg','','',1,NOW(),0,0,NOW(),1,1,0,'jpg',1)
- ,(5,1,'inneroptics_dot_net_portland.jpg','000000000000',1,55737,'inneroptics_dot_net_portland.jpg','','',1,NOW(),0,0,NOW(),1,1,0,'jpg',1);
-
-DROP TABLE IF EXISTS Files;
-
-CREATE TABLE IF NOT EXISTS `Files` (
-  `fID` int(10) unsigned NOT NULL auto_increment,
-  `fDateAdded` datetime default NULL,
-  `uID` int(10) unsigned NOT NULL default '0',
-  `fslID` int(10) unsigned NOT NULL default '0',
-  `ocID` int(10) unsigned NOT NULL,
-  `fOverrideSetPermissions` int(1) NOT NULL default '0',
-  `fPassword` varchar(255) default NULL,
-  PRIMARY KEY  (`fID`,`uID`,`fslID`),
-  KEY `fOverrideSetPermissions` (`fOverrideSetPermissions`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-
-INSERT INTO Files VALUES(1,NOW(),1,0,0,0,NULL)
- ,(2,NOW(),1,0,0,0,NULL)
- ,(3,NOW(),1,0,0,0,NULL)
- ,(4,NOW(),1,0,0,0,NULL)
- ,(5,NOW(),1,0,0,0,NULL);
-
-DROP TABLE IF EXISTS Groups;
-
-CREATE TABLE IF NOT EXISTS `Groups` (
-  `gID` int(10) unsigned NOT NULL auto_increment,
-  `gName` varchar(128) NOT NULL,
-  `gDescription` varchar(255) NOT NULL,
-  `gUserExpirationIsEnabled` int(1) NOT NULL default '0',
-  `gUserExpirationMethod` varchar(12) default NULL,
-  `gUserExpirationSetDateTime` datetime default NULL,
-  `gUserExpirationInterval` int(10) unsigned NOT NULL default '0',
-  `gUserExpirationAction` varchar(20) default NULL,
-  PRIMARY KEY  (`gID`),
-  UNIQUE KEY `gName` (`gName`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+INSERT INTO Files VALUES(1,NOW(),1,0,2,0,NULL)
+ ,(2,NOW(),1,0,2,0,NULL)
+ ,(3,NOW(),1,0,2,0,NULL)
+ ,(4,NOW(),1,0,2,0,NULL)
+ ,(5,NOW(),1,0,2,0,NULL);
 
 INSERT INTO Groups VALUES(1,'Guest','The guest group represents unregistered visitors to your site.',0,NULL,NULL,0,NULL)
  ,(2,'Registered Users','The registered users group represents all user accounts.',0,NULL,NULL,0,NULL)
  ,(3,'Administrators','',0,NULL,NULL,0,NULL);
 
-DROP TABLE IF EXISTS Jobs;
-
-CREATE TABLE IF NOT EXISTS `Jobs` (
-  `jID` int(10) unsigned NOT NULL auto_increment,
-  `jName` varchar(100) NOT NULL,
-  `jDescription` varchar(255) NOT NULL,
-  `jDateInstalled` datetime default NULL,
-  `jDateLastRun` datetime default NULL,
-  `pkgID` int(10) unsigned NOT NULL default '0',
-  `jLastStatusText` varchar(255) default NULL,
-  `jLastStatusCode` smallint(4) NOT NULL default '0',
-  `jStatus` varchar(14) NOT NULL default 'ENABLED',
-  `jHandle` varchar(255) NOT NULL,
-  `jNotUninstallable` smallint(4) NOT NULL default '0',
-  PRIMARY KEY  (`jID`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
-INSERT INTO Jobs VALUES(1,'Index Search Engine','Index the site to allow searching to work quickly and accurately.',NOW(),NOW(),0,'Index updated. 6 pages required reindexing.',0,'ENABLED','index_search',1)
+INSERT INTO Jobs VALUES(1,'Index Search Engine','Index the site to allow searching to work quickly and accurately.',NOW(),NOW(),0,'Index updated. 2 pages required reindexing.',0,'ENABLED','index_search',1)
  ,(2,'Generate Sitemap File','Generate the sitemap.xml file that search engines use to crawl your site.',NOW(),NOW(),0,'Sitemap XML File Saved.',0,'ENABLED','generate_sitemap',0)
  ,(3,'Process Email Posts','Polls an email account and grabs private messages/postings that are sent there..',NOW(),NOW(),0,'The Job was run successfully.',0,'ENABLED','process_email',0);
 
-DROP TABLE IF EXISTS JobsLog;
-
-CREATE TABLE IF NOT EXISTS `JobsLog` (
-  `jlID` int(10) unsigned NOT NULL auto_increment,
-  `jID` int(10) unsigned NOT NULL,
-  `jlMessage` varchar(255) NOT NULL,
-  `jlTimestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `jlError` int(10) NOT NULL default '0',
-  PRIMARY KEY  (`jlID`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
-
-DROP TABLE IF EXISTS LayoutPresets;
-
-CREATE TABLE IF NOT EXISTS `LayoutPresets` (
-  `lpID` int(10) unsigned NOT NULL auto_increment,
-  `lpName` varchar(128) NOT NULL,
-  `layoutID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`lpID`),
-  UNIQUE KEY `layoutID` (`layoutID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS Layouts;
-
-CREATE TABLE IF NOT EXISTS `Layouts` (
-  `layoutID` int(10) unsigned NOT NULL auto_increment,
-  `layout_rows` int(5) NOT NULL default '3',
-  `layout_columns` int(3) NOT NULL default '3',
-  `spacing` int(3) NOT NULL default '3',
-  `breakpoints` varchar(255) NOT NULL default '',
-  `locked` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`layoutID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS Logs;
-
-CREATE TABLE IF NOT EXISTS `Logs` (
-  `logID` int(10) unsigned NOT NULL auto_increment,
-  `logType` varchar(64) NOT NULL,
-  `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `logText` longtext,
-  `logIsInternal` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`logID`),
-  KEY `logType` (`logType`),
-  KEY `logIsInternal` (`logIsInternal`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS MailImporters;
-
-CREATE TABLE IF NOT EXISTS `MailImporters` (
-  `miID` int(10) unsigned NOT NULL auto_increment,
-  `miHandle` varchar(64) NOT NULL,
-  `miServer` varchar(255) default NULL,
-  `miUsername` varchar(255) default NULL,
-  `miPassword` varchar(255) default NULL,
-  `miEncryption` varchar(32) default NULL,
-  `miIsEnabled` int(1) NOT NULL default '0',
-  `miEmail` varchar(255) default NULL,
-  `miPort` int(10) unsigned NOT NULL default '0',
-  `pkgID` int(10) unsigned default NULL,
-  PRIMARY KEY  (`miID`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+INSERT INTO JobsLog VALUES(1,0,'Index updated. 6 pages required reindexing.',NOW(),0)
+ ,(2,0,'Sitemap XML File Saved.',NOW(),0)
+ ,(3,0,'The Job was run successfully.',NOW(),0)
+ ,(4,1,'mysql error: [1054: Unknown column \'ak_exclude_search_index\' in \'where clause\'] in EXECUTE(\"select p1.cID, pt.ctHandle  from Pages p1 left join PageTypes pt on (pt.ctID = p1.ctID) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical ',NOW(),2)
+ ,(5,1,'Index updated. 2 pages required reindexing.',NOW(),0);
 
 INSERT INTO MailImporters VALUES(1,'private_message',NULL,NULL,NULL,NULL,0,NULL,0,0);
-
-DROP TABLE IF EXISTS MailValidationHashes;
-
-CREATE TABLE IF NOT EXISTS `MailValidationHashes` (
-  `mvhID` int(10) unsigned NOT NULL auto_increment,
-  `miID` int(10) unsigned NOT NULL default '0',
-  `email` varchar(255) NOT NULL,
-  `mHash` varchar(128) NOT NULL,
-  `mDateGenerated` int(10) unsigned NOT NULL default '0',
-  `mDateRedeemed` int(10) unsigned NOT NULL default '0',
-  `data` text,
-  PRIMARY KEY  (`mvhID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS Packages;
-
-CREATE TABLE IF NOT EXISTS `Packages` (
-  `pkgID` int(10) unsigned NOT NULL auto_increment,
-  `pkgName` varchar(255) NOT NULL,
-  `pkgHandle` varchar(64) NOT NULL,
-  `pkgDescription` text,
-  `pkgDateInstalled` datetime NOT NULL,
-  `pkgIsInstalled` tinyint(1) NOT NULL default '1',
-  `pkgVersion` varchar(32) default NULL,
-  `pkgAvailableVersion` varchar(32) default NULL,
-  PRIMARY KEY  (`pkgID`),
-  UNIQUE KEY `pkgHandle` (`pkgHandle`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS PagePaths;
-
-CREATE TABLE IF NOT EXISTS `PagePaths` (
-  `ppID` int(10) unsigned NOT NULL auto_increment,
-  `cID` int(10) unsigned default '0',
-  `cPath` text,
-  `ppIsCanonical` varchar(1) NOT NULL default '1',
-  PRIMARY KEY  (`ppID`),
-  KEY `cID` (`cID`),
-  KEY `ppIsCanonical` (`ppIsCanonical`),
-  KEY `cPath` (`cPath`(128))
-) ENGINE=MyISAM AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
 
 INSERT INTO PagePaths VALUES(1,5,'/login','1')
  ,(2,6,'/register','1')
  ,(3,7,'/profile','1')
  ,(4,8,'/profile/edit','1')
- ,(5,9,'/members','1')
  ,(6,10,'/profile/avatar','1')
  ,(7,11,'/profile/messages','1')
  ,(8,12,'/profile/friends','1')
@@ -1173,36 +769,13 @@ INSERT INTO PagePaths VALUES(1,5,'/login','1')
  ,(49,53,'/dashboard/settings/mail','1')
  ,(50,54,'/dashboard/settings/marketplace','1')
  ,(51,55,'/download_file','1')
- ,(52,56,'/about','1')
- ,(53,57,'/about/press-room','1')
- ,(54,59,'/about/press-room/launch-our-new-site','1')
- ,(55,60,'/about/guestbook','1')
- ,(56,61,'/search','1')
- ,(57,62,'/search/search-results','1');
-
-DROP TABLE IF EXISTS PagePermissionPageTypes;
-
-CREATE TABLE IF NOT EXISTS `PagePermissionPageTypes` (
-  `cID` int(10) unsigned NOT NULL default '0',
-  `gID` int(10) unsigned NOT NULL default '0',
-  `uID` int(10) unsigned NOT NULL default '0',
-  `ctID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`cID`,`gID`,`uID`,`ctID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS PagePermissions;
-
-CREATE TABLE IF NOT EXISTS `PagePermissions` (
-  `cID` int(10) unsigned NOT NULL default '0',
-  `gID` int(10) unsigned NOT NULL default '0',
-  `uID` int(10) unsigned NOT NULL default '0',
-  `cgPermissions` varchar(32) default NULL,
-  `cgStartDate` datetime default NULL,
-  `cgEndDate` datetime default NULL,
-  PRIMARY KEY  (`cID`,`gID`,`uID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+ ,(54,67,'/search','1')
+ ,(55,68,'/search/search-results','1')
+ ,(57,69,'/about','1')
+ ,(59,70,'/about/guest-book','1')
+ ,(61,71,'/blog','1')
+ ,(63,72,'/blog/my-first-blog-post','1')
+ ,(65,73,'/blog/adding-a-new-post','1');
 
 INSERT INTO PagePermissions VALUES(5,1,0,'r',NULL,NULL)
  ,(5,2,0,'r',NULL,NULL)
@@ -1211,115 +784,20 @@ INSERT INTO PagePermissions VALUES(5,1,0,'r',NULL,NULL)
  ,(1,1,0,'r',NULL,NULL)
  ,(1,3,0,'r:rv:wa:db:av:dc:adm',NULL,NULL);
 
-DROP TABLE IF EXISTS PageSearchIndex;
-
-CREATE TABLE IF NOT EXISTS `PageSearchIndex` (
-  `cID` int(10) unsigned NOT NULL default '0',
-  `content` text,
-  `cName` varchar(255) default NULL,
-  `cDescription` text,
-  `cPath` text,
-  `cDatePublic` datetime default NULL,
-  `cDateLastIndexed` datetime default NULL,
-  `cDateLastSitemapped` datetime default NULL,
-  PRIMARY KEY  (`cID`),
-  KEY `cDateLastIndexed` (`cDateLastIndexed`),
-  KEY `cDateLastSitemapped` (`cDateLastSitemapped`),
-  FULLTEXT KEY `cName` (`cName`),
-  FULLTEXT KEY `cDescription` (`cDescription`),
-  FULLTEXT KEY `content` (`content`),
-  FULLTEXT KEY `content2` (`cName`,`cDescription`,`content`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO PageSearchIndex VALUES(1,'','Home',NULL,NULL,'2010-09-13 11:37:30','2010-09-13 11:37:30',NULL)
- ,(55,'','Download File',NULL,'/download_file',NOW(),NOW(),NULL)
- ,(16,'','Sitemap',NULL,'/dashboard/sitemap',NOW(),NOW(),NULL)
- ,(17,'','Full',NULL,'/dashboard/sitemap/full',NOW(),NOW(),NULL)
- ,(18,'','Explore',NULL,'/dashboard/sitemap/explore',NOW(),NOW(),NULL)
- ,(19,'','Search',NULL,'/dashboard/sitemap/search',NOW(),NOW(),NULL)
- ,(21,'','Files',NULL,'/dashboard/files',NOW(),NOW(),NULL)
- ,(22,'','Search',NULL,'/dashboard/files/search',NOW(),NOW(),NULL)
- ,(23,'','Attributes',NULL,'/dashboard/files/attributes',NOW(),NOW(),NULL)
- ,(24,'','Sets',NULL,'/dashboard/files/sets',NOW(),NOW(),NULL)
- ,(25,'','Access',NULL,'/dashboard/files/access',NOW(),NOW(),NULL)
- ,(26,'','Reports',NULL,'/dashboard/reports',NOW(),NOW(),NULL)
- ,(27,'','Forms',NULL,'/dashboard/reports/forms',NOW(),NOW(),NULL)
- ,(28,'','Surveys',NULL,'/dashboard/reports/surveys',NOW(),NOW(),NULL)
- ,(29,'','Logs',NULL,'/dashboard/reports/logs',NOW(),NOW(),NULL)
- ,(30,'','Users',NULL,'/dashboard/users',NOW(),NOW(),NULL)
- ,(31,'','Search',NULL,'/dashboard/users/search',NOW(),NOW(),NULL)
- ,(32,'','Add',NULL,'/dashboard/users/add',NOW(),NOW(),NULL)
- ,(33,'','Groups',NULL,'/dashboard/users/groups',NOW(),NOW(),NULL)
- ,(34,'','Attributes',NULL,'/dashboard/users/attributes',NOW(),NOW(),NULL)
- ,(35,'','Registration',NULL,'/dashboard/users/registration',NOW(),NOW(),NULL)
- ,(36,'','Scrapbook',NULL,'/dashboard/scrapbook',NOW(),NOW(),NULL)
- ,(37,'','Pages',NULL,'/dashboard/pages',NOW(),NOW(),NULL)
- ,(38,'','Themes',NULL,'/dashboard/pages/themes',NOW(),NOW(),NULL)
- ,(43,'','Types',NULL,'/dashboard/pages/types',NOW(),NOW(),NULL)
- ,(45,'','Single',NULL,'/dashboard/pages/single',NOW(),NOW(),NULL)
- ,(46,'','Install',NULL,'/dashboard/install',NOW(),NOW(),NULL)
- ,(47,'','System',NULL,'/dashboard/system',NOW(),NOW(),NULL)
- ,(49,'','Backup',NULL,'/dashboard/system/backup',NOW(),NOW(),NULL)
- ,(52,'','Settings',NULL,'/dashboard/settings',NOW(),NOW(),NULL)
- ,(53,'','Mail',NULL,'/dashboard/settings/mail',NOW(),NOW(),NULL)
- ,(59,'','Launch our new site!','Neeto speedo! We just rebuilt our site in record time and now we can easily change EVERYTHING.','/about/press-room/launch-our-new-site',NOW(),NOW(),NULL)
- ,(62,'','Search Results',NULL,'/search/search-results',NOW(),NOW(),NULL)
- ,(9,'','Members',NULL,'/members','2010-09-13 11:37:31',NOW(),NULL)
+INSERT INTO PageSearchIndex VALUES(1,'Sidebar\r\n Everything about concrete5 is completely customizable through the CMS. This is a separate area from the main content on the homepage. You can&nbsp;drag and drop blocks&nbsp;like this around your layout. \r\n &nbsp;  Welcome to concrete5 - an Open Source CMS\r\n Content Management is easy with concrete5\'s in-context editing. Just&nbsp;login&nbsp;and you can add and change things as you browse your site.&nbsp; \r\n Here\'s some videos you can watch learn how to: \r\n\r\nEdit&nbsp;this page.\r\nAdd a&nbsp;new page.\r\nAdd some basic functionality, like&nbsp;a Form.\r\nFinding &amp; adding&nbsp;more functionality and themes.\r\n\r\n We\'ve taken the liberty to build out the rest of this site with some sample content that will help you learn concrete5. Wander around a bit, or just goto the&nbsp;Dashboard &gt; Sitemap&nbsp;and delete the parts you don\'t want quickly. \r\n &nbsp;  ','Home',NULL,NULL,NOW(),NOW(),NULL)
  ,(42,'','Marketplace',NULL,'/dashboard/pages/themes/marketplace',NOW(),NOW(),NULL)
- ,(56,'Sed ut perspiciatis unde omnis iste natus error (H1) Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?  Contact Us: ','About',NULL,'/about',NOW(),NOW(),NULL)
- ,(57,'Welcome This a great example of how flexible page types can be. We added a page type of \"press release\" so we could assign some custom attributes to it and make the very PR-ish formatted custom template for the page list block below. Press Releases: ','Press Room',NULL,'/about/press-room',NOW(),NOW(),NULL)
- ,(60,'We\'re happy to see you here.  Let us know you\'ve been here by signing our guestbook.  ','Guestbook','Neeto speedo! We just rebuilt our site in record time and now we can easily change EVERYTHING.','/about/guestbook',NOW(),NOW(),NULL)
- ,(61,'Sitemap ','Search',NULL,'/search',NOW(),NOW(),NULL);
-
-DROP TABLE IF EXISTS PageStatistics;
-
-CREATE TABLE IF NOT EXISTS `PageStatistics` (
-  `pstID` bigint(20) unsigned NOT NULL auto_increment,
-  `cID` int(10) unsigned NOT NULL default '0',
-  `date` date default NULL,
-  `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `uID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`pstID`),
-  KEY `cID` (`cID`),
-  KEY `date` (`date`),
-  KEY `uID` (`uID`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS PageThemeStyles;
-
-CREATE TABLE IF NOT EXISTS `PageThemeStyles` (
-  `ptID` int(10) unsigned NOT NULL default '0',
-  `ptsHandle` varchar(128) NOT NULL,
-  `ptsValue` longtext,
-  `ptsType` varchar(32) NOT NULL,
-  PRIMARY KEY  (`ptID`,`ptsHandle`,`ptsType`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS PageThemes;
-
-CREATE TABLE IF NOT EXISTS `PageThemes` (
-  `ptID` int(10) unsigned NOT NULL auto_increment,
-  `ptHandle` varchar(64) NOT NULL,
-  `ptName` varchar(255) default NULL,
-  `ptDescription` text,
-  `pkgID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`ptID`),
-  UNIQUE KEY `ptHandle` (`ptHandle`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+ ,(67,'Site Map ','Search','','/search',NOW(),NOW(),NULL)
+ ,(68,'','Search Results','','/search/search-results',NOW(),NOW(),NULL)
+ ,(66,' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel tellus lectus, scelerisque faucibus nunc. Curabitur lacus nibh, eleifend vel porttitor in, bibendum quis tortor. Curabitur eros ligula, scelerisque ac ultricies a, dictum ac tellus. Mauris id tellus tortor. Proin a sollicitudin libero. Nam pellentesque commodo magna, nec mattis elit pulvinar id. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris orci dui, adipiscing sit amet bibendum vel, sodales sed purus. Donec fringilla odio vel enim cursus luctus quis semper leo. Donec rhoncus odio ac elit dignissim lobortis. \r\n &nbsp;   Duis dapibus nibh eu arcu viverra tempor. Fusce auctor sapien eu mauris malesuada vel euismod orci vulputate. Curabitur at orci id quam mollis rhoncus vitae volutpat urna. Nam eget sapien at neque mollis varius sed vitae ipsum. Vestibulum commodo, eros sit amet sagittis cursus, massa mi lacinia lorem, vel pellentesque sapien purus eu lacus. Pellentesque mollis gravida enim. Fusce mi odio, elementum ut fermentum a, pharetra in quam. Mauris sed vestibulum sapien. In sit amet faucibus diam. Proin lectus quam, sodales ut posuere non, viverra a nibh. Aenean sollicitudin, diam eu elementum rutrum, nisi ante pretium mi, ut tristique ante tellus non ligula. Nam diam turpis, viverra non volutpat vel, scelerisque vel neque. In pretium, libero et vulputate varius, libero nulla blandit ligula, tincidunt egestas leo mi eu nisi. Mauris nunc augue, cursus vel viverra non, feugiat in enim. In eget dignissim est. Donec dictum leo in libero tincidunt sollicitudin hendrerit elit placerat. Aliquam vitae nunc diam, non vulputate nibh. Quisque tincidunt, dui ut rutrum feugiat, libero lorem interdum sapien, eget pharetra mi ligula ut lectus. Pellentesque consequat mollis est viverra malesuada. \r\n Curabitur eget quam vitae tellus blandit congue a sed lectus. Nunc ultrices lacus dignissim felis venenatis varius placerat eros dapibus. Nulla facilisi. Vivamus sodales accumsan convallis. Mauris congue tempus feugiat. Proin elementum fringilla leo, sit amet pretium nisl imperdiet interdum. Suspendisse volutpat cursus eros, nec porta est laoreet at. Sed porttitor suscipit augue, eu molestie justo faucibus et. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus faucibus mi vel tortor consequat eget rutrum nisl ultrices. Praesent et lacinia augue. Phasellus id est id enim ultricies placerat. Etiam porta enim eu enim convallis sed eleifend metus faucibus. In ac lobortis eros. Pellentesque felis turpis, cursus sed imperdiet non, viverra vel diam. Donec vel orci mi, placerat egestas purus. Vestibulum vel diam id magna suscipit accumsan. Quisque risus felis, sagittis non iaculis id, tempus in arcu. Donec tempus metus neque. Proin malesuada dui a tortor pretium tincidunt quis at ligula. \r\n Nam laoreet faucibus purus ac pretium. Aenean euismod diam adipiscing erat semper quis sodales elit tristique. Vestibulum vel tellus eu lorem porttitor aliquet. Vestibulum bibendum viverra cursus. Aenean sit amet magna odio, convallis imperdiet metus. Duis condimentum posuere vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed vitae elit ut sapien vestibulum tempor sit amet ac tortor. Donec ligula nulla, varius id ornare id, vestibulum non felis. Nullam neque erat, tristique a eleifend pellentesque, eleifend sit amet ipsum. In eget urna nibh. Phasellus scelerisque, magna ac feugiat ultricies, risus dolor volutpat quam, in rutrum nunc ante id sem. Fusce interdum scelerisque fermentum. \r\n &nbsp;  ','',NULL,NULL,NOW(),NOW(),NULL)
+ ,(69,'Learn More\r\n Visit&nbsp;concrete5.org&nbsp;to learn more from the&nbsp;community&nbsp;and the&nbsp;documentation. You can also browse our&nbsp;marketplace&nbsp;for more&nbsp;add-ons&nbsp;and&nbsp;themes&nbsp;to quickly build the site you really need.&nbsp; \r\n &nbsp;  Common Tips\r\n Want to&nbsp;change your site name&nbsp;up top? \r\n Need to sell stuff on your website? Check out our&nbsp;eCommerce add-on. \r\n Help,&nbsp;I can\'t login&nbsp;anymore! \r\n &nbsp;  ','About','','/about',NOW(),NOW(),NULL)
+ ,(70,'Say Hi!\r\n Here\'s a simple guestbook you can add to any page on your website to allow comments. Why not put the guestbook block in edit mode and play with the options? \r\n We also have a fully featured&nbsp;Discussions Forum Add-on&nbsp;if you need it.&nbsp; \r\n &nbsp;  ','Guestbook','','/about/guest-book',NOW(),NOW(),NULL)
+ ,(71,'','Blog','','/about/guest-book/blog',NOW(),NOW(),NULL)
+ ,(72,' This is the intro of your blog post. If your post is short, just stick it all in here. Everything in the \"Main\" block area will be displayed from the main&nbsp;blog list page.   If you tend to write long blog posts that go on, and on, and on - you should consider keeping that content in this \"Blog Post More\" block area. This area only shows up to visitors who click on the blog post\'s title or more link to read the full post.&nbsp; \r\n Keep your long posts in here and just a short synopsis up top if you\'d like a nice scannable blog.  ','My First Blog Post','','/blog/my-first-blog-post',NOW(),NOW(),NULL)
+ ,(73,' In-context editing is pretty cool cool!   By now you\'ve probably watched through the basics at concrete5.org, so you\'re getting a good sense of how you can add pages around your site. To make a new blog post... \r\n\r\nGoto the blog list page, this is the holder page for all your posts in the site tree.&nbsp;\r\nClick Add Page, on the upper left.&nbsp;\r\nPick Blog Entry as a page type.&nbsp;\r\nGive it a name and hit return, or click the add page button at the bottom of the drop down. (You don\'t need to worry about all these other fields yet, you can always change them later through Edit Page &gt; Properties\r\nYou\'re now on your new blog post page, in edit mode. Start making blocks and get things looking right.&nbsp;\r\nExit Edit Mode and Publish your changes.&nbsp;\r\n ','Adding a New Post','','/blog/adding-a-new-post',NOW(),NOW(),NULL);
 
 INSERT INTO PageThemes VALUES(1,'default','Plain Yogurt\n','Plain Yogurt is Concrete\'s default theme.',0)
  ,(2,'greensalad','Green Salad Theme\n','This is Concrete\'s Green Salad site theme.',0)
  ,(3,'dark_chocolate','Dark Chocolate\n','Dark Chocolate is Concrete\'s default theme in black.',0);
-
-DROP TABLE IF EXISTS PageTypeAttributes;
-
-CREATE TABLE IF NOT EXISTS `PageTypeAttributes` (
-  `ctID` int(10) unsigned NOT NULL default '0',
-  `akID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`ctID`,`akID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO PageTypeAttributes VALUES(1,1)
  ,(1,2)
@@ -1336,74 +814,19 @@ INSERT INTO PageTypeAttributes VALUES(1,1)
  ,(4,1)
  ,(4,2)
  ,(4,3)
- ,(4,4)
- ,(4,14)
- ,(4,15);
-
-DROP TABLE IF EXISTS PageTypes;
-
-CREATE TABLE IF NOT EXISTS `PageTypes` (
-  `ctID` int(10) unsigned NOT NULL auto_increment,
-  `ctHandle` varchar(32) NOT NULL,
-  `ctIcon` varchar(128) default NULL,
-  `ctName` varchar(90) NOT NULL,
-  `pkgID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`ctID`),
-  UNIQUE KEY `ctHandle` (`ctHandle`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+ ,(4,4);
 
 INSERT INTO PageTypes VALUES(1,'right_sidebar','template3.png','Right Sidebar',0)
  ,(2,'left_sidebar','template1.png','Left Sidebar',0)
  ,(3,'full','main.png','Full Width',0)
- ,(4,'Press Release','template3.png','Press Release',0);
+ ,(4,'blog_entry','template2.png','Blog Entry',0);
 
-DROP TABLE IF EXISTS Pages;
-
-CREATE TABLE IF NOT EXISTS `Pages` (
-  `cID` int(10) unsigned NOT NULL default '0',
-  `ctID` int(10) unsigned NOT NULL default '0',
-  `cIsTemplate` varchar(1) NOT NULL default '0',
-  `uID` int(10) unsigned default NULL,
-  `cIsCheckedOut` tinyint(1) NOT NULL default '0',
-  `cCheckedOutUID` int(10) unsigned default NULL,
-  `cCheckedOutDatetime` datetime default NULL,
-  `cCheckedOutDatetimeLastEdit` datetime default NULL,
-  `cPendingAction` varchar(6) default NULL,
-  `cPendingActionDatetime` datetime NOT NULL default '0000-00-00 00:00:00',
-  `cPendingActionUID` int(10) unsigned default NULL,
-  `cPendingActionTargetCID` int(10) unsigned default NULL,
-  `cOverrideTemplatePermissions` tinyint(1) NOT NULL default '1',
-  `cInheritPermissionsFromCID` int(10) unsigned NOT NULL default '0',
-  `cInheritPermissionsFrom` varchar(8) NOT NULL default 'PARENT',
-  `cFilename` varchar(255) default NULL,
-  `cPointerID` int(10) unsigned NOT NULL default '0',
-  `cPointerExternalLink` varchar(255) default NULL,
-  `cPointerExternalLinkNewWindow` tinyint(1) NOT NULL default '0',
-  `cChildren` int(10) unsigned NOT NULL default '0',
-  `cDisplayOrder` int(10) unsigned NOT NULL default '0',
-  `cParentID` int(10) unsigned NOT NULL default '0',
-  `pkgID` int(10) unsigned NOT NULL default '0',
-  `ptID` int(10) unsigned NOT NULL default '0',
-  `cCacheFullPageContent` int(4) NOT NULL default '-1',
-  `cCacheFullPageContentOverrideLifetime` varchar(32) NOT NULL default '0',
-  `cCacheFullPageContentLifetimeCustom` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`cID`),
-  KEY `cParentID` (`cParentID`),
-  KEY `cCheckedOutUID` (`cCheckedOutUID`),
-  KEY `cPointerID` (`cPointerID`),
-  KEY `uID` (`uID`),
-  KEY `ctID` (`ctID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO Pages VALUES(1,1,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'OVERRIDE',NULL,0,NULL,0,10,0,0,0,1,-1,'0',0)
+INSERT INTO Pages VALUES(1,1,'0',1,0,NULL,NULL,NOW(),NULL,NOW(),NULL,NULL,1,1,'OVERRIDE',NULL,0,NULL,0,10,0,0,0,1,-1,'0',0)
  ,(2,1,'1',NULL,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
- ,(3,2,'1',NULL,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
- ,(4,3,'1',NULL,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
  ,(5,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,5,'OVERRIDE','/login.php',0,NULL,0,0,0,1,0,1,-1,'0',0)
  ,(6,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,6,'OVERRIDE','/register.php',0,NULL,0,0,1,1,0,1,-1,'0',0)
  ,(7,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/profile/view.php',0,NULL,0,4,2,1,0,1,-1,'0',0)
  ,(8,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/profile/edit.php',0,NULL,0,0,0,7,0,1,-1,'0',0)
- ,(9,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/members.php',0,NULL,0,0,3,1,0,1,-1,'0',0)
  ,(10,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/profile/avatar.php',0,NULL,0,0,1,7,0,1,-1,'0',0)
  ,(11,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/profile/messages.php',0,NULL,0,0,2,7,0,1,-1,'0',0)
  ,(12,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/profile/friends.php',0,NULL,0,0,3,7,0,1,-1,'0',0)
@@ -1450,28 +873,16 @@ INSERT INTO Pages VALUES(1,1,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'OV
  ,(53,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/mail/view.php',0,NULL,0,0,0,52,0,0,-1,'0',0)
  ,(54,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/marketplace.php',0,NULL,0,0,1,52,0,0,-1,'0',0)
  ,(55,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/download_file.php',0,NULL,0,0,7,1,0,0,-1,'0',0)
- ,(56,2,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,2,8,1,0,0,-1,'0',0)
- ,(57,2,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,1,0,56,0,1,-1,'0',0)
- ,(58,4,'1',NULL,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
- ,(59,4,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,0,57,0,1,-1,'0',0)
- ,(60,2,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,1,56,0,1,-1,'0',0)
- ,(61,2,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,1,9,1,0,0,-1,'0',0)
- ,(62,2,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,0,61,0,1,-1,'0',0);
-
-DROP TABLE IF EXISTS PileContents;
-
-CREATE TABLE IF NOT EXISTS `PileContents` (
-  `pcID` int(10) unsigned NOT NULL auto_increment,
-  `pID` int(10) unsigned NOT NULL default '0',
-  `itemID` int(10) unsigned NOT NULL default '0',
-  `itemType` varchar(64) NOT NULL,
-  `quantity` int(10) unsigned NOT NULL default '1',
-  `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `displayOrder` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`pcID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
+ ,(64,2,'1',NULL,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
+ ,(65,3,'1',NULL,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
+ ,(66,4,'1',NULL,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
+ ,(67,2,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,1,2,1,0,1,-1,'0',0)
+ ,(68,2,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,0,67,0,1,-1,'0',0)
+ ,(69,2,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,1,0,1,0,1,-1,'0',0)
+ ,(70,2,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,0,69,0,1,-1,'0',0)
+ ,(71,1,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,2,1,1,0,1,-1,'0',0)
+ ,(72,4,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,0,71,0,1,-1,'0',0)
+ ,(73,4,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,1,71,0,1,-1,'0',0);
 
 DROP TABLE IF EXISTS Piles;
 
@@ -1483,64 +894,8 @@ CREATE TABLE IF NOT EXISTS `Piles` (
   `name` varchar(255) default NULL,
   `state` varchar(64) NOT NULL,
   PRIMARY KEY  (`pID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-
-
-DROP TABLE IF EXISTS SignupRequests;
-
-CREATE TABLE IF NOT EXISTS `SignupRequests` (
-  `id` int(11) NOT NULL auto_increment,
-  `ipFrom` int(10) unsigned NOT NULL default '0',
-  `date_access` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`id`),
-  KEY `index_ipFrom` (`ipFrom`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS SystemNotifications;
-
-CREATE TABLE IF NOT EXISTS `SystemNotifications` (
-  `snID` int(10) unsigned NOT NULL auto_increment,
-  `snTypeID` int(3) unsigned NOT NULL default '0',
-  `snURL` text,
-  `snURL2` text,
-  `snDateTime` datetime NOT NULL,
-  `snIsArchived` int(1) NOT NULL default '0',
-  `snIsNew` int(1) NOT NULL default '0',
-  `snTitle` varchar(255) default NULL,
-  `snDescription` text,
-  `snBody` text,
-  PRIMARY KEY  (`snID`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS TaskPermissionUserGroups;
-
-CREATE TABLE IF NOT EXISTS `TaskPermissionUserGroups` (
-  `tpID` int(10) unsigned NOT NULL default '0',
-  `gID` int(10) unsigned NOT NULL default '0',
-  `uID` int(10) unsigned NOT NULL default '0',
-  `canRead` int(1) NOT NULL default '0',
-  PRIMARY KEY  (`tpID`,`gID`,`uID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO TaskPermissionUserGroups VALUES(2,3,0,1)
- ,(3,3,0,1)
- ,(4,3,0,1)
- ,(6,3,0,1);
-
-DROP TABLE IF EXISTS TaskPermissions;
-
-CREATE TABLE IF NOT EXISTS `TaskPermissions` (
-  `tpID` int(10) unsigned NOT NULL auto_increment,
-  `tpHandle` varchar(255) default NULL,
-  `tpName` varchar(255) default NULL,
-  `tpDescription` text,
-  `pkgID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`tpID`),
-  UNIQUE KEY `tpHandle` (`tpHandle`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 INSERT INTO TaskPermissions VALUES(1,'access_task_permissions','Change Task Permissions','',0)
  ,(2,'access_sitemap','Access Sitemap and Page Search','',0)
@@ -1551,279 +906,40 @@ INSERT INTO TaskPermissions VALUES(1,'access_task_permissions','Change Task Perm
  ,(7,'sudo','Sign in as User','',0)
  ,(8,'uninstall_packages','Uninstall Packages','',0);
 
-DROP TABLE IF EXISTS UserAttributeKeys;
 
-CREATE TABLE IF NOT EXISTS `UserAttributeKeys` (
-  `akID` int(10) unsigned NOT NULL,
-  `uakProfileDisplay` tinyint(1) NOT NULL default '0',
-  `uakMemberListDisplay` tinyint(1) NOT NULL default '0',
-  `uakProfileEdit` tinyint(1) NOT NULL default '1',
-  `uakProfileEditRequired` tinyint(1) NOT NULL default '0',
-  `uakRegisterEdit` tinyint(1) NOT NULL default '0',
-  `uakRegisterEditRequired` tinyint(1) NOT NULL default '0',
-  `displayOrder` int(10) unsigned default '0',
-  `uakIsActive` tinyint(1) NOT NULL default '1',
-  PRIMARY KEY  (`akID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO UserAttributeKeys VALUES(9,0,0,1,0,0,0,1,1)
- ,(10,0,0,1,0,1,0,2,1)
- ,(11,0,0,1,0,1,0,3,1);
-
-DROP TABLE IF EXISTS UserAttributeValues;
-
-CREATE TABLE IF NOT EXISTS `UserAttributeValues` (
-  `uID` int(10) unsigned NOT NULL default '0',
-  `akID` int(10) unsigned NOT NULL default '0',
-  `avID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`uID`,`akID`,`avID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS UserBannedIPs;
-
-CREATE TABLE IF NOT EXISTS `UserBannedIPs` (
-  `ipFrom` int(10) unsigned NOT NULL default '0',
-  `ipTo` int(10) unsigned NOT NULL default '0',
-  `banCode` int(1) unsigned NOT NULL default '1',
-  `expires` int(10) unsigned NOT NULL default '0',
-  `isManual` int(1) NOT NULL default '0',
-  PRIMARY KEY  (`ipFrom`,`ipTo`),
-  KEY `ipFrom` (`ipFrom`),
-  KEY `ipTo` (`ipTo`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS UserGroups;
-
-CREATE TABLE IF NOT EXISTS `UserGroups` (
-  `uID` int(10) unsigned NOT NULL default '0',
-  `gID` int(10) unsigned NOT NULL default '0',
-  `ugEntered` datetime NOT NULL default '0000-00-00 00:00:00',
-  `type` varchar(64) default NULL,
-  PRIMARY KEY  (`uID`,`gID`),
-  KEY `uID` (`uID`),
-  KEY `gID` (`gID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS UserOpenIDs;
-
-CREATE TABLE IF NOT EXISTS `UserOpenIDs` (
-  `uID` int(10) unsigned NOT NULL,
-  `uOpenID` varchar(255) NOT NULL,
-  PRIMARY KEY  (`uOpenID`),
-  KEY `uID` (`uID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS UserPrivateMessages;
-
-CREATE TABLE IF NOT EXISTS `UserPrivateMessages` (
-  `msgID` int(10) unsigned NOT NULL auto_increment,
-  `uAuthorID` int(10) unsigned NOT NULL default '0',
-  `msgDateCreated` datetime NOT NULL,
-  `msgSubject` varchar(255) NOT NULL,
-  `msgBody` text,
-  `uToID` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`msgID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS UserPrivateMessagesTo;
-
-CREATE TABLE IF NOT EXISTS `UserPrivateMessagesTo` (
-  `msgID` int(10) unsigned NOT NULL default '0',
-  `uID` int(10) unsigned NOT NULL default '0',
-  `uAuthorID` int(10) unsigned NOT NULL default '0',
-  `msgMailboxID` int(11) NOT NULL,
-  `msgIsNew` int(1) NOT NULL default '0',
-  `msgIsUnread` int(1) NOT NULL default '0',
-  `msgIsReplied` int(1) NOT NULL default '0',
-  PRIMARY KEY  (`msgID`,`uID`,`uAuthorID`),
-  KEY `uID` (`uID`),
-  KEY `uAuthorID` (`uAuthorID`),
-  KEY `msgFolderID` (`msgMailboxID`),
-  KEY `msgIsNew` (`msgIsNew`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS UserSearchIndexAttributes;
-
-CREATE TABLE IF NOT EXISTS `UserSearchIndexAttributes` (
-  `uID` int(11) unsigned NOT NULL default '0',
-  `ak_date_of_birth` datetime default NULL,
-  `ak_profile_private_messages_enabled` tinyint(4) default '0',
-  `ak_profile_private_messages_notification_enabled` tinyint(4) default '0',
-  PRIMARY KEY  (`uID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS UserValidationHashes;
-
-CREATE TABLE IF NOT EXISTS `UserValidationHashes` (
-  `uvhID` int(10) unsigned NOT NULL auto_increment,
-  `uID` int(10) unsigned default NULL,
-  `uHash` varchar(64) NOT NULL,
-  `type` int(4) unsigned NOT NULL default '0',
-  `uDateGenerated` int(10) unsigned NOT NULL default '0',
-  `uDateRedeemed` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`uvhID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS Users;
-
-CREATE TABLE IF NOT EXISTS `Users` (
-  `uID` int(10) unsigned NOT NULL auto_increment,
-  `uName` varchar(64) NOT NULL,
-  `uEmail` varchar(64) NOT NULL,
-  `uPassword` varchar(255) NOT NULL,
-  `uIsActive` varchar(1) NOT NULL default '0',
-  `uIsValidated` tinyint(4) NOT NULL default '-1',
-  `uIsFullRecord` tinyint(1) NOT NULL default '1',
-  `uDateAdded` datetime NOT NULL default '0000-00-00 00:00:00',
-  `uHasAvatar` tinyint(1) NOT NULL default '0',
-  `uLastOnline` int(10) unsigned NOT NULL default '0',
-  `uLastLogin` int(10) unsigned NOT NULL default '0',
-  `uPreviousLogin` int(10) unsigned NOT NULL default '0',
-  `uNumLogins` int(10) unsigned NOT NULL default '0',
-  `uTimezone` varchar(255) default NULL,
-  PRIMARY KEY  (`uID`),
-  UNIQUE KEY `uName` (`uName`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS UsersFriends;
-
-CREATE TABLE IF NOT EXISTS `UsersFriends` (
-  `ufID` int(10) unsigned NOT NULL auto_increment,
-  `uID` int(10) unsigned default NULL,
-  `status` varchar(64) NOT NULL,
-  `friendUID` int(10) unsigned default NULL,
-  `uDateAdded` datetime NOT NULL default '0000-00-00 00:00:00',
-  PRIMARY KEY  (`ufID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS atAddress;
-
-CREATE TABLE IF NOT EXISTS `atAddress` (
-  `avID` int(10) unsigned NOT NULL default '0',
-  `address1` varchar(255) default NULL,
-  `address2` varchar(255) default NULL,
-  `city` varchar(255) default NULL,
-  `state_province` varchar(255) default NULL,
-  `country` varchar(4) default NULL,
-  `postal_code` varchar(32) default NULL,
-  PRIMARY KEY  (`avID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS atAddressCustomCountries;
-
-CREATE TABLE IF NOT EXISTS `atAddressCustomCountries` (
-  `atAddressCustomCountryID` int(10) unsigned NOT NULL auto_increment,
-  `akID` int(10) unsigned NOT NULL default '0',
-  `country` varchar(5) NOT NULL,
-  PRIMARY KEY  (`atAddressCustomCountryID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS atAddressSettings;
-
-CREATE TABLE IF NOT EXISTS `atAddressSettings` (
-  `akID` int(10) unsigned NOT NULL default '0',
-  `akHasCustomCountries` int(1) NOT NULL default '0',
-  `akDefaultCountry` varchar(12) default NULL,
-  PRIMARY KEY  (`akID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS atBoolean;
-
-CREATE TABLE IF NOT EXISTS `atBoolean` (
-  `avID` int(10) unsigned NOT NULL,
-  `value` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`avID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO atBoolean VALUES(13,1);
-
-DROP TABLE IF EXISTS atBooleanSettings;
-
-CREATE TABLE IF NOT EXISTS `atBooleanSettings` (
-  `akID` int(10) unsigned NOT NULL,
-  `akCheckedByDefault` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`akID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO atBooleanSettings VALUES(4,0)
- ,(5,0)
- ,(7,0)
- ,(8,0)
- ,(10,1)
- ,(11,1);
-
-DROP TABLE IF EXISTS atDateTime;
-
-CREATE TABLE IF NOT EXISTS `atDateTime` (
-  `avID` int(10) unsigned NOT NULL,
-  `value` datetime default '0000-00-00 00:00:00',
-  PRIMARY KEY  (`avID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO atDateTime VALUES(11,'2010-09-13 11:37:00');
-
-DROP TABLE IF EXISTS atDateTimeSettings;
-
-CREATE TABLE IF NOT EXISTS `atDateTimeSettings` (
-  `akID` int(10) unsigned NOT NULL,
-  `akDateDisplayMode` varchar(255) default NULL,
-  PRIMARY KEY  (`akID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO atDateTimeSettings VALUES(9,'text')
- ,(14,'date_time');
-
-DROP TABLE IF EXISTS atDefault;
-
-CREATE TABLE IF NOT EXISTS `atDefault` (
-  `avID` int(10) unsigned NOT NULL,
-  `value` longtext,
-  PRIMARY KEY  (`avID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS atFile;
-
-CREATE TABLE IF NOT EXISTS `atFile` (
-  `avID` int(10) unsigned NOT NULL,
-  `fID` int(10) unsigned NOT NULL,
-  PRIMARY KEY  (`avID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS atNumber;
-
-CREATE TABLE IF NOT EXISTS `atNumber` (
-  `avID` int(10) unsigned NOT NULL,
-  `value` decimal(14,4) default '0.0000',
-  PRIMARY KEY  (`avID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+INSERT INTO atBoolean VALUES(14,0)
+ ,(18,1)
+ ,(23,0)
+ ,(27,0)
+ ,(31,0)
+ ,(35,0)
+ ,(39,0)
+ ,(44,0);
+
+INSERT INTO atDefault VALUES(11,'')
+ ,(12,'')
+ ,(13,'')
+ ,(15,'')
+ ,(16,'')
+ ,(17,'')
+ ,(20,'')
+ ,(21,'')
+ ,(22,'')
+ ,(24,'')
+ ,(25,'')
+ ,(26,'')
+ ,(28,'')
+ ,(29,'')
+ ,(30,'')
+ ,(32,'')
+ ,(33,'')
+ ,(34,'')
+ ,(36,'')
+ ,(37,'')
+ ,(38,'')
+ ,(41,'')
+ ,(42,'')
+ ,(43,'');
 
 INSERT INTO atNumber VALUES(1,800.0000)
  ,(2,192.0000)
@@ -1832,416 +948,74 @@ INSERT INTO atNumber VALUES(1,800.0000)
  ,(5,800.0000)
  ,(6,192.0000)
  ,(7,800.0000)
- ,(8,192.0000)
+ ,(8,215.0000)
  ,(9,800.0000)
- ,(10,215.0000);
-
-DROP TABLE IF EXISTS atSelectOptions;
-
-CREATE TABLE IF NOT EXISTS `atSelectOptions` (
-  `ID` int(10) unsigned NOT NULL auto_increment,
-  `akID` int(10) unsigned default NULL,
-  `value` varchar(255) default NULL,
-  `displayOrder` int(10) unsigned default NULL,
-  `isEndUserAdded` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
-INSERT INTO atSelectOptions VALUES(1,15,'Press Release',0,0)
- ,(2,15,'News Item',1,0)
- ,(3,15,'Speaking/Event',2,0);
-
-DROP TABLE IF EXISTS atSelectOptionsSelected;
-
-CREATE TABLE IF NOT EXISTS `atSelectOptionsSelected` (
-  `avID` int(10) unsigned NOT NULL,
-  `atSelectOptionID` int(10) unsigned NOT NULL,
-  PRIMARY KEY  (`avID`,`atSelectOptionID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO atSelectOptionsSelected VALUES(12,1);
-
-DROP TABLE IF EXISTS atSelectSettings;
-
-CREATE TABLE IF NOT EXISTS `atSelectSettings` (
-  `akID` int(10) unsigned NOT NULL,
-  `akSelectAllowMultipleValues` tinyint(1) NOT NULL default '0',
-  `akSelectOptionDisplayOrder` varchar(255) NOT NULL default 'display_asc',
-  `akSelectAllowOtherValues` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`akID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO atSelectSettings VALUES(15,0,'display_asc',0);
-
-DROP TABLE IF EXISTS atTextareaSettings;
-
-CREATE TABLE IF NOT EXISTS `atTextareaSettings` (
-  `akID` int(10) unsigned NOT NULL default '0',
-  `akTextareaDisplayMode` varchar(255) default NULL,
-  PRIMARY KEY  (`akID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO atTextareaSettings VALUES(2,'text')
- ,(3,'text')
- ,(6,'text');
-
-DROP TABLE IF EXISTS btContentFile;
-
-CREATE TABLE IF NOT EXISTS `btContentFile` (
-  `bID` int(10) unsigned NOT NULL,
-  `fID` int(10) unsigned default NULL,
-  `fileLinkText` varchar(255) default NULL,
-  `filePassword` varchar(255) default NULL,
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS btContentImage;
-
-CREATE TABLE IF NOT EXISTS `btContentImage` (
-  `bID` int(10) unsigned NOT NULL,
-  `fID` int(10) unsigned default '0',
-  `fOnstateID` int(10) unsigned default '0',
-  `maxWidth` int(10) unsigned default '0',
-  `maxHeight` int(10) unsigned default '0',
-  `externalLink` varchar(255) default NULL,
-  `altText` varchar(255) default NULL,
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO btContentImage VALUES(24,5,0,0,0,NULL,'Header Image')
- ,(7,2,0,0,0,NULL,'Left Sidebar Page Type Image')
- ,(8,3,0,0,0,NULL,'Right Sidebar Page Type Image')
- ,(9,3,0,0,0,NULL,'Full Width Page Type Image');
-
-DROP TABLE IF EXISTS btContentLocal;
-
-CREATE TABLE IF NOT EXISTS `btContentLocal` (
-  `bID` int(10) unsigned NOT NULL,
-  `content` longtext,
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO btContentLocal VALUES(10,'{[CCM:SITE]}')
- ,(11,'<h1>Welcome to Concrete.</h1><p>Learn how to:</p><ul><li><a title=\"web editing with concrete5\" href=\"http://www.concrete5.org/help/editing/login-incontext-editing/\" target=\"_blank\">Edit</a> this page.</li><li>Add a <a title=\"add pages in concrete5\" href=\"http://www.concrete5.org/help/editing/add-a-page/\" target=\"_blank\">new page</a>.</li><li>Add some basic functionality, like <a title=\"os cms concrete5\" href=\"http://www.concrete5.org/help/editing/add_a_form/\" target=\"_blank\">a Form</a>.</li><li><a title=\"add-on marketplace for concrete5\" href=\"http://www.concrete5.org/help/editing/installing_a_package/\" target=\"_blank\">Finding &amp; adding</a> more functionality and themes. </li></ul><p>We\'ve taken the liberty to build out the rest of this like a typical small organization. Wander around and put these pages in edit mode to see how we did it.</p>')
- ,(13,'<h3>Learn More</h3><p>Visit concrete5.org to learn more from the <a title=\"open source content management system\" href=\"{CCM:BASE_URL}.org/community\" target=\"_blank\">community</a> and the <a title=\"CMS concrete5\" href=\"{CCM:BASE_URL}.org/help\" target=\"_blank\">help</a> section.</p>')
- ,(14,'<h2>Sidebar</h2><p>Everything about Concrete is completely customizable through the CMS. This is a separate area from the main content on the homepage. You can <a title=\"blocks on concrete5\" href=\"http://www.concrete5.org/help/editing/arrange_blocks_on_a_page/\" target=\"_blank\">drag and drop blocks</a> like this around your layout.</p>')
- ,(16,'<h1>Sed ut perspiciatis unde omnis iste natus error (H1)</h1><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>')
- ,(17,'<h2>Contact Us:</h2>')
- ,(20,'<h1>Welcome</h1><p>This a great example of how flexible page types can be. We added a page type of \"press release\" so we could assign some custom attributes to it and make the very PR-ish formatted custom template for the page list block below.</p><h2>Press Releases:</h2>')
- ,(25,'<p>Vestibulum a tristique tellus. Morbi nunc orci, ornare sit amet accumsan nec, sagittis eu nisi. Sed elementum fringilla ipsum a interdum. Nulla egestas turpis at dui interdum faucibus. Proin consectetur nibh eros, eget sodales felis. Nam volutpat bibendum augue ut lacinia. Nam volutpat fringilla odio, vitae feugiat dui sagittis sed. Aenean interdum accumsan luctus. Suspendisse congue sagittis tortor ut porta. Etiam justo augue, auctor posuere iaculis ac, aliquet vitae purus. In malesuada, ipsum non vulputate semper, felis purus condimentum augue, a mollis metus nisi a diam. Nulla eu scelerisque lacus. Morbi congue massa vitae nulla auctor suscipit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus ut mauris quis nunc rhoncus lobortis. Aliquam sit amet dui et felis sodales volutpat nec eget nisl.</p><p>Nulla elit dui, pharetra eget elementum eu, varius sed nisi. Morbi semper interdum nisl, eget rutrum ante venenatis nec. Vivamus dignissim, justo quis semper ultricies, quam elit elementum eros, rutrum volutpat urna nulla quis dui. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed et orci ligula. In est dui, porta at posuere a, ullamcorper ut nisi. Maecenas nibh eros, suscipit et pulvinar non, tempus varius dui. Quisque nec tortor sed erat rhoncus laoreet. Sed pulvinar est eu quam adipiscing tincidunt. Donec auctor arcu et ante venenatis sagittis.</p><p>&nbsp;</p>')
- ,(26,'<h2>About Us:<br /></h2><p>This is a content block that is part of the page\'s defaults so it will show up every time you make a new press release. If <a title=\"building with concrete5\" href=\"http://www.concrete5.org/help/editing/scrapbook_defaults/\" target=\"_blank\">change it through defaults</a>, you update it everywhere!</p>')
- ,(27,'<h1>We\'re happy to see you here.<br /></h1><p>Let us know you\'ve been here by signing our guestbook.</p>')
- ,(30,'<h1>Sitemap</h1>');
-
-DROP TABLE IF EXISTS btExternalForm;
-
-CREATE TABLE IF NOT EXISTS `btExternalForm` (
-  `bID` int(10) unsigned NOT NULL,
-  `filename` varchar(128) default NULL,
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS btFlashContent;
-
-CREATE TABLE IF NOT EXISTS `btFlashContent` (
-  `bID` int(10) unsigned NOT NULL,
-  `fID` int(10) unsigned default NULL,
-  `quality` varchar(255) default NULL,
-  `minVersion` varchar(255) default NULL,
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS btForm;
-
-CREATE TABLE IF NOT EXISTS `btForm` (
-  `bID` int(10) unsigned NOT NULL,
-  `questionSetId` int(10) unsigned default '0',
-  `surveyName` varchar(255) default NULL,
-  `thankyouMsg` text,
-  `notifyMeOnSubmission` tinyint(3) unsigned NOT NULL default '0',
-  `recipientEmail` varchar(255) default NULL,
-  `displayCaptcha` int(11) default '1',
-  `redirectCID` int(11) default '0',
-  PRIMARY KEY  (`bID`),
-  KEY `questionSetIdForeign` (`questionSetId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO btForm VALUES(18,1,'About','Thanks!',0,NULL,0,0);
-
-DROP TABLE IF EXISTS btFormAnswerSet;
-
-CREATE TABLE IF NOT EXISTS `btFormAnswerSet` (
-  `asID` int(10) unsigned NOT NULL auto_increment,
-  `questionSetId` int(10) unsigned default '0',
-  `created` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `uID` int(10) unsigned default '0',
-  PRIMARY KEY  (`asID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS btFormAnswers;
-
-CREATE TABLE IF NOT EXISTS `btFormAnswers` (
-  `aID` int(10) unsigned NOT NULL auto_increment,
-  `asID` int(10) unsigned default '0',
-  `msqID` int(10) unsigned default '0',
-  `answer` varchar(255) default NULL,
-  `answerLong` text,
-  PRIMARY KEY  (`aID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS btFormQuestions;
-
-CREATE TABLE IF NOT EXISTS `btFormQuestions` (
-  `qID` int(10) unsigned NOT NULL auto_increment,
-  `msqID` int(10) unsigned default '0',
-  `bID` int(10) unsigned default '0',
-  `questionSetId` int(10) unsigned default '0',
-  `question` varchar(255) default NULL,
-  `inputType` varchar(255) default NULL,
-  `options` text,
-  `position` int(10) unsigned default '1000',
-  `width` int(10) unsigned default '50',
-  `height` int(10) unsigned default '3',
-  `required` int(11) default '0',
-  PRIMARY KEY  (`qID`),
-  KEY `questionSetId` (`questionSetId`),
-  KEY `msqID` (`msqID`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-
-INSERT INTO btFormQuestions VALUES(1,1,18,1,'Name:','field','',1,0,0,1)
- ,(2,2,18,1,'Phone:','field','',2,0,0,0)
- ,(3,3,18,1,'eMail:','field','',3,0,0,0)
- ,(4,4,18,1,'Comments:','text','',4,20,10,0);
-
-DROP TABLE IF EXISTS btGoogleMap;
-
-CREATE TABLE IF NOT EXISTS `btGoogleMap` (
-  `bID` int(10) unsigned NOT NULL,
-  `title` varchar(255) default NULL,
-  `api_key` varchar(255) default NULL,
-  `location` varchar(255) default NULL,
-  `latitude` double default NULL,
-  `longitude` double default NULL,
-  `zoom` int(8) default NULL,
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS btGuestBook;
-
-CREATE TABLE IF NOT EXISTS `btGuestBook` (
-  `bID` int(10) unsigned NOT NULL,
-  `requireApproval` int(11) default '0',
-  `title` varchar(100) default 'Comments',
-  `dateFormat` varchar(100) default NULL,
-  `displayGuestBookForm` int(11) default '1',
-  `displayCaptcha` int(11) default '1',
-  `authenticationRequired` int(11) default '0',
-  `notifyEmail` varchar(100) default NULL,
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO btGuestBook VALUES(28,0,'Comments',NULL,1,1,0,NULL);
-
-DROP TABLE IF EXISTS btGuestBookEntries;
-
-CREATE TABLE IF NOT EXISTS `btGuestBookEntries` (
-  `bID` int(11) default NULL,
-  `cID` int(11) default '1',
-  `entryID` int(11) NOT NULL auto_increment,
-  `uID` int(11) default '0',
-  `commentText` longtext,
-  `user_name` varchar(100) default NULL,
-  `user_email` varchar(100) default NULL,
-  `entryDate` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `approved` int(11) default '1',
-  PRIMARY KEY  (`entryID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS btNavigation;
-
-CREATE TABLE IF NOT EXISTS `btNavigation` (
-  `bID` int(10) unsigned NOT NULL,
-  `orderBy` varchar(255) default 'alpha_asc',
-  `displayPages` varchar(255) default 'top',
-  `displayPagesCID` int(10) unsigned NOT NULL default '1',
-  `displayPagesIncludeSelf` tinyint(3) unsigned NOT NULL default '0',
-  `displaySubPages` varchar(255) default 'none',
-  `displaySubPageLevels` varchar(255) default 'none',
-  `displaySubPageLevelsNum` smallint(5) unsigned NOT NULL default '0',
-  `displayUnavailablePages` tinyint(3) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO btNavigation VALUES(1,'display_asc','top',0,0,'none',NULL,0,0)
- ,(2,'display_asc','top',0,0,'none',NULL,0,0)
- ,(3,'display_asc','top',0,0,'none',NULL,0,0)
- ,(4,'display_asc','second_level',0,0,'relevant','none',0,0)
- ,(5,'display_asc','second_level',0,0,'relevant','none',0,0)
- ,(22,'display_asc','top',0,0,'none',NULL,0,0)
- ,(23,'display_asc','second_level',0,0,'relevant','enough_plus1',0,0)
- ,(31,'display_asc','top',0,0,'all','all',0,0);
-
-DROP TABLE IF EXISTS btPageList;
-
-CREATE TABLE IF NOT EXISTS `btPageList` (
-  `bID` int(10) unsigned NOT NULL,
-  `num` smallint(5) unsigned NOT NULL,
-  `orderBy` varchar(32) default NULL,
-  `cParentID` int(10) unsigned NOT NULL default '1',
-  `cThis` tinyint(3) unsigned NOT NULL default '0',
-  `paginate` tinyint(3) unsigned NOT NULL default '0',
-  `displayAliases` tinyint(3) unsigned NOT NULL default '1',
-  `ctID` smallint(5) unsigned default NULL,
-  `rss` int(11) default '0',
-  `rssTitle` varchar(255) default NULL,
-  `rssDescription` longtext,
-  `truncateSummaries` int(11) default '0',
-  `displayFeaturedOnly` int(11) default '0',
-  `truncateChars` int(11) default '128',
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO btPageList VALUES(21,99,'display_asc',57,1,0,0,NULL,NULL,NULL,NULL,0,0,0);
-
-DROP TABLE IF EXISTS btRssDisplay;
-
-CREATE TABLE IF NOT EXISTS `btRssDisplay` (
-  `bID` int(10) unsigned NOT NULL,
-  `title` varchar(255) default NULL,
-  `url` varchar(255) default NULL,
-  `dateFormat` varchar(100) default NULL,
-  `itemsToDisplay` int(10) unsigned default '5',
-  `showSummary` tinyint(3) unsigned NOT NULL default '1',
-  `launchInNewWindow` tinyint(3) unsigned NOT NULL default '1',
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS btSearch;
-
-CREATE TABLE IF NOT EXISTS `btSearch` (
-  `bID` int(10) unsigned NOT NULL,
-  `title` varchar(255) default NULL,
-  `buttonText` varchar(128) default NULL,
-  `baseSearchPath` varchar(255) default NULL,
-  `resultsURL` varchar(255) default NULL,
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO btSearch VALUES(32,'Search','Go','','')
- ,(33,'Search Your Site','Search','','/search/search-results');
-
-DROP TABLE IF EXISTS btSlideshow;
-
-CREATE TABLE IF NOT EXISTS `btSlideshow` (
-  `bID` int(10) unsigned NOT NULL,
-  `fsID` int(10) unsigned default NULL,
-  `playback` varchar(50) default NULL,
-  `duration` int(10) unsigned default NULL,
-  `fadeDuration` int(10) unsigned default NULL,
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO btSlideshow VALUES(15,0,'ORDER',NULL,NULL)
- ,(19,0,'ORDER',NULL,NULL);
-
-DROP TABLE IF EXISTS btSlideshowImg;
-
-CREATE TABLE IF NOT EXISTS `btSlideshowImg` (
-  `slideshowImgId` int(10) unsigned NOT NULL auto_increment,
-  `bID` int(10) unsigned default NULL,
-  `fID` int(10) unsigned default NULL,
-  `url` varchar(255) default NULL,
-  `duration` int(10) unsigned default NULL,
-  `fadeDuration` int(10) unsigned default NULL,
-  `groupSet` int(10) unsigned default NULL,
-  `position` int(10) unsigned default NULL,
-  `imgHeight` int(10) unsigned default NULL,
-  PRIMARY KEY  (`slideshowImgId`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-
-INSERT INTO btSlideshowImg VALUES(1,15,1,'',5,2,0,0,192)
- ,(2,15,4,'',5,2,0,1,192)
- ,(3,15,3,'',5,2,0,2,192)
- ,(4,19,1,'',5,2,0,0,192)
- ,(5,19,4,'',5,2,0,1,192)
- ,(6,19,3,'',5,2,0,2,192);
-
-DROP TABLE IF EXISTS btSurvey;
-
-CREATE TABLE IF NOT EXISTS `btSurvey` (
-  `bID` int(10) unsigned NOT NULL,
-  `question` varchar(255) default '',
-  `requiresRegistration` int(11) default '0',
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO btSurvey VALUES(29,'Do you like what you see?',NULL);
-
-DROP TABLE IF EXISTS btSurveyOptions;
-
-CREATE TABLE IF NOT EXISTS `btSurveyOptions` (
-  `optionID` int(10) unsigned NOT NULL auto_increment,
-  `bID` int(11) default NULL,
-  `optionName` varchar(255) default NULL,
-  `displayOrder` int(11) default '0',
-  PRIMARY KEY  (`optionID`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
-INSERT INTO btSurveyOptions VALUES(1,29,'Yes',0)
- ,(2,29,'Kinda',1)
- ,(3,29,'Not Really',2);
-
-DROP TABLE IF EXISTS btSurveyResults;
-
-CREATE TABLE IF NOT EXISTS `btSurveyResults` (
-  `resultID` int(10) unsigned NOT NULL auto_increment,
-  `optionID` int(10) unsigned default '0',
-  `uID` int(10) unsigned default '0',
-  `bID` int(11) default NULL,
-  `cID` int(11) default NULL,
-  `ipAddress` varchar(128) default NULL,
-  `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`resultID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS btVideo;
-
-CREATE TABLE IF NOT EXISTS `btVideo` (
-  `bID` int(10) unsigned NOT NULL,
-  `fID` int(10) unsigned default NULL,
-  `width` int(10) unsigned default NULL,
-  `height` int(10) unsigned default NULL,
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DROP TABLE IF EXISTS btYouTube;
-
-CREATE TABLE IF NOT EXISTS `btYouTube` (
-  `bID` int(10) unsigned NOT NULL,
-  `title` varchar(255) default NULL,
-  `videoURL` varchar(255) default NULL,
-  PRIMARY KEY  (`bID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO btYouTube VALUES(12,'Basic Editing','http://www.youtube.com/watch?v=oYSOFTNLbKY');
-
+ ,(10,192.0000);
+
+INSERT INTO atSelectOptions VALUES(1,11,'sample',0,1)
+ ,(2,11,'Hello World',1,1);
+
+INSERT INTO atSelectOptionsSelected VALUES(40,1)
+ ,(40,2)
+ ,(45,1);
+
+INSERT INTO atSelectSettings VALUES(11,1,'display_asc',1);
+
+INSERT INTO btContentImage VALUES(8,4,0,0,0,'','')
+ ,(11,2,0,0,0,'','')
+ ,(13,1,0,0,0,'','');
+
+INSERT INTO btContentLocal VALUES(4,'<h2>Sidebar</h2>\r\n<p>Everything about concrete5 is completely customizable through the CMS. This is a separate area from the main content on the homepage. You can&nbsp;<a title=\"Move blocks in concrete5\" href=\"http://www.concrete5.org/documentation/general-topics/blocks-and-areas\" target=\"_blank\">drag and drop blocks</a>&nbsp;like this around your layout.</p>\r\n<p>&nbsp;</p>')
+ ,(5,'<h1>Welcome to concrete5 - an Open Source CMS</h1>\r\n<p>Content Management is easy with concrete5\'s in-context editing. Just&nbsp;<a title=\"Login\" href=\"/index.php/login\">login</a>&nbsp;and you can add and change things as you browse your site.&nbsp;</p>\r\n<p>Here\'s some videos you can watch learn how to:</p>\r\n<ul>\r\n<li><a title=\"In-context editing CMS\" href=\"http://www.concrete5.org/documentation/general-topics/in-context-editing/\">Edit</a>&nbsp;this page.</li>\r\n<li>Add a&nbsp;<a title=\"Add a page in concrete5\" href=\"http://www.concrete5.org/documentation/general-topics/add-a-page/\" target=\"_blank\">new page</a>.</li>\r\n<li>Add some basic functionality, like&nbsp;<a title=\"Add a simple form in concrete5\" href=\"http://www.concrete5.org/documentation/general-topics/add_a_form\" target=\"_blank\">a Form</a>.</li>\r\n<li><a title=\"add-on marketplace for concrete5\" href=\"http://www.concrete5.org/marketplace/how_to_install_add_ons_and_themes_/\" target=\"_blank\">Finding &amp; adding</a>&nbsp;more functionality and themes.</li>\r\n</ul>\r\n<p>We\'ve taken the liberty to build out the rest of this site with some sample content that will help you learn concrete5. Wander around a bit, or just goto the&nbsp;<a title=\"Sitemap\" href=\"/index.php/dashboard/sitemap/full/\">Dashboard &gt; Sitemap</a>&nbsp;and delete the parts you don\'t want quickly.</p>\r\n<p>&nbsp;</p>')
+ ,(15,'<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel tellus lectus, scelerisque faucibus nunc. Curabitur lacus nibh, eleifend vel porttitor in, bibendum quis tortor. Curabitur eros ligula, scelerisque ac ultricies a, dictum ac tellus. Mauris id tellus tortor. Proin a sollicitudin libero. Nam pellentesque commodo magna, nec mattis elit pulvinar id. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris orci dui, adipiscing sit amet bibendum vel, sodales sed purus. Donec fringilla odio vel enim cursus luctus quis semper leo. Donec rhoncus odio ac elit dignissim lobortis.</p>\r\n<p>&nbsp;</p>')
+ ,(16,'<p>Duis dapibus nibh eu arcu viverra tempor. Fusce auctor sapien eu mauris malesuada vel euismod orci vulputate. Curabitur at orci id quam mollis rhoncus vitae volutpat urna. Nam eget sapien at neque mollis varius sed vitae ipsum. Vestibulum commodo, eros sit amet sagittis cursus, massa mi lacinia lorem, vel pellentesque sapien purus eu lacus. Pellentesque mollis gravida enim. Fusce mi odio, elementum ut fermentum a, pharetra in quam. Mauris sed vestibulum sapien. In sit amet faucibus diam. Proin lectus quam, sodales ut posuere non, viverra a nibh. Aenean sollicitudin, diam eu elementum rutrum, nisi ante pretium mi, ut tristique ante tellus non ligula. Nam diam turpis, viverra non volutpat vel, scelerisque vel neque. In pretium, libero et vulputate varius, libero nulla blandit ligula, tincidunt egestas leo mi eu nisi. Mauris nunc augue, cursus vel viverra non, feugiat in enim. In eget dignissim est. Donec dictum leo in libero tincidunt sollicitudin hendrerit elit placerat. Aliquam vitae nunc diam, non vulputate nibh. Quisque tincidunt, dui ut rutrum feugiat, libero lorem interdum sapien, eget pharetra mi ligula ut lectus. Pellentesque consequat mollis est viverra malesuada.</p>\r\n<p>Curabitur eget quam vitae tellus blandit congue a sed lectus. Nunc ultrices lacus dignissim felis venenatis varius placerat eros dapibus. Nulla facilisi. Vivamus sodales accumsan convallis. Mauris congue tempus feugiat. Proin elementum fringilla leo, sit amet pretium nisl imperdiet interdum. Suspendisse volutpat cursus eros, nec porta est laoreet at. Sed porttitor suscipit augue, eu molestie justo faucibus et. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus faucibus mi vel tortor consequat eget rutrum nisl ultrices. Praesent et lacinia augue. Phasellus id est id enim ultricies placerat. Etiam porta enim eu enim convallis sed eleifend metus faucibus. In ac lobortis eros. Pellentesque felis turpis, cursus sed imperdiet non, viverra vel diam. Donec vel orci mi, placerat egestas purus. Vestibulum vel diam id magna suscipit accumsan. Quisque risus felis, sagittis non iaculis id, tempus in arcu. Donec tempus metus neque. Proin malesuada dui a tortor pretium tincidunt quis at ligula.</p>\r\n<p>Nam laoreet faucibus purus ac pretium. Aenean euismod diam adipiscing erat semper quis sodales elit tristique. Vestibulum vel tellus eu lorem porttitor aliquet. Vestibulum bibendum viverra cursus. Aenean sit amet magna odio, convallis imperdiet metus. Duis condimentum posuere vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed vitae elit ut sapien vestibulum tempor sit amet ac tortor. Donec ligula nulla, varius id ornare id, vestibulum non felis. Nullam neque erat, tristique a eleifend pellentesque, eleifend sit amet ipsum. In eget urna nibh. Phasellus scelerisque, magna ac feugiat ultricies, risus dolor volutpat quam, in rutrum nunc ante id sem. Fusce interdum scelerisque fermentum.</p>\r\n<p>&nbsp;</p>')
+ ,(21,'<h1>Site Map</h1>')
+ ,(24,'<h1>Learn More</h1>\r\n<p>Visit&nbsp;<a title=\"concrete5 Content Management System\" href=\"{CCM:BASE_URL}.org\" target=\"_blank\">concrete5.org</a>&nbsp;to learn more from the&nbsp;<a title=\"open source content management system\" href=\"{CCM:BASE_URL}.org/community\" target=\"_blank\">community</a>&nbsp;and the&nbsp;<a title=\"concrete5 documentation\" href=\"http://www.concrete5.org/documentation/\" target=\"_blank\">documentation</a>. You can also browse our&nbsp;<a title=\"concrete5 marketplace\" href=\"http://www.concrete5.org/marketplace/\" target=\"_blank\">marketplace</a>&nbsp;for more&nbsp;<a title=\"Add-ons for concrete5\" href=\"http://www.concrete5.org/marketplace/addons/\" target=\"_blank\">add-ons</a>&nbsp;and&nbsp;<a title=\"Themes for concrete5\" href=\"http://www.concrete5.org/marketplace/themes/\" target=\"_blank\">themes</a>&nbsp;to quickly build the site you really need.&nbsp;</p>\r\n<p>&nbsp;</p>')
+ ,(25,'<h2>Common Tips</h2>\r\n<p>Want to&nbsp;<a title=\"change your site name in concrete5\" href=\"http://www.concrete5.org/help/faq/how_do_i_get_rid_of_my_sitename_/\" target=\"_blank\">change your site name</a>&nbsp;up top?</p>\r\n<p>Need to sell stuff on your website? Check out our&nbsp;<a title=\"eCommerce and concrete5\" href=\"http://www.concrete5.org/marketplace/addons/ecommerce/\" target=\"_blank\">eCommerce add-on</a>.</p>\r\n<p>Help,&nbsp;<a title=\"Reset your admin password in concrete5\" href=\"http://www.concrete5.org/help/faq/i-can-t-login/\" target=\"_blank\">I can\'t login</a>&nbsp;anymore!</p>\r\n<p>&nbsp;</p>')
+ ,(26,'<h1>Say Hi!</h1>\r\n<p>Here\'s a simple guestbook you can add to any page on your website to allow comments. Why not put the guestbook block in edit mode and play with the options?</p>\r\n<p>We also have a fully featured&nbsp;<a title=\"Forums for concrete5\" href=\"http://www.concrete5.org/marketplace/addons/discussion/\" target=\"_blank\">Discussions Forum Add-on</a>&nbsp;if you need it.&nbsp;</p>\r\n<p>&nbsp;</p>')
+ ,(31,'<p>This is the intro of your blog post. If your post is short, just stick it all in here. Everything in the \"Main\" block area will be displayed from the main&nbsp;<a title=\"Blog\" href=\"{CCM:CID_71}\">blog list page</a>.</p>\r\n<p>&nbsp;</p>')
+ ,(32,'<p>If you tend to write long blog posts that go on, and on, and on - you should consider keeping that content in this \"Blog Post More\" block area. This area only shows up to visitors who click on the blog post\'s title or more link to read the full post.&nbsp;</p>\r\n<p>Keep your long posts in here and just a short synopsis up top if you\'d like a nice scannable blog.</p>\r\n<p>&nbsp;</p>')
+ ,(34,'<p>This is the intro of your blog post. If your post is short, just stick it all in here. Everything in the \"Main\" block area will be displayed from the main&nbsp;<a title=\"Blog\" href=\"{CCM:CID_71}\">blog list page</a>.</p>')
+ ,(35,'<p>If you tend to write long blog posts that go on, and on, and on - you should consider keeping that content in this \"Blog Post More\" block area. This area only shows up to visitors who click on the blog post\'s title or more link to read the full post.&nbsp;</p>\r\n<p>Keep your long posts in here and just a short synopsis up top if you\'d like a nice scannable blog.</p>')
+ ,(36,'<p>In-context editing is pretty cool cool!</p>')
+ ,(38,'<p>By now you\'ve probably watched through the basics at concrete5.org, so you\'re getting a good sense of how you can add pages around your site. To make a new blog post...</p>\r\n<ol>\r\n<li>Goto the blog list page, this is the holder page for all your posts in the site tree.&nbsp;</li>\r\n<li>Click Add Page, on the upper left.&nbsp;</li>\r\n<li>Pick Blog Entry as a page type.&nbsp;</li>\r\n<li>Give it a name and hit return, or click the add page button at the bottom of the drop down. (You don\'t need to worry about all these other fields yet, you can always change them later through Edit Page &gt; Properties</li>\r\n<li>You\'re now on your new blog post page, in edit mode. Start making blocks and get things looking right.&nbsp;</li>\r\n<li>Exit Edit Mode and Publish your changes.&nbsp;</li>\r\n</ol>');
+
+INSERT INTO btDateNav VALUES(18,0,0,0,4,0,'current_page',0,0,0,0,0,0)
+ ,(28,0,71,1,0,0,'current_month',0,0,0,0,0,0);
+
+INSERT INTO btGuestBook VALUES(17,0,'Comments:','M jS, Y',1,1,0,'')
+ ,(27,0,'Comments:','M jS, Y',1,1,0,'');
+
+INSERT INTO btNavigation VALUES(1,'display_asc','top',0,0,'none','enough',0,0)
+ ,(3,'display_asc','second_level',0,0,'relevant','enough',0,0)
+ ,(7,'display_asc','top',0,0,'none','enough',0,0)
+ ,(9,'display_asc','second_level',0,0,'relevant','enough',0,0)
+ ,(10,'display_asc','top',0,0,'none','enough',0,0)
+ ,(12,'display_asc','top',0,0,'none','enough',0,0)
+ ,(14,'display_asc','top',0,0,'relevant_breadcrumb','enough',0,0)
+ ,(20,'display_asc','top',0,0,'all','all',0,0);
+
+INSERT INTO btPageList VALUES(30,10,'chrono_desc',0,0,1,1,4,1,'Blog','',0,0,0);
+
+INSERT INTO btSearch VALUES(19,'Search Results','Search','','')
+ ,(22,'Search Your Site','Go','','/search/search-results')
+ ,(29,'Tags','','','/search/search-results');
+
+INSERT INTO btSlideshow VALUES(2,0,'ORDER',NULL,NULL);
+
+INSERT INTO btSlideshowImg VALUES(1,2,5,'',5,2,0,0,192)
+ ,(2,2,4,'',5,2,0,1,215)
+ ,(3,2,2,'',5,2,0,2,192)
+ ,(4,2,3,'',5,2,0,3,192);
+
+INSERT INTO btSurvey VALUES(37,'What\'s easiest?',0);
+
+INSERT INTO btSurveyOptions VALUES(1,37,'Fixing a typo when I see it.',0)
+ ,(2,37,'Adding a form as easily as content.',1)
+ ,(3,37,'Block area layouts are pretty cool.',2);
+
+INSERT INTO btTags VALUES(23,'Tags',68)
+ ,(33,'Tags',68)
+ ,(39,'Tags',68);
+
+INSERT INTO btYouTube VALUES(6,'Basic Editing','http://www.youtube.com/watch?v=oYSOFTNLbKY');
