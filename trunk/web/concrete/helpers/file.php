@@ -62,7 +62,7 @@ class FileHelper {
 	public function copyAll($source, $target, $mode = 0777) {
 		if (is_dir($source)) {
 			@mkdir($target, $mode);
-			chmod($target, $mode);
+			@chmod($target, $mode);
 			
 			$d = dir($source);
 			while (FALSE !== ($entry = $d->read())) {
