@@ -369,10 +369,8 @@ class Controller {
 	public function render($view) {
 		$v = View::getInstance();
 		$this->renderOverride = $view;
-		$c = $this->getCollectionObject();
-		if (is_object($c)) {
-			$v->setCollectionObject($c);
-		}
+		$c = Page::getCurrentPage();
+		$v->setCollectionObject($c);
 		$v->setController($this);
 		if (method_exists($this, 'on_before_render')) {
 			call_user_func_array(array($this, 'on_before_render'), array($method));
