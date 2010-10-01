@@ -72,7 +72,6 @@ INSERT INTO AttributeKeys VALUES(1,'meta_title','Meta Title',1,0,0,0,1,1,1,0)
  ,(10,'height','Height',1,0,1,0,0,6,3,0)
  ,(11,'tags','Tags',0,0,0,0,1,8,1,0);
 
-
 INSERT INTO AttributeTypeCategories VALUES(1,1)
  ,(1,2)
  ,(1,3)
@@ -219,7 +218,8 @@ INSERT INTO Blocks VALUES(1,NULL,NOW(),NOW(),'header_menu.php','1',3,1)
  ,(36,NULL,NOW(),NOW(),NULL,'1',1,1)
  ,(37,NULL,NOW(),NOW(),NULL,'1',17,1)
  ,(38,NULL,NOW(),NOW(),NULL,'1',1,1)
- ,(39,NULL,NOW(),NOW(),NULL,'1',20,1);
+ ,(39,NULL,NOW(),NOW(),NULL,'1',20,1)
+ ,(40,NULL,NOW(),NOW(),NULL,'1',19,1);
 
 INSERT INTO CollectionAttributeValues VALUES(66,1,11,19)
  ,(67,2,1,11)
@@ -264,6 +264,11 @@ INSERT INTO CollectionAttributeValues VALUES(66,1,11,19)
  ,(72,3,3,38)
  ,(72,3,4,39)
  ,(72,3,11,40)
+ ,(72,4,1,36)
+ ,(72,4,2,37)
+ ,(72,4,3,38)
+ ,(72,4,4,39)
+ ,(72,4,11,40)
  ,(73,2,1,41)
  ,(73,2,2,42)
  ,(73,2,3,43)
@@ -272,7 +277,12 @@ INSERT INTO CollectionAttributeValues VALUES(66,1,11,19)
  ,(73,3,2,42)
  ,(73,3,3,43)
  ,(73,3,4,44)
- ,(73,3,11,45);
+ ,(73,3,11,45)
+ ,(73,4,1,41)
+ ,(73,4,2,42)
+ ,(73,4,3,43)
+ ,(73,4,4,44)
+ ,(73,4,11,45);
 
 INSERT INTO CollectionSearchIndexAttributes VALUES(2,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
  ,(1,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
@@ -374,7 +384,9 @@ INSERT INTO CollectionVersionBlockStyles VALUES(1,2,1,'Header Nav',0)
  ,(73,3,18,'Sidebar',0)
  ,(73,3,36,'Main',0)
  ,(73,3,38,'Blog Post More',0)
- ,(73,3,39,'Sidebar',0);
+ ,(73,3,39,'Sidebar',0)
+ ,(73,3,40,'Blog Post Footer',0)
+ ,(72,3,40,'Blog Post Footer',0);
 
 INSERT INTO CollectionVersionBlocks VALUES(2,1,1,'Header Nav',0,'1',0,0)
  ,(2,1,2,'Header',0,'1',0,0)
@@ -396,7 +408,7 @@ INSERT INTO CollectionVersionBlocks VALUES(2,1,1,'Header Nav',0,'1',0,0)
  ,(66,1,14,'Blog Post Header',0,'1',0,0)
  ,(66,1,15,'Main',0,'1',0,0)
  ,(66,1,16,'Blog Post More',0,'1',0,0)
- ,(66,1,17,'Blog Post Footer',0,'1',0,1)
+ ,(66,1,17,'Blog Post Footer',1,'1',0,1)
  ,(66,1,18,'Sidebar',0,'1',0,0)
  ,(67,1,7,'Header Nav',0,'0',0,0)
  ,(67,1,8,'Header',0,'0',0,0)
@@ -497,7 +509,28 @@ INSERT INTO CollectionVersionBlocks VALUES(2,1,1,'Header Nav',0,'1',0,0)
  ,(73,3,18,'Sidebar',0,'0',0,0)
  ,(73,3,36,'Main',0,'0',0,0)
  ,(73,3,38,'Blog Post More',0,'0',0,0)
- ,(73,3,39,'Sidebar',1,'1',0,0);
+ ,(73,3,39,'Sidebar',1,'1',0,0)
+ ,(66,1,40,'Blog Post Footer',0,'1',0,0)
+ ,(73,3,40,'Blog Post Footer',1,'0',0,0)
+ ,(72,3,40,'Blog Post Footer',1,'0',0,0)
+ ,(72,4,12,'Header Nav',0,'0',0,0)
+ ,(72,4,13,'Header',0,'0',0,0)
+ ,(72,4,14,'Blog Post Header',0,'0',0,0)
+ ,(72,4,17,'Blog Post Footer',1,'0',0,0)
+ ,(72,4,18,'Sidebar',0,'0',0,0)
+ ,(72,4,34,'Main',0,'0',0,0)
+ ,(72,4,35,'Blog Post More',0,'0',0,0)
+ ,(72,4,33,'Sidebar',1,'0',0,0)
+ ,(72,4,40,'Blog Post Footer',0,'0',0,0)
+ ,(73,4,12,'Header Nav',0,'0',0,0)
+ ,(73,4,13,'Header',0,'0',0,0)
+ ,(73,4,14,'Blog Post Header',0,'0',0,0)
+ ,(73,4,17,'Blog Post Footer',1,'0',0,0)
+ ,(73,4,18,'Sidebar',0,'0',0,0)
+ ,(73,4,36,'Main',0,'0',0,0)
+ ,(73,4,38,'Blog Post More',0,'0',0,0)
+ ,(73,4,39,'Sidebar',1,'0',0,0)
+ ,(73,4,40,'Blog Post Footer',0,'0',0,0);
 
 INSERT INTO CollectionVersions VALUES(2,1,NULL,NULL,NULL,NOW(),NOW(),'Initial Version',1,0,1,1,NULL)
  ,(1,2,'Home','home',NULL,NOW(),NOW(),'New Version 2',0,0,1,1,NULL)
@@ -571,10 +604,13 @@ INSERT INTO CollectionVersions VALUES(2,1,NULL,NULL,NULL,NOW(),NOW(),'Initial Ve
  ,(71,2,'Blog','blog','',NOW(),NOW(),'Version 2',1,0,1,1,NULL)
  ,(72,1,'My First Blog Post','my-first-blog-post','',NOW(),NOW(),'Initial Version',0,0,1,NULL,NULL)
  ,(72,2,'My First Blog Post','my-first-blog-post','',NOW(),NOW(),'New Version 2',0,0,1,1,NULL)
- ,(72,3,'My First Blog Post','my-first-blog-post','',NOW(),NOW(),'Version 3',1,0,1,1,NULL)
+ ,(72,3,'My First Blog Post','my-first-blog-post','',NOW(),NOW(),'Version 3',0,0,1,1,NULL)
  ,(73,1,'Adding a New Post','adding-a-new-post','',NOW(),NOW(),'Initial Version',0,0,1,NULL,NULL)
  ,(73,2,'Adding a New Post','adding-a-new-post','',NOW(),NOW(),'New Version 2',0,0,1,1,NULL)
- ,(73,3,'Adding a New Post','adding-a-new-post','',NOW(),NOW(),'New Version 3',1,0,1,1,NULL);
+ ,(73,3,'Adding a New Post','adding-a-new-post','',NOW(),NOW(),'New Version 3',0,0,1,1,NULL)
+ ,(74,1,'Members','members',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(72,4,'My First Blog Post','my-first-blog-post','',NOW(),NOW(),'New Version 4',1,0,1,1,NULL)
+ ,(73,4,'Adding a New Post','adding-a-new-post','',NOW(),NOW(),'New Version 4',1,0,1,1,NULL);
 
 INSERT INTO Collections VALUES(1,NOW(),NOW(),'home')
  ,(2,NOW(),NOW(),NULL)
@@ -638,7 +674,8 @@ INSERT INTO Collections VALUES(1,NOW(),NOW(),'home')
  ,(70,NOW(),NOW(),'guest-book')
  ,(71,NOW(),NOW(),'blog')
  ,(72,NOW(),NOW(),'my-first-blog-post')
- ,(73,NOW(),NOW(),'adding-a-new-post');
+ ,(73,NOW(),NOW(),'adding-a-new-post')
+ ,(74,NOW(),NOW(),'members');
 
 INSERT INTO Config VALUES('SITE',NOW(),'{CCM:SITE}',0,0);
 
@@ -647,7 +684,6 @@ INSERT INTO DashboardHomepage VALUES(1,'activity','Site Activity',0,0)
  ,(3,'help','Help',0,0)
  ,(4,'news','Latest News',0,0)
  ,(5,'notes','Notes',0,0);
-
 
 INSERT INTO FileAttributeValues VALUES(1,1,9,1)
  ,(1,1,10,2)
@@ -774,8 +810,9 @@ INSERT INTO PagePaths VALUES(1,5,'/login','1')
  ,(57,69,'/about','1')
  ,(59,70,'/about/guest-book','1')
  ,(61,71,'/blog','1')
- ,(63,72,'/blog/my-first-blog-post','1')
- ,(65,73,'/blog/adding-a-new-post','1');
+ ,(67,72,'/blog/my-first-blog-post','1')
+ ,(68,73,'/blog/adding-a-new-post','1')
+ ,(66,74,'/members','1');
 
 INSERT INTO PagePermissions VALUES(5,1,0,'r',NULL,NULL)
  ,(5,2,0,'r',NULL,NULL)
@@ -821,18 +858,18 @@ INSERT INTO PageTypes VALUES(1,'right_sidebar','template3.png','Right Sidebar',0
  ,(3,'full','main.png','Full Width',0)
  ,(4,'blog_entry','template2.png','Blog Entry',0);
 
-INSERT INTO Pages VALUES(1,1,'0',1,0,NULL,NULL,NOW(),NULL,NOW(),NULL,NULL,1,1,'OVERRIDE',NULL,0,NULL,0,10,0,0,0,1,-1,'0',0)
+INSERT INTO Pages VALUES(1,1,'0',1,0,NULL,NULL,NOW(),NULL,NOW(),NULL,NULL,1,1,'OVERRIDE',NULL,0,NULL,0,11,0,0,0,1,-1,'0',0)
  ,(2,1,'1',NULL,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
  ,(5,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,5,'OVERRIDE','/login.php',0,NULL,0,0,0,1,0,1,-1,'0',0)
- ,(6,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,6,'OVERRIDE','/register.php',0,NULL,0,0,1,1,0,1,-1,'0',0)
- ,(7,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/profile/view.php',0,NULL,0,4,2,1,0,1,-1,'0',0)
+ ,(6,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,6,'OVERRIDE','/register.php',0,NULL,0,0,3,1,0,1,-1,'0',0)
+ ,(7,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/profile/view.php',0,NULL,0,4,4,1,0,1,-1,'0',0)
  ,(8,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/profile/edit.php',0,NULL,0,0,0,7,0,1,-1,'0',0)
  ,(10,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/profile/avatar.php',0,NULL,0,0,1,7,0,1,-1,'0',0)
  ,(11,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/profile/messages.php',0,NULL,0,0,2,7,0,1,-1,'0',0)
  ,(12,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/profile/friends.php',0,NULL,0,0,3,7,0,1,-1,'0',0)
- ,(13,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/page_not_found.php',0,NULL,0,0,4,1,0,1,-1,'0',0)
- ,(14,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/page_forbidden.php',0,NULL,0,0,5,1,0,1,-1,'0',0)
- ,(15,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'OVERRIDE','/dashboard/view.php',0,NULL,0,9,6,1,0,0,-1,'0',0)
+ ,(13,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/page_not_found.php',0,NULL,0,0,6,1,0,1,-1,'0',0)
+ ,(14,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/page_forbidden.php',0,NULL,0,0,7,1,0,1,-1,'0',0)
+ ,(15,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'OVERRIDE','/dashboard/view.php',0,NULL,0,9,8,1,0,0,-1,'0',0)
  ,(16,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/sitemap/view.php',0,NULL,0,4,0,15,0,0,-1,'0',0)
  ,(17,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/sitemap/full.php',0,NULL,0,0,0,16,0,0,-1,'0',0)
  ,(18,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/sitemap/explore.php',0,NULL,0,0,1,16,0,0,-1,'0',0)
@@ -872,30 +909,18 @@ INSERT INTO Pages VALUES(1,1,'0',1,0,NULL,NULL,NOW(),NULL,NOW(),NULL,NULL,1,1,'O
  ,(52,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/view.php',0,NULL,0,2,8,15,0,0,-1,'0',0)
  ,(53,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/mail/view.php',0,NULL,0,0,0,52,0,0,-1,'0',0)
  ,(54,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/marketplace.php',0,NULL,0,0,1,52,0,0,-1,'0',0)
- ,(55,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/download_file.php',0,NULL,0,0,7,1,0,0,-1,'0',0)
+ ,(55,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/download_file.php',0,NULL,0,0,9,1,0,0,-1,'0',0)
  ,(64,2,'1',NULL,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
  ,(65,3,'1',NULL,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
  ,(66,4,'1',NULL,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
- ,(67,2,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,1,2,1,0,1,-1,'0',0)
+ ,(67,2,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,1,5,1,0,1,-1,'0',0)
  ,(68,2,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,0,67,0,1,-1,'0',0)
- ,(69,2,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,1,0,1,0,1,-1,'0',0)
+ ,(69,2,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,1,1,1,0,1,-1,'0',0)
  ,(70,2,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,0,69,0,1,-1,'0',0)
- ,(71,1,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,2,1,1,0,1,-1,'0',0)
+ ,(71,1,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,2,2,1,0,1,-1,'0',0)
  ,(72,4,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,0,71,0,1,-1,'0',0)
- ,(73,4,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,1,71,0,1,-1,'0',0);
-
-DROP TABLE IF EXISTS Piles;
-
-CREATE TABLE IF NOT EXISTS `Piles` (
-  `pID` int(10) unsigned NOT NULL auto_increment,
-  `uID` int(10) unsigned default NULL,
-  `isDefault` tinyint(1) NOT NULL default '0',
-  `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `name` varchar(255) default NULL,
-  `state` varchar(64) NOT NULL,
-  PRIMARY KEY  (`pID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
+ ,(73,4,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,1,71,0,1,-1,'0',0)
+ ,(74,0,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT','/members.php',0,NULL,0,0,10,1,0,0,-1,'0',0);
 
 INSERT INTO TaskPermissions VALUES(1,'access_task_permissions','Change Task Permissions','',0)
  ,(2,'access_sitemap','Access Sitemap and Page Search','',0)
@@ -905,7 +930,6 @@ INSERT INTO TaskPermissions VALUES(1,'access_task_permissions','Change Task Perm
  ,(6,'backup','Perform Full Database Backups','',0)
  ,(7,'sudo','Sign in as User','',0)
  ,(8,'uninstall_packages','Uninstall Packages','',0);
-
 
 INSERT INTO atBoolean VALUES(14,0)
  ,(18,1)
@@ -994,6 +1018,8 @@ INSERT INTO btNavigation VALUES(1,'display_asc','top',0,0,'none','enough',0,0)
  ,(12,'display_asc','top',0,0,'none','enough',0,0)
  ,(14,'display_asc','top',0,0,'relevant_breadcrumb','enough',0,0)
  ,(20,'display_asc','top',0,0,'all','all',0,0);
+
+INSERT INTO btNextPrevious VALUES(40,'next_previous','Next','Previous',1,1,1);
 
 INSERT INTO btPageList VALUES(30,10,'chrono_desc',0,0,1,1,4,1,'Blog','',0,0,0);
 

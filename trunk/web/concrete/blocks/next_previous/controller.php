@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die(_("Access Denied.")); 
+<?php  defined('C5_EXECUTE') or die(_("Access Denied.")); 
 
 Loader::model('page_list'); 
 
@@ -40,13 +40,16 @@ class NextPreviousBlockController extends BlockController {
 		
 		$nextPage=$this->getNextCollection();
 		$previousPage=$this->getPreviousCollection();
+		$parentPage=Page::getByID(Page::getCurrentPage()->getCollectionParentID());
 		
 		if( $this->linkStyle=='page_name' ){
 			$nextLinkText = (!$nextPage)?'':$nextPage->getCollectionName(); 
 			$previousLinkText = (!$previousPage)?'':$previousPage->getCollectionName();
+			$parentLinkText = (!$parentPage)?'':$parentPage->getCollectionName();
 		}else{
 			$nextLinkText = $this->nextLabel;
 			$previousLinkText = $this->previousLabel;
+			$parentLinkText = $this->parentLabel;
 		}
 		
 		if($this->showArrows){
@@ -56,9 +59,11 @@ class NextPreviousBlockController extends BlockController {
 		
 		$this->set( 'nextCollection', $nextPage );
 		$this->set( 'previousCollection', $previousPage );
+		$this->set( 'parentCollection', $parentPage );
 		
 		$this->set( 'nextLinkText', $nextLinkText );
 		$this->set( 'previousLinkText', $previousLinkText );		
+		$this->set( 'parentLinkText', $parentLinkText );		
 	}
 	
 	function getNextCollection(){
@@ -85,7 +90,13 @@ class NextPreviousBlockController extends BlockController {
 	protected function loadOtherCollections(){
 		global $c; 
 		$pl = new PageList();
-		$pl->sortByDisplayOrder();
+
+        if ($this->orderBy == 'chrono_desc') {
+            $pl->sortByPublicDateDescending();
+        } else {
+    		$pl->sortByDisplayOrder();
+        }
+
 		$pl->filterByParentID( $c->cParentID );  
 		if($this->excludeSystemPages) $this->excludeSystemPages($pl);
 		$this->otherCollections = $pl->get(); 

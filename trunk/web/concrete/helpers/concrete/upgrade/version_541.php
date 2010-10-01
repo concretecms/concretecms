@@ -23,6 +23,9 @@ class ConcreteUpgradeVersion541Helper {
 	public function run() {
 		// we install the updated schema just for tables that matter
 		Package::installDB(dirname(__FILE__) . '/db/version_541.xml');
+		BlockType::installBlockType('tags');			
+		BlockType::installBlockType('next_previous');			
+		BlockType::installBlockType('date_nav');
 	}
 
 	
