@@ -17,7 +17,7 @@ jQuery.fn.dialog._create = function(opts) {
 	jQuery.fn.dialog.showLoader(opts);
 	
 	jQuery.fn.dialog.position(opts);
-	
+	jQuery.fn.dialog.loadShell(opts);	
 	if (jQuery.fn.dialog.totalDialogs > 0) {
 		jQuery.fn.dialog.deactivate(jQuery.fn.dialog.totalDialogs-1);
 	}
@@ -139,7 +139,7 @@ jQuery.fn.dialog.getTotalOpen = function() {
 jQuery.fn.dialog.load = function(fnd) {
 	if (fnd.element != null) {
 		// we are loading some content on the page rather than through AJAX
-		jQuery.fn.dialog.loadShell(fnd);
+		//jQuery.fn.dialog.loadShell(fnd);
 		jQuery.fn.dialog.position(fnd);
 		jQuery.fn.dialog.hideLoader();
 		$("#ccm-dialog-content" + fnd.n).append($(fnd.element));
@@ -163,7 +163,7 @@ jQuery.fn.dialog.load = function(fnd) {
 			type: 'GET',
 			url: durl,
 			success: function(resp) {
-				jQuery.fn.dialog.loadShell(fnd);
+				//jQuery.fn.dialog.loadShell(fnd);
 				jQuery.fn.dialog.position(fnd);
 				jQuery.fn.dialog.hideLoader();
 				$("#ccm-dialog-content" + fnd.n).html(resp);

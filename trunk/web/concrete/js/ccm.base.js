@@ -2,7 +2,7 @@
 
 var ccm_uiLoaded = false;
 var ccm_siteActivated = true;
-var ccm_animEffects = true;
+var ccm_animEffects = false;
 
 ccm_parseJSON = function(resp, onNoError) {
 	if (resp.error) {
@@ -26,7 +26,12 @@ ccm_deactivateSite = function(onDone) {
 		$(this).css('visibility', 'hidden');
 	});
 	
-	$("#ccm-overlay").show();
+	if (ccm_animEffects) {
+		$("#ccm-overlay").fadeIn(100);
+	} else {
+		$("#ccm-overlay").show();
+	}
+	
 	ccm_siteActivated = false;
 	if (typeof onDone == 'function') {
 		onDone();
@@ -34,8 +39,12 @@ ccm_deactivateSite = function(onDone) {
 }
 
 ccm_activateSite = function() {
-	$("#ccm-overlay").hide();
-
+	if (ccm_animEffects) {
+		$("#ccm-overlay").fadeOut(100);
+	} else {
+		$("#ccm-overlay").hide();
+	}
+	
 	$("embed,object").each(function() {
 		$(this).css('visibility', $(this).attr('ccm-style-old-visibility'));
 	});
