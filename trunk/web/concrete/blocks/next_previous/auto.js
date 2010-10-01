@@ -2,8 +2,8 @@ var ccmNextPrevious ={
 
 	init:function(){   
 		$('input[name=linkStyle]').each(function(i,el){ 
-			el.onclick=function(){ lightweightBlogNextPrevious.nextPrevLabelsShown(this); }
-			el.onchange=function(){ lightweightBlogNextPrevious.nextPrevLabelsShown(this); }							   
+			el.onclick=function(){ ccmNextPrevious.nextPrevLabelsShown(this); }
+			el.onchange=function(){ ccmNextPrevious.nextPrevLabelsShown(this); }							   
 		})
 	},
 	
