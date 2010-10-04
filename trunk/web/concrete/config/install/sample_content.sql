@@ -54,7 +54,8 @@ INSERT INTO Areas VALUES(1,1,'Header Nav',0,0)
  ,(54,73,'Main',0,0)
  ,(55,73,'Blog Post More',0,0)
  ,(56,73,'Blog Post Footer',0,0)
- ,(57,73,'Sidebar',0,0);
+ ,(57,73,'Sidebar',0,0)
+ ,(58,36,'Global',0,0);
 
 INSERT INTO AttributeKeyCategories VALUES(1,'collection',0,NULL)
  ,(2,'user',0,NULL)
@@ -219,7 +220,8 @@ INSERT INTO Blocks VALUES(1,NULL,NOW(),NOW(),'header_menu.php','1',3,1)
  ,(37,NULL,NOW(),NOW(),NULL,'1',17,1)
  ,(38,NULL,NOW(),NOW(),NULL,'1',1,1)
  ,(39,NULL,NOW(),NOW(),NULL,'1',20,1)
- ,(40,NULL,NOW(),NOW(),NULL,'1',19,1);
+ ,(40,NULL,NOW(),NOW(),NULL,'1',19,1)
+ ,(41,'My_Site_Name',NOW(),NOW(),NULL,'1',1,1);
 
 INSERT INTO CollectionAttributeValues VALUES(66,1,11,19)
  ,(67,2,1,11)
@@ -283,19 +285,6 @@ INSERT INTO CollectionAttributeValues VALUES(66,1,11,19)
  ,(73,4,3,43)
  ,(73,4,4,44)
  ,(73,4,11,45);
-
-INSERT INTO CollectionSearchIndexAttributes VALUES(2,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
- ,(1,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
- ,(65,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
- ,(42,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
- ,(67,'','','',0,0,NULL,0,0,NULL)
- ,(68,'','','',1,0,NULL,0,0,NULL)
- ,(66,NULL,NULL,NULL,0,0,NULL,0,0,'\n')
- ,(69,'','','',0,0,NULL,0,0,NULL)
- ,(70,'','','',0,0,NULL,0,0,NULL)
- ,(71,'','','',0,0,NULL,0,0,NULL)
- ,(72,'','','',0,0,NULL,0,0,'\nsample\nHello World\n')
- ,(73,'','','',0,0,NULL,0,0,'\nsample\n');
 
 INSERT INTO CollectionVersionBlockStyles VALUES(1,2,1,'Header Nav',0)
  ,(1,2,2,'Header',0)
@@ -530,7 +519,8 @@ INSERT INTO CollectionVersionBlocks VALUES(2,1,1,'Header Nav',0,'1',0,0)
  ,(73,4,36,'Main',0,'0',0,0)
  ,(73,4,38,'Blog Post More',0,'0',0,0)
  ,(73,4,39,'Sidebar',1,'0',0,0)
- ,(73,4,40,'Blog Post Footer',0,'0',0,0);
+ ,(73,4,40,'Blog Post Footer',0,'0',0,0)
+ ,(36,2,41,'Global',0,'1',0,0);
 
 INSERT INTO CollectionVersions VALUES(2,1,NULL,NULL,NULL,NOW(),NOW(),'Initial Version',1,0,1,1,NULL)
  ,(1,2,'Home','home',NULL,NOW(),NOW(),'New Version 2',0,0,1,1,NULL)
@@ -610,7 +600,8 @@ INSERT INTO CollectionVersions VALUES(2,1,NULL,NULL,NULL,NOW(),NOW(),'Initial Ve
  ,(73,3,'Adding a New Post','adding-a-new-post','',NOW(),NOW(),'New Version 3',0,0,1,1,NULL)
  ,(74,1,'Members','members',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(72,4,'My First Blog Post','my-first-blog-post','',NOW(),NOW(),'New Version 4',1,0,1,1,NULL)
- ,(73,4,'Adding a New Post','adding-a-new-post','',NOW(),NOW(),'New Version 4',1,0,1,1,NULL);
+ ,(73,4,'Adding a New Post','adding-a-new-post','',NOW(),NOW(),'New Version 4',1,0,1,1,NULL)
+ ,(36,2,'Scrapbook','scrapbook','Share content across your site.',NOW(),NOW(),'New Version 2',0,1,1,NULL,NULL);
 
 INSERT INTO Collections VALUES(1,NOW(),NOW(),'home')
  ,(2,NOW(),NOW(),NULL)
@@ -677,7 +668,20 @@ INSERT INTO Collections VALUES(1,NOW(),NOW(),'home')
  ,(73,NOW(),NOW(),'adding-a-new-post')
  ,(74,NOW(),NOW(),'members');
 
-INSERT INTO Config VALUES('SITE',NOW(),'{CCM:SITE}',0,0);
+INSERT INTO CollectionSearchIndexAttributes VALUES(2,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
+ ,(1,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
+ ,(65,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
+ ,(42,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
+ ,(67,'','','',0,0,NULL,0,0,NULL)
+ ,(68,'','','',1,0,NULL,0,0,NULL)
+ ,(66,NULL,NULL,NULL,0,0,NULL,0,0,'\n')
+ ,(69,'','','',0,0,NULL,0,0,NULL)
+ ,(70,'','','',0,0,NULL,0,0,NULL)
+ ,(71,'','','',0,0,NULL,0,0,NULL)
+ ,(72,'','','',0,0,NULL,0,0,'\nsample\nHello World\n')
+ ,(73,'','','',0,0,NULL,0,0,'\nsample\n');
+
+INSERT INTO Config VALUES('SITE',NOW(),'{[CCM:SITE]}',0,0);
 
 INSERT INTO DashboardHomepage VALUES(1,'activity','Site Activity',0,0)
  ,(2,'reports','Statistics',0,0)
@@ -746,12 +750,6 @@ INSERT INTO Groups VALUES(1,'Guest','The guest group represents unregistered vis
 INSERT INTO Jobs VALUES(1,'Index Search Engine','Index the site to allow searching to work quickly and accurately.',NOW(),NOW(),0,'Index updated. 2 pages required reindexing.',0,'ENABLED','index_search',1)
  ,(2,'Generate Sitemap File','Generate the sitemap.xml file that search engines use to crawl your site.',NOW(),NOW(),0,'Sitemap XML File Saved.',0,'ENABLED','generate_sitemap',0)
  ,(3,'Process Email Posts','Polls an email account and grabs private messages/postings that are sent there..',NOW(),NOW(),0,'The Job was run successfully.',0,'ENABLED','process_email',0);
-
-INSERT INTO JobsLog VALUES(1,0,'Index updated. 6 pages required reindexing.',NOW(),0)
- ,(2,0,'Sitemap XML File Saved.',NOW(),0)
- ,(3,0,'The Job was run successfully.',NOW(),0)
- ,(4,1,'mysql error: [1054: Unknown column \'ak_exclude_search_index\' in \'where clause\'] in EXECUTE(\"select p1.cID, pt.ctHandle  from Pages p1 left join PageTypes pt on (pt.ctID = p1.ctID) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical ',NOW(),2)
- ,(5,1,'Index updated. 2 pages required reindexing.',NOW(),0);
 
 INSERT INTO MailImporters VALUES(1,'private_message',NULL,NULL,NULL,NULL,0,NULL,0,0);
 
@@ -910,26 +908,26 @@ INSERT INTO Pages VALUES(1,1,'0',1,0,NULL,NULL,NOW(),NULL,NOW(),NULL,NULL,1,1,'O
  ,(53,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/mail/view.php',0,NULL,0,0,0,52,0,0,-1,'0',0)
  ,(54,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/marketplace.php',0,NULL,0,0,1,52,0,0,-1,'0',0)
  ,(55,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/download_file.php',0,NULL,0,0,9,1,0,0,-1,'0',0)
- ,(64,2,'1',NULL,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
- ,(65,3,'1',NULL,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
- ,(66,4,'1',NULL,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
- ,(67,2,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,1,5,1,0,1,-1,'0',0)
- ,(68,2,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,0,67,0,1,-1,'0',0)
- ,(69,2,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,1,1,1,0,1,-1,'0',0)
- ,(70,2,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,0,69,0,1,-1,'0',0)
- ,(71,1,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,2,2,1,0,1,-1,'0',0)
- ,(72,4,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,0,71,0,1,-1,'0',0)
- ,(73,4,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,1,71,0,1,-1,'0',0)
- ,(74,0,'0',1,0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL,1,1,'PARENT','/members.php',0,NULL,0,0,10,1,0,0,-1,'0',0);
+ ,(64,2,'1',NULL,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
+ ,(65,3,'1',NULL,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
+ ,(66,4,'1',NULL,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,0,'PARENT',NULL,0,NULL,0,0,0,0,0,0,-1,'0',0)
+ ,(67,2,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,1,5,1,0,1,-1,'0',0)
+ ,(68,2,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,0,67,0,1,-1,'0',0)
+ ,(69,2,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,1,1,1,0,1,-1,'0',0)
+ ,(70,2,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,0,69,0,1,-1,'0',0)
+ ,(71,1,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,2,2,1,0,1,-1,'0',0)
+ ,(72,4,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,0,71,0,1,-1,'0',0)
+ ,(73,4,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT',NULL,0,NULL,0,0,1,71,0,1,-1,'0',0)
+ ,(74,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/members.php',0,NULL,0,0,10,1,0,0,-1,'0',0);
 
 INSERT INTO TaskPermissions VALUES(1,'access_task_permissions','Change Task Permissions','',0)
- ,(2,'access_sitemap','Access Sitemap and Page Search','',0)
- ,(3,'access_user_search','Access User Search','',0)
- ,(4,'access_group_search','Access Group Search','',0)
- ,(5,'access_page_defaults','Change Content on Page Type Default Pages','',0)
- ,(6,'backup','Perform Full Database Backups','',0)
- ,(7,'sudo','Sign in as User','',0)
- ,(8,'uninstall_packages','Uninstall Packages','',0);
+,(2,'access_sitemap','Access Sitemap and Page Search','',0)
+,(3,'access_user_search','Access User Search','',0)
+,(4,'access_group_search','Access Group Search','',0)
+,(5,'access_page_defaults','Change Content on Page Type Default Pages','',0)
+,(6,'backup','Perform Full Database Backups','',0)
+,(7,'sudo','Sign in as User','',0)
+,(8,'uninstall_packages','Uninstall Packages','',0);
 
 INSERT INTO atBoolean VALUES(14,0)
  ,(18,1)
@@ -1002,7 +1000,8 @@ INSERT INTO btContentLocal VALUES(4,'<h2>Sidebar</h2>\r\n<p>Everything about con
  ,(34,'<p>This is the intro of your blog post. If your post is short, just stick it all in here. Everything in the \"Main\" block area will be displayed from the main&nbsp;<a title=\"Blog\" href=\"{CCM:CID_71}\">blog list page</a>.</p>')
  ,(35,'<p>If you tend to write long blog posts that go on, and on, and on - you should consider keeping that content in this \"Blog Post More\" block area. This area only shows up to visitors who click on the blog post\'s title or more link to read the full post.&nbsp;</p>\r\n<p>Keep your long posts in here and just a short synopsis up top if you\'d like a nice scannable blog.</p>')
  ,(36,'<p>In-context editing is pretty cool cool!</p>')
- ,(38,'<p>By now you\'ve probably watched through the basics at concrete5.org, so you\'re getting a good sense of how you can add pages around your site. To make a new blog post...</p>\r\n<ol>\r\n<li>Goto the blog list page, this is the holder page for all your posts in the site tree.&nbsp;</li>\r\n<li>Click Add Page, on the upper left.&nbsp;</li>\r\n<li>Pick Blog Entry as a page type.&nbsp;</li>\r\n<li>Give it a name and hit return, or click the add page button at the bottom of the drop down. (You don\'t need to worry about all these other fields yet, you can always change them later through Edit Page &gt; Properties</li>\r\n<li>You\'re now on your new blog post page, in edit mode. Start making blocks and get things looking right.&nbsp;</li>\r\n<li>Exit Edit Mode and Publish your changes.&nbsp;</li>\r\n</ol>');
+ ,(38,'<p>By now you\'ve probably watched through the basics at concrete5.org, so you\'re getting a good sense of how you can add pages around your site. To make a new blog post...</p>\r\n<ol>\r\n<li>Goto the blog list page, this is the holder page for all your posts in the site tree.&nbsp;</li>\r\n<li>Click Add Page, on the upper left.&nbsp;</li>\r\n<li>Pick Blog Entry as a page type.&nbsp;</li>\r\n<li>Give it a name and hit return, or click the add page button at the bottom of the drop down. (You don\'t need to worry about all these other fields yet, you can always change them later through Edit Page &gt; Properties</li>\r\n<li>You\'re now on your new blog post page, in edit mode. Start making blocks and get things looking right.&nbsp;</li>\r\n<li>Exit Edit Mode and Publish your changes.&nbsp;</li>\r\n</ol>')
+ ,(41,'<p>{[CCM:SITE]}</p>');
 
 INSERT INTO btDateNav VALUES(18,0,0,0,4,0,'current_page',0,0,0,0,0,0)
  ,(28,0,71,1,0,0,'current_month',0,0,0,0,0,0);
