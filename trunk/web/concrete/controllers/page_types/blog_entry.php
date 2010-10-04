@@ -3,7 +3,7 @@
 class BlogEntryPageTypeController extends Controller {	
 	
 	/**
-	 * Returns a formated text for the number of comments in the first comment block in the "Entry Comments" area
+	 * Returns a formatted text for the number of comments in the first comment block in the "Entry Comments" area
 	 * @param string $singular_format
 	 * @param string $plural_format
 	 * @param string $disabled_message

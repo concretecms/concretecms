@@ -6,7 +6,6 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 	$isFirst = true; //So first item in list can have a different css class (e.g. no top border)
 	$excerptBlocks = ($controller->truncateSummaries ? 1 : null); //1 is the number of blocks to include in the excerpt
 	$truncateChars = ($controller->truncateSummaries ? $controller->truncateChars : 0);
-	//$bh = Loader::helper('page_content');
 	foreach ($cArray as $cobj):
 		$title = $cobj->getCollectionName();
 		$date = $cobj->getCollectionDatePublic('F j, Y');
