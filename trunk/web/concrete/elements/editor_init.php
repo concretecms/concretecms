@@ -15,6 +15,7 @@ var ccm_editorCurrentAuxTool = '';
 // store the selection/position for ie..
 var bm; 
 setBookMark = function () {
+	tinyMCE.activeEditor.focus();
 	bm = tinyMCE.activeEditor.selection.getBookmark();
 }
 
