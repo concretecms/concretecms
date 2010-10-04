@@ -21,7 +21,12 @@
         
             <div class="spacer"></div>
             
-            <script>
+            <script type="text/javascript">
+           	ThumbnailBuilder_onSaveCompleted = function() { 
+				alert("<?=t('User Profile picture saved.')?>");
+				window.location.href="<?=$this->url('/profile/avatar')?>";
+			}
+			
             $(function(){   
                 var params = { 
                     bgcolor: "#ffffff",
@@ -36,23 +41,6 @@
                 };
 				swfobject.embedSWF ("<?=DIR_REL?>/concrete/flash/thumbnail_editor_2.swf", "profile-avatar", "500", "400", "10,0,0,0", "includes/expressInstall.swf", flashvars, params);
         
-       			/*
-                //SWF OBJECT 2.0 Method
-                var params = { 
-                    bgcolor: "#ffffff",
-                    wmode:  "transparent",
-                    quality:  "high" 
-                };
-                var flashvars = { 
-                    bgcolor: "#ffffff",
-                    base_url: "<?=BASE_URL?>",
-                    session: "<?=session_id()?>",
-                    "export": "<?=$this->url($c->getCollectionPath(), 'save_thumb')?>" 
-                };
-                swfobject.embedSWF("<?=DIR_REL?>/concrete/flash/thumbnail_editor.swf", "discussion-profile-avatar", "450", "500", "8.0", false, flashvars, params);
-           		
-           		*/
-           		
            		
            });
             </script>
