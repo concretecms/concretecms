@@ -49,7 +49,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 		$btID = $b->getBlockTypeID();
 		$bt = BlockType::getByID($btID);
 		$uh = Loader::helper('concrete/urls');
-		$rssUrl = $controller->getRssUrl($b);
+		$rssUrl = $controller->getRssUrl($b, 'blog_rss');
 		$rssIcon = $uh->getBlockTypeAssetsURL($bt, 'rss.png');
 		$rssTitle = $controller->rssTitle;
 	?>

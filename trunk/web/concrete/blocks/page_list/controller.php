@@ -184,14 +184,14 @@
 		
 		}
 
-		public function getRssUrl($b){
+		public function getRssUrl($b, $tool = 'rss'){
 			$uh = Loader::helper('concrete/urls');
 			if(!$b) return '';
 			$btID = $b->getBlockTypeID();
 			$bt = BlockType::getByID($btID);
 			$c = $b->getBlockCollectionObject();
 			$a = $b->getBlockAreaObject();
-			$rssUrl = $uh->getBlockTypeToolsURL($bt)."/rss?bID=".$b->getBlockID()."&amp;cID=".$c->getCollectionID()."&amp;arHandle=" . $a->getAreaHandle();
+			$rssUrl = $uh->getBlockTypeToolsURL($bt)."/" . $tool . "?bID=".$b->getBlockID()."&amp;cID=".$c->getCollectionID()."&amp;arHandle=" . $a->getAreaHandle();
 			return $rssUrl;
 		}
 	}
