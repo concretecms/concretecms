@@ -10,6 +10,7 @@ var editor_id = 'ccm-content-<?=$a->getAreaID()?>';
 // store the selection/position for ie..
 var bm; 
 setBookMark = function () {
+	tinyMCE.activeEditor.focus();
 	bm = tinyMCE.activeEditor.selection.getBookmark();
 }
 
