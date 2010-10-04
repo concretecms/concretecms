@@ -41,6 +41,7 @@
 				$row['orderBy'] = $this->orderBy;
 				$row['ctID'] = $this->ctID;
 				$row['rss'] = $this->rss;
+				$row['displayAliases'] = $this->displayAliases;
 			}
 			
 
