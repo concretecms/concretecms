@@ -13,7 +13,7 @@ if($_GET['bID']) {
 	$rssUrl = $controller->getRssUrl($b);
 	
 	$bp = new Permissions($b);
-	if( $bp->canRead() && $controller->rss) {
+	if( $bp->canRead() && $controller->rss && ($b->getBlockFilename() == 'blog_index.php' || $b->getBlockFilename() == 'blog_index')) {
 
 		$cArray = $controller->getPages();
 		$nh = Loader::helper('navigation');
@@ -36,7 +36,13 @@ if($_GET['bID']) {
 			  <link>
 				<?= BASE_URL.DIR_REL.$nh->getLinkToCollection($cobj) ?>		  
 			  </link>
-			  <description><?=htmlspecialchars(strip_tags($cobj->getCollectionDescription()))."....";?></description>
+			  <description><![CDATA[
+				<?php
+				$a = new Area('Main');
+				$a->disableControls();
+				$a->display($cobj);
+				?>
+			  ]]></description>
 			  <? /* <pubDate><?=$cobj->getCollectionDatePublic()?></pubDate>
 			  Wed, 23 Feb 2005 16:12:56 GMT  */ ?>
 			  <pubDate><?=date( 'D, d M Y H:i:s T',strtotime($cobj->getCollectionDatePublic())) ?></pubDate>
@@ -47,7 +53,7 @@ if($_GET['bID']) {
 		
 <?	} else {  	
 		$v = View::getInstance();
-		$v->renderError('Permission Denied',"You don't have permission to access this RSS feed");
+		$v->renderError('Permission Denied',"This page list doesn't use the custom blog template, or you don't have permission to access this RSS feed");
 		exit;
 	}
 			
