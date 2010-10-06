@@ -1230,10 +1230,10 @@ $ppWhere = '';
 		$this->rescanCollectionPath();
 	}
 
-	function duplicateAll($nc) {
+	function duplicateAll($nc, $preserveUserID = false) {
 		$db = Loader::db();
 		$nc2 = $this->duplicate($nc);
-		Page::_duplicateAll($this, $nc2);
+		Page::_duplicateAll($this, $nc2, $preserveUserID);
 		return $nc2;
 	}
 
@@ -1241,7 +1241,7 @@ $ppWhere = '';
 	* @access private
 	**/
 
-	function _duplicateAll($cParent, $cNewParent) {
+	function _duplicateAll($cParent, $cNewParent, $preserveUserID = false) {
 		$db = Loader::db();
 		$cID = $cParent->getCollectionID();
 		$q = "select cID from Pages where cParentID = '{$cID}' order by cDisplayOrder asc";
@@ -1249,19 +1249,22 @@ $ppWhere = '';
 		if ($r) {
 			while ($row = $r->fetchRow()) {
 				$tc = Page::getByID($row['cID']);
-				$nc = $tc->duplicate($cNewParent);
-				$tc->_duplicateAll($tc, $nc);
+				$nc = $tc->duplicate($cNewParent, $preserveUserID);
+				$tc->_duplicateAll($tc, $nc, $preserveUserID);
 			}
 		}
 	}
 
-	function duplicate($nc) {
+	function duplicate($nc, $preserveUserID = false) {
 		$db = Loader::db();
 		// the passed collection is the parent collection
 		$cParentID = $nc->getCollectionID();
 
 		$u = new User();
 		$uID = $u->getUserID();
+		if ($preserveUserID) {
+			$uID = $this->getCollectionUserID();		
+		}
 		$dh = Loader::helper('date');			
 		$cDate = $dh->getSystemDateTime();
 		

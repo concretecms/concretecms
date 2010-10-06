@@ -173,6 +173,7 @@
 		protected $btTable = 'btNavigation';
 		protected $btInterfaceWidth = "500";
 		protected $btInterfaceHeight = "350";
+		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = false;
