@@ -20,7 +20,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class ConcreteUpgradeVersion5406Helper {
 
-	public function run() {
+	public function prepare() {
 		// we install the updated schema just for tables that matter
 		Package::installDB(dirname(__FILE__) . '/db/version_5406.xml');
 	}

@@ -164,7 +164,12 @@ class UpgradeController extends Controller {
 				if (method_exists($ugh, 'prepare')) {
 					$prepareMessages[] =$ugh->prepare($this);
 				}
-				$runMessages[] = $ugh->run();
+			}
+			
+			foreach($this->upgrades as $ugh) {
+				if (method_exists($ugh, 'run')) {
+					$runMessages[] = $ugh->run();
+				}
 			}
 			
 			$message = '';
