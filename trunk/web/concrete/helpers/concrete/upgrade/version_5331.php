@@ -20,11 +20,9 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class ConcreteUpgradeVersion5331Helper {
 
-	public function run() {
+	public function prepare() {
 		$db = Loader::db();
-		Cache::disableLocalCache();
 		Package::installDB(dirname(__FILE__) . '/db/version_5331.xml');
-		Cache::enableLocalCache();
 	}
 	
 

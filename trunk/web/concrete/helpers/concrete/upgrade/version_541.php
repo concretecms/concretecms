@@ -20,9 +20,12 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class ConcreteUpgradeVersion541Helper {
 
-	public function run() {
+	public function prepare() {
 		// we install the updated schema just for tables that matter
 		Package::installDB(dirname(__FILE__) . '/db/version_541.xml');
+	}
+	
+	public function run() {
 		BlockType::installBlockType('tags');			
 		BlockType::installBlockType('next_previous');			
 		BlockType::installBlockType('date_nav');

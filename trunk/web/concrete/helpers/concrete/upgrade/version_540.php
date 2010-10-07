@@ -29,9 +29,6 @@ class ConcreteUpgradeVersion540Helper {
 		//  we backup the custom styles table
 		$this->backupCustomStylesTables();
 		
-		// we install the updated schema just for tables that matter
-		Package::installDB(dirname(__FILE__) . '/db/version_540.xml');
-		
 		// upgrade blocks that differ between versions
 		$this->updateBlocks();
 		
@@ -51,6 +48,11 @@ class ConcreteUpgradeVersion540Helper {
 		}
 		
 		Cache::enableLocalCache();
+	}
+	
+	public function prepare() {
+		// we install the updated schema just for tables that matter
+		Package::installDB(dirname(__FILE__) . '/db/version_540.xml');
 	}
 
 	protected function setupSiteSearchIndexing() {
