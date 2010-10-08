@@ -512,8 +512,8 @@ ccm_alSetupCheckboxes = function(searchInstance) {
 				break;
 			case "properties": 
 				jQuery.fn.dialog.open({
-					width: 680,
-					height: 450,
+					width: 690,
+					height: 440,
 					modal: false,
 					href: CCM_TOOLS_PATH + '/files/bulk_properties?' + fIDstring + '&searchInstance=' + searchInstance,
 					title: ccmi18n.properties				
@@ -632,10 +632,16 @@ ccm_filesUploadedDialog = function(searchInstance) {
 	for( var i=0; i< ccm_uploadedFiles.length; i++ )
 		fIDstring=fIDstring+'&fID[]='+ccm_uploadedFiles[i];
 	jQuery.fn.dialog.open({
-		width: 630,
-		height: 550,
-		modal: true,
-		href: CCM_TOOLS_PATH + '/files/add_to_complete/?'+fIDstring + '&searchInstance=' + searchInstance,
+		width: 690,
+		height: 440,
+		modal: false,
+		href: CCM_TOOLS_PATH + '/files/bulk_properties/?'+fIDstring + '&uploaded=true&searchInstance=' + searchInstance,
+		onClose: function() {
+			ccm_deactivateSearchResults(searchInstance);
+			$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
+				ccm_parseAdvancedSearchResponse(resp, searchInstance);
+			});
+		},
 		title: ccmi18n_filemanager.uploadComplete				
 	});
 	ccm_uploadedFiles=[];

@@ -14,7 +14,7 @@ table#ccm-file-search-advanced-sets-header {margin-bottom: 12px}
 table#ccm-file-search-advanced-sets-header h2, table#ccm-file-search-advanced-sets-header h1 {margin: 0px}
 div.ccm-file-search-advanced-sets-results {max-height: 200px; overflow: auto; border: 2px solid rgba(200,200,200,0.2); padding: 4px}
 div.ccm-file-search-advanced-sets-results ul, div.ccm-file-search-advanced-sets-results li {margin: 0px; padding: 0px; list-style-type: none}
-div.ccm-file-search-advanced-sets-results li {position: relative; padding: 0px 38px 4px 20px}
+div.ccm-file-search-advanced-sets-results li {position: relative; padding: 0px 38px 0px 20px}
 div.ccm-file-search-advanced-sets-results li {min-height: 16px}
 div.ccm-file-search-advanced-sets-results li input {position: absolute; top: 0px; left: 0px}
 div.ccm-file-search-advanced-sets-results li div.ccm-file-search-advanced-set-controls {display: none; position: absolute; top: 0px; right: 0px; z-index: 10}
@@ -70,7 +70,8 @@ img.ccm-generic-thumbnail {border: 0px}
 div#ccm-file-add-to-set-tab h2 {margin-bottom: 10px}
 div#ccm-file-add-to-set-tab hr {border: 0px; background: #aaa; margin: 8px 0px 8px 0px; height: 1px}
 
-div.ccm-file-search-advanced-sets-results li.ccm-file-set-add-cb {margin-bottom: 8px}
+div.ccm-file-search-advanced-sets-results li.ccm-file-set-add-cb {margin-bottom: 4px}
+div.ccm-file-search-advanced-sets-results li.ccm-file-set-add-cb:last-child {margin-bottom: 0px}
 
 .ccm-file-set-add-cb img {vertical-align: middle;}
 
