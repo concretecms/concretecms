@@ -43,34 +43,41 @@ $defaultPropertyVals=array();
 foreach($files as $f){
 	$fv = $f->getVersionToModify();
 	$title=$fv->getTitle();
-	if(!strlen($defaultPropertyVals['title']) || $defaultPropertyVals['title']==$title) 
-		 $defaultPropertyVals['title']=$title;
-	else $defaultPropertyVals['title']='MIXED VALUES'; 
-	
+	if(!strlen($defaultPropertyVals['title']) || $defaultPropertyVals['title']==$title) {
+		 $defaultPropertyVals['title']=$title;  $defaultPropertyVals['titleValue']=$title;
+		} else {
+		$defaultPropertyVals['title']='{CCM:MULTIPLE:VALUES}';  $defaultPropertyVals['titleValue']='';
+		}
+		
 	$description=$fv->getDescription(); 
-	if(!strlen($defaultPropertyVals['description']) || $defaultPropertyVals['description']==$description) 
-		 $defaultPropertyVals['description']=$description;
-	else $defaultPropertyVals['description']='MIXED VALUES'; 
+	if(!strlen($defaultPropertyVals['description']) || $defaultPropertyVals['description']==$description) {
+		 $defaultPropertyVals['description']=$description; $defaultPropertyVals['descriptionValue']=$description;
+	} else {
+		 $defaultPropertyVals['description']='{CCM:MULTIPLE:VALUES}';  $defaultPropertyVals['descriptionValue']='';
+	}
 	
 	$tags=$fv->getTags(); 
-	if(!strlen($defaultPropertyVals['tags']) || $defaultPropertyVals['tags']==$tags) 
-		 $defaultPropertyVals['tags']=$tags;
-	else $defaultPropertyVals['tags']='MIXED VALUES';	 
+	if(!strlen($defaultPropertyVals['tags']) || $defaultPropertyVals['tags']==$tags) {
+		 $defaultPropertyVals['tags']=$tags;  $defaultPropertyVals['tagsValue']=$tags;
+	} else {
+		$defaultPropertyVals['tags']='{CCM:MULTIPLE:VALUES}';  $defaultPropertyVals['tagsValue']='';
+	}
 	
 	foreach($attribs as $ak){
 		$akID=$ak->getAttributeKeyID();
-		$attrVal = $fv->getAttribute($ak, true); 
-		if(!strlen($defaultPropertyVals['ak'.$akID]) || $defaultPropertyVals['ak'.$akID]==$attrVal) 
+		$vo = $fv->getAttributeValueObject($ak);
+		$attrVal = '';
+		if (is_object($vo)) {
+			$attrVal = $vo->getValue('display');
+		}
+		if(!isset($defaultPropertyVals['ak'.$akID]) || $defaultPropertyVals['ak'.$akID]==$attrVal) {
 			 $defaultPropertyVals['ak'.$akID]=$attrVal;
-		else $defaultPropertyVals['ak'.$akID]='MIXED VALUES';		
+		} else {
+			$defaultPropertyVals['ak' . $akID]='{CCM:MULTIPLE:VALUES}';  $defaultPropertyVals['ak' . $akID . 'Value']='';
+		}
 	}
 }
-foreach($defaultPropertyVals as $key=>$val)
-	if($val=='MIXED VALUES')  $defaultPropertyVals[$key]='';
 
-
-
- 
 if ($_POST['task'] == 'update_core' && $fp->canWrite() && (!$previewMode)) { 
  
 	switch($_POST['attributeField']) {
@@ -143,6 +150,8 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 	global $previewMode, $f, $fp, $files, $form;
 	if ($value == '') {
 		$text = '<div class="ccm-attribute-field-none">' . t('None') . '</div>';
+	} else if ($value == '{CCM:MULTIPLE:VALUES}') { 
+		$text = '<div class="ccm-attribute-field-none">' . t('Multiple Values') . '</div>';
 	} else { 
 		$text = htmlentities( $value, ENT_QUOTES, APP_CHARSET);
 	}
@@ -183,19 +192,19 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 	print $html;
 }
 
-function printFileAttributeRow($ak, $fv) {
-	global $previewMode, $f, $fp, $files, $form, $defaultPropertyVals; 
+function printFileAttributeRow($ak, $fv, $value) {
+	global $previewMode, $f, $fp, $files, $form; 
 	$vo = $fv->getAttributeValueObject($ak);
-	$value = '';
-	if (is_object($vo)) {
-		$value = $vo->getValue('display');
-	}
 	
 	if ($value == '') {
 		$text = '<div class="ccm-attribute-field-none">' . t('None') . '</div>';
-	} else {
+	} else if ($value == '{CCM:MULTIPLE:VALUES}') { 
+		$text = '<div class="ccm-attribute-field-none">' . t('Multiple Values') . '</div>';
+		$vo = '';
+	} else { 
 		$text = $value;
 	}
+
 	if ($ak->isAttributeKeyEditable() && $fp->canWrite() && (!$previewMode)) { 
 	$type = $ak->getAttributeType();
 	$hiddenFIDfields='';
@@ -237,47 +246,110 @@ if (!isset($_REQUEST['reload'])) { ?>
 	<div id="ccm-file-properties-wrapper">
 <? } ?>
 
-<h1><?=t('File Details')?></h1>
+<script type="text/javascript">
+var ccm_activeFileManagerAddCompleteTab = "ccm-file-manager-add-complete-basic";
 
+$(function() {
+	$("#ccm-file-manager-add-complete-tabs a").click(function() {
+		$("li.ccm-nav-active").removeClass('ccm-nav-active');
+		$("#" + ccm_activeFileManagerAddCompleteTab + "-tab").hide();
+		ccm_activeFileManagerAddCompleteTab = $(this).attr('id');
+		$(this).parent().addClass("ccm-nav-active");
+		$("#" + ccm_activeFileManagerAddCompleteTab + "-tab").show();
+	});
 
-<div id="ccm-file-properties">
-<h2><?=t('Basic Properties')?></h2>
-<table border="0" cellspacing="0" cellpadding="0" class="ccm-grid">  
+	$("div.ccm-message").show('highlight');
+});
+</script>
 
-<?
+<style type="text/css">
+div.ccm-add-files-complete div.ccm-message {margin-bottom: 0px}
+table.ccm-grid input.ccm-input-text, table.ccm-grid textarea {width: 100%}
+table.ccm-grid th {width: 70px}
 
-printCorePropertyRow(t('Title'), 'fvTitle', $defaultPropertyVals['title'], $form->text('fvTitle', $defaultPropertyVals['title']));
-printCorePropertyRow(t('Description'), 'fvDescription', $defaultPropertyVals['description'], $form->textarea('fvDescription', $defaultPropertyVals['description']));
-printCorePropertyRow(t('Tags'), 'fvTags', $defaultPropertyVals['tags'], $form->textarea('fvTags', $defaultPropertyVals['tags']));
+</style>
 
-?>
-
-</table>
-
-
-<? 
-
-if (count($attribs) > 0) { ?>
-
-<br/>
-
-<h2><?=t('Other Properties')?></h2>
-<table border="0" cellspacing="0" cellpadding="0" class="ccm-grid">
-<?
-
-foreach($attribs as $at) {
-
-	printFileAttributeRow($at, $fv);
-
-}
-
-?>
-</table>
+<? if ($_REQUEST['uploaded']) { ?>
+	<? if (count($_REQUEST['fID']) == 1) { ?>
+		<div class="ccm-message"><strong><?=t('1 file uploaded successfully.')?></strong></div>
+	<? } else { ?>
+		<div class="ccm-message"><strong><?=t('%s files uploaded successfully.', count($_REQUEST['fID']))?></strong></div>
+	<? } ?>
 <? } ?>
 
-<br/>  
+<ul class="ccm-dialog-tabs" id="ccm-file-manager-add-complete-tabs">
+	<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-file-manager-add-complete-basic"><?=t('Basic Properties')?></a></li>
+	<? if (count($attribs) > 0) { ?>
+		<li><a href="javascript:void(0)" id="ccm-file-manager-add-complete-attributes"><?=t('Other Properties')?></a></li>
+	<? } ?>
+	<? if ($_REQUEST['uploaded']) { ?>
+		<li><a href="javascript:void(0)" id="ccm-file-manager-add-complete-sets"><?=t('Sets')?></a></li>
+	<? } ?>
+</ul>
+
+<div id="ccm-file-properties">
+<div id="ccm-file-manager-add-complete-basic-tab">
+<table border="0" cellspacing="0" cellpadding="0" class="ccm-grid">  
+<? if (count($files) == 1) { ?>
+<tr>
+	<th><?=t('ID')?></th>
+	<td width="100%" colspan="2"><?=$fv->getFileID()?> <span style="color: #afafaf">(<?=t('Version')?> <?=$fv->getFileVersionID()?>)</span></td>
+</tr>
+<tr>
+	<th><?=t('Filename')?></th>
+	<td width="100%" colspan="2"><?=$fv->getFileName()?></td>
+</tr>
+<tr>
+	<th><?=t('URL to File')?></th>
+	<td width="100%" colspan="2"><?=$fv->getRelativePath(true)?></td>
+</tr>
+
+<tr>
+	<th><?=t('Type')?></th>
+	<td colspan="2"><?=$fv->getType()?></td>
+</tr>
+
+<tr>
+	<th><?=t('Size')?></th>
+	<td colspan="2"><?=$fv->getSize()?> (<?=number_format($fv->getFullSize())?> <?=t('bytes')?>)</td>
+</tr>
+<? } ?>
+
+<?
+printCorePropertyRow(t('Title'), 'fvTitle', $defaultPropertyVals['title'], $form->text('fvTitle', $defaultPropertyVals['titleValue']));
+printCorePropertyRow(t('Description'), 'fvDescription', $defaultPropertyVals['description'], $form->textarea('fvDescription', $defaultPropertyVals['descriptionValue']));
+printCorePropertyRow(t('Tags'), 'fvTags', $defaultPropertyVals['tags'], $form->textarea('fvTags', $defaultPropertyVals['tagsValue']));
+?>
+
+<? if (count($files) == 1) { ?>
+<tr>
+	<th><?=t('File Preview')?></th>
+	<td colspan="2"><?=$fv->getThumbnail(2)?></td>
+</tr>
+<? } ?>
+</table>
 
 </div>
+
+<div id="ccm-file-manager-add-complete-attributes-tab" style="display: none">
+
+<table border="0" cellspacing="0" cellpadding="0" class="ccm-grid" width="100%">  
+<?
+foreach($attribs as $at) { 
+	printFileAttributeRow($at, $fv, $defaultPropertyVals['ak' . $at->getAttributeKeyID()]);
+} ?>
+</table>
+
+</div>
+</div>
+
+<? if ($_REQUEST['uploaded']) { ?>
+
+	<div id="ccm-file-manager-add-complete-sets-tab" style="display: none">	
+		<div class="ccm-files-add-to-sets-wrapper"><? Loader::element('files/add_to_sets', array('disableForm' => FALSE, 'disableTitle' => true)) ?></div>
+	</div>
+
+<? } ?>
 
 <script type="text/javascript">
 $(function() { 

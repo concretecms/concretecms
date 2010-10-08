@@ -135,9 +135,12 @@ $(function() {
 	<div style="margin-top: 12px">
 	<table border="0" cellspacing="0" cellpadding="0" id="ccm-file-search-advanced-sets-header">
 	<tr>
+		<? if (!$disableTitle) { ?>
 		<td width="100%"><h1><?=t('Set')?></h1></td>
+		<? } ?>
 		<td>
-
+		
+		
 		<div class="ccm-file-sets-search-wrapper-input">
 			<?=$form->text('fsAddToSearchName', $searchRequest['fsSearchName'], array('autocomplete' => 'off'))?>
 		</div>
@@ -147,7 +150,7 @@ $(function() {
 	</table>
 	</div>
 
-
+	
 	<? $s1 = FileSet::getMySets(); ?>
 	<? if (count($s1) > 0) { ?>
 	<div class="ccm-file-search-advanced-sets-results">
