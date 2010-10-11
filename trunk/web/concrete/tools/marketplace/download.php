@@ -1,5 +1,12 @@
 <?  defined('C5_EXECUTE') or die("Access Denied.");
 
+$tp = new TaskPermission();
+if (!$tp->canInstallPackages()) { ?>
+	<p><?=t('You do not have permission to download packages from the marketplace.')?></p>
+	<? exit;
+
+}
+
 Loader::library('marketplace');
 Loader::model('marketplace_remote_item');
 

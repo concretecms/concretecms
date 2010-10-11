@@ -22,13 +22,18 @@ class DashboardSettingsMarketplaceController extends Controller {
 	}
 	
 	public function connect_complete() {
-		if (!$_POST['csToken']) {
-			$this->set('error', t('An unexpected error occurred when connecting your site to the marketplace.'));
+		$tp = new TaskPermission();
+		if ($tp->canInstallPackages()) {
+			if (!$_POST['csToken']) {
+				$this->set('error', array(t('An unexpected error occurred when connecting your site to the marketplace.')));
+			} else {
+				Config::save('MARKETPLACE_SITE_TOKEN', $_POST['csToken']);
+				Config::save('MARKETPLACE_SITE_URL_TOKEN', $_POST['csURLToken']);
+				print '<script type="text/javascript">parent.window.location.href=\'' . View::url('/dashboard/install', 'view', 'community_connect_success') . '\';</script>';
+				exit;
+			}
 		} else {
-			Config::save('MARKETPLACE_SITE_TOKEN', $_POST['csToken']);
-			Config::save('MARKETPLACE_SITE_URL_TOKEN', $_POST['csURLToken']);
-			print '<script type="text/javascript">parent.window.location.href=\'' . View::url('/dashboard/install', 'view', 'community_connect_success') . '\';</script>';
-			exit;
+			$this->set('error', array(t('You do not have permission to connect this site to the marketplace.')));
 		}
 	}
 

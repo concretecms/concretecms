@@ -332,10 +332,21 @@ INSERT INTO Pages VALUES(1,1,'0',1,1,1,NOW(),NOW(),NULL,NOW(),NULL,NULL,1,1,'OVE
 
 
 INSERT INTO TaskPermissions VALUES(1,'access_task_permissions','Change Task Permissions','',0)
- ,(2,'access_sitemap','Access Sitemap and Page Search','',0)
- ,(3,'access_user_search','Access User Search','',0)
- ,(4,'access_group_search','Access Group Search','',0)
- ,(5,'access_page_defaults','Change Content on Page Type Default Pages','',0)
- ,(6,'backup','Perform Full Database Backups','',0)
- ,(7,'sudo','Sign in as User','',0)
- ,(8,'uninstall_packages','Uninstall Packages','',0);
+,(2,'access_sitemap','Access Sitemap and Page Search','',0)
+,(3,'access_user_search','Access User Search','',0)
+,(4,'access_group_search','Access Group Search','',0)
+,(5,'access_page_defaults','Change Content on Page Type Default Pages','',0)
+,(6,'backup','Perform Full Database Backups','',0)
+,(7,'sudo','Sign in as User','',0)
+,(8,'uninstall_packages','Uninstall Packages','',0)
+,(9,'install_packages','Install Packages and Connect to the Marketplace','',0);
+
+INSERT INTO TaskPermissionUserGroups VALUES(1,3,0,1)
+,(2,3,0,1)
+,(3,3,0,1)
+,(4,3,0,1)
+,(5,3,0,1)
+,(6,3,0,1)
+,(8,3,0,1)
+,(9,3,0,1);
+
