@@ -231,6 +231,14 @@ if (!defined('ENABLE_USER_TIMEZONES')) {
 	Config::getOrDefine('ENABLE_USER_TIMEZONES', false);	
 }
 
+// private message limitations
+if(!defined('USER_PRIVATE_MESSAGE_MAX')) {
+	Config::getOrDefine('USER_PRIVATE_MESSAGE_MAX', '20'); // number of messages that can be sent within USER_PRIVATE_MESSAGE_MAX_TIME_SPAN
+}
+if(!defined('USER_PRIVATE_MESSAGE_MAX_TIME_SPAN')) {
+	Config::getOrDefine('USER_PRIVATE_MESSAGE_MAX_TIME_SPAN', '15'); // minutes
+}
+
 //these are the hashkey types for registration related authentication
 define('UVTYPE_REGISTER', 0);
 define('UVTYPE_CHANGE_PASSWORD', 1);

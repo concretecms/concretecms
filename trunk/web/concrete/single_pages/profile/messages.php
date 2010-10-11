@@ -105,6 +105,12 @@
     		
     		<?
     			break;
+			case 'over_limit': ?>
+				<h2><?php echo t('Woops!')?></h2>
+				<p><?php echo t("You've sent more messages than we can handle just now, that last one didn't go out. 
+				We've notified an administrator to check into this. 
+				Please wait a few minutes before sending a new message."); ?></p>
+				<?php break; 
     		case 'send':
     		case 'reply':
     		case 'write': ?>
