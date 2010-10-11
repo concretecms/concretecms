@@ -100,25 +100,30 @@ class Marketplace {
 		// if $mpID is passed, we are going to either
 		// a. go to its purchase page
 		// b. pass you through to the page AFTER connecting.
-		if (!$this->isConnected()) {
-			$url = MARKETPLACE_URL_CONNECT;
-			if (!$completeURL) {
-				$completeURL = BASE_URL . View::url('/dashboard/settings/marketplace', 'connect_complete');
+		$tp = new TaskPermission();
+		if ($tp->canInstallPackages()) {
+			if (!$this->isConnected()) {
+				$url = MARKETPLACE_URL_CONNECT;
+				if (!$completeURL) {
+					$completeURL = BASE_URL . View::url('/dashboard/settings/marketplace', 'connect_complete');
+				}
+				$csReferrer = urlencode($completeURL);
+				$csiURL = urlencode(BASE_URL . DIR_REL);
+				if ($this->hasConnectionError()) {
+					$csToken = $this->getSiteToken();
+				} else {
+					// new connection 
+					$csToken = Marketplace::generateSiteToken();
+				}
+				$url = $url . '?ts=' . time() . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(SITE, ENT_QUOTES, APP_CHARSET);
 			}
-			$csReferrer = urlencode($completeURL);
-			$csiURL = urlencode(BASE_URL . DIR_REL);
-			if ($this->hasConnectionError()) {
-				$csToken = $this->getSiteToken();
+			if ($csToken == false) {
+				return '<div class="ccm-error">' . t('Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that cURL is enabled on your server. If these are both true, It\'s possible your site\'s IP address may be blacklisted for some reason on our server. Please ask your webhost what your site\'s outgoing cURL request IP address is, and email it to us at <a href="mailto:help@concrete5.org">help@concrete5.org</a>.') . '</div>';
 			} else {
-				// new connection 
-				$csToken = Marketplace::generateSiteToken();
+				return '<iframe id="ccm-marketplace-frame-' . time() . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
 			}
-			$url = $url . '?ts=' . time() . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(SITE, ENT_QUOTES, APP_CHARSET);
-		}
-		if ($csToken == false) {
-			return '<div class="ccm-error">' . t('Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that cURL is enabled on your server. If these are both true, It\'s possible your site\'s IP address may be blacklisted for some reason on our server. Please ask your webhost what your site\'s outgoing cURL request IP address is, and email it to us at <a href="mailto:help@concrete5.org">help@concrete5.org</a>.') . '</div>';
 		} else {
-			return '<iframe id="ccm-marketplace-frame-' . time() . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+			return '<div class="ccm-error">' . t('You do not have permission to connect this site to the marketplace.') . '</div>';
 		}
 	}
 	

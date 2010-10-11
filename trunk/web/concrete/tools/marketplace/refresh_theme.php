@@ -1,6 +1,7 @@
 <?  defined('C5_EXECUTE') or die("Access Denied.");
 
 $ch = Loader::helper('concrete/interface');
+$tp = new TaskPermission();
 
 //marketplace
 if (ENABLE_MARKETPLACE_SUPPORT) {
@@ -23,8 +24,9 @@ ccm_marketplaceRefreshInstalledThemes = function() {
 </script>
 
 <h2><?=t('Themes')?></h2> 
-
-	<? if( !count($availableThemes) ){ ?>
+	<? if (!$tp->canInstallPackages()) { ?>
+		<div><?=t('You do not have permission to connect to the marketplace.')?></div>
+	<? } else if( !count($availableThemes) ){ ?>
 		<div><?=t('Unable to connect to the marketplace.')?></div>
 	<? }else{ ?>
 		<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil(count($availableThemes)/4)?>" >

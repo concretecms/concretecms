@@ -3,7 +3,8 @@
 $ch = Loader::helper('concrete/interface');
 
 //marketplace
-if(ENABLE_MARKETPLACE_SUPPORT){
+$tp = new TaskPermission();
+if(ENABLE_MARKETPLACE_SUPPORT && $tp->canInstallPackages()){
 	Loader::model('marketplace_remote_item');
 	$mri = new MarketplaceRemoteItemList();
 	$mri->filterByIsFeaturedRemotely(1);

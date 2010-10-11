@@ -3,17 +3,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $ci = Loader::helper('concrete/urls');
 $ch = Loader::helper('concrete/interface');
-$mi = Marketplace::getInstance();
+$tp = new TaskPermission();
+if ($tp->canInstallPackages()) {
+	$mi = Marketplace::getInstance();
+}
 $pkgArray = Package::getInstalledList();
 
-$tp = new TaskPermission();
 
 if ($this->controller->getTask() == 'browse') { ?>
 
 <h1><span><?=t("Browse the Marketplace")?></span></h1>
 <div class="ccm-dashboard-inner">
 <? 
-	if (!$mi->isConnected()) { ?>
+	if (!$tp->canInstallPackages()) { ?>
+	
+		<p class="ccm-error"><?=t('You do not have access to download themes or add-ons from the marketplace.')?></p>
+	<? } else if (!$mi->isConnected()) { ?>
 		<? Loader::element('dashboard/marketplace_connect_failed')?>
 	<? } else { ?>
 		
@@ -145,7 +150,7 @@ if ($this->controller->getTask() == 'browse') { ?>
 </div>
 </div>
 
-<? } else if ($this->controller->getTask() == 'update') { 
+<? } else if ($this->controller->getTask() == 'update' && $tp->canInstallPackages()) { 
 
 	$pkgAvailableArray = Package::getLocalUpgradeablePackages();
 	$thisURL = $this->url('/dashboard/install', 'update');
@@ -249,8 +254,13 @@ if ($this->controller->getTask() == 'browse') { ?>
 	// this consists of 
 	// 1. All packages that have greater pkgAvailableVersions than pkgVersion
 	// 2. All packages that have greater pkgVersion than getPackageCurrentlyInstalledVersion
-	$local = Package::getLocalUpgradeablePackages();
-	$remote = Package::getRemotelyUpgradeablePackages();
+	$local = array();
+	$remote = array();
+	$pkgAvailableArray = array();
+	if ($tp->canInstallPackages()) { 
+		$local = Package::getLocalUpgradeablePackages();
+		$remote = Package::getRemotelyUpgradeablePackages();
+	}
 	
 	// now we strip out any dupes for the total
 	$updates = 0;
@@ -264,9 +274,10 @@ if ($this->controller->getTask() == 'browse') { ?>
 			$updates++;
 		}
 	}
+	if ($tp->canInstallPackages()) { 
+		$pkgAvailableArray = Package::getAvailablePackages();
+	}
 	
-	$pkgAvailableArray = Package::getAvailablePackages();
-
 
 	$thisURL = $this->url('/dashboard/install');
 
@@ -293,7 +304,7 @@ if ($this->controller->getTask() == 'browse') { ?>
 	Loader::model('collection_attributes');
 	$db = Loader::db();
 	
-	if(ENABLE_MARKETPLACE_SUPPORT){
+	if(ENABLE_MARKETPLACE_SUPPORT && $tp->canInstallPackages()){
 		$purchasedBlocksSource = Marketplace::getAvailableMarketplaceItems();		
 	}else{
 		$purchasedBlocksSource = array();
@@ -486,7 +497,9 @@ if ($this->controller->getTask() == 'browse') { ?>
 			</div>
 				
 		</div>
-	
+		
+		<? if ($tp->canInstallPackages()) { ?>
+		
 		<div class="ccm-module" style="width: 350px; margin-bottom: 20px">
 				<? if ($updates > 0) { ?>
 				<h1><span><?=t('Updates')?></span></h1>
@@ -599,6 +612,9 @@ if ($this->controller->getTask() == 'browse') { ?>
 	
 		</div>
 		</div>
+		
+		<? } ?>
+		
 		</div>
 	
 	<? } ?>

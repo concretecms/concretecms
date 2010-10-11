@@ -21,6 +21,7 @@ if ($tp1->can()) {
 		TaskPermission::getByHandle('access_user_search'),
 		TaskPermission::getByHandle('access_group_search'),
 		TaskPermission::getByHandle('access_page_defaults'),
+		TaskPermission::getByHandle('install_packages'),
 		TaskPermission::getByHandle('uninstall_packages'),
 		TaskPermission::getByHandle('backup'),
 		TaskPermission::getByHandle('sudo')		
