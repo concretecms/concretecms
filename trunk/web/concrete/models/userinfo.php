@@ -290,7 +290,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				} else {
 					$mh->load('private_message');
 				}
-				$mh->sendMail();				
+				
+				
+				if(UserPrivateMessageLimit::isOverLimit($this->getUserID())) {
+					return false;
+				} else {
+					$mh->sendMail();
+					return true;
+				}				
 			}
 		}
 		
