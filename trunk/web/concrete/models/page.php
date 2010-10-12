@@ -2086,6 +2086,10 @@ $ppWhere = '';
 			// we are NOT specifically caching this page, and we don't 
 			return false;
 		}
+		
+		if ($this->isGeneratedCollection()) {
+			return false;
+		}	
 
 		foreach($blocks as $b) {
 			$controller = $b->getInstance();
