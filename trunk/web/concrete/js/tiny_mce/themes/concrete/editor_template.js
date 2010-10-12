@@ -1167,7 +1167,7 @@
 				url : tinymce.baseURL + '/themes/concrete/image.htm',
 				width : 355 + parseInt(ed.getLang('concrete.image_delta_width', 0)),
 				height : 275 + parseInt(ed.getLang('concrete.image_delta_height', 0)),
-				inline : trueconcrete
+				inline : true
 			}, {
 				theme_url : this.url
 			});
