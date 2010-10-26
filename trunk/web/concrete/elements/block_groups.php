@@ -48,11 +48,11 @@
 		  rowValue = "uID:" + uID;
 		  existingRow = document.getElementById("_row:" + rowValue);		  
 		  if (!existingRow) {
-		      tbl = document.getElementById("ccmPermissionsTable");	      
+		  	  tbl = document.getElementById("ccmPermissionsTableBlock");	      
               row = tbl.insertRow(-1); // insert at bottom of table. safari, wtf ?                            
               row.id = "_row:" + rowValue;
 
-			ccm_setupGridStriping('ccmPermissionsTable');
+			ccm_setupGridStriping('ccmPermissionsTableBlock');
               
               cells = new Array();
 				for (i = 0; i < 4; i++) {
@@ -75,11 +75,11 @@
           existingRow = document.getElementById("_row:" + rowValue);
           if (!existingRow) {
                
-            tbl = document.getElementById("ccmPermissionsTable");	      
+            tbl = document.getElementById("ccmPermissionsTableBlock");	      
             row = tbl.insertRow(-1); // insert at bottom of table. safari, wtf ?                            
             row.id = "_row:" + rowValue;
 
-			ccm_setupGridStriping('ccmPermissionsTable');
+			ccm_setupGridStriping('ccmPermissionsTableBlock');
 
               
               cells = new Array();
@@ -104,11 +104,11 @@
 	    	  oRow.id = null;
 	    	  oRow.style.display = "none";
 
-			ccm_setupGridStriping('ccmPermissionsTable');
+			ccm_setupGridStriping('ccmPermissionsTableBlock');
 		}
 	
 	$(function() {
-		ccm_setupGridStriping('ccmPermissionsTable');
+		ccm_setupGridStriping('ccmPermissionsTableBlock');
 	});
 	</script>
 	
@@ -128,7 +128,7 @@
 
 		<div class="ccm-spacer">&nbsp;</div>
 <br/>
-            <table id="ccmPermissionsTable" border="0" cellspacing="0" cellpadding="0" class="ccm-grid" style="width: 100%">
+            <table id="ccmPermissionsTableBlock" border="0" cellspacing="0" cellpadding="0" class="ccm-grid" style="width: 100%">
             <tr>
                <th style="width: 100%">&nbsp;</th>
               <th><?=t('Read')?></th>

@@ -56,7 +56,9 @@ class AttributeKey extends Object {
 	 */
 	protected function load($akID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ?', array($akID));
+		$akunhandle = Loader::helper('text')->uncamelcase(get_class($this));
+		$akCategoryHandle = substr($akunhandle, 0, strpos($akunhandle, '_attribute_key'));
+		$row = $db->GetRow('select akID, akHandle, akName, AttributeKeys.akCategoryID, akIsEditable, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ? and akCategoryHandle = ?', array($akID, $akCategoryHandle));
 		$this->setPropertiesFromArray($row);
 	}
 	

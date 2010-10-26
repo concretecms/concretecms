@@ -129,18 +129,25 @@ class SearchBlockController extends BlockController {
 		$_q = preg_replace('/[^A-Za-z\']/i', '', $_REQUEST['query']);
 		Loader::library('database_indexed_search');
 		$ipl = new IndexedPageList();
+		$aksearch = false;
 		if (is_array($_REQUEST['akID'])) {
 			Loader::model('attribute/categories/collection');
 			foreach($_REQUEST['akID'] as $akID => $req) {
-				$fak = CollectionAttributeKey::get($akID);
+				$fak = CollectionAttributeKey::getByID($akID);
 				if (is_object($fak)) {
 					$type = $fak->getAttributeType();
 					$cnt = $type->getController();
 					$cnt->setAttributeKey($fak);
 					$cnt->searchForm($ipl);
+					$aksearch = true;
 				}
 			}
 		}
+		
+		if((empty($_REQUEST['query']) && $aksearch == false) || $this->resultsURL != '') {
+			return false;		
+		}
+		
 		$ipl->setSimpleIndexMode(true);
 		if (isset($_REQUEST['query'])) {
 			$ipl->filterByKeywords($_q);
