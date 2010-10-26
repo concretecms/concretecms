@@ -10,6 +10,10 @@ if (!isset($editor_selector)) {
 	$editor_selector = 'ccm-advanced-editor';
 }
 
+if (isset($editor_height)) {
+	$textEditorHeight = $editor_height;
+}
+
 if (!isset($editor_mode)) {
 	$txtEditorMode=Config::get('CONTENTS_TXT_EDITOR_MODE');
 } else {

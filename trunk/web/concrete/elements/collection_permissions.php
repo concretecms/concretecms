@@ -38,12 +38,12 @@ $saveMsg = t('Save permissions first.');
 			rowValue = "uID:" + uID;
 			existingRow = document.getElementById("_row:" + rowValue);		  
 			if (!existingRow) {
-				tbl = document.getElementById("ccmPermissionsTable");
+				tbl = document.getElementById("ccmPermissionsTablePage");
 
 				row = tbl.insertRow(-1); // insert at bottom of table. safari, wtf ?                            
 				row.id = "_row:" + rowValue;
 				
-				ccm_setupGridStriping('ccmPermissionsTable');
+				ccm_setupGridStriping('ccmPermissionsTablePage');
 				
 				cells = new Array();
 				target = 10;
@@ -83,12 +83,12 @@ $saveMsg = t('Save permissions first.');
 			rowText = gName;
 			existingRow = document.getElementById("_row:" + rowValue);
 			if (rowValue && (existingRow == null)) {
-				tbl = document.getElementById("ccmPermissionsTable");	      
+				tbl = document.getElementById("ccmPermissionsTablePage");	      
 
 				row = tbl.insertRow(-1); // insert at bottom of table. safari, wtf ?                            
 				row.id = "_row:" + rowValue;
 				
-				ccm_setupGridStriping('ccmPermissionsTable');
+				ccm_setupGridStriping('ccmPermissionsTablePage');
 				
 				cells = new Array();
 				
@@ -132,7 +132,7 @@ $saveMsg = t('Save permissions first.');
 	    	  oRow.id = null;
 	    	  oRow.style.display = "none";
 
-			  ccm_setupGridStriping('ccmPermissionsTable');
+			  ccm_setupGridStriping('ccmPermissionsTablePage');
 			}
 			
 	</script>
@@ -140,10 +140,10 @@ $saveMsg = t('Save permissions first.');
 		<style type="text/css">
 			.datetime {display: none}
 			.subpage {display: none}
-			#ccmPermissionsTable .ccm-input-time-wrapper {display: block; margin-left: 14px}
+			#ccmPermissionsTablePage .ccm-input-time-wrapper {display: block; margin-left: 14px}
 			td.permissions {text-align: center}
 			
-			#ccmPermissionsTable .ccm-input-date-wrapper input.ccm-input-date {width: 120px;}
+			#ccmPermissionsTablePage .ccm-input-date-wrapper input.ccm-input-date {width: 120px;}
 			
 		</style>
 		
@@ -181,7 +181,7 @@ $saveMsg = t('Save permissions first.');
 			<strong><?=t('This page inherits its permissions from:');?> <a target="_blank" href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$cpc->getCollectionID()?>"><?=$cpc->getCollectionName()?></a></strong><br/><br/>
 			<? } ?>		
 				
-            <table id="ccmPermissionsTable" width="100%" class="ccm-grid" border="0" cellspacing="0" cellpadding="0">
+            <table id="ccmPermissionsTablePage" width="100%" class="ccm-grid" border="0" cellspacing="0" cellpadding="0">
             <tr>
               <th><div style="width: 200px">&nbsp;</div></th>
               <th class="permissions"><?=t('Read')?></th>
@@ -274,14 +274,14 @@ $saveMsg = t('Save permissions first.');
 
 <script type="text/javascript">
 ccm_deactivatePermissionsTable = function() {
-	$("#ccmPermissionsTable input, #ccmPermissionsTable select").each(function(i) {
+	$("#ccmPermissionsTablePage input, #ccmPermissionsTablePage select").each(function(i) {
 		$(this).get(0).disabled = true;
 	});
 	$("#ccm-page-permissions-select-user-group").hide();
 }
 
 ccm_activatePermissionsTable = function() {
-	$("#ccmPermissionsTable input, #ccmPermissionsTable select").each(function(i) {
+	$("#ccmPermissionsTablePage input, #ccmPermissionsTablePage select").each(function(i) {
 		$(this).get(0).disabled = false;
 	});
 	$("input.ccm-activate-date-time").each(function() {
@@ -327,7 +327,7 @@ $(function() {
 			ccm_deactivatePermissionsTable();
 		}
 	});
-	ccm_setupGridStriping('ccmPermissionsTable'); 
+	ccm_setupGridStriping('ccmPermissionsTablePage'); 
 });
 </script>
 

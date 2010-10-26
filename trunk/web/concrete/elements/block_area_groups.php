@@ -54,7 +54,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					return false;
 				}			
 	
-				tbl = document.getElementById("ccmPermissionsTable");	   
+				tbl = document.getElementById("ccmPermissionsTableArea");	   
 				row1 = tbl.insertRow(-1); // insert at bottom of table. safari, wtf ?                            
 				row1.id = "_row_uID_" + uID;
 				row2 = tbl.insertRow(-1); // insert at bottom of table. safari, wtf ?                            
@@ -117,7 +117,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					return false;
 				}
 				
-				tbl = document.getElementById("ccmPermissionsTable");	   
+				tbl = document.getElementById("ccmPermissionsTableArea");	   
 				row1 = tbl.insertRow(-1); // insert at bottom of table. safari, wtf ?                            
 				row1.id = "_row_gID_" + gID;
 				row2 = tbl.insertRow(-1); // insert at bottom of table. safari, wtf ?                            
@@ -192,7 +192,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			
 			function setPermissionAvailability(value) {
-				tbl = document.getElementById("ccmPermissionsTable");
+				tbl = document.getElementById("ccmPermissionsTableArea");
 				switch(value) {
 					case "OVERRIDE":
 						inputs = tbl.getElementsByTagName("INPUT");
@@ -244,7 +244,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	</div>
 	<div class="ccm-spacer">&nbsp;</div><br/>
 
-	<table id="ccmPermissionsTable" border="0" cellspacing="0" cellpadding="0" class="ccm-grid" style="width: 100%">
+	<table id="ccmPermissionsTableArea" border="0" cellspacing="0" cellpadding="0" class="ccm-grid" style="width: 100%">
 		<? 
 		
 		$rowNum = 1;
