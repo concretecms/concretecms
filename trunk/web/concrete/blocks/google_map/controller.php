@@ -2,18 +2,15 @@
 	defined('C5_EXECUTE') or die("Access Denied.");
 	class GoogleMapBlockController extends BlockController {
 		
-		var $pobj;
-		
 		protected $btTable = 'btGoogleMap';
 		protected $btInterfaceWidth = "400";
-		protected $btInterfaceHeight = "220";
+		protected $btInterfaceHeight = "200";
 		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = true;
 
 		public $title = "";
-		public $api_key = "";
 		public $location = "";
 		public $latitude = "";
 		public $longitude = "";
@@ -26,52 +23,42 @@
 			return t("Enter an address and a Google Map of that location will be placed in your page.");
 		}
 		
+		
 		public function getBlockTypeName() {
 			return t("Google Map");
 		}		
 		
+		
 		public function getJavaScriptStrings() {
-			return array(
-				'maps-api-key' => t('Please enter a valid Google Maps API key.'),
-				'maps-zoom' => t('Please enter a zoom number from 0 to 17.')
-			);
+			return array('maps-zoom' => t('Please enter a zoom number from 0 to 17.'));
 		}
 		
-		function __construct($obj = null) {		
-			parent::__construct($obj);	 
-			if(!$this->title) $this->title=t("My Map"); 
-		}		
 		
-		public function add() {
-			$db = Loader::db();		
-			$q = 'SELECT api_key FROM '.$this->btTable.' WHERE api_key!="" ';
-			$this->api_key = $db->getOne($q);
-			$this->title=t("My Map");
+		public function on_page_view() {
+			$html = Loader::helper('html');
+			$this->addHeaderItem('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>');
 		}
 		
-		function view(){ 
+		
+		public function view(){ 
 			$this->set('bID', $this->bID);	
 			$this->set('title', $this->title);
-			$this->set('api_key', $this->api_key);
 			$this->set('location', $this->location);
 			$this->set('latitude', $this->latitude);
 			$this->set('longitude', $this->longitude);
 			$this->set('zoom', $this->zoom);			
 		}
 		
-		function save($data) { 
+		public function save($data) { 
 			$args['title'] = isset($data['title']) ? trim($data['title']) : '';
-			$args['api_key'] = isset($data['api_key']) ? trim($data['api_key']) : '';
 			$args['location'] = isset($data['location']) ? trim($data['location']) : '';
 			$args['zoom'] = (intval($data['zoom'])>=0 && intval($data['zoom'])<=17) ? intval($data['zoom']) : 14;
 			
 			if( strlen($args['location'])>0 ){
-				$geoCodeHelper = new GoogleGeoCodeHelper( $args['api_key'] );
-				$geoCodeHelper->loadGeoCodeData($args['location']);
-				$coords=$geoCodeHelper->getCoords();
-				$args['latitude']=floatval($coords[1]);
-				$args['longitude']=floatval($coords[0]);
-			}else{
+				$coords = $this->lookupLatLong($args['location']);
+				$args['latitude']=floatval($coords['lat']);
+				$args['longitude']=floatval($coords['lng']);
+			} else {
 				$args['latitude']=0;
 				$args['longitude']=0;
 			}
@@ -79,10 +66,38 @@
 			parent::save($args);
 		}
 		
+		public function lookupLatLong($address) {
+			$json = Loader::helper('json');
+			$fh = Loader::helper('file');
+			
+			$base_url = "http://maps.google.com/maps/api/geocode/json?sensor=false";
+			$request_url = $base_url . "&address=".urlencode($address);
+			
+			$res = $fh->getContents($request_url);
+			$res = $json->decode($res);
+			if(!is_object($res)) { 
+				return false;
+			}
+			switch($res->status) {
+				case 'OK':
+					$lat = $res->results[0]->geometry->location->lat;
+					$lng = $res->results[0]->geometry->location->lng;
+					return array('lat'=>$lat,'lng'=>$lng);
+					break;
+				case 'ZERO_RESULTS':
+				case 'OVER_QUERY_LIMIT':
+				case 'REQUEST_DENIED':
+				case 'INVALID_REQUEST':
+					return false;
+					break;
+			}
+		}
+		
 	}
 	
 	
 	/** 
+	 * @deprecated
 	 * @access private
 	 */
 	class GoogleGeoCodeHelper{

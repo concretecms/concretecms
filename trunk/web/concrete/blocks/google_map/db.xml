@@ -6,7 +6,6 @@
 			<unsigned />
 		</field>
 		<field name="title" type="C" size="255"></field>		
-		<field name="api_key" type="C" size="255"></field>
 		<field name="location" type="C" size="255"></field>	
 		<field name="latitude" type="F"></field>
 		<field name="longitude" type="F"></field>	
