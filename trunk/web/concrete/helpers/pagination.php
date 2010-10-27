@@ -163,7 +163,7 @@ class PaginationHelper {
 			//preceeding dots for high number of pages
 			if($i<($this->current_page-5) && $i!=0){
 				if($predotted!=1){
-				   $pages.='...';
+				   $pages.='<span class="ccm-pagination-ellipses">...</span>';
 				   $predotted=1;
 				}
 				continue;
@@ -171,7 +171,7 @@ class PaginationHelper {
 			//following dots for high number of pages
 			if($i>($this->current_page+5) && $i!=($this->number_of_pages-1)){
 				if($postdotted!=1){
-				   $pages.='...';
+				   $pages.='<span class="ccm-pagination-ellipses">...</span>';
 				   $postdotted=1;
 				}
 				continue;
