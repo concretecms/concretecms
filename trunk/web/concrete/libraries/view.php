@@ -722,12 +722,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				// the block itself is actually loaded 			
 				
 				if ($view instanceof Page) {
-					$blocks = $view->getBlocks();
-					if ($view->supportsPageCache($blocks, $this->controller)) {
+					$_pageBlocks = $view->getBlocks();
+					if ($view->supportsPageCache($_pageBlocks, $this->controller)) {
 						$view->renderFromCache();
 					}
 					
-					foreach($blocks as $b1) {
+					foreach($_pageBlocks as $b1) {
 						$btc = $b1->getInstance();
 						// now we inject any custom template CSS and JavaScript into the header
 						if('Controller' != get_class($btc)){
@@ -773,7 +773,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					print $pageContent;
 					
 					if ($view instanceof Page) {
-						if ($view->supportsPageCache($blocks, $this->controller)) {
+						if ($view->supportsPageCache($_pageBlocks, $this->controller)) {
 							$view->addToPageCache($pageContent);
 						}
 					}
