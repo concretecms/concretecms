@@ -2069,12 +2069,13 @@ $ppWhere = '';
 		
 		// test get variables
 		$allowedGetVars = array('cid');
-		foreach($_GET as $key => $value) {
-			if (!in_array(strtolower($key), $allowedGetVars)) {
-				return false;
+		if (is_array($_GET)) {
+			foreach($_GET as $key => $value) {
+				if (!in_array(strtolower($key), $allowedGetVars)) {
+					return false;
+				}
 			}
-		}
-		
+		}		
 		
 		if ($this->cCacheFullPageContent == 1 || FULL_PAGE_CACHE_GLOBAL == 'all') {
 			// this cache page at the page level
@@ -2091,10 +2092,12 @@ $ppWhere = '';
 			return false;
 		}	
 
-		foreach($blocks as $b) {
-			$controller = $b->getInstance();
-			if (!$controller->cacheBlockOutput()) {
-				return false;
+		if (is_array($blocks)) {
+			foreach($blocks as $b) {
+				$controller = $b->getInstance();
+				if (!$controller->cacheBlockOutput()) {
+					return false;
+				}
 			}
 		}
 		return true;
