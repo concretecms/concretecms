@@ -20,7 +20,7 @@ table#googleMapBlockSetup td{ font-size:12px; vertical-align:top; padding-bottom
 		<th><?=t('Zoom')?>:</th>
 		<td>
 		<input id="ccm_googlemap_block_zoom" name="zoom" value="<?=$mapObj->zoom?>" maxlength="255" type="text" style="width:80%">
-		<div class="ccm-note"><?=t('Enter a number from 0 to 17, with 17 being the most zoomed in.')?> </div>
+		<div class="ccm-note"><?=t('Enter a number from 0 to 21, with 21 being the most zoomed in.')?> </div>
 		</td>
 	</tr>			
 </table>
