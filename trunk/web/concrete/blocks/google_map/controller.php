@@ -29,8 +29,16 @@
 		}		
 		
 		
-		public function getJavaScriptStrings() {
-			return array('maps-zoom' => t('Please enter a zoom number from 0 to 17.'));
+		public function validate($args) {
+			$error = Loader::helper('validation/error');
+			
+			if(!is_numeric($args['zoom'])) {
+				$error->add(t('Please enter a zoom number from 0 to 21.'));
+			}
+			
+			if($error->has()) {
+				return $error;
+			}
 		}
 		
 		
