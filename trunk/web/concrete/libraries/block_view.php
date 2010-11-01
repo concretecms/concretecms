@@ -206,6 +206,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			$outputContent = false;
 			$useCache = false;
+			$page = Page::getCurrentPage();
 			
 			if ($view == 'view') {
 				if ($this->controller->cacheBlockOutput() && ($obj instanceof Block)) {
@@ -214,7 +215,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 							$useCache = true;
 					}
 					if ($useCache) {
-						$outputContent = Cache::get('block_view_output', $obj->getBlockCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle());
+						$outputContent = Cache::get('block_view_output', $page->getCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle());
 					}
 				}
 			}
@@ -299,7 +300,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				print $outputContent;
 				
 				if ($useCache) {
-					Cache::set('block_view_output', $obj->getBlockCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
+					Cache::set('block_view_output', $page->getCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
 				}
 			}
 			if (isset($footer)) {
