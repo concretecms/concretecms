@@ -135,6 +135,9 @@ class IndexedSearch {
 			if (in_array($row['arHandle'], $searchableAreaNames)) {
 				$b = Block::getByID($row['bID'], $c, $row['arHandle']);
 				$bi = $b->getInstance();
+				if (!is_object($b)) {
+					continue;
+				}
 				if(method_exists($bi,'getSearchableContent')){
 					$searchableContent = $bi->getSearchableContent();  
 					if(strlen(trim($searchableContent))) 					
