@@ -7,6 +7,8 @@
 		protected $btTable = 'btRssDisplay';
 		protected $btInterfaceWidth = "400";
 		protected $btInterfaceHeight = "170";
+		protected $btCacheBlockRecord = true;
+		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = true;
 		

@@ -31,19 +31,19 @@ class Page extends Collection {
 	 * @param unknown_type $versionOrig
 	 * @return Page
 	 */
-	public static function getByID($cID, $versionOrig = 'RECENT') {
+	public static function getByID($cID, $versionOrig = 'RECENT', $class = 'Page') {
 		if ($versionOrig) {
 			$version = CollectionVersion::getNumericalVersionID($cID, $versionOrig);
 		}
 		$ca = new Cache();
 		$c = ($version > 0) ? $ca->get('page', $cID . ':' . $version) : $ca->get('page', $cID);
 
-		if ($c instanceof Page) {
+		if ($c instanceof $class) {
 			return $c;
 		}
 		
 		$where = "where Pages.cID = ?";
-		$c = new Page;
+		$c = new $class;
 		$c->populatePage($cID, $where, $version);
  
 		// must use cID instead of c->getCollectionID() because cID may be the pointer to another page		
