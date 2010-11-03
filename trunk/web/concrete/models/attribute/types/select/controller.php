@@ -541,8 +541,13 @@ class SelectAttributeTypeOptionList extends Object implements Iterator {
 	
 	public function __toString() {
 		$str = '';
+		$i = 0;
 		foreach($this->options as $opt) {
-			$str .= $opt->getSelectAttributeOptionValue() . "\n";
+			$str .= $opt->getSelectAttributeOptionValue();
+			$i++;
+			if ($i < count($this->options)) {
+				$str .= "\n";
+			}
 		}
 		return $str;
 	}

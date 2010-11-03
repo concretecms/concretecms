@@ -248,7 +248,7 @@
 			$r = $db->query($q2, $v2);
 			
 			// next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection
-			if (($oldHandle != $newHandle) && (!$c->isGeneratedCollection())) {
+			if ((($oldHandle != $newHandle) || $oldHandle == '') && (!$c->isGeneratedCollection())) {
 				$c->rescanCollectionPath();
 			}
 			Events::fire('on_page_version_approve', $c);
