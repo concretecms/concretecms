@@ -25,8 +25,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			for ($i = 1; $i < count($a); $i++) {
 				$args .= '&args[]=' . $a[$i];
 			}
-			$action = $uh->getToolsURL('attribute_type_actions') . '?atID=' . $this->controller->attributeType->getAttributeTypeID() . '&action=' . $action . $args;
-			return $action;
+			$url = $uh->getToolsURL('attribute_type_actions') . '?atID=' . $this->controller->attributeType->getAttributeTypeID();
+			if (is_object($this->attributeKey)) {
+				$url .= '&akID=' . $this->attributeKey->getAttributeKeyID();
+			}
+			$url .= '&action=' . $action . $args;
+			return $url;
 		}
 		
 		public function getAttributeTypeURL($filename = false) {

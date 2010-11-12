@@ -51,6 +51,26 @@ class FormHelper {
 		$str = '<input type="submit" class="ccm-input-submit '.$additionalClasses.'" id="' . $name . '" name="' . $name . '" value="' . $value . '" ' . $_fields . ' />';
 		return $str;
 	}
+
+	/** 
+	 * Creates a button
+	 * @param string $name
+	 * @param string value
+	 * @param array $fields Additional fields appended at the end of the submit button
+	 * return string $html
+	 */	 
+	public function button($name, $value, $fields = array(), $additionalClasses='') {
+		$_fields = '';
+		if (isset($fields['class'])) {
+			$additionalClasses = $fields['class'];
+			unset($fields['class']);
+		}
+		foreach($fields as $key => $fieldvalue) {
+			$_fields .= $key . '="' . $fieldvalue . '" ';
+		}
+		$str = '<input type="button" class="ccm-input-button '.$additionalClasses.'" id="' . $name . '" name="' . $name . '" value="' . $value . '" ' . $_fields . ' />';
+		return $str;
+	}
 	
 	/** 
 	 * Creates a label tag
@@ -266,6 +286,7 @@ class FormHelper {
 		// to the tag. If there's only one, then it's the array
 		if (count($a) == 3) {
 			$val = ($val !== false) ? $val : $a[1];
+			$val = str_replace('"', '&#34;', $val);
 			$str .= 'value="' . $val . '" ';
 			$miscFields = $a[2];
 			foreach($a[2] as $key => $value) {
@@ -274,10 +295,14 @@ class FormHelper {
 		} else {
 			if (is_array($a[1])) {
 				$str .= 'value="' . $val . '" ';
+				$val = str_replace('"', '&#34;', $val);
+
 				$miscFields = $a[1];
 			} else {
 				// we ignore this second value if a post is set with this guy in it
 				$val = ($val !== false) ? $val : $a[1];
+				$val = str_replace('"', '&#34;', $val);
+
 				$str .= 'value="' . $val . '" ';
 			}
 		}

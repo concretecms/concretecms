@@ -1,6 +1,10 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
-	$at = AttributeType::getByID($_REQUEST['atID']);
+	if (isset($_REQUEST['akID'])) {
+		$at = AttributeKey::getInstanceByID($_REQUEST['akID']);
+	} else {
+		$at = AttributeType::getByID($_REQUEST['atID']);
+	}
 	if (is_object($at)) {
 		$cnt = $at->getController();
 		if (isset($_REQUEST['args']) && is_array($_REQUEST['args'])) {

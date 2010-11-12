@@ -434,6 +434,9 @@ class Permissions extends Object {
 		if ($ar['canApproveVersions'] == 1) {
 			$str .= 'av:';
 		}
+		if ($ar['canReadVersions'] == 1) {
+			$str .= 'rv:';
+		}
 		if ($ar['canDelete'] == 1) {
 			$str .= 'dc:';
 		}
@@ -731,7 +734,7 @@ class BlockPermissions extends Permissions {
 		$adm = $u->isSuperUser();
 		
 		if ($adm) {
-			$this->permissionSet = ($cv->isMostRecent()) ? 'r:wa:db' : 'r';
+			$this->permissionSet = ($cv->isMostRecent()) ? 'r:wa:db:adm' : 'r';
 		} else {
 			$this->permissionSet = $this->setGroupAccess($bObj, $u, $cv);
 		}
