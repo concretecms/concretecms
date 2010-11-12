@@ -297,7 +297,20 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		return $list;
 	}
 	
-	public function getOptionUsageArray($parentPage = false) {
+	public function action_load_autocomplete_values() {
+		$this->load();
+		$values = array();
+			// now, if the current instance of the attribute key allows us to do autocomplete, we return all the values
+		if ($this->akSelectAllowMultipleValues && $this->akSelectAllowOtherValues) {
+			$options = $this->getOptions($_GET['term'] . '%');
+			foreach($options as $opt) {
+				$values[] = $opt->getSelectAttributeOptionValue();
+			}
+		}
+		print Loader::helper('json')->encode($values);
+	}
+	
+	public function getOptionUsageArray($parentPage = false, $limit = 9999) {
 		$db = Loader::db();
 		$q = "select atSelectOptions.value, atSelectOptionID, count(atSelectOptionID) as total from Pages inner join CollectionVersions on (Pages.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) inner join CollectionAttributeValues on (CollectionVersions.cID = CollectionAttributeValues.cID and CollectionVersions.cvID = CollectionAttributeValues.cvID) inner join atSelectOptionsSelected on (atSelectOptionsSelected.avID = CollectionAttributeValues.avID) inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where CollectionAttributeValues.akID = ? ";
 		$v = array($this->attributeKey->getAttributeKeyID());
@@ -305,7 +318,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 			$v[] = $parentPage->getCollectionID();
 			$q .= "and cParentID = ?";
 		}
-		$q .= " group by atSelectOptionID order by total desc";
+		$q .= " group by atSelectOptionID order by total desc limit " . $limit;
 		$r = $db->Execute($q, $v);
 		$list = new SelectAttributeTypeOptionList();
 		$i = 0;

@@ -71,6 +71,15 @@ class AttributeKey extends Object {
 		return PackageList::getHandle($this->pkgID);
 	}
 	
+	public static function getInstanceByID($akID) {
+		$db = Loader::db();
+		$akCategoryID = $db->GetOne('select akCategoryID from AttributeKeys where akID = ?', $akID);
+		if ($akCategoryID > 0) {
+			$akc = AttributeKeyCategory::getByID($akCategoryID);
+			return $akc->getAttributeKeyByID($akID);
+		}
+	}
+	
 	/** 
 	 * Returns an attribute type object 
 	 */

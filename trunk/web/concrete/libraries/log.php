@@ -73,7 +73,7 @@ class Log {
 	private $sessionText = null;
 	private $isInternal = false;
 	
-	public function __construct($log = null, $session = false, $internal = false) {
+	public function __construct($log = null, $session = true, $internal = false) {
 		$th = Loader::helper('text');
 		if ($log == null) {
 			$log = '';
