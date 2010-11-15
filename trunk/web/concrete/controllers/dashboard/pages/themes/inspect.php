@@ -8,7 +8,7 @@ class DashboardPagesThemesInspectController extends Controller {
 	// grab all the page types from within a theme	
 	public function view($ptID = null, $isOnInstall = false) {
 		if (!$ptID) {
-			$this->redirect('/dashboard/themes/');
+			$this->redirect('/dashboard/pages/themes/');
 		}
 		
 		$v = Loader::helper('validation/error');
