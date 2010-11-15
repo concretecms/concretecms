@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); 
 
 $form = Loader::helper('form');
-
+$json = Loader::helper('json');
 if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display autocomplete form
 	$attrKeyID = $this->attributeKey->getAttributeKeyID();
 	?>
@@ -44,7 +44,7 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 	<script type="text/javascript">
 	//<![CDATA[
 	$(function() {
-		var availableTags = <?php echo json_encode($opt_values);?>;
+		var availableTags = <?=$json->encode($opt_values);?>;
 		$("#newAttrValueRows<?php echo $attrKeyID?>").autocomplete({
 			source: "<?=$this->action('load_autocomplete_values')?>",
 			select: function( event, ui ) {
