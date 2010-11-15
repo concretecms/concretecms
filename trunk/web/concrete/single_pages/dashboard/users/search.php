@@ -321,7 +321,6 @@ if (is_object($uo)) {
 		</table>
         
         <input type="hidden" name="edit" value="1" />
-		</form>
 
 		<div class="ccm-buttons">
 		
@@ -329,6 +328,7 @@ if (is_object($uo)) {
 		<?=Loader::helper('concrete/interface')->submit(t('Update User'))?>
 
 		</div>	
+		</form>
 
 		<div class="ccm-spacer">&nbsp;</div>
 		

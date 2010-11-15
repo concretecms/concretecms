@@ -91,6 +91,14 @@
 			return $pages;
 		}
 		
+		public function edit() {
+			$c = Page::getCurrentPage();
+			if ($c->getCollectionID() != $this->cParentID && (!$this->cThis) && ($this->cParentID != 0)) { 
+				$isOtherPage = true;
+				$this->set('isOtherPage', true);
+			}
+		}
+		
 		public function view() {
 			$cArray = $this->getPages();
 			$nh = Loader::helper('navigation');

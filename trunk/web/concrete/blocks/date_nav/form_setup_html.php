@@ -4,6 +4,16 @@
 #ccm-pagelist-truncateTxt.faintText, #ccm-pagelist-truncateTitleTxt.faintText{ color:#999; }
 </style>
 
+<script type="text/javascript">
+$("select#cParentIDLocation").change(function() {
+	if ($(this).attr("value") == 'OTHER') {
+		$("div.ccm-page-list-page-other").show();
+	} else {
+		$("div.ccm-page-list-page-other").hide();
+	}
+});
+</script>
+
 <input type="hidden" name="dateNavToolsDir" value="<?php echo $uh->getBlockTypeToolsURL($bt)?>/" />
 <div id="ccm-pagelistPane-add" class="ccm-pagelistPane">
 
@@ -42,12 +52,12 @@
 			<?php echo t('at the current level')?></option>
 			<option value="<?php echo $c->getCollectionID()?>" <?php  if ($bCID == $controller->cParentID || $controller->cThis) { ?> selected="selected"<?php  } ?>>
 			<?php echo t('beneath this page')?></option>
-			<option value="OTHER" <?php  if ($controller->isOtherPage) { ?> selected="selected"<?php  } ?>>
+			<option value="OTHER" <?php  if ($isOtherPage) { ?> selected="selected"<?php  } ?>>
 			<?php echo t('beneath another page')?></option>
 			</select>
 		</div>
 			
-		<div class="ccm-page-list-page-other" <?php  if (!$controller->isOtherPage) { ?> style="display: none" <?php  } ?>>			
+		<div class="ccm-page-list-page-other" <?php  if (!$isOtherPage) { ?> style="display: none" <?php  } ?>>			
 			<?php  $form = Loader::helper('form/page_selector');
 			if ($isOtherPage) {
 				print $form->selectPage('cParentIDValue', $controller->cParentID);
