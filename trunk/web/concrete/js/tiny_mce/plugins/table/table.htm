@@ -9,13 +9,15 @@
 	<script type="text/javascript" src="../../utils/editable_selects.js"></script>
 	<script type="text/javascript" src="js/table.js"></script>
 	<link href="css/table.css" rel="stylesheet" type="text/css" />
+	<style type="text/css">@import "../../../../css/ccm.dialog.css";</style>
+	<style type="text/css">@import "../../../../css/ccm.forms.css";</style>
 </head>
 <body id="table" style="display: none">
 	<form onsubmit="insertTable();return false;" action="#">
 		<div class="tabs">
-			<ul>
-				<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{#table_dlg.general_tab}</a></span></li>
-				<li id="advanced_tab"><span><a href="javascript:mcTabs.displayTab('advanced_tab','advanced_panel');" onmousedown="return false;">{#table_dlg.advanced_tab}</a></span></li>
+		 <ul id="ccm-tinymce-table-tabs" class="ccm-dialog-tabs">
+				<li id="general_tab" class="current"><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{#table_dlg.general_tab}</a></li>
+				<li id="advanced_tab"><a href="javascript:mcTabs.displayTab('advanced_tab','advanced_panel');" onmousedown="return false;">{#table_dlg.advanced_tab}</a></li>
 			</ul>
 		</div>
 
@@ -178,9 +180,9 @@
 			</div>
 		</div>
 
-		<div class="mceActionPanel">
-			<input type="submit" id="insert" name="insert" value="{#insert}" />
-			<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
+		<div>
+			<input type="submit" id="insert" name="insert" class="ccm-button-v2" style="float: right"value="{#insert}" />
+			<input type="button" id="cancel" name="cancel" class="ccm-button-v2" value="{#cancel}" onclick="tinyMCEPopup.close();" />
 		</div>
 	</form>
 </body>
