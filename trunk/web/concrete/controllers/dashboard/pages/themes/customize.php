@@ -5,8 +5,11 @@ class DashboardPagesThemesCustomizeController extends Controller {
 
 	protected $helpers = array('html', 'form');
 
-	public function view($themeID, $state = false) {
+	public function view($themeID = false, $state = false) {
 		$pt = PageTheme::getByID($themeID);
+		if ($themeID == false || (!is_object($pt))) {
+			$this->redirect('/dashboard/pages/themes');
+		}
 		if (is_object($pt)) {
 			$styles = $pt->getEditableStylesList();
 			$this->set('styles', $styles);

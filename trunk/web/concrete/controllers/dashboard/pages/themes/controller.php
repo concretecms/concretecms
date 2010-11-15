@@ -75,6 +75,10 @@ class DashboardPagesThemesController extends Controller {
 		$valt = Loader::helper('validation/token');
 		$this->set('activate_confirm', View::url('/dashboard/pages/themes', 'activate_confirm', $ptID, $valt->generate('activate')));	
 	}
+	
+	public function marketplace() {
+		$this->redirect('/dashboard/install/browse', 'themes');
+	}
 
 	public function install($ptHandle = null) {
 		$th = PageTheme::getByFileHandle($ptHandle);
