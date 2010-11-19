@@ -29,6 +29,15 @@ class ConcreteUpgradeVersion541Helper {
 		BlockType::installBlockType('tags');			
 		BlockType::installBlockType('next_previous');			
 		BlockType::installBlockType('date_nav');
+		
+        Loader::model('collection_types');
+        $blogEntry = CollectionType::getByHandle('blog_entry');
+        if( !$blogEntry || !intval($blogEntry->getCollectionTypeID()) ){
+            $data['ctHandle'] = 'blog_entry';
+            $data['ctName'] = t('Blog Entry');
+            $blogEntry = CollectionType::add($data);
+        }
+		
 	}
 
 	

@@ -300,6 +300,10 @@ class File extends Object {
 				$row['avID']
 			));
 		}
+		
+		// return the new file object
+		return File::getByID($fIDNew);
+		
 	}
 	
 	public static function add($filename, $prefix, $data = array()) {

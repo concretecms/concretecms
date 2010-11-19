@@ -240,7 +240,7 @@ class FormHelper {
 				if ($type == 'post') { 
 					return $v2;
 				} else {
-					return preg_replace('/<|>|;|\//','', $v2);
+					return preg_replace('/<|>|;|/','', $v2);
 				}
 			}
 		}			
@@ -250,7 +250,7 @@ class FormHelper {
 			if ($type == 'post') { 
 				return $arr[$key];
 			} else {
-				return preg_replace('/<|>|;|\//','', $arr[$key]);
+				return preg_replace('/<|>|;|/','', $arr[$key]);
 			}
 		}
 		

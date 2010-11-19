@@ -860,9 +860,9 @@ $ppWhere = '';
 		return $this->childrenCIDArray;
 	}
 
-	function _getNumChildren($cID,$oneLevelOnly=0) {
+	function _getNumChildren($cID,$oneLevelOnly=0, $sortColumn = 'cDisplayOrder asc') {
 		$db = Loader::db();
-		$q = "select cID from Pages left join Packages on Pages.pkgID = Packages.pkgID where cParentID = {$cID} and cIsTemplate = 0 and (Packages.pkgHandle <> 'core' or pkgHandle is null or Pages.ctID > 0)";
+		$q = "select cID from Pages left join Packages on Pages.pkgID = Packages.pkgID where cParentID = {$cID} and cIsTemplate = 0 and (Packages.pkgHandle <> 'core' or pkgHandle is null or Pages.ctID > 0) order by {$sortColumn}";
 		$r = $db->query($q);
 		if ($r) {
 			while ($row = $r->fetchRow()) {
