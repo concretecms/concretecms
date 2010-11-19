@@ -61,19 +61,20 @@ class PageList extends DatabaseItemList {
 		$db = Loader::db();
 		$kw = $db->quote($keywords);
 		$qk = $db->quote('%' . $keywords . '%');
+		Loader::model('attribute/categories/collection');		
+		$keys = CollectionAttributeKey::getSearchableIndexedList();
+		$attribsStr = '';
+		foreach ($keys as $ak) {
+			$cnt = $ak->getController();			
+			$attribsStr.=' OR ' . $cnt->searchKeywords($keywords);
+		}
+
 		if ($simple || $this->indexModeSimple) { // $this->indexModeSimple is set by the IndexedPageList class
-			$this->filter(false, "(psi.cName like $qk or psi.cDescription like $qk or psi.content like $qk)");		
+			$this->filter(false, "(psi.cName like $qk or psi.cDescription like $qk or psi.content like $qk {$attribsStr})");		
 		} else {
 			$this->indexedSearch = true;
 			$this->indexedKeywords = $keywords;
 			$this->autoSortColumns[] = 'cIndexScore';
-			Loader::model('attribute/categories/collection');		
-			$keys = CollectionAttributeKey::getSearchableIndexedList();
-			$attribsStr = '';
-			foreach ($keys as $ak) {
-				$cnt = $ak->getController();			
-				$attribsStr.=' OR ' . $cnt->searchKeywords($keywords);
-			}
 			$this->filter(false, "((match(psi.cName, psi.cDescription, psi.content) against ({$kw})) {$attribsStr})");
 		}
 	}
