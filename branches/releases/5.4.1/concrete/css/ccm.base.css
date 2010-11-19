@@ -1,0 +1,34 @@
+/* Automatically included across all of c5 - use this file gingerly */
+img.ccm-captcha-image {display: block}
+
+/* clear and pagination styles */
+*.ccm-spacer {clear: both; font-size:1px; line-height:1px; }
+div.ccm-pagination { text-align:center; position: relative}
+div.ccm-pagination span.ccm-page-right {position: absolute; top: 0px; right: 0px;}
+div.ccm-pagination span.ccm-page-left {position: absolute; top: 0px; left: 0px}
+
+/* Layout */ 
+/*
+.ccm-layout .ccm-layout-cell{ overflow:hidden; }
+*/
+.ccm-layout-table .ccm-layout-col {float:left}
+.ccm-layout .first .ccm-layout-col-spacing { margin-left:0px !important } 
+.ccm-layout .last .ccm-layout-col-spacing { margin-right:0px !important } 
+
+/* global error styles */
+.ccm-error {font-weight: bold; color: #f00}
+.ccm-required {font-weight: bold; color: #3975AD}
+
+div#ccm-overlay {
+	position: fixed;
+	z-index:99;
+	top: 0px;
+	left: 0px;
+	background-color:#000;
+	filter:alpha(opacity=70);
+	-moz-opacity: 0.7;
+	opacity: 0.7;
+	height:100%;
+	width:100%;
+	display: none;
+} 

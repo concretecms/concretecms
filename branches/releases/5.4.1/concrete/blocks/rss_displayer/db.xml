@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btRssDisplay">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="title" type="C" size="255">
+		</field> 			
+		<field name="url" type="C" size="255">
+		</field> 		
+		<field name="dateFormat" type="C" size="100">
+		</field> 		
+		<field name="itemsToDisplay" type="I">
+			<unsigned />
+			<default value="5" />
+		</field>
+		<field name="showSummary" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="1" />
+		</field>
+		<field name="launchInNewWindow" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="1" />
+		</field>		
+	</table>
+</schema>

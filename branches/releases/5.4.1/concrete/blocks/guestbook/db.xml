@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btGuestBook">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="requireApproval" type="i">
+			<default value="0"/>
+		</field>
+		<field name="title" type="C" size="100">
+			<default value="Comments"/>
+		</field>
+		<field name="dateFormat" type="C" size="100">
+		</field>
+		<field name="displayGuestBookForm" type="i">
+			<default value="1"/>
+		</field>
+		<field name="displayCaptcha" type="i">
+			<default value="1"/>
+		</field>
+		<field name="authenticationRequired" type="i">
+			<default value="0"/>
+		</field>
+		<field name="notifyEmail" type="C" size="100">
+		</field>				
+	</table>
+	<table name="btGuestBookEntries">
+		<field name="bID" type="I">
+		</field>
+		<field name="cID" type="I">
+			<default value="1"/>
+		</field>	
+		<field name="entryID" type="I">
+			<key/>
+			<autoincrement/>
+		</field>
+		<field name="uID" type="I">
+			<default value="0"/>
+		</field>		
+		<field name="commentText" type="X2">
+		</field>
+		<field name="user_name" type="C" size="100">
+		</field>
+		<field name="user_email" type="C" size="100">
+		</field>
+		<field name="entryDate" type="T">
+			<deftimestamp/>
+		</field>
+		<field name="approved" type="i">
+			<default value="1"/>
+		</field>
+		<index name="cID">
+			<col>cID</col>
+		</index>
+	</table>
+</schema>

@@ -1,0 +1,75 @@
+table#ccm-search-form-table {width:100%}
+table#ccm-search-form-table td{  }
+div#ccm-search-results em.ccm-highlight-search {background-color: #FFF9BB;padding: 4px;font-weight: bold;font-style: normal}
+
+div#ccm-list-wrapper div.ccm-paging-top, div#ccm-list-wrapper div#ccm-list-none { padding-top: 5px; position:static }
+div#ccm-list-wrapper div.ccm-pagination {font-size: 14px;padding:0px; margin-top: 12px;margin-bottom: 12px; width: 98%; position:static; }
+div#ccm-list-wrapper div.ccm-pagination span.ccm-page-left{ position:static; float:left; text-align:left; display:block; width:100px; }
+div#ccm-list-wrapper div.ccm-pagination span.ccm-page-right{ position:static; float:right; text-align:right; display:block; width:100px; }
+
+div#ccm-search-advanced-results-wrapper {display: block; width: 100%; /* position: relative */}
+
+table.ccm-results-list {width: 100%; border-left: 1px solid #ffffff}
+table.ccm-results-list th, table.ccm-results-list td {padding: 4px 8px 4px 8px; font-size: 11px}
+table.ccm-results-list tr th {font-size: 11px;background-color: #efefef; text-align: left; padding-left: 8px; white-space: nowrap; color: #666}
+table.ccm-results-list select, table.ccm-results-list input {font-size: 10px}
+
+table.ccm-results-list tr th a {color: #666; padding-right: 14px; text-decoration: none}
+table.ccm-results-list tr th a:hover {color: #333;}
+table.ccm-results-list tr th.ccm-results-list-active-sort-desc a, table.ccm-results-list tr th.ccm-results-list-active-sort-asc a {color: #333}
+table.ccm-results-list tr th.ccm-results-list-active-sort-desc a {background: #efefef url(../images/icons/arrow_down_black.png) no-repeat scroll right 5px}
+table.ccm-results-list tr th.ccm-results-list-active-sort-asc a {background: #efefef url(../images/icons/arrow_up_black.png) no-repeat scroll right 4px}
+
+table.ccm-results-list tr.ccm-list-record td {border-bottom: 1px solid #dedede;}
+table.ccm-results-list tr.ccm-list-record-alt td, table.ccm-results-list tr.ccm-row-alt td {background-color: #f2f2f2}
+table.ccm-results-list tr.ccm-list-record:hover td {cursor: pointer; background-color: rgba(214,237,247,0.6) !important; }
+
+img#ccm-search-loading,img.ccm-search-loading { display: none; float:right; }
+div.ccm-results-list-none { font-weight: bold}
+
+div#ccm-search-overlay {display: block; width: 100%; font-size: 11px; padding:0px; margin:0px; height:auto; overflow:hidden }
+div#ccm-search-overlay h2 {margin-bottom: 0px}
+
+
+div.ccm-search-advanced-fields {display: block;border: 1px solid #ddd;padding: 8px; width:auto; background:#fafafa; margin-right:10px; width:210px}
+div#ccm-search-advanced-sets {display: block;border: 1px solid #ddd;padding: 8px; width:auto; background:#fafafa; margin-right:10px; margin-top: 20px; width:210px}
+div#ccm-search-advanced-sets div {font-size: 12px; font-weight: normal;}
+div#ccm-search-advanced-sets input {vertical-align: middle}
+div#ccm-search-advanced-sets label {font-weight: normal; display: inline; vertical-align: middle; margin: 0px; line-height: 12px; padding: 0px 0px 0px 0px}
+
+div.ccm-search-advanced-fields div, div#ccm-sitemap-search td {font-size: 10px !important}
+div.ccm-search-advanced-fields-inner {padding-top: 4px}
+div.ccm-search-advanced-fields div.ccm-search-field {margin-bottom:8px} 
+
+div#ccm-search-field-base {display: none}
+div.ccm-search-field input, div.ccm-search-field select, div.ccm-search-field td {font-size: 10px !important}
+
+.ccm-search-option .ccm-summary-selected-item {border: 0px; padding: 0px; margin: 0px}
+
+.ccm-search-option-type-number input.ccm-input-text {width: 30px !important}
+.ccm-search-option input.ccm-input-text {width: 86px !important}
+.ccm-search-option input.ccm-input-date {width: 86px !important}
+.ccm-search-option select.ccm-input-select {width: 86px !important}
+.ccm-search-option fieldset {border: none !important; padding: 0px !important; margin: 0px !important}
+#ccm-search-fields-submit {text-align: right; padding-top: 8px}
+
+/* properties */
+td.ccm-attribute-editable-field-central {border-right: 0px !important; padding-right: 40px}
+img.ccm-attribute-editable-field-save-button {display: none}
+img.ccm-attribute-editable-field-loading {display: none}
+ div.ccm-attribute-field-none {color: #aaa;}
+tr.ccm-attribute-editable-field textarea {width: 100%}
+tr.ccm-attribute-editable-field textarea {height: 100px}
+img.ccm-attribute-editable-field-loading {display: none}
+div.ccm-attribute-editable-field-form {display: none}
+div.ccm-attribute-editable-field-type-text input {width: 100%}
+div.ccm-attribute-editable-field-type-number input {width: 60px}
+
+div#ccm-search-save, div#ccm-search-export {float: left; width: 80px; text-align: left;}
+div#ccm-search-export a, div#ccm-search-save a {font-size: 11px}
+div#ccm-search-export {background: transparent url(../images/icons/excel.png) no-repeat;padding-left: 22px; margin-top: 2px; padding-top: 3px; padding-bottom: 10px  }
+div#ccm-search-save {background: transparent url(../images/icons/save_search.png) no-repeat; padding-left: 20px; margin-top: 2px; padding-top: 1px; padding-bottom: 12px}
+
+ul.ccm-search-sortable-column-wrapper {border: 2px solid #dedede; padding: 0px; margin: 0px; padding-top: 8px}
+ul.ccm-search-sortable-column-wrapper li {padding: 2px 0px 4px 24px; margin-left: 4px; margin-bottom: 4px; background: transparent url(../images/icons/column.png) no-repeat scroll; list-style-type: none}
+ul.ccm-search-sortable-column-wrapper li:hover {cursor: move}

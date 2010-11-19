@@ -1,0 +1,7 @@
+html>/**/body ul.ccm-search-block-tag-cloud {list-style-type: none; margin: 0px; padding: 0px}
+html>/**/body ul.ccm-search-block-tag-cloud li {margin: 0px; padding: 0px; zoom: 1; display: inline-block; margin-right: 8px; margin-bottom: 8px; color: #ccc; font-size: 10px}
+html>/**/body ul.ccm-search-block-tag-cloud li a {padding: 4px; background-color: #f6f6f6; display: inline-block; text-decoration: none; vertical-align: middle; border: 1px solid #aaa; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px}
+html>/**/body ul.ccm-search-block-tag-cloud li a:hover {background-color: #e8e8e8; color: #333}
+
+:first-child+html ul.ccm-search-block-tag-cloud li {float: left; margin-right: 20px; white-space: nowrap; padding: 0px; margin-left: 0px}
+* html ul.ccm-search-block-tag-cloud li {float: left; margin-right: 20px; white-space: nowrap; padding: 0px; margin-left: 0px}
