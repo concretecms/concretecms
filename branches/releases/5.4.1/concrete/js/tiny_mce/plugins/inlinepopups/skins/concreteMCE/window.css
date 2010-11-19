@@ -1,0 +1,376 @@
+/* Clearlooks 2 */
+
+/* Reset */
+.concreteMCE, .concreteMCE div, .concreteMCE span, .concreteMCE a {
+	vertical-align:baseline;
+	text-align:left;
+	position:absolute;
+	border:0;
+	padding:0;
+	margin:0;
+	background:transparent;
+	font-family:Arial, Verdana;
+	font-size:11px;
+	color:#000;
+	text-decoration:none;
+	font-weight:normal;
+	width:auto;
+	height:auto;
+	overflow:hidden;
+	display:block
+}
+/* General */
+.concreteMCE {
+	position:absolute;
+	direction:ltr
+}
+.concreteMCE .mceWrapper {
+	position:static
+}
+.mceEventBlocker {
+	position:absolute;
+	left:0;
+	top:0;
+	background:url(img/horizontal.gif) no-repeat 0 -75px;
+	width:100%;
+	height:100%
+}
+.concreteMCE .mcePlaceHolder {
+	border:1px solid #000;
+	top:0;
+	left:0;
+}
+.concreteMCE_modalBlocker {
+	position:absolute;
+	left:0;
+	top:0;
+	width:100%;
+	height:100%;
+	display:none
+}
+/* Top */
+.concreteMCE .mceTop, .concreteMCE .mceTop div {
+	top:0;
+	width:100%;
+	height:40px
+}
+.concreteMCE .mceTop .mceLeft, .concreteMCE .mceFocus .mceTop .mceLeft {
+	width:22px;
+	height:30px;
+	background:url(img/bg_dialog_tl.png)
+}
+.concreteMCE .mceTop .mceRight {
+	right:0;
+	width:22px;
+	height:30px;
+	background:url(img/bg_dialog_tr.png)
+}
+.concreteMCE .mceFocus .mceTop .mceCenter, .concreteMCE .mceTop .mceCenter {
+	right:22px;
+	width:100%;
+	height:30px;
+	background:url(img/bg_dialog_t_long.png) repeat-x top right;
+	clip:rect(auto auto auto 44px);
+}
+.concreteMCE .mceFocus .mceTop span, .concreteMCE .mceTop span {
+	display:block;
+	margin-left:22px;
+	font-size:12px;
+	text-align:left;
+	line-height:30px;
+	font-weight:bold;
+	color:#666666;
+}
+/* Middle */
+.concreteMCE .mceMiddle, .concreteMCE .mceMiddle div {
+	top:0;
+	overflow:hidden;
+}
+.concreteMCE .mceMiddle {
+	width:100%;
+	height:100%;
+	clip:rect(30px auto auto auto);
+	overflow:hidden;
+}
+.concreteMCE .mceMiddle .mceLeft {
+	left:0;
+	width:22px;
+	height:100%;
+	background:url(img/bg_dialog_l.png);
+	top: -23px
+}
+.concreteMCE .mceMiddle div.mceContentWrapper {
+	top: -20px;
+	left: -20px;
+	padding: 0px;
+	height:100%;
+	width:100%;
+	background-color:#fafafa;
+	clip:rect(auto auto auto 38px);
+}
+
+.concreteMCE .mceMiddle span {
+	top:30px;
+	left:22px;
+	padding: 0px 0px 0px 0px;
+	right: 20px;
+	bottom: 20px;
+	background-color:#fafafa;
+}
+/* 
+div.concreteMCE div.mceMiddle div.mceContentWrap {
+	height: 100%;
+	width: 100%;
+	margin: 0 20px 0 20px;
+	top:-20px;
+	left:0;
+	background-color:#999999;
+}
+.concreteMCE .mceMiddle div.mceContentWrap span {
+	width:auto;
+	height:100%;
+	text-align:center;
+	margin:auto;
+}
+*/
+.concreteMCE .mceMiddle .mceRight {
+	right:0;
+	width:22px;
+	height:100%;
+	background:url(img/bg_dialog_r.png);
+	top: -23px
+}
+/* Bottom */
+.concreteMCE .mceBottom, .concreteMCE .mceBottom div {
+	height:23px
+}
+.concreteMCE .mceBottom {
+	left:0;
+	bottom:0;
+	width:100%
+}
+.concreteMCE .mceBottom div {
+	top:0
+}
+.concreteMCE .mceBottom .mceLeft {
+	left:0;
+	width:22px;
+	background:url(img/bg_dialog_bl.png);
+}
+.concreteMCE .mceBottom .mceCenter, .concreteMCE .mceStatusbar .mceBottom .mceCenter {
+	right:22px;
+	width:100%;
+	background:url(img/bg_dialog_b.png) 44px 0;
+	clip:rect(auto auto auto 44px);
+}
+.concreteMCE .mceBottom .mceRight {
+	right:0;
+	width:22px;
+	background: url(img/bg_dialog_br.png)
+}
+.concreteMCE .mceBottom span {
+	display:none
+}
+.concreteMCE .mceStatusbar .mceBottom, .concreteMCE .mceStatusbar .mceBottom div {
+	height:23px
+}
+.concreteMCE .mceStatusbar .mceBottom .mceLeft {
+	background:url(img/bg_dialog_bl.png)
+}
+.concreteMCE .mceStatusbar .mceBottom .mceRight {
+	background:url(img/bg_dialog_br.png)
+}
+/*
+.concreteMCE .mceStatusbar .mceBottom span {display:block; left:22px; font-family:Arial, Verdana; font-size:11px; line-height:23px}
+*/
+
+/* Actions */
+
+.concreteMCE a {
+	width:29px;
+	height:16px;
+	top:3px;
+}
+.concreteMCE .mceClose {
+	right:6px;
+	background:url(img/buttons.gif) -87px 0;
+	display:none;
+}
+.concreteMCE .mceMin {
+	display:none;
+	right:68px;
+	background:url(img/buttons.gif) 0 0;
+	display:none;
+}
+.concreteMCE .mceMed {
+	display:none;
+	right:37px;
+	background:url(img/buttons.gif) -29px 0;
+	display:none;
+}
+.concreteMCE .mceMax {
+	display:none;
+	right:37px;
+	background:url(img/buttons.gif) -58px 0;
+	display:none;
+}
+.concreteMCE .mceMove {
+	display:none;
+	width:100%;
+	cursor:move;
+	background:url(img/corners.gif) no-repeat -100px -100px
+}
+.concreteMCE .mceMovable .mceMove {
+	display:block
+}
+.concreteMCE .mceFocus .mceClose {
+	right:22px;
+	background:url(img/buttons.gif) -87px -16px;
+	display:none;
+}
+.concreteMCE .mceFocus .mceMin {
+	right:68px;
+	background:url(img/buttons.gif) 0 -16px;
+	display:none;
+}
+.concreteMCE .mceFocus .mceMed {
+	right:37px;
+	background:url(img/buttons.gif) -29px -16px;
+	display:none;
+}
+.concreteMCE .mceFocus .mceMax {
+	right:37px;
+	background:url(img/buttons.gif) -58px -16px;
+	display:none;
+}
+.concreteMCE .mceFocus .mceClose:hover {
+	right:6px;
+	background:url(img/buttons.gif) -87px -32px
+}
+.concreteMCE .mceFocus .mceClose:hover {
+	right:6px;
+	background:url(img/buttons.gif) -87px -32px
+}
+.concreteMCE .mceFocus .mceMin:hover {
+	right:68px;
+	background:url(img/buttons.gif) 0 -32px
+}
+.concreteMCE .mceFocus .mceMed:hover {
+	right:37px;
+	background:url(img/buttons.gif) -29px -32px
+}
+.concreteMCE .mceFocus .mceMax:hover {
+	right:37px;
+	background:url(img/buttons.gif) -58px -32px
+}
+/* Resize */
+.concreteMCE .mceResize {
+	top:auto;
+	left:auto;
+	display:none;
+	width:5px;
+	height:5px;
+	background:url(img/horizontal.gif) no-repeat 0 -75px
+}
+.concreteMCE .mceResizable .mceResize {
+	display:block
+}
+.concreteMCE .mceResizable .mceMin, .concreteMCE .mceMax {
+	display:none
+}
+/*
+.concreteMCE .mceMinimizable .mceMin {display:block}
+.concreteMCE .mceMaximizable .mceMax {display:block}
+.concreteMCE .mceMaximized .mceMed {display:block}
+.concreteMCE .mceMaximized .mceMax {display:none}
+*/
+.concreteMCE a.mceResizeN {
+	top:0;
+	left:0;
+	width:100%;
+	cursor:n-resize
+}
+.concreteMCE a.mceResizeNW {
+	top:0;
+	left:0;
+	cursor:nw-resize
+}
+.concreteMCE a.mceResizeNE {
+	top:0;
+	right:0;
+	cursor:ne-resize
+}
+.concreteMCE a.mceResizeW {
+	top:0;
+	left:0;
+	height:100%;
+	cursor:w-resize;
+}
+.concreteMCE a.mceResizeE {
+	top:0;
+	right:0;
+	height:100%;
+	cursor:e-resize
+}
+.concreteMCE a.mceResizeS {
+	bottom:0;
+	left:0;
+	width:100%;
+	cursor:s-resize
+}
+.concreteMCE a.mceResizeSW {
+	bottom:0;
+	left:0;
+	cursor:sw-resize
+}
+.concreteMCE a.mceResizeSE {
+	bottom:0;
+	right:0;
+	cursor:se-resize
+}
+/* Alert/Confirm */
+.concreteMCE .mceButton {
+	font-weight:bold;
+	bottom:10px;
+	width:80px;
+	height:30px;
+	background:url(img/button.gif);
+	line-height:30px;
+	vertical-align:middle;
+	text-align:center;
+	outline:0
+}
+.concreteMCE .mceMiddle .mceIcon {
+	left:15px;
+	top:35px;
+	width:32px;
+	height:32px
+}
+/* 
+.concreteMCE .mceAlert .mceMiddle span, .concreteMCE .mceConfirm .mceMiddle span {background:transparent;left:60px; top:35px; width:320px; height:50px; font-weight:bold; overflow:auto; white-space:normal}
+*/
+.concreteMCE a:hover {
+	font-weight:bold;
+}
+.concreteMCE .mceAlert .mceMiddle, .concreteMCE .mceConfirm .mceMiddle {
+}
+.concreteMCE .mceAlert .mceOk {
+	left:50%;
+	top:auto;
+	margin-left: -40px
+}
+.concreteMCE .mceAlert .mceIcon {
+	background:url(img/alert.gif)
+}
+.concreteMCE .mceConfirm .mceOk {
+	left:50%;
+	top:auto;
+	margin-left: -90px
+}
+.concreteMCE .mceConfirm .mceCancel {
+	left:50%;
+	top:auto
+}
+.concreteMCE .mceConfirm .mceIcon {
+	background:url(img/confirm.gif)
+}

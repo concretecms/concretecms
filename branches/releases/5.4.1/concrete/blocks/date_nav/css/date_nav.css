@@ -1,0 +1,17 @@
+.ccmDateNav ul{overflow:hidden; list-style:none; padding:0px; margin:0px;  }
+.ccmDateNav ul li { padding: 2px 0px 2px 0px; }
+.ccmDateNav ul li.selected{ font-weight:bold }
+.ccmDateNav ul li .section{ margin:4px 0px 2px 0px; background: url(../images/arrow_down_gray.png) no-repeat left; padding-left:16px; }
+.ccmDateNav ul li .section.closed{ background:url(../images/arrow_right_gray.png) no-repeat left; }
+.ccmDateNav ul li .sectionPage{ margin-left:16px; }
+.ccmDateNav ul li .ellipsis {padding-top:0px; margin-top:0px; line-height:4px; padding-bottom:4px;}
+.ccmDateNav ul.years li.year{padding-bottom:0px;}
+.ccmDateNav ul.years li.year ul.months{margin-left:16px; margin-bottom:0px; padding-bottom:0px;} 
+.ccmDateNav ul.years li.year ul.months li.month{margin-bottom:0px; padding-bottom:0px}
+.ccmDateNav ul.months li.month ul.monthsPages{ margin-left:16px}
+.ccmDateNav .trigger{cursor:pointer}
+
+.ccmDateNav ul li .pageSummary{ font-size:85%; line-height:85%; margin:4px 0px;  }
+
+.ccmDateNav ul li .section{ background-image:url(../images/arrow_down_gray.png); }
+.ccmDateNav ul li .section.closed{ background-image:url(../images/arrow_right_gray.png); }
