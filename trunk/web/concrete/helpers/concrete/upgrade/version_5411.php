@@ -25,13 +25,14 @@ class ConcreteUpgradeVersion5411Helper {
 		$db = Loader::db();
 		$cnt = $db->GetOne('select count(*) from TaskPermissions where tpHandle = ?', array('install_packages'));
 		if ($cnt < 1) {
-			$v = array('install_packages', t('Install Packages and Connect to the Marketplace'));
-			$db->Execute("INSERT INTO TaskPermissions (tpHandle, tpName) VALUES(?, ?)", $v);
-			
+			$g3 = Group::getByID(ADMIN_GROUP_ID);
+			$tip = TaskPermission::addTask('install_packages', t('Install Packages and Connect to the Marketplace'), false);
+			if (is_object($g3)) {
+				$tip->addAccess($g3);
+			}
 		}
 		
 		// ensure we have a proper ocID
-		
 		$db->Execute("alter table Files modify column ocID int unsigned not null default 0");	
 	}
 
