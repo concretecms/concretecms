@@ -512,9 +512,12 @@ class Block extends Object {
 		$csrID = $this->csrID;
 		if ($csrID > 0) {
 			Loader::model('custom_style');
+			$txt = Loader::helper('text');
 			$csr = CustomStyleRule::getByID($csrID);
+			$arHandle = $txt->filterNonAlphaNum($this->getAreaHandle());
+
 			if (is_object($csr)) {
-				$csr->setCustomStyleNameSpace('blockStyle');
+				$csr->setCustomStyleNameSpace('blockStyle' . $this->getBlockID() . $arHandle );
 				return $csr;
 			}
 		}

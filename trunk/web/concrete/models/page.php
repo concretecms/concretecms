@@ -1019,6 +1019,7 @@ $ppWhere = '';
 		foreach ($newPaths as $key=>$val) {
 			if (!empty($val)) {
 				// Auto-prepend a slash if one is missing.
+				$val = trim($val, '/');
 				$val = $txt->sanitizeFileSystem($val, true);
 				if ($val{0} != '/') {
 					$val = '/' . $val;

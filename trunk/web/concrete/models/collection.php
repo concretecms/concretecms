@@ -373,19 +373,25 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		$db = Loader::db();
 		$csrs = array();
-		$r1 = $db->GetCol('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($this->getCollectionID(), $this->getVersionID()));
-		$r2 = $db->GetCol('select csrID from CollectionVersionAreaStyles where cID = ? and cvID = ? and csrID > 0', array($this->getCollectionID(), $this->getVersionID()));
-		foreach($r1 as $csrID) {
+		$txt = Loader::helper('text');
+		$r1 = $db->GetAll('select bID, arHandle, csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($this->getCollectionID(), $this->getVersionID()));
+		$r2 = $db->GetAll('select arHandle, csrID from CollectionVersionAreaStyles where cID = ? and cvID = ? and csrID > 0', array($this->getCollectionID(), $this->getVersionID()));
+		foreach($r1 as $r) {
+			$csrID = $r['csrID'];
+			$arHandle = $txt->filterNonAlphaNum($r['arHandle']);
+			$bID = $r['bID'];
 			$obj = CustomStyleRule::getByID($csrID);
 			if (is_object($obj)) {
-				$obj->setCustomStyleNameSpace('blockStyle');
+				$obj->setCustomStyleNameSpace('blockStyle' . $bID . $arHandle);
 				$csrs[] = $obj;
 			}
 		}
-		foreach($r2 as $csrID) {
+		foreach($r2 as $r) {
+			$csrID = $r['csrID'];
+			$arHandle = $txt->filterNonAlphaNum($r['arHandle']);
 			$obj = CustomStyleRule::getByID($csrID);
 			if (is_object($obj)) {
-				$obj->setCustomStyleNameSpace('areaStyle');
+				$obj->setCustomStyleNameSpace('areaStyle' . $arHandle);
 				$csrs[] = $obj;
 			}
 		}
@@ -420,10 +426,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		$csrID = $this->vObj->customAreaStyles[$area->getAreaHandle()];
 		
 		if ($csrID > 0) {
+			$txt = Loader::helper('text');
 			Loader::model('custom_style');
+			$arHandle = $txt->filterNonAlphaNum($area->getAreaHandle());			
 			$csr = CustomStyleRule::getByID($csrID);
 			if (is_object($csr)) {
-				$csr->setCustomStyleNameSpace('areaStyle');
+				$csr->setCustomStyleNameSpace('areaStyle' . $arHandle);
 				return $csr;
 			}
 		}
