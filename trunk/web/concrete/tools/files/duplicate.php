@@ -16,14 +16,12 @@ if ($_POST['task'] == 'duplicate_multiple_files') {
 		foreach($_POST['fID'] as $fID) {
 			$f = File::getByID($fID);
 			if ($fp->canAddFileType($f->getExtension())) {
-				$f->duplicate();
+				$nf = $f->duplicate();
+				$json['fID'][] = $nf->getFileID();
 			} else {
 				$json['error'] = t('Unable to copy one or more files.');
 			}
 		}
-	}
-	if (!$json['error']) {
-		$json['fID'] = $_POST['fID'];
 	}
 	print $js->encode($json);
 	exit;
@@ -46,7 +44,10 @@ if (!is_array($_REQUEST['fID'])) {
 	}
 
 	if (!$obj->error) {
-		$f->duplicate();
+		$nf = $f->duplicate();
+		if (is_object($nf)) {
+			$obj->fID = $nf->getFileID();
+		}
 	}
 	
 	print $js->encode($obj);

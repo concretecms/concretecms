@@ -252,6 +252,10 @@ class ItemList {
 		$this->itemsPerPage = $num;
 	}
 	
+	public function getItemsPerPage() {
+		return $this->itemsPerPage;
+	}
+	
 	public function setItems($items) {
 		$this->items = $items;
 	}

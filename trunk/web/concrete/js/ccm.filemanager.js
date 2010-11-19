@@ -874,10 +874,12 @@ ccm_alDuplicateFile = function(fID, searchInstance) {
 		
 		
 		var highlight = new Array();
-		highlight.push(fID);
-		ccm_alRefresh(highlight, searchInstance);
-		ccm_uploadedFiles.push(fID);
-		ccm_filesUploadedDialog(searchInstance);
+		if (r.fID) {
+			highlight.push(r.fID);
+			ccm_alRefresh(highlight, searchInstance);
+			ccm_uploadedFiles.push(r.fID);
+			ccm_filesUploadedDialog(searchInstance);
+		}
 	});
 }
 
