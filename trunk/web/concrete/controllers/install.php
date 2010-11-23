@@ -90,6 +90,7 @@ class InstallController extends Controller {
 		$statements = array_merge($schema, $statements);
 		
 		$db = Loader::db();
+		$db->ensureEncoding();
 		foreach ($statements as $statement) {
 			if (trim($statement) != "") { 
 				$r = $db->execute($statement);
