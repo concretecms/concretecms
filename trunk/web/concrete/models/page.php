@@ -17,9 +17,9 @@ class Page extends Collection {
 	 * @return Page
 	 */
 	public static function getByPath($path, $version = 'RECENT') {
-		$db = Loader::db();
 		$cID = Cache::get('page_id_from_path', $path);
 		if ($cID == false) {
+			$db = Loader::db();
 			$cID = $db->GetOne("select cID from PagePaths where cPath = ?", array($path));
 			Cache::set("page_id_from_path", $path, $cID);
 		}
