@@ -21,18 +21,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	class User extends Object { 
 	
-		var $uID = '';
-		var $uName = '';
-		var $uGroups = array();
-		var $superUser = false;
-		var $uTimezone = NULL;
+		public $uID = '';
+		public $uName = '';
+		public $uGroups = array();
+		public $superUser = false;
+		public $uTimezone = NULL;
 		
 		/**
 		 * @param int $uID
 		 * @param boolean $login
 		 * @return User
 		 */
-		function getByUserID($uID, $login = false) {
+		public static function getByUserID($uID, $login = false) {
 			$db = Loader::db();
 			$v = array($uID);
 			$q = "SELECT uID, uName, uIsActive, uLastOnline, uTimezone FROM Users WHERE uID = ?";
@@ -63,7 +63,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @param int $uID
 		 * @return User
 		 */
-		function loginByUserID($uID) {
+		public function loginByUserID($uID) {
 			return User::getByUserID($uID, true);
 		}
 		
@@ -93,7 +93,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 		
-		function User() {
+		public function __construct() {
 			$args = func_get_args();
 			
 			if ($args[1]) {

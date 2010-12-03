@@ -126,7 +126,7 @@ class SearchBlockController extends BlockController {
 	
 	function do_search() {
 		$q = $_REQUEST['query'];
-		$_q = preg_replace('/[^A-Za-z\']/i', '', $_REQUEST['query']);
+		$_q = trim(preg_replace('/[^A-Za-z0-9\s\']/i', ' ', $_REQUEST['query']));
 		Loader::library('database_indexed_search');
 		$ipl = new IndexedPageList();
 		$aksearch = false;
