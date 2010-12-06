@@ -104,6 +104,26 @@ class FileList extends DatabaseItemList {
 		$this->filter('f.ocID', $ocID);
 	}
 	
+	/**
+	 * filters a FileList by the uID of the approving User
+	 * @param int $uID
+	 * @return void
+	 * @since 5.4.1.1+
+	 */
+	public function filterByApproverUID($uID) {
+		$this->filter('fv.fvApproverUID', $uID);	
+	}
+	
+	/**
+	 * filters a FileList by the uID of the owning User
+	 * @param int $uID
+	 * @return void
+	 * @since 5.4.1.1+
+	*/
+	public function filterByAuthorUID($uID) {
+		$this->filter('fv.fvAuthorUID', $uID);	
+	}
+	
 	public function setPermissionLevel($plevel) {
 		$this->permissionLevel = $plevel;
 	}
