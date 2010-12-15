@@ -412,33 +412,33 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 			if ($path != '') {
 				if (file_exists(DIR_FILES_CONTROLLERS . $controllerFile)) {
-					include(DIR_FILES_CONTROLLERS . $controllerFile);
+					require_once(DIR_FILES_CONTROLLERS . $controllerFile);
 					$include = true;
 				} else if (file_exists(DIR_FILES_CONTROLLERS . $path . '/' . FILENAME_COLLECTION_CONTROLLER)) {
-					include(DIR_FILES_CONTROLLERS . $path . '/' . FILENAME_COLLECTION_CONTROLLER);
+					require_once(DIR_FILES_CONTROLLERS . $path . '/' . FILENAME_COLLECTION_CONTROLLER);
 					$include = true;
 				} else if (file_exists(DIR_FILES_CONTROLLERS_REQUIRED . $controllerFile)) {
-					include(DIR_FILES_CONTROLLERS_REQUIRED . $controllerFile);
+					require_once(DIR_FILES_CONTROLLERS_REQUIRED . $controllerFile);
 					$include = true;
 				} else if (file_exists(DIR_FILES_CONTROLLERS_REQUIRED . $path . '/' . FILENAME_COLLECTION_CONTROLLER)) {
-					include(DIR_FILES_CONTROLLERS_REQUIRED . $path . '/' . FILENAME_COLLECTION_CONTROLLER);
+					require_once(DIR_FILES_CONTROLLERS_REQUIRED . $path . '/' . FILENAME_COLLECTION_CONTROLLER);
 					$include = true;
 
 				} else if (is_object($item)) {
 					if ($item->getPackageID() > 0 && (file_exists(DIR_FILES_CONTROLLERS . $controllerFile))) {
-						include(DIR_FILES_CONTROLLERS . $controllerFile);
+						require_once(DIR_FILES_CONTROLLERS . $controllerFile);
 						$include = true;
 					} else if ($item->getPackageID() > 0 && (file_exists(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $controllerFile))) {
-						include(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $controllerFile);
+						require_once(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $controllerFile);
 						$include = true;
 					} else if ($item->getPackageID() > 0 && (file_exists(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $path . '/'. FILENAME_COLLECTION_CONTROLLER))) {
-						include(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $path . '/'. FILENAME_COLLECTION_CONTROLLER);
+						require_once(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $path . '/'. FILENAME_COLLECTION_CONTROLLER);
 						$include = true;
 					} else if ($item->getPackageID() > 0 && (file_exists(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $controllerFile))) {
-						include(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $controllerFile);
+						require_once(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $controllerFile);
 						$include = true;
 					} else if ($item->getPackageID() > 0 && (file_exists(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $path . '/'. FILENAME_COLLECTION_CONTROLLER))) {
-						include(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $path . '/'. FILENAME_COLLECTION_CONTROLLER);
+						require_once(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $path . '/'. FILENAME_COLLECTION_CONTROLLER);
 						$include = true;
 					}
 				}

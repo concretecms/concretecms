@@ -216,33 +216,37 @@ class ItemList {
 	protected $queryStringSortVariable = 'ccm_order_by';
 	protected $queryStringSortDirectionVariable = 'ccm_order_dir';
 	protected $enableStickySearchRequest = false;
+	protected $stickySearchRequestNameSpace = '';
 	protected $items = array();
 	
-	public function enableStickySearchRequest() {
+	public function enableStickySearchRequest($namespace = false) {
+		if ($namespace) {
+			$this->stickySearchRequestNameSpace = $namespace;
+		}
 		$this->enableStickySearchRequest = true;
 	}
 	
-	public function resetSearchRequest() {
-		$_SESSION[get_class($this) . 'SearchFields'] = array();
+	public function resetSearchRequest($namespace = '') {
+		$_SESSION[get_class($this) . $namespace . 'SearchFields'] = array();
 	}
 	
 	public function addToSearchRequest($key, $val) {
-		$_SESSION[get_class($this) . 'SearchFields'][$key] = $value;
+		$_SESSION[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'][$key] = $value;
 	}
 	
 	public function getSearchRequest() {
 		if ($this->enableStickySearchRequest) {
-			if (!is_array($_SESSION[get_class($this) . 'SearchFields'])) {
-				$_SESSION[get_class($this) . 'SearchFields'] = array();
+			if (!is_array($_SESSION[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'])) {
+				$_SESSION[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'] = array();
 			}
 			
 			// i don't believe we need this approach particularly, and it's a pain in the ass
 			//$validSearchKeys = array('fKeywords', 'numResults', 'fsIDNone', 'fsID', 'ccm_order_dir', 'ccm_order_by', 'size_from', 'size_to', 'type', 'extension', 'date_from', 'date_to', 'searchField', 'selectedSearchField', 'akID');
 			
 			foreach($_REQUEST as $key => $value) {
-				$_SESSION[get_class($this) . 'SearchFields'][$key] = $value;
+				$_SESSION[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'][$key] = $value;
 			}		
-			return $_SESSION[get_class($this) . 'SearchFields'];
+			return $_SESSION[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'];
 		} else {
 			return $_REQUEST;
 		}

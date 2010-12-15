@@ -114,6 +114,10 @@ class PaginationHelper {
 		}
 	}
 	
+	public function hasNextPage() {
+		return $this->current_page < ($this->number_of_pages-1);
+	}
+	
 	function getTotalPages() {
 		return $this->number_of_pages;
 	}
@@ -124,7 +128,7 @@ class PaginationHelper {
 		}
 		if($this->number_of_pages==1) return;		
 		//if not last page
-		if ($this->current_page>=($this->number_of_pages-1))
+		if (!$this->hasNextPage())
 			 return '<span class="'.$this->classOff.'">'.$linkText.'</span>';
 		 else{
 			$linkURL=str_replace("%pageNum%", $this->getNextInt()+1, $this->URL);
@@ -179,7 +183,7 @@ class PaginationHelper {
 			
 			//if not current page
 			if ($this->current_page==$i){ 
-					$pages.="<span class='$this->classCurrent'> <strong>".($i+1)."</strong> </span>";
+					$pages.="<span class='$this->classCurrent'><strong>".($i+1)."</strong></span>";
 			   }else{
 					$linkURL=str_replace("%pageNum%", $i+1, $this->URL);
 					$pages.="<span class='$this->classOn'> <a href='$linkURL' ".$this->getJSFunctionCall($i+1).">".($i+1)."</a> </span>";

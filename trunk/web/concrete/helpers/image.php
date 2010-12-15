@@ -163,14 +163,24 @@ class ImageHelper {
 	/** 
 	 * Runs getThumbnail on the path, and then prints it out as an XHTML image
 	 */
-	public function outputThumbnail($obj, $maxWidth, $maxHeight, $alt = null) {
+	public function outputThumbnail($obj, $maxWidth, $maxHeight, $alt = null, $return = false) {
 		$thumb = $this->getThumbnail($obj, $maxWidth, $maxHeight);
-		print '<img class="ccm-output-thumbnail" alt="' . $alt . '" src="' . $thumb->src . '" width="' . $thumb->width . '" height="' . $thumb->height . '" />';
+		$html = '<img class="ccm-output-thumbnail" alt="' . $alt . '" src="' . $thumb->src . '" width="' . $thumb->width . '" height="' . $thumb->height . '" />';
+		if ($return) {
+			return $html;
+		} else {
+			print $html;
+		}
 	}
 	
-	public function output($obj, $alt = null) {
+	public function output($obj, $alt = null, $return = false) {
 		$s = @getimagesize($obj->getPath());
-		print '<img class="ccm-output-image" alt="' . $alt . '" src="' . $obj->getRelativePath() . '" width="' . $s[0] . '" height="' . $s[1] . '" />';
+		$html = '<img class="ccm-output-image" alt="' . $alt . '" src="' . $obj->getRelativePath() . '" width="' . $s[0] . '" height="' . $s[1] . '" />';
+		if ($return) {
+			return $html;
+		} else {
+			print $html;
+		}
 	}
 
 

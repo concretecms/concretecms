@@ -75,6 +75,12 @@ if (isset($cp)) {
 	
 	}
 
+	if ($c->isMasterCollection()) {
+		$statusMessage .= $statusMessage ? "<br/>" : "";
+		$statusMessage .= t('Page Defaults for') . ' "' . $c->getCollectionTypeName() . '" ' . t("page type");
+		$statusMessage .= "<br/>" . t('(All edits take effect immediately)');
+	}
+
 	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { ?>
 
 menuHTML += '<div id="ccm-page-controls">';
@@ -97,7 +103,11 @@ if ($fp->canSearchFiles() && $u->config('UI_FILEMANAGER')) { ?>
 ?>
 
 <? if ($dh->canRead()) { ?>
-	menuHTML += '<li><a id="ccm-nav-dashboard" href="<?=View::url('/dashboard')?>"><?=t('Dashboard')?></a></li>';
+	<? if ($c->isMasterCollection()) { ?>
+			menuHTML += '<li><a id="ccm-nav-dashboard" class="return-to-pagetypes" href="<?=View::url('/dashboard/pages/types')?>"><?=t('Back to Page Types')?></a></li>';
+	<? } else { ?>
+			menuHTML += '<li><a id="ccm-nav-dashboard" href="<?=View::url('/dashboard')?>"><?=t('Dashboard')?></a></li>';
+	<? } ?>
 <? } ?>
 menuHTML += '<li><a id="ccm-nav-help" dialog-title="<?=t('Help')?>" dialog-on-open="$(\'#ccm-nav-help\').removeClass(\'ccm-nav-loading\')" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/help/" dialog-width="500" dialog-height="350" dialog-modal="false"><?=t('Help')?></a></li>';
 menuHTML += '<li class="ccm-last"><a id="ccm-nav-logout" href="<?=View::url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>';
@@ -108,26 +118,32 @@ menuHTML += '</div>';
 menuHTML += '<ul id="ccm-main-nav">';
 <? if (!$c->isAlias()) { ?>
 menuHTML += '<li class="ccm-main-nav-view-option" <? if ($c->isEditMode()) { ?> style="display: none" <? } ?>><? if ($cantCheckOut) { ?><span id="ccm-nav-edit"><?=t('Edit Page')?></span><? } else if ($cp->canWrite() || $cp->canApproveCollection()) { ?><a href="javascript:void(0)" id="ccm-nav-edit"><?=t('Edit Page')?></a><? } ?></li>';
-<? if ($cp->canAddSubContent()) { ?>
+<? if ($cp->canAddSubContent() && !$c->isMasterCollection()) { ?>
 	menuHTML += '<li class="ccm-main-nav-view-option" <? if ($c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-add"><?=t('Add Page')?></a></li>';
 <? } ?>
 menuHTML += '<li class="ccm-main-nav-arrange-option" <? if (!$c->isArrangeMode()) { ?> style="display: none" <? } ?>><a href="#" id="ccm-nav-save-arrange"><?=t('Save Positioning')?></a></li>';
-menuHTML += '<li class="ccm-main-nav-edit-option ccm-main-nav-exit-edit-mode-direct" <? if (!$c->isEditMode() || ($vo->isNew()))  { ?> style="display: none" <? } ?>><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-in<?=$token?>" id="ccm-nav-exit-edit-direct"><?=t('Exit Edit Mode')?></a></li>';
-menuHTML += '<li class="ccm-main-nav-edit-option ccm-main-nav-exit-edit-mode" <? if (!$c->isEditMode() || (!$vo->isNew())) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-exit-edit"><?=t('Exit Edit Mode')?></a></li>';
-<? if ($cp->canWrite()) { ?>
-	menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-properties"><?=t('Properties')?></a></li>';
+<? if ($c->isMasterCollection()) { ?>
+menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode() || ($vo->isNew()))  { ?> style="display: none" <? } ?>><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-in<?=$token?>" id="ccm-nav-exit-edit-direct"><?=t('Exit Edit Mode')?></a></li>';
+<? } else { ?>
+ menuHTML += '<li class="ccm-main-nav-edit-option ccm-main-nav-exit-edit-mode-direct" <? if (!$c->isEditMode() || ($vo->isNew()))  { ?> style="display: none" <? } ?>><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-in<?=$token?>" id="ccm-nav-exit-edit-direct"><?=t('Exit Edit Mode')?></a></li>';
+ menuHTML += '<li class="ccm-main-nav-edit-option ccm-main-nav-exit-edit-mode" <? if (!$c->isEditMode() || (!$vo->isNew())) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-exit-edit"><?=t('Exit Edit Mode')?></a></li>';
 <? } ?>
-<? if ($cp->canAdminPage()) { ?>
+<? if ($cp->canWrite() && !$c->isMasterCollection()) { ?>
+ 	menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-properties"><?=t('Properties')?></a></li>';
+ <? } ?>
+<? if ($cp->canAdminPage() && !$c->isMasterCollection()) { ?>
 menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-design"><?=t('Design')?></a></li>';
-menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-permissions"><?=t('Permissions')?></a></li>';
 <? } ?>
-<? if ($cp->canReadVersions()) { ?>
-	menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-versions"><?=t('Versions')?></a></li>';
-<? } ?>
-<? if ($sh->canRead() || $cp->canDeleteCollection()) { ?>
-	menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-mcd"><?=t('Move/Delete')?></a></li>';
-<? } ?>
-<? } ?>
+ <? if ($cp->canAdminPage()) { ?>
+	menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-permissions"><?=t('Permissions')?></a></li>';
+ <? } ?>
+ <? if ($cp->canReadVersions() && !$c->isMasterCollection()) { ?>
+ 	menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-versions"><?=t('Versions')?></a></li>';
+ <? } ?>
+<? if (($sh->canRead() || $cp->canDeleteCollection()) && !$c->isMasterCollection()) { ?>
+ 	menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-mcd"><?=t('Move/Delete')?></a></li>';
+ <? } ?>
+ <? } ?>
 menuHTML += '</ul>';
 menuHTML += '</div>';
 menuHTML += '<div id="ccm-page-detail"><div id="ccm-page-detail-l"><div id="ccm-page-detail-r"><div id="ccm-page-detail-content"></div></div></div>';

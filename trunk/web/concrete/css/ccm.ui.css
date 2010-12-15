@@ -92,6 +92,7 @@ ul#ccm-main-nav a#ccm-nav-save-arrange {background-image: url(../images/icons/ic
 ul#ccm-main-nav a#ccm-nav-save-arrange.ccm-nav-loading {background-position: center 9px !important}
 
 ul#ccm-system-nav #ccm-nav-dashboard {background-image: url(../images/icons/icon_header_dashboard.png); background-position: center 8px !important}
+ul#ccm-system-nav #ccm-nav-dashboard.return-to-pagetypes {background-image: url(../images/dashboard/icon_return_to_website.png); background-position: center 8px !important}
 ul#ccm-system-nav #ccm-nav-dashboard.ccm-nav-loading {background-position: center 8px !important}
 ul#ccm-system-nav #ccm-nav-help {background-image: url(../images/icons/icon_header_help.png); background-position: center 8px !important}
 ul#ccm-system-nav #ccm-nav-help.ccm-nav-loading {background-position: center 8px !important}
@@ -125,6 +126,13 @@ div#ccm-page-detail-br {background: transparent url(../images/bg_pane_rb.png) no
 div#ccm-page-detail-r {-webkit-box-shadow: 0px 10px 10px rgba(0,0,0,0.4); -moz-box-shadow: 0px 10px 10px rgba(0,0,0,0.4); box-shadow: 0px 10px 10px rgba(0,0,0,0.4); border-left: 5px solid #f3f3f3; border-bottom: 5px solid #f3f3f3; border-right: 5px solid #f3f3f3;  -webkit-border-bottom-left-radius: 20px; -webkit-border-bottom-right-radius: 20px;-moz-border-radius-bottomleft: 20px; -moz-border-radius-bottomright: 20px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; font-family: "Helvetica Neue", Arial, Helvetica; background: #f2f2f2; position: relative; margin-left: 10px; margin-right: 10px; padding-top: 0; }
 div#ccm-page-detail-content {border-left: 1px solid #c7c7c7; border-bottom: 1px solid #c7c7c7; border-right: 1px solid #c7c7c7;-webkit-border-bottom-left-radius: 20px; -webkit-border-bottom-right-radius: 20px;-moz-border-radius-bottomleft: 20px; -moz-border-radius-bottomright: 20px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; padding-bottom: 20px}
 div#ccm-page-detail-content div {font-family: "Helvetica Neue", Arial, Helvetica;}
+
+div.ccm-block-alias {
+	border: 2px dotted #fbb !important;
+}
+div.ccm-block-global {
+	border: 2px dotted #f93 !important;
+}
 
 div.ccm-block-arrange, div.ccm-block {
 	margin: 0px;

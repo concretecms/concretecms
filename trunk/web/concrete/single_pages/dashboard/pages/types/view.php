@@ -385,7 +385,7 @@ if ($ctEditMode) {
 			<?
 			$tp = new TaskPermission();
 			if ($tp->canAccessPageDefaults()) { ?>
-				<? print $ih->button_js(t('Defaults'), "window.open('" . $this->url('/dashboard/pages/types?cID=' . $ct->getMasterCollectionID() . '&task=load_master')."')", 'left', false, array('title'=>t('Lets you set default permissions and blocks for a particular page type.')) );?>
+				<? print $ih->button(t('Defaults'), $this->url('/dashboard/pages/types?cID=' . $ct->getMasterCollectionID() . '&task=load_master'))?>
 			<? } else { 
 				$defaultsErrMsg = t('You do not have access to page type default content.');
 				?>

@@ -182,6 +182,10 @@ class Block extends Object {
 		}
 	}
 	
+	public function isAliasOfMasterCollection() {
+		return $this->getBlockCollectionObject()->isBlockAliasedFromMasterCollection($this);
+	}
+	
 	public function isGlobal() {
 		return $this->bIsGlobal;
 	}
