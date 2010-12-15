@@ -38,6 +38,7 @@
 		const VALID_UPLOADED_FILE = 20;
 		const VALID_UPLOADED_FILE_REQUIRED = 25;
 		const VALID_TOKEN = 30;
+		const VALID_FIELD_INVALID = 99;
 
 		public function __construct() {
 			$this->error = Loader::helper('validation/error');
@@ -138,6 +139,12 @@
 			foreach($this->fieldsInvalid as $f) {
 				$this->error->add($f->message);	
 			}
+		}
+		
+		public function invalidate($message) {
+			$f = new stdClass;
+			$f->message = $message;
+			$this->fieldsInvalid[] = $f;
 		}
 		
 		/** 

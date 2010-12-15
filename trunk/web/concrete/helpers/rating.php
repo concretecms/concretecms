@@ -125,7 +125,7 @@ class RatingHelper {
 		Loader::model('attribute/categories/collection');
 		$ak = CollectionAttributeKey::getByHandle('rating');
 		if (is_object($ak)) {
-			$val = $db->GetOne('select avg(ak_rating) from CollectionSearchIndexAttributes c inner join Pages p on p.cID = c.cID where p.cParentID = ?', array($cID));
+			$val = $db->GetOne('select avg(ak_' . $akHandle . ') from CollectionSearchIndexAttributes c inner join Pages p on p.cID = c.cID where p.cParentID = ?', array($cID));
 			return $val;
 		}		
 	}

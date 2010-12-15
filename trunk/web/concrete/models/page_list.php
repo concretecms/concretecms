@@ -196,8 +196,21 @@ class PageList extends DatabaseItemList {
 	 * @param mixed $cParentID
 	 */
 	public function filterByParentID($cParentID) {
-		$this->filterByCParentID = $cParentID;
-		$this->filter('p1.cParentID', $cParentID);
+		$db = Loader::db();
+		if (is_array($cParentID)) {
+			$cth = '(';
+			for ($i = 0; $i < count($cParentID); $i++) {
+				if ($i > 0) {
+					$cth .= ',';
+				}
+				$cth .= $db->quote($cParentID[$i]);
+			}
+			$cth .= ')';
+			$this->filter(false, "(p1.cParentID in {$cth})");
+		} else {
+			$this->filterByCParentID = $cParentID;
+			$this->filter('p1.cParentID', $cParentID);
+		}
 	}
 	
 	/** 

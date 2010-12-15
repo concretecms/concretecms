@@ -11,6 +11,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 */
 class Page extends Collection {
 
+	protected $blocksAliasedFromMasterCollection = null;
+	
 	/**
 	 * @param string $path
 	 * @param unknown_type $version
@@ -623,6 +625,20 @@ $ppWhere = '';
 		} else {
 			return $this->ptID;
 		}	
+	}
+	
+	function isBlockAliasedFromMasterCollection(&$b) {
+		//Retrieve info for all of this page's blocks at once (and "cache" it)
+		// so we don't have to query the database separately for every block on the page.
+		if (is_null($this->blocksAliasedFromMasterCollection)) {
+			$db = Loader::db();
+			$q = 'SELECT bID FROM CollectionVersionBlocks WHERE cID = ? AND isOriginal = 0 AND cvID = ? AND bID IN (SELECT bID FROM CollectionVersionBlocks AS cvb2 WHERE cvb2.cid = ?)';
+			$v = array($this->getCollectionID(), $this->getVersionObject()->getVersionID(), $this->getMasterCollectionID());
+			$r = $db->execute($q, $v);
+			$this->blocksAliasedFromMasterCollection = $db->GetCol($q, $v);
+		}
+		
+		return ($b->isAlias() && in_array($b->getBlockID(), $this->blocksAliasedFromMasterCollection));
 	}
 	
 	function getCollectionThemeObject() {
