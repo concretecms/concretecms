@@ -5,6 +5,9 @@ $json = Loader::helper('json');
 if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display autocomplete form
 	$attrKeyID = $this->attributeKey->getAttributeKeyID();
 	?>
+	
+<div class="ccm-attribute-type-select-autocomplete">
+
 	<div id="selectedAttrValueRows_<?php echo $attrKeyID;?>">
 		<?php 
 		foreach($selectedOptions as $optID) { 
@@ -38,9 +41,10 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 	<?php 
 	echo $form->text('newAttrValueRows'.$attrKeyID, array('style'=>'position:relative; width: 200px; z-index: 260;'));
 	?>
-	<input type="button" value="<?=t('Add')?>" onclick="ccmAttributeTypeSelectTagHelper<?=$attrKeyID?>.addButtonClick(); return false" />
+	<input type="button" class="ccm-input-button" value="<?=t('Add')?>" onclick="ccmAttributeTypeSelectTagHelper<?=$attrKeyID?>.addButtonClick(); return false" />
 	</span>
-	
+</div>
+
 	<script type="text/javascript">
 	//<![CDATA[
 	$(function() {
