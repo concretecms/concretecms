@@ -65,9 +65,15 @@ class ValidationCaptchaHelper {
 	/**
 	 * Displays the text input field that must be entered when used with a corresponding image.
 	 */
-	public function showInput()
+	public function showInput($args = false)
 	{
-	  echo '<input type="text" name="ccmCaptchaCode" class="ccm-input-captcha" />';
+	$attribs = '';
+		if (is_array($args)) {
+			foreach($args as $key => $value) {
+				$attribs .= $key . '="' . $value . '" ';
+			}
+		}
+	  echo '<input type="text" name="ccmCaptchaCode" class="ccm-input-captcha" ' . $attribs . ' />';
 	}
 	
 	/** 
