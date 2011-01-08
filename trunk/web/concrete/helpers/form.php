@@ -88,7 +88,7 @@ class FormHelper {
 	 * @param string $key
 	 */
 	public function file($key) {
-		$str = '<input type="file" name="' . $key . '" value="" />';
+		$str = '<input type="file" id="' . $key . '" name="' . $key . '" value="" class="ccm-input-file" />';
 		return $str;
 	}
 	

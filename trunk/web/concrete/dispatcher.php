@@ -131,8 +131,7 @@
 	## This must come before packages ##
 	if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true) {
 		@include(DIR_CONFIG_SITE . '/site_events.php');
-	}
-	
+	}	
 	
 	## Check online, user-related startup routines
 	require(dirname(__FILE__) . '/startup/user.php');

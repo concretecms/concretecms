@@ -4,9 +4,10 @@ img.ccm-captcha-image {display: block}
 /* clear and pagination styles */
 *.ccm-spacer {clear: both; font-size:1px; line-height:1px; }
 div.ccm-pagination { text-align:center; position: relative}
-div.ccm-pagination span.ccm-page-right {position: absolute; top: 0px; right: 0px;}
+div.ccm-pagination span.ccm-page-right {position: absolute; top: 0px; right: 0px; margin-right: 0px !important}
+div.ccm-pagination span.ccm-page-right span {margin-right: 0px}
 div.ccm-pagination span.ccm-page-left {position: absolute; top: 0px; left: 0px}
-
+div.ccm-pagination span {margin-right: 4px}
 /* Layout */ 
 /*
 .ccm-layout .ccm-layout-cell{ overflow:hidden; }

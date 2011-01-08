@@ -1,4 +1,7 @@
-<? header('Content-type: text/javascript'); ?>
+<?
+defined('C5_EXECUTE') or die("Access Denied.");
+
+header('Content-type: text/javascript'); ?>
 
 var ccmi18n = { 
 	

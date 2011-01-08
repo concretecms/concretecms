@@ -140,7 +140,7 @@ class ImageHelper {
 		if (file_exists($path)) {
 			$filename = md5($path . ':' . $maxWidth . ':' . $maxHeight . ':' . filemtime($path)) . '.' . $fh->getExtension($path);
 		} else {
-			$filename = md5($path . ':' . $maxWidth . ':' . $maxHeight . ':') . $fh->getExtension($path);
+			$filename = md5($path . ':' . $maxWidth . ':' . $maxHeight . ':') . '.' . $fh->getExtension($path);
 		}
 
 		if (!file_exists(DIR_FILES_CACHE . '/' . $filename)) {
