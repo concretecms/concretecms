@@ -186,7 +186,7 @@ class PaginationHelper {
 					$pages.="<span class='$this->classCurrent'><strong>".($i+1)."</strong></span>";
 			   }else{
 					$linkURL=str_replace("%pageNum%", $i+1, $this->URL);
-					$pages.="<span class='$this->classOn'> <a href='$linkURL' ".$this->getJSFunctionCall($i+1).">".($i+1)."</a> </span>";
+					$pages.="<span class='$this->classOn'><a href='$linkURL' ".$this->getJSFunctionCall($i+1).">".($i+1)."</a></span>";
 			} //end if not current page
 			$pages_made++;
 		}

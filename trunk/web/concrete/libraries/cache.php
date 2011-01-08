@@ -49,7 +49,11 @@ class Cache {
 				if (!defined('CACHE_LIBRARY') || (defined("CACHE_LIBRARY") && CACHE_LIBRARY == "default")) {
 					define('CACHE_LIBRARY', 'File');
 				}
-				$cache = Zend_Cache::factory('Core', CACHE_LIBRARY, $frontendOptions, $backendOptions);
+				$customBackendNaming = false;
+				if (CACHE_LIBRARY == 'Zend_Cache_Backend_ZendServer_Shmem') {
+					$customBackendNaming = true;
+				}
+				$cache = Zend_Cache::factory('Core', CACHE_LIBRARY, $frontendOptions, $backendOptions, false, $customBackendNaming);
 			}
 		}
 		return $cache;

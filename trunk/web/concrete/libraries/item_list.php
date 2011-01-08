@@ -389,8 +389,8 @@ class ItemList {
 			$html = '<div class="ccm-spacer"></div>';
 			$html .= '<div class="ccm-pagination">';
 			$html .= '<span class="ccm-page-left">' . $paginator->getPrevious() . '</span>';
-			$html .= '<span class="ccm-page-right">' . $paginator->getNext() . '</span>';
 			$html .= $paginator->getPages();
+			$html .= '<span class="ccm-page-right">' . $paginator->getNext() . '</span>';
 			$html .= '</div>';
 		}
 		if (isset($html)) {
