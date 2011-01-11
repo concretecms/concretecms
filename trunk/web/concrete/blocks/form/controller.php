@@ -627,7 +627,7 @@ class MiniSurvey{
    				
    			}
 			
-				echo '<tr><td>&nbsp;</td><td><input class="formBlockSubmitButton" name="Submit" type="submit" value="'.t('Submit').'" /></td></tr>';
+				echo '<tr><td>&nbsp;</td><td><input class="formBlockSubmitButton ccm-input-button" name="Submit" type="submit" value="'.t('Submit').'" /></td></tr>';
 				echo '</table>';
 				
 			}else{
