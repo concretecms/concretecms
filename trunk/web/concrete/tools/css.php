@@ -1,5 +1,5 @@
 <?
-
+defined('C5_EXECUTE') or die("Access Denied.");
 $co = Request::get();
 $v = View::getInstance();
 $au = $co->getAuxiliaryData();
