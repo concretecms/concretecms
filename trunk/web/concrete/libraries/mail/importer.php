@@ -228,7 +228,11 @@ class MailImportedMessage {
 	
 	public function __construct($mail, Zend_Mail_Message $msg, $count) {
 		
-		$this->subject = $msg->subject;
+		try {
+			$this->subject = $msg->subject;
+		} catch(Exception $e) {
+		}
+		
 		$this->oMail = $mail;
 		$this->oMailMessage = $msg;
 		$this->oMailCnt = $count;
@@ -238,26 +242,31 @@ class MailImportedMessage {
 		} else {
 			$this->sender = substr($msg->from, strpos($msg->from, '<') + 1, strpos($msg->from, '>') - strpos($msg->from, '<') - 1);
 		}
+
+		try {
 		
-		if (strpos($msg->contentType, 'text/plain') !== false) {
-			$this->body = $msg->getContent();
-		} else {
-			$foundPart = null;
-			
-			foreach (new RecursiveIteratorIterator($msg) as $part) {
-				try {
-					if (strtok($part->contentType, ';') == 'text/plain') {
-						$foundPart = $part;
-						break;
+			if (strpos($msg->contentType, 'text/plain') !== false) {
+				$this->body = $msg->getContent();
+			} else {
+				$foundPart = null;
+				
+				foreach (new RecursiveIteratorIterator($msg) as $part) {
+					try {
+						if (strtok($part->contentType, ';') == 'text/plain') {
+							$foundPart = $part;
+							break;
+						}
+					} catch (Zend_Mail_Exception $e) {
+						// ignore
 					}
-				} catch (Zend_Mail_Exception $e) {
-					// ignore
+				}
+			
+				if ($foundPart) {
+					$this->body = $foundPart;
 				}
 			}
+		} catch(Exception $e) {
 		
-			if ($foundPart) {
-				$this->body = $foundPart;
-			}
 		}
 		
 		// find the hash

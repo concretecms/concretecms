@@ -1,4 +1,6 @@
 <?
+defined('C5_EXECUTE') or die("Access Denied.");
+
 /*
 require_once('_base_tools.php');
 require_once(DIR_CLASSES.'/toolbox/validation_tools.php');
