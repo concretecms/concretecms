@@ -15,6 +15,7 @@ class FileList extends DatabaseItemList {
 	protected $itemsPerPage = 10;
 	protected $attributeClass = 'FileAttributeKey';
 	protected $permissionLevel = 'canSearch';
+	protected $filteredFileSetIDs = array();
 	
 	/* magic method for filtering by attributes. */
 	public function __call($nm, $a) {
@@ -61,13 +62,10 @@ class FileList extends DatabaseItemList {
 		$this->filter(false, '(fvFilename like ' . $qkeywords . ' or fvDescription like ' . $qkeywords . ' or fvTitle like ' . $qkeywords . ' or fvTags like ' . $qkeywords . ' or u.uName = ' . $keywordsExact . $attribsStr . ')');
 	}
 	
-	/** 
-	 * Filters by files found in a certain set. If "false" is provided, we display files not found in any set. */
+
 	public function filterBySet($fs) {
 		if ($fs != false) {
-			$tableAliasName='fsf'.intval($fs->getFileSetID());
-			$this->addToQuery("left join FileSetFiles {$tableAliasName} on {$tableAliasName}.fID = f.fID");
-			$this->filter("{$tableAliasName}.fsID", $fs->getFileSetID(), '=');
+			$this->filteredFileSetIDs[] = intval($fs->getFileSetID());
 		} else {
 			$s1 = FileSet::getMySets();
 			$sets = array();
@@ -83,6 +81,23 @@ class FileList extends DatabaseItemList {
 			$this->filter(false, '(fsfex.fID is null or (select count(fID) from FileSetFiles where fID = fsfex.fID and fsID in (' . $setStr . ')) = 0)');
 		}
 	}
+	
+	
+	protected function setupFileSetFilters() {	
+		$fsIDs = array_unique($this->filteredFileSetIDs);
+		$fsIDs = array_filter($fsIDs,'is_numeric');
+		
+		$db = Loader::db();
+		
+		if(is_array($fsIDs) && count($fsIDs)) {
+			foreach($fsIDs as $fsID) {
+				if($fsID > 0) {
+					$this->filter(false,'f.fID IN (SELECT DISTINCT fID FROM FileSetFiles WHERE fsID = '.$db->quote($fsID).')');
+				}
+			}
+		}
+	}
+	
 	
 	/** 
 	 * Filters the file list by file size (in kilobytes)
@@ -209,7 +224,7 @@ class FileList extends DatabaseItemList {
 	}
 	
 	/** 
-	 * Returns an array of page objects based on current settings
+	 * Returns an array of file objects based on current settings
 	 */
 	public function get($itemsToGet = 0, $offset = 0) {
 		$files = array();
@@ -237,6 +252,7 @@ class FileList extends DatabaseItemList {
 			$this->filter('fvIsApproved', 1);
 			$this->setupAttributeFilters("left join FileSearchIndexAttributes on (fv.fID = FileSearchIndexAttributes.fID)");
 			$this->setupFilePermissions();
+			$this->setupFileSetFilters();
 			$this->queryCreated=1;
 		}
 	}
