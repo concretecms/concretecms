@@ -215,7 +215,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 							$useCache = true;
 					}
 					if ($useCache) {
-						$outputContent = Cache::get('block_view_output', $page->getCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle());
+						$cID = 0;
+						if (is_object($page)) {
+							$cID = $page->getCollectionID();
+						}
+						$outputContent = Cache::get('block_view_output', $cID . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle());
 					}
 				}
 			}
@@ -300,7 +304,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				print $outputContent;
 				
 				if ($useCache) {
-					Cache::set('block_view_output', $page->getCollectionID() . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
+					$cID = 0;
+					if (is_object($page)) {
+						$cID = $page->getCollectionID();
+					}				
+					Cache::set('block_view_output', $cID . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
 				}
 			}
 			if (isset($footer)) {
