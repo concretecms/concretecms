@@ -1,6 +1,4 @@
-<?
-
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 Loader::model('attribute/categories/file');
 /**
 *
