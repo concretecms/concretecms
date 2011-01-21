@@ -22,6 +22,10 @@ class FormHelper {
 
 	private $radioIndex = 1;
 	private $selectIndex = 1;
+	
+	public function __construct() {
+		$this->th = Loader::helper("text");
+	}
 
 	/** 
 	 * Returns an action suitable for including in a form action property.
@@ -237,21 +241,15 @@ class FormHelper {
 			if (isset($v2)) {
 				// if the type if GET, we make sure to strip it of any nasties
 				// POST we will let stay unfiltered
-				if ($type == 'post') { 
-					return $v2;
+				if (is_string($v2)) {
+					return $this->th->entities($v2);
 				} else {
-					return preg_replace('/<|>|;|/','', $v2);
+					return $v2;
 				}
 			}
 		}			
 		if (isset($arr[$key])) {
-			// if the type if GET, we make sure to strip it of any nasties
-			// POST we will let stay unfiltered
-			if ($type == 'post') { 
-				return $arr[$key];
-			} else {
-				return preg_replace('/<|>|;|/','', $arr[$key]);
-			}
+			return $this->th->entities($arr[$key]);
 		}
 		
 		return false;
