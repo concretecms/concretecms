@@ -258,6 +258,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 		
+		public function getErrorObject() {
+			$ve = Loader::helper('validation/error');
+			$ve->add(t('You may not send more than %s messages in %s minutes', USER_PRIVATE_MESSAGE_MAX, USER_PRIVATE_MESSAGE_MAX_TIME_SPAN));
+			return $ve;
+		}
+		
 		protected function notifyAdmin($offenderID) {
 			$offender = UserInfo::getByID($offenderID);
 			$admin = UserInfo::getByID(USER_SUPER_ID);
