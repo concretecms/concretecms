@@ -156,21 +156,20 @@ class ProfileMessagesController extends ProfileEditController {
 		if ($vf->test()) {
 			$u = new User();
 			$sender = UserInfo::getByID($u->getUserID());
-			if($sender->sendPrivateMessage($this->get('recipient'), $this->post('msgSubject'), $this->post('msgBody'), $this->get('msg'))) {
+			$r = $sender->sendPrivateMessage($this->get('recipient'), $this->post('msgSubject'), $this->post('msgBody'), $this->get('msg'));
+			if ($r instanceof ValidationErrorHelper) {
+				$this->error = $r;
+			} else {
 				if ($this->post('msgID') > 0) { 
 					$this->redirect('/profile/messages', 'reply_complete', $box, $msgID);
 				} else {
 					$this->redirect('/profile/messages', 'send_complete', $uID);
 				}
-			} else {
-				$this->redirect('/profile/messages', 'over_limit');
 			}
 		} else {
 			$this->error = $vf->getError();
 		}		
 	}
-	
-	public function over_limit() {}
 	
 	public function send_complete($uID) { 
 		$this->validateUser($uID);

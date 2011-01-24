@@ -245,6 +245,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		public function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = false) {
 			Loader::model('user_private_message');
+			if(UserPrivateMessageLimit::isOverLimit($this->getUserID())) {
+				return UserPrivateMessageLimit::getErrorObject();
+			}		
 			$subject = ($subject == '') ? t('(No Subject)') : $subject;
 			$db = Loader::db();
 			$dt = Loader::helper('date');
@@ -290,14 +293,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				} else {
 					$mh->load('private_message');
 				}
-				
-				
-				if(UserPrivateMessageLimit::isOverLimit($this->getUserID())) {
-					return false;
-				} else {
-					$mh->sendMail();
-					return true;
-				}				
+				$mh->sendMail();
 			}
 		}
 		
