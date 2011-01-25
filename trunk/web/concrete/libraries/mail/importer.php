@@ -246,7 +246,7 @@ class MailImportedMessage {
 		try {
 		
 			if (strpos($msg->contentType, 'text/plain') !== false) {
-				$this->body = $msg->getContent();
+				$this->body = quoted_printable_decode($msg->getContent());
 			} else {
 				$foundPart = null;
 				
@@ -296,7 +296,7 @@ class MailImportedMessage {
 		$r = preg_split(MailImporter::getMessageBodyHashRegularExpression(), $this->body, $matches);		
 		$message = $r[0];
 		$r = preg_replace(array(
-			'/On (.*) at (.*) wrote:/i',
+			'/On (.*) at (.*) wrote:/si',
 			'/[\n\r\s\>]*\Z/i'
 		), '', $message);
 		return $r;
