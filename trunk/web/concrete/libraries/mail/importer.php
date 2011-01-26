@@ -296,7 +296,7 @@ class MailImportedMessage {
 		$r = preg_split(MailImporter::getMessageBodyHashRegularExpression(), $this->body, $matches);		
 		$message = $r[0];
 		$r = preg_replace(array(
-			'/On (.*) at (.*) wrote:/si',
+			'/^On (.*) at (.*), (.*) wrote:/sm',
 			'/[\n\r\s\>]*\Z/i'
 		), '', $message);
 		return $r;
