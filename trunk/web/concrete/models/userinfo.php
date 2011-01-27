@@ -129,6 +129,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		const ADD_OPTIONS_NOHASH		= 0;
 		const ADD_OPTIONS_SKIP_CALLBACK	= 1;
+		
+		/**
+		 * @param array $data
+		 * @param array | false $options
+		 * @return UserInfo
+		 */
 		public static function add($data,$options=false) {
 			$options = is_array($options) ? $options : array();
 			$db = Loader::db();
@@ -488,6 +494,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 		
+		/**
+		 * @param array $data
+		 * @return UserInfo
+		 */
 		public function register($data) {
 			// slightly different than add. this is public facing
 			if (defined("USER_VALIDATE_EMAIL")) {
