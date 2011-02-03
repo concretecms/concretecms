@@ -134,17 +134,19 @@ class IndexedSearch {
 		while ($row = $r->FetchRow()) {
 			if (in_array($row['arHandle'], $searchableAreaNames)) {
 				$b = Block::getByID($row['bID'], $c, $row['arHandle']);
-				$bi = $b->getInstance();
-				if (!is_object($b)) {
-					continue;
+				if (is_object($b)) {
+					$bi = $b->getInstance();
+					if (!is_object($b)) {
+						continue;
+					}
+					if(method_exists($bi,'getSearchableContent')){
+						$searchableContent = $bi->getSearchableContent();  
+						if(strlen(trim($searchableContent))) 					
+							$text .= strip_tags(str_ireplace($tagsToSpaces,' ',$searchableContent)).' ';
+					}
+					unset($b);
+					unset($bi);
 				}
-				if(method_exists($bi,'getSearchableContent')){
-					$searchableContent = $bi->getSearchableContent();  
-					if(strlen(trim($searchableContent))) 					
-						$text .= strip_tags(str_ireplace($tagsToSpaces,' ',$searchableContent)).' ';
-				}
-				unset($b);
-				unset($bi);
 			}		
 		}
 		

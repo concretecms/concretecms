@@ -77,7 +77,7 @@ class FileHelper {
 				}
 				
 				copy($Entry, $target . '/' . $entry);
-				chmod($target . '/' . $entry, $mode);
+				@chmod($target . '/' . $entry, $mode);
 			}
 			
 			$d->close();
