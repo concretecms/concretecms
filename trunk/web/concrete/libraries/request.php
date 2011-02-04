@@ -72,10 +72,10 @@ class Request {
 			}
 			if (!$path) {
 				$path = Request::parsePathFromRequest('PATH_INFO');
-			}
+			}/*
 			if (!$path) {
 				$path = Request::parsePathFromRequest('REQUEST_URI');
-			}
+			}*/
 			if (!$path) {
 				$path = Request::parsePathFromRequest('SCRIPT_NAME');
 			}
