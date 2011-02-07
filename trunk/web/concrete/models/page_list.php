@@ -126,7 +126,7 @@ class PageList extends DatabaseItemList {
 		if (PERMISSIONS_MODEL != 'simple') {
 			// support timed release
 			$this->filter(false, "((select count(cID) from PagePermissions pp1 where pp1.cID = {$cInheritPermissionsFromCID} and
-				((pp1.cgPermissions like 'r%' and cv.cvIsApproved = 1) or (pp1.cgPermissions like 'rv%')) and (
+				((pp1.cgPermissions like 'r%' and cv.cvIsApproved = 1) or (pp1.cgPermissions like '%rv%')) and (
 					(pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID})
 					and 
 						(pp1.cgStartDate is null or pp1.cgStartDate <= '{$date}')
