@@ -40,7 +40,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		public function camelcase($file) {
 			// turns "asset_library" into "AssetLibrary"
-			$r1 = ucwords(str_replace(array('_', '/'), ' ', $file));
+			$r1 = ucwords(str_replace(array('_', '-', '/'), ' ', $file));
 			$r2 = str_replace(' ', '', $r1);
 			return $r2;		
 		}
