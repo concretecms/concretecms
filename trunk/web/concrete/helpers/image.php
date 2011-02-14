@@ -93,18 +93,24 @@ class ImageHelper {
 			}
 		}
 		
-		//Calculate cropping
+		//Calculate cropping to center image
 		if ($do_crop_x) {
+			/*
 			//Get half the difference between scaled width and target width,
 			// and crop by starting the copy that many pixels over from the left side of the source (scaled) image.
 			$nudge = ($width / 10); //I have *no* idea why the width isn't centering exactly -- this seems to fix it though.
 			$crop_src_x = ($finalWidth / 2.00) - ($width / 2.00) + $nudge;
+			*/
+			$crop_src_x = round(($oWidth - ($width * $oHeight / $height)) * 0.5);
 		}
 		if ($do_crop_y) {
+			/*
 			//Calculate cropping...
 			//Get half the difference between scaled height and target height,
 			// and crop by starting the copy that many pixels down from the top of the source (scaled) image.
 			$crop_src_y = ($finalHeight / 2.00) - ($height / 2.00);
+			*/
+			$crop_src_y = round(($oHeight - ($height * $oWidth / $width)) * 0.5);
 		}
 		
 		//create "canvas" to put new resized and/or cropped image into
