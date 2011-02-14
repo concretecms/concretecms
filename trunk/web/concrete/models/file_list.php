@@ -87,10 +87,15 @@ class FileList extends DatabaseItemList {
 		
 		$db = Loader::db();
 		
+		$i = 0;
 		if(is_array($fsIDs) && count($fsIDs)) {
 			foreach($fsIDs as $fsID) {
 				if($fsID > 0) {
+					if ($i == 0) {
+						$this->addToQuery("left join FileSetFiles fsfl on fsfl.fID = f.fID");
+					}
 					$this->filter(false,'f.fID IN (SELECT DISTINCT fID FROM FileSetFiles WHERE fsID = '.$db->quote($fsID).')');
+					$i++;
 				}
 			}
 		}
