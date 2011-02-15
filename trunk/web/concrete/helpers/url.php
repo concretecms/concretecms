@@ -45,7 +45,7 @@ class UrlHelper {
 	}
 	
 	public function buildQuery($url, $params) {
-		return $url . '?' . http_build_query($params);
+		return $url . '?' . http_build_query($params, '', '&');
 	}
 	
 }
