@@ -49,32 +49,26 @@ $v->addHeaderItem($html->css('ccm.dialog.css'));
 $v->addHeaderItem($html->css('jquery.rating.css'));
 $v->addHeaderItem($html->css('jquery.ui.css'));
 
-require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); 
-
-?>
-
-<script type="text/javascript">
-<?
 $valt = Loader::helper('validation/token');
-print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
+$disp = '<script type="text/javascript">'."\n";
+$disp .=  "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';"."\n";
+$disp .= '$(function() {'."\n";
+$disp .= '	$("div.message").animate({'."\n";
+$disp .= "		backgroundColor: 'white'"."\n";
+$disp .= "	}, 'fast').animate({"."\n";
+$disp .= "		backgroundColor: '#eeeeee'"."\n";
+$disp .= "	}, 'fast');"."\n";
+$disp .= "	ccm_setupDashboardHeaderMenu();"."\n";
+ if ($dashboard->getCollectionID() == $c->getCollectionID()) {
+		$disp .= "ccm_dashboardRequestRemoteInformation();"."\n";
+	}
+$disp .= "	});"."\n";
+$disp .= "</script>"."\n";
+//require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); 
+$v->addHeaderItem($disp);
+
+Loader::element('header_required');
 ?>
-
-</script>
-
-<script type="text/javascript">
-$(function() {
-	$("div.message").animate({
-		backgroundColor: 'white'
-	}, 'fast').animate({
-		backgroundColor: '#eeeeee'
-	}, 'fast');
-	
-	ccm_setupDashboardHeaderMenu();
-	<? if ($dashboard->getCollectionID() == $c->getCollectionID()) { ?>
-		ccm_dashboardRequestRemoteInformation();
-	<? } ?>
-});
-</script>
 </head>
 <body>
 
@@ -251,6 +245,6 @@ foreach($nav as $n2) {
 	</div>
 
 </div>
-
+<? Loader::element('footer_required', array('disableTrackingCode' => true)); ?>
 </body>
 </html>

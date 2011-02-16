@@ -74,6 +74,12 @@
 			$args['fType'] = FileType::T_IMAGE;
 			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
 		}
+
+		public function video($id, $postname, $chooseText, $fileInstanceBlock = null) {
+			$args = array();
+			$args['fType'] = FileType::T_VIDEO;
+			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
+		}
 	
 	}
 	

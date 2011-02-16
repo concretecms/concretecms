@@ -287,20 +287,15 @@ class FormHelper {
 			$val = str_replace('"', '&#34;', $val);
 			$str .= 'value="' . $val . '" ';
 			$miscFields = $a[2];
-			foreach($a[2] as $key => $value) {
-				$str .= $key . '="' . $value . '" ';
-			}
 		} else {
 			if (is_array($a[1])) {
 				$str .= 'value="' . $val . '" ';
 				$val = str_replace('"', '&#34;', $val);
-
 				$miscFields = $a[1];
 			} else {
 				// we ignore this second value if a post is set with this guy in it
 				$val = ($val !== false) ? $val : $a[1];
 				$val = str_replace('"', '&#34;', $val);
-
 				$str .= 'value="' . $val . '" ';
 			}
 		}
