@@ -417,13 +417,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				} else if (file_exists(DIR_FILES_CONTROLLERS . $path . '/' . FILENAME_COLLECTION_CONTROLLER)) {
 					require_once(DIR_FILES_CONTROLLERS . $path . '/' . FILENAME_COLLECTION_CONTROLLER);
 					$include = true;
-				} else if (file_exists(DIR_FILES_CONTROLLERS_REQUIRED . $controllerFile)) {
-					require_once(DIR_FILES_CONTROLLERS_REQUIRED . $controllerFile);
-					$include = true;
-				} else if (file_exists(DIR_FILES_CONTROLLERS_REQUIRED . $path . '/' . FILENAME_COLLECTION_CONTROLLER)) {
-					require_once(DIR_FILES_CONTROLLERS_REQUIRED . $path . '/' . FILENAME_COLLECTION_CONTROLLER);
-					$include = true;
-
 				} else if (is_object($item)) {
 					if ($item->getPackageID() > 0 && (file_exists(DIR_FILES_CONTROLLERS . $controllerFile))) {
 						require_once(DIR_FILES_CONTROLLERS . $controllerFile);
@@ -443,6 +436,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					}
 				}
 				
+				if (!$include) {
+					if (file_exists(DIR_FILES_CONTROLLERS_REQUIRED . $controllerFile)) {
+						require_once(DIR_FILES_CONTROLLERS_REQUIRED . $controllerFile);
+						$include = true;
+					} else if (file_exists(DIR_FILES_CONTROLLERS_REQUIRED . $path . '/' . FILENAME_COLLECTION_CONTROLLER)) {
+						require_once(DIR_FILES_CONTROLLERS_REQUIRED . $path . '/' . FILENAME_COLLECTION_CONTROLLER);
+						$include = true;
+					}
+				}
+					
 				if ($include) {
 					$class = Object::camelcase($path) . 'Controller';
 				}
