@@ -69,8 +69,8 @@ class Controller {
 		
 		// we are already on the right page now
 		// let's grab the right method as well.
-		$task = substr($req->getRequestPath(), strlen($req->getRequestCollectionPath()));
-		
+		$task = substr('/' . $req->getRequestPath(), strlen($req->getRequestCollectionPath()) + 1);
+
 		// remove legacy separaters
 		$task = str_replace('-/', '', $task);
 		
