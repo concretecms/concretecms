@@ -36,7 +36,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class ValidationCaptchaHelper {
 
-   private $securimage;
+   	protected $securimage;
    
 	public function __construct() {
 		Loader::library("3rdparty/securimage/securimage");
