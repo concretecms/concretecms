@@ -43,6 +43,23 @@ class ValidationCaptchaHelper {
 		
 		$this->securimage = new Securimage();
 		$this->securimage->ttf_file = DIR_LIBRARIES_3RDPARTY_CORE . '/securimage/elephant.ttf';
+		
+		$this->securimage->image_width   = 190;
+		$this->securimage->image_height  = 60;
+		
+		$this->securimage->image_bg_color = new Securimage_Color(227, 218, 237);
+		
+		$this->securimage->line_color = new Securimage_Color(51, 51, 51);
+		$this->securimage->num_lines = 5;
+		
+		$this->securimage->use_multi_text   = true;
+		$this->securimage->multi_text_color = array(
+			new Securimage_Color(184, 4, 50),
+			new Securimage_Color(12, 67, 157),
+			new Securimage_Color(244, 49, 11)
+			);
+		$this->securimage->text_color = new Securimage_Color(184, 4, 50);
+		
 	}
 	
 	/** 
