@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $ih = Loader::helper('concrete/interface');
 $valt = Loader::helper('validation/token');
-
+$form = Loader::helper('form');
 $ctArray = CollectionType::getList();
 $args['section'] = 'collection_types';
 $u = new User();
@@ -159,7 +159,7 @@ if ($ctEditMode) {
 		</td>
 	</tr>
 	<tr>
-		<td colspan="3" class="header" class="subheader"><?=t('Default Attributes')?></td>
+		<td colspan="3" class="subheader" class="subheader"><?=t('Default Attributes')?></td>
 	</tr>
 	<?
 		$attribs = CollectionAttributeKey::getList();
@@ -187,6 +187,14 @@ if ($ctEditMode) {
 		<? }
 	?></tr>
 	<? } ?>
+	<tr>
+		<td colspan="3" class="header"><?=t('Composer')?></td>
+	</tr>
+	<tr>
+		<td colspan="3">
+			<?=$form->checkbox('ctIncludeInComposer', 1, $ct->isCollectionTypeIncludedInComposer())?> <?=$form->label('ctIncludeInComposer', t('Yes, include this page type in Composer.'))?>
+		</td>
+	</tr>	
 	<tr>
 		<td colspan="3" class="header">
 		<? print $ih->submit(t('Update Page Type'), 'update_page_type', 'right');?>
@@ -332,6 +340,14 @@ if ($ctEditMode) {
 		<? }
 	?></tr>
 	<? } ?>
+	<tr>
+		<td colspan="3" class="header"><?=t('Composer')?></td>
+	</tr>
+	<tr>
+		<td colspan="3">
+			<?=$form->checkbox('ctIncludeInComposer', 1)?> <?=$form->label('ctIncludeInComposer', t('Yes, include this page type in Composer.'))?>
+		</td>
+	</tr>
 	<tr>
 		<td colspan="3" class="header">
 		<? print $ih->submit(t('Add Page Type'), 'add_page_type', 'right');?>

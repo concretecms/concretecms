@@ -38,7 +38,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$ct = Cache::get('pageTypeByHandle', $ctHandle);
 			if (!is_object($ct)) {
 				$db = Loader::db();
-				$q = "SELECT ctID, ctHandle, ctName, ctIcon, pkgID from PageTypes where ctHandle = ?";
+				$q = "SELECT ctID, ctHandle, ctName, ctIncludeInComposer, ctIcon, pkgID from PageTypes where ctHandle = ?";
 				$r = $db->query($q, array($ctHandle));
 				if ($r) {
 					$row = $r->fetchRow();
@@ -76,7 +76,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			
 			$db = Loader::db();
-			$q = "SELECT ctID, ctHandle, ctName, ctIcon, pkgID from PageTypes where PageTypes.ctID = ?";
+			$q = "SELECT ctID, ctHandle, ctName, ctIncludeInComposer, ctIcon, pkgID from PageTypes where PageTypes.ctID = ?";
 			$r = $db->query($q, array($ctID));
 			if ($r) {
 				$row = $r->fetchRow();
@@ -194,8 +194,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (isset($data['ctIcon'])) {
 				$ctIcon = $data['ctIcon'];
 			}
-			$v = array($data['ctHandle'], $data['ctName'], $ctIcon, $pkgID);
-			$q = "insert into PageTypes (ctHandle, ctName, ctIcon, pkgID) values (?, ?, ?, ?)";
+			$ctIncludeInComposer = 0;
+			if (isset($data['ctIncludeInComposer']) && $data['ctIncludeInComposer'] == 1) {
+				$ctIncludeInComposer = 1;
+			}
+			$v = array($data['ctHandle'], $data['ctName'], $ctIcon, $ctIncludeInComposer, $pkgID);
+			$q = "insert into PageTypes (ctHandle, ctName, ctIcon, ctIncludeInComposer, pkgID) values (?, ?, ?, ?, ?)";
 			$r = $db->prepare($q);
 			$res = $db->execute($r, $v);
 			if ($res) {
@@ -250,8 +254,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		public function update($data) {
 			$db = Loader::db();
-			$v = array($data['ctName'], $data['ctHandle'], $data['ctIcon'], $this->ctID);
-			$r = $db->prepare("update PageTypes set ctName = ?, ctHandle = ?, ctIcon = ? where ctID = ?");
+			$ctIncludeInComposer = 0;
+			if (isset($data['ctIncludeInComposer']) && $data['ctIncludeInComposer'] == 1) {
+				$ctIncludeInComposer = 1;
+			}
+			$v = array($data['ctName'], $data['ctHandle'], $data['ctIcon'], $ctIncludeInComposer, $this->ctID);
+			$r = $db->prepare("update PageTypes set ctName = ?, ctHandle = ?, ctIcon = ?, ctIncludeInComposer = ? where ctID = ?");
 			$res = $db->execute($r, $v);
 			
 			// metadata
@@ -356,6 +364,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function getCollectionTypeID() { return $this->ctID; }
 		public function getCollectionTypeName() { return $this->ctName; }
 		public function getCollectionTypeHandle() { return $this->ctHandle; }
+		public function isCollectionTypeIncludedInComposer() {return $this->ctIncludeInComposer;}
 		public function getMasterCollectionID() { return $this->mcID; }
 		public function getCollectionTypeIcon() {return $this->ctIcon;}
 		public function getPackageID() {return $this->pkgID;}
