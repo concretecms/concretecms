@@ -78,7 +78,7 @@ if($success) {
 	
 	<br/>
 	
-	<div class="ccm-button">
+	<div class="ccm-buttons">
 		<?=$form->submit('register', t('Register'))?>
 		<?=$form->hidden('rcID', $rcID); ?>
 	</div>

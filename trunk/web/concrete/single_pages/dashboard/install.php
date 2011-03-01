@@ -509,7 +509,7 @@ if ($this->controller->getTask() == 'browse') { ?>
 					<? } else { ?>
 						<?=t('There are currently <strong>%s</strong> updates available.', $updates)?>
 					<? } ?>
-					<? print $ch->button(t('Update Addons'), $this->url('/dashboard/install/update'))?>
+					<? print $ch->button(t('Update Addons'), $this->url('/dashboard/install', 'update'))?>
 					
 					<div class="ccm-spacer">&nbsp;</div>
 				

@@ -1359,6 +1359,10 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="ctIncludeInComposer" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <index name="ctHandle">
       <UNIQUE/>
       <col>ctHandle</col>
