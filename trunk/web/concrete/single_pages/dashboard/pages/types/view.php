@@ -348,6 +348,10 @@ if ($ctEditMode) {
 			<?=$form->checkbox('ctIncludeInComposer', 1)?> <?=$form->label('ctIncludeInComposer', t('Yes, include this page type in Composer.'))?>
 		</td>
 	</tr>
+	<tr class="row-composer" style="display: none">
+		<td colspan="3" class="subheader"><?=t('Composer Settings')?></td>
+	</tr>
+	
 	<tr>
 		<td colspan="3" class="header">
 		<? print $ih->submit(t('Add Page Type'), 'add_page_type', 'right');?>
@@ -432,16 +436,17 @@ if ($ctEditMode) {
 
 	
 	
+<? } ?>
+
 <script type="text/javascript">
 $(function() {
-	$("#ccm-toggle-pages").click(function() {
-		if (this.checked) {
-			$("tr.ccm-core-package-row").css('display', 'none');
+	$("input[name=ctIncludeInComposer]").click(function() {
+		if (!this.checked) {
+			$(".row-composer").css('display', 'none');
 		} else {
-			$("tr.ccm-core-package-row").css('display', 'table-row');
+			$(".row-composer").css('display', 'table-row');
 		}
 	});
 });
 </script>
 
-<? }
