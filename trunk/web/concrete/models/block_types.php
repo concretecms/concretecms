@@ -344,6 +344,26 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	
 			return $templates;
 		}
+
+		function getBlockTypeComposerTemplates() {
+			$btHandle = $this->getBlockTypeHandle();
+			$pkgHandle = $this->getPackageHandle();
+
+			$templates = array();
+			$fh = Loader::helper('file');
+			
+			if (file_exists(DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER)) {
+				$templates = array_merge($templates, $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER));
+			}
+
+			if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER)) {
+				$templates = array_merge($templates, $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER));
+			}
+
+			$templates = array_unique($templates);
+	
+			return $templates;
+		}
 		
 		function setAreaPermissions(&$area, &$cp) {
 			$db = Loader::db();

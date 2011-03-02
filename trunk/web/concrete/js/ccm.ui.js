@@ -80,7 +80,7 @@ ccm_showBlockMenu = function(obj, e) {
 			html += '<li><a class="ccm-icon" dialog-modal="false" dialog-title="' + ccmi18n.changeBlockTemplate + '" dialog-width="300" dialog-height="100" id="menuChangeTemplate' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + CCM_CID + '&bID=' + obj.bID + '&isGlobal=' + obj.isGlobal + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=template&modal=true&width=300&height=100" title="' + ccmi18n.changeBlockTemplate + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/wrench.png)">' + ccmi18n.changeBlockTemplate + '</span></a></li>';
 		}
 
-		if (obj.canModifyGroups || obj.canAliasBlockOut) {
+		if (obj.canModifyGroups || obj.canAliasBlockOut || obj.canSetupComposer) {
 			html += '<li class="header"></li>';
 		}
 
@@ -89,6 +89,9 @@ ccm_showBlockMenu = function(obj, e) {
 		}
 		if (obj.canAliasBlockOut) {
 			html += '<li><a class="ccm-icon" dialog-width="550" dialog-height="450" id="menuBlockAliasOut' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + CCM_CID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=child_pages" dialog-title="' + ccmi18n.setBlockAlias + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/template_block.png)">' + ccmi18n.setBlockAlias + '</span></a></li>';
+		}
+		if (obj.canSetupComposer) {
+			html += '<li><a class="ccm-icon" dialog-width="300" dialog-modal="false" dialog-height="150" id="menuBlockSetupComposer' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + CCM_CID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=composer" dialog-title="' + ccmi18n.setBlockComposerSettings + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/template_block.png)">' + ccmi18n.setBlockComposerSettings + '</span></a></li>';
 		}
 		
 
@@ -105,6 +108,9 @@ ccm_showBlockMenu = function(obj, e) {
 		}
 		if (obj.canAliasBlockOut) {
 			$('a#menuBlockAliasOut' + obj.bID + '-' + obj.aID).dialog();
+		}
+		if (obj.canSetupComposer) {
+			$('a#menuBlockSetupComposer' + obj.bID + '-' + obj.aID).dialog();
 		}
 		if (obj.canModifyGroups) {
 			$("#menuBlockGroups" + obj.bID + '-' + obj.aID).dialog();
