@@ -557,6 +557,19 @@
       <col>cDateAdded</col>
     </index>
   </table>
+ <table name="ComposerDefaultBlocks">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="bID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cbFilename" type="C" size="64"/>
+  </table>
   <table name="Config">
     <field name="cfKey" type="C" size="64">
       <KEY/>
@@ -1341,6 +1354,18 @@
       <UNSIGNED />
     </field>
   </table>
+  <table name="ComposerTypeAttributes">
+    <field name="ctID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED />
+    </field>
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED />
+    </field>
+  </table>
   <table name="PageTypes">
     <field name="ctID" type="I" size="10">
       <KEY/>
@@ -1359,14 +1384,31 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="ctIncludeInComposer" type="C" size="1">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
     <index name="ctHandle">
       <UNIQUE/>
       <col>ctHandle</col>
     </index>
+  </table>
+  <table name="ComposerTypes">
+    <field name="ctID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ctComposerPublishPageMethod" type="C" size="64">
+      <NOTNULL/>
+      <DEFAULT value="CHOOSE"/>
+    </field>
+    <field name="ctComposerPublishPageTypeID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ctComposerPublishPageParentID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
   </table>
   <table name="Pages">
     <field name="cID" type="I" size="10">

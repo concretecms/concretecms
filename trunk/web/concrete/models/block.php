@@ -207,6 +207,15 @@ class Block extends Object {
 		} else {
 			$this->bIsGlobal = 0;
 		}
+		
+		$c = $this->getBlockCollectionObject();
+		if ($c->isMasterCollection()) {
+			$row = $db->GetRow('select cbFilename, bID from ComposerDefaultBlocks where cID = ? and bID = ?', array($c->getCollectionID(), $this->getBlockID()));
+			if (is_array($row) && $row['bID'] > 0) {
+				$this->bIncludeInComposer = true;
+				$this->cbFilename = $row['cbFilename'];
+			}
+		}
 		return 0;
 	}
 
@@ -235,6 +244,10 @@ class Block extends Object {
 			}
 		}
 		return $dir;	
+	}
+	
+	public function isBlockIncludedInComposer() {
+		return $this->bIncludeInComposer;
 	}
 
 	function loadNewCollection(&$c) {
@@ -606,6 +619,9 @@ class Block extends Object {
 		return $this->bFilename;
 	}
 
+	function getBlockComposerFilename() {
+		return $this->cbFilename;
+	}
 
 	function getBlockID() {
 		return $this->bID;
@@ -693,6 +709,11 @@ class Block extends Object {
 	function getBlockUpdateCssAction() {
 		$str = $this->_getBlockAction();
 		return $str . '&amp;btask=update_block_css';
+	}	
+
+	function getBlockUpdateComposerSettingsAction() {
+		$str = $this->_getBlockAction();
+		return $str . '&amp;btask=update_composer_settings';
 	}	
 
 	function getBlockPassThruAction() {
@@ -1071,6 +1092,26 @@ class Block extends Object {
 		$this->refreshCache();
 		
 	}
+
+	function updateBlockComposerSettings($data) {
+		$db = Loader::db();
+		$this->updateBlockInformation($data);
+		
+		$cbFilename = $this->cbFilename;
+		if (isset($data['cbFilename'])) {
+			$cbFilename = $data['cbFilename'];
+		}
+
+		$db->Execute('delete from ComposerDefaultBlocks where cID = ? and bID = ?', array($this->getBlockCollectionID(), $this->getBlockID()));
+		if ($data['bIncludeInComposer']) {
+			$db->Execute('insert into ComposerDefaultBlocks (bID, cID, cbFilename) values (?, ?, ?)', array(
+				$this->getBlockID(), $this->getBlockCollectionID(), $cbFilename	
+			));
+		}
+		$this->refreshCache();
+		
+	}
+
 
 }
 ?>

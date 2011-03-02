@@ -212,6 +212,33 @@
 					//exit;
 				}
 				break;
+			case 'update_composer_settings':
+				$a = Area::get($c, $_GET['arHandle']);
+				$b = Block::getByID($_GET['bID'], $c, $a);
+				$p = new Permissions($b);
+				// we're updating the groups for a particular block
+				if ($p->canAdminBlock() && $c->isMasterCollection()) {
+					
+					$nvc = $c->getVersionToModify();
+					$b->loadNewCollection($nvc);
+
+					$data = $_POST;					
+					$b->updateBlockComposerSettings($data);
+					$b->refreshCacheAll();
+					
+					$obj = new stdClass;
+					$obj->bID = $b->getBlockID();
+					$obj->aID = $a->getAreaID();
+					$obj->arHandle= $a->getAreaHandle();
+					$obj->error = false;
+					
+					print Loader::helper('json')->encode($obj);
+					exit;
+					
+					//header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $redirectCID . '&mode=edit' . $step);
+					//exit;
+				}
+				break;
 			case 'passthru':
 				if (isset($_GET['bID']) && isset($_GET['arHandle'])) {
 					$a = Area::get($c, $_GET['arHandle']);

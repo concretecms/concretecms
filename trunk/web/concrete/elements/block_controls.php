@@ -56,7 +56,14 @@ ccm_menuObj<?=$id?>.deleteMessage = "<?=$deleteMessage?>";
 <? }
 if ($c->isMasterCollection()) { ?>
 ccm_menuObj<?=$id?>.canAliasBlockOut = true;
-<? } 
+<?
+$ct = CollectionType::getByID($c->getCollectionTypeID());
+if ($ct->isCollectionTypeIncludedInComposer()) { ?>
+	ccm_menuObj<?=$id?>.canSetupComposer = true;
+<? }
+
+}
+
 if ($p->canWrite()) {  ?>
 	ccm_menuObj<?=$id?>.canArrange = true;
 <? 

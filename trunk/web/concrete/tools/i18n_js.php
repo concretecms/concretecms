@@ -41,6 +41,7 @@ var ccmi18n = {
 	confirmCssPresetDelete: "<?=t("Are you sure you want to delete this custom style preset?")?>",
 	setBlockPermissions: "<?=t('Set Permissions')?>",
 	setBlockAlias: "<?=t('Setup on Child Pages')?>",
+	setBlockComposerSettings: "<?=t("Composer Settings")?>",
 	clear: "<?=t('Clear')?>",
 	helpPopup: "<?=t('Help')?>",
 	community: "<?=t('concrete5 Community')?>",

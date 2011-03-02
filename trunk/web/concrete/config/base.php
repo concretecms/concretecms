@@ -190,6 +190,7 @@ if (!defined('DIRNAME_THEMES_CORE')) {
 define('DIRNAME_TOOLS', 'tools');
 define('DIRNAME_BLOCK_TOOLS', 'tools');
 define('DIRNAME_BLOCK_TEMPLATES', 'templates');
+define('DIRNAME_BLOCK_TEMPLATES_COMPOSER', 'composer');
 define('DIRNAME_CSS', 'css');
 define('DIRNAME_JAVASCRIPT', 'js');
 define('DIRNAME_IMAGES', 'images');

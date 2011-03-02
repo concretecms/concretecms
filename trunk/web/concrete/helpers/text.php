@@ -53,8 +53,8 @@ class TextHelper {
 		
 		$handle = str_replace($searchMulti, $replaceMulti, $handle);
 
-		$searchNormal = array("/[&]/", "/[\s|.]+/", "/[^0-9A-Za-z-_]/", "/-+/");
-		$searchSlashes = array("/[&]/", "/[\s|.]+/", "/[^0-9A-Za-z-_\/]/", "/-+/");
+		$searchNormal = array("/[&]/", "/[\s]+/", "/[^0-9A-Za-z-_.]/", "/-+/");
+		$searchSlashes = array("/[&]/", "/[\s]+/", "/[^0-9A-Za-z-_.\/]/", "/-+/");
 		$replace = array("and", "-", "", "-");
 		
 		$search = $searchNormal;

@@ -1,34 +1,52 @@
 <?xml version="1.0"?>
 <schema version="0.3">
 
-  <table name="PageTypes">
+<table name="ComposerTypes">
     <field name="ctID" type="I" size="10">
       <KEY/>
-      <AUTOINCREMENT/>
+      <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="ctHandle" type="C" size="32">
+    <field name="ctComposerPublishPageMethod" type="C" size="64">
       <NOTNULL/>
+      <DEFAULT value="CHOOSE"/>
     </field>
-    <field name="ctIcon" type="C" size="128"/>
-    <field name="ctName" type="C" size="90">
-      <NOTNULL/>
-    </field>
-    <field name="pkgID" type="I" size="10">
+    <field name="ctComposerPublishPageTypeID" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="ctIncludeInComposer" type="C" size="1">
+    <field name="ctComposerPublishPageParentID" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
-    <index name="ctHandle">
-      <UNIQUE/>
-      <col>ctHandle</col>
-    </index>
+  </table>
+  <table name="ComposerTypeAttributes">
+    <field name="ctID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED />
+    </field>
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED />
+    </field>
   </table>
 
-
+ <table name="ComposerDefaultBlocks">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="bID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cbFilename" type="C" size="64"/>
+  </table>
 
 </schema>

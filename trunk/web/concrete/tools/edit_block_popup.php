@@ -29,7 +29,7 @@ if ($_REQUEST['btask'] != 'view' && $_REQUEST['btask'] != 'view_edit_mode') {
 
 $bv = new BlockView(); 
 			
-if(($isGlobal || $c->isMasterCollection()) && $_REQUEST['btask'] != 'view_edit_mode') {
+if(($isGlobal || $c->isMasterCollection()) && (!in_array($_REQUEST['btask'], array('child_pages','composer','view_edit_mode')))) {
 	echo '<div class="ccm-notification">';
 	echo t('This is a global block.  Editing it here will change all instances of this block throughout the site.');
 	//echo t('This is a global block.  Edit it from the <a href="%s">Global Scrapbook</a> in your dashboard.<br /><br /><br />', View::url('/dashboard/scrapbook/') );
@@ -120,6 +120,11 @@ if (is_object($b)) {
 		case 'child_pages':
 			if ($bp->canAdminBlock()) {
 				$bv->renderElement('block_master_collection_alias', array('b' => $b));
+			}
+			break;
+		case 'composer':
+			if ($bp->canAdminBlock()) {
+				$bv->renderElement('block_master_collection_composer', array('b' => $b));
 			}
 			break;
 		case 'edit': 			
