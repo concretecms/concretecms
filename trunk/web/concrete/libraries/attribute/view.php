@@ -14,10 +14,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected function getValue() {return $this->attributeValue;}
 		protected function getAttributeKey() {return $this->attributeKey;}
 		
-		public function field($fieldName) {
-			return $this->controller->field($fieldName);
-		}
-		
 		public function action($action) {
 			$uh = Loader::helper('concrete/urls');
 			$a = func_get_args();

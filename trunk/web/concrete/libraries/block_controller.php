@@ -47,6 +47,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		protected $identifier;
 		
+		public function getIdentifier() {
+			return $this->identifier;
+		}
+		
 		/**
 		 * Sets a value used by a particular block. These variables will automatically be present in the corresponding views used by the block.
 		 * @param string $key
@@ -181,6 +185,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			} 
 			return Page::getCurrentPage();
 		}
+
+		public function field($fieldName) {
+			return '_bf[' . $this->identifier . '][' . $fieldName . ']';
+		}
+
+		public function post($field = false) {
+			// the only post that matters is the one for this attribute's name space
+			$req = ($this->requestArray == false) ? $_POST : $this->requestArray;
+			if (is_array($req['_bf'])) {
+				$p = $req['_bf'][$this->identifier];
+				if ($field) {
+					return $p[$field];
+				}
+				return $p;
+			}			
+			return parent::post($field);
+		}
+
 		
 		/**
 		 * Automatically run when a block is deleted. This removes the special data from the block's specific database table. If a block needs to do more than this this method should be overridden.
@@ -210,11 +232,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		public function __construct($obj = null) {
 			if ($obj instanceof BlockType) {
-				$this->identifier = 'BLOCKTYPE:' . $obj->getBlockTypeID();
+				$this->identifier = 'BLOCKTYPE_' . $obj->getBlockTypeID();
 				$this->btHandle = $obj->getBlockTypeHandle();
 			} else if ($obj instanceof Block) {
 				$b = $obj;
-				$this->identifier = 'BLOCK:' . $obj->getBlockID();
+				$this->identifier = 'BLOCK_' . $obj->getBlockID();
 			
 				// we either have a blockID passed, or nothing passed, if we're adding a block type				
 				$this->bID = $b->getBlockID();
