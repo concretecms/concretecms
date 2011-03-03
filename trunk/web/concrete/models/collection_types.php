@@ -444,6 +444,26 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		
+		/** 
+		 * Checks to see if the page in question is a valid composer draft for the logged in user
+		 */
+		public static function isValidComposerDraft($entry) {
+			$u = new User();
+			$drafts = Page::getByPath(COMPOSER_DRAFTS_PAGE_PATH);
+			if ($entry->getCollectionParentID() != $drafts->getCollectionID()) {
+				return false;
+			}
+			if ($u->getUserID() != $entry->getCollectionUserID()) {
+				return false;
+			}
+			$cp = new Permissions($entry);
+			if (!$cp->canRead()) {
+				return false;
+			}			
+			return true;
+		}
+		
+		
 		public function getCollectionTypeID() { return $this->ctID; }
 		public function getCollectionTypeName() { return $this->ctName; }
 		public function getCollectionTypeHandle() { return $this->ctHandle; }
@@ -463,6 +483,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function getPackageHandle() {
 			return PackageList::getHandle($this->pkgID);
 		}
-
+	
+		public function getCollectionTypeComposerBlocks() {
+			$pc = Page::getByID($this->getMasterCollectionID());
+			$tblocks = $pc->getBlocks();
+			$blocks = array();
+			foreach($tblocks as $b) {
+				if ($b->isBlockIncludedInComposer()) {
+					$blocks[] = $b;
+				}
+			}
+			return $blocks;
+		}
 	}
 ?>

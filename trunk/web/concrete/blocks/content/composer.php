@@ -1,7 +1,13 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 //$replaceOnUnload = 1;
-$bt->inc('editor_init.php');
-?>
+$class = strtolower('ccm-advanced-editor-' . $controller->getIdentifier());
+Loader::element('editor_init');
+Loader::element('editor_config', array('editor_selector' => $class));
+Loader::element('editor_controls');
 
-<div style="text-align: center"><textarea id="ccm-content-<?=$a->getAreaID()?>" class="advancedEditor ccm-advanced-editor" name="content"></textarea></div>
+$form = Loader::helper('form');
+print $form->textarea($this->field('content'), array(
+	'class' => 'advancedEditor ' . $class
+));
+

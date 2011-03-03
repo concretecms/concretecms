@@ -182,6 +182,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			
 		}
+
+		public function field($fieldName) {
+			return $this->controller->field($fieldName);
+		}
+		
 		
 		/** 
 		 * @access private

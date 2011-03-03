@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?
-if (isset($GLOBALS['CCM_SITEMAP_NODE_NUM'])) {
+if (isset($GLOBALS['CCM_EDITOR_SITEMAP_NODE_NUM'])) {
 	$GLOBALS['CCM_EDITOR_SITEMAP_NODE_NUM']++;
 } else {
 	$GLOBALS['CCM_EDITOR_SITEMAP_NODE_NUM'] = 1;
