@@ -496,3 +496,4 @@ div#ccm-dashboard-composer ol {list-style-type: none; padding-left: 0px;}
 div#ccm-dashboard-composer ol li {margin-bottom: 20px; padding-left: 0px; margin-left: 0px}
 div#ccm-dashboard-composer input.ccm-input-text {width: 100%}
 div#ccm-dashboard-composer textarea {width: 100%; height: 100px}
+div#composer-save-status {position: absolute; top: 5px; right: 5px; font-size: 11px; color: #aaa}

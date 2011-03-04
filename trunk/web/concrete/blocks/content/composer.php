@@ -7,7 +7,7 @@ Loader::element('editor_config', array('editor_selector' => $class));
 Loader::element('editor_controls');
 
 $form = Loader::helper('form');
-print $form->textarea($this->field('content'), array(
+print $form->textarea($this->field('content'), $controller->getContentEditMode(), array(
 	'class' => 'advancedEditor ' . $class
 ));
 

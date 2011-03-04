@@ -48,5 +48,18 @@
     </field>
     <field name="cbFilename" type="C" size="64"/>
   </table>
+  
+  <table name="ComposerDrafts">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cpStatus" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
 
 </schema>

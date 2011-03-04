@@ -1,14 +1,20 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+Loader::model('composer_page');
 class DashboardComposerWriteController extends Controller {
 
 	public $helpers = array('form', 'html');
 	
 	public function save() {
-		$ct = $this->setCollectionType($this->post('ctID'));
-		$this->set('action', 'add');			
-		
 		if ($this->isPost()) {
+			if (intval($this->post('entryID')) > 0) {
+				$entry = ComposerPage::getByID($this->post('entryID'));
+			}
+			
+			if (!is_object($entry)) {
+				$this->error->add(t('Invalid page.'));
+			}
+		
 			$valt = Loader::helper('validation/token');
 			$vtex = Loader::helper('validation/strings');
 			
@@ -33,17 +39,26 @@ class DashboardComposerWriteController extends Controller {
 							$parent = Page::getByID($this->post('cParentID'));
 							break;
 					}
-				} else {
-					$parent = Page::getCurrentPage();
 				}
 				
 				$data = array('cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
-				$p = $parent->add($ct, $data);
-				$this->saveData($p);
+				$entry->update($data);
+				$this->saveData($entry);
+				$entry->markComposerPageAsSaved();
 				if ($this->post('ccm-submit-publish')) {
 					$this->redirect('?cID=' . $p->getCollectionID());
+				} else if ($this->post('autosave')) { 
+					// this is done by javascript. we refresh silently and send a json success back
+					$json = Loader::helper('json');
+					$obj = new stdClass;
+					$dh = Loader::helper('date');
+					$obj->error = false;
+					$obj->time = $dh->getLocalDateTime('now','g:i a');
+					$obj->timestamp =date('m/d/Y g:i a');
+					print $json->encode($obj);
+					exit;
 				} else {
-					$this->redirect('/dashboard/composer/write', 'edit', $p->getCollectionID(), 'saved');
+					$this->redirect('/dashboard/composer/write', 'edit', $entry->getCollectionID(), 'saved');
 				}
 			}
 			
@@ -61,12 +76,7 @@ class DashboardComposerWriteController extends Controller {
 		}
 		
 		if (intval($cID) > 0) {
-			$entry = Page::getByID($cID);
-			if (is_object($entry) && !$entry->isError()) {
-				if (!CollectionType::isValidComposerDraft($entry)) {
-					unset($entry);
-				}
-			}
+			$entry = ComposerPage::getByID($cID);
 		}
 		
 		if (!is_object($entry)) {
@@ -78,13 +88,14 @@ class DashboardComposerWriteController extends Controller {
 			$this->set('name', $entry->getCollectionName());
 			$this->set('description', $entry->getCollectionDescription());
 			$this->set('attribs', $ct->getComposerAttributeKeys());
-			$this->set('blocks', $ct->getCollectionTypeComposerBlocks());
+			$this->set('blocks', $entry->getComposerBlocks());
 		}
 	}
 	
 	protected function saveData($p) {
-		$ct = $this->get('ct');
-		$blocks = $ct->getCollectionTypeComposerBlocks();
+		$ct = CollectionType::getByID($p->getCollectionTypeID());
+		$blocks = $p->getComposerBlocks();
+		
 		// now we grab the instance on the created page
 		foreach($blocks as $b) {
 			$req = $b->getController()->post();
@@ -144,7 +155,9 @@ class DashboardComposerWriteController extends Controller {
 			$this->set('ctArray', $ctArray);
 			//$this->redirect('/dashboard/composer');
 		} else {
-			$this->set('action', 'add');			
+			// create a new page of this type
+			$entry = ComposerPage::createDraft($ct);
+			$this->redirect('/dashboard/composer/write', 'edit', $entry->getCollectionID());
 		}
 	}
 	

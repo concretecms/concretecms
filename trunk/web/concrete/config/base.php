@@ -413,7 +413,7 @@ define('HOME_UID', USER_SUPER_ID);
 define('HOME_HANDLE', "home");
 
 # Composer settings
-define('COMPOSER_DRAFTS_PAGE_PATH', '/dashboard/composer/write');
+define('COMPOSER_DRAFTS_PAGE_PATH', '/dashboard/composer/drafts');
 
 # User avatar constants - should probably be moved into the avatar helper class as avatar constants
 if (!defined('AVATAR_WIDTH') && !defined('AVATAR_HEIGHT')) {
