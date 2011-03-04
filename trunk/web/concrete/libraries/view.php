@@ -775,6 +775,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					include($this->theme);
 					$pageContent = ob_get_contents();
 					ob_end_clean();
+					
+					if (defined("ENABLE_HTML_OPTIMIZATION") && ENABLE_HTML_OPTIMIZATION == true) {
+						// Miser optimiser
+						$o = Loader::helper('html/optimizer');
+						$pageContent = $o->optimise($pageContent);
+					}
+					
 					print $pageContent;
 					
 					if ($view instanceof Page) {
