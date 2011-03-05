@@ -28,6 +28,12 @@ class ConcreteDashboardHelper {
 		return $cp->canRead();
 	}
 	
+	
+	public function canAccessComposer() {
+		$c = Page::getByPath('/dashboard/composer', 'ACTIVE');
+		$cp = new Permissions($c);
+		return $cp->canRead();
+	}
 
 
 	

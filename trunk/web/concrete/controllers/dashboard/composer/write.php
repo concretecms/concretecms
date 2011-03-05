@@ -8,11 +8,13 @@ class DashboardComposerWriteController extends Controller {
 	public function save() {
 		if ($this->isPost()) {
 			if (intval($this->post('entryID')) > 0) {
-				$entry = ComposerPage::getByID($this->post('entryID'));
+				$entry = ComposerPage::getByID($this->post('entryID'), 'RECENT');
 			}
 			
 			if (!is_object($entry)) {
 				$this->error->add(t('Invalid page.'));
+			} else {
+				$ct = CollectionType::getByID($entry->getCollectionTypeID());
 			}
 		
 			$valt = Loader::helper('validation/token');
@@ -26,27 +28,42 @@ class DashboardComposerWriteController extends Controller {
 				if (!$vtex->notempty($this->post('cName'))) {
 					$this->error->add(t('You must provide a name for your page before you can publish it.'));
 				}
+				if (!$entry->isValidComposerDraft()) {
+					$this->error->add(t('This is not a valid composer draft'));
+				}
+				
+				if ($ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE' || $ct->getCollectionTypeComposerPublishMethod() == 'PAGE_TYPE') { 
+					$parent = Page::getByID($this->post('cPublishParentID'));
+					if (!is_object($parent) || $parent->isError()) {
+						$this->error->add(t('Invalid parent page.'));
+					} else {
+						$cp = new Permissions($parent);
+						if (!$cp->canAddSubCollection($ct)) {
+							$this->error->add(t('You do not have permissions to add this page type in that location.'));
+						}
+					}
+				} else if ($ct->getCollectionTypeComposerPublishMethod() == 'PARENT') {
+					$parent = Page::getByID($ct->getCollectionTypeComposerPublishPageParentID());
+				}
+			} else if ($this->post('ccm-submit-discard') && !$this->error->has()) {
+				if ($entry->isValidComposerDraft()) {
+					$entry->delete();
+					$this->redirect('/dashboard/composer/drafts', 'draft_discarded');
+				}
 			}
 			
 			if (!$this->error->has()) {
-				$parent = false;
-				if ($this->post('ccm-submit-publish')) {
-					switch($ct->getCollectionTypeComposerPublishMethod()) {
-						case 'PARENT':
-							$parent = Page::getByID($ct->getCollectionTypeComposerPublishPageParentID());
-							break;
-						default:
-							$parent = Page::getByID($this->post('cParentID'));
-							break;
-					}
-				}
 				
 				$data = array('cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
 				$entry->update($data);
 				$this->saveData($entry);
 				$entry->markComposerPageAsSaved();
 				if ($this->post('ccm-submit-publish')) {
-					$this->redirect('?cID=' . $p->getCollectionID());
+					$entry->move($parent);
+					$v = CollectionVersion::get($entry, 'RECENT');
+					$v->approve();
+					$entry->markComposerPageAsPublished();
+					$this->redirect('?cID=' . $entry->getCollectionID());
 				} else if ($this->post('autosave')) { 
 					// this is done by javascript. we refresh silently and send a json success back
 					$json = Loader::helper('json');
@@ -60,6 +77,8 @@ class DashboardComposerWriteController extends Controller {
 				} else {
 					$this->redirect('/dashboard/composer/write', 'edit', $entry->getCollectionID(), 'saved');
 				}
+			} else if (is_object($entry)) {
+				$this->edit($entry->getCollectionID());
 			}
 			
 		} else {
@@ -76,7 +95,7 @@ class DashboardComposerWriteController extends Controller {
 		}
 		
 		if (intval($cID) > 0) {
-			$entry = ComposerPage::getByID($cID);
+			$entry = ComposerPage::getByID($cID, 'RECENT');
 		}
 		
 		if (!is_object($entry)) {

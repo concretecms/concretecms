@@ -1,1 +1,36 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<h1><span><?=t('Drafts')?></h1>
+<div class="ccm-dashboard-inner">
+<? 
+$today = Loader::helper('date')->getLocalDateTime('now', 'Y-m-d');
+if (count($drafts) > 0) { ?>
+
+<table class="ccm-results-list">
+<tr>
+	<th width="60%"><?=t('Page Name')?></th>
+	<th width="20%"><?=t('Page Type')?></th>
+	<th width="20%"><?=t('Last Modified')?></th>
+</tr>
+<? foreach($drafts as $dr) { ?>
+<tr>
+	<td><a href="<?=$this->url('/dashboard/composer/write', 'edit', $dr->getCollectionID())?>"><? if (!$dr->getCollectionName()) {
+		print t('(Untitled Page)');
+	} else {
+		print $dr->getCollectionName();
+	} ?></a></td>
+	<td><?=$dr->getCollectionTypeName()?></td>
+	<td><?
+		$mask = 'F jS Y - g:i a';
+		if ($today == $dr->getCollectionDateLastModified("Y-m-d")) {
+			$mask = 'g:i a';
+		}
+		print $dr->getCollectionDateLastModified($mask)?></td>
+<? } ?>
+</table>
+
+<? } else { ?>
+	
+	<p><?=t('You have not created any drafts. <a href="%s">Visit Composer &gt;</a>', $this->url('/dashboard/composer/write'))?></p>
+
+<? } ?>
+</div>

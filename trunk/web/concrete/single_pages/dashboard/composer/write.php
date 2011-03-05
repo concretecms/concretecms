@@ -66,8 +66,12 @@
 	<? } ?>
 
 		<?=Loader::helper('concrete/interface')->submit(t('Save Draft'), 'save', 'left')?>
+		<? if ($entry->getComposerPageStatus() < ComposerPage::COMPOSER_PAGE_STATUS_PUBLISHED) { ?>
+			<?=Loader::helper('concrete/interface')->submit(t('Discard Draft'), 'discard', 'left')?>
+		<? } ?>
 		<?=Loader::helper('concrete/interface')->submit(t('Publish Page'), 'publish')?>
 		<?=$form->hidden('entryID', $entry->getCollectionID())?>
+		<input type="hidden" name="cPublishParentID" value="0" />
 		<?=$form->hidden('autosave', 0)?>
 		<?=Loader::helper('validation/token')->output('composer')?>
 		<div class="ccm-spacer">&nbsp;</div>
@@ -85,6 +89,10 @@
 	ccm_composerCheckAutoSave = function() {
 		if (ccm_composerDoAutoSave) {
 			$('input[name=autosave]').val('1');
+			try {
+				tinyMCE.triggerSave(true, true);
+			} catch(e) { }
+			
 			$('#ccm-dashboard-composer-form').ajaxSubmit({
 				'dataType': 'json',
 				'success': function(r) {
@@ -104,10 +112,47 @@
 			}
 		}
 	}
+	
+	ccm_composerSelectParentPageAndSubmit = function(cID) {
+	 	$("input[name=cPublishParentID]").val(cID);
+	 	$("input[name=ccm-submit-publish]").click();
+	}
 		
 	$(function() {
 		var ccm_composerAutoSaveIntervalTimeout = 5000;
+		var ccm_composerIsPublishClicked = false;
 		
+		$("#ccm-submit-discard").click(function() {
+			return (confirm('<?=t("Discard this draft?")?>'));
+		});
+		
+		$("#ccm-submit-publish").click(function() {
+			ccm_composerIsPublishClicked = true;
+		});
+		
+		$("#ccm-dashboard-composer-form").submit(function() {
+			if ($("input[name=cPublishParentID]").val() > 0) {
+				return true;
+			}
+			if (ccm_composerIsPublishClicked) {
+				ccm_composerIsPublishClicked = false;			
+
+				<? if ($ct->getCollectionTypeComposerPublishMethod() == 'PAGE_TYPE' || $ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE') { ?>
+					jQuery.fn.dialog.open({
+						title: '<?=t("Publish Page")?>',
+						href: CCM_TOOLS_PATH + '/composer_target?cID=<?=$entry->getCollectionID()?>',
+						width: '550',
+						modal: false,
+						height: '400'
+					});
+					return false;
+				<? } else if ($ct->getCollectionTypeComposerPublishMethod() == 'PARENT') { ?>
+					return true;				
+				<? } else { ?>
+					return false;
+				<? } ?>
+			}
+		});
 		// don't start the auto-save until something changes
 		$("input, textarea, select").change(function() {
 			if (!ccm_composerAutoSaveStarted) {
