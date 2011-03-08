@@ -60,11 +60,14 @@ if (isset($entry)) { ?>
 	
 	<? } ?>
 
-		<?=Loader::helper('concrete/interface')->submit(t('Save Draft'), 'save', 'left')?>
 		<? if ($entry->getComposerPageStatus() < ComposerPage::COMPOSER_PAGE_STATUS_PUBLISHED) { ?>
-			<?=Loader::helper('concrete/interface')->submit(t('Discard Draft'), 'discard', 'left')?>
+			<?=Loader::helper('concrete/interface')->submit(t('Save'), 'save', 'left')?>
+			<?=Loader::helper('concrete/interface')->submit(t('Discard'), 'discard', 'left')?>
+			<?=Loader::helper('concrete/interface')->button_js(t('Preview'), 'javascript:ccm_composerLaunchPreview()', 'left')?>
+			<?=Loader::helper('concrete/interface')->submit(t('Publish Page'), 'publish')?>
+		<? } else { ?>
+			<?=Loader::helper('concrete/interface')->submit(t('Update'), 'publish')?>
 		<? } ?>
-		<?=Loader::helper('concrete/interface')->submit(t('Publish Page'), 'publish')?>
 		<?=$form->hidden('entryID', $entry->getCollectionID())?>
 		<input type="hidden" name="cPublishParentID" value="0" />
 		<?=$form->hidden('autosave', 0)?>
@@ -75,37 +78,27 @@ if (isset($entry)) { ?>
 	</form>
 
 	<script type="text/javascript">
-	var ccm_composerAutoSaveStarted = false;
 	var ccm_composerAutoSaveInterval = false;
-	var ccm_composerDoAutoSave = false;
-	var ccm_composerMaxSecondsSinceSave = 10;
-	var ccm_composerLastSaveTime = new Date("<?=date('m/d/Y g:i:s a')?>");
 	
-	ccm_composerCheckAutoSave = function() {
-		if (ccm_composerDoAutoSave) {
-			$('input[name=autosave]').val('1');
-			try {
-				tinyMCE.triggerSave(true, true);
-			} catch(e) { }
-			
-			$('#ccm-dashboard-composer-form').ajaxSubmit({
-				'dataType': 'json',
-				'success': function(r) {
-					ccm_composerLastSaveTime = new Date();
-					$("#composer-save-status").html('<?=t("Page saved at ")?>' + r.time)
-				}
-			});
-			$('input[name=autosave]').val('0');
-			ccm_composerDoAutoSave = false;
-		} else {
-			
-			// first check - has it been longer than X seconds since last save
-			var ms = ccm_composerMaxSecondsSinceSave * 1000;
-			var secondsSinceLastSave = (new Date() - ccm_composerLastSaveTime);
-			if (ms < secondsSinceLastSave) {
-				ccm_composerDoAutoSave = true;
+	ccm_composerDoAutoSave = function() {
+		$('input[name=autosave]').val('1');
+		try {
+			tinyMCE.triggerSave(true, true);
+		} catch(e) { }
+		
+		$('#ccm-dashboard-composer-form').ajaxSubmit({
+			'dataType': 'json',
+			'success': function(r) {
+				ccm_composerLastSaveTime = new Date();
+				$("#composer-save-status").html('<?=t("Page saved at ")?>' + r.time)
 			}
-		}
+		});
+		$('input[name=autosave]').val('0');
+	}
+	
+	ccm_composerLaunchPreview = function() {
+		<? $t = PageTheme::getSiteTheme(); ?>
+		ccm_previewInternalTheme(<?=$entry->getCollectionID()?>, <?=$t->getThemeID()?>, '<?=addslashes(str_replace(array("\r","\n","\n"),'',$t->getThemeName()))?>');
 	}
 	
 	ccm_composerSelectParentPageAndSubmit = function(cID) {
@@ -128,7 +121,7 @@ if (isset($entry)) { ?>
 	}
 	
 	$(function() {
-		var ccm_composerAutoSaveIntervalTimeout = 5000;
+		var ccm_composerAutoSaveIntervalTimeout = 7000;
 		var ccm_composerIsPublishClicked = false;
 		
 		$("#ccm-submit-discard").click(function() {
@@ -162,15 +155,12 @@ if (isset($entry)) { ?>
 				<? } ?>
 			}
 		});
-		// don't start the auto-save until something changes
-		$("input, textarea, select").change(function() {
-			if (!ccm_composerAutoSaveStarted) {
-				ccm_composerAutoSaveInterval = setInterval(function() {
-					ccm_composerCheckAutoSave();
-				}, ccm_composerAutoSaveIntervalTimeout);
-			}
-			ccm_composerAutoSaveStarted = true;
-		});
+
+		ccm_composerAutoSaveInterval = setInterval(function() {
+			ccm_composerDoAutoSave();
+		}, 
+		ccm_composerAutoSaveIntervalTimeout);
+		
 	});
 	</script>
 	

@@ -269,14 +269,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					}
 					
 					if ($view == 'composer') {
+						$displayEditLink = true;
 						$header = DIR_FILES_ELEMENTS_CORE . '/block_header_composer.php';
 						$footer = DIR_FILES_ELEMENTS_CORE . '/block_footer_composer.php';
-						$cmpbase = $this->getBlockPath(FILENAME_BLOCK_COMPOSER);
-						if (file_exists($cmpbase . '/' . FILENAME_BLOCK_COMPOSER)) {
-							$template = $base . '/' . FILENAME_BLOCK_COMPOSER;
-							$displayEditLink = false;
-						} else {
-							$displayEditLink = true;
+						$cpFilename = $obj->getBlockComposerFilename();
+						if ($cpFilename) {
+							$cmpbase = $this->getBlockPath(DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $cpFilename);
+							if (file_exists($cmpbase . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $cpFilename)) {
+								$template = $base . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $cpFilename;
+								$displayEditLink = false;
+							}
+						}
+						
+						if ($displayEditLink) {
+							$cmpbase = $this->getBlockPath(FILENAME_BLOCK_COMPOSER);
+							if (file_exists($cmpbase . '/' . FILENAME_BLOCK_COMPOSER)) {
+								$template = $base . '/' . FILENAME_BLOCK_COMPOSER;
+								$displayEditLink = false;
+							}
 						}
 						
 					} else {
