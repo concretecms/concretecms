@@ -1,6 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? if (isset($entry)) { ?>
+<?
+if (isset($entry)) { ?>
 
 	<form method="post" enctype="multipart/form-data" action="<?=$this->action('save')?>" id="ccm-dashboard-composer-form">
 	
@@ -41,23 +42,17 @@
 	?>
 	
 		<h2><?=t('Content')?></h2>
-	<ol>
+	<ol id="ccm-composer-block-list">
 	<? foreach($blocks as $b) { ?>
-		<li><? if ($b->getBlockName() != '') { ?>
-			<h3><?=$b->getBlockName()?></h3>
-		<? } else {
-			$btName = $b->getBlockTypeName();
-		?>
-		
-			<h3><?=$btName?></h3>
-		
-		<? } ?>
+		<li>
 		
 		<?
 		$bv = new BlockView();
 		$bv->render($b, 'composer');
 		?>
-	
+		
+		</li>
+		
 	<? } ?>
 	
 	</ol>
@@ -118,6 +113,20 @@
 	 	$("input[name=ccm-submit-publish]").click();
 	}
 		
+		
+	ccm_composerEditBlock = function(cID, bID, arHandle, w, h) {
+		if(!w) w=550;
+		if(!h) h=380; 
+		var editBlockURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED ?>/edit_block_popup';
+		$.fn.dialog.open({
+			title: ccmi18n.editBlock,
+			href: editBlockURL+'?cID='+cID+'&bID='+bID+'&arHandle=' + encodeURIComponent(arHandle) + '&btask=edit',
+			width: w,
+			modal: false,
+			height: h
+		});		
+	}
+	
 	$(function() {
 		var ccm_composerAutoSaveIntervalTimeout = 5000;
 		var ccm_composerIsPublishClicked = false;

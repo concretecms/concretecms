@@ -278,7 +278,12 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 			if (resp.isGlobalBlock == true) {
 				isGlobal = 1;
 			}
-			var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&isGlobal=' + isGlobal + '&bID=' + resp.bID + '&arHandle=' + encodeURIComponent(resp.arHandle) + '&btask=view_edit_mode';	 
+			if (resp.cID) {
+				cID = resp.cID; 
+			} else {
+				cID = CCM_CID;
+			}
+			var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + cID + '&isGlobal=' + isGlobal + '&bID=' + resp.bID + '&arHandle=' + encodeURIComponent(resp.arHandle) + '&btask=view_edit_mode';	 
 			$.get(action, 		
 				function(r) { 
 					if ($("#ccm-scrapbook-list").length > 0) {

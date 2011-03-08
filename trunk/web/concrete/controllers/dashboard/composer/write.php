@@ -119,15 +119,8 @@ class DashboardComposerWriteController extends Controller {
 		foreach($blocks as $b) {
 			$req = $b->getController()->post();
 			$b2 = Block::getByID($b->getBlockID(), $p, $b->getAreaHandle());
-			if ($b2->isAlias()) {
-				$nb = $b2->duplicate($p);
-				$b2->deleteBlock();
-				$b2 = $nb;
-			}
-					
-			// we can update the block that we're submitting
 			$b2->update($req);
-		}					
+		}
 				
 		Loader::model("attribute/categories/collection");
 		$aks = $ct->getComposerAttributeKeys();
