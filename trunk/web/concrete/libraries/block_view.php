@@ -242,7 +242,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}
 			
-			if (!in_array($view, array('view', 'add', 'edit', 'scrapbook'))) {
+			if (!in_array($view, array('composer','view', 'add', 'edit', 'scrapbook'))) {
 				// then we're trying to render a custom view file, which we'll pass to the bottom functions as $_filename
 				$_filename = $view . '.php';
 				$view = 'view';
@@ -253,6 +253,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$header = DIR_FILES_ELEMENTS_CORE . '/block_header_view.php';
 					$footer = DIR_FILES_ELEMENTS_CORE . '/block_footer_view.php';										
 					break;
+				case 'composer':
 				case 'view':				
 					if (!$outputContent) {
 						if (!isset($_filename)) {
@@ -266,8 +267,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						}
 						$template = $bvt->getTemplate();
 					}
-					$header = DIR_FILES_ELEMENTS_CORE . '/block_header_view.php';
-					$footer = DIR_FILES_ELEMENTS_CORE . '/block_footer_view.php';										
+					
+					if ($view == 'composer') {
+						$header = DIR_FILES_ELEMENTS_CORE . '/block_header_composer.php';
+						$footer = DIR_FILES_ELEMENTS_CORE . '/block_footer_composer.php';
+						$cmpbase = $this->getBlockPath(FILENAME_BLOCK_COMPOSER);
+						if (file_exists($cmpbase . '/' . FILENAME_BLOCK_COMPOSER)) {
+							$template = $base . '/' . FILENAME_BLOCK_COMPOSER;
+							$displayEditLink = false;
+						} else {
+							$displayEditLink = true;
+						}
+						
+					} else {
+						$header = DIR_FILES_ELEMENTS_CORE . '/block_header_view.php';
+						$footer = DIR_FILES_ELEMENTS_CORE . '/block_footer_view.php';										
+					}
 					break;
 				case 'add':
 					if (!isset($_filename)) {

@@ -79,7 +79,7 @@ class Block extends Object {
 		$b = new Block;
 		if ($c == null && $a == null) {
 			// just grab really specific block stuff
-			$q = "select bID, bIsActive, BlockTypes.btID, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
+			$q = "select bID, bIsActive, BlockTypes.btID, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, cbFilename, bIncludeInComposer, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
 			$b->isOriginal = 1;
 			$v = array($bID);				
 		} else {
@@ -94,7 +94,7 @@ class Block extends Object {
 
 			$v = array($b->arHandle, $cID, $cvID, $bID);
 			$q = "select CollectionVersionBlocks.isOriginal, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbDisplayOrder,
-			Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID)
+			Blocks.bIsActive, Blocks.bID, Blocks.btID, cbFilename, bIncludeInComposer, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID)
 			inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
 		
 		}
@@ -209,13 +209,6 @@ class Block extends Object {
 		}
 		
 		$c = $this->getBlockCollectionObject();
-		if ($c->isMasterCollection()) {
-			$row = $db->GetRow('select cbFilename, bID from ComposerDefaultBlocks where cID = ? and bID = ?', array($c->getCollectionID(), $this->getBlockID()));
-			if (is_array($row) && $row['bID'] > 0) {
-				$this->bIncludeInComposer = true;
-				$this->cbFilename = $row['cbFilename'];
-			}
-		}
 		return 0;
 	}
 
@@ -468,8 +461,8 @@ class Block extends Object {
 		if(!$bc) return false;
 					
 		$bDate = $dh->getSystemDateTime();
-		$v = array($this->bName, $bDate, $bDate, $this->bFilename, $this->btID, $this->uID);
-		$q = "insert into Blocks (bName, bDateAdded, bDateModified, bFilename, btID, uID) values (?, ?, ?, ?, ?, ?)";
+		$v = array($this->bName, $bDate, $bDate, $this->bFilename, $this->bIncludeInComposer, $this->cbFilename, $this->btID, $this->uID);
+		$q = "insert into Blocks (bName, bDateAdded, bDateModified, bFilename, bIncludeInComposer, cbFilename, btID, uID) values (?, ?, ?, ?, ?, ?, ?, ?)";
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 		$newBID = $db->Insert_ID(); // this is the latest inserted block ID
@@ -1101,13 +1094,10 @@ class Block extends Object {
 		if (isset($data['cbFilename'])) {
 			$cbFilename = $data['cbFilename'];
 		}
-
-		$db->Execute('delete from ComposerDefaultBlocks where cID = ? and bID = ?', array($this->getBlockCollectionID(), $this->getBlockID()));
-		if ($data['bIncludeInComposer']) {
-			$db->Execute('insert into ComposerDefaultBlocks (bID, cID, cbFilename) values (?, ?, ?)', array(
-				$this->getBlockID(), $this->getBlockCollectionID(), $cbFilename	
-			));
-		}
+		
+		$db->Execute('update Blocks set cbFilename = ?, bIncludeInComposer = ? where bID = ?', array(
+			$cbFilename, $data['bIncludeInComposer'], $this->getBlockID()
+		));
 		$this->refreshCache();
 		
 	}

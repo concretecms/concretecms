@@ -18,9 +18,21 @@ class ComposerPage extends Page {
 		$parent = Page::getByPath(COMPOSER_DRAFTS_PAGE_PATH);
 		$data['cvIsApproved'] = 0;
 		$p = $parent->add($ct, $data);
+				
 		$db = Loader::db();
 		$db->Execute('insert into ComposerDrafts (cID, cpStatus) values (?, ?)', array($p->getCollectionID(), self::COMPOSER_PAGE_STATUS_NEW));
-		return ComposerPage::getByID($p->getCollectionID());
+		$entry = ComposerPage::getByID($p->getCollectionID());
+
+		// duplicate all composer blocks onto the new page and make them into new blocks
+		$blocks = $entry->getComposerBlocks();
+		foreach($blocks as $b) {
+			$b2 = Block::getByID($b->getBlockID(), $p, $b->getAreaHandle());
+			$nb = $b2->duplicate($p);
+			$b2->deleteBlock();
+			$b2 = $nb;
+		}					
+		
+		return $entry;		
 	}
 	
 	public function getComposerPageStatus() {
@@ -80,7 +92,33 @@ class ComposerPage extends Page {
 	}
 	
 	public function getComposerBlocks() {
-		// if the page is new and hasn't been saved, we get them directly from the master collection
+		$tblocks = $this->getBlocks();
+		$blocks = array();
+		foreach($tblocks as $b) {
+			if ($b->isBlockIncludedInComposer()) {
+				$blocks[] = $b;
+			}
+		}
+		return $blocks;
+
+		/*
+		// all this stuff is old
+		$blocks = array();
+		$ct = CollectionType::getByID($this->getCollectionTypeID());
+		$dfBlocks = $ct->getCollectionTypeComposerBlocks();
+		$db = Loader::db();
+		foreach($dfBlocks as $dfb) {
+			// now we check to see if there's a newer version on this page. If there is we grab it.
+			$bRow = $db->GetRow('select cvb.bID, cvb.arHandle from CollectionVersionBlocks cvb inner join BlockRelations br on (cvb.bID = br.bID) inner join ComposerDefaultBlocks cdb on cdb.bID = br.originalBID where cvb.cID = ? and cvb.cvID = ? and originalBID = ?', array($this->getCollectionID(), $this->getVersionID(), $dfb->getBlockID()));
+			if (is_array($bRow) && $bRow['bID']) {
+				$b = Block::getByID($bRow['bID'], $this, $bRow['arHandle']);
+			} else {
+				$b = $dfb;
+			}
+			if (is_object($b)) {
+				$blocks[] = $b;
+			}
+		}
 		if ($this->cpStatus == self::COMPOSER_PAGE_STATUS_NEW) {
 			$ct = CollectionType::getByID($this->getCollectionTypeID());
 			return $ct->getCollectionTypeComposerBlocks();
@@ -98,7 +136,9 @@ class ComposerPage extends Page {
 				}
 			}
 			return $blocks;
-		}
+		}*/
+		
+		return $blocks;
 	}
 	
 	public static function getByID($cID, $cvID = 'RECENT') {

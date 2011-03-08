@@ -320,7 +320,13 @@
     <field name="uID" type="I" size="10">
       <UNSIGNED/>
     </field>
-  </table>
+    <field name="bIncludeInComposer" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cbFilename" type="C" size="128"/>
+  </table> 
   <table name="CollectionAttributeValues">
     <field name="cID" type="I" size="10">
       <KEY/>

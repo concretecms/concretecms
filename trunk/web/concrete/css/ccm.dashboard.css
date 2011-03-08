@@ -497,3 +497,7 @@ div#ccm-dashboard-composer ol li {margin-bottom: 20px; padding-left: 0px; margin
 div#ccm-dashboard-composer input.ccm-input-text {width: 100%}
 div#ccm-dashboard-composer textarea {width: 100%; height: 100px}
 div#composer-save-status {position: absolute; top: 5px; right: 5px; font-size: 11px; color: #aaa}
+
+div#ccm-dashboard-composer .ccm-block-type .options { float:right; padding:8px }
+div#ccm-dashboard-composer .ccm-block-type-inner{ border:1px solid #e1e1e1; background-color:#f6f6f6; padding-left:8px; margin-bottom: 16px;}
+div#ccm-dashboard-composer .ccm-block-type-inner .ccm-block-type-inner-icon {width:16px; height:16px; margin-right:8px; float:left; cursor:move}

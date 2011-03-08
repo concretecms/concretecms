@@ -16,10 +16,6 @@ if (!ENABLE_CACHE) {
 	Cache::disableCache();
 }
 
-if (!defined('ENABLE_HTML_OPTIMIZATION')) {
-	Config::getOrDefine('ENABLE_HTML_OPTIMIZATION', false); 
-}
-
 if (ENABLE_CACHE) {
 	Config::getOrDefine('FULL_PAGE_CACHE_GLOBAL', 'blocks');	
 }
