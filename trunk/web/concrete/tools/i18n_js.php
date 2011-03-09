@@ -84,6 +84,7 @@ var ccmi18n_sitemap = {
 	reorderPage: "<?=t('Change Page Order')?>",
 	reorderPageMessage: "<?=t('Move or reorder pages by dragging their icons.')?>",
 	moveCopyPageMessage: "<?=t('Choose a new parent page from the sitemap.')?>",
+	editInComposer: "<?=t('Edit in Composer')?>",
 	
 	searchPages: "<?=t('Search Pages')?>",
 	explorePages: "<?=t('Flat View')?>",
