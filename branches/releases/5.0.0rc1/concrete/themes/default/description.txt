@@ -1,2 +1,0 @@
-Plain Yogurt
-Plain Yogurt is Concrete's default theme.

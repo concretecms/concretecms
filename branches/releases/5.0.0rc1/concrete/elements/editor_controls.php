@@ -1,8 +1,0 @@
-<div class="ccm-editor-controls">
-<ul>
-<li><a class="ccm-launch-al" onclick="ccm_editorCurrentAuxTool='image'; setBookMark();" href="#">Add Image</a></li>
-<li><a class="ccm-launch-al" onclick="ccm_editorCurrentAuxTool='file'; setBookMark();" href="#">Add File</a></li>
-<li><a href="<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay.php?sitemap_mode=select_page" onclick="setBookMark();" class="dialog-launch" dialog-modal="false" >Insert Link to Page</a></li>
-</ul>
-</div>
-<div class="ccm-spacer">&nbsp;</div>
