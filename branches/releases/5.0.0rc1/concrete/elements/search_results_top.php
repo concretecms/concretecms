@@ -1,1 +1,0 @@
-<div class="ccm-paging-top">Viewing <b><?php echo $pOptions['currentRangeStart']?></b> to <b><span id="pagingPageResults"><?php echo $pOptions['currentRangeEnd']?></span></b> (<b><span id="pagingTotalResults"><?php echo $pOptions['total']?></span></b> Total)</div>
