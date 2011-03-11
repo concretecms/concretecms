@@ -3,10 +3,10 @@
 <? 
 
 $installErrorMsg = t('Unable to Install. Not all required items are available.');
-$introMsg = t('To install Concrete, please fill out the form below.');
+$introMsg = t('To install concrete5, please fill out the form below.');
 if (isset($message)) { ?>
 
-<h1><?=t('Install Concrete')?></h1>
+<h1><?=t('Install concrete5')?></h1>
 
 <div class="ccm-form">
 <?=$message?>
@@ -66,7 +66,7 @@ $(function() {
 
 <div id="ccm-install-intro">
 
-<h1><?=t('Install Concrete')?></h1>
+<h1><?=t('Install concrete5')?></h1>
 	
 </div>
 
@@ -98,19 +98,19 @@ $(function() {
 <div class="test loading" id="ccm-test-urls"><?=t('Support for C5 Request URLs')?>
 
 <a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
-<div class="ccm-install-info"><?=t('Concrete cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.')?></div>
+<div class="ccm-install-info"><?=t('concrete5 cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.')?></div>
 
 </div>
 <div class="test <? if ($imageTest) { ?>passed<? } else { ?>fail<? } ?>"><?=t('Image Manipulation Available')?>
 
 <a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
-<div class="ccm-install-info"><?=t('Concrete requires GD library 2.0.1 or greater.')?></div>
+<div class="ccm-install-info"><?=t('concrete5 requires GD library 2.0.1 or greater.')?></div>
 
 </div>
 <div class="test <? if ($xmlTest) { ?>passed<? } else { ?>fail<? } ?>"><?=t('XML Support')?>
 
 <a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
-<div class="ccm-install-info"><?=t('Concrete requires PHP XML Parser and SimpleXML extensions.')?></div>
+<div class="ccm-install-info"><?=t('concrete5 requires PHP XML Parser and SimpleXML extensions.')?></div>
 
 </div>
 
@@ -196,7 +196,7 @@ $(function() {
 	<br/>
 	
 	<div class="ccm-button">
-	<?=$form->submit('submit', t('Install Concrete').' &gt;', array('disabled'=> 1))?>
+	<?=$form->submit('submit', t('Install concrete5').' &gt;', array('disabled'=> 1))?>
 	</div>
 	<br/><br/>
 

@@ -62,6 +62,7 @@
 	Loader::model('block_types');
 	Loader::model('collection');
 	Loader::model('collection_version');
+	Loader::model('collection_types');
 	Loader::model('config');
 	Loader::model('groups');
 	Loader::model('layout');  
