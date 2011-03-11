@@ -118,7 +118,10 @@ INSERT INTO CollectionVersions VALUES(2,1,NULL,NULL,NULL,NOW(),NOW(),'Initial Ve
  ,(54,1,'Marketplace','marketplace',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(55,1,'Download File','download_file',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(63,1,NULL,'uID=1',NULL,NOW(),NOW(),'Initial Version',1,0,NULL,NULL,NULL)
- ,(64,1,'Members','members',NULL,'2010-10-01 16:04:12','2010-10-01 16:04:12','Initial Version',1,0,1,NULL,NULL);
+ ,(64,1,'Members','members',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(75,1,'Composer','composer','Write for your site',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(76,1,'Write','write',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(77,1,'Drafts','drafts',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL);
 
 
 INSERT INTO Collections VALUES(1,NOW(),NOW(),'home')
@@ -173,7 +176,10 @@ INSERT INTO Collections VALUES(1,NOW(),NOW(),'home')
  ,(54,NOW(),NOW(),'marketplace')
  ,(55,NOW(),NOW(),'download_file')
  ,(63,NOW(),NOW(),'uID=1')
- ,(64,NOW(),NOW(),'members');
+ ,(64,NOW(),NOW(),'members')
+ ,(75,NOW(),NOW(),'composer')
+ ,(76,NOW(),NOW(),'write')
+ ,(77,NOW(),NOW(),'drafts');
 
 INSERT INTO Config VALUES('SITE',NOW(),'{[CCM:SITE]}',0,0);
 
@@ -252,7 +258,11 @@ INSERT INTO PagePaths VALUES(1,5,'/login','1')
  ,(49,53,'/dashboard/settings/mail','1')
  ,(50,54,'/dashboard/settings/marketplace','1')
  ,(51,55,'/download_file','1')
- ,(52,64,'/members','1');
+ ,(52,64,'/members','1')
+ ,(69,75,'/dashboard/composer','1')
+ ,(70,76,'/dashboard/composer/write','1')
+ ,(71,77,'/dashboard/composer/drafts','1');
+
 
 INSERT INTO PagePermissions VALUES(5,1,0,'r',NULL,NULL)
  ,(5,2,0,'r',NULL,NULL)
@@ -285,28 +295,29 @@ INSERT INTO Pages VALUES(1,1,'0',1,1,1,NOW(),NOW(),NULL,NOW(),NULL,NULL,1,1,'OVE
 ,(13,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/page_not_found.php',0,NULL,0,0,4,1,0,1,-1,'0',0)
 ,(14,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/page_forbidden.php',0,NULL,0,0,5,1,0,1,-1,'0',0)
 ,(15,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'OVERRIDE','/dashboard/view.php',0,NULL,0,9,6,1,0,0,-1,'0',0)
-,(16,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/sitemap/view.php',0,NULL,0,4,0,15,0,0,-1,'0',0)
+,(75,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/composer/view.php',0,NULL,0,2,0,15,0,0,-1,'0',0)
+,(16,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/sitemap/view.php',0,NULL,0,4,1,15,0,0,-1,'0',0)
 ,(17,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/sitemap/full.php',0,NULL,0,0,0,16,0,0,-1,'0',0)
 ,(18,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/sitemap/explore.php',0,NULL,0,0,1,16,0,0,-1,'0',0)
 ,(19,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/sitemap/search.php',0,NULL,0,0,2,16,0,0,-1,'0',0)
 ,(20,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/sitemap/access.php',0,NULL,0,0,3,16,0,0,-1,'0',0)
-,(21,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/files/view.php',0,NULL,0,4,1,15,0,0,-1,'0',0)
+,(21,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/files/view.php',0,NULL,0,4,2,15,0,0,-1,'0',0)
 ,(22,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/files/search.php',0,NULL,0,0,0,21,0,0,-1,'0',0)
 ,(23,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/files/attributes.php',0,NULL,0,0,1,21,0,0,-1,'0',0)
 ,(24,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/files/sets.php',0,NULL,0,0,2,21,0,0,-1,'0',0)
 ,(25,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/files/access.php',0,NULL,0,0,3,21,0,0,-1,'0',0)
-,(26,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/reports.php',0,NULL,0,3,2,15,0,0,-1,'0',0)
+,(26,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/reports.php',0,NULL,0,3,3,15,0,0,-1,'0',0)
 ,(27,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/reports/forms.php',0,NULL,0,0,0,26,0,0,-1,'0',0)
 ,(28,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/reports/surveys.php',0,NULL,0,0,1,26,0,0,-1,'0',0)
 ,(29,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/reports/logs.php',0,NULL,0,0,2,26,0,0,-1,'0',0)
-,(30,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/users/view.php',0,NULL,0,5,3,15,0,0,-1,'0',0)
+,(30,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/users/view.php',0,NULL,0,5,4,15,0,0,-1,'0',0)
 ,(31,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/users/search.php',0,NULL,0,0,0,30,0,0,-1,'0',0)
 ,(32,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/users/add.php',0,NULL,0,0,1,30,0,0,-1,'0',0)
 ,(33,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/users/groups.php',0,NULL,0,0,2,30,0,0,-1,'0',0)
 ,(34,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/users/attributes.php',0,NULL,0,0,3,30,0,0,-1,'0',0)
 ,(35,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/users/registration.php',0,NULL,0,0,4,30,0,0,-1,'0',0)
-,(36,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/scrapbook/view.php',0,NULL,0,0,4,15,0,0,-1,'0',0)
-,(37,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/pages/view.php',0,NULL,0,4,5,15,0,0,-1,'0',0)
+,(36,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/scrapbook/view.php',0,NULL,0,0,5,15,0,0,-1,'0',0)
+,(37,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/pages/view.php',0,NULL,0,4,6,15,0,0,-1,'0',0)
 ,(38,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/pages/themes/view.php',0,NULL,0,4,0,37,0,0,-1,'0',0)
 ,(39,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/pages/themes/add.php',0,NULL,0,0,0,38,0,0,-1,'0',0)
 ,(40,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/pages/themes/inspect.php',0,NULL,0,0,1,38,0,0,-1,'0',0)
@@ -314,18 +325,20 @@ INSERT INTO Pages VALUES(1,1,'0',1,1,1,NOW(),NOW(),NULL,NOW(),NULL,NULL,1,1,'OVE
 ,(43,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/pages/types/view.php',0,NULL,0,0,1,37,0,0,-1,'0',0)
 ,(44,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/pages/attributes.php',0,NULL,0,0,2,37,0,0,-1,'0',0)
 ,(45,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/pages/single.php',0,NULL,0,0,3,37,0,0,-1,'0',0)
-,(46,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/install.php',0,NULL,0,0,6,15,0,0,-1,'0',0)
-,(47,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/system/view.php',0,NULL,0,4,7,15,0,0,-1,'0',0)
+,(46,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/install.php',0,NULL,0,0,7,15,0,0,-1,'0',0)
+,(47,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/system/view.php',0,NULL,0,4,8,15,0,0,-1,'0',0)
 ,(48,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/system/jobs.php',0,NULL,0,0,0,47,0,0,-1,'0',0)
 ,(49,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/system/backup.php',0,NULL,0,0,1,47,0,0,-1,'0',0)
 ,(50,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/system/update.php',0,NULL,0,0,2,47,0,0,-1,'0',0)
 ,(51,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/system/notifications.php',0,NULL,0,0,3,47,0,0,-1,'0',0)
-,(52,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/view.php',0,NULL,0,2,8,15,0,0,-1,'0',0)
+,(52,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/view.php',0,NULL,0,2,9,15,0,0,-1,'0',0)
 ,(53,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/mail/view.php',0,NULL,0,0,0,52,0,0,-1,'0',0)
 ,(54,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/marketplace.php',0,NULL,0,0,1,52,0,0,-1,'0',0)
 ,(55,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/download_file.php',0,NULL,0,0,7,1,0,0,-1,'0',0)
-,(64,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/members.php',0,NULL,0,0,7,1,0,0,-1,'0',0);
-
+,(64,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/members.php',0,NULL,0,0,7,1,0,0,-1,'0',0)
+,(76,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/composer/write.php',0,NULL,0,0,0,75,0,0,-1,'0',0)
+,(77,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/composer/drafts.php',0,NULL,0,0,1,75,0,0,-1,'0',0);
+ 
 
 INSERT INTO TaskPermissions VALUES(1,'access_task_permissions','Change Task Permissions','',0)
 ,(2,'access_sitemap','Access Sitemap and Page Search','',0)

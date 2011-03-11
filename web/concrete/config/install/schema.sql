@@ -125,6 +125,8 @@ bFilename                VARCHAR(32),
 bIsActive                VARCHAR(1) NOT NULL DEFAULT '1',
 btID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 uID                      INTEGER(10) UNSIGNED,
+bIncludeInComposer       INTEGER(1) UNSIGNED NOT NULL DEFAULT 0,
+cbFilename               VARCHAR(128),
                  PRIMARY KEY (bID)
 );
 
@@ -209,8 +211,6 @@ cvActivateDatetime       DATETIME,
 
 ALTER TABLE CollectionVersions ADD  INDEX cvIsApproved  (cvIsApproved);
 
-ALTER TABLE CollectionVersions ADD  INDEX cvName  (cvName(128));
-
 CREATE TABLE Collections (
 cID                      INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 cDateAdded               DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -222,6 +222,19 @@ cHandle                  VARCHAR(255),
 ALTER TABLE Collections ADD  INDEX cDateModified  (cDateModified);
 
 ALTER TABLE Collections ADD  INDEX cDateAdded  (cDateAdded);
+
+CREATE TABLE ComposerDrafts (
+cID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+cpStatus                 INTEGER(3) UNSIGNED NOT NULL DEFAULT 0,
+                 PRIMARY KEY (cID)
+);
+
+CREATE TABLE ComposerDefaultBlocks (
+cID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+bID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+cbFilename               VARCHAR(64),
+                 PRIMARY KEY (cID, bID)
+);
 
 CREATE TABLE Config (
 cfKey                    VARCHAR(64) NOT NULL,
@@ -490,8 +503,6 @@ ALTER TABLE PagePaths ADD  INDEX cID  (cID);
 
 ALTER TABLE PagePaths ADD  INDEX ppIsCanonical  (ppIsCanonical);
 
-ALTER TABLE PagePaths ADD  INDEX cPath (cPath(128));
-
 CREATE TABLE PageSearchIndex (
 cID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 content                  TEXT,
@@ -574,6 +585,12 @@ akID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
                  PRIMARY KEY (ctID, akID)
 );
 
+CREATE TABLE ComposerTypeAttributes (
+ctID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+akID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+                 PRIMARY KEY (ctID, akID)
+);
+
 CREATE TABLE PageTypes (
 ctID                     INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 ctHandle                 VARCHAR(32) NOT NULL,
@@ -584,6 +601,14 @@ pkgID                    INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 );
 
 ALTER TABLE PageTypes ADD  UNIQUE INDEX ctHandle  (ctHandle);
+
+CREATE TABLE ComposerTypes (
+ctID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+ctComposerPublishPageMethod VARCHAR(64) NOT NULL DEFAULT 'CHOOSE',
+ctComposerPublishPageTypeID INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+ctComposerPublishPageParentID INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+                 PRIMARY KEY (ctID)
+);
 
 CREATE TABLE Pages (
 cID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
@@ -917,8 +942,6 @@ atSelectOptionID         INTEGER(10) UNSIGNED NOT NULL,
                  PRIMARY KEY (avID, atSelectOptionID)
 );
 
-ALTER TABLE atSelectOptionsSelected add index `atSelectOptionID` (atSelectOptionID);
-
 CREATE TABLE atAddress (
 avID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 address1                 VARCHAR(255),
@@ -954,6 +977,12 @@ displaySubPages          VARCHAR(255) DEFAULT 'none',
 displaySubPageLevels     VARCHAR(255) DEFAULT 'none',
 displaySubPageLevelsNum  SMALLINT UNSIGNED NOT NULL DEFAULT 0,
 displayUnavailablePages  TINYINT UNSIGNED NOT NULL DEFAULT 0,
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btContentLocal (
+bID                      INTEGER UNSIGNED NOT NULL,
+content                  LONGTEXT,
                  PRIMARY KEY (bID)
 );
 
@@ -1049,7 +1078,6 @@ answerLong               TEXT,
 CREATE TABLE btGoogleMap (
 bID                      INTEGER UNSIGNED NOT NULL,
 title                    VARCHAR(255),
-api_key                  VARCHAR(255),
 location                 VARCHAR(255),
 latitude                 DOUBLE,
 longitude                DOUBLE,
@@ -1084,12 +1112,6 @@ approved                 INTEGER DEFAULT 1,
 
 ALTER TABLE btGuestBookEntries ADD  INDEX cID  (cID);
 
-CREATE TABLE btContentLocal (
-bID                      INTEGER UNSIGNED NOT NULL,
-content                  LONGTEXT,
-                 PRIMARY KEY (bID)
-);
-
 CREATE TABLE btContentImage (
 bID                      INTEGER UNSIGNED NOT NULL,
 fID                      INTEGER UNSIGNED DEFAULT 0,
@@ -1116,9 +1138,11 @@ bID                      INTEGER UNSIGNED NOT NULL,
 linkStyle                VARCHAR(32),
 nextLabel                VARCHAR(128),
 previousLabel            VARCHAR(128),
+parentLabel              VARCHAR(128),
 showArrows               INTEGER DEFAULT 1,
 loopSequence             INTEGER DEFAULT 1,
 excludeSystemPages       INTEGER DEFAULT 1,
+orderBy                  VARCHAR(20) DEFAULT 'display_asc',
                  PRIMARY KEY (bID)
 );
 
@@ -1230,26 +1254,14 @@ videoURL                 VARCHAR(255),
                  PRIMARY KEY (bID)
 );
 
-
-CREATE TABLE IF NOT EXISTS `CollectionSearchIndexAttributes` (
-  `cID` int(11) unsigned NOT NULL default '0',
-  `ak_meta_title` text,
-  `ak_meta_description` text,
-  `ak_meta_keywords` text,
-  `ak_exclude_nav` tinyint(4) default '0',
-  `ak_exclude_page_list` tinyint(4) default '0',
-  `ak_header_extra_content` text,
-  `ak_exclude_search_index` tinyint(4) default '0',
-  `ak_exclude_sitemapxml` tinyint(4) default '0',
-  `ak_tags` text,
-  PRIMARY KEY  (`cID`)
+CREATE TABLE CollectionSearchIndexAttributes (
+cID                      INTEGER(11) UNSIGNED NOT NULL DEFAULT 0,
+                 PRIMARY KEY (cID)
 );
 
-CREATE TABLE IF NOT EXISTS `FileSearchIndexAttributes` (
-  `fID` int(11) unsigned NOT NULL default '0',
-  `ak_width` decimal(14,4) default '0.0000',
-  `ak_height` decimal(14,4) default '0.0000',
-  PRIMARY KEY  (`fID`)
+CREATE TABLE FileSearchIndexAttributes (
+fID                      INTEGER(11) UNSIGNED NOT NULL DEFAULT 0,
+                 PRIMARY KEY (fID)
 );
 
 CREATE TABLE UserSearchIndexAttributes (
