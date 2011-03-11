@@ -60,7 +60,7 @@
 		public function save($data) { 
 			$args['title'] = isset($data['title']) ? trim($data['title']) : '';
 			$args['location'] = isset($data['location']) ? trim($data['location']) : '';
-			$args['zoom'] = (intval($data['zoom'])>=0 && intval($data['zoom'])<=17) ? intval($data['zoom']) : 14;
+			$args['zoom'] = (intval($data['zoom'])>=0 && intval($data['zoom'])<=21) ? intval($data['zoom']) : 14;
 			
 			if( strlen($args['location'])>0 ){
 				$coords = $this->lookupLatLong($args['location']);
