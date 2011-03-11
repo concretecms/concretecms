@@ -1043,3 +1043,22 @@ INSERT INTO btTags VALUES(23,'Tags',68)
  ,(39,'Tags',68);
 
 INSERT INTO btYouTube VALUES(6,'Basic Editing','http://www.youtube.com/watch?v=oYSOFTNLbKY');
+
+INSERT INTO CollectionSearchIndexAttributes VALUES(2,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
+ ,(1,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
+ ,(65,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
+ ,(42,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
+ ,(67,'','','',0,0,NULL,0,0,NULL)
+ ,(68,'','','',1,0,NULL,0,0,NULL)
+ ,(66,NULL,NULL,NULL,0,0,NULL,0,0,'\n')
+ ,(69,'','','',0,0,NULL,0,0,NULL)
+ ,(70,'','','',0,0,NULL,0,0,NULL)
+ ,(71,'','','',0,0,NULL,0,0,NULL)
+ ,(72,'','','',0,0,NULL,0,0,'\nsample\nHello World\n')
+ ,(73,'','','',0,0,NULL,0,0,'\nsample\n');
+
+INSERT INTO FileSearchIndexAttributes VALUES(1,800.0000,192.0000)
+ ,(2,800.0000,192.0000)
+ ,(3,800.0000,192.0000)
+ ,(4,800.0000,215.0000)
+ ,(5,800.0000,192.0000);
