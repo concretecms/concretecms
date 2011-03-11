@@ -4,7 +4,7 @@ $u = new User();
 $form = Loader::helper('form');
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 Loader::element('files/add_to_sets');

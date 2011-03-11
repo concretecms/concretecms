@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $tp = new TaskPermission();
 if (!$tp->canAccessUserSearch()) { 
-	die(_("You have no access to users."));
+	die(t("You have no access to users."));
 }
 
 $u = new User();

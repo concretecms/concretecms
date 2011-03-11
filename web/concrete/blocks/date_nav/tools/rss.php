@@ -1,5 +1,5 @@
 <?php 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 
 //Permissions Check
 if($_GET['bID']) {
@@ -47,12 +47,12 @@ if($_GET['bID']) {
 		
 <?php 	} else {  	
 		$v = View::getInstance();
-		$v->renderError('Permission Denied',"You don't have permission to access this RSS feed");
+		$v->renderError(t('Permission Denied'),t('You don\'t have permission to access this RSS feed'));
 		exit;
 	}
 			
 } else {
-	echo "You don't have permission to access this RSS feed";
+	echo t('You don\'t have permission to access this RSS feed');
 }
 exit;
 

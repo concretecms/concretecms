@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $ch = Page::getByPath("/dashboard");
 $chp = new Permissions($ch);
 if (!$chp->canRead()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 Loader::library('3rdparty/open_flash_chart' );

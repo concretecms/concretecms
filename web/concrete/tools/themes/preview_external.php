@@ -12,7 +12,7 @@ if($collectionType) $ctHandle=$collectionType->getCollectionTypeHandle();
 
 $c = Page::getByID($previewCID,"RECENT");
 $cp = new Permissions($c);
-if(!$cp->canWrite()) throw new Exception(_('Access Denied.'));
+if(!$cp->canWrite()) throw new Exception(t("Access Denied."));
 
 //$previewVersion=$previewCollection->getVersionObject();
 $previewVersionID=$c->getVersionID();

@@ -7,7 +7,7 @@ $ih = Loader::helper('concrete/interface');
 $f = File::getByID($_REQUEST['fID']);
 $cp = new Permissions($f);
 if (!$cp->canAdmin()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 $form = Loader::helper('form');
 

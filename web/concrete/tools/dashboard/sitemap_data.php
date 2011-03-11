@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $dh = Loader::helper('concrete/dashboard/sitemap');
 if (!$dh->canRead()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 if (isset($_REQUEST['selectedPageID'])) {

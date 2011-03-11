@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAddFiles()) {
-	die(_("Unable to add files."));
+	die(t("Unable to add files."));
 }
 $cf = Loader::helper("file");
 $valt = Loader::helper('validation/token');

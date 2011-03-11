@@ -8,7 +8,7 @@ $form = Loader::helper('form');
 
 $fp = FilePermissions::getGlobal();
 if (!$fp->canRead()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 $ci = Loader::helper('file');

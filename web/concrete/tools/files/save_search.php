@@ -5,7 +5,7 @@ $form = Loader::helper('form');
 $vt = Loader::helper('validation/token');
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 if ($_POST['task'] == 'save_search') {

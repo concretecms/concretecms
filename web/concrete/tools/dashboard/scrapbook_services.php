@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $scrapbookC = Page::getByPath("/dashboard/scrapbook");
 $scrapbookPermissions = new Permissions($scrapbookC);
 if (!$scrapbookPermissions->canRead()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
  
 $db = Loader::db();

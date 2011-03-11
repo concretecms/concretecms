@@ -8,7 +8,7 @@ $cf = Loader::helper('file');
 
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAddFiles()) {
-	die(_("Unable to add files."));
+	die(t("Unable to add files."));
 }
 
 $error = "";

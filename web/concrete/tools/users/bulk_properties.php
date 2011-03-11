@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $tp = new TaskPermission();
 if (!$tp->canAccessUserSearch()) { 
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 Loader::model('attribute/categories/user');
