@@ -1,4 +1,4 @@
-<?php  defined('C5_EXECUTE') or die(_("Access Denied.")); ?>  
+<?php  defined('C5_EXECUTE') or die("Access Denied."); ?>  
 
 <style>
 #ccm-pagelist-truncateTxt.faintText, #ccm-pagelist-truncateTitleTxt.faintText{ color:#999; }

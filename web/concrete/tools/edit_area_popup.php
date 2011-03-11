@@ -49,7 +49,7 @@ switch($_GET['atask']) {
 }
 
 if (!$canViewPane) {
-	die(_("Access Denied.")); 
+	die(t("Access Denied."));
 }
 
 ?>

@@ -12,7 +12,7 @@ if (isset($_REQUEST['fvID'])) {
 
 $fp = new Permissions($f);
 if (!$fp->canRead()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 ?>
 

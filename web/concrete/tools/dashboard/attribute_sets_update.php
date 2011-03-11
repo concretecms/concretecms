@@ -11,7 +11,7 @@ if (strpos($path, '/dashboard') === 0) {
 }
 
 if (!$canRead) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 // this should be cleaned up.... yeah

@@ -3,7 +3,7 @@ Loader::model('user_attributes');
 $form = Loader::helper('form');
 $tp = new TaskPermission();
 if (!$tp->canAccessUserSearch()) { 
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 $selectedAKIDs = array();

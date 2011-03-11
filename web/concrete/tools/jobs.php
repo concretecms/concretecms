@@ -9,7 +9,7 @@ $jobObj = Loader::model("job");
 $outputDisabled=0;
 
 if (!Job::authenticateRequest($_REQUEST['auth'])) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 } 
 
 //JSON vars

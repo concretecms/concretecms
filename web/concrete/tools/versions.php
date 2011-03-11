@@ -11,7 +11,7 @@
 	$isCheckedOut = $c->isCheckedOut() && !$c->isEditMode();
 	
 	if (!$cp->canReadVersions() && !$cp->canApproveCollection()) {
-		die(_("Access Denied."));
+		die(t("Access Denied."));
 	}
 	
 	if ($_GET['vtask'] == 'view_version') { ?>

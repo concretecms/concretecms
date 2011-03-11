@@ -4,7 +4,7 @@ ini_set('memory_limit', -1);
 
 $tp = new TaskPermission();
 if (!$tp->canAccessUserSearch()) { 
-	die(_("You have no access to users."));
+	die(t("You have no access to users."));
 }
 
 // no limit

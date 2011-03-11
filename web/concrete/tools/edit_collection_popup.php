@@ -55,7 +55,7 @@ if (!isset($divID)) {
 }
 
 if (!$canViewPane) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 ?>
