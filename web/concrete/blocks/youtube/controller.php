@@ -20,11 +20,11 @@
 		 * Used for localization. If we want to localize the name/description we have to include this
 		 */
 		public function getBlockTypeDescription() {
-			return t("Embeds a Youtube Video in your web page.");
+			return t("Embeds a YouTube Video in your web page.");
 		}
 		
 		public function getBlockTypeName() {
-			return t("Youtube Video");
+			return t("YouTube Video");
 		}
 		
 		function on_page_view() {
@@ -33,7 +33,7 @@
 		}
 		
 		public function getJavaScriptStrings() {
-			return array('youtube-required' => t('Please enter a valid Youtube URL.'));
+			return array('youtube-required' => t('Please enter a valid YouTube URL.'));
 		}
 		
 		function __construct($obj = null) {		
