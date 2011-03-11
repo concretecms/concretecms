@@ -8,6 +8,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 * @package Pages
 *
 */
+Loader::model('collection_types');
 class ComposerPage extends Page {
 	
 	const COMPOSER_PAGE_STATUS_NEW = 1;
