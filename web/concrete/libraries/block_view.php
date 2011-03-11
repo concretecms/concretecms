@@ -69,7 +69,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function action($task, $extraParams = null) {
 			try {
 				if (is_object($this->block)) {
-					return $this->block->getBlockPassThruAction() . '&method=' . $task . $extraParams;
+					return $this->block->getBlockPassThruAction() . '&amp;method=' . $task . $extraParams;
 				}
 			} catch(Exception $e) {}
 		}
