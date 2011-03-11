@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $al = Loader::helper('concrete/asset_library');
 $ah = Loader::helper('concrete/interface');
@@ -7,10 +7,10 @@ $ah = Loader::helper('concrete/interface');
 #ccm-slideshowBlock-imgRows a{cursor:pointer}
 #ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow,
 #ccm-slideshowBlock-fsRow {margin-bottom:16px;clear:both;padding:7px;background-color:#eee}
-#ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow a.moveUpLink{ display:block; background:url(<?=DIR_REL?>/concrete/images/icons/arrow_up.png) no-repeat center; height:10px; width:16px; }
-#ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow a.moveDownLink{ display:block; background:url(<?=DIR_REL?>/concrete/images/icons/arrow_down.png) no-repeat center; height:10px; width:16px; }
-#ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow a.moveUpLink:hover{background:url(<?=DIR_REL?>/concrete/images/icons/arrow_up_black.png) no-repeat center;}
-#ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow a.moveDownLink:hover{background:url(<?=DIR_REL?>/concrete/images/icons/arrow_down_black.png) no-repeat center;}
+#ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow a.moveUpLink{ display:block; background:url(<?php echo ASSETS_URL_IMAGES?>/icons/arrow_up.png) no-repeat center; height:10px; width:16px; }
+#ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow a.moveDownLink{ display:block; background:url(<?php echo ASSETS_URL_IMAGES?>/icons/arrow_down.png) no-repeat center; height:10px; width:16px; }
+#ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow a.moveUpLink:hover{background:url(<?php echo ASSETS_URL_IMAGES?>/icons/arrow_up_black.png) no-repeat center;}
+#ccm-slideshowBlock-imgRows .ccm-slideshowBlock-imgRow a.moveDownLink:hover{background:url(<?php echo ASSETS_URL_IMAGES?>/icons/arrow_down_black.png) no-repeat center;}
 #ccm-slideshowBlock-imgRows .cm-slideshowBlock-imgRowIcons{ float:right; width:35px; text-align:left; }
 </style>
 
