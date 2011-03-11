@@ -13,3 +13,6 @@ http://www.concrete5.org
 	5.	Concrete 5 should be installed.
 	
 You'll probably want to change your admin user's password (which can be done in the dashboard). Also check out the settings page in the dashboard
+
+#Documentation
+http://concrete5.org/documentation/
