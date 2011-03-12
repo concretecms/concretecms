@@ -7,7 +7,7 @@ $form = Loader::helper('form');
 
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAddFiles()) {
-	die(_("Unable to add files."));
+	die(t("Unable to add files."));
 }
 
 $types = $fp->getAllowedFileExtensions();
@@ -39,7 +39,7 @@ $("#ccm-file-import-tabs a").click(function() {
 </script>
 
 <div id="ccm-file-upload-multiple-tab">
-<h1>Upload Multiple Files</h1>
+<h1><?php echo t('Upload Multiple Files')?></h1>
 
 <?
 $umf = ini_get('upload_max_filesize');
@@ -67,7 +67,7 @@ $(function() {
 		file_size_limit : "<?=$umf?>",
 		file_types : "<?=$types?>",
 		button_window_mode : SWFUpload.WINDOW_MODE.TRANSPARENT,
-		file_types_description : "All Files",
+		file_types_description : "<?php echo t('All Files') ?>",
 		file_upload_limit : 100,
 		button_cursor: SWFUpload.CURSOR.HAND,
 		file_queue_limit : 0,
@@ -111,7 +111,7 @@ $(function() {
 				var progress = new FileProgress(file, this.customSettings.progressTarget);
 				progress.setProgress(percent);
 				
-				progress.setStatus("Uploading... ("+percent+"%)");
+				progress.setStatus("<?php echo t('Uploading...')?> ("+percent+"%)");
 			} catch (ex) {
 				this.debug(ex);
 			}		

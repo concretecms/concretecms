@@ -13,7 +13,7 @@ if ($tp1->canAccessTaskPermissions()) {
 		<form method="post" id="sitemap-permissions" action="<?=$this->url('/dashboard/sitemap/access', 'save_permissions')?>">
 			<?=$validation_token->output('sitemap_permissions');?>
 	
-			<? print $h->getForm($tp, t('Add users or groups to determine access to the file manager. <strong>Note:</strong> If you want users to have access to the dashboard sitemap, they must be entered here and in the dashboard sitemap page permissions area.')); ?>
+			<? print $h->getForm($tp, t('Add users or groups to determine access to the sitemap. <strong>Note:</strong> If you want users to have access to the dashboard sitemap, they must be entered here and in the dashboard sitemap page permissions area.')); ?>
 			
 			<div class="ccm-spacer">&nbsp;</div>
 			

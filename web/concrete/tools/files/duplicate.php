@@ -6,7 +6,7 @@ $js = Loader::helper('json');
 $form = Loader::helper('form');
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 if ($_POST['task'] == 'duplicate_multiple_files') {

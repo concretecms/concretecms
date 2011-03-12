@@ -22,7 +22,7 @@ foreach($fileIDs as $fID) {
 }
 
 if (count($files) == 0) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 $i = 0;

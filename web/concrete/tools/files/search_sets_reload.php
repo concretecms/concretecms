@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $cp = FilePermissions::getGlobal();
 if (!$cp->canAccessFileManager()) {
-	die(_("Unable to access the file manager."));
+	die(t("Unable to access the file manager."));
 }
 
 Loader::model('file_list');

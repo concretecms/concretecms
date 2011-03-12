@@ -208,6 +208,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db = Loader::db();  
 
 			$r = $db->Execute('select avID, akID from UserAttributeValues where uID = ?', array($this->uID));
+			Loader::model('attribute/categories/user');
 			while ($row = $r->FetchRow()) {
 				$uak = UserAttributeKey::getByID($row['akID']);
 				$av = $this->getAttributeValueObject($uak);

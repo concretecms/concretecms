@@ -1,5 +1,5 @@
 <?php 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 
 global $c;
 $textHelper = Loader::helper("text"); 
@@ -58,7 +58,7 @@ if( count($postsByDate)>1 && !$controller->flatDisplay ) echo "<ul class='years'
 $monthDisplayFormat = ($controller->flatDisplay && count($postsByDate)>1) ? 'F Y' : 'F'; 
 		
 //show the outer months UL with flat display
-if($controller->flatDisplay) echo "\t <UL class='months collapsible ".$hideMonths."'> \r \n";		
+if($controller->flatDisplay) echo "\t <ul class='months collapsible ".$hideMonths."'> \r \n";		
 		
 //loop through years 
 foreach($postsByDate as $year=>$postsByMonth ){
@@ -72,7 +72,7 @@ foreach($postsByDate as $year=>$postsByMonth ){
 	
 	
 	//don't show the inner months UL with flat display
-	if(!$controller->flatDisplay) echo "\t <UL class='months collapsible ".$hideMonths."'> \r \n";
+	if(!$controller->flatDisplay) echo "\t <ul class='months collapsible ".$hideMonths."'> \r \n";
 	
 	//print the months that have postings
 	foreach($postsByMonth as $month=>$pagesArray){
@@ -126,20 +126,20 @@ foreach($postsByDate as $year=>$postsByMonth ){
 	}		
 	
 	//don't show the inner months UL with flat display 
-	if(!$controller->flatDisplay)  echo "\t </UL> \r \n";
+	if(!$controller->flatDisplay)  echo "\t </ul> \r \n";
 		
 	if(count($postsByDate)>1) echo "</li> \r \n";
 }
 
 //show the outer months UL with flat display
-if( $controller->flatDisplay )  echo "\t </UL> \r \n";
+if( $controller->flatDisplay )  echo "\t </ul> \r \n";
 
 //don't show the outer years UL with flat display
 if( count($postsByDate)>1 && !$controller->flatDisplay ) echo "</ul> \r \n"; 
 ?>
 </div>
 
-<script>
+<script type="text/javascript">
 <?php  if($controller->defaultNode=='current_month'){ ?>
 ccmDateNav.dateKey='<?php echo  date( 'm_Y' ) ?>';
 <?php  }else{  // current page

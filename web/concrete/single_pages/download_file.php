@@ -14,7 +14,7 @@ $returnURL = ($_POST['returnURL']) ? $_POST['returnURL'] : $_SERVER['HTTP_REFERE
 
 <? if (!isset($filename)) { ?>
 
-	<p><?=t("Invalid File.");?>
+	<p><?=t("Invalid File.");?></p>
 
 <? } else { ?>
 	

@@ -7,7 +7,7 @@ $u = new User();
 $scrapbookHelper=Loader::helper('concrete/scrapbook'); 
 
 if (!$u->isRegistered()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 Loader::model('pile');
 $p = false;

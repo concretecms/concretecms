@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $tp = new TaskPermission();
 if (!$tp->canAccessGroupSearch()) { 
-	echo(_("You have no access to groups."));
+	echo(t("You have no access to groups."));
 } else { 	
 	
 	if (!$_REQUEST['group_submit_search']) { ?>

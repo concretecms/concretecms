@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $c = Page::getByID($_REQUEST['cID']);
 $cp = new Permissions($c);
 if (!$cp->canWrite()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 $v = CollectionVersion::get($c, "RECENT", true);

@@ -14,8 +14,10 @@ class LoginController extends Controller {
 		} else {
 			$this->set('uNameLabel', t('Username'));
 		}
+		
+		$txt = Loader::helper('text');
 		if (strlen($_GET['uName'])) { // pre-populate the username if supplied
-			$this->set("uName",$_GET['uName']);
+		   $this->set("uName",trim($txt->filterNonAlphaNum($_GET['uName'])));
 		}
 		
 		$this->openIDReturnTo = BASE_URL . View::url("/login", "complete_openid"); 

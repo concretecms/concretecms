@@ -10,7 +10,7 @@ class Backup {
 			file_put_contents(DIR_FILES_BACKUPS . "/.htaccess","Order Deny,Allow\nDeny from all");
 		}
 		$str_bkupfile = "dbu_". time() .".sql";
-		$arr_tables = $db->getCol("SHOW TABLES FROM " . DB_DATABASE); 
+		$arr_tables = $db->getCol("SHOW TABLES FROM `" . DB_DATABASE"`"); 
 		foreach ($arr_tables as $bkuptable) {
 			$tableobj = new BackupTable($bkuptable);
 			$str_backupdata .= "DROP TABLE IF EXISTS $bkuptable;\n\n";
