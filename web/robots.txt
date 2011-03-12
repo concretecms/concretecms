@@ -16,3 +16,4 @@ Disallow: /packages
 Disallow: /single_pages 
 Disallow: /themes 
 Disallow: /tools
+Disallow: /updates
