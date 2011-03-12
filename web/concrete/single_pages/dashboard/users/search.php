@@ -397,9 +397,9 @@ if (is_object($uo)) {
 					}
 					</script>
 	
-				<? } else { ?>
+				<? } /*else { ?>
 					<? print $ih->button_js(t('Sign In as User'), 'alert(\'' . t('You do not have permission to sign in as other users.') . '\')', 'left', 'ccm-button-inactive');?>
-				<? } ?>
+				<? }*/ ?>
 			<? } ?>
 
 		</div>

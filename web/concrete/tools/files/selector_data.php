@@ -8,7 +8,7 @@ $form = Loader::helper('form');
 $f = File::getByID($_REQUEST['fID']);
 $fp = new Permissions($f);
 if (!$fp->canRead()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 $fv = $f->getApprovedVersion();

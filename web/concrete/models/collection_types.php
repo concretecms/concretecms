@@ -21,7 +21,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  *
- */	
+ */
+        loader::model('attribute/categories/collection');
 	class CollectionType extends Object {
 
 		var $ctID;

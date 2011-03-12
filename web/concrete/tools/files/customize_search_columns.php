@@ -4,7 +4,7 @@ $form = Loader::helper('form');
 Loader::model('attribute/categories/file');
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 

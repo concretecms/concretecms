@@ -11,7 +11,7 @@ if ($_REQUEST['mode'] == 'users') {
 
 $tp = new TaskPermission();
 if (!$tp->canAccessUserSearch() && !$tp->canAccessGroupSearch()) { 
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 ?>

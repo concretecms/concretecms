@@ -683,11 +683,11 @@ class MiniSurvey{
 
 				case 'select':
 					if($this->frontEndMode){
-						$selected=(!$_REQUEST['Question'.$msqID])?'selected':'';
+						$selected=(!$_REQUEST['Question'.$msqID])?'selected="selected"':'';
 						$html.= '<option value="" '.$selected.'>----</option>';					
 					}
 					foreach($options as $option){
-						$checked=($_REQUEST['Question'.$msqID]==trim($option))?'selected':'';
+						$checked=($_REQUEST['Question'.$msqID]==trim($option))?'selected="selected':'';
 						$html.= '<option '.$checked.'>'.trim($option).'</option>';
 					}
 					return '<select name="Question'.$msqID.'" >'.$html.'</select>';
@@ -701,7 +701,7 @@ class MiniSurvey{
 					return $html;
 					
 				case 'fileupload': 
-					$html='<input type="file" name="Question'.$msqID.'" id="" />'; 				
+					$html='<input type="file" name="Question'.$msqID.'" />'; 				
 					return $html;
 					
 				case 'text':

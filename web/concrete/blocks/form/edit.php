@@ -16,5 +16,5 @@ var thisbID=parseInt(<?php echo $b->getBlockID()?>);
 var thisbtID=parseInt(<?php echo $b->getBlockTypeID()?>); 
 </script>
 
-<?php  include('styles_include.php'); ?>
-<?php  include('form_setup_html.php'); ?>
+<?php  $this->inc('styles_include.php'); ?>
+<?php  $this->inc('form_setup_html.php'); ?>

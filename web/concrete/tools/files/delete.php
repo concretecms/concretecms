@@ -4,7 +4,7 @@ $u = new User();
 $form = Loader::helper('form');
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 if ($_POST['task'] == 'delete_files') {

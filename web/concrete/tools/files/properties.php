@@ -9,7 +9,7 @@ $f = File::getByID($_REQUEST['fID']);
 
 $fp = new Permissions($f);
 if (!$fp->canRead()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 if (isset($_REQUEST['fvID'])) {

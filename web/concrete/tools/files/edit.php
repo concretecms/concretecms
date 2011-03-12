@@ -9,7 +9,7 @@ $fv = $f->getApprovedVersion();
 
 $fp = new Permissions($f);
 if (!$fp->canWrite()) {
-	die(_("Access Denied."));
+	die(t("Access Denied."));
 }
 
 $to = $fv->getTypeObject();

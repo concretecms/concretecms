@@ -5,7 +5,7 @@
 	$f = File::getByID($_POST['file-id']);
 	$fp = new Permissions($f);
 	if (!$fp->canRead()) {
-		die(_("Access Denied."));
+		die(t("Access Denied."));
 	}
 
 	switch ($_POST['action']) {
@@ -16,5 +16,5 @@
 			$file_set->RemoveFileFromSet($_POST['file-id']);
 			break;
 		default:
-			throw new Exception('INVALID ACTION');
+			throw new Exception(t('INVALID ACTION'));
 	}

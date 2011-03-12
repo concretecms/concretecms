@@ -1,5 +1,5 @@
 <?php   
-defined('C5_EXECUTE') or die(_("Access Denied."));  
+defined('C5_EXECUTE') or die("Access Denied.");  
 ?> 
 
 <div id="ccm-next-previous-pane" class="ccm-next-previous-pane">  
