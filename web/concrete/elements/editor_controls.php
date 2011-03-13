@@ -17,7 +17,7 @@
 $path = Page::getByPath('/dashboard/settings');
 $cp = new Permissions($path);
 if($cp->canRead()) { 
-$confirm = 'if(confirm(\''.t("Are you sure you want to leave? All changes will be lost.").'\')) {location.href = \''.View::url("/dashboard/settings").'\';}';
+$confirm = 'if(confirm(\''.t("Are you sure you want to leave? All changes will be lost.").'\')) {location.href = \''.View::url("/dashboard/settings").'#txt-editor-form\';}';
 ?>
 	<li><a style="float: right" href="#" onclick="<?php echo $confirm?>"><?=t('Customize Toolbar')?></a></li>
 <?php } ?>
