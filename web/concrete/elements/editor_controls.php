@@ -13,7 +13,12 @@
 <?php } ?>
 */ ?>
 <li><a href="#" onclick="setBookMark();ccmEditorSitemapOverlay();"><?=t('Insert Link to Page')?></a></li>
-<li><a style="float: right" href="<?=View::url('/dashboard/settings')?>"><?=t('Customize Toolbar')?></a></li>
+<?php
+$path = Page::getByPath('/dashboard/settings');
+$cp = new Permissions($path);
+if($cp->canRead()) { ?>
+	<li><a style="float: right" href="<?=View::url('/dashboard/settings')?>"><?=t('Customize Toolbar')?></a></li>
+<?php } ?>
 </ul>
 </div>
 </div>
@@ -25,7 +30,7 @@
 <script type="text/javascript">
 function ccmEditorSitemapOverlay() {
     $.fn.dialog.open({
-        title: 'Choose A Page',
+        title: '<?php echo t("Choose A Page") ?>',
         href: CCM_TOOLS_PATH + '/sitemap_overlay.php?sitemap_mode=select_page&callback=ccm_selectSitemapNode<?=$GLOBALS['CCM_EDITOR_SITEMAP_NODE_NUM']?>',
         width: '550',
         modal: false,
