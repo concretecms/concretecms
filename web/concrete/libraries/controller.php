@@ -347,7 +347,7 @@ class Controller {
 			header('Location: '.$url);		
 			exit;
 		}
-		throw new Exception('Invalid Redirect URL');
+		throw new Exception(t('Invalid Redirect URL'));
 	}
 
 	/** 
