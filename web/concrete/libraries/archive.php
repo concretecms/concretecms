@@ -119,7 +119,7 @@ class Archive {
 		} else {
 			$f = $fh->copyAll($dirFull, $this->targetDirectory . '/' . $dirBase);
 			if (!is_dir($this->targetDirectory . '/' . $dirBase)) {
-				throw new Exception('Unable to copy directory ' . $dirBase . ' to ' . $this->targetDirectory . '. Perhaps permissions are set incorrectly or the target directory does not exist.');
+				throw new Exception(t('Unable to copy directory %s to %s. Perhaps permissions are set incorrectly or the target directory does not exist.',$dirBase,$this->targetDirectory));
 			}
 		}
 		return $dirBase;
