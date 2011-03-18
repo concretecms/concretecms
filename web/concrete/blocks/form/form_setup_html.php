@@ -1,6 +1,8 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
-$uh = Loader::helper('concrete/urls'); ?>
+$uh = Loader::helper('concrete/urls'); 
+
+?>
 
 <ul class="ccm-dialog-tabs" id="ccm-formblock-tabs">
 	<li class="<?php echo (intval($miniSurveyInfo['bID'])==0)?'ccm-nav-active':''?>"><a href="javascript:void(0)" id="ccm-formblock-tab-add"><?php echo t('Add')?></a></li>
@@ -22,7 +24,7 @@ $uh = Loader::helper('concrete/urls'); ?>
 	if(strlen($miniSurveyInfo['surveyName'])==0)
 		$miniSurveyInfo['surveyName']=$c->getCollectionName();
 	?>
-	<strong>Options:</strong>
+	<strong><?=t('Options:')?></strong>
 	
 	<div class="fieldRow">
 		<div class="fieldLabel"><?php echo t('Form Name')?>:</div>
