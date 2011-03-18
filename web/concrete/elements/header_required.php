@@ -1,4 +1,4 @@
-<? 
+<?php 
 defined('C5_EXECUTE') or die("Access Denied.");
 global $c;
 global $cp;
@@ -16,32 +16,36 @@ if (is_object($c)) {
 }
 ?>
 
-<meta http-equiv="content-type" content="text/html; charset=<?=APP_CHARSET?>" />
-<?
+<meta http-equiv="content-type" content="text/html; charset=<?php echo APP_CHARSET?>" />
+<?php
 $akt = $c->getCollectionAttributeValue('meta_title'); 
 $akd = $c->getCollectionAttributeValue('meta_description');
 $akk = $c->getCollectionAttributeValue('meta_keywords');
 
 if ($akt) { 
 	$pageTitle = $akt; 
-	?><title><?=htmlspecialchars($akt, ENT_COMPAT, APP_CHARSET)?></title>
-<? } else { 
+	?><title><?php echo htmlspecialchars($akt, ENT_COMPAT, APP_CHARSET)?></title>
+<?php } else { 
 	$pageTitle = htmlspecialchars($c->getCollectionName(), ENT_COMPAT, APP_CHARSET);
-	?><title><?=sprintf(PAGE_TITLE_FORMAT, SITE, $pageTitle)?></title>
+	?><title><?php echo sprintf(PAGE_TITLE_FORMAT, SITE, $pageTitle)?></title>
 <? } 
 
-if ($akd) { 
-?><meta name="description" content="<?=htmlspecialchars($akd, ENT_COMPAT, APP_CHARSET)?>" />
-<? } else { 
-?><meta name="description" content="<?=htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET)?>" />
-<? }
-if ($akk) { ?><meta name="keywords" content="<?=htmlspecialchars($akk, ENT_COMPAT, APP_CHARSET)?>" />
-<? } ?>
-<meta name="generator" content="concrete5 - <?=APP_VERSION ?>" />
+if ($akd) { ?>
+<meta name="description" content="<?=htmlspecialchars($akd, ENT_COMPAT, APP_CHARSET)?>" />
+<?php } else { ?>
+<meta name="description" content="<?=htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET)?>" />
+<?php }
+if ($akk) { ?>
+<meta name="keywords" content="<?=htmlspecialchars($akk, ENT_COMPAT, APP_CHARSET)?>" />
+<?php } 
+if($c->getCollectionAttributeValue('exclude_search_index')) { ?>
+    <meta name="robots" contents="noindex" />
+<?php } ?>
+<meta name="generator" content="concrete5 - <?php echo APP_VERSION ?>" />
 
-<? $u = new User(); ?>
+<?php $u = new User(); ?>
 <script type="text/javascript">
-<?
+<?php
 	echo("var CCM_DISPATCHER_FILENAME = '" . DIR_REL . '/' . DISPATCHER_FILENAME . "';\r");
 	echo("var CCM_CID = ".($cID?$cID:0).";\r");
 	if (isset($isEditMode)) {
@@ -51,13 +55,13 @@ if ($akk) { ?><meta name="keywords" content="<?=htmlspecialchars($akk, ENT_COMPA
 		echo("var CCM_ARRANGE_MODE = {$isArrangeMode};\r");
 	}
 ?>
-var CCM_IMAGE_PATH = "<?=ASSETS_URL_IMAGES?>";
-var CCM_TOOLS_PATH = "<?=REL_DIR_FILES_TOOLS_REQUIRED?>";
-var CCM_REL = "<?=DIR_REL?>";
+var CCM_IMAGE_PATH = "<?php echo ASSETS_URL_IMAGES?>";
+var CCM_TOOLS_PATH = "<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>";
+var CCM_REL = "<?php echo DIR_REL?>";
 
 </script>
 
-<?
+<?php
 $html = Loader::helper('html');
 $this->addHeaderItem($html->css('ccm.base.css'), 'CORE');
 $this->addHeaderItem($html->javascript('jquery.js'), 'CORE');
@@ -68,11 +72,11 @@ $favIconFID=intval(Config::get('FAVICON_FID'));
 
 if($favIconFID) {
 	$f = File::getByID($favIconFID); ?>
-	<link rel="shortcut icon" href="<?=$f->getRelativePath()?>" type="image/x-icon" />
-	<link rel="icon" href="<?=$f->getRelativePath()?>" type="image/x-icon" />
-<? } ?>
+	<link rel="shortcut icon" href="<?php echo $f->getRelativePath()?>" type="image/x-icon" />
+	<link rel="icon" href="<?php echo $f->getRelativePath()?>" type="image/x-icon" />
+<?php } ?>
 
-<?  
+<?php 
 if (is_object($cp)) { 
 
 	if ($this->editingEnabled()) {
