@@ -69,6 +69,7 @@
 	Loader::model('package');
 	Loader::model('page');
 	Loader::model('page_theme');
+	Loader::model('composer_page');
 	Loader::model('permissions');
 	Loader::model('user');
 	Loader::model('userinfo');

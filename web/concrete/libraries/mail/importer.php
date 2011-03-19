@@ -262,7 +262,7 @@ class MailImportedMessage {
 				}
 			
 				if ($foundPart) {
-					$this->body = $foundPart;
+					$this->body = quoted_printable_decode($foundPart);
 				}
 			}
 		} catch(Exception $e) {
@@ -288,6 +288,7 @@ class MailImportedMessage {
 	public function getOriginalMessageCount() {return $this->oMailCnt;}
 	
 	public function getSubject() {return $this->subject;}
+	public function getBody() {return $this->body;}
 	
 	/** 
 	 * Returns the relevant content of the email message, minus any quotations, and the line that includes the validation hash
