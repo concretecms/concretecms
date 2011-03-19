@@ -1,6 +1,5 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::model('composer_page');
 Loader::model('collection_types');
 class DashboardComposerWriteController extends Controller {
 

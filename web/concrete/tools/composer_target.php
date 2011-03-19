@@ -6,7 +6,6 @@ if (!$sh->canAccessComposer()) {
 	die(t('Access Denied'));
 }
 
-Loader::model('composer_page');
 $entry = ComposerPage::getByID($_REQUEST['cID'], 'RECENT');
 if (!is_object($entry)) {
 	die(t('Access Denied'));
