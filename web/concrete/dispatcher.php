@@ -126,14 +126,13 @@
 	## Package events
 	require(dirname(__FILE__) . '/startup/packages.php');
 
-	// Now we check to see if we're including CSS, Javascript, etc...
-	// Include Tools. Format: index.php?task=include_frontend&fType=TOOL&filename=test.php
-	require(dirname(__FILE__) . '/startup/tools.php');
-
-	## This must come before packages ##
 	if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true) {
 		@include(DIR_CONFIG_SITE . '/site_events.php');
 	}	
+
+	// Now we check to see if we're including CSS, Javascript, etc...
+	// Include Tools. Format: index.php?task=include_frontend&fType=TOOL&filename=test.php
+	require(dirname(__FILE__) . '/startup/tools.php');
 	
 	## Check online, user-related startup routines
 	require(dirname(__FILE__) . '/startup/user.php');
