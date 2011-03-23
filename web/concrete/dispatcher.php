@@ -129,7 +129,8 @@
 	// Now we check to see if we're including CSS, Javascript, etc...
 	// Include Tools. Format: index.php?task=include_frontend&fType=TOOL&filename=test.php
 	require(dirname(__FILE__) . '/startup/tools.php');
-
+	
+	# site events
 	if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true) {
 		@include(DIR_CONFIG_SITE . '/site_events.php');
 	}	
