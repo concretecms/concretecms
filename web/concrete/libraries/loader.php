@@ -349,6 +349,8 @@
 		 */
 		public function controller($item) {
 			
+			$include = false;
+			
 			if (is_string($item)) {
 				$db = Loader::db();
 				if (is_object($db)) {

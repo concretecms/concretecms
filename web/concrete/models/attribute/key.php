@@ -155,7 +155,7 @@ class AttributeKey extends Object {
 		$vn = Loader::helper('validation/numbers');
 		$txt = Loader::helper('text');
 		if (!is_object($type)) {
-			// The passed item is not an integer. It is probably something like 'DATE'
+			// The passed item is not an object. It is probably something like 'DATE'
 			$type = AttributeType::getByHandle(strtolower($type));
 		}
 		$atID = $type->getAttributeTypeID();
