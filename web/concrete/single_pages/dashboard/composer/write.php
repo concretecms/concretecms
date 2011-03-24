@@ -20,32 +20,25 @@ if (isset($entry)) { ?>
 		</li>
 	</ol>
 	
-	<?
-	if (count($attribs) > 0) { ?>
-	
-	<h2><?=t("Attributes")?></h2>
 	<ol>
-	<? foreach($attribs as $ak) { 
-		if (is_object($entry)) {
-			$value = $entry->getAttributeValueObject($ak);
-		}
-		?>
-		<li><strong><?=$ak->render('label');?></strong><br/>
-		<?=$ak->render('form', $value, true)?>	
-		</li>
-	<? } ?>
-	</ol>
-	
-	<? } 
-	
-	if (count($blocks) > 0) { 
-	?>
-	
-		<h2><?=t('Content')?></h2>
-	<ol id="ccm-composer-block-list">
-	<? foreach($blocks as $b) { ?>
-		<li>
+	<? 
+	foreach($contentitems as $ci) {
+		if ($ci instanceof AttributeKey) { 
+			$ak = $ci;
+			if (is_object($entry)) {
+				$value = $entry->getAttributeValueObject($ak);
+			}
+			?>
+			<li><strong><?=$ak->render('label');?></strong><br/>
+			<?=$ak->render('form', $value, true)?>	
+			</li>
 		
+		<? } else { 
+			$b = $ci; 
+			$b = $entry->getComposerBlockInstance($b);
+			?>
+		
+		<li>
 		<?
 		$bv = new BlockView();
 		$bv->render($b, 'composer');
@@ -53,12 +46,12 @@ if (isset($entry)) { ?>
 		
 		</li>
 		
-	<? } ?>
-	
+		<?
+		} ?>
+	<? }  ?>
 	</ol>
 	
 	
-	<? } ?>
 
 		<? if ($entry->getComposerPageStatus() < ComposerPage::COMPOSER_PAGE_STATUS_PUBLISHED) { ?>
 			<?=Loader::helper('concrete/interface')->submit(t('Save'), 'save', 'left')?>

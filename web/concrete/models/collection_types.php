@@ -278,22 +278,35 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		public function resetComposerData() {
 			$db = Loader::db();
-			$db->query("delete from ComposerTypeAttributes where ctID = ?", array($this->getCollectionTypeID()));
+			$db->query("delete from ComposerContentLayout where ctID = ?", array($this->getCollectionTypeID()));
 			$db->Execute('delete from ComposerTypes where ctID = ?', array($this->getCollectionTypeID()));
 			$this->refreshCache();
 		}
 		
-		public function saveComposerAttributeKeys($ids = array()) {
+		public function saveComposerAttributeKeys($atids = array()) {
 			$db = Loader::db();
-			$db->Execute('delete from ComposerTypeAttributes where ctID = ?', array($this->getCollectionTypeID()));
-			if (is_array($ids)) {
-				foreach($ids as $ak) {
-					$v2 = array($this->ctID, $ak);
-					$db->query("insert into ComposerTypeAttributes (ctID, akID) values (?, ?)", $v2);
+			// we remove those that aren't in the list already
+			$ids = $atids;
+			$ids[] = -1;
+			$v = implode(',', $ids);
+			$r = $db->Execute("delete from ComposerContentLayout where akID not in ({$v}) and bID = 0 and ctID = ?", array($this->getCollectionTypeID()));
+			// now we append the new items
+			$displayOrder = $db->GetOne('select max(displayOrder) from ComposerContentLayout where ctID = ?', array($this->getCollectionTypeID()));
+			if ($displayOrder > 0) {
+				$displayOrder++;
+			} else {
+				$displayOrder = 0;
+			}
+			
+			if (is_array($atids)) {
+				foreach($atids as $ak) {
+					$db->Replace('ComposerContentLayout', array('ctID' => $this->ctID, 'akID' => $ak, 'displayOrder' => $displayOrder), array('ctID', 'akID'), true);
+					$displayOrder++;
 				}
 			}
-			$this->refreshCache();
+
 		}
+		
 		
 		public function saveComposerPublishTargetPage($c) {
 			$db = Loader::db();
@@ -317,6 +330,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db->Replace('ComposerTypes', array('ctID' => $this->ctID, 'ctComposerPublishPageMethod' => 'CHOOSE', 'ctComposerPublishPageTypeID' => 0, 'ctComposerPublishPageParentID' => 0),
 				array('ctID'), true);
 			$this->refreshCache();
+		}
+		
+		public function saveComposerContentItemOrder($items) {
+			$db = Loader::db();
+			$displayOrder = 0;
+			foreach($items as $it) {
+				$bID = $it->bID;
+				if (!$bID) {
+					$bID = 0;
+				}
+				$akID = $it->akID;
+				if (!$akID) {
+					$akID = 0;
+				}
+				$v = array($displayOrder, $bID, $akID, $this->getCollectionTypeID());
+				$db->Execute('update ComposerContentLayout set displayOrder = ? where bID = ? and akID = ? and ctID = ?', $v);
+				$displayOrder++;
+			}
 		}
 		
 		public function update($data) {
@@ -391,25 +422,38 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		public function getComposerAttributeKeys() {
-			if (count($this->composerAKIDArray) == 0) {
-				$db = Loader::db();
-				$v = array($this->getCollectionTypeID());
-				$q = "select akID from ComposerTypeAttributes where ctID = ?";
-				$r = $db->query($q, $v);
-				if ($r) {
-					while ($row = $r->fetchRow()) {
-						$this->composerAKIDArray[] = $row['akID'];
+			$db = Loader::db();
+			$akIDs = $db->GetCol('select akID from ComposerContentLayout where ctID = ? and akID > 0', array($this->ctID));
+			$attribs = array();
+			if (is_array($akIDs)) {
+				foreach($akIDs as $akID) {
+					$obj = CollectionAttributeKey::getByID($akID);
+					if (is_object($obj)) {
+						$attribs[] = $obj;
 					}
 				}
 			}
-			$objArray = array();
-			foreach($this->composerAKIDArray as $akID) {
-				$obj = CollectionAttributeKey::getByID($akID);
-				if (is_object($obj)) {
-					$objArray[] = $obj;
+			return $attribs;
+		}
+		
+		public function getComposerContentItems() {
+			$db = Loader::db();
+			$r = $db->Execute('select bID, akID, ccFilename from ComposerContentLayout where ctID = ? order by displayOrder asc', array($this->ctID));
+			$items = array();
+			while ($row = $r->FetchRow()) {
+				if ($row['akID'] > 0) {
+					$obj = CollectionAttributeKey::getByID($row['akID']);
+					if (is_object($obj)) {
+						$items[] = $obj;
+					}
+				} else if ($row['bID'] > 0) {
+					$b = Block::getByID($row['bID']);
+					if (is_object($b)) {
+						$items[] = $b;
+					}
 				}
 			}
-			return $objArray;
+			return $items;
 		}
 		
 		public function isAvailableCollectionTypeAttribute($akID) {

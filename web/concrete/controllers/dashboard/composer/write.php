@@ -106,8 +106,7 @@ class DashboardComposerWriteController extends Controller {
 			$this->set("ct", $ct);
 			$this->set('name', $entry->getCollectionName());
 			$this->set('description', $entry->getCollectionDescription());
-			$this->set('attribs', $ct->getComposerAttributeKeys());
-			$this->set('blocks', $entry->getComposerBlocks());
+			$this->set('contentitems', $ct->getComposerContentItems());
 		}
 	}
 	
@@ -149,8 +148,7 @@ class DashboardComposerWriteController extends Controller {
 		}
 		if (is_object($ct)) {
 			$this->set('ct', $ct);
-			$this->set('attribs', $ct->getComposerAttributeKeys());
-			$this->set('blocks', $ct->getCollectionTypeComposerBlocks());
+			$this->set('contentitems', $ct->getComposerContentItems());
 		}
 		return $ct;
 	}

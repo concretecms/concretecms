@@ -498,6 +498,9 @@ div#ccm-dashboard-composer input.ccm-input-text {width: 100%}
 div#ccm-dashboard-composer textarea {width: 100%; height: 100px}
 div#composer-save-status {position: absolute; top: 5px; right: 5px; font-size: 11px; color: #aaa}
 
+div.ccm-composer-content-item img {vertical-align: middle; margin-right: 4px; cursor: move}
+div.ccm-composer-content-item {border-bottom: 1px dotted #aaa; margin-bottom: 5px; padding-bottom: 5px}
+
 div#ccm-dashboard-composer .ccm-block-type .options { float:right; padding:8px }
 div#ccm-dashboard-composer .ccm-block-type-inner{ border:1px solid #e1e1e1; background-color:#f6f6f6; padding-left:8px; margin-bottom: 16px;}
-div#ccm-dashboard-composer .ccm-block-type-inner .ccm-block-type-inner-icon {width:16px; height:16px; margin-right:8px; float:left; cursor:move}
+div#ccm-dashboard-composer .ccm-block-type-inner .ccm-block-type-inner-icon {width:16px; height:16px; margin-right:8px; float:left;}
