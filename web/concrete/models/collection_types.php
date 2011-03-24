@@ -290,6 +290,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$ids[] = -1;
 			$v = implode(',', $ids);
 			$r = $db->Execute("delete from ComposerContentLayout where akID not in ({$v}) and bID = 0 and ctID = ?", array($this->getCollectionTypeID()));
+
 			// now we append the new items
 			$displayOrder = $db->GetOne('select max(displayOrder) from ComposerContentLayout where ctID = ?', array($this->getCollectionTypeID()));
 			if ($displayOrder > 0) {
@@ -298,13 +299,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$displayOrder = 0;
 			}
 			
+			$existingAKIDs = $db->GetCol('select akID from ComposerContentLayout where akID > 0 and ctID = ?', array($this->getCollectionTypeID()));
+			// this returns all akIDs currently available the composer content layout table for this composer type
+			// if something is in the new array but not in the existing one we append
+
 			if (is_array($atids)) {
 				foreach($atids as $ak) {
-					$db->Replace('ComposerContentLayout', array('ctID' => $this->ctID, 'akID' => $ak, 'displayOrder' => $displayOrder), array('ctID', 'akID'), true);
-					$displayOrder++;
+					if (!in_array($ak, $existingAKIDs)) {
+						$db->Replace('ComposerContentLayout', array('ctID' => $this->ctID, 'akID' => $ak, 'displayOrder' => $displayOrder), array('ctID', 'akID'), true);
+						$displayOrder++;
+					}
 				}
 			}
-
 		}
 		
 		
@@ -511,16 +517,4 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return PackageList::getHandle($this->pkgID);
 		}
 	
-		public function getCollectionTypeComposerBlocks() {
-			$pc = Page::getByID($this->getMasterCollectionID());
-			$tblocks = $pc->getBlocks();
-			$blocks = array();
-			foreach($tblocks as $b) {
-				if ($b->isBlockIncludedInComposer()) {
-					$blocks[] = $b;
-				}
-			}
-			return $blocks;
-		}
 	}
-?>

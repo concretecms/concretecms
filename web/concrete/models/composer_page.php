@@ -94,10 +94,13 @@ class ComposerPage extends Page {
 	
 	
 	public function getComposerBlocks() {
-		$tblocks = $this->getBlocks();
+		$db = Loader::db();
+		$bIDs = $db->GetCol('select bID from ComposerContentLayout where bID > 0 and ctID = ? order by displayOrder', array($this->getCollectionTypeID()));
 		$blocks = array();
-		foreach($tblocks as $b) {
-			if ($b->isBlockIncludedInComposer()) {
+		foreach($bIDs as $bID) {
+			$b = Block::getByID($bID);
+			$b = $this->getComposerBlockInstance($b);
+			if (is_object($b)) {
 				$blocks[] = $b;
 			}
 		}
@@ -122,9 +125,20 @@ class ComposerPage extends Page {
 		$db = Loader::db();
 		// is the block in the current page with the current id ?
 		$arHandle = $db->getOne('select arHandle from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ?', array($this->getCollectionID(), $this->getVersionID(), $b->getBlockID()));
+		if (!$arHandle) {
+			$tempBID = $b->getBlockID();
+			while ($tempBID != false) {
+				$bID = $tempBID;
+				$tempBID = $db->GetOne('select distinct br.bID from BlockRelations br inner join CollectionVersionBlocks cvb on cvb.bID = br.bID where br.originalBID = ? and cvb.cID = ?', array($bID, $this->getCollectionID()));
+			}
+			$arHandle = $db->getOne('select arHandle from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ?', array($this->getCollectionID(), $this->getVersionID(), $bID));
+		} else {
+			$bID = $b->getBlockID();
+		}
+		
 		if ($arHandle) {
 			$c = Page::getByID($this->getCollectionID(), $this->getVersionID());
-			$b = Block::getByID($b->getBlockID(), $c, $arHandle);
+			$b = Block::getByID($bID, $c, $arHandle);
 			return $b;
 		}
 		
