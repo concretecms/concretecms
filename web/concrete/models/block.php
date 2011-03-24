@@ -79,7 +79,7 @@ class Block extends Object {
 		$b = new Block;
 		if ($c == null && $a == null) {
 			// just grab really specific block stuff
-			$q = "select bID, bIsActive, BlockTypes.btID, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, cbFilename, bIncludeInComposer, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
+			$q = "select bID, bIsActive, BlockTypes.btID, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
 			$b->isOriginal = 1;
 			$v = array($bID);				
 		} else {
@@ -94,7 +94,7 @@ class Block extends Object {
 
 			$v = array($b->arHandle, $cID, $cvID, $bID);
 			$q = "select CollectionVersionBlocks.isOriginal, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbDisplayOrder,
-			Blocks.bIsActive, Blocks.bID, Blocks.btID, cbFilename, bIncludeInComposer, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID)
+			Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID)
 			inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
 		
 		}
@@ -121,7 +121,14 @@ class Block extends Object {
 			
 			$b->instance = new $class($b);
 			$b->populateIsGlobal();
-			
+			if ($c != null && $c->isMasterCollection()) {
+				$ctID = $c->getCollectionTypeID();
+				$cb = $db->GetRow('select bID, ccFilename from ComposerContentLayout where ctID = ? and bID = ?', array($ctID, $bID));
+				if (is_array($cb) && $cb['bID'] == $bID) {
+					$b->bIncludeInComposer = 1;
+					$b->cbFilename = $cb['ccFilename'];
+				}
+			}
 			
 			if ($c != null || $a != null) {
 				$ca = new Cache();
@@ -461,8 +468,8 @@ class Block extends Object {
 		if(!$bc) return false;
 					
 		$bDate = $dh->getSystemDateTime();
-		$v = array($this->bName, $bDate, $bDate, $this->bFilename, $this->bIncludeInComposer, $this->cbFilename, $this->btID, $this->uID);
-		$q = "insert into Blocks (bName, bDateAdded, bDateModified, bFilename, bIncludeInComposer, cbFilename, btID, uID) values (?, ?, ?, ?, ?, ?, ?, ?)";
+		$v = array($this->bName, $bDate, $bDate, $this->bFilename, $this->btID, $this->uID);
+		$q = "insert into Blocks (bName, bDateAdded, bDateModified, bFilename, btID, uID) values (?, ?, ?, ?, ?, ?)";
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 		$newBID = $db->Insert_ID(); // this is the latest inserted block ID
@@ -1089,19 +1096,23 @@ class Block extends Object {
 	function updateBlockComposerSettings($data) {
 		$db = Loader::db();
 		$this->updateBlockInformation($data);
-		
-		$cbFilename = $this->cbFilename;
-		if (isset($data['cbFilename'])) {
-			$cbFilename = $data['cbFilename'];
-		}
-		
-		$db->Execute('update Blocks set cbFilename = ?, bIncludeInComposer = ? where bID = ?', array(
-			$cbFilename, $data['bIncludeInComposer'], $this->getBlockID()
-		));
-		$this->refreshCache();
-		
+		if ($this->c->isMasterCollection()) {
+			$ctID = $this->c->getCollectionTypeID();
+			if ($data['bIncludeInComposer']) {
+				$displayOrder = $db->GetOne('select max(displayOrder) from ComposerContentLayout where ctID = ?', array($this->c->getCollectionTypeID()));
+				if ($displayOrder > 0) {
+					$displayOrder++;
+				} else {
+					$displayOrder = 0;
+				}
+			
+				$db->Replace('ComposerContentLayout', array('bID' => $this->getBlockID(), 'ctID' => $ctID, 'ccFilename' => $data['cbFilename'], 'displayOrder' => $displayOrder), array('bID', 'ctID'), true);
+			} else {
+				$db->Execute('delete from ComposerContentLayout where ctID = ? and bID = ?', array($ctID, $this->getBlockID()));
+			}
+			$this->refreshCache();
+		}		
 	}
 
 
 }
-?>

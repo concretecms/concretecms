@@ -125,8 +125,6 @@ bFilename                VARCHAR(32),
 bIsActive                VARCHAR(1) NOT NULL DEFAULT '1',
 btID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 uID                      INTEGER(10) UNSIGNED,
-bIncludeInComposer       INTEGER(1) UNSIGNED NOT NULL DEFAULT 0,
-cbFilename               VARCHAR(128),
                  PRIMARY KEY (bID)
 );
 
@@ -227,13 +225,6 @@ CREATE TABLE ComposerDrafts (
 cID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 cpStatus                 INTEGER(3) UNSIGNED NOT NULL DEFAULT 0,
                  PRIMARY KEY (cID)
-);
-
-CREATE TABLE ComposerDefaultBlocks (
-cID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
-bID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
-cbFilename               VARCHAR(64),
-                 PRIMARY KEY (cID, bID)
 );
 
 CREATE TABLE Config (
@@ -585,11 +576,6 @@ akID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
                  PRIMARY KEY (ctID, akID)
 );
 
-CREATE TABLE ComposerTypeAttributes (
-ctID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
-akID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
-                 PRIMARY KEY (ctID, akID)
-);
 
 CREATE TABLE PageTypes (
 ctID                     INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,

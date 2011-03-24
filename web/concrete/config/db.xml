@@ -320,12 +320,6 @@
     <field name="uID" type="I" size="10">
       <UNSIGNED/>
     </field>
-    <field name="bIncludeInComposer" type="I" size="1">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="cbFilename" type="C" size="128"/>
   </table> 
   <table name="CollectionAttributeValues">
     <field name="cID" type="I" size="10">
@@ -575,18 +569,27 @@
       <UNSIGNED/>
     </field>
   </table>
- <table name="ComposerDefaultBlocks">
-    <field name="cID" type="I" size="10">
+  <table name="ComposerContentLayout">
+    <field name="cclID" type="I" size="10">
       <KEY/>
-      <DEFAULT value="0"/>
+      <AUTOINCREMENT/>
       <UNSIGNED/>
     </field>
     <field name="bID" type="I" size="10">
-      <KEY/>
+      <NOTNULL/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="cbFilename" type="C" size="64"/>
+    <field name="akID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="displayOrder" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
   </table>
   <table name="Config">
     <field name="cfKey" type="C" size="64">
@@ -1361,18 +1364,6 @@
     </field>
   </table>
   <table name="PageTypeAttributes">
-    <field name="ctID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED />
-    </field>
-    <field name="akID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED />
-    </field>
-  </table>
-  <table name="ComposerTypeAttributes">
     <field name="ctID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>

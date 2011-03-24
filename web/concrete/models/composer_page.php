@@ -92,6 +92,7 @@ class ComposerPage extends Page {
 		return $pages;		
 	}
 	
+	
 	public function getComposerBlocks() {
 		$tblocks = $this->getBlocks();
 		$blocks = array();
@@ -100,45 +101,6 @@ class ComposerPage extends Page {
 				$blocks[] = $b;
 			}
 		}
-		return $blocks;
-
-		/*
-		// all this stuff is old
-		$blocks = array();
-		$ct = CollectionType::getByID($this->getCollectionTypeID());
-		$dfBlocks = $ct->getCollectionTypeComposerBlocks();
-		$db = Loader::db();
-		foreach($dfBlocks as $dfb) {
-			// now we check to see if there's a newer version on this page. If there is we grab it.
-			$bRow = $db->GetRow('select cvb.bID, cvb.arHandle from CollectionVersionBlocks cvb inner join BlockRelations br on (cvb.bID = br.bID) inner join ComposerDefaultBlocks cdb on cdb.bID = br.originalBID where cvb.cID = ? and cvb.cvID = ? and originalBID = ?', array($this->getCollectionID(), $this->getVersionID(), $dfb->getBlockID()));
-			if (is_array($bRow) && $bRow['bID']) {
-				$b = Block::getByID($bRow['bID'], $this, $bRow['arHandle']);
-			} else {
-				$b = $dfb;
-			}
-			if (is_object($b)) {
-				$blocks[] = $b;
-			}
-		}
-		if ($this->cpStatus == self::COMPOSER_PAGE_STATUS_NEW) {
-			$ct = CollectionType::getByID($this->getCollectionTypeID());
-			return $ct->getCollectionTypeComposerBlocks();
-		} else {
-			// otherwise get the new copies of blocks on the current page which USED to be on the master collection and marked as included in composer
-			$db = Loader::db();
-			$q = "select cvb.bID, cvb.arHandle from CollectionVersionBlocks cvb inner join BlockRelations br on (cvb.bID = br.bID) inner join ComposerDefaultBlocks cdb on cdb.bID = br.originalBID inner join CollectionVersionBlocks cvb2 on cdb.bID = cvb2.bID where cvb.cID = ? and cvb.cvID = ? order by cvb2.cbDisplayOrder";
-			$v = array($this->getCollectionID(), $this->getVersionID());
-			$r = $db->Execute($q, $v);
-			$blocks = array();
-			while ($row = $r->FetchRow()) {
-				$b = Block::getByID($row['bID'], $this, $row['arHandle']);
-				if (is_object($b)) {
-					$blocks[] = $b;
-				}
-			}
-			return $blocks;
-		}*/
-		
 		return $blocks;
 	}
 	
@@ -153,6 +115,19 @@ class ComposerPage extends Page {
 			return $c;
 		}
 		return false;
+	}
+	
+	public function getComposerBlockInstance($b) {
+		// this gets a master collection block and finds the current block in the current entry that matches it, complete with area name, etc...
+		$db = Loader::db();
+		// is the block in the current page with the current id ?
+		$arHandle = $db->getOne('select arHandle from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ?', array($this->getCollectionID(), $this->getVersionID(), $b->getBlockID()));
+		if ($arHandle) {
+			$c = Page::getByID($this->getCollectionID(), $this->getVersionID());
+			$b = Block::getByID($b->getBlockID(), $c, $arHandle);
+			return $b;
+		}
+		
 	}
 
 }
