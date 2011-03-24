@@ -2,6 +2,8 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $ih = Loader::helper('concrete/interface');
+$cap = Loader::helper('concrete/dashboard');
+
 $valt = Loader::helper('validation/token');
 $form = Loader::helper('form');
 $ctArray = CollectionType::getList();
@@ -188,91 +190,6 @@ if ($ctEditMode) {
 	?></tr>
 	<? } ?>
 	<tr>
-		<td colspan="3" class="header"><?=t('Composer')?></td>
-	</tr>
-	<tr>
-		<td colspan="3">
-			<?=$form->checkbox('ctIncludeInComposer', 1, $ct->isCollectionTypeIncludedInComposer() == 1)?> <?=$form->label('ctIncludeInComposer', t('Yes, include this page type in Composer.'))?>
-		</td>
-	</tr>
-	<tr class="row-composer" style="display: none">
-		<td colspan="3" class="subheader"><?=t('Composer Publishing Settings')?></td>
-	</tr>
-	<tr class="row-composer" style="display: none">
-		<td colspan="3">
-			<div>
-			<?=$form->radio('ctComposerPublishPageMethod', 'CHOOSE', $ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE' || $ct->getCollectionTypeComposerPublishMethod == null)?>
-			<?=$form->label('ctComposerPublishPageMethod1', t('Choose from all pages when publishing.'))?>
-			
-			</div>
-			
-			<div>
-			<?=$form->radio('ctComposerPublishPageMethod', 'PAGE_TYPE', $ct->getCollectionTypeComposerPublishMethod() == 'PAGE_TYPE')?>
-			<?=$form->label('ctComposerPublishPageMethod2', t('Choose from pages of a certain type when publishing.'))?>
-			
-			</div>
-
-			<div style="display: none; padding: 10px" id="ccm-composer-choose-parent-page-type">
-				<? $types = array();
-				foreach($ctArray as $cta) {
-					$types[$cta->getCollectionTypeID()] = $cta->getCollectionTypeName();
-				}
-				?>
-				<?=$form->select('ctComposerPublishPageTypeID', $types, $ct->getCollectionTypeComposerPublishPageTypeID())?>
-			</div>
-			
-			<div>
-			<?=$form->radio('ctComposerPublishPageMethod', 'PARENT', $ct->getCollectionTypeComposerPublishMethod() == 'PARENT')?>
-			<?=$form->label('ctComposerPublishPageMethod3', t('Always publish below a certain page.'))?>
-			</div>
-			
-			
-			<div style="display: none; padding: 10px" id="ccm-composer-choose-parent">
-			
-			<? $pf = Loader::helper('form/page_selector');
-			print $pf->selectPage('ctComposerPublishPageParentID', $ct->getCollectionTypeComposerPublishPageParentID());
-			?>
-			
-			</div>
-	
-		
-		</td>
-	</tr>
-	<tr class="row-composer" style="display: none">
-		<td colspan="3" class="subheader"><?=t('Attributes to Display in Composer')?></td>
-	</tr>
-	<?
-		$selectedAttributes = array();
-		$cpattribs = $ct->getComposerAttributeKeys();
-		foreach($cpattribs as $cpa) {
-			$selectedAttributes[] = $cpa->getAttributeKeyID();
-		}
-		
-		$attribs = CollectionAttributeKey::getList();
-		$i = 0;
-		foreach($attribs as $ak) { 
-		if ($i == 0) { ?>
-			<tr class="row-composer" style="display: none">
-		<? } ?>
-		
-		<td><?=$form->checkbox('composerAKID[]', $ak->getAttributeKeyID(), in_array($ak->getAttributeKeyID(), $selectedAttributes))?> <?=$form->label('composerAKID_' . $ak->getAttributeKeyID(), $ak->getAttributeKeyName())?></td>
-		
-		<? $i++;
-		
-		if ($i == 3) { ?>
-		</tr>
-		<? 
-		$i = 0;
-		}
-		
-	}
-	
-	if ($i < 3 && $i > 0) {
-		for ($j = $i; $j < 3; $j++) { ?>
-			<td>&nbsp;</td>
-		<? }
-	?></tr>
-	<? } ?>	<tr>
 		<td colspan="3" class="header">
 		<? print $ih->submit(t('Update Page Type'), 'update_page_type', 'right');?>
 		<? print $ih->button(t('Cancel'), $this->url('/dashboard/pages/types'), 'left');?>
@@ -417,94 +334,7 @@ if ($ctEditMode) {
 		<? }
 	?></tr>
 	<? } ?>
-	<tr>
-		<td colspan="3" class="header"><?=t('Composer')?></td>
-	</tr>
-	<tr>
-		<td colspan="3">
-			<?=$form->checkbox('ctIncludeInComposer', 1)?> <?=$form->label('ctIncludeInComposer', t('Yes, include this page type in Composer.'))?>
-		</td>
-	</tr>
-	<tr class="row-composer" style="display: none">
-		<td colspan="3" class="subheader"><?=t('Composer Publishing Settings')?></td>
-	</tr>
-	<tr class="row-composer" style="display: none">
-		<td colspan="3">
-			<div>
-			<?=$form->radio('ctComposerPublishPageMethod', 'CHOOSE', true)?>
-			<?=$form->label('ctComposerPublishPageMethod1', t('Choose from all pages when publishing.'))?>
-			
-			</div>
-			
-			<div>
-			<?=$form->radio('ctComposerPublishPageMethod', 'PAGE_TYPE')?>
-			<?=$form->label('ctComposerPublishPageMethod2', t('Choose from pages of a certain type when publishing.'))?>
-			
-			</div>
 
-			<div style="display: none; padding: 10px" id="ccm-composer-choose-parent-page-type">
-				<? $types = array();
-				foreach($ctArray as $ct) {
-					$types[$ct->getCollectionTypeID()] = $ct->getCollectionTypeName();
-				}
-				?>
-				<?=$form->select('ctComposerPublishPageTypeID', $types)?>
-			</div>
-			
-			<div>
-			<?=$form->radio('ctComposerPublishPageMethod', 'PARENT')?>
-			<?=$form->label('ctComposerPublishPageMethod3', t('Always publish below a certain page.'))?>
-			</div>
-			
-			
-			<div style="display: none; padding: 10px" id="ccm-composer-choose-parent">
-			
-			<? $pf = Loader::helper('form/page_selector');
-			print $pf->selectPage('ctComposerPublishPageParentID');
-			?>
-			
-			</div>
-	
-		
-		</td>
-	</tr>
-	<tr class="row-composer" style="display: none">
-		<td colspan="3" class="subheader"><?=t('Attributes to Display  in Composer')?></td>
-	</tr>
-	<?
-		$attribs = CollectionAttributeKey::getList();
-		$i = 0;
-		foreach($attribs as $ak) { 
-		if ($i == 0) { ?>
-			<tr class="row-composer" style="display: none">
-		<? } ?>
-		
-		<td><?=$form->checkbox('composerAKID[]', $ak->getAttributeKeyID())?> <?=$form->label('composerAKID_' . $ak->getAttributeKeyID(), $ak->getAttributeKeyName())?></td>
-		
-		<? $i++;
-		
-		if ($i == 3) { ?>
-		</tr>
-		<? 
-		$i = 0;
-		}
-		
-	}
-	
-	if ($i < 3 && $i > 0) {
-		for ($j = $i; $j < 3; $j++) { ?>
-			<td>&nbsp;</td>
-		<? }
-	?></tr>
-	<? } ?>
-
-	<tr>
-		<td colspan="3" class="header">
-		<? print $ih->submit(t('Add Page Type'), 'add_page_type', 'right');?>
-		<? print $ih->button(t('Cancel'), $this->url('/dashboard/pages/types'), 'left');?>
-		</td>
-	</tr>
-	</table>
 	</div>
 	
 	<br>
@@ -530,6 +360,9 @@ if ($ctEditMode) {
 		<td class="subheader"><?=t('Package')?></td>
 		<td class="subheader"><div style="width: 90px"></div></td>
 		<td class="subheader"><div style="width: 60px"></div></td>
+		<? if ($cap->canAccessComposer()) { ?>
+			<td class="subheader"><div style="width: 60px"></div></td>
+		<? } ?>
 	</tr>
 	<? foreach ($ctArray as $ct) { ?>
 	<tr>
@@ -560,8 +393,11 @@ if ($ctEditMode) {
 		<? } ?>
 	
 		</td>
-		<td><? print $ih->button(t('Edit'), $this->url('/dashboard/pages/types?ctID=' . $ct->getCollectionTypeID() . '&task=edit'))?></td>
-
+		
+		<td><? print $ih->button(t('Settings'), $this->url('/dashboard/pages/types?ctID=' . $ct->getCollectionTypeID() . '&task=edit'))?></td>
+		<? if ($cap->canAccessComposer()) { ?>
+			<td><? print $ih->button(t('Composer'), $this->url('/dashboard/pages/types/composer', 'view', $ct->getCollectionTypeID()))?></td>
+		<? } ?>	
 	</tr>
 	<? } ?>
 	
@@ -583,38 +419,3 @@ if ($ctEditMode) {
 	
 	
 <? } ?>
-
-<script type="text/javascript">
-ccm_setupComposerFields = function() {
-	
-	if ($("input[name=ctIncludeInComposer]").attr('checked')) {
-		$(".row-composer").show();
-	} else {
-		$(".row-composer").hide();
-	}
-	var val = $('input[name=ctComposerPublishPageMethod]:checked').val();
-	switch(val) {
-		case 'PAGE_TYPE':
-			$("#ccm-composer-choose-parent-page-type").show();
-			$("#ccm-composer-choose-parent").hide();
-			break;
-		case 'PARENT':
-			$("#ccm-composer-choose-parent-page-type").hide();
-			$("#ccm-composer-choose-parent").show();
-			break;
-		default:
-			$("#ccm-composer-choose-parent-page-type").hide();
-			$("#ccm-composer-choose-parent").hide();
-		break;
-	}
-}
-
-$(function() {
-	$("input[name=ctIncludeInComposer], input[name=ctComposerPublishPageMethod]").click(function() {
-		ccm_setupComposerFields();
-	});
-	ccm_setupComposerFields();
-});
-
-</script>
-
