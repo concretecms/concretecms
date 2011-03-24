@@ -237,26 +237,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					}
 				}
 				
-				if (isset($data['ctIncludeInComposer']) && $data['ctIncludeInComposer'] == 1) {
-					$ctComposerPublishPageTypeID = 0;
-					$ctComposerPublishPageParentID = 0;
-					if ($data['ctComposerPublishPageMethod'] == 'PAGE_TYPE') {
-						$ctComposerPublishPageTypeID = $data['ctComposerPublishPageTypeID'];
-					} else if ($data['ctComposerPublishPageMethod'] == 'PARENT') {
-						$ctComposerPublishPageParentID = $data['ctComposerPublishPageParentID'];
-					}
-					$db->Execute('insert into ComposerTypes (ctID, ctComposerPublishPageMethod, ctComposerPublishPageTypeID, ctComposerPublishPageParentID) values (?, ?, ?, ?)', array(
-						$ctID, $data['ctComposerPublishPageMethod'], $ctComposerPublishPageTypeID, $ctComposerPublishPageParentID
-					));
-					if (is_array($data['composerAKID'])) {
-						foreach($data['composerAKID'] as $ak) {
-							$v2 = array($ctID, $ak);
-							$db->query("insert into ComposerTypeAttributes (ctID, akID) values (?, ?)", $v2);
-						}
-					}
-					
-				}
-
 				// now that we've created the collection type, we create the master collection
 				$dh = Loader::helper('date');
 				$cDate = $dh->getSystemDateTime();
@@ -296,6 +276,49 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $pages;
 		}
 		
+		public function resetComposerData() {
+			$db = Loader::db();
+			$db->query("delete from ComposerTypeAttributes where ctID = ?", array($this->getCollectionTypeID()));
+			$db->Execute('delete from ComposerTypes where ctID = ?', array($this->getCollectionTypeID()));
+			$this->refreshCache();
+		}
+		
+		public function saveComposerAttributeKeys($ids = array()) {
+			$db = Loader::db();
+			$db->Execute('delete from ComposerTypeAttributes where ctID = ?', array($this->getCollectionTypeID()));
+			if (is_array($ids)) {
+				foreach($ids as $ak) {
+					$v2 = array($this->ctID, $ak);
+					$db->query("insert into ComposerTypeAttributes (ctID, akID) values (?, ?)", $v2);
+				}
+			}
+			$this->refreshCache();
+		}
+		
+		public function saveComposerPublishTargetPage($c) {
+			$db = Loader::db();
+			$db->Execute('delete from ComposerTypes where ctID = ?', array($this->getCollectionTypeID()));
+			$db->Replace('ComposerTypes', array('ctID' => $this->ctID, 'ctComposerPublishPageMethod' => 'PARENT', 'ctComposerPublishPageTypeID' => 0, 'ctComposerPublishPageParentID' => $c->getCollectionID()),
+				array('ctID'), true);
+			$this->refreshCache();
+		}
+		
+		public function saveComposerPublishTargetPageType($ct) {
+			$db = Loader::db();
+			$db->Execute('delete from ComposerTypes where ctID = ?', array($this->getCollectionTypeID()));
+			$db->Replace('ComposerTypes', array('ctID' => $this->ctID, 'ctComposerPublishPageMethod' => 'PAGE_TYPE', 'ctComposerPublishPageTypeID' => $ct->getCollectionTypeID(), 'ctComposerPublishPageParentID' => 0),
+				array('ctID'), true);
+			$this->refreshCache();
+		}
+		
+		public function saveComposerPublishTargetAll() {
+			$db = Loader::db();
+			$db->Execute('delete from ComposerTypes where ctID = ?', array($this->getCollectionTypeID()));
+			$db->Replace('ComposerTypes', array('ctID' => $this->ctID, 'ctComposerPublishPageMethod' => 'CHOOSE', 'ctComposerPublishPageTypeID' => 0, 'ctComposerPublishPageParentID' => 0),
+				array('ctID'), true);
+			$this->refreshCache();
+		}
+		
 		public function update($data) {
 			$db = Loader::db();
 
@@ -306,28 +329,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			// metadata
 			$v2 = array($this->getCollectionTypeID());
 			$db->query("delete from PageTypeAttributes where ctID = ?", $v2);
-			$db->query("delete from ComposerTypeAttributes where ctID = ?", $v2);
 
-			if (isset($data['ctIncludeInComposer']) && $data['ctIncludeInComposer'] == 1) {
-				$ctComposerPublishPageTypeID = 0;
-				$ctComposerPublishPageParentID = 0;
-				if ($data['ctComposerPublishPageMethod'] == 'PAGE_TYPE') {
-					$ctComposerPublishPageTypeID = $data['ctComposerPublishPageTypeID'];
-				} else if ($data['ctComposerPublishPageMethod'] == 'PARENT') {
-					$ctComposerPublishPageParentID = $data['ctComposerPublishPageParentID'];
-				}
-				$db->Replace('ComposerTypes', array('ctID' => $this->ctID, 'ctComposerPublishPageMethod' => $data['ctComposerPublishPageMethod'], 'ctComposerPublishPageTypeID' => $ctComposerPublishPageTypeID, 'ctComposerPublishPageParentID' => $ctComposerPublishPageParentID),
-					array('ctID'), true);				
-				if (is_array($data['composerAKID'])) {
-					foreach($data['composerAKID'] as $ak) {
-						$v2 = array($this->ctID, $ak);
-						$db->query("insert into ComposerTypeAttributes (ctID, akID) values (?, ?)", $v2);
-					}
-				}
-			} else {
-				$db->Execute('delete from ComposerTypes where ctID = ?', array($this->getCollectionTypeID()));
-			}
-			
 			if (is_array($data['akID'])) {
 				foreach($data['akID'] as $ak) {
 					$v3 = array($this->getCollectionTypeID(), $ak);
