@@ -57,7 +57,6 @@ class DashboardComposerWriteController extends Controller {
 				$data = array('cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
 				$entry->update($data);
 				$this->saveData($entry);
-				$entry->markComposerPageAsSaved();
 				if ($this->post('ccm-submit-publish')) {
 					$entry->move($parent);
 					$v = CollectionVersion::get($entry, 'RECENT');
