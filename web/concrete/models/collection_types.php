@@ -123,7 +123,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db->query("DELETE FROM PageTypes WHERE ctID = ?",array($this->ctID));
 			$db->query("DELETE FROM PageTypeAttributes WHERE ctID = ?",array($this->ctID));
 			$db->query("DELETE FROM ComposerTypes WHERE ctID = ?",array($this->ctID));
-			$db->query("DELETE FROM ComposerTypeAttributes WHERE ctID = ?",array($this->ctID));
+			$db->query("DELETE FROM ComposerContentLayout WHERE ctID = ?",array($this->ctID));
 			$this->refreshCache();
 		}
 		

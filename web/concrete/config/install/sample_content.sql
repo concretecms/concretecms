@@ -181,47 +181,47 @@ INSERT INTO BlockTypes VALUES(1,'content','Content','HTML/WYSIWYG Editor Content
  ,(19,'next_previous','Next & Previous Nav','Navigate through sibling pages.',1,0,0,0,430,300,0)
  ,(20,'tags','Tags','List pages based on type, area.',1,0,0,0,500,350,0);
 
-INSERT INTO Blocks VALUES(1,NULL,NOW(),NOW(),'header_menu.php','1',3,1,0,'')
- ,(2,NULL,NOW(),NOW(),NULL,'1',11,1,0,'')
- ,(3,NULL,NOW(),NOW(),NULL,'1',3,1,0,'')
- ,(4,NULL,NOW(),NOW(),NULL,'1',1,1,0,'')
- ,(5,NULL,NOW(),NOW(),NULL,'1',1,1,0,'')
- ,(6,NULL,NOW(),NOW(),NULL,'1',16,1,0,'')
- ,(7,NULL,NOW(),NOW(),'header_menu.php','1',3,1,0,'')
- ,(8,NULL,NOW(),NOW(),NULL,'1',8,1,0,'')
- ,(9,NULL,NOW(),NOW(),NULL,'1',3,1,0,'')
- ,(10,NULL,NOW(),NOW(),'header_menu.php','1',3,1,0,'')
- ,(11,NULL,NOW(),NOW(),NULL,'1',8,1,0,'')
- ,(12,NULL,NOW(),NOW(),'header_menu.php','1',3,1,0,'')
- ,(13,NULL,NOW(),NOW(),NULL,'1',8,1,0,'')
- ,(14,NULL,NOW(),NOW(),'breadcrumb.php','1',3,1,0,'')
- ,(15,NULL,NOW(),NOW(),NULL,'1',1,1,0,'')
- ,(16,NULL,NOW(),NOW(),NULL,'1',1,1,0,'')
- ,(17,NULL,NOW(),NOW(),NULL,'1',10,1,0,'')
- ,(18,NULL,NOW(),NOW(),NULL,'1',18,1,0,'')
- ,(19,NULL,NOW(),NOW(),NULL,'1',12,1,0,'')
- ,(20,NULL,NOW(),NOW(),NULL,'1',3,1,0,'')
- ,(21,NULL,NOW(),NOW(),NULL,'1',1,1,0,'')
- ,(22,NULL,NOW(),NOW(),NULL,'1',12,1,0,'')
- ,(23,NULL,NOW(),NOW(),NULL,'1',20,1,0,'')
- ,(24,NULL,NOW(),NOW(),NULL,'1',1,1,0,'')
- ,(25,NULL,NOW(),NOW(),NULL,'1',1,1,0,'')
- ,(26,NULL,NOW(),NOW(),NULL,'1',1,1,0,'')
- ,(27,NULL,NOW(),NOW(),NULL,'1',10,1,0,'')
- ,(28,NULL,NOW(),NOW(),NULL,'1',18,1,0,'')
- ,(29,NULL,NOW(),NOW(),'tag_cloud','1',12,1,0,'')
- ,(30,NULL,NOW(),NOW(),'blog_index.php','1',6,1,0,'')
- ,(31,NULL,NOW(),NOW(),NULL,'1',1,1,0,'')
- ,(32,NULL,NOW(),NOW(),NULL,'1',1,1,0,'')
- ,(33,NULL,NOW(),NOW(),NULL,'1',20,1,0,'')
- ,(34,NULL,NOW(),NOW(),NULL,'1',1,1,0,'')
- ,(35,NULL,NOW(),NOW(),NULL,'1',1,1,0,'')
- ,(36,NULL,NOW(),NOW(),NULL,'1',1,1,0,'')
- ,(37,NULL,NOW(),NOW(),NULL,'1',17,1,0,'')
- ,(38,NULL,NOW(),NOW(),NULL,'1',1,1,0,'')
- ,(39,NULL,NOW(),NOW(),NULL,'1',20,1,0,'')
- ,(40,NULL,NOW(),NOW(),NULL,'1',19,1,0,'')
- ,(41,'My_Site_Name',NOW(),NOW(),NULL,'1',1,1,0,'');
+INSERT INTO Blocks VALUES(1,NULL,NOW(),NOW(),'header_menu.php','1',3,1)
+ ,(2,NULL,NOW(),NOW(),NULL,'1',11,1)
+ ,(3,NULL,NOW(),NOW(),NULL,'1',3,1)
+ ,(4,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(5,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(6,NULL,NOW(),NOW(),NULL,'1',16,1)
+ ,(7,NULL,NOW(),NOW(),'header_menu.php','1',3,1)
+ ,(8,NULL,NOW(),NOW(),NULL,'1',8,1)
+ ,(9,NULL,NOW(),NOW(),NULL,'1',3,1)
+ ,(10,NULL,NOW(),NOW(),'header_menu.php','1',3,1)
+ ,(11,NULL,NOW(),NOW(),NULL,'1',8,1)
+ ,(12,NULL,NOW(),NOW(),'header_menu.php','1',3,1)
+ ,(13,NULL,NOW(),NOW(),NULL,'1',8,1)
+ ,(14,NULL,NOW(),NOW(),'breadcrumb.php','1',3,1)
+ ,(15,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(16,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(17,NULL,NOW(),NOW(),NULL,'1',10,1)
+ ,(18,NULL,NOW(),NOW(),NULL,'1',18,1)
+ ,(19,NULL,NOW(),NOW(),NULL,'1',12,1)
+ ,(20,NULL,NOW(),NOW(),NULL,'1',3,1)
+ ,(21,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(22,NULL,NOW(),NOW(),NULL,'1',12,1)
+ ,(23,NULL,NOW(),NOW(),NULL,'1',20,1)
+ ,(24,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(25,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(26,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(27,NULL,NOW(),NOW(),NULL,'1',10,1)
+ ,(28,NULL,NOW(),NOW(),NULL,'1',18,1)
+ ,(29,NULL,NOW(),NOW(),'tag_cloud','1',12,1)
+ ,(30,NULL,NOW(),NOW(),'blog_index.php','1',6,1)
+ ,(31,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(32,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(33,NULL,NOW(),NOW(),NULL,'1',20,1)
+ ,(34,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(35,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(36,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(37,NULL,NOW(),NOW(),NULL,'1',17,1)
+ ,(38,NULL,NOW(),NOW(),NULL,'1',1,1)
+ ,(39,NULL,NOW(),NOW(),NULL,'1',20,1)
+ ,(40,NULL,NOW(),NOW(),NULL,'1',19,1)
+ ,(41,'My_Site_Name',NOW(),NOW(),NULL,'1',1,1);
 
 INSERT INTO CollectionAttributeValues VALUES(66,1,11,19)
  ,(67,2,1,11)
@@ -603,7 +603,8 @@ INSERT INTO CollectionVersions VALUES(2,1,NULL,NULL,NULL,NOW(),NOW(),'Initial Ve
  ,(36,2,'Scrapbook','scrapbook','Share content across your site.',NOW(),NOW(),'New Version 2',0,1,1,NULL,NULL)
  ,(75,1,'Composer','composer','Write for your site',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(76,1,'Write','write',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
- ,(77,1,'Drafts','drafts',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL);
+ ,(77,1,'Drafts','drafts',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(78,1,'Composer','composer',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL);
 
 INSERT INTO Collections VALUES(1,NOW(),NOW(),'home')
  ,(2,NOW(),NOW(),NULL)
@@ -670,7 +671,8 @@ INSERT INTO Collections VALUES(1,NOW(),NOW(),'home')
  ,(74,NOW(),NOW(),'members')
  ,(75,NOW(),NOW(),'composer')
  ,(76,NOW(),NOW(),'write')
- ,(77,NOW(),NOW(),'drafts');
+ ,(77,NOW(),NOW(),'drafts')
+ ,(78,NOW(),NOW(),'composer');
 
 INSERT INTO Config VALUES('SITE',NOW(),'{[CCM:SITE]}',0,0);
 
@@ -797,14 +799,17 @@ INSERT INTO PagePaths VALUES(1,5,'/login','1')
  ,(66,74,'/members','1')
  ,(69,75,'/dashboard/composer','1')
  ,(70,76,'/dashboard/composer/write','1')
- ,(71,77,'/dashboard/composer/drafts','1');
+ ,(71,77,'/dashboard/composer/drafts','1')
+ ,(72,78,'/dashboard/pages/types/composer','1');
 
+ 
 INSERT INTO PagePermissions VALUES(5,1,0,'r',NULL,NULL)
  ,(5,2,0,'r',NULL,NULL)
  ,(6,1,0,'r',NULL,NULL)
  ,(15,3,0,'r:wa:adm',NULL,NULL)
  ,(1,1,0,'r',NULL,NULL)
  ,(1,3,0,'r:rv:wa:db:av:dc:adm',NULL,NULL);
+
 
 INSERT INTO PageSearchIndex VALUES(1,'Sidebar\r\n Everything about concrete5 is completely customizable through the CMS. This is a separate area from the main content on the homepage. You can&nbsp;drag and drop blocks&nbsp;like this around your layout. \r\n &nbsp;  Welcome to concrete5 - an Open Source CMS\r\n Content Management is easy with concrete5\'s in-context editing. Just&nbsp;login&nbsp;and you can add and change things as you browse your site.&nbsp; \r\n Here\'s some videos you can watch learn how to: \r\n\r\nEdit&nbsp;this page.\r\nAdd a&nbsp;new page.\r\nAdd some basic functionality, like&nbsp;a Form.\r\nFinding &amp; adding&nbsp;more functionality and themes.\r\n\r\n We\'ve taken the liberty to build out the rest of this site with some sample content that will help you learn concrete5. Wander around a bit, or just goto the&nbsp;Dashboard &gt; Sitemap&nbsp;and delete the parts you don\'t want quickly. \r\n &nbsp;  ','Home',NULL,NULL,NOW(),NOW(),NULL)
  ,(67,'Site Map ','Search','','/search',NOW(),NOW(),NULL)
@@ -906,7 +911,8 @@ INSERT INTO Pages VALUES(1,1,'0',1,0,NULL,NULL,NOW(),NULL,NOW(),NULL,NULL,1,1,'O
  ,(74,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/members.php',0,NULL,0,0,10,1,0,0,-1,'0',0)
  ,(75,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/composer/view.php',0,NULL,0,2,0,15,0,0,-1,'0',0)
  ,(76,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/composer/write.php',0,NULL,0,0,0,75,0,0,-1,'0',0)
- ,(77,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/composer/drafts.php',0,NULL,0,0,1,75,0,0,-1,'0',0);
+ ,(77,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/composer/drafts.php',0,NULL,0,0,1,75,0,0,-1,'0',0)
+ ,(78,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/pages/types/composer.php',0,NULL,0,0,1,43,0,0,-1,'0',0);
 
 
 INSERT INTO TaskPermissions VALUES(1,'access_task_permissions','Change Task Permissions','',0)

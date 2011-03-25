@@ -334,6 +334,13 @@ if ($ctEditMode) {
 		<? }
 	?></tr>
 	<? } ?>
+	 <tr>
+	<td colspan="3" class="header">
+	   <? print $ih->submit(t('Add Page Type'), 'add_page_type', 'right');?>
+	   <? print $ih->button(t('Cancel'), $this->url('/dashboard/pages/types'), 'left');?>
+	   </td>
+	</tr>
+	</table>
 
 	</div>
 	

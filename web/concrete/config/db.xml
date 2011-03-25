@@ -563,6 +563,11 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="cpPublishParentID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
   </table>
   <table name="ComposerContentLayout">
     <field name="cclID" type="I" size="10">
@@ -585,6 +590,12 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="ctID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ccFilename" type="C" size="128"/>
   </table>
   <table name="Config">
     <field name="cfKey" type="C" size="64">
