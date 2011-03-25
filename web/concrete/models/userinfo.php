@@ -764,136 +764,123 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		function UserInfoList($obj) {
 			$db = Loader::db();
-			switch(strtolower(get_class($obj))) {
-				case 'page':
-					$cID = $obj->getPermissionsCollectionID();
-					$q = "select uID, cgPermissions, cgStartDate, cgEndDate from PagePermissions where cID = '{$cID}' and uID > 0";
-					$r = $db->query($q);
-					if ($r) {
-						$userPermissionsArray = array();
-						$userIDArray = array();
-						$upTemp = array();
-						while ($row = $r->fetchRow()) {
+			if ($obj instanceof Page) { 
+				$cID = $obj->getPermissionsCollectionID();
+				$q = "select uID, cgPermissions, cgStartDate, cgEndDate from PagePermissions where cID = '{$cID}' and uID > 0";
+				$r = $db->query($q);
+				if ($r) {
+					$userPermissionsArray = array();
+					$userIDArray = array();
+					$upTemp = array();
+					while ($row = $r->fetchRow()) {
+						$userIDArray[] = $row['uID'];
+						$upTemp['permissionSet'] = $row['cgPermissions'];
+						$upTemp['upStartDate'] = $row['cgStartDate'];
+						$upTemp['upEndDate'] = $row['cgEndDate'];
+						$userPermissionsArray[$row['uID']] = $upTemp;
+					}
+				}
+				$q = "select uID from PagePermissionPageTypes where cID = '{$cID}' and uID > 0";
+				$r = $db->query($q);
+				if ($r) {
+					while ($row = $r->fetchRow()) {
+						if (!in_array($row['uID'], $userIDArray)) {
 							$userIDArray[] = $row['uID'];
-							$upTemp['permissionSet'] = $row['cgPermissions'];
-							$upTemp['upStartDate'] = $row['cgStartDate'];
-							$upTemp['upEndDate'] = $row['cgEndDate'];
-							$userPermissionsArray[$row['uID']] = $upTemp;
+							$userPermissionsArray[$row['uID']] = array();
 						}
 					}
-					$q = "select uID from PagePermissionPageTypes where cID = '{$cID}' and uID > 0";
-					$r = $db->query($q);
-					if ($r) {
-						while ($row = $r->fetchRow()) {
-							if (!in_array($row['uID'], $userIDArray)) {
-								$userIDArray[] = $row['uID'];
-								$userPermissionsArray[$row['uID']] = array();
-							}
-						}
+				}
+				foreach($userIDArray as $uID) {
+					$ui = UserInfo::getByID($uID, $userPermissionsArray[$uID]);
+					if( !$ui || !method_exists($ui,'getUserID') ) continue;
+					$this->uiArray[]=$ui;
+				}
+				unset($userPermissionsArray);
+				unset($upTemp);
+				unset($userIDArray);
+			} else if ($obj instanceof Block) { 
+				$c = $obj->getBlockCollectionObject();
+				$cID = $c->getCollectionID();
+				$cvID = $c->getVersionID();
+				$bID = $obj->getBlockID();
+				$q = "select uID, cbgPermissions from CollectionVersionBlockPermissions where cID = '{$cID}' and cvID = '{$cvID}' and bID = '{$bID}' and uID > 0";
+				$r = $db->query($q);
+				if ($r) {
+					while ($row = $r->fetchRow()) {
+							$userPermissionsArray['permissionSet'] = $row['cbgPermissions'];
+							$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
+							if( !$ui || !method_exists($ui,'getUserID') ) continue;
+							$this->uiArray[]=$ui;								
 					}
-					foreach($userIDArray as $uID) {
-						$ui = UserInfo::getByID($uID, $userPermissionsArray[$uID]);
-						if( !$ui || !method_exists($ui,'getUserID') ) continue;
-						$this->uiArray[]=$ui;
-					}
-					unset($userPermissionsArray);
-					unset($upTemp);
-					unset($userIDArray);
-					break;
-				case 'block':
-					$c = $obj->getBlockCollectionObject();
-					$cID = $c->getCollectionID();
-					$cvID = $c->getVersionID();
-					$bID = $obj->getBlockID();
-					$q = "select uID, cbgPermissions from CollectionVersionBlockPermissions where cID = '{$cID}' and cvID = '{$cvID}' and bID = '{$bID}' and uID > 0";
-					$r = $db->query($q);
-					if ($r) {
-						while ($row = $r->fetchRow()) {
-								$userPermissionsArray['permissionSet'] = $row['cbgPermissions'];
-								$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
-								if( !$ui || !method_exists($ui,'getUserID') ) continue;
-								$this->uiArray[]=$ui;								
-						}
-					}
-					break;
-				case 'taskpermissionlist':
-					$tpis = $obj->getTaskPermissionIDs();
-					$q = "select distinct uID from TaskPermissionUserGroups where tpID in (" . implode(',', $tpis) . ") and uID > 0";
-					$r = $db->Execute($q);
-					while ($row = $r->FetchRow()) {
+				}
+			} else if ($obj instanceof TaskPermissionList) {
+				$tpis = $obj->getTaskPermissionIDs();
+				$q = "select distinct uID from TaskPermissionUserGroups where tpID in (" . implode(',', $tpis) . ") and uID > 0";
+				$r = $db->Execute($q);
+				while ($row = $r->FetchRow()) {
+					$userPermissionsArray['permissions'] = $row;
+					$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
+					if( !$ui || !method_exists($ui,'getUserID') ) continue;
+					$this->uiArray[]=$ui;
+				}
+			} else if ($obj instanceof FileSetList) { 
+				$fsIDs = array();
+				foreach($obj->sets as $fs) {
+					$fsIDs[] = $fs->getFileSetID();
+				}
+				$where = "fsID in (" . implode(',', $fsIDs) . ")";
+
+				$gID = $this->gID;
+				$q = "select uID, MAX(canRead) as canRead, MAX(canSearch) as canSearch, max(canWrite) as canWrite, max(canAdmin) as canAdmin from FileSetPermissions where {$where} and uID > 0 group by uID";
+				$r = $db->Execute($q);
+				while ($row = $r->fetchRow()) {
+					$userPermissionsArray['permissions'] = $row;
+					$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
+					if( !$ui || !method_exists($ui,'getUserID') ) continue;
+					$this->uiArray[]=$ui;	
+				}
+			} else if ($obj instanceof FileSet) { 
+				$fsID = $obj->getFileSetID();
+				$q = "select uID, canSearch, canRead, canWrite, canAdmin, canAdd from FileSetPermissions where fsID = '{$fsID}' and uID > 0";
+				$r = $db->query($q);
+				if ($r) {
+					while ($row = $r->fetchRow()) {
 						$userPermissionsArray['permissions'] = $row;
+						if ($row['canAdd'] == FilePermissions::PTYPE_CUSTOM) {
+							$userPermissionsArray['permissions']['canAddExtensions'] = $db->GetCol("select extension from FilePermissionFileTypes where uID = {$row['uID']} and fsID = {$fsID}");
+						}
 						$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
 						if( !$ui || !method_exists($ui,'getUserID') ) continue;
-						$this->uiArray[]=$ui;
+						$this->uiArray[]=$ui;								
 					}
-					break;
-				case 'filesetlist':
-					$fsIDs = array();
-					foreach($obj->sets as $fs) {
-						$fsIDs[] = $fs->getFileSetID();
-					}
-					$where = "fsID in (" . implode(',', $fsIDs) . ")";
-
-					$gID = $this->gID;
-					$q = "select uID, MAX(canRead) as canRead, MAX(canSearch) as canSearch, max(canWrite) as canWrite, max(canAdmin) as canAdmin from FileSetPermissions where {$where} and uID > 0 group by uID";
-					$r = $db->Execute($q);
+				}
+			} else if ($obj instanceof File) {
+				$fID = $obj->getFileID();
+				$q = "select uID, canRead, canWrite, canSearch, canAdmin from FilePermissions where fID = '{$fID}' and uID > 0";
+				$r = $db->query($q);
+				if ($r) {
 					while ($row = $r->fetchRow()) {
 						$userPermissionsArray['permissions'] = $row;
 						$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
 						if( !$ui || !method_exists($ui,'getUserID') ) continue;
 						$this->uiArray[]=$ui;	
 					}
+				}
 
-					break;
-				
-					break;
-				case 'fileset':
-					$fsID = $obj->getFileSetID();
-					$q = "select uID, canSearch, canRead, canWrite, canAdmin, canAdd from FileSetPermissions where fsID = '{$fsID}' and uID > 0";
-					$r = $db->query($q);
-					if ($r) {
-						while ($row = $r->fetchRow()) {
-							$userPermissionsArray['permissions'] = $row;
-							if ($row['canAdd'] == FilePermissions::PTYPE_CUSTOM) {
-								$userPermissionsArray['permissions']['canAddExtensions'] = $db->GetCol("select extension from FilePermissionFileTypes where uID = {$row['uID']} and fsID = {$fsID}");
-							}
-							$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
-							if( !$ui || !method_exists($ui,'getUserID') ) continue;
-							$this->uiArray[]=$ui;								
-						}
+			} else if ($obj instanceof Area) { 
+				$c = $obj->getAreaCollectionObject();
+				$cID = ($obj->getAreaCollectionInheritID() > 0) ? $obj->getAreaCollectionInheritID() : $c->getCollectionID();
+				$v = array($cID, $obj->getAreaHandle());
+				$q = "select uID, agPermissions from AreaGroups where cID =  ? and arHandle = ? and uID > 0";
+				$r = $db->query($q, $v);
+				if ($r) {
+					while ($row = $r->fetchRow()) {
+						$userPermissionsArray['permissionSet'] = $row['agPermissions'];
+						$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
+						if( !$ui || !method_exists($ui,'getUserID') ) continue;
+						$this->uiArray[]=$ui;
 					}
-
-					break;
-				case 'file':
-					$fID = $obj->getFileID();
-					$q = "select uID, canRead, canWrite, canSearch, canAdmin from FilePermissions where fID = '{$fID}' and uID > 0";
-					$r = $db->query($q);
-					if ($r) {
-						while ($row = $r->fetchRow()) {
-							$userPermissionsArray['permissions'] = $row;
-							$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
-							if( !$ui || !method_exists($ui,'getUserID') ) continue;
-							$this->uiArray[]=$ui;	
-						}
-					}
-
-					break;
-				case 'area':
-					
-					$c = $obj->getAreaCollectionObject();
-					$cID = ($obj->getAreaCollectionInheritID() > 0) ? $obj->getAreaCollectionInheritID() : $c->getCollectionID();
-					$v = array($cID, $obj->getAreaHandle());
-					$q = "select uID, agPermissions from AreaGroups where cID =  ? and arHandle = ? and uID > 0";
-					$r = $db->query($q, $v);
-					if ($r) {
-						while ($row = $r->fetchRow()) {
-							$userPermissionsArray['permissionSet'] = $row['agPermissions'];
-							$ui = UserInfo::getByID($row['uID'], $userPermissionsArray);
-							if( !$ui || !method_exists($ui,'getUserID') ) continue;
-							$this->uiArray[]=$ui;
-						}
-					}
-					break;
+				}
 			}
 
 			return $this;

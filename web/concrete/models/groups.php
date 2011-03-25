@@ -58,56 +58,47 @@
 		 */
 		private function getRelevantGroups($obj, $omitRequiredGroups = false) {
 			$db = Loader::db();
-			switch(strtolower(get_class($obj))) {
-				case 'block':
-					$table = 'CollectionVersionBlockPermissions';
-					$c = $obj->getBlockCollectionObject();
-					$cID = $c->getCollectionID();
-					$cvID = $c->getVersionID();
-					$bID = $obj->getBlockID();
-					$where = "cID = '{$cID}' and cvID = '{$cvID}' and bID = '{$bID}'";
-					break;
-				case 'fileset':
-					$table = 'FileSetPermissions';
-					$fsID = $obj->getFileSetID();
-					$where = "fsID = '{$fsID}'";
-					break;
-				case 'filesetlist':
-					$table = 'FileSetPermissions';
-					$fsIDs = array();
-					foreach($obj->sets as $fs) {
-						$fsIDs[] = $fs->getFileSetID();
-					}
-					$where = "fsID in (" . implode(',', $fsIDs) . ")";
-					break;
-				case 'taskpermissionlist':
-					$tpis = $obj->getTaskPermissionIDs();
-					$table = 'TaskPermissionUserGroups';
-					$where = "tpID in (" . implode(',', $tpis) . ")";
-					break;
-				case 'file':
-					$table = 'FilePermissions';
-					$fID = $obj->getFileID();
-					$where = "fID = '{$fID}'";
-					break;
-				case 'page':
-					$table = 'PagePermissions';
-					$cID = $obj->getPermissionsCollectionID();
-					$where = "cID = '{$cID}'";
-					break;
-				case 'area':
-					$table = 'AreaGroups';
-					$c = $obj->getAreaCollectionObject();
-					$cID = ($obj->getAreaCollectionInheritID() > 0) ? $obj->getAreaCollectionInheritID() : $c->getCollectionID();
-					$where = "cID = " . $cID . " and arHandle = " . $db->quote($obj->getAreaHandle());
-					break;
-				case 'userinfo':
-					$table = 'UserGroups';
-					$uID = $obj->getUserID();						
-					if ($uID) {
-						$where = "uID = {$uID}";
-					}
-					break;
+			if ($obj instanceof Block) { 
+				$table = 'CollectionVersionBlockPermissions';
+				$c = $obj->getBlockCollectionObject();
+				$cID = $c->getCollectionID();
+				$cvID = $c->getVersionID();
+				$bID = $obj->getBlockID();
+				$where = "cID = '{$cID}' and cvID = '{$cvID}' and bID = '{$bID}'";
+			} else if ($obj instanceof FileSet) { 
+				$table = 'FileSetPermissions';
+				$fsID = $obj->getFileSetID();
+				$where = "fsID = '{$fsID}'";
+			} else if ($obj instanceof FileSetList) { 
+				$table = 'FileSetPermissions';
+				$fsIDs = array();
+				foreach($obj->sets as $fs) {
+					$fsIDs[] = $fs->getFileSetID();
+				}
+				$where = "fsID in (" . implode(',', $fsIDs) . ")";
+			} else if ($obj instanceof TaskPermissionList) { 
+				$tpis = $obj->getTaskPermissionIDs();
+				$table = 'TaskPermissionUserGroups';
+				$where = "tpID in (" . implode(',', $tpis) . ")";
+			} else if ($obj instanceof File) { 
+				$table = 'FilePermissions';
+				$fID = $obj->getFileID();
+				$where = "fID = '{$fID}'";
+			} else if ($obj instanceof Page) { 
+				$table = 'PagePermissions';
+				$cID = $obj->getPermissionsCollectionID();
+				$where = "cID = '{$cID}'";
+			} else if ($obj instanceof Area) { 
+				$table = 'AreaGroups';
+				$c = $obj->getAreaCollectionObject();
+				$cID = ($obj->getAreaCollectionInheritID() > 0) ? $obj->getAreaCollectionInheritID() : $c->getCollectionID();
+				$where = "cID = " . $cID . " and arHandle = " . $db->quote($obj->getAreaHandle());
+			} else if ($obj instanceof UserInfo) { 
+				$table = 'UserGroups';
+				$uID = $obj->getUserID();						
+				if ($uID) {
+					$where = "uID = {$uID}";
+				}
 			}
 
 			$groups = array();
@@ -231,115 +222,104 @@
 			$this->pObj = $obj;
 			
 			$db = Loader::db();
-			
-			switch(strtolower(get_class($obj))) {
-				case 'block':
-					$c = $obj->getBlockCollectionObject();
-					$cID = $c->getCollectionID();
-					$cvID = $c->getVersionID();
-					$bID = $obj->getBlockID();
-					$gID = $this->gID;
-					$q = "select cbgPermissions from CollectionVersionBlockPermissions where cID = '{$cID}' and cvID = '{$cvID}' and bID = '{$bID}' and gID = '{$gID}'";
-					$permissions = $db->getOne($q);
-					if ($permissions) {
-						$this->permissionSet = $permissions;
-					}
-					break;
-				case 'filesetlist':
-					$fsIDs = array();
-					foreach($obj->sets as $fs) {
-						$fsIDs[] = $fs->getFileSetID();
-					}
-					$where = "fsID in (" . implode(',', $fsIDs) . ")";
+			if ($obj instanceof Block) { 
+				$c = $obj->getBlockCollectionObject();
+				$cID = $c->getCollectionID();
+				$cvID = $c->getVersionID();
+				$bID = $obj->getBlockID();
+				$gID = $this->gID;
+				$q = "select cbgPermissions from CollectionVersionBlockPermissions where cID = '{$cID}' and cvID = '{$cvID}' and bID = '{$bID}' and gID = '{$gID}'";
+				$permissions = $db->getOne($q);
+				if ($permissions) {
+					$this->permissionSet = $permissions;
+				}
+			} else if ($obj instanceof FileSetList) { 
+				$fsIDs = array();
+				foreach($obj->sets as $fs) {
+					$fsIDs[] = $fs->getFileSetID();
+				}
+				$where = "fsID in (" . implode(',', $fsIDs) . ")";
 
-					$gID = $this->gID;
-					$q = "select max(canRead) as canRead, max(canWrite) as canWrite, max(canSearch) as canSearch, max(canAdmin) as canAdmin from FileSetPermissions where {$where} and gID = '{$gID}' group by gID";
-					$p = $db->GetRow($q);
+				$gID = $this->gID;
+				$q = "select max(canRead) as canRead, max(canWrite) as canWrite, max(canSearch) as canSearch, max(canAdmin) as canAdmin from FileSetPermissions where {$where} and gID = '{$gID}' group by gID";
+				$p = $db->GetRow($q);
 
-					$this->permissions = $p;
-
-					break;
-				case 'taskpermission':
-					$q = "select canRead from TaskPermissionUserGroups where tpID = ? and gID = ?";
-					$permissions = $db->GetRow($q, array($obj->getTaskPermissionID(), $this->gID));
-					if ($permissions) {
-						$this->permissions = $permissions;
-					}
-					break;
-				case 'fileset':
-					$fsID = $obj->getFileSetID();
-					$gID = $this->gID;
-					$q = "select canRead, canSearch, canWrite, canAdmin, canAdd from FileSetPermissions where fsID = '{$fsID}' and gID = '{$gID}'";
-					$permissions = $db->GetRow($q);
-					if ($permissions) {
-						$this->permissions = $permissions;
-					}
-					
-					$q = "select extension from FilePermissionFileTypes where fsID = '{$fsID}' and gID = '{$gID}'";
-					$extensions = $db->GetCol($q);
-					$this->permissions['canAddExtensions'] = $extensions;
-					break;
-				case 'file':
-					$fID = $obj->getFileID();
-					$gID = $this->gID;
-					$q = "select canRead, canWrite, canSearch, canAdmin from FilePermissions where fID = '{$fID}' and gID = '{$gID}'";
-					$permissions = $db->GetRow($q);
-					if ($permissions) {
-						$this->permissions = $permissions;
-					}
-					break;
-				case 'page':
-					//$cID = $obj->getCollectionID();
-					$cID = $obj->getPermissionsCollectionID();
-					$gID = $this->gID;
-					$q = "select cgPermissions, cgStartDate, cgEndDate from PagePermissions where cID = '{$cID}' and gID = '{$gID}'";
+				$this->permissions = $p;
+			} else if ($obj instanceof TaskPermission) { 
+				$q = "select canRead from TaskPermissionUserGroups where tpID = ? and gID = ?";
+				$permissions = $db->GetRow($q, array($obj->getTaskPermissionID(), $this->gID));
+				if ($permissions) {
+					$this->permissions = $permissions;
+				}
+			} else if ($obj instanceof FileSet) { 
+				$fsID = $obj->getFileSetID();
+				$gID = $this->gID;
+				$q = "select canRead, canSearch, canWrite, canAdmin, canAdd from FileSetPermissions where fsID = '{$fsID}' and gID = '{$gID}'";
+				$permissions = $db->GetRow($q);
+				if ($permissions) {
+					$this->permissions = $permissions;
+				}
+				
+				$q = "select extension from FilePermissionFileTypes where fsID = '{$fsID}' and gID = '{$gID}'";
+				$extensions = $db->GetCol($q);
+				$this->permissions['canAddExtensions'] = $extensions;
+			} else if ($obj instanceof File) { 
+				$fID = $obj->getFileID();
+				$gID = $this->gID;
+				$q = "select canRead, canWrite, canSearch, canAdmin from FilePermissions where fID = '{$fID}' and gID = '{$gID}'";
+				$permissions = $db->GetRow($q);
+				if ($permissions) {
+					$this->permissions = $permissions;
+				}
+			} else if ($obj instanceof Page) { 
+				//$cID = $obj->getCollectionID();
+				$cID = $obj->getPermissionsCollectionID();
+				$gID = $this->gID;
+				$q = "select cgPermissions, cgStartDate, cgEndDate from PagePermissions where cID = '{$cID}' and gID = '{$gID}'";
+				$r = $db->query($q);
+				if ($r) {
+					$row = $r->fetchRow();
+					$this->permissionSet = $row['cgPermissions'];
+					$this->cgStartDate = $row['cgStartDate'];
+					$this->cgEndDate = $row['cgEndDate'];
+				}
+				$q = "select count(*) from PagePermissionPageTypes where cID = '{$cID}' and gID = '{$gID}'";
+				$total = $db->getOne($q, $v);
+				if ($total > 0) {
+					$this->canAddPages = true;
+				}
+			} else if ($obj instanceof Area) { 
+				$c = $obj->getAreaCollectionObject();
+				$cID = ($obj->getAreaCollectionInheritID() > 0) ? $obj->getAreaCollectionInheritID() : $c->getCollectionID();
+	
+	
+				$gID = $this->gID;
+				$v = array($cID, $obj->getAreaHandle(), $gID);
+				$q = "select agPermissions from AreaGroups where cID = ? and arHandle = ? and gID = ?";
+				$r = $db->query($q, $v);
+				if ($r) {
+					$row = $r->fetchRow();
+					$this->permissionSet = $row['agPermissions'];
+				}
+				$q = "select count(*) from AreaGroupBlockTypes where cID = ? and arHandle = ? and gID = ?";
+				$total = $db->getOne($q, $v);
+				if ($total > 0) {
+					$this->canAddBlocks = true;
+				}
+			} else if ($obj instanceof UserInfo) { 
+				$uID = $this->pObj->getUserID();						
+				if ($uID) {
+					$q = "select gID, ugEntered, UserGroups.type from UserGroups where gID = '{$this->gID}' and uID = {$uID}";
 					$r = $db->query($q);
 					if ($r) {
 						$row = $r->fetchRow();
-						$this->permissionSet = $row['cgPermissions'];
-						$this->cgStartDate = $row['cgStartDate'];
-						$this->cgEndDate = $row['cgEndDate'];
-					}
-					$q = "select count(*) from PagePermissionPageTypes where cID = '{$cID}' and gID = '{$gID}'";
-					$total = $db->getOne($q, $v);
-					if ($total > 0) {
-						$this->canAddPages = true;
-					}
-					break;
-				case 'area':
-					$c = $obj->getAreaCollectionObject();
-					$cID = ($obj->getAreaCollectionInheritID() > 0) ? $obj->getAreaCollectionInheritID() : $c->getCollectionID();
-		
-		
-					$gID = $this->gID;
-					$v = array($cID, $obj->getAreaHandle(), $gID);
-					$q = "select agPermissions from AreaGroups where cID = ? and arHandle = ? and gID = ?";
-					$r = $db->query($q, $v);
-					if ($r) {
-						$row = $r->fetchRow();
-						$this->permissionSet = $row['agPermissions'];
-					}
-					$q = "select count(*) from AreaGroupBlockTypes where cID = ? and arHandle = ? and gID = ?";
-					$total = $db->getOne($q, $v);
-					if ($total > 0) {
-						$this->canAddBlocks = true;
-					}
-					break;
-				case 'userinfo':
-					$uID = $this->pObj->getUserID();						
-					if ($uID) {
-						$q = "select gID, ugEntered, UserGroups.type from UserGroups where gID = '{$this->gID}' and uID = {$uID}";
-						$r = $db->query($q);
-						if ($r) {
-							$row = $r->fetchRow();
-							if ($row['gID']) {
-								$this->inGroup = true;
-								$this->gDateTimeEntered = $row['ugEntered'];
-								$this->gMemberType = $row['type'];
-							}
+						if ($row['gID']) {
+							$this->inGroup = true;
+							$this->gDateTimeEntered = $row['ugEntered'];
+							$this->gMemberType = $row['type'];
 						}
 					}
-					break;
+				}
 			}
 			
 			// if we have a permissions array, we set the character tokens for backwards compatibility 
