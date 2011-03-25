@@ -223,7 +223,18 @@ ALTER TABLE Collections ADD  INDEX cDateAdded  (cDateAdded);
 
 CREATE TABLE ComposerDrafts (
 cID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+cpPublishParentID        INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
                  PRIMARY KEY (cID)
+);
+
+CREATE TABLE ComposerContentLayout (
+cclID                    INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+bID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+akID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+displayOrder             INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+ctID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+ccFilename               VARCHAR(128),
+                 PRIMARY KEY (cclID)
 );
 
 CREATE TABLE Config (
@@ -233,14 +244,6 @@ cfValue                  LONGTEXT,
 uID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 pkgID                    INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
                  PRIMARY KEY (cfKey, uID)
-);
-
-CREATE TABLE ComposerContentLayout (
-cclID                    INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-bID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
-akID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
-displayOrder             INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
-                 PRIMARY KEY (cclID)
 );
 
 ALTER TABLE Config ADD  INDEX uID  (uID);
