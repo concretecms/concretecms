@@ -12,7 +12,10 @@ if (!is_object($entry)) {
 }
 
 $ct = CollectionType::getByID($entry->getCollectionTypeID());
-
+$function = 'ccm_composerSelectParentPage';
+if ($_REQUEST['submitOnChoose']) {
+	$function = 'ccm_composerSelectParentPageAndSubmit';
+}
 
 switch($ct->getCollectionTypeComposerPublishMethod()) {
 	case 'PAGE_TYPE': 
@@ -28,7 +31,7 @@ switch($ct->getCollectionTypeComposerPublishMethod()) {
 	<h1><?=t("Where do you want to publish this page?")?></h1>
 	<ul class="icon-select-list">
 	<? foreach($pages as $p) { ?>
-		<li class="icon-select-page"><a href="javascript:void(0)" onclick="ccm_composerSelectParentPageAndSubmit(<?=$p->getCollectionID()?>)"><?=$p->getCollectionName()?></a></li>
+		<li class="icon-select-page"><a href="javascript:void(0)" onclick="<?=$function?>(<?=$p->getCollectionID()?>)"><?=$p->getCollectionName()?></a></li>
 	<? } ?>
 	</ul>
 	
@@ -37,7 +40,7 @@ switch($ct->getCollectionTypeComposerPublishMethod()) {
 	case 'CHOOSE':
 		$args['sitemapCombinedMode'] = $sitemapCombinedMode;
 		$args['select_mode'] = 'select_page';
-		$args['callback'] = 'ccm_composerSelectParentPageAndSubmit';
+		$args['callback'] = $function;
 		$args['display_mode'] = 'full';
 		$args['instance_id'] = time();
 		Loader::element('dashboard/sitemap', $args);	

@@ -19,6 +19,28 @@ if (isset($entry)) { ?>
 		<?=$form->textarea('cDescription', $description)?>		
 		</li>
 	</ol>
+
+	<? if ($entry->isComposerDraft()) { ?>
+	<h2><?=t('Publish Location')?></h2>
+	<ol><li><span id="ccm-composer-publish-location"><?
+		if ($entry->getComposerDraftPublishParentID() > 0) { 
+			print $this->controller->getComposerDraftPublishText($entry);
+		} ?>
+		</span>
+		
+		<? 
+	
+	if ($ct->getCollectionTypeComposerPublishMethod() == 'PAGE_TYPE' || $ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE') { ?>
+		
+		<a href="javascript:void(0)" onclick="ccm_openComposerPublishTargetWindow(false)"><?=t('Choose publish location.')?></a>
+	
+	<? } 
+	
+	?></li></ol>
+	<? } ?>
+	
+
+	<h2><?=t('Attributes &amp; Content')?></h2>
 	
 	<ol>
 	<? 
@@ -60,14 +82,22 @@ if (isset($entry)) { ?>
 		<?=Loader::helper('concrete/interface')->submit(t('Save'), 'save', 'left')?>
 		<?=Loader::helper('concrete/interface')->submit(t('Discard'), 'discard', 'left', 'ccm-composer-hide-on-approved')?>
 		<?=Loader::helper('concrete/interface')->button_js(t('Preview'), 'javascript:ccm_composerLaunchPreview()', 'left', 'ccm-composer-hide-on-approved')?>
-		<? if ($entry->isComposerDraft()) { ?>
+
+		<? if ($entry->isComposerDraft()) { 
+		$pp = new Permissions($entry);
+		?>
+			<? if (PERMISSIONS_MODEL != 'simple' && $pp->canAdmin()) { ?>
+				<?=Loader::helper('concrete/interface')->button_js(t('Permissions'), 'javascript:ccm_composerLaunchPermissions()', 'left', 'ccm-composer-hide-on-no-target')?>
+			<? } ?>
 			<?=Loader::helper('concrete/interface')->submit(t('Publish Page'), 'publish')?>
 		<? } else { ?>
 			<?=Loader::helper('concrete/interface')->submit(t('Publish Changes'), 'publish')?>
 		<? } ?>
 		
 		<?=$form->hidden('entryID', $entry->getCollectionID())?>
-		<input type="hidden" name="cPublishParentID" value="0" />
+		<? if ($entry->isComposerDraft()) { ?>
+			<input type="hidden" name="cPublishParentID" value="<?=$entry->getComposerDraftPublishParentID()?>" />
+		<? } ?>
 		<?=$form->hidden('autosave', 0)?>
 		<?=Loader::helper('validation/token')->output('composer')?>
 		<div class="ccm-spacer">&nbsp;</div>
@@ -100,12 +130,33 @@ if (isset($entry)) { ?>
 		ccm_previewInternalTheme(<?=$entry->getCollectionID()?>, <?=$t->getThemeID()?>, '<?=addslashes(str_replace(array("\r","\n","\n"),'',$t->getThemeName()))?>');
 	}
 	
+	ccm_composerSelectParentPage = function(cID) {
+		$("input[name=cPublishParentID]").val(cID);
+		$(".ccm-composer-hide-on-no-target").show();
+		$("#ccm-composer-publish-location").load('<?=$this->action("select_publish_target")?>', {'entryID': <?=$entry->getCollectionID()?>, 'cPublishParentID': cID});
+		jQuery.fn.dialog.closeTop();
+
+	}	
+
 	ccm_composerSelectParentPageAndSubmit = function(cID) {
-	 	$("input[name=cPublishParentID]").val(cID);
-	 	$("input[name=ccm-submit-publish]").click();
+		$("input[name=cPublishParentID]").val(cID);
+		$(".ccm-composer-hide-on-no-target").show();
+		$("#ccm-composer-publish-location").load('<?=$this->action("select_publish_target")?>', {'entryID': <?=$entry->getCollectionID()?>, 'cPublishParentID': cID}, function() {
+		 	$("input[name=ccm-submit-publish]").click();
+		});
+	}	
+		
+	ccm_composerLaunchPermissions = function(cID) {
+		var shref = CCM_TOOLS_PATH + '/edit_collection_popup?ctask=edit_permissions_composer&cID=<?=$entry->getCollectionID()?>';
+		jQuery.fn.dialog.open({
+			title: '<?=t("Permissions")?>',
+			href: shref,
+			width: '640',
+			modal: false,
+			height: '310'
+		});
 	}
-		
-		
+	
 	ccm_composerEditBlock = function(cID, bID, arHandle, w, h) {
 		if(!w) w=550;
 		if(!h) h=380; 
@@ -119,10 +170,28 @@ if (isset($entry)) { ?>
 		});		
 	}
 	
+	ccm_openComposerPublishTargetWindow = function(submitOnChoose) {
+		var shref = CCM_TOOLS_PATH + '/composer_target?cID=<?=$entry->getCollectionID()?>';
+		if (submitOnChoose) {
+			shref += '&submitOnChoose=1';
+		}
+		jQuery.fn.dialog.open({
+			title: '<?=t("Publish Page")?>',
+			href: shref,
+			width: '550',
+			modal: false,
+			height: '400'
+		});
+	}
+	
 	$(function() {
 		<? if (is_object($v) && $v->isApproved()) { ?>
 			$(".ccm-composer-hide-on-approved").hide();
 		<? } ?>
+
+		if ($("input[name=cPublishParentID]").val() < 1) {
+			$(".ccm-composer-hide-on-no-target").hide();
+		}
 		
 		var ccm_composerAutoSaveIntervalTimeout = 7000;
 		var ccm_composerIsPublishClicked = false;
@@ -144,13 +213,7 @@ if (isset($entry)) { ?>
 					ccm_composerIsPublishClicked = false;			
 	
 					<? if ($ct->getCollectionTypeComposerPublishMethod() == 'PAGE_TYPE' || $ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE') { ?>
-						jQuery.fn.dialog.open({
-							title: '<?=t("Publish Page")?>',
-							href: CCM_TOOLS_PATH + '/composer_target?cID=<?=$entry->getCollectionID()?>',
-							width: '550',
-							modal: false,
-							height: '400'
-						});
+						ccm_openComposerPublishTargetWindow(true);
 						return false;
 					<? } else if ($ct->getCollectionTypeComposerPublishMethod() == 'PARENT') { ?>
 						return true;				
