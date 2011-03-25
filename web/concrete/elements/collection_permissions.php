@@ -5,13 +5,26 @@ $dh = Loader::helper('date');
 $dt = Loader::helper('form/date_time');
 
 if ($cp->canAdminPage()) {
-$gl = new GroupList($c);
-$gArray = $gl->getGroupList();
-$ul = new UserInfoList($c);
-$ulArray = $ul->getUserInfoList();
-$ctArray = CollectionType::getList($c);
-}
+	// if it's composer mode and we have a target, then we hack the permissions collection id
+	if (isset($isComposer) && $isComposer) {
+		$cd = ComposerPage::getByID($c->getCollectionID());
+		if ($cd->isComposerDraft()) {
+			if ($cd->getComposerDraftPublishParentID() > 0) {
+				if ($cd->getCollectionInheritance() == 'PARENT') {
+					$c->cParentID = $cd->getComposerDraftPublishParentID();
+					$cpID = $c->getParentPermissionsCollectionID();
+					$c->cInheritPermissionsFromCID = $cpID;
+				}
+			}
+		}
+	}
 
+	$gl = new GroupList($c);
+	$gArray = $gl->getGroupList();
+	$ul = new UserInfoList($c);
+	$ulArray = $ul->getUserInfoList();
+	$ctArray = CollectionType::getList($c);
+}
 $saveMsg = t('Save permissions first.');
 ?>
 <div class="ccm-pane-controls">
@@ -308,15 +321,20 @@ $(function() {
 		},
 		success: function(r) {
 			var r = eval('(' + r + ')');
-			if (r != null && r.rel == 'SITEMAP') {
-				jQuery.fn.dialog.hideLoader();
+			<? if (isset($isComposer) && $isComposer) { ?>
+				jQuery.fn.dialog.hideLoader();						
 				jQuery.fn.dialog.closeTop();
-				ccmSitemapHighlightPageLabel(r.cID);
-			} else {
-				ccm_hidePane(function() {
-					jQuery.fn.dialog.hideLoader();						
-				});
-			}
+			<? } else { ?>
+				if (r != null && r.rel == 'SITEMAP') {
+					jQuery.fn.dialog.hideLoader();
+					jQuery.fn.dialog.closeTop();
+					ccmSitemapHighlightPageLabel(r.cID);
+				} else {
+					ccm_hidePane(function() {
+						jQuery.fn.dialog.hideLoader();						
+					});
+				}
+			<? } ?>
 			ccmAlert.hud(ccmi18n_sitemap.setPagePermissionsMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
 		}
 	});

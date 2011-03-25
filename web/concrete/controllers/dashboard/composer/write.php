@@ -30,7 +30,7 @@ class DashboardComposerWriteController extends Controller {
 				}
 				
 				if ($ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE' || $ct->getCollectionTypeComposerPublishMethod() == 'PAGE_TYPE') { 
-					$parent = Page::getByID($this->post('cPublishParentID'));
+					$parent = Page::getByID($entry->getComposerDraftPublishParentID());
 					if (!is_object($parent) || $parent->isError()) {
 						$this->error->add(t('Invalid parent page.'));
 					} else {
@@ -135,6 +135,36 @@ class DashboardComposerWriteController extends Controller {
 	
 	public function on_before_render() {
 		$this->set('error', $this->error);
+	}
+	
+	public function select_publish_target() {
+		$parent = Page::getByID($this->post('cPublishParentID'));
+		$str = '';
+		if (!is_object($parent) || $parent->isError()) {
+			print t('Invalid parent page.');
+			exit;
+		} else {
+			$entry = ComposerPage::getByID($this->post('entryID'));
+			if (!is_object($entry) || (!$entry->isComposerDraft())) {
+				print t('Invalid composer draft.');
+				exit;
+			}
+			
+			$ct = CollectionType::getByID($entry->getCollectionTypeID());
+			$cp = new Permissions($parent);
+			if (!$cp->canAddSubCollection($ct)) {
+				print t('You do not have permissions to add this page type in that location.');
+				exit;
+			}
+		}
+		$entry->setComposerDraftPublishParentID($this->post('cPublishParentID'));
+		print $this->getComposerDraftPublishText($entry);
+		exit;
+	}
+	
+	public function getComposerDraftPublishText($entry) {
+		$ppc = Page::getByID($entry->getComposerDraftPublishParentID());
+		return t('This page will be published beneath %s.', '<a target="_blank" href="' . Loader::helper('navigation')->getLinkToCollection($ppc) . '">' . $ppc->getCollectionName() . '</a>');
 	}
 	
 	public function on_start() {

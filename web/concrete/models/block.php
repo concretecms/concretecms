@@ -121,12 +121,34 @@ class Block extends Object {
 			
 			$b->instance = new $class($b);
 			$b->populateIsGlobal();
-			if ($c != null && $c->isMasterCollection()) {
-				$ctID = $c->getCollectionTypeID();
-				$cb = $db->GetRow('select bID, ccFilename from ComposerContentLayout where ctID = ? and bID = ?', array($ctID, $bID));
-				if (is_array($cb) && $cb['bID'] == $bID) {
-					$b->bIncludeInComposer = 1;
-					$b->cbFilename = $cb['ccFilename'];
+			if ($c != null) {
+				$ct = CollectionType::getByID($c->getCollectionTypeID());
+				if (is_object($ct)) {
+					if ($ct->isCollectionTypeIncludedInComposer()) { 
+					
+						if ($c->isMasterCollection()) {
+							$ctID = $c->getCollectionTypeID();
+							$ccbID = $bID;
+						} else {
+							$tempBID = $b->getBlockID();
+							while ($tempBID != false && $tempBID != 0) {
+								$originalBID = $tempBID;
+								$tempBID = $db->GetOne('select distinct br.originalBID from BlockRelations br inner join CollectionVersionBlocks cvb on cvb.bID = br.bID where br.bID = ? and cvb.cID = ?', array($tempBID, $cID));
+							}
+							if ($originalBID && is_object($c)) {
+								$ctID = $c->getCollectionTypeID();
+								$ccbID = $originalBID;
+							}
+						}
+						
+						if ($ctID && $ccbID) {
+							$cb = $db->GetRow('select bID, ccFilename from ComposerContentLayout where ctID = ? and bID = ?', array($ctID, $ccbID));
+							if (is_array($cb) && $cb['bID'] == $ccbID) {
+								$b->bIncludeInComposer = 1;
+								$b->cbFilename = $cb['ccFilename'];
+							}
+						}
+					}
 				}
 			}
 			

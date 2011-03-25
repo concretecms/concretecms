@@ -17,7 +17,11 @@ class ComposerPage extends Page {
 		$p = $parent->add($ct, $data);
 				
 		$db = Loader::db();
-		$db->Execute('insert into ComposerDrafts (cID) values (?)', array($p->getCollectionID()));
+		$targetPageID = 0;
+		if ($ct->getCollectionTypeComposerPublishMethod() == 'PARENT') {
+			$targetPageID = $ct->getCollectionTypeComposerPublishPageParentID();			
+		}
+		$db->Execute('insert into ComposerDrafts (cID, cpPublishParentID) values (?, ?)', array($p->getCollectionID(), $targetPageID));
 		$entry = ComposerPage::getByID($p->getCollectionID());
 
 		// duplicate all composer blocks onto the new page and make them into new blocks
@@ -51,6 +55,16 @@ class ComposerPage extends Page {
 		$db = Loader::db();
 		$cID = $db->GetOne('select cID from ComposerDrafts where cID = ?', array($this->getCollectionID()));
 		return $cID == $this->getCollectionID();
+	}
+	
+	public function getComposerDraftPublishParentID() {
+		return $this->cpPublishParentID;
+	}
+
+	public function setComposerDraftPublishParentID($cParentID) {
+		$this->cpPublishParentID = $cParentID;
+		$db = Loader::db();
+		$db->Execute('update ComposerDrafts set cpPublishParentID = ? where cID = ?', array($cParentID, $this->getCollectionID()));
 	}
 	
 	// old
@@ -113,12 +127,10 @@ class ComposerPage extends Page {
 	public static function getByID($cID, $cvID = 'RECENT') {
 		$db = Loader::db();
 		$c = parent::getByID($cID, $cvID, 'ComposerPage');
-		/*
-		$r = $db->GetRow('select cpStatus from ComposerDrafts where cID = ?', array($c->getCollectionID()));
-		if ($r['cpStatus'] > 0) {
-			$c->cpStatus = $r['cpStatus'];
-		}
-		*/
+
+		$r = $db->GetRow('select cpPublishParentID from ComposerDrafts where cID = ?', array($c->getCollectionID()));
+		$c->cpPublishParentID = $r['cpPublishParentID'];
+
 		if (self::isValidComposerPage($c)) {
 			return $c;
 		}

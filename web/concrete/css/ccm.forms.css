@@ -59,7 +59,7 @@ div.ccm-buttons .accept {float: right}
 
 a.ccm-button-left {float: left; }
 a.ccm-button {float: left; margin-right: 10px}
-a.ccm-button-right {float: right}
+a.ccm-button-right {float: right; margin-left: 10px}
 
 div.ccm-button, a.ccm-button-right, a.ccm-button-left, a.ccm-button {display: block; text-decoration: none !important; height: 38px !important; background: transparent url(../images/button_l.png) no-repeat;}
 a.ccm-button-right:hover, a.ccm-button-left:hover, a.ccm-button:hover {background: transparent url(../images/button_l_active.png) no-repeat scroll;}

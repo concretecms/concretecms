@@ -6,6 +6,8 @@ $c = Page::getByID($_GET['cID'], 'RECENT');
 $cp = new Permissions($c);
 $canViewPane = false;
 
+$additionalArgs = array();
+
 switch($_GET['ctask']) {
 	case 'edit_metadata':
 		$toolSection = "collection_metadata";
@@ -18,6 +20,11 @@ switch($_GET['ctask']) {
 			$toolSection = "collection_permissions";
 		}
 		$canViewPane = $cp->canAdminPage();
+		break;
+	case 'edit_permissions_composer':
+		$toolSection = "collection_permissions";
+		$canViewPane = $cp->canAdminPage();
+		$additionalArgs['isComposer'] = true;
 		break;
 	case 'mcd':
 		$toolSection = "collection_mcd";
@@ -75,10 +82,12 @@ if (!$canViewPane) {
 	}
 	
 	if (($c->isEditMode() || ($_GET['ctask'] == 'add')) && $toolSection) {
-		Loader::element($toolSection, array(
+		$args = array(
 			'c' => $c,
 			'cp' => $cp			
-		));
+		);
+		$args = array_merge($args, $additionalArgs);
+		Loader::element($toolSection, $args);
 	} else {
 		$error = t("Someone has already checked out this page for editing.");
 	}
