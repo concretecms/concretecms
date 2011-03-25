@@ -43,11 +43,6 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="cpStatus" type="I" size="3">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
   </table>
 
 </schema>

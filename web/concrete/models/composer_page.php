@@ -11,17 +11,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 Loader::model('collection_types');
 class ComposerPage extends Page {
 	
-	const COMPOSER_PAGE_STATUS_NEW = 1;
-	const COMPOSER_PAGE_STATUS_SAVED = 2;
-	const COMPOSER_PAGE_STATUS_PUBLISHED = 10;
-	
 	public static function createDraft($ct) {
 		$parent = Page::getByPath(COMPOSER_DRAFTS_PAGE_PATH);
 		$data['cvIsApproved'] = 0;
 		$p = $parent->add($ct, $data);
 				
 		$db = Loader::db();
-		$db->Execute('insert into ComposerDrafts (cID, cpStatus) values (?, ?)', array($p->getCollectionID(), self::COMPOSER_PAGE_STATUS_NEW));
+		$db->Execute('insert into ComposerDrafts (cID) values (?)', array($p->getCollectionID()));
 		$entry = ComposerPage::getByID($p->getCollectionID());
 
 		// duplicate all composer blocks onto the new page and make them into new blocks
@@ -36,10 +32,6 @@ class ComposerPage extends Page {
 		return $entry;		
 	}
 	
-	public function getComposerPageStatus() {
-		return $this->cpStatus;
-	}
-
 	/** 
 	 * Checks to see if the page in question is a valid composer draft for the logged in user
 	 */
@@ -55,6 +47,14 @@ class ComposerPage extends Page {
 		return true;
 	}
 	
+	public function isComposerDraft() {
+		$db = Loader::db();
+		$cID = $db->GetOne('select cID from ComposerDrafts where cID = ?', array($this->getCollectionID()));
+		return $cID == $this->getCollectionID();
+	}
+	
+	// old
+	/*
 	public function isValidComposerDraft() {
 		$u = new User();
 		if ($this->getComposerPageStatus() >= ComposerPage::COMPOSER_PAGE_STATUS_PUBLISHED) {
@@ -72,16 +72,18 @@ class ComposerPage extends Page {
 		$this->refreshCache();
 	}
 
+	*/
+
 	public function markComposerPageAsPublished() {
 		$db = Loader::db();
-		$db->Replace('ComposerDrafts', array('cID' => $this->getCollectionID(), 'cpStatus' => self::COMPOSER_PAGE_STATUS_PUBLISHED), array('cID'), true);
+		$db->Execute('delete from ComposerDrafts where cID = ?', array($this->getCollectionID()));
 		$this->refreshCache();
 	}
-	
+
 	public function getMyDrafts() {
 		$db = Loader::db();
 		$u = new User();
-		$r = $db->Execute('select ComposerDrafts.cID from ComposerDrafts inner join Pages on ComposerDrafts.cID = Pages.cID inner join Collections on Collections.cID = Pages.cID where cpStatus <> ? and uID = ? order by cDateModified desc', array(self::COMPOSER_PAGE_STATUS_PUBLISHED, $u->getUserID()));
+		$r = $db->Execute('select ComposerDrafts.cID from ComposerDrafts inner join Pages on ComposerDrafts.cID = Pages.cID inner join Collections on Collections.cID = Pages.cID where uID = ? order by cDateModified desc', array($u->getUserID()));
 		$pages = array();
 		while ($row = $r->FetchRow()) {
 			$entry = ComposerPage::getByID($row['cID']);
@@ -91,6 +93,7 @@ class ComposerPage extends Page {
 		}
 		return $pages;		
 	}
+	
 	
 	
 	public function getComposerBlocks() {
@@ -110,10 +113,12 @@ class ComposerPage extends Page {
 	public static function getByID($cID, $cvID = 'RECENT') {
 		$db = Loader::db();
 		$c = parent::getByID($cID, $cvID, 'ComposerPage');
+		/*
 		$r = $db->GetRow('select cpStatus from ComposerDrafts where cID = ?', array($c->getCollectionID()));
 		if ($r['cpStatus'] > 0) {
 			$c->cpStatus = $r['cpStatus'];
 		}
+		*/
 		if (self::isValidComposerPage($c)) {
 			return $c;
 		}
