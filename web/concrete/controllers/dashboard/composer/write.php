@@ -28,9 +28,6 @@ class DashboardComposerWriteController extends Controller {
 				if (!$vtex->notempty($this->post('cName'))) {
 					$this->error->add(t('You must provide a name for your page before you can publish it.'));
 				}
-				if (!$entry->isValidComposerDraft()) {
-					$this->error->add(t('This is not a valid composer draft'));
-				}
 				
 				if ($ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE' || $ct->getCollectionTypeComposerPublishMethod() == 'PAGE_TYPE') { 
 					$parent = Page::getByID($this->post('cPublishParentID'));
@@ -46,15 +43,24 @@ class DashboardComposerWriteController extends Controller {
 					$parent = Page::getByID($ct->getCollectionTypeComposerPublishPageParentID());
 				}
 			} else if ($this->post('ccm-submit-discard') && !$this->error->has()) {
-				if ($entry->isValidComposerDraft()) {
+				if ($entry->isComposerDraft()) {
 					$entry->delete();
 					$this->redirect('/dashboard/composer/drafts', 'draft_discarded');
+				} else {
+					// we just discard the most recent changes
+					$v = CollectionVersion::get($entry, 'RECENT');
+					$v->discard();
+					$this->redirect('?cID=' . $entry->getCollectionID());
 				}
 			}
 			
 			if (!$this->error->has()) {
 				
 				$data = array('cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
+				$entry->getVersionToModify();
+				// this is a pain. we have to use composerpage::getbyid again because
+				// getVersionToModify is hard-coded to return a page object
+				$entry = ComposerPage::getByID($entry->getCollectionID(), 'RECENT');
 				$entry->update($data);
 				$this->saveData($entry);
 				if ($this->post('ccm-submit-publish')) {

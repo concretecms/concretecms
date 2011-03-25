@@ -79,6 +79,9 @@ class Request {
 			if (!$path) {
 				$path = Request::parsePathFromRequest('SCRIPT_NAME');
 			}
+			if (!$path) {
+				$path = Request::parsePathFromRequest('REDIRECT_URL');
+			}
 			$req = new Request($path);
 		}
 		return $req;
