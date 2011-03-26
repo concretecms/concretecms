@@ -4,7 +4,7 @@
 	<?=$error?><br/><br/>
 <? } ?>
 
-<form action="<?=$this->url( $resultTargetURL )?>" method="get">
+<form action="<?=$this->url( $resultTargetURL )?>" method="get" class="ccm-search-block-form">
 
 	<? if( strlen($title)>0){ ?><h3><?=$title?></h3><? } ?>
 	
@@ -16,9 +16,9 @@
 	<?  }
 	} ?>
 	
-	<input name="query" type="text" value="<?=htmlentities($query, ENT_COMPAT, APP_CHARSET)?>" />
+	<input name="query" type="text" value="<?=htmlentities($query, ENT_COMPAT, APP_CHARSET)?>" class="ccm-search-block-text" />
 	
-	<input name="submit" type="submit" value="<?=$buttonText?>" />
+	<input name="submit" type="submit" value="<?=$buttonText?>" class="ccm-search-block-submit" />
 
 <? 
 $tt = Loader::helper('text');
