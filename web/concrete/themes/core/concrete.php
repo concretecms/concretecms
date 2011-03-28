@@ -20,25 +20,7 @@ if (is_object($c)) {
 
 <div id="ccm-theme-wrapper">
 
-<? if (isset($error) && $error != '') { ?>
-	<? 
-	if ($error instanceof Exception) {
-		$_error[] = $error->getMessage();
-	} else if ($error instanceof ValidationErrorHelper) { 
-		$_error = $error->getList();
-	} else if (is_array($error)) {
-		$_error = $error;
-	} else if (is_string($error)) {
-		$_error[] = $error;
-	}
-	
-		?>
-		<ul class="ccm-error">
-		<? foreach($_error as $e) { ?><li><?=$e?></li><? } ?>
-		</ul>
-	<? 
-} ?>
-
+<?php Loader::element('system_errors', array('error' => $error)); ?>
 <?php print $innerContent ?>
 
 </div>
