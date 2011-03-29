@@ -56,7 +56,7 @@ class DashboardComposerWriteController extends Controller {
 			
 			if (!$this->error->has()) {
 				
-				$data = array('cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
+				$data = array('cDatePublic' => Loader::helper('form/date_time')->translate('cDatePublic'), 'cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
 				$entry->getVersionToModify();
 				// this is a pain. we have to use composerpage::getbyid again because
 				// getVersionToModify is hard-coded to return a page object
@@ -111,6 +111,7 @@ class DashboardComposerWriteController extends Controller {
 			$this->set("ct", $ct);
 			$this->set('name', $entry->getCollectionName());
 			$this->set('description', $entry->getCollectionDescription());
+			$this->set('cDatePublic', $entry->getCollectionDatePublic());
 			$this->set('contentitems', $ct->getComposerContentItems());
 		}
 	}
