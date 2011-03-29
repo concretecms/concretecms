@@ -18,6 +18,15 @@ if (isset($entry)) { ?>
 		<strong><?=$form->label('cDescription', t('Short Description'))?></strong><br/>
 		<?=$form->textarea('cDescription', $description)?>		
 		</li>
+		<li>
+		<strong><?=$form->label('cDatePublic', t('Date Posted'))?></strong><br/>
+		<? 
+		if ($this->controller->isPost()) { 	
+			$cDatePublic = Loader::helper('form/date_time')->translate('cDatePublic');
+		}
+		?>		
+		<?=Loader::helper('form/date_time')->datetime('cDatePublic', $cDatePublic)?>		
+		</li>
 	</ol>
 
 	<? if ($entry->isComposerDraft()) { ?>
