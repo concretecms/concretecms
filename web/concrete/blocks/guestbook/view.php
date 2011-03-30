@@ -71,7 +71,7 @@ foreach($posts as $p) { ?>
 			<? } ?>
 			
 			<?=(isset($errors['commentText'])?"<br /><span class=\"error\">".$errors['commentText']."</span>":"")?>
-			<textarea name="commentText" rows="10" cols="150"><?=$Entry->commentText ?></textarea><br />
+			<textarea name="commentText"><?=$Entry->commentText ?></textarea><br />
 			<?
 			if($controller->displayCaptcha) {
 				
