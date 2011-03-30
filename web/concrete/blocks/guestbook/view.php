@@ -1,52 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <? $c = Page::getCurrentPage(); ?>
-<style type="text/css">
-
-h4.guestBook-title {
-	border-bottom:1px solid #666666;
-	margin-top:30px;
-}
-
-div.guestBook-entry {
-	padding:4px 0 4px 0;
-	margin:6px 0 12px 0;
-}
-
-.guestBook-entry div.contentByLine {
-	font-size:.8em;
-	color:#333333;
-	margin-bottom: 4px;
-}
-
-.guestBook-entry div.guestBook-manage-links {
-	font-size:.8em;
-	color:#333333;
-	text-align:right;
-	float:right;
-	padding-left:8px; 
-}
-.guestBook-formBlock {
-	margin:12px 0 12px 0;
-}
-.guestBook-formBlock label {
-	width:60px;
-	display:block;
-	float:left;
-}
-.guestBook-formBlock textarea {
-	width:100%;
-	height: 150px;
-	margin: 12px 0 12px 0;
-}
-.guestBook-formBlock .note {
-	font-size:10px;
-}
-
-.guestBook-formBlock span.error, div#guestBook-formBlock-<?=$controller->bID?> span.error {
-	color:#990000;
-	text-align:left;
-}
-</style>
 <h4 class="guestBook-title"><?=$controller->title?></h4>
 <?php if($invalidIP) { ?>
 <div class="ccm-error"><p><?=$invalidIP?></p></div>
@@ -60,7 +13,7 @@ $posts = $controller->getEntries();
 $bp = $controller->getPermissionsObject(); 
 foreach($posts as $p) { ?>
 	<? if($p['approved'] || $bp->canWrite()) { ?>
-    <div class="guestBook-entry">
+    <div class="guestBook-entry<?php if ($c->getVersionObject()->getVersionAuthorUserName() == $u->getUserName()) {?> authorPost <?php }?>">
     	<? if($bp->canWrite()) { ?> 
 				<div class="guestBook-manage-links">
                 	<a href="<?=$this->action('loadEntry')."&entryID=".$p['entryID'];?>#guestBookForm"><?=t('Edit')?></a> | 
@@ -118,7 +71,7 @@ foreach($posts as $p) { ?>
 			<? } ?>
 			
 			<?=(isset($errors['commentText'])?"<br /><span class=\"error\">".$errors['commentText']."</span>":"")?>
-			<textarea name="commentText"><?=$Entry->commentText ?></textarea><br />
+			<textarea name="commentText" rows="10" cols="150"><?=$Entry->commentText ?></textarea><br />
 			<?
 			if($controller->displayCaptcha) {
 				
