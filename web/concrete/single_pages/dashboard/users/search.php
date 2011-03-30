@@ -504,33 +504,38 @@ if (is_object($uo)) {
 		</table>
 		</div>
 	</div>
-		
-
 
 	<h1><span><?=t('Delete User')?></span></h1>
 	
 	<div class="ccm-dashboard-inner">
 		<div class="ccm-spacer"></div>
 		<?
+		$cu = new User();
+		$tp = new TaskPermission();
+		if ($tp->canDeleteUser()) {
 		$delConfirmJS = t('Are you sure you want to permanently remove this user?');
-		if ($uo->getUserID() == USER_SUPER_ID) { ?>
-			<?=t('You may not remove the super user account.')?>
-		<? } else if($u->isSuperUser() == false){ ?>
-			<?=t('You must be logged in as %s to remove user accounts.', USER_SUPER)?>
-			
-		<? }else{ ?>   
-			
-			<script type="text/javascript">
-			deleteUser = function() {
-				if (confirm('<?=$delConfirmJS?>')) { 
-					location.href = "<?=$this->url('/dashboard/users/search', 'delete', $uo->getUserID(), $valt->generate('delete_account'))?>";				
+			if ($uo->getUserID() == USER_SUPER_ID) { ?>
+				<?=t('You may not remove the super user account.')?>
+			<? } else if (!$tp->canDeleteUser()) { ?>
+				<?=t('You do not have permission to perform this action.');		
+			} else if ($uo->getUserID() == $cu->getUserID()) {
+				echo t('You cannot delete your own user account.');
+			}else{ ?>   
+				
+				<script type="text/javascript">
+				deleteUser = function() {
+					if (confirm('<?=$delConfirmJS?>')) { 
+						location.href = "<?=$this->url('/dashboard/users/search', 'delete', $uo->getUserID(), $valt->generate('delete_account'))?>";				
+					}
 				}
-			}
-			</script>
-
-			<? print $ih->button_js(t('Delete User Account'), "deleteUser()", 'left');?>
-
-		<? } ?>
+				</script>
+	
+				<? print $ih->button_js(t('Delete User Account'), "deleteUser()", 'left');?>
+	
+			<? }
+		} else {
+			echo t('You do not have permission to perform this action.');
+		}?>
 		<div class="ccm-spacer"></div>
 	</div>
 	<? } ?>
