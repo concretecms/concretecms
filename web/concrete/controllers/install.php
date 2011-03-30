@@ -84,7 +84,7 @@ class InstallController extends Controller {
 		$schema = explode("\n\n", $sql);
 		
 		$sql = file_get_contents($contentfile);
-		$sql = str_replace('{[CCM:SITE]}', $_POST['SITE'], $sql);
+		$sql = str_replace('{[CCM:SITE]}', addslashes($_POST['SITE']), $sql);
 		$statements = explode("\n\n", $sql);
 
 		$statements = array_merge($schema, $statements);
@@ -313,7 +313,7 @@ class InstallController extends Controller {
 						// login 
 						define('PASSWORD_SALT', $salt);
 						$u = new User($this->installData['USER_SUPER'], $uPassword);
-						$this->set('message', t('Congratulations. Concrete has been installed. You have been logged in as <b>%s</b> with the password <b>%s</b>.<br/><br/>If you wish to change this password, you may do so from the users area of the dashboard.', $this->installData['USER_SUPER'], $uPassword));
+						$this->set('message', t('Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password <b>%s</b>.<br/><br/>If you wish to change this password, you may do so from the users area of the dashboard.', $this->installData['USER_SUPER'], $uPassword));
 						
 						
 					} else {
