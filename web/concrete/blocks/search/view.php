@@ -4,7 +4,7 @@
 	<?=$error?><br/><br/>
 <? } ?>
 
-<form action="<?=$this->url( $resultTargetURL )?>" method="get">
+<form action="<?=$this->url( $resultTargetURL )?>" method="get" class="ccm-search-block-form">
 
 	<? if( strlen($title)>0){ ?><h3><?=$title?></h3><? } ?>
 	
@@ -16,9 +16,9 @@
 	<?  }
 	} ?>
 	
-	<input name="query" type="text" value="<?=htmlentities($query, ENT_COMPAT, APP_CHARSET)?>" />
+	<input name="query" type="text" value="<?=htmlentities($query, ENT_COMPAT, APP_CHARSET)?>" class="ccm-search-block-text" />
 	
-	<input name="submit" type="submit" value="<?=$buttonText?>" />
+	<input name="submit" type="submit" value="<?=$buttonText?>" class="ccm-search-block-submit" />
 
 <? 
 $tt = Loader::helper('text');
@@ -34,7 +34,7 @@ if ($do_search) {
 				<p>
 					<?php echo ($currentPageBody ? $currentPageBody .'<br />' : '')?>
 					<?php echo $this->controller->highlightedMarkup($tt->shortText($r->getDescription()),$query)?>
-					<span class="pageLink"><?php echo $this->controller->highlightedMarkup($r->getPath(),$query)?></span>
+					<a href="<?php echo $r->getPath(); ?>" class="pageLink"><?php echo $this->controller->highlightedMarkup($r->getPath(),$query)?></a>
 				</p>
 			</div>
 		<? 	}//foreach search result ?>
