@@ -4,18 +4,7 @@
 	$u = new User();
 	$uID=$u->getUserID();
 ?>
-<style type="text/css">
-#surveyResults .surveySwatch {
-	background:#999999 none repeat scroll 0%;
-	border:1px solid #666666;
-	float:left;
-	font-size:1px;
-	height:10px;
-	line-height:1px;
-	margin:3px 4px 0px 0px;
-	width:10px;
-}
-</style>
+
 <div class="poll">
 <?  
 if ($controller->hasVoted()) { ?>
