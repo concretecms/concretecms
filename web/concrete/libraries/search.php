@@ -125,14 +125,14 @@ class Search {
 				$variables['order'] = $order;
 				$url = $_SERVER['PHP_SELF'] . $this->qsReplace($variables);
 					
-				$cell .= ' class="subheaderActive"><a href="' . htmlentities($url) . '">' . $fieldtext . '</a></td>';
+				$cell .= ' class="subheaderActive"><a href="' . htmlentities($url, ENT_QUOTES, APP_CHARSET) . '">' . $fieldtext . '</a></td>';
 			} else {
 			
 				$variables['sort'] = $args[1];
 				$variables['order'] = $defaultSort;
 				$url = $_SERVER['PHP_SELF'] . $this->qsReplace($variables);
 				
-				$cell .= ' class="subheader"><a href="' . htmlentities($url) . '">' . $fieldtext . '</a></td>';
+				$cell .= ' class="subheader"><a href="' . htmlentities($url, ENT_QUOTES, APP_CHARSET) . '">' . $fieldtext . '</a></td>';
 			}
 		} else {
 			$cell .= ' class="subheader">' . $fieldtext . '</td>';

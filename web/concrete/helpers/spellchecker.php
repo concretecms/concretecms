@@ -50,7 +50,7 @@ class SpellcheckerHelper{
 		// Get list or errors.
 		$offset=0; 
 		
-		$htmlentitiesStr=htmlentities($string); 
+		$htmlentitiesStr=htmlentities($string, ENT_QUOTES, APP_CHARSET); 
 		$wordNumber=0;
 		foreach (explode("\n",$mistakes) as $word){
 			$wordNumber++;
