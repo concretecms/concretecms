@@ -17,7 +17,7 @@
 	
 			if (is_array($ctArray)) { ?>
 	  <select name="ctID" id="selectCTID">
-		<option value="0">** All **</option>
+		<option value="0">** <?php echo t('All')?> **</option>
 		<? foreach ($ctArray as $ct) { ?>
 		<option value="<?=$ct->getCollectionTypeID()?>" <? if ($ctID == $ct->getCollectionTypeID()) { ?> selected <? } ?>>
 		<?=$ct->getCollectionTypeName()?>
