@@ -123,7 +123,7 @@ ccm_checkSelectedAdvancedSearchField = function(searchType, fieldset) {
 		}
 	});
 
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").each(function() {
+	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option input.ccm-input-date").each(function() {
 		$(this).attr('id', $(this).attr('id') + fieldset);
 	});
 	
