@@ -284,7 +284,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						if ($displayEditLink) {
 							$cmpbase = $this->getBlockPath(FILENAME_BLOCK_COMPOSER);
 							if (file_exists($cmpbase . '/' . FILENAME_BLOCK_COMPOSER)) {
-								$template = $base . '/' . FILENAME_BLOCK_COMPOSER;
+								$template = $cmpbase . '/' . FILENAME_BLOCK_COMPOSER;
 								$displayEditLink = false;
 							}
 						}
