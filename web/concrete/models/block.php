@@ -645,6 +645,25 @@ class Block extends Object {
 		return $this->cbFilename;
 	}
 
+	public function hasComposerBlockTemplate() {
+		$bv = new BlockView();
+		$bv->setBlockObject($this);
+		$cpFilename = $this->getBlockComposerFilename();
+		if ($cpFilename) {
+			$cmpbase = $bv->getBlockPath(DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $cpFilename);
+			if (file_exists($cmpbase . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $cpFilename)) {
+				return true;
+			}
+		}
+		
+		$cmpbase = $bv->getBlockPath(FILENAME_BLOCK_COMPOSER);
+		if (file_exists($cmpbase . '/' . FILENAME_BLOCK_COMPOSER)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	function getBlockID() {
 		return $this->bID;
 	}

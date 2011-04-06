@@ -122,9 +122,13 @@ class DashboardComposerWriteController extends Controller {
 		
 		// now we grab the instance on the created page
 		foreach($blocks as $b) {
-			$req = $b->getController()->post();
-			$b2 = Block::getByID($b->getBlockID(), $p, $b->getAreaHandle());
-			$b2->update($req);
+			if ($b->hasComposerBlockTemplate()) {
+				// we check this because if the block doesn't have a composer block template then we don't want
+				// to try and auto-save it
+				$req = $b->getController()->post();
+				$b2 = Block::getByID($b->getBlockID(), $p, $b->getAreaHandle());
+				$b2->update($req);
+			}
 		}
 				
 		Loader::model("attribute/categories/collection");
