@@ -460,7 +460,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}
 			
-			if (is_dir(DIR_FILES_BLOCK_TYPES_CORE . '/' . $btHandle)) {
+			if (is_dir(DIR_FILES_BLOCK_TYPES . '/' . $btHandle)) {
 				$dir = DIR_FILES_BLOCK_TYPES;
 			} else {
 				$dir = DIR_FILES_BLOCK_TYPES_CORE;
