@@ -12,8 +12,8 @@
 
 class SpellcheckerHelper{
 
-	var $wordSuggestions=array();
-	var $aspell_path = DIR_FILES_BIN_ASPELL;
+	public $wordSuggestions=array();
+	public $aspell_path = DIR_FILES_BIN_ASPELL;
 
 	//check to see if aspell is installed - returns a boolean
 	public function enabled(){

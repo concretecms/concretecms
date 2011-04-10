@@ -187,20 +187,20 @@
 			return t("Auto-Nav");
 		}
 
-		var $navArray = array();
-		var $cParentIDArray = array();
+		public $navArray = array();
+		public $cParentIDArray = array();
 
-		var $sorted_array = array();
-		var $navSort = array();
-		var $navObjectNames = array();
+		public $sorted_array = array();
+		public $navSort = array();
+		public $navObjectNames = array();
 
-		var $displayPages, $displayPagesCID, $displayPagesIncludeSelf, $displaySubPages, $displaySubPageLevels, $displaySubPageLevelsNum, $orderBy, $displayUnavailablePages;
-		var $haveRetrievedSelf = false;
-		var $haveRetrievedSelfPlus1 = false;
+		public $displayPages, $displayPagesCID, $displayPagesIncludeSelf, $displaySubPages, $displaySubPageLevels, $displaySubPageLevelsNum, $orderBy, $displayUnavailablePages;
+		public $haveRetrievedSelf = false;
+		public $haveRetrievedSelfPlus1 = false;
 		public $displaySystemPages = false;
 
 		// private variable $displayUnapproved, used by the dashboard
-		var $displayUnapproved = false;
+		public $displayUnapproved = false;
 
 		// haveRetrievedSelf is a variable that stores whether or not a particular tree walking operation has retrieved the current page. We use this
 		// with subpage modes like enough and enough_plus1

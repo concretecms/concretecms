@@ -5,7 +5,7 @@ Loader::block('library_file');
 
 class HtmlBlockController extends BlockController {
 	
-	var $pobj;
+	public $pobj;
 
 	protected $btTable = 'btContentLocal';
 	protected $btInterfaceWidth = "600";

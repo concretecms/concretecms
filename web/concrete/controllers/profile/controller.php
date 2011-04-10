@@ -6,7 +6,7 @@ Loader::model('users_friends');
 
 class ProfileController extends Controller {
 	
-	var $helpers = array('html', 'form', 'text'); 
+	public $helpers = array('html', 'form', 'text'); 
 	
 	public function on_start(){
 		$this->error = Loader::helper('validation/error');
