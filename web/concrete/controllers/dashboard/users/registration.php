@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class DashboardUsersRegistrationController extends Controller {
 
-	var $helpers = array('form'); 
+	public $helpers = array('form'); 
 	
 	public function __construct() { 
 		$this->token = Loader::helper('validation/token');

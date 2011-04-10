@@ -25,11 +25,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
         loader::model('attribute/categories/collection');
 	class CollectionType extends Object {
 
-		var $ctID;
-		var $addCTUArray = array();
-		var $addCTGArray = array();
-		var $akIDArray = array();
-		var $composerAKIDArray = array();
+		public $ctID;
+		public $addCTUArray = array();
+		public $addCTGArray = array();
+		public $akIDArray = array();
+		public $composerAKIDArray = array();
 		
 		/**
 		 * @description returns a collection type object for the given CollectionType handle

@@ -4,7 +4,7 @@ Loader::model('user_attributes');
 Loader::model('attribute/categories/collection');
 class ProfileEditController extends Controller {
 
-	var $helpers = array('html', 'form', 'date');
+	public $helpers = array('html', 'form', 'date');
 	
 	public function __construct() {
 		$html = Loader::helper('html');

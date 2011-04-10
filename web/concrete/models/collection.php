@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  
 	class Collection extends Object {
 		
-		var $cID;
+		public $cID;
 		protected $attributes = array();
 		/* version specific stuff */
 

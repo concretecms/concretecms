@@ -28,7 +28,7 @@ class SurveyBlockController extends BlockController {
 	protected $btInterfaceHeight = "300";	
 	protected $btIncludeAll = 1;
 	
-	var $options = array();
+	public $options = array();
 
 	/** 
 	 * Used for localization. If we want to localize the name/description we have to include this
@@ -278,7 +278,7 @@ class SurveyBlockController extends BlockController {
  */
 
 class BlockPollOption {
-	var $optionID, $optionName, $displayOrder;
+	public $optionID, $optionName, $displayOrder;
 	
 	function getOptionID() {return $this->optionID;}
 	function getOptionName() {return $this->optionName;}

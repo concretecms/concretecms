@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class DashboardFilesSetsController extends Controller {
 
-	var $helpers = array('form','validation/token','concrete/interface'); 
+	public $helpers = array('form','validation/token','concrete/interface'); 
 
 	public function on_start(){
 		$html = Loader::helper('html');

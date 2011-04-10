@@ -21,7 +21,7 @@
  */
 	class GroupList extends Object {
 	
-		var $gArray = array();
+		public $gArray = array();
 		
 		/**
 		 * Get all groups should only really be run when you're sure there aren't a million groups in the system

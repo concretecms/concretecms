@@ -149,35 +149,35 @@ class Permissions extends Object {
 	* @access private
 	*
 	*/
-	var $permissionSet;
+	public $permissionSet;
 
 	/**
 	*
 	* @access private
 	*
 	*/
-	var $permError;
+	public $permError;
 
 	/**
 	*
 	* @access private
 	*
 	*/
-	var $originalObj;
+	public $originalObj;
 
 	/**
 	*
 	* @access private
 	*
 	*/
-	var $addCollectionTypes = array();
+	public $addCollectionTypes = array();
 
 	/**
 	*
 	* @access private
 	*
 	*/
-	var $addBlockTypes = array();
+	public $addBlockTypes = array();
 	
 	/**
 	*
@@ -186,7 +186,7 @@ class Permissions extends Object {
 	* @access private
 	*
 	*/
-	var $oUID;
+	public $oUID;
 	
 	/**
 	*
@@ -472,7 +472,7 @@ class Permissions extends Object {
 *
 */
 class CollectionPermissions extends Permissions {
-	var $addCTIDs = array();
+	public $addCTIDs = array();
 	
 	function CollectionPermissions(&$cObj) {
 		$u = new User();
@@ -637,7 +637,7 @@ class CollectionPermissions extends Permissions {
 *
 */
 class AreaPermissions extends Permissions {
-	var $addBTIDs = array();
+	public $addBTIDs = array();
 	
 	function AreaPermissions($aObj) {
 		$u = new User();

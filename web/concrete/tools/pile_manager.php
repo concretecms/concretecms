@@ -220,7 +220,7 @@ if($_REQUEST['btask']=='add'){
 		$ih = Loader::helper('concrete/interface'); 
 		
 		$defaultScrapbook=$scrapbookHelper->getDefault(); ?>		
-		<script>
+		<script type="text/javascript">
 		if(!ccmSaveToScrapbookDialogTarget)
 			var ccmSaveToScrapbookDialogTarget=null;
 			
