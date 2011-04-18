@@ -204,7 +204,7 @@ class FormBlockController extends BlockController {
 			throw new Exception(t("Oops, something is wrong with the form you posted (it doesn't have a question set id)."));
 			
 		//get all questions for this question set
-		$rows=$db->GetArray("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=? AND bID=? order by position asc", array( $qsID, intval($this->bID)));			
+		$rows=$db->GetArray("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=? AND bID=? order by position asc, msqID", array( $qsID, intval($this->bID)));			
 
 		// check captcha if activated
 		if ($this->displayCaptcha) {
