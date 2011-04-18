@@ -117,7 +117,9 @@ foreach ($gResults as $g) { ?>
 
 	<div class="ccm-group">
 		<a class="ccm-group-inner" href="<?=$this->url('/dashboard/users/groups?task=edit&gID=' . $g['gID'])?>" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$g['gName']?></a>
-		<div class="ccm-group-description"><?=$g['gDescription']?></div>
+		<? if ($g['gDescription']) { ?>
+			<div class="ccm-group-description"><?=$g['gDescription']?></div>
+		<? } ?>
 	</div>
 
 

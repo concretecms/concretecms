@@ -705,7 +705,7 @@ class MiniSurvey{
 					return $html;
 					
 				case 'text':
-					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
+					$val=($_REQUEST['Question'.$msqID])?Loader::helper('text')->entities($_REQUEST['Question'.$msqID]):'';
 					return '<textarea name="Question'.$msqID.'" cols="'.$questionData['width'].'" rows="'.$questionData['height'].'" style="width:95%">'.$val.'</textarea>';
 					
 				case 'field':
