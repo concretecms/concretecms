@@ -426,6 +426,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			} else {
 				$dir = $dir2;
 			}
+
+			// now we check to see if it's been overridden in the core and if so we do it there
+			if ($btID > 0) { 
+				// this is only necessary when it's an existing refresh
+				if (is_dir(DIR_FILES_BLOCK_TYPES . '/' . $btHandle)) {
+					$dir = DIR_FILES_BLOCK_TYPES;
+				}
+			}
 			
 			$bt = new BlockType;
 			$bt->btHandle = $btHandle;
