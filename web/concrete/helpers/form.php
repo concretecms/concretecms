@@ -314,7 +314,38 @@ class FormHelper {
 		return $str;
 		
 	}
-
+        /** 
+	 * Creates an email input element
+	 * @param string $key
+	 */
+	public function email($key) {
+		$str = '<input id="' . $key . '" type="email" name="' . $key . '" value="" class="ccm-input-email" style="height: 30px; width: 100%;" />';
+		return $str;
+	}
+	/** 
+	 * Creates a telephone input element
+	 * @param string $key
+	 */
+	public function tel($key) {
+		$str = '<input id="' . $key . '" type="tel" name="' . $key . '" value="" class="ccm-input-tel" />';
+		return $str;
+	}
+ 	 /** 
+	 * Creates a url input element
+	 * @param string $key
+	 */
+	public function url($key) {
+		$str = '<input id="' . $key . '" type="url" name="' . $key . '" value="" class="ccm-input-url" />';
+		return $str;
+	}
+	 /** 
+	 * Creates a search input element
+	 * @param string $key
+	 */
+	public function search($key) {
+		$str = '<input id="' . $key . '" type="search" name="' . $key . '" value="" class="ccm-input-search" />';
+		return $str;
+	}
 
 	/**
 	 * Renders a select field. First argument is the name of the field. Second is an associative array of key => display. Second argument is either the value of the field to be selected (and if it's blank we check post) or a misc. array of fields
