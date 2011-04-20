@@ -32,7 +32,8 @@ class Cache {
 					'cache_id_prefix' => CACHE_ID		
 				);
 				$backendOptions = array(
-					'cache_dir' => DIR_FILES_CACHE
+					'cache_dir' => DIR_FILES_CACHE,
+					'file_locking' => false
 				);
 				if (defined('CACHE_BACKEND_OPTIONS')) {
 					$opts = unserialize(CACHE_BACKEND_OPTIONS);
