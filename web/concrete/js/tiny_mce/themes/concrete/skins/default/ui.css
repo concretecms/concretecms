@@ -17,17 +17,17 @@
 .defaultSkin .mceExternalToolbar td.mceToolbar {padding-right:13px;}
 .defaultSkin .mceExternalClose {position:absolute; top:3px; right:3px; width:7px; height:7px; background:url(../../img/icons.gif) -820px 0}
 
-.defaultSkin table.mceLayout { background: #fbfbfb top right no-repeat url(img/menu_bg_long.gif); }
-.defaultSkin table.mceLayout tr.mceFirst { }
-.defaultSkin table.mceLayout tr.mceFirst .mceLeft { background: top left no-repeat url(img/menu_bg_left_cap.gif); } 
+.defaultSkin table.mceLayout { }
+.defaultSkin table.mceLayout tr.mceFirst {}
+.defaultSkin table.mceLayout tr.mceFirst .mceLeft { border: 2px solid #cfcfcf; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px; -o-border-radius: 10px; background: #fbfbfb repeat-x left bottom url(img/menu_bg_middle_no_border.png); } 
 
 /* Layout */
 .defaultSkin table.mceLayout {border:0;}
 .defaultSkin table.mceLayout tr.mceFirst td {}
-.defaultSkin table.mceLayout tr.mceLast td {border:1px solid #CCC;}
+.defaultSkin table.mceLayout tr.mceLast td {padding: 2px 0px 0px 0px !important;}
+.defaultSkin .mceIframeContainer iframe {border:1px solid #CCC;}
 .defaultSkin table.mceToolbar, .defaultSkin tr.mceFirst .mceToolbar tr td, .defaultSkin tr.mceLast .mceToolbar tr td {background-color: transparent !important; border:0; margin:0; padding:0;}
 .defaultSkin td.mceToolbar {padding:4px 8px 4px 8px; vertical-align:top;}
-.defaultSkin .mceIframeContainer {border-top:1px solid #CCC; border-bottom:1px solid #CCC}
 .defaultSkin .mceStatusbar {font-family:'MS Sans Serif',sans-serif,Verdana,Arial; font-size:9pt; line-height:16px; overflow:visible; color:#000; display:block; height:20px}
 .defaultSkin .mceStatusbar div {float:left; margin:2px}
 .defaultSkin .mceStatusbar a.mceResize {display:block; float:right; background:url(../../img/icons.gif) -800px 0; width:20px; height:20px; cursor:se-resize}
