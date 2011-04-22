@@ -1,6 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
-<div class="ccm-editor-controls">
+<div class="ccm-editor-controls-left-cap">
 <div class="ccm-editor-controls-right-cap">
+<div class="ccm-editor-controls">
 <ul>
 <li ccm-file-manager-field="rich-text-editor-image"><a class="ccm-file-manager-launch" onclick="ccm_editorCurrentAuxTool='image'; setBookMark();return false;" href="#"><?=t('Add Image')?></a></li>
 <li><a class="ccm-file-manager-launch" onclick="ccm_editorCurrentAuxTool='file'; setBookMark();return false;" href="#"><?=t('Add File')?></a></li>
@@ -22,6 +23,7 @@ $confirm = 'if(confirm(\''.t("Are you sure you want to leave? All changes will b
 	<li><a style="float: right" href="#" onclick="<?php echo $confirm?>"><?=t('Customize Toolbar')?></a></li>
 <?php } ?>
 </ul>
+</div>
 </div>
 </div>
 <div id="rich-text-editor-image-fm-display">
