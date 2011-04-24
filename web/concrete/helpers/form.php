@@ -314,37 +314,205 @@ class FormHelper {
 		return $str;
 		
 	}
-        /** 
-	 * Creates an email input element
+	 /**
+	 * Renders a email input field. Second argument is either the value of the field (and if it's blank we check post) or a misc. array of fields
 	 * @param string $key
+	 * @return $html
 	 */
 	public function email($key) {
-		$str = '<input id="' . $key . '" type="email" name="' . $key . '" value="" class="ccm-input-email" style="height: 30px; width: 100%;" />';
+		$a = func_get_args();
+		$val = $this->getRequestValue($key);
+		$class = "ccm-input-email";
+
+		// index 0 is always the key
+		// need to figure out a good way to get a unique ID
+		$str = '<input id="' . $key . '" type="email" name="' . $key . '" ';
+
+		// if there are two more values, then we treat index 1 as the value in the
+		// value field, and index 2 as an assoc. array of other stuff to add
+		// to the tag. If there's only one, then it's the array
+
+		if (count($a) == 3) {
+			$val = ($val !== false) ? $val : $a[1];
+			$str .= 'value="' . $val . '" ';
+			$miscFields = $a[2];
+			foreach($a[2] as $key => $value) {
+				$str .= $key . '="' . $value . '" ';
+			}
+		} else {
+			if (is_array($a[1])) {
+				$str .= 'value="' . $val . '" ';
+				$miscFields = $a[1];
+			} else {
+				// we ignore this second value if a post is set with this guy in it
+				$val = ($val !== false) ? $val : $a[1];
+				$str .= 'value="' . $val . '" ';
+			}
+		}
+
+		if (is_array($miscFields)) {
+			foreach($miscFields as $key => $value) {
+				if ($key == 'class') {
+					$class .= ' ' . $value;
+				} else {
+					$str .= $key . '="' . $value . '" ';
+				}
+			}
+		}
+		$str .= 'class="'.$class.'" />';
+
 		return $str;
+
 	}
-	/** 
-	 * Creates a telephone input element
+	 /**
+	 * Renders a telephone input field. Second argument is either the value of the field (and if it's blank we check post) or a misc. array of fields
 	 * @param string $key
+	 * @return $html
 	 */
-	public function tel($key) {
-		$str = '<input id="' . $key . '" type="tel" name="' . $key . '" value="" class="ccm-input-tel" />';
+	public function telephone($key) {
+		$a = func_get_args();
+		$val = $this->getRequestValue($key);
+		$class = "ccm-input-tel";
+
+		// index 0 is always the key
+		// need to figure out a good way to get a unique ID
+		$str = '<input id="' . $key . '" type="tel" name="' . $key . '" ';
+
+		// if there are two more values, then we treat index 1 as the value in the
+		// value field, and index 2 as an assoc. array of other stuff to add
+		// to the tag. If there's only one, then it's the array
+
+		if (count($a) == 3) {
+			$val = ($val !== false) ? $val : $a[1];
+			$str .= 'value="' . $val . '" ';
+			$miscFields = $a[2];
+			foreach($a[2] as $key => $value) {
+				$str .= $key . '="' . $value . '" ';
+			}
+		} else {
+			if (is_array($a[1])) {
+				$str .= 'value="' . $val . '" ';
+				$miscFields = $a[1];
+			} else {
+				// we ignore this second value if a post is set with this guy in it
+				$val = ($val !== false) ? $val : $a[1];
+				$str .= 'value="' . $val . '" ';
+			}
+		}
+
+		if (is_array($miscFields)) {
+			foreach($miscFields as $key => $value) {
+				if ($key == 'class') {
+					$class .= ' ' . $value;
+				} else {
+					$str .= $key . '="' . $value . '" ';
+				}
+			}
+		}
+		$str .= 'class="'.$class.'" />';
+
 		return $str;
+
 	}
- 	 /** 
-	 * Creates a url input element
+	 /**
+	 * Renders a url input field. Second argument is either the value of the field (and if it's blank we check post) or a misc. array of fields
 	 * @param string $key
+	 * @return $html
 	 */
 	public function url($key) {
-		$str = '<input id="' . $key . '" type="url" name="' . $key . '" value="" class="ccm-input-url" />';
+		$a = func_get_args();
+		$val = $this->getRequestValue($key);
+		$class = "ccm-input-urll";
+
+		// index 0 is always the key
+		// need to figure out a good way to get a unique ID
+		$str = '<input id="' . $key . '" type="url" name="' . $key . '" ';
+
+		// if there are two more values, then we treat index 1 as the value in the
+		// value field, and index 2 as an assoc. array of other stuff to add
+		// to the tag. If there's only one, then it's the array
+
+		if (count($a) == 3) {
+			$val = ($val !== false) ? $val : $a[1];
+			$str .= 'value="' . $val . '" ';
+			$miscFields = $a[2];
+			foreach($a[2] as $key => $value) {
+				$str .= $key . '="' . $value . '" ';
+			}
+		} else {
+			if (is_array($a[1])) {
+				$str .= 'value="' . $val . '" ';
+				$miscFields = $a[1];
+			} else {
+				// we ignore this second value if a post is set with this guy in it
+				$val = ($val !== false) ? $val : $a[1];
+				$str .= 'value="' . $val . '" ';
+			}
+		}
+
+		if (is_array($miscFields)) {
+			foreach($miscFields as $key => $value) {
+				if ($key == 'class') {
+					$class .= ' ' . $value;
+				} else {
+					$str .= $key . '="' . $value . '" ';
+				}
+			}
+		}
+		$str .= 'class="'.$class.'" />';
+
 		return $str;
+
 	}
-	 /** 
-	 * Creates a search input element
+	 /**
+	 * Renders a search input field. Second argument is either the value of the field (and if it's blank we check post) or a misc. array of fields
 	 * @param string $key
+	 * @return $html
 	 */
 	public function search($key) {
-		$str = '<input id="' . $key . '" type="search" name="' . $key . '" value="" class="ccm-input-search" />';
+		$a = func_get_args();
+		$val = $this->getRequestValue($key);
+		$class = "ccm-input-search";
+
+		// index 0 is always the key
+		// need to figure out a good way to get a unique ID
+		$str = '<input id="' . $key . '" type="search" name="' . $key . '" ';
+
+		// if there are two more values, then we treat index 1 as the value in the
+		// value field, and index 2 as an assoc. array of other stuff to add
+		// to the tag. If there's only one, then it's the array
+
+		if (count($a) == 3) {
+			$val = ($val !== false) ? $val : $a[1];
+			$str .= 'value="' . $val . '" ';
+			$miscFields = $a[2];
+			foreach($a[2] as $key => $value) {
+				$str .= $key . '="' . $value . '" ';
+			}
+		} else {
+			if (is_array($a[1])) {
+				$str .= 'value="' . $val . '" ';
+				$miscFields = $a[1];
+			} else {
+				// we ignore this second value if a post is set with this guy in it
+				$val = ($val !== false) ? $val : $a[1];
+				$str .= 'value="' . $val . '" ';
+			}
+		}
+
+		if (is_array($miscFields)) {
+			foreach($miscFields as $key => $value) {
+				if ($key == 'class') {
+					$class .= ' ' . $value;
+				} else {
+					$str .= $key . '="' . $value . '" ';
+				}
+			}
+		}
+		$str .= 'class="'.$class.'" />';
+
 		return $str;
+
 	}
 
 	/**
