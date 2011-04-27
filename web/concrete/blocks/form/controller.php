@@ -301,6 +301,15 @@ class FormBlockController extends BlockController {
 					$answer='';
 				}elseif($row['inputType']=='fileupload'){
 					 $answer=intval( $tmpFileIds[intval($row['msqID'])] );
+				}elseif($row['inputType']=='url'){
+					$answerLong="";
+					$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
+				}elseif($row['inputType']=='email'){
+					$answerLong="";
+					$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
+				}elseif($row['inputType']=='telephone'){
+					$answerLong="";
+					$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
 				}else{
 					$answerLong="";
 					$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
@@ -707,7 +716,15 @@ class MiniSurvey{
 				case 'text':
 					$val=($_REQUEST['Question'.$msqID])?Loader::helper('text')->entities($_REQUEST['Question'.$msqID]):'';
 					return '<textarea name="Question'.$msqID.'" cols="'.$questionData['width'].'" rows="'.$questionData['height'].'" style="width:95%">'.$val.'</textarea>';
-					
+				case 'url':
+					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
+					return '<input name="Question'.$msqID.'" type="url" value="'.stripslashes(htmlspecialchars($val)).'" />';
+				case 'telephone':
+					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
+					return '<input name="Question'.$msqID.'" type="tel" value="'.stripslashes(htmlspecialchars($val)).'" />';
+				case 'email':
+					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
+					return '<input name="Question'.$msqID.'" type="email" value="'.stripslashes(htmlspecialchars($val)).'" />';	
 				case 'field':
 				default:
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
