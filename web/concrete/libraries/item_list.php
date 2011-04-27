@@ -7,10 +7,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class DatabaseItemList extends ItemList {
 
-	private $query = '';
-	private $userQuery = '';
-	private $debug = false;
-	private $filters = array();
+	protected $query = '';
+	protected $userQuery = '';
+	protected $debug = false;
+	protected $filters = array();
 	protected $sortByString = '';
 	protected $groupByString = '';  
 	protected $autoSortColumns = array();
@@ -42,7 +42,7 @@ class DatabaseItemList extends ItemList {
 		$this->userQuery .= $query . ' ';
 	}
 
-	private function setupAutoSort() {
+	protected function setupAutoSort() {
 		if (count($this->autoSortColumns) > 0) {
 			$req = $this->getSearchRequest();
 			if (in_array($req[$this->queryStringSortVariable], $this->autoSortColumns)) {
@@ -51,7 +51,7 @@ class DatabaseItemList extends ItemList {
 		}
 	}
 	
-	private function executeBase() {
+	protected function executeBase() {
 		$db = Loader::db();
 		$q = $this->query . $this->userQuery . ' where 1=1 ';
 		foreach($this->filters as $f) {
@@ -297,7 +297,7 @@ class ItemList {
 		return array_slice($this->items, $offset, $itemsToGet);
 	}
 	
-	private function setCurrentPage($page = false) {
+	protected function setCurrentPage($page = false) {
 		$this->currentPage = $page;
 		if ($page == false) {
 			$pagination = Loader::helper('pagination');

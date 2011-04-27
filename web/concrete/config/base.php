@@ -315,7 +315,7 @@ if (!defined('DIR_FILES_CACHE')) {
 }
 
 if (!defined('CACHE_ID')) {
-	define('CACHE_ID', md5(BASE_URL . DIR_REL));
+	define('CACHE_ID', md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL));
 }
 
 if (defined('DIR_FILES_CACHE') && !is_dir(DIR_FILES_CACHE)) {
