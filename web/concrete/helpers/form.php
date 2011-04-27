@@ -22,9 +22,44 @@ class FormHelper {
 
 	private $radioIndex = 1;
 	private $selectIndex = 1;
-	
+
 	public function __construct() {
 		$this->th = Loader::helper("text");
+	}
+	public function miscFields() {
+				// if there are two more values, then we treat index 1 as the value in the
+		// value field, and index 2 as an assoc. array of other stuff to add
+		// to the tag. If there's only one, then it's the array
+
+		if (count($a) == 3) {
+			$val = ($val !== false) ? $val : $a[1];
+			$str .= 'value="' . $val . '" ';
+			$miscFields = $a[2];
+			foreach($a[2] as $key => $value) {
+				$str .= $key . '="' . $value . '" ';
+			}
+		} else {
+			if (is_array($a[1])) {
+				$str .= 'value="' . $val . '" ';
+				$miscFields = $a[1];
+			} else {
+				// we ignore this second value if a post is set with this guy in it
+				$val = ($val !== false) ? $val : $a[1];
+				$str .= 'value="' . $val . '" ';
+			}
+		}
+
+		if (is_array($miscFields)) {
+			foreach($miscFields as $key => $value) {
+				if ($key == 'class') {
+					$class .= ' ' . $value;
+				} else {
+					$str .= $key . '="' . $value . '" ';
+				}
+			}
+		}
+		$str .= 'class="'.$class.'" />';
+		return $str;
 	}
 
 	/** 
@@ -75,7 +110,7 @@ class FormHelper {
 		$str = '<input type="button" class="ccm-input-button '.$additionalClasses.'" id="' . $name . '" name="' . $name . '" value="' . $value . '" ' . $_fields . ' />';
 		return $str;
 	}
-	
+
 	/** 
 	 * Creates a label tag
 	 * @param string $field
@@ -86,7 +121,7 @@ class FormHelper {
 		$str = '<label for="' . $field . '">' . $name . '</label>';
 		return $str;
 	}
-	
+
 	/** 
 	 * Creates a file input element
 	 * @param string $key
@@ -95,7 +130,7 @@ class FormHelper {
 		$str = '<input type="file" id="' . $key . '" name="' . $key . '" value="" class="ccm-input-file" />';
 		return $str;
 	}
-	
+
 	/**
 	 * Creates a hidden form field. 
 	 * @param string $key
@@ -109,7 +144,7 @@ class FormHelper {
 		$str = '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . $value . '" />';
 		return $str;
 	}
-	
+
 	/** 
 	 * Creates an HTML checkbox
 	 * @param string $field
@@ -141,11 +176,11 @@ class FormHelper {
 		} else if (is_array($this->getRequestValue($field)) && in_array($value, $this->getRequestValue($field))) {
 			$checked = true;
 		}
-			
+
 		if ($checked) {
 			$checked = 'checked="checked" ';
 		}
-		
+
 		$str = '<input type="checkbox" class="ccm-input-checkbox" name="' . $field . '" id="' . $id . '" value="' . $value . '" ' . $checked . ' ' . $mf . ' />';
 		return $str;
 	}
@@ -157,26 +192,26 @@ class FormHelper {
 	 */
 	 public function textarea($key) {
 	 	$a = func_get_args();
-		
+
 		$str = '<textarea id="' . $key . '" name="' . $key . '" ';
 		$rv = $this->getRequestValue($key);
-		
+
 		if (count($a) == 3) {
 			$innerValue = ($rv !== false) ? $rv : $a[1];
 
 			$miscFields = $a[2];
 		} else {
-			
+
 			if (is_array($a[1])) {
 				$innerValue = ($rv !== false) ? $rv : '';
 				$miscFields = $a[1];
 			} else {
-				
+
 				// we ignore this second value if a post is set with this guy in it
 				$innerValue = ($rv !== false) ? $rv : $a[1];
 			}
 		}
-		
+
 		if (is_array($miscFields)) {
 			if (empty($miscFields['class'])) {
 				$miscFields['class'] = "ccm-input-textarea";
@@ -190,11 +225,11 @@ class FormHelper {
 		} else {
 			$str .= ' class="ccm-input-textarea" ';
 		}
-		
+
 		$str .= '>' . $innerValue . '</textarea>';
 		return $str;
 	 }
-	 
+
 	/**
 	 * Generates a radio button
 	 * @param string $key
@@ -203,7 +238,7 @@ class FormHelper {
 	 */
 	public function radio($key, $value, $valueOrArray = false, $miscFields = array()) {
 		$str = '<input type="radio" class="ccm-input-radio" name="' . $key . '" id="' . $key . $this->radioIndex . '" value="' . $value . '" ';
-		
+
 		if (is_array($valueOrArray)) {
 			$miscFields = $valueOrArray;
 		}
@@ -213,17 +248,17 @@ class FormHelper {
 				$str .= $k . '="' . $v . '" ';
 			}
 		}
-		
+
 		if ($valueOrArray == $value && !isset($_REQUEST[$key]) || (isset($_REQUEST[$key]) && $_REQUEST[$key] == $value)) {
 			$str .= 'checked="checked" ';
 		}
-		
+
 		$this->radioIndex++;
-		
+
 		$str .= ' />';
 		return $str;
 	}
-	
+
 	protected function processRequestValue($key, $type = "post") {
 		$arr = ($type == 'post') ? $_POST : $_GET;
 		if (strpos($key, '[') !== false) {
@@ -251,10 +286,10 @@ class FormHelper {
 		if (isset($arr[$key])) {
 			return $this->th->entities($arr[$key]);
 		}
-		
+
 		return false;
 	}
-	
+
 	// checks the request based on the key passed. Does things like turn the key into arrays if the key has text versions of [ and ] in it, etc..
 	public function getRequestValue($key) {
 		$val = $this->processRequestValue($key, 'post');
@@ -278,7 +313,7 @@ class FormHelper {
 		// index 0 is always the key
 		// need to figure out a good way to get a unique ID
 		$str = '<input id="' . $key . '" type="text" name="' . $key . '" ';
-		
+
 		// if there are two more values, then we treat index 1 as the value in the
 		// value field, and index 2 as an assoc. array of other stuff to add
 		// to the tag. If there's only one, then it's the array
@@ -299,7 +334,7 @@ class FormHelper {
 				$str .= 'value="' . $val . '" ';
 			}
 		}
-		
+
 		if (is_array($miscFields)) {
 			foreach($miscFields as $key => $value) {
 				if ($key == 'class') {
@@ -310,11 +345,74 @@ class FormHelper {
 			}
 		}
 		$str .= 'class="'.$class.'" />';
-		
-		return $str;
-		
-	}
 
+		return $str;
+
+	}
+	 /**
+	 * Renders a email input field. Second argument is either the value of the field (and if it's blank we check post) or a misc. array of fields
+	 * @param string $key
+	 * @return $html
+	 */
+	public function email($key) {
+		$a = func_get_args();
+		$val = $this->getRequestValue($key);
+		$class = "ccm-input-email";
+
+		// index 0 is always the key
+		// need to figure out a good way to get a unique ID
+		$str = '<input id="' . $key . '" type="email" name="' . $key . '" ';
+		$this->miscFields();
+
+	}
+	 /**
+	 * Renders a telephone input field. Second argument is either the value of the field (and if it's blank we check post) or a misc. array of fields
+	 * @param string $key
+	 * @return $html
+	 */
+	public function telephone($key) {
+		$a = func_get_args();
+		$val = $this->getRequestValue($key);
+		$class = "ccm-input-tel";
+
+		// index 0 is always the key
+		// need to figure out a good way to get a unique ID
+		$str = '<input id="' . $key . '" type="tel" name="' . $key . '" ';
+		$this->miscFields();
+
+	}
+	 /**
+	 * Renders a url input field. Second argument is either the value of the field (and if it's blank we check post) or a misc. array of fields
+	 * @param string $key
+	 * @return $html
+	 */
+	public function url($key) {
+		$a = func_get_args();
+		$val = $this->getRequestValue($key);
+		$class = "ccm-input-urll";
+
+		// index 0 is always the key
+		// need to figure out a good way to get a unique ID
+		$str = '<input id="' . $key . '" type="url" name="' . $key . '" ';
+		$this->miscFields();
+
+	}
+	 /**
+	 * Renders a search input field. Second argument is either the value of the field (and if it's blank we check post) or a misc. array of fields
+	 * @param string $key
+	 * @return $html
+	 */
+	public function search($key) {
+		$a = func_get_args();
+		$val = $this->getRequestValue($key);
+		$class = "ccm-input-search";
+
+		// index 0 is always the key
+		// need to figure out a good way to get a unique ID
+		$str = '<input id="' . $key . '" type="search" name="' . $key . '" ';
+		$this->miscFields();
+
+	}
 
 	/**
 	 * Renders a select field. First argument is the name of the field. Second is an associative array of key => display. Second argument is either the value of the field to be selected (and if it's blank we check post) or a misc. array of fields
@@ -326,7 +424,7 @@ class FormHelper {
 		if (is_array($val)) {
 			$valueOrArray = $val[0];
 		}
-		
+
 		if ((strpos($key, '[]') + 2) == strlen($key)) {
 			$_key = substr($key, 0, strpos($key, '[]'));
 			$id = $_key . $this->selectIndex;
@@ -341,7 +439,7 @@ class FormHelper {
 		} else {
 			$miscFields['ccm-passed-value'] = $valueOrArray;	
 		}
-		
+
 		$_class = '';
 		if (is_array($miscFields) && isset($miscFields['class'])) {
 			$_class = ' ' . $miscFields['class'];
@@ -354,9 +452,9 @@ class FormHelper {
 				$str .= $k . '="' . $value . '" ';
 			}
 		}
-		
+
 		$str .= '>';
-		
+
 
 		foreach($values as $k => $value) { 
 			$selected = "";
@@ -366,13 +464,13 @@ class FormHelper {
 			$str .= '<option value="' . $k . '" ' . $selected . '>' . $value . '</option>';
 		}
 
-		
+
 		$this->selectIndex++;
 
 		$str .= '</select>';
 		return $str;
 	}
-	
+
 
 
 	/**
@@ -388,42 +486,8 @@ class FormHelper {
 		// index 0 is always the key
 		// need to figure out a good way to get a unique ID
 		$str = '<input id="' . $key . '" type="password" name="' . $key . '" ';
-		
-		// if there are two more values, then we treat index 1 as the value in the
-		// value field, and index 2 as an assoc. array of other stuff to add
-		// to the tag. If there's only one, then it's the array
-		
-		if (count($a) == 3) {
-			$val = ($val !== false) ? $val : $a[1];
-			$str .= 'value="' . $val . '" ';
-			$miscFields = $a[2];
-			foreach($a[2] as $key => $value) {
-				$str .= $key . '="' . $value . '" ';
-			}
-		} else {
-			if (is_array($a[1])) {
-				$str .= 'value="' . $val . '" ';
-				$miscFields = $a[1];
-			} else {
-				// we ignore this second value if a post is set with this guy in it
-				$val = ($val !== false) ? $val : $a[1];
-				$str .= 'value="' . $val . '" ';
-			}
-		}
-		
-		if (is_array($miscFields)) {
-			foreach($miscFields as $key => $value) {
-				if ($key == 'class') {
-					$class .= ' ' . $value;
-				} else {
-					$str .= $key . '="' . $value . '" ';
-				}
-			}
-		}
-		$str .= 'class="'.$class.'" />';
-		
-		return $str;
-		
+		$this->miscFields();
+
 	}
 
 }
