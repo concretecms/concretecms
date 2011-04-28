@@ -211,6 +211,15 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		}
 		return $html;
 	}
+
+	public function getDisplaySanitizedValue() {
+		$list = $this->getSelectedOptions();
+		$html = '';
+		foreach($list as $l) {
+			$html .= $l->getSelectAttributeOptionValue() . '<br/>';
+		}
+		return $html;
+	}
 	
 	public function validateForm($p) {
 		$this->load();
