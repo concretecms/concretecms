@@ -35,7 +35,7 @@ $confirm = 'if(confirm(\''.t("Are you sure you want to leave? All changes will b
 function ccmEditorSitemapOverlay() {
     $.fn.dialog.open({
         title: '<?php echo t("Choose A Page") ?>',
-        href: CCM_TOOLS_PATH + '/sitemap_overlay.php?sitemap_mode=select_page&amp;callback=ccm_selectSitemapNode<?=$GLOBALS['CCM_EDITOR_SITEMAP_NODE_NUM']?>',
+        href: CCM_TOOLS_PATH + '/sitemap_overlay.php?sitemap_mode=select_page&callback=ccm_selectSitemapNode<?=$GLOBALS['CCM_EDITOR_SITEMAP_NODE_NUM']?>',
         width: '550',
         modal: false,
         height: '400'
