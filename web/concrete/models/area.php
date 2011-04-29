@@ -481,7 +481,7 @@ class Area extends Object {
 		$this->enclosingEnd = $html;
 	}
 
-	function update($aKeys, $aValues) {
+	function update() {
 		$db = Loader::db();
 
 		// now it's permissions time
