@@ -58,8 +58,6 @@ class FormHelper {
 				}
 			}
 		}
-		$str .= 'class="'.$class.'" />';
-		return $str;
 	}
 
 	/** 
@@ -181,7 +179,7 @@ class FormHelper {
 			$checked = 'checked="checked" ';
 		}
 
-		$str = '<input type="checkbox" class="ccm-input-checkbox" name="' . $field . '" id="' . $id . '" value="' . $value . '" ' . $checked . ' ' . $mf . ' />';
+		$str = '<input type="checkbox" class="ccm-input-checkbox'.$class.'" name="' . $field . '" id="' . $id . '" value="' . $value . '" ' . $checked . ' ' . $mf . ' />';
 		return $str;
 	}
 
@@ -363,6 +361,8 @@ class FormHelper {
 		// need to figure out a good way to get a unique ID
 		$str = '<input id="' . $key . '" type="email" name="' . $key . '" ';
 		$this->miscFields();
+		$str .= 'class="'.$class.'" />';
+		return $str;
 
 	}
 	 /**
@@ -379,6 +379,8 @@ class FormHelper {
 		// need to figure out a good way to get a unique ID
 		$str = '<input id="' . $key . '" type="tel" name="' . $key . '" ';
 		$this->miscFields();
+		$str .= 'class="'.$class.'" />';
+		return $str;
 
 	}
 	 /**
@@ -395,6 +397,8 @@ class FormHelper {
 		// need to figure out a good way to get a unique ID
 		$str = '<input id="' . $key . '" type="url" name="' . $key . '" ';
 		$this->miscFields();
+		$str .= 'class="'.$class.'" />';
+		return $str;
 
 	}
 	 /**
@@ -411,6 +415,8 @@ class FormHelper {
 		// need to figure out a good way to get a unique ID
 		$str = '<input id="' . $key . '" type="search" name="' . $key . '" ';
 		$this->miscFields();
+		$str .= 'class="'.$class.'" />';
+		return $str;
 
 	}
 
@@ -487,6 +493,8 @@ class FormHelper {
 		// need to figure out a good way to get a unique ID
 		$str = '<input id="' . $key . '" type="password" name="' . $key . '" ';
 		$this->miscFields();
+		$str .= 'class="'.$class.'" />';
+		return $str;
 
 	}
 
