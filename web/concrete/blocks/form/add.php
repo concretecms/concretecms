@@ -5,7 +5,7 @@ $ui=UserInfo::getByID($u->uID);
 $miniSurveyInfo['recipientEmail']=$ui->uEmail;
 ?>
 
-<script>
+<script type="text/javascript">
 var thisbID=parseInt(<?php echo intval($_REQUEST['bID'])?>); 
 var thisbtID=parseInt(<?php echo $bt->getBlockTypeID()?>); 
 </script>

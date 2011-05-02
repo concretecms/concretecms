@@ -294,7 +294,7 @@ $(function(){ GlobalScrapbook.init(); });
 
 <? }else{ ?>
 
-	<h1><span><?=htmlentities($scrapbookName) ?></span></h1>
+	<h1><span><?=htmlentities($scrapbookName, ENT_QUOTES, APP_CHARSET) ?></span></h1>
 	
 	<div class="ccm-dashboard-inner"> 
 

@@ -71,8 +71,12 @@ if (isset($entry)) { ?>
 		
 		<li>
 		<?
-		$bv = new BlockView();
-		$bv->render($b, 'composer');
+		if (is_object($b)) {
+			$bv = new BlockView();
+			$bv->render($b, 'composer');
+		} else {
+			print t('Block not found. Unable to edit in composer.');
+		}
 		?>
 		
 		</li>

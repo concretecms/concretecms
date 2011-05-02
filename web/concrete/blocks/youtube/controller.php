@@ -2,7 +2,7 @@
 	defined('C5_EXECUTE') or die("Access Denied.");
 	class YoutubeBlockController extends BlockController {
 		
-		var $pobj;
+		public $pobj;
 		 
 		protected $btTable = 'btYouTube';
 		protected $btInterfaceWidth = "400";

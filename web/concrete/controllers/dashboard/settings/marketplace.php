@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class DashboardSettingsMarketplaceController extends Controller {
 
-	var $helpers = array('form'); 
+	public $helpers = array('form'); 
 
 	public function on_start() {
 		Loader::library('marketplace');

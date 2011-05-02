@@ -275,9 +275,9 @@ INSERT INTO PagePermissions VALUES(5,1,0,'r',NULL,NULL)
  ,(1,3,0,'r:rv:wa:db:av:dc:adm',NULL,NULL);
 
 
-INSERT INTO PageThemes VALUES(1,'default','Plain Yogurt\n','Plain Yogurt is Concrete\'s default theme.',0)
- ,(2,'greensalad','Green Salad Theme\n','This is Concrete\'s Green Salad site theme.',0)
- ,(3,'dark_chocolate','Dark Chocolate\n','Dark Chocolate is Concrete\'s default theme in black.',0);
+INSERT INTO PageThemes VALUES(1,'default','Plain Yogurt\n','Plain Yogurt is concrete5\'s default theme.',0)
+ ,(2,'greensalad','Green Salad Theme\n','This is concrete5\'s Green Salad site theme.',0)
+ ,(3,'dark_chocolate','Dark Chocolate\n','Dark Chocolate is concrete5\'s default theme in black.',0);
 
 INSERT INTO PageTypeAttributes VALUES(1,1)
  ,(1,2)
