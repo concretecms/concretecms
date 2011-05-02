@@ -103,7 +103,7 @@ class DatabaseItemList extends ItemList {
 	}
 	
 	protected function setupAttributeSort() {
-		if (method_exists($this->attributeClass, 'getList')) {
+		if (is_callable(array($this->attributeClass, 'getList'))) {
 			$l = call_user_func(array($this->attributeClass, 'getList'));
 			foreach($l as $ak) {
 				$this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();

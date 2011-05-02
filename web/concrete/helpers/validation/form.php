@@ -141,6 +141,7 @@
 			}
 		}
 		
+		
 		public function invalidate($message) {
 			$f = new stdClass;
 			$f->message = $message;
