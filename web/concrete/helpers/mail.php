@@ -89,13 +89,14 @@ class MailHelper {
 		} else {
 			include(DIR_FILES_EMAIL_TEMPLATES_CORE . "/{$template}.php");
 		}
-
+		
 		if (isset($from)) {
 			$this->from($from[0], $from[1]);
 		}
 		$this->template = $template;
 		$this->subject = $subject;
 		$this->body = $body;
+		$this->bodyHTML = $bodyHTML;
 	}
 	
 	//if you don't want to use the load method
