@@ -105,7 +105,10 @@ $uh = Loader::helper('concrete/urls');
 				<input name="answerType" type="radio" value="radios" /> <?php echo t('Radio Buttons ')?> &nbsp; <br>
 				<input name="answerType" type="radio" value="select" /> <?php echo t('Select Box')?> &nbsp; <br>
 				<input name="answerType" type="radio" value="checkboxlist" /> <?php echo t('Checkbox List')?> &nbsp; <br>
-				<input name="answerType" type="radio" value="fileupload" /> <?php echo t('File Upload')?>
+				<input name="answerType" type="radio" value="fileupload" /> <?php echo t('File Upload')?>&nbsp; <br/>
+				<input name="answerType" type="radio" value="email" /> <?php echo t('Email Address')?> &nbsp; <br>
+				<input name="answerType" type="radio" value="telephone" /> <?php echo t('Telephone')?> &nbsp; <br>
+				<input name="answerType" type="radio" value="url" /> <?php echo t('Web Address')?> &nbsp; <br>
 			</div>
 			<div class="spacer"></div>
 		</div>
@@ -179,6 +182,9 @@ $uh = Loader::helper('concrete/urls');
 				<input name="answerTypeEdit" type="radio" value="select" /> <?php echo t('Select Box')?> &nbsp; <br>
 				<input name="answerTypeEdit" type="radio" value="checkboxlist" /> <?php echo t('Checkbox List')?> &nbsp; <br>
 				<input name="answerTypeEdit" type="radio" value="fileupload" /> <?php echo t('File Upload')?>
+				<input name="answerTypeEdit" type="radio" value="email" /> <?php echo t('Email Address')?> &nbsp; <br>
+				<input name="answerTypeEdit" type="radio" value="telephone" /> <?php echo t('Telephone')?> &nbsp; <br>
+				<input name="answerTypeEdit" type="radio" value="url" /> <?php echo t('Web Address')?> &nbsp; <br>
 			</div>
 			<div class="ccm-spacer"></div>
 		</div>

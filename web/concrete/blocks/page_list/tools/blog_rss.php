@@ -34,7 +34,7 @@ if($_GET['bID']) {
 			<item>
 			  <title><?=htmlspecialchars($title);?></title>
 			  <link>
-				<?= BASE_URL.DIR_REL.$nh->getLinkToCollection($cobj) ?>		  
+				<?= BASE_URL.$nh->getLinkToCollection($cobj) ?>		  
 			  </link>
 			  <description><![CDATA[
 				<?php
@@ -53,12 +53,12 @@ if($_GET['bID']) {
 		
 <?	} else {  	
 		$v = View::getInstance();
-		$v->renderError('Permission Denied',"This page list doesn't use the custom blog template, or you don't have permission to access this RSS feed");
+		$v->renderError(t('Permission Denied'), t("This page list doesn't use the custom blog template, or you don't have permission to access this RSS feed"));
 		exit;
 	}
 			
 } else {
-	echo "You don't have permission to access this RSS feed";
+	echo t("You don't have permission to access this RSS feed");
 }
 exit;
 

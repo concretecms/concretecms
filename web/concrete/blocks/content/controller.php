@@ -2,7 +2,7 @@
 	defined('C5_EXECUTE') or die("Access Denied.");
 	class ContentBlockController extends BlockController {
 		
-		var $pobj;
+		public $pobj;
 		
 		protected $btTable = 'btContentLocal';
 		protected $btInterfaceWidth = "600";

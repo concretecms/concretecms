@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class DashboardSettingsController extends Controller {
 
-	var $helpers = array('form'); 
+	public $helpers = array('form'); 
 
 	protected function getRewriteRules() {
 		$rewriteRules = "<IfModule mod_rewrite.c>\n";

@@ -34,9 +34,16 @@ if($_GET['bID']) {
 			<item>
 			  <title><?=htmlspecialchars($title);?></title>
 			  <link>
-				<?= BASE_URL.DIR_REL.$nh->getLinkToCollection($cobj) ?>		  
+				<?= BASE_URL.$nh->getLinkToCollection($cobj) ?>		  
 			  </link>
-			  <description><?=htmlspecialchars(strip_tags($cobj->getCollectionDescription()))."....";?></description>
+			  <?php
+			  if(strlen(htmlspecialchars(strip_tags($cobj->getCollectionDescription()))) != 0) {
+			  	$desc = htmlspecialchars(strip_tags($cobj->getCollectionDescription()))."...";
+			  } else {
+			  	$desc = "";
+			  }
+			  ?>
+			  <description><?php echo $desc;?></description>
 			  <? /* <pubDate><?=$cobj->getCollectionDatePublic()?></pubDate>
 			  Wed, 23 Feb 2005 16:12:56 GMT  */ ?>
 			  <pubDate><?=date( 'D, d M Y H:i:s T',strtotime($cobj->getCollectionDatePublic())) ?></pubDate>
@@ -47,12 +54,12 @@ if($_GET['bID']) {
 		
 <?	} else {  	
 		$v = View::getInstance();
-		$v->renderError('Permission Denied',"You don't have permission to access this RSS feed");
+		$v->renderError(t('Permission Denied'), t("You don't have permission to access this RSS feed"));
 		exit;
 	}
 			
 } else {
-	echo "You don't have permission to access this RSS feed";
+	echo t("You don't have permission to access this RSS feed");
 }
 exit;
 

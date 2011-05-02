@@ -87,8 +87,6 @@ foreach($notifications as $n) {
 		<a class="ccm-dashboard-notification-read-more" href="<?=$n->getSystemNotificationAlternateURL()?>"><?=$bodyReadMore?></a>	
 	<? } ?>
 	
-	</p>
-
 	</li>
 
 	<? 

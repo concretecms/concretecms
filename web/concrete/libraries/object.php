@@ -11,7 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 */
 	class Object {
 	
-		var $error = '';
+		public $error = '';
 		
 		/* TODO: move these into an error class */
 		

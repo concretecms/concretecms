@@ -19,20 +19,20 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class PaginationHelper {
 
-	var $current_page=0;	//Zero Based
-	var $page_size=20;
-	var $result_offset=0;
-	var $number_of_pages=0;
-	var $result_count=0;
-	var $result_lower=0; //for 'Results lower-upper of result_count'
-	var $result_upper=0;
-	var $classOff='ltgray';
-	var $classOn='';
-	var $classCurrent='currentPage';		
-	var $URL=''; //%pageNum% for page number
-	var $jsFunctionCall='';
-	var $queryStringPagingVariable = 'ccm_paging_p';
-	var $additionalVars = array();
+	public $current_page=0;	//Zero Based
+	public $page_size=20;
+	public $result_offset=0;
+	public $number_of_pages=0;
+	public $result_count=0;
+	public $result_lower=0; //for 'Results lower-upper of result_count'
+	public $result_upper=0;
+	public $classOff='ltgray';
+	public $classOn='';
+	public $classCurrent='currentPage';		
+	public $URL=''; //%pageNum% for page number
+	public $jsFunctionCall='';
+	public $queryStringPagingVariable = 'ccm_paging_p';
+	public $additionalVars = array();
 	
 	function PaginationHelper(){
 	

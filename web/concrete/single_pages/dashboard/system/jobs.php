@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<script>
+<script type="text/javascript">
 
 var Jobs = {
 

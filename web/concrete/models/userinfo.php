@@ -760,7 +760,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	   // obtains relevant users for the passed object. Since users can now
 	   // act just like groups (permissions-wise)
 
-	   var $uiArray = array();
+	   public $uiArray = array();
 
 		function UserInfoList($obj) {
 			$db = Loader::db();

@@ -24,7 +24,7 @@ define("STRING_UTILS_TRUNCATE_PARS",    '\n{2,}');
 
 class ValidationBannedWordsHelper{
 
-    var $bannedWords;
+    public $bannedWords;
 	
     function getCSV_simple($file){
 		$lines = file($file);
