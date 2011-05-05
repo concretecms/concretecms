@@ -11,7 +11,7 @@
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = true;
-		protected $btCacheBlockOutputLifetime = 300;
+		protected $btCacheBlockOutputLifetime = CACHE_LIFETIME;
 		
 		public function getBlockTypeDescription() {
 			return t("HTML/WYSIWYG Editor Content.");

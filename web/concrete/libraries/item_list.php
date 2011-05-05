@@ -335,7 +335,7 @@ class ItemList {
 		$uh = Loader::helper('url');
 		
 		// we switch it up if this column is the currently active column and the direction is currently the case
-		if ($_REQUEST[$this->queryStringSortVariable] == $column && $_REQUEST[$this->queryStringSortDirectionVariable] == $dir) {
+		if ($this->sortBy == $column && $this->sortByDirection == $dir) {
 			$dir = ($dir == 'asc') ? 'desc' : 'asc';
 		}
 		$args = array(
