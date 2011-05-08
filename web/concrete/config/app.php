@@ -187,7 +187,9 @@ if (!defined('ENABLE_OPENID_AUTHENTICATION')) {
 	Config::getOrDefine('ENABLE_OPENID_AUTHENTICATION', false);
 }
 
-Config::getOrDefine('MAIL_SEND_METHOD', 'PHP_MAIL');
+if (!defined('MAIL_SEND_METHOD')) { 
+	Config::getOrDefine('MAIL_SEND_METHOD', 'PHP_MAIL');
+}
 
 if (!defined('ENABLE_REGISTRATION_CAPTCHA')) { 
 	Config::getOrDefine('ENABLE_REGISTRATION_CAPTCHA', true);
