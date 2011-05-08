@@ -146,7 +146,7 @@ class SearchBlockController extends BlockController {
 			}
 		}
 		
-		if((empty($_REQUEST['query']) && $aksearch == false) || $this->resultsURL != '') {
+		if (empty($_REQUEST['query']) && $aksearch == false) {
 			return false;		
 		}
 		
