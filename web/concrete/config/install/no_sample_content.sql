@@ -183,8 +183,6 @@ INSERT INTO Collections VALUES(1,NOW(),NOW(),'home')
  ,(77,NOW(),NOW(),'drafts')
  ,(78,NOW(),NOW(),'composer');
 
-INSERT INTO Config VALUES('SITE',NOW(),'{[CCM:SITE]}',0,0);
-
 INSERT INTO DashboardHomepage VALUES(1,'activity','Site Activity',0,0)
  ,(2,'reports','Statistics',0,0)
  ,(3,'help','Help',0,0)
