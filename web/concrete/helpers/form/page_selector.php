@@ -49,13 +49,12 @@ class FormPageSelectorHelper {
 		$html .= '</div>'; 
 		$html .= '<script type="text/javascript"> 
 		var ccmActivePageField;
-		$(function() {
-			$("a.ccm-sitemap-select-page").unbind();
-			$("a.ccm-sitemap-select-page").dialog();
-			$("a.ccm-sitemap-select-page").click(function() {
+		function ccm_initSelectPage() {
+			$("a.ccm-sitemap-select-page").unbind().dialog().click(function(){
 				ccmActivePageField = this;
 			});
-		});
+		};
+		$(ccm_initSelectPage);
 		ccm_selectSitemapNode = function(cID, cName) { ';
 		if($javascriptFunc=='' || $javascriptFunc=='ccm_selectSitemapNode'){
 			$html .= '
