@@ -16,9 +16,7 @@ if ($c->isEditMode()) { ?>
 	<div id="youtube<?php echo $bID?>"><?php echo t('You must install Adobe Flash to view this content.')?></div>
 	<script type="text/javascript">
 	//<![CDATA[
-	params = {
-		wmode:  "transparent",
-	};
+	params = { wmode:  "transparent" };
 	flashvars = {};
 	swfobject.embedSWF('http://www.youtube.com/v/<?=$query['v']?>&amp;hl=en', 'youtube<?php echo $bID?>', '<?php echo $vWidth; ?>', '<?php echo $vHeight; ?>', '8.0.0', false, flashvars, params);
 	//]]>
