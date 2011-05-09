@@ -8,6 +8,11 @@ class File extends Object {
 	const F_ERROR_INVALID_FILE = 1;
 	const F_ERROR_FILE_NOT_FOUND = 2;
 	
+	/**
+	 * returns a file object for the given file ID
+	 * @param int $fID
+	 * @return File
+	 */
 	public function getByID($fID) {
 		$f = Cache::get('file_approved', $fID);
 		if (is_object($f)) {
@@ -440,12 +445,22 @@ class File extends Object {
 	}
 	
 
+	/**
+	 * returns the most recent FileVersion object
+	 * @return FileVersion
+	 */
 	public function getRecentVersion() {
 		$db = Loader::db();
 		$fvID = $db->GetOne("select fvID from FileVersions where fID = ? order by fvID desc", array($this->fID));
 		return $this->getVersion($fvID);
 	}
 	
+	/**
+	 * returns the FileVersion object for the provided fvID
+	 * if none provided returns the approved version
+	 * @param int $fvID
+	 * @return FileVersion
+	 */
 	public function getVersion($fvID = null) {
 		if ($fvID == null) {
 			$fvID = $this->fvID; // approved version
