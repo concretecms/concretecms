@@ -22,7 +22,7 @@ div.ccm-error-response {color: #f00; margin-bottom: 12px}
 #page #header #logo p{ display:inline; line-height:inherit; font-size:inherit; padding:inherit; margin:inherit; color:inherit }
 
 
-#page #header #headerNav{ position: absolute; top: 14px; right: 0px; z-index:2; width:100%; overflow:visible;}
+#page #header #headerNav{ position: absolute; top: 14px; right: 0px; z-index:2; overflow:visible;}
 #page #header ul.nav-header{ list-style:none; margin:0px; padding:0px; width:auto; z-index:2; overflow:visible; float: right}
 #page #header ul.nav-header li{float:left; padding:2px 0px; margin-left:16px; margin-bottom: 0px; color:#999; font-size:13px; margin-top:0px }
 #page #header ul.nav-header li a,#page #header ul.nav-header li a:hover{ text-decoration:none; color:#999999 }
