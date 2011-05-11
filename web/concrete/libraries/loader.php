@@ -382,7 +382,7 @@
 					$file = $c->getCollectionFilename();
 					if ($file != '') {
 						// strip off PHP suffix for the $path variable, which needs it gone
-						if (strpos($file, FILENAME_COLLECTION_VIEW) !== false) {
+						if (strpos($file, '/' . FILENAME_COLLECTION_VIEW) !== false) {
 							$path = substr($file, 0, strpos($file, '/'. FILENAME_COLLECTION_VIEW));
 						} else {
 							$path = substr($file, 0, strpos($file, '.php'));
