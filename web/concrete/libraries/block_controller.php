@@ -40,7 +40,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btHasRendered = false;
 		protected $btCacheBlockRecord = false;
 		protected $btCacheBlockOutput = false;
-		protected $btCacheBlockOutputLifetime = CACHE_LIFETIME; // seconds, half an hour 
+		protected $btCacheBlockOutputLifetime = CACHE_LIFETIME;
 		protected $btCacheBlockOutputOnPost = false;
 		protected $btCacheBlockOutputForRegisteredUsers = false;
 		public $headerItems = array();

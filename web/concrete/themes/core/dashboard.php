@@ -107,6 +107,8 @@ foreach($nav as $n2) {
 </ul>
 </div>
 
+<? if (!$disableSecondLevelNav) { ?>
+
 <? if (isset($subnav)) { ?>
 
 <div id="ccm-dashboard-subnav">
@@ -154,7 +156,9 @@ foreach($nav as $n2) {
 	
 	<?
 		}
+	} 
 } ?>
+
 
 <?
 	if (isset($latest_version)){ 
