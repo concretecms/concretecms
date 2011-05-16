@@ -31,12 +31,22 @@ ccm_triggerSelectFile = function(fID, af) {
 			e.stopPropagation();
 			ccm_alActivateMenu($(this),e);
 		});
+		
+		if (typeof(ccm_triggerSelectFileComplete)  == 'function') {
+			ccm_triggerSelectFileComplete(fID, af);
+		}
 	});
 	var vobj = $('#' + af + "-fm-value");
 	vobj.attr('value', fID);
 	ccm_alSetupFileProcessor();
 }
- 
+
+ccm_alGetFileData = function(fID, onComplete) {
+	$.getJSON(CCM_TOOLS_PATH + '/files/get_data.php?fID=' + fID, function(resp) {
+		onComplete(resp);
+	});
+}
+
 ccm_clearFile = function(e, af) {
 	e.stopPropagation();
 	var obj = $('#' + af + "-fm-selected");

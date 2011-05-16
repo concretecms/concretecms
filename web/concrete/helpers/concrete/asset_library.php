@@ -43,7 +43,7 @@
 				$resetDisplay = 'none';
 			}
 				
-			$html = '<div id="' . $id . '-fm-selected" class="ccm-file-selected-wrapper" style="display: ' . $selectedDisplay . '"><img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" /></div>';
+			$html = '<div id="' . $id . '-fm-selected" onclick="ccm_chooseAsset=false" class="ccm-file-selected-wrapper" style="display: ' . $selectedDisplay . '"><img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" /></div>';
 			
 			$html .= '<div class="ccm-file-manager-select" id="' . $id . '-fm-display" ccm-file-manager-field="' . $id . '" style="display: ' . $resetDisplay . '">';
 			$html .= '<a href="javascript:void(0)" onclick="ccm_chooseAsset=false; ccm_alLaunchSelectorFileManager(\'' . $id . '\')">' . $chooseText . '</a>';
