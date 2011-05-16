@@ -163,7 +163,6 @@ ccmBlockTypeResetKeys = function() {
 $(function() {
 	$(window).css('overflow', 'hidden');
 	$(window).unbind('keydown.blocktypes');
-	$("input[name=ccmBlockTypeSearch]").focus();
 	ccmBlockTypeMapKeys();
 });
 
