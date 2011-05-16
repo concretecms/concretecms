@@ -14,16 +14,14 @@
  *
  * @category   Zend
  * @package    Zend_Search_Lucene
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Lucene.php 23775 2011-03-01 17:25:24Z ralph $
  */
 
 
-/** Zend_Search_Lucene_Exception */
-require_once 'Zend/Search/Lucene/Exception.php';
-
-/** Zend_Search_Lucene_Document */
-require_once 'Zend/Search/Lucene/Document.php';
+/** User land classes and interfaces turned on by Zend/Search/Lucene.php file inclusion. */
+/** @todo Section should be removed with ZF 2.0 release as obsolete                      */
 
 /** Zend_Search_Lucene_Document_Html */
 require_once 'Zend/Search/Lucene/Document/Html.php';
@@ -37,58 +35,61 @@ require_once 'Zend/Search/Lucene/Document/Pptx.php';
 /** Zend_Search_Lucene_Document_Xlsx */
 require_once 'Zend/Search/Lucene/Document/Xlsx.php';
 
-/** Zend_Search_Lucene_Storage_Directory_Filesystem */
-require_once 'Zend/Search/Lucene/Storage/Directory/Filesystem.php';
-
-/** Zend_Search_Lucene_Storage_File_Memory */
-require_once 'Zend/Search/Lucene/Storage/File/Memory.php';
-
-/** Zend_Search_Lucene_Index_Term */
-require_once 'Zend/Search/Lucene/Index/Term.php';
-
-/** Zend_Search_Lucene_Index_TermInfo */
-require_once 'Zend/Search/Lucene/Index/TermInfo.php';
-
-/** Zend_Search_Lucene_Index_SegmentInfo */
-require_once 'Zend/Search/Lucene/Index/SegmentInfo.php';
-
-/** Zend_Search_Lucene_Index_FieldInfo */
-require_once 'Zend/Search/Lucene/Index/FieldInfo.php';
-
-/** Zend_Search_Lucene_Index_Writer */
-require_once 'Zend/Search/Lucene/Index/Writer.php';
-
 /** Zend_Search_Lucene_Search_QueryParser */
 require_once 'Zend/Search/Lucene/Search/QueryParser.php';
 
 /** Zend_Search_Lucene_Search_QueryHit */
 require_once 'Zend/Search/Lucene/Search/QueryHit.php';
 
-/** Zend_Search_Lucene_Search_Similarity */
-require_once 'Zend/Search/Lucene/Search/Similarity.php';
+/** Zend_Search_Lucene_Analysis_Analyzer */
+require_once 'Zend/Search/Lucene/Analysis/Analyzer.php';
 
-/** Zend_Search_Lucene_Index_SegmentInfoPriorityQueue */
-require_once 'Zend/Search/Lucene/Index/SegmentInfoPriorityQueue.php';
+/** Zend_Search_Lucene_Search_Query_Term */
+require_once 'Zend/Search/Lucene/Search/Query/Term.php';
 
-/** Zend_Search_Lucene_Index_DocsFilter */
-require_once 'Zend/Search/Lucene/Index/DocsFilter.php';
+/** Zend_Search_Lucene_Search_Query_Phrase */
+require_once 'Zend/Search/Lucene/Search/Query/Phrase.php';
+
+/** Zend_Search_Lucene_Search_Query_MultiTerm */
+require_once 'Zend/Search/Lucene/Search/Query/MultiTerm.php';
+
+/** Zend_Search_Lucene_Search_Query_Wildcard */
+require_once 'Zend/Search/Lucene/Search/Query/Wildcard.php';
+
+/** Zend_Search_Lucene_Search_Query_Range */
+require_once 'Zend/Search/Lucene/Search/Query/Range.php';
+
+/** Zend_Search_Lucene_Search_Query_Fuzzy */
+require_once 'Zend/Search/Lucene/Search/Query/Fuzzy.php';
+
+/** Zend_Search_Lucene_Search_Query_Boolean */
+require_once 'Zend/Search/Lucene/Search/Query/Boolean.php';
+
+/** Zend_Search_Lucene_Search_Query_Empty */
+require_once 'Zend/Search/Lucene/Search/Query/Empty.php';
+
+/** Zend_Search_Lucene_Search_Query_Insignificant */
+require_once 'Zend/Search/Lucene/Search/Query/Insignificant.php';
+
+
+
+
+/** Internally used classes */
+
+/** Zend_Search_Lucene_Interface */
+require_once 'Zend/Search/Lucene/Interface.php';
+
+/** Zend_Search_Lucene_Index_SegmentInfo */
+require_once 'Zend/Search/Lucene/Index/SegmentInfo.php';
 
 /** Zend_Search_Lucene_LockManager */
 require_once 'Zend/Search/Lucene/LockManager.php';
 
 
-
-/** Zend_Search_Lucene_Interface */
-require_once 'Zend/Search/Lucene/Interface.php';
-
-/** Zend_Search_Lucene_Proxy */
-require_once 'Zend/Search/Lucene/Proxy.php';
-
-
 /**
  * @category   Zend
  * @package    Zend_Search_Lucene
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
@@ -112,6 +113,15 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
     private static $_resultSetLimit = 0;
 
     /**
+     * Terms per query limit
+     *
+     * 0 means no limit
+     *
+     * @var integer
+     */
+    private static $_termsPerQueryLimit = 1024;
+
+    /**
      * File system adapter.
      *
      * @var Zend_Search_Lucene_Storage_Directory
@@ -133,7 +143,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
     private $_writer = null;
 
     /**
-     * Array of Zend_Search_Lucene_Index_SegmentInfo objects for this index.
+     * Array of Zend_Search_Lucene_Index_SegmentInfo objects for current version of index.
      *
      * @var array Zend_Search_Lucene_Index_SegmentInfo
      */
@@ -179,6 +189,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
     const FORMAT_2_1     = 1;
     const FORMAT_2_3     = 2;
 
+
     /**
      * Index format version
      *
@@ -194,6 +205,9 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      */
     public static function create($directory)
     {
+        /** Zend_Search_Lucene_Proxy */
+        require_once 'Zend/Search/Lucene/Proxy.php';
+
         return new Zend_Search_Lucene_Proxy(new Zend_Search_Lucene($directory, true));
     }
 
@@ -205,6 +219,9 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      */
     public static function open($directory)
     {
+        /** Zend_Search_Lucene_Proxy */
+        require_once 'Zend/Search/Lucene/Proxy.php';
+
         return new Zend_Search_Lucene_Proxy(new Zend_Search_Lucene($directory, false));
     }
 
@@ -238,6 +255,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
          *       without performance problems
          */
 
+        require_once 'Zend/Search/Lucene/Exception.php';
         try {
             for ($count = 0; $count < self::GENERATION_RETRIEVE_COUNT; $count++) {
                 // Try to get generation file
@@ -272,16 +290,31 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
                     if (strpos($e->getMessage(), 'is not readable') !== false) {
                         return -1;
                     } else {
-                        throw $e;
+                        throw new Zend_Search_Lucene_Exception($e->getMessage(), $e->getCode(), $e);
                     }
                 }
             } else {
-                throw $e;
+                throw new Zend_Search_Lucene_Exception($e->getMessage(), $e->getCode(), $e);
             }
         }
 
         return -1;
     }
+
+    /**
+     * Get generation number associated with this index instance
+     *
+     * The same generation number in pair with document number or query string
+     * guarantees to give the same result while index retrieving.
+     * So it may be used for search result caching.
+     *
+     * @return integer
+     */
+    public function getGeneration()
+    {
+        return $this->_generation;
+    }
+
 
     /**
      * Get segments file name
@@ -320,6 +353,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
         if ($formatVersion != self::FORMAT_PRE_2_1  &&
             $formatVersion != self::FORMAT_2_1  &&
             $formatVersion != self::FORMAT_2_3) {
+            require_once 'Zend/Search/Lucene/Exception.php';
             throw new Zend_Search_Lucene_Exception('Unsupported index format');
         }
 
@@ -338,12 +372,12 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
         $format = $segmentsFile->readInt();
 
         if ($format != (int)0xFFFFFFFF) {
+            require_once 'Zend/Search/Lucene/Exception.php';
             throw new Zend_Search_Lucene_Exception('Wrong segments file format');
         }
 
         // read version
-        // $segmentsFile->readLong();
-        $segmentsFile->readInt(); $segmentsFile->readInt();
+        $segmentsFile->readLong();
 
         // read segment name counter
         $segmentsFile->readInt();
@@ -384,12 +418,12 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
         } else if ($format == (int)0xFFFFFFFD) {
             $this->_formatVersion = self::FORMAT_2_1;
         } else {
+            require_once 'Zend/Search/Lucene/Exception.php';
             throw new Zend_Search_Lucene_Exception('Unsupported segments file format');
         }
 
         // read version
-        // $segmentsFile->readLong();
-        $segmentsFile->readInt(); $segmentsFile->readInt();
+        $segmentsFile->readLong();
 
         // read segment name counter
         $segmentsFile->readInt();
@@ -404,19 +438,12 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
             $segSize = $segmentsFile->readInt();
 
             // 2.1+ specific properties
-            //$delGen          = $segmentsFile->readLong();
-            $delGenHigh        = $segmentsFile->readInt();
-            $delGenLow         = $segmentsFile->readInt();
-            if ($delGenHigh == (int)0xFFFFFFFF  && $delGenLow == (int)0xFFFFFFFF) {
-                $delGen = -1; // There are no deletes
-            } else {
-                $delGen = ($delGenHigh << 32) | $delGenLow;
-            }
+            $delGen = $segmentsFile->readLong();
 
             if ($this->_formatVersion == self::FORMAT_2_3) {
                 $docStoreOffset = $segmentsFile->readInt();
 
-                if ($docStoreOffset != -1) {
+                if ($docStoreOffset != (int)0xFFFFFFFF) {
                     $docStoreSegment        = $segmentsFile->readString();
                     $docStoreIsCompoundFile = $segmentsFile->readByte();
 
@@ -439,6 +466,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
                     $normGens[] = $segmentsFile->readLong();
                 }
 
+                require_once 'Zend/Search/Lucene/Exception.php';
                 throw new Zend_Search_Lucene_Exception('Separate norm files are not supported. Optimize index to use it with Zend_Search_Lucene.');
             }
 
@@ -474,21 +502,23 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      * IndexReader constructor needs Directory as a parameter. It should be
      * a string with a path to the index folder or a Directory object.
      *
-     * @param mixed $directory
+     * @param Zend_Search_Lucene_Storage_Directory_Filesystem|string $directory
      * @throws Zend_Search_Lucene_Exception
      */
     public function __construct($directory = null, $create = false)
     {
         if ($directory === null) {
+            require_once 'Zend/Search/Lucene/Exception.php';
             throw new Zend_Search_Exception('No index directory specified');
         }
 
-        if ($directory instanceof Zend_Search_Lucene_Storage_Directory_Filesystem) {
-            $this->_directory      = $directory;
-            $this->_closeDirOnExit = false;
-        } else {
+        if (is_string($directory)) {
+            require_once 'Zend/Search/Lucene/Storage/Directory/Filesystem.php';
             $this->_directory      = new Zend_Search_Lucene_Storage_Directory_Filesystem($directory);
             $this->_closeDirOnExit = true;
+        } else {
+            $this->_directory      = $directory;
+            $this->_closeDirOnExit = false;
         }
 
         $this->_segmentInfos = array();
@@ -499,15 +529,16 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
         $this->_generation = self::getActualGeneration($this->_directory);
 
         if ($create) {
+            require_once 'Zend/Search/Lucene/Exception.php';
             try {
                 Zend_Search_Lucene_LockManager::obtainWriteLock($this->_directory);
             } catch (Zend_Search_Lucene_Exception $e) {
                 Zend_Search_Lucene_LockManager::releaseReadLock($this->_directory);
 
                 if (strpos($e->getMessage(), 'Can\'t obtain exclusive index lock') === false) {
-                    throw $e;
+                    throw new Zend_Search_Lucene_Exception($e->getMessage(), $e->getCode(), $e);
                 } else {
-                    throw new Zend_Search_Lucene_Exception('Can\'t create index. It\'s under processing now');
+                    throw new Zend_Search_Lucene_Exception('Can\'t create index. It\'s under processing now', 0, $e);
                 }
             }
 
@@ -524,12 +555,14 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
                 $this->_generation++;
             }
 
+            require_once 'Zend/Search/Lucene/Index/Writer.php';
             Zend_Search_Lucene_Index_Writer::createIndex($this->_directory, $this->_generation, $nameCounter);
 
             Zend_Search_Lucene_LockManager::releaseWriteLock($this->_directory);
         }
 
         if ($this->_generation == -1) {
+            require_once 'Zend/Search/Lucene/Exception.php';
             throw new Zend_Search_Lucene_Exception('Index doesn\'t exists in the specified directory.');
         } else if ($this->_generation == 0) {
             $this->_readPre21SegmentsFile();
@@ -605,8 +638,11 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      */
     private function _getIndexWriter()
     {
-        if (!$this->_writer instanceof Zend_Search_Lucene_Index_Writer) {
-            $this->_writer = new Zend_Search_Lucene_Index_Writer($this->_directory, $this->_segmentInfos, $this->_formatVersion);
+        if ($this->_writer === null) {
+            require_once 'Zend/Search/Lucene/Index/Writer.php';
+            $this->_writer = new Zend_Search_Lucene_Index_Writer($this->_directory,
+                                                                 $this->_segmentInfos,
+                                                                 $this->_formatVersion);
         }
 
         return $this->_writer;
@@ -671,7 +707,10 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      */
     public function isDeleted($id)
     {
+        $this->commit();
+
         if ($id >= $this->_docCount) {
+            require_once 'Zend/Search/Lucene/Exception.php';
             throw new Zend_Search_Lucene_Exception('Document id is out of the range.');
         }
 
@@ -726,7 +765,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
     }
 
     /**
-     * Set result set limit.
+     * Get result set limit.
      *
      * 0 means no limit
      *
@@ -735,6 +774,30 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
     public static function getResultSetLimit()
     {
         return self::$_resultSetLimit;
+    }
+
+    /**
+     * Set terms per query limit.
+     *
+     * 0 means no limit
+     *
+     * @param integer $limit
+     */
+    public static function setTermsPerQueryLimit($limit)
+    {
+        self::$_termsPerQueryLimit = $limit;
+    }
+
+    /**
+     * Get result set limit.
+     *
+     * 0 (default) means no limit
+     *
+     * @return integer
+     */
+    public static function getTermsPerQueryLimit()
+    {
+        return self::$_termsPerQueryLimit;
     }
 
     /**
@@ -850,17 +913,20 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      * of Zend_Search_Lucene_Search_QueryHit objects.
      * Input is a string or Zend_Search_Lucene_Search_Query.
      *
-     * @param mixed $query
+     * @param Zend_Search_Lucene_Search_QueryParser|string $query
      * @return array Zend_Search_Lucene_Search_QueryHit
      * @throws Zend_Search_Lucene_Exception
      */
     public function find($query)
     {
         if (is_string($query)) {
+            require_once 'Zend/Search/Lucene/Search/QueryParser.php';
+
             $query = Zend_Search_Lucene_Search_QueryParser::parse($query);
         }
 
         if (!$query instanceof Zend_Search_Lucene_Search_Query) {
+            require_once 'Zend/Search/Lucene/Exception.php';
             throw new Zend_Search_Lucene_Exception('Query must be a string or Zend_Search_Lucene_Search_Query object');
         }
 
@@ -875,6 +941,9 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
         $query->execute($this);
 
         $topScore = 0;
+
+        /** Zend_Search_Lucene_Search_QueryHit */
+        require_once 'Zend/Search/Lucene/Search/QueryHit.php';
 
         foreach ($query->matchedDocs() as $id => $num) {
             $docScore = $query->score($id, $this);
@@ -920,6 +989,16 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
             $fieldNames = $this->getFieldNames();
             $sortArgs   = array();
 
+            // PHP 5.3 now expects all arguments to array_multisort be passed by
+            // reference (if it's invoked through call_user_func_array());
+            // since constants can't be passed by reference, create some placeholder variables.
+            $sortReg    = SORT_REGULAR;
+            $sortAsc    = SORT_ASC;
+            $sortNum    = SORT_NUMERIC;
+
+            $sortFieldValues = array();
+
+            require_once 'Zend/Search/Lucene/Exception.php';
             for ($count = 1; $count < count($argList); $count++) {
                 $fieldName = $argList[$count];
 
@@ -927,51 +1006,62 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
                     throw new Zend_Search_Lucene_Exception('Field name must be a string.');
                 }
 
-                if (!in_array($fieldName, $fieldNames)) {
-                    throw new Zend_Search_Lucene_Exception('Wrong field name.');
-                }
-
-                $valuesArray = array();
-                foreach ($hits as $hit) {
-                    try {
-                        $value = $hit->getDocument()->getFieldValue($fieldName);
-                    } catch (Zend_Search_Lucene_Exception $e) {
-                        if (strpos($e->getMessage(), 'not found') === false) {
-                            throw $e;
-                        } else {
-                            $value = null;
-                        }
+                if (strtolower($fieldName) == 'score') {
+                    $sortArgs[] = &$scores;
+                } else {
+                    if (!in_array($fieldName, $fieldNames)) {
+                        throw new Zend_Search_Lucene_Exception('Wrong field name.');
                     }
 
-                    $valuesArray[] = $value;
-                }
+                    if (!isset($sortFieldValues[$fieldName])) {
+                        $valuesArray = array();
+                        foreach ($hits as $hit) {
+                            try {
+                                $value = $hit->getDocument()->getFieldValue($fieldName);
+                            } catch (Zend_Search_Lucene_Exception $e) {
+                                if (strpos($e->getMessage(), 'not found') === false) {
+                                    throw new Zend_Search_Lucene_Exception($e->getMessage(), $e->getCode(), $e);
+                                } else {
+                                    $value = null;
+                                }
+                            }
 
-                $sortArgs[] = $valuesArray;
+                            $valuesArray[] = $value;
+                        }
+
+                        // Collect loaded values in $sortFieldValues
+                        // Required for PHP 5.3 which translates references into values when source
+                        // variable is destroyed
+                        $sortFieldValues[$fieldName] = $valuesArray;
+                    }
+
+                    $sortArgs[] = &$sortFieldValues[$fieldName];
+                }
 
                 if ($count + 1 < count($argList)  &&  is_integer($argList[$count+1])) {
                     $count++;
-                    $sortArgs[] = $argList[$count];
+                    $sortArgs[] = &$argList[$count];
 
                     if ($count + 1 < count($argList)  &&  is_integer($argList[$count+1])) {
                         $count++;
-                        $sortArgs[] = $argList[$count];
+                        $sortArgs[] = &$argList[$count];
                     } else {
                         if ($argList[$count] == SORT_ASC  || $argList[$count] == SORT_DESC) {
-                            $sortArgs[] = SORT_REGULAR;
+                            $sortArgs[] = &$sortReg;
                         } else {
-                            $sortArgs[] = SORT_ASC;
+                            $sortArgs[] = &$sortAsc;
                         }
                     }
                 } else {
-                    $sortArgs[] = SORT_ASC;
-                    $sortArgs[] = SORT_REGULAR;
+                    $sortArgs[] = &$sortAsc;
+                    $sortArgs[] = &$sortReg;
                 }
             }
 
             // Sort by id's if values are equal
-            $sortArgs[] = $ids;
-            $sortArgs[] = SORT_ASC;
-            $sortArgs[] = SORT_NUMERIC;
+            $sortArgs[] = &$ids;
+            $sortArgs[] = &$sortAsc;
+            $sortArgs[] = &$sortNum;
 
             // Array to be sorted
             $sortArgs[] = &$hits;
@@ -1006,6 +1096,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      *
      * @param integer|Zend_Search_Lucene_Search_QueryHit $id
      * @return Zend_Search_Lucene_Document
+     * @throws Zend_Search_Lucene_Exception    Exception is thrown if $id is out of the range
      */
     public function getDocument($id)
     {
@@ -1015,6 +1106,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
         }
 
         if ($id >= $this->_docCount) {
+            require_once 'Zend/Search/Lucene/Exception.php';
             throw new Zend_Search_Lucene_Exception('Document id is out of the range.');
         }
 
@@ -1077,7 +1169,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
     public function hasTerm(Zend_Search_Lucene_Index_Term $term)
     {
         foreach ($this->_segmentInfos as $segInfo) {
-            if ($segInfo->getTermInfo($term) instanceof Zend_Search_Lucene_Index_TermInfo) {
+            if ($segInfo->getTermInfo($term) !== null) {
                 return true;
             }
         }
@@ -1105,7 +1197,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
 
         if (count($subResults) == 0) {
             return array();
-        } else if (count($subResults) == 0) {
+        } else if (count($subResults) == 1) {
             // Index is optimized (only one segment)
             // Do not perform array reindexing
             return reset($subResults);
@@ -1139,7 +1231,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
 
         if (count($subResults) == 0) {
             return array();
-        } else if (count($subResults) == 0) {
+        } else if (count($subResults) == 1) {
             // Index is optimized (only one segment)
             // Do not perform array reindexing
             return reset($subResults);
@@ -1221,6 +1313,9 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      */
     public function getSimilarity()
     {
+        /** Zend_Search_Lucene_Search_Similarity */
+        require_once 'Zend/Search/Lucene/Search/Similarity.php';
+
         return Zend_Search_Lucene_Search_Similarity::getDefault();
     }
 
@@ -1286,6 +1381,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
         }
 
         if ($id >= $this->_docCount) {
+            require_once 'Zend/Search/Lucene/Exception.php';
             throw new Zend_Search_Lucene_Exception('Document id is out of the range.');
         }
 
@@ -1372,10 +1468,13 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
     {
         $result = array();
 
-        $segmentInfoQueue = new Zend_Search_Lucene_Index_SegmentInfoPriorityQueue();
+        /** Zend_Search_Lucene_Index_TermsPriorityQueue */
+        require_once 'Zend/Search/Lucene/Index/TermsPriorityQueue.php';
+
+        $segmentInfoQueue = new Zend_Search_Lucene_Index_TermsPriorityQueue();
 
         foreach ($this->_segmentInfos as $segmentInfo) {
-            $segmentInfo->reset();
+            $segmentInfo->resetTermsStream();
 
             // Skip "empty" segments
             if ($segmentInfo->currentTerm() !== null) {
@@ -1402,40 +1501,29 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
 
 
     /**
-     * Terms stream queue
+     * Terms stream priority queue object
      *
-     * @var Zend_Search_Lucene_Index_SegmentInfoPriorityQueue
+     * @var Zend_Search_Lucene_TermStreamsPriorityQueue
      */
-    private $_termsStreamQueue = null;
-
-    /**
-     * Last Term in a terms stream
-     *
-     * @var Zend_Search_Lucene_Index_Term
-     */
-    private $_lastTerm = null;
+    private $_termsStream = null;
 
     /**
      * Reset terms stream.
      */
     public function resetTermsStream()
     {
-        $this->_termsStreamQueue = new Zend_Search_Lucene_Index_SegmentInfoPriorityQueue();
+        if ($this->_termsStream === null) {
+            /** Zend_Search_Lucene_TermStreamsPriorityQueue */
+            require_once 'Zend/Search/Lucene/TermStreamsPriorityQueue.php';
 
-        foreach ($this->_segmentInfos as $segmentInfo) {
-            $segmentInfo->reset();
-
-            // Skip "empty" segments
-            if ($segmentInfo->currentTerm() !== null) {
-                $this->_termsStreamQueue->put($segmentInfo);
-            }
+            $this->_termsStream = new Zend_Search_Lucene_TermStreamsPriorityQueue($this->_segmentInfos);
+        } else {
+            $this->_termsStream->resetTermsStream();
         }
-
-        $this->nextTerm();
     }
 
     /**
-     * Skip terms stream up to specified term preffix.
+     * Skip terms stream up to the specified term preffix.
      *
      * Prefix contains fully specified field info and portion of searched term
      *
@@ -1443,21 +1531,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      */
     public function skipTo(Zend_Search_Lucene_Index_Term $prefix)
     {
-        $segments = array();
-
-        while (($segmentInfo = $this->_termsStreamQueue->pop()) !== null) {
-            $segments[] = $segmentInfo;
-        }
-
-        foreach ($segments as $segmentInfo) {
-            $segmentInfo->skipTo($prefix);
-
-            if ($segmentInfo->currentTerm() !== null) {
-                $this->_termsStreamQueue->put($segmentInfo);
-            }
-        }
-
-        $this->nextTerm();
+        $this->_termsStream->skipTo($prefix);
     }
 
     /**
@@ -1467,31 +1541,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      */
     public function nextTerm()
     {
-        while (($segmentInfo = $this->_termsStreamQueue->pop()) !== null) {
-            if ($this->_termsStreamQueue->top() === null ||
-                $this->_termsStreamQueue->top()->currentTerm()->key() !=
-                            $segmentInfo->currentTerm()->key()) {
-                // We got new term
-                $this->_lastTerm = $segmentInfo->currentTerm();
-
-                if ($segmentInfo->nextTerm() !== null) {
-                    // Put segment back into the priority queue
-                    $this->_termsStreamQueue->put($segmentInfo);
-                }
-
-                return $this->_lastTerm;
-            }
-
-            if ($segmentInfo->nextTerm() !== null) {
-                // Put segment back into the priority queue
-                $this->_termsStreamQueue->put($segmentInfo);
-            }
-        }
-
-        // End of stream
-        $this->_lastTerm = null;
-
-        return null;
+        return $this->_termsStream->nextTerm();
     }
 
     /**
@@ -1501,7 +1551,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      */
     public function currentTerm()
     {
-        return $this->_lastTerm;
+        return $this->_termsStream->currentTerm();
     }
 
     /**
@@ -1511,12 +1561,8 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      */
     public function closeTermsStream()
     {
-        while (($segmentInfo = $this->_termsStreamQueue->pop()) !== null) {
-            $segmentInfo->closeTermsStream();
-        }
-
-        $this->_termsStreamQueue = null;
-        $this->_lastTerm         = null;
+        $this->_termsStream->closeTermsStream();
+        $this->_termsStream = null;
     }
 
 

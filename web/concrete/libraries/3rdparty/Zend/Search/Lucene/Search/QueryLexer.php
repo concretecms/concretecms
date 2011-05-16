@@ -15,10 +15,10 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Search
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: QueryLexer.php 23775 2011-03-01 17:25:24Z ralph $
  */
-
 
 /** Zend_Search_Lucene_FSM */
 require_once 'Zend/Search/Lucene/FSM.php';
@@ -26,18 +26,11 @@ require_once 'Zend/Search/Lucene/FSM.php';
 /** Zend_Search_Lucene_Search_QueryParser */
 require_once 'Zend/Search/Lucene/Search/QueryToken.php';
 
-/** Zend_Search_Lucene_Exception */
-require_once 'Zend/Search/Lucene/Exception.php';
-
-/** Zend_Search_Lucene_Search_QueryParserException */
-require_once 'Zend/Search/Lucene/Search/QueryParserException.php';
-
-
 /**
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Search
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Search_Lucene_Search_QueryLexer extends Zend_Search_Lucene_FSM
@@ -364,6 +357,7 @@ class Zend_Search_Lucene_Search_QueryLexer extends Zend_Search_Lucene_FSM
         $this->process(self::IN_WHITE_SPACE);
 
         if ($this->getState() != self::ST_WHITE_SPACE) {
+            require_once 'Zend/Search/Lucene/Search/QueryParserException.php';
             throw new Zend_Search_Lucene_Search_QueryParserException('Unexpected end of query');
         }
 
@@ -397,6 +391,7 @@ class Zend_Search_Lucene_Search_QueryLexer extends Zend_Search_Lucene_FSM
             // check,
             if ($this->_queryStringPosition == count($this->_queryString)  ||
                 $this->_queryString[$this->_queryStringPosition] != $lexeme) {
+                    require_once 'Zend/Search/Lucene/Search/QueryParserException.php';
                     throw new Zend_Search_Lucene_Search_QueryParserException('Two chars lexeme expected. ' . $this->_positionMsg());
                 }
 
@@ -413,6 +408,7 @@ class Zend_Search_Lucene_Search_QueryLexer extends Zend_Search_Lucene_FSM
         if ($token->type == Zend_Search_Lucene_Search_QueryToken::TT_FIELD_INDICATOR) {
             $token = array_pop($this->_lexemes);
             if ($token === null  ||  $token->type != Zend_Search_Lucene_Search_QueryToken::TT_WORD) {
+                require_once 'Zend/Search/Lucene/Search/QueryParserException.php';
                 throw new Zend_Search_Lucene_Search_QueryParserException('Field mark \':\' must follow field name. ' . $this->_positionMsg());
             }
 
@@ -497,14 +493,17 @@ class Zend_Search_Lucene_Search_QueryLexer extends Zend_Search_Lucene_FSM
      *********************************************************************/
     public function lexModifierErrException()
     {
+        require_once 'Zend/Search/Lucene/Search/QueryParserException.php';
         throw new Zend_Search_Lucene_Search_QueryParserException('Lexeme modifier character can be followed only by number, white space or query syntax element. ' . $this->_positionMsg());
     }
     public function quoteWithinLexemeErrException()
     {
+        require_once 'Zend/Search/Lucene/Search/QueryParserException.php';
         throw new Zend_Search_Lucene_Search_QueryParserException('Quote within lexeme must be escaped by \'\\\' char. ' . $this->_positionMsg());
     }
     public function wrongNumberErrException()
     {
+        require_once 'Zend/Search/Lucene/Search/QueryParserException.php';
         throw new Zend_Search_Lucene_Search_QueryParserException('Wrong number syntax.' . $this->_positionMsg());
     }
 }

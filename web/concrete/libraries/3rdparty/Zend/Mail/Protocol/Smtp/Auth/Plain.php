@@ -11,13 +11,13 @@
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@zend.com so we can send you a copy immediately.
- * 
+ *
  * @category   Zend
  * @package    Zend_Mail
  * @subpackage Protocol
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Plain.php 16219 2009-06-21 19:45:39Z thomas $
+ * @version    $Id: Plain.php 23775 2011-03-01 17:25:24Z ralph $
  */
 
 
@@ -33,7 +33,7 @@ require_once 'Zend/Mail/Protocol/Smtp.php';
  * @category   Zend
  * @package    Zend_Mail
  * @subpackage Protocol
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Mail_Protocol_Smtp_Auth_Plain extends Zend_Mail_Protocol_Smtp
@@ -89,7 +89,7 @@ class Zend_Mail_Protocol_Smtp_Auth_Plain extends Zend_Mail_Protocol_Smtp
 
         $this->_send('AUTH PLAIN');
         $this->_expect(334);
-        $this->_send(base64_encode(chr(0) . $this->_username . chr(0) . $this->_password));
+        $this->_send(base64_encode("\0" . $this->_username . "\0" . $this->_password));
         $this->_expect(235);
         $this->_auth = true;
     }
