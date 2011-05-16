@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Mail
  * @subpackage Transport
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Abstract.php 17334 2009-08-01 01:25:22Z yoshida@zend.co.jp $
+ * @version    $Id: Abstract.php 23775 2011-03-01 17:25:24Z ralph $
  */
 
 
@@ -34,7 +34,7 @@ require_once 'Zend/Mime.php';
  * @category   Zend
  * @package    Zend_Mail
  * @subpackage Transport
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Mail_Transport_Abstract
@@ -140,7 +140,7 @@ abstract class Zend_Mail_Transport_Abstract
             }
 
             $this->_headers['Content-Type'] = array(
-                $type . '; charset=' . $this->_mail->getCharset() . ';'
+                $type . ';'
                 . $this->EOL
                 . " " . 'boundary="' . $boundary . '"'
             );

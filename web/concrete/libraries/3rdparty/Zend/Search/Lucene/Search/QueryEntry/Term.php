@@ -15,33 +15,19 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Search
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Term.php 23775 2011-03-01 17:25:24Z ralph $
  */
-
-
-/** Zend_Search_Lucene_Index_Term */
-require_once 'Zend/Search/Lucene/Index/Term.php';
-
-/** Zend_Search_Lucene_Exception */
-require_once 'Zend/Search/Lucene/Exception.php';
 
 /** Zend_Search_Lucene_Search_QueryEntry */
 require_once 'Zend/Search/Lucene/Search/QueryEntry.php';
-
-/** Zend_Search_Lucene_Search_QueryParserException */
-require_once 'Zend/Search/Lucene/Search/QueryParserException.php';
-
-/** Zend_Search_Lucene_Analysis_Analyzer */
-require_once 'Zend/Search/Lucene/Analysis/Analyzer.php';
-
-
 
 /**
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Search
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Search_Lucene_Search_QueryEntry_Term extends Zend_Search_Lucene_Search_QueryEntry
@@ -100,6 +86,8 @@ class Zend_Search_Lucene_Search_QueryEntry_Term extends Zend_Search_Lucene_Searc
         if ($parameter !== null) {
             $this->_similarity = $parameter;
         } else {
+            /** Zend_Search_Lucene_Search_Query_Fuzzy */
+            require_once 'Zend/Search/Lucene/Search/Query/Fuzzy.php';
             $this->_similarity = Zend_Search_Lucene_Search_Query_Fuzzy::DEFAULT_MIN_SIMILARITY;
         }
     }
@@ -113,91 +101,30 @@ class Zend_Search_Lucene_Search_QueryEntry_Term extends Zend_Search_Lucene_Searc
      */
     public function getQuery($encoding)
     {
-        if (strpos($this->_term, '?') !== false || strpos($this->_term, '*') !== false) {
-            if ($this->_fuzzyQuery) {
-                throw new Zend_Search_Lucene_Search_QueryParserException('Fuzzy search is not supported for terms with wildcards.');
-            }
-
-            $pattern = '';
-
-            $subPatterns = explode('*', $this->_term);
-
-            $astericFirstPass = true;
-            foreach ($subPatterns as $subPattern) {
-                if (!$astericFirstPass) {
-                    $pattern .= '*';
-                } else {
-                    $astericFirstPass = false;
-                }
-
-                $subPatternsL2 = explode('?', $subPattern);
-
-                $qMarkFirstPass = true;
-                foreach ($subPatternsL2 as $subPatternL2) {
-                    if (!$qMarkFirstPass) {
-                        $pattern .= '?';
-                    } else {
-                        $qMarkFirstPass = false;
-                    }
-
-                    $tokens = Zend_Search_Lucene_Analysis_Analyzer::getDefault()->tokenize($subPatternL2, $encoding);
-                    if (count($tokens) > 1) {
-                        throw new Zend_Search_Lucene_Search_QueryParserException('Wildcard search is supported only for non-multiple word terms');
-                    }
-
-                    foreach ($tokens as $token) {
-                        $pattern .= $token->getTermText();
-                    }
-                }
-            }
-
-            $term  = new Zend_Search_Lucene_Index_Term($pattern, $this->_field);
-            $query = new Zend_Search_Lucene_Search_Query_Wildcard($term);
-            $query->setBoost($this->_boost);
-
-            return $query;
-        }
-
-        $tokens = Zend_Search_Lucene_Analysis_Analyzer::getDefault()->tokenize($this->_term, $encoding);
-
-        if (count($tokens) == 0) {
-            return new Zend_Search_Lucene_Search_Query_Insignificant();
-        }
-
-        if (count($tokens) == 1  && !$this->_fuzzyQuery) {
-            $term  = new Zend_Search_Lucene_Index_Term($tokens[0]->getTermText(), $this->_field);
-            $query = new Zend_Search_Lucene_Search_Query_Term($term);
-            $query->setBoost($this->_boost);
-
-            return $query;
-        }
-
-        if (count($tokens) == 1  && $this->_fuzzyQuery) {
-            $term  = new Zend_Search_Lucene_Index_Term($tokens[0]->getTermText(), $this->_field);
-            $query = new Zend_Search_Lucene_Search_Query_Fuzzy($term, $this->_similarity);
-            $query->setBoost($this->_boost);
-
-            return $query;
-        }
-
         if ($this->_fuzzyQuery) {
-            throw new Zend_Search_Lucene_Search_QueryParserException('Fuzzy search is supported only for non-multiple word terms');
-        }
-        
-        //It's not empty or one term query
-        $query = new Zend_Search_Lucene_Search_Query_MultiTerm();
-
-        /**
-         * @todo Process $token->getPositionIncrement() to support stemming, synonyms and other
-         * analizer design features
-         */
-        foreach ($tokens as $token) {
-            $term = new Zend_Search_Lucene_Index_Term($token->getTermText(), $this->_field);
-            $query->addTerm($term, true); // all subterms are required
+            /** Zend_Search_Lucene_Search_Query_Preprocessing_Fuzzy */
+            require_once 'Zend/Search/Lucene/Search/Query/Preprocessing/Fuzzy.php';
+            $query = new Zend_Search_Lucene_Search_Query_Preprocessing_Fuzzy($this->_term,
+                                                                             $encoding,
+                                                                             ($this->_field !== null)?
+                                                                                  iconv($encoding, 'UTF-8', $this->_field) :
+                                                                                  null,
+                                                                             $this->_similarity
+                                                                             );
+            $query->setBoost($this->_boost);
+            return $query;
         }
 
+
+        /** Zend_Search_Lucene_Search_Query_Preprocessing_Term */
+        require_once 'Zend/Search/Lucene/Search/Query/Preprocessing/Term.php';
+        $query = new Zend_Search_Lucene_Search_Query_Preprocessing_Term($this->_term,
+                                                                        $encoding,
+                                                                        ($this->_field !== null)?
+                                                                              iconv($encoding, 'UTF-8', $this->_field) :
+                                                                              null
+                                                                        );
         $query->setBoost($this->_boost);
-
         return $query;
     }
 }

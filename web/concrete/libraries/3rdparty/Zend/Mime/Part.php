@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Mime
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Part.php 16541 2009-07-07 06:59:03Z bkarwin $
+ * @version    $Id: Part.php 23775 2011-03-01 17:25:24Z ralph $
  */
 
 /**
@@ -29,7 +29,7 @@ require_once 'Zend/Mime.php';
  *
  * @category   Zend
  * @package    Zend_Mime
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Mime_Part {
@@ -144,6 +144,19 @@ class Zend_Mime_Part {
             return stream_get_contents($this->getEncodedStream());
         } else {
             return Zend_Mime::encode($this->_content, $this->encoding, $EOL);
+        }
+    }
+    
+    /**
+     * Get the RAW unencoded content from this part
+     * @return string
+     */
+    public function getRawContent()
+    {
+        if ($this->_isStream) {
+            return stream_get_contents($this->_content);
+        } else {
+            return $this->_content;
         }
     }
 

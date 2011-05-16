@@ -15,13 +15,22 @@
  * @category   Zend
  * @package    Zend_Http
  * @subpackage Client_Adapter
- * @version    $Id: Test.php 12104 2008-10-23 22:36:28Z shahar $
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: Test.php 23775 2011-03-01 17:25:24Z ralph $
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
+/**
+ * @see Zend_Uri_Http
+ */
 require_once 'Zend/Uri/Http.php';
+/**
+ * @see Zend_Http_Response
+ */
 require_once 'Zend/Http/Response.php';
+/**
+ * @see Zend_Http_Client_Adapter_Interface
+ */
 require_once 'Zend/Http/Client/Adapter/Interface.php';
 
 /**
@@ -35,7 +44,7 @@ require_once 'Zend/Http/Client/Adapter/Interface.php';
  * @category   Zend
  * @package    Zend_Http
  * @subpackage Client_Adapter
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Http_Client_Adapter_Test implements Zend_Http_Client_Adapter_Interface
@@ -63,6 +72,13 @@ class Zend_Http_Client_Adapter_Test implements Zend_Http_Client_Adapter_Interfac
     protected $responseIndex = 0;
 
     /**
+     * Wether or not the next request will fail with an exception
+     *
+     * @var boolean
+     */
+    protected $_nextRequestWillFail = false;
+
+    /**
      * Adapter constructor, currently empty. Config is set using setConfig()
      *
      */
@@ -70,22 +86,40 @@ class Zend_Http_Client_Adapter_Test implements Zend_Http_Client_Adapter_Interfac
     { }
 
     /**
+     * Set the nextRequestWillFail flag
+     *
+     * @param boolean $flag
+     * @return Zend_Http_Client_Adapter_Test
+     */
+    public function setNextRequestWillFail($flag)
+    {
+        $this->_nextRequestWillFail = (bool) $flag;
+
+        return $this;
+    }
+
+    /**
      * Set the configuration array for the adapter
      *
-     * @param array $config
+     * @param Zend_Config | array $config
      */
     public function setConfig($config = array())
     {
-        if (! is_array($config)) {
+        if ($config instanceof Zend_Config) {
+            $config = $config->toArray();
+
+        } elseif (! is_array($config)) {
             require_once 'Zend/Http/Client/Adapter/Exception.php';
             throw new Zend_Http_Client_Adapter_Exception(
-                '$config expects an array, ' . gettype($config) . ' recieved.');
+                'Array or Zend_Config object expected, got ' . gettype($config)
+            );
         }
 
         foreach ($config as $k => $v) {
             $this->config[strtolower($k)] = $v;
         }
     }
+
 
     /**
      * Connect to the remote server
@@ -94,9 +128,16 @@ class Zend_Http_Client_Adapter_Test implements Zend_Http_Client_Adapter_Interfac
      * @param int     $port
      * @param boolean $secure
      * @param int     $timeout
+     * @throws Zend_Http_Client_Adapter_Exception
      */
     public function connect($host, $port = 80, $secure = false)
-    { }
+    {
+        if ($this->_nextRequestWillFail) {
+            $this->_nextRequestWillFail = false;
+            require_once 'Zend/Http/Client/Adapter/Exception.php';
+            throw new Zend_Http_Client_Adapter_Exception('Request failed');
+        }
+    }
 
     /**
      * Send request to the remote server
@@ -158,7 +199,7 @@ class Zend_Http_Client_Adapter_Test implements Zend_Http_Client_Adapter_Interfac
     public function setResponse($response)
     {
         if ($response instanceof Zend_Http_Response) {
-            $response = $response->asString();
+            $response = $response->asString("\r\n");
         }
 
         $this->responses = (array)$response;
@@ -168,10 +209,14 @@ class Zend_Http_Client_Adapter_Test implements Zend_Http_Client_Adapter_Interfac
     /**
      * Add another response to the response buffer.
      *
-     * @param string $response
+     * @param string Zend_Http_Response|$response
      */
     public function addResponse($response)
     {
+         if ($response instanceof Zend_Http_Response) {
+            $response = $response->asString("\r\n");
+        }
+
         $this->responses[] = $response;
     }
 

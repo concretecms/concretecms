@@ -11,13 +11,13 @@
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@zend.com so we can send you a copy immediately.
- * 
+ *
  * @category   Zend
  * @package    Zend_Mail
  * @subpackage Storage
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Mbox.php 16219 2009-06-21 19:45:39Z thomas $
+ * @version    $Id: Mbox.php 23775 2011-03-01 17:25:24Z ralph $
  */
 
 
@@ -41,7 +41,7 @@ require_once 'Zend/Mail/Storage/Mbox.php';
  * @category   Zend
  * @package    Zend_Mail
  * @subpackage Storage
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Mail_Storage_Folder_Mbox extends Zend_Mail_Storage_Mbox implements Zend_Mail_Storage_Folder_Interface
@@ -73,7 +73,7 @@ class Zend_Mail_Storage_Folder_Mbox extends Zend_Mail_Storage_Mbox implements Ze
      *   - dirname rootdir of mbox structure
      *   - folder intial selected folder, default is 'INBOX'
      *
-     * @param  $params array mail reader specific parameters
+     * @param array $params mail reader specific parameters
      * @throws Zend_Mail_Storage_Exception
      */
     public function __construct($params)
@@ -213,7 +213,7 @@ class Zend_Mail_Storage_Folder_Mbox extends Zend_Mail_Storage_Mbox implements Ze
                  * @see Zend_Mail_Storage_Exception
                  */
                 require_once 'Zend/Mail/Storage/Exception.php';
-                throw new Zend_Mail_Storage_Exception("{$this->_currentFolder} is not selectable");
+                throw new Zend_Mail_Storage_Exception("{$this->_currentFolder} is not selectable", 0, $e);
             }
             // seems like file has vanished; rebuilding folder tree - but it's still an exception
             $this->_buildFolderTree($this->_rootdir);
@@ -222,7 +222,7 @@ class Zend_Mail_Storage_Folder_Mbox extends Zend_Mail_Storage_Mbox implements Ze
              */
             require_once 'Zend/Mail/Storage/Exception.php';
             throw new Zend_Mail_Storage_Exception('seems like the mbox file has vanished, I\'ve rebuild the ' .
-                                                         'folder tree, search for an other folder and try again');
+                                                         'folder tree, search for an other folder and try again', 0, $e);
         }
     }
 

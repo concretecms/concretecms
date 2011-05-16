@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Loader
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: CamelCaseToUnderscore.php 6779 2007-11-08 15:10:41Z matthew $
+ * @version    $Id: Exception.php 23775 2011-03-01 17:25:24Z ralph $
  */
 
 /**
@@ -28,8 +28,8 @@ require_once 'Zend/Exception.php';
  * @category   Zend
  * @package    Zend_Loader
  * @uses       Zend_Exception
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Loader_Exception extends Zend_Exception 
+class Zend_Loader_Exception extends Zend_Exception
 {}

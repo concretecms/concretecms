@@ -15,15 +15,14 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Document
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Xlsx.php 23775 2011-03-01 17:25:24Z ralph $
  */
 
 
 /** Zend_Search_Lucene_Document_OpenXml */
 require_once 'Zend/Search/Lucene/Document/OpenXml.php';
-
-if (class_exists('ZipArchive', false)) {
 
 /**
  * Xlsx document.
@@ -31,7 +30,7 @@ if (class_exists('ZipArchive', false)) {
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Document
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Search_Lucene_Document_Xlsx extends Zend_Search_Lucene_Document_OpenXml
@@ -76,9 +75,15 @@ class Zend_Search_Lucene_Document_Xlsx extends Zend_Search_Lucene_Document_OpenX
      *
      * @param string  $fileName
      * @param boolean $storeContent
+     * @throws Zend_Search_Lucene_Exception
      */
     private function __construct($fileName, $storeContent)
     {
+        if (!class_exists('ZipArchive', false)) {
+            require_once 'Zend/Search/Lucene/Exception.php';
+            throw new Zend_Search_Lucene_Exception('MS Office documents processing functionality requires Zip extension to be loaded');
+        }
+
         // Document data holders
         $sharedStrings = array();
         $worksheets = array();
@@ -90,7 +95,12 @@ class Zend_Search_Lucene_Document_Xlsx extends Zend_Search_Lucene_Document_OpenX
         $package->open($fileName);
 
         // Read relations and search for officeDocument
-        $relations = simplexml_load_string($package->getFromName("_rels/.rels"));
+        $relationsXml = $package->getFromName('_rels/.rels');
+        if ($relationsXml === false) {
+            require_once 'Zend/Search/Lucene/Exception.php';
+            throw new Zend_Search_Lucene_Exception('Invalid archive or corrupted .xlsx file.');
+        }
+        $relations = simplexml_load_string($relationsXml);
         foreach ($relations->Relationship as $rel) {
             if ($rel["Type"] == Zend_Search_Lucene_Document_OpenXml::SCHEMA_OFFICEDOCUMENT) {
                 // Found office document! Read relations for workbook...
@@ -251,5 +261,3 @@ class Zend_Search_Lucene_Document_Xlsx extends Zend_Search_Lucene_Document_OpenX
         return new Zend_Search_Lucene_Document_Xlsx($fileName, $storeContent);
     }
 }
-
-} // end if (class_exists('ZipArchive'))
