@@ -21,12 +21,42 @@ class RatingHelper {
 	
 	public function outputDisplay($value) {
 		$html = '';
-		$star1 = ($value >= 20) ? 'rating-star-on' : 'rating-star-off';
-		$star2 = ($value >= 40) ? 'rating-star-on' : 'rating-star-off';
-		$star3 = ($value >= 60) ? 'rating-star-on' : 'rating-star-off';
-		$star4 = ($value >= 80) ? 'rating-star-on' : 'rating-star-off';
-		$star5 = ($value >= 100) ? 'rating-star-on' : 'rating-star-off';
+		$star1 = 'rating-star-off';
+		$star2 = 'rating-star-off';
+		$star3 = 'rating-star-off';
+		$star4 = 'rating-star-off';
+		$star5 = 'rating-star-off';
 		
+		if ($value > 4) {
+			$star1 = 'rating-star-on-half';
+		}
+		if ($value > 14) {
+			$star1 = 'rating-star-on';
+		}
+		if ($value > 24) {
+			$star2 = 'rating-star-on-half';
+		}
+		if ($value > 34) {
+			$star2 = 'rating-star-on';
+		}
+		if ($value > 44) {
+			$star3 = 'rating-star-on-half';
+		}
+		if ($value > 54) {
+			$star3 = 'rating-star-on';
+		}
+		if ($value > 64) {
+			$star4 = 'rating-star-on-half';
+		}
+		if ($value > 74) {
+			$star4 = 'rating-star-on';
+		}
+		if ($value > 84) {
+			$star5 = 'rating-star-on-half';
+		}
+		if ($value > 94) {
+			$star5 = 'rating-star-on';
+		}		
 		$html .= '<div class="ccm-rating">';
 		$html .= '<div class="rating-star rating-star-readonly ' . $star1 . '"><a href="javascript:void(0)"></a></div>';		
 		$html .= '<div class="rating-star rating-star-readonly ' . $star2 . '"><a href="javascript:void(0)"></a></div>';		

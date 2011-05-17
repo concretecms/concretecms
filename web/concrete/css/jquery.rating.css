@@ -13,5 +13,7 @@ div.rating-star{background:transparent!important;overflow:hidden!important}
 input.rating-star-control {display: none}
 .rating-cancel {display: none !important}
 
+div.rating-star-on-half a {background-position:0 -48px!important}
+
 div.ccm-rating input {display: none}
 div.ccm-rating {white-space: nowrap}
