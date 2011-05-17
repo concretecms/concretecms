@@ -102,6 +102,10 @@ class PaginationHelper {
 		return str_replace("%pageNum%",$this->current_page, $this->URL);
 	}
 	
+	public function getQueryStringPagingVariable() {
+		return $this->queryStringPagingVariable;
+	}
+	
 	function getCurrentPage() {
 		return $this->current_page;
 	}
