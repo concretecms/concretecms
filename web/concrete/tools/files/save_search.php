@@ -19,7 +19,7 @@ if ($_POST['task'] == 'save_search') {
 	if ($req['ccm_order_by'] != '' && $req['ccm_order_dir'] != '') {
 		$colset->setDefaultSortColumn($colset->getColumnByKey($req['ccm_order_by']), $req['ccm_order_dir']);
 	}
-	$fsa = FileSetSavedSearch::add($_POST['fsName'], $req, $colset);
+	$fsa = FileSetSavedSearch::add(Loader::helper('text')->entities($_POST['fsName']), $req, $colset);
 	print $fsa->getFileSetID();
 	exit;
 }
