@@ -63,7 +63,8 @@ class ValidationCaptchaHelper {
 	public function display() {
 	  // @TODO: How do we properly print a picture using a helper function?
 	  $ci = Loader::helper('concrete/urls');
-      echo '<img src="' . $ci->getToolsURL('captcha') . '?nocache=' .time(). '" alt="' .t('Captcha Code'). '" class="ccm-captcha-image" />';      
+            echo '<img src="' . $ci->getToolsURL('captcha') . '?nocache=' .time(). '" alt="' .t('Captcha Code'). '" onclick="this.src = \'' . $ci->getToolsURL('captcha') . '?nocache=' .$time. '\'" class="ccm-captcha-image" />';
+      echo t('Click the image to see another captcha.');     
 	}
 	
 	/** 
