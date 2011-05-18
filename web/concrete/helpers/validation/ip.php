@@ -47,7 +47,7 @@
 			return $this->check($ip, ' AND isManual = ? AND expires = ? ',Array(1,0));
 		}
 		
-		protected function getRequestIP() {			
+		public function getRequestIP() {			
 			if ( array_key_exists ('HTTP_CLIENT_IP', $_SERVER ) && $_SERVER['HTTP_CLIENT_IP']){
 				return $_SERVER['HTTP_CLIENT_IP'];
 			}
