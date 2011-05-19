@@ -74,6 +74,14 @@
 			$args['fType'] = FileType::T_IMAGE;
 			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
 		}
+		/**
+		* Sets up a video to be chosen for use with a block.
+		 * @param string $id The ID of your form field
+		 * @param string $postname The name of your database column into which you'd like to save the file ID
+		 * @param string $chooseText
+		 * @param LibraryFileBlock $bf
+		 * return string $html
+		 */
 
 		public function video($id, $postname, $chooseText, $fileInstanceBlock = null) {
 			$args = array();
@@ -81,6 +89,68 @@
 			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
 		}
 	
+			/**
+		* Sets up a text file to be chosen for use with a block.
+		 * @param string $id The ID of your form field
+		 * @param string $postname The name of your database column into which you'd like to save the file ID
+		 * @param string $chooseText
+		 * @param LibraryFileBlock $bf
+		 * return string $html
+		 */
+
+		public function text($id, $postname, $chooseText, $fileInstanceBlock = null) {
+			$args = array();
+			$args['fType'] = FileType::T_TEXT;
+			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
+		}
+	
+		 /**
+		 * Sets up audio to be chosen for use with a block.
+		 * @param string $id The ID of your form field
+		 * @param string $postname The name of your database column into which you'd like to save the file ID
+		 * @param string $chooseText
+		 * @param LibraryFileBlock $bf
+		 * return string $html
+		 */
+
+		public function audio($id, $postname, $chooseText, $fileInstanceBlock = null) {
+			$args = array();
+			$args['fType'] = FileType::T_AUDIO;
+			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
+		}
+	
+		 /**
+		 * Sets up a document to be chosen for use with a block.
+		 * @param string $id The ID of your form field
+		 * @param string $postname The name of your database column into which you'd like to save the file ID
+		 * @param string $chooseText
+		 * @param LibraryFileBlock $bf
+		 * return string $html
+		 */
+
+		public function doc($id, $postname, $chooseText, $fileInstanceBlock = null) {
+			$args = array();
+			$args['fType'] = FileType::T_DOCUMENT;
+			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
+		}
+	
+		 /**
+		 * Sets up an application to be chosen for use with a block.
+		 * @param string $id The ID of your form field
+		 * @param string $postname The name of your database column into which you'd like to save the file ID
+		 * @param string $chooseText
+		 * @param LibraryFileBlock $bf
+		 * return string $html
+		 */
+
+		public function app($id, $postname, $chooseText, $fileInstanceBlock = null) {
+			$args = array();
+			$args['fType'] = FileType::T_APPLICATION;
+			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
+		}
+	
 	}
+	
+?>
 	
 ?>
