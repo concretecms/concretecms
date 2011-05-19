@@ -1,14 +1,18 @@
 <?
-/**
- * @package Helpers
- * @category Concrete
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- */
 
 /**
+ * File helper
+ * 
  * Functions useful for working with files and directories.
+ * 
+ * Used as follows:
+ * <code>
+ * $file = Loader::helper('file');
+ * $path = 'http://www.concrete5.org/tools/get_latest_version_number';
+ * $contents = $file->getContents($path);
+ * echo $contents;
+ * </code> 
+ *
  * @package Helpers
  * @category Concrete
  * @author Andrew Embler <andrew@concrete5.org>
@@ -26,7 +30,8 @@ class FileHelper {
 	
 	/** 
 	 * Returns the contents of a directory in an array.
-	 * @param string $directory
+	 * @param string $directory Directory to get the contents of
+	 * @param array $ignoreFilesArray File names to not include when getting the directory contents
 	 * @return array
 	 */
 	public function getDirectoryContents($dir, $ignoreFilesArray = array()) {
@@ -55,9 +60,10 @@ class FileHelper {
 	}
 	
 	/** 
-	 * Recursively copies all items in the source directory to the target directory
-	 * @param string $source
-	 * @param string $target
+	 * Recursively copies all items in the source directory or file to the target directory
+	 * @param string $source Source to copy
+	 * @param string $target Place to copy the source
+	 * @param int $mode What to chmod the file to
 	 */
 	public function copyAll($source, $target, $mode = 0777) {
 		if (is_dir($source)) {
@@ -89,6 +95,7 @@ class FileHelper {
 	
 	/** 
 	 * Takes a path to a file and sends it to the browser, streaming it, and closing the HTTP connection afterwards. Basically a force download method
+	 * @param stings $file
 	 */
 	public function forceDownload($file) {
 		
@@ -128,6 +135,7 @@ class FileHelper {
 	
 	/** 
 	 * Returns the full path to the temporary directory
+	 * @return string
 	 */
 	public function getTemporaryDirectory() {
 		if (!is_dir(DIR_TMP)) {
@@ -153,7 +161,9 @@ class FileHelper {
 	/**
 	 * Just a consistency wrapper for file_get_contents
 	 * Should use curl if it exists and fopen isn't allowed (thanks Remo)
-	 * @param $filename
+	 * @param string $filename
+	 * @param string $timeout
+	 * @return string $contents
 	 */
 	public function getContents($file, $timeout = 5) {
 		$url = @parse_url($file);
@@ -200,6 +210,8 @@ class FileHelper {
 	
 	/** 
 	 * Cleans up a filename and returns the cleaned up version
+	 * @param string $file
+	 * @return string @file
 	 */
 	public function sanitize($file) {
 		// $file = preg_replace("/[^0-9A-Z_a-z-.\s]/","", $file); // pre 5.4.1 allowed spaces
@@ -209,7 +221,8 @@ class FileHelper {
 	
 	/** 
 	* Returns the extension for a file name
-	* @param $filename
+	* @param string $filename
+	* @return string $extension
 	*/
 	public function getExtension($filename) {
 		$extension = end(explode(".",$filename));
@@ -218,6 +231,9 @@ class FileHelper {
 	
 	/** 
 	 * Takes a path and replaces the files extension in that path with the specified extension
+	 * @param string $filename
+	 * @param string $extension
+	 * @return string $newFileName
 	 */
 	public function replaceExtension($filename, $extension) {
 		$newFileName = substr($filename, 0, strrpos($filename, '.')) . '.' . $extension;
