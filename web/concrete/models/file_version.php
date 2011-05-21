@@ -26,6 +26,10 @@ class FileVersion extends Object {
 		return $to->getGenericTypeText( $to->getGenericType() );
 	}	
 
+	/**
+	 * returns the File object associated with this FileVersion object
+	 * @return File
+	 */
 	public function getFile() {
 		$fo = File::getByID($this->fID);
 		return $fo;
