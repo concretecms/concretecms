@@ -604,6 +604,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$this->controller = Loader::controller($view);
 					$this->controller->setupAndRun();
 				}
+
+				if ($this->controller->getRenderOverride() != '') {
+				   $view = $this->controller->getRenderOverride();
+				}
 				
 				// Determine which inner item to load, load it, and stick it in $innerContent
 				$content = false;
