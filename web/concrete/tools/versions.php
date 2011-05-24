@@ -154,7 +154,7 @@
 			}
 		}
 		
-		$page = $_REQUEST['ccm_paging_p'];
+		$page = $_REQUEST[PAGING_STRING];
 		if (!$page) {
 			$page = 1;
 		}
@@ -298,7 +298,7 @@ $("input[name=vApprove]").click(function() {
 
 ccm_goToVersionPage = function(p, url) {
 	jQuery.fn.dialog.showLoader();
-	var dest = CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1&cID=<?=$c->getCollectionID()?>&ccm_paging_p=' + p;
+	var dest = CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1&cID=<?=$c->getCollectionID()?>&<?php echo PAGING_STRING?>' + p;
 	$("#ccm-versions-container").load(dest, function() {
 		jQuery.fn.dialog.hideLoader();
 	});

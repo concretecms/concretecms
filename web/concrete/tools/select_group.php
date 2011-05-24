@@ -57,7 +57,7 @@ if (!$tp->canAccessGroupSearch()) {
 	
 	<div id="ccm-group-paging">
 	<?
-	$url = REL_DIR_FILES_TOOLS_REQUIRED . '/select_group?gKeywords=' . $_REQUEST['gKeywords'] . '&include_core_groups=' . $_REQUEST['include_core_groups'] . '&ccm_paging_p=%pageNum%';
+	$url = REL_DIR_FILES_TOOLS_REQUIRED . '/select_group?gKeywords=' . $_REQUEST['gKeywords'] . '&include_core_groups=' . $_REQUEST['include_core_groups'] . '&' . PAGING_STRING . '=%pageNum%';
 	$gl->displayPaging($url);
 	?>
 	</div>

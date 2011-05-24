@@ -31,7 +31,7 @@ class PaginationHelper {
 	public $classCurrent='currentPage';		
 	public $URL=''; //%pageNum% for page number
 	public $jsFunctionCall='';
-	public $queryStringPagingVariable = 'ccm_paging_p';
+	public $queryStringPagingVariable = PAGING_STRING;
 	public $additionalVars = array();
 	
 	function PaginationHelper(){
