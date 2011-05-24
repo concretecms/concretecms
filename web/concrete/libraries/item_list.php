@@ -230,7 +230,7 @@ class ItemList {
 	protected $start = 0;
 	protected $sortBy;
 	protected $sortByDirection;
-	protected $queryStringPagingVariable = 'ccm_paging_p';
+	protected $queryStringPagingVariable = PAGING_STRING;
 	protected $queryStringSortVariable = 'ccm_order_by';
 	protected $queryStringSortDirectionVariable = 'ccm_order_dir';
 	protected $enableStickySearchRequest = false;

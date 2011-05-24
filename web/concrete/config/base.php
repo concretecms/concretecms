@@ -91,6 +91,10 @@ if (!defined('ENABLE_ASSET_COMPRESSION')) {
 	define('ENABLE_ASSET_COMPRESSION', false);
 }
 
+if (!defined('PAGING_STRING')) {
+	define('PAGING_STRING', 'ccm_paging_p');
+}
+
 /** 
  * Character support
  */
