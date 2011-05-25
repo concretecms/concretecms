@@ -244,8 +244,8 @@ class LoginController extends Controller {
 			$this->set('invalidRegistrationFields', true);
 			$this->set('unfilledAttributes', $unfilledAttributes);
 		}
-
-		$rcID = $this->post('rcID');
+		$txt = Loader::helper('text');
+		$rcID = $txt->entities($this->post('rcID'));
 		$nh = Loader::helper('validation/numbers');
 
 		//set redirect url
