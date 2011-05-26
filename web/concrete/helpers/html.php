@@ -57,7 +57,7 @@ class HtmlHelper {
 			}
 		}
 
-		$css->file .= (strpos($css->file, '?') > -1) ? '&' : '?';
+		$css->file .= (strpos($css->file, '?') > -1) ? '&amp;' : '?';
 		$css->file .= 'v=' . md5(APP_VERSION . PASSWORD_SALT);		
 		// for the javascript addHeaderItem we need to have a full href available
 		$css->href = $css->file;
@@ -98,7 +98,7 @@ class HtmlHelper {
 			$js->file = ASSETS_URL_JAVASCRIPT . '/' . $file;
 		}
 
-		$js->file .= (strpos($js->file, '?') > -1) ? '&' : '?';
+		$js->file .= (strpos($js->file, '?') > -1) ? '&amp;' : '?';
 		$js->file .= 'v=' . md5(APP_VERSION . PASSWORD_SALT);
 		
 		// for the javascript addHeaderItem we need to have a full href available
