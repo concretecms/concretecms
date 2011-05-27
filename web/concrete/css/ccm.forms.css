@@ -107,7 +107,17 @@ a.ccm-button em.ccm-button-close {background-image: url(../images/icons/close.pn
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	border: 1px solid #a8a8a8;
 	position: relative;
-	cursor: pointer
+	cursor: pointer;
+}
+
+.ccm-button-v2-left {
+	float: left;
+	margin-right: 8px;
+}
+
+.ccm-button-v2-right {
+	float: right;
+	margin-left: 8px;
 }
 
 .ccm-button-v2:disabled {
