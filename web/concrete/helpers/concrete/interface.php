@@ -31,8 +31,11 @@ class ConcreteInterfaceHelper {
 	 */
 	public function submit($text, $formID = false, $buttonAlign = 'right', $innerClass = null, $args = array()) {
 		if ($buttonAlign == 'right') {
-			$align = 'style="float: right"';
+			$innerClass .= ' ccm-button-v2-right';
+		} else if ($buttonAlign == 'left') {
+			$innerClass .= ' ccm-button-v2-left';
 		}
+		
 		if (!$formID) {
 			$formID = 'button';
 		}
@@ -54,7 +57,9 @@ class ConcreteInterfaceHelper {
 	 */
 	public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = array(), $onclick='') { 
 		if ($buttonAlign == 'right') {
-			$align = 'style="float: right"';
+			$innerClass .= ' ccm-button-v2-right';
+		} else if ($buttonAlign == 'left') {
+			$innerClass .= ' ccm-button-v2-left';
 		}
 		$argsstr = '';
 		foreach($args as $k => $v) {
@@ -75,7 +80,9 @@ class ConcreteInterfaceHelper {
 	public function button_js($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = array()) {
 		$href = 'javascript:void(0)';
 		if ($buttonAlign == 'right') {
-			$align = 'style="float: right"';
+			$innerClass .= ' ccm-button-v2-right';
+		} else if ($buttonAlign == 'left') {
+			$innerClass .= ' ccm-button-v2-left';
 		}
 		$argsstr = '';
 		foreach($args as $k => $v) {
