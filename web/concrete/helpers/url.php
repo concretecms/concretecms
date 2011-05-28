@@ -37,7 +37,7 @@ class UrlHelper {
 			if (strpos($url, '?') === false) {
 				$url = $url . '?' . $variable . '=' . $value;
 			} else {
-				$url = $url . '&' . $variable . '=' . $value;
+				$url = $url . '&amp;' . $variable . '=' . $value;
 			}
 		}
 		
