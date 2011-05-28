@@ -28,7 +28,7 @@ if (isset($_REQUEST['searchInstance'])) {
 <td width="100%"><?=$pageList->displaySummary();?></td>
 	<td style="white-space: nowrap"><?=t('With Selected: ')?>&nbsp;</td>
 	<td align="right">
-	<select id="ccm-<?=$searchInstance?>-list-multiple-operations" disabled>
+	<select id="ccm-<?=$searchInstance?>-list-multiple-operations" disabled="disabled">
 		<option value="">**</option>
 		<option value="properties"><?=t('Edit Properties')?></option>
 	</select>
@@ -65,7 +65,7 @@ if (isset($_REQUEST['searchInstance'])) {
 			foreach($slist as $ak) { ?>
 				<th class="<?=$pageList->getSearchResultsClass($ak)?>"><a href="<?=$pageList->getSortByURL($ak, 'asc', $bu, $soargs)?>"><?=$ak->getAttributeKeyDisplayHandle()?></a></th>
 			<? } ?>			
-			<th class="ccm-search-add-column-header"><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-search-add-column"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a></th>
+			<th class="ccm-search-add-column-header"><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-search-add-column"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" alt="<?php echo t('Add')?>"/></a></th>
 		</tr>
 	<?
 		foreach($pages as $cobj) {

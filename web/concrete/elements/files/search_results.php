@@ -90,10 +90,6 @@ if (isset($_REQUEST['searchInstance'])) {
 				<? } ?>
 			<? } ?>
 			
-			<? /*
-			
-			*/ ?>
-			
 			<td>&nbsp;</td>
 			
 			</tr>
