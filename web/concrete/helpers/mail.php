@@ -201,6 +201,7 @@ class MailHelper {
 			}
 			if (!isset($from)) {
 				$from = array(EMAIL_DEFAULT_FROM_ADDRESS, EMAIL_DEFAULT_FROM_NAME);
+				$fromStr = EMAIL_DEFAULT_FROM_ADDRESS;
 			}
 			
 			// The currently included Zend library has a bug in setReplyTo that
