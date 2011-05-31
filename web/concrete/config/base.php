@@ -107,21 +107,6 @@ if (!defined("DB_COLLATE")) {
 	define('DB_COLLATE', '');
 }
 
-if (!defined('LOCALE')) {
-	define("LOCALE", 'en_US');
-}
-
-if (strpos(LOCALE, '_') > -1) {
-	$loc = explode('_', LOCALE);
-	if (is_array($loc) && count($loc) == 2) {
-		define('LANGUAGE', $loc[0]);
-	}
-}
-
-if (!defined("LANGUAGE")) {
-	define("LANGUAGE", LOCALE);
-}
-
 define("LANGUAGE_DOMAIN_CORE", "messages");
 
 # Path to the core files shared between all concrete 5 installations
@@ -232,6 +217,7 @@ define('ASSETS_URL_JAVASCRIPT', $ap . '/js');
 define('ASSETS_URL_IMAGES', $ap . '/images');
 define('ASSETS_URL_FLASH', $ap . '/flash');
 
+
 # Pages/Collections
 define('FILENAME_COLLECTION_VIEW', 'view.php');
 define('FILENAME_COLLECTION_ACCESS', 'access.xml');
@@ -284,6 +270,11 @@ define('FILENAME_THEMES_ERROR', 'error');
 define('ASSETS_URL_THEMES_NO_THUMBNAIL', ASSETS_URL_IMAGES . '/spacer.gif');
 define('THEMES_THUMBNAIL_WIDTH', 120);
 define('THEMES_THUMBNAIL_HEIGHT', 90);
+
+# languages
+define('DIR_LANGUAGES', DIR_BASE . '/' . DIRNAME_LANGUAGES);
+define('DIR_LANGUAGES_CORE', DIR_BASE_CORE . '/' . DIRNAME_LANGUAGES);
+
 
 # Mail templates are just another kind of element, but with some special properties
 define('DIR_FILES_EMAIL_TEMPLATES', DIR_BASE . '/mail');

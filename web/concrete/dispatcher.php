@@ -90,14 +90,14 @@
 	## Startup check ##	
 	require(dirname(__FILE__) . '/startup/encoding_check.php');
 
-	## File types ##
-	require(dirname(__FILE__) . '/config/file_types.php');
-
 	## Startup check, install ##	
 	require(dirname(__FILE__) . '/startup/config_check_complete.php');
 	
 	## User level config ##	
 	require(dirname(__FILE__) . '/config/app.php');
+
+	## File types ##
+	require(dirname(__FILE__) . '/config/file_types.php');
 	
 	## Check host for redirection ##	
 	require(dirname(__FILE__) . '/startup/url_check.php');

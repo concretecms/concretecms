@@ -20,6 +20,23 @@ class LoginController extends Controller {
 		   $this->set("uName",trim($txt->filterNonAlphaNum($_GET['uName'])));
 		}
 		
+
+		$languages = array();		
+		$locales = array();
+		if (Config::get('LANGUAGE_CHOOSE_ON_LOGIN')) {
+			Loader::library('3rdparty/Zend/Locale');
+			$languages = Localization::getAvailableInterfaceLanguages();
+			if (count($languages) > 0) { 
+				array_unshift($languages, 'en_US');
+			}
+			$locales = array();
+			foreach($languages as $lang) {
+				$loc = new Zend_Locale($lang);
+				$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', LOCALE);
+			}
+		}
+		$this->set('locales', $locales);
+		
 		$this->openIDReturnTo = BASE_URL . View::url("/login", "complete_openid"); 
 	}
 	

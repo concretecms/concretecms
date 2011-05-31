@@ -229,7 +229,7 @@ class V2JavaScriptOutputObject extends V2HeaderOutputObject {
 
 	public $script;			// STRING (the actual JS code)
 	public $xhtml = true;	// BOOL (should we wrap with CDATA...?)
-	
+
 	public function __toString() {
 		
 		if (!$this->string) { // If __toString() has not yet been run on this object
