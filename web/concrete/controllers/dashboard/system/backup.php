@@ -85,9 +85,12 @@ class DashboardSystemBackupController extends Controller {
 
 		$file = $this->post('backup_file');
 		
+		$fh = Loader::helper('file');
+		
 		$db = Loader::db(); 
 		chmod(DIR_FILES_BACKUPS . '/'. $file, 0666);
-		$str_restSql = file_get_contents(DIR_FILES_BACKUPS . '/' . $file);
+		$str_restSql = $fh->getContents(DIR_FILES_BACKUPS . '/' . $file);
+		//$str_restSql = file_get_contents(DIR_FILES_BACKUPS . '/' . $file);
 		if (!$str_restSql) {
 			$this->set("error",array("There was an error trying to restore the database. This file was empty."));
 			$this->view();
