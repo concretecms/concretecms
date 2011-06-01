@@ -16,7 +16,7 @@ class DashboardSettingsMultilingualController extends DashboardBaseController {
 		$locales = array();
 		foreach($languages as $lang) {
 			$loc = new Zend_Locale($lang);
-			$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', LOCALE);
+			$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
 		}
 		$this->set('LANGUAGE_CHOOSE_ON_LOGIN', Config::get('LANGUAGE_CHOOSE_ON_LOGIN'));
 		$this->set('locales', $locales);
@@ -31,7 +31,7 @@ class DashboardSettingsMultilingualController extends DashboardBaseController {
 	public function save_interface_language() {
 		if (Loader::helper('validation/token')->validate('save_interface_language')) {
 			
-			Config::save('LOCALE', $this->post('LOCALE'));
+			Config::save('SITE_LOCALE', $this->post('SITE_LOCALE'));
 			Config::save('LANGUAGE_CHOOSE_ON_LOGIN', $this->post('LANGUAGE_CHOOSE_ON_LOGIN'));
 			$this->redirect('/dashboard/settings/multilingual', 'interface_settings_saved');
 			

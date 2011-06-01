@@ -274,10 +274,31 @@ if (is_object($uo)) {
 			<td><input type="password" name="uPasswordConfirm" autocomplete="off" value="" style="width: 94%"></td>
 			<td><?=t('(Leave these fields blank to keep the same password)')?></td>
 		</tr>
+		<?
+		$languages = Localization::getAvailableInterfaceLanguages();
+		if (count($languages) > 0) { ?>
+	
+		<tr>
+			<td class="subheader" colspan="3"><?=t('Default Language')?></td>
+		</tr>	
+		<tr>
+			<Td colspan="3">
+			<?
+				array_unshift($languages, 'en_US');
+				$locales = array();
+				Loader::library('3rdparty/Zend/Locale');
+				foreach($languages as $lang) {
+					$loc = new Zend_Locale($lang);
+					$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
+				}
+				$ux = $uo->getUserObject();
+				print $form->select('uDefaultLanguage', $locales, $ux->getUserDefaultLanguage());
+			?>
+			</td>
+		</tr>	
+		<? } ?>
+
 		<? if(ENABLE_USER_TIMEZONES) { ?>
-        <tr>
-			<td colspan="3" class="header"><?=t('Localization')?></td>
-		</tr>
         <tr>
         	<td class="subheader" colspan="3"><?=t('Time Zone')?></td>
         </tr>

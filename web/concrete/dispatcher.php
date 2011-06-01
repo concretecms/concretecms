@@ -96,6 +96,9 @@
 	## User level config ##	
 	require(dirname(__FILE__) . '/config/app.php');
 
+	## Localization ##	
+	require(dirname(__FILE__) . '/config/localization.php');
+
 	## File types ##
 	require(dirname(__FILE__) . '/config/file_types.php');
 	

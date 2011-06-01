@@ -7,6 +7,8 @@ class LoginController extends Controller {
 	
 	public $helpers = array('form');
 	private $openIDReturnTo;
+	protected $locales = array();
+	
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
 		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
@@ -32,9 +34,10 @@ class LoginController extends Controller {
 			$locales = array();
 			foreach($languages as $lang) {
 				$loc = new Zend_Locale($lang);
-				$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', LOCALE);
+				$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
 			}
 		}
+		$this->locales = $locales;
 		$this->set('locales', $locales);
 		
 		$this->openIDReturnTo = BASE_URL . View::url("/login", "complete_openid"); 
@@ -214,6 +217,12 @@ class LoginController extends Controller {
 		if ($this->post('uMaintainLogin')) {
 			$u->setUserForeverCookie();
 		}
+		
+		if (count($this->locales) > 0) {
+			if (Config::get('LANGUAGE_CHOOSE_ON_LOGIN')) {
+				$u->setUserDefaultLanguage($this->post('USER_LOCALE'));
+			}
+		}		
 		
 		// Verify that the user has filled out all
 		// required items that are required on register

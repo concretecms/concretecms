@@ -19,7 +19,7 @@
 		}
 
 		public function getTranslate() {
-			if (LOCALE != 'en_US') {
+			if (ACTIVE_LOCALE != 'en_US') {
 				static $translate;
 				if (!isset($translate)) {
 					Loader::library('3rdparty/Zend/Translate');
@@ -27,9 +27,9 @@
 					if (is_object($cache)) {
 						Zend_Translate::setCache($cache);
 					}
-					if (LOCALE != 'en_US') {
-						if (is_dir(DIR_BASE . '/languages/' . LOCALE)) {
-							$translate = new Zend_Translate('gettext', DIR_BASE . '/languages/' . LOCALE, LOCALE);
+					if (ACTIVE_LOCALE != 'en_US') {
+						if (is_dir(DIR_BASE . '/languages/' . ACTIVE_LOCALE)) {
+							$translate = new Zend_Translate('gettext', DIR_BASE . '/languages/' . ACTIVE_LOCALE, ACTIVE_LOCALE);
 						}
 					}
 					

@@ -813,6 +813,7 @@ uLastLogin               INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 uPreviousLogin           INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 uNumLogins               INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 uTimezone                VARCHAR(255),
+uDefaultLanguage		 VARCHAR(32) NULL
                  PRIMARY KEY (uID)
 );
 

@@ -1957,6 +1957,7 @@
       <UNSIGNED/>
     </field>
 	<field name="uTimezone" type="C" size="255"></field>
+    <field name="uDefaultLanguage" type="C" size="32"/>
     <index name="uName">
       <UNIQUE/>
       <col>uName</col>

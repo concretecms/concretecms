@@ -11,7 +11,17 @@ if (count($languages) == 0) { ?>
 	
 	<form method="post" action="<?=$this->action('save_interface_language')?>">
 	<div><?=$form->checkbox('LANGUAGE_CHOOSE_ON_LOGIN', 1, $LANGUAGE_CHOOSE_ON_LOGIN)?> <?=$form->label('LANGUAGE_CHOOSE_ON_LOGIN', t('Offer choice of language on login.'))?></div>
-	<div><?=$form->label('LOCALE', t('Default Language'))?> <?=$form->select('LOCALE', $locales, LOCALE);?></div>
+	<? if (defined('LOCALE')) { ?>
+	<br/>
+		<strong><?=t('Default Language: ')?></strong>
+		<div><? foreach($locales as $sl => $v) {
+			if ($sl == LOCALE) {
+				print $v;
+			}
+		} ?> <?=t('This has been set in config/site.php')?></div>
+	<? } else { ?>
+		<div><?=$form->label('SITE_LOCALE', t('Default Language'))?> <?=$form->select('SITE_LOCALE', $locales, SITE_LOCALE);?></div>
+	<? } ?>
 	
 	<br/>
 	<?=Loader::helper('validation/token')->output('save_interface_language')?>
