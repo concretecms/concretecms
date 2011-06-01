@@ -138,12 +138,7 @@ foreach($nav as $n2) {
 	?>	
 		<div id="ccm-dashboard-subnav">
 		<ul><? foreach($subpagesP as $sc) { 
-		
-			if ($c->getCollectionPath() == $sc->getCollectionPath() || (strpos($c->getCollectionPath(), $sc->getCollectionPath()) == 0) && strpos($c->getCollectionPath(), $sc->getCollectionPath()) !== false) {
-				$isActive = true;
-			} else {
-				$isActive = false;
-			}
+			$isActive = ($c->getCollectionPath() == $sc->getCollectionPath() || strpos($c->getCollectionPath(), $sc->getCollectionPath() . '/') === 0);
 			
 		?><li <? if ($isActive) { ?> class="nav-selected" <? } ?>><a href="<?=$nh->getLinkToCollection($sc, false, true)?>"><?=t($sc->getCollectionName())?></a></li><? } ?></ul>
 		<br/><div class="ccm-spacer">&nbsp;</div>
