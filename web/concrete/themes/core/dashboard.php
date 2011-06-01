@@ -93,12 +93,8 @@ Loader::element('header_required');
 <?
 foreach($nav as $n2) { 
 	$cp = new Permissions($n2);
-	if ($cp->canRead()) { 
-		if ($c->getCollectionPath() == $n2->getCollectionPath() || (strpos($c->getCollectionPath(), $n2->getCollectionPath()) == 0) && strpos($c->getCollectionPath(), $n2->getCollectionPath()) !== false) {
-			$isActive = true;
-		} else {
-			$isActive = false;
-		}
+	if ($cp->canRead()) {
+		$isActive = ($c->getCollectionPath() == $n2->getCollectionPath() || strpos($c->getCollectionPath(), $n2->getCollectionPath() . '/') === 0);
 ?>
 	<li <? if ($isActive) { ?> class="ccm-nav-active" <? } ?>><a href="<?=$nh->getLinkToCollection($n2, false, true)?>"><?=t($n2->getCollectionName())?> <span><?=t($n2->getCollectionDescription())?></span></a></li>
 <? }
