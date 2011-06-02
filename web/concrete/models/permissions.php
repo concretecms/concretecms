@@ -551,7 +551,7 @@ class CollectionPermissions extends Permissions {
 			}
 			$inStr .= ')';
 			
-			$_uID = ($u->getUserID() > -1) ? " or uID = " . $u->getUserID() : "";
+			$_uID = ($u->getUserID() > 0) ? " or uID = " . $u->getUserID() : "";
 			$_cID = $cObj->getPermissionsCollectionID();
 		
 			$q = "select cgPermissions, cgStartDate, cgEndDate, gID from PagePermissions where cID = '{$_cID}' and (gID in $inStr $_uID)";

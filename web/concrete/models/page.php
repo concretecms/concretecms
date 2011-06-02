@@ -526,11 +526,14 @@ $ppWhere = '';
 			}
 	
 		} else {
-			/*
-			if ($this->ctIcon != null) {
-				$icon = REL_DIR_FILES_COLLECTION_TYPE_ICONS . '/' . $this->ctIcon;
-			}*/
-			
+			$obj = LanguageSectionPage::getByID($this->getCollectionID());
+			if (is_object($obj)) {
+				if (file_exists(DIR_FILES_LANGUAGE_ICONS . '/' . strtolower($obj->getIcon()) . '.png')) {
+					$icon = REL_DIR_FILES_LANGUAGE_ICONS . '/' . strtolower($obj->getIcon()) . '.png';
+				} else if (file_exists(DIR_FILES_LANGUAGE_ICONS_CORE . '/' . strtolower($obj->getIcon()) . '.png')) {
+					$icon = REL_DIR_FILES_LANGUAGE_ICONS_CORE . '/' . strtolower($obj->getIcon()) . '.png';
+				}
+			}			
 		}
 		return $icon;
 	}

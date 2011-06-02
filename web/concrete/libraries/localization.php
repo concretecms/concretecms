@@ -18,6 +18,10 @@
 			return $languages;
 		}
 
+		public function getAvailableContentLanguages() {
+			return explode(',', LANGUAGE_CONTENT_LANGUAGES_AVAILABLE);		
+		}		
+		
 		public function getTranslate() {
 			if (ACTIVE_LOCALE != 'en_US') {
 				static $translate;
