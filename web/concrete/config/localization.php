@@ -2,12 +2,13 @@
 defined('C5_EXECUTE') or die("Access Denied."); 
 
 $u = new User();
+Config::getOrDefine('SITE_LOCALE', 'en_US');
+
 if ($u->getUserDefaultLanguage() != '') {
 	define('ACTIVE_LOCALE', $u->getUserDefaultLanguage());
 } else if (defined('LOCALE')) {
 	define('ACTIVE_LOCALE', LOCALE);
 } else {
-	Config::getOrDefine('SITE_LOCALE', 'en_US');
 	define('ACTIVE_LOCALE', SITE_LOCALE);
 }
 
@@ -21,9 +22,6 @@ if (strpos(ACTIVE_LOCALE, '_') > -1) {
 if (!defined("LANGUAGE")) {
 	define("LANGUAGE", ACTIVE_LOCALE);
 }
-
-define('LANGUAGE_CONTENT_LANGUAGES_AVAILABLE', 'ar,cs,da,de,es,fi,fr,hu,id,it,ja,nl,pt_BR,pt_PT,ro,ru,sv');
-
 
 // initialize localization immediately following defining locale
 Localization::init();
