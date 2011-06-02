@@ -4,24 +4,6 @@
 	
 		public function init() {Localization::getTranslate();}
 		
-		public static function getAvailableInterfaceLanguages() {
-			$languages = array();
-			$fh = Loader::helper('file');
-			
-			if (file_exists(DIR_LANGUAGES)) {
-				$languages = array_merge($languages, $fh->getDirectoryContents(DIR_LANGUAGES));
-			}
-			if (file_exists(DIR_LANGUAGES_CORE)) {
-				$languages = array_merge($languages, $fh->getDirectoryContents(DIR_LANGUAGES_CORE));
-			}
-			
-			return $languages;
-		}
-
-		public function getAvailableContentLanguages() {
-			return explode(',', LANGUAGE_CONTENT_LANGUAGES_AVAILABLE);		
-		}		
-		
 		public function getTranslate() {
 			if (ACTIVE_LOCALE != 'en_US') {
 				static $translate;
@@ -44,8 +26,25 @@
 				return $translate;
 			}
 		}
-	}
 	
+	
+		public static function getAvailableInterfaceLanguages() {
+			$languages = array();
+			$fh = Loader::helper('file');
+			
+			if (file_exists(DIR_LANGUAGES)) {
+				$languages = array_merge($languages, $fh->getDirectoryContents(DIR_LANGUAGES));
+			}
+			if (file_exists(DIR_LANGUAGES_CORE)) {
+				$languages = array_merge($languages, $fh->getDirectoryContents(DIR_LANGUAGES_CORE));
+			}
+			
+			return $languages;
+		}
+	
+
+	}
+
 	function t($text) {
 		$zt = Localization::getTranslate();
 		if (func_num_args() == 1) {

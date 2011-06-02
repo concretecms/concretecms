@@ -30,7 +30,7 @@ class ConcreteUpgradeVersion542Helper {
 				$tip->addAccess($g3);
 			}
 		}
-
+		Loader::model('single_page');
 		$sp = Page::getByPath('/dashboard/settings/multilingual');
 		if ($sp->isError()) {
 			$d1a = SinglePage::add('/dashboard/settings/multilingual');
