@@ -110,4 +110,19 @@ class ConcreteInterfaceHelper {
 		$html .= '</div><div class="ccm-spacer">&nbsp;</div>';
 		return $html;
 	}	
+	
+	/** 
+	 * Returns a flag for a passed country/region
+	 */
+	public function getFlagIconSRC($region) {
+		$region = strtolower($region);
+		if (file_exists(DIR_FILES_LANGUAGE_ICONS . '/' . $region . '.png')) {
+			$icon = REL_DIR_FILES_LANGUAGE_ICONS . '/' . $region . '.png';
+		} else if (file_exists(DIR_FILES_LANGUAGE_ICONS_CORE . '/' . $region . '.png')) {
+			$icon = REL_DIR_FILES_LANGUAGE_ICONS_CORE . '/' . $region . '.png';
+		}
+		if (isset($icon)) {
+			return '<img class="ccm-region-flag" id="ccm-region-flag-' . $region . '" width="16" height="11" src="' . $icon . '" alt="' . $region . '" />';
+		}
+	}
 }

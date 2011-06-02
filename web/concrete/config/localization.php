@@ -22,6 +22,9 @@ if (!defined("LANGUAGE")) {
 	define("LANGUAGE", ACTIVE_LOCALE);
 }
 
+define('LANGUAGE_CONTENT_LANGUAGES_AVAILABLE', 'ar,cs,da,de,es,fi,fr,hu,id,it,ja,nl,pt_BR,pt_PT,ro,ru,sv');
+
+
 // initialize localization immediately following defining locale
 Localization::init();
 
