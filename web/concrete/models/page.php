@@ -506,6 +506,13 @@ $ppWhere = '';
 	public function getCollectionIcon() {
 		// returns a fully qualified image link for this page's icon, either based on its collection type or if icon.png appears in its view directory
 		$icon = '';
+		
+		$icon = Events::fire('on_page_get_icon', $this);
+		
+		if ($icon) {
+			return $icon;
+		}
+		
 		if ($this->isGeneratedCollection()) {
 			if ($this->getPackageID() > 0) {
 				if (is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) {
@@ -526,14 +533,7 @@ $ppWhere = '';
 			}
 	
 		} else {
-			$obj = LanguageSectionPage::getByID($this->getCollectionID());
-			if (is_object($obj)) {
-				if (file_exists(DIR_FILES_LANGUAGE_ICONS . '/' . strtolower($obj->getIcon()) . '.png')) {
-					$icon = REL_DIR_FILES_LANGUAGE_ICONS . '/' . strtolower($obj->getIcon()) . '.png';
-				} else if (file_exists(DIR_FILES_LANGUAGE_ICONS_CORE . '/' . strtolower($obj->getIcon()) . '.png')) {
-					$icon = REL_DIR_FILES_LANGUAGE_ICONS_CORE . '/' . strtolower($obj->getIcon()) . '.png';
-				}
-			}			
+
 		}
 		return $icon;
 	}
