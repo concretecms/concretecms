@@ -13,6 +13,7 @@ class DatabaseItemList extends ItemList {
 	protected $filters = array();
 	protected $sortByString = '';
 	protected $groupByString = '';  
+	protected $havingString = '';  
 	protected $autoSortColumns = array();
 	protected $userPostQuery = '';
 	
@@ -91,6 +92,10 @@ class DatabaseItemList extends ItemList {
 		
 		if ($this->groupByString != '') {
 			$q .= 'group by ' . $this->groupByString . ' ';
+		}		
+
+		if ($this->havingString != '') {
+			$q .= 'having ' . $this->havingString . ' ';
 		}		
 		
 		return $q;
@@ -172,6 +177,10 @@ class DatabaseItemList extends ItemList {
 		}
 		$this->groupByString = $key;
 	}	
+
+	public function having($column, $value, $comparison = '=') {
+		$this->havingString = $column . ' ' . $comparison . ' ' . $value;
+	}
 	
 	public function getSortByURL($column, $dir = 'asc', $baseURL = false, $additionalVars = array()) {
 		if ($column instanceof AttributeKey) {
