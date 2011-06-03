@@ -27,7 +27,8 @@ class TagsBlockController extends BlockController {
 	}
 	
 	public function add() { 
-		$this->loadAttribute();
+		$ak = $this->loadAttribute();
+		$this->set('ak',$ak);
 	}
 	
 	protected function loadAttribute() {
