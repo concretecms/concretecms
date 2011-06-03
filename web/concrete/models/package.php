@@ -322,6 +322,13 @@ class Package extends Object {
 						case 'TaskPermission':
 							$item->delete();
 							break;
+						default:
+							if(method_exists($item, 'delete')) {
+								$item->delete();
+							} elseif(method_exists($item, 'uninstall')) {
+								$item->uninstall();
+							}
+							break;
 					}
 				}
 			}
