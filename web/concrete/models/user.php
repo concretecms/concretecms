@@ -160,6 +160,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$this->uTimezone = $_SESSION['uTimezone'];
 					$this->uDefaultLanguage = $_SESSION['uDefaultLanguage'];
 					$this->superUser = ($_SESSION['uID'] == USER_SUPER_ID) ? true : false;
+				} else {
+					$this->uID = null;
+					$this->uName = null;
+					$this->superUser = false;
+					$this->uDefaultLanguage = null;
+					$this->uTimezone = null;
 				}
 				$this->uGroups = $this->_getUserGroups();
 				if (!isset($args[2])) {
