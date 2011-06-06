@@ -360,7 +360,7 @@ class LoginController extends Controller {
 	}
 	
 	// responsible for validating a user's email address
-	public function v($hash) {
+	public function v($hash = '') {
 		$ui = UserInfo::getByValidationHash($hash);
 		if (is_object($ui)) {
 			$ui->markValidated();
@@ -370,11 +370,10 @@ class LoginController extends Controller {
 	}
 	
 	// responsible for validating a user's email address
-	public function change_password($uHash) {
+	public function change_password($uHash = '') {
 		$db = Loader::db();
 		$h = Loader::helper('validation/identifier');
 		$e = Loader::helper('validation/error');
-		
 		$ui = UserInfo::getByValidationHash($uHash);		
 		if (is_object($ui)){
 			$hashCreated = $db->GetOne("select uDateGenerated FROM UserValidationHashes where uHash=?", array($uHash));
