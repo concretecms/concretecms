@@ -355,7 +355,7 @@ class LoginController extends Controller {
 		$this->redirect('/');
 	}
 	
-	public function forward($cID) {
+	public function forward($cID = 0) {
 		$this->set('rcID', $cID);
 	}
 	
