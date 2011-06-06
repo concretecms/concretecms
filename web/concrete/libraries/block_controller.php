@@ -127,13 +127,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		public function save($args) {
 			//$argsMerged = array_merge($_POST, $args);
-			$attribs = $this->record->getAttributeNames();
-			foreach($attribs as $key) {
-				if (isset($args[$key])) {
-					$this->record->{$key} = $args[$key];
+			if ($this->btTable) {
+				$attribs = $this->record->getAttributeNames();
+				foreach($attribs as $key) {
+					if (isset($args[$key])) {
+						$this->record->{$key} = $args[$key];
+					}
 				}
+				$this->record->Replace();
 			}
-			$this->record->Replace();
 		}
 		
 		/**
@@ -152,10 +154,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @return BlockRecord $newInstance
 		 */
 		public function duplicate($newBID) {
-			$newInstance = clone $this->record;
-			$newInstance->bID = $newBID;
-			$newInstance->Insert();
-			return $newInstance;
+			if ($this->btTable) {
+				$newInstance = clone $this->record;
+				$newInstance->bID = $newBID;
+				$newInstance->Insert();
+				return $newInstance;
+			}
 		}
 		
 		public function __wakeup() {
@@ -210,7 +214,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		public function delete() {
 			if ($this->bID > 0) {
-				$this->record->delete();
+				if ($this->btTable) {
+					$this->record->delete();
+				}
 			}
 		}
 
@@ -219,10 +225,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @return void
 		 */
 		protected function load() {
-			$attribs = $this->record->getAttributeNames();
-			foreach($attribs as $key) {
-				$this->{$key} = $this->record->$key;
-				$this->set($key, $this->record->$key);
+			if ($this->btTable) {
+				$attribs = $this->record->getAttributeNames();
+				foreach($attribs as $key) {
+					$this->{$key} = $this->record->$key;
+					$this->set($key, $this->record->$key);
+				}
 			}
 		}
 		
