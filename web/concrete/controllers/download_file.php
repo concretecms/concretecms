@@ -34,7 +34,7 @@ class DownloadFileController extends Controller {
 		}
 	}
 	
-	public function view_inline($fID) {
+	public function view_inline($fID = 0) {
 		$file = File::getByID($fID);
 		$fp = new Permissions($file);
 		if (!$fp->canRead()) {
