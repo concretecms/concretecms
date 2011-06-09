@@ -1,5 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+session_write_close();
 
 Loader::dashboardModuleController('help');
 Loader::dashboardModuleController('news');
