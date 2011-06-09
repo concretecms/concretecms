@@ -91,8 +91,22 @@ class Controller {
 			
 		}
 		
-		if (is_callable(array($this, $method)) && (strpos($method, 'on_') !== 0) && (!in_array($method, $this->restrictedMethods))) {
+		$foundTask = false;
 		
+		try {
+			$r = new ReflectionMethod(get_class($this), $method);
+			$cl = $r->getDeclaringClass();
+			if (is_object($cl)) {
+				if ($cl->getName() != 'Controller' && strpos($method, 'on_') !== 0 && strpos($method, '__') !== 0 && $r->isPublic()) {
+					$foundTask = true;
+				}
+			}
+		} catch(Exception $e) {
+		
+		}
+			
+		if ($foundTask) {
+
 			$this->task = $method;
 			if (!is_array($this->parameters)) {
 				$this->parameters = array();
@@ -205,10 +219,13 @@ class Controller {
 	/**
 	 * @access private
 	 */
+	/*
+	// no longer used. we use reflection
 	public function setupRestrictedMethods() {
 		$methods = get_class_methods('Controller');
 		$this->restrictedMethods = $methods;
 	}
+	*/
 	
 	/** 
 	 * Returns true if the current request is a POST requested
