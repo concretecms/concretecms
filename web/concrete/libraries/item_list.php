@@ -64,22 +64,26 @@ class DatabaseItemList extends ItemList {
 				$q .= 'and ' . $f[1] . ' ';
 			} else {
 				if (is_array($value)) {
-					switch($comp) {
-						case '=':
-							$comp = 'in';
-							break;
-						case '!=':
-							$comp = 'not in';
-							break;
-					}
-					$q .= 'and ' . $column . ' ' . $comp . ' (';
-					for ($i = 0; $i < count($value); $i++) {
-						if ($i > 0) {
-							$q .= ',';
+					if (count($value) > 0) {
+						switch($comp) {
+							case '=':
+								$comp = 'in';
+								break;
+							case '!=':
+								$comp = 'not in';
+								break;
 						}
-						$q .= $db->quote($value[$i]);
+						$q .= 'and ' . $column . ' ' . $comp . ' (';
+						for ($i = 0; $i < count($value); $i++) {
+							if ($i > 0) {
+								$q .= ',';
+							}
+							$q .= $db->quote($value[$i]);
+						}
+						$q .= ') ';
+					} else {
+						$q .= 'and 1 = 2';
 					}
-					$q .= ') ';			
 				} else { 
 					$comp = is_null($value) ? 'IS' : $comp;
 					$q .= 'and ' . $column . ' ' . $comp . ' ' . $db->quote($value) . ' ';
