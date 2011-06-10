@@ -121,7 +121,7 @@ if ($this->controller->getTask() == 'browse') { ?>
 			<h3><?=$text->unhandle($k)?></h3>
 			
 			<? foreach($itemArray as $item) { ?>
-				<?=Package::getItemName($item)?><br/>			
+				<?=$pkg->getItemName($item)?><br/>			
 			<? } ?>
 			
 			<br/>
