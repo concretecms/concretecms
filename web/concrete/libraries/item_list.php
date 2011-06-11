@@ -236,6 +236,18 @@ class ItemList {
 		$this->enableStickySearchRequest = true;
 	}
 	
+	public function getQueryStringPagingVariable() {
+		return $this->queryStringPagingVariable;
+	}
+
+	public function getQueryStringSortVariable() {
+		return $this->queryStringSortVariable;
+	}
+
+	public function getQueryStringSortDirectionVariable() {
+		return $this->queryStringSortDirectionVariable;
+	}
+	
 	public function resetSearchRequest($namespace = '') {
 		$_SESSION[get_class($this) . $namespace . 'SearchFields'] = array();
 	}

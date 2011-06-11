@@ -135,7 +135,7 @@ class SurveyBlockController extends BlockController {
 			$db->query($q1, $v1);
 			
 			$v2 = array($opt->getOptionID());
-			$newOptionID = get_insert_id();
+			$newOptionID = $db->Insert_ID();
 			$q2 = "select * from btSurveyResults where optionID = ?";
 			$r2 = $db->query($q2, $v2);
 			if ($r2) {
