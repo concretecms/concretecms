@@ -807,6 +807,9 @@ class Block extends Object {
 			$q = "delete from CollectionVersionBlocks where bID = '$bID'";
 			$r = $db->query($q);
 
+			$q = "delete from ComposerContentLayout where bID = '$bID'";
+			$r = $db->query($q);
+
 			$q = "delete from CollectionVersionBlockPermissions where bID = '$bID'";
 			$r = $db->query($q);
 			
