@@ -176,7 +176,7 @@
 		<div>
 		<br/>
 		<label for="USER_LOCALE"><?=t('Language')?></label><br/>
-		<?=$form->select('USER_LOCALE', $locales, ACTIVE_LOCALE)?>
+		<?=$form->select('USER_LOCALE', $locales)?>
 		</div>
 		<br/>
 	<? } ?>
