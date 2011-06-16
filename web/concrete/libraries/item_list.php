@@ -184,7 +184,11 @@ class DatabaseItemList extends ItemList {
 	}	
 
 	public function having($column, $value, $comparison = '=') {
-		$this->havingString = $column . ' ' . $comparison . ' ' . $value;
+		if ($column == false) {
+			$this->havingString = $value;
+		} else {
+			$this->havingString = $column . ' ' . $comparison . ' ' . $value;
+		}
 	}
 	
 	public function getSortByURL($column, $dir = 'asc', $baseURL = false, $additionalVars = array()) {
