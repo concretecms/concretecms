@@ -572,8 +572,8 @@ class PageTheme extends Object {
 	
 	private static function getThemeNameAndDescription($dir) {
 		$res = new stdClass;
-		$res->ptName = '(No Name)';
-		$res->ptDescription = '(No Description)';
+		$res->ptName = t('(No Name)');
+		$res->ptDescription = t('(No Description)');
 		if (file_exists($dir . '/' . FILENAME_THEMES_DESCRIPTION)) {
 			$con = file($dir . '/' . FILENAME_THEMES_DESCRIPTION);
 			$res->ptName = $con[0];

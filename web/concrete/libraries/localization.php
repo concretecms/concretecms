@@ -5,7 +5,7 @@
 		public function init() {Localization::getTranslate();}
 		
 		public function getTranslate() {
-			if (ACTIVE_LOCALE != 'en_US') {
+			if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != 'en_US') {
 				static $translate;
 				if (!isset($translate)) {
 					Loader::library('3rdparty/Zend/Translate');
