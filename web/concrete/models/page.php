@@ -2194,8 +2194,14 @@ $ppWhere = '';
 	 *
 	*/
 	public static function getCurrentPage() {
-		global $c;
-		return $c;
+		$req = Request::get();
+		$current = $req->getCurrentPage();
+		if (is_object($current)) {
+			return $current;
+		} else {
+			global $c;
+			return $c;
+		}
 	}
 
 }

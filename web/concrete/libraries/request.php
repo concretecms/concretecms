@@ -317,6 +317,14 @@ class Request {
 		$this->task = $task;
 	}
 	
+	public function setCurrentPage($page) {
+		$this->currentPage = $page;
+	}
+	
+	public function getCurrentPage() {
+		return $this->currentPage;
+	}
+	
 	/**
 	 * Sets the controller params, used when the Page object identifies
 	 * the actual path.
