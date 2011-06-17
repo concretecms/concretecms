@@ -222,10 +222,11 @@
 		 * Loads a helper file. If the same helper file is contained in both the core concrete directory and the site's directory, it will load the site's first, which could then extend the core.
 		 */
 		public function helper($file, $pkgHandle = false) {
-			// loads and instantiates the object
+		
+			static $instances = array();
+			$class = false;		
+			
 			if ($pkgHandle != false) {
-				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-				require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_HELPERS . '/' . $file . '.php');
 				$class = Object::camelcase($pkgHandle . '_' . $file) . "Helper";
 				if (!class_exists($class, false)) {
 					$class = Object::camelcase($file) . "Helper";
@@ -234,21 +235,38 @@
 				// first we check if there's an object of the SAME kind in the core. If so, then we load the core first, then, we load the second one (site)
 				// and we hope the second one EXTENDS the first
 				if (file_exists(DIR_HELPERS_CORE . '/' . $file . '.php')) {
-					require_once(DIR_HELPERS_CORE . '/' . $file . '.php');
-					require_once(DIR_HELPERS . '/' . $file . '.php');
 					$class = "Site" . Object::camelcase($file) . "Helper";
 				} else {
-					require_once(DIR_HELPERS . '/' . $file . '.php');
 					$class = Object::camelcase($file) . "Helper";
 				}
 			} else {
-				require_once(DIR_HELPERS_CORE . '/' . $file . '.php');
-				$class = Object::camelcase($file) . "Helper";
-				
+				$class = Object::camelcase($file) . "Helper";					
 			}
 			
-			$cl = new $class;
-			return $cl;
+			if (array_key_exists($class, $instances)) {
+            	$instance = $instances[$class];
+            } else {
+				if ($pkgHandle != false) {
+					$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+					require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_HELPERS . '/' . $file . '.php');
+				} else if (file_exists(DIR_HELPERS . '/' . $file . '.php')) {
+					// first we check if there's an object of the SAME kind in the core. If so, then we load the core first, then, we load the second one (site)
+					// and we hope the second one EXTENDS the first
+					if (file_exists(DIR_HELPERS_CORE . '/' . $file . '.php')) {
+						require_once(DIR_HELPERS_CORE . '/' . $file . '.php');
+						require_once(DIR_HELPERS . '/' . $file . '.php');
+					} else {
+						require_once(DIR_HELPERS . '/' . $file . '.php');
+					}
+				} else {
+					require_once(DIR_HELPERS_CORE . '/' . $file . '.php');
+				}
+
+	            $instances[$class] = new $class();
+    	        $instance = $instances[$class];
+			}
+			
+			return $instance;
 		}
 		
 		/**

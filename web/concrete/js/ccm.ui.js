@@ -915,8 +915,6 @@ ccm_setupHeaderMenu = function() {
 		$(this).addClass('ccm-nav-loading');
 	});
 	$("#ccm-nav-help").dialog();
-	$("#ccm-nav-sitemap").dialog();
-	$("#ccm-nav-file-manager").dialog();
 	$("a#ccm-nav-dashboard").click(function() {
 		var dash = $(this).attr('href');
 		setTimeout(function() {

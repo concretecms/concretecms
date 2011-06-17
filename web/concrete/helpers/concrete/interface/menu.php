@@ -1,0 +1,180 @@
+<?
+
+defined('C5_EXECUTE') or die("Access Denied.");
+class ConcreteInterfaceMenuHelper {
+
+	static $menuItems = array();
+	
+
+	
+	/** 
+	 * Adds a menu item to the header menu area 
+	 * <code>
+	 * 	$bh->addMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkg = false);
+	 * </code>
+	 */
+	public function addMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkg = false) {
+		$obj = new ConcreteInterfaceHelperMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkg);
+		$this->menuItems[] = $obj;
+	}
+	
+	/** 
+	 * Returns current menu items
+	 */
+	public function getMenuItems($position = false) {
+		if ($position) {
+			$tmpItems = array();
+			foreach($this->menuItems as $mi) {
+				if ($mi->getPosition() == $position) {
+					$tmpItems[] = $mi;
+				}
+			}
+			return $tmpItems;
+		} else {
+			return $this->menuItems;
+		}
+	}
+
+}
+
+class ConcreteInterfaceHelperMenuItem {
+
+	public function __construct($handle, $name, $position, $linkAttributes, $pkg) {
+		$this->handle = $handle;
+		$this->name = $name;
+		$this->position = $position;
+		$this->linkAttributes = $linkAttributes;
+		$this->pkg = $pkg;
+	}
+	
+	protected $controller;
+	
+	public function getHandle() {return $this->handle;}
+	public function getName() {return $this->name;}
+	public function getPosition() {return $this->position;}
+	public function getLinkAttributes() {return $this->linkAttributes;}
+	public function getPackageObject() {return $this->pkg;}
+	
+	public function getController() {
+		if (isset($this->controller)) {
+			return $this->controller;
+		} else {
+			$class = Object::camelcase($this->handle . 'ConcreteInterfaceMenuItemController');
+			if (!class_exists($class)) {
+				$file1 = DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $this->handle . '/' . FILENAME_MENU_ITEM_CONTROLLER;
+				if (is_object($pkg)) {
+					$pkgHandle = $pkg->getPackageHandle();
+					$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+					$file2 = $dir . '/' . $pkgHandle . '/' . DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $this->handle . '/' . FILENAME_MENU_ITEM_CONTROLLER;
+				}
+				$file3 = DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ELEMENTS_MENU . '/' . $this->handle . '/' . FILENAME_MENU_ITEM_CONTROLLER;
+				if (file_exists($file1)) {
+					include($file1);
+				} else if (isset($file2) && file_exists($file2)) {
+					include($file2);
+				} else {
+					include($file3);
+				}
+			}
+
+			$this->controller = new $class();
+			$this->controller->setMenuItem($this);
+			return $this->controller;
+		}
+	}
+	
+	public function getMenuItemFilePath($_file) {
+		$f = $this->mapMenuItemFilePath($_file);
+		if (is_object($f)) {
+			return $f->file;
+		}
+	}
+	
+	public function getMenuItemFileURL($_file) {
+		$f = $this->mapMenuItemFilePath($_file);
+		if (is_object($f)) {
+			return $f->url;
+		}
+	}
+	
+	protected function mapMenuItemFilePath($_file) {
+		$handle = $this->handle;
+		if (file_exists(DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file)) {
+			$file = DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file;
+			$url = BASE_URL . DIR_REL . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file;
+		}
+		
+		if (is_object($this->pkg)) {
+			if (!isset($file)) {
+				$pkgHandle = $this->pkg->getPackageHandle();
+				$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
+				if (file_exists($dirp . '/' . DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file)) {
+					$file = $dirp . '/' . DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file;
+					$url = BASE_URL . DIR_REL . '/' .DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file;
+				}
+			}
+		}
+		
+		if (!isset($file)) {
+			if (file_exists(DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ELEMENTS_MENU . '/' .  $handle . '/' . $_file)) {
+				$file = DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ELEMENTS_MENU . '/' .  $handle . '/' . $_file;
+				$url = ASSETS_URL . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file;
+			}
+		}
+		
+		if (isset($file)) {
+			$obj = new stdClass;
+			$obj->file = $file;
+			$obj->url = $url;
+			return $obj;
+		} else {
+			return false;
+		}
+	}
+}
+
+class ConcreteInterfaceMenuItemController extends Controller {
+	
+	protected $menuItem;
+	protected $headerItemsToCheck = array(
+		'CSS' => 'view.css', 
+		'JAVASCRIPT' => 'view.js'
+	);
+
+	public function setMenuItem($obj) {
+		$this->menuItem = $obj;
+	}
+
+	public function outputAutoHeaderItems() {
+		$h = Loader::helper('html');
+		foreach($this->headerItemsToCheck as $t => $i) {
+			$o = $this->menuItem->getMenuItemFilePath($i);
+			if ($o) {
+				$this->menuItem->getMenuItemFileURL($i);
+				switch($t) {
+					case 'CSS':
+						$this->addHeaderItem($h->css($this->menuItem->getMenuItemFileURL($i)));
+						break;
+					case 'JAVASCRIPT':
+						$this->addHeaderItem($h->javascript($this->menuItem->getMenuItemFileURL($i)));
+						break;
+				}
+			}
+		}
+	}
+	
+	public function displayItem() {
+		return true;
+	}
+	
+	public function getMenuLinkHTML() {
+		$attribs = '';
+		if (is_array($this->menuItem->getLinkAttributes())) {
+			foreach($this->menuItem->getLinkAttributes() as $key => $value) {
+				$attribs .= $key . '="' . $value . '" ';
+			}
+		}
+		$html = '<a id="ccm-page-edit-nav-' . $this->menuItem->getHandle() . '" ' . $attribs . '>' . $this->menuItem->getName() . '</a>';
+		return $html;
+	}
+}

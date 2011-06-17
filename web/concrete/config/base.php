@@ -166,6 +166,7 @@ define('DIRNAME_ELEMENTS', 'elements');
 define('DIRNAME_LANGUAGES', 'languages');
 define('DIRNAME_JOBS', 'jobs');
 define('DIRNAME_DASHBOARD', 'dashboard');
+define('DIRNAME_ELEMENTS_MENU', 'menu');
 define('DIRNAME_DASHBOARD_MODULES', 'modules');
 define('DIRNAME_MAIL_TEMPLATES', 'mail');
 define('DIRNAME_THEMES', 'themes');
@@ -250,6 +251,7 @@ define('FILENAME_ATTRIBUTE_DB', 'db.xml');
 # Elements
 define('DIR_FILES_ELEMENTS', DIR_BASE . '/elements');
 define('DIR_FILES_ELEMENTS_CORE', DIR_BASE_CORE . '/elements');
+define('FILENAME_MENU_ITEM_CONTROLLER', 'controller.php');
 
 # Jobs
 if (!defined('DIR_FILES_JOBS')) {
