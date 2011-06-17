@@ -287,6 +287,7 @@ if (is_object($uo)) {
 				array_unshift($languages, 'en_US');
 				$locales = array();
 				Loader::library('3rdparty/Zend/Locale');
+				$locales[''] = t('** Default');
 				foreach($languages as $lang) {
 					$loc = new Zend_Locale($lang);
 					$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);

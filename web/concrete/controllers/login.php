@@ -31,7 +31,7 @@ class LoginController extends Controller {
 			if (count($languages) > 0) { 
 				array_unshift($languages, 'en_US');
 			}
-			$locales = array();
+			$locales = array('' => t('** Default'));
 			foreach($languages as $lang) {
 				$loc = new Zend_Locale($lang);
 				$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
@@ -219,7 +219,7 @@ class LoginController extends Controller {
 		}
 		
 		if (count($this->locales) > 0) {
-			if (Config::get('LANGUAGE_CHOOSE_ON_LOGIN')) {
+			if (Config::get('LANGUAGE_CHOOSE_ON_LOGIN') && $this->post('USER_LOCALE') != '') {
 				$u->setUserDefaultLanguage($this->post('USER_LOCALE'));
 			}
 		}		

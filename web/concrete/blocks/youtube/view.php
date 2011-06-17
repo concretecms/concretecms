@@ -8,7 +8,7 @@ $vWidth=425;
 $vHeight=344;
 if ($c->isEditMode()) { ?>
 	<div class="ccm-edit-mode-disabled-item" style="width:<?php echo $vWidth; ?>px; height:<?php echo $vHeight; ?>px;">
-		<div style="padding:8px 0px; padding-top: <?php echo round($vHeight/2)-10; ?>px;"><?php echo t('Content disabled in edit mode.'); ?></div>
+		<div style="padding:8px 0px; padding-top: <?php echo round($vHeight/2)-10; ?>px;"><?php echo t('Video disabled in edit mode.'); ?></div>
 	</div>
 	
 <? } else { ?>

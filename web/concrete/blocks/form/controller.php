@@ -614,7 +614,7 @@ class MiniSurvey{
 					} else { */
 						$requiredSymbol=($questionRow['required'])?'&nbsp;<span class="required">*</span>':'';
 						echo '<tr>
-						        <td valign="top" class="question">'.$questionRow['question'].''.$requiredSymbol.'</td>
+						        <td valign="top" class="question"><label for="Question'.intval($questionRow['msqID']).'">'.$questionRow['question'].''.$requiredSymbol.'</label></td>
 						        <td valign="top">'.$this->loadInputType($questionRow,showEdit).'</td>
 						      </tr>';
 					//}
@@ -699,7 +699,7 @@ class MiniSurvey{
 						$checked=($_REQUEST['Question'.$msqID]==trim($option))?'selected="selected':'';
 						$html.= '<option '.$checked.'>'.trim($option).'</option>';
 					}
-					return '<select name="Question'.$msqID.'" >'.$html.'</select>';
+					return '<select name="Question'.$msqID.'" id="Question'.$msqID.'" >'.$html.'</select>';
 								
 				case 'radios':
 					foreach($options as $option){
@@ -710,25 +710,25 @@ class MiniSurvey{
 					return $html;
 					
 				case 'fileupload': 
-					$html='<input type="file" name="Question'.$msqID.'" />'; 				
+					$html='<input type="file" name="Question'.$msqID.'" id="Question'.$msqID.'" />'; 				
 					return $html;
 					
 				case 'text':
 					$val=($_REQUEST['Question'.$msqID])?Loader::helper('text')->entities($_REQUEST['Question'.$msqID]):'';
-					return '<textarea name="Question'.$msqID.'" cols="'.$questionData['width'].'" rows="'.$questionData['height'].'" style="width:95%">'.$val.'</textarea>';
+					return '<textarea name="Question'.$msqID.'" id="Question'.$msqID.'" cols="'.$questionData['width'].'" rows="'.$questionData['height'].'" style="width:95%">'.$val.'</textarea>';
 				case 'url':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
-					return '<input name="Question'.$msqID.'" type="url" value="'.stripslashes(htmlspecialchars($val)).'" />';
+					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="url" value="'.stripslashes(htmlspecialchars($val)).'" />';
 				case 'telephone':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
-					return '<input name="Question'.$msqID.'" type="tel" value="'.stripslashes(htmlspecialchars($val)).'" />';
+					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="tel" value="'.stripslashes(htmlspecialchars($val)).'" />';
 				case 'email':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
-					return '<input name="Question'.$msqID.'" type="email" value="'.stripslashes(htmlspecialchars($val)).'" />';	
+					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="email" value="'.stripslashes(htmlspecialchars($val)).'" />';	
 				case 'field':
 				default:
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
-					return '<input name="Question'.$msqID.'" type="text" value="'.stripslashes(htmlspecialchars($val)).'" />';
+					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="text" value="'.stripslashes(htmlspecialchars($val)).'" />';
 			}
 		}
 		

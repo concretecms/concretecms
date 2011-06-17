@@ -140,19 +140,20 @@ if ($_POST['create']) {
 	if (count($languages) > 0) { ?>
 
 	<tr>
-		<td class="subheader" colspan="2"><?=t('Default Language')?></td>
+		<td class="subheader" colspan="2"><?=t('Language')?></td>
 	</tr>	
 	<tr>
 		<Td colspan="2">
 		<?
 			array_unshift($languages, 'en_US');
 			$locales = array();
+			$locales[''] = t('** Default');
 			Loader::library('3rdparty/Zend/Locale');
 			foreach($languages as $lang) {
 				$loc = new Zend_Locale($lang);
 				$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
 			}
-			print $form->select('uDefaultLanguage', $locales, ACTIVE_LOCALE);
+			print $form->select('uDefaultLanguage', $locales);
 		?>
 		</td>
 	</tr>	

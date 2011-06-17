@@ -108,7 +108,7 @@ ccmBlockTypeSearchResultsSelect = function(which, e) {
 	// this is buggy. needs fixing
 
 	var currPos = currObj.position();
-	var currDialog = currObj.parents('div.ccm-dialog-content');
+	var currDialog = currObj.parents('div.ui-dialog-content');
 	var docViewTop = currDialog.scrollTop();
 	var docViewBottom = docViewTop + currDialog.innerHeight();
 

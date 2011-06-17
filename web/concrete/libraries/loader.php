@@ -465,7 +465,6 @@
 				$controller->setCollectionObject($c);
 			}
 			
-			$controller->setupRestrictedMethods();
 			return $controller;
 		}
 
