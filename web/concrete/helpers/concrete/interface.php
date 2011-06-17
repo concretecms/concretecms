@@ -19,6 +19,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class ConcreteInterfaceHelper {
 
+	static $menuItems = array();
 	
 	/** 
 	 * Generates a submit button in the Concrete style
@@ -111,5 +112,4 @@ class ConcreteInterfaceHelper {
 		return $html;
 	}	
 	
-
 }

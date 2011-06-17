@@ -745,6 +745,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$btc->runTask('on_page_view', array($view));
 					}
 					
+					// do we have any custom menu plugins?
+					$ih = Loader::helper('concrete/interface/menu');
+					$items = $ih->getMenuItems();
+					foreach($items as $im) {
+						$controller = $im->getController();
+						$controller->outputAutoHeaderItems();
+					}
+					
 					// now, we output all the custom style records for the design tab in blocks/areas on the page
 					$c = $this->getCollectionObject();
 					$view->outputCustomStyleHeaderItems(); 				
