@@ -158,6 +158,9 @@
 			$c = Page::getByID($req->getRequestCollectionID(), false);
 		}
 	
+		$req = Request::get();
+		$req->setCurrentPage($c);
+		
 		if ($c->isError()) {
 			// if we've gotten an error getting information about this particular collection
 			// than we load up the Content class, and get prepared to fire away

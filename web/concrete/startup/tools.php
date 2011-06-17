@@ -2,6 +2,7 @@
 	defined('C5_EXECUTE') or die("Access Denied.");
 	
 	$co = Request::get();
+	
 	if ($co->isIncludeRequest()) {
 		switch($co->getIncludeType()) {
 			case "CONCRETE_TOOL":

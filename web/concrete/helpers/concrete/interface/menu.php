@@ -10,11 +10,11 @@ class ConcreteInterfaceMenuHelper {
 	/** 
 	 * Adds a menu item to the header menu area 
 	 * <code>
-	 * 	$bh->addMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkg = false);
+	 * 	$bh->addMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkgHandle = false);
 	 * </code>
 	 */
-	public function addMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkg = false) {
-		$obj = new ConcreteInterfaceHelperMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkg);
+	public function addMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkgHandle = false) {
+		$obj = new ConcreteInterfaceHelperMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkgHandle);
 		$this->menuItems[] = $obj;
 	}
 	
@@ -39,21 +39,22 @@ class ConcreteInterfaceMenuHelper {
 
 class ConcreteInterfaceHelperMenuItem {
 
-	public function __construct($handle, $name, $position, $linkAttributes, $pkg) {
+	public function __construct($handle, $name, $position, $linkAttributes, $pkgHandle = false) {
 		$this->handle = $handle;
 		$this->name = $name;
 		$this->position = $position;
 		$this->linkAttributes = $linkAttributes;
-		$this->pkg = $pkg;
+		$this->pkgHandle = $pkgHandle;
 	}
 	
 	protected $controller;
 	
 	public function getHandle() {return $this->handle;}
 	public function getName() {return $this->name;}
+	public function setName($name) {$this->name = $name;}
 	public function getPosition() {return $this->position;}
 	public function getLinkAttributes() {return $this->linkAttributes;}
-	public function getPackageObject() {return $this->pkg;}
+	public function getPackageObject() {return $this->pkgHandle;}
 	
 	public function getController() {
 		if (isset($this->controller)) {
@@ -62,10 +63,10 @@ class ConcreteInterfaceHelperMenuItem {
 			$class = Object::camelcase($this->handle . 'ConcreteInterfaceMenuItemController');
 			if (!class_exists($class)) {
 				$file1 = DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $this->handle . '/' . FILENAME_MENU_ITEM_CONTROLLER;
-				if (is_object($pkg)) {
-					$pkgHandle = $pkg->getPackageHandle();
+				if ($this->pkgHandle) {
+					$pkgHandle = $this->pkgHandle;
 					$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-					$file2 = $dir . '/' . $pkgHandle . '/' . DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $this->handle . '/' . FILENAME_MENU_ITEM_CONTROLLER;
+					$file2 = $dir . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $this->handle . '/' . FILENAME_MENU_ITEM_CONTROLLER;
 				}
 				$file3 = DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ELEMENTS_MENU . '/' . $this->handle . '/' . FILENAME_MENU_ITEM_CONTROLLER;
 				if (file_exists($file1)) {
@@ -104,12 +105,12 @@ class ConcreteInterfaceHelperMenuItem {
 			$url = BASE_URL . DIR_REL . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file;
 		}
 		
-		if (is_object($this->pkg)) {
+		if ($this->pkgHandle) {
 			if (!isset($file)) {
-				$pkgHandle = $this->pkg->getPackageHandle();
+				$pkgHandle = $this->pkgHandle;
 				$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
-				if (file_exists($dirp . '/' . DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file)) {
-					$file = $dirp . '/' . DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file;
+				if (file_exists($dirp . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file)) {
+					$file = $dirp . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file;
 					$url = BASE_URL . DIR_REL . '/' .DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file;
 				}
 			}

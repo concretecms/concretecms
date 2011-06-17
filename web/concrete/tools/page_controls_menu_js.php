@@ -11,6 +11,8 @@ if ($_REQUEST['cvID'] > 0) {
 	$c = Page::getByID($_REQUEST['cID']);
 }
 $cp = new Permissions($c);
+$req = Request::get();
+$req->setCurrentPage($c);
 
 $valt = Loader::helper('validation/token');
 $sh = Loader::helper('concrete/dashboard/sitemap');

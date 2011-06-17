@@ -2,7 +2,6 @@
 	defined('C5_EXECUTE') or die("Access Denied.");
 	$u = new User();
 	if ($u->isRegistered()) {
-		$sh = Loader::helper('concrete/dashboard/sitemap');
 		$ihm = Loader::helper('concrete/interface/menu');
 		
 		$ihm->addMenuItem('sitemap', t('Sitemap'), 'right', array(
