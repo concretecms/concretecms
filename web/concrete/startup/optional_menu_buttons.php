@@ -4,7 +4,7 @@
 	if ($u->isRegistered()) {
 		$ihm = Loader::helper('concrete/interface/menu');
 		
-		$ihm->addMenuItem('sitemap', t('Sitemap'), 'right', array(
+		$ihm->addPageHeaderMenuItem('sitemap', t('Sitemap'), 'right', array(
 			'dialog-title' => t('Navigate to Page'),
 			'href' => REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector?callback=ccm_goToSitemapNode&sitemap_select_mode=select_page',
 			'dialog-on-open' => "$(\'#ccm-page-edit-nav-sitemap\').removeClass(\'ccm-nav-loading\')",
@@ -13,7 +13,7 @@
 			'dialog-modal' => "false"
 		));
 	
-		$ihm->addMenuItem('filemanager', t('File Manager'), 'right', array(
+		$ihm->addPageHeaderMenuItem('filemanager', t('File Manager'), 'right', array(
 			'dialog-title' => t('Navigate to Page'),
 			'href' => REL_DIR_FILES_TOOLS_REQUIRED . '/files/search_dialog?disable_choose=1',
 			'dialog-on-open' => "$(\'#ccm-page-edit-nav-filemanager\').removeClass(\'ccm-nav-loading\')",
