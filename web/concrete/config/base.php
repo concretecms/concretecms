@@ -166,7 +166,7 @@ define('DIRNAME_ELEMENTS', 'elements');
 define('DIRNAME_LANGUAGES', 'languages');
 define('DIRNAME_JOBS', 'jobs');
 define('DIRNAME_DASHBOARD', 'dashboard');
-define('DIRNAME_ELEMENTS_MENU', 'menu');
+define('DIRNAME_ELEMENTS_HEADER_MENU', 'header_menu');
 define('DIRNAME_DASHBOARD_MODULES', 'modules');
 define('DIRNAME_MAIL_TEMPLATES', 'mail');
 define('DIRNAME_THEMES', 'themes');

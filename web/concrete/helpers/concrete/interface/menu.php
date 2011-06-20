@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class ConcreteInterfaceMenuHelper {
 
-	static $menuItems = array();
+	protected $menuItems = array();
 	
 
 	
@@ -62,13 +62,13 @@ class ConcreteInterfaceHelperMenuItem {
 		} else {
 			$class = Object::camelcase($this->handle . 'ConcreteInterfaceMenuItemController');
 			if (!class_exists($class)) {
-				$file1 = DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $this->handle . '/' . FILENAME_MENU_ITEM_CONTROLLER;
+				$file1 = DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $this->handle . '/' . FILENAME_MENU_ITEM_CONTROLLER;
 				if ($this->pkgHandle) {
 					$pkgHandle = $this->pkgHandle;
 					$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-					$file2 = $dir . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $this->handle . '/' . FILENAME_MENU_ITEM_CONTROLLER;
+					$file2 = $dir . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $this->handle . '/' . FILENAME_MENU_ITEM_CONTROLLER;
 				}
-				$file3 = DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ELEMENTS_MENU . '/' . $this->handle . '/' . FILENAME_MENU_ITEM_CONTROLLER;
+				$file3 = DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $this->handle . '/' . FILENAME_MENU_ITEM_CONTROLLER;
 				if (file_exists($file1)) {
 					include($file1);
 				} else if (isset($file2) && file_exists($file2)) {
@@ -100,26 +100,26 @@ class ConcreteInterfaceHelperMenuItem {
 	
 	protected function mapMenuItemFilePath($_file) {
 		$handle = $this->handle;
-		if (file_exists(DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file)) {
-			$file = DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file;
-			$url = BASE_URL . DIR_REL . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file;
+		if (file_exists(DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file)) {
+			$file = DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file;
+			$url = BASE_URL . DIR_REL . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file;
 		}
 		
 		if ($this->pkgHandle) {
 			if (!isset($file)) {
 				$pkgHandle = $this->pkgHandle;
 				$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
-				if (file_exists($dirp . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file)) {
-					$file = $dirp . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file;
-					$url = BASE_URL . DIR_REL . '/' .DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file;
+				if (file_exists($dirp . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file)) {
+					$file = $dirp . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file;
+					$url = BASE_URL . DIR_REL . '/' .DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file;
 				}
 			}
 		}
 		
 		if (!isset($file)) {
-			if (file_exists(DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ELEMENTS_MENU . '/' .  $handle . '/' . $_file)) {
-				$file = DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ELEMENTS_MENU . '/' .  $handle . '/' . $_file;
-				$url = ASSETS_URL . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_MENU . '/' . $handle . '/' . $_file;
+			if (file_exists(DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' .  $handle . '/' . $_file)) {
+				$file = DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' .  $handle . '/' . $_file;
+				$url = ASSETS_URL . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file;
 			}
 		}
 		
