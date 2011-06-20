@@ -93,7 +93,7 @@ menuHTML += '<div id="ccm-system-nav-wrapper2">';
 menuHTML += '<ul id="ccm-system-nav">';
 
 <?
-$items = $ihm->getMenuItems('right');
+$items = $ihm->getPageHeaderMenuItems('right');
 foreach($items as $ih) {
 	$cnt = $ih->getController(); 
 	if ($cnt->displayItem()) {
@@ -148,7 +148,7 @@ menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?>
  <? } ?>
 
 <?
-$items = $ihm->getMenuItems('left');
+$items = $ihm->getPageHeaderMenuItems('left');
 foreach($items as $ih) {
 	$cnt = $ih->getController(); 
 	if ($cnt->displayItem()) {

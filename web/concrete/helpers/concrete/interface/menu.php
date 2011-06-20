@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class ConcreteInterfaceMenuHelper {
 
-	protected $menuItems = array();
+	protected $pageHeaderMenuItems = array();
 	
 
 	
@@ -13,25 +13,25 @@ class ConcreteInterfaceMenuHelper {
 	 * 	$bh->addMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkgHandle = false);
 	 * </code>
 	 */
-	public function addMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkgHandle = false) {
+	public function addPageHeaderMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkgHandle = false) {
 		$obj = new ConcreteInterfaceHelperMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkgHandle);
-		$this->menuItems[] = $obj;
+		$this->pageHeaderMenuItems[] = $obj;
 	}
 	
 	/** 
 	 * Returns current menu items
 	 */
-	public function getMenuItems($position = false) {
+	public function getPageHeaderMenuItems($position = false) {
 		if ($position) {
 			$tmpItems = array();
-			foreach($this->menuItems as $mi) {
+			foreach($this->pageHeaderMenuItems as $mi) {
 				if ($mi->getPosition() == $position) {
 					$tmpItems[] = $mi;
 				}
 			}
 			return $tmpItems;
 		} else {
-			return $this->menuItems;
+			return $this->pageHeaderMenuItems;
 		}
 	}
 
@@ -148,17 +148,19 @@ class ConcreteInterfaceMenuItemController extends Controller {
 
 	public function outputAutoHeaderItems() {
 		$h = Loader::helper('html');
-		foreach($this->headerItemsToCheck as $t => $i) {
-			$o = $this->menuItem->getMenuItemFilePath($i);
-			if ($o) {
-				$this->menuItem->getMenuItemFileURL($i);
-				switch($t) {
-					case 'CSS':
-						$this->addHeaderItem($h->css($this->menuItem->getMenuItemFileURL($i)));
-						break;
-					case 'JAVASCRIPT':
-						$this->addHeaderItem($h->javascript($this->menuItem->getMenuItemFileURL($i)));
-						break;
+		if ($this->menuItem->getController()->displayItem()) {
+			foreach($this->headerItemsToCheck as $t => $i) {
+				$o = $this->menuItem->getMenuItemFilePath($i);
+				if ($o) {
+					$this->menuItem->getMenuItemFileURL($i);
+					switch($t) {
+						case 'CSS':
+							$this->addHeaderItem($h->css($this->menuItem->getMenuItemFileURL($i)));
+							break;
+						case 'JAVASCRIPT':
+							$this->addHeaderItem($h->javascript($this->menuItem->getMenuItemFileURL($i)));
+							break;
+					}
 				}
 			}
 		}

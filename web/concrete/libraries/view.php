@@ -747,7 +747,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					
 					// do we have any custom menu plugins?
 					$ih = Loader::helper('concrete/interface/menu');
-					$items = $ih->getMenuItems();
+					$items = $ih->getPageHeaderMenuItems();
 					foreach($items as $im) {
 						$controller = $im->getController();
 						$controller->outputAutoHeaderItems();
