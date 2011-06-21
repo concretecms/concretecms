@@ -202,6 +202,7 @@
 			$res = $db->execute($r, $v);
 			
 			$nv = CollectionVersion::get($c, $newVID);
+			Events::fire('on_page_version_add', $c, $nv);
 			$nv->refreshCache();
 			// now we return it
 			return $nv;
