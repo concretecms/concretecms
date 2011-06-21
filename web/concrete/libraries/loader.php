@@ -228,6 +228,8 @@
 			
 			if ($pkgHandle != false) {
 				$class = Object::camelcase($pkgHandle . '_' . $file) . "Helper";
+				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+				require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_HELPERS . '/' . $file . '.php');
 				if (!class_exists($class, false)) {
 					$class = Object::camelcase($file) . "Helper";
 				}
@@ -247,8 +249,7 @@
             	$instance = $instances[$class];
             } else {
 				if ($pkgHandle != false) {
-					$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-					require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_HELPERS . '/' . $file . '.php');
+					// already handled by code above.
 				} else if (file_exists(DIR_HELPERS . '/' . $file . '.php')) {
 					// first we check if there's an object of the SAME kind in the core. If so, then we load the core first, then, we load the second one (site)
 					// and we hope the second one EXTENDS the first
