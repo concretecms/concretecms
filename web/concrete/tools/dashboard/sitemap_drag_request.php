@@ -67,7 +67,12 @@ if (!$error) {
 					break;
 				case "MOVE":
 					if ($dcp->canApproveCollection() && $ocp->canApproveCollection()) {
-						$nc2 = $oc->move($dc);
+						$_SESSION['movePageSaveOldPagePath'] = $_REQUEST['saveOldPagePath'];
+						if ($_REQUEST['saveOldPagePath']) {
+							$nc2 = $oc->move($dc, true);
+						} else {
+							$nc2 = $oc->move($dc);
+						}
 						$successMessage = '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '"';
 					} else {
 						$oc->markPendingAction('MOVE', $dc);
@@ -119,7 +124,10 @@ if ($successMessage) {
 
 		<input type="radio" checked style="vertical-align: middle" id="ctaskMove" name="ctask" value="MOVE" onclick="toggleMove()" />
 		<strong><?=t('Move')?></strong> "<?=$oc->getCollectionName()?>" <?=t('beneath')?> "<?=$dc->getCollectionName()?>"
-		<br/><br/>
+		<div style="margin: 4px 0px 0px 20px">
+		<input type="checkbox" id="saveOldPagePath" name="saveOldPagePath" value="1" style="vertical-align: middle" <? if (isset($_SESSION['movePageSaveOldPagePath']) && $_SESSION['movePageSaveOldPagePath']) { ?> checked="checked" <? } ?> /> <?=t('Save old page path')?>
+		</div>
+		<br/>
 		
 		<? if ($oc->getCollectionPointerID() < 1) { ?>
 		<input type="radio" style="vertical-align: middle" id="ctaskAlias" name="ctask" value="ALIAS" onclick="toggleAlias()" />

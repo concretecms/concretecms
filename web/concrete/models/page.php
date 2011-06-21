@@ -1199,7 +1199,7 @@ $ppWhere = '';
 		}
 	}
 
-	function move($nc) {
+	function move($nc, $retainOldPagePath = false) {
 		$db = Loader::db();
 		$newCParentID = $nc->getCollectionID();
 		$dh = Loader::helper('date');
@@ -1247,7 +1247,7 @@ $ppWhere = '';
 		$ret = Events::fire('on_page_move', $this, $oldParent, $newParent);
 
 		// now that we've moved the collection, we rescan its path
-		$this->rescanCollectionPath();
+		$this->rescanCollectionPath($retainOldPagePath);
 	}
 
 	function duplicateAll($nc, $preserveUserID = false) {
@@ -1518,7 +1518,7 @@ $ppWhere = '';
 		
 	}
 
-	function rescanCollectionPath() {
+	function rescanCollectionPath($retainOldPagePath = false) {
 		if ($this->cParentID > 0) {
 			$db = Loader::db();
 			// first, we grab the path of the parent, if such a thing exists, for our prefix
@@ -1526,7 +1526,7 @@ $ppWhere = '';
 			$cPath = $db->getOne($q);
 
 			// Now we perform the collection path function on the current cID
-			$np = $this->rescanCollectionPathIndividual($this->cID, $cPath);
+			$np = $this->rescanCollectionPathIndividual($this->cID, $cPath, $retainOldPagePath);
 			$this->cPath = $np;
 			
 			// Now we start with the recursive collection path scanning, armed with our prefix (from the level above what we're scanning)
@@ -1572,7 +1572,7 @@ $ppWhere = '';
 		}
 	}
 	
-	function rescanCollectionPathIndividual($cID, $cPath) {
+	function rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath = false) {
 		$db = Loader::db();
 		$q = "select CollectionVersions.cID, CollectionVersions.cvHandle, CollectionVersions.cvID, PagePaths.cID as cpcID from CollectionVersions left join PagePaths on (PagePaths.cID = CollectionVersions.cID) where CollectionVersions.cID = '{$cID}' and CollectionVersions.cvIsApproved = 1";
 		$r = $db->query($q);
@@ -1601,7 +1601,11 @@ $ppWhere = '';
 			}
 
 			if ($row['cpcID']) {
-				$db->query('delete from PagePaths where ppIsCanonical = 1 and cID = ?', array($row['cpcID']));	
+				if ($retainOldPagePath) {
+					$db->query("update PagePaths set ppIsCanonical = 0 where cID = {$cID}");
+				} else {
+					$db->query('delete from PagePaths where ppIsCanonical = 1 and cID = ?', array($row['cpcID']));
+				}
 			}
 
 			// Check to see if a non-canonical page path already exists for the new location.
