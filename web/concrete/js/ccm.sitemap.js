@@ -445,7 +445,7 @@ moveCopyAliasNode = function(reloadPage) {
 	var display_mode = $("input[name=display_mode]").val();
 	var select_mode = $("input[name=select_mode]").val();
 	var copyAll = $("input[name=copyAll]:checked").val();
-	
+	var saveOldPagePath = $("input[name=saveOldPagePath]:checked").val();
 	// DO THE DEED
 
 	params = {
@@ -454,7 +454,8 @@ moveCopyAliasNode = function(reloadPage) {
 		'destCID': destCID,
 		'ctask': ctask,
 		'ccm_token': CCM_SECURITY_TOKEN,
-		'copyAll': copyAll		
+		'copyAll': copyAll,
+		'saveOldPagePath': saveOldPagePath
 	};
 
 	jQuery.fn.dialog.showLoader();
@@ -600,6 +601,7 @@ toggleMove = function() {
 	if ($("#copyThisPage").get(0)) {
 		$("#copyThisPage").get(0).disabled = true;
 		$("#copyChildren").get(0).disabled = true;
+		$("#saveOldPagePath").attr('disabled', false);
 	}
 }
 
@@ -607,6 +609,8 @@ toggleAlias = function() {
 	if ($("#copyThisPage").get(0)) {
 		$("#copyThisPage").get(0).disabled = true;
 		$("#copyChildren").get(0).disabled = true;
+		$("#saveOldPagePath").attr('checked', false);
+		$("#saveOldPagePath").attr('disabled', 'disabled');
 	}
 }
 
@@ -615,6 +619,8 @@ toggleCopy = function() {
 		$("#copyThisPage").get(0).disabled = false;
 		$("#copyThisPage").get(0).checked = true;
 		$("#copyChildren").get(0).disabled = false;
+		$("#saveOldPagePath").attr('checked', false);
+		$("#saveOldPagePath").attr('disabled', 'disabled');
 	}
 }
 

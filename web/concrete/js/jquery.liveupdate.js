@@ -5,6 +5,7 @@
 (function($) {  
 	var self = null;
  	var lutype = 'blocktypes';
+ 	var searchValue = null;
  	
 	$.fn.liveUpdate = function(list, type) {	
 		return this.each(function() {
@@ -35,16 +36,20 @@
 		},
 		
 		filter: function() {
-			if ($.trim(this.field.val()) == '') { 
-				if (this.lutype == 'blocktypes') {
-					this.list.children('li').addClass('ccm-block-type-available'); 
-					this.list.children('li').removeClass('ccm-block-type-selected'); 
-				} else {
-					this.list.children('li').show();
+			if (this.field.val() != searchValue) {
+				if ($.trim(this.field.val()) == '') { 
+					if (this.lutype == 'blocktypes') {
+						this.list.children('li').addClass('ccm-block-type-available'); 
+						this.list.children('li').removeClass('ccm-block-type-selected'); 
+					} else {
+						this.list.children('li').show();
+					}
+					return; 
 				}
-				return; 
+				this.displayResults(this.getScores(this.field.val().toLowerCase()));
 			}
-			this.displayResults(this.getScores(this.field.val().toLowerCase()));
+			searchValue = this.field.val();
+
 		},
 		
 		setupCache: function() {

@@ -78,9 +78,11 @@ ccmBlockTypeSearchClear = function() {
 
 var ccmLiveSearchActive = false;
 ccmBlockTypeSearchResultsSelect = function(which, e) {
+
 	e.preventDefault();
 	e.stopPropagation();
-	$("input[name=ccmBlockTypeSearch]").blur();
+//	$("input[name=ccmBlockTypeSearch]").blur();
+
 	// find the currently selected item
 	var obj = $("li.ccm-block-type-selected");
 	var foundblock = false;
@@ -164,6 +166,8 @@ $(function() {
 	$(window).css('overflow', 'hidden');
 	$(window).unbind('keydown.blocktypes');
 	ccmBlockTypeMapKeys();
+	$("#ccmBlockTypeSearch").get(0).focus();
+
 });
 
 </script>
