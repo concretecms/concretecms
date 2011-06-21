@@ -70,6 +70,24 @@ class FormUserSelectorHelper {
 		return $html;
 	}
 	
+	public function quickSelect($key, $val = false, $args = array()) {
+		$form = Loader::helper('form');
+		$valt = Loader::helper('validation/token');
+		$token = $valt->generate('quick_user_select_' . $key);
+		$html .= "
+		<style type=\"text/css\">
+		ul.ui-autocomplete {position:absolute; list-style:none; }
+		ul.ui-autocomplete li.ui-menu-item { margin-left:0; padding:2px;}
+		</style>
+		<script type=\"text/javascript\">
+		$(document).ready(function () {
+			$('#".$key."').autocomplete({source: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/users/autocomplete?key=" . $key . "&token=" . $token . "'});
+		} );
+		</script>";
+		$html .= '<span class="ccm-quick-user-selector">'.$form->text($key,$val, $args).'</span>';
+		return $html;
+	}
+	
 	public function selectMultipleUsers($fieldName) {
 		
 		$html = '';
