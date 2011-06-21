@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class ConcreteInterfaceMenuHelper {
 
-	static $menuItems = array();
+	public $menuItems = array();
 	
 
 	
