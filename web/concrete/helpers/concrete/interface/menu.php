@@ -5,8 +5,6 @@ class ConcreteInterfaceMenuHelper {
 
 	protected $pageHeaderMenuItems = array();
 	
-
-	
 	/** 
 	 * Adds a menu item to the header menu area 
 	 * <code>
