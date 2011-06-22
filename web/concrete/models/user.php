@@ -158,7 +158,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$this->uID = $_SESSION['uID'];
 					$this->uName = $_SESSION['uName'];
 					$this->uTimezone = $_SESSION['uTimezone'];
-					$this->uDefaultLanguage = $_SESSION['uDefaultLanguage'];
+					if (isset($_SESSION['uDefaultLanguage'])) {
+						$this->uDefaultLanguage = $_SESSION['uDefaultLanguage'];
+					}
 					$this->superUser = ($_SESSION['uID'] == USER_SUPER_ID) ? true : false;
 				} else {
 					$this->uID = null;
