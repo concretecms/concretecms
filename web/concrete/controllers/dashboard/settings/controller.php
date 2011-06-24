@@ -717,7 +717,7 @@ class DashboardSettingsController extends Controller {
 		$this->set('subnav', $subnav);
 	}
 	
-	protected function set_permissions($saved = false) {
+	public function set_permissions($saved = false) {
 		//IP Address Blacklist
 		Loader::model('user_banned_ip');
 		$ip_ban_enable_lock_ip_after 	= Config::get('IP_BAN_LOCK_IP_ENABLE');
