@@ -449,7 +449,7 @@ class Package extends Object {
 	/**
 	 * @return Package
 	 */
-	protected function install() {
+	public function install() {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
 		$v = array($this->getPackageName(), $this->getPackageDescription(), $this->getPackageVersion(), $this->getPackageHandle(), 1, $dh->getSystemDateTime());
