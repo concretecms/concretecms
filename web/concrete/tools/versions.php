@@ -395,7 +395,7 @@ $("input[name=vRemove]").click(function() {
 	?> 
 	<tr id="ccm-version-row<?=$v->getVersionID()?>" class="<?=$class?>">
 		<td><input type="checkbox" <? if ($vIsPending) { ?> class="cb-version-pending"<? } else if ($v->isApproved()) { ?> class="cb-version-active"<? } else { ?> class="cb-version-old" <? } ?> id="cb<?=$v->getVersionID()?>" name="vID[]" value="<?=$v->getVersionID()?>" /></td>
-		<td><a dialog-width="85%" dialog-height="80%" title="<?=t('Compare Versions')?>" class="ccm-version" dialog-modal="false" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&cvID=<?=$v->getVersionID()?>&vtask=view_version"><?=$v->getVersionName()?></a></td>
+		<td><a dialog-width="85%" dialog-height="80%" title="<?=t('Compare Versions')?>" class="ccm-version" dialog-title="<?=t('Compare Versions')?>" dialog-modal="false" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&cvID=<?=$v->getVersionID()?>&vtask=view_version"><?=$v->getVersionName()?></a></td>
 		<td><?=$v->getVersionComments()?></td>
 		<td><?
 			print $v->getVersionAuthorUserName();
