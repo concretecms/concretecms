@@ -277,7 +277,6 @@ define('THEMES_THUMBNAIL_HEIGHT', 90);
 define('DIR_LANGUAGES', DIR_BASE . '/' . DIRNAME_LANGUAGES);
 define('DIR_LANGUAGES_CORE', DIR_BASE_CORE . '/' . DIRNAME_LANGUAGES);
 
-
 # Mail templates are just another kind of element, but with some special properties
 define('DIR_FILES_EMAIL_TEMPLATES', DIR_BASE . '/mail');
 define('DIR_FILES_EMAIL_TEMPLATES_CORE', DIR_BASE_CORE . '/mail');

@@ -547,6 +547,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			 
 		$this->refreshCache();
 	} 
+
+	function getCollectionTypeID() {
+		return false;
+	}
 	
 	
 	public function rescanDisplayOrder($areaName) {

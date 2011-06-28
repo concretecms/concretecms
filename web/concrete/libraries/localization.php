@@ -2,31 +2,57 @@
 	
 	class Localization {
 	
-		public function init() {Localization::getTranslate();}
+		public function init() {
+			$loc = self::getInstance();
+			$loc->getTranslate();
+		}
 		
-		public function getTranslate() {
+		public static function getInstance() {
+			static $loc;
+			if (!isset($loc)) {			
+				$loc = new Localization();
+			}
+			return $loc;
+		}
+
+		protected $translate;
+
+		public function __construct() {
 			if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != 'en_US') {
-				static $translate;
-				if (!isset($translate)) {
-					Loader::library('3rdparty/Zend/Translate');
-					$cache = Cache::getLibrary();
-					if (is_object($cache)) {
-						Zend_Translate::setCache($cache);
-					}
-					if (ACTIVE_LOCALE != 'en_US') {
-						if (is_dir(DIR_BASE . '/languages/' . ACTIVE_LOCALE)) {
-							$translate = new Zend_Translate('gettext', DIR_BASE . '/languages/' . ACTIVE_LOCALE, ACTIVE_LOCALE);
-						}
-					}
-					
-					if (!isset($translate)) {
-						$translate = false;
+				Loader::library('3rdparty/Zend/Translate');
+				$cache = Cache::getLibrary();
+				if (is_object($cache)) {
+					Zend_Translate::setCache($cache);
+				}
+				if (ACTIVE_LOCALE != 'en_US') {
+					if (is_dir(DIR_BASE . '/languages/' . ACTIVE_LOCALE)) {
+						$this->translate = new Zend_Translate('gettext', DIR_BASE . '/languages/' . ACTIVE_LOCALE, ACTIVE_LOCALE);
 					}
 				}
-				return $translate;
 			}
 		}
-	
+
+		public function getActiveTranslateObject() {
+			return $this->translate;
+		}
+
+		public function addSiteInterfaceLanguage($language) {
+			if (is_object($this->translate)) {
+				$this->translate->addTranslation(MULTILINGUAL_DIR_LANGUAGES_SITE_INTERFACE . '/' . $language . '.mo', $language);
+			} else {
+				Loader::library('3rdparty/Zend/Translate');
+				$cache = Cache::getLibrary();
+				if (is_object($cache)) {
+					Zend_Translate::setCache($cache);
+				}
+				$this->translate = new Zend_Translate('gettext', MULTILINGUAL_DIR_LANGUAGES_SITE_INTERFACE . '/' . $language . '.mo', $language);
+			}
+		}
+		
+		public static function getTranslate() {
+			$loc = self::getInstance();
+			return $loc->getActiveTranslateObject();
+		}
 	
 		public static function getAvailableInterfaceLanguages() {
 			$languages = array();
@@ -39,7 +65,14 @@
 				$languages = array_merge($languages, $fh->getDirectoryContents(DIR_LANGUAGES_CORE));
 			}
 			
-			return $languages;
+			$langtmp = array();
+			foreach($languages as $lang) {
+				if ($lang != DIRNAME_LANGUAGES_SITE_INTERFACE) {
+					$langtmp[] = $lang;
+				}
+			}
+			
+			return $langtmp;
 		}
 	
 
