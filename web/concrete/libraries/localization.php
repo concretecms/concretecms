@@ -38,14 +38,14 @@
 
 		public function addSiteInterfaceLanguage($language) {
 			if (is_object($this->translate)) {
-				$this->translate->addTranslation(MULTILINGUAL_DIR_LANGUAGES_SITE_INTERFACE . '/' . $language . '.mo', $language);
+				$this->translate->addTranslation(DIR_LANGUAGES_SITE_INTERFACE . '/' . $language . '.mo', $language);
 			} else {
 				Loader::library('3rdparty/Zend/Translate');
 				$cache = Cache::getLibrary();
 				if (is_object($cache)) {
 					Zend_Translate::setCache($cache);
 				}
-				$this->translate = new Zend_Translate('gettext', MULTILINGUAL_DIR_LANGUAGES_SITE_INTERFACE . '/' . $language . '.mo', $language);
+				$this->translate = new Zend_Translate('gettext', DIR_LANGUAGES_SITE_INTERFACE . '/' . $language . '.mo', $language);
 			}
 		}
 		
