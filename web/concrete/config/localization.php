@@ -19,8 +19,14 @@ if (strpos(ACTIVE_LOCALE, '_') > -1) {
 	}
 }
 
-if (!defined('MULTILINGUAL_DIR_LANGUAGES_SITE_INTERFACE')) {
-	define('MULTILINGUAL_DIR_LANGUAGES_SITE_INTERFACE', DIR_LANGUAGES . '/site');
+define('DIRNAME_LANGUAGES_SITE_INTERFACE', 'site');
+
+if (!defined('DIR_LANGUAGES_SITE_INTERFACE')) {
+	define('DIR_LANGUAGES_SITE_INTERFACE', DIR_LANGUAGES . '/' . DIRNAME_LANGUAGES_SITE_INTERFACE);
+}
+
+if (!defined('REL_DIR_LANGUAGES_SITE_INTERFACE')) {
+	define('REL_DIR_LANGUAGES_SITE_INTERFACE', DIR_REL . '/' . DIRNAME_LANGUAGES . '/' . DIRNAME_LANGUAGES_SITE_INTERFACE);
 }
 
 if (!defined("LANGUAGE")) {
@@ -103,7 +109,6 @@ if (!defined('DATE_APP_SURVEY_RESULTS')) {
 if (!defined('DATE_FORM_HELPER_FORMAT_HOUR')) {
 	define('DATE_FORM_HELPER_FORMAT_HOUR', '12'); // can be 12 or 24
 }
-define('DIRNAME_LANGUAGES_SITE_INTERFACE', 'site');
 define('BLOCK_NOT_AVAILABLE_TEXT', t('This block is no longer available.'));
 define('GUEST_GROUP_NAME', t('Guest'));
 define('REGISTERED_GROUP_NAME', t('Registered Users'));
