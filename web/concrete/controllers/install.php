@@ -81,11 +81,11 @@ class InstallController extends Controller {
 		
 		
 		$sql = file_get_contents($installDirectory . '/install/schema.sql');
-		$schema = explode("\n\n", $sql);
+		$schema = explode("\r\n\r\n", $sql);
 		
 		$sql = file_get_contents($contentfile);
 		$sql = str_replace('{[CCM:SITE]}', addslashes($_POST['SITE']), $sql);
-		$statements = explode("\n\n", $sql);
+		$statements = explode("\r\n\r\n", $sql);
 
 		$statements = array_merge($schema, $statements);
 		
