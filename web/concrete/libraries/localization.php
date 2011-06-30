@@ -45,7 +45,7 @@
 				if (is_object($cache)) {
 					Zend_Translate::setCache($cache);
 				}
-				$this->translate = new Zend_Translate('gettext', DIR_LANGUAGES_SITE_INTERFACE . '/' . $language . '.mo', $language);
+				$this->translate = new Zend_Translate(array('adapter' => 'gettext', 'content' => DIR_LANGUAGES_SITE_INTERFACE . '/' . $language . '.mo', 'locale' => $language, 'disableNotices' => true));
 			}
 		}
 		
