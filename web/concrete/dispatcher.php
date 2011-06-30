@@ -137,10 +137,10 @@
 	require(dirname(__FILE__) . '/startup/optional_menu_buttons.php');
 
 	# site events - we have to include before tools
-	if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true) {
+	if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true &&  file_exists(DIR_CONFIG_SITE . '/site_events.php')) {
 		@include(DIR_CONFIG_SITE . '/site_events.php');
-	}	
-	
+	}
+
 	// Now we check to see if we're including CSS, Javascript, etc...
 	// Include Tools. Format: index.php?task=include_frontend&fType=TOOL&filename=test.php
 	require(dirname(__FILE__) . '/startup/tools.php');
