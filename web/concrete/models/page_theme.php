@@ -576,8 +576,8 @@ class PageTheme extends Object {
 		$res->ptDescription = t('(No Description)');
 		if (file_exists($dir . '/' . FILENAME_THEMES_DESCRIPTION)) {
 			$con = file($dir . '/' . FILENAME_THEMES_DESCRIPTION);
-			$res->ptName = $con[0];
-			$res->ptDescription = $con[1];	
+			$res->ptName = trim($con[0]);
+			$res->ptDescription = trim($con[1]);	
 		}
 		return $res;
 	}
