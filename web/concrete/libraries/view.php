@@ -747,11 +747,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					
 					// do we have any custom menu plugins?
 					$ih = Loader::helper('concrete/interface/menu');
-					$items = $ih->getPageHeaderMenuItems();
-					foreach($items as $im) {
-						$controller = $im->getController();
-						$controller->outputAutoHeaderItems();
+					$_interfaceItems = $ih->getPageHeaderMenuItems();
+					foreach($_interfaceItems as $_im) {
+						$_controller = $_im->getController();
+						$_controller->outputAutoHeaderItems();
 					}
+					unset($_interfaceItems);
+					unset($_im);
+					unset($_controller);
+					
 					
 					// now, we output all the custom style records for the design tab in blocks/areas on the page
 					$c = $this->getCollectionObject();
