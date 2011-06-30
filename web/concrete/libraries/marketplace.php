@@ -77,23 +77,19 @@ class Marketplace {
 	public static function downloadRemoteFile($file) {
 		$fh = Loader::helper('file');
 		$file .= '?csiURL=' . urlencode(BASE_URL . DIR_REL);
-		$pkg = $fh->getContents($file);
-		if (empty($pkg)) {
-			return Package::E_PACKAGE_DOWNLOAD;
-		}
 
-		$file = time();
+		$ftime = time();
 		// Use the same method as the Archive library to build a temporary file name.
-		$tmpFile = $fh->getTemporaryDirectory() . '/' . $file . '.zip';
-		$fp = fopen($tmpFile, "wb");
-		if ($fp) {
-			fwrite($fp, $pkg);
-			fclose($fp);
-		} else {
-			return Package::E_PACKAGE_SAVE;
+		$tmpFile = $fh->getTemporaryDirectory() . '/' . $ftime . '.zip';
+
+		if(copy($file, $tmpFile)) {
+
+		    return $ftime;
 		}
-		
-		return $file;
+		else {
+
+		    return Package::E_PACKAGE_DOWNLOAD;
+		}
 	}
 	
 	public function getMarketplaceFrame($width = '100%', $height = '530', $completeURL = false) {
