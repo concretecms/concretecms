@@ -1,5 +1,3 @@
-
-
 CREATE TABLE AreaGroupBlockTypes (
 cID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 arHandle                 VARCHAR(255) NOT NULL,
