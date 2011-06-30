@@ -39,9 +39,11 @@ class FileHelper {
 		$aDir = array();
 		if (is_dir($dir)) {
 			$handle = opendir($dir);
-			while(($file = readdir($handle)) !== false) {
-				if (substr($file, 0, 1) != '.' && (!in_array($file, $this->ignoreFiles))) {
-					$aDir[] = $file;
+			if($handle) {
+				while(($file = readdir($handle)) !== false) {
+					if (substr($file, 0, 1) != '.' && (!in_array($file, $this->ignoreFiles))) {
+						$aDir[] = $file;
+					}
 				}
 			}
 		}
