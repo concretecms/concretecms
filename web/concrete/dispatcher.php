@@ -255,7 +255,7 @@
 		}
 		
 		## Fire the on_page_view Event
-		Events::fire('on_page_view', $c, $u;
+		Events::fire('on_page_view', $c, $u);
 		
 		## now we display (provided we've gotten this far)
 	
