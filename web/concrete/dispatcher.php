@@ -249,10 +249,13 @@
 		require(dirname(__FILE__) . '/startup/process.php');
 
 		## Record the view
+		$u = new User();
 		if (STATISTICS_TRACK_PAGE_VIEWS == 1) {
-			$u = new User();
 			$u->recordView($c);
 		}
+		
+		## Fire the on_page_view Event
+		Events::fire('on_page_view', $c, $u);
 		
 		## now we display (provided we've gotten this far)
 	
