@@ -172,7 +172,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				
 				if (is_object($ui) && !in_array(self::ADD_OPTIONS_SKIP_CALLBACK,$options)) {
 					// run any internal event we have for user add
-					Events::fire('on_user_add', $ui);
+					Events::fire('on_user_add', $ui, $data['uPassword']);
 				}
 				
 				return $ui;
