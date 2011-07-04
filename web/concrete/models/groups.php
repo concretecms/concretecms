@@ -522,6 +522,10 @@
 				$v = array($gName, $gDescription, $this->gID);
 				$r = $db->prepare("update Groups set gName = ?, gDescription = ? where gID = ?");
 				$res = $db->Execute($r, $v);
+				$group = Group::getByID($this->gID);
+		        Events::fire('on_group_update', $this);
+        		
+        		return $group;
 			}
 		}
 		
@@ -533,6 +537,7 @@
 			
 			if ($res) {
 				$ng = Group::getByID($db->Insert_ID());
+				Events::fire('on_group_add', $ng);
 				return $ng;
 			}
 		}
