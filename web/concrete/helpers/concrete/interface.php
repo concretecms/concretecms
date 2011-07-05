@@ -79,7 +79,6 @@ class ConcreteInterfaceHelper {
 	 * @return string
 	 */
 	public function button_js($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = array()) {
-		$href = 'javascript:void(0)';
 		if ($buttonAlign == 'right') {
 			$innerClass .= ' ccm-button-v2-right';
 		} else if ($buttonAlign == 'left') {
