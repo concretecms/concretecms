@@ -22,8 +22,8 @@
 		
 		<div id="headerNav">
 			<?
-			$a = new Area('Header Nav');
-			$a->display($c);
+			$a = new GlobalArea('Header Nav');
+			$a->display();
 			?>
 		</div>
 		
