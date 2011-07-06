@@ -55,11 +55,11 @@ ccm_activateSite = function() {
 
 ccm_addHeaderItem = function(item, type) {
 	if (type == 'CSS') {
-		if (!($('head').children('link[href*=' + item + ']').length)) {
+		if (!($('head').children('link[href*="' + item + '"]').length)) {
 			$('head').append('<link rel="stylesheet" type="text/css" href="' + item + '?ts=' + new Date().getTime() + '" />');
 		}
 	} else if (type == 'JAVASCRIPT') {
-		if (!($('head').children('script[src*=' + item + ']').length)) {
+		if (!($('head').children('script[src*="' + item + '"]').length)) {
 			$('head').append('<script type="text/javascript" src="' + item + '?ts=' + new Date().getTime() + '"></script>');
 		}
 
