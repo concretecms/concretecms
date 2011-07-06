@@ -70,7 +70,7 @@ class CollectionAttributeKey extends AttributeKey {
 	}
 	
 	public static function getByID($akID) {
-		$cak = Cache::get('attribute_key', $akID);
+		$cak = Cache::get('collection_attribute_key', $akID);
 		if (is_object($cak)) {
 			return $cak;
 		}
@@ -78,7 +78,7 @@ class CollectionAttributeKey extends AttributeKey {
 		$ak = new CollectionAttributeKey();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
-			Cache::set('attribute_key', $akID, $ak);
+			Cache::set('collection_attribute_key', $akID, $ak);
 			return $ak;	
 		}
 	}
