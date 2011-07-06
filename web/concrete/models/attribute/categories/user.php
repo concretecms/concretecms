@@ -48,7 +48,7 @@ class UserAttributeKey extends AttributeKey {
 	}
 	
 	public static function getByID($akID) {
-		$ak = Cache::get('attribute_key', $akID);
+		$ak = Cache::get('user_attribute_key', $akID);
 		if (is_object($ak)) {
 			return $ak;
 		}
@@ -56,7 +56,7 @@ class UserAttributeKey extends AttributeKey {
 		$ak = new UserAttributeKey();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
-			Cache::set('attribute_key', $akID, $ak);
+			Cache::set('user_attribute_key', $akID, $ak);
 			return $ak;	
 		}
 	}
