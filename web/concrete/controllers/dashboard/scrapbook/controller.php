@@ -112,7 +112,8 @@ class DashboardScrapbookController extends Controller {
 				$block->updateBlockName( $_POST['bName'], 1 );
 			}
 		} 
-		$this->view();	
+		header('Location: ' . View::url('/dashboard/scrapbook', 'view') . '?scrapbookName=' . $scrapbookName);
+		exit;
 	}
 	
 	public function rename_scrapbook(){
