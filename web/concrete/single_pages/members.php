@@ -1,14 +1,14 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div id="ccm-profile-wrapper">
 	<form method="get" action="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>">
-			Search  		
+			<?php echo t('Search');?>  		
 			<input type="hidden" name="cID" value="<?=$c->getCollectionID()?>" />
 			<input name="keywords" type="text" value="<?=$keywords?>" size="20" />		
 			<input name="submit" type="submit" value="<?=t('Search')?>" />	
 
 	</form>
 	
-	<h1>Members</h1> 	
+	<h1><?php echo t('Members');?></h1> 	
 	
 	<? if ($userList->getTotal() == 0) { ?>
 	
