@@ -29,18 +29,20 @@ class DashboardComposerWriteController extends Controller {
 					$this->error->add(t('You must provide a name for your page before you can publish it.'));
 				}
 				
-				if ($ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE' || $ct->getCollectionTypeComposerPublishMethod() == 'PAGE_TYPE') { 
-					$parent = Page::getByID($entry->getComposerDraftPublishParentID());
-					if (!is_object($parent) || $parent->isError()) {
-						$this->error->add(t('Invalid parent page.'));
-					} else {
-						$cp = new Permissions($parent);
-						if (!$cp->canAddSubCollection($ct)) {
-							$this->error->add(t('You do not have permissions to add this page type in that location.'));
+				if ($entry->isComposerDraft()) { 
+					if ($ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE' || $ct->getCollectionTypeComposerPublishMethod() == 'PAGE_TYPE') { 
+						$parent = Page::getByID($entry->getComposerDraftPublishParentID());
+						if (!is_object($parent) || $parent->isError()) {
+							$this->error->add(t('Invalid parent page.'));
+						} else {
+							$cp = new Permissions($parent);
+							if (!$cp->canAddSubCollection($ct)) {
+								$this->error->add(t('You do not have permissions to add this page type in that location.'));
+							}
 						}
+					} else if ($ct->getCollectionTypeComposerPublishMethod() == 'PARENT') {
+						$parent = Page::getByID($ct->getCollectionTypeComposerPublishPageParentID());
 					}
-				} else if ($ct->getCollectionTypeComposerPublishMethod() == 'PARENT') {
-					$parent = Page::getByID($ct->getCollectionTypeComposerPublishPageParentID());
 				}
 			} else if ($this->post('ccm-submit-discard') && !$this->error->has()) {
 				if ($entry->isComposerDraft()) {
@@ -64,10 +66,12 @@ class DashboardComposerWriteController extends Controller {
 				$entry->update($data);
 				$this->saveData($entry);
 				if ($this->post('ccm-submit-publish')) {
-					$entry->move($parent);
 					$v = CollectionVersion::get($entry, 'RECENT');
 					$v->approve();
-					$entry->markComposerPageAsPublished();
+					if ($entry->isComposerDraft()) { 
+						$entry->move($parent);
+						$entry->markComposerPageAsPublished();
+					}
 					$this->redirect('?cID=' . $entry->getCollectionID());
 				} else if ($this->post('autosave')) { 
 					// this is done by javascript. we refresh silently and send a json success back
