@@ -62,7 +62,7 @@ class Request {
 	 */
 	public static function get() {
 		static $req;
-		if (!isset($req)) {			
+		if (!isset($req) || defined('C5_UNIT_TESTING')) {			
 			$path = false;
 			if (defined('SERVER_PATH_VARIABLE')) {
 				$path = Request::parsePathFromRequest(SERVER_PATH_VARIABLE);
