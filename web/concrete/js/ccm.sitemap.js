@@ -737,7 +737,7 @@ ccm_sitemapSetupSearch = function(instance_id) {
 ccm_sitemapSearchSetupCheckboxes = function(instance_id) {
 	$("#ccm-" + instance_id + "-list-cb-all").click(function(e) {
 		e.stopPropagation();
-		if ($(this).attr('checked') == true) {
+		if ($(this).prop('checked') == true) {
 			$('.ccm-list-record td.ccm-' + instance_id + '-list-cb input[type=checkbox]').attr('checked', true);
 			$("#ccm-" + instance_id + "-list-multiple-operations").attr('disabled', false);
 		} else {
