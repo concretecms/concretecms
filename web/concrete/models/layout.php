@@ -260,7 +260,8 @@
 		if(!intval($rows)) $rows=1;
 		if(!intval($columns)) $columns=3;
 		$layoutNameClass = 'ccm-layout-name-'.TextHelper::camelcase($this->getAreaHandle()).'-'.TextHelper::camelcase($this->getLayoutNameTxt()).'-'.$this->getAreaNameNumber();
-		echo '<div id="ccm-layout-'.$this->layoutID.'" class="ccm-layout ccm-layout-table  '.$layoutNameClass.' '.$editMode.'">';
+		$layoutIDVal = strtolower('ccm-layout-'.TextHelper::camelcase($this->getAreaHandle()).'-'.$this->layoutID . '-'. $this->getAreaNameNumber());
+		echo '<div id="'.$layoutIDVal.'" class="ccm-layout ccm-layout-table  '.$layoutNameClass.' '.$editMode.'">';
 		for( $i=0; $i<$rows; $i++ ){
 			echo '<div class="ccm-layout-row ccm-layout-row-'.($i+1).'">';
 				$cumulativeWidth=0;
