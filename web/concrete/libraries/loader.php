@@ -117,16 +117,24 @@
 			}
 		}
 
-		public function tool($file, $args = null) {
-			if (is_array($args)) {
-				extract($args);
-			}
-			if (file_exists(DIR_FILES_TOOLS . '/' . $file . '.php')) {
-				include(DIR_FILES_TOOLS . '/' . $file . '.php');
-			} else if (file_exists(DIR_FILES_TOOLS_REQUIRED . '/' . $file . '.php')) {
-				include(DIR_FILES_TOOLS_REQUIRED . '/' . $file . '.php');
-			}
-		}
+             /**
+             * Loads a tool file from c5 or site
+             * checks if its in the packages folder first.
+             */
+               public function tool($file, $args = null, $pkgHandle= null) {
+                   if (is_array($args)) {
+                       extract($args);
+                   }
+                   if($pkgHandle&& file_exists(DIR_PACKAGES . '/' .$pkgHandle.'/'.DIRNAME_TOOLS.'/'. $file . '.php')){
+                        include(DIR_PACKAGES . '/' .$pkgHandle.'/'.DIRNAME_TOOLS.'/'. $file . '.php');
+                   }else{
+                        if (file_exists(DIR_FILES_TOOLS . '/' . $file . '.php')) {
+                            include(DIR_FILES_TOOLS . '/' . $file . '.php');
+                        } else if (file_exists(DIR_FILES_TOOLS_REQUIRED . '/' . $file . '.php')) {
+                            include(DIR_FILES_TOOLS_REQUIRED . '/' . $file . '.php');
+                        }
+                    }
+                }
 
 		/** 
 		 * Loads a block's controller/class into memory. 
