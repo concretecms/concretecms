@@ -375,7 +375,7 @@
 						//see above
 					}elseif( $cvalID ){
 						//get the cval of the record that corresponds to this version & area 
-						$vals = array( $nvc->getCollectionID(), $nvc->getVersionID(), $_GET['arHandle'], intval($_REQUEST['layoutID']) );
+						$vals = array( $nvc->getCollectionID(), $nvc->getVersionID(), $_GET['arHandle'], intval($originalLayoutID) );
 						$cvalID = intval($db->getOne('SELECT cvalID FROM CollectionVersionAreaLayouts WHERE cID=? AND cvID=? AND arHandle=? AND layoutID=? ',$vals));	
 						if($updateLayoutId) $nvc->updateAreaLayoutId( $cvalID, $layout->layoutID);  
 					}else{  
