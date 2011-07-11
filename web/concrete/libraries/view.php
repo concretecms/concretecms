@@ -792,7 +792,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$pageContent = ob_get_contents();
 					ob_end_clean();
 					
-					print $pageContent;
+					$ret = Events::fire('on_page_output', $pageContent);
+					if($ret != '') {
+						print $ret;
+					} else {
+						print $pageContent;
+					}
 					
 					if ($view instanceof Page) {
 						if ($view->supportsPageCache($_pageBlocks, $this->controller)) {
