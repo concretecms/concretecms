@@ -39,12 +39,24 @@ class Request {
 		if (!$path) {
 			return false;
 		}
-		$replace[] = DIR_REL . '/' . DISPATCHER_FILENAME;
+		
+		// if the path starts off with dir_rel, we remove it:
+		
 		if (DIR_REL != '') {
-			$replace[] = DIR_REL . '/';
+			$dr = trim(DIR_REL, '/');
+			$path = trim($path, '/');
+			if (strpos($path, $dr) === 0) {
+				$path = substr($path, strlen($dr));	
+			}
 		}
-		$path = str_replace($replace, '', $path);
+		
 		$path = trim($path, '/');
+		if (strpos($path, DISPATCHER_FILENAME) === 0) {
+			$path = substr($path, strlen(DISPATCHER_FILENAME));	
+		}
+
+		$path = trim($path, '/');
+		
 		if (defined('ENABLE_CMS_FOR_PATH') && ENABLE_CMS_FOR_PATH != '') {
 			$path = ENABLE_CMS_FOR_PATH . '/' . $path;
 		}
