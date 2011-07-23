@@ -51,19 +51,11 @@ class UrlHelper {
         /**
 	* Shortens a given url with the tiny url api
 	* @param string $strURL
-	* @return string $strURL
+	* @return string $url
 	*/
 	public function shortenUrl($strURL) {
-		if(function_exists('curl_init')) {
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, "http://tinyurl.com/api-create.php?url=".$strURL);
-			curl_setopt($ch, CURLOPT_HEADER, 0);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			$url = curl_exec($ch);
-			curl_close($ch);
-		} else {
-			$url = file_get_contents("http://tinyurl.com/api-create.php?url=".$strURL);
-		}
+                $file=loader::helper('file');
+                $url=$file->getContents($strURL);
     	        return $url;
 	}
 
