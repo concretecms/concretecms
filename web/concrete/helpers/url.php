@@ -55,7 +55,7 @@ class UrlHelper {
 	*/
 	public function shortenUrl($strURL) {
                 $file=loader::helper('file');
-                $url=$file->getContents($strURL);
+                $url=$file->getContents("http://tinyurl.com/api-create.php?url=".$strURL);
     	        return $url;
 	}
 
