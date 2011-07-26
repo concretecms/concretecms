@@ -108,14 +108,14 @@ class TextHelper {
 	 * @param int $numChars
 	 * @param string $tail
 	 */
-	public function shorten($textStr, $numChars = 255, $tail = '...') {
+	public function shorten($textStr, $numChars = 255, $tail = '…') {
 		return $this->shortText($textStr, $numChars, $tail);
 	}
 	
 	/** 
 	 * An alias for shorten()
 	 */	
-	function shortText($textStr, $numChars=255, $tail='...') {
+	function shortText($textStr, $numChars=255, $tail='…') {
 		if (intval($numChars)==0) $numChars=255;
 		$textStr=strip_tags($textStr);
 		if (function_exists('mb_substr')) {
