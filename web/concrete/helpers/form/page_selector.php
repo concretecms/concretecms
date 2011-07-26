@@ -95,5 +95,37 @@ class FormPageSelectorHelper {
 		}
     	Loader::element('dashboard/sitemap', $args);
 	}
+
+	public function quickSelect($key, $cID = false, $args = array()) {
+		$selectedCID = 0;
+		if (isset($_REQUEST[$key])) {
+			$selectedCID = $_REQUEST[$key];
+		} else if ($cID > 0) {
+			$selectedCID = $cID;
+		}
+		
+		$cName = '';
+		if ($selectedCID > 0) {
+			$oc = Page::getByID($selectedCID);
+			$cp = new Permissions($oc);
+			if ($cp->canRead()) {
+				$cName = $oc->getCollectionName();
+			}
+		}
+
+
+		$form = Loader::helper('form');
+		$valt = Loader::helper('validation/token');
+		$token = $valt->generate('quick_page_select_' . $key);
+		$html .= "
+		<script type=\"text/javascript\">
+		$(document).ready(function () {
+			$('#ccm-quite-page-selector-label-".$key."').autocomplete({source: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/pages/autocomplete?key=" . $key . "&token=" . $token . "'});
+			$('#ccm-quite-page-selector-label-".$key."').autocomplete('widget').addClass('ccm-page-selector-autocomplete');
+		} );
+		</script>";
+		$html .= '<input type="hidden" id="ccm-quick-page-selector-value-field-<?=$key?>" name="<?=$key?>" value="<?=$selectedCID?>" /><span class="ccm-quick-page-selector">'.$form->text('ccm-quite-page-selector-label-'. $key,$cName, $args).'</span>';
+		return $html;
+	}
 	
 }
