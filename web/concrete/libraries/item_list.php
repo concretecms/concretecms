@@ -344,7 +344,11 @@ class ItemList {
 			return false;
 		}
 		$summary = $this->getSummary();
-		$html = '<div class="ccm-paging-top">'. t('Viewing <b>%s</b> to <b>%s</b> (<b>%s</b> Total)', $summary->currentStart, "<span id=\"pagingPageResults\">" . $summary->currentEnd . "</span>", "<span id=\"pagingTotalResults\">" . $this->total . "</span>") . ( $right_content != '' ? '<span class="ccm-paging-top-content">'. $right_content .'</span>' : '' ) .'</div>';
+		if ($summary->currentEnd == -1) {
+			$html = '<div class="ccm-paging-top">'. t('Viewing <b>%s</b> to <b>%s</b> (<b>%s</b> Total)', $summary->currentStart, "<span id=\"pagingPageResults\">" . $summary->total . "</span>", "<span id=\"pagingTotalResults\">" . $this->total . "</span>") . ( $right_content != '' ? '<span class="ccm-paging-top-content">'. $right_content .'</span>' : '' ) .'</div>';
+		} else {
+			$html = '<div class="ccm-paging-top">'. t('Viewing <b>%s</b> to <b>%s</b> (<b>%s</b> Total)', $summary->currentStart, "<span id=\"pagingPageResults\">" . $summary->currentEnd . "</span>", "<span id=\"pagingTotalResults\">" . $this->total . "</span>") . ( $right_content != '' ? '<span class="ccm-paging-top-content">'. $right_content .'</span>' : '' ) .'</div>';
+		}
 		print $html;
 	}
 	

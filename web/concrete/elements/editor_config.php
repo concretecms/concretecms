@@ -1,7 +1,6 @@
 <?
-$textEditorWidth=intval(Config::get('CONTENTS_TXT_EDITOR_WIDTH'));
 $textEditorHeight=intval(Config::get('CONTENTS_TXT_EDITOR_HEIGHT'));
-if($textEditorWidth<580)   $textEditorWidth=580;
+$textEditorWidth = '100%';
 //else $textEditorWidth=  $textEditorWidth;
 if($textEditorHeight<100)  $textEditorHeight=380;
 else $textEditorHeight= $textEditorHeight-70;
@@ -14,6 +13,10 @@ if (isset($editor_height)) {
 	$textEditorHeight = $editor_height;
 }
 
+if (isset($editor_width)) {
+	$textEditorWidth = $editor_width;
+}
+
 if (!isset($editor_mode)) {
 	$txtEditorMode=Config::get('CONTENTS_TXT_EDITOR_MODE');
 } else {
@@ -24,7 +27,7 @@ if (!isset($editor_mode)) {
 <script language="javascript">
 tinyMCE.init({
 	mode : "textareas",
-	width: "100%", 
+	width: "<?=$textEditorWidth?>", 
 	height: "<?=$textEditorHeight?>px", 	
 	inlinepopups_skin : "concreteMCE",
 	theme_concrete_buttons2_add : "spellchecker",
