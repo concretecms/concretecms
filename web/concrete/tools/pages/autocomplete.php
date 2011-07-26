@@ -17,5 +17,6 @@ if ($valt->validate('quick_page_select_' . $_REQUEST['key'], $_REQUEST['token'])
 		$obj->value = $c->getCollectionID();
 		$pageNames[] = $obj;
 	}
-	echo json_encode($pageNames);
+	$jh = Loader::helper('json');
+	echo $jh->encode($pageNames);
 }
