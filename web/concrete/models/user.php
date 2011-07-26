@@ -183,6 +183,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$uLastLogin = $db->getOne("select uLastLogin from Users where uID = ?", array($this->uID));
 			
 			$db->query("update Users set uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array(time(), $uLastLogin, $this->uID));
+			Events::fire('on_record_login', $this);
 		}
 		
 		function recordView($c) {
@@ -191,6 +192,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$cID = $c->getCollectionID();
 			$v = array($cID, $uID);
 			$db->query("insert into PageStatistics (cID, uID, date) values (?, ?, NOW())", $v);
+			Events::fire('on_record_view', $this, $c);
 			
 		}
 		
@@ -363,6 +365,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					'ugEntered' => $dt->getSystemDateTime()
 				),
 				array('uID', 'gID'), true);
+				Events::fire('on_user_enter_group', $this, $g);
 			}
 		}
 		
@@ -380,6 +383,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$gID = $g->getGroupID();
 				$db = Loader::db();
 				
+				$ret = Events::fire('on_user_exit_group', $this, $g);
+				if($ret < 0) {
+					return false;
+				}
 				$q = "delete from UserGroups where uID = '{$this->uID}' and gID = '{$gID}'";
 				$r = $db->query($q);	
 			}		
