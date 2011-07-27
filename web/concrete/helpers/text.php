@@ -129,6 +129,28 @@ class TextHelper {
 		}
 		return $textStr;			
 	}
+        
+        /**
+        * Shortens and sanitizes a string but only cuts at word boundaries
+	* @param string $textStr
+	* @param int $numChars
+	* @param string $tail
+        */
+        function shortenTextWord($textStr, $numChars=255, $tail='…') {
+		if (intval($numChars)==0) $numChars=255;
+		$textStr=strip_tags($textStr);
+		if (function_exists('mb_substr')) {
+			if (mb_strlen($textStr, APP_CHARSET) > $numChars) { 
+				$textStr=preg_replace('/\s+?(\S+)?$/', '', mb_substr($textStr, 0, $numChars + 1, APP_CHARSET)) . $tail;
+			}
+		} else {
+			if (strlen($textStr) > $numChars) { 
+				$textStr = preg_replace('/\s+?(\S+)?$/', '', substr($textStr, 0, $numChars + 1)) . $tail;
+			}
+		}
+		return $textStr;		
+	}
+
 	
 	
 	/**
