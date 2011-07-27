@@ -120,11 +120,31 @@ class FormPageSelectorHelper {
 		$html .= "
 		<script type=\"text/javascript\">
 		$(document).ready(function () {
-			$('#ccm-quite-page-selector-label-".$key."').autocomplete({source: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/pages/autocomplete?key=" . $key . "&token=" . $token . "'});
-			$('#ccm-quite-page-selector-label-".$key."').autocomplete('widget').addClass('ccm-page-selector-autocomplete');
+			$('#ccm-quick-page-selector-label-".$key."').autocomplete({
+				select: function(e, ui) {
+					$('#ccm-quick-page-selector-label-" . $key . "').val(ui.item.label);
+					$('#ccm-quick-page-selector-value-" . $key . "').val(ui.item.value);
+					return false;
+				},
+				open: function(e, ui) {
+					$('#ccm-quick-page-selector-label-" . $key . "').val('');
+					$('#ccm-quick-page-selector-value-" . $key . "').val('');
+				},
+				focus: function(e, ui) {
+					$('#ccm-quick-page-selector-label-" . $key . "').val(ui.item.label);
+					return false;
+				},
+				source: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/pages/autocomplete?key=" . $key . "&token=" . $token . "'
+			});
+			$('#ccm-quick-page-selector-label-" . $key . "').keydown(function(e) {
+				if (e.keyCode == 13) {
+					e.preventDefault();
+				}
+			});
+			$('#ccm-quick-page-selector-label-".$key."').autocomplete('widget').addClass('ccm-page-selector-autocomplete');
 		} );
 		</script>";
-		$html .= '<input type="hidden" id="ccm-quick-page-selector-value-field-<?=$key?>" name="<?=$key?>" value="<?=$selectedCID?>" /><span class="ccm-quick-page-selector">'.$form->text('ccm-quite-page-selector-label-'. $key,$cName, $args).'</span>';
+		$html .= '<input type="hidden" id="ccm-quick-page-selector-value-' . $key . '" name="' . $key . '" value="' . $selectedCID . '" /><span class="ccm-quick-page-selector">'.$form->text('ccm-quick-page-selector-label-'. $key,$cName, $args).'</span>';
 		return $html;
 	}
 	
