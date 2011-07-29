@@ -104,7 +104,7 @@ class AttributeKey extends Object {
 		$className = $txt->camelcase($akCategoryHandle);
 		while ($row = $r->FetchRow()) {
 			$c1 = $className . 'AttributeKey';
-			$c1a = call_user_func_array(array($c1, 'getByID'), array($row['akID']));
+			$c1a = call_user_func(array($c1, 'getByID'), $row['akID']);
 			if (is_object($c1a)) {
 				$list[] = $c1a;
 			}

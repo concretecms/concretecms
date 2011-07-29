@@ -41,7 +41,7 @@ class AttributeKeyCategory extends Object {
 		$txt = Loader::helper('text');
 		$className = $txt->camelcase($this->akCategoryHandle);
 		$c1 = $className . 'AttributeKey';
-		$ak = call_user_func_array(array($c1, 'getByHandle'), array($akHandle));
+		$ak = call_user_func(array($c1, 'getByHandle'), $akHandle);
 		return $ak;
 	}
 
@@ -54,7 +54,7 @@ class AttributeKeyCategory extends Object {
 		$txt = Loader::helper('text');
 		$className = $txt->camelcase($this->akCategoryHandle);
 		$c1 = $className . 'AttributeKey';
-		$ak = call_user_func_array(array($c1, 'getByID'), array($akID));
+		$ak = call_user_func(array($c1, 'getByID'), $akID);
 		return $ak;
 	}
 
