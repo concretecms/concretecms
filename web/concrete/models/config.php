@@ -31,20 +31,12 @@ class ConfigValue extends Object {
 }
 
 class Config extends Object {
-	
-	private $props = array();
 	private $pkg = false;
 	
 	public function setPackageObject($pkg) {
 		$this->pkg = $pkg;
 	}
 	public function get($cfKey, $getFullObject = false) {
-		static $instance;
-		if (!isset($instance)) {
-			$v = __CLASS__;
-			$instance = new $v;
-		}
-
 		$ca = new Cache();
 		$pkgID = '';
 		if (isset($this) && is_object($this->pkg)) {
