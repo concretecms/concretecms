@@ -9,7 +9,7 @@ foreach($pl as $p) {
 		if (is_object($pkg)) {
 			$pkg->setupPackageLocalization();
 			if (method_exists($pkg, 'on_start')) {
-				call_user_func(array($pkg, 'on_start'));
+				$pkg->on_start();
 			}
 		}
 	}

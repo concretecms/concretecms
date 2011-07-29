@@ -201,9 +201,9 @@ class Controller {
 			if(!is_array($params)) {
 				$params = array($params);
 			}
-			$ret = call_user_func_array(array($this, $method), $params);
+			return call_user_func_array(array($this, $method), $params);
 		}
-		return $ret;
+		return null;
 	}
 
 	private function isCallable($method) {
@@ -390,7 +390,8 @@ class Controller {
 		$v->setCollectionObject($c);
 		$v->setController($this);
 		if (method_exists($this, 'on_before_render')) {
-			call_user_func_array(array($this, 'on_before_render'), array($method));
+			// this $view used to be $method which doesn't exist
+			$this->on_before_render($view);
 		}
 		$v->render($view);
 	}
