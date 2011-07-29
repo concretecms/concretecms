@@ -101,7 +101,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$this->task = $method;
 			}
 			if (method_exists($this, 'on_start')) {
-				$this->onstart($method);
+				$this->on_start($method);
 			}
 			if ($method) {
 				$this->runTask($method, $args);
