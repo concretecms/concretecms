@@ -6,6 +6,7 @@ class DashboardComposerWriteController extends Controller {
 	public $helpers = array('form', 'html');
 	
 	public function save() {
+		session_write_close();
 		if ($this->isPost()) {
 			if (intval($this->post('entryID')) > 0) {
 				$entry = ComposerPage::getByID($this->post('entryID'), 'RECENT');
@@ -58,7 +59,7 @@ class DashboardComposerWriteController extends Controller {
 			
 			if (!$this->error->has()) {
 				
-				$data = array('cDatePublic' => Loader::helper('form/date_time')->translate('cDatePublic'), 'cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
+				$data = array('cDatePublic' => Loader::helper('form/date_time')->translate('cDatePublic'), 'cHandle' => Loader::helper('text')->sanitizeFileSystem($this->post('cName')), 'cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
 				$entry->getVersionToModify();
 				// this is a pain. we have to use composerpage::getbyid again because
 				// getVersionToModify is hard-coded to return a page object

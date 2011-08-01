@@ -34,7 +34,7 @@ div#ccm-search-overlay h2 {margin-bottom: 0px}
 
 div.ccm-search-advanced-fields {display: block;border: 1px solid #ddd;padding: 8px; width:auto; background:#fafafa; margin-right:10px; width:210px}
 div#ccm-search-advanced-sets {display: block;border: 1px solid #ddd;padding: 8px; width:auto; background:#fafafa; margin-right:10px; margin-top: 20px; width:210px}
-div#ccm-search-advanced-sets div {font-size: 13px; font-weight: normal;}
+div#ccm-search-advanced-sets div {font-size: 12px; font-weight: normal;}
 div#ccm-search-advanced-sets input {vertical-align: middle}
 div#ccm-search-advanced-sets label {font-weight: normal; display: inline; vertical-align: middle; margin: 0px; line-height: 12px; padding: 0px 0px 0px 0px}
 
