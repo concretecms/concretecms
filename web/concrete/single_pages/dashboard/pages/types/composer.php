@@ -163,7 +163,7 @@ if ($cap->canAccessComposer()) { ?>
 ccm_setupComposerFields = function() {
 	
 	if ($("input[name=ctIncludeInComposer]").prop('checked')) {
-		$(".row-composer input, .row-composer select").attr('disabled', '');
+		$(".row-composer input, .row-composer select").attr('disabled', false);
 	} else {
 		$(".row-composer input, .row-composer select").attr('disabled', 'true');
 	}
