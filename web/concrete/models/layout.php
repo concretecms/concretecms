@@ -50,7 +50,7 @@
 	public function getAreaNameNumber(){ return intval($this->areaNameNumber); } 
 	
 	public function getLayoutNameDivider(){ return ' : '; }
-	public function getLayoutNameTxt(){ return t('Layout'); }
+	public function getLayoutNameTxt(){ return 'Layout'; }
 	public function getLayoutName(){ return $this->getAreaHandle().$this->getLayoutNameDivider().$this->getLayoutNameTxt().' '.$this->getAreaNameNumber(); }
 	public function getLayoutPresetId(){ return intval($this->lpID); }
 	public function getLayoutPresetObj(){ return LayoutPreset::getByID($this->lpID); }
