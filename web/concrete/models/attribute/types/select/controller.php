@@ -245,8 +245,10 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		foreach($options as $id) {
 			if ($id > 0) {
 				$opt = SelectAttributeTypeOption::getByID($id);
-				$optionText[] = $opt->getSelectAttributeOptionValue(true);
-				$optionQuery[] = $opt->getSelectAttributeOptionValue(false);
+				if (is_object($opt)) {
+					$optionText[] = $opt->getSelectAttributeOptionValue(true);
+					$optionQuery[] = $opt->getSelectAttributeOptionValue(false);
+				}
 			}
 		}
 		if (count($optionText) == 0) {
