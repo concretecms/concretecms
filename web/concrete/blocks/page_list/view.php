@@ -13,6 +13,12 @@
 		$cobj = $cArray[$i]; 
 		$target = $cobj->getAttribute('nav_target');
 
+		if ($cobj->getCollectionPointerExternalLink() != '') {
+			if ($cobj->openCollectionPointerExternalLinkInNewWindow()) {
+				$target = "_blank";
+			}
+		}
+
 		$title = $cobj->getCollectionName(); ?>
 	
 	<h3 class="ccm-page-list-title"><a <? if ($target != '') { ?> target="<?=$target?>" <? } ?> href="<?=$nh->getLinkToCollection($cobj)?>"><?=$title?></a></h3>
