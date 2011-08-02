@@ -606,7 +606,9 @@
 					// we can update the block that we're submitting
 					$b->update($_POST);
 					$obj->error = false;
-					$obj->cID = $nvc->getCollectionID();
+					if (!$obj->cID) {
+						$obj->cID = $nvc->getCollectionID();
+					}
 					$obj->bID = $b->getBlockID();
 				} else {
 					$obj->error = true;

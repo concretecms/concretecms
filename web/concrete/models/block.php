@@ -225,8 +225,10 @@ class Block extends Object {
 		$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
 		$globalScrapbookC = $scrapbookHelper->getGlobalScrapbookPage(); 
 		
-		if( $this->cID==$globalScrapbookC->cID ) return true;
-		
+		if( $this->cID==$globalScrapbookC->cID ) {
+			$this->bIsGlobal = true;	
+			return true;
+		}
 		$q = "SELECT b.bID FROM Blocks AS b, CollectionVersionBlocks AS cvb ".
 			 "WHERE b.bID = '{$this->bID}' AND cvb.bID=b.bID AND cvb.cID=".intval($globalScrapbookC->getCollectionId())." LIMIT 1";
 			 
