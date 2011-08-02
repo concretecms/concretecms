@@ -143,7 +143,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function getMessageAuthorName() {
 			if ($this->authorName == false) {
 				$author = $this->getMessageAuthorObject();
-				$this->authorName = $author->getUserName();
+				if (is_object($author)) { 
+					$this->authorName = $author->getUserName();
+				} else {
+					$this->authorName = t('Unknown User');
+				}
 			}
 			
 			return $this->authorName;

@@ -13,7 +13,19 @@
 		}else foreach($friendsData as $friendsData){ 
 			$friendUID=$friendsData['friendUID'];
 			$friendUI = UserInfo::getById( $friendUID );
-			?>
+			if (!is_object($friendUI)) { ?>
+
+			<div class="ccm-users-friend" style="margin-bottom:16px;">
+				<div style="float:left; width:100px;">
+					<?=$av->outputNoAvatar()?>
+				</div>
+				<div >
+					<?=t('Unknown User')?>
+				</div>
+				<div class="ccm-spacer"></div>
+			</div>			
+			
+			<? } else { ?>
 			<div class="ccm-users-friend" style="margin-bottom:16px;">
 				<div style="float:left; width:100px;">
 					<a href="<?=View::url('/profile',$friendUID)?>"><?= $av->outputUserAvatar($friendUI)?></a>
@@ -26,6 +38,7 @@
 				</div>
 				<div class="ccm-spacer"></div>
 			</div>			
+			<? } ?>
 		<? } ?>	
     </div>
 	
