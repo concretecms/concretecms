@@ -62,6 +62,11 @@ class DashboardFilesSetsController extends Controller {
 		$this->set('message', t('New file set added successfully.'));
 		$this->view();
 	}
+
+	public function file_set_updated() {
+		$this->set('message', t('File set updated successfully.'));
+		$this->view();
+	}
 	
 	public function file_set_deleted() {
 		$this->set('message', t('File set deleted successfully.'));
@@ -135,8 +140,7 @@ class DashboardFilesSetsController extends Controller {
 			$fh->setFileSetPermissions($file_set, $p);			
 		}
 		
-		$this->set('message',t('Changes Saved'));
-		$this->view();
+		$this->redirect("/dashboard/files/sets", 'file_set_updated');
 	}
 	
 }
