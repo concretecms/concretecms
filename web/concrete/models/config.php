@@ -34,6 +34,11 @@ class Config extends Object {
 	private $pkg = false;
 	private static $store;
 	
+	public static function setStore(ConfigStore $store)
+	{
+		self::$store = $store;
+	}
+	
 	/**
 	 * @return ConfigStore
 	 */
