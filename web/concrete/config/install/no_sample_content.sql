@@ -10,6 +10,8 @@ INSERT INTO AttributeKeys VALUES(1,'meta_title','Meta Title',1,0,0,0,1,1,1,0)
  ,(6,'header_extra_content','Header Extra Content',1,0,0,0,1,2,1,0)
  ,(7,'exclude_search_index','Exclude From Search Index',1,0,0,0,1,3,1,0)
  ,(8,'exclude_sitemapxml','Exclude From sitemap.xml',1,0,0,0,1,3,1,0)
+ ,(9,'width','Width',1,0,1,0,0,6,3,0)
+ ,(10,'height','Height',1,0,1,0,0,6,3,0)
  ,(11,'tags','Tags',0,0,0,0,1,8,1,0);
 
 INSERT INTO AttributeTypeCategories VALUES(1,1)
