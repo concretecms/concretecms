@@ -49,6 +49,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$nu->uTimezone = $row['uTimezone'];
 				$nu->uGroups = $nu->_getUserGroups(true);
 				if ($login) {
+					session_regenerate_id();
 					$_SESSION['uID'] = $row['uID'];
 					$_SESSION['uName'] = $row['uName'];
 					$_SESSION['uBlockTypesSet'] = false;
@@ -135,6 +136,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						}
 						$this->recordLogin();
 						if (!$args[2]) {
+							session_regenerate_id();
 							$_SESSION['uID'] = $row['uID'];
 							$_SESSION['uName'] = $row['uName'];
 							$_SESSION['superUser'] = $this->superUser;
