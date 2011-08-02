@@ -54,12 +54,13 @@ if ( !$validLayout || !$cp->canWrite() || !$ap->canWrite()  ) {
 			
 		case 'move': 
 			$cvalID=intval($_REQUEST['cvalID']);
+			$layout = Layout::getByID($_REQUEST['layoutID']);
 			$db = Loader::db();
 			$layouts = $a->getAreaLayouts($nvc);
 			$direction = $_REQUEST['direction']; 
 			for($i=0; $i<count($layouts); $i++){  
 				$layout=$layouts[$i]; 
-				if($layout->cvalID==$cvalID ){
+				if($layout->getLayoutID()==$_REQUEST['layoutID'] ){
 					if( $direction=='up' && $i>0 ){
 						$prevLayout=$layouts[$i-1];
 						$layout->position = $prevLayout->position;
