@@ -106,19 +106,36 @@ class Request {
 	 */
 	public function getRequestedPage() {
 		$path = $this->getRequestCollectionPath();
+		$origPath = $path;
 		$r = Cache::get('request_path_page', $path);
 		if ($r == false) {
+			$r = array();
+			$db = Loader::db();
+			$cID = false;
+			while ((!$cID) && $path) {
+				$cID = $db->GetOne('select cID from PagePaths where cPath = ?', $path);
+				if ($cID) {
+					$cPath = $path;
+					break;
+				}
+				$path = substr($path, 0, strrpos($path, '/'));
+			}
+			
+			/*
 			// Get the longest path (viz most specific match) that is contained
 			// within the request path
 			$db = Loader::db();
 			$r = $db->Execute("select cID,cPath from PagePaths where ? LIKE CONCAT(replace(cPath, '_','\_'),'%') ORDER BY LENGTH(cPath) DESC LIMIT 0,1", array($this->getRequestCollectionPath()));
 			$r = $r->FetchRow();
-			if (is_array($r)) {
-				Cache::set('request_path_page', $path, $r);
+			*/
+			if ($cID && $cPath) { 
+				$r['cID'] = $cID;
+				$r['cPath'] = $cPath;
+				Cache::set('request_path_page', $origPath, $r);
 			}			
 		}	
 		
-		if (is_array($r)) {
+		if (is_array($r)) { 
 			$req = Request::get();
 			$cPath = $r['cPath'];
 			$cID = $r['cID'];
