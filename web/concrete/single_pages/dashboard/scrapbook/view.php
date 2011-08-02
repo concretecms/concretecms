@@ -199,7 +199,7 @@ $(function(){ GlobalScrapbook.init(); });
 			$form = Loader::helper('form'); ?>
 			
 			<tr>
-				<td colspan="2" class="subheader"><?=t('Add a Shared Scrapbook')?></td>
+				<td colspan="2" class="subheader"><?=t('Add a Global Scrapbook')?></td>
 			</tr>
 			<tr>
 			<td colspan="2">
@@ -229,7 +229,7 @@ $(function(){ GlobalScrapbook.init(); });
 
 <? }elseif($scrapbookName=='userScrapbook'){ ?>
 	
-	<h1><span><?=t('User Scrapbook')?></span></h1>
+	<h1><span><?=t("%s's Personal Scrapbook", $u->getUserName()) ?></span></h1>
 	
 	<div class="ccm-dashboard-inner">	
 	
