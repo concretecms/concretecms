@@ -654,14 +654,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$blockIDs = array();
 				if (is_array($r)) {
 					foreach($r as $bl) {
-						$blockIDs[$bl['arHandle']][] = $bl;
+						$blockIDs[strtolower($bl['arHandle'])][] = $bl;
 					}
 				}
 				Cache::set('collection_blocks', $this->getCollectionID() . ':' . $this->getVersionID(), $blockIDs);
 			}
 			
 			if ($arHandle != false) {
-				$blockIDsTmp = $blockIDs[$arHandle];
+				$blockIDsTmp = $blockIDs[strtolower($arHandle)];
 				$blockIDs = $blockIDsTmp;
 			} else {
 			
