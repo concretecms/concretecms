@@ -29,30 +29,39 @@ $error = array();
 
 // load all the incoming fields into an array
 $incoming_urls = array();
-for ($i = 1; $i < 6; $i++) {
-	$this_url = trim($_REQUEST['url_upload_' .$i]); 
 
-	// did we get anything?
-	if (!strlen($this_url))
-		continue; 
+if (!function_exists('iconv_get_encoding')) {
+	$errors[] = t('Remote URL import requires the iconv extension enabled on your server.');
+}
+
+if (count($errors) == 0) { 
+	for ($i = 1; $i < 6; $i++) {
+		$this_url = trim($_REQUEST['url_upload_' .$i]); 
 	
-	// validate URL
-	if (Zend_Uri_Http::check($this_url)) {
-		// URL appears to be good... add it
-		$incoming_urls[] = $this_url;
-	} else {
-		$errors[] = '"' . $this_url . '"' . t(' is not a valid URL.');
+		// did we get anything?
+		if (!strlen($this_url))
+			continue; 
+		
+		// validate URL
+		if (Zend_Uri_Http::check($this_url)) {
+			// URL appears to be good... add it
+			$incoming_urls[] = $this_url;
+		} else {
+			$errors[] = '"' . $this_url . '"' . t(' is not a valid URL.');
+		}
 	}
+
+	if (!$valt->validate('import_remote')) {
+		$errors[] = $valt->getErrorMessage();
+	}
+				
+	
+	if (count($incoming_urls) < 1) {
+		$errors[] = t('You must specify at least one valid URL.');
+	}
+
 }
 
-if (!$valt->validate('import_remote')) {
-	$errors[] = $valt->getErrorMessage();
-}
-			
-
-if (count($incoming_urls) < 1) {
-	$errors[] = t('You must specify at least one valid URL.');
-}
 
 $import_responses = array();
 
