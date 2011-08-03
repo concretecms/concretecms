@@ -83,6 +83,15 @@ if (is_object($b)) {
 				$v = View::getInstance();
 				
 				$items = $v->getHeaderItems();
+				$csr = $b->getBlockCustomStyleRule(); 
+				if (is_object($csr)) { 
+					$styleHeader .= '#'.$csr->getCustomStyleRuleCSSID(1).' {'. $csr->getCustomStyleRuleText(). "}";  ?>
+					<script type="text/javascript">
+						$('head').append('<style type="text/css"><?=$styleHeader?></style>');
+					</script>
+				<?
+				}
+
 				if (count($items) > 0) { ?>
 				<script type="text/javascript">				
 				<?
