@@ -348,7 +348,7 @@ $(function(){ GlobalScrapbook.init(); });
 							<? } ?>
 							
 							<? if ($bp->canDeleteBlock()) { ?>
-							<a href="<?php echo $this->action('deleteBlock',urlencode($scrapbookName), 0, intval($b->bID), $valt->generate('delete_scrapbook_block'))?>" onclick="return GlobalScrapbook.confirmDelete()">
+							<a href="<?php echo $this->action('deleteBlock', Loader::helper('text')->entities($scrapbookName), 0, intval($b->bID), $valt->generate('delete_scrapbook_block'))?>" onclick="return GlobalScrapbook.confirmDelete()">
 								<?=t('Delete')?>
 							</a> 
 							
