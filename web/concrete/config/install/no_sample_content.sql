@@ -126,7 +126,7 @@ INSERT INTO CollectionVersions VALUES(2,1,NULL,NULL,NULL,NOW(),NOW(),'Initial Ve
  ,(55,1,'Download File','download_file',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(63,1,NULL,'uID=1',NULL,NOW(),NOW(),'Initial Version',1,0,NULL,NULL,NULL)
  ,(64,1,'Members','members',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
- ,(75,1,'Composer','composer','Write for your site',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(75,1,'Composer Beta','composer','Write for your site',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(76,1,'Write','write',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(77,1,'Drafts','drafts',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(78,1,'Composer','composer',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
