@@ -207,6 +207,8 @@ cvActivateDatetime       DATETIME,
 
 ALTER TABLE CollectionVersions ADD  INDEX cvIsApproved  (cvIsApproved);
 
+ALTER TABLE CollectionVersions ADD  INDEX cvName  (cvName(128));
+
 CREATE TABLE Collections (
 cID                      INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 cDateAdded               DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -501,6 +503,8 @@ ppIsCanonical            VARCHAR(1) NOT NULL DEFAULT '1',
 ALTER TABLE PagePaths ADD  INDEX cID  (cID);
 
 ALTER TABLE PagePaths ADD  INDEX ppIsCanonical  (ppIsCanonical);
+
+ALTER TABLE PagePaths ADD  INDEX cPath (cPath(128));
 
 CREATE TABLE PageSearchIndex (
 cID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
@@ -936,6 +940,8 @@ avID                     INTEGER(10) UNSIGNED NOT NULL,
 atSelectOptionID         INTEGER(10) UNSIGNED NOT NULL,
                  PRIMARY KEY (avID, atSelectOptionID)
 );
+
+ALTER TABLE atSelectOptionsSelected add index `atSelectOptionID` (atSelectOptionID);
 
 CREATE TABLE atAddress (
 avID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
