@@ -270,8 +270,8 @@ class PageTheme extends Object {
 			$contents = $fh->getContents($this->getThemeDirectory() . '/' . $file);
 			
 			// replace all url( instances with url starting with path to theme
-			$contents = preg_replace('/(url\((?!\'data:\S+))(.*)/', '$1' . $this->getThemeURL() . '/$2', $contents);
-            $contents = preg_replace('/(url\(")(.*)/', '$1' . $this->getThemeURL() . '/$2', $contents);
+			$contents = preg_replace('/(url\(\')(.*)/', '$1' . $this->getThemeURL() . '/$2', $contents);
+			$contents = preg_replace('/(url\(")(.*)/', '$1' . $this->getThemeURL() . '/$2', $contents);
             $contents = preg_replace('/(url\((?![\'"]))(.*)/', '$1' . $this->getThemeURL() . '/$2', $contents);
 			
 			// load up all tokens from the db for this stylesheet.
