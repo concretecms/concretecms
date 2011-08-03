@@ -370,7 +370,7 @@ fvHasThumbnail3          INTEGER(1) NOT NULL DEFAULT 0,
 fvExtension              VARCHAR(32),
 fvType                   INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
                  PRIMARY KEY (fID, fvID)
-)ENGINE=MYISAM;
+);
 
 ALTER TABLE FileVersions ADD  INDEX fvExtension  (fvType);
 
@@ -512,7 +512,7 @@ cDatePublic              DATETIME,
 cDateLastIndexed         DATETIME,
 cDateLastSitemapped      DATETIME,
                  PRIMARY KEY (cID)
-)ENGINE=MYISAM;
+);
 
 ALTER TABLE PageSearchIndex ADD  FULLTEXT INDEX cName  (cName);
 
@@ -551,7 +551,7 @@ date                     DATE,
 timestamp                TIMESTAMP NOT NULL,
 uID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
                  PRIMARY KEY (pstID)
-)ENGINE=MYISAM;
+);
 
 ALTER TABLE PageStatistics ADD  INDEX cID  (cID);
 
@@ -1270,7 +1270,9 @@ CREATE TABLE IF NOT EXISTS `FileSearchIndexAttributes` (
   PRIMARY KEY  (`fID`)
 );
 
-CREATE TABLE UserSearchIndexAttributes (
-uID                      INTEGER(11) UNSIGNED NOT NULL DEFAULT 0,
-                 PRIMARY KEY (uID)
+CREATE TABLE IF NOT EXISTS `UserSearchIndexAttributes` (
+  `uID` int(11) unsigned NOT NULL DEFAULT '0',
+  `ak_profile_private_messages_enabled` tinyint(4) DEFAULT '0',
+  `ak_profile_private_messages_notification_enabled` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`uID`)
 );
