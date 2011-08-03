@@ -15,6 +15,14 @@ if (isset($message)) { ?>
 </div>
 
 <? } else { ?>
+
+<style type="text/css">
+input.ccm-input-text:disabled {
+	opacity: 0.8;
+	-moz-opacity: 0.8;
+}
+</style>
+
 <script type="text/javascript">
 
 
