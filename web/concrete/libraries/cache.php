@@ -152,11 +152,10 @@ class Cache {
 	 */	
 	public function delete($type, $id){
 		$cache = Cache::getLibrary();
-		if (!$cache) {
-			return false;
+		if ($cache) {
+			$cache->remove(Cache::key($type, $id));
 		}
 
-		$cache->remove(Cache::key($type, $id));
 		$loc = CacheLocal::get();
 		if ($loc->enabled && isset($loc->cache[Cache::key($type, $id)])) {
 			unset($loc->cache[Cache::key($type, $id)]);
