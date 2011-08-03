@@ -75,8 +75,8 @@ INSERT INTO AttributeKeys VALUES(1,'meta_title','Meta Title',1,0,0,0,1,1,1,0)
  ,(12,'profile_private_messages_enabled','I would like to receive private messages.',1,0,0,0,1,3,2,0)
  ,(13,'profile_private_messages_notification_enabled','Send me email notifications when I receive a private message.',1,0,0,0,1,3,2,0);
 
-INSERT INTO UserAttributeKeys VALUES (12,1,0,0,0,0,0,10,1)
- ,(13,0,0,1,0,1,0,12,1);
+INSERT INTO UserAttributeKeys VALUES (12,0,0,1,0,1,0,0,1)
+ ,(13,0,0,1,0,1,0,1,1);
 
 INSERT INTO AttributeTypeCategories VALUES(1,1)
  ,(1,2)
@@ -951,6 +951,9 @@ INSERT INTO atBoolean VALUES(14,0)
  ,(35,0)
  ,(39,0)
  ,(44,0);
+
+INSERT INTO atBooleanSettings VALUES(12,1)
+ ,(13,1);
 
 INSERT INTO atDefault VALUES(11,'')
  ,(12,'')
