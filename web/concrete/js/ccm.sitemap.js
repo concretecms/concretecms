@@ -376,9 +376,10 @@ activateLabels = function(instance_id, display_mode, select_mode) {
 	if (select_mode == 'select_page' || select_mode == 'move_copy_delete') {
 		smwrapper.find("li.ccm-sitemap-explore-paging a").each(function() {
 			$(this).click(function() {
+				var treeRootNode = $(this).parentsUntil('ul').parent().attr('tree-root-node-id');
 				jQuery.fn.dialog.showLoader();
 				$.get($(this).attr('href'), function(r) {
-					parseSitemapResponse(instance_id, display_mode, select_mode, 0, r);
+					parseSitemapResponse(instance_id, display_mode, select_mode, treeRootNode, r);
 					activateLabels(instance_id, display_mode, select_mode);
 					jQuery.fn.dialog.hideLoader();
 				});			
