@@ -85,9 +85,9 @@ if (is_object($b)) {
 				$items = $v->getHeaderItems();
 				$csr = $b->getBlockCustomStyleRule(); 
 				if (is_object($csr)) { 
-					$styleHeader .= '#'.$csr->getCustomStyleRuleCSSID(1).' {'. $csr->getCustomStyleRuleText(). "}";  ?>
+					$styleHeader = '#'.$csr->getCustomStyleRuleCSSID(1).' {'. $csr->getCustomStyleRuleText(). "}";  ?>
 					<script type="text/javascript">
-						$('head').append('<style type="text/css"><?=$styleHeader?></style>');
+						$('head').append('<style type="text/css"><?=addslashes($styleHeader)?></style>');
 					</script>
 				<?
 				}
