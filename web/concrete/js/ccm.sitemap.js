@@ -388,8 +388,7 @@ activateLabels = function(instance_id, display_mode, select_mode) {
 			});
 		});
 	}
-	
-	if (display_mode == 'full') {
+	if (display_mode == 'full' && (!select_mode)) {
 		smwrapper.find('img.handle').addClass('moveable');
 
 		//drop onto a page
@@ -535,8 +534,8 @@ openSub = function(instanceID, nodeID, display_mode, select_mode, onComplete) {
 	cancelReorder();
 	ccm_sitemap_html = '';
 	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?instance_id=" + instanceID + "&node=" + nodeID + "&display_mode=" + display_mode + "&select_mode=" + select_mode + "&selectedPageID=" + container.attr('selected-page-id'), function(resp) {
-		parseSitemapResponse(instanceID, 'full', false, nodeID, resp);
-		activateLabels(instanceID, 'full');
+		parseSitemapResponse(instanceID, 'full', select_mode, nodeID, resp);
+		activateLabels(instanceID, 'full', select_mode);
 		if (select_mode != 'move_copy_delete' && select_mode != 'select_page') {
 			activateReorder();
 		}
