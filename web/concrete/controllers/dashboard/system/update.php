@@ -109,7 +109,7 @@ class DashboardSystemUpdateController extends Controller {
 		$this->view();
 	}
 	
-	protected function secCheck() {
+	public function secCheck() {
 		$fh = Loader::helper('file');
 		$updates = $fh->getDirectoryContents(DIR_APP_UPDATES);
 		foreach($updates as $upd) {
