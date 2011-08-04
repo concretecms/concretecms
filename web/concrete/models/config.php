@@ -80,7 +80,12 @@ class Config extends Object {
 		return $list;
 	}	
 	
+	// Misleading old functionname
 	public function getOrDefine($key, $defaultValue) {
+		return self::getAndDefine($key, $defaultValue);
+	}
+	
+	public function getAndDefine($key, $defaultValue) {
 		$val = Config::get($key);
 		if ($val == null) {
 			$val = $defaultValue;
@@ -97,7 +102,7 @@ class Config extends Object {
 	}
 	
 	public function save($cfKey, $cfValue) {
-		$pkgID = 0;
+		$pkgID = null;
 		if (isset($this) && is_object($this->pkg)) {
 			$pkgID = $this->pkg->getPackageID();
 		}
