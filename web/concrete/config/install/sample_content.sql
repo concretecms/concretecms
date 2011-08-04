@@ -1056,9 +1056,9 @@ INSERT INTO btSurveyOptions VALUES(1,37,'Fixing a typo when I see it.',0)
  ,(2,37,'Adding a form as easily as content.',1)
  ,(3,37,'Block area layouts are pretty cool.',2);
 
-INSERT INTO btTags VALUES(23,'Tags',68)
- ,(33,'Tags',68)
- ,(39,'Tags',68);
+INSERT INTO btTags VALUES(23,'Tags',68,'page',10)
+ ,(33,'Tags',68,'page',10)
+ ,(39,'Tags',68,'page',10);
 
 INSERT INTO btYouTube VALUES(6,'Basic Editing','http://www.youtube.com/watch?v=oYSOFTNLbKY');
 
