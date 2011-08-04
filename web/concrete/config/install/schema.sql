@@ -1237,6 +1237,8 @@ CREATE TABLE btTags (
 bID                      INTEGER UNSIGNED NOT NULL,
 title                    VARCHAR(255),
 targetCID                INTEGER,
+displayMode              VARCHAR(20) DEFAULT 'page',
+cloudCount               INTEGER DEFAULT 10,
                  PRIMARY KEY (bID)
 );
 
