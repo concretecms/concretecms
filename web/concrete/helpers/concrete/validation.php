@@ -81,6 +81,9 @@
 			if (strlen($username) < USER_USERNAME_MINIMUM) {
 				return false;
 			}
+			if (strlen($username) > USER_USERNAME_MAXIMUM) {
+				return false;
+			}
 			if(USER_USERNAME_ALLOW_SPACES) {
 				$resp = preg_match("/[^A-Za-z0-9 ]/", $username);
 			} else {
