@@ -516,7 +516,7 @@ cDatePublic              DATETIME,
 cDateLastIndexed         DATETIME,
 cDateLastSitemapped      DATETIME,
                  PRIMARY KEY (cID)
-);
+)ENGINE=MYISAM;
 
 ALTER TABLE PageSearchIndex ADD  FULLTEXT INDEX cName  (cName);
 
@@ -555,7 +555,7 @@ date                     DATE,
 timestamp                TIMESTAMP NOT NULL,
 uID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
                  PRIMARY KEY (pstID)
-);
+)ENGINE=MYISAM;
 
 ALTER TABLE PageStatistics ADD  INDEX cID  (cID);
 
@@ -1267,18 +1267,18 @@ CREATE TABLE IF NOT EXISTS `CollectionSearchIndexAttributes` (
   `ak_exclude_sitemapxml` tinyint(4) default '0',
   `ak_tags` text,
   PRIMARY KEY  (`cID`)
-);
+) ENGINE=MyISAM;
 
 CREATE TABLE IF NOT EXISTS `FileSearchIndexAttributes` (
   `fID` int(11) unsigned NOT NULL default '0',
   `ak_width` decimal(14,4) default '0.0000',
   `ak_height` decimal(14,4) default '0.0000',
   PRIMARY KEY  (`fID`)
-);
+) ENGINE=MyISAM;
 
 CREATE TABLE IF NOT EXISTS `UserSearchIndexAttributes` (
   `uID` int(11) unsigned NOT NULL DEFAULT '0',
   `ak_profile_private_messages_enabled` tinyint(4) DEFAULT '0',
   `ak_profile_private_messages_notification_enabled` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`uID`)
-);
+) ENGINE=MyISAM;
