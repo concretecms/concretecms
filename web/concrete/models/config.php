@@ -144,6 +144,9 @@ class ConfigStore {
 			$this->rows = array();
 			$r = $this->db->Execute('select * from Config where uID = 0 order by cfKey asc');
 			while ($row = $r->FetchRow()) {
+				if (!$row['pkgID']) {
+					$row['pkgID'] = 0;
+				}
 				$this->rows["{$row['cfKey']}.{$row['pkgID']}"] = $row;
 			}
 			$r->Close();
@@ -167,7 +170,7 @@ class ConfigStore {
 	 * @return ConfigValue|void
 	 */
 	public function get($cfKey, $pkgID = null) {
-		if ($pkgID !== null && isset($this->rows["{$cfKey}.{$pkgID}"])) {
+		if ($pkgID > 0 && isset($this->rows["{$cfKey}.{$pkgID}"])) {
 			return $this->rowToConfigValue($this->rows["{$cfKey}.{$pkgID}"]);
 		} else {
 			foreach ($this->rows as $row) {
@@ -191,6 +194,9 @@ class ConfigStore {
 	
 	public function set($cfKey, $cfValue, $pkgID = 0) {
 		$timestamp = date('Y-m-d H:i:s');
+		if ($row['pkgID'] < 1) {
+			$pkgID = 0;
+		}
 		$this->rows["{$cfKey}.{$pkgID}"] = array(
 			'cfKey' => $cfKey,
 			'timestamp' => $timestamp,
@@ -206,7 +212,7 @@ class ConfigStore {
 	}
 	
 	public function delete($cfKey, $pkgID = null) {
-		if ($pkgID !== null) {
+		if ($pkgID > 0) {
 			unset($this->rows["{$cfKey}.{$pkgID}"]);
 			$this->db->query(
 				"delete from Config where cfKey = ? and pkgID = ?",
