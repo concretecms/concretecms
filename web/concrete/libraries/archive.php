@@ -56,11 +56,11 @@ class Archive {
 	 * @param string $directory
 	 * @return string $directory
 	 */
-	protected function unzip($directory) {
-		$file = $directory . '.zip';
-		$fh = Loader::helper('file');
-		if (function_exists('zip_open')) {
-			$zip = new ZipArchive;
+         protected function unzip($directory) {
+                $file = $directory . '.zip';
+                $fh = Loader::helper('file');
+                if (version_compare(phpversion(), '5.3.0', '>=') && function_exists('zip_open')) {
+                        $zip = new ZipArchive;
 			if ($zip->open($fh->getTemporaryDirectory() . '/' . $file) === TRUE) {
 				$zip->extractTo($fh->getTemporaryDirectory() . '/' . $directory . '/');
 				$zip->close();	

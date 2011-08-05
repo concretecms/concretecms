@@ -59,7 +59,7 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 		});
 
 		$("#newAttrValueRows<?php echo $attrKeyID?>").bind("keydown", function(e) {
-			if (e.keyCode == 13 || e.keyCode == 188) { // comma or enter
+			if (e.keyCode == 13) { // comma or enter
 				if($(this).val().length > 0) {
 					ccmAttributeTypeSelectTagHelper<?php echo $attrKeyID?>.add($(this).val());
 					$(this).val('');

@@ -171,6 +171,7 @@ class ListsStatesProvincesHelper {
 		'WESTL' => 'West Lothian',
 		'WIGTOWN' => 'Wigtownshire',
 		
+		'MERSEYSIDE' => 'Merseyside',
 		
 		'BEDS' => 'Bedfordshire',
 		'LONDON' => 'London',

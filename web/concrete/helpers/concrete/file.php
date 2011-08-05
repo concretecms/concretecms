@@ -94,12 +94,15 @@
 				if ($createDirectories) { 
 					if (!is_dir($base . '/' . $d1)) { 
 						@mkdir($base . '/' . $d1, 0777, TRUE); 
+						@touch($base . '/' . $d1 . '/index.html');
 					} 
 					if (!is_dir($base . '/' . $d1 . '/' . $d2)) { 
 						@mkdir($base . '/' . $d1 . '/' . $d2, 0777, TRUE); 
+						@touch($base . '/' . $d1 . '/' . $d2 . '/index.html');
 					} 
 					if (!is_dir($base . '/' . $d1 . '/' . $d2 . '/' . $d3)) { 
 						@mkdir($base . '/' . $d1 . '/' . $d2 . '/' . $d3, 0777, TRUE); 
+						@touch($base . '/' . $d1 . '/' . $d2 . '/' . $d3 . '/index.html');
 					} 
 				}
 				

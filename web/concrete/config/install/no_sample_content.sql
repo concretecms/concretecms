@@ -10,7 +10,14 @@ INSERT INTO AttributeKeys VALUES(1,'meta_title','Meta Title',1,0,0,0,1,1,1,0)
  ,(6,'header_extra_content','Header Extra Content',1,0,0,0,1,2,1,0)
  ,(7,'exclude_search_index','Exclude From Search Index',1,0,0,0,1,3,1,0)
  ,(8,'exclude_sitemapxml','Exclude From sitemap.xml',1,0,0,0,1,3,1,0)
- ,(11,'tags','Tags',0,0,0,0,1,8,1,0);
+ ,(9,'width','Width',1,0,1,0,0,6,3,0)
+ ,(10,'height','Height',1,0,1,0,0,6,3,0)
+ ,(11,'tags','Tags',0,0,0,0,1,8,1,0)
+ ,(12,'profile_private_messages_enabled','I would like to receive private messages.',1,0,0,0,1,3,2,0)
+ ,(13,'profile_private_messages_notification_enabled','Send me email notifications when I receive a private message.',1,0,0,0,1,3,2,0);
+
+INSERT INTO UserAttributeKeys VALUES (12,0,0,1,0,1,0,0,1)
+ ,(13,0,0,1,0,1,0,1,1);
 
 INSERT INTO AttributeTypeCategories VALUES(1,1)
  ,(1,2)
@@ -119,7 +126,7 @@ INSERT INTO CollectionVersions VALUES(2,1,NULL,NULL,NULL,NOW(),NOW(),'Initial Ve
  ,(55,1,'Download File','download_file',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(63,1,NULL,'uID=1',NULL,NOW(),NOW(),'Initial Version',1,0,NULL,NULL,NULL)
  ,(64,1,'Members','members',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
- ,(75,1,'Composer','composer','Write for your site',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(75,1,'Composer Beta','composer','Write for your site',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(76,1,'Write','write',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(77,1,'Drafts','drafts',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(78,1,'Composer','composer',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
@@ -343,8 +350,11 @@ INSERT INTO Pages VALUES(1,1,'0',1,1,1,NOW(),NOW(),NULL,NOW(),NULL,NULL,1,1,'OVE
 ,(76,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/composer/write.php',0,NULL,0,0,0,75,0,0,-1,'0',0)
 ,(77,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/composer/drafts.php',0,NULL,0,0,1,75,0,0,-1,'0',0)
 ,(78,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/pages/types/composer.php',0,NULL,0,0,1,43,0,0,-1,'0',0)
- ,(79,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/multilingual/view.php',0,NULL,0,0,1,52,0,0,-1,'0',0);
+,(79,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/multilingual/view.php',0,NULL,0,0,1,52,0,0,-1,'0',0);
  
+
+INSERT INTO atSelectSettings VALUES(11,1,'display_asc',1);
+
 
 INSERT INTO TaskPermissions VALUES(1,'access_task_permissions','Change Task Permissions','',0)
 ,(2,'access_sitemap','Access Sitemap and Page Search','',0)
@@ -366,3 +376,6 @@ INSERT INTO TaskPermissionUserGroups VALUES(1,3,0,1)
 ,(8,3,0,1)
 ,(9,3,0,1)
 ,(10,3,0,1);
+
+INSERT INTO atBooleanSettings VALUES(12,1)
+,(13,1);

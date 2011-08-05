@@ -241,12 +241,19 @@
 				break;
 			case 'passthru':
 				if (isset($_GET['bID']) && isset($_GET['arHandle'])) {
-					$a = Area::get($c, $_GET['arHandle']);
-					$b = Block::getByID($_GET['bID'], $c, $a);
-					// basically, we hand off the current request to the block
-					// which handles permissions and everything
-					$p = new Permissions($b);
-					if ($p->canRead()) {
+					$b = Block::getByID($_GET['bID']);
+					if (!$b->isGlobal()) { 
+						$a = Area::get($c, $_GET['arHandle']);
+						$b = Block::getByID($_GET['bID'], $c, $a);
+						// basically, we hand off the current request to the block
+						// which handles permissions and everything
+						$p = new Permissions($b);
+						if ($p->canRead()) {
+							$action = $b->passThruBlock($_REQUEST['method']);
+						}
+					} else if (is_object($b) && (!$b->isError())) { 
+						// global blocks are less restricted
+						// we still have to have a valid ccm token to get here
 						$action = $b->passThruBlock($_REQUEST['method']);
 					}
 				}
@@ -375,7 +382,7 @@
 						//see above
 					}elseif( $cvalID ){
 						//get the cval of the record that corresponds to this version & area 
-						$vals = array( $nvc->getCollectionID(), $nvc->getVersionID(), $_GET['arHandle'], intval($_REQUEST['layoutID']) );
+						$vals = array( $nvc->getCollectionID(), $nvc->getVersionID(), $_GET['arHandle'], intval($originalLayoutID) );
 						$cvalID = intval($db->getOne('SELECT cvalID FROM CollectionVersionAreaLayouts WHERE cID=? AND cvID=? AND arHandle=? AND layoutID=? ',$vals));	
 						if($updateLayoutId) $nvc->updateAreaLayoutId( $cvalID, $layout->layoutID);  
 					}else{  
@@ -606,7 +613,9 @@
 					// we can update the block that we're submitting
 					$b->update($_POST);
 					$obj->error = false;
-					$obj->cID = $nvc->getCollectionID();
+					if (!$obj->cID) {
+						$obj->cID = $nvc->getCollectionID();
+					}
 					$obj->bID = $b->getBlockID();
 				} else {
 					$obj->error = true;

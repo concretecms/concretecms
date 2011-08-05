@@ -392,7 +392,7 @@ var ccmLayoutEdit = {
 		})
 		
 		$('#layoutPresetActionNew input[name=layoutPresetAction]').click(function() {
-			if ($(this).val() == 'create_new_preset' && $(this).attr('checked')) {
+			if ($(this).val() == 'create_new_preset' && $(this).prop('checked')) {
 				$('input[name=layoutPresetName]').attr('disabled', false).focus();
 			} else {
 				$('input[name=layoutPresetName]').val('').attr('disabled', true);
@@ -400,7 +400,7 @@ var ccmLayoutEdit = {
 		});
 		
 		$('#layoutPresetActions input[name=layoutPresetAction]').click(function() {
-			if ($(this).val() == 'create_new_preset' && $(this).attr('checked')) {
+			if ($(this).val() == 'create_new_preset' && $(this).prop('checked')) {
 				$('input[name=layoutPresetNameAlt]').attr('disabled', false).focus();
 			} else {
 				$('input[name=layoutPresetNameAlt]').val('').attr('disabled', true);

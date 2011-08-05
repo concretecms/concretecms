@@ -71,7 +71,7 @@ if (is_object($b)) {
 			}
 			break;
 		case 'view_edit_mode':
-			if ($bp->canWrite() || ($c->canWrite() && $b->isGlobalBlock() && $b->canRead())) {
+			if ($bp->canWrite() || ($c->canWrite() && $b->isGlobal() && $b->canRead())) {
 
 				$btc = $b->getInstance();
 				// now we inject any custom template CSS and JavaScript into the header
@@ -83,6 +83,15 @@ if (is_object($b)) {
 				$v = View::getInstance();
 				
 				$items = $v->getHeaderItems();
+				$csr = $b->getBlockCustomStyleRule(); 
+				if (is_object($csr)) { 
+					$styleHeader = '#'.$csr->getCustomStyleRuleCSSID(1).' {'. $csr->getCustomStyleRuleText(). "}";  ?>
+					<script type="text/javascript">
+						$('head').append('<style type="text/css"><?=addslashes($styleHeader)?></style>');
+					</script>
+				<?
+				}
+
 				if (count($items) > 0) { ?>
 				<script type="text/javascript">				
 				<?
@@ -97,6 +106,11 @@ if (is_object($b)) {
 				} ?>
 				</script>
 				<? }
+				
+				if ($rarHandle) {
+					$pagec = Page::getByID($_REQUEST['cID']);
+					$a = Area::getOrCreate($pagec, $rarHandle);
+				}
 				
 				$bv->renderElement('block_controls', array(
 					'a' => $a,

@@ -103,6 +103,24 @@ class IndexedSearch {
 		return $areas;
 	}
 	
+	public function reindexPage($page) {
+		$db = Loader::db();			
+		if (is_object($page) && ($page instanceof Collection) && ($page->getAttribute('exclude_search_index') != 1)) {
+			$datetime = Loader::helper('date')->getSystemDateTime();
+			$db->Replace('PageSearchIndex', array(
+				'cID' => $page->getCollectionID(), 
+				'cName' => $page->getCollectionName(), 
+				'cDescription' => $page->getCollectionDescription(), 
+				'cPath' => $page->getCollectionPath(),
+				'cDatePublic' => $page->getCollectionDatePublic(), 
+				'content' => $this->getBodyContentFromPage($page),
+				'cDateLastIndexed' => $datetime
+			), array('cID'), true);			
+		} else {
+			$db->Execute('delete from PageSearchIndex where cID = ?', array($page->getCollectionID()));
+		}
+	}	
+	
 	public function getBodyContentFromPage($c) {
 		$searchableAreaNamesInitial=$this->getSavedSearchableAreas();
 		foreach($this->searchableAreaNamesManual as $sm) {

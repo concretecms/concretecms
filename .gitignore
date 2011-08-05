@@ -16,6 +16,7 @@ __MACOSX
 
 # ignore packages folder
 /web/packages/*
+/web/concrete/packages/*
 
 # more stuff
 /web/css/*

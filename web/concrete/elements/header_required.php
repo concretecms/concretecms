@@ -26,7 +26,7 @@ if ($akt) {
 	$pageTitle = $akt; 
 	?><title><?php echo htmlspecialchars($akt, ENT_COMPAT, APP_CHARSET)?></title>
 <?php } else { 
-	$pageTitle = htmlspecialchars($c->getCollectionName(), ENT_COMPAT, APP_CHARSET);
+	$pageTitle = htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET);
 	?><title><?php echo sprintf(PAGE_TITLE_FORMAT, SITE, $pageTitle)?></title>
 <? } 
 

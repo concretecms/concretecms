@@ -13,15 +13,21 @@
 		$cobj = $cArray[$i]; 
 		$target = $cobj->getAttribute('nav_target');
 
-		$title = $cobj->getCollectionName(); ?>
+		if ($cobj->getCollectionPointerExternalLink() != '') {
+			if ($cobj->openCollectionPointerExternalLinkInNewWindow()) {
+				$target = "_blank";
+			}
+		}
+
+		$title = $textHelper->entities($cobj->getCollectionName()); ?>
 	
 	<h3 class="ccm-page-list-title"><a <? if ($target != '') { ?> target="<?=$target?>" <? } ?> href="<?=$nh->getLinkToCollection($cobj)?>"><?=$title?></a></h3>
 	<div class="ccm-page-list-description">
 		<?
 		if(!$controller->truncateSummaries){
-			echo $cobj->getCollectionDescription();
+			echo $textHelper->entities($cobj->getCollectionDescription());
 		}else{
-			echo $textHelper->shorten($cobj->getCollectionDescription(),$controller->truncateChars);
+			echo $textHelper->entities($textHelper->shorten($cobj->getCollectionDescription(),$controller->truncateChars));
 		}
 		?>
 	</div>
@@ -36,7 +42,7 @@
 			<div class="ccm-page-list-rss-icon">
 				<a href="<?=$rssUrl?>" target="_blank"><img src="<?=$uh->getBlockTypeAssetsURL($bt, 'rss.png')?>" width="14" height="14" alt="<?php echo t('RSS Icon')?>" title="<?php echo t('RSS Feed')?>" /></a>
 			</div>
-			<link href="<?=BASE_URL . $rssUrl?>" rel="alternate" type="application/rss+xml" title="<?=$controller->rssTitle?>" />
+			<link href="<?=BASE_URL . $rssUrl?>" rel="alternate" type="application/rss+xml" title="<?=$textHelper->entities($controller->rssTitle)?>" />
 		<? 
 	} 
 	?>

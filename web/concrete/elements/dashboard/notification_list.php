@@ -58,7 +58,7 @@ foreach($notifications as $n) {
 		SystemNotification::SN_TYPE_CORE_MESSAGE_NEWS,
 		SystemNotification::SN_TYPE_CORE_MESSAGE_OTHER
 	))) { ?>
-		<p><?=$txt->shorten(strip_tags($n->getSystemNotificationDescription()), 64)?></p>
+		<? /* <p><?=$txt->shorten(strip_tags($n->getSystemNotificationDescription()), 64)?></p> */ ?>
 	<? } else { ?>
 		<p><?=$n->getSystemNotificationDescription()?></p>
 	<? } ?>

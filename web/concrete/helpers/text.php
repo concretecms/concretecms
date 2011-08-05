@@ -79,8 +79,8 @@ class TextHelper {
 	 * @param int $maxlength
 	 * @return string
 	 */
-	function sanitize($string, $maxlength = 0) {
-		$text = trim(strip_tags($string));
+	function sanitize($string, $maxlength = 0, $allowed = '') {	
+            $text = trim(strip_tags($string, $allowed));
 		if ($maxlength > 0) {
 			if (function_exists('mb_substr')) {
 				$text = mb_substr($text, 0, $maxlength, APP_CHARSET);

@@ -6,18 +6,29 @@ if (!ini_get('safe_mode')) {
 	@set_time_limit(0);
 }
 $jobObj = Loader::model("job");
+$json = Loader::helper('json');
 $outputDisabled=0;
 
-if (!Job::authenticateRequest($_REQUEST['auth'])) {
-	die(t("Access Denied."));
-} 
-
 //JSON vars
-$jsonErrorCode=0;   // 0: Successful, 1: job not found
+$jsonErrorCode=0;   // 0: Successful, 1: job not found, 2: Access Denoed
 $jsonMessage='';
 $jsonJHandle='';
 $jsonJID=0;
 $jsonJDateLastRun='';
+
+if (!Job::authenticateRequest($_REQUEST['auth'])) {
+	if(!$_REQUEST['debug']) {
+		die(t("Access Denied."));
+	} else {
+		$debug = array();
+		$debug['error'] = 2;
+		$debug['message'] = t("Access Denied.");
+		$debug['jHandle'] = '';
+		$debug['jID'] = '';
+		$debug['jDateLastRun'] = '';
+		die($json->encode($debug));
+	}
+} 
 
 //Uncomment to turn debugging on
 //$_REQUEST['debug']=1;
@@ -62,7 +73,7 @@ if( strlen($_REQUEST['jHandle'])>0 || intval($_REQUEST['jID'])>0 ){
 		$outputDisabled=1;
 	$jsonMessage=t('All Jobs Run Successfully');
 	$runTime=date(DATE_APP_GENERIC_MDYT);
-	$jsonJHandle ='All Jobs';	
+	$jsonJHandle =t('All Jobs');	
 }
 
 //all print/echo statements are suppressed, unless the debug variable is set
@@ -71,6 +82,12 @@ if(!$_REQUEST['debug']){
 }
 
 //$runTime=strtotime($jsonJDateLastRun);
-if(!$outputDisabled)
-	echo '{error: '.intval($jsonErrorCode).',message:"'.addslashes($jsonMessage).'",jHandle:"'.$jsonJHandle.'",jID:'.$jsonJID.',jDateLastRun:"'.$runTime.'"}';
-?>
+if(!$outputDisabled) {
+	$debug = array();
+	$debug['error'] = intval($jsonErrorCode);
+	$debug['message'] = $jsonMessage;
+	$debug['jHandle'] = $jsonJHandle;
+	$debug['jID'] = $jsonJID;
+	$debug['jDateLastRun'] = $runTime;
+	echo $json->encode($debug);
+}

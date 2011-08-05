@@ -263,7 +263,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			$db = Loader::db();
 			$pages = array();
-			$r = $db->query("select Pages.cID, Collections.cDateAdded, Collections.cDateModified, max(cvID) as cvID, cvName from Pages inner join Collections on Collections.cID = Pages.cID inner join CollectionVersions on Pages.cID = CollectionVersions.cID where ctID = ? and cIsTemplate = 0 group by CollectionVersions.cID order by cvName asc;", array($this->getCollectionTypeID()));
+			$r = $db->query("select Pages.cID, Collections.cDateAdded, Collections.cDateModified, max(cvID) as cvID, cvName from Pages inner join Collections on Collections.cID = Pages.cID inner join (select * from CollectionVersions order by cvID desc) as Foo on Pages.cID = Foo.cID where ctID = ? and cIsTemplate = 0 group by Foo.cID order by cvName asc;", array($this->getCollectionTypeID()));
 			while ($row = $r->fetchRow()) {
 				$p = new Page;
 				$p->setPropertiesFromArray($row);
