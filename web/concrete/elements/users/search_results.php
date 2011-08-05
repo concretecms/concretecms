@@ -51,7 +51,7 @@
 			$action = View::url('/dashboard/users/search?uID=' . $ui->getUserID());
 			
 			if ($mode == 'choose_one' || $mode == 'choose_multiple') {
-				$action = 'javascript:void(0); ccm_triggerSelectUser(' . $ui->getUserID() . ',\'' . $ui->getUserName() . '\'); jQuery.fn.dialog.closeTop();';
+				$action = 'javascript:void(0); ccm_triggerSelectUser(' . $ui->getUserID() . ',\'' . $txt->entities($ui->getUserName()) . '\',\'' . $txt->entities($ui->getUserEmail()) . '\'); jQuery.fn.dialog.closeTop();';
 			}
 			
 			if (!isset($striped) || $striped == 'ccm-list-record-alt') {

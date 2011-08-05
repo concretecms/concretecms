@@ -54,7 +54,7 @@ class FileAttributeKey extends AttributeKey {
 	}
 	
 	public static function getByID($akID) {
-		$fak = Cache::get('attribute_key', $akID);
+		$fak = Cache::get('file_attribute_key', $akID);
 		if (is_object($fak)) {
 			return $fak;
 		}
@@ -62,7 +62,7 @@ class FileAttributeKey extends AttributeKey {
 		$ak = new FileAttributeKey();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
-			Cache::set('attribute_key', $akID, $ak);
+			Cache::set('file_attribute_key', $akID, $ak);
 			return $ak;	
 		}	
 	}

@@ -112,7 +112,7 @@ class DashboardReportsFormsController extends Controller {
 					$file=File::getByID($fID);
 					if($fID && $file){
 						$fileVersion=$file->getApprovedVersion();
-						echo "\t\t\t".'<a href="'. BASE_URL . DIR_REL . $fileVersion->getRelativePath() .'">'.$fileVersion->getFileName().'</a>'."\r\n";
+						echo "\t\t\t".'<a href="'. $fileVersion->getDownloadURL() .'">'.$fileVersion->getFileName().'</a>'."\r\n";
 					}else{
 						echo "\t\t\t".t('File not found')."\r\n";
 					} 	

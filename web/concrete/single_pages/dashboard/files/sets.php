@@ -201,7 +201,7 @@
 			ccm_alActivateFilePermissionsSelector();	
 			
 			$("#fsOverrideGlobalPermissions").click(function() {
-				if ($(this).attr('checked')) {
+				if ($(this).prop('checked')) {
 					$('#ccm-file-set-permissions-wrapper').show();
 				} else { 
 					$('#ccm-file-set-permissions-wrapper').hide();

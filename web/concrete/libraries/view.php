@@ -746,11 +746,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					}
 					
 					// do we have any custom menu plugins?
-					$ih = Loader::helper('concrete/interface/menu');
-					$_interfaceItems = $ih->getPageHeaderMenuItems();
-					foreach($_interfaceItems as $_im) {
-						$_controller = $_im->getController();
-						$_controller->outputAutoHeaderItems();
+					$cp = new Permissions($view);
+					if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { 
+						$ih = Loader::helper('concrete/interface/menu');
+						$_interfaceItems = $ih->getPageHeaderMenuItems();
+						foreach($_interfaceItems as $_im) {
+							$_controller = $_im->getController();
+							$_controller->outputAutoHeaderItems();
+						}
+						unset($_interfaceItems);
+						unset($_im);
+						unset($_controller);
 					}
 					unset($_interfaceItems);
 					unset($_im);
@@ -792,7 +798,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$pageContent = ob_get_contents();
 					ob_end_clean();
 					
-					print $pageContent;
+					$ret = Events::fire('on_page_output', $pageContent);
+					if($ret != '') {
+						print $ret;
+					} else {
+						print $pageContent;
+					}
 					
 					if ($view instanceof Page) {
 						if ($view->supportsPageCache($_pageBlocks, $this->controller)) {

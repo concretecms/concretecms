@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
-<div class="ccm-editor-controls-left-cap">
+<div class="ccm-editor-controls-left-cap" <? if (isset($editor_width)) { ?>"style="width: <?=$editor_width?>px"<? } ?>>
 <div class="ccm-editor-controls-right-cap">
 <div class="ccm-editor-controls">
 <ul>

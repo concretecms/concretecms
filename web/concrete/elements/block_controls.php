@@ -4,7 +4,11 @@
 	$c = $b->getBlockCollectionObject();
 	$btw = BlockType::getByID($b->getBlockTypeID());
 	$bID = $b->getBlockID();
-	$arHandle = $a->getAreaHandle();
+	if ($rarHandle) { 
+		$arHandle = $rarHandle;
+	} else {
+		$arHandle = $a->getAreaHandle();
+	}
 	$isAlias = $b->isAlias();
 	$isGlobal = $b->isGlobal();
 	$u = new User();

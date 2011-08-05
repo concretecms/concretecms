@@ -208,6 +208,8 @@ cvActivateDatetime       DATETIME,
 
 ALTER TABLE CollectionVersions ADD  INDEX cvIsApproved  (cvIsApproved);
 
+ALTER TABLE CollectionVersions ADD  INDEX cvName  (cvName(128));
+
 CREATE TABLE Collections (
 cID                      INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 cDateAdded               DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -371,7 +373,7 @@ fvHasThumbnail3          INTEGER(1) NOT NULL DEFAULT 0,
 fvExtension              VARCHAR(32),
 fvType                   INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
                  PRIMARY KEY (fID, fvID)
-)ENGINE=MYISAM;
+);
 
 ALTER TABLE FileVersions ADD  INDEX fvExtension  (fvType);
 
@@ -502,6 +504,8 @@ ppIsCanonical            VARCHAR(1) NOT NULL DEFAULT '1',
 ALTER TABLE PagePaths ADD  INDEX cID  (cID);
 
 ALTER TABLE PagePaths ADD  INDEX ppIsCanonical  (ppIsCanonical);
+
+ALTER TABLE PagePaths ADD  INDEX cPath (cPath(128));
 
 CREATE TABLE PageSearchIndex (
 cID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
@@ -938,6 +942,8 @@ atSelectOptionID         INTEGER(10) UNSIGNED NOT NULL,
                  PRIMARY KEY (avID, atSelectOptionID)
 );
 
+ALTER TABLE atSelectOptionsSelected add index `atSelectOptionID` (atSelectOptionID);
+
 CREATE TABLE atAddress (
 avID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 address1                 VARCHAR(255),
@@ -1232,6 +1238,8 @@ CREATE TABLE btTags (
 bID                      INTEGER UNSIGNED NOT NULL,
 title                    VARCHAR(255),
 targetCID                INTEGER,
+displayMode              VARCHAR(20) DEFAULT 'page',
+cloudCount               INTEGER DEFAULT 10,
                  PRIMARY KEY (bID)
 );
 
@@ -1262,16 +1270,24 @@ CREATE TABLE IF NOT EXISTS `CollectionSearchIndexAttributes` (
   `ak_exclude_sitemapxml` tinyint(4) default '0',
   `ak_tags` text,
   PRIMARY KEY  (`cID`)
-);
+) ENGINE=MyISAM;
 
 CREATE TABLE IF NOT EXISTS `FileSearchIndexAttributes` (
   `fID` int(11) unsigned NOT NULL default '0',
   `ak_width` decimal(14,4) default '0.0000',
   `ak_height` decimal(14,4) default '0.0000',
   PRIMARY KEY  (`fID`)
-);
+) ENGINE=MyISAM;
 
 CREATE TABLE UserSearchIndexAttributes (
 uID                      INTEGER(11) UNSIGNED NOT NULL DEFAULT 0,
                  PRIMARY KEY (uID)
 );
+) ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `UserSearchIndexAttributes` (
+  `uID` int(11) unsigned NOT NULL DEFAULT '0',
+  `ak_profile_private_messages_enabled` tinyint(4) DEFAULT '0',
+  `ak_profile_private_messages_notification_enabled` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`uID`)
+) ENGINE=MyISAM;

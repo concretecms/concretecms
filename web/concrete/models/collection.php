@@ -169,17 +169,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$index = new IndexedSearch();
 			}
 			
-			$datetime = Loader::helper('date')->getSystemDateTime();
-			
-			$db->Replace('PageSearchIndex', array(
-				'cID' => $this->getCollectionID(), 
-				'cName' => $this->getCollectionName(), 
-				'cDescription' => $this->getCollectionDescription(), 
-				'cPath' => $this->getCollectionPath(),
-				'cDatePublic' => $this->getCollectionDatePublic(), 
-				'content' => $index->getBodyContentFromPage($this),
-				'cDateLastIndexed' => $datetime
-			), array('cID'), true);			
+			$index->reindexPage($this);
 		}
 		
 		public function getAttributeValueObject($ak, $createIfNotFound = false) {
@@ -664,14 +654,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$blockIDs = array();
 				if (is_array($r)) {
 					foreach($r as $bl) {
-						$blockIDs[$bl['arHandle']][] = $bl;
+						$blockIDs[strtolower($bl['arHandle'])][] = $bl;
 					}
 				}
 				Cache::set('collection_blocks', $this->getCollectionID() . ':' . $this->getVersionID(), $blockIDs);
 			}
 			
 			if ($arHandle != false) {
-				$blockIDsTmp = $blockIDs[$arHandle];
+				$blockIDsTmp = $blockIDs[strtolower($arHandle)];
 				$blockIDs = $blockIDsTmp;
 			} else {
 			

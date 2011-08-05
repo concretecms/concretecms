@@ -459,6 +459,7 @@ if (!defined("API_KEY_PICNIK")) {
 }
 
 $ADODB_ASSOC_CASE =  2;
+
 require(dirname(__FILE__) . '/version.php');
 define('APP_VERSION', $APP_VERSION);
 define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the latest version (this is seconds)

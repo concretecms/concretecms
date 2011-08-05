@@ -71,7 +71,12 @@ INSERT INTO AttributeKeys VALUES(1,'meta_title','Meta Title',1,0,0,0,1,1,1,0)
  ,(8,'exclude_sitemapxml','Exclude From sitemap.xml',1,0,0,0,1,3,1,0)
  ,(9,'width','Width',1,0,1,0,0,6,3,0)
  ,(10,'height','Height',1,0,1,0,0,6,3,0)
- ,(11,'tags','Tags',0,0,0,0,1,8,1,0);
+ ,(11,'tags','Tags',0,0,0,0,1,8,1,0)
+ ,(12,'profile_private_messages_enabled','I would like to receive private messages.',1,0,0,0,1,3,2,0)
+ ,(13,'profile_private_messages_notification_enabled','Send me email notifications when I receive a private message.',1,0,0,0,1,3,2,0);
+
+INSERT INTO UserAttributeKeys VALUES (12,0,0,1,0,1,0,0,1)
+ ,(13,0,0,1,0,1,0,1,1);
 
 INSERT INTO AttributeTypeCategories VALUES(1,1)
  ,(1,2)
@@ -601,7 +606,7 @@ INSERT INTO CollectionVersions VALUES(2,1,NULL,NULL,NULL,NOW(),NOW(),'Initial Ve
  ,(72,4,'My First Blog Post','my-first-blog-post','',NOW(),NOW(),'New Version 4',1,0,1,1,NULL)
  ,(73,4,'Adding a New Post','adding-a-new-post','',NOW(),NOW(),'New Version 4',1,0,1,1,NULL)
  ,(36,2,'Scrapbook','scrapbook','Share content across your site.',NOW(),NOW(),'New Version 2',0,1,1,NULL,NULL)
- ,(75,1,'Composer','composer','Write for your site',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(75,1,'Composer Beta','composer','Write for your site',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(76,1,'Write','write',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(77,1,'Drafts','drafts',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(78,1,'Composer','composer',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
@@ -947,6 +952,9 @@ INSERT INTO atBoolean VALUES(14,0)
  ,(39,0)
  ,(44,0);
 
+INSERT INTO atBooleanSettings VALUES(12,1)
+ ,(13,1);
+
 INSERT INTO atDefault VALUES(11,'')
  ,(12,'')
  ,(13,'')
@@ -1048,9 +1056,9 @@ INSERT INTO btSurveyOptions VALUES(1,37,'Fixing a typo when I see it.',0)
  ,(2,37,'Adding a form as easily as content.',1)
  ,(3,37,'Block area layouts are pretty cool.',2);
 
-INSERT INTO btTags VALUES(23,'Tags',68)
- ,(33,'Tags',68)
- ,(39,'Tags',68);
+INSERT INTO btTags VALUES(23,'Tags',68,'page',10)
+ ,(33,'Tags',68,'page',10)
+ ,(39,'Tags',68,'page',10);
 
 INSERT INTO btYouTube VALUES(6,'Basic Editing','http://www.youtube.com/watch?v=oYSOFTNLbKY');
 

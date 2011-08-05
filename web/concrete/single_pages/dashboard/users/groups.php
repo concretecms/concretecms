@@ -359,7 +359,7 @@ $style = 'width: 60px';
 ccm_checkGroupExpirationOptions = function() {
 	var sel = $("select[name=gUserExpirationMethod]");
 	var cb = $("input[name=gUserExpirationIsEnabled]");
-	if (cb.attr('checked')) {
+	if (cb.prop('checked')) {
 		sel.attr('disabled', false);
 		switch(sel.val()) {
 			case 'SET_TIME':

@@ -60,10 +60,16 @@ class DashboardScrapbookController extends Controller {
 		$this->set('cPath', $cPath); 
 	}
 	
-	public function delete_scrapbook(){
+	public function delete_scrapbook($arHandle, $token){
+		$valt = Loader::helper('validation/token');
+		if(!$valt->validate('delete_scrapbook', $token)){
+			$this->set('error', array($valt->getErrorMessage()));
+			$this->view();
+			return;
+		}
 		$db = Loader::db();
 		$c = $this->getCollectionObject();
-		$vals = array( $_REQUEST['arHandle'], intval($c->getCollectionID()) );
+		$vals = array($arHandle, intval($c->getCollectionID()) );
 		$db->query( 'DELETE FROM Areas WHERE arHandle=? AND cID=?', $vals);
 		$db->query( 'DELETE FROM CollectionVersionBlocks WHERE arHandle=? AND cID=?', $vals);	
 		Cache::flush(); 
@@ -71,7 +77,14 @@ class DashboardScrapbookController extends Controller {
 	} 
 	
 	public function addScrapbook(){
-		$scrapbookName = $_REQUEST['scrapbookName']; 
+		$txt = Loader::helper('text');
+		$valt = Loader::helper('validation/token');
+		if(!$valt->validate('add_scrapbook')){
+			$this->set('error', array($valt->getErrorMessage()));
+			$this->view();
+			return;
+		}
+		$scrapbookName = $txt->sanitize($_REQUEST['scrapbookName']); 
 		$c=$this->getCollectionObject();
 		$a = Area::get($c, $scrapbookName);
 		if (!is_object($a)) {
@@ -80,17 +93,22 @@ class DashboardScrapbookController extends Controller {
 		$this->redirect('/dashboard/scrapbook/');
 	}	
 	
-	public function deleteBlock(){
-		if( intval($_REQUEST['pcID']) ){
-			$pc = PileContent::get($_REQUEST['pcID']);
+	public function deleteBlock($name = '', $pcID = 0, $bID = 0, $token = ''){
+		$valt = Loader::helper('validation/token');
+		if(!$valt->validate('delete_scrapbook_block', $token)){
+			$this->set('error', array($valt->getErrorMessage()));
+			$this->view();
+			return;
+		}
+		if($pcID > 0){
+			$pc = PileContent::get($pcID);
 			$p = $pc->getPile();
 			if ($p->isMyPile()) {
 				$pc->delete();
 			}
 		}else{
-			$bID=intval($_REQUEST['bID']);
 			$c = Page::getCurrentPage();
-			$block=Block::getById($bID, $c, $_REQUEST['scrapbookName']); 
+			$block=Block::getById($bID, $c, $name); 
 			if( $block ){  //&& $block->getAreaHandle()=='Global Scrapbook'
 				$block->delete(1);
 			}
@@ -99,6 +117,12 @@ class DashboardScrapbookController extends Controller {
 	}
 	
 	public function rename_block(){
+		$valt = Loader::helper('validation/token');
+		if(!$valt->validate('rename_scrapbook_block')){
+			$this->set('error', array($valt->getErrorMessage()));
+			$this->view();
+			return;
+		}
 		$bID=intval($_REQUEST['bID']); 
 		$globalScrapbookC=$this->getCollectionObject(); 
 		$scrapbookName = $_REQUEST['scrapbookName']; 
@@ -112,13 +136,21 @@ class DashboardScrapbookController extends Controller {
 				$block->updateBlockName( $_POST['bName'], 1 );
 			}
 		} 
-		$this->view();	
+		header('Location: ' . View::url('/dashboard/scrapbook', 'view') . '?scrapbookName=' . $scrapbookName);
+		exit;
 	}
 	
 	public function rename_scrapbook(){
+		$valt = Loader::helper('validation/token');
+		if(!$valt->validate('rename_scrapbook')){
+			$this->set('error', array($valt->getErrorMessage()));
+			$this->view();
+			return;
+		}
+		$txt = Loader::helper('text');
 		$db = Loader::db();
 		$c=$this->getCollectionObject();
-		$scrapbookName=$_POST['scrapbookName'];
+		$scrapbookName=$txt->sanitize($_POST['scrapbookName']);
 		
 		//get original area name
 		$vals=array(  intval($_POST['arID']), $c->getCollectionId() ); 

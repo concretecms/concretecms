@@ -7,6 +7,17 @@ class DashboardSettingsMultilingualController extends DashboardBaseController {
 
 	public $helpers = array('form'); 
 	
+	public function on_start() {
+		$subnav = array(
+			array(View::url('/dashboard/settings'), t('General')),
+			array(View::url('/dashboard/settings/mail'), t('Email')),
+			array(View::url('/dashboard/settings', 'set_permissions'), t('Access')),
+			array(View::url('/dashboard/settings/multilingual'), t('Multilingual'), true),
+			array(View::url('/dashboard/settings', 'set_developer'), t('Debug')),
+			array(View::url('/dashboard/settings', 'manage_attribute_types'), t('Attributes'))
+		);
+		$this->set('subnav', $subnav);	}
+	
 	public function view() {
 		Loader::library('3rdparty/Zend/Locale');
 		$languages = Localization::getAvailableInterfaceLanguages();

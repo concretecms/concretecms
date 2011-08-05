@@ -130,12 +130,12 @@ if (isset($entry)) { ?>
 		$('#ccm-dashboard-composer-form').ajaxSubmit({
 			'dataType': 'json',
 			'success': function(r) {
+				$('input[name=autosave]').val('0');
 				ccm_composerLastSaveTime = new Date();
 				$("#composer-save-status").html('<?=t("Page saved at ")?>' + r.time);
 				$(".ccm-composer-hide-on-approved").show();
 			}
 		});
-		$('input[name=autosave]').val('0');
 	}
 	
 	ccm_composerLaunchPreview = function() {

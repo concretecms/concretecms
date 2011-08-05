@@ -15,6 +15,14 @@ if (isset($message)) { ?>
 </div>
 
 <? } else { ?>
+
+<style type="text/css">
+input.ccm-input-text:disabled {
+	opacity: 0.8;
+	-moz-opacity: 0.8;
+}
+</style>
+
 <script type="text/javascript">
 
 
@@ -129,13 +137,15 @@ $(function() {
 <div class="ccm-install-info"><?=t('Multilingual support requires the gettext PHP extension and may not work with safe mode enabled.')?></div>
 
 </div>
-<div class="test <? if ($searchTest) { ?>passed<? } else { ?>warning<? } ?>"><?=t('Search Indexing Available')?>
+*/ ?>
+
+<div class="test <? if ($remoteFileUploadTest) { ?>passed<? } else { ?>warning<? } ?>"><?=t('Remote File Importing Available')?>
 
 <a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
-<div class="ccm-install-info"><?=t('Search indexing requires the mbstring and iconv PHP extensions, and PCRE support.')?></div>
+<div class="ccm-install-info"><?=t('Remote file importing through the file manager requires the iconv PHP extension.')?></div>
 
 </div>
-*/ ?>
+
 <div class="test <? if ($diffTest) { ?>passed<? } else { ?>warning<? } ?>"><?=t('Version Comparison Available')?>
 
 <a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>

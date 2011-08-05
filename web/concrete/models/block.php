@@ -225,8 +225,10 @@ class Block extends Object {
 		$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
 		$globalScrapbookC = $scrapbookHelper->getGlobalScrapbookPage(); 
 		
-		if( $this->cID==$globalScrapbookC->cID ) return true;
-		
+		if( $this->cID==$globalScrapbookC->cID ) {
+			$this->bIsGlobal = true;	
+			return true;
+		}
 		$q = "SELECT b.bID FROM Blocks AS b, CollectionVersionBlocks AS cvb ".
 			 "WHERE b.bID = '{$this->bID}' AND cvb.bID=b.bID AND cvb.cID=".intval($globalScrapbookC->getCollectionId())." LIMIT 1";
 			 
@@ -1096,21 +1098,29 @@ class Block extends Object {
 	 * Removes a cached version of the block 
 	 */
 	public function refreshCache() {
-		$c = $this->getBlockCollectionObject();
-		$a = $this->getBlockAreaObject();
-		if (is_object($c) && is_object($a)) {
-			Cache::delete('block', $this->getBlockID() . ':' . $c->getCollectionID() . ':' . $c->getVersionID() . ':' . $a->getAreaHandle());
-			Cache::delete('block_view_output', $c->getCollectionID() . ':' . $this->getBlockID() . ':' . $a->getAreaHandle());
-			Cache::delete('collection_blocks', $c->getCollectionID() . ':' . $c->getVersionID());
+		// if the block is a global block, we need to delete all cached versions that reference it.
+		if ($this->bIsGlobal) {
+			$this->refreshCacheAll();
+		} else { 
+			$c = $this->getBlockCollectionObject();
+			$a = $this->getBlockAreaObject();
+			if (is_object($c) && is_object($a)) {
+				Cache::delete('block', $this->getBlockID() . ':' . $c->getCollectionID() . ':' . $c->getVersionID() . ':' . $a->getAreaHandle());
+				Cache::delete('block_view_output', $c->getCollectionID() . ':' . $this->getBlockID() . ':' . $a->getAreaHandle());
+				Cache::delete('collection_blocks', $c->getCollectionID() . ':' . $c->getVersionID());
+			}
+			Cache::delete('block', $this->getBlockID());		
 		}
-		Cache::delete('block', $this->getBlockID());		
 	}
 	
-	public function refreshCacheAll(){
+	public function refreshCacheAll() {
 		$db = Loader::db();
 		$rows=$db->getAll( 'SELECT cID, cvID, arHandle FROM CollectionVersionBlocks WHERE bID='.intval($this->getBlockID()) ); 
 		foreach($rows as $row){
 			Cache::delete('block', $this->getBlockID() . ':' . intval($row['cID']) . ':' . intval($row['cvID']) . ':' . $row['arHandle'] );
+			Cache::delete('block_view_output', $row['cID'] . ':' . $this->getBlockID(). ':' . $row['arHandle']);
+			Cache::delete('collection_blocks', $row['cID'] . ':' . $row['cvID']);
+			Cache::delete('block', $this->getBlockID());
 		}
 	}
 	
