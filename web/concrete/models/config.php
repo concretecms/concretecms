@@ -63,9 +63,11 @@ class Config extends Object {
 		$cv = self::getStore()->get($cfKey, $pkgID);
 
 		if (!$getFullObject) {
-			$value = $cv->value;
-			unset($cv);
-			return $value;
+			if (is_object($cv)) {
+				$value = $cv->value;
+				unset($cv);
+				return $value;
+			}
 		} else {
 			return $cv;
 		}
