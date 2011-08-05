@@ -19,9 +19,8 @@ class Page extends Collection {
 	 * @return Page
 	 */
 	public static function getByPath($path, $version = 'RECENT') {
-		if(substr($path, -1) == '/') { // if the path ends in a / remove it.
-			$path = substr($path, 0, -1);
-		}
+		$path = rtrim($path, '/'); // if the path ends in a / remove it.
+
 		$cID = Cache::get('page_id_from_path', $path);
 		if ($cID == false) {
 			$db = Loader::db();
