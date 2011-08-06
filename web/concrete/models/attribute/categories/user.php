@@ -44,7 +44,7 @@ class UserAttributeKey extends AttributeKey {
 	public function getAttributeValue($avID, $method = 'getValue') {
 		$av = UserAttributeValue::getByID($avID);
 		$av->setAttributeKey($this);
-		return call_user_func_array(array($av, $method), array());
+		return $av->{$method}();
 	}
 	
 	public static function getByID($akID) {

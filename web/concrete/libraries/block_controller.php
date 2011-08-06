@@ -291,14 +291,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$this->load();
 			}
 			if (method_exists($this, 'on_start')) {
-				call_user_func_array(array($this, 'on_start'), array($method));
+				$this->on_start($method);
 			}
 			if ($method) {
 				$this->runTask($method, array());
 			}
 			
 			if (method_exists($this, 'on_before_render')) {
-				call_user_func_array(array($this, 'on_before_render'), array($method));
+				$this->on_before_render($method);
 			}
 		}
 
