@@ -88,9 +88,11 @@ class Config extends Object {
 	}
 	
 	public function getAndDefine($key, $defaultValue) {
-		$val = Config::get($key);
-		if ($val == null) {
+		$val = Config::get($key, true);
+		if (!$val) {
 			$val = $defaultValue;
+		} else {
+			$val = $val->value;
 		}
 		define($key, $val);
 	}
@@ -137,6 +139,10 @@ class ConfigStore {
 	}
 	
 	private function load() {
+		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
+			// if cache has been explicitly disabled, we re-enable it anyway.
+			Cache::enableCache();
+		}
 		$val = Cache::get('config_options', 'all');
 		if ($val) {
 			$this->rows = $val;
@@ -151,6 +157,9 @@ class ConfigStore {
 			}
 			$r->Close();
 			Cache::set('config_options', 'all', $this->rows);
+		}
+		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
+			Cache::disableCache();
 		}
 	}
 	
@@ -208,7 +217,15 @@ class ConfigStore {
 			"replace into Config (cfKey, timestamp, cfValue, pkgID) values (?, ?, ?, ?)",
 			array($cfKey, $timestamp, $cfValue, $pkgID)
 		);
+		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
+			// if cache has been explicitly disabled, we re-enable it anyway.
+			Cache::enableCache();
+		}
 		Cache::set('config_options', 'all', $this->rows);
+		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
+			// if cache has been explicitly disabled, we re-enable it anyway.
+			Cache::disableCache();
+		}
 	}
 	
 	public function delete($cfKey, $pkgID = null) {
@@ -229,6 +246,14 @@ class ConfigStore {
 				array($cfKey)
 			);
 		}
+		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
+			// if cache has been explicitly disabled, we re-enable it anyway.
+			Cache::enableCache();
+		}
 		Cache::set('config_options', 'all', $this->rows);
+		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
+			// if cache has been explicitly disabled, we re-enable it anyway.
+			Cache::disableCache();
+		}
 	}
 }

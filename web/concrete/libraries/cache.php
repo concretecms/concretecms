@@ -72,8 +72,9 @@ class Cache {
 	}
 	
 	public function enableCache() {
-		if (defined('ENABLE_CACHE') && ENABLE_CACHE == TRUE) {
-			Cache::getLibrary()->setOption('caching', true);
+		$ca = Cache::getLibrary();
+		if (is_object($ca)) {
+			$ca->setOption('caching', true);
 		}
 	}
 	
