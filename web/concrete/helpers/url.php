@@ -48,15 +48,15 @@ class UrlHelper {
 		return $url . '?' . http_build_query($params, '', '&');
 	}
 
-        /**
-	* Shortens a given url with the tiny url api
-	* @param string $strURL
-	* @return string $url
-	*/
-	public function shortenUrl($strURL) {
-                $file=loader::helper('file');
-                $url=$file->getContents("http://tinyurl.com/api-create.php?url=".$strURL);
-    	        return $url;
+    /**
+	 * Shortens a given url with the tiny url api
+	 * @param string $strURL
+	 * @return string $url
+	 */
+	public function shortenURL($strURL) {
+		$file = Loader::helper('file');
+		$url = $file->getContents("http://tinyurl.com/api-create.php?url=".$strURL);
+		return $url;
 	}
 
 	
