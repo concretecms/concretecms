@@ -494,7 +494,7 @@ class DatabaseItemListColumn {
 
 	public function getColumnValue($obj) {
 		if (is_array($this->callback)) {
-			return call_user_func_array($this->callback, array($obj));
+			return call_user_func($this->callback, $obj);
 		} else {
 			return call_user_func(array($obj, $this->callback));
 		}
@@ -563,7 +563,7 @@ class DatabaseItemListColumnSet {
 	}
 	public function getColumnByKey($key) {
 		if (substr($key, 0, 3) == 'ak_') {
-			$ak = call_user_func_array(array($this->attributeClass, 'getByHandle'), array(substr($key, 3)));
+			$ak = call_user_func(array($this->attributeClass, 'getByHandle'), substr($key, 3));
 			$col = new DatabaseItemListAttributeKeyColumn($ak);
 			return $col;
 		} else {
