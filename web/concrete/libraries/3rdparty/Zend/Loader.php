@@ -187,6 +187,8 @@ class Zend_Loader
             return false;
         }
 
+        if(strpos($filename, '/')==0) return false; //if absolute path skip
+
         foreach (self::explodeIncludePath() as $path) {
             if ($path == '.') {
                 if (is_readable($filename)) {
@@ -195,7 +197,7 @@ class Zend_Loader
                 continue;
             }
             $file = $path . '/' . $filename;
-            if (is_readable($file)) {
+            if (is_readable(realpath($file))) {
                 return true;
             }
         }
