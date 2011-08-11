@@ -164,9 +164,11 @@
 						if (is_array($_POST['checkedCIDs'])) {
 							foreach($_POST['checkedCIDs'] as $cID) {
 								if (!(is_array($_POST['cIDs'])) || (!in_array($cID, $_POST['cIDs']))) {
-									$nc = Page::getByID($cID);
+									$nc = Page::getByID($cID, 'RECENT');
 									$nb = Block::getByID($_GET['bID'], $nc, $a);
-									$nb->deleteBlock();
+									if (is_object($nb) && (!$nb->isError())) {
+										$nb->deleteBlock();
+									}
 									$nc->rescanDisplayOrder($_REQUEST['arHandle']);								
 								}
 								
