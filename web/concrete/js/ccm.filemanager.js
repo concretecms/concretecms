@@ -242,6 +242,11 @@ ccm_alSetupSetsForm = function(searchInstance) {
 			$(this).find('img').attr('src', CCM_IMAGE_PATH + '/checkbox_state_' + toSetState + '.png');
 		});
 	});
+	$("#ccm-" + searchInstance + "-add-to-set-form input[name=fsNew]").click(function() {
+		if (!$(this).prop('checked')) {
+			$("#ccm-" + searchInstance + "-add-to-set-form input[name=fsNewText]").val('');
+		}
+	});
 	$("#ccm-" + searchInstance + "-add-to-set-form").submit(function() {
 		ccm_alSubmitSetsForm(searchInstance);
 		return false;

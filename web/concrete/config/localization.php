@@ -100,6 +100,9 @@ if (!defined('DATE_APP_DATE_ATTRIBUTE_TYPE_MDY')) {
 if (!defined('DATE_APP_DATE_ATTRIBUTE_TYPE_T')) {
 	define('DATE_APP_DATE_ATTRIBUTE_TYPE_T', DATE_APP_GENERIC_TS);
 }
+if (!defined('DATE_APP_DATE_PICKER')) {
+	define('DATE_APP_DATE_PICKER', 'm/d/yy');
+}
 
 
 if (!defined('DATE_APP_SURVEY_RESULTS')) {

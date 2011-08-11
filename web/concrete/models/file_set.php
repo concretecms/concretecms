@@ -105,6 +105,11 @@
 			}
 		}
 		
+		/**
+		 * Get a file set object by a file set's id
+		 * @param int $fsID
+		 * @return FileSet
+		 */
 		public function getByID($fsID) {
 			$db = Loader::db();
 			$row = $db->GetRow('select * from FileSets where fsID = ?', array($fsID));
@@ -122,6 +127,11 @@
 			}
 		}
 		
+		/**
+		 * Get a file set object by a file name
+		 * @param string $fsName
+		 * @return FileSet
+		 */
 		public function getByName($fsName) {
 			$db = Loader::db();
 			$row = $db->GetRow('select * from FileSets where fsName = ?', array($fsName));

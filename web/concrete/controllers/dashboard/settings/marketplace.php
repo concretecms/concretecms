@@ -11,6 +11,7 @@ class DashboardSettingsMarketplaceController extends Controller {
 			array(View::url('/dashboard/settings'), t('General'), true),
 			array(View::url('/dashboard/settings/mail'), t('Email')),
 			array(View::url('/dashboard/settings', 'set_permissions'), t('Access')),
+                        array(View::url('/dashboard/settings/multilingual'), t('Multilingual')),
 			array(View::url('/dashboard/settings', 'set_developer'), t('Debug')),
 			array(View::url('/dashboard/settings', 'manage_attribute_types'), t('Attributes'))
 		);
