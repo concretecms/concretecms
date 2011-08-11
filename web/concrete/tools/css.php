@@ -20,6 +20,7 @@ if (isset($au->theme) && isset($au->file)) {
 			$stat = filemtime($pt->getThemeDirectory() . '/' . $au->file);
 
 			$style = Cache::get(str_replace('-','_', $au->theme), $au->file, $stat);
+			
 			if ($style == '') {
 				$style = $pt->parseStyleSheet($au->file);
 				Cache::set(str_replace('-','_', $au->theme), $au->file, $style, CACHE_LIFETIME);
