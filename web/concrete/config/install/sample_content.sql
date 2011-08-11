@@ -723,11 +723,11 @@ INSERT INTO FileVersionLog VALUES(1,1,1,5,9)
  ,(19,5,1,3,0)
  ,(20,5,1,4,0);
 
-INSERT INTO FileVersions VALUES(1,1,'inneroptics_dot_net_aspens.jpg','371285369023',1,108199,'inneroptics_dot_net_aspens.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
- ,(2,1,'inneroptics_dot_net_canyonlands.jpg','911285369025',1,54531,'inneroptics_dot_net_canyonlands.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
- ,(3,1,'inneroptics_dot_net_new_zealand_sheep.jpg','851285369025',1,80735,'inneroptics_dot_net_new_zealand_sheep.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
- ,(4,1,'inneroptics_dot_net_portland.jpg','711285369026',1,55737,'inneroptics_dot_net_portland.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
- ,(5,1,'inneroptics_dot_net_starfish.jpg','701285369026',1,88621,'inneroptics_dot_net_starfish.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1);
+INSERT INTO FileVersions VALUES(1,1,'inneroptics_dot_net_aspens.jpg','371285369023',1,108199,'inneroptics_dot_net_aspens.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(2,1,'inneroptics_dot_net_canyonlands.jpg','911285369025',1,54531,'inneroptics_dot_net_canyonlands.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(3,1,'inneroptics_dot_net_new_zealand_sheep.jpg','851285369025',1,80735,'inneroptics_dot_net_new_zealand_sheep.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(4,1,'inneroptics_dot_net_portland.jpg','711285369026',1,55737,'inneroptics_dot_net_portland.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(5,1,'inneroptics_dot_net_starfish.jpg','701285369026',1,88621,'inneroptics_dot_net_starfish.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1);
 
 INSERT INTO Files VALUES(1,NOW(),1,0,2,0,NULL)
  ,(2,NOW(),1,0,2,0,NULL)
