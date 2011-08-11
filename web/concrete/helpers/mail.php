@@ -28,6 +28,10 @@ class MailHelper {
 	protected $template; 
 	protected $bodyHTML = false;
 	
+	/**
+	 * @todo documentation
+	 * @return Ambigous <Zend_Mail_Transport_Smtp, Zend_Mail>
+	 */
 	public static function getMailerObject(){
 		Loader::library('3rdparty/Zend/Mail');
 		$response = array();
@@ -99,19 +103,51 @@ class MailHelper {
 		$this->bodyHTML = $bodyHTML;
 	}
 	
-	//if you don't want to use the load method
+	/**
+	 * Manually set the text body of a mail message, typically the body is set in the template + load method
+	 * @param string $body
+	 * @return void
+	 */
 	public function setBody($body){
 		$this->body = $body;
 	}
+	
+	/**
+	 * Manually set the message's subject
+	 * @param string $subject
+	 * @return void
+	 */
 	public function setSubject($subject){
 		$this->subject = $subject;
 	}	
 	
+	/**
+	 * Returns the message's subject
+	 * @return string
+	 */
 	public function getSubject() {return $this->subject;}
+	
+	/**
+	 * Returns the message's text body
+	 * @return string
+	 */
 	public function getBody() {return $this->body;}
+	
+	
+	/**
+	 * manually set the HTML portion of a MIME encoded message, can also be done by setting $bodyHTML in a mail template
+	 * @param string $html
+	 * @return void
+	 */
 	public function setBodyHTML($html) {
 		$this->bodyHTML = $html;
-	}	
+	}
+	
+	/**
+	 * @param MailImporter $importer
+	 * @param array $data
+	 * @return void
+	 */
 	public function enableMailResponseProcessing($importer, $data) {
 		foreach($this->to as $em) {
 			$importer->setupValidation($em[0], $data);
@@ -120,6 +156,11 @@ class MailHelper {
 		$this->body = $importer->setupBody($this->body);		
 	}
 	
+	/**
+	 * @param array $arr
+	 * @return string
+	 * @todo documentation
+	 */
 	protected function generateEmailStrings($arr) {
 		$str = '';
 		for ($i = 0; $i < count($arr); $i++) {
@@ -182,6 +223,7 @@ class MailHelper {
 		
 	/** 
 	 * Sends the email
+	 * @return void
 	 */
 	public function sendMail() {
 		$_from[] = $this->from;
