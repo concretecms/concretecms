@@ -14,7 +14,7 @@ class DownloadFileController extends Controller {
 		// get the block
 		if ($fID > 0) {
 			$file = File::getByID($fID);			
-			if ($file instanceof File && $file->getFileID() > 0) {				
+			if ($file instanceof File && $file->getFileID() > 0) {	
 				
 				$fp = new Permissions($file);
 				if (!$fp->canRead()) {
