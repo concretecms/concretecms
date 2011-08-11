@@ -21,6 +21,8 @@ class JsonHelper {
 	
 	/** 
 	 * Decodes a JSON string
+	 * @param string $string
+	 * @return string
 	 */
 	public function decode($string) {
 		if (function_exists('json_decode')) {
@@ -35,6 +37,8 @@ class JsonHelper {
 	
 	/** 
 	 * Encodes a data structure into a JSON string
+	 * @param string $mixed
+	 * @return string
 	 */
 	public function encode($mixed) {
 		if (function_exists('json_encode')) {

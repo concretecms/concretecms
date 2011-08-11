@@ -1,6 +1,4 @@
-<?
-
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
  * @package Core
@@ -11,17 +9,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
  *
  */
 
-/**
-
- * @package Core
- * @author Andrew Embler <andrew@concrete5.org>
- * @category Concrete
- * @copyright  Copyright (c) 2003-2009 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
 class MailImporter extends Object {
 
+	/**
+	 * gets the text string that's used to identify the body of the message
+	 * @return string
+	 */
 	public function getMessageBodyHeader() {
 		return t('--- Reply ABOVE. Do not alter this line --- [' . $this->validationHash  . '] ---');
 	}
