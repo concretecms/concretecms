@@ -14,16 +14,7 @@
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
- * Now includes
- * Modification of concrete/helpers/image.php to include cropping functionality.
- * 
- * To use this helper in your site, just place this file into YOURSITE/helpers (NOT YOURSITE/concrete/helpers),
- * then anywhere in code you call the image helper's "create()", "getThumbnail()", or "outputThumbnail()" functions,
- * you can add a new argument of "true" to the end of the parameters list to enable cropping.
- * For example:
- * $ih = Loader::helper('image');
- * $ih->getThumbnail($fileObj, 150, 150, true); //<-- will crop the image to 150x150 pixels
-
+ * Now includes cropping functionality (thanks to Jordan Lev and Kirk Roberts)
  */
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -191,7 +182,7 @@ class ImageHelper {
 	/** 
 	 * Returns a path to the specified item, resized and/or cropped to meet max width and height. $obj can either be
 	 * a string (path) or a file object. 
-	 * Returns an object with the following properties: src, width, height, alt
+	 * Returns an object with the following properties: src, width, height
 	 * @param mixed $obj
 	 * @param int $maxWidth
 	 * @param int $maxHeight

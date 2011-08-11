@@ -99,6 +99,10 @@ class FileImporter {
 	 * somehow. That's what happens in tools/files/importers/.
 	 * If a $fr (FileRecord) object is passed, we assign the newly imported FileVersion
 	 * object to that File. If not, we make a new filerecord.
+	 * @param string $pointer path to file
+	 * @param string $filename
+	 * @param FileRecord $fr
+	 * @return number Error Code | FileVersion
 	 */
 	public function import($pointer, $filename = false, $fr = false) {
 		

@@ -61,7 +61,7 @@ INSERT INTO BlockTypes VALUES(1,'content','Content','HTML/WYSIWYG Editor Content
  ,(7,'file','File','Link to files stored in the asset library.',1,0,0,0,300,250,0)
  ,(8,'image','Image','Adds images and onstates from the library to pages.',1,0,0,0,300,440,0)
  ,(9,'flash_content','Flash Content','Embeds SWF files, including flash detection.',1,0,0,0,300,240,0)
- ,(10,'guestbook','Guestbook','Adds blog-style comments (a guestbook) to your page.',1,0,1,0,300,260,0)
+ ,(10,'guestbook','Guestbook/Comments','Adds blog-style comments (a guestbook) to your page.',1,0,1,0,300,260,0)
  ,(11,'slideshow','Slideshow','Display a running loop of images.',1,0,0,0,550,400,0)
  ,(12,'search','Search','Add a search box to your site.',1,0,0,0,400,170,0)
  ,(13,'google_map','Google Map','Enter an address and a Google Map of that location will be placed in your page.',1,0,0,0,400,220,0)

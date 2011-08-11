@@ -37,15 +37,28 @@ class UrlHelper {
 			if (strpos($url, '?') === false) {
 				$url = $url . '?' . $variable . '=' . $value;
 			} else {
-				$url = $url . '&amp;' . $variable . '=' . $value;
+				$url = $url . '&' . $variable . '=' . $value;
 			}
 		}
 		
+		$url = str_replace('&', '&amp;', $url);
 		return $url;
 	}
 	
 	public function buildQuery($url, $params) {
 		return $url . '?' . http_build_query($params, '', '&');
 	}
+
+    /**
+	 * Shortens a given url with the tiny url api
+	 * @param string $strURL
+	 * @return string $url
+	 */
+	public function shortenURL($strURL) {
+		$file = Loader::helper('file');
+		$url = $file->getContents("http://tinyurl.com/api-create.php?url=".$strURL);
+		return $url;
+	}
+
 	
 }
