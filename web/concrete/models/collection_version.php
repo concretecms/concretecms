@@ -104,15 +104,6 @@
 				}
 			}
 			
-			if ($cv->cvAuthorUID > 0) {
-				$uAuthor = UserInfo::getByID($cv->cvAuthorUID);
-				if(is_object($uAuthor)) $cv->cvAuthorUname = $uAuthor->getUserName();
-			}
-			if ($cv->cvApproverUID > 0) {
-				$uApprover = UserInfo::getByID($cv->cvApproverUID);
-				if(is_object($uApprover)) $cv->cvApproverUname = $uApprover->getUserName();
-			}
-			
 			// load the attributes for a particular version object
 			Loader::model('attribute/categories/collection');			
 			$cv->attributes = CollectionAttributeKey::getAttributes($c->getCollectionID(), $cvID);
@@ -145,8 +136,18 @@
 		function getVersionComments() {return $this->cvComments;}
 		function getVersionAuthorUserID() {return $this->cvAuthorUID;}
 		function getVersionApproverUserID() {return $this->cvApproverUID;}
-		function getVersionAuthorUserName() {return $this->cvAuthorUname;}
-		function getVersionApproverUserName() {return $this->cvApproverUname;}
+		function getVersionAuthorUserName() {
+			if ($this->cvAuthorUID > 0) {
+				$db = Loader::db();
+				return $db->GetOne('select uName from Users where uID = ?', array($this->cvAuthorUID));
+			}
+		}
+		function getVersionApproverUserName() {
+			if ($this->cvApproverUID > 0) {
+				$db = Loader::db();
+				return $db->GetOne('select uName from Users where uID = ?', array($this->cvApproverUID));
+			}
+		}
 		
 		/**
 		 * Gets the date the collection version was created 
