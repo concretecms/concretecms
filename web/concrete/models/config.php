@@ -203,7 +203,7 @@ class ConfigStore {
 	
 	public function set($cfKey, $cfValue, $pkgID = 0) {
 		$timestamp = date('Y-m-d H:i:s');
-		if ($row['pkgID'] < 1) {
+		if ($pkgID < 1) {
 			$pkgID = 0;
 		}
 		$this->rows["{$cfKey}.{$pkgID}"] = array(
