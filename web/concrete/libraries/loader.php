@@ -205,6 +205,7 @@
 						ADOdb_Active_Record::SetDatabaseAdapter($_dba);
 						$_db = new Database();
 						$_db->setDatabaseObject($_dba);
+						//$_db->setDebug(true);
 						//$_db->setLogging(true);
 					} else if (defined('DB_SERVER')) {
 						$v = View::getInstance();

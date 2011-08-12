@@ -321,10 +321,15 @@ class Block extends Object {
 		
 		// ONLY ALLOWS ITEMS THAT START WITH "action_";
 		
-		return @call_user_func_array(array($bc, $method), array());
+		return @$bc->{$method}();
 	}
 	
-	public function getInstance() {
+	public function getInstance() {		
+		if ($this->instance->cacheBlockRecord() && is_object($this->instance->getBlockControllerData())) {
+			$this->instance->__construct();
+		} else {
+			$this->instance = Loader::controller($this);
+		}		
 		return $this->instance;
 	}
 	
