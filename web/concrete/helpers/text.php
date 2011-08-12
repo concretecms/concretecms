@@ -95,6 +95,16 @@ class TextHelper {
 	}
 
 	/**
+	 * Leaves only characters that are valid in email addresses (RFC)
+	 * @param string $email
+	 * @return string
+	 */
+	public function email($email) {
+		$regex = "/[^a-zA-Z0-9_\.!#\$\&'\*\+-?^`{|}~@]/i";
+		return preg_replace($regex, '', $email);
+	}
+
+	/**
 	 * always use in place of htmlentites(), so it works with different langugages
 	**/
 	public function entities($v){
