@@ -120,6 +120,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return true;
 		}
 		
+		public function getBlockControllerData() {
+			return $this->record;
+		}
+		
 		/**
 		 * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
 		 * @param array $args
@@ -127,15 +131,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		public function save($args) {
 			//$argsMerged = array_merge($_POST, $args);
-			if ($this->btTable) {
-				$attribs = $this->record->getAttributeNames();
-				foreach($attribs as $key) {
-					if (isset($args[$key])) {
-						$this->record->{$key} = $args[$key];
-					}
+			$attribs = $this->record->getAttributeNames();
+			foreach($attribs as $key) {
+				if (isset($args[$key])) {
+					$this->record->{$key} = $args[$key];
 				}
-				$this->record->Replace();
 			}
+			$this->record->Replace();
 		}
 		
 		/**
@@ -166,7 +168,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$this->__construct();
 		}
 		
-
+		public function cacheBlockRecord() {
+			return $this->btCacheBlockRecord;
+		}
+		
 		public function cacheBlockOutput() {
 			return $this->btCacheBlockOutput;
 		}
@@ -225,11 +230,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @return void
 		 */
 		protected function load() {
-			if ($this->btTable) {
-				$attribs = $this->record->getAttributeNames();
-				foreach($attribs as $key) {
-					$this->{$key} = $this->record->$key;
-					$this->set($key, $this->record->$key);
+			if (is_object($this->record)) {
+				foreach($this->record as $key => $value) {
+					$this->{$key} = $value;
+					$this->set($key, $value);
 				}
 			}
 		}
@@ -283,15 +287,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if ($method) {
 				$this->task = $method;
 			}
+			if ($this->btCacheBlockRecord) {
+				$this->load();
+			}
 			if (method_exists($this, 'on_start')) {
-				call_user_func_array(array($this, 'on_start'), array($method));
+				$this->on_start($method);
 			}
 			if ($method) {
 				$this->runTask($method, array());
 			}
 			
 			if (method_exists($this, 'on_before_render')) {
-				call_user_func_array(array($this, 'on_before_render'), array($method));
+				$this->on_before_render($method);
 			}
 		}
 

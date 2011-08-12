@@ -1,4 +1,4 @@
-<?
+<?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -31,109 +31,229 @@ class ConfigValue extends Object {
 }
 
 class Config extends Object {
-	
-	private $props = array();
 	private $pkg = false;
+	private static $store;
+	
+	public static function setStore(ConfigStore $store)
+	{
+		self::$store = $store;
+	}
+	
+	/**
+	 * @return ConfigStore
+	 */
+	private static function getStore()
+	{
+		if (!self::$store) {
+			self::$store = new ConfigStore(Loader::db());
+		}
+		return self::$store;
+	}
 	
 	public function setPackageObject($pkg) {
 		$this->pkg = $pkg;
 	}
+	
 	public function get($cfKey, $getFullObject = false) {
-		static $instance;
-		if (!isset($instance)) {
-			$v = __CLASS__;
-			$instance = new $v;
-		}
-
-		$ca = new Cache();
-		$pkgID = '';
+		$pkgID = null;
 		if (isset($this) && is_object($this->pkg)) {
 			$pkgID = $this->pkg->getPackageID();
 		}
 		
-		$cv = $ca->get('config_option' . $pkgID, $cfKey);
-		
-		if ((!isset($cv)) || (!($cv instanceof ConfigValue))) {
-			$db = Loader::db();
-			$v = array($cfKey);
-			$qs = '';
-			if ($pkgID > 0) {
-				$v[] = $pkgID;
-				$qs = ' and pkgID = ?';
-			}
-			
-			$val = @$db->GetRow("select timestamp, cfValue from Config where cfKey = ?" . $qs, $v);
-			if (!$val) {
-				$val = $db->GetRow("select cfValue from Config where cfKey = ?" . $qs, $v);
-			}
-			
-			$cfValue = '';
-			$timestamp = '';
-			if (isset($val['cfValue'])) {
-				$cfValue = $val['cfValue'];
-			}
-			if (isset($val['timestamp'])) {
-				$timestamp = $val['timestamp'];
-			}
-			
-			$cv = new ConfigValue();
-			$cv->value = $cfValue;
-			$cv->key = $cfKey;
-			$cv->timestamp = $timestamp;
-
-			$ca->set('config_option' . $pkgID, $cfKey, $cv);		
-		}
+		$cv = self::getStore()->get($cfKey, $pkgID);
 
 		if (!$getFullObject) {
-			$value = $cv->value;
-			unset($cv);
-			return $value;
+			if (is_object($cv)) {
+				$value = $cv->value;
+				unset($cv);
+				return $value;
+			}
 		} else {
 			return $cv;
 		}
 	}
 	
 	public static function getListByPackage($pkg) {
-		$db = Loader::db();
+		$res = self::getStore()->getListByPackage($pkg->getPackageID());
 		$list = array();
-		$r = $db->Execute('select cfKey from Config where pkgID = ? order by cfKey asc', array($pkg->getPackageID()));
-		while ($row = $r->FetchRow()) {
-			$list[] = $pkg->config($row['cfKey'], true);
+		foreach ($res as $key) {
+			$list[] = $pkg->config($key, true);
 		}
-		$r->Close();
 		return $list;
 	}	
 	
+	// Misleading old functionname
 	public function getOrDefine($key, $defaultValue) {
-		$val = Config::get($key);
-		if ($val == null) {
+		return self::getAndDefine($key, $defaultValue);
+	}
+	
+	public function getAndDefine($key, $defaultValue) {
+		$val = Config::get($key, true);
+		if (!$val) {
 			$val = $defaultValue;
+		} else {
+			$val = $val->value;
 		}
 		define($key, $val);
 	}
 	
 	public function clear($cfKey) {
-		$db = Loader::db();
-		$pkgID = '';
+		$pkgID = null;
 		if (isset($this) && is_object($this->pkg)) {
 			$pkgID = $this->pkg->getPackageID();
-			$db->query("delete from Config where cfKey = ? and pkgID = ?", array($cfKey, $pkgID));
-		} else {
-			$db->query("delete from Config where cfKey = ?", array($cfKey));
 		}
-		Cache::delete('config_option' . $pkgID, $cfKey);
+		self::getStore()->delete($cfKey, $pkgID);
 	}
 	
 	public function save($cfKey, $cfValue) {
-		$db = Loader::db();
-		$pkgID = '';
+		$pkgID = null;
 		if (isset($this) && is_object($this->pkg)) {
 			$pkgID = $this->pkg->getPackageID();
-			$db->query("replace into Config (cfKey, cfValue, pkgID) values (?, ?, ?)", array($cfKey, $cfValue, $pkgID));
-		} else {
-			$db->query("replace into Config (cfKey, cfValue) values (?, ?)", array($cfKey, $cfValue));
 		}
-		Cache::delete('config_option' . $pkgID, $cfKey);
+		self::getStore()->set($cfKey, $cfValue, $pkgID);
 	}
 	
+}
+
+/**
+ * Config Store that handles the saving and retrieval of ConfigValues
+ * 
+ * @package Utilities 
+ * @author Christiaan Baartse <anotherhero@gmail.com>
+ * @category Concrete
+ */
+class ConfigStore {
+	/**
+	 * @var Database
+	 */
+	private $db;
+	
+	/**
+	 * @var array
+	 */
+	private $rows;
+	
+	public function __construct(Database $db) {
+		$this->db = $db;
+		$this->load();
+	}
+	
+	private function load() {
+		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
+			// if cache has been explicitly disabled, we re-enable it anyway.
+			Cache::enableCache();
+		}
+		$val = Cache::get('config_options', 'all');
+		if ($val) {
+			$this->rows = $val;
+		} else {
+			$this->rows = array();
+			$r = $this->db->Execute('select * from Config where uID = 0 order by cfKey asc');
+			while ($row = $r->FetchRow()) {
+				if (!$row['pkgID']) {
+					$row['pkgID'] = 0;
+				}
+				$this->rows["{$row['cfKey']}.{$row['pkgID']}"] = $row;
+			}
+			$r->Close();
+			Cache::set('config_options', 'all', $this->rows);
+		}
+		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
+			Cache::disableCache();
+		}
+	}
+	
+	private function rowToConfigValue($row)
+	{
+		$cv = new ConfigValue();
+		$cv->key = $row['cfKey'];
+		$cv->value = isset($row['cfValue']) ? $row['cfValue'] : '';
+		$cv->timestamp = isset($row['timestamp']) ? $row['timestamp'] : '';
+		return $cv;
+	}
+	
+	/**
+	 * Get a config item 
+	 * @param string $cfKey
+	 * @param int $pkgID optional
+	 * @return ConfigValue|void
+	 */
+	public function get($cfKey, $pkgID = null) {
+		if ($pkgID > 0 && isset($this->rows["{$cfKey}.{$pkgID}"])) {
+			return $this->rowToConfigValue($this->rows["{$cfKey}.{$pkgID}"]);
+		} else {
+			foreach ($this->rows as $row) {
+				if ($row['cfKey'] == $cfKey) {
+					return $this->rowToConfigValue($row);
+				}
+			}
+		}
+		return null;
+	}
+	
+	public function getListByPackage($pkgID) {
+		$list = array();
+		foreach ($this->rows as $row) {
+			if ($row['pkgID'] == $pkgID) {
+				$list[] = $row['cfKey'];
+			}
+		}
+		return $list;
+	}
+	
+	public function set($cfKey, $cfValue, $pkgID = 0) {
+		$timestamp = date('Y-m-d H:i:s');
+		if ($pkgID < 1) {
+			$pkgID = 0;
+		}
+		$this->rows["{$cfKey}.{$pkgID}"] = array(
+			'cfKey' => $cfKey,
+			'timestamp' => $timestamp,
+			'cfValue' => $cfValue,
+			'uID' => 0,
+			'pkgID' => $pkgID
+		);
+		$this->db->query(
+			"replace into Config (cfKey, timestamp, cfValue, pkgID) values (?, ?, ?, ?)",
+			array($cfKey, $timestamp, $cfValue, $pkgID)
+		);
+		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
+			// if cache has been explicitly disabled, we re-enable it anyway.
+			Cache::enableCache();
+		}
+		Cache::set('config_options', 'all', $this->rows);
+		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
+			// if cache has been explicitly disabled, we re-enable it anyway.
+			Cache::disableCache();
+		}
+	}
+	
+	public function delete($cfKey, $pkgID = null) {
+		if ($pkgID > 0) {
+			unset($this->rows["{$cfKey}.{$pkgID}"]);
+			$this->db->query(
+				"delete from Config where cfKey = ? and pkgID = ?",
+				array($cfKey, $pkgID)
+			);
+		} else {
+			foreach ($this->rows as $key => $row) {
+				if ($row['cfKey'] == $cfKey) {
+					unset($this->rows[$key]);
+				}
+			}
+			$this->db->query(
+				"delete from Config where cfKey = ?",
+				array($cfKey)
+			);
+		}
+		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
+			// if cache has been explicitly disabled, we re-enable it anyway.
+			Cache::enableCache();
+		}
+		Cache::set('config_options', 'all', $this->rows);
+		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
+			// if cache has been explicitly disabled, we re-enable it anyway.
+			Cache::disableCache();
+		}
+	}
 }

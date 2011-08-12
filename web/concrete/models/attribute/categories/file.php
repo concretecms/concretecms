@@ -49,7 +49,7 @@ class FileAttributeKey extends AttributeKey {
 		$av = FileAttributeValue::getByID($avID);
 		if (is_object($av)) {
 			$av->setAttributeKey($this);
-			return call_user_func_array(array($av, $method), array());
+			return $av->{$method}();
 		}
 	}
 	

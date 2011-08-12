@@ -140,7 +140,7 @@ class Request {
 			$cPath = $r['cPath'];
 			$cID = $r['cID'];
 			$req->setCollectionPath($cPath);			
-			$c = Page::getByID($cID);
+			$c = Page::getByID($cID, false);
 		} else {
 			$c = new Page();
 			$c->loadError(COLLECTION_NOT_FOUND);

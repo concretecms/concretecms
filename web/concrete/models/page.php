@@ -67,43 +67,24 @@ class Page extends Collection {
 		$db = Loader::db();
 		
 		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cPendingAction, cPendingActionUID, cPendingActionTargetCID, cPendingActionDatetime, cCheckedOutUID, cIsTemplate, uID, cPath, Pages.ctID, ctHandle, ctIcon, ptID, cParentID, cChildren, ctName, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PageTypes on (PageTypes.ctID = Pages.ctID) left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
-		$q2 = "select cParentID, cPointerID, cPath, Pages.cID from Pages left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
-
-		if ($cInfo != 1) {
-			if (empty($where)) {
-				$ppWhere = "where ";
-			} else {
-				$ppWhere = " and ";
-			}
-			$ppWhere .= "PagePaths.ppIsCanonical = 1";
-		} else {
-			$ppWhere = '';
-		}
-//TBD
-$ppWhere = '';
+		//$q2 = "select cParentID, cPointerID, cPath, Pages.cID from Pages left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		
 		$v = array($cInfo);
-		$q2 .= $where . $ppWhere;
-
-		$r = $db->query($q2, $v);
+		$r = $db->query($q0 . $where, $v);
 		$row = $r->fetchRow();
 		if ($row['cPointerID'] > 0) {
-			$q1 = $q0 . "where Pages.cID = ?" . $ppWhere;
+			$q1 = $q0 . "where Pages.cID = ?";
 			$cPointerOriginalID = $row['cID'];
 			$v = array($row['cPointerID']);
 			$cParentIDOverride = $row['cParentID'];
 			$cPathOverride = $row['cPath'];
 			$cPointerID = $row['cPointerID'];
 			$cDisplayOrderOverride = $row['cDisplayOrder'];
-		} else {
-			$q1 = $q0 . $where . $ppWhere;
-		}
-
-		// isTemplate = 0 because we don't want to get return templates
-
-		$r = $db->query($q1, $v);
-		if ($r) {
+			$r = $db->query($q1, $v);
 			$row = $r->fetchRow();
+		}
+	
+		if ($r) {
 			if ($row) {
 				foreach ($row as $key => $value) {
 					$this->{$key} = $value;
