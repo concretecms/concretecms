@@ -12,5 +12,7 @@
 		} else {  
 			$args = array(); 
 		}
-		call_user_func_array(array($cnt, 'action_' . $_REQUEST['action']), $args);
+		if(method_exists($cnt, 'action_' . $_REQUEST['action'])) { //make sure the controller has the right method
+			call_user_func_array(array($cnt, 'action_' . $_REQUEST['action']), $args);
+		}
 	}
