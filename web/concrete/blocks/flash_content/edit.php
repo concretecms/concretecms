@@ -12,12 +12,12 @@
 <br/><br/>
 <h2><?=t('Quality')?></h2>
 <select name="quality">
-	<option value="low" <?=($quality == "low"?"selected=\"selected\"":"")?>>low</option>
-    <option value="autolow" <?=($quality == "autolow"?"selected=\"selected\"":"")?>>autolow</option>
-    <option value="autohigh" <?=($quality == "autohigh"?"selected=\"selected\"":"")?>>autohigh</option>
-    <option value="medium" <?=($quality == "medium"?"selected=\"selected\"":"")?>>medium</option>
-    <option value="high" <?=($quality == "high"?"selected=\"selected\"":"")?>>high</option>
-    <option value="best" <?=($quality == "best"?"selected=\"selected\"":"")?>>best</option>
+	<option value="low" <?=($quality == "low"?"selected=\"selected\"":"")?>><?=t('low')?></option>
+    <option value="autolow" <?=($quality == "autolow"?"selected=\"selected\"":"")?>><?=t('autolow')?></option>
+    <option value="autohigh" <?=($quality == "autohigh"?"selected=\"selected\"":"")?>><?=t('autohigh')?></option>
+    <option value="medium" <?=($quality == "medium"?"selected=\"selected\"":"")?>><?=t('medium')?></option>
+    <option value="high" <?=($quality == "high"?"selected=\"selected\"":"")?>><?=t('high')?></option>
+    <option value="best" <?=($quality == "best"?"selected=\"selected\"":"")?>><?=t('best')?></option>
 </select><br /><br />
 
 <h2><?=t('Minimum Flash Player Version')?></h2>
