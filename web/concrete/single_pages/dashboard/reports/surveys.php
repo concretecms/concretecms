@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 	
 	<div class="surveyOverview" >
 		<div id="displayOptions">
-			<a href="<?=$this->action('view')?>">&#60;&#60; Back to List</a>
+			<a href="<?=$this->action('view')?>">&#60;&#60; <?=t('Back to List')?></a>
 		</div>
 		<table class="entry-form" >
 			<tr>
