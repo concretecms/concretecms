@@ -146,11 +146,11 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 		  </tr>
 		  <tr>
 		  	<td>&nbsp;</td>
-		  	<td><strong>Repeat</strong>:<br/>
-		  	<input type="radio" value="no-repeat" name="background_repeat" <? if ($cssData['background_repeat'] == 'no-repeat' || !$cssData['backgroundImageRepeat']) { ?> checked <? } ?> /> None
-		  	<input type="radio" value="repeat-x" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat-x') { ?> checked <? } ?> /> Horizontal
-		  	<input type="radio" value="repeat-y" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat-y') { ?> checked <? } ?>/> Vertical
-		  	<input type="radio" value="repeat" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat') { ?> checked <? } ?>/> All
+		  	<td><strong><?=t('Repeat')?></strong>:<br/>
+		  	<input type="radio" value="no-repeat" name="background_repeat" <? if ($cssData['background_repeat'] == 'no-repeat' || !$cssData['backgroundImageRepeat']) { ?> checked <? } ?> /> <?=t('None')?>
+		  	<input type="radio" value="repeat-x" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat-x') { ?> checked <? } ?> /> <?=t('Horizontal')?>
+		  	<input type="radio" value="repeat-y" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat-y') { ?> checked <? } ?>/> <?=t('Vertical')?>
+		  	<input type="radio" value="repeat" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat') { ?> checked <? } ?>/> <?=t('All')?>
 		  	
 		  </table>
 		  <div class="ccm-spacer"></div>
