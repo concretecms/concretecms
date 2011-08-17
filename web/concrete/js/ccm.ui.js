@@ -931,7 +931,7 @@ ccm_setupHeaderMenu = function() {
 			// stupid safari? wtf?
 			window.location.href = href;
 		}, 50);
-		
+		return false;
 	});
 	
 }
