@@ -271,8 +271,8 @@ if($_REQUEST['btask']=='add'){
 		
 		<div id="ccm-blockAddModeWrap" style="display:<?=($defaultScrapbook!=$scrapbookHelper->getPersonalScrapbookName())?'block':'none'?>">
 			&nbsp;<br />
-			<input name="blockAddMode" type="radio" value="duplicate" checked="checked" /> New copy to Scrapbook<br />
-			<input id="blockAddModeAliased" name="blockAddMode" type="radio" value="alias" /> Alias original to Scrapbook
+			<input name="blockAddMode" type="radio" value="duplicate" checked="checked" /> <?=t('New copy to Scrapbook')?><br />
+			<input id="blockAddModeAliased" name="blockAddMode" type="radio" value="alias" /> <?=t('Alias original to Scrapbook')?>
 		</div>
 	
 		<br/> 
