@@ -56,26 +56,28 @@ class Archive {
 	 * @param string $directory
 	 * @return string $directory
 	 */
-         protected function unzip($directory) {
-                $file = $directory . '.zip';
-                $fh = Loader::helper('file');
-                if (version_compare(phpversion(), '5.3.0', '>=') && function_exists('zip_open')) {
-                        $zip = new ZipArchive;
-			if ($zip->open($fh->getTemporaryDirectory() . '/' . $file) === TRUE) {
-				$zip->extractTo($fh->getTemporaryDirectory() . '/' . $directory . '/');
-				$zip->close();	
-				return $fh->getTemporaryDirectory() . '/' . $directory;
-			}			
-			throw new Exception(t('There was an error unpacking the file. Perhaps you have not uploaded a valid zip file, or you do not have zip installed.'));			
- 		} else {
-			$ret = @shell_exec(DIR_FILES_BIN_UNZIP . ' ' . $fh->getTemporaryDirectory() . '/' . $file . ' -d ' . $fh->getTemporaryDirectory() . '/' . $directory . '/');
-			$files = $this->f->getDirectoryContents($fh->getTemporaryDirectory() . '/' . $directory);
-			if (count($files) == 0) {
-				throw new Exception(t('There was an error unpacking your file. Perhaps you have not uploaded a valid zip file, or you do not have zip installed.'));
-			} else {
-				return $fh->getTemporaryDirectory() . '/' . $directory;
-			}
+	protected function unzip($directory) {
+		$file = $directory . '.zip';
+		$fh = Loader::helper('file');
+		if (function_exists('zip_open')) {
+			try {
+				$zip = new ZipArchive;
+				if ($zip->open($fh->getTemporaryDirectory() . '/' . $file) === TRUE) {
+					$zip->extractTo($fh->getTemporaryDirectory() . '/' . $directory . '/');
+					$zip->close();	
+					return $fh->getTemporaryDirectory() . '/' . $directory;
+				}			
+			} catch(Exception $e) {}
+ 		} 
+
+		$ret = @shell_exec(DIR_FILES_BIN_UNZIP . ' ' . $fh->getTemporaryDirectory() . '/' . $file . ' -d ' . $fh->getTemporaryDirectory() . '/' . $directory . '/');
+		$files = $this->f->getDirectoryContents($fh->getTemporaryDirectory() . '/' . $directory);
+		if (count($files) == 0) {
+			throw new Exception(t('There was an error unpacking your file. Perhaps you have not uploaded a valid zip file, or you do not have zip installed.'));
+		} else {
+			return $fh->getTemporaryDirectory() . '/' . $directory;
 		}
+
 	}
 	
 	/**
