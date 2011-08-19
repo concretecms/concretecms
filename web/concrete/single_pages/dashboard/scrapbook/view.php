@@ -367,7 +367,7 @@ $(function(){ GlobalScrapbook.init(); });
 								<form method="post" action="<?php echo $this->action('rename_block')?>">
 									<?php $valt->output('rename_scrapbook_block')?>
 									<input name="bID" type="hidden" value="<?=intval($b->bID) ?>" />
-									<input name="scrapbookName" type="hidden" value="<?=urlencode($scrapbookName) ?>" />
+									<input name="scrapbookName" type="hidden" value="<?=$scrapbookName ?>" />
 									<input name="bName" type="text" value="<?=$b->getBlockName() ?>" />
 									<input name="Submit" type="submit" value="<?=t('Save')?>" />
 									<input onclick="GlobalScrapbook.toggleRename(<?=intval($b->bID) ?>)" name="cancel" type="button" value="<?=t('Cancel')?>" />
