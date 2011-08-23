@@ -81,7 +81,6 @@
 			if (is_object($c)) {
 				$this->cID = $c->getCollectionID();
 			}
-			$cParentID = ($row['cThis']) ? $this->cID : $row['cParentID'];
 			
 			Loader::model('attribute/categories/collection');
 			if ($this->displayFeaturedOnly == 1) {
@@ -105,7 +104,12 @@
 			}
 			
 			if ( intval($row['cParentID']) != 0) {
-				$pl->filterByParentID($cParentID);
+				$cParentID = ($row['cThis']) ? $this->cID : $row['cParentID'];
+				if ($this->includeAllDescendents) {
+					$pl->filterByPath(Page::getByID($cParentID)->getCollectionPath());
+				} else {
+					$pl->filterByParentID($cParentID);
+				}
 			}
 
 			if ($num > 0) {
@@ -175,6 +179,7 @@
 			$args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
 			$args['cThis'] = ($args['cParentID'] == $this->cID) ? '1' : '0';
 			$args['cParentID'] = ($args['cParentID'] == 'OTHER') ? $args['cParentIDValue'] : $args['cParentID'];
+			$args['includeAllDescendents'] = ($args['includeAllDescendents']) ? '1' : '0';
 			$args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
 			$args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
 			$args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
