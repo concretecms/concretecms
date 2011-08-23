@@ -61,15 +61,20 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 		$this->load();
 		$dt = Loader::helper('form/date_time');
 		$caValue = $this->getValue();
+		$html = Loader::helper('html');
 		switch($this->akDateDisplayMode) {
 			case 'text':
 				$form = Loader::helper('form');
 				print $form->text($this->field('value'), $this->getDisplayValue());
 				break;
 			case 'date':
+				$this->addHeaderItem($html->css('jquery.ui.css'));
+				$this->addHeaderItem($html->javascript('jquery.ui.js'));
 				print $dt->date($this->field('value'), $caValue);
 				break;
 			default:
+				$this->addHeaderItem($html->css('jquery.ui.css'));
+				$this->addHeaderItem($html->javascript('jquery.ui.js'));
 				print $dt->datetime($this->field('value'), $caValue);
 				break;
 		}
