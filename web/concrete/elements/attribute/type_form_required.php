@@ -46,8 +46,27 @@ if (is_object($key)) {
 	<? } ?>
 
 	<td style="padding-right: 10px">
-	<?=$form->checkbox('akIsSearchableIndexed', 1, $akIsSearchableIndexed)?> <?=t('Content included in "Keyword Search".');?><br/>
-	<?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <?=t('Field available in "Advanced Search".');?>
+	<?php
+	$category_handle = $category->getAttributeKeyCategoryHandle();
+	$keyword_label = t('Content included in "Keyword Search".');
+	$advanced_label = t('Field available in "Advanced Search".');
+	switch ($category_handle) {
+		case 'page':
+			$keyword_label = t('Content included in sitewide search".');
+			$advanced_label = t('Field available in Dashboard Page Search".');
+			break;
+		case 'file':
+			$keyword_label = t('Content included in sitewide search".');
+			$advanced_label = t('Field available in File Manager Search".');			
+			break;
+		case 'user':
+			$keyword_label = t('Content included in sitewide search".');
+			$advanced_label = t('Field available in Dashboard User Search".');
+			break;
+	}
+	?>
+	<?=$form->checkbox('akIsSearchableIndexed', 1, $akIsSearchableIndexed)?> <?=$keyword_label?><br/>
+	<?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <?=$advanced_label?>
 	</td>
 </tr>
 </table>
