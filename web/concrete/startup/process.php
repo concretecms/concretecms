@@ -193,10 +193,23 @@
 				$p = new Permissions($b);
 				// we're updating the groups for a particular block
 				if ($p->canWrite()) {
-					
-					$nvc = $c->getVersionToModify();
-					$b->loadNewCollection($nvc);
 
+					$bt = BlockType::getByHandle($b->getBlockTypeHandle());
+					if (!$bt->includeAll()) {
+						// we make sure to create a new version, if necessary				
+						$nvc = $c->getVersionToModify();
+					} else {
+						$nvc = $c; // keep the same one
+					}
+					$ob = $b;
+					// replace the block with the version of the block in the later version (if applicable)
+					$b = Block::getByID($_REQUEST['bID'], $nvc, $a);
+					if ($b->isAlias()) {
+						$nb = $ob->duplicate($nvc);
+						$b->deleteBlock();
+						$b = &$nb;
+					}
+					
 					$data = $_POST;					
 					$b->updateBlockInformation($data);
 					$b->refreshCacheAll();
