@@ -120,8 +120,13 @@ if (isset($entry)) { ?>
 
 	<script type="text/javascript">
 	var ccm_composerAutoSaveInterval = false;
+	var ccm_composerDoAutoSaveAllowed = true;
 	
-	ccm_composerDoAutoSave = function() {
+	ccm_composerDoAutoSave = function(callback) {
+		if (!ccm_composerDoAutoSaveAllowed) {
+			return false;
+		}
+		
 		$('input[name=autosave]').val('1');
 		try {
 			tinyMCE.triggerSave(true, true);
@@ -134,13 +139,19 @@ if (isset($entry)) { ?>
 				ccm_composerLastSaveTime = new Date();
 				$("#composer-save-status").html('<?=t("Page saved at ")?>' + r.time);
 				$(".ccm-composer-hide-on-approved").show();
+				if (callback) {
+					callback();
+				}
 			}
 		});
 	}
 	
 	ccm_composerLaunchPreview = function() {
+		jQuery.fn.dialog.showLoader();
 		<? $t = PageTheme::getSiteTheme(); ?>
-		ccm_previewInternalTheme(<?=$entry->getCollectionID()?>, <?=$t->getThemeID()?>, '<?=addslashes(str_replace(array("\r","\n","\n"),'',$t->getThemeName()))?>');
+		ccm_composerDoAutoSave(function() {
+			ccm_previewInternalTheme(<?=$entry->getCollectionID()?>, <?=$t->getThemeID()?>, '<?=addslashes(str_replace(array("\r","\n","\n"),'',$t->getThemeName()))?>');
+		});
 	}
 	
 	ccm_composerSelectParentPage = function(cID) {
@@ -215,6 +226,10 @@ if (isset($entry)) { ?>
 		
 		$("#ccm-submit-publish").click(function() {
 			ccm_composerIsPublishClicked = true;
+		});
+		
+		$("#ccm-dashboard-composer-form").submit(function() {
+			ccm_composerDoAutoSaveAllowed = false;
 		});
 		
 		<? if ($entry->isComposerDraft()) { ?>
