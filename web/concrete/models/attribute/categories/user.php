@@ -67,6 +67,12 @@ class UserAttributeKey extends AttributeKey {
 		$ak = UserAttributeKey::getByID($akID);
 		return $ak;
 	}
+
+	public function export(&$xml) {
+		$type = $this->getAttributeType()->getAttributeTypeHandle();
+		$category = AttributeKeyCategory::getByID($this->akCategoryID)->getAttributeKeyCategoryHandle();
+		$xml .= '<attributekey profile-displayed="' . $this->uakProfileDisplay . '" profile-editable="' . $this->uakProfileEdit . '" profile-required="' . $this->uakProfileEditRequired . '" register-editable="' . $this->uakRegisterEdit . '" register-required="' . $this->uakRegisterEditRequired . '" member-list-displayed="' . $this->uakMemberListDisplay . '" handle="' . $this->getAttributeKeyHandle() . '" name="' . $this->getAttributeKeyName() . '" searchable="' . $this->isAttributeKeySearchable() . '" indexed="' . $this->isAttributeKeySearchable() . '" type="' . $type . '" category="' . $category . '" />';
+	}
 	
 	public function isAttributeKeyDisplayedOnProfile() {
 		return $this->uakProfileDisplay;

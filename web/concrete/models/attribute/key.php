@@ -101,6 +101,7 @@ class AttributeKey extends Object {
 		$r = $db->Execute($q, array($akCategoryHandle));
 		$list = array();
 		$txt = Loader::helper('text');
+		Loader::model('attribute/categories/' . $akCategoryHandle);
 		$className = $txt->camelcase($akCategoryHandle);
 		while ($row = $r->FetchRow()) {
 			$c1 = $className . 'AttributeKey';
@@ -112,7 +113,26 @@ class AttributeKey extends Object {
 		$r->Close();
 		return $list;
 	}
+	
+	public function export(&$xml) {
+		$type = $this->getAttributeType()->getAttributeTypeHandle();
+		$category = AttributeKeyCategory::getByID($this->akCategoryID)->getAttributeKeyCategoryHandle();
+		$xml .= '<attributekey handle="' . $this->getAttributeKeyHandle() . '" name="' . $this->getAttributeKeyName() . '" searchable="' . $this->isAttributeKeySearchable() . '" indexed="' . $this->isAttributeKeySearchable() . '" type="' . $type . '" category="' . $category . '" />';
+	}
 
+	public static function exportList(&$xml) {
+		$categories = AttributeKeyCategory::getList();
+		$xml .= '<attributekeys>';
+		foreach($categories as $cat) {
+			$attributes = AttributeKey::getList($cat->getAttributeKeyCategoryHandle());
+			foreach($attributes as $at) {
+				$at->export($xml);
+			}
+		}
+		$xml .= '</attributekeys>';
+		
+	}
+	
 	/** 
 	 * Note, this queries both the pkgID found on the AttributeKeys table AND any attribute keys of a special type
 	 * installed by that package, and any in categories by that package.
