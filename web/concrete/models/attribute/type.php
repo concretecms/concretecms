@@ -41,7 +41,7 @@ class AttributeType extends Object {
 		
 		$xml .= '<attributetypes>';
 		foreach($attribs as $at) {
-			$xml .= '<attributetype handle="' . $at->getAttributeTypeHandle() . '" />';
+			$xml .= '<attributetype handle="' . $at->getAttributeTypeHandle() . '" package="' . $at->getPackageHandle() . '" />';
 		}
 		$xml .= '</attributetypes>';
 	}

@@ -593,7 +593,7 @@ class PageTheme extends Object {
 			if ($pst->getThemeID() == $pt->getThemeID()) {
 				$activated = 1;
 			}
-			$xml .= '<theme handle="' . $pt->getThemeHandle() . '" activated="' . $activated . '" />';
+			$xml .= '<theme handle="' . $pt->getThemeHandle() . '" package="' . $pt->getPackageHandle() . '" activated="' . $activated . '" />';
 		}
 		$xml .= '</themes>';
 	}
