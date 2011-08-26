@@ -117,7 +117,7 @@ class AttributeKey extends Object {
 	public function export(&$xml) {
 		$type = $this->getAttributeType()->getAttributeTypeHandle();
 		$category = AttributeKeyCategory::getByID($this->akCategoryID)->getAttributeKeyCategoryHandle();
-		$xml .= '<attributekey handle="' . $this->getAttributeKeyHandle() . '" name="' . $this->getAttributeKeyName() . '" searchable="' . $this->isAttributeKeySearchable() . '" indexed="' . $this->isAttributeKeySearchable() . '" type="' . $type . '" category="' . $category . '" />';
+		$xml .= '<attributekey package="' . $this->getPackageHandle() . '" handle="' . $this->getAttributeKeyHandle() . '" name="' . $this->getAttributeKeyName() . '" searchable="' . $this->isAttributeKeySearchable() . '" indexed="' . $this->isAttributeKeySearchable() . '" type="' . $type . '" category="' . $category . '" />';
 	}
 
 	public static function exportList(&$xml) {

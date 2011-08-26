@@ -35,6 +35,8 @@ class Export {
 		// now theme
 		PageTheme::exportList($xml);
 		
+		// now packages
+		
 		$xml .= '</concrete5-cif>';
 		return $xml;
 		

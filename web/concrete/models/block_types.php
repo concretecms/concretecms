@@ -41,7 +41,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$attribs = BlockTypeList::getInstalledList();			
 			$xml .= '<blocktypes>';
 			foreach($attribs as $bt) {
-				$xml .= '<blocktype handle="' . $bt->getBlockTypeHandle() . '" />';
+				$xml .= '<blocktype handle="' . $bt->getBlockTypeHandle() . '" package="' . $bt->getPackageHandle() . '" />';
 			}
 			$xml .= '</blocktypes>';
 		}
