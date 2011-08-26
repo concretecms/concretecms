@@ -32,6 +32,9 @@ class Export {
 		// now attribute keys (including user)
 		AttributeKey::exportList($xml);
 		
+		// now theme
+		PageTheme::exportList($xml);
+		
 		$xml .= '</concrete5-cif>';
 		return $xml;
 		
