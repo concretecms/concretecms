@@ -583,6 +583,21 @@ class PageTheme extends Object {
 		return $res;
 	}
 	
+	public static function exportList(&$xml) {
+		$xml .= '<themes>';
+		$list = PageTheme::getList();
+		$pst = PageTheme::getSiteTheme();
+		
+		foreach($list as $pt) {
+			$activated = 0;
+			if ($pst->getThemeID() == $pt->getThemeID()) {
+				$activated = 1;
+			}
+			$xml .= '<theme handle="' . $pt->getThemeHandle() . '" activated="' . $activated . '" />';
+		}
+		$xml .= '</themes>';
+	}
+	
 	private function install($dir, $ptHandle, $pkgID) {
 		if (is_dir($dir)) {
 			$db = Loader::db();
