@@ -36,6 +36,16 @@ class AttributeType extends Object {
 		return $list;
 	}
 	
+	public static function exportList(&$xml) {
+		$attribs = AttributeType::getList();
+		
+		$xml .= '<attributetypes>';
+		foreach($attribs as $at) {
+			$xml .= '<attributetype handle="' . $at->getAttributeTypeHandle() . '" />';
+		}
+		$xml .= '</attributetypes>';
+	}
+	
 	public function delete() {
 		$db = Loader::db();
 		if (method_exists($this->controller, 'deleteType')) {

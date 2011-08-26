@@ -37,6 +37,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $blockTypes;
 		}
 		
+		public static function exportList(&$xml) {
+			$attribs = BlockTypeList::getInstalledList();			
+			$xml .= '<blocktypes>';
+			foreach($attribs as $bt) {
+				$xml .= '<blocktype handle="' . $bt->getBlockTypeHandle() . '" />';
+			}
+			$xml .= '</blocktypes>';
+		}
+		
 		function BlockTypeList($allowedBlocks = null) {
 			$db = Loader::db();
 			$this->btArray = array();
