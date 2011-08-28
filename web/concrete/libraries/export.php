@@ -43,7 +43,9 @@ class Export {
 		
 		// now files
 		Loader::model('file_list');
-		FileList::export($this->x);
+		$vh = Loader::helper("validation/identifier");
+		$this->filesArchive = $vh->getString();
+		FileList::export($this->x, $this->filesArchive);
 	}
 	
 	public function output() {
@@ -51,8 +53,8 @@ class Export {
 		
 	}
 	
-	public function exportFiles() {
-		
+	public function getFilesArchive() {
+		return $this->filesArchive;
 	}
 	
 	/** 
