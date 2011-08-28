@@ -80,16 +80,26 @@ class FileList extends DatabaseItemList {
 		}
 	}
 
-	public static function export($xml) {
+	public static function export($xml, $archive) {
 		$fl = new FileList();
 		$files = $fl->get();
+		$filestring = '';
+		$fh = Loader::helper('file');
+		$filenames = array();
+		$filename = $fh->getTemporaryDirectory() . '/' . $archive . '.zip';
 		if (count($files) > 0) {
 			$pkgs = $xml->addChild("files");
 			foreach($files as $f) {
 				$node = $pkgs->addChild('file');
 				$node->addAttribute('filename', $f->getFileName());
+				if (!in_array(basename($f->getPath()), $filenames)) {
+					$filestring .= "'" . addslashes($f->getPath()) . "' ";
+				}
+				$filenames[] = basename($f->getPath());
 			}
+			exec(DIR_FILES_BIN_ZIP . ' -j \'' . addslashes($filename) . '\' ' . $filestring);
 		}
+
 	}
 	
 	protected function setupFileSetFilters() {	
