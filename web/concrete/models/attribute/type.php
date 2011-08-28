@@ -36,14 +36,16 @@ class AttributeType extends Object {
 		return $list;
 	}
 	
-	public static function exportList(&$xml) {
+	public static function exportList($xml) {
 		$attribs = AttributeType::getList();
 		
-		$xml .= '<attributetypes>';
+		$axml = $xml->addChild('attributetypes');
 		foreach($attribs as $at) {
-			$xml .= '<attributetype handle="' . $at->getAttributeTypeHandle() . '" package="' . $at->getPackageHandle() . '" />';
+			$atype = $axml->addChild('attributetype');
+			$atype->addAttribute('handle', $at->getAttributeTypeHandle());
+			$atype->addAttribute('package', $at->getPackageHandle());
 		}
-		$xml .= '</attributetypes>';
+		
 	}
 	
 	public function delete() {

@@ -79,7 +79,18 @@ class FileList extends DatabaseItemList {
 			$this->filter(false, '(fsfex.fID is null or (select count(fID) from FileSetFiles where fID = fsfex.fID and fsID in (' . $setStr . ')) = 0)');
 		}
 	}
-	
+
+	public static function export($xml) {
+		$fl = new FileList();
+		$files = $fl->get();
+		if (count($files) > 0) {
+			$pkgs = $xml->addChild("files");
+			foreach($files as $f) {
+				$node = $pkgs->addChild('file');
+				$node->addAttribute('filename', $f->getFileName());
+			}
+		}
+	}
 	
 	protected function setupFileSetFilters() {	
 		$fsIDs = array_unique($this->filteredFileSetIDs);
