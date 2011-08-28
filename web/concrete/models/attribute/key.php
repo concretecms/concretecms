@@ -114,23 +114,29 @@ class AttributeKey extends Object {
 		return $list;
 	}
 	
-	public function export(&$xml) {
+	public function export($axml) {
 		$type = $this->getAttributeType()->getAttributeTypeHandle();
 		$category = AttributeKeyCategory::getByID($this->akCategoryID)->getAttributeKeyCategoryHandle();
-		$xml .= '<attributekey package="' . $this->getPackageHandle() . '" handle="' . $this->getAttributeKeyHandle() . '" name="' . $this->getAttributeKeyName() . '" searchable="' . $this->isAttributeKeySearchable() . '" indexed="' . $this->isAttributeKeySearchable() . '" type="' . $type . '" category="' . $category . '" />';
+		$akey = $axml->addChild('attributekey');
+		$akey->addAttribute('package', $this->getPackageHandle());
+		$akey->addAttribute('handle',$this->getAttributeKeyHandle());
+		$akey->addAttribute('name', $this->getAttributeKeyName());
+		$akey->addAttribute('searchable', $this->isAttributeKeySearchable());
+		$akey->addAttribute('indexed', $this->isAttributeKeySearchable());
+		$akey->addAttribute('type', $type);
+		$akey->addAttribute('category', $category);
+		return $akey;
 	}
 
-	public static function exportList(&$xml) {
+	public static function exportList($xml) {
 		$categories = AttributeKeyCategory::getList();
-		$xml .= '<attributekeys>';
+		$axml = $xml->addChild('attributekeys');
 		foreach($categories as $cat) {
 			$attributes = AttributeKey::getList($cat->getAttributeKeyCategoryHandle());
 			foreach($attributes as $at) {
-				$at->export($xml);
+				$at->export($axml);
 			}
 		}
-		$xml .= '</attributekeys>';
-		
 	}
 	
 	/** 

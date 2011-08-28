@@ -68,10 +68,15 @@ class UserAttributeKey extends AttributeKey {
 		return $ak;
 	}
 
-	public function export(&$xml) {
-		$type = $this->getAttributeType()->getAttributeTypeHandle();
-		$category = AttributeKeyCategory::getByID($this->akCategoryID)->getAttributeKeyCategoryHandle();
-		$xml .= '<attributekey package="' . $this->getPackageHandle() . '" profile-displayed="' . $this->uakProfileDisplay . '" profile-editable="' . $this->uakProfileEdit . '" profile-required="' . $this->uakProfileEditRequired . '" register-editable="' . $this->uakRegisterEdit . '" register-required="' . $this->uakRegisterEditRequired . '" member-list-displayed="' . $this->uakMemberListDisplay . '" handle="' . $this->getAttributeKeyHandle() . '" name="' . $this->getAttributeKeyName() . '" searchable="' . $this->isAttributeKeySearchable() . '" indexed="' . $this->isAttributeKeySearchable() . '" type="' . $type . '" category="' . $category . '" />';
+	public function export($axml) {
+		$akey = parent::export($axml);
+		$akey->addAttribute('profile-displayed', $this->uakProfileDisplay);
+		$akey->addAttribute('profile-editable', $this->uakProfileEdit);
+		$akey->addAttribute('profile-required',$this->uakProfileEditRequired);
+		$akey->addAttribute('register-editable', $this->uakRegisterEdit);
+		$akey->addAttribute('register-required', $this->uakRegisterEditRequired);
+		$akey->addAttribute('member-list-displayed', $this->uakMemberListDisplay);
+		return $akey;
 	}
 	
 	public function isAttributeKeyDisplayedOnProfile() {

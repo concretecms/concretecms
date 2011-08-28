@@ -583,8 +583,8 @@ class PageTheme extends Object {
 		return $res;
 	}
 	
-	public static function exportList(&$xml) {
-		$xml .= '<themes>';
+	public static function exportList($xml) {
+		$nxml = $xml->addChild('themes');
 		$list = PageTheme::getList();
 		$pst = PageTheme::getSiteTheme();
 		
@@ -593,9 +593,12 @@ class PageTheme extends Object {
 			if ($pst->getThemeID() == $pt->getThemeID()) {
 				$activated = 1;
 			}
-			$xml .= '<theme handle="' . $pt->getThemeHandle() . '" package="' . $pt->getPackageHandle() . '" activated="' . $activated . '" />';
+			$type = $nxml->addChild('theme');
+			$type->addAttribute('handle', $pt->getThemeHandle());
+			$type->addAttribute('package', $pt->getPackageHandle());
+			$type->addAttribute('activated', $activated);
 		}
-		$xml .= '</themes>';
+
 	}
 	
 	private function install($dir, $ptHandle, $pkgID) {

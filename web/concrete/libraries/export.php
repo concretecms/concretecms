@@ -20,26 +20,61 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Export {
 	
-	public function exportContent() {
-		$xml = '<concrete5-cif version="1.0">';		
-		
+	protected $x; // the xml object for export
+	
+	public function run() {
+		$this->x = new SimpleXMLElement("<concrete5-cif></concrete5-cif>");
+		$this->x->addAttribute('version', '1.0');
+
 		// First, attribute types
-		AttributeType::exportList($xml);
-		
+		AttributeType::exportList($this->x);
+
 		// then block types
-		BlockTypeList::exportList($xml);
-		
+		BlockTypeList::exportList($this->x);
+
 		// now attribute keys (including user)
-		AttributeKey::exportList($xml);
-		
+		AttributeKey::exportList($this->x);
+
 		// now theme
-		PageTheme::exportList($xml);
+		PageTheme::exportList($this->x);
 		
 		// now packages
+		PackageList::export($this->x);
 		
-		$xml .= '</concrete5-cif>';
-		return $xml;
+		// now files
+		Loader::model('file_list');
+		FileList::export($this->x);
+	}
+	
+	public function output() {
+		return $this->x->asXML();
 		
 	}
+	
+	public function exportFiles() {
+		
+	}
+	
+	/** 
+	 * Removes an item from the export xml registry
+	 */
+	public function removeItem($parent, $node, $handle) {
+		$query = '//'.$node.'[@handle=\''.$handle.'\']';
+		$r = $this->x->xpath($query);
+		if ($r && isset($r[0]) && $r[0] instanceof SimpleXMLElement) {		
+			$dom = dom_import_simplexml($r[0]);
+			$dom->parentNode->removeChild($dom);
+		}
+
+		$query = '//'.$parent;
+		$r = $this->x->xpath($query);
+		if ($r && isset($r[0]) && $r[0] instanceof SimpleXMLElement) {		
+			$dom = dom_import_simplexml($r[0]);
+			if ($dom->childNodes->length < 1) {
+				$dom->parentNode->removeChild($dom);
+			}
+		}
+	}
+
 
 }

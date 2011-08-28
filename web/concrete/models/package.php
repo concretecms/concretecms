@@ -45,6 +45,15 @@ class PackageList extends Object {
 		return $this->packages;
 	}
 	
+	public static function export($xml) {
+		$packages = PackageList::get()->getPackages();
+		$pkgs = $xml->addChild("packages");
+		foreach($packages as $pkg) {
+			$node = $pkgs->addChild('package');
+			$node->addAttribute('handle', $pkg->getPackageHandle());
+		}
+	}
+	
 	public static function getHandle($pkgID) {
 		if ($pkgID < 1) {
 			return false;
