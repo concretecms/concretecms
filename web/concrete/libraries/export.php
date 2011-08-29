@@ -45,7 +45,23 @@ class Export {
 		Loader::model('file_list');
 		$vh = Loader::helper("validation/identifier");
 		$this->filesArchive = $vh->getString();
-		FileList::export($this->x, $this->filesArchive);
+		//FileList::export($this->x, $this->filesArchive);
+		
+		// now single pages
+		$singlepages = $this->x->addChild("singlepages");
+		$db = Loader::db();
+		$r = $db->Execute('select cID from Pages where cFilename is not null and cFilename <> "" order by cID asc');
+		while($row = $r->FetchRow()) {
+			$pc = Page::getByID($row['cID'], 'RECENT');
+			$pc->export($singlepages);
+		}		
+		
+		// now page types
+		// including composer
+		// and the defaults page
+		
+		// now content pages
+		// note: update page export code to get all blocks
 	}
 	
 	public function output() {
@@ -61,7 +77,7 @@ class Export {
 	 * Removes an item from the export xml registry
 	 */
 	public function removeItem($parent, $node, $handle) {
-		$query = '//'.$node.'[@handle=\''.$handle.'\']';
+		$query = '//'.$node.'[@handle=\''.$handle.'\' or @package=\''.$handle.'\']';
 		$r = $this->x->xpath($query);
 		if ($r && isset($r[0]) && $r[0] instanceof SimpleXMLElement) {		
 			$dom = dom_import_simplexml($r[0]);

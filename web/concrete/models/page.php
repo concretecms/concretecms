@@ -637,6 +637,15 @@ class Page extends Collection {
 			return $cIDRedir;
 		}
 	}
+	
+	public function export($pageNode) {
+		$p = $pageNode->addChild('page');
+		$p->addAttribute('name', $this->getCollectionName());
+		$p->addAttribute('path', $this->getCollectionPath());
+		$p->addAttribute('filename', $this->getCollectionFilename());
+		$p->addAttribute('description', $this->getCollectionDescription());
+		$p->addAttribute('package', $this->getPackageHandle());
+	}
 
 	/**
 	 * Returns the uID for a page that is checked out
