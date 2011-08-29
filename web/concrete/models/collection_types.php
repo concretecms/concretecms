@@ -171,6 +171,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $list;
 		}	
 		
+		public static function exportList($xml) {
+			$list = self::getList();
+			$nxml = $xml->addChild('pagetypes');
+			foreach($list as $ct) {
+				$type = $nxml->addChild('pagetype');
+				$type->addAttribute('handle', $ct->getCollectionTypeHandle());
+				$type->addAttribute('package', $ct->getPackageHandle());
+				$ct->setComposerProperties();
+				if ($ct->isCollectionTypeIncludedInComposer()) { 
+					$composer = $type->addChild('composer');
+				}
+			}
+		}
 
 		public function refreshCache() {
 			Cache::delete('pageTypeByID', $this->ctID);
