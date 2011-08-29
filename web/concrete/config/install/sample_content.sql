@@ -1060,7 +1060,7 @@ INSERT INTO btTags VALUES(23,'Tags',68,'page',10)
  ,(33,'Tags',68,'page',10)
  ,(39,'Tags',68,'page',10);
 
-INSERT INTO btYouTube VALUES(6,'Basic Editing','http://www.youtube.com/watch?v=oYSOFTNLbKY');
+INSERT INTO btYouTube VALUES(6,'Basic Editing','http://www.youtube.com/watch?v=oYSOFTNLbKY','','',0);
 
 INSERT INTO CollectionSearchIndexAttributes VALUES(2,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
  ,(1,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
