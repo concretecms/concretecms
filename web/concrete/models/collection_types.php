@@ -181,6 +181,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$ct->setComposerProperties();
 				if ($ct->isCollectionTypeIncludedInComposer()) { 
 					$composer = $type->addChild('composer');
+					$composer->addAttribute('method', $ct->getCollectionTypeComposerPublishMethod());
+					$composer->addAttribute('parent', $ct->getCollectionTypeComposerPublishPageParentID());
+					$composer->addAttribute('pagetype', $ct->getCollectionTypeComposerPublishPageTypeID());
+					$items = $ct->getComposerContentItems();
+					if (count($items) > 0) { 
+						$itemNode = $composer->addChild('items');
+						foreach($items as $ci) {
+							if ($ci instanceof AttributeKey) {
+								$attribute = $itemNode->addChild('attributekey'); 
+								$attribute->addAttribute('handle', $ci->getAttributeKeyHandle());
+							} else if ($ci instanceof Block) {
+								$block = $itemNode->addChild('block'); 
+								$block->addAttribute('name', $ci->getBlockName());
+							}
+						}
+					}
 				}
 			}
 		}

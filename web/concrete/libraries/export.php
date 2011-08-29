@@ -59,7 +59,6 @@ class Export {
 		// now page types
 		CollectionType::exportList($this->x);
 
-		// including composer
 		// and the defaults page
 		
 		// now content pages
