@@ -508,7 +508,7 @@
       <UNSIGNED/>
     </field>
     <field name="cvName" type="X" />
-    <field name="cvHandle" type="C" size="64"/>
+    <field name="cvHandle" type="C" size="255"/>
     <field name="cvDescription" type="X"/>
     <field name="cvDatePublic" type="T"/>
     <field name="cvDateCreated" type="T">
