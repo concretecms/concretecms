@@ -2,6 +2,10 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 // Start the session
+if(@ini_get('session.auto_start')) {
+	@session_destroy();
+}
+
 ini_set('session.use_trans_sid',0);  
 session_set_cookie_params(0, str_replace(' ', '%20', DIR_REL) . '/'); 
 /* ini_set('session.save_path', DIR_SESSIONS); */
