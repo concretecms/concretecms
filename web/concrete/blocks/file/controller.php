@@ -10,7 +10,9 @@
 		protected $btCacheBlockOutputForRegisteredUsers = true;
 		protected $btInterfaceHeight = 250;
 		protected $btTable = 'btContentFile';
-
+		
+		protected $btExportFileColumns = array('fID');
+		
 		/** 
 		 * Used for localization. If we want to localize the name/description we have to include this
 		 */

@@ -5,6 +5,8 @@ class TagsBlockController extends BlockController {
 	protected $btTable = 'btTags';
 	protected $btInterfaceWidth = "500";
 	protected $btInterfaceHeight = "350";
+
+	protected $btExportPageColumns = array('targetCID');
 	
 	protected $btCacheBlockOutput = true;
 	protected $btCacheBlockOutputOnPost = false;

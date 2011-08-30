@@ -43,7 +43,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btCacheBlockOutputLifetime = CACHE_LIFETIME;
 		protected $btCacheBlockOutputOnPost = false;
 		protected $btCacheBlockOutputForRegisteredUsers = false;
+		
+		protected $btExportPageColumns = array();
+		protected $btExportFileColumns = array();
+		protected $btExportPageTypeColumns = array();
+		
 		public $headerItems = array();
+		
+		
 
 		protected $identifier;
 		
@@ -183,7 +190,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			foreach($bcd as $key => $value) {
 				if (isset($columns[strtoupper($key)])) {
 					if ($value) {
-						$data->addChild($key, '<![CDATA[' . $value . ']]>');
+						
+						if (in_array($key, $this->btExportPageColumns)) {
+							$data->addChild($key, Export::replaceValueWithPlaceHolder('page', $value));
+						} else if (in_array($key, $this->btExportFileColumns)) {
+							$data->addChild($key, Export::replaceValueWithPlaceHolder('file', $value));
+						} else if (in_array($key, $this->btExportPageTypeColumns)) {
+							$data->addChild($key, Export::replaceValueWithPlaceHolder('page_type', $value));
+						} else {
+							$data->addChild($key, '<![CDATA[' . $value . ']]>');
+						}
 					}
 				}
 			}

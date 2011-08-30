@@ -12,6 +12,8 @@ class SlideshowBlockController extends BlockController {
 	protected $btCacheBlockOutputOnPost = true;
 	protected $btCacheBlockOutputForRegisteredUsers = true;
 
+	protected $btExportFileColumns = array('fID');
+
 	public $defaultDuration = 5;	
 	public $defaultFadeDuration = 2;	
 	
