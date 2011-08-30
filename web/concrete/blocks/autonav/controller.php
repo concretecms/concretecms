@@ -179,6 +179,8 @@
 		protected $btCacheBlockOutputForRegisteredUsers = false;
 		protected $btCacheBlockOutputLifetime = 300;
 		
+		protected $btExportPageColumns = array('displayPagesCID');
+		
 		public function getBlockTypeDescription() {
 			return t("Creates navigation trees and sitemaps.");
 		}

@@ -60,7 +60,20 @@ class Export {
 		CollectionType::exportList($this->x);
 		
 		// now content pages
-		// note: update page export code to get all blocks
+		$pages = $this->x->addChild("pages");
+		$db = Loader::db();
+		$r = $db->Execute('select cID from Pages where cFilename is null or cFilename = "" order by cID asc');
+		while($row = $r->FetchRow()) {
+			$pc = Page::getByID($row['cID'], 'RECENT');
+			$pc->export($pages);
+		}		
+		
+		// file placeholder
+		// page placeholder
+		// multi-table blocks
+		// content block file/page shit
+		
+
 	}
 	
 	public function output() {
@@ -70,6 +83,23 @@ class Export {
 	
 	public function getFilesArchive() {
 		return $this->filesArchive;
+	}
+	
+	public static function replaceValueWithPlaceHolder($type, $value) {
+		switch($type) {
+			case 'page':
+				$c = Page::getByID($value);
+				return '{ccm:export:page:' . $c->getCollectionPath() . '}';
+				break;
+			case 'page_type':
+				$ct = CollectionType::getByID($value);
+				return '{ccm:export:pagetype:' . $ct->getCollectionTypeHandle() . '}';
+				break;
+			case 'file':
+				$f = File::getByID($value);
+				return '{ccm:export:file:' . $f->getFileName() . '}';
+				break;
+		}
 	}
 	
 	/** 
