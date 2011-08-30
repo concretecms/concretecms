@@ -67,9 +67,6 @@ class Export {
 			$pc = Page::getByID($row['cID'], 'RECENT');
 			$pc->export($pages);
 		}		
-		
-		// content block file/page shit
-		
 
 	}
 	
