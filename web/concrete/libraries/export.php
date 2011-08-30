@@ -58,8 +58,6 @@ class Export {
 		
 		// now page types
 		CollectionType::exportList($this->x);
-
-		// and the defaults page
 		
 		// now content pages
 		// note: update page export code to get all blocks

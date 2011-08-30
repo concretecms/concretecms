@@ -114,17 +114,21 @@ class AttributeKey extends Object {
 		return $list;
 	}
 	
-	public function export($axml) {
+	public function export($axml, $type = 'full') {
 		$type = $this->getAttributeType()->getAttributeTypeHandle();
 		$category = AttributeKeyCategory::getByID($this->akCategoryID)->getAttributeKeyCategoryHandle();
 		$akey = $axml->addChild('attributekey');
-		$akey->addAttribute('package', $this->getPackageHandle());
 		$akey->addAttribute('handle',$this->getAttributeKeyHandle());
-		$akey->addAttribute('name', $this->getAttributeKeyName());
-		$akey->addAttribute('searchable', $this->isAttributeKeySearchable());
-		$akey->addAttribute('indexed', $this->isAttributeKeySearchable());
-		$akey->addAttribute('type', $type);
-		$akey->addAttribute('category', $category);
+		
+		if ($type == 'full') { 
+			$akey->addAttribute('name', $this->getAttributeKeyName());
+			$akey->addAttribute('package', $this->getPackageHandle());
+			$akey->addAttribute('searchable', $this->isAttributeKeySearchable());
+			$akey->addAttribute('indexed', $this->isAttributeKeySearchable());
+			$akey->addAttribute('type', $type);
+			$akey->addAttribute('category', $category);
+		}
+		
 		return $akey;
 	}
 

@@ -640,11 +640,18 @@ class Page extends Collection {
 	
 	public function export($pageNode) {
 		$p = $pageNode->addChild('page');
-		$p->addAttribute('name', $this->getCollectionName());
+		$p->addAttribute('name', Loader::helper('text')->entities($this->getCollectionName()));
 		$p->addAttribute('path', $this->getCollectionPath());
 		$p->addAttribute('filename', $this->getCollectionFilename());
-		$p->addAttribute('description', $this->getCollectionDescription());
+		$p->addAttribute('description', Loader::helper('text')->entities($this->getCollectionDescription()));
 		$p->addAttribute('package', $this->getPackageHandle());
+		
+		$db = Loader::db();
+		$r = $db->Execute('select arHandle from Areas where cID = ?', array($this->getCollectionID()));
+		while ($row = $r->FetchRow()) {
+			$ax = Area::get($this, $row['arHandle']);
+			$ax->export($p, $this);
+		}
 	}
 
 	/**

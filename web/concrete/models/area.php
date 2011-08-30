@@ -465,6 +465,18 @@ class Area extends Object {
 		return $layouts; 
 	}
 	
+	/** 
+	 * Exports the area to content format
+	 */
+	public function export($p, $page) {
+		$area = $p->addChild('area');
+		$area->addAttribute('name', $this->getAreaHandle());
+		
+		$blocks = $page->getBlocks($this->getAreaHandle());
+		foreach($blocks as $bl) {
+			$bl->export($area);
+		}
+	}
 	
 
 	/** 
