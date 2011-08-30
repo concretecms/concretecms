@@ -1134,11 +1134,16 @@ class Block extends Object {
 			$blockNode = $node->addChild('block');
 			$blockNode->addAttribute('type', $this->getBlockTypeHandle());
 			$blockNode->addAttribute('name', $this->getBlockName());
+			if ($this->getBlockFilename() != '') {
+				$blockNode->addAttribute('custom-template', $this->getBlockFilename());
+			}
+			if ($this->getBlockComposerFilename() != '') {
+				$blockNode->addAttribute('composer-template', $this->getBlockComposerFilename());
+			}
+			
 			if ($exportType == 'full') {
-				$data = $blockNode->addChild('data');
-				// grab all the columns from the block's table
 				$bc = $this->getInstance();
-				$bc->export($data);
+				$bc->export($blockNode);
 			}
 		}
 	}

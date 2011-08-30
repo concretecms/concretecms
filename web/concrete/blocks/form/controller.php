@@ -9,6 +9,8 @@ class FormBlockController extends BlockController {
 	public $btInterfaceWidth = '420';
 	public $btInterfaceHeight = '430';
 	public $thankyouMsg=''; 
+	protected $btExportTables = array('btForm', 'btFormQuestions');
+	protected $btExportPageColumns = array('redirectCID');
 	
 	protected $noSubmitFormRedirect=0;
 	protected $lastAnswerSetId=0;

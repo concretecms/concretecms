@@ -27,6 +27,7 @@ class SurveyBlockController extends BlockController {
 	protected $btInterfaceWidth = "420";
 	protected $btInterfaceHeight = "300";	
 	protected $btIncludeAll = 1;
+	protected $btExportTables = array('btSurvey','btSurveyOptions','btSurveyResults');
 	
 	public $options = array();
 

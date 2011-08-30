@@ -13,6 +13,7 @@ class SlideshowBlockController extends BlockController {
 	protected $btCacheBlockOutputForRegisteredUsers = true;
 
 	protected $btExportFileColumns = array('fID');
+	protected $btExportTables = array('btSlideshow','btSlideshowImg');
 
 	public $defaultDuration = 5;	
 	public $defaultFadeDuration = 2;	
