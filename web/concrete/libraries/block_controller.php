@@ -168,6 +168,27 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$this->__construct();
 		}
 		
+		public function getBlockTypeDatabaseTable() {
+			return $this->btTable;
+		}
+		
+		public function export(SimpleXMLElement $data) {
+			$bcd = $this->getBlockControllerData();
+			$db = Loader::db();
+			$columns = $db->MetaColumns($this->getBlockTypeDatabaseTable());
+
+			// remove columns we don't want
+			unset($columns['BID']);
+
+			foreach($bcd as $key => $value) {
+				if (isset($columns[strtoupper($key)])) {
+					if ($value) {
+						$data->addChild($key, '<![CDATA[' . $value . ']]>');
+					}
+				}
+			}
+		}
+
 		public function cacheBlockRecord() {
 			return $this->btCacheBlockRecord;
 		}

@@ -1129,6 +1129,20 @@ class Block extends Object {
 		}
 	}
 	
+	public function export($node, $exportType = 'full') {
+		if (!$this->isAliasOfMasterCollection()) {
+			$blockNode = $node->addChild('block');
+			$blockNode->addAttribute('type', $this->getBlockTypeHandle());
+			$blockNode->addAttribute('name', $this->getBlockName());
+			if ($exportType == 'full') {
+				$data = $blockNode->addChild('data');
+				// grab all the columns from the block's table
+				$bc = $this->getInstance();
+				$bc->export($data);
+			}
+		}
+	}
+	
 	function updateBlockInformation($data) {
 		// this is the function that updates a block's information, like its block filename, and block name
 		$db = Loader::db();

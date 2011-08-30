@@ -182,21 +182,34 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				if ($ct->isCollectionTypeIncludedInComposer()) { 
 					$composer = $type->addChild('composer');
 					$composer->addAttribute('method', $ct->getCollectionTypeComposerPublishMethod());
-					$composer->addAttribute('parent', $ct->getCollectionTypeComposerPublishPageParentID());
-					$composer->addAttribute('pagetype', $ct->getCollectionTypeComposerPublishPageTypeID());
+					$parent = '';
+					$pagetype = '';
+					
+					if ($ct->getCollectionTypeComposerPublishPageTypeID() > 0) {
+						$pct = CollectionType::getByID($ct->getCollectionTypeComposerPublishPageTypeID());
+						$pagetype = $pct->getCollectionTypeHandle();
+					}
+
+					if ($ct->getCollectionTypeComposerPublishPageParentID() > 0) {
+						$pct = Page::getByID($ct->getCollectionTypeComposerPublishPageParentID());
+						$parent = $pct->getCollectionPath();
+					}
+					
+					$composer->addAttribute('pagetype', $pagetype);
+					$composer->addAttribute('parent', $parent);
+
 					$items = $ct->getComposerContentItems();
 					if (count($items) > 0) { 
 						$itemNode = $composer->addChild('items');
 						foreach($items as $ci) {
-							if ($ci instanceof AttributeKey) {
-								$attribute = $itemNode->addChild('attributekey'); 
-								$attribute->addAttribute('handle', $ci->getAttributeKeyHandle());
-							} else if ($ci instanceof Block) {
-								$block = $itemNode->addChild('block'); 
-								$block->addAttribute('name', $ci->getBlockName());
-							}
+							$ci->export($itemNode, 'composer');
 						}
 					}
+				}
+				$mcID = $ct->getMasterCollectionID();
+				if ($mcID > 0) {
+					$mc = Page::getByID($mcID);
+					$mc->export($type);						
 				}
 			}
 		}
