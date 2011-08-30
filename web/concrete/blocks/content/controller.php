@@ -40,24 +40,33 @@
 			$content = $this->translateFromEditMode($this->content);
 			return $content;				
 		}
+		
+		public function export(SimpleXMLElement $blockNode) {			
+			
+			$data = $blockNode->addChild('data');
+			$data->addAttribute('table', $this->btTable);
+			$record = $data->addChild('record');
+			$content = $this->content;
+			$content = preg_replace_callback(
+				'/{CCM:CID_([0-9]+)}/i',
+				array('Export', 'replacePageWithPlaceHolderInMatch'),				
+				$content);
+
+			$content = preg_replace_callback(
+				'/{CCM:FID_([0-9]+)}/i',
+				array('Export', 'replaceImageWithPlaceHolderInMatch'),				
+				$content);
+
+			$content = preg_replace_callback(
+				'/{CCM:FID_DL_([0-9]+)}/i',
+				array('Export', 'replaceFileWithPlaceHolderInMatch'),				
+				$content);
+
+
+			$record->addChild('content', $content);
+		}
 
 		function translateFromEditMode($text) {
-			// old stuff. Can remove in a later version.
-			$text = str_replace('href="{[CCM:BASE_URL]}', 'href="' . BASE_URL . DIR_REL, $text);
-			$text = str_replace('src="{[CCM:REL_DIR_FILES_UPLOADED]}', 'src="' . BASE_URL . REL_DIR_FILES_UPLOADED, $text);
-
-			// we have the second one below with the backslash due to a screwup in the
-			// 5.1 release. Can remove in a later version.
-
-			$text = preg_replace(
-				array(
-					'/{\[CCM:BASE_URL\]}/i',
-					'/{CCM:BASE_URL}/i'),
-				array(
-					BASE_URL . DIR_REL,
-					BASE_URL . DIR_REL)
-				, $text);
-				
 			// now we add in support for the links
 			
 			$text = preg_replace(
@@ -70,6 +79,12 @@
 			$text = preg_replace_callback(
 				'/{CCM:FID_([0-9]+)}/i',
 				array('ContentBlockController', 'replaceFileIDInEditMode'),				
+				$text);
+
+			
+			$text = preg_replace_callback(
+				'/{CCM:FID_DL_([0-9]+)}/i',
+				array('ContentBlockController', 'replaceDownloadFileIDInEditMode'),				
 				$text);
 			
 
@@ -156,6 +171,14 @@
 			}
 		}
 
+		private function replaceDownloadFileIDInEditMode($match) {
+			$fID = $match[1];
+			if ($fID > 0) {
+				$c = Page::getCurrentPage();
+				return View::url('/download_file', 'view', $fID);
+			}
+		}
+		
 		private function replaceFileIDInEditMode($match) {
 			$fID = $match[1];
 			return View::url('/download_file', 'view_inline', $fID);

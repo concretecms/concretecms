@@ -186,11 +186,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$pagetype = '';
 					
 					if ($ct->getCollectionTypeComposerPublishPageTypeID() > 0) {
-						$pagetype = Export::replaceValueWithPlaceHolder('page_type', $ct->getCollectionTypeComposerPublishPageTypeID());
+						$pagetype = Export::replacePageTypeWithPlaceHolder($ct->getCollectionTypeComposerPublishPageTypeID());
 					}
 
 					if ($ct->getCollectionTypeComposerPublishPageParentID() > 0) {
-						$parent = Export::replaceValueWithPlaceHolder('page', $ct->getCollectionTypeComposerPublishPageParentID());
+						$parent = Export::replacePageWithPlaceHolder($ct->getCollectionTypeComposerPublishPageParentID());
 					}
 					
 					$composer->addAttribute('pagetype', $pagetype);

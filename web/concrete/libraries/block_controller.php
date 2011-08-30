@@ -179,26 +179,36 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this->btTable;
 		}
 		
-		public function export(SimpleXMLElement $data) {
-			$bcd = $this->getBlockControllerData();
+		public function export(SimpleXMLElement $blockNode) {
+
+			$tables[] = $this->getBlockTypeDatabaseTable();
+			if (isset($this->btExportTables)) {
+				$tables = $this->btExportTables;
+			}
 			$db = Loader::db();
-			$columns = $db->MetaColumns($this->getBlockTypeDatabaseTable());
-
-			// remove columns we don't want
-			unset($columns['BID']);
-
-			foreach($bcd as $key => $value) {
-				if (isset($columns[strtoupper($key)])) {
-					if ($value) {
-						
-						if (in_array($key, $this->btExportPageColumns)) {
-							$data->addChild($key, Export::replaceValueWithPlaceHolder('page', $value));
-						} else if (in_array($key, $this->btExportFileColumns)) {
-							$data->addChild($key, Export::replaceValueWithPlaceHolder('file', $value));
-						} else if (in_array($key, $this->btExportPageTypeColumns)) {
-							$data->addChild($key, Export::replaceValueWithPlaceHolder('page_type', $value));
-						} else {
-							$data->addChild($key, '<![CDATA[' . $value . ']]>');
+		
+			foreach($tables as $tbl) {
+				$data = $blockNode->addChild('data');
+				$data->addAttribute('table', $tbl);
+				$columns = $db->MetaColumns($tbl);
+				// remove columns we don't want
+				unset($columns['BID']);
+				$r = $db->Execute('select * from ' . $tbl . ' where bID = ?', array($this->bID));
+				while ($record = $r->FetchRow()) {
+					$tableRecord = $data->addChild('record');
+					foreach($record as $key => $value) {
+						if (isset($columns[strtoupper($key)])) {
+							if ($value) {							
+								if (in_array($key, $this->btExportPageColumns)) {
+									$tableRecord->addChild($key, Export::replacePageWithPlaceHolder($value));
+								} else if (in_array($key, $this->btExportFileColumns)) {
+									$tableRecord->addChild($key, Export::replaceFileWithPlaceHolder($value));
+								} else if (in_array($key, $this->btExportPageTypeColumns)) {
+									$tableRecord->addChild($key, Export::replacePageTypeWithPlaceHolder($value));
+								} else {
+									$tableRecord->addChild($key, '<![CDATA[' . $value . ']]>');
+								}
+							}
 						}
 					}
 				}

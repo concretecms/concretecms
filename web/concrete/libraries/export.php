@@ -62,15 +62,12 @@ class Export {
 		// now content pages
 		$pages = $this->x->addChild("pages");
 		$db = Loader::db();
-		$r = $db->Execute('select cID from Pages where cFilename is null or cFilename = "" order by cID asc');
+		$r = $db->Execute('select cID from Pages where cIsTemplate = 0 and cFilename is null or cFilename = "" order by cID asc');
 		while($row = $r->FetchRow()) {
 			$pc = Page::getByID($row['cID'], 'RECENT');
 			$pc->export($pages);
 		}		
 		
-		// file placeholder
-		// page placeholder
-		// multi-table blocks
 		// content block file/page shit
 		
 
@@ -85,21 +82,34 @@ class Export {
 		return $this->filesArchive;
 	}
 	
-	public static function replaceValueWithPlaceHolder($type, $value) {
-		switch($type) {
-			case 'page':
-				$c = Page::getByID($value);
-				return '{ccm:export:page:' . $c->getCollectionPath() . '}';
-				break;
-			case 'page_type':
-				$ct = CollectionType::getByID($value);
-				return '{ccm:export:pagetype:' . $ct->getCollectionTypeHandle() . '}';
-				break;
-			case 'file':
-				$f = File::getByID($value);
-				return '{ccm:export:file:' . $f->getFileName() . '}';
-				break;
-		}
+	public static function replacePageWithPlaceHolder($cID) {
+		$c = Page::getByID($cID);
+		return '{ccm:export:page:' . $c->getCollectionPath() . '}';
+	}
+
+	public static function replaceFileWithPlaceHolder($fID) {
+		$f = File::getByID($fID);
+		return '{ccm:export:file:' . $f->getFileName() . '}';
+	}
+
+	public static function replacePageWithPlaceHolderInMatch($cID) {
+		$cID = $cID[1];
+		return self::replacePageWithPlaceHolder($cID);
+	}
+
+	public static function replaceFileWithPlaceHolderInMatch($fID) {
+		$fID = $fID[1];
+		return self::replaceFileWithPlaceHolder($fID);
+	}
+	
+	public static function replaceImageWithPlaceHolderInMatch($fID) {
+		$f = File::getByID($fID[1]);
+		return '{ccm:export:image:' . $f->getFileName() . '}';
+	}
+
+	public static function replacePageTypeWithPlaceHolder($ctID) {
+		$ct = CollectionType::getByID($ctID);
+		return '{ccm:export:pagetype:' . $ct->getCollectionTypeHandle() . '}';
 	}
 	
 	/** 
