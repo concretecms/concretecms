@@ -127,7 +127,7 @@ class InstallController extends Controller {
 	 * Testing
 	 */
 	public function on_start() {
-		if (isset($_POST['locale'])) {
+		if (isset($_POST['locale']) && $_POST['locale']) {
 			define("ACTIVE_LOCALE", $_POST['locale']);
 			$this->set('locale', $_POST['locale']);
 		}
@@ -324,7 +324,7 @@ class InstallController extends Controller {
 						if (isset($setPermissionsModel)) {
 							$configuration .= "define('PERMISSIONS_MODEL', '" . addslashes($setPermissionsModel) . "');\n";
 						}
-						if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != 'en_US') {
+						if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != '' && ACTIVE_LOCALE != 'en_US') {
 							$configuration .= "define('LOCALE', '" . ACTIVE_LOCALE . "');\n";
 						}
 						$configuration .= "define('PASSWORD_SALT', '{$salt}');\n";
