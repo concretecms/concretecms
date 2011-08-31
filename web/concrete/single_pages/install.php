@@ -1,9 +1,10 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 
+
 <? 
 
-$installErrorMsg = t('Unable to Install. Not all required items are available.');
 $introMsg = t('To install concrete5, please fill out the form below.');
+
 if (isset($message)) { ?>
 
 <h1><?=t('Install concrete5')?></h1>
@@ -14,7 +15,7 @@ if (isset($message)) { ?>
 <a href="<?=DIR_REL?>/"><?=t('Continue to your site.')?> &gt;</a>
 </div>
 
-<? } else { ?>
+<? } else if (isset($locale) || count($locales) == 0) { ?>
 
 <style type="text/css">
 input.ccm-input-text:disabled {
@@ -82,7 +83,7 @@ $(function() {
 
 <div id="ccm-install-check-items">
 <h2 style="margin-top: 0px"><?=t('Testing Required Items')?></h2>
-<div class="test <? if ($phpVtest) { ?>passed<? } else { ?>warning<? } ?>"><?=t('PHP 5.1 Available')?>
+<div class="test <? if ($phpVtest) { ?>passed<? } else { ?>warning<? } ?>"><?=t('PHP 5.2 Available')?>
 <a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
 <div class="ccm-install-info"><?=t('PHP 5.2 or greater is recommended<br />
  for timezone support.')?></div>
@@ -103,7 +104,7 @@ $(function() {
 <div class="ccm-install-info"><?=$this->controller->getDBErrorMsg()?></div>
 
 </div>
-<div class="test loading" id="ccm-test-urls"><?=t('Support for C5 Request URLs')?>
+<div class="test loading" id="ccm-test-urls"><?=t('Supports concrete5 request URLs')?>
 
 <a href="javascript:void(0)" class="ccm-install-tooltip"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" border="0" width="16" height="16" alt="" /></a>
 <div class="ccm-install-info"><?=t('concrete5 cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.')?></div>
@@ -153,7 +154,8 @@ $(function() {
 </div>
 
 <div style="text-align: center; margin-top: 16px">
-<form action="<?=$this->url('/install')?>" method="get">
+<form action="<?=$this->url('/install')?>" method="post">
+	<input type="hidden" name="locale" value="<?=$locale?>" />
 	<input type="submit" name="submit" class="ccm-input-submit" value="<?=t('Run Tests Again')?>" />
 </form>
 </div>
@@ -169,17 +171,34 @@ $(function() {
 
 
 <form action="<?=$this->url('/install', 'configure')?>" method="post">
-
-	<h2><?=t('Personal Information')?></h2>
+	<input type="hidden" name="locale" value="<?=$locale?>" />
+	<h2><?=t('Site Information')?></h2>
 	
 	<label for="SITE"><?=t('Name Your Site')?>:</label><br/>
 	<?=$form->text('SITE', array('disabled'=> 1)); ?>
 	<br/><br/>
+	
+	Sample content selector
+	<br/><br/>
+	
+	<h2><?=t('Administrator Information')?></h2>
+	
 
-	<label for="uEmail"><?=t('Your Email Address')?></label><br/>
+	<label for="uEmail"><?=t('Email Address')?></label><br/>
 	<?=$form->text('uEmail', array('disabled'=> 1)); ?>
 	
 	<br/><br/>
+
+	<label for="uPassword"><?=t('Password')?></label><br/>
+	<?=$form->text('uPassword', array('disabled'=> 1)); ?>
+	
+	<br/><br/>
+	
+	<label for="uPassword"><?=t('Confirm Password')?></label><br/>
+	<?=$form->text('uPasswordConfirm', array('disabled'=> 1)); ?>
+	
+	<br/><br/>
+	
 	
 	<h2><?=t('Database Information')?></h2>
 	
@@ -199,12 +218,6 @@ $(function() {
 	<?=$form->text('DB_DATABASE', array('disabled'=> 1)); ?>
 	<br/><br/>
 	
-	<h2><?=t('Sample Content')?></h2>
-	
-	<?=$form->checkbox('INSTALL_SAMPLE_CONTENT',1,true); ?>
-	<label for="INSTALL_SAMPLE_CONTENT"><?=t('Install sample content')?></label><br/>	
-	<br/>
-	
 	<div class="ccm-button">
 	<?=$form->submit('submit', t('Install concrete5').' &gt;', array('disabled'=> 1))?>
 	</div>
@@ -212,4 +225,25 @@ $(function() {
 
 </form>
 </div>
+
+
+<? } else { ?>
+
+
+<h1><?=t('Install concrete5')?></h1>
+
+<div id="ccm-install-intro">
+
+<form method="post" action="<?=$this->url('/install', 'select_language')?>">
+	<label for="locale"><?=t('Choose your Language')?></label><br/>	
+	<?=$form->select('locale', $locales, 'en_US'); ?>
+	<br/>
+	
+	<div class="ccm-button">
+	<?=$form->submit('submit', t('Choose Language'))?>
+	</div>
+</form>
+
+</div>
+
 <? } ?>
