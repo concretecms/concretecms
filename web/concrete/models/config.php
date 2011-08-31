@@ -133,7 +133,7 @@ class ConfigStore {
 	 */
 	private $rows;
 	
-	public function __construct(Database $db) {
+	public function __construct($db) {
 		$this->db = $db;
 		$this->load();
 	}

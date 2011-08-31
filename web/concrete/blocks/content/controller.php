@@ -63,7 +63,7 @@
 				$content);
 
 
-			$record->addChild('content', $content);
+			$record->addChild('content', '<![CDATA['.$content.']]>');
 		}
 
 		function translateFromEditMode($text) {

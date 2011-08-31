@@ -467,15 +467,28 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function renderError($title, $error, $errorObj = null) {
 			$innerContent = $error;
 			$titleContent = $title; 
+			if (!$this) {
+				$v = new View();
+				$v->setThemeForView(DIRNAME_THEMES_CORE, FILENAME_THEMES_ERROR . '.php', true);
+				include($v->getTheme());	
+				exit;
+			}
 			if (!isset($this->theme) || (!$this->theme) || (!file_exists($this->theme))) {
 				$this->setThemeForView(DIRNAME_THEMES_CORE, FILENAME_THEMES_ERROR . '.php', true);
 				include($this->theme);	
+				exit;			
 			} else {
 				Loader::element('error_fatal', array('innerContent' => $innerContent, 
 					'titleContent' => $titleContent));
 			}
 		}
 		
+		/** 
+		 * @private 
+		 */
+		public static function defaultExceptionHandler($e) {
+			View::renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);
+		}
 
 		/**
 		 * sets the current theme

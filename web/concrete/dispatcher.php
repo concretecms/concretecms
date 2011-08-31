@@ -43,6 +43,8 @@
 	Loader::library('attribute/view');
 	Loader::library('attribute/controller');
 
+	set_exception_handler(array('View', 'defaultExceptionHandler'));
+	
 	## Autoload settings
 	if (C5_ENVIRONMENT_ONLY == false) {
 		require(dirname(__FILE__) . '/startup/autoload.php');
