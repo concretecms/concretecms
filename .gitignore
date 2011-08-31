@@ -26,6 +26,7 @@ __MACOSX
 /web/tools/*
 /web/controllers/*
 /web/single_pages/*
+/web/models/*
 
 # ignore sitemap.xml
 /web/sitemap.xml
