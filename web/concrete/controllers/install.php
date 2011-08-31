@@ -21,6 +21,7 @@ if (!defined('DIR_FILES_UPLOADED')) {
 if (!defined('DIR_FILES_TRASH')) {
 	define('DIR_FILES_TRASH', DIR_FILES_TRASH_STANDARD);
 }
+
 define('DIR_FILES_INCOMING', DIR_FILES_UPLOADED . '/incoming');
 define('DIR_FILES_UPLOADED_THUMBNAILS', DIR_FILES_UPLOADED . '/thumbnails');
 define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_FILES_UPLOADED . '/thumbnails/level2');
@@ -30,7 +31,6 @@ define('DIR_FILES_AVATARS', DIR_FILES_UPLOADED . '/avatars');
 class InstallController extends Controller {
 
 	public $helpers = array('form', 'html');
-	private $fp;
 	
 	// default values to be the currently defined vals
 	private $installData = array(
@@ -65,6 +65,29 @@ class InstallController extends Controller {
 		}
 	}
 	
+	protected function getLocales() {
+		Loader::library('3rdparty/Zend/Locale');
+		$languages = Localization::getAvailableInterfaceLanguages();
+		if (count($languages) > 0) { 
+			array_unshift($languages, 'en_US');
+		}
+		$locales = array();
+		foreach($languages as $lang) {
+			$loc = new Zend_Locale($lang);
+			$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', $lang);
+		}
+		return $locales;
+	}
+	
+	public function view() {
+		$locales = $this->getLocales();
+		$this->set('locales', $locales);		
+	}
+	
+	public function select_language() {
+		
+	}
+
 	protected function installDB() {
 		 
 		
@@ -99,16 +122,15 @@ class InstallController extends Controller {
 				}
 			}
 		}
-	}
-	
-	public function test_url($num1, $num2) {
-		$js = Loader::helper('json');
-		$num = $num1 + $num2;
-		print $js->encode(array('response' => $num));
-		exit;
-	}
-	
+	}	
+	/** 
+	 * Testing
+	 */
 	public function on_start() {
+		if (isset($_POST['locale'])) {
+			define("ACTIVE_LOCALE", $_POST['locale']);
+			$this->set('locale', $_POST['locale']);
+		}
 		$this->setRequiredItems();
 		$this->setOptionalItems();
 	}
@@ -171,11 +193,18 @@ class InstallController extends Controller {
 			return true;
 		}
 	}
-	
+
 	public function getDBErrorMsg() {
 		return t('Function mysql_connect() not found. Your system does not appear to have MySQL available within PHP.');
 	}
-	
+
+	public function test_url($num1, $num2) {
+		$js = Loader::helper('json');
+		$num = $num1 + $num2;
+		print $js->encode(array('response' => $num));
+		exit;
+	}
+
 	public function configure() {
 		try {
 
@@ -186,7 +215,18 @@ class InstallController extends Controller {
 			$val->addRequired("DB_DATABASE", t('You must specify a valid database name'));
 			$val->addRequired("DB_SERVER", t('You must specify a valid database server'));
 			
-			$e = Loader::helper('/validation/error');
+			$password = $_POST['uPassword'];
+			$passwordConfirm = $_POST['uPasswordConfirm'];
+
+			$e = Loader::helper('validation/error');
+			$uh = Loader::helper('concrete/user');
+			$uh->validNewPassword($password, $e);
+	
+			if ($password) {
+				if ($password != $passwordConfirm) {
+					$e->add(t('The two passwords provided do not match.'));
+				}
+			}
 			
 			if(is_object($this->fileWriteErrors)) {
 				$e = $this->fileWriteErrors;
@@ -233,10 +273,6 @@ class InstallController extends Controller {
 					mkdir($this->installData['DIR_FILES_AVATARS']);
 				}
 				
-				if (isset($_POST['uPasswordForce'])) {
-					$this->installData['uPassword'] = $_POST['uPasswordForce'];
-				}
-
 				if (isset($_POST['packages'])) {
 					$this->installData['packages'] = $_POST['packages'];
 				}
@@ -254,13 +290,9 @@ class InstallController extends Controller {
 				
 				// insert admin user into the user table
 				$salt = ( defined('MANUAL_PASSWORD_SALT') ) ? MANUAL_PASSWORD_SALT : $vh->getString(64);
-				if(!isset($this->installData['uPassword'])) {
-					$uPassword = rand(100000, 999999);
-				} else {
-					$uPassword = $this->installData['uPassword'];
-				}
-
+				$uPassword = $_POST['uPassword'];
 				$uEmail = $_POST['uEmail'];
+				
 				$uPasswordEncrypted = User::encryptPassword($uPassword, $salt);
 				UserInfo::addSuperUser($uPasswordEncrypted, $uEmail);
 
@@ -291,6 +323,9 @@ class InstallController extends Controller {
 						$configuration .= "define('DIR_REL', '" . $this->installData['DIR_REL'] . "');\n";
 						if (isset($setPermissionsModel)) {
 							$configuration .= "define('PERMISSIONS_MODEL', '" . addslashes($setPermissionsModel) . "');\n";
+						}
+						if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != 'en_US') {
+							$configuration .= "define('LOCALE', '" . ACTIVE_LOCALE . "');\n";
 						}
 						$configuration .= "define('PASSWORD_SALT', '{$salt}');\n";
 						if (is_array($_POST['SITE_CONFIG'])) {
@@ -346,7 +381,5 @@ class InstallController extends Controller {
 		}
 	}
 
-	
 }
 
-?>
