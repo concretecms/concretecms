@@ -114,13 +114,13 @@ class AttributeKey extends Object {
 		return $list;
 	}
 	
-	public function export($axml, $type = 'full') {
+	public function export($axml, $exporttype = 'full') {
 		$type = $this->getAttributeType()->getAttributeTypeHandle();
 		$category = AttributeKeyCategory::getByID($this->akCategoryID)->getAttributeKeyCategoryHandle();
 		$akey = $axml->addChild('attributekey');
 		$akey->addAttribute('handle',$this->getAttributeKeyHandle());
 		
-		if ($type == 'full') { 
+		if ($exporttype == 'full') { 
 			$akey->addAttribute('name', $this->getAttributeKeyName());
 			$akey->addAttribute('package', $this->getPackageHandle());
 			$akey->addAttribute('searchable', $this->isAttributeKeySearchable());
