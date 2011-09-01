@@ -24,6 +24,7 @@ class ContentImporter {
 		$sx = simplexml_load_file($file);
 		$this->importSinglePages($sx);
 		$this->importBlockTypes($sx);
+		$this->importAttributeCategories($sx);
 		$this->importAttributeTypes($sx);
 		$this->importAttributes($sx);
 		$this->importThemes($sx);
@@ -175,7 +176,13 @@ class ContentImporter {
 				if (!$name) {
 					$name = Loader::helper('text')->unhandle($at['handle']);
 				}
-				AttributeType::add($at['handle'], $name, $pkg);
+				$type = AttributeType::add($at['handle'], $name, $pkg);
+				if (isset($at->categories)) {
+					foreach($at->categories->children() as $cat) {
+						$catobj = AttributeKeyCategory::getByHandle($cat['handle']->__toString());
+						$catobj->associateAttributeKeyType($type);
+					}
+				}
 			}
 		}
 	}
@@ -235,14 +242,20 @@ class ContentImporter {
 		}
 	}
 
+	protected function importAttributeCategories(SimpleXMLElement $sx) {
+		if (isset($sx->attributecategories)) {
+			foreach($sx->attributecategories->category as $akc) {
+				$pkg = ContentImporter::getPackageObject($akc['package']);
+				$akx = AttributeKeyCategory::add($akc['handle'], $akc['allow-sets'], $pkg);
+			}
+		}
+	}
+	
 	protected function importAttributes(SimpleXMLElement $sx) {
 		if (isset($sx->attributekeys)) {
 			foreach($sx->attributekeys->attributekey as $ak) {
 				$akc = AttributeKeyCategory::getByHandle($ak['category']);
 				$pkg = ContentImporter::getPackageObject($ak['package']);
-				if (!is_object($akc)) {
-					$akc = AttributeKeyCategory::add($ak['category'], AttributeKeyCategory::ASET_ALLOW_SINGLE, $pkg);
-				}
 				$type = AttributeType::getByHandle($ak['type']);
 				if (is_object($pkg)) {
 					Loader::model('attribute/categories/' . $akc->getAttributeKeyCategoryHandle(), $pkg->getPackageHandle());

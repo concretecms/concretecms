@@ -32,6 +32,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	 		return $this->attributeType;
 	 	}
 	 	
+	 	public function export($ak) {
+	 		return $ak;
+	 	}
+	 	
+	 	
 	 	protected function getAttributeValueID() {
 	 		if (is_object($this->attributeValue)) {
 		 		return $this->attributeValue->getAttributeValueID();

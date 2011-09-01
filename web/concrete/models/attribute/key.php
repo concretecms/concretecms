@@ -129,6 +129,7 @@ class AttributeKey extends Object {
 			$akey->addAttribute('category', $category);
 		}
 		
+		$this->getController()->export($akey);
 		return $akey;
 	}
 

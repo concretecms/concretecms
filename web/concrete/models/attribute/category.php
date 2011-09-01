@@ -31,6 +31,17 @@ class AttributeKeyCategory extends Object {
 		$r = $db->GetOne("select count(akID) from AttributeKeys where akHandle = ? and akCategoryID = ?", array($akHandle, $this->akCategoryID));
 		return $r > 0;
 	}
+
+	public static function exportList($xml) {
+		$attribs = self::getList();		
+		$axml = $xml->addChild('attributecategories');
+		foreach($attribs as $akc) {
+			$acat = $axml->addChild('attributecategory');
+			$acat->addAttribute('handle', $akc->getAttributeKeyCategoryHandle());
+			$acat->addAttribute('allow-sets', $akc->allowAttributeSets());
+			$acat->addAttribute('package', $akc->getPackageHandle());
+		}		
+	}
 	
 	public function getAttributeKeyByHandle($akHandle) {
 		if ($this->pkgID > 0) {
