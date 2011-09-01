@@ -40,6 +40,50 @@
 			$content = $this->translateFromEditMode($this->content);
 			return $content;				
 		}
+
+		public function getImportData($blockNode) {
+			$args = array();
+			$content = $blockNode->data->record->content;
+
+			$content = preg_replace_callback(
+				'/\{ccm:export:page:(.*)\}/i',
+				array('ContentBlockController', 'replacePagePlaceHolderOnImport'),				
+				$content);
+
+			$content = preg_replace_callback(
+				'/\{ccm:export:image:(.*)\}/i',
+				array('ContentBlockController', 'replaceImagePlaceHolderOnImport'),				
+				$content);
+
+			$content = preg_replace_callback(
+				'/\{ccm:export:file:(.*)\}/i',
+				array('ContentBlockController', 'replaceFilePlaceHolderOnImport'),				
+				$content);
+
+
+			$args['content'] = $content;			
+			return $args;
+		}
+		
+		public static function replacePagePlaceHolderOnImport($match) {
+			$cPath = $match[1];
+			$pc = Page::getByPath($cPath);
+			return '{CCM:CID_' . $pc->getCollectionID() . '}';
+		}
+
+		public static function replaceImagePlaceHolderOnImport($match) {
+			$filename = $match[1];
+			$db = Loader::db();
+			$fID = $db->GetOne('select fID from FileVersions where filename = ?', array($filename));
+			return '{CCM:FID_' . $fID . '}';
+		}
+		
+		public static function replaceFilePlaceHolderOnImport($match) {
+			$filename = $match[1];
+			$db = Loader::db();
+			$fID = $db->GetOne('select fID from FileVersions where filename = ?', array($filename));
+			return '{CCM:FID_DL_' . $fID . '}';
+		}
 		
 		public function export(SimpleXMLElement $blockNode) {			
 			
@@ -65,6 +109,8 @@
 
 			$record->addChild('content', '<![CDATA['.$content.']]>');
 		}
+		
+		
 
 		function translateFromEditMode($text) {
 			// now we add in support for the links

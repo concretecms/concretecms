@@ -117,10 +117,12 @@ class InstallController extends Controller {
 		$ci = new ContentImporter();
 		$ci->importContentFile($installDirectory . '/install/base/block_types.xml');
 		$ci->importContentFile($installDirectory . '/install/base/attributes.xml');
+		$ci->importContentFile($installDirectory . '/install/base/page_types.xml');
 		$ci->importContentFile($installDirectory . '/install/base/themes.xml');
 		$ci->importContentFile($installDirectory . '/install/base/jobs.xml');
 		$ci->importContentFile($installDirectory . '/install/base/task_permissions.xml');
 		$ci->importContentFile($installDirectory . '/install/base/dashboard_and_system_pages.xml');
+		$ci->importContentFile($installDirectory . '/install/base/pages.xml');
 		//$spl = Loader::startingPointPackage('blank');
 		//$spl->install();
 	}

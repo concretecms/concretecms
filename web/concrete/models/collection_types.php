@@ -22,7 +22,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-        loader::model('attribute/categories/collection');
+    Loader::model('attribute/categories/collection');
 	class CollectionType extends Object {
 
 		public $ctID;
@@ -170,6 +170,45 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$r->Close();
 			return $list;
 		}	
+
+		public function importComposerSettings(SimpleXMLElement $sx) {
+			$db = Loader::db();
+			if ($sx['method'] == 'PAGE_TYPE') {
+				$ctID = ContentImporter::getValue($sx['pagetype']);
+				$cta = CollectionType::getByID($ctID);
+				$this->saveComposerPublishTargetPageType($cta);
+			} else if ($sx['method'] == 'PARENT') {
+				$cID = ContentImporter::getValue($sx['parent']);
+				$c = Page::getByID($cID);
+				$this->saveComposerPublishTargetPage($c);
+			} else {
+				$this->saveComposerPublishTargetAll();					
+			}
+			
+			if (isset($sx->items)) {
+				foreach($sx->items->children() as $node) {
+					$displayOrder = $db->GetOne('select max(displayOrder) as displayOrder from ComposerContentLayout where ctID = ?', array($this->ctID));
+					if ($displayOrder < 1) {
+						$displayOrder = 0;
+					} else {
+						$displayOrder++;
+					}
+					if ($node->getName() == 'attributekey') {
+						$ak = CollectionAttributeKey::getByHandle($node['handle']->__toString());
+						$v = array($ak->getAttributeKeyID(), $displayOrder, $this->ctID);
+						$db->Execute('insert into ComposerContentLayout (akID, displayOrder, ctID) values (?, ?, ?)', $v);
+					}
+					if ($node->getName() == 'block') {
+						$mcID = $this->getMasterCollectionID();
+						$bID = $db->GetOne('select Blocks.bID from CollectionVersionBlocks inner join Blocks on CollectionVersionBlocks.bID = Blocks.bID where cID = ? and Blocks.bName = ?', array(
+							$mcID, $node['name']->__toString()
+						));
+						$v = array($bID, $displayOrder, $this->ctID);
+						$db->Execute('insert into ComposerContentLayout (bID, displayOrder, ctID) values (?, ?, ?)', $v);
+					}
+				}
+			}
+		}
 		
 		public static function exportList($xml) {
 			$list = self::getList();
@@ -177,6 +216,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			foreach($list as $ct) {
 				$type = $nxml->addChild('pagetype');
 				$type->addAttribute('handle', $ct->getCollectionTypeHandle());
+				$type->addAttribute('name', $ct->getCollectionTypeName());
 				$type->addAttribute('package', $ct->getPackageHandle());
 				$ct->setComposerProperties();
 				if ($ct->isCollectionTypeIncludedInComposer()) { 
@@ -186,11 +226,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$pagetype = '';
 					
 					if ($ct->getCollectionTypeComposerPublishPageTypeID() > 0) {
-						$pagetype = Export::replacePageTypeWithPlaceHolder($ct->getCollectionTypeComposerPublishPageTypeID());
+						$pagetype = ContentExporter::replacePageTypeWithPlaceHolder($ct->getCollectionTypeComposerPublishPageTypeID());
 					}
 
 					if ($ct->getCollectionTypeComposerPublishPageParentID() > 0) {
-						$parent = Export::replacePageWithPlaceHolder($ct->getCollectionTypeComposerPublishPageParentID());
+						$parent = ContentExporter::replacePageWithPlaceHolder($ct->getCollectionTypeComposerPublishPageParentID());
 					}
 					
 					$composer->addAttribute('pagetype', $pagetype);

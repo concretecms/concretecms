@@ -177,11 +177,16 @@
 			$args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
 			$args['cThis'] = ($args['cParentID'] == $this->cID) ? '1' : '0';
 			$args['cParentID'] = ($args['cParentID'] == 'OTHER') ? $args['cParentIDValue'] : $args['cParentID'];
+			if (!$args['cParentID']) {
+				$args['cParentID'] = 0;
+			}
 			$args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
 			$args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
 			$args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
 			$args['truncateChars'] = intval($args['truncateChars']); 
 			$args['paginate'] = intval($args['paginate']); 
+			$args['rss'] = intval($args['rss']);
+			$args['ctID'] = intval($args['ctID']);
 
 			parent::save($args);
 		

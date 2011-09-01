@@ -35,6 +35,31 @@ class FormBlockController extends BlockController {
 			'form-min-1' => t('Please add at least one question to your form.')			
 		);
 	}
+
+	protected function importAdditionalData($b, $blockNode) {
+		if (isset($blockNode->data)) {
+			foreach($blockNode->data as $data) {
+				if ($data['table'] != $this->getBlockTypeDatabaseTable()) {
+					$table = $data['table']->__toString();
+					if (isset($data->record)) {
+						foreach($data->record as $record) {
+							$aar = new ADODB_Active_Record($table);
+							$aar->bID = $b->getBlockID();
+							foreach($record->children() as $node) {
+								$nodeName = $node->getName();
+								$aar->{$nodeName} = $node->__toString();
+							}
+							if ($table == 'btFormQuestions') {
+								$db = Loader::db();
+								$aar->questionSetId = $db->GetOne('select questionSetId from btForm where bID = ?', array($b->getBlockID()));
+							}
+							$aar->Save();
+						}
+					}								
+				}
+			}
+		}
+	}
 	
 	public function __construct($b = null){ 
 		parent::__construct($b);

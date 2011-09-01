@@ -29,6 +29,8 @@ class ContentImporter {
 		$this->importThemes($sx);
 		$this->importTaskPermissions($sx);
 		$this->importJobs($sx);
+		$this->importPageTypes($sx);
+		$this->importPages($sx);
 		
 		// export attributes // import attributes
 		// page types, pages, blocks, areas, etc...
@@ -50,6 +52,103 @@ class ContentImporter {
 				$spl = SinglePage::add($p['path'], $pkg);
 				if ($p['name']) {
 					$spl->update(array('cName' => $p['name'], 'cDescription' => $p['description']));
+				}
+			}
+		}
+	}
+
+	protected function setupPageNodeOrder($pageNodeA, $pageNodeB) {
+		$pathA = $pageNodeA['path']->__toString();
+		$pathB = $pageNodeB['path']->__toString();
+		$numA = explode('/', $pathA);
+		$numB = explode('/', $pathB);
+		if ($numA == $numB) {
+			return 0;
+		} else {
+			return ($numA < $numB) ? -1 : 1;
+		}
+	}
+	
+	protected function importPages(SimpleXMLElement $sx) {
+		if (isset($sx->pages)) {
+			$nodes = array();
+			foreach($sx->pages->page as $p) {
+				$nodes[] = $p;
+			}
+			usort($nodes, array('ContentImporter', 'setupPageNodeOrder'));
+			
+			$home = Page::getByID(HOME_CID, 'RECENT');
+
+			foreach($nodes as $px) {
+				$pkg = ContentImporter::getPackageObject($px['package']);
+				$data = array();
+				$data['pkgID'] = 0;
+				if (is_object($pkg)) {
+					$data['pkgID'] = $pkg->getPackageID();
+				}
+				
+				if ($px['path'] == '') {
+					// home page
+					$page = $home;
+				} else {
+					$page = Page::getByPath($px['path']);
+					if (!is_object($page) || ($page->isError())) {
+						$ct = CollectionType::getByHandle($px['pagetype']);
+						$lastSlash = strrpos($px['path']->__toString(), '/');
+						$parentPath = substr($px['path']->__toString(), 0, $lastSlash);
+						$data['cHandle'] = substr($px['path']->__toString(), $lastSlash + 1);
+						if (!$parentPath) {
+							$parent = $home;
+						} else {
+							$parent = Page::getByPath($parentPath);
+						}
+						$page = $parent->add($ct, $data);
+
+					}
+				}
+				
+				$page->update(array('cName' => $px['name'], 'cDescription' => $px['description']));
+				if (isset($px->area)) {
+					$this->importPageAreas($page, $px);
+				}
+			}
+		}
+	}
+	
+	protected function importPageAreas(Page $page, SimpleXMLElement $px) {
+		foreach($px->area as $ax) {
+			if (isset($ax->block)) {
+				foreach($ax->block as $bx) {
+					$bt = BlockType::getByHandle($bx['type']);
+					$btc = $bt->getController();
+					$btc->import($page, $ax['name']->__toString(), $bx);
+				}
+			}
+		}
+	}
+	
+	protected function importPageTypes(SimpleXMLElement $sx) {
+		if (isset($sx->pagetypes)) {
+			foreach($sx->pagetypes->pagetype as $ct) {
+				$pkg = ContentImporter::getPackageObject($ct['package']);
+				$ctr = CollectionType::add(array(
+					'ctHandle' => $ct['handle'],
+					'ctName' => $ct['name']
+				), $pkg);
+				
+				$mc = Page::getByID($ctr->getMasterCollectionID());
+				if (isset($ct->page)) {
+					$this->importPageAreas($mc, $ct->page);
+				}
+			}
+			
+			// we loop twice because when we have a composer node that deals with page types we may 
+			// not have created the page type yet
+			
+			foreach($sx->pagetypes->pagetype as $ct) {
+				if (isset($ct->composer)) {
+					$ctr = CollectionType::getByHandle($ct['handle']->__toString());
+					$ctr->importComposerSettings($ct->composer);
 				}
 			}
 		}
@@ -150,6 +249,29 @@ class ContentImporter {
 	}
 
 
-
+	public static function getValue($value) {
+		if (preg_match('/\{ccm:export:page:(.*)\}|\{ccm:export:file:(.*)\}|\{ccm:export:image:(.*)\}|\{ccm:export:pagetype:(.*)\}/i', $value, $matches)) {
+			if ($matches[1]) {
+				$c = Page::getByPath($matches[1]);
+				return $c->getCollectionID();
+			}
+			if ($matches[2]) {
+				$db = Loader::db();
+				$fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($matches[2]));
+				return $fID;
+			}
+			if ($matches[3]) {
+				$db = Loader::db();
+				$fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($matches[3]));
+				return $fID;
+			}
+			if ($matches[4]) {
+				$ct = CollectionType::getByHandle($matches[4]);
+				return $ct->getCollectionTypeID();
+			}
+		} else {
+			return $value;
+		}
+	}	
 
 }
