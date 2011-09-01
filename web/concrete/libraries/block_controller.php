@@ -200,11 +200,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						if (isset($columns[strtoupper($key)])) {
 							if ($value) {							
 								if (in_array($key, $this->btExportPageColumns)) {
-									$tableRecord->addChild($key, Export::replacePageWithPlaceHolder($value));
+									$tableRecord->addChild($key, ContentExporter::replacePageWithPlaceHolder($value));
 								} else if (in_array($key, $this->btExportFileColumns)) {
-									$tableRecord->addChild($key, Export::replaceFileWithPlaceHolder($value));
+									$tableRecord->addChild($key, ContentExporter::replaceFileWithPlaceHolder($value));
 								} else if (in_array($key, $this->btExportPageTypeColumns)) {
-									$tableRecord->addChild($key, Export::replacePageTypeWithPlaceHolder($value));
+									$tableRecord->addChild($key, ContentExporter::replacePageTypeWithPlaceHolder($value));
 								} else {
 									$tableRecord->addChild($key, '<![CDATA[' . $value . ']]>');
 								}

@@ -90,31 +90,16 @@ class InstallController extends Controller {
 
 	protected function installDB() {
 		 
+		// first, we install the schema
 		
 		$installDirectory = $this->installData['DIR_BASE_CORE'] . '/config';
-		if ($_POST['INSTALL_SAMPLE_CONTENT']) {
-			$contentfile = $installDirectory . '/install/sample_content.sql';
-		} else {
-			$contentfile = $installDirectory . '/install/no_sample_content.sql';
-		}
-		
-		if (!file_exists($contentfile)) {
-			throw new Exception(t('Unable to locate database import file.'));
-		}
-		
 		
 		$sql = file_get_contents($installDirectory . '/install/schema.sql');
 		$schema = explode("\n\n", $sql);
 		
-		$sql = file_get_contents($contentfile);
-		$sql = str_replace('{[CCM:SITE]}', addslashes($_POST['SITE']), $sql);
-		$statements = explode("\n\n", $sql);
-
-		$statements = array_merge($schema, $statements);
-		
 		$db = Loader::db();
 		$db->ensureEncoding();
-		foreach ($statements as $statement) {
+		foreach ($schema as $statement) {
 			if (trim($statement) != "") { 
 				$r = $db->execute($statement);
 				if (!$r) { 
@@ -122,7 +107,21 @@ class InstallController extends Controller {
 				}
 			}
 		}
-	}	
+	}
+	
+	protected function installStarterContent() {
+		Loader::model('package/starting_point');
+		Loader::library('content/importer');
+		$installDirectory = $this->installData['DIR_BASE_CORE'] . '/config';
+		$ci = new ContentImporter();
+		$ci->importContentFile($installDirectory . '/install/base/block_types.xml');
+		$ci->importContentFile($installDirectory . '/install/base/attributes.xml');
+		Page::addHomePage();
+		$ci->importContentFile($installDirectory . '/install/base/dashboard_and_system_pages.xml');
+		//$spl = Loader::startingPointPackage('blank');
+		//$spl->install();
+	}
+	
 	/** 
 	 * Testing
 	 */
@@ -131,6 +130,7 @@ class InstallController extends Controller {
 			define("ACTIVE_LOCALE", $_POST['locale']);
 			$this->set('locale', $_POST['locale']);
 		}
+		Cache::disableCache();
 		$this->setRequiredItems();
 		$this->setOptionalItems();
 	}
@@ -253,6 +253,8 @@ class InstallController extends Controller {
 			}
 			
 			if ($val->test() && (!$e->has())) {
+
+				Cache::flush();
 				
 				if (!is_dir($this->installData['DIR_FILES_UPLOADED_THUMBNAILS'])) {
 					mkdir($this->installData['DIR_FILES_UPLOADED_THUMBNAILS']);
@@ -278,15 +280,11 @@ class InstallController extends Controller {
 				}
 				
 				$this->installDB();
+				$this->installStarterContent();
 				
 				$vh = Loader::helper('validation/identifier');
 				
 				// copy the files
-				
-				$fh = Loader::helper('file');
-				if ($_POST['INSTALL_SAMPLE_CONTENT']) {
-					$fh->copyAll($this->installData['DIR_BASE_CORE'] . '/config/install/files', DIR_FILES_UPLOADED);
-				}
 				
 				// insert admin user into the user table
 				$salt = ( defined('MANUAL_PASSWORD_SALT') ) ? MANUAL_PASSWORD_SALT : $vh->getString(64);
@@ -304,7 +302,6 @@ class InstallController extends Controller {
 					$this->fp = @fopen($this->installData['DIR_CONFIG_SITE'] . '/site.php', 'w+');
 					if ($this->fp) {
 					
-						Cache::flush();
 												
 						if (is_array($this->installData['packages'])) {
 							foreach($this->installData['packages'] as $pkgHandle) {

@@ -467,7 +467,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function renderError($title, $error, $errorObj = null) {
 			$innerContent = $error;
 			$titleContent = $title; 
-			if (!$this) {
+			if (!isset($this) || (!$this)) {
 				$v = new View();
 				$v->setThemeForView(DIRNAME_THEMES_CORE, FILENAME_THEMES_ERROR . '.php', true);
 				include($v->getTheme());	

@@ -78,6 +78,26 @@ class UserAttributeKey extends AttributeKey {
 		$akey->addAttribute('member-list-displayed', $this->uakMemberListDisplay);
 		return $akey;
 	}
+
+	public static function import(SimpleXMLElement $ak) {
+		$type = AttributeType::getByHandle($ak['type']);
+		$pkg = false;
+		if ($ak['package']) {
+			$pkg = Package::getByHandle($ak['package']);
+		}
+		UserAttributeKey::add($type, array(
+			'akHandle' => $ak['handle'], 
+			'akName' => $ak['name'], 
+			'akIsSearchableIndexed' => $ak['indexed'], 
+			'akIsSearchable' => $ak['searchable'],
+			'uakProfileDisplay' => $ak['profile-displayed'],
+			'uakProfileEdit' => $ak['profile-editable'],
+			'uakProfileEditRequired' => $ak['profile-required'],
+			'uakRegisterEdit' => $ak['register-editable'],
+			'uakRegisterEditRequired' => $ak['register-required'],
+			'uakMemberListDisplay' => $ak['member-list-displayed']
+		), $pkg);
+	}
 	
 	public function isAttributeKeyDisplayedOnProfile() {
 		return $this->uakProfileDisplay;

@@ -290,6 +290,23 @@
 		/**
 		 * @access private
 		 */
+		public function startingPointPackage($pkgHandle) {
+			// loads and instantiates the object
+			$dir = (is_dir(DIR_STARTING_POINT_PACKAGES . '/' . $pkgHandle)) ? DIR_STARTING_POINT_PACKAGES : DIR_STARTING_POINT_PACKAGES_CORE;
+			if (file_exists($dir . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER)) {
+				require_once($dir . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER);
+				$class = Object::camelcase($pkgHandle) . "StartingPointPackage";
+				if (class_exists($class)) {
+					$cl = new $class;
+					return $cl;
+				}
+			}
+		}
+		
+
+		/**
+		 * @access private
+		 */
 		public function dashboardModuleController($dbhHandle, $pkg = null) {
 			$class = Object::camelcase($dbhHandle . 'DashboardModuleController');
 			if (!class_exists($class)) {
