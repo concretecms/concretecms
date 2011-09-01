@@ -61,6 +61,23 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		}
 	}
 	
+	public function export($akey) {
+		$this->load();
+		$db = Loader::db();
+		$type = $akey->addChild('type');
+		$type->addAttribute('allow-multiple-values', $this->akSelectAllowMultipleValues);
+		$type->addAttribute('display-order', $this->akSelectOptionDisplayOrder);
+		$type->addAttribute('allow-other-values', $this->akSelectAllowOtherValues);
+		$r = $db->Execute('select value, displayOrder, isEndUserAdded from atSelectOptions where akID = ? order by displayOrder asc', $this->getAttributeKey()->getAttributeKeyID());
+		$options = $type->addChild('options');
+		while ($row = $r->FetchRow()) {
+			$opt = $options->addChild('option');
+			$opt->addAttribute('value', $row['value']);
+			$opt->addAttribute('is-end-user-added', $row['isEndUserAdded']);
+		}
+		return $akey;
+	}
+	
 	private function getSelectValuesFromPost() {
 		$options = new SelectAttributeTypeOptionList();
 		$displayOrder = 0;		

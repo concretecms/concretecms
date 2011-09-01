@@ -170,6 +170,20 @@ class AddressAttributeTypeController extends AttributeTypeController  {
 		}
 	}
 
+	public function export($akey) {
+		$this->load();
+		$type = $akey->addChild('type');
+		$type->addAttribute('custom-countries', $this->akHasCustomCountries);
+		$type->addAttribute('default-country', $this->akDefaultCountry);
+		if ($this->akHasCustomCountries) {
+			$countries = $type->addChild('countries');
+			foreach($this->akCustomCountries as $country) {
+				$countries->addChild('country', $country);			
+			}
+		}
+		return $akey;
+	}
+
 	public function saveKey($data) {
 		$e = Loader::helper('validation/error');
 		

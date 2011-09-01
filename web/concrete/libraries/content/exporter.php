@@ -26,7 +26,10 @@ class ContentExporter {
 		$this->x = new SimpleXMLElement("<concrete5-cif></concrete5-cif>");
 		$this->x->addAttribute('version', '1.0');
 
-		// First, attribute types
+		// First, attribute categories
+		AttributeKeyCategory::exportList($this->x);
+
+		// attribute types
 		AttributeType::exportList($this->x);
 
 		// then block types
