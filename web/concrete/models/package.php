@@ -117,6 +117,9 @@ class PackageList extends Object {
  */
 class Package extends Object {
 
+	protected $DIR_PACKAGES_CORE = DIR_PACKAGES_CORE;
+	protected $DIR_PACKAGES = DIR_PACKAGES;
+	
 	public function getPackageID() {return $this->pkgID;}
 	public function getPackageName() {return t($this->pkgName);}
 	public function getPackageDescription() {return t($this->pkgDescription);}
@@ -355,7 +358,7 @@ class Package extends Object {
 		$pkg = Loader::package($package);
 		
 		// Step 1 does that package exist ?
-		if ((!is_dir(DIR_PACKAGES . '/' . $package) && (!is_dir(DIR_PACKAGES_CORE . '/' . $package))) || $package == '') {
+		if ((!is_dir($this->this->DIR_PACKAGES . '/' . $package) && (!is_dir($this->DIR_PACKAGES_CORE . '/' . $package))) || $package == '') {
 			$errors[] = Package::E_PACKAGE_NOT_FOUND;
 		} else if (!is_object($pkg)) {
 			$errors[] = Package::E_PACKAGE_NOT_FOUND;
@@ -415,7 +418,7 @@ class Package extends Object {
 	 */
 	 
 	public function getPackagePath() {
-		$dirp = (is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+		$dirp = (is_dir($this->DIR_PACKAGES . '/' . $this->getPackageHandle())) ? $this->DIR_PACKAGES : $this->DIR_PACKAGES_CORE;
 		$path = $dirp . '/' . $this->getPackageHandle();
 		return $path;
 	}
@@ -549,8 +552,8 @@ class Package extends Object {
 	public function backup() {
 		// you can only backup root level packages.
 		// Need to figure something else out for core level
-		if ($this->pkgHandle != '' && is_dir(DIR_PACKAGES . '/' . $this->pkgHandle)) {
-			$ret = @rename(DIR_PACKAGES . '/' . $this->pkgHandle, DIR_FILES_TRASH . '/' . $this->pkgHandle . '_' . date('YmdHis'));
+		if ($this->pkgHandle != '' && is_dir($this->DIR_PACKAGES . '/' . $this->pkgHandle)) {
+			$ret = @rename($this->DIR_PACKAGES . '/' . $this->pkgHandle, DIR_FILES_TRASH . '/' . $this->pkgHandle . '_' . date('YmdHis'));
 			if (!$ret) {
 				return array(Package::E_PACKAGE_MIGRATE_BACKUP);
 			}
@@ -579,7 +582,7 @@ class Package extends Object {
 	public static function getAvailablePackages($filterInstalled = true) {
 		$dh = Loader::helper('file');
 		
-		$packages = $dh->getDirectoryContents(DIR_PACKAGES);
+		$packages = $dh->getDirectoryContents($this->DIR_PACKAGES);
 		if ($filterInstalled) {
 			$handles = self::getInstalledHandles();
 

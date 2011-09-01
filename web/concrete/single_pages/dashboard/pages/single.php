@@ -70,7 +70,7 @@ $generated = SinglePage::getList();
 		}
 		
 	?>
-	<tr <? if ($packageHandle == DIRNAME_PACKAGE_CORE) { ?> class="ccm-core-package-row" <? } ?>>
+	<tr>
 		<td><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$p->getCollectionID()?>"><?=$p->getCollectionName()?></a></td>
 		<td><?=$p->getCollectionPath()?></td>
 		<td><? print $packageName; ?></td>

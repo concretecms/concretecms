@@ -18,7 +18,7 @@
  */
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Export {
+class ContentExporter {
 	
 	protected $x; // the xml object for export
 	

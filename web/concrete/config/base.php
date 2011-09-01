@@ -154,8 +154,8 @@ if (!defined('DIR_PACKAGES')) {
 	define('DIR_PACKAGES', DIR_BASE . '/packages');
 }
 define('DIR_PACKAGES_CORE', DIR_BASE_CORE . '/packages');
-define('DIRNAME_PACKAGE_CORE', 'core');
-define('DIR_PACKAGE_CORE', DIR_BASE_CORE . '/packages/' . DIRNAME_PACKAGE_CORE);
+define('DIR_STARTING_POINT_PACKAGES', DIR_BASE . '/config/install/packages');
+define('DIR_STARTING_POINT_PACKAGES_CORE', DIR_BASE_CORE . '/config/install/packages');
 
 define('DIRNAME_BLOCKS', 'blocks');
 define('DIRNAME_BACKUPS', 'backups');

@@ -49,17 +49,17 @@
 			$content = $this->content;
 			$content = preg_replace_callback(
 				'/{CCM:CID_([0-9]+)}/i',
-				array('Export', 'replacePageWithPlaceHolderInMatch'),				
+				array('ContentExporter', 'replacePageWithPlaceHolderInMatch'),				
 				$content);
 
 			$content = preg_replace_callback(
 				'/{CCM:FID_([0-9]+)}/i',
-				array('Export', 'replaceImageWithPlaceHolderInMatch'),				
+				array('ContentExporter', 'replaceImageWithPlaceHolderInMatch'),				
 				$content);
 
 			$content = preg_replace_callback(
 				'/{CCM:FID_DL_([0-9]+)}/i',
-				array('Export', 'replaceFileWithPlaceHolderInMatch'),				
+				array('ContentExporter', 'replaceFileWithPlaceHolderInMatch'),				
 				$content);
 
 

@@ -177,6 +177,16 @@ class AttributeKey extends Object {
 		return $list;
 	}	
 	
+	public static function import(SimpleXMLElement $ak) {
+		$type = AttributeType::getByHandle($ak['type']);
+		$akCategoryHandle = $ak['category'];
+		$pkg = false;
+		if ($ak['package']) {
+			$pkg = Package::getByHandle($ak['package']);
+		}
+		self::add($akCategoryHandle, $type, array('akHandle' => $ak['handle'], 'akName' => $ak['name'], 'akIsSearchableIndexed' => $ak['indexed'], 'akIsSearchable' => $ak['searchable']), $pkg);
+	}
+	
 	/** 
 	 * Adds an attribute key. 
 	 */
