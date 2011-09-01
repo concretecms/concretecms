@@ -395,9 +395,10 @@
       <DEFAULT value="0"/>
       <UNSIGNED />
     </field>
-    <field name="isOriginal" type="C" size="1">
+    <field name="isOriginal" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
+      <UNSIGNED />
     </field>
     <field name="cbOverrideAreaPermissions" type="I1" size="1">
       <NOTNULL/>
@@ -409,6 +410,9 @@
     </field>
     <index name="cbIncludeAll">
       <col>cbIncludeAll</col>
+    </index>
+    <index name="isOriginal">
+    	<col>isOriginal</col>
     </index>
   </table>
 
@@ -1436,9 +1440,10 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="cIsTemplate" type="C" size="1">
+    <field name="cIsTemplate" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
     <field name="uID" type="I" size="10">
       <UNSIGNED/>
@@ -1542,6 +1547,9 @@
     </index>
     <index name="cPointerID">
       <col>cPointerID</col>
+    </index>
+    <index name="cIsTemplate">
+    	<col>cIsTemplate</col>
     </index>
   </table>
   <table name="PileContents">
