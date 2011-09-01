@@ -230,7 +230,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			$q = "select ctID, ctHandle, ctIcon, ctName, pkgID from PageTypes order by ctName asc";
 			$r = $db->query($q);
-
+			$ctArray = array();
 			if ($r) {
 				while ($row = $r->fetchRow()) {
 					$ct = new CollectionType;

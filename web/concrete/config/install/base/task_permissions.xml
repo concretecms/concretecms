@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <taskpermissions>
+		<taskpermission handle="access_task_permissions" name="Change Task Permissions">
+			<access>
+				<group name="Administrators" />
+			</access>
+		</taskpermission>
+		<taskpermission handle="access_sitemap" name="Access Sitemap and Page Search">
+			<access>
+				<group name="Administrators" />
+			</access>
+		</taskpermission>
+		<taskpermission handle="access_user_search" name="Access User Search">
+			<access>
+				<group name="Administrators" />
+			</access>
+		</taskpermission>
+		<taskpermission handle="access_group_search" name="Access Group Search">
+			<access>
+				<group name="Administrators" />
+			</access>
+		</taskpermission>
+		<taskpermission handle="access_page_defaults" name="Access Page Defaults">
+			<access>
+				<group name="Administrators" />
+			</access>
+		</taskpermission>
+		<taskpermission handle="backup" name="Perform Full Database Backups">
+			<access>
+				<group name="Administrators" />
+			</access>
+		</taskpermission>
+		<taskpermission handle="uninstall_packages" name="Uninstall Packages">
+			<access>
+				<group name="Administrators" />
+			</access>
+		</taskpermission>
+		<taskpermission handle="install_packages" name="Install Packages and Connect to the Marketplace">
+			<access>
+				<group name="Administrators" />
+			</access>
+		</taskpermission>
+		<taskpermission handle="delete_user" name="Delete Users">
+			<access>
+				<group name="Administrators" />
+			</access>
+		</taskpermission>
+		<taskpermission handle="sudo" name="Sign in as User" />
+
+	</taskpermissions>
+
+</concrete5-cif>

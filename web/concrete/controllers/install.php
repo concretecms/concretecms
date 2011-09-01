@@ -113,10 +113,13 @@ class InstallController extends Controller {
 		Loader::model('package/starting_point');
 		Loader::library('content/importer');
 		$installDirectory = $this->installData['DIR_BASE_CORE'] . '/config';
+		Page::addHomePage();
 		$ci = new ContentImporter();
 		$ci->importContentFile($installDirectory . '/install/base/block_types.xml');
 		$ci->importContentFile($installDirectory . '/install/base/attributes.xml');
-		Page::addHomePage();
+		$ci->importContentFile($installDirectory . '/install/base/themes.xml');
+		$ci->importContentFile($installDirectory . '/install/base/jobs.xml');
+		$ci->importContentFile($installDirectory . '/install/base/task_permissions.xml');
 		$ci->importContentFile($installDirectory . '/install/base/dashboard_and_system_pages.xml');
 		//$spl = Loader::startingPointPackage('blank');
 		//$spl->install();
@@ -280,19 +283,25 @@ class InstallController extends Controller {
 				}
 				
 				$this->installDB();
-				$this->installStarterContent();
-				
-				$vh = Loader::helper('validation/identifier');
-				
-				// copy the files
+
+				// insert the default groups
+				// create the groups our site users
+				// have to add these in the right order so their IDs get set
+				// starting at 1 w/autoincrement
+				$g1 = Group::add(t("Guest"), t("The guest group represents unregistered visitors to your site."));
+				$g2 = Group::add(t("Registered Users"), t("The registered users group represents all user accounts."));
+				$g3 = Group::add(t("Administrators"), "");
 				
 				// insert admin user into the user table
+				$vh = Loader::helper('validation/identifier');
 				$salt = ( defined('MANUAL_PASSWORD_SALT') ) ? MANUAL_PASSWORD_SALT : $vh->getString(64);
 				$uPassword = $_POST['uPassword'];
 				$uEmail = $_POST['uEmail'];
-				
 				$uPasswordEncrypted = User::encryptPassword($uPassword, $salt);
 				UserInfo::addSuperUser($uPasswordEncrypted, $uEmail);
+				
+				
+				$this->installStarterContent();
 
 				if (defined('PERMISSIONS_MODEL') && PERMISSIONS_MODEL != 'simple') {
 					$setPermissionsModel = PERMISSIONS_MODEL;
