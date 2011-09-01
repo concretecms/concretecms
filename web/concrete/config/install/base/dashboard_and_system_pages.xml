@@ -55,4 +55,5 @@
         <page name="Composer" path="/dashboard/pages/types/composer" filename="/dashboard/pages/types/composer.php" description="" package=""/>
         <page name="Multilingual Settings" path="/dashboard/settings/multilingual" filename="/dashboard/settings/multilingual/view.php" description="" package=""/>
     </singlepages>
+
 </concrete5-cif>

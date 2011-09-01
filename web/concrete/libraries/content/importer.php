@@ -31,9 +31,9 @@ class ContentImporter {
 		$this->importJobs($sx);
 		$this->importPageTypes($sx);
 		$this->importPages($sx);
+		$this->importPackages($sx);
 		
 		// export attributes // import attributes
-		// page types, pages, blocks, areas, etc...
 	}
 	
 	protected static function getPackageObject($pkgHandle) {
@@ -179,7 +179,16 @@ class ContentImporter {
 			}
 		}
 	}
-
+	
+	protected function importPackages(SimpleXMLElement $sx) {
+		if (isset($sx->packages)) {
+			foreach($sx->packages->package as $p) {
+				$pkg = Loader::package($p['handle']);
+				$pkg->install();
+			}
+		}
+	}
+	
 	protected function importThemes(SimpleXMLElement $sx) {
 		if (isset($sx->themes)) {
 			foreach($sx->themes->theme as $th) {
