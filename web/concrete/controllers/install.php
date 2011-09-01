@@ -313,7 +313,7 @@ class InstallController extends Controller {
 					$this->fp = @fopen($this->installData['DIR_CONFIG_SITE'] . '/site.php', 'w+');
 					if ($this->fp) {
 					
-												
+						// legacy package auto-install support		
 						if (is_array($this->installData['packages'])) {
 							foreach($this->installData['packages'] as $pkgHandle) {
 								$p = Loader::package($pkgHandle);
