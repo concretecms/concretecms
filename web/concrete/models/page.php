@@ -643,6 +643,7 @@ class Page extends Collection {
 		$p->addAttribute('name', Loader::helper('text')->entities($this->getCollectionName()));
 		$p->addAttribute('path', $this->getCollectionPath());
 		$p->addAttribute('filename', $this->getCollectionFilename());
+		$p->addAttribute('pagetype', $this->getCollectionTypeHandle());
 		$p->addAttribute('description', Loader::helper('text')->entities($this->getCollectionDescription()));
 		$p->addAttribute('package', $this->getPackageHandle());
 		

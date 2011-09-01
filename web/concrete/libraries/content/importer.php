@@ -26,6 +26,12 @@ class ContentImporter {
 		$this->importBlockTypes($sx);
 		$this->importAttributeTypes($sx);
 		$this->importAttributes($sx);
+		$this->importThemes($sx);
+		$this->importTaskPermissions($sx);
+		$this->importJobs($sx);
+		
+		// export attributes // import attributes
+		// page types, pages, blocks, areas, etc...
 	}
 	
 	protected static function getPackageObject($pkgHandle) {
@@ -71,6 +77,52 @@ class ContentImporter {
 					$name = Loader::helper('text')->unhandle($at['handle']);
 				}
 				AttributeType::add($at['handle'], $name, $pkg);
+			}
+		}
+	}
+
+	protected function importThemes(SimpleXMLElement $sx) {
+		if (isset($sx->themes)) {
+			foreach($sx->themes->theme as $th) {
+				$pkg = ContentImporter::getPackageObject($th['package']);
+				$pt = PageTheme::add($th['handle'], $pkg);
+				if ($th['activated'] == '1') {
+					$pt->applyToSite();
+				}
+			}
+		}
+	}
+
+	protected function importJobs(SimpleXMLElement $sx) {
+		Loader::model('job');
+		if (isset($sx->jobs)) {
+			foreach($sx->jobs->job as $jx) {
+				$pkg = ContentImporter::getPackageObject($jx['package']);
+				if (is_object($pkg)) {
+					Job::installByPackage($jx['handle'], $pkg);
+				} else {
+					Job::installByHandle($jx['handle']);				
+				}
+			}
+		}
+	}
+
+	protected function importTaskPermissions(SimpleXMLElement $sx) {
+		if (isset($sx->taskpermissions)) {
+			foreach($sx->taskpermissions->taskpermission as $tp) {
+				$pkg = ContentImporter::getPackageObject($at['package']);
+				$tpa = TaskPermission::addTask($tp['handle'], $tp['name'], $tp['description'], $pkg);
+				if (isset($tp->access)) {
+					foreach($tp->access->children() as $ch) {
+						if ($ch->getName() == 'group') {
+							$g = Group::getByName($ch['name']);
+							if (!is_object($g)) {
+								$g = Group::add($g['name'], $g['description']);
+							}
+							$tpa->addAccess($g);
+						}
+					}
+				}
 			}
 		}
 	}

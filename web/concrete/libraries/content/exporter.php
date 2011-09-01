@@ -67,7 +67,13 @@ class ContentExporter {
 			$pc = Page::getByID($row['cID'], 'RECENT');
 			$pc->export($pages);
 		}		
-
+		
+		// now task permissions
+		TaskPermissionList::export($this->x);
+		
+		// now jobs
+		Loader::model('job');
+		Job::exportList($this->x);
 	}
 	
 	public function output() {
