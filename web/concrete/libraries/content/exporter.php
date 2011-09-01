@@ -86,33 +86,45 @@ class ContentExporter {
 	}
 	
 	public static function replacePageWithPlaceHolder($cID) {
-		$c = Page::getByID($cID);
-		return '{ccm:export:page:' . $c->getCollectionPath() . '}';
+		if ($cID > 0) { 
+			$c = Page::getByID($cID);
+			return '{ccm:export:page:' . $c->getCollectionPath() . '}';
+		}
 	}
 
 	public static function replaceFileWithPlaceHolder($fID) {
-		$f = File::getByID($fID);
-		return '{ccm:export:file:' . $f->getFileName() . '}';
+		if ($fID > 0) { 
+			$f = File::getByID($fID);
+			return '{ccm:export:file:' . $f->getFileName() . '}';
+		}
 	}
 
 	public static function replacePageWithPlaceHolderInMatch($cID) {
-		$cID = $cID[1];
-		return self::replacePageWithPlaceHolder($cID);
+		if ($cID[1] > 0) { 
+			$cID = $cID[1];
+			return self::replacePageWithPlaceHolder($cID);
+		}
 	}
 
 	public static function replaceFileWithPlaceHolderInMatch($fID) {
-		$fID = $fID[1];
-		return self::replaceFileWithPlaceHolder($fID);
+		if ($fID[1] > 0) { 
+			$fID = $fID[1];
+			return self::replaceFileWithPlaceHolder($fID);
+		}
 	}
 	
 	public static function replaceImageWithPlaceHolderInMatch($fID) {
-		$f = File::getByID($fID[1]);
-		return '{ccm:export:image:' . $f->getFileName() . '}';
+		if ($fID > 0) { 
+			$f = File::getByID($fID[1]);
+			return '{ccm:export:image:' . $f->getFileName() . '}';
+		}
 	}
 
 	public static function replacePageTypeWithPlaceHolder($ctID) {
-		$ct = CollectionType::getByID($ctID);
-		return '{ccm:export:pagetype:' . $ct->getCollectionTypeHandle() . '}';
+		if ($ctID > 0) {
+			$ct = CollectionType::getByID($ctID);
+			return '{ccm:export:pagetype:' . $ct->getCollectionTypeHandle() . '}';
+		}
 	}
 	
 	/** 
