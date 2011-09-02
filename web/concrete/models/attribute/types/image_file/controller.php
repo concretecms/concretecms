@@ -20,7 +20,11 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 			return '<a href="' . $f->getDownloadURL() . '">' . $f->getTitle() . '</a>';
 		}
 	}
-
+	
+	public function exportValue($akn) {
+		$av = $akn->addChild('value');
+		$av->addChild('fID', ContentExporter::replaceFileWithPlaceHolder($this->getValue()->getFileID()));
+	}
 	public function searchForm($list) {
 		$fileID = $this->request('value');
 		$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $fileID);

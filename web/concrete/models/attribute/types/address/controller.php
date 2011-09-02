@@ -170,7 +170,7 @@ class AddressAttributeTypeController extends AttributeTypeController  {
 		}
 	}
 
-	public function export($akey) {
+	public function exportKey($akey) {
 		$this->load();
 		$type = $akey->addChild('type');
 		$type->addAttribute('custom-countries', $this->akHasCustomCountries);
@@ -182,6 +182,17 @@ class AddressAttributeTypeController extends AttributeTypeController  {
 			}
 		}
 		return $akey;
+	}
+
+	public function exportValue($akn) {
+		$avn = $akn->addChild('value');
+		$address = $this->getValue();
+		$avn->addAttribute('address1', $address->getAddress1());
+		$avn->addAttribute('address2', $address->getAddress2());
+		$avn->addAttribute('city', $address->getCity());
+		$avn->addAttribute('state-province', $address->getStateProvince());
+		$avn->addAttribute('country', $address->getCountry());
+		$avn->addAttribute('postal-code', $address->getPostalCode());
 	}
 	
 	public function import($akey) {

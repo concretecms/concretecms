@@ -25,6 +25,11 @@
             <area name="Main"/>
         </page>
         <page name="Test Page 2" path="/test-page-2" filename="" pagetype="page" description="" package="">
+            <attributes>
+                <exclude_nav>1</exclude_nav>
+                <tags>Hello World
+                    awesome</tags>
+            </attributes>
             <area name="Header Nav"/>
             <area name="Header"/>
             <area name="Sidebar"/>

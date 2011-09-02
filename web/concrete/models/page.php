@@ -646,7 +646,20 @@ class Page extends Collection {
 		$p->addAttribute('pagetype', $this->getCollectionTypeHandle());
 		$p->addAttribute('description', Loader::helper('text')->entities($this->getCollectionDescription()));
 		$p->addAttribute('package', $this->getPackageHandle());
-		
+
+		$attribs = $this->getSetCollectionAttributes();
+		if (count($attribs) > 0) {
+			$attributes = $p->addChild('attributes');
+			foreach($attribs as $ak) {
+				$av = $this->getAttributeValueObject($ak);
+				$cnt = $ak->getController();
+				$cnt->setAttributeValue($av);
+		 		$akx = $attributes->addChild('attributekey');
+		 		$akx->addAttribute('handle', $ak->getAttributeKeyHandle());
+				$cnt->exportValue($akx);
+			}
+		}
+
 		$db = Loader::db();
 		$r = $db->Execute('select arHandle from Areas where cID = ?', array($this->getCollectionID()));
 		while ($row = $r->FetchRow()) {

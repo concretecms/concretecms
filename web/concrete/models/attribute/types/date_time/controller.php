@@ -80,7 +80,7 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 		}
 	}
 
-	public function export($akey) {
+	public function exportKey($akey) {
 		$this->load();
 		$type = $akey->addChild('type');
 		$type->addAttribute('mode', $this->akDateDisplayMode);

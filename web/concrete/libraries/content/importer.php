@@ -112,6 +112,11 @@ class ContentImporter {
 				if (isset($px->area)) {
 					$this->importPageAreas($page, $px);
 				}
+				if (isset($px->attributes)) {
+					foreach($px->attributes->children() as $attr) {
+						$page->setAttribute($attr->getName(), $attr->__toString());	
+					}
+				}
 			}
 		}
 	}
@@ -265,7 +270,7 @@ class ContentImporter {
 				$txt = Loader::helper('text');
 				$className = $txt->camelcase($akc->getAttributeKeyCategoryHandle());
 				$c1 = $className . 'AttributeKey';
-				$ak = call_user_func(array($c1, 'import'), $ak);				
+				$ak = call_user_func(array($c1, 'importKey'), $ak);				
 			}
 		}
 	}
