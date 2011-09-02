@@ -61,7 +61,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		}
 	}
 	
-	public function export($akey) {
+	public function exportKey($akey) {
 		$this->load();
 		$db = Loader::db();
 		$type = $akey->addChild('type');
@@ -77,7 +77,17 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		}
 		return $akey;
 	}
-
+	
+	public function exportValue($akn) {
+		$list = $this->getSelectedOptions();
+		if ($list->count() > 0) {
+			$av = $akn->addChild('value');
+			foreach($list as $l) {
+				$av->addChild('option', $l->__toString());
+			}
+		}
+	}
+	
 	public function import($akey) {
 		if (isset($akey->type)) {
 			$akSelectAllowMultipleValues = $akey->type['allow-multiple-values'];

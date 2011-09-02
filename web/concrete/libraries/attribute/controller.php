@@ -32,11 +32,20 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	 		return $this->attributeType;
 	 	}
 	 	
-	 	public function export($ak) {
+	 	public function exportKey($ak) {
 	 		return $ak;
 	 	}
 	 	
-	 	public function import($akn) {
+	 	public function exportValue(SimpleXMLElement $akv) {
+			$val = $this->attributeValue->getValue();
+			if (is_object($val)) {
+				$val = $val->__toString();
+			}
+			$av = $akv->addChild('value', '<![CDATA[' . $val . ']]>');
+	 		return $av;
+	 	}
+	 	
+	 	public function importKey($akn) {
 	 		
 	 	}
 	 	

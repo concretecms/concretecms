@@ -19,7 +19,7 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 		return $value;	
 	}
 	
-	public function export($akey) {
+	public function exportKey($akey) {
 		$this->load();
 		$type = $akey->addChild('type');
 		$type->addAttribute('checked', $this->akCheckedByDefault);

@@ -127,9 +127,9 @@ class AttributeKey extends Object {
 			$akey->addAttribute('indexed', $this->isAttributeKeySearchable());
 			$akey->addAttribute('type', $type);
 			$akey->addAttribute('category', $category);
+			$this->getController()->exportKey($akey);
 		}
 		
-		$this->getController()->export($akey);
 		return $akey;
 	}
 
