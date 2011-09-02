@@ -87,6 +87,13 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 		return $akey;
 	}
 
+	public function import($akey) {
+		if (isset($akey->type)) {
+			$data['akDateDisplayMode'] = $akey->type['mode'];
+			$this->saveKey($data);
+		}
+	}
+
 	public function validateForm($data) {
 		return $data['value'] != '';
 	}

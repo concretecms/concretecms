@@ -185,7 +185,8 @@ class AttributeKey extends Object {
 		if ($ak['package']) {
 			$pkg = Package::getByHandle($ak['package']);
 		}
-		self::add($akCategoryHandle, $type, array('akHandle' => $ak['handle'], 'akName' => $ak['name'], 'akIsSearchableIndexed' => $ak['indexed'], 'akIsSearchable' => $ak['searchable']), $pkg);
+		$akn = self::add($akCategoryHandle, $type, array('akHandle' => $ak['handle'], 'akName' => $ak['name'], 'akIsSearchableIndexed' => $ak['indexed'], 'akIsSearchable' => $ak['searchable']), $pkg);
+		$akn->getController()->import($ak);
 	}
 	
 	/** 

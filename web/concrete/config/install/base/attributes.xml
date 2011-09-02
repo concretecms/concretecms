@@ -103,7 +103,9 @@
         <attributekey handle="meta_keywords" name="Meta Keywords" package="" searchable="1" indexed="1" type="textarea" category="collection">
             <type mode="text"/>
         </attributekey>
-        <attributekey handle="exclude_nav" name="Exclude From Nav" package="" searchable="1" indexed="1" type="boolean" category="collection"/>
+        <attributekey handle="exclude_nav" name="Exclude From Nav" package="" searchable="1" indexed="1" type="boolean" category="collection">
+            <type checked="1"/>
+        </attributekey>
         <attributekey handle="exclude_page_list" name="Exclude From Page List" package="" searchable="1" indexed="1" type="boolean" category="collection"/>
         <attributekey handle="header_extra_content" name="Header Extra Content" package="" searchable="1" indexed="1" type="textarea" category="collection">
             <type mode="text"/>

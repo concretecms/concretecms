@@ -85,7 +85,7 @@ class UserAttributeKey extends AttributeKey {
 		if ($ak['package']) {
 			$pkg = Package::getByHandle($ak['package']);
 		}
-		UserAttributeKey::add($type, array(
+		$akn = UserAttributeKey::add($type, array(
 			'akHandle' => $ak['handle'], 
 			'akName' => $ak['name'], 
 			'akIsSearchableIndexed' => $ak['indexed'], 
@@ -97,6 +97,9 @@ class UserAttributeKey extends AttributeKey {
 			'uakRegisterEditRequired' => $ak['register-required'],
 			'uakMemberListDisplay' => $ak['member-list-displayed']
 		), $pkg);
+
+		$akn->getController()->import($ak);
+
 	}
 	
 	public function isAttributeKeyDisplayedOnProfile() {

@@ -77,6 +77,27 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		}
 		return $akey;
 	}
+
+	public function import($akey) {
+		if (isset($akey->type)) {
+			$akSelectAllowMultipleValues = $akey->type['allow-multiple-values'];
+			$akSelectOptionDisplayOrder = $akey->type['display-order'];
+			$akSelectAllowOtherValues = $akey->type['allow-other-values'];
+			$db = Loader::db();
+			$db->Replace('atSelectSettings', array(
+				'akID' => $this->attributeKey->getAttributeKeyID(), 
+				'akSelectAllowMultipleValues' => $akSelectAllowMultipleValues, 
+				'akSelectAllowOtherValues' => $akSelectAllowOtherValues,
+				'akSelectOptionDisplayOrder' => $akSelectOptionDisplayOrder
+			), array('akID'), true);
+
+			if (isset($akey->type->options)) {
+				foreach($akey->type->options->children() as $option) {
+					SelectAttributeTypeOption::add($this->attributeKey, $option['value'], $option['is-end-user-added']);
+				}
+			}
+		}
+	}
 	
 	private function getSelectValuesFromPost() {
 		$options = new SelectAttributeTypeOptionList();

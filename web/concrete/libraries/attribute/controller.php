@@ -36,6 +36,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	 		return $ak;
 	 	}
 	 	
+	 	public function import($akn) {
+	 		
+	 	}
+	 	
 	 	
 	 	protected function getAttributeValueID() {
 	 		if (is_object($this->attributeValue)) {

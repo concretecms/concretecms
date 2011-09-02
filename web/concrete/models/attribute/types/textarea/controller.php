@@ -115,6 +115,13 @@ class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 		return $akey;
 	}
 
+	public function import($akey) {
+		if (isset($akey->type)) {
+			$data['akTextareaDisplayMode'] = $akey->type['mode'];
+			$this->saveKey($data);
+		}
+	}
+	
 	public function duplicateKey($newAK) {
 		$this->load();
 		$db = Loader::db();
