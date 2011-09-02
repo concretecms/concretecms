@@ -194,8 +194,20 @@ class AddressAttributeTypeController extends AttributeTypeController  {
 		$avn->addAttribute('country', $address->getCountry());
 		$avn->addAttribute('postal-code', $address->getPostalCode());
 	}
+
+	public function importValue(SimpleXMLElement $akv) {
+		if (isset($akv->value)) {
+			$data['address1'] = $akv->value['address1'];
+			$data['address2'] = $akv->value['address2'];
+			$data['city'] = $akv->value['city'];
+			$data['state_province'] = $akv->value['state-province'];
+			$data['country'] = $akv->value['country'];
+			$data['postal_code'] = $akv->value['postal-code'];
+			return $data;
+		}
+	}
 	
-	public function import($akey) {
+	public function importKey($akey) {
 		if (isset($akey->type)) {
 			$data['akHasCustomCountries'] = $akey->type['custom-countries'];
 			$data['akDefaultCountry'] = $akey->type['default-country'];

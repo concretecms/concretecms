@@ -88,7 +88,17 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		}
 	}
 	
-	public function import($akey) {
+	public function importValue(SimpleXMLElement $akv) {
+		if (isset($akv->value)) {
+			$vals = array();
+			foreach($akv->value->children() as $ch) {
+				$vals[] = $ch->__toString();
+			}
+			return $vals;
+		}
+	}
+	
+	public function importKey($akey) {
 		if (isset($akey->type)) {
 			$akSelectAllowMultipleValues = $akey->type['allow-multiple-values'];
 			$akSelectOptionDisplayOrder = $akey->type['display-order'];

@@ -98,7 +98,7 @@ class UserAttributeKey extends AttributeKey {
 			'uakMemberListDisplay' => $ak['member-list-displayed']
 		), $pkg);
 
-		$akn->getController()->import($ak);
+		$akn->getController()->importKey($ak);
 
 	}
 	

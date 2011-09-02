@@ -114,14 +114,26 @@ class InstallController extends Controller {
 		Loader::library('content/importer');
 		$installDirectory = $this->installData['DIR_BASE_CORE'] . '/config';
 		Page::addHomePage();
+		
 		$ci = new ContentImporter();
 		$ci->importContentFile($installDirectory . '/install/base/block_types.xml');
 		$ci->importContentFile($installDirectory . '/install/base/attributes.xml');
-		$ci->importContentFile($installDirectory . '/install/base/page_types.xml');
 		$ci->importContentFile($installDirectory . '/install/base/themes.xml');
 		$ci->importContentFile($installDirectory . '/install/base/jobs.xml');
 		$ci->importContentFile($installDirectory . '/install/base/task_permissions.xml');
 		$ci->importContentFile($installDirectory . '/install/base/dashboard_and_system_pages.xml');
+
+		// files have to come after attributes.xml
+		// install files
+		Loader::library('file/importer');
+		$fh = new FileImporter();
+		$contents = Loader::helper('file')->getDirectoryContents($installDirectory . '/install/files');
+
+		foreach($contents as $filename) {
+			$fh->import($installDirectory . '/install/files/' . $filename, $filename);
+		}
+
+		$ci->importContentFile($installDirectory . '/install/base/page_types.xml');
 		$ci->importContentFile($installDirectory . '/install/base/pages.xml');
 		//$spl = Loader::startingPointPackage('blank');
 		//$spl->install();

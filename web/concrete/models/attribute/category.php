@@ -36,7 +36,7 @@ class AttributeKeyCategory extends Object {
 		$attribs = self::getList();		
 		$axml = $xml->addChild('attributecategories');
 		foreach($attribs as $akc) {
-			$acat = $axml->addChild('attributecategory');
+			$acat = $axml->addChild('category');
 			$acat->addAttribute('handle', $akc->getAttributeKeyCategoryHandle());
 			$acat->addAttribute('allow-sets', $akc->allowAttributeSets());
 			$acat->addAttribute('package', $akc->getPackageHandle());
