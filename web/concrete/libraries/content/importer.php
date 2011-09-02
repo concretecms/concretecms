@@ -114,7 +114,8 @@ class ContentImporter {
 				}
 				if (isset($px->attributes)) {
 					foreach($px->attributes->children() as $attr) {
-						$page->setAttribute($attr->getName(), $attr->__toString());	
+						$ak = CollectionAttributeKey::getByHandle($attr['handle']);
+						$page->setAttribute($attr['handle']->__toString(), $ak->getController()->importValue($attr));
 					}
 				}
 			}
@@ -270,7 +271,7 @@ class ContentImporter {
 				$txt = Loader::helper('text');
 				$className = $txt->camelcase($akc->getAttributeKeyCategoryHandle());
 				$c1 = $className . 'AttributeKey';
-				$ak = call_user_func(array($c1, 'importKey'), $ak);				
+				$ak = call_user_func(array($c1, 'import'), $ak);				
 			}
 		}
 	}

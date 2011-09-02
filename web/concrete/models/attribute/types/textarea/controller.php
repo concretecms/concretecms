@@ -115,7 +115,7 @@ class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 		return $akey;
 	}
 
-	public function import($akey) {
+	public function importKey($akey) {
 		if (isset($akey->type)) {
 			$data['akTextareaDisplayMode'] = $akey->type['mode'];
 			$this->saveKey($data);

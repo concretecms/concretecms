@@ -37,6 +37,15 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 		return $value;	
 	}
 	
+	public function importValue(SimpleXMLElement $akv) {
+		if (isset($akv->value->fID)) {
+			$fID = ContentImporter::getValue($akv->value->fID->__toString());
+			if ($fID) {
+				return File::getByID($fID);
+			}
+		}
+	}
+	
 	public function search() {
 		// search by file causes too many problems
 		//$al = Loader::helper('concrete/asset_library');
@@ -55,7 +64,9 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 	// run when we call setAttribute(), instead of saving through the UI
 	public function saveValue($obj) {
 		$db = Loader::db();
-		$db->Replace('atFile', array('avID' => $this->getAttributeValueID(), 'fID' => $obj->getFileID()), 'avID', true);
+		if (is_object($obj) && (!$obj->isError())) {
+			$db->Replace('atFile', array('avID' => $this->getAttributeValueID(), 'fID' => $obj->getFileID()), 'avID', true);
+		}
 	}
 	
 	public function deleteKey() {

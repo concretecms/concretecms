@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
 
-
     <pages>
         <page name="Welcome to my website" path="" filename="" pagetype="" description="This is my description" package="">
             <area name="Header Nav">
@@ -26,10 +25,85 @@
         </page>
         <page name="Test Page 2" path="/test-page-2" filename="" pagetype="page" description="" package="">
             <attributes>
-                <exclude_nav>1</exclude_nav>
-                <tags>Hello World
-                    awesome</tags>
+                <attributekey handle="meta_title">
+                    <value><![CDATA[meta title]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="tags">
+                    <value>
+                        <option>hello world</option>
+                    </value>
+                </attributekey>
+                <attributekey handle="date">
+                    <value><![CDATA[2011-04-01 00:00:00]]></value>
+                </attributekey>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:inneroptics_dot_net_portland.jpg}</fID>
+                    </value>
+                </attributekey>
+                <attributekey handle="num">
+                    <value><![CDATA[3]]></value>
+                </attributekey>
+                <attributekey handle="rating">
+                    <value><![CDATA[60]]></value>
+                </attributekey>
+                <attributekey handle="address">
+                    <value address1="123 blah st" address2="suite 210" city="london" state-province="PEEBLESS" country="UK" postal-code="1123"/>
+                </attributekey>
             </attributes>
+            <area name="Header Nav"/>
+            <area name="Header"/>
+            <area name="Sidebar"/>
+        </page>
+        <page name="Test Page 3" path="/test-page-3" filename="" pagetype="page" description="" package="">
+            <area name="Header Nav"/>
+            <area name="Header"/>
+            <area name="Sidebar"/>
+        </page>
+        <page name="Test Sub 1" path="/test-page-2/test-sub-1" filename="" pagetype="page" description="" package="">
+            <area name="Header Nav"/>
+            <area name="Header"/>
+            <area name="Sidebar"/>
+        </page>
+        <page name="Test Sub 2" path="/test-page-2/test-sub-1/test-sub-2" filename="" pagetype="page" description="" package="">
+            <area name="Header Nav"/>
+            <area name="Header"/>
+            <area name="Sidebar"/>
+        </page>
+        <page name="Test Page 3" path="/test-page-2/test-sub-1/test-sub-2/test-page-3" filename="" pagetype="page" description="" package="">
+            <area name="Header Nav"/>
+            <area name="Header"/>
+            <area name="Sidebar"/>
+        </page>
+    </pages>
+
+	<!--
+    <pages>
+        <page name="Welcome to my website" path="" filename="" pagetype="" description="This is my description" package="">
+            <area name="Header Nav">
+                <block type="autonav" name="" custom-template="header_menu.php">
+                    <data table="btNavigation">
+                        <record>
+                            <orderBy><![CDATA[display_asc]]></orderBy>
+                            <displayPages><![CDATA[top]]></displayPages>
+                            <displayPagesCID/>
+                            <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                            <displaySubPages><![CDATA[none]]></displaySubPages>
+                            <displaySubPageLevels><![CDATA[custom]]></displaySubPageLevels>
+                            <displaySubPageLevelsNum><![CDATA[1]]></displaySubPageLevelsNum>
+                            <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+                        </record>
+                    </data>
+                </block>
+            </area>
+            <area name="Header"/>
+            <area name="Sidebar"/>
+            <area name="Main"/>
+        </page>
+        <page name="Test Page 2" path="/test-page-2" filename="" pagetype="page" description="" package="">
             <area name="Header Nav"/>
             <area name="Header"/>
             <area name="Sidebar"/>
@@ -56,6 +130,7 @@
             <area name="Main"/>
         </page>
     </pages>
+    //-->
 
 
 

@@ -26,7 +26,7 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 		return $akey;
 	}
 	
-	public function import($akey) {
+	public function importKey($akey) {
 		if (isset($akey->type)) {
 			$data['akCheckedByDefault'] = $akey->type['checked'];
 			$this->saveKey($data);
