@@ -19,6 +19,20 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 		return $value;	
 	}
 	
+	public function export($akey) {
+		$this->load();
+		$type = $akey->addChild('type');
+		$type->addAttribute('checked', $this->akCheckedByDefault);
+		return $akey;
+	}
+	
+	public function import($akey) {
+		if (isset($akey->type)) {
+			$data['akCheckedByDefault'] = $akey->type['checked'];
+			$this->saveKey($data);
+		}
+	}
+	
 	public function getDisplayValue() {
 		$v = $this->getValue();
 		return ($v == 1) ? t('Yes') : t('No');

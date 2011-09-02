@@ -183,6 +183,19 @@ class AddressAttributeTypeController extends AttributeTypeController  {
 		}
 		return $akey;
 	}
+	
+	public function import($akey) {
+		if (isset($akey->type)) {
+			$data['akHasCustomCountries'] = $akey->type['custom-countries'];
+			$data['akDefaultCountry'] = $akey->type['default-country'];
+			if (isset($akey->type->countries)) {
+				foreach($akey->type->countries->children() as $country) {
+					$data['akCustomCountries'][] = $country->__toString();
+				}
+			}
+			$this->saveKey($data);
+		}
+	}
 
 	public function saveKey($data) {
 		$e = Loader::helper('validation/error');
