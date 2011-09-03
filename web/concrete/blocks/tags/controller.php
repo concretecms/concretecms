@@ -89,10 +89,12 @@ class TagsBlockController extends BlockController {
 	
 	public function save($args) {
 		$ak = $this->loadAttribute();
-		$c = Page::getByID($_REQUEST['cID'], 'RECENT');
-		$nvc = $c->getVersionToModify();
-		$ak->saveAttributeForm($nvc);
-		$nvc->refreshCache();
+		if ($_REQUEST['cID']) {
+			$c = Page::getByID($_REQUEST['cID'], 'RECENT');
+			$nvc = $c->getVersionToModify();
+			$ak->saveAttributeForm($nvc);
+			$nvc->refreshCache();
+		}
 		parent::save($args);
 	}	
 }

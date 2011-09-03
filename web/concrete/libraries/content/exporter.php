@@ -46,9 +46,7 @@ class ContentExporter {
 		
 		// now files
 		Loader::model('file_list');
-		$vh = Loader::helper("validation/identifier");
-		$this->filesArchive = $vh->getString();
-		//FileList::export($this->x, $this->filesArchive);
+		FileList::export($this->x);
 		
 		// now single pages
 		$singlepages = $this->x->addChild("singlepages");
@@ -65,7 +63,7 @@ class ContentExporter {
 		// now content pages
 		$pages = $this->x->addChild("pages");
 		$db = Loader::db();
-		$r = $db->Execute('select cID from Pages where cIsTemplate = 0 and cFilename is null or cFilename = "" order by cID asc');
+		$r = $db->Execute('select Pages.cID from Pages left join ComposerDrafts on Pages.cID = ComposerDrafts.cID where ComposerDrafts.cID is null and cIsTemplate = 0 and cFilename is null or cFilename = "" order by cID asc');
 		while($row = $r->FetchRow()) {
 			$pc = Page::getByID($row['cID'], 'RECENT');
 			$pc->export($pages);
@@ -85,7 +83,11 @@ class ContentExporter {
 	}
 	
 	public function getFilesArchive() {
-		return $this->filesArchive;
+		Loader::model('file_list');
+		$vh = Loader::helper("validation/identifier");
+		$archive = $vh->getString();
+		FileList::exportArchive($archive);
+		return $archive;
 	}
 	
 	public static function replacePageWithPlaceHolder($cID) {

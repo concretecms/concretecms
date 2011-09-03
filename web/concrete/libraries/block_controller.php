@@ -232,7 +232,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected function importAdditionalData($b, $blockNode) {
 			if (isset($blockNode->data)) {
 				foreach($blockNode->data as $data) {
-					if ($data['table'] != $this->getBlockTypeDatabaseTable()) {
+					if (strtoupper($data['table']) != strtoupper($this->getBlockTypeDatabaseTable())) {
 						$table = $data['table']->__toString();
 						if (isset($data->record)) {
 							foreach($data->record as $record) {

@@ -80,7 +80,19 @@ class FileList extends DatabaseItemList {
 		}
 	}
 
-	public static function export($xml, $archive) {
+	public static function export($xml) {
+		$fl = new FileList();
+		$files = $fl->get();
+		if (count($files) > 0) {
+			$pkgs = $xml->addChild("files");
+			foreach($files as $f) {
+				$node = $pkgs->addChild('file');
+				$node->addAttribute('filename', $f->getFileName());
+			}
+		}
+	}
+
+	public static function exportArchive($archive) {
 		$fl = new FileList();
 		$files = $fl->get();
 		$filestring = '';
@@ -88,10 +100,7 @@ class FileList extends DatabaseItemList {
 		$filenames = array();
 		$filename = $fh->getTemporaryDirectory() . '/' . $archive . '.zip';
 		if (count($files) > 0) {
-			$pkgs = $xml->addChild("files");
 			foreach($files as $f) {
-				$node = $pkgs->addChild('file');
-				$node->addAttribute('filename', $f->getFileName());
 				if (!in_array(basename($f->getPath()), $filenames)) {
 					$filestring .= "'" . addslashes($f->getPath()) . "' ";
 				}
@@ -99,7 +108,6 @@ class FileList extends DatabaseItemList {
 			}
 			exec(DIR_FILES_BIN_ZIP . ' -j \'' . addslashes($filename) . '\' ' . $filestring);
 		}
-
 	}
 	
 	protected function setupFileSetFilters() {	
