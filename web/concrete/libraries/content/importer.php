@@ -22,7 +22,7 @@ class ContentImporter {
 	
 	public function importContentFile($file) {
 		$sx = simplexml_load_file($file);
-		$this->importSinglePages($sx);
+		$this->importSinglePageStructure($sx);
 		$this->importBlockTypes($sx);
 		$this->importAttributeCategories($sx);
 		$this->importAttributeTypes($sx);
@@ -30,8 +30,12 @@ class ContentImporter {
 		$this->importThemes($sx);
 		$this->importTaskPermissions($sx);
 		$this->importJobs($sx);
-		$this->importPageTypes($sx);
-		$this->importPages($sx);
+		// import bare page types first, then import structure, then page types blocks, attributes and composer settings, then page content, because we need the structure for certain attributes and stuff set in master collections (like composer)
+		$this->importPageTypesBase($sx);
+		$this->importPageStructure($sx);
+		$this->importPageTypeDefaults($sx);
+		$this->importSinglePageContent($sx);
+		$this->importPageContent($sx);
 		$this->importPackages($sx);
 		
 		// export attributes // import attributes
@@ -45,7 +49,7 @@ class ContentImporter {
 		return $pkg;		
 	}
 	
-	protected function importSinglePages(SimpleXMLElement $sx) {
+	protected function importSinglePageStructure(SimpleXMLElement $sx) {
 		Loader::model('single_page');
 		if (isset($sx->singlepages)) {
 			foreach($sx->singlepages->page as $p) {
@@ -53,6 +57,24 @@ class ContentImporter {
 				$spl = SinglePage::add($p['path'], $pkg);
 				if ($p['name']) {
 					$spl->update(array('cName' => $p['name'], 'cDescription' => $p['description']));
+				}
+			}
+		}
+	}
+
+	protected function importSinglePageContent(SimpleXMLElement $sx) {
+		Loader::model('single_page');
+		if (isset($sx->singlepages)) {
+			foreach($sx->singlepages->page as $px) {
+				$page = Page::getByPath($px['path']);
+				if (isset($px->area)) {
+					$this->importPageAreas($page, $px);
+				}
+				if (isset($px->attributes)) {
+					foreach($px->attributes->children() as $attr) {
+						$ak = CollectionAttributeKey::getByHandle($attr['handle']);
+						$page->setAttribute($attr['handle']->__toString(), $ak->getController()->importValue($attr));
+					}
 				}
 			}
 		}
@@ -70,7 +92,28 @@ class ContentImporter {
 		}
 	}
 	
-	protected function importPages(SimpleXMLElement $sx) {
+	protected function importPageContent(SimpleXMLElement $sx) {
+		if (isset($sx->pages)) {
+			foreach($sx->pages->page as $px) {
+				if ($px['path'] != '') {
+					$page = Page::getByPath($px['path']);
+				} else {
+					$page = Page::getByID(HOME_CID, 'RECENT');
+				}
+				if (isset($px->area)) {
+					$this->importPageAreas($page, $px);
+				}
+				if (isset($px->attributes)) {
+					foreach($px->attributes->children() as $attr) {
+						$ak = CollectionAttributeKey::getByHandle($attr['handle']);
+						$page->setAttribute($attr['handle']->__toString(), $ak->getController()->importValue($attr));
+					}
+				}
+			}
+		}
+	}
+	
+	protected function importPageStructure(SimpleXMLElement $sx) {
 		if (isset($sx->pages)) {
 			$nodes = array();
 			foreach($sx->pages->page as $p) {
@@ -87,10 +130,12 @@ class ContentImporter {
 				if (is_object($pkg)) {
 					$data['pkgID'] = $pkg->getPackageID();
 				}
-				
+				$args = array();
 				if ($px['path'] == '') {
 					// home page
 					$page = $home;
+					$ct = CollectionType::getByHandle($px['pagetype']);
+					$args['ctID'] = $ct->getCollectionTypeID();
 				} else {
 					$page = Page::getByPath($px['path']);
 					if (!is_object($page) || ($page->isError())) {
@@ -107,17 +152,9 @@ class ContentImporter {
 
 					}
 				}
-				
-				$page->update(array('cName' => $px['name'], 'cDescription' => $px['description']));
-				if (isset($px->area)) {
-					$this->importPageAreas($page, $px);
-				}
-				if (isset($px->attributes)) {
-					foreach($px->attributes->children() as $attr) {
-						$ak = CollectionAttributeKey::getByHandle($attr['handle']);
-						$page->setAttribute($attr['handle']->__toString(), $ak->getController()->importValue($attr));
-					}
-				}
+				$args['cName'] = $px['name'];
+				$args['cDescription'] = $px['description'];
+				$page->update($args);
 			}
 		}
 	}
@@ -134,7 +171,7 @@ class ContentImporter {
 		}
 	}
 	
-	protected function importPageTypes(SimpleXMLElement $sx) {
+	protected function importPageTypesBase(SimpleXMLElement $sx) {
 		if (isset($sx->pagetypes)) {
 			foreach($sx->pagetypes->pagetype as $ct) {
 				$pkg = ContentImporter::getPackageObject($ct['package']);
@@ -142,20 +179,33 @@ class ContentImporter {
 					'ctHandle' => $ct['handle'],
 					'ctName' => $ct['name']
 				), $pkg);
-				
+			}
+		}
+	}
+
+	protected function importPageTypeDefaults(SimpleXMLElement $sx) {
+		$db = Loader::db();
+		if (isset($sx->pagetypes)) {
+			foreach($sx->pagetypes->pagetype as $ct) {
+				$ctr = CollectionType::getByHandle($ct['handle']->__toString());
 				$mc = Page::getByID($ctr->getMasterCollectionID());
 				if (isset($ct->page)) {
 					$this->importPageAreas($mc, $ct->page);
 				}
-			}
-			
-			// we loop twice because when we have a composer node that deals with page types we may 
-			// not have created the page type yet
-			
-			foreach($sx->pagetypes->pagetype as $ct) {
 				if (isset($ct->composer)) {
 					$ctr = CollectionType::getByHandle($ct['handle']->__toString());
 					$ctr->importComposerSettings($ct->composer);
+				}
+				
+				// now, we copy all the content from these defaults out to the page that they're on.
+				$r = $db->Execute('select arHandle, bID from CollectionVersionBlocks where cID = ?', array($ctr->getMasterCollectionID()));
+				$cs = $db->GetCol('select cID from Pages where ctID = ?', array($ctr->getCollectionTypeID()));
+				while ($row = $r->FetchRow()) {
+					$block = Block::getByID($row['bID'], $mc, $row['arHandle']);
+					foreach($cs as $cID) {
+						$newC = Page::getByID($cID, 'RECENT');
+						$block->alias($newC);
+					}
 				}
 			}
 		}

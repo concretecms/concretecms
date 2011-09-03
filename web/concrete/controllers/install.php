@@ -14,7 +14,7 @@ if (!ini_get('safe_mode')) {
 date_default_timezone_set(@date_default_timezone_get());
 
 define('ENABLE_CACHE', false);
-define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.jpg;');
+define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.jpg;*.png;*.gif');
 if (!defined('DIR_FILES_UPLOADED')) {
 	define('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED_STANDARD);
 }
@@ -116,6 +116,18 @@ class InstallController extends Controller {
 		Page::addHomePage();
 		
 		$ci = new ContentImporter();
+		$ci->importContentFile($installDirectory . '/install/wk/file1.xml');
+		Loader::library('file/importer');
+		$fh = new FileImporter();
+		$contents = Loader::helper('file')->getDirectoryContents($installDirectory . '/install/wk/files');
+
+		foreach($contents as $filename) {
+			$fh->import($installDirectory . '/install/wk/files/' . $filename, $filename);
+		}
+
+		$ci->importContentFile($installDirectory . '/install/wk/file2.xml');
+
+		/*
 		$ci->importContentFile($installDirectory . '/install/base/block_types.xml');
 		$ci->importContentFile($installDirectory . '/install/base/attributes.xml');
 		$ci->importContentFile($installDirectory . '/install/base/themes.xml');
@@ -135,6 +147,8 @@ class InstallController extends Controller {
 
 		$ci->importContentFile($installDirectory . '/install/base/page_types.xml');
 		$ci->importContentFile($installDirectory . '/install/base/pages.xml');
+		*/
+		
 		//$spl = Loader::startingPointPackage('blank');
 		//$spl->install();
 	}
