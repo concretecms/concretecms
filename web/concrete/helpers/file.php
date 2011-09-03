@@ -100,7 +100,7 @@ class FileHelper {
 	 * @param stings $file
 	 */
 	public function forceDownload($file) {
-		
+		session_write_close();
 		header('Content-type: application/octet-stream');
 		$filename = basename($file);
 		header("Content-Disposition: attachment; filename=\"$filename\"");

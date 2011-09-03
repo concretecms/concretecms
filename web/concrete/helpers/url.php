@@ -37,10 +37,11 @@ class UrlHelper {
 			if (strpos($url, '?') === false) {
 				$url = $url . '?' . $variable . '=' . $value;
 			} else {
-				$url = $url . '&amp;' . $variable . '=' . $value;
+				$url = $url . '&' . $variable . '=' . $value;
 			}
 		}
 		
+		$url = str_replace('&', '&amp;', $url);
 		return $url;
 	}
 	

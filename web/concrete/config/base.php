@@ -134,7 +134,7 @@ define('DIR_LIBRARIES_CORE', DIR_BASE_CORE . '/libraries'); // front-end
 define('DIR_LIBRARIES_3RDPARTY', DIR_LIBRARIES . '/3rdparty');
 define('DIR_LIBRARIES_3RDPARTY_CORE', DIR_LIBRARIES_CORE . '/3rdparty');
 
-ini_set('include_path', get_include_path() . PATH_SEPARATOR . DIR_LIBRARIES_3RDPARTY . PATH_SEPARATOR . DIR_LIBRARIES_3RDPARTY_CORE);
+ini_set('include_path', DIR_LIBRARIES_3RDPARTY . PATH_SEPARATOR . DIR_LIBRARIES_3RDPARTY_CORE . PATH_SEPARATOR . get_include_path());
 
 # Models are explicit things - concrete-related or not - that deal with the db
 define('DIR_MODELS', DIR_BASE . '/models'); // front-end

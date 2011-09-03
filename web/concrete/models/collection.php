@@ -393,10 +393,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		} 		
 		  
-		$r3 = $db->GetAll('select l.layoutID, l.spacing from CollectionVersionAreaLayouts cval LEFT JOIN Layouts AS l ON  cval.layoutID=l.layoutID WHERE cval.cID = ? and cval.cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
+		$r3 = $db->GetAll('select l.layoutID, l.spacing, arHandle, areaNameNumber from CollectionVersionAreaLayouts cval LEFT JOIN Layouts AS l ON  cval.layoutID=l.layoutID WHERE cval.cID = ? and cval.cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
 		foreach($r3 as $data){  
 			if(!intval($data['spacing'])) continue; 
-			$layoutStyleRules='#ccm-layout-'.intval($data['layoutID']).' .ccm-layout-col-spacing { margin:0px '.ceil(floatval($data['spacing'])/2).'px }';
+			$layoutIDVal = strtolower('ccm-layout-'.TextHelper::camelcase($data['arHandle']).'-'.$data['layoutID'] . '-'. $data['areaNameNumber']);
+			$layoutStyleRules='#' . $layoutIDVal . ' .ccm-layout-col-spacing { margin:0px '.ceil(floatval($data['spacing'])/2).'px }';
 			$styleHeader .= $layoutStyleRules . " \r\n";  
 		}  
 		
