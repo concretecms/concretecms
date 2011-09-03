@@ -606,7 +606,7 @@ INSERT INTO CollectionVersions VALUES(2,1,NULL,NULL,NULL,NOW(),NOW(),'Initial Ve
  ,(72,4,'My First Blog Post','my-first-blog-post','',NOW(),NOW(),'New Version 4',1,0,1,1,NULL)
  ,(73,4,'Adding a New Post','adding-a-new-post','',NOW(),NOW(),'New Version 4',1,0,1,1,NULL)
  ,(36,2,'Scrapbook','scrapbook','Share content across your site.',NOW(),NOW(),'New Version 2',0,1,1,NULL,NULL)
- ,(75,1,'Composer Beta','composer','Write for your site',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(75,1,'Composer Beta','composer','Write for your site.',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(76,1,'Write','write',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(77,1,'Drafts','drafts',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(78,1,'Composer','composer',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
@@ -723,11 +723,11 @@ INSERT INTO FileVersionLog VALUES(1,1,1,5,9)
  ,(19,5,1,3,0)
  ,(20,5,1,4,0);
 
-INSERT INTO FileVersions VALUES(1,1,'inneroptics_dot_net_aspens.jpg','371285369023',1,108199,'inneroptics_dot_net_aspens.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
- ,(2,1,'inneroptics_dot_net_canyonlands.jpg','911285369025',1,54531,'inneroptics_dot_net_canyonlands.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
- ,(3,1,'inneroptics_dot_net_new_zealand_sheep.jpg','851285369025',1,80735,'inneroptics_dot_net_new_zealand_sheep.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
- ,(4,1,'inneroptics_dot_net_portland.jpg','711285369026',1,55737,'inneroptics_dot_net_portland.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
- ,(5,1,'inneroptics_dot_net_starfish.jpg','701285369026',1,88621,'inneroptics_dot_net_starfish.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1);
+INSERT INTO FileVersions VALUES(1,1,'inneroptics_dot_net_aspens.jpg','371285369023',1,108199,'inneroptics_dot_net_aspens.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(2,1,'inneroptics_dot_net_canyonlands.jpg','911285369025',1,54531,'inneroptics_dot_net_canyonlands.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(3,1,'inneroptics_dot_net_new_zealand_sheep.jpg','851285369025',1,80735,'inneroptics_dot_net_new_zealand_sheep.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(4,1,'inneroptics_dot_net_portland.jpg','711285369026',1,55737,'inneroptics_dot_net_portland.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(5,1,'inneroptics_dot_net_starfish.jpg','701285369026',1,88621,'inneroptics_dot_net_starfish.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1);
 
 INSERT INTO Files VALUES(1,NOW(),1,0,2,0,NULL)
  ,(2,NOW(),1,0,2,0,NULL)
@@ -1060,7 +1060,7 @@ INSERT INTO btTags VALUES(23,'Tags',68,'page',10)
  ,(33,'Tags',68,'page',10)
  ,(39,'Tags',68,'page',10);
 
-INSERT INTO btYouTube VALUES(6,'Basic Editing','http://www.youtube.com/watch?v=oYSOFTNLbKY');
+INSERT INTO btYouTube VALUES(6,'Basic Editing','http://www.youtube.com/watch?v=oYSOFTNLbKY','','',0);
 
 INSERT INTO CollectionSearchIndexAttributes VALUES(2,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
  ,(1,NULL,NULL,NULL,0,0,NULL,0,0,NULL)

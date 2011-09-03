@@ -7,5 +7,12 @@
 		</field>
 		<field name="title" type="C" size="255"></field>		
 		<field name="videoURL" type="C" size="255"></field>
+		<field name="vHeight" type="C" size="255"></field>		
+		<field name="vWidth" type="C" size="255"></field>
+		<field name="vPlayer" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="0" />
+		</field>
 	</table>
 </schema>

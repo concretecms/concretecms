@@ -42,8 +42,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<div class="ccm-block-field-group">
 	  <h2><?php  echo t('Page Order')?></h2>  
       <select name="orderBy">
-          <option value="display_asc" <?php echo ($controller->orderBy=='display_asc') ? 'selected="selected"' : '' ?>>Sitemap</option>
-          <option value="chrono_desc" <?php echo ($controller->orderBy=='chrono_desc') ? 'selected="selected"' : '' ?>>Chronological</option>
+          <option value="display_asc" <?php echo ($controller->orderBy=='display_asc') ? 'selected="selected"' : '' ?>><?=t('Sitemap')?></option>
+          <option value="chrono_desc" <?php echo ($controller->orderBy=='chrono_desc') ? 'selected="selected"' : '' ?>><?=t('Chronological')?></option>
       </select>
 	</div> 
     

@@ -70,7 +70,14 @@ class Database {
 	 * Any item that isn't found in our wrapper class gets automatically sent our database object.
 	 */
 	public function __call($method, $args) {
-		return call_user_func_array(array($this->db, $method), $args);
+		// call_user_func_array is slow avoid it at all costs!
+		switch (count($args)) {
+			case 1: return $this->db->{$method}($args[0]);
+			case 2: return $this->db->{$method}($args[0], $args[1]);
+			case 3: return $this->db->{$method}($args[0], $args[1], $args[2]);
+			case 4: return $this->db->{$method}($args[0], $args[1], $args[2], $args[3]);
+			default: return call_user_func_array(array($this->db, $method), $args);
+		}
 	}
 	
 	/** 

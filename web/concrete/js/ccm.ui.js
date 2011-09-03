@@ -264,6 +264,7 @@ ccm_hideMenus = function() {
 
 ccm_parseBlockResponse = function(r, currentBlockID, task) {
 	try { 
+		r = r.replace(/(<([^>]+)>)/ig,""); // because some plugins add bogus HTML after our JSON requests and screw everything up
 		resp = eval('(' + r + ')');
 		if (resp.error == true) {
 			var message = '<ul>'
@@ -930,7 +931,7 @@ ccm_setupHeaderMenu = function() {
 			// stupid safari? wtf?
 			window.location.href = href;
 		}, 50);
-		
+		return false;
 	});
 	
 }
