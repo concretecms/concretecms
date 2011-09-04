@@ -1140,11 +1140,19 @@ class Block extends Object {
 			if ($this->getBlockComposerFilename() != '') {
 				$blockNode->addAttribute('composer-template', $this->getBlockComposerFilename());
 			}
+			if (is_object($this->c) && $this->c->isMasterCollection()) {
+				$mcBlockID = Loader::helper('validation/identifier')->getString(8);
+				ContentExporter::addMasterCollectionBlockID($this, $mcBlockID);
+				$blockNode->addAttribute('mc-block-id', $mcBlockID);
+			}
 			
 			if ($exportType == 'full') {
 				$bc = $this->getInstance();
 				$bc->export($blockNode);
 			}
+		} else {
+			$blockNode = $node->addChild('block');
+			$blockNode->addAttribute('mc-block-id', ContentExporter::getMasterCollectionTemporaryBlockID($this));			
 		}
 	}
 	

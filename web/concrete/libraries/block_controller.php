@@ -259,6 +259,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$bt = BlockType::getByHandle($this->btHandle);
 			$b = $page->addBlock($bt, $arHandle, $args);
 			$b->updateBlockInformation(array('bName' => $blockNode['name'], 'bFilename' => $blockNode['custom-template']));
+			if ($page->isMasterCollection() && $blockNode['mc-block-id'] != '') {
+				ContentImporter::addMasterCollectionBlockID($b, $blockNode['mc-block-id']->__toString());		
+			}					
 			
 			// now we insert stuff that isn't part of the btTable
 			// we have to do this this way because we need a bID

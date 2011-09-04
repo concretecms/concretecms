@@ -109,46 +109,37 @@ class InstallController extends Controller {
 		}
 	}
 	
-	protected function installStarterContent() {
+	public function install_starter_data() {
+		require(DIR_CONFIG_SITE . '/site.install.php');
 		Loader::model('package/starting_point');
 		Loader::library('content/importer');
 		$installDirectory = $this->installData['DIR_BASE_CORE'] . '/config';
 		Page::addHomePage();
-		
 		$ci = new ContentImporter();
 		$ci->importContentFile($installDirectory . '/install/wk/file1.xml');
+
+	}
+	
+	public function install_add_files() {
+		require(DIR_CONFIG_SITE . '/site.install.php');
 		Loader::library('file/importer');
 		$fh = new FileImporter();
+		$installDirectory = $this->installData['DIR_BASE_CORE'] . '/config';
 		$contents = Loader::helper('file')->getDirectoryContents($installDirectory . '/install/wk/files');
 
 		foreach($contents as $filename) {
 			$fh->import($installDirectory . '/install/wk/files/' . $filename, $filename);
 		}
 
+	
+	}
+	
+	public function install_starter_content() {
+		require(DIR_CONFIG_SITE . '/site.install.php');
+		Loader::library('content/importer');
+		$installDirectory = $this->installData['DIR_BASE_CORE'] . '/config';
+		$ci = new ContentImporter();
 		$ci->importContentFile($installDirectory . '/install/wk/file2.xml');
-
-		/*
-		$ci->importContentFile($installDirectory . '/install/base/block_types.xml');
-		$ci->importContentFile($installDirectory . '/install/base/attributes.xml');
-		$ci->importContentFile($installDirectory . '/install/base/themes.xml');
-		$ci->importContentFile($installDirectory . '/install/base/jobs.xml');
-		$ci->importContentFile($installDirectory . '/install/base/task_permissions.xml');
-		$ci->importContentFile($installDirectory . '/install/base/dashboard_and_system_pages.xml');
-
-		// files have to come after attributes.xml
-		// install files
-		Loader::library('file/importer');
-		$fh = new FileImporter();
-		$contents = Loader::helper('file')->getDirectoryContents($installDirectory . '/install/files');
-
-		foreach($contents as $filename) {
-			$fh->import($installDirectory . '/install/files/' . $filename, $filename);
-		}
-
-		$ci->importContentFile($installDirectory . '/install/base/page_types.xml');
-		$ci->importContentFile($installDirectory . '/install/base/pages.xml');
-		*/
-		
 		//$spl = Loader::startingPointPackage('blank');
 		//$spl->install();
 	}
@@ -235,8 +226,61 @@ class InstallController extends Controller {
 		print $js->encode(array('response' => $num));
 		exit;
 	}
+	
+	public function install_db() {
+		require(DIR_CONFIG_SITE . '/site.install.php');
+		$db = Loader::db();			
+		$this->installDB();
+	}
 
-	public function configure() {
+	public function add_users() {
+		require(DIR_CONFIG_SITE . '/site.install.php');
+		// insert the default groups
+		// create the groups our site users
+		// have to add these in the right order so their IDs get set
+		// starting at 1 w/autoincrement
+		$g1 = Group::add(t("Guest"), t("The guest group represents unregistered visitors to your site."));
+		$g2 = Group::add(t("Registered Users"), t("The registered users group represents all user accounts."));
+		$g3 = Group::add(t("Administrators"), "");
+		
+		// insert admin user into the user table
+		$uPassword = INSTALL_USER_PASSWORD;
+		$uEmail = INSTALL_USER_EMAIL;
+		$uPasswordEncrypted = User::encryptPassword($uPassword, PASSWORD_SALT);
+		UserInfo::addSuperUser($uPasswordEncrypted, $uEmail);
+	}
+	
+	public function start_install() {
+		Cache::flush();
+		
+		if (!is_dir($this->installData['DIR_FILES_UPLOADED_THUMBNAILS'])) {
+			mkdir($this->installData['DIR_FILES_UPLOADED_THUMBNAILS']);
+		}
+		if (!is_dir($this->installData['DIR_FILES_INCOMING'])) {
+			mkdir($this->installData['DIR_FILES_INCOMING']);
+		}
+		if (!is_dir($this->installData['DIR_FILES_TRASH'])) {
+			mkdir($this->installData['DIR_FILES_TRASH']);
+		}
+		if (!is_dir($this->installData['DIR_FILES_CACHE'])) {
+			mkdir($this->installData['DIR_FILES_CACHE']);
+		}
+		if (!is_dir($this->installData['DIR_FILES_CACHE_DB'])) {
+			mkdir($this->installData['DIR_FILES_CACHE_DB']);
+		}
+		if (!is_dir($this->installData['DIR_FILES_AVATARS'])) {
+			mkdir($this->installData['DIR_FILES_AVATARS']);
+		}
+		
+		if (isset($_POST['packages'])) {
+			$this->installData['packages'] = $_POST['packages'];
+		}
+
+	}
+	
+	public function configure() {	
+		$this->addHeaderItem(Loader::helper('html')->css('jquery.ui.css'));
+		$this->addHeaderItem(Loader::helper('html')->javascript('jquery.ui.js'));
 		try {
 
 			$val = Loader::helper('validation/form');
@@ -285,48 +329,9 @@ class InstallController extends Controller {
 			
 			if ($val->test() && (!$e->has())) {
 
-				Cache::flush();
-				
-				if (!is_dir($this->installData['DIR_FILES_UPLOADED_THUMBNAILS'])) {
-					mkdir($this->installData['DIR_FILES_UPLOADED_THUMBNAILS']);
-				}
-				if (!is_dir($this->installData['DIR_FILES_INCOMING'])) {
-					mkdir($this->installData['DIR_FILES_INCOMING']);
-				}
-				if (!is_dir($this->installData['DIR_FILES_TRASH'])) {
-					mkdir($this->installData['DIR_FILES_TRASH']);
-				}
-				if (!is_dir($this->installData['DIR_FILES_CACHE'])) {
-					mkdir($this->installData['DIR_FILES_CACHE']);
-				}
-				if (!is_dir($this->installData['DIR_FILES_CACHE_DB'])) {
-					mkdir($this->installData['DIR_FILES_CACHE_DB']);
-				}
-				if (!is_dir($this->installData['DIR_FILES_AVATARS'])) {
-					mkdir($this->installData['DIR_FILES_AVATARS']);
-				}
-				
-				if (isset($_POST['packages'])) {
-					$this->installData['packages'] = $_POST['packages'];
-				}
-				
-				$this->installDB();
 
-				// insert the default groups
-				// create the groups our site users
-				// have to add these in the right order so their IDs get set
-				// starting at 1 w/autoincrement
-				$g1 = Group::add(t("Guest"), t("The guest group represents unregistered visitors to your site."));
-				$g2 = Group::add(t("Registered Users"), t("The registered users group represents all user accounts."));
-				$g3 = Group::add(t("Administrators"), "");
+				/*
 				
-				// insert admin user into the user table
-				$vh = Loader::helper('validation/identifier');
-				$salt = ( defined('MANUAL_PASSWORD_SALT') ) ? MANUAL_PASSWORD_SALT : $vh->getString(64);
-				$uPassword = $_POST['uPassword'];
-				$uEmail = $_POST['uEmail'];
-				$uPasswordEncrypted = User::encryptPassword($uPassword, $salt);
-				UserInfo::addSuperUser($uPasswordEncrypted, $uEmail);
 				
 				
 				$this->installStarterContent();
@@ -347,29 +352,6 @@ class InstallController extends Controller {
 							}
 						}
 						
-						// write the config file
-						$configuration = "<?php\n";
-						$configuration .= "define('DB_SERVER', '" . addslashes($_POST['DB_SERVER']) . "');\n";
-						$configuration .= "define('DB_USERNAME', '" . addslashes($_POST['DB_USERNAME']) . "');\n";
-						$configuration .= "define('DB_PASSWORD', '" . addslashes($_POST['DB_PASSWORD']) . "');\n";
-						$configuration .= "define('DB_DATABASE', '" . addslashes($_POST['DB_DATABASE']) . "');\n";
-						$configuration .= "define('BASE_URL', '" . $this->installData['BASE_URL'] . "');\n";
-						$configuration .= "define('DIR_REL', '" . $this->installData['DIR_REL'] . "');\n";
-						if (isset($setPermissionsModel)) {
-							$configuration .= "define('PERMISSIONS_MODEL', '" . addslashes($setPermissionsModel) . "');\n";
-						}
-						if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != '' && ACTIVE_LOCALE != 'en_US') {
-							$configuration .= "define('LOCALE', '" . ACTIVE_LOCALE . "');\n";
-						}
-						$configuration .= "define('PASSWORD_SALT', '{$salt}');\n";
-						if (is_array($_POST['SITE_CONFIG'])) {
-							foreach($_POST['SITE_CONFIG'] as $key => $value) { 
-								$configuration .= "define('" . $key . "', '" . $value . "');\n";
-							}
-						}
-						$res = fwrite($this->fp, $configuration);
-						fclose($this->fp);
-						chmod($this->installData['DIR_CONFIG_SITE'] . '/site.php', 0777);
 						
 						// save some options into the database
 						Config::save('SITE', $_POST['SITE']);
@@ -393,7 +375,43 @@ class InstallController extends Controller {
 	
 				} else {
 					throw new Exception(t('Unable to locate config directory.'));
+				}*/
+
+				// write the config file
+				$vh = Loader::helper('validation/identifier');
+				$salt = ( defined('MANUAL_PASSWORD_SALT') ) ? MANUAL_PASSWORD_SALT : $vh->getString(64);
+				$this->fp = @fopen($this->installData['DIR_CONFIG_SITE'] . '/site.install.php', 'w+');
+				if ($this->fp) {
+					$configuration = "<?php\n";
+					$configuration .= "define('DB_SERVER', '" . addslashes($_POST['DB_SERVER']) . "');\n";
+					$configuration .= "define('DB_USERNAME', '" . addslashes($_POST['DB_USERNAME']) . "');\n";
+					$configuration .= "define('DB_PASSWORD', '" . addslashes($_POST['DB_PASSWORD']) . "');\n";
+					$configuration .= "define('DB_DATABASE', '" . addslashes($_POST['DB_DATABASE']) . "');\n";
+					$configuration .= "define('BASE_URL', '" . $this->installData['BASE_URL'] . "');\n";
+					$configuration .= "define('INSTALL_USER_EMAIL', '" . $_POST['uEmail'] . "');\n";
+					$configuration .= "define('INSTALL_USER_PASSWORD', '" . $_POST['uPassword'] . "');\n";
+					$configuration .= "define('DIR_REL', '" . $this->installData['DIR_REL'] . "');\n";
+					if (isset($setPermissionsModel)) {
+						$configuration .= "define('PERMISSIONS_MODEL', '" . addslashes($setPermissionsModel) . "');\n";
+					}
+					if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != '' && ACTIVE_LOCALE != 'en_US') {
+						$configuration .= "define('LOCALE', '" . ACTIVE_LOCALE . "');\n";
+					}
+					$configuration .= "define('PASSWORD_SALT', '{$salt}');\n";
+					if (is_array($_POST['SITE_CONFIG'])) {
+						foreach($_POST['SITE_CONFIG'] as $key => $value) { 
+							$configuration .= "define('" . $key . "', '" . $value . "');\n";
+						}
+					}
+					$res = fwrite($this->fp, $configuration);
+					fclose($this->fp);
+					chmod($this->installData['DIR_CONFIG_SITE'] . '/site.install.php', 0777);
+				} else {
+					throw new Exception(t('Unable to open config/site.php for writing.'));
 				}
+				
+				$this->set('successMessage', t('Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password <b>%s</b>.<br/><br/>If you wish to change this password, you may do so from the users area of the dashboard.', $this->installData['USER_SUPER'], $uPassword));
+
 			
 			} else {
 				if ($e->has()) {
