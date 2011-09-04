@@ -20,6 +20,8 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class ContentImporter {
 	
+	protected static $mcBlockIDs = array();
+	
 	public function importContentFile($file) {
 		$sx = simplexml_load_file($file);
 		$this->importSinglePageStructure($sx);
@@ -163,11 +165,32 @@ class ContentImporter {
 		foreach($px->area as $ax) {
 			if (isset($ax->block)) {
 				foreach($ax->block as $bx) {
-					$bt = BlockType::getByHandle($bx['type']);
-					$btc = $bt->getController();
-					$btc->import($page, $ax['name']->__toString(), $bx);
+					if ($bx['type'] != '') {
+						// we check this because you might just get a block node with only an mc-block-id, if it's an alias
+						$bt = BlockType::getByHandle($bx['type']);
+						$btc = $bt->getController();
+						$btc->import($page, $ax['name']->__toString(), $bx);
+					} else if ($bx['mc-block-id'] != '') {
+						// we find that block in the master collection block pool and alias it out
+						$bID = array_search($bx['mc-block-id']->__toString(), self::$mcBlockIDs);
+						if ($bID) {
+							$mc = Page::getByID($page->getMasterCollectionID());
+							$block = Block::getByID($bID, $mc, $ax['name']->__toString());
+							$block->alias($page);
+						}
+					}
 				}
 			}
+		}
+	}
+
+	public static function addMasterCollectionBlockID($b, $id) {
+		self::$mcBlockIDs[$b->getBlockID()] = $id;
+	}
+	
+	public static function getMasterCollectionTemporaryBlockID($b) {
+		if (isset(self::$mcBlockIDs[$b->getBlockID()])) {
+			return self::$mcBlockIDs[$b->getBlockID()];
 		}
 	}
 	
@@ -198,6 +221,7 @@ class ContentImporter {
 				}
 				
 				// now, we copy all the content from these defaults out to the page that they're on.
+				/*
 				$r = $db->Execute('select arHandle, bID from CollectionVersionBlocks where cID = ?', array($ctr->getMasterCollectionID()));
 				$cs = $db->GetCol('select cID from Pages where ctID = ?', array($ctr->getCollectionTypeID()));
 				while ($row = $r->FetchRow()) {
@@ -207,6 +231,7 @@ class ContentImporter {
 						$block->alias($newC);
 					}
 				}
+				*/
 			}
 		}
 	}

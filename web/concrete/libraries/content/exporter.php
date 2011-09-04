@@ -21,6 +21,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class ContentExporter {
 	
 	protected $x; // the xml object for export
+	protected static $mcBlockIDs = array();
 	
 	public function run() {
 		$this->x = new SimpleXMLElement("<concrete5-cif></concrete5-cif>");
@@ -44,9 +45,12 @@ class ContentExporter {
 		// now packages
 		PackageList::export($this->x);
 		
-		// now files
-		Loader::model('file_list');
-		FileList::export($this->x);
+		// now task permissions
+		TaskPermissionList::export($this->x);
+		
+		// now jobs
+		Loader::model('job');
+		Job::exportList($this->x);
 		
 		// now single pages
 		$singlepages = $this->x->addChild("singlepages");
@@ -69,12 +73,16 @@ class ContentExporter {
 			$pc->export($pages);
 		}		
 		
-		// now task permissions
-		TaskPermissionList::export($this->x);
-		
-		// now jobs
-		Loader::model('job');
-		Job::exportList($this->x);
+	}
+	
+	public static function addMasterCollectionBlockID($b, $id) {
+		self::$mcBlockIDs[$b->getBlockID()] = $id;
+	}
+	
+	public static function getMasterCollectionTemporaryBlockID($b) {
+		if (isset(self::$mcBlockIDs[$b->getBlockID()])) {
+			return self::$mcBlockIDs[$b->getBlockID()];
+		}
 	}
 	
 	public function output() {

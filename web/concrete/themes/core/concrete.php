@@ -11,6 +11,7 @@ if (is_object($c)) {
  	Loader::element('header_required');
 } else { 
 	print Loader::helper('html')->javascript('jquery.js');
+	$this->outputHeaderItems();
 }
 ?>
 </head>

@@ -1,28 +1,103 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 
-
-<? 
-
-$introMsg = t('To install concrete5, please fill out the form below.');
-
-if (isset($message)) { ?>
-
-<h1><?=t('Install concrete5')?></h1>
-
-<div class="ccm-form">
-<?=$message?>
-<br/><br/>
-<a href="<?=DIR_REL?>/"><?=t('Continue to your site.')?> &gt;</a>
-</div>
-
-<? } else if (isset($locale) || count($locales) == 0) { ?>
-
 <style type="text/css">
 input.ccm-input-text:disabled {
 	opacity: 0.8;
 	-moz-opacity: 0.8;
 }
+
+#success-message {
+	display: none;
+}
+
+#install-progress-summary {
+	font-size: 20px;
+	color: #555;
+	padding-top: 4px;
+	padding-bottom: 24px;
+	padding-left: 40px;
+	background: transparent url(<?=ASSETS_URL_IMAGES?>/throbber_white_32.gif) no-repeat;
+}
+
 </style>
+
+
+<? 
+
+$introMsg = t('To install concrete5, please fill out the form below.');
+
+if (isset($successMessage)) { ?>
+
+<script type="text/javascript">
+$(function() {
+	$( "#install-progress-bar" ).progressbar({
+		value: 0
+	});
+
+	$.get('<?=$this->url("/install", "start_install")?>', function() {
+		$( "#install-progress-bar" ).progressbar({
+			value: 5
+		});
+		$("#install-progress-summary").html('<?=t('Installing database.')?>');
+		$.get('<?=$this->url("/install", "install_db")?>', function() {
+			$( "#install-progress-bar" ).progressbar({
+				value: 30
+			});
+			$("#install-progress-summary").html('<?=t('Adding users and groups.')?>');
+			$.get('<?=$this->url("/install", "add_users")?>', function() {
+				$( "#install-progress-bar" ).progressbar({
+					value: 40
+				});
+				$("#install-progress-summary").html('<?=t('Adding attributes, block types, permissions and jobs.')?>');
+				$.get('<?=$this->url("/install", "install_starter_data")?>', function() {
+					$( "#install-progress-bar" ).progressbar({
+						value: 60
+					});
+					$("#install-progress-summary").html('<?=t('Adding images and files.')?>');
+					$.get('<?=$this->url("/install", "install_add_files")?>', function() {
+						$( "#install-progress-bar" ).progressbar({
+							value: 75
+						});
+						$("#install-progress-summary").html('<?=t('Adding page types, pages and content.')?>');
+						$.get('<?=$this->url("/install", "install_starter_content")?>', function() {
+							$( "#install-progress-bar" ).progressbar({
+								value: 100
+							});
+							setTimeout(function() {
+								$("#install-progress-bar").fadeOut(300);
+								$("#install-progress-summary").fadeOut(300);
+								$("#success-message").show();
+							}, 800);
+						});
+					});
+				});
+			});
+
+		});
+	});
+});
+
+</script>
+
+
+<h1><?=t('Install concrete5')?></h1>
+
+<div class="ccm-install-intro">
+<div id="success-message">
+<?=$successMessage?>
+<br/><br/>
+<a href="<?=DIR_REL?>/"><?=t('Continue to your site.')?> &gt;</a>
+</div>
+
+<div id="install-progress-summary">
+<?=t('Beginning Installation')?>
+</div>
+
+<div id="install-progress-bar"></div>
+
+</div>
+
+<? } else if (isset($locale) || count($locales) == 0) { ?>
 
 <script type="text/javascript">
 
