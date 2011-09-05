@@ -32,39 +32,6 @@ class InstallController extends Controller {
 
 	public $helpers = array('form', 'html');
 	
-	// default values to be the currently defined vals
-	private $installData = array(
-			"DIR_BASE_CORE"=>DIR_BASE_CORE,
-			"DIR_FILES_BIN_HTMLDIFF"=>DIR_FILES_BIN_HTMLDIFF,
-			"DIR_BASE"=>DIR_BASE,
-			"DIR_REL"=>DIR_REL,
-			"BASE_URL"=>BASE_URL,
-			"DIR_CONFIG_SITE" => DIR_CONFIG_SITE,
-			"DIR_FILES_UPLOADED"=>DIR_FILES_UPLOADED,
-			"DIR_FILES_UPLOADED_THUMBNAILS"=>DIR_FILES_UPLOADED_THUMBNAILS,
-			"DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2" => DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2,
-			"DIR_FILES_TRASH"=>DIR_FILES_TRASH,
-			"DIR_FILES_INCOMING" => DIR_FILES_INCOMING,
-			"DIR_FILES_CACHE"=>DIR_FILES_CACHE,
-			"DIR_FILES_CACHE_DB"=>DIR_FILES_CACHE_DB,
-			"DIR_FILES_AVATARS"=>DIR_FILES_AVATARS,
-			"DIR_PACKAGES"=>DIR_PACKAGES,
-			"USER_SUPER_ID"=>USER_SUPER_ID,
-			"USER_SUPER"=>USER_SUPER,
-			"GUEST_GROUP_ID"=>GUEST_GROUP_ID,
-			"ADMIN_GROUP_ID"=>ADMIN_GROUP_ID,
-			"APP_VERSION"=>APP_VERSION,
-			"DEBUG_DISPLAY_ERRORS"=>DEBUG_DISPLAY_ERRORS,
-			"uPassword"=>NULL
-		);
-	
-	public function setInstallData($data) {
-		// reset only the supplied vals
-		foreach($data as $key=>$value) {
-			$this->installData[$key] = $value;
-		}
-	}
-	
 	protected function getLocales() {
 		Loader::library('3rdparty/Zend/Locale');
 		$languages = Localization::getAvailableInterfaceLanguages();
@@ -88,62 +55,6 @@ class InstallController extends Controller {
 		
 	}
 
-	protected function installDB() {
-		 
-		// first, we install the schema
-		
-		$installDirectory = $this->installData['DIR_BASE_CORE'] . '/config';
-		
-		$sql = file_get_contents($installDirectory . '/install/schema.sql');
-		$schema = explode("\n\n", $sql);
-		
-		$db = Loader::db();
-		$db->ensureEncoding();
-		foreach ($schema as $statement) {
-			if (trim($statement) != "") { 
-				$r = $db->execute($statement);
-				if (!$r) { 
-					throw new Exception(t('Unable to install database: %s', $db->ErrorMsg()));
-				}
-			}
-		}
-	}
-	
-	public function install_starter_data() {
-		require(DIR_CONFIG_SITE . '/site.install.php');
-		Loader::model('package/starting_point');
-		Loader::library('content/importer');
-		$installDirectory = $this->installData['DIR_BASE_CORE'] . '/config';
-		Page::addHomePage();
-		$ci = new ContentImporter();
-		$ci->importContentFile($installDirectory . '/install/wk/file1.xml');
-
-	}
-	
-	public function install_add_files() {
-		require(DIR_CONFIG_SITE . '/site.install.php');
-		Loader::library('file/importer');
-		$fh = new FileImporter();
-		$installDirectory = $this->installData['DIR_BASE_CORE'] . '/config';
-		$contents = Loader::helper('file')->getDirectoryContents($installDirectory . '/install/wk/files');
-
-		foreach($contents as $filename) {
-			$fh->import($installDirectory . '/install/wk/files/' . $filename, $filename);
-		}
-
-	
-	}
-	
-	public function install_starter_content() {
-		require(DIR_CONFIG_SITE . '/site.install.php');
-		Loader::library('content/importer');
-		$installDirectory = $this->installData['DIR_BASE_CORE'] . '/config';
-		$ci = new ContentImporter();
-		$ci->importContentFile($installDirectory . '/install/wk/file2.xml');
-		//$spl = Loader::startingPointPackage('blank');
-		//$spl->install();
-	}
-	
 	/** 
 	 * Testing
 	 */
@@ -170,7 +81,7 @@ class InstallController extends Controller {
 		$this->set('remoteFileUploadTest', function_exists('iconv'));
 		// no longer need built-in gettext
 		//$this->set('langTest', Localization::isAvailable() && (!ini_get('safe_mode')));
-		$diffExecTest = is_executable($this->installData['DIR_FILES_BIN_HTMLDIFF']);
+		$diffExecTest = is_executable(DIR_FILES_BIN_HTMLDIFF);
 		$diffSystem = (!ini_get('safe_mode'));
 		if ($diffExecTest && $diffSystem) {
 			$this->set('diffTest', true);
@@ -196,15 +107,15 @@ class InstallController extends Controller {
 	private function testFileWritePermissions() {
 		$e = Loader::helper('validation/error');
 
-		if (!is_writable($this->installData['DIR_CONFIG_SITE'])) {
+		if (!is_writable(DIR_CONFIG_SITE)) {
 			$e->add(t('Your configuration directory config/ does not appear to be writable by the web server.'));
 		}
 
-		if (!is_writable($this->installData['DIR_FILES_UPLOADED'])) {
+		if (!is_writable(DIR_FILES_UPLOADED)) {
 			$e->add(t('Your files directory files/ does not appear to be writable by the web server.'));
 		}
 		
-		if (!is_writable($this->installData['DIR_PACKAGES'])) {
+		if (!is_writable(DIR_PACKAGES)) {
 			$e->add(t('Your packages directory packages/ does not appear to be writable by the web server.'));
 		}
 
@@ -227,55 +138,14 @@ class InstallController extends Controller {
 		exit;
 	}
 	
-	public function install_db() {
-		require(DIR_CONFIG_SITE . '/site.install.php');
-		$db = Loader::db();			
-		$this->installDB();
-	}
-
-	public function add_users() {
-		require(DIR_CONFIG_SITE . '/site.install.php');
-		// insert the default groups
-		// create the groups our site users
-		// have to add these in the right order so their IDs get set
-		// starting at 1 w/autoincrement
-		$g1 = Group::add(t("Guest"), t("The guest group represents unregistered visitors to your site."));
-		$g2 = Group::add(t("Registered Users"), t("The registered users group represents all user accounts."));
-		$g3 = Group::add(t("Administrators"), "");
+	public function run_routine($pkgHandle, $routine) {
+		Loader::model('package/starting_point');
+		$spl = Loader::startingPointPackage('blog');
+		require(DIR_CONFIG_SITE . '/site_install.php');
+		@include(DIR_CONFIG_SITE . '/site_install_user.php');
 		
-		// insert admin user into the user table
-		$uPassword = INSTALL_USER_PASSWORD;
-		$uEmail = INSTALL_USER_EMAIL;
-		$uPasswordEncrypted = User::encryptPassword($uPassword, PASSWORD_SALT);
-		UserInfo::addSuperUser($uPasswordEncrypted, $uEmail);
-	}
-	
-	public function start_install() {
-		Cache::flush();
-		
-		if (!is_dir($this->installData['DIR_FILES_UPLOADED_THUMBNAILS'])) {
-			mkdir($this->installData['DIR_FILES_UPLOADED_THUMBNAILS']);
-		}
-		if (!is_dir($this->installData['DIR_FILES_INCOMING'])) {
-			mkdir($this->installData['DIR_FILES_INCOMING']);
-		}
-		if (!is_dir($this->installData['DIR_FILES_TRASH'])) {
-			mkdir($this->installData['DIR_FILES_TRASH']);
-		}
-		if (!is_dir($this->installData['DIR_FILES_CACHE'])) {
-			mkdir($this->installData['DIR_FILES_CACHE']);
-		}
-		if (!is_dir($this->installData['DIR_FILES_CACHE_DB'])) {
-			mkdir($this->installData['DIR_FILES_CACHE_DB']);
-		}
-		if (!is_dir($this->installData['DIR_FILES_AVATARS'])) {
-			mkdir($this->installData['DIR_FILES_AVATARS']);
-		}
-		
-		if (isset($_POST['packages'])) {
-			$this->installData['packages'] = $_POST['packages'];
-		}
-
+		call_user_func(array($spl, $routine));
+		exit;
 	}
 	
 	public function configure() {	
@@ -330,67 +200,17 @@ class InstallController extends Controller {
 			if ($val->test() && (!$e->has())) {
 
 
-				/*
-				
-				
-				
-				$this->installStarterContent();
-
-				if (defined('PERMISSIONS_MODEL') && PERMISSIONS_MODEL != 'simple') {
-					$setPermissionsModel = PERMISSIONS_MODEL;
-				}
-				
-				if (file_exists($this->installData['DIR_CONFIG_SITE'])) {	
-					$this->fp = @fopen($this->installData['DIR_CONFIG_SITE'] . '/site.php', 'w+');
-					if ($this->fp) {
-					
-						// legacy package auto-install support		
-						if (is_array($this->installData['packages'])) {
-							foreach($this->installData['packages'] as $pkgHandle) {
-								$p = Loader::package($pkgHandle);
-								$p->install();
-							}
-						}
-						
-						
-						// save some options into the database
-						Config::save('SITE', $_POST['SITE']);
-						// add the current app version as our site's app version
-						Config::save('SITE_APP_VERSION', $this->installData['APP_VERSION']);
-						Config::save('SITE_DEBUG_LEVEL', $this->installData['DEBUG_DISPLAY_ERRORS']);
-						Config::save('ENABLE_LOG_EMAILS', 1);
-						Config::save('ENABLE_LOG_ERRORS', 1);
-						Config::save('FULL_PAGE_CACHE_GLOBAL', 0);
-						
-						// login 
-						define('PASSWORD_SALT', $salt);
-						$u = new User($this->installData['USER_SUPER'], $uPassword);
-						$this->set('message', t('Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password <b>%s</b>.<br/><br/>If you wish to change this password, you may do so from the users area of the dashboard.', $this->installData['USER_SUPER'], $uPassword));
-						
-						
-					} else {
-						throw new Exception(t('Unable to open config/site.php for writing.'));
-					}
-				
-	
-				} else {
-					throw new Exception(t('Unable to locate config directory.'));
-				}*/
-
 				// write the config file
 				$vh = Loader::helper('validation/identifier');
 				$salt = ( defined('MANUAL_PASSWORD_SALT') ) ? MANUAL_PASSWORD_SALT : $vh->getString(64);
-				$this->fp = @fopen($this->installData['DIR_CONFIG_SITE'] . '/site.install.php', 'w+');
+				$this->fp = @fopen(DIR_CONFIG_SITE . '/site_install.php', 'w+');
+				$this->fpu = @fopen(DIR_CONFIG_SITE . '/site_install_user.php', 'w+');
 				if ($this->fp) {
 					$configuration = "<?php\n";
 					$configuration .= "define('DB_SERVER', '" . addslashes($_POST['DB_SERVER']) . "');\n";
 					$configuration .= "define('DB_USERNAME', '" . addslashes($_POST['DB_USERNAME']) . "');\n";
 					$configuration .= "define('DB_PASSWORD', '" . addslashes($_POST['DB_PASSWORD']) . "');\n";
 					$configuration .= "define('DB_DATABASE', '" . addslashes($_POST['DB_DATABASE']) . "');\n";
-					$configuration .= "define('BASE_URL', '" . $this->installData['BASE_URL'] . "');\n";
-					$configuration .= "define('INSTALL_USER_EMAIL', '" . $_POST['uEmail'] . "');\n";
-					$configuration .= "define('INSTALL_USER_PASSWORD', '" . $_POST['uPassword'] . "');\n";
-					$configuration .= "define('DIR_REL', '" . $this->installData['DIR_REL'] . "');\n";
 					if (isset($setPermissionsModel)) {
 						$configuration .= "define('PERMISSIONS_MODEL', '" . addslashes($setPermissionsModel) . "');\n";
 					}
@@ -405,12 +225,28 @@ class InstallController extends Controller {
 					}
 					$res = fwrite($this->fp, $configuration);
 					fclose($this->fp);
-					chmod($this->installData['DIR_CONFIG_SITE'] . '/site.install.php', 0777);
+					chmod(DIR_CONFIG_SITE . '/site_install.php', 0700);
 				} else {
 					throw new Exception(t('Unable to open config/site.php for writing.'));
 				}
+
+				if ($this->fpu) {
+					$configuration = "<?php\n";
+					$configuration .= "define('INSTALL_USER_EMAIL', '" . $_POST['uEmail'] . "');\n";
+					$configuration .= "define('INSTALL_USER_PASSWORD_HASH', '" . User::encryptPassword($_POST['uPassword'], $salt) . "');\n";
+					$res = fwrite($this->fpu, $configuration);
+					fclose($this->fpu);
+					chmod(DIR_CONFIG_SITE . '/site_install_user.php', 0700);
+				} else {
+					throw new Exception(t('Unable to open config/site_user.php for writing.'));
+				}
+
+				Loader::model('package/starting_point');
+				$spl = Loader::startingPointPackage('blog');
+				$this->set('installPackage', $spl->getPackageHandle());
+				$this->set('installRoutines', $spl->getInstallRoutines());
 				
-				$this->set('successMessage', t('Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password <b>%s</b>.<br/><br/>If you wish to change this password, you may do so from the users area of the dashboard.', $this->installData['USER_SUPER'], $uPassword));
+				$this->set('successMessage', t('Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose.<br/><br/>If you wish to change this password, you may do so from the users area of the dashboard.', USER_SUPER, $uPassword));
 
 			
 			} else {
@@ -426,8 +262,8 @@ class InstallController extends Controller {
 			if (is_resource($this->fp)) {
 				fclose($this->fp);
 			}
-			if (file_exists($this->installData['DIR_CONFIG_SITE'] . '/site.php')) {
-				unlink($this->installData['DIR_CONFIG_SITE'] . '/site.php');
+			if (file_exists(DIR_CONFIG_SITE . '/site.php')) {
+				unlink(DIR_CONFIG_SITE . '/site.php');
 			}
 			$this->set('error', $e);
 		}

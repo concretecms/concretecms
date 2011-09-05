@@ -33,48 +33,32 @@ $(function() {
 	$( "#install-progress-bar" ).progressbar({
 		value: 0
 	});
+	
+<? for ($i = 1; $i <= count($installRoutines); $i++) {
+	$routine = $installRoutines[$i-1]; ?>
 
-	$.get('<?=$this->url("/install", "start_install")?>', function() {
-		$( "#install-progress-bar" ).progressbar({
-			value: 5
-		});
-		$("#install-progress-summary").html('<?=t('Installing database.')?>');
-		$.get('<?=$this->url("/install", "install_db")?>', function() {
+	ccm_installRoutine<?=$i?> = function() {
+		<? if ($routine->getText() != '') { ?>
+			$("#install-progress-summary").html('<?=$routine->getText()?>');
+		<? } ?>
+		$.get('<?=$this->url("/install", "run_routine", $installPackage, $routine->getMethod())?>', function() {
 			$( "#install-progress-bar" ).progressbar({
-				value: 30
+				value: <?=$routine->getProgress()?>
 			});
-			$("#install-progress-summary").html('<?=t('Adding users and groups.')?>');
-			$.get('<?=$this->url("/install", "add_users")?>', function() {
-				$( "#install-progress-bar" ).progressbar({
-					value: 40
+			<? if ($i < count($installRoutines)) { ?>
+				ccm_installRoutine<?=$i+1?>();
+			<? } else { ?>
+				$("#install-progress-wrapper").fadeOut(300, function() {
+					$("#success-message").fadeIn(300);
 				});
-				$("#install-progress-summary").html('<?=t('Adding attributes, block types, permissions and jobs.')?>');
-				$.get('<?=$this->url("/install", "install_starter_data")?>', function() {
-					$( "#install-progress-bar" ).progressbar({
-						value: 60
-					});
-					$("#install-progress-summary").html('<?=t('Adding images and files.')?>');
-					$.get('<?=$this->url("/install", "install_add_files")?>', function() {
-						$( "#install-progress-bar" ).progressbar({
-							value: 75
-						});
-						$("#install-progress-summary").html('<?=t('Adding page types, pages and content.')?>');
-						$.get('<?=$this->url("/install", "install_starter_content")?>', function() {
-							$( "#install-progress-bar" ).progressbar({
-								value: 100
-							});
-							setTimeout(function() {
-								$("#install-progress-bar").fadeOut(300);
-								$("#install-progress-summary").fadeOut(300);
-								$("#success-message").show();
-							}, 800);
-						});
-					});
-				});
-			});
-
+			<? } ?>
 		});
-	});
+	}
+	
+<? } ?>
+
+	ccm_installRoutine1();
+
 });
 
 </script>
@@ -89,11 +73,15 @@ $(function() {
 <a href="<?=DIR_REL?>/"><?=t('Continue to your site.')?> &gt;</a>
 </div>
 
+<div id="install-progress-wrapper">
+
 <div id="install-progress-summary">
 <?=t('Beginning Installation')?>
 </div>
 
 <div id="install-progress-bar"></div>
+
+</div>
 
 </div>
 
