@@ -696,6 +696,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$content = DIR_FILES_CONTENT_REQUIRED . "/{$view}/" . FILENAME_COLLECTION_VIEW;
 					} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "/{$view}.php")) {
 						$content = DIR_FILES_CONTENT_REQUIRED . "/{$view}.php";
+					} else if ($this->getCollectionObject() != null && $this->getCollectionObject()->isGeneratedCollection() && $this->getCollectionObject()->getPackageID() > 0) {
+						//This is a single_page associated with a package, so check the package views as well
+						$pagePkgPath = Package::getByID($this->getCollectionObject()->getPackageID())->getPackagePath();
+						if (file_exists($pagePkgPath . "/single_pages/{$view}/" . FILENAME_COLLECTION_VIEW)) {
+							$content = $pagePkgPath . "/single_pages/{$view}/" . FILENAME_COLLECTION_VIEW;
+						} else if (file_exists($pagePkgPath . "/single_pages/{$view}.php")) {
+							$content = $pagePkgPath . "/single_pages/{$view}.php";
+						}
 					}
 					$wrapTemplateInTheme = true;
 					$themeFilename = $view . '.php';
