@@ -5,6 +5,9 @@ class StartingPointPackage extends Package {
 
 	protected $DIR_PACKAGES_CORE = DIR_STARTING_POINT_PACKAGES_CORE;
 	protected $DIR_PACKAGES = DIR_STARTING_POINT_PACKAGES;
+	protected $REL_DIR_PACKAGES_CORE = REL_DIR_STARTING_POINT_PACKAGES_CORE;
+	protected $REL_DIR_PACKAGES = REL_DIR_STARTING_POINT_PACKAGES;
+	
 	protected $routines = array();
 	
 	public function getInstallRoutines() {
@@ -16,7 +19,7 @@ class StartingPointPackage extends Package {
 	public function __construct() {
 		$this->routines = array(
 		new StartingPointInstallRoutine('make_directories', 10, t('Starting installation and creating directories.')),
-		new StartingPointInstallRoutine('install_database', 20, t('Creating database and tables.')),
+		new StartingPointInstallRoutine('install_database', 20, t('Creating database tables.')),
 		new StartingPointInstallRoutine('add_users', 45, t('Adding admin user.')),
 		new StartingPointInstallRoutine('install_blocks_attributes_permissions_jobs', 55, t('Installing block types, attributes, permissions and jobs.')),
 		new StartingPointInstallRoutine('import_files', 70, t('Importing files.')),

@@ -55,13 +55,19 @@ $(function() {
 </script>
 
 
+<div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
+</div>
 
-<div class="ccm-install-intro">
+<div class="row">
+<div class="span10 offset3">
+
 <div id="success-message">
 <?=$successMessage?>
 <br/><br/>
-<a href="<?=DIR_REL?>/"><?=t('Continue to your site.')?> &gt;</a>
+<div class="well">
+<input type="button" class="btn large primary" onclick="window.location.href='<?=DIR_REL?>/'" value="<?=t('Continue to your site')?>" />
+</div>
 </div>
 
 <div id="install-progress-wrapper">
@@ -82,10 +88,20 @@ $(function() {
 </div>
 
 </div>
-
+</div>
 </div>
 
 <? } else if ($this->controller->getTask() == 'setup' || $this->controller->getTask() == 'configure') { ?>
+
+<script type="text/javascript">
+$(function() {
+	$("#sample-content-selector td").click(function() {
+		$(this).parent().find('input[type=radio]').prop('checked', true);
+		$(this).parent().parent().find('tr').removeClass();
+		$(this).parent().addClass('package-selected');
+	});
+});
+</script>
 
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
@@ -171,17 +187,41 @@ $(function() {
 <div class="row">
 <div class="span16 columns">
 
-	<fieldset>
-	<legend><?=t("Starting Point")?></legend>
-	<div class="clearfix">
-		<label><?=t('Sample Content')?></label>
-		<div class="input">
-		asdf
-		</div>
-	</div>
-	</fieldset>
+<h3><?=t('Sample Content')?></h3>
+
+		
+		<?
+		$availableSampleContent = array('standard', 'blog','blank');
+		$uh = Loader::helper('concrete/urls');
+		?>
+		
+		<table class="zebra-striped" id="sample-content-selector">
+		<thead>
+		<tr>
+			<th colspan="3"></th>
+		</tr>
+		</thead>
+		<tbody>
+		<? foreach($availableSampleContent as $pkgHandle) {
+			$spl = Loader::startingPointPackage($pkgHandle);
+		?>
+
+		<tr class="<? if ($this->post('SAMPLE_CONTENT') == $pkgHandle || (!$this->post('SAMPLE_CONTENT') && $pkgHandle == 'standard')) { ?>package-selected<? } ?>">
+			<td><?=$form->radio('SAMPLE_CONTENT', $pkgHandle, $pkgHandle == 'standard')?></td>
+			<td><img src="<?=$uh->getPackageIconURL($spl)?>" width="97" height="97" alt="<?=$spl->getPackageName()?>" /></td>
+			<td width="100%"><h4><?=$spl->getPackageName()?></h4><p><?=$spl->getPackageDescription()?></td>
+		</tr>
+		
+		<? } ?>
+		
+		</tbody>
+		</table>
+		
+		<div class="alert-message block-message info"><?=t('concrete5 veterans can choose "Blank," but otherwise we recommend starting with "Standard Website" or "Blog."')?></div>
+
+
 	
-	</div>
+</div>
 </div>
 
 <div class="well">
@@ -242,7 +282,7 @@ $(function() {
 <div class="row">
 <div class="span8 columns">
 
-<table class="zebra-striped">
+<table class="zebra-striped requirements-table">
 <thead>
 <tr>
 	<th></th>
@@ -278,7 +318,7 @@ $(function() {
 </div>
 <div class="span8 columns">
 
-<table class="zebra-striped">
+<table class="requirements-table zebra-striped">
 <thead>
 <tr>
 	<th></th>
@@ -318,7 +358,7 @@ $(function() {
 <div class="span8 columns">
 
 
-<table class="zebra-striped">
+<table class="requirements-table zebra-striped">
 <thead>
 <tr>
 	<th></th>
@@ -336,7 +376,7 @@ $(function() {
 
 </div>
 <div class="span8 columns">
-<table class="zebra-striped">
+<table class="requirements-table zebra-striped">
 <thead>
 <tr>
 	<th></th>
