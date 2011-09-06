@@ -51,6 +51,10 @@ class InstallController extends Controller {
 		$this->set('locales', $locales);		
 	}
 	
+	public function setup() {
+	
+	}
+	
 	public function select_language() {
 		
 	}
@@ -63,6 +67,7 @@ class InstallController extends Controller {
 			define("ACTIVE_LOCALE", $_POST['locale']);
 			$this->set('locale', $_POST['locale']);
 		}
+		require(DIR_BASE_CORE . '/config/file_types.php');
 		Cache::disableCache();
 		$this->setRequiredItems();
 		$this->setOptionalItems();
@@ -144,7 +149,17 @@ class InstallController extends Controller {
 		require(DIR_CONFIG_SITE . '/site_install.php');
 		@include(DIR_CONFIG_SITE . '/site_install_user.php');
 		
-		call_user_func(array($spl, $routine));
+		$jsx = Loader::helper('json');
+		$js = new stdClass;
+		
+		try {
+			call_user_func(array($spl, $routine));
+			$js->error = false;
+		} catch(Exception $e) {
+			$js->error = true;
+			$js->message = $e->getMessage();
+		}
+		print $jsx->encode($js);
 		exit;
 	}
 	

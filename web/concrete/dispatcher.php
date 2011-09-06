@@ -92,11 +92,11 @@
 	## Startup check ##	
 	require(dirname(__FILE__) . '/startup/encoding_check.php');
 
-	## File types - must come before install ##
-	require(dirname(__FILE__) . '/config/file_types.php');
-
-	## Startup check, install ##	
+	# Startup check, install ##	
 	require(dirname(__FILE__) . '/startup/config_check_complete.php');
+
+	## File types ##
+	require(dirname(__FILE__) . '/config/file_types.php');
 	
 	## User level config ##	
 	require(dirname(__FILE__) . '/config/app.php');

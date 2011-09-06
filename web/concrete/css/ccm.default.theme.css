@@ -7,41 +7,4 @@ h2 {color: #303030; margin: 0px 0px 10px 0px; font-size: 18px}
 div#ccm-logo {border-top: 3px solid #222; background: url(../images/bg_header.png) repeat-x; }
 div#ccm-theme-wrapper {width: 640px; margin: 0px auto 0px auto; background: #fff; padding: 20px; }
 
-a {color: #538AC4}
-p {color: #333}
-div.ccm-spacer {clear: both; line-height: 0px; margin-right: 0px}
-
-
-.ccm-error {color: #f00; font-weight: bold}
-ul.ccm-error {font-size: 12px; list-style-type: none; padding: 0px; margin: 0px 0px 30px 0px}
-ul.ccm-error li {margin-bottom: 8px}
-
-div.ccm-form {width: 300px; margin: 0px auto 0px auto}
-
-div.ccm-form label {font-size: 14px; color: #333}
-div.ccm-form-sub {color: #888; font-size: 12px}
-div.ccm-form input.ccm-input-text, div.ccm-form input.uak-text, div.ccm-form input.ccm-input-password, div.ccm-form input.ccm-input-captcha {width: 300px; font-size: 18px; color: #444; padding: 4px}
-div.ccm-form input.ccm-input-openid {background: #fff url(../images/icons/openid.gif) no-repeat scroll 2px 6px; width: 284px; font-size: 18px; color: #444; padding: 4px 4px 4px 20px}
-
-input.ccm-input-submit, input.ccm-input-button {font-size: 18px;}
-div.ccm-button {margin-top: 12px; text-align: right}
-
-/* install check */
-
-div#ccm-install-check {width: 300px; float: left; margin-right: 40px}
-div#ccm-install-form {width: 300px; float: left}
-
-div#ccm-install-check-items {background: #ebebeb url(../images/bg_default_pane.jpg) repeat-x scroll; padding: 10px; border: 1px solid #ddd; -webkit-border-radius: 10px; -moz-border-radius: 10px}
-div#ccm-install-check-items div.test {padding: 2px 30px 4px 0px; position: relative;  background-attachment: scroll; background-position: right 7px; background-repeat: no-repeat}
-div#ccm-install-check-items div.passed {background-image: url(../images/icons/success.png); color: #666}
-div#ccm-install-check-items div.loading {background-image: url(../images/dashboard/sitemap/loading.gif);}
-div#ccm-install-check-items div.warning {background-image: url(../images/icons/warning.png); font-weight: bold}
-div#ccm-install-check-items div.fail {background-image: url(../images/icons/error.png); font-weight: bold}
-div#ccm-install-check-items h2 {margin-bottom: 3px; margin-top: 20px}
-div#ccm-install-note a {text-decoration: none}
-div#ccm-install-note a:hover {text-decoration: underline}
-div#ccm-install-note {font-size: 12px; margin-top: 10px; text-align: center; line-height: 18px}
-div.ccm-install-info {display: none; font-size: 12px; font-weight: normal; color: #000; line-height: 18px; margin-bottom: 20px}
-a.ccm-install-tooltip img {position: absolute; top: 7px; right: 21px}
-div#ccm-install-check-items div.passed a.ccm-install-tooltip {display: none}
-div#ccm-install-check-items div.loading a.ccm-install-tooltip {display: none}
+div.container {padding-top: 50px;}

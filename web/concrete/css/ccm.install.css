@@ -1,0 +1,25 @@
+/* install check */
+
+table td {vertical-align:top !important;}
+table td div.alert-message {margin-top: 12px;}
+table td img {width: 16px; height: 16px;}
+
+div.block-message form {display: inline;}
+div.well {text-align: center;}
+div.well form {display: inline;}
+
+#success-message {
+	display: none;
+}
+
+#install-progress-summary {
+	font-size: 20px;
+	color: #555;
+	padding-top: 4px;
+	padding-bottom: 24px;
+	padding-left: 40px;
+	background: transparent url(<?=ASSETS_URL_IMAGES?>/throbber_white_32.gif) no-repeat;
+}
+#install-success {display: none;}
+#install-progress-error-wrapper {display: none;}
+#ccm-test-request-tooltip {display: none;}
