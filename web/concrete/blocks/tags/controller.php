@@ -6,6 +6,7 @@ class TagsBlockController extends BlockController {
 	protected $btInterfaceWidth = "500";
 	protected $btInterfaceHeight = "350";
 	
+	protected $btCacheBlockRecord = true;
 	protected $btCacheBlockOutput = true;
 	protected $btCacheBlockOutputOnPost = false;
 	protected $btCacheBlockOutputForRegisteredUsers = false;
