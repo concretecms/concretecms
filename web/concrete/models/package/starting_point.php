@@ -53,6 +53,7 @@ class StartingPointPackage extends Package {
 		$installDirectory = DIR_BASE_CORE . '/config';
 		$ci = new ContentImporter();
 		$ci->importContentFile($this->getPackagePath() . '/content.xml');
+
 	}
 	
 
@@ -131,7 +132,17 @@ class StartingPointPackage extends Package {
 		$fs->setPermissions($g2, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE);
 		$fs->setPermissions($g3, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL);
 
-		Config::save('SITE', $_POST['SITE']);
+		// Add global scrapbook site name block	 															
+		$bl = Block::getByName('My_Site_Name');
+		if (is_object($bl) && (!$bl->isError())) {
+			$data = array();
+			$data['uID'] = USER_SUPER_ID;
+			$data['content'] = SITE;					
+			$bl->update($data);
+		}
+		
+		Config::save('SITE', SITE);
+
 		// add the current app version as our site's app version
 		Config::save('SITE_APP_VERSION', APP_VERSION);
 		Config::save('SITE_DEBUG_LEVEL', DEBUG_DISPLAY_ERRORS);
