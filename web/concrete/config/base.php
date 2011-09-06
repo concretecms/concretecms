@@ -222,6 +222,11 @@ define('ASSETS_URL_JAVASCRIPT', $ap . '/js');
 define('ASSETS_URL_IMAGES', $ap . '/images');
 define('ASSETS_URL_FLASH', $ap . '/flash');
 
+define('REL_DIR_STARTING_POINT_PACKAGES', DIR_REL . '/config/install/packages');
+define('REL_DIR_STARTING_POINT_PACKAGES_CORE', ASSETS_URL . '/config/install/packages');
+define('REL_DIR_PACKAGES', DIR_REL . '/packages');
+define('REL_DIR_PACKAGES_CORE', ASSETS_URL . '/packages');
+
 
 # Pages/Collections
 define('FILENAME_COLLECTION_VIEW', 'view.php');

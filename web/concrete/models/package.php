@@ -119,6 +119,13 @@ class Package extends Object {
 
 	protected $DIR_PACKAGES_CORE = DIR_PACKAGES_CORE;
 	protected $DIR_PACKAGES = DIR_PACKAGES;
+	protected $REL_DIR_PACKAGES_CORE = REL_DIR_PACKAGES_CORE;
+	protected $REL_DIR_PACKAGES = REL_DIR_PACKAGES;
+	
+	public function getRelativePath() {
+		$dirp = (is_dir($this->DIR_PACKAGES . '/' . $this->getPackageHandle())) ? $this->REL_DIR_PACKAGES : $this->REL_DIR_PACKAGES_CORE;
+		return $dirp . '/' . $this->pkgHandle;
+	}
 	
 	public function getPackageID() {return $this->pkgID;}
 	public function getPackageName() {return t($this->pkgName);}

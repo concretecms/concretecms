@@ -1,24 +1,31 @@
 /* install check */
 
-table td {vertical-align:top !important;}
+table.requirements-table td {vertical-align:top !important;}
 table td div.alert-message {margin-top: 12px;}
-table td img {width: 16px; height: 16px;}
+table.requirements-table td img {width: 16px; height: 16px;}
 
 div.block-message form {display: inline;}
 div.well {text-align: center;}
 div.well form {display: inline;}
+
+table tr.package-selected td {
+	background-color: #DDF4FB !important;
+}
+
+table#sample-content-selector td {
+	cursor: pointer;
+}
 
 #success-message {
 	display: none;
 }
 
 #install-progress-summary {
-	font-size: 20px;
-	color: #555;
-	padding-top: 4px;
-	padding-bottom: 24px;
-	padding-left: 40px;
-	background: transparent url(<?=ASSETS_URL_IMAGES?>/throbber_white_32.gif) no-repeat;
+	padding-left: 20px;
+	padding-top: 0px;
+	margin-bottom: 20px;
+	margin-top: 20px;
+	background: transparent url(../images/throbber_white_16.gif) no-repeat;
 }
 #install-success {display: none;}
 #install-progress-error-wrapper {display: none;}
