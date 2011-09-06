@@ -6,6 +6,7 @@
 		protected $btInterfaceWidth = 300;
 		protected $btInterfaceHeight = 440;
 		protected $btTable = 'btContentImage';
+		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = true;

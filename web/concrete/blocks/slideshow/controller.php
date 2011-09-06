@@ -7,7 +7,7 @@ class SlideshowBlockController extends BlockController {
 	protected $btTable = 'btSlideshow';
 	protected $btInterfaceWidth = "550";
 	protected $btInterfaceHeight = "400";
-	protected $btCacheBlockOutputRecord = true;
+	protected $btCacheBlockRecord = true;
 	protected $btCacheBlockOutput = true;
 	protected $btCacheBlockOutputOnPost = true;
 	protected $btCacheBlockOutputForRegisteredUsers = true;
