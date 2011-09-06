@@ -241,8 +241,12 @@ $(function() {
 	<?=$form->text('SITE', array('disabled'=> 1)); ?>
 	<br/><br/>
 	
-	Sample content selector
-	<br/><br/>
+	<h2><?=t('Sample Content')?></h2>
+	
+	<?=$form->radio('SAMPLE_CONTENT', 'blank', true)?> <?=$form->label('SAMPLE_CONTENT1', t('None'))?><br/>
+	<?=$form->radio('SAMPLE_CONTENT', 'standard')?> <?=$form->label('SAMPLE_CONTENT2', t('Regular Website'))?><br/>
+	<?=$form->radio('SAMPLE_CONTENT', 'blog')?> <?=$form->label('SAMPLE_CONTENT3', t('Blog'))?><br/>
+	<br/>
 	
 	<h2><?=t('Administrator Information')?></h2>
 	
