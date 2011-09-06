@@ -140,7 +140,7 @@ class InstallController extends Controller {
 	
 	public function run_routine($pkgHandle, $routine) {
 		Loader::model('package/starting_point');
-		$spl = Loader::startingPointPackage('blog');
+		$spl = Loader::startingPointPackage($pkgHandle);
 		require(DIR_CONFIG_SITE . '/site_install.php');
 		@include(DIR_CONFIG_SITE . '/site_install_user.php');
 		
@@ -242,7 +242,7 @@ class InstallController extends Controller {
 				}
 
 				Loader::model('package/starting_point');
-				$spl = Loader::startingPointPackage('blog');
+				$spl = Loader::startingPointPackage($this->post('SAMPLE_CONTENT'));
 				$this->set('installPackage', $spl->getPackageHandle());
 				$this->set('installRoutines', $spl->getInstallRoutines());
 				
