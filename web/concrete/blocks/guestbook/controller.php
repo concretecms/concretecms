@@ -28,7 +28,7 @@
 		protected $btInterfaceHeight = "260";	
 		protected $btIncludeAll = 1;
 		protected $btExportPageColumns = array('cID');
-		protected $btExportTables = array('btGuestbook', 'btGuestbookEntries');
+		protected $btExportTables = array('btGuestBook', 'btGuestBookEntries');
 
 		
 		/** 

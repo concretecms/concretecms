@@ -1,0 +1,495 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+        <page name="Login" path="/login" filename="/login.php" pagetype="" description="" package=""/>
+        <page name="Register" path="/register" filename="/register.php" pagetype="" description="" package=""/>
+        <page name="Profile" path="/profile" filename="/profile/view.php" pagetype="" description="" package=""/>
+        <page name="Edit" path="/profile/edit" filename="/profile/edit.php" pagetype="" description="" package=""/>
+        <page name="Avatar" path="/profile/avatar" filename="/profile/avatar.php" pagetype="" description="" package=""/>
+        <page name="Messages" path="/profile/messages" filename="/profile/messages.php" pagetype="" description="" package=""/>
+        <page name="Friends" path="/profile/friends" filename="/profile/friends.php" pagetype="" description="" package=""/>
+        <page name="Page Not Found" path="/page_not_found" filename="/page_not_found.php" pagetype="" description="" package="">
+            <area name="Main"/>
+        </page>
+        <page name="Page Forbidden" path="/page_forbidden" filename="/page_forbidden.php" pagetype="" description="" package=""/>
+        <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package=""/>
+        <page name="Sitemap" path="/dashboard/sitemap" filename="/dashboard/sitemap/view.php" pagetype="" description="Whole world at a glance." package=""/>
+        <page name="Full Sitemap" path="/dashboard/sitemap/full" filename="/dashboard/sitemap/full.php" pagetype="" description="" package=""/>
+        <page name="Flat View" path="/dashboard/sitemap/explore" filename="/dashboard/sitemap/explore.php" pagetype="" description="" package=""/>
+        <page name="Page Search" path="/dashboard/sitemap/search" filename="/dashboard/sitemap/search.php" pagetype="" description="" package=""/>
+        <page name="Access" path="/dashboard/sitemap/access" filename="/dashboard/sitemap/access.php" pagetype="" description="" package=""/>
+        <page name="File Manager" path="/dashboard/files" filename="/dashboard/files/view.php" pagetype="" description="All documents and images." package=""/>
+        <page name="Search" path="/dashboard/files/search" filename="/dashboard/files/search.php" pagetype="" description="" package=""/>
+        <page name="Attributes" path="/dashboard/files/attributes" filename="/dashboard/files/attributes.php" pagetype="" description="" package=""/>
+        <page name="Sets" path="/dashboard/files/sets" filename="/dashboard/files/sets.php" pagetype="" description="" package=""/>
+        <page name="Access" path="/dashboard/files/access" filename="/dashboard/files/access.php" pagetype="" description="" package=""/>
+        <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype="" description="Get data from forms and logs." package=""/>
+        <page name="Form Results" path="/dashboard/reports/forms" filename="/dashboard/reports/forms.php" pagetype="" description="Get submission data." package=""/>
+        <page name="Surveys" path="/dashboard/reports/surveys" filename="/dashboard/reports/surveys.php" pagetype="" description="" package=""/>
+        <page name="Logs" path="/dashboard/reports/logs" filename="/dashboard/reports/logs.php" pagetype="" description="" package=""/>
+        <page name="Users and Groups" path="/dashboard/users" filename="/dashboard/users/view.php" pagetype="" description="Add and manage people." package=""/>
+        <page name="Find Users" path="/dashboard/users/search" filename="/dashboard/users/search.php" pagetype="" description="" package=""/>
+        <page name="Add User" path="/dashboard/users/add" filename="/dashboard/users/add.php" pagetype="" description="" package=""/>
+        <page name="Groups" path="/dashboard/users/groups" filename="/dashboard/users/groups.php" pagetype="" description="" package=""/>
+        <page name="User Attributes" path="/dashboard/users/attributes" filename="/dashboard/users/attributes.php" pagetype="" description="" package=""/>
+        <page name="Login &amp; Registration" path="/dashboard/users/registration" filename="/dashboard/users/registration.php" pagetype="" description="" package=""/>
+        <page name="Scrapbook" path="/dashboard/scrapbook" filename="/dashboard/scrapbook/view.php" pagetype="" description="Share content across your site." package="">
+            <area name="Global">
+                <block type="content" name="My_Site_Name">
+                    <data table="btContentLocal">
+                        <record>
+                            <content><![CDATA[<p>test</p>]]></content>
+                        </record>
+                    </data>
+                </block>
+            </area>
+        </page>
+        <page name="Pages and Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package=""/>
+        <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype="" description="Reskin your site." package=""/>
+        <page name="Add" path="/dashboard/pages/themes/add" filename="/dashboard/pages/themes/add.php" pagetype="" description="" package=""/>
+        <page name="Inspect" path="/dashboard/pages/themes/inspect" filename="/dashboard/pages/themes/inspect.php" pagetype="" description="" package=""/>
+        <page name="Customize" path="/dashboard/pages/themes/customize" filename="/dashboard/pages/themes/customize.php" pagetype="" description="" package=""/>
+        <page name="Page Types" path="/dashboard/pages/types" filename="/dashboard/pages/types/view.php" pagetype="" description="What goes in your site." package=""/>
+        <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php" pagetype="" description="" package=""/>
+        <page name="Single Pages" path="/dashboard/pages/single" filename="/dashboard/pages/single.php" pagetype="" description="" package=""/>
+        <page name="Add Functionality" path="/dashboard/install" filename="/dashboard/install.php" pagetype="" description="Install addons &amp; themes." package=""/>
+        <page name="System &amp; Maintenance" path="/dashboard/system" filename="/dashboard/system/view.php" pagetype="" description="Backup, cleanup and update." package=""/>
+        <page name="Jobs" path="/dashboard/system/jobs" filename="/dashboard/system/jobs.php" pagetype="" description="" package=""/>
+        <page name="Backup &amp; Restore" path="/dashboard/system/backup" filename="/dashboard/system/backup.php" pagetype="" description="" package=""/>
+        <page name="Update" path="/dashboard/system/update" filename="/dashboard/system/update.php" pagetype="" description="" package=""/>
+        <page name="Notifications" path="/dashboard/system/notifications" filename="/dashboard/system/notifications.php" pagetype="" description="" package=""/>
+        <page name="Sitewide Settings" path="/dashboard/settings" filename="/dashboard/settings/view.php" pagetype="" description="Secure and setup your site." package=""/>
+        <page name="Email" path="/dashboard/settings/mail" filename="/dashboard/settings/mail/view.php" pagetype="" description="Enable post via email and other settings." package=""/>
+        <page name="Marketplace" path="/dashboard/settings/marketplace" filename="/dashboard/settings/marketplace.php" pagetype="" description="" package=""/>
+        <page name="Download File" path="/download_file" filename="/download_file.php" pagetype="" description="" package=""/>
+        <page name="Members" path="/members" filename="/members.php" pagetype="" description="" package=""/>
+        <page name="Composer Beta" path="/dashboard/composer" filename="/dashboard/composer/view.php" pagetype="" description="Write for your site." package=""/>
+        <page name="Write" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package=""/>
+        <page name="Drafts" path="/dashboard/composer/drafts" filename="/dashboard/composer/drafts.php" pagetype="" description="" package=""/>
+        <page name="Composer" path="/dashboard/pages/types/composer" filename="/dashboard/pages/types/composer.php" pagetype="" description="" package=""/>
+        <page name="Multilingual Settings" path="/dashboard/settings/multilingual" filename="/dashboard/settings/multilingual/view.php" pagetype="" description="" package=""/>
+    </singlepages>
+    <pagetypes>
+        <pagetype handle="full" name="Full Width" package="">
+            <page name="" path="" filename="" pagetype="full" description="" package="">
+                <area name="Header Nav">
+                    <block type="autonav" name="" custom-template="header_menu.php" mc-block-id="0bM1O9v6">
+                        <data table="btNavigation">
+                            <record>
+                                <orderBy><![CDATA[display_asc]]></orderBy>
+                                <displayPages><![CDATA[top]]></displayPages>
+                                <displayPagesCID/>
+                                <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                                <displaySubPages><![CDATA[none]]></displaySubPages>
+                                <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
+                                <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+                                <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+                            </record>
+                        </data>
+                    </block>
+                </area>
+                <area name="Header">
+                    <block type="image" name="" mc-block-id="XpeofvS4">
+                        <data table="btContentImage">
+                            <record>
+                                <fID>{ccm:export:file:inneroptics_dot_net_canyonlands.jpg}</fID>
+                                <fOnstateID/>
+                                <maxWidth><![CDATA[0]]></maxWidth>
+                                <maxHeight><![CDATA[0]]></maxHeight>
+                                <externalLink><![CDATA[]]></externalLink>
+                                <altText><![CDATA[]]></altText>
+                            </record>
+                        </data>
+                    </block>
+                </area>
+                <area name="Main"/>
+            </page>
+        </pagetype>
+        <pagetype handle="left_sidebar" name="Left Sidebar" package="">
+            <page name="" path="" filename="" pagetype="left_sidebar" description="" package="">
+                <area name="Header Nav">
+                    <block type="autonav" name="" custom-template="header_menu.php" mc-block-id="wVrgzYLD">
+                        <data table="btNavigation">
+                            <record>
+                                <orderBy><![CDATA[display_asc]]></orderBy>
+                                <displayPages><![CDATA[top]]></displayPages>
+                                <displayPagesCID/>
+                                <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                                <displaySubPages><![CDATA[none]]></displaySubPages>
+                                <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
+                                <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+                                <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+                            </record>
+                        </data>
+                    </block>
+                </area>
+                <area name="Header">
+                    <block type="image" name="" mc-block-id="tKtpsWVg">
+                        <data table="btContentImage">
+                            <record>
+                                <fID>{ccm:export:file:inneroptics_dot_net_portland.jpg}</fID>
+                                <fOnstateID/>
+                                <maxWidth><![CDATA[0]]></maxWidth>
+                                <maxHeight><![CDATA[0]]></maxHeight>
+                                <externalLink><![CDATA[]]></externalLink>
+                                <altText><![CDATA[]]></altText>
+                            </record>
+                        </data>
+                    </block>
+                </area>
+                <area name="Sidebar">
+                    <block type="autonav" name="" mc-block-id="CHCQ46Tz">
+                        <data table="btNavigation">
+                            <record>
+                                <orderBy><![CDATA[display_asc]]></orderBy>
+                                <displayPages><![CDATA[second_level]]></displayPages>
+                                <displayPagesCID/>
+                                <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                                <displaySubPages><![CDATA[relevant]]></displaySubPages>
+                                <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
+                                <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+                                <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+                            </record>
+                        </data>
+                    </block>
+                </area>
+                <area name="Main"/>
+            </page>
+        </pagetype>
+        <pagetype handle="right_sidebar" name="Right Sidebar" package="">
+            <page name="" path="" filename="" pagetype="right_sidebar" description="" package="">
+                <area name="Header Nav">
+                    <block type="autonav" name="" custom-template="header_menu.php" mc-block-id="rNtlsfTe">
+                        <data table="btNavigation">
+                            <record>
+                                <orderBy><![CDATA[display_asc]]></orderBy>
+                                <displayPages><![CDATA[top]]></displayPages>
+                                <displayPagesCID/>
+                                <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                                <displaySubPages><![CDATA[none]]></displaySubPages>
+                                <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
+                                <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+                                <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+                            </record>
+                        </data>
+                    </block>
+                </area>
+                <area name="Header">
+                    <block type="slideshow" name="" mc-block-id="r27Q6OCN">
+                        <data table="btSlideshow">
+                            <record>
+                                <fsID><![CDATA[0]]></fsID>
+                                <playback><![CDATA[ORDER]]></playback>
+                                <duration><![CDATA[]]></duration>
+                                <fadeDuration><![CDATA[]]></fadeDuration>
+                            </record>
+                        </data>
+                        <data table="btSlideshowImg">
+                            <record>
+                                <slideshowImgId><![CDATA[1]]></slideshowImgId>
+                                <fID>{ccm:export:file:inneroptics_dot_net_starfish.jpg}</fID>
+                                <url><![CDATA[]]></url>
+                                <duration><![CDATA[5]]></duration>
+                                <fadeDuration><![CDATA[2]]></fadeDuration>
+                                <groupSet><![CDATA[0]]></groupSet>
+                                <position><![CDATA[0]]></position>
+                                <imgHeight><![CDATA[192]]></imgHeight>
+                            </record>
+                            <record>
+                                <slideshowImgId><![CDATA[2]]></slideshowImgId>
+                                <fID>{ccm:export:file:inneroptics_dot_net_portland.jpg}</fID>
+                                <url><![CDATA[]]></url>
+                                <duration><![CDATA[5]]></duration>
+                                <fadeDuration><![CDATA[2]]></fadeDuration>
+                                <groupSet><![CDATA[0]]></groupSet>
+                                <position><![CDATA[1]]></position>
+                                <imgHeight><![CDATA[215]]></imgHeight>
+                            </record>
+                            <record>
+                                <slideshowImgId><![CDATA[3]]></slideshowImgId>
+                                <fID>{ccm:export:file:inneroptics_dot_net_canyonlands.jpg}</fID>
+                                <url><![CDATA[]]></url>
+                                <duration><![CDATA[5]]></duration>
+                                <fadeDuration><![CDATA[2]]></fadeDuration>
+                                <groupSet><![CDATA[0]]></groupSet>
+                                <position><![CDATA[2]]></position>
+                                <imgHeight><![CDATA[192]]></imgHeight>
+                            </record>
+                            <record>
+                                <slideshowImgId><![CDATA[4]]></slideshowImgId>
+                                <fID>{ccm:export:file:inneroptics_dot_net_new_zealand_sheep.jpg}</fID>
+                                <url><![CDATA[]]></url>
+                                <duration><![CDATA[5]]></duration>
+                                <fadeDuration><![CDATA[2]]></fadeDuration>
+                                <groupSet><![CDATA[0]]></groupSet>
+                                <position><![CDATA[3]]></position>
+                                <imgHeight><![CDATA[192]]></imgHeight>
+                            </record>
+                        </data>
+                    </block>
+                </area>
+                <area name="Sidebar">
+                    <block type="autonav" name="" mc-block-id="MomRxixT">
+                        <data table="btNavigation">
+                            <record>
+                                <orderBy><![CDATA[display_asc]]></orderBy>
+                                <displayPages><![CDATA[second_level]]></displayPages>
+                                <displayPagesCID/>
+                                <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                                <displaySubPages><![CDATA[relevant]]></displaySubPages>
+                                <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
+                                <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+                                <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+                            </record>
+                        </data>
+                    </block>
+                </area>
+                <area name="Main"/>
+            </page>
+        </pagetype>
+    </pagetypes>
+    <pages>
+        <page name="Home" path="" filename="" pagetype="right_sidebar" description="" package="">
+            <area name="Header Nav">
+                <block mc-block-id="rNtlsfTe"/>
+            </area>
+            <area name="Header">
+                <block mc-block-id="r27Q6OCN"/>
+            </area>
+            <area name="Sidebar">
+                <block type="content" name="">
+                    <data table="btContentLocal">
+                        <record>
+                            <content><![CDATA[<h2>Sidebar</h2>
+                                <p>Everything about concrete5 is completely customizable through the CMS. This is a separate area from the main content on the homepage. You can <a title="Move blocks in concrete5" href="http://www.concrete5.org/documentation/general-topics/blocks-and-areas" target="_blank">drag and drop blocks</a> like this around your layout.</p>
+                                <p> </p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </area>
+                <area name="Main">
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<h1>Welcome to concrete5 - an Open Source CMS</h1>
+                                    <p>Content Management is easy with concrete5's in-context editing. Just <a title="Login" href="{CCM:BASE_URL}/index.php/login">login</a> and you can add and change things as you browse your site. </p>
+                                    <p>Here's some videos you can watch learn how to:</p>
+                                    <ul>
+                                    <li><a title="In-context editing CMS" href="http://www.concrete5.org/documentation/general-topics/in-context-editing/">Edit</a> this page.</li>
+                                    <li>Add a <a title="Add a page in concrete5" href="http://www.concrete5.org/documentation/general-topics/add-a-page/" target="_blank">new page</a>.</li>
+                                    <li>Add some basic functionality, like <a title="Add a simple form in concrete5" href="http://www.concrete5.org/documentation/general-topics/add_a_form" target="_blank">a Form</a>.</li>
+                                    <li><a title="add-on marketplace for concrete5" href="http://www.concrete5.org/marketplace/how_to_install_add_ons_and_themes_/" target="_blank">Finding & adding</a> more functionality and themes.</li>
+                                    </ul>
+                                    <p>We've taken the liberty to build out the rest of this site with some sample content that will help you learn concrete5. Wander around a bit, or just goto the <a title="Sitemap" href="{CCM:BASE_URL}/index.php/dashboard/sitemap/full/">Dashboard > Sitemap</a> and delete the parts you don't want quickly.</p>
+                                    <p> </p>]]></content>
+                                </record>
+                            </data>
+                        </block>
+                        <block type="youtube" name="">
+                            <data table="btYouTube">
+                                <record>
+                                    <title><![CDATA[Basic Editing]]></title>
+                                    <videoURL><![CDATA[http://www.youtube.com/watch?v=oYSOFTNLbKY]]></videoURL>
+                                    <vHeight><![CDATA[]]></vHeight>
+                                    <vWidth><![CDATA[]]></vWidth>
+                                    <vPlayer><![CDATA[0]]></vPlayer>
+                                </record>
+                            </data>
+                        </block>
+                    </area>
+                </page>
+                <page name="Search" path="/search" filename="" pagetype="left_sidebar" description="" package="">
+                    <attributes>
+                        <attributekey handle="meta_title">
+                            <value><![CDATA[]]></value>
+                        </attributekey>
+                        <attributekey handle="meta_description">
+                            <value><![CDATA[]]></value>
+                        </attributekey>
+                        <attributekey handle="meta_keywords">
+                            <value><![CDATA[]]></value>
+                        </attributekey>
+                        <attributekey handle="exclude_nav">
+                            <value><![CDATA[0]]></value>
+                        </attributekey>
+                    </attributes>
+                    <area name="Header Nav">
+                        <block mc-block-id="wVrgzYLD"/>
+                    </area>
+                    <area name="Header">
+                        <block mc-block-id="tKtpsWVg"/>
+                    </area>
+                    <area name="Sidebar">
+                        <block type="search" name="">
+                            <data table="btSearch">
+                                <record>
+                                    <title><![CDATA[Search Your Site]]></title>
+                                    <buttonText><![CDATA[Go]]></buttonText>
+                                    <baseSearchPath><![CDATA[]]></baseSearchPath>
+                                    <resultsURL><![CDATA[/search/search-results]]></resultsURL>
+                                </record>
+                            </data>
+                        </block>
+                    </area>
+                    <area name="Main">
+                        <block type="content" name="">
+                            <data table="btContentLocal">
+                                <record>
+                                    <content><![CDATA[<h1>Site Map</h1>]]></content>
+                                </record>
+                            </data>
+                        </block>
+                        <block type="autonav" name="">
+                            <data table="btNavigation">
+                                <record>
+                                    <orderBy><![CDATA[display_asc]]></orderBy>
+                                    <displayPages><![CDATA[top]]></displayPages>
+                                    <displayPagesCID/>
+                                    <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                                    <displaySubPages><![CDATA[all]]></displaySubPages>
+                                    <displaySubPageLevels><![CDATA[all]]></displaySubPageLevels>
+                                    <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+                                    <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+                                </record>
+                            </data>
+                        </block>
+                    </area>
+                </page>
+                <page name="Search Results" path="/search/search-results" filename="" pagetype="left_sidebar" description="" package="">
+                    <attributes>
+                        <attributekey handle="meta_title">
+                            <value><![CDATA[]]></value>
+                        </attributekey>
+                        <attributekey handle="meta_description">
+                            <value><![CDATA[]]></value>
+                        </attributekey>
+                        <attributekey handle="meta_keywords">
+                            <value><![CDATA[]]></value>
+                        </attributekey>
+                        <attributekey handle="exclude_nav">
+                            <value><![CDATA[1]]></value>
+                        </attributekey>
+                    </attributes>
+                    <area name="Header Nav">
+                        <block mc-block-id="wVrgzYLD"/>
+                    </area>
+                    <area name="Header">
+                        <block mc-block-id="tKtpsWVg"/>
+                    </area>
+                    <area name="Sidebar">
+                        <block mc-block-id="CHCQ46Tz"/>
+                    </area>
+                    <area name="Main">
+                        <block type="search" name="">
+                            <data table="btSearch">
+                                <record>
+                                    <title><![CDATA[Search Results]]></title>
+                                    <buttonText><![CDATA[Search]]></buttonText>
+                                    <baseSearchPath><![CDATA[]]></baseSearchPath>
+                                    <resultsURL><![CDATA[]]></resultsURL>
+                                </record>
+                            </data>
+                        </block>
+                    </area>
+                </page>
+                <page name="About" path="/about" filename="" pagetype="left_sidebar" description="" package="">
+                    <attributes>
+                        <attributekey handle="meta_title">
+                            <value><![CDATA[]]></value>
+                        </attributekey>
+                        <attributekey handle="meta_description">
+                            <value><![CDATA[]]></value>
+                        </attributekey>
+                        <attributekey handle="meta_keywords">
+                            <value><![CDATA[]]></value>
+                        </attributekey>
+                        <attributekey handle="exclude_nav">
+                            <value><![CDATA[0]]></value>
+                        </attributekey>
+                    </attributes>
+                    <area name="Header Nav">
+                        <block mc-block-id="wVrgzYLD"/>
+                    </area>
+                    <area name="Header">
+                        <block mc-block-id="tKtpsWVg"/>
+                    </area>
+                    <area name="Sidebar">
+                        <block mc-block-id="CHCQ46Tz"/>
+                    </area>
+                    <area name="Main">
+                        <block type="content" name="">
+                            <data table="btContentLocal">
+                                <record>
+                                    <content><![CDATA[<h1>Learn More</h1>
+                                        <p>Visit <a title="concrete5 Content Management System" href="http://www.concrete5.org" target="_blank">concrete5.org</a> to learn more from the <a title="open source content management system" href="http://www.concrete5.org/community" target="_blank">community</a> and the <a title="concrete5 documentation" href="http://www.concrete5.org/documentation/" target="_blank">documentation</a>. You can also browse our <a title="concrete5 marketplace" href="http://www.concrete5.org/marketplace/" target="_blank">marketplace</a> for more <a title="Add-ons for concrete5" href="http://www.concrete5.org/marketplace/addons/" target="_blank">add-ons</a> and <a title="Themes for concrete5" href="http://www.concrete5.org/marketplace/themes/" target="_blank">themes</a> to quickly build the site you really need. </p>
+                                        <p> </p>]]></content>
+                                    </record>
+                                </data>
+                            </block>
+                            <block type="content" name="">
+                                <data table="btContentLocal">
+                                    <record>
+                                        <content><![CDATA[<h2>Common Tips</h2>
+                                            <p>Want to <a title="change your site name in concrete5" href="http://www.concrete5.org/help/faq/how_do_i_get_rid_of_my_sitename_/" target="_blank">change your site name</a> up top?</p>
+                                            <p>Need to sell stuff on your website? Check out our <a title="eCommerce and concrete5" href="http://www.concrete5.org/marketplace/addons/ecommerce/" target="_blank">eCommerce add-on</a>.</p>
+                                            <p>Help, <a title="Reset your admin password in concrete5" href="http://www.concrete5.org/help/faq/i-can-t-login/" target="_blank">I can't login</a> anymore!</p>
+                                            <p> </p>]]></content>
+                                        </record>
+                                    </data>
+                                </block>
+                            </area>
+                        </page>
+                        <page name="Guestbook" path="/about/guest-book" filename="" pagetype="left_sidebar" description="" package="">
+                            <attributes>
+                                <attributekey handle="meta_title">
+                                    <value><![CDATA[]]></value>
+                                </attributekey>
+                                <attributekey handle="meta_description">
+                                    <value><![CDATA[]]></value>
+                                </attributekey>
+                                <attributekey handle="meta_keywords">
+                                    <value><![CDATA[]]></value>
+                                </attributekey>
+                                <attributekey handle="exclude_nav">
+                                    <value><![CDATA[0]]></value>
+                                </attributekey>
+                            </attributes>
+                            <area name="Header Nav">
+                                <block mc-block-id="wVrgzYLD"/>
+                            </area>
+                            <area name="Header">
+                                <block mc-block-id="tKtpsWVg"/>
+                            </area>
+                            <area name="Sidebar">
+                                <block mc-block-id="CHCQ46Tz"/>
+                            </area>
+                            <area name="Main">
+                                <block type="content" name="">
+                                    <data table="btContentLocal">
+                                        <record>
+                                            <content><![CDATA[<h1>Say Hi!</h1>
+                                                <p>Here's a simple guestbook you can add to any page on your website to allow comments. Why not put the guestbook block in edit mode and play with the options?</p>
+                                                <p>We also have a fully featured <a title="Forums for concrete5" href="http://www.concrete5.org/marketplace/addons/discussion/" target="_blank">Discussions Forum Add-on</a> if you need it. </p>
+                                                <p> </p>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="guestbook" name="">
+                                        <data table="btGuestBook">
+                                            <record>
+                                                <requireApproval><![CDATA[0]]></requireApproval>
+                                                <title><![CDATA[Comments:]]></title>
+                                                <dateFormat><![CDATA[M jS, Y]]></dateFormat>
+                                                <displayGuestBookForm><![CDATA[1]]></displayGuestBookForm>
+                                                <displayCaptcha><![CDATA[1]]></displayCaptcha>
+                                                <authenticationRequired><![CDATA[0]]></authenticationRequired>
+                                                <notifyEmail><![CDATA[]]></notifyEmail>
+                                            </record>
+                                        </data>
+                                        <data table="btGuestBookEntries"/>
+                                    </block>
+                                </area>
+                            </page>
+                        </pages>
+                    </concrete5-cif>
