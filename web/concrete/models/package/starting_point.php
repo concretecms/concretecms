@@ -17,11 +17,11 @@ class StartingPointPackage extends Package {
 		$this->routines = array(
 		new StartingPointInstallRoutine('make_directories', 10, t('Starting installation and creating directories.')),
 		new StartingPointInstallRoutine('install_database', 20, t('Creating database and tables.')),
-		new StartingPointInstallRoutine('add_users', 25, t('Adding admin user.')),
-		new StartingPointInstallRoutine('install_blocks_attributes_permissions_jobs', 40, t('Installing block types, attributes, permissions and jobs.')),
-		new StartingPointInstallRoutine('import_files', 50, t('Importing files.')),
-		new StartingPointInstallRoutine('install_content', 80, t('Adding pages and content.')),
-		new StartingPointInstallRoutine('set_site_permissions', 90, t('Setting up site permissions.'))
+		new StartingPointInstallRoutine('add_users', 45, t('Adding admin user.')),
+		new StartingPointInstallRoutine('install_blocks_attributes_permissions_jobs', 55, t('Installing block types, attributes, permissions and jobs.')),
+		new StartingPointInstallRoutine('import_files', 70, t('Importing files.')),
+		new StartingPointInstallRoutine('install_content', 90, t('Adding pages and content.')),
+		new StartingPointInstallRoutine('set_site_permissions', 95, t('Setting up site permissions.'))
 		);
 	}
 	
@@ -130,8 +130,8 @@ class StartingPointPackage extends Package {
 
 		Config::save('SITE', $_POST['SITE']);
 		// add the current app version as our site's app version
-		Config::save('SITE_APP_VERSION', $this->installData['APP_VERSION']);
-		Config::save('SITE_DEBUG_LEVEL', $this->installData['DEBUG_DISPLAY_ERRORS']);
+		Config::save('SITE_APP_VERSION', APP_VERSION);
+		Config::save('SITE_DEBUG_LEVEL', DEBUG_DISPLAY_ERRORS);
 		Config::save('ENABLE_LOG_EMAILS', 1);
 		Config::save('ENABLE_LOG_ERRORS', 1);
 		Config::save('FULL_PAGE_CACHE_GLOBAL', 0);
