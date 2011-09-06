@@ -71,6 +71,7 @@ class InstallController extends Controller {
 		Cache::disableCache();
 		$this->setRequiredItems();
 		$this->setOptionalItems();
+		Loader::model('package/starting_point');
 	}
 	
 	private function setRequiredItems() {
@@ -144,7 +145,6 @@ class InstallController extends Controller {
 	}
 	
 	public function run_routine($pkgHandle, $routine) {
-		Loader::model('package/starting_point');
 		$spl = Loader::startingPointPackage($pkgHandle);
 		require(DIR_CONFIG_SITE . '/site_install.php');
 		@include(DIR_CONFIG_SITE . '/site_install_user.php');
@@ -249,6 +249,7 @@ class InstallController extends Controller {
 					$configuration = "<?php\n";
 					$configuration .= "define('INSTALL_USER_EMAIL', '" . $_POST['uEmail'] . "');\n";
 					$configuration .= "define('INSTALL_USER_PASSWORD_HASH', '" . User::encryptPassword($_POST['uPassword'], $salt) . "');\n";
+					$configuration .= "define('SITE', '" . addslashes($_POST['SITE']) . "');\n";
 					$res = fwrite($this->fpu, $configuration);
 					fclose($this->fpu);
 					chmod(DIR_CONFIG_SITE . '/site_install_user.php', 0700);
@@ -261,7 +262,7 @@ class InstallController extends Controller {
 				$this->set('installPackage', $spl->getPackageHandle());
 				$this->set('installRoutines', $spl->getInstallRoutines());
 				
-				$this->set('successMessage', t('Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose.<br/><br/>If you wish to change this password, you may do so from the users area of the dashboard.', USER_SUPER, $uPassword));
+				$this->set('successMessage', t('Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.', USER_SUPER, $uPassword));
 
 			
 			} else {
