@@ -5,7 +5,7 @@
 <!-- insert CSS for Default Concrete Theme //-->
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.default.theme.css";</style>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.install.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/twitter.bootstrap.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.twitter.bootstrap.css";</style>
 <? 
 if (is_object($c)) {
 	$v = View::getInstance();
@@ -18,8 +18,10 @@ if (is_object($c)) {
 ?>
 </head>
 <body>
+<div class="ccm-ui">
 
 <div id="ccm-logo"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" width="49" height="49" alt="Concrete CMS" /></div>
+
 
 
 
@@ -28,6 +30,7 @@ if (is_object($c)) {
 <?php Loader::element('system_errors', array('format' => 'block', 'error' => $error)); ?>
 <?php print $innerContent ?>
 
+</div>
 </div>
 
 </body>
