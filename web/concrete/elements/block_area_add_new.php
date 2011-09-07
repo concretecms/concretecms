@@ -43,10 +43,10 @@ ccm_showBlockTypeDescriptions = function() {
 var ccm_areaActiveTab = "ccm-add";
 
 $("#ccm-area-tabs a").click(function() {
-	$("li.ccm-nav-active").removeClass('ccm-nav-active');
+	$("li.active").removeClass('active');
 	$("#" + ccm_areaActiveTab + "-tab").hide();
 	ccm_areaActiveTab = $(this).attr('id');
-	$(this).parent().addClass("ccm-nav-active");
+	$(this).parent().addClass("active");
 	$("#" + ccm_areaActiveTab + "-tab").show();
 	if (ccm_areaActiveTab == 'ccm-add-marketplace') {
 		ccm_updateMarketplaceTab();	
@@ -174,8 +174,8 @@ $(function() {
 
 
 <? if (ENABLE_MARKETPLACE_SUPPORT && $_REQUEST['addOnly'] != 1) { ?>
-<ul class="ccm-dialog-tabs" id="ccm-area-tabs">
-	<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-add"><?=t('Add New')?></a></li>
+<ul class="tabs" id="ccm-area-tabs">
+	<li class="active"><a href="javascript:void(0)" id="ccm-add"><?=t('Add New')?></a></li>
 	<li><a href="javascript:void(0)" id="ccm-add-marketplace"><?=t('Add From Marketplace')?></a></li>
 </ul>
 <? } ?>

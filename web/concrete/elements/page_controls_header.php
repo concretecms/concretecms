@@ -17,6 +17,7 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 </script>
 
 <?
+$this->addHeaderItem($html->css('ccm.twitter.bootstrap.css'));
 $this->addHeaderItem($html->css('ccm.ui.css'));
 $this->addHeaderItem($html->css('jquery.rating.css'));
 $this->addHeaderItem($html->css('ccm.dialog.css'));
