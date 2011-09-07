@@ -1,9 +1,11 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.tipsy.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.tooltip.js"></script>
 <script type="text/javascript">
 $(function() {
-	$(".tooltip").tipsy();
+	$(".tooltip").twipsy({
+		position: 'below'
+	});
 });
 </script>
 
@@ -285,8 +287,7 @@ $(function() {
 <table class="zebra-striped requirements-table">
 <thead>
 <tr>
-	<th></th>
-	<th colspan="2"><?=t('Item')?></th>
+	<th colspan="3"></th>
 </tr>
 </thead>
 <tbody>
@@ -321,8 +322,7 @@ $(function() {
 <table class="requirements-table zebra-striped">
 <thead>
 <tr>
-	<th></th>
-	<th colspan="2"><?=t('Item')?></th>
+	<th colspan="3"></th>
 </tr>
 </thead>
 
@@ -361,8 +361,7 @@ $(function() {
 <table class="requirements-table zebra-striped">
 <thead>
 <tr>
-	<th></th>
-	<th><?=t('Item')?></th>
+	<th colspan="3"></th>
 </tr>
 </thead>
 <tbody>
@@ -379,8 +378,7 @@ $(function() {
 <table class="requirements-table zebra-striped">
 <thead>
 <tr>
-	<th></th>
-	<th colspan="2"><?=t('Item')?></th>
+	<th colspan="3"></th>
 </tr>
 </thead>
 
