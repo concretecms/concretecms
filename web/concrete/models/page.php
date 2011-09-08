@@ -2245,6 +2245,10 @@ class Page extends Collection {
 		Cache::set('page_content', $this->getCollectionID(), $content, $this->getCollectionFullPageCachingLifetimeValue());
 	}
 	
+	public function getFromPageCache() {
+		return Cache::get('page_content', $this->getCollectionID());
+	}
+	
 	public function renderFromCache() {
 		$content = Cache::get('page_content', $this->getCollectionID());
 		if ($content != false) {
