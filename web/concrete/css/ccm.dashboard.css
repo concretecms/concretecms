@@ -505,3 +505,7 @@ div.ccm-composer-content-item {border-bottom: 1px dotted #aaa; margin-bottom: 5p
 div#ccm-dashboard-composer .ccm-block-type .options { float:right; padding:8px }
 div#ccm-dashboard-composer .ccm-block-type-inner{ border:1px solid #e1e1e1; background-color:#f6f6f6; padding-left:8px; margin-bottom: 16px;}
 div#ccm-dashboard-composer .ccm-block-type-inner .ccm-block-type-inner-icon {width:16px; height:16px; margin-right:8px; float:left;}
+
+/* NEW DASHBOARD */
+
+div.ccm-dashboard-options-bar { border-bottom: 1px solid #ccc; padding: 10px; background-color: #f4f4f4; margin: -8px -8px 15px -8px}

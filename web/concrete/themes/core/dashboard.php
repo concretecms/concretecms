@@ -39,6 +39,7 @@ if (LANGUAGE != 'en') {
 }
 
 // Require CSS
+$v->addHeaderItem($html->css('ccm.twitter.bootstrap.css'));
 $v->addHeaderItem($html->css('ccm.dashboard.css'));
 $v->addHeaderItem($html->css('ccm.colorpicker.css'));
 $v->addHeaderItem($html->css('ccm.menus.css'));
