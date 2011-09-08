@@ -6,15 +6,64 @@
         <category handle="file" allow-sets="0" package=""/>
     </attributecategories>
     <attributetypes>
-        <attributetype handle="text" package=""/>
-        <attributetype handle="textarea" package=""/>
-        <attributetype handle="boolean" package=""/>
-        <attributetype handle="date_time" package=""/>
-        <attributetype handle="image_file" package=""/>
-        <attributetype handle="number" package=""/>
-        <attributetype handle="rating" package=""/>
-        <attributetype handle="select" package=""/>
-        <attributetype handle="address" package=""/>
+        <attributetype handle="text" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="textarea" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="boolean" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="date_time" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="image_file" package="">
+            <categories>
+                <category handle="collection"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="number" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="rating" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="select" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="address" package="">
+            <categories>
+                <category handle="user"/>
+            </categories>
+        </attributetype>
     </attributetypes>
     <blocktypes>
         <blocktype handle="autonav" package=""/>
