@@ -1,3 +1,5 @@
+<div class="ccm-ui">
+
 <? 
 //Used on both page and file attributes
 $c = Page::getCurrentPage();
@@ -7,20 +9,30 @@ if (is_object($category) && $category->allowAttributeSets()) {
 	$sets = $category->getAttributeSets();
 }
 
-if (count($attribs) > 0) { 
+if (count($attribs) > 0) { ?>
 
+<div class="ccm-dashboard-options-bar">
+
+
+	<?
 	$ih = Loader::helper('concrete/interface');
 	$valt = Loader::helper('validation/token');
 	
 	if (count($sets) > 0) {  ?>
 	
-		<h3 style="position: absolute; top: 6px; right: 8px"><?=t('View Attributes: ')?><select style="font-size: 10px" onchange="window.location.href='<?=Loader::helper('navigation')->getLinkToCollection($c)?>?asGroupAttributes=' + this.value" name="asGroupAttributes">
+		<strong><?=t('View')?></strong> <select onchange="window.location.href='<?=Loader::helper('navigation')->getLinkToCollection($c)?>?asGroupAttributes=' + this.value" name="asGroupAttributes">
 			<option value="1" <? if ($_REQUEST['asGroupAttributes'] !== '0') { ?> selected <? } ?>><?=t('Grouped by set')?></option>
 			<option value="0" <? if ($_REQUEST['asGroupAttributes'] === '0') { ?> selected <? } ?>><?=t('In one list')?></option>
-		</select></h3>
-		<div class="ccm-spacer">&nbsp;</div>
+		</select>
 
-	<? }
+	<? } ?>
+	
+	<input type="button" class="btn small" onclick="window.location.href='<?=$this->url('/dashboard/settings/attribute_sets', $category->getAttributeKeyCategoryID())?>'" value="<?=t('Manage Sets')?>" />
+
+
+</div>
+
+	<?
 	
 	if (count($sets) > 0 && ($_REQUEST['asGroupAttributes'] !== '0')) { ?>
 	
@@ -126,6 +138,8 @@ if (count($attribs) > 0) {
 		}
 	});
 </script>
+
+</div>
 
 <style type="text/css">
 div.ccm-attribute-sortable-set-list img.ccm-attribute-icon:hover {cursor: move}
