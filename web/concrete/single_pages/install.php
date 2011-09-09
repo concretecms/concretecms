@@ -28,22 +28,30 @@ $(function() {
 		<? if ($routine->getText() != '') { ?>
 			$("#install-progress-summary").html('<?=$routine->getText()?>');
 		<? } ?>
-		$.getJSON('<?=$this->url("/install", "run_routine", $installPackage, $routine->getMethod())?>', function(r) {
-			if (r.error) {
+		$.ajax('<?=$this->url("/install", "run_routine", $installPackage, $routine->getMethod())?>', {
+			dataType: 'json',
+			error: function(r) {
 				$("#install-progress-wrapper").hide();
-				$("#install-progress-errors").append('<div class="alert-message error">' + r.message + '</div>');
+				$("#install-progress-errors").append('<div class="alert-message error">' + r.responseText + '</div>');
 				$("#install-progress-error-wrapper").fadeIn(300);
-			} else {
-				$( "#install-progress-bar" ).progressbar({
-					value: <?=$routine->getProgress()?>
-				});
-				<? if ($i < count($installRoutines)) { ?>
-					ccm_installRoutine<?=$i+1?>();
-				<? } else { ?>
-					$("#install-progress-wrapper").fadeOut(300, function() {
-						$("#success-message").fadeIn(300);
+			},
+			success: function(r) {
+				if (r.error) {
+					$("#install-progress-wrapper").hide();
+					$("#install-progress-errors").append('<div class="alert-message error">' + r.message + '</div>');
+					$("#install-progress-error-wrapper").fadeIn(300);
+				} else {
+					$( "#install-progress-bar" ).progressbar({
+						value: <?=$routine->getProgress()?>
 					});
-				<? } ?>
+					<? if ($i < count($installRoutines)) { ?>
+						ccm_installRoutine<?=$i+1?>();
+					<? } else { ?>
+						$("#install-progress-wrapper").fadeOut(300, function() {
+							$("#success-message").fadeIn(300);
+						});
+					<? } ?>
+				}
 			}
 		});
 	}
