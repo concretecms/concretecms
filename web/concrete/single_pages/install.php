@@ -146,13 +146,13 @@ $(function() {
 		<div class="clearfix">
 		<label for="uPassword"><?=t('Password')?>:</label>
 		<div class="input">
-			<?=$form->text('uPassword', array('class' => 'xlarge'))?>
+			<?=$form->password('uPassword', array('class' => 'xlarge'))?>
 		</div>
 		</div>
 		<div class="clearfix">
 		<label for="uPasswordConfirm"><?=t('Confirm Password')?>:</label>
 		<div class="input">
-			<?=$form->text('uPasswordConfirm', array('class' => 'xlarge'))?>
+			<?=$form->password('uPasswordConfirm', array('class' => 'xlarge'))?>
 		</div>
 		</div>
 		
@@ -181,7 +181,7 @@ $(function() {
 	<div class="clearfix">
 	<label for="DB_PASSWORD"><?=t('MySQL Password')?>:</label>
 	<div class="input">
-		<?=$form->text('DB_PASSWORD', array('class' => 'xlarge'))?>
+		<?=$form->password('DB_PASSWORD', array('class' => 'xlarge'))?>
 	</div>
 	</div>
 
@@ -350,7 +350,7 @@ $(function() {
 	<td><? if ($fileWriteTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /><? } ?></td>
 	<td width="100%"><?=t('Web Server Access to Files and Configuration Directories')?>
 	</td>
-	<td><? if (!$fileWriteTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="tooltip" title="<?=$t('The config/, packages/ and files/ directories must be writable by your web server.')?>" /><? } ?></td>
+	<td><? if (!$fileWriteTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="tooltip" title="<?=t('The config/, packages/ and files/ directories must be writable by your web server.')?>" /><? } ?></td>
 </tr>
 
 </tbody>
@@ -419,7 +419,9 @@ $(function() {
 </div>
 
 <div class="block-message alert-message info">
+<p>
 <?=t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', 'http://www.concrete5.org/community/forums/installation', 'http://www.getconcrete5.com')?>
+</p>
 </div>
 
 <? } else { ?>
