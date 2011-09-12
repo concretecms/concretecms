@@ -8,3 +8,5 @@ div#ccm-logo {border-top: 3px solid #222; background: url(../images/bg_header.pn
 div#ccm-theme-wrapper {width: 640px; margin: 0px auto 0px auto; background: #fff; padding: 20px; }
 
 div.container {padding-top: 50px;}
+
+input.ccm-input-openid {background: #fff url(../images/icons/openid.gif) no-repeat scroll 2px 6px; width: 284px; font-size: 18px; color: #444; padding: 4px 4px 4px 20px !important}
