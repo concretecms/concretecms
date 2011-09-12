@@ -148,8 +148,9 @@ class StartingPointPackage extends Package {
 		Config::save('SITE_DEBUG_LEVEL', DEBUG_DISPLAY_ERRORS);
 		Config::save('ENABLE_LOG_EMAILS', 1);
 		Config::save('ENABLE_LOG_ERRORS', 1);
-		Config::save('FULL_PAGE_CACHE_GLOBAL', 0);
-
+		Config::save('ENABLE_CACHE', 1);
+		Config::save('FULL_PAGE_CACHE_GLOBAL', "0");
+		
 		$args = array();
 		$args['cInheritPermissionsFrom'] = 'OVERRIDE';
 		$args['cOverrideTemplatePermissions'] = 1;

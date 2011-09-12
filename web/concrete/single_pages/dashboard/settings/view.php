@@ -723,7 +723,7 @@ $(document).ready(function(){
 
 	<h2><?=t('Full Page Caching')?></h2>
 	
-	<div class="ccm-dashboard-radio"><input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="0" <? if (FULL_PAGE_CACHE_GLOBAL == 0) { ?> checked <? } ?> /> <?=t('Disabled, unless specified at page level.')?></div>
+	<div class="ccm-dashboard-radio"><input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="0" <? if (FULL_PAGE_CACHE_GLOBAL == 0 || FULL_PAGE_CACHE_GLOBAL == '0') { ?> checked <? } ?> /> <?=t('Disabled, unless specified at page level.')?></div>
 	<div class="ccm-dashboard-radio"><input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="blocks" <? if (FULL_PAGE_CACHE_GLOBAL == 'blocks') { ?> checked <? } ?> /> <?=t('Enabled if blocks allow it, unless specified at page level.')?></div>
 	<div class="ccm-dashboard-radio"><input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="all" <? if (FULL_PAGE_CACHE_GLOBAL == 'all') { ?> checked <? } ?> /> <?=t('Enabled in all cases (Emergency Cache Mode)')?></div>
 	

@@ -2344,13 +2344,13 @@ class Page extends Collection {
 			}
 		}		
 		
-		if ($this->cCacheFullPageContent == 1 || FULL_PAGE_CACHE_GLOBAL == 'all') {
+		if ($this->cCacheFullPageContent == 1 || FULL_PAGE_CACHE_GLOBAL === 'all') {
 			// this cache page at the page level
 			// this overrides any global settings
 			return true;
 		}
 		
-		if (FULL_PAGE_CACHE_GLOBAL != 'blocks') {
+		if (FULL_PAGE_CACHE_GLOBAL !== 'blocks') {
 			// we are NOT specifically caching this page, and we don't 
 			return false;
 		}

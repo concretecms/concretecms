@@ -206,7 +206,7 @@ class InstallController extends Controller {
 						
 						$num = $db->GetCol("show tables");
 						if (count($num) > 0) {
-							$e->add(t('There are already %s tables in this database. Concrete must be installed in an empty database.', count($num)));
+							$e->add(t('There are already %s tables in this database. concrete5 must be installed in an empty database.', count($num)));
 						}
 					}
 				}
