@@ -75,6 +75,6 @@ if ($p->canWrite()) {  ?>
 if ($editMessage) { ?>
 ccm_menuObj<?=$id?>.editMessage = "<?=$editMessage?>";
 <? } ?>
-$(function() {ccm_menuInit(ccm_menuObj<?=$id?>)});
+head.ready(function() {ccm_menuInit(ccm_menuObj<?=$id?>)});
 
 </script>

@@ -45,7 +45,7 @@ if ($a->areaAcceptsBlocks()) { ?>
 	<? } else { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canDesign = false;
 	<? } ?>
-	$(function() {ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>)});
+	head.ready(function() {ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>)});
 	</script>
 	<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To %s', $arHandle)?></div>
 	<? } ?>
