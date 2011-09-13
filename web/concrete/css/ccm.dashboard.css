@@ -80,8 +80,9 @@ div.message {padding: 10px; border: 1px solid #94a7c7; background: #eee; margin-
 div.message li {color: #666; font-weight: normal}
 div.message ul {margin: 10px 0px 0px 0px; padding-left: 20px}
 
+/*
 div.actions { position: absolute; top: 7px; right: 10px }
-
+*/
 
 div#ccm-user-search {border: 1px solid #ddd; padding: 8px; margin-bottom: 10px;}
 div#ccm-user-search div, div#ccm-user-search td, div#ccm-user-search input {font-size: 11px}

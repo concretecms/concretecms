@@ -219,11 +219,8 @@ foreach($nav as $n2) {
 		
 		if (count($_error) > 0) {
 			?>
-			<div class="message error">
-			<strong><?=t('The following errors occurred when attempting to process your request:')?></strong>
-			<ul>
-			<? foreach($_error as $e) { ?><li><?=$e?></li><? } ?>
-			</ul>
+			<div class="ccm-ui">
+			<?php Loader::element('system_errors', array('format' => 'block', 'error' => $_error)); ?>
 			</div>
 		<? 
 		}
