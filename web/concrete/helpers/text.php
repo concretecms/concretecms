@@ -219,6 +219,13 @@ class TextHelper {
 		return $r1;
 	}
 
+	/** 
+	 * Takes a string and turns it into a handle.
+	 */
+	public function handle($string) {
+		return str_replace('-', '_', $this->sanitizeFileSystem($string));
+	}
+	
 	/**
 	 * Strips out non-alpha-numeric characters
 	 * @param string $val
