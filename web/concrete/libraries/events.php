@@ -46,7 +46,7 @@ class Events {
 		return $instance;
 	}		
 
-	private $registeredEvents = array();
+	public $registeredEvents = array();
 	
 	
 	/** 
@@ -90,9 +90,10 @@ class Events {
 	 * @param string $method
 	 * @param string $filename
 	 * @param array $params
+	 * $param int $priority
 	 * @return void
 	 */
-	public static function extend($event, $class, $method, $filename, $params = array()) {
+	public static function extend($event, $class, $method, $filename, $params = array(), $priority = 5) {
 		Events::enableEvents();
 		$ce = Events::getInstance();
 		$ce->registeredEvents[$event][] = array(
@@ -100,8 +101,10 @@ class Events {
 			$class,
 			$method,
 			$filename,
-			$params
-		);	
+			$params,
+			$priority
+		);
+		self::sortByPriority();
 	}
 	
 	/** 
@@ -168,6 +171,31 @@ class Events {
 		}		
 		return $eventReturn;
 	}
+
+	/**
+	 * Sorts registered events by priority
+	 * @return void
+	 */
+	protected static function sortByPriority() {
+		$ce = Events::getInstance();
+		foreach(array_keys($ce->registeredEvents) as $event) {
+			usort($ce->registeredEvents[$event],'Events::comparePriority');
+		}
+	}
+
+	/**
+	 * compare function to be used with usort
+	 * for sorting the events by priority
+	 * @param array $a
+	 * @param array $b
+	 * @return number|number|number
+	 */
+	public static function comparePriority($a,$b) {
+		if($a['priority'] > $b['priority']) return 1;
+		if($a['priority'] > $b['priority']) return -1;
+		return 0;
+	}
+
 }
 
 
