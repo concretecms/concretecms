@@ -1,7 +1,9 @@
 body {background: #efefef url(../images/dashboard/bg.png) repeat-y scroll; padding: 0px; margin: 0px; font-size: 13px}
 ul, li {margin: 0px; padding: 0px}
 div.ccm-dashboard-inner ul { margin-top: 12px; margin-bottom: 12px}
+/*
 div.ccm-dashboard-inner li {margin-left: 28px}
+*/
 div#tree ul, div#tree li {margin: 0px; padding: 0px}
 
 body, ul, td, div, h1, h2, h3, h4, h5 {font-family: "Helvetica Neue", Arial, Helvetica, sans-serif}
@@ -59,6 +61,8 @@ div.ccm-dashboard-inner fieldset {
 }
 
 h1 {background: transparent url(../images/dashboard/header_l.png) no-repeat; position: relative}
+div.ccm-dashboard-inner h1 {background: transparent;}
+
 h1 span {display: block; background: transparent url(../images/dashboard/header_r.png) repeat-x right top; padding: 4px 3px 4px 0px; margin-left: 11px}
 h1 a.ccm-dashboard-header-option {font-size: 11px; position: absolute; top: 7px; right: 10px}
 h1 a.ccm-dashboard-header-option-add {font-size: 11px; position: absolute; height: 14px; top: 7px; right: 7px; padding-right: 20px; background: transparent url(../images/icons/add.png) no-repeat right top}

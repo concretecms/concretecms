@@ -109,6 +109,10 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="asIsLocked" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
   </table>
 
   <table name="AttributeKeys">
