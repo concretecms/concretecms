@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+
+
+  <table name="AttributeSets">
+    <field name="asID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="asName" type="C" size="255"/>
+    <field name="asHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="akCategoryID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="asIsLocked" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+
+	
+
+</schema>
