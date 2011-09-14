@@ -168,14 +168,14 @@ class AttributeKeyCategory extends Object {
 		return AttributeKeyCategory::getByID($id);
 	}
 
-	public function addSet($asHandle, $asName, $pkg = false) {
+	public function addSet($asHandle, $asName, $pkg = false, $asIsLocked = 1) {
 		if ($this->akCategoryAllowSets > AttributeKeyCategory::ASET_ALLOW_NONE) {
 			$db = Loader::db();
 			$pkgID = 0;
 			if (is_object($pkg)) {
 				$pkgID = $pkg->getPackageID();
 			}
-			$db->Execute('insert into AttributeSets (asHandle, asName, akCategoryID, pkgID) values (?, ?, ?, ?)', array($asHandle, $asName, $this->akCategoryID, $pkgID));
+			$db->Execute('insert into AttributeSets (asHandle, asName, akCategoryID, asIsLocked, pkgID) values (?, ?, ?, ?, ?)', array($asHandle, $asName, $this->akCategoryID, $asIsLocked, $pkgID));
 			$id = $db->Insert_ID();
 			
 			$as = AttributeSet::getByID($id);
