@@ -46,7 +46,7 @@ class Events {
 		return $instance;
 	}		
 
-	public $registeredEvents = array();
+	private $registeredEvents = array();
 	
 	
 	/** 
@@ -192,7 +192,7 @@ class Events {
 	 */
 	public static function comparePriority($a,$b) {
 		if($a['priority'] > $b['priority']) return 1;
-		if($a['priority'] > $b['priority']) return -1;
+		if($a['priority'] < $b['priority']) return -1;
 		return 0;
 	}
 
