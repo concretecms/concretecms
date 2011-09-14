@@ -72,6 +72,7 @@ var ccmi18n_sitemap = {
 	
 	visitPage: "<?=t('Visit')?>",
 	pageProperties: "<?=t('Properties')?>",
+	pagePropertiesTitle: "<?=t('Page Properties')?>",
 	setPagePermissions: "<?=t('Set Permissions')?>",
 	setPagePermissionsMsg: "<?=t('Page permissions updated successfully.')?>",
 	pageDesignMsg: "<?=t('Theme and page type updated successfully.')?>",

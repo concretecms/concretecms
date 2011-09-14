@@ -10,7 +10,7 @@ if ($cp->canAdminPage()) {
 	$ctArray = CollectionType::getList();
 }
 ?>
-<div class="ccm-pane-controls">
+<div class="ccm-pane-controls ccm-ui">
 <form method="post" name="permissionForm" id="ccmMetadataForm" action="<?=$c->getCollectionAction()?>">
 <input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 
@@ -25,11 +25,19 @@ if ($cp->canAdminPage()) {
 		var ccm_activePropertiesTab = "ccm-properties-standard";
 		
 		$("#ccm-properties-tabs a").click(function() {
-			$("li.ccm-nav-active").removeClass('ccm-nav-active');
+			$("li.active").removeClass('active');
 			$("#" + ccm_activePropertiesTab + "-tab").hide();
 			ccm_activePropertiesTab = $(this).attr('id');
-			$(this).parent().addClass("ccm-nav-active");
+			$(this).parent().addClass("active");
 			$("#" + ccm_activePropertiesTab + "-tab").show();
+			
+			if (ccm_activePropertiesTab == 'ccm-properties-custom') {
+				$('#ccm-dialog-content1').dialog('option','height','540');
+			} else {
+				$('#ccm-dialog-content1').dialog('option','height','460');
+			}
+			$('#ccm-dialog-content1').dialog('option','position','center');
+
 		});
 		
 		ccm_settingsSetupCacheForm = function() {
@@ -90,107 +98,105 @@ if ($cp->canAdminPage()) {
 		});
 	</script>
 	
-	<style type="text/css">
-	.ccm-field-meta #newAttrValueRows{ margin-top:4px; }
-	.ccm-field-meta .newAttrValueRow{margin-top:4px}	
-	.ccm-field-meta input.faint{ color:#999 }
-	
-	#ccm-properties-custom-tab, #ccm-properties-standard-tab, #ccm-page-paths-tab {
-		margin-top: 12px;
-	}
-	</style>
-	
+
 	<h1><?=t('Page Properties')?></h1>
 
 	
 	<div id="ccm-required-meta">
 	
 		
-	<ul class="ccm-dialog-tabs" id="ccm-properties-tabs">
-		<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-properties-standard"><?=t('Standard Properties')?></a></li>
+	<ul class="tabs" id="ccm-properties-tabs">
+		<li class="active"><a href="javascript:void(0)" id="ccm-properties-standard"><?=t('Standard Properties')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-page-paths"><?=t('Page Paths and Location')?></a></li>
-		<li><a href="javascript:void(0)" id="ccm-properties-custom"><?=t('Custom Attributes')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-properties-cache"><?=t('Speed Settings')?></a></li>
+		<li><a href="javascript:void(0)" id="ccm-properties-custom"><?=t('Custom Attributes')?></a></li>
 	</ul>
 
 	<div id="ccm-properties-standard-tab">
 	
-	<div class="ccm-field-one">
-	<label><?=t('Name')?></label> <input type="text" name="cName" value="<?=htmlentities( $c->getCollectionName(), ENT_QUOTES, APP_CHARSET) ?>" class="ccm-input-text">
+	<div class="clearfix">
+		<label for="cName"><?=t('Name')?></label>
+		<div class="input"><input type="text" id="cName" name="cName" value="<?=htmlentities( $c->getCollectionName(), ENT_QUOTES, APP_CHARSET) ?>" /></div>
 	</div>
-	
-	<div class="ccm-field-one">
-	
-	<label><?=t('Public Date/Time')?></label> 
-	<? 
-	print $dt->datetime('cDatePublic', $c->getCollectionDatePublic(null, 'user')); ?>
+
+	<div class="clearfix">
+		<label for="cDatePublic"><?=t('Public Date/Time')?></label>
+		<div class="input"><? print $dt->datetime('cDatePublic', $c->getCollectionDatePublic(null, 'user')); ?></div>
 	</div>
-	
-	<div class="ccm-field-two">
+
+
+	<div class="clearfix">
 	<label><?=t('Owner')?></label>
+	<div class="input">
 	
 		<? 
 		print $uh->selectUser('uID', $c->getCollectionUserID());
 		?>
-		
+	</div>
 	</div>
 		
 	
-	<div class="ccm-field">
-	<label><?=t('Description')?></label> <textarea name="cDescription" class="ccm-input-text" style="width: 570px; height: 50px"><?=$c->getCollectionDescription()?></textarea>
+	<div class="clearfix">
+	<label for="cDescription"><?=t('Description')?></label>
+	<div class="input"><textarea id="cDescription" name="cDescription" class="ccm-input-text" style="width: 500px; height: 50px"><?=$c->getCollectionDescription()?></textarea></div>
 	</div>
 	
 	</div>
 	
 	<div id="ccm-page-paths-tab" style="display: none">
 		
-		<div class="ccm-field">
-		<label><?= t('Canonical URL')?></label>
+		<div class="clearfix">
+		<label for="cHandle"><?= t('Canonical URL')?></label>
+		<div class="input">
 		<?php if (!$c->isGeneratedCollection()) { ?>
 			<?=BASE_URL . DIR_REL;?><? if (URL_REWRITING == false) { ?>/<?=DISPATCHER_FILENAME?><? } ?><?
 			$cPath = substr($c->getCollectionPath(), strrpos($c->getCollectionPath(), '/') + 1);
-			print substr($c->getCollectionPath(), 0, strrpos($c->getCollectionPath(), '/'))?>/<input type="text" name="cHandle" class="ccm-input-text" value="<?php echo $cPath?>" id="cHandle"><input type="hidden" name="oldCHandle" value="<?php echo $c->getCollectionHandle()?>"><br /><br />
+			print substr($c->getCollectionPath(), 0, strrpos($c->getCollectionPath(), '/'))?>/<input type="text" name="cHandle" value="<?php echo $cPath?>" id="cHandle"><input type="hidden" name="oldCHandle" value="<?php echo $c->getCollectionHandle()?>"><br /><br />
 		<?php  } else { ?>
 			<?php echo $c->getCollectionHandle()?><br /><br />
 		<?php  } ?>
-		<div class="ccm-note"><?=t('This page must always be available from at least one URL. That URL is listed above.')?></div>
+			<span class="help-block"><?=t('This page must always be available from at least one URL. That URL is listed above.')?></span>
 		</div>
-
+		</div>
+		
 		<?php if (!$c->isGeneratedCollection()) { ?>
-			<label><?= t('Additional Page URL(s)') ?></label>
+		<div class="clearfix" id="ccm-more-page-paths">
+			<label><?= t('More URLs') ?></label>
 	
-			<div class="ccm-field">
 			<?php
 				$paths = $c->getPagePaths();
 				foreach ($paths as $path) {
 					if (!$path['ppIsCanonical']) {
 						$ppID = $path['ppID'];
 						$cPath = $path['cPath'];
-						echo '<span class="ccm-meta_path">' .
+						echo '<div class="input ccm-meta_path">' .
 			     			'<input type="text" name="ppURL-' . $ppID . '" class="ccm-input-text" value="' . $cPath . '" id="ppID-'. $ppID . '"> ' .
-			     			'<a href="javascript:void(0)" class="ccm-meta-path-del">' . t('Remove Path') . '</a></span>'."\n";
+			     			'<a href="javascript:void(0)" class="ccm-meta-path-del">' . t('Remove Path') . '</a></div>'."\n";
 					}
 				}
 			?>
-		    <span class="ccm-meta-path">
+		    <div class="input">
 	     		<input type="text" name="ppURL-add-0" class="ccm-input-text" value="" id="ppID-add-0">
 		 		<a href="javascript:void(0)" class="ccm-meta-path-add"><?=t('Add Path')?></a>
-			</span>
 			</div>
+		</div>
 		<?php } ?>
 	
 	</div>
+	
+	<style type="text/css">
+	#ccm-more-page-paths div.input {margin-bottom: 10px;}
+	</style>
 	
 	<div id="ccm-properties-custom-tab" style="display: none">
 		<? Loader::element('collection_metadata_fields', array('c'=>$c ) ); ?>
 	</div>
 
-	<div id="ccm-properties-cache-tab" style="display: none">
-		<h2><?=t('Full Page Caching')?></h2>
+	<div id="ccm-properties-cache-tab" style="display: none" class="form-stacked">
+		
 		<? if (!ENABLE_CACHE) {
 			print t('The cache has been disabled. Full page caching is not available.');
 		} else { ?>
-			<div>
 			<? $form = Loader::helper('form');?>
 			<?
 			switch(FULL_PAGE_CACHE_GLOBAL) {
@@ -220,22 +226,50 @@ if ($cp->canAdminPage()) {
 					break;
 			}
 			?>
-			<div><?=$form->radio('cCacheFullPageContent', -1, $c->getCollectionFullPageCaching(), array('enable-cache' => $enableCache))?> <?=t('Use global setting - %s', $globalSetting)?></div>
-			<div><?=$form->radio('cCacheFullPageContent', 0, $c->getCollectionFullPageCaching(), array('enable-cache' => 0))?> <?=t('Do not cache this page.')?></div>
-			<div><?=$form->radio('cCacheFullPageContent', 1, $c->getCollectionFullPageCaching(), array('enable-cache' => 1))?> <?=t('Cache this page.')?></div>
+
+			<div class="clearfix">
+			<label><?=t('Full Page Caching')?></label>
+
+			<div class="input">
+			<ul class="inputs-list">
+			<li><label><?=$form->radio('cCacheFullPageContent', -1, $c->getCollectionFullPageCaching(), array('enable-cache' => $enableCache))?>
+			<span><?=t('Use global setting - %s', $globalSetting)?></span>
+			</label></li>
+			<li><label><?=$form->radio('cCacheFullPageContent', 0, $c->getCollectionFullPageCaching(), array('enable-cache' => 0))?>
+			<span><?=t('Do not cache this page.')?></span>
+			</label></li>
+			<li><label><?=$form->radio('cCacheFullPageContent', 1, $c->getCollectionFullPageCaching(), array('enable-cache' => 1))?>
+			<span><?=t('Cache this page.')?></span>
+			</label>
+			</li>
+			</ul>
+			</div>
 			
-			<br/>
+			</div>
 			
-			<h3><?=t('Cache for how long?')?></h3>
+			<div class="clearfix">
+			<label><?=t('Cache for how long?')?></label>
 			
-			<div class="ccm-properties-cache-lifetime">
+			<div class="ccm-properties-cache-lifetime input">
+			<ul class="inputs-list">
 				<? $val = ($c->getCollectionFullPageCachingLifetimeCustomValue() > 0 && $c->getCollectionFullPageCachingLifetime()) ? $c->getCollectionFullPageCachingLifetimeCustomValue() : ''; ?>
-				<div><?=$form->radio('cCacheFullPageContentOverrideLifetime', 0, $c->getCollectionFullPageCachingLifetime())?> <?=t('Use global setting - %s', $globalSettingLifetime)?></div>
-				<div><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'default', $c->getCollectionFullPageCachingLifetime())?> <?=t('Default - %s minutes', CACHE_LIFETIME / 60)?></div>
-				<div><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'custom', $c->getCollectionFullPageCachingLifetime())?> <?=t('Custom')?>
-					<?=$form->text('cCacheFullPageContentLifetimeCustom', $val, array('style' => 'width: 40px'))?> <?=t('minutes')?>		
+				<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 0, $c->getCollectionFullPageCachingLifetime())?> 
+				<?=t('Use global setting - %s', $globalSettingLifetime)?>
+				</span></label></li>
+				<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'default', $c->getCollectionFullPageCachingLifetime())?> 
+				<?=t('Default - %s minutes', CACHE_LIFETIME / 60)?>
+				</span></label></li>
+				<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'forever', $c->getCollectionFullPageCachingLifetime())?>
+				<?=t('Until manually cleared')?>
+				</span></label></li>
+				<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'custom', $c->getCollectionFullPageCachingLifetime())?>
+				<?=t('Custom')?>
+				</span></label>
+				<div style="margin-top: 4px; margin-left: 16px">
+					<?=$form->text('cCacheFullPageContentLifetimeCustom', $val, array('style' => 'width: 40px'))?> <?=t('minutes')?>	
 				</div>
-				<div><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'forever', $c->getCollectionFullPageCachingLifetime())?> <?=t('Until manually cleared')?></div>
+				</li>
+			</ul>
 			</div>
 		<? } ?>
 	</div>
@@ -246,7 +280,6 @@ if ($cp->canAdminPage()) {
 	<div class="ccm-spacer">&nbsp;</div>
 </form>
 </div>
-	<div class="ccm-buttons">
-<!--	<a href="javascript:void(0)" onclick="ccm_hidePane()" class="ccm-button-left cancel"><span><em class="ccm-button-close">Cancel</em></span></a>//-->
-	<a href="javascript:void(0)" onclick="$('#ccmMetadataForm').submit()" class="ccm-button-right accept"><span><?=t('Save')?></span></a>
+	<div class="dialog-buttons">
+	<a href="javascript:void(0)" class="btn primary" onclick="$('#ccmMetadataForm').submit()"><?=t('Save')?></a>
 	</div>

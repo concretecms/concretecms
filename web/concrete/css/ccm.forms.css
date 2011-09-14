@@ -1,4 +1,10 @@
-
+.ui-dialog-content div.ccm-pane-controls h1 {display: none}
+div.ccm-note { font-size:10px; color:#999999; font-weight:normal }
+div.ccm-block-field-note {font-size: 10px; padding-top: 3px; color: #999}
+div.ccm-note-important {border: 1px solid #777; padding: 8px; background-color: #DBEEF3}
+.ccm-input-time-wrapper select {width: inherit;}
+.ccm-input-date-wrapper {margin-right: 10px;}
+/*
 div#ccm-edit-collection {width: 600px; margin: 0px auto 0px auto}
 div#ccm-edit-collection-design {width: 640px; margin: 0px auto 0px auto; -khtml-user-select: none; -moz-user-select: none}
 div#ccm-collection-mcd {width: 90%; margin: 0px auto 0px auto; -khtml-user-select: none; -moz-user-select: none}
@@ -6,8 +12,8 @@ div.ccm-pane-controls a {color: #0069D6; cursor:pointer}
 div.ccm-pane-controls *, div.ccm-dialog-window * {font-family: "Helvetica Neue", Arial, Helvetica, sans-serif; color: #333}
 div.ccm-pane-controls {text-align: left; font-size: 12px}
 
-div.ccm-pane-controls h1, div.ccm-dialog-window h1 {color: rgb(0, 60, 138); position: static !important; font-size: 18px; margin-bottom: 16px; margin-top: 16px}
-div.ccm-dialog-window div.ccm-pane-controls h1 {display: none}
+
+div.ccm-pane-controls h1 {color: rgb(0, 60, 138); position: static !important; font-size: 18px; margin-bottom: 16px; margin-top: 16px}
 div.ccm-dialog-window div.ccm-pane-header {display: none}
 
 div.ccm-pane-controls strong, div.ccm-dialog-window strong {color: #666; font-weight: bold}
@@ -22,10 +28,7 @@ div.ccm-pane-controls label {display: block; color: #000; margin-bottom: 3px; fo
 div.ccm-pane-controls div.ccm-block-field-group label {color: #333; font-weight: normal !important; display: inline}
 div.ccm-pane-controls div.ccm-field-one {width: 280px; float: left; margin-right: 12px; padding-bottom: 8px}
 div.ccm-pane-controls div.ccm-field-two {width: 280px; float: left; padding-bottom: 8px}
-div.ccm-note { font-size:10px; color:#999999; font-weight:normal }
-div.ccm-block-field-note {font-size: 10px; padding-top: 3px; color: #999}
-div.ccm-note-important {border: 1px solid #777; padding: 8px; background-color: #DBEEF3}
-
+*/
 /* meta dropdown */
 /*
 div#ccm-move-page {margin-bottom: 20px !important; border: 1px solid black}
@@ -33,12 +36,12 @@ div#ccm-required-meta-add {margin-right: 0px}
 
 div#ccm-page-types {margin-right: 30px}
 div#ccm-page-types, div#ccm-required-meta-add {height: 180px}
-*/
 
 div#ccm-required-meta, div#ccm-move-page, div#ccm-required-meta-add {border: 2px solid #bababa; background: white; padding: 8px}
 div#ccm-optional-meta, div#ccm-delete-page, div#ccm-page-types {border: 2px solid #bababa; padding: 8px; background: white;}
 
 div#ccm-properties-standard-tab input.ccm-input-text, div#ccm-page-paths-tab input.ccm-input-text {width: 272px !important}
+*/
 
 div.ccm-form-area {border: 2px solid #bababa; padding: 8px; background: white;}
 
@@ -234,6 +237,7 @@ table.ccm-block-type-table td {padding: 8px 2px 8px; border-bottom: 1px solid #D
 /* general overlay select list */
 ul.icon-select-list {padding: 2px 0px 0px 0px; margin: 0px; list-style-type: none !important;}
 ul.icon-select-list li a, ul.icon-select-list li span {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fafafa}
+ul.icon-select-list li.icon-select-list-header span {font-weight: bold; color: #333; padding-left: 10px; background-color: #f1f1f1;}
 ul.icon-select-list a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7 !important}
 ul.icon-select-list li span {color: #aaa; }
 ul.icon-select-list li {position: static; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-left: 0px; margin-bottom: 2px; left:0px; top:0px; width:auto; height:auto;}
