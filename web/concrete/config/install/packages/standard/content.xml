@@ -69,6 +69,7 @@
         <page name="Drafts" path="/dashboard/composer/drafts" filename="/dashboard/composer/drafts.php" pagetype="" description="" package=""/>
         <page name="Composer" path="/dashboard/pages/types/composer" filename="/dashboard/pages/types/composer.php" pagetype="" description="" package=""/>
         <page name="Multilingual Settings" path="/dashboard/settings/multilingual" filename="/dashboard/settings/multilingual/view.php" pagetype="" description="" package=""/>
+        <page name="Attribute Sets" path="/dashboard/settings/attribute_sets" filename="/dashboard/settings/attribute_sets/view.php" pagetype="" description="" package=""/>
     </singlepages>
     <pagetypes>
         <pagetype handle="full" name="Full Width" package="">

@@ -22,7 +22,7 @@ table#sample-content-selector td {
 
 #install-progress-summary {
 	padding-left: 24px;
-	padding-top: 0px;
+	padding-top: 3px;
 	margin-bottom: 20px;
 	margin-top: 20px;
 	background: transparent url(../images/throbber_white_16.gif) no-repeat left 4px;
