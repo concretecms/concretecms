@@ -4,7 +4,7 @@ $attribs = array();
 
 $requiredKeys = array();
 $usedKeys = array();
-if ($c->getCollectionTypeID() > 0) {
+if ($c->getCollectionTypeID() > 0 && !$c->isMasterCollection()) {
 	$cto = CollectionType::getByID($c->getCollectionTypeID());
 	$aks = $cto->getAvailableAttributeKeys();
 	foreach($aks as $ak) {
@@ -71,7 +71,12 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 </div>
 <div class="span7">
 <div id="ccm-page-attributes-none" <? if (count($usedKeysCombined) > 0) { ?>style="display: none"<? } ?>>
-<div style="padding-top: 140px; width: 400px; text-align: center"><h3><?=t('No attributes assigned.')?></h3></div>
+<div style="padding-top: 140px; width: 400px; text-align: center"><h3>
+	<? if ($c->isMasterCollection()) { ?>
+		<?=t('No attributes assigned. Any attributes you set here will automatically be set on pages when they are created.')?>
+	<? } else { ?>
+		<?=t('No attributes assigned.')?>
+	<? } ?></h3></div>
 </div>
 
 <? 

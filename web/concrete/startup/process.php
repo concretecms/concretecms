@@ -978,9 +978,7 @@
 				$data['cDatePublic'] = $dh->getSystemDateTime($dt->translate('cDatePublic'));	
 				
 				$nc = $c->add($ct, $data);
-				
-				$nvc = $nc->getVersionToModify();
-				processMetaData($nvc); 				
+
 				
 				if (is_object($nc)) {
 					if ($_POST['rel'] == 'SITEMAP') { 
