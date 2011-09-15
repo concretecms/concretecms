@@ -2134,6 +2134,27 @@ class Page extends Collection {
 		}
 	}
 
+	function _associateMasterCollectionAttributes($newCID, $masterCID) {
+		$mc = Page::getByID($masterCID, 'ACTIVE');
+		$nc = Page::getByID($newCID, 'RECENT');
+		$db = Loader::db();
+
+		$mcID = $mc->getCollectionID();
+		$mcvID = $mc->getVersionID();
+
+		$q = "select * from CollectionAttributeValues where cID = ?";
+		$r = $db->query($q, array($mcID));
+
+		if ($r) {
+			while ($row = $r->fetchRow()) {
+				$db->Execute('insert into CollectionAttributeValues (cID, cvID, akID, avID) values (?, ?, ?, ?)', array(
+					$nc->getCollectionID(), $nc->getVersionID(), $row['akID'], $row['avID']
+				));
+			}
+			$r->free();
+		}
+	}
+	
 	/**
 	* Adds the home page to the system. Typically used only by the installation program.
 	* @return page
@@ -2257,6 +2278,7 @@ class Page extends Collection {
 				// now that we know the insert operation was a success, we need to see if the collection type we're adding has a master collection associated with it
 				if ($masterCID) {
 					$this->_associateMasterCollectionBlocks($newCID, $masterCID);
+					$this->_associateMasterCollectionAttributes($newCID, $masterCID);
 				}
 			}
 			

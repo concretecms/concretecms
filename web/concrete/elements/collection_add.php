@@ -135,12 +135,6 @@ for ($i = 0; $i < count($ctArray); $i++) {
 			<label><?=t('Description')?></label> <textarea name="cDescription" style="width: 100%; height: 80px"></textarea>
 		</div>
 		
-		<style type="text/css">
-		#ccm-metadata-fields{display:none; }
-		</style>
-		<?
-		$nc=new Page();
-		Loader::element('collection_metadata_fields', array('c'=>$nc) ); ?>
 	
 	</div>
 	
@@ -270,18 +264,11 @@ $(function() {
 		
 		$('#ccm-metadata-fields').css('display','block');		
 		$('.ccm-field-meta').css('display','none');
-		
+		/*
 		//set all attributes as not active
 		$('.ccm-meta-field-selected').each(function(i,el){ el.value=0; })
 		
 		//all shown attributes
-		/*
-		var shownAttrKeys=$('#shownAttributeKeys'+ptid).val().split(',');		
-		for(var i=0;i<shownAttrKeys.length;i++){
-			$('#ccm-field-ak'+shownAttrKeys[i]).css('display','block');
-			$('#ccm-meta-field-selected'+shownAttrKeys[i]).val(shownAttrKeys[i]);
-		}
-		*/
 		
 		//show required attributes
 		$('.ccm-meta-close').css('display','block');
@@ -305,6 +292,7 @@ $(function() {
 			if($('#ccm-field-ak'+thisField).css('display')=='block') return;
 			metaCstmSelect.options[metaCstmSelect.options.length] = new Option(thisName, thisField);
 		}); 
+		*/
 		
 	});
 
