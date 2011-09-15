@@ -38,6 +38,8 @@ asName                   VARCHAR(255),
 asHandle                 VARCHAR(255) NOT NULL,
 akCategoryID             INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 pkgID                    INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+asIsLocked               INTEGER(1) NOT NULL DEFAULT 1,
+asDisplayOrder           INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
                  PRIMARY KEY (asID)
 );
 

@@ -104,7 +104,7 @@ class AttributeKeyCategory extends Object {
 	
 	public function getAttributeSets() {
 		$db = Loader::db();
-		$r = $db->Execute('select asID from AttributeSets where akCategoryID = ? order by asID asc', $this->akCategoryID);
+		$r = $db->Execute('select asID from AttributeSets where akCategoryID = ? order by asDisplayOrder asc, asID asc', $this->akCategoryID);
 		$sets = array();
 		while ($row = $r->FetchRow()) {
 			$sets[] = AttributeSet::getByID($row['asID']);
@@ -134,6 +134,7 @@ class AttributeKeyCategory extends Object {
 		$db = Loader::db();
 		$this->clearAttributeKeyCategoryTypes();
 		$this->clearAttributeKeyCategoryColumnHeaders();
+		$this->rescanSetDisplayOrder();
 		$db->Execute('delete from AttributeKeyCategories where akCategoryID = ?', $this->akCategoryID);		
 	}
 	
@@ -175,11 +176,37 @@ class AttributeKeyCategory extends Object {
 			if (is_object($pkg)) {
 				$pkgID = $pkg->getPackageID();
 			}
-			$db->Execute('insert into AttributeSets (asHandle, asName, akCategoryID, asIsLocked, pkgID) values (?, ?, ?, ?, ?)', array($asHandle, $asName, $this->akCategoryID, $asIsLocked, $pkgID));
+			$sets = $db->GetOne('select count(asID) from AttributeSets where akCategoryID = ?', array($this->akCategoryID));
+			$asDisplayOrder = 0;
+			if ($sets > 0) {
+				$asDisplayOrder = $db->GetOne('select max(asDisplayOrder) from AttributeSets where akCategoryID = ?', array($this->akCategoryID));
+				$asDisplayOrder++;
+			}
+			
+			$db->Execute('insert into AttributeSets (asHandle, asName, akCategoryID, asIsLocked, asDisplayOrder, pkgID) values (?, ?, ?, ?, ?,?)', array($asHandle, $asName, $this->akCategoryID, $asIsLocked, $asDisplayOrder, $pkgID));
 			$id = $db->Insert_ID();
 			
 			$as = AttributeSet::getByID($id);
 			return $as;
 		}
 	}
+	
+	protected function rescanSetDisplayOrder() {
+		$db = Loader::db();
+		$do = 1;
+		$r = $db->Execute('select asID from AttributeSets where akCategoryID = ? order by asDisplayOrder asc, asID asc', $this->getAttributeKeyCategoryID());
+		while ($row = $r->FetchRow()) {
+			$db->Execute('update AttributeSetKeys set displayOrder = ? where asID = ? and akCategoryID = ?', array($do, $row['asID'], $this->getAttributeKeyCategoryID()));
+			$do++;
+		}
+	}
+
+	public function updateAttributeSetDisplayOrder($uats) {
+		$db = Loader::db();
+		for ($i = 0; $i < count($uats); $i++) {
+			$v = array($this->getAttributeKeyCategoryID(), $uats[$i]);
+			$db->query("update AttributeSets set asDisplayOrder = {$i} where akCategoryID = ? and asID = ?", $v);
+		}
+	}
+	
 }
