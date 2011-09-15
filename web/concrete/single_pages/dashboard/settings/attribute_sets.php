@@ -111,17 +111,39 @@ if (count($list) > 0) { ?>
 
 	<? if (count($sets) > 0) { ?>
 	
+	<div class="ccm-attribute-sortable-set-list">
+	
 		<? foreach($sets as $asl) { ?>
-			<div class="ccm-group">
+			<div class="ccm-group" id="asID_<?=$asl->getAttributeSetID()?>">
+				<img class="ccm-group-sort" src="<?=ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" />
 				<a class="ccm-group-inner" href="<?=$this->url('/dashboard/settings/attribute_sets/', 'edit', $asl->getAttributeSetID())?>" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$asl->getAttributeSetName()?></a>
 			</div>
 		<? } ?>
-	</ul>
+	</div>
+	
 	<? } else { ?>
 		<?=t('No attribute sets currently defined.')?>
 	<? } ?>
 	
 </div>
+
+<script type="text/javascript">
+	$("div.ccm-attribute-sortable-set-list").sortable({
+		handle: 'img.ccm-group-sort',
+		cursor: 'move',
+		opacity: 0.5,
+		stop: function() {
+			var ualist = $(this).sortable('serialize');
+			ualist += '&categoryID=<?=$categoryID?>';
+			$.post('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/dashboard/attribute_set_order_update', ualist, function(r) {
+
+			});
+		}
+	});
+</script>
+
+</div>
+
 
 <h1><span><?=t("Add Set")?></span></h1>
 <div class="ccm-dashboard-inner ccm-ui">

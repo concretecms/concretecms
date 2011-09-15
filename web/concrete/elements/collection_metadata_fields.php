@@ -85,7 +85,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 		<div class="well form-stacked" id="ak<?=$ak->getAttributeKeyID()?>" <? if (!in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?> style="display: none" <? } ?>>
 		<input type="hidden" class="ccm-meta-field-selected" id="ccm-meta-field-selected<?=$ak->getAttributeKeyID()?>" name="selectedAKIDs[]" value="<? if (!in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>0<? } else { ?><?=$ak->getAttributeKeyID()?><? } ?>" />
 		
-			<a href="javascript:void(0)"><?=t('Remove Attribute')?></a>
+			<a href="javascript:void(0)" class="ccm-meta-close" ccm-meta-name="<?=$ak->getAttributeKeyName()?>" id="ccm-remove-field-ak<?=$ak->getAttributeKeyID()?>" style="display:<?=(!in_array($ak->getAttributeKeyID(), $requiredKeys))?'block':'none'?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" alt="<?=t('remove')?>" /></a>
 
 			<label><?=$ak->getAttributeKeyName()?></label>
 			<?=$ak->render('form', $caValue); ?>
@@ -114,14 +114,6 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 
 
 
-<? foreach($attribs as $ak) { 
-	$caValue = $c->getAttributeValueObject($ak);
-?>
-<div class="well form-stacked" id="ak<?=$ak->getAttributeKeyID()?>" style="display: none">
-	<label><?=$ak->getAttributeKeyName()?></label>
-	<?=$ak->render('form', $caValue); ?>
-</div>
-<? } ?>
 </div>
 </div>
 
@@ -210,14 +202,67 @@ ccmShowAttributeKey = function(akID) {
 	$("#ak" + akID).fadeIn(300, 'easeOutExpo');
 }
 
+var ccmPathHelper={
+	add:function(field){
+		var parent = $(field).parent();
+		var clone = parent.clone();
+		clone.children().each(function() {
+			if (this.id != undefined  && (i = this.id.search("-add-")) != -1) {
+				this.id = this.id.substr(0, i) + "-add-" + (parseInt(this.id.substr(i+5)) + 1);
+			}
+			if (this.name != undefined && (i = this.name.search("-add-")) != -1) {
+				this.name = this.name.substr(0, i) + "-add-" + (parseInt(this.name.substr(i+5)) + 1);
+			}
+			if (this.type == "text") {
+				this.value = "";
+			}
+		});
+    	$(field).replaceWith('<a href="javascript:void(0)" class="ccm-meta-path-del">Remove Path</a>');
+		clone.appendTo(parent.parent());
+
+		$("a.ccm-meta-path-add,a.ccm-meta-path.del").unbind('click');
+		$("a.ccm-meta-path-add").click(function(ev) { ccmPathHelper.add(ev.target) });
+		$("a.ccm-meta-path-del").click(function(ev) { ccmPathHelper.del(ev.target) });
+	},
+	del:function(field){
+		$(field).parent().remove();
+	}
+}
 $(function() {
 	$(window).css('overflow', 'hidden');
 	$(window).unbind('keydown.attribs');
 	ccmPageAttributesMapKeys();
 	$("#ccmSearchAttributeListField").get(0).focus();
 
+	$("a.ccm-meta-close").click(function() {
+		var thisField = $(this).attr('id').substring(19);
+		var thisName = $(this).attr('ccm-meta-name');
+		$("#ccm-meta-field-selected" + thisField).val(0);
+		// add it back to the select menu
+		$("#sak" + thisField).removeClass('ccm-attribute-added');
+		$("#ak" + thisField).fadeOut(80, 'easeOutExpo', function() {
+			if ($('li.ccm-attribute-added').length == 0) {
+				$("#ccm-page-attributes-none").show();
+			}
+		});
+		
+	});
+
+	$("a.ccm-meta-path-add").click(function(ev) { ccmPathHelper.add(ev.target) });
+	$("a.ccm-meta-path-del").click(function(ev) { ccmPathHelper.del(ev.target) });
+
 });
 
 
 </script>
+
+<style type="text/css">
+#ccm-properties-custom-tab input.ccm-input-text {
+	width: 350px;
+}
+#ccm-properties-custom-tab textarea.ccm-input-textarea {
+	width: 350px;
+}
+
+</style>
 

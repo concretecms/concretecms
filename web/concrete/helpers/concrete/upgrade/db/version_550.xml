@@ -26,6 +26,11 @@
       <NOTNULL/>
       <DEFAULT value="1"/>
     </field>
+    <field name="asDisplayOrder" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
   </table>
 
 	
