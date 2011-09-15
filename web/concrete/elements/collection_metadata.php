@@ -104,7 +104,7 @@ if ($cp->canAdminPage()) {
 		
 	<ul class="tabs" id="ccm-properties-tabs">
 		<li <? if (!$c->isMasterCollection()) { ?>class="active"<? } else { ?>style="display: none"<? } ?>><a href="javascript:void(0)" id="ccm-properties-standard"><?=t('Standard Properties')?></a></li>
-		<li <? if (!$c->isMasterCollection()) { ?>class="active"<? } else { ?>style="display: none"<? } ?>><a href="javascript:void(0)" id="ccm-page-paths"><?=t('Page Paths and Location')?></a></li>
+		<li <? if ($c->isMasterCollection()) { ?>style="display: none"<? } ?>><a href="javascript:void(0)" id="ccm-page-paths"><?=t('Page Paths and Location')?></a></li>
 		<li <? if ($c->isMasterCollection()) { ?>class="active"<? } ?>><a href="javascript:void(0)" id="ccm-properties-cache"><?=t('Speed Settings')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-properties-custom"><?=t('Custom Attributes')?></a></li>
 	</ul>
