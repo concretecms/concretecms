@@ -30,8 +30,8 @@ class MailHelper {
 	
 	/**
 	 * @todo documentation
-	 * @return Ambigous <Zend_Mail_Transport_Smtp, Zend_Mail>
-	 */
+	 * @return array <Zend_Mail_Transport_Smtp, Zend_Mail>
+	*/
 	public static function getMailerObject(){
 		Loader::library('3rdparty/Zend/Mail');
 		$response = array();
@@ -225,7 +225,7 @@ class MailHelper {
 	 * Sends the email
 	 * @return void
 	 */
-	public function sendMail() {
+	public function sendMail($resetData = true) {
 		$_from[] = $this->from;
 		$fromStr = $this->generateEmailStrings($_from);
 		$toStr = $this->generateEmailStrings($this->to);
@@ -306,6 +306,17 @@ class MailHelper {
 			$l->write(t('Body') . ': ' . $this->body);
 			$l->close();
 		}		
+		
+		// clear data if applicable
+		if ($resetData) {
+			$this->to = array();
+			$this->replyto = array();
+			$this->from = array();
+			$this->template = '';
+			$this->subject = '';
+			$this->body = '';
+			$this->bodyHTML = '';
+		}
 	}
 	
 }

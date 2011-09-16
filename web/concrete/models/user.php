@@ -49,7 +49,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$nu->uTimezone = $row['uTimezone'];
 				$nu->uGroups = $nu->_getUserGroups(true);
 				if ($login) {
-					session_regenerate_id();
+					User::regenerateSession();
 					$_SESSION['uID'] = $row['uID'];
 					$_SESSION['uName'] = $row['uName'];
 					$_SESSION['uBlockTypesSet'] = false;
@@ -61,6 +61,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}
 			return $nu;
+		}
+		
+		protected static function regenerateSession() {
+			$tmpSession = $_SESSION; 
+			session_write_close(); 
+			setcookie(session_name(), session_id(), time()-100000);
+			session_id(sha1(mt_rand())); 
+			session_start(); 
+			$_SESSION = $tmpSession; 
 		}
 		
 		/**
@@ -136,7 +145,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						}
 						$this->recordLogin();
 						if (!$args[2]) {
-							session_regenerate_id();
+							User::regenerateSession();
 							$_SESSION['uID'] = $row['uID'];
 							$_SESSION['uName'] = $row['uName'];
 							$_SESSION['superUser'] = $this->superUser;
@@ -365,6 +374,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					'ugEntered' => $dt->getSystemDateTime()
 				),
 				array('uID', 'gID'), true);
+				Events::fire('on_user_enter_group', $this, $g);
 			}
 		}
 		
@@ -382,6 +392,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$gID = $g->getGroupID();
 				$db = Loader::db();
 				
+				$ret = Events::fire('on_user_exit_group', $this, $g);
 				$q = "delete from UserGroups where uID = '{$this->uID}' and gID = '{$gID}'";
 				$r = $db->query($q);	
 			}		

@@ -192,7 +192,7 @@ CREATE TABLE CollectionVersions (
 cID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 cvID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 1,
 cvName                   TEXT,
-cvHandle                 VARCHAR(64),
+cvHandle                 VARCHAR(255),
 cvDescription            TEXT,
 cvDatePublic             DATETIME,
 cvDateCreated            DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -1250,11 +1250,14 @@ height                   INTEGER UNSIGNED,
                  PRIMARY KEY (bID)
 );
 
-CREATE TABLE btYouTube (
-bID                      INTEGER UNSIGNED NOT NULL,
-title                    VARCHAR(255),
-videoURL                 VARCHAR(255),
-                 PRIMARY KEY (bID)
+CREATE TABLE `btYouTube` (
+  `bID` int(10) unsigned NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `videoURL` varchar(255) DEFAULT NULL,
+  `vHeight` varchar(255) DEFAULT NULL,
+  `vWidth` varchar(255) DEFAULT NULL,
+  `vPlayer` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`bID`)
 );
 
 CREATE TABLE IF NOT EXISTS `CollectionSearchIndexAttributes` (
