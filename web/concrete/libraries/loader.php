@@ -24,7 +24,6 @@
 		 * Loads a library file, either from the site's files or from Concrete's
 		 */
 		public function library($lib, $pkgHandle = null) {
-			$lib = strtolower($lib);
 		
 			if (file_exists(DIR_LIBRARIES . '/' . $lib . '.php')) {
 				require_once(DIR_LIBRARIES . '/' . $lib . '.php');
@@ -48,7 +47,7 @@
 		 * Loads a model from either an application, the site, or the core Concrete directory
 		 */
 		public function model($mod, $pkgHandle = null) {
-			$mod = strtolower($mod);
+
 			if (file_exists(DIR_MODELS . '/' . $mod . '.php')) {
 				require_once(DIR_MODELS . '/' . $mod . '.php');
 				return;
