@@ -559,7 +559,7 @@ ccm_doShowPane = function(obj, targetURL) {
 		
 		$.ajax({
 			type: 'GET',
-			url: targetURL + "&random=" + (new Date().getTime()),
+			url: targetURL + "&toppane=1&random=" + (new Date().getTime()),
 			success: function(msg) {
 				conpane.html(msg);
 				$("#ccm-page-detail-content .dialog-launch").dialog();			

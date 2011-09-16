@@ -4,6 +4,8 @@ div.ccm-block-field-note {font-size: 10px; padding-top: 3px; color: #999}
 div.ccm-note-important {border: 1px solid #777; padding: 8px; background-color: #DBEEF3}
 .ccm-input-time-wrapper select {width: inherit;}
 .ccm-input-date-wrapper {margin-right: 10px;}
+div#ccm-page-detail-content div.ccm-pane-controls {text-align: left; font-size: 12px; background-color: #fff; padding: 10px;}
+div#ccm-page-detail-content div.ccm-pane-controls div.dialog-buttons {padding: 10px 20px 0px 20px; margin: 0px -10px -30px -10px; background-color: #f2f2f2; border-top: 1px solid #e7e7e7}
 /*
 div#ccm-edit-collection {width: 600px; margin: 0px auto 0px auto}
 div#ccm-edit-collection-design {width: 640px; margin: 0px auto 0px auto; -khtml-user-select: none; -moz-user-select: none}
