@@ -116,7 +116,7 @@ class File extends Object {
 	}
 	
 	public function setPassword($pw) {
-		Events::fire('on_file_password', $this, $pw);
+		Events::fire('on_file_set_password', $this, $pw);
 		$db = Loader::db();
 		$db->Execute("update Files set fPassword = ? where fID = ?", array($pw, $this->getFileID()));
 		$this->fPassword = $pw;
