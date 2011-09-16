@@ -393,9 +393,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$db = Loader::db();
 				
 				$ret = Events::fire('on_user_exit_group', $this, $g);
-				if($ret < 0) {
-					return false;
-				}
 				$q = "delete from UserGroups where uID = '{$this->uID}' and gID = '{$gID}'";
 				$r = $db->query($q);	
 			}		
