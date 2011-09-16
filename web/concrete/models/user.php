@@ -194,7 +194,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$uLastLogin = $db->getOne("select uLastLogin from Users where uID = ?", array($this->uID));
 			
 			$db->query("update Users set uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array(time(), $uLastLogin, $this->uID));
-			Events::fire('on_record_login', $this);
 		}
 		
 		function recordView($c) {
@@ -203,7 +202,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$cID = $c->getCollectionID();
 			$v = array($cID, $uID);
 			$db->query("insert into PageStatistics (cID, uID, date) values (?, ?, NOW())", $v);
-			Events::fire('on_record_view', $this, $c);
 			
 		}
 		
