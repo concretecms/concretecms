@@ -21,7 +21,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 
 <div class="row">
 <div class="span4 columns">
-
+	<h6><?=t("All Attributes")?></h6>
 	<div class="ccm-block-type-search-wrapper ">
 
 		<form onsubmit="return ccmPageAttributeSearchFormCheckResults()">
@@ -71,6 +71,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	
 </div>
 <div class="span7">
+<h6><?=t("Selected Attributes")?></h6>
 <div id="ccm-page-attributes-none" <? if (count($usedKeysCombined) > 0) { ?>style="display: none"<? } ?>>
 <div style="padding-top: 140px; width: 400px; text-align: center"><h3>
 	<? if ($c->isMasterCollection()) { ?>
