@@ -75,7 +75,7 @@ class HtmlHelper {
 	 * @param $file
 	 * @return $str
 	 */
-	public function javascript($file, $pkgHandle = null, $async = false) {
+	public function javascript($file, $pkgHandle = null) {
 
 		$js = new JavaScriptOutputObject();
 		
@@ -103,11 +103,6 @@ class HtmlHelper {
 		
 		// for the javascript addHeaderItem we need to have a full href available
 		$js->href = $js->file;
-		if ($async) {
-			$js->async = true;
-		} else {
-			$js->async = false;
-		}
 		return $js;
 	}
 	
@@ -201,13 +196,8 @@ class HeaderOutputObject {
  * @access private
  */
 class JavaScriptOutputObject extends HeaderOutputObject {
-	public $async = false;
 	public function __toString() {
-		if ($this->async) {
-			return '<script type="text/javascript">head.js("' . $this->file . '");</script>';
-		} else {
-			return '<script type="text/javascript" src="' . $this->file . '"></script>';
-		}
+		return '<script type="text/javascript" src="' . $this->file . '"></script>';
 	}
 	
 }

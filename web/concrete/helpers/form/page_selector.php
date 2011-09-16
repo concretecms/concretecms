@@ -136,7 +136,7 @@ class FormPageSelectorHelper {
 		$token = $valt->generate('quick_page_select_' . $key);
 		$html .= "
 		<script type=\"text/javascript\">
-		head.ready(function () {
+		$(function () {
 			$('#ccm-quick-page-selector-label-".$key."').autocomplete({
 				select: function(e, ui) {
 					$('#ccm-quick-page-selector-label-" . $key . "').val(ui.item.label);
