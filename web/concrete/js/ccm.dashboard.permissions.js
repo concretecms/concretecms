@@ -6,7 +6,7 @@ ccm_triggerSelectGroup = function (gID, gName) {
 	ccm_sitemapSelectPermissionsEntity('gID', gID, gName);
 }
 
-$(function() {	
+head.ready(function() {	
 	$("#ug-selector").dialog();	
 	ccm_sitemapActivatePermissionsSelector();	
 });

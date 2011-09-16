@@ -829,7 +829,7 @@ ccm_sitemapSelectDisplayMode = function(instance_id, display_mode, select_mode, 
 	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?task=save_sitemap_display_mode&display_mode=" + display_mode);
 }
 
-$(function() {
+head.ready(function() {
 	$(document).ajaxError(function(event, request, settings) {
 		ccmAlert.notice(ccmi18n_sitemap.loadErrorTitle, request.responseText);
 	});

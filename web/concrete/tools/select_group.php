@@ -78,7 +78,7 @@ if (!$tp->canAccessGroupSearch()) {
 	<? } ?>
 	
 	<script type="text/javascript">
-	$(function() {
+	head.ready(function() {
 		ccm_setupGroupSearch();
 	});
 	</script>
