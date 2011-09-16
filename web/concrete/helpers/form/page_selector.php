@@ -54,7 +54,7 @@ class FormPageSelectorHelper {
 				ccmActivePageField = this;
 			});
 		};
-		$(ccm_initSelectPage);
+		head.ready(ccm_initSelectPage);
 		ccm_selectSitemapNode = function(cID, cName) { ';
 		if($javascriptFunc=='' || $javascriptFunc=='ccm_selectSitemapNode'){
 			$html .= '
@@ -118,7 +118,7 @@ class FormPageSelectorHelper {
 		$token = $valt->generate('quick_page_select_' . $key);
 		$html .= "
 		<script type=\"text/javascript\">
-		$(document).ready(function () {
+		head.ready(function () {
 			$('#ccm-quick-page-selector-label-".$key."').autocomplete({
 				select: function(e, ui) {
 					$('#ccm-quick-page-selector-label-" . $key . "').val(ui.item.label);

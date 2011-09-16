@@ -16,26 +16,26 @@ $v->disableEditing();
 
 // Required JavaScript
 
-$v->addHeaderItem($html->javascript('jquery.js'));
-$v->addHeaderItem($html->javascript('jquery.ui.js'));
-$v->addHeaderItem($html->javascript('ccm.dialog.js'));
-$v->addHeaderItem($html->javascript('ccm.base.js'));
-$v->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
+$v->addHeaderItem($html->javascript('head.load.min.js'), 'CORE');
+$v->addHeaderItem($html->javascript('jquery.js', false, true));
+$v->addHeaderItem($html->javascript('jquery.ui.js', false, true));
+$v->addHeaderItem($html->javascript('ccm.dialog.js', false, true));
+$v->addHeaderItem($html->javascript('ccm.base.js', false, true));
+$this->addHeaderItem('<script type="text/javascript">head.js("' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js");</script>'); 
 
-$v->addHeaderItem($html->javascript('jquery.rating.js'));
-$v->addHeaderItem($html->javascript('jquery.form.js'));
-$v->addHeaderItem($html->javascript('ccm.ui.js'));
-$v->addHeaderItem($html->javascript('quicksilver.js'));
-$v->addHeaderItem($html->javascript('jquery.liveupdate.js'));
-$v->addHeaderItem($html->javascript('ccm.search.js'));
-$v->addHeaderItem($html->javascript('ccm.filemanager.js'));
-$v->addHeaderItem($html->javascript('ccm.themes.js'));
-$v->addHeaderItem($html->javascript('jquery.ui.js'));
-$v->addHeaderItem($html->javascript('jquery.colorpicker.js'));
-$v->addHeaderItem($html->javascript('tiny_mce/tiny_mce.js'));
+$v->addHeaderItem($html->javascript('jquery.rating.js', false, true));
+$v->addHeaderItem($html->javascript('jquery.form.js', false, true));
+$v->addHeaderItem($html->javascript('ccm.ui.js', false, true));
+$v->addHeaderItem($html->javascript('quicksilver.js', false, true));
+$v->addHeaderItem($html->javascript('jquery.liveupdate.js', false, true));
+$v->addHeaderItem($html->javascript('ccm.search.js', false, true));
+$v->addHeaderItem($html->javascript('ccm.filemanager.js', false, true));
+$v->addHeaderItem($html->javascript('ccm.themes.js', false, true));
+$v->addHeaderItem($html->javascript('jquery.colorpicker.js', false, true));
+$v->addHeaderItem($html->javascript('tiny_mce/tiny_mce.js', false, true));
 
 if (LANGUAGE != 'en') {
-	$v->addHeaderItem($html->javascript('i18n/ui.datepicker-'.LANGUAGE.'.js'));
+	$v->addHeaderItem($html->javascript('i18n/ui.datepicker-'.LANGUAGE.'.js', false, true));
 }
 
 // Require CSS
@@ -52,7 +52,7 @@ $v->addHeaderItem($html->css('jquery.ui.css'));
 $valt = Loader::helper('validation/token');
 $disp = '<script type="text/javascript">'."\n";
 $disp .=  "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';"."\n";
-$disp .= '$(function() {'."\n";
+$disp .= 'head.ready(function() {'."\n";
 $disp .= '	$("div.message").animate({'."\n";
 $disp .= "		backgroundColor: 'white'"."\n";
 $disp .= "	}, 'fast').animate({"."\n";
