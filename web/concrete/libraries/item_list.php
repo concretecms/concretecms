@@ -473,8 +473,12 @@ class ItemList {
 	 */
 	public function sortBy($column, $direction = 'asc') {
 		$this->sortBy = $column;
-		$this->sortByDirection = $direction;
-	} 
+		if (in_array($direction, array('asc','desc'))) {
+			$this->sortByDirection = $direction;
+		} else {
+			$this->sortByDirection = 'asc';
+		}
+	}
 
 	/** 
 	 * Sets up a column to sort by

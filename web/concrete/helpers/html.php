@@ -113,6 +113,18 @@ class HtmlHelper {
 	
 	
 	/** 
+	 * Includes a JavaScript inline script.
+	 * @param string $script
+	 * @return string $str
+	 */
+	public function script($script) {
+		$js = new InlineScriptOutputObject();
+    		$js->script = $script;
+		return $js;
+	}
+	
+	
+	/** 
 	 * Includes an image file when given a src, width and height. Optional attribs array specifies style, other properties.
 	 * First checks the PATH off the root of the site
 	 * Then checks the PATH off the images directory at the root of the site.
@@ -180,6 +192,7 @@ class HeaderOutputObject {
 
 	public $file = '';
 	public $href = '';
+  	public $script = '';
 	public $compress = true;
 
 }
@@ -197,6 +210,17 @@ class JavaScriptOutputObject extends HeaderOutputObject {
 		}
 	}
 	
+}
+
+/**
+ * @access private
+ */
+class InlineScriptOutputObject extends HeaderOutputObject {
+
+  public function __toString() {
+    return '<script type="text/javascript">/*<![CDATA[*/'. $this->script .'/*]]>*/</script>';
+  }
+  
 }
 
 /** 

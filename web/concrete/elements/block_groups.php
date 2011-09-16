@@ -30,7 +30,7 @@
 				document.forms['ccmBlockPermissionForm'].action = document.forms['ccmBlockPermissionForm'].action + "&applyToAll=1";
 			}
 			<? } ?>
-			document.forms['ccmBlockPermissionForm'].submit();
+			$('#ccmBlockPermissionForm').submit();
 		}
 		
 		<? if ($numChildren) { ?>
@@ -123,6 +123,9 @@
 	<? } ?>	
 	</span>
 		<div class="ccm-buttons" style="margin-bottom: 10px"> 
+		<?php  if ($b->overrideAreaPermissions()) { ?>
+			<a href="javascript:void(0)" onclick="revertToPagePermissions()" class="ccm-button-left cancel"><span><?php echo t('Revert to Area Permissions')?></span></a>
+		<?php  } ?>
 		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-width="90%" dialog-title="<?=t('Add User/Group')?>"  dialog-height="70%" dialog-modal="false" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add"><?=t('Add User/Group')?></em></span></a>
 		</div>
 

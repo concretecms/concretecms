@@ -149,6 +149,8 @@ if ($_POST['create']) {
 			$locales = array();
 			$locales[''] = t('** Default');
 			Loader::library('3rdparty/Zend/Locale');
+			Loader::library('3rdparty/Zend/Locale/Data');
+			Zend_Locale_Data::setCache(Cache::getLibrary());
 			foreach($languages as $lang) {
 				$loc = new Zend_Locale($lang);
 				$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);

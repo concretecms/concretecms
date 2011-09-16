@@ -193,10 +193,23 @@
 				$p = new Permissions($b);
 				// we're updating the groups for a particular block
 				if ($p->canWrite()) {
-					
-					$nvc = $c->getVersionToModify();
-					$b->loadNewCollection($nvc);
 
+					$bt = BlockType::getByHandle($b->getBlockTypeHandle());
+					if (!$bt->includeAll()) {
+						// we make sure to create a new version, if necessary				
+						$nvc = $c->getVersionToModify();
+					} else {
+						$nvc = $c; // keep the same one
+					}
+					$ob = $b;
+					// replace the block with the version of the block in the later version (if applicable)
+					$b = Block::getByID($_REQUEST['bID'], $nvc, $a);
+					if ($b->isAlias()) {
+						$nb = $ob->duplicate($nvc);
+						$b->deleteBlock();
+						$b = &$nb;
+					}
+					
 					$data = $_POST;					
 					$b->updateBlockInformation($data);
 					$b->refreshCacheAll();
@@ -243,20 +256,25 @@
 				break;
 			case 'passthru':
 				if (isset($_GET['bID']) && isset($_GET['arHandle'])) {
-					$b = Block::getByID($_GET['bID']);
-					if (!$b->isGlobal()) { 
-						$a = Area::get($c, $_GET['arHandle']);
-						$b = Block::getByID($_GET['bID'], $c, $a);
-						// basically, we hand off the current request to the block
-						// which handles permissions and everything
-						$p = new Permissions($b);
-						if ($p->canRead()) {
-							$action = $b->passThruBlock($_REQUEST['method']);
+					$vn = Loader::helper('validation/numbers');
+					if ($vn->integer($_GET['bID'])) {
+						$b = Block::getByID($_GET['bID']);
+						if (is_object($b)) {
+							if (!$b->isGlobal()) { 
+								$a = Area::get($c, $_GET['arHandle']);
+								$b = Block::getByID($_GET['bID'], $c, $a);
+								// basically, we hand off the current request to the block
+								// which handles permissions and everything
+								$p = new Permissions($b);
+								if ($p->canRead()) {
+									$action = $b->passThruBlock($_REQUEST['method']);
+								}
+							} else if (is_object($b) && (!$b->isError())) { 
+								// global blocks are less restricted
+								// we still have to have a valid ccm token to get here
+								$action = $b->passThruBlock($_REQUEST['method']);
+							}
 						}
-					} else if (is_object($b) && (!$b->isError())) { 
-						// global blocks are less restricted
-						// we still have to have a valid ccm token to get here
-						$action = $b->passThruBlock($_REQUEST['method']);
 					}
 				}
 				break;

@@ -2,8 +2,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class SlideshowBlockController extends BlockController {
 	
-	var $pobj;
-	
 	protected $btTable = 'btSlideshow';
 	protected $btInterfaceWidth = "550";
 	protected $btInterfaceHeight = "400";
