@@ -216,7 +216,7 @@ $uh = Loader::helper('concrete/urls');
 			<div class="ccm-spacer"></div>
 		</div>		
 		
-		<input type="hidden" id="positionEdit" name="position" type="text" value="1000" />
+		<input type="hidden" id="positionEdit" name="position" value="1000" />
 		<input id="cancelEditQuestion" name="cancelEdit" type="button" value="Cancel"/>
 		<input id="editQuestion" name="edit" type="button" value="Save Changes &raquo;"/>
 	</div>
