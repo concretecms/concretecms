@@ -18,8 +18,8 @@ class LoginController extends Controller {
 		}
 		
 		$txt = Loader::helper('text');
-		if (strlen($_GET['uName'])) { // pre-populate the username if supplied
-		   $this->set("uName",trim($txt->filterNonAlphaNum($_GET['uName'])));
+		if (strlen($_GET['uName'])) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
+		   $this->set("uName",trim($txt->email($_GET['uName'])));
 		}
 		
 
