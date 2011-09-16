@@ -303,6 +303,14 @@ class Job extends Object {
 		$db = Loader::db();
 		$db->query( 'DELETE FROM Jobs WHERE jHandle=?', array($this->jHandle) );
 	}
+	
+	/** 
+	 * Removes Job log entries 
+	 */
+	public static function clearLog() {
+		$db = Loader::db();
+		$db->Execute("delete from JobsLog");
+	}
 
 }
 
