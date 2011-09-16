@@ -26,7 +26,7 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 
 <script type="text/javascript">
 	var CCM_LAUNCHER_SITEMAP = 'full';
-	head.ready(function() {
+	$(function() {
 		ccmSitemapLoad('<?=$instanceID?>', 'full');
 	});
 </script>

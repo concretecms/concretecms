@@ -4,7 +4,7 @@
 
 CCM_LAUNCHER_SITEMAP = 'explore'; // we need this for when we are moving and copying
 
-head.ready(function() {
+$(function() {
 	ccmSitemapLoad('<?=$instanceID?>', 'explore');
 });
 </script>

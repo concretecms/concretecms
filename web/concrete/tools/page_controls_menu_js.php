@@ -185,11 +185,11 @@ menuHTML += '</div>';
 
 <?
 if ($statusMessage != '') {?> 
-	head.ready(function() { ccmAlert.hud('<?=str_replace("'",'"',$statusMessage) ?>', 5000); });
+	$(function() { ccmAlert.hud('<?=str_replace("'",'"',$statusMessage) ?>', 5000); });
 <? } ?>
 
 	
-	head.ready(function() {
+	$(function() {
 		$(document.body).prepend('<div id="ccm-page-controls-wrapper"></div>');
 		$("#ccm-page-controls-wrapper").html(menuHTML);
 	

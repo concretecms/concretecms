@@ -50,7 +50,7 @@ class FormUserSelectorHelper {
 		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedUID . '">';
 		$html .= '</div>'; 
 		$html .= '<script type="text/javascript">';
-		$html .= 'head.ready(function() { $("#ccm-user-selector-' . $fieldName . '").dialog(); });';
+		$html .= '$(function() { $("#ccm-user-selector-' . $fieldName . '").dialog(); });';
 		$html .= 'if (typeof(ccmActiveUserField) == "undefined") {';
 		$html .= 'var ccmActiveUserField;';		
 		$html .= '}';
@@ -80,7 +80,7 @@ class FormUserSelectorHelper {
 		ul.ui-autocomplete li.ui-menu-item { margin-left:0; padding:2px;}
 		</style>
 		<script type=\"text/javascript\">
-		head.ready(function () {
+		$(function () {
 			$('#".$key."').autocomplete({source: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/users/autocomplete?key=" . $key . "&token=" . $token . "'});
 		} );
 		</script>";
@@ -108,7 +108,7 @@ class FormUserSelectorHelper {
 		}*/
 		$html .= '<tr class="ccm-user-selected-item-none"><td colspan="3">' . t('No users selected.') . '</td></tr>';
 		$html .= '</tbody></table><script type="text/javascript">
-		head.ready(function() {
+		$(function() {
 			$("#ccmUserSelect' . $fieldName . ' .ccm-user-select-item").dialog();
 			$("a.ccm-user-list-clear").click(function() {
 				$(this).parents(\'tr\').remove();

@@ -71,7 +71,7 @@ if ($sitemapOverlayPreference != 'explore') {
 </div>
 
 <script type="text/javascript">
-head.ready(function() {
+$(function() {
 	ccmSitemapLoad('<?=$instance_id?>', '<?=$display_mode?>', '<?=$select_mode?>', '<?=$node?>', '<?=$cID?>');
 });
 </script>
