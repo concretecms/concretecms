@@ -51,12 +51,13 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 		} 	
 		
 	} 
+
+	$unsetattribs = $category->getUnassignedAttributeKeys();
 	
-	if (count($sets) > 0 ) { ?>
+	if (count($sets) > 0 && count($unsetattribs) > 0) { ?>
 		<li class="icon-select-list-header"><span><?=t('Other')?></span></li>
 	<? }
 	
-	$unsetattribs = $category->getUnassignedAttributeKeys();
 	foreach($unsetattribs as $ak) { ?>
 		
 		<li id="sak<?=$ak->getAttributeKeyID()?>" class="ccm-attribute-available <? if (in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>ccm-attribute-added<? } ?>"><a style="background-image: url('<?=$ak->getAttributeKeyIconSRC()?>')" href="javascript:void(0)" onclick="ccmShowAttributeKey(<?=$ak->getAttributeKeyID()?>)"><?=$ak->getAttributeKeyName()?></a></li>	

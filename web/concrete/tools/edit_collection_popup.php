@@ -67,7 +67,10 @@ if (!$canViewPane) {
 
 ?>
 
-<? Loader::element('pane_header', array('c'=>$c)); ?>
+<? if ($_REQUEST['toppane'] == 1) {
+	Loader::element('pane_header', array('c'=>$c));
+}
+?>
 
 <div id="<?=$divID?>">
 
@@ -100,3 +103,7 @@ if ($error) {
 <div class="ccm-spacer">&nbsp;</div>
 
 </div>
+
+<? if ($_REQUEST['toppane'] == 1) { ?>
+	<? Loader::element('pane_footer', array('c'=>$c)); ?>
+<? } ?>
