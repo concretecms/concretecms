@@ -251,11 +251,7 @@ var ccm_sitemap_html = '';
 parseSitemapResponse = function(instanceID, display_mode, select_mode, nodeID, resp) { 
 	var container = $("ul[tree-root-node-id=" + nodeID + "][sitemap-instance-id=" + instanceID + "]");
 	container.html(resp);
-	if (!tr_doAnim) {
-		container.show();
-	} else {
-		container.slideDown(300);
-	}
+	container.slideDown(150, 'easeOutExpo');
 }
 
 selectMoveCopyTarget = function(instanceID, display_mode, select_mode, destCID, origCID) {
@@ -574,7 +570,7 @@ closeSub = function(instanceID, nodeID, display_mode, select_mode) {
 	var container = $("ul[tree-root-node-id=" + nodeID + "][sitemap-instance-id=" + instanceID + "]");	
 	if (tr_doAnim) {
 		setLoading(nodeID);
-		container.slideUp(300, function() {
+		container.slideUp(150, 'easeOutExpo', function() {
 			removeLoading(nodeID);
 			container.attr('tree-root-state', 'closed');
 			container.html('');
