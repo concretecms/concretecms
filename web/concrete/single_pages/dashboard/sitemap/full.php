@@ -31,42 +31,44 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 	});
 </script>
 
-<h1><span><?=t('Sitemap')?></span></h1>
+<div class="row">
+<div class="span14 offset1 columns">
 
-<div class="ccm-dashboard-inner" >
+<div class="ccm-dashboard-pane">
+<div class="ccm-dashboard-pane-header"><h3><?=t('Sitemap')?></h3></div>
+<div class="ccm-dashboard-pane-options">
+	<div id="ccm-show-all-pages">
+		<label for="ccm-show-all-pages-cb"><?=t('Show System Pages')?></label>
+		<div class="input">
+		<ul class="inputs-list">
+			<li><input type="checkbox" id="ccm-show-all-pages-cb" <? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?> checked <? } ?> /></li>
+		</ul>		
+		</div>
+	</div>
+</div>
 
+<div class="ccm-dashboard-pane-body">
 	<? if ($sh->canRead()) { ?>
 	
 		<div id="ccm-sitemap-message"></div>
 	
-		<table border="0" cellspacing="0" cellpadding="0">
-		<tr>
-		<td style="width: 100%" valign="top">
 		
 		<div id="tree" sitemap-instance-id="<?=$instance_id?>">
 			<ul id="tree-root0" tree-root-node-id="0" sitemap-mode="full" sitemap-instance-id="<?=$instanceID?>">
 			<?=$listHTML?>
 			</ul>
 		</div>
-	
-		</td>
-		<td valign="top">
 		
-		<div id="ccm-show-all-pages">
-		<input type="checkbox" id="ccm-show-all-pages-cb" <? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?> checked <? } ?> />
-		<label for="ccm-show-all-pages-cb"><?=t('Show System Pages')?></label>
-		</div>
-		
-		</td>
-		</tr>
-		</table>
-		
-		</div>
 	
 	<? } else { ?>
 	
 		<p><?=t("You do not have access to the sitemap.");?></p>
 	
 	<? } ?>
-	
+</div>
+
+
+
+</div>
+</div>
 </div>

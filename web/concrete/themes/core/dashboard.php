@@ -17,6 +17,7 @@ $v->disableEditing();
 // Required JavaScript
 
 $v->addHeaderItem($html->javascript('jquery.js'));
+$v->addHeaderItem($html->javascript('jquery.backstretch.js'));
 $v->addHeaderItem($html->javascript('jquery.ui.js'));
 $v->addHeaderItem($html->javascript('ccm.dialog.js'));
 $v->addHeaderItem($html->javascript('ccm.base.js'));
@@ -70,140 +71,30 @@ $v->addHeaderItem($disp);
 
 Loader::element('header_required');
 ?>
+
+<script type="text/javascript">
+	$(function() {
+	    $.backstretch("http://farm3.static.flickr.com/2443/3843020508_5325eaf761.jpg" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
+	});
+</script>
 </head>
 <body>
 
-<div id="ccm-dashboard-page">
+<? if (!$_SESSION['dashboardHasSeenImage']) { 
+	//$_SESSION['dashboardHasSeenImage'] = true;
+} ?>
+
+<div id="ccm-dashboard-page" class="ccm-ui">
 
 <div id="ccm-dashboard-header">
 <a href="<?=$this->url('/dashboard/')?>"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" height="49" width="49" alt="Concrete5" /></a>
 </div>
 
-<div id="ccm-system-nav-wrapper1">
-<div id="ccm-system-nav-wrapper2">
-<ul id="ccm-system-nav">
-<li><a id="ccm-nav-return" href="<?=$this->url('/')?>"><?=t('Return to Website')?></a></li>
-<li><a id="ccm-nav-dashboard-help" dialog-title="<?=t('Help')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/help/" dialog-width="500" dialog-height="350" dialog-modal="false"><?=t('Help')?></a></li>
-<li class="ccm-last"><a id="ccm-nav-logout" href="<?=$this->url('/login/', 'logout')?>"><?=t('Sign Out')?></a></li>
-</ul>
-</div>
-</div>
-
-<div id="ccm-dashboard-nav">
-<ul>
-<?
-foreach($nav as $n2) { 
-	$cp = new Permissions($n2);
-	if ($cp->canRead()) {
-		$isActive = ($c->getCollectionPath() == $n2->getCollectionPath() || strpos($c->getCollectionPath(), $n2->getCollectionPath() . '/') === 0);
-?>
-	<li <? if ($isActive) { ?> class="ccm-nav-active" <? } ?>><a href="<?=$nh->getLinkToCollection($n2, false, true)?>"><?=t($n2->getCollectionName())?> <span><?=t($n2->getCollectionDescription())?></span></a></li>
-<? }
-
-}?>
-</ul>
-</div>
-
-<? if (!$disableSecondLevelNav) { ?>
-
-<? if (isset($subnav)) { ?>
-
-<div id="ccm-dashboard-subnav">
-<ul><? foreach($subnav as $item) { ?><li <? if (isset($item[2]) && $item[2] == true) { ?> class="nav-selected" <? } ?>><a href="<?=$item[0]?>"><?=$item[1]?></a></li><? } ?></ul>
-<br/><div class="ccm-spacer">&nbsp;</div>
-</div>
-<? } else if ($c->getCollectionID() != $dashboard->getCollectionID()) {
-	// we auto-gen the subnav 
-	// if we're right under the dashboard, we get items beneath us. If not we get items at our same level
-	$pcs = $nh->getTrailToCollection($c);
-	$pcs = array_reverse($pcs);
-	
-	if (count($pcs) == 2) {
-		$parent = $c;
-	} else {
-		$parent = $pcs[2];
-	}
-	
-	$subpages = AutonavBlockController::getChildPages($parent);
-	$subpagesP = array();
-	foreach($subpages as $sc) {
-		$cp = new Permissions($sc);
-		if ($cp->canRead()) { 
-			$subpagesP[] = $sc;
-		}
-	
-		
-	}
-	
-	if (count($subpagesP) > 0) { 
-	?>	
-		<div id="ccm-dashboard-subnav">
-		<ul><? foreach($subpagesP as $sc) { 
-			$isActive = ($c->getCollectionPath() == $sc->getCollectionPath() || strpos($c->getCollectionPath(), $sc->getCollectionPath() . '/') === 0);
-			
-		?><li <? if ($isActive) { ?> class="nav-selected" <? } ?>><a href="<?=$nh->getLinkToCollection($sc, false, true)?>"><?=t($sc->getCollectionName())?></a></li><? } ?></ul>
-		<br/><div class="ccm-spacer">&nbsp;</div>
-		</div>
-	
-	
-	<?
-		}
-	} 
-} ?>
-
-
-<?
-	if (isset($latest_version)){ 
-		print Loader::element('dashboard/notification_update', array('latest_version' => $latest_version));
-	}
-?>
-
-<? if(strlen(APP_VERSION)){ ?>
-<div id="ccm-dashboard-version">
-	<?= t('Version') ?>: <?=APP_VERSION ?>
-</div>
-<? } ?>
-
-<? if (count($pcs) > 2 && (!$disableThirdLevelNav)) { 
-
-	if (count($pcs) == 3) {
-		$parent = $c;
-	} else {
-		$parent = $pcs[3];
-	}
-	$subpages = AutonavBlockController::getChildPages($parent);
-	$subpagesP = array();
-	foreach($subpages as $sc) {
-		$cp = new Permissions($sc);
-		if ($cp->canRead()) { 
-			$subpagesP[] = $sc;
-		}	
-	}
-	
-	if (count($subpagesP) > 0) { 
-	?>	
-	<div id="ccm-dashboard-subnav-third">
-		<ul><? foreach($subpagesP as $sc) { 
-		
-			if ($c->getCollectionPath() == $sc->getCollectionPath() || (strpos($c->getCollectionPath(), $sc->getCollectionPath()) == 0) && strpos($c->getCollectionPath(), $sc->getCollectionPath()) !== false) {
-				$isActive = true;
-			} else {
-				$isActive = false;
-			}
-			
-		?><li <? if ($isActive) { ?> class="nav-selected" <? } ?>><a href="<?=$nh->getLinkToCollection($sc, false, true)?>"><?=t($sc->getCollectionName())?></a></li><? } ?></ul>
-	</div>
-	
-	
-	<?
-	}
-}
-
-?>
-
 <div id="ccm-dashboard-content">
 
-	<div id="ccm-dashboard-content-inner">
+	<div class="container">
+
+
 	<? if (isset($error)) { ?>
 		<? 
 		if ($error instanceof Exception) {
@@ -219,25 +110,22 @@ foreach($nav as $n2) {
 		
 		if (count($_error) > 0) {
 			?>
-			<div class="ccm-ui">
 			<?php Loader::element('system_errors', array('format' => 'block', 'error' => $_error)); ?>
-			</div>
 		<? 
 		}
 	}
 	
 	if (isset($message)) { ?>
-		<div class="message success"><?=$message?></div>
+		<div class="block-message alert-message info success"><?=$message?></div>
 	<? } ?>
 	
 	<?php print $innerContent; ?>
+	
 	</div>
 	
-	<div class="ccm-spacer">&nbsp;</div>
-
-	</div>
-
 </div>
+</div>
+
 <? Loader::element('footer_required', array('disableTrackingCode' => true)); ?>
 </body>
 </html>

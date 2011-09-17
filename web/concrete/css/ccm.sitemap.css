@@ -54,8 +54,6 @@ div.dropzone {height: 6px;  }
 div.dropzone-active {height: 3px; margin-top: 0px; border-bottom: 1px dotted #333; margin-bottom:2px}
 div.dropzone-ready { } /* height: 4px; border-left: 4px solid #f00;} */
 
-div#ccm-show-all-pages,div#ccm-sitemap-search, div#ccm-dashboard-select-display-mode {border: 1px solid #ddd; padding: 8px; width:180px; background:#fafafa; margin-left:12px}
-
 div#ccm-sitemap-search { margin-bottom: 10px;  }
 div#ccm-sitemap-search div, div#ccm-sitemap-search td {font-size: 10px !important}
 div#ccm-sitemap-search-inner {padding-top: 10px}
