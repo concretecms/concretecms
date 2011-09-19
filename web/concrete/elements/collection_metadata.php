@@ -175,7 +175,6 @@ if ($cp->canAdminPage()) {
 			?>
 		    <span class="ccm-meta-path">
 	     		<?php echo BASE_URL . DIR_REL;?><?php  if (URL_REWRITING == false) { ?>/<?php echo DISPATCHER_FILENAME?><?php  } ?><?php 
-			$cPath = substr($c->getCollectionPath(), strrpos($c->getCollectionPath(), '/') + 1);
 			print substr($c->getCollectionPath(), 0, strrpos($c->getCollectionPath(), '/'))?> <input type="text" name="ppURL-add-0" class="ccm-input-text" value="" id="ppID-add-0">
 		 		<a href="javascript:void(0)" class="ccm-meta-path-add"><?=t('Add Path')?></a>
 			</span>
