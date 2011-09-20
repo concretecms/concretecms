@@ -255,7 +255,7 @@ class Page extends Collection {
 	* Gets the user that is editing the current page. 
 	* $return string $name
 	*/
-	public function getCollectionCheckedOutUserID() {
+	public function getCollectionCheckedOutUserName()() {
 		$db = Loader::db();
 		$query = "select cCheckedOutUID from Pages where cID = ?";
 		$vals=array($this->cID);
@@ -264,7 +264,7 @@ class Page extends Collection {
 		    $ui = UserInfo::getByID($checkedOutId);
 		    $name=$ui->getUserName();
 		}else{
-		    $name="Guest";
+		    $name=GUEST_GROUP_NAME;
 		}
 		return $name;
 	}
