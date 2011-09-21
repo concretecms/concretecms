@@ -30,7 +30,7 @@ if (isset($cp)) {
 	if ($c->isCheckedOut()) {
 		if (!$c->isCheckedOutByMe()) {
 			$cantCheckOut = true;
-			$statusMessage .= t("%s is currently editing this page.", $c->getCollectionCheckedOutUserID());
+			$statusMessage .= t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName());
 		}
 	}
 	
