@@ -18,8 +18,8 @@ class LoginController extends Controller {
 		}
 		
 		$txt = Loader::helper('text');
-		if (strlen($_GET['uName'])) { // pre-populate the username if supplied
-		   $this->set("uName",trim($txt->filterNonAlphaNum($_GET['uName'])));
+		if (strlen($_GET['uName'])) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
+		   $this->set("uName",trim($txt->email($_GET['uName'])));
 		}
 		
 
@@ -27,11 +27,13 @@ class LoginController extends Controller {
 		$locales = array();
 		if (Config::get('LANGUAGE_CHOOSE_ON_LOGIN')) {
 			Loader::library('3rdparty/Zend/Locale');
+			Loader::library('3rdparty/Zend/Locale/Data');
 			$languages = Localization::getAvailableInterfaceLanguages();
 			if (count($languages) > 0) { 
 				array_unshift($languages, 'en_US');
 			}
 			$locales = array('' => t('** Default'));
+			Zend_Locale_Data::setCache(Cache::getLibrary());
 			foreach($languages as $lang) {
 				$loc = new Zend_Locale($lang);
 				$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
