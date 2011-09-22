@@ -5,6 +5,15 @@ class ConcreteInterfaceMenuHelper {
 
 	protected $pageHeaderMenuItems = array();
 	
+	/**
+	 * this method is called by the Loader::helper to clean up the instance of this object
+	 * resets the class scope variables
+	 * @return void
+	*/
+	public function reset() {
+		$this->pageHeaderMenuItems = array();
+	}
+	
 	/** 
 	 * Adds a menu item to the header menu area 
 	 * <code>
