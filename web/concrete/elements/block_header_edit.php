@@ -30,7 +30,11 @@ if (is_array($headerItems[$identifier])) {
 ?>
 $(function() {
 	$('#ccm-block-form').each(function() {
-		ccm_setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
+		<? if (isset($proxyBlock)) { ?>
+			ccm_setupBlockForm($(this), '<?=$proxyBlock->getBlockID()?>', 'edit');
+		<? } else { ?>
+			ccm_setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
+		<? } ?>
 	});
 });
 </script>
