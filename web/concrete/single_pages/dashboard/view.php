@@ -1,7 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<h1><?=t('Manage concrete5')?></h1>
-
 <ul class="ccm-tile-menu clearfix">
 
 <?php

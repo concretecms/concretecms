@@ -3,14 +3,21 @@
 	$cID = $b->getBlockCollectionID();
 	$c = $b->getBlockCollectionObject();
 	$btw = BlockType::getByID($b->getBlockTypeID());
+	$btOriginal = $btw;
 	$bID = $b->getBlockID();
+	$heightPlus = 20;
+	if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+		$_bi = $b->getInstance();
+		$_bo = Block::getByID($_bi->getOriginalBlockID());
+		$btOriginal = BlockType::getByHandle($_bo->getBlockTypeHandle());
+		$heightPlus = 80;
+	}
 	if ($rarHandle) { 
 		$arHandle = $rarHandle;
 	} else {
 		$arHandle = $a->getAreaHandle();
 	}
 	$isAlias = $b->isAlias();
-	$isGlobal = $b->isGlobal();
 	$u = new User();
 	$numChildren = (!$isAlias) ? $b->getNumChildren() : 0;
 	if ($isAlias) {
@@ -36,12 +43,11 @@ ccm_menuObj<?=$id?>.type = "BLOCK";
 ccm_menuObj<?=$id?>.arHandle = '<?=$arHandle?>';
 ccm_menuObj<?=$id?>.aID = <?=$a->getAreaID()?>;
 ccm_menuObj<?=$id?>.bID = <?=$bID?>;
-ccm_menuObj<?=$id?>.isGlobal = <?=intval($isGlobal)?>;
 <? if ($b->isEditable() && $p->canWrite()) { ?>
 ccm_menuObj<?=$id?>.canWrite =true;
-ccm_menuObj<?=$id?>.btName = "<?=$btw->getBlockTypeName()?>";
-ccm_menuObj<?=$id?>.width = <?=$btw->getBlockTypeInterfaceWidth()?>;
-ccm_menuObj<?=$id?>.height = <?=(!$isGlobal)?$btw->getBlockTypeInterfaceHeight():$btw->getBlockTypeInterfaceHeight()+20 ?>;
+ccm_menuObj<?=$id?>.btName = "<?=$btOriginal->getBlockTypeName()?>";
+ccm_menuObj<?=$id?>.width = <?=$btOriginal->getBlockTypeInterfaceWidth()?>;
+ccm_menuObj<?=$id?>.height = <?=$btOriginal->getBlockTypeInterfaceHeight()+$heightPlus ?>;
 <? }
 if ($p->canAdminBlock() && PERMISSIONS_MODEL != 'simple') { ?>
 ccm_menuObj<?=$id?>.canModifyGroups = true;

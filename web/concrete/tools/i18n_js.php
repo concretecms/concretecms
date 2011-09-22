@@ -26,6 +26,7 @@ var ccmi18n = {
 	addBlockMsg: "<?=t('The block has been added successfully.')?>",
 	updateBlock: "<?=t('Update Block')?>",
 	updateBlockMsg: "<?=t('The block has been saved successfully.')?>",
+	copyBlockToScrapbookMsg: "<?=t('The block has been added to your scrapbook.')?>",
 	closeWindow: "<?=t('Close')?>",
 	editBlock: "<?=t('Edit')?>",
 	compareVersions: "<?=t('Compare Versions')?>",

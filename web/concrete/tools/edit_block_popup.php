@@ -1,22 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");  
 
-if($_REQUEST['isGlobal'] && ($_REQUEST['btask']=='edit' || $_REQUEST['btask'] == 'view_edit_mode' || $_REQUEST['btask']=='template') ){
-	$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
-	$c = $scrapbookHelper->getGlobalScrapbookPage();					
-	$db = Loader::db();
-	$arHandle=$db->getOne('SELECT arHandle FROM CollectionVersionBlocks WHERE bID=? AND cID=? AND isOriginal=1', array(intval($_REQUEST['bID']),intval($c->getCollectionId()))); 
-	$a = Area::get( $c, $arHandle);				
-	$b=Block::getByID( intval($_REQUEST['bID']), $c, $a);
-	//redirect cID
-	$rcID = intval($_REQUEST['cID']);
-	$isGlobal=1;
-	$rarHandle = $_REQUEST['arHandle'];
-}else{
-	$c = Page::getByID($_REQUEST['cID']);
-	$a = Area::get($c, $_REQUEST['arHandle']);
-	$b = Block::getByID($_REQUEST['bID'], $c, $a);
-}
+$c = Page::getByID($_REQUEST['cID']);
+$a = Area::get($c, $_REQUEST['arHandle']);
+$b = Block::getByID($_REQUEST['bID'], $c, $a);
 
 $bp = new Permissions($b);
 if (!$bp->canWrite()) {
@@ -29,8 +16,8 @@ if ($_REQUEST['btask'] != 'view' && $_REQUEST['btask'] != 'view_edit_mode') {
 
 $bv = new BlockView(); 
 			
-if(($isGlobal || $c->isMasterCollection()) && (!in_array($_REQUEST['btask'], array('child_pages','composer','view_edit_mode')))) {
-	echo '<div class="ccm-notification">';
+if(($c->isMasterCollection()) && (!in_array($_REQUEST['btask'], array('child_pages','composer','view_edit_mode')))) { 
+	echo '<div class="alert-message block-message info">';
 	echo t('This is a global block.  Editing it here will change all instances of this block throughout the site.');
 	//echo t('This is a global block.  Edit it from the <a href="%s">Global Scrapbook</a> in your dashboard.<br /><br /><br />', View::url('/dashboard/scrapbook/') );
 	//echo '[<a class="ccm-dialog-close">'.t('Close Window').'</a>]';
@@ -53,7 +40,7 @@ if (is_object($b)) {
 					$styleToDelete = CustomStylePreset::getByID($_REQUEST['deleteCspID']);
 					$styleToDelete->delete();
 				}
-				$refreshAction = REL_DIR_FILES_TOOLS_REQUIRED . '/edit_block_popup?btask=block_css&cID=' . $c->getCollectionID() . '&arHandle=' . $a->getAreaHandle() . '&bID=' . $b->getBlockID() . '&isGlobal=' . $_REQUEST['isGlobal'] . '&refresh=1';
+				$refreshAction = REL_DIR_FILES_TOOLS_REQUIRED . '/edit_block_popup?btask=block_css&cID=' . $c->getCollectionID() . '&arHandle=' . $a->getAreaHandle() . '&bID=' . $b->getBlockID() . '&refresh=1';
 				$bv->renderElement('custom_style', array('b' => $b, 'rcID'=>$rcID, 'c' => $c, 'a' => $a, 'style' => $style, 'action' => $action, 'refreshAction' => $refreshAction) );
 			}
 			break;	 
@@ -71,7 +58,7 @@ if (is_object($b)) {
 			}
 			break;
 		case 'view_edit_mode':
-			if ($bp->canWrite() || ($c->canWrite() && $b->isGlobal() && $b->canRead())) {
+			if ($bp->canWrite()) {
 
 				$btc = $b->getInstance();
 				// now we inject any custom template CSS and JavaScript into the header

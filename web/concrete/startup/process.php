@@ -584,23 +584,16 @@
 			if ($p->canWrite()) {
 
 				$bi = $b->getInstance();
+				if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+					$_b = Block::getByID($bi->getOriginalBlockID());
+					$bi = $_b->getInstance(); // for validation
+				}
 				$e = $bi->validate($_POST);
 				$obj = new stdClass;
 				$obj->aID = $a->getAreaID();
 				$obj->arHandle = $a->getAreaHandle();
 				$obj->cID = $c->getCollectionID();
-				$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
-				$c1 = $scrapbookHelper->getGlobalScrapbookPage();					
-				if ($c1->getCollectionID() == $c->getCollectionID()) {
-					$obj->isGlobalBlock = true;
-					$obj->cID = $_REQUEST['rcID'];
-					$obj->arHandle = $_REQUEST['rarHandle'];
-					$a1 = Area::getOrCreate(Page::getByID($obj->cID), $obj->arHandle);
-					$obj->aID = $a1->getAreaID();
-				} else {
-					$obj->isGlobalBlock = false;
-				}
-				
+
 				if ((!is_object($e)) || (($e instanceof ValidationErrorHelper) && (!$e->has()))) {
 					$bt = BlockType::getByHandle($b->getBlockTypeHandle());
 					if (!$bt->includeAll()) {
@@ -614,7 +607,16 @@
 					$b = Block::getByID($_REQUEST['bID'], $nvc, $a);
 					
 					
-					if ($b->isAlias()) {
+					if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+						// if we're editing a scrapbook display block, we add a new block in this position for the real block type
+						// set the block to the display order
+						// delete the scrapbook display block, and save the data
+						$btx = BlockType::getByHandle($_b->getBlockTypeHandle());
+						$nb = $nvc->addBlock($btx, $a, array());
+						$b->deleteBlock();
+						$b = &$nb;
+					
+					} else if ($b->isAlias()) {
 	
 						// then this means that the block we're updating is an alias. If you update an alias, you're actually going
 						// to duplicate the original block, and update the newly created block. If you update an original, your changes
@@ -671,41 +673,20 @@
 								$b->setBlockAreaObject($a);
 								$bt = BlockType::getByHandle($b->getBlockTypeHandle());
 								if ($ap->canAddBlock($bt)) {
-									if (!$bt->includeAll()) {
-										$nvc = $c->getVersionToModify();
-										$b->alias($nvc);
-									} else {
-										$b->alias($c);
-									}
+									$btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
+									$nvc = $c->getVersionToModify();
+									$data['bOriginalID'] = $bID;
+									$nb = $nvc->addBlock($btx, $a, $data);
 								}
 							}
 						}
-					} else if (isset($_REQUEST['bID'])) {
-						if($_REQUEST['globalBlock']) {
-							$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
-							$c1 = $scrapbookHelper->getGlobalScrapbookPage();			
-							$a1 = Area::get($c1, $_REQUEST['globalScrapbook']);
-							$b = Block::getByID($_REQUEST['bID'], $c1, $a1);
-						} else {
-							$b = Block::getByID($_REQUEST['bID']); 
-						}
-						$bt = BlockType::getByHandle($b->getBlockTypeHandle());						
-						if ($ap->canAddBlock($bt)) {
-							$b->setBlockAreaObject($a);
-							if (!$bt->includeAll()) {
-								$nvc = $c->getVersionToModify();
-								$b->alias($nvc);
-							} else {
-								$b->alias($c);
-							}
-						}					
-					}
-
+					} 
+					
 					$obj = new stdClass;
 					$obj->aID = $a->getAreaID();
 					$obj->arHandle = $a->getAreaHandle();
 					$obj->cID = $c->getCollectionID();
-					$obj->bID = $b->getBlockID();
+					$obj->bID = $nb->getBlockID();
 					$obj->error = false;
 					print Loader::helper('json')->encode($obj);
 					exit;

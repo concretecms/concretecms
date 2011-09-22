@@ -1,17 +1,18 @@
 body {background-color: #000;}
-div#ccm-dashboard-header {background: transparent url(../images/dashboard/bg_header.png) repeat-x scroll; position: absolute; top: 0px; left: 0px; height: 53px; width: 100%; z-index: 10}
+div#ccm-dashboard-header {
+-webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);box-shadow: 0px 2px 2px rgba(90,90,90,0.3); border-bottom: 1px solid #888;background: #eee url(../images/dashboard/bg_header.png) repeat-x scroll; position: absolute; top: 0px; left: 0px; height: 49px; width: 100%; z-index: 10}
 div#ccm-dashboard-content {  margin-top: 70px; }
 
 /* In-Page Tile-based Menus */
 
-ul.ccm-tile-menu { list-style-type: none; padding: 0px; margin-top: 1px; margin-left: 1px; ;}
+ul.ccm-tile-menu { list-style-type: none; padding: 0px; margin-top: 90px; margin-left: 1px;}
 ul.ccm-tile-menu li {margin-left: 0px !important;  float: left}
-ul.ccm-tile-menu li a {background-color: rgba(0,0,0,0.6); color: #fff; padding: 10px; width: 214px; margin-right: 1px; margin-bottom: 1px; display: block;}
-ul.ccm-tile-menu li a span {color: auto; display: block; color: #B4E5FF; font-size: 16px; margin-bottom: 4px; font-weight: bold; }
+ul.ccm-tile-menu li a {background-color: rgba(0,0,0,0.6); color: #fff; font-size: 16px; padding: 20px; width: 272px; margin-right: 1px; margin-bottom: 1px; display: block;}
+ul.ccm-tile-menu li a span {color: auto; display: block; color: #B4E5FF; font-size: 24px; margin-bottom: 8px; margin-top: 0px; font-weight: bold; }
 ul.ccm-tile-menu li a:hover {text-decoration: none; color: #000; background-color: rgba(255,255,255, 0.8);}
 ul.ccm-tile-menu li a:hover span {color: #000}
 
-ul.ccm-tile-menu li:nth-child(4n+1) a {width: 213px}
+ul.ccm-tile-menu li:nth-child(4n+1) a {width: 272px}
 
 /* Legacy Central Panes */
 div.ccm-dashboard-inner {padding: 20px; background-color:#ffffff;border:1px solid #999;border:1px solid rgba(0, 0, 0, 0.3);*border:1px solid #999;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-webkit-background-clip:padding-box;-moz-background-clip:padding-box;background-clip:padding-box;}
