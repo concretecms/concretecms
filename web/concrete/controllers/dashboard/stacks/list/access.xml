@@ -1,0 +1,5 @@
+<access>
+<node handle="dashboard/stacks/list">
+<guests canRead="1" />
+</node>
+</access>

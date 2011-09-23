@@ -2,7 +2,13 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 global $c;?>
 <?
-$bt = BlockType::getByID($b->getBlockTypeID());
+if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+	$bi = $b->getInstance();
+	$bx = Block::getByID($bi->getOriginalBlockID());
+	$bt = BlockType::getByID($bx->getBlockTypeID());
+} else {
+	$bt = BlockType::getByID($b->getBlockTypeID());
+}
 $templates = $bt->getBlockTypeCustomTemplates();
 $txt = Loader::helper('text');
 ?>

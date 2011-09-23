@@ -1,0 +1,121 @@
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+
+<div class="row">
+<div class="span14 offset1 columns">
+<div class="ccm-dashboard-pane">
+
+<? if ($this->controller->getTask() == 'view_details') { ?>
+
+	<script type="text/javascript">
+	
+	ccm_stacksAddBlock = function() {
+		ccm_openAreaAddBlock("Main", true, <?=$stack->getCollectionID()?>);
+	}
+	
+	ccm_parseBlockResponsePost = function() {
+		$(".ccm-main-nav-edit-option").fadeIn(300);
+	}
+	
+	$(function() {
+		CCM_EDIT_MODE = true; // override header_required
+		ccm_editInit();
+		$("#stackPermissions").dialog();
+		$("#stackVersions").dialog();
+	});
+	
+	</script>
+	
+	<style type="text/css">
+	div.ccm-block {border: 2px dotted #efefef; clear: both; overflow: hidden; margin: 0px 0px 4px 0px; padding: 2px}
+	</style>
+	
+
+	<div class="ccm-dashboard-pane-header"><h3><?=$stack->getCollectionName()?></h3></div>
+	<div class="ccm-dashboard-pane-options">
+		<a href="javascript:void(0)" onclick="window.location.href='<?=$this->url('/dashboard/stacks')?>'" class="btn small"><?=t('Back to List')?></a>
+		<a href="javascript:void(0)" onclick="ccm_stacksAddBlock()" class="btn small ccm-main-nav-edit-option"><?=t('Add Block')?></a>
+		<a class="btn small ccm-main-nav-edit-option" dialog-width="640" dialog-height="340" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?rel=SITEMAP&cID=<?=$stack->getCollectionID()?>"><?=t('Version History')?></a>
+
+		<? if (PERMISSIONS_MODEL == 'advanced') { ?>
+			<a class="btn small ccm-main-nav-edit-option" dialog-width="580" dialog-height="420" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$stack->getCollectionID()?>&arHandle=Main&atask=groups"><?=t('Permissions')?></a>
+		<? } ?>
+		<a href="javascript:void(0)" onclick="ccm_saveArrangement(<?=$stack->getCollectionID()?>)" class="success btn small ccm-main-nav-arrange-option" style="display: none"><?=t('Save Positioning')?></a>
+		<?
+		$vo = $stack->getVersionObject();
+		if ($cp->canApproveCollection()) {
+			$token = '&' . Loader::helper('validation/token')->getParameter(); ?>
+			<a style="float: right; <? if ($vo->isApproved()) { ?> display: none; <? } ?> href="javascript:void(0)" onclick="window.location.href='<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $stack->getCollectionID() . "&ctask=approve-recent" . $token?>'" class="btn small success ccm-main-nav-edit-option"><?=t('Approve Changes')?></a>
+		<?
+		}		
+		?>
+	</div>
+	<div class="ccm-dashboard-pane-body clearfix" id="ccm-stack-container">
+	<? if (count($blocks) > 0) {
+		$a = Area::get($stack, 'Main');
+		$bv = new BlockView();
+		$bv->renderElement('block_area_header', array('a' => $a));	
+		$bv->renderElement('block_area_header_view', array('a' => $a));	
+
+		foreach($blocks as $b) {
+			$bv = new BlockView();
+			$bv->setAreaObject($a); 
+			$p = new Permissions($b);
+			$bv->renderElement('block_controls', array( 'a' => $a, 'b' => $b, 'p' => $p ));
+			$bv->renderElement('block_header', array( 'a' => $a, 'b' => $b, 'p' => $p ));
+			$bv->render($b);
+			$bv->renderElement('block_footer');
+		}
+		$bv->renderElement('block_area_footer_view', array('a' => $a));	
+		print '</div>'; // instead  of loading block area footer view
+		
+	} else { ?>
+		<p><?=t('You have not added any blocks to this stack.')?></p>
+	<? } ?>
+	
+	</div>
+
+<? } else { ?>
+
+	<div class="ccm-dashboard-pane-header"><h3><?=t('Stacks')?></h3></div>
+	
+	<div class="ccm-dashboard-pane-body">
+		
+		<?
+		if (count($stacks) > 0) { 
+			foreach($stacks as $st) { ?>
+	
+				<div class="ccm-stack">
+					<a href="<?=$this->url('/dashboard/stacks/view_details', $st->getCollectionID())?>"><?=$st->getCollectionName()?></a>
+				</div>
+			
+			<?
+			}
+		} else {
+			print t('No stacks created yet.');
+		}
+		?>
+		
+		<br/>
+		<h3><?=t('New Stack')?></h3>
+		<form method="post" action="<?=$this->action('add_stack')?>">
+		<?=Loader::helper("validation/token")->output('add_stack')?>
+		<div class="clearfix">
+			<?=Loader::helper("form")->label('stackName', t('Name'))?>
+			<div class="input">
+				<?=Loader::helper('form')->text('stackName')?>
+			</div>
+		</div>
+		<div class="actions">
+			<?=Loader::helper("form")->submit('add', t('Add Stack'), array('class' => 'primary'))?>
+		
+		</div>
+		
+		</form>
+		
+	</div>
+
+<? } ?>
+
+</div>
+</div>
+</div>
