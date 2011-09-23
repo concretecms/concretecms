@@ -138,6 +138,7 @@
 						$obj = new stdClass;
 						$obj->bID = $b->getBlockID();
 						$obj->aID = $a->getAreaID();
+						$obj->cID = $c->getCollectionID();
 						$obj->arHandle= $a->getAreaHandle();
 						$obj->error = false;
 						
@@ -201,10 +202,17 @@
 					} else {
 						$nvc = $c; // keep the same one
 					}
-					$ob = $b;
-					// replace the block with the version of the block in the later version (if applicable)
+
 					$b = Block::getByID($_REQUEST['bID'], $nvc, $a);
-					if ($b->isAlias()) {
+					$ob = $b;
+					if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+						$bi = $b->getInstance();
+						$ob = Block::getByID($bi->getOriginalBlockID());
+						$ob->setBlockAreaObject($a);
+						$nb = $ob->duplicate($nvc);
+						$b->deleteBlock();
+						$b = &$nb;
+					} else if ($b->isAlias()) {					
 						$nb = $ob->duplicate($nvc);
 						$b->deleteBlock();
 						$b = &$nb;
@@ -219,7 +227,8 @@
 					$obj->aID = $a->getAreaID();
 					$obj->arHandle= $a->getAreaHandle();
 					$obj->error = false;
-					
+					$obj->cID = $c->getCollectionID();
+	
 					print Loader::helper('json')->encode($obj);
 					exit;
 					

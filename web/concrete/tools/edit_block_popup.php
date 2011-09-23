@@ -25,7 +25,7 @@ if(($c->isMasterCollection()) && (!in_array($_REQUEST['btask'], array('child_pag
 }  
 
 if ($b->isAliasOfMasterCollection() && $_REQUEST['btask'] != 'view_edit_mode') {
-	echo '<div class="ccm-notification">';
+	echo '<div class="alert-message block-message info">';
 	echo t('This block is an alias of Page Defaults. Editing it here will "disconnect" it so changes to Page Defaults will no longer affect this block.');
 	echo '</div>';
 }

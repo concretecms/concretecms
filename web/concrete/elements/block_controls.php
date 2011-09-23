@@ -43,6 +43,7 @@ ccm_menuObj<?=$id?>.type = "BLOCK";
 ccm_menuObj<?=$id?>.arHandle = '<?=$arHandle?>';
 ccm_menuObj<?=$id?>.aID = <?=$a->getAreaID()?>;
 ccm_menuObj<?=$id?>.bID = <?=$bID?>;
+ccm_menuObj<?=$id?>.cID = <?=$cID?>;
 <? if ($b->isEditable() && $p->canWrite()) { ?>
 ccm_menuObj<?=$id?>.canWrite =true;
 ccm_menuObj<?=$id?>.btName = "<?=$btOriginal->getBlockTypeName()?>";

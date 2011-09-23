@@ -5,7 +5,7 @@ Loader::model('page_list');
 class StackList extends PageList {
 
 	public function __construct() {
-		$c = Page::getByPath('/dashboard/stacks/list');
+		$c = Page::getByPath(STACKS_PAGE_PATH);
 		$this->ignoreAliases = true;
 		$this->filterByParentID($c->getCollectionID());
 	}

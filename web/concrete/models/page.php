@@ -218,6 +218,7 @@ class Page extends Collection {
 				}
 			}
 		}
+		Cache::delete('collection_blocks', $this->getCollectionID() . ':' . $this->getVersionID());
 	}
 
 	/**

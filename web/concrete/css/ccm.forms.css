@@ -194,7 +194,7 @@ form#ccm-group-search label {font-weight: bold}
 /* stacks */
 div.ccm-stack a {background-repeat: no-repeat; background-position: 8px 8px; background-image: url(../images/icons/stack.png); color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
 div.ccm-stack {position: relative; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px}
-div.ccm-stack a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7; text-decoration: none}
+div.ccm-stack a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7; text-decoration: none; color: #666}
 
 
 /* scroller */
