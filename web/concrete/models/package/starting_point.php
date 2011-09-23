@@ -132,15 +132,6 @@ class StartingPointPackage extends Package {
 		$fs->setPermissions($g2, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE);
 		$fs->setPermissions($g3, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL);
 
-		// Add global scrapbook site name block	 															
-		$bl = Block::getByName('My_Site_Name');
-		if (is_object($bl) && (!$bl->isError())) {
-			$data = array();
-			$data['uID'] = USER_SUPER_ID;
-			$data['content'] = SITE;					
-			$bl->update($data);
-		}
-		
 		Config::save('SITE', SITE);
 
 		// add the current app version as our site's app version

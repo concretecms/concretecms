@@ -81,7 +81,7 @@ Loader::element('header_required');
 <body>
 
 <? if (!$_SESSION['dashboardHasSeenImage']) { 
-	//$_SESSION['dashboardHasSeenImage'] = true;
+	$_SESSION['dashboardHasSeenImage'] = true;
 } ?>
 
 <div id="ccm-dashboard-page" class="ccm-ui">

@@ -18,4 +18,24 @@
 			return $this->bOriginalID;
 		}
 		
+		public function on_page_view() {
+			$b = Block::getByID($this->bOriginalID);
+			$bc = $b->getInstance();
+			if (method_exists($bc, 'on_page_view')) {
+				$bc->on_page_view();
+			}
+		}
+
+		public function outputAutoHeaderItems() {
+			$b = Block::getByID($this->bOriginalID);
+			$bvt = new BlockViewTemplate($b);
+			$headers = $bvt->getTemplateHeaderItems();
+			if (count($headers) > 0) {
+				foreach($headers as $h) {
+					$this->addHeaderItem($h);
+				}
+			}
+		}
+		
+		
 	}
