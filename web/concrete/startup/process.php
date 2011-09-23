@@ -677,6 +677,7 @@
 									$nvc = $c->getVersionToModify();
 									$data['bOriginalID'] = $bID;
 									$nb = $nvc->addBlock($btx, $a, $data);
+									$nb->refreshCache();
 								}
 							}
 						}

@@ -35,8 +35,6 @@ $(function(){ ccmPrepareScrapbookItemsDelete(); });
 </script>
 
 
-<h1><?=t('Add From Scrapbook')?></h1>		
-	
 <div id="ccm-scrapbookListsWrap">
 <? Loader::element('scrapbook_lists', array( 'c'=>$c, 'a'=>$a, 'scrapbookName'=>'userScrapbook', 'token'=>$token ) );  ?>
 </div>

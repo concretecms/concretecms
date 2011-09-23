@@ -34,6 +34,21 @@ $ci = Loader::helper('concrete/urls');
 			</div>	
 			<?
 			$i++;
-		} 
+		} else { ?>
+		
+		
+			<div class="ccm-scrapbook-list-item" id="ccm-pc-<?=$obj->getPileContentID()?>">
+				<div class="ccm-block-type">
+					<a class="ccm-scrapbook-delete" title="Remove from Scrapbook" href="javascript:void(0)" id="sb<?=$obj->getPileContentID()?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" width="16" height="16" /></a>
+					<div class="ccm-scrapbook-list-item-detail">	
+						<?	
+						print BLOCK_NOT_AVAILABLE_TEXT;
+						?>
+					</div>
+				</div>
+			</div>	
+
+		
+		<? } 
 	}	?> 
 	</div>
