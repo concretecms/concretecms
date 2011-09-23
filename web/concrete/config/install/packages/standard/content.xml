@@ -34,17 +34,8 @@
         <page name="Groups" path="/dashboard/users/groups" filename="/dashboard/users/groups.php" pagetype="" description="" package=""/>
         <page name="User Attributes" path="/dashboard/users/attributes" filename="/dashboard/users/attributes.php" pagetype="" description="" package=""/>
         <page name="Login &amp; Registration" path="/dashboard/users/registration" filename="/dashboard/users/registration.php" pagetype="" description="" package=""/>
-        <page name="Scrapbook" path="/dashboard/scrapbook" filename="/dashboard/scrapbook/view.php" pagetype="" description="Share content across your site." package="">
-            <area name="Global">
-                <block type="content" name="My_Site_Name">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[<p>test</p>]]></content>
-                        </record>
-                    </data>
-                </block>
-            </area>
-        </page>
+        <page name="Stacks" path="/dashboard/stacks" filename="/dashboard/stacks/view.php" pagetype="" description="Share content across your site." package="" />
+        <page name="Stack List" path="/dashboard/stacks/list" filename="/dashboard/stacks/list/view.php" pagetype="" description="" package="" />
         <page name="Pages and Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package=""/>
         <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype="" description="Reskin your site." package=""/>
         <page name="Add" path="/dashboard/pages/themes/add" filename="/dashboard/pages/themes/add.php" pagetype="" description="" package=""/>

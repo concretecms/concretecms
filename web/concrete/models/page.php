@@ -2253,6 +2253,9 @@ class Page extends Collection {
 		$cobj = parent::add($data);		
 		$cID = $cobj->getCollectionID();		
 		$ctID = $ct->getCollectionTypeID();
+		if (!$ctID) {
+			$ctID = 0;
+		}
 
 		$q = "select cID from Pages where ctID = '$ctID' and cIsTemplate = '1'";
 		$masterCID = $db->getOne($q);
