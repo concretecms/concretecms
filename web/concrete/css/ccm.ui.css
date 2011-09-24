@@ -145,7 +145,11 @@ div.ccm-block-arrange:hover {
 	border: 2px dotted #000;
 }
 
-div.ccm-add-block {
+div.ccm-add-block-global {
+	border: 2px dotted #ddd !important;
+}
+
+div.ccm-add-block, div.ccm-add-block-global {
 	padding: 2px;
 	font-size: 11px;
 	white-space: nowrap;

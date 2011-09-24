@@ -47,6 +47,10 @@ if ($a->areaAcceptsBlocks()) { ?>
 	<? } ?>
 	$(function() {ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>)});
 	</script>
-	<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To %s', $arHandle)?></div>
+	<? if ($a->isGlobalArea()) { ?>
+		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To Sitewide %s', $arHandle)?></div>
+	<? } else { ?>
+		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To %s', $arHandle)?></div>
+	<? } ?>
 	<? } ?>
 <? } ?>

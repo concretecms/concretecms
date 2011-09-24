@@ -50,7 +50,7 @@
 		?>
 	</div>
 	<div class="ccm-dashboard-pane-body clearfix" id="ccm-stack-container">
-	<? if (count($blocks) > 0) {
+	<?
 		$a = Area::get($stack, 'Main');
 		$bv = new BlockView();
 		$bv->renderElement('block_area_header', array('a' => $a));	
@@ -67,11 +67,7 @@
 		}
 		$bv->renderElement('block_area_footer_view', array('a' => $a));	
 		print '</div>'; // instead  of loading block area footer view
-		
-	} else { ?>
-		<p><?=t('You have not added any blocks to this stack.')?></p>
-	<? } ?>
-	
+	?>	
 	</div>
 
 <? } else { ?>

@@ -1,7 +1,12 @@
 <? 
 	defined('C5_EXECUTE') or die("Access Denied.");
-	$cID = $b->getBlockCollectionID();
-	$c = $b->getBlockCollectionObject();
+	if ($a->isGlobalArea()) {
+		$c = Page::getCurrentPage();
+		$cID = $c->getCollectionID();
+	} else {
+		$cID = $b->getBlockCollectionID();
+		$c = $b->getBlockCollectionObject();
+	}
 	$btw = BlockType::getByID($b->getBlockTypeID());
 	$btOriginal = $btw;
 	$bID = $b->getBlockID();
@@ -11,11 +16,6 @@
 		$_bo = Block::getByID($_bi->getOriginalBlockID());
 		$btOriginal = BlockType::getByHandle($_bo->getBlockTypeHandle());
 		$heightPlus = 80;
-	}
-	if ($rarHandle) { 
-		$arHandle = $rarHandle;
-	} else {
-		$arHandle = $a->getAreaHandle();
 	}
 	$isAlias = $b->isAlias();
 	$u = new User();
@@ -40,7 +40,7 @@
 
 ccm_menuObj<?=$id?> = new Object();
 ccm_menuObj<?=$id?>.type = "BLOCK";
-ccm_menuObj<?=$id?>.arHandle = '<?=$arHandle?>';
+ccm_menuObj<?=$id?>.arHandle = '<?=$a->getAreaHandle()?>';
 ccm_menuObj<?=$id?>.aID = <?=$a->getAreaID()?>;
 ccm_menuObj<?=$id?>.bID = <?=$bID?>;
 ccm_menuObj<?=$id?>.cID = <?=$cID?>;
@@ -75,7 +75,7 @@ if ($ct->isCollectionTypeIncludedInComposer()) { ?>
 
 }
 
-if ($p->canWrite()) {  ?>
+if ($p->canWrite() && (!$a->isGlobalArea())) {  ?>
 	ccm_menuObj<?=$id?>.canArrange = true;
 <? 
 }

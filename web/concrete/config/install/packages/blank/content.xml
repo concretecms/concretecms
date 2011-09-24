@@ -34,7 +34,6 @@
         <page name="User Attributes" path="/dashboard/users/attributes" filename="/dashboard/users/attributes.php" pagetype="" description="" package=""/>
         <page name="Login &amp; Registration" path="/dashboard/users/registration" filename="/dashboard/users/registration.php" pagetype="" description="" package=""/>
         <page name="Stacks" path="/dashboard/stacks" filename="/dashboard/stacks/view.php" pagetype="" description="Share content across your site." package="" />
-        <page name="Stack List" path="/dashboard/stacks/list" filename="/dashboard/stacks/list.php" pagetype="" description="" package="" />
         <page name="Stack List" path="/dashboard/stacks/list" filename="/dashboard/stacks/list/view.php" pagetype="" description="" package="" />
         <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype="" description="Reskin your site." package=""/>
         <page name="Add" path="/dashboard/pages/themes/add" filename="/dashboard/pages/themes/add.php" pagetype="" description="" package=""/>
