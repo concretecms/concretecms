@@ -22,16 +22,23 @@
 				break;
 			case 'PACKAGE_TOOL':
 				if ($co->getPackageHandle() != '') {
-					$file1 = DIR_PACKAGES . '/' . $co->getPackageHandle() . '/' . DIRNAME_TOOLS . '/' . $co->getFilename();
-					$file2 = DIR_PACKAGES_CORE . '/' . $co->getPackageHandle() . '/' . DIRNAME_TOOLS . '/' . $co->getFilename();
+					
+					$file1 = DIR_FILES_TOOLS . '/' . $co->getPackageHandle() . '/' . $co->getFilename();
+					$file2 = DIR_PACKAGES . '/' . $co->getPackageHandle() . '/' . DIRNAME_TOOLS . '/' . $co->getFilename();
+					$file3 = DIR_PACKAGES_CORE . '/' . $co->getPackageHandle() . '/' . DIRNAME_TOOLS . '/' . $co->getFilename();
+					
+					//echo var_dump($file1, $file2, $file3); exit;
+					
 					if (file_exists($file1)) {
 						include($file1);
 						$include = true;
 					} else if (file_exists($file2)) {
 						include($file2);
 						$include = true;
-					}
-
+					} elseif(file_exists($file3)) {
+						include($file3);
+						$include = true;
+					} 
 				}
 				break;
 			case "BLOCK_TOOL":

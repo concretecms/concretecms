@@ -135,7 +135,7 @@ class MarketplaceRemoteItem extends Object {
 				if ($mi->getMarketplaceItemID() > 0) {
 					return $mi;
 				}
-			}
+			} 
 		} catch (Exception $e) {
 			throw new Exception(t('Unable to connect to marketplace to retrieve item'));
 		}
