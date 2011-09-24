@@ -71,7 +71,11 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-  </table>
+    <field name="arIsGlobal" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>  </table>
    <table name="AttributeSetKeys">
     <field name="akID" type="I" size="10">
       <KEY/>

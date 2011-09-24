@@ -22,6 +22,7 @@ cID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 arHandle                 VARCHAR(255) NOT NULL,
 arOverrideCollectionPermissions TINYINT(1) NOT NULL DEFAULT 0,
 arInheritPermissionsFromAreaOnCID INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+arIsGlobal INTEGER(1) UNSIGNED NOT NULL DEFAULT 0,
                  PRIMARY KEY (arID)
 );
 
@@ -968,4 +969,323 @@ akID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 akHasCustomCountries     INTEGER(1) NOT NULL DEFAULT 0,
 akDefaultCountry         VARCHAR(12),
                  PRIMARY KEY (akID)
+<<<<<<< HEAD
 );
+=======
+);
+
+CREATE TABLE btNavigation (
+bID                      INTEGER UNSIGNED NOT NULL,
+orderBy                  VARCHAR(255) DEFAULT 'alpha_asc',
+displayPages             VARCHAR(255) DEFAULT 'top',
+displayPagesCID          INTEGER UNSIGNED NOT NULL DEFAULT 1,
+displayPagesIncludeSelf  TINYINT UNSIGNED NOT NULL DEFAULT 0,
+displaySubPages          VARCHAR(255) DEFAULT 'none',
+displaySubPageLevels     VARCHAR(255) DEFAULT 'none',
+displaySubPageLevelsNum  SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+displayUnavailablePages  TINYINT UNSIGNED NOT NULL DEFAULT 0,
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btContentLocal (
+bID                      INTEGER UNSIGNED NOT NULL,
+content                  LONGTEXT,
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btDateNav (
+bID                      INTEGER UNSIGNED NOT NULL,
+num                      SMALLINT UNSIGNED NOT NULL,
+cParentID                INTEGER UNSIGNED NOT NULL DEFAULT 1,
+cThis                    TINYINT UNSIGNED NOT NULL DEFAULT 0,
+ctID                     SMALLINT UNSIGNED,
+flatDisplay              INTEGER DEFAULT 0,
+defaultNode              VARCHAR(64) DEFAULT 'current_page',
+truncateTitles           INTEGER DEFAULT 0,
+truncateSummaries        INTEGER DEFAULT 0,
+displayFeaturedOnly      INTEGER DEFAULT 0,
+truncateChars            INTEGER DEFAULT 128,
+truncateTitleChars       INTEGER DEFAULT 128,
+showDescriptions         INTEGER DEFAULT 0,
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btExternalForm (
+bID                      INTEGER UNSIGNED NOT NULL,
+filename                 VARCHAR(128),
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btContentFile (
+bID                      INTEGER UNSIGNED NOT NULL,
+fID                      INTEGER UNSIGNED,
+fileLinkText             VARCHAR(255),
+filePassword             VARCHAR(255),
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btFlashContent (
+bID                      INTEGER UNSIGNED NOT NULL,
+fID                      INTEGER UNSIGNED,
+quality                  VARCHAR(255),
+minVersion               VARCHAR(255),
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btForm (
+bID                      INTEGER UNSIGNED NOT NULL,
+questionSetId            INTEGER UNSIGNED DEFAULT 0,
+surveyName               VARCHAR(255),
+thankyouMsg              TEXT,
+notifyMeOnSubmission     TINYINT UNSIGNED NOT NULL DEFAULT 0,
+recipientEmail           VARCHAR(255),
+displayCaptcha           INTEGER DEFAULT 1,
+redirectCID              INTEGER DEFAULT 0,
+                 PRIMARY KEY (bID)
+);
+
+ALTER TABLE btForm ADD  INDEX questionSetIdForeign  (questionSetId);
+
+CREATE TABLE btFormQuestions (
+qID                      INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+msqID                    INTEGER UNSIGNED DEFAULT 0,
+bID                      INTEGER UNSIGNED DEFAULT 0,
+questionSetId            INTEGER UNSIGNED DEFAULT 0,
+question                 VARCHAR(255),
+inputType                VARCHAR(255),
+options                  TEXT,
+position                 INTEGER UNSIGNED DEFAULT 1000,
+width                    INTEGER UNSIGNED DEFAULT 50,
+height                   INTEGER UNSIGNED DEFAULT 3,
+required                 INTEGER DEFAULT 0,
+                 PRIMARY KEY (qID)
+);
+
+ALTER TABLE btFormQuestions ADD  INDEX questionSetId  (questionSetId);
+
+ALTER TABLE btFormQuestions ADD  INDEX msqID  (msqID);
+
+CREATE TABLE btFormAnswerSet (
+asID                     INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+questionSetId            INTEGER UNSIGNED DEFAULT 0,
+created                  TIMESTAMP,
+uID                      INTEGER UNSIGNED DEFAULT 0,
+                 PRIMARY KEY (asID)
+);
+
+CREATE TABLE btFormAnswers (
+aID                      INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+asID                     INTEGER UNSIGNED DEFAULT 0,
+msqID                    INTEGER UNSIGNED DEFAULT 0,
+answer                   VARCHAR(255),
+answerLong               TEXT,
+                 PRIMARY KEY (aID)
+);
+
+CREATE TABLE btGoogleMap (
+bID                      INTEGER UNSIGNED NOT NULL,
+title                    VARCHAR(255),
+location                 VARCHAR(255),
+latitude                 DOUBLE,
+longitude                DOUBLE,
+zoom                     INTEGER(8),
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btGuestBook (
+bID                      INTEGER UNSIGNED NOT NULL,
+requireApproval          INTEGER DEFAULT 0,
+title                    VARCHAR(100) DEFAULT 'Comments',
+dateFormat               VARCHAR(100),
+displayGuestBookForm     INTEGER DEFAULT 1,
+displayCaptcha           INTEGER DEFAULT 1,
+authenticationRequired   INTEGER DEFAULT 0,
+notifyEmail              VARCHAR(100),
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btGuestBookEntries (
+bID                      INTEGER,
+cID                      INTEGER DEFAULT 1,
+entryID                  INTEGER NOT NULL AUTO_INCREMENT,
+uID                      INTEGER DEFAULT 0,
+commentText              LONGTEXT,
+user_name                VARCHAR(100),
+user_email               VARCHAR(100),
+entryDate                TIMESTAMP,
+approved                 INTEGER DEFAULT 1,
+                 PRIMARY KEY (entryID)
+);
+
+ALTER TABLE btGuestBookEntries ADD  INDEX cID  (cID);
+
+CREATE TABLE btContentImage (
+bID                      INTEGER UNSIGNED NOT NULL,
+fID                      INTEGER UNSIGNED DEFAULT 0,
+fOnstateID               INTEGER UNSIGNED DEFAULT 0,
+maxWidth                 INTEGER UNSIGNED DEFAULT 0,
+maxHeight                INTEGER UNSIGNED DEFAULT 0,
+externalLink             VARCHAR(255),
+altText                  VARCHAR(255),
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btFile (
+bID                      INTEGER UNSIGNED NOT NULL,
+filename                 VARCHAR(255),
+origfilename             VARCHAR(255),
+url                      VARCHAR(255),
+type                     VARCHAR(32),
+generictype              VARCHAR(32),
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btNextPrevious (
+bID                      INTEGER UNSIGNED NOT NULL,
+linkStyle                VARCHAR(32),
+nextLabel                VARCHAR(128),
+previousLabel            VARCHAR(128),
+parentLabel              VARCHAR(128),
+showArrows               INTEGER DEFAULT 1,
+loopSequence             INTEGER DEFAULT 1,
+excludeSystemPages       INTEGER DEFAULT 1,
+orderBy                  VARCHAR(20) DEFAULT 'display_asc',
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btPageList (
+bID                      INTEGER UNSIGNED NOT NULL,
+num                      SMALLINT UNSIGNED NOT NULL,
+orderBy                  VARCHAR(32),
+cParentID                INTEGER UNSIGNED NOT NULL DEFAULT 1,
+cThis                    TINYINT UNSIGNED NOT NULL DEFAULT 0,
+paginate                 TINYINT UNSIGNED NOT NULL DEFAULT 0,
+displayAliases           TINYINT UNSIGNED NOT NULL DEFAULT 1,
+ctID                     SMALLINT UNSIGNED,
+rss                      INTEGER DEFAULT 0,
+rssTitle                 VARCHAR(255),
+rssDescription           LONGTEXT,
+truncateSummaries        INTEGER DEFAULT 0,
+displayFeaturedOnly      INTEGER DEFAULT 0,
+truncateChars            INTEGER DEFAULT 128,
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btRssDisplay (
+bID                      INTEGER UNSIGNED NOT NULL,
+title                    VARCHAR(255),
+url                      VARCHAR(255),
+dateFormat               VARCHAR(100),
+itemsToDisplay           INTEGER UNSIGNED DEFAULT 5,
+showSummary              TINYINT UNSIGNED NOT NULL DEFAULT 1,
+launchInNewWindow        TINYINT UNSIGNED NOT NULL DEFAULT 1,
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btSearch (
+bID                      INTEGER UNSIGNED NOT NULL,
+title                    VARCHAR(255),
+buttonText               VARCHAR(128),
+baseSearchPath           VARCHAR(255),
+resultsURL               VARCHAR(255),
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btSlideshow (
+bID                      INTEGER UNSIGNED NOT NULL,
+fsID                     INTEGER UNSIGNED,
+playback                 VARCHAR(50),
+duration                 INTEGER UNSIGNED,
+fadeDuration             INTEGER UNSIGNED,
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btSlideshowImg (
+slideshowImgId           INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+bID                      INTEGER UNSIGNED,
+fID                      INTEGER UNSIGNED,
+url                      VARCHAR(255),
+duration                 INTEGER UNSIGNED,
+fadeDuration             INTEGER UNSIGNED,
+groupSet                 INTEGER UNSIGNED,
+position                 INTEGER UNSIGNED,
+imgHeight                INTEGER UNSIGNED,
+                 PRIMARY KEY (slideshowImgId)
+);
+
+CREATE TABLE btSurvey (
+bID                      INTEGER UNSIGNED NOT NULL,
+question                 VARCHAR(255) DEFAULT '',
+requiresRegistration     INTEGER DEFAULT 0,
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btSurveyOptions (
+optionID                 INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+bID                      INTEGER,
+optionName               VARCHAR(255),
+displayOrder             INTEGER DEFAULT 0,
+                 PRIMARY KEY (optionID)
+);
+
+CREATE TABLE btSurveyResults (
+resultID                 INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+optionID                 INTEGER UNSIGNED DEFAULT 0,
+uID                      INTEGER UNSIGNED DEFAULT 0,
+bID                      INTEGER,
+cID                      INTEGER,
+ipAddress                VARCHAR(128),
+timestamp                TIMESTAMP,
+                 PRIMARY KEY (resultID)
+);
+
+CREATE TABLE btTags (
+bID                      INTEGER UNSIGNED NOT NULL,
+title                    VARCHAR(255),
+targetCID                INTEGER,
+displayMode              VARCHAR(20) DEFAULT 'page',
+cloudCount               INTEGER DEFAULT 10,
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btVideo (
+bID                      INTEGER UNSIGNED NOT NULL,
+fID                      INTEGER UNSIGNED,
+width                    INTEGER UNSIGNED,
+height                   INTEGER UNSIGNED,
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE btYouTube (
+bID                      INTEGER UNSIGNED NOT NULL,
+title                    VARCHAR(255),
+videoURL                 VARCHAR(255),
+                 PRIMARY KEY (bID)
+);
+
+CREATE TABLE IF NOT EXISTS `CollectionSearchIndexAttributes` (
+  `cID` int(11) unsigned NOT NULL default '0',
+  `ak_meta_title` text,
+  `ak_meta_description` text,
+  `ak_meta_keywords` text,
+  `ak_exclude_nav` tinyint(4) default '0',
+  `ak_exclude_page_list` tinyint(4) default '0',
+  `ak_header_extra_content` text,
+  `ak_exclude_search_index` tinyint(4) default '0',
+  `ak_exclude_sitemapxml` tinyint(4) default '0',
+  `ak_tags` text,
+  PRIMARY KEY  (`cID`)
+) ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `FileSearchIndexAttributes` (
+  `fID` int(11) unsigned NOT NULL default '0',
+  `ak_width` decimal(14,4) default '0.0000',
+  `ak_height` decimal(14,4) default '0.0000',
+  PRIMARY KEY  (`fID`)
+) ENGINE=MyISAM;
+
+CREATE TABLE UserSearchIndexAttributes (
+uID                      INTEGER(11) UNSIGNED NOT NULL DEFAULT 0,
+                 PRIMARY KEY (uID)
+);
+) ENGINE=MyISAM;

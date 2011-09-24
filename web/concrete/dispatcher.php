@@ -52,6 +52,7 @@
 	
 	## Load required models ##
 	Loader::model('area');
+	Loader::model('global_area');
 	Loader::model('attribute/key');
 	Loader::model('attribute/value');
 	Loader::model('attribute/category');
