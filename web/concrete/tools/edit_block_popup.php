@@ -3,7 +3,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $c = Page::getByID($_REQUEST['cID']);
 $a = Area::get($c, $_REQUEST['arHandle']);
-$b = Block::getByID($_REQUEST['bID'], $c, $a);
+if (!$a->isGlobalArea()) {
+	$b = Block::getByID($_REQUEST['bID'], $c, $a);
+} else {
+	$b = Block::getByID($_REQUEST['bID'], Stack::getByName($_REQUEST['arHandle']), STACKS_AREA_NAME);
+	$b->setBlockAreaObject($a); // set the original area object
+	$isGlobalArea = true;
+}
 
 $bp = new Permissions($b);
 if (!$bp->canWrite()) {
@@ -15,6 +21,12 @@ if ($_REQUEST['btask'] != 'view' && $_REQUEST['btask'] != 'view_edit_mode') {
 }
 
 $bv = new BlockView(); 
+
+if ($isGlobalArea && $_REQUEST['btask'] != 'view_edit_mode') {
+	echo '<div class="alert-message block-message info">';
+	echo t('This block is contained within a global area. Changing its content will change it everywhere that global area is referenced.');
+	echo('</div>');
+}
 			
 if(($c->isMasterCollection()) && (!in_array($_REQUEST['btask'], array('child_pages','composer','view_edit_mode')))) { 
 	echo '<div class="alert-message block-message info">';
@@ -94,11 +106,6 @@ if (is_object($b)) {
 				</script>
 				<? }
 				
-				if ($rarHandle) {
-					$pagec = Page::getByID($_REQUEST['cID']);
-					$a = Area::getOrCreate($pagec, $rarHandle);
-				}
-				
 				$bv->renderElement('block_controls', array(
 					'a' => $a,
 					'b' => $b,
@@ -133,8 +140,7 @@ if (is_object($b)) {
 				$bv->render($b, 'edit', array(
 					'c' => $c,
 					'a' => $a, 
-					'rcID'=>$rcID,
-					'rarHandle' => $rarHandle
+					'rcID'=>$rcID
 				));
 			} 
 			break;

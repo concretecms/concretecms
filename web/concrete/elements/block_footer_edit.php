@@ -19,7 +19,6 @@ $closeWindowCID=(intval($rcID))?intval($rcID):$c->getCollectionID();
 	<div class="ccm-spacer">&nbsp;</div>
 
 	<input type="hidden" name="update" value="1" />
-	<input type="hidden" name="rarHandle" value="<?=$rarHandle?>" />
 	<input type="hidden" name="rcID" value="<?=$rcID?>" />
 	<input type="submit" name="ccm-edit-block-submit" value="submit" style="display: none" id="ccm-form-submit-button" />
 	<input type="hidden" name="processBlock" value="1">

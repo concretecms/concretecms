@@ -7,12 +7,10 @@ class GlobalArea extends Area {
 	protected $arIsGlobal = 1;
 	
 	public function display() {
-		$c = Page::getByID(HOME_CID, 'RECENT');
+		$c = Page::getCurrentPage();
+		parent::getOrCreate($c, $this->arHandle, 1);		
 		parent::display($c);
 	}
 	
-	public function getOrCreate(&$c, $arHandle) {
-		parent::getOrCreate($c, $arHandle, 1);		
-	}
 	
 }

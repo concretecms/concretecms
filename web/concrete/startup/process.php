@@ -586,8 +586,13 @@
 			// the person is attempting to update some block of content
 
 			$a = Area::get($c, $_GET['arHandle']);
-			
-			$b = Block::getByID($_REQUEST['bID'], $c, $a);
+			$ax = $a; 
+			$cx = $c;
+			if ($a->isGlobalArea()) {
+				$ax = STACKS_AREA_NAME;
+				$cx = Stack::getByName($_REQUEST['arHandle']);
+			}
+			$b = Block::getByID($_REQUEST['bID'], $cx, $ax);
 			$p = new Permissions($b);
 			
 			if ($p->canWrite()) {
@@ -607,14 +612,13 @@
 					$bt = BlockType::getByHandle($b->getBlockTypeHandle());
 					if (!$bt->includeAll()) {
 						// we make sure to create a new version, if necessary				
-						$nvc = $c->getVersionToModify();
+						$nvc = $cx->getVersionToModify();
 					} else {
-						$nvc = $c; // keep the same one
+						$nvc = $cx; // keep the same one
 					}
 					$ob = $b;
 					// replace the block with the version of the block in the later version (if applicable)
-					$b = Block::getByID($_REQUEST['bID'], $nvc, $a);
-					
+					$b = Block::getByID($_REQUEST['bID'], $nvc, $ax);				
 					
 					if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
 						// if we're editing a scrapbook display block, we add a new block in this position for the real block type

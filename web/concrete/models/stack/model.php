@@ -11,7 +11,7 @@ class Stack extends Page {
 		}
 		
 		$cp = new Permissions($stack);
-		if (!$cp->canWrite()) {
+		if (!$cp->canRead()) {
 			return false;
 		}			
 		return true;
@@ -27,11 +27,28 @@ class Stack extends Page {
 		if (!$stackName) {
 			$data['name'] = t('No Name');
 		}
-		$data['filename'] = '/dashboard/stacks/detail.php';
+		$data['filename'] = STACKS_PAGE_FILENAME;
 		$page = $parent->addStatic($data);	
 
 		// we have to do this because we need the area to exist before we try and add something to it.
-		$a = Area::getOrCreate($page, 'Main');
+		$a = Area::getOrCreate($page,  STACKS_AREA_NAME);
+	}
+	
+	public static function getByName($stackName, $cvID = 'RECENT') {
+		$db = Loader::db();
+		$parent = Page::getByPath(STACKS_PAGE_PATH);
+		$cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions on Pages.cID = CollectionVersions.cID where cParentID = ? and cvName = ? order by cvID desc', array($parent->getCollectionID(), $stackName));
+		if ($cID) {
+			return self::getByID($cID, $cvID);
+		}
+	}
+	
+	public static function getOrCreate($stackName) {
+		$stack = self::getByName($stackName);
+		if (!$stack) {		
+			$stack = self::addStack($stackName);
+		}
+		return $stack;
 	}
 	
 	public static function getByID($cID, $cvID = 'RECENT') {
