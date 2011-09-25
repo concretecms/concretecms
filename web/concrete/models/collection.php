@@ -385,6 +385,32 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$csrs[] = $obj;
 			}
 		}
+		
+		// grab all the header block style rules for items in global areas on this page
+		$rs = $db->GetCol('select arHandle from Areas where arIsGlobal = 1 and cID = ?', array($this->getCollectionID()));
+		if (count($rs) > 0) {
+			$pcp = new Permissions($this);
+			foreach($rs as $garHandle) {
+				if ($pcp->canReadVersions()) {
+					$s = Stack::getByName($garHandle, 'RECENT');
+				} else {
+					$s = Stack::getByName($garHandle, 'APPROVED');
+				}
+				if (is_object($s)) {
+					$rs1 = $db->GetAll('select bID, csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($s->getCollectionID(), $s->getVersionID()));
+					foreach($rs1 as $r) {
+						$csrID = $r['csrID'];
+						$arHandle = $txt->filterNonAlphaNum($garHandle);
+						$bID = $r['bID'];
+						$obj = CustomStyleRule::getByID($csrID);
+						if (is_object($obj)) {
+							$obj->setCustomStyleNameSpace('blockStyle' . $bID . $arHandle);
+							$csrs[] = $obj;
+						}
+					}
+				}
+			}
+		}
 		//get the header style rules
 		$styleHeader = ''; 
 		foreach($csrs as $st) { 
@@ -640,6 +666,28 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 		
+		public function getGlobalBlocks() {
+			$db = Loader::db();		
+			$rs = $db->GetCol('select arHandle from Areas where arIsGlobal = 1 and cID = ?', array($this->getCollectionID()));
+			$blocks = array();
+			if (count($rs) > 0) {
+				$pcp = new Permissions($this);
+				foreach($rs as $garHandle) {
+					if ($pcp->canReadVersions()) {
+						$s = Stack::getByName($garHandle, 'RECENT');
+					} else {
+						$s = Stack::getByName($garHandle, 'APPROVED');
+					}
+					if (is_object($s)) {
+						$blocksTmp = $s->getBlocks(STACKS_AREA_NAME);
+						$blocks = array_merge($blocks, $blocksTmp);
+					}
+				}
+			}
+			
+			return $blocks;
+		}
+		
 		public function getBlocks($arHandle = false) {
 			
 			$v = array($this->getCollectionID(), $this->getVersionID());
@@ -650,7 +698,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (!is_array($blockIDs)) {
 				$db = Loader::db();
 				$q = "select Blocks.bID, CollectionVersionBlocks.arHandle from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) order by CollectionVersionBlocks.cbDisplayOrder asc";
-	
 				$r = $db->GetAll($q, $v);
 				$blockIDs = array();
 				if (is_array($r)) {

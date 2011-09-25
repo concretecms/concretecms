@@ -745,6 +745,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				
 				if ($view instanceof Page) {
 					$_pageBlocks = $view->getBlocks();
+					$_pageBlocksGlobal = $view->getGlobalBlocks();
+					$_pageBlocks = array_merge($_pageBlocks, $_pageBlocksGlobal);
 					if ($view->supportsPageCache($_pageBlocks, $this->controller)) {
 						$view->renderFromCache();
 					}
