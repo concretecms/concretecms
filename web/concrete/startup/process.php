@@ -51,11 +51,18 @@
 			case 'remove':
 				$a = Area::get($c, $_REQUEST['arHandle']);
 				if (is_object($a)) {
-					$b = Block::getByID($_REQUEST['bID'], $c, $a);
+					$ax = $a;
+					$cx = $c;
+					if ($a->isGlobalArea()) {
+						$ax = STACKS_AREA_NAME;
+						$cx = Stack::getByName($_REQUEST['arHandle']);
+					}
+
+					$b = Block::getByID($_REQUEST['bID'], $cx, $ax);
 					$p = new Permissions($b); // might be block-level, or it might be area level
 					// we're removing a particular block of content
 					if ($p->canDeleteBlock()){
-						$nvc = $c->getVersionToModify();
+						$nvc = $cx->getVersionToModify();
 						$b->loadNewCollection($nvc);
 						
 						$b->deleteBlock();
@@ -190,7 +197,13 @@
 				break;
 			case 'update_information':
 				$a = Area::get($c, $_GET['arHandle']);
-				$b = Block::getByID($_GET['bID'], $c, $a);
+				$ax = $a; 
+				$cx = $c;
+				if ($a->isGlobalArea()) {
+					$ax = STACKS_AREA_NAME;
+					$cx = Stack::getByName($_REQUEST['arHandle']);
+				}
+				$b = Block::getByID($_REQUEST['bID'], $cx, $ax);
 				$p = new Permissions($b);
 				// we're updating the groups for a particular block
 				if ($p->canWrite()) {
@@ -198,12 +211,12 @@
 					$bt = BlockType::getByHandle($b->getBlockTypeHandle());
 					if (!$bt->includeAll()) {
 						// we make sure to create a new version, if necessary				
-						$nvc = $c->getVersionToModify();
+						$nvc = $cx->getVersionToModify();
 					} else {
-						$nvc = $c; // keep the same one
+						$nvc = $cx; // keep the same one
 					}
 
-					$b = Block::getByID($_REQUEST['bID'], $nvc, $a);
+					$b = Block::getByID($_REQUEST['bID'], $nvc, $ax);
 					$ob = $b;
 					if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
 						$bi = $b->getInstance();
