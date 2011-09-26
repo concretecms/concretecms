@@ -23,7 +23,7 @@ $args = array('c'=>$c, 'a' => $a, 'cp' => $cp, 'ap' => $ap, 'token' => $token);
 Loader::element("dialog_header");
 
 if ($a->isGlobalArea()) {
-	echo '<div class="alert-message block-message info">';
+	echo '<div class="alert-message block-message warning">';
 	echo t('This is a global area. Content added here will be visible on every page that contains this area.');
 	echo('</div>');
 } 

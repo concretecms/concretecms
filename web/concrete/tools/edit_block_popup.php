@@ -23,13 +23,13 @@ if ($_REQUEST['btask'] != 'view' && $_REQUEST['btask'] != 'view_edit_mode') {
 $bv = new BlockView(); 
 
 if ($isGlobalArea && $_REQUEST['btask'] != 'view_edit_mode') {
-	echo '<div class="alert-message block-message info">';
+	echo '<div class="alert-message block-message warning">';
 	echo t('This block is contained within a global area. Changing its content will change it everywhere that global area is referenced.');
 	echo('</div>');
 }
 			
 if(($c->isMasterCollection()) && (!in_array($_REQUEST['btask'], array('child_pages','composer','view_edit_mode')))) { 
-	echo '<div class="alert-message block-message info">';
+	echo '<div class="alert-message block-message warning">';
 	echo t('This is a global block.  Editing it here will change all instances of this block throughout the site.');
 	//echo t('This is a global block.  Edit it from the <a href="%s">Global Scrapbook</a> in your dashboard.<br /><br /><br />', View::url('/dashboard/scrapbook/') );
 	//echo '[<a class="ccm-dialog-close">'.t('Close Window').'</a>]';
@@ -37,7 +37,7 @@ if(($c->isMasterCollection()) && (!in_array($_REQUEST['btask'], array('child_pag
 }  
 
 if ($b->isAliasOfMasterCollection() && $_REQUEST['btask'] != 'view_edit_mode') {
-	echo '<div class="alert-message block-message info">';
+	echo '<div class="alert-message block-message warning">';
 	echo t('This block is an alias of Page Defaults. Editing it here will "disconnect" it so changes to Page Defaults will no longer affect this block.');
 	echo '</div>';
 }
