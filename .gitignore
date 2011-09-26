@@ -21,3 +21,4 @@ __MACOSX
 error_log
 .htaccess
 .ftpquota
+/.idea/
