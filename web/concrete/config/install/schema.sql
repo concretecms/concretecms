@@ -675,6 +675,16 @@ state                    VARCHAR(64) NOT NULL,
                  PRIMARY KEY (pID)
 );
 
+CREATE TABLE `Stacks` (
+  `stID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `stName` varchar(255) NOT NULL DEFAULT '',
+  `stType` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `cID` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`stID`),
+  KEY `stType` (`stType`),
+  KEY `stName` (`stName`)
+)
+
 CREATE TABLE UserAttributeKeys (
 akID                     INTEGER(10) UNSIGNED NOT NULL,
 uakProfileDisplay        TINYINT(1) NOT NULL DEFAULT 0,

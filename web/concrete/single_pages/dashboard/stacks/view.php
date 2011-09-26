@@ -37,7 +37,11 @@
 		<a href="javascript:void(0)" onclick="window.location.href='<?=$this->url('/dashboard/stacks')?>'" class="btn small"><?=t('Back to List')?></a>
 		<a href="javascript:void(0)" onclick="ccm_stacksAddBlock()" class="btn small ccm-main-nav-edit-option"><?=t('Add Block')?></a>
 		<a class="btn small ccm-main-nav-edit-option" dialog-width="640" dialog-height="340" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?rel=SITEMAP&cID=<?=$stack->getCollectionID()?>"><?=t('Version History')?></a>
-
+		<? $cpc = new Permissions($stack);
+		if ($cpc->canDeleteCollection()) { ?>
+			<a class="btn small ccm-main-nav-edit-option error" href="javascript:void(0)" onclick="window.location.href='<?=$this->url('/dashboard/stacks/', 'delete', $stack->getCollectionID(), Loader::helper('validation/token')->generate('delete'))?>'"><?=t('Delete Stack')?></a>
+		<? } ?>
+		
 		<? if (PERMISSIONS_MODEL == 'advanced') { ?>
 			<a class="btn small ccm-main-nav-edit-option" dialog-width="580" dialog-height="420" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$stack->getCollectionID()?>&arHandle=Main&atask=groups"><?=t('Permissions')?></a>
 		<? } ?>
@@ -62,10 +66,12 @@
 			$bv = new BlockView();
 			$bv->setAreaObject($a); 
 			$p = new Permissions($b);
-			$bv->renderElement('block_controls', array( 'a' => $a, 'b' => $b, 'p' => $p ));
-			$bv->renderElement('block_header', array( 'a' => $a, 'b' => $b, 'p' => $p ));
-			$bv->render($b);
-			$bv->renderElement('block_footer');
+			if ($p->canRead()) {
+				$bv->renderElement('block_controls', array( 'a' => $a, 'b' => $b, 'p' => $p ));
+				$bv->renderElement('block_header', array( 'a' => $a, 'b' => $b, 'p' => $p ));
+				$bv->render($b);
+				$bv->renderElement('block_footer');
+			}
 		}
 		$bv->renderElement('block_area_footer_view', array('a' => $a));	
 		print '</div>'; // instead  of loading block area footer view
@@ -78,22 +84,44 @@
 	
 	<div class="ccm-dashboard-pane-body">
 		
-		<?
-		if (count($stacks) > 0) { 
-			foreach($stacks as $st) { ?>
+	<h4><?=t('Global Areas')?></h4>
 	
-				<div class="ccm-stack">
-					<a href="<?=$this->url('/dashboard/stacks/view_details', $st->getCollectionID())?>"><?=$st->getCollectionName()?></a>
-				</div>
-			
-			<?
-			}
-		} else {
-			print t('No stacks created yet.');
-		}
-		?>
+	<?
+	if (count($globalareas) > 0) { 
+		foreach($globalareas as $st) { ?>
+
+			<div class="ccm-stack">
+				<a href="<?=$this->url('/dashboard/stacks/view_details', $st->getCollectionID())?>"><?=$st->getCollectionName()?></a>
+			</div>
 		
-		<br/>
+		<?
+		}
+	} else {
+		print '<p>';
+		print t('No global areas created yet.');
+		print '</p>';	
+	}
+	?>
+		
+	<h4><?=t('Other Stacks')?></h4>
+	
+	<?
+	if (count($useradded) > 0) { 
+		foreach($useradded as $st) { ?>
+
+			<div class="ccm-stack">
+				<a href="<?=$this->url('/dashboard/stacks/view_details', $st->getCollectionID())?>"><?=$st->getCollectionName()?></a>
+			</div>
+		
+		<?
+		}
+	} else {
+		print '<p>';
+		print t('No stacks have been added.');
+		print '</p>';
+	}
+	?>
+
 		<h3><?=t('New Stack')?></h3>
 		<form method="post" action="<?=$this->action('add_stack')?>">
 		<?=Loader::helper("validation/token")->output('add_stack')?>

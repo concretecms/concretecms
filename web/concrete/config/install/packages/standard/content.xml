@@ -62,6 +62,37 @@
         <page name="Multilingual Settings" path="/dashboard/settings/multilingual" filename="/dashboard/settings/multilingual/view.php" pagetype="" description="" package=""/>
         <page name="Attribute Sets" path="/dashboard/settings/attribute_sets" filename="/dashboard/settings/attribute_sets/view.php" pagetype="" description="" package=""/>
     </singlepages>
+    <stacks>
+        <stack name="Header Nav" type="global_area">
+            <area name="Main">
+                <block type="autonav" name="" custom-template="header_menu.php">
+                    <data table="btNavigation">
+                        <record>
+                            <orderBy><![CDATA[display_asc]]></orderBy>
+                            <displayPages><![CDATA[top]]></displayPages>
+                            <displayPagesCID/>
+                            <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                            <displaySubPages><![CDATA[none]]></displaySubPages>
+                            <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
+                            <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+                            <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+                        </record>
+                    </data>
+                </block>
+            </area>
+        </stack>
+        <stack name="Site Heading" type="global_area">
+            <area name="Main">
+                <block type="content" name="">
+                    <data table="btContentLocal">
+                        <record>
+                            <content><![CDATA[<h1 id="logo"><a href="{ccm:export:page:}"><p>concrete5 Site</p></a></h1>]]></content>
+                        </record>
+                    </data>
+                </block>
+            </area>
+        </stack>
+    </stacks>
     <pagetypes>
         <pagetype handle="full" name="Full Width" package="">
             <page name="" path="" filename="" pagetype="full" description="" package="">

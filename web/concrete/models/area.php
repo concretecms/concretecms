@@ -117,6 +117,9 @@ class Area extends Object {
 	}
 
 	function get(&$c, $arHandle) {
+		if (!is_object($c)) {
+			return false;
+		}
 		
 		$ca = new Cache();
 		$a = Cache::get('area', $c->getCollectionID() . ':' . $arHandle);
@@ -165,7 +168,7 @@ class Area extends Object {
 		
 		if ($arIsGlobal) {
 			// we create a stack for it			
-			Stack::getOrCreate($arHandle);
+			Stack::getOrCreateGlobalArea($arHandle);
 		}
 
 		$area = Area::get($c, $arHandle); // we're assuming the insert succeeded

@@ -346,24 +346,32 @@
 					$cx = Stack::getByName($_REQUEST['arHandle']);
 					$ax = Area::get($cx, STACKS_AREA_NAME);
 				}
+				$obj = new stdClass;
+
 				$ap = new Permissions($ax);	
-				if ($ap->canAddBlocks()) {
-					$stack = Stack::getByID($_REQUEST['stID']);
-					if (is_object($stack)) {
+				$stack = Stack::getByID($_REQUEST['stID']);
+				if (is_object($stack)) {
+					if ($ap->canAddStack($stack)) {
 						// we've already run permissions on the stack at this point, at least for viewing the stack.
 						$btx = BlockType::getByHandle(BLOCK_HANDLE_STACK_PROXY);
 						$nvc = $cx->getVersionToModify();
 						$data['stID'] = $stack->getCollectionID();
 						$nb = $nvc->addBlock($btx, $ax, $data);
+
+						$obj->aID = $a->getAreaID();
+						$obj->arHandle = $a->getAreaHandle();
+						$obj->cID = $c->getCollectionID();
+						$obj->bID = $nb->getBlockID();
+						$obj->error = false;
+					} else {
+						$obj->error = true;
+						$obj->response = array(t('The stack contains invalid block types.'));
 					}
+				} else {
+					$obj->error = true;
+					$obj->response = array(t('Invalid stack.'));
 				}
 
-				$obj = new stdClass;
-				$obj->aID = $a->getAreaID();
-				$obj->arHandle = $a->getAreaHandle();
-				$obj->cID = $c->getCollectionID();
-				$obj->bID = $nb->getBlockID();
-				$obj->error = false;
 				print Loader::helper('json')->encode($obj);
 				exit;
 

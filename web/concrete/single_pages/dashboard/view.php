@@ -1,6 +1,13 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<ul class="ccm-tile-menu clearfix">
+<div class="row">
+<div class="span14 offset1 columns">
+<div class="ccm-dashboard-pane">
+
+	<div class="ccm-dashboard-pane-header"><h3><?=t('Dashboard Home')?></h3></div>
+	<div class="ccm-dashboard-pane-body clearfix">
+
+<ul class="clearfix">
 
 <?php
 
@@ -12,9 +19,15 @@ foreach($children as $ch) {
 	?>
 	
 	<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><span><?=$page->getCollectionName()?></span>
-		<?=$page->getCollectionDescription()?>
 	</a></li>
 	
 <? } ?>
 
 </ul>
+
+</div>
+</div>
+
+</div>
+</div>
+</div>

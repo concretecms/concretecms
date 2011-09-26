@@ -2103,6 +2103,32 @@
       <DEFAULT value="0"/>
     </field>
   </table>
+<table name="Stacks">
+    <field name="stID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="stName" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="stType" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="stType">
+      <col>stType</col>
+    </index>
+    <index name="stName">
+      <col>stName</col>
+    </index>
+  </table>
   <table name="atDateTimeSettings">
     <field name="akID" type="I" size="10">
       <KEY/>

@@ -12,5 +12,4 @@ class GlobalArea extends Area {
 		parent::display($c);
 	}
 	
-	
 }

@@ -7,8 +7,8 @@
 	} else {
 		$stack = Stack::getByID($stID, 'ACTIVE');
 	}
-	$pp = new Permissions($stack);
-	if ($pp->canRead()) {
-		$ax = new Area(STACKS_AREA_NAME);
+	$ax = Area::get($stack, STACKS_AREA_NAME);
+	$axp = new Permissions($ax);
+	if ($axp->canRead()) {
 		$ax->display($stack);
 	}
