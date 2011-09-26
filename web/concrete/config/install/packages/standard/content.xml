@@ -65,22 +65,6 @@
     <pagetypes>
         <pagetype handle="full" name="Full Width" package="">
             <page name="" path="" filename="" pagetype="full" description="" package="">
-                <area name="Header Nav">
-                    <block type="autonav" name="" custom-template="header_menu.php" mc-block-id="0bM1O9v6">
-                        <data table="btNavigation">
-                            <record>
-                                <orderBy><![CDATA[display_asc]]></orderBy>
-                                <displayPages><![CDATA[top]]></displayPages>
-                                <displayPagesCID/>
-                                <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
-                                <displaySubPages><![CDATA[none]]></displaySubPages>
-                                <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
-                                <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
-                                <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
-                            </record>
-                        </data>
-                    </block>
-                </area>
                 <area name="Header">
                     <block type="image" name="" mc-block-id="XpeofvS4">
                         <data table="btContentImage">
@@ -100,22 +84,6 @@
         </pagetype>
         <pagetype handle="left_sidebar" name="Left Sidebar" package="">
             <page name="" path="" filename="" pagetype="left_sidebar" description="" package="">
-                <area name="Header Nav">
-                    <block type="autonav" name="" custom-template="header_menu.php" mc-block-id="wVrgzYLD">
-                        <data table="btNavigation">
-                            <record>
-                                <orderBy><![CDATA[display_asc]]></orderBy>
-                                <displayPages><![CDATA[top]]></displayPages>
-                                <displayPagesCID/>
-                                <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
-                                <displaySubPages><![CDATA[none]]></displaySubPages>
-                                <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
-                                <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
-                                <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
-                            </record>
-                        </data>
-                    </block>
-                </area>
                 <area name="Header">
                     <block type="image" name="" mc-block-id="tKtpsWVg">
                         <data table="btContentImage">
@@ -151,22 +119,6 @@
         </pagetype>
         <pagetype handle="right_sidebar" name="Right Sidebar" package="">
             <page name="" path="" filename="" pagetype="right_sidebar" description="" package="">
-                <area name="Header Nav">
-                    <block type="autonav" name="" custom-template="header_menu.php" mc-block-id="rNtlsfTe">
-                        <data table="btNavigation">
-                            <record>
-                                <orderBy><![CDATA[display_asc]]></orderBy>
-                                <displayPages><![CDATA[top]]></displayPages>
-                                <displayPagesCID/>
-                                <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
-                                <displaySubPages><![CDATA[none]]></displaySubPages>
-                                <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
-                                <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
-                                <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
-                            </record>
-                        </data>
-                    </block>
-                </area>
                 <area name="Header">
                     <block type="slideshow" name="" mc-block-id="r27Q6OCN">
                         <data table="btSlideshow">
@@ -243,9 +195,6 @@
     </pagetypes>
     <pages>
         <page name="Home" path="" filename="" pagetype="right_sidebar" description="" package="">
-            <area name="Header Nav">
-                <block mc-block-id="rNtlsfTe"/>
-            </area>
             <area name="Header">
                 <block mc-block-id="r27Q6OCN"/>
             </area>
@@ -306,9 +255,6 @@
                             <value><![CDATA[0]]></value>
                         </attributekey>
                     </attributes>
-                    <area name="Header Nav">
-                        <block mc-block-id="wVrgzYLD"/>
-                    </area>
                     <area name="Header">
                         <block mc-block-id="tKtpsWVg"/>
                     </area>
@@ -363,9 +309,6 @@
                             <value><![CDATA[1]]></value>
                         </attributekey>
                     </attributes>
-                    <area name="Header Nav">
-                        <block mc-block-id="wVrgzYLD"/>
-                    </area>
                     <area name="Header">
                         <block mc-block-id="tKtpsWVg"/>
                     </area>
@@ -400,9 +343,6 @@
                             <value><![CDATA[0]]></value>
                         </attributekey>
                     </attributes>
-                    <area name="Header Nav">
-                        <block mc-block-id="wVrgzYLD"/>
-                    </area>
                     <area name="Header">
                         <block mc-block-id="tKtpsWVg"/>
                     </area>
@@ -447,9 +387,6 @@
                                     <value><![CDATA[0]]></value>
                                 </attributekey>
                             </attributes>
-                            <area name="Header Nav">
-                                <block mc-block-id="wVrgzYLD"/>
-                            </area>
                             <area name="Header">
                                 <block mc-block-id="tKtpsWVg"/>
                             </area>

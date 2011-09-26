@@ -193,12 +193,17 @@ class Area extends Object {
 			}
 			if (is_object($c)) {
 				$blocks = $c->getBlocks(STACKS_AREA_NAME);
+				$globalArea = Area::get($c, STACKS_AREA_NAME);
 			}
 		} else {
 			$blocks = $c->getBlocks($this->arHandle);
 		}
 		foreach($blocks as $ab) {
-			$ab->setBlockAreaObject($this);
+			if ($this->arIsGlobal && is_object($globalArea)) {
+				$ab->setBlockAreaObject($globalArea);
+			} else {
+				$ab->setBlockAreaObject($this);
+			}
 			$this->areaBlocksArray[] = $ab;
 			$this->totalBlocks++;
 		}

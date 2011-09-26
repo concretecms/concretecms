@@ -10,12 +10,16 @@ class DashboardStacksDetailController extends DashboardBaseController {
 		$cp = new Permissions($c);
 		if ($cp->canRead()) {
 			$c = Page::getCurrentPage();
-			$cID = $c->getCollectionID();
-			$this->redirect('/dashboard/stacks','view_details', $cID);		
+			$pcp = new Permissions($c);
+			if ((!$pcp->canReadVersions()) || ($_GET['vtask'] != 'view_versions' && $_GET['vtask'] != 'compare')) {
+				$cID = $c->getCollectionID();
+				$this->redirect('/dashboard/stacks','view_details', $cID);		
+			}
 		} else {
 			$v = View::getInstance();
 			$v->render('/page_not_found');
 		}
 	}		
+	
 
 }

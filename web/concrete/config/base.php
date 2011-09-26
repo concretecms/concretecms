@@ -203,6 +203,7 @@ define('BLOCK_HANDLE_SCRAPBOOK_PROXY', 'core_scrapbook_display');
 define('STACKS_PAGE_PATH', '/dashboard/stacks/list');
 define('STACKS_AREA_NAME', 'Main');
 define('STACKS_PAGE_FILENAME', '/dashboard/stacks/detail.php');
+define('BLOCK_HANDLE_STACK_PROXY', 'core_stack_display');
 
 # Hosted assets are assets shared amongst all Concrete5 installations on a single machine.
 if (defined('MULTI_SITE') && MULTI_SITE == 1) {

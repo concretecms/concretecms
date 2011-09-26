@@ -80,7 +80,14 @@
 			case 'update_block_css': 
 				$a = Area::get($c, $_REQUEST['arHandle']);
 				if (is_object($a)) {
-					$b = Block::getByID($_REQUEST['bID'], $c, $a);
+					$ax = $a;
+					$cx = $c;
+					if ($a->isGlobalArea()) {
+						$ax = STACKS_AREA_NAME;
+						$cx = Stack::getByName($_REQUEST['arHandle']);
+					}
+
+					$b = Block::getByID($_REQUEST['bID'], $cx, $ax);
 					$p = new Permissions($b);
 					if ($p->canWrite()){ 					
 						
@@ -93,7 +100,7 @@
 						
 						Loader::model('custom_style');						
 						
-						$nvc = $c->getVersionToModify();
+						$nvc = $cx->getVersionToModify();
 						$b->loadNewCollection($nvc);
 						
 						//if this block is being changed, make sure it's a new version of the block.
@@ -130,11 +137,18 @@
 			case 'update_groups':
 				$a = Area::get($c, $_GET['arHandle']);
 				if (is_object($a)) {
-					$b = Block::getByID($_GET['bID'], $c, $a); 
+					$ax = $a;
+					$cx = $c;
+					if ($a->isGlobalArea()) {
+						$ax = STACKS_AREA_NAME;
+						$cx = Stack::getByName($_REQUEST['arHandle']);
+					}
+
+					$b = Block::getByID($_GET['bID'], $cx, $ax); 
 					$p = new Permissions($b);
 					// we're updating the groups for a particular block
 					if ($p->canAdminBlock()) {
-						$nvc = $c->getVersionToModify();
+						$nvc = $cx->getVersionToModify();
 						$b->loadNewCollection($nvc);
 						if ($c->isMasterCollection()) {
 							$b->updateBlockGroups(true);
@@ -147,6 +161,7 @@
 						$obj->aID = $a->getAreaID();
 						$obj->cID = $c->getCollectionID();
 						$obj->arHandle= $a->getAreaHandle();
+						$obj->task = 'update_groups';
 						$obj->error = false;
 						
 						print Loader::helper('json')->encode($obj);
@@ -302,18 +317,56 @@
 		switch($_GET['atask']) { 		
 			case 'update':
 				if ($cp->canAdminPage()) {
-					$area = Area::get($c, $_GET['arHandle']);
-					if (is_object($area)) {
+					$a = Area::get($c, $_GET['arHandle']);
+					$ax = $a; 
+					$cx = $c;
+					if ($a->isGlobalArea()) {
+						$cx = Stack::getByName($_REQUEST['arHandle']);
+						$ax = Area::get($cx, STACKS_AREA_NAME);
+					}
+
+					if (is_object($a)) {
 						if ($_POST['aRevertToPagePermissions']) {
-							$area->revertToPagePermissions();		
+							$ax->revertToPagePermissions();		
 						} else {
-							$area->update($_POST['attribKey'], $_POST['attribValue']);
+							$ax->update();
 						}
 					}
 					
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
 					exit;
 				}				
+				break;
+			case 'add_stack':
+				$a = Area::get($c, $_GET['arHandle']);
+				$cx = $c;
+				$ax = $a;
+
+				if ($a->isGlobalArea()) {
+					$cx = Stack::getByName($_REQUEST['arHandle']);
+					$ax = Area::get($cx, STACKS_AREA_NAME);
+				}
+				$ap = new Permissions($ax);	
+				if ($ap->canAddBlocks()) {
+					$stack = Stack::getByID($_REQUEST['stID']);
+					if (is_object($stack)) {
+						// we've already run permissions on the stack at this point, at least for viewing the stack.
+						$btx = BlockType::getByHandle(BLOCK_HANDLE_STACK_PROXY);
+						$nvc = $cx->getVersionToModify();
+						$data['stID'] = $stack->getCollectionID();
+						$nb = $nvc->addBlock($btx, $ax, $data);
+					}
+				}
+
+				$obj = new stdClass;
+				$obj->aID = $a->getAreaID();
+				$obj->arHandle = $a->getAreaHandle();
+				$obj->cID = $c->getCollectionID();
+				$obj->bID = $nb->getBlockID();
+				$obj->error = false;
+				print Loader::helper('json')->encode($obj);
+				exit;
+
 				break;
 			case 'design':
 				$area = Area::get($c, $_GET['arHandle']);
@@ -638,7 +691,7 @@
 						// set the block to the display order
 						// delete the scrapbook display block, and save the data
 						$btx = BlockType::getByHandle($_b->getBlockTypeHandle());
-						$nb = $nvc->addBlock($btx, $a, array());
+						$nb = $nvc->addBlock($btx, $ax, array());
 						$b->deleteBlock();
 						$b = &$nb;
 					
@@ -679,7 +732,13 @@
 			// the persion is attempting to add a block of content of some kind
 			$a = Area::get($c, $_REQUEST['arHandle']);
 			if (is_object($a)) {
-				$ap = new Permissions($a);	
+				$ax = $a;
+				$cx = $c;
+				if ($a->isGlobalArea()) {
+					$cx = Stack::getByName($_REQUEST['arHandle']);
+					$ax = Area::get($cx, STACKS_AREA_NAME);
+				}
+				$ap = new Permissions($ax);	
 				if ($_REQUEST['btask'] == 'alias_existing_block') {
 					if (is_array($_REQUEST['pcID'])) {		
 						Loader::model('pile');
@@ -696,13 +755,13 @@
 							if ($pc->getItemType() == "BLOCK") {
 								$bID = $pc->getItemID();
 								$b = Block::getByID($bID);
-								$b->setBlockAreaObject($a);
+								$b->setBlockAreaObject($ax);
 								$bt = BlockType::getByHandle($b->getBlockTypeHandle());
 								if ($ap->canAddBlock($bt)) {
 									$btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
-									$nvc = $c->getVersionToModify();
+									$nvc = $cx->getVersionToModify();
 									$data['bOriginalID'] = $bID;
-									$nb = $nvc->addBlock($btx, $a, $data);
+									$nb = $nvc->addBlock($btx, $ax, $data);
 									$nb->refreshCache();
 								}
 							}
@@ -735,11 +794,11 @@
 						if ((!is_object($e)) || (($e instanceof ValidationErrorHelper) && (!$e->has()))) {
 
 							if (!$bt->includeAll()) {
-								$nvc = $c->getVersionToModify();
-								$nb = $nvc->addBlock($bt, $a, $data);
+								$nvc = $cx->getVersionToModify();
+								$nb = $nvc->addBlock($bt, $ax, $data);
 							} else {
 								// if we apply to all, then we don't worry about a new version of the page
-								$nb = $c->addBlock($bt, $a, $data);
+								$nb = $c->addBlock($bt, $ax, $data);
 							}
 
 							$obj->error = false;
