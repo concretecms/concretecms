@@ -35,7 +35,7 @@ if ($a->areaAcceptsBlocks()) { ?>
 	<? if ($cp->canAdmin() && PERMISSIONS_MODEL != 'simple') { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canModifyGroups = true;
 	<? } ?>
-	<? if ($ap->canWrite() && ENABLE_AREA_LAYOUTS == true && (!$c->isMasterCollection())) { ?>
+	<? if ($ap->canWrite() && ENABLE_AREA_LAYOUTS == true && (!$a->isGlobalArea()) && (!$c->isMasterCollection())) { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canLayout = true;
 	<? } else { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canLayout = false;

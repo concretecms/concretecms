@@ -114,7 +114,7 @@
 	
 <? global $c;?>
 <h1><?=t('Block Permissions')?></h1>
-<form method="post" name="ccmBlockPermissionForm" id="ccmBlockPermissionForm" action="<?=$gl->getGroupUpdateAction($b)?>&rcID=<?=intval($rcID)?>">
+<form method="post" name="ccmBlockPermissionForm" id="ccmBlockPermissionForm" action="<?=$gl->getGroupUpdateAction($b)?>">
 	<span class="ccm-important">
 	<? if (!$b->overrideAreaPermissions()) { ?>
 		<?=t('Permissions for this block are currently dependent on the area containing this block. If you override those permissions here, they will not match those of the area.')?><br/><br/>

@@ -26,6 +26,8 @@ arIsGlobal INTEGER(1) UNSIGNED NOT NULL DEFAULT 0,
                  PRIMARY KEY (arID)
 );
 
+ALTER TABLE Areas ADD  INDEX arIsGlobal  (arIsGlobal);
+
 CREATE TABLE AttributeSetKeys (
 akID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 asID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,

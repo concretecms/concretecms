@@ -23,7 +23,7 @@
 		*/
 		?>
 		
-		<iframe border="0" id="v<?=time()?>" frameborder="0" height="100%" width="100%" src="<?=BASE_URL . DIR_REL?>/<?=DISPATCHER_FILENAME?>?cvID=<?=$_REQUEST['cvID']?>&cID=<?=$_REQUEST['cID']?>" />
+		<iframe border="0" id="v<?=time()?>" frameborder="0" height="100%" width="100%" src="<?=BASE_URL . DIR_REL?>/<?=DISPATCHER_FILENAME?>?cvID=<?=$_REQUEST['cvID']?>&cID=<?=$_REQUEST['cID']?>&vtask=view_versions" />
 	
 	<? 
 		exit;

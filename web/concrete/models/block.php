@@ -120,7 +120,7 @@ class Block extends Object {
 			}
 			
 			$b->instance = new $class($b);
-			$b->populateIsGlobal();
+			
 			if ($c != null) {
 				$ct = CollectionType::getByID($c->getCollectionTypeID());
 				if (is_object($ct)) {
@@ -216,33 +216,9 @@ class Block extends Object {
 	}
 	
 	public function isGlobal() {
-		return $this->bIsGlobal;
+		return false; // legacy. no more scrapbooks in the dashboard.
 	}
 	
-	public function populateIsGlobal() {
-		$db = Loader::db();
-		
-		$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
-		$globalScrapbookC = $scrapbookHelper->getGlobalScrapbookPage(); 
-		
-		if( $this->cID==$globalScrapbookC->cID ) {
-			$this->bIsGlobal = true;	
-			return true;
-		}
-		$q = "SELECT b.bID FROM Blocks AS b, CollectionVersionBlocks AS cvb ".
-			 "WHERE b.bID = '{$this->bID}' AND cvb.bID=b.bID AND cvb.cID=".intval($globalScrapbookC->getCollectionId())." LIMIT 1";
-			 
-		$r = $db->query($q);
-		if ($r->numRows() > 0) {
-			$this->bIsGlobal = 1;
-		} else {
-			$this->bIsGlobal = 0;
-		}
-		
-		$c = $this->getBlockCollectionObject();
-		return 0;
-	}
-
 	public function inc($file) {
 		$b = $this;
 		if (file_exists($this->getBlockPath() . '/' . $file)) {

@@ -126,6 +126,10 @@ div.ccm-block-alias {
 	border: 2px dotted #fbb !important;
 }
 
+div.ccm-block-stack {
+	border: 2px dotted #6D0000 !important;
+}
+
 div.ccm-block-arrange, div.ccm-block {
 	margin: 0px;
 	border: 2px dotted #f00;
@@ -140,9 +144,13 @@ div.ccm-block-arrange {
 	overflow: hidden;
 }
 
-div.ccm-block-arrange:hover {
+div.ccm-area div.ccm-block-arrange:hover {
 	cursor: move;
 	border: 2px dotted #000;
+}
+
+div.ccm-global-area div.ccm-block-arrange {
+	border: 2px dotted #eee;
 }
 
 div.ccm-add-block-global {

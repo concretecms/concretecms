@@ -44,6 +44,9 @@
 					} else if (this.lutype == 'attributes') {
 						this.list.children('li').addClass('ccm-attribute-available'); 
 						this.list.children('li').removeClass('ccm-attribute-selected'); 
+					} else if (this.lutype == 'stacks') {
+						this.list.children('li').addClass('ccm-stack-available'); 
+						this.list.children('li').removeClass('ccm-stack-selected'); 
 					} else {
 						this.list.children('li').show();
 					}
@@ -66,6 +69,9 @@
 				} else if (lutype == 'attributes') {
 					var val = $(this).find('a,span').html().toLowerCase();
 					self.cache.push(val);
+				} else if (lutype == 'stacks') {
+					var val = $(this).find('a,span').html().toLowerCase();
+					self.cache.push(val);
 				} else if (lutype == 'fileset') {
 					self.cache.push($(this).find('label').html().toLowerCase());
 				}
@@ -84,9 +90,18 @@
 			} else if (this.lutype == 'attributes') {
 				this.list.children('li').removeClass('ccm-attribute-available');
 				this.list.children('li').removeClass('ccm-attribute-selected');
+				this.list.children('li').removeClass('ccm-item-selected');
 				$.each(scores, function(i, score) { self.rows[score[1]].addClass('ccm-attribute-available'); });
 				this.list.children('li.icon-select-list-header').removeClass("ccm-attribute-available");
 				$(this.list.find('li.ccm-attribute-available')[0]).addClass('ccm-item-selected');
+
+			} else if (this.lutype == 'stacks') {
+				this.list.children('li').removeClass('ccm-stack-available');
+				this.list.children('li').removeClass('ccm-stack-selected');
+				this.list.children('li').removeClass('ccm-item-selected');
+				$.each(scores, function(i, score) { self.rows[score[1]].addClass('ccm-stack-available'); });
+				this.list.children('li.icon-select-list-header').removeClass("ccm-stack-available");
+				$(this.list.find('li.ccm-stack-available')[0]).addClass('ccm-item-selected');
 
 			} else {
 				this.list.children('li').hide();

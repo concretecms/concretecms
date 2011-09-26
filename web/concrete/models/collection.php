@@ -394,7 +394,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				if ($pcp->canReadVersions()) {
 					$s = Stack::getByName($garHandle, 'RECENT');
 				} else {
-					$s = Stack::getByName($garHandle, 'APPROVED');
+					$s = Stack::getByName($garHandle, 'ACTIVE');
 				}
 				if (is_object($s)) {
 					$rs1 = $db->GetAll('select bID, csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($s->getCollectionID(), $s->getVersionID()));
@@ -676,7 +676,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					if ($pcp->canReadVersions()) {
 						$s = Stack::getByName($garHandle, 'RECENT');
 					} else {
-						$s = Stack::getByName($garHandle, 'APPROVED');
+						$s = Stack::getByName($garHandle, 'ACTIVE');
 					}
 					if (is_object($s)) {
 						$blocksTmp = $s->getBlocks(STACKS_AREA_NAME);

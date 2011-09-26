@@ -62,6 +62,11 @@ ccm_showBlockMenu = function(obj, e) {
 			html += (obj.editInline) ? '<li><a class="ccm-icon" id="menuEdit' + obj.bID + '-' + obj.aID + '" href="' + CCM_DISPATCHER_FILENAME + '?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=edit#_edit' + obj.bID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/edit_small.png)">' + ccmi18n.editBlock + '</span></a></li>'
 				: '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editBlock + ' ' + obj.btName + '" dialog-append-buttons="true" dialog-modal="false" dialog-on-close="ccm_blockWindowAfterClose()" dialog-width="' + obj.width + '" dialog-height="' + obj.height + '" id="menuEdit' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=edit"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/edit_small.png)">' + ccmi18n.editBlock + '</span></a></li>';
 		}
+		if (obj.canWriteStack) {
+			html += '<li><a class="ccm-icon" id="menuEdit' + obj.bID + '-' + obj.aID + '" href="' + CCM_DISPATCHER_FILENAME + '/dashboard/stacks/-/view_details/' + obj.stID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/edit_small.png)">' + ccmi18n.editStackContents + '</span></a></li>'
+			html += '<li class="header"></li>';
+			
+		}
 		html += '<li><a class="ccm-icon" id="menuAddToScrapbook' + obj.bID + '-' + obj.aID + '" href="#" onclick="javascript:ccm_addToScrapbook(' + obj.cID + ',' + obj.bID + ',\'' + encodeURIComponent(obj.arHandle) + '\');return false;"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/paste_small.png)">' + ccmi18n.copyBlockToScrapbook + '</span></a></li>';
 
 
@@ -73,11 +78,13 @@ ccm_showBlockMenu = function(obj, e) {
 		if (obj.canDelete) {
 			html += '<li><a class="ccm-icon" id="menuDelete' + obj.bID + '-' + obj.aID + '" href="#" onclick="javascript:ccm_deleteBlock(' + obj.cID + ',' + obj.bID + ',' + obj.aID + ', \'' + encodeURIComponent(obj.arHandle) + '\', \'' + obj.deleteMessage + '\');return false;"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n.deleteBlock + '</span></a></li>';
 		} 		
-		if (obj.canWrite) {
+		if (obj.canDesign || obj.canWrite) {
 			html += '<li class="header"></li>';
-			if (obj.canDesign) {
-				html += '<li><a class="ccm-icon" dialog-modal="false" dialog-title="' + ccmi18n.changeBlockBaseStyle + '" dialog-width="450" dialog-height="420" id="menuChangeCSS' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=block_css&modal=true&width=300&height=100" title="' + ccmi18n.changeBlockCSS + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/design_small.png)">' + ccmi18n.changeBlockCSS + '</span></a></li>';
-			}
+		}
+		if (obj.canDesign) {
+			html += '<li><a class="ccm-icon" dialog-modal="false" dialog-title="' + ccmi18n.changeBlockBaseStyle + '" dialog-width="450" dialog-height="420" id="menuChangeCSS' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=block_css&modal=true&width=300&height=100" title="' + ccmi18n.changeBlockCSS + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/design_small.png)">' + ccmi18n.changeBlockCSS + '</span></a></li>';
+		}
+		if (obj.canWrite) {
 			html += '<li><a class="ccm-icon" dialog-modal="false" dialog-title="' + ccmi18n.changeBlockTemplate + '" dialog-width="300" dialog-height="100" id="menuChangeTemplate' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=template&modal=true&width=300&height=100" title="' + ccmi18n.changeBlockTemplate + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/wrench.png)">' + ccmi18n.changeBlockTemplate + '</span></a></li>';
 		}
 
@@ -105,7 +112,9 @@ ccm_showBlockMenu = function(obj, e) {
 		if (obj.canWrite && (!obj.editInline)) {
 			$('a#menuEdit' + obj.bID + '-' + obj.aID).dialog();
 			$('a#menuChangeTemplate' + obj.bID + '-' + obj.aID).dialog();
-			$('a#menuChangeCSS' + obj.bID + '-' + obj.aID).dialog();	
+		}
+		if (obj.canDesign) {
+			$('a#menuChangeCSS' + obj.bID + '-' + obj.aID).dialog();
 		}
 		if (obj.canAliasBlockOut) {
 			$('a#menuBlockAliasOut' + obj.bID + '-' + obj.aID).dialog();
@@ -177,6 +186,7 @@ ccm_showAreaMenu = function(obj, e) {
 			//html += '<li class="header"></li>';
 			if (obj.canAddBlocks) {
 				html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.addBlockNew + '" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuAddNewBlock' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&atask=add&addOnly=' + addOnly + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n.addBlockNew + '</span></a></li>';
+				html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.addBlockStack + '" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuAddNewBlock' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&atask=add_from_stack&addOnly=' + addOnly + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/add.png)">' + ccmi18n.addBlockStack + '</span></a></li>';
 				html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.addBlockPaste + '" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuAddPaste' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&atask=paste&addOnly=' + addOnly + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/paste_small.png)">' + ccmi18n.addBlockPaste + '</span></a></li>';
 			}
 			if (obj.canAddBlocks && (obj.canDesign || obj.canLayout)) {
@@ -323,7 +333,7 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 						ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'success', ccmi18n.updateBlock);
 					}
 					if (typeof window.ccm_parseBlockResponsePost == 'function') {
-						ccm_parseBlockResponsePost();
+						ccm_parseBlockResponsePost(resp);
 					}
 				}
 			);

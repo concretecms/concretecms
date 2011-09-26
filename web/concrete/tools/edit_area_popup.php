@@ -13,9 +13,21 @@ if (!$cp->canWrite()) {
 
 $args = array('c'=>$c, 'a' => $a, 'cp' => $cp, 'ap' => $ap, 'token' => $token);
 
+Loader::element("dialog_header");
+
+if ($a->isGlobalArea()) {
+	echo '<div class="alert-message block-message info">';
+	echo t('This is a global area. Content added here will be visible on every page that contains this area.');
+	echo('</div>');
+} 
+
 switch($_GET['atask']) {
 	case 'add':
 		$toolSection = "block_area_add_new";
+		$canViewPane = $ap->canAddBlocks();
+		break;
+	case 'add_from_stack':
+		$toolSection = "block_area_add_stack";
 		$canViewPane = $ap->canAddBlocks();
 		break;
 	case 'paste':
@@ -55,3 +67,5 @@ if (!$canViewPane) {
 ?>
 
 <? Loader::element($toolSection, $args);
+
+ Loader::element("dialog_footer"); ?>

@@ -5,7 +5,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	<?
 	if ($cp->canAdminPage() && is_object($a)) {
-	
+		$ax = $a;
+		if ($a->isGlobalArea()) {
+			$cx = Stack::getByName($a->getAreaHandle());
+			$a = Area::get($cx, STACKS_AREA_NAME);
+		}
 		$btArray = BlockTypeList::getAreaBlockTypes($a, $cp);
 		
 		
@@ -213,7 +217,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 		</script>
 
-<form method="post" name="permissionForm" action="<?=$a->getAreaUpdateAction()?>">
+<form method="post" name="permissionForm" action="<?=$ax->getAreaUpdateAction()?>">
 	<? 
 	if ($a->getAreaCollectionInheritID() != $c->getCollectionID() && $a->getAreaCollectionInheritID() > 0) {
 		$pc = $c->getPermissionsCollectionObject(); 

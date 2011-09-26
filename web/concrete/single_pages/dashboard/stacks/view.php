@@ -12,8 +12,10 @@
 		ccm_openAreaAddBlock("Main", true, <?=$stack->getCollectionID()?>);
 	}
 	
-	ccm_parseBlockResponsePost = function() {
-		$(".ccm-main-nav-edit-option").fadeIn(300);
+	ccm_parseBlockResponsePost = function(r) {
+		if (r.task != 'update_groups') {
+			$(".ccm-main-nav-edit-option").fadeIn(300);
+		}
 	}
 	
 	$(function() {
