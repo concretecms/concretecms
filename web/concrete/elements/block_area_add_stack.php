@@ -2,6 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 Loader::model('stack/list');
 $sl = new StackList();
+$sl->filterByUserAdded();
 $stacks = $sl->get();
 
 //$btl = $a->getAddBlockTypes($c, $ap );
@@ -135,10 +136,15 @@ $(function() {
 	<ul id="ccm-stack-list" class="icon-select-list icon-select-list-groups">
 	<? if (count($stacks) > 0) { 
 		foreach($stacks as $s) { 
+			$as = Area::get($s, STACKS_AREA_NAME);
+			$asp = new Permissions($as);
+			if ($asp->canRead() && $ap->canAddStack($s)) { 
 			?>	
 			<li class="ccm-stack-available">
 				<a onclick="ccmStackAddToArea(<?=$s->getCollectionID()?>, '<?=urlencode($a->getAreaHandle())?>')" href="javascript:void(0)"><?=$s->getCollectionName()?></a>
 			</li>
+			
+			<? } ?>
 			
 		<? }
 	} else { ?>

@@ -59,6 +59,12 @@ ccm_menuObj<?=$id?>.height = <?=$btOriginal->getBlockTypeInterfaceHeight()+$heig
 	ccm_menuObj<?=$id?>.stID = <?=$bi->stID?>;
 	<? } 
 } 
+
+if ($b->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) { ?>
+	ccm_menuObj<?=$id?>.canCopyToScrapbook = false;	
+<? } else { ?>
+	ccm_menuObj<?=$id?>.canCopyToScrapbook = true;
+<? } 
 if ($p->canAdminBlock() && PERMISSIONS_MODEL != 'simple') { ?>
 ccm_menuObj<?=$id?>.canModifyGroups = true;
 <? }

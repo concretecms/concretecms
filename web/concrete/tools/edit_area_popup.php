@@ -2,8 +2,15 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $c = Page::getByID($_REQUEST['cID']); 
 $a = Area::get($c, $_GET['arHandle']);
-$cp = new Permissions($c);
-$ap = new Permissions($a);
+$ax = $a;
+$cx = $c;
+if ($a->isGlobalArea()) {
+	$cx = Stack::getByName($a->getAreaHandle());
+	$ax = Area::get($cx, STACKS_AREA_NAME);
+}
+
+$cp = new Permissions($cx);
+$ap = new Permissions($ax);
 $valt = Loader::helper('validation/token');
 $token = '&' . $valt->getParameter();
 

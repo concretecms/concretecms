@@ -55,7 +55,7 @@ class ContentExporter {
 		// now single pages
 		$singlepages = $this->x->addChild("singlepages");
 		$db = Loader::db();
-		$r = $db->Execute('select cID from Pages where cFilename is not null and cFilename <> "" order by cID asc');
+		$r = $db->Execute('select cID from Pages where cFilename is not null and cFilename <> "" and cID not in (select cID from Stacks) order by cID asc');
 		while($row = $r->FetchRow()) {
 			$pc = Page::getByID($row['cID'], 'RECENT');
 			$pc->export($singlepages);
@@ -63,6 +63,10 @@ class ContentExporter {
 		
 		// now page types
 		CollectionType::exportList($this->x);
+		
+		// now stacks/global areas
+		Loader::model('stack/list');
+		StackList::export($this->x);
 		
 		// now content pages
 		$pages = $this->x->addChild("pages");

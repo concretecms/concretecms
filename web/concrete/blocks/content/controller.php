@@ -67,8 +67,12 @@
 		
 		public static function replacePagePlaceHolderOnImport($match) {
 			$cPath = $match[1];
-			$pc = Page::getByPath($cPath);
-			return '{CCM:CID_' . $pc->getCollectionID() . '}';
+			if ($cPath) { 
+				$pc = Page::getByPath($cPath);
+				return '{CCM:CID_' . $pc->getCollectionID() . '}';
+			} else {
+				return '{CCM:CID_1}';
+			}
 		}
 
 		public static function replaceImagePlaceHolderOnImport($match) {
@@ -107,7 +111,7 @@
 				$content);
 
 
-			$record->addChild('content', '<![CDATA['.$content.']]>');
+			$record->addChild('content', '<![CDATA['.Loader::helper('text')->entities($content).']]>');
 		}
 		
 		

@@ -9,7 +9,13 @@ class DashboardStacksController extends DashboardBaseController {
 		parent::on_start();
 		Loader::model('stack/list');
 		$stm = new StackList();
-		$this->set('stacks', $stm->get());
+		$stm->filterByGlobalAreas();
+		$this->set('globalareas', $stm->get());
+
+		$stm = new StackList();
+		$stm->filterByUserAdded();
+		$this->set('useradded', $stm->get());
+
 	}		
 	
 	public function add_stack() {
@@ -23,6 +29,29 @@ class DashboardStacksController extends DashboardBaseController {
 	
 	public function stack_added() {
 		$this->set('message', t('Stack added successfully'));
+	}
+
+	public function stack_deleted() {
+		$this->set('message', t('Stack deleted successfully'));
+	}
+	
+	public function delete($cID = false, $token = false) {
+		if (Loader::helper('validation/token')->validate('delete', $token)) {
+			$s = Stack::getByID($cID);
+			if (is_object($s)) {
+				$sps = new Permissions($s);
+				if ($sps->canDeleteCollection()) {
+					$s->delete();
+					$this->redirect('/dashboard/stacks', 'stack_deleted');
+				} else {
+					$this->error->add(t('You do not have access to delete this stack.'));
+				}
+			} else {
+				$this->error->add(t('Invalid stack'));
+			}
+		} else {
+			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
+		}
 	}
 	
 	public function view_details($cID) {

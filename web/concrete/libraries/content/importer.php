@@ -25,6 +25,7 @@ class ContentImporter {
 	public function importContentFile($file) {
 		$sx = simplexml_load_file($file);
 		$this->importSinglePageStructure($sx);
+		$this->importStacksStructure($sx);
 		$this->importBlockTypes($sx);
 		$this->importAttributeCategories($sx);
 		$this->importAttributeTypes($sx);
@@ -37,6 +38,7 @@ class ContentImporter {
 		$this->importPageStructure($sx);
 		$this->importPageTypeDefaults($sx);
 		$this->importSinglePageContent($sx);
+		$this->importStacksContent($sx);
 		$this->importPageContent($sx);
 		$this->importPackages($sx);
 		
@@ -49,6 +51,30 @@ class ContentImporter {
 			$pkg = Package::getByHandle($pkgHandle);
 		}
 		return $pkg;		
+	}
+
+	protected function importStacksStructure(SimpleXMLElement $sx) {
+		if (isset($sx->stacks)) {
+			foreach($sx->stacks->stack as $p) {
+				if (isset($p['type'])) {
+					$type = Stack::mapImportTextToType($p['type']);
+					Stack::addStack($p['name'], $type);
+				} else {
+					Stack::addStack($p['name']);
+				}
+			}
+		}
+	}
+
+	protected function importStacksContent(SimpleXMLElement $sx) {
+		if (isset($sx->stacks)) {
+			foreach($sx->stacks->stack as $p) {
+				$stack = Stack::getByName($p['name']);
+				if (isset($p->area)) {
+					$this->importPageAreas($stack, $p);
+				}
+			}
+		}
 	}
 	
 	protected function importSinglePageStructure(SimpleXMLElement $sx) {
