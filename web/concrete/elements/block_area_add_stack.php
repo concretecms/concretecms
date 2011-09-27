@@ -141,7 +141,7 @@ $(function() {
 			if ($asp->canRead() && $ap->canAddStack($s)) { 
 			?>	
 			<li class="ccm-stack-available">
-				<a onclick="ccmStackAddToArea(<?=$s->getCollectionID()?>, '<?=urlencode($a->getAreaHandle())?>')" href="javascript:void(0)"><?=$s->getCollectionName()?></a>
+				<a onclick="ccmStackAddToArea(<?=$s->getCollectionID()?>, '<?=Loader::helper('text')->entities($a->getAreaHandle())?>')" href="javascript:void(0)"><?=$s->getCollectionName()?></a>
 			</li>
 			
 			<? } ?>

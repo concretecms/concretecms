@@ -63,6 +63,12 @@
 					// we're removing a particular block of content
 					if ($p->canDeleteBlock()){
 						$nvc = $cx->getVersionToModify();
+
+						if ($a->isGlobalArea()) {
+							$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+							$xvc->relateVersionEdits($nvc);
+						}
+
 						$b->loadNewCollection($nvc);
 						
 						$b->deleteBlock();
@@ -101,6 +107,10 @@
 						Loader::model('custom_style');						
 						
 						$nvc = $cx->getVersionToModify();
+						if ($a->isGlobalArea()) {
+							$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+							$xvc->relateVersionEdits($nvc);
+						}
 						$b->loadNewCollection($nvc);
 						
 						//if this block is being changed, make sure it's a new version of the block.
@@ -149,6 +159,10 @@
 					// we're updating the groups for a particular block
 					if ($p->canAdminBlock()) {
 						$nvc = $cx->getVersionToModify();
+						if ($a->isGlobalArea()) {
+							$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+							$xvc->relateVersionEdits($nvc);
+						}
 						$b->loadNewCollection($nvc);
 						if ($c->isMasterCollection()) {
 							$b->updateBlockGroups(true);
@@ -229,6 +243,10 @@
 						$nvc = $cx->getVersionToModify();
 					} else {
 						$nvc = $cx; // keep the same one
+					}
+					if ($a->isGlobalArea()) {
+						$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+						$xvc->relateVersionEdits($nvc);
 					}
 
 					$b = Block::getByID($_REQUEST['bID'], $nvc, $ax);
@@ -355,6 +373,10 @@
 						// we've already run permissions on the stack at this point, at least for viewing the stack.
 						$btx = BlockType::getByHandle(BLOCK_HANDLE_STACK_PROXY);
 						$nvc = $cx->getVersionToModify();
+						if ($a->isGlobalArea()) {
+							$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+							$xvc->relateVersionEdits($nvc);
+						}
 						$data['stID'] = $stack->getCollectionID();
 						$nb = $nvc->addBlock($btx, $ax, $data);
 
@@ -690,6 +712,12 @@
 					} else {
 						$nvc = $cx; // keep the same one
 					}
+					
+					if ($a->isGlobalArea()) {
+						$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+						$xvc->relateVersionEdits($nvc);
+					}
+					
 					$ob = $b;
 					// replace the block with the version of the block in the later version (if applicable)
 					$b = Block::getByID($_REQUEST['bID'], $nvc, $ax);				
@@ -768,6 +796,10 @@
 								if ($ap->canAddBlock($bt)) {
 									$btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
 									$nvc = $cx->getVersionToModify();
+									if ($a->isGlobalArea()) {
+										$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+										$xvc->relateVersionEdits($nvc);
+									}
 									$data['bOriginalID'] = $bID;
 									$nb = $nvc->addBlock($btx, $ax, $data);
 									$nb->refreshCache();
@@ -806,7 +838,12 @@
 								$nb = $nvc->addBlock($bt, $ax, $data);
 							} else {
 								// if we apply to all, then we don't worry about a new version of the page
-								$nb = $c->addBlock($bt, $ax, $data);
+								$nb = $cx->addBlock($bt, $ax, $data);
+							}
+							
+							if ($a->isGlobalArea()) {
+								$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+								$xvc->relateVersionEdits($nvc);
 							}
 
 							$obj->error = false;
