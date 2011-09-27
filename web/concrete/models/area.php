@@ -157,14 +157,19 @@ class Area extends Object {
 
 		$area = Area::get($c, $arHandle);
 		if (is_object($area)) {
-			return $area;
+			if ($area->isGlobalArea() == $arIsGlobal) {
+				return $area;
+			} else if (!$area->isGlobalArea() && !$arIsGlobal) {
+				return $area;
+			}
 		}
-
+		
 		$cID = $c->getCollectionID();
-		$v = array($cID, $arHandle, $arIsGlobal);
-		$q = "insert into Areas (cID, arHandle, arIsGlobal) values (?, ?, ?)";
 		$db = Loader::db();
-		$db->query($q, $v);
+		if (!$arIsGlobal) {
+			$arIsGlobal = 0;
+		}
+		$db->Replace('Areas', array('cID' => $cID, 'arHandle' => $arHandle, 'arIsGlobal' => $arIsGlobal), array('arHandle', 'cID'), true);
 		
 		if ($arIsGlobal) {
 			// we create a stack for it			
@@ -359,7 +364,7 @@ class Area extends Object {
 		}
 		
 		$currentPage = Page::getCurrentPage();
-		$ourArea = Area::getOrCreate($c, $this->arHandle);
+		$ourArea = Area::getOrCreate($c, $this->arHandle, $this->arIsGlobal);
 		if (count($this->customTemplateArray) > 0) {
 			$ourArea->customTemplateArray = $this->customTemplateArray;
 		}
