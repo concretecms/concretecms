@@ -647,6 +647,10 @@ class Block extends Object {
 		return false;
 	}
 	
+	public function getBlockDisplayOrder() {
+		return $this->cbDisplayOrder;
+	}
+	
 	function getBlockID() {
 		return $this->bID;
 	}
@@ -850,6 +854,23 @@ class Block extends Object {
 	function setOriginalBlockID($originalBID) {
 		$this->originalBID = $originalBID;
 	}
+	
+	public function setAbsoluteBlockDisplayOrder($do) {
+		$db = Loader::db();
+
+		$cID = $this->cID;
+		$bID = $this->bID;
+		$arHandle = $this->arHandle;
+
+		$c = $this->getBlockCollectionObject();
+		$cvID = $c->getVersionID();
+	
+		$q = "update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
+		$r = $db->query($q, array($do, $bID, $cID, $cvID, $arHandle));
+		
+		$this->refreshCache();
+	}
+	
 	function setBlockDisplayOrder($i) {
 		// This function moves a block up or down
 		// Since this is a function that has to be called from an instantiated block, then we already know the cID and areaName
