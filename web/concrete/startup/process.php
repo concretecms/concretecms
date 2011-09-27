@@ -254,8 +254,10 @@
 					if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
 						$bi = $b->getInstance();
 						$ob = Block::getByID($bi->getOriginalBlockID());
+						$originalDisplayOrder = $b->getBlockDisplayOrder();
 						$ob->setBlockAreaObject($a);
 						$nb = $ob->duplicate($nvc);
+						$nb->setAbsoluteBlockDisplayOrder($originalDisplayOrder);
 						$b->deleteBlock();
 						$b = &$nb;
 					} else if ($b->isAlias()) {					
@@ -726,8 +728,10 @@
 						// if we're editing a scrapbook display block, we add a new block in this position for the real block type
 						// set the block to the display order
 						// delete the scrapbook display block, and save the data
+						$originalDisplayOrder = $b->getBlockDisplayOrder();
 						$btx = BlockType::getByHandle($_b->getBlockTypeHandle());
 						$nb = $nvc->addBlock($btx, $ax, array());
+						$nb->setAbsoluteBlockDisplayOrder($originalDisplayOrder);
 						$b->deleteBlock();
 						$b = &$nb;
 					
