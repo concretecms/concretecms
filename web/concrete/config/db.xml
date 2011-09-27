@@ -360,6 +360,28 @@
       <UNSIGNED />
     </field>
   </table>
+ <table name="CollectionVersionRelatedEdits">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cRelationID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvRelationID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
   <table name="CollectionVersionBlockPermissions">
     <field name="cID" type="I" size="10">
       <KEY/>

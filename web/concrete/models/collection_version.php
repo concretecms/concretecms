@@ -233,7 +233,7 @@
 			
 			$oldHandle = $ov->getCollectionHandle();
 			$newHandle = $this->cvHandle;
-
+			
 			// update a collection updated record
 			$dh = Loader::helper('date');
 			$db->query('update Collections set cDateModified = ? where cID = ?', array($dh->getLocalDateTime(), $cID));
@@ -253,9 +253,26 @@
 			if ((($oldHandle != $newHandle) || $oldHandle == '') && (!$c->isGeneratedCollection())) {
 				$c->rescanCollectionPath();
 			}
+
+			// check for related version edits. This only gets applied when we edit global areas.
+			if ($this->isNew()) {
+				$r = $db->Execute('select cRelationID, cvRelationID from CollectionVersionRelatedEdits where cID = ? and cvID = ?', array($cID, $cvID));
+				while ($row = $r->FetchRow()) {
+					$cn = Page::getByID($row['cRelationID'], $row['cvRelationID']);
+					$cnp = new Permissions($cn);
+					if ($cnp->canApproveCollection()) {
+						$v = $cn->getVersionObject();
+						if ($v->isNew()) {
+							$v->approve();
+						}
+					}
+				}
+			}
+
 			Events::fire('on_page_version_approve', $c);
 			$c->reindex();
 			$this->refreshCache();
+
 		}
 		
 		public function discard() {
@@ -327,6 +344,7 @@
 			}
 			
 			$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($cID, $cvID));
+			$db->Execute('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ?', array($cID, $cvID));
 			$db->Execute('delete from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($cID, $cvID));
 			$db->Execute('delete from CollectionVersionAreaLayouts where cID = ? and cvID = ?', array($cID, $cvID));
 			

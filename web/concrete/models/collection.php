@@ -533,6 +533,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		$this->refreshCache();
 	}
 	
+	public function relateVersionEdits($oc) {
+		$db = Loader::db();
+		$v = array(
+			$this->getCollectionID(),
+			$this->getVersionID(),
+			$oc->getCollectionID(),
+			$oc->getVersionID()
+		);
+		$r = $db->GetOne('select count(*) from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?', $v);
+		if ($r > 0) {
+			return false;
+		} else {
+			$db->Execute('insert into CollectionVersionRelatedEdits (cID, cvID, cRelationID, cvRelationID) values (?, ?, ?, ?)', $v);
+		}
+	}
 	
 	public function updateAreaLayoutId( $cvalID=0, $newLayoutId=0){ 
 		$db = Loader::db();
