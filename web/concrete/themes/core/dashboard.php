@@ -75,7 +75,24 @@ Loader::element('header_required');
 <script type="text/javascript">
 	$(function() {
 	    $.backstretch("http://farm3.static.flickr.com/2443/3843020508_5325eaf761.jpg" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
+
+		$("#ccm-nav-intelligent-search-wrapper").click(function() {
+			$("#ccm-nav-intelligent-search").focus();
+		});
+		$("#ccm-nav-intelligent-search").focus(function() {
+			$(this).parent().addClass("ccm-system-nav-selected");
+		});
+
+		$("#ccm-nav-intelligent-search").blur(function() {
+			$(this).parent().removeClass("ccm-system-nav-selected");
+		});
+		
+		$is = $("#ccm-intelligent-search-results");
+		$("#ccm-nav-intelligent-search").keydown(function() {
+			$is.show();	
+		});
 	});
+	
 </script>
 </head>
 <body>
@@ -87,8 +104,54 @@ Loader::element('header_required');
 <div id="ccm-dashboard-page" class="ccm-ui">
 
 <div id="ccm-dashboard-header">
-<a href="<?=$this->url('/dashboard/')?>"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" height="49" width="49" alt="Concrete5" /></a>
+<a href="<?=$this->url('/dashboard/')?>"><img id="ccm-dashboard-logo" src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" height="49" width="49" alt="Concrete5" /></a>
+
+<ul id="ccm-main-nav">
+<li><a id="ccm-nav-return" href="<?=$this->url('/')?>"><?=t('Return to Website')?></a></li>
+</ul>
+
+<ul id="ccm-system-nav">
+<li><a id="ccm-nav-dashboard" href="<?=$this->url('/dashboard')?>"><?=t('Dashboard')?></a></li>
+<li id="ccm-nav-intelligent-search-wrapper"><input type="search" placeholder="<?=t('Intelligent Search')?>" id="ccm-nav-intelligent-search" tabindex="1" /></li>
+<li><a id="ccm-nav-sign-out" href="<?=$this->url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>
+</ul>
+
 </div>
+
+<div id="ccm-intelligent-search-results">
+<?
+$page = Page::getByPath('/dashboard');
+$children = $page->getCollectionChildrenArray(true);
+
+foreach($children as $ch) {
+	$page = Page::getByID($ch);
+	?>
+	
+	<div class="module">
+	
+	<h1><?=$page->getCollectionName()?></h1>
+	
+	
+	<ul>
+		<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page)?>"><?=t('Home')?></a><span><?=$page->getCollectionDescription()?></span></li>	
+	<?
+	$ch2 = $page->getCollectionChildrenArray(true);
+	foreach($ch2 as $chi) {
+		$subpage = Page::getByID($chi); ?>
+		<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage)?>"><?=$subpage->getCollectionName()?></a><span><?=$subpage->getCollectionDescription()?></span></li>
+		<? 
+	}
+	?>
+	</ul>
+	
+	</div>
+	
+	<?
+}
+	
+?>
+</div>
+
 
 <div id="ccm-dashboard-content">
 

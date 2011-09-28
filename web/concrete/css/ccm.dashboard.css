@@ -1,18 +1,44 @@
 body {background-color: #000;}
-div#ccm-dashboard-header {
--webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);box-shadow: 0px 2px 2px rgba(90,90,90,0.3); border-bottom: 1px solid #888;background: #eee url(../images/dashboard/bg_header.png) repeat-x scroll; position: absolute; top: 0px; left: 0px; height: 49px; width: 100%; z-index: 10}
+div#ccm-dashboard-header {-webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3); box-shadow: 0px 2px 2px rgba(90,90,90,0.3); border-bottom: 1px solid #888;background: #eee url(../images/dashboard/bg_header.png) repeat-x scroll; position: absolute; top: 0px; left: 0px; height: 49px; width: 100%; z-index: 10}
+img#ccm-dashboard-logo {position: absolute; top: 0px; left: 0px; z-index: 10; }
+
 div#ccm-dashboard-content {  margin-top: 70px; }
 
-/* In-Page Tile-based Menus */
+/* Header Nav - will move into ccm.menus.css */
+ul#ccm-main-nav, ul#ccm-system-nav {font-size: 15px; font-weight: bold;}
+ul#ccm-main-nav a, ul#ccm-system-nav a {color: #666; font-weight: bold}
+ul#ccm-main-nav a:hover, ul#ccm-system-nav a:hover {text-decoration: none; }
+ul#ccm-main-nav {border-left: 1px solid #c5c5c5; margin: 0px; padding: 0px; margin: 0px 0px 0px 8px; position: absolute; top: 0px; left: 49px}
+ul#ccm-main-nav li, ul#ccm-system-nav li {
+	float: left;
+	border-right: 1px solid #c5c5c5;
+	padding: 0px; 
+	line-height: 12px; 
+	margin: 0px 0px 0px 0px !important;
+	padding: 0px !important;
+	list-style-type: none;
+	height: 49px;
+}
+li.ccm-system-nav-selected, ul#ccm-main-nav li:hover, ul#ccm-system-nav li:hover {background: transparent url(../images/dashboard/bg_header_active.png) repeat-x scroll;}
 
-ul.ccm-tile-menu { list-style-type: none; padding: 0px; margin-top: 90px; margin-left: 1px;}
-ul.ccm-tile-menu li {margin-left: 0px !important;  float: left}
-ul.ccm-tile-menu li a {background-color: rgba(0,0,0,0.6); color: #fff; font-size: 16px; padding: 20px; width: 272px; margin-right: 1px; margin-bottom: 1px; display: block;}
-ul.ccm-tile-menu li a span {color: auto; display: block; color: #B4E5FF; font-size: 24px; margin-bottom: 8px; margin-top: 0px; font-weight: bold; }
-ul.ccm-tile-menu li a:hover {text-decoration: none; color: #000; background-color: rgba(255,255,255, 0.8);}
-ul.ccm-tile-menu li a:hover span {color: #000}
+ul#ccm-main-nav a, ul#ccm-system-nav a {display: block; padding-right: 10px; padding-left: 31px; height: 31px; padding-top: 18px; background-repeat: no-repeat; }
+ul#ccm-main-nav a#ccm-nav-return {background-image: url(../images/dashboard/icon_return_to_website.png); background-position: 10px 19px}
+ul#ccm-system-nav a#ccm-nav-sign-out {background-image: url(../images/dashboard/icon_logout.png); background-position: 12px 20px}
+ul#ccm-system-nav a#ccm-nav-dashboard {background-image: url(../images/icon_dashboard.png); background-position: 10px 18px}
+ul#ccm-system-nav li#ccm-nav-intelligent-search-wrapper:hover {cursor: pointer;}
+ul#ccm-system-nav input#ccm-nav-intelligent-search {margin: 14px 12px 0px 12px; height: 11px; width: 142px; background: #fff url(../images/icon_intelligent_search_mag.png) no-repeat scroll 3px 4px; padding-left: 16px; padding-top: 6px; padding-bottom: 4px}
 
-ul.ccm-tile-menu li:nth-child(4n+1) a {width: 272px}
+ul#ccm-system-nav { margin: 0px; padding: 0px; margin: 0px 0px 0px 8px; position: absolute; top: 0px; right: 0px}
+ul#ccm-system-nav li { border-right: 0px; border-left: 1px solid #c5c5c5; }
+
+/* Intelligent Search Results - will move into ccm.menus.css */
+div#ccm-intelligent-search-results {padding: 0px; background: transparent url(../images/bg_intelligent_search.png) repeat-y scroll; position: absolute; display: block; top: 50px; right: 103px; width: 430px; border-left: 1px solid #888; border-right: 1px solid #888; border-bottom: 1px solid #888; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; -webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3); box-shadow: 0px 2px 2px rgba(90,90,90,0.3);}
+div#ccm-intelligent-search-results span {display: none;}
+div#ccm-intelligent-search-results div.module {position: relative; margin-left: 120px; border-top: 1px solid #fff; border-bottom: 1px solid #dfdfdf}
+div#ccm-intelligent-search-results div.module h1 {font-size: 11px; font-weight: bold; color: #9a9a9a; text-transform: uppercase; line-height: 14px; position: absolute; top: 12px; left: -110px; text-align: right; width: 95px}
+div#ccm-intelligent-search-results div.module li {display: block; list-style-type: none; margin-left: 0px}
+div#ccm-intelligent-search-results div.module ul {margin-left: 15px; margin-bottom: 10px !important; margin-top: 10px !important}
+div#ccm-intelligent-search-results li a {display: block;}
 
 /* Legacy Central Panes */
 div.ccm-dashboard-inner {padding: 20px; background-color:#ffffff;border:1px solid #999;border:1px solid rgba(0, 0, 0, 0.3);*border:1px solid #999;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-webkit-background-clip:padding-box;-moz-background-clip:padding-box;background-clip:padding-box;}
