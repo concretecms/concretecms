@@ -218,7 +218,7 @@ class Job extends Object {
 	}
 	
 	final function executeJob(){
-		
+		Events::fire('on_before_job_execute', $this);
 		$db = Loader::db();
 		$timestampH =date('Y-m-d g:i:s A');
 		$timestamp=date('Y-m-d H:i:s');
@@ -242,7 +242,7 @@ class Job extends Object {
 			$enum = $this->getError();
 		}
 		$rs = $db->query( "INSERT INTO JobsLog (jID, jlMessage, jlTimestamp, jlError) VALUES(?,?,?,?)", array( $this->jID, $resultMsg, $timestamp, $enum ) );
-		
+		Events::fire('on_job_execute', $this);
 		
 		return $resultMsg;
 	}
@@ -289,6 +289,7 @@ class Job extends Object {
 	}
  
 	final public function install(){
+		
 		$db = Loader::db();
 		$jobExists=$db->getOne( 'SELECT count(*) FROM Jobs WHERE jHandle=?', array($this->jHandle) );
 		$vals=array($this->getJobName(),$this->getJobDescription(),  date('Y-m-d H:i:s'), $this->jNotUninstallable, $this->jHandle);
@@ -297,9 +298,14 @@ class Job extends Object {
 		}else{
 			$db->query('INSERT INTO Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle) VALUES(?,?,?,?,?)',$vals);
 		}
+		Events::fire('on_job_install' $this);
 	}
  
 	final public function uninstall(){
+		$ret = Events::fire('on_job_uninstall', $this);
+		if($ret < 0) {
+			return $ret;
+		}
 		$db = Loader::db();
 		$db->query( 'DELETE FROM Jobs WHERE jHandle=?', array($this->jHandle) );
 	}
