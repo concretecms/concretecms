@@ -1,19 +1,12 @@
 <?
-
 defined('C5_EXECUTE') or die("Access Denied.");
-/**
- * @package Users
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2009 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
 
 /**
  * An object representing a private message sent to a user
  *
  * @package Users
  * @category Concrete
+ * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2009 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  *
@@ -80,6 +73,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			$db = Loader::db();
 			if ($this->uID != $this->uAuthorID) {
+				Events::fire('on_pm_marked_as_read', $this);
 				$db->Execute('update UserPrivateMessagesTo set msgIsUnread = 0 where msgID = ?', array($this->msgID, $this->msgMailboxID, $this->uID));
 			}
 		}
@@ -124,6 +118,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db = Loader::db();
 			if (!$this->uID) {
 				return false;
+			}
+			$ret = Events::fire('on_pm_delete', $this);
+			if($ret < 0) {
+				return;
 			}
 			$db->Execute('delete from UserPrivateMessagesTo where uID = ? and msgID = ?', array($this->uID, $this->msgID));
 		}
@@ -192,6 +190,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function removeNewStatus() {
 			$db = Loader::db();
 			$user = UserInfo::getByID($this->uID);
+			Events::fire('on_pm_marked_not_new', $this);
 			$db->Execute('update UserPrivateMessagesTo set msgIsNew = 0 where msgMailboxID = ? and uID = ?', array($this->msgMailboxID, $user->getUserID()));
 		}
 
@@ -270,6 +269,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		protected function notifyAdmin($offenderID) {
 			$offender = UserInfo::getByID($offenderID);
+			Events::fire('on_pm_over_limit', $offender);
 			$admin = UserInfo::getByID(USER_SUPER_ID);
 			
 			Log::addEntry(t("User: %s has tried to send more than %s private messages within %s minutes", $offender->getUserName(), USER_PRIVATE_MESSAGE_MAX, USER_PRIVATE_MESSAGE_MAX_TIME_SPAN),t('warning'));
