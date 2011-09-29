@@ -68,6 +68,7 @@
     <blocktypes>
         <blocktype handle="core_scrapbook_display" package=""/>
         <blocktype handle="core_stack_display" package=""/>
+        <blocktype handle="dashboard_featured_addon" package=""/>
         <blocktype handle="autonav" package=""/>
         <blocktype handle="content" package=""/>
         <blocktype handle="date_nav" package=""/>

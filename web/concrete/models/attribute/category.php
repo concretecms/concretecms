@@ -196,7 +196,7 @@ class AttributeKeyCategory extends Object {
 		$do = 1;
 		$r = $db->Execute('select asID from AttributeSets where akCategoryID = ? order by asDisplayOrder asc, asID asc', $this->getAttributeKeyCategoryID());
 		while ($row = $r->FetchRow()) {
-			$db->Execute('update AttributeSetKeys set displayOrder = ? where asID = ? and akCategoryID = ?', array($do, $row['asID'], $this->getAttributeKeyCategoryID()));
+			$db->Execute('update AttributeSetKeys set displayOrder = ? where asID = ?', array($do, $row['asID']));
 			$do++;
 		}
 	}

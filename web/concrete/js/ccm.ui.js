@@ -884,10 +884,6 @@ ccm_headerMenuPreloads = function(){
 	ccmHeaderImg.src = CCM_IMAGE_PATH + "/bg_header_active.png";
 }
 
-ccm_setupDashboardHeaderMenu = function(){	
-	ccm_headerMenuPreloads();
-	$("#ccm-nav-dashboard-help").dialog();
-}
 
 ccm_dashboardRequestRemoteInformation = function() {
 	$.get(CCM_TOOLS_PATH + '/dashboard/get_remote_information');
@@ -948,25 +944,7 @@ ccm_setupHeaderMenu = function() {
 	$("ul#ccm-system-nav a").click(function() {
 		$(this).addClass('ccm-nav-loading');
 	});
-	$("#ccm-nav-help").dialog();
-	$("a#ccm-nav-dashboard").click(function() {
-		var dash = $(this).attr('href');
-		setTimeout(function() {
-			// stupid safari? wtf?
-			window.location.href = dash;
-		}, 50);
-		return false;
-	});
-	
-	$("a#ccm-nav-logout").click(function() {
-		var href = $(this).attr('href');
-		setTimeout(function() {
-			// stupid safari? wtf?
-			window.location.href = href;
-		}, 50);
-		return false;
-	});
-	
+
 }
 
 ccm_removeHeaderLoading = function() {
