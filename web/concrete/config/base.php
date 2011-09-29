@@ -497,6 +497,10 @@ if (!defined("MENU_HELP_URL")) {
 	define('MENU_HELP_URL', CONCRETE5_ORG_URL . '/tools/help_overlay/');
 }
 
+if (!defined('MENU_HELP_SERVICE_URL')) {
+	define('MENU_HELP_SERVICE_URL', CONCRETE5_ORG_URL . '/tools/get_remote_help_list/');
+}
+
 if (!defined('MARKETPLACE_THEME_PREVIEW_URL')) {
 	define('MARKETPLACE_THEME_PREVIEW_URL', CONCRETE5_ORG_URL.'/tools/preview_theme/');
 }

@@ -47,14 +47,29 @@
 					} else if (this.lutype == 'stacks') {
 						this.list.children('li').addClass('ccm-stack-available'); 
 						this.list.children('li').removeClass('ccm-stack-selected'); 
+					} else if (this.lutype == 'intelligent-search') {
+						if (this.list.is(':visible')) {
+							this.list.hide();
+						}
 					} else {
 						this.list.children('li').show();
 					}
 					return; 
 				}
-				this.displayResults(this.getScores(this.field.val().toLowerCase()));
+				if (this.lutype != 'intelligent-search' || this.field.val().length > 3) {
+					this.displayResults(this.getScores(this.field.val().toLowerCase()));
+				} else if (this.lutype  == 'intelligent-search') {
+					if (this.list.is(':visible')) {
+						this.list.hide();
+					}
+				}
 			}
 			searchValue = this.field.val();
+			if (searchValue == '' && this.lutype  == 'intelligent-search') {
+				if (this.list.is(':visible')) {
+					this.list.hide();
+				}
+			}
 
 		},
 		
@@ -63,7 +78,7 @@
 			this.cache = [];
 			this.rows = [];
 			var lutype = this.lutype;
-			this.list.children('li').each(function() {
+			this.list.find('li').each(function() {
 				if (lutype == 'blocktypes') {
 					self.cache.push($(this).find('a.ccm-block-type-inner').html().toLowerCase());
 				} else if (lutype == 'attributes') {
@@ -74,6 +89,8 @@
 					self.cache.push(val);
 				} else if (lutype == 'fileset') {
 					self.cache.push($(this).find('label').html().toLowerCase());
+				} else if (lutype == 'intelligent-search') {
+					self.cache.push($(this).find('span').html().toLowerCase());
 				}
 				self.rows.push($(this));
 			});
@@ -102,7 +119,25 @@
 				$.each(scores, function(i, score) { self.rows[score[1]].addClass('ccm-stack-available'); });
 				this.list.children('li.icon-select-list-header').removeClass("ccm-stack-available");
 				$(this.list.find('li.ccm-stack-available')[0]).addClass('ccm-item-selected');
-
+			} else if (this.lutype == 'intelligent-search') {
+				if (!this.list.is(':visible')) {
+					this.list.fadeIn(160, 'easeOutExpo');
+				}
+				this.list.find('.ccm-intelligent-search-results-module-onsite').hide();
+				this.list.find('li').hide();
+				var shown = 0;
+				$.each(scores, function(i, score) { 
+					$li = self.rows[score[1]];
+					if (score[0] > 0.7) {
+						shown++;
+						if (!$li.parent().parent().is(':visible')) {
+							$li.parent().parent().show();
+						}
+						$li.show();
+					}
+				});
+				this.list.find('li a').removeClass('ccm-intelligent-search-result-selected');
+				this.list.find('li:visible a:first').addClass('ccm-intelligent-search-result-selected');
 			} else {
 				this.list.children('li').hide();
 				$.each(scores, function(i, score) { self.rows[score[1]].show(); });
