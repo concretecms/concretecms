@@ -607,6 +607,7 @@ ctID                     INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 ctHandle                 VARCHAR(32) NOT NULL,
 ctIcon                   VARCHAR(128),
 ctName                   VARCHAR(90) NOT NULL,
+ctIsInternal			 TINYINT(1) NOT NULL DEFAULT 0,
 pkgID                    INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
                  PRIMARY KEY (ctID)
 );

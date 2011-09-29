@@ -40,7 +40,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$ct = Cache::get('pageTypeByHandle', $ctHandle);
 			if (!is_object($ct)) {
 				$db = Loader::db();
-				$q = "SELECT ctID, ctHandle, ctName, ctIcon, pkgID from PageTypes where ctHandle = ?";
+				$q = "SELECT ctID, ctHandle, ctIsInternal, ctName, ctIcon, pkgID from PageTypes where ctHandle = ?";
 				$r = $db->query($q, array($ctHandle));
 				if ($r) {
 					$row = $r->fetchRow();
@@ -88,7 +88,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			
 			$db = Loader::db();
-			$q = "SELECT ctID, ctHandle, ctName, ctIcon, pkgID from PageTypes where PageTypes.ctID = ?";
+			$q = "SELECT ctID, ctHandle, ctName, ctIsInternal, ctIcon, pkgID from PageTypes where PageTypes.ctID = ?";
 			$r = $db->query($q, array($ctID));
 			if ($r) {
 				$row = $r->fetchRow();
@@ -211,12 +211,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		public static function exportList($xml) {
-			$list = self::getList();
+			$list = self::getList(false, true);
 			$nxml = $xml->addChild('pagetypes');
 			foreach($list as $ct) {
 				$type = $nxml->addChild('pagetype');
 				$type->addAttribute('handle', $ct->getCollectionTypeHandle());
 				$type->addAttribute('name', $ct->getCollectionTypeName());
+				$type->addAttribute('internal', $ct->isCollectionTypeInternal());
 				$type->addAttribute('package', $ct->getPackageHandle());
 				$ct->setComposerProperties();
 				if ($ct->isCollectionTypeIncludedInComposer()) { 
@@ -258,7 +259,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			Cache::delete('pageTypeList', false);
 		}
 		
-		public static function getList($limiterType = null) {
+		public static function getList($limiterType = null, $includeInternal = false) {
 			$db = Loader::db();
 
 			// the purpose for this class? Well, we get an array of collection type objects,
@@ -268,7 +269,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			foreach($mcIDs as $mc) {
 				$masterCollectionIDs[$mc['ctID']] = $mc['cID'];
 			}
-			$q = "select ctID, ctHandle, ctIcon, ctName, pkgID from PageTypes order by ctName asc";
+			if ($includeInternal) {
+				$internal = 1;
+			} else {
+				$internal = 0;
+			}
+			$q = "select ctID, ctHandle, ctIcon, ctName, ctIsInternal, pkgID from PageTypes where ctIsInternal = {$internal} order by ctName asc";
 			$r = $db->query($q);
 			$ctArray = array();
 			if ($r) {
@@ -302,8 +308,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (isset($data['ctIcon'])) {
 				$ctIcon = $data['ctIcon'];
 			}
-			$v = array($data['ctHandle'], $data['ctName'], $ctIcon, $pkgID);
-			$q = "insert into PageTypes (ctHandle, ctName, ctIcon, pkgID) values (?, ?, ?, ?)";
+			$ctIsInternal = 0;
+			if (isset($data['ctIsInternal']) && $data['ctIsInternal']) {
+				$ctIsInternal = 1;
+			}
+			$v = array($data['ctHandle'], $data['ctName'], $ctIcon, $ctIsInternal, $pkgID);
+			$q = "insert into PageTypes (ctHandle, ctName, ctIcon, ctIsInternal, pkgID) values (?, ?, ?, ?, ?)";
 			$r = $db->prepare($q);
 			$res = $db->execute($r, $v);
 			if ($res) {
@@ -581,6 +591,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function getCollectionTypeName() { return $this->ctName; }
 		public function getCollectionTypeHandle() { return $this->ctHandle; }
 		public function isCollectionTypeIncludedInComposer() {return $this->ctIncludeInComposer;}
+		public function isCollectionTypeInternal() {return $this->ctIsInternal;}
 		public function getCollectionTypeComposerPublishMethod() {
 			return $this->ctComposerPublishPageMethod;
 		}

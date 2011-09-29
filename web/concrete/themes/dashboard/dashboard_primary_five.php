@@ -1,0 +1,26 @@
+<?
+defined('C5_EXECUTE') or die("Access Denied.");
+$this->inc('elements/header.php', array('enableEditing' => true)); ?>
+
+<div id="newsflow">
+<? $this->inc('elements/header_newsflow_edit.php'); ?>
+<table>
+<tr>
+	<td  style="width: 66%" colspan="2" rowspan="2">
+	<? $a = new Area('Primary'); $a->display($c); ?>
+	</td>
+	<td><? $a = new Area('Secondary 1'); $a->display($c); ?></td>
+</tr>
+<tr>
+	<td style="width: 34%"><? $a = new Area('Secondary 2'); $a->display($c); ?></td>
+</tr>
+<tr>
+	<td style="width: 33%"><? $a = new Area('Secondary 3'); $a->display($c); ?></td>
+	<td style="width: 33%"><? $a = new Area('Secondary 4'); $a->display($c); ?></td>
+	<td style="width: 34%"><? $a = new Area('Secondary 5'); $a->display($c); ?></td>
+</tr>
+</table>
+
+</div>
+
+<? $this->inc('elements/footer.php'); ?>

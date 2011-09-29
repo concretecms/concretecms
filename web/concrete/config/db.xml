@@ -1454,6 +1454,10 @@
     <field name="ctName" type="C" size="90">
       <NOTNULL/>
     </field>
+    <field name="ctIsInternal" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <field name="pkgID" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>

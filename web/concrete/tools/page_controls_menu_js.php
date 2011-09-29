@@ -190,9 +190,12 @@ if ($statusMessage != '') {?>
 
 	
 	$(function() {
-		$(document.body).prepend('<div id="ccm-page-controls-wrapper"></div>');
-		$("#ccm-page-controls-wrapper").html(menuHTML);
-	
+		<? 
+		if (!$dh->inDashboard()) { ?>
+			$(document.body).prepend('<div id="ccm-page-controls-wrapper"></div>');
+			$("#ccm-page-controls-wrapper").html(menuHTML);
+		<? } ?>
+		
 		<? if ($c->isArrangeMode()) { ?>
 			$(ccm_arrangeInit);	
 		<? } else if ($c->isEditMode()) { ?>

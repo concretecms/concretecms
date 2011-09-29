@@ -657,7 +657,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$themeFilename = $c->getCollectionHandle() . '.php';
 						
 					} else {
-
 						if (file_exists(DIR_BASE . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php')) {
 							$content = DIR_BASE . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php';
 							$wrapTemplateInTheme = true;

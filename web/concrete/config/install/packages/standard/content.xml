@@ -94,6 +94,7 @@
         </stack>
     </stacks>
     <pagetypes>
+        <pagetype handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package="" />
         <pagetype handle="full" name="Full Width" package="">
             <page name="" path="" filename="" pagetype="full" description="" package="">
                 <area name="Header">
@@ -225,6 +226,12 @@
         </pagetype>
     </pagetypes>
     <pages>
+    	<page name="Customize Dashboard Home" path="/dashboard/home" filename="" pagetype="dashboard_primary_five" description="" package="">
+			<attributes>
+				<attributekey handle="exclude_nav"><value>1</value></attributekey>
+				<attributekey handle="exclude_search_index"><value>1</value></attributekey>
+			</attributes>
+    	</page>
         <page name="Home" path="" filename="" pagetype="right_sidebar" description="" package="">
             <area name="Header">
                 <block mc-block-id="r27Q6OCN"/>
