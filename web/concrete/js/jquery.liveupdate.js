@@ -56,7 +56,7 @@
 					}
 					return; 
 				}
-				if (this.lutype != 'intelligent-search' || this.field.val().length > 3) {
+				if (this.lutype != 'intelligent-search' || this.field.val().length > 2) {
 					this.displayResults(this.getScores(this.field.val().toLowerCase()));
 				} else if (this.lutype  == 'intelligent-search') {
 					if (this.list.is(':visible')) {

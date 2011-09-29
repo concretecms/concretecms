@@ -18,6 +18,7 @@ $v->disableEditing();
 
 $v->addHeaderItem($html->javascript('jquery.js'));
 $v->addHeaderItem($html->javascript('jquery.backstretch.js'));
+$v->addHeaderItem($html->javascript('masonry.js'));
 $v->addHeaderItem($html->javascript('jquery.ui.js'));
 $v->addHeaderItem($html->javascript('ccm.dialog.js'));
 $v->addHeaderItem($html->javascript('ccm.base.js'));
@@ -75,6 +76,17 @@ Loader::element('header_required');
 <script type="text/javascript">
 	$(function() {
 	    $.backstretch("http://farm3.static.flickr.com/2443/3843020508_5325eaf761.jpg" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
+		
+		$('#ccm-dashboard-overlay-main').masonry({
+		  itemSelector: '.ccm-dashboard-overlay-module', 
+		  isResizable: false
+		});
+		$('#ccm-dashboard-overlay-packages').masonry({
+		  itemSelector: '.ccm-dashboard-overlay-module',
+		  isResizable: false
+		});
+
+		$("#ccm-dashboard-overlay").css('visibility','visible').hide();
 
 		$("#ccm-nav-intelligent-search-wrapper").click(function() {
 			$("#ccm-nav-intelligent-search").focus();
@@ -173,7 +185,7 @@ Loader::element('header_required');
 	}
 
 	ccm_intelligentSearchDoOffsite = function(query) {	
-		if (query.trim().length > 3) {
+		if (query.trim().length > 2) {
 			if (query.trim() == ajaxquery) {
 				return;
 			}
@@ -268,13 +280,18 @@ Loader::element('header_required');
 $page = Page::getByPath('/dashboard');
 $children = $page->getCollectionChildrenArray(true);
 
+$packagepages = array();
 $corepages = array();
-$pkgpages = array();
 foreach($children as $ch) {
 	$page = Page::getByID($ch);
-
+	if ($page->getPackageID() > 0) {
+		$packagepages[] = $page;
+	} else {
+		$corepages[] = $page;
+	}
+	
+	
 	$ch2 = $page->getCollectionChildrenArray(true);
-	if (count($ch2) > 0) { 
 	?>
 	
 	<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-onsite">
@@ -283,9 +300,10 @@ foreach($children as $ch) {
 	
 	
 	<ul class="ccm-intelligent-search-results-list">
-		<? /*
-		<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page)?>"><?=t('Home')?></a><span><?=$page->getCollectionDescription()?></span></li>	
-		*/ ?>
+	<? if (count($ch2) == 0) { ?>
+		<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage)?>"><?=$page->getCollectionName()?></a><span><?=$page->getCollectionName()?></span></li>
+	<? } ?>
+	
 	<?
 	foreach($ch2 as $chi) {
 		$subpage = Page::getByID($chi); ?>
@@ -297,7 +315,6 @@ foreach($children as $ch) {
 	
 	</div>
 	<? }
-}
 	
 ?>
 	
@@ -319,33 +336,75 @@ foreach($children as $ch) {
 
 <div id="ccm-dashboard-overlay">
 <div id="ccm-dashboard-overlay-core">
-<div class="ccm-dashboard-overlay-inner">
-<div class="row clearfix">
+<div class="ccm-dashboard-overlay-inner" id="ccm-dashboard-overlay-main">
 
-<? 
-for ($i = 0; $i < count($children); $i++) {
-	$page = Page::getByID($children[$i]);
+<?php
+
+
+foreach($corepages as $page) {
+	?>
+	
+	<div class="ccm-dashboard-overlay-module">
+	
+	<h1><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><?=$page->getCollectionName()?></a></h1>
+	
+	
+	<ul>
+	
+	<?
+	$ch2 = $page->getCollectionChildrenArray(true);
+	foreach($ch2 as $chi) {
+		$subpage = Page::getByID($chi); ?>
+		<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subpage)?>"><?=$subpage->getCollectionName()?></a></li>
+		<? 
+	}
+	?>
+	</ul>
+	
+	</div>
+	
+	<?
+}
+	
 ?>
 
-<? if ($i > 0 && $i % 3 == 0) { ?>
-</div>
-	<div class="row clearfix">
-<? } ?>
-
-	<div class="span3">
-	<a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><b><?=$page->getCollectionName()?></b></a>
-	</div>
-
-
-<? } ?>
 </div>
 </div>
-</div>
+<? if (count($packagepages) > 0) { ?>
 <div id="ccm-dashboard-overlay-footer">
-<div class="ccm-dashboard-overlay-inner">
-alsdkfjalsdfjas
+<div class="ccm-dashboard-overlay-inner" id="ccm-dashboard-overlay-packages">
+<?php
+
+
+foreach($packagepages as $page) {
+	?>
+	
+	<div class="ccm-dashboard-overlay-module">
+	
+	<h1><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><?=$page->getCollectionName()?></a></h1>
+	
+	
+	<ul>
+	
+	<?
+	$ch2 = $page->getCollectionChildrenArray(true);
+	foreach($ch2 as $chi) {
+		$subpage = Page::getByID($chi); ?>
+		<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subpage)?>"><?=$subpage->getCollectionName()?></a></li>
+		<? 
+	}
+	?>
+	</ul>
+	
+	</div>
+	
+	<?
+}
+	
+?>
 </div>
 </div>
+<? } ?>
 </div>
 
 
