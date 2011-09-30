@@ -7,7 +7,7 @@ class DashboardSitemapAccessController extends Controller {
 	
 	public function on_start() {
 		$this->set('h', Loader::helper('concrete/dashboard/task_permissions'));
-		$this->addHeaderItem(Loader::helper('html')->javascript('ccm.dashboard.permissions.js'));
+		$this->addHeaderItem(Loader::helper('html')->javascript('ccm.dashboard.permissions.js', false, true));
 	}
 
 	public function save_permissions() {

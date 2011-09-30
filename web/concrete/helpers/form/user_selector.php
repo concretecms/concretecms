@@ -80,7 +80,7 @@ class FormUserSelectorHelper {
 		ul.ui-autocomplete li.ui-menu-item { margin-left:0; padding:2px;}
 		</style>
 		<script type=\"text/javascript\">
-		$(document).ready(function () {
+		$(function () {
 			$('#".$key."').autocomplete({source: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/users/autocomplete?key=" . $key . "&token=" . $token . "'});
 		} );
 		</script>";

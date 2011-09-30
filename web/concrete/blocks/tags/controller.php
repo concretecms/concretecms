@@ -8,6 +8,7 @@ class TagsBlockController extends BlockController {
 
 	protected $btExportPageColumns = array('targetCID');
 	
+	protected $btCacheBlockRecord = true;
 	protected $btCacheBlockOutput = true;
 	protected $btCacheBlockOutputOnPost = false;
 	protected $btCacheBlockOutputForRegisteredUsers = false;
@@ -31,6 +32,8 @@ class TagsBlockController extends BlockController {
 	public function add() { 
 		$ak = $this->loadAttribute();
 		$this->set('ak',$ak);
+		
+		$this->set('displayMode','page');
 	}
 	
 	protected function loadAttribute() {
@@ -95,6 +98,7 @@ class TagsBlockController extends BlockController {
 			$ak->saveAttributeForm($nvc);
 			$nvc->refreshCache();
 		}
+		$args['cloudCount'] = (is_numeric($args['cloudCount'])?$args['cloudCount']:0);
 		parent::save($args);
 	}	
 }

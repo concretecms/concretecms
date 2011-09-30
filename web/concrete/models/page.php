@@ -905,12 +905,10 @@ class Page extends Collection {
 	 * @return int
 	 */		
 	function getCollectionParentIDFromChildID($cID) {
-		$cParentID = Cache::get('parent_id', $cID);
 		if ($cParentID == false) {
 			$db = Loader::db();
 			$q = "select cParentID from Pages where cID = '$cID'";
 			$cParentID = $db->GetOne($q);
-			Cache::set('parent_id', $cID, $cParentID);
 		}
 		return $cParentID;
 	}

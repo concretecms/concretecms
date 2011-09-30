@@ -3,8 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class SearchBlockController extends BlockController {
 	
-	public $pobj;
-	  
 	protected $btTable = 'btSearch';
 	protected $btInterfaceWidth = "400";
 	protected $btInterfaceHeight = "170";

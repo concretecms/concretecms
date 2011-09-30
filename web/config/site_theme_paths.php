@@ -1,6 +1,6 @@
-<?php 
+<?php  
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die(_("Access Denied."));
 
 
 /* 

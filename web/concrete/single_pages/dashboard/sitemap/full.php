@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 Loader::library('search');
 
 $this->addHeaderItem(Loader::helper('html')->css('ccm.sitemap.css'));
-$this->addHeaderItem(Loader::helper('html')->javascript('ccm.sitemap.js'));
+$this->addHeaderItem(Loader::helper('html')->javascript('ccm.sitemap.js', false, true));
 
 $sh = Loader::helper('concrete/dashboard/sitemap');
 

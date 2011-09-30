@@ -2,12 +2,10 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class SlideshowBlockController extends BlockController {
 	
-	var $pobj;
-	
 	protected $btTable = 'btSlideshow';
 	protected $btInterfaceWidth = "550";
 	protected $btInterfaceHeight = "400";
-	protected $btCacheBlockOutputRecord = true;
+	protected $btCacheBlockRecord = true;
 	protected $btCacheBlockOutput = true;
 	protected $btCacheBlockOutputOnPost = true;
 	protected $btCacheBlockOutputForRegisteredUsers = true;
