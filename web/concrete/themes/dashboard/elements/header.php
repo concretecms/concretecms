@@ -307,7 +307,7 @@ foreach($children as $ch) {
 	
 	<ul class="ccm-intelligent-search-results-list">
 	<? if (count($ch2) == 0) { ?>
-		<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage)?>"><?=$page->getCollectionName()?></a><span><?=$page->getCollectionName()?></span></li>
+		<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page)?>"><?=$page->getCollectionName()?></a><span><?=$page->getCollectionName()?></span></li>
 	<? } ?>
 	
 	<?

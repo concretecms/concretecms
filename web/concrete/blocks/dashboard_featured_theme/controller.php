@@ -1,7 +1,7 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
 	
-	class DashboardFeaturedAddonBlockController extends BlockController {
+	class DashboardFeaturedThemeBlockController extends BlockController {
 
 		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
@@ -13,11 +13,11 @@
 		protected $btInterfaceHeight = 100;
 		
 		public function getBlockTypeDescription() {
-			return t("Features an add-on from concrete5.org.");
+			return t("Features a theme from concrete5.org.");
 		}
 		
 		public function getBlockTypeName() {
-			return t("Dashboard Featured Add-On");
+			return t("Dashboard Featured Theme");
 		}
 		
 		public function view() {
@@ -25,7 +25,7 @@
 			$mri = new MarketplaceRemoteItemList();
 			$mri->sortBy('recommended');
 			$mri->setItemsPerPage(1);
-			$mri->setType('addons');
+			$mri->setType('themes');
 			$mri->execute();
 			$items = $mri->getPage();
 			if (is_object($items[0])) {

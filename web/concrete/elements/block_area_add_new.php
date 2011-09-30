@@ -2,6 +2,12 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $btl = $a->getAddBlockTypes($c, $ap );
 $blockTypes = $btl->getBlockTypeList();
+$dsh = Loader::helper('concrete/dashboard');
+$dashboardBlockTypes = array();
+if ($dsh->inDashboard()) {
+	$dashboardBlockTypes = BlockTypeList::getDashboardBlockTypes($ap);
+}
+$blockTypes = array_merge($blockTypes, $dashboardBlockTypes);
 $ci = Loader::helper('concrete/urls');
 $ch = Loader::helper('concrete/interface');
 $form = Loader::helper('form');

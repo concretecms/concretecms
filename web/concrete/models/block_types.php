@@ -47,6 +47,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 		
+		public static function getDashboardBlockTypes($ap) {
+			$blockTypeIDs = $ap->getAddBlockTypes();
+			$db = Loader::db();
+			$btIDs = $db->GetCol('select btID from BlockTypes where btHandle like "dashboard_%" order by btID asc');
+			$blockTypes = array();
+			foreach($btIDs as $btID) {
+				if (in_array($btID, $blockTypeIDs)) {
+					$blockTypes[] = BlockType::getByID($btID);
+				}
+			}
+			return $blockTypes;
+		}
+		
 		function BlockTypeList($allowedBlocks = null) {
 			$db = Loader::db();
 			$this->btArray = array();

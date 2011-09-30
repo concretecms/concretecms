@@ -98,6 +98,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		function install($path) {
 			// passed path is the path to this block (try saying that ten times fast)
 			// create the necessary table
+			if (!$this->btTable) {
+				$r = new stdClass;
+				$r->result = true;
+				return $r;
+			}
 			$ret = Package::installDB($path . '/' . $this->dbFile);
 			return $ret;
 		}
@@ -138,13 +143,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		public function save($args) {
 			//$argsMerged = array_merge($_POST, $args);
-			$attribs = $this->record->getAttributeNames();
-			foreach($attribs as $key) {
-				if (isset($args[$key])) {
-					$this->record->{$key} = $args[$key];
+			if ($this->record) {
+				$attribs = $this->record->getAttributeNames();
+				foreach($attribs as $key) {
+					if (isset($args[$key])) {
+						$this->record->{$key} = $args[$key];
+					}
 				}
+				$this->record->Replace();
 			}
-			$this->record->Replace();
 		}
 		
 		/**
