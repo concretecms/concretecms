@@ -284,6 +284,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function isCoreBlockType() {
 			return is_dir(DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle());
 		}
+
+		public function hasAddTemplate() {
+			$bv = new BlockView();
+			$bv->setBlockObject($this);
+			$path = $bv->getBlockPath(FILENAME_BLOCK_ADD);
+			if (file_exists($path . '/' . FILENAME_BLOCK_ADD)) {
+				return true;
+			}
+			return false;
+		}
+		
 		
 		function getBlockTypeInterfaceWidth() {return $this->btInterfaceWidth;}
 		function getBlockTypeInterfaceHeight() {return $this->btInterfaceHeight;}

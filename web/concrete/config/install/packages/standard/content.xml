@@ -228,10 +228,60 @@
     <pages>
     	<page name="Customize Dashboard Home" path="/dashboard/home" filename="" pagetype="dashboard_primary_five" description="" package="">
 			<attributes>
-				<attributekey handle="exclude_nav"><value>1</value></attributekey>
-				<attributekey handle="exclude_search_index"><value>1</value></attributekey>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+				<attributekey handle="exclude_search_index">
+					<value><![CDATA[1]]></value>
+				</attributekey>
 			</attributes>
-    	</page>
+			<area name="Primary">
+				<block type="dashboard_app_status" name=""/>
+			</area>
+			<area name="Secondary 1">
+				<block type="rss_displayer" name="" custom-template="read_more.php">
+					<data table="btRssDisplay">
+						<record>
+							<title><![CDATA[]]></title>
+							<url><![CDATA[http://www.concrete5.org/about/blog/totally-random-web-show/-/feed/]]></url>
+							<dateFormat><![CDATA[F jS]]></dateFormat>
+							<itemsToDisplay><![CDATA[1]]></itemsToDisplay>
+							<showSummary><![CDATA[1]]></showSummary>
+							<launchInNewWindow><![CDATA[0]]></launchInNewWindow>
+						</record>
+					</data>
+				</block>
+			</area>
+			<area name="Secondary 2">
+				<block type="rss_displayer" name="" custom-template="read_more.php">
+					<data table="btRssDisplay">
+						<record>
+							<title><![CDATA[]]></title>
+							<url><![CDATA[http://www.concrete5.org/about/blog/concrete5-sightings/-/feed/]]></url>
+							<dateFormat><![CDATA[F jS]]></dateFormat>
+							<itemsToDisplay><![CDATA[1]]></itemsToDisplay>
+							<showSummary><![CDATA[1]]></showSummary>
+							<launchInNewWindow><![CDATA[0]]></launchInNewWindow>
+						</record>
+					</data>
+				</block>
+			</area>
+			<area name="Secondary 3">
+				<block type="dashboard_featured_theme" name=""/>
+			</area>
+			<area name="Secondary 4">
+				<block type="content" name="">
+					<data table="btContentLocal">
+						<record>
+							<content><![CDATA[<p>Tip of the day</p>]]></content>
+						</record>
+					</data>
+				</block>
+			</area>
+			<area name="Secondary 5">
+				<block type="dashboard_featured_addon" name=""/>
+			</area>
+		</page>
         <page name="Home" path="" filename="" pagetype="right_sidebar" description="" package="">
             <area name="Header">
                 <block mc-block-id="r27Q6OCN"/>
