@@ -195,6 +195,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db = Loader::db();
 		
 			foreach($tables as $tbl) {
+				if (!$tbl) {
+					continue;
+				}
 				$data = $blockNode->addChild('data');
 				$data->addAttribute('table', $tbl);
 				$columns = $db->MetaColumns($tbl);

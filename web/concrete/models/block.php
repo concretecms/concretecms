@@ -28,10 +28,6 @@ class Block extends Object {
 	var $arHandle;
 	var $c;
 
-	// isEditable doesn't necessarily mean by everyone, just means that a form exists
-	// in the filesystem to handle an edit state
-	var $isEditable = true;
-
 	public static function populateManually($blockInfo, $c, $a) {
 		$b = new Block;
 		$b->setPropertiesFromArray($blockInfo);
@@ -751,7 +747,13 @@ class Block extends Object {
 
 	
 	function isEditable() {
-		return $this->isEditable;
+		$bv = new BlockView();
+		$bv->setBlockObject($this);
+		$path = $bv->getBlockPath(FILENAME_BLOCK_EDIT);
+		if (file_exists($path . '/' . FILENAME_BLOCK_EDIT)) {
+			return true;
+		}
+		return false;
 	}
 
 	function overrideAreaPermissions() {

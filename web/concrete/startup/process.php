@@ -758,14 +758,8 @@
 					$obj->response = $e->getList();
 				}
 				
-				if ($_POST['ccm-block-form-method'] == 'AJAX') { 
-					print Loader::helper('json')->encode($obj);
-					exit;
-				} else {
-					$redirectCID = (intval($_REQUEST['rcID'])) ? intval($_REQUEST['rcID']) : intval($_REQUEST['cID']);
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $redirectCID . $edit . $step);
-					exit;
-				}
+				print Loader::helper('json')->encode($obj);
+				exit;
 			}
 						
 		} else if ($_REQUEST['add'] || $_REQUEST['_add']) {
@@ -860,13 +854,8 @@
 						
 						}
 
-						if ($_POST['ccm-block-form-method'] == 'AJAX') { 
-							print Loader::helper('json')->encode($obj);
-							exit;
-						} else {
-							header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
-							exit;
-						}
+						print Loader::helper('json')->encode($obj);
+						exit;
 					}
 				}
 			}
