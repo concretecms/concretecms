@@ -188,6 +188,10 @@ class MarketplaceRemoteItemList extends ItemList {
 		$this->params['keywords'] = $keywords;
 	}
 	
+	public function sortBy($sortBy) {
+		$this->params['sort'] = $sortBy;
+	}
+	
 	public function filterBySet($set) {
 		$this->params['set'] = $set;
 	}
