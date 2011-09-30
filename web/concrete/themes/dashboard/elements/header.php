@@ -359,8 +359,19 @@ foreach($children as $ch) {
 <div id="ccm-dashboard-overlay-core">
 <div class="ccm-dashboard-overlay-inner" id="ccm-dashboard-overlay-main">
 
-<?php
+	<div class="ccm-dashboard-overlay-module">
+	
+	<h1><a href="<?=$this->url('/dashboard')?>"><?=t('Dashboard Home')?></a></h1>
+	
+	
+	<ul>
+		<li><a href="<?=$this->url('/dashboard/home')?>"><?=t('Customize')?></a></li>
+	</ul>
+	
+	</div>
 
+
+<?php
 
 foreach($corepages as $page) {
 	?>
@@ -393,17 +404,6 @@ foreach($corepages as $page) {
 }
 	
 ?>
-
-	<div class="ccm-dashboard-overlay-module">
-	
-	<h1><a href="<?=$this->url('/dashboard')?>"><?=t('Dashboard Home')?></a></h1>
-	
-	
-	<ul>
-		<li><a href="<?=$this->url('/dashboard/home')?>"><?=t('Customize')?></a></li>
-	</ul>
-	
-	</div>
 
 
 </div>

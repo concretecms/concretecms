@@ -145,6 +145,10 @@ class UserAttributeKey extends AttributeKey {
 		$this->refreshCache();
 		$db->Execute('update UserAttributeKeys set uakIsActive = 0 where akID = ?', array($this->akID));
 	}
+
+	public function refreshCache() {
+		Cache::delete('user_attribute_key', $this->getAttributeKeyID());
+	}
 	
 	public static function getList() {
 		$list = parent::getList('user');	

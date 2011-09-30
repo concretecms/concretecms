@@ -433,8 +433,11 @@ foreach($attribs as $at) {
 					echo t('Anonymous');
 				}else{ 
 					$downloadUI = UserInfo::getById($uID);
-					//echo get_class($downloadUI);
-					echo $downloadUI->getUserName();
+					if($downloadUI instanceof UserInfo) {
+						echo $downloadUI->getUserName();
+					} else {
+						echo t('Deleted User');
+					}
 				} 
 				?>
 			</td>

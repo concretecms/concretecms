@@ -335,6 +335,16 @@ class Controller {
 	}
 
 	/** 
+	 * Adds an item to the view's footer. This item will then be automatically printed out before the </body> section of the page
+	 * @param string $item
+	 * @return void
+	 */
+	public function addFooterItem($item) { 
+		$v = View::getInstance();
+		$v->addFooterItem($item, 'CONTROLLER');
+	}
+
+	/** 
 	 * Redirects to a given URL
 	 * @param string $location
 	 * @param string $task
@@ -447,7 +457,15 @@ class Controller {
 		$v = View::getInstance();
 		$v->outputHeaderItems();
 	}
-
+  
+	/** 
+	 * Outputs a list of items set by the addFooterItem() function
+	 * @return void
+	 */
+	public function outputFooterItems() {
+		$v = View::getInstance();
+		$v->outputFooterItems();
+	}
 }
 
 ?>

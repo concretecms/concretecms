@@ -21,7 +21,7 @@ if (!$bObj->vHeight) {
 		<td><input type="text" style="width: 230px" name="title" value="<?=$bObj->title?>"/></td>
 	</tr>	
 	<tr>
-		<th><?=t('Youtube URL')?></th>
+		<th><?=t('YouTube URL')?></th>
 		<td>
 			<input type="text" style="width: 230px" id="YouTubeVideoURL" name="videoURL" value="<?=$bObj->videoURL?>" />
 		</td>

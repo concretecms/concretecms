@@ -32,11 +32,6 @@
 		 */
 		public static function getNumericalVersionID($cID, $cvID) {
 			if ($cvID == 'RECENT' || $cvID == 'ACTIVE') {
-				$ca = new Cache();
-				$cv = $ca->get('collection_version_id', $cID . ':' . $cvID);
-				if ($cv != false) {
-					return $cv;
-				}
 				
 				// first, we make sure that the cID is for an actual page. If we're pointing to another page (an alias)
 				// we need to use THAT cID
@@ -56,9 +51,6 @@
 						$cvIDa = $db->GetOne("select cvID from CollectionVersions where cID = ? and cvIsApproved = 1", $v);
 						break;
 				}
-				if ($cvIDa != false) {
-					$ca->set('collection_version_id', $cID . ':' . $cvID, $cvIDa);
-				}
 				return $cvIDa;
 			} else {
 				// cvID IS numerical
@@ -72,11 +64,7 @@
 			$cvIDs = $db->GetCol("select cvID from CollectionVersions where cID = ?", $this->cID);
 			foreach($cvIDs as $cvID) {
 				Cache::delete('page', $cID . ':' . $cvID);
-				Cache::delete('collection_version', $cID . ':' . $cvID);
 				Cache::delete('collection_blocks', $cID . ':' . $cvID);
-				Cache::delete('collection_version_id', $cID . ':' . $cvID);
-				Cache::delete('collection_version_id', $cID . ':RECENT');
-				Cache::delete('collection_version_id', $cID . ':ACTIVE');
 			}
 		}
 		
@@ -85,11 +73,6 @@
 				$cvID = CollectionVersion::getNumericalVersionID($c->getCollectionID(), $cvID);
 			}
 			
-			$ca = new Cache();
-			$cv = $ca->get('collection_version', $c->getCollectionID() . ':' . $cvID);
-			if ($cv instanceof CollectionVersion) {
-				return $cv;
-			}
 			
 			$cv = new CollectionVersion();
 			$db = Loader::db();
@@ -115,9 +98,6 @@
 			foreach($r as $styles) {
 				$cv->customAreaStyles[$styles['arHandle']] = $styles['csrID'];
 			}
-			
-			$ca = new Cache();
-			$ca->set('collection_version', $c->getCollectionID() . ':' . $cvID, $cv);
 			
 			return $cv;
 		}

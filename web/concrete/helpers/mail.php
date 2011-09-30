@@ -30,8 +30,8 @@ class MailHelper {
 	
 	/**
 	 * @todo documentation
-	 * @return Ambigous <Zend_Mail_Transport_Smtp, Zend_Mail>
-	 */
+	 * @return array <Zend_Mail_Transport_Smtp, Zend_Mail>
+	*/
 	public static function getMailerObject(){
 		Loader::library('3rdparty/Zend/Mail');
 		$response = array();

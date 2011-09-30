@@ -8,7 +8,7 @@
 		protected $btInterfaceHeight = "350";
 		protected $btExportPageColumns = array('cParentID');
 		protected $btExportPageTypeColumns = array('ctID');
-		
+		protected $btCacheBlockRecord = true;
 		
 		/** 
 		 * Used for localization. If we want to localize the name/description we have to include this

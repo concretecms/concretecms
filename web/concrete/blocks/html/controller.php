@@ -5,11 +5,10 @@ Loader::block('library_file');
 
 class HtmlBlockController extends BlockController {
 	
-	public $pobj;
-
 	protected $btTable = 'btContentLocal';
 	protected $btInterfaceWidth = "600";
 	protected $btInterfaceHeight = "465";
+	protected $btCacheBlockRecord = true;
 	protected $btCacheBlockOutput = true;
 	protected $btCacheBlockOutputOnPost = true;
 	protected $btCacheBlockOutputForRegisteredUsers = true;

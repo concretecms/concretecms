@@ -434,9 +434,10 @@
       <DEFAULT value="0"/>
       <UNSIGNED />
     </field>
-    <field name="isOriginal" type="C" size="1">
+    <field name="isOriginal" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
+      <UNSIGNED />
     </field>
     <field name="cbOverrideAreaPermissions" type="I1" size="1">
       <NOTNULL/>
@@ -448,6 +449,9 @@
     </field>
     <index name="cbIncludeAll">
       <col>cbIncludeAll</col>
+    </index>
+    <index name="isOriginal">
+    	<col>isOriginal</col>
     </index>
   </table>
 
@@ -547,7 +551,7 @@
       <UNSIGNED/>
     </field>
     <field name="cvName" type="X" />
-    <field name="cvHandle" type="C" size="64"/>
+    <field name="cvHandle" type="C" size="255"/>
     <field name="cvDescription" type="X"/>
     <field name="cvDatePublic" type="T"/>
     <field name="cvDateCreated" type="T">
@@ -1479,9 +1483,10 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="cIsTemplate" type="C" size="1">
+    <field name="cIsTemplate" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
     <field name="uID" type="I" size="10">
       <UNSIGNED/>
@@ -1585,6 +1590,9 @@
     </index>
     <index name="cPointerID">
       <col>cPointerID</col>
+    </index>
+    <index name="cIsTemplate">
+    	<col>cIsTemplate</col>
     </index>
   </table>
   <table name="PileContents">

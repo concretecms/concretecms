@@ -197,7 +197,7 @@ CREATE TABLE CollectionVersions (
 cID                      INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 cvID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 1,
 cvName                   TEXT,
-cvHandle                 VARCHAR(64),
+cvHandle                 VARCHAR(255),
 cvDescription            TEXT,
 cvDatePublic             DATETIME,
 cvDateCreated            DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
