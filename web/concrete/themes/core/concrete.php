@@ -5,7 +5,7 @@
 <!-- insert CSS for Default Concrete Theme //-->
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.default.theme.css";</style>
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.install.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.twitter.bootstrap.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.app.css";</style>
 <? 
 if (is_object($c)) {
 	$v = View::getInstance();

@@ -1,0 +1,1 @@
+find build/*.js -type f -exec cat {} \; -exec echo "" \; > ccm.app.js

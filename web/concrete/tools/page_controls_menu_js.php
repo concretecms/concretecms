@@ -86,13 +86,85 @@ if (isset($cp)) {
 
 	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { ?>
 
-menuHTML += '<div id="ccm-page-controls">';
-menuHTML += '<div id="ccm-logo-wrapper"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" width="49" height="49" id="ccm-logo" /></div>';
-menuHTML += '<div id="ccm-system-nav-wrapper1">';
-menuHTML += '<div id="ccm-system-nav-wrapper2">';
+
+
+
+
+menuHTML += '<div id="ccm-page-controls-wrapper" class="ccm-ui">';
+menuHTML += '<div id="ccm-toolbar">';
+menuHTML += '<img id="ccm-logo" src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" height="49" width="49" alt="Concrete5" />';
+
+menuHTML += '<ul id="ccm-main-nav">';
+menuHTML += '<li <? if ($c->isEditMode()) { ?>class="ccm-nav-edit-mode-active"<? } ?>><a class="ccm-icon-edit ccm-menu-icon" id="ccm-nav-edit" href="javascript:void(0)"><? if ($c->isEditMode()) { ?><?=t('Editing')?><? } else { ?><?=t('Edit')?></a><? } ?></li>';
+menuHTML += '</ul>';
+
 menuHTML += '<ul id="ccm-system-nav">';
+menuHTML += '<li><a class="ccm-icon-dashboard ccm-menu-icon" id="ccm-nav-dashboard" href="<?=View::url('/dashboard')?>"><?=t('Dashboard')?></a></li>';
+menuHTML += '<li id="ccm-nav-intelligent-search-wrapper"><input type="search" placeholder="<?=t('Intelligent Search')?>" id="ccm-nav-intelligent-search" tabindex="1" /></li>';
+menuHTML += '<li><a id="ccm-nav-sign-out" class="ccm-icon-sign-out ccm-menu-icon" href="<?=View::url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>';
+menuHTML += '</ul>';
+
+menuHTML += '</div>';
 
 <?
+$dh = Loader::helper('concrete/dashboard');
+?>
+
+menuHTML += '<?=$dh->getDashboardAndSearchMenus()?>';
+
+menuHTML += '<div id="ccm-edit-overlay">';
+menuHTML += '<div class="ccm-edit-overlay-inner">';
+
+<? if ($c->isEditMode() && (!$vo->isNew())) { ?>
+
+menuHTML += '<span class="label notice"><?=t('Version %s', $c->getVersionID())?></span>';
+menuHTML += '<?=t('Page currently in edit mode on %s', $c->getCollectionDateLastModified(DATE_APP_GENERIC_MDYT))?>';
+menuHTML += '<div class="ccm-edit-overlay-actions">';
+menuHTML += '<a href="javascript:void(0)" onclick="window.location.href=\'<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-in<?=$token?>\'" id="ccm-nav-exit-edit-direct" class="btn primary"><?=t('Exit Edit Mode')?></a>';
+menuHTML += '</div>';
+
+<? } else { ?>
+
+menuHTML += '<span class="label notice"><?=t('Version %s', $c->getVersionID())?></span>';
+menuHTML += '<?=t('Page last edited on %s', $c->getCollectionDateLastModified(DATE_APP_GENERIC_MDYT))?>';
+
+menuHTML += '<div class="ccm-edit-overlay-actions">';
+<? if ($cp->canWrite()) { ?>
+	menuHTML += '<a href="<? if (!$cantCheckOut) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>" class="btn primary <? if ($cantCheckOut) { ?> disabled <? } ?> tooltip" <? if ($cantCheckOut) { ?>title="<?=t('Someone has already checked this page out for editing.')?>"<? } ?>><?=t('Edit this Page')?></a>';
+<? } ?>
+<? if ($cp->canAddSubContent()) { ?>
+	menuHTML += '<a href="" class="btn"><?=t('Add a Sub-Page')?></a>';
+<? } ?>
+menuHTML += '</div>';
+
+
+<? } ?>
+
+menuHTML += '</div>';
+
+<? if (!$cantCheckOut) { ?>
+
+menuHTML += '<div id="ccm-edit-overlay-footer">';
+menuHTML += '<div class="ccm-edit-overlay-inner">';
+menuHTML += '<ul>';
+menuHTML += '<li><a class="ccm-menu-icon ccm-icon-properties" href=""><?=t('Properties')?></a></li>';
+menuHTML += '<li><a class="ccm-menu-icon ccm-icon-design" href=""><?=t('Design')?></a></li>';
+menuHTML += '<li><a class="ccm-menu-icon ccm-icon-permissions" href=""><?=t('Permissions')?></a></li>';
+menuHTML += '<li><a class="ccm-menu-icon ccm-icon-versions" href=""><?=t('Versions')?></a></li>';
+menuHTML += '<li><a class="ccm-menu-icon ccm-icon-speed-settings" href=""><?=t('Speed Settings')?></a></li>';
+menuHTML += '<li><a class="ccm-menu-icon ccm-icon-move-copy" href=""><?=t('Move/Copy')?></a></li>';
+menuHTML += '<li><a class="ccm-menu-icon ccm-icon-delete" href=""><?=t('Delete')?></a></li>';
+menuHTML += '</ul>';
+menuHTML += '</div>';
+menuHTML += '</div>';
+
+<? } ?>
+
+menuHTML += '</div>';
+menuHTML += '</div>';
+
+<?
+/*
 $items = $ihm->getPageHeaderMenuItems('right');
 foreach($items as $ih) {
 	$cnt = $ih->getController(); 
@@ -102,6 +174,7 @@ foreach($items as $ih) {
 	<?
 	}
 }
+
 ?>
 
 <? if ($dh->canRead()) { ?>
@@ -164,53 +237,32 @@ menuHTML += '<div id="ccm-page-detail"><div id="ccm-page-detail-l"><div id="ccm-
 menuHTML += '<div id="ccm-page-detail-lower"><div id="ccm-page-detail-bl"><div id="ccm-page-detail-br"><div id="ccm-page-detail-b"></div></div></div></div>';
 menuHTML += '</div>';
 
-<? if ($c->getCollectionParentID() > 0) { ?>
-	menuHTML += '<div id="ccm-bc">';
-	menuHTML += '<div id="ccm-bc-inner">';
-	<?
-		$nh = Loader::helper('navigation');
-		$trail = $nh->getTrailToCollection($c);
-		$trail = array_reverse($trail);
-		$trail[] = $c;
-	?>
-	menuHTML += '<ul>';
-	<? foreach($trail as $_c) { ?>
-		menuHTML += '<li><a href="#" onclick="javascript:location.href=\'<?=$nh->getLinkToCollection($_c)?>\'"><?=htmlentities($_c->getCollectionName(), ENT_QUOTES, APP_CHARSET)?></a></li>';
-	<? } ?>
-	menuHTML += '</ul>';
-	
-	menuHTML += '</div>';
-	menuHTML += '</div>';
-<? } ?>
+<? */ ?>
 
-<?
-if ($statusMessage != '') {?> 
-	$(function() { ccmAlert.hud('<?=str_replace("'",'"',$statusMessage) ?>', 5000); });
-<? } ?>
-
-	
-	$(function() {
-		<? 
-		if (!$dh->inDashboard()) { ?>
-			$(document.body).prepend('<div id="ccm-page-controls-wrapper"></div>');
-			$("#ccm-page-controls-wrapper").html(menuHTML);
-		<? } ?>
-		
-		<? if ($c->isArrangeMode()) { ?>
-			$(ccm_arrangeInit);	
-		<? } else if ($c->isEditMode()) { ?>
-			$(ccm_editInit);	
-		<? } else { ?>
-			$(ccm_init);
-		<? } ?>
-		
-		<? if ($u->config('UI_BREADCRUMB')) {  ?>
-			ccm_setupBreadcrumb();
-		<? } ?>
-		
-	});
 <?
 	}
 	
 } ?>
 
+<?
+if ($statusMessage != '') {?> 
+	//$(function() { ccmAlert.hud('<?=str_replace("'",'"',$statusMessage) ?>', 5000); });
+<? } ?>
+
+	
+$(function() {
+	<? 
+	if (!$dh->inDashboard()) { ?>
+		$(document.body).prepend('<div id="ccm-page-controls-wrapper"></div>');
+		$("#ccm-page-controls-wrapper").html(menuHTML);
+	<? } ?>
+	
+	<? if ($c->isEditMode()) { ?>
+		$(ccm_editInit);	
+	<? } ?>
+	
+	$(".tooltip").twipsy();
+    ccm_activateToolbar();
+
+	
+});
