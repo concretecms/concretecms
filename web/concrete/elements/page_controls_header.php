@@ -23,6 +23,7 @@ $this->addHeaderItem($html->css('jquery.ui.css'));
 $this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 $this->addFooterItem($html->javascript('jquery.js'));
 $this->addFooterItem($html->javascript('jquery.ui.js'));
+$this->addFooterItem($html->javascript('jquery.form.js'));
 $this->addFooterItem($html->javascript('ccm.app.js'));
 	
 if (ACTIVE_LOCALE != 'en_US') {

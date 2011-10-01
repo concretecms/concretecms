@@ -84,7 +84,9 @@ if (isset($cp)) {
 		$statusMessage .= "<br/>" . t('(All edits take effect immediately)');
 	}
 
-	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { ?>
+	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { 
+	
+		$cID = $c->getCollectionID(); ?>
 
 
 
@@ -147,10 +149,10 @@ menuHTML += '</div>';
 menuHTML += '<div id="ccm-edit-overlay-footer">';
 menuHTML += '<div class="ccm-edit-overlay-inner">';
 menuHTML += '<ul>';
-menuHTML += '<li><a class="ccm-menu-icon ccm-icon-properties" href=""><?=t('Properties')?></a></li>';
+menuHTML += '<li><a class="ccm-menu-icon ccm-icon-properties" id="ccm-toolbar-nav-properties" dialog-width="640" dialog-height="360" dialog-append-buttons="true" dialog-modal="false" dialog-title="<?=t('Page Properties')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?<? if ($cp->canApproveCollection() && (!$c->isEditMode())) { ?>approveImmediately=1<? } ?>&cID=<?=$c->getCollectionID()?>&ctask=edit_metadata"><?=t('Properties')?></a></li>';
 menuHTML += '<li><a class="ccm-menu-icon ccm-icon-design" href=""><?=t('Design')?></a></li>';
 menuHTML += '<li><a class="ccm-menu-icon ccm-icon-permissions" href=""><?=t('Permissions')?></a></li>';
-menuHTML += '<li><a class="ccm-menu-icon ccm-icon-versions" href=""><?=t('Versions')?></a></li>';
+menuHTML += '<li><a class="ccm-menu-icon ccm-icon-versions" id="ccm-toolbar-nav-versions" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="<?=t('Page Versions')?>" id="menuVersions<?=$cID?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?rel=SITEMAP&cID=<?=$cID?>"><?=t('Versions')?></a></li>';
 menuHTML += '<li><a class="ccm-menu-icon ccm-icon-speed-settings" href=""><?=t('Speed Settings')?></a></li>';
 menuHTML += '<li><a class="ccm-menu-icon ccm-icon-move-copy" href=""><?=t('Move/Copy')?></a></li>';
 menuHTML += '<li><a class="ccm-menu-icon ccm-icon-delete" href=""><?=t('Delete')?></a></li>';

@@ -1003,21 +1003,13 @@
 				
 				$obj = new stdClass;
 
-				if ($_POST['rel'] == 'SITEMAP') { 
-					$obj->rel = $_POST['rel'];
-					if ($cp->canApproveCollection()) {
-						$v = CollectionVersion::get($c, "RECENT");
-						$v->approve();
-						$u = new User();
-						$u->unloadCollectionEdit();
-						$obj->name = $v->getVersionName();
-					}
-					
-				} else {
-					//header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
-					//exit;
+				if ($_POST['approveImmediately'] && ($cp->canApproveCollection())) {
+					$v = CollectionVersion::get($c, "RECENT");
+					$v->approve();
+					$u = new User();
+					$u->unloadCollectionEdit();
+					$obj->name = $v->getVersionName();
 				}
-
 				$obj->cID = $c->getCollectionID();
 				print Loader::helper('json')->encode($obj);
 				exit;

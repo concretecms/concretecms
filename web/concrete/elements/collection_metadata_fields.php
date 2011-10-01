@@ -103,6 +103,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	
 	<script type="text/javascript">
 	<? 
+	/*
 	$v = View::getInstance();
 	$headerItems = $v->getHeaderItems();
 	foreach($headerItems as $item) {
@@ -114,6 +115,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 		 ccm_addHeaderItem("<?=$item->file?>", '<?=$type?>');
 		<? 
 	} 
+	*/
 	?>
 	</script>
 	
