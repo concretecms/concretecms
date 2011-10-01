@@ -55,7 +55,6 @@ class DashboardStacksController extends DashboardBaseController {
 	}
 	
 	public function view_details($cID) {
-		$this->addHeaderItem(Loader::helper('html')->css('ccm.ui.css'));
 		$s = Stack::getByID($cID);
 		if (is_object($s)) {
 			$blocks = $s->getBlocks('Main');

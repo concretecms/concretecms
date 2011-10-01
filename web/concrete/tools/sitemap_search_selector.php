@@ -7,11 +7,6 @@ if (!$sh->canRead()) {
 
 ?>
 <div>
-
-<?=Loader::helper('html')->css('ccm.sitemap.css')?>
-<?=Loader::helper('html')->javascript('ccm.sitemap.js')?>
-
-
 <script type="text/javascript">
 var ccm_ssActiveTab = "ccm-show-sitemap";
 

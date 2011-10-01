@@ -215,7 +215,11 @@
 			$fID = $match[1];
 			if ($fID > 0) {
 				$c = Page::getCurrentPage();
-				return View::url('/download_file', 'view', $fID, $c->getCollectionID());
+				if (is_object($c)) {
+					return View::url('/download_file', 'view', $fID);
+				} else {
+					return View::url('/download_file', 'view', $fID, $c->getCollectionID());				
+				}
 			}
 		}
 

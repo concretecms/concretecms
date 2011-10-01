@@ -826,10 +826,11 @@ ccm_sitemapSelectDisplayMode = function(instance_id, display_mode, select_mode, 
 }
 
 $(function() {
+	/*
 	$(document).ajaxError(function(event, request, settings) {
 		ccmAlert.notice(ccmi18n_sitemap.loadErrorTitle, request.responseText);
 	});
-	
+	*/
 	
 	$(document).click(function() {
 		ccm_hideMenus();

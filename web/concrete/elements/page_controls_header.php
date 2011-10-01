@@ -17,26 +17,13 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 </script>
 
 <?
-$this->addHeaderItem($html->css('ccm.twitter.bootstrap.css'));
-$this->addHeaderItem($html->css('ccm.ui.css'));
-$this->addHeaderItem($html->css('jquery.rating.css'));
-$this->addHeaderItem($html->css('ccm.dialog.css'));
-$this->addHeaderItem($html->css('ccm.menus.css'));
-$this->addHeaderItem($html->css('ccm.forms.css'));
-$this->addHeaderItem($html->css('ccm.search.css'));
-$this->addHeaderItem($html->css('ccm.filemanager.css'));
-$this->addHeaderItem($html->css('ccm.colorpicker.css'));
+$this->addHeaderItem($html->css('ccm.app.css'));
 $this->addHeaderItem($html->css('jquery.ui.css'));
 
 $this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 $this->addFooterItem($html->javascript('jquery.js'));
-$this->addFooterItem($html->javascript('jquery.form.js'));
-$this->addFooterItem($html->javascript('jquery.metadata.js'));
 $this->addFooterItem($html->javascript('jquery.ui.js'));
-$this->addFooterItem($html->javascript('quicksilver.js'));
-$this->addFooterItem($html->javascript('jquery.liveupdate.js'));
-$this->addFooterItem($html->javascript('jquery.rating.js'));
-$this->addFooterItem($html->javascript('jquery.colorpicker.js'));
+$this->addFooterItem($html->javascript('ccm.app.js'));
 	
 if (ACTIVE_LOCALE != 'en_US') {
 	$dlocale = str_replace('_', '-', ACTIVE_LOCALE);
@@ -44,12 +31,6 @@ if (ACTIVE_LOCALE != 'en_US') {
 	$this->addFooterItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');
 }
 
-$this->addFooterItem($html->javascript('ccm.dialog.js'));
-$this->addFooterItem($html->javascript('ccm.themes.js'));
-$this->addFooterItem($html->javascript('ccm.filemanager.js'));
-$this->addFooterItem($html->javascript('ccm.search.js'));
-$this->addFooterItem($html->javascript('ccm.ui.js'));
-$this->addFooterItem($html->javascript('ccm.layout.js'));
 $this->addFooterItem($html->javascript('tiny_mce/tiny_mce.js'));
 
 
