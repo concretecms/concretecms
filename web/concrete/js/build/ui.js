@@ -31,7 +31,8 @@ ccm_showBlockMenu = function(obj, e) {
 		el = document.createElement("DIV");
 		el.id = "ccm-block-menu" + obj.bID + "-" + obj.aID;
 		el.className = "ccm-menu ccm-ui";
-		el.style.display = "none";
+		el.style.display = "block";
+		el.style.visibility = "hidden";
 		document.body.appendChild(el);
 		
 		bobj = $("#ccm-block-menu" + obj.bID + "-" + obj.aID);
@@ -64,24 +65,24 @@ ccm_showBlockMenu = function(obj, e) {
 			html += '<li class="ccm-menu-separator"></li>';
 		}
 		if (obj.canDesign) {
-			html += '<li><a class="ccm-menu-icon" dialog-modal="false" dialog-title="' + ccmi18n.changeBlockBaseStyle + '" dialog-width="450" dialog-height="420" id="menuChangeCSS' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=block_css&modal=true&width=300&height=100" title="' + ccmi18n.changeBlockCSS + '">' + ccmi18n.changeBlockCSS + '</a></li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-design-menu" dialog-modal="false" dialog-title="' + ccmi18n.changeBlockBaseStyle + '" dialog-width="450" dialog-height="420" id="menuChangeCSS' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=block_css&modal=true&width=300&height=100" title="' + ccmi18n.changeBlockCSS + '">' + ccmi18n.changeBlockCSS + '</a></li>';
 		}
 		if (obj.canWrite) {
-			html += '<li><a class="ccm-menu-icon" dialog-modal="false" dialog-title="' + ccmi18n.changeBlockTemplate + '" dialog-width="300" dialog-height="100" id="menuChangeTemplate' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=template&modal=true&width=300&height=100" title="' + ccmi18n.changeBlockTemplate + '">' + ccmi18n.changeBlockTemplate + '</a></li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-custom-template-menu" dialog-modal="false" dialog-title="' + ccmi18n.changeBlockTemplate + '" dialog-width="300" dialog-height="100" id="menuChangeTemplate' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=template&modal=true&width=300&height=100" title="' + ccmi18n.changeBlockTemplate + '">' + ccmi18n.changeBlockTemplate + '</a></li>';
 		}
 
 		if (obj.canModifyGroups || obj.canAliasBlockOut || obj.canSetupComposer) {
-			html += '<li class="header"></li>';
+			html += '<li class="ccm-menu-separator"></li>';
 		}
 
 		if (obj.canModifyGroups) {
-			html += '<li><a title="' + ccmi18n.setBlockPermissions + '" class="ccm-menu-icon" dialog-width="400" dialog-height="380" id="menuBlockGroups' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=groups" dialog-title="' + ccmi18n.setBlockPermissions + '">' + ccmi18n.setBlockPermissions + '</a></li>';
+			html += '<li><a title="' + ccmi18n.setBlockPermissions + '" class="ccm-menu-icon ccm-icon-permissions-menu" dialog-width="400" dialog-height="380" id="menuBlockGroups' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=groups" dialog-title="' + ccmi18n.setBlockPermissions + '">' + ccmi18n.setBlockPermissions + '</a></li>';
 		}
 		if (obj.canAliasBlockOut) {
-			html += '<li><a class="ccm-menu-icon" dialog-width="550" dialog-height="450" id="menuBlockAliasOut' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=child_pages" dialog-title="' + ccmi18n.setBlockAlias + '">' + ccmi18n.setBlockAlias + '</a></li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-setup-child-pages-menu" dialog-width="550" dialog-height="450" id="menuBlockAliasOut' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=child_pages" dialog-title="' + ccmi18n.setBlockAlias + '">' + ccmi18n.setBlockAlias + '</a></li>';
 		}
 		if (obj.canSetupComposer) {
-			html += '<li><a class="ccm-menu-icon" dialog-width="300" dialog-modal="false" dialog-height="150" id="menuBlockSetupComposer' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=composer" dialog-title="' + ccmi18n.setBlockComposerSettings + '">' + ccmi18n.setBlockComposerSettings + '</a></li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-setup-composer-menu" dialog-width="300" dialog-modal="false" dialog-height="150" id="menuBlockSetupComposer' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=composer" dialog-title="' + ccmi18n.setBlockComposerSettings + '">' + ccmi18n.setBlockComposerSettings + '</a></li>';
 		}
 		
 
@@ -129,10 +130,7 @@ ccm_openAreaAddBlock = function(arHandle, addOnly, cID) {
 		href: CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + cID + '&atask=add&arHandle=' + arHandle + '&addOnly=' + addOnly,
 		width: 550,
 		modal: false,
-		height: 380,
-		onClose: function() {
-			ccm_activateHeader();
-		}
+		height: 380
 	});
 }
 
@@ -264,6 +262,8 @@ ccm_deleteBlock = function(cID, bID, aID, arHandle, msg) {
 ccm_hideMenus = function() {
 	/* 1st, hide all items w/the css menu class */
 	$("div.ccm-menu").hide();
+	$("div.ccm-menu").css('visibility', 'hidden');
+	$("div.ccm-menu").show();
 }
 
 ccm_parseBlockResponse = function(r, currentBlockID, task) {
@@ -599,33 +599,30 @@ ccm_goToSitemapNode = function(cID, cName) {
 }
 
 ccm_fadeInMenu = function(bobj, e) {
-	var mwidth = bobj.width();
-	var mheight = bobj.height();
+	var mwidth = bobj.find('div.popover div.inner').width();
+	var mheight = bobj.find('div.popover').height();
+	bobj.hide();
+	bobj.css('visibility', 'visible');
+	
 	var posX = e.pageX + 2;
 	var posY = e.pageY + 2;
-	
+
 	if ($(window).height() < e.clientY + mheight) {
-		posY = e.pageY - mheight + 20;
+		posY = posY - mheight - 10;
+		posX = posX - (mwidth / 2);
+		bobj.find('div.popover').removeClass('below');
+		bobj.find('div.popover').addClass('above');
 	} else {
-		posY = posY - 20;
-	}
-	
-	if ($(window).width() < e.clientX + mwidth) {
-		posX = e.pageX - mwidth + 15;
-	} else {
-		posX = posX - 15;
-	}
-	
-	// the 15 and 20 is because of the way we're styling these menus
+		posX = posX - (mwidth / 2);
+		posY = posY + 10;
+		bobj.find('div.popover').removeClass('above');
+		bobj.find('div.popover').addClass('below');
+	}	
 	
 	bobj.css("top", posY + "px");
 	bobj.css("left", posX + "px");
+	bobj.fadeIn(60);
 	
-	if (ccm_animEffects) {
-		bobj.fadeIn(60);
-	} else {
-		bobj.show();
-	}
 }
 
 ccm_blockWindowClose = function() {

@@ -12,6 +12,7 @@ if ($cp->canAdminPage()) {
 ?>
 <div class="ccm-pane-controls ccm-ui">
 <form method="post" name="permissionForm" id="ccmMetadataForm" action="<?=$c->getCollectionAction()?>">
+<input type="hidden" name="approveImmediately" value="<?=$_REQUEST['approveImmediately']?>" />
 <input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 
 	<script type="text/javascript"> 
@@ -79,15 +80,10 @@ if ($cp->canAdminPage()) {
 				success: function(r) {
 					try {
 						var r = eval('(' + r + ')');
+						jQuery.fn.dialog.hideLoader();
+						jQuery.fn.dialog.closeTop();
 						if (r != null && r.rel == 'SITEMAP') {
-							jQuery.fn.dialog.hideLoader();
-							jQuery.fn.dialog.closeTop();
 							ccmSitemapHighlightPageLabel(r.cID, r.name);
-						} else {
-							ccm_mainNavDisableDirectExit();
-							ccm_hidePane(function() {
-								jQuery.fn.dialog.hideLoader();						
-							});
 						}
 						ccmAlert.hud(ccmi18n.savePropertiesMsg, 2000, 'success', ccmi18n.properties);
 					} catch(e) {

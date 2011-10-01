@@ -54,6 +54,7 @@ ccm_activateSite = function() {
 }
 
 ccm_addHeaderItem = function(item, type) {
+	alert(item);
 	if (type == 'CSS') {
 		if (!($('head').children('link[href*="' + item + '"]').length)) {
 			$('head').append('<link rel="stylesheet" type="text/css" href="' + item + '?ts=' + new Date().getTime() + '" />');

@@ -104,6 +104,9 @@ $(function() {
 		$("#ccm-nav-intelligent-search").bind('click', function(e) { if ( this.value=="") { 
 			$("#ccm-intelligent-search-results").hide();
 		}});
+		
+		$("#ccm-toolbar-nav-properties").dialog();
+		$("#ccm-toolbar-nav-versions").dialog();
 	
 		$("#ccm-nav-edit").click(function() {
 			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
