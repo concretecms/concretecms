@@ -11,6 +11,12 @@ if ($cp->canAdminPage()) {
 }
 ?>
 <div class="ccm-pane-controls ccm-ui">
+<? if ($_REQUEST['approveImmediately']) { ?>
+	<div class="alert-message block-message notice">
+		<?=t("Note: Since you haven't checked this page out for editing, these changes will immediately be approved.")?>
+	</div>
+<? } ?>
+
 <form method="post" name="permissionForm" id="ccmMetadataForm" action="<?=$c->getCollectionAction()?>">
 <input type="hidden" name="approveImmediately" value="<?=$_REQUEST['approveImmediately']?>" />
 <input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
@@ -33,44 +39,15 @@ if ($cp->canAdminPage()) {
 			$("#" + ccm_activePropertiesTab + "-tab").show();
 			
 			if (ccm_activePropertiesTab == 'ccm-properties-custom') {
-				$('#ccm-dialog-content1').dialog('option','height','540');
+				$('#ccm-dialog-content1').dialog('option','height','570');
 			} else {
-				$('#ccm-dialog-content1').dialog('option','height','460');
+				$('#ccm-dialog-content1').dialog('option','height','490');
 			}
 			$('#ccm-dialog-content1').dialog('option','position','center');
 
 		});
 		
-		ccm_settingsSetupCacheForm = function() {
-			var obj = $('input[name=cCacheFullPageContent]:checked');
-			if (obj.attr('enable-cache') == 1) {
-				$('div.ccm-properties-cache-lifetime input').attr('disabled', false);
-			} else {
-				$('div.ccm-properties-cache-lifetime input').attr('disabled', true);
-				$('input[name=cCacheFullPageContentOverrideLifetime][value=0]').attr('checked', true);
-			}
-
-			var obj2 = $('input[name=cCacheFullPageContentOverrideLifetime]:checked');
-			if (obj2.val() == 'custom') {
-				$('input[name=cCacheFullPageContentLifetimeCustom]').attr('disabled', false);
-			} else {
-				$('input[name=cCacheFullPageContentLifetimeCustom]').attr('disabled', true);
-				$('input[name=cCacheFullPageContentLifetimeCustom]').val('');
-			}
-
-		}
-		
 		$(function() {
-			$("input[name=cCacheFullPageContent]").click(function() {
-				ccm_settingsSetupCacheForm();
-			});
-			$("input[name=cCacheFullPageContentOverrideLifetime]").click(function() {
-				ccm_settingsSetupCacheForm();
-			});
-			$("input[name=cCacheFullPageContentOverrideLifetime][value=custom]").click(function() {
-				$('input[name=cCacheFullPageContentLifetimeCustom]').get(0).focus();
-			});
-			ccm_settingsSetupCacheForm();
 			$("#ccmMetadataForm").ajaxForm({
 				type: 'POST',
 				iframe: true,
@@ -100,9 +77,8 @@ if ($cp->canAdminPage()) {
 		
 	<ul class="tabs" id="ccm-properties-tabs">
 		<li <? if (!$c->isMasterCollection()) { ?>class="active"<? } else { ?>style="display: none"<? } ?>><a href="javascript:void(0)" id="ccm-properties-standard"><?=t('Standard Properties')?></a></li>
-		<li <? if ($c->isMasterCollection()) { ?>style="display: none"<? } ?>><a href="javascript:void(0)" id="ccm-page-paths"><?=t('Page Paths and Location')?></a></li>
-		<li <? if ($c->isMasterCollection()) { ?>class="active"<? } ?>><a href="javascript:void(0)" id="ccm-properties-cache"><?=t('Speed Settings')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-properties-custom"><?=t('Custom Attributes')?></a></li>
+		<li <? if ($c->isMasterCollection()) { ?>style="display: none"<? } ?>><a href="javascript:void(0)" id="ccm-page-paths"><?=t('Page Paths and Location')?></a></li>
 	</ul>
 
 	<div id="ccm-properties-standard-tab">
@@ -185,88 +161,6 @@ if ($cp->canAdminPage()) {
 		<? Loader::element('collection_metadata_fields', array('c'=>$c ) ); ?>
 	</div>
 
-	<div id="ccm-properties-cache-tab" style="display: none" class="form-stacked">
-		
-		<? if (!ENABLE_CACHE) {
-			print t('The cache has been disabled. Full page caching is not available.');
-		} else { ?>
-			<? $form = Loader::helper('form');?>
-			<?
-			switch(FULL_PAGE_CACHE_GLOBAL) {
-				case 'blocks':
-					$globalSetting = t('cache page if all blocks support it.');
-					$enableCache = 1;
-					break;
-				case 'all':
-					$globalSetting = t('enable full page cache.');
-					$enableCache = 1;
-					break;
-				case 0:
-					$globalSetting = t('disable full page cache.');
-					$enableCache = 0;
-					break;
-			}
-			switch(FULL_PAGE_CACHE_LIFETIME) {
-				case 'default':
-					$globalSettingLifetime = t('%s minutes', CACHE_LIFETIME / 60);
-					break;
-				case 'custom':
-					$custom = Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM');
-					$globalSettingLifetime = t('%s minutes', $custom);
-					break;
-				case 'forever':
-					$globalSettingLifetime = t('Until manually cleared');
-					break;
-			}
-			?>
-
-			<div class="clearfix">
-			<label><?=t('Full Page Caching')?></label>
-
-			<div class="input">
-			<ul class="inputs-list">
-			<li><label><?=$form->radio('cCacheFullPageContent', -1, $c->getCollectionFullPageCaching(), array('enable-cache' => $enableCache))?>
-			<span><?=t('Use global setting - %s', $globalSetting)?></span>
-			</label></li>
-			<li><label><?=$form->radio('cCacheFullPageContent', 0, $c->getCollectionFullPageCaching(), array('enable-cache' => 0))?>
-			<span><?=t('Do not cache this page.')?></span>
-			</label></li>
-			<li><label><?=$form->radio('cCacheFullPageContent', 1, $c->getCollectionFullPageCaching(), array('enable-cache' => 1))?>
-			<span><?=t('Cache this page.')?></span>
-			</label>
-			</li>
-			</ul>
-			</div>
-			
-			</div>
-			
-			<div class="clearfix">
-			<label><?=t('Cache for how long?')?></label>
-			
-			<div class="ccm-properties-cache-lifetime input">
-			<ul class="inputs-list">
-				<? $val = ($c->getCollectionFullPageCachingLifetimeCustomValue() > 0 && $c->getCollectionFullPageCachingLifetime()) ? $c->getCollectionFullPageCachingLifetimeCustomValue() : ''; ?>
-				<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 0, $c->getCollectionFullPageCachingLifetime())?> 
-				<?=t('Use global setting - %s', $globalSettingLifetime)?>
-				</span></label></li>
-				<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'default', $c->getCollectionFullPageCachingLifetime())?> 
-				<?=t('Default - %s minutes', CACHE_LIFETIME / 60)?>
-				</span></label></li>
-				<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'forever', $c->getCollectionFullPageCachingLifetime())?>
-				<?=t('Until manually cleared')?>
-				</span></label></li>
-				<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'custom', $c->getCollectionFullPageCachingLifetime())?>
-				<?=t('Custom')?>
-				</span></label>
-				<div style="margin-top: 4px; margin-left: 16px">
-					<?=$form->text('cCacheFullPageContentLifetimeCustom', $val, array('style' => 'width: 40px'))?> <?=t('minutes')?>	
-				</div>
-				</li>
-			</ul>
-			</div>
-		<? } ?>
-	</div>
-	
 	
 	<input type="hidden" name="update_metadata" value="1" />
 	<input type="hidden" name="processCollection" value="1">

@@ -60,6 +60,7 @@ var ccmi18n = {
 	customizeSearch: "<?=t('Customize Search')?>",
 	properties: "<?=t('Properties')?>",
 	savePropertiesMsg: "<?=t('Page Properties saved.')?>",
+	saveSpeedSettingsMsg: "<?=t("Speed Settings saved.")?>",
 	ok: "<?=t('Ok')?>",
 	x: "<?=t('x')?>"
 }

@@ -19,13 +19,14 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 <?
 $this->addHeaderItem($html->css('ccm.app.css'));
 $this->addHeaderItem($html->css('jquery.ui.css'));
+$this->addFooterItem('<div id="ccm-page-controls-wrapper"><div id="ccm-toolbar"></div></div>');
 
 $this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
-$this->addFooterItem($html->javascript('jquery.js'));
+$this->addHeaderItem($html->javascript('jquery.js'));
 $this->addFooterItem($html->javascript('jquery.ui.js'));
 $this->addFooterItem($html->javascript('jquery.form.js'));
 $this->addFooterItem($html->javascript('ccm.app.js'));
-	
+
 if (ACTIVE_LOCALE != 'en_US') {
 	$dlocale = str_replace('_', '-', ACTIVE_LOCALE);
 	$this->addFooterItem($html->javascript('i18n/ui.datepicker-' . $dlocale . '.js'));
@@ -37,7 +38,7 @@ $this->addFooterItem($html->javascript('tiny_mce/tiny_mce.js'));
 
 $cID = ($c->isAlias()) ? $c->getCollectionPointerOriginalID() : $c->getCollectionID();
 
-$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/page_controls_menu_js?cID=' . $cID . '&amp;cvID=' . $cvID . '&amp;btask=' . $_REQUEST['btask'] . '&amp;ts=' . time() . '"></script>'); 
+$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/page_controls_menu_js?cID=' . $cID . '&amp;cvID=' . $cvID . '&amp;btask=' . $_REQUEST['btask'] . '&amp;ts=' . time() . '"></script>'); 
 
 	}
 	

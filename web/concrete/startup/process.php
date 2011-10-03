@@ -970,6 +970,23 @@
 					exit;
 				}
 			}		
+		} else if ($_POST['update_speed_settings']) {
+			// updating a collection
+			if ($cp->canAdminPage()) {
+				
+				$data = array();
+				$data['cCacheFullPageContent'] = $_POST['cCacheFullPageContent'];
+				$data['cCacheFullPageContentLifetimeCustom'] = $_POST['cCacheFullPageContentLifetimeCustom'];
+				$data['cCacheFullPageContentOverrideLifetime'] = $_POST['cCacheFullPageContentOverrideLifetime'];				
+
+				$c->update($data);
+				
+				$obj = new stdClass;
+				$obj->name = $c->getCollectionName();
+				$obj->cID = $c->getCollectionID();
+				print Loader::helper('json')->encode($obj);
+				exit;
+			}	
 		} else if ($_POST['update_metadata']) { 
 			// updating a collection
 			if ($cp->canWrite()) {
