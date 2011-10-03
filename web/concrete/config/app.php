@@ -71,6 +71,9 @@ if (!defined('ENABLE_LEGACY_CONTROLLER_URLS')) {
 	define('ENABLE_LEGACY_CONTROLLER_URLS', false);
 }
 
+if(!defined('FORBIDDEN_SHOW_LOGIN')) {
+	Config::getOrDefine('FORBIDDEN_SHOW_LOGIN', true); //show the login page instead of forbidden for non-logged in users
+}
 
 if (URL_REWRITING_ALL == true) {
 	define('URL_SITEMAP', BASE_URL . DIR_REL . '/dashboard/sitemap');
