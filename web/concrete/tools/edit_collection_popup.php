@@ -13,6 +13,10 @@ switch($_GET['ctask']) {
 		$toolSection = "collection_metadata";
 		$canViewPane = $cp->canWrite();
 		break;
+	case 'edit_speed_settings':
+		$toolSection = "collection_speed_settings";
+		$canViewPane = $cp->canAdminPage();
+		break;
 	case 'edit_permissions':
 		if (PERMISSIONS_MODEL == 'simple') {
 			$toolSection = 'collection_permissions_simple';
@@ -30,6 +34,10 @@ switch($_GET['ctask']) {
 		$toolSection = "collection_mcd";
 		$canViewPane = $cp->canWrite();
 		$divID = "ccm-collection-mcd";
+		break;
+	case 'delete':
+		$toolSection = "collection_delete";
+		$canViewPane = $cp->canDeleteCollection();
 		break;
 	case 'set_theme':
 		$toolSection = "collection_theme";

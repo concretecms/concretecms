@@ -171,9 +171,7 @@ if (!$_GET['versions_reloaded']) { ?>
 	<div id="ccm-versions-container">
 <? } ?>
 
-<? Loader::element('pane_header', array('c'=>$c, 'close'=>'ccm_exitVersionList')); ?>
-
-<div class="ccm-pane-controls">
+<div class="ccm-pane-controls ccm-ui">
 
 <script type="text/javascript">
 
@@ -339,7 +337,6 @@ $("input[name=vRemove]").click(function() {
 <div class="ccm-pane-controls">
 <div id="ccm-edit-collection">
 
-<h1><?=t('Page Versions')?></h1>
 <p><?=t("The following is a list of all this page's versions. If you can edit a page you will automatically see its most recent version, but the approved version is what regular users will see.")?></p>
 
 <div class="ccm-form-area">
@@ -353,23 +350,23 @@ $("input[name=vRemove]").click(function() {
 	<form>
 	<?=t('Select')?>: <a id="ccm-version-select-none" href="#"><?=t('None')?></a> | <a id="ccm-version-select-old" href="#"><?=t('Old Versions')?></a>
 	&nbsp;&nbsp;
-	<input type="button" name="vCompare" value="<?=t('Compare')?>" disabled />
+	<input class="btn" type="button" name="vCompare" value="<?=t('Compare')?>" disabled />
 	&nbsp;
-	<input type="button" name="vApprove" value="<?=t('Approve')?>" disabled />
+	<input class="btn" type="button" name="vApprove" value="<?=t('Approve')?>" disabled />
 	
 	&nbsp;
-	<input type="button" name="vRemove" value="<?=t('Remove')?>" disabled />
+	<input class="btn" type="button" name="vRemove" value="<?=t('Remove')?>" disabled />
 	
 	</form>
 	<br/>
-	<table border="0" cellspacing="0" width="100%" class="ccm-grid" cellpadding="0">
+	<table border="0" cellspacing="0" width="100%" class="zebra-striped" cellpadding="0" id="ccm-versions-list">
 	<tr>
 		<th>&nbsp;</th>
 		<th><?=t('Name')?></th>
 		<th><?=t('Comments')?></th>
 		<th><?=t('Creator')?></th>
 		<th><?=t('Approver')?></th>
-		<th><?=t('Added On')?></th>
+		<th class="headerSortDown"><?=t('Added On')?></th>
 	</tr>
 	<? 
 	$vIsPending = true;

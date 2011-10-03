@@ -73,7 +73,7 @@ if (!$error) {
 						} else {
 							$nc2 = $oc->move($dc);
 						}
-						$successMessage = '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '"';
+						$successMessage = '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '." ';
 					} else {
 						$oc->markPendingAction('MOVE', $dc);
 						$successMessage = t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.", $oc->getCollectionName() , $dc->getCollectionName() );
@@ -103,7 +103,7 @@ if ($successMessage) {
 		print $js->encode($json);
 
 	} else {
-		print '<div class="error">' . $error . '</div>';
+		print '<div class="error">' . $error . '</div><div class="dialog-buttons"><a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" id="ccm-exit-drag-request" class="ccm-button-left btn">' . t('Cancel') . '</a></div>';
 	}
 	exit;
 }
@@ -148,13 +148,13 @@ if ($successMessage) {
 		
 		<br/>
 	
-	<div class="ccm-buttons">
+	<div class="dialog-buttons">
 	<? if ($_REQUEST['sitemap_mode'] == 'move_copy_delete') { ?>
-		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" id="ccm-exit-drag-request" title="<?=t('Choose Page')?>" class="ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
+		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" id="ccm-exit-drag-request" title="<?=t('Choose Page')?>" class="ccm-button-left btn"><?=t('Cancel')?></a>
 	<? } else { ?>
-		<a href="javascript:void(0)" onclick="showBranch(<?=$oc->getCollectionID()?>);$.fn.dialog.closeTop()" class="ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
+		<a href="javascript:void(0)" onclick="showBranch(<?=$oc->getCollectionID()?>);$.fn.dialog.closeTop()" class="ccm-button-left btn"><?=t('Cancel')?></a>
 	<? } ?>
-	<a href="javascript:void(0)" onclick="moveCopyAliasNode(<? if ($_REQUEST['sitemap_mode'] == 'move_copy_delete') { ?>true<? } ?>)" class="ccm-button-right accept"><span><?=t('Go')?></span></a>
+	<a href="javascript:void(0)" onclick="moveCopyAliasNode(<? if ($_REQUEST['select_mode'] == 'move_copy_delete') { ?>true<? } ?>)" class="ccm-button-right btn primary"><span><?=t('Go')?></span></a>
 	</div>
 	
 	<div class="ccm-spacer">&nbsp;</div>

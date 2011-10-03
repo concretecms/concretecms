@@ -1,1 +1,1 @@
-find buildmin/*.js -type f -exec cat {} \; -exec echo "" \; > ccm.app.js
+find ccm_app/*.js -type f -exec cat {} \; -exec echo "" \; > ccm.app.js
