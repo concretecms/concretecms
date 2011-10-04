@@ -207,7 +207,7 @@ menuHTML += '</div>';
 <? } ?>
 
 menuHTML += '</div>';
-menuHTML += '<?=$ish->getQuickNavigationBar()?>';
+menuHTML += '<?=addslashes($ish->getQuickNavigationBar())?>';
 
 <?
 /*

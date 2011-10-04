@@ -663,8 +663,9 @@ div#ccm-quick-nav a{padding:4px;line-height:15px;-webkit-border-radius:6px;-moz-
 a.ccm-menu-icon{background:url(../images/icons_sprite.png) no-repeat top left;}
 .ccm-icon-back{background-position:-13px -295px !important;}
 .ccm-icon-sign-out{background-position:60px -1728px !important;}
-.ccm-icon-close{background-position:-20px -1745px !important;}
-.ccm-icon-favorite{background-position:-20px -1803px !important;}
+.ccm-icon-close{background-position:-19px -1744px !important;}
+.ccm-icon-favorite{background-position:-20px -1802px !important;}
+.ccm-icon-favorite-selected{background-position:-20px -1863px !important;}
 .ccm-icon-dashboard{background-position:-15px -557px !important;}
 .ccm-icon-edit{background-position:-13px -758px !important;}
 .ccm-icon-properties{background-position:-18px -1226px !important;}
