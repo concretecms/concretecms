@@ -28,6 +28,10 @@ class FileHelper {
 	 */
 	protected $ignoreFiles = array('__MACOSX', DIRNAME_CONTROLLERS);
 	
+	public function reset() {
+		$this->ignoreFiles = array('__MACOSX', DIRNAME_CONTROLLERS);
+	}
+	
 	/** 
 	 * Returns the contents of a directory in an array.
 	 * @param string $directory Directory to get the contents of
