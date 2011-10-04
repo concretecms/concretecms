@@ -17,7 +17,7 @@ $req->setCurrentPage($c);
 $valt = Loader::helper('validation/token');
 $sh = Loader::helper('concrete/dashboard/sitemap');
 $dh = Loader::helper('concrete/dashboard');
-$ih = Loader::helper('concrete/interface');
+$ish = Loader::helper('concrete/interface');
 $token = '&' . $valt->getParameter();
 
 if (isset($cp)) {
@@ -101,6 +101,17 @@ menuHTML += '<li <? if ($c->isEditMode()) { ?>class="ccm-nav-edit-mode-active"<?
 menuHTML += '</ul>';
 
 menuHTML += '<ul id="ccm-system-nav">';
+<?
+$items = $ihm->getPageHeaderMenuItems('right');
+foreach($items as $ih) {
+	$cnt = $ih->getController(); 
+	if ($cnt->displayItem()) {
+	?>
+		menuHTML += '<li><?=$cnt->getMenuLinkHTML()?></li>';
+	<?
+	}
+}
+?>
 menuHTML += '<li><a class="ccm-icon-dashboard ccm-menu-icon" id="ccm-nav-dashboard" href="<?=View::url('/dashboard')?>"><?=t('Dashboard')?></a></li>';
 menuHTML += '<li id="ccm-nav-intelligent-search-wrapper"><input type="search" placeholder="<?=t('Intelligent Search')?>" id="ccm-nav-intelligent-search" tabindex="1" /></li>';
 menuHTML += '<li><a id="ccm-nav-sign-out" class="ccm-icon-sign-out ccm-menu-icon" href="<?=View::url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>';
@@ -153,7 +164,7 @@ menuHTML += '<span class="label notice"><?=t('Version %s', $c->getVersionID())?>
 menuHTML += '<?=t('Page last edited on %s', $c->getCollectionDateLastModified(DATE_APP_GENERIC_MDYT))?>';
 menuHTML += '<div class="ccm-edit-overlay-actions">';
 <? if ($cp->canWrite()) { ?>
-	menuHTML += '<a href="<? if (!$cantCheckOut) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>" class="btn primary <? if ($cantCheckOut) { ?> disabled <? } ?> tooltip" <? if ($cantCheckOut) { ?>title="<?=t('Someone has already checked this page out for editing.')?>"<? } ?>><?=t('Edit this Page')?></a>';
+	menuHTML += '<a id="ccm-nav-check-out" href="<? if (!$cantCheckOut) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>" class="btn primary <? if ($cantCheckOut) { ?> disabled <? } ?> tooltip" <? if ($cantCheckOut) { ?>title="<?=t('Someone has already checked this page out for editing.')?>"<? } ?>><?=t('Edit this Page')?></a>';
 <? } ?>
 <? if ($cp->canAddSubContent()) { ?>
 	menuHTML += '<a id="ccm-toolbar-add-subpage" dialog-width="680" dialog-modal="false" dialog-height="440" dialog-title="<?=t('Add a Sub-Page')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?cID=<?=$cID?>&ctask=add"class="btn"><?=t('Add a Sub-Page')?></a>';
@@ -196,19 +207,10 @@ menuHTML += '</div>';
 <? } ?>
 
 menuHTML += '</div>';
-menuHTML += '</div>';
+menuHTML += '<?=$ish->getQuickNavigationBar()?>';
 
 <?
 /*
-$items = $ihm->getPageHeaderMenuItems('right');
-foreach($items as $ih) {
-	$cnt = $ih->getController(); 
-	if ($cnt->displayItem()) {
-	?>
-		menuHTML += '<li><?=$cnt->getMenuLinkHTML()?></li>';
-	<?
-	}
-}
 
 ?>
 
@@ -286,17 +288,18 @@ if ($statusMessage != '') {?>
 
 	
 $(function() {
-	<? 
-	if (!$dh->inDashboard()) { ?>
-		$("#ccm-page-controls-wrapper").html(menuHTML);
-	<? } ?>
-	
 	<? if ($c->isEditMode()) { ?>
 		$(ccm_editInit);	
 	<? } ?>
+
+	<? 
+	if (!$dh->inDashboard()) { ?>
+		$("#ccm-page-controls-wrapper").html(menuHTML);
+		$(".tooltip").twipsy();
+		ccm_activateToolbar();
+	<? } ?>
 	
-	$(".tooltip").twipsy();
-    ccm_activateToolbar();
+	
 
 	
 });

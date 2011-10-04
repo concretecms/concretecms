@@ -358,7 +358,10 @@ class LoginController extends Controller {
 	}
 	
 	public function forward($cID = 0) {
-		$this->set('rcID', $cID);
+		$nh = Loader::helper('validation/numbers');
+		if ($nh->integer($cID)) {
+			$this->set('rcID', $cID);
+		}
 	}
 	
 	// responsible for validating a user's email address

@@ -68,7 +68,7 @@ Loader::element('header_required');
 	$_SESSION['dashboardHasSeenImage'] = true;
 } ?>
 
-<div id="ccm-dashboard-page" class="ccm-ui">
+<div class="ccm-ui">
 
 <div id="ccm-toolbar">
 <a href="<?=$this->url('/dashboard/')?>"><img id="ccm-logo" src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" height="49" width="49" alt="Concrete5" /></a>
@@ -84,11 +84,15 @@ Loader::element('header_required');
 </ul>
 
 </div>
-
 <?
+$_ih = Loader::helper('concrete/interface');
+print $_ih->getQuickNavigationBar();
+
 $dh = Loader::helper('concrete/dashboard');
 print $dh->getDashboardAndSearchMenus();
 ?>
+</div>
+<div id="ccm-dashboard-page" class="ccm-ui">
 
 <div id="ccm-dashboard-content">
 

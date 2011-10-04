@@ -31,7 +31,7 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 <div class="span14 offset1 columns">
 
 <div class="ccm-dashboard-pane">
-<div class="ccm-dashboard-pane-header"><h3><?=t('Sitemap')?></h3></div>
+<?=$this->controller->outputDashboardPaneHeader(t('Sitemap'));?>
 <div class="ccm-dashboard-pane-options">
 	<div id="ccm-show-all-pages">
 		<label for="ccm-show-all-pages-cb"><?=t('Show System Pages')?></label>
