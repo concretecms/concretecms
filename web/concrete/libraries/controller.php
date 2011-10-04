@@ -405,19 +405,6 @@ class Controller {
 	 * @return Page
 	 */
 	public function getCollectionObject() {return $this->c;}
-	
-	/**
-   * Get the current controllers url, first checking to see if this controller has a collection object
-   * @return string url
-   * @author Scott Conrad <scott.conrads@gmail.com>
-   */
-  public function getCollectionURL(){
-    $nh = Loader::helper('navigation');
-    $nh instanceof NavigationHelper;
-    if(is_object($this->c) && $this->c instanceOf Page){
-      return $nh->getCollectionURL($this->c);
-    }
-  }
   /** 
 	 * Gets the current view for the controller (typically the page's handle)
 	 * @return string $view
