@@ -651,9 +651,20 @@ div#ccm-notification{position:fixed;display:none;top:60px;border:1px solid #d7d7
 div#ccm-notification a{color:#444;text-decoration:underline;}
 div#ccm-notification h3{font-size:16px;font-weight:bold;margin:2px 0px 2px 0px;padding:0px;line-height:16px;color:#444444;}
 img#ccm-notification-icon{margin-right:6px;margin-top:2px;opacity:0.5;}
+div#ccm-quick-nav{z-index:99;background-color:#d9ebf5;background-repeat:repeat-x;background-image:-khtml-gradient(linear, left top, left bottom, from(#edf3f7), to(#d9ebf5));background-image:-moz-linear-gradient(top, #edf3f7, #d9ebf5);background-image:-ms-linear-gradient(top, #edf3f7, #d9ebf5);background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #edf3f7), color-stop(100%, #d9ebf5));background-image:-webkit-linear-gradient(top, #edf3f7, #d9ebf5);background-image:-o-linear-gradient(top, #edf3f7, #d9ebf5);background-image:linear-gradient(top, #edf3f7, #d9ebf5);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#edf3f7', endColorstr='#d9ebf5', GradientType=0);text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);border-color:#d9ebf5 #d9ebf5 #9ccbe5;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);position:relative;display:none;-webkit-box-shadow:inset 0 1px 0 #ffffff;-moz-box-shadow:inset 0 1px 0 #ffffff;box-shadow:inset 0 1px 0 #ffffff;border-bottom:1px solid #A1C3DA;position:absolute;top:50px;height:32px;width:100%;zoom:1;}div#ccm-quick-nav:before,div#ccm-quick-nav:after{display:table;content:"";zoom:1;*display:inline;}
+div#ccm-quick-nav:after{clear:both;}
+div#ccm-quick-nav ul#ccm-quick-nav-favorites{position:absolute;top:8px;left:10px;margin:0px;padding:0px;}
+div#ccm-quick-nav ul#ccm-quick-nav-favorites li{margin-right:20px;}
+div#ccm-quick-nav ul li a{display:inline;}
+div#ccm-quick-nav ul#ccm-quick-nav-breadcrumb{position:absolute;top:8px;right:10px;margin:0px;padding:0px;}div#ccm-quick-nav ul#ccm-quick-nav-breadcrumb .divider{padding:0 5px;color:#9FBCCF;}
+div#ccm-quick-nav ul{font-size:12px;}
+div#ccm-quick-nav a{padding:4px;line-height:15px;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;}
+.ui-effects-transfer{-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;border:1px solid #000;z-index:10000;background-color:rgba(255, 255, 255, 0.4);}
 a.ccm-menu-icon{background:url(../images/icons_sprite.png) no-repeat top left;}
 .ccm-icon-back{background-position:-13px -295px !important;}
 .ccm-icon-sign-out{background-position:60px -1728px !important;}
+.ccm-icon-close{background-position:-20px -1745px !important;}
+.ccm-icon-favorite{background-position:-20px -1803px !important;}
 .ccm-icon-dashboard{background-position:-15px -557px !important;}
 .ccm-icon-edit{background-position:-13px -758px !important;}
 .ccm-icon-properties{background-position:-18px -1226px !important;}

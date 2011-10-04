@@ -111,4 +111,45 @@ class ConcreteInterfaceHelper {
 		return $html;
 	}	
 	
+	public function getQuickNavigationBar() {
+		$c = Page::getCurrentPage();
+		if (!is_object($c)) {
+			return;
+		}
+		
+		if (!is_array($_SESSION['ccmQuickNavRecentPages'])) {
+			$_SESSION['ccmQuickNavRecentPages'] = array();
+		}
+		if (!in_array($c->getCollectionID(), $_SESSION['ccmQuickNavRecentPages'])) {
+			$_SESSION['ccmQuickNavRecentPages'][] = $c->getCollectionID();
+		}
+		if (count($_SESSION['ccmQuickNavRecentPages']) > 5) {
+			array_shift($_SESSION['ccmQuickNavRecentPages']);
+		}
+		
+		$html = '';
+		$html .= '<div id="ccm-quick-nav">';
+		$html .= '<ul id="ccm-quick-nav-favorites" class="pills"></ul>';
+		
+		if (count($_SESSION['ccmQuickNavRecentPages']) > 0) {
+			$html .= '<ul id="ccm-quick-nav-breadcrumb" class="pills">';
+			$i = 0;
+			foreach($_SESSION['ccmQuickNavRecentPages'] as $_cID) {
+				$_c = Page::getByID($_cID);
+				$name = t('(No Name)');
+				$divider = '';
+				if (isset($_SESSION['ccmQuickNavRecentPages'][$i+1])) {
+					$divider = '<span class="divider">/</span>';
+				}
+				if ($_c->getCollectionName()) {
+					$name = $_c->getCollectionName();
+				}
+				$html .= '<li><a href="' . Loader::helper('navigation')->getLinkToCollection($_c) . '">' . $name . '</a>' . $divider . '</li>';
+				$i++;
+			}
+			$html .= '</ul>';
+		}
+		$html .= '</div>';
+		return $html;
+	}
 }

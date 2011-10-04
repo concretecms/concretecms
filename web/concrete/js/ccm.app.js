@@ -3804,7 +3804,7 @@ moveCopyAliasNode = function(reloadPage) {
 				} else {
 					setTimeout(function() {
 						window.location.href = CCM_DISPATCHER_FILENAME + "?cID=" + resp.cID;
-					}, 1000);
+					}, 2000);
 					return false;
 				}
 			}
@@ -4208,10 +4208,59 @@ $(function() {
 	ccm_intelligentSearchDoOffsite($('#ccm-nav-intelligent-search').val());
 });
 
+	var ccm_quickNavTimer = false;
+	
+	ccm_showQuickNav = function(callback) {
+		clearTimeout(ccm_quickNavTimer);
+		if ($('#ccm-quick-nav').is(':visible')) {
+			if (typeof(callback) == 'function') {
+				callback();
+			}
+		} else {
+			$("#ccm-quick-nav").fadeIn(120, 'easeOutExpo', function() {
+				if (typeof(callback) == 'function') {
+					callback();
+				}
+			});
+		}
+	}
+	
+	ccm_hideQuickNav = function() {
+		$("#ccm-quick-nav").fadeOut(120, 'easeInExpo');
+		clearTimeout(ccm_quickNavTimer);
+	}
+	
+	ccm_addToQuickNav = function(cID) {
+		ccm_showQuickNav(function() {
+			$("#ccm-quick-nav-favorites").append('<li />');
+			var accepter = $("#ccm-quick-nav-favorites li:last-child");
+			accepter.css('display','none');
+			var l = $("#ccm-add-to-quick-nav");
+			var title = l.parent().parent().parent().find('h3');
+			title.css('display','inline');
+			accepter.html('<a href="' + l.attr('ccm-quick-nav-href') + '" onclick="' + l.attr('ccm-quick-nav-onclick') + '">' + l.attr('ccm-quick-nav-title') + '</a>').css('visibility','hidden').show();
+			title.effect("transfer", { to: accepter, 'easing': 'easeOutExpo'}, 600, function() {
+				accepter.hide().css('visibility','visible').fadeIn(240, 'easeInExpo');			
+				title.css('display','block');
+				ccm_quickNavTimer = setTimeout(function() {
+					ccm_hideQuickNav();
+				}, 1000);
+			});
+		});
+	}
+	
 	ccm_activateToolbar = function() {
 		$("#ccm-toolbar li a").click(function() {
 			$(this).parent().addClass('ccm-system-nav-selected');
 		});
+		$("#ccm-toolbar,#ccm-quick-nav").hover(function() {
+			ccm_showQuickNav();
+		}, function() {
+			ccm_quickNavTimer = setTimeout(function() {
+				ccm_hideQuickNav();
+			}, 1000);
+		});
+		
 		$('#ccm-dashboard-overlay-main').masonry({
 		  itemSelector: '.ccm-dashboard-overlay-module', 
 		  isResizable: false

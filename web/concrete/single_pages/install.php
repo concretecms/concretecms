@@ -206,11 +206,6 @@ $(function() {
 		?>
 		
 		<table class="zebra-striped" id="sample-content-selector">
-		<thead>
-		<tr>
-			<th colspan="3"></th>
-		</tr>
-		</thead>
 		<tbody>
 		<? foreach($availableSampleContent as $pkgHandle) {
 			$spl = Loader::startingPointPackage($pkgHandle);
@@ -293,11 +288,6 @@ $(function() {
 <div class="span8 columns">
 
 <table class="zebra-striped requirements-table">
-<thead>
-<tr>
-	<th colspan="3"></th>
-</tr>
-</thead>
 <tbody>
 <tr>
 	<td><? if ($phpVtest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
@@ -328,11 +318,6 @@ $(function() {
 <div class="span8 columns">
 
 <table class="requirements-table zebra-striped">
-<thead>
-<tr>
-	<th colspan="3"></th>
-</tr>
-</thead>
 
 <tr>
 	<td><? if ($imageTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /><? } ?></td>
@@ -367,11 +352,6 @@ $(function() {
 
 
 <table class="requirements-table zebra-striped">
-<thead>
-<tr>
-	<th colspan="3"></th>
-</tr>
-</thead>
 <tbody>
 <tr>
 	<td><? if ($remoteFileUploadTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
@@ -384,11 +364,6 @@ $(function() {
 </div>
 <div class="span8 columns">
 <table class="requirements-table zebra-striped">
-<thead>
-<tr>
-	<th colspan="3"></th>
-</tr>
-</thead>
 
 <tr>
 	<td><? if ($diffTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>

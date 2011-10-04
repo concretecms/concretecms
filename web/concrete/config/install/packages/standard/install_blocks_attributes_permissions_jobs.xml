@@ -184,6 +184,11 @@
                 <group name="Administrators"/>
             </access>
         </taskpermission>
+        <taskpermission handle="view_newsflow" name="View Newsflow Updates in an Overlay" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
     </taskpermissions>
     <jobs>
         <job handle="index_search" package=""/>
