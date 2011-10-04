@@ -274,8 +274,8 @@ class Controller {
 	}
 	
 	/** 
-	 * If no arguments are passed, returns the REQUEST array. If a key is passed, it returns the value as it exists in the request array.
-   *  * If A default value is provided and the key does not exist in the REQUEST array, the default value is returned
+   * If no arguments are passed, returns the REQUEST array. If a key is passed, it returns the value as it exists in the request array.
+   * If a default value is provided and the key does not exist in the REQUEST array, the default value is returned
 	 * @param string $key
    * @param mixed $defaultValue
 	 * @return mixed $value
@@ -292,9 +292,9 @@ class Controller {
 	
 	/** 
 	 * Sets a variable to be passed through from the controller to the view
-	 * @param string $key
-	 * @param string $val
-	 * @return void
+   * @param string $key
+   * @param string $val
+   * @return void
 	 */
 	public function set($key, $val) {
 		$loc = CacheLocal::get();
