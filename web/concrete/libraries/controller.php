@@ -242,7 +242,7 @@ class Controller {
    * @param mixed $defaultValue
 	 * @return mixed $value
 	 */
-	public function post($key = null,$defaultValue = null) {
+	public function post($key = null, $defaultValue = null) {
 		if ($key == null) {
 			return $_POST;
 		}
@@ -280,14 +280,14 @@ class Controller {
    * @param mixed $defaultValue
 	 * @return mixed $value
 	 */
-	public function request($key = null,$defaultValue = null) {
+	public function request($key = null, $defaultValue = null) {
 		if ($key == null) {
 			return $_REQUEST;
 		}
 		if(isset($_REQUEST[$key])){
       return (is_string($_REQUEST[$key])) ? trim($_REQUEST[$key]) : $_REQUEST[$key];
     }
-		return $default;
+		return $defaultValue;
 	}
 	
 	/** 
