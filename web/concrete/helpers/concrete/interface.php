@@ -111,6 +111,15 @@ class ConcreteInterfaceHelper {
 		return $html;
 	}	
 	
+	public function getQuickNavigationLinkHTML($c) {
+		$cnt = Loader::controller($c);
+		if (method_exists($cnt, 'getQuickNavigationLinkHTML')) {
+			return $cnt->getQuickNavigationLinkHTML();
+		} else {
+			return '<a href="' . Loader::helper('navigation')->getLinkToCollection($c) . '">' . $c->getCollectionName() . '</a>';
+		}
+	}
+	
 	public function getQuickNavigationBar() {
 		$c = Page::getCurrentPage();
 		if (!is_object($c)) {
@@ -129,8 +138,19 @@ class ConcreteInterfaceHelper {
 		
 		$html = '';
 		$html .= '<div id="ccm-quick-nav">';
-		$html .= '<ul id="ccm-quick-nav-favorites" class="pills"></ul>';
-		
+		$html .= '<ul id="ccm-quick-nav-favorites" class="pills">';
+		$u = new User();
+		$quicknav = unserialize($u->config('QUICK_NAV_BOOKMARKS'));
+		if (is_array($quicknav)) {
+			foreach($quicknav as $cID) {
+				$c = Page::getByID($cID);
+				$cp = new Permissions($c);
+				if ($cp->canRead() && is_object($c) && (!$c->isError())) {
+					$html .= '<li id="ccm-quick-nav-page-' . $c->getCollectionID() . '">' . $this->getQuickNavigationLinkHTML($c) . '</li>';
+				}
+			}
+		}
+		$html .= '</ul>';
 		if (count($_SESSION['ccmQuickNavRecentPages']) > 0) {
 			$html .= '<ul id="ccm-quick-nav-breadcrumb" class="pills">';
 			$i = 0;

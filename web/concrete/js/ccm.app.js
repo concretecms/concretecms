@@ -4230,21 +4230,42 @@ $(function() {
 		clearTimeout(ccm_quickNavTimer);
 	}
 	
-	ccm_addToQuickNav = function(cID) {
+	ccm_closeDashboardPane = function(r) {
+		$(r).closest('div.ccm-dashboard-pane').fadeOut(120, 'easeOutExpo');
+	}
+		
+	ccm_toggleQuickNav = function(cID, token) {
+		var l = $("#ccm-add-to-quick-nav");
+		if (l.hasClass('ccm-icon-favorite-selected')) {
+			l.removeClass('ccm-icon-favorite-selected').addClass('ccm-icon-favorite');
+		} else {
+			l.removeClass('ccm-icon-favorite').addClass('ccm-icon-favorite-selected');
+		}
 		ccm_showQuickNav(function() {
-			$("#ccm-quick-nav-favorites").append('<li />');
-			var accepter = $("#ccm-quick-nav-favorites li:last-child");
-			accepter.css('display','none');
-			var l = $("#ccm-add-to-quick-nav");
-			var title = l.parent().parent().parent().find('h3');
-			title.css('display','inline');
-			accepter.html('<a href="' + l.attr('ccm-quick-nav-href') + '" onclick="' + l.attr('ccm-quick-nav-onclick') + '">' + l.attr('ccm-quick-nav-title') + '</a>').css('visibility','hidden').show();
-			title.effect("transfer", { to: accepter, 'easing': 'easeOutExpo'}, 600, function() {
-				accepter.hide().css('visibility','visible').fadeIn(240, 'easeInExpo');			
-				title.css('display','block');
-				ccm_quickNavTimer = setTimeout(function() {
-					ccm_hideQuickNav();
-				}, 1000);
+			$.getJSON(CCM_TOOLS_PATH + '/dashboard/add_to_quick_nav', {
+				'cID': cID,
+				'token': token
+			}, function(r) {
+				if (r.result == 'add') { 
+					$("#ccm-quick-nav-favorites").append('<li />');
+					var accepter = $("#ccm-quick-nav-favorites li:last-child");
+					accepter.attr('id','ccm-quick-nav-page-' + cID).css('display','none');
+					var title = l.parent().parent().parent().find('h3');
+					title.css('display','inline');
+					accepter.html(r.link).css('visibility','hidden').show();
+					title.effect("transfer", { to: accepter, 'easing': 'easeOutExpo'}, 600, function() {
+						accepter.hide().css('visibility','visible').fadeIn(240, 'easeInExpo');			
+						title.css('display','block');
+						ccm_quickNavTimer = setTimeout(function() {
+							ccm_hideQuickNav();
+						}, 1000);
+					});
+				} else {
+					$("#ccm-quick-nav-page-" + cID).fadeOut(240, 'easeOutExpo');
+					ccm_quickNavTimer = setTimeout(function() {
+						ccm_hideQuickNav();
+					}, 1000);
+				}
 			});
 		});
 	}

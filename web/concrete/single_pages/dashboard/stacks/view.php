@@ -80,7 +80,7 @@
 
 <? } else { ?>
 
-	<div class="ccm-dashboard-pane-header"><h3><?=t('Stacks')?></h3></div>
+	<?=$this->controller->outputDashboardPaneHeader(t('Stacks')); ?>
 	
 	<div class="ccm-dashboard-pane-body">
 		
