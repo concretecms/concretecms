@@ -220,70 +220,57 @@ class Controller {
 	
 	/** 
 	 * If no arguments are passed, returns the post array. If a key is passed, it returns the value as it exists in the post array.
+   * If a default value is provided and the key does not exist in the POST array, the default value is returned
 	 * @param string $key
-	 * @return string $value
+   * @param mixed $defaultValue
+	 * @return mixed $value
 	 */
-	public function post($key = null) {
+	public function post($key = null,$defaultValue = null) {
 		if ($key == null) {
 			return $_POST;
 		}
-		
-		if (isset($_POST[$key])) {
-			if (is_string($_POST[$key])) {
-				return trim($_POST[$key]);
-			} else {
-				return $_POST[$key];
-			}
-		} else {
-			return null;
-		}
+	  if(isset($_POST[$key])){
+      return (is_string($_POST[$key])) ? trim($_POST[$key]) : $_POST[$key];
+    }
+		return $defaultValue;
 	}
 	
 	/** 
 	 * If no arguments are passed, returns the GET array. If a key is passed, it returns the value as it exists in the GET array.
 	 * Also checks the set array, because this function used to return the value of the $this->set() function
+   * If a default value is provided and the key does not exist in the GET array, the default value is returned
 	 * @param string $key
-	 * @return string $value
+   * @param mixed $defaultValue
+	 * @return mixed $value
 	 */
-	public function get($key = null) {
+	public function get($key = null, $defaultValue = null) {
 		if ($key == null) {
 			return $_GET;
 		}
-		
 		if (isset($this->sets[$key])) {
 			return $this->sets[$key];
 		}
-		
-		if (isset($_GET[$key])) {
-			if (is_string($_GET[$key])) {
-				return trim($_GET[$key]);
-			} else {
-				return $_GET[$key];
-			}
-		} else {
-			return null;
-		}
+    if(isset($_GET[$key])){
+      return (is_string($_GET[$key])) ? trim($_GET[$key]) : $_GET[$key];
+    }
+		return $defaultValue;
 	}
 	
 	/** 
 	 * If no arguments are passed, returns the REQUEST array. If a key is passed, it returns the value as it exists in the request array.
+   *  * If A default value is provided and the key does not exist in the REQUEST array, the default value is returned
 	 * @param string $key
-	 * @return string $value
+   * @param mixed $defaultValue
+	 * @return mixed $value
 	 */
-	public function request($key = null) {
+	public function request($key = null,$defaultValue = null) {
 		if ($key == null) {
 			return $_REQUEST;
 		}
-		
-		if (isset($_REQUEST[$key])) {
-			if (is_string($_REQUEST[$key])) {
-				return trim($_REQUEST[$key]);
-			} else {
-				return $_REQUEST[$key];
-			}
-		} else {
-			return null;
-		}
+		if(isset($_REQUEST[$key])){
+      return (is_string($_REQUEST[$key])) ? trim($_REQUEST[$key]) : $_REQUEST[$key];
+    }
+		return $default;
 	}
 	
 	/** 
