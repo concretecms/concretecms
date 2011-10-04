@@ -146,11 +146,11 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 		  </tr>
 		  <tr>
 		  	<td>&nbsp;</td>
-		  	<td><strong>Repeat</strong>:<br/>
-		  	<input type="radio" value="no-repeat" name="background_repeat" <? if ($cssData['background_repeat'] == 'no-repeat' || !$cssData['backgroundImageRepeat']) { ?> checked <? } ?> /> None
-		  	<input type="radio" value="repeat-x" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat-x') { ?> checked <? } ?> /> Horizontal
-		  	<input type="radio" value="repeat-y" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat-y') { ?> checked <? } ?>/> Vertical
-		  	<input type="radio" value="repeat" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat') { ?> checked <? } ?>/> All
+		  	<td><strong><?=t('Repeat')?></strong>:<br/>
+		  	<input type="radio" value="no-repeat" name="background_repeat" <? if ($cssData['background_repeat'] == 'no-repeat' || !$cssData['backgroundImageRepeat']) { ?> checked <? } ?> /> <?=t('None')?>
+		  	<input type="radio" value="repeat-x" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat-x') { ?> checked <? } ?> /> <?=t('Horizontal')?>
+		  	<input type="radio" value="repeat-y" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat-y') { ?> checked <? } ?>/> <?=t('Vertical')?>
+		  	<input type="radio" value="repeat" name="background_repeat" <? if ($cssData['background_repeat'] == 'repeat') { ?> checked <? } ?>/> <?=t('All')?>
 		  	
 		  </table>
 		  <div class="ccm-spacer"></div>
@@ -326,12 +326,15 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 	
 	<br/>
 	
-	<? if ($cspID > 0) { ?>
+	<? if ($cspID > 0) { 
+		$cspx = CustomStylePreset::getByID($cspID);
+
+	?>
 	<div id="cspFooterPreset" style="display: none">
 		<div class="ccm-note-important">
 			<h2><?=t('You are changing a preset')?></h2>
-			<div><?=$form->radio('cspPresetAction', 'update_existing_preset', true)?> <?=t('Update "%s" preset everywhere it is used', $csp->getCustomStylePresetName())?></div>
-			<div><?=$form->radio('cspPresetAction', 'save_as_custom_style')?> <?=t('Use this style here, and leave "%s" unchanged', $csp->getCustomStylePresetName())?></div>
+			<div><?=$form->radio('cspPresetAction', 'update_existing_preset', true)?> <?=t('Update "%s" preset everywhere it is used', $cspx->getCustomStylePresetName())?></div>
+			<div><?=$form->radio('cspPresetAction', 'save_as_custom_style')?> <?=t('Use this style here, and leave "%s" unchanged', $cspx->getCustomStylePresetName())?></div>
 			<div><?=$form->radio('cspPresetAction', 'create_new_preset')?> <?=t('Save this style as a new preset')?><br/><span style="margin-left: 20px"><?=$form->text('cspName', array('style' => 'width:  127px', 'disabled' => true))?></span></div>
 		</div>
 	</div>

@@ -1,23 +1,16 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");  ?>
 <div class="ccm-tags-display">
-<h4><?php echo $title ?></h4>
-<?php
-$nh = Loader::helper("navigation");
-$c = Page::getCurrentPage();
-if($ak instanceof CollectionAttributeKey) {
-	$av = $c->getAttributeValueObject($ak);
-	$selectedOptions = $c->getAttribute($ak->getAttributeKeyHandle());
-	$akc = $ak->getController();
-	if($selectedOptions instanceof SelectAttributeTypeOptionList && $selectedOptions->count() > 0) {
-		?><ul class="ccm-tag-list">
-			<?php foreach($selectedOptions as $opt) {
-				$qs = $akc->field('atSelectOptionID') . '[]=' . $opt->getSelectAttributeOptionID();
-				?><li><? if ($targetCID > 0) {
-					$target = Page::getByID($targetCID); ?>
-					<a href="<?=$nh->getLinkToCollection($target)?>?<?=$qs?>">
-				<? } ?><?php echo $opt ?><? if ($targetCID > 0) { ?></a><? } ?></li><?php 
-			}?>	
-		</ul>
-	<?php } 
-	} ?>
+<?php if(strlen($title)) {
+	?><h4><?php echo $title ?></h4><?php
+}
+if($options instanceof SelectAttributeTypeOptionList && $options->count() > 0) {
+	?><ul class="ccm-tag-list">
+		<?php foreach($options as $opt) {
+			$qs = $akc->field('atSelectOptionID') . '[]=' . $opt->getSelectAttributeOptionID();
+			?><li <?php echo ($selectedOptionID == $opt->getSelectAttributeOptionID()?'class="ccm-tag-selected"':'')?>><? if ($target instanceof Page) { ?>
+				<a href="<?=$navigation->getLinkToCollection($target)?>?<?=$qs?>"><?php echo $opt ?></a><? }  else { echo $opt; }?></li><?php 
+		}?>	
+	</ul>
+<?php } ?>
+	<div style="clear: both"></div>
 </div>

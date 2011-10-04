@@ -1,5 +1,4 @@
-<? 
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 $includeAssetLibrary = true; 
 $assetLibraryPassThru = array(
 	'type' => 'image'

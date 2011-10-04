@@ -15,16 +15,14 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Storage
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Filesystem.php 23964 2011-05-03 14:20:58Z adamlundrigan $
  */
 
 
 /** Zend_Search_Lucene_Storage_Directory */
 require_once 'Zend/Search/Lucene/Storage/Directory.php';
-
-/** Zend_Search_Lucene_Storage_File_Filesystem */
-require_once 'Zend/Search/Lucene/Storage/File/Filesystem.php';
 
 
 /**
@@ -33,7 +31,7 @@ require_once 'Zend/Search/Lucene/Storage/File/Filesystem.php';
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Storage
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene_Storage_Directory
@@ -94,7 +92,7 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
 
     public static function mkdirs($dir, $mode = 0777, $recursive = true)
     {
-        if (is_null($dir) || $dir === '') {
+        if (($dir === null) || $dir === '') {
             return false;
         }
         if (is_dir($dir) || $dir === '/') {
@@ -182,6 +180,7 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
             $this->_fileHandlers[$filename]->close();
         }
         unset($this->_fileHandlers[$filename]);
+        require_once 'Zend/Search/Lucene/Storage/File/Filesystem.php';
         $this->_fileHandlers[$filename] = new Zend_Search_Lucene_Storage_File_Filesystem($this->_dirPath . '/' . $filename, 'w+b');
 
         // Set file permissions, but don't care about any possible failures, since file may be already
@@ -207,7 +206,8 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
         unset($this->_fileHandlers[$filename]);
 
         global $php_errormsg;
-        $trackErrors = ini_get('track_errors'); ini_set('track_errors', '1');
+        $trackErrors = ini_get('track_errors');
+        ini_set('track_errors', '1');
         if (!@unlink($this->_dirPath . '/' . $filename)) {
             ini_set('track_errors', $trackErrors);
             require_once 'Zend/Search/Lucene/Exception.php';
@@ -346,6 +346,7 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
     {
         $fullFilename = $this->_dirPath . '/' . $filename;
 
+        require_once 'Zend/Search/Lucene/Storage/File/Filesystem.php';
         if (!$shareHandler) {
             return new Zend_Search_Lucene_Storage_File_Filesystem($fullFilename);
         }

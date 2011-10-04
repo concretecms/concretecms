@@ -6,6 +6,6 @@ $includeAssetLibrary = true;
 $al = Loader::helper('concrete/asset_library');
 ?>
 <h2><?=t("Video File")?></h2>
-<?=$al->file('ccm-b-flv-file', 'fID', t('Choose Video File') );?>
+<?=$al->video('ccm-b-flv-file', 'fID', t('Choose Video File') );?>
 
 <? $this->inc('form_setup_html.php'); ?> 

@@ -65,7 +65,7 @@ foreach($searchFieldAttributes as $ak) {
 				<option value="eq" <? if ($req['cChildrenSelect'] == 'eq') { ?> selected <? } ?>><?=t('Equal To')?></option>
 				<option value="lt"<? if ($req['cChildrenSelect'] == 'lt') { ?> selected <? } ?>><?=t('Fewer Than')?></option>
 			</select>
-			<input type=text name="cChildren" value="<?=$req['cChildren']?>" style="width: 30px">
+			<input type="text" name="cChildren" value="<?=$req['cChildren']?>" style="width: 30px" />
 		</span>
 		
 		<? foreach($searchFieldAttributes as $sfa) { 
@@ -98,7 +98,7 @@ foreach($searchFieldAttributes as $ak) {
 		}
 	?>
 		<div id="ccm-search-box-title">
-			<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" class="ccm-search-loading" id="ccm-<?=$searchInstance?>-search-loading" />
+			<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" class="ccm-search-loading" id="ccm-<?=$searchInstance?>-search-loading" alt="<?php echo t('Loading')?>"/>
 			<h2><?=t('Search')?></h2>			
 		</div>
 		
@@ -160,7 +160,7 @@ foreach($searchFieldAttributes as $ak) {
 							'500' => '500'
 						), $searchRequest['numResults'], array('style' => 'width:65px'))?>
 					</td>
-					<td><a href="javascript:void(0)" id="ccm-<?=$searchInstance?>-search-add-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a></td>
+					<td><a href="javascript:void(0)" id="ccm-<?=$searchInstance?>-search-add-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" alt="<?php echo t('Add')?>" /></a></td>
 				</tr>	
 				</table>
 			</div>
@@ -177,7 +177,7 @@ foreach($searchFieldAttributes as $ak) {
 						<?=t('Select Search Field.')?>
 						</td>
 						<td valign="top">
-						<a href="javascript:void(0)" class="ccm-search-remove-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" /></a>
+						<a href="javascript:void(0)" class="ccm-search-remove-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" alt="<?php echo t('Remove')?>" /></a>
 						</td>
 					</tr>
 				</table>
@@ -270,7 +270,7 @@ foreach($searchFieldAttributes as $ak) {
 							} ?>
 							</td>
 							<td valign="top">
-							<a href="javascript:void(0)" class="ccm-search-remove-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" /></a>
+							<a href="javascript:void(0)" class="ccm-search-remove-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" alt="<?php echo t('Remove')?>"/></a>
 							</td>
 						</tr>
 					</table>

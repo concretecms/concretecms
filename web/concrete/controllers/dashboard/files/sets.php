@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class DashboardFilesSetsController extends Controller {
 
-	var $helpers = array('form','validation/token','concrete/interface'); 
+	public $helpers = array('form','validation/token','concrete/interface'); 
 
 	public function on_start(){
 		$html = Loader::helper('html');
@@ -60,6 +60,11 @@ class DashboardFilesSetsController extends Controller {
 	
 	public function file_set_added() {
 		$this->set('message', t('New file set added successfully.'));
+		$this->view();
+	}
+
+	public function file_set_updated() {
+		$this->set('message', t('File set updated successfully.'));
 		$this->view();
 	}
 	
@@ -135,8 +140,7 @@ class DashboardFilesSetsController extends Controller {
 			$fh->setFileSetPermissions($file_set, $p);			
 		}
 		
-		$this->set('message',t('Changes Saved'));
-		$this->view();
+		$this->redirect("/dashboard/files/sets", 'file_set_updated');
 	}
 	
 }

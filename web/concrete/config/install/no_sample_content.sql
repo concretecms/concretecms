@@ -10,7 +10,14 @@ INSERT INTO AttributeKeys VALUES(1,'meta_title','Meta Title',1,0,0,0,1,1,1,0)
  ,(6,'header_extra_content','Header Extra Content',1,0,0,0,1,2,1,0)
  ,(7,'exclude_search_index','Exclude From Search Index',1,0,0,0,1,3,1,0)
  ,(8,'exclude_sitemapxml','Exclude From sitemap.xml',1,0,0,0,1,3,1,0)
- ,(11,'tags','Tags',0,0,0,0,1,8,1,0);
+ ,(9,'width','Width',1,0,1,0,0,6,3,0)
+ ,(10,'height','Height',1,0,1,0,0,6,3,0)
+ ,(11,'tags','Tags',0,0,0,0,1,8,1,0)
+ ,(12,'profile_private_messages_enabled','I would like to receive private messages.',1,0,0,0,1,3,2,0)
+ ,(13,'profile_private_messages_notification_enabled','Send me email notifications when I receive a private message.',1,0,0,0,1,3,2,0);
+
+INSERT INTO UserAttributeKeys VALUES (12,0,0,1,0,1,0,0,1)
+ ,(13,0,0,1,0,1,0,1,1);
 
 INSERT INTO AttributeTypeCategories VALUES(1,1)
  ,(1,2)
@@ -54,7 +61,7 @@ INSERT INTO BlockTypes VALUES(1,'content','Content','HTML/WYSIWYG Editor Content
  ,(7,'file','File','Link to files stored in the asset library.',1,0,0,0,300,250,0)
  ,(8,'image','Image','Adds images and onstates from the library to pages.',1,0,0,0,300,440,0)
  ,(9,'flash_content','Flash Content','Embeds SWF files, including flash detection.',1,0,0,0,300,240,0)
- ,(10,'guestbook','Guestbook','Adds blog-style comments (a guestbook) to your page.',1,0,1,0,300,260,0)
+ ,(10,'guestbook','Guestbook/Comments','Adds blog-style comments (a guestbook) to your page.',1,0,1,0,300,260,0)
  ,(11,'slideshow','Slideshow','Display a running loop of images.',1,0,0,0,550,400,0)
  ,(12,'search','Search','Add a search box to your site.',1,0,0,0,400,170,0)
  ,(13,'google_map','Google Map','Enter an address and a Google Map of that location will be placed in your page.',1,0,0,0,400,220,0)
@@ -119,10 +126,11 @@ INSERT INTO CollectionVersions VALUES(2,1,NULL,NULL,NULL,NOW(),NOW(),'Initial Ve
  ,(55,1,'Download File','download_file',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(63,1,NULL,'uID=1',NULL,NOW(),NOW(),'Initial Version',1,0,NULL,NULL,NULL)
  ,(64,1,'Members','members',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
- ,(75,1,'Composer','composer','Write for your site',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(75,1,'Composer Beta','composer','Write for your site.',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(76,1,'Write','write',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(77,1,'Drafts','drafts',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
- ,(78,1,'Composer','composer',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL);
+ ,(78,1,'Composer','composer',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(79,1,'Multilingual Settings','multilingual',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL);
 
 
 INSERT INTO Collections VALUES(1,NOW(),NOW(),'home')
@@ -181,9 +189,8 @@ INSERT INTO Collections VALUES(1,NOW(),NOW(),'home')
  ,(75,NOW(),NOW(),'composer')
  ,(76,NOW(),NOW(),'write')
  ,(77,NOW(),NOW(),'drafts')
- ,(78,NOW(),NOW(),'composer');
-
-INSERT INTO Config VALUES('SITE',NOW(),'{[CCM:SITE]}',0,0);
+ ,(78,NOW(),NOW(),'composer')
+ ,(79,NOW(),NOW(),'multilingual');
 
 INSERT INTO DashboardHomepage VALUES(1,'activity','Site Activity',0,0)
  ,(2,'reports','Statistics',0,0)
@@ -264,7 +271,8 @@ INSERT INTO PagePaths VALUES(1,5,'/login','1')
  ,(69,75,'/dashboard/composer','1')
  ,(70,76,'/dashboard/composer/write','1')
  ,(71,77,'/dashboard/composer/drafts','1')
- ,(72,78,'/dashboard/pages/types/composer','1');
+ ,(72,78,'/dashboard/pages/types/composer','1')
+ ,(73,79,'/dashboard/settings/multilingual','1');
 
 
 INSERT INTO PagePermissions VALUES(5,1,0,'r',NULL,NULL)
@@ -275,9 +283,9 @@ INSERT INTO PagePermissions VALUES(5,1,0,'r',NULL,NULL)
  ,(1,3,0,'r:rv:wa:db:av:dc:adm',NULL,NULL);
 
 
-INSERT INTO PageThemes VALUES(1,'default','Plain Yogurt\n','Plain Yogurt is Concrete\'s default theme.',0)
- ,(2,'greensalad','Green Salad Theme\n','This is Concrete\'s Green Salad site theme.',0)
- ,(3,'dark_chocolate','Dark Chocolate\n','Dark Chocolate is Concrete\'s default theme in black.',0);
+INSERT INTO PageThemes VALUES(1,'default','Plain Yogurt\n','Plain Yogurt is concrete5\'s default theme.',0)
+ ,(2,'greensalad','Green Salad Theme\n','This is concrete5\'s Green Salad site theme.',0)
+ ,(3,'dark_chocolate','Dark Chocolate\n','Dark Chocolate is concrete5\'s default theme in black.',0);
 
 INSERT INTO PageTypeAttributes VALUES(1,1)
  ,(1,2)
@@ -341,8 +349,12 @@ INSERT INTO Pages VALUES(1,1,'0',1,1,1,NOW(),NOW(),NULL,NOW(),NULL,NULL,1,1,'OVE
 ,(64,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,1,'PARENT','/members.php',0,NULL,0,0,7,1,0,0,-1,'0',0)
 ,(76,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/composer/write.php',0,NULL,0,0,0,75,0,0,-1,'0',0)
 ,(77,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/composer/drafts.php',0,NULL,0,0,1,75,0,0,-1,'0',0)
-,(78,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/pages/types/composer.php',0,NULL,0,0,1,43,0,0,-1,'0',0);
+,(78,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/pages/types/composer.php',0,NULL,0,0,1,43,0,0,-1,'0',0)
+,(79,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/multilingual/view.php',0,NULL,0,0,1,52,0,0,-1,'0',0);
  
+
+INSERT INTO atSelectSettings VALUES(11,1,'display_asc',1);
+
 
 INSERT INTO TaskPermissions VALUES(1,'access_task_permissions','Change Task Permissions','',0)
 ,(2,'access_sitemap','Access Sitemap and Page Search','',0)
@@ -352,7 +364,8 @@ INSERT INTO TaskPermissions VALUES(1,'access_task_permissions','Change Task Perm
 ,(6,'backup','Perform Full Database Backups','',0)
 ,(7,'sudo','Sign in as User','',0)
 ,(8,'uninstall_packages','Uninstall Packages','',0)
-,(9,'install_packages','Install Packages and Connect to the Marketplace','',0);
+,(9,'install_packages','Install Packages and Connect to the Marketplace','',0)
+,(10,'delete_user','Delete Users','',0);
 
 INSERT INTO TaskPermissionUserGroups VALUES(1,3,0,1)
 ,(2,3,0,1)
@@ -361,5 +374,8 @@ INSERT INTO TaskPermissionUserGroups VALUES(1,3,0,1)
 ,(5,3,0,1)
 ,(6,3,0,1)
 ,(8,3,0,1)
-,(9,3,0,1);
+,(9,3,0,1)
+,(10,3,0,1);
 
+INSERT INTO atBooleanSettings VALUES(12,1)
+,(13,1);

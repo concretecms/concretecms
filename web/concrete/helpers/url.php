@@ -41,11 +41,24 @@ class UrlHelper {
 			}
 		}
 		
+		$url = str_replace('&', '&amp;', $url);
 		return $url;
 	}
 	
 	public function buildQuery($url, $params) {
 		return $url . '?' . http_build_query($params, '', '&');
 	}
+
+    /**
+	 * Shortens a given url with the tiny url api
+	 * @param string $strURL
+	 * @return string $url
+	 */
+	public function shortenURL($strURL) {
+		$file = Loader::helper('file');
+		$url = $file->getContents("http://tinyurl.com/api-create.php?url=".$strURL);
+		return $url;
+	}
+
 	
 }

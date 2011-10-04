@@ -78,9 +78,11 @@ ccmBlockTypeSearchClear = function() {
 
 var ccmLiveSearchActive = false;
 ccmBlockTypeSearchResultsSelect = function(which, e) {
+
 	e.preventDefault();
 	e.stopPropagation();
-	$("input[name=ccmBlockTypeSearch]").blur();
+//	$("input[name=ccmBlockTypeSearch]").blur();
+
 	// find the currently selected item
 	var obj = $("li.ccm-block-type-selected");
 	var foundblock = false;
@@ -108,7 +110,7 @@ ccmBlockTypeSearchResultsSelect = function(which, e) {
 	// this is buggy. needs fixing
 
 	var currPos = currObj.position();
-	var currDialog = currObj.parents('div.ccm-dialog-content');
+	var currDialog = currObj.parents('div.ui-dialog-content');
 	var docViewTop = currDialog.scrollTop();
 	var docViewBottom = docViewTop + currDialog.innerHeight();
 
@@ -163,8 +165,9 @@ ccmBlockTypeResetKeys = function() {
 $(function() {
 	$(window).css('overflow', 'hidden');
 	$(window).unbind('keydown.blocktypes');
-	$("input[name=ccmBlockTypeSearch]").focus();
 	ccmBlockTypeMapKeys();
+	$("#ccmBlockTypeSearch").get(0).focus();
+
 });
 
 </script>

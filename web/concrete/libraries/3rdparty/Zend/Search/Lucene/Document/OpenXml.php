@@ -15,15 +15,15 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Document
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: OpenXml.php 23775 2011-03-01 17:25:24Z ralph $
  */
 
 
 /** Zend_Search_Lucene_Document */
 require_once 'Zend/Search/Lucene/Document.php';
 
-if (class_exists('ZipArchive', false)) {
 
 /**
  * OpenXML document.
@@ -31,7 +31,7 @@ if (class_exists('ZipArchive', false)) {
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Document
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Search_Lucene_Document_OpenXml extends Zend_Search_Lucene_Document
@@ -81,7 +81,7 @@ abstract class Zend_Search_Lucene_Document_OpenXml extends Zend_Search_Lucene_Do
     {
         // Data holders
         $coreProperties = array();
-        
+
         // Read relations and search for core properties
         $relations = simplexml_load_string($package->getFromName("_rels/.rels"));
         foreach ($relations->Relationship as $rel) {
@@ -102,10 +102,10 @@ abstract class Zend_Search_Lucene_Document_OpenXml extends Zend_Search_Lucene_Do
                 }
             }
         }
-        
+
         return $coreProperties;
     }
-    
+
     /**
      * Determine absolute zip path
      *
@@ -127,5 +127,3 @@ abstract class Zend_Search_Lucene_Document_OpenXml extends Zend_Search_Lucene_Do
         return implode('/', $absolutes);
     }
 }
-
-} // end if (class_exists('ZipArchive'))

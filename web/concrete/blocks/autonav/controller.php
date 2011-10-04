@@ -187,20 +187,20 @@
 			return t("Auto-Nav");
 		}
 
-		var $navArray = array();
-		var $cParentIDArray = array();
+		public $navArray = array();
+		public $cParentIDArray = array();
 
-		var $sorted_array = array();
-		var $navSort = array();
-		var $navObjectNames = array();
+		public $sorted_array = array();
+		public $navSort = array();
+		public $navObjectNames = array();
 
-		var $displayPages, $displayPagesCID, $displayPagesIncludeSelf, $displaySubPages, $displaySubPageLevels, $displaySubPageLevelsNum, $orderBy, $displayUnavailablePages;
-		var $haveRetrievedSelf = false;
-		var $haveRetrievedSelfPlus1 = false;
+		public $displayPages, $displayPagesCID, $displayPagesIncludeSelf, $displaySubPages, $displaySubPageLevels, $displaySubPageLevelsNum, $orderBy, $displayUnavailablePages;
+		public $haveRetrievedSelf = false;
+		public $haveRetrievedSelfPlus1 = false;
 		public $displaySystemPages = false;
 
 		// private variable $displayUnapproved, used by the dashboard
-		var $displayUnapproved = false;
+		public $displayUnapproved = false;
 
 		// haveRetrievedSelf is a variable that stores whether or not a particular tree walking operation has retrieved the current page. We use this
 		// with subpage modes like enough and enough_plus1
@@ -212,24 +212,20 @@
 		function __construct($obj = null) {
 			if (is_object($obj)) {
 				switch(strtolower(get_class($obj))) {
-					case "blocktype":
-						// instantiating autonav on a particular collection page, instead of adding
-						// it through the block interface
-						$this->bID = null;
-						$c = Page::getCurrentPage();
-						if (is_object($c)) {
-							$this->cID = $c->getCollectionID();
-							$this->cParentID = $c->getCollectionParentID();
-						}
-						break;
-					case "block": // block
-						// standard block object
-						$this->bID = $obj->bID;
-						$cobj = $obj->getBlockCollectionObject();
-						$this->cID = ($cobj->getCollectionPointerID()) ? $cobj->getCollectionPointerOriginalID() : $cobj->getCollectionID();
-						$this->displayCID = $cobj->getCollectionID();
-						$this->cParentID = $cobj->cParentID;
-						break;
+				   case "blocktype":
+					  // instantiating autonav on a particular collection page, instead of adding
+					  // it through the block interface
+					  $this->bID = null;
+					  break;
+				   case "block": // block
+					  // standard block object
+					  $this->bID = $obj->bID;
+					  break;
+				}
+				$c = Page::getCurrentPage();
+				if (is_object($c)) {
+				   $this->cID = $c->getCollectionID();
+				   $this->cParentID = $c->getCollectionParentID();
 				}
 			}
 			

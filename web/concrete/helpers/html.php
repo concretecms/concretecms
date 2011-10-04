@@ -57,12 +57,12 @@ class HtmlHelper {
 			}
 		}
 
-		$css->file .= (strpos($css->file, '?') > -1) ? '&' : '?';
+		$css->file .= (strpos($css->file, '?') > -1) ? '&amp;' : '?';
 		$css->file .= 'v=' . md5(APP_VERSION . PASSWORD_SALT);		
 		// for the javascript addHeaderItem we need to have a full href available
 		$css->href = $css->file;
 		if (substr($css->file, 0, 4) != 'http') {
-			$css->href = ASSETS_URL_WEB_FULL . $css->file;
+			$css->href = BASE_URL . $css->file;
 		}
 		return $css;
 	}
@@ -98,18 +98,23 @@ class HtmlHelper {
 			$js->file = ASSETS_URL_JAVASCRIPT . '/' . $file;
 		}
 
-		$js->file .= (strpos($js->file, '?') > -1) ? '&' : '?';
+		$js->file .= (strpos($js->file, '?') > -1) ? '&amp;' : '?';
 		$js->file .= 'v=' . md5(APP_VERSION . PASSWORD_SALT);
 		
 		// for the javascript addHeaderItem we need to have a full href available
 		$js->href = $js->file;
-		/*
-		 // this currently messes up the check on whether a given item is already loaded
-		 
-		if (substr($js->file, 0, 4) != 'http') {
-			$js->href = ASSETS_URL_WEB_FULL . $js->file;
-		}
-		*/
+		return $js;
+	}
+	
+	
+	/** 
+	 * Includes a JavaScript inline script.
+	 * @param string $script
+	 * @return string $str
+	 */
+	public function script($script) {
+		$js = new InlineScriptOutputObject();
+    		$js->script = $script;
 		return $js;
 	}
 	
@@ -182,6 +187,7 @@ class HeaderOutputObject {
 
 	public $file = '';
 	public $href = '';
+  	public $script = '';
 	public $compress = true;
 
 }
@@ -195,6 +201,17 @@ class JavaScriptOutputObject extends HeaderOutputObject {
 		return '<script type="text/javascript" src="' . $this->file . '"></script>';
 	}
 	
+}
+
+/**
+ * @access private
+ */
+class InlineScriptOutputObject extends HeaderOutputObject {
+
+  public function __toString() {
+    return '<script type="text/javascript">/*<![CDATA[*/'. $this->script .'/*]]>*/</script>';
+  }
+  
 }
 
 /** 

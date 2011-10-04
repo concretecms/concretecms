@@ -90,14 +90,17 @@
 	## Startup check ##	
 	require(dirname(__FILE__) . '/startup/encoding_check.php');
 
-	## File types ##
-	require(dirname(__FILE__) . '/config/file_types.php');
-
 	## Startup check, install ##	
 	require(dirname(__FILE__) . '/startup/config_check_complete.php');
 	
 	## User level config ##	
 	require(dirname(__FILE__) . '/config/app.php');
+
+	## Localization ##	
+	require(dirname(__FILE__) . '/config/localization.php');
+
+	## File types ##
+	require(dirname(__FILE__) . '/config/file_types.php');
 	
 	## Check host for redirection ##	
 	require(dirname(__FILE__) . '/startup/url_check.php');
@@ -118,22 +121,29 @@
 	require(dirname(__FILE__) . '/startup/tools_upgrade_check.php');
 
 	## Specific site routes for various content items (if they exist) ##
-	@include(DIR_CONFIG_SITE . '/site_theme_paths.php');
+        if (file_exists(DIR_CONFIG_SITE . '/site_theme_paths.php')) {
+		@include(DIR_CONFIG_SITE . '/site_theme_paths.php');
+        }
 
 	## Specific site routes for various content items (if they exist) ##
-	@include(DIR_CONFIG_SITE . '/site_file_types.php');
+	if (file_exists(DIR_CONFIG_SITE . '/site_file_types.php')) {
+		@include(DIR_CONFIG_SITE . '/site_file_types.php');
+	}
 
 	## Package events
 	require(dirname(__FILE__) . '/startup/packages.php');
 
+	## Add additional core menu options
+	require(dirname(__FILE__) . '/startup/optional_menu_buttons.php');
+
+	# site events - we have to include before tools
+	if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true &&  file_exists(DIR_CONFIG_SITE . '/site_events.php')) {
+		@include(DIR_CONFIG_SITE . '/site_events.php');
+	}
+
 	// Now we check to see if we're including CSS, Javascript, etc...
 	// Include Tools. Format: index.php?task=include_frontend&fType=TOOL&filename=test.php
 	require(dirname(__FILE__) . '/startup/tools.php');
-	
-	# site events
-	if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true) {
-		@include(DIR_CONFIG_SITE . '/site_events.php');
-	}	
 	
 	## Check online, user-related startup routines
 	require(dirname(__FILE__) . '/startup/user.php');
@@ -152,6 +162,9 @@
 			$c = Page::getByID($req->getRequestCollectionID(), false);
 		}
 	
+		$req = Request::get();
+		$req->setCurrentPage($c);
+		
 		if ($c->isError()) {
 			// if we've gotten an error getting information about this particular collection
 			// than we load up the Content class, and get prepared to fire away
@@ -236,10 +249,13 @@
 		require(dirname(__FILE__) . '/startup/process.php');
 
 		## Record the view
+		$u = new User();
 		if (STATISTICS_TRACK_PAGE_VIEWS == 1) {
-			$u = new User();
 			$u->recordView($c);
 		}
+		
+		## Fire the on_page_view Event
+		Events::fire('on_page_view', $c, $u);
 		
 		## now we display (provided we've gotten this far)
 	

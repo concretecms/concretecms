@@ -154,7 +154,7 @@
 			}
 		}
 		
-		$page = $_REQUEST['ccm_paging_p'];
+		$page = $_REQUEST[PAGING_STRING];
 		if (!$page) {
 			$page = 1;
 		}
@@ -298,7 +298,7 @@ $("input[name=vApprove]").click(function() {
 
 ccm_goToVersionPage = function(p, url) {
 	jQuery.fn.dialog.showLoader();
-	var dest = CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1&cID=<?=$c->getCollectionID()?>&ccm_paging_p=' + p;
+	var dest = CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1&cID=<?=$c->getCollectionID()?>&<?php echo PAGING_STRING?>' + p;
 	$("#ccm-versions-container").load(dest, function() {
 		jQuery.fn.dialog.hideLoader();
 	});
@@ -395,7 +395,7 @@ $("input[name=vRemove]").click(function() {
 	?> 
 	<tr id="ccm-version-row<?=$v->getVersionID()?>" class="<?=$class?>">
 		<td><input type="checkbox" <? if ($vIsPending) { ?> class="cb-version-pending"<? } else if ($v->isApproved()) { ?> class="cb-version-active"<? } else { ?> class="cb-version-old" <? } ?> id="cb<?=$v->getVersionID()?>" name="vID[]" value="<?=$v->getVersionID()?>" /></td>
-		<td><a dialog-width="85%" dialog-height="80%" title="<?=t('Compare Versions')?>" class="ccm-version" dialog-modal="false" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&cvID=<?=$v->getVersionID()?>&vtask=view_version"><?=$v->getVersionName()?></a></td>
+		<td><a dialog-width="85%" dialog-height="80%" title="<?=t('Compare Versions')?>" class="ccm-version" dialog-title="<?=t('Compare Versions')?>" dialog-modal="false" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&cvID=<?=$v->getVersionID()?>&vtask=view_version"><?=$v->getVersionName()?></a></td>
 		<td><?=$v->getVersionComments()?></td>
 		<td><?
 			print $v->getVersionAuthorUserName();

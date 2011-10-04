@@ -270,8 +270,9 @@ class PageTheme extends Object {
 			$contents = $fh->getContents($this->getThemeDirectory() . '/' . $file);
 			
 			// replace all url( instances with url starting with path to theme
-			$contents = str_replace('url(', 'url(' . $this->getThemeURL() . '/', $contents);
-			
+			$contents = preg_replace('/(url\(\')(.*)/', '$1' . $this->getThemeURL() . '/$2', $contents);
+			$contents = preg_replace('/(url\(")(.*)/', '$1' . $this->getThemeURL() . '/$2', $contents);
+            $contents = preg_replace('/(url\((?![\'"]))(.*)/', '$1' . $this->getThemeURL() . '/$2', $contents);
 			
 			// load up all tokens from the db for this stylesheet.
 			// if a replacement style array is passed then we use that instead of the database (as is the case when previewing)
@@ -572,12 +573,12 @@ class PageTheme extends Object {
 	
 	private static function getThemeNameAndDescription($dir) {
 		$res = new stdClass;
-		$res->ptName = '(No Name)';
-		$res->ptDescription = '(No Description)';
+		$res->ptName = t('(No Name)');
+		$res->ptDescription = t('(No Description)');
 		if (file_exists($dir . '/' . FILENAME_THEMES_DESCRIPTION)) {
 			$con = file($dir . '/' . FILENAME_THEMES_DESCRIPTION);
-			$res->ptName = $con[0];
-			$res->ptDescription = $con[1];	
+			$res->ptName = trim($con[0]);
+			$res->ptDescription = trim($con[1]);	
 		}
 		return $res;
 	}

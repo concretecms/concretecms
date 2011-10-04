@@ -15,8 +15,9 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Document
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Document.php 23775 2011-03-01 17:25:24Z ralph $
  */
 
 
@@ -30,7 +31,7 @@ require_once 'Zend/Search/Lucene/Field.php';
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Document
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Search_Lucene_Document
@@ -56,7 +57,7 @@ class Zend_Search_Lucene_Document
      * Proxy method for getFieldValue(), provides more convenient access to
      * the string value of a field.
      *
-     * @param  $offset
+     * @param  string $offset
      * @return string
      */
     public function __get($offset)
@@ -99,6 +100,7 @@ class Zend_Search_Lucene_Document
     public function getField($fieldName)
     {
         if (!array_key_exists($fieldName, $this->_fields)) {
+            require_once 'Zend/Search/Lucene/Exception.php';
             throw new Zend_Search_Lucene_Exception("Field name \"$fieldName\" not found in document.");
         }
         return $this->_fields[$fieldName];

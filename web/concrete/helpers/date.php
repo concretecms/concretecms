@@ -97,10 +97,16 @@ class DateHelper {
 		return $datetime->format($mask);
 	}
 
+	/**
+	 * returns a keyed array of timezone identifiers
+	 * see: http://www.php.net/datetimezone.listidentifiers.php
+	 * @return array:
+	 */
 	public function getTimezones() {
 		return array_combine(DateTimeZone::listIdentifiers(),DateTimeZone::listIdentifiers());
 	}
 
+	
 	public function timeSince($posttime,$precise=0){
 		$timeRemaining=0;
 		$diff=date("U")-$posttime;

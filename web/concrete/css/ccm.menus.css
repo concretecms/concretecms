@@ -1,21 +1,5 @@
-/*
-
-div.ccm-menu-l {background: transparent url(../images/bg_menu_l.png) repeat-y scroll 0 0; width:100%; height:auto; }
-div.ccm-menu-r {background: transparent url(../images/bg_menu_r.png) repeat-y scroll 100% 0; }
-
-div.ccm-menu-b {background: transparent url(../images/bg_menu_b.png) repeat-x 0 100%; height: 31px; margin-left: 26px; margin-right: 26px; width:128px;}
-div.ccm-menu-bl { background: transparent url(../images/bg_menu_lb.png) no-repeat 0 100%; clear:both }
-div.ccm-menu-br {background: transparent url(../images/bg_menu_rb.png) no-repeat 100% 100%;}
-
-div.ccm-menu-t {background: transparent url(../images/bg_menu_t.png) repeat-x 0 0; height: 21px; margin-left: 26px; margin-right: 26px; width:128px;}
-div.ccm-menu-tl {background: transparent url(../images/bg_menu_lt.png) no-repeat 0 0; }
-div.ccm-menu-tr {background: transparent url(../images/bg_menu_rt.png) no-repeat 100% 0;}
-
-*/
-
-
 div.ccm-menu {
-	z-index: 500;
+	z-index: 9999;
 	font-family: "Lucida Grande", Arial, Helvetica;
 	-khtml-user-select: none;
 	-moz-user-select: none;

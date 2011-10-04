@@ -15,13 +15,31 @@ if(!$ak instanceof CollectionAttributeKey) {?>
 	<div class="ccm-block-field-group">
 		<h2><?php echo t('Display Title')?></h2>
 		<?php echo $form->text('title',$title);?>
-		
 		<br/><br/>
-		<h2><?php echo $ak->getAttributeKeyName();?></h2>
-		<?php
-			$av = $c->getAttributeValueObject($ak);
-			$ak->render('form',$av);
-		?>	
+		
+		<div>
+			<label>
+				<?php echo $form->radio('displayMode','page',$displayMode)?>
+				<?php echo t('Display Tags for the current page')?>
+			</label>
+		</div>
+		<div>
+			<label>
+				<?php echo $form->radio('displayMode','cloud',$displayMode)?>
+				<?php echo t('Display available tags');?>
+			</label>
+		</div>
+		<div id="ccm-tags-display-page">
+			<h2><?php echo $ak->getAttributeKeyName();?></h2>
+			<?php
+				$av = $c->getAttributeValueObject($ak);
+				$ak->render('form',$av);
+			?>
+		</div>
+		<div id="ccm-tags-display-cloud" style="display: none;">
+			<h2><?php echo t('Number of tags to display');?></h2>
+			<?php echo $form->text('cloudCount',$cloudCount,array('size'=>4))?>
+		</div>
 	</div>
 </div>
 

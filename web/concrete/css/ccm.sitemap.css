@@ -5,7 +5,7 @@ div#tree ul {padding: 0px; margin: 0px}
 div#tree ul li {padding-top: 0px; padding-bottom: 0px; padding-left: 17px; margin-bottom: 0px; line-height: 12px; font-size: 12px}
 div#tree ul li img.handle {position: absolute; top: 0px; left: 0px;}
 div#tree ul li img.moveable {cursor: move}
-li.tree-node {position: relative; background-color: transparent; background-repeat: no-repeat; background-attachment: scroll; height:auto;}
+li.tree-node {position: relative; background-color: transparent; background-repeat: no-repeat; background-attachment: scroll; background-position: left top; height:auto;}
 div#ccm-sitemap-message {display: none}
 
 div.ccm-sitemap-explore {margin-left: 0px !important}
@@ -54,7 +54,7 @@ div.dropzone {height: 6px;  }
 div.dropzone-active {height: 3px; margin-top: 0px; border-bottom: 1px dotted #333; margin-bottom:2px}
 div.dropzone-ready { } /* height: 4px; border-left: 4px solid #f00;} */
 
-div#ccm-show-all-pages,div#ccm-sitemap-search, div#ccm-dashboard-select-display-mode {border: 1px solid #ddd; padding: 8px; width:180px; position: relative; z-index: 90; background:#fafafa; margin-left:12px}
+div#ccm-show-all-pages,div#ccm-sitemap-search, div#ccm-dashboard-select-display-mode {border: 1px solid #ddd; padding: 8px; width:180px; background:#fafafa; margin-left:12px}
 
 div#ccm-sitemap-search { margin-bottom: 10px;  }
 div#ccm-sitemap-search div, div#ccm-sitemap-search td {font-size: 10px !important}

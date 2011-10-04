@@ -229,15 +229,15 @@ class V2JavaScriptOutputObject extends V2HeaderOutputObject {
 
 	public $script;			// STRING (the actual JS code)
 	public $xhtml = true;	// BOOL (should we wrap with CDATA...?)
-	
+
 	public function __toString() {
-		
+		$fh = Loader::helper('file');
 		if (!$this->string) { // If __toString() has not yet been run on this object
 
 			if ($this->inline) { // Put the code inline? Not cacheable by browser!
 					
 				if (!$this->script && $this->file) {
-					$this->script = file_get_contents($this->abs);
+					$this->script = $fh->getContents($this->abs);
 				}
 				
 				if (!$this->script) { // nothing to insert inline
@@ -298,13 +298,13 @@ class V2CSSOutputObject extends V2HeaderOutputObject {
 	public $css; // STRING (the actual css code)
 	
 	public function __toString() {
-		
+		$fh = Loader::helper('file');
 		if (!$this->string) { // If __toString() has not yet been run on this object
 			
 			if ($this->inline || $this->css) { // Put the code inline? Not cacheable by browser!	
 						
 				if (!$this->css && $this->abs) { // get CSS code from the filesystem. Absolute link has already been validated
-					$this->css = file_get_contents($this->abs);
+					$this->css = $fh->getContents($this->abs);
 				}
 	
 				if (!$this->css) { // nothing to insert inline

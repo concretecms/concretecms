@@ -91,6 +91,10 @@ if (!defined('ENABLE_ASSET_COMPRESSION')) {
 	define('ENABLE_ASSET_COMPRESSION', false);
 }
 
+if (!defined('PAGING_STRING')) {
+	define('PAGING_STRING', 'ccm_paging_p');
+}
+
 /** 
  * Character support
  */
@@ -105,21 +109,6 @@ if (!defined('DB_CHARSET')) {
 
 if (!defined("DB_COLLATE")) {
 	define('DB_COLLATE', '');
-}
-
-if (!defined('LOCALE')) {
-	define("LOCALE", 'en_US');
-}
-
-if (strpos(LOCALE, '_') > -1) {
-	$loc = explode('_', LOCALE);
-	if (is_array($loc) && count($loc) == 2) {
-		define('LANGUAGE', $loc[0]);
-	}
-}
-
-if (!defined("LANGUAGE")) {
-	define("LANGUAGE", LOCALE);
 }
 
 define("LANGUAGE_DOMAIN_CORE", "messages");
@@ -145,7 +134,7 @@ define('DIR_LIBRARIES_CORE', DIR_BASE_CORE . '/libraries'); // front-end
 define('DIR_LIBRARIES_3RDPARTY', DIR_LIBRARIES . '/3rdparty');
 define('DIR_LIBRARIES_3RDPARTY_CORE', DIR_LIBRARIES_CORE . '/3rdparty');
 
-ini_set('include_path', get_include_path() . PATH_SEPARATOR . DIR_LIBRARIES_3RDPARTY . PATH_SEPARATOR . DIR_LIBRARIES_3RDPARTY_CORE);
+ini_set('include_path', DIR_LIBRARIES_3RDPARTY . PATH_SEPARATOR . DIR_LIBRARIES_3RDPARTY_CORE . PATH_SEPARATOR . get_include_path());
 
 # Models are explicit things - concrete-related or not - that deal with the db
 define('DIR_MODELS', DIR_BASE . '/models'); // front-end
@@ -181,6 +170,7 @@ define('DIRNAME_ELEMENTS', 'elements');
 define('DIRNAME_LANGUAGES', 'languages');
 define('DIRNAME_JOBS', 'jobs');
 define('DIRNAME_DASHBOARD', 'dashboard');
+define('DIRNAME_ELEMENTS_HEADER_MENU', 'header_menu');
 define('DIRNAME_DASHBOARD_MODULES', 'modules');
 define('DIRNAME_MAIL_TEMPLATES', 'mail');
 define('DIRNAME_THEMES', 'themes');
@@ -211,14 +201,12 @@ define('FILENAME_BLOCK_DB', 'db.xml');
 # Hosted assets are assets shared amongst all Concrete5 installations on a single machine.
 if (defined('MULTI_SITE') && MULTI_SITE == 1) {
 	define('ASSETS_URL_WEB', BASE_URL);
-	define('ASSETS_URL_WEB_FULL', BASE_URL);
 	@include(DIRNAME_UPDATES . '/index.php');
 	if (isset($DIR_APP_UPDATES)) {
 		define('DIR_APP_UPDATES', $DIR_APP_UPDATES);
 	}
 } else {
 	define('DIR_APP_UPDATES', DIR_BASE . '/' . DIRNAME_UPDATES);
-	define('ASSETS_URL_WEB_FULL', BASE_URL . DIR_REL);
 	define('ASSETS_URL_WEB', DIR_REL);
 	define('MULTI_SITE', 0);
 }
@@ -233,6 +221,7 @@ define('ASSETS_URL_CSS', $ap . '/css');
 define('ASSETS_URL_JAVASCRIPT', $ap . '/js');
 define('ASSETS_URL_IMAGES', $ap . '/images');
 define('ASSETS_URL_FLASH', $ap . '/flash');
+
 
 # Pages/Collections
 define('FILENAME_COLLECTION_VIEW', 'view.php');
@@ -266,6 +255,7 @@ define('FILENAME_ATTRIBUTE_DB', 'db.xml');
 # Elements
 define('DIR_FILES_ELEMENTS', DIR_BASE . '/elements');
 define('DIR_FILES_ELEMENTS_CORE', DIR_BASE_CORE . '/elements');
+define('FILENAME_MENU_ITEM_CONTROLLER', 'controller.php');
 
 # Jobs
 if (!defined('DIR_FILES_JOBS')) {
@@ -286,6 +276,10 @@ define('FILENAME_THEMES_ERROR', 'error');
 define('ASSETS_URL_THEMES_NO_THUMBNAIL', ASSETS_URL_IMAGES . '/spacer.gif');
 define('THEMES_THUMBNAIL_WIDTH', 120);
 define('THEMES_THUMBNAIL_HEIGHT', 90);
+
+# languages
+define('DIR_LANGUAGES', DIR_BASE . '/' . DIRNAME_LANGUAGES);
+define('DIR_LANGUAGES_CORE', DIR_BASE_CORE . '/' . DIRNAME_LANGUAGES);
 
 # Mail templates are just another kind of element, but with some special properties
 define('DIR_FILES_EMAIL_TEMPLATES', DIR_BASE . '/mail');
@@ -315,7 +309,7 @@ if (!defined('DIR_FILES_CACHE')) {
 }
 
 if (!defined('CACHE_ID')) {
-	define('CACHE_ID', md5(BASE_URL . DIR_REL));
+	define('CACHE_ID', md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL));
 }
 
 if (defined('DIR_FILES_CACHE') && !is_dir(DIR_FILES_CACHE)) {
@@ -338,7 +332,7 @@ if (defined('DIR_FILES_CACHE')) {
 }
 
 if (!defined('CACHE_LIFETIME')) {
-	define('CACHE_LIFETIME', 43200);
+	define('CACHE_LIFETIME', null);
 }
 
 define('ON_WINDOWS', intval(substr(PHP_OS,0,3)=='WIN') );
@@ -465,6 +459,7 @@ if (!defined("API_KEY_PICNIK")) {
 }
 
 $ADODB_ASSOC_CASE =  2;
+
 require(dirname(__FILE__) . '/version.php');
 define('APP_VERSION', $APP_VERSION);
 define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the latest version (this is seconds)

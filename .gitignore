@@ -14,6 +14,20 @@ __MACOSX
 # ignore updates folder
 /web/updates/*
 
+# ignore packages folder
+/web/packages/*
+/web/concrete/packages/*
+
+# more stuff
+/web/css/*
+/web/js/*
+/web/blocks/*
+/web/languages/*
+/web/tools/*
+/web/controllers/*
+/web/single_pages/*
+/web/models/*
+
 # ignore sitemap.xml
 /web/sitemap.xml
 

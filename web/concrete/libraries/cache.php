@@ -32,7 +32,8 @@ class Cache {
 					'cache_id_prefix' => CACHE_ID		
 				);
 				$backendOptions = array(
-					'cache_dir' => DIR_FILES_CACHE
+					'cache_dir' => DIR_FILES_CACHE,
+					'file_locking' => false
 				);
 				if (defined('CACHE_BACKEND_OPTIONS')) {
 					$opts = unserialize(CACHE_BACKEND_OPTIONS);
@@ -71,8 +72,9 @@ class Cache {
 	}
 	
 	public function enableCache() {
-		if (defined('ENABLE_CACHE') && ENABLE_CACHE == TRUE) {
-			Cache::getLibrary()->setOption('caching', true);
+		$ca = Cache::getLibrary();
+		if (is_object($ca)) {
+			$ca->setOption('caching', true);
 		}
 	}
 	
@@ -151,11 +153,10 @@ class Cache {
 	 */	
 	public function delete($type, $id){
 		$cache = Cache::getLibrary();
-		if (!$cache) {
-			return false;
+		if ($cache) {
+			$cache->remove(Cache::key($type, $id));
 		}
 
-		$cache->remove(Cache::key($type, $id));
 		$loc = CacheLocal::get();
 		if ($loc->enabled && isset($loc->cache[Cache::key($type, $id)])) {
 			unset($loc->cache[Cache::key($type, $id)]);

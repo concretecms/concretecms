@@ -26,6 +26,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public $uGroups = array();
 		public $superUser = false;
 		public $uTimezone = NULL;
+		protected $uDefaultLanguage = null;
 		
 		/**
 		 * @param int $uID
@@ -35,7 +36,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public static function getByUserID($uID, $login = false) {
 			$db = Loader::db();
 			$v = array($uID);
-			$q = "SELECT uID, uName, uIsActive, uLastOnline, uTimezone FROM Users WHERE uID = ?";
+			$q = "SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage FROM Users WHERE uID = ?";
 			$r = $db->query($q, $v);
 			if ($r) {
 				$row = $r->fetchRow();
@@ -43,20 +44,32 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$nu->uID = $row['uID'];
 				$nu->uName = $row['uName'];
 				$nu->uIsActive = $row['uIsActive'];
+				$nu->uDefaultLanguage = $row['uDefaultLanguage'];
 				$nu->uLastLogin = $row['uLastLogin'];
 				$nu->uTimezone = $row['uTimezone'];
 				$nu->uGroups = $nu->_getUserGroups(true);
 				if ($login) {
+					User::regenerateSession();
 					$_SESSION['uID'] = $row['uID'];
 					$_SESSION['uName'] = $row['uName'];
 					$_SESSION['uBlockTypesSet'] = false;
 					$_SESSION['uGroups'] = $nu->uGroups;
 					$_SESSION['uLastOnline'] = $row['uLastOnline'];
 					$_SESSION['uTimezone'] = $row['uTimezone'];
+					$_SESSION['uDefaultLanguage'] = $row['uDefaultLanguage'];
 					$nu->recordLogin();
 				}
 			}
 			return $nu;
+		}
+		
+		protected static function regenerateSession() {
+			$tmpSession = $_SESSION; 
+			session_write_close(); 
+			setcookie(session_name(), session_id(), time()-100000);
+			session_id(sha1(mt_rand())); 
+			session_start(); 
+			$_SESSION = $tmpSession; 
 		}
 		
 		/**
@@ -96,7 +109,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function __construct() {
 			$args = func_get_args();
 			
-			if ($args[1]) {
+			if (isset($args[1])) {
 				// first, we check to see if the username and password match the admin username and password
 				// $username = uName normally, but if not it's email address
 				
@@ -108,9 +121,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$password = User::encryptPassword($password, PASSWORD_SALT);
 				$v = array($username, $password);
 				if (defined('USER_REGISTRATION_WITH_EMAIL_ADDRESS') && USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
-					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone from Users where uEmail = ? and uPassword = ?";
+					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage from Users where uEmail = ? and uPassword = ?";
 				} else {
-					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone from Users where uName = ? and uPassword = ?";
+					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage from Users where uName = ? and uPassword = ?";
 				}
 				$db = Loader::db();
 				$r = $db->query($q, $v);
@@ -123,6 +136,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$this->uName = $row['uName'];
 						$this->uIsActive = $row['uIsActive'];
 						$this->uTimezone = $row['uTimezone'];
+						$this->uDefaultLanguage = $row['uDefaultLanguage'];
 						$this->uGroups = $this->_getUserGroups($args[2]);
 						if ($row['uID'] == USER_SUPER_ID) {
 							$this->superUser = true;
@@ -131,12 +145,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						}
 						$this->recordLogin();
 						if (!$args[2]) {
+							User::regenerateSession();
 							$_SESSION['uID'] = $row['uID'];
 							$_SESSION['uName'] = $row['uName'];
 							$_SESSION['superUser'] = $this->superUser;
 							$_SESSION['uBlockTypesSet'] = false;
 							$_SESSION['uGroups'] = $this->uGroups;
 							$_SESSION['uTimezone'] = $this->uTimezone;
+							$_SESSION['uDefaultLanguage'] = $this->uDefaultLanguage;
 						}
 					} else if ($row['uID'] && !$row['uIsActive']) {
 						$this->loadError(USER_INACTIVE);
@@ -149,14 +165,25 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			} else {
 				// then we just get session info
-				$this->uID = $_SESSION['uID'];
-				$this->uName = $_SESSION['uName'];
+				if (isset($_SESSION['uID'])) {
+					$this->uID = $_SESSION['uID'];
+					$this->uName = $_SESSION['uName'];
+					$this->uTimezone = $_SESSION['uTimezone'];
+					if (isset($_SESSION['uDefaultLanguage'])) {
+						$this->uDefaultLanguage = $_SESSION['uDefaultLanguage'];
+					}
+					$this->superUser = ($_SESSION['uID'] == USER_SUPER_ID) ? true : false;
+				} else {
+					$this->uID = null;
+					$this->uName = null;
+					$this->superUser = false;
+					$this->uDefaultLanguage = null;
+					$this->uTimezone = null;
+				}
 				$this->uGroups = $this->_getUserGroups();
-				if (!$args[2]) {
+				if (!isset($args[2])) {
 					$_SESSION['uGroups'] = $this->uGroups;
 				}
-				$this->superUser = ($_SESSION['uID'] == USER_SUPER_ID) ? true : false;
-				$this->uTimezone = $_SESSION['uTimezone'];
 			}
 			
 			return $this;
@@ -176,10 +203,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$v = array($cID, $uID);
 			$db->query("insert into PageStatistics (cID, uID, date) values (?, ?, NOW())", $v);
 			
-			// record a view, arguments are
-			// 1. page being viewed
-			// 2. user viewing page
-			Events::fire('on_page_view', $c, $this);
 		}
 		
 		public function encryptPassword($uPassword, $salt = PASSWORD_SALT) {
@@ -242,7 +265,38 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		function getUserGroups() {
-			return $this->uGroups;
+			$ugtmp = array();
+			// we have to do this because we don't have a localized version of the guest and registered group names
+			// when we called _getUserGroups() below. So we have to push out the defining of the guest and registered
+			// names til runtime
+			
+			foreach($this->uGroups as $key => $value) {
+				$ugtmp[$key] = $value;
+				if ($key == GUEST_GROUP_ID) {
+					$ugtmp[$key] = GUEST_GROUP_NAME;
+				}
+				if ($key == REGISTERED_GROUP_ID) {
+					$ugtmp[$key] = REGISTERED_GROUP_NAME;
+				}
+			}
+			return $ugtmp;
+		}
+		
+		/** 
+		 * Sets a default language for a user record 
+		 */
+		public function setUserDefaultLanguage($lang) {
+			$db = Loader::db();
+			$this->uDefaultLanguage = $lang;
+			$_SESSION['uDefaultLanguage'] = $lang;
+			$db->Execute('update Users set uDefaultLanguage = ? where uID = ?', array($lang, $this->getUserID()));
+		}
+		
+		/** 
+		 * Gets the default language for the logged-in user
+		 */
+		public function getUserDefaultLanguage() {
+			return $this->uDefaultLanguage;
 		}
 		
 		function refreshUserGroups() {
@@ -253,12 +307,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		function _getUserGroups($disableLogin = false) {
-			if ($_SESSION['uGroups'] && (!$disableLogin)) {
+			if ((!empty($_SESSION['uGroups'])) && (!$disableLogin)) {
 				$ug = $_SESSION['uGroups'];
 			} else {
 				$db = Loader::db();
 				if ($this->uID) {
-					$ug[REGISTERED_GROUP_ID] = REGISTERED_GROUP_NAME;
+					$ug[REGISTERED_GROUP_ID] = REGISTERED_GROUP_ID;
 					//$_SESSION['uGroups'][REGISTERED_GROUP_ID] = REGISTERED_GROUP_NAME;
 
 					$uID = $this->uID;
@@ -300,8 +354,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				
 				// now we populate also with guest information, since presumably logged-in users 
 				// see the same stuff as guest
-				$ug[GUEST_GROUP_ID] = GUEST_GROUP_NAME;
-				//$_SESSION['uGroups'][GUEST_GROUP_ID] = GUEST_GROUP_NAME;
+				$ug[GUEST_GROUP_ID] = GUEST_GROUP_ID;
 			}
 			
 			return $ug;
@@ -321,6 +374,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					'ugEntered' => $dt->getSystemDateTime()
 				),
 				array('uID', 'gID'), true);
+				Events::fire('on_user_enter_group', $this, $g);
 			}
 		}
 		
@@ -338,6 +392,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$gID = $g->getGroupID();
 				$db = Loader::db();
 				
+				$ret = Events::fire('on_user_exit_group', $this, $g);
 				$q = "delete from UserGroups where uID = '{$this->uID}' and gID = '{$gID}'";
 				$r = $db->query($q);	
 			}		

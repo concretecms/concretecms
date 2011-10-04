@@ -9,7 +9,7 @@
 		
 		if ($pOptions['previous'] > -1) {
 			$variables['start'] = $pOptions['previous']; 
-			echo('<a href="' . htmlentities($script . Search::qsReplace($variables)) . '">&lt;&lt;</a>');
+			echo('<a href="' . htmlentities($script . Search::qsReplace($variables), ENT_QUOTES, APP_CHARSET) . '">&lt;&lt;</a>');
 			echo('&nbsp;&nbsp;');
 		}
 		

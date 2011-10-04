@@ -159,8 +159,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (!in_array(self::ADD_OPTIONS_NOHASH, $options)) {
 				$password_to_insert = User::encryptPassword($password_to_insert);			
 			}	
-			$v = array($data['uName'], $data['uEmail'], $password_to_insert, $uIsValidated, $uDateAdded, $uIsFullRecord, 1);
-			$r = $db->prepare("insert into Users (uName, uEmail, uPassword, uIsValidated, uDateAdded, uIsFullRecord, uIsActive) values (?, ?, ?, ?, ?, ?, ?)");
+			
+			if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
+				$uDefaultLanguage = $data['uDefaultLanguage'];
+			}
+			$v = array($data['uName'], $data['uEmail'], $password_to_insert, $uIsValidated, $uDateAdded, $uIsFullRecord, $uDefaultLanguage, 1);
+			$r = $db->prepare("insert into Users (uName, uEmail, uPassword, uIsValidated, uDateAdded, uIsFullRecord, uDefaultLanguage, uIsActive) values (?, ?, ?, ?, ?, ?, ?, ?)");
 			$res = $db->execute($r, $v);
 			if ($res) {
 				$newUID = $db->Insert_ID();
@@ -168,7 +172,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				
 				if (is_object($ui) && !in_array(self::ADD_OPTIONS_SKIP_CALLBACK,$options)) {
 					// run any internal event we have for user add
-					Events::fire('on_user_add', $ui);
+					Events::fire('on_user_add', $ui, $data['uPassword']);
 				}
 				
 				return $ui;
@@ -217,6 +221,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}
 
+			$r = $db->query("DELETE FROM UsersFriends WHERE friendUID = ?",array(intval($this->uID)) );
+			
 			$r = $db->query("DELETE FROM UserGroups WHERE uID = ?",array(intval($this->uID)) );
 			$r = $db->query("DELETE FROM UserOpenIDs WHERE uID = ?",array(intval($this->uID)));
 			$r = $db->query("DELETE FROM Users WHERE uID = ?",array(intval($this->uID)));
@@ -424,12 +430,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$uTimezone = $data['uTimezone'];
 				}
 				
+				$uDefaultLanguage = null;
+				if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
+					$uDefaultLanguage = $data['uDefaultLanguage'];
+				}
+				
 				$testChange = false;
 				
 				if ($data['uPassword'] != null) {
 					if (User::encryptPassword($data['uPassword']) == User::encryptPassword($data['uPasswordConfirm'])) {
-						$v = array($uName, $uEmail, User::encryptPassword($data['uPassword']), $uHasAvatar, $uTimezone, $this->uID);
-						$r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ?, uTimezone = ? where uID = ?");
+						$v = array($uName, $uEmail, User::encryptPassword($data['uPassword']), $uHasAvatar, $uTimezone, $uDefaultLanguage, $this->uID);
+						$r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ? where uID = ?");
 						$res = $db->execute($r, $v);
 						
 						$testChange = true;
@@ -438,8 +449,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$updateGroups = false;
 					}
 				} else {
-					$v = array($uName, $uEmail, $uHasAvatar, $uTimezone, $this->uID);
-					$r = $db->prepare("update Users set uName = ?, uEmail = ?, uHasAvatar = ?, uTimezone = ? where uID = ?");
+					$v = array($uName, $uEmail, $uHasAvatar, $uTimezone, $uDefaultLanguage, $this->uID);
+					$r = $db->prepare("update Users set uName = ?, uEmail = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ? where uID = ?");
 					$res = $db->execute($r, $v);
 				}
 
@@ -760,7 +771,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	   // obtains relevant users for the passed object. Since users can now
 	   // act just like groups (permissions-wise)
 
-	   var $uiArray = array();
+	   public $uiArray = array();
 
 		function UserInfoList($obj) {
 			$db = Loader::db();

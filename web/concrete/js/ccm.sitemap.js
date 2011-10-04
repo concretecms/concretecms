@@ -376,9 +376,10 @@ activateLabels = function(instance_id, display_mode, select_mode) {
 	if (select_mode == 'select_page' || select_mode == 'move_copy_delete') {
 		smwrapper.find("li.ccm-sitemap-explore-paging a").each(function() {
 			$(this).click(function() {
+				var treeRootNode = $(this).parentsUntil('ul').parent().attr('tree-root-node-id');
 				jQuery.fn.dialog.showLoader();
 				$.get($(this).attr('href'), function(r) {
-					parseSitemapResponse(instance_id, display_mode, select_mode, 0, r);
+					parseSitemapResponse(instance_id, display_mode, select_mode, treeRootNode, r);
 					activateLabels(instance_id, display_mode, select_mode);
 					jQuery.fn.dialog.hideLoader();
 				});			
@@ -387,8 +388,7 @@ activateLabels = function(instance_id, display_mode, select_mode) {
 			});
 		});
 	}
-	
-	if (display_mode == 'full') {
+	if (display_mode == 'full' && (!select_mode)) {
 		smwrapper.find('img.handle').addClass('moveable');
 
 		//drop onto a page
@@ -445,7 +445,7 @@ moveCopyAliasNode = function(reloadPage) {
 	var display_mode = $("input[name=display_mode]").val();
 	var select_mode = $("input[name=select_mode]").val();
 	var copyAll = $("input[name=copyAll]:checked").val();
-	
+	var saveOldPagePath = $("input[name=saveOldPagePath]:checked").val();
 	// DO THE DEED
 
 	params = {
@@ -454,7 +454,8 @@ moveCopyAliasNode = function(reloadPage) {
 		'destCID': destCID,
 		'ctask': ctask,
 		'ccm_token': CCM_SECURITY_TOKEN,
-		'copyAll': copyAll		
+		'copyAll': copyAll,
+		'saveOldPagePath': saveOldPagePath
 	};
 
 	jQuery.fn.dialog.showLoader();
@@ -533,8 +534,8 @@ openSub = function(instanceID, nodeID, display_mode, select_mode, onComplete) {
 	cancelReorder();
 	ccm_sitemap_html = '';
 	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?instance_id=" + instanceID + "&node=" + nodeID + "&display_mode=" + display_mode + "&select_mode=" + select_mode + "&selectedPageID=" + container.attr('selected-page-id'), function(resp) {
-		parseSitemapResponse(instanceID, 'full', false, nodeID, resp);
-		activateLabels(instanceID, 'full');
+		parseSitemapResponse(instanceID, 'full', select_mode, nodeID, resp);
+		activateLabels(instanceID, 'full', select_mode);
 		if (select_mode != 'move_copy_delete' && select_mode != 'select_page') {
 			activateReorder();
 		}
@@ -600,6 +601,7 @@ toggleMove = function() {
 	if ($("#copyThisPage").get(0)) {
 		$("#copyThisPage").get(0).disabled = true;
 		$("#copyChildren").get(0).disabled = true;
+		$("#saveOldPagePath").attr('disabled', false);
 	}
 }
 
@@ -607,6 +609,8 @@ toggleAlias = function() {
 	if ($("#copyThisPage").get(0)) {
 		$("#copyThisPage").get(0).disabled = true;
 		$("#copyChildren").get(0).disabled = true;
+		$("#saveOldPagePath").attr('checked', false);
+		$("#saveOldPagePath").attr('disabled', 'disabled');
 	}
 }
 
@@ -615,6 +619,8 @@ toggleCopy = function() {
 		$("#copyThisPage").get(0).disabled = false;
 		$("#copyThisPage").get(0).checked = true;
 		$("#copyChildren").get(0).disabled = false;
+		$("#saveOldPagePath").attr('checked', false);
+		$("#saveOldPagePath").attr('disabled', 'disabled');
 	}
 }
 
@@ -731,7 +737,7 @@ ccm_sitemapSetupSearch = function(instance_id) {
 ccm_sitemapSearchSetupCheckboxes = function(instance_id) {
 	$("#ccm-" + instance_id + "-list-cb-all").click(function(e) {
 		e.stopPropagation();
-		if ($(this).attr('checked') == true) {
+		if ($(this).prop('checked') == true) {
 			$('.ccm-list-record td.ccm-' + instance_id + '-list-cb input[type=checkbox]').attr('checked', true);
 			$("#ccm-" + instance_id + "-list-multiple-operations").attr('disabled', false);
 		} else {

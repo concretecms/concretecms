@@ -37,6 +37,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		private $headerItems = array();
 
+		/** 
+		 * An array of items that get loaded into just before body close
+		 */
+		private $footerItems = array();
+
 		/**
 		 * themePaths holds the various hard coded paths to themes
 		 * @access private
@@ -105,12 +110,36 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$this->headerItems[$namespace][] = $item;
 		}
 		
+		/** 
+		 * Function responsible for adding footer items within the context of a view.
+		 * @access private
+		 */
+		public function addFooterItem($item, $namespace = 'VIEW') {
+			$this->footerItems[$namespace][] = $item;
+		}
+		
 		public function getHeaderItems() {
 			$a1 = (is_array($this->headerItems['CORE'])) ? $this->headerItems['CORE'] : array();
 			$a2 = (is_array($this->headerItems['VIEW'])) ? $this->headerItems['VIEW'] : array();
 			$a3 = (is_array($this->headerItems['CONTROLLER'])) ? $this->headerItems['CONTROLLER'] : array();
 			
 			$items = array_merge($a1, $a2, $a3);
+			if (version_compare(PHP_VERSION, '5.2.9', '<')) {
+				$items = array_unique($items);
+			} else {
+				// stupid PHP
+				$items = array_unique($items, SORT_STRING);
+			}
+			return $items;
+		}
+		
+		public function getFooterItems() {
+			$a1 = (is_array($this->footerItems['CORE'])) ? $this->footerItems['CORE'] : array();
+			$a2 = (is_array($this->footerItems['VIEW'])) ? $this->footerItems['VIEW'] : array();
+			$a3 = (is_array($this->footerItems['CONTROLLER'])) ? $this->footerItems['CONTROLLER'] : array();
+			$a4 = (is_array($this->footerItems['SCRIPT'])) ? $this->footerItems['SCRIPT'] : array();
+			
+			$items = array_merge($a1, $a2, $a3, $a4);
 			if (version_compare(PHP_VERSION, '5.2.9', '<')) {
 				$items = array_unique($items);
 			} else {
@@ -181,6 +210,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			
 			
+		}
+		
+		/** 
+		 * Function responsible for outputting footer items
+		 * @access private
+		 */
+		public function outputFooterItems() {
+			$items = $this->getFooterItems();
+			
+			foreach($items as $hi) {
+				print $hi; // caled on two seperate lines because of pre php 5.2 __toString issues
+				print "\n";
+			}
 		}
 
 		public function field($fieldName) {
@@ -604,6 +646,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$this->controller = Loader::controller($view);
 					$this->controller->setupAndRun();
 				}
+
+				if ($this->controller->getRenderOverride() != '') {
+				   $view = $this->controller->getRenderOverride();
+				}
 				
 				// Determine which inner item to load, load it, and stick it in $innerContent
 				$content = false;
@@ -741,6 +787,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$btc->runTask('on_page_view', array($view));
 					}
 					
+					// do we have any custom menu plugins?
+					$cp = new Permissions($view);
+					if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { 
+						$ih = Loader::helper('concrete/interface/menu');
+						$_interfaceItems = $ih->getPageHeaderMenuItems();
+						foreach($_interfaceItems as $_im) {
+							$_controller = $_im->getController();
+							$_controller->outputAutoHeaderItems();
+						}
+						unset($_interfaceItems);
+						unset($_im);
+						unset($_controller);
+					}
+					unset($_interfaceItems);
+					unset($_im);
+					unset($_controller);
+					
+					
 					// now, we output all the custom style records for the design tab in blocks/areas on the page
 					$c = $this->getCollectionObject();
 					$view->outputCustomStyleHeaderItems(); 				
@@ -776,7 +840,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$pageContent = ob_get_contents();
 					ob_end_clean();
 					
-					print $pageContent;
+					$ret = Events::fire('on_page_output', $pageContent);
+					if($ret != '') {
+						print $ret;
+					} else {
+						print $pageContent;
+					}
 					
 					if ($view instanceof Page) {
 						if ($view->supportsPageCache($_pageBlocks, $this->controller)) {

@@ -39,28 +39,45 @@ class FormPageSelectorHelper {
 		}
 
 		$html = '';
+		$clearStyle = 'display: none';
 		$html .= '<div class="ccm-summary-selected-item"><div class="ccm-summary-selected-item-inner"><strong class="ccm-summary-selected-item-label">';
 		if ($selectedCID > 0) {
 			$oc = Page::getByID($selectedCID);
 			$html .= $oc->getCollectionName();
+			$clearStyle = '';
 		}
 		$html .= '</strong></div>';
-		$html .= '<a class="ccm-sitemap-select-page" dialog-sender="' . $fieldName . '" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector.php?sitemap_select_mode=select_page&cID=' . $selectedCID . '">' . t('Select Page') . '</a>';		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedCID . '">';
+		$html .= '<a class="ccm-sitemap-select-page" dialog-sender="' . $fieldName . '" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector.php?sitemap_select_mode=select_page&amp;cID=' . $selectedCID . '">' . t('Select Page') . '</a>';
+		$html .= '&nbsp;<a href="javascript:void(0)" dialog-sender="' . $fieldName . '" class="ccm-sitemap-clear-selected-page" style="float: right; margin-top: -8px;' . $clearStyle . '"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" style="vertical-align: middle; margin-left: 3px" /></a>';
+		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedCID . '"/>';
 		$html .= '</div>'; 
 		$html .= '<script type="text/javascript"> 
 		var ccmActivePageField;
-		$(function() {
-			$("a.ccm-sitemap-select-page").unbind();
-			$("a.ccm-sitemap-select-page").dialog();
-			$("a.ccm-sitemap-select-page").click(function() {
+		function ccm_initSelectPage() {
+			$("a.ccm-sitemap-select-page").unbind().dialog().click(function(){
 				ccmActivePageField = this;
 			});
-		});
+			$("a.ccm-sitemap-clear-selected-page").unbind().click(function(){
+				ccmActivePageField = this;
+				clearPageSelection();
+			});
+		};
+		function clearPageSelection() {
+			var fieldName = $(ccmActivePageField).attr("dialog-sender");
+			var par = $(ccmActivePageField).parent().find(\'.ccm-summary-selected-item-label\');
+			$(ccmActivePageField).parent().find(\'.ccm-sitemap-clear-selected-page\').hide();
+			var pari = $(ccmActivePageField).parent().find("[name=\'"+fieldName+"\']");
+			console.log(pari);
+			par.html("");
+			pari.val("0");
+		}
+		$(ccm_initSelectPage);
 		ccm_selectSitemapNode = function(cID, cName) { ';
 		if($javascriptFunc=='' || $javascriptFunc=='ccm_selectSitemapNode'){
 			$html .= '
 			var fieldName = $(ccmActivePageField).attr("dialog-sender");
 			var par = $(ccmActivePageField).parent().find(\'.ccm-summary-selected-item-label\');
+			$(ccmActivePageField).parent().find(\'.ccm-sitemap-clear-selected-page\').show();
 			var pari = $(ccmActivePageField).parent().find("[name=\'"+fieldName+"\']");
 			par.html(cName);
 			pari.val(cID);
@@ -95,6 +112,62 @@ class FormPageSelectorHelper {
 			$args['instance_id'] = time();
 		}
     	Loader::element('dashboard/sitemap', $args);
+	}
+
+	public function quickSelect($key, $cID = false, $args = array()) {
+		$selectedCID = 0;
+		if (isset($_REQUEST[$key])) {
+			$selectedCID = $_REQUEST[$key];
+		} else if ($cID > 0) {
+			$selectedCID = $cID;
+		}
+		
+		$cName = '';
+		if ($selectedCID > 0) {
+			$oc = Page::getByID($selectedCID);
+			$cp = new Permissions($oc);
+			if ($cp->canRead()) {
+				$cName = $oc->getCollectionName();
+			}
+		}
+
+		$form = Loader::helper('form');
+		$valt = Loader::helper('validation/token');
+		$token = $valt->generate('quick_page_select_' . $key);
+		$html .= "
+		<script type=\"text/javascript\">
+		$(document).ready(function () {
+			$('#ccm-quick-page-selector-label-".$key."').autocomplete({
+				select: function(e, ui) {
+					$('#ccm-quick-page-selector-label-" . $key . "').val(ui.item.label);
+					$('#ccm-quick-page-selector-value-" . $key . "').val(ui.item.value);
+					return false;
+				},
+				open: function(e, ui) {
+					//$('#ccm-quick-page-selector-label-" . $key . "').val('');
+					$('#ccm-quick-page-selector-value-" . $key . "').val('');
+				},
+				focus: function(e, ui) {
+					$('#ccm-quick-page-selector-label-" . $key . "').val(ui.item.label);
+					return false;
+				},
+				source: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/pages/autocomplete?key=" . $key . "&token=" . $token . "'
+			});
+			$('#ccm-quick-page-selector-label-" . $key . "').keydown(function(e) {
+				if (e.keyCode == 13) {
+					e.preventDefault();
+				}
+			}).change(function(e) {
+				if ($('#ccm-quick-page-selector-label-" . $key . "').val() == '') {
+					$('#ccm-quick-page-selector-value-" . $key . "').val('');
+				}
+			});
+			$('#ccm-quick-page-selector-label-".$key."').autocomplete('widget').addClass('ccm-page-selector-autocomplete');
+		} );
+		</script>";
+		$html .= '<input type="hidden" id="ccm-quick-page-selector-value-' . $key . '" name="' . $key . '" value="' . $selectedCID . '" /><span class="ccm-quick-page-selector">
+		<input type="text" class="ccm-input-text" name="ccm-quick-page-selector-label-'  . $key . '" id="ccm-quick-page-selector-label-'  . $key . '" value="' . $cName . '" /></span>';
+		return $html;
 	}
 	
 }

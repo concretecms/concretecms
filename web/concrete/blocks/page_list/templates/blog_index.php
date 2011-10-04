@@ -54,7 +54,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	?>
 		<div id="rss">
 			<a href="<?php echo $rssUrl; ?>" target="_blank"><?php echo t('Subscribe to RSS Feed')?></a>
-			<a href="<?php echo $rssUrl; ?>" target="_blank"><img src="<?php echo $rssIcon; ?>" width="14" height="14" alt="<?php echo t('RSS Icon')?>" title="<?php echo t('RSS Feed')?>/></a>
+			<a href="<?php echo $rssUrl; ?>" target="_blank"><img src="<?php echo $rssIcon; ?>" width="14" height="14" alt="<?php echo t('RSS Icon')?>" title="<?php echo t('RSS Feed')?>" /></a>
 		</div>
 		<link href="<?php echo $rssUrl; ?>" rel="alternate" type="application/rss+xml" title="<?php echo $rssTitle; ?>" />
 	<?php endif; ?>

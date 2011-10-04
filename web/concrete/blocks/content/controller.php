@@ -2,8 +2,6 @@
 	defined('C5_EXECUTE') or die("Access Denied.");
 	class ContentBlockController extends BlockController {
 		
-		var $pobj;
-		
 		protected $btTable = 'btContentLocal';
 		protected $btInterfaceWidth = "600";
 		protected $btInterfaceHeight = "465";
@@ -11,7 +9,7 @@
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = true;
-		protected $btCacheBlockOutputLifetime = 300;
+		protected $btCacheBlockOutputLifetime = CACHE_LIFETIME;
 		
 		public function getBlockTypeDescription() {
 			return t("HTML/WYSIWYG Editor Content.");

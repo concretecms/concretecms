@@ -4,7 +4,7 @@ Loader::model('user_attributes');
 Loader::model('attribute/categories/collection');
 class ProfileEditController extends Controller {
 
-	var $helpers = array('html', 'form', 'date');
+	public $helpers = array('html', 'form', 'date');
 	
 	public function __construct() {
 		$html = Loader::helper('html');
@@ -23,6 +23,10 @@ class ProfileEditController extends Controller {
 		$this->addHeaderItem(Loader::helper('html')->css('ccm.profile.css'));
 	}
 
+	public function save_complete() {
+		$this->set('message', t('Profile Information Saved.'));
+	}
+	
 	public function save() { 
 		$ui = $this->get('ui');
 
@@ -92,8 +96,7 @@ class ProfileEditController extends Controller {
 			foreach($aks as $uak) {
 				$uak->saveAttributeForm($ui);				
 			}
-		
-			$this->set('message', t('Profile Information Saved.'));
+			$this->redirect("/profile/edit", "save_complete");
 		} else {
 			$this->set('error', $e);
 		}

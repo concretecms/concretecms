@@ -28,6 +28,15 @@ class ConcreteDashboardSitemapHelper {
 	
 	public $html = '';
 	
+	/**
+	 * this method is called by the Loader::helper to clean up the instance of this object
+	 * resets the class scope variables
+	 * @return void
+	*/
+	public function reset() {
+		$this->html = '';
+	}
+	
 	function addOpenNode($cID) {
 		if (is_array($_SESSION['dsbSitemapNodes'])) {
 			if (in_array($cID, $_SESSION['dsbSitemapNodes'])) {
@@ -317,10 +326,10 @@ class ConcreteDashboardSitemapHelper {
 				if ($display_mode == 'explore') { 
 					$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPaging(false, true) . '</li>';
 				} else {
-					$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPaging(REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_data', true) . '</li>';
+					$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPaging(REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_data', true, array('node' => $nodeID)) . '</li>';
 				}
 			} else {
-				$drillDownAction = ($req->keywords != null) ? View::url('/dashboard/sitemap/search?cvName=' . $req->keywords . '&selectedSearchField[]=parent&numResults=' . SITEMAP_PAGES_LIMIT . '&ccm_paging_p=2&cParentAll=1&ccm_order_by=cDisplayOrder&cParentIDSearchField=' . $nodeID) : View::url('/dashboard/sitemap/explore', $nodeID);
+				$drillDownAction = ($req->keywords != null) ? View::url('/dashboard/sitemap/search?cvName=' . $req->keywords . '&selectedSearchField[]=parent&numResults=' . SITEMAP_PAGES_LIMIT . '&' . PAGING_STRING . '=2&cParentAll=1&ccm_order_by=cDisplayOrder&cParentIDSearchField=' . $nodeID) : View::url('/dashboard/sitemap/explore', $nodeID);
 				$this->html .= '<li class="ccm-sitemap-more-results">' . t('%s more to display. <a href="%s">View All</a>',  $req->total - count($req->results), $drillDownAction) . '</a></li>';
 			}
 		}

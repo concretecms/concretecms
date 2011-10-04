@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class DashboardSettingsController extends Controller {
 
-	var $helpers = array('form'); 
+	public $helpers = array('form'); 
 
 	protected function getRewriteRules() {
 		$rewriteRules = "<IfModule mod_rewrite.c>\n";
@@ -711,13 +711,14 @@ class DashboardSettingsController extends Controller {
 			array(View::url('/dashboard/settings'), t('General'), $globalSelected),
 			array(View::url('/dashboard/settings/mail'), t('Email')),
 			array(View::url('/dashboard/settings', 'set_permissions'), t('Access'), $permsSelected),
+			array(View::url('/dashboard/settings/multilingual'), t('Multilingual')),
 			array(View::url('/dashboard/settings', 'set_developer'), t('Debug'), $devSelected),
 			array(View::url('/dashboard/settings', 'manage_attribute_types'), t('Attributes'), $attrSelected)
 		);
 		$this->set('subnav', $subnav);
 	}
 	
-	protected function set_permissions($saved = false) {
+	public function set_permissions($saved = false) {
 		//IP Address Blacklist
 		Loader::model('user_banned_ip');
 		$ip_ban_enable_lock_ip_after 	= Config::get('IP_BAN_LOCK_IP_ENABLE');

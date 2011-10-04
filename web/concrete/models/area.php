@@ -23,25 +23,25 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 class Area extends Object {
 
-	var $cID, $arID, $arHandle;
-	var $c;
+	public $cID, $arID, $arHandle;
+	public $c;
 
 	/* area-specific attributes */
 
-	var $maximumBlocks = -1; // limits the number of blocks in the area
-	var $customTemplateArray = array(); // sets a custom template for all blocks in the area
-	var $firstRunBlockTypeHandle; // block type handle for the block to automatically activate on first_run
-	var $ratingThreshold = 0; // if set higher, any blocks that aren't rated high enough aren't seen (unless you have sufficient privs)
-	var $showControls = true;
-	var $attributes = array();
+	public $maximumBlocks = -1; // limits the number of blocks in the area
+	public $customTemplateArray = array(); // sets a custom template for all blocks in the area
+	public $firstRunBlockTypeHandle; // block type handle for the block to automatically activate on first_run
+	public $ratingThreshold = 0; // if set higher, any blocks that aren't rated high enough aren't seen (unless you have sufficient privs)
+	public $showControls = true;
+	public $attributes = array();
 
-	var $enclosingStart = '';
-	var $enclosingEnd = '';
+	public $enclosingStart = '';
+	public $enclosingEnd = '';
 	
 	/* run-time variables */
 
-	var $totalBlocks = 0; // the number of blocks currently rendered in the area
-	var $areaBlocksArray; // not an array actually until it's set
+	public $totalBlocks = 0; // the number of blocks currently rendered in the area
+	public $areaBlocksArray; // not an array actually until it's set
 
 	/*
 		The constructor is used primarily on pages, to make an Area. We actually use Collection::getArea() when we want to interact with a fully

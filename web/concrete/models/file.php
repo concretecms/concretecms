@@ -8,6 +8,11 @@ class File extends Object {
 	const F_ERROR_INVALID_FILE = 1;
 	const F_ERROR_FILE_NOT_FOUND = 2;
 	
+	/**
+	 * returns a file object for the given file ID
+	 * @param int $fID
+	 * @return File
+	 */
 	public function getByID($fID) {
 		$f = Cache::get('file_approved', $fID);
 		if (is_object($f)) {
@@ -111,6 +116,7 @@ class File extends Object {
 	}
 	
 	public function setPassword($pw) {
+		Events::fire('on_file_set_password', $this, $pw);
 		$db = Loader::db();
 		$db->Execute("update Files set fPassword = ? where fID = ?", array($pw, $this->getFileID()));
 		$this->fPassword = $pw;
@@ -326,6 +332,7 @@ class File extends Object {
 		$f = File::getByID($fID);
 		
 		$fv = $f->addVersion($filename, $prefix, $data);
+		Events::fire('on_file_add', $f, $fv);
 			
 		return $fv;
 	}
@@ -371,6 +378,7 @@ class File extends Object {
 			''));;
 			
 		$fv = $this->getVersion($fvID);
+		Events::fire('on_file_version_add', $fv);
 		return $fv;
 	}
 	
@@ -440,12 +448,22 @@ class File extends Object {
 	}
 	
 
+	/**
+	 * returns the most recent FileVersion object
+	 * @return FileVersion
+	 */
 	public function getRecentVersion() {
 		$db = Loader::db();
 		$fvID = $db->GetOne("select fvID from FileVersions where fID = ? order by fvID desc", array($this->fID));
 		return $this->getVersion($fvID);
 	}
 	
+	/**
+	 * returns the FileVersion object for the provided fvID
+	 * if none provided returns the approved version
+	 * @param int $fvID
+	 * @return FileVersion
+	 */
 	public function getVersion($fvID = null) {
 		if ($fvID == null) {
 			$fvID = $this->fvID; // approved version
@@ -501,7 +519,7 @@ class File extends Object {
 		if(!isset($rcID) || !is_numeric($rcID)) {
 			$rcID = 0;
 		}
-		
+		Events::fire('on_file_download', $fv, $u);
 		$db = Loader::db();
 		$db->Execute('insert into DownloadStatistics (fID, fvID, uID, rcID) values (?, ?, ?, ?)',  array( $this->fID, intval($fvID), $uID, $rcID ) );		
 	}
