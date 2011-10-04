@@ -97,6 +97,8 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		}
 		$this->set('selectedOptionValues',$selectedOptionValues);
 		$this->set('selectedOptions', $selectedOptions);
+		$this->addHeaderItem(Loader::helper('html')->javascript('jquery.ui.js'));
+		$this->addHeaderItem(Loader::helper('html')->css('jquery.ui.css'));
 	}
 	
 	public function search() {
@@ -175,7 +177,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		
 		if (is_array($value) && $this->akSelectAllowMultipleValues) {
 			foreach($value as $v) {
-				$opt = SelectAttributeTypeOption::getByValue($v);
+				$opt = SelectAttributeTypeOption::getByValue($v, $this->attributeKey);
 				if (is_object($opt)) {
 					$options[] = $opt;	
 				}
@@ -185,7 +187,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 				$value = $value[0];
 			}
 			
-			$opt = SelectAttributeTypeOption::getByValue($value);
+			$opt = SelectAttributeTypeOption::getByValue($value, $this->attributeKey);
 			if (is_object($opt)) {
 				$options[] = $opt;	
 			}
@@ -208,6 +210,15 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		$html = '';
 		foreach($list as $l) {
 			$html .= $l . '<br/>';
+		}
+		return $html;
+	}
+
+	public function getDisplaySanitizedValue() {
+		$list = $this->getSelectedOptions();
+		$html = '';
+		foreach($list as $l) {
+			$html .= $l->getSelectAttributeOptionValue() . '<br/>';
 		}
 		return $html;
 	}
@@ -236,8 +247,10 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		foreach($options as $id) {
 			if ($id > 0) {
 				$opt = SelectAttributeTypeOption::getByID($id);
-				$optionText[] = $opt->getSelectAttributeOptionValue(true);
-				$optionQuery[] = $opt->getSelectAttributeOptionValue(false);
+				if (is_object($opt)) {
+					$optionText[] = $opt->getSelectAttributeOptionValue(true);
+					$optionQuery[] = $opt->getSelectAttributeOptionValue(false);
+				}
 			}
 		}
 		if (count($optionText) == 0) {
@@ -477,9 +490,13 @@ class SelectAttributeTypeOption extends Object {
 		}
 	}
 	
-	public static function getByValue($value) {
+	public static function getByValue($value, $ak = false) {
 		$db = Loader::db();
-		$row = $db->GetRow("select ID, displayOrder, value from atSelectOptions where value = ?", array($value));
+		if (is_object($ak)) {
+			$row = $db->GetRow("select ID, displayOrder, value from atSelectOptions where value = ? and akID = ?", array($value, $ak->getAttributeKeyID()));
+		} else {
+			$row = $db->GetRow("select ID, displayOrder, value from atSelectOptions where value = ?", array($value));
+		}
 		if (isset($row['ID'])) {
 			$obj = new SelectAttributeTypeOption($row['ID'], $row['value'], $row['displayOrder']);
 			return $obj;

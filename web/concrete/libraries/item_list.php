@@ -7,12 +7,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class DatabaseItemList extends ItemList {
 
-	private $query = '';
-	private $userQuery = '';
-	private $debug = false;
-	private $filters = array();
+	protected $query = '';
+	protected $userQuery = '';
+	protected $debug = false;
+	protected $filters = array();
 	protected $sortByString = '';
 	protected $groupByString = '';  
+	protected $havingString = '';  
 	protected $autoSortColumns = array();
 	protected $userPostQuery = '';
 	
@@ -42,7 +43,7 @@ class DatabaseItemList extends ItemList {
 		$this->userQuery .= $query . ' ';
 	}
 
-	private function setupAutoSort() {
+	protected function setupAutoSort() {
 		if (count($this->autoSortColumns) > 0) {
 			$req = $this->getSearchRequest();
 			if (in_array($req[$this->queryStringSortVariable], $this->autoSortColumns)) {
@@ -51,7 +52,7 @@ class DatabaseItemList extends ItemList {
 		}
 	}
 	
-	private function executeBase() {
+	protected function executeBase() {
 		$db = Loader::db();
 		$q = $this->query . $this->userQuery . ' where 1=1 ';
 		foreach($this->filters as $f) {
@@ -63,23 +64,28 @@ class DatabaseItemList extends ItemList {
 				$q .= 'and ' . $f[1] . ' ';
 			} else {
 				if (is_array($value)) {
-					switch($comp) {
-						case '=':
-							$comp = 'in';
-							break;
-						case '!=':
-							$comp = 'not in';
-							break;
-					}
-					$q .= 'and ' . $column . ' ' . $comp . ' (';
-					for ($i = 0; $i < count($value); $i++) {
-						if ($i > 0) {
-							$q .= ',';
+					if (count($value) > 0) {
+						switch($comp) {
+							case '=':
+								$comp = 'in';
+								break;
+							case '!=':
+								$comp = 'not in';
+								break;
 						}
-						$q .= $db->quote($value[$i]);
+						$q .= 'and ' . $column . ' ' . $comp . ' (';
+						for ($i = 0; $i < count($value); $i++) {
+							if ($i > 0) {
+								$q .= ',';
+							}
+							$q .= $db->quote($value[$i]);
+						}
+						$q .= ') ';
+					} else {
+						$q .= 'and 1 = 2';
 					}
-					$q .= ') ';			
 				} else { 
+					$comp = (is_null($value) && stripos($comp, 'is') === false) ? (($comp == '!=' || $comp == '<>') ? 'IS NOT' : 'IS') : $comp;
 					$q .= 'and ' . $column . ' ' . $comp . ' ' . $db->quote($value) . ' ';
 				}
 			}
@@ -92,6 +98,10 @@ class DatabaseItemList extends ItemList {
 		if ($this->groupByString != '') {
 			$q .= 'group by ' . $this->groupByString . ' ';
 		}		
+
+		if ($this->havingString != '') {
+			$q .= 'having ' . $this->havingString . ' ';
+		}		
 		
 		return $q;
 	}
@@ -103,7 +113,7 @@ class DatabaseItemList extends ItemList {
 	}
 	
 	protected function setupAttributeSort() {
-		if (method_exists($this->attributeClass, 'getList')) {
+		if (is_callable(array($this->attributeClass, 'getList'))) {
 			$l = call_user_func(array($this->attributeClass, 'getList'));
 			foreach($l as $ak) {
 				$this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();
@@ -172,6 +182,14 @@ class DatabaseItemList extends ItemList {
 		}
 		$this->groupByString = $key;
 	}	
+
+	public function having($column, $value, $comparison = '=') {
+		if ($column == false) {
+			$this->havingString = $value;
+		} else {
+			$this->havingString = $column . ' ' . $comparison . ' ' . $value;
+		}
+	}
 	
 	public function getSortByURL($column, $dir = 'asc', $baseURL = false, $additionalVars = array()) {
 		if ($column instanceof AttributeKey) {
@@ -212,7 +230,7 @@ class ItemList {
 	protected $start = 0;
 	protected $sortBy;
 	protected $sortByDirection;
-	protected $queryStringPagingVariable = 'ccm_paging_p';
+	protected $queryStringPagingVariable = PAGING_STRING;
 	protected $queryStringSortVariable = 'ccm_order_by';
 	protected $queryStringSortDirectionVariable = 'ccm_order_dir';
 	protected $enableStickySearchRequest = false;
@@ -224,6 +242,18 @@ class ItemList {
 			$this->stickySearchRequestNameSpace = $namespace;
 		}
 		$this->enableStickySearchRequest = true;
+	}
+	
+	public function getQueryStringPagingVariable() {
+		return $this->queryStringPagingVariable;
+	}
+
+	public function getQueryStringSortVariable() {
+		return $this->queryStringSortVariable;
+	}
+
+	public function getQueryStringSortDirectionVariable() {
+		return $this->queryStringSortDirectionVariable;
 	}
 	
 	public function resetSearchRequest($namespace = '') {
@@ -297,7 +327,7 @@ class ItemList {
 		return array_slice($this->items, $offset, $itemsToGet);
 	}
 	
-	private function setCurrentPage($page = false) {
+	protected function setCurrentPage($page = false) {
 		$this->currentPage = $page;
 		if ($page == false) {
 			$pagination = Loader::helper('pagination');
@@ -314,7 +344,11 @@ class ItemList {
 			return false;
 		}
 		$summary = $this->getSummary();
-		$html = '<div class="ccm-paging-top">'. t('Viewing <b>%s</b> to <b>%s</b> (<b>%s</b> Total)', $summary->currentStart, "<span id=\"pagingPageResults\">" . $summary->currentEnd . "</span>", "<span id=\"pagingTotalResults\">" . $this->total . "</span>") . ( $right_content != '' ? '<span class="ccm-paging-top-content">'. $right_content .'</span>' : '' ) .'</div>';
+		if ($summary->currentEnd == -1) {
+			$html = '<div class="ccm-paging-top">'. t('Viewing <b>%s</b> to <b>%s</b> (<b>%s</b> Total)', $summary->currentStart, "<span id=\"pagingPageResults\">" . $summary->total . "</span>", "<span id=\"pagingTotalResults\">" . $this->total . "</span>") . ( $right_content != '' ? '<span class="ccm-paging-top-content">'. $right_content .'</span>' : '' ) .'</div>';
+		} else {
+			$html = '<div class="ccm-paging-top">'. t('Viewing <b>%s</b> to <b>%s</b> (<b>%s</b> Total)', $summary->currentStart, "<span id=\"pagingPageResults\">" . $summary->currentEnd . "</span>", "<span id=\"pagingTotalResults\">" . $this->total . "</span>") . ( $right_content != '' ? '<span class="ccm-paging-top-content">'. $right_content .'</span>' : '' ) .'</div>';
+		}
 		print $html;
 	}
 	
@@ -335,7 +369,7 @@ class ItemList {
 		$uh = Loader::helper('url');
 		
 		// we switch it up if this column is the currently active column and the direction is currently the case
-		if ($_REQUEST[$this->queryStringSortVariable] == $column && $_REQUEST[$this->queryStringSortDirectionVariable] == $dir) {
+		if ($this->sortBy == $column && $this->sortByDirection == $dir) {
 			$dir = ($dir == 'asc') ? 'desc' : 'asc';
 		}
 		$args = array(
@@ -439,8 +473,12 @@ class ItemList {
 	 */
 	public function sortBy($column, $direction = 'asc') {
 		$this->sortBy = $column;
-		$this->sortByDirection = $direction;
-	} 
+		if (in_array($direction, array('asc','desc'))) {
+			$this->sortByDirection = $direction;
+		} else {
+			$this->sortByDirection = 'asc';
+		}
+	}
 
 	/** 
 	 * Sets up a column to sort by
@@ -460,7 +498,7 @@ class DatabaseItemListColumn {
 
 	public function getColumnValue($obj) {
 		if (is_array($this->callback)) {
-			return call_user_func_array($this->callback, array($obj));
+			return call_user_func($this->callback, $obj);
 		} else {
 			return call_user_func(array($obj, $this->callback));
 		}
@@ -529,7 +567,7 @@ class DatabaseItemListColumnSet {
 	}
 	public function getColumnByKey($key) {
 		if (substr($key, 0, 3) == 'ak_') {
-			$ak = call_user_func_array(array($this->attributeClass, 'getByHandle'), array(substr($key, 3)));
+			$ak = call_user_func(array($this->attributeClass, 'getByHandle'), substr($key, 3));
 			$col = new DatabaseItemListAttributeKeyColumn($ak);
 			return $col;
 		} else {

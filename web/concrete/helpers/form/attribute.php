@@ -4,6 +4,10 @@ class FormAttributeHelper {
 	
 	private $obj;
 	
+	public function reset() {
+		unset($this->obj);
+	}
+	
 	public function setAttributeObject($obj) {
 		$this->obj = $obj;
 	}
@@ -21,7 +25,7 @@ class FormAttributeHelper {
 					$class = $oclass . 'AttributeKey';
 					break;
 			}
-			$obj = call_user_func_array(array($class, 'getByHandle'), array($key));
+			$obj = call_user_func(array($class, 'getByHandle'), $key);
 		}
 		
 		if (!is_object($obj)) {

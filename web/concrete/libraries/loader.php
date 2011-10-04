@@ -47,7 +47,7 @@
 		 * Loads a model from either an application, the site, or the core Concrete directory
 		 */
 		public function model($mod, $pkgHandle = null) {
-			
+
 			if (file_exists(DIR_MODELS . '/' . $mod . '.php')) {
 				require_once(DIR_MODELS . '/' . $mod . '.php');
 				return;
@@ -117,17 +117,30 @@
 			}
 		}
 
-		public function tool($file, $args = null) {
-			if (is_array($args)) {
-				extract($args);
-			}
-			if (file_exists(DIR_FILES_TOOLS . '/' . $file . '.php')) {
+		 /**
+		 * Loads a tool file from c5 or site
+		 * first checks if its in root/tools. 
+		 * If it isn't and pkgHandle is defined it checks in root/packages/pkghandle
+		 * If it isn't there and pkgHandle is defined it checks in root/concrete/packages/pkghandle
+		 * Finally it checks if its in root/concrete/tools
+		 */
+		public function tool($file, $args = null, $pkgHandle= null) {
+		   if (is_array($args)) {
+			   extract($args);
+		   }
+		   if (file_exists(DIR_FILES_TOOLS . '/' . $file . '.php')) {
 				include(DIR_FILES_TOOLS . '/' . $file . '.php');
-			} else if (file_exists(DIR_FILES_TOOLS_REQUIRED . '/' . $file . '.php')) {
+		   } else if($pkgHandle){
+			   if(file_exists(DIR_PACKAGES . '/' .$pkgHandle.'/'.DIRNAME_TOOLS.'/'. $file . '.php')){
+				   include(DIR_PACKAGES . '/' .$pkgHandle.'/'.DIRNAME_TOOLS.'/'. $file . '.php');
+			   }else{
+				   include(DIR_PACKAGES_CORE . '/' .$pkgHandle.'/'.DIRNAME_TOOLS.'/'. $file . '.php');
+			   }
+		   } else if(file_exists(DIR_FILES_TOOLS_REQUIRED . '/' . $file . '.php')) {
 				include(DIR_FILES_TOOLS_REQUIRED . '/' . $file . '.php');
 			}
 		}
-
+		
 		/** 
 		 * Loads a block's controller/class into memory. 
 		 * <code>
@@ -205,6 +218,7 @@
 						ADOdb_Active_Record::SetDatabaseAdapter($_dba);
 						$_db = new Database();
 						$_db->setDatabaseObject($_dba);
+						//$_db->setDebug(true);
 						//$_db->setLogging(true);
 					} else if (defined('DB_SERVER')) {
 						$v = View::getInstance();
@@ -222,11 +236,14 @@
 		 * Loads a helper file. If the same helper file is contained in both the core concrete directory and the site's directory, it will load the site's first, which could then extend the core.
 		 */
 		public function helper($file, $pkgHandle = false) {
-			// loads and instantiates the object
+		
+			static $instances = array();
+			$class = false;		
+			
 			if ($pkgHandle != false) {
+				$class = Object::camelcase($pkgHandle . '_' . $file) . "Helper";
 				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
 				require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_HELPERS . '/' . $file . '.php');
-				$class = Object::camelcase($pkgHandle . '_' . $file) . "Helper";
 				if (!class_exists($class, false)) {
 					$class = Object::camelcase($file) . "Helper";
 				}
@@ -234,21 +251,41 @@
 				// first we check if there's an object of the SAME kind in the core. If so, then we load the core first, then, we load the second one (site)
 				// and we hope the second one EXTENDS the first
 				if (file_exists(DIR_HELPERS_CORE . '/' . $file . '.php')) {
-					require_once(DIR_HELPERS_CORE . '/' . $file . '.php');
-					require_once(DIR_HELPERS . '/' . $file . '.php');
 					$class = "Site" . Object::camelcase($file) . "Helper";
 				} else {
-					require_once(DIR_HELPERS . '/' . $file . '.php');
 					$class = Object::camelcase($file) . "Helper";
 				}
 			} else {
-				require_once(DIR_HELPERS_CORE . '/' . $file . '.php');
-				$class = Object::camelcase($file) . "Helper";
-				
+				$class = Object::camelcase($file) . "Helper";					
 			}
 			
-			$cl = new $class;
-			return $cl;
+			if (array_key_exists($class, $instances)) {
+            	$instance = $instances[$class];
+            } else {
+				if ($pkgHandle != false) {
+					// already handled by code above.
+				} else if (file_exists(DIR_HELPERS . '/' . $file . '.php')) {
+					// first we check if there's an object of the SAME kind in the core. If so, then we load the core first, then, we load the second one (site)
+					// and we hope the second one EXTENDS the first
+					if (file_exists(DIR_HELPERS_CORE . '/' . $file . '.php')) {
+						require_once(DIR_HELPERS_CORE . '/' . $file . '.php');
+						require_once(DIR_HELPERS . '/' . $file . '.php');
+					} else {
+						require_once(DIR_HELPERS . '/' . $file . '.php');
+					}
+				} else {
+					require_once(DIR_HELPERS_CORE . '/' . $file . '.php');
+				}
+
+	            $instances[$class] = new $class();
+    	        $instance = $instances[$class];
+			}
+			
+			if(method_exists($instance,'reset')) {
+				$instance->reset();
+			}
+			
+			return $instance;
 		}
 		
 		/**
@@ -382,7 +419,7 @@
 					$file = $c->getCollectionFilename();
 					if ($file != '') {
 						// strip off PHP suffix for the $path variable, which needs it gone
-						if (strpos($file, FILENAME_COLLECTION_VIEW) !== false) {
+						if (strpos($file, '/' . FILENAME_COLLECTION_VIEW) !== false) {
 							$path = substr($file, 0, strpos($file, '/'. FILENAME_COLLECTION_VIEW));
 						} else {
 							$path = substr($file, 0, strpos($file, '.php'));
@@ -465,7 +502,6 @@
 				$controller->setCollectionObject($c);
 			}
 			
-			$controller->setupRestrictedMethods();
 			return $controller;
 		}
 

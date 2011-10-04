@@ -44,11 +44,11 @@ class UserAttributeKey extends AttributeKey {
 	public function getAttributeValue($avID, $method = 'getValue') {
 		$av = UserAttributeValue::getByID($avID);
 		$av->setAttributeKey($this);
-		return call_user_func_array(array($av, $method), array());
+		return $av->{$method}();
 	}
 	
 	public static function getByID($akID) {
-		$ak = Cache::get('attribute_key', $akID);
+		$ak = Cache::get('user_attribute_key', $akID);
 		if (is_object($ak)) {
 			return $ak;
 		}
@@ -56,7 +56,7 @@ class UserAttributeKey extends AttributeKey {
 		$ak = new UserAttributeKey();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
-			Cache::set('attribute_key', $akID, $ak);
+			Cache::set('user_attribute_key', $akID, $ak);
 			return $ak;	
 		}
 	}
@@ -110,6 +110,10 @@ class UserAttributeKey extends AttributeKey {
 		$db = Loader::db();
 		$this->refreshCache();
 		$db->Execute('update UserAttributeKeys set uakIsActive = 0 where akID = ?', array($this->akID));
+	}
+
+	public function refreshCache() {
+		Cache::delete('user_attribute_key', $this->getAttributeKeyID());
 	}
 	
 	public static function getList() {

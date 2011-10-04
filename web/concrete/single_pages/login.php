@@ -163,19 +163,30 @@
 	<input type="password" name="uPassword" id="uPassword" class="ccm-input-text">
 	</div>
 
-	<hr />
 	
 	<? if (OpenIDAuth::isEnabled()) { ?>
 		<div>
 		<label for="uOpenID"><?=t('Or login using an OpenID')?>:</label><br/>
 		<input type="text" name="uOpenID" id="uOpenID" <?= (isset($uOpenID)?'value="'.$uOpenID.'"':'');?> class="ccm-input-openid">
 		</div>
+
 	<? } ?>
-	<?=$form->checkbox('uMaintainLogin', 1)?> <label for="uMaintainLogin"><?=t('Remember Me')?></label>
+
+	<? if (isset($locales) && is_array($locales) && count($locales) > 0) { ?>
+		<div>
+		<br/>
+		<label for="USER_LOCALE"><?=t('Language')?></label><br/>
+		<?=$form->select('USER_LOCALE', $locales)?>
+		</div>
+		<br/>
+	<? } ?>
+
+	<div style="float: left; width: 120px; padding-top: 12px"><?=$form->checkbox('uMaintainLogin', 1)?> <label for="uMaintainLogin"><?=t('Remember Me')?></label></div>
 	
 	<div class="ccm-button">
 	<?=$form->submit('submit', t('Sign In') . ' &gt;')?>
 	</div>
+	<div class="ccm-spacer">&nbsp;</div>
 	<? $rcID = isset($_REQUEST['rcID']) ? preg_replace('/<|>/', '', $_REQUEST['rcID']) : $rcID; ?>
 	<input type="hidden" name="rcID" value="<?=$rcID?>" />
 </form>

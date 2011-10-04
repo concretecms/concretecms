@@ -71,7 +71,12 @@ INSERT INTO AttributeKeys VALUES(1,'meta_title','Meta Title',1,0,0,0,1,1,1,0)
  ,(8,'exclude_sitemapxml','Exclude From sitemap.xml',1,0,0,0,1,3,1,0)
  ,(9,'width','Width',1,0,1,0,0,6,3,0)
  ,(10,'height','Height',1,0,1,0,0,6,3,0)
- ,(11,'tags','Tags',0,0,0,0,1,8,1,0);
+ ,(11,'tags','Tags',0,0,0,0,1,8,1,0)
+ ,(12,'profile_private_messages_enabled','I would like to receive private messages.',1,0,0,0,1,3,2,0)
+ ,(13,'profile_private_messages_notification_enabled','Send me email notifications when I receive a private message.',1,0,0,0,1,3,2,0);
+
+INSERT INTO UserAttributeKeys VALUES (12,0,0,1,0,1,0,0,1)
+ ,(13,0,0,1,0,1,0,1,1);
 
 INSERT INTO AttributeTypeCategories VALUES(1,1)
  ,(1,2)
@@ -169,7 +174,7 @@ INSERT INTO BlockTypes VALUES(1,'content','Content','HTML/WYSIWYG Editor Content
  ,(7,'file','File','Link to files stored in the asset library.',1,0,0,0,300,250,0)
  ,(8,'image','Image','Adds images and onstates from the library to pages.',1,0,0,0,300,440,0)
  ,(9,'flash_content','Flash Content','Embeds SWF files, including flash detection.',1,0,0,0,300,240,0)
- ,(10,'guestbook','Guestbook','Adds blog-style comments (a guestbook) to your page.',1,0,1,0,300,260,0)
+ ,(10,'guestbook','Guestbook/Comments','Adds blog-style comments (a guestbook) to your page.',1,0,1,0,300,260,0)
  ,(11,'slideshow','Slideshow','Display a running loop of images.',1,0,0,0,550,400,0)
  ,(12,'search','Search','Add a search box to your site.',1,0,0,0,400,170,0)
  ,(13,'google_map','Google Map','Enter an address and a Google Map of that location will be placed in your page.',1,0,0,0,400,220,0)
@@ -601,10 +606,11 @@ INSERT INTO CollectionVersions VALUES(2,1,NULL,NULL,NULL,NOW(),NOW(),'Initial Ve
  ,(72,4,'My First Blog Post','my-first-blog-post','',NOW(),NOW(),'New Version 4',1,0,1,1,NULL)
  ,(73,4,'Adding a New Post','adding-a-new-post','',NOW(),NOW(),'New Version 4',1,0,1,1,NULL)
  ,(36,2,'Scrapbook','scrapbook','Share content across your site.',NOW(),NOW(),'New Version 2',0,1,1,NULL,NULL)
- ,(75,1,'Composer','composer','Write for your site',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(75,1,'Composer Beta','composer','Write for your site.',NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(76,1,'Write','write',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
  ,(77,1,'Drafts','drafts',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
- ,(78,1,'Composer','composer',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL);
+ ,(78,1,'Composer','composer',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL)
+ ,(79,1,'Multilingual Settings','multilingual',NULL,NOW(),NOW(),'Initial Version',1,0,1,NULL,NULL);
 
 INSERT INTO Collections VALUES(1,NOW(),NOW(),'home')
  ,(2,NOW(),NOW(),NULL)
@@ -672,9 +678,8 @@ INSERT INTO Collections VALUES(1,NOW(),NOW(),'home')
  ,(75,NOW(),NOW(),'composer')
  ,(76,NOW(),NOW(),'write')
  ,(77,NOW(),NOW(),'drafts')
- ,(78,NOW(),NOW(),'composer');
-
-INSERT INTO Config VALUES('SITE',NOW(),'{[CCM:SITE]}',0,0);
+ ,(78,NOW(),NOW(),'composer')
+ ,(79,NOW(),NOW(),'multilingual');
 
 INSERT INTO DashboardHomepage VALUES(1,'activity','Site Activity',0,0)
  ,(2,'reports','Statistics',0,0)
@@ -718,11 +723,11 @@ INSERT INTO FileVersionLog VALUES(1,1,1,5,9)
  ,(19,5,1,3,0)
  ,(20,5,1,4,0);
 
-INSERT INTO FileVersions VALUES(1,1,'inneroptics_dot_net_aspens.jpg','371285369023',1,108199,'inneroptics_dot_net_aspens.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
- ,(2,1,'inneroptics_dot_net_canyonlands.jpg','911285369025',1,54531,'inneroptics_dot_net_canyonlands.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
- ,(3,1,'inneroptics_dot_net_new_zealand_sheep.jpg','851285369025',1,80735,'inneroptics_dot_net_new_zealand_sheep.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
- ,(4,1,'inneroptics_dot_net_portland.jpg','711285369026',1,55737,'inneroptics_dot_net_portland.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
- ,(5,1,'inneroptics_dot_net_starfish.jpg','701285369026',1,88621,'inneroptics_dot_net_starfish.jpg','','\n\n',1,NOW(),1,1,NOW(),1,1,0,'jpg',1);
+INSERT INTO FileVersions VALUES(1,1,'inneroptics_dot_net_aspens.jpg','371285369023',1,108199,'inneroptics_dot_net_aspens.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(2,1,'inneroptics_dot_net_canyonlands.jpg','911285369025',1,54531,'inneroptics_dot_net_canyonlands.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(3,1,'inneroptics_dot_net_new_zealand_sheep.jpg','851285369025',1,80735,'inneroptics_dot_net_new_zealand_sheep.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(4,1,'inneroptics_dot_net_portland.jpg','711285369026',1,55737,'inneroptics_dot_net_portland.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1)
+ ,(5,1,'inneroptics_dot_net_starfish.jpg','701285369026',1,88621,'inneroptics_dot_net_starfish.jpg','','',1,NOW(),1,1,NOW(),1,1,0,'jpg',1);
 
 INSERT INTO Files VALUES(1,NOW(),1,0,2,0,NULL)
  ,(2,NOW(),1,0,2,0,NULL)
@@ -800,7 +805,8 @@ INSERT INTO PagePaths VALUES(1,5,'/login','1')
  ,(69,75,'/dashboard/composer','1')
  ,(70,76,'/dashboard/composer/write','1')
  ,(71,77,'/dashboard/composer/drafts','1')
- ,(72,78,'/dashboard/pages/types/composer','1');
+ ,(72,78,'/dashboard/pages/types/composer','1')
+ ,(73,79,'/dashboard/settings/multilingual','1');
 
  
 INSERT INTO PagePermissions VALUES(5,1,0,'r',NULL,NULL)
@@ -821,9 +827,9 @@ INSERT INTO PageSearchIndex VALUES(1,'Sidebar\r\n Everything about concrete5 is 
  ,(72,' This is the intro of your blog post. If your post is short, just stick it all in here. Everything in the \"Main\" block area will be displayed from the main&nbsp;blog list page.   If you tend to write long blog posts that go on, and on, and on - you should consider keeping that content in this \"Blog Post More\" block area. This area only shows up to visitors who click on the blog post\'s title or more link to read the full post.&nbsp; \r\n Keep your long posts in here and just a short synopsis up top if you\'d like a nice scannable blog.  ','My First Blog Post','','/blog/my-first-blog-post',NOW(),NOW(),NULL)
  ,(73,' In-context editing is pretty cool cool!   By now you\'ve probably watched through the basics at concrete5.org, so you\'re getting a good sense of how you can add pages around your site. To make a new blog post... \r\n\r\nGoto the blog list page, this is the holder page for all your posts in the site tree.&nbsp;\r\nClick Add Page, on the upper left.&nbsp;\r\nPick Blog Entry as a page type.&nbsp;\r\nGive it a name and hit return, or click the add page button at the bottom of the drop down. (You don\'t need to worry about all these other fields yet, you can always change them later through Edit Page &gt; Properties\r\nYou\'re now on your new blog post page, in edit mode. Start making blocks and get things looking right.&nbsp;\r\nExit Edit Mode and Publish your changes.&nbsp;\r\n ','Adding a New Post','','/blog/adding-a-new-post',NOW(),NOW(),NULL);
 
-INSERT INTO PageThemes VALUES(1,'default','Plain Yogurt\n','Plain Yogurt is Concrete\'s default theme.',0)
- ,(2,'greensalad','Green Salad Theme\n','This is Concrete\'s Green Salad site theme.',0)
- ,(3,'dark_chocolate','Dark Chocolate\n','Dark Chocolate is Concrete\'s default theme in black.',0);
+INSERT INTO PageThemes VALUES(1,'default','Plain Yogurt\n','Plain Yogurt is concrete5\'s default theme.',0)
+ ,(2,'greensalad','Green Salad Theme\n','This is concrete5\'s Green Salad site theme.',0)
+ ,(3,'dark_chocolate','Dark Chocolate\n','Dark Chocolate is concrete5\'s default theme in black.',0);
 
 INSERT INTO PageTypeAttributes VALUES(1,1)
  ,(1,2)
@@ -912,7 +918,8 @@ INSERT INTO Pages VALUES(1,1,'0',1,0,NULL,NULL,NOW(),NULL,NOW(),NULL,NULL,1,1,'O
  ,(75,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/composer/view.php',0,NULL,0,2,0,15,0,0,-1,'0',0)
  ,(76,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/composer/write.php',0,NULL,0,0,0,75,0,0,-1,'0',0)
  ,(77,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/composer/drafts.php',0,NULL,0,0,1,75,0,0,-1,'0',0)
- ,(78,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/pages/types/composer.php',0,NULL,0,0,1,43,0,0,-1,'0',0);
+ ,(78,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/pages/types/composer.php',0,NULL,0,0,1,43,0,0,-1,'0',0)
+ ,(79,0,'0',1,0,NULL,NULL,NULL,NULL,NOW(),NULL,NULL,1,15,'PARENT','/dashboard/settings/multilingual/view.php',0,NULL,0,0,1,52,0,0,-1,'0',0);
 
 
 INSERT INTO TaskPermissions VALUES(1,'access_task_permissions','Change Task Permissions','',0)
@@ -923,7 +930,8 @@ INSERT INTO TaskPermissions VALUES(1,'access_task_permissions','Change Task Perm
 ,(6,'backup','Perform Full Database Backups','',0)
 ,(7,'sudo','Sign in as User','',0)
 ,(8,'uninstall_packages','Uninstall Packages','',0)
-,(9,'install_packages','Install Packages and Connect to the Marketplace','',0);
+,(9,'install_packages','Install Packages and Connect to the Marketplace','',0)
+,(10,'delete_user','Delete Users','',0);
 
 INSERT INTO TaskPermissionUserGroups VALUES(1,3,0,1)
 ,(2,3,0,1)
@@ -932,7 +940,8 @@ INSERT INTO TaskPermissionUserGroups VALUES(1,3,0,1)
 ,(5,3,0,1)
 ,(6,3,0,1)
 ,(8,3,0,1)
-,(9,3,0,1);
+,(9,3,0,1)
+,(10,3,0,1);
 
 INSERT INTO atBoolean VALUES(14,0)
  ,(18,1)
@@ -942,6 +951,9 @@ INSERT INTO atBoolean VALUES(14,0)
  ,(35,0)
  ,(39,0)
  ,(44,0);
+
+INSERT INTO atBooleanSettings VALUES(12,1)
+ ,(13,1);
 
 INSERT INTO atDefault VALUES(11,'')
  ,(12,'')
@@ -993,11 +1005,11 @@ INSERT INTO btContentImage VALUES(8,4,0,0,0,'','')
  ,(13,1,0,0,0,'','');
 
 INSERT INTO btContentLocal VALUES(4,'<h2>Sidebar</h2>\r\n<p>Everything about concrete5 is completely customizable through the CMS. This is a separate area from the main content on the homepage. You can&nbsp;<a title=\"Move blocks in concrete5\" href=\"http://www.concrete5.org/documentation/general-topics/blocks-and-areas\" target=\"_blank\">drag and drop blocks</a>&nbsp;like this around your layout.</p>\r\n<p>&nbsp;</p>')
- ,(5,'<h1>Welcome to concrete5 - an Open Source CMS</h1>\r\n<p>Content Management is easy with concrete5\'s in-context editing. Just&nbsp;<a title=\"Login\" href=\"/index.php/login\">login</a>&nbsp;and you can add and change things as you browse your site.&nbsp;</p>\r\n<p>Here\'s some videos you can watch learn how to:</p>\r\n<ul>\r\n<li><a title=\"In-context editing CMS\" href=\"http://www.concrete5.org/documentation/general-topics/in-context-editing/\">Edit</a>&nbsp;this page.</li>\r\n<li>Add a&nbsp;<a title=\"Add a page in concrete5\" href=\"http://www.concrete5.org/documentation/general-topics/add-a-page/\" target=\"_blank\">new page</a>.</li>\r\n<li>Add some basic functionality, like&nbsp;<a title=\"Add a simple form in concrete5\" href=\"http://www.concrete5.org/documentation/general-topics/add_a_form\" target=\"_blank\">a Form</a>.</li>\r\n<li><a title=\"add-on marketplace for concrete5\" href=\"http://www.concrete5.org/marketplace/how_to_install_add_ons_and_themes_/\" target=\"_blank\">Finding &amp; adding</a>&nbsp;more functionality and themes.</li>\r\n</ul>\r\n<p>We\'ve taken the liberty to build out the rest of this site with some sample content that will help you learn concrete5. Wander around a bit, or just goto the&nbsp;<a title=\"Sitemap\" href=\"/index.php/dashboard/sitemap/full/\">Dashboard &gt; Sitemap</a>&nbsp;and delete the parts you don\'t want quickly.</p>\r\n<p>&nbsp;</p>')
+ ,(5,'<h1>Welcome to concrete5 - an Open Source CMS</h1>\r\n<p>Content Management is easy with concrete5\'s in-context editing. Just&nbsp;<a title=\"Login\" href=\"{CCM:BASE_URL}/index.php/login\">login</a>&nbsp;and you can add and change things as you browse your site.&nbsp;</p>\r\n<p>Here\'s some videos you can watch learn how to:</p>\r\n<ul>\r\n<li><a title=\"In-context editing CMS\" href=\"http://www.concrete5.org/documentation/general-topics/in-context-editing/\">Edit</a>&nbsp;this page.</li>\r\n<li>Add a&nbsp;<a title=\"Add a page in concrete5\" href=\"http://www.concrete5.org/documentation/general-topics/add-a-page/\" target=\"_blank\">new page</a>.</li>\r\n<li>Add some basic functionality, like&nbsp;<a title=\"Add a simple form in concrete5\" href=\"http://www.concrete5.org/documentation/general-topics/add_a_form\" target=\"_blank\">a Form</a>.</li>\r\n<li><a title=\"add-on marketplace for concrete5\" href=\"http://www.concrete5.org/marketplace/how_to_install_add_ons_and_themes_/\" target=\"_blank\">Finding &amp; adding</a>&nbsp;more functionality and themes.</li>\r\n</ul>\r\n<p>We\'ve taken the liberty to build out the rest of this site with some sample content that will help you learn concrete5. Wander around a bit, or just goto the&nbsp;<a title=\"Sitemap\" href=\"{CCM:BASE_URL}/index.php/dashboard/sitemap/full/\">Dashboard &gt; Sitemap</a>&nbsp;and delete the parts you don\'t want quickly.</p>\r\n<p>&nbsp;</p>')
  ,(15,'<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel tellus lectus, scelerisque faucibus nunc. Curabitur lacus nibh, eleifend vel porttitor in, bibendum quis tortor. Curabitur eros ligula, scelerisque ac ultricies a, dictum ac tellus. Mauris id tellus tortor. Proin a sollicitudin libero. Nam pellentesque commodo magna, nec mattis elit pulvinar id. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris orci dui, adipiscing sit amet bibendum vel, sodales sed purus. Donec fringilla odio vel enim cursus luctus quis semper leo. Donec rhoncus odio ac elit dignissim lobortis.</p>\r\n<p>&nbsp;</p>')
  ,(16,'<p>Duis dapibus nibh eu arcu viverra tempor. Fusce auctor sapien eu mauris malesuada vel euismod orci vulputate. Curabitur at orci id quam mollis rhoncus vitae volutpat urna. Nam eget sapien at neque mollis varius sed vitae ipsum. Vestibulum commodo, eros sit amet sagittis cursus, massa mi lacinia lorem, vel pellentesque sapien purus eu lacus. Pellentesque mollis gravida enim. Fusce mi odio, elementum ut fermentum a, pharetra in quam. Mauris sed vestibulum sapien. In sit amet faucibus diam. Proin lectus quam, sodales ut posuere non, viverra a nibh. Aenean sollicitudin, diam eu elementum rutrum, nisi ante pretium mi, ut tristique ante tellus non ligula. Nam diam turpis, viverra non volutpat vel, scelerisque vel neque. In pretium, libero et vulputate varius, libero nulla blandit ligula, tincidunt egestas leo mi eu nisi. Mauris nunc augue, cursus vel viverra non, feugiat in enim. In eget dignissim est. Donec dictum leo in libero tincidunt sollicitudin hendrerit elit placerat. Aliquam vitae nunc diam, non vulputate nibh. Quisque tincidunt, dui ut rutrum feugiat, libero lorem interdum sapien, eget pharetra mi ligula ut lectus. Pellentesque consequat mollis est viverra malesuada.</p>\r\n<p>Curabitur eget quam vitae tellus blandit congue a sed lectus. Nunc ultrices lacus dignissim felis venenatis varius placerat eros dapibus. Nulla facilisi. Vivamus sodales accumsan convallis. Mauris congue tempus feugiat. Proin elementum fringilla leo, sit amet pretium nisl imperdiet interdum. Suspendisse volutpat cursus eros, nec porta est laoreet at. Sed porttitor suscipit augue, eu molestie justo faucibus et. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus faucibus mi vel tortor consequat eget rutrum nisl ultrices. Praesent et lacinia augue. Phasellus id est id enim ultricies placerat. Etiam porta enim eu enim convallis sed eleifend metus faucibus. In ac lobortis eros. Pellentesque felis turpis, cursus sed imperdiet non, viverra vel diam. Donec vel orci mi, placerat egestas purus. Vestibulum vel diam id magna suscipit accumsan. Quisque risus felis, sagittis non iaculis id, tempus in arcu. Donec tempus metus neque. Proin malesuada dui a tortor pretium tincidunt quis at ligula.</p>\r\n<p>Nam laoreet faucibus purus ac pretium. Aenean euismod diam adipiscing erat semper quis sodales elit tristique. Vestibulum vel tellus eu lorem porttitor aliquet. Vestibulum bibendum viverra cursus. Aenean sit amet magna odio, convallis imperdiet metus. Duis condimentum posuere vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed vitae elit ut sapien vestibulum tempor sit amet ac tortor. Donec ligula nulla, varius id ornare id, vestibulum non felis. Nullam neque erat, tristique a eleifend pellentesque, eleifend sit amet ipsum. In eget urna nibh. Phasellus scelerisque, magna ac feugiat ultricies, risus dolor volutpat quam, in rutrum nunc ante id sem. Fusce interdum scelerisque fermentum.</p>\r\n<p>&nbsp;</p>')
  ,(21,'<h1>Site Map</h1>')
- ,(24,'<h1>Learn More</h1>\r\n<p>Visit&nbsp;<a title=\"concrete5 Content Management System\" href=\"{CCM:BASE_URL}.org\" target=\"_blank\">concrete5.org</a>&nbsp;to learn more from the&nbsp;<a title=\"open source content management system\" href=\"{CCM:BASE_URL}.org/community\" target=\"_blank\">community</a>&nbsp;and the&nbsp;<a title=\"concrete5 documentation\" href=\"http://www.concrete5.org/documentation/\" target=\"_blank\">documentation</a>. You can also browse our&nbsp;<a title=\"concrete5 marketplace\" href=\"http://www.concrete5.org/marketplace/\" target=\"_blank\">marketplace</a>&nbsp;for more&nbsp;<a title=\"Add-ons for concrete5\" href=\"http://www.concrete5.org/marketplace/addons/\" target=\"_blank\">add-ons</a>&nbsp;and&nbsp;<a title=\"Themes for concrete5\" href=\"http://www.concrete5.org/marketplace/themes/\" target=\"_blank\">themes</a>&nbsp;to quickly build the site you really need.&nbsp;</p>\r\n<p>&nbsp;</p>')
+ ,(24,'<h1>Learn More</h1>\r\n<p>Visit&nbsp;<a title=\"concrete5 Content Management System\" href=\"http://www.concrete5.org\" target=\"_blank\">concrete5.org</a>&nbsp;to learn more from the&nbsp;<a title=\"open source content management system\" href=\"http://www.concrete5.org/community\" target=\"_blank\">community</a>&nbsp;and the&nbsp;<a title=\"concrete5 documentation\" href=\"http://www.concrete5.org/documentation/\" target=\"_blank\">documentation</a>. You can also browse our&nbsp;<a title=\"concrete5 marketplace\" href=\"http://www.concrete5.org/marketplace/\" target=\"_blank\">marketplace</a>&nbsp;for more&nbsp;<a title=\"Add-ons for concrete5\" href=\"http://www.concrete5.org/marketplace/addons/\" target=\"_blank\">add-ons</a>&nbsp;and&nbsp;<a title=\"Themes for concrete5\" href=\"http://www.concrete5.org/marketplace/themes/\" target=\"_blank\">themes</a>&nbsp;to quickly build the site you really need.&nbsp;</p>\r\n<p>&nbsp;</p>')
  ,(25,'<h2>Common Tips</h2>\r\n<p>Want to&nbsp;<a title=\"change your site name in concrete5\" href=\"http://www.concrete5.org/help/faq/how_do_i_get_rid_of_my_sitename_/\" target=\"_blank\">change your site name</a>&nbsp;up top?</p>\r\n<p>Need to sell stuff on your website? Check out our&nbsp;<a title=\"eCommerce and concrete5\" href=\"http://www.concrete5.org/marketplace/addons/ecommerce/\" target=\"_blank\">eCommerce add-on</a>.</p>\r\n<p>Help,&nbsp;<a title=\"Reset your admin password in concrete5\" href=\"http://www.concrete5.org/help/faq/i-can-t-login/\" target=\"_blank\">I can\'t login</a>&nbsp;anymore!</p>\r\n<p>&nbsp;</p>')
  ,(26,'<h1>Say Hi!</h1>\r\n<p>Here\'s a simple guestbook you can add to any page on your website to allow comments. Why not put the guestbook block in edit mode and play with the options?</p>\r\n<p>We also have a fully featured&nbsp;<a title=\"Forums for concrete5\" href=\"http://www.concrete5.org/marketplace/addons/discussion/\" target=\"_blank\">Discussions Forum Add-on</a>&nbsp;if you need it.&nbsp;</p>\r\n<p>&nbsp;</p>')
  ,(31,'<p>This is the intro of your blog post. If your post is short, just stick it all in here. Everything in the \"Main\" block area will be displayed from the main&nbsp;<a title=\"Blog\" href=\"{CCM:CID_71}\">blog list page</a>.</p>\r\n<p>&nbsp;</p>')
@@ -1044,11 +1056,11 @@ INSERT INTO btSurveyOptions VALUES(1,37,'Fixing a typo when I see it.',0)
  ,(2,37,'Adding a form as easily as content.',1)
  ,(3,37,'Block area layouts are pretty cool.',2);
 
-INSERT INTO btTags VALUES(23,'Tags',68)
- ,(33,'Tags',68)
- ,(39,'Tags',68);
+INSERT INTO btTags VALUES(23,'Tags',68,'page',10)
+ ,(33,'Tags',68,'page',10)
+ ,(39,'Tags',68,'page',10);
 
-INSERT INTO btYouTube VALUES(6,'Basic Editing','http://www.youtube.com/watch?v=oYSOFTNLbKY');
+INSERT INTO btYouTube VALUES(6,'Basic Editing','http://www.youtube.com/watch?v=oYSOFTNLbKY','','',0);
 
 INSERT INTO CollectionSearchIndexAttributes VALUES(2,NULL,NULL,NULL,0,0,NULL,0,0,NULL)
  ,(1,NULL,NULL,NULL,0,0,NULL,0,0,NULL)

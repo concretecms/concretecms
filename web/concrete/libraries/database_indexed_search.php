@@ -103,6 +103,24 @@ class IndexedSearch {
 		return $areas;
 	}
 	
+	public function reindexPage($page) {
+		$db = Loader::db();			
+		if (is_object($page) && ($page instanceof Collection) && ($page->getAttribute('exclude_search_index') != 1)) {
+			$datetime = Loader::helper('date')->getSystemDateTime();
+			$db->Replace('PageSearchIndex', array(
+				'cID' => $page->getCollectionID(), 
+				'cName' => $page->getCollectionName(), 
+				'cDescription' => $page->getCollectionDescription(), 
+				'cPath' => $page->getCollectionPath(),
+				'cDatePublic' => $page->getCollectionDatePublic(), 
+				'content' => $this->getBodyContentFromPage($page),
+				'cDateLastIndexed' => $datetime
+			), array('cID'), true);			
+		} else {
+			$db->Execute('delete from PageSearchIndex where cID = ?', array($page->getCollectionID()));
+		}
+	}	
+	
 	public function getBodyContentFromPage($c) {
 		$searchableAreaNamesInitial=$this->getSavedSearchableAreas();
 		foreach($this->searchableAreaNamesManual as $sm) {
@@ -134,19 +152,17 @@ class IndexedSearch {
 		while ($row = $r->FetchRow()) {
 			if (in_array($row['arHandle'], $searchableAreaNames)) {
 				$b = Block::getByID($row['bID'], $c, $row['arHandle']);
-				if (is_object($b)) {
-					$bi = $b->getInstance();
-					if (!is_object($b)) {
-						continue;
-					}
-					if(method_exists($bi,'getSearchableContent')){
-						$searchableContent = $bi->getSearchableContent();  
-						if(strlen(trim($searchableContent))) 					
-							$text .= strip_tags(str_ireplace($tagsToSpaces,' ',$searchableContent)).' ';
-					}
-					unset($b);
-					unset($bi);
+				if (!is_object($b)) {
+					continue;
 				}
+				$bi = $b->getInstance();
+				if(method_exists($bi,'getSearchableContent')){
+					$searchableContent = $bi->getSearchableContent();  
+					if(strlen(trim($searchableContent))) 					
+						$text .= strip_tags(str_ireplace($tagsToSpaces,' ',$searchableContent)).' ';
+				}
+				unset($b);
+				unset($bi);
 			}		
 		}
 		

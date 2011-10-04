@@ -130,7 +130,7 @@ $(function() {
 	$('form#ccm-<?=$searchInstance?>-customize-search-columns-form input[type=checkbox]').click(function() {
 		var thisLabel = $(this).parent().find('label').html();
 		var thisID = $(this).attr('id');
-		if ($(this).attr('checked')) {
+		if ($(this).prop('checked')) {
 			if ($('#field_' + thisID).length == 0) {
 				$('#ccm-<?=$searchInstance?>-sortable-column-default').append('<option value="' + thisID + '" id="opt_' + thisID + '">' + thisLabel + '<\/option>');
 				$('div.ccm-sortable-column-sort-controls select').attr('disabled', false);

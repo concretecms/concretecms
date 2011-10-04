@@ -36,7 +36,7 @@
 		}
 		
 		public function getBlockTypeName() {
-			return t("Guestbook");
+			return t("Guestbook / Comments");
 		}			
 			
 		function delete() {

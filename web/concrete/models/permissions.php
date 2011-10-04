@@ -149,35 +149,35 @@ class Permissions extends Object {
 	* @access private
 	*
 	*/
-	var $permissionSet;
+	public $permissionSet;
 
 	/**
 	*
 	* @access private
 	*
 	*/
-	var $permError;
+	public $permError;
 
 	/**
 	*
 	* @access private
 	*
 	*/
-	var $originalObj;
+	public $originalObj;
 
 	/**
 	*
 	* @access private
 	*
 	*/
-	var $addCollectionTypes = array();
+	public $addCollectionTypes = array();
 
 	/**
 	*
 	* @access private
 	*
 	*/
-	var $addBlockTypes = array();
+	public $addBlockTypes = array();
 	
 	/**
 	*
@@ -186,7 +186,7 @@ class Permissions extends Object {
 	* @access private
 	*
 	*/
-	var $oUID;
+	public $oUID;
 	
 	/**
 	*
@@ -472,7 +472,7 @@ class Permissions extends Object {
 *
 */
 class CollectionPermissions extends Permissions {
-	var $addCTIDs = array();
+	public $addCTIDs = array();
 	
 	function CollectionPermissions(&$cObj) {
 		$u = new User();
@@ -551,7 +551,7 @@ class CollectionPermissions extends Permissions {
 			}
 			$inStr .= ')';
 			
-			$_uID = ($u->getUserID() > -1) ? " or uID = " . $u->getUserID() : "";
+			$_uID = ($u->getUserID() > 0) ? " or uID = " . $u->getUserID() : "";
 			$_cID = $cObj->getPermissionsCollectionID();
 		
 			$q = "select cgPermissions, cgStartDate, cgEndDate, gID from PagePermissions where cID = '{$_cID}' and (gID in $inStr $_uID)";
@@ -637,7 +637,7 @@ class CollectionPermissions extends Permissions {
 *
 */
 class AreaPermissions extends Permissions {
-	var $addBTIDs = array();
+	public $addBTIDs = array();
 	
 	function AreaPermissions($aObj) {
 		$u = new User();

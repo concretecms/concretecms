@@ -264,6 +264,7 @@ ccm_hideMenus = function() {
 
 ccm_parseBlockResponse = function(r, currentBlockID, task) {
 	try { 
+		r = r.replace(/(<([^>]+)>)/ig,""); // because some plugins add bogus HTML after our JSON requests and screw everything up
 		resp = eval('(' + r + ')');
 		if (resp.error == true) {
 			var message = '<ul>'
@@ -583,7 +584,7 @@ ccm_triggerSelectUser = function(uID, uName, uEmail) {
 
 ccm_setupUserSearch = function() {
 	$("#ccm-user-list-cb-all").click(function() {
-		if ($(this).attr('checked') == true) {
+		if ($(this).prop('checked') == true) {
 			$('.ccm-list-record td.ccm-user-list-cb input[type=checkbox]').attr('checked', true);
 			$("#ccm-user-list-multiple-operations").attr('disabled', false);
 		} else {
@@ -915,15 +916,13 @@ ccm_setupHeaderMenu = function() {
 		$(this).addClass('ccm-nav-loading');
 	});
 	$("#ccm-nav-help").dialog();
-	$("#ccm-nav-sitemap").dialog();
-	$("#ccm-nav-file-manager").dialog();
 	$("a#ccm-nav-dashboard").click(function() {
 		var dash = $(this).attr('href');
 		setTimeout(function() {
 			// stupid safari? wtf?
 			window.location.href = dash;
 		}, 50);
-		
+		return false;
 	});
 	
 	$("a#ccm-nav-logout").click(function() {
@@ -932,7 +931,7 @@ ccm_setupHeaderMenu = function() {
 			// stupid safari? wtf?
 			window.location.href = href;
 		}, 50);
-		
+		return false;
 	});
 	
 }
@@ -1109,7 +1108,7 @@ var ccmCustomStyle = {
 			});		
 		}
 		$('input[name=cspPresetAction]').click(function() {
-			if ($(this).val() == 'create_new_preset' && $(this).attr('checked')) {
+			if ($(this).val() == 'create_new_preset' && $(this).prop('checked')) {
 				$('input[name=cspName]').attr('disabled', false).focus();
 			} else { 
 				$('input[name=cspName]').val('').attr('disabled', true); 
@@ -1142,7 +1141,7 @@ var ccmCustomStyle = {
 		});
 		
 		$('#ccmCustomCssForm').submit(function() {
-			if ($('input[name=cspCreateNew]').attr('checked') == true) {
+			if ($('input[name=cspCreateNew]').prop('checked') == true) {
 				if ($('input[name=cspName]').val() == '') { 
 					$('input[name=cspName]').focus();
 					alert(ccmi18n.errorCustomStylePresetNoName);

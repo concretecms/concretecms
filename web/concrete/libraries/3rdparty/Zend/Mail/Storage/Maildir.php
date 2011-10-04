@@ -11,13 +11,13 @@
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@zend.com so we can send you a copy immediately.
- * 
+ *
  * @category   Zend
  * @package    Zend_Mail
  * @subpackage Storage
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Maildir.php 16219 2009-06-21 19:45:39Z thomas $
+ * @version    $Id: Maildir.php 23775 2011-03-01 17:25:24Z ralph $
  */
 
 
@@ -41,7 +41,7 @@ require_once 'Zend/Mail/Storage.php';
  * @category   Zend
  * @package    Zend_Mail
  * @subpackage Storage
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Mail_Storage_Maildir extends Zend_Mail_Storage_Abstract
@@ -71,7 +71,7 @@ class Zend_Mail_Storage_Maildir extends Zend_Mail_Storage_Abstract
                                           'R' => Zend_Mail_Storage::FLAG_ANSWERED,
                                           'S' => Zend_Mail_Storage::FLAG_SEEN,
                                           'T' => Zend_Mail_Storage::FLAG_DELETED);
-                                          
+
     // TODO: getFlags($id) for fast access if headers are not needed (i.e. just setting flags)?
 
     /**
@@ -86,7 +86,7 @@ class Zend_Mail_Storage_Maildir extends Zend_Mail_Storage_Abstract
             return count($this->_files);
         }
 
-        $count = 0;                
+        $count = 0;
         if (!is_array($flags)) {
             foreach ($this->_files as $file) {
                 if (isset($file['flaglookup'][$flags])) {
@@ -95,7 +95,7 @@ class Zend_Mail_Storage_Maildir extends Zend_Mail_Storage_Abstract
             }
             return $count;
         }
-        
+
         $flags = array_flip($flags);
            foreach ($this->_files as $file) {
                foreach ($flags as $flag => $v) {
@@ -179,7 +179,7 @@ class Zend_Mail_Storage_Maildir extends Zend_Mail_Storage_Abstract
             return new $this->_messageClass(array('file'  => $this->_getFileData($id, 'filename'),
                                                   'flags' => $this->_getFileData($id, 'flags')));
         }
-        
+
         return new $this->_messageClass(array('handler' => $this, 'id' => $id, 'headers' => $this->getRawHeader($id),
                                               'flags'   => $this->_getFileData($id, 'flags')));
     }
@@ -257,7 +257,7 @@ class Zend_Mail_Storage_Maildir extends Zend_Mail_Storage_Abstract
      * Supported parameters are:
      *   - dirname dirname of mbox file
      *
-     * @param  $params array mail reader specific parameters
+     * @param array $params mail reader specific parameters
      * @throws Zend_Mail_Storage_Exception
      */
     public function __construct($params)

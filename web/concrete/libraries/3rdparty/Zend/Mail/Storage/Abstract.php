@@ -11,13 +11,13 @@
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@zend.com so we can send you a copy immediately.
- * 
+ *
  * @category   Zend
  * @package    Zend_Mail
  * @subpackage Storage
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Abstract.php 16219 2009-06-21 19:45:39Z thomas $
+ * @version    $Id: Abstract.php 23775 2011-03-01 17:25:24Z ralph $
  */
 
 
@@ -25,7 +25,7 @@
  * @category   Zend
  * @package    Zend_Mail
  * @subpackage Storage
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Mail_Storage_Abstract implements Countable, ArrayAccess, SeekableIterator
@@ -78,7 +78,7 @@ abstract class Zend_Mail_Storage_Abstract implements Countable, ArrayAccess, See
             $var = strtolower(substr($var, 3));
             return isset($this->_has[$var]) ? $this->_has[$var] : null;
         }
-        
+
         /**
          * @see Zend_Mail_Storage_Exception
          */
@@ -119,7 +119,7 @@ abstract class Zend_Mail_Storage_Abstract implements Countable, ArrayAccess, See
     /**
      * Get a message with headers and body
      *
-     * @param  $id int number of message
+     * @param int $id number of message
      * @return Zend_Mail_Message
      */
     abstract public function getMessage($id);

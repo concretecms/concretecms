@@ -60,7 +60,7 @@ class ValidationStringsHelper {
 	 * @return bool
 	 */
 	public function notempty($field) {
-		return (trim($field) != '');
+		return ((is_array($field) && count($field) > 0) || (is_string($field) && trim($field) != ''));
 	}	
 	
 	/** 

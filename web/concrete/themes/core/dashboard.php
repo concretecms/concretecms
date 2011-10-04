@@ -7,7 +7,7 @@ $nav = AutonavBlockController::getChildPages($dashboard);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="<?=LANGUAGE?>" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <?
 $html = Loader::helper('html');
@@ -93,12 +93,8 @@ Loader::element('header_required');
 <?
 foreach($nav as $n2) { 
 	$cp = new Permissions($n2);
-	if ($cp->canRead()) { 
-		if ($c->getCollectionPath() == $n2->getCollectionPath() || (strpos($c->getCollectionPath(), $n2->getCollectionPath()) == 0) && strpos($c->getCollectionPath(), $n2->getCollectionPath()) !== false) {
-			$isActive = true;
-		} else {
-			$isActive = false;
-		}
+	if ($cp->canRead()) {
+		$isActive = ($c->getCollectionPath() == $n2->getCollectionPath() || strpos($c->getCollectionPath(), $n2->getCollectionPath() . '/') === 0);
 ?>
 	<li <? if ($isActive) { ?> class="ccm-nav-active" <? } ?>><a href="<?=$nh->getLinkToCollection($n2, false, true)?>"><?=t($n2->getCollectionName())?> <span><?=t($n2->getCollectionDescription())?></span></a></li>
 <? }
@@ -106,6 +102,8 @@ foreach($nav as $n2) {
 }?>
 </ul>
 </div>
+
+<? if (!$disableSecondLevelNav) { ?>
 
 <? if (isset($subnav)) { ?>
 
@@ -140,12 +138,7 @@ foreach($nav as $n2) {
 	?>	
 		<div id="ccm-dashboard-subnav">
 		<ul><? foreach($subpagesP as $sc) { 
-		
-			if ($c->getCollectionPath() == $sc->getCollectionPath() || (strpos($c->getCollectionPath(), $sc->getCollectionPath()) == 0) && strpos($c->getCollectionPath(), $sc->getCollectionPath()) !== false) {
-				$isActive = true;
-			} else {
-				$isActive = false;
-			}
+			$isActive = ($c->getCollectionPath() == $sc->getCollectionPath() || strpos($c->getCollectionPath(), $sc->getCollectionPath() . '/') === 0);
 			
 		?><li <? if ($isActive) { ?> class="nav-selected" <? } ?>><a href="<?=$nh->getLinkToCollection($sc, false, true)?>"><?=t($sc->getCollectionName())?></a></li><? } ?></ul>
 		<br/><div class="ccm-spacer">&nbsp;</div>
@@ -154,7 +147,9 @@ foreach($nav as $n2) {
 	
 	<?
 		}
+	} 
 } ?>
+
 
 <?
 	if (isset($latest_version)){ 

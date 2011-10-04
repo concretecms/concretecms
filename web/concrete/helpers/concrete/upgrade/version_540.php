@@ -53,6 +53,10 @@ class ConcreteUpgradeVersion540Helper {
 	public function prepare() {
 		// we install the updated schema just for tables that matter
 		Package::installDB(dirname(__FILE__) . '/db/version_540.xml');
+		
+		$db = Loader::db();
+		$db->Execute('alter table CollectionVersionBlockStyles drop primary key');
+		$db->Execute('alter table CollectionVersionBlockStyles add primary key (cID, bID, cvID, arHandle)');
 	}
 
 	protected function setupSiteSearchIndexing() {

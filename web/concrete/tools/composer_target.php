@@ -1,6 +1,6 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
-
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+$navigation = Loader::helper('navigation');
+$th = Loader::helper('text');
 $sh = Loader::helper('concrete/dashboard');
 if (!$sh->canAccessComposer()) {
 	die(t('Access Denied'));
@@ -30,8 +30,19 @@ switch($ct->getCollectionTypeComposerPublishMethod()) {
 	
 	<h1><?=t("Where do you want to publish this page?")?></h1>
 	<ul class="icon-select-list">
-	<? foreach($pages as $p) { ?>
-		<li class="icon-select-page"><a href="javascript:void(0)" onclick="<?=$function?>(<?=$p->getCollectionID()?>)"><?=$p->getCollectionName()?></a></li>
+	<? foreach($pages as $p) { 
+		$trail = $navigation->getTrailToCollection($p);
+		$crumbs = array();
+		if(is_array($trail) && count($trail)) {
+			$trail = array_reverse($trail,false);
+			foreach($trail as $t) { 
+				$crumbs[] = $th->shortText($t->getCollectionName(),10);
+			}
+		}
+		?>
+		<li class="icon-select-page"><a href="javascript:void(0)" onclick="<?=$function?>(<?=$p->getCollectionID()?>)"><?=$p->getCollectionName()?></a>
+			<div class="ccm-note" style="padding-left: 8px;"><?php echo implode(" &gt; ",$crumbs)?></div>
+		</li>
 	<? } ?>
 	</ul>
 	

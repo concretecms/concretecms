@@ -274,10 +274,34 @@ if (is_object($uo)) {
 			<td><input type="password" name="uPasswordConfirm" autocomplete="off" value="" style="width: 94%"></td>
 			<td><?=t('(Leave these fields blank to keep the same password)')?></td>
 		</tr>
+		<?
+		$languages = Localization::getAvailableInterfaceLanguages();
+		if (count($languages) > 0) { ?>
+	
+		<tr>
+			<td class="subheader" colspan="3"><?=t('Default Language')?></td>
+		</tr>	
+		<tr>
+			<Td colspan="3">
+			<?
+				array_unshift($languages, 'en_US');
+				$locales = array();
+				Loader::library('3rdparty/Zend/Locale');
+				Loader::library('3rdparty/Zend/Locale/Data');
+				$locales[''] = t('** Default');
+				Zend_Locale_Data::setCache(Cache::getLibrary());
+				foreach($languages as $lang) {
+					$loc = new Zend_Locale($lang);
+					$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
+				}
+				$ux = $uo->getUserObject();
+				print $form->select('uDefaultLanguage', $locales, $ux->getUserDefaultLanguage());
+			?>
+			</td>
+		</tr>	
+		<? } ?>
+
 		<? if(ENABLE_USER_TIMEZONES) { ?>
-        <tr>
-			<td colspan="3" class="header"><?=t('Localization')?></td>
-		</tr>
         <tr>
         	<td class="subheader" colspan="3"><?=t('Time Zone')?></td>
         </tr>
@@ -504,33 +528,38 @@ if (is_object($uo)) {
 		</table>
 		</div>
 	</div>
-		
-
 
 	<h1><span><?=t('Delete User')?></span></h1>
 	
 	<div class="ccm-dashboard-inner">
 		<div class="ccm-spacer"></div>
 		<?
+		$cu = new User();
+		$tp = new TaskPermission();
+		if ($tp->canDeleteUser()) {
 		$delConfirmJS = t('Are you sure you want to permanently remove this user?');
-		if ($uo->getUserID() == USER_SUPER_ID) { ?>
-			<?=t('You may not remove the super user account.')?>
-		<? } else if($u->isSuperUser() == false){ ?>
-			<?=t('You must be logged in as %s to remove user accounts.', USER_SUPER)?>
-			
-		<? }else{ ?>   
-			
-			<script type="text/javascript">
-			deleteUser = function() {
-				if (confirm('<?=$delConfirmJS?>')) { 
-					location.href = "<?=$this->url('/dashboard/users/search', 'delete', $uo->getUserID(), $valt->generate('delete_account'))?>";				
+			if ($uo->getUserID() == USER_SUPER_ID) { ?>
+				<?=t('You may not remove the super user account.')?>
+			<? } else if (!$tp->canDeleteUser()) { ?>
+				<?=t('You do not have permission to perform this action.');		
+			} else if ($uo->getUserID() == $cu->getUserID()) {
+				echo t('You cannot delete your own user account.');
+			}else{ ?>   
+				
+				<script type="text/javascript">
+				deleteUser = function() {
+					if (confirm('<?=$delConfirmJS?>')) { 
+						location.href = "<?=$this->url('/dashboard/users/search', 'delete', $uo->getUserID(), $valt->generate('delete_account'))?>";				
+					}
 				}
-			}
-			</script>
-
-			<? print $ih->button_js(t('Delete User Account'), "deleteUser()", 'left');?>
-
-		<? } ?>
+				</script>
+	
+				<? print $ih->button_js(t('Delete User Account'), "deleteUser()", 'left');?>
+	
+			<? }
+		} else {
+			echo t('You do not have permission to perform this action.');
+		}?>
 		<div class="ccm-spacer"></div>
 	</div>
 	<? } ?>

@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	class BlockTypeList extends Object {
 	
-		var $btArray = array();
+		public $btArray = array();
 		
 		public static function getByPackage($pkg) {
 			$db = Loader::db();
@@ -181,7 +181,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 * @access private
 */	
 	class BlockTypeDB extends ADOdb_Active_Record {
-		var $_table = 'BlockTypes';
+		public $_table = 'BlockTypes';
 	}
 
 /**
@@ -195,8 +195,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 */		
 	class BlockType extends Object {
 		
-		var $addBTUArray = array();
-		var $addBTGArray = array();
+		public $addBTUArray = array();
+		public $addBTGArray = array();
 		public $controller;
 		
 		public static function getByHandle($handle) {
@@ -426,6 +426,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			} else {
 				$dir = $dir2;
 			}
+
+			// now we check to see if it's been overridden in the core and if so we do it there
+			if ($btID > 0) { 
+				// this is only necessary when it's an existing refresh
+				if (is_dir(DIR_FILES_BLOCK_TYPES . '/' . $btHandle)) {
+					$dir = DIR_FILES_BLOCK_TYPES;
+				}
+			}
 			
 			$bt = new BlockType;
 			$bt->btHandle = $btHandle;
@@ -460,10 +468,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}
 			
-			if (is_dir(DIR_FILES_BLOCK_TYPES_CORE . '/' . $btHandle)) {
-				$dir = DIR_FILES_BLOCK_TYPES_CORE;
-			} else {
+			if (is_dir(DIR_FILES_BLOCK_TYPES . '/' . $btHandle)) {
 				$dir = DIR_FILES_BLOCK_TYPES;
+			} else {
+				$dir = DIR_FILES_BLOCK_TYPES_CORE;
 			}
 			
 			$bt = new BlockType;

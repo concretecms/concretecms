@@ -9,12 +9,12 @@ $al = Loader::helper('concrete/asset_library');
 <br/>
 <h2><?=t('Quality')?></h2>
 <select name="quality">
-	<option value="low">low</option>
-    <option value="autolow">autolow</option>
-    <option value="autohigh">autohigh</option>
-    <option value="medium">medium</option>
-    <option value="high" selected="selected">high</option>
-    <option value="best">best</option>
+	<option value="low"><?=t('low')?></option>
+    <option value="autolow"><?=t('autolow')?></option>
+    <option value="autohigh"><?=t('autohigh')?></option>
+    <option value="medium"><?=t('medium')?></option>
+    <option value="high" selected="selected"><?=t('high')?></option>
+    <option value="best"><?=t('best')?></option>
 </select><br /><br />
 
 <h2><?=t('Minimum Flash Player Version')?></h2>

@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class DashboardSitemapAccessController extends Controller {
 
-	var $helpers = array('form', 'validation/token');
+	public $helpers = array('form', 'validation/token');
 	
 	public function on_start() {
 		$this->set('h', Loader::helper('concrete/dashboard/task_permissions'));

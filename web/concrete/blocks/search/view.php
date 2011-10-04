@@ -42,10 +42,10 @@ if ($do_search) {
 		
 		<?
 		if($paginator && strlen($paginator->getPages())>0){ ?>	
-		<div class="pagination">	
-			 <span class="pageLeft"><?=$paginator->getPrevious()?></span>
-			 <span class="pageRight"><?=$paginator->getNext()?></span>
+		<div class="ccm-pagination">	
+			 <span class="ccm-page-left"><?=$paginator->getPrevious()?></span>
 			 <?=$paginator->getPages()?>
+			 <span class="ccm-page-right"><?=$paginator->getNext()?></span>
 		</div>	
 		<? } ?>
 

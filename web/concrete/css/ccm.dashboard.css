@@ -61,6 +61,7 @@ div.ccm-dashboard-inner fieldset {
 h1 {background: transparent url(../images/dashboard/header_l.png) no-repeat; position: relative}
 h1 span {display: block; background: transparent url(../images/dashboard/header_r.png) repeat-x right top; padding: 4px 3px 4px 0px; margin-left: 11px}
 h1 a.ccm-dashboard-header-option {font-size: 11px; position: absolute; top: 7px; right: 10px}
+h1 a.ccm-dashboard-header-option-add {font-size: 11px; position: absolute; height: 14px; top: 7px; right: 7px; padding-right: 20px; background: transparent url(../images/icons/add.png) no-repeat right top}
 
 form {margin: 0px}
 a {text-decoration: none; color: #5377A9;}
@@ -209,7 +210,7 @@ div.ccm-attribute img {vertical-align: middle; margin-right: 4px}
 div.ccm-attribute {border-bottom: 1px dotted #aaa; margin-bottom: 5px; padding-bottom: 5px}
 
 
-*.notes {font-size: 10px; color: #aaa}
+*.notes, .ccm-note {font-size: 10px !important; color: #aaa !important;}
 
 table.entry-form {width: 100%}
 table.entry-form input.uak-text {width: 200px}

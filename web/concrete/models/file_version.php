@@ -26,6 +26,10 @@ class FileVersion extends Object {
 		return $to->getGenericTypeText( $to->getGenericType() );
 	}	
 
+	/**
+	 * returns the File object associated with this FileVersion object
+	 * @return File
+	 */
 	public function getFile() {
 		$fo = File::getByID($this->fID);
 		return $fo;
@@ -182,7 +186,7 @@ class FileVersion extends Object {
 			));
 		}
 		$fv2 = $f->getVersion($fvID);
-		
+		Events::fire('on_file_version_duplicate', $fv2);
 		return $fv2;
 	}
 	
@@ -245,6 +249,7 @@ class FileVersion extends Object {
 		$db->Execute("update FileVersions set fvTitle = ? where fID = ? and fvID = ?", array($title, $this->getFileID(), $this->getFileVersionID()));
 		$this->logVersionUpdate(FileVersion::UT_TITLE);
 		$this->fvTitle = $title;
+		Events::fire('on_file_version_update_title', $this, $title);
 		$fo = $this->getFile();
 		$fo->refreshCache();
 	}
@@ -255,6 +260,7 @@ class FileVersion extends Object {
 		$db->Execute("update FileVersions set fvTags = ? where fID = ? and fvID = ?", array($tags, $this->getFileID(), $this->getFileVersionID()));
 		$this->logVersionUpdate(FileVersion::UT_TAGS);
 		$this->fvTitle = $tags;
+		Events::fire('on_file_version_update_tags', $this, $tags);
 		$fo = $this->getFile();
 		$fo->refreshCache();
 	}
@@ -265,6 +271,7 @@ class FileVersion extends Object {
 		$db->Execute("update FileVersions set fvDescription = ? where fID = ? and fvID = ?", array($descr, $this->getFileID(), $this->getFileVersionID()));
 		$this->logVersionUpdate(FileVersion::UT_DESCRIPTION);
 		$this->fvTitle = $descr;
+		Events::fire('on_file_version_update_description', $this, $descr);
 		$fo = $this->getFile();
 		$fo->refreshCache();
 	}
@@ -286,6 +293,7 @@ class FileVersion extends Object {
 		$db->Execute("update FileVersions set fvIsApproved = 0 where fID = ?", array($this->getFileID()));
 		$db->Execute("update FileVersions set fvIsApproved = 1 where fID = ? and fvID = ?", array($this->getFileID(), $this->getFileVersionID()));
 
+		Events::fire('on_file_version_approve', $this);
 		$fo = $this->getFile();
 		$fo->reindex();
 		$fo->refreshCache();
@@ -295,6 +303,7 @@ class FileVersion extends Object {
 	public function deny() {
 		$db = Loader::db();
 		$db->Execute("update FileVersions set fvIsApproved = 0 where fID = ? and fvID = ?", array($this->getFileID(), $this->getFileVersionID()));
+		Events::fire('on_file_version_deny', $this);
 		$fo = $this->getFile();
 		$fo->refreshCache();
 	}

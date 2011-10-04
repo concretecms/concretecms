@@ -7,6 +7,8 @@ class LoginController extends Controller {
 	
 	public $helpers = array('form');
 	private $openIDReturnTo;
+	protected $locales = array();
+	
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
 		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
@@ -16,9 +18,29 @@ class LoginController extends Controller {
 		}
 		
 		$txt = Loader::helper('text');
-		if (strlen($_GET['uName'])) { // pre-populate the username if supplied
-		   $this->set("uName",trim($txt->filterNonAlphaNum($_GET['uName'])));
+		if (strlen($_GET['uName'])) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
+		   $this->set("uName",trim($txt->email($_GET['uName'])));
 		}
+		
+
+		$languages = array();		
+		$locales = array();
+		if (Config::get('LANGUAGE_CHOOSE_ON_LOGIN')) {
+			Loader::library('3rdparty/Zend/Locale');
+			Loader::library('3rdparty/Zend/Locale/Data');
+			$languages = Localization::getAvailableInterfaceLanguages();
+			if (count($languages) > 0) { 
+				array_unshift($languages, 'en_US');
+			}
+			$locales = array('' => t('** Default'));
+			Zend_Locale_Data::setCache(Cache::getLibrary());
+			foreach($languages as $lang) {
+				$loc = new Zend_Locale($lang);
+				$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
+			}
+		}
+		$this->locales = $locales;
+		$this->set('locales', $locales);
 		
 		$this->openIDReturnTo = BASE_URL . View::url("/login", "complete_openid"); 
 	}
@@ -198,6 +220,12 @@ class LoginController extends Controller {
 			$u->setUserForeverCookie();
 		}
 		
+		if (count($this->locales) > 0) {
+			if (Config::get('LANGUAGE_CHOOSE_ON_LOGIN') && $this->post('USER_LOCALE') != '') {
+				$u->setUserDefaultLanguage($this->post('USER_LOCALE'));
+			}
+		}		
+		
 		// Verify that the user has filled out all
 		// required items that are required on register
 		// That means users logging in after new user attributes
@@ -244,8 +272,8 @@ class LoginController extends Controller {
 			$this->set('invalidRegistrationFields', true);
 			$this->set('unfilledAttributes', $unfilledAttributes);
 		}
-
-		$rcID = $this->post('rcID');
+		$txt = Loader::helper('text');
+		$rcID = $txt->entities($this->post('rcID'));
 		$nh = Loader::helper('validation/numbers');
 
 		//set redirect url
@@ -329,12 +357,12 @@ class LoginController extends Controller {
 		$this->redirect('/');
 	}
 	
-	public function forward($cID) {
+	public function forward($cID = 0) {
 		$this->set('rcID', $cID);
 	}
 	
 	// responsible for validating a user's email address
-	public function v($hash) {
+	public function v($hash = '') {
 		$ui = UserInfo::getByValidationHash($hash);
 		if (is_object($ui)) {
 			$ui->markValidated();
@@ -344,11 +372,10 @@ class LoginController extends Controller {
 	}
 	
 	// responsible for validating a user's email address
-	public function change_password($uHash) {
+	public function change_password($uHash = '') {
 		$db = Loader::db();
 		$h = Loader::helper('validation/identifier');
 		$e = Loader::helper('validation/error');
-		
 		$ui = UserInfo::getByValidationHash($uHash);		
 		if (is_object($ui)){
 			$hashCreated = $db->GetOne("select uDateGenerated FROM UserValidationHashes where uHash=?", array($uHash));

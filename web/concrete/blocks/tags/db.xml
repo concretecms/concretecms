@@ -7,5 +7,11 @@
 		</field>
 		<field name="title" type="C" size="255"></field>
 		<field name="targetCID" type="I"></field>
+		<field name="displayMode" type="C" size="20">
+			<default value="page"/>
+		</field>
+		<field name="cloudCount" type="I">
+			<default value="10"/>
+		</field>
 	</table>
 </schema>

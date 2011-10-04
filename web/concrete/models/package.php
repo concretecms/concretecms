@@ -208,8 +208,8 @@ class Package extends Object {
 		$translate = Localization::getTranslate();
 		if (is_object($translate)) {
 			$path = $this->getPackagePath() . '/' . DIRNAME_LANGUAGES;
-			if (file_exists($path . '/' . LOCALE . '/LC_MESSAGES/messages.mo')) {
-				$translate->addTranslation($path . '/' . LOCALE . '/LC_MESSAGES/messages.mo', LOCALE);
+			if (file_exists($path . '/' . ACTIVE_LOCALE . '/LC_MESSAGES/messages.mo')) {
+				$translate->addTranslation($path . '/' . ACTIVE_LOCALE . '/LC_MESSAGES/messages.mo', ACTIVE_LOCALE);
 			}
 		}
 	}
@@ -321,6 +321,13 @@ class Package extends Object {
 						case 'AttributeType':
 						case 'TaskPermission':
 							$item->delete();
+							break;
+						default:
+							if(method_exists($item, 'delete')) {
+								$item->delete();
+							} elseif(method_exists($item, 'uninstall')) {
+								$item->uninstall();
+							}
 							break;
 					}
 				}
@@ -442,7 +449,7 @@ class Package extends Object {
 	/**
 	 * @return Package
 	 */
-	protected function install() {
+	public function install() {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
 		$v = array($this->getPackageName(), $this->getPackageDescription(), $this->getPackageVersion(), $this->getPackageHandle(), 1, $dh->getSystemDateTime());

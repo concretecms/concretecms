@@ -3,8 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class SearchBlockController extends BlockController {
 	
-	var $pobj;
-	  
 	protected $btTable = 'btSearch';
 	protected $btInterfaceWidth = "400";
 	protected $btInterfaceHeight = "170";
@@ -146,7 +144,7 @@ class SearchBlockController extends BlockController {
 			}
 		}
 		
-		if((empty($_REQUEST['query']) && $aksearch == false) || $this->resultsURL != '') {
+		if (empty($_REQUEST['query']) && $aksearch == false) {
 			return false;		
 		}
 		
@@ -168,7 +166,7 @@ class SearchBlockController extends BlockController {
 		foreach($res as $r) { 
 			$results[] = new IndexedSearchResult($r['cID'], $r['cName'], $r['cDescription'], $r['score'], $r['cPath'], $r['content']);
 		}
-		
+				
 		$this->set('query', $q);
 		$this->set('paginator', $ipl->getPagination());
 		$this->set('results', $results);

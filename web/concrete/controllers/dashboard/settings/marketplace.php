@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class DashboardSettingsMarketplaceController extends Controller {
 
-	var $helpers = array('form'); 
+	public $helpers = array('form'); 
 
 	public function on_start() {
 		Loader::library('marketplace');
@@ -11,6 +11,7 @@ class DashboardSettingsMarketplaceController extends Controller {
 			array(View::url('/dashboard/settings'), t('General'), true),
 			array(View::url('/dashboard/settings/mail'), t('Email')),
 			array(View::url('/dashboard/settings', 'set_permissions'), t('Access')),
+                        array(View::url('/dashboard/settings/multilingual'), t('Multilingual')),
 			array(View::url('/dashboard/settings', 'set_developer'), t('Debug')),
 			array(View::url('/dashboard/settings', 'manage_attribute_types'), t('Attributes'))
 		);

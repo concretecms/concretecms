@@ -1,6 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
-<div class="ccm-editor-controls">
+<div class="ccm-editor-controls-left-cap" <? if (isset($editor_width)) { ?>style="width: <?=$editor_width?>px"<? } ?>>
 <div class="ccm-editor-controls-right-cap">
+<div class="ccm-editor-controls">
 <ul>
 <li ccm-file-manager-field="rich-text-editor-image"><a class="ccm-file-manager-launch" onclick="ccm_editorCurrentAuxTool='image'; setBookMark();return false;" href="#"><?=t('Add Image')?></a></li>
 <li><a class="ccm-file-manager-launch" onclick="ccm_editorCurrentAuxTool='file'; setBookMark();return false;" href="#"><?=t('Add File')?></a></li>
@@ -16,12 +17,11 @@
 <?php
 $path = Page::getByPath('/dashboard/settings');
 $cp = new Permissions($path);
-if($cp->canRead()) { 
-$confirm = 'if(confirm(\''.t("Are you sure you want to leave? All changes will be lost.").'\')) {location.href = \''.View::url("/dashboard/settings").'#txt-editor-form\';}';
-?>
-	<li><a style="float: right" href="#" onclick="<?php echo $confirm?>"><?=t('Customize Toolbar')?></a></li>
+if($cp->canRead()) { ?>
+	<li><a style="float: right" href="<?php echo View::url('/dashboard/settings')?>" target="_blank"><?php echo t('Customize Toolbar')?></a></li>
 <?php } ?>
 </ul>
+</div>
 </div>
 </div>
 <div id="rich-text-editor-image-fm-display">
@@ -33,7 +33,7 @@ $confirm = 'if(confirm(\''.t("Are you sure you want to leave? All changes will b
 function ccmEditorSitemapOverlay() {
     $.fn.dialog.open({
         title: '<?php echo t("Choose A Page") ?>',
-        href: CCM_TOOLS_PATH + '/sitemap_overlay.php?sitemap_mode=select_page&amp;callback=ccm_selectSitemapNode<?=$GLOBALS['CCM_EDITOR_SITEMAP_NODE_NUM']?>',
+        href: CCM_TOOLS_PATH + '/sitemap_overlay.php?sitemap_mode=select_page&callback=ccm_selectSitemapNode<?=$GLOBALS['CCM_EDITOR_SITEMAP_NODE_NUM']?>',
         width: '550',
         modal: false,
         height: '400'

@@ -14,7 +14,7 @@ class DownloadFileController extends Controller {
 		// get the block
 		if ($fID > 0) {
 			$file = File::getByID($fID);			
-			if ($file) {				
+			if ($file instanceof File && $file->getFileID() > 0) {	
 				
 				$fp = new Permissions($file);
 				if (!$fp->canRead()) {
@@ -34,7 +34,7 @@ class DownloadFileController extends Controller {
 		}
 	}
 	
-	public function view_inline($fID) {
+	public function view_inline($fID = 0) {
 		$file = File::getByID($fID);
 		$fp = new Permissions($file);
 		if (!$fp->canRead()) {

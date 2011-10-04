@@ -15,26 +15,19 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Index
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: DocumentWriter.php 23775 2011-03-01 17:25:24Z ralph $
  */
-
-
-/** Zend_Search_Lucene_Exception */
-require_once 'Zend/Search/Lucene/Exception.php';
-
-/** Zend_Search_Lucene_Analysis_Analyzer */
-require_once 'Zend/Search/Lucene/Analysis/Analyzer.php';
 
 /** Zend_Search_Lucene_Index_SegmentWriter */
 require_once 'Zend/Search/Lucene/Index/SegmentWriter.php';
-
 
 /**
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Index
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Search_Lucene_Index_SegmentWriter_DocumentWriter extends Zend_Search_Lucene_Index_SegmentWriter
@@ -78,23 +71,29 @@ class Zend_Search_Lucene_Index_SegmentWriter_DocumentWriter extends Zend_Search_
      */
     public function addDocument(Zend_Search_Lucene_Document $document)
     {
+        /** Zend_Search_Lucene_Search_Similarity */
+        require_once 'Zend/Search/Lucene/Search/Similarity.php';
+
         $storedFields = array();
         $docNorms     = array();
         $similarity   = Zend_Search_Lucene_Search_Similarity::getDefault();
 
         foreach ($document->getFieldNames() as $fieldName) {
             $field = $document->getField($fieldName);
-            $this->addField($field);
 
             if ($field->storeTermVector) {
                 /**
                  * @todo term vector storing support
                  */
+                require_once 'Zend/Search/Lucene/Exception.php';
                 throw new Zend_Search_Lucene_Exception('Store term vector functionality is not supported yet.');
             }
 
             if ($field->isIndexed) {
                 if ($field->isTokenized) {
+                    /** Zend_Search_Lucene_Analysis_Analyzer */
+                    require_once 'Zend/Search/Lucene/Analysis/Analyzer.php';
+
                     $analyzer = Zend_Search_Lucene_Analysis_Analyzer::getDefault();
                     $analyzer->setInput($field->value, $field->encoding);
 
@@ -119,12 +118,22 @@ class Zend_Search_Lucene_Index_SegmentWriter_DocumentWriter extends Zend_Search_
                         $this->_termDocs[$termKey][$this->_docCount][] = $position;
                     }
 
-                    $docNorms[$field->name] = chr($similarity->encodeNorm( $similarity->lengthNorm($field->name,
-                                                                                                   $tokenCounter)*
-                                                                           $document->boost*
-                                                                           $field->boost ));
+                    if ($tokenCounter == 0) {
+                        // Field contains empty value. Treat it as non-indexed and non-tokenized
+                        $field = clone($field);
+                        $field->isIndexed = $field->isTokenized = false;
+                    } else {
+                        $docNorms[$field->name] = chr($similarity->encodeNorm( $similarity->lengthNorm($field->name,
+                                                                                                       $tokenCounter)*
+                                                                               $document->boost*
+                                                                               $field->boost ));
+                    }
+                } else if (($fieldUtf8Value = $field->getUtf8Value()) == '') {
+                    // Field contains empty value. Treat it as non-indexed and non-tokenized
+                    $field = clone($field);
+                    $field->isIndexed = $field->isTokenized = false;
                 } else {
-                    $term = new Zend_Search_Lucene_Index_Term($field->getUtf8Value(), $field->name);
+                    $term = new Zend_Search_Lucene_Index_Term($fieldUtf8Value, $field->name);
                     $termKey = $term->key();
 
                     if (!isset($this->_termDictionary[$termKey])) {
@@ -147,8 +156,9 @@ class Zend_Search_Lucene_Index_SegmentWriter_DocumentWriter extends Zend_Search_
             if ($field->isStored) {
                 $storedFields[] = $field;
             }
-        }
 
+            $this->addField($field);
+        }
 
         foreach ($this->_fields as $fieldName => $field) {
             if (!$field->isIndexed) {
@@ -203,6 +213,9 @@ class Zend_Search_Lucene_Index_SegmentWriter_DocumentWriter extends Zend_Search_
         $this->_dumpDictionary();
 
         $this->_generateCFS();
+
+        /** Zend_Search_Lucene_Index_SegmentInfo */
+        require_once 'Zend/Search/Lucene/Index/SegmentInfo.php';
 
         return new Zend_Search_Lucene_Index_SegmentInfo($this->_directory,
                                                         $this->_name,

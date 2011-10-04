@@ -11,10 +11,13 @@ if ($_REQUEST['cvID'] > 0) {
 	$c = Page::getByID($_REQUEST['cID']);
 }
 $cp = new Permissions($c);
+$req = Request::get();
+$req->setCurrentPage($c);
 
 $valt = Loader::helper('validation/token');
 $sh = Loader::helper('concrete/dashboard/sitemap');
 $dh = Loader::helper('concrete/dashboard');
+$ih = Loader::helper('concrete/interface');
 $token = '&' . $valt->getParameter();
 
 if (isset($cp)) {
@@ -89,16 +92,15 @@ menuHTML += '<div id="ccm-system-nav-wrapper1">';
 menuHTML += '<div id="ccm-system-nav-wrapper2">';
 menuHTML += '<ul id="ccm-system-nav">';
 
-<? 
-if ($sh->canRead() && $u->config('UI_SITEMAP')) { ?>
-	menuHTML += '<li><a id="ccm-nav-sitemap" dialog-title="<?=t('Navigate to Page')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_search_selector?callback=ccm_goToSitemapNode&sitemap_select_mode=select_page" dialog-on-open="$(\'#ccm-nav-sitemap\').removeClass(\'ccm-nav-loading\')" dialog-width="90%" dialog-height="70%" dialog-modal="false"><?=t('Sitemap')?></a></li>';
 <?
-}
-$fp = FilePermissions::getGlobal();
-if ($fp->canSearchFiles() && $u->config('UI_FILEMANAGER')) { ?>
-	menuHTML += '<li><a id="ccm-nav-file-manager" dialog-title="<?=t('File Manager')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_dialog?disable_choose=1" dialog-on-open="$(\'#ccm-nav-file-manager\').removeClass(\'ccm-nav-loading\')" dialog-width="90%" dialog-height="70%" dialog-modal="false"><?=t('File Manager')?></a></li>';
-
-<?
+$items = $ihm->getPageHeaderMenuItems('right');
+foreach($items as $ih) {
+	$cnt = $ih->getController(); 
+	if ($cnt->displayItem()) {
+	?>
+		menuHTML += '<li><?=$cnt->getMenuLinkHTML()?></li>';
+	<?
+	}
 }
 ?>
 
@@ -144,6 +146,18 @@ menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?>
  	menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-mcd"><?=t('Move/Delete')?></a></li>';
  <? } ?>
  <? } ?>
+
+<?
+$items = $ihm->getPageHeaderMenuItems('left');
+foreach($items as $ih) {
+	$cnt = $ih->getController(); 
+	if ($cnt->displayItem()) {
+	?>
+		menuHTML += '<li><?=$cnt->getMenuLinkHTML()?></li>';
+	<?
+	}
+}
+?>
 menuHTML += '</ul>';
 menuHTML += '</div>';
 menuHTML += '<div id="ccm-page-detail"><div id="ccm-page-detail-l"><div id="ccm-page-detail-r"><div id="ccm-page-detail-content"></div></div></div>';

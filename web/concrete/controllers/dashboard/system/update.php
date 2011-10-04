@@ -50,6 +50,7 @@ class DashboardSystemUpdateController extends Controller {
 	
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
+		$this->secCheck();
 	}
 
 	public function on_before_render() {
@@ -106,6 +107,21 @@ class DashboardSystemUpdateController extends Controller {
 			}
 		}
 		$this->view();
+	}
+	
+	public function secCheck() {
+		$fh = Loader::helper('file');
+		$updates = $fh->getDirectoryContents(DIR_APP_UPDATES);
+		foreach($updates as $upd) {
+			if (is_dir(DIR_APP_UPDATES . '/' . $upd) && is_writable(DIR_APP_UPDATES . '/' . $upd)) {
+				if (file_exists(DIR_APP_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME) && is_writable(DIR_APP_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME)) {
+					unlink(DIR_APP_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME);
+				}
+				if (!file_exists(DIR_APP_UPDATES . '/' . $upd . '/index.html')) {
+					touch(DIR_APP_UPDATES . '/' . $upd . '/index.html');
+				}
+			}
+		}
 	}
 	
 	public function do_update() {

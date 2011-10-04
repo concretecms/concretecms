@@ -52,7 +52,7 @@ if ($controller->hasVoted()) { ?>
 		//&chl= join('|',$optionNamesAbbrev) 
 		if(count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVotes>0){ ?>
 		<div >
-		<img border="" src="http://chart.apis.google.com/chart?cht=p&chd=t:<?=join(',',$optionResults)?>&chs=180x180&chco=<?=join(',',$graphColors)?>" />
+		<img border="" src="http://chart.apis.google.com/chart?cht=p&chd=t:<?=join(',',$optionResults)?>&chs=180x180&chco=<?=join(',',$graphColors)?>" alt="<?php echo t('survey results');?>" />
 		</div>
 		<? } ?>	
 		<div class="spacer">&nbsp;</div>	

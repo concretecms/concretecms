@@ -43,6 +43,7 @@ class AttributeType extends Object {
 		}
 		
 		$db->Execute("delete from AttributeTypes where atID = ?", array($this->atID));
+		$db->Execute("delete from AttributeTypeCategories where atID = ?", array($this->atID));
 	}
 	
 	public static function getListByPackage($pkg) {

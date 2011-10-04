@@ -107,7 +107,16 @@ a.ccm-button em.ccm-button-close {background-image: url(../images/icons/close.pn
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	border: 1px solid #a8a8a8;
 	position: relative;
-	cursor: pointer
+	cursor: pointer;
+}
+
+.ccm-button-v2-left {
+	margin-right: 8px;
+}
+
+.ccm-button-v2-right {
+	float: right;
+	margin-left: 8px;
 }
 
 .ccm-button-v2:disabled {
@@ -163,10 +172,10 @@ table.ccm-grid-list th a {color: #000}
 table.ccm-grid-list th.full {width: 100%}
 
 /* user/group selector */
-div.ccm-group a.ccm-group-inner {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; }
-div.ccm-group div.ccm-group-inner-indiv {background-repeat: no-repeat; background-position: 8px 8px; color: #666; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none;}
-div.ccm-group a.ccm-group-inner-atag {color: #666; font-size: 14px; padding: 8px 0px; text-decoration: none; }
-div.ccm-group a.ccm-group-inner-atag:hover {color: #666; font-size: 14px; padding: 8px 0px; text-decoration: none;}
+div.ccm-group a.ccm-group-inner {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
+div.ccm-group div.ccm-group-inner-indiv {background-repeat: no-repeat; background-position: 8px 8px; color: #666; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
+div.ccm-group a.ccm-group-inner-atag {color: #666; font-size: 14px; padding: 8px 0px; text-decoration: none; border: 1px solid #fff}
+div.ccm-group a.ccm-group-inner-atag:hover {color: #666; font-size: 14px; padding: 8px 0px; text-decoration: none; border: 1px solid #fff}
 div.ccm-group {position: relative; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px}
 div.ccm-group a.ccm-group-inner:hover {background-color: #d9e7ff; border: 1px solid #94a7c7}
 div.ccm-group-description {padding-left: 30px; color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
@@ -189,8 +198,9 @@ div.ccm-scroller-inner ul li.ccm-item-selected img {margin: 0px; border: 2px sol
 div.ccm-scroller-inner ul li.ccm-item-selected img.ccm-preview {margin: 2px; border: 0px}
 
 /* editor */
-div.ccm-editor-controls {background: rgb(250,250,250) url(../images/bg_editor_concrete_controls_long.png) no-repeat left scroll; text-align: right; padding:0px; }
-div.ccm-editor-controls div.ccm-editor-controls-right-cap { background:  transparent url(../images/bg_editor_concrete_controls_cap_right.png) no-repeat right; padding: 0px 18px 8px 40px }
+div.ccm-editor-controls-right-cap { background:  transparent url(../images/bg_editor_concrete_controls_cap_right.png) no-repeat right; }
+div.ccm-editor-controls-left-cap { background:  transparent url(../images/bg_editor_concrete_controls_cap_left.png) no-repeat left; }
+div.ccm-editor-controls {margin: 0px 13px 0px 39px; background: transparent url(../images/bg_editor_controls_middle.png) repeat; padding: 0px 18px 8px 0px}
 div.ccm-editor-controls ul {display: block; list-style-type: none; height: 24px; margin: 0px !important; padding: 0px;}
 div.ccm-editor-controls ul li {float: left; font-size: 10px; color: #333; margin: 0px 20px 0px 0px !important; list-style-type: none; padding: 0px}
 div.ccm-editor-controls ul li a {color: #333; text-decoration: none; display: block; padding: 10px 0px 10px 12px; background: transparent url(../images/bg_editor_concrete_caret.png) no-repeat scroll left 14px; }
@@ -222,11 +232,12 @@ table.ccm-block-type-table div.ccm-block-type-description {color: #aaa; font-siz
 table.ccm-block-type-table td {padding: 8px 2px 8px; border-bottom: 1px solid #DEDEDE}
 
 /* general overlay select list */
-ul.icon-select-list {padding: 2px 0px 0px 0px; margin: 0px}
-ul.icon-select-list li a {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
+ul.icon-select-list {padding: 2px 0px 0px 0px; margin: 0px; list-style-type: none !important;}
+ul.icon-select-list li a, ul.icon-select-list li span {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fafafa}
 ul.icon-select-list a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7 !important}
-ul.icon-select-list li {position: static; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px; left:0px; top:0px; width:auto; height:auto;}
-ul.icon-select-list li.icon-select-page a {background-image: url(../images/dashboard/sitemap/document.png);}
+ul.icon-select-list li span {color: #aaa; }
+ul.icon-select-list li {position: static; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-left: 0px; margin-bottom: 2px; left:0px; top:0px; width:auto; height:auto;}
+ul.icon-select-list li.icon-select-page a, ul.icon-select-list li.icon-select-page span {background-image: url(../images/dashboard/sitemap/document.png);}
 /* block type grid */
 
 /*

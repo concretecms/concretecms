@@ -91,8 +91,22 @@ class Controller {
 			
 		}
 		
-		if (is_callable(array($this, $method)) && (strpos($method, 'on_') !== 0) && (!in_array($method, $this->restrictedMethods))) {
+		$foundTask = false;
 		
+		try {
+			$r = new ReflectionMethod(get_class($this), $method);
+			$cl = $r->getDeclaringClass();
+			if (is_object($cl)) {
+				if ($cl->getName() != 'Controller' && strpos($method, 'on_') !== 0 && strpos($method, '__') !== 0 && $r->isPublic()) {
+					$foundTask = true;
+				}
+			}
+		} catch(Exception $e) {
+		
+		}
+			
+		if ($foundTask) {
+
 			$this->task = $method;
 			if (!is_array($this->parameters)) {
 				$this->parameters = array();
@@ -122,7 +136,7 @@ class Controller {
 				$do404 = false;
 			} else if (!is_callable(array($this, $this->task)) && count($this->parameters) > 0) {
 				$do404 = true;
-			} else if (is_callable(array($this, $this->task))) {
+			} else if (is_callable(array($this, $this->task))  && (get_class($this) != 'PageForbiddenController')) {
 				// we use reflection to see if the task itself, which now much exist, takes fewer arguments than 
 				// what is specified
 				$r = new ReflectionMethod(get_class($this), $this->task);
@@ -187,9 +201,9 @@ class Controller {
 			if(!is_array($params)) {
 				$params = array($params);
 			}
-			$ret = call_user_func_array(array($this, $method), $params);
+			return call_user_func_array(array($this, $method), $params);
 		}
-		return $ret;
+		return null;
 	}
 
 	private function isCallable($method) {
@@ -205,10 +219,13 @@ class Controller {
 	/**
 	 * @access private
 	 */
+	/*
+	// no longer used. we use reflection
 	public function setupRestrictedMethods() {
 		$methods = get_class_methods('Controller');
 		$this->restrictedMethods = $methods;
 	}
+	*/
 	
 	/** 
 	 * Returns true if the current request is a POST requested
@@ -305,6 +322,16 @@ class Controller {
 	}
 
 	/** 
+	 * Adds an item to the view's footer. This item will then be automatically printed out before the </body> section of the page
+	 * @param string $item
+	 * @return void
+	 */
+	public function addFooterItem($item) { 
+		$v = View::getInstance();
+		$v->addFooterItem($item, 'CONTROLLER');
+	}
+
+	/** 
 	 * Redirects to a given URL
 	 * @param string $location
 	 * @param string $task
@@ -360,7 +387,8 @@ class Controller {
 		$v->setCollectionObject($c);
 		$v->setController($this);
 		if (method_exists($this, 'on_before_render')) {
-			call_user_func_array(array($this, 'on_before_render'), array($method));
+			// this $view used to be $method which doesn't exist
+			$this->on_before_render($view);
 		}
 		$v->render($view);
 	}
@@ -428,7 +456,15 @@ class Controller {
 		$v = View::getInstance();
 		$v->outputHeaderItems();
 	}
-
+  
+	/** 
+	 * Outputs a list of items set by the addFooterItem() function
+	 * @return void
+	 */
+	public function outputFooterItems() {
+		$v = View::getInstance();
+		$v->outputFooterItems();
+	}
 }
 
 ?>

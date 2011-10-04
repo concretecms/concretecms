@@ -34,7 +34,7 @@
 	if (count($users) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-user-list" class="ccm-results-list">
 		<tr>
-			<th><input id="ccm-user-list-cb-all" type="checkbox" /></td>
+			<th><input id="ccm-user-list-cb-all" type="checkbox" /></th>
 			<th class="<?=$userList->getSearchResultsClass('uName')?>"><a href="<?=$userList->getSortByURL('uName', 'asc', $bu)?>"><?=t('Username')?></a></th>
 			<th class="<?=$userList->getSearchResultsClass('uEmail')?>"><a href="<?=$userList->getSortByURL('uEmail', 'asc', $bu)?>"><?=t('Email Address')?></a></th>
 			<th class="<?=$userList->getSearchResultsClass('uDateAdded')?>"><a href="<?=$userList->getSortByURL('uDateAdded', 'asc', $bu)?>"><?=t('Date Added')?></a></th>
@@ -51,7 +51,7 @@
 			$action = View::url('/dashboard/users/search?uID=' . $ui->getUserID());
 			
 			if ($mode == 'choose_one' || $mode == 'choose_multiple') {
-				$action = 'javascript:void(0); ccm_triggerSelectUser(' . $ui->getUserID() . ',\'' . $ui->getUserName() . '\'); jQuery.fn.dialog.closeTop();';
+				$action = 'javascript:void(0); ccm_triggerSelectUser(' . $ui->getUserID() . ',\'' . $txt->entities($ui->getUserName()) . '\',\'' . $txt->entities($ui->getUserEmail()) . '\'); jQuery.fn.dialog.closeTop();';
 			}
 			
 			if (!isset($striped) || $striped == 'ccm-list-record-alt') {

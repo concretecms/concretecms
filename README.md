@@ -10,9 +10,10 @@ http://www.concrete5.org
 	2.	Make sure files/ and its subdirectories are writable by the Apache process (or the world.)
 	3.	Create a new MySQL database and a MySQL user account with the following privileges on that database: INSERT, SELECT, UPDATE, DELETE, CREATE, DROP, ALTER
 	4.	Visit your Concrete5 site in your web browser. You should see an installation screen where you can specify your site's name, your base URL, and your database settings.
-	5.	Concrete 5 should be installed.
+	5.	concrete5 should be installed.
 	
 You'll probably want to change your admin user's password (which can be done in the dashboard). Also check out the settings page in the dashboard
 
 # Documentation
+
 http://concrete5.org/documentation/

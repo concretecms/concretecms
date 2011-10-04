@@ -35,7 +35,7 @@ if (is_object($key)) {
 <script type="text/javascript">
 $(function() {
 	$('input[name=uakProfileEdit]').click(function() {
-		if ($(this).attr('checked')) {
+		if ($(this).prop('checked')) {
 			$('input[name=uakProfileEditRequired]').attr('disabled', false);
 		} else {
 			$('input[name=uakProfileEditRequired]').attr('checked', false);
@@ -44,7 +44,7 @@ $(function() {
 	});
 
 	$('input[name=uakRegisterEdit]').click(function() {
-		if ($(this).attr('checked')) {
+		if ($(this).prop('checked')) {
 			$('input[name=uakRegisterEditRequired]').attr('disabled', false);
 		} else {
 			$('input[name=uakRegisterEditRequired]').attr('checked', false);
@@ -53,14 +53,14 @@ $(function() {
 	});
 	
 
-	if ($('input[name=uakProfileEdit]').attr('checked')) {
+	if ($('input[name=uakProfileEdit]').prop('checked')) {
 		$('input[name=uakProfileEditRequired]').attr('disabled', false);
 	} else {
 		$('input[name=uakProfileEditRequired]').attr('checked', false);
 		$('input[name=uakProfileEditRequired]').attr('disabled', true);		
 	}	
 
-	if ($('input[name=uakRegisterEdit]').attr('checked')) {
+	if ($('input[name=uakRegisterEdit]').prop('checked')) {
 		$('input[name=uakRegisterEditRequired]').attr('disabled', false);
 	} else {
 		$('input[name=uakRegisterEditRequired]').attr('checked', false);

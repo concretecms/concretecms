@@ -20,7 +20,7 @@ Loader::model('attribute/categories/user');
 class UserList extends DatabaseItemList { 
 
 	protected $attributeFilters = array();
-	protected $autoSortColumns = array('uName', 'uEmail', 'uDateAdded', 'uLastLogin', 'uNumLogins');
+	protected $autoSortColumns = array('uName', 'uEmail', 'uDateAdded', 'uLastLogin', 'uNumLogins', 'uLastOnline');
 	protected $itemsPerPage = 10;
 	protected $attributeClass = 'UserAttributeKey';
 	

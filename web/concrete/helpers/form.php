@@ -22,6 +22,11 @@ class FormHelper {
 
 	private $radioIndex = 1;
 	private $selectIndex = 1;
+
+	public function reset() {
+		$this->radioIndex = 1;
+		$this->selectIndex = 1;
+	}
 	
 	public function __construct() {
 		$this->th = Loader::helper("text");
@@ -44,16 +49,7 @@ class FormHelper {
 	 * return string $html
 	 */	 
 	public function submit($name, $value, $fields = array(), $additionalClasses='') {
-		$_fields = '';
-		if (isset($fields['class'])) {
-			$additionalClasses = $fields['class'];
-			unset($fields['class']);
-		}
-		foreach($fields as $key => $fieldvalue) {
-			$_fields .= $key . '="' . $fieldvalue . '" ';
-		}
-		$str = '<input type="submit" class="ccm-input-submit '.$additionalClasses.'" id="' . $name . '" name="' . $name . '" value="' . $value . '" ' . $_fields . ' />';
-		return $str;
+		return '<input type="submit"' . $this->parseMiscFields('ccm-input-submit ' . $additionalClasses, $fields) . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" />';
 	}
 
 	/** 
@@ -64,18 +60,9 @@ class FormHelper {
 	 * return string $html
 	 */	 
 	public function button($name, $value, $fields = array(), $additionalClasses='') {
-		$_fields = '';
-		if (isset($fields['class'])) {
-			$additionalClasses = $fields['class'];
-			unset($fields['class']);
-		}
-		foreach($fields as $key => $fieldvalue) {
-			$_fields .= $key . '="' . $fieldvalue . '" ';
-		}
-		$str = '<input type="button" class="ccm-input-button '.$additionalClasses.'" id="' . $name . '" name="' . $name . '" value="' . $value . '" ' . $_fields . ' />';
-		return $str;
+		return '<input type="button"' . $this->parseMiscFields('ccm-input-button ' . $additionalClasses, $fields) . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" />';
 	}
-	
+
 	/** 
 	 * Creates a label tag
 	 * @param string $field
@@ -86,7 +73,7 @@ class FormHelper {
 		$str = '<label for="' . $field . '">' . $name . '</label>';
 		return $str;
 	}
-	
+
 	/** 
 	 * Creates a file input element
 	 * @param string $key
@@ -95,7 +82,7 @@ class FormHelper {
 		$str = '<input type="file" id="' . $key . '" name="' . $key . '" value="" class="ccm-input-file" />';
 		return $str;
 	}
-	
+
 	/**
 	 * Creates a hidden form field. 
 	 * @param string $key
@@ -109,7 +96,7 @@ class FormHelper {
 		$str = '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . $value . '" />';
 		return $str;
 	}
-	
+
 	/** 
 	 * Creates an HTML checkbox
 	 * @param string $field
@@ -118,20 +105,12 @@ class FormHelper {
 	 * @return string $html
 	 */
 	public function checkbox($field, $value, $isChecked = false, $miscFields = array()) {
-
-		$mf = '';
-		if (is_array($miscFields)) {
-			foreach($miscFields as $k => $v) {
-				$mf .= $k . '="' . $v . '" ';
-			}
-		}
 		$id = $field;
 		$_field = $field;
-		$_array = false;
+
 		if ((strpos($field, '[]') + 2) == strlen($field)) {
 			$_field = substr($field, 0, strpos($field, '[]'));
 			$id = $_field . '_' . $value;
-			$_array = true;
 		}
 
 		if ($isChecked && (!isset($_REQUEST[$_field])) && ($_SERVER['REQUEST_METHOD'] != 'POST')) {
@@ -141,13 +120,12 @@ class FormHelper {
 		} else if (is_array($this->getRequestValue($field)) && in_array($value, $this->getRequestValue($field))) {
 			$checked = true;
 		}
-			
+
 		if ($checked) {
 			$checked = 'checked="checked" ';
 		}
-		
-		$str = '<input type="checkbox" class="ccm-input-checkbox" name="' . $field . '" id="' . $id . '" value="' . $value . '" ' . $checked . ' ' . $mf . ' />';
-		return $str;
+
+		return '<input type="checkbox" '. $this->parseMiscFields('ccm-input-checkbox', $miscFields) . ' name="' . $field . '" id="' . $id . '" value="' . $value . '" ' . $checked . ' />';
 	}
 
 	/** 
@@ -157,44 +135,28 @@ class FormHelper {
 	 */
 	 public function textarea($key) {
 	 	$a = func_get_args();
-		
+
 		$str = '<textarea id="' . $key . '" name="' . $key . '" ';
 		$rv = $this->getRequestValue($key);
-		
+
 		if (count($a) == 3) {
 			$innerValue = ($rv !== false) ? $rv : $a[1];
-
 			$miscFields = $a[2];
 		} else {
-			
 			if (is_array($a[1])) {
 				$innerValue = ($rv !== false) ? $rv : '';
 				$miscFields = $a[1];
 			} else {
-				
 				// we ignore this second value if a post is set with this guy in it
 				$innerValue = ($rv !== false) ? $rv : $a[1];
 			}
 		}
-		
-		if (is_array($miscFields)) {
-			if (empty($miscFields['class'])) {
-				$miscFields['class'] = "ccm-input-textarea";
-			} else {
-				$miscFields['class'] .= " ccm-input-textarea";
-			}
 
-			foreach($miscFields as $key => $value) {
-				$str .= $key . '="' . $value . '" ';
-			}
-		} else {
-			$str .= ' class="ccm-input-textarea" ';
-		}
-		
+		$str .= $this->parseMiscFields('ccm-input-textarea', $miscFields);
 		$str .= '>' . $innerValue . '</textarea>';
 		return $str;
 	 }
-	 
+
 	/**
 	 * Generates a radio button
 	 * @param string $key
@@ -202,28 +164,24 @@ class FormHelper {
 	 * @param string $valueOfSelectedOption
 	 */
 	public function radio($key, $value, $valueOrArray = false, $miscFields = array()) {
-		$str = '<input type="radio" class="ccm-input-radio" name="' . $key . '" id="' . $key . $this->radioIndex . '" value="' . $value . '" ';
-		
+		$str = '<input type="radio" name="' . $key . '" id="' . $key . $this->radioIndex . '" value="' . $value . '" ';
+
 		if (is_array($valueOrArray)) {
 			$miscFields = $valueOrArray;
 		}
 
-		if (is_array($miscFields)) {
-			foreach($miscFields as $k => $v) {
-				$str .= $k . '="' . $v . '" ';
-			}
-		}
-		
+		$str .= $this->parseMiscFields('ccm-input-radio', $miscFields) . ' ';
+
 		if ($valueOrArray == $value && !isset($_REQUEST[$key]) || (isset($_REQUEST[$key]) && $_REQUEST[$key] == $value)) {
 			$str .= 'checked="checked" ';
 		}
-		
+
 		$this->radioIndex++;
-		
+
 		$str .= ' />';
 		return $str;
 	}
-	
+
 	protected function processRequestValue($key, $type = "post") {
 		$arr = ($type == 'post') ? $_POST : $_GET;
 		if (strpos($key, '[') !== false) {
@@ -251,10 +209,10 @@ class FormHelper {
 		if (isset($arr[$key])) {
 			return $this->th->entities($arr[$key]);
 		}
-		
+
 		return false;
 	}
-	
+
 	// checks the request based on the key passed. Does things like turn the key into arrays if the key has text versions of [ and ] in it, etc..
 	public function getRequestValue($key) {
 		$val = $this->processRequestValue($key, 'post');
@@ -265,68 +223,98 @@ class FormHelper {
 		}
 	}
 
-	/**
-	 * Renders a text input field. Second argument is either the value of the field (and if it's blank we check post) or a misc. array of fields
-	 * @param string $key
-	 * @return $html
-	 */
-	public function text($key) {
-		$a = func_get_args();
-		$val = $this->getRequestValue($key);
-		$class = "ccm-input-text";
 
-		// index 0 is always the key
-		// need to figure out a good way to get a unique ID
-		$str = '<input id="' . $key . '" type="text" name="' . $key . '" ';
-		
-		// if there are two more values, then we treat index 1 as the value in the
-		// value field, and index 2 as an assoc. array of other stuff to add
-		// to the tag. If there's only one, then it's the array
-		if (count($a) == 3) {
-			$val = ($val !== false) ? $val : $a[1];
-			$val = str_replace('"', '&#34;', $val);
-			$str .= 'value="' . $val . '" ';
-			$miscFields = $a[2];
+	/**
+	 * Internal function that creates an <input> element of type $type. Handles the messiness of evaluating $valueOrArray. Assigns a default class of ccm-input-$type
+	 * @param string $key Input element's name and id
+	 * @param string $type Accepted value for HTML attribute "type"
+	 * @param string|array $valueOrArray Either the default value (subject to be overridden by $_REQUEST) or $miscFields (see below)
+	 * @param array $miscFields A hash array with html attributes as key/value pairs (possibly including "class")
+	 * @return $html
+
+	 */
+	protected function inputType($key, $type, $valueOrArray, $miscFields) {
+		$val = $this->getRequestValue($key);
+
+		if (is_array($valueOrArray)) {
+			//valueOrArray is, in fact, the miscFields array
+			$miscFields = $valueOrArray;
 		} else {
-			if (is_array($a[1])) {
-				$str .= 'value="' . $val . '" ';
-				$val = str_replace('"', '&#34;', $val);
-				$miscFields = $a[1];
-			} else {
-				// we ignore this second value if a post is set with this guy in it
-				$val = ($val !== false) ? $val : $a[1];
-				$val = str_replace('"', '&#34;', $val);
-				$str .= 'value="' . $val . '" ';
-			}
+			//valueOrArray is either empty or the default field value; miscFields is either empty or the miscFields
+			$val = ($val !== false) ? $val : $valueOrArray;
 		}
-		
-		if (is_array($miscFields)) {
-			foreach($miscFields as $key => $value) {
-				if ($key == 'class') {
-					$class .= ' ' . $value;
-				} else {
-					$str .= $key . '="' . $value . '" ';
-				}
-			}
-		}
-		$str .= 'class="'.$class.'" />';
-		
-		return $str;
-		
+		$val = str_replace('"', '&#34;', $val);
+
+		return "<input id=\"$key\" type=\"$type\" name=\"$key\" value=\"$val\" " . $this->parseMiscFields("ccm-input-$type", $miscFields) . ' />';
 	}
 
+	/**
+	 * Renders a text input field.
+	 * @param string $key Input element's name and id
+	 * @param string|array $valueOrArray Either the default value (subject to be overridden by $_REQUEST) or $miscFields (see below)
+	 * @param array $miscFields A hash array with html attributes as key/value pairs (possibly including "class")
+	 * @return $html
+	 */
+	public function text($key, $valueOrArray = false, $miscFields = array()) {
+		return $this->inputType($key, 'text', $valueOrArray, $miscFields);
+
+	}
+
+	/**
+	 * Renders an email input field.
+	 * @param string $key Input element's name and id
+	 * @param string|array $valueOrArray Either the default value (subject to be overridden by $_REQUEST) or $miscFields (see below)
+	 * @param array $miscFields A hash array with html attributes as key/value pairs (possibly including "class")
+	 * @return $html
+	 */
+	public function email($key, $valueOrArray = false, $miscFields = array()) {
+		return $this->inputType($key, 'email', $valueOrArray, $miscFields);
+	}
+	
+	/**
+	 * Renders a telephone input field.
+	 * @param string $key Input element's name and id
+	 * @param string|array $valueOrArray Either the default value (subject to be overridden by $_REQUEST) or $miscFields (see below)
+	 * @param array $miscFields A hash array with html attributes as key/value pairs (possibly including "class")
+	 * @return $html
+	 */
+	public function telephone($key, $valueOrArray = false, $miscFields = array()) {
+		return $this->inputType($key, 'tel', $valueOrArray, $miscFields);
+	}
+
+	/**
+	 * Renders a URL input field.
+	 * @param string $key Input element's name and id
+	 * @param string|array $valueOrArray Either the default value (subject to be overridden by $_REQUEST) or $miscFields (see below)
+	 * @param array $miscFields A hash array with html attributes as key/value pairs (possibly including "class")
+	 * @return $html
+	 */
+	public function url($key, $valueOrArray = false, $miscFields = array()) {
+		return $this->inputType($key, 'url', $valueOrArray, $miscFields);
+	}
+
+	/**
+	 * Renders a search input field.
+	 * @param string $key Input element's name and id
+	 * @param string|array $valueOrArray Either the default value (subject to be overridden by $_REQUEST) or $miscFields (see below)
+	 * @param array $miscFields A hash array with html attributes as key/value pairs (possibly including "class")
+	 * @return $html
+	 */
+	public function search($key, $valueOrArray = false, $miscFields = array()) {
+		return $this->inputType($key, 'search', $valueOrArray, $miscFields);
+	}
 
 	/**
 	 * Renders a select field. First argument is the name of the field. Second is an associative array of key => display. Second argument is either the value of the field to be selected (and if it's blank we check post) or a misc. array of fields
 	 * @param string $key
 	 * @return $html
 	 */
-	public function select($key, $values, $valueOrArray = false, $miscFields = array()) {
+	public function select($key, $optionValues, $valueOrArray = false, $miscFields = array()) {
 		$val = $this->getRequestValue($key);
 		if (is_array($val)) {
 			$valueOrArray = $val[0];
 		}
-		
+
 		if ((strpos($key, '[]') + 2) == strlen($key)) {
 			$_key = substr($key, 0, strpos($key, '[]'));
 			$id = $_key . $this->selectIndex;
@@ -335,30 +323,15 @@ class FormHelper {
 			$id = $key;
 		}
 
-
 		if (is_array($valueOrArray)) {
 			$miscFields = $valueOrArray;
 		} else {
 			$miscFields['ccm-passed-value'] = $valueOrArray;	
 		}
-		
-		$_class = '';
-		if (is_array($miscFields) && isset($miscFields['class'])) {
-			$_class = ' ' . $miscFields['class'];
-		}
-		unset($miscFields['class']);
-		$str = '<select class="ccm-input-select' . $_class . '" name="' . $key . '" id="' . $id . '" ';
 
-		if (is_array($miscFields)) {
-			foreach($miscFields as $k => $value) {
-				$str .= $k . '="' . $value . '" ';
-			}
-		}
-		
-		$str .= '>';
-		
+		$str = '<select name="' . $key . '" id="' . $id . '" ' . $this->parseMiscFields('ccm-input-select', $miscFields) . '>';
 
-		foreach($values as $k => $value) { 
+		foreach($optionValues as $k => $value) {
 			$selected = "";
 			if ($valueOrArray == $k && !isset($_REQUEST[$_key]) || ($val !== false && $val == $k) || (is_array($_REQUEST[$_key]) && (in_array($k, $_REQUEST[$_key])))) {
 				$selected = 'selected="selected"';
@@ -366,64 +339,69 @@ class FormHelper {
 			$str .= '<option value="' . $k . '" ' . $selected . '>' . $value . '</option>';
 		}
 
-		
 		$this->selectIndex++;
 
 		$str .= '</select>';
 		return $str;
 	}
-	
-
 
 	/**
-	 * Renders a password field. Second argument is either the value of the field (and if it's blank we check post) or a misc. array of fields
-	 * @param string $key
+	 * Renders a multiple select box
+	 * @param string $key Select's name and id
+	 * @param array $optionValues Hash array with name/value as the select's option value/text
+	 * @param array|string $defaultValues Default value(s) which match with the option values; overridden by $_REQUEST
+	 * @param array $miscFields A hash array with html attributes as key/value pairs (possibly including "class")
 	 * @return $html
 	 */
-	public function password($key) {
-		$a = func_get_args();
-		$val = $this->getRequestValue($key);
-		$class = "ccm-input-password";
+	public function selectMultiple($key, $optionValues, $defaultValues = false, $miscFields = array()) {
+        $val = $this->getRequestValue($key . '[]');
 
-		// index 0 is always the key
-		// need to figure out a good way to get a unique ID
-		$str = '<input id="' . $key . '" type="password" name="' . $key . '" ';
-		
-		// if there are two more values, then we treat index 1 as the value in the
-		// value field, and index 2 as an assoc. array of other stuff to add
-		// to the tag. If there's only one, then it's the array
-		
-		if (count($a) == 3) {
-			$val = ($val !== false) ? $val : $a[1];
-			$str .= 'value="' . $val . '" ';
-			$miscFields = $a[2];
-			foreach($a[2] as $key => $value) {
-				$str .= $key . '="' . $value . '" ';
-			}
-		} else {
-			if (is_array($a[1])) {
-				$str .= 'value="' . $val . '" ';
-				$miscFields = $a[1];
-			} else {
-				// we ignore this second value if a post is set with this guy in it
-				$val = ($val !== false) ? $val : $a[1];
-				$str .= 'value="' . $val . '" ';
-			}
+        $defaultValues = (array) $defaultValues;
+
+        if ($val) {
+            $defaultValues = $val;
+        }
+
+        $str = "<input type='hidden' class='ignore' name='{$key}' value='' />
+                <select name=\"{$key}[]\" id=\"$key\" multiple=\"multiple\"" . $this->parseMiscFields('ccm-input-select', $miscFields) . ">";
+        foreach ($optionValues as $val => $text) {
+            $selected = in_array($val, $defaultValues) ? ' selected="selected"' : '';
+            $str .= "<option value=\"$val\"$selected>$text</option>";
+        }
+        $str .= "</select>";
+
+        return $str;
+    }
+
+	/**
+	 * Renders a password input field.
+	 * @param string $key Input element's name and id
+	 * @param string|array $valueOrArray Either the default value (subject to be overridden by $_REQUEST) or $miscFields (see below)
+	 * @param array $miscFields A hash array with html attributes as key/value pairs (possibly including "class")
+	 * @return $html
+	 */
+	public function password($key, $valueOrArray = false, $miscFields = array()) {
+		return $this->inputType($key, 'password', $valueOrArray, $miscFields);
+	}
+
+	/**
+	 * Create an HTML fragment of attribute values, merging any CSS class names as necessary
+	 * @param string $defaultClass Default CSS class name
+	 * @param array $attributes A hash array of attributes (name => value)
+	 * @return string a fragment of attributes suitable to put inside of an HTML tag
+	 */
+	protected function parseMiscFields($defaultClass, $attributes) {
+		$attr = '';
+
+		if ($defaultClass) {
+			$attributes['class'] = trim((isset($attributes['class']) ? $attributes['class'] : '') . ' ' . $defaultClass);
 		}
 		
-		if (is_array($miscFields)) {
-			foreach($miscFields as $key => $value) {
-				if ($key == 'class') {
-					$class .= ' ' . $value;
-				} else {
-					$str .= $key . '="' . $value . '" ';
-				}
-			}
+		foreach ((array) $attributes as $k => $v) {
+			$attr .= " $k=\"$v\"";
 		}
-		$str .= 'class="'.$class.'" />';
-		
-		return $str;
-		
+
+		return $attr;
 	}
 
 }

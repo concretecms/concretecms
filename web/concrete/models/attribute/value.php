@@ -83,7 +83,7 @@ class AttributeValue extends Object {
 			foreach($modes as $mode) {
 				$method = 'get' . $th->camelcase($mode) . 'Value';
 				if (method_exists($this->attributeType->controller, $method)) {
-					return call_user_func(array($this->attributeType->controller, $method));
+					return $this->attributeType->controller->{$method}();
 				}
 			}
 		}		

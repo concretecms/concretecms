@@ -31,7 +31,7 @@
 			if ($args['fID'] < 1) {
 				$e->add(t('You must select a file.'));
 			}
-			if ($args['fileLinkText'] == '') {
+			if (trim($args['fileLinkText']) == '') {
 				$e->add(t('You must give your file a link.'));
 			}
 			return $e;

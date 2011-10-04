@@ -15,17 +15,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
  	<div id="ccm_edit_pane_nextPreviousWrap" style="display:<?php echo ($controller->linkStyle!='page_name')?'block':'none' ?>" >
         <div class="ccm-block-field-group">
           <h2><?php  echo t('Next Label')?></h2>  
-          <input name="nextLabel" type="text" value="<?php echo htmlentities($controller->nextLabel, ENT_QUOTES, 'UTF-8') ?>" />
+          <input name="nextLabel" type="text" value="<?php echo htmlentities($controller->nextLabel, ENT_QUOTES, APP_CHARSET) ?>" />
         </div>
         
         <div class="ccm-block-field-group">
           <h2><?php  echo t('Previous Label')?></h2>  
-          <input name="previousLabel" type="text" value="<?php echo htmlentities($controller->previousLabel, ENT_QUOTES, 'UTF-8') ?>" />
+          <input name="previousLabel" type="text" value="<?php echo htmlentities($controller->previousLabel, ENT_QUOTES, APP_CHARSET) ?>" />
         </div>
         
         <div class="ccm-block-field-group">
           <h2><?php  echo t('Up Label')?></h2>  
-          <input name="parentLabel" type="text" value="<?php echo htmlentities($controller->parentLabel, ENT_QUOTES, 'UTF-8') ?>" />
+          <input name="parentLabel" type="text" value="<?php echo htmlentities($controller->parentLabel, ENT_QUOTES, APP_CHARSET) ?>" />
         </div>
     </div>
     
@@ -42,8 +42,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<div class="ccm-block-field-group">
 	  <h2><?php  echo t('Page Order')?></h2>  
       <select name="orderBy">
-          <option value="display_asc" <?php echo ($controller->orderBy=='display_asc') ? 'selected="selected"' : '' ?>>Sitemap</option>
-          <option value="chrono_desc" <?php echo ($controller->orderBy=='chrono_desc') ? 'selected="selected"' : '' ?>>Chronological</option>
+          <option value="display_asc" <?php echo ($controller->orderBy=='display_asc') ? 'selected="selected"' : '' ?>><?=t('Sitemap')?></option>
+          <option value="chrono_desc" <?php echo ($controller->orderBy=='chrono_desc') ? 'selected="selected"' : '' ?>><?=t('Chronological')?></option>
       </select>
 	</div> 
     

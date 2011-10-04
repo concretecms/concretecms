@@ -39,19 +39,23 @@ $aPicnikParams['_import'] = "image_file";
 
 $aPicnikParams['image_file'] = "@".$fv->getPath();
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_VERBOSE, 0);
-curl_setopt($ch, CURLOPT_URL, $strPicnikUrl);
-//Don't ask me what this does, I just know that without this funny header, the whole thing doesn't work!
-curl_setopt($ch, CURLOPT_HTTPHEADER,array('Expect:'));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-curl_setopt($ch, CURLOPT_POST, 1 );
-
-//seems no need to tell it enctype='multipart/data' it already knows
-curl_setopt($ch, CURLOPT_POSTFIELDS, $aPicnikParams );
-
-$url = curl_exec( $ch );
-curl_close ($ch);
-
-?>
-<iframe class="ccm-file-editor-wrapper" id="ccm-file-editor-wrapper<?=time()?>" style="padding: 0px; border: 0px; margin: 0px" width="100%" height="100%" frameborder="0" border="0" src="<?=$url?>"></iframe>
+if (!function_exists('curl_init')) {
+	print t('You must have the curl extension installed to use the remote image editor.');
+} else {
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_VERBOSE, 0);
+	curl_setopt($ch, CURLOPT_URL, $strPicnikUrl);
+	//Don't ask me what this does, I just know that without this funny header, the whole thing doesn't work!
+	curl_setopt($ch, CURLOPT_HTTPHEADER,array('Expect:'));
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+	curl_setopt($ch, CURLOPT_POST, 1 );
+	
+	//seems no need to tell it enctype='multipart/data' it already knows
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $aPicnikParams );
+	
+	$url = curl_exec( $ch );
+	curl_close ($ch);
+	
+	?>
+	<iframe class="ccm-file-editor-wrapper" id="ccm-file-editor-wrapper<?=time()?>" style="padding: 0px; border: 0px; margin: 0px" width="100%" height="100%" frameborder="0" border="0" src="<?=$url?>"></iframe>
+<? } ?>
