@@ -281,6 +281,10 @@
     	        $instance = $instances[$class];
 			}
 			
+			if(method_exists($instance,'reset')) {
+				$instance->reset();
+			}
+			
 			return $instance;
 		}
 		

@@ -1,11 +1,4 @@
-<?
-/**
- * @package Helpers
- * @category Concrete
- * @author Tony Trupp <tony@concrete5.org>
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- */
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
  * Class to paginate record sets.
@@ -16,7 +9,6 @@
  * @license    http://www.concrete5.org/license/     MIT License
  */
 
-defined('C5_EXECUTE') or die("Access Denied.");
 class PaginationHelper {
 
 	public $current_page=0;	//Zero Based
@@ -34,11 +26,24 @@ class PaginationHelper {
 	public $queryStringPagingVariable = PAGING_STRING;
 	public $additionalVars = array();
 	
-	function PaginationHelper(){
-	
+	public function reset() {
+		$this->current_page=0;	//Zero Based
+		$this->page_size=20;
+		$this->result_offset=0;
+		$this->number_of_pages=0;
+		$this->result_count=0;
+		$this->result_lower=0; //for 'Results lower-upper of result_count'
+		$this->result_upper=0;
+		$this->classOff='ltgray';
+		$this->classOn='';
+		$this->classCurrent='currentPage';		
+		$this->URL	='';
+		$this->jsFunctionCall='';
+		$this->queryStringPagingVariable = PAGING_STRING;
+		$this->additionalVars = array();
 	}
 	
-	function init($page_num,$num_results=0,$URL='',$size=20,$jsFunctionCall=''){
+	public function init($page_num,$num_results=0,$URL='',$size=20,$jsFunctionCall=''){
 		$page_num=intval($page_num);
 		if($page_num>0) $page_num--;
 		$this->current_page=$page_num;
@@ -58,7 +63,7 @@ class PaginationHelper {
 		if($jsFunctionCall) $this->jsFunctionCall=$jsFunctionCall;
 	}
 	
-	private function getBaseURL($url = false) {
+	protected function getBaseURL($url = false) {
 		$uh = Loader::helper('url');
 		$args = array($this->queryStringPagingVariable => '%pageNum%');
 		if (count($this->additionalVars) > 0) {			
@@ -74,7 +79,7 @@ class PaginationHelper {
 		$this->additionalVars = $args;
 	}
 	
-	function recalc($num_results){
+	public function recalc($num_results){
 		//recalulate the number of pages
 		$this->result_count=intval($num_results);
 		if ($this->page_size==0) $this->page_size=1;
@@ -93,12 +98,12 @@ class PaginationHelper {
 		}
 	}
 	
-	function getLIMIT(){
+	public function getLIMIT(){
 		//for MYSQL Limit statement
 		return $this->result_offset.','.$this->page_size; 
 	}
 	
-	function getCurrentURL(){
+	public function getCurrentURL(){
 		return str_replace("%pageNum%",$this->current_page, $this->URL);
 	}
 	
@@ -106,11 +111,11 @@ class PaginationHelper {
 		return $this->queryStringPagingVariable;
 	}
 	
-	function getCurrentPage() {
+	public function getCurrentPage() {
 		return $this->current_page;
 	}
 	
-	function getRequestedPage() {
+	public function getRequestedPage() {
 		if (isset($_REQUEST[$this->queryStringPagingVariable])) {
 			return $_REQUEST[$this->queryStringPagingVariable];
 		} else {
@@ -122,11 +127,11 @@ class PaginationHelper {
 		return $this->current_page < ($this->number_of_pages-1);
 	}
 	
-	function getTotalPages() {
+	public function getTotalPages() {
 		return $this->number_of_pages;
 	}
 	
-	function getNext($linkText = false){
+	public function getNext($linkText = false){
 		if (!$linkText) {
 			$linkText = t('Next') . ' &raquo;';
 		}
@@ -140,12 +145,12 @@ class PaginationHelper {
 		}
 	}
 
-	function getNextInt(){
+	public function getNextInt(){
 		if ($this->current_page>=($this->number_of_pages-1)) return $this->number_of_pages-1;
 		return $this->current_page+1; 	
 	}			
 	
-	function getPrevious($linkText = false){
+	public function getPrevious($linkText = false){
 		if (!$linkText) {
 			$linkText = '&laquo; ' . t('Previous');
 		}
@@ -159,12 +164,12 @@ class PaginationHelper {
 		}
 	}
 
-	function getPreviousInt(){
+	public function getPreviousInt(){
 		if(($this->current_page-1)<=0) return 0;		
 		return $this->current_page-1;
 	}		
 
-	function getPages(){
+	public function getPages(){
 		if($this->number_of_pages==1) return;
 		$pages_made=0;
 		for ($i=0;$i<$this->number_of_pages;$i++){
@@ -198,7 +203,7 @@ class PaginationHelper {
 	}
 			
 	//for turning an array into a pagable set (for use with lucene, rss, etc)
-	function limitResultsToPage( $results=array() ){
+	public function limitResultsToPage( $results=array() ){
 		$posIndexedResults=array();
 		foreach( $results as $ignoredKey=>$result )
 			$posIndexedResults[]=$result;
@@ -213,7 +218,7 @@ class PaginationHelper {
 		return $limitedResults;
 	}
 				
-	function getJSFunctionCall($pageNum){
+	public function getJSFunctionCall($pageNum){
 		if(!$this->jsFunctionCall) return '';
 		return ' onclick="return '.$this->jsFunctionCall.'(this,'.$pageNum.');"';
 	}
