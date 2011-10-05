@@ -3,7 +3,7 @@
 <span><?=t('You are currently running concrete5 version <strong>%s</strong>.', APP_VERSION)?></span>
 </h1>
 
-<? if (version_compare($latest_version, APP_VERSION, '<')) { ?>
+<? if (version_compare($latest_version, APP_VERSION, '>')) { ?>
 <div class="block-message alert-message info">
 <h4><?=t('A new version of concrete5 is available!')?></h4>
 <p><?=t('The latest version of concrete5 is <strong>%s</strong>. You are running %s.', $latest_version, APP_VERSION)?></p>
