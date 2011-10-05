@@ -700,6 +700,8 @@ a.ccm-menu-icon{background:url(../images/icons_sprite.png) no-repeat top left;}
 .ccm-icon-add-stack-menu{background-position:-17px -244px !important;}
 .ccm-icon-add-layout-menu{background-position:-16px -118px !important;}
 .ccm-icon-design-menu{background-position:-18px -702px !important;}
+.ccm-icon-option-closed{background-position:34px -2003px !important;}
+.ccm-icon-option-open{background-position:34px -1931px !important;}
 .ccm-layout.ccm-edit-mode div.ccm-layout-area-highlight{border-color:#1c1;}
 .ccm-layout-controls{position:relative;top:0px;left:0px;width:100%;height:auto;padding-top:4px;margin:auto;margin-top:2px;}
 .ccm-layout-controls .ccm-slider{border:1px solid #bbb;border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;height:8px;width:99%;background:#f6f6f6 url(../images/slider_bg.png) repeat center;margin:auto;margin-bottom:8px;position:relative;left:0px;top:0px;z-index:1;}
