@@ -152,7 +152,7 @@ ccm_showAreaMenu = function(obj, e) {
 			// create the 1st instance of the menu
 			el = document.createElement("DIV");
 			el.id = "ccm-area-menu" + obj.aID;
-			el.className = "ccm-menu";
+			el.className = "ccm-menu ccm-ui";
 			el.style.display = "none";
 			document.body.appendChild(el);
 			
@@ -595,9 +595,11 @@ ccm_arrangeInit = function() {
 	});
 }
 
-ccm_selectSitemapNode = function(cID, cName) {
-	alert(cID);
-	alert(cName);
+if (typeof(ccm_selectSitemapNode) != 'function') {
+	ccm_selectSitemapNode = function(cID, cName) {
+		alert(cID);
+		alert(cName);
+	}
 }
 
 ccm_goToSitemapNode = function(cID, cName) {

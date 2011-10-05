@@ -172,6 +172,9 @@ class ConcreteInterfaceMenuItemController extends Controller {
 		$attribs = '';
 		if (is_array($this->menuItem->getLinkAttributes())) {
 			foreach($this->menuItem->getLinkAttributes() as $key => $value) {
+				if ($key == 'class') {
+					$value = 'ccm-header-nav-package-item ' . $value;
+				}
 				$attribs .= $key . '="' . $value . '" ';
 			}
 		}
