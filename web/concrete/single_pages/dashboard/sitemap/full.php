@@ -33,13 +33,18 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 <div class="ccm-dashboard-pane">
 <?=$this->controller->outputDashboardPaneHeader(t('Sitemap'));?>
 <div class="ccm-dashboard-pane-options">
-	<div id="ccm-show-all-pages">
-		<label for="ccm-show-all-pages-cb"><?=t('Show System Pages')?></label>
-		<div class="input">
-		<ul class="inputs-list">
-			<li><input type="checkbox" id="ccm-show-all-pages-cb" <? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?> checked <? } ?> /></li>
-		</ul>		
+	<a href="javascript:void(0)" onclick="ccm_dashboardToggleOptions(this)" class="ccm-icon-option-<? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?>open<? } else { ?>closed<? } ?> ccm-menu-icon"><?=t('Options')?></a>
+	<div class="ccm-dashboard-pane-options-content" <? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?> style="display: block" <? } ?>>
+		<form>
+		<div id="ccm-show-all-pages" class="clearfix">
+			<label for="ccm-show-all-pages-cb"><?=t('Show System Pages')?></label>
+			<div class="input">
+			<ul class="inputs-list">
+				<li><input type="checkbox" id="ccm-show-all-pages-cb" <? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?> checked <? } ?> /></li>
+			</ul>		
+			</div>
 		</div>
+		</form>
 	</div>
 </div>
 

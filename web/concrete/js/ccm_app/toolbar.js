@@ -25,10 +25,6 @@ $(function() {
 		clearTimeout(ccm_quickNavTimer);
 	}
 	
-	ccm_closeDashboardPane = function(r) {
-		$(r).closest('div.ccm-dashboard-pane').fadeOut(120, 'easeOutExpo');
-	}
-		
 	ccm_toggleQuickNav = function(cID, token) {
 		var l = $("#ccm-add-to-quick-nav");
 		if (l.hasClass('ccm-icon-favorite-selected')) {
