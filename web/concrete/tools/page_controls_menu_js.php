@@ -97,9 +97,23 @@ menuHTML += '<div id="ccm-toolbar">';
 menuHTML += '<img id="ccm-logo" src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" height="49" width="49" alt="Concrete5" />';
 
 menuHTML += '<ul id="ccm-main-nav">';
-menuHTML += '<li <? if ($c->isEditMode()) { ?>class="ccm-nav-edit-mode-active"<? } ?>><a class="ccm-icon-edit ccm-menu-icon" id="ccm-nav-edit" href="javascript:void(0)"><? if ($c->isEditMode()) { ?><?=t('Editing')?><? } else { ?><?=t('Edit')?></a><? } ?></li>';
-menuHTML += '</ul>';
+<? if ($c->isMasterCollection()) { ?>
+	menuHTML += '<li><a class="ccm-icon-back ccm-menu-icon" href="<?=View::url('/dashboard/pages/types')?>"><?=t('Page Types')?></a></li>';
+<? } ?>
 
+menuHTML += '<li <? if ($c->isEditMode()) { ?>class="ccm-nav-edit-mode-active"<? } ?>><a class="ccm-icon-edit ccm-menu-icon" id="ccm-nav-edit" href="javascript:void(0)"><? if ($c->isEditMode()) { ?><?=t('Editing')?><? } else { ?><?=t('Edit')?></a><? } ?></li>';
+<?
+$items = $ihm->getPageHeaderMenuItems('left');
+foreach($items as $ih) {
+	$cnt = $ih->getController(); 
+	if ($cnt->displayItem()) {
+	?>
+		menuHTML += '<li><?=$cnt->getMenuLinkHTML()?></li>';
+	<?
+	}
+}
+?>
+menuHTML += '</ul>';
 menuHTML += '<ul id="ccm-system-nav">';
 <?
 $items = $ihm->getPageHeaderMenuItems('right');
@@ -112,7 +126,10 @@ foreach($items as $ih) {
 	}
 }
 ?>
-menuHTML += '<li><a class="ccm-icon-dashboard ccm-menu-icon" id="ccm-nav-dashboard" href="<?=View::url('/dashboard')?>"><?=t('Dashboard')?></a></li>';
+
+<? if ($dh->canRead()) { ?>
+	menuHTML += '<li><a class="ccm-icon-dashboard ccm-menu-icon" id="ccm-nav-dashboard" href="<?=View::url('/dashboard')?>"><?=t('Dashboard')?></a></li>';
+<? } ?>
 menuHTML += '<li id="ccm-nav-intelligent-search-wrapper"><input type="search" placeholder="<?=t('Intelligent Search')?>" id="ccm-nav-intelligent-search" tabindex="1" /></li>';
 menuHTML += '<li><a id="ccm-nav-sign-out" class="ccm-icon-sign-out ccm-menu-icon" href="<?=View::url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>';
 menuHTML += '</ul>';
@@ -214,60 +231,8 @@ menuHTML += '<?=addslashes($ish->getQuickNavigationBar())?>';
 
 ?>
 
-<? if ($dh->canRead()) { ?>
-	<? if ($c->isMasterCollection()) { ?>
-			menuHTML += '<li><a id="ccm-nav-dashboard" class="return-to-pagetypes" href="<?=View::url('/dashboard/pages/types')?>"><?=t('Back to Page Types')?></a></li>';
-	<? } else { ?>
-			menuHTML += '<li><a id="ccm-nav-dashboard" href="<?=View::url('/dashboard')?>"><?=t('Dashboard')?></a></li>';
-	<? } ?>
-<? } ?>
-menuHTML += '<li><a id="ccm-nav-help" dialog-title="<?=t('Help')?>" dialog-on-open="$(\'#ccm-nav-help\').removeClass(\'ccm-nav-loading\')" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/help/" dialog-width="500" dialog-height="350" dialog-modal="false"><?=t('Help')?></a></li>';
-menuHTML += '<li class="ccm-last"><a id="ccm-nav-logout" href="<?=View::url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>';
-menuHTML += '</ul>';
-menuHTML += '</div>';
-menuHTML += '</div>';
-
-menuHTML += '<ul id="ccm-main-nav">';
-<? if (!$c->isAlias()) { ?>
-menuHTML += '<li class="ccm-main-nav-view-option" <? if ($c->isEditMode()) { ?> style="display: none" <? } ?>><? if ($cantCheckOut) { ?><span id="ccm-nav-edit"><?=t('Edit Page')?></span><? } else if ($cp->canWrite() || $cp->canApproveCollection()) { ?><a href="javascript:void(0)" id="ccm-nav-edit"><?=t('Edit Page')?></a><? } ?></li>';
-<? if ($cp->canAddSubContent() && !$c->isMasterCollection()) { ?>
-	menuHTML += '<li class="ccm-main-nav-view-option" <? if ($c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-add"><?=t('Add Page')?></a></li>';
-<? } ?>
 menuHTML += '<li class="ccm-main-nav-arrange-option" <? if (!$c->isArrangeMode()) { ?> style="display: none" <? } ?>><a href="#" id="ccm-nav-save-arrange"><?=t('Save Positioning')?></a></li>';
-<? if ($c->isMasterCollection()) { ?>
-menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode() || ($vo->isNew()))  { ?> style="display: none" <? } ?>><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-in<?=$token?>" id="ccm-nav-exit-edit-direct"><?=t('Exit Edit Mode')?></a></li>';
-<? } else { ?>
- menuHTML += '<li class="ccm-main-nav-edit-option ccm-main-nav-exit-edit-mode-direct" <? if (!$c->isEditMode() || ($vo->isNew()))  { ?> style="display: none" <? } ?>><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-in<?=$token?>" id="ccm-nav-exit-edit-direct"><?=t('Exit Edit Mode')?></a></li>';
- menuHTML += '<li class="ccm-main-nav-edit-option ccm-main-nav-exit-edit-mode" <? if (!$c->isEditMode() || (!$vo->isNew())) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-exit-edit"><?=t('Exit Edit Mode')?></a></li>';
-<? } ?>
-<? if ($cp->canWrite()) { ?>
- 	menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-properties"><?=t('Properties')?></a></li>';
- <? } ?>
-<? if ($cp->canAdminPage() && !$c->isMasterCollection()) { ?>
-menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-design"><?=t('Design')?></a></li>';
-<? } ?>
- <? if ($cp->canAdminPage()) { ?>
-	menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-permissions"><?=t('Permissions')?></a></li>';
- <? } ?>
- <? if ($cp->canReadVersions() && !$c->isMasterCollection()) { ?>
- 	menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-versions"><?=t('Versions')?></a></li>';
- <? } ?>
-<? if (($sh->canRead() || $cp->canDeleteCollection()) && !$c->isMasterCollection()) { ?>
- 	menuHTML += '<li class="ccm-main-nav-edit-option" <? if (!$c->isEditMode()) { ?> style="display: none" <? } ?>><a href="javascript:void(0)" id="ccm-nav-mcd"><?=t('Move/Delete')?></a></li>';
- <? } ?>
- <? } ?>
 
-<?
-$items = $ihm->getPageHeaderMenuItems('left');
-foreach($items as $ih) {
-	$cnt = $ih->getController(); 
-	if ($cnt->displayItem()) {
-	?>
-		menuHTML += '<li><?=$cnt->getMenuLinkHTML()?></li>';
-	<?
-	}
-}
-?>
 menuHTML += '</ul>';
 menuHTML += '</div>';
 menuHTML += '<div id="ccm-page-detail"><div id="ccm-page-detail-l"><div id="ccm-page-detail-r" class="ccm-ui"><div id="ccm-page-detail-content"></div></div></div>';

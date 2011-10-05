@@ -62,9 +62,6 @@ $(function() {
 	}
 	
 	ccm_activateToolbar = function() {
-		$("#ccm-toolbar li a").click(function() {
-			$(this).parent().addClass('ccm-system-nav-selected');
-		});
 		$("#ccm-toolbar,#ccm-quick-nav").hover(function() {
 			ccm_showQuickNav();
 		}, function() {

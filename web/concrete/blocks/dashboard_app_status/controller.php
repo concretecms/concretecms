@@ -19,9 +19,27 @@
 		}
 		
 		public function view() {
-			Loader::block('form');
-			$this->set('totalFormSubmissions', FormBlockStatistics::getTotalSubmissions());
-			$this->set('totalFormSubmissionsToday', FormBlockStatistics::getTotalSubmissions(date('Y-m-d')));
+			$this->set('latest_version', Config::get('APP_VERSION_LATEST'));
+			$tp = new TaskPermission();
+			$updates = 0;
+			if ($tp->canInstallPackages()) { 
+				$local = Package::getLocalUpgradeablePackages();
+				$remote = Package::getRemotelyUpgradeablePackages();
+			}
+			
+			// now we strip out any dupes for the total
+			$updates = 0;
+			$localHandles = array();
+			foreach($local as $_pkg) {
+				$updates++;
+				$localHandles[] = $_pkg->getPackageHandle();
+			}
+			foreach($remote as $_pkg) {
+				if (!in_array($_pkg->getPackageHandle(), $localHandles)) {
+					$updates++;
+				}
+			}
+			$this->set('updates', $updates);
 		}
 		
 	}
