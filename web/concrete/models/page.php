@@ -251,7 +251,23 @@ class Page extends Collection {
 			}
 		}
 	}
-
+	/** 
+	* Gets the user that is editing the current page. 
+	* $return string $name
+	*/
+	public function getCollectionCheckedOutUserName() {
+		$db = Loader::db();
+		$query = "select cCheckedOutUID from Pages where cID = ?";
+		$vals=array($this->cID);
+		$checkedOutId = $db->getOne($query, $vals);
+		if(is_object(UserInfo::getByID($checkedOutId))){
+		    $ui = UserInfo::getByID($checkedOutId);
+		    $name=$ui->getUserName();
+		}else{
+		    $name=GUEST_GROUP_NAME;
+		}
+		return $name;
+	}
 	/**
 	 * Checks if the page is checked out by the current user
 	 * @return bool
