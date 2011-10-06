@@ -157,7 +157,8 @@ if ($cp->canAdminPage()) {
 		</div>
 
 		<?php if (!$c->isGeneratedCollection()) { ?>
-			<label><?= t('Additional Page URL(s)') ?></label>
+			<label><?php echo  t('Additional Page URL(s)') ?></label>
+			<p><?php echo t('Remember to include a slash before the page name, for example \'/my-alternative-url\'.');?></p>
 	
 			<div class="ccm-field">
 			<?php
@@ -173,7 +174,8 @@ if ($cp->canAdminPage()) {
 				}
 			?>
 		    <span class="ccm-meta-path">
-	     		<input type="text" name="ppURL-add-0" class="ccm-input-text" value="" id="ppID-add-0">
+	     		<?php echo BASE_URL . DIR_REL;?><?php  if (URL_REWRITING == false) { ?>/<?php echo DISPATCHER_FILENAME?><?php  } ?><?php 
+			print substr($c->getCollectionPath(), 0, strrpos($c->getCollectionPath(), '/'))?> <input type="text" name="ppURL-add-0" class="ccm-input-text" value="" id="ppID-add-0">
 		 		<a href="javascript:void(0)" class="ccm-meta-path-add"><?=t('Add Path')?></a>
 			</span>
 			</div>
