@@ -126,8 +126,8 @@
 	}
 	?>
 	
-	<?=$form->hidden('uName', $_POST['uName'])?>
-	<?=$form->hidden('uPassword', $_POST['uPassword'])?>
+	<?=$form->hidden('uName', Loader::helper('text')->entities($_POST['uName']))?>
+	<?=$form->hidden('uPassword', Loader::helper('text')->entities($_POST['uPassword']))?>
 	<?=$form->hidden('uOpenID', $uOpenID)?>
 	<?=$form->hidden('completePartialProfile', true)?>
 

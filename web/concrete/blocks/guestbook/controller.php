@@ -126,9 +126,9 @@
 				$txt = Loader::helper('text');
 
 				$E = new GuestBookBlockEntry($this->bID, $c->getCollectionID());
-				$E->user_name = $txt->sanitize($_POST['name']).'';
-				$E->user_email = $txt->sanitize($_POST['email']).'';
-				$E->commentText = $txt->sanitize($_POST['commentText']);
+				$E->user_name = $txt->entities($_POST['name']).'';
+				$E->user_email = $txt->entities($_POST['email']).'';
+				$E->commentText = $txt->entities($_POST['commentText']);
 				$E->uID			= $uID;
 				
 				$E->entryID = ($_POST['entryID']?$_POST['entryID']:NULL);
