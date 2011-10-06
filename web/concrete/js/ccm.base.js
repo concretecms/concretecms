@@ -53,16 +53,25 @@ ccm_activateSite = function() {
 	ccm_topPaneDeactivated = false;
 }
 
+
 ccm_addHeaderItem = function(item, type) {
+	// "item" might already have a "?v=", so avoid invalid query string.
+	var qschar = (item.indexOf('?') != -1 ? '' : '?ts=');
 	if (type == 'CSS') {
-		if (!($('head').children('link[href*="' + item + '"]').length)) {
-			$('head').append('<link rel="stylesheet" type="text/css" href="' + item + '?ts=' + new Date().getTime() + '" />');
+		if (navigator.userAgent.indexOf('MSIE') != -1) {
+			// Most reliable way found to force IE to apply dynamically inserted stylesheet across jQuery versions
+			var ss = document.createElement('link'), hd = document.getElementsByTagName('head')[0];
+			ss.type = 'text/css'; ss.rel = 'stylesheet'; ss.href = item; ss.media = 'screen';
+			hd.appendChild(ss);
+		} else {
+			if (!($('head').children('link[href*="' + item + '"]').length)) {
+				$('head').append('<link rel="stylesheet" media="screen" type="text/css" href="' + item + qschar + new Date().getTime() + '" />');
+			}
 		}
 	} else if (type == 'JAVASCRIPT') {
 		if (!($('head').children('script[src*="' + item + '"]').length)) {
-			$('head').append('<script type="text/javascript" src="' + item + '?ts=' + new Date().getTime() + '"></script>');
+			$('head').append('<script type="text/javascript" src="' + item + qschar + new Date().getTime() + '"></script>');
 		}
-
 	} else {
 		if (!($('head').children(item).length)) {
 			$('head').append(item);
