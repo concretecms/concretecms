@@ -214,7 +214,7 @@ class SurveyBlockController extends BlockController {
 		}
 		
 		if ($total_results <= 0) { 
-			$chart_options = '<div style="text-align: center; margin-top: 15px;"><?php echo t('No data is available yet.')?></div>';
+			$chart_options = '<div style="text-align: center; margin-top: 15px;">' . t('No data is available yet.') . '</div>';
 			$this->set('chart_options', $chart_options);
 			return;
 		}		
