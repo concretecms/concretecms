@@ -63,6 +63,10 @@ ccm_addHeaderItem = function(item, type) {
 			$('head').append('<script type="text/javascript" src="' + item + '?ts=' + new Date().getTime() + '"></script>');
 		}
 
+	} else {
+		if (!($('head').children(item).length)) {
+			$('head').append(item);
+		}
 	}
 }
 
