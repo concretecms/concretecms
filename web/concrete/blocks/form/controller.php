@@ -696,7 +696,7 @@ class MiniSurvey{
 						$html.= '<option value="" '.$selected.'>----</option>';					
 					}
 					foreach($options as $option){
-						$checked=($_REQUEST['Question'.$msqID]==trim($option))?'selected="selected':'';
+						$checked=($_REQUEST['Question'.$msqID]==trim($option))?'selected="selected"':'';
 						$html.= '<option '.$checked.'>'.trim($option).'</option>';
 					}
 					return '<select name="Question'.$msqID.'" id="Question'.$msqID.'" >'.$html.'</select>';
