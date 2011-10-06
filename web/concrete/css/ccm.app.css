@@ -417,8 +417,6 @@ table#ccm-file-upload-multiple-list{border:1px solid #ddd;}
 table#ccm-file-upload-multiple-list th{font-weight:bold;text-align:left;padding:4px;background-color:#D3E4F0;border-bottom:1px solid #cecece;}
 table#ccm-file-upload-multiple-list td{padding:8px;color:#666666;}
 div.ccm-file-manager-progress-bar-pending{font-weight:bold;text-align:center;}
-.ui-progressbar{height:2em;text-align:left;width:250px;}
-.ui-progressbar .ui-progressbar-value{margin:-1px;height:100%;}
 div.ccm-file-manager-select{border:1px solid #dedede;}
 div.ccm-file-selected-wrapper{border:1px solid #dedede;padding:10px 10px 10px 11px;}
 div.ccm-file-manager-select a{display:block;padding:10px 10px 10px 25px;text-decoration:none;background:transparent url(../images/icons/add.png) no-repeat scroll 6px 11px;color:#666;font-weight:bold;}
