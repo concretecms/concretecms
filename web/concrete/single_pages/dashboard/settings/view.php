@@ -797,7 +797,7 @@ $(document).ready(function(){
 		<tr>
 		<td valign="top" width="50%">
 
-		<h2>Toolbar Set</h2>
+		<h2><?=t('Toolbar Set')?></h2>
 		
 		<div class="ccm-dashboard-radio"><input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="SIMPLE" style="vertical-align: middle" <?=( $txtEditorMode=='SIMPLE' || !strlen($txtEditorMode) )?'checked':''?> /> <?=t('Simple')?></div>
 		
@@ -811,7 +811,7 @@ $(document).ready(function(){
 		<td><div style="width: 50px">&nbsp;</div></td>
 		<td valign="top" width="50%">
 		
-		<h2>Editor Dimensions</h2>
+		<h2><?=t('Editor Dimensions')?></h2>
 		
 		<table cellspacing="0" cellpadding="0">
 		<tr>
