@@ -427,10 +427,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$dir = $dir2;
 			}
 
-			// now we check to see if it's been overridden in the core and if so we do it there
+			// now we check to see if it's been overridden in the site root and if so we do it there
 			if ($btID > 0) { 
 				// this is only necessary when it's an existing refresh
-				if (is_dir(DIR_FILES_BLOCK_TYPES . '/' . $btHandle)) {
+				if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $btHandle . '/' . FILENAME_BLOCK_CONTROLLER)) {
 					$dir = DIR_FILES_BLOCK_TYPES;
 				}
 			}
@@ -545,7 +545,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					return $db->ErrorMsg();
 				}
 			} else {
-				return t("No block found with the handle %s found.", $btHandle);
+				return t("No block found with the handle %s.", $btHandle);
 			}
 		}
 		
