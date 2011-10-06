@@ -7,8 +7,8 @@ table#rssDisplayerSetup td{ font-size:12px }
 
 <?
 
-if (!$dateFormat) {
-	$dateFormat = t('F jS');
+if (!$rssObj->dateFormat) {
+	$rssObj->dateFormat = t('F jS');
 }
 ?>
 
@@ -19,7 +19,7 @@ if (!$dateFormat) {
 	</tr>
 	<tr>
 		<th><?=t('Date Format')?>:</th>
-		<td><input type="text" name="dateFormat" value="<?=$dateFormat?>" style="width: 95%" />
+		<td><input type="text" name="dateFormat" value="<?=$rssObj->dateFormat?>" style="width: 95%" />
 			<div class="ccm-note">(<?=t('Enter a <a href="%s" target="_blank">PHP date string</a> here.', 'http://www.php.net/date')?>)</div>
 		</td>
 	<tr>
