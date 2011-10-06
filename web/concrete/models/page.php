@@ -264,10 +264,11 @@ class Page extends Collection {
 		    $ui = UserInfo::getByID($checkedOutId);
 		    $name=$ui->getUserName();
 		}else{
-		    $name=GUEST_GROUP_NAME;
+		    $name= t('Unknown User');
 		}
 		return $name;
 	}
+	
 	/**
 	 * Checks if the page is checked out by the current user
 	 * @return bool
