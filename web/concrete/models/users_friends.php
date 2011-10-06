@@ -75,7 +75,6 @@ class UsersFriends extends Object {
 			if(!$u || !intval($u->uID)) return false;
 			$uID=$u->uID;
 		}
-		Events::fire('on_before_user_friend_remove', $uID, $friendUID);
 		$db = Loader::db();	 
 		$vals = array( $friendUID, $uID);
 		$sql = 'DELETE FROM UsersFriends WHERE friendUID=? AND uID=?'; 
