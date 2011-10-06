@@ -51,17 +51,17 @@ if (is_object($key)) {
 	$keyword_label = t('Content included in "Keyword Search".');
 	$advanced_label = t('Field available in "Advanced Search".');
 	switch ($category_handle) {
-		case 'page':
-			$keyword_label = t('Content included in sitewide search".');
-			$advanced_label = t('Field available in Dashboard Page Search".');
+		case 'collection':
+			$keyword_label = t('Content included in sitewide page search index.');
+			$advanced_label = t('Field available in Dashboard Page Search.');
 			break;
 		case 'file':
-			$keyword_label = t('Content included in sitewide search".');
-			$advanced_label = t('Field available in File Manager Search".');			
+			$keyword_label = t('Content included in file search index.');
+			$advanced_label = t('Field available in File Manager Search.');			
 			break;
 		case 'user':
-			$keyword_label = t('Content included in sitewide search".');
-			$advanced_label = t('Field available in Dashboard User Search".');
+			$keyword_label = t('Content included in user keyword search.');
+			$advanced_label = t('Field available in Dashboard User Search.');
 			break;
 	}
 	?>
