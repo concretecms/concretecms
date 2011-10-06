@@ -545,8 +545,8 @@ div#ccm-sitemap-bc ul li{float:left;margin:0px 0px 0px 6px;list-style-type:none;
 div#ccm-sitemap-bc ul{padding:0px !important;margin:0px !important;}
 div#ccm-sitemap-bc ul:after{content:".";display:block;height:0;clear:both;visibility:hidden;}
 div#ccm-dashboard-select-display-mode{margin-bottom:8px;width:auto;margin-left:0px;}
-div#newsflow{z-index:999;width:940px;margin:60px auto 0px auto;background-color:#ffffff;border:1px solid #999;border:1px solid rgba(0, 0, 0, 0.3);*border:1px solid #999;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-webkit-background-clip:padding-box;-moz-background-clip:padding-box;background-clip:padding-box;}
-div#newsflow table td{vertical-align:top;border-bottom:1px solid #dedede;border-right:1px solid #dedede;height:200px;}
+div#newsflow{z-index:999;width:940px;margin:0px auto 0px auto;background-color:#ffffff;border:1px solid #999;border:1px solid rgba(0, 0, 0, 0.3);*border:1px solid #999;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-webkit-background-clip:padding-box;-moz-background-clip:padding-box;background-clip:padding-box;}
+div#newsflow table td{vertical-align:top;border-bottom:1px solid #dedede;border-right:1px solid #dedede;height:200px;background-clip:padding-box;}
 div#newsflow table td:last-child{border-right:0px;}
 div#newsflow table h3{line-height:20px;}
 div#newsflow table tr:last-child td{border-bottom:0px;}
@@ -664,6 +664,7 @@ div#ccm-quick-nav ul{font-size:12px;}
 div#ccm-quick-nav a{padding:4px;line-height:15px;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;}
 .ui-effects-transfer{-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;border:1px solid #000;z-index:10000;background-color:rgba(255, 255, 255, 0.4);}
 a.ccm-menu-icon{background:url(../images/icons_sprite.png) no-repeat top left;}
+.ccm-icon-move{background-position:0 -1095px !important;}
 .ccm-icon-back{background-position:-13px -295px !important;}
 .ccm-icon-sign-out{background-position:60px -1728px !important;}
 .ccm-icon-close{background-position:-19px -1744px !important;}
@@ -674,35 +675,40 @@ a.ccm-menu-icon{background:url(../images/icons_sprite.png) no-repeat top left;}
 .ccm-icon-properties{background-position:-18px -1226px !important;}
 .ccm-icon-design{background-position:-18px -705px !important;}
 .ccm-icon-permissions{background-position:-14px -1161px !important;}
-.ccm-icon-versions{background-position:-16px -1550px !important;}
+.ccm-icon-versions{background-position:-16px -1551px !important;}
 .ccm-icon-speed-settings{background-position:-29px -1482px !important;}
 .ccm-icon-move-copy{background-position:-16px -903px !important;}
-.ccm-icon-delete{background-position:-16px -639px !important;}
-.ccm-icon-access-permissions{background-position:0 0 !important;}
-.ccm-icon-copy{background-position:0 -443px !important;}
-.ccm-icon-flat-view{background-position:0 -839px !important;}
-.ccm-icon-move-down{background-position:0 -969px !important;}
-.ccm-icon-move-up{background-position:0 -1032px !important;}
-.ccm-icon-move{background-position:0 -1095px !important;}
-.ccm-icon-replace{background-position:0 -1293px !important;}
-.ccm-icon-search-pages{background-position:0 -1356px !important;}
-.ccm-icon-sets{background-position:0 -1420px !important;}
-.ccm-icon-view{background-position:0 -1619px !important;}
-.ccm-icon-visit{background-position:0 -1684px !important;}
-.ccm-icon-properties-menu{background-position:-18px -1226px !important;}
-.ccm-icon-speed-settings-menu{background-position:-29px -1482px !important;}
-.ccm-icon-versions-menu{background-position:-16px -1550px !important;}
-.ccm-icon-move-copy-menu{background-position:-16px -903px !important;}
-.ccm-icon-add-page-menu{background-position:0 -188px !important;}
+.ccm-icon-delete{background-position:-15px -639px !important;}
+.ccm-icon-access-permissions{background-position:-19px 4px !important;}
+.ccm-icon-flat-view{background-position:-18px -832px !important;}
+.ccm-icon-move-down{background-position:-15px -962px !important;}
+.ccm-icon-move-up{background-position:-15px -1026px !important;}
+.ccm-icon-replace{background-position:-17px -1287px !important;}
+.ccm-icon-search-pages{background-position:-18px -1349px !important;}
+.ccm-icon-sets{background-position:-17px -1415px !important;}
+.ccm-icon-view{background-position:-17px -1613px !important;}
+.ccm-icon-visit{background-position:-16px -1676px !important;}
+.ccm-icon-properties-menu{background-position:-18px -1222px !important;}
+.ccm-icon-speed-settings-menu{background-position:-24px -1479px !important;}
+.ccm-icon-versions-menu{background-position:-16px -1546px !important;}
+.ccm-icon-move-copy-menu{background-position:-17px -898px !important;}
+.ccm-icon-copy-menu{background-position:-18px -439px !important;}
+.ccm-icon-add-page-menu{background-position:-18px -181px !important;}
 .ccm-icon-edit-menu{background-position:-17px -770px !important;}
 .ccm-icon-move-menu{background-position:-19px -1090px !important;}
-.ccm-icon-clipboard-menu{background-position:-15px -372px !important;}
+.ccm-icon-clipboard-menu{background-position:-15px -371px !important;}
 .ccm-icon-delete-menu{background-position:-18px -634px !important;}
 .ccm-icon-design-menu{background-position:-18px -701px !important;}
 .ccm-icon-permissions-menu{background-position:-14px -1156px !important;}
 .ccm-icon-custom-template-menu{background-position:-19px -505px !important;}
-.ccm-icon-setup-child-pages-menu{background-position:-15px -1677px !important;}
+.ccm-icon-setup-child-pages-menu{background-position:-16px -2301px !important;}
+.ccm-icon-choose-file-menu{background-position:-16px -2302px !important;}
+.ccm-icon-clear-file-menu{background-position:-14px -1740px !important;}
+.ccm-icon-edit-in-composer-menu{background-position:-19px -2224px !important;}
 .ccm-icon-setup-composer-menu{background-position:-18px -1222px !important;}
+.ccm-icon-edit-external-link{background-position:-19px -2155px !important;}
+.ccm-icon-download-menu{background-position:-15px -962px !important;}
+.ccm-icon-add-external-link-menu{background-position:-18px -2078px !important;}
 .ccm-icon-add-block-menu{background-position:-15px -58px !important;}
 .ccm-icon-add-stack-menu{background-position:-17px -244px !important;}
 .ccm-icon-add-layout-menu{background-position:-16px -118px !important;}

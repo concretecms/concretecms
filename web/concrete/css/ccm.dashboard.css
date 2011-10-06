@@ -1,6 +1,6 @@
 
 body{background-color:#000;margin:0px;}
-div#ccm-dashboard-content{margin-top:160px;}
+div#ccm-dashboard-content{margin-top:130px;margin-bottom:80px;}
 div.ccm-dashboard-inner{padding:20px;background-color:#ffffff;border:1px solid #999;border:1px solid rgba(0, 0, 0, 0.3);*border:1px solid #999;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-webkit-background-clip:padding-box;-moz-background-clip:padding-box;background-clip:padding-box;}
 h1#ccm-dashboard-welcome-back{margin:-11px -10px 0px -11px;font-size:48px;padding:60px 0px 40px 145px;background:transparent url(../images/newsflow_logo_welcome_back.png) no-repeat 0 0;}
 h1#ccm-dashboard-welcome-back span{font-size:12px;font-weight:normal;display:block;margin-top:5px;margin-left:5px;}
