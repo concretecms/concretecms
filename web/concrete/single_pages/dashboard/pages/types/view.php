@@ -22,25 +22,19 @@ if ($_GET['cID'] && $_GET['task'] == 'load_master') {
 if ($_REQUEST['task'] == 'edit') {
 	$ct = CollectionType::getByID($_REQUEST['ctID']);
 	if (is_object($ct)) { 		
-		if ($_POST['update']) {
-		
-			$ctName = $_POST['ctName'];
-			$ctHandle = $_POST['ctHandle'];
 			
-		} else {
-			
-			$ctName = $ct->getCollectionTypeName();
-			$ctHandle = $ct->getCollectionTypeHandle();
-		
-		}
-		
+		$ctName = $ct->getCollectionTypeName();
+		$ctHandle = $ct->getCollectionTypeHandle();		
+		$ctName = Loader::helper("text")->entities($ctName);
+		$ctHandle = Loader::helper('text')->entities($ctHandle);
+
 		$ctEditMode = true;
 	}
 }
 
 if ($_POST['task'] == 'add' || $_POST['update']) {
-	$ctName = $_POST['ctName'];
-	$ctHandle = $_POST['ctHandle'];
+	$ctName = Loader::helper("text")->entities($_POST['ctName']);
+	$ctHandle = Loader::helper('text')->entities($_POST['ctHandle']);
 	
 	$error = array();
 	if (!$ctHandle) {
@@ -242,8 +236,8 @@ if ($ctEditMode) {
 		<td class="subheader"><?=t('Handle')?> <span class="required">*</span></td>
 	</tr>	
 	<tr>
-		<td style="width: 65%"  colspan="2"><input type="text" name="ctName" style="width: 100%" value="<?=$_POST['ctName']?>" /></td>
-		<td style="width: 35%"><input type="text" name="ctHandle" style="width: 100%" value="<?=$_POST['ctHandle']?>" /></td>
+		<td style="width: 65%"  colspan="2"><input type="text" name="ctName" style="width: 100%" value="<?=$ctName?>" /></td>
+		<td style="width: 35%"><input type="text" name="ctHandle" style="width: 100%" value="<?=$ctHandle?>" /></td>
 	</tr>
 	<tr>
 		<td colspan="3" class="subheader"><?=t('Icon')?>

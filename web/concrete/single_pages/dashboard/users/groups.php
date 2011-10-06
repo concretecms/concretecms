@@ -151,13 +151,13 @@ foreach ($gResults as $g) { ?>
 	<td class="subheader"><?=t('Name')?> <span class="required">*</span></td>
 </tr>
 <tr>
-	<td><input type="text" name="gName" style="width: 100%" value="<?=htmlentities($_POST['gName'])?>" /></td>
+	<td><input type="text" name="gName" style="width: 100%" value="<?=Loader::helper("text")->entities($_POST['gName'])?>" /></td>
 </tr>
 <tr>
 	<td class="subheader"><?=t('Description')?></td>
 </tr>
 <tr>
-	<td><textarea name="gDescription" style="width: 100%; height: 120px"><?=$_POST['gDescription']?></textarea></td>
+	<td><textarea name="gDescription" style="width: 100%; height: 120px"><?=Loader::helper("text")->entities($_POST['gDescription'])?></textarea></td>
 </tr>
 <tr>
 	<td class="subheader"><?=t("Group Expiration Options")?></td>
@@ -236,7 +236,7 @@ $style = 'width: 60px';
 			<td class="subheader"><?=t('Name')?> <span class="required">*</span></td>
 		</tr>
 		<tr>
-			<td><input type="text" name="gName" style="width: 100%" value="<?=$gName?>" /></td>
+			<td><input type="text" name="gName" style="width: 100%" value="<?=Loader::helper('text')->entities($gName)?>" /></td>
 		</tr>
 		<tr>
 			<td class="subheader"><?=t('Description')?></td>
