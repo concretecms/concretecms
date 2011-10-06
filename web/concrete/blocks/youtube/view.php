@@ -18,7 +18,7 @@ if ($c->isEditMode()) { ?>
 	</div>
 <? } elseif ($vPlayer==1) { ?>
 	
-	<div id="youtube<?php echo $bID?>">
+	<div id="youtube<?php echo $bID?>" class="youtubeBlock">
 	
 	<?php if($url['host'] == 'youtu.be') { ?>
 		<iframe class="youtube-player" type="text/html" width="<?php echo $vWidth; ?>" height="<?php echo $vHeight; ?>" src="http://www.youtube.com/embed/<?=$url['path']?>" frameborder="0"></iframe>
@@ -28,7 +28,7 @@ if ($c->isEditMode()) { ?>
 	</div>
 <? } else { ?>
 	
-	<div id="youtube<?php echo $bID?>"><?php echo t('You must install Adobe Flash to view this content.')?></div>
+	<div id="youtube<?php echo $bID?>" class="youtubeBlock"><div id="youtube<?php echo $bID?>_video"><?php echo t('You must install Adobe Flash to view this content.')?></div></div>
 	
 	<?php 
 	
@@ -39,7 +39,7 @@ if ($c->isEditMode()) { ?>
 			wmode:  "transparent"
 		};
 		flashvars = {};
-		swfobject.embedSWF('http://www.youtube.com/v<?=$url['path']?>&amp;hl=en', 'youtube<?php echo $bID?>', '<?php echo $vWidth; ?>', '<?php echo $vHeight; ?>', '8.0.0', false, flashvars, params);
+		swfobject.embedSWF('http://www.youtube.com/v<?=$url['path']?>&amp;hl=en', 'youtube<?php echo $bID?>_video', '<?php echo $vWidth; ?>', '<?php echo $vHeight; ?>', '8.0.0', false, flashvars, params);
 		//]]>
 		</script>
 	<? }else{ ?>
@@ -49,7 +49,7 @@ if ($c->isEditMode()) { ?>
 			wmode:  "transparent"
 		};
 		flashvars = {};
-		swfobject.embedSWF('http://www.youtube.com/v/<?=$query['v']?>&amp;hl=en', 'youtube<?php echo $bID?>', '<?php echo $vWidth; ?>', '<?php echo $vHeight; ?>', '8.0.0', false, flashvars, params);
+		swfobject.embedSWF('http://www.youtube.com/v/<?=$query['v']?>&amp;hl=en', 'youtube<?php echo $bID?>_video', '<?php echo $vWidth; ?>', '<?php echo $vHeight; ?>', '8.0.0', false, flashvars, params);
 		//]]>
 		</script>
 	<? } ?>
