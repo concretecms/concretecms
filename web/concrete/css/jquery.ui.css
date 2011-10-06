@@ -727,8 +727,8 @@ button:focus {outline: none;}
  *
  * http://docs.jquery.com/UI/Progressbar#theming
  */
-.ui-progressbar { height: 12px; text-align: left; background: #FFF url(images/progress_bar.gif) 0 -14px repeat-x; }
-.ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; background: url(images/progress_bar.gif) 0 0 repeat-x; }
+.ui-progressbar { height: 32px; text-align: left; background: #f4f4f4; }
+.ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; background: url(images/progress_bar.png) 100% 50% repeat-x; }
 
 /* Extra Input Field Styling */
 .ui-form textarea, .ui-form input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
