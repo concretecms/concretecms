@@ -33,7 +33,7 @@ showPageMenu = function(obj, e) {
 		
 			html += '<li><a class="ccm-menu-icon ccm-icon-visit" id="menuVisit' + obj.cID + '" href="' + CCM_DISPATCHER_FILENAME + '?cID=' + obj.cID + '">' + ccmi18n_sitemap.visitExternalLink + '<\/a><\/li>';
 			if (obj.cAlias == 'LINK') {
-				html += '<li><a class="ccm-menu-icon ccm-icon-edit-menu" dialog-width="350" dialog-height="300" dialog-title="' + ccmi18n_sitemap.editExternalLink + '" dialog-modal="false" id="menuLink' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=edit_external">' + ccmi18n_sitemap.editExternalLink + '<\/a><\/li>';
+				html += '<li><a class="ccm-menu-icon ccm-icon-edit-external-link" dialog-width="350" dialog-height="300" dialog-title="' + ccmi18n_sitemap.editExternalLink + '" dialog-modal="false" id="menuLink' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=edit_external">' + ccmi18n_sitemap.editExternalLink + '<\/a><\/li>';
 			}
 			html += '<li><a class="ccm-menu-icon ccm-icon-delete-menu" id="menuDelete' + obj.cID + '" href="javascript:deletePage(' + obj.cID + ',\'' + obj.instance_id + '\', \'' + obj.display_mode + '\', \'' + obj.select_mode + '\')">' + ccmi18n_sitemap.deleteExternalLink + '<\/a><\/li>';
 
@@ -47,14 +47,15 @@ showPageMenu = function(obj, e) {
 		
 			html += '<li><a class="ccm-menu-icon ccm-icon-visit" id="menuVisit' + obj.cID + '" href="' + CCM_DISPATCHER_FILENAME + '?cID=' + obj.cID + '">' + ccmi18n_sitemap.visitPage + '<\/a><\/li>';
 			if (obj.canCompose) {
-				html += '<li><a class="ccm-menu-icon ccm-icon-setup-composer-menu" id="menuComposer' + obj.cID + '" href="' + CCM_DISPATCHER_FILENAME + '/dashboard/composer/write/-/edit/' + obj.cID + '">' + ccmi18n_sitemap.editInComposer + '<\/a><\/li>';
+				html += '<li><a class="ccm-menu-icon ccm-icon-edit-in-composer-menu" id="menuComposer' + obj.cID + '" href="' + CCM_DISPATCHER_FILENAME + '/dashboard/composer/write/-/edit/' + obj.cID + '">' + ccmi18n_sitemap.editInComposer + '<\/a><\/li>';
 			}
+			html += '<li class=\"ccm-menu-separator\"><\/li>';
 			html += '<li><a class="ccm-menu-icon ccm-icon-properties-menu" dialog-width="640" dialog-height="360" dialog-append-buttons="true" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pagePropertiesTitle + '" id="menuProperties' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=edit_metadata">' + ccmi18n_sitemap.pageProperties + '<\/a><\/li>';
 			html += '<li><a class="ccm-menu-icon ccm-icon-speed-settings-menu" dialog-width="550" dialog-height="280" dialog-append-buttons="true" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.speedSettingsTitle + '" id="menuSpeedSettings' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=edit_speed_settings">' + ccmi18n_sitemap.speedSettings + '<\/a><\/li>';
 			html += '<li><a class="ccm-menu-icon ccm-icon-permissions-menu" dialog-width="640" dialog-height="310" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.setPagePermissions + '" id="menuPermissions' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=edit_permissions">' + ccmi18n_sitemap.setPagePermissions + '<\/a><\/li>';
 			html += '<li><a class="ccm-menu-icon ccm-icon-design-menu" dialog-width="680" dialog-height="420" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageDesign + '" id="menuDesign' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=set_theme">' + ccmi18n_sitemap.pageDesign + '<\/a><\/li>';
 			html += '<li><a class="ccm-menu-icon ccm-icon-versions-menu" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageVersions + '" id="menuVersions' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/versions.php?rel=SITEMAP&cID=' + obj.cID + '">' + ccmi18n_sitemap.pageVersions + '<\/a><\/li>';
-			html += '<li><a class="ccm-menu-icon ccmm-icon-delete-menu" id="menuDelete' + obj.cID + '" href="javascript:deletePage(' + obj.cID + ',\'' + obj.instance_id + '\',\'' + obj.display_mode + '\', \'' + obj.select_mode + '\')">' + ccmi18n_sitemap.deletePage + '<\/a><\/li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-delete-menu" id="menuDelete' + obj.cID + '" href="javascript:deletePage(' + obj.cID + ',\'' + obj.instance_id + '\',\'' + obj.display_mode + '\', \'' + obj.select_mode + '\')">' + ccmi18n_sitemap.deletePage + '<\/a><\/li>';
 			html += '<li class=\"ccm-menu-separator\"><\/li>';
 			if (obj.display_mode == 'explore' || obj.display_mode == 'search') {
 				html += '<li><a class="ccm-menu-icon ccm-icon-move-copy-menu" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.moveCopyPage + '" id="menuMoveCopy' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/sitemap_overlay?instance_id=' + obj.instance_id + '&display_mode=' + obj.display_mode + '&select_mode=move_copy_delete&cID=' + obj.cID + '" id="menuMoveCopy' + obj.cID + '">' + ccmi18n_sitemap.moveCopyPage + '<\/a><\/li>';
