@@ -14,7 +14,7 @@ class DashboardBaseController extends Controller {
 		$this->set('error', $this->error);
 	}
 
-	public function outputDashboardPaneHeader($title = false) {
+	public function outputDashboardPaneHeader($title = false, $help = false) {
 		$c = Page::getCurrentPage();
 		$vt = Loader::helper('validation/token');
 		$token = $vt->generate('access_quick_nav');
@@ -31,6 +31,9 @@ class DashboardBaseController extends Controller {
 			}
 		}
 		$html .= '<ul class="ccm-dashboard-pane-header-icons">';
+		if ($help) {
+			$html .= '<li><a href="javascript:void(0)" onclick="ccm_togglePageHelp(event)" class="ccm-icon-help" title="' . t('Help') . '" id="ccm-page-help" data-content="' . $help . '">' . t('Help') . '</a></li>';
+		}
 		$html .= '<li><a href="javascript:void(0)" id="ccm-add-to-quick-nav" ccm-quick-nav-title="' . $quickNavTitle . '" onclick="ccm_toggleQuickNav(' . $c->getCollectionID() . ',\'' . $token . '\')" class="' . $class . '">' . t('Add to Favorites') . '</a></li>';
 		$html .= '<li><a href="javascript:void(0)" onclick="ccm_closeDashboardPane(this)" class="ccm-icon-close">' . t('Close') . '</a></li>';
 		$html .= '</ul>';

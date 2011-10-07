@@ -59,6 +59,7 @@ Loader::element('header_required');
 	$(function() {
 	    $.backstretch("http://farm3.static.flickr.com/2443/3843020508_5325eaf761.jpg" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
 	    ccm_activateToolbar();
+	    $("#ccm-page-help").popover({placement: 'below', html: true, trigger: 'manual'});
 	});
 </script>
 

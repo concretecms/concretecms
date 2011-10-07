@@ -77,11 +77,15 @@
         if (this.options.animate) {
           $tip.addClass('fade')
         }
-
+		
+		if ($("#twipsy-holder").length == 0) {
+			$('<div />').attr('id','twipsy-holder').attr('class', 'ccm-ui').prependTo(document.body);
+		}
+		
         $tip
           .remove()
           .css({ top: 0, left: 0, display: 'block' })
-          .prependTo(document.body)
+          .prependTo($("#twipsy-holder"))
 
         pos = $.extend({}, this.$element.offset(), {
           width: this.$element[0].offsetWidth

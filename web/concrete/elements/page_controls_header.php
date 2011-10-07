@@ -28,7 +28,10 @@ if (!$dh->inDashboard()) {
 	$this->addFooterItem($html->javascript('jquery.ui.js'));
 	$this->addFooterItem($html->javascript('jquery.form.js'));
 	$this->addFooterItem($html->javascript('ccm.app.js'));
-	
+	if ($dh->canRead()) {
+		// newflow
+		
+	}
 	if (ACTIVE_LOCALE != 'en_US') {
 		$dlocale = str_replace('_', '-', ACTIVE_LOCALE);
 		$this->addFooterItem($html->javascript('i18n/ui.datepicker-' . $dlocale . '.js'));
