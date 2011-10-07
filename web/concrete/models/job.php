@@ -283,7 +283,7 @@ class Job extends Object {
 			$db = Loader::db();
 			$db->Execute('insert into Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle, pkgID) values (?, ?, ?, ?, ?, ?)', 
 				array($j->getJobName(), $j->getJobDescription(), Loader::helper('date')->getLocalDateTime(), 0, $jHandle, $pkg->getPackageID()));
-			
+			Events::fire('on_job_install' $j);
 			return $j;
 		}
 	}
