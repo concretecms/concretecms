@@ -25,6 +25,19 @@ $(function() {
 		clearTimeout(ccm_quickNavTimer);
 	}
 	
+	ccm_togglePageHelp = function(e) {
+		if ($('.popover').is(':visible')) {
+			$('#ccm-page-help').popover('hide');	
+		} else {
+			$('#ccm-page-help').popover('show');	
+			e.stopPropagation();
+			$(window).bind('click.popover', function() {
+				$('#ccm-page-help').popover('hide');		
+				$(window).unbind('click.popover');
+			});
+		}
+	}
+	
 	ccm_toggleQuickNav = function(cID, token) {
 		var l = $("#ccm-add-to-quick-nav");
 		if (l.hasClass('ccm-icon-favorite-selected')) {

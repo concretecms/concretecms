@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.tooltip.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap.twipsy.js"></script>
 <script type="text/javascript">
 $(function() {
 	$(".tooltip").twipsy({

@@ -31,7 +31,7 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 <div class="span14 offset1 columns">
 
 <div class="ccm-dashboard-pane">
-<?=$this->controller->outputDashboardPaneHeader(t('Sitemap'));?>
+<?=$this->controller->outputDashboardPaneHeader(t('Sitemap'), t('The sitemap allows you to view your site as a tree and easily organize its hierarchy.'));?>
 <div class="ccm-dashboard-pane-options">
 	<a href="javascript:void(0)" onclick="ccm_dashboardToggleOptions(this)" class="ccm-icon-option-<? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?>open<? } else { ?>closed<? } ?> ccm-menu-icon"><?=t('Options')?></a>
 	<div class="ccm-dashboard-pane-options-content" <? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?> style="display: block" <? } ?>>
