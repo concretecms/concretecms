@@ -397,6 +397,7 @@ define('REGISTERED_GROUP_ID', '2');
 define('ADMIN_GROUP_ID', '3');
 define('SESSION_MAX_LIFETIME', 7200); // 2 hours
 define('USER_CHANGE_PASSWORD_URL_LIFETIME',  7200);
+define('NEWSFLOW_VIEWED_THRESHOLD', 86400); // once a day
 
 # Default search size
 define('SEARCH_CHUNK_SIZE','20'); /* number of entries retrieved per page */

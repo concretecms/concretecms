@@ -3,7 +3,7 @@
 $_c = Page::getCurrentPage();
 $valt = Loader::Helper('validation/token');
 $token = '&' . $valt->getParameter();
-if ($_c->getCollectionPath() != '/dashboard') { ?>
+if ($_c->getCollectionPath() != '/dashboard' && !$_GET['external']) { ?>
 <div class="well" style="margin-bottom: 0px">
 	<? if ($_c->isCheckedOut()) { ?>
 	<a href="#" id="ccm-nav-save-arrange" class="btn ccm-main-nav-arrange-option" style="display: none"><?=t('Save Positioning')?></a>

@@ -120,6 +120,21 @@ class ConcreteInterfaceHelper {
 		}
 	}
 	
+	public function showNewsflowOverlay() {
+		$tp = new TaskPermission();
+		if ($tp->canViewNewsflow()) {
+			$u = new User();
+			$nf = $u->config('NEWSFLOW_LAST_VIEWED');
+			if (!$nf) {
+				return true;
+			}
+			if (time() - $nf > NEWSFLOW_VIEWED_THRESHOLD) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public function getQuickNavigationBar() {
 		$c = Page::getCurrentPage();
 		if (!is_object($c)) {
