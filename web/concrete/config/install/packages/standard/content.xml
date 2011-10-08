@@ -95,6 +95,7 @@
     </stacks>
     <pagetypes>
         <pagetype handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package="" />
+        <pagetype handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package="" />
         <pagetype handle="full" name="Full Width" package="">
             <page name="" path="" filename="" pagetype="full" description="" package="">
                 <area name="Header">
@@ -226,6 +227,78 @@
         </pagetype>
     </pagetypes>
     <pages>
+    	<page name="Welcome to concrete5" path="/dashboard/welcome" filename="" description="Learn about how to use concrete5, how to develop for concrete5, and get general help." pagetype="dashboard_header_four_col">
+			<attributes>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+			</attributes>
+			<area name="Header">
+				<block type="content" name="">
+					<data table="btContentLocal">
+						<record>
+						<content><![CDATA[	<div id="newsflow-header-first-run"><h1>Welcome to concrete5.</h1>
+						<h2>It's easy to edit content and add pages using in-context editing.</h2></div>
+						]]></content>
+						</record>
+					</data>
+				</block>
+			</area>
+			<area name="Column 1">
+				<block type="content" name="">
+					<data table="btContentLocal">
+						<record>
+						<content><![CDATA[<div class="newsflow-column-first-run">
+							<h3>Building Your Own Site</h3>
+							<p>If you’re comfortable in PHP concrete5 should be a breeze to learn. Take a few moments to understand the architecture.</p>
+							<p><a href="" class="btn primary">Editor's Guide</a></p>
+							</div>]]></content>
+						</record>
+					</data>
+				</block>
+			</area>
+			<area name="Column 2">
+				<block type="content" name="">
+					<data table="btContentLocal">
+						<record>
+						<content><![CDATA[<div class="newsflow-column-first-run">
+							<h3>Developing Applications</h3>
+							<p>If you’re comfortable in PHP concrete5 should be a breeze to learn. Take a few moments to understand the architecture.</p>
+							<p><a href="" class="btn primary">Developer's Guide</a></p>
+							</div>]]></content>
+						</record>
+					</data>
+				</block>
+			</area>
+			<area name="Column 3">
+				<block type="content" name="">
+					<data table="btContentLocal">
+						<record>
+						<content><![CDATA[<div class="newsflow-column-first-run">
+							<h3>Designing Websites</h3>
+							<p>Good with CSS and HTML? You can easily theme anything with concrete5.</p>
+							<p><a href="" class="btn primary">Designer's Guide</a></p>
+							</div>]]></content>
+						</record>
+					</data>
+				</block>
+			</area>
+			<area name="Column 4">
+				<block type="content" name="">
+					<data table="btContentLocal">
+						<record>
+						<content><![CDATA[
+						<div class="newsflow-column-first-run">
+						<h3>Business Background</h3>
+						<p>Worried about license structures, white-labeling or why concrete5 is a good choice for your agency?</p>
+						<p><a href="" class="btn primary">Executive's Guide</a></p>
+						</div>]]></content>
+						</record>
+					</data>
+				</block>
+			</area>
+    	</page>
+    	
     	<page name="Customize Dashboard Home" path="/dashboard/home" filename="" pagetype="dashboard_primary_five" description="" package="">
 			<attributes>
 				<attributekey handle="exclude_nav">

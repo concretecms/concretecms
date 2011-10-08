@@ -171,12 +171,23 @@ jQuery.fn.dialog.replaceTop = function(h) {
 	$("#ccm-dialog-content" + nd).html(h);
 }
 
-jQuery.fn.dialog.showLoader = function(fnd) {
+jQuery.fn.dialog.showLoader = function(text) {
 	if (typeof(imgLoader)=='undefined' || !imgLoader || !imgLoader.src) return false; 
 	if ($('#ccm-dialog-loader').length < 1) {
 		$("body").append("<div id='ccm-dialog-loader-wrapper'><img id='ccm-dialog-loader' src='"+imgLoader.src+"' /></div>");//add loader to the page
 	}
 	$('#ccm-dialog-loader-wrapper').css('opacity', 0.8);
+	if (text != null) {
+		$("<div />").attr('id', 'ccm-dialog-loader-text').html(text).prependTo($("#ccm-dialog-loader-wrapper"));
+	}
+
+	var w = $("#ccm-dialog-loader-wrapper").width();
+	var h = $("#ccm-dialog-loader-wrapper").height();
+	var tw = $(window).width();
+	var th = $(window).height();
+	var _left = (tw - w) / 2;
+	var _top = (th - h) / 2;
+	$("#ccm-dialog-loader-wrapper").css('left', _left + 'px').css('top', _top + 'px');
 	$('#ccm-dialog-loader-wrapper').show();//show loader
 	//$('#ccm-dialog-loader-wrapper').fadeTo('slow', 0.2);
 }

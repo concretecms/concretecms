@@ -34,6 +34,10 @@ if (!$dh->inDashboard()) {
 		$u = new User();
 		$u->saveConfig('NEWSFLOW_LAST_VIEWED', time());
 	}	
+	if (!Config::get('SHOW_INTRODUCTION')) {
+		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_showAppIntroduction(); });</script>');
+		Config::save('SHOW_INTRODUCTION', 1);
+	}
 	if (ACTIVE_LOCALE != 'en_US') {
 		$dlocale = str_replace('_', '-', ACTIVE_LOCALE);
 		$this->addFooterItem($html->javascript('i18n/ui.datepicker-' . $dlocale . '.js'));

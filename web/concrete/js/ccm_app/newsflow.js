@@ -21,9 +21,23 @@ ccm_showNewsflow = function() {
 	});
 
 	var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
-	
 	$('.ui-widget-overlay').show();
-	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/home?external=1', function() {
+	jQuery.fn.dialog.showLoader(ccmi18n.newsflowLoading);	
+	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/home?_ccm_dashboard_external=1', function() {
+		jQuery.fn.dialog.hideLoader();
+		ccm_setNewsflowOverlayDimensions();
+		$("#newsflow-overlay").css('top', '90px').fadeIn('300', 'easeOutExpo');
+	});
+}
+
+ccm_showAppIntroduction = function() {
+	$(window).resize(function(){
+		ccm_setNewsflowOverlayDimensions();
+	});
+
+	var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
+	$('.ui-widget-overlay').show();
+	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/welcome?_ccm_dashboard_external=1', function() {
 		ccm_setNewsflowOverlayDimensions();
 		$("#newsflow-overlay").css('top', '90px').fadeIn('300', 'easeOutExpo');
 	});
