@@ -1,18 +1,10 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-if (!$_GET['external']) {
-	$this->inc('elements/header.php', array('enableEditing' => true)); 
+$this->inc('elements/header.php', array('enableEditing' => true)); 
 ?>
-<? } ?>
 
 <div id="newsflow">
-<? if ($_GET['external']) { ?>
-	<ul class="ccm-dashboard-pane-header-icons">
-		<li><a href="javascript:void(0)" onclick="ccm_closeNewsflow()" class="ccm-icon-close"><?=t('Close')?></a></li>
-	</ul>
-<? } ?>
-
-<? $this->inc('elements/header_newsflow_edit.php'); ?>
+<? $this->inc('elements/header_newsflow.php'); ?>
 <table>
 <tr>
 	<td class="newsflow-em1" style="width: 66%" colspan="2" rowspan="2">
@@ -31,8 +23,4 @@ if (!$_GET['external']) {
 </table>
 </div>
 
-<? if (!$_GET['external']) { ?>
-
 <? $this->inc('elements/footer.php'); ?>
-
-<? } ?>

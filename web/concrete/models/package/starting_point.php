@@ -163,6 +163,8 @@ class StartingPointPackage extends Package {
 		Config::save('ENABLE_LOG_ERRORS', 1);
 		Config::save('ENABLE_CACHE', 1);
 		Config::save('FULL_PAGE_CACHE_GLOBAL', "0");
+		$u = new User();
+		$u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
 		
 		$args = array();
 		$args['cInheritPermissionsFrom'] = 'OVERRIDE';

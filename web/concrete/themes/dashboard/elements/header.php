@@ -1,5 +1,9 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <? 
+if ($_GET['_ccm_dashboard_external']) {
+	return;
+}
+
 Loader::block('autonav');
 $nh = Loader::helper('navigation');
 $dashboard = Page::getByPath("/dashboard");

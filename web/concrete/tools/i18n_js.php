@@ -62,6 +62,7 @@ var ccmi18n = {
 	savePropertiesMsg: "<?=t('Page Properties saved.')?>",
 	saveSpeedSettingsMsg: "<?=t("Speed Settings saved.")?>",
 	ok: "<?=t('Ok')?>",
+	newsflowLoading: "<?=t("Loading latest site information and concrete5 updates.")?>",
 	x: "<?=t('x')?>"
 }
 

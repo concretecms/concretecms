@@ -2998,12 +2998,23 @@ jQuery.fn.dialog.replaceTop = function(h) {
 	$("#ccm-dialog-content" + nd).html(h);
 }
 
-jQuery.fn.dialog.showLoader = function(fnd) {
+jQuery.fn.dialog.showLoader = function(text) {
 	if (typeof(imgLoader)=='undefined' || !imgLoader || !imgLoader.src) return false; 
 	if ($('#ccm-dialog-loader').length < 1) {
 		$("body").append("<div id='ccm-dialog-loader-wrapper'><img id='ccm-dialog-loader' src='"+imgLoader.src+"' /></div>");//add loader to the page
 	}
 	$('#ccm-dialog-loader-wrapper').css('opacity', 0.8);
+	if (text != null) {
+		$("<div />").attr('id', 'ccm-dialog-loader-text').html(text).prependTo($("#ccm-dialog-loader-wrapper"));
+	}
+
+	var w = $("#ccm-dialog-loader-wrapper").width();
+	var h = $("#ccm-dialog-loader-wrapper").height();
+	var tw = $(window).width();
+	var th = $(window).height();
+	var _left = (tw - w) / 2;
+	var _top = (th - h) / 2;
+	$("#ccm-dialog-loader-wrapper").css('left', _left + 'px').css('top', _top + 'px');
 	$('#ccm-dialog-loader-wrapper').show();//show loader
 	//$('#ccm-dialog-loader-wrapper').fadeTo('slow', 0.2);
 }
@@ -3107,14 +3118,27 @@ ccm_showNewsflow = function() {
 	});
 
 	var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
-	
 	$('.ui-widget-overlay').show();
-	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/home?external=1', function() {
+	jQuery.fn.dialog.showLoader(ccmi18n.newsflowLoading);	
+	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/home?_ccm_dashboard_external=1', function() {
+		jQuery.fn.dialog.hideLoader();
 		ccm_setNewsflowOverlayDimensions();
 		$("#newsflow-overlay").css('top', '90px').fadeIn('300', 'easeOutExpo');
 	});
 }
 
+ccm_showAppIntroduction = function() {
+	$(window).resize(function(){
+		ccm_setNewsflowOverlayDimensions();
+	});
+
+	var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
+	$('.ui-widget-overlay').show();
+	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/welcome?_ccm_dashboard_external=1', function() {
+		ccm_setNewsflowOverlayDimensions();
+		$("#newsflow-overlay").css('top', '90px').fadeIn('300', 'easeOutExpo');
+	});
+}
 // qs_score - Quicksilver Score
 // 
 // A port of the Quicksilver string ranking algorithm

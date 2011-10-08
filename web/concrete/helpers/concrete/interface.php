@@ -125,6 +125,10 @@ class ConcreteInterfaceHelper {
 		if ($tp->canViewNewsflow()) {
 			$u = new User();
 			$nf = $u->config('NEWSFLOW_LAST_VIEWED');
+			if ($nf == 'FIRSTRUN') {
+				return false;
+			}
+			
 			if (!$nf) {
 				return true;
 			}
