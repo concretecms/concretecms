@@ -21,12 +21,28 @@ class StartingPointPackage extends Package {
 		new StartingPointInstallRoutine('make_directories', 10, t('Starting installation and creating directories.')),
 		new StartingPointInstallRoutine('install_database', 20, t('Creating database tables.')),
 		new StartingPointInstallRoutine('add_users', 45, t('Adding admin user.')),
-		new StartingPointInstallRoutine('install_blocks_attributes_permissions_jobs', 55, t('Installing block types, attributes, permissions and jobs.')),
-		new StartingPointInstallRoutine('import_files', 70, t('Importing files.')),
-		new StartingPointInstallRoutine('install_content', 90, t('Adding pages and content.')),
-		new StartingPointInstallRoutine('set_site_permissions', 95, t('Setting up site permissions.'))
+		new StartingPointInstallRoutine('install_blocks_attributes_permissions_jobs', 50, t('Installing block types, attributes, permissions and jobs.')),
+		new StartingPointInstallRoutine('import_files', 60, t('Importing files.')),
+		new StartingPointInstallRoutine('install_content', 65, t('Adding pages and content.')),
+		new StartingPointInstallRoutine('set_site_permissions', 80, t('Setting up site permissions.')),
+		new StartingPointInstallRoutine('precache', 85, t('Prefetching information.')),
+		new StartingPointInstallRoutine('finish', 95, t('Finishing.'))
 		);
 	}
+
+	public function precache() {
+		$c = Page::getByID(HOME_CID);
+		$blocks = $c->getBlocks();
+		foreach($blocks as $b) {
+			$bi = $b->getInstance();
+			$bi->setupAndRun('view');
+		}
+		$c = Page::getByPath('/dashboard/home');
+		$blocks = $c->getBlocks();
+		foreach($blocks as $b) {
+			$bi = $b->getInstance();
+			$bi->setupAndRun('view');
+		}	}
 	
 	public function install_blocks_attributes_permissions_jobs() {
 		Loader::library('content/importer');
@@ -120,6 +136,12 @@ class StartingPointPackage extends Package {
 		}
 	}
 	
+	public function finish() {
+		rename(DIR_CONFIG_SITE . '/site_install.php', DIR_CONFIG_SITE . '/site.php');
+		@unlink(DIR_CONFIG_SITE . '/site_install_user.php');
+		chmod(DIR_CONFIG_SITE . '/site.php', 0777);
+	}
+	
 	public function set_site_permissions() {
 		
 		Loader::model('file_set');
@@ -155,10 +177,6 @@ class StartingPointPackage extends Package {
 		
 		$home = Page::getByID(1, "RECENT");
 		$home->updatePermissions($args);
-		
-		rename(DIR_CONFIG_SITE . '/site_install.php', DIR_CONFIG_SITE . '/site.php');
-		@unlink(DIR_CONFIG_SITE . '/site_install_user.php');
-		chmod(DIR_CONFIG_SITE . '/site.php', 0777);
 	}
 	
 }
