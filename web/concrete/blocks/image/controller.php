@@ -57,7 +57,6 @@
 			$args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;
 			$args['maxWidth'] = (intval($args['maxWidth']) > 0) ? intval($args['maxWidth']) : 0;
 			$args['maxHeight'] = (intval($args['maxHeight']) > 0) ? intval($args['maxHeight']) : 0;
-xdebug_break();
 			switch (intval($args['linkType'])) {
 				case 1:
 					$args['externalLink'] = '';
