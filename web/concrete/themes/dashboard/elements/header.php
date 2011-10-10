@@ -98,11 +98,11 @@ $dh = Loader::helper('concrete/dashboard');
 print $dh->getDashboardAndSearchMenus();
 ?>
 </div>
-<div id="ccm-dashboard-page" class="ccm-ui">
+<div id="ccm-dashboard-page">
 
 <div id="ccm-dashboard-content">
 
-	<div class="container">
+	<div class="ccm-dashboard-page-container">
 
 
 	<? if (isset($error)) { ?>

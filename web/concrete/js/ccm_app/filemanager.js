@@ -93,20 +93,6 @@ ccm_activateFileManager = function(altype, searchInstance) {
 		}
 	});
 
-	$("form#ccm-" + searchInstance + "-advanced-search a.ccm-search-saved-exit").click(function() {
-		if (altype == 'DASHBOARD') { 
-			window.location.href = CCM_DISPATCHER_FILENAME + '/dashboard/files/search';
-		} else {
-			jQuery.fn.dialog.showLoader();
-			var url = $("div#ccm-" + searchInstance + "-overlay-wrapper input[name=dialogAction]").val() + "&refreshDialog=1";
-			$.get(url, function(resp) {
-				jQuery.fn.dialog.hideLoader();
-				$("div#ccm-" + searchInstance + "-overlay-wrapper").html(resp);
-				$("div#ccm-" + searchInstance + "-overlay-wrapper a.dialog-launch").dialog();
-			});
-		}
-	});
-
 	ccm_searchActivatePostFunction[searchInstance] = function() {
 		ccm_alSetupCheckboxes(searchInstance);
 		ccm_alSetupSelectFiles();
@@ -173,6 +159,7 @@ ccm_alSubmitSetsForm = function(searchInstance) {
 		jQuery.fn.dialog.hideLoader();		
 		$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
 			$("#ccm-" + searchInstance + "-sets-search-wrapper").load(CCM_TOOLS_PATH + '/files/search_sets_reload', {'searchInstance': searchInstance}, function() {
+				$(".chosen-select").chosen();
 				ccm_parseAdvancedSearchResponse(resp, searchInstance);
 			});
 		});
@@ -440,8 +427,8 @@ ccm_alSetupSelectFiles = function() {
 		fID = fID.substring(3);
 		ccm_starFile(e.target,fID);
 	});
-	$("div.ccm-file-list-thumbnail-image img").hover(function(e) { 
-		var fID = $(this).parent().attr('fID');
+	$(".ccm-file-list-thumbnail").hover(function(e) { 
+		var fID = $(this).attr('fID');
 		var obj = $('#fID' + fID + 'hoverThumbnail'); 
 		if (obj.length > 0) { 
 			var tdiv = obj.find('div');
@@ -451,7 +438,7 @@ ccm_alSetupSelectFiles = function() {
 			tdiv.show();
 		}
 	}, function() {
-		var fID = $(this).parent().attr('fID');
+		var fID = $(this).attr('fID');
 		var obj = $('#fID' + fID + 'hoverThumbnail');
 		var tdiv = obj.find('div');
 		tdiv.hide(); 
@@ -559,6 +546,13 @@ ccm_alSetupCheckboxes = function(searchInstance) {
 }
 
 ccm_alSetupFileSetSearch = function(searchInstance) {
+	$("#ccm-" + searchInstance + "-sets-search-wrapper select").chosen().unbind();
+	$("#ccm-" + searchInstance + "-sets-search-wrapper select").chosen().change(function() {
+		var sel = $("#ccm-" + searchInstance + "-sets-search-wrapper option:selected");
+		$("#ccm-" + searchInstance + "-advanced-search").submit();
+	});
+
+	/*
 	$(".ccm-" + searchInstance + "-search-advanced-sets-cb input[type=checkbox]").unbind();
 	$(".ccm-" + searchInstance + "-search-advanced-sets-cb input[type=checkbox]").click(function() {
 		$("input[name=fsIDNone][instance=" + searchInstance + "]").attr('checked', false);
@@ -578,7 +572,9 @@ ccm_alSetupFileSetSearch = function(searchInstance) {
 		}
 		$("#ccm-" + searchInstance + "-advanced-search").submit();
 	});
+	*/
 }
+
 
 ccm_alGetSelectedFileIDs = function(searchInstance) {
 	var fidstr = '';

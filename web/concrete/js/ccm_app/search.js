@@ -5,7 +5,11 @@ ccm_setupAdvancedSearchFields = function(searchType) {
 	$("#ccm-" + searchType + "-search-add-option").unbind();
 	$("#ccm-" + searchType + "-search-add-option").click(function() {
 		ccm_totalAdvancedSearchFields++;
-		$("#ccm-search-fields-wrapper").append('<div class="ccm-search-field" id="ccm-' + searchType + '-search-field-set' + ccm_totalAdvancedSearchFields + '">' + $("#ccm-search-field-base").html() + '<\/div>');
+		if ($("#ccm-search-fields-wrapper").length > 0) { 
+			$("#ccm-search-fields-wrapper").append('<div class="ccm-search-field" id="ccm-' + searchType + '-search-field-set' + ccm_totalAdvancedSearchFields + '">' + $("#ccm-search-field-base").html() + '<\/div>');
+		} else {
+			$("#ccm-" + searchType + "-search-advanced-fields").append('<tr class="ccm-search-field" id="ccm-' + searchType + '-search-field-set' + ccm_totalAdvancedSearchFields + '">' + $("#ccm-search-field-base").html() + '<\/tr>');
+		}
 		ccm_activateAdvancedSearchFields(searchType, ccm_totalAdvancedSearchFields);
 	});
 	
@@ -142,7 +146,7 @@ ccm_activateAdvancedSearchFields = function(searchType, fieldset) {
 	selTag.unbind();
 	selTag.change(function() {
 		var selected = $(this).find(':selected').val(); 
-		$(this).next('input.ccm-' + searchType + '-selected-field').val(selected);
+		$(this).parent().parent().find('input.ccm-' + searchType + '-selected-field').val(selected);
 		
 		var itemToCopy = $('#ccm-' + searchType + '-search-field-base-elements span[search-field=' + selected + ']');
 		$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-selected-field-content").html('');
@@ -163,6 +167,8 @@ ccm_activateAdvancedSearchFields = function(searchType, fieldset) {
 	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-remove-option").unbind();
 	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-remove-option").click(function() {
 		$(this).parents('div.ccm-search-field').remove();
+		$(this).parents('tr.ccm-search-field').remove();
+		
 		//ccm_totalAdvancedSearchFields--;
 	});
 	
