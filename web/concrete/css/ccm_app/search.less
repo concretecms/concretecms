@@ -7,11 +7,9 @@ div#ccm-list-wrapper div.ccm-pagination {font-size: 14px;padding:0px; margin-top
 div#ccm-list-wrapper div.ccm-pagination span.ccm-page-left{ position:static; float:left; text-align:left; display:block; width:100px; }
 div#ccm-list-wrapper div.ccm-pagination span.ccm-page-right{ position:static; float:right; text-align:right; display:block; width:100px; }
 
-div#ccm-search-advanced-results-wrapper {display: block; width: 100%; /* position: relative */}
-
-table.ccm-results-list {width: 100%; border-left: 1px solid #ffffff}
-table.ccm-results-list th, table.ccm-results-list td {padding: 4px 8px 4px 8px; font-size: 12px}
-table.ccm-results-list td div {font-size: 12px}
+table.ccm-results-list td {vertical-align: middle;}
+table.ccm-results-list ul.media-grid {margin-left: 0px; width: auto;}
+table.ccm-results-list ul.media-grid a {margin-left: auto; margin-right: auto; margin-bottom: 0px;}
 table.ccm-results-list tr th {font-size: 12px;background-color: #efefef; text-align: left; padding-left: 8px; white-space: nowrap; color: #666}
 table.ccm-results-list select, table.ccm-results-list input {font-size: 12px}
 
@@ -25,25 +23,26 @@ table.ccm-results-list tr.ccm-list-record td, table.ccm-results-list tr.ccm-list
 table.ccm-results-list tr.ccm-list-record-alt td, table.ccm-results-list tr.ccm-row-alt td {background-color: #f2f2f2}
 table.ccm-results-list tr.ccm-list-record:hover td {cursor: pointer; background-color: rgba(214,237,247,0.6) !important; }
 
-img#ccm-search-loading,img.ccm-search-loading { display: none; float:right; }
+img#ccm-search-loading,img.ccm-search-loading { display: none; margin-left: 5px; vertical-align: middle;}
 div.ccm-results-list-none { font-weight: bold}
 
 div#ccm-search-overlay {display: block; width: 100%; font-size: 13px; padding:0px; margin:0px; height:auto; overflow:hidden }
 div#ccm-search-overlay h2 {margin-bottom: 0px}
 
+.ccm-search-advanced-fields td {vertical-align: middle;}
+.ccm-search-advanced-fields th {background-color: #fff; .border-radius-top-only(5px);}
+a.ccm-advanced-search-add-field {color: #333; padding: 3px 27px 3px 3px; position: relative; height: 24px;}
+a.ccm-advanced-search-add-field:hover {.border-radius(3px); background-color: #d7d7d7; text-decoration: none; color: #333;}
+a.ccm-advanced-search-add-field span {position: absolute; top: -2px; right: 3px; width: 22px; height: 24px;}
+a.ccm-search-remove-option {margin-right: 3px; display: block;}
 
-div.ccm-search-advanced-fields {display: block;border: 1px solid #ddd;padding: 8px; width:auto; background:#fafafa; margin-right:10px; width:210px}
 div#ccm-search-advanced-sets {display: block;border: 1px solid #ddd;padding: 8px; width:auto; background:#fafafa; margin-right:10px; margin-top: 20px; width:210px}
 div#ccm-search-advanced-sets div {font-size: 12px; font-weight: normal;}
 div#ccm-search-advanced-sets input {vertical-align: middle}
 div#ccm-search-advanced-sets label {font-weight: normal; display: inline; vertical-align: middle; margin: 0px; line-height: 12px; padding: 0px 0px 0px 0px}
-
-div.ccm-search-advanced-fields div, div#ccm-sitemap-search td {font-size: 11px !important}
-div.ccm-search-advanced-fields-inner {padding-top: 4px}
 div.ccm-search-advanced-fields div.ccm-search-field {margin-bottom:8px} 
 
-div#ccm-search-field-base {display: none}
-div.ccm-search-field input, div.ccm-search-field select, div.ccm-search-field td {font-size: 11px !important}
+#ccm-search-field-base {display: none}
 
 .ccm-search-option .ccm-summary-selected-item {border: 0px; padding: 0px; margin: 0px}
 
@@ -66,10 +65,17 @@ div.ccm-attribute-editable-field-form {display: none}
 div.ccm-attribute-editable-field-type-text input {width: 100%}
 div.ccm-attribute-editable-field-type-number input {width: 60px}
 
-div#ccm-search-save, div#ccm-search-export {float: left; width: 80px; text-align: left;}
-div#ccm-search-export a, div#ccm-search-save a {font-size: 11px}
+div#ccm-search-export {float: left; width: 80px; text-align: left;}
+div#ccm-search-export a {font-size: 11px}
 div#ccm-search-export {background: transparent url(../images/icons/excel.png) no-repeat;padding-left: 22px; margin-top: 2px; padding-top: 3px; padding-bottom: 10px  }
-div#ccm-search-save {background: transparent url(../images/icons/save_search.png) no-repeat; padding-left: 20px; margin-top: 2px; padding-top: 1px; padding-bottom: 12px}
+
+a.ccm-search-save {color: #333; padding: 3px 27px 3px 3px; position: relative; height: 24px;}
+a.ccm-search-save:hover {.border-radius(3px); background-color: #d7d7d7; text-decoration: none; color: #333;}
+a.ccm-search-save span {position: absolute; top: -2px; right: 3px; width: 22px; height: 24px;}
+
+a#ccm-search-add-column {margin-left: 8px; color: #333; padding: 3px 29px 3px 3px; position: relative; height: 24px;}
+a#ccm-search-add-column:hover {.border-radius(3px); background-color: #d7d7d7; text-decoration: none; color: #333;}
+a#ccm-search-add-column span {position: absolute; top: 2px; right: 5px; width: 24px; height: 24px;}
 
 ul.ccm-search-sortable-column-wrapper {border: 2px solid #dedede; padding: 0px; margin: 0px; padding-top: 8px}
 ul.ccm-search-sortable-column-wrapper li {padding: 2px 0px 4px 24px; margin-left: 4px; margin-bottom: 4px; background: transparent url(../images/icons/column.png) no-repeat scroll; list-style-type: none}

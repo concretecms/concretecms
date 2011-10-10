@@ -63,7 +63,7 @@ class DashboardFilesSearchController extends Controller {
 			$fileList->setItemsPerPage($req['numResults']);
 		}
 		
-		if (isset($req['fsIDNone']) && $req['fsIDNone'] == 1) { 
+		if ((isset($req['fsIDNone']) && $req['fsIDNone'] == 1) || (is_array($req['fsID']) && in_array(-1, $req['fsID']))) { 
 			$fileList->filterBySet(false);
 		} else {
 			if (is_array($req['fsID'])) {

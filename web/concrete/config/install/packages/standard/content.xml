@@ -19,11 +19,11 @@
         <page name="Flat View" path="/dashboard/sitemap/explore" filename="/dashboard/sitemap/explore.php" pagetype="" description="" package=""/>
         <page name="Page Search" path="/dashboard/sitemap/search" filename="/dashboard/sitemap/search.php" pagetype="" description="" package=""/>
         <page name="Access" path="/dashboard/sitemap/access" filename="/dashboard/sitemap/access.php" pagetype="" description="" package=""/>
-        <page name="File Manager" path="/dashboard/files" filename="/dashboard/files/view.php" pagetype="" description="All documents and images." package=""/>
-        <page name="Search" path="/dashboard/files/search" filename="/dashboard/files/search.php" pagetype="" description="" package=""/>
+        <page name="Files" path="/dashboard/files" filename="/dashboard/files/view.php" pagetype="" description="All documents and images." package=""/>
+        <page name="File Manager" path="/dashboard/files/search" filename="/dashboard/files/search.php" pagetype="" description="" package=""/>
         <page name="Attributes" path="/dashboard/files/attributes" filename="/dashboard/files/attributes.php" pagetype="" description="" package=""/>
         <page name="Sets" path="/dashboard/files/sets" filename="/dashboard/files/sets.php" pagetype="" description="" package=""/>
-        <page name="Access" path="/dashboard/files/access" filename="/dashboard/files/access.php" pagetype="" description="" package=""/>
+        <page name="Permissions" path="/dashboard/files/access" filename="/dashboard/files/access.php" pagetype="" description="" package=""/>
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype="" description="Get data from forms and logs." package=""/>
         <page name="Form Results" path="/dashboard/reports/forms" filename="/dashboard/reports/forms.php" pagetype="" description="Get submission data." package=""/>
         <page name="Surveys" path="/dashboard/reports/surveys" filename="/dashboard/reports/surveys.php" pagetype="" description="" package=""/>
