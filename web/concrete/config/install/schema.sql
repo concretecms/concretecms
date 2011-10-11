@@ -1124,6 +1124,7 @@ fOnstateID               INTEGER UNSIGNED DEFAULT 0,
 maxWidth                 INTEGER UNSIGNED DEFAULT 0,
 maxHeight                INTEGER UNSIGNED DEFAULT 0,
 externalLink             VARCHAR(255),
+internalLinkCID          INTEGER UNSIGNED DEFAULT 0,
 altText                  VARCHAR(255),
                  PRIMARY KEY (bID)
 );

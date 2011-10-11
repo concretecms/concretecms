@@ -4,7 +4,7 @@
 	class ImageBlockController extends BlockController {
 
 		protected $btInterfaceWidth = 300;
-		protected $btInterfaceHeight = 440;
+		protected $btInterfaceHeight = 450;
 		protected $btTable = 'btContentImage';
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
@@ -40,12 +40,36 @@
 		}		
 		function getAltText() {return $this->altText;}
 		function getExternalLink() {return $this->externalLink;}
+		function getInternalLinkCID() {return $this->internalLinkCID;}
+		function getLinkURL() {
+			if (!empty($this->externalLink)) {
+				return $this->externalLink;
+			} else if (!empty($this->internalLinkCID)) {
+				$linkToC = Page::getByID($this->internalLinkCID);
+				return (empty($linkToC) || $linkToC->error) ? '' : Loader::helper('navigation')->getLinkToCollection($linkToC);
+			} else {
+				return '';
+			}
+		}
 		
 		public function save($args) {		
 			$args['fOnstateID'] = ($args['fOnstateID'] != '') ? $args['fOnstateID'] : 0;
 			$args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;
 			$args['maxWidth'] = (intval($args['maxWidth']) > 0) ? intval($args['maxWidth']) : 0;
 			$args['maxHeight'] = (intval($args['maxHeight']) > 0) ? intval($args['maxHeight']) : 0;
+			switch (intval($args['linkType'])) {
+				case 1:
+					$args['externalLink'] = '';
+					break;
+				case 2:
+					$args['internalLinkCID'] = 0;
+					break;
+				default:
+					$args['externalLink'] = '';
+					$args['internalLinkCID'] = 0;
+					break;
+			}
+			unset($args['linkType']); //this doesn't get saved to the database (it's only for UI usage)
 			parent::save($args);
 		}
 
@@ -93,9 +117,10 @@
 			
 			$img .= ($id) ? "id=\"{$id}\" " : "";
 			$img .= "/>";
-
-			if($this->externalLink != ""){
-				$img = "<a href=\"{$this->externalLink}\">" . $img ."</a>";
+			
+			$linkURL = $this->getLinkURL();
+			if (!empty($linkURL)) {
+				$img = "<a href=\"{$linkURL}\">" . $img ."</a>";
 			}
 			return $img;
 		}

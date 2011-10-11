@@ -22,6 +22,10 @@
 			<default value="0" />
 		</field>
 		<field name="externalLink"  type="C" size="255"></field>
+		<field name="internalLinkCID"  type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
 		<field name="altText" type="C" size="255">
 		</field>
 	</table>
