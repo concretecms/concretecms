@@ -229,7 +229,7 @@ foreach($nav as $n2) {
 	}
 	
 	if (isset($message)) { ?>
-		<div class="message success"><?=$message?></div>
+		<div class="message success"><?=Loader::helper('text')->entities($message)?></div>
 	<? } ?>
 	
 	<?php print $innerContent; ?>
