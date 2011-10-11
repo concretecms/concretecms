@@ -30,11 +30,11 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 <div class="row">
 <div class="span14 offset1 columns">
 
-<div class="ccm-dashboard-pane">
+<div class="ccm-pane">
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Sitemap'), t('The sitemap allows you to view your site as a tree and easily organize its hierarchy.'));?>
-<div class="ccm-dashboard-pane-options">
-	<a href="javascript:void(0)" onclick="ccm_dashboardToggleOptions(this)" class="ccm-icon-option-<? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?>open<? } else { ?>closed<? } ?>"><?=t('Options')?></a>
-	<div class="ccm-dashboard-pane-options-content" <? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?> style="display: block" <? } ?>>
+<div class="ccm-pane-options">
+	<a href="javascript:void(0)" onclick="ccm_paneToggleOptions(this)" class="ccm-icon-option-<? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?>open<? } else { ?>closed<? } ?>"><?=t('Options')?></a>
+	<div class="ccm-pane-options-content" <? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?> style="display: block" <? } ?>>
 		<form>
 		<div id="ccm-show-all-pages" class="clearfix">
 			<label for="ccm-show-all-pages-cb"><?=t('Show System Pages')?></label>
@@ -48,7 +48,7 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 	</div>
 </div>
 
-<div class="ccm-dashboard-pane-body">
+<div class="ccm-pane-body">
 	<? if ($sh->canRead()) { ?>
 	
 		<div id="ccm-sitemap-message"></div>
@@ -67,7 +67,7 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 	
 	<? } ?>
 </div>
-<div class="ccm-dashboard-pane-footer"></div>
+<div class="ccm-pane-footer"></div>
 </div>
 
 </div>

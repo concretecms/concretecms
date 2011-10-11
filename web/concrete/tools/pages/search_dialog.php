@@ -30,26 +30,9 @@ $searchRequest = $pageList->getSearchRequest();
 </script>
 
 <div id="ccm-search-overlay" >
-	
-		<table id="ccm-search-form-table" >
-			<tr>
-				<td valign="top" class="ccm-search-form-advanced-col">
-					<? Loader::element('pages/search_form_advanced', array('sitemap_select_callback' => $sitemap_select_callback, 'searchInstance' => $searchInstance, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'searchRequest' => $searchRequest)); ?>
-				</td>		
-				<td valign="top" width="100%">	
-					
-					<div id="ccm-search-advanced-results-wrapper">
-					
-						<div id="ccm-<?=$searchInstance?>-search-results">
-						
-							<? Loader::element('pages/search_results', array('searchInstance' => $searchInstance, 'sitemap_select_callback' => $sitemap_select_callback, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
-						
-						</div>
-					
-					</div>
-				
-				</td>	
-			</tr>
-		</table>		
+<div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
+	<? Loader::element('pages/search_form_advanced', array('sitemap_select_callback' => $sitemap_select_callback, 'searchInstance' => $searchInstance, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'searchRequest' => $searchRequest)); ?>
+</div>
 
+<? Loader::element('pages/search_results', array('searchInstance' => $searchInstance, 'sitemap_select_callback' => $sitemap_select_callback, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
 </div>

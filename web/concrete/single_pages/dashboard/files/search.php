@@ -1,14 +1,14 @@
 <div class="ccm-ui">
 <div class="row">
 
-<div class="ccm-dashboard-pane">
+<div class="ccm-pane">
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('File Manager'), t('Add, search, replace and modify the files for your website.'));?>
 <? 
 $c = Page::getCurrentPage();
 $ocID = $c->getCollectionID();
 $fp = FilePermissions::getGlobal();
 if ($fp->canSearchFiles()) { ?>
-<div class="ccm-dashboard-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
+<div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
 
 <ul class="tabs">
 <li class="active"><a href="javascript:void(0)" onclick="$('#ccm-<?=$searchInstance?>-pane-options ul.tabs li').removeClass('active'); $(this).parent().addClass('active'); $('#ccm-<?=$searchInstance?>-pane-options div.ccm-file-manager-add-form').hide(); $('#ccm-<?=$searchInstance?>-pane-options div.ccm-file-manager-search-form').show();"><?=t('Search Files')?></a></li>
@@ -21,21 +21,17 @@ if ($fp->canSearchFiles()) { ?>
 </div>
 </div>
 
-<div class="ccm-dashboard-pane-body">
-<div id="ccm-<?=$searchInstance?>-search-results" class="ccm-file-list">
+<? Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'columns' => $columns, 'searchType' => 'DASHBOARD', 'files' => $files, 'fileList' => $fileList)); ?>
 
-	<? Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'columns' => $columns, 'searchType' => 'DASHBOARD', 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
-
-</div>
-</div>
 <? } else { ?>
-<div class="ccm-dashboard-pane-body">
+<div class="ccm-pane-body">
 	<p><?=t("You do not have access to the file manager.");?></p>
 </div>	
-<? } ?>
-<div class="ccm-dashboard-pane-footer"></div>
+<div class="ccm-pane-footer"></div>
 
 </div>
+
+<? } ?>
 
 </div>
 </div>

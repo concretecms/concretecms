@@ -11,6 +11,15 @@ if (isset($_REQUEST['searchInstance'])) {
 	};
 	var CCM_STAR_ACTION    = 'files/star.php';
 </script>
+
+<div id="ccm-<?=$searchInstance?>-search-results" class="ccm-file-list">
+
+<? if ($searchType == 'DASHBOARD') { ?>
+
+<div class="ccm-pane-body">
+
+<? } ?>
+
 <div id="ccm-list-wrapper"><a name="ccm-<?=$searchInstance?>-list-wrapper-anchor"></a>
 	<div style="float: right; margin-bottom: 10px">
 		<? $form = Loader::helper('form'); ?>
@@ -33,23 +42,15 @@ if (isset($_REQUEST['searchInstance'])) {
 	$txt = Loader::helper('text');
 	$keywords = $searchRequest['fKeywords'];
 	$soargs = array();
+	$soargs['searchType'] = $searchType;
 	$soargs['searchInstance'] = $searchInstance;
-	
-	/*
-	if ($searchType == 'DASHBOARD') {
-		$bu = false;
-	} else {
-		$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/files/search_results';
-	}
-	*/
-	
 	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/files/search_results';
 	
 	if (count($files) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-<?=$searchInstance?>-list" class="ccm-results-list">
 		<tr>
 			<th><input id="ccm-<?=$searchInstance?>-list-cb-all" type="checkbox" /></td>
-			<th><?=t('Thumbnail')?></th>
+			<th class="ccm-file-list-thumbnail-wrapper"><?=t('Thumbnail')?></th>
 
 			<th class="ccm-file-list-starred">&nbsp;</th>
 			<? foreach($columns->getColumns() as $col) { ?>
@@ -108,7 +109,21 @@ if (isset($_REQUEST['searchInstance'])) {
 		<div class="ccm-results-list-none"><?=t('No files found.')?></div>
 		
 	
-	<? } 
-	$fileList->displayPaging($bu, false, $soargs); ?>
+	<? } ?>
 	
+</div>
+
+<? if ($searchType == 'DASHBOARD') { ?>
+</div>
+
+<div class="ccm-pane-footer">
+	<? 	$fileList->displayPaging($bu, false, $soargs); ?>
+</div>
+
+<? } else { ?>
+	<div class="ccm-pane-dialog-pagination">
+		<? 	$fileList->displayPaging($bu, false, $soargs); ?>
+	</div>
+<? } ?>
+
 </div>

@@ -61,6 +61,9 @@ ccm_deactivateSearchResults = function(searchType) {
 }
 
 ccm_activateSearchResults = function(searchType) {
+	if ($('a[name=ccm-' + searchType + '-list-wrapper-anchor]').length > 0) {
+		window.location.hash = 'ccm-' + searchType + '-list-wrapper-anchor';
+	}
 	var obj = $("#ccm-" + searchType + "-search-loading");
 	if (obj.length == 0 || searchType == null) {
 		obj = $("#ccm-search-loading");
@@ -102,6 +105,11 @@ ccm_setupInPagePaginationAndSorting = function(searchType) {
 		});
 		return false;
 	});
+	$(".ccm-pane-dialog-pagination").each(function() {
+		$(this).closest('.ui-dialog').find('.ui-dialog-buttonpane').html('');
+		$(this).appendTo($(this).closest('.ui-dialog').find('.ui-dialog-buttonpane'));
+	});
+	
 }
 
 ccm_setupSortableColumnSelection = function(searchType) {
@@ -119,7 +127,7 @@ ccm_setupSortableColumnSelection = function(searchType) {
 }
 
 ccm_checkSelectedAdvancedSearchField = function(searchType, fieldset) {
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option[search-field=date_added] input").each(function() {
+	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").each(function() {
 		if ($(this).attr('id') == 'date_from') {
 			$(this).attr('id', 'date_from' + fieldset);
 		} else if ($(this).attr('id') == 'date_to') {
@@ -127,14 +135,11 @@ ccm_checkSelectedAdvancedSearchField = function(searchType, fieldset) {
 		}
 	});
 
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option input.ccm-input-date").each(function() {
+	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").each(function() {
 		$(this).attr('id', $(this).attr('id') + fieldset);
 	});
 	
 	
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option[search-field=date_added] input").datepicker({
-		showAnim: 'fadeIn'
-	});
 	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").datepicker({
 		showAnim: 'fadeIn'
 	});

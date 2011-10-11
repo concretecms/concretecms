@@ -135,6 +135,7 @@ ccm_launchFileManager = function(filters) {
 	$.fn.dialog.open({
 		width: '90%',
 		height: '70%',
+		appendButtons: true,
 		modal: false,
 		href: CCM_TOOLS_PATH + "/files/search_dialog?ocID=" + CCM_CID + "&search=1" + filters,
 		title: ccmi18n_filemanager.title
@@ -830,6 +831,11 @@ ccm_alActivateMenu = function(obj, e) {
 		html += '</ul>';
 		html += '</div></div></div>';
 		bobj.append(html);
+
+		$(bobj).find('a').bind('click.hide-menu', function(e) {
+			ccm_hideMenus();
+			return false;	
+		});
 		
 		$("#ccm-al-menu" + fID + searchInstance + selector + " a.dialog-launch").dialog();
 		

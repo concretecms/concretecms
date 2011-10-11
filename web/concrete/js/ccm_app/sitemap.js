@@ -93,6 +93,11 @@ showPageMenu = function(obj, e) {
 
 		bobj.append(html);
 
+		$(bobj).find('a').bind('click.hide-menu', function(e) {
+			ccm_hideMenus();
+			return false;	
+		});
+
 		$("#menuProperties" + obj.cID).dialog();
 		$("#menuSpeedSettings" + obj.cID).dialog();
 		$("#menuSubPage" + obj.cID).dialog();
@@ -757,12 +762,22 @@ ccm_sitemapSearchSetupCheckboxes = function(instance_id) {
 
 	$("#ccm-" + instance_id + "-list-multiple-operations").change(function() {
 		var action = $(this).val();
+		cIDstring = '';
+		$("td.ccm-" + instance_id + "-list-cb input[type=checkbox]:checked").each(function() {
+			cIDstring=cIDstring+'&cID[]='+$(this).val();
+		});
 		switch(action) {
-			case "properties": 
-				cIDstring = '';
-				$("td.ccm-" + instance_id + "-list-cb input[type=checkbox]:checked").each(function() {
-					cIDstring=cIDstring+'&cID[]='+$(this).val();
+			case "delete":
+				jQuery.fn.dialog.open({
+					width: 500,
+					height: 400,
+					modal: false,
+					appendButtons: true,
+					href: CCM_TOOLS_PATH + '/pages/delete?' + cIDstring + '&searchInstance=' + instance_id,
+					title: ccmi18n_sitemap.deletePages				
 				});
+				break;
+			case "properties": 
 				jQuery.fn.dialog.open({
 					width: 630,
 					height: 450,
@@ -826,6 +841,18 @@ ccm_sitemapSelectDisplayMode = function(instance_id, display_mode, select_mode, 
 	
 	// now we save the preference	
 	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?task=save_sitemap_display_mode&display_mode=" + display_mode);
+}
+
+ccm_sitemapDeletePages = function(searchInstance) {
+	$("#ccm-" + searchInstance + "-delete-form").ajaxSubmit(function(resp) {
+		ccm_parseJSON(resp, function() {	
+			jQuery.fn.dialog.closeTop();
+			ccm_deactivateSearchResults(searchInstance);
+			$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
+				ccm_parseAdvancedSearchResponse(resp, searchInstance);
+			});
+		});
+	});
 }
 
 $(function() {

@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <? if ($_GET['_ccm_dashboard_external']) { ?>
-	<ul class="ccm-dashboard-pane-header-icons">
+	<ul class="ccm-pane-header-icons">
 		<li><a href="javascript:void(0)" onclick="ccm_closeNewsflow()" class="ccm-icon-close"><?=t('Close')?></a></li>
 	</ul>
 <? } ?>
@@ -19,3 +19,8 @@ if ($_c->getCollectionPath() != '/dashboard' && $_c->getCollectionPath() != '/da
 	<? if (!$_c->isCheckedOut()) { ?><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?>" id="ccm-nav-check-out" class="btn"><?=t('Edit Page')?></a><? } ?>
 </div>
 <? } ?>
+
+<?
+
+$u = new User();
+$u->saveConfig('NEWSFLOW_LAST_VIEWED', time());

@@ -2,9 +2,9 @@ body {background-color: #000; margin: 0px;}
 div#ccm-dashboard-content {  margin-top: 130px; margin-bottom: 80px }
 
 /* New Central Panes */
-.ccm-dashboard-pane-backdrop{background-color:rgba(0, 0, 0, 0.5);position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;}
-.ccm-dashboard-pane{border:1px solid #999;border:1px solid rgba(0, 0, 0, 0.3);*border:1px solid #999;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-webkit-background-clip:padding-box;-moz-background-clip:padding-box;background-clip:padding-box;}
-.ccm-dashboard-pane-header{
+.ccm-pane-backdrop{background-color:rgba(0, 0, 0, 0.5);position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;}
+.ccm-pane{border:1px solid #999;border:1px solid rgba(0, 0, 0, 0.3);*border:1px solid #999;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-webkit-background-clip:padding-box;-moz-background-clip:padding-box;background-clip:padding-box;}
+.ccm-pane-header{
 	#gradient > .vertical(#f1f1f1,#d1d1d1);
 	background-clip: padding-box;
 	-webkit-border-top-left-radius: 6px;
@@ -15,28 +15,11 @@ div#ccm-dashboard-content {  margin-top: 130px; margin-bottom: 80px }
 	-moz-border-radius-topright: 6px;
 	border-bottom:1px solid #eee;padding:5px 20px; position: relative;}
 
-.ccm-dashboard-pane-header h3 {font-size: 24px}
-.ccm-dashboard-pane-body{padding:20px; background-color: #fff;}
-.ccm-dashboard-pane-footer{background-color:#f5f5f5;padding:14px 20px 15px;border-top:1px solid #ddd;-webkit-border-radius:0 0 6px 6px;-moz-border-radius:0 0 6px 6px;border-radius:0 0 6px 6px;-webkit-box-shadow:inset 0 1px 0 #ffffff;-moz-box-shadow:inset 0 1px 0 #ffffff;box-shadow:inset 0 1px 0 #ffffff;zoom:1;margin-bottom:0;}
-.ccm-dashboard-pane-options {margin-bottom: 0px !important; background-color:#f1f1f1; position: relative; padding:14px 20px 15px;border-bottom:1px solid #ddd;-webkit-box-shadow:inset 0 1px 0 #ffffff;-moz-box-shadow:inset 0 1px 0 #ffffff;box-shadow:inset 0 1px 0 #ffffff;zoom:1;margin-bottom:0;}
-.ccm-dashboard-pane-options-content {display: none; margin-bottom: -18px;}
 .ccm-dashboard-page-container {  .fixed-container(); }
-.ccm-dashboard-pane-options a.ccm-icon-option-closed, .ccm-dashboard-pane-options a.ccm-icon-option-open {position: absolute; top: 5px; right: 5px; color: #666; line-height: 12px; padding-bottom: 3px; padding-top: 3px; padding-right: 25px; padding-left: 5px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;  background-clip: padding-box; }
-.ccm-dashboard-pane-options a.ccm-icon-option-closed:hover, .ccm-dashboard-pane-options a.ccm-icon-option-open:hover {color: #666; text-decoration: none; background-color: #c3c3c3}
-.ccm-dashboard-pane-options a.ccm-icon-option-closed {background-image: url(../images/icons_sprite_up_down.png); background-repeat: no-repeat; background-position: right 5px}
-.ccm-dashboard-pane-options a.ccm-icon-option-open {background-image: url(../images/icons_sprite_up_down.png); background-repeat: no-repeat; background-position: right -67px}
-.ccm-dashboard-pane-options form {margin-bottom: 0px;}
-.ccm-dashboard-pane-options-permanent-search {.clearfix();}
-.ccm-dashboard-pane-options-permanent-search label {margin-left: 0px; width: auto;}
-.ccm-dashboard-pane-options-permanent-search div.input {margin-left: 10px; float: left}
-.ccm-dashboard-pane-footer:before, .ccm-dashboard-pane-footer:after{display:table;content:"";}
-.ccm-dashboard-pane-footer:after{clear:both;}
-.ccm-dashboard-pane-footer .btn{float:right;margin-left:10px;}
-.ccm-dashboard-pane-options ul.tabs li.active a {background-color: #f1f1f1;}
 
 /* Legacy Central Panes */
 .ccm-dashboard-page-container h1 span {
-	.ccm-dashboard-pane-header;
+	.ccm-pane-header;
 	#font > .sans-serif(bold, 24px, 36px);
 	border-left: 1px solid #999;
 	border-top: 1px solid #999;

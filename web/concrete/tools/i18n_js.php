@@ -85,6 +85,7 @@ var ccmi18n_sitemap = {
 	pageDesign: "<?=t('Design')?>",
 	pageVersions: "<?=t('Versions')?>",
 	deletePage: "<?=t('Delete')?>",
+	deletePages: "<?=t('Delete Pages')?>",
 	deletePageSuccessMsg: "<?=t('The page has been removed successfully.')?>",
 	addPage: "<?=t('Add Page')?>",
 	moveCopyPage: "<?=t('Move/Copy')?>",

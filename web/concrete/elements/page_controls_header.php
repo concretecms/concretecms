@@ -29,15 +29,6 @@ if (!$dh->inDashboard()) {
 	$this->addFooterItem($html->javascript('jquery.form.js'));
 	$this->addFooterItem($html->javascript('ccm.app.js'));
 	$cih = Loader::helper('concrete/interface');
-	if ($cih->showNewsflowOverlay()) {
-		$this->addFooterItem('<script type="text/javascript">$(function() { ccm_showNewsflow(); });</script>');
-		$u = new User();
-		$u->saveConfig('NEWSFLOW_LAST_VIEWED', time());
-	}	
-	if (!Config::get('SHOW_INTRODUCTION')) {
-		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_showAppIntroduction(); });</script>');
-		Config::save('SHOW_INTRODUCTION', 1);
-	}
 	if (ACTIVE_LOCALE != 'en_US') {
 		$dlocale = str_replace('_', '-', ACTIVE_LOCALE);
 		$this->addFooterItem($html->javascript('i18n/ui.datepicker-' . $dlocale . '.js'));

@@ -19,24 +19,29 @@ if (isset($_REQUEST['searchInstance'])) {
 }
 ?>
 
-<div id="ccm-list-wrapper"><a name="ccm-<?=$searchInstance?>-list-wrapper-anchor"></a>
+<div id="ccm-<?=$searchInstance?>-search-results" class="ccm-file-list">
 
 <? if (!$searchDialog) { ?>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-<tr>
-<td width="100%"><?=$pageList->displaySummary();?></td>
-	<td style="white-space: nowrap"><?=t('With Selected: ')?>&nbsp;</td>
-	<td align="right">
-	<select id="ccm-<?=$searchInstance?>-list-multiple-operations" disabled="disabled">
-		<option value="">**</option>
-		<option value="properties"><?=t('Edit Properties')?></option>
-	</select>
-	</td>
-</tr>
-</table>
+<div class="ccm-pane-body">
+
 <? } ?>
+
+<div id="ccm-list-wrapper"><a name="ccm-<?=$searchInstance?>-list-wrapper-anchor"></a>
+	<div style="float: right; margin-bottom: 10px">
+		<? $form = Loader::helper('form'); ?>
+
+		<?=$form->label('ccm-' . $searchInstance . '-list-multiple-operations', t('With Selected'))?>
+		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" style="width: 120px; margin-left: 8px;" disabled>
+			<option value="">**</option>
+			<option value="properties"><?=t('Edit Properties')?></option>
+			<option value="delete"><?=t('Delete')?></option>
+		</select>	
+		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-search-add-column"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Customize Results')?></a>
+	</div>
+
 <?
+	$pageList->displaySummary();
 	$txt = Loader::helper('text');
 	$keywords = $searchRequest['keywords'];
 	$soargs = array();
@@ -48,7 +53,7 @@ if (isset($_REQUEST['searchInstance'])) {
 	
 	if (count($pages) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-<?=$searchInstance?>-list" class="ccm-results-list">
-		<tr class="ccm-results-list-header">
+		<tr>
 			<? if (!$searchDialog) { ?><th><input id="ccm-<?=$searchInstance?>-list-cb-all" type="checkbox" /></th><? } ?>
 			<th><?=t('Type')?></th>
 
@@ -65,7 +70,6 @@ if (isset($_REQUEST['searchInstance'])) {
 			foreach($slist as $ak) { ?>
 				<th class="<?=$pageList->getSearchResultsClass($ak)?>"><a href="<?=$pageList->getSortByURL($ak, 'asc', $bu, $soargs)?>"><?=$ak->getAttributeKeyDisplayHandle()?></a></th>
 			<? } ?>			
-			<th class="ccm-search-add-column-header"><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-search-add-column"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" alt="<?php echo t('Add')?>"/></a></th>
 		</tr>
 	<?
 		foreach($pages as $cobj) {
@@ -103,12 +107,10 @@ if (isset($_REQUEST['searchInstance'])) {
 				}
 				?></td>
 			<? } ?>		
-			<td>&nbsp;</td>
 			
 			</tr>
 			<?
 		}
-
 	?>
 	
 	</table>
@@ -120,7 +122,21 @@ if (isset($_REQUEST['searchInstance'])) {
 		<div class="ccm-results-list-none"><?=t('No pages found.')?></div>
 		
 	
-	<? } 
-	$pageList->displayPaging($bu, false, $soargs); ?>
+	<? } ?>
 	
+</div>
+
+<? if (!$searchDialog) { ?>
+</div>
+
+<div class="ccm-pane-footer">
+	<? 	$pageList->displayPaging($bu, false, $soargs); ?>
+</div>
+
+<? } else { ?>
+	<div class="ccm-pane-dialog-pagination">
+		<? 	$pageList->displayPaging($bu, false, $soargs); ?>
+	</div>
+<? } ?>
+
 </div>
