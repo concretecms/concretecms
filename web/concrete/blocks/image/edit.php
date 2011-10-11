@@ -27,8 +27,20 @@ if ($controller->getFileOnstateID() > 0) {
 </div>
 
 <div class="ccm-block-field-group">
-<h2><?=t('Image Links to URL')?></h2>
-<?= $form->text('externalLink', $externalLink, array('style' => 'width: 250px')); ?>
+	<h2>
+		<?=t('Image Links to:')?>
+		<select name="linkType" id="linkType">
+			<option value="0" <?=(empty($externalLink) && empty($internalLinkCID) ? 'selected="selected"' : '')?>><?=t('Nothing')?></option>
+			<option value="1" <?=(empty($externalLink) && !empty($internalLinkCID) ? 'selected="selected"' : '')?>><?=t('Another Page')?></option>
+			<option value="2" <?=(!empty($externalLink) ? 'selected="selected"' : '')?>><?=t('External URL')?></option>
+		</select>
+	</h2>
+	<div id="linkTypePage" style="display: none;">
+		<?= Loader::helper('form/page_selector')->selectPage('internalLinkCID', $internalLinkCID); ?>
+	</div>
+	<div id="linkTypeExternal" style="display: none;">
+		<?= $form->text('externalLink', $externalLink, array('style' => 'width: 250px')); ?>
+	</div>
 </div>
 
 <div class="ccm-block-field-group">

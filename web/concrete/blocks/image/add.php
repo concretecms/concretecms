@@ -17,8 +17,20 @@ $al = Loader::helper('concrete/asset_library');
 </div>
 
 <div class="ccm-block-field-group">
-<h2><?=t('Image Links to URL')?></h2>
-<?= $form->text('externalLink', array('style' => 'width: 250px')); ?>
+	<h2>
+		<?=t('Image Links to:')?>
+		<select name="linkType" id="linkType">
+			<option value="0"><?=t('Nothing')?></option>
+			<option value="1" selected="selected"><?=t('Another Page')?></option>
+			<option value="2"><?=t('External URL')?></option>
+		</select>
+	</h2>
+	<div id="linkTypePage" style="display: none;">
+		<?= Loader::helper('form/page_selector')->selectPage('internalLinkCID'); ?>
+	</div>
+	<div id="linkTypeExternal" style="display: none;">
+		<?= $form->text('externalLink', array('style' => 'width: 250px')); ?>
+	</div>
 </div>
 
 <div class="ccm-block-field-group">
