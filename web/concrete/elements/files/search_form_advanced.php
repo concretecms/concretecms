@@ -59,7 +59,7 @@ foreach($t1 as $value) {
 		<?=$form->select('extension', $extensions)?>
 		</span>
 
-		<span class="ccm-search-option"  search-field="date_added">
+		<span class="ccm-search-option ccm-search-option-type-date_time"  search-field="date_added">
 		<?=$form->text('date_from', array('style' => 'width: 86px'))?>
 		<?=t('to')?>
 		<?=$form->text('date_to', array('style' => 'width: 86px'))?>
@@ -90,12 +90,13 @@ foreach($t1 as $value) {
 	<?
 		print $form->hidden('fType'); 
 		print $form->hidden('fExtension'); 
+		print $form->hidden('searchType', $searchType); 
 		print $form->hidden('ccm_order_dir', $searchRequest['ccm_order_dir']); 
 		print $form->hidden('ccm_order_by', $searchRequest['ccm_order_by']); 
 		print $form->hidden('fileSelector', $fileSelector); 
 	?>	
 	<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
-	<div class="ccm-dashboard-pane-options-permanent-search">
+	<div class="ccm-pane-options-permanent-search">
 
 	<?
 		$s2 = FileSet::getSavedSearches();
@@ -125,7 +126,7 @@ foreach($t1 as $value) {
 		<div class="span5">
 		<?=$form->label('fvKeywords', t('Keywords'))?>
 		<div class="input">
-			<?=$form->text('fKeywords', $searchRequest['fKeywords'], array('class' => 'span3')); ?>
+			<?=$form->text('fKeywords', $searchRequest['fKeywords'], array('style'=> 'width: 170px')); ?>
 		</div>
 		</div>
 		
@@ -161,15 +162,17 @@ foreach($t1 as $value) {
 				'500' => '500'
 			), $searchRequest['numResults'], array('style' => 'width:65px'))?>
 
-			<img src="<?=ASSETS_URL_IMAGES?>/loader_intelligent_search.gif" width="43" height="11" class="ccm-search-loading" id="ccm-<?=$searchInstance?>-search-loading" />
 		</div>
+		<?=$form->submit('ccm-search-files', 'Search', array('style' => 'margin-left: 10px'))?>
+			<img src="<?=ASSETS_URL_IMAGES?>/loader_intelligent_search.gif" width="43" height="11" class="ccm-search-loading" id="ccm-<?=$searchInstance?>-search-loading" />
+
 		</div>
 
 		
 	</div>
 	
-	<a href="javascript:void(0)" onclick="ccm_dashboardToggleOptions(this)" class="ccm-icon-option-<? if (is_array($searchRequest['selectedSearchField']) && count($searchRequest['selectedSearchField']) > 1) { ?>open<? } else { ?>closed<? } ?>"><?=t('Advanced Search')?></a>
-	<div class="clearfix ccm-dashboard-pane-options-content" <? if (is_array($searchRequest['selectedSearchField']) && count($searchRequest['selectedSearchField']) > 1) { ?>style="display: block" <? } ?>>
+	<a href="javascript:void(0)" onclick="ccm_paneToggleOptions(this)" class="ccm-icon-option-<? if (is_array($searchRequest['selectedSearchField']) && count($searchRequest['selectedSearchField']) > 1) { ?>open<? } else { ?>closed<? } ?>"><?=t('Advanced Search')?></a>
+	<div class="clearfix ccm-pane-options-content" <? if (is_array($searchRequest['selectedSearchField']) && count($searchRequest['selectedSearchField']) > 1) { ?>style="display: block" <? } ?>>
 		<br/>
 		<table class="zebra-striped ccm-search-advanced-fields" id="ccm-<?=$searchInstance?>-search-advanced-fields">
 		<? if ($_REQUEST['fssID'] < 1) { ?>
@@ -221,7 +224,7 @@ foreach($t1 as $value) {
 					<? } ?>
 					
 					<? if ($req == 'date_added') { ?>
-						<span class="ccm-search-option"  search-field="date_added">
+						<span class="ccm-search-option ccm-search-option-type-date_time"  search-field="date_added">
 						<?=$form->text('date_from', $searchRequest['date_from'], array('style' => 'width: 86px'))?>
 						<?=t('to')?>
 						<?=$form->text('date_to', $searchRequest['date_to'], array('style' => 'width: 86px'))?>
@@ -258,7 +261,6 @@ foreach($t1 as $value) {
 		</table>
 
 		<div id="ccm-search-fields-submit">
-			<?=$form->submit('ccm-search-files', 'Search', array('style' => 'float: left'))?>
 			<? if ($_REQUEST['fssID'] < 1) { ?><a class="ccm-search-save" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/save_search?searchInstance=<?=$searchInstance?>" id="ccm-<?=$searchInstance?>-launch-save-search" dialog-title="<?=t('Save Search')?>" dialog-width="320" dialog-height="200" dialog-modal="false"><span class="ccm-menu-icon ccm-icon-search-pages"></span><?=t('Save Search')?></a><? } ?>
 		</div>
 

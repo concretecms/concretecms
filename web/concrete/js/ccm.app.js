@@ -2447,6 +2447,7 @@ ccm_launchFileManager = function(filters) {
 	$.fn.dialog.open({
 		width: '90%',
 		height: '70%',
+		appendButtons: true,
 		modal: false,
 		href: CCM_TOOLS_PATH + "/files/search_dialog?ocID=" + CCM_CID + "&search=1" + filters,
 		title: ccmi18n_filemanager.title
@@ -3142,6 +3143,11 @@ ccm_alActivateMenu = function(obj, e) {
 		html += '</ul>';
 		html += '</div></div></div>';
 		bobj.append(html);
+
+		$(bobj).find('a').bind('click.hide-menu', function(e) {
+			ccm_hideMenus();
+			return false;	
+		});
 		
 		$("#ccm-al-menu" + fID + searchInstance + selector + " a.dialog-launch").dialog();
 		
@@ -3813,7 +3819,7 @@ jQuery.fn.dialog.open = function(obj) {
 				});
 				if ($("#ccm-dialog-content" + nd + " .dialog-buttons").length > 0) {
 					$("#ccm-dialog-content" + nd).parent().addClass('ccm-ui');
-					$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-buttonpane').html($("#ccm-dialog-content" + nd + " .dialog-buttons").html());
+					$("#ccm-dialog-content" + nd + " .dialog-buttons").appendTo($("#ccm-dialog-content" + nd).parent().find('.ui-dialog-buttonpane').html(''));
 					$("#ccm-dialog-content" + nd + " .dialog-buttons").remove();
 				}
 				if (typeof obj.onOpen != "undefined") {
@@ -4151,6 +4157,9 @@ ccm_deactivateSearchResults = function(searchType) {
 }
 
 ccm_activateSearchResults = function(searchType) {
+	if ($('a[name=ccm-' + searchType + '-list-wrapper-anchor]').length > 0) {
+		window.location.hash = 'ccm-' + searchType + '-list-wrapper-anchor';
+	}
 	var obj = $("#ccm-" + searchType + "-search-loading");
 	if (obj.length == 0 || searchType == null) {
 		obj = $("#ccm-search-loading");
@@ -4192,6 +4201,11 @@ ccm_setupInPagePaginationAndSorting = function(searchType) {
 		});
 		return false;
 	});
+	$(".ccm-pane-dialog-pagination").each(function() {
+		$(this).closest('.ui-dialog').find('.ui-dialog-buttonpane').html('');
+		$(this).appendTo($(this).closest('.ui-dialog').find('.ui-dialog-buttonpane'));
+	});
+	
 }
 
 ccm_setupSortableColumnSelection = function(searchType) {
@@ -4209,7 +4223,7 @@ ccm_setupSortableColumnSelection = function(searchType) {
 }
 
 ccm_checkSelectedAdvancedSearchField = function(searchType, fieldset) {
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option[search-field=date_added] input").each(function() {
+	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").each(function() {
 		if ($(this).attr('id') == 'date_from') {
 			$(this).attr('id', 'date_from' + fieldset);
 		} else if ($(this).attr('id') == 'date_to') {
@@ -4217,14 +4231,11 @@ ccm_checkSelectedAdvancedSearchField = function(searchType, fieldset) {
 		}
 	});
 
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option input.ccm-input-date").each(function() {
+	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").each(function() {
 		$(this).attr('id', $(this).attr('id') + fieldset);
 	});
 	
 	
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option[search-field=date_added] input").datepicker({
-		showAnim: 'fadeIn'
-	});
 	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").datepicker({
 		showAnim: 'fadeIn'
 	});
@@ -4417,6 +4428,11 @@ showPageMenu = function(obj, e) {
 		html += '</div></div></div>';
 
 		bobj.append(html);
+
+		$(bobj).find('a').bind('click.hide-menu', function(e) {
+			ccm_hideMenus();
+			return false;	
+		});
 
 		$("#menuProperties" + obj.cID).dialog();
 		$("#menuSpeedSettings" + obj.cID).dialog();
@@ -5082,12 +5098,22 @@ ccm_sitemapSearchSetupCheckboxes = function(instance_id) {
 
 	$("#ccm-" + instance_id + "-list-multiple-operations").change(function() {
 		var action = $(this).val();
+		cIDstring = '';
+		$("td.ccm-" + instance_id + "-list-cb input[type=checkbox]:checked").each(function() {
+			cIDstring=cIDstring+'&cID[]='+$(this).val();
+		});
 		switch(action) {
-			case "properties": 
-				cIDstring = '';
-				$("td.ccm-" + instance_id + "-list-cb input[type=checkbox]:checked").each(function() {
-					cIDstring=cIDstring+'&cID[]='+$(this).val();
+			case "delete":
+				jQuery.fn.dialog.open({
+					width: 500,
+					height: 400,
+					modal: false,
+					appendButtons: true,
+					href: CCM_TOOLS_PATH + '/pages/delete?' + cIDstring + '&searchInstance=' + instance_id,
+					title: ccmi18n_sitemap.deletePages				
 				});
+				break;
+			case "properties": 
 				jQuery.fn.dialog.open({
 					width: 630,
 					height: 450,
@@ -5151,6 +5177,18 @@ ccm_sitemapSelectDisplayMode = function(instance_id, display_mode, select_mode, 
 	
 	// now we save the preference	
 	$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?task=save_sitemap_display_mode&display_mode=" + display_mode);
+}
+
+ccm_sitemapDeletePages = function(searchInstance) {
+	$("#ccm-" + searchInstance + "-delete-form").ajaxSubmit(function(resp) {
+		ccm_parseJSON(resp, function() {	
+			jQuery.fn.dialog.closeTop();
+			ccm_deactivateSearchResults(searchInstance);
+			$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
+				ccm_parseAdvancedSearchResponse(resp, searchInstance);
+			});
+		});
+	});
 }
 
 $(function() {
@@ -6187,6 +6225,19 @@ ccm_blockFormSubmit = function() {
 	}
 	return true;
 }
+
+ccm_paneToggleOptions = function(obj) {
+	var pane = $(obj).parent().find('div.ccm-pane-options-content');
+	if ($(obj).hasClass('ccm-icon-option-closed')) {
+		$(obj).removeClass('ccm-icon-option-closed').addClass('ccm-icon-option-open');
+		pane.slideDown('fast', 'easeOutExpo');
+	} else {
+		$(obj).removeClass('ccm-icon-option-open').addClass('ccm-icon-option-closed');
+		pane.slideUp('fast', 'easeOutExpo');
+	}
+}
+
+
 
 ccm_setupGridStriping = function(tbl) {
 	$("#" + tbl + " tr").removeClass();

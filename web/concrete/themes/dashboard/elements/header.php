@@ -126,5 +126,5 @@ print $dh->getDashboardAndSearchMenus();
 	}
 	
 	if (isset($message)) { ?>
-		<div class="block-message alert-message info success"><?=$message?></div>
+		<div class="block-message alert-message info success"><?=Loader::helper('text')->entities($message)?></div>
 	<? } ?>

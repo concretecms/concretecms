@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $this->inc('elements/header.php', array('enableEditing' => true)); 
 ?>
 
+<div class="ccm-ui">
 <div id="newsflow">
 <? $this->inc('elements/header_newsflow.php'); ?>
 <table>
@@ -16,6 +17,7 @@ $this->inc('elements/header.php', array('enableEditing' => true));
 	<td style="width: 25%"><? $a = new Area('Column 4'); $a->display($c); ?></td>
 </tr>
 </table>
+</div>
 </div>
 
 <? $this->inc('elements/footer.php'); ?>

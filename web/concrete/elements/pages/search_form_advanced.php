@@ -3,6 +3,7 @@
 
 $searchFields = array(
 	'' => '** ' . t('Fields'),
+	'keywords' => t('Full Page Index'),
 	'date_added' => t('Date Added'),
 	'date_public' => t('Public Date'),
 	'owner' => t('Page Owner'),
@@ -26,6 +27,10 @@ foreach($searchFieldAttributes as $ak) {
 	
 	<div id="ccm-<?=$searchInstance?>-search-field-base-elements" style="display: none">
 	
+		<span class="ccm-search-option"  search-field="keywords">
+		<?=$form->text('keywords', $searchRequest['keywords'], array('style' => 'width: 120px'))?>
+		</span>
+
 		<span class="ccm-search-option ccm-search-option-type-date_time"  search-field="date_public">
 		<?=$form->text('date_public_from', array('style' => 'width: 86px'))?>
 		<?=t('to')?>
@@ -39,33 +44,39 @@ foreach($searchFieldAttributes as $ak) {
 		</span>
 
 		<span class="ccm-search-option"  search-field="owner">
-		<?=$form->text('owner', array('style' => 'width: 120px'))?>
+		<?=$form->text('owner', array('class'=>'span5'))?>
 		</span>
 
 		<span class="ccm-search-option"  search-field="version_status">
-		<div><?=$form->radio('cvIsApproved', 0, false)?> <?=$form->label("cvIsApproved1", t('Unapproved'))?></div>
-		<div><?=$form->radio('cvIsApproved', 1, false)?> <?=$form->label("cvIsApproved2", t('Approved'))?></div>
+		<ul class="inputs-list">
+		<li><label><?=$form->radio('cvIsApproved', 0, false)?> <span><?=t('Unapproved')?></label></li>
+		<li><label><?=$form->radio('cvIsApproved', 1, false)?> <span><?=t('Approved')?></span></label></li>
+		</ul>
 		</span>
 			
 		<? if (!$searchDialog) { ?>
 		<span class="ccm-search-option" search-field="parent">
-		<div style="width: 100px">
-		<strong><?=t('Search All Children')?></strong><br/>
-		<div><?=$form->radio('cParentAll', 1)?> <?=$form->label("cParentAll3", t('Yes'))?></div>
-		<div><?=$form->radio('cParentAll', 0, 0)?> <?=$form->label("cParentAll4", t('No'))?></div>
+
 		<? $ps = Loader::helper("form/page_selector");
 		print $ps->selectPage('cParentIDSearchField');
 		?>
-		</div>
+		
+		<br/><strong><?=t('Search All Children?')?></strong><br/>
+		<ul class="inputs-list">
+		<li><label><?=$form->radio('cParentAll', 0, false)?> <span><?=t('Yes')?></label></li>
+		<li><label><?=$form->radio('cParentAll', 1, false)?> <span><?=t('No')?></span></label></li>
+		</ul>
+		
+
 		</span>
 		<? } ?>
 		<span class="ccm-search-option"  search-field="num_children">
-			<select name="cChildrenSelect" style="width: 45px">
+			<select name="cChildrenSelect">
 				<option value="gt"<? if ($req['cChildrenSelect'] == 'gt') { ?> selected <? } ?>><?=t('More Than')?></option>
 				<option value="eq" <? if ($req['cChildrenSelect'] == 'eq') { ?> selected <? } ?>><?=t('Equal To')?></option>
 				<option value="lt"<? if ($req['cChildrenSelect'] == 'lt') { ?> selected <? } ?>><?=t('Fewer Than')?></option>
 			</select>
-			<input type="text" name="cChildren" value="<?=$req['cChildren']?>" style="width: 30px" />
+			<input type="text" name="cChildren" value="<?=$req['cChildren']?>" />
 		</span>
 		
 		<? foreach($searchFieldAttributes as $sfa) { 
@@ -76,9 +87,9 @@ foreach($searchFieldAttributes as $ak) {
 
 	<form method="get" id="ccm-<?=$searchInstance?>-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/search_results">
 
-<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
+	<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
 
-<div id="ccm-<?=$searchInstance?>-search-advanced-fields" class="ccm-search-advanced-fields" >
+	<div class="ccm-pane-options-permanent-search">
 	
 		<input type="hidden" name="submit_search" value="1" />
 	<?	
@@ -97,197 +108,155 @@ foreach($searchFieldAttributes as $ak) {
 			print $form->hidden('sitemap_display_mode', $sitemap_display_mode);
 		}
 	?>
-		<div id="ccm-search-box-title">
-			<img src="<?=ASSETS_URL_IMAGES?>/throbber_white_16.gif" width="16" height="16" class="ccm-search-loading" id="ccm-<?=$searchInstance?>-search-loading" alt="<?php echo t('Loading')?>"/>
-			<h2><?=t('Search')?></h2>			
+
+		<div class="span4">
+		<?=$form->label('cvName', t('Page Name'))?>
+		<div class="input">
+			<?=$form->text('cvName', $searchRequest['cvName'], array('style'=> 'width: 120px')); ?>
 		</div>
-		
-		<div id="ccm-search-advanced-fields-inner">
-			<div class="ccm-search-field">
-				<table border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="100%">
-					<strong><?=$form->label('cvName', t('Page Name'))?></strong>
-					<?=$form->text('cvName', $searchRequest['cvName'], array('style' => 'width:200px')); ?>
-					</td>
-				</tr>
-				</table>
-			</div>
+		</div>
 
-			<div class="ccm-search-field">
-				<table border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="100%">
-					<? if ($searchType == 'DASHBOARD') { ?>
-						<a style="float: right; font-weight: bold" href="<?=$this->url('/dashboard/sitemap/search', 'manage_index')?>"><?=t('Setup Index')?></a>
-					<? } ?>
-					<strong><?=$form->label('keywords', t('Full Page Index'))?></strong>
-					<?=$form->text('keywords', $searchRequest['keywords'], array('style' => 'width:200px')); ?>
-					</td>
-				</tr>
-				</table>
-			</div>
-
-			<div class="ccm-search-field">
-				<table border="0" cellspacing="0" cellpadding="0" width="100%">
-				<tr>
-					<td style="white-space: nowrap" align="right"><div style="width: 85px; padding-right:5px"><?=t('Page Type')?></div></td>
-					<td width="100%">
-						<? 
-						Loader::model('collection_types');
-						$ctl = CollectionType::getList();
-						$ctypes = array('' => t('** All'));
-						foreach($ctl as $ct) {
-							$ctypes[$ct->getCollectionTypeID()] = $ct->getCollectionTypeName();
-						}
-						
-						print $form->select('ctID', $ctypes, $searchRequest['ctID'], array('style' => 'width:120px'))?>
-					</td>
-				</tr>	
-				</table>
-			</div>
-		
-			<div class="ccm-search-field">
-				<table border="0" cellspacing="0" cellpadding="0" width="100%">
-				<tr>
-					<td style="white-space: nowrap" align="right"><div style="width: 85px; padding-right:5px"><?=t('Results Per Page')?></div></td>
-					<td width="100%">
-						<?=$form->select('numResults', array(
-							'10' => '10',
-							'25' => '25',
-							'50' => '50',
-							'100' => '100',
-							'500' => '500'
-						), $searchRequest['numResults'], array('style' => 'width:65px'))?>
-					</td>
-					<td><a href="javascript:void(0)" id="ccm-<?=$searchInstance?>-search-add-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" alt="<?php echo t('Add')?>" /></a></td>
-				</tr>	
-				</table>
-			</div>
-
-			<div id="ccm-search-field-base">				
-				<table border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td valign="top" style="padding-right: 4px">
-						<?=$form->select('searchField', $searchFields, array('style' => 'width: 85px'));
-						?>
-						<input type="hidden" value="" class="ccm-<?=$searchInstance?>-selected-field" name="selectedSearchField[]" />
-						</td>
-						<td width="100%" valign="top" class="ccm-selected-field-content">
-						<?=t('Select Search Field.')?>
-						</td>
-						<td valign="top">
-						<a href="javascript:void(0)" class="ccm-search-remove-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" alt="<?php echo t('Remove')?>" /></a>
-						</td>
-					</tr>
-				</table>
-			</div>
-			
-			<div id="ccm-search-fields-wrapper">
+		<div class="span4">
+		<?=$form->label('ctID', t('Page Type'))?>
+		<div class="input">
 			<? 
-			$i = 1;
-			if (is_array($searchRequest['selectedSearchField'])) { 
-				foreach($searchRequest['selectedSearchField'] as $req) { 
-					
-					if ($req == '') {
-						continue;
-					}
-					
-					?>
-					
-					<div class="ccm-search-field ccm-search-request-field-set" ccm-search-type="<?=$req?>" id="ccm-<?=$searchInstance?>-search-field-set<?=$i?>">
-					<table border="0" cellspacing="0" cellpadding="0">
-						<tr>
-							<td valign="top" style="padding-right: 4px">
-							<?=$form->select('searchField' . $i, $searchFields, $req, array('style' => 'width: 85px')); ?>
-							<input type="hidden" value="<?=$req?>" class="ccm-page-selected-field" name="selectedSearchField[]" />
-							</td>
-							<td width="100%" valign="top" class="ccm-selected-field-content">
-							
-							<? if ($req == 'date_public') { ?>
-								<span class="ccm-search-option ccm-search-option-type-date_time"  search-field="date_public">
-								<?=$form->text('date_public_from', $searchRequest['date_public_from'], array('style' => 'width: 86px'))?>
-								<?=t('to')?>
-								<?=$form->text('date_public_to', $searchRequest['date_public_to'], array('style' => 'width: 86px'))?>
-								</span>
-							<? } ?>
+			Loader::model('collection_types');
+			$ctl = CollectionType::getList();
+			$ctypes = array('' => t('** All'));
+			foreach($ctl as $ct) {
+				$ctypes[$ct->getCollectionTypeID()] = $ct->getCollectionTypeName();
+			}
+			
+			print $form->select('ctID', $ctypes, $searchRequest['ctID'], array('style' => 'width:120px'))?>
 
-							<? if ($req == 'date_added') { ?>
-								<span class="ccm-search-option ccm-search-option-type-date_time"  search-field="date_added">
-								<?=$form->text('date_added_from', $searchRequest['date_added_from'], array('style' => 'width: 86px'))?>
-								<?=t('to')?>
-								<?=$form->text('date_added_to', $searchRequest['date_added_to'], array('style' => 'width: 86px'))?>
-								</span>
-							<? } ?>
+		</div>
+		</div>
 
-							<? if ($req == 'owner') { ?>
-								<span class="ccm-search-option"  search-field="owner">
-								<?=$form->text('owner', $searchRequest['owner'], array('style' => 'width: 120px'))?>
-								</span>
-							<? } ?>
+		<div class="span5">
+		<?=$form->label('numResults', t('# Per Page'))?>
+		<div class="input">
+			<?=$form->select('numResults', array(
+				'10' => '10',
+				'25' => '25',
+				'50' => '50',
+				'100' => '100',
+				'500' => '500'
+			), $searchRequest['numResults'], array('style' => 'width:65px'))?>
+		</div>
+		<?=$form->submit('ccm-search-pages', 'Search', array('style' => 'margin-left: 10px'))?>
+		<img src="<?=ASSETS_URL_IMAGES?>/loader_intelligent_search.gif" width="43" height="11" class="ccm-search-loading" id="ccm-<?=$searchInstance?>-search-loading" />
+		</div>
 
-							<? if ($req == 'num_children') { ?>
-								<span class="ccm-search-option"  search-field="num_children">
-								<select name="cChildrenSelect" style="width: 45px">
-									<option value="gt"<? if ($searchRequest['cChildrenSelect'] == 'gt') { ?> selected <? } ?>><?=t('More Than')?></option>
-									<option value="eq" <? if ($searchRequest['cChildrenSelect'] == 'eq') { ?> selected <? } ?>><?=t('Equal To')?></option>
-									<option value="lt"<? if ($searchRequest['cChildrenSelect'] == 'lt') { ?> selected <? } ?>><?=t('Fewer Than')?></option>
-								</select>
-								<input type=text name="cChildren" value="<?=$searchRequest['cChildren']?>" style="width: 30px">
-								</span>
-							<? } ?>
-
-							<? if ($req == 'version_status') { ?>
-								<span class="ccm-search-option"  search-field="version_status">
-								<div>
-								<?=$form->radio('_cvIsApproved', 0, $searchRequest['cvIsApproved'])?> <?=$form->label("cvIsApproved1", t('Unapproved'))?>
-								</div>
-								<div>
-								<?=$form->radio('_cvIsApproved', 1, $searchRequest['cvIsApproved'])?> <?=$form->label("cvIsApproved2", t('Approved'))?>
-								</div>
-								</span>
-							<? } ?>
-							
-							<? if ((!$searchDialog) && $req == 'parent') { ?>
-							<span class="ccm-search-option" search-field="parent">
-							<div style="width: 100px">
-							<strong><?=t('Search All Children')?></strong><br/>
-							<div><?=$form->radio('_cParentAll', 1, $searchRequest['cParentAll'])?> <?=$form->label("cParentAll3", t('Yes'))?></div>
-							<div><?=$form->radio('_cParentAll', 0, $searchRequest['cParentAll'])?> <?=$form->label("cParentAll4", t('No'))?></div>
-							<? $ps = Loader::helper("form/page_selector");
-							print $ps->selectPage('cParentIDSearchField', $searchRequest['cParentIDSearchField']);
-							?>
-							</div>
+	</div>
+	<a href="javascript:void(0)" onclick="ccm_paneToggleOptions(this)" class="ccm-icon-option-<? if (is_array($searchRequest['selectedSearchField']) && count($searchRequest['selectedSearchField']) > 1) { ?>open<? } else { ?>closed<? } ?>"><?=t('Advanced Search')?></a>
+	<div class="clearfix ccm-pane-options-content" <? if (is_array($searchRequest['selectedSearchField']) && count($searchRequest['selectedSearchField']) > 1) { ?>style="display: block" <? } ?>>
+		<br/>
+		<table class="zebra-striped ccm-search-advanced-fields" id="ccm-<?=$searchInstance?>-search-advanced-fields">
+		<tr>
+			<th style="text-align: right" colspan="3"><a href="javascript:void(0)" id="ccm-<?=$searchInstance?>-search-add-option" class="ccm-advanced-search-add-field"><span class="ccm-menu-icon ccm-icon-view"></span><?=t('Add Field')?></a></th>
+		</tr>
+		<tr id="ccm-search-field-base">
+			<td><?=$form->select('searchField', $searchFields);?></td>
+			<td width="100%">
+			<input type="hidden" value="" class="ccm-<?=$searchInstance?>-selected-field" name="selectedSearchField[]" />
+			<div class="ccm-selected-field-content">
+				<?=t('Select Search Field.')?>				
+			</div></td>
+			<td><a href="javascript:void(0)" class="ccm-search-remove-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" /></a></td>
+		</tr>
+		<? 
+		$i = 1;
+		if (is_array($searchRequest['selectedSearchField'])) { 
+			foreach($searchRequest['selectedSearchField'] as $req) { 
+				if ($req == '') {
+					continue;
+				}
+				?>
+				
+				<tr class="ccm-search-field ccm-search-request-field-set" ccm-search-type="<?=$req?>" id="ccm-<?=$searchInstance?>-search-field-set<?=$i?>">
+				<td><?=$form->select('searchField' . $i, $searchFields, $req); ?></td>
+				<td width="100%"><input type="hidden" value="<?=$req?>" class="ccm-<?=$searchInstance?>-selected-field" name="selectedSearchField[]" />
+					<div class="ccm-selected-field-content">
+						<? if ($req == 'date_public') { ?>
+							<span class="ccm-search-option ccm-search-option-type-date_time"  search-field="date_public">
+							<?=$form->text('date_public_from', $searchRequest['date_public_from'], array('style' => 'width: 86px'))?>
+							<?=t('to')?>
+							<?=$form->text('date_public_to', $searchRequest['date_public_to'], array('style' => 'width: 86px'))?>
 							</span>
-							<? } ?>
-							
-							<? foreach($searchFieldAttributes as $sfa) { 
-								if ($sfa->getAttributeKeyID() == $req) {
-									$at = $sfa->getAttributeType();
-									$at->controller->setRequestArray($searchRequest);
-									$at->render('search', $sfa);
-								}
-							} ?>
-							</td>
-							<td valign="top">
-							<a href="javascript:void(0)" class="ccm-search-remove-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" alt="<?php echo t('Remove')?>"/></a>
-							</td>
-						</tr>
-					</table>
-					</div>
-					
+						<? } ?>
+
+						<? if ($req == 'keywords') { ?>
+							<span class="ccm-search-option"  search-field="keywords">
+							<?=$form->text('keywords', $searchRequest['keywords'], array('style' => 'width: 120px'))?>
+							</span>
+						<? } ?>
+
+						<? if ($req == 'date_added') { ?>
+							<span class="ccm-search-option ccm-search-option-type-date_time"  search-field="date_added">
+							<?=$form->text('date_added_from', $searchRequest['date_added_from'], array('style' => 'width: 86px'))?>
+							<?=t('to')?>
+							<?=$form->text('date_added_to', $searchRequest['date_added_to'], array('style' => 'width: 86px'))?>
+							</span>
+						<? } ?>
+
+						<? if ($req == 'owner') { ?>
+							<span class="ccm-search-option"  search-field="owner">
+							<?=$form->text('owner', $searchRequest['owner'], array('class' => 'span5'))?>
+							</span>
+						<? } ?>
+
+						<? if ($req == 'num_children') { ?>
+							<span class="ccm-search-option"  search-field="num_children">
+							<select name="cChildrenSelect">
+								<option value="gt"<? if ($searchRequest['cChildrenSelect'] == 'gt') { ?> selected <? } ?>><?=t('More Than')?></option>
+								<option value="eq" <? if ($searchRequest['cChildrenSelect'] == 'eq') { ?> selected <? } ?>><?=t('Equal To')?></option>
+								<option value="lt"<? if ($searchRequest['cChildrenSelect'] == 'lt') { ?> selected <? } ?>><?=t('Fewer Than')?></option>
+							</select>
+							<input type=text name="cChildren" value="<?=$searchRequest['cChildren']?>">
+							</span>
+						<? } ?>
+
+						<? if ($req == 'version_status') { ?>
+							<span class="ccm-search-option"  search-field="version_status">
+							<ul class="inputs-list">
+							<li><label><?=$form->radio('_cvIsApproved', 0, $searchRequest['cvIsApproved'])?> <span><?=t('Unapproved')?></label></li>
+							<li><label><?=$form->radio('_cvIsApproved', 1, $searchRequest['cvIsApproved'])?> <span><?=t('Approved')?></span></label></li>
+							</ul>
+							</span>
+						<? } ?>
+						
+						<? if ((!$searchDialog) && $req == 'parent') { ?>
+						<span class="ccm-search-option" search-field="parent">
+
+						<? $ps = Loader::helper("form/page_selector");
+						print $ps->selectPage('cParentIDSearchField', $searchRequest['cParentIDSearchField']);
+						?>
+						
+						<br/><strong><?=t('Search All Children?')?></strong><br/>
+
+						<ul class="inputs-list">
+						<li><label><?=$form->radio('_cParentAll', 0, $searchRequest['cParentAll'])?> <span><?=t('Yes')?></label></li>
+						<li><label><?=$form->radio('_cParentAll', 1, $searchRequest['cParentAll'])?> <span><?=t('No')?></span></label></li>
+						</ul>
+						</span>
+						<? } ?>
+						
+						<? foreach($searchFieldAttributes as $sfa) { 
+							if ($sfa->getAttributeKeyID() == $req) {
+								$at = $sfa->getAttributeType();
+								$at->controller->setRequestArray($searchRequest);
+								$at->render('search', $sfa);
+							}
+						} ?>					</div>
+					</td>
+					<td><a href="javascript:void(0)" class="ccm-search-remove-option"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" /></a></td>
+					</tr>
 				<? 
 					$i++;
-				}
-			}?>
-			
-			</div>
-			
-			<div id="ccm-search-fields-submit">
-				<?=$form->submit('ccm-search-pages', t('Search'))?>
-			</div>
-		</div>
-	
-</div>
+				} 
+				
+				} ?>
+		</table>
 
-</form>
+	</div>
+</form>	

@@ -34,40 +34,31 @@
 	</div>
 
 <? } else { ?>
-	<h1><span><?=t('Search Pages')?></span></h1>
-	
-	<div class="ccm-dashboard-inner">
-		
-		<?
-		$dh = Loader::helper('concrete/dashboard/sitemap');
-		if ($dh->canRead()) { ?>
-	
-		<table id="ccm-search-form-table" >
-			<tr>
-				<td valign="top" class="ccm-search-form-advanced-col">
-					<? Loader::element('pages/search_form_advanced', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
-				</td>		
-				<td valign="top" width="100%">	
-					
-					<div id="ccm-search-advanced-results-wrapper">
-					
-							<div id="ccm-<?=$searchInstance?>-search-results">
-						
-							<? Loader::element('pages/search_results', array('searchInstance' => $searchInstance, 'searchType' => 'DASHBOARD', 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
-						
-						</div>
-					
-					</div>
-				
-				</td>	
-			</tr>
-		</table>		
-		
-		<? } else { ?>
-		
-			<p><?=t("You must have access to the dashboard sitemap to search pages.")?></p>
-		
-		<? } ?>	
-		
-	</div>
+
+
+<div class="ccm-ui">
+<div class="row">
+
+<div class="ccm-pane">
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Search Pages'), t('Search the pages of your site and perform bulk actions on them.'));?>
+<?
+$dh = Loader::helper('concrete/dashboard/sitemap');
+if ($dh->canRead()) { ?>
+
+<div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
+<? Loader::element('pages/search_form_advanced', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
+</div>
+
+<? Loader::element('pages/search_results', array('searchInstance' => $searchInstance, 'searchType' => 'DASHBOARD', 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
+<? } else { ?>
+<div class="ccm-pane-body">
+	<p><?=t("You must have access to the dashboard sitemap to search pages.")?></p>
+</div>	
+<div class="ccm-pane-footer"></div>
+
+</div>
+<? } ?>
+
+</div>
+</div>
 <? } ?>

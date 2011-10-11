@@ -401,7 +401,7 @@ class ItemList {
 		return $summary->pages > 1;
 	}
 	
-	public function getPagination($url = false, $additionalVars = array()) {
+	public function getPagination($url = false, $additionalVars = array(), $hash = false) {
 		$pagination = Loader::helper('pagination');
 		if ($this->currentPage == false) {
 			$this->setCurrentPage();
@@ -410,15 +410,15 @@ class ItemList {
 			$pagination->setAdditionalQueryStringVariables($additionalVars);
 		}
 		$pagination->queryStringPagingVariable = $this->queryStringPagingVariable;
-		$pagination->init($this->currentPage, $this->getTotal(), $url, $this->itemsPerPage);
+		$pagination->init($this->currentPage, $this->getTotal(), $url, $this->itemsPerPage, $hash);
 		return $pagination;
 	}
 	
 	/** 
 	 * Gets standard HTML to display paging */
-	public function displayPaging($script = false, $return = false, $additionalVars = array()) {
+	public function displayPaging($script = false, $return = false, $additionalVars = array(), $hash = false) {
 		$summary = $this->getSummary();
-		$paginator = $this->getPagination($script, $additionalVars);
+		$paginator = $this->getPagination($script, $additionalVars, $hash);
 		if ($summary->pages > 1) {
 			$html = '<div class="ccm-spacer"></div>';
 			$html .= '<div class="ccm-pagination">';

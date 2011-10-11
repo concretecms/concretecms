@@ -2,7 +2,7 @@
 
 <div class="row">
 <div class="span14 offset1 columns">
-<div class="ccm-dashboard-pane">
+<div class="ccm-pane">
 
 <? if ($this->controller->getTask() == 'view_details') { ?>
 
@@ -32,8 +32,8 @@
 	</style>
 	
 
-	<div class="ccm-dashboard-pane-header"><h3><?=$stack->getCollectionName()?></h3></div>
-	<div class="ccm-dashboard-pane-options">
+	<div class="ccm-pane-header"><h3><?=$stack->getCollectionName()?></h3></div>
+	<div class="ccm-pane-options">
 		<a href="javascript:void(0)" onclick="window.location.href='<?=$this->url('/dashboard/stacks')?>'" class="btn small"><?=t('Back to List')?></a>
 		<a href="javascript:void(0)" onclick="ccm_stacksAddBlock()" class="btn small ccm-main-nav-edit-option"><?=t('Add Block')?></a>
 		<a class="btn small ccm-main-nav-edit-option" dialog-width="640" dialog-height="340" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?rel=SITEMAP&cID=<?=$stack->getCollectionID()?>"><?=t('Version History')?></a>
@@ -55,7 +55,7 @@
 		}		
 		?>
 	</div>
-	<div class="ccm-dashboard-pane-body clearfix" id="ccm-stack-container">
+	<div class="ccm-pane-body clearfix" id="ccm-stack-container">
 	<?
 		$a = Area::get($stack, 'Main');
 		$bv = new BlockView();
@@ -82,7 +82,7 @@
 
 	<?=$this->controller->outputDashboardPaneHeader(t('Stacks')); ?>
 	
-	<div class="ccm-dashboard-pane-body">
+	<div class="ccm-pane-body">
 		
 	<h4><?=t('Global Areas')?></h4>
 	

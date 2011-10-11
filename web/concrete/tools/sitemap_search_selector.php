@@ -6,23 +6,23 @@ if (!$sh->canRead()) {
 }
 
 ?>
-<div>
+<div class="ccm-ui">
 <script type="text/javascript">
 var ccm_ssActiveTab = "ccm-show-sitemap";
 
 $("#ccm-ss-tabs a").click(function() {
-	$("li.ccm-nav-active").removeClass('ccm-nav-active');
+	$("li.active").removeClass('active');
 	$("#" + ccm_ssActiveTab + "-tab").hide();
 	ccm_ssActiveTab = $(this).attr('id');
-	$(this).parent().addClass("ccm-nav-active");
+	$(this).parent().addClass("active");
 	$("#" + ccm_ssActiveTab + "-tab").show();
 });
 
 </script>
 
-<ul class="ccm-dialog-tabs" id="ccm-ss-tabs">
-<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-show-sitemap"><?=t('Sitemap')?></a></li>
-<li><a href="javascript:void(0)" id="ccm-show-search"><?=t('Search')?></a></li>
+<ul class="tabs" id="ccm-ss-tabs">
+<li class="active"><a href="javascript:void(0)" id="ccm-show-sitemap" onclick="$('.ui-dialog-buttonpane').hide()"><?=t('Sitemap')?></a></li>
+<li><a href="javascript:void(0)" id="ccm-show-search" onclick="$('.ui-dialog-buttonpane').show()"><?=t('Search')?></a></li>
 </ul>
 
 <br/>
@@ -42,3 +42,8 @@ include(DIR_FILES_TOOLS_REQUIRED . '/pages/search_dialog.php'); ?>
 
 </div>
 </div>
+
+<script type="text/javascript">$(function() {
+	$('.ui-dialog-buttonpane').hide();
+});
+</script>

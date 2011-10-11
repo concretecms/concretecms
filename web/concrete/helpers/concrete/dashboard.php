@@ -44,7 +44,7 @@ class ConcreteDashboardHelper {
 		$c = Page::getCurrentPage();
 		$vt = Loader::helper('validation/token');
 		$token = $vt->generate('access_quick_nav');
-		$html = '<div class="ccm-dashboard-pane-header">';
+		$html = '<div class="ccm-pane-header">';
 		$class = 'ccm-icon-favorite';
 		$u = new User();
 		$quicknav = unserialize($u->config('QUICK_NAV_BOOKMARKS'));
@@ -53,7 +53,7 @@ class ConcreteDashboardHelper {
 				$class = 'ccm-icon-favorite-selected';	
 			}
 		}
-		$html .= '<ul class="ccm-dashboard-pane-header-icons">';
+		$html .= '<ul class="ccm-pane-header-icons">';
 		if ($help) {
 			$html .= '<li><a href="javascript:void(0)" onclick="ccm_togglePageHelp(event)" class="ccm-icon-help" title="' . t('Help') . '" id="ccm-page-help" data-content="' . $help . '">' . t('Help') . '</a></li>';
 		}

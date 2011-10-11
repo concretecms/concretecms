@@ -86,6 +86,17 @@ if (is_object($cp)) {
 	if ($this->areLinksDisabled()) { 
 		$this->addHeaderItem('<script type="text/javascript">window.onload = function() {ccm_disableLinks()}</script>', 'CORE');
 	}
+	$cih = Loader::helper('concrete/interface');
+	if ($cih->showNewsflowOverlay()) {
+		$this->addFooterItem('<script type="text/javascript">$(function() { ccm_showNewsflow(); });</script>');
+		$u = new User();
+		$u->saveConfig('NEWSFLOW_LAST_VIEWED', time());
+	}	
+	if (!Config::get('SHOW_INTRODUCTION')) {
+		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_showAppIntroduction(); });</script>');
+		Config::save('SHOW_INTRODUCTION', 1);
+	}
+
 
 }
 
