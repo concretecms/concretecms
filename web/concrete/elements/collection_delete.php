@@ -5,6 +5,32 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 $numChildren = $c->getNumChildren();
 ?>
 
+<script type="text/javascript">
+$(function() {
+	$("#ccmDeletePageForm").ajaxForm({
+		type: 'POST',
+		iframe: true,
+		beforeSubmit: function() {
+			jQuery.fn.dialog.showLoader();
+		},
+		success: function(r) {
+			var r = eval('(' + r + ')');
+			if (r != null && r.rel == 'SITEMAP') {
+				jQuery.fn.dialog.hideLoader();
+				jQuery.fn.dialog.closeTop();
+				<? if ($_REQUEST['display_mode'] == 'explore') { ?>
+					ccmSitemapExploreNode('<?=$_REQUEST['instance_id']?>', 'explore', '<?=$_REQUEST['select_mode']?>', resp.cParentID);
+				<? } else { ?>
+					deleteBranchFade(r.cID);
+				<? } ?>
+	 			ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
+			} else {
+				window.location.href = '<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=' + r.cParentID;
+			}
+		}
+	});
+});
+</script>
 
 <? if ($c->getCollectionID() == 1) {  ?>
 	<div class="error alert-message"><?=t('You may not delete the home page.');?></div>
@@ -26,6 +52,10 @@ $numChildren = $c->getNumChildren();
 				</div>
 				<input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
 				<input type="hidden" name="ctask" value="clear_pending_action">
+				<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
+				<input type="hidden" name="display_mode" value="<?=$_REQUEST['display_mode']?>" />
+				<input type="hidden" name="instance_id" value="<?=$_REQUEST['instance_id']?>" />
+				<input type="hidden" name="select_mode" value="<?=$_REQUEST['select_mode']?>" />
 			</form>
 		<? } ?>
 	<? } else if ($c->isPendingMove() || $c->isPendingCopy()) { ?>
@@ -42,8 +72,10 @@ $numChildren = $c->getNumChildren();
 		<div class="ccm-buttons">
 
 		<form method="post" id="ccmDeletePageForm" action="<?=$c->getCollectionAction()?>">	
+			<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
+
 			<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Close')?>" onclick="jQuery.fn.dialog.closeTop()" />
-			<a href="javascript:void(0)" onclick="$('#ccmDeletePageForm').get(0).submit()" class="ccm-button-right btn error"><span><?=t('Delete Page')?></span></a>
+			<a href="javascript:void(0)" onclick="$('#ccmDeletePageForm').submit()" class="ccm-button-right btn error"><span><?=t('Delete Page')?></span></a>
 			</div>
 		<h3><?=t('Are you sure you wish to delete this page?')?></h3>
 		<? if ($cp->canAdminPage() && $numChildren > 0) { ?>
@@ -53,6 +85,9 @@ $numChildren = $c->getNumChildren();
 		<p><?=t('This cannot be undone.')?></p>
 			<input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
 			<input type="hidden" name="ctask" value="delete">
+			<input type="hidden" name="display_mode" value="<?=$_REQUEST['display_mode']?>" />
+			<input type="hidden" name="instance_id" value="<?=$_REQUEST['instance_id']?>" />
+			<input type="hidden" name="select_mode" value="<?=$_REQUEST['select_mode']?>" />
 		</form>
 		</div>
 		

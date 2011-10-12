@@ -539,12 +539,18 @@
 						if ($cp->canApproveCollection()) {
 							$cParentID = $c->getCollectionParentID();
 							$c->approvePendingAction();
-							header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cParentID . $step);
-							exit;
 						}
 					}
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '&ctask=mcd' . $step);
+					$obj = new stdClass;
+					$obj->rel = $_REQUEST['rel'];
+					$obj->cParentID = $cParentID;
+					$obj->cID = $c->getCollectionID();
+					$obj->display_mode = $_REQUEST['display_mode'];
+					$obj->select_mode = $_REQUEST['select_mode'];
+					$obj->instance_id = $_REQUEST['instance_id'];
+					print Loader::helper('json')->encode($obj);
 					exit;
+
 				}
 			case 'clear_pending_action':
 				if ($cp->canApproveCollection() || $u->getUserID() == $c->getPendingActionUserID()) {
