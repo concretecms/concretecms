@@ -35,6 +35,7 @@ if (isset($_REQUEST['searchInstance'])) {
 		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" style="width: 120px; margin-left: 8px;" disabled>
 			<option value="">**</option>
 			<option value="properties"><?=t('Edit Properties')?></option>
+			<option value="design"><?=t('Design')?></option>
 			<option value="delete"><?=t('Delete')?></option>
 		</select>	
 		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-search-add-column"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Customize Results')?></a>

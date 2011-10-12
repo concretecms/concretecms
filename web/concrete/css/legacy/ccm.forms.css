@@ -197,18 +197,6 @@ div.ccm-stack {position: relative; padding: 0px 0px 2px 0px; border-bottom: 1px 
 div.ccm-stack a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7; text-decoration: none; color: #666}
 
 
-/* scroller */
-div.ccm-scroller {position: relative; padding: 20px 10px 20px 10px; background: #fff url(../images/bg_scroller.png) repeat-x}
-a.ccm-scroller-l {z-index: 100; position: absolute; top: 20px; left: 10px}
-a.ccm-scroller-r {z-index: 100; position: absolute; top: 20px; right: 10px}
-div.ccm-scroller-inner {width: 520px; margin-left: 40px; height: 130px; overflow: hidden; position: relative}
-div.ccm-scroller-inner ul {position: absolute; list-style: none; overflow: hidden; white-space: nowrap; padding: 0px; margin: 0px;}
-div.ccm-scroller-inner ul li {float: left; width: 124px; margin-left: 0px; padding: 0px; margin-right: 8px;}
-div.ccm-scroller-inner ul li span {display: block; text-align: center; font-size: 12px; padding-top: 1px;}
-div.ccm-scroller-inner img {margin: 2px}
-div.ccm-scroller-inner ul li.ccm-item-selected {font-weight: bold;}
-div.ccm-scroller-inner ul li.ccm-item-selected img {margin: 0px; border: 2px solid #00BDF7}
-div.ccm-scroller-inner ul li.ccm-item-selected img.ccm-preview {margin: 2px; border: 0px}
 
 /* block type grid */
 

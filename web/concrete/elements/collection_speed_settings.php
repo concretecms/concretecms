@@ -137,7 +137,7 @@ global $c;
 				<?=t('Custom')?>
 				</span></label>
 				<div style="margin-top: 4px; margin-left: 16px">
-					<?=$form->text('cCacheFullPageContentLifetimeCustom', $val, array('style' => 'width: 40px'))?> <?=t('minutes')?>	
+					<label><?=$form->text('cCacheFullPageContentLifetimeCustom', $val, array('style' => 'width: 40px'))?> <?=t('minutes')?></label>
 				</div>
 				</li>
 			</ul>
