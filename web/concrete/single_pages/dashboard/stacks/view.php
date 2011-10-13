@@ -1,5 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
+<div class="ccm-ui">
 <div class="row">
 <div class="span14 offset1 columns">
 <div class="ccm-pane">
@@ -80,7 +81,7 @@
 
 <? } else { ?>
 
-	<?=$this->controller->outputDashboardPaneHeader(t('Stacks')); ?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Stacks'), t('Stacks give you a central place to stash blocks, where you can control their order, permissions, and even version them.<br><br>Add stacks to your site and you can update them in one place.'));?>
 	
 	<div class="ccm-pane-body">
 		
@@ -142,6 +143,7 @@
 
 <? } ?>
 
+</div>
 </div>
 </div>
 </div>

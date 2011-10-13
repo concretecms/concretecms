@@ -395,6 +395,7 @@ activateLabels = function(instance_id, display_mode, select_mode) {
 					width: 350,
 					modal: false,
 					height: 350, 
+					appendButtons: true,
 					onClose: function() {
 						showBranch(origCID);
 					}
@@ -457,6 +458,12 @@ moveCopyAliasNode = function(reloadPage) {
 						// we are in the dashboard and we need to actually go to the explore node
 						window.location.href = CCM_DISPATCHER_FILENAME + "/dashboard/sitemap/explore/-/" + destCID;
 						return false;
+					}
+					if (CCM_LAUNCHER_SITEMAP == 'search') {
+						ccm_deactivateSearchResults(CCM_SEARCH_INSTANCE_ID);
+						$("#ccm-" + CCM_SEARCH_INSTANCE_ID + "-advanced-search").ajaxSubmit(function(resp) {
+							ccm_parseAdvancedSearchResponse(resp, CCM_SEARCH_INSTANCE_ID);
+						});
 					}
 				} else {
 					setTimeout(function() {
@@ -769,7 +776,25 @@ ccm_sitemapSearchSetupCheckboxes = function(instance_id) {
 					title: ccmi18n_sitemap.pageDesign				
 				});
 				break;
-
+			case 'move_copy':
+				jQuery.fn.dialog.open({
+					width: 640,
+					height: 340,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/sitemap_overlay?instance_id=' + instance_id + '&select_mode=move_copy_delete&' + cIDstring,
+					title: ccmi18n_sitemap.moveCopyPage				
+				});
+				break;
+			case 'speed_settings':
+				jQuery.fn.dialog.open({
+					width: 610,
+					height: 340,
+					modal: false,
+					appendButtons: true,
+					href: CCM_TOOLS_PATH + '/pages/speed_settings?' + cIDstring,
+					title: ccmi18n_sitemap.speedSettingsTitle				
+				});
+				break;
 			case "properties": 
 				jQuery.fn.dialog.open({
 					width: 630,

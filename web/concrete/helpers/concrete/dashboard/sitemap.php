@@ -217,7 +217,7 @@ class ConcreteDashboardSitemapHelper {
 				if ($select_mode == '') {
 					$this->html .= '<li><a href="' . View::url('/dashboard/sitemap/explore', $t->getCollectionID()) . '"><span>' . $t->getCollectionName() . '</span></a></li>';
 				} else {
-					$this->html .= '<li><a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \''. $display_mode . '\', \'' . $select_mode . '\',' . $t->getCollectionID() . ',' . $spID . ')">' . $t->getCollectionName() . '</a></li>';
+					$this->html .= '<li><a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \''. $display_mode . '\', \'' . $select_mode . '\',' . $t->getCollectionID() . ',\'' . $spID . '\')">' . $t->getCollectionName() . '</a></li>';
 				}
 			}
 			$cp = new Permissions($c);
@@ -257,7 +257,7 @@ class ConcreteDashboardSitemapHelper {
 			if ($ri['numSubpages'] > 0) {
 				$subPageStr = ($ri['id'] == 1) ? '' : ' (' . $ri['numSubpages'] . ')';
 				if ($display_mode == 'explore') {
-					$this->html .= ($select_mode == 'move_copy_delete' || $select_mode == 'select_page') ? '<a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \'' . $display_mode . '\', \'' . $select_mode . '\', ' . $ri["id"] . ',' . $spID . ')">' : '<a href="' . View::url('/dashboard/sitemap/explore', $ri['id']) . '">' ;
+					$this->html .= ($select_mode == 'move_copy_delete' || $select_mode == 'select_page') ? '<a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \'' . $display_mode . '\', \'' . $select_mode . '\', ' . $ri["id"] . ',\'' . $spID . '\')">' : '<a href="' . View::url('/dashboard/sitemap/explore', $ri['id']) . '">' ;
 				}
 				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/spacer.gif" width="16" height="16" class="handle ' . $moveableClass . '" />';
 				if ($display_mode == 'explore' || $select_mode == 'move_copy_delete' || $select_mode == 'select_page') {

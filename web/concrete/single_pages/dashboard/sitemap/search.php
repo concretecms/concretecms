@@ -35,6 +35,10 @@
 
 <? } else { ?>
 
+<script type="text/javascript">
+CCM_LAUNCHER_SITEMAP = 'search'; // we need this for when we are moving and copying
+CCM_SEARCH_INSTANCE_ID = '<?=$searchInstance?>';
+</script>
 
 <div class="ccm-ui">
 <div class="row">

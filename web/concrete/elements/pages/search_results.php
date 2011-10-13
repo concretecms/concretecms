@@ -35,6 +35,8 @@ if (isset($_REQUEST['searchInstance'])) {
 		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" style="width: 120px; margin-left: 8px;" disabled>
 			<option value="">**</option>
 			<option value="properties"><?=t('Edit Properties')?></option>
+			<option value="move_copy"><?=t('Move/Copy')?></option>
+			<option value="speed_settings"><?=t('Speed Settings')?></option>
 			<option value="design"><?=t('Design')?></option>
 			<option value="delete"><?=t('Delete')?></option>
 		</select>	
@@ -82,7 +84,7 @@ if (isset($_REQUEST['searchInstance'])) {
 			}
 
 			?>
-			<tr class="ccm-list-record <?=$striped?>" cName="<?=htmlentities($cobj->getCollectionName(), ENT_QUOTES, APP_CHARSET)?>" cID="<?=$cobj->getCollectionID()?>" sitemap-select-callback="<?=$sitemap_select_callback?>" sitemap-select-mode="<?=$sitemap_select_mode?>" sitemap-display-mode="search" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
+			<tr class="ccm-list-record <?=$striped?>" cName="<?=htmlentities($cobj->getCollectionName(), ENT_QUOTES, APP_CHARSET)?>" cID="<?=$cobj->getCollectionID()?>" sitemap-select-callback="<?=$sitemap_select_callback?>" sitemap-select-mode="<?=$sitemap_select_mode?>" sitemap-instance-id="<?=$searchInstance?>" sitemap-display-mode="search" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
 			<? if (!$searchDialog) { ?><td class="ccm-<?=$searchInstance?>-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td><? } ?>
 			<td><?=$cobj->getCollectionTypeName()?></td>
 			<td class="ccm-page-list-name"><div style="max-width: 150px; word-wrap: break-word"><?=$txt->highlightSearch($cobj->getCollectionName(), $keywords)?></div></td>
