@@ -10,12 +10,46 @@ Loader::model('collection_types');
 
 $error = t("An unspecified error has occurred.");
 
+$originalPages = array();
 if (isset($_REQUEST['origCID'] ) && is_numeric($_REQUEST['origCID'])) {
-	$oc = Page::getByID($_REQUEST['origCID']);
+	$originalPages[] = Page::getByID($_REQUEST['origCID']);
 }
+
 if (isset($_REQUEST['destCID'] ) && is_numeric($_REQUEST['destCID'])) {
 	$dc = Page::getByID($_REQUEST['destCID']);
+	$dcp = new Permissions($dc);
 }
+
+$canReadSource = true;
+$canAddSubContent = true;
+$canMoveCopyTo = true;
+$canCopyChildren = true;
+if (isset($_REQUEST['origCID'] ) && strpos($_REQUEST['origCID'], ',') > -1) {
+	$ocs = explode(',', $_REQUEST['origCID']);
+	foreach($ocs as $ocID) {
+		$originalPages[] = Page::getByID($ocID);
+	}
+}
+
+foreach($originalPages as $oc) {
+	$ocp = new Permissions($oc);
+	$originalPages[] = $oc;
+	if (!$ocp->canRead()) {
+		$canReadSource = false;
+	}
+	$ct = CollectionType::getByID($oc->getCollectionTypeID());
+	if (!$dcp->canAddSubContent($ct)) {
+		$canAddSubContent = false;
+	}
+	if (!$oc->canMoveCopyTo($dc)) {
+		$canMoveCopyTo = false;
+	}	
+	if ((!$ocp->canAdminPage()) || ($oc->getCollectionPointerID() > 0)) {
+		$canCopyChildren = false;
+	}
+}
+
+
 
 $valt = Loader::helper('validation/token');
 
@@ -23,19 +57,14 @@ $json = array();
 $json['error'] = false;
 $json['message'] = false;
 
-if (is_object($oc) && is_object($dc)) {
-	$ocp = new Permissions($oc);
-	$dcp = new Permissions($dc);
-	$ct = CollectionType::getByID($dc->getCollectionTypeID());
-	if (!$ocp->canRead()) {
-		$error = t("You cannot view the source page.");
-	} else if (!$dcp->canAddSubContent($ct)) {
-		$error = t("You do not have sufficient privileges to add this type of page to this destination.");
-	} else if (!$oc->canMoveCopyTo($dc)) {
-		$error = t("You may not move/copy/alias the chosen page to that location.");
-	} else {
-		$error = false;
-	}
+if (!$canReadSource) {
+	$error = t("You cannot view the source page(s).");
+} else if (!$canAddSubContent) {
+	$error = t("You do not have sufficient privileges to add this page or these pages to this destination.");
+} else if (!$canMoveCopyTo) {
+	$error = t("You may not move/copy/alias the chosen page(s) to that location.");
+} else {
+	$error = false;
 }
 
 if (!$error) {
@@ -43,42 +72,51 @@ if (!$error) {
 		if ($valt->validate()) {
 			switch($_REQUEST['ctask']) {
 				case "ALIAS":
-					$ncID = $oc->addCollectionAlias($dc);
-					$successMessage = '"' . $oc->getCollectionName() . '" '.t('was successfully aliased beneath').' "' . $dc->getCollectionName() . '"';
-					$newCID = $ncID;
+					foreach($originalPages as $oc) {
+						$ncID = $oc->addCollectionAlias($dc);
+						$successMessage .= '"' . $oc->getCollectionName() . '" '.t('was successfully aliased beneath').' "' . $dc->getCollectionName() . '" ';
+						$newCID[] = $ncID;
+					}
 					break;
 				case "COPY":
 					if ($_REQUEST['copyAll'] && $dcp->canAdminPage()) {
-						$nc2 = $oc->duplicateAll($dc); // new collection is passed back
-						if (is_object($nc2)) {
-							$successMessage = '"' . $oc->getCollectionName() . '" '.t('and all its children were successfully copied beneath').' "' . $dc->getCollectionName() . '"';
+						foreach($originalPages as $oc) {
+							$nc2 = $oc->duplicateAll($dc); // new collection is passed back
+							if (is_object($nc2)) {
+								$successMessage .= '"' . $oc->getCollectionName() . '" '.t('and all its children were successfully copied beneath').' "' . $dc->getCollectionName() . '" ';
+							}
 						}
 					} else {
-						$nc2 = $oc->duplicate($dc);
-						if (is_object($nc2)) {
-							$successMessage = '"' . $oc->getCollectionName() . '" '.t('was successfully copied beneath').' "' . $dc->getCollectionName() . '"';
+						foreach($originalPages as $oc) {
+							$nc2 = $oc->duplicate($dc);
+							if (is_object($nc2)) {
+								$successMessage .= '"' . $oc->getCollectionName() . '" '.t('was successfully copied beneath').' "' . $dc->getCollectionName() . '" ';
+							}
 						}
 					}
 					if (!is_object($nc2)) {
 						$error = t("An error occurred while attempting the copy operation.");
 					} else {
-						$newCID = $nc2->getCollectionID();
+						$newCID[] = $nc2->getCollectionID();
 					}
 					break;
 				case "MOVE":
-					if ($dcp->canApproveCollection() && $ocp->canApproveCollection()) {
+					foreach($originalPages as $oc) {
+						$ocp = new Permissions($oc);
 						$_SESSION['movePageSaveOldPagePath'] = $_REQUEST['saveOldPagePath'];
-						if ($_REQUEST['saveOldPagePath']) {
-							$nc2 = $oc->move($dc, true);
+						if ($dcp->canApproveCollection() && $ocp->canApproveCollection()) {
+							if ($_REQUEST['saveOldPagePath']) {
+								$nc2 = $oc->move($dc, true);
+							} else {
+								$nc2 = $oc->move($dc);
+							}
+							$successMessage .= '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '." ';
 						} else {
-							$nc2 = $oc->move($dc);
+							$oc->markPendingAction('MOVE', $dc);
+							$successMessage .= t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.\n", $oc->getCollectionName() , $dc->getCollectionName() );
 						}
-						$successMessage = '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '." ';
-					} else {
-						$oc->markPendingAction('MOVE', $dc);
-						$successMessage = t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.", $oc->getCollectionName() , $dc->getCollectionName() );
 					}
-					$newCID = $oc->getCollectionID();
+					$newCID[] = $oc->getCollectionID();
 					break;
 			}
 		} else {
@@ -110,8 +148,12 @@ if ($successMessage) {
 
 ?>
 
-<h2>
-<?=t('You dragged "%s" onto "%s." What do you wish to do?',$oc->getCollectionName(),$dc->getCollectionName())?>
+<h3>
+<? if (count($originalPages) > 1) { ?>
+	<?=t('What do you wish to do?')?>
+<? } else { ?>
+	<?=t('You dragged "%s" onto "%s." What do you wish to do?',$oc->getCollectionName(),$dc->getCollectionName())?>
+<? } ?>
 </h2><br/>
 	<form>
 
@@ -123,7 +165,7 @@ if ($successMessage) {
 		<input type="hidden" name="display_mode" id="display_mode" value="<?=$_REQUEST['display_mode']?>" />
 
 		<input type="radio" checked style="vertical-align: middle" id="ctaskMove" name="ctask" value="MOVE" onclick="toggleMove()" />
-		<strong><?=t('Move')?></strong> "<?=$oc->getCollectionName()?>" <?=t('beneath')?> "<?=$dc->getCollectionName()?>"
+		<strong><?=t('Move')?></strong> <? if (count($originalPages) == 1) { ?>"<?=$oc->getCollectionName()?>"<? } ?> <?=t('beneath')?> "<?=$dc->getCollectionName()?>"
 		<div style="margin: 4px 0px 0px 20px">
 		<input type="checkbox" id="saveOldPagePath" name="saveOldPagePath" value="1" style="vertical-align: middle" <? if (isset($_SESSION['movePageSaveOldPagePath']) && $_SESSION['movePageSaveOldPagePath']) { ?> checked="checked" <? } ?> /> <?=t('Save old page path')?>
 		</div>
@@ -131,16 +173,16 @@ if ($successMessage) {
 		
 		<? if ($oc->getCollectionPointerID() < 1) { ?>
 		<input type="radio" style="vertical-align: middle" id="ctaskAlias" name="ctask" value="ALIAS" onclick="toggleAlias()" />
-		<strong><?=t('Alias')?></strong> "<?=$oc->getCollectionName()?>" <?=t('beneath')?> "<?=$dc->getCollectionName()?>" - <?=t('The page will appear in both locations; all edits to the original will be reflected in the alias.')?>
+		<strong><?=t('Alias')?></strong> <? if (count($originalPages) == 1) { ?>"<?=$oc->getCollectionName()?>"<? } ?> <?=t('beneath')?> "<?=$dc->getCollectionName()?>" - <?=t('Pages appear in both locations; all edits to originals will be reflected in their alias.')?>
 		<br/><br/>
 		<? } ?>
 		
 		<input type="radio" style="vertical-align: middle" id="ctaskCopy" name="ctask" value="COPY" onclick="toggleCopy()" />
-		<strong><?=t('Copy')?></strong> "<?=$oc->getCollectionName()?>" <?=t('beneath')?> "<?=$dc->getCollectionName()?>"
+		<strong><?=t('Copy')?></strong> <? if (count($originalPages) == 1) { ?>"<?=$oc->getCollectionName()?>"<? } ?> <?=t('beneath')?> "<?=$dc->getCollectionName()?>"
 		<div style="margin: 4px 0px 0px 20px">
-		<? if ($ocp->canAdminPage() && $oc->getCollectionPointerID() < 1) { ?>
-			<input type="radio" id="copyThisPage" name="copyAll" value="0" style="vertical-align: middle" disabled /> <?=t('Copy this page.')?><br/>
-			<input type="radio" id="copyChildren" name="copyAll" value="1" style="vertical-align: middle" disabled /> <?=t('Copy this page + children.')?>
+		<? if ($canCopyChildren) { ?>
+			<input type="radio" id="copyThisPage" name="copyAll" value="0" style="vertical-align: middle" disabled /> <?=t('Copy page.')?><br/>
+			<input type="radio" id="copyChildren" name="copyAll" value="1" style="vertical-align: middle" disabled /> <?=t('Copy page + children.')?>
 		<? } else { ?> 
 			<?=t('Your copy operation will only affect the current page - not any children.')?>
 		<? } ?>
