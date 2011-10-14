@@ -139,7 +139,7 @@ class StartingPointPackage extends Package {
 	public function finish() {
 		rename(DIR_CONFIG_SITE . '/site_install.php', DIR_CONFIG_SITE . '/site.php');
 		@unlink(DIR_CONFIG_SITE . '/site_install_user.php');
-		chmod(DIR_CONFIG_SITE . '/site.php', 0777);
+		@chmod(DIR_CONFIG_SITE . '/site.php', 0777);
 	}
 	
 	public function set_site_permissions() {
@@ -172,6 +172,34 @@ class StartingPointPackage extends Package {
 		
 		$home = Page::getByID(1, "RECENT");
 		$home->updatePermissions($args);
+	}
+	
+	public static function hasCustomList() {
+		$fh = Loader::helper('file');
+		if (is_dir(DIR_STARTING_POINT_PACKAGES)) {
+			$available = $fh->getDirectoryContents(DIR_STARTING_POINT_PACKAGES);
+			if (count($available) > 0) { 
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static function getAvailableList() {
+		$fh = Loader::helper('file');
+		// first we check the root install directory. If it exists, then we only include stuff from there. Otherwise we get it from the core.
+		$available = array();
+		if (is_dir(DIR_STARTING_POINT_PACKAGES)) {
+			$available = $fh->getDirectoryContents(DIR_STARTING_POINT_PACKAGES);
+		}
+		if (count($available) == 0) {
+			$available = $fh->getDirectoryContents(DIR_STARTING_POINT_PACKAGES_CORE);
+		}
+		$availableList = array();
+		foreach($available as $pkgHandle) {
+			$availableList[] = Loader::startingPointPackage($pkgHandle);
+		}
+		return $availableList;
 	}
 	
 }

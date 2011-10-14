@@ -120,6 +120,30 @@ class ConcreteInterfaceHelper {
 		}
 	}
 	
+	public function showWhiteLabelMessage() {
+		return (Config::get('WHITE_LABEL_LOGO_SRC') || file_exists(DIR_BASE . '/' . DIRNAME_IMAGES . '/logo_menu.png'));
+	}
+	
+	public function getToolbarLogoSRC() {
+		$alt = Config::get('WHITE_LABEL_APP_NAME');
+		if (!$alt) {
+			$alt = 'concrete5';
+		}
+		$src = Config::get('WHITE_LABEL_LOGO_SRC');
+		if (!$src) {
+			$filename = 'logo_menu.png';
+			if (file_exists(DIR_BASE . '/' . DIRNAME_IMAGES . '/' . $filename)) {
+				$src = DIR_REL . '/' . DIRNAME_IMAGES . '/' . $filename;
+				$d = getimagesize(DIR_BASE . '/' . DIRNAME_IMAGES . '/' . $filename);
+				$dimensions = $d[3];
+			} else {
+				$src = ASSETS_URL_IMAGES . '/' . $filename;
+				$dimensions = 'width="49" height="49"';
+			}
+		}
+		return '<img id="ccm-logo" src="' . $src . '" ' . $dimensions . ' alt="' . $alt . '" title="' . $alt . '" />';
+	}
+	
 	public function showNewsflowOverlay() {
 		$tp = new TaskPermission();
 		$c = Page::getCurrentPage();

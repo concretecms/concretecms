@@ -224,6 +224,11 @@ $(function() {
 					$("#ccm-approve-field").val('APPROVE');
 					$("#ccm-check-in").submit();
 				});
+				var posX = $(this).position().left;
+				if (posX > 0) {
+					posX = posX - 20; // BACK it up!
+				}
+				$("#ccm-edit-overlay").css('left', posX + "px");
 				$("#ccm-edit-overlay").fadeIn(160, 'easeOutExpo', function() {
 					$(this).find('a').click(function() {
 						ccm_toolbarCloseEditMenu();
