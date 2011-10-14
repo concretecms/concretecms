@@ -26,7 +26,7 @@ $(function() {
 	}
 	
 	ccm_togglePageHelp = function(e) {
-		if ($('.popover').is(':visible')) {
+		if ($('#twipsy-holder .popover').is(':visible')) {
 			$('#ccm-page-help').popover('hide');	
 		} else {
 			$('#ccm-page-help').popover('show');	

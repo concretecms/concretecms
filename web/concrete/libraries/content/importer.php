@@ -42,8 +42,7 @@ class ContentImporter {
 		$this->importStacksContent($sx);
 		$this->importPageContent($sx);
 		$this->importPackages($sx);
-		
-		// export attributes // import attributes
+		$this->importConfigValues($sx);
 	}
 	
 	protected static function getPackageObject($pkgHandle) {
@@ -326,6 +325,21 @@ class ContentImporter {
 					Job::installByPackage($jx['handle'], $pkg);
 				} else {
 					Job::installByHandle($jx['handle']);				
+				}
+			}
+		}
+	}
+
+	protected function importConfigValues(SimpleXMLElement $sx) {
+		if (isset($sx->config)) {
+			$db = Loader::db();
+			$configstore = new ConfigStore($db);
+			foreach($sx->config->children() as $key) {
+				$pkg = ContentImporter::getPackageObject($key['package']);
+				if (is_object($pkg)) {
+					$configstore->set($key->getName(), $key->__toString(), $pkg->getPackageID());
+				} else {
+					$configstore->set($key->getName(), $key->__toString());
 				}
 			}
 		}

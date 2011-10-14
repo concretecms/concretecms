@@ -80,6 +80,8 @@ class ContentExporter {
 			$pc->export($pages);
 		}		
 		
+		Config::exportList($this->x);
+		
 	}
 	
 	public static function addMasterCollectionBlockID($b, $id) {

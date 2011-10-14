@@ -58,6 +58,10 @@
 				array('ContentBlockController', 'replaceFilePlaceHolderOnImport'),				
 				$content);
 
+			$content = preg_replace_callback(
+				'/\{ccm:export:define:(.*)\}/i',
+				array('ContentBlockController', 'replaceDefineOnImport'),				
+				$content);
 
 			$args['content'] = $content;			
 			return $args;
@@ -70,6 +74,14 @@
 				return '{CCM:CID_' . $pc->getCollectionID() . '}';
 			} else {
 				return '{CCM:CID_1}';
+			}
+		}
+
+		public static function replaceDefineOnImport($match) {
+			$define = $match[1];
+			if (defined($define)) {
+				$r = get_defined_constants();
+				return $r[$define];
 			}
 		}
 
