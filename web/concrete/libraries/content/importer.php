@@ -30,6 +30,7 @@ class ContentImporter {
 		$this->importAttributeCategories($sx);
 		$this->importAttributeTypes($sx);
 		$this->importAttributes($sx);
+		$this->importAttributeSets($sx);
 		$this->importThemes($sx);
 		$this->importTaskPermissions($sx);
 		$this->importJobs($sx);
@@ -378,6 +379,21 @@ class ContentImporter {
 		}
 	}
 
+	protected function importAttributeSets(SimpleXMLElement $sx) {
+		if (isset($sx->attributesets)) {
+			foreach($sx->attributesets->attributeset as $as) {
+				$akc = AttributeKeyCategory::getByHandle($as['category']);
+				$pkg = ContentImporter::getPackageObject($as['package']);
+				$set = $akc->addSet($as['handle']->__toString(), $as['name']->__toString(), $pkg, $as['locked']);
+				foreach($as->children() as $ask) {
+					$ak = $akc->getAttributeKeyByHandle($ask['handle']->__toString());
+					if (is_object($ak)) { 	
+						$set->addKey($ak);
+					}
+				}
+			}
+		}
+	}
 
 	public static function getValue($value) {
 		if (preg_match('/\{ccm:export:page:(.*)\}|\{ccm:export:file:(.*)\}|\{ccm:export:image:(.*)\}|\{ccm:export:pagetype:(.*)\}/i', $value, $matches)) {

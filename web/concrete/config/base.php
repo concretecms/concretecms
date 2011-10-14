@@ -481,12 +481,13 @@ define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
 
 //Main Concrete Site - For Marketplace, Knowledge Base, etc.
 if (!defined('CONCRETE5_ORG_URL')) {
-	define('CONCRETE5_ORG_URL', 'http://www.concrete5.org');
+	define('CONCRETE5_ORG_URL', 'http://c5org');
 }
 
 define('MARKETPLACE_BASE_URL_SITE_PAGE', CONCRETE5_ORG_URL.'/private/sites');
 
 define('MARKETPLACE_URL_CONNECT', CONCRETE5_ORG_URL.'/marketplace/connect');
+define('MARKETPLACE_URL_CHECKOUT', CONCRETE5_ORG_URL.'/cart/-/add/');
 define('MARKETPLACE_URL_CONNECT_VALIDATE', CONCRETE5_ORG_URL.'/marketplace/connect/-/validate');
 define('MARKETPLACE_PURCHASES_LIST_WS', CONCRETE5_ORG_URL . '/marketplace/connect/-/get_available_licenses');
 define('MARKETPLACE_ITEM_INFORMATION_WS', CONCRETE5_ORG_URL . '/marketplace/connect/-/get_item_information');

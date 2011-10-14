@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
     <attributecategories>
-        <category handle="collection" allow-sets="0" package=""/>
-        <category handle="user" allow-sets="0" package=""/>
-        <category handle="file" allow-sets="0" package=""/>
+        <category handle="collection" allow-sets="1" package=""/>
+        <category handle="user" allow-sets="1" package=""/>
+        <category handle="file" allow-sets="1" package=""/>
     </attributecategories>
     <attributetypes>
         <attributetype handle="text" package="">
@@ -133,6 +133,22 @@
         <attributekey handle="width" name="Width" package="" searchable="1" indexed="1" type="number" category="file"/>
         <attributekey handle="height" name="Height" package="" searchable="1" indexed="1" type="number" category="file"/>
     </attributekeys>
+    <attributesets>
+        <attributeset handle="page_header" name="Page Header" package="" locked="0" category="collection">
+            <attributekey handle="meta_title"/>
+            <attributekey handle="meta_description"/>
+            <attributekey handle="meta_keywords"/>
+            <attributekey handle="header_extra_content"/>
+        </attributeset>
+        <attributeset handle="navigation" name="Navigation and Indexing" package="" locked="0" category="collection">
+            <attributekey handle="exclude_nav"/>
+            <attributekey handle="exclude_page_list"/>
+            <attributekey handle="exclude_search_index"/>
+            <attributekey handle="exclude_sitemapxml"/>
+            <attributekey handle="tags"/>
+        </attributeset>
+    </attributesets>
+
     <themes>
         <theme handle="default" package="" activated="1"/>
         <theme handle="greensalad" package="" activated="0"/>

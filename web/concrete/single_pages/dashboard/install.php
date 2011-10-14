@@ -47,7 +47,7 @@ if ($this->controller->getTask() == 'browse') { ?>
 						}
 						if ($item->purchaseRequired()) {
 							$buttonText = t('Purchase');
-							$buttonAction = 'javascript:window.open(\'' . $item->getRemoteURL() . '\')';
+								$buttonAction = 'javascript:ccm_getMarketplaceItem({mpID: \'' . $item->getMarketplaceItemID() . '\'})';
 						} else {
 							$buttonText = t('Install');
 							if ($type == 'themes') {
