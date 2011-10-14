@@ -4094,10 +4094,6 @@ String.prototype.score = function(abbreviation,offset) {
   }
   return 0.0
 }
-window.ccm_goToInstallAddons = function() {
-	window.location.href = CCM_DISPATCHER_FILENAME + '/dashboard/install';
-}
-
 ccm_getMarketplaceItem = function(args) {
 	var mpID = args.mpID;
 	var closeTop = args.closeTop;
@@ -5455,7 +5451,7 @@ $(function() {
 	}
 	
 	ccm_togglePageHelp = function(e) {
-		if ($('.popover').is(':visible')) {
+		if ($('#twipsy-holder .popover').is(':visible')) {
 			$('#ccm-page-help').popover('hide');	
 		} else {
 			$('#ccm-page-help').popover('show');	

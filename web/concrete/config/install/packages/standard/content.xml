@@ -86,7 +86,10 @@
                 <block type="content" name="">
                     <data table="btContentLocal">
                         <record>
-                            <content><![CDATA[<h1 id="logo"><a href="{ccm:export:page:}"><p>concrete5 Site</p></a></h1>]]></content>
+                            <content><![CDATA[<h1 id="logo">
+                            	<a href="{ccm:export:page:}">
+                            		<p>{ccm:export:define:SITE}</p>
+                            	</a></h1>]]></content>
                         </record>
                     </data>
                 </block>
@@ -583,4 +586,12 @@
                                 </area>
                             </page>
                         </pages>
+						<config>
+							<SITE_DEBUG_LEVEL>1</SITE_DEBUG_LEVEL>
+							<ENABLE_LOG_EMAILS>1</ENABLE_LOG_EMAILS>
+							<ENABLE_LOG_ERRORS>1</ENABLE_LOG_ERRORS>
+							<ENABLE_CACHE>1</ENABLE_CACHE>
+							<FULL_PAGE_CACHE_GLOBAL>0</FULL_PAGE_CACHE_GLOBAL>
+							<ENABLE_MARKETPLACE_SUPPORT>1</ENABLE_MARKETPLACE_SUPPORT>
+						</config>
                     </concrete5-cif>

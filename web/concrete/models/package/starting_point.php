@@ -155,14 +155,7 @@ class StartingPointPackage extends Package {
 		$fs->setPermissions($g3, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL);
 
 		Config::save('SITE', SITE);
-
-		// add the current app version as our site's app version
 		Config::save('SITE_APP_VERSION', APP_VERSION);
-		Config::save('SITE_DEBUG_LEVEL', DEBUG_DISPLAY_ERRORS);
-		Config::save('ENABLE_LOG_EMAILS', 1);
-		Config::save('ENABLE_LOG_ERRORS', 1);
-		Config::save('ENABLE_CACHE', 1);
-		Config::save('FULL_PAGE_CACHE_GLOBAL', "0");
 		$u = new User();
 		$u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
 		

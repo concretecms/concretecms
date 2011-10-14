@@ -176,42 +176,6 @@ table.ccm-grid-list th {padding: 4px; border-top: 1px solid #aaa; border-left: 1
 table.ccm-grid-list th a {color: #000}
 table.ccm-grid-list th.full {width: 100%}
 
-/* user/group selector */
-div.ccm-group a.ccm-group-inner {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
-div.ccm-group div.ccm-group-inner-indiv {background-repeat: no-repeat; background-position: 8px 8px; color: #666; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
-div.ccm-group a.ccm-group-inner-atag {color: #666; font-size: 14px; padding: 8px 0px; text-decoration: none; border: 1px solid #fff}
-div.ccm-group a.ccm-group-inner-atag:hover {color: #666; font-size: 14px; padding: 8px 0px; text-decoration: none; border: 1px solid #fff}
-div.ccm-group {position: relative; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px}
-div.ccm-group a.ccm-group-inner:hover {background-color: #d9e7ff; border: 1px solid #94a7c7}
-div.ccm-group img.ccm-group-sort {position: absolute; top: 12px; right: 10px; z-index: 200}
-img.ccm-group-sort:hover {cursor: move}
-div.ccm-group-description {padding-left: 30px; color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
-span.ccm-group-description {color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
-form#ccm-group-search {width: 200px; text-align: right; padding-right: 10px; float: right; position: relative; top: -40px; font-size: 10px}
-form#ccm-group-search input {font-size: 10px}
-form#ccm-group-search label {font-weight: bold}
-
-/* stacks */
-div.ccm-stack a {background-repeat: no-repeat; background-position: 8px 8px; background-image: url(../images/icons/stack.png); color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
-div.ccm-stack {position: relative; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px}
-div.ccm-stack a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7; text-decoration: none; color: #666}
-
-
-
-/* block type grid */
-
-/*
-div#ccm-block-type-grid div.ccm-block-type-grid-entry a {width: 60px; height: 30px; margin-right: 10px; margin-bottom: 10px; overflow: hidden; float: left; border: 1px solid #d7d7d7; -webkit-border-radius: 4px; -moz-border-radius: 4px; text-decoration: none; display: block; padding: 30px 4px 4px 4px; text-align: center;  background-color: #fff; background-repeat: no-repeat; background-position: center 10px}
-div#ccm-block-type-grid div.ccm-block-type-grid-entry a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7} */
-
-
-div.ccm-block-type-search-wrapper {}
-div.ccm-block-type-search {}
-div.ccm-block-type-search-wrapper a.ccm-block-type-help img {float: right; margin-right: 10px; margin-top: 14px}
-ul#ccm-block-type-list .ccm-block-type-available {display: list-item !important}
-div.ccm-search-bar, div.ccm-block-type-search {background: #F0F6FA url(../images/icons/search.png) no-repeat scroll 8px 14px; border-bottom: 1px solid #dedede; padding-bottom: 10px; padding-top: 10px; padding-left: 32px}
-div.ccm-search-bar {margin: -8px -8px 20px -8px}
-a#ccm-block-type-clear-search {margin-left: 2px; display: none}
 
 
 .ccm-style-property-table td {padding-right: 8px !important; padding-bottom: 8px !important}
