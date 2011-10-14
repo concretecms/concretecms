@@ -67,7 +67,23 @@ class ConcreteDashboardHelper {
 		$html .= '</div>';
 		return $html;
 	}
-
+	
+	public function getDashboardBackgroundImage() {
+		$feed = array();
+		// this feed is an array of standard PHP objects with a SRC, a caption, and a URL
+		// allow for a custom white-label feed
+		if (defined('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED') && WHITE_LABEL_DASHBOARD_BACKGROUND_FEED != '') {
+			$contents = Loader::helper('file')->getContents(WHITE_LABEL_DASHBOARD_BACKGROUND_FEED);
+		} else if (defined('WHITE_LABEL_DASHBOARD_BACKGROUND_SRC') && WHITE_LABEL_DASHBOARD_BACKGROUND_SRC != '') {
+			$image = new stdClass;
+			$image->src = WHITE_LABEL_DASHBOARD_BACKGROUND_SRC;
+			$image->caption = WHITE_LABEL_DASHBOARD_BACKGROUND_CAPTION;
+			return $image;
+		} else {
+			$contents = Loader::helper('file')->getContents(DASHBOARD_BACKGROUND_FEED);
+			return Loader::helper('json')->decode($contents);
+		}
+	}
 
 	public function getDashboardAndSearchMenus() {
 		ob_start(); ?>
@@ -134,21 +150,21 @@ class ConcreteDashboardHelper {
 				
 				</div>
 				
-				
+				<? if (ENABLE_INTELLIGENT_SEARCH_HELP) { ?>
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite ccm-intelligent-search-results-module-loading">
 				<h1><?=t('Help')?></h1>
 				<ul class="ccm-intelligent-search-results-list" id="ccm-intelligent-search-results-list-help">
 				</ul>
-				
 				</div>
-			
+				<? } ?>
+				
+				<? if (ENABLE_INTELLIGENT_SEARCH_MARKETPLACE) { ?>
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite ccm-intelligent-search-results-module-loading">
 				<h1><?=t('Add-Ons &amp; Themes')?></h1>
 				<ul class="ccm-intelligent-search-results-list" id="ccm-intelligent-search-results-list-marketplace">
 				</ul>
-				
 				</div>
-				
+				<? } ?>				
 			</div>
 			
 			<div id="ccm-dashboard-overlay">

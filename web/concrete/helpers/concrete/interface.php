@@ -121,15 +121,19 @@ class ConcreteInterfaceHelper {
 	}
 	
 	public function showWhiteLabelMessage() {
-		return (Config::get('WHITE_LABEL_LOGO_SRC') || file_exists(DIR_BASE . '/' . DIRNAME_IMAGES . '/logo_menu.png'));
+		return ((defined('WHITE_LABEL_LOGO_SRC') && WHITE_LABEL_LOGO_SRC != '')  || file_exists(DIR_BASE . '/' . DIRNAME_IMAGES . '/logo_menu.png'));
 	}
 	
 	public function getToolbarLogoSRC() {
-		$alt = Config::get('WHITE_LABEL_APP_NAME');
+		if (defined('WHITE_LABEL_APP_NAME')) { 
+			$alt = WHITE_LABEL_APP_NAME;
+		}
 		if (!$alt) {
 			$alt = 'concrete5';
 		}
-		$src = Config::get('WHITE_LABEL_LOGO_SRC');
+		if (defined('WHITE_LABEL_LOGO_SRC')) { 
+			$src = WHITE_LABEL_LOGO_SRC;
+		}
 		if (!$src) {
 			$filename = 'logo_menu.png';
 			if (file_exists(DIR_BASE . '/' . DIRNAME_IMAGES . '/' . $filename)) {

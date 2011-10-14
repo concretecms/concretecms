@@ -4,6 +4,18 @@ if ($_GET['_ccm_dashboard_external']) {
 	return;
 }
 
+if (!defined('WHITE_LABEL_DASHBOARD_BACKGROUND_SRC')) {
+	Config::getOrDefine('WHITE_LABEL_DASHBOARD_BACKGROUND_SRC', false);
+}
+
+if (!defined('WHITE_LABEL_DASHBOARD_BACKGROUND_CAPTION')) {
+	Config::getOrDefine('WHITE_LABEL_DASHBOARD_BACKGROUND_CAPTION', false);
+}
+
+if (!defined('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED')) {
+	Config::getOrDefine('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED', false);
+}
+
 Loader::block('autonav');
 $nh = Loader::helper('navigation');
 $dashboard = Page::getByPath("/dashboard");
@@ -57,11 +69,13 @@ $disp .= "</script>"."\n";
 $v->addHeaderItem($disp);
 
 Loader::element('header_required');
+
+$backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundImage();
 ?>
 
 <script type="text/javascript">
 	$(function() {
-	    $.backstretch("http://farm3.static.flickr.com/2443/3843020508_5325eaf761.jpg" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
+	    $.backstretch("<?=$backgroundImage->src?>" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
 	    ccm_activateToolbar();
 	    $("#ccm-page-help").popover({placement: 'below', html: true, trigger: 'manual'});
 	});
@@ -73,6 +87,10 @@ Loader::element('header_required');
 <? if (!$_SESSION['dashboardHasSeenImage']) { 
 	$_SESSION['dashboardHasSeenImage'] = true;
 } ?>
+
+<? if (isset($backgroundImage->caption) && $backgroundImage->caption) { ?>
+	<div id="ccm-dashboard-background-caption" class="ccm-ui"><div id="ccm-dashboard-background-caption-inner"><? if ($backgroundImage->url) { ?><a target="_blank" href="<?=$backgroundImage->url?>"><? } ?><?=$backgroundImage->caption?><? if ($backgroundImage->url) { ?></a><? } ?></div></div>
+<? } ?>
 
 <div class="ccm-ui">
 
