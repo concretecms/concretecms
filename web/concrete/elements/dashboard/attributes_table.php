@@ -124,6 +124,7 @@ if (count($attribs) > 0) { ?>
 <? } ?>
 
 <script type="text/javascript">
+$(function() {
 	$("div.ccm-attribute-sortable-set-list").sortable({
 		handle: 'img.ccm-attribute-icon',
 		cursor: 'move',
@@ -137,6 +138,7 @@ if (count($attribs) > 0) { ?>
 			});
 		}
 	});
+});
 </script>
 
 </div>

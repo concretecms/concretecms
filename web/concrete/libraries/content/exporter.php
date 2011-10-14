@@ -39,6 +39,9 @@ class ContentExporter {
 		// now attribute keys (including user)
 		AttributeKey::exportList($this->x);
 
+		// now attribute keys (including user)
+		AttributeSet::exportList($this->x);
+
 		// now theme
 		PageTheme::exportList($this->x);
 		

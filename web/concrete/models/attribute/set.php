@@ -68,6 +68,33 @@ class AttributeSet extends Object {
 		$db->Execute('delete from AttributeSetKeys where asID = ?', array($this->asID));
 	}
 	
+	public function export($axml) {
+		$category = AttributeKeyCategory::getByID($this->getAttributeSetKeyCategoryID())->getAttributeKeyCategoryHandle();
+		$akey = $axml->addChild('attributeset');
+		$akey->addAttribute('handle',$this->getAttributeSetHandle());
+		$akey->addAttribute('name', $this->getAttributeSetName());
+		$akey->addAttribute('package', $this->getPackageHandle());
+		$akey->addAttribute('locked', $this->isAttributeSetLocked());
+		$akey->addAttribute('category', $category);
+		$keys = $this->getAttributeKeys();
+		foreach($keys as $ak) {
+			$ak->export($akey, false);
+		}
+		return $akey;
+	}
+
+	public static function exportList($xml) {
+		$axml = $xml->addChild('attributesets');
+		$db = Loader::db();
+		$r = $db->Execute('select asID from AttributeSets order by asID asc');
+		$list = array();
+		while ($row = $r->FetchRow()) {
+			$list[] = AttributeSet::getByID($row['asID']);
+		}
+		foreach($list as $as) {
+			$as->export($axml);
+		}
+	}
 
 	public function getAttributeKeys() {
 		$db = Loader::db();

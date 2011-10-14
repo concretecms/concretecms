@@ -126,6 +126,21 @@ class Marketplace {
 			return '<div class="ccm-error">' . t('You do not have permission to connect this site to the marketplace.') . '</div>';
 		}
 	}
+
+	public function getMarketplacePurchaseFrame($mp, $width = '100%', $height = '530') {
+		$tp = new TaskPermission();
+		if ($tp->canInstallPackages()) {
+			if ($this->isConnected()) {
+				$url = MARKETPLACE_URL_CHECKOUT;
+				$csiURL = urlencode(BASE_URL . DIR_REL);
+				$csToken = $this->getSiteToken();
+				$url = $url . '/' . $mp->getProductBlockID() . '?ts=' . time() . '&csiURL=' . $csiURL . '&csToken=' . $csToken;
+			}
+			return '<iframe id="ccm-marketplace-frame-' . time() . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+		} else {
+			return '<div class="ccm-error">' . t('You do not have permission to connect this site to the marketplace.') . '</div>';
+		}
+	}
 	
 	
 	/** 

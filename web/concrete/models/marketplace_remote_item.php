@@ -32,6 +32,8 @@ class MarketplaceRemoteItem extends Object {
 	public function getPrice(){ return sprintf("%.2f",floatval($this->price)); }
 	public function getRemoteCollectionID(){ return $this->cID; }
 	public function getRemoteURL(){ return $this->url; }
+	public function getProductBlockID() {return $this->productBlockID;}
+	public function getFivePackProductBlockID() {return $this->fivePackProductBlockID;}
 	public function getRemoteFileURL(){ return $this->file; }
 	public function getRemoteIconURL(){ return $this->icon; }
 	public function getRemoteListIconURL() {return $this->listicon;}
