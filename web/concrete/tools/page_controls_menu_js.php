@@ -94,9 +94,10 @@ if (isset($cp)) {
 
 menuHTML += '<div id="ccm-page-controls-wrapper" class="ccm-ui">';
 menuHTML += '<div id="ccm-toolbar">';
-menuHTML += '<img id="ccm-logo" src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" height="49" width="49" alt="Concrete5" />';
 
 menuHTML += '<ul id="ccm-main-nav">';
+menuHTML += '<li id="ccm-logo-wrapper"><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></li>';
+
 <? if ($c->isMasterCollection()) { ?>
 	menuHTML += '<li><a class="ccm-icon-back ccm-menu-icon" href="<?=View::url('/dashboard/pages/types')?>"><?=t('Page Types')?></a></li>';
 <? } ?>
@@ -112,6 +113,9 @@ foreach($items as $ih) {
 	<?
 	}
 }
+if (Loader::helper('concrete/interface')->showWhiteLabelMessage()) { ?>
+	menuHTML += '<li id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>';
+<? }
 ?>
 menuHTML += '</ul>';
 menuHTML += '<ul id="ccm-system-nav">';

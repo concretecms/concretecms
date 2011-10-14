@@ -201,18 +201,19 @@ $(function() {
 
 		
 		<?
-		$availableSampleContent = array('standard', 'blog','blank');
 		$uh = Loader::helper('concrete/urls');
 		?>
 		
 		<table class="zebra-striped" id="sample-content-selector">
 		<tbody>
-		<? foreach($availableSampleContent as $pkgHandle) {
-			$spl = Loader::startingPointPackage($pkgHandle);
+		<? 
+		$availableSampleContent = StartingPointPackage::getAvailableList();
+		foreach($availableSampleContent as $spl) { 
+			$pkgHandle = $spl->getPackageHandle();
 		?>
 
-		<tr class="<? if ($this->post('SAMPLE_CONTENT') == $pkgHandle || (!$this->post('SAMPLE_CONTENT') && $pkgHandle == 'standard')) { ?>package-selected<? } ?>">
-			<td><?=$form->radio('SAMPLE_CONTENT', $pkgHandle, $pkgHandle == 'standard')?></td>
+		<tr class="<? if ($this->post('SAMPLE_CONTENT') == $pkgHandle || (!$this->post('SAMPLE_CONTENT') && $pkgHandle == 'standard') || count($availableSampleContent) == 1) { ?>package-selected<? } ?>">
+			<td><?=$form->radio('SAMPLE_CONTENT', $pkgHandle, ($pkgHandle == 'standard' || count($availableSampleContent) == 1))?></td>
 			<td><img src="<?=$uh->getPackageIconURL($spl)?>" width="97" height="97" alt="<?=$spl->getPackageName()?>" /></td>
 			<td width="100%"><h4><?=$spl->getPackageName()?></h4><p><?=$spl->getPackageDescription()?></td>
 		</tr>
@@ -222,8 +223,9 @@ $(function() {
 		</tbody>
 		</table>
 		
-		<div class="alert-message block-message info"><?=t('concrete5 veterans can choose "Blank," but otherwise we recommend starting with "Standard Website" or "Blog."')?></div>
-
+		<? if (!StartingPointPackage::hasCustomList()) { ?>
+			<div class="alert-message block-message info"><?=t('concrete5 veterans can choose "Blank," but otherwise we recommend starting with "Standard Website" or "Blog."')?></div>
+		<? } ?>
 
 	
 </div>

@@ -77,10 +77,12 @@ Loader::element('header_required');
 <div class="ccm-ui">
 
 <div id="ccm-toolbar">
-<a href="<?=$this->url('/dashboard/')?>"><img id="ccm-logo" src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" height="49" width="49" alt="Concrete5" /></a>
-
 <ul id="ccm-main-nav">
+<li id="ccm-logo-wrapper"><a href="<?=$this->url('/dashboard/')?>"><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></a></li>
 <li><a class="ccm-icon-back ccm-menu-icon" href="<?=$this->url('/')?>"><?=t('Return to Website')?></a></li>
+<? if (Loader::helper('concrete/interface')->showWhiteLabelMessage()) { ?>
+	<li id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>
+<? } ?>
 </ul>
 
 <ul id="ccm-system-nav">

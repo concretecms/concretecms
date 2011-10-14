@@ -49,6 +49,7 @@ class InstallController extends Controller {
 	public function view() {
 		$locales = $this->getLocales();
 		$this->set('locales', $locales);		
+		$this->testAndRunInstall();		
 	}
 	
 	public function setup() {
@@ -72,6 +73,29 @@ class InstallController extends Controller {
 		$this->setRequiredItems();
 		$this->setOptionalItems();
 		Loader::model('package/starting_point');
+	}
+	
+	protected function testAndRunInstall() {
+		if (file_exists(DIR_CONFIG_SITE . '/site_install_user.php')) {
+			require(DIR_CONFIG_SITE . '/site_install.php');
+			@include(DIR_CONFIG_SITE . '/site_install_user.php');
+			$e = Loader::helper('validation/error');
+			$e = $this->validateDatabase($e);
+			if ($e->has()) {
+				$this->set('error', $e);
+			} else {
+				$this->addHeaderItem(Loader::helper('html')->css('jquery.ui.css'));
+				$this->addHeaderItem(Loader::helper('html')->javascript('jquery.ui.js'));
+				if (defined('INSTALL_STARTING_POINT') && INSTALL_STARTING_POINT) { 
+					$spl = Loader::startingPointPackage(INSTALL_STARTING_POINT);
+				} else {
+					$spl = Loader::startingPointPackage('standard');
+				}
+				$this->set('installPackage', $spl->getPackageHandle());
+				$this->set('installRoutines', $spl->getInstallRoutines());
+				$this->set('successMessage', t('Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.', USER_SUPER, $uPassword));
+			}
+		}
 	}
 	
 	private function setRequiredItems() {
@@ -163,9 +187,37 @@ class InstallController extends Controller {
 		exit;
 	}
 	
+	protected function validateDatabase($e) {
+		if (!function_exists('mysql_connect')) {
+			$e->add($this->getDBErrorMsg());
+		} else {
+
+			// attempt to connect to the database
+			if (defined('DB_SERVER')) {
+				$db = Loader::db($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE, true);			
+				$DB_SERVER = DB_SERVER;
+				$DB_DATABASE = DB_DATABASE;
+			} else {
+				$db = Loader::db( $_POST['DB_SERVER'], $_POST['DB_USERNAME'], $_POST['DB_PASSWORD'], $_POST['DB_DATABASE'], true);			
+				$DB_SERVER = $_POST['DB_SERVER'];
+				$DB_DATABASE = $_POST['DB_DATABASE'];
+			}
+			
+			if ($DB_SERVER && $DB_DATABASE) {
+				if (!$db) {
+					$e->add(t('Unable to connect to database.'));
+				} else {					
+					$num = $db->GetCol("show tables");
+					if (count($num) > 0) {
+						$e->add(t('There are already %s tables in this database. concrete5 must be installed in an empty database.', count($num)));
+					}
+				}
+			}
+		}	
+		return $e;
+	}
+	
 	public function configure() {	
-		$this->addHeaderItem(Loader::helper('html')->css('jquery.ui.css'));
-		$this->addHeaderItem(Loader::helper('html')->javascript('jquery.ui.js'));
 		try {
 
 			$val = Loader::helper('validation/form');
@@ -192,25 +244,7 @@ class InstallController extends Controller {
 				$e = $this->fileWriteErrors;
 			}
 			
-			if (!function_exists('mysql_connect')) {
-				$e->add($this->getDBErrorMsg());
-			} else {
-
-				// attempt to connect to the database
-				$db = Loader::db( $_POST['DB_SERVER'], $_POST['DB_USERNAME'], $_POST['DB_PASSWORD'], $_POST['DB_DATABASE'], true);			
-				
-				if ($_POST['DB_SERVER'] && $_POST['DB_DATABASE']) {
-					if (!$db) {
-						$e->add(t('Unable to connect to database.'));
-					} else {
-						
-						$num = $db->GetCol("show tables");
-						if (count($num) > 0) {
-							$e->add(t('There are already %s tables in this database. concrete5 must be installed in an empty database.', count($num)));
-						}
-					}
-				}
-			}
+			$e = $this->validateDatabase($e);
 			
 			if ($val->test() && (!$e->has())) {
 
@@ -249,20 +283,15 @@ class InstallController extends Controller {
 					$configuration = "<?php\n";
 					$configuration .= "define('INSTALL_USER_EMAIL', '" . $_POST['uEmail'] . "');\n";
 					$configuration .= "define('INSTALL_USER_PASSWORD_HASH', '" . User::encryptPassword($_POST['uPassword'], $salt) . "');\n";
+					$configuration .= "define('INSTALL_STARTING_POINT', '" . $this->post('SAMPLE_CONTENT') . "');\n";
 					$configuration .= "define('SITE', '" . addslashes($_POST['SITE']) . "');\n";
 					$res = fwrite($this->fpu, $configuration);
 					fclose($this->fpu);
 					chmod(DIR_CONFIG_SITE . '/site_install_user.php', 0700);
+					$this->redirect('/');
 				} else {
 					throw new Exception(t('Unable to open config/site_user.php for writing.'));
 				}
-
-				Loader::model('package/starting_point');
-				$spl = Loader::startingPointPackage($this->post('SAMPLE_CONTENT'));
-				$this->set('installPackage', $spl->getPackageHandle());
-				$this->set('installRoutines', $spl->getInstallRoutines());
-				
-				$this->set('successMessage', t('Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.', USER_SUPER, $uPassword));
 
 			
 			} else {
