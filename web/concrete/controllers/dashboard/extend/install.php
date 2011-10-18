@@ -1,0 +1,138 @@
+<?
+
+defined('C5_EXECUTE') or die("Access Denied.");
+class DashboardExtendInstallController extends Controller {
+	
+	public function on_start() {
+		Loader::library('marketplace');
+		$this->error = Loader::helper('validation/error');
+	}
+	
+	public function uninstall($pkgID) {
+		$tp = new TaskPermission();
+		if (!$tp->canUninstallPackages()) {
+			return false;
+		}
+		
+		$pkg = Package::getByID($pkgID);
+		if (!is_object($pkg)) {
+			$this->redirect("/dashboard/install");
+		}
+		$this->set('text', Loader::helper('text'));
+		$this->set('pkg', $pkg);
+		$this->set('items', $pkg->getPackageItems());
+	}
+
+	public function do_uninstall_package() {
+		$pkgID = $this->post('pkgID');
+
+		$valt = Loader::helper('validation/token');
+
+		if ($pkgID > 0) {
+			$pkg = Package::getByID($pkgID);
+		}
+		
+		if (!$valt->validate('uninstall')) {
+			$this->error->add($valt->getErrorMessage());
+		}
+		
+		$tp = new TaskPermission();
+		if (!$tp->canUninstallPackages()) {
+			$this->error->add(t('You do not have permission to uninstall packages.'));
+		}
+		
+		if (!is_object($pkg)) {
+			$this->error->add(t('Invalid package.'));
+		}
+		
+		if (!$this->error->has()) {
+			$pkg->uninstall();
+			if ($this->post('pkgMoveToTrash')) {
+				$r = $pkg->backup();
+				if (is_array($r)) {
+					$pe = Package::mapError($r);
+					foreach($pe as $ei) {
+						$this->error->add($ei);
+					}
+				}
+			}
+			if (!$this->error->has()) { 
+				$this->redirect('/dashboard/install', 'package_uninstalled');
+			}
+		}
+		
+		if ($this->error->has()) {
+			$this->set('error', $this->error);
+		}
+		$this->inspect_package($pkgID);
+
+	}
+
+	public function inspect_package($pkgID = 0) { 
+		if ($pkgID > 0) {
+			$pkg = Package::getByID($pkgID);
+		}
+		
+		if (isset($pkg) && ($pkg instanceof Package)) {
+			$this->set('pkg', $pkg);
+		} else {
+			$this->redirect('/dashboard/install');
+		}
+	}
+	
+	public function package_uninstalled() {
+		$this->set('message', t('The package type has been uninstalled.'));
+	}
+	
+	public function install_package($package) {
+		$tp = new TaskPermission();
+		if ($tp->canInstallPackages()) { 
+			$tests = Package::testForInstall($package);
+			if (is_array($tests)) {
+				$tests = Package::mapError($tests);
+				$this->set('error', $tests);
+			} else {
+				$p = Loader::package($package);
+				try {
+					$p->install();
+					$this->set('message', t('The package has been installed.'));
+				} catch(Exception $e) {
+					$this->set('error', $e);
+				}
+			}
+		} else {
+			$this->error->add(t('You do not have permission to install add-ons.'));
+			$this->set('error', $this->error);
+		}
+	}
+	
+
+    public function download($remoteMPID=null) {
+		$tp = new TaskPermission();
+		if ($tp->canInstallPackages()) { 
+			Loader::model('marketplace_remote_item');
+			$mri = MarketplaceRemoteItem::getByID($remoteMPID);
+			
+			if (!is_object($mri)) {
+				$this->set('error', array(t('Invalid marketplace item ID.')));
+				return;
+			}
+			
+			$r = $mri->download();
+			if ($r != false) {
+				if (!is_array($r)) {
+					$this->set('error', array($r));
+				} else {
+					$errors = Package::mapError($r);
+					$this->set('error', $errors);
+				}
+			} else {
+				$this->set('message', t('Marketplace item %s downloaded successfully.', $mri->getName()));
+			}
+		} else {
+			$this->error->add(t('You do not have permission to download add-ons.'));
+			$this->set('error', $this->error);
+		}
+    }
+
+}

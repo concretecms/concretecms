@@ -18,10 +18,13 @@ if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MAR
 			case Marketplace::E_INVALID_BASE_URL:
 				print t('The base URL of your site does not match a registered instance of the site. Please click below to authenticate your site again.');
 				break;
-			case Marketplace::E_GENERAL_CONNECTION_ERROR:
+			case Marketplace::E_UNRECOGNIZED_SITE_TOKEN:
+				print t('Unable to connect to your project page. Your database contains a marketplace token which concrete5.org cannot verify.');
+				break;
+			//case Marketplace::E_GENERAL_CONNECTION_ERROR:
+			default:
 				print t('Error establishing connection to the concrete5 community. Please check that curl and other required libraries are enabled.');
 				break;
-
 	}
 		?>
 		</div>
@@ -43,5 +46,5 @@ if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MAR
 	
 	<br/><br/>
 	
-	<? print $h->button(t('Connect to Community'), $this->url('/dashboard/settings/marketplace'))?>
+	<? print $h->button(t('Connect to Community'), $this->url('/dashboard/extend/connect'))?>
 <? } ?>
