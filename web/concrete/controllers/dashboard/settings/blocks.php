@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class DashboardInstallController extends Controller {
+class DashboardSettingsBlocksController extends Controller {
 	
 	public function __construct() {
 		$this->error = Loader::helper('validation/error');

@@ -48,7 +48,7 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 	</div>
 </div>
 
-<div class="ccm-pane-body">
+<div class="ccm-pane-body ccm-pane-body-footer">
 	<? if ($sh->canRead()) { ?>
 	
 		<div id="ccm-sitemap-message"></div>
@@ -67,7 +67,6 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 	
 	<? } ?>
 </div>
-<div class="ccm-pane-footer"></div>
 </div>
 
 </div>

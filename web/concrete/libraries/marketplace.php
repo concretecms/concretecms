@@ -6,6 +6,7 @@ class Marketplace {
 	
 	const E_INVALID_BASE_URL = 20;
 	const E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED = 21;
+	const E_UNRECOGNIZED_SITE_TOKEN = 22;
 	const E_GENERAL_CONNECTION_ERROR = 99;
 
 	protected $isConnected = false;
@@ -31,7 +32,7 @@ class Marketplace {
 
 			$fh = Loader::helper('file');
 			$csiURL = urlencode(BASE_URL . DIR_REL);
-			$url = MARKETPLACE_URL_CONNECT_VALIDATE."?csToken={$csToken}&csiURL=" . $csiURL;
+			$url = MARKETPLACE_URL_CONNECT_VALIDATE."?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
 			$vn = Loader::helper('validation/numbers');
 			$r = $fh->getContents($url);
 			if ($r == false) {
@@ -105,7 +106,7 @@ class Marketplace {
 			if (!$this->isConnected()) {
 				$url = MARKETPLACE_URL_CONNECT;
 				if (!$completeURL) {
-					$completeURL = BASE_URL . View::url('/dashboard/settings/marketplace', 'connect_complete');
+					$completeURL = BASE_URL . View::url('/dashboard/extend/connect', 'connect_complete');
 				}
 				$csReferrer = urlencode($completeURL);
 				$csiURL = urlencode(BASE_URL . DIR_REL);
@@ -154,7 +155,7 @@ class Marketplace {
 			if (is_object($p)) {
 				// we only add a notification if it's newer than the last one we know about
 				if (version_compare($p->getPackageVersionUpdateAvailable(), $i->getVersion(), '<') && version_compare($p->getPackageVersion(), $i->getVersion(), '<')) {
-					SystemNotification::add(SystemNotification::SN_TYPE_ADDON_UPDATE, t('An updated version of %s is available.', $i->getName()), t('New Version: %s.', $i->getVersion()), '', View::url('/dashboard/install', 'update'), $i->getRemoteURL());
+					SystemNotification::add(SystemNotification::SN_TYPE_ADDON_UPDATE, t('An updated version of %s is available.', $i->getName()), t('New Version: %s.', $i->getVersion()), '', View::url('/dashboard/extend/update'), $i->getRemoteURL());
 				}
 				$p->updateAvailableVersionNumber($i->getVersion());
 			}

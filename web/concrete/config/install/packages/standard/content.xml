@@ -44,7 +44,12 @@
         <page name="Page Types" path="/dashboard/pages/types" filename="/dashboard/pages/types/view.php" pagetype="" description="What goes in your site." package=""/>
         <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php" pagetype="" description="" package=""/>
         <page name="Single Pages" path="/dashboard/pages/single" filename="/dashboard/pages/single.php" pagetype="" description="" package=""/>
-        <page name="Add Functionality" path="/dashboard/install" filename="/dashboard/install.php" pagetype="" description="Install addons &amp; themes." package=""/>
+        <page name="Extend concrete5" path="/dashboard/extend" filename="/dashboard/extend/view.php" pagetype="" description="Connect to the concrete5 marketplace, install custom add-ons, and download updates for marketplace add-ons and themes." package=""/>
+        <page name="Install Themes &amp; Add-ons" path="/dashboard/extend/install" filename="/dashboard/extend/install.php" pagetype="" description="Install add-ons &amp; themes." package=""/>
+        <page name="Check for Updates" path="/dashboard/extend/update" filename="/dashboard/extend/update.php" pagetype="" description="Update your installed packages." package=""/>
+        <page name="Connect to the Community" path="/dashboard/extend/connect" filename="/dashboard/extend/connect.php" pagetype="" description="Connect to the concrete5 community." package=""/>
+        <page name="Get More Themes" path="/dashboard/extend/themes" filename="/dashboard/extend/themes.php" pagetype="" description="Download themes from concrete5.org." package=""/>
+        <page name="Get More Add-Ons" path="/dashboard/extend/add-ons" filename="/dashboard/extend/add_ons.php" pagetype="" description="Download add-ons from concrete5.org." package=""/>
         <page name="System &amp; Maintenance" path="/dashboard/system" filename="/dashboard/system/view.php" pagetype="" description="Backup, cleanup and update." package=""/>
         <page name="Jobs" path="/dashboard/system/jobs" filename="/dashboard/system/jobs.php" pagetype="" description="" package=""/>
         <page name="Backup &amp; Restore" path="/dashboard/system/backup" filename="/dashboard/system/backup.php" pagetype="" description="" package=""/>
@@ -52,7 +57,6 @@
         <page name="Notifications" path="/dashboard/system/notifications" filename="/dashboard/system/notifications.php" pagetype="" description="" package=""/>
         <page name="Sitewide Settings" path="/dashboard/settings" filename="/dashboard/settings/view.php" pagetype="" description="Secure and setup your site." package=""/>
         <page name="Email" path="/dashboard/settings/mail" filename="/dashboard/settings/mail/view.php" pagetype="" description="Enable post via email and other settings." package=""/>
-        <page name="Marketplace" path="/dashboard/settings/marketplace" filename="/dashboard/settings/marketplace.php" pagetype="" description="" package=""/>
         <page name="Download File" path="/download_file" filename="/download_file.php" pagetype="" description="" package=""/>
         <page name="Members" path="/members" filename="/members.php" pagetype="" description="" package=""/>
         <page name="Composer Beta" path="/dashboard/composer" filename="/dashboard/composer/view.php" pagetype="" description="Write for your site." package=""/>
@@ -60,6 +64,7 @@
         <page name="Drafts" path="/dashboard/composer/drafts" filename="/dashboard/composer/drafts.php" pagetype="" description="" package=""/>
         <page name="Composer" path="/dashboard/pages/types/composer" filename="/dashboard/pages/types/composer.php" pagetype="" description="" package=""/>
         <page name="Multilingual Settings" path="/dashboard/settings/multilingual" filename="/dashboard/settings/multilingual/view.php" pagetype="" description="" package=""/>
+        <page name="Manage Block Types" path="/dashboard/settings/blocks" filename="/dashboard/settings/multilingual/blocks.php" pagetype="" description="" package=""/>
         <page name="Attribute Sets" path="/dashboard/settings/attribute_sets" filename="/dashboard/settings/attribute_sets/view.php" pagetype="" description="" package=""/>
     </singlepages>
     <stacks>

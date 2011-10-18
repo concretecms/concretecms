@@ -29,7 +29,15 @@ class MarketplaceRemoteItem extends Object {
 	public function getHandle() { return $this->handle; }
 	public function getName(){ return $this->name; }
 	public function getDescription() {return $this->description;}
+	public function getBody() {return $this->bodyContent;}
 	public function getPrice(){ return sprintf("%.2f",floatval($this->price)); }
+	public function getScreenshots() {
+		if (is_array($this->screenshots)) {
+			return $this->screenshots;
+		} else {
+			return array();
+		}
+	}
 	public function getRemoteCollectionID(){ return $this->cID; }
 	public function getRemoteURL(){ return $this->url; }
 	public function getProductBlockID() {return $this->productBlockID;}

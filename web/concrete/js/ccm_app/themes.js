@@ -21,6 +21,11 @@ function ccm_previewMarketplaceTheme(cID, themeCID,themeName,themeHandle){
 	});
 }
 
+ccm_marketplaceDetailShowMore = function() {	
+	$(".ccm-marketplace-item-information-more").hide();
+	$(".ccm-marketplace-item-information-inner").css('max-height', 'none');
+}
+
 
 ccm_enableDesignScrollers = function() {
 	$("a.ccm-scroller-l").hover(function() {

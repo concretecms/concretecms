@@ -79,6 +79,14 @@ if (!defined('WHITE_LABEL_APP_NAME')) {
 	Config::getOrDefine('WHITE_LABEL_APP_NAME', false);
 }
 
+if (!defined("ENABLE_AREA_LAYOUTS")) {
+	Config::getOrDefine('ENABLE_AREA_LAYOUTS', true);
+}
+
+if (!defined("ENABLE_CUSTOM_DESIGN")) {
+	Config::getOrDefine('ENABLE_CUSTOM_DESIGN', true);
+}
+
 if (!defined('URL_REWRITING_ALL')) { 
 	define("URL_REWRITING_ALL", false);
 }
