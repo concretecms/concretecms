@@ -137,10 +137,8 @@ class StartingPointPackage extends Package {
 	}
 	
 	public function finish() {
-		//rename(DIR_CONFIG_SITE . '/site_install.php', DIR_CONFIG_SITE . '/site.php');
-		//@unlink(DIR_CONFIG_SITE . '/site_install_user.php');
-		// remove this line and uncomment the two above when done developing !!
-		copy(DIR_CONFIG_SITE . '/site_install.php', DIR_CONFIG_SITE . '/site.php');
+		rename(DIR_CONFIG_SITE . '/site_install.php', DIR_CONFIG_SITE . '/site.php');
+		@unlink(DIR_CONFIG_SITE . '/site_install_user.php');
 		@chmod(DIR_CONFIG_SITE . '/site.php', 0777);
 	}
 	
