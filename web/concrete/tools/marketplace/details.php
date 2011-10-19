@@ -28,7 +28,9 @@ if (is_object($mri)) { ?>
 			<img src="<?=$si->src?>" width="<?=$si->width?>" height="<?=$si->height?>" />	
 		<? }
 	} else { ?>
-		<img src="<?=ASSETS_URL_IMAGES?>/spacer.gif" width="400" height="400" />
+		<div class="ccm-marketplace-item-screenshots-none">
+			<?=t('No screenshots')?>
+		</div>
 	<? } ?>
 	</div>
 	</div>
@@ -55,9 +57,27 @@ if (is_object($mri)) { ?>
 	<div class="ccm-marketplace-item-information-more">
 		<a href="javascript:void(0)" onclick="ccm_marketplaceDetailShowMore()"><?=t('More Details')?></a>
 	</div>
+
+	<? if ($mri->getReviewBody() != '') { ?>
+		<div class="ccm-marketplace-item-review-quote">
+		<?=$mri->getReviewBody()?>
+		</div>
+	<? } ?>
+	<div class="ccm-marketplace-item-rating">
+		<?=Loader::helper('rating')->outputDisplay($mri->getAverageRating())?>
+		<?=$mri->getTotalRatings()?> <?= ($mri->getTotalRatings() == 1) ? t('review') : t('reviews'); ?>
+		<? if ($mri->getTotalRatings() > 0) { ?>
+			<a href="<?=$mri->getRemoteReviewsURL()?>" class="ccm-marketplace-item-reviews-link"><?=t('Read Reviews')?></a>
+		<? } ?>
+	</div>
 	
 	<div class="ccm-marketplace-item-buttons">
-		<input type="button" class="btn primary" value="<?=$buttonText?>" onclick="<?=$buttonAction?>" />&nbsp;&nbsp;<input type="button" class="btn" value="<?=t('View in Marketplace')?>" onclick="window.open('<?=$mri->getRemoteURL()?>')" />
+		<input type="button" class="btn primary" value="<?=$buttonText?>" onclick="<?=$buttonAction?>" />&nbsp;&nbsp;<input type="button" class="btn" value="<?=t('View in Marketplace')?>" onclick="window.open('<?=$mri->getRemoteURL()?>')" /> 
+		<? if ($mri->getMarketplaceItemType() == 'theme') { ?>
+			<a title="<?php echo t('Preview')?>" onclick="ccm_previewMarketplaceTheme(1, <?php echo intval($mri->getRemoteCollectionID())?>,'<?php echo addslashes($mri->getName()) ?>','<?php echo addslashes($mri->getHandle()) ?>')" 
+			href="javascript:void(0)" class="btn"><?=t('Preview')?></a>
+		<? } ?>
+		
 	</div>
 	</div>
 		

@@ -6,9 +6,6 @@ class DashboardExtendThemesController extends Controller {
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
 		Loader::library('marketplace');
-		$this->addFooterItem(Loader::helper('html')->javascript('jquery.nivo.slider.js'));
-		$this->addHeaderItem(Loader::helper('html')->css('jquery.nivo.slider.css'));
-		$this->addHeaderItem(Loader::helper('html')->css('jquery.nivo/default.css'));
 	}
 	
 	public function view() {
@@ -18,7 +15,7 @@ class DashboardExtendThemesController extends Controller {
 			Loader::model('marketplace_remote_item');
 			
 			$mri = new MarketplaceRemoteItemList();
-			$mri->setItemsPerPage(12);
+			$mri->setItemsPerPage(3);
 			$sets = MarketplaceRemoteItemList::getItemSets('themes');
 
 			$setsel = array('' => t('All Items'), 'FEATURED' => t('Featured Items'));

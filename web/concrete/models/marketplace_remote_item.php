@@ -26,6 +26,7 @@ class MarketplaceRemoteItem extends Object {
 	}
 
 	public function getMarketplaceItemID() {return $this->mpID;}
+	public function getMarketplaceItemType() {return $this->mpType;}
 	public function getHandle() { return $this->handle; }
 	public function getName(){ return $this->name; }
 	public function getDescription() {return $this->description;}
@@ -38,7 +39,19 @@ class MarketplaceRemoteItem extends Object {
 			return array();
 		}
 	}
+	public function getAverageRating() {return $this->rating;}
+	public function getTotalRatings() {
+		if ($this->totalRatings) {
+			return $this->totalRatings;
+		} else {
+			return 0;
+		}
+	}
+	public function getRemoteReviewsURL() {return $this->reviewsURL;}
 	public function getRemoteCollectionID(){ return $this->cID; }
+	public function getReviewBody() {
+		return $this->reviewBody;
+	}
 	public function getRemoteURL(){ return $this->url; }
 	public function getProductBlockID() {return $this->productBlockID;}
 	public function getFivePackProductBlockID() {return $this->fivePackProductBlockID;}

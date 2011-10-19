@@ -120,11 +120,34 @@ class PaginationHelper {
 	}
 	
 	public function hasNextPage() {
+		if($this->number_of_pages==1) return;		
 		return $this->current_page < ($this->number_of_pages-1);
+	}
+
+	public function hasPreviousPage() {
+		if($this->number_of_pages==1) return false;
+		if ($this->current_page=="0") {
+			return false;
+		}
+		return true;
 	}
 	
 	function getTotalPages() {
 		return $this->number_of_pages;
+	}
+	
+	public function getNextURL() {
+		if ($this->hasNextPage()) { 
+			$linkURL = str_replace("%pageNum%", $this->getNextInt()+1, $this->URL);
+			return $linkURL;
+		}
+	}
+
+	public function getPreviousURL() {
+		if ($this->hasPreviousPage()) { 
+			$linkURL = str_replace("%pageNum%", $this->getPreviousInt()+1, $this->URL);
+			return $linkURL;
+		}
 	}
 	
 	function getNext($linkText = false){

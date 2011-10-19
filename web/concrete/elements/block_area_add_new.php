@@ -179,13 +179,6 @@ $(function() {
 </script>
 
 
-<? if (ENABLE_MARKETPLACE_SUPPORT && $_REQUEST['addOnly'] != 1) { ?>
-<ul class="tabs" id="ccm-area-tabs">
-	<li class="active"><a href="javascript:void(0)" id="ccm-add"><?=t('Add New')?></a></li>
-	<li><a href="javascript:void(0)" id="ccm-add-marketplace"><?=t('Add From Marketplace')?></a></li>
-</ul>
-<? } ?>
-
 <div id="ccm-add-tab">
 	<div class="ccm-block-type-search-wrapper">
 
@@ -228,10 +221,16 @@ $(function() {
 	</ul>
 </div>
 
-<? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
-<div id="ccm-add-marketplace-tab" style="display: none">
-	<div class="ccm-block-type-list">
-
+<? if(ENABLE_MARKETPLACE_SUPPORT){ 
+	$tp = new TaskPermission();
+	if ($tp->canInstallPackages()) { 
+	?>
+	<div class="well">
+	<p>
+	<?=t("You can download more blocks at the")?>
+	<a onclick="ccmBlockTypeResetKeys(); ccm_openAddonLauncher()" class="ccm-block-type-inner ccm-block-type-marketplace"><?=t('concrete5 marketplace.')?></a>
+	</p>
 	</div>
-</div>
-<? } ?>
+<? } 
+
+}?>	

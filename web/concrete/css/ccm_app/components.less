@@ -21,9 +21,20 @@ h1#ccm-dashboard-welcome-back span {padding: 0px; background: none; .border-radi
 #newsflow-header-first-run h2 {font-size: 18px; line-height: 24px; color: #09f; padding-left: 8px;}
 .newsflow-column-first-run h3 {line-height: 28px !important; margin-bottom: 10px; font-weight: normal; font-size: 24px; color: #09f;}
 .newsflow-column-first-run {padding: 10px 10px 100px 10px; overflow: visible}
+#newsflow .ccm-pane-options {.border-radius-top-only(6px);}
+#newsflow-paging-previous, #newsflow-paging-next {width: 80px; padding: 0px 15px 0px 15px; text-align: center; height: 100%; z-index: 10; position: absolute; top: 0px; background-clip: padding-box; }
+#newsflow-paging-previous {left: 0px; .border-radius-left-only(6px)}
+#newsflow-paging-previous:hover {background: transparent url(../images/bg_newsflow_previous.png) repeat-y top left;}
+#newsflow-paging-previous:hover span, #newsflow-paging-next:hover span {display: table-cell;}
+#newsflow-paging-next {right: 0px;  .border-radius-right-only(6px)}
+#newsflow-paging-next:hover {background: transparent url(../images/bg_newsflow_next.png) repeat-y top right;}
+#newsflow-paging-previous span, #newsflow-paging-next span {width: 80px; vertical-align: middle; display: none;}
+#newsflow-paging-previous a {width: 57px; height: 86px; background: transparent url(../images/newsflow_previous.png) no-repeat; display: inline-block;}
+#newsflow-paging-next a {width: 57px; height: 86px; background: transparent url(../images/newsflow_next.png) no-repeat; display: inline-block}
 
 /* panes (including dashboard) */ 
-.ccm-pane-header-icons {position: absolute; top: 15px; right:10px;}
+.ccm-pane {position: relative;}
+.ccm-pane-header-icons {position: absolute; top: 15px; right:10px; z-index: 20}
 .ccm-pane-header-icons li {list-style-type: none; display: block; margin-left: 5px; width: 17px; height: 17px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;  background-clip: padding-box; float: left}
 .ccm-pane-header-icons li:hover {background-color: #c3c3c3; }
 .ccm-pane-header-icons li a {display: block; width: 0px; height: 0px; padding-left: 17px; padding-top: 17px; overflow: hidden; background: transparent url(../images/icons_sprite.png) no-repeat top left}
@@ -79,15 +90,15 @@ div.ccm-summary-selected-item {border: 1px solid #dedede; margin-top: 8px; margi
 div.ccm-block-field-group {margin-bottom: 10px; border-bottom: 1px dotted #aaa; padding-bottom: 10px}rou
 div.ccm-block-field-group h2 {margin-bottom: 6px}
 
-ul#ccm-block-type-list {padding: 2px 0px 0px 0px; margin: 0px}
+ul#ccm-block-type-list {padding: 2px 0px 0px 0px; margin: 0px 0px 16px 0px}
 ul#ccm-block-type-list li {margin-left: 0px; list-style-type: none; display: none !important}
 .ccm-block-type a.ccm-scrapbook-delete {top: 8px; right: 10px; position: absolute}
-.ccm-block-type a.ccm-block-type-inner, .ccm-block-type p.ccm-block-type-inner, .ccm-block-type .ccm-block-type-inner {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
+.ccm-block-type a.ccm-block-type-inner, .ccm-block-type p.ccm-block-type-inner, .ccm-block-type .ccm-block-type-inner {background-repeat: no-repeat; background-position: 8px 8px; color: #666; margin-bottom: 2px; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
 .ccm-block-type a.ccm-block-type-inner-nobkgd, .ccm-block-type p.ccm-block-type-inner-nobkgd, .ccm-block-type .ccm-block-type-inner-nobkgd {color: #666; display: block; font-size: 14px; text-decoration: none; border: 1px solid #fff}
 .ccm-block-type p.ccm-block-type-inner {margin: 0px}
 .ccm-block-type-selected a.ccm-block-type-inner {background-color: #BDD5FD; border: 1px solid #255E8A !important}
 .ccm-block-type a.ccm-block-type-inner:hover {background-color: #d9e7ff; border: 1px solid #94a7c7 !important}
-.ccm-block-type {position: static; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px; left:0px; top:0px; width:auto; height:auto;}
+.ccm-block-type {position: static; padding: 0px 0px 2px 0px; border-bottom: 1px solid #e4e4e4 !important; margin-bottom: 2px !important; left:0px; top:0px; width:auto; height:auto;}
 .ccm-block-type div.ccm-block-type-description {display: none; padding-left: 30px; color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
 .ccm-block-type.ccm-external-block-type li.ccm-block-price{ float:right; margin:10px 10px 0px 10px; font-weight: bold; color: #205334; text-transform: uppercase}
 .ccm-block-type.ccm-external-block-type .ccm-block-type-description{display:block; padding-left: 0px;}
@@ -156,6 +167,7 @@ div#ccm-block-type-grid div.ccm-block-type-grid-entry a:hover {background-color:
 
 
 div.ccm-block-type-search-wrapper {}
+div.ccm-block-type-search-wrapper form {margin-bottom: 2px;}
 div.ccm-block-type-search {}
 div.ccm-block-type-search-wrapper a.ccm-block-type-help img {float: right; margin-right: 10px; margin-top: 14px}
 ul#ccm-block-type-list .ccm-block-type-available {display: list-item !important}

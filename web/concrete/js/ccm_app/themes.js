@@ -26,7 +26,6 @@ ccm_marketplaceDetailShowMore = function() {
 	$(".ccm-marketplace-item-information-inner").css('max-height', 'none');
 }
 
-
 ccm_enableDesignScrollers = function() {
 	$("a.ccm-scroller-l").hover(function() {
 		$(this).find('img').attr('src', CCM_IMAGE_PATH + '/button_scroller_l_active.png');

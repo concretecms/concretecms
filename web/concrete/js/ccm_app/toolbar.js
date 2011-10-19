@@ -291,7 +291,8 @@ $(function() {
 					$("#ccm-intelligent-search-results-list-marketplace").html('');
 					for (i = 0; i < r.length; i++) {
 						var rr= r[i];
-						$("#ccm-intelligent-search-results-list-marketplace").append('<li><a href="' + rr.href + '"><img src="' + rr.img + '" />' + rr.name + '</a></li>');
+						var _onclick = "ccm_openAddonLauncher(" + rr.mpID + ")";
+						$("#ccm-intelligent-search-results-list-marketplace").append('<li><a href="javascript:void(0)" onclick="' + _onclick + '"><img src="' + rr.img + '" />' + rr.name + '</a></li>');
 					}
 					if (r.length == 0) {
 						$("#ccm-intelligent-search-results-list-marketplace").parent().hide();
