@@ -176,7 +176,6 @@ jQuery.fn.dialog.showLoader = function(text) {
 	if ($('#ccm-dialog-loader').length < 1) {
 		$("body").append("<div id='ccm-dialog-loader-wrapper'><img id='ccm-dialog-loader' src='"+imgLoader.src+"' /></div>");//add loader to the page
 	}
-	$('#ccm-dialog-loader-wrapper').css('opacity', 0.8);
 	if (text != null) {
 		$("<div />").attr('id', 'ccm-dialog-loader-text').html(text).prependTo($("#ccm-dialog-loader-wrapper"));
 	}
@@ -194,6 +193,7 @@ jQuery.fn.dialog.showLoader = function(text) {
 
 jQuery.fn.dialog.hideLoader = function() {
 	$("#ccm-dialog-loader-wrapper").hide();
+	$("#ccm-dialog-loader-text").remove();
 }
 
 jQuery.fn.dialog.closeTop = function() {

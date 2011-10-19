@@ -1,4 +1,4 @@
-table.ccm-marketplace-results {margin-top: -20px; border: 0px !important; margin-left: -20px; margin-bottom: -20px; width: 958px}
+table.ccm-marketplace-results {margin-top: -20px; border: 0px !important; margin-left: -20px; margin-bottom: -20px; margin-right: -20px; width: 958px}
 table.ccm-marketplace-results td {height: 90px !important; vertical-align: top; border-bottom: 1px solid #dedede; border-radius: 0px; -webkit-border-radius: 0px; -moz-border-radius: 0px; border-top: 0px !important; border-left: 0px !important; height: 125px; border-right: 1px solid #dedede;}
 table.ccm-marketplace-results td:last-child {border-right: 0px !important;}
 table.ccm-marketplace-results tr:last-child td {border-bottom: 0px !important}
@@ -13,10 +13,16 @@ table.ccm-marketplace-results td.ccm-marketplace-item-unselected:hover {cursor: 
 table.ccm-marketplace-results td.ccm-marketplace-item-selected {#gradient > .vertical(#ededed, #dbdbdb);}
 
 p.ccm-marketplace-detail-loading {margin-bottom: 0px; padding: 0px 0px 0px 56px; line-height: 14px; background: transparent url(../images/loader_intelligent_search.gif) no-repeat left 2px}
-#ccm-marketplace-detail {display: none; min-height: 450px;}
+#ccm-marketplace-detail {position: relative; display: none; min-height: 450px;}
 #ccm-marketplace-detail-inner {display: none;}
 #ccm-marketplace-detail div.block-message {margin-bottom: 0px}
+#ccm-marketplace-detail #newsflow-paging-next {.border-radius-right-only(0px); display: none}
+#ccm-marketplace-detail #newsflow-paging-previous {.border-radius-left-only(0px); display: none;}
 
+#newsflow #ccm-marketplace-detail {.border-radius-top-only(6px); padding: 20px;}
+#newsflow table.ccm-marketplace-results {margin: 0px; width: 940px}
+#newsflow .ccm-pane-body {padding: 0px;}
+#newsflow div.ccm-marketplace-results-info {width: 232px;}
 
 #ccm-marketplace-item-screenshots-outer {
 	position: relative;
@@ -28,21 +34,32 @@ p.ccm-marketplace-detail-loading {margin-bottom: 0px; padding: 0px 0px 0px 56px;
 
 #ccm-marketplace-item-screenshots-wrapper {
 position: relative;
-padding: 20px;
-border: 1px solid #efefef;
+padding-top: 0px; padding-right: 0px;
 margin: 0 0px 30px 0;
+padding-left: 12px;
+padding-bottom: 23px;
 float: left;
 background: #fff;
--webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
--moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset; 
-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset; }
+background-image: url(../images/bg_marketplace_detail_left.png), url(../images/bg_marketplace_detail_bottom.png);
+background-position: bottom left, bottom right;
+background-repeat: no-repeat;
+}
 
+.ccm-marketplace-item-screenshots-none {color: #aaa; font-size: 24px; padding-top: 190px; height: 210px; width: 400px; text-align: center;}
 
-.ccm-marketplace-item-information {margin-left: 470px;}
-.ccm-marketplace-item-information-inner {overflow: hidden; max-height: 380px;}
+.ccm-marketplace-item-information {margin-left: 440px;}
+.ccm-marketplace-item-information-inner {overflow: hidden; max-height: 330px;}
 
 .ccm-marketplace-item-buttons {margin-top: 10px;}
 
 .ccm-marketplace-item-information-more {background: transparent url(../images/marketplace_more_fade.png) repeat-x scroll; margin-bottom: -40px; z-index: 5; position: relative; top: -40px; padding-top: 40px; position: relative}
 .ccm-marketplace-item-information-more a {color: #666; background-image: url(../images/icons_sprite_up_down.png); background-repeat: no-repeat; background-position: left 5px; padding-left: 15px; display: block;}
 .ccm-marketplace-item-information-more a:hover {color: #666; }
+
+.ccm-marketplace-item-rating {margin-top: 8px; margin-bottom: 8px;  }
+.ccm-marketplace-item-rating div.ccm-rating {float: left; margin-right: 12px; }
+.ccm-marketplace-item-rating a.ccm-marketplace-item-reviews-link {margin-left: 12px;}
+
+div.ccm-marketplace-item-review-quote {background: url(../images/marketplace_review_quote.png) no-repeat; min-height: 35px; padding-left: 35px; margin-top: 8px}
+
+.
