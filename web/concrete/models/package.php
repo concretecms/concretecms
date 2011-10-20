@@ -151,7 +151,13 @@ class Package extends Object {
 	public function getPackageVersionUpdateAvailable() {return $this->pkgAvailableVersion;}
 	public function getPackageCurrentlyInstalledVersion() {return $this->pkgCurrentVersion;}
 	public function isPackageInstalled() { return $this->pkgIsInstalled;}
-	
+	public function getChangelogContents() {
+		if (file_exists($this->getPackagePath() . '/CHANGELOG')) {
+			$contents = Loader::helper('file')->getContents($this->getPackagePath() . '/CHANGELOG');
+			return nl2br(Loader::helper('text')->entities($contents));
+		}
+		return '';
+	}
 	protected $appVersionRequired = '5.0.0';
 	
 	const E_PACKAGE_NOT_FOUND = 1;

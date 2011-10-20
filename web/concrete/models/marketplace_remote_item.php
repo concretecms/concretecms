@@ -40,6 +40,7 @@ class MarketplaceRemoteItem extends Object {
 		}
 	}
 	public function getAverageRating() {return $this->rating;}
+	public function getVersionHistory() {return $this->versionHistory;}
 	public function getTotalRatings() {
 		if ($this->totalRatings) {
 			return $this->totalRatings;

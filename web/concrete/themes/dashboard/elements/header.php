@@ -78,6 +78,7 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 	    $.backstretch("<?=$backgroundImage->src?>" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
 	    ccm_activateToolbar();
 	    $("#ccm-page-help").popover({placement: 'below', html: true, trigger: 'manual'});
+	    $('.tooltip').twipsy({placement: 'below'});
 	});
 </script>
 

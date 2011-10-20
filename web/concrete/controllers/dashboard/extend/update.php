@@ -7,7 +7,7 @@ class DashboardExtendUpdateController extends Controller {
 		$this->error = Loader::helper('validation/error');
 		Loader::library('marketplace');
 	}
-	public function view($pkgHandle = false) {
+	public function do_update($pkgHandle = false) {
 		$tp = new TaskPermission();
 		if ($tp->canInstallPackages()) { 
 			if ($pkgHandle) {
@@ -25,11 +25,17 @@ class DashboardExtendUpdateController extends Controller {
 						$this->set('error', $e);
 					}
 				}
-			} else {
-				$mi = Marketplace::getInstance();
-				if ($mi->isConnected()) {
-					Marketplace::checkPackageUpdates();
-				}
+			}
+		}
+		$this->view();
+	}
+	
+	public function view() {
+		$tp = new TaskPermission();
+		if ($tp->canInstallPackages()) { 
+			$mi = Marketplace::getInstance();
+			if ($mi->isConnected()) {
+				Marketplace::checkPackageUpdates();
 			}
 		}
 	}
@@ -61,7 +67,7 @@ class DashboardExtendUpdateController extends Controller {
 					$this->set('error', $errors);
 				}
 			} else {
-				$this->redirect('/dashboard/install', 'update', $mri->getHandle());
+				$this->redirect('/dashboard/extend/update', 'do_update', $mri->getHandle());
 			}
 		}
     }
