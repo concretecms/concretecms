@@ -35,18 +35,17 @@
 
 	<div class="ccm-pane-header"><h3><?=$stack->getCollectionName()?></h3></div>
 	<div class="ccm-pane-options">
-		<a href="javascript:void(0)" onclick="window.location.href='<?=$this->url('/dashboard/stacks')?>'" class="btn small"><?=t('Back to List')?></a>
+		<a href="javascript:void(0)" onclick="window.location.href='<?=$this->url('/dashboard/blocks/stacks')?>'" class="btn small"><?=t('Back to List')?></a>
 		<a href="javascript:void(0)" onclick="ccm_stacksAddBlock()" class="btn small ccm-main-nav-edit-option"><?=t('Add Block')?></a>
 		<a class="btn small ccm-main-nav-edit-option" dialog-width="640" dialog-height="340" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?rel=SITEMAP&cID=<?=$stack->getCollectionID()?>"><?=t('Version History')?></a>
 		<? $cpc = new Permissions($stack);
 		if ($cpc->canDeleteCollection()) { ?>
-			<a class="btn small ccm-main-nav-edit-option error" href="javascript:void(0)" onclick="window.location.href='<?=$this->url('/dashboard/stacks/', 'delete', $stack->getCollectionID(), Loader::helper('validation/token')->generate('delete'))?>'"><?=t('Delete Stack')?></a>
+			<a class="btn small ccm-main-nav-edit-option error" href="javascript:void(0)" onclick="window.location.href='<?=$this->url('/dashboard/blocks/stacks/', 'delete', $stack->getCollectionID(), Loader::helper('validation/token')->generate('delete'))?>'"><?=t('Delete Stack')?></a>
 		<? } ?>
 		
 		<? if (PERMISSIONS_MODEL == 'advanced') { ?>
 			<a class="btn small ccm-main-nav-edit-option" dialog-width="580" dialog-height="420" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$stack->getCollectionID()?>&arHandle=Main&atask=groups"><?=t('Permissions')?></a>
 		<? } ?>
-		<a href="javascript:void(0)" onclick="ccm_saveArrangement(<?=$stack->getCollectionID()?>)" class="success btn small ccm-main-nav-arrange-option" style="display: none"><?=t('Save Positioning')?></a>
 		<?
 		$vo = $stack->getVersionObject();
 		if ($cp->canApproveCollection()) {
@@ -56,7 +55,7 @@
 		}		
 		?>
 	</div>
-	<div class="ccm-pane-body clearfix" id="ccm-stack-container">
+	<div class="ccm-pane-body ccm-pane-body-footer clearfix" id="ccm-stack-container">
 	<?
 		$a = Area::get($stack, 'Main');
 		$bv = new BlockView();
@@ -83,7 +82,7 @@
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Stacks'), t('Stacks give you a central place to stash blocks, where you can control their order, permissions, and even version them.<br><br>Add stacks to your site and you can update them in one place.'));?>
 	
-	<div class="ccm-pane-body">
+	<div class="ccm-pane-body ccm-pane-body-footer">
 		
 	<h4><?=t('Global Areas')?></h4>
 	
@@ -92,7 +91,7 @@
 		foreach($globalareas as $st) { ?>
 
 			<div class="ccm-stack">
-				<a href="<?=$this->url('/dashboard/stacks/view_details', $st->getCollectionID())?>"><?=$st->getCollectionName()?></a>
+				<a href="<?=$this->url('/dashboard/blocks/stacks/view_details', $st->getCollectionID())?>"><?=$st->getCollectionName()?></a>
 			</div>
 		
 		<?
@@ -111,7 +110,7 @@
 		foreach($useradded as $st) { ?>
 
 			<div class="ccm-stack">
-				<a href="<?=$this->url('/dashboard/stacks/view_details', $st->getCollectionID())?>"><?=$st->getCollectionName()?></a>
+				<a href="<?=$this->url('/dashboard/blocks/stacks/view_details', $st->getCollectionID())?>"><?=$st->getCollectionName()?></a>
 			</div>
 		
 		<?

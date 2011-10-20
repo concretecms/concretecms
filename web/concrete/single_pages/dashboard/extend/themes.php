@@ -22,17 +22,22 @@ if ($tp->canInstallPackages()) {
 	<div class="ccm-pane" id="ccm-marketplace-item-browser">
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Browse Themes'), t('Get more themes from concrete5.org.'));?>
 <? } ?>
-<div class="ccm-pane-body" id="ccm-marketplace-detail" <? if ($list->getTotal() == 0) { ?> style="display: block" <? } ?>>
-<div id="ccm-marketplace-detail-inner" ></div>
+<div class="ccm-pane-body <? if ($_REQUEST['mpID']) { ?> ccm-pane-body-footer <? } ?>" id="ccm-marketplace-detail">
+<div id="ccm-marketplace-detail-inner"></div>
 <? if ($list->getTotal() > 0) { ?>
 <p class="ccm-marketplace-detail-loading"><?=t('Loading Details')?></p>
 <? } else { ?>
 	<p><?=t('No results found.')?></p>
 <? } ?>
+
+<? if (!$_REQUEST['mpID']) { ?>
 <div id="newsflow-paging-previous"><span><a href="javascript:void(0)" onclick="ccm_marketplaceBrowserSelectPrevious()"></a></span></div>
 <div id="newsflow-paging-next"><span><a href="javascript:void(0)" onclick="ccm_marketplaceBrowserSelectNext()"></a></span></div>
+<? } ?>
 
 </div>
+
+<? if (!$_REQUEST['mpID']) { ?>
 
 <? if ($tp->canInstallPackages()) { ?>
 <div class="ccm-pane-options">
@@ -115,14 +120,21 @@ if ($tp->canInstallPackages()) {
 <? $url = Loader::helper('url')->unsetVariable('prev'); ?>
 <div class="ccm-pane-footer" id="ccm-marketplace-browse-footer"><?=$list->displayPaging($url)?></div>
 
+<? } ?>
+
 
 </div>
 
 </div>
 </div>
-
+<? if (isset($_REQUEST['mpID']) && $_REQUEST['mpID'] > 0 && Loader::helper('validation/numbers')->integer($_REQUEST['mpID'])) {
+	$mpID = $_REQUEST['mpID'];
+} else {
+	$mpID = 'false';
+}
+?>
 <script type="text/javascript">
 $(function() {
-	ccm_marketplaceBrowserInit(false, <? if ($_REQUEST['prev'] == 1) { ?>'last'<? } else { ?>false<? } ?>);
+	ccm_marketplaceBrowserInit(<?=$mpID?>, <? if ($_REQUEST['prev'] == 1) { ?>'last'<? } else { ?>false<? } ?>); 
 });
 </script>

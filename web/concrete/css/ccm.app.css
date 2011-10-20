@@ -536,6 +536,9 @@ p.ccm-marketplace-detail-loading{margin-bottom:0px;padding:0px 0px 0px 56px;line
 .ccm-marketplace-item-rating div.ccm-rating{float:left;margin-right:12px;}
 .ccm-marketplace-item-rating a.ccm-marketplace-item-reviews-link{margin-left:12px;}
 div.ccm-marketplace-item-review-quote{background:url(../images/marketplace_review_quote.png) no-repeat;min-height:35px;padding-left:35px;margin-top:8px;}
+table td.ccm-marketplace-list-install-button{text-align:right !important;vertical-align:middle;border-left:0px !important;padding-left:30px;}
+.ccm-addon-list-description{width:400px;border-left:0px !important;vertical-align:middle !important;}
+table td.ccm-marketplace-list-thumbnail{width:97px;height:97px;}
 table#ccm-search-form-table{width:100%;}
 div#ccm-search-results em.ccm-highlight-search{background-color:#FFF9BB;padding:4px;font-weight:bold;font-style:normal;}
 div#ccm-list-wrapper div.ccm-paging-top,div#ccm-list-wrapper div#ccm-list-none{padding-top:5px;position:static;}
@@ -728,6 +731,7 @@ roudiv.ccm-block-field-group h2{margin-bottom:6px;}
 ul#ccm-block-type-list{padding:2px 0px 0px 0px;margin:0px 0px 16px 0px;}
 ul#ccm-block-type-list li{margin-left:0px;list-style-type:none;display:none !important;}
 .ccm-block-type a.ccm-scrapbook-delete{top:8px;right:10px;position:absolute;}
+.ccm-block-type-inner .btn{position:relative;top:-6px;}
 .ccm-block-type a.ccm-block-type-inner,.ccm-block-type p.ccm-block-type-inner,.ccm-block-type .ccm-block-type-inner{background-repeat:no-repeat;background-position:8px 8px;color:#666;margin-bottom:2px;display:block;font-size:14px;padding:8px 8px 8px 30px;text-decoration:none;border:1px solid #ffffff;}
 .ccm-block-type a.ccm-block-type-inner-nobkgd,.ccm-block-type p.ccm-block-type-inner-nobkgd,.ccm-block-type .ccm-block-type-inner-nobkgd{color:#666;display:block;font-size:14px;text-decoration:none;border:1px solid #ffffff;}
 .ccm-block-type p.ccm-block-type-inner{margin:0px;}

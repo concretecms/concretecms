@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 Loader::controller('/dashboard/base');
-class DashboardStacksController extends DashboardBaseController {
+class DashboardBlocksStacksController extends DashboardBaseController {
 
 	
 	public function on_start() {
@@ -21,7 +21,7 @@ class DashboardStacksController extends DashboardBaseController {
 	public function add_stack() {
 		if (Loader::helper('validation/token')->validate('add_stack')) {
 			$stack = Stack::addStack($this->post('stackName'));
-			$this->redirect('/dashboard/stacks', 'stack_added');
+			$this->redirect('/dashboard/blocks/stacks', 'stack_added');
 		} else {
 			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
 		}
@@ -42,7 +42,7 @@ class DashboardStacksController extends DashboardBaseController {
 				$sps = new Permissions($s);
 				if ($sps->canDeleteCollection()) {
 					$s->delete();
-					$this->redirect('/dashboard/stacks', 'stack_deleted');
+					$this->redirect('/dashboard/blocks/stacks', 'stack_deleted');
 				} else {
 					$this->error->add(t('You do not have access to delete this stack.'));
 				}

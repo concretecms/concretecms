@@ -51,7 +51,7 @@ ccm_showBlockMenu = function(obj, e) {
 				: '<li><a class="ccm-menu-icon ccm-icon-edit-menu" onclick="ccm_hideMenus()" dialog-title="' + ccmi18n.editBlock + ' ' + obj.btName + '" dialog-append-buttons="true" dialog-modal="false" dialog-on-close="ccm_blockWindowAfterClose()" dialog-width="' + obj.width + '" dialog-height="' + obj.height + '" id="menuEdit' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=edit">' + ccmi18n.editBlock + '</a></li>';
 		}
 		if (obj.canWriteStack) {
-			html += '<li><a class="ccm-menu-icon ccm-icon-edit-menu" id="menuEdit' + obj.bID + '-' + obj.aID + '" href="' + CCM_DISPATCHER_FILENAME + '/dashboard/stacks/-/view_details/' + obj.stID + '">' + ccmi18n.editStackContents + '</a></li>'
+			html += '<li><a class="ccm-menu-icon ccm-icon-edit-menu" id="menuEdit' + obj.bID + '-' + obj.aID + '" href="' + CCM_DISPATCHER_FILENAME + '/dashboard/blocks/stacks/-/view_details/' + obj.stID + '">' + ccmi18n.editStackContents + '</a></li>'
 			html += '<li class="header"></li>';
 			
 		}
@@ -525,7 +525,7 @@ ccm_saveArrangement = function(cID) {
 		cID = CCM_CID;
 	}
 
-	ccm_mainNavDisableDirectExit(true);
+	ccm_mainNavDisableDirectExit();
 	var serial = '';
 	$('div.ccm-area').each(function() {
 		areaStr = '&area[' + $(this).attr('id').substring(1) + '][]=';
@@ -556,10 +556,8 @@ ccm_saveArrangement = function(cID) {
 				$(this).removeClass('ccm-block-arrange');
 			});
 			ccm_arrangeMode = false;
-			$(".ccm-main-nav-arrange-option").fadeOut(300, function() {
-				$(".ccm-main-nav-edit-option").fadeIn(300, function() {
-					ccm_removeHeaderLoading();
-				});
+			$(".ccm-main-nav-edit-option").fadeIn(300, function() {
+				ccm_removeHeaderLoading();
 			});
  			ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
  		}});
@@ -587,12 +585,11 @@ ccm_arrangeInit = function() {
 			items: 'div.ccm-block-arrange',
 			connectWith: $("div.ccm-area"),
 			accept: 'div.ccm-block-arrange',
-			opacity: 0.5
+			opacity: 0.5,
+			stop: function() {
+				ccm_saveArrangement();
+			}
 		});
-	});
-	
-	$("a#ccm-nav-save-arrange").click(function() {
-		ccm_saveArrangement();
 	});
 }
 

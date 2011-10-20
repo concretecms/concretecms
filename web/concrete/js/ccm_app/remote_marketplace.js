@@ -21,7 +21,7 @@ ccm_marketplaceLauncherOpenPost = function() {
 	});
 }
 
-ccm_openThemeLauncher = function() {
+ccm_openThemeLauncher = function(mpID) {
 	jQuery.fn.dialog.closeTop();
 	
 	$(window).resize(function(){
@@ -30,8 +30,12 @@ ccm_openThemeLauncher = function() {
 
 	var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
 	$('.ui-widget-overlay').show();
-	jQuery.fn.dialog.showLoader(ccmi18n.themeBrowserLoading);	
-	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/extend/themes?_ccm_dashboard_external=1', function() {
+	jQuery.fn.dialog.showLoader(ccmi18n.themeBrowserLoading);
+	var mpIDstr = '';
+	if (mpID) {
+		mpIDstr = '&mpID=' + mpID;
+	}
+	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/extend/themes?_ccm_dashboard_external=1' + mpIDstr, function() {
 		ccm_marketplaceLauncherOpenPost();
 	});
 }

@@ -7,23 +7,30 @@ $tp = new TaskPermission();
 if ($tp->canInstallPackages()) {
 	$mi = Marketplace::getInstance();
 }
-$pkgArray = Package::getInstalledList();
+$pkgArray = Package::getInstalledList();?>
 
+<div class="ccm-ui">
+		
+<?
 if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) { ?>
 
-<div style="width: 760px">
-<h1><span><?=t("Uninstall Package")?></span></h1>
-<div class="ccm-dashboard-inner">
+<div class="row">
+<div class="span12 offset2 columns">
+
+<?
+	$removeBTConfirm = t('This will remove all elements associated with the %s package. This cannot be undone. Are you sure?', $pkg->getPackageHandle());
+?>
+<form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?=$this->action('do_uninstall_package')?>" onsubmit="return confirm('<?=$removeBTConfirm?>')">
+
+<div class="ccm-pane">
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Uninstall Package'));?>
+<div class="ccm-pane-body">
 	
-	<?
-		$removeBTConfirm = t('This will remove all elements associated with the %s package. This cannot be undone. Are you sure?', $pkg->getPackageHandle());
-	?>
 	
-	<form method="post" id="ccm-uninstall-form" action="<?=$this->action('do_uninstall_package')?>" onsubmit="return confirm('<?=$removeBTConfirm?>')">
 	<?=$valt->output('uninstall')?>
 	<input type="hidden" name="pkgID" value="<?=$pkg->getPackageID()?>" />
 	
-	<h2><?=t('Items To Uninstall')?></h2>
+	<h3><?=t('Items To Uninstall')?></h3>
 	
 	<p><?=t('Uninstalling %s will remove the following data from your system.', $pkg->getPackageName())?></p>
 		
@@ -32,44 +39,46 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 				continue;
 			}
 			?>
-			<h3><?=$text->unhandle($k)?></h3>
-			
+			<h5><?=$text->unhandle($k)?></h5>
 			<? foreach($itemArray as $item) { ?>
-				<?=$pkg->getItemName($item)?><br/>			
+				<?=$pkg->getItemName($item)?><br/>
 			<? } ?>
-			
-			<br/>
-			
+				
 		<? } ?>
+		<br/>
 
-
-		<h2><?=t('Move package to trash directory on server?')?></h2>
-		<p><?=Loader::helper('form')->checkbox('pkgMoveToTrash', 1)?> <?=Loader::helper('form')->label('pkgMoveToTrash', t('Yes, remove the package\'s directory from of the installation directory.'))?></p>
+		<div class="clearfix">
+		<h3><?=t('Move package to trash directory on server?')?></h3>
+		<ul class="inputs-list">
+		<li><label><?=Loader::helper('form')->checkbox('pkgMoveToTrash', 1)?>
+		<span><?=t('Yes, remove the package\'s directory from of the installation directory.')?></span></label>
+		</li>
+		</ul>
+		</div>
 		
 		
 		<? Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle()); ?>
-		
-		
-<?
-		$u = new User();
-		$buttons[] = $ch->button(t('Cancel'), $this->url('/dashboard/install', 'inspect_package', $pkg->getPackageID()), 'left');
-		$buttons[] = $ch->submit(t('Uninstall Package'), 'ccm-uninstall-form', 'right');
-		
-		print $ch->buttons($buttons);
-		?>
-		
-		<div class="ccm-spacer">&nbsp;</div>
-		</form>
+				
 		
 </div>
+<div class="ccm-pane-footer">
+<? print $ch->submit(t('Uninstall Package'), 'ccm-uninstall-form', '', 'error'); ?>
+<? print $ch->button(t('Cancel'), $this->url('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()), ''); ?>
 </div>
+
+</div>
+</form>
+
+</div>
+</div>
+
 
 <? 
 } else { 
 
 	function sortAvailableArray($obj1, $obj2) {
-		$name1 = ($obj1 instanceof Package) ? $obj1->getPackageName() : $obj1->getBlockTypeName();
-		$name2 = ($obj2 instanceof Package) ? $obj2->getPackageName() : $obj2->getBlockTypeName();
+		$name1 = $obj1->getPackageName();
+		$name2 = $obj2->getPackageName();
 		return strcasecmp($name1, $name2);
 	}
 	
@@ -102,24 +111,8 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 	}
 	
 
-	$thisURL = $this->url('/dashboard/install');
-
-	$btArray = BlockTypeList::getInstalledList();
-	$btAvailableArray = BlockTypeList::getAvailableList();
-	
-	$coreBlockTypes = array();
-	$webBlockTypes = array();
-	
-	foreach($btArray as $_bt) {
-		if ($_bt->getPackageID() == 0) {
-			if ($_bt->isCoreBlockType()) {
-				$coreBlockTypes[] = $_bt;
-			} else {
-				$webBlockTypes[] = $_bt;
-			}
-		}
-	}
-	$availableArray = array_merge($btAvailableArray, $pkgAvailableArray);
+	$thisURL = $this->url('/dashboard/extend/install');
+	$availableArray = $pkgAvailableArray;
 	usort($availableArray, 'sortAvailableArray');
 	
 	/* Load featured add-ons from the marketplace.
@@ -132,9 +125,6 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 	}else{
 		$purchasedBlocksSource = array();
 	}
-	
-	// now we iterate through the purchased items (NOT BLOCKS, THESE CAN INCLUDE THEMES) list and removed ones already downloaded
-	// This really should be made into a more generic object since it's not block types anymore.
 	
 	$skipHandles = array();
 	foreach($availableArray as $ava) {
@@ -155,13 +145,20 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 	
 	if (is_object($pkg)) { ?>
 	
-		<h1><span><?=$pkg->getPackageName()?></span></h1>
-		<div class="ccm-dashboard-inner">
-			<img src="<?=$ci->getPackageIconURL($pkg)?>" style="float: right" />
-			<div><a href="<?=$this->url('/dashboard/install')?>">&lt; <?=t('Return to Add Functionality')?></a></div><br/>
-				
-			<h2><?=t('Description')?></h2>
-			<p><?=$pkg->getPackageDescription()?></p>
+		<div class="row">
+		<div class="span12 offset2 columns">
+		<div class="ccm-pane">
+		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Inspect Package'));?>
+		<div class="ccm-pane-body ccm-pane-body-footer">
+
+			<ul class="breadcrumb"><li><a href="<?=$this->url('/dashboard/extend/install')?>">&lt; <?=t('Return to Add Functionality')?></a></li></ul>
+
+			<table class="zebra-striped">
+			<tr>
+				<td class="ccm-marketplace-list-thumbnail"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
+				<td class="ccm-addon-list-description" style="width: 100%"><h3><?=$pkg->getPackageName()?> - <?=$pkg->getPackageVersion()?></a></h3><?=$pkg->getPackageDescription()?></td>
+			</tr>				
+			</table>
 		
 			<?
 			
@@ -172,21 +169,17 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 			}
 			
 			if (count($blocks) > 0) { ?>
-				<h2><?=t("Block Types")?></h2>
-				<? foreach($blocks as $bt) { ?>
-	
-					<div class="ccm-addon-list">
-					<table cellspacing="0" cellpadding="0" border="0">		
-					<tr>
-						<td class="ccm-installed-items-icon"><img src="<?=$ci->getBlockTypeIconURL($bt)?>" /></td>
-						<td class="ccm-addon-list-description"><h3><?=$bt->getBlockTypeName()?></a></h3><?=$bt->getBlockTypeDescription()?></td>
-						<td><div style="width: 80px"><?=$ch->button(t("Edit"), View::url('/dashboard/install', 'inspect_block_type', $bt->getBlockTypeID()))?></div></td>					
-					</tr>
-					</table>
-					</div>
-				
-				<? } ?>		
-				<br/><br/>
+				<h5><?=t("Block Types")?></h5>
+				<ul id="ccm-block-type-list">
+				<? foreach($blocks as $bt) {
+					$btIcon = $ci->getBlockTypeIconURL($bt);?>
+					<li class="ccm-block-type ccm-block-type-available">
+						<a style="background-image: url(<?=$btIcon?>)" class="ccm-block-type-inner" href="<?=$this->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID())?>"><?=$bt->getBlockTypeName()?></a>
+						<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>"><?=$bt->getBlockTypeDescription()?></div>
+					</li>
+				<? } ?>
+				</ul>
+
 			<? } ?>
 			
 			<div class="ccm-spacer">&nbsp;</div>
@@ -196,69 +189,100 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 			$tp = new TaskPermission();
 			if ($tp->canUninstallPackages()) { 
 			
-				$buttons[] = $ch->button(t('Uninstall Package'), $this->url('/dashboard/install', 'uninstall', $pkg->getPackageID()), 'left');
+				$buttons[] = $ch->button(t('Uninstall Package'), $this->url('/dashboard/extend/install', 'uninstall', $pkg->getPackageID()), 'left');
 				print $ch->buttons($buttons); 
 
 			} ?>
 			
 		</div>
+		</div>
+		</div>
+		</div>
 		
 	<?
 	
-	} else if (is_object($bt)) { ?>
-	
-		<h1><span><?=$bt->getBlockTypeName()?></span></h1>
-		<div class="ccm-dashboard-inner">
-			<img src="<?=$ci->getBlockTypeIconURL($bt)?>" style="float: right" />
-			<div><a href="<?=$this->url('/dashboard/install')?>">&lt; <?=t('Return to Add Functionality')?></a></div><br/>
-				
-			<h2><?=t('Description')?></h2>
-			<p><?=$bt->getBlockTypeDescription()?></p>
+	 } else { ?>
 		
-			<h2><?=t('Usage Count')?></h2>
-			<p><?=$num?></p>
-				
-			<? if ($bt->isBlockTypeInternal()) { ?>
-			<h2><?=t('Internal')?></h2>
-			<p><?=t('This is an internal block type.')?></p>
+		<div class="row">
+		<div class="span12 offset2 columns">
+		<div class="ccm-pane">
+		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Add Functionality'), t('Install custom add-ons or those downloaded from the concrete5.org marketplace.'));?>
+		<div class="ccm-pane-body ccm-pane-body-footer">
+			
+		<h3><?=t('Currently Installed')?></h3>
+		<? if (count($pkgArray) > 0) { ?>
+			
+			<? if ($updates > 0) { ?>
+				<div class="block-message alert-message info">
+				<h4><?=t('Add-On updates are available!')?></h4>
+				<? if ($updates == 1) { ?>
+					<p><?=t('There is currently <strong>1</strong> update available.')?></p>
+				<? } else { ?>
+					<p><?=t('There are currently <strong>%s</strong> updates available.', $updates)?></p>
+				<? } ?>
+				<div class="alert-actions"><a class="small btn" href="<?=$this->url('/dashboard/extend/update')?>"><?=t('Update Add-Ons')?></a></div>
+				</div>
 			<? } ?>
-	
-			<?
-			$buttons[] = $ch->button(t("Refresh"), $this->url('/dashboard/install','refresh_block_type', $bt->getBlockTypeID()), "left");
-			$u = new User();
-			
-			if ($u->isSuperUser()) {
-			
-				$removeBTConfirm = t('This will remove all instances of the %s block type. This cannot be undone. Are you sure?', $bt->getBlockTypeHandle());
-				
-				$buttons[] = $ch->button_js(t('Remove'), 'removeBlockType()', 'left');?>
-	
-				<script type="text/javascript">
-				removeBlockType = function() {
-					if (confirm('<?=$removeBTConfirm?>')) { 
-						location.href = "<?=$this->url('/dashboard/install', 'uninstall_block_type', $bt->getBlockTypeID(), $valt->generate('uninstall'))?>";				
-					}
-				}
-				</script>
-	
-			<? } else { ?>
-				<? $buttons[] = $ch->button_js(t('Remove'), 'alert(\'' . t('Only the super user may remove block types.') . '\')', 'left', 'ccm-button-inactive');?>
-			<? }
-			
-			print $ch->buttons($buttons); ?>
-			
-		</div>
-				
-	<? } else { ?>
+
+			<table class="zebra-striped">
 		
-		<!--[if IE 7]>
-		<style type="text/css">
-		td.ccm-addon-list-description {width: 161px !important}
-		</style>
-		<![endif]-->
-		<div style="width: 720px">
-		<div class="ccm-module" style="width: 350px; margin-bottom: 20px">
+			<?	foreach ($pkgArray as $pkg) { ?>
+				<tr>
+					<td class="ccm-marketplace-list-thumbnail"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
+					<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?> - <?=$pkg->getPackageVersion()?></a></h3><?=$pkg->getPackageDescription()?>
+
+					</td>
+					<td class="ccm-marketplace-list-install-button"><?=$ch->button(t("Edit"), View::url('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()), "")?></td>					
+				</tr>
+			<? } ?>
+			</table>
+
+		<? } else { ?>		
+			<p><?=t('No packages have been installed.')?></p>
+		<? } ?>
+
+		<? if ($tp->canInstallPackages()) { ?>
+			<h3><?=t('Awaiting Installation')?></h3>
+		<? if (count($availableArray) == 0 && count($purchasedBlocks) == 0) { ?>
 			
+			<? if (!$mi->isConnected()) { ?>
+				<?=t('Nothing currently available to install.')?>
+			<? } ?>
+			
+		<? } else { ?>
+	
+			<table class="zebra-striped">
+			<? foreach ($purchasedBlocks as $pb) {
+				$file = $pb->getRemoteFileURL();
+				if (!empty($file)) {?>
+				<tr>
+					<td class="ccm-marketplace-list-thumbnail"><img src="<?=$pb->getRemoteIconURL()?>" /></td>
+					<td class="ccm-addon-list-description"><h3><?=$pb->getName()?></h3>
+					<?=$pb->getDescription()?>
+					</td>
+					<td class="ccm-marketplace-list-install-button"><?=$ch->button(t("Download"), View::url('/dashboard/extend/install', 'download', $pb->getMarketplaceItemID()), "", 'primary')?></td>
+				</tr>
+				<? } ?>
+			<? } ?>
+			<?	foreach ($availableArray as $obj) { ?>
+				<tr>
+					<td class="ccm-marketplace-list-thumbnail"><img src="<?=$ci->getPackageIconURL($obj)?>" /></td>
+					<td class="ccm-addon-list-description"><h3><?=$obj->getPackageName()?></h3>
+					<?=$obj->getPackageDescription()?></td>
+					<td class="ccm-marketplace-list-install-button"><?=$ch->button(t("Install"), $this->url('/dashboard/extend/install','install_package', $obj->getPackageHandle()), "");?></td>
+				</tr>
+			<? } ?>
+			</table>
+	
+	
+			<? } ?>
+		<? } ?>		
+		</div>
+		</div>
+		</div>
+		</div>
+		
+	<? /*			
 			<h1><span><?=t('Currently Installed')?></span></h1>
 			<div class="ccm-dashboard-inner">
 			<? if (count($pkgArray) > 0) { ?>
@@ -272,7 +296,7 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 						<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?> - <?=$pkg->getPackageVersion()?></a></h3><?=$pkg->getPackageDescription()?>
 
 						</td>
-						<td><?=$ch->button(t("Edit"), View::url('/dashboard/install', 'inspect_package', $pkg->getPackageID()), "right")?></td>					
+						<td><?=$ch->button(t("Edit"), View::url('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()), "right")?></td>					
 					</tr>
 					</table>
 					</div>
@@ -282,67 +306,10 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 	
 			<? } ?>
 			
-			<? if (count($webBlockTypes) > 0) { ?>
-				<h2><?=t('Custom Block Types')?></h2>
-				<?	foreach ($webBlockTypes as $bt) { ?>
-					<div class="ccm-addon-list">
-					<table cellspacing="0" cellpadding="0">		
-					<tr>
-						<td class="ccm-installed-items-icon"><img src="<?=$ci->getBlockTypeIconURL($bt)?>" /></td>
-						<td class="ccm-addon-list-description"><h3><?=$bt->getBlockTypeName()?></a></h3><?=$bt->getBlockTypeDescription()?></td>
-						<td><?=$ch->button(t("Edit"), View::url('/dashboard/install', 'inspect_block_type', $bt->getBlockTypeID()), "right")?></td>					
-					</tr>
-					</table>
-					</div>
-				<? } ?>
-				<br/><br/>
-			<? } ?>
-			
-			<h2><?=t('Core Block Types')?></h2>
-			<? 
-			if (count($coreBlockTypes) == 0) { ?>
-				<p><?=t('No block types have been installed.')?></p>
-			<? } else { ?>
-			
-				<?	foreach ($coreBlockTypes as $bt) { ?>
-					<div class="ccm-addon-list">
-					<table cellspacing="0" cellpadding="0">		
-					<tr>
-						<td class="ccm-installed-items-icon"><img src="<?=$ci->getBlockTypeIconURL($bt)?>" /></td>
-						<td class="ccm-addon-list-description"><h3><?=$bt->getBlockTypeName()?></a></h3><?=$bt->getBlockTypeDescription()?></td>
-						<td><?=$ch->button(t("Edit"), View::url('/dashboard/install', 'inspect_block_type', $bt->getBlockTypeID()), "right")?></td>					
-					</tr>
-					</table>
-					</div>
-				<? } ?>				
-			<? } ?>
-	
 			</div>
-				
-		</div>
 		
 		<? if ($tp->canInstallPackages()) { ?>
 		
-		<div class="ccm-module" style="width: 350px; margin-bottom: 20px">
-				<? if ($updates > 0) { ?>
-				<h1><span><?=t('Updates')?></span></h1>
-				<div class="ccm-dashboard-inner">
-					<? if ($updates == 1) { ?>
-						<?=t('There is currently <strong>1</strong> update available.')?>
-					<? } else { ?>
-						<?=t('There are currently <strong>%s</strong> updates available.', $updates)?>
-					<? } ?>
-					<? print $ch->button(t('Update Addons'), $this->url('/dashboard/install', 'update'))?>
-					
-					<div class="ccm-spacer">&nbsp;</div>
-				
-				</div>
-				
-			
-			<br/>
-			<? } ?>
-			
-
 			<h1><span><?=t('New')?></span></h1>
 			<div class="ccm-dashboard-inner">
 			 
@@ -356,16 +323,15 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 				<? if (count($purchasedBlocks) == 0) { ?>
 					<?=t('There appears to be nothing currently available to install from your <a href="%s" target="_blank">project page</a>.', $mi->getSitePageURL())?><br/><br/>
 				<? } ?>
-				<?=t('Browse more <a href="%s">add-ons</a> and <a href="%s">themes</a>, and check on your <a href="%s" target="_blank">project page</a>.', $this->url('/dashboard/install/', 'browse', 'addons'), $this->url('/dashboard/install', 'browse', 'themes'), $mi->getSitePageURL())?>
+				<?=t('Browse more <a href="%s">add-ons</a> and <a href="%s">themes</a>, and check on your <a href="%s" target="_blank">project page</a>.', $this->url('/dashboard/extend/install/', 'browse', 'addons'), $this->url('/dashboard/extend/install', 'browse', 'themes'), $mi->getSitePageURL())?>
 				<br/><br/>
-				<a href="<?=$this->url('/dashboard/install', 'update')?>"><?=t("Check for updates &gt;")?></a>
+				<a href="<?=$this->url('/dashboard/extend/install', 'update')?>"><?=t("Check for updates &gt;")?></a>
 			<?
 			
 			} else {
 				Loader::element('dashboard/marketplace_connect_failed');
 			}
 			?>
-				<div class="ccm-spacer">&nbsp;</div>
 			</div>
 			
 			<? } ?>
@@ -387,17 +353,10 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 				<div class="ccm-addon-list">
 				<table cellspacing="0" cellpadding="0" border="0">
 				<tr>
-				<? if (get_class($obj) == "BlockType") { ?>
-					<td><img src="<?=$ci->getBlockTypeIconURL($obj)?>" /></td>
-					<td class="ccm-addon-list-description"><h3><?=$obj->getBlockTypeName()?></h3>
-					<?=$obj->getBlockTypeDescription()?></td>
-					<td><?=$ch->button(t("Install"), $this->url('/dashboard/install','install_block_type', $obj->getBlockTypeHandle()), "right");?></td>
-				<? } else { ?>
 					<td><img src="<?=$ci->getPackageIconURL($obj)?>" /></td>
 					<td class="ccm-addon-list-description"><h3><?=$obj->getPackageName()?></h3>
 					<?=$obj->getPackageDescription()?></td>
-					<td><?=$ch->button(t("Install"), $this->url('/dashboard/install','install_package', $obj->getPackageHandle()), "right");?></td>
-				<? } ?>
+					<td><?=$ch->button(t("Install"), $this->url('/dashboard/extend/install','install_package', $obj->getPackageHandle()), "right");?></td>
 				</tr>
 				</table>
 				</div>
@@ -418,7 +377,7 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 					<td class="ccm-addon-list-description"><h3><?=$pb->getName()?></h3>
 					<?=$pb->getDescription()?>
 					</td>
-					<td width="120"><?=$ch->button(t("Download"), View::url('/dashboard/install', 'download', $pb->getMarketplaceItemID()), "right")?></td>
+					<td width="120"><?=$ch->button(t("Download"), View::url('/dashboard/extend/install', 'download', $pb->getMarketplaceItemID()), "right")?></td>
 				</tr>
 				</table>
 				</div>
@@ -429,16 +388,11 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 	
 			<? } ?>
 	
-			</div>
-	
-		</div>
-	
-		</div>
 		</div>
 		
 		<? } ?>
-		
-		</div>
-	
+		*/ ?>
 	<? } ?>
 <? } ?>
+
+</div>
