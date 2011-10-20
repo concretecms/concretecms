@@ -7,101 +7,117 @@ $tp = new TaskPermission();
 if ($tp->canInstallPackages()) {
 	$mi = Marketplace::getInstance();
 }
-$pkgArray = Package::getInstalledList();
+
+$pkgRemote = array();
+$pkgLocal = array();
+if (ENABLE_MARKETPLACE_SUPPORT) {
+	$pkgArray = Package::getInstalledList();
+	foreach($pkgArray as $pkg) {
+		if ($pkg->isPackageInstalled() && version_compare($pkg->getPackageVersion(), $pkg->getPackageVersionUpdateAvailable(), '<')) { 
+			$pkgRemote[] = $pkg;
+		}
+	}
+}
+$pkgAvailableArray = Package::getLocalUpgradeablePackages();
+foreach($pkgAvailableArray as $pkg) {
+	if (!in_array($pkg, $pkgRemote)) {
+		$pkgLocal[] = $pkg;
+	}
+}
+
 
 if (!$tp->canInstallPackages()) { ?>
-	<p class="ccm-error"><?=t('You do not have access to download themes or add-ons from the marketplace.')?></p>
+	<p class="block-message alert-message error"><?=t('You do not have access to download themes or add-ons from the marketplace.')?></p>
 <? } else if (!$mi->isConnected()) { ?>
-	<? Loader::element('dashboard/marketplace_connect_failed')?>
-<? } else {
-	$pkgAvailableArray = Package::getLocalUpgradeablePackages();
-	$thisURL = $this->url('/dashboard/install', 'update');
-	
-	if (count($pkgAvailableArray) > 0) { 
-	
-	?>
-	
-	<h1><span><?=t('Downloaded and Ready to Install')?></span></h1>
-	
-	
-	<div class="ccm-dashboard-inner">
-	<? foreach ($pkgAvailableArray as $pkg) {  ?>
-		<div class="ccm-addon-list">
-			<table cellspacing="0" cellpadding="0" border="0">		
-			<tr>
-				<td class="ccm-installed-items-icon"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
-				<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></a></h3><?=$pkg->getPackageDescription()?>
-				<br/><br/>
-				<strong><?=t('Current Version: %s', $pkg->getPackageCurrentlyInstalledVersion())?></strong><br/>
-				<strong><?=t('New Version: %s', $pkg->getPackageVersion())?></strong><br/>
-				</td>
-				<td><?=$ch->button(t("Update"), View::url('/dashboard/install', 'update', $pkg->getPackageHandle()), "right")?></td>					
-			</tr>
-			</table>
-			</div>
-		<? } ?>			
+	<h1><span><?=t('concrete5.org Marketplace')?></span></h1>
+	<div class="ccm-dashboard-inner ccm-ui">
+		<? Loader::element('dashboard/marketplace_connect_failed')?>
 	</div>
+<? } else { ?>
 
-	<? } ?>
+		<div class="ccm-ui">
+		<div class="row">
+		<div class="ccm-pane">
+		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Update Add-Ons'));?>
+		<div class="ccm-pane-body ccm-pane-body-footer">
+		<? if (count($pkgLocal) == 0 && count($pkgRemote) == 0) { ?>
+			<p><?=t('No updates for your add-ons are available.')?></p>
+		<? } else { ?>
 
-<? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
+			<table>
+			<? foreach($pkgRemote as $pkg) { 
 
-<h1><span><?=t('Available for Download')?></span></h1>
-
-
-<div class="ccm-dashboard-inner">
-	<? if (!$mi->isConnected()) { ?>
-	<div class="ccm-addon-marketplace-account">
-		<? Loader::element('dashboard/marketplace_connect_failed'); ?>	
-	</div>
-	
-	<? } ?>
-	
-
-	<h2><?=t('The Following Updates are Available')?></h2>
-	
-	<?
-	$i = 0;
-	Loader::model('marketplace_remote_item');
-	foreach ($pkgArray as $pkg) { 
-		if (!is_object($pkg)) {
-			continue;
-		}
-		if ($pkg->isPackageInstalled() && version_compare($pkg->getPackageVersion(), $pkg->getPackageVersionUpdateAvailable(), '<')) { 
-			$i++;
-			
-			$rpkg = MarketplaceRemoteItem::getByHandle($pkg->getPackageHandle());
-			
+				$rpkg = MarketplaceRemoteItem::getByHandle($pkg->getPackageHandle());
 			?>
-			<div class="ccm-addon-list">
-			<table cellspacing="0" cellpadding="0" border="0" style="width: auto !important">		
-			<tr>
-				<td valign="top" class="ccm-installed-items-icon"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
-				<td valign="top" class="ccm-addon-list-description" style="width: 100%"><h3><?=$pkg->getPackageName()?></a></h3><?=$pkg->getPackageDescription()?>
-				<br/><br/>
-				<strong><?=t('Current Version: %s', $pkg->getPackageVersion())?></strong><br/>
-				<strong><?=t('New Version: %s', $pkg->getPackageVersionUpdateAvailable())?></strong><br/>
-				<a target="_blank" href="<?=$rpkg->getRemoteURL()?>"><?=t('More Information')?></a>
-				</td>
-				<td valign="top"><?=$ch->button(t("Download and Install"), View::url('/dashboard/install', 'prepare_remote_upgrade', $rpkg->getMarketplaceItemID()), "right")?></td>					
-			</tr>
+			
+				<tr>
+					<td class="ccm-marketplace-list-thumbnail" rowspan="2"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
+					<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></h3><p><?=$pkg->getPackageDescription()?></p>
+					<p><strong><?=t('New Version: %s. Upgrading from: %s.', $pkg->getPackageVersionUpdateAvailable(), $pkg->getPackageVersion())?></p>
+
+					</td>
+					<? if (!is_object($rpkg)) { ?>
+						<td class="ccm-marketplace-list-install-button"><input class="btn" disabled="disabled" type="button" value="<?=t('More Information')?>" /> <input class="btn primary" disabled="disabled" type="button" value="<?=t('Download and Install')?>" />
+					<? } else { ?>
+						<td class="ccm-marketplace-list-install-button"><a class="btn" target="_blank" href="<?=$rpkg->getRemoteURL()?>"><?=t('More Information')?></a> <?=$ch->button(t("Download and Install"), View::url('/dashboard/extend/update', 'prepare_remote_upgrade', $rpkg->getMarketplaceItemID()), "", "primary")?></td>					
+					<? } ?>
+				</tr>
+				<? if (is_object($rpkg)) { ?>
+				<tr>
+					<td colspan="2" style="border-top: 0px">
+						<? $versionHistory = $rpkg->getVersionHistory();?>
+						<? if (trim($versionHistory) != '') { ?>
+							<div class="ccm-marketplace-update-changelog">
+								<h6><?=t('Version History')?></h6>
+								<?=$versionHistory?>
+							</div>
+							<div class="ccm-marketplace-item-information-more">
+								<a href="javascript:void(0)" onclick="ccm_marketplaceUpdatesShowMore(this)"><?=t('More Details')?></a>
+							</div>
+						<? } ?>
+					</td>
+				</tr>
+				<? } else { ?>
+				<tr>
+					<td colspan="2" style="border-top: 0px">
+						<div class="block-message alert-message error"><p><?=t('Unable to locate this add-on on concrete5.org')?></p></div>
+					</td>
+				</tr>
+				<? } ?>		
+			<? }
+			
+			foreach($pkgLocal as $pkg) { ?>
+			
+				<tr>
+					<td class="ccm-marketplace-list-thumbnail" rowspan="2"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
+					<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></h3><p><?=$pkg->getPackageDescription()?></p>
+					<p><strong><?=t('New Version: %s. Upgrading from: %s.', $pkg->getPackageVersion(), $pkg->getPackageCurrentlyInstalledVersion())?></p>
+					</td>
+					<td class="ccm-marketplace-list-install-button"><?=$ch->button(t("Update Add-On"), View::url('/dashboard/extend/update', 'do_update', $pkg->getPackageHandle()), "", "primary")?></td>					
+				</tr>
+				<tr>
+					<td colspan="2" style="border-top: 0px">
+						<? $versionHistory = $pkg->getChangelogContents();?>
+						<? if (trim($versionHistory) != '') { ?>
+							<div class="ccm-marketplace-update-changelog">
+								<h6><?=t('Version History')?></h6>
+								<?=$versionHistory?>
+							</div>
+							<div class="ccm-marketplace-item-information-more">
+								<a href="javascript:void(0)" onclick="ccm_marketplaceUpdatesShowMore(this)"><?=t('More Details')?></a>
+							</div>
+						<? } ?>
+					</td>
+				</tr>
+				
+			<? } ?>		
+			
 			</table>
-			</div>
-		<? } ?>			
-	<? }
-		
-		if ($i == 0) { ?>
-			
-			<p><?=t('There are no updates for your add-ons currently available from the marketplace.')?></p>
-			
 			
 		<? } ?>
-	
-
-
-</div>
+		</div>
+		</div>
+		</div>
+		</div>
 
 <? } ?>
-
-<? 
-}
