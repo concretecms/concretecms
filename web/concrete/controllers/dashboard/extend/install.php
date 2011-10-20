@@ -16,7 +16,7 @@ class DashboardExtendInstallController extends Controller {
 		
 		$pkg = Package::getByID($pkgID);
 		if (!is_object($pkg)) {
-			$this->redirect("/dashboard/install");
+			$this->redirect("/dashboard/extend/install");
 		}
 		$this->set('text', Loader::helper('text'));
 		$this->set('pkg', $pkg);
@@ -57,7 +57,7 @@ class DashboardExtendInstallController extends Controller {
 				}
 			}
 			if (!$this->error->has()) { 
-				$this->redirect('/dashboard/install', 'package_uninstalled');
+				$this->redirect('/dashboard/extend/install', 'package_uninstalled');
 			}
 		}
 		
@@ -76,7 +76,7 @@ class DashboardExtendInstallController extends Controller {
 		if (isset($pkg) && ($pkg instanceof Package)) {
 			$this->set('pkg', $pkg);
 		} else {
-			$this->redirect('/dashboard/install');
+			$this->redirect('/dashboard/extend/install');
 		}
 	}
 	

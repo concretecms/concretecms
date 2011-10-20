@@ -44,7 +44,7 @@ class ConcreteInterfaceHelper {
 		foreach($args as $k => $v) {
 			$argsstr .= $k . '="' . $v . '" ';
 		}
-		return '<input type="submit" class="ccm-button-v2 ' . $innerClass . '" value="' . $text . '" id="ccm-submit-' . $formID . '" name="ccm-submit-' . $formID . '" ' . $align . ' ' . $argsstr . ' />';
+		return '<input type="submit" class="btn ccm-button-v2 ' . $innerClass . '" value="' . $text . '" id="ccm-submit-' . $formID . '" name="ccm-submit-' . $formID . '" ' . $align . ' ' . $argsstr . ' />';
 	}
 	
 	/** 
@@ -66,7 +66,7 @@ class ConcreteInterfaceHelper {
 		foreach($args as $k => $v) {
 			$argsstr .= $k . '="' . $v . '" ';
 		}
-		return '<input type="button" class="ccm-button-v2 ' . $innerClass . '" value="' . $text . '" onclick="window.location.href=\'' . $href . '\'" ' . $align . ' ' . $argsstr . ' />';
+		return '<input type="button" class="btn ccm-button-v2 ' . $innerClass . '" value="' . $text . '" onclick="window.location.href=\'' . $href . '\'" ' . $align . ' ' . $argsstr . ' />';
 	}
 
 	/** 
@@ -88,7 +88,7 @@ class ConcreteInterfaceHelper {
 		foreach($args as $k => $v) {
 			$argsstr .= $k . '="' . $v . '" ';
 		}
-		return '<input type="button" class="ccm-button-v2 ' . $innerClass . '" value="' . $text . '" onclick="' . $onclick . '" ' . $align . ' ' . $argsstr . ' />';
+		return '<input type="button" class="btn ccm-button-v2 ' . $innerClass . '" value="' . $text . '" onclick="' . $onclick . '" ' . $align . ' ' . $argsstr . ' />';
 	}
 	
 	/** 
@@ -103,11 +103,11 @@ class ConcreteInterfaceHelper {
 		if (!is_array($buttons)) {
 			$buttons = func_get_args();
 		}
-		$html = '<div class="ccm-buttons">';
+		$html = '<div class="ccm-buttons well">';
 		foreach($buttons as $_html) {
-			$html .= $_html;
+			$html .= $_html . ' ';
 		}
-		$html .= '</div><div class="ccm-spacer">&nbsp;</div>';
+		$html .= '</div>';
 		return $html;
 	}	
 	

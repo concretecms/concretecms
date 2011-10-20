@@ -25,6 +25,6 @@
 	<? } else { ?>
 		<p><?=t('There are currently <strong>%s</strong> updates available.', $updates)?></p>
 	<? } ?>
-	<div class="alert-actions"><a class="small btn" href="<?=$this->url('/dashboard/install', 'update')?>"><?=t('Update Add-Ons')?></a></div>
+	<div class="alert-actions"><a class="small btn" href="<?=$this->url('/dashboard/extend/install', 'update')?>"><?=t('Update Add-Ons')?></a></div>
 	</div>
 <? } ?>

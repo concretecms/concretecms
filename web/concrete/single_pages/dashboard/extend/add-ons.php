@@ -131,11 +131,11 @@ if ($tp->canInstallPackages()) {
 <? if (isset($_REQUEST['mpID']) && $_REQUEST['mpID'] > 0 && Loader::helper('validation/numbers')->integer($_REQUEST['mpID'])) {
 	$mpID = $_REQUEST['mpID'];
 } else {
-	$mpID = '';
+	$mpID = 'false';
 }
 ?>
 <script type="text/javascript">
 $(function() {
-	ccm_marketplaceBrowserInit(<?=$mpID?> <? if ($mpID) { ?>,<? } ?> <? if ($_REQUEST['prev'] == 1) { ?>'last'<? } else { ?>false<? } ?>); 
+	ccm_marketplaceBrowserInit(<?=$mpID?>, <? if ($_REQUEST['prev'] == 1) { ?>'last'<? } else { ?>false<? } ?>); 
 });
 </script>

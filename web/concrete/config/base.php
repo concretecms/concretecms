@@ -194,9 +194,9 @@ define('FILENAME_BLOCK_DB', 'db.xml');
 define('BLOCK_HANDLE_SCRAPBOOK_PROXY', 'core_scrapbook_display');
 
 # Stacks
-define('STACKS_PAGE_PATH', '/dashboard/stacks/list');
+define('STACKS_PAGE_PATH', '/dashboard/blocks/stacks/list');
 define('STACKS_AREA_NAME', 'Main');
-define('STACKS_PAGE_FILENAME', '/dashboard/stacks/detail.php');
+define('STACKS_PAGE_FILENAME', '/dashboard/blocks/stacks/detail.php');
 define('BLOCK_HANDLE_STACK_PROXY', 'core_stack_display');
 
 # Hosted assets are assets shared amongst all Concrete5 installations on a single machine.

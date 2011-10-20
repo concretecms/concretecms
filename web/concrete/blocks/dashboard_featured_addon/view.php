@@ -7,4 +7,4 @@
 <p><?=$remoteItem->getDescription()?></p>
 </div>
 
-<a href="<?=$remoteItem->getRemoteURL()?>" class="btn"><?=t('Learn More')?></a>
+<a href="javascript:void(0)" onclick="ccm_openAddonLauncher(<?=$remoteItem->getMarketplaceItemID()?>)" class="btn"><?=t('Learn More')?></a>
