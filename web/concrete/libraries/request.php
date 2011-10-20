@@ -1,5 +1,4 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
  * @package Core
@@ -21,13 +20,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 class Request {
 
+	private $currentPage;
 	private $requestPath;
 	private $task;
 	private $params;
 	private $includeType;
+	private $btHandle;
 	private $filename;
 	private $cID;
 	private $cPath;
+	private $pkgHandle;
+	private $auxData;
 	
 	// parses the current request and returns an 
 	// object with tasks, tools, etc... defined in them
