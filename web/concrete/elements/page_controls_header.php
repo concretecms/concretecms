@@ -27,6 +27,7 @@ if (!$dh->inDashboard()) {
 	$this->addHeaderItem($html->javascript('jquery.js'));
 	$this->addFooterItem($html->javascript('jquery.ui.js'));
 	$this->addFooterItem($html->javascript('jquery.form.js'));
+	$this->addFooterItem($html->javascript('alice-min.js'));
 	$this->addFooterItem($html->javascript('ccm.app.js'));
 	$cih = Loader::helper('concrete/interface');
 	if (ACTIVE_LOCALE != 'en_US') {

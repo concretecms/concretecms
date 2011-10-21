@@ -171,18 +171,6 @@ class ConcreteDashboardHelper {
 			<div id="ccm-dashboard-overlay-core">
 			<div class="ccm-dashboard-overlay-inner" id="ccm-dashboard-overlay-main">
 			
-				<div class="ccm-dashboard-overlay-module">
-				
-				<h1><a href="<?=View::url('/dashboard')?>"><?=t('Dashboard Home')?></a></h1>
-				
-				
-				<ul>
-					<li><a href="<?=View::url('/dashboard/home')?>"><?=t('Customize')?></a></li>
-				</ul>
-				
-				</div>
-			
-			
 			<?php
 			
 			foreach($corepages as $page) {
@@ -218,6 +206,15 @@ class ConcreteDashboardHelper {
 			?>
 			
 			
+			</div>
+			</div>
+			<div id="ccm-dashboard-overlay-misc" <? if (count($packagepages) == 0)  { ?>class="ccm-dashboard-overlay-misc-rounded" <? } ?>>
+			<div class="ccm-dashboard-overlay-inner">
+			<ul>
+			<li><a href="<?=View::url('/dashboard')?>"><strong><?=t('News')?></strong></a><?=t(' – Learn about your site and concrete5')?></li>
+			<li><a href="<?=View::url('/dashboard/settings')?>"><strong><?=t('System &amp; Settings')?></strong></a><?=t(' – Secure and setup your site.')?></li>
+			<li><a href="<?=View::url('/dashboard/extend')?>"><strong><?=t('Extend concrete5')?></strong></a> – <a href="<?=View::url('/dashboard/extend/install')?>"><?=t('Install')?></a>, <a href="<?=View::url('/dashboard/extend/update')?>"><?=t('update')?></a> <?=t('or download more')?> <a href="<?=View::url('/dashboard/extend/themes')?>"><?=t('themes')?></a> <?=t('and')?> <a href="<?=View::url('/dashboard/extend/add-ons')?>"><?=t('add-ons')?>.</li>
+			</ul>
 			</div>
 			</div>
 			<? if (count($packagepages) > 0) { ?>
