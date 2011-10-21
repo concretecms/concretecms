@@ -83,15 +83,6 @@ $(function() {
 			}, 1000);
 		});
 		
-		$('#ccm-dashboard-overlay-main').masonry({
-		  itemSelector: '.ccm-dashboard-overlay-module', 
-		  isResizable: false
-		});
-		$('#ccm-dashboard-overlay-packages').masonry({
-		  itemSelector: '.ccm-dashboard-overlay-module',
-		  isResizable: false
-		});
-	
 		$("#ccm-dashboard-overlay").css('visibility','visible').hide();
 	
 		$("#ccm-nav-intelligent-search-wrapper").click(function() {

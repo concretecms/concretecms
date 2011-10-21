@@ -14,6 +14,9 @@
         </page>
         <page name="Page Forbidden" path="/page_forbidden" filename="/page_forbidden.php" pagetype="" description="" package=""/>
         <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package=""/>
+        <page name="Composer Beta" path="/dashboard/composer" filename="/dashboard/composer/view.php" pagetype="" description="Write for your site." package=""/>
+        <page name="Write" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package=""/>
+        <page name="Drafts" path="/dashboard/composer/drafts" filename="/dashboard/composer/drafts.php" pagetype="" description="" package=""/>
         <page name="Sitemap" path="/dashboard/sitemap" filename="/dashboard/sitemap/view.php" pagetype="" description="Whole world at a glance." package=""/>
         <page name="Full Sitemap" path="/dashboard/sitemap/full" filename="/dashboard/sitemap/full.php" pagetype="" description="" package=""/>
         <page name="Flat View" path="/dashboard/sitemap/explore" filename="/dashboard/sitemap/explore.php" pagetype="" description="" package=""/>
@@ -24,16 +27,25 @@
         <page name="Attributes" path="/dashboard/files/attributes" filename="/dashboard/files/attributes.php" pagetype="" description="" package=""/>
         <page name="Sets" path="/dashboard/files/sets" filename="/dashboard/files/sets.php" pagetype="" description="" package=""/>
         <page name="Permissions" path="/dashboard/files/access" filename="/dashboard/files/access.php" pagetype="" description="" package=""/>
-        <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype="" description="Get data from forms and logs." package=""/>
-        <page name="Form Results" path="/dashboard/reports/forms" filename="/dashboard/reports/forms.php" pagetype="" description="Get submission data." package=""/>
-        <page name="Surveys" path="/dashboard/reports/surveys" filename="/dashboard/reports/surveys.php" pagetype="" description="" package=""/>
-        <page name="Logs" path="/dashboard/reports/logs" filename="/dashboard/reports/logs.php" pagetype="" description="" package=""/>
-        <page name="Users and Groups" path="/dashboard/users" filename="/dashboard/users/view.php" pagetype="" description="Add and manage people." package=""/>
+        <page name="Members" path="/dashboard/users" filename="/dashboard/users/view.php" pagetype="" description="Add and manage the user accounts and groups on your website." package=""/>
         <page name="Find Users" path="/dashboard/users/search" filename="/dashboard/users/search.php" pagetype="" description="" package=""/>
         <page name="Add User" path="/dashboard/users/add" filename="/dashboard/users/add.php" pagetype="" description="" package=""/>
         <page name="Groups" path="/dashboard/users/groups" filename="/dashboard/users/groups.php" pagetype="" description="" package=""/>
         <page name="User Attributes" path="/dashboard/users/attributes" filename="/dashboard/users/attributes.php" pagetype="" description="" package=""/>
         <page name="Login &amp; Registration" path="/dashboard/users/registration" filename="/dashboard/users/registration.php" pagetype="" description="" package=""/>
+        <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype="" description="Get data from forms and logs." package=""/>
+        <page name="Form Results" path="/dashboard/reports/forms" filename="/dashboard/reports/forms.php" pagetype="" description="Get submission data." package=""/>
+        <page name="Surveys" path="/dashboard/reports/surveys" filename="/dashboard/reports/surveys.php" pagetype="" description="" package=""/>
+        <page name="Logs" path="/dashboard/reports/logs" filename="/dashboard/reports/logs.php" pagetype="" description="" package=""/>
+        <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package=""/>
+        <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype="" description="Reskin your site." package=""/>
+        <page name="Add" path="/dashboard/pages/themes/add" filename="/dashboard/pages/themes/add.php" pagetype="" description="" package=""/>
+        <page name="Inspect" path="/dashboard/pages/themes/inspect" filename="/dashboard/pages/themes/inspect.php" pagetype="" description="" package=""/>
+        <page name="Customize" path="/dashboard/pages/themes/customize" filename="/dashboard/pages/themes/customize.php" pagetype="" description="" package=""/>
+        <page name="Page Types" path="/dashboard/pages/types" filename="/dashboard/pages/types/view.php" pagetype="" description="What goes in your site." package=""/>
+        <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php" pagetype="" description="" package=""/>
+        <page name="Single Pages" path="/dashboard/pages/single" filename="/dashboard/pages/single.php" pagetype="" description="" package=""/>
+        
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype="" description="Manage sitewide content and administer block types." package="" />
         <page name="Stacks" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype="" description="Share content across your site." package="" />
         <page name="Stack List" path="/dashboard/blocks/stacks/list" filename="/dashboard/blocks/stacks/list/view.php" pagetype="" description="" package="">
@@ -47,38 +59,40 @@
 			</attributes>
         </page>
         <page name="Block Types" path="/dashboard/blocks/types" filename="/dashboard/blocks/types/view.php" pagetype="" description="Manage the installed block types in your site." package=""/>
-        <page name="Pages and Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package=""/>
-        <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype="" description="Reskin your site." package=""/>
-        <page name="Add" path="/dashboard/pages/themes/add" filename="/dashboard/pages/themes/add.php" pagetype="" description="" package=""/>
-        <page name="Inspect" path="/dashboard/pages/themes/inspect" filename="/dashboard/pages/themes/inspect.php" pagetype="" description="" package=""/>
-        <page name="Customize" path="/dashboard/pages/themes/customize" filename="/dashboard/pages/themes/customize.php" pagetype="" description="" package=""/>
-        <page name="Page Types" path="/dashboard/pages/types" filename="/dashboard/pages/types/view.php" pagetype="" description="What goes in your site." package=""/>
-        <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php" pagetype="" description="" package=""/>
-        <page name="Single Pages" path="/dashboard/pages/single" filename="/dashboard/pages/single.php" pagetype="" description="" package=""/>
-        <page name="Extend concrete5" path="/dashboard/extend" filename="/dashboard/extend/view.php" pagetype="" description="Connect to the concrete5 marketplace, install custom add-ons, and download updates for marketplace add-ons and themes." package=""/>
-        <page name="Add Functionality" path="/dashboard/extend/install" filename="/dashboard/extend/install.php" pagetype="" description="Install add-ons &amp; themes." package=""/>
-        <page name="Update Add-Ons" path="/dashboard/extend/update" filename="/dashboard/extend/update.php" pagetype="" description="Update your installed packages." package=""/>
-        <page name="Connect to the Community" path="/dashboard/extend/connect" filename="/dashboard/extend/connect.php" pagetype="" description="Connect to the concrete5 community." package="">
+    	
+        <page name="Extend concrete5" path="/dashboard/extend" filename="/dashboard/extend/view.php" pagetype="" description="Connect to the concrete5 marketplace, install custom add-ons, and download updates for marketplace add-ons and themes." package="">
 			<attributes>
 				<attributekey handle="exclude_nav">
 					<value><![CDATA[1]]></value>
 				</attributekey>
 			</attributes>
         </page>
+        <page name="Add Functionality" path="/dashboard/extend/install" filename="/dashboard/extend/install.php" pagetype="" description="Install add-ons &amp; themes." package=""/>
+        <page name="Update Add-Ons" path="/dashboard/extend/update" filename="/dashboard/extend/update.php" pagetype="" description="Update your installed packages." package=""/>
+        <page name="Connect to the Community" path="/dashboard/extend/connect" filename="/dashboard/extend/connect.php" pagetype="" description="Connect to the concrete5 community." package="" />
         <page name="Get More Themes" path="/dashboard/extend/themes" filename="/dashboard/extend/themes.php" pagetype="" description="Download themes from concrete5.org." package=""/>
         <page name="Get More Add-Ons" path="/dashboard/extend/add-ons" filename="/dashboard/extend/add_ons.php" pagetype="" description="Download add-ons from concrete5.org." package=""/>
-        <page name="System &amp; Maintenance" path="/dashboard/system" filename="/dashboard/system/view.php" pagetype="" description="Backup, cleanup and update." package=""/>
+        <page name="System &amp; Maintenance" path="/dashboard/system" filename="/dashboard/system/view.php" pagetype="" description="Backup, cleanup and update." package="">
+			<attributes>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+			</attributes>
+        </page>
         <page name="Jobs" path="/dashboard/system/jobs" filename="/dashboard/system/jobs.php" pagetype="" description="" package=""/>
         <page name="Backup &amp; Restore" path="/dashboard/system/backup" filename="/dashboard/system/backup.php" pagetype="" description="" package=""/>
         <page name="Update" path="/dashboard/system/update" filename="/dashboard/system/update.php" pagetype="" description="" package=""/>
         <page name="Notifications" path="/dashboard/system/notifications" filename="/dashboard/system/notifications.php" pagetype="" description="" package=""/>
-        <page name="Sitewide Settings" path="/dashboard/settings" filename="/dashboard/settings/view.php" pagetype="" description="Secure and setup your site." package=""/>
+        <page name="Sitewide Settings" path="/dashboard/settings" filename="/dashboard/settings/view.php" pagetype="" description="Secure and setup your site." package="">
+			<attributes>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+			</attributes>
+        </page>
         <page name="Email" path="/dashboard/settings/mail" filename="/dashboard/settings/mail/view.php" pagetype="" description="Enable post via email and other settings." package=""/>
         <page name="Download File" path="/download_file" filename="/download_file.php" pagetype="" description="" package=""/>
         <page name="Members" path="/members" filename="/members.php" pagetype="" description="" package=""/>
-        <page name="Composer Beta" path="/dashboard/composer" filename="/dashboard/composer/view.php" pagetype="" description="Write for your site." package=""/>
-        <page name="Write" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package=""/>
-        <page name="Drafts" path="/dashboard/composer/drafts" filename="/dashboard/composer/drafts.php" pagetype="" description="" package=""/>
         <page name="Composer" path="/dashboard/pages/types/composer" filename="/dashboard/pages/types/composer.php" pagetype="" description="" package=""/>
         <page name="Multilingual Settings" path="/dashboard/settings/multilingual" filename="/dashboard/settings/multilingual/view.php" pagetype="" description="" package=""/>
         <page name="Attribute Sets" path="/dashboard/settings/attribute_sets" filename="/dashboard/settings/attribute_sets/view.php" pagetype="" description="" package=""/>
