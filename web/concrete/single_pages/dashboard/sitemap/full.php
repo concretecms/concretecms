@@ -26,12 +26,7 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 		ccmSitemapLoad('<?=$instanceID?>', 'full');
 	});
 </script>
-<div class="ccm-ui">
-<div class="row">
-<div class="span14 offset1 columns">
-
-<div class="ccm-pane">
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Sitemap'), t('The sitemap allows you to view your site as a tree and easily organize its hierarchy.'));?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sitemap'), t('The sitemap allows you to view your site as a tree and easily organize its hierarchy.'), 'span14 offset1', false);?>
 <div class="ccm-pane-options">
 	<a href="javascript:void(0)" onclick="ccm_paneToggleOptions(this)" class="ccm-icon-option-<? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?>open<? } else { ?>closed<? } ?>"><?=t('Options')?></a>
 	<div class="ccm-pane-options-content" <? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?> style="display: block" <? } ?>>
@@ -47,7 +42,6 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 		</form>
 	</div>
 </div>
-
 <div class="ccm-pane-body ccm-pane-body-footer">
 	<? if ($sh->canRead()) { ?>
 	
@@ -67,8 +61,4 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 	
 	<? } ?>
 </div>
-</div>
-
-</div>
-</div>
-</div>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>

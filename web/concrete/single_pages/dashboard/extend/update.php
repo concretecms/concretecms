@@ -35,11 +35,7 @@ if (!$tp->canInstallPackages()) { ?>
 	</div>
 <? } else { ?>
 
-		<div class="ccm-ui">
-		<div class="row">
-		<div class="ccm-pane">
-		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Update Add-Ons'));?>
-		<div class="ccm-pane-body ccm-pane-body-footer">
+		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Update Add-Ons'));?>
 		<? if (count($pkgLocal) == 0 && count($pkgRemote) == 0) { ?>
 			<p><?=t('No updates for your add-ons are available.')?></p>
 		<? } else { ?>
@@ -115,9 +111,7 @@ if (!$tp->canInstallPackages()) { ?>
 			</table>
 			
 		<? } ?>
-		</div>
-		</div>
-		</div>
-		</div>
+		<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();
+		?>
 
 <? } ?>

@@ -63,7 +63,13 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 		}
 		
 		$cb = Loader::helper('form')->checkbox($this->field('value'), 1, $checked);
-		print $cb . ' ' . t('Yes');
+		print $cb . ' <span>' . t('Yes') . '</span>';
+	}
+	
+	public function composer() {
+		print '<ul class="inputs-list"><li><label>';
+		$this->form();
+		print '</label></li></ul>';
 	}
 	
 	public function search() {

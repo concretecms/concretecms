@@ -1,10 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="ccm-ui">
-<div class="row">
-<div class="span14 offset1 columns">
-<div class="ccm-pane">
-
 <? if ($this->controller->getTask() == 'view_details') { ?>
 
 	<script type="text/javascript">
@@ -32,8 +27,7 @@
 	div.ccm-block {border: 2px dotted #efefef; clear: both; overflow: hidden; margin: 0px 0px 4px 0px; padding: 2px}
 	</style>
 	
-
-	<div class="ccm-pane-header"><h3><?=$stack->getCollectionName()?></h3></div>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($stack->getCollectionName(), false, 'span14 offset1', false)?>
 	<div class="ccm-pane-options">
 		<a href="javascript:void(0)" onclick="window.location.href='<?=$this->url('/dashboard/blocks/stacks')?>'" class="btn small"><?=t('Back to List')?></a>
 		<a href="javascript:void(0)" onclick="ccm_stacksAddBlock()" class="btn small ccm-main-nav-edit-option"><?=t('Add Block')?></a>
@@ -77,12 +71,11 @@
 		print '</div>'; // instead  of loading block area footer view
 	?>	
 	</div>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false); ?>
 
 <? } else { ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Stacks'), t('Stacks give you a central place to stash blocks, where you can control their order, permissions, and even version them.<br><br>Add stacks to your site and you can update them in one place.'));?>
-	
-	<div class="ccm-pane-body ccm-pane-body-footer">
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Stacks'), t('Stacks give you a central place to stash blocks, where you can control their order, permissions, and even version them.<br><br>Add stacks to your site and you can update them in one place.'), 'span14 offset1');?>
 		
 	<h4><?=t('Global Areas')?></h4>
 	
@@ -138,11 +131,6 @@
 		
 		</form>
 		
-	</div>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
 
 <? } ?>
-
-</div>
-</div>
-</div>
-</div>
