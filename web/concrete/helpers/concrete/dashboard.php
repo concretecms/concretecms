@@ -40,6 +40,23 @@ class ConcreteDashboardHelper {
 		return strpos($c->getCollectionPath(), '/dashboard') === 0;
 	}
 	
+	public function getDashboardPaneFooterWrapper($includeDefaultBody = true) {
+		$html = '</div></div></div></div>';
+		if ($includeDefaultBody) {
+			$html .= '</div>';
+		}
+		return $html;
+	}
+	
+	public function getDashboardPaneHeaderWrapper($title = false, $help = false, $span = 'span16', $includeDefaultBody = true) {
+		$html = '<div class="ccm-ui"><div class="row"><div class="' . $span . '"><div class="ccm-pane">';
+		$html .= self::getDashboardPaneHeader($title, $help);
+		if ($includeDefaultBody) {
+			$html .= '<div class="ccm-pane-body ccm-pane-body-footer">';
+		}
+		return $html;
+	}
+	
 	public function getDashboardPaneHeader($title = false, $help = false) {
 		$c = Page::getCurrentPage();
 		$vt = Loader::helper('validation/token');
@@ -213,7 +230,7 @@ class ConcreteDashboardHelper {
 			<ul>
 			<li><a href="<?=View::url('/dashboard')?>"><strong><?=t('News')?></strong></a><?=t(' – Learn about your site and concrete5')?></li>
 			<li><a href="<?=View::url('/dashboard/settings')?>"><strong><?=t('System &amp; Settings')?></strong></a><?=t(' – Secure and setup your site.')?></li>
-			<li><a href="<?=View::url('/dashboard/extend')?>"><strong><?=t('Extend concrete5')?></strong></a> – <a href="<?=View::url('/dashboard/extend/install')?>"><?=t('Install')?></a>, <a href="<?=View::url('/dashboard/extend/update')?>"><?=t('update')?></a> <?=t('or download more')?> <a href="<?=View::url('/dashboard/extend/themes')?>"><?=t('themes')?></a> <?=t('and')?> <a href="<?=View::url('/dashboard/extend/add-ons')?>"><?=t('add-ons')?>.</li>
+			<li><a href="<?=View::url('/dashboard/extend')?>"><strong><?=t('Extend concrete5')?></strong></a> – <a href="<?=View::url('/dashboard/extend/install')?>"><?=t('Install')?></a>, <a href="<?=View::url('/dashboard/extend/update')?>"><?=t('update')?></a> <?=t('or download more')?> <a href="<?=View::url('/dashboard/extend/themes')?>"><?=t('themes')?></a> <?=t('and')?> <a href="<?=View::url('/dashboard/extend/add-ons')?>"><?=t('add-ons')?></a>.</li>
 			</ul>
 			</div>
 			</div>

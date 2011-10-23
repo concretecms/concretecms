@@ -127,6 +127,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (method_exists($this, 'on_start')) {
 				$this->on_start($method);
 			}
+			if ($method == 'composer') {
+				$method = array('composer', 'form');
+			}
+			
 			if ($method) {
 				$this->runTask($method, $args);
 			}

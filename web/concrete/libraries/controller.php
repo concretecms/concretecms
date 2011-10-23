@@ -197,11 +197,19 @@ class Controller {
 	 * @return void
 	 */
 	public function runTask($method, $params) {
-		if (is_callable(array($this, $method))) {
-			if(!is_array($params)) {
-				$params = array($params);
+		// can be an array of cyclable methods. The first one found is fired.
+		if (is_array($method)) {
+			$methodArray = $method;
+		} else {
+			$methodArray[] = $method;
+		}
+		foreach($methodArray as $method) {
+			if (is_callable(array($this, $method))) {
+				if(!is_array($params)) {
+					$params = array($params);
+				}
+				return call_user_func_array(array($this, $method), $params);
 			}
-			return call_user_func_array(array($this, $method), $params);
 		}
 		return null;
 	}

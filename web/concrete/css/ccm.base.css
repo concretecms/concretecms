@@ -33,3 +33,6 @@ div#ccm-overlay {
 	width:100%;
 	display: none;
 } 
+
+.ccm-input-time-wrapper select {width: 50px !important; margin-right: 4px !important;}
+.ccm-input-date {width: 80px !important; margin-right: 4px !important;}

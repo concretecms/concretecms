@@ -9,23 +9,15 @@ if ($tp->canInstallPackages()) {
 }
 $pkgArray = Package::getInstalledList();?>
 
-<div class="ccm-ui">
-		
 <?
 if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) { ?>
-
-<div class="row">
-<div class="span12 offset2 columns">
-
 <?
 	$removeBTConfirm = t('This will remove all elements associated with the %s package. This cannot be undone. Are you sure?', $pkg->getPackageHandle());
 ?>
 <form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?=$this->action('do_uninstall_package')?>" onsubmit="return confirm('<?=$removeBTConfirm?>')">
 
-<div class="ccm-pane">
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Uninstall Package'));?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Uninstall Package'), false, 'span12 offset2', false);?>
 <div class="ccm-pane-body">
-	
 	
 	<?=$valt->output('uninstall')?>
 	<input type="hidden" name="pkgID" value="<?=$pkg->getPackageID()?>" />
@@ -65,13 +57,8 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 <? print $ch->submit(t('Uninstall Package'), 'ccm-uninstall-form', '', 'error'); ?>
 <? print $ch->button(t('Cancel'), $this->url('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()), ''); ?>
 </div>
-
-</div>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
 </form>
-
-</div>
-</div>
-
 
 <? 
 } else { 
@@ -145,11 +132,7 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 	
 	if (is_object($pkg)) { ?>
 	
-		<div class="row">
-		<div class="span12 offset2 columns">
-		<div class="ccm-pane">
-		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Inspect Package'));?>
-		<div class="ccm-pane-body ccm-pane-body-footer">
+		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Inspect Package'), false, 'span12 offset2');?>
 
 			<ul class="breadcrumb"><li><a href="<?=$this->url('/dashboard/extend/install')?>">&lt; <?=t('Return to Add Functionality')?></a></li></ul>
 
@@ -181,9 +164,7 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 				</ul>
 
 			<? } ?>
-			
-			<div class="ccm-spacer">&nbsp;</div>
-			
+
 			<? 
 			
 			$tp = new TaskPermission();
@@ -194,20 +175,12 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 
 			} ?>
 			
-		</div>
-		</div>
-		</div>
-		</div>
-		
+			<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
 	<?
 	
 	 } else { ?>
 		
-		<div class="row">
-		<div class="span12 offset2 columns">
-		<div class="ccm-pane">
-		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Add Functionality'), t('Install custom add-ons or those downloaded from the concrete5.org marketplace.'));?>
-		<div class="ccm-pane-body ccm-pane-body-footer">
+		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Functionality'), t('Install custom add-ons or those downloaded from the concrete5.org marketplace.'), 'span12 offset2');?>
 			
 		<h3><?=t('Currently Installed')?></h3>
 		<? if (count($pkgArray) > 0) { ?>
@@ -277,12 +250,5 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 	
 			<? } ?>
 		<? } ?>		
-		</div>
-		</div>
-		</div>
-		</div>
-
 	<? } ?>
 <? } ?>
-
-</div>
