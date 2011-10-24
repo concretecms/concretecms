@@ -210,7 +210,7 @@ class TextHelper {
 	
 	/**
 	 * Runs a number of text functions, including autolink, nl2br, strip_tags. Assumes that you want simple
-	 * text comments but witih a few niceties.
+	 * text comments but with a few niceties.
 	 * @param string $input
 	 * @return string $output
 	 */
