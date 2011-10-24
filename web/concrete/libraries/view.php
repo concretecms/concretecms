@@ -614,8 +614,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$this->themeDir = $themeDir;
 			$this->themePkgID = $pkgID;
 		}
-				
-				
+		public function escape($text){
+			Loader::helper('text');
+			return TextHelper::sanitize($text);
+		}
 		/**
 		 * render takes one argument - the item being rendered - and it can either be a path or a page object
 		 * @access public
