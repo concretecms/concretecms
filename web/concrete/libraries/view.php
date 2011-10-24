@@ -655,6 +655,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				Events::fire('on_start', $this);
 				
 				// Extract controller information from the view, and put it in the current context
+				Loader::controller('/dashboard/base');
 				if (!isset($this->controller)) {
 					$this->controller = Loader::controller($view);
 					$this->controller->setupAndRun();

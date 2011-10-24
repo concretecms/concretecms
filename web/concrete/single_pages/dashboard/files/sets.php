@@ -210,36 +210,39 @@
 		});
 </script>	
 <?php } else { ?>
-	<h1><span><?=t('File Sets')?></span></h1>
-	<div class="ccm-dashboard-inner">
 
-		<div class="ccm-search-bar">
+
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Sets'), false, false, false)?>
+	<div class="ccm-pane-options">
+	<div class="ccm-pane-options-permanent-search">
 		
 		<form id="ccm-file-set-search" method="get" action="<?=$this->url('/dashboard/files/sets')?>">
-		<div id="ccm-group-search-fields">
-
-		<strong><?=t('Type')?></strong>
-		
-		<input type="radio" id="fsTypePublic" name="fsType" value="<?=FileSet::TYPE_PUBLIC?>" <? if ($fsType != FileSet::TYPE_PRIVATE) { ?> checked <? } ?> onclick="$('#ccm-file-set-search').submit()" />
-		<label for="fsTypePublic"><?=t('Public Sets')?></label>
-		&nbsp;&nbsp;&nbsp;
-		<input type="radio" id="fsTypePublic" name="fsType" value="<?=FileSet::TYPE_PRIVATE?>" <? if ($fsType == FileSet::TYPE_PRIVATE) { ?> checked <? } ?> onclick="$('#ccm-file-set-search').submit()"  />
-		<label for="fsTypePublic"><?=t('My Sets')?></label>
-		
-		<span style="margin-left: 40px">&nbsp;</span>
-		
-		<strong><?=t('Keywords')?></strong>
-		
-		<input type="text" id="ccm-group-search-keywords" name="fsKeywords" value="<?=Loader::helper('text')->entities($_REQUEST['fsKeywords'])?>" class="ccm-text" style="width: 100px" />
-		<input type="submit" value="<?=t('Search')?>" />
-		<input type="hidden" name="group_submit_search" value="1" />
+		<div class="span4">
+		<?=$form->label('fsType', t('Type'))?>
+		<div class="input">
+		<select id="fsType" name="fsType" class="span3">
+		<option value="<?=FileSet::TYPE_PUBLIC?>" <? if ($fsType != FileSet::TYPE_PRIVATE) { ?> selected <? } ?>><?=t('Public Sets')?></option>
+		<option value="<?=FileSet::TYPE_PRIVATE?>" <? if ($fsType == FileSet::TYPE_PRIVATE) { ?> selected <? } ?>><?=t('My Sets')?></option>
+		</select>
 		</div>
+		</div>
+
+		<div class="span5">
+		<?=$form->label('fsKeywords', t('Keywords'))?>
+		<div class="input">
+		<input type="text" id="fsKeywords" name="fsKeywords" value="<?=Loader::helper('text')->entities($_REQUEST['fsKeywords'])?>" class="span3" />
+		</div>
+		</div>
+				
+		<input type="submit" class="btn" value="<?=t('Search')?>" />
+		<input type="hidden" name="group_submit_search" value="1" />
 		</form>
 
-		</div>
-		
+	</div>
+	</div>
+	<div class="ccm-pane-body <? if (!$fsl->requiresPaging()) { ?> ccm-pane-body-footer <? } ?> ">
+	
 		<? if (count($fileSets) > 0) { 
-			$fsl->displaySummary();
 			
 		foreach ($fileSets as $fs) { ?>
 		
@@ -250,7 +253,6 @@
 		
 		<? }
 		
-			$fsl->displayPaging();
 		
 		} else { ?>
 		
@@ -259,31 +261,12 @@
 		<? } ?>
 	
 	</div>
-	
-	<h1><span><?=t('Add Public Set')?></span></h1>
-	<div class="ccm-dashboard-inner">
-		<form method="post" id="file-sets-add" action="<?=$this->url('/dashboard/files/sets', 'file_sets_add')?>">
-			<?=$validation_token->output('file_sets_add');?>
-			<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
-				<tbody>
-					<tr>
-						<td class="subheader"><?=t('Name')?></td>
-					</tr>
-					<tr>
-						<td><?=$form->text('file_set_name','',array('style'=>'width:99%'));?></td>
-					</tr>
-					<tr>
-						<td class="header">
-						<?php
-							$b1 = $concrete_interface->submit(t('Add'), 'file-sets-add');
-							print $concrete_interface->buttons($b1);
-						?>					
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</form>
-	</div>
+	<? if ($fsl->requiresPaging()) { ?>
+		<div class="ccm-pane-footer">
+		<? $fsl->displayPaging(); ?>
+		</div>
+	<? } ?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper($fsl->requiresPaging())?>
 	
 	<script type="text/javascript">
 		var editFileSet = function(fsID){	

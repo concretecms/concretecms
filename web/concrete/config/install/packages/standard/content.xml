@@ -24,12 +24,14 @@
         <page name="Files" path="/dashboard/files" filename="/dashboard/files/view.php" pagetype="" description="All documents and images." package=""/>
         <page name="File Manager" path="/dashboard/files/search" filename="/dashboard/files/search.php" pagetype="" description="" package=""/>
         <page name="Attributes" path="/dashboard/files/attributes" filename="/dashboard/files/attributes.php" pagetype="" description="" package=""/>
-        <page name="Sets" path="/dashboard/files/sets" filename="/dashboard/files/sets.php" pagetype="" description="" package=""/>
+        <page name="File Sets" path="/dashboard/files/sets" filename="/dashboard/files/sets.php" pagetype="" description="" package=""/>
+        <page name="Add File Set" path="/dashboard/files/add_set" filename="/dashboard/files/add_set.php" pagetype="" description="" package=""/>
         <page name="Members" path="/dashboard/users" filename="/dashboard/users/view.php" pagetype="" description="Add and manage the user accounts and groups on your website." package=""/>
-        <page name="Find Users" path="/dashboard/users/search" filename="/dashboard/users/search.php" pagetype="" description="" package=""/>
+        <page name="Search Users" path="/dashboard/users/search" filename="/dashboard/users/search.php" pagetype="" description="" package=""/>
+        <page name="User Groups" path="/dashboard/users/groups" filename="/dashboard/users/groups.php" pagetype="" description="" package=""/>
+        <page name="Attributes" path="/dashboard/users/attributes" filename="/dashboard/users/attributes.php" pagetype="" description="" package=""/>
         <page name="Add User" path="/dashboard/users/add" filename="/dashboard/users/add.php" pagetype="" description="" package=""/>
-        <page name="Groups" path="/dashboard/users/groups" filename="/dashboard/users/groups.php" pagetype="" description="" package=""/>
-        <page name="User Attributes" path="/dashboard/users/attributes" filename="/dashboard/users/attributes.php" pagetype="" description="" package=""/>
+        <page name="Add Group" path="/dashboard/users/add_group" filename="/dashboard/users/add_group.php" pagetype="" description="" package=""/>
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype="" description="Get data from forms and logs." package=""/>
         <page name="Form Results" path="/dashboard/reports/forms" filename="/dashboard/reports/forms.php" pagetype="" description="Get submission data." package=""/>
         <page name="Surveys" path="/dashboard/reports/surveys" filename="/dashboard/reports/surveys.php" pagetype="" description="" package=""/>
@@ -41,8 +43,7 @@
         <page name="Customize" path="/dashboard/pages/themes/customize" filename="/dashboard/pages/themes/customize.php" pagetype="" description="" package=""/>
         <page name="Page Types" path="/dashboard/pages/types" filename="/dashboard/pages/types/view.php" pagetype="" description="What goes in your site." package=""/>
         <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php" pagetype="" description="" package=""/>
-        <page name="Single Pages" path="/dashboard/pages/single" filename="/dashboard/pages/single.php" pagetype="" description="" package=""/>
-        
+        <page name="Single Pages" path="/dashboard/pages/single" filename="/dashboard/pages/single.php" pagetype="" description="" package=""/>        
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype="" description="Manage sitewide content and administer block types." package="" />
         <page name="Stacks" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype="" description="Share content across your site." package="" />
         <page name="Stack List" path="/dashboard/blocks/stacks/list" filename="/dashboard/blocks/stacks/list/view.php" pagetype="" description="" package="">
@@ -76,19 +77,67 @@
 				</attributekey>
 			</attributes>
         </page>
+        <!--
         <page name="Automated Jobs" path="/dashboard/system/jobs" filename="/dashboard/system/jobs.php" pagetype="" description="" package=""/>
         <page name="Backup &amp; Restore" path="/dashboard/system/backup" filename="/dashboard/system/backup.php" pagetype="" description="" package=""/>
         <page name="Update" path="/dashboard/system/update" filename="/dashboard/system/update.php" pagetype="" description="" package=""/>
         <page name="Notifications" path="/dashboard/system/notifications" filename="/dashboard/system/notifications.php" pagetype="" description="" package=""/>
         <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype="" description="Enable post via email and other settings." package=""/>
-        <page name="Permissions" path="/dashboard/system/permissions" filename="/dashboard/system/permissions/view.php" pagetype="" description="Change who can edit your site, and how they can do it." package=""/>
+        <page name="Permissions &amp; Access" path="/dashboard/system/permissions" filename="/dashboard/system/permissions/view.php" pagetype="" description="Change who can edit your site, and how they can do it." package=""/>
         <page name="File Permissions" path="/dashboard/system/permissions/files" filename="/dashboard/system/permissions/files.php" pagetype="" description="Setup how users can access your site's files." package=""/>
 		<page name="Login &amp; Registration" path="/dashboard/system/registration" filename="/dashboard/system/registration.php" pagetype="" description="" package=""/>
+		//-->
+
+        <page name="Appearance" path="/dashboard/system/appearance" filename="/dashboard/system/appearance/view.php" pagetype="" description="Control your site name and bookmark icons." package=""/>
+        <page name="Site Name" path="/dashboard/system/appearance/site_name" filename="/dashboard/system/appearance/site_name.php" pagetype="" description="" package=""/>
+        <page name="Bookmark Icons" path="/dashboard/system/appearance/icons" filename="/dashboard/system/appearance/icons.php" pagetype="" description="Bookmark icon and mobile home screen icon setup." package=""/>
+        <page name="Time Zone" path="/dashboard/system/appearance/timezone" filename="/dashboard/system/appearance/timezone.php" pagetype="" description="" package=""/>
+
+        <page name="SEO &amp; Statistics" path="/dashboard/system/seo" filename="/dashboard/system/seo/view.php" pagetype="" description="Enable pretty URLs, statistics and tracking codes." package=""/>
+        <page name="Pretty URLs" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php" pagetype="" description="" package=""/>
+        <page name="Tracking Codes" path="/dashboard/system/seo/tracking_codes" filename="/dashboard/system/seo/tracking_codes.php" pagetype="" description="" package=""/>
+        <page name="Enable Statistics" path="/dashboard/system/seo/statistics" filename="/dashboard/system/seo/statistics.php" pagetype="" description="" package=""/>
+
+        <page name="Editing" path="/dashboard/system/editing" filename="/dashboard/system/editing/view.php" pagetype="" description="Control how your site is edited." package=""/>
+        <page name="Rich Text Editor" path="/dashboard/system/editing/editor" filename="/dashboard/system/editing/editor.php" pagetype="" description="" package=""/>
+        <page name="Languages" path="/dashboard/system/editing/multilingual" filename="/dashboard/system/editing/multilingual/view.php" pagetype="" description="" package=""/>
+
+        <page name="Optimization &amp; Maintenance" path="/dashboard/system/maintenance" filename="/dashboard/system/maintenance/view.php" pagetype="" description="Keep your site running well." package=""/>
+        <page name="Cache &amp; Speed Settings" path="/dashboard/system/maintenance/cache" filename="/dashboard/system/maintenance/cache.php" pagetype="" description="" package=""/>
+        <page name="Automated Jobs" path="/dashboard/system/maintenance/jobs" filename="/dashboard/system/maintenance/jobs.php" pagetype="" description="" package=""/>
+        <page name="Maintenance Mode" path="/dashboard/system/maintenance/mode" filename="/dashboard/system/maintenance/mode.php" pagetype="" description="" package=""/>
+        <page name="Notifications" path="/dashboard/system/maintenance/notifications" filename="/dashboard/system/maintenance/notifications.php" pagetype="" description="" package=""/>
+        <page name="Update concrete5" path="/dashboard/system/maintenance/update" filename="/dashboard/system/maintenance/update.php" pagetype="" description="" package=""/>
+        <page name="Backup Database" path="/dashboard/system/maintenance/backup" filename="/dashboard/system/maintenance/backup.php" pagetype="" description="" package=""/>
+
+        <page name="Permissions &amp; Access" path="/dashboard/system/permissions" filename="/dashboard/system/permissions/view.php" pagetype="" description="Control who sees and edits your site." package=""/>
+        <page name="Site Access" path="/dashboard/system/permissions/site" filename="/dashboard/system/permissions/site.php" pagetype="" description="" package=""/>
+        <page name="File Permissions" path="/dashboard/system/permissions/file" filename="/dashboard/system/permissions/file.php" pagetype="" description="" package=""/>
+        <page name="Task Permissions" path="/dashboard/system/permissions/tasks" filename="/dashboard/system/permissions/tasks.php" pagetype="" description="" package=""/>
+        <page name="IP Blacklist" path="/dashboard/system/permissions/ip_blacklist" filename="/dashboard/system/permissions/ip_blacklist.php" pagetype="" description="" package=""/>
+
+        <page name="Login &amp; Registration" path="/dashboard/system/registration" filename="/dashboard/system/registration/view.php" pagetype="" description="Change login behaviors and setup public profiles." package=""/>
+        <page name="Post-Login Settings" path="/dashboard/system/registration/postlogin" filename="/dashboard/system/registration/postlogin.php" pagetype="" description="" package=""/>
+        <page name="Public Profiles" path="/dashboard/system/registration/profiles" filename="/dashboard/system/registration/profiles.php" pagetype="" description="" package=""/>
+        <page name="Public Registration" path="/dashboard/system/registration/public_registration" filename="/dashboard/system/registration/public_registration.php" pagetype="" description="" package=""/>
+
+        <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype="" description="Control how your site send and processes mail." package=""/>
+        <page name="SMTP Method" path="/dashboard/system/mail/method" filename="/dashboard/system/mail/method.php" pagetype="" description="" package=""/>
+        <page name="Importers" path="/dashboard/system/mail/importers" filename="/dashboard/system/mail/importers.php" pagetype="" description="" package=""/>
+
+        <page name="Attributes" path="/dashboard/system/attributes" filename="/dashboard/system/attributes/view.php" pagetype="" description="Setup attributes for pages, users, files and more." package=""/>
+        <page name="Sets" path="/dashboard/system/attributes/sets" filename="/dashboard/system/attributes/sets.php" pagetype="" description="Group attributes into sets for easier organization" package=""/>
+        <page name="Types" path="/dashboard/system/attributes/types" filename="/dashboard/system/attributes/types.php" pagetype="" description="Choose which attribute types are available for different items." package=""/>
+	
+        <page name="Developer" path="/dashboard/system/developer" filename="/dashboard/system/developer/view.php" pagetype="" description="Advanced settings for web developers." package=""/>
+        <page name="Environment Information" path="/dashboard/system/developer/environment" filename="/dashboard/system/developer/environment.php" pagetype="" description="" package=""/>
+        <page name="Export Database XML" path="/dashboard/system/developer/database" filename="/dashboard/system/developer/database.php" pagetype="" description="" package=""/>
+        <page name="Debug Settings" path="/dashboard/system/developer/debug" filename="/dashboard/system/developer/debug.php" pagetype="" description="" package=""/>
+        <page name="Logging Settings" path="/dashboard/system/developer/logging" filename="/dashboard/system/developer/logging.php" pagetype="" description="" package=""/>
+
 		<page name="Download File" path="/download_file" filename="/download_file.php" pagetype="" description="" package=""/>
         <page name="Members" path="/members" filename="/members.php" pagetype="" description="" package=""/>
         <page name="Composer" path="/dashboard/pages/types/composer" filename="/dashboard/pages/types/composer.php" pagetype="" description="" package=""/>
-        <page name="Multilingual Settings" path="/dashboard/system/multilingual" filename="/dashboard/system/multilingual/view.php" pagetype="" description="" package=""/>
-        <page name="Attribute Sets" path="/dashboard/system/attribute_sets" filename="/dashboard/system/attribute_sets/view.php" pagetype="" description="" package=""/>
     </singlepages>
     <stacks>
         <stack name="Header Nav" type="global_area">

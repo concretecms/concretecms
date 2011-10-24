@@ -58,7 +58,7 @@ $disp .= '$(function() {'."\n";
 $disp .= '	$("div.message").animate({'."\n";
 $disp .= "		backgroundColor: 'white'"."\n";
 $disp .= "	}, 'fast').animate({"."\n";
-$disp .= "		backgroundColor: '#eeeeee'"."\n";
+$disp .= "		backgroundColor: '#DDF4FB'"."\n";
 $disp .= "	}, 'fast');"."\n";
  if ($dashboard->getCollectionID() == $c->getCollectionID()) {
 		$disp .= "ccm_dashboardRequestRemoteInformation();"."\n";
@@ -151,7 +151,7 @@ print $dh->getDashboardAndSearchMenus();
 	
 	if (isset($message)) { ?>
 		<div class="ccm-ui"><div class="row">
-			<div class="block-message alert-message info success"><?=Loader::helper('text')->entities($message)?></div>
+			<div class="message block-message alert-message info success"><?=Loader::helper('text')->entities($message)?></div>
 			</div>
 			</div>
 	<? } ?>

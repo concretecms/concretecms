@@ -543,6 +543,7 @@ table td.ccm-marketplace-list-thumbnail{width:97px;height:97px;}
 table#ccm-search-form-table{width:100%;}
 div#ccm-search-results em.ccm-highlight-search{background-color:#FFF9BB;padding:4px;font-weight:bold;font-style:normal;}
 div#ccm-list-wrapper div.ccm-paging-top,div#ccm-list-wrapper div#ccm-list-none{padding-top:5px;position:static;}
+div.ccm-paging-top{font-size:13px;padding-top:0px;padding-bottom:5px;font-weight:bold;color:#bfbfbf;text-transform:uppercase;}
 div#ccm-list-wrapper div.ccm-pagination{font-size:14px;padding:0px;margin-top:12px;margin-bottom:12px;position:static;}
 div#ccm-list-wrapper div.ccm-pagination span.ccm-page-left{position:static;float:left;text-align:left;display:block;width:100px;}
 div#ccm-list-wrapper div.ccm-pagination span.ccm-page-right{position:static;float:right;text-align:right;display:block;width:100px;}
@@ -608,7 +609,7 @@ div#tree ul li img.handle{position:absolute;top:0px;left:0px;}
 div#tree ul li img.moveable{cursor:move;}
 li.tree-node{position:relative;background-color:transparent;background-repeat:no-repeat;background-attachment:scroll;background-position:left top;height:auto;}
 div#ccm-sitemap-message{display:none;}
-div.ccm-sitemap-explore{margin-left:0px !important;}
+div.ccm-sitemap-explore{margin-left:12px !important;}
 div.ccm-sitemap-explore ul li{padding-bottom:4px !important;border-bottom:1px solid #ededed;margin-bottom:4px !important;padding-left:20px !important;}
 div.ccm-dialog-window li.ccm-sitemap-navigate-up a span,div.ccm-pane-controls li.ccm-sitemap-navigate-up a span{color:#003c8a;}
 div.ccm-sitemap-explore ul li.ccm-sitemap-explore-paging{border-bottom:0px;margin-top:16px;font-weight:bold;}
@@ -617,8 +618,6 @@ a.ccm-icon-sitemap-search span{background-position:9px 6px !important;}
 a.ccm-tree-search-trigger{display:none;vertical-align:middle;margin-left:3px;}
 li.tree-node-document{background-image:url(../images/dashboard/sitemap/document.png);}
 li.tree-node-folder,li.tree-node-folder-explore{background-image:url(../images/dashboard/sitemap/folder.png);}
-li.tree-node-folder-explore img:hover{background-image:url(../images/dashboard/sitemap/folder_into.png);}
-div.ccm-sitemap-explore li.tree-node img,li.tree-node-folder-explore img{cursor:move;}
 li.tree-node-loading{background-image:url(../images/dashboard/sitemap/loading.gif) !important;}
 ul.ccm-sitemap-search-results{margin-left:17px !important;}
 form.ccm-tree-search{margin-top:2px;background:#e3e3e3;width:160px;padding:4px;font-size:10px;display:none;position:relative;}
@@ -703,6 +702,7 @@ h1#ccm-dashboard-welcome-back span{padding:0px;background:none;-webkit-border-to
 .ccm-pane-options-permanent-search label{margin-left:0px;width:auto;}
 .ccm-pane-options-permanent-search div.input{margin-left:10px;float:left;}
 .ccm-pane-options ul.tabs li.active a{background-color:#f1f1f1;}
+.ccm-pane>form{margin-bottom:0px;}
 .ui-dialog #ccm-list-wrapper{margin-top:10px;}
 .ccm-pane-footer a,.ccm-pane-dialog-pagination a{color:#333;text-decoration:none;font-weight:bold;padding:1px;}
 .ccm-pane-footer span,.ccm-pane-dialog-pagination span{color:#999;padding:1px;}
@@ -714,7 +714,7 @@ h1#ccm-dashboard-welcome-back span{padding:0px;background:none;-webkit-border-to
 .ccm-pane-footer:before,.ccm-pane-footer:after{display:table;content:"";}
 .ccm-pane-footer:after{clear:both;}
 .ccm-pane-footer .ccm-button-v2-right{float:right;margin-left:10px;}
-#ccm-dialog-loader-wrapper{display:none;font-size:14px;color:#555;z-index:2000;position:absolute;border:3px solid #afafaf;padding:10px;background-color:#fff;-webkit-border-radius:6px;border-radius:6px;-moz-border-radius:6px;text-align:center;}
+#ccm-dialog-loader-wrapper{display:none;font-size:14px;color:#555;z-index:2000;position:fixed;border:3px solid #afafaf;padding:10px;background-color:#fff;-webkit-border-radius:6px;border-radius:6px;-moz-border-radius:6px;text-align:center;}
 #ccm-dialog-loader{margin:auto;}
 #ccm-dialog-loader-text{margin-bottom:6px;}
 div.ccm-editor-controls-right-cap{background:transparent url(../images/bg_editor_concrete_controls_cap_right.png) no-repeat right;}

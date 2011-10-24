@@ -95,20 +95,27 @@ $gResults = $gl->getPage();
 
 ?>
 
-<h1><span><?=t('Groups')?></span></h1>
-<div class="ccm-dashboard-inner">
-
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Groups'), false, 'span12 offset2', false)?>
 <?
 $tp = new TaskPermission();
 if ($tp->canAccessGroupSearch()) { ?>
 
-<form id="ccm-group-search" method="get" style="top: -30px; left: 10px" action="<?=$this->url('/dashboard/users/groups')?>">
-<div id="ccm-group-search-fields">
-<input type="text" id="ccm-group-search-keywords" name="gKeywords" value="<?=htmlentities($_REQUEST['gKeywords'])?>" class="ccm-text" style="width: 100px" />
-<input type="submit" value="<?=t('Search')?>" />
+<div class="ccm-pane-options">
+<div class="ccm-pane-options-permanent-search">
+<form method="get" action="<?=$this->url('/dashboard/users/groups')?>">
+<div class="span7">
+<? $form = Loader::helper('form'); ?>
+<?=$form->label('gKeywords', t('Keywords'))?>
+<div class="input">
+	<input type="text" name="gKeywords" value="<?=htmlentities($_REQUEST['gKeywords'])?>"  />
+	<input class="btn" type="submit" value="<?=t('Search')?>" />
+</div>
 <input type="hidden" name="group_submit_search" value="1" />
 </div>
 </form>
+</div>
+</div>
+<div class="ccm-pane-body <? if (!$gl->requiresPaging()) { ?> ccm-pane-body-footer <? } ?>">
 
 <? if (count($gResults) > 0) { 
 	$gl->displaySummary();
@@ -125,101 +132,25 @@ foreach ($gResults as $g) { ?>
 
 <? }
 
-	$gl->displayPaging();
-
 } else { ?>
 
 	<p><?=t('No groups found.')?></p>
 	
 <? } ?>
+</div>
+<? if ($gl->requiresPaging()) { ?>
+<div class="ccm-pane-footer">
+	<?=$gl->displayPaging();?>
+</div>
+<? } ?>
 
 <? } else { ?>
+<div class="ccm-pane-body ccm-pane-body-footer">
 	<p><?=t('You do not have access to group search. This setting may be changed in the access section of the dashboard settings page.')?></p>
-
+</div>
 <? } ?>
-</div>
 
-<h1><span><?=t('Add Group')?> (<em class="required">*</em> - <?=t('required field')?>)</span></h1>
-
-<div class="ccm-dashboard-inner">
-
-<form method="post" id="add-group-form" action="<?=$this->url('/dashboard/users/groups/')?>">
-<?=$valt->output('add_or_update_group')?>
-<div style="margin:0px; padding:0px; width:100%; height:auto" >	
-<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
-<tr>
-	<td class="subheader"><?=t('Name')?> <span class="required">*</span></td>
-</tr>
-<tr>
-	<td><input type="text" name="gName" style="width: 100%" value="<?=htmlentities($_POST['gName'])?>" /></td>
-</tr>
-<tr>
-	<td class="subheader"><?=t('Description')?></td>
-</tr>
-<tr>
-	<td><textarea name="gDescription" style="width: 100%; height: 120px"><?=$_POST['gDescription']?></textarea></td>
-</tr>
-<tr>
-	<td class="subheader"><?=t("Group Expiration Options")?></td>
-</tr>
-<? $form = Loader::helper('form'); ?>
-<? $date = Loader::helper('form/date_time'); ?>
-<?
-$style = 'width: 60px';
-?>
-<tr>	
-	<td><?=$form->checkbox('gUserExpirationIsEnabled', 1, false)?>
-	<?=t('Automatically remove users from this group')?>
-	
-	<?=$form->select("gUserExpirationMethod", array(
-		'SET_TIME' => t('at a specific date and time'),
-			'INTERVAL' => t('once a certain amount of time has passed')
-		
-	), array('disabled' => true));?>	
-	
-	<div id="gUserExpirationSetTimeOptions" style="display: none">
-	<br/>
-	<h2><?=t('Expiration Date')?></h2>
-	<?=$date->datetime('gUserExpirationSetDateTime')?>
-	</div>
-	<div id="gUserExpirationIntervalOptions" style="display: none">
-	<br/>
-	<h2><?=t('Accounts will Expire After')?></h2>
-	<table border="0" cellspacing="0" cellpadding="0">
-	<tr>
-		<td valign="top"><strong><?=t('Days')?></strong><br/>
-		<?=$form->text('gUserExpirationIntervalDays', array('style' => $style))?>
-		</td>
-		<td valign="top"><strong><?=t('Hours')?></strong><br/>
-		<?=$form->text('gUserExpirationIntervalHours', array('style' => $style))?>
-		</td>
-		<td valign="top"><strong><?=t('Minutes')?></strong><br/>
-		<?=$form->text('gUserExpirationIntervalMinutes', array('style' => $style))?>
-		</td>
-	</tr>
-	</table>
-	</div>
-	<div id="gUserExpirationAction" style="display: none">
-	<br/>
-	<h2><?=t('Expiration Action')?></h2>
-		<?=$form->select("gUserExpirationAction", array(
-		'REMOVE' => t('Remove the user from this group'),
-			'DEACTIVATE' => t('Deactivate the user account'),
-			'REMOVE_DEACTIVATE' => t('Remove the user from the group and deactivate the account')
-		
-	));?>	
-
-	</div>
-	</td>
-</tr>
-<tr>
-	<td class="header"><input type="hidden" name="add" value="1" /><?=$ih->submit(t('Add'), 'add-group-form')?></td>
-</tr>
-</table>
-</div>
-<br>
-</form>	
-</div>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
 
 <? } else { ?>
 	<h1><span><?=t('Edit Group')?></span></h1>
