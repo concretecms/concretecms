@@ -126,7 +126,11 @@ class ConcreteDashboardHelper {
 				}
 				
 				
-				$ch2 = $page->getCollectionChildrenArray(true);
+				if ($page->getCollectionPath() == '/dashboard/system') {
+					$ch2 = $page->getCollectionChildrenArray();
+				} else {
+					$ch2 = $page->getCollectionChildrenArray(true);
+				}
 				?>
 				
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-onsite">
@@ -140,6 +144,11 @@ class ConcreteDashboardHelper {
 				<? } ?>
 				
 				<?
+				if ($page->getCollectionPath() == '/dashboard/system') { ?>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page)?>"><?=t('View All')?><span><?=$page->getCollectionName()?></span></li>
+				<?				
+				}
+				
 				foreach($ch2 as $chi) {
 					$subpage = Page::getByID($chi); 
 					if ($subpage->getAttribute('exclude_search_index')) {
@@ -147,7 +156,7 @@ class ConcreteDashboardHelper {
 					}
 			
 					?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage)?>"><?=$subpage->getCollectionName()?></a><span><?=$page->getCollectionName()?> <?=$subpage->getCollectionName()?></span></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage)?>"><?=$subpage->getCollectionName()?></a><span><? if ($page->getCollectionPath() != '/dashboard/system') { ?><?=$page->getCollectionName()?> <? } ?><?=$subpage->getCollectionName()?></span></li>
 					<? 
 				}
 				?>
@@ -229,7 +238,7 @@ class ConcreteDashboardHelper {
 			<div class="ccm-dashboard-overlay-inner">
 			<ul>
 			<li><a href="<?=View::url('/dashboard')?>"><strong><?=t('News')?></strong></a><?=t(' – Learn about your site and concrete5')?></li>
-			<li><a href="<?=View::url('/dashboard/settings')?>"><strong><?=t('System &amp; Settings')?></strong></a><?=t(' – Secure and setup your site.')?></li>
+			<li><a href="<?=View::url('/dashboard/system')?>"><strong><?=t('System &amp; Settings')?></strong></a><?=t(' – Secure and setup your site.')?></li>
 			<li><a href="<?=View::url('/dashboard/extend')?>"><strong><?=t('Extend concrete5')?></strong></a> – <a href="<?=View::url('/dashboard/extend/install')?>"><?=t('Install')?></a>, <a href="<?=View::url('/dashboard/extend/update')?>"><?=t('update')?></a> <?=t('or download more')?> <a href="<?=View::url('/dashboard/extend/themes')?>"><?=t('themes')?></a> <?=t('and')?> <a href="<?=View::url('/dashboard/extend/add-ons')?>"><?=t('add-ons')?></a>.</li>
 			</ul>
 			</div>

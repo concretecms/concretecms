@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die("Access Denied.");?>
 <? if (in_array($this->controller->getTask(), array('update_set', 'update_set_attributes', 'edit', 'delete_set'))) { ?>
 
 <h1><span><?=t('Set Attributes')?></span></h1>

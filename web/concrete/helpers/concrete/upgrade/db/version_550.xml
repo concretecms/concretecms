@@ -33,6 +33,75 @@
     </field>
   </table>
 
+  <table name="CollectionVersionBlocks">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="1"/>
+      <UNSIGNED/>
+    </field>
+    <field name="bID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="arHandle" type="C" size="255">
+      <KEY/>
+    </field>
+    <field name="cbDisplayOrder" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED />
+    </field>
+    <field name="isOriginal" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED />
+    </field>
+    <field name="cbOverrideAreaPermissions" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="cbIncludeAll" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="cbIncludeAll">
+      <col>cbIncludeAll</col>
+    </index>
+    <index name="isOriginal">
+    	<col>isOriginal</col>
+    </index>
+    <index name="bID">
+      <col>bID</col>
+    </index>
+  </table>
+
+	<table name="btFormAnswerSet">
+		<field name="asID" type="I">
+			<key />
+			<autoincrement />
+			<unsigned />
+		</field>
+		<field name="questionSetId" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<field name="created" type="T">
+			<deftimestamp />
+		</field>
+		<field name="uID" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<index name="questionSetId">
+			<col>questionSetId</col>
+		</index>
+	</table>
 	
 
 </schema>

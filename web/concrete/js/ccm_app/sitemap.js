@@ -373,9 +373,12 @@ activateLabels = function(instance_id, display_mode, select_mode) {
 			});
 		});
 	}
-	if (display_mode == 'full' && (!select_mode)) {
+	if ((display_mode == 'explore' || display_mode == 'full') && (!select_mode)) {
 		smwrapper.find('img.handle').addClass('moveable');
-
+	}
+	
+	if (display_mode == 'full' && (!select_mode)) {
+	
 		//drop onto a page
 		smwrapper.find('div.tree-label').droppable({
 			accept: '.tree-node',

@@ -453,6 +453,9 @@
     <index name="isOriginal">
     	<col>isOriginal</col>
     </index>
+    <index name="bID">
+      <col>bID</col>
+    </index>
   </table>
 
   <table name="CollectionVersionBlockStyles">

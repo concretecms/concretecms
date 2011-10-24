@@ -1,9 +1,10 @@
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('System &amp; Settings'));?>
+<form>
 <?
 foreach($categories as $cat) { ?>
 
-	<div class="ccm-dashboard-system-category">
+	<div class="page-header">
 	<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat)?>"><?=$cat->getCollectionName()?></a>
 	<small><?=$cat->getCollectionDescription()?></small>
 	</h3>
@@ -22,12 +23,12 @@ foreach($categories as $cat) { ?>
 	
 	if (count($show) > 0) { ?>
 	
-	<div class="ccm-dashboard-system-category-inner">
+	<div class="clearfix">
 	
 	<? foreach($show as $subcat) { ?>
 	
 	<div class="span4">
-		<a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat)?>"><?=$subcat->getCollectionName()?></a>
+		<a href="<?=Loader::helper('navigation')->getLinkToCollection($cat)?>"><?=$subcat->getCollectionName()?></a>
 	</div>
 	
 	<? } ?>
