@@ -42,7 +42,8 @@ class StartingPointPackage extends Package {
 		foreach($blocks as $b) {
 			$bi = $b->getInstance();
 			$bi->setupAndRun('view');
-		}	}
+		}
+	}
 	
 	public function install_blocks_attributes_permissions_jobs() {
 		Loader::library('content/importer');

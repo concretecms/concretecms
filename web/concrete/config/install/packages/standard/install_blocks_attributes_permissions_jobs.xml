@@ -70,6 +70,7 @@
         <blocktype handle="core_stack_display" package=""/>
         <blocktype handle="dashboard_featured_addon" package=""/>
         <blocktype handle="dashboard_featured_theme" package=""/>
+        <blocktype handle="dashboard_newsflow_latest" package=""/>
         <blocktype handle="dashboard_app_status" package=""/>
         <blocktype handle="dashboard_form_summary" package=""/>
         <blocktype handle="autonav" package=""/>
