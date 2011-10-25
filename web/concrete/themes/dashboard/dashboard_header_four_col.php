@@ -4,7 +4,7 @@ $this->inc('elements/header.php', array('enableEditing' => true));
 ?>
 
 <div class="ccm-ui">
-<div id="newsflow">
+<div class="newsflow" id="newsflow-main">
 <? $this->inc('elements/header_newsflow.php'); ?>
 <table>
 <tr>

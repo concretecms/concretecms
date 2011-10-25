@@ -196,7 +196,7 @@ define('BLOCK_HANDLE_SCRAPBOOK_PROXY', 'core_scrapbook_display');
 # Stacks
 define('STACKS_PAGE_PATH', '/dashboard/blocks/stacks/list');
 define('STACKS_AREA_NAME', 'Main');
-define('STACKS_PAGE_FILENAME', '/dashboard/blocks/stacks/detail.php');
+define('STACKS_PAGE_FILENAME', '/dashboard/blocks/tacks/detail.php');
 define('BLOCK_HANDLE_STACK_PROXY', 'core_stack_display');
 
 # Hosted assets are assets shared amongst all Concrete5 installations on a single machine.
@@ -476,6 +476,13 @@ define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
 //Main Concrete Site - For Marketplace, Knowledge Base, etc.
 if (!defined('CONCRETE5_ORG_URL')) {
 	define('CONCRETE5_ORG_URL', 'http://www.concrete5.org');
+}
+if (!defined('NEWSFLOW_URL')) {
+	define('NEWSFLOW_URL', 'http://newsflow');
+}
+
+if (!defined('ENABLE_APP_NEWS')) {
+	define('ENABLE_APP_NEWS', true);
 }
 
 define('MARKETPLACE_BASE_URL_SITE_PAGE', CONCRETE5_ORG_URL.'/private/sites');

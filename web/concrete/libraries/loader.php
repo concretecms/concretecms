@@ -511,7 +511,7 @@
 				}
 			}
 			
-			if (is_object($c)) {
+			if (isset($c) && is_object($c)) {
 				$controller->setCollectionObject($c);
 			}
 			

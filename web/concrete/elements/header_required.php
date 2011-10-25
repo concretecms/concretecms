@@ -89,8 +89,6 @@ if (is_object($cp)) {
 	$cih = Loader::helper('concrete/interface');
 	if ($cih->showNewsflowOverlay()) {
 		$this->addFooterItem('<script type="text/javascript">$(function() { ccm_showNewsflow(); });</script>');
-		$u = new User();
-		$u->saveConfig('NEWSFLOW_LAST_VIEWED', time());
 	}	
 	if (!Config::get('SHOW_INTRODUCTION')) {
 		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_showAppIntroduction(); });</script>');

@@ -331,7 +331,7 @@
 						<content><![CDATA[<div class="newsflow-column-first-run">
 							<h3>Building Your Own Site</h3>
 							<p>If you’re comfortable in PHP concrete5 should be a breeze to learn. Take a few moments to understand the architecture.</p>
-							<p><a href="" class="btn primary">Editor's Guide</a></p>
+							<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/editors')" class="btn primary">Editor's Guide</a></p>
 							</div>]]></content>
 						</record>
 					</data>
@@ -344,7 +344,7 @@
 						<content><![CDATA[<div class="newsflow-column-first-run">
 							<h3>Developing Applications</h3>
 							<p>If you’re comfortable in PHP concrete5 should be a breeze to learn. Take a few moments to understand the architecture.</p>
-							<p><a href="" class="btn primary">Developer's Guide</a></p>
+							<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/developers')" class="btn primary">Developer's Guide</a></p>
 							</div>]]></content>
 						</record>
 					</data>
@@ -357,7 +357,7 @@
 						<content><![CDATA[<div class="newsflow-column-first-run">
 							<h3>Designing Websites</h3>
 							<p>Good with CSS and HTML? You can easily theme anything with concrete5.</p>
-							<p><a href="" class="btn primary">Designer's Guide</a></p>
+							<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/designers')" class="btn primary">Designer's Guide</a></p>
 							</div>]]></content>
 						</record>
 					</data>
@@ -371,7 +371,7 @@
 						<div class="newsflow-column-first-run">
 						<h3>Business Background</h3>
 						<p>Worried about license structures, white-labeling or why concrete5 is a good choice for your agency?</p>
-						<p><a href="" class="btn primary">Executive's Guide</a></p>
+						<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/executives')" class="btn primary">Executive's Guide</a></p>
 						</div>]]></content>
 						</record>
 					</data>
@@ -424,16 +424,10 @@
 				<block type="dashboard_featured_theme" name=""/>
 			</area>
 			<area name="Secondary 4">
-				<block type="content" name="">
-					<data table="btContentLocal">
-						<record>
-							<content><![CDATA[<p>Tip of the day</p>]]></content>
-						</record>
-					</data>
-				</block>
+				<block type="dashboard_featured_addon" name=""/>
 			</area>
 			<area name="Secondary 5">
-				<block type="dashboard_featured_addon" name=""/>
+				<block type="dashboard_newsflow_latest" name=""/>
 			</area>
 		</page>
         <page name="Home" path="" filename="" pagetype="right_sidebar" description="" package="">

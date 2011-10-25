@@ -14,7 +14,7 @@ if ($tp->canInstallPackages()) {
 
 
 <? if ($_GET['_ccm_dashboard_external']) { ?>
-	<div id="newsflow">
+	<div class="newsflow">
 	<ul class="ccm-pane-header-icons">
 		<li><a href="javascript:void(0)" onclick="ccm_closeNewsflow()" class="ccm-icon-close"><?=t('Close')?></a></li>
 	</ul>
@@ -31,8 +31,8 @@ if ($tp->canInstallPackages()) {
 <? } ?>
 
 <? if (!$_REQUEST['mpID']) { ?>
-<div id="newsflow-paging-previous"><span><a href="javascript:void(0)" onclick="ccm_marketplaceBrowserSelectPrevious()"></a></span></div>
-<div id="newsflow-paging-next"><span><a href="javascript:void(0)" onclick="ccm_marketplaceBrowserSelectNext()"></a></span></div>
+<div class="newsflow-paging-previous"><span><a href="javascript:void(0)" onclick="ccm_marketplaceBrowserSelectPrevious()"></a></span></div>
+<div class="newsflow-paging-next"><span><a href="javascript:void(0)" onclick="ccm_marketplaceBrowserSelectNext()"></a></span></div>
 <? } ?>
 
 </div>
