@@ -83,6 +83,8 @@
 				theme_concrete_resize_horizontal : 1,
 				theme_concrete_resizing_use_cookie : 1,
 				theme_concrete_font_sizes : "1,2,3,4,5,6,7",
+				theme_concrete_font_selector : "span",
+				theme_concrete_show_current_color: 0,
 				readonly : ed.settings.readonly
 			}, ed.settings);
 
@@ -121,6 +123,9 @@
 			if (s.theme_concrete_statusbar_location == 'none')
 				s.theme_concrete_statusbar_location = 0;
 
+			if (ed.settings.content_css !== false)
+				ed.contentCSS.push(ed.baseURI.toAbsolute(url + "/skins/" + ed.settings.skin + "/content.css"));
+
 			// Init editor
 			ed.onInit.add(function() {
 				if (!ed.settings.readonly) {
@@ -131,10 +136,6 @@
 						t._updateUndoStatus(ed);
 					});
 				}
-
-				if (ed.settings.content_css !== false)
-					ed.dom.loadCSS(ed.baseURI.toAbsolute("themes/concrete/skins/" + ed.settings.skin + "/content.css"));
-
 			});
 
 			ed.onSetProgressState.add(function(ed, b, ti) {
@@ -868,7 +869,7 @@
 			
 
 			if (s.theme_concrete_resizing) {
-				DOM.add(td, 'a', {id : ed.id + '_resize', href : 'javascript:;', onclick : "return false;", 'class' : 'mceResize'});
+				DOM.add(td, 'a', {id : ed.id + '_resize', href : 'javascript:;', onclick : "return false;", 'class' : 'mceResize', tabIndex:"-1"});
 
 				if (s.theme_concrete_resizing_use_cookie) {
 					ed.onPostRender.add(function() {
