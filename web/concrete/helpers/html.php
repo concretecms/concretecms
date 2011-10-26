@@ -18,6 +18,27 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 class HtmlHelper {
+	
+	protected $legacyJavascript = array(
+		'ccm.dialog.js' => 'ccm.app.js',
+		'jquery.metadata.js' => 'ccm.app.js',
+		'ccm.themes.js' => 'ccm.app.js',
+		'ccm.filemanager.js' => 'ccm.app.js',
+		'jquery.rating.js' => 'ccm.app.js',
+		'jquery.colorpicker.js' => 'ccm.app.js',
+		'jquery.liveupdate.js' => 'ccm.app.js',
+		'ccm.ui.js' => 'ccm.app.js',
+		'ccm.search.js' => 'ccm.app.js'
+	);
+	protected $legacyCSS = array(
+		'ccm.dialog.css' => 'ccm.app.css',
+		'ccm.ui.css' => 'ccm.app.css',
+		'ccm.forms.css' => 'ccm.app.css',
+		'ccm.menus.css' => 'ccm.app.css',
+		'ccm.search.css' => 'ccm.app.css',
+		'ccm.filemanager.css' => 'ccm.app.css',
+		'ccm.calendar.css' => 'ccm.app.css'
+	);
 
 	/** 
 	 * Includes a CSS file. This function looks in several places. 
@@ -53,6 +74,9 @@ class HtmlHelper {
 			if (file_exists(DIR_BASE . '/' . DIRNAME_CSS . '/' . $file)) {
 				$css->file = DIR_REL . '/' . DIRNAME_CSS . '/' . $file;
 			} else {
+				if (isset($this->legacyCSS[$file])) {
+					$file = $this->legacyCSS[$file];
+				}
 				$css->file = ASSETS_URL_CSS . '/' . $file;
 			}
 		}
@@ -95,6 +119,9 @@ class HtmlHelper {
 		}
 			
 		if ($js->file == '') {
+			if (isset($this->legacyJavascript[$file])) {
+				$file = $this->legacyJavascript[$file];
+			}
 			$js->file = ASSETS_URL_JAVASCRIPT . '/' . $file;
 		}
 

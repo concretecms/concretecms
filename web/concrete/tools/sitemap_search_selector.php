@@ -6,7 +6,7 @@ if (!$sh->canRead()) {
 }
 
 ?>
-<div class="ccm-ui">
+<div class="ccm-ui" id="ccm-sitemap-search-selector">
 <script type="text/javascript">
 var ccm_ssActiveTab = "ccm-show-sitemap";
 
@@ -21,8 +21,8 @@ $("#ccm-ss-tabs a").click(function() {
 </script>
 
 <ul class="tabs" id="ccm-ss-tabs">
-<li class="active"><a href="javascript:void(0)" id="ccm-show-sitemap" onclick="$('.ui-dialog-buttonpane').hide()"><?=t('Sitemap')?></a></li>
-<li><a href="javascript:void(0)" id="ccm-show-search" onclick="$('.ui-dialog-buttonpane').show()"><?=t('Search')?></a></li>
+<li class="active"><a href="javascript:void(0)" id="ccm-show-sitemap" onclick="ccm_sitemapSearchSelectorHideBottom()"><?=t('Sitemap')?></a></li>
+<li><a href="javascript:void(0)" id="ccm-show-search" onclick="ccm_sitemapSearchSelectorShowBottom()"><?=t('Search')?></a></li>
 </ul>
 
 <br/>
@@ -43,7 +43,17 @@ include(DIR_FILES_TOOLS_REQUIRED . '/pages/search_dialog.php'); ?>
 </div>
 </div>
 
-<script type="text/javascript">$(function() {
-	$('.ui-dialog-buttonpane').hide();
+<script type="text/javascript">
+ccm_sitemapSearchSelectorHideBottom = function() {
+	$('#ccm-sitemap-search-selector').parent().parent().find('.ui-dialog-buttonpane').hide();
+}
+
+ccm_sitemapSearchSelectorShowBottom = function() {
+	$('#ccm-sitemap-search-selector').parent().parent().find('.ui-dialog-buttonpane').show();
+}
+
+
+$(function() {
+	ccm_sitemapSearchSelectorHideBottom();
 });
 </script>

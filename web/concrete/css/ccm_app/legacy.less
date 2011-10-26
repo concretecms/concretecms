@@ -1,3 +1,74 @@
 /** 
  * CSS we put in place to not completely break items that have been built prior to 5.5
  */
+ 
+.ccm-dialog-tabs {
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+  .clearfix();
+  > li {
+    float: left;
+    > a {
+      display: block;
+    }
+  }
+}
+
+// Basic Tabs
+.ccm-dialog-tabs {
+  float: left;
+  width: 100%;
+  margin: 0px 0px 20p 0px;
+  border-bottom: 1px solid #ddd !important;
+  > li {
+	list-style-type: none;
+    margin: 0px;
+    position: relative; // For the dropdowns mostly
+    top: 1px;
+    > a {
+      padding: 0 15px;
+      margin-right: 2px;
+      line-height: @baseline * 2;
+      color: @linkColor;
+      text-decoration: none;
+      border: 1px solid transparent;
+      .border-radius(4px 4px 0 0);
+      &:hover {
+        text-decoration: none;
+        background-color: #eee;
+        border-color: #eee #eee #ddd;
+      }
+    }
+    &.ccm-nav-active > a {
+      color: @gray;
+      background-color: @white;
+      border: 1px solid #ddd;
+      border-bottom-color: transparent;
+    }
+  }
+  // first one for backwards compatibility
+  .menu-dropdown,
+  .dropdown-menu {
+    top: 35px;
+    border-width: 1px;
+    .border-radius(0 6px 6px 6px);
+  }
+  // first one for backwards compatibility
+  a.menu:after,
+  .dropdown-toggle:after {
+    border-top-color: #999;
+    margin-top: 15px;
+    margin-left: 5px;
+  }
+  // first one for backwards compatibility
+  li.open.menu .menu,
+  .open.dropdown .dropdown-toggle {
+    border-color: #999;
+  }
+  // first one for backwards compatibility
+  li.open a.menu:after,
+  .dropdown.open .dropdown-toggle:after {
+    border-top-color: #555;
+  }
+}
