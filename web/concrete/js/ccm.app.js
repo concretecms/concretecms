@@ -961,7 +961,10 @@
 				} else if (lutype == 'fileset') {
 					self.cache.push($(this).find('label').html().toLowerCase());
 				} else if (lutype == 'intelligent-search') {
-					self.cache.push($(this).find('span').html().toLowerCase());
+					var s = $(this).find('span').html();
+					if (s) {
+						self.cache.push(s.toLowerCase());
+					}
 				}
 				self.rows.push($(this));
 			});
@@ -4445,6 +4448,9 @@ jQuery.fn.dialog.open = function(obj) {
 	} else {
 		var buttons = false;
 	}
+	if (h > $(window).height()) {
+		h = $(window).height();
+	}
 	$("#ccm-dialog-content" + nd).jqdialog({
 		'modal': true,
 		'height': h,
@@ -4455,8 +4461,7 @@ jQuery.fn.dialog.open = function(obj) {
 		easing:"easeInExpo"
 		},
 		hide:{
-			effect:"drop", 
-			direction:"down", 
+			effect:"fade", 
 			distance:60, 
 			duration:500, 
 			easing:"easeOutExpo"
