@@ -133,7 +133,7 @@ jQuery.fn.dialog.open = function(obj) {
 					jQuery.fn.dialog.closeTop();
 				});
 				if ($("#ccm-dialog-content" + nd + " .dialog-buttons").length > 0) {
-					$("#ccm-dialog-content" + nd).parent().addClass('ccm-ui');
+					$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-buttonpane').addClass("ccm-ui");
 					$("#ccm-dialog-content" + nd + " .dialog-buttons").appendTo($("#ccm-dialog-content" + nd).parent().find('.ui-dialog-buttonpane').html(''));
 					$("#ccm-dialog-content" + nd + " .dialog-buttons").remove();
 				}
