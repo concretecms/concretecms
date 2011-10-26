@@ -179,7 +179,7 @@ $(function() {
 </script>
 
 
-<div id="ccm-add-tab">
+<div id="ccm-add-tab" class="ccm-ui">
 	<div class="ccm-block-type-search-wrapper">
 
 		<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescriptions()" title="<?=t('Learn more about this block type.')?>" id="ccm-bt-help-trigger-all"><img src="<?=ASSETS_URL_IMAGES?>/icons/icon_header_help.png" width="17" height="20" /></a>
@@ -225,11 +225,13 @@ $(function() {
 	$tp = new TaskPermission();
 	if ($tp->canInstallPackages()) { 
 	?>
+	<div class="ccm-ui">
 	<div class="well">
 	<p>
 	<?=t("You can download more blocks at the")?>
 	<a onclick="ccmBlockTypeResetKeys(); ccm_openAddonLauncher()" class="ccm-block-type-inner ccm-block-type-marketplace"><?=t('concrete5 marketplace.')?></a>
 	</p>
+	</div>
 	</div>
 <? } 
 
