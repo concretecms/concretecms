@@ -4,9 +4,7 @@
 foreach($categories as $cat) { ?>
 
 	<div class="ccm-dashboard-system-category">
-	<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat)?>"><?=$cat->getCollectionName()?></a>
-	<small><?=$cat->getCollectionDescription()?></small>
-	</h3>
+	<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat)?>"><?=$cat->getCollectionName()?></a></h3>
 	</div>
 	
 	<?

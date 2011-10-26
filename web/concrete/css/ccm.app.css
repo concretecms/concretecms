@@ -677,10 +677,10 @@ h1#ccm-dashboard-welcome-back span{padding:0px;background:none;-webkit-border-to
 .newsflow-column-first-run{padding:10px 10px 100px 10px;overflow:visible;}
 .newsflow .ccm-pane-options{-webkit-border-top-left-radius:6px;-webkit-border-top-right-radius:6px;-moz-border-radius-topleft:6px;-moz-border-radius-topright:6px;border-top-left-radius:6px;border-top-right-radius:6px;}
 .newsflow-paging-previous,.newsflow-paging-next{width:80px;padding:0px 15px 0px 15px;text-align:center;height:100%;z-index:10;position:absolute;top:0px;background-clip:padding-box;}
-.newsflow-paging-previous{left:0px;-webkit-border-top-left-radius:6px;-webkit-border-bottom-left-radius:6px;-moz-border-radius-topleft:6px;-moz-border-radius-bottomleft:6px;border-top-left-radius:6px;border-bottom-left-radius:6px;}
+.newsflow-paging-previous{left:0px;}
 .newsflow-paging-previous:hover{background:transparent url(../images/bg_newsflow_previous.png) repeat-y top left;}
 .newsflow-paging-previous:hover span,.newsflow-paging-next:hover span{display:table-cell;}
-.newsflow-paging-next{right:0px;-webkit-border-top-right-radius:6px;-webkit-border-bottom-right-radius:6px;-moz-border-radius-topright:6px;-moz-border-radius-bottomright:6px;border-top-right-radius:6px;border-bottom-right-radius:6px;}
+.newsflow-paging-next{right:0px;}
 .newsflow-paging-next:hover{background:transparent url(../images/bg_newsflow_next.png) repeat-y top right;}
 .newsflow-paging-previous span,.newsflow-paging-next span{width:80px;vertical-align:middle;display:none;}
 .newsflow-paging-previous a{width:57px;height:86px;background:transparent url(../images/newsflow_previous.png) no-repeat;display:inline-block;}
