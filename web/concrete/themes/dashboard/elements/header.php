@@ -41,6 +41,7 @@ $v->addFooterItem($html->javascript('ccm.base.js'));
 $v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 $v->addFooterItem($html->javascript('ccm.app.js'));
 $v->addFooterItem($html->javascript('ccm.dashboard.js'));
+$v->addFooterItem(Loader::helper('html')->javascript('tiny_mce/tiny_mce.js'));
 
 if (LANGUAGE != 'en') {
 	$v->addHeaderItem($html->javascript('i18n/ui.datepicker-'.LANGUAGE.'.js'));

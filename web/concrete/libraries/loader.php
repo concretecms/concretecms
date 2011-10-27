@@ -317,57 +317,6 @@
 		}
 		
 
-		/**
-		 * @access private
-		 */
-		public function dashboardModuleController($dbhHandle, $pkg = null) {
-			$class = Object::camelcase($dbhHandle . 'DashboardModuleController');
-			if (!class_exists($class)) {
-				$file1 = DIR_FILES_CONTROLLERS . '/' . DIRNAME_DASHBOARD . '/' . DIRNAME_DASHBOARD_MODULES . '/' . $dbhHandle . '.php';
-				if (is_object($pkg)) {
-					$pkgHandle = $pkg->getPackageHandle();
-					$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-					$file2 = $dir . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_DASHBOARD . '/' . DIRNAME_DASHBOARD_MODULES . '/' . $dbhHandle . '.php';
-				}
-				$file3 = DIR_FILES_CONTROLLERS_REQUIRED . '/' . DIRNAME_DASHBOARD . '/' . DIRNAME_DASHBOARD_MODULES . '/' . $dbhHandle . '.php';
-				if (file_exists($file1)) {
-					include($file1);
-				} else if (isset($file2) && file_exists($file2)) {
-					include($file2);
-				} else {
-					include($file3);
-				}
-			}
-
-			$controller = new $class();
-			return $controller;
-		}
-		
-		/** 
-		 * @access private
-		 */		
-		public function dashboardModule($dbhHandle, $pkg = null) {
-			$controller = Loader::dashboardModuleController($dbhHandle, $pkg);
-			extract($controller->getSets());
-			extract($controller->getHelperObjects());
-			$this->controller = $controller;
-
-			// now the view
-			$file1 = DIR_FILES_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/' . DIRNAME_DASHBOARD_MODULES . '/' . $dbhHandle . '.php';
-			if (is_object($pkg)) {
-				$pkgHandle = $pkg->getPackageHandle();
-				$file2 = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/' . DIRNAME_DASHBOARD_MODULES . '/' . $dbhHandle . '.php';
-			}
-			$file3 = DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_DASHBOARD . '/' . DIRNAME_DASHBOARD_MODULES . '/' . $dbhHandle . '.php';
-			if (file_exists($file1)) {
-				include($file1);
-			} else if (isset($file2) && file_exists($file2)) {
-				include($file2);
-			} else {
-				include($file3);
-			}
-		}
-		
 		/** 
 		 * Gets the path to a particular page type controller
 		 */

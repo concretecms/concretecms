@@ -179,7 +179,6 @@ class DashboardComposerWriteController extends Controller {
 	
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
-		$this->addFooterItem(Loader::helper('html')->javascript('tiny_mce/tiny_mce.js'));
 		$this->set('disableThirdLevelNav', true);
 	}
 	
