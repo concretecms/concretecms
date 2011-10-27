@@ -70,12 +70,12 @@ $v->addHeaderItem($disp);
 
 Loader::element('header_required');
 
-$backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundImage();
+$backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundImageSRC();
 ?>
 
 <script type="text/javascript">
 	$(function() {
-	    $.backstretch("<?=$backgroundImage->src?>" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
+	    $.backstretch("<?=$backgroundImage?>" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
 	    ccm_activateToolbar();
 	    $("#ccm-page-help").popover({placement: 'below', html: true, trigger: 'manual'});
 	    $('.tooltip').twipsy({placement: 'below'});

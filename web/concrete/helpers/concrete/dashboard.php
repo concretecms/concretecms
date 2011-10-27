@@ -85,24 +85,28 @@ class ConcreteDashboardHelper {
 		return $html;
 	}
 	
-	public function getDashboardBackgroundImage() {
+	public function getDashboardBackgroundImageSRC() {
 		$feed = array();
 		// this feed is an array of standard PHP objects with a SRC, a caption, and a URL
 		// allow for a custom white-label feed
+		$filename = date('Ymd') . '.jpg';
+		
 		if (defined('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED') && WHITE_LABEL_DASHBOARD_BACKGROUND_FEED != '') {
-			$contents = Loader::helper('file')->getContents(WHITE_LABEL_DASHBOARD_BACKGROUND_FEED);
+			$image = WHITE_LABEL_DASHBOARD_BACKGROUND_FEED . '/' . $filename;
 		} else if (defined('WHITE_LABEL_DASHBOARD_BACKGROUND_SRC') && WHITE_LABEL_DASHBOARD_BACKGROUND_SRC != '') {
-			$image = new stdClass;
-			$image->src = WHITE_LABEL_DASHBOARD_BACKGROUND_SRC;
-			$image->caption = WHITE_LABEL_DASHBOARD_BACKGROUND_CAPTION;
-			return $image;
+			$image = WHITE_LABEL_DASHBOARD_BACKGROUND_SRC;
 		} else {
-			$contents = Loader::helper('file')->getContents(DASHBOARD_BACKGROUND_FEED);
-			return Loader::helper('json')->decode($contents);
+			$image = DASHBOARD_BACKGROUND_FEED . '/' . $filename;
 		}
+		return $image;
 	}
 
 	public function getDashboardAndSearchMenus() {
+		if (isset($_SESSION['dashboardMenus'])) {
+			
+			return $_SESSION['dashboardMenus'];
+		}
+		
 		ob_start(); ?>
 			<div id="ccm-intelligent-search-results">
 			<?
