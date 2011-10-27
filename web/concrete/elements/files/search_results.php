@@ -114,6 +114,7 @@ if (isset($_REQUEST['searchInstance'])) {
 </div>
 
 <? if ($searchType == 'DASHBOARD') { ?>
+asdf
 </div>
 
 <div class="ccm-pane-footer">

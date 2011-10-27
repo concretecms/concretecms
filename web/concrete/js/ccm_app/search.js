@@ -61,8 +61,15 @@ ccm_deactivateSearchResults = function(searchType) {
 }
 
 ccm_activateSearchResults = function(searchType) {
-	if ($('a[name=ccm-' + searchType + '-list-wrapper-anchor]').length > 0) {
+	/*if ($('a[name=ccm-' + searchType + '-list-wrapper-anchor]').length > 0) {
 		window.location.hash = 'ccm-' + searchType + '-list-wrapper-anchor';
+	}*/
+	if ($('.ui-dialog-content').length == 0) { 
+		window.scrollTo(0,0);
+	} else {
+		$('.ui-dialog-content').each(function(i) { 
+			$(this).get(0).scrollTop = 0;
+		});
 	}
 	var obj = $("#ccm-" + searchType + "-search-loading");
 	if (obj.length == 0 || searchType == null) {
