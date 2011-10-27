@@ -622,7 +622,7 @@ ccm_alSetupFileProcessor = function() {
 
 ccm_alSubmitSingle = function(form) {
 	if ($(form).find(".ccm-al-upload-single-file").val() == '') { 
-		alert(ccmi18n_filemanager.uploadErrorChooseFile);
+		ccmAlert(ccmi18n_filemanager.uploadErrorChooseFile);
 		return false;
 	} else { 
 		$(form).find('.ccm-al-upload-single-submit').hide();
@@ -694,6 +694,7 @@ ccm_alRefresh = function(highlightFIDs, searchInstance, fileSelector) {
 		'ccm_order_by': 'fvDateAdded',
 		'ccm_order_dir': 'desc', 
 		'fileSelector': fileSelector,
+		'searchType' : ccm_alLaunchType[searchInstance],
 		'searchInstance': searchInstance
 	}, function() {
 		ccm_activateSearchResults(searchInstance);
@@ -804,7 +805,7 @@ ccm_alActivateMenu = function(obj, e) {
 			html += '<li class="ccm-menu-separator"></li>';	
 		}
 		if ($(obj).attr('ccm-file-manager-can-view') == '1') {
-			html += '<li><a class="ccm-menu-icon ccm-icon-view dialog-launch" dialog-modal="false" dialog-width="90%" dialog-height="75%" dialog-title="' + ccmi18n_filemanager.view + '" id="menuView' + fID + '" href="' + CCM_TOOLS_PATH + '/files/view?fID=' + fID + '">'+ ccmi18n_filemanager.view + '<\/a><\/li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-view dialog-launch" dialog-modal="false" dialog-append-buttons="true" dialog-width="90%" dialog-height="75%" dialog-title="' + ccmi18n_filemanager.view + '" id="menuView' + fID + '" href="' + CCM_TOOLS_PATH + '/files/view?fID=' + fID + '">'+ ccmi18n_filemanager.view + '<\/a><\/li>';
 		} else {
 			html += '<li><a class="ccm-menu-icon ccm-icon-download-menu" id="menuDownload' + fID + '" target="' + ccm_alProcessorTarget + '" href="' + CCM_TOOLS_PATH + '/files/download?fID=' + fID + '">'+ ccmi18n_filemanager.download + '<\/a><\/li>';	
 		}

@@ -15,15 +15,6 @@ if (!$fp->canRead()) {
 	die(t("Access Denied."));
 }
 ?>
-
-<div id="ccm-file-manager-download-bar">
-<form method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/download/" id="ccm-file-manager-download-form">
-<?=$form->hidden('fID', $f->getFileID()); ?>
-<?=$form->hidden('fvID', $f->getFileVersionID()); ?>
-<?=$form->submit('submit', t('Download'))?>
-</form>
-</div>
-
 <div style="text-align: center">
 
 <?
@@ -34,6 +25,14 @@ if ($to->getPackageHandle() != '') {
 	Loader::element('files/view/' . $to->getView(), array('fv' => $fv));
 }
 ?>
+</div>
+
+<div class="dialog-buttons">
+<form method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/download/" style="margin: 0px">
+<?=$form->hidden('fID', $f->getFileID()); ?>
+<?=$form->hidden('fvID', $f->getFileVersionID()); ?>
+<?=$form->submit('submit', t('Download'), array('class' => 'ccm-button-right primary'))?>
+</form>
 </div>
 
 <script type="text/javascript">
