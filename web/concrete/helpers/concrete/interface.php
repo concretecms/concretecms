@@ -220,4 +220,12 @@ class ConcreteInterfaceHelper {
 		$html .= '</div>';
 		return $html;
 	}
+	
+	public function cacheInterfaceItems() {
+		$u = new User();
+		if ($u->isRegistered()) {
+			$ch = Loader::helper('concrete/dashboard');
+			$_SESSION['dashboardMenus'] = $ch->getDashboardAndSearchMenus();
+		}
+	}
 }
