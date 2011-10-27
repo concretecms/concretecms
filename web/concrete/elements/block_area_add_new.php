@@ -182,10 +182,10 @@ $(function() {
 <div id="ccm-add-tab" class="ccm-ui">
 	<div class="ccm-block-type-search-wrapper">
 
-		<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescriptions()" title="<?=t('Learn more about this block type.')?>" id="ccm-bt-help-trigger-all"><img src="<?=ASSETS_URL_IMAGES?>/icons/icon_header_help.png" width="17" height="20" /></a>
 
 		<form onsubmit="return ccmBlockTypeSearchFormCheckResults()">
 		<div class="ccm-block-type-search">
+		<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescriptions()" title="<?=t('Learn more about this block type.')?>" id="ccm-bt-help-trigger-all"><img src="<?=ASSETS_URL_IMAGES?>/icons/icon_header_help.png" width="17" height="20" /></a>
 		<?=$form->text('ccmBlockTypeSearch', array('tabindex' => 1, 'autocomplete' => 'off', 'style' => 'width: 168px'))?>
 		<a href="javascript:void(0)" id="ccm-block-type-clear-search" onclick="ccmBlockTypeSearchClear()"><img width="16" height="16" src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" border="0" style="vertical-align: middle" /></a>
 		</div>

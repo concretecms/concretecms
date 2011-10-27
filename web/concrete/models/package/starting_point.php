@@ -17,19 +17,31 @@ class StartingPointPackage extends Package {
 	// default routines
 	
 	public function __construct() {
+		Loader::library('content/importer');
 		$this->routines = array(
-		new StartingPointInstallRoutine('make_directories', 10, t('Starting installation and creating directories.')),
-		new StartingPointInstallRoutine('install_database', 20, t('Creating database tables.')),
-		new StartingPointInstallRoutine('add_users', 45, t('Adding admin user.')),
-		new StartingPointInstallRoutine('install_blocks_attributes_permissions_jobs', 50, t('Installing block types, attributes, permissions and jobs.')),
-		new StartingPointInstallRoutine('import_files', 60, t('Importing files.')),
+		new StartingPointInstallRoutine('make_directories', 5, t('Starting installation and creating directories.')),
+		new StartingPointInstallRoutine('install_database', 10, t('Creating database tables.')),
+		new StartingPointInstallRoutine('add_users', 20, t('Adding admin user.')),
+		new StartingPointInstallRoutine('add_home_page', 23, t('Creating home page.')),
+		new StartingPointInstallRoutine('install_attributes', 25, t('Installing attributes.')),
+		new StartingPointInstallRoutine('install_blocktypes', 30, t('Adding block types.')),
+		new StartingPointInstallRoutine('install_themes', 35, t('Adding themes.')),
+		new StartingPointInstallRoutine('install_jobs', 38, t('Installing automated jobs.')),
+		new StartingPointInstallRoutine('install_dashboard', 40, t('Installing dashboard.')),
+		new StartingPointInstallRoutine('install_required_single_pages', 50, t('Installing login and registration pages.')),
+		new StartingPointInstallRoutine('install_config', 55, t('Configuring site.')),
+		new StartingPointInstallRoutine('import_files', 58, t('Importing files.')),
 		new StartingPointInstallRoutine('install_content', 65, t('Adding pages and content.')),
 		new StartingPointInstallRoutine('set_site_permissions', 80, t('Setting up site permissions.')),
 		new StartingPointInstallRoutine('precache', 85, t('Prefetching information.')),
 		new StartingPointInstallRoutine('finish', 95, t('Finishing.'))
 		);
 	}
-
+	
+	public function add_home_page() {
+		Page::addHomePage();
+	}
+	
 	public function precache() {
 		$c = Page::getByID(HOME_CID);
 		$blocks = $c->getBlocks();
@@ -45,12 +57,40 @@ class StartingPointPackage extends Package {
 		}
 	}
 	
-	public function install_blocks_attributes_permissions_jobs() {
-		Loader::library('content/importer');
-		Page::addHomePage();
+	public function install_attributes() {
 		$ci = new ContentImporter();
-		$ci->importContentFile($this->getPackagePath() . '/install_blocks_attributes_permissions_jobs.xml');
+		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/attributes.xml');
+	}
 
+	public function install_dashboard() {
+		$ci = new ContentImporter();
+		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/dashboard.xml');
+	}
+
+	public function install_required_single_pages() {
+		$ci = new ContentImporter();
+		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/login_registration.xml');
+	}
+
+
+	public function install_blocktypes() {
+		$ci = new ContentImporter();
+		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/blocktypes.xml');
+	}
+
+	public function install_themes() {
+		$ci = new ContentImporter();
+		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/themes.xml');
+	}
+
+	public function install_jobs() {
+		$ci = new ContentImporter();
+		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/jobs.xml');
+	}
+
+	public function install_config() {
+		$ci = new ContentImporter();
+		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/config.xml');
 	}
 	
 	public function import_files() {
@@ -138,14 +178,16 @@ class StartingPointPackage extends Package {
 	}
 	
 	public function finish() {
-		//rename(DIR_CONFIG_SITE . '/site_install.php', DIR_CONFIG_SITE . '/site.php');
-		//@unlink(DIR_CONFIG_SITE . '/site_install_user.php');
+		rename(DIR_CONFIG_SITE . '/site_install.php', DIR_CONFIG_SITE . '/site.php');
+		@unlink(DIR_CONFIG_SITE . '/site_install_user.php');
 		// remove this line and uncomment the two above when done developing !!
-		copy(DIR_CONFIG_SITE . '/site_install.php', DIR_CONFIG_SITE . '/site.php');
+		//copy(DIR_CONFIG_SITE . '/site_install.php', DIR_CONFIG_SITE . '/site.php');
 		@chmod(DIR_CONFIG_SITE . '/site.php', 0777);
 	}
 	
 	public function set_site_permissions() {
+		$ci = new ContentImporter();
+		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/permissions.xml');
 		
 		Loader::model('file_set');
 		$fs = FileSet::getGlobal();

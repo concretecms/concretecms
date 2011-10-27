@@ -1,12 +1,5 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
-    <pagetypes>
-        <pagetype handle="page" name="Page" package="" />
-    </pagetypes>
-    <pages>
-	<page name="Home" path="" filename="" pagetype="page" description="" package="">
-	</page>
-    </pages>
 	<config>
 		<SITE_DEBUG_LEVEL>1</SITE_DEBUG_LEVEL>
 		<ENABLE_LOG_EMAILS>1</ENABLE_LOG_EMAILS>
