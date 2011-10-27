@@ -221,6 +221,13 @@ class ConcreteInterfaceHelper {
 		return $html;
 	}
 	
+	public function clearInterfaceItemsCache() {
+		$u = new User();
+		if ($u->isRegistered()) {
+			unset($_SESSION['dashboardMenus']);
+		}
+	}
+	
 	public function cacheInterfaceItems() {
 		$u = new User();
 		if ($u->isRegistered()) {

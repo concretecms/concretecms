@@ -55,6 +55,7 @@ class StartingPointPackage extends Package {
 			$bi = $b->getInstance();
 			$bi->setupAndRun('view');
 		}
+		Loader::helper('concrete/interface')->cacheInterfaceItems();
 	}
 	
 	public function install_attributes() {
@@ -151,7 +152,7 @@ class StartingPointPackage extends Package {
 		}
 		$uEmail = INSTALL_USER_EMAIL;
 		UserInfo::addSuperUser($uPasswordEncrypted, $uEmail);
-		$u = User::getByUserID(USER_SUPER_ID, true);
+		$u = User::getByUserID(USER_SUPER_ID, true, false);
 	}
 	
 	public function make_directories() {
