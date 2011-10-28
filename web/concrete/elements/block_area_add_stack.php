@@ -148,6 +148,7 @@ $(function() {
 			
 		<? }
 	} else { ?>
+		<br/>
 		<p><?=t('No stacks can be added to this area.')?></p>
 	<? } ?>
 	</ul>

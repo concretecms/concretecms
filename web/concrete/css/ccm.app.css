@@ -655,6 +655,7 @@ div.newsflow table{margin-bottom:0px;}
 div.newsflow td.newsflow-em1{background-color:#f1f1f1;}
 div.newsflow td.newsflow-em1 hr{border-bottom-color:#d1d1d1;}
 div#newsflow-overlay{display:none;position:absolute;z-index:95;}
+div#newsflow-overlay div.row{margin-left:0px;}
 div#newsflow-overlay .ccm-pane-header-icons li{margin-left:2px;}
 div#newsflow-overlay .ccm-pane-header-icons{top:5px;right:5px;}
 h1#ccm-dashboard-welcome-back{margin:-11px -10px 0px -11px;font-size:48px;padding:60px 0px 40px 145px;background:transparent url(../images/newsflow_logo_welcome_back.png) no-repeat 0 0;}

@@ -12,6 +12,7 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
 $templates = $bt->getBlockTypeCustomTemplates();
 $txt = Loader::helper('text');
 ?>
+<div class="ccm-ui">
 <form method="post" id="ccmCustomTemplateForm" action="<?=$b->getBlockUpdateInformationAction()?>&rcID=<?=intval($rcID) ?>">
 	
 	<strong><?=t('Custom Template')?></strong>:<br>
@@ -37,9 +38,9 @@ $txt = Loader::helper('text');
 					?></option>		
 			<? } ?>
 		</select>
-		<div class="ccm-buttons">
-		<a href="#" class="ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
-		<a href="javascript:void(0)" onclick="$('#ccmCustomTemplateForm').submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
+		<div class="dialog-buttons">
+		<a href="#" class="btn ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
+		<a href="javascript:void(0)" onclick="$('#ccmCustomTemplateForm').submit()" class="ccm-button-right accept primary btn"><span><?=t('Update')?></span></a>
 		</div>
 		
 	<? } ?>
@@ -48,6 +49,7 @@ $valt = Loader::helper('validation/token');
 $valt->output();
 ?>
 </form>
+</div>
 
 <script type="text/javascript">
 $(function() {
