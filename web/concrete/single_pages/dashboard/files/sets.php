@@ -212,7 +212,7 @@
 <?php } else { ?>
 
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Sets'), false, false, false)?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Sets'), false, 'span16', false)?>
 	<div class="ccm-pane-options">
 	<div class="ccm-pane-options-permanent-search">
 		

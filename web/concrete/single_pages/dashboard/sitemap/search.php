@@ -40,11 +40,8 @@ CCM_LAUNCHER_SITEMAP = 'search'; // we need this for when we are moving and copy
 CCM_SEARCH_INSTANCE_ID = '<?=$searchInstance?>';
 </script>
 
-<div class="ccm-ui">
-<div class="row">
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Search Pages'), t('Search the pages of your site and perform bulk actions on them.'));?>
 
-<div class="ccm-pane">
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Search Pages'), t('Search the pages of your site and perform bulk actions on them.'));?>
 <?
 $dh = Loader::helper('concrete/dashboard/sitemap');
 if ($dh->canRead()) { ?>
@@ -54,15 +51,14 @@ if ($dh->canRead()) { ?>
 </div>
 
 <? Loader::element('pages/search_results', array('searchInstance' => $searchInstance, 'searchType' => 'DASHBOARD', 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
+
 <? } else { ?>
 <div class="ccm-pane-body">
 	<p><?=t("You must have access to the dashboard sitemap to search pages.")?></p>
 </div>	
-<div class="ccm-pane-footer"></div>
 
-</div>
 <? } ?>
 
-</div>
-</div>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(); ?>
+
 <? } ?>

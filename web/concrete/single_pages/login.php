@@ -153,11 +153,11 @@ $(function() {
 
 <? } else { ?>
 
+<form method="post" action="<?=$this->url('/login', 'do_login')?>">
 
 <div class="row">
 <div class="span8 columns">
 
-<form method="post" action="<?=$this->url('/login', 'do_login')?>">
 <fieldset>
 	
 	<legend><?=t('User Account')?></legend>
@@ -217,8 +217,9 @@ $(function() {
 		<label for="uMaintainLogin"><?=t('Remember Me')?></label>
 		<div class="input">
 		<ul class="inputs-list">
-			<li><label><?=$form->checkbox('uMaintainLogin', 1)?> <span><?=t('Remain logged in to website.')?></label></li>
+			<li><label><?=$form->checkbox('uMaintainLogin', 1)?> <span><?=t('Remain logged in to website.')?></span></label></li>
 		</ul>
+		</div>
 	</div>
 	
 	
@@ -232,8 +233,8 @@ $(function() {
 	<?=$form->submit('submit', t('Sign In') . ' &gt;', array('class' => 'primary'))?>
 	</div>
 </div>
-</form>
 </div>
+</form>
 
 <h3><?=t('Forgot Your Password?')?></h3>
 
