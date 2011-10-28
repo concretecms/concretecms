@@ -3,20 +3,9 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 Loader::controller('/dashboard/base');
 
-class DashboardSystemMultilingualController extends DashboardBaseController {
+class DashboardSystemEditingMultilingualController extends DashboardBaseController {
 
 	public $helpers = array('form'); 
-	
-	public function on_start() {
-		$subnav = array(
-			array(View::url('/dashboard/settings'), t('General')),
-			array(View::url('/dashboard/settings/mail'), t('Email')),
-			array(View::url('/dashboard/settings', 'set_permissions'), t('Access')),
-			array(View::url('/dashboard/settings/multilingual'), t('Multilingual'), true),
-			array(View::url('/dashboard/settings', 'set_developer'), t('Debug')),
-			array(View::url('/dashboard/settings', 'manage_attribute_types'), t('Attributes'))
-		);
-		$this->set('subnav', $subnav);	}
 	
 	public function view() {
 		Loader::library('3rdparty/Zend/Locale');
@@ -48,7 +37,7 @@ class DashboardSystemMultilingualController extends DashboardBaseController {
 			
 			Config::save('SITE_LOCALE', $this->post('SITE_LOCALE'));
 			Config::save('LANGUAGE_CHOOSE_ON_LOGIN', $this->post('LANGUAGE_CHOOSE_ON_LOGIN'));
-			$this->redirect('/dashboard/settings/multilingual', 'interface_settings_saved');
+			$this->redirect('/dashboard/system/editing/multilingual', 'interface_settings_saved');
 			
 		} else {
 			$this->error->add(Loader::helper('validation/token')->getErrorMessage());

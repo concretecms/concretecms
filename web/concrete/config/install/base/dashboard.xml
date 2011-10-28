@@ -65,16 +65,6 @@
 				</attributekey>
 			</attributes>
         </page>
-        <!--
-        <page name="Automated Jobs" path="/dashboard/system/jobs" filename="/dashboard/system/jobs.php" pagetype="" description="" package=""/>
-        <page name="Backup &amp; Restore" path="/dashboard/system/backup" filename="/dashboard/system/backup.php" pagetype="" description="" package=""/>
-        <page name="Update" path="/dashboard/system/update" filename="/dashboard/system/update.php" pagetype="" description="" package=""/>
-        <page name="Notifications" path="/dashboard/system/notifications" filename="/dashboard/system/notifications.php" pagetype="" description="" package=""/>
-        <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype="" description="Enable post via email and other settings." package=""/>
-        <page name="Permissions &amp; Access" path="/dashboard/system/permissions" filename="/dashboard/system/permissions/view.php" pagetype="" description="Change who can edit your site, and how they can do it." package=""/>
-        <page name="File Permissions" path="/dashboard/system/permissions/files" filename="/dashboard/system/permissions/files.php" pagetype="" description="Setup how users can access your site's files." package=""/>
-		<page name="Login &amp; Registration" path="/dashboard/system/registration" filename="/dashboard/system/registration.php" pagetype="" description="" package=""/>
-		//-->
 
         <page name="Appearance" path="/dashboard/system/appearance" filename="/dashboard/system/appearance/view.php" pagetype="" description="Control your site name and bookmark icons." package=""/>
         <page name="Site Name" path="/dashboard/system/appearance/site_name" filename="/dashboard/system/appearance/site_name.php" pagetype="" description="" package=""/>
@@ -94,7 +84,6 @@
         <page name="Cache &amp; Speed Settings" path="/dashboard/system/maintenance/cache" filename="/dashboard/system/maintenance/cache.php" pagetype="" description="" package=""/>
         <page name="Automated Jobs" path="/dashboard/system/maintenance/jobs" filename="/dashboard/system/maintenance/jobs.php" pagetype="" description="" package=""/>
         <page name="Maintenance Mode" path="/dashboard/system/maintenance/mode" filename="/dashboard/system/maintenance/mode.php" pagetype="" description="" package=""/>
-        <page name="Notifications" path="/dashboard/system/maintenance/notifications" filename="/dashboard/system/maintenance/notifications.php" pagetype="" description="" package=""/>
         <page name="Update concrete5" path="/dashboard/system/maintenance/update" filename="/dashboard/system/maintenance/update.php" pagetype="" description="" package=""/>
         <page name="Backup Database" path="/dashboard/system/maintenance/backup" filename="/dashboard/system/maintenance/backup.php" pagetype="" description="" package=""/>
 
