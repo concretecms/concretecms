@@ -556,10 +556,8 @@ ccm_saveArrangement = function(cID) {
 				$(this).removeClass('ccm-block-arrange');
 			});
 			ccm_arrangeMode = false;
-			$(".ccm-main-nav-edit-option").fadeIn(300, function() {
-				ccm_removeHeaderLoading();
-			});
- 			ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
+			$(".ccm-main-nav-edit-option").fadeIn(300);
+			ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
  		}});
 }
 
@@ -580,6 +578,7 @@ ccm_arrangeInit = function() {
 	});
 	
 	$("div.ccm-area").each(function() {
+		var cID = $(this).attr('cID');
 		$(this).addClass('ccm-move-mode');
 		$(this).sortable({
 			items: 'div.ccm-block-arrange',
@@ -587,7 +586,7 @@ ccm_arrangeInit = function() {
 			accept: 'div.ccm-block-arrange',
 			opacity: 0.5,
 			stop: function() {
-				ccm_saveArrangement();
+				ccm_saveArrangement(cID);
 			}
 		});
 	});
