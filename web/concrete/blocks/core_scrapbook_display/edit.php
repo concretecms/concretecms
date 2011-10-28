@@ -1,7 +1,7 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
 ?>
-
+<div class="ccm-ui">
 <?
 $bo = Block::getByID($bOriginalID);
 $bp = new Permissions($bo);
@@ -20,3 +20,4 @@ if ($bp->canWrite()) {
 } else { ?>
 	<div class="alert-message error"><?=t("You don't have access to edit the original instance of this block.")?></div>
 <? } ?>
+</div>
