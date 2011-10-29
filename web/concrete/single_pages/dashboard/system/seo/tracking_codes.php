@@ -6,8 +6,9 @@ $ih = Loader::helper('concrete/interface');
 /* @var $form FormHelper */
 $form = Loader::helper('form');
 ?>
-<?=$h->getDashboardPaneHeaderWrapper(t('Tracking Codes'));?>
+<?=$h->getDashboardPaneHeaderWrapper(t('Tracking Codes'), false, false, false);?>
 <form id="tracking-code-form" action="<?=$this->action('')?>" method="post">
+<div class="ccm-pane-body">
 	<?=$this->controller->token->output('update_tracking_code')?>
 	<?php if (!empty($token_error) && is_array($token_error)) { ?>
 	<div class="alert-message error"><?=$token_error[0]?></div>
@@ -37,13 +38,14 @@ $form = Loader::helper('form');
 				</li>
 			</ul>
 		</div>
-	</div>
+	</div>	
 	
-		
-	<?
+</div>
+<div class="ccm-pane-footer">
+<?
 	$submit = $ih->submit( t('Save'), 'tracking-code-form', 'right', 'primary');
-	$cancel = $ih->button( t('Cancel'), $this->url('/dashboard'), 'left');
-	print $ih->buttons($cancel, $submit);
-	?> 
+	print $submit;
+?>
+</div>
 </form>
-<?=$h->getDashboardPaneFooterWrapper();?>
+<?=$h->getDashboardPaneFooterWrapper(false);?>
