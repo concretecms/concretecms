@@ -9,9 +9,15 @@ class DashboardSystemSeoTrackingCodesController extends DashboardBaseController 
 			if ($this->token->validate('update_tracking_code')) {
 					Config::save('SITE_TRACKING_CODE', $this->post('tracking_code'));
 					Config::save('SITE_TRACKING_CODE_POSITION', $this->post('tracking_code_position'));
+					$this->redirect('/dashboard/system/seo/tracking_codes', 'saved');
 			} else {
-				$this->set('token_error', array($this->token->getErrorMessage()));
+				$this->error->add($this->token->getErrorMessage());
 			}
 		}
+	}
+	
+	public function saved() {
+		$this->set('message', t('Tracking code settings updated successfully.'));
+		$this->view();
 	}
 }
