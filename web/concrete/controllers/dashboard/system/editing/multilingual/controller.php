@@ -26,7 +26,9 @@ class DashboardSystemEditingMultilingualController extends DashboardBaseControll
 		$this->set('languages', $languages);
 	}
 	
-
+	public function on_start() {
+		$this->token = Loader::helper('validation/token');
+	}
 
 	public function interface_settings_saved() {
 		$this->set('message', t('Interface settings saved'));
