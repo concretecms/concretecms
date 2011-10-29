@@ -142,17 +142,15 @@ print $dh->getDashboardAndSearchMenus();
 		
 		if (count($_error) > 0) {
 			?>
-			<div class="ccm-ui"><div class="row">
+			<div class="ccm-ui">
 				<?php Loader::element('system_errors', array('format' => 'block', 'error' => $_error)); ?>
-			</div>
 			</div>
 		<? 
 		}
 	}
 	
 	if (isset($message)) { ?>
-		<div class="ccm-ui"><div class="row">
+		<div class="ccm-ui">
 			<div class="message block-message alert-message info success"><?=Loader::helper('text')->entities($message)?></div>
-			</div>
-			</div>
+		</div>
 	<? } ?>
