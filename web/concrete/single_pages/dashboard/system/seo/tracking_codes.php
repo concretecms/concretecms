@@ -7,7 +7,7 @@ $ih = Loader::helper('concrete/interface');
 $form = Loader::helper('form');
 ?>
 <?=$h->getDashboardPaneHeaderWrapper(t('Tracking Codes'));?>
-<form id="tracking-code-form" class="form-stacked" action="<?=$this->action('')?>" method="post">
+<form id="tracking-code-form" action="<?=$this->action('')?>" method="post">
 	<?=$this->controller->token->output('update_tracking_code')?>
 	<?php if (!empty($token_error) && is_array($token_error)) { ?>
 	<div class="alert-message error"><?=$token_error[0]?></div>
