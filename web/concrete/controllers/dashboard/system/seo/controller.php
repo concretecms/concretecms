@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class DashboardSystemSeoController extends Controller{
+class DashboardSystemSeoController extends DashboardBaseController{
 
 	public $helpers = array('form'); 
 	
