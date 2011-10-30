@@ -356,27 +356,10 @@ class PageList extends DatabaseItemList {
 		if ($this->includeSystemPages || $this->filterByCParentID > 1 || $this->filterByCT == true) {
 			return false;
 		}
-		$cIDs = Cache::get('page_list_exclude_ids', false);
-		if ($cIDs == false) {
-			$db = Loader::db();
-			$filters = ''; 
-			for ($i = 0; $i < count($this->systemPagesToExclude); $i++) {
-				$spe = $this->systemPagesToExclude[$i];
-				$filters .= 'cFilename like \'/' . $spe . '\' ';
-				if ($i + 1 < count($this->systemPagesToExclude)) {
-					$filters .= 'or ';
-				}
-			}
-			$cIDs = $db->GetCol("select cID from Pages where 1=1 and ctID = 0 and (" . $filters . ")");
-			if (count($cIDs) > 0) {
-				Cache::set('page_list_exclude_ids', false, $cIDs);
-			}
-		}
-		$cIDStr = implode(',', $cIDs);
 		if ($this->includeAliases) {
-			$this->filter(false, "(p1.cID not in ({$cIDStr}) or p2.cID not in ({$cIDStr}))");
+			$this->filter(false, "(p1.cIsSystemPage = 0 or p2.cIsSystemPage = 0)");	
 		} else {
-			$this->filter(false, "(p1.cID not in ({$cIDStr}))");
+			$this->filter(false, "(p1.cIsSystemPage = 0)");	
 		}
 	}
 	

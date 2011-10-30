@@ -650,6 +650,7 @@ ptID                     INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
 cCacheFullPageContent    INTEGER(4) NOT NULL DEFAULT -1,
 cCacheFullPageContentOverrideLifetime VARCHAR(32) NOT NULL DEFAULT '0',
 cCacheFullPageContentLifetimeCustom INTEGER(10) UNSIGNED NOT NULL DEFAULT 0,
+cIsSystemPage tinyint(1) not null default 0,
                  PRIMARY KEY (cID)
 );
 
@@ -662,6 +663,8 @@ ALTER TABLE Pages ADD  INDEX cPointerID  (cPointerID);
 ALTER TABLE Pages ADD  INDEX uID  (uID);
 
 ALTER TABLE Pages ADD  INDEX ctID  (ctID);
+
+ALTER TABLE Pages ADD  INDEX cIsSystemPage  (cIsSystemPage);
 
 CREATE TABLE PileContents (
 pcID                     INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,

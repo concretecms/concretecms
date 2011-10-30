@@ -1859,6 +1859,14 @@ class Page extends Collection {
 			
 			if ($res3) {
 				$np = Page::getByID($cID, $row['cvID']);
+				// now we mark the page as a system page based on this path:
+				$systemPages=array('/login', '/register', '/download_file', '/profile', '/dashboard', '/profile/*', '/dashboard/*','/page_forbidden','/page_not_found','/members'); 
+				$th = Loader::helper('text');
+				foreach($systemPages as $sp) {
+					if ($th->fnmatch($sp, $newPath)) {
+						$db->Execute('update Pages set cIsSystemPage = 1 where cID = ?', array($cID));
+					}
+				}				
 				$np->refreshCache();
 				return $newPath;
 			}
@@ -2411,7 +2419,7 @@ class Page extends Collection {
 		
 		$uID = USER_SUPER_ID;
 		$data['uID'] = $uID;
-		
+		$cIsSystemPage = 0;
 		parent::refreshCache();
 		$cobj = parent::add($data);		
 		$cID = $cobj->getCollectionID();
@@ -2423,8 +2431,8 @@ class Page extends Collection {
 		$cInheritPermissionsFromCID = $this->getPermissionsCollectionID();
 		$cInheritPermissionsFrom = 'PARENT';
 		
-		$v = array($cID, $cFilename, $cParentID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $uID, $pkgID);
-		$q = "insert into Pages (cID, cFilename, cParentID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, uID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		$v = array($cID, $cFilename, $cParentID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $cIsSystemPage, $uID, $pkgID);
+		$q = "insert into Pages (cID, cFilename, cParentID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, cIsSystemPage, uID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 

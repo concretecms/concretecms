@@ -1576,6 +1576,10 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="cIsSystemPage" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <index name="cParentID">
       <col>cParentID</col>
     </index>
@@ -1596,6 +1600,9 @@
     </index>
     <index name="cIsTemplate">
     	<col>cIsTemplate</col>
+    </index>
+    <index name="cIsSystemPage">
+      <col>cIsSystemPage</col>
     </index>
   </table>
   <table name="PileContents">
