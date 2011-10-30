@@ -37,11 +37,10 @@ class DashboardSystemSeoUrlsController extends DashboardBaseController{
 	}
 	
 	
-	
 	/**
 	* Dasboard page view
 	*
-	* @param string $status - Result of attempting to update rewrite rules
+	* @param string $strStatus - Result of attempting to update rewrite rules
 	* @param boolean $blnHtu - Flag denoting if the .htaccess file was writable or not
 	* @return void
 	*/		
