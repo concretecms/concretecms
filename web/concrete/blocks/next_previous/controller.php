@@ -104,27 +104,7 @@ class NextPreviousBlockController extends BlockController {
 	}
 	
 	protected function excludeSystemPages($pageList){
-		$systemPages=array('login.php', 'register.php', 'download_file.php', 'profile/%', 'dashboard/%','page_forbidden%','page_not_found%'); 
-		//$cIDs = Cache::get('next_previous_page_list_exclude_ids', false);
-		if ($cIDs == false) {
-			$db = Loader::db();
-			$filters = ''; 
-			for ($i = 0; $i < count($systemPages); $i++) {
-				$spe = $systemPages[$i];
-				$filters .= 'cFilename like \'/' . $spe . '\' ';
-				if ($i + 1 < count($systemPages)) {
-					$filters .= 'or ';
-				}
-			}
-			$cIDs = $db->GetCol("select cID from Pages where 1=1 and ctID = 0 and (" . $filters . ")");
-			if (count($cIDs) > 0) {
-				Cache::set('next_previous_page_list_exclude_ids', false, $cIDs);
-			}
-		}
-		$cIDStr = implode(',', $cIDs);
-		//echo "(p1.cID not in ({$cIDStr}) or p2.cID not in ({$cIDStr}))";
-		//die;
-		$pageList->filter(false, "(p1.cID not in ({$cIDStr}) or p2.cID not in ({$cIDStr}))");	
+		$pageList->filter(false, "(p1.cIsSystemPage = 0 or p2.cIsSystemPage = 0)");	
 	}
 }
 
