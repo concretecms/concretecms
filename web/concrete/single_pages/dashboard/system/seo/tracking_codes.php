@@ -10,9 +10,6 @@ $form = Loader::helper('form');
 <form id="tracking-code-form" action="<?=$this->action('')?>" method="post">
 <div class="ccm-pane-body">
 	<?=$this->controller->token->output('update_tracking_code')?>
-	<?php if (!empty($token_error) && is_array($token_error)) { ?>
-	<div class="alert-message error"><?=$token_error[0]?></div>
-	<?php } ?>
 	<div class="clearfix">
 		<?=$form->label('tracking_code', t('Tracking Codes'))?>
 		<div class="input">
