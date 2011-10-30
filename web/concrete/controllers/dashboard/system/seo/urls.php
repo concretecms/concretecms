@@ -46,11 +46,12 @@ class DashboardSystemSeoUrlsController extends DashboardBaseController{
 	*/		
 	public function view($strStatus = false, $blnHtu = false){
 		$strStatus = (string) $strStatus;
-		$blnHtu = (bool) $blnHtu;
+		$blnHtu = (bool) $blnHtu;		
+		$intRewriting = Config::get('URL_REWRITING') == 1 ? 1 : 0;
 		
 		$this->set('fh', Loader::helper('form'));
 		$this->set('strRules', $this->getRewriteRules());
-		$this->set('intRewriting', (int) URL_REWRITING);
+		$this->set('intRewriting', $intRewriting);
 		
 		if($strStatus == 'rewriting_saved'){		
 			if(URL_REWRITING && !$blnHtu){	
@@ -70,42 +71,47 @@ class DashboardSystemSeoUrlsController extends DashboardBaseController{
 	* @return void
 	*/		
 	public function update_rewriting(){
-		$strHtText = $this->getHtaccessText();		
-		$blnHtu = 0;
-		
-		if($this->isPost()){
-			$intCurrent = (int) Config::get('URL_REWRITING');
-			$intPosted = (int) $this->post('URL_REWRITING');
+		if($this->token->validate('update_rewriting')){
+			$strHtText = (string) $this->getHtaccessText();		
+			$blnHtu = 0;
 			
-			// If there was no change we don't attempt to edit/create the .htaccess file
-			if($intCurrent == $intPosted){
-				$this->redirect('/dashboard/system/seo/urls');
-			}
-			
-			Config::save('URL_REWRITING', $intPosted);
+			if($this->isPost()){
+				$intCurrent = Config::get('URL_REWRITING') == 1 ? 1 : 0;
+				$intPosted = $this->post('URL_REWRITING') == 1 ? 1 : 0;								
+				
+				// If there was no change we don't attempt to edit/create the .htaccess file
+				if($intCurrent == $intPosted){
+					$this->redirect('/dashboard/system/seo/urls');
+				}
+				
+				Config::save('URL_REWRITING', $intPosted);
+							
+				if($this->post('URL_REWRITING') == 1){				
+					if(file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE . '/.htaccess')){		
+						if(file_put_contents(DIR_BASE . '/.htaccess', $strHtText, FILE_APPEND)){
+							$blnHtu = 1;
+						}
+					}elseif(!file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE)){		
+						if(file_put_contents(DIR_BASE . '/.htaccess', $strHtText)){
+							$blnHtu = 1;
+						}
+					}
+				}else{
+					if(file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE . '/.htaccess')){
+						$fh = Loader::helper('file');
+						$contents = $fh->getContents(DIR_BASE . '/.htaccess');
 						
-			if($this->post('URL_REWRITING') == 1){				
-				if(file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE . '/.htaccess')){		
-					if(file_put_contents(DIR_BASE . '/.htaccess', $strHtText, FILE_APPEND)){
-						$blnHtu = 1;
-					}
-				}elseif(!file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE)){		
-					if(file_put_contents(DIR_BASE . '/.htaccess', $strHtText)){
-						$blnHtu = 1;
+						if(file_put_contents(DIR_BASE . '/.htaccess', str_replace($strHtText, '', $contents))){
+							$blnHtu = 1;
+						}
 					}
 				}
-			}else{
-				if(file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE . '/.htaccess')){
-					$fh = Loader::helper('file');
-					$contents = $fh->getContents(DIR_BASE . '/.htaccess');
-					
-					if(file_put_contents(DIR_BASE . '/.htaccess', str_replace($strHtText, '', $contents))){
-						$blnHtu = 1;
-					}
-				}
+				
+				$this->redirect('/dashboard/system/seo/urls', 'rewriting_saved', $blnHtu);
 			}
-			
-			$this->redirect('/dashboard/system/seo/urls', 'rewriting_saved', $blnHtu);
+		}else{
+			$this->set('error', array($this->token->getErrorMessage()));
 		}
 	}	
 }
+?>
