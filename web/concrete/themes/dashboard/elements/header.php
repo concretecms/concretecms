@@ -33,11 +33,9 @@ if (!isset($enableEditing) || $enableEditing == false) {
 
 // Required JavaScript
 
-$v->addFooterItem($html->javascript('jquery.js'));
 $v->addFooterItem($html->javascript('jquery.backstretch.js'));
 $v->addFooterItem($html->javascript('jquery.ui.js'));
 $v->addFooterItem($html->javascript('jquery.form.js'));
-$v->addFooterItem($html->javascript('ccm.base.js'));
 $v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 $v->addFooterItem($html->javascript('ccm.app.js'));
 $v->addFooterItem($html->javascript('ccm.dashboard.js'));
