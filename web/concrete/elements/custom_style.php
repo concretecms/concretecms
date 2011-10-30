@@ -98,8 +98,8 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 	<? } ?>
 	
 	<div id="cspFooterNoPreset" >
-		<?=t('Save this style as a new preset.')?>
 		<?=$form->checkbox('cspPresetAction', 'create_new_preset')?>
+		<?=t('Save this style as a new preset.')?>
 		<span style="margin-left: 10px">
 			<?=$form->text('cspName', array('style' => 'width:  140px', 'disabled' => true))?>
 		</span>
