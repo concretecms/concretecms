@@ -45,7 +45,7 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 	<div class="ccm-ui" id="ccm-custom-style-wrapper">
 <? } ?>
 
-<form method="post" id="ccmCustomCssForm" action="<?=$action?>" style="width:96%; margin:auto;">
+<form class="form-stacked" method="post" id="ccmCustomCssForm" action="<?=$action?>" style="width:96%; margin:auto;">
 
 	<input id="ccm-reset-style" name="reset_css" type="hidden" value="0" />
 	
@@ -61,7 +61,6 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 	<? } ?>
 	
 	<input type="hidden" name="selectedCsrID" value="<?=$selectedCsrID?>" />
-	<ul id="ccm-styleEditPane-tabs" class="ccm-dialog-tabs" style="margin-bottom:16px; margin-top:4px;">
 		<li class="ccm-nav-active"><a id="ccm-styleEditPane-tab-fonts" href="#" onclick="return ccmCustomStyle.tabs(this,'fonts');"><?=t('Fonts') ?></a></li>
 		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'background');"><?=t('Background') ?></a></li>
 		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'border');"><?=t('Border') ?></a></li>
@@ -107,7 +106,7 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 	
 	<br/>
 	
-	<div class="ccm-buttons">
+	<div class="dialog-buttons">
 		<a href="#" class="ccm-button-left cancel btn" onclick="jQuery.fn.dialog.closeTop()"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
 	
 		<a href="javascript:void(0)" onclick="$('#ccmCustomCssForm').submit()" class="btn primary ccm-button-right accept"><span><?=t('Update')?></span></a>
