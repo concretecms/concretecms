@@ -181,14 +181,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$displayOrder++;
 					}
 					if ($node->getName() == 'attributekey') {
-						$ak = CollectionAttributeKey::getByHandle($node['handle']->__toString());
+						$ak = CollectionAttributeKey::getByHandle((string) $node['handle']);
 						$v = array($ak->getAttributeKeyID(), $displayOrder, $this->ctID);
 						$db->Execute('insert into ComposerContentLayout (akID, displayOrder, ctID) values (?, ?, ?)', $v);
 					}
 					if ($node->getName() == 'block') {
 						$mcID = $this->getMasterCollectionID();
 						$bID = $db->GetOne('select Blocks.bID from CollectionVersionBlocks inner join Blocks on CollectionVersionBlocks.bID = Blocks.bID where cID = ? and Blocks.bName = ?', array(
-							$mcID, $node['name']->__toString()
+							$mcID, (string) $node['name']
 						));
 						$v = array($bID, $displayOrder, $this->ctID);
 						$db->Execute('insert into ComposerContentLayout (bID, displayOrder, ctID) values (?, ?, ?)', $v);

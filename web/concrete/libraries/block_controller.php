@@ -230,7 +230,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					if ($data['table'] == $this->getBlockTypeDatabaseTable()) {
 						if (isset($data->record)) {
 							foreach($data->record->children() as $node) {
-								$args[$node->getName()] = ContentImporter::getValue($node->__toString());
+								$args[$node->getName()] = ContentImporter::getValue((string) $node);
 							}
 						}
 					} 
@@ -243,14 +243,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (isset($blockNode->data)) {
 				foreach($blockNode->data as $data) {
 					if (strtoupper($data['table']) != strtoupper($this->getBlockTypeDatabaseTable())) {
-						$table = $data['table']->__toString();
+						$table = (string) $data['table'];
 						if (isset($data->record)) {
 							foreach($data->record as $record) {
 								$aar = new ADODB_Active_Record($table);
 								$aar->bID = $b->getBlockID();
 								foreach($record->children() as $node) {
 									$nodeName = $node->getName();
-									$aar->{$nodeName} = ContentImporter::getValue($node->__toString());
+									$aar->{$nodeName} = ContentImporter::getValue((string) $node);
 								}
 								$aar->Save();
 							}
@@ -270,7 +270,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$b = $page->addBlock($bt, $arHandle, $args);
 			$b->updateBlockInformation(array('bName' => $blockNode['name'], 'bFilename' => $blockNode['custom-template']));
 			if ($page->isMasterCollection() && $blockNode['mc-block-id'] != '') {
-				ContentImporter::addMasterCollectionBlockID($b, $blockNode['mc-block-id']->__toString());		
+				ContentImporter::addMasterCollectionBlockID($b, (string) $blockNode['mc-block-id']);		
 			}					
 			
 			// now we insert stuff that isn't part of the btTable
