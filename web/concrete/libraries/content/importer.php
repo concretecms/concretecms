@@ -101,7 +101,7 @@ class ContentImporter {
 				if (isset($px->attributes)) {
 					foreach($px->attributes->children() as $attr) {
 						$ak = CollectionAttributeKey::getByHandle($attr['handle']);
-						$page->setAttribute($attr['handle']->__toString(), $ak->getController()->importValue($attr));
+						$page->setAttribute((string) $attr['handle'], $ak->getController()->importValue($attr));
 					}
 				}
 			}
@@ -109,8 +109,8 @@ class ContentImporter {
 	}
 
 	protected function setupPageNodeOrder($pageNodeA, $pageNodeB) {
-		$pathA = $pageNodeA['path']->__toString();
-		$pathB = $pageNodeB['path']->__toString();
+		$pathA = (string) $pageNodeA['path'];
+		$pathB = (string) $pageNodeB['path'];
 		$numA = explode('/', $pathA);
 		$numB = explode('/', $pathB);
 		if ($numA == $numB) {
@@ -134,7 +134,7 @@ class ContentImporter {
 				if (isset($px->attributes)) {
 					foreach($px->attributes->children() as $attr) {
 						$ak = CollectionAttributeKey::getByHandle($attr['handle']);
-						$page->setAttribute($attr['handle']->__toString(), $ak->getController()->importValue($attr));
+						$page->setAttribute((string) $attr['handle'], $ak->getController()->importValue($attr));
 					}
 				}
 			}
@@ -168,9 +168,9 @@ class ContentImporter {
 					$page = Page::getByPath($px['path']);
 					if (!is_object($page) || ($page->isError())) {
 						$ct = CollectionType::getByHandle($px['pagetype']);
-						$lastSlash = strrpos($px['path']->__toString(), '/');
-						$parentPath = substr($px['path']->__toString(), 0, $lastSlash);
-						$data['cHandle'] = substr($px['path']->__toString(), $lastSlash + 1);
+						$lastSlash = strrpos((string) $px['path'], '/');
+						$parentPath = substr((string) $px['path'], 0, $lastSlash);
+						$data['cHandle'] = substr((string) $px['path'], $lastSlash + 1);
 						if (!$parentPath) {
 							$parent = $home;
 						} else {
@@ -195,13 +195,13 @@ class ContentImporter {
 						// we check this because you might just get a block node with only an mc-block-id, if it's an alias
 						$bt = BlockType::getByHandle($bx['type']);
 						$btc = $bt->getController();
-						$btc->import($page, $ax['name']->__toString(), $bx);
+						$btc->import($page, (string) $ax['name'], $bx);
 					} else if ($bx['mc-block-id'] != '') {
 						// we find that block in the master collection block pool and alias it out
-						$bID = array_search($bx['mc-block-id']->__toString(), self::$mcBlockIDs);
+						$bID = array_search((string) $bx['mc-block-id'], self::$mcBlockIDs);
 						if ($bID) {
 							$mc = Page::getByID($page->getMasterCollectionID());
-							$block = Block::getByID($bID, $mc, $ax['name']->__toString());
+							$block = Block::getByID($bID, $mc, (string) $ax['name']);
 							$block->alias($page);
 						}
 					}
@@ -237,13 +237,13 @@ class ContentImporter {
 		$db = Loader::db();
 		if (isset($sx->pagetypes)) {
 			foreach($sx->pagetypes->pagetype as $ct) {
-				$ctr = CollectionType::getByHandle($ct['handle']->__toString());
+				$ctr = CollectionType::getByHandle((string) $ct['handle']);
 				$mc = Page::getByID($ctr->getMasterCollectionID());
 				if (isset($ct->page)) {
 					$this->importPageAreas($mc, $ct->page);
 				}
 				if (isset($ct->composer)) {
-					$ctr = CollectionType::getByHandle($ct['handle']->__toString());
+					$ctr = CollectionType::getByHandle((string) $ct['handle']);
 					$ctr->importComposerSettings($ct->composer);
 				}
 				
@@ -287,7 +287,7 @@ class ContentImporter {
 				$type = AttributeType::add($at['handle'], $name, $pkg);
 				if (isset($at->categories)) {
 					foreach($at->categories->children() as $cat) {
-						$catobj = AttributeKeyCategory::getByHandle($cat['handle']->__toString());
+						$catobj = AttributeKeyCategory::getByHandle((string) $cat['handle']);
 						$catobj->associateAttributeKeyType($type);
 					}
 				}
@@ -337,9 +337,9 @@ class ContentImporter {
 			foreach($sx->config->children() as $key) {
 				$pkg = ContentImporter::getPackageObject($key['package']);
 				if (is_object($pkg)) {
-					$configstore->set($key->getName(), $key->__toString(), $pkg->getPackageID());
+					$configstore->set($key->getName(), (string) $key, $pkg->getPackageID());
 				} else {
-					$configstore->set($key->getName(), $key->__toString());
+					$configstore->set($key->getName(), (string) $key);
 				}
 			}
 		}
@@ -398,9 +398,9 @@ class ContentImporter {
 			foreach($sx->attributesets->attributeset as $as) {
 				$akc = AttributeKeyCategory::getByHandle($as['category']);
 				$pkg = ContentImporter::getPackageObject($as['package']);
-				$set = $akc->addSet($as['handle']->__toString(), $as['name']->__toString(), $pkg, $as['locked']);
+				$set = $akc->addSet((string) $as['handle'], (string) $as['name'], $pkg, $as['locked']);
 				foreach($as->children() as $ask) {
-					$ak = $akc->getAttributeKeyByHandle($ask['handle']->__toString());
+					$ak = $akc->getAttributeKeyByHandle((string) $ask['handle']);
 					if (is_object($ak)) { 	
 						$set->addKey($ak);
 					}
