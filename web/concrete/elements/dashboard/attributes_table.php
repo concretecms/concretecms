@@ -27,7 +27,7 @@ if (count($attribs) > 0) { ?>
 
 	<? } ?>
 	
-	<input type="button" class="btn small" onclick="window.location.href='<?=$this->url('/dashboard/settings/attribute_sets', $category->getAttributeKeyCategoryID())?>'" value="<?=t('Manage Sets')?>" />
+	<input type="button" class="btn small" onclick="window.location.href='<?=$this->url('/dashboard/system/attributes/sets', 'category', $category->getAttributeKeyCategoryID())?>'" value="<?=t('Manage Sets')?>" />
 
 
 </div>

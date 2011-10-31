@@ -1,6 +1,6 @@
 
 <? if ($this->controller->getTask() != 'select_type' && $this->controller->getTask() != 'add' && $this->controller->getTask() != 'edit') { ?>
-	<h1><a class="ccm-dashboard-header-option" href="<?=$this->url('/dashboard/settings/', 'manage_attribute_types')?>"><?=t('Manage Attribute Types')?></a><span><?=t('Attributes')?></span></h1>
+	<h1><a class="ccm-dashboard-header-option" href="<?=$this->url('/dashboard/system/attributes/types'	)?>"><?=t('Manage Attribute Types')?></a><span><?=t('Attributes')?></span></h1>
 	<div class="ccm-dashboard-inner">
 	<?
 	$attribs = UserAttributeKey::getList();
