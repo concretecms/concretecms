@@ -146,7 +146,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				// stupid PHP
 				$items = array_unique($items, SORT_STRING);
 			}
-			return $items;
+			
+			// also strip out anything that was in the header
+			$headerItems = $this->getHeaderItems();
+			$retitems = array();
+			foreach($items as $it) {
+				if (!in_array($it, $headerItems)) {
+					$retitems[] = $it;
+				}
+			}
+			return $retitems;
 		}
 		
 		/** 
@@ -164,51 +173,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$outputPost = array();
 			$output = array();
 			
-			/*
-			if (ENABLE_ASSET_COMPRESSION == true) {
-				foreach($items as $item) {
-					if (is_a($item, 'JavaScriptOutputObject')) {
-						$output['JAVASCRIPT'][dirname($item->file)][] = $item;
-					} else if (is_a($item, 'CSSOutputObject')) {
-						$output['CSS'][dirname($item->file)][] = $item;
-					} else {
-						$outputPost[] = $item;
-					}
-				}
-	
-				$html = Loader::helper("html");
-				foreach($output as $type => $item) {
-					switch($type) {
-						case 'JAVASCRIPT':
-							foreach($item as $base => $ind) {
-								$src = REL_DIR_FILES_TOOLS_REQUIRED . '/minify?b=' . trim($base, '/') . '&f=';
-								foreach($ind as $i) {
-									$src .= basename($i->file) . ',';
-								}
-								print $html->javascript(trim($src, ',')) . "\n";
-							}
-							break;
-						case 'CSS':
-							foreach($item as $base => $ind) {
-								$src = REL_DIR_FILES_TOOLS_REQUIRED . '/minify?b=' . trim($base, '/') . '&f=';
-								foreach($ind as $i) {
-									$src .= basename($i->file) . ',';
-								}
-								print $html->css(trim($src, ',')) . "\n";
-							}
-							break;					
-					}
-				}
-			} else {
-				$outputPost = $items;
-			}
-			*/
-			
 			foreach($items as $hi) {
 				print $hi; // caled on two seperate lines because of pre php 5.2 __toString issues
 				print "\n";
-			}
-			
+			}			
 			
 		}
 		
