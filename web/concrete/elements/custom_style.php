@@ -61,6 +61,7 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 	<? } ?>
 	
 	<input type="hidden" name="selectedCsrID" value="<?=$selectedCsrID?>" />
+	<ul id="ccm-styleEditPane-tabs" class="ccm-dialog-tabs" style="margin-left:0px">
 		<li class="ccm-nav-active"><a id="ccm-styleEditPane-tab-fonts" href="#" onclick="return ccmCustomStyle.tabs(this,'fonts');"><?=t('Fonts') ?></a></li>
 		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'background');"><?=t('Background') ?></a></li>
 		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'border');"><?=t('Border') ?></a></li>
