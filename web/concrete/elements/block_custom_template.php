@@ -13,15 +13,15 @@ $templates = $bt->getBlockTypeCustomTemplates();
 $txt = Loader::helper('text');
 ?>
 <div class="ccm-ui">
-<form method="post" id="ccmCustomTemplateForm" action="<?=$b->getBlockUpdateInformationAction()?>&rcID=<?=intval($rcID) ?>">
+<form method="post" id="ccmCustomTemplateForm" action="<?=$b->getBlockUpdateInformationAction()?>&amp;rcID=<?=intval($rcID) ?>">
 	
-	<strong><?=t('Custom Template')?></strong>:<br>
+	<strong><?=t('Custom Template')?></strong>:<br/>
 	
 	<? if (count($templates) == 0) { ?>
 	
 		<?=t('There are no custom templates available.')?>
-		<div class="ccm-buttons">
-		<a href="#" class="ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
+		<div class="ccm-buttons dialog-buttons">
+			<a href="#" class="btn ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
 		</div>
 
 	<? } else { ?>
@@ -38,9 +38,9 @@ $txt = Loader::helper('text');
 					?></option>		
 			<? } ?>
 		</select>
-		<div class="dialog-buttons">
-		<a href="#" class="btn ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
-		<a href="javascript:void(0)" onclick="$('#ccmCustomTemplateForm').submit()" class="ccm-button-right accept primary btn"><span><?=t('Update')?></span></a>
+		<div class="ccm-buttons dialog-buttons">
+			<a href="#" class="btn ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
+			<a href="javascript:void(0)" onclick="$('#ccmCustomTemplateForm').submit()" class="ccm-button-right accept primary btn"><span><?=t('Update')?></span></a>
 		</div>
 		
 	<? } ?>
