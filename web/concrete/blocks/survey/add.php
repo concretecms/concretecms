@@ -13,9 +13,9 @@ div.survey-block-option img {
 <script>
 var currentOption = 0;
 </script>
-
+<div class="ccm-ui">
 <strong><?=t('Question')?></strong><br/>
-<input type="text" style="width: 350px" name="question" value="" />
+<input type="text" style="width: 320px" name="question" value="" />
 <br><br>
 <strong><?=t('Open to all site visitors?')?></strong><br/>
 <input type="radio" value="0" name="requiresRegistration" style="vertical-align: middle" checked />&nbsp;<?=t('Yes')?>
@@ -29,5 +29,6 @@ var currentOption = 0;
 
 <br/><br/>
 <strong><?=t('Add option')?></strong><br/>
-<input type="text" name="optionValue" id="ccm-survey-optionValue" style="width: 350px" />
-<input type="button" onclick="addOption()" value="<?=t('Add')?>" />
+<input type="text" name="optionValue" id="ccm-survey-optionValue" style="width: 320px" />
+<input type="button" onclick="addOption()" value="<?=t('Add')?>" class="btn small" />
+</div>
