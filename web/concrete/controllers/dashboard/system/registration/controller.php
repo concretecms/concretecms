@@ -8,4 +8,3 @@ class DashboardSystemRegistrationController extends DashboardBaseController {
 		$this->redirect('/dashboard/system/registration/public_registration/');
 	}
 }
-?>
