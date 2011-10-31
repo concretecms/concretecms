@@ -723,6 +723,7 @@ div.ccm-block-field-group{margin-bottom:10px;border-bottom:1px dotted #aaa;paddi
 roudiv.ccm-block-field-group h2{margin-bottom:6px;}
 ul#ccm-block-type-list{padding:2px 0px 0px 0px;margin:0px 0px 16px 0px;}
 ul#ccm-block-type-list li{margin-left:0px;list-style-type:none;display:none !important;}
+.ccm-scrapbook-list-item{position:relative;}
 .ccm-block-type a.ccm-scrapbook-delete{top:8px;right:10px;position:absolute;}
 .ccm-block-type-inner .btn{position:relative;top:-6px;}
 .ccm-block-type a.ccm-block-type-inner,.ccm-block-type p.ccm-block-type-inner,.ccm-block-type .ccm-block-type-inner{background-repeat:no-repeat;background-position:8px 8px;color:#666;margin-bottom:2px;display:block;font-size:14px;padding:8px 8px 8px 30px;text-decoration:none;border:1px solid #ffffff;}
