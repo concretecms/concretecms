@@ -3,10 +3,9 @@
 <?php
 $h = Loader::helper('concrete/interface');
 ?>	
-	<br />
     <form method="post" id="registration-type-form" action="<?php echo $this->url('/dashboard/system/registration/public_registration', 'update_registration_type')?>">  
     
-    <div class="ccm-dashboard-inner"> 
+    <div class="ccm-pane-body"> 
     	
     	<div class="clearfix">
             <label id="optionsCheckboxes"><strong><?php echo t('Registration Options')?></strong></label>
@@ -65,13 +64,10 @@ $h = Loader::helper('concrete/interface');
 			  </ul>
 			</div>
         </div>  
-		
-		<br />
-		<?php 
-		$b1 = $h->submit(t('Save'), 'registration-type-form');
-		print $h->buttons($b1);
-		?>   
 	</div>
+<div class="ccm-pane-footer">
+<? print $h->submit(t('Save'), 'registration-type-form', 'right', 'primary'); ?>
+</div>
 </form> 	
     
    
