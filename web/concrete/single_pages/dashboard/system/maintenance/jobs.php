@@ -1,3 +1,85 @@
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+/* @var $h ConcreteDashboardHelper */
+$h = Loader::helper('concrete/dashboard');
+/* @var $ih ConcreteInterfaceHelper */
+$ih = Loader::helper('concrete/interface');
+/* @var $form FormHelper */
+$form = Loader::helper('form');
+/* @var $jh JsonHelper */
+$jh = Loader::helper('json');
+?>
+<style type="text/css">
+#run-all, .run-task { height: 16px; width: 16px; display: block; }
+
+.run-task {
+	background: url("/concrete/images/ui-icons_222222_256x240.png") no-repeat 0 -160px transparent;
+}
+
+#run-all {
+	background: url("/concrete/images/ui-icons_222222_256x240.png") no-repeat -32px -160px transparent;
+}
+</style>
+<?=$h->getDashboardPaneHeaderWrapper(t('Automated Jobs'), false, false, false);?>
+<form id="automated-jobs-run-form" action="<?=$this->action('')?>" method="post">
+<?=$this->controller->token->output('automated_jobs')?>
+<div class="ccm-pane-body">
+<?if ($jobList->numRows() == 0):?>
+<?=t('You currently have no jobs installed.')?>
+<?else:?>
+<table class="zebra-striped">
+<thead>
+<tr>
+	<th><a id="run-all" href="" title="<?=t('Run all')?>"></a></th>
+	<th><?=t('ID')?></th>
+	<th><?=t('Name')?></th>
+	<th><?=t('Description')?></th>
+	<th><?=t('Last Run')?></th>
+	<th><?=t('Results of Last Run')?></th>
+	<th></th>
+</tr>
+</thead>
+<tbody>
+<?foreach ($jobList as $job):?>
+<tr>
+	<td><a class="run-task" title="<?=t('Run')?>" href="<?=$this->action('execute', $job['jID'])?>"></a></td>
+	<td><?=$job['jID']?></td>
+	<td><?=$job['jName']?></td>
+	<td><?=$job['jDescription']?></td>
+	<td><?
+	if ($job['jStatus'] == 'RUNNING') {
+		$runtime = date(DATE_APP_GENERIC_TS, strtotime($job['jDateLastRun']));
+		echo ("<strong>");
+		echo t("Currently Running (Since %s)", $runtime);					
+		echo ("</strong>");
+	} else if($job['jDateLastRun'] == '' || substr($job['jDateLastRun'], 0, 4) == '0000') {
+		echo t('Never');
+	} else {
+		$runtime = date(DATE_APP_GENERIC_MDY . t(' \a\t ') . DATE_APP_GENERIC_TS, strtotime($job['jDateLastRun']) );
+		echo $runtime;
+	}
+?></td>
+	<td><?=$job['jLastStatusText']?></td>
+	<td><?if(!$jobItem['jNotUninstallable']) { ?>
+		<form method="post" action="<?=$this->action('uninstall')?>" onsubmit="return confirm(<?=$jh->encode(t("Are you sure you want to uninstall this job?"))?>);">
+			<input name="jID" type="hidden" value="<?=$jobItem['jID'] ?>" />
+			<input name="Remove" type="Submit" value="<?=t('Remove')?>" />
+		</form>
+	<? } ?></td>
+</tr>
+<?endforeach?>
+</tbody>
+</table>
+<?endif?>
+</div>
+<div class="ccm-pane-footer">
+<?
+	$submit = $ih->submit( t('Save'), 'tracking-code-form', 'right', 'primary');
+	print $submit;
+?>
+</div>
+</form>
+<?=$h->getDashboardPaneFooterWrapper(false);?>
+<?return;?>
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <script type="text/javascript">
 
