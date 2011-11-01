@@ -42,10 +42,19 @@
     }
     &.ccm-nav-active > a {
       color: @gray;
+      outline: none;
       background-color: @white;
       border: 1px solid #ddd;
       border-bottom-color: transparent;
     }
+    &.current > a {
+      color: @gray;
+      outline: none;
+      background-color: @white;
+      border: 1px solid #ddd;
+      border-bottom-color: transparent;
+    }
+
   }
   // first one for backwards compatibility
   .menu-dropdown,
