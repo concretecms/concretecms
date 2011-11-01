@@ -455,7 +455,7 @@ if ($ctEditMode) {
                     <?
                     $tp = new TaskPermission();
                     if ($tp->canAccessPageDefaults()) { ?>
-                        <? print $ih->button(t('Defaults'), $this->url('/dashboard/pages/types?cID=' . $ct->getMasterCollectionID() . '&task=load_master'))?>
+                        <? print $ih->button(t('Defaults'), $this->url('/dashboard/pages/types?cID=' . $ct->getMasterCollectionID() . '&task=load_master'), 'left','small')?>
                     <? } else { 
                         $defaultsErrMsg = t('You do not have access to page type default content.');
                         ?>
