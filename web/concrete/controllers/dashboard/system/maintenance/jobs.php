@@ -12,4 +12,9 @@ class DashboardSystemMaintenanceJobsController extends DashboardBaseController {
 	function execute($job) {
 		
 	}
+	
+	function uninstall($job_id) {
+		
+		$this->view();
+	}
 }
