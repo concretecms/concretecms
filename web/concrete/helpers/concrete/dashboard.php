@@ -142,17 +142,17 @@ class ConcreteDashboardHelper {
 				
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-onsite">
 				
-				<h1><?=$page->getCollectionName()?></h1>
+				<h1><?=t($page->getCollectionName())?></h1>
 				
 				
 				<ul class="ccm-intelligent-search-results-list">
 				<? if (count($ch2) == 0) { ?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page)?>"><?=$page->getCollectionName()?></a><span><?=$page->getCollectionName()?></span></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page)?>"><?=t($page->getCollectionName())?></a><span><?=t($page->getCollectionName())?></span></li>
 				<? } ?>
 				
 				<?
 				if ($page->getCollectionPath() == '/dashboard/system') { ?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page)?>"><?=t('View All')?><span><?=$page->getCollectionName()?></span></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page)?>"><?=t('View All')?><span><?=t($page->getCollectionName())?></span></li>
 				<?				
 				}
 				
@@ -163,7 +163,7 @@ class ConcreteDashboardHelper {
 					}
 			
 					?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage)?>"><?=$subpage->getCollectionName()?></a><span><? if ($page->getCollectionPath() != '/dashboard/system') { ?><?=$page->getCollectionName()?> <? } ?><?=$subpage->getCollectionName()?></span></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage)?>"><?=$subpage->getCollectionName()?></a><span><? if ($page->getCollectionPath() != '/dashboard/system') { ?><?=t($page->getCollectionName())?> <? } ?><?=$subpage->getCollectionName()?></span></li>
 					<? 
 				}
 				?>
@@ -211,7 +211,7 @@ class ConcreteDashboardHelper {
 				
 				<div class="ccm-dashboard-overlay-module">
 				
-				<h1><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><?=$page->getCollectionName()?></a></h1>
+				<h1><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><?=t($page->getCollectionName())?></a></h1>
 				
 				
 				<ul>
@@ -261,7 +261,7 @@ class ConcreteDashboardHelper {
 				
 				<div class="ccm-dashboard-overlay-module">
 				
-				<h1><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><?=$page->getCollectionName()?></a></h1>
+				<h1><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><?=t($page->getCollectionName())?></a></h1>
 				
 				
 				<ul>
