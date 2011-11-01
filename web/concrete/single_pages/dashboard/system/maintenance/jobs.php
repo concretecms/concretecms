@@ -19,6 +19,16 @@ $jh = Loader::helper('json');
 	background: url("/concrete/images/ui-icons_222222_256x240.png") no-repeat -32px -160px transparent;
 }
 </style>
+<script>
+jQuery(function($) {
+	$('.btn.remove').bind('click', function(e) {
+		if (!confirm(<?=$jh->encode(t("Are you sure you want to uninstall this job?"))?>)) {
+			e.preventDefault();
+		}
+	});
+	
+});
+</script>
 <?=$h->getDashboardPaneHeaderWrapper(t('Automated Jobs'), false, false, false);?>
 <form id="automated-jobs-run-form" action="<?=$this->action('')?>" method="post">
 <?=$this->controller->token->output('automated_jobs')?>
@@ -29,7 +39,7 @@ $jh = Loader::helper('json');
 <table class="zebra-striped">
 <thead>
 <tr>
-	<th><a id="run-all" href="" title="<?=t('Run all')?>"></a></th>
+	<th><a id="run-all" href="<?=$this->action('execute_all')?>" title="<?=t('Run all')?>"></a></th>
 	<th><?=t('ID')?></th>
 	<th><?=t('Name')?></th>
 	<th><?=t('Description')?></th>
@@ -59,14 +69,35 @@ $jh = Loader::helper('json');
 	}
 ?></td>
 	<td><?=$job['jLastStatusText']?></td>
-	<td><?if(!$jobItem['jNotUninstallable']) { ?>
-		<form method="post" action="<?=$this->action('uninstall')?>" onsubmit="return confirm(<?=$jh->encode(t("Are you sure you want to uninstall this job?"))?>);">
-			<input name="jID" type="hidden" value="<?=$jobItem['jID'] ?>" />
-			<input name="Remove" type="Submit" value="<?=t('Remove')?>" />
-		</form>
-	<? } ?></td>
+	<td><?if(!$job['jNotUninstallable']):?>
+		<a class="btn remove" href="<?=$this->action('uninstall', $job['jID'])?>"><?=t('Remove')?></a>
+	<?endif?></td>
 </tr>
 <?endforeach?>
+</tbody>
+</table>
+<?endif?>
+
+<?if($availableJobs):?>
+<h2><?=t('Jobs Available for Installation')?></h2>
+<table class="zebra-striped">
+<thead>
+	<tr> 
+		<th><?=t('Name')?></td>
+		<th><?=t('Description')?></td> 
+		<th></td>
+	</tr>
+</thead>
+<tbody>
+	<?foreach($availableJobs as $availableJobName => $job):?>
+	<tr> 
+		<td><?=$job->getJobName() ?></td>
+		<td><?=$job->getJobDescription() ?></td> 
+		<td><?if(!$job->invalid):?>
+			<a class="btn" href="<?=$this->action('install', $job->jHandle)?>"><?=t('Install')?></a>
+		<?endif?></td>
+	</tr>	
+	<?endforeach?>
 </tbody>
 </table>
 <?endif?>
