@@ -47,7 +47,7 @@ if (count($errors) == 0) {
 			// URL appears to be good... add it
 			$incoming_urls[] = $this_url;
 		} else {
-			$errors[] = '"' . $this_url . '"' . t(' is not a valid URL.');
+			$errors[] = $this_url . t(' is not a valid URL.');
 		}
 	}
 
