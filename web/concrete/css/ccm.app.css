@@ -169,7 +169,7 @@
 .ccm-ui .inputs-list .inputs-list{margin-left:25px;margin-bottom:10px;padding-top:0;}
 .ccm-ui .inputs-list:first-child{padding-top:6px;}
 .ccm-ui .inputs-list li+li{padding-top:2px;}
-.ccm-ui .inputs-list input[type=radio],.ccm-ui .inputs-list input[type=checkbox]{margin-bottom:0;}
+.ccm-ui .inputs-list input[type=radio],.ccm-ui .inputs-list input[type=checkbox]{margin-bottom:0;vertical-align:top;}
 .ccm-ui .form-stacked{padding-left:20px;}.ccm-ui .form-stacked fieldset{padding-top:9px;}
 .ccm-ui .form-stacked legend{padding-left:0;}
 .ccm-ui .form-stacked label{display:block;float:none;width:auto;font-weight:bold;text-align:left;line-height:20px;padding-top:0;}
@@ -936,6 +936,7 @@ ul#ccm-select-marketplace-theme li .desc{font-size:10px;}
 .ccm-layouts-block-arrange-placeholder{display:none;}
 .ccm-move-mode .ccm-layouts-block-arrange-placeholder{height:0px !important;min-height:0px;padding:0px !important;border:0px none;cursor:default;padding-top:4px !important;display:block;}
 #ccm-dashboard-composer-form div.ccm-block-stack,#ccm-dashboard-composer-form div.ccm-block-alias,#ccm-dashboard-composer-form div.ccm-block-global,#ccm-dashboard-composer-form div.ccm-block{margin:0px;padding:0px;border:0px;}
+img.ccm-composer-content-item-icon {vertical-align:text-top;margin-right:5px;}
 div.ccm-block-alias{border:2px dotted #fbb !important;}
 div.ccm-block-stack{border:2px dotted #6D0000 !important;}
 div.ccm-block-arrange,div.ccm-block{margin:0px;border:2px dotted #f00;padding:2px;margin-bottom:4px;overflow:hidden;}
