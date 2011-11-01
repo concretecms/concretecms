@@ -66,6 +66,9 @@ class DashboardSitemapSearchController extends Controller {
 		$pageList->displayUnapprovedPages();
 
 		$pageList->sortBy('cDateModified', 'desc');
+
+		$columns = PageSearchColumnSet::getCurrent();
+		$this->set('columns', $columns);
 		
 		$cvName = htmlentities($req['cvName'], ENT_QUOTES, APP_CHARSET);
 		

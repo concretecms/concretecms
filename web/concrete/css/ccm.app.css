@@ -577,15 +577,13 @@ img.ccm-attribute-editable-field-loading{display:none;}
 div.ccm-attribute-editable-field-form{display:none;}
 div.ccm-attribute-editable-field-type-text input{width:100%;}
 div.ccm-attribute-editable-field-type-number input{width:60px;}
-div#ccm-search-export{float:left;width:80px;text-align:left;}
-div#ccm-search-export a{font-size:11px;}
-div#ccm-search-export{background:transparent url(../images/icons/excel.png) no-repeat;padding-left:22px;margin-top:2px;padding-top:3px;padding-bottom:10px;}
 a.ccm-search-save{color:#333;padding:3px 27px 3px 3px;position:relative;height:24px;}
 a.ccm-search-save:hover{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;background-color:#d7d7d7;text-decoration:none;color:#333;}
 a.ccm-search-save span{position:absolute;top:-2px;right:3px;width:22px;height:24px;}
-a#ccm-search-add-column{margin-left:8px;color:#333;padding:3px 29px 3px 3px;position:relative;height:24px;}
-a#ccm-search-add-column:hover{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;background-color:#d7d7d7;text-decoration:none;color:#333;}
-a#ccm-search-add-column span{position:absolute;top:2px;right:5px;width:24px;height:24px;}
+a#ccm-search-add-column,a#ccm-export-results{margin-left:8px;color:#333;padding:3px 29px 3px 3px;position:relative;height:24px;}
+a#ccm-search-add-column:hover,a#ccm-export-results:hover{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;background-color:#d7d7d7;text-decoration:none;color:#333;}
+a#ccm-search-add-column span,a#ccm-export-results span{position:absolute;top:2px;right:5px;width:24px;height:24px;}
+a#ccm-export-results span{background:transparent url(../images/icons/excel.png) no-repeat;background-position:top right;}
 ul.ccm-search-sortable-column-wrapper{border:2px solid #dedede;padding:0px;margin:0px;padding-top:8px;}
 ul.ccm-search-sortable-column-wrapper li{padding:2px 0px 4px 24px;margin-left:4px;margin-bottom:4px;background:transparent url(../images/icons/column.png) no-repeat scroll;list-style-type:none;}
 ul.ccm-search-sortable-column-wrapper li:hover{cursor:move;}

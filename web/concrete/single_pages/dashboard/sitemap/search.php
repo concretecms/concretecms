@@ -40,17 +40,17 @@ CCM_LAUNCHER_SITEMAP = 'search'; // we need this for when we are moving and copy
 CCM_SEARCH_INSTANCE_ID = '<?=$searchInstance?>';
 </script>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Search Pages'), t('Search the pages of your site and perform bulk actions on them.'));?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Search Pages'), t('Search the pages of your site and perform bulk actions on them.'), false, false);?>
 
 <?
 $dh = Loader::helper('concrete/dashboard/sitemap');
 if ($dh->canRead()) { ?>
 
 <div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
-<? Loader::element('pages/search_form_advanced', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
+<? Loader::element('pages/search_form_advanced', array('columns' => $columns, 'searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
 </div>
 
-<? Loader::element('pages/search_results', array('searchInstance' => $searchInstance, 'searchType' => 'DASHBOARD', 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
+<? Loader::element('pages/search_results', array('columns' => $columns, 'searchInstance' => $searchInstance, 'searchType' => 'DASHBOARD', 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
 
 <? } else { ?>
 <div class="ccm-pane-body">
@@ -59,6 +59,6 @@ if ($dh->canRead()) { ?>
 
 <? } ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(); ?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false); ?>
 
 <? } ?>

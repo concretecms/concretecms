@@ -1,32 +1,48 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 
-<div id="ccm-list-wrapper">
+<div id="ccm-user-search-results">
+
+<? if ($searchType == 'DASHBOARD') { ?>
+
+<div class="ccm-pane-body">
+
+<? } ?>
+
 <?
 	if (!$mode) {
 		$mode = $_REQUEST['mode'];
 	}
+	if (!$searchType) {
+		$searchType = $_REQUEST['searchType'];
+	}
 	
 	$soargs = array();
+	$soargs['searchType'] = $searchType;
 	$soargs['mode'] = $mode;
+	$searchInstance = 'user';
 
 	?>
-	<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr>
-	<td width="100%"><?=$userList->displaySummary();?></td>
-		<td style="white-space: nowrap"><?=t('With Selected: ')?>&nbsp;</td>
-		<td align="right">
-		<select id="ccm-user-list-multiple-operations" disabled>
+
+<div id="ccm-list-wrapper"><a name="ccm-<?=$searchInstance?>-list-wrapper-anchor"></a>
+
+	<div style="float: right; margin-bottom: 10px">
+		<? $form = Loader::helper('form'); ?>
+
+		<?=$form->label('ccm-user-list-multiple-operations', t('With Selected'))?>
+		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" style="width: 120px; margin-left: 8px;" disabled>
 					<option value="">**</option>
 					<option value="properties"><?=t('Edit Properties')?></option>
 				<? if ($mode == 'choose_multiple') { ?>
 					<option value="choose"><?=t('Choose')?></option>
 				<? } ?>
 				</select>
-		</td>
-	</tr>
-	</table>
-	
+		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/customize_search_columns" id="ccm-search-add-column"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Customize Results')?></a>
+		<a id="ccm-export-results" href="javascript:void(0)" onclick="$('#ccm-user-advanced-search').attr('action', '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results_export'); $('#ccm-user-advanced-search').get(0).submit(); $('#ccm-user-advanced-search').attr('action', '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results');"><span></span><?=t('Export')?></a>
+
+	</div>
+
 	<?
+	$userList->displaySummary();
 	$txt = Loader::helper('text');
 	$keywords = $_REQUEST['keywords'];
 	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/users/search_results';
@@ -34,17 +50,15 @@
 	if (count($users) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-user-list" class="ccm-results-list">
 		<tr>
-			<th><input id="ccm-user-list-cb-all" type="checkbox" /></th>
-			<th class="<?=$userList->getSearchResultsClass('uName')?>"><a href="<?=$userList->getSortByURL('uName', 'asc', $bu)?>"><?=t('Username')?></a></th>
-			<th class="<?=$userList->getSearchResultsClass('uEmail')?>"><a href="<?=$userList->getSortByURL('uEmail', 'asc', $bu)?>"><?=t('Email Address')?></a></th>
-			<th class="<?=$userList->getSearchResultsClass('uDateAdded')?>"><a href="<?=$userList->getSortByURL('uDateAdded', 'asc', $bu)?>"><?=t('Date Added')?></a></th>
-			<th class="<?=$userList->getSearchResultsClass('uNumLogins')?>"><a href="<?=$userList->getSortByURL('uNumLogins', 'asc', $bu)?>"><?=t('# Logins')?></a></th>
-			<? 
-			$slist = UserAttributeKey::getColumnHeaderList();
-			foreach($slist as $ak) { ?>
-				<th class="<?=$userList->getSearchResultsClass($ak)?>"><a href="<?=$userList->getSortByURL($ak, 'asc', $bu)?>"><?=$ak->getAttributeKeyDisplayHandle()?></a></th>
-			<? } ?>			
-			<th class="ccm-search-add-column-header"><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/customize_search_columns" id="ccm-search-add-column"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" /></a></th>
+			<th width="1"><input id="ccm-user-list-cb-all" type="checkbox" /></th>
+			<? foreach($columns->getColumns() as $col) { ?>
+				<? if ($col->isColumnSortable()) { ?>
+					<th class="<?=$userList->getSearchResultsClass($col->getColumnKey())?>"><a href="<?=$userList->getSortByURL($col->getColumnKey(), $col->getColumnDefaultSortDirection(), $bu, $soargs)?>"><?=$col->getColumnName()?></a></th>
+				<? } else { ?>
+					<th><?=$col->getColumnName()?></th>
+				<? } ?>
+			<? } ?>
+
 		</tr>
 	<?
 		foreach($users as $ui) { 
@@ -64,21 +78,14 @@
 		
 			<tr class="ccm-list-record <?=$striped?>">
 			<td class="ccm-user-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$ui->getUserID()?>" user-email="<?=$ui->getUserEmail()?>" user-name="<?=$ui->getUserName()?>" /></td>
-			<td><a href="<?=$action?>"><?=$txt->highlightSearch($ui->getUserName(), $keywords)?></a></td>
-			<td><a href="mailto:<?=$ui->getUserEmail()?>"><?=$txt->highlightSearch($ui->getUserEmail(), $keywords)?></a></td>
-			<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_USERS, strtotime($ui->getUserDateAdded('user')))?></td>
-			<td><?=$ui->getNumLogins()?></td>
-			<? 
-			$slist = UserAttributeKey::getColumnHeaderList();
-			foreach($slist as $ak) { ?>
-				<td><?
-				$vo = $ui->getAttributeValueObject($ak);
-				if (is_object($vo)) {
-					print $vo->getValue('display');
-				}
-				?></td>
-			<? } ?>		
-			<td>&nbsp;</td>
+			<? foreach($columns->getColumns() as $col) { ?>
+				<? if ($col->getColumnKey() == 'uName') { ?>
+					<td><a href="<?=$action?>"><?=$ui->getUserName()?></a></td>
+				<? } else { ?>
+					<td><?=$col->getColumnValue($ui)?></td>
+				<? } ?>
+			<? } ?>
+
 			</tr>
 			<?
 		}
@@ -94,9 +101,23 @@
 		<div id="ccm-list-none"><?=t('No users found.')?></div>
 		
 	
-	<? } 
-	$userList->displayPaging($bu, false, $soargs); ?>
+	<? }  ?>
+
+</div>
 	
+<? if ($searchType == 'DASHBOARD') { ?>
+</div>
+
+<div class="ccm-pane-footer">
+	<? 	$userList->displayPaging($bu, false, $soargs); ?>
+</div>
+
+<? } else { ?>
+	<div class="ccm-pane-dialog-pagination">
+		<? 	$userList->displayPaging($bu, false, $soargs); ?>
+	</div>
+<? } ?>
+
 </div>
 
 <script type="text/javascript">
