@@ -433,11 +433,7 @@ if ($ctEditMode) {
                 <th width="100%"><?=t('Name')?></th>
                 <th><?=t('Handle')?></th>
                 <th><?=t('Package')?></th>
-                <th></th>
-                <th></th>
-                <? if ($cap->canAccessComposer()) { ?>
-                    <th></th>
-                <? } ?>
+                <th <? if ($cap->canAccessComposer()) { ?>colspan="3"<? } else { ?>colspan="2"<? } ?></th>
             </tr>
 		</thead>
 		<tbody>
@@ -465,15 +461,15 @@ if ($ctEditMode) {
                     <? } else { 
                         $defaultsErrMsg = t('You do not have access to page type default content.');
                         ?>
-                        <? print $ih->button_js(t('Defaults'), "alert('" . $defaultsErrMsg . "')", 'left', 'ccm-button-inactive', array('title'=>t('Lets you set default permissions and blocks for a particular page type.')) );?>
+                        <? print $ih->button_js(t('Defaults'), "alert('" . $defaultsErrMsg . "')", 'left', 'small ccm-button-inactive', array('title'=>t('Lets you set default permissions and blocks for a particular page type.')) );?>
                     <? } ?>
                 <? } ?>
             
                 </td>
                 
-                <td><? print $ih->button(t('Settings'), $this->url('/dashboard/pages/types?ctID=' . $ct->getCollectionTypeID() . '&task=edit'))?></td>
+                <td><? print $ih->button(t('Settings'), $this->url('/dashboard/pages/types?ctID=' . $ct->getCollectionTypeID() . '&task=edit'), 'left','small')?></td>
                 <? if ($cap->canAccessComposer()) { ?>
-                    <td><? print $ih->button(t('Composer'), $this->url('/dashboard/pages/types/composer', 'view', $ct->getCollectionTypeID()))?></td>
+                    <td><? print $ih->button(t('Composer'), $this->url('/dashboard/pages/types/composer', 'view', $ct->getCollectionTypeID()), 'left', 'small')?></td>
                 <? } ?>	
             </tr>
             <? } ?>
