@@ -637,42 +637,25 @@ $(function() {
 
 } else { ?>
 
-<h1><span><?=t('User Search')?></span></h1>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Search Users'), t('Search the users of your site and perform bulk actions on them.'), false, false);?>
 
-<div class="ccm-dashboard-inner">
+<?
+$tp = new TaskPermission();
+if ($tp->canAccessUserSearch()) { ?>
 
-	<?
-	$tp = new TaskPermission();
-	if ($tp->canAccessUserSearch()) { 
-	
-	?>
-
-	<table id="ccm-search-form-table" >
-		<tr>
-			<td valign="top" class="ccm-search-form-advanced-col">
-				<? Loader::element('users/search_form_advanced'); ?>
-			</td>		
-
-			<td valign="top" width="100%">	
-				
-				<div id="ccm-search-advanced-results-wrapper">
-					
-					<div id="ccm-user-search-results">
-					
-						<? Loader::element('users/search_results', array('users' => $users, 'userList' => $userList, 'pagination' => $pagination)); ?>
-					
-					</div>
-				
-				</div>
-			
-			</td>	
-		</tr>
-	</table>		
-
-	<? } else { ?>
-		<p><?=t('You do not have access to user search. This setting may be changed in the access section of the dashboard settings page.')?></p>
-	<? } ?>
-	
+<div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
+<? Loader::element('users/search_form_advanced', array('columns' => $columns, 'searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
 </div>
+
+<? Loader::element('users/search_results', array('columns' => $columns, 'searchInstance' => $searchInstance, 'searchType' => 'DASHBOARD', 'users' => $users, 'userList' => $userList, 'pagination' => $pagination)); ?>
+
+<? } else { ?>
+<div class="ccm-pane-body">
+	<p><?=t('You do not have access to user search. This setting may be changed in the access section of the dashboard settings page.')?></p>
+</div>	
+
+<? } ?>
+
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false); ?>
 
 <? } ?>

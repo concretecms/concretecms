@@ -125,6 +125,7 @@ ccm_setupSortableColumnSelection = function(searchType) {
 		jQuery.fn.dialog.open({
 			width: 550,
 			height: 350,
+			appendButtons: true,
 			modal: false,
 			href: $(this).attr('href'),
 			title: ccmi18n.customizeSearch				

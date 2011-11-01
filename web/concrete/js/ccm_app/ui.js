@@ -426,6 +426,8 @@ ccm_triggerSelectUser = function(uID, uName, uEmail) {
 }
 
 ccm_setupUserSearch = function() {
+	$(".chosen-select").chosen();	
+	
 	$("#ccm-user-list-cb-all").click(function() {
 		if ($(this).prop('checked') == true) {
 			$('.ccm-list-record td.ccm-user-list-cb input[type=checkbox]').attr('checked', true);
@@ -473,10 +475,6 @@ ccm_setupUserSearch = function() {
 		$(this).get(0).selectedIndex = 0;
 	});
 
-	$("div.ccm-user-search-advanced-groups-cb input[type=checkbox]").unbind();
-	$("div.ccm-user-search-advanced-groups-cb input[type=checkbox]").click(function() {
-		$("#ccm-user-advanced-search").submit();
-	});
 
 }
 

@@ -34,16 +34,17 @@ if ($_POST['task'] == 'update_columns') {
 $list = FileAttributeKey::getList();
 
 ?>
+<div class="ccm-ui">
 
 <form method="post" id="ccm-<?=$searchInstance?>-customize-search-columns-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/customize_search_columns/">
 <?=$form->hidden('task', 'update_columns')?>
 
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="35%" valign="top">
-	<h1><?=t('Choose Headers')?></h1>
+	<h3><?=t('Choose Headers')?></h3>
 	
-	<h2><?=t('Standard Properties')?></h2>
+	<div class="clearfix">
+	<label><?=t('Standard Properties')?></label>
+	<div class="input">
+	<ul class="inputs-list">
 	
 	<?
 	$columns = $fldca->getColumns();
@@ -51,23 +52,30 @@ $list = FileAttributeKey::getList();
 
 		?>
 
-		<div><?=$form->checkbox($col->getColumnKey(), 1, $fldc->contains($col), array('style' => 'vertical-align: middle'))?> <label for="<?=$col->getColumnKey()?>"><?=$col->getColumnName()?></label></div>
+		<li><label><?=$form->checkbox($col->getColumnKey(), 1, $fldc->contains($col))?> <span><?=$col->getColumnName()?></span></label></li>
 	
 	<? } ?>
 	
-	<h2><?=t('Additional Attributes')?></h2>
+	</ul>
+	</div>
+	</div>
+
+	<div class="clearfix">
+	<label><?=t('Additional Attributes')?></label>
+	<div class="input">
+	<ul class="inputs-list">
 	
 	<? foreach($list as $ak) { ?>
+
+		<li><label><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak))?> <span><?=$ak->getAttributeKeyDisplayHandle()?></span></label></li>
 	
-		<div><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak), array('style' => 'vertical-align: middle'))?> <label for="ak_<?=$ak->getAttributeKeyHandle()?>"><?=$ak->getAttributeKeyDisplayHandle()?></label></div>
-		
 	<? } ?>
 	
-	</td>
-	<td><div style="width: 20px">&nbsp;</div></td>
-	<td valign="top" width="65%">
+	</ul>
+	</div>
+	</div>
 	
-	<h1><?=t('Column Order')?></h1>
+	<h3><?=t('Column Order')?></h3>
 	
 	<p><?=t('Click and drag to change column order.')?></p>
 	
@@ -77,15 +85,11 @@ $list = FileAttributeKey::getList();
 	<? } ?>	
 	</ul>
 	
-	<h1><?=t('Sort By')?></h1>
+	<br/>
+	
+	<h3><?=t('Sort By')?></h3>
 	
 	<div class="ccm-sortable-column-sort-controls">
-	<?
-	$h = Loader::helper('concrete/interface');
-	$b1 = $h->submit(t('Save'), 'save', 'right');
-	print $b1;
-	?>
-
 	
 	<? $ds = $fldc->getDefaultSortColumn(); ?>
 	
@@ -99,12 +103,13 @@ $list = FileAttributeKey::getList();
 		<option value="desc" <? if ($ds->getColumnDefaultSortDirection() == 'desc') { ?> selected="true" <? } ?>><?=t('Descending')?></option>	
 	</select>	
 	</div>
-	
-	</td>
-</tr>
-</table>
+
+	<div class="dialog-buttons">
+	<input type="button" class="btn primary" onclick="$('#ccm-<?=$searchInstance?>-customize-search-columns-form').submit()" value="<?=t('Save')?>" />
+	</div>
 
 </form>
+</div>
 
 <script type="text/javascript">
 ccm_submitCustomizeSearchColumnsForm = function() {
@@ -128,7 +133,7 @@ $(function() {
 		opacity: 0.5
 	});
 	$('form#ccm-<?=$searchInstance?>-customize-search-columns-form input[type=checkbox]').click(function() {
-		var thisLabel = $(this).parent().find('label').html();
+		var thisLabel = $(this).parent().find('span').html();
 		var thisID = $(this).attr('id');
 		if ($(this).prop('checked')) {
 			if ($('#field_' + thisID).length == 0) {
