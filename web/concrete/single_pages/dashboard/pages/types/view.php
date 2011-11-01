@@ -88,8 +88,7 @@ if ($ctEditMode) {
 	$ct->populateAvailableAttributeKeys();
 	?>
 	
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Page Type'), false, false, false);?>
-	<!-- <h1><span><?=t('Edit Page Type')?> (<em class="required">*</em> - <?=t('required field')?>)</span></h1> -->
+    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Page Type').'<span class="label" style="position:relative;top:-3px;left:12px;">'.t('* required field').'</span>', false, false, false);?>
     
     <form method="post" id="update_page_type" action="<?=$this->url('/dashboard/pages/types/')?>">
 	<?=$valt->output('add_or_update_page_type')?>
@@ -102,17 +101,17 @@ if ($ctEditMode) {
         <table border="0" cellspacing="0" cellpadding="0">
             <thead>
                 <tr>
-                    <th class="header" colspan="2"><?=t('Name')?> <span class="required">*</span></th>
+                    <th class="header"><?=t('Name')?> <span class="required">*</span></th>
                     <th class="header"><?=t('Handle')?> <span class="required">*</span></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td colspan="2" width="65%">
-                        <?=$form->text('ctName', $ctName, array('class' => 'xlarge'))?>
+                    <td>
+                        <?=$form->text('ctName', $ctName, array('class' => 'span9'))?>
                     </td>
-                    <td width="35%">
-                        <?=$form->text('ctHandle', $ctHandle)?>
+                    <td>
+                        <?=$form->text('ctHandle', $ctHandle, array('class' => 'span6'))?>
                     </td>
                 </tr>
 			</tbody>
@@ -121,7 +120,7 @@ if ($ctEditMode) {
         <table border="0" cellspacing="0" cellpadding="0">
             <thead>
                 <tr>
-                    <th colspan="3" class="subheader">
+                    <th class="subheader">
                     <?=t('Icon')?>
                     <?
                         if (!is_object($pageTypeIconsFS)) {
@@ -139,7 +138,7 @@ if ($ctEditMode) {
 			</thead>
             <tbody>
                 <tr>
-                    <td colspan="3">
+                    <td>
                         
                             <? 
                             $first = true;
@@ -193,7 +192,7 @@ if ($ctEditMode) {
                         <tr class="inputs-list">
                     <? } ?>
                     
-                            <td>
+                            <td width="33%">
                             <label>
                             <input type="checkbox" name="akID[]" value="<?=$ak->getAttributeKeyID()?>" <? if (($this->controller->isPost() && in_array($ak->getAttributeKeyID(), $akIDArray))) { ?> checked <? } else if ((!$this->controller->isPost()) && $ct->isAvailableCollectionTypeAttribute($ak->getAttributeKeyID())) { ?> checked <? } ?> />
                             <span><?=$ak->getAttributeKeyName()?></span>
@@ -265,8 +264,7 @@ if ($ctEditMode) {
 	
     <!-- START: Add Page Type pane -->
     
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Page Type'), false, false, false);?>
-	<!-- <h1><span><?=t('Add Page Type')?> (<em class="required">*</em> - <?=t('required field')?>)</span></h1> -->
+    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Page Type').'<span class="label" style="position:relative;top:-3px;left:12px;">'.t('* required field').'</span>', false, false, false);?>
 	
     <form method="post" id="add_page_type" action="<?=$this->url('/dashboard/pages/types/')?>">
 	<?=$valt->output('add_or_update_page_type')?>
@@ -277,17 +275,17 @@ if ($ctEditMode) {
         <table border="0" cellspacing="0" cellpadding="0">
             <thead>
                 <tr>
-                    <th class="header" colspan="2"><?=t('Name')?> <span class="required">*</span></th>
+                    <th class="header"><?=t('Name')?> <span class="required">*</span></th>
                     <th class="header"><?=t('Handle')?> <span class="required">*</span></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td colspan="2" width="65%">
-                        <?=$form->text('ctName', $_POST['ctName'], array('class' => 'xlarge'))?>
+                    <td>
+                        <?=$form->text('ctName', $_POST['ctName'], array('class' => 'span9'))?>
                     </td>
-                    <td width="35%">
-                        <?=$form->text('ctHandle', $_POST['ctHandle'])?>
+                    <td>
+                        <?=$form->text('ctHandle', $_POST['ctHandle'], array('class' => 'span6'))?>
                     </td>
                 </tr>
 			</tbody>
@@ -296,7 +294,7 @@ if ($ctEditMode) {
         <table border="0" cellspacing="0" cellpadding="0">
             <thead>
                 <tr>
-                    <th colspan="3" class="subheader">
+                    <th class="subheader">
 					
 					<?=t('Icon')?>
                     <?
@@ -316,7 +314,7 @@ if ($ctEditMode) {
 			</thead>
             <tbody>
                 <tr>
-                    <td colspan="3">
+                    <td>
                     <? 
                     $first = true;
                     foreach($icons as $ic) { 
@@ -376,7 +374,7 @@ if ($ctEditMode) {
                         <tr class="inputs-list">
                     <? } ?>
                     
-                        <td>
+                        <td width="33%">
                             <label>
                                 <input type="checkbox" name="akID[]" value="<?=$ak->getAttributeKeyID()?>" />
                                 <span><?=$ak->getAttributeKeyName()?></span>
