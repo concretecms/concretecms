@@ -25,12 +25,12 @@ if ($cap->canAccessComposer()) { ?>
         <table cellspacing="0" cellpadding="0" border="0">
             <thead>
                 <tr>
-                    <th colspan="3" class="header"><?=t('Included in Composer?')?></th>
+                    <th class="header"><?=t('Included in Composer?')?></th>
                 </tr>
             </thead>
             <tbody>
                 <tr class="inputs-list">
-                    <td colspan="3">
+                    <td>
                     
                     	<label>
                         	<?=$form->checkbox('ctIncludeInComposer', 1, $ct->isCollectionTypeIncludedInComposer() == 1)?>
@@ -45,12 +45,12 @@ if ($cap->canAccessComposer()) { ?>
         <table cellspacing="0" cellpadding="0" border="0">
             <thead>
                 <tr>
-                    <th colspan="3" class="subheader"><?=t('Composer Publishing Settings')?></th>
+                    <th class="subheader"><?=t('Composer Publishing Settings')?></th>
                 </tr>
 			</thead>
 			<tbody>
                 <tr class="row-composer inputs-list">
-                    <td colspan="3">
+                    <td>
                     
                         <label>
                         	<?=$form->radio('ctComposerPublishPageMethod', 'CHOOSE', $ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE' || $ct->getCollectionTypeComposerPublishMethod == null)?>
@@ -110,7 +110,7 @@ if ($cap->canAccessComposer()) { ?>
                         <tr class="row-composer inputs-list">
                     <? } ?>
                     
-                    	<td>
+                    	<td width="33%">
                             <label>
                                 <?=$form->checkbox('composerAKID[]', $ak->getAttributeKeyID(), in_array($ak->getAttributeKeyID(), $selectedAttributes))?>
                                 <span><?=$ak->getAttributeKeyName()?></span>
@@ -139,12 +139,12 @@ if ($cap->canAccessComposer()) { ?>
 		<table cellspacing="0" cellpadding="0" border="0">
             <thead>
 				<tr>
-                    <th colspan="3" class="header"><?=t('Composer Content Order')?></th>
+                    <th class="header"><?=t('Composer Content Order')?></th>
                 </tr>
 			</thead>
             <tbody>
                 <tr>
-                    <td colspan="3">
+                    <td>
                         <div class="ccm-composer-content-item-list">
                         
                         <?
