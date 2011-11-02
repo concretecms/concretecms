@@ -213,7 +213,7 @@ class AddressAttributeTypeController extends AttributeTypeController  {
 			$data['akDefaultCountry'] = $akey->type['default-country'];
 			if (isset($akey->type->countries)) {
 				foreach($akey->type->countries->children() as $country) {
-					$data['akCustomCountries'][] = $country->__toString();
+					$data['akCustomCountries'][] = (string) $country;
 				}
 			}
 			$this->saveKey($data);

@@ -57,7 +57,7 @@ if (isset($_REQUEST['searchInstance'])) {
 				<? if ($col->isColumnSortable()) { ?>
 					<th class="<?=$fileList->getSearchResultsClass($col->getColumnKey())?>"><a href="<?=$fileList->getSortByURL($col->getColumnKey(), $col->getColumnDefaultSortDirection(), $bu, $soargs)?>"><?=$col->getColumnName()?></a></th>
 				<? } else { ?>
-					<th><?=t('Type')?></th>
+					<th><?=$col->getColumnName()?></th>
 				<? } ?>
 			<? } ?>
 		</tr>

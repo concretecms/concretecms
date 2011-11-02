@@ -1,179 +1,180 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");?>
-<? if (in_array($this->controller->getTask(), array('update_set', 'update_set_attributes', 'edit', 'delete_set'))) { ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+$form = Loader::helper('form');
+$txt = Loader::helper('text');?>
+<?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_attributes', 'edit', 'delete_set'))) { 
 
-<h1><span><?=t('Set Attributes')?></span></h1>
-<div class="ccm-dashboard-inner ccm-ui">
-<p><?=t('Add the following attributes to this set.')?></p>
-
-<form class="form-stacked" method="post" action="<?=$this->action('update_set_attributes')?>">
-<input type="hidden" name="asID" value="<?=$set->getAttributeSetID()?>" />
-<?=Loader::helper('validation/token')->output('update_set_attributes')?>
-
-<? 
-$cat = AttributeKeyCategory::getByID($set->getAttributeSetKeyCategoryID());
-$list = AttributeKey::getList($cat->getAttributeKeyCategoryHandle());
-$unassigned = $cat->getUnassignedAttributeKeys();
-if (count($list) > 0) { ?>
-
-	<div class="clearfix">
-	<ul class="inputs-list">
+	echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Set'), false);?>
+		
+		<div class="clearfix">
+		<div class="row">
+		<div class="span-pane-half">
+		<h3><?=t('Update Set Details')?></h3>
 	
-	<?
-	foreach($list as $ak) { 
+		<?php if ($set->isAttributeSetLocked()) { ?>
+			<div class="info block-message alert-message">
+				<p><?php echo t('This attribute set is locked. It cannot be deleted, and its handle cannot be changed.')?></p>
+			</div>	
+		<?php } ?>
 
-	$disabled = '';
-	if (!in_array($ak, $unassigned) && (!$ak->inAttributeSet($set))) { 
-		$disabled = array('disabled' => 'disabled');
-	}
-	
-	?>
-		<li><label>
-			<?=$form->checkbox('akID[]', $ak->getAttributeKeyID(), $ak->inAttributeSet($set), $disabled)?>
-			<span><?=$ak->getAttributeKeyName()?></span>
-			<span class="ccm-note"><?=$ak->getAttributeKeyHandle()?></span>
-		</label>
-		</li>	
-	<? } ?>
-
-	</div>
-	
-	<div class="actions">
-		<?=$form->submit('submit', t('Update Attributes'), array('class' => 'primary'))?>
-		<a class="btn" href="<?=$this->url('/dashboard/settings/attribute_sets', 'view', $set->getAttributeSetKeyCategoryID())?>"><?=t('Cancel')?></a>	
-	</div>
-<? 
-} else { ?>
-	<p><?=t('No attributes found.')?></p>
-<? } ?>
-
-</form>
-</div>
-
-<h1><span><?=t("Update Set Details")?></span></h1>
-<div class="ccm-dashboard-inner ccm-ui">
-	
-	<? if ($set->isAttributeSetLocked()) { ?>
-		<div class="info block-message alert-message"><p><?=t('This attribute set is locked. It cannot be deleted, and its handle cannot be changed.')?></p></div>	
-	<? } ?>
-
-	<form method="post" action="<?=$this->action('update_set')?>">
-	<input type="hidden" name="asID" value="<?=$set->getAttributeSetID()?>" />
-	<?=Loader::helper('validation/token')->output('update_set')?>
-	<div class="clearfix">
-		<?=$form->label('asHandle', t('Handle'))?>
-		<div class="input">
-			<? if ($set->isAttributeSetLocked()) { ?>
-				<?=$form->text('asHandle', $set->getAttributeSetHandle(), array('disabled' => 'disabled'))?>
-			<? } else { ?>
-				<?=$form->text('asHandle', $set->getAttributeSetHandle())?>
-			<? } ?>
-		</div>
-	</div>
-	
-	<div class="clearfix">
-		<?=$form->label('asName', t('Name'))?>
-		<div class="input">
-			<?=$form->text('asName', $set->getAttributeSetName())?>
-		</div>
-	</div>
-	
-	<div class="actions">
-		<?=$form->submit('submit', t('Update Set'), array('class' => 'primary'))?>
-		<a class="btn" href="<?=$this->url('/dashboard/settings/attribute_sets', 'view', $set->getAttributeSetKeyCategoryID())?>"><?=t('Cancel')?></a>	
-	</div>
-	</form>
-</div>
-
-
-	<? if (!$set->isAttributeSetLocked()) { ?>	
-
-<h1><span><?=t("Delete Set")?></span></h1>
-<div class="ccm-dashboard-inner ccm-ui">
-
-	<p><?=t('Warning, this cannot be undone. No attributes will be deleted but they will no longer be grouped together.')?></p>
-	<form method="post" action="<?=$this->action('delete_set')?>" class="form-stacked">
-		<input type="hidden" name="asID" value="<?=$set->getAttributeSetID()?>" />
-		<?=Loader::helper('validation/token')->output('delete_set')?>
-	
-		<div class="actions">
-			<?=$form->submit('submit', t('Delete Set'), array('class' => 'danger'))?>
-			<a class="btn" href="<?=$this->url('/dashboard/settings/attribute_sets', 'view', $set->getAttributeSetKeyCategoryID())?>"><?=t('Cancel')?></a>	
-		</div>
-	</form>
-	
-</div>
-<? } ?>
-
-<? } else { ?>
-
-<h1><span><?=t("Attribute Sets")?></span></h1>
-<div class="ccm-dashboard-inner ccm-ui">
-
-
-	<? if (count($sets) > 0) { ?>
-	
-	<div class="ccm-attribute-sortable-set-list">
-	
-		<? foreach($sets as $asl) { ?>
-			<div class="ccm-group" id="asID_<?=$asl->getAttributeSetID()?>">
-				<img class="ccm-group-sort" src="<?=ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" />
-				<a class="ccm-group-inner" href="<?=$this->url('/dashboard/settings/attribute_sets/', 'edit', $asl->getAttributeSetID())?>" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$asl->getAttributeSetName()?></a>
+		<form class="form-stacked" method="post" action="<?php echo $this->action('update_set')?>">
+			<input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
+			<?php echo Loader::helper('validation/token')->output('update_set')?>
+			<div class="clearfix">
+				<?php echo $form->label('asHandle', t('Handle'))?>
+				<div class="input">
+					<?php if ($set->isAttributeSetLocked()) { ?>
+						<?php echo $form->text('asHandle', $set->getAttributeSetHandle(), array('disabled' => 'disabled'))?>
+					<?php } else { ?>
+						<?php echo $form->text('asHandle', $set->getAttributeSetHandle())?>
+					<?php } ?>
+				</div>
 			</div>
-		<? } ?>
-	</div>
 	
-	<? } else { ?>
-		<?=t('No attribute sets currently defined.')?>
-	<? } ?>
+			<div class="clearfix">
+				<?php echo $form->label('asName', t('Name'))?>
+				<div class="input">
+					<?php echo $form->text('asName', $set->getAttributeSetName())?>
+				</div>
+			</div>
+
+			<div class="actions">
+				<?php echo $form->submit('submit', t('Update Set'), array('class' => 'primary'))?>
+			</div>
+		</form>
+
+		<?php if (!$set->isAttributeSetLocked()) { ?>	
+			<h3><?=t('Delete Set')?></h3>
+			<p><?php echo t('Warning, this cannot be undone. No attributes will be deleted but they will no longer be grouped together.')?></p>
+			<form method="post" action="<?php echo $this->action('delete_set')?>" class="">
+				<input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
+				<?php echo Loader::helper('validation/token')->output('delete_set')?>
+			
+				<div class="form-stacked actions">
+					<?php echo $form->submit('submit', t('Delete Set'), array('class' => 'danger'))?>
+				</div>
+			</form>
+		<?php } ?>
+		</div>
+
+		<div class="span-pane-half">
+		<h3><?=t('Add Attributes to Set')?></h3>
 	
-</div>
-
-<script type="text/javascript">
-	$("div.ccm-attribute-sortable-set-list").sortable({
-		handle: 'img.ccm-group-sort',
-		cursor: 'move',
-		opacity: 0.5,
-		stop: function() {
-			var ualist = $(this).sortable('serialize');
-			ualist += '&categoryID=<?=$categoryID?>';
-			$.post('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/dashboard/attribute_set_order_update', ualist, function(r) {
-
-			});
-		}
-	});
-</script>
-
-</div>
-
-
-<h1><span><?=t("Add Set")?></span></h1>
-<div class="ccm-dashboard-inner ccm-ui">
-	<p><?=t('Group attributes into sets for better organization and management.')?></p>
+		<form class="" method="post" action="<?php echo $this->action('update_set_attributes')?>">
+			<input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
+			<?php echo Loader::helper('validation/token')->output('update_set_attributes')?>
 	
-	<form method="post" action="<?=$this->action('add_set')?>">
-	<input type="hidden" name="categoryID" value="<?=$categoryID?>" />
-	<?=Loader::helper('validation/token')->output('add_set')?>
+			<?php 
+			$cat = AttributeKeyCategory::getByID($set->getAttributeSetKeyCategoryID());
+			$list = AttributeKey::getList($cat->getAttributeKeyCategoryHandle());
+			$unassigned = $cat->getUnassignedAttributeKeys();
+			if (count($list) > 0) { ?>
+	
+				<div class="clearfix">
+					<ul class="inputs-list">
+	
+						<?php foreach($list as $ak) { 
+	
+						$disabled = '';
+						if (!in_array($ak, $unassigned) && (!$ak->inAttributeSet($set))) { 
+							$disabled = array('disabled' => 'disabled');
+						}
+		
+						?>
+							<li>
+								<label>
+									<?php echo $form->checkbox('akID[]', $ak->getAttributeKeyID(), $ak->inAttributeSet($set), $disabled)?>
+									<span><?php echo $ak->getAttributeKeyName()?></span>
+									<span class="help-inline"><?php echo $ak->getAttributeKeyHandle()?></span>
+								</label>
+							</li>	
+						<?php } ?>
+					</ul>
+				</div>
+		
+				<div class="form-stacked actions">
+					<?php echo $form->submit('submit', t('Update Attributes'), array('class' => 'primary'))?>
+				</div>
+			<?php } else { ?>
+				<p><?php echo t('No attributes found.')?></p>
+			<?php } ?>
+	
+		</form>
+		</div>
+		</div>
+		</div>
+
+
+	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
+
+
+
+
+<?php } else if($this->controller->getTask() == 'category'){ ?>
+
+	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($txt->unHandle($this->controller->category->getAttributeKeyCategoryHandle()).' '.t('Attribute Sets'), false);?>
+
+	<?php if (count($sets) > 0) { ?>
+	
+		<div class="ccm-attribute-sortable-set-list">
+		
+			<?php foreach($sets as $asl) { ?>
+				<div class="ccm-group" id="asID_<?php echo $asl->getAttributeSetID()?>">
+					<img class="ccm-group-sort" src="<?php echo ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" />
+					<a class="ccm-group-inner" href="<?php echo $this->url('/dashboard/system/attributes/sets/', 'edit', $asl->getAttributeSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $asl->getAttributeSetName()?></a>
+				</div>
+			<?php } ?>
+		</div>
+	
+	<?php } else { ?>
+		<?php echo t('No attribute sets currently defined.')?>
+	<?php } ?>
+
+	<br/>
+	
+	<h3><?=t('Add Set')?></h3>
+
+	<p><?php echo t('Group attributes into sets for better organization and management.')?></p>
+	
+	<form method="post" action="<?php echo $this->action('add_set')?>">
+	<input type="hidden" name="categoryID" value="<?php echo $categoryID?>" />
+	<?php echo Loader::helper('validation/token')->output('add_set')?>
 	<div class="clearfix">
-		<?=$form->label('asHandle', t('Handle'))?>
+		<?php echo $form->label('asHandle', t('Handle'))?>
 		<div class="input">
-			<?=$form->text('asHandle')?>
+			<?php echo $form->text('asHandle')?>
 		</div>
 	</div>
 	
 	<div class="clearfix">
-		<?=$form->label('asName', t('Name'))?>
+		<?php echo $form->label('asName', t('Name'))?>
 		<div class="input">
-			<?=$form->text('asName')?>
+			<?php echo $form->text('asName')?>
 		</div>
 	</div>
 	
-	<div class="actions">
-		<?=$form->submit('submit', t('Add Set'), array('class' => 'primary'))?>
+	<div class="form-stacked actions">
+		<?php echo $form->submit('submit', t('Add Set'), array('class' => 'ccm-button-right 	primary'))?>
+		<a class="btn" href="<?php echo $this->url('/dashboard/system/attributes/sets')?>"><?php echo t('Back to Categories')?></a>	
 	</div>
 	</form>
+	
+	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
 
-</div>
-
-<? } ?>
-
+<?php } else { ?>
+	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Attribute Categories'), false);?>
+		<p><?php echo t('Attribute Categories are used to group different types of sets.')?></p>
+		<div class="">
+			<?php 
+			if(count($categories) > 0) {
+				foreach($categories as $cat) { ?>
+					<div class="ccm-group" id="acID_<?php echo $cat->getAttributeKeyCategoryID()?>">
+						<a class="ccm-group-inner" href="<?php echo $this->url('/dashboard/system/attributes/sets/', 'category', $cat->getAttributeKeyCategoryID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $txt->unhandle($cat->getAttributeKeyCategoryHandle())?></a>
+					</div>
+				<?php } 
+			} else {
+				echo t('No attribute categories currently defined.');
+			} ?>
+		</div>
+	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>	
+<?php } ?>
 

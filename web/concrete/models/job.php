@@ -107,6 +107,11 @@ class Job extends Object {
 		return $rs;
 	}
 	
+	public static function resetRunningJobs() {
+		$db = Loader::db();
+		$db->Execute('update Jobs set jStatus = \'ENABLED\' where jStatus = \'RUNNING\'');
+	}
+	
 	final static function getByID( $jID=0 ){
 		$db = Loader::db(); 
 		$jobData = $db->getRow("SELECT * FROM Jobs WHERE jID=".intval($jID));
