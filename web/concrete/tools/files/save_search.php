@@ -26,7 +26,9 @@ if ($_POST['task'] == 'save_search') {
 
 ?>
 
-<h1><?=t('Save Search')?></h1>
+<div class="ccm-ui">
+
+<h3><?=t('Save Search')?></h3>
 
 <form id="ccm-<?=$searchInstance?>-save-search-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/save_search" onsubmit="return ccm_alSaveSearch(this)">
 <?=$form->hidden('task', 'save_search')?>
@@ -35,12 +37,11 @@ if ($_POST['task'] == 'save_search') {
 <p><?=t('Enter a name for this saved search file set.')?></p>
 <?=$form->text('fsName', array('style' => 'width: 200px'))?>
 
-<?=$ih->submit(t('Save Search'))?>
-<br/><br/>
-
-<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left')?>	
+<?=$ih->submit(t('Save Search'), false, 'left')?>
 
 </form>
+
+</div>
 	
 <script type="text/javascript">
 ccm_alSaveSearch = function(form) {

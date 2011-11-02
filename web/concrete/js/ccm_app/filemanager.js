@@ -491,6 +491,7 @@ ccm_alSetupCheckboxes = function(searchInstance) {
 					width: 500,
 					height: 400,
 					modal: false,
+					appendButtons: true,
 					href: CCM_TOOLS_PATH + '/files/delete?' + fIDstring + '&searchInstance=' + searchInstance,
 					title: ccmi18n_filemanager.deleteFile				
 				});
@@ -827,7 +828,7 @@ ccm_alActivateMenu = function(obj, e) {
 			html += '<li><a class="ccm-menu-icon ccm-icon-access-permissions dialog-launch" dialog-modal="false" dialog-width="400" dialog-height="380" dialog-title="' + ccmi18n_filemanager.permissions + '" id="menuFilePermissions' + fID + '" href="' + CCM_TOOLS_PATH + '/files/permissions?searchInstance=' + searchInstance + '&fID=' + fID + '">'+ ccmi18n_filemanager.permissions + '<\/a><\/li>';
 		}
 		if ($(obj).attr('ccm-file-manager-can-delete') == '1') {
-			html += '<li><a class="ccm-icon-delete-menu ccm-menu-icon dialog-launch" dialog-modal="false" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.deleteFile + '" id="menuDeleteFile' + fID + '" href="' + CCM_TOOLS_PATH + '/files/delete?searchInstance=' + searchInstance + '&fID=' + fID + '">'+ ccmi18n_filemanager.deleteFile + '<\/a><\/li>';
+			html += '<li><a class="ccm-icon-delete-menu ccm-menu-icon dialog-launch" dialog-append-buttons="true" dialog-modal="false" dialog-width="500" dialog-height="200" dialog-title="' + ccmi18n_filemanager.deleteFile + '" id="menuDeleteFile' + fID + '" href="' + CCM_TOOLS_PATH + '/files/delete?searchInstance=' + searchInstance + '&fID=' + fID + '">'+ ccmi18n_filemanager.deleteFile + '<\/a><\/li>';
 		}
 		html += '</ul>';
 		html += '</div></div></div>';
