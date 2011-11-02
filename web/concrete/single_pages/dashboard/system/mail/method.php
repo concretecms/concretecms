@@ -6,6 +6,7 @@ $secureVals = array('' => t('None'), 'SSL' => 'SSL', 'TLS' => 'TLS');
 $form = Loader::helper('form');
 ?>
 	
+
 	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sitewide Mail Settings'), false, 'span12 offset2', false)?>
 	<div class="ccm-pane-body">
 	<form method="post" action="<?=$this->url('/dashboard/system/mail/method', 'save_settings')?>" id="mail-settings-form">
@@ -13,6 +14,13 @@ $form = Loader::helper('form');
 		<legend><?=t('Send Mail Method')?></legend>
 		<div class="ccm-dashboard-radio input">
 		<?=$form->radio('MAIL_SEND_METHOD', 'PHP_MAIL', MAIL_SEND_METHOD)?> <?=t('Default PHP Mail Function')?><br/>
+	<h1><span><?=t('Sitewide Mail Settings')?></span></h1>
+	<div class="ccm-dashboard-inner">
+	<form method="post" action="<?=$this->action('save_settings')?>" id="mail-settings-form">
+	
+	<h2><?=t('Send Mail Method')?></h2>
+	<div class="ccm-dashboard-radio">
+		<?=$form->radio('MAIL_SEND_METHOD', 'PHP_MAIL', MAIL_SEND_METHOD)?> <?=t('Default PHP Mail Function')?>
 		<?=$form->radio('MAIL_SEND_METHOD', 'SMTP', MAIL_SEND_METHOD)?> <?=t('External SMTP Server')?>
 		</div>
 		</fieldset>
@@ -76,6 +84,3 @@ $form = Loader::helper('form');
 	
 	</div>
 	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
-
-
-
