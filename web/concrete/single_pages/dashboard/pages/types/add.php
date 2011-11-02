@@ -10,47 +10,13 @@ $u = new User();
 Loader::model('file_set');
 $pageTypeIconsFS = FileSet::getByName("Page Type Icons");
 
-if ($_POST['task'] == 'add') {
-	$ctName = $_POST['ctName'];
-	$ctHandle = $_POST['ctHandle'];
-	
-	$error = array();
-	if (!$ctHandle) {
-		$error[] = t("Handle required.");
-	}
-	if (!$ctName) {
-		$error[] = t("Name required.");
-	}
-	
-	if (!$valt->validate('add_page_type')) {
-		$error[] = $valt->getErrorMessage();
-	}
-	
-	$akIDArray = $_POST['akID'];
-	if (!is_array($akIDArray)) {
-		$akIDArray = array();
-	}
-	
-	if (count($error) == 0) {
-		try {
-			if ($_POST['task'] == 'add') {
-				$nCT = CollectionType::add($_POST);
-				$this->controller->redirect('/dashboard/pages/types?created=1');
-			}		
-			exit;
-		} catch(Exception $e1) {
-			$error[] = $e1->getMessage();
-		}
-	}
-}
-
 ?>
 	
     <!-- START: Add Page Type pane -->
     
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Page Type').'<span class="label" style="position:relative;top:-3px;left:12px;">'.t('* required field').'</span>', false, false, false);?>
 	
-    <form method="post" id="add_page_type" action="<?=$this->url('/dashboard/pages/types/add')?>">
+    <form method="post" id="add_page_type" action="<?=$this->url('/dashboard/pages/types/add', 'do_add')?>">
 	<?=$valt->output('add_page_type')?>
     <?=$form->hidden('task', 'add'); ?>
 	
