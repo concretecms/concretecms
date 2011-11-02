@@ -110,8 +110,11 @@ jQuery(function($) {
 </tr>
 </thead>
 <tbody>
+<? $jobrunning = false; ?>
 <?foreach ($jobList as $job):?>
-<tr>
+<tr <? if ($job['jStatus'] == 'RUNNING') {
+	
+	$jobrunning = true;?>class="running" <? } ?>>
 	<td><a class="run-task" title="<?=t('Run')?>" href="<?=BASE_URL.$this->url('/tools/required/jobs?auth='.$auth.'&jobId='.$job['jID'])?>" data-jobId="<?=$job['jID']?>"></a><span class="run-indicator"></span></td>
 	<td><?=$job['jID']?></td>
 	<td><?=$job['jName']?></td>
@@ -165,5 +168,10 @@ jQuery(function($) {
 <div><?=t('If you wish to run these jobs in the background, automate access to the following URL:')?></div>
 <div><a href="<?=BASE_URL.$this->url('/tools/required/jobs?auth='.$auth)?>"><?=BASE_URL . $this->url('/tools/required/jobs?auth=' . $auth)?></a></div>
 </div>
-<div class="ccm-pane-footer"></div>
+<div class="ccm-pane-footer"><? if ($jobrunning == true) { ?>
+	<form method="post" style="display: inline" action="<?=$this->action('reset_running_jobs')?>">
+		<?=Loader::helper('validation/token')->output('reset_running_jobs')?>
+		<input type="submit" class="btn" value="<?=t('Reset all Running Jobs')?>" />
+	</form>
+<? } ?></div>
 <?=$h->getDashboardPaneFooterWrapper(false);?>

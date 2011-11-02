@@ -35,9 +35,11 @@ class ConcreteDashboardHelper {
 		return $cp->canRead();
 	}
 
-	public function inDashboard() {
-		$c = Page::getCurrentPage();
-		return strpos($c->getCollectionPath(), '/dashboard') === 0;
+	public function inDashboard($page = false) {
+		if (!$page) {
+			$page = Page::getCurrentPage();
+		}
+		return strpos($page->getCollectionPath(), '/dashboard') === 0;
 	}
 	
 	public function getDashboardPaneFooterWrapper($includeDefaultBody = true) {
