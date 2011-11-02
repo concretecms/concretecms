@@ -8,14 +8,16 @@ $form = Loader::helper('form');
 ?>
 <?=$h->getDashboardPaneHeaderWrapper(t('Site Permissions'), false, false, false);?>
 <form id="site-permissions-form" action="<?=$this->action('save')?>" method="post">
-<div class="ccm-pane-body">
 	<?=$this->controller->token->output('site_permissions_code')?>
 
-<?if(PERMISSIONS_MODEL != 'simple'):?>
+<? if(PERMISSIONS_MODEL != 'simple'):?>
+<div class="ccm-pane-body ccm-pane-body-footer">
 <p>
-<?=t('Your Concrete site does not use the simple permissions model. You must change your permissions for each specific page and content area.')?>
+<?=t('Your concrete5 site does not use the simple permissions model. You must change your permissions for each specific page and content area.')?>
 </p>
+</div>
 <?else:?>
+<div class="ccm-pane-body">
 	<div class="clearfix">
 		<?=$form->label('view', t('Viewing Permissions'))?>
 		<div class="input">
@@ -57,13 +59,15 @@ $form = Loader::helper('form');
 			<span class="help-block"><?=t('Choose which users and groups may edit your site. Note: These settings can be overridden on specific pages.')?></span>
 		</div>
 	</div>
-<?endif?>
 </div>
 <div class="ccm-pane-footer">
 <?
 	$submit = $ih->submit( t('Save'), 'site-permissions-form', 'right', 'primary');
 	print $submit;
 ?>
+</div>
+
+<?endif?>
 </div>
 </form>
 <?=$h->getDashboardPaneFooterWrapper(false);?>
