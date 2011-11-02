@@ -7,7 +7,7 @@ $ih = Loader::helper('concrete/interface');
 $form = Loader::helper('form');
 ?>
 <?=$h->getDashboardPaneHeaderWrapper(t('Site Permissions'), false, false, false);?>
-<form id="site-permissions-form" action="<?=$this->action('save')?>" method="post">
+<form id="site-permissions-form" action="<?=$this->action('')?>" method="post">
 	<?=$this->controller->token->output('site_permissions_code')?>
 
 <? if(PERMISSIONS_MODEL != 'simple'):?>
