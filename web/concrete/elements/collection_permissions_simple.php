@@ -6,7 +6,7 @@ $gl = new GroupList($c, false, true);
 $gArray = $gl->getGroupList();
 ?>
 
-<div class="ccm-pane-controls">
+<div class="ccm-ui">
 <form method="post" id="ccmPermissionsForm" name="ccmPermissionsForm" action="<?=$c->getCollectionAction()?>">
 <input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 
