@@ -42,10 +42,19 @@
     }
     &.ccm-nav-active > a {
       color: @gray;
+      outline: none;
       background-color: @white;
       border: 1px solid #ddd;
       border-bottom-color: transparent;
     }
+    &.current > a {
+      color: @gray;
+      outline: none;
+      background-color: @white;
+      border: 1px solid #ddd;
+      border-bottom-color: transparent;
+    }
+
   }
   // first one for backwards compatibility
   .menu-dropdown,
@@ -72,3 +81,6 @@
     border-top-color: #555;
   }
 }
+
+/* Dashboard Header Option - for things like attributes. We don't use this anymore */
+.ccm-dashboard-header-option {color: #333; #font > .sans-serif(); z-index: 5; text-decoration: none; position: absolute; top: 0px; right: 10px; top: 9px; line-height: 14px; padding-bottom: 2px; .ccm-ui .btn.small()}

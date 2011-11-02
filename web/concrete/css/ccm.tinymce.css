@@ -1,0 +1,6 @@
+ul.ccm-dialog-tabs, body {
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+ul.ccm-dialog-tabs {font-size: 12px;}
+ul.ccm-dialog-tabs a:focus {outline: none;}

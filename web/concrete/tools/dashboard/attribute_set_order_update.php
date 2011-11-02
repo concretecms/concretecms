@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $canRead = false;
-$ch = Page::getByPath('/dashboard/settings/attribute_sets');
+$ch = Page::getByPath('/dashboard/settings/attributes/sets');
 $cp = new Permissions($ch);
 if ($cp->canRead()) {
 	$canRead = true;

@@ -97,14 +97,15 @@
 	# Startup check, install ##	
 	require(dirname(__FILE__) . '/startup/config_check_complete.php');
 
-	## File types ##
-	require(dirname(__FILE__) . '/config/file_types.php');
-	
 	## User level config ##	
 	require(dirname(__FILE__) . '/config/app.php');
 
 	## Localization ##	
 	require(dirname(__FILE__) . '/config/localization.php');
+
+	## File types ##
+	## Note: these have to come after config/localization.php ##
+	require(dirname(__FILE__) . '/config/file_types.php');
 	
 	## Check host for redirection ##	
 	require(dirname(__FILE__) . '/startup/url_check.php');

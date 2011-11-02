@@ -56,7 +56,7 @@ class ConcreteInterfaceHelper {
 	 * @param array $args Extra args passed to the link
 	 * @return string
 	 */
-	public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = array(), $onclick='') { 
+	public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = array()) { 
 		if ($buttonAlign == 'right') {
 			$innerClass .= ' ccm-button-v2-right';
 		} else if ($buttonAlign == 'left') {
@@ -66,7 +66,7 @@ class ConcreteInterfaceHelper {
 		foreach($args as $k => $v) {
 			$argsstr .= $k . '="' . $v . '" ';
 		}
-		return '<input type="button" class="btn ccm-button-v2 ' . $innerClass . '" value="' . $text . '" onclick="window.location.href=\'' . $href . '\'" ' . $align . ' ' . $argsstr . ' />';
+		return '<a href="'.$href.'" class="btn '.$innerClass.'" '.$argsstr.'>'.$text.'</a>';
 	}
 
 	/** 

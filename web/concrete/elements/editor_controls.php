@@ -39,6 +39,7 @@ function ccmEditorSitemapOverlay() {
         height: '400'
     });
 };
-
-ccm_activateFileSelectors();
+$(function() {
+	ccm_activateFileSelectors();
+});
 </script>

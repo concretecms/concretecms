@@ -8,6 +8,7 @@ if (!$sh->canRead()) {
 
 $cnt = Loader::controller('/dashboard/sitemap/search');
 $pageList = $cnt->getRequestedSearchResults();
+$columns = $cnt->get('columns');
 $pages = $pageList->getPage();
 $pagination = $pageList->getPagination();
 if (!isset($sitemap_select_mode)) {
@@ -31,8 +32,8 @@ $searchRequest = $pageList->getSearchRequest();
 
 <div id="ccm-search-overlay" >
 <div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
-	<? Loader::element('pages/search_form_advanced', array('sitemap_select_callback' => $sitemap_select_callback, 'searchInstance' => $searchInstance, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'searchRequest' => $searchRequest)); ?>
+	<? Loader::element('pages/search_form_advanced', array('columns' => $columns, 'sitemap_select_callback' => $sitemap_select_callback, 'searchInstance' => $searchInstance, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'searchRequest' => $searchRequest)); ?>
 </div>
 
-<? Loader::element('pages/search_results', array('searchInstance' => $searchInstance, 'sitemap_select_callback' => $sitemap_select_callback, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
+<? Loader::element('pages/search_results', array('columns' => $columns, 'searchInstance' => $searchInstance, 'sitemap_select_callback' => $sitemap_select_callback, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
 </div>

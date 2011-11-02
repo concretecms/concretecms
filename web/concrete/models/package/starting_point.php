@@ -118,19 +118,10 @@ class StartingPointPackage extends Package {
 	public function install_database() {
 		$db = Loader::db();			
 		$installDirectory = DIR_BASE_CORE. '/config';
-		
-		$sql = file_get_contents($installDirectory . '/install/schema.sql');
-		$schema = explode("\n\n", $sql);
-		
-		$db = Loader::db();
-		$db->ensureEncoding();
-		foreach ($schema as $statement) {
-			if (trim($statement) != "") { 
-				$r = $db->execute($statement);
-				if (!$r) { 
-					throw new Exception(t('Unable to install database: %s', $db->ErrorMsg()));
-				}
-			}
+		try {
+			Package::installDB($installDirectory . '/db.xml');
+		} catch (Exception $e) { 
+			throw new Exception(t('Unable to install database: %s', $db->ErrorMsg()));
 		}
 	}
 
@@ -153,6 +144,9 @@ class StartingPointPackage extends Package {
 		$uEmail = INSTALL_USER_EMAIL;
 		UserInfo::addSuperUser($uPasswordEncrypted, $uEmail);
 		$u = User::getByUserID(USER_SUPER_ID, true, false);
+		
+		Loader::library('mail/importer');
+		MailImporter::add(array('miHandle' => 'private_message'));
 	}
 	
 	public function make_directories() {
