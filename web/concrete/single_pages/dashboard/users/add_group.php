@@ -96,16 +96,16 @@ $form = Loader::helper('form');
 	<li>
 	<label>
 	<?=$form->checkbox('gUserExpirationIsEnabled', 1, false)?>
-	<span><?=t('Automatically remove users from this group')?>
-		
-	<?=$form->select("gUserExpirationMethod", array(
+	<span><?=t('Automatically remove users from this group')?></span></label>
+	
+	<div style="padding-left: 15px; padding-top: 10px; padding-bottom: 10px">
+		<?=$form->select("gUserExpirationMethod", array(
 		'SET_TIME' => t('at a specific date and time'),
 			'INTERVAL' => t('once a certain amount of time has passed')
 		
 	), array('disabled' => true));?>	
-	
+	</div>	
 
-	</span></label>
 	</li>
 </ul>
 </div>

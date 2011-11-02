@@ -7,18 +7,6 @@ class DashboardSystemMaintenanceCacheController extends DashboardBaseController 
 	
 	public function view(){
 	}
-	
-	public function clear_cache() {
-		if ($this->token->validate("clear_cache")) {
-			if ($this->isPost()) {
-				if (Cache::flush()) {
-					$this->redirect('/dashboard/system/maintenance/cache', 'cache_cleared');
-				}
-			}
-		} else {
-			$this->set('error', array($this->token->getErrorMessage()));
-		}
-	}
 
 	public function update_cache() {
 		if ($this->token->validate("update_cache")) {
@@ -35,11 +23,6 @@ class DashboardSystemMaintenanceCacheController extends DashboardBaseController 
 		} else {
 			$this->set('error', array($this->token->getErrorMessage()));
 		}
-	}
-	
-	public function cache_cleared() {
-		$this->set('message', t('Cached files removed.'));	
-		$this->view();
 	}
 	
 	public function cache_updated() {
