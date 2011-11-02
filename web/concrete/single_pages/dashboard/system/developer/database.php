@@ -6,41 +6,35 @@
 
 <div class="ccm-pane-body ccm-pane-body-footer">
 <p>
-<a href="<?php echo $this->url('/dashboard/system/developer/database')?>" class="btn primary"><?php echo t('Return to Export Database XML')?></a>
+<a href="<?php echo $this->url('/dashboard/system/developer/database')?>" class="btn"><?php echo t('Return to Export Database XML')?></a>
 </p>
-<pre class="prettyprint"><?php echo htmlentities($schema, ENT_COMPAT, APP_CHARSET)?></pre>
+<textarea style="width: 100%; height: 600px"><?php echo htmlentities($schema, ENT_COMPAT, APP_CHARSET)?></textarea>
 
 </div>
 <?php }else{?>
 
 <?php  if (ENABLE_DEVELOPER_OPTIONS) { ?>
 
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Database Tables and Content'), false, 'span12 offset2', false)?>
-	<div class="ccm-pane-body">
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Database Tables and Content'), false, 'span12 offset2')?>
 	
-	<form method="post" id="export-db-form" action="<?php echo $this->url('/dashboard/system/developer/database', 'export_database_schema')?>">
+	<form method="post" class="form-stacked" id="export-db-form" action="<?php echo $this->url('/dashboard/system/developer/database', 'export_database_schema')?>">
 
 	<h3><?php echo t('Export Database Schema')?></h3>
 	<p><?php echo t('Click below to view your database schema in a format that can imported into concrete5 later.')?></p>
     
-    </div>
-
-    <div class="ccm-pane-footer">
+    <div class="actions">
         <?
         print $interface->submit(t('Export Database Tables'), 'export-db-form', 'left','primary');
         ?>
-    
     </div>
+
 	
 	</form>
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
-
-<br/>
-
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Refresh Schema'), false, 'span12 offset2', false)?>
 	
-    <div class="ccm-pane-body">
-	<form method="post" id="refresh-schema-form" action="<?php echo $this->url('/dashboard/system/developer/database', 'refresh_database_schema')?>" class="form-stacked">
+	
+	<form method="post" class="form-stacked" id="refresh-schema-form" action="<?php echo $this->url('/dashboard/system/developer/database', 'refresh_database_schema')?>" class="form-stacked">
+
+	<h3><?=t('Database Refresh')?></h3>
 		<?php echo $this->controller->token->output('refresh_database_schema')?>
 		<?php  
 		$extra = array();
@@ -74,26 +68,21 @@
               <span class="help-block">
                 <?php echo t('Reloads database tables contained in %s.', 'config/' . FILENAME_LOCAL_DB)?>
               </span>
-              
-            
-
- 	</div>
-
-    <div class="ccm-pane-footer">
-        <?
+    
+    <div class="actions">
+            <?
         print $interface->submit(t('Refresh Databases'), 'refresh-schema-form', 'left','primary');
         ?>
     
-    </div>
-	
-		
+	</div>
+            
 	</form>
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>		
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>		
 	
 
 
 <?php  }else{ ?>
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Export Database XML'), false, 'span12 offset2', false)?>
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Database XML'), false, 'span12 offset2', false)?>
 <div class="ccm-pane-body ccm-pane-body-footer">
 <div class="alert-message block-message error">       
         <p><?php echo t('Developer options have been disabled in the config file.');?></p>
