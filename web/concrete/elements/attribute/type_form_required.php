@@ -3,7 +3,7 @@ $form = Loader::helper('form');
 $ih = Loader::helper("concrete/interface");
 $valt = Loader::helper('validation/token');
 $akName = '';
-$akIsSearchable = 0;
+$akIsSearchable = 1;
 $asID = 0;
 
 if (is_object($key)) {
@@ -20,21 +20,51 @@ if (is_object($key)) {
 	print $form->hidden('akID', $key->getAttributeKeyID());
 }
 ?>
-<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
-<tr>
-	<td class="subheader"><?=t('Handle')?> <span class="required">*</span></td>
-	<td class="subheader"><?=t('Name')?> <span class="required">*</span></td>
-	<? if ($category->allowAttributeSets() == AttributeKeyCategory::ASET_ALLOW_SINGLE) { ?>
-		<td class="subheader"><?=t("Set")?></td>
-	<? } ?>
-	<td class="subheader"><?=t("Searchable")?></td>
-</tr>	
-<tr>
-	<td style="padding-right: 15px"><?=$form->text('akHandle', $akHandle, array('style' => 'width: 100%'))?></td>
-	<td style="padding-right: 15px"><?=$form->text('akName', $akName, array('style' => 'width: 100%'))?></td>
-	<? if ($category->allowAttributeSets() == AttributeKeyCategory::ASET_ALLOW_SINGLE) { ?>
-		<td style="padding-right: 10px">
-		<?
+
+<div class="ccm-pane-body">
+
+<? if (is_object($key)) { ?>
+	<?
+	$valt = Loader::helper('validation/token');
+	$ih = Loader::helper('concrete/interface');
+	$delConfirmJS = t('Are you sure you want to remove this attribute?');
+	?>
+	<script type="text/javascript">
+	deleteAttribute = function() {
+		if (confirm('<?=$delConfirmJS?>')) { 
+			location.href = "<?=$this->url('/dashboard/files/attributes', 'delete', $key->getAttributeKeyID(), $valt->generate('delete_attribute'))?>";				
+		}
+	}
+	</script>
+	
+	<? print $ih->button_js(t('Delete Attribute'), "deleteAttribute()", 'right', 'error');?>
+<? } ?>
+
+
+<fieldset>
+<legend><?=t('%s: Basic Details', $type->getAttributeTypeName())?></legend>
+
+<div class="clearfix">
+<?=$form->label('akHandle', t('Handle'))?>
+<div class="input">
+	<?=$form->text('akHandle', $akHandle)?>
+	<span class="help-inline"><?=t('Required')?></span>
+</div>
+</div>
+
+<div class="clearfix">
+<?=$form->label('akName', t('Name'))?>
+<div class="input">
+	<?=$form->text('akName', $akName)?>
+	<span class="help-inline"><?=t('Required')?></span>
+</div>
+</div>
+
+<? if ($category->allowAttributeSets() == AttributeKeyCategory::ASET_ALLOW_SINGLE) { ?>
+<div class="clearfix">
+<?=$form->label('asID', t('Set'))?>
+<div class="input">
+	<?
 		$sel = array('0' => t('** None'));
 		$sets = $category->getAttributeSets();
 		foreach($sets as $as) {
@@ -42,15 +72,21 @@ if (is_object($key)) {
 		}
 		print $form->select('asID', $sel, $asID);
 		?>
-		</td>
-	<? } ?>
+</div>
+</div>
+<? } ?>
 
-	<td style="padding-right: 10px">
-	<?=$form->checkbox('akIsSearchableIndexed', 1, $akIsSearchableIndexed)?> <?=t('Content included in "Keyword Search".');?><br/>
-	<?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <?=t('Field available in "Advanced Search".');?>
-	</td>
-</tr>
-</table>
+<div class="clearfix">
+<label><?=t('Searchable')?></label>
+<div class="input">
+<ul class="inputs-list">
+	<li><label><?=$form->checkbox('akIsSearchableIndexed', 1, $akIsSearchableIndexed)?> <span><?=t('Content included in "Keyword Search".');?></span></label></li>
+	<li><label><?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <span><?=t('Field available in "Advanced Search".');?></span></label></li>
+</ul>
+</div>
+</div>
+
+</fieldset>
 
 <?=$form->hidden('atID', $type->getAttributeTypeID())?>
 <?=$form->hidden('akCategoryID', $category->getAttributeKeyCategoryID()); ?>
@@ -64,10 +100,13 @@ if ($category->getPackageID() > 0) {
 ?>
 <? $type->render('type_form', $key); ?>
 
-<? if (is_object($key)) { ?>
-	<?=$ih->submit(t('Update Attribute'), 'ccm-attribute-key-form')?>
-<? } else { ?>
-	<?=$ih->submit(t('Add Attribute'), 'ccm-attribute-key-form')?>
-<? } ?>
+</div>
+<div class="ccm-pane-footer">
+<input type="button" class="btn" onclick="window.history.go(-1)" value="<?=t('Back')?>" />
 
-<div class="ccm-spacer">&nbsp;</div>
+<? if (is_object($key)) { ?>
+	<?=$ih->submit(t('Update Attribute'), 'ccm-attribute-key-form', 'right', 'primary')?>
+<? } else { ?>
+	<?=$ih->submit(t('Add Attribute'), 'ccm-attribute-key-form', 'right', 'primary')?>
+<? } ?>
+</div>

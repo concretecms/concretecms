@@ -870,1275 +870,2542 @@
 
 
 /** 
+
  * Much thanks to http://static.railstips.org/orderedlist
+
  */
+
  
+
 (function($) {  
+
 	var self = null;
+
  	var lutype = 'blocktypes';
+
  	var searchValue = null;
+
  	
+
 	$.fn.liveUpdate = function(list, type) {	
+
 		return this.each(function() {
+
 			new $.liveUpdate(this, list, type);
+
 		});
+
 	};
+
 	
+
 	$.liveUpdate = function (e, list, type) {
+
 		this.field = $(e);
+
 		this.list  = $('#' + list);
+
 		this.lutype = 'blocktypes';
+
 		if (typeof(type) != 'undefined') {
+
 			this.lutype = type;
+
 		}
+
+
 
 		if (this.list.length > 0) {
+
 			this.init();
+
 		}
+
 	};
+
 	
+
 	$.liveUpdate.prototype = {
+
 		init: function() {
+
 			var self = this;
+
 			this.setupCache();
+
 			this.field.parents('form').submit(function() { return false; });
+
 			this.field.keyup(function() { self.filter(); });
+
 			self.filter();
-		},
-		
-		filter: function() {
-			if (this.field.val() != searchValue) {
-				if ($.trim(this.field.val()) == '') { 
-					if (this.lutype == 'blocktypes') {
-						this.list.children('li').addClass('ccm-block-type-available'); 
-						this.list.children('li').removeClass('ccm-block-type-selected'); 
-					} else if (this.lutype == 'attributes') {
-						this.list.children('li').addClass('ccm-attribute-available'); 
-						this.list.children('li').removeClass('ccm-attribute-selected'); 
-					} else if (this.lutype == 'stacks') {
-						this.list.children('li').addClass('ccm-stack-available'); 
-						this.list.children('li').removeClass('ccm-stack-selected'); 
-					} else if (this.lutype == 'intelligent-search') {
-						if (this.list.is(':visible')) {
-							this.list.hide();
-						}
-					} else {
-						this.list.children('li').show();
-					}
-					return; 
-				}
-				if (this.lutype != 'intelligent-search' || this.field.val().length > 2) {
-					this.displayResults(this.getScores(this.field.val().toLowerCase()));
-				} else if (this.lutype  == 'intelligent-search') {
-					if (this.list.is(':visible')) {
-						this.list.hide();
-					}
-				}
-			}
-			searchValue = this.field.val();
-			if (searchValue == '' && this.lutype  == 'intelligent-search') {
-				if (this.list.is(':visible')) {
-					this.list.hide();
-				}
-			}
 
 		},
+
 		
-		setupCache: function() {
-			var self = this;
-			this.cache = [];
-			this.rows = [];
-			var lutype = this.lutype;
-			this.list.find('li').each(function() {
-				if (lutype == 'blocktypes') {
-					self.cache.push($(this).find('a.ccm-block-type-inner').html().toLowerCase());
-				} else if (lutype == 'attributes') {
-					var val = $(this).find('a,span').html().toLowerCase();
-					self.cache.push(val);
-				} else if (lutype == 'stacks') {
-					var val = $(this).find('a,span').html().toLowerCase();
-					self.cache.push(val);
-				} else if (lutype == 'fileset') {
-					self.cache.push($(this).find('label').html().toLowerCase());
-				} else if (lutype == 'intelligent-search') {
-					var s = $(this).find('span').html();
-					if (s) {
-						self.cache.push(s.toLowerCase());
+
+		filter: function() {
+
+			if (this.field.val() != searchValue) {
+
+				if ($.trim(this.field.val()) == '') { 
+
+					if (this.lutype == 'blocktypes') {
+
+						this.list.children('li').addClass('ccm-block-type-available'); 
+
+						this.list.children('li').removeClass('ccm-block-type-selected'); 
+
+					} else if (this.lutype == 'attributes') {
+
+						this.list.children('li').addClass('ccm-attribute-available'); 
+
+						this.list.children('li').removeClass('ccm-attribute-selected'); 
+
+					} else if (this.lutype == 'stacks') {
+
+						this.list.children('li').addClass('ccm-stack-available'); 
+
+						this.list.children('li').removeClass('ccm-stack-selected'); 
+
+					} else if (this.lutype == 'intelligent-search') {
+
+						if (this.list.is(':visible')) {
+
+							this.list.hide();
+
+						}
+
+					} else {
+
+						this.list.children('li').show();
+
 					}
+
+					return; 
+
 				}
-				self.rows.push($(this));
-			});
-			this.cache_length = this.cache.length;
+
+				if (this.lutype != 'intelligent-search' || this.field.val().length > 2) {
+
+					this.displayResults(this.getScores(this.field.val().toLowerCase()));
+
+				} else if (this.lutype  == 'intelligent-search') {
+
+					if (this.list.is(':visible')) {
+
+						this.list.hide();
+
+					}
+
+				}
+
+			}
+
+			searchValue = this.field.val();
+
+			if (searchValue == '' && this.lutype  == 'intelligent-search') {
+
+				if (this.list.is(':visible')) {
+
+					this.list.hide();
+
+				}
+
+			}
+
+
+
 		},
+
 		
-		displayResults: function(scores) {
+
+		setupCache: function() {
+
 			var self = this;
+
+			this.cache = [];
+
+			this.rows = [];
+
+			var lutype = this.lutype;
+
+			this.list.find('li').each(function() {
+
+				if (lutype == 'blocktypes') {
+
+					self.cache.push($(this).find('a.ccm-block-type-inner').html().toLowerCase());
+
+				} else if (lutype == 'attributes') {
+
+					var val = $(this).find('a,span').html().toLowerCase();
+
+					self.cache.push(val);
+
+				} else if (lutype == 'stacks') {
+
+					var val = $(this).find('a,span').html().toLowerCase();
+
+					self.cache.push(val);
+
+				} else if (lutype == 'fileset') {
+
+					self.cache.push($(this).find('label').html().toLowerCase());
+
+				} else if (lutype == 'intelligent-search') {
+
+					var s = $(this).find('span').html();
+
+					if (s) {
+
+						self.cache.push(s.toLowerCase());
+
+					}
+
+				}
+
+				self.rows.push($(this));
+
+			});
+
+			this.cache_length = this.cache.length;
+
+		},
+
+		
+
+		displayResults: function(scores) {
+
+			var self = this;
+
 			if (this.lutype == 'blocktypes') {
+
 				this.list.children('li').removeClass('ccm-block-type-available');
+
 				this.list.children('li').removeClass('ccm-block-type-selected');
+
 				$.each(scores, function(i, score) { self.rows[score[1]].addClass('ccm-block-type-available'); });
+
 				$(this.list.find('li.ccm-block-type-available')[0]).addClass('ccm-block-type-selected');
+
 			} else if (this.lutype == 'attributes') {
+
 				this.list.children('li').removeClass('ccm-attribute-available');
+
 				this.list.children('li').removeClass('ccm-attribute-selected');
+
 				this.list.children('li').removeClass('ccm-item-selected');
+
 				$.each(scores, function(i, score) { self.rows[score[1]].addClass('ccm-attribute-available'); });
+
 				this.list.children('li.icon-select-list-header').removeClass("ccm-attribute-available");
+
 				$(this.list.find('li.ccm-attribute-available')[0]).addClass('ccm-item-selected');
 
+
+
 			} else if (this.lutype == 'stacks') {
+
 				this.list.children('li').removeClass('ccm-stack-available');
+
 				this.list.children('li').removeClass('ccm-stack-selected');
+
 				this.list.children('li').removeClass('ccm-item-selected');
+
 				$.each(scores, function(i, score) { self.rows[score[1]].addClass('ccm-stack-available'); });
+
 				this.list.children('li.icon-select-list-header').removeClass("ccm-stack-available");
+
 				$(this.list.find('li.ccm-stack-available')[0]).addClass('ccm-item-selected');
+
 			} else if (this.lutype == 'intelligent-search') {
+
 				if (!this.list.is(':visible')) {
+
 					this.list.fadeIn(160, 'easeOutExpo');
+
 				}
+
 				this.list.find('.ccm-intelligent-search-results-module-onsite').hide();
+
 				this.list.find('li').hide();
+
 				var shown = 0;
+
 				$.each(scores, function(i, score) { 
+
 					$li = self.rows[score[1]];
+
 					if (score[0] > 0.7) {
+
 						shown++;
+
 						if (!$li.parent().parent().is(':visible')) {
+
 							$li.parent().parent().show();
+
 						}
+
 						$li.show();
+
 					}
+
 				});
+
 				this.list.find('li a').removeClass('ccm-intelligent-search-result-selected');
+
 				this.list.find('li:visible a:first').addClass('ccm-intelligent-search-result-selected');
+
 			} else {
+
 				this.list.children('li').hide();
+
 				$.each(scores, function(i, score) { self.rows[score[1]].show(); });
+
 			}
+
 		},
+
 		
+
 		getScores: function(term) {
+
 			var scores = [];
+
 			for (var i=0; i < this.cache_length; i++) {
+
 				var score = this.cache[i].score(term);
+
 				if (score > 0) { scores.push([score, i]); }
+
 			}
+
 			return scores.sort(function(a, b) { return b[0] - a[0]; });
+
 		}
+
 	}
+
 })(jQuery);
 /*
+
  * Metadata - jQuery plugin for parsing metadata from elements
+
  *
+
  * Copyright (c) 2006 John Resig, Yehuda Katz, Jörn Zaefferer, Paul McLanahan
+
  *
+
  * Dual licensed under the MIT and GPL licenses:
+
  *   http://www.opensource.org/licenses/mit-license.php
+
  *   http://www.gnu.org/licenses/gpl.html
+
  *
+
  * Revision: $Id$
+
  *
+
  */
+
+
 
 /**
+
  * Sets the type of metadata to use. Metadata is encoded in JSON, and each property
+
  * in the JSON will become a property of the element itself.
+
  *
+
  * There are three supported types of metadata storage:
+
  *
+
  *   attr:  Inside an attribute. The name parameter indicates *which* attribute.
+
  *          
+
  *   class: Inside the class attribute, wrapped in curly braces: { }
+
  *   
+
  *   elem:  Inside a child element (e.g. a script tag). The
+
  *          name parameter indicates *which* element.
+
  *          
+
  * The metadata for an element is loaded the first time the element is accessed via jQuery.
+
  *
+
  * As a result, you can define the metadata type, use $(expr) to load the metadata into the elements
+
  * matched by expr, then redefine the metadata type and run another $(expr) for other elements.
+
  * 
+
  * @name $.metadata.setType
+
  *
+
  * @example <p id="one" class="some_class {item_id: 1, item_label: 'Label'}">This is a p</p>
+
  * @before $.metadata.setType("class")
+
  * @after $("#one").metadata().item_id == 1; $("#one").metadata().item_label == "Label"
+
  * @desc Reads metadata from the class attribute
+
  * 
+
  * @example <p id="one" class="some_class" data="{item_id: 1, item_label: 'Label'}">This is a p</p>
+
  * @before $.metadata.setType("attr", "data")
+
  * @after $("#one").metadata().item_id == 1; $("#one").metadata().item_label == "Label"
+
  * @desc Reads metadata from a "data" attribute
+
  * 
+
  * @example <p id="one" class="some_class"><script>{item_id: 1, item_label: 'Label'}</script>This is a p</p>
+
  * @before $.metadata.setType("elem", "script")
+
  * @after $("#one").metadata().item_id == 1; $("#one").metadata().item_label == "Label"
+
  * @desc Reads metadata from a nested script element
+
  * 
+
  * @param String type The encoding type
+
  * @param String name The name of the attribute to be used to get metadata (optional)
+
  * @cat Plugins/Metadata
+
  * @descr Sets the type of encoding to be used when loading metadata for the first time
+
  * @type undefined
+
  * @see metadata()
+
  */
 
+
+
 (function($) {
+
+
 
 $.extend({
+
 	metadata : {
+
 		defaults : {
+
 			type: 'class',
+
 			name: 'metadata',
+
 			cre: /({.*})/,
+
 			single: 'metadata'
+
 		},
+
 		setType: function( type, name ){
+
 			this.defaults.type = type;
+
 			this.defaults.name = name;
+
 		},
+
 		get: function( elem, opts ){
+
 			var settings = $.extend({},this.defaults,opts);
+
 			// check for empty string in single property
+
 			if ( !settings.single.length ) settings.single = 'metadata';
+
 			
+
 			var data = $.data(elem, settings.single);
+
 			// returned cached data if it already exists
+
 			if ( data ) return data;
+
 			
+
 			data = "{}";
+
 			
+
 			if ( settings.type == "class" ) {
+
 				var m = settings.cre.exec( elem.className );
+
 				if ( m )
+
 					data = m[1];
+
 			} else if ( settings.type == "elem" ) {
+
 				if( !elem.getElementsByTagName ) return;
+
 				var e = elem.getElementsByTagName(settings.name);
+
 				if ( e.length )
+
 					data = $.trim(e[0].innerHTML);
+
 			} else if ( elem.getAttribute != undefined ) {
+
 				var attr = elem.getAttribute( settings.name );
+
 				if ( attr )
+
 					data = attr;
+
 			}
+
 			
+
 			if ( data.indexOf( '{' ) <0 )
+
 			data = "{" + data + "}";
+
 			
+
 			data = eval("(" + data + ")");
+
 			
+
 			$.data( elem, settings.single, data );
+
 			return data;
+
 		}
+
 	}
+
 });
 
+
+
 /**
+
  * Returns the metadata object for the first member of the jQuery object.
+
  *
+
  * @name metadata
+
  * @descr Returns element's metadata object
+
  * @param Object opts An object contianing settings to override the defaults
+
  * @type jQuery
+
  * @cat Plugins/Metadata
+
  */
+
 $.fn.metadata = function( opts ){
+
 	return $.metadata.get( this[0], opts );
+
 };
+
+
 
 })(jQuery);
 /*
+
  * jQuery Nivo Slider v2.6
+
  * http://nivo.dev7studios.com
+
  *
+
  * Copyright 2011, Gilbert Pellegrom
+
  * Free to use and abuse under the MIT license.
+
  * http://www.opensource.org/licenses/mit-license.php
+
  * 
+
  * March 2010
+
  */
+
+
 
 (function($) {
 
+
+
     var NivoSlider = function(element, options){
+
 		//Defaults are below
+
 		var settings = $.extend({}, $.fn.nivoSlider.defaults, options);
 
+
+
         //Useful variables. Play carefully.
+
         var vars = {
+
             currentSlide: 0,
+
             currentImage: '',
+
             totalSlides: 0,
+
             randAnim: '',
+
             running: false,
+
             paused: false,
+
             stop: false
+
         };
+
     
+
         //Get this slider
+
         var slider = $(element);
+
         slider.data('nivo:vars', vars);
+
         slider.css('position','relative');
+
         slider.addClass('nivoSlider');
+
         
+
         //Find our slider children
+
         var kids = slider.children();
+
         kids.each(function() {
+
             var child = $(this);
+
             var link = '';
+
             if(!child.is('img')){
+
                 if(child.is('a')){
+
                     child.addClass('nivo-imageLink');
+
                     link = child;
+
                 }
+
                 child = child.find('img:first');
+
             }
+
             //Get img width & height
+
             var childWidth = child.width();
+
             if(childWidth == 0) childWidth = child.attr('width');
+
             var childHeight = child.height();
+
             if(childHeight == 0) childHeight = child.attr('height');
+
             //Resize the slider
+
             if(childWidth > slider.width()){
+
                 slider.width(childWidth);
+
             }
+
             if(childHeight > slider.height()){
+
                 slider.height(childHeight);
+
             }
+
             if(link != ''){
+
                 link.css('display','none');
+
             }
+
             child.css('display','none');
+
             vars.totalSlides++;
+
         });
+
         
+
         //Set startSlide
+
         if(settings.startSlide > 0){
+
             if(settings.startSlide >= vars.totalSlides) settings.startSlide = vars.totalSlides - 1;
+
             vars.currentSlide = settings.startSlide;
+
         }
+
         
+
         //Get initial image
+
         if($(kids[vars.currentSlide]).is('img')){
+
             vars.currentImage = $(kids[vars.currentSlide]);
+
         } else {
+
             vars.currentImage = $(kids[vars.currentSlide]).find('img:first');
+
         }
+
         
+
         //Show initial link
+
         if($(kids[vars.currentSlide]).is('a')){
+
             $(kids[vars.currentSlide]).css('display','block');
+
         }
+
         
+
         //Set first background
+
         slider.css('background','url("'+ vars.currentImage.attr('src') +'") no-repeat');
 
+
+
         //Create caption
+
         slider.append(
+
             $('<div class="nivo-caption"><p></p></div>').css({ display:'none', opacity:settings.captionOpacity })
+
         );			
+
 		
+
 		// Process caption function
+
 		var processCaption = function(settings){
+
 			var nivoCaption = $('.nivo-caption', slider);
+
 			if(vars.currentImage.attr('title') != '' && vars.currentImage.attr('title') != undefined){
+
 				var title = vars.currentImage.attr('title');
+
 				if(title.substr(0,1) == '#') title = $(title).html();	
 
+
+
 				if(nivoCaption.css('display') == 'block'){
+
 					nivoCaption.find('p').fadeOut(settings.animSpeed, function(){
+
 						$(this).html(title);
+
 						$(this).fadeIn(settings.animSpeed);
+
 					});
+
 				} else {
+
 					nivoCaption.find('p').html(title);
+
 				}					
+
 				nivoCaption.fadeIn(settings.animSpeed);
+
 			} else {
+
 				nivoCaption.fadeOut(settings.animSpeed);
+
 			}
+
 		}
+
 		
+
         //Process initial  caption
+
         processCaption(settings);
+
         
+
         //In the words of Super Mario "let's a go!"
+
         var timer = 0;
+
         if(!settings.manualAdvance && kids.length > 1){
+
             timer = setInterval(function(){ nivoRun(slider, kids, settings, false); }, settings.pauseTime);
+
         }
+
+
 
         //Add Direction nav
+
         if(settings.directionNav){
+
             slider.append('<div class="nivo-directionNav"><a class="nivo-prevNav">'+ settings.prevText +'</a><a class="nivo-nextNav">'+ settings.nextText +'</a></div>');
+
             
+
             //Hide Direction nav
+
             if(settings.directionNavHide){
+
                 $('.nivo-directionNav', slider).hide();
+
                 slider.hover(function(){
+
                     $('.nivo-directionNav', slider).show();
+
                 }, function(){
+
                     $('.nivo-directionNav', slider).hide();
+
                 });
+
             }
+
             
+
             $('a.nivo-prevNav', slider).live('click', function(){
+
                 if(vars.running) return false;
+
                 clearInterval(timer);
+
                 timer = '';
+
                 vars.currentSlide -= 2;
+
                 nivoRun(slider, kids, settings, 'prev');
+
             });
+
             
+
             $('a.nivo-nextNav', slider).live('click', function(){
+
                 if(vars.running) return false;
+
                 clearInterval(timer);
+
                 timer = '';
+
                 nivoRun(slider, kids, settings, 'next');
+
             });
+
         }
+
         
+
         //Add Control nav
+
         if(settings.controlNav){
+
             var nivoControl = $('<div class="nivo-controlNav"></div>');
+
             slider.append(nivoControl);
+
             for(var i = 0; i < kids.length; i++){
+
                 if(settings.controlNavThumbs){
+
                     var child = kids.eq(i);
+
                     if(!child.is('img')){
+
                         child = child.find('img:first');
+
                     }
+
                     if (settings.controlNavThumbsFromRel) {
+
                         nivoControl.append('<a class="nivo-control" rel="'+ i +'"><img src="'+ child.attr('rel') + '" alt="" /></a>');
+
                     } else {
+
                         nivoControl.append('<a class="nivo-control" rel="'+ i +'"><img src="'+ child.attr('src').replace(settings.controlNavThumbsSearch, settings.controlNavThumbsReplace) +'" alt="" /></a>');
+
                     }
+
                 } else {
+
                     nivoControl.append('<a class="nivo-control" rel="'+ i +'">'+ (i + 1) +'</a>');
+
                 }
+
                 
+
             }
+
             //Set initial active link
+
             $('.nivo-controlNav a:eq('+ vars.currentSlide +')', slider).addClass('active');
+
             
+
             $('.nivo-controlNav a', slider).live('click', function(){
+
                 if(vars.running) return false;
+
                 if($(this).hasClass('active')) return false;
+
                 clearInterval(timer);
+
                 timer = '';
+
                 slider.css('background','url("'+ vars.currentImage.attr('src') +'") no-repeat');
+
                 vars.currentSlide = $(this).attr('rel') - 1;
+
                 nivoRun(slider, kids, settings, 'control');
+
             });
+
         }
+
         
+
         //Keyboard Navigation
+
         if(settings.keyboardNav){
+
             $(window).keypress(function(event){
+
                 //Left
+
                 if(event.keyCode == '37'){
+
                     if(vars.running) return false;
+
                     clearInterval(timer);
+
                     timer = '';
+
                     vars.currentSlide-=2;
+
                     nivoRun(slider, kids, settings, 'prev');
+
                 }
+
                 //Right
+
                 if(event.keyCode == '39'){
+
                     if(vars.running) return false;
+
                     clearInterval(timer);
+
                     timer = '';
+
                     nivoRun(slider, kids, settings, 'next');
+
                 }
+
             });
+
         }
+
         
+
         //For pauseOnHover setting
+
         if(settings.pauseOnHover){
+
             slider.hover(function(){
+
                 vars.paused = true;
+
                 clearInterval(timer);
+
                 timer = '';
+
             }, function(){
+
                 vars.paused = false;
+
                 //Restart the timer
+
                 if(timer == '' && !settings.manualAdvance){
+
                     timer = setInterval(function(){ nivoRun(slider, kids, settings, false); }, settings.pauseTime);
+
                 }
+
             });
+
         }
+
         
+
         //Event when Animation finishes
+
         slider.bind('nivo:animFinished', function(){ 
+
             vars.running = false; 
+
             //Hide child links
+
             $(kids).each(function(){
+
                 if($(this).is('a')){
+
                     $(this).css('display','none');
+
                 }
+
             });
+
             //Show current link
+
             if($(kids[vars.currentSlide]).is('a')){
+
                 $(kids[vars.currentSlide]).css('display','block');
+
             }
+
             //Restart the timer
+
             if(timer == '' && !vars.paused && !settings.manualAdvance){
+
                 timer = setInterval(function(){ nivoRun(slider, kids, settings, false); }, settings.pauseTime);
+
             }
+
             //Trigger the afterChange callback
+
             settings.afterChange.call(this);
+
         });
+
         
+
         // Add slices for slice animations
+
         var createSlices = function(slider, settings, vars){
+
             for(var i = 0; i < settings.slices; i++){
+
 				var sliceWidth = Math.round(slider.width()/settings.slices);
+
 				if(i == settings.slices-1){
+
 					slider.append(
+
 						$('<div class="nivo-slice"></div>').css({ 
+
 							left:(sliceWidth*i)+'px', width:(slider.width()-(sliceWidth*i))+'px',
+
 							height:'0px', 
+
 							opacity:'0', 
+
 							background: 'url("'+ vars.currentImage.attr('src') +'") no-repeat -'+ ((sliceWidth + (i * sliceWidth)) - sliceWidth) +'px 0%'
+
 						})
+
 					);
+
 				} else {
+
 					slider.append(
+
 						$('<div class="nivo-slice"></div>').css({ 
+
 							left:(sliceWidth*i)+'px', width:sliceWidth+'px',
+
 							height:'0px', 
+
 							opacity:'0', 
+
 							background: 'url("'+ vars.currentImage.attr('src') +'") no-repeat -'+ ((sliceWidth + (i * sliceWidth)) - sliceWidth) +'px 0%'
+
 						})
+
 					);
+
 				}
+
 			}
+
         }
+
 		
+
 		// Add boxes for box animations
+
 		var createBoxes = function(slider, settings, vars){
+
 			var boxWidth = Math.round(slider.width()/settings.boxCols);
+
 			var boxHeight = Math.round(slider.height()/settings.boxRows);
+
 			
+
 			for(var rows = 0; rows < settings.boxRows; rows++){
+
 				for(var cols = 0; cols < settings.boxCols; cols++){
+
 					if(cols == settings.boxCols-1){
+
 						slider.append(
+
 							$('<div class="nivo-box"></div>').css({ 
+
 								opacity:0,
+
 								left:(boxWidth*cols)+'px', 
+
 								top:(boxHeight*rows)+'px',
+
 								width:(slider.width()-(boxWidth*cols))+'px',
+
 								height:boxHeight+'px',
+
 								background: 'url("'+ vars.currentImage.attr('src') +'") no-repeat -'+ ((boxWidth + (cols * boxWidth)) - boxWidth) +'px -'+ ((boxHeight + (rows * boxHeight)) - boxHeight) +'px'
+
 							})
+
 						);
+
 					} else {
+
 						slider.append(
+
 							$('<div class="nivo-box"></div>').css({ 
+
 								opacity:0,
+
 								left:(boxWidth*cols)+'px', 
+
 								top:(boxHeight*rows)+'px',
+
 								width:boxWidth+'px',
+
 								height:boxHeight+'px',
+
 								background: 'url("'+ vars.currentImage.attr('src') +'") no-repeat -'+ ((boxWidth + (cols * boxWidth)) - boxWidth) +'px -'+ ((boxHeight + (rows * boxHeight)) - boxHeight) +'px'
+
 							})
+
 						);
+
 					}
+
 				}
+
 			}
+
 		}
+
+
 
         // Private run method
+
 		var nivoRun = function(slider, kids, settings, nudge){
+
 			//Get our vars
+
 			var vars = slider.data('nivo:vars');
+
             
+
             //Trigger the lastSlide callback
+
             if(vars && (vars.currentSlide == vars.totalSlides - 1)){ 
+
 				settings.lastSlide.call(this);
+
 			}
+
             
+
             // Stop
+
 			if((!vars || vars.stop) && !nudge) return false;
+
 			
+
 			//Trigger the beforeChange callback
+
 			settings.beforeChange.call(this);
+
 					
+
 			//Set current background before change
+
 			if(!nudge){
+
 				slider.css('background','url("'+ vars.currentImage.attr('src') +'") no-repeat');
+
 			} else {
+
 				if(nudge == 'prev'){
+
 					slider.css('background','url("'+ vars.currentImage.attr('src') +'") no-repeat');
+
 				}
+
 				if(nudge == 'next'){
+
 					slider.css('background','url("'+ vars.currentImage.attr('src') +'") no-repeat');
+
 				}
+
 			}
+
 			vars.currentSlide++;
+
             //Trigger the slideshowEnd callback
+
 			if(vars.currentSlide == vars.totalSlides){ 
+
 				vars.currentSlide = 0;
+
 				settings.slideshowEnd.call(this);
+
 			}
+
 			if(vars.currentSlide < 0) vars.currentSlide = (vars.totalSlides - 1);
+
 			//Set vars.currentImage
+
 			if($(kids[vars.currentSlide]).is('img')){
+
 				vars.currentImage = $(kids[vars.currentSlide]);
+
 			} else {
+
 				vars.currentImage = $(kids[vars.currentSlide]).find('img:first');
+
 			}
+
 			
+
 			//Set active links
+
 			if(settings.controlNav){
+
 				$('.nivo-controlNav a', slider).removeClass('active');
+
 				$('.nivo-controlNav a:eq('+ vars.currentSlide +')', slider).addClass('active');
+
 			}
+
 			
+
 			//Process caption
+
 			processCaption(settings);
+
 			
+
 			// Remove any slices from last transition
+
 			$('.nivo-slice', slider).remove();
+
 			
+
 			// Remove any boxes from last transition
+
 			$('.nivo-box', slider).remove();
+
 			
+
 			if(settings.effect == 'random'){
+
 				var anims = new Array('sliceDownRight','sliceDownLeft','sliceUpRight','sliceUpLeft','sliceUpDown','sliceUpDownLeft','fold','fade',
+
                 'boxRandom','boxRain','boxRainReverse','boxRainGrow','boxRainGrowReverse');
+
 				vars.randAnim = anims[Math.floor(Math.random()*(anims.length + 1))];
+
 				if(vars.randAnim == undefined) vars.randAnim = 'fade';
+
 			}
+
             
+
             //Run random effect from specified set (eg: effect:'fold,fade')
+
             if(settings.effect.indexOf(',') != -1){
+
                 var anims = settings.effect.split(',');
+
                 vars.randAnim = anims[Math.floor(Math.random()*(anims.length))];
+
 				if(vars.randAnim == undefined) vars.randAnim = 'fade';
+
             }
+
 		
+
 			//Run effects
+
 			vars.running = true;
+
 			if(settings.effect == 'sliceDown' || settings.effect == 'sliceDownRight' || vars.randAnim == 'sliceDownRight' ||
+
 				settings.effect == 'sliceDownLeft' || vars.randAnim == 'sliceDownLeft'){
+
 				createSlices(slider, settings, vars);
+
 				var timeBuff = 0;
+
 				var i = 0;
+
 				var slices = $('.nivo-slice', slider);
+
 				if(settings.effect == 'sliceDownLeft' || vars.randAnim == 'sliceDownLeft') slices = $('.nivo-slice', slider)._reverse();
+
 				
+
 				slices.each(function(){
+
 					var slice = $(this);
+
 					slice.css({ 'top': '0px' });
+
 					if(i == settings.slices-1){
+
 						setTimeout(function(){
+
 							slice.animate({ height:'100%', opacity:'1.0' }, settings.animSpeed, '', function(){ slider.trigger('nivo:animFinished'); });
+
 						}, (100 + timeBuff));
+
 					} else {
+
 						setTimeout(function(){
+
 							slice.animate({ height:'100%', opacity:'1.0' }, settings.animSpeed);
+
 						}, (100 + timeBuff));
+
 					}
+
 					timeBuff += 50;
+
 					i++;
+
 				});
+
 			} 
+
 			else if(settings.effect == 'sliceUp' || settings.effect == 'sliceUpRight' || vars.randAnim == 'sliceUpRight' ||
+
 					settings.effect == 'sliceUpLeft' || vars.randAnim == 'sliceUpLeft'){
+
 				createSlices(slider, settings, vars);
+
 				var timeBuff = 0;
+
 				var i = 0;
+
 				var slices = $('.nivo-slice', slider);
+
 				if(settings.effect == 'sliceUpLeft' || vars.randAnim == 'sliceUpLeft') slices = $('.nivo-slice', slider)._reverse();
+
 				
+
 				slices.each(function(){
+
 					var slice = $(this);
+
 					slice.css({ 'bottom': '0px' });
+
 					if(i == settings.slices-1){
+
 						setTimeout(function(){
+
 							slice.animate({ height:'100%', opacity:'1.0' }, settings.animSpeed, '', function(){ slider.trigger('nivo:animFinished'); });
+
 						}, (100 + timeBuff));
+
 					} else {
+
 						setTimeout(function(){
+
 							slice.animate({ height:'100%', opacity:'1.0' }, settings.animSpeed);
+
 						}, (100 + timeBuff));
+
 					}
+
 					timeBuff += 50;
+
 					i++;
+
 				});
+
 			} 
+
 			else if(settings.effect == 'sliceUpDown' || settings.effect == 'sliceUpDownRight' || vars.randAnim == 'sliceUpDown' || 
+
 					settings.effect == 'sliceUpDownLeft' || vars.randAnim == 'sliceUpDownLeft'){
+
 				createSlices(slider, settings, vars);
+
 				var timeBuff = 0;
+
 				var i = 0;
+
 				var v = 0;
+
 				var slices = $('.nivo-slice', slider);
+
 				if(settings.effect == 'sliceUpDownLeft' || vars.randAnim == 'sliceUpDownLeft') slices = $('.nivo-slice', slider)._reverse();
+
 				
+
 				slices.each(function(){
+
 					var slice = $(this);
+
 					if(i == 0){
+
 						slice.css('top','0px');
+
 						i++;
+
 					} else {
+
 						slice.css('bottom','0px');
+
 						i = 0;
+
 					}
+
 					
+
 					if(v == settings.slices-1){
+
 						setTimeout(function(){
+
 							slice.animate({ height:'100%', opacity:'1.0' }, settings.animSpeed, '', function(){ slider.trigger('nivo:animFinished'); });
+
 						}, (100 + timeBuff));
+
 					} else {
+
 						setTimeout(function(){
+
 							slice.animate({ height:'100%', opacity:'1.0' }, settings.animSpeed);
+
 						}, (100 + timeBuff));
+
 					}
+
 					timeBuff += 50;
+
 					v++;
+
 				});
+
 			} 
+
 			else if(settings.effect == 'fold' || vars.randAnim == 'fold'){
+
 				createSlices(slider, settings, vars);
+
 				var timeBuff = 0;
+
 				var i = 0;
+
 				
+
 				$('.nivo-slice', slider).each(function(){
+
 					var slice = $(this);
+
 					var origWidth = slice.width();
+
 					slice.css({ top:'0px', height:'100%', width:'0px' });
+
 					if(i == settings.slices-1){
+
 						setTimeout(function(){
+
 							slice.animate({ width:origWidth, opacity:'1.0' }, settings.animSpeed, '', function(){ slider.trigger('nivo:animFinished'); });
+
 						}, (100 + timeBuff));
+
 					} else {
+
 						setTimeout(function(){
+
 							slice.animate({ width:origWidth, opacity:'1.0' }, settings.animSpeed);
+
 						}, (100 + timeBuff));
+
 					}
+
 					timeBuff += 50;
+
 					i++;
+
 				});
+
 			}  
+
 			else if(settings.effect == 'fade' || vars.randAnim == 'fade'){
+
 				createSlices(slider, settings, vars);
+
 				
+
 				var firstSlice = $('.nivo-slice:first', slider);
+
                 firstSlice.css({
+
                     'height': '100%',
+
                     'width': slider.width() + 'px'
+
                 });
+
     
+
 				firstSlice.animate({ opacity:'1.0' }, (settings.animSpeed*2), '', function(){ slider.trigger('nivo:animFinished'); });
+
 			}          
+
             else if(settings.effect == 'slideInRight' || vars.randAnim == 'slideInRight'){
+
 				createSlices(slider, settings, vars);
+
 				
+
                 var firstSlice = $('.nivo-slice:first', slider);
+
                 firstSlice.css({
+
                     'height': '100%',
+
                     'width': '0px',
+
                     'opacity': '1'
+
                 });
+
+
 
                 firstSlice.animate({ width: slider.width() + 'px' }, (settings.animSpeed*2), '', function(){ slider.trigger('nivo:animFinished'); });
+
             }
+
             else if(settings.effect == 'slideInLeft' || vars.randAnim == 'slideInLeft'){
+
 				createSlices(slider, settings, vars);
+
 				
+
                 var firstSlice = $('.nivo-slice:first', slider);
+
                 firstSlice.css({
+
                     'height': '100%',
+
                     'width': '0px',
+
                     'opacity': '1',
+
                     'left': '',
+
                     'right': '0px'
+
                 });
+
+
 
                 firstSlice.animate({ width: slider.width() + 'px' }, (settings.animSpeed*2), '', function(){ 
+
                     // Reset positioning
+
                     firstSlice.css({
+
                         'left': '0px',
+
                         'right': ''
+
                     });
+
                     slider.trigger('nivo:animFinished'); 
+
                 });
+
             }
+
 			else if(settings.effect == 'boxRandom' || vars.randAnim == 'boxRandom'){
+
 				createBoxes(slider, settings, vars);
+
 				
+
 				var totalBoxes = settings.boxCols * settings.boxRows;
+
 				var i = 0;
+
 				var timeBuff = 0;
+
 				
+
 				var boxes = shuffle($('.nivo-box', slider));
+
 				boxes.each(function(){
+
 					var box = $(this);
+
 					if(i == totalBoxes-1){
+
 						setTimeout(function(){
+
 							box.animate({ opacity:'1' }, settings.animSpeed, '', function(){ slider.trigger('nivo:animFinished'); });
+
 						}, (100 + timeBuff));
+
 					} else {
+
 						setTimeout(function(){
+
 							box.animate({ opacity:'1' }, settings.animSpeed);
+
 						}, (100 + timeBuff));
+
 					}
+
 					timeBuff += 20;
+
 					i++;
+
 				});
+
 			}
+
 			else if(settings.effect == 'boxRain' || vars.randAnim == 'boxRain' || settings.effect == 'boxRainReverse' || vars.randAnim == 'boxRainReverse' || 
+
                     settings.effect == 'boxRainGrow' || vars.randAnim == 'boxRainGrow' || settings.effect == 'boxRainGrowReverse' || vars.randAnim == 'boxRainGrowReverse'){
+
 				createBoxes(slider, settings, vars);
+
 				
+
 				var totalBoxes = settings.boxCols * settings.boxRows;
+
 				var i = 0;
+
 				var timeBuff = 0;
+
 				
+
 				// Split boxes into 2D array
+
 				var rowIndex = 0;
+
 				var colIndex = 0;
+
 				var box2Darr = new Array();
+
 				box2Darr[rowIndex] = new Array();
+
 				var boxes = $('.nivo-box', slider);
+
 				if(settings.effect == 'boxRainReverse' || vars.randAnim == 'boxRainReverse' ||
+
                    settings.effect == 'boxRainGrowReverse' || vars.randAnim == 'boxRainGrowReverse'){
+
 					boxes = $('.nivo-box', slider)._reverse();
+
 				}
+
 				boxes.each(function(){
+
 					box2Darr[rowIndex][colIndex] = $(this);
+
 					colIndex++;
+
 					if(colIndex == settings.boxCols){
+
 						rowIndex++;
+
 						colIndex = 0;
+
 						box2Darr[rowIndex] = new Array();
+
 					}
+
 				});
+
 				
+
 				// Run animation
+
 				for(var cols = 0; cols < (settings.boxCols * 2); cols++){
+
 					var prevCol = cols;
+
 					for(var rows = 0; rows < settings.boxRows; rows++){
+
 						if(prevCol >= 0 && prevCol < settings.boxCols){
+
 							/* Due to some weird JS bug with loop vars 
+
 							being used in setTimeout, this is wrapped
+
 							with an anonymous function call */
+
 							(function(row, col, time, i, totalBoxes) {
+
 								var box = $(box2Darr[row][col]);
+
                                 var w = box.width();
+
                                 var h = box.height();
+
                                 if(settings.effect == 'boxRainGrow' || vars.randAnim == 'boxRainGrow' ||
+
                                    settings.effect == 'boxRainGrowReverse' || vars.randAnim == 'boxRainGrowReverse'){
+
                                     box.width(0).height(0);
+
                                 }
+
 								if(i == totalBoxes-1){
+
 									setTimeout(function(){
+
 										box.animate({ opacity:'1', width:w, height:h }, settings.animSpeed/1.3, '', function(){ slider.trigger('nivo:animFinished'); });
+
 									}, (100 + time));
+
 								} else {
+
 									setTimeout(function(){
+
 										box.animate({ opacity:'1', width:w, height:h }, settings.animSpeed/1.3);
+
 									}, (100 + time));
+
 								}
+
 							})(rows, prevCol, timeBuff, i, totalBoxes);
+
 							i++;
+
 						}
+
 						prevCol--;
+
 					}
+
 					timeBuff += 100;
+
 				}
+
 			}
+
 		}
+
 		
+
 		// Shuffle an array
+
 		var shuffle = function(arr){
+
 			for(var j, x, i = arr.length; i; j = parseInt(Math.random() * i), x = arr[--i], arr[i] = arr[j], arr[j] = x);
+
 			return arr;
+
 		}
+
         
+
         // For debugging
+
         var trace = function(msg){
+
             if (this.console && typeof console.log != "undefined")
+
                 console.log(msg);
+
         }
+
         
+
         // Start / Stop
+
         this.stop = function(){
+
             if(!$(element).data('nivo:vars').stop){
+
                 $(element).data('nivo:vars').stop = true;
+
                 trace('Stop Slider');
+
             }
+
         }
+
         
+
         this.start = function(){
+
             if($(element).data('nivo:vars').stop){
+
                 $(element).data('nivo:vars').stop = false;
+
                 trace('Start Slider');
+
             }
+
         }
+
         
+
         //Trigger the afterLoad callback
+
         settings.afterLoad.call(this);
+
 		
+
 		return this;
+
     };
+
         
+
     $.fn.nivoSlider = function(options) {
+
     
+
         return this.each(function(key, value){
+
             var element = $(this);
+
             // Return early if this element already has a plugin instance
+
             if (element.data('nivoslider')) return element.data('nivoslider');
+
             // Pass options to plugin constructor
+
             var nivoslider = new NivoSlider(this, options);
+
             // Store plugin object in this element's data
+
             element.data('nivoslider', nivoslider);
+
         });
 
+
+
 	};
+
 	
+
 	//Default settings
+
 	$.fn.nivoSlider.defaults = {
+
 		effect: 'random',
+
 		slices: 15,
+
 		boxCols: 8,
+
 		boxRows: 4,
+
 		animSpeed: 500,
+
 		pauseTime: 3000,
+
 		startSlide: 0,
+
 		directionNav: true,
+
 		directionNavHide: true,
+
 		controlNav: true,
+
 		controlNavThumbs: false,
+
         controlNavThumbsFromRel: false,
+
 		controlNavThumbsSearch: '.jpg',
+
 		controlNavThumbsReplace: '_thumb.jpg',
+
 		keyboardNav: true,
+
 		pauseOnHover: true,
+
 		manualAdvance: false,
+
 		captionOpacity: 0.8,
+
 		prevText: 'Prev',
+
 		nextText: 'Next',
+
 		beforeChange: function(){},
+
 		afterChange: function(){},
+
 		slideshowEnd: function(){},
+
         lastSlide: function(){},
+
         afterLoad: function(){}
+
 	};
+
 	
+
 	$.fn._reverse = [].reverse;
+
 	
+
 })(jQuery);
 /*
+
  ### jQuery Star Rating Plugin v3.00 - 2009-03-16 ###
+
  * Home: http://www.fyneworks.com/jquery/star-rating/
+
  * Code: http://code.google.com/p/jquery-star-rating-plugin/
+
  *
+
 	* Dual licensed under the MIT and GPL licenses:
+
  *   http://www.opensource.org/licenses/mit-license.php
+
  *   http://www.gnu.org/licenses/gpl.html
+
  ###
+
 *//*
+
 	Based on http://www.phpletter.com/Demo/Jquery-Star-Rating-Plugin/
+
  Original comments:
+
 	This is hacked version of star rating created by <a href="http://php.scripts.psu.edu/rja171/widgets/rating.php">Ritesh Agrawal</a>
+
 	It transforms a set of radio type input elements to star rating type and remain the radio element name and value,
+
 	so could be integrated with your form. It acts as a normal radio button.
+
 	modified by : Logan Cai (cailongqun[at]yahoo.com.cn)
+
 */
 
+
+
 /*# AVOID COLLISIONS #*/
+
 ;if(window.jQuery) (function($){
+
 /*# AVOID COLLISIONS #*/
+
 	
+
 	// IE6 Background Image Fix
+
 	if ($.browser.msie) try { document.execCommand("BackgroundImageCache", false, true)} catch(e) { }
+
 	// Thanks to http://www.visualjquery.com/rating/rating_redux.html
+
 	
+
 	// plugin initialization
+
 	$.fn.rating = function(options){
+
 		if(this.length==0) return this; // quick fail
+
 		
+
 		// Handle API methods
+
 		if(typeof arguments[0]=='string'){
+
 			// Perform API methods on individual elements
+
 			if(this.length>1){
+
 				var args = arguments;
+
 				return this.each(function(){
+
 					$.fn.rating.apply($(this), args);
+
     });
+
 			};
+
 			// Invoke API method handler
+
 			$.fn.rating[arguments[0]].apply(this, $.makeArray(arguments).slice(1) || []);
+
 			// Quick exit...
+
 			return this;
+
 		};
+
 		
+
 		// Initialize options for this call
+
 		var options = $.extend(
+
 			{}/* new object */,
+
 			$.fn.rating.options/* default options */,
+
 			options || {} /* just-in-time options */
+
 		);
+
 		
+
 		// loop through each matched element
+
 		this.each(function(){
+
 			
+
 			// Generate internal control ID
+
 			// - ignore square brackets in element names
+
 			var eid = (this.name || 'unnamed-rating').replace(/\[|\]+/g, "_");
+
 			var context = $(this.form || document.body);
+
 			var raters = context.data('rating') || { count:0 };
+
 			var rater = raters[eid];
+
 			var control;
+
 			// ---------------
+
 			
+
 			if(rater){
+
 				control = rater.data('rating');
+
 				control.count++;
+
 			}
+
 			else{
+
 				// Initialize options for this raters
+
 				control = $.extend(
+
 					{}/* new object */,
+
 					options || {} /* current call options */,
+
 					($.metadata? $(this).metadata(): ($.meta?$(this).data():null)) || {}, /* metadata options */
+
 					{ count:0, stars: [] }
+
 				);
+
 				
+
 				// increment number of rating controls
+
 				control.serial = raters.count++;
+
 				
+
 				// create rating element
+
 				rater = $('<input type="text" class="rating-star-control" name="' + this.name + '" id="' + eid + '" value="" size="2"/>');
+
 				$(this).before(rater.hide());
+
 				
+
 				// Mark element for initialization (once all stars are ready)
+
 				rater.addClass('rating-to-be-drawn');
+
 				
+
 				// Accept readOnly setting from 'disabled' property
+
 				if($(this).attr('disabled')) control.readOnly = true;
+
 				
+
 				// Create 'cancel' button
+
 				$(this).before(
+
 					control.cancel = $('<div class="rating-cancel"><a title="' + control.cancel + '">' + control.cancelValue + '</a></div>')
+
 					.mouseover(function(){ $(this).rating('drain'); $(this).addClass('rating-star-hover'); })
+
 					.mouseout(function(){ $(this).rating('draw'); $(this).removeClass('rating-star-hover'); })
+
 					.click(function(){ $(this).rating('select'); })
+
 					.data('rating', control)
+
 				);
+
 				
+
 			}; // first element of group
+
 			
+
 			// insert rating star
+
 			var star = $('<div class="rating-star rater-'+ control.serial +'"><a title="' + (this.title || this.value) + '">' + this.value + '</a></div>');
+
 			$(this).after(star);
+
 			
+
 			// inherit attributes from input element
+
 			if(this.id) star.attr('id', this.id);
+
 			if(this.className) star.addClass(this.className);
+
 			
+
 			// Half-stars?
+
 			if(control.half) control.split = 2;
+
 			
+
 			// Prepare division control
+
 			if(typeof control.split=='number' && control.split>0){
+
 				var stw = ($.fn.width ? star.width() : 0) || control.starWidth;
+
 				var spi = (control.count % control.split), spw = Math.floor(stw/control.split);
+
 				star
+
 				// restrict star's width and hide overflow (already in CSS)
+
 				.width(spw)
+
 				// move the star left by using a negative margin
+
 				// this is work-around to IE's stupid box model (position:relative doesn't work)
+
 				.find('a').css({ 'margin-left':'-'+ (spi*spw) +'px' })
+
 			};
+
 			
+
 			// readOnly?
+
 			if(control.readOnly)//{ //save a byte!
+
 				// Mark star as readOnly so user can customize display
+
 				star.addClass('rating-star-readonly');
+
 			//}  //save a byte!
+
 			else//{ //save a byte!
+
 			 // Enable hover css effects
+
 				star.addClass('rating-star-live')
+
 				 // Attach mouse events
+
 				 .mouseover(function(){ $(this).rating('fill'); })
+
 				 .mouseout(function(){ $(this).rating('draw'); })
+
 				 .click(function(){ $(this).rating('select'); })
+
 				;
+
 			//}; //save a byte!
+
 			
+
 			////if(window.console) console.log(['###', gid, this.checked, $.fn.rating.group[gid].initial]);
+
 			if(this.checked)	control.current = star;
+
 			
+
 			// remove this checkbox - values will be stored in a hidden field
+
 			$(this).remove();
+
 			
+
 			// store control information in form (or body when form not available)
+
 			control.stars[control.stars.length] = star;
+
 			control.element = raters[eid] = rater;
+
 			control.context = context;
+
 			control.raters = raters;
+
 			
+
 			rater.data('rating', control);
+
 			star.data('rating', control);
+
 			context.data('rating', raters);
+
   }); // each element
+
 		
+
 		// Initialize ratings (first draw)
+
 		$('.rating-to-be-drawn').rating('draw').removeClass('rating-to-be-drawn');
+
 		
+
 		return this; // don't break the chain...
+
 	};
+
 	
+
 	/*--------------------------------------------------------*/
+
 	
+
 	/*
+
 		### Core functionality and API ###
+
 	*/
+
 	$.extend($.fn.rating, {
+
 		
+
 		fill: function(){ // fill to the current mouse position.
+
 			var control = this.data('rating'); if(!control) return this;
+
 			// do not execute when control is in read-only mode
+
 			if(control.readOnly) return;
+
 			// Reset all stars and highlight them up to this element
+
 			this.rating('drain');
+
 			this.prevAll().andSelf().filter('.rater-'+ control.serial).addClass('rating-star-hover');
+
 			// focus handler, as requested by focusdigital.co.uk
+
 			if(control.focus) control.focus.apply(
+
     control.element, [this.text(), $('a',this)[0]]
+
 			);
+
 		},// $.fn.rating.fill
+
 		
+
 		drain: function() { // drain all the stars.
+
 			var control = this.data('rating'); if(!control) return this;
+
 			// do not execute when control is in read-only mode
+
 			if(control.readOnly) return;
+
 			// Reset all stars
+
 			control.element.siblings().filter('.rater-'+ control.serial).removeClass('rating-star-on').removeClass('rating-star-hover');
+
 		},// $.fn.rating.drain
+
 		
+
 		draw: function(){ // set value and stars to reflect current selection
+
 			var control = this.data('rating'); if(!control) return this;
+
 			// Clear all stars
+
 			this.rating('drain');
+
 			// Set control value
+
 			if(control.current){
+
  			control.element.val(control.current.text());
+
 				control.current.prevAll().andSelf().filter('.rater-'+ control.serial).addClass('rating-star-on');
+
 			}
+
 			else
+
 			 control.element.val('');
+
 			// Show/hide 'cancel' button
+
 			control.cancel[control.readOnly || control.required?'hide':'show']();
+
 			// Add/remove read-only classes to remove hand pointer
+
 			this.siblings()[control.readOnly?'addClass':'removeClass']('rating-star-readonly');
+
 			// blur handler, as requested by focusdigital.co.uk
+
 			if(control.blur) control.blur.apply(
+
     control.element, [this.text(), $('a',this)[0]]
+
 			);
+
 		},// $.fn.rating.draw
+
 		
+
 		select: function(value){ // select a value
+
 			var control = this.data('rating'); if(!control) return this;
+
 			// do not execute when control is in read-only mode
+
 			if(control.readOnly) return;
+
 			// clear selection
+
 			control.current = null;
+
 			// programmatically (based on user input)
+
 			if(typeof value!='undefined'){
+
 			 // select by index (0 based)
+
 				if(typeof value=='number')
+
  			 return control.stars[value].rating('select');
+
 				// select by literal value (must be passed as a string
+
 				if(typeof value=='string')
+
 					return $(control.stars).each(function(){
+
 						if(this.text()==value) this.rating('select');
+
 					});
+
 			}
+
 			else if(this.is('.rater-'+ control.serial))
+
 			 control.current = this;
+
 			// Update rating control state
+
 			this.data('rating', control);
+
 			// Update display
+
 			this.rating('draw');
+
 			// click callback, as requested here: http://plugins.jquery.com/node/1655
+
 			if(control.callback) control.callback.apply(
+
     control.element,
+
 				 control.current ?
+
 				 [control.current.text(), $('a',control.current)[0]] :
+
 					['']
+
 			);// callback event
+
 		},// $.fn.rating.select
+
 		
+
 		readOnly: function(toggle, disable){ // make the control read-only (still submits value)
+
 			var control = this.data('rating'); if(!control) return this;
+
 			// setread-only status
+
 			control.readOnly = toggle ? true : false;
+
 			// enable/disable control value submission
+
 			if(disable) control.element.attr("disabled", "disabled");
+
 			else     			control.element.removeAttr("disabled");
+
 			// Update rating control state
+
 			this.data('rating', control);
+
 			// Update display
+
 			this.rating('draw');
+
 		},// $.fn.rating.readOnly
+
 		
+
 		disable: function(){ // make read-only and never submit value
+
 			this.rating('readOnly', true, true);
+
 		},// $.fn.rating.disable
+
 		
+
 		enable: function(){ // make read/write and submit value
+
 			this.rating('readOnly', false, false);
+
 		}// $.fn.rating.select
+
 		
+
  });
+
 	
+
 	/*--------------------------------------------------------*/
+
 	
+
 	/*
+
 		### Default Settings ###
+
 		eg.: You can override default control like this:
+
 		$.fn.rating.options.cancel = 'Clear';
+
 	*/
+
 	$.fn.rating.options = { //$.extend($.fn.rating, { options: {
+
 			cancel: 'Cancel Rating',   // advisory title for the 'cancel' link
+
 			cancelValue: '',           // value to submit when user click the 'cancel' link
+
 			split: 0,                  // split the star into how many parts?
+
 			
+
 			// Width of star image in case the plugin can't work it out. This can happen if
+
 			// the jQuery.dimensions plugin is not available OR the image is hidden at installation
+
 			starWidth: 16//,
+
 			
+
 			//NB.: These don't need to be pre-defined (can be undefined/null) so let's save some code!
+
 			//half:     false,         // just a shortcut to control.split = 2
+
 			//required: false,         // disables the 'cancel' button so user can only select one of the specified values
+
 			//readOnly: false,         // disable rating plugin interaction/ values cannot be changed
+
 			//focus:    function(){},  // executed when stars are focused
+
 			//blur:     function(){},  // executed when stars are focused
+
 			//callback: function(){},  // executed when a star is clicked
+
  }; //} });
+
 	
+
 	/*--------------------------------------------------------*/
+
 	
+
 	/*
+
 		### Default implementation ###
+
 		The plugin will attach itself to file inputs
+
 		with the class 'multi' when the page loads
+
 	*/
+
 	$(function(){ $('input[type=radio].star').rating(); });
+
 	
+
 	
+
 	
+
 /*# AVOID COLLISIONS #*/
+
 })(jQuery);
+
 /*# AVOID COLLISIONS #*/
+
 
 // Chosen, a Select Box Enhancer for jQuery and Protoype
 // by Patrick Filler for Harvest, http://getharvest.com
@@ -4637,237 +5904,468 @@ $(document).ready(function(){
 });
 
 ccm_setNewsflowOverlayDimensions = function() {
+
 	var w = $("#newsflow-overlay").width();
+
 	var h = $('#newsflow-overlay').height();
+
 	var tw = $(window).width();
+
 	var th = $(window).height();
+
 	var _left = (tw - w) / 2;
+
 	var _top = (th - h) / 2;
+
 	_top = _top + 29; // handle the top toolbar
+
 	_left = _left + "px";
+
 	_top = _top + "px";
+
 	$("#newsflow-overlay").css('left', _left).css('top', _top);
+
 }
+
+
 
 ccm_closeNewsflow = function() {
+
 	$("#newsflow-overlay").fadeOut(300, 'easeOutExpo', function() {
+
 		$("#newsflow-overlay").remove();
+
 	});
+
 	$('.ui-widget-overlay').fadeOut(300, 'easeOutExpo', function() {
+
 		$(this).remove();
+
 	});
+
+
 
 	if ($('#ccm-dashboard-content div#newsflow-main').length > 0 && $('#ccm-dashboard-content div#newsflow-main').not(':visible')) { 
+
 		$('#ccm-dashboard-content div#newsflow-main').fadeIn(300, 'easeOutExpo');
+
 	}	
+
 }
+
+
 
 ccm_showNewsflow = function(hideLoadingText) {
+
 	$(window).resize(function(){
+
 		ccm_setNewsflowOverlayDimensions();
+
 	});
 
+
+
 	ccm_showNewsflowOverlay();
+
 	if (!hideLoadingText) {
+
 		jQuery.fn.dialog.showLoader(ccmi18n.newsflowLoading);	
+
 	} else {
+
 		jQuery.fn.dialog.showLoader();	
+
 	}
+
 	$('<div />').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/home?_ccm_dashboard_external=1', function() {
+
 		jQuery.fn.dialog.hideLoader();
+
 		ccm_createNewsflowWindow();
+
 		$("#newsflow-overlay").html($(this).html());
+
 		ccm_setNewsflowOverlayDimensions();
+
 		ccm_setNewsflowPagingArrowHeight();
+
 		$("#newsflow-overlay").fadeIn('300', 'easeOutExpo');
+
 	});
+
 }
+
+
 
 ccm_createNewsflowWindow = function() {
+
 	if ($('#newsflow-overlay').length < 1) {
+
 		var $overlay = $('<div id="newsflow-overlay"></div>').hide().appendTo('body');
+
 	} else {
+
 		$("#newsflow-overlay").hide();
+
 	}
+
 }
+
+
 
 ccm_showNewsflowOverlay = function() {
+
 	if ($('#ccm-dashboard-content div#newsflow-main').length == 0) { 
+
 		if ($('.ui-widget-overlay').length < 1) {
+
 			var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
+
 		}
+
 		$('.ui-widget-overlay').show();
+
 	}
+
 }
+
+
 
 ccm_setNewsflowPagingArrowHeight = function() {
+
 	if ($('#newsflow-overlay').length > 0) { 
+
 		var $ovl = $('#newsflow-overlay');
+
 	} else {
+
 		var $ovl = $('#newsflow-main');
+
 	}
+
 	var h = $ovl.height();
+
 	$(".newsflow-paging-previous span, .newsflow-paging-next span").css('height', h + 'px');
+
 	$(".newsflow-paging-previous, .newsflow-paging-next").css('height', h + 'px');
+
 }
+
+
 
 ccm_showNewsflowOffsite = function(id) {
+
 	if (!id) {
+
 		if ($('#ccm-dashboard-content div#newsflow-main').length > 0 && $('#ccm-dashboard-content div#newsflow-main').not(':visible')) { 
+
 			ccm_closeNewsflow();
+
 			$('#ccm-dashboard-content div#newsflow-main').fadeIn(300, 'easeOutExpo');
+
 		} else {
+
 			ccm_showNewsflow(true);
+
 		}
+
 		return;
+
 	}
+
 	$(window).resize(function(){
+
 		ccm_setNewsflowOverlayDimensions();
+
 	});
+
 	
+
 	ccm_showNewsflowOverlay();
+
 	jQuery.fn.dialog.showLoader();	
+
 	if ($('#ccm-dashboard-content div#newsflow-main').is(':visible')) { 
+
 		$('#ccm-dashboard-content div#newsflow-main').fadeOut(300);
+
 	}
+
 	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_TOOLS_PATH + '/newsflow?cID=' + id, function() {
+
 		jQuery.fn.dialog.hideLoader();
+
 		ccm_createNewsflowWindow();
+
 		$("#newsflow-overlay").html($(this).html());
+
 		ccm_setNewsflowOverlayDimensions();
+
 		ccm_setNewsflowPagingArrowHeight();
+
 		$("#newsflow-overlay").fadeIn('300', 'easeOutExpo');
+
 	});
+
 }
 
+
+
 ccm_getNewsflowByPath = function(path) {
+
 	$(window).resize(function(){
+
 		ccm_setNewsflowOverlayDimensions();
+
 	});
+
 	ccm_showNewsflowOverlay();
+
 	jQuery.fn.dialog.showLoader();	
+
 	if ($('#ccm-dashboard-content div#newsflow-main').is(':visible')) { 
+
 		$('#ccm-dashboard-content div#newsflow-main').fadeOut(300);
+
 	}
+
 	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_TOOLS_PATH + '/newsflow?cPath=' + path, function() {
+
 		jQuery.fn.dialog.hideLoader();
+
 		ccm_createNewsflowWindow();
+
 		$("#newsflow-overlay").html($(this).html());
+
 		ccm_setNewsflowOverlayDimensions();
+
 		ccm_setNewsflowPagingArrowHeight();
+
 		$("#newsflow-overlay").fadeIn('300', 'easeOutExpo');
+
 	});
+
 }
+
+
+
 
 
 ccm_showAppIntroduction = function() {
+
 	$(window).resize(function(){
+
 		ccm_setNewsflowOverlayDimensions();
+
 	});
 
+
+
 	ccm_showNewsflowOverlay();
+
 	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/welcome?_ccm_dashboard_external=1', function() {
+
 		ccm_createNewsflowWindow();
+
 		$("#newsflow-overlay").html($(this).html());
+
 		ccm_setNewsflowOverlayDimensions();
+
 		ccm_setNewsflowPagingArrowHeight();
+
 		$("#newsflow-overlay").fadeIn('300', 'easeOutExpo');
+
 	});
+
 }
 // qs_score - Quicksilver Score
+
 // 
+
 // A port of the Quicksilver string ranking algorithm
+
 // 
+
 // "hello world".score("axl") //=> 0.0
+
 // "hello world".score("ow") //=> 0.6
+
 // "hello world".score("hello world") //=> 1.0
+
 //
+
 // Tested in Firefox 2 and Safari 3
+
 //
+
 // The Quicksilver code is available here
+
 // http://code.google.com/p/blacktree-alchemy/
+
 // http://blacktree-alchemy.googlecode.com/svn/trunk/Crucible/Code/NSString+BLTRRanking.m
+
 //
+
 // The MIT License
+
 // 
+
 // Copyright (c) 2008 Lachie Cox
+
 // 
+
 // Permission is hereby granted, free of charge, to any person obtaining a copy
+
 // of this software and associated documentation files (the "Software"), to deal
+
 // in the Software without restriction, including without limitation the rights
+
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+
 // copies of the Software, and to permit persons to whom the Software is
+
 // furnished to do so, subject to the following conditions:
+
 // 
+
 // The above copyright notice and this permission notice shall be included in
+
 // all copies or substantial portions of the Software.
+
 // 
+
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+
 // THE SOFTWARE.
 
 
+
+
+
 String.prototype.score = function(abbreviation,offset) {
+
   offset = offset || 0 // TODO: I think this is unused... remove
+
  
+
   if(abbreviation.length == 0) return 0.9
+
   if(abbreviation.length > this.length) return 0.0
 
+
+
   for (var i = abbreviation.length; i > 0; i--) {
+
     var sub_abbreviation = abbreviation.substring(0,i)
+
     var index = this.indexOf(sub_abbreviation)
 
 
+
+
+
     if(index < 0) continue;
+
     if(index + abbreviation.length > this.length + offset) continue;
 
+
+
     var next_string       = this.substring(index+sub_abbreviation.length)
+
     var next_abbreviation = null
 
+
+
     if(i >= abbreviation.length)
+
       next_abbreviation = ''
+
     else
+
       next_abbreviation = abbreviation.substring(i)
+
  
+
     var remaining_score   = next_string.score(next_abbreviation,offset+index)
+
  
+
     if (remaining_score > 0) {
+
       var score = this.length-next_string.length;
 
+
+
       if(index != 0) {
+
         var j = 0;
 
+
+
         var c = this.charCodeAt(index-1)
+
         if(c==32 || c == 9) {
+
           for(var j=(index-2); j >= 0; j--) {
+
             c = this.charCodeAt(j)
+
             score -= ((c == 32 || c == 9) ? 1 : 0.15)
+
           }
 
+
+
           // XXX maybe not port this heuristic
+
           // 
+
           //          } else if ([[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember:[self characterAtIndex:matchedRange.location]]) {
+
           //            for (j = matchedRange.location-1; j >= (int) searchRange.location; j--) {
+
           //              if ([[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember:[self characterAtIndex:j]])
+
           //                score--;
+
           //              else
+
           //                score -= 0.15;
+
           //            }
+
         } else {
+
           score -= index
+
         }
+
       }
+
    
+
       score += remaining_score * next_string.length
+
       score /= this.length;
+
       return score
+
     }
+
   }
+
   return 0.0
+
 }
 ccm_marketplaceLauncherOpenPost = function() {
 
@@ -5239,8 +6737,8 @@ ccm_setupInPagePaginationAndSorting = function(searchType) {
 }
 
 ccm_setupSortableColumnSelection = function(searchType) {
-	$("#ccm-search-add-column").unbind();
-	$("#ccm-search-add-column").click(function() {
+	$("#ccm-list-view-customize").unbind();
+	$("#ccm-list-view-customize").click(function() {
 		jQuery.fn.dialog.open({
 			width: 550,
 			height: 350,
@@ -6417,330 +7915,655 @@ ccm_enableDesignScrollers = function() {
 }
 
 $(function() {
+
 	ccm_intelligentSearchActivateResults();	
+
 	ccm_intelligentSearchDoOffsite($('#ccm-nav-intelligent-search').val());
+
 });
 
+
+
 	var ccm_quickNavTimer = false;
+
 	
+
 	ccm_showQuickNav = function(callback) {
+
 		clearTimeout(ccm_quickNavTimer);
+
 		if ($('#ccm-quick-nav').is(':visible')) {
+
 			if (typeof(callback) == 'function') {
+
 				callback();
+
 			}
+
 		} else {
+
 			$("#ccm-quick-nav").fadeIn(120, 'easeOutExpo', function() {
+
 				if (typeof(callback) == 'function') {
+
 					callback();
+
 				}
+
 			});
+
 		}
+
 	}
+
 	
+
 	ccm_hideQuickNav = function() {
+
 		$("#ccm-quick-nav").fadeOut(120, 'easeInExpo');
+
 		clearTimeout(ccm_quickNavTimer);
+
 	}
+
 	
+
 	ccm_togglePageHelp = function(e) {
+
 		if ($('#twipsy-holder .popover').is(':visible')) {
+
 			$('#ccm-page-help').popover('hide');	
+
 		} else {
+
 			$('#ccm-page-help').popover('show');	
+
 			e.stopPropagation();
+
 			$(window).bind('click.popover', function() {
+
 				$('#ccm-page-help').popover('hide');		
+
 				$(window).unbind('click.popover');
+
 			});
+
 		}
+
 	}
+
 	
+
 	ccm_toggleQuickNav = function(cID, token) {
+
 		var l = $("#ccm-add-to-quick-nav");
+
 		if (l.hasClass('ccm-icon-favorite-selected')) {
+
 			l.removeClass('ccm-icon-favorite-selected').addClass('ccm-icon-favorite');
+
 		} else {
+
 			l.removeClass('ccm-icon-favorite').addClass('ccm-icon-favorite-selected');
+
 		}
+
 		ccm_showQuickNav(function() {
+
 			$.getJSON(CCM_TOOLS_PATH + '/dashboard/add_to_quick_nav', {
+
 				'cID': cID,
+
 				'token': token
+
 			}, function(r) {
+
 				if (r.result == 'add') { 
+
 					$("#ccm-quick-nav-favorites").append('<li />');
+
 					var accepter = $("#ccm-quick-nav-favorites li:last-child");
+
 					accepter.attr('id','ccm-quick-nav-page-' + cID).css('display','none');
+
 					var title = l.parent().parent().parent().find('h3');
+
 					title.css('display','inline');
+
 					accepter.html(r.link).css('visibility','hidden').show();
+
 					title.effect("transfer", { to: accepter, 'easing': 'easeOutExpo'}, 600, function() {
+
 						accepter.hide().css('visibility','visible').fadeIn(240, 'easeInExpo');			
+
 						title.css('display','block');
+
 						ccm_quickNavTimer = setTimeout(function() {
+
 							ccm_hideQuickNav();
+
 						}, 1000);
+
 					});
+
 				} else {
+
 					$("#ccm-quick-nav-page-" + cID).fadeOut(240, 'easeOutExpo');
+
 					ccm_quickNavTimer = setTimeout(function() {
+
 						ccm_hideQuickNav();
+
 					}, 1000);
+
 				}
+
 			});
-		});
-	}
-	
-	ccm_activateToolbar = function() {
-		$("#ccm-toolbar,#ccm-quick-nav").hover(function() {
-			ccm_showQuickNav();
-		}, function() {
-			ccm_quickNavTimer = setTimeout(function() {
-				ccm_hideQuickNav();
-			}, 1000);
-		});
-		
-		$("#ccm-dashboard-overlay").css('visibility','visible').hide();
-	
-		$("#ccm-nav-intelligent-search-wrapper").click(function() {
-			$("#ccm-nav-intelligent-search").focus();
-		});
-		$("#ccm-nav-intelligent-search").focus(function() {
-			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-			$(this).parent().addClass("ccm-system-nav-selected");
-			if ($("#ccm-dashboard-overlay").is(':visible')) {
-				$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
-				$(window).unbind('click.dashboard-nav');
-			}
-		});
-		
-		$("#ccm-nav-dashboard").click(function() {
-			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-			$(this).parent().addClass('ccm-system-nav-selected');
-			$("#ccm-nav-intelligent-search").val('');
-			$("#ccm-intelligent-search-results").fadeOut(90, 'easeOutExpo');
-	
-			if ($('#ccm-edit-overlay').is(':visible')) {
-				$('#ccm-edit-overlay').fadeOut(90, 'easeOutExpo');
-				$(window).unbind('click.ccm-edit');
-			}
-	
-			if ($('#ccm-dashboard-overlay').is(':visible')) {
-				$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-				$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
-				$(window).unbind('click.dashboard-nav');
-			} else {
-				$("#ccm-dashboard-overlay").fadeIn(160, 'easeOutExpo');
-				$(window).bind('click.dashboard-nav', function() {
-					$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-					$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
-					$(window).unbind('click.dashboard-nav');
-				});
-			}
-			return false;
-		});
-	
-		$("#ccm-nav-intelligent-search").bind('keydown.ccm-intelligent-search', function(e) {
-			if (e.keyCode == 13 || e.keyCode == 40 || e.keyCode == 38) {
-				e.preventDefault();
-				e.stopPropagation();
-	
-				if (e.keyCode == 13 && $("a.ccm-intelligent-search-result-selected").length > 0) {
-					var href = $("a.ccm-intelligent-search-result-selected").attr('href');
-					if (!href || href == '#' || href == 'javascript:void(0)') {
-						$("a.ccm-intelligent-search-result-selected").click();
-					} else {
-						window.location.href = href;
-					}
-				}
-				var visibleitems = $("#ccm-intelligent-search-results li:visible");
-				var sel;
-				
-				if (e.keyCode == 40 || e.keyCode == 38) {
-					$.each(visibleitems, function(i, item) {
-						if ($(item).children('a').hasClass('ccm-intelligent-search-result-selected')) {
-							if (e.keyCode == 38) {
-								io = visibleitems[i-1];
-							} else {
-								io = visibleitems[i+1];
-							}
-							sel = $(io).find('a');
-						}
-					});
-					if (sel && sel.length > 0) {
-						$("a.ccm-intelligent-search-result-selected").removeClass();
-						$(sel).addClass('ccm-intelligent-search-result-selected');				
-					}
-				}
-			} 
-		});
-	
-		$("#ccm-nav-intelligent-search").bind('keyup.ccm-intelligent-search', function(e) {
-			ccm_intelligentSearchDoOffsite($(this).val());
-		});
-	
-		$("#ccm-nav-intelligent-search").blur(function() {
-			$(this).parent().removeClass("ccm-system-nav-selected");
-		});
-		
-		
-		$("#ccm-nav-intelligent-search").liveUpdate('ccm-intelligent-search-results', 'intelligent-search');
-		$("#ccm-nav-intelligent-search").bind('click', function(e) { if ( this.value=="") { 
-			$("#ccm-intelligent-search-results").hide();
-		}});
-		
-		$("#ccm-toolbar-nav-properties").dialog();
-		$("#ccm-toolbar-add-subpage").dialog();
-		$("#ccm-toolbar-nav-versions").dialog();
-		$("#ccm-toolbar-nav-design").dialog();
-		$("#ccm-toolbar-nav-permissions").dialog();
-		$("#ccm-toolbar-nav-speed-settings").dialog();
-		$("#ccm-toolbar-nav-move-copy").dialog();
-		$("#ccm-toolbar-nav-delete").dialog();
-	
-		$("#ccm-nav-edit").click(function() {
-			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-			$(this).parent().addClass('ccm-system-nav-selected');
-			$("#ccm-nav-intelligent-search").val('');
-			$("#ccm-intelligent-search-results").fadeOut(90, 'easeOutExpo');
-	
-			if ($('#ccm-dashboard-overlay').is(':visible')) {
-				$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
-				$(window).unbind('click.dashboard-nav');
-			}
-	
-			if ($('#ccm-edit-overlay').is(':visible')) {
-				$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-				$('#ccm-edit-overlay').fadeOut(90, 'easeOutExpo');
-				$(window).unbind('click.ccm-edit');
-			} else {
-				$("#ccm-edit-overlay").click(function(e) {
-					e.stopPropagation();
-				});
-				setTimeout("$('#ccm-check-in-comments').focus();",300);
-				$("#ccm-check-in-preview").click(function() {
-					$("#ccm-approve-field").val('PREVIEW');
-					$("#ccm-check-in").submit();
-				});
-			
-				$("#ccm-check-in-discard").click(function() {
-					$("#ccm-approve-field").val('DISCARD');
-					$("#ccm-check-in").submit();
-				});
-			
-				$("#ccm-check-in-publish").click(function() {
-					$("#ccm-approve-field").val('APPROVE');
-					$("#ccm-check-in").submit();
-				});
-				var posX = $(this).position().left;
-				if (posX > 0) {
-					posX = posX - 20; // BACK it up!
-				}
-				$("#ccm-edit-overlay").css('left', posX + "px");
-				$("#ccm-edit-overlay").fadeIn(160, 'easeOutExpo', function() {
-					$(this).find('a').click(function() {
-						ccm_toolbarCloseEditMenu();
-					});
-				});
-				$(window).bind('click.ccm-edit', function() {
-					ccm_toolbarCloseEditMenu();				
-				});
-			}
-			return false;
+
 		});
 
 	}
+
+	
+
+	ccm_activateToolbar = function() {
+
+		$("#ccm-toolbar,#ccm-quick-nav").hover(function() {
+
+			ccm_showQuickNav();
+
+		}, function() {
+
+			ccm_quickNavTimer = setTimeout(function() {
+
+				ccm_hideQuickNav();
+
+			}, 1000);
+
+		});
+
+		
+
+		$("#ccm-dashboard-overlay").css('visibility','visible').hide();
+
+	
+
+		$("#ccm-nav-intelligent-search-wrapper").click(function() {
+
+			$("#ccm-nav-intelligent-search").focus();
+
+		});
+
+		$("#ccm-nav-intelligent-search").focus(function() {
+
+			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
+
+			$(this).parent().addClass("ccm-system-nav-selected");
+
+			if ($("#ccm-dashboard-overlay").is(':visible')) {
+
+				$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
+
+				$(window).unbind('click.dashboard-nav');
+
+			}
+
+		});
+
+		
+
+		$("#ccm-nav-dashboard").click(function() {
+
+			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
+
+			$(this).parent().addClass('ccm-system-nav-selected');
+
+			$("#ccm-nav-intelligent-search").val('');
+
+			$("#ccm-intelligent-search-results").fadeOut(90, 'easeOutExpo');
+
+	
+
+			if ($('#ccm-edit-overlay').is(':visible')) {
+
+				$('#ccm-edit-overlay').fadeOut(90, 'easeOutExpo');
+
+				$(window).unbind('click.ccm-edit');
+
+			}
+
+	
+
+			if ($('#ccm-dashboard-overlay').is(':visible')) {
+
+				$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
+
+				$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
+
+				$(window).unbind('click.dashboard-nav');
+
+			} else {
+
+				$("#ccm-dashboard-overlay").fadeIn(160, 'easeOutExpo');
+
+				$(window).bind('click.dashboard-nav', function() {
+
+					$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
+
+					$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
+
+					$(window).unbind('click.dashboard-nav');
+
+				});
+
+			}
+
+			return false;
+
+		});
+
+	
+
+		$("#ccm-nav-intelligent-search").bind('keydown.ccm-intelligent-search', function(e) {
+
+			if (e.keyCode == 13 || e.keyCode == 40 || e.keyCode == 38) {
+
+				e.preventDefault();
+
+				e.stopPropagation();
+
+	
+
+				if (e.keyCode == 13 && $("a.ccm-intelligent-search-result-selected").length > 0) {
+
+					var href = $("a.ccm-intelligent-search-result-selected").attr('href');
+
+					if (!href || href == '#' || href == 'javascript:void(0)') {
+
+						$("a.ccm-intelligent-search-result-selected").click();
+
+					} else {
+
+						window.location.href = href;
+
+					}
+
+				}
+
+				var visibleitems = $("#ccm-intelligent-search-results li:visible");
+
+				var sel;
+
+				
+
+				if (e.keyCode == 40 || e.keyCode == 38) {
+
+					$.each(visibleitems, function(i, item) {
+
+						if ($(item).children('a').hasClass('ccm-intelligent-search-result-selected')) {
+
+							if (e.keyCode == 38) {
+
+								io = visibleitems[i-1];
+
+							} else {
+
+								io = visibleitems[i+1];
+
+							}
+
+							sel = $(io).find('a');
+
+						}
+
+					});
+
+					if (sel && sel.length > 0) {
+
+						$("a.ccm-intelligent-search-result-selected").removeClass();
+
+						$(sel).addClass('ccm-intelligent-search-result-selected');				
+
+					}
+
+				}
+
+			} 
+
+		});
+
+	
+
+		$("#ccm-nav-intelligent-search").bind('keyup.ccm-intelligent-search', function(e) {
+
+			ccm_intelligentSearchDoOffsite($(this).val());
+
+		});
+
+	
+
+		$("#ccm-nav-intelligent-search").blur(function() {
+
+			$(this).parent().removeClass("ccm-system-nav-selected");
+
+		});
+
+		
+
+		
+
+		$("#ccm-nav-intelligent-search").liveUpdate('ccm-intelligent-search-results', 'intelligent-search');
+
+		$("#ccm-nav-intelligent-search").bind('click', function(e) { if ( this.value=="") { 
+
+			$("#ccm-intelligent-search-results").hide();
+
+		}});
+
+		
+
+		$("#ccm-toolbar-nav-properties").dialog();
+
+		$("#ccm-toolbar-add-subpage").dialog();
+
+		$("#ccm-toolbar-nav-versions").dialog();
+
+		$("#ccm-toolbar-nav-design").dialog();
+
+		$("#ccm-toolbar-nav-permissions").dialog();
+
+		$("#ccm-toolbar-nav-speed-settings").dialog();
+
+		$("#ccm-toolbar-nav-move-copy").dialog();
+
+		$("#ccm-toolbar-nav-delete").dialog();
+
+	
+
+		$("#ccm-nav-edit").click(function() {
+
+			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
+
+			$(this).parent().addClass('ccm-system-nav-selected');
+
+			$("#ccm-nav-intelligent-search").val('');
+
+			$("#ccm-intelligent-search-results").fadeOut(90, 'easeOutExpo');
+
+	
+
+			if ($('#ccm-dashboard-overlay').is(':visible')) {
+
+				$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
+
+				$(window).unbind('click.dashboard-nav');
+
+			}
+
+	
+
+			if ($('#ccm-edit-overlay').is(':visible')) {
+
+				$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
+
+				$('#ccm-edit-overlay').fadeOut(90, 'easeOutExpo');
+
+				$(window).unbind('click.ccm-edit');
+
+			} else {
+
+				$("#ccm-edit-overlay").click(function(e) {
+
+					e.stopPropagation();
+
+				});
+
+				setTimeout("$('#ccm-check-in-comments').focus();",300);
+
+				$("#ccm-check-in-preview").click(function() {
+
+					$("#ccm-approve-field").val('PREVIEW');
+
+					$("#ccm-check-in").submit();
+
+				});
+
+			
+
+				$("#ccm-check-in-discard").click(function() {
+
+					$("#ccm-approve-field").val('DISCARD');
+
+					$("#ccm-check-in").submit();
+
+				});
+
+			
+
+				$("#ccm-check-in-publish").click(function() {
+
+					$("#ccm-approve-field").val('APPROVE');
+
+					$("#ccm-check-in").submit();
+
+				});
+
+				var posX = $(this).position().left;
+
+				if (posX > 0) {
+
+					posX = posX - 20; // BACK it up!
+
+				}
+
+				$("#ccm-edit-overlay").css('left', posX + "px");
+
+				$("#ccm-edit-overlay").fadeIn(160, 'easeOutExpo', function() {
+
+					$(this).find('a').click(function() {
+
+						ccm_toolbarCloseEditMenu();
+
+					});
+
+				});
+
+				$(window).bind('click.ccm-edit', function() {
+
+					ccm_toolbarCloseEditMenu();				
+
+				});
+
+			}
+
+			return false;
+
+		});
+
+
+
+	}
+
 	var ajaxtimer = null;
+
 	var ajaxquery = null;
 
+
+
 	ccm_toolbarCloseEditMenu = function() {
+
 		$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
+
 		$('#ccm-edit-overlay').fadeOut(90, 'easeOutExpo');
+
 		$(window).unbind('click.ccm-edit');
+
 	}
+
 	
+
 	ccm_intelligentSearchActivateResults = function() {
+
 		if ($("#ccm-intelligent-search-results div:visible").length == 0) {
+
 			$("#ccm-intelligent-search-results").hide();
+
 		}
+
 		$("#ccm-intelligent-search-results a").hover(function() {
+
 			$('a.ccm-intelligent-search-result-selected').removeClass();
+
 			$(this).addClass('ccm-intelligent-search-result-selected');
+
 		}, function() {
+
 			$(this).removeClass('ccm-intelligent-search-result-selected');
+
 		});
+
 	}
+
+
 
 	ccm_intelligentSearchDoOffsite = function(query) {	
+
 		if (!query) {
+
 			return;
+
 		}
+
 		if (query.trim().length > 2) {
+
 			if (query.trim() == ajaxquery) {
+
 				return;
+
 			}
+
 			
+
 			if (ajaxtimer) {
+
 				window.clearTimeout(ajaxtimer);
+
 			}
+
 			ajaxquery = query.trim();
+
 			ajaxtimer = window.setTimeout(function() {
+
 				ajaxtimer = null;
+
 				$("#ccm-intelligent-search-results-list-marketplace").parent().show();
+
 				$("#ccm-intelligent-search-results-list-help").parent().show();
+
 				$("#ccm-intelligent-search-results-list-marketplace").parent().addClass('ccm-intelligent-search-results-module-loading');
+
 				$("#ccm-intelligent-search-results-list-help").parent().addClass('ccm-intelligent-search-results-module-loading');
+
 	
+
 				$.getJSON(CCM_TOOLS_PATH + '/marketplace/intelligent_search', {
+
 					'q': ajaxquery
+
 				},
+
 				function(r) {
+
 					$("#ccm-intelligent-search-results-list-marketplace").parent().removeClass('ccm-intelligent-search-results-module-loading');
+
 					$("#ccm-intelligent-search-results-list-marketplace").html('');
+
 					for (i = 0; i < r.length; i++) {
+
 						var rr= r[i];
+
 						var _onclick = "ccm_openAddonLauncher(" + rr.mpID + ")";
+
 						$("#ccm-intelligent-search-results-list-marketplace").append('<li><a href="javascript:void(0)" onclick="' + _onclick + '"><img src="' + rr.img + '" />' + rr.name + '</a></li>');
+
 					}
+
 					if (r.length == 0) {
+
 						$("#ccm-intelligent-search-results-list-marketplace").parent().hide();
+
 					}
+
 					if ($('.ccm-intelligent-search-result-selected').length == 0) {
+
 						$("#ccm-intelligent-search-results").find('li a').removeClass('ccm-intelligent-search-result-selected');
+
 						$("#ccm-intelligent-search-results li:visible a:first").addClass('ccm-intelligent-search-result-selected');
+
 					}
+
 					ccm_intelligentSearchActivateResults();
+
 				}).error(function() {
+
 					$("#ccm-intelligent-search-results-list-marketplace").parent().hide();
+
 				});
+
 	
+
 				$.getJSON(CCM_TOOLS_PATH + '/get_remote_help', {
+
 					'q': ajaxquery
+
 				},
+
 				function(r) {
+
+
 
 					$("#ccm-intelligent-search-results-list-help").parent().removeClass('ccm-intelligent-search-results-module-loading');
+
 					$("#ccm-intelligent-search-results-list-help").html('');
+
 					for (i = 0; i < r.length; i++) {
+
 						var rr= r[i];
+
 						$("#ccm-intelligent-search-results-list-help").append('<li><a href="' + rr.href + '">' + rr.name + '</a></li>');
+
 					}
+
 					if (r.length == 0) {
+
 						$("#ccm-intelligent-search-results-list-help").parent().hide();
+
 					}
+
 					if ($('.ccm-intelligent-search-result-selected').length == 0) {
+
 						$("#ccm-intelligent-search-results").find('li a').removeClass('ccm-intelligent-search-result-selected');
+
 						$("#ccm-intelligent-search-results li:visible a:first").addClass('ccm-intelligent-search-result-selected');
+
 					}
+
 					ccm_intelligentSearchActivateResults();
 
+
+
 				}).error(function() {
+
 					$("#ccm-intelligent-search-results-list-help").parent().hide();
+
 				});
+
 	
+
 			}, 500);
+
 		}
+
 	}
 var ccm_arrangeMode = false;
 var ccm_selectedDomID = false;
