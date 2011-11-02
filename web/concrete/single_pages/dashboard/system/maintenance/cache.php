@@ -41,23 +41,6 @@
 </form>
 <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>  
 
-<br/>  
-    
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Clear Cache'), false, 'span12 offset2', false)?>
-
-<form method="post" id="clear-cache-form" action="<?php echo $this->url('/dashboard/system/maintenance/cache', 'clear_cache')?>">
-    <div class="ccm-pane-body">
-        <?php echo $this->controller->token->output('clear_cache')?>
-        <p><?php echo t('If your site is displaying out-dated information, or behaving unexpectedly, it may help to clear your cache.')?></p>
-    </div>
-    <div class="ccm-pane-footer">
-        <?
-        print $interface->submit(t('Clear Cache'), 'clear-cache-form', 'left','primary');
-        ?>
-    
-    </div>    
-</form>
-    
 <script type="text/javascript">
 	ccm_settingsSetupCacheForm = function() {
 		var obj = $('input[name=ENABLE_CACHE]:checked');
@@ -99,5 +82,3 @@
 		}
 	}
 </script>
-
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>

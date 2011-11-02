@@ -82,6 +82,7 @@
 
         <page name="Optimization &amp; Maintenance" path="/dashboard/system/maintenance" filename="/dashboard/system/maintenance/view.php" pagetype="" description="Keep your site running well." package=""/>
         <page name="Cache &amp; Speed Settings" path="/dashboard/system/maintenance/cache" filename="/dashboard/system/maintenance/cache.php" pagetype="" description="" package=""/>
+        <page name="Clear Cache" path="/dashboard/system/maintenance/clear_cache" filename="/dashboard/system/maintenance/clear_cache.php" pagetype="" description="" package=""/>
         <page name="Automated Jobs" path="/dashboard/system/maintenance/jobs" filename="/dashboard/system/maintenance/jobs.php" pagetype="" description="" package=""/>
         <page name="Maintenance Mode" path="/dashboard/system/maintenance/mode" filename="/dashboard/system/maintenance/mode.php" pagetype="" description="" package=""/>
         <page name="Update concrete5" path="/dashboard/system/maintenance/update" filename="/dashboard/system/maintenance/update.php" pagetype="" description="" package=""/>
