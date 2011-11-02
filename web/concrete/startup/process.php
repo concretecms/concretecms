@@ -1,6 +1,5 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
-	
 	# Filename: _process.php
 	# Author: Andrew Embler (andrew@bluepavo.com)
 	# -------------------
