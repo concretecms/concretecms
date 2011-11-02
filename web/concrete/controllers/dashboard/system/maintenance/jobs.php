@@ -9,12 +9,34 @@ class DashboardSystemMaintenanceJobsController extends DashboardBaseController {
 		$this->set('auth', Job::generateAuth());
 	}
 	
-	function execute($job) {
-		
+	function install($handle = null) {
+		if ($handle) {
+			Loader::model("job");
+			Job::installByHandle($handle);
+			$this->set('message', t('Job succesfully installed.'));
+		} else {
+			$this->error->add(t('No job specified.'));
+		}
+		$this->view();
 	}
 	
-	function uninstall($job_id) {
-		
+	function uninstall($job_id = null) {
+		if ($job_id) {
+			Loader::model("job");
+			$job = Job::getByID((int) $job_id);
+			if ($job) {
+				if (!$job->jNotUninstallable) {
+					$job->uninstall();
+					$this->set('message', t('Job succesfully uninstalled.'));
+				} else {
+					$this->error->add(t('This job cannot be uninstalled.'));
+				}
+			} else {
+				$this->error->add(t('Job not found.'));
+			}
+		} else {
+			$this->error->add(t('No job specified.'));
+		}
 		$this->view();
 	}
 }
