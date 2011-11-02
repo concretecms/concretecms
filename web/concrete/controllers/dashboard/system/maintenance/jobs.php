@@ -39,4 +39,17 @@ class DashboardSystemMaintenanceJobsController extends DashboardBaseController {
 		}
 		$this->view();
 	}
+	
+	public function reset_running_jobs() {
+		Loader::model('job');
+		if (Loader::helper('validation/token')->validate('reset_running_jobs')) { 
+			Job::resetRunningJobs();
+			$this->redirect('/dashboard/system/maintenance/jobs', 'reset_complete');
+		}
+	}
+	public function reset_complete() {
+		$this->set('message', t('All running jobs have been reset.'));
+		$this->view();
+	}
+	
 }
