@@ -48,7 +48,7 @@ if ($_POST['task'] == 'add') {
 	
     <!-- START: Add Page Type pane -->
     
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Adds Page Type').'<span class="label" style="position:relative;top:-3px;left:12px;">'.t('* required field').'</span>', false, false, false);?>
+    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Page Type').'<span class="label" style="position:relative;top:-3px;left:12px;">'.t('* required field').'</span>', false, false, false);?>
 	
     <form method="post" id="add_page_type" action="<?=$this->url('/dashboard/pages/types/add')?>">
 	<?=$valt->output('add_page_type')?>
