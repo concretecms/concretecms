@@ -1,7 +1,9 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
-$uh = Loader::helper('concrete/urls'); 
-
+/* @var $uh ConcreteUrlsHelper */ 
+$uh = Loader::helper('concrete/urls');
+/* @var $fh FormHelper */ 
+$fh = Loader::helper('form');
 ?>
 
 <ul class="ccm-dialog-tabs" id="ccm-formblock-tabs">
@@ -10,6 +12,7 @@ $uh = Loader::helper('concrete/urls');
 	<li><a href="javascript:void(0)" id="ccm-formblock-tab-preview"><?php echo t('Preview')?></a></li>
 	<li><a href="javascript:void(0)" id="ccm-formblock-tab-options"><?php echo t('Options')?></a></li>
 </ul>
+<div class="spacer"></div>
 
 <input type="hidden" name="miniSurveyServices" value="<?php echo $uh->getBlockTypeToolsURL($bt)?>/services.php" />
 
@@ -83,11 +86,19 @@ $uh = Loader::helper('concrete/urls');
 <input type="hidden" id="msqID" name="msqID" type="text" value="<?php echo intval($msqID)?>" />
 
 <div id="ccm-formBlockPane-add" class="ccm-formBlockPane" style=" <?php echo (intval($miniSurveyInfo['bID'])==0)?'display:block':''?> ">
-	<div id="newQuestionBox">
 	
-		<div id="addNewQuestionTitle"><strong><?php echo t('Add a New Question')?>:</strong></div>		
+
+	<div id="newQuestionBox">
+		<div id="addNewQuestionTitle"><h2><?php echo t('Add a New Question')?></h2></div>		
 		
 		<div id="questionAddedMsg" class="formBlockQuestionMsg"><?php echo t('Your question has been added. To view it click the preview tab.')?></div>
+		
+		<div class="clearfix">
+			<?=$fh->label('question', t('Question'))?>
+			<div class="input">
+				<?=$fh->text('question')?>
+			</div>
+		</div>
 		
 		<div class="fieldRow">
 			<div class="fieldLabel"><?php echo t('Question')?>:</div>
