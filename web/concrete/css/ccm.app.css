@@ -580,9 +580,9 @@ div.ccm-attribute-editable-field-type-number input{width:60px;}
 a.ccm-search-save{color:#333;padding:3px 27px 3px 3px;position:relative;height:24px;}
 a.ccm-search-save:hover{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;background-color:#d7d7d7;text-decoration:none;color:#333;}
 a.ccm-search-save span{position:absolute;top:-2px;right:3px;width:22px;height:24px;}
-a#ccm-search-add-column,a#ccm-export-results{margin-left:8px;color:#333;padding:3px 29px 3px 3px;position:relative;height:24px;}
-a#ccm-search-add-column:hover,a#ccm-export-results:hover{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;background-color:#d7d7d7;text-decoration:none;color:#333;}
-a#ccm-search-add-column span,a#ccm-export-results span{position:absolute;top:2px;right:5px;width:24px;height:24px;}
+a#ccm-list-view-customize,a#ccm-export-results{margin-left:8px;color:#333;padding:3px 29px 3px 3px;position:relative;height:24px;}
+a#ccm-list-view-customize:hover,a#ccm-export-results:hover{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;background-color:#d7d7d7;text-decoration:none;color:#333;}
+a#ccm-list-view-customize span,a#ccm-export-results span{position:absolute;top:2px;right:5px;width:24px;height:24px;}
 a#ccm-export-results span{background:transparent url(../images/icons/excel.png) no-repeat;background-position:top right;}
 ul.ccm-search-sortable-column-wrapper{border:2px solid #dedede;padding:0px;margin:0px;padding-top:8px;}
 ul.ccm-search-sortable-column-wrapper li{padding:2px 0px 4px 24px;margin-left:4px;margin-bottom:4px;background:transparent url(../images/icons/column.png) no-repeat scroll;list-style-type:none;}
@@ -698,6 +698,7 @@ td.newsflow-latest-edition-wrapper{background-color:#e7f7ff;background-repeat:re
 .ccm-pane .form-stacked .ccm-pane-body{margin-left:-20px;}
 .ccm-pane .form-stacked .ccm-pane-footer{margin-left:-20px;}
 .ui-dialog .form-stacked{padding-left:0px;}
+.ccm-pane-footer .form-stacked{padding-left:0px;}
 .ccm-pane-footer div.ccm-pagination a,.ccm-pane-dialog-pagination a{color:#333;text-decoration:none;font-weight:bold;padding:1px;}
 .ccm-pane-footer div.ccm-pagination span,.ccm-pane-dialog-pagination span{color:#999;padding:1px;}
 .ccm-pane-footer div.ccm-pagination a:hover,.ccm-pane-dialog-pagination a:hover{text-decoration:none;background-color:#c3c3c3;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;color:#333;}
