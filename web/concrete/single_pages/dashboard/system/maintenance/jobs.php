@@ -131,7 +131,7 @@ jQuery(function($) {
 ?></td>
 	<td class="jLastStatusText"><?=$job['jLastStatusText']?></td>
 	<td><?if(!$job['jNotUninstallable']):?>
-		<a class="btn remove" href="<?=$this->action('uninstall', $job['jID'])?>"><?=t('Remove')?></a>
+		<?=$ih->button(t('Remove'), $this->action('uninstall', $job['jID']), null, 'remove')?>
 	<?endif?></td>
 </tr>
 <?endforeach?>
@@ -155,7 +155,7 @@ jQuery(function($) {
 		<td><?=$job->getJobName() ?></td>
 		<td><?=$job->getJobDescription() ?></td> 
 		<td><?if(!$job->invalid):?>
-			<a class="btn" href="<?=$this->action('install', $job->jHandle)?>"><?=t('Install')?></a>
+			<?=$ih->button(t('Install'), $this->action('install', $job->jHandle))?>
 		<?endif?></td>
 	</tr>	
 	<?endforeach?>
@@ -165,10 +165,5 @@ jQuery(function($) {
 <div><?=t('If you wish to run these jobs in the background, automate access to the following URL:')?></div>
 <div><a href="<?=BASE_URL.$this->url('/tools/required/jobs?auth='.$auth)?>"><?=BASE_URL . $this->url('/tools/required/jobs?auth=' . $auth)?></a></div>
 </div>
-<div class="ccm-pane-footer">
-<?
-	$submit = $ih->submit( t('Save'), 'tracking-code-form', 'right', 'primary');
-	//print $submit;
-?>
-</div>
+<div class="ccm-pane-footer"></div>
 <?=$h->getDashboardPaneFooterWrapper(false);?>
