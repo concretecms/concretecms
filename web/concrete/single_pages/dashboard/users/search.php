@@ -234,7 +234,7 @@ if (is_object($uo)) {
 	</script>
 		
 		
-	<h1><span><?=t('Edit Account')?></span></h1>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit User'), t('Edit User account.'), false, false);?>
 	
 	<div class="ccm-dashboard-inner">
 
@@ -379,8 +379,7 @@ if (is_object($uo)) {
 	
 	<? } else { ?>
 
-	<h1><span><?=t('View User')?></span></h1>
-	
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('View User'), t('View User accounts.'), false, false);?>
 	<div class="ccm-dashboard-inner">
 		<div class="actions" >			
 		
