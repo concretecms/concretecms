@@ -18,6 +18,8 @@
 .ccm-ui input[type="search"]{-webkit-appearance:textfield;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;}
 .ccm-ui input[type="search"]::-webkit-search-decoration{-webkit-appearance:none;}
 .ccm-ui textarea{overflow:auto;vertical-align:top;}
+.ccm-ui .clearfix{zoom:1;}.ccm-ui .clearfix:before,.ccm-ui .clearfix:after{display:table;content:"";zoom:1;*display:inline;}
+.ccm-ui .clearfix:after{clear:both;}
 .ccm-ui{margin:0;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:13px;font-weight:normal;line-height:18px;color:#404040;}
 .ccm-ui .container{width:940px;margin-left:auto;margin-right:auto;zoom:1;}.ccm-ui .container:before,.ccm-ui .container:after{display:table;content:"";zoom:1;*display:inline;}
 .ccm-ui .container:after{clear:both;}
