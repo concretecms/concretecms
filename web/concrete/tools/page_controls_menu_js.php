@@ -188,7 +188,7 @@ menuHTML += '<div class="ccm-edit-overlay-actions">';
 	menuHTML += '<a id="ccm-nav-check-out" href="<? if (!$cantCheckOut) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>" class="btn primary <? if ($cantCheckOut) { ?> disabled <? } ?> tooltip" <? if ($cantCheckOut) { ?>title="<?=t('Someone has already checked this page out for editing.')?>"<? } ?>><?=t('Edit this Page')?></a>';
 <? } ?>
 <? if ($cp->canAddSubContent()) { ?>
-	menuHTML += '<a id="ccm-toolbar-add-subpage" dialog-width="680" dialog-modal="false" dialog-height="440" dialog-title="<?=t('Add a Sub-Page')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?cID=<?=$cID?>&ctask=add"class="btn"><?=t('Add a Sub-Page')?></a>';
+	menuHTML += '<a id="ccm-toolbar-add-subpage" dialog-width="680" dialog-modal="false" dialog-append-buttons="true" dialog-height="215" dialog-title="<?=t('Add a Sub-Page')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?cID=<?=$cID?>&ctask=add"class="btn"><?=t('Add a Sub-Page')?></a>';
 <? } ?>
 menuHTML += '</div>';
 
@@ -207,7 +207,7 @@ menuHTML += '<ul>';
 <? } ?>
 <? if ($cp->canAdminPage()) { ?>
 	menuHTML += '<li><a class="ccm-menu-icon ccm-icon-design" id="ccm-toolbar-nav-design" dialog-append-buttons="true" dialog-width="610" dialog-height="405" dialog-modal="false" dialog-title="<?=t('Design')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?cID=<?=$cID?>&ctask=set_theme"><?=t('Design')?></a></li>';
-	menuHTML += '<li><a class="ccm-menu-icon ccm-icon-permissions" dialog-append-buttons="true" id="ccm-toolbar-nav-permissions" dialog-width="640" dialog-height="310" dialog-modal="false" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?&cID=<?=$cID?>&ctask=edit_permissions"><?=t('Permissions')?></a></li>';
+	menuHTML += '<li><a class="ccm-menu-icon ccm-icon-permissions" dialog-append-buttons="true" id="ccm-toolbar-nav-permissions" dialog-width="640" dialog-height="330" dialog-modal="false" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?&cID=<?=$cID?>&ctask=edit_permissions"><?=t('Permissions')?></a></li>';
 <? } ?>
 <? if ($cp->canReadVersions()) { ?>
 	menuHTML += '<li><a class="ccm-menu-icon ccm-icon-versions" id="ccm-toolbar-nav-versions" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="<?=t('Page Versions')?>" id="menuVersions<?=$cID?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>"><?=t('Versions')?></a></li>';

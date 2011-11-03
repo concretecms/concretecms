@@ -234,7 +234,7 @@ if (is_object($uo)) {
 	</script>
 		
 		
-	<h1><span><?=t('Edit Account')?></span></h1>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit User'), t('Edit User account.'), false, false);?>
 	
 	<div class="ccm-dashboard-inner">
 
@@ -379,160 +379,50 @@ if (is_object($uo)) {
 	
 	<? } else { ?>
 
-	<h1><span><?=t('View User')?></span></h1>
-	
-	<div class="ccm-dashboard-inner">
-		<div class="actions" >			
-		
-			<? if ($uo->getUserID() != USER_SUPER_ID || $u->isSuperUser()) { ?>
-	
-				<? print $ih->button(t('Edit User'), $this->url('/dashboard/users/search?uID=' . intval($uID) ) . '&task=edit', 'left');?>
-	
-				<? if (USER_VALIDATE_EMAIL == true) { ?>
-					<? if ($uo->isValidated() < 1) { ?>
-					<? print $ih->button(t('Mark Email as Valid'), $this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=validate_email'), 'left');?>
-					<? } ?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('View User'), t('View User accounts.'), false, false);?>
+	<div class="ccm-pane-options">
+		<? if ($uo->getUserID() != USER_SUPER_ID || $u->isSuperUser()) { ?>
+
+			<? print $ih->button(t('Edit User'), $this->url('/dashboard/users/search?uID=' . intval($uID) ) . '&task=edit', 'left');?>
+
+			<? if (USER_VALIDATE_EMAIL == true) { ?>
+				<? if ($uo->isValidated() < 1) { ?>
+				<? print $ih->button(t('Mark Email as Valid'), $this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=validate_email'), 'left');?>
 				<? } ?>
-				
-				<? if ($uo->getUserID() != USER_SUPER_ID) { ?>
-					<? if ($uo->isActive()) { ?>
-						<? print $ih->button(t('Deactivate User'), $this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=deactivate&ccm_token='.$valt->generate('user_deactivate')), 'left');?>
-					<? } else { ?>
-						<? print $ih->button(t('Activate User'), $this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=activate&ccm_token='.$valt->generate('user_activate')), 'left');?>
-					<? } ?>
-				<? } ?>
-			
 			<? } ?>
 			
-			<?
-			$tp = new TaskPermission();
-			if ($uo->getUserID() != $u->getUserID()) {
-				if ($tp->canSudo()) { 
-				
-					$loginAsUserConfirm = t('This will end your current session and sign you in as %s', $uo->getUserName());
-					
-					print $ih->button_js(t('Sign In as User'), 'loginAsUser()', 'left');?>
-	
-					<script type="text/javascript">
-					loginAsUser = function() {
-						if (confirm('<?=$loginAsUserConfirm?>')) { 
-							location.href = "<?=$this->url('/dashboard/users/search', 'sign_in_as_user', $uo->getUserID(), $valt->generate('sudo'))?>";				
-						}
-					}
-					</script>
-	
-				<? } /*else { ?>
-					<? print $ih->button_js(t('Sign In as User'), 'alert(\'' . t('You do not have permission to sign in as other users.') . '\')', 'left', 'ccm-button-inactive');?>
-				<? }*/ ?>
+			<? if ($uo->getUserID() != USER_SUPER_ID) { ?>
+				<? if ($uo->isActive()) { ?>
+					<? print $ih->button(t('Deactivate User'), $this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=deactivate&ccm_token='.$valt->generate('user_deactivate')), 'left');?>
+				<? } else { ?>
+					<? print $ih->button(t('Activate User'), $this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=activate&ccm_token='.$valt->generate('user_activate')), 'left');?>
+				<? } ?>
 			<? } ?>
-
-		</div>
 		
-		<h2><?=t('Required Information')?></h2>
-		
-		<div style="margin:0px; padding:0px; width:100%; height:auto" >
-		<table border="0" cellspacing="1" cellpadding="0">
-		<tr>
-			<td><?=$av->outputUserAvatar($uo)?></td>
-			<td><?=$uo->getUserName()?><br/>
-			<a href="mailto:<?=$uo->getUserEmail()?>"><?=$uo->getUserEmail()?></a><br/>
-			<?=$uo->getUserDateAdded('user')?>
-			<?=(ENABLE_USER_TIMEZONES && strlen($uo->getUserTimezone())?"<br />".t('Timezone').": ".$uo->getUserTimezone():"")?>
-            
-			<? if (USER_VALIDATE_EMAIL) { ?><br/>
-				<?=t('Full Record')?>: <strong><?= ($uo->isFullRecord()) ? "Yes" : "No" ?></strong>
-				&nbsp;&nbsp;
-				<?=t('Email Validated')?>: <strong><?
-					switch($uo->isValidated()) {
-						case '-1':
-							print t('Unknown');
-							break;
-						case '0':
-							print t('No');
-							break;
-						case '1':
-							print t('Yes');
-							break;
-					}?>
-					</strong>
-			<? } ?></td>
-		</tr>
-		</table>
-		</div>
-
-		
-		<?
-		$attribs = UserAttributeKey::getList(true);
-		if (count($attribs) > 0) { ?>
-		<h2><?=t('Other Information')?></h2>
-
-		<div style="margin:0px; padding:0px; width:100%; height:auto" >
-		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
-
-
-		<? 
-		for ($i = 0; $i < count($attribs); $i = $i + 3) { 			
-			$uk = $attribs[$i]; 
-			$uk2 = $attribs[$i+1]; 
-			$uk3 = $attribs[$i+2]; 		
-			
-			?>
-			
-		<tr>
-			<td class="subheader" style="width: 33%"><?=$uk->getAttributeKeyDisplayHandle()?></td>
-			<? if (is_object($uk2)) { ?><td  style="width: 33%" class="subheader"><?=$uk2->getAttributeKeyDisplayHandle()?></td><? } else { ?><td  style="width: 33%" class="subheader">&nbsp;</td><? } ?>
-			<? if (is_object($uk3)) { ?><td  style="width: 33%"class="subheader"><?=$uk3->getAttributeKeyDisplayHandle()?></td><? } else { ?><td style="width: 33%" class="subheader">&nbsp;</td><? } ?>
-		</tr>
-		<tr>
-			<td><?=$uo->getAttribute($uk->getAttributeKeyHandle(), 'displaySanitized', 'display')?></td>
-			<? if (is_object($uk2)) { ?><td><?=$uo->getAttribute($uk2->getAttributeKeyHandle(), 'displaySanitized', 'display')?></td><? } else { ?><td style="width: 33%">&nbsp;</td><? } ?>
-			<? if (is_object($uk3)) { ?><td><?=$uo->getAttribute($uk3->getAttributeKeyHandle(), 'displaySanitized', 'display')?></td><? } else { ?><td>&nbsp;</td><? } ?>
-		</tr>
 		<? } ?>
 		
-		</table>
-		</div>
-		
-		<? }  ?>
-		
-		<h2><?=t('Groups')?></h2>
+		<?
+		$tp = new TaskPermission();
+		if ($uo->getUserID() != $u->getUserID()) {
+			if ($tp->canSudo()) { 
+			
+				$loginAsUserConfirm = t('This will end your current session and sign you in as %s', $uo->getUserName());
+				
+				print $ih->button_js(t('Sign In as User'), 'loginAsUser()', 'left');?>
 
-		<div style="margin:0px; padding:0px; width:100%; height:auto" >
-		
-		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
-		<tr>
-			<td colspan="2" class="header"><?=t('Group')?></td>
-			<td class="header"><?=t('Date Entered')?></td>
-		</tr>
-		<? $gArray = $gl->getGroupList(); ?>
-		<tr>
-			<td colspan="2">
-				<? $enteredArray = array(); ?>
-				<? foreach ($gArray as $g) { ?>
-					<? if ($g->inGroup()) {
-						echo($g->getGroupName() . '<br>');
-						$enteredArray[] = $g->getGroupDateTimeEntered();
-					} ?>
-				<? } ?>
-			</td>
-			<td>
-			<? foreach ($enteredArray as $dateTime) {
-				if ($dateTime != '0000-00-00 00:00:00') {
-					echo($dateTime . '<br>');
-				} else {
-					echo('<br>');
+				<script type="text/javascript">
+				loginAsUser = function() {
+					if (confirm('<?=$loginAsUserConfirm?>')) { 
+						location.href = "<?=$this->url('/dashboard/users/search', 'sign_in_as_user', $uo->getUserID(), $valt->generate('sudo'))?>";				
+					}
 				}
-			} ?>
-			</td>
-		</tr>
-		</table>
-		</div>
-	</div>
+				</script>
 
-	<h1><span><?=t('Delete User')?></span></h1>
-	
-	<div class="ccm-dashboard-inner">
-		<div class="ccm-spacer"></div>
+			<? } /*else { ?>
+				<? print $ih->button_js(t('Sign In as User'), 'alert(\'' . t('You do not have permission to sign in as other users.') . '\')', 'left', 'ccm-button-inactive');?>
+			<? }*/ ?>
+		<? } ?>
+		
 		<?
 		$cu = new User();
 		$tp = new TaskPermission();
@@ -554,13 +444,92 @@ if (is_object($uo)) {
 				}
 				</script>
 	
-				<? print $ih->button_js(t('Delete User Account'), "deleteUser()", 'left');?>
+				<? print $ih->button_js(t('Delete User Account'), "deleteUser()", 'left', 'error');?>
 	
-			<? }
-		} else {
-			echo t('You do not have permission to perform this action.');
-		}?>
-		<div class="ccm-spacer"></div>
+			<? } ?>
+		<? } ?>
+		</div>
+		<div class="ccm-pane-body ccm-pane-body-footer" id="ccm-dashboard-user-body">
+		
+		<?=$av->outputUserAvatar($uo)?>
+		<h3><?=t('Basic Details')?></h3>
+		<p><strong><?=$uo->getUserName()?></strong>
+		<p><a href="mailto:<?=$uo->getUserEmail()?>"><?=$uo->getUserEmail()?></a></p>
+		<p><?=t('Account created on %s', $uo->getUserDateAdded('user'))?></p>
+		<?=(ENABLE_USER_TIMEZONES && strlen($uo->getUserTimezone())?"<p>".t('Timezone').": ".$uo->getUserTimezone() . '</p>':"")?>
+		<? if (USER_VALIDATE_EMAIL) { ?>
+			<p>
+			<?=t('Full Record')?>: <strong><?= ($uo->isFullRecord()) ? "Yes" : "No" ?></strong>
+			&nbsp;&nbsp;
+			<?=t('Email Validated')?>: <strong><?
+				switch($uo->isValidated()) {
+					case '-1':
+						print t('Unknown');
+						break;
+					case '0':
+						print t('No');
+						break;
+					case '1':
+						print t('Yes');
+						break;
+				}?>
+				</strong></p>
+				
+		<? } ?>
+
+		<br/>
+		<?
+		$attribs = UserAttributeKey::getList(true);
+		if (count($attribs) > 0) { ?>
+		<h3><?=t('User Attributes')?></h3>
+
+		<? 
+		for ($i = 0; $i < count($attribs); $i++) { 			
+			$uk = $attribs[$i]; 
+			
+			?>
+			
+		<div class="row">
+		<div class="span5" style=""><p><strong><?=$uk->getAttributeKeyDisplayHandle()?></strong></p></div>
+		<div class="span5"><p>
+			<?=$uo->getAttribute($uk->getAttributeKeyHandle(), 'displaySanitized', 'display')?>
+		</p></div>
+		</div>
+
+		<? } ?>
+		
+		<? }  ?>
+		
+		<br/>
+		<h3><?=t('Groups')?></h3>
+
+		<? $gArray = $gl->getGroupList(); ?>
+		<? $enteredArray = array(); ?>
+		<? $groups = 0; ?>
+		<? foreach ($gArray as $g) { ?>
+			<? if ($g->inGroup()) { 
+				$groups++; ?>
+
+				<div class="row">
+				<div class="span5" style=""><p><strong><?=$g->getGroupName()?></strong></p></div>
+				<div class="span5"><p>
+					<?
+					$dateTime = $g->getGroupDateTimeEntered();
+					if ($dateTime != '0000-00-00 00:00:00') {
+						echo($dateTime . '<br>');
+					} else {
+						echo('<br>');
+					}?>
+					</p></div>
+				</div>
+			<? } ?>
+		<? } 
+		
+		if ($groups == 0) { 
+			print t('None');
+		}
+		?>
+		
 	</div>
 	<? } ?>
 

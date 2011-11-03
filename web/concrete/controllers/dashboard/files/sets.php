@@ -100,7 +100,7 @@ class DashboardFilesSetsController extends Controller {
 		$file_set->resetPermissions();		
 		if ($file_set->fsOverrideGlobalPermissions == 1) {
 			$p = $this->post();
-			$fh = Loader::controller('/dashboard/files/access');
+			$fh = Loader::controller('/dashboard/system/permissions/files');
 			$fh->setFileSetPermissions($file_set, $p);			
 		}
 		

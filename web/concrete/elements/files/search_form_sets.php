@@ -34,7 +34,7 @@ if (count($s1) > 0) { ?>
 		<div class="ccm-file-search-advanced-set-controls">
 			<a href="<?=View::url('/dashboard/files/sets', 'view_detail', $fs->getFileSetID())?>"><?=$html->image('icons/wrench.png')?></a>
 			<? if ($pfs->canDeleteFileSet()) { ?>
-				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete_set?fsID=<?=$fs->getFileSetID()?>&searchInstance=<?=$searchInstance?>" class="ccm-file-set-delete-window" dialog-title="<?=t('Delete File Set')?>" dialog-width="320" dialog-height="200" dialog-modal="false"><?=$html->image('icons/delete_small.png')?></a>
+				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete_set?fsID=<?=$fs->getFileSetID()?>&searchInstance=<?=$searchInstance?>" dialog-append-buttons="true" class="ccm-file-set-delete-window" dialog-title="<?=t('Delete File Set')?>" dialog-width="320" dialog-height="110" dialog-modal="false"><?=$html->image('icons/delete_small.png')?></a>
 			<? } ?>
 		</div>
 		<?=$form->checkbox('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetID(), (is_array($searchRequest['fsID']) && in_array($fs->getFileSetID(), $searchRequest['fsID'])))?> <?=$form->label('fsID[' . $fs->getFileSetID() . ']', $fs->getFileSetName())?></li>
