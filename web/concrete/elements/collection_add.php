@@ -50,8 +50,7 @@ for ($i = 0; $i < count($ctArray); $i++) {
 
 	?>
 	
-	<h1><?=t('Add Page')?></h1>
-
+<div class="ccm-ui">
 	<form method="post" action="<?=$c->getCollectionAction()?>" id="ccmAddPage">		
 	<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 	<? // sitemap mode ?>
@@ -61,12 +60,7 @@ for ($i = 0; $i < count($ctArray); $i++) {
 	<div class="ccm-form-area">
 			
 		<div id="ccm-choose-pg-type">
-			<div id="ccm-show-page-types" style="float:right; display:none">
-				<span id="ccm-selectedPgType" style="padding-right:4px"></span>
-				<a onclick="ccmChangePgType(this)">(<?=t('Change')?>)</a>
-			</div>	
-		
-			<h2><?=t('Choose a Page Type')?></h2>
+			<h4 id="ccm-choose-pg-type-title"><?=t('Choose a Page Type')?></h4>
 			
 			<div id="ccm-page-type-scroller" class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil($cnt/4)?>">
 				<a href="javascript:void(0)" class="ccm-scroller-l"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_l.png" width="28" height="79" alt="l" /></a>
@@ -107,42 +101,60 @@ for ($i = 0; $i < count($ctArray); $i++) {
 			
 			</div>
 		</div> 
-
-		<h2><?=t('Page Information')?></h2>
-
-		<div class="ccm-field">	
-			<div class="ccm-field-one" style="width: 400px">
-				<label><?=t('Name')?></label> <input type="text" name="cName" value="" class="text" style="width: 100%" onKeyUp="makeAlias(this.value, 'cHandle')" >
-			</div>
-			
-			<div class="ccm-field-two" style="width: 200px"	>
-				<label><?=t('Alias')?></label> <input type="text" name="cHandle" style="width: 100%" value="" id="cHandle">
-			</div>
 		
-			<div class="ccm-spacer">&nbsp;</div>
+		<div id="ccm-add-page-information" style="display: none">
+		
+		<h4><?=t('Page Information')?></h4>
+		<? $form = Loader::helper('form'); ?>
+
+		<div id="ccm-show-page-types" style="display: none">
+		<div class="clearfix">
+			<label><?=t('Page Type')?></label>
+			<div class="input">
+			<span id="ccm-selectedPgType" style="padding-right:4px" class="label"></span>
+			<a href="javascript:void(0)" class="btn" onclick="ccmChangePgType(this)"><?=t('Change')?></a>
+			</div>
+		</div>	
+	
+
+		<div class="clearfix">
+			<?=$form->label('cName', t('Name'))?>
+			<div class="input"><input type="text" name="cName" value="" class="text span8" onKeyUp="makeAlias(this.value, 'cHandle')" ></div>
+		</div>
+
+		
+		<div class="clearfix">
+			<?=$form->label('cHandle', t('Alias'))?>
+			<div class="input"><input type="text" name="cHandle" class="span8" value="" id="cHandle"></div>
 		</div>
 		
-		<div class="ccm-field">		
-			<label><?=t('Public Date/Time')?></label> 
+		<div class="clearfix">		
+			<?=$form->label('cDatePublic', t('Public Date/Time'))?>
+			<div class="input">
 			<?
 			$dt = Loader::helper('form/date_time');
 			echo $dt->datetime('cDatePublic' );
 			?> 
+			</div>
 		</div>		
-
-	
-		<div class="ccm-field">
-			<label><?=t('Description')?></label> <textarea name="cDescription" style="width: 100%; height: 80px"></textarea>
-		</div>
 		
+		<div class="clearfix">
+			<?=$form->label('cDescription', t('Description'))?>
+			<div class="input">
+			<textarea name="cDescription" rows="4" class="span8"></textarea>
+			</div>
+		</div>	
+		
+		</div>
 	
 	</div>
 	
 	
 
-	<div class="ccm-buttons">
-		<?=Loader::helper('concrete/interface')->submit(t('Add Page'),'ccmAddPage')?>
+	<div class="dialog-buttons">
+		<input type="submit" onclick="$('#ccmAddPage').submit()" class="btn primary ccm-button-right" />
 	</div>	
+
 	<input type="hidden" name="add" value="1" />
 	<input type="hidden" name="processCollection" value="1">
 	<div class="ccm-spacer">&nbsp;</div>
@@ -251,12 +263,17 @@ $(function() {
 	});
 	
 	$("#ccm-select-page-type a").click(function() {
+		$('#ccm-choose-pg-type-title').hide();
 		$("#ccm-select-page-type li").each(function() {
 			$(this).removeClass('ccm-item-selected');
 		});
+		$('#ccm-dialog-content1').dialog('option','height','460');
+		$('#ccm-dialog-content1').dialog('option','position','center');
+
 		$(this).parent().addClass('ccm-item-selected');
 		var ptid=$(this).attr('ccm-page-type-id');
 		$("input[name=ctID]").val(ptid);
+		$('#ccm-add-page-information').show();
 		
 		$('#ccm-page-type-scroller').css('display','none');
 		$('#ccm-show-page-types').css('display','block');
@@ -299,7 +316,10 @@ $(function() {
 });
 
 function ccmChangePgType(a){
-	$(a.parentNode).css('display','none');
+	$('#ccm-dialog-content1').dialog('option','height','310');
+	$('#ccm-dialog-content1').dialog('option','position','center');
+	$('#ccm-choose-pg-type-title').show();
+	$('#ccm-add-page-information').hide();
 	$('#ccm-page-type-scroller').css('display','block');
 	$('#ccm-metadata-fields').css('display','none');
 }
