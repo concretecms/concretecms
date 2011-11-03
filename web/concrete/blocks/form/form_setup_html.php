@@ -21,47 +21,32 @@ $fh = Loader::helper('concrete/interface/form');
 	<input type="hidden" id="ccm-pendingDeleteIDs" name="pendingDeleteIDs" value="" />
 	
 	<div id="ccm-formBlockPane-options" class="ccm-formBlockPane">
-	
 		<?php 
 		$c = Page::getCurrentPage();
 		if(strlen($miniSurveyInfo['surveyName'])==0)
 			$miniSurveyInfo['surveyName']=$c->getCollectionName();
 		?>
-		<strong><?=t('Options:')?></strong>
-		
-		<div class="fieldRow">
-			<div class="fieldLabel"><?php echo t('Form Name')?>:</div>
-			<div class="fieldValues">
-				<input id="ccmSurveyName" name="surveyName" style="width: 95%" type="text" class="ccm-input-text" value="<?php echo $miniSurveyInfo['surveyName']?>" />
-			</div>
-			<div class="ccm-spacer"></div>
-		</div>	
-		
-		<div class="fieldRow">
-			<div class="fieldLabel" style=""><?php echo t('Message to display when completed')?>:</div>
-			<div class="fieldValues"> 
-				<textarea name="thankyouMsg" cols="50" rows="2" style="width: 95%" class="ccm-input-text" ><?php echo $this->controller->thankyouMsg ?></textarea>
-			</div>
-			<div class="ccm-spacer"></div>
-		</div>
-		
-		<div class="fieldRow" style="margin-top:16px">
-			<?php echo t('Notify me by email when people submit this form')?>: 
-			<input name="notifyMeOnSubmission" type="checkbox" value="1" <?php echo (intval($miniSurveyInfo['notifyMeOnSubmission'])>=1)?'checked="checked"':''?> onchange="miniSurvey.showRecipient(this)" onclick="miniSurvey.showRecipient(this)" />
-			<div id="recipientEmailWrap" class="fieldRow" style=" <?php echo (intval($miniSurveyInfo['notifyMeOnSubmission'])==0)?'display:none':''?>">
-				<div class="fieldLabel"><?php echo t('Recipient Email')?>:</div>
-				<div class="fieldValues">
-				 <input name="recipientEmail" value="<?php echo $miniSurveyInfo['recipientEmail']?>" type="text" size="20" maxlength="128" />
-				<div class="ccm-note"><?= t('(Seperate multiple emails with a comma)')?></div>
+		<fieldset>
+			<legend><?=t('Options')?></legend>
+			<?=$fh->text('surveyName', t('Form Name'), $miniSurveyInfo['surveyName'])?>
+			<?=$fh->textarea('thankyouMsg', t('Message to display when completed'), $this->controller->thankyouMsg)?>
+			<div class="clearfix">
+				<label><?=t('Notify me by email when people submit this form')?></label>
+				<div class="input">
+					<div class="input-prepend">
+						<label class="add-on">
+							<input type="checkbox" name="notifyMeOnSubmission" value="1" <?php echo (intval($miniSurveyInfo['notifyMeOnSubmission'])>=1)?'checked="checked"':''?> />
+						</label>
+						<input name="recipientEmail" type="text" value="<?php echo $miniSurveyInfo['recipientEmail']?>" size="20" maxlength="128" />
+					</div>
+					<span class="help-block"><?=t('(Seperate multiple emails with a comma)')?></span>
 				</div>
-				<div class="ccm-spacer"></div>
 			</div>
-		</div> 
-		
-		<div class="fieldRow">
-			<?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', 'http://en.wikipedia.org/wiki/Captcha')?>
-	        <input name="displayCaptcha" value="1" <?php echo (intval($miniSurveyInfo['displayCaptcha'])>=1)?'checked="checked"':''?> type="checkbox" />
-		</div>	
+			<?=$fh->radios('displayCaptcha', t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', 'http://en.wikipedia.org/wiki/Captcha'), array(
+				1 => t('Yes'),
+				0 => t('No'),
+			), (int) $miniSurveyInfo['displayCaptcha'])?>
+		</fieldset>
 		
 		<div class="fieldRow">
 			<?php echo t('Redirect to another page after form submission?');?>
