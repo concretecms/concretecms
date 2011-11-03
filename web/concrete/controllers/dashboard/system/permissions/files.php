@@ -1,42 +1,11 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class DashboardSystemPermissionsFilesController extends Controller {
+class DashboardSystemPermissionsFilesController extends DashboardBaseController {
 
 	var $helpers = array('form','concrete/interface','validation/token', 'concrete/file');
 	
-	public function view($updated=false) {
+	public function view() {
 		$helper_file = Loader::helper('concrete/file');
-		
-		$file_access_file_types = UPLOAD_FILE_EXTENSIONS_ALLOWED;
-		
-		//is nothing's been defined, display the constant value
-		if (!$file_access_file_types) {
-			$file_access_file_types = $helper_file->unserializeUploadFileExtensions(UPLOAD_FILE_EXTENSIONS_ALLOWED);
-		}
-		else {
-			$file_access_file_types = $helper_file->unserializeUploadFileExtensions($file_access_file_types);		
-		}
-		$file_access_file_types = join(', ',$file_access_file_types);		
-		$this->set('file_access_file_types', $file_access_file_types);		
-		
-		Loader::model('file_storage_location');
-		$fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
-		if (is_object($fsl)) {
-			$this->set('fslName', $fsl->getName());
-			$this->set('fslDirectory', $fsl->getDirectory());
-		}
-		
-		switch ($updated) {
-			case 'extensions-saved':
-				$this->set('message',t('Changes Saved'));
-				break;
-		}
-	}
-	
-	public function on_start() {
-		$html = Loader::helper('html');
-		$this->addHeaderItem($html->css('ccm.filemanager.css'));
-		$this->addHeaderItem($html->javascript('ccm.filemanager.js'));
 	}
 	
 	public function getFileAccessRow($type, $identifier = '', $name = '', $canSearch = true, $canRead = FilePermissions::PTYPE_ALL, $canWrite = FilePermissions::PTYPE_ALL, $canAdmin = FilePermissions::PTYPE_ALL, $canAdd = FilePermissions::PTYPE_ALL, $allowedExtensions = array()) {
@@ -55,56 +24,69 @@ class DashboardSystemPermissionsFilesController extends Controller {
 			$id = '_'. $identifier;
 			$ida = '_' . $identifier . '[]';
 		}
-		$html .= '<h2>';
+		$html .= '<h3>';
 		if (($identifier != 'gID_1' && $identifier != 'gID_2')) {
 			$html .= '<a href="javascript:void(0)" class="ccm-file-permissions-remove"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" width="16" height="16" /></a>';
 		}
-		$html .= '<span>' . $name . '</span></h2>';
+		$html .= '<span>' . $name . '</span></h3>';
 
 		$viewExtended = (FilePermissions::PTYPE_NONE == $canSearch) ? 'style="display: none"' : '';
 		
-		$html .= '<table border="0" cellspacing="0" cellpadding="0" id="ccm-file-permissions-grid">
-		<tr class="ccm-file-access-view">
-			<th>' . t('View Site Files') . '</th>
-			<td>' . $form->radio('canRead' . $id, FilePermissions::PTYPE_ALL, $canRead) . ' ' . t('Yes') . '</td>
-			<td>' . $form->radio('canRead' . $id, FilePermissions::PTYPE_NONE, $canRead) . ' ' . t('No') . '</td>
-		</tr>';		
-			$html .= '<tr class="ccm-file-access-file-manager">';
+		$html .= '
+		<div class="clearfix ccm-file-access-view">
+		<label>' . t('View Site Files') . '</label>
+		<div class="input"><ul class="inputs-list">
+			<li><label>' . $form->radio('canRead' . $id, FilePermissions::PTYPE_ALL, $canRead) . ' <span>' . t('Yes') . '</span></label></li>
+			<li><label>' . $form->radio('canRead' . $id, FilePermissions::PTYPE_NONE, $canRead) . ' <span>' . t('No') . '</span></label></li>
+		</ul></div></div>';		
+			$html .= '<div class="clearfix ccm-file-access-file-manager">';
 			if ($type == 'GLOBAL') {
-				$html .= '<th>' . t('Search Files') . '</th>';
+				$html .= '<label>' . t('Search Files') . '</label>';
 			} else {
-				$html .= '<th>' . t('Search Files in Set') . '</th>';
+				$html .= '<label>' . t('Search Files in Set') . '</label>';
 			}
-			$html .= '<td>' . $form->radio('canSearch' . $id, FilePermissions::PTYPE_ALL, $canSearch) . ' ' . t('All') . '</td>
-				<td>' . $form->radio('canSearch' . $id, FilePermissions::PTYPE_MINE, $canSearch) . ' ' . t('Mine') . '</td>
-				<td>' . $form->radio('canSearch' . $id, FilePermissions::PTYPE_NONE, $canSearch) . ' ' . t('No') . '</td>
-			</tr>';
-		$html .='
-		<tr class="ccm-file-access-edit" ' . $viewExtended . '>
-			<th>' . t('Edit Files') . '</th>
-			<td>' . $form->radio('canWrite' . $id, FilePermissions::PTYPE_ALL, $canWrite) . ' ' . t('All') . '</td>
-			<td>' . $form->radio('canWrite' . $id, FilePermissions::PTYPE_MINE, $canWrite) . ' ' . t('Mine') . '</td>
-			<td>' . $form->radio('canWrite' . $id, FilePermissions::PTYPE_NONE, $canWrite) . ' ' . t('None') . '</td>
-		</tr>
-		<tr class="ccm-file-access-admin" ' . $viewExtended . '>
-			<th>' . t('Admin Files') . '</th>
-			<td>' . $form->radio('canAdmin' . $id, FilePermissions::PTYPE_ALL, $canAdmin) . ' ' . t('All') . '</td>
-			<td>' . $form->radio('canAdmin' . $id, FilePermissions::PTYPE_MINE, $canAdmin) . ' ' . t('Mine') . '</td>
-			<td>' . $form->radio('canAdmin' . $id, FilePermissions::PTYPE_NONE, $canAdmin) . ' ' . t('None') . '</td>
-		</tr>
-		<tr class="ccm-file-access-add" ' . $viewExtended . '>
-			<th>' . t('Add Files') . '</th>
-			<td>' . $form->radio('canAdd' . $id, FilePermissions::PTYPE_ALL, $canAdd) . ' ' . t('All') . '</td>
-			<td>' . $form->radio('canAdd' . $id, FilePermissions::PTYPE_CUSTOM, $canAdd) . ' ' . t('Custom') . '</td>
-			<td>' . $form->radio('canAdd' . $id, FilePermissions::PTYPE_NONE, $canAdd) . ' ' . t('None') . '</td>
-		</tr>
-		<tr>
-			<th>&nbsp;</th>
-			<td colspan="3">';
+			$html .= '
+			<div class="input"><ul class="inputs-list">
+				<li><label>' . $form->radio('canSearch' . $id, FilePermissions::PTYPE_ALL, $canSearch) . ' <span>' . t('All') . '</span></label></li>
+				<li><label>' . $form->radio('canSearch' . $id, FilePermissions::PTYPE_MINE, $canSearch) . ' <span>' . t('Mine') . '</span></label></li>
+				<li><label>' . $form->radio('canSearch' . $id, FilePermissions::PTYPE_NONE, $canSearch) . ' <span>' . t('No') . '</span></label></li>
+			</ul></div>';
+		$html .='</div>
+		<div class="clearfix ccm-file-access-edit" ' . $viewExtended . '>
+			<label>' . t('Edit Files') . '</label>
+			<div class="input">
+			<ul class="inputs-list">
+			<li><label>' . $form->radio('canWrite' . $id, FilePermissions::PTYPE_ALL, $canWrite) . ' <span>' . t('All') . '</span></label></li>
+			<li><label>' . $form->radio('canWrite' . $id, FilePermissions::PTYPE_MINE, $canWrite) . ' <span>' . t('Mine') . '</span></label></li>
+			<li><label>' . $form->radio('canWrite' . $id, FilePermissions::PTYPE_NONE, $canWrite) . ' <span>' . t('None') . '</span></label></li>
+			</ul>
+			</div>
+		</div>
+		<div class="clearfix ccm-file-access-admin" ' . $viewExtended . '>
+			<label>' . t('Admin Files') . '</label>
+			<div class="input">
+			<ul class="inputs-list">
+			<li><label>' . $form->radio('canAdmin' . $id, FilePermissions::PTYPE_ALL, $canAdmin) . ' <span>' . t('All') . '</span></label></li>
+			<li><label>' . $form->radio('canAdmin' . $id, FilePermissions::PTYPE_MINE, $canAdmin) . ' <span>' . t('Mine') . '</span></label></li>
+			<li><label>' . $form->radio('canAdmin' . $id, FilePermissions::PTYPE_NONE, $canAdmin) . ' <span>' . t('None') . '</span></label></li>
+			</ul>
+			</div>
+		</div>
+		<div class="clearfix ccm-file-access-add" ' . $viewExtended . '>
+			<label>' . t('Add Files') . '</label>
+			<div class="input">
+			<ul class="inputs-list">
+			<li><label>' . $form->radio('canAdd' . $id, FilePermissions::PTYPE_ALL, $canAdd) . ' <span>' . t('All') . '</span></label></li>
+			<li><label>' . $form->radio('canAdd' . $id, FilePermissions::PTYPE_CUSTOM, $canAdd) . '<span> ' . t('Custom') . '</span></label></li>
+			<li><label>' . $form->radio('canAdd' . $id, FilePermissions::PTYPE_NONE, $canAdd) . ' <span>' . t('None') . '</span></label></li>
+			</ul>
+			</div>
+		</div>
+		';
 			
 			$disp = ($canAdd == FilePermissions::PTYPE_CUSTOM && $canSearch != FilePermissions::PTYPE_NONE) ? 'block' : 'none';
 			
-			$html .= '<div class="ccm-file-access-add-extensions" style="display: ' . $disp . '; padding-top: 8px">
+			$html .= '<div class="ccm-file-access-add-extensions" style="display: ' . $disp . ';"><div class="clearfix"><label></label><div class="input">
 			
 			<div class="ccm-file-access-add-extensions-header">' . $form->checkbox('toggleCanAddExtension', 1, false) . '
 			<strong>' . t('Allowed File Types') . '</strong></div>
@@ -118,10 +100,8 @@ class DashboardSystemPermissionsFilesController extends Controller {
 				}
 				$html .= '<div>' . $form->checkbox('canAddExtension' . $ida, $ext, $checked) . ' ' . $ext . '</div>';
 			}
-			$html .= '</div></div>		
-			</td>
-		</tr>
-		</table></div>';
+			$html .= '</div></div></div></div>
+		</div>';
 		return $html;
 	}
 
@@ -139,7 +119,7 @@ class DashboardSystemPermissionsFilesController extends Controller {
 		
 		$fs = FileSet::getGlobal();
 		$this->setFileSetPermissions($fs, $p);
-		$this->redirect('/dashboard/files/access', 'global_permissions_saved');
+		$this->redirect('/dashboard/system/permissions/files', 'global_permissions_saved');
 	}
 	
 	public function setFileSetPermissions($fs, $post) {
@@ -170,50 +150,5 @@ class DashboardSystemPermissionsFilesController extends Controller {
 		$this->view();
 	}
 
-	public function storage_saved() {
-		$this->set('message', t('File storage locations saved.'));
-		$this->view();
-	}
 
-	public function file_storage(){
-		$helper_file = Loader::helper('concrete/file');
-		$validation_token = Loader::helper('validation/token');
-		
-		if (!$validation_token->validate("file_storage")) {
-			$this->set('error', array($validation_token->getErrorMessage()));
-			return;
-		}
-		
-		Config::save('DIR_FILES_UPLOADED', $this->post('DIR_FILES_UPLOADED'));
-
-		if ($this->post('fslName') != '' && $this->post('fslDirectory') != '') {
-			Loader::model('file_storage_location');
-			$fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
-			if (!is_object($fsl)) {
-				FileStorageLocation::add($this->post('fslName'), $this->post('fslDirectory'), FileStorageLocation::ALTERNATE_ID);
-			} else {
-				$fsl->update($this->post('fslName'), $this->post('fslDirectory'));
-			}			
-		}
-
-		$this->redirect('/dashboard/files/access','storage_saved');
-	}
-	
-	
-	public function file_access_extensions(){
-		$helper_file = Loader::helper('concrete/file');
-		$validation_token = Loader::helper('validation/token');
-		
-		if (!$validation_token->validate("file_access_extensions")) {
-			$this->set('error', array($validation_token->getErrorMessage()));
-			return;
-		}
-		
-		$types = preg_split('{,}',$this->post('file-access-file-types'),null,PREG_SPLIT_NO_EMPTY);
-		$types = $helper_file->serializeUploadFileExtensions($types);
-		Config::save('UPLOAD_FILE_EXTENSIONS_ALLOWED',$types);
-		$this->redirect('/dashboard/files/access','extensions-saved');
-	}
 }
-
-?>

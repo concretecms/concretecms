@@ -10,27 +10,38 @@ if (is_object($key)) {
 }
 ?>
 <? $form = Loader::helper('form'); ?>
-<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
-<tr>
-	<td class="subheader" style="width: 34%"><?=t('Public Display')?></td>
-	<td class="subheader" style="width: 33%"><?=t('Edit Mode')?></td>
-	<td class="subheader" style="width: 33%"><?=t('Registration')?></td>
-</tr>	
-<tr>
-	<td valign="top">
-	<?=$form->checkbox('uakProfileDisplay', 1, $uakProfileDisplay)?> <?=t('Displayed in Public Profile.');?><br/>
-	<?=$form->checkbox('uakMemberListDisplay', 1, $uakMemberListDisplay)?> <?=t('Displayed on Member List.');?>
-	</td>
-	<td valign="top">
-		<?=$form->checkbox('uakProfileEdit', 1, $uakProfileEdit)?> <?=t('Editable in Profile.');?><Br/>
-		<?=$form->checkbox('uakProfileEditRequired', 1, $uakProfileEditRequired)?> <?=t('Editable and Required in Profile.');?>
-	</td>
-	<td valign="top">
-		<?=$form->checkbox('uakRegisterEdit', 1, $uakRegisterEdit)?> <?=t('Show on Registration Form.');?><Br/>
-		<?=$form->checkbox('uakRegisterEditRequired', 1, $uakRegisterEditRequired)?> <?=t('Require on Registration Form.');?>
-	</td>
-</tr>
-</table>
+<fieldset>
+<legend><?=t('User Attribute Options')?></legend>
+<div class="clearfix">
+<label><?=t('Public Display')?></label>
+<div class="input">
+<ul class="inputs-list">
+	<li><label><?=$form->checkbox('uakProfileDisplay', 1, $uakProfileDisplay)?> <span><?=t('Displayed in Public Profile.');?></span></label</li>
+	<li><label><?=$form->checkbox('uakMemberListDisplay', 1, $uakMemberListDisplay)?> <span><?=t('Displayed on Member List.');?></span></label</li>
+</ul>
+</div>
+</div>
+
+<div class="clearfix">
+<label><?=t('Edit Mode')?></label>
+<div class="input">
+<ul class="inputs-list">
+	<li><label><?=$form->checkbox('uakProfileEdit', 1, $uakProfileEdit)?> <span><?=t('Editable in Profile.');?></span></label</li>
+	<li><label><?=$form->checkbox('uakProfileEditRequired', 1, $uakProfileEditRequired)?> <span><?=t('Editable and Required in Profile.');?></span></label</li>
+</ul>
+</div>
+</div>
+
+
+<div class="clearfix">
+<label><?=t('Registration')?></label>
+<div class="input">
+<ul class="inputs-list">
+	<li><label><?=$form->checkbox('uakRegisterEdit', 1, $uakRegisterEdit)?> <span><?=t('Show on Registration Form.');?></span></label</li>
+	<li><label><?=$form->checkbox('uakRegisterEditRequired', 1, $uakRegisterEditRequired)?> <span><?=t('Require on Registration Form.');?></span></label</li>
+</ul>
+</div>
+</div>
 
 <script type="text/javascript">
 $(function() {
