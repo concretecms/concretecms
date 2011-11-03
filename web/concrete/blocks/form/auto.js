@@ -190,7 +190,7 @@ var miniSurvey ={
 	validate:function(){
 			var failed=0;
 			
-			var n=$('#ccmSurveyName');
+			var n=$('#surveyName');
 			if( !n || parseInt(n.val().length)==0 ){
 				alert(ccm_t('form-name'));
 				this.showPane('options');

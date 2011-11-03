@@ -34,7 +34,7 @@ class ConcreteInterfaceFormHelper
 	
 	public function nameToId($name)
 	{
-		return $id = str_replace(array('[', ']'), array('_', ''), $name);
+		return $id = trim(str_replace(array('[', ']'), array('_', ''), $name), '_');
 	}
 	
 	public function tag($name, array $attr = array(), $inner = null, $escape_inner = true)
@@ -121,7 +121,7 @@ class ConcreteInterfaceFormHelper
 		ob_start();
 		?>
 		<div class="clearfix">
-			<?=$this->tag('label', array('for' => $name), $label)?>
+			<?=$this->tag('label', array('for' => $name), $label, false)?>
 			<div class="input">
 				<?=$this->tag('input', array('type' => 'text', 'name' => $name, 'id' => $name, 'value' => $value))?>
 				<?if($help):?>
@@ -146,7 +146,7 @@ class ConcreteInterfaceFormHelper
 		ob_start();
 		?>
 		<div class="clearfix">
-			<?=$this->tag('label', array('for' => $name), $label)?>
+			<?=$this->tag('label', array('for' => $name), $label, false)?>
 			<div class="input">
 				<?=$this->tag('textarea', array('name' => $name, 'id' => $name, 'rows' => 3), $value)?>
 				<?if($help):?>
@@ -164,7 +164,7 @@ class ConcreteInterfaceFormHelper
 		ob_start();
 		?>
 		<div class="clearfix">
-			<?=$this->tag('label', array('id' => $id), $label)?>
+			<?=$this->tag('label', array('id' => $id), $label, false)?>
 			<div class="input">
 				<ul class="inputs-list">
 					<?foreach ($options as $value => $text):
@@ -197,7 +197,7 @@ class ConcreteInterfaceFormHelper
 		ob_start();
 		?>
 		<div class="clearfix">
-			<?=$this->tag('label', array('id' => $id), $label)?>
+			<?=$this->tag('label', array('id' => $id), $label, false)?>
 			<div class="input">
 				<div class="inline-inputs">
 					<?=$inputs?>
