@@ -30,8 +30,8 @@ var miniSurvey ={
 		});		
 	},
 	showPane:function(pane){
-		$('ul#ccm-formblock-tabs li').each(function(num,el){ $(el).removeClass('ccm-nav-active') });
-		$(document.getElementById('ccm-formblock-tab-'+pane).parentNode).addClass('ccm-nav-active');
+		$('ul#ccm-formblock-tabs li').each(function(num,el){ $(el).removeClass('active') });
+		$(document.getElementById('ccm-formblock-tab-'+pane).parentNode).addClass('active');
 		$('div.ccm-formBlockPane').each(function(num,el){ el.style.display='none'; });
 		$('#ccm-formBlockPane-'+pane).css('display','block');
 	},
@@ -97,8 +97,11 @@ var miniSurvey ={
 								   miniSurvey.edit_qID=0;
 							   }
 						   }else{
-							   $('#questionAddedMsg').slideDown('slow');
-							   setTimeout("$('#questionAddedMsg').slideUp('slow');",5000);
+							   var questionAddedMsg = $('#questionAddedMsg');
+							   questionAddedMsg.fadeIn();
+							   setTimeout(function(){
+								   questionAddedMsg.fadeOut();
+							   }, 5000);
 							   //miniSurvey.saveOrder();
 						   }
 						   $('#editQuestionForm').css('display','none');
@@ -187,7 +190,7 @@ var miniSurvey ={
 	validate:function(){
 			var failed=0;
 			
-			var n=$('#ccmSurveyName');
+			var n=$('#surveyName');
 			if( !n || parseInt(n.val().length)==0 ){
 				alert(ccm_t('form-name'));
 				this.showPane('options');
@@ -273,5 +276,6 @@ $(document).ready(function(){
 			$('#ccm-form-redirect-page').hide();
 		}
 	});
-		
+	/* TODO hackzors, this shouldnt be necessary */
+	$('#ccm-block-form').closest('div').addClass('ccm-ui');
 });
