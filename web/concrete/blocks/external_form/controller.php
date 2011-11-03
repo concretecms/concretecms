@@ -53,8 +53,12 @@
 				require_once($filename);
 				$class .= 'ExternalFormBlockController';
 				$fp = new $class($this->getBlockObject());
-
+			}
+			
+			if(is_object($fp)) {
 				return $fp;
+			} else {
+				throw new Exception(t('Unable load external form block controller file: %s',$this->filename)); 
 			}
 		}
 		
