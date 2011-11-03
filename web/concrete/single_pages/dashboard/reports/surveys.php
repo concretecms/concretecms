@@ -66,24 +66,22 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
 	<?= "<p>".t('You have not created any surveys.')."</p>" ?>
 	<? } else { ?>
 
-		<table class="zebra-striped">
+		<table class="zebra-striped ccm-results-list">
         	<thead>
                 <tr>
-                    <th><a href="<?=$surveyList->getSortByURL('question', 'asc')?>"><?=t('Name')?></a></th>
-                    <th><a href="<?=$surveyList->getSortByURL('cvName', 'asc')?>"><?=t('Found on Page')?></a></th>
-                    <th><a href="<?=$surveyList->getSortByURL('lastResponse', 'desc')?>"><?=t('Last Response')?></a></th>
-                    <th><a href="<?=$surveyList->getSortByURL('numberOfResponses', 'desc')?>"><?=t('Number of Responses')?></a></th>
-                    <th></th>
+                    <th class="<?=$surveyList->getSearchResultsClass('question')?>"><a href="<?=$surveyList->getSortByURL('question', 'asc')?>"><?=t('Name')?></a></th>
+                    <th class="<?=$surveyList->getSearchResultsClass('cvName')?>"><a href="<?=$surveyList->getSortByURL('cvName', 'asc')?>"><?=t('Found on Page')?></a></th>
+                    <th class="<?=$surveyList->getSearchResultsClass('lastResponse')?>"><a href="<?=$surveyList->getSortByURL('lastResponse', 'desc')?>"><?=t('Last Response')?></a></th>
+                    <th class="<?=$surveyList->getSearchResultsClass('numberOfResponses')?>"><a href="<?=$surveyList->getSortByURL('numberOfResponses', 'desc')?>"><?=t('Number of Responses')?></a></th>
                 </tr>
             </thead>
             <tbody>
 			<? foreach($surveys as $survey) { ?>
 					<tr>
-						<td><strong><?=$survey['question'] ?></strong></td>
+						<td><strong><a href="<?=$this->action('viewDetail', $survey['bID'], $survey['cID'])?>"><?=$survey['question'] ?></a></strong></td>
 						<td><?=$survey['cvName'] ?></td>
 						<td><?=formatDate($survey['lastResponse']) ?></td>
 						<td><?=$survey['numberOfResponses'] ?></td>
-                        <td><? print $ih->button(t('View Results'), $this->action('viewDetail', $survey['bID'], $survey['cID']),'left','small')?></td>
 					</tr>
 				<? }
 			} ?>
