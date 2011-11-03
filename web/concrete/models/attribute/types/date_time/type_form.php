@@ -1,9 +1,10 @@
-<table class="entry-form" cellspacing="1" cellpadding="0">
-<tr>
-	<td class="subheader"><?=t('Ask User For')?></td>
-</tr>
-<tr>
-	<? 
+<fieldset>
+<legend><?=t('Date/Time Options')?></legend>
+
+<div class="clearfix">
+<?=$form->label('akDateDisplayMode', t('Ask User For'))?>
+<div class="input">
+<? 
 	$akDateDisplayModeOptions = array(
 		'date_time' => t('Both Date and Time'),
 		'date' => t('Date Only'),
@@ -11,6 +12,8 @@
 
 	);
 	?>
-	<td><?=$form->select('akDateDisplayMode', $akDateDisplayModeOptions, $akDateDisplayMode)?></td>
-</tr>
-</table>
+<?=$form->select('akDateDisplayMode', $akDateDisplayModeOptions, $akDateDisplayMode)?>
+</div>
+</div>
+
+</fieldset>
