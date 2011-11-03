@@ -27,7 +27,7 @@ if ($cp->canAdminPage()) {
 }
 $saveMsg = t('Save permissions first.');
 ?>
-<div class="ccm-pane-controls">
+<div class="ccm-ui">
 
 <form method="post" id="ccmPermissionsForm" name="ccmPermissionsForm" action="<?=$c->getCollectionAction()?>">
 <input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
@@ -72,7 +72,7 @@ $saveMsg = t('Save permissions first.');
 				}
 				
 				cells[0].className = "actor";
-				cells[0].innerHTML = '<a href="javascript:removePermissionRow(\'_row:' + rowValue + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12"></a>' + uName;
+				cells[0].innerHTML = '<a href="javascript:removePermissionRow(\'_row:' + rowValue + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12"></a> ' + uName;
 				cells[1].innerHTML = '<input type="checkbox" name="collectionRead[]" value="' + rowValue + '">';
 				cells[2].innerHTML = '<input type="checkbox" name="collectionReadVersions[]" value="' + rowValue + '">';
 				cells[3].innerHTML = '<input type="checkbox" name="collectionWrite[]" value="' + rowValue + '">';
@@ -153,20 +153,14 @@ $saveMsg = t('Save permissions first.');
 		<style type="text/css">
 			.datetime {display: none}
 			.subpage {display: none}
-			#ccmPermissionsTablePage .ccm-input-time-wrapper {display: block; margin-left: 14px}
+			#ccmPermissionsTablePage .ccm-input-time-wrapper {display: block; margin-left: 14px !important; margin-top: 8px}
+			#ccmPermissionsTablePage .ccm-input-date-wrapper {margin-left: 4px;}
+			#ccmPermissionsTablePage .ccm-input-date-wrapper input {width: 140px !important}
 			td.permissions {text-align: center}
-			
-			#ccmPermissionsTablePage .ccm-input-date-wrapper input.ccm-input-date {width: 120px;}
 			
 		</style>
 		
-		<h1 style="margin-bottom: 0px">Page Permissions</h1>
-
-		<div class="ccm-buttons" style="width: 140px; float: right" id="ccm-page-permissions-select-user-group"> 
-		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Add User/Group')?>"  dialog-height="70%" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add"><?=t('Add User/Group')?></em></span></a>
-		</div>		
-
-		<div style="float: left; width: 450px; padding-top: 15px">
+		<div class="ccm-pane-options">
 		  <strong><?=t('Set')?></strong>&nbsp;
 		   <select id="ccmToggleInheritance" style="width: 130px" name="cInheritPermissionsFrom">
 			<? if ($c->getCollectionID() > 1) { ?><option value="PARENT" <? if ($c->getCollectionInheritance() == "PARENT") { ?> selected<? } ?>><?=t('By Area of Site (Hierarchy)')?></option><? } ?>
@@ -182,9 +176,14 @@ $saveMsg = t('Save permissions first.');
 			<option value="subpage"><?=t('Sub-Page Permissions')?></option>
 			<option value="datetime"><?=t('Timed Release Settings')?></option>
 		  </select>
+
+		<a class="btn ccm-button-right dialog-launch" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Add User/Group')?>"  dialog-height="70%"><?=t('Add User/Group')?></a>
+
 		</div>
+
+
 		
-		<div class="ccm-spacer" style="margin-bottom: 8px">&nbsp;</div>
+		<div class="clearfix"></div>
 		
 		
 		 <?
@@ -278,9 +277,8 @@ $saveMsg = t('Save permissions first.');
 				<br><br>
 				<? } ?>
 				
-			<div class="ccm-buttons">
-<!--				<a href="javascript:void(0)" onclick="ccm_hidePane()" class="ccm-button-left cancel"><span><em class="ccm-button-close">Cancel</em></span></a>//-->
-				<a href="javascript:void(0)" onclick="$('form[name=ccmPermissionsForm]').submit()" class="ccm-button-right accept"><span><?=t('Save')?></span></a>
+			<div class="dialog-buttons">
+				<a href="javascript:void(0)" class="btn primary" onclick="$('form[name=ccmPermissionsForm]').submit()"><?=t('Save')?></a>
 			</div>	
 			<input type="hidden" name="update_permissions" value="1" class="accept">
 			<input type="hidden" name="processCollection" value="1">

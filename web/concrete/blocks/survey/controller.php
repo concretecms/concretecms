@@ -233,25 +233,26 @@ class SurveyBlockController extends BlockController {
 		$percentage_value_string = substr_replace($percentage_value_string,'',-1);
 		
 		// Get Google Charts API image
-		$img_src = '<img border="" src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $percentage_value_string . '&chs=120x120&chco=' . join(',',$graphColors) . '" />';
+		$img_src = '<img class="surveyChart" style="margin-bottom:10px;" border="" src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $percentage_value_string . '&chs=180x180&chco=' . join(',',$graphColors) . '" />';
 		$this->set('pie_chart', $img_src);
 		
 		// Build human-readable option list
 		$i = 1;
-		$chart_options = '<table style="margin-left: 20px; float: left; width: 130px;">';
+		$chart_options = '<table class="zebra-striped"><tbody>';
 		foreach($options as $option) {
 			$chart_options .= '<tr>'; 
-			$chart_options .= '<td width="55px" class="note" style="white-space:nowrap">';
-			$chart_options .= '<div class="surveySwatch" style="background:#' . $graphColors[$i - 1] . '"></div>';
-			$chart_options .= '&nbsp;' . ($option['amount'] > 0) ? round($option['amount'] / $total_results * 100) : 0;
-			$chart_options .= '%</td>';
 			$chart_options .= '<td>'; 
 			$chart_options .= '<strong>' . $options[$i - 1]['name'] . '</strong>';
+			$chart_options .= '</td>';
+			$chart_options .= '<td width="60" style="text-align:right;">';
+			$chart_options .= ($option['amount'] > 0) ? round($option['amount'] / $total_results * 100) : 0;
+			$chart_options .= '%';
+			$chart_options .= '<div class="surveySwatch" style="border-radius: 3px; margin-left: 6px; width:18px; height:18px; float:right; background:#' . $graphColors[$i - 1] . '"></div>';
 			$chart_options .= '</td>';
 			$chart_options .= '</tr>';
 			$i++;
 		}
-		$chart_options .= '</table>';
+		$chart_options .= '</tbody></table>';
 		$this->set('chart_options', $chart_options);
 	}
 }

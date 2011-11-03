@@ -60,7 +60,7 @@
 				}
 				
 				cells[0].className = "actor";
-				cells[0].innerHTML = '<a href="javascript:removePermissionRow(\'_row:' + rowValue + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12"></a>' + uName;
+				cells[0].innerHTML = '<a href="javascript:removePermissionRow(\'_row:' + rowValue + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12"></a> ' + uName;
 				cells[1].innerHTML = '<div style="text-align: center"><input type="checkbox" name="blockRead[]" value="' + rowValue + '"></div>';
 				cells[2].innerHTML = '<div style="text-align: center"><input type="checkbox" name="blockWrite[]" value="' + rowValue + '"></div>';
 				cells[3].innerHTML = '<div style="text-align: center"><input type="checkbox" name="blockDelete[]" value="' + rowValue + '"></div>';
@@ -88,7 +88,7 @@
 				}
               
               	cells[0].className = "actor";
-              	cells[0].innerHTML = '<a href="javascript:removePermissionRow(\'_row:' + rowValue + '\',\'' + rowValue + '\',\'' + rowText + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12"></a>' + rowText;
+              	cells[0].innerHTML = '<a href="javascript:removePermissionRow(\'_row:' + rowValue + '\',\'' + rowValue + '\',\'' + rowText + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12"></a> ' + rowText;
 				cells[1].innerHTML = '<div style="text-align: center"><input type="checkbox" name="blockRead[]" value="' + rowValue + '"></div>';
 				cells[2].innerHTML = '<div style="text-align: center"><input type="checkbox" name="blockWrite[]" value="' + rowValue + '"></div>';
 				cells[3].innerHTML = '<div style="text-align: center"><input type="checkbox" name="blockDelete[]" value="' + rowValue + '"></div>';
@@ -113,20 +113,21 @@
 	</script>
 	
 <? global $c;?>
-<h1><?=t('Block Permissions')?></h1>
+<div class="ccm-ui">
 <form method="post" name="ccmBlockPermissionForm" id="ccmBlockPermissionForm" action="<?=$gl->getGroupUpdateAction($b)?>">
-	<span class="ccm-important">
+	<br/>
+	<div class="block-message alert-message notice">
 	<? if (!$b->overrideAreaPermissions()) { ?>
 		<?=t('Permissions for this block are currently dependent on the area containing this block. If you override those permissions here, they will not match those of the area.')?><br/><br/>
 	<? } else { ?>
 		<?=t("Permissions for this block currently override those of the parent area. To revert to the area's permissions, click the button below.")?><br/><br/>
 	<? } ?>	
-	</span>
+	</div>
 		<div class="ccm-buttons" style="margin-bottom: 10px"> 
 		<?php  if ($b->overrideAreaPermissions()) { ?>
-			<a href="javascript:void(0)" onclick="revertToPagePermissions()" class="ccm-button-left cancel"><span><?php echo t('Revert to Area Permissions')?></span></a>
+			<a href="javascript:void(0)" onclick="revertToPagePermissions()" class="ccm-button-left cancel btn"><span><?php echo t('Revert to Area Permissions')?></span></a>
 		<?php  } ?>
-		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-width="90%" dialog-title="<?=t('Add User/Group')?>"  dialog-height="70%" dialog-modal="false" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add"><?=t('Add User/Group')?></em></span></a>
+		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-width="90%" dialog-title="<?=t('Add User/Group')?>"  dialog-height="70%" dialog-modal="false" class="dialog-launch btn ccm-button-right"><?=t('Add User/Group')?></a>
 		</div>
 
 		<div class="ccm-spacer">&nbsp;</div>
@@ -183,15 +184,16 @@
 		// we're submitting to override the page's permissions ?>
 		<input type="hidden" name="cbOverrideAreaPermissions" value="1" id="cbOverrideAreaPermissions">
 
-		<div class="ccm-buttons">
-		<a href="javascript:void(0)" onclick="<? if ($numChildren) { ?>applyToAll();<? } else { ?>$('#ccmBlockPermissionForm').submit()<? } ?>" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
-		<a href="javascript:void(0)" class="ccm-button-left cancel ccm-dialog-close"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
+		<div class="dialog-buttons">
+		<a href="javascript:void(0)" onclick="<? if ($numChildren) { ?>applyToAll();<? } else { ?>$('#ccmBlockPermissionForm').submit()<? } ?>" class="ccm-button-right accept btn primary"><?=t('Update')?></a>
+		<a href="javascript:void(0)" class="ccm-button-left ccm-dialog-close btn"><?=t('Cancel')?></a>
 		</div>
 <?
 $valt = Loader::helper('validation/token');
 $valt->output();
 ?>
 </form>
+</div>
 
 <script type="text/javascript">
 $(function() {

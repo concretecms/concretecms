@@ -29,15 +29,11 @@ if ($fsp->canDeleteFileSet()) {
 
 ?>
 
-<h1><?=t('Delete File Set')?></h1>
+<div class="ccm-ui">
 
-	<?=t('Are you sure you want to delete the following file set?')?><br/><br/>
-	
-	<strong><?=$fs->getFileSetName()?></strong>
-	
-	<br/><br/>
-	<div class="ccm-note"><?=t('(Note: files within the set will not be removed.)')?></div>
-	<br/><br/>
+<p><?=t('Are you sure you want to delete the following file set?')?></p>
+<p><strong><?=$fs->getFileSetName()?></strong></p>
+<div class="help-block"><?=t('(Note: files within the set will not be removed.)')?></div>
 	
 	<form id="ccm-<?=$searchInstance?>-delete-file-set-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete_set" onsubmit="return ccm_alDeleteFileSet(this)">
 	<?=$form->hidden('task', 'delete_file_set')?>
@@ -45,11 +41,15 @@ if ($fsp->canDeleteFileSet()) {
 	<?=$form->hidden('fsID', $_REQUEST['fsID']); ?>	
 	<?=$form->hidden('searchInstance', $_REQUEST['searchInstance']); ?>	
 	<? $ih = Loader::helper('concrete/interface')?>
-	<?=$ih->submit(t('Delete'))?>
+
+<div class="dialog-buttons">
+	<?=$ih->button_js(t('Delete'), "$('#ccm-" . $searchInstance . "-delete-file-set-form').submit()", 'right', 'error')?>
 	<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left')?>	
-	
+</div>
+
 	</form>
-	
+</div>
+
 <script type="text/javascript">
 ccm_alDeleteFileSet = function(form) {
 	jQuery.fn.dialog.showLoader();
