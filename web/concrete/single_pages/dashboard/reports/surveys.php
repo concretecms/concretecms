@@ -11,9 +11,9 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
     
 	<div class="ccm-pane-body">
     
-    	<div class="ui-helper-clearfix">
+    	<div class="row">
     
-          <div class="span9">
+          <div class="span10">
       
             <table class="zebra-striped">
               <thead>
@@ -39,7 +39,7 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
         
           </div>
           
-          <div class="span5" style="margin-left:50px;">
+          <div class="span5" style="margin-left:30px;">
       
             <div style="text-align:center;">
               <?= $pie_chart ?>
