@@ -63,7 +63,14 @@ class UserAttributeKey extends AttributeKey {
 
 	public static function getByHandle($akHandle) {
 		$db = Loader::db();
-		$akID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', array($akHandle));
+		
+		$q = "SELECT ak.akID 
+			FROM AttributeKeys ak
+			INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID 
+			WHERE ak.akHandle = ?
+			AND akc.akCategoryHandle = 'user'";
+		$akID = $db->GetOne($q, array($akHandle));
+		
 		$ak = UserAttributeKey::getByID($akID);
 		return $ak;
 	}
