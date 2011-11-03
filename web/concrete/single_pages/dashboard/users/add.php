@@ -112,15 +112,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		</tr>
 		</table>
 	<? } ?>	
-
+</div>
+<div class="ccm-pane-footer">
 	<div class="ccm-buttons">
 		<input type="hidden" name="create" value="1" />
-		<?=$ih->submit(t('Create User'))?>
+		<? print $ih->submit(t('Create User'), 'ccm-user-form', 'right', 'primary'); ?>
 
 	</div>	
-
-	<div class="ccm-spacer">&nbsp;</div>
+</div>
 
 	</form>
-</div>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
