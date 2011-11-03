@@ -4499,7 +4499,6 @@ jQuery.fn.dialog.open = function(obj) {
 	});		
 	
 	if (!obj.element) {
-		alert('wut');
 		$.ajax({
 			type: 'GET',
 			url: obj.href,
@@ -4526,18 +4525,12 @@ jQuery.fn.dialog.open = function(obj) {
 			}
 		});			
 	} else {
-		alert('x');
 		jQuery.fn.dialog.hideLoader();
 		$("#ccm-dialog-content" + nd).append($(obj.element));
 		if ($(obj.element).css('display') == 'none') {
 			$(obj.element).show();
 		}
 		$("#ccm-dialog-content" + nd + " .dialog-launch").dialog();
-		if ($("#ccm-dialog-content" + nd + " .dialog-buttons").length > 0) {
-			$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-buttonpane').addClass("ccm-ui");
-			$("#ccm-dialog-content" + nd + " .dialog-buttons").appendTo($("#ccm-dialog-content" + nd).parent().find('.ui-dialog-buttonpane').html(''));
-			$("#ccm-dialog-content" + nd + " .dialog-buttons").remove();
-		}
 		$("#ccm-dialog-content" + nd + " .ccm-dialog-close").click(function() {
 			jQuery.fn.dialog.closeTop();
 		});
