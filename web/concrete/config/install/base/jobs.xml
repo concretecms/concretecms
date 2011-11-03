@@ -4,5 +4,6 @@
         <job handle="index_search" package=""/>
         <job handle="generate_sitemap" package=""/>
         <job handle="process_email" package=""/>
+        <job handle="remove_old_page_versions" package=""/>
     </jobs>
 </concrete5-cif>
