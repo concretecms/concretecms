@@ -74,20 +74,21 @@ if ($_POST['task'] == 'set_advanced_permissions') {
 
 <div id="ccm-file-permissions-advanced-tab">
 
-<h2><?=t('File Permissions')?></h2>
-
 <form method="post" id="ccm-<?=$searchInstance?>-permissions-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions/">
 <?=$form->hidden('task', 'set_advanced_permissions')?>
 <?=$form->hidden('fID', $f->getFileID())?>
 
-<a style="margin-left: 20px" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector?include_core_groups=1" id="ug-selector" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="70%" class="ccm-button-right dialog-launch"><span><em><?=t('Add Group or User')?></em></span></a>
-
-<div class="ccm-important">
+<div class="clearfix" style="margin-bottom: 0px">
+<div class="block-message alert-message info">
 <? if (!$f->overrideFileSetPermissions()) { ?>
-	<?=t('Permissions for this file are currently dependent on set and global settings. If you override those permissions here, they will not match those of the file\'s sets.')?><br/><br/>
+	<p><?=t('Permissions for this file are currently dependent on set and global settings. If you override those permissions here, they will not match those of the file\'s sets.')?></p>
 <? } else { ?>
-	<?=t("Permissions for this file currently override file set and global settings. To revert these permissions, click the button below.")?><br/><br/>
+	<p><?=t("Permissions for this file currently override file set and global settings. To revert these permissions, click the button below.")?></p>
 <? } ?>	
+</div>
+</div>
+<div class="clearfix">
+<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector?include_core_groups=1" id="ug-selector" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="70%" class="ccm-button-right dialog-launch btn"><?=t('Add Group or User')?></a>
 </div>
 
 <? if ($f->overrideFileSetPermissions()) {
@@ -176,9 +177,9 @@ $uArray = $ul->getUserInfoList();
 	<div class="ccm-buttons">
 	<? if ($f->overrideFileSetPermissions()) { ?>
 		<input type="hidden" name="fRevertToSetPermissions" id="fRevertToSetPermissions" value="0" />
-		<a href="javascript:void(0)" onclick="$('#fRevertToSetPermissions').val(1);ccm_alSubmitPermissionsForm('<?=$searchInstance?>')" class="ccm-button-left cancel"><span><?=t('Revert Permissions')?></span></a>
+		<a href="javascript:void(0)" onclick="$('#fRevertToSetPermissions').val(1);ccm_alSubmitPermissionsForm('<?=$searchInstance?>')" class="ccm-button-left cancel btn"><?=t('Revert Permissions')?></a>
 	<? } ?>
-	<?=$ih->button_js(t('Update'), 'ccm_alSubmitPermissionsForm(\'' . $searchInstance . '\')')?>
+	<?=$ih->button_js(t('Update'), 'ccm_alSubmitPermissionsForm(\'' . $searchInstance . '\')', 'right', 'primary')?>
 	</div>
 
 
