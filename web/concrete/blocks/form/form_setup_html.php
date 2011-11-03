@@ -2,13 +2,13 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 /* @var $uh ConcreteUrlsHelper */ 
 $uh = Loader::helper('concrete/urls');
-/* @var $fh FormHelper */ 
-$fh = Loader::helper('form');
+/* @var $fh ConcreteInterfaceFormHelper */
+$fh = Loader::helper('concrete/interface/form');
 ?>
 <div class="ccm-ui">
-	<ul class="ccm-dialog-tabs" id="ccm-formblock-tabs">
-		<li class="<?php echo (intval($miniSurveyInfo['bID'])==0)?'ccm-nav-active':''?>"><a href="javascript:void(0)" id="ccm-formblock-tab-add"><?php echo t('Add')?></a></li>
-		<li class="<?php echo (intval($miniSurveyInfo['bID'])>0)?'ccm-nav-active':''?>"><a href="javascript:void(0)" id="ccm-formblock-tab-edit"><?php echo t('Edit')?></a></li>
+	<ul class="tabs" id="ccm-formblock-tabs">
+		<li class="<?php echo (intval($miniSurveyInfo['bID'])==0)?'active':''?>"><a href="javascript:void(0)" id="ccm-formblock-tab-add"><?php echo t('Add')?></a></li>
+		<li class="<?php echo (intval($miniSurveyInfo['bID'])>0)?'active':''?>"><a href="javascript:void(0)" id="ccm-formblock-tab-edit"><?php echo t('Edit')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-formblock-tab-preview"><?php echo t('Preview')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-formblock-tab-options"><?php echo t('Options')?></a></li>
 	</ul>
@@ -91,101 +91,47 @@ $fh = Loader::helper('form');
 		<fieldset id="newQuestionBox">
 			<legend id="addNewQuestionTitle"><?php echo t('Add a New Question')?></legend>		
 			
-			<div id="questionAddedMsg" class="formBlockQuestionMsg"><?php echo t('Your question has been added. To view it click the preview tab.')?></div>
-			
-			<div class="clearfix">
-				<?=$fh->label('question', t('Question'))?>
-				<div class="input">
-					<?=$fh->text('question')?>
-				</div>
+			<div id="questionAddedMsg" class="alert-message" style="display:none">
+				<?=t('Your question has been added. To view it click the preview tab.')?>
 			</div>
 			
-			<div class="clearfix">
-				<?=$fh->label('answerType', t('Answer Type'))?>
-				<div class="input">
-					<ul class="inputs-list">
-						<li><label>
-							<?=$fh->radio('answerType', 'field')?>
-							<span><?=t('Text Field')?></span>
-						</label></li>
-						<li><label>
-							<?=$fh->radio('answerType', 'text')?>
-							<span><?php echo t('Text Area')?></span>
-						</label></li>
-						<li><label>
-							<?=$fh->radio('answerType', 'radios')?>
-							<span><?php echo t('Radio Buttons ')?></span>
-						</label></li>
-						<li><label>
-							<?=$fh->radio('answerType', 'select')?>
-							<span><?php echo t('Select Box')?></span>
-						</label></li>
-						<li><label>
-							<?=$fh->radio('answerType', 'checkboxlist')?>
-							<span><?php echo t('Checkbox List')?></span>
-						</label></li>
-						<li><label>
-							<?=$fh->radio('answerType', 'fileupload')?>
-							<span><?php echo t('File Upload')?></span>
-						</label></li>
-						<li><label>
-							<?=$fh->radio('answerType', 'email')?>
-							<span><?php echo t('Email Address')?></span>
-						</label></li>
-						<li><label>
-							<?=$fh->radio('answerType', 'telephone')?>
-							<span><?php echo t('Telephone')?></span>
-						</label></li>
-						<li><label>
-							<?=$fh->radio('answerType', 'url')?>
-							<span><?php echo t('Web Address')?></span>
-						</label></li>
-					</ul>
-				</div>
+			<?=$fh->text('question', t('Question'))?>
+			
+			<?=$fh->radios('answerType', t('Answer Type'), array(
+				'field' => t('Text Field'),
+				'text' => t('Text Area'),
+				'radios' => t('Radio Buttons'),
+				'select' => t('Select Box'),
+				'checkboxlist' => t('Checkbox List'),
+				'fileupload' => t('File Upload'),
+				'email' => t('Email Address'),
+				'telephone' => t('Telephone'),
+				'url' => t('Web Address'),
+			))?>
+			
+			<div id="answerOptionsArea">
+				<?=$fh->textarea('answerOptions', t('Answer Options'), null, t('Put each answer options on a new line'))?>
+			</div>
+
+			<div id="answerSettings">
+				<fieldset>
+					<legend><?=t('Settings')?></legend>
+					<?=$fh->text('width', 'Text Area Width', 50)?>
+					<?=$fh->text('height', 'Text Area Height', 3)?>
+				</fieldset>
 			</div>
 			
-			<div class="fieldRow" id="answerOptionsArea">
-				<div class="fieldLabel"><?php echo t('Answer Options')?>: </div>
-				<div class="fieldValues">
-					<textarea id="answerOptions" name="answerOptions" cols="50" rows="4" style="width:90%"></textarea><br />
-					<?php echo t('Put each answer options on a new line')?>
-				</div>
-				<div class="ccm-spacer"></div>
+			<div id="questionRequired">
+				<?=$fh->radios('required', t('Required'), array(
+					1 => t('Yes'),
+					0 => t('No'),
+				), 0)?>
 			</div>
 			
-			
-			<div class="fieldRow" id="answerSettings">
-				<div class="fieldLabel"><?php echo t('Settings')?>: </div>
-				<div class="fieldValues">
-					<?php echo t('Text Area Width')?>: <input id="width" name="width" type="text" value="50" size="3"/> <br />
-					<?php echo t('Text Area Height')?>: <input id="height" name="height" type="text" value="3" size="2"/>
-				</div>
-				<div class="ccm-spacer"></div>
+			<div>
+				<?=$fh->jsbutton('refreshButton', t('Refresh'), '', array('style'=>'display:none'))?>
+				<?=$fh->jsbutton('addQuestion', t('Add Question'), 'primary')?>
 			</div>
-			
-			
-			<div class="fieldRow" id="questionRequired">
-				<div class="fieldLabel">&nbsp;</div>
-				<div class="fieldValues"> 
-					<input id="required" name="required" type="checkbox" value="1" />
-					<?php echo t('This question is required.')?> 
-				</div>
-				<div class="ccm-spacer"></div>
-			</div>		
-			
-			
-			<div class="fieldRow" >
-				<div class="fieldLabel">&nbsp; </div>
-				<div class="fieldValues">
-					<input type="hidden" id="position" name="position" type="text" value="1000" />
-					<input id="refreshButton" name="refresh" type="button" value="Refresh" style="display:none" /> 
-					<input id="addQuestion" name="add" type="button" value="<?php echo t('Add Question')?> &raquo;" />
-				</div>
-			</div>
-			
-			
-			<div class="ccm-spacer"></div>
-			
 		</fieldset> 
 	</div> 
 		
