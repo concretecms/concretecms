@@ -73,6 +73,11 @@ class InstallController extends Controller {
 		$this->setRequiredItems();
 		$this->setOptionalItems();
 		Loader::model('package/starting_point');
+
+		if (file_exists(DIR_CONFIG_SITE . '/site.php')) {
+			throw new Exception(t('concrete5 is already installed.'));
+		}		
+
 	}
 	
 	protected function testAndRunInstall() {
