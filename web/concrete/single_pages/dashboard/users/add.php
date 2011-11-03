@@ -1,114 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$u = new User();
-$uh = Loader::helper('concrete/user');
-$txt = Loader::helper('text');
-$vals = Loader::helper('validation/strings');
-$valt = Loader::helper('validation/token');
-$valc = Loader::helper('concrete/validation');
-$dtt = Loader::helper('form/date_time');
-$form = Loader::helper('form');
-$ih = Loader::helper('concrete/interface');
-$av = Loader::helper('concrete/avatar');
-
-if ($_POST['create']) {
-
-	$username = trim($_POST['uName']);
-	$username = preg_replace("/\s+/", " ", $username);
-	$_POST['uName'] = $username;	
-	
-	$password = $_POST['uPassword'];
-	
-	if (!$vals->email($_POST['uEmail'])) {
-		$error[] = t('Invalid email address provided.');
-	} else if (!$valc->isUniqueEmail($_POST['uEmail'])) {
-		$error[] = t("The email address '%s' is already in use. Please choose another.",$_POST['uEmail']);
-	}
-	
-	if (strlen($username) < USER_USERNAME_MINIMUM) {
-		$error[] = t('A username must be between at least %s characters long.',USER_USERNAME_MINIMUM);
-	}
-
-	if (strlen($username) > USER_USERNAME_MAXIMUM) {
-		$error[] = t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM);
-	}
-
-	if (strlen($username) >= USER_USERNAME_MINIMUM && !$valc->username($username)) {
-		if(USER_USERNAME_ALLOW_SPACES) {
-			$error[] = t('A username may only contain letters, numbers and spaces.');
-		} else {
-			$error[] = t('A username may only contain letters or numbers.');
-		}
-	}
-
-	if (!$valc->isUniqueUsername($username)) {
-		$error[] = t("The username '%s' already exists. Please choose another",$username);
-	}		
-
-	if ($username == USER_SUPER) {
-		$error[] = t('Invalid Username');
-	}
-
-	
-	if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
-		$error[] = t('A password must be between %s and %s characters',USER_PASSWORD_MINIMUM,USER_PASSWORD_MAXIMUM);
-	}
-		
-	if (strlen($password) >= USER_PASSWORD_MINIMUM && !$valc->password($password)) {
-		$error[] = t('A password may not contain ", \', >, <, or any spaces.');
-	}
-
-	if (!$valt->validate('create_account')) {
-		$error[] = $valt->getErrorMessage();
-	}
-
-	Loader::model("attribute/categories/user");
-	$aks = UserAttributeKey::getRegistrationList();
-
-	foreach($aks as $uak) {
-		if ($uak->isAttributeKeyRequiredOnRegister()) {
-			$e1 = $uak->validateAttributeForm();
-			if ($e1 == false) {
-				$error[] = t('The field "%s" is required', $uak->getAttributeKeyName());
-			} else if ($e1 instanceof ValidationErrorHelper) {
-				$error[] = $e1->getList();
-			}
-		}
-	}
-	
-	if (!$error) {
-		// do the registration
-		$data = array('uName' => $username, 'uPassword' => $password, 'uEmail' => $_POST['uEmail'], 'uDefaultLanguage' => $_POST['uDefaultLanguage']);
-		$uo = UserInfo::add($data);
-		
-		if (is_object($uo)) {
-
-			if (is_uploaded_file($_FILES['uAvatar']['tmp_name'])) {
-				$uHasAvatar = $av->updateUserAvatar($_FILES['uAvatar']['tmp_name'], $uo->getUserID());
-			}
-			
-			foreach($aks as $uak) {
-				$uak->saveAttributeForm($uo);				
-			}
-
-			$uo->updateGroups($_POST['gID']);
-			$uID = $uo->getUserID();
-			$this->controller->redirect('/dashboard/users/search?uID=' . $uID . '&user_created=1');
-		} else {
-			$error[] = t('An error occurred while trying to create the account.');
-		}
-		
-	}		
-}
-
 ?>
-	<h1><span><?=t('Create Account')?></span></h1>
-	
-	<div class="ccm-dashboard-inner"> 
-	
-	<div class="actions">
-	<span class="required">*</span> - <?=t('required field')?>
-	</div>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Create Account'), t('Create new User accounts.'), false, false);?>
+<div class="ccm-pane-body"> 
 	
 	<form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$this->url('/dashboard/users/add')?>">
 	<?=$valt->output('create_account')?>
@@ -226,6 +120,7 @@ if ($_POST['create']) {
 	</div>	
 
 	<div class="ccm-spacer">&nbsp;</div>
-	
-	</div>
+
 	</form>
+</div>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
