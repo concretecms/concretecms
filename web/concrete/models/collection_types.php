@@ -251,11 +251,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$masterCollectionIDs[$mc['ctID']] = $mc['cID'];
 			}
 			if ($includeInternal) {
-				$internal = 1;
+				$internal = '1=1';
 			} else {
-				$internal = 0;
+				$internal = 'ctIsInternal = 0';
 			}
-			$q = "select ctID, ctHandle, ctIcon, ctName, ctIsInternal, pkgID from PageTypes where ctIsInternal = {$internal} order by ctName asc";
+			$q = "select ctID, ctHandle, ctIcon, ctName, ctIsInternal, pkgID from PageTypes where {$internal} order by ctName asc";
 			$r = $db->query($q);
 			$ctArray = array();
 			if ($r) {
