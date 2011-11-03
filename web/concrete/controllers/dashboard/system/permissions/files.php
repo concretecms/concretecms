@@ -1,42 +1,11 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class DashboardSystemPermissionsFilesController extends Controller {
+class DashboardSystemPermissionsFilesController extends DashboardBaseController {
 
 	var $helpers = array('form','concrete/interface','validation/token', 'concrete/file');
 	
-	public function view($updated=false) {
+	public function view() {
 		$helper_file = Loader::helper('concrete/file');
-		
-		$file_access_file_types = UPLOAD_FILE_EXTENSIONS_ALLOWED;
-		
-		//is nothing's been defined, display the constant value
-		if (!$file_access_file_types) {
-			$file_access_file_types = $helper_file->unserializeUploadFileExtensions(UPLOAD_FILE_EXTENSIONS_ALLOWED);
-		}
-		else {
-			$file_access_file_types = $helper_file->unserializeUploadFileExtensions($file_access_file_types);		
-		}
-		$file_access_file_types = join(', ',$file_access_file_types);		
-		$this->set('file_access_file_types', $file_access_file_types);		
-		
-		Loader::model('file_storage_location');
-		$fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
-		if (is_object($fsl)) {
-			$this->set('fslName', $fsl->getName());
-			$this->set('fslDirectory', $fsl->getDirectory());
-		}
-		
-		switch ($updated) {
-			case 'extensions-saved':
-				$this->set('message',t('Changes Saved'));
-				break;
-		}
-	}
-	
-	public function on_start() {
-		$html = Loader::helper('html');
-		$this->addHeaderItem($html->css('ccm.filemanager.css'));
-		$this->addHeaderItem($html->javascript('ccm.filemanager.js'));
 	}
 	
 	public function getFileAccessRow($type, $identifier = '', $name = '', $canSearch = true, $canRead = FilePermissions::PTYPE_ALL, $canWrite = FilePermissions::PTYPE_ALL, $canAdmin = FilePermissions::PTYPE_ALL, $canAdd = FilePermissions::PTYPE_ALL, $allowedExtensions = array()) {
@@ -150,7 +119,7 @@ class DashboardSystemPermissionsFilesController extends Controller {
 		
 		$fs = FileSet::getGlobal();
 		$this->setFileSetPermissions($fs, $p);
-		$this->redirect('/dashboard/files/access', 'global_permissions_saved');
+		$this->redirect('/dashboard/system/permissions/files', 'global_permissions_saved');
 	}
 	
 	public function setFileSetPermissions($fs, $post) {
@@ -181,50 +150,5 @@ class DashboardSystemPermissionsFilesController extends Controller {
 		$this->view();
 	}
 
-	public function storage_saved() {
-		$this->set('message', t('File storage locations saved.'));
-		$this->view();
-	}
 
-	public function file_storage(){
-		$helper_file = Loader::helper('concrete/file');
-		$validation_token = Loader::helper('validation/token');
-		
-		if (!$validation_token->validate("file_storage")) {
-			$this->set('error', array($validation_token->getErrorMessage()));
-			return;
-		}
-		
-		Config::save('DIR_FILES_UPLOADED', $this->post('DIR_FILES_UPLOADED'));
-
-		if ($this->post('fslName') != '' && $this->post('fslDirectory') != '') {
-			Loader::model('file_storage_location');
-			$fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
-			if (!is_object($fsl)) {
-				FileStorageLocation::add($this->post('fslName'), $this->post('fslDirectory'), FileStorageLocation::ALTERNATE_ID);
-			} else {
-				$fsl->update($this->post('fslName'), $this->post('fslDirectory'));
-			}			
-		}
-
-		$this->redirect('/dashboard/files/access','storage_saved');
-	}
-	
-	
-	public function file_access_extensions(){
-		$helper_file = Loader::helper('concrete/file');
-		$validation_token = Loader::helper('validation/token');
-		
-		if (!$validation_token->validate("file_access_extensions")) {
-			$this->set('error', array($validation_token->getErrorMessage()));
-			return;
-		}
-		
-		$types = preg_split('{,}',$this->post('file-access-file-types'),null,PREG_SPLIT_NO_EMPTY);
-		$types = $helper_file->serializeUploadFileExtensions($types);
-		Config::save('UPLOAD_FILE_EXTENSIONS_ALLOWED',$types);
-		$this->redirect('/dashboard/files/access','extensions-saved');
-	}
 }
-
-?>
