@@ -235,17 +235,11 @@ class Permissions extends Object {
 	
 	public function populateAllPageTypes() {
 		$ca = new Cache();
-		$pageTypes = $ca->get('pageTypeList', false);
-		if (is_array($pageTypes)) {
-			$this->addCollectionTypes = $pageTypes;
-		} else {
-			$db = Loader::db();
-			$q = "select ctID from PageTypes";
-			$r = $db->query($q);
-			while($row = $r->fetchRow()) {
-				$this->addCollectionTypes[] = $row['ctID'];
-			}
-			$ca->set('pageTypeList', false, $this->addCollectionTypes);
+		$db = Loader::db();
+		$q = "select ctID from PageTypes";
+		$r = $db->query($q);
+		while($row = $r->fetchRow()) {
+			$this->addCollectionTypes[] = $row['ctID'];
 		}
 	}
 	
