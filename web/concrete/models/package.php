@@ -58,24 +58,20 @@ class PackageList extends Object {
 		if ($pkgID < 1) {
 			return false;
 		}
-		$pkgHandle = Cache::get('pkgHandle', $pkgID);
-		if ($pkgHandle != false) {
-			return $pkgHandle;
+		$packageList = Cache::get('packageHandleList', false);
+		if (is_array($packageList)) {
+			return $packageList[$pkgID];
 		}
 		
-		$pl = PackageList::get();
-		$handle = null;
-		$plitems = $pl->getPackages();
-		
-		foreach($plitems as $p) {
-			if ($p->getPackageID() == $pkgID) {
-				$handle = $p->getPackageHandle();
-				break;
-			}
+		$packageList = array();
+		$db = Loader::db();
+		$r = $db->Execute('select pkgID, pkgHandle from Packages where pkgIsInstalled = 1');
+		while ($row = $r->FetchRow()) {
+			$packageList[$row['pkgID']] = $row['pkgHandle'];
 		}
-
-		Cache::set('pkgHandle', $pkgID, $handle);
-		return $handle;
+		
+		Cache::set('packageHandleList', false, $packageList);
+		return $packageList[$pkgID];
 	}
 	
 	public static function refreshCache() {
@@ -245,7 +241,6 @@ class Package extends Object {
 	public function getPackageItems() {
 		$items = array();
 		Loader::model('single_page');
-		Loader::model('dashboard/homepage');
 		Loader::library('mail/importer');
 		Loader::model('job');
 		Loader::model('collection_types');
@@ -254,7 +249,6 @@ class Package extends Object {
 		$items['attribute_sets'] = AttributeSet::getListByPackage($this);
 		$items['page_types'] = CollectionType::getListByPackage($this);
 		$items['mail_importers'] = MailImporter::getListByPackage($this);
-		$items['dashboard_modules'] = DashboardHomepageView::getModules($this);
 		$items['configuration_values'] = Config::getListByPackage($this);
 		$items['block_types'] = BlockTypeList::getByPackage($this);
 		$items['page_themes'] = PageTheme::getListByPackage($this);
@@ -270,7 +264,6 @@ class Package extends Object {
 	public static function getItemName($item) {
 		$txt = Loader::helper('text');
 		Loader::model('single_page');
-		Loader::model('dashboard/homepage');
 		if ($item instanceof BlockType) {
 			return $item->getBlockTypeName();
 		} else if ($item instanceof PageTheme) {
@@ -293,8 +286,6 @@ class Package extends Object {
 			return t(' %s (%s)', $txt->unhandle($item->getAttributeKeyHandle()), $txt->unhandle($akc->getAttributeKeyCategoryHandle()));
 		} else if ($item instanceof ConfigValue) {
 			return ucwords(strtolower($txt->unhandle($item->key)));
-		} else if ($item instanceof DashboardHomepage) {
-			return t('%s (%s)', $item->dbhDisplayName, $txt->unhandle($item->dbhModule));
 		} else if (is_a($item, 'TaskPermission')) {
 			return $item->getTaskPermissionName();			
 		} else if (is_a($item, 'Job')) {
@@ -337,9 +328,6 @@ class Package extends Object {
 							$co = new Config();
 							$co->setPackageObject($this);
 							$co->clear($item->key);
-							break;
-						case 'DashboardHomepage':
-							$item->Delete();
 							break;
 						case 'AttributeKeyCategory':
 						case 'AttributeSet':
