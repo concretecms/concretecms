@@ -46,7 +46,7 @@ foreach ($gArray as $g) {
 </div>
 
 <div class="dialog-buttons">
-	<a href="javascript:void(0)" onclick="ccm_hidePane()" class="ccm-button-left btn"><?=t('Cancel')?></a>
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop();" class="ccm-button-left btn"><?=t('Cancel')?></a>
 	<a href="javascript:void(0)" onclick="$('form[name=ccmPermissionsForm]').submit()" class="ccm-button-right btn primary"><?=t('Save')?></a>
 </div>	
 <input type="hidden" name="update_permissions" value="1" class="accept">

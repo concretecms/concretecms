@@ -244,7 +244,7 @@ ccm_exitVersionList = function() {
 	if (ccm_versionsMustReload) {
 		window.location.reload();
 	} else {
-		ccm_hidePane();
+		jQuery.fn.dialog.closeTop();
 	}
 }
 
