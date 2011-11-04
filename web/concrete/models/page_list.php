@@ -292,6 +292,10 @@ class PageList extends DatabaseItemList {
 		}
 	}
 
+	public function filterByDateLastModified($date, $comparison = '=') {
+		$this->filter('c.cDateModified', $date, $comparison);
+	}
+
 	/** 
 	 * Filters by public date
 	 * @param string $date

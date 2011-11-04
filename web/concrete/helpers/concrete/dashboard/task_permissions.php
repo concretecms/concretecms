@@ -49,10 +49,10 @@ class ConcreteDashboardTaskPermissionsHelper {
 			$html .= '<input type="hidden" name="tpID[]" value="' . $_tp->getTaskPermissionID() . '" />';
 		}
 		
-		$html .= '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/user_group_selector" id="ug-selector" dialog-modal="false" dialog-width="90%" dialog-title="' . t('Choose User/Group') . '"  dialog-height="70%" class="ccm-button-right dialog-launch"><span><em>' . t('Add Group or User') . '</em></span></a>';
-		$html .= '<p>' . $description . '</p>';
+		$html .= '<div class="ccm-pane-body">';
+		$html .= '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/user_group_selector" id="ug-selector" dialog-modal="false" dialog-width="90%" dialog-title="' . t('Choose User/Group') . '"  dialog-height="70%" class="ccm-button-right dialog-launch btn">' . t('Add Group or User') . '</a>';
+		$html .= '<p>' . $description . '</p>'; 
 
-		$html .= '<div class="ccm-spacer">&nbsp;</div><br/>';		
 		$html .= '<div id="ccm-permissions-entities-wrapper" class="ccm-permissions-entities-wrapper"><div id="ccm-permissions-entity-base" class="ccm-permissions-entity-base">' . $this->getAccessRow($tp) . '</div>';
 		
 		foreach($gArray as $g) { 
@@ -64,7 +64,7 @@ class ConcreteDashboardTaskPermissionsHelper {
 		}
 		
 		
-		$html .= '</div>';
+		$html .= '</div></div>';
 		
 		return $html;
 	}
@@ -86,11 +86,11 @@ class ConcreteDashboardTaskPermissionsHelper {
 
 		$html .= $form->hidden('selectedEntity[]', $identifier);
 		
-		$html .= '<h2>';
+		$html .= '<h3>';
 		if (($identifier != 'gID_1' && $identifier != 'gID_2')) {
-			$html .= '<a href="javascript:void(0)" class="ccm-permissions-remove"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" width="16" height="16" /></a>';
+			$html .= '<a href="javascript:void(0)" class="ccm-permissions-remove"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" width="16" height="16" /></a> ';
 		}
-		$html .= '<span>' . $name . '</span></h2>';
+		$html .= '<span>' . $name . '</span></h3>';
 
 		
 		$html .= '<table border="0" cellspacing="0" cellpadding="0" id="ccm-sitemap-permissions-grid">';
@@ -106,7 +106,7 @@ class ConcreteDashboardTaskPermissionsHelper {
 			}
 			
 			$html .= '<tr class="ccm-permissions-access">
-				<th>' . $tp->getTaskPermissionName() . '</th>
+				<td><strong>' . $tp->getTaskPermissionName() . '</strong></td>
 				<td>' . $form->radio($id . $tpID, '1', $canRead) . ' ' . t('Yes') . '</td>
 				<td>' . $form->radio($id . $tpID, 0, $canRead) . ' ' . t('No') . '</td>
 			</tr>';

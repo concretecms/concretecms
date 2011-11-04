@@ -181,7 +181,6 @@ $(function() {
 	
 <? } ?>
 
-<hr />
 
 <h3><?=t('Add to New Set')?></h3>
 
