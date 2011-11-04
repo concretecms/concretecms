@@ -59,7 +59,7 @@ if($success) {
 		<div class="clearfix">
 			<?php echo $form->label('uPasswordConfirm',t('Confirm Password')); ?>
 			<div class="input">
-				<?php echo $form->text('uPasswordConfirm'); ?>
+				<?php echo $form->password('uPasswordConfirm'); ?>
 			</div>
 		</div>
 
