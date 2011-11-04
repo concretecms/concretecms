@@ -5,6 +5,7 @@ $searchFields = array(
 	'' => '** ' . t('Fields'),
 	'keywords' => t('Full Page Index'),
 	'date_added' => t('Date Added'),
+	'last_modified' => t('Last Modified'),
 	'date_public' => t('Public Date'),
 	'owner' => t('Page Owner'),
 	'num_children' => t('# Children'),
@@ -41,6 +42,12 @@ foreach($searchFieldAttributes as $ak) {
 		<?=$form->text('date_added_from', array('style' => 'width: 86px'))?>
 		<?=t('to')?>
 		<?=$form->text('date_added_to', array('style' => 'width: 86px'))?>
+		</span>
+
+		<span class="ccm-search-option ccm-search-option-type-date_time"  search-field="last_modified">
+		<?=$form->text('last_modified_from', array('style' => 'width: 86px'))?>
+		<?=t('to')?>
+		<?=$form->text('last_modified_to', array('style' => 'width: 86px'))?>
 		</span>
 
 		<span class="ccm-search-option"  search-field="owner">

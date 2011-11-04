@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+ <pagetypes>
+        <pagetype handle="blog_entry" name="Blog Entry" internal="0" package="">
+            <composer method="PARENT" pagetype="" parent="{ccm:export:page:/blog}">
+                <items>
+                    <attributekey handle="tags"/>
+                    <block type="content" name="Main Content"/>
+                    <block type="content" name="More Content"/>
+                </items>
+            </composer>
+            <page name="" path="" filename="" pagetype="blog_entry" description="" package="">
+                <attributes>
+                    <attributekey handle="tags"/>
+                </attributes>
+                <area name="Blog Post Header"/>
+                <area name="Main">
+                    <block type="content" name="Main Content" mc-block-id="RKAuAI0w">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </area>
+                <area name="Blog Post More">
+                    <block type="content" name="More Content" mc-block-id="txYCPnKQ">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </area>
+                <area name="Blog Post Footer"/>
+                <area name="Header"/>
+                <area name="Sidebar">
+                    <block type="tags" name="" mc-block-id="98HnBcWU">
+                        <data table="btTags">
+                            <record>
+                                <title><![CDATA[Tags]]></title>
+                                <targetCID>0</targetCID>
+                                <displayMode><![CDATA[page]]></displayMode>
+                                <cloudCount><![CDATA[0]]></cloudCount>
+                            </record>
+                        </data>
+                    </block>
+                </area>
+            </page>
+        </pagetype>
+        <pagetype handle="page" name="Page" internal="0" package="">
+            <page name="" path="" filename="" pagetype="page" description="" package="">
+                <area name="Header"/>
+                <area name="Sidebar"/>
+                <area name="Main"/>
+            </page>
+        </pagetype>
+    </pagetypes>
+    
+    <stacks>
+        <stack name="Header Nav" type="global_area">
+            <area name="Main">
+                <block type="autonav" name="" custom-template="header_menu.php">
+                    <data table="btNavigation">
+                        <record>
+                            <orderBy><![CDATA[display_asc]]></orderBy>
+                            <displayPages><![CDATA[top]]></displayPages>
+                            <displayPagesCID/>
+                            <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                            <displaySubPages><![CDATA[none]]></displaySubPages>
+                            <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
+                            <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+                            <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+                        </record>
+                    </data>
+                </block>
+            </area>
+        </stack>
+        <stack name="Site Heading" type="global_area">
+            <area name="Main">
+                <block type="content" name="">
+                    <data table="btContentLocal">
+                        <record>
+                            <content><![CDATA[<h1>Composer Blog</h1>]]></content>
+                        </record>
+                    </data>
+                </block>
+            </area>
+        </stack>
+    </stacks>
+
+    <pages>
+        <page name="Home" path="" filename="" pagetype="page" description="" package="">
+            <area name="Header"/>
+            <area name="Sidebar"/>
+            <area name="Main"/>
+        </page>
+
+		<page name="Blog" path="/blog" filename="" pagetype="page" description="" package="">
+			<area name="Header"/>
+			<area name="Sidebar"/>
+			<area name="Main">
+				<block type="page_list" name="" custom-template="blog_index.php">
+					<data table="btPageList">
+						<record>
+							<num><![CDATA[10]]></num>
+							<orderBy><![CDATA[chrono_desc]]></orderBy>
+							<cParentID>{ccm:export:page:/blog}</cParentID>
+							<cThis><![CDATA[1]]></cThis>
+							<paginate><![CDATA[1]]></paginate>
+							<displayAliases><![CDATA[1]]></displayAliases>
+							<ctID/>
+							<rss><![CDATA[0]]></rss>
+							<rssTitle><![CDATA[]]></rssTitle>
+							<rssDescription><![CDATA[]]></rssDescription>
+							<truncateSummaries><![CDATA[0]]></truncateSummaries>
+							<displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+							<truncateChars><![CDATA[0]]></truncateChars>
+						</record>
+					</data>
+				</block>
+			</area>
+		</page>
+	</pages>
+
+</concrete5-cif>

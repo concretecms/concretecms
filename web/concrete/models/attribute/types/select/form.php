@@ -41,7 +41,7 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 	<?php 
 	echo $form->text('newAttrValueRows'.$attrKeyID, array('class' => 'ccm-attribute-type-select-autocomplete-text', 'style'=>'position:relative; width: 200px'));
 	?>
-	<input type="button" class="ccm-input-button" value="<?=t('Add')?>" onclick="ccmAttributeTypeSelectTagHelper<?=$attrKeyID?>.addButtonClick(); return false" />
+	<input type="button" class="btn ccm-input-button" value="<?=t('Add')?>" onclick="ccmAttributeTypeSelectTagHelper<?=$attrKeyID?>.addButtonClick(); return false" />
 	</span>
 </div>
 
