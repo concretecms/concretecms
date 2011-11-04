@@ -9,7 +9,7 @@ $ct = CollectionType::getByID($ctID);
 
 $cList = $ct->getPages();
 ?>
-
+<div class="ccm-ui">
 <form method="post" id="ccmBlockMasterCollectionForm" action="<?=$b->getBlockMasterCollectionAliasAction()?>">
 
 	<? if (count($cList) == 0) { ?>
@@ -21,13 +21,13 @@ $cList = $ct->getPages();
 	<p><?=t("Choose which pages below this particular block should appear on. Any previously selected blocks may also be removed using the checkbox. Click the checkbox in the header to select/deselect all pages.")?></p>
 	<br/>
 		
-		<table border="0" cellspacing="0" width="100%" class="ccm-grid" cellpadding="0">
+		<table class="zebra-stripped" >
 		<tr>
 			<th>ID</th>
 			<th><?=t('Name')?></th>
-			<th style="white-space: nowrap"><?=t('Date Created')?></th>
-			<th style="white-space: nowrap"><?=t('Date Modified')?></th>			
-			<th style="white-space: nowrap"><input type="checkbox" id="mc-cb-all" /></th>			
+			<th ><?=t('Date Created')?></th>
+			<th ><?=t('Date Modified')?></th>			
+			<th ><input type="checkbox" id="mc-cb-all" /></th>			
 		</tr>
 	
 	<?
@@ -36,9 +36,9 @@ $cList = $ct->getPages();
 			<tr class="active">
 			<td><?=$p->getCollectionID()?></td>
 			<td><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$p->getCollectionID()?>" target="_blank"><?=$p->getCollectionName()?></a></td>
-			<td style="text-align: center"><?=$p->getCollectionDateAdded('m/d/Y','user')?></td>
-			<td style="text-align: center"><? if ($b->isAlias($p)) { ?> <input type="hidden" name="checkedCIDs[]" value="<?=$p->getCollectionID()?>" /><? } ?><?=$p->getCollectionDateLastModified('m/d/Y','user')?></td>
-			<td style="text-align: center"><input class="mc-cb" type="checkbox" name="cIDs[]" value="<?=$p->getCollectionID()?>" <? if ($b->isAlias($p)) { ?> checked <? } ?> /></td>
+			<td ><?=$p->getCollectionDateAdded('m/d/Y','user')?></td>
+			<td ><? if ($b->isAlias($p)) { ?> <input type="hidden" name="checkedCIDs[]" value="<?=$p->getCollectionID()?>" /><? } ?><?=$p->getCollectionDateLastModified('m/d/Y','user')?></td>
+			<td ><input class="mc-cb" type="checkbox" name="cIDs[]" value="<?=$p->getCollectionID()?>" <? if ($b->isAlias($p)) { ?> checked <? } ?> /></td>
 			</tr>
 		
 		<? } ?>
@@ -48,8 +48,8 @@ $cList = $ct->getPages();
 	<? } ?>
 	
 	<div class="ccm-buttons">
-	<a href="#" class="ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
-	<a href="javascript:void(0)" onclick="$('#ccmBlockMasterCollectionForm').submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
+	<a href="#" class="ccm-dialog-close ccm-button-left cancel"><span><em class="btn ccm-button-close"><?=t('Cancel')?></em></span></a>
+	<a href="javascript:void(0)" onclick="$('#ccmBlockMasterCollectionForm').submit()" class="btn primary ccm-button-right accept"><span><?=t('Update')?></span></a>
 	</div>
 
 <script type="text/javascript">
@@ -73,3 +73,4 @@ $(function() {
 
 </script>
 </form>
+</div>
