@@ -93,17 +93,20 @@ var miniSurvey ={
 						   alert(ccm_t('complete-required'));
 						}else{
 						   if(jsonObj.mode=='Edit'){
-							   $('#questionEditedMsg').slideDown('slow');
-							   setTimeout("$('#questionEditedMsg').slideUp('slow');",5000);
+							   var questionMsg = $('#questionEditedMsg');
+							   questionMsg.fadeIn();
+							   setTimeout(function(){
+								   questionMsg.fadeOut();
+							   }, 5000);
 							   if(jsonObj.hideQID){
 								   miniSurvey.hideQuestions.push( miniSurvey.edit_qID ); //jsonObj.hideQID); 
 								   miniSurvey.edit_qID=0;
 							   }
 						   }else{
-							   var questionAddedMsg = $('#questionAddedMsg');
-							   questionAddedMsg.fadeIn();
+							   var questionMsg = $('#questionAddedMsg');
+							   questionMsg.fadeIn();
 							   setTimeout(function(){
-								   questionAddedMsg.fadeOut();
+								   questionMsg.fadeOut();
 							   }, 5000);
 							   //miniSurvey.saveOrder();
 						   }
