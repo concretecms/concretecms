@@ -4773,6 +4773,9 @@ ccm_showAppIntroduction = function() {
 		$("#newsflow-overlay").fadeIn('300', 'easeOutExpo');
 	});
 }
+ccm_doPageReindexing = function() {
+	$.get(CCM_TOOLS_PATH + '/reindex_pending_pages?ccm_token=' + CCM_SECURITY_TOKEN);
+}
 // qs_score - Quicksilver Score
 // 
 // A port of the Quicksilver string ranking algorithm
