@@ -6046,11 +6046,6 @@ ccmSitemapLoad = function(instance_id, display_mode, select_mode, node, selected
 		ccmSitemapExploreNode(instance_id, display_mode, select_mode, node, selectedPageID);
 	} else if (display_mode == 'full') {
 
-		ccm_hidePane = function() {
-			// overrides the typically UI hidepane because we're only seeing these on thickbox elements
-			jQuery.fn.dialog.closeTop();
-		}
-
 		activateLabels(instance_id, display_mode, select_mode);
 		if (select_mode != 'move_copy_delete' && select_mode != 'select_page') {
 			activateReorder();
