@@ -39,7 +39,7 @@ class FormAttributeHelper {
 			$html .= ' <span class="ccm-required">*</span>';
 		}
 		$html .= '<div class="input">';
-		$html .= $obj->render('form', $value, true);
+		$html .= $obj->render('composer', $value, true);
 			
 		$html .= '</div></div>';
 		
