@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
 ?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Logs'));?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Logs'), false, '', false);?>
 
 <div class="ccm-pane-body">
 	<form method="post" id="ccm-log-search"  action="<?=$pageBase?>">
@@ -44,7 +44,7 @@ $th = Loader::helper('text');
 </div>
 <? if (count($entries) > 0) { ?>
 <div class="ccm-pane-footer" style="text-align: center;">
-		<input class="btn danger" type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$this->url('/dashboard/reports/logs', 'clear', $valt->generate())?>'}" value="<?=t('Clear Log')?>" />
+	<input class="btn danger" type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$this->url('/dashboard/reports/logs', 'clear', $valt->generate())?>'}" value="<?=t('Clear Log')?>" />
 </div>
 <? } ?>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
