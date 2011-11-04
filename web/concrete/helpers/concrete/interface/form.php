@@ -110,22 +110,32 @@ class ConcreteInterfaceFormHelper
 	
 	/**
 	 * Text tag
-	 * @param string $name of the input
-	 * @param string $label
-	 * @param string $value
-	 * @param string $help
-	 * @param array $args attributes to be set in the input tag
+	 * array('name' => 'name', 'label' => 'SomeText', 'value' => 'some_value')
+	 * @param array $args named argument
+	 * @return string
 	 */
-	public function text($name, $label, $value = null, $help = null, array $args = array())
+	public function text(array $args)
 	{
-		$id = $this->nameToId($name);
-		$args = array_merge(array('type' => 'text', 'name' => $name, 'id' => $name, 'value' => $value), $args);
+		$this->requiredArgs(array('name', 'label'), $args);
+		$value = null;
+		$help = null;
+		$id = $this->nameToId($args['name']);
+		extract($args);
+		
+		if (!$attr) {
+			$attr = array(
+				'type' => 'text',
+				'name' => $name,
+				'id' => $id,
+				'value' => $value,
+			);
+		}
 		ob_start();
 		?>
 		<div class="clearfix">
 			<?=$this->tag('label', array('for' => $name), $label, false)?>
 			<div class="input">
-				<?=$this->tag('input', $args)?>
+				<?=$this->tag('input', $attr)?>
 				<?if($help):?>
 				<?=$this->tag('span', array('class' => 'help-block'), $help)?>
 				<?endif?>
@@ -142,15 +152,27 @@ class ConcreteInterfaceFormHelper
 	 * @param string $value
 	 * @param string $help
 	 */
-	public function textarea($name, $label, $value = null, $help = null)
+	public function textarea(array $args)
 	{
-		$id = $this->nameToId($name);
+		$this->requiredArgs(array('name', 'label'), $args);
+		$value = null;
+		$help = null;
+		$id = $this->nameToId($args['name']);
+		$rows = 3;
+		$cols = null;
+		extract($args);
+		
+		if (!$attr) {
+			$attr =  array(
+				'name' => $name, 'id' => $id, 'rows' => $rows, 'cols' => $cols
+			);
+		}
 		ob_start();
 		?>
 		<div class="clearfix">
 			<?=$this->tag('label', array('for' => $name), $label, false)?>
 			<div class="input">
-				<?=$this->tag('textarea', array('name' => $name, 'id' => $name, 'rows' => 3), $value)?>
+				<?=$this->tag('textarea', $attr, $value)?>
 				<?if($help):?>
 				<?=$this->tag('span', array('class' => 'help-block'), $help)?>
 				<?endif?>
@@ -160,9 +182,14 @@ class ConcreteInterfaceFormHelper
 		return ob_get_clean();
 	}
 	
-	public function radios($name, $label, array $options, $selected = null, $help = null)
+	public function radios(array $args)
 	{
-		$id = $this->nameToId($name);
+		$this->requiredArgs(array('name', 'label', 'options'), $args);
+		$selected = null;
+		$help = null;
+		$id = $this->nameToId($args['name']);
+		extract($args);
+
 		ob_start();
 		?>
 		<div class="clearfix">
@@ -170,17 +197,17 @@ class ConcreteInterfaceFormHelper
 			<div class="input">
 				<ul class="inputs-list">
 					<?foreach ($options as $value => $text):
-					$args = array(
+					$attr = array(
 						'name' => $name,
 						'type' => 'radio',
 						'value' => $value
 					);
 					if ($selected !== null && $value == $selected) {
-						$args['checked'] = 'checked'; 
+						$attr['checked'] = 'checked'; 
 					}
 					?>
 					<li><label>
-						<?=$this->tag('input', $args)?>
+						<?=$this->tag('input', $attr)?>
 						<?=$this->tag('span', array(), $text)?>
 					</label></li>
 					<?endforeach?>
@@ -194,22 +221,18 @@ class ConcreteInterfaceFormHelper
 		return ob_get_clean();
 	}
 	
-	public function inlineInputs($label, $inputs, $help = null)
+	private function requiredArgs($names, $args)
 	{
-		ob_start();
-		?>
-		<div class="clearfix">
-			<?=$this->tag('label', array('id' => $id), $label, false)?>
-			<div class="input">
-				<div class="inline-inputs">
-					<?=$inputs?>
-				</div>
-				<?if($help):?>
-				<?=$this->tag('span', array('class' => 'help-block'), $help)?>
-				<?endif?>
-			</div>
-		</div>
-		<?php
-		return ob_get_clean();
+		$missing = array();
+		foreach($names as $name) {
+			if (!array_key_exists($name, $args)) {
+				$missing[] = $name;
+			}
+		}
+		if ($missing) {
+			throw new InvalidArgumentException(
+				'Missing entries in arguments array: '. implode(', ', $missing)
+			);
+		}
 	}
 }
