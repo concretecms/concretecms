@@ -77,6 +77,7 @@ class PackageList extends Object {
 	public static function refreshCache() {
 		Cache::delete('pkgList', 1);
 		Cache::delete('pkgList', 0);
+		Cache::delete('packageHandleList', false);
 	}
 	
 	public static function get($pkgIsInstalled = 1) {
@@ -169,6 +170,10 @@ class Package extends Object {
 
 	public function getApplicationVersionRequired() {
 		return $this->appVersionRequired;
+	}
+	
+	public function hasInstallNotes() {
+		return file_exists($this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/install.php');
 	}
 	
 	public static function installDB($xmlFile) {
