@@ -135,9 +135,7 @@ $(function() {
 				jQuery.fn.dialog.closeTop();
 				ccmSitemapHighlightPageLabel(r.cID);
 			} else {
-				ccm_hidePane(function() {
-					jQuery.fn.dialog.hideLoader();						
-				});
+				jQuery.fn.dialog.closeTop();
 			}
 			ccmAlert.hud(ccmi18n_sitemap.pageDesignMsg, 2000, 'success', ccmi18n_sitemap.pageDesign);
 		}
