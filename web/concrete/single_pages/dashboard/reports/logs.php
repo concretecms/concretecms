@@ -2,11 +2,10 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
-	?>
+?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Logs'), false, '', false);?>
 
-<h1><span><?=$title?></span></h1>
-<div class="ccm-dashboard-inner">
-
+<div class="ccm-pane-body">
 	<form method="post" id="ccm-log-search"  action="<?=$pageBase?>">
 	<?=t('Keywords')?>
 	<?=$form->text('keywords', $keywords)?>
@@ -16,7 +15,7 @@ $th = Loader::helper('text');
 	<?=$form->submit('search',t('Search') )?>
 	</form>
 
-	<table border="0" cellspacing="1" cellpadding="0" class="grid-list">
+	<table border="0" cellspacing="1" cellpadding="0" class="grid-list zebra-striped">
 	<tr>
 		<td class="subheaderActive"><?=t('Date/Time')?></td>
 		<td class="subheader"><?=t('Log Type')?></td>
@@ -32,13 +31,6 @@ $th = Loader::helper('text');
 	</tr>
 	<? } ?>
 	</table>	
-
-	<? if (count($entries) > 0) { ?>
-		<div style="text-align: center; padding-top: 10px">
-		<input type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$this->url('/dashboard/reports/logs', 'clear', $valt->generate())?>'}" value="<?=t('Clear Log')?>" />
-		</div>
-	<? } ?>
-	
 	<br/>
 	
 	<? if($paginator && strlen($paginator->getPages())>0){ ?>	 
@@ -50,3 +42,9 @@ $th = Loader::helper('text');
 	<? } ?>		
 
 </div>
+<? if (count($entries) > 0) { ?>
+<div class="ccm-pane-footer" style="text-align: center;">
+	<input class="btn danger" type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$this->url('/dashboard/reports/logs', 'clear', $valt->generate())?>'}" value="<?=t('Clear Log')?>" />
+</div>
+<? } ?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
