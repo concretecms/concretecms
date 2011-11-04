@@ -114,16 +114,18 @@ class ConcreteInterfaceFormHelper
 	 * @param string $label
 	 * @param string $value
 	 * @param string $help
+	 * @param array $args attributes to be set in the input tag
 	 */
-	public function text($name, $label, $value = null, $help = null)
+	public function text($name, $label, $value = null, $help = null, array $args = array())
 	{
 		$id = $this->nameToId($name);
+		$args = array_merge(array('type' => 'text', 'name' => $name, 'id' => $name, 'value' => $value), $args);
 		ob_start();
 		?>
 		<div class="clearfix">
 			<?=$this->tag('label', array('for' => $name), $label, false)?>
 			<div class="input">
-				<?=$this->tag('input', array('type' => 'text', 'name' => $name, 'id' => $name, 'value' => $value))?>
+				<?=$this->tag('input', $args)?>
 				<?if($help):?>
 				<?=$this->tag('span', array('class' => 'help-block'), $help)?>
 				<?endif?>

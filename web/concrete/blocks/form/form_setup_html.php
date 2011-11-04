@@ -110,18 +110,15 @@ $fh = Loader::helper('concrete/interface/form');
 		
 	<div id="ccm-formBlockPane-edit" class="ccm-formBlockPane" style=" <?php echo (intval($miniSurveyInfo['bID'])>0)?'display:block':''?> ">
 		
-		<div id="questionEditedMsg" class="formBlockQuestionMsg"><?php echo t('Your question has been edited.')?></div>
+		<div id="questionEditedMsg" class="alert-message" style="display:none">
+			<?php echo t('Your question has been edited.')?>
+		</div>
 		
 		<div id="editQuestionForm" style="display:none">
-			<div id="editQuestionTitle" ><strong><?php echo t('Edit Question')?>:</strong></div>
-			
-			<div class="fieldRow">
-				<div class="fieldLabel"><?php echo t('Question')?>:</div>
-				<div class="fieldValues">
-					<input id="questionEdit" name="question" type="text" style="width: 265px" class="ccm-input-text" />
-				</div>
-				<div class="ccm-spacer"></div>
-			</div>	
+			<fieldset>
+				<legend id="editQuestionTitle"><?=t('Edit Question')?></legend>
+				<?=$fh->text('question', t('Question'), null, null, array('id' => 'questionEdit'))?>
+			</fieldset>
 			
 			<div class="fieldRow">
 				<div class="fieldLabel"><?php echo t('Answer Type')?>: </div>
