@@ -30,39 +30,27 @@ $fh = Loader::helper('concrete/interface/form');
 			<legend><?=t('Options')?></legend>
 			<?=$fh->text('surveyName', t('Form Name'), $miniSurveyInfo['surveyName'])?>
 			<?=$fh->textarea('thankyouMsg', t('Message to display when completed'), $this->controller->thankyouMsg)?>
-			<div class="clearfix">
-				<label><?=t('Notify me by email when people submit this form')?></label>
-				<div class="input">
-					<div class="input-prepend">
-						<label class="add-on">
-							<input type="checkbox" name="notifyMeOnSubmission" value="1" <?php echo (intval($miniSurveyInfo['notifyMeOnSubmission'])>=1)?'checked="checked"':''?> />
-						</label>
-						<input name="recipientEmail" type="text" value="<?php echo $miniSurveyInfo['recipientEmail']?>" size="20" maxlength="128" />
-					</div>
-					<span class="help-block"><?=t('(Seperate multiple emails with a comma)')?></span>
-				</div>
-			</div>
+			<?=$fh->text('recipientEmail', t('Notify me by email when people submit this form'), $miniSurveyInfo['recipientEmail'], t('(Seperate multiple emails with a comma)'))?>
 			<?=$fh->radios('displayCaptcha', t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', 'http://en.wikipedia.org/wiki/Captcha'), array(
 				1 => t('Yes'),
 				0 => t('No'),
 			), (int) $miniSurveyInfo['displayCaptcha'])?>
-		</fieldset>
-		
-		<div class="fieldRow">
-			<?php echo t('Redirect to another page after form submission?');?>
-			<input id="ccm-form-redirect" name="redirect" value="1" <?php echo (intval($miniSurveyInfo['redirectCID'])>=1)?'checked="checked"':''?> type="checkbox" />
-			<div id="ccm-form-redirect-page" <?php echo (intval($miniSurveyInfo['redirectCID'])>=1)?'':'style="display:none"'; ?>>
-			<?php
-			$form = Loader::helper('form/page_selector');
-			if ($miniSurveyInfo['redirectCID']) {
-				print $form->selectPage('redirectCID', $miniSurveyInfo['redirectCID']);
-			} else {
-				print $form->selectPage('redirectCID');
-			}
-			?>
+			<div class="clearfix">
+				<label for="ccm-form-redirect"><?=t('Redirect to another page after form submission?')?></label>
+				<div class="input">
+					<div id="ccm-form-redirect-page">
+						<?php
+							$form = Loader::helper('form/page_selector');
+							if ($miniSurveyInfo['redirectCID']) {
+								print $form->selectPage('redirectCID', $miniSurveyInfo['redirectCID']);
+							} else {
+								print $form->selectPage('redirectCID');
+							}
+						?>
+					</div>
+				</div>
 			</div>
-		</div>
-		
+		</fieldset>
 	</div> 
 	
 	<input type="hidden" id="qsID" name="qsID" type="text" value="<?php echo intval($miniSurveyInfo['questionSetId'])?>" />
