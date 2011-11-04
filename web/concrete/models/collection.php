@@ -150,26 +150,46 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$this->reindex();
 		}
 		
-		public function reindex($index = false) {
+		public static function reindexPendingPages() {
+			$num = 0;
+			$db = Loader::db();
+			$r = $db->Execute("select cID from PageSearchIndex where cRequiresReindex = 1");
+			while ($row = $r->FetchRow()) { 
+				$pc = Page::getByID($row['cID']);
+				$pc->reindex($this, true);
+				$num++;
+			}
+			Config::save('DO_PAGE_REINDEX_CHECK', false);
+			return $num;		
+		}
+				
+		public function reindex($index = false, $actuallyDoReindex = false) {
 			if ($this->isAlias()) {
 				return false;
 			}
-			$db = Loader::db();
-			
-			Loader::model('attribute/categories/collection');
-			$attribs = CollectionAttributeKey::getAttributes($this->getCollectionID(), $this->getVersionID(), 'getSearchIndexValue');
-	
-			$db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
-			$searchableAttributes = array('cID' => $this->getCollectionID());
-			$rs = $db->Execute('select * from CollectionSearchIndexAttributes where cID = -1');
-			AttributeKey::reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
-			
-			if ($index == false) {
-				Loader::library('database_indexed_search');
-				$index = new IndexedSearch();
+			if ($actuallyDoReindex || ENABLE_PROGRESSIVE_PAGE_REINDEX == false) { 
+				$db = Loader::db();
+				
+				Loader::model('attribute/categories/collection');
+				$attribs = CollectionAttributeKey::getAttributes($this->getCollectionID(), $this->getVersionID(), 'getSearchIndexValue');
+		
+				$db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
+				$searchableAttributes = array('cID' => $this->getCollectionID());
+				$rs = $db->Execute('select * from CollectionSearchIndexAttributes where cID = -1');
+				AttributeKey::reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
+				
+				if ($index == false) {
+					Loader::library('database_indexed_search');
+					$index = new IndexedSearch();
+				}
+				
+				$index->reindexPage($this);
+				$db->Replace('PageSearchIndex', array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 0), array('cID'), false);
+			} else { 			
+				$db = Loader::db();
+				Config::save('DO_PAGE_REINDEX_CHECK', true);
+				$db->Replace('PageSearchIndex', array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 1), array('cID'), false);
 			}
-			
-			$index->reindexPage($this);
 		}
 		
 		public function getAttributeValueObject($ak, $createIfNotFound = false) {
