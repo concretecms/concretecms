@@ -9,8 +9,6 @@ $dh = Loader::helper('date');
 	
 ?>
 
-<h2><?=t('Add External Link')?></h2>
-
 	<form class="form-stacked" method="post" action="<?=$c->getCollectionAction()?>" id="ccmAddPage">		
 	
 	<div class="ccm-form-area">
@@ -35,7 +33,8 @@ $dh = Loader::helper('date');
 	<div class="ccm-spacer">&nbsp;</div>
 	</div>
 
-	<div class="ccm-buttons">
+	<div class="ccm-buttons dialog-buttons">
+	<input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" />
 	<a href="javascript:void(0)" onclick="$('#ccmAddPage').get(0).submit()" class="btn primary ccm-button-right accept"><span><?=t('Add')?></span></a>
 	</div>	
 	<input type="hidden" name="add_external" value="1" />
