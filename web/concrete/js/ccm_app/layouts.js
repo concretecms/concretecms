@@ -225,13 +225,14 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 		this.layoutWrapper.find('.ccm-block').each(function(i,el){
 			if(el.style.display!='none')  hasBlocks=1;													
 		})
-		var dialogHeight=(hasBlocks)?'110px':'50px';
+		var dialogHeight=(hasBlocks)?'135px':'70px';
 		
 		$.fn.dialog.open({
 			title: ccmi18n.deleteLayoutOptsTitle,
 			href:  CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(this.area) + '&layoutID=' + this.layout_id +  '&task=deleteOpts&hasBlocks='+hasBlocks,
 			width: '340px',
 			modal: false,
+			appendButtons: true,
 			height: dialogHeight
 		});	
 			
