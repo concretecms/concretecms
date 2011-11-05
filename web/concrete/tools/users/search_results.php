@@ -9,9 +9,10 @@ if (!$tp->canAccessUserSearch()) {
 $u = new User();
 $cnt = Loader::controller('/dashboard/users/search');
 $userList = $cnt->getRequestedSearchResults();
+$columns = $cnt->get('columns');
 
 $users = $userList->getPage();
 $pagination = $userList->getPagination();
 
 
-Loader::element('users/search_results', array('users' => $users, 'userList' => $userList, 'pagination' => $pagination));
+Loader::element('users/search_results', array('columns' => $columns, 'users' => $users, 'userList' => $userList, 'searchType' => $_REQUEST['searchType'], 'pagination' => $pagination));

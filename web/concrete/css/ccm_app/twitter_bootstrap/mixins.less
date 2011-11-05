@@ -18,6 +18,20 @@
 	}
 }
 
+.ccm-ui .clearfix {
+  zoom: 1;
+	&:before,
+  &:after {
+    display: table;
+    content: "";
+    zoom: 1;
+    *display: inline;
+	}
+	&:after {
+    clear: both;
+	}
+}
+
 // Center-align a block level element
 .center-block() {
 	display: block;

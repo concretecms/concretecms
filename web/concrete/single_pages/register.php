@@ -1,5 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<h1><?=t('Site Registration')?></h1>
+<div class="page-header">
+	<h1><?=t('Site Registration')?></h1>
+</div>
 <div class="ccm-form">
 
 <? 
@@ -29,60 +31,77 @@ if($success) {
 } else { ?>
 
 <form method="post" action="<?=$this->url('/register', 'do_register')?>">
-
-	<? if ($displayUserName) { ?>
-		<div>
-		<?=$form->label('uName', t('Username') )?>
-		<?=$form->text('uName')?>
+<div class="row">
+<div class="span8 columns">
+	<fieldset>
+		<legend>Your Details</legend>
+		<? if ($displayUserName) { ?>
+			<div class="clearfix">
+				<?= $form->label('uName',t('Username')); ?>
+				<div class="input">
+					<?= $form->text('uName'); ?>
+				</div>
+			</div>
+		<? } ?>
+	
+		<div class="clearfix">
+			<?php echo $form->label('uEmail',t('Email Address')); ?>
+			<div class="input">
+				<?php echo $form->text('uEmail'); ?>
+			</div>
 		</div>
-		<br/>
-	<? } ?>
-	
-	<div>
-	<?=$form->label('uEmail', t('Email Address') )?>
-	<?=$form->text('uEmail')?>
-	</div>
-	<br/>
-	
-	<div>
-	<?=$form->label('uPassword', t('Password') )?>
-	<?=$form->password('uPassword')?>
-	</div>
-	<br/>
+		<div class="clearfix">
+			<?php echo $form->label('uPassword',t('Password')); ?>
+			<div class="input">
+				<?php echo $form->password('uPassword'); ?>
+			</div>
+		</div>
+		<div class="clearfix">
+			<?php echo $form->label('uPasswordConfirm',t('Confirm Password')); ?>
+			<div class="input">
+				<?php echo $form->password('uPasswordConfirm'); ?>
+			</div>
+		</div>
 
-	<div>
-	<?=$form->label('uPasswordConfirm', t('Confirm Password') )?>
-	<?=$form->password('uPasswordConfirm')?>
-	</div>
-	<br/>
-	
+	</fieldset>
+</div>
+<div class="span8 columns">
+	<fieldset>
+		<legend><?=t('Options')?></legend>
 	<?
 	
 	$attribs = UserAttributeKey::getRegistrationList();
 	$af = Loader::helper('form/attribute');
 	
-	foreach($attribs as $ak) { 
-		print $af->display($ak, $ak->isAttributeKeyRequiredOnRegister());	
-		print '<br/><br/>';
-	}
+	foreach($attribs as $ak) { ?> 
+			<?= $af->display($ak, $ak->isAttributeKeyRequiredOnRegister());	?>
+	<? }?>
+	</fieldset>
+</div>
+<div class="span16 columns ">
+	<? if (ENABLE_REGISTRATION_CAPTCHA) { ?>
 	
-	if (ENABLE_REGISTRATION_CAPTCHA) { 
-		print $form->label('captcha', t('Please type the letters and numbers shown in the image.'));
-		print '<br/>';
-		$captcha = Loader::helper('validation/captcha');				
-		$captcha->display();
-		?>
+		<div class="clearfix">
+			<?=$form->label('captcha', t('Please type the letters and numbers shown in the image.')); ?>
+			<div class="input">
+				<?php $captcha = Loader::helper('validation/captcha');				
+					  $captcha->display();?> </br>
+				     <?php $captcha->showInput();?>  
+			</div>
+		</div>
+	
 		
-		<div><? $captcha->showInput();?> </div>
 	<? } ?>
-	
-	<br/>
-	
-	<div class="ccm-buttons">
-		<?=$form->submit('register', t('Register'))?>
-		<?=$form->hidden('rcID', $rcID); ?>
-	</div>
 
+</div>
+<div class="span16 columns">
+	<div class="actions">
+	<?=$form->hidden('rcID', $rcID); ?>
+	<?=$form->submit('register', t('Register') . ' &gt;', array('class' => 'primary'))?>
+	</div>
+</div>
+	
+</div>
 </form>
 <? } ?>
 

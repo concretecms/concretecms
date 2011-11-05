@@ -134,7 +134,7 @@ $(function() {
 <? } ?>
 
 	<div class="clear"></div>
-	<div class="ccm-search-bar" style="margin-right: 0px; margin-left: 0px">
+	<div class="ccm-search-bar">
 		<?=$form->text('fsAddToSearchName', $searchRequest['fsSearchName'], array('autocomplete' => 'off'))?>
 	</div>
 
@@ -181,7 +181,6 @@ $(function() {
 	
 <? } ?>
 
-<hr />
 
 <h3><?=t('Add to New Set')?></h3>
 

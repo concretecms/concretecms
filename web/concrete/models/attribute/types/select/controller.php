@@ -83,7 +83,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		if ($list->count() > 0) {
 			$av = $akn->addChild('value');
 			foreach($list as $l) {
-				$av->addChild('option', $l->__toString());
+				$av->addChild('option', (string) $l);
 			}
 		}
 	}
@@ -92,7 +92,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		if (isset($akv->value)) {
 			$vals = array();
 			foreach($akv->value->children() as $ch) {
-				$vals[] = $ch->__toString();
+				$vals[] = (string) $ch;
 			}
 			return $vals;
 		}

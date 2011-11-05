@@ -2,74 +2,17 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $section = 'groups';
 
-function checkExpirationOptions($g) {
-	if ($_POST['gUserExpirationIsEnabled']) {
-		$date = Loader::helper('form/date_time');
-		switch($_POST['gUserExpirationMethod']) {
-			case 'SET_TIME':
-				$g->setGroupExpirationByDateTime($date->translate('gUserExpirationSetDateTime'), $_POST['gUserExpirationAction']);
-				break;
-			case 'INTERVAL':
-				$g->setGroupExpirationByInterval($_POST['gUserExpirationIntervalDays'], $_POST['gUserExpirationIntervalHours'], $_POST['gUserExpirationIntervalMinutes'], $_POST['gUserExpirationAction']);
-				break;
-		}
-	} else {
-		$g->removeGroupExpiration();
-	}
-}
-
 $txt = Loader::helper('text');
 $ih = Loader::helper('concrete/interface');
 $valt = Loader::helper('validation/token');
 
-if ($_POST['add']) { 
-
-	$gName = $txt->sanitize($_POST['gName']);
-	$gDescription = $_POST['gDescription'];
-	
-	$error = array();
-	if (!$gName) {
-		$error[] = t("Name required.");
-	}
-	
-	if (!$valt->validate('add_or_update_group')) {
-		$error[] = $valt->getErrorMessage();
-	}
-	
-	$g1 = Group::getByName($gName);
-	if ($g1 instanceof Group) {
-		if ((!is_object($g)) || $g->getGroupID() != $g1->getGroupID()) {
-			$error[] = t('A group named "%s" already exists', $g1->getGroupName());
-		}
-	}
-	
-	if (count($error) == 0) {
-		if ($_POST['add']) {
-			$g = Group::add($gName, $_POST['gDescription']);
-			checkExpirationOptions($g);
-			$this->controller->redirect('/dashboard/users/groups?created=1');
-		} else if (is_object($g)) {
-			$g->update($gName, $_POST['gDescription']);
-			checkExpirationOptions($g);
-			$this->controller->redirect('/dashboard/users/groups?updated=1');
-		}	
-		
-		exit;
-	}
-}
-
-if ($_GET['created']) {
-	$message = t("Group Created.");
-} else if ($_GET['updated']) {
-	$message = t("Group Updated.");
-}
 $date = Loader::helper('form/date_time');
 $form = Loader::helper('form');
 
 ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Group'), false, false, false)?>
-<form method="post" id="add-group-form" action="<?=$this->url('/dashboard/users/add_group/')?>">
+<form method="post" id="add-group-form" action="<?=$this->url('/dashboard/users/add_group/', 'do_add')?>">
 <div class="ccm-pane-body">
 <?=$valt->output('add_or_update_group')?>
 <fieldset>
@@ -96,16 +39,16 @@ $form = Loader::helper('form');
 	<li>
 	<label>
 	<?=$form->checkbox('gUserExpirationIsEnabled', 1, false)?>
-	<span><?=t('Automatically remove users from this group')?>
-		
-	<?=$form->select("gUserExpirationMethod", array(
+	<span><?=t('Automatically remove users from this group')?></span></label>
+	
+	<div style="padding-left: 15px; padding-top: 10px; padding-bottom: 10px">
+		<?=$form->select("gUserExpirationMethod", array(
 		'SET_TIME' => t('at a specific date and time'),
 			'INTERVAL' => t('once a certain amount of time has passed')
 		
 	), array('disabled' => true));?>	
-	
+	</div>	
 
-	</span></label>
 	</li>
 </ul>
 </div>

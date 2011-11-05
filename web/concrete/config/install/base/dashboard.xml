@@ -30,6 +30,7 @@
         <page name="Inspect" path="/dashboard/pages/themes/inspect" filename="/dashboard/pages/themes/inspect.php" pagetype="" description="" package=""/>
         <page name="Customize" path="/dashboard/pages/themes/customize" filename="/dashboard/pages/themes/customize.php" pagetype="" description="" package=""/>
         <page name="Page Types" path="/dashboard/pages/types" filename="/dashboard/pages/types/view.php" pagetype="" description="What goes in your site." package=""/>
+		<page name="Add Page Type" path="/dashboard/pages/types/add" filename="/dashboard/pages/types/add.php" pagetype="" description="Add page types to your site." package=""/>
         <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php" pagetype="" description="" package=""/>
         <page name="Single Pages" path="/dashboard/pages/single" filename="/dashboard/pages/single.php" pagetype="" description="" package=""/>        
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype="" description="Manage sitewide content and administer block types." package="" />
@@ -82,14 +83,17 @@
 
         <page name="Optimization &amp; Maintenance" path="/dashboard/system/maintenance" filename="/dashboard/system/maintenance/view.php" pagetype="" description="Keep your site running well." package=""/>
         <page name="Cache &amp; Speed Settings" path="/dashboard/system/maintenance/cache" filename="/dashboard/system/maintenance/cache.php" pagetype="" description="" package=""/>
+        <page name="Clear Cache" path="/dashboard/system/maintenance/clear_cache" filename="/dashboard/system/maintenance/clear_cache.php" pagetype="" description="" package=""/>
         <page name="Automated Jobs" path="/dashboard/system/maintenance/jobs" filename="/dashboard/system/maintenance/jobs.php" pagetype="" description="" package=""/>
         <page name="Maintenance Mode" path="/dashboard/system/maintenance/mode" filename="/dashboard/system/maintenance/mode.php" pagetype="" description="" package=""/>
         <page name="Update concrete5" path="/dashboard/system/maintenance/update" filename="/dashboard/system/maintenance/update.php" pagetype="" description="" package=""/>
         <page name="Backup Database" path="/dashboard/system/maintenance/backup" filename="/dashboard/system/maintenance/backup.php" pagetype="" description="" package=""/>
+        <page name="File Storage Locations" path="/dashboard/system/maintenance/file_storage_locations" filename="/dashboard/system/maintenance/file_storage_locations.php" pagetype="" description="" package=""/>
 
         <page name="Permissions &amp; Access" path="/dashboard/system/permissions" filename="/dashboard/system/permissions/view.php" pagetype="" description="Control who sees and edits your site." package=""/>
         <page name="Site Access" path="/dashboard/system/permissions/site" filename="/dashboard/system/permissions/site.php" pagetype="" description="" package=""/>
         <page name="File Permissions" path="/dashboard/system/permissions/files" filename="/dashboard/system/permissions/file.php" pagetype="" description="" package=""/>
+        <page name="Allowed File Types" path="/dashboard/system/permissions/file_types" filename="/dashboard/system/permissions/file_types.php" pagetype="" description="" package=""/>
         <page name="Task Permissions" path="/dashboard/system/permissions/tasks" filename="/dashboard/system/permissions/tasks.php" pagetype="" description="" package=""/>
         <page name="IP Blacklist" path="/dashboard/system/permissions/ip_blacklist" filename="/dashboard/system/permissions/ip_blacklist.php" pagetype="" description="" package=""/>
 

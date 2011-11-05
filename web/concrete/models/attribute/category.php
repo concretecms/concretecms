@@ -138,7 +138,7 @@ class AttributeKeyCategory extends Object {
 		$db->Execute('delete from AttributeKeyCategories where akCategoryID = ?', $this->akCategoryID);		
 	}
 	
-	public function getList() {
+	public static function getList() {
 		$db = Loader::db();
 		$cats = array();
 		$r = $db->Execute('select akCategoryID from AttributeKeyCategories order by akCategoryID asc');

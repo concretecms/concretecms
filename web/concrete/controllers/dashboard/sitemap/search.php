@@ -66,6 +66,9 @@ class DashboardSitemapSearchController extends Controller {
 		$pageList->displayUnapprovedPages();
 
 		$pageList->sortBy('cDateModified', 'desc');
+
+		$columns = PageSearchColumnSet::getCurrent();
+		$this->set('columns', $columns);
 		
 		$cvName = htmlentities($req['cvName'], ENT_QUOTES, APP_CHARSET);
 		
@@ -139,6 +142,20 @@ class DashboardSitemapSearchController extends Controller {
 								$dateTo = date('Y-m-d', strtotime($dateTo));
 								$dateTo .= ' 23:59:59';								
 								$pageList->filterByPublicDate($dateTo, '<=');
+							}
+							break;
+						case "last_modified":
+							$dateFrom = $req['last_modified_from'];
+							$dateTo = $req['last_modified_to'];
+							if ($dateFrom != '') {
+								$dateFrom = date('Y-m-d', strtotime($dateFrom));
+								$pageList->filterByDateLastModified($dateFrom, '>=');
+								$dateFrom .= ' 00:00:00';
+							}
+							if ($dateTo != '') {
+								$dateTo = date('Y-m-d', strtotime($dateTo));
+								$dateTo .= ' 23:59:59';								
+								$pageList->filterByDateLastModified($dateTo, '<=');
 							}
 							break;
 						case "date_added":

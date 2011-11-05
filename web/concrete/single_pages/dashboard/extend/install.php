@@ -10,7 +10,23 @@ if ($tp->canInstallPackages()) {
 $pkgArray = Package::getInstalledList();?>
 
 <?
-if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) { ?>
+if ($this->controller->getTask() == 'install_package' && $showInstallNotes && $tp->canInstallPackages()) { ?>
+
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Install %s', $pkg->getPackageName()), false, 'span12 offset2', false);?>
+<form method="post" action="<?=$this->action('install_package', $pkg->getPackageHandle())?>">
+<?=Loader::helper('validation/token')->output('install_options_selected')?>
+<div class="ccm-pane-body">
+<?=Loader::packageElement('dashboard/install', $pkg->getPackageHandle())?>
+</div>
+<div class="ccm-pane-footer">
+	<a href="<?=$this->url('/dashboard/extend/install')?>" class="btn"><?=t('Cancel')?></a>
+	<input type="submit" value="<?=t('Install %s', $pkg->getPackageName())?>" class="btn primary ccm-button-right" />
+</div>
+</form>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false); ?>
+
+
+<? } else if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) { ?>
 <?
 	$removeBTConfirm = t('This will remove all elements associated with the %s package. This cannot be undone. Are you sure?', $pkg->getPackageHandle());
 ?>
@@ -54,7 +70,7 @@ if ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) 
 		
 </div>
 <div class="ccm-pane-footer">
-<? print $ch->submit(t('Uninstall Package'), 'ccm-uninstall-form', '', 'error'); ?>
+<? print $ch->submit(t('Uninstall Package'), 'ccm-uninstall-form', 'right', 'error'); ?>
 <? print $ch->button(t('Cancel'), $this->url('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()), ''); ?>
 </div>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>

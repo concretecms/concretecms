@@ -4,6 +4,8 @@ global $c;
 
 ?>
 
+<div class="ccm-ui">
+
 <form method="post" id="ccmSpeedSettingsForm" action="<?=$c->getCollectionAction()?>">
 
 	<script type="text/javascript"> 
@@ -148,6 +150,7 @@ global $c;
 	<input type="hidden" name="update_speed_settings" value="1" />
 	<input type="hidden" name="processCollection" value="1">
 </form>
+</div>
 
 	<div class="dialog-buttons">
 	<a href="javascript:void(0)" class="btn primary" onclick="$('#ccmSpeedSettingsForm').submit()"><?=t('Save')?></a>

@@ -1,8 +1,8 @@
 <? 
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
-	<h1><?=t('Set Area Permissions')?></h1>
 
+<br/>
 	<?
 	if ($cp->canAdminPage() && is_object($a)) {
 		$ax = $a;
@@ -68,8 +68,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				row2.className = rowValue.replace(":","_");
 				row3.className = rowValue.replace(":","_");
 				
-				row1Cell = document.createElement("TH");
-				row1Cell.innerHTML = '<a href="javascript:removePermissionRow(\'' + rowValue.replace(':','_') + '\',\'' + rowText + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12" style="float: right" ></a>' + rowText;
+				row1Cell = document.createElement("TD");
+				row1Cell.innerHTML = '<h4><a href="javascript:removePermissionRow(\'' + rowValue.replace(':','_') + '\',\'' + rowText + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12" style="float: right" ></a>' + rowText + "</h4>";
 				row1Cell.colSpan = 7;
 				row1Cell.className =  'ccm-permissions-header';
 				row1.appendChild(row1Cell);
@@ -107,7 +107,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				row3Cell2.width = '100%';
 				row3Cell2.innerHTML = '<div style="width: 460px;">';
 				<? foreach ($btArray as $bt) { ?>
-					row3Cell2.innerHTML += '<div style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="' + rowValue + '" />&nbsp;<?=htmlspecialchars($bt->getBlockTypeName(), ENT_QUOTES, APP_CHARSET)?></div>';
+					row3Cell2.innerHTML += '<div style="white-space: nowrap; float: left; width: 130px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="' + rowValue + '" />&nbsp;<?=htmlspecialchars($bt->getBlockTypeName(), ENT_QUOTES, APP_CHARSET)?></div>';
 				<? } ?>		
 				row3Cell2.innerHTML += '</div>';
 			}
@@ -131,8 +131,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				row2.className = rowValue.replace(":","_");
 				row3.className = rowValue.replace(":","_");
 				
-				row1Cell = document.createElement("TH");
-				row1Cell.innerHTML = '<a href="javascript:removePermissionRow(\'' + rowValue.replace(':','_') + '\',\'' + rowText + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12" style="float: right" ></a>' + rowText;
+				row1Cell = document.createElement("TD");
+				row1Cell.innerHTML = '<h4><a href="javascript:removePermissionRow(\'' + rowValue.replace(':','_') + '\',\'' + rowText + '\')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12" style="float: right" ></a>' + rowText + '</h4>';
 				row1Cell.colSpan = 7;
 				row1Cell.className =  'ccm-permissions-header';
 				row1.appendChild(row1Cell);
@@ -170,7 +170,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				row3Cell2.width = '100%';
 				row3Cell2.innerHTML = '<div style="width: 460px;">';
 				<? foreach ($btArray as $bt) { ?>
-					row3Cell2.innerHTML += '<div style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="' + rowValue + '" />&nbsp;<?=htmlspecialchars($bt->getBlockTypeName(), ENT_QUOTES, APP_CHARSET)?></div>';
+					row3Cell2.innerHTML += '<div style="white-space: nowrap; float: left; width: 130px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="' + rowValue + '" />&nbsp;<?=htmlspecialchars($bt->getBlockTypeName(), ENT_QUOTES, APP_CHARSET)?></div>';
 				<? } ?>		
 				row3Cell2.innerHTML += '</div>';
 				
@@ -216,6 +216,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			
 		</script>
+		
+<div class="ccm-ui">
 
 <form method="post" name="permissionForm" action="<?=$ax->getAreaUpdateAction()?>">
 	<? 
@@ -224,31 +226,36 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		$areac = Page::getByID($a->getAreaCollectionInheritID());
 		?>
 		
+
+		<div class="block-message alert-message notice">
 		<p>
 		<?=t("The following area permissions are inherited from an area set on ")?>
 		<a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$areac->getCollectionID()?>"><?=$areac->getCollectionName()?></a>. 
 		<?=t("To change them everywhere, edit this area on that page. To override them here and on all sub-pages, edit below.")?>
 		</p>
-
+		</div>
+		
 <? 	} else if (!$a->overrideCollectionPermissions()) { ?>
 
+	<div class="block-message alert-message notice">
+	<p>
 	<?=t("The following area permissions are inherited from the page's permissions. To override them, edit below.")?>
-
+	</p>
+	</div>
+	
 <? } else { ?>
 
-	<span class="ccm-important">
-		<?=t("Permissions for this area currently override those of the page. To revert to the page's permissions, click <strong>revert to page permissions</strong> below.")?>
-		<br/><br/>
-	</span>
+	<div class="block-message alert-message notice">
+	<p><?=t("Permissions for this area currently override those of the page. To revert to the page's permissions, click <strong>revert to page permissions</strong> below.")?></p>
+	</div>
 
 <? } ?>
-
-	<div class="ccm-buttons" style="margin-bottom: 10px"> 
-		<a dialog-modal="false" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-width="90%" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="70%" class="dialog-launch ccm-button-right"><span><em class="ccm-button-add"><?=t('Add Group or User')?></em></span></a>
+	
+	<div class="clearfix">
+	<a dialog-modal="false" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-width="90%" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="70%" class="btn dialog-launch ccm-button-right"><?=t('Add Group or User')?></a>
 	</div>
-	<div class="ccm-spacer">&nbsp;</div><br/>
-
-	<table id="ccmPermissionsTableArea" border="0" cellspacing="0" cellpadding="0" class="ccm-grid" style="width: 100%">
+	
+	<table id="ccmPermissionsTableArea" border="0" cellspacing="0" cellpadding="0" style="width: 100%">
 		<? 
 		
 		$rowNum = 1;
@@ -260,10 +267,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if ($display) { ?>
 	
 				<tr class="gID_<?=$g->getGroupID()?>" id="_row_gID_<?=$g->getGroupID()?>">
-				<th colspan="7" style="text-align: left; white-space: nowrap"><? if ($g->getGroupID() != GUEST_GROUP_ID && $g->getGroupID() != REGISTERED_GROUP_ID) { ?>    
+				<td colspan="7" style="text-align: left; white-space: nowrap"><? if ($g->getGroupID() != GUEST_GROUP_ID && $g->getGroupID() != REGISTERED_GROUP_ID) { ?>    
 							<a href="javascript:removePermissionRow('gID_<?=$g->getGroupID()?>', '<?=$g->getGroupName()?>')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12" style="float: right" ></a>
 						<? } ?>
-						<?=$g->getGroupName()?></th>		
+						<h4><?=$g->getGroupName()?></h4></td>		
 				</tr>
 				<tr class="gID_<?=$g->getGroupID()?>">
 				<td valign="top" style="text-align: center"><strong><?=t('Read')?></strong></td>
@@ -279,7 +286,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				<td colspan="6" width="100%">
 				<div style="width: 460px;">
 					<? foreach ($btArray as $bt) { ?>
-						<span style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="gID:<?=$g->getGroupID()?>"<? if ($bt->canAddBlock($g)) { ?> checked<? } ?>>&nbsp;<?=$bt->getBlockTypeName()?></span>		
+						<span style="white-space: nowrap; float: left; width: 130px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="gID:<?=$g->getGroupID()?>"<? if ($bt->canAddBlock($g)) { ?> checked<? } ?>>&nbsp;<?=$bt->getBlockTypeName()?></span>		
 					<? } ?>
 				</div>
 				</td>
@@ -293,10 +300,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		foreach ($ulArray as $ui) { ?>
 	
 			<tr id="_row_uID_<?=$ui->getUserID()?>" class="uID_<?=$ui->getUserID()?> no-bg">
-				<th colspan="7" style="text-align: left; white-space: nowrap">
+				<td colspan="7" style="text-align: left; white-space: nowrap">
 					<a href="javascript:removePermissionRow('uID_<?=$ui->getUserID()?>')"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" width="12" height="12" style="float: right"></a>
-					<?=$ui->getUserName()?>
-				</th>		
+					<h4><?=$ui->getUserName()?></h4>
+				</td>
 			</tr>
 			<tr class="uID_<?=$ui->getUserID()?>" >
 				<td valign="top" style="text-align: center"><strong><?=t('Read')?></strong></td>
@@ -312,7 +319,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				<td colspan="6" width="100%">
 				<div style="width: 460px;">
 					<? foreach ($btArray as $bt) { ?>
-						<span style="white-space: nowrap; float: left; width: 80px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="uID:<?=$ui->getUserID()?>"<? if ($bt->canAddBlock($ui)) { ?> checked<? } ?>>&nbsp;<?=$bt->getBlockTypeName()?></span>
+						<span style="white-space: nowrap; float: left; width: 130px; margin-right: 20px"><input type="checkbox" name="areaAddBlockType[<?=$bt->getBlockTypeID()?>][]" value="uID:<?=$ui->getUserID()?>"<? if ($bt->canAddBlock($ui)) { ?> checked<? } ?>>&nbsp;<?=$bt->getBlockTypeName()?></span>
 					<? } ?>
 				</div>
 				</td>
@@ -326,14 +333,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	
 	<input type="hidden" name="aRevertToPagePermissions" id="aRevertToPagePermissions" value="0" />
 
-	<div class="ccm-buttons">
+	<div class="dialog-buttons">
 	<? if ($a->overrideCollectionPermissions()) { ?>
-		<a href="javascript:void(0)" onclick="$('#aRevertToPagePermissions').val(1);$('form[name=permissionForm]').get(0).submit()" class="ccm-button-left cancel"><span><?=t('Revert to Page Permissions')?></span></a>
+		<a href="javascript:void(0)" onclick="$('#aRevertToPagePermissions').val(1);$('form[name=permissionForm]').get(0).submit()" class="ccm-button-left btn"><?=t('Revert to Page Permissions')?></a>
 	<? } ?>
-		<a href="javascript:void(0)" onclick="$('form[name=permissionForm]').get(0).submit()" class="ccm-button-right accept"><span><?=t('Update')?></span></a>
+		<a href="javascript:void(0)" onclick="$('form[name=permissionForm]').get(0).submit()" class="ccm-button-right accept primary btn"><?=t('Update')?></a>
 	</div>
-	<div class="ccm-spacer">&nbsp;</div> 
 
 </form>
+</div>
 
 <? } ?>
