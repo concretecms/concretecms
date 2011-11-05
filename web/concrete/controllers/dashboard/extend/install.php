@@ -90,7 +90,7 @@ class DashboardExtendInstallController extends Controller {
 			$p = Loader::package($package);
 			if (is_object($p)) {
 				if (
-					(!$p->hasInstallNotes()) ||
+					(!$p->showInstallOptionsScreen()) ||
 					Loader::helper('validation/token')->validate('install_options_selected')
 				) {
 					$tests = Package::testForInstall($package);
@@ -99,18 +99,22 @@ class DashboardExtendInstallController extends Controller {
 						$this->set('error', $tests);
 					} else {
 						try {
+							$u = new User();
 							$p->install($this->post());
+							if ($u->isSuperUser() && $p->allowsFullContentSwap() && $this->post('pkgDoFullContentSwap')) { 
+								$p->swapContent($this->post());
+							}
 							$this->set('message', t('The package has been installed.'));
 						} catch(Exception $e) {
-							if ($p->hasInstallNotes()) {
-								$this->set('showInstallNotes', true);
+							if ($p->showInstallOptionsScreen()) {
+								$this->set('showInstallOptionsScreen', true);
 								$this->set('pkg', $p);
 							}
 							$this->set('error', $e);
 						}
 					}
 				} else {
-					$this->set('showInstallNotes', true);
+					$this->set('showInstallOptionsScreen', true);
 					$this->set('pkg', $p);
 				}
 			}
