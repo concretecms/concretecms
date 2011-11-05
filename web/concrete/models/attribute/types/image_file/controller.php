@@ -39,7 +39,8 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 	
 	public function importValue(SimpleXMLElement $akv) {
 		if (isset($akv->value->fID)) {
-			$fID = ContentImporter::getValue($akv->value->fID->__toString());
+			$fIDVal = (string) $akv->value->fID;
+			$fID = ContentImporter::getValue($fIDVal);
 			if ($fID) {
 				return File::getByID($fID);
 			}

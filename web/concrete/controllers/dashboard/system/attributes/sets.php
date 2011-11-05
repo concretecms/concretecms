@@ -1,18 +1,37 @@
-<?
+<?php defined('C5_EXECUTE') or die('Access Denied');
 
-Loader::controller('/dashboard/base');
-class DashboardSystemAttributeSetsController extends DashboardBaseController {
+class DashboardSystemAttributesSetsController extends DashboardBaseController {
 	
-	public $helpers = array('form');
-	protected $category;
+	public $category;
 	
-	public function view($categoryID = false, $mode = false) {
+	public function view() {
+		$this->set('categories', AttributeKeyCategory::getList());
+	}
+	
+	public function category($categoryID = false, $mode = false) {
+		$this->addFooterItem('<script type="text/javascript">
+		$("div.ccm-attribute-sortable-set-list").sortable({
+			handle: \'img.ccm-group-sort\',
+			cursor: \'move\',
+			opacity: 0.5,
+			stop: function() {
+				var ualist = $(this).sortable(\'serialize\');
+				ualist += \'&categoryID='.$categoryID.'\';
+				$.post(\''.REL_DIR_FILES_TOOLS_REQUIRED.'/dashboard/attribute_set_order_update\', ualist, function(r) {
+	
+				});
+			}
+		});
+	</script>');
+		if(!intval($categoryID)) {
+			$this->redirect('/dashboard/system/attributes/sets');
+		}
 		$this->category = AttributeKeyCategory::getByID($categoryID);
 		if (is_object($this->category)) {
 			$sets = $this->category->getAttributeSets();
 			$this->set('sets', $sets);
 		} else {
-			$this->redirect('/dashboard/system');
+			$this->redirect('/dashboard/system/attributes/sets');
 		}
 		$this->set('categoryID', $categoryID);
 		switch($mode) {
@@ -29,8 +48,8 @@ class DashboardSystemAttributeSetsController extends DashboardBaseController {
 	}
 
 	public function add_set() {
-		$this->view($this->post('categoryID'));
-		if (Loader::helper('validation/token')->validate('add_set')) { 
+		$this->category($this->post('categoryID'));
+		if ($this->token->validate('add_set')) { 
 			if (!trim($this->post('asHandle'))) { 
 				$this->error->add(t("Specify a handle for your attribute set."));
 			} else {
@@ -48,16 +67,16 @@ class DashboardSystemAttributeSetsController extends DashboardBaseController {
 				}
 				
 				$this->category->addSet($this->post('asHandle'), $this->post('asName'), false, 0);
-				$this->redirect('dashboard/system/attribute_sets', $this->category->getAttributeKeyCategoryID(), 'set_added');
+				$this->redirect('dashboard/system/attributes/sets', 'category', $this->category->getAttributeKeyCategoryID(), 'set_added');
 			}
 			
 		} else {
-			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
+			$this->error->add($this->token->getErrorMessage());
 		}
 	}
 	
 	public function update_set() {
-		if (Loader::helper('validation/token')->validate('update_set')) { 
+		if ($this->token->validate('update_set')) { 
 			$as = AttributeSet::getByID($this->post('asID'));
 			if (!is_object($as)) {
 				$this->error->add(t('Invalid attribute set.'));
@@ -80,16 +99,16 @@ class DashboardSystemAttributeSetsController extends DashboardBaseController {
 					$as->updateAttributeSetHandle($this->post('asHandle'));
 				}
 				$as->updateAttributeSetName($this->post('asName'));
-				$this->redirect('dashboard/system/attribute_sets', $as->getAttributeSetKeyCategoryID(), 'set_updated');
+				$this->redirect('dashboard/system/attributes/sets', 'category', $as->getAttributeSetKeyCategoryID(), 'set_updated');
 			}
 			
 		} else {
-			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
+			$this->error->add($this->token->getErrorMessage());
 		}
 	}
 	
 	public function update_set_attributes() {
-		if (Loader::helper('validation/token')->validate('update_set_attributes')) { 
+		if ($this->token->validate('update_set_attributes')) { 
 			$as = AttributeSet::getByID($this->post('asID'));
 			if (!is_object($as)) {
 				$this->error->add(t('Invalid attribute set.'));
@@ -107,17 +126,17 @@ class DashboardSystemAttributeSetsController extends DashboardBaseController {
 						}
 					}
 				}
-				$this->redirect('dashboard/system/attribute_sets', $cat->getAttributeKeyCategoryID(), 'set_updated');
+				$this->redirect('dashboard/system/attributes/sets', 'category', $cat->getAttributeKeyCategoryID(), 'set_updated');
 			}	
 			
 		} else {
-			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
+			$this->error->add($this->token->getErrorMessage());
 		}
 		$this->edit($this->post('asID'));
 	}
 	
 	public function delete_set() {
-		if (Loader::helper('validation/token')->validate('delete_set')) { 
+		if ($this->token->validate('delete_set')) { 
 			$as = AttributeSet::getByID($this->post('asID'));
 			if (!is_object($as)) {
 				$this->error->add(t('Invalid attribute set.'));
@@ -128,10 +147,10 @@ class DashboardSystemAttributeSetsController extends DashboardBaseController {
 			if (!$this->error->has()) {
 				$categoryID = $as->getAttributeSetKeyCategoryID();
 				$as->delete();
-				$this->redirect('dashboard/system/attribute_sets', $categoryID, 'set_deleted');
+				$this->redirect('dashboard/system/attributes/sets', 'category', $categoryID, 'set_deleted');
 			}			
 		} else {
-			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
+			$this->error->add($this->token->getErrorMessage());
 		}
 	}
 	
@@ -142,7 +161,7 @@ class DashboardSystemAttributeSetsController extends DashboardBaseController {
 		if (is_object($as)) {
 			$this->set('set', $as);
 		} else {
-			$this->redirect('/dashboard/system');
+			$this->redirect('/dashboard/system/attributes/sets');
 		}
 	}
 	

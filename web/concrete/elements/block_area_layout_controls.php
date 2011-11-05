@@ -13,8 +13,12 @@
 	<div id="ccm-layout-controls-slider-<?=intval($layout->cvalID) ?>" class="ccm-layout-controls-slider ccm-slider ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"></div>
 
 	<script type="text/javascript">
-	<? if( intval($layout->cvalID) ){ ?>var<? } ?> ccmLayout<?=intval($layout->cvalID) ?> = new ccmLayout( <?=intval($layout->cvalID) ?>, <?=intval($layout->layoutID) ?>, "<?= $layout->getAreaHandle() ?>", <?=intval($layout->locked) ?> );
-	$(function(){  ccmLayout<?=intval($layout->cvalID) ?>.init(); });
+	
+	$(function(){ 
+		<? if( intval($layout->cvalID) ){ ?>var<? } ?> ccmLayout<?=intval($layout->cvalID) ?> = new ccmLayout( <?=intval($layout->cvalID) ?>, <?=intval($layout->layoutID) ?>, "<?= $layout->getAreaHandle() ?>", <?=intval($layout->locked) ?> );
+		ccmLayout<?=intval($layout->cvalID) ?>.init(); 
+		
+	});
 	</script>
 	
 </div>

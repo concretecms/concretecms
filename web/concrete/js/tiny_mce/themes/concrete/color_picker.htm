@@ -5,8 +5,8 @@
 	<script type="text/javascript" src="../../tiny_mce_popup.js"></script>
 	<script type="text/javascript" src="../../utils/mctabs.js"></script>
 	<script type="text/javascript" src="js/color_picker.js"></script>
-   	<style type="text/css">@import "../../../../css/ccm.dialog.css";</style>
-    <style type="text/css">@import "../../../../css/ccm.forms.css";</style>
+	<style type="text/css">@import "../../../../css/ccm.app.css";</style>
+	<style type="text/css">@import "../../../../css/ccm.tinymce.css";</style>
 </head>
 <body id="colorpicker" style="display: none">
 <form onsubmit="insertAction();return false" action="#">
@@ -25,8 +25,8 @@
 		</div>
 	</div>
 
-	<div class="mceActionPanel">
-		<input type="submit" class="ccm-button-v2" id="insert" name="insert" value="{#apply}" />
+	<div class="mceActionPanel ccm-ui">
+		<input type="submit" class="btn" id="insert" name="insert" value="{#apply}" />
 
 		<div id="preview"></div>
 

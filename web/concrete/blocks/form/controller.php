@@ -40,14 +40,14 @@ class FormBlockController extends BlockController {
 		if (isset($blockNode->data)) {
 			foreach($blockNode->data as $data) {
 				if ($data['table'] != $this->getBlockTypeDatabaseTable()) {
-					$table = $data['table']->__toString();
+					$table = (string) $data['table'];
 					if (isset($data->record)) {
 						foreach($data->record as $record) {
 							$aar = new ADODB_Active_Record($table);
 							$aar->bID = $b->getBlockID();
 							foreach($record->children() as $node) {
 								$nodeName = $node->getName();
-								$aar->{$nodeName} = $node->__toString();
+								$aar->{$nodeName} = (string) $node;
 							}
 							if ($table == 'btFormQuestions') {
 								$db = Loader::db();

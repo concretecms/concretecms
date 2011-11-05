@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $dh = Loader::helper('concrete/dashboard');
 
-echo $dh->getDashboardPaneHeaderWrapper(t('Pretty URLs'), t("Automatically translates your path-based concrete5 URLs so that they don't include %s.", DISPATCHER_FILENAME), 'span9 offset3', false);
+echo $dh->getDashboardPaneHeaderWrapper(t('Pretty URLs'), t("Automatically translates your path-based concrete5 URLs so that they don't include %s.", DISPATCHER_FILENAME), 'span8 offset4', false);
 ?>
 
 <form method="post" action="<?php echo $this->action('update_rewriting'); ?>">

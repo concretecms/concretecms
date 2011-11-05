@@ -4,8 +4,8 @@
 	<title>{#advanced_dlg.anchor_title}</title>
 	<script type="text/javascript" src="../../tiny_mce_popup.js"></script>
 	<script type="text/javascript" src="js/anchor.js"></script>
-   	<style type="text/css">@import "../../../../css/ccm.dialog.css";</style>
-    <style type="text/css">@import "../../../../css/ccm.forms.css";</style>
+	<style type="text/css">@import "../../../../css/ccm.app.css";</style>
+	<style type="text/css">@import "../../../../css/ccm.tinymce.css";</style>
 	<base target="_self" />
 </head>
 <body style="display: none">
@@ -20,9 +20,9 @@
 		</tr>
 	</table>
 
-	<div class="mceActionPanel">
-		<input type="submit" id="insert" name="insert" class="ccm-button-v2" style="float: right" value="{#update}" />
-		<input type="button" id="cancel" name="cancel" class="ccm-button-v2"  value="{#cancel}" onclick="tinyMCEPopup.close();" />
+	<div class="mceActionPanel ccm-ui">
+		<input type="submit" id="insert" name="insert" class="btn" style="float: right" value="{#update}" />
+		<input type="button" id="cancel" name="cancel" class="btn"  value="{#cancel}" onclick="tinyMCEPopup.close();" />
 	</div>
 </form>
 </body>

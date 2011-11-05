@@ -27,6 +27,11 @@ class ConcreteUpgradeVersion550Helper {
 			$db->Execute('alter table Pages add column cIsSystemPage tinyint(1) not null default 0');
 			$db->Execute('alter table Pages add index (cIsSystemPage)');
 		}
+		$columns = $db->MetaColumns('PageSearchIndex');
+		if (!isset($columns['CREQUIRESREINDEX'])) {
+			$db->Execute('alter table PageSearchIndex add column cRequiresReindex tinyint(1) not null default 0');
+			$db->Execute('alter table PageSearchIndex add index (cRequiresReindex)');
+		}
 	}
 	
 	public function prepare() {

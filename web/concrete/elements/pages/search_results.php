@@ -40,7 +40,7 @@ if (isset($_REQUEST['searchInstance'])) {
 			<option value="design"><?=t('Design')?></option>
 			<option value="delete"><?=t('Delete')?></option>
 		</select>	
-		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-search-add-column"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Customize Results')?></a>
+		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-list-view-customize"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Customize Results')?></a>
 	</div>
 
 <?
@@ -58,21 +58,17 @@ if (isset($_REQUEST['searchInstance'])) {
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-<?=$searchInstance?>-list" class="ccm-results-list">
 		<tr>
 			<? if (!$searchDialog) { ?><th><input id="ccm-<?=$searchInstance?>-list-cb-all" type="checkbox" /></th><? } ?>
-			<th><?=t('Type')?></th>
-
-			<th class="ccm-page-list-name <?=$pageList->getSearchResultsClass('cvName')?>"><a href="<?=$pageList->getSortByURL('cvName', 'asc', $bu, $soargs)?>"><?=t('Name')?></a></th>
-			<th class="<?=$pageList->getSearchResultsClass('cvDatePublic')?>"><a href="<?=$pageList->getSortByURL('cvDatePublic', 'asc', $bu, $soargs)?>"><?=t('Public Date')?></a></th>
-			<th class="<?=$pageList->getSearchResultsClass('cDateModified')?>"><a href="<?=$pageList->getSortByURL('cDateModified', 'asc', $bu, $soargs)?>"><?=t('Date Modified')?></a></th>
-			<th><?=t('Owner')?></th>
 			<? if ($pageList->isIndexedSearch()) { ?>
 				<th class="<?=$pageList->getSearchResultsClass('cIndexScore')?>"><a href="<?=$pageList->getSortByURL('cIndexScore', 'desc', $bu, $soargs)?>"><?=t('Score')?></a></th>
 			<? } ?>
+			<? foreach($columns->getColumns() as $col) { ?>
+				<? if ($col->isColumnSortable()) { ?>
+					<th class="<?=$pageList->getSearchResultsClass($col->getColumnKey())?>"><a href="<?=$pageList->getSortByURL($col->getColumnKey(), $col->getColumnDefaultSortDirection(), $bu, $soargs)?>"><?=$col->getColumnName()?></a></th>
+				<? } else { ?>
+					<th><?=$col->getColumnName()?></th>
+				<? } ?>
+			<? } ?>
 
-			<? 
-			$slist = CollectionAttributeKey::getColumnHeaderList();
-			foreach($slist as $ak) { ?>
-				<th class="<?=$pageList->getSearchResultsClass($ak)?>"><a href="<?=$pageList->getSortByURL($ak, 'asc', $bu, $soargs)?>"><?=$ak->getAttributeKeyDisplayHandle()?></a></th>
-			<? } ?>			
 		</tr>
 	<?
 		foreach($pages as $cobj) {
@@ -86,31 +82,17 @@ if (isset($_REQUEST['searchInstance'])) {
 			?>
 			<tr class="ccm-list-record <?=$striped?>" cName="<?=htmlentities($cobj->getCollectionName(), ENT_QUOTES, APP_CHARSET)?>" cID="<?=$cobj->getCollectionID()?>" sitemap-select-callback="<?=$sitemap_select_callback?>" sitemap-select-mode="<?=$sitemap_select_mode?>" sitemap-instance-id="<?=$searchInstance?>" sitemap-display-mode="search" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
 			<? if (!$searchDialog) { ?><td class="ccm-<?=$searchInstance?>-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td><? } ?>
-			<td><?=$cobj->getCollectionTypeName()?></td>
-			<td class="ccm-page-list-name"><div style="max-width: 150px; word-wrap: break-word"><?=$txt->highlightSearch($cobj->getCollectionName(), $keywords)?></div></td>
-			<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES, strtotime($cobj->getCollectionDatePublic()))?></td>
-			<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES, strtotime($cobj->getCollectionDateLastModified()))?></td>
-			<td><?
-				$ui = UserInfo::getByID($cobj->getCollectionUserID());
-				if (is_object($ui)) {
-					print $ui->getUserName();
-				}
-			?></td>
-			<? if ($pageList->isIndexedSearch()) { ?>
-				<td><?=$cobj->getPageIndexScore()?></td>
+
+
+
+			<? foreach($columns->getColumns() as $col) { ?>
+				<? if ($col->getColumnKey() == 'cvName') { ?>
+					<td class="ccm-page-list-name"><?=$txt->highlightSearch($cobj->getCollectionName(), $keywords)?></td>		
+				<? } else { ?>
+					<td><?=$col->getColumnValue($cobj)?></td>
+				<? } ?>
 			<? } ?>
-			
-			<? 
-			$slist = CollectionAttributeKey::getColumnHeaderList();
-			foreach($slist as $ak) { ?>
-				<td><?
-				$vo = $cobj->getAttributeValueObject($ak);
-				if (is_object($vo)) {
-					print $vo->getValue('display');
-				}
-				?></td>
-			<? } ?>		
-			
+
 			</tr>
 			<?
 		}

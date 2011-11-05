@@ -2,7 +2,7 @@
 <div class="ccm-pane-header">
 <?
 	if (!isset($close)) {
-		$close = 'ccm_hidePane';
+		$close = 'jQuery.fn.dialog.closeTop();';
 	}
 ?>
 

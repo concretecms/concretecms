@@ -34,7 +34,7 @@ if (isset($_REQUEST['searchInstance'])) {
 			<option value="duplicate"><?=t('Copy')?></option>
 			<option value="delete"><?=t('Delete')?></option>
 		</select>	
-		<? if ($_REQUEST['fssID'] < 1) { ?><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-search-add-column"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Customize Results')?></a><? } ?>
+		<? if ($_REQUEST['fssID'] < 1) { ?><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-list-view-customize"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Customize Results')?></a><? } ?>
 	</div>
 
 <?
@@ -57,7 +57,7 @@ if (isset($_REQUEST['searchInstance'])) {
 				<? if ($col->isColumnSortable()) { ?>
 					<th class="<?=$fileList->getSearchResultsClass($col->getColumnKey())?>"><a href="<?=$fileList->getSortByURL($col->getColumnKey(), $col->getColumnDefaultSortDirection(), $bu, $soargs)?>"><?=$col->getColumnName()?></a></th>
 				<? } else { ?>
-					<th><?=t('Type')?></th>
+					<th><?=$col->getColumnName()?></th>
 				<? } ?>
 			<? } ?>
 		</tr>

@@ -120,11 +120,12 @@ ccm_setupInPagePaginationAndSorting = function(searchType) {
 }
 
 ccm_setupSortableColumnSelection = function(searchType) {
-	$("#ccm-search-add-column").unbind();
-	$("#ccm-search-add-column").click(function() {
+	$("#ccm-list-view-customize").unbind();
+	$("#ccm-list-view-customize").click(function() {
 		jQuery.fn.dialog.open({
 			width: 550,
 			height: 350,
+			appendButtons: true,
 			modal: false,
 			href: $(this).attr('href'),
 			title: ccmi18n.customizeSearch				

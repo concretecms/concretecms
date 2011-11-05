@@ -38,14 +38,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	 	
 	 	public function importValue(SimpleXMLElement $akv) {
 			if (isset($akv->value)) {
-				return $akv->value->__toString();
+				return (string) $akv->value;
 			}
 	 	}
 	 	
 	 	public function exportValue(SimpleXMLElement $akv) {
 			$val = $this->attributeValue->getValue();
 			if (is_object($val)) {
-				$val = $val->__toString();
+				$val = (string) $val;
 			}
 			$av = $akv->addChild('value', '<![CDATA[' . $val . ']]>');
 	 		return $av;

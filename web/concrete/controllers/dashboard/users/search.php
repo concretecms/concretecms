@@ -25,6 +25,9 @@ class DashboardUsersSearchController extends Controller {
 		$userList->showInactiveUsers = true;
 		$userList->showInvalidatedUsers = true;
 		
+		$columns = UserSearchColumnSet::getCurrent();
+		$this->set('columns', $columns);
+
 		if ($_GET['keywords'] != '') {
 			$userList->filterByKeywords($_GET['keywords']);
 		}	
