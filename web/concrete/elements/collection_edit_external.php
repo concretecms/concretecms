@@ -9,8 +9,6 @@ $dh = Loader::helper('date');
 if ($c->isAlias() && $c->getCollectionPointerExternalLink() != '') {
 ?>
 
-<h2><?=t('Edit External Link')?></h2>
-
 	<form class="form-stacked" method="post" action="<?=$c->getCollectionAction()?>" id="ccmEditLink">		
 	
 	<div class="ccm-form-area">
@@ -35,7 +33,8 @@ if ($c->isAlias() && $c->getCollectionPointerExternalLink() != '') {
 	</div>
 
 
-	<div class="ccm-buttons">
+	<div class="ccm-buttons dialog-buttons">
+	<input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" />
 	<a href="javascript:void(0)" onclick="$('#ccmEditLink').get(0).submit()" class="btn primary ccm-button-right accept"><span><?=('Save')?></span></a>
 	</div>	
 	<input type="hidden" name="update_external" value="1" />
