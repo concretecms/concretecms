@@ -23,7 +23,7 @@ echo $dh->getDashboardPaneHeaderWrapper(t('Pretty URLs'), t("Automatically trans
 		if(URL_REWRITING){
 			echo '
 		<div class="clearfix"><h5>' . t('Required Code') . '</h5>
-		<textarea style="max-width:100%; min-width:470px; height:150px; min-height:150px; max-height:300px;" onclick="this.select()">' . $strRules . '</textarea></div>';
+		<textarea style="width:408px; max-width:408px; min-width:408px; height:150px; min-height:150px; max-height:300px;" onclick="this.select()">' . $strRules . '</textarea></div>';
 		}
 		?>		
 	</div>
