@@ -12,6 +12,7 @@ class DashboardPagesThemesCustomizeController extends Controller {
 		}
 		if (is_object($pt)) {
 			$styles = $pt->getEditableStylesList();
+			$this->set('t', $pt);
 			$this->set('styles', $styles);
 			$this->set('themeID', $themeID);
 		 	Cache::delete('preview_theme_style', $themeID);
