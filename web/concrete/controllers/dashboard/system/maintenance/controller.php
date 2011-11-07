@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class DashboardSystemDeveloperController extends DashboardBaseController{
+class DashboardSystemMaintenanceController extends DashboardBaseController{
 	/**
 	* Dashboard view - automatically redirects to a default
 	* page in the category
@@ -9,7 +9,7 @@ class DashboardSystemDeveloperController extends DashboardBaseController{
 	* @return void
 	*/
 	public function view() {
-		$this->redirect('/dashboard/system/developer/environment');
+		$this->redirect('/dashboard/system/maintenance/cache');
 	}
 }
 ?>
