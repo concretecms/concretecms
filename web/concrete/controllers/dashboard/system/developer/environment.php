@@ -1,6 +1,6 @@
 ﻿<?php 
 defined('C5_EXECUTE') or die("Access Denied.");
-class DashboardSystemDeveloperEnvironmentController extends Controller {	
+class DashboardSystemDeveloperEnvironmentController extends DashboardBaseController {	
 	
 	public function get_environment_info() {
 		set_time_limit(5);
