@@ -105,6 +105,129 @@ div.ccm-permissions-entity-base {display: none}
 /* themes */
 tr.ccm-theme-active td {background-color: #DDF4FB !important;}
 
+/* themes customization page */
+form#customize-form{margin-bottom:0;}
+div#previewTheme {height:500px;}
+div.ccm-theme-style-attribute {display:inline-block; margin-right:25px; line-height: 36px; position: relative; height: 36px; font-weight: bold; zoom: 1; *display: inline; *width: 120px; *margin-right:15px;}
+span.ccm-theme-style-attribute-name {display:block; float:left; margin-right:5px; font-weight:normal;}
+div.ccm-theme-style-attribute div.ccm-theme-style-slot-1 {display:inline;}
+
+div.ccm-theme-style-attribute div {
+	float:right;
+	background: url(../images/widgets/colorpicker/select2.png) no-repeat;
+	cursor: pointer;
+	*float:left;
+	*width: 36px;
+	*height: 36px;
+}
+
+div.ccm-theme-style-attribute div div {
+	width: 28px;
+	height: 28px;
+	margin:4px;
+	background: url(../images/widgets/colorpicker/select2.png) center no-repeat;
+}
+
+div.ccm-theme-style-attribute div.ccm-theme-style-font {
+	background: transparent url(../images/widgets/font/text_rich.png) no-repeat scroll 6px 6px;
+}
+
+div.ccm-theme-style-attribute div.ccm-theme-style-custom {
+	background: transparent url(../images/widgets/font/custom_style.png) no-repeat scroll 10px 10px;
+	*position:absolute;
+}
+
+div#jquery-font-panel input, div#jquery-custom-panel input {
+	font-size: 10px;
+}
+
+div#jquery-font-panel, div#jquery-custom-panel {
+	display: none; 
+	position: absolute; 
+	top: 0px; left: 0px; 
+	width: 356px;
+	height: 176px;
+	overflow: hidden;
+	background: url(../images/widgets/font/background.png) no-repeat;
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	display: none;
+	z-index:1500;
+}
+
+div#jquery-custom-panel div#jquery-custom-panel-save {
+	padding-top: 5px;
+	padding-right: 11px;
+	text-align: right;
+}
+
+div#jquery-custom-panel textarea {
+	margin-top: 10px;
+	margin-left: 10px;
+	border: 1px solid #dedede;
+	padding: 4px;
+	width: 325px;
+	height: 115px;
+}
+
+div#jquery-font-panel div.jquery-font-panel-list {
+	overflow: auto;
+	border: 2px solid #bfbfbf;
+	height: 152px;
+}
+
+div#jquery-font-panel div#jquery-font-panel-list-fonts {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	width: 180px; 
+}
+
+div#jquery-font-panel div#jquery-font-panel-list-sizes {
+	position: absolute;
+	top: 10px;
+	left: 205px;
+	width: 60px; 
+}
+
+div#jquery-font-panel div#jquery-font-panel-list-styles {
+	position: absolute;
+	top: 10px;
+	left: 280px;
+	width: 65px;
+	height: 50px;
+}
+
+div#jquery-font-panel div#jquery-font-panel-list-weights {
+	position: absolute;
+	top: 68px;
+	left: 280px;
+	width: 65px;
+	height: 50px;
+}
+
+div#jquery-font-panel div#jquery-font-panel-save {
+	position: absolute; 
+	top: 130px;
+	left: 295px;
+}
+
+div#jquery-font-panel-save input, div#jquery-custom-panel-save input {
+	width: 36px;
+	padding: 0px;
+	text-align: center;
+}
+
+div#jquery-font-panel div.jquery-font-panel-list div {
+	padding: 4px;
+	border-bottom: 2px solid #e1e1e1;
+	background-color: #fefefe;
+	font-size: 12px; 
+	color: #787878;
+	cursor: pointer;
+}
+
+div#jquery-font-panel div.jquery-font-panel-list div.font-panel-list-selected {background-color: #E6EBED; color: #333}
+
 /* ip blacklist */
 .ccm-inline-form-and-text { margin-bottom: 10px;}
 table#ip-blacklist td label {
