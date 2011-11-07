@@ -14,10 +14,59 @@ $ih = Loader::helper('concrete/interface');
 	?>
     
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Customize Theme'), false, false, false);?>
+
+    <form action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/themes/preview_internal?themeID=<?=$themeID?>&previewCID=1" method="post" target="preview-theme" id="customize-form">
+	
+	<div class="ccm-pane-options">
+	<?	
+		$customSt = false;
+		
+		foreach($styles as $sto) { 
+			$st = $sto[0];
+			if ($st->getType() == PageThemeEditableStyle::TSTYPE_CUSTOM) {
+				$customST = $st;
+				continue;
+			}
+			
+			?>
+			
+			<div class="ccm-theme-style-attribute <? if ($useSlots) { ?>ccm-theme-style-slots<? } ?>">
+			<span class="ccm-theme-style-attribute-name"><?=$st->getName()?></span>
+	
+			<? 
+			for ($i = 0; $i < count($sto); $i++) { 
+				$slot = $i + 1;
+				$st = $sto[$i];
+				switch($st->getType()) {
+					case PageThemeEditableStyle::TSTYPE_COLOR: ?>
+						<?=$form->hidden('input_theme_style_' . $st->getHandle() . '_' . $st->getType(), $st->getValue())?>
+						<div class="ccm-theme-style-color <? if ($useSlots) { ?>ccm-theme-style-slot-<?=$slot?><? } ?>" id="theme_style_<?=$st->getHandle()?>_<?=$st->getType()?>"><div hex-color="<?=$st->getValue()?>" style="background-color: <?=$st->getValue()?>"></div></div>
+					<? 
+						break;
+					case PageThemeEditableStyle::TSTYPE_FONT: ?>
+						<?=$form->hidden('input_theme_style_' . $st->getHandle() . '_' . $st->getType(), $st->getShortValue())?>
+						<div class="ccm-theme-style-font <? if ($useSlots) { ?>ccm-theme-style-slot-<?=$slot?><? } ?>" font-panel-font="<?=$st->getFamily()?>" font-panel-weight="<?=$st->getWeight()?>" font-panel-style="<?=$st->getStyle()?>" font-panel-size="<?=$st->getSize()?>" id="theme_style_<?=$st->getHandle()?>_<?=$st->getType()?>"><div></div></div>
+						
+					<? 
+						break;
+				}
+			} // END For loop ?>
+			</div>
+			
+		<? 
+		} // END Foreach loop
+		
+		if (isset($customST)) { ?>
+		<div class="ccm-theme-style-attribute <? if ($useSlots) { ?>ccm-theme-style-slots<? } ?>">
+			<span class="ccm-theme-style-attribute-name"><?=t('Add Your CSS')?></span>
+			<?=$form->hidden('input_theme_style_' . $customST->getHandle() . '_' . $customST->getType(), $customST->getOriginalValue())?>
+			<div class="ccm-theme-style-custom <? if ($useSlots) { ?>ccm-theme-style-slot-1<? } ?>" id="theme_style_<?=$customST->getHandle()?>_<?=$customST->getType()?>"><div></div></div>
+		</div>
+		<? } ?>
+	</div>
 	
     <div class="ccm-pane-body">  
     
-    <form action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/themes/preview_internal?themeID=<?=$themeID?>&previewCID=1" method="post" target="preview-theme" id="customize-form">
     <?=$vt->output()?>
     <?=$form->hidden('saveAction', $this->action('save')); ?>
     <?=$form->hidden('resetAction', $this->action('reset')); ?>
@@ -34,95 +83,13 @@ $ih = Loader::helper('concrete/interface');
         }
     }
     ?>
-    
-    	<div class="themesWrapper">    
-    	
-        	<a href="javascript:void(0)" onclick="ccm_paneToggleOptions(this)" class="ccm-icon-option-open">Styles Palette</a>
-            
-            <table border="0" cellpadding="0" cellspacing="0" width="100%">
-            	<thead>
-            		<tr>
-            			<th>Preview</th>
-            		</tr>
-            	</thead>
-            	<tbody>
-            		<tr>
-            			<td>
-            
-                        <div id="ccm-themes-styles-container">
-                            <div id="ccm-themes-styles-panel" title="Styles" class="styles-toolbar ccm-pane-options-content clearfix">
-                                    
-                                    <?	
-                                    $customSt = false;
-                                    
-                                    foreach($styles as $sto) { 
-                                        $st = $sto[0];
-                                        if ($st->getType() == PageThemeEditableStyle::TSTYPE_CUSTOM) {
-                                            $customST = $st;
-                                            continue;
-                                        }
-                                        
-                                        ?>
-                                        
-                                        <div class="ccm-theme-style-attribute <? if ($useSlots) { ?>ccm-theme-style-slots<? } ?>">
-                                        <span class="ccm-theme-style-attribute-name"><?=$st->getName()?></span>
-                                
-                                        <? 
-                                        for ($i = 0; $i < count($sto); $i++) { 
-                                            $slot = $i + 1;
-                                            $st = $sto[$i];
-                                            switch($st->getType()) {
-                                                case PageThemeEditableStyle::TSTYPE_COLOR: ?>
-                                                    <?=$form->hidden('input_theme_style_' . $st->getHandle() . '_' . $st->getType(), $st->getValue())?>
-                                                    <div class="ccm-theme-style-color <? if ($useSlots) { ?>ccm-theme-style-slot-<?=$slot?><? } ?>" id="theme_style_<?=$st->getHandle()?>_<?=$st->getType()?>"><div hex-color="<?=$st->getValue()?>" style="background-color: <?=$st->getValue()?>"></div></div>
-                                                <? 
-                                                    break;
-                                                case PageThemeEditableStyle::TSTYPE_FONT: ?>
-                                                    <?=$form->hidden('input_theme_style_' . $st->getHandle() . '_' . $st->getType(), $st->getShortValue())?>
-                                                    <div class="ccm-theme-style-font <? if ($useSlots) { ?>ccm-theme-style-slot-<?=$slot?><? } ?>" font-panel-font="<?=$st->getFamily()?>" font-panel-weight="<?=$st->getWeight()?>" font-panel-style="<?=$st->getStyle()?>" font-panel-size="<?=$st->getSize()?>" id="theme_style_<?=$st->getHandle()?>_<?=$st->getType()?>"><div></div></div>
-                                                    
-                                                <? 
-                                                    break;
-                                            }
-                                        } // END For loop ?>
-                                        </div>
-                                        
-                                    <? 
-                                    } // END Foreach loop
-                                    
-                                    if (isset($customST)) { ?>
-                                    <div class="ccm-theme-style-attribute <? if ($useSlots) { ?>ccm-theme-style-slots<? } ?>">
-                                        <span class="ccm-theme-style-attribute-name"><?=t('Add Your CSS')?></span>
-                                        <?=$form->hidden('input_theme_style_' . $customST->getHandle() . '_' . $customST->getType(), $customST->getOriginalValue())?>
-                                        <div class="ccm-theme-style-custom <? if ($useSlots) { ?>ccm-theme-style-slot-1<? } ?>" id="theme_style_<?=$customST->getHandle()?>_<?=$customST->getType()?>"><div></div></div>
-                                    </div>
-                                    <? } ?>
-                                    
-                                    <div class="actions">
-                                    
-                                        <? print $ih->button_js(t("Exit Fullscreen"), "ccm_closeInternalThemeFullscreenPreview()", 'left'); ?>
-                                    
-                                    </div>
-                                    
-							</div>
-						</div>
-        
-
-                        <div id="previewContainer" style="border: 2px solid #eee; height:500px;">
-                            <div id="previewTheme">
-                                <iframe name="preview-theme" id="preview-theme" height="100%" width="100%" src="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/themes/preview_internal?themeID=<?=$themeID?>&previewCID=1" border="0" frameborder="0"></iframe>
-                            </div>                        
-                        </div>
+		<div id="previewContainer" style="border: 2px solid #eee; height:500px;">
+			<div id="previewTheme">
+				<iframe name="preview-theme" id="preview-theme" height="100%" width="100%" src="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/themes/preview_internal?themeID=<?=$themeID?>&previewCID=1" border="0" frameborder="0"></iframe>
+			</div>                        
+		</div>
         
         
-        			</td>
-        		</tr>
-        	</tbody>
-        </table>
-        
-        </div><!-- END Theme Wrapper -->
-        
-    </form>
     
     </div><!-- END Pane body -->
     
@@ -132,6 +99,8 @@ $ih = Loader::helper('concrete/interface');
         <? print $ih->button_js(t('Reset'), 'resetCustomizedTheme()', 'right', 'error'); ?>
         <? print $ih->button_js(t("Fullscreen View"), "ccm_previewInternalThemeFullscreen(1, " . intval($t->getThemeID()) . ",'" . addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) . "')", 'right'); ?>
     </div>
+
+    </form>
     
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
     
