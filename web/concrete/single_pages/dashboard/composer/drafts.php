@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Composer Drafts'), t('Composer gives you a simple interface for adding pages to your concrete5 site.'))?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Composer Drafts'))?>
 
 <? 
 $today = Loader::helper('date')->getLocalDateTime('now', 'Y-m-d');

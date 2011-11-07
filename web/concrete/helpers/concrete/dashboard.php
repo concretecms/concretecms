@@ -76,6 +76,14 @@ class ConcreteDashboardHelper {
 			}
 		}
 		$html .= '<ul class="ccm-pane-header-icons">';
+		if (!$help) {
+			$ih = Loader::helper('concrete/interface/help');
+			$pageHelp = $ih->getPages();
+			if (isset($pageHelp[$c->getCollectionPath()])) {
+				$help = $pageHelp[$c->getCollectionPath()];
+			}
+		}
+		
 		if ($help) {
 			$html .= '<li><a href="javascript:void(0)" onclick="ccm_togglePageHelp(event, this)" class="ccm-icon-help" title="' . t('Help') . '" id="ccm-page-help" data-content="' . $help . '">' . t('Help') . '</a></li>';
 		}
