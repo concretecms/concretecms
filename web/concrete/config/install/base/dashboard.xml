@@ -121,6 +121,7 @@
         <page name="Composer" path="/dashboard/pages/types/composer" filename="/dashboard/pages/types/composer.php" pagetype="" description="" package=""/>
     </singlepages>
     <pagetypes>
+        <pagetype handle="core_stack" name="Stack" internal="1" package="" />
         <pagetype handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package="" />
         <pagetype handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package="" />
     </pagetypes>
