@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 Loader::controller('/dashboard/base');
-class DashboardBlocksStacksDetailController extends DashboardBaseController {
+class CoreStackPageTypeController extends Controller {
 
 	
 	public function on_start() {
