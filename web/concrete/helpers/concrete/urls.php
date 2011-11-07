@@ -25,7 +25,7 @@ class ConcreteUrlsHelper {
 		if ($pkg && file_exists($pkg->getPackagePath() . '/' . FILENAME_BLOCK_ICON)) {
 			return $this->getPackageURL($pkg) . '/' . FILENAME_BLOCK_ICON;
 		} else {
-			return BLOCK_TYPE_GENERIC_ICON;
+			return PACKAGE_GENERIC_ICON;
 		}
 	}
 	

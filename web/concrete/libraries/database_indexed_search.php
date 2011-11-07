@@ -199,11 +199,13 @@ class IndexedSearch {
 				continue;
 			}		
 
-			$c->reindex($this);
-			$num++;
-			
+			$c->reindex($this, true);
+			$num++;		
 			unset($c);
 		}
+		
+		$pnum = Collection::reindexPendingPages();
+		$num = $num + $pnum;
 		
 		Cache::enableLocalCache();
 		$result = new stdClass;

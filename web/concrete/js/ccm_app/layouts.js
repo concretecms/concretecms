@@ -58,7 +58,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 			// create the 1st instance of the menu
 			el = document.createElement("DIV");
 			el.id = "ccm-layout-options-menu-" + this.cvalID;
-			el.className = "ccm-menu";
+			el.className = "ccm-menu ccm-ui";
 			el.style.display = "none";
 			document.body.appendChild(el);
 			
@@ -66,25 +66,23 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 			aobj.css("position", "absolute");
 			
 			//contents  of menu
-			var html = '<div class="ccm-menu-tl"><div class="ccm-menu-tr"><div class="ccm-menu-t"></div></div></div>';
-			html += '<div class="ccm-menu-l"><div class="ccm-menu-r">';
+			var html = '<div class="popover"><div class="arrow"></div><div class="inner"><div class="content">';
 			html += '<ul>';
 			
 			//the arHandle here should be encoded with encodeURIComponent(), but it leads to a double encoding issue in ccm.dialog.js 
-			html += '<li><a class="ccm-icon" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="280" id="menuEditLayout' + this.cvalID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(this.area) + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&atask=layout"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/layout_small.png)">' + ccmi18n.editAreaLayout + '</span></a></li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-edit-menu" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="280" id="menuEditLayout' + this.cvalID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(this.area) + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&atask=layout">' + ccmi18n.editAreaLayout + '</a></li>';
 
-			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveUp' + this.cvalID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/icon_move_up.png)">' + ccmi18n.moveLayoutUp + '</span></a></li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-move-up" id="menuAreaLayoutMoveUp' + this.cvalID + '">' + ccmi18n.moveLayoutUp + '</a></li>';
 						
-			html += '<li><a class="ccm-icon" id="menuAreaLayoutMoveDown' + this.cvalID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/icon_move_down.png)">' + ccmi18n.moveLayoutDown + '</span></a></li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-move-down" id="menuAreaLayoutMoveDown' + this.cvalID + '">' + ccmi18n.moveLayoutDown + '</a></li>';
 			
 			var lockText = (this.locked) ? ccmi18n.unlockAreaLayout : ccmi18n.lockAreaLayout ; 
-			html += '<li><a class="ccm-icon" id="menuAreaLayoutLock' + this.cvalID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/permissions_small.png)">' + lockText + '</span></a></li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-lock-menu" id="menuAreaLayoutLock' + this.cvalID + '">' + lockText + '</a></li>';
 			
-			html += '<li><a class="ccm-icon" id="menuAreaLayoutDelete' + this.cvalID + '"><span style="background-image: url(' + CCM_IMAGE_PATH + '/icons/delete_small.png)">' + ccmi18n.deleteLayout + '</span></a></li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-delete-menu" id="menuAreaLayoutDelete' + this.cvalID + '">' + ccmi18n.deleteLayout + '</a></li>';
 			
 			html += '</ul>';
-			html += '</div></div>';
-			html += '<div class="ccm-menu-bl"><div class="ccm-menu-br"><div class="ccm-menu-b"></div></div></div>';
+			html += '</div></div></div>';
 			aobj.append(html);
 			
 			var aJQobj = $(aobj);

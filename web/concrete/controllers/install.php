@@ -192,6 +192,14 @@ class InstallController extends Controller {
 		exit;
 	}
 	
+	protected function validateSampleContent($e) {
+		$pkg = Loader::startingPointPackage($this->post('SAMPLE_CONTENT'));
+		if (!is_object($pkg)) {
+			$e->add(t("You must select a valid sample content starting point."));
+		}
+		return $e;
+	}
+	
 	protected function validateDatabase($e) {
 		if (!function_exists('mysql_connect')) {
 			$e->add($this->getDBErrorMsg());
@@ -250,6 +258,7 @@ class InstallController extends Controller {
 			}
 			
 			$e = $this->validateDatabase($e);
+			$e = $this->validateSampleContent($e);
 			
 			if ($val->test() && (!$e->has())) {
 
