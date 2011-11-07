@@ -25,14 +25,14 @@ $(function() {
 		clearTimeout(ccm_quickNavTimer);
 	}
 	
-	ccm_togglePageHelp = function(e) {
+	ccm_togglePageHelp = function(e, link) {
 		if ($('#twipsy-holder .popover').is(':visible')) {
-			$('#ccm-page-help').popover('hide');	
+			$(link).popover('hide');	
 		} else {
-			$('#ccm-page-help').popover('show');	
+			$(link).popover('show');	
 			e.stopPropagation();
 			$(window).bind('click.popover', function() {
-				$('#ccm-page-help').popover('hide');		
+				$(link).popover('hide');		
 				$(window).unbind('click.popover');
 			});
 		}

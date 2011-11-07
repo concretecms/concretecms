@@ -77,7 +77,7 @@ class ConcreteDashboardHelper {
 		}
 		$html .= '<ul class="ccm-pane-header-icons">';
 		if ($help) {
-			$html .= '<li><a href="javascript:void(0)" onclick="ccm_togglePageHelp(event)" class="ccm-icon-help" title="' . t('Help') . '" id="ccm-page-help" data-content="' . $help . '">' . t('Help') . '</a></li>';
+			$html .= '<li><a href="javascript:void(0)" onclick="ccm_togglePageHelp(event, this)" class="ccm-icon-help" title="' . t('Help') . '" id="ccm-page-help" data-content="' . $help . '">' . t('Help') . '</a></li>';
 		}
 		$html .= '<li><a href="javascript:void(0)" id="ccm-add-to-quick-nav" onclick="ccm_toggleQuickNav(' . $c->getCollectionID() . ',\'' . $token . '\')" class="' . $class . '">' . t('Add to Favorites') . '</a></li>';
 		$html .= '<li><a href="javascript:void(0)" onclick="ccm_closeDashboardPane(this)" class="ccm-icon-close">' . t('Close') . '</a></li>';
