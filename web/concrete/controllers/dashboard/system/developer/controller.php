@@ -12,4 +12,3 @@ class DashboardSystemDeveloperController extends DashboardBaseController{
 		$this->redirect('/dashboard/system/developer/environment');
 	}
 }
-?>

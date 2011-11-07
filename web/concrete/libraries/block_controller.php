@@ -461,6 +461,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return t($this->btDescription);
 		}
 		
+		/** 
+		 * Returns HTML that will be shown when a user wants help for a given block type
+		 */
+		public function getBlockTypeHelp() {
+			return $this->btHelpContent;
+		}
+		
 		/**
 		 * @access private
 		 */

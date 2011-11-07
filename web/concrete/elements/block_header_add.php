@@ -41,6 +41,21 @@ $(function() {
 
 <input type="hidden" name="ccm-block-pane-action" value="<?=$_SERVER['REQUEST_URI']?>" />
 
+<?
+$hih = Loader::helper("concrete/interface/help");
+$blockTypes = $hih->getBlockTypes();
+if (isset($blockTypes[$bt->getBlockTypeHandle()])) {
+	$help = $blockTypes[$bt->getBlockTypeHandle()];
+} else {
+	$cont = $bt->getController();
+	if ($cont->getBlockTypeHelp()) {
+		$help = $cont->getBlockTypeHelp();
+	}
+}
+if (isset($help)) { ?>
+	<div class="dialog-help"><?=$help?></div>
+<? } ?>
+
 <form method="post" action="<?=$action?>" class="validate" id="ccm-block-form" enctype="multipart/form-data">
 
 <input type="hidden" name="ccm-block-form-method" value="REGULAR" />
