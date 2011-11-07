@@ -42,7 +42,12 @@ $fh = Loader::helper('concrete/interface/form');
 				'name' => 'recipientEmail',
 				'label' => t('Notify me by email when people submit this form'),
 				'value' => $miniSurveyInfo['recipientEmail'],
-				'help' => t('(Seperate multiple emails with a comma)')
+				'help' => t('(Seperate multiple emails with a comma)'),
+				'prepend' => array(
+					'name' => 'notifyMeOnSubmission',
+					'value' => 1,
+					'checked' => $miniSurveyInfo['notifyMeOnSubmission'] == 1
+				)
 			))?>
 			<?=$fh->radios(array(
 				'name' => 'displayCaptcha',

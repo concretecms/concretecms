@@ -120,6 +120,7 @@ class ConcreteInterfaceFormHelper
 		$value = null;
 		$help = null;
 		$size = null;
+		$prepend = null;
 		$id = $this->nameToId($args['name']);
 		extract($args);
 		
@@ -137,7 +138,26 @@ class ConcreteInterfaceFormHelper
 		<div class="clearfix">
 			<?=$this->tag('label', array('for' => $name), $label, false)?>
 			<div class="input">
+				<?if ($prepend):?>
+				<div class="input-prepend">
+					<?if (is_array($prepend)):
+						$prepend = array_merge(array(
+						'id' => $this->nameToId($prepend['name']),
+						'type' => 'checkbox'
+						), $prepend);
+					?>
+					<label class="add-on">
+					<?=$this->tag('input', $prepend)?>
+					</label>
+					<?else:?>
+					<span class="add-on"><?=$this->th->entities($prepend)?></span>
+					<?endif?>
+					<?=$this->tag('input', $attr)?>
+				</div>
+				<?else:?>
 				<?=$this->tag('input', $attr)?>
+				<?endif?>
+				
 				<?if($help):?>
 				<?=$this->tag('span', array('class' => 'help-block'), $help)?>
 				<?endif?>
