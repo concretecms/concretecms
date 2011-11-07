@@ -103,9 +103,6 @@ class FormBlockController extends BlockController {
 			$data['redirect'] = 0;
 			$data['redirectCID'] = 0;
 		}
-		if (!empty($data['recipientEmail'])) {
-			$data['notifyMeOnSubmission'] = 1;
-		}
 		
 		$v = array( $data['qsID'], $data['surveyName'], intval($data['notifyMeOnSubmission']), $data['recipientEmail'], $data['thankyouMsg'], intval($data['displayCaptcha']), intval($data['redirectCID']), intval($this->bID) );
  		
