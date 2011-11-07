@@ -211,22 +211,22 @@ ccm_setSelectors = function() {
 	/* if two and only two are checked, we can compare */
 	
 	if (ccm_versionsChecked == 2) {
-		$("input[name=vCompare]").get(0).disabled = false;
+		$("input[name=vCompare]").prop('disabled', false);
 	} else {
-		$("input[name=vCompare]").get(0).disabled = true;
+		$("input[name=vCompare]").prop('disabled', true);
 	}
 	
 	
 	if (ccm_versionsChecked > 0 && (!isActiveChecked)) {
-		$("input[name=vRemove]").get(0).disabled = false;
+		$("input[name=vRemove]").prop('disabled', false);
 	} else {
-		$("input[name=vRemove]").get(0).disabled = true;
+		$("input[name=vRemove]").prop('disabled', true);
 	}
 	
 	if (ccm_versionsChecked == 1 && (!isActiveChecked)) {
-		$("input[name=vApprove]").get(0).disabled = false;
+		$("input[name=vApprove]").prop('disabled', false);
 	} else {
-		$("input[name=vApprove]").get(0).disabled = true;
+		$("input[name=vApprove]").prop('disabled', true);
 	}
 	
 	
@@ -349,9 +349,13 @@ $("input[name=vRemove]").click(function() {
 	
 	<form>
 	<?=t('Select')?>: <a id="ccm-version-select-none" href="#"><?=t('None')?></a> | <a id="ccm-version-select-old" href="#"><?=t('Old Versions')?></a>
-	&nbsp;&nbsp;
-	<input class="btn" type="button" name="vCompare" value="<?=t('Compare')?>" disabled />
+	<?
+	$ih = Loader::helper("concrete/dashboard");
+	if (!$ih->inDashboard($c)) { ?>
+		&nbsp;&nbsp;
+		<input class="btn" type="button" name="vCompare" value="<?=t('Compare')?>" disabled />
 	&nbsp;
+	<? } ?>
 	<input class="btn" type="button" name="vApprove" value="<?=t('Approve')?>" disabled />
 	
 	&nbsp;
