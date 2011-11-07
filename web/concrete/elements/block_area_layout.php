@@ -36,13 +36,13 @@ if(!$layout ){
 <div id="ccm-layout-edit-wrapper">
 <? } ?>
 
-<style>
-#ccmLayoutConfigOptions { margin-top:12px; }
-#ccmLayoutConfigOptions table td { padding-bottom:4px; vertical-align:top; padding-bottom:12px; padding-right:12px; } 
-#ccmLayoutConfigOptions table td.padBottom {  }
+<style type="text/css">
+	#ccmLayoutConfigOptions { margin-top:12px; }
+	#ccmLayoutConfigOptions table td { padding-bottom:4px; vertical-align:top; padding-bottom:12px; padding-right:12px; } 
+	#ccmLayoutConfigOptions table td.padBottom {  }
 </style>
 
-<form method="post" id="ccmAreaLayoutForm" action="<?=$action?>" style="width:96%; margin:auto;"> 
+<form method="post" class="ccm-ui" id="ccmAreaLayoutForm" action="<?=$action?>" style="width:96%; margin:auto;"> 
 
 	<input id="ccmAreaLayoutForm_layoutID" name="layoutID" type="hidden" value="<?=intval( $layout->layoutID ) ?>" />  
 	<input id="ccmAreaLayoutForm_arHandle" name="arHandle" type="hidden" value="<?=htmlentities( $a->getAreaHandle(), ENT_COMPAT, APP_CHARSET) ?>" /> 
@@ -68,28 +68,28 @@ if(!$layout ){
 	
 		<table> 
 			<tr>
-				<td class="label"><?=t('Columns')?></td>
+				<td><?=t('Columns')?>:</td>
 				<td class="val">
 					<input name="layout_columns" type="text" value="<?=intval($layout->columns) ?>" size=2 />
 				</td>
 				
 			</tr>
 			<tr>
-				<td class="label padBottom"><?=t('Rows')?></td>
+				<td class="padBottom"><?=t('Rows')?>:</td>
 				<td class="val padBottom">
 					<input name="layout_rows" type="text" value="<?=intval($layout->rows) ?>" size=2 />
 				</td>
 			</tr>
 			
 			<tr>	
-				<td class="label padBottom"><?=t('Spacing')?></td>
+				<td class="padBottom"><?=t('Spacing')?>:</td>
 				<td class="val padBottom">
 					<input name="spacing" type="text" value="<?=intval($layout->spacing) ?>" size=2 /> <?=t('px')?>
 				</td>				
 			</tr>			
 			
 			<tr>
-				<td class="label padBottom"><?= t('Lock Widths') ?></td>
+				<td class="padBottom"><?= t('Lock Widths') ?>:</td>
 				<td class="val padBottom">
 					<input name="locked" type="checkbox" value="1" <?= ( intval($layout->locked) ) ? 'checked="checked"' : '' ?> />
 				</td>				
@@ -118,25 +118,25 @@ if(!$layout ){
 	
 	
 	<? if ( is_object($layoutPreset) ) { ?>
-	<div id="layoutPresetActions" style="display: none">
-		<div><?=$form->radio('layoutPresetAction', 'update_existing_preset', true)?> <?=t('Update "%s" preset everywhere it is used?', $layoutPreset->getLayoutPresetName())?></div>
-		<div><?=$form->radio('layoutPresetAction', 'save_as_custom')?> <?=t('Use this layout here, and leave "%s" unchanged?', $layoutPreset->getLayoutPresetName())?></div>
-		<div><?=$form->radio('layoutPresetAction', 'create_new_preset')?> <?=t('Save this style as a new preset?')?><br/><span style="margin-left: 20px"><?=$form->text('layoutPresetNameAlt', array('style' => 'width:  127px', 'disabled' => true))?></span></div>
-	</div>
+		<div id="layoutPresetActions" style="display: none">
+			<div><?=$form->radio('layoutPresetAction', 'update_existing_preset', true)?> <?=t('Update "%s" preset everywhere it is used?', $layoutPreset->getLayoutPresetName())?></div>
+			<div><?=$form->radio('layoutPresetAction', 'save_as_custom')?> <?=t('Use this layout here, and leave "%s" unchanged?', $layoutPreset->getLayoutPresetName())?></div>
+			<div><?=$form->radio('layoutPresetAction', 'create_new_preset')?> <?=t('Save this style as a new preset?')?><br/><span style="margin-left: 20px"><?=$form->text('layoutPresetNameAlt', array('style' => 'width:  127px', 'disabled' => true))?></span></div>
+		</div>
 	<? } ?>	
 
 	<div id="layoutPresetActionNew" style="margin-bottom:16px;"> 
 		<?=$form->checkbox('layoutPresetAction', 'create_new_preset')?> 
-		<label for="layoutPresetAction" style="display: inline; color: #555"><?=t('Save this style as a new preset.')?></label>
+		<?=t('Save this style as a new preset.')?>
 		<span style="margin-left: 10px"><?=$form->text('layoutPresetName', array('style' => 'width:  127px', 'disabled' => true))?></span>
 	</div>
 	
 	
 	
-	<div class="ccm-buttons">
-		<a href="#" class="ccm-button-left cancel" onclick="jQuery.fn.dialog.closeTop()"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
+	<div class="ccm-buttons dialog-buttons">
+		<a href="#" class="btn ccm-button-left cancel" onclick="jQuery.fn.dialog.closeTop()"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
 		
-		<a href="javascript:void(0)" onclick="$('#ccmAreaLayoutForm').submit()" class="ccm-button-right accept"><span><?=intval($layout->layoutID)?t('Save Changes'):t('Create Layout')?></span></a>
+		<a href="javascript:void(0)" onclick="$('#ccmAreaLayoutForm').submit()" class="ccm-button-right accept btn primary"><span><?=intval($layout->layoutID)?t('Save Changes'):t('Create Layout')?></span></a>
 	</div>	 
 	
 

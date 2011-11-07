@@ -4151,13 +4151,14 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 		this.layoutWrapper.find('.ccm-block').each(function(i,el){
 			if(el.style.display!='none')  hasBlocks=1;													
 		})
-		var dialogHeight=(hasBlocks)?'110px':'50px';
+		var dialogHeight=(hasBlocks)?'135px':'70px';
 		
 		$.fn.dialog.open({
 			title: ccmi18n.deleteLayoutOptsTitle,
 			href:  CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(this.area) + '&layoutID=' + this.layout_id +  '&task=deleteOpts&hasBlocks='+hasBlocks,
 			width: '340px',
 			modal: false,
+			appendButtons: true,
 			height: dialogHeight
 		});	
 			
@@ -6914,7 +6915,7 @@ ccm_showAreaMenu = function(obj, e) {
 				html += '<li class="ccm-menu-separator"></li>';
 			}
 			if (obj.canLayout) {
-				html += '<li><a onclick="ccm_hideMenus()" class="ccm-menu-icon ccm-icon-add-layout-menu" dialog-title="' + ccmi18n.addAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="280" id="menuAreaLayout' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&atask=layout">' + ccmi18n.addAreaLayout + '</a></li>';
+				html += '<li><a onclick="ccm_hideMenus()" class="ccm-menu-icon ccm-icon-add-layout-menu" dialog-title="' + ccmi18n.addAreaLayout + '" dialog-modal="false" dialog-width="400" dialog-height="300" dialog-append-buttons="true" id="menuAreaLayout' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&atask=layout">' + ccmi18n.addAreaLayout + '</a></li>';
 			}
 			if (obj.canDesign) {
 				html += '<li><a onclick="ccm_hideMenus()" class="ccm-menu-icon ccm-icon-design-menu" dialog-title="' + ccmi18n.changeAreaCSS + '" dialog-modal="false" dialog-append-buttons="true" dialog-width="475" dialog-height="500" id="menuAreaStyle' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&atask=design">' + ccmi18n.changeAreaCSS + '</a></li>';
