@@ -119,6 +119,7 @@ class ConcreteInterfaceFormHelper
 		$this->requiredArgs(array('name', 'label'), $args);
 		$value = null;
 		$help = null;
+		$size = null;
 		$id = $this->nameToId($args['name']);
 		extract($args);
 		
@@ -128,6 +129,7 @@ class ConcreteInterfaceFormHelper
 				'name' => $name,
 				'id' => $id,
 				'value' => $value,
+				'size' => $size
 			);
 		}
 		ob_start();
@@ -185,7 +187,7 @@ class ConcreteInterfaceFormHelper
 	public function radios(array $args)
 	{
 		$this->requiredArgs(array('name', 'label', 'options'), $args);
-		$selected = null;
+		$value = null;
 		$help = null;
 		$id = $this->nameToId($args['name']);
 		extract($args);
@@ -193,16 +195,16 @@ class ConcreteInterfaceFormHelper
 		ob_start();
 		?>
 		<div class="clearfix">
-			<?=$this->tag('label', array('id' => $id), $label, false)?>
+			<?=$this->tag('label', array(), $label, false)?>
 			<div class="input">
-				<ul class="inputs-list">
-					<?foreach ($options as $value => $text):
+				<ul id="<?=$this->th->entities($id)?>" class="inputs-list">
+					<?foreach ($options as $val => $text):
 					$attr = array(
 						'name' => $name,
 						'type' => 'radio',
-						'value' => $value
+						'value' => $val
 					);
-					if ($selected !== null && $value == $selected) {
+					if ($value !== null && $val == $value) {
 						$attr['checked'] = 'checked'; 
 					}
 					?>
