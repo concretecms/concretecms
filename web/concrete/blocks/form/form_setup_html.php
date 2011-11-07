@@ -28,13 +28,28 @@ $fh = Loader::helper('concrete/interface/form');
 		?>
 		<fieldset>
 			<legend><?=t('Options')?></legend>
-			<?=$fh->text('surveyName', t('Form Name'), $miniSurveyInfo['surveyName'])?>
-			<?=$fh->textarea('thankyouMsg', t('Message to display when completed'), $this->controller->thankyouMsg)?>
-			<?=$fh->text('recipientEmail', t('Notify me by email when people submit this form'), $miniSurveyInfo['recipientEmail'], t('(Seperate multiple emails with a comma)'))?>
-			<?=$fh->radios('displayCaptcha', t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', 'http://en.wikipedia.org/wiki/Captcha'), array(
-				1 => t('Yes'),
-				0 => t('No'),
-			), (int) $miniSurveyInfo['displayCaptcha'])?>
+			<?=$fh->text(array(
+				'name' => 'surveyName',
+				'label' => t('Form Name'),
+				'value' => $miniSurveyInfo['surveyName']
+			))?>
+			<?=$fh->textarea(array(
+				'name' => 'thankyouMsg',
+				'label' => t('Message to display when completed'),
+				'value' => $this->controller->thankyouMsg
+			))?>
+			<?=$fh->text(array(
+				'name' => 'recipientEmail',
+				'label' => t('Notify me by email when people submit this form'),
+				'value' => $miniSurveyInfo['recipientEmail'],
+				'help' => t('(Seperate multiple emails with a comma)')
+			))?>
+			<?=$fh->radios(array(
+				'name' => 'displayCaptcha',
+				'label' => t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', 'http://en.wikipedia.org/wiki/Captcha'),
+				'value' => (int) $miniSurveyInfo['displayCaptcha'],
+				'options' => array(1 => t('Yes'), 0 => t('No'))
+			))?>
 			<div class="clearfix">
 				<label for="ccm-form-redirect"><?=t('Redirect to another page after form submission?')?></label>
 				<div class="input">
@@ -68,38 +83,57 @@ $fh = Loader::helper('concrete/interface/form');
 				<?=t('Your question has been added. To view it click the preview tab.')?>
 			</div>
 			
-			<?=$fh->text('question', t('Question'))?>
-			
-			<?=$fh->radios('answerType', t('Answer Type'), array(
-				'field' => t('Text Field'),
-				'text' => t('Text Area'),
-				'radios' => t('Radio Buttons'),
-				'select' => t('Select Box'),
-				'checkboxlist' => t('Checkbox List'),
-				'fileupload' => t('File Upload'),
-				'email' => t('Email Address'),
-				'telephone' => t('Telephone'),
-				'url' => t('Web Address'),
+			<?=$fh->text(array('name' => 'question', 'label' => t('Question')))?>
+
+			<?=$fh->radios(array(
+				'name' => 'answerType',
+				'label' => t('Answer Type'),
+				'options' => array(
+					'field' => t('Text Field'),
+					'text' => t('Text Area'),
+					'radios' => t('Radio Buttons'),
+					'select' => t('Select Box'),
+					'checkboxlist' => t('Checkbox List'),
+					'fileupload' => t('File Upload'),
+					'email' => t('Email Address'),
+					'telephone' => t('Telephone'),
+					'url' => t('Web Address'),
+				)
 			))?>
 			
 			<div id="answerOptionsArea">
-				<?=$fh->textarea('answerOptions', t('Answer Options'), null, t('Put each answer options on a new line'))?>
+				<?=$fh->textarea(array(
+					'name' => 'answerOptions',
+					'label' => t('Answer Options'),
+					'help' => t('Put each answer options on a new line')
+				))?>
 			</div>
 
 			<div id="answerSettings">
 				<fieldset>
 					<legend><?=t('Settings')?></legend>
-					<?=$fh->text('width', 'Text Area Width', 50)?>
-					<?=$fh->text('height', 'Text Area Height', 3)?>
+					<?=$fh->text(array(
+						'name' => 'width',
+						'label' => t('Text Area Width'),
+						'value' => 50
+					))?>
+					<?=$fh->text(array(
+						'name' => 'height',
+						'label' => t('Text Area Height'),
+						'value' => 3
+					))?>
 				</fieldset>
 			</div>
 			
-			<div id="questionRequired">
-				<?=$fh->radios('required', t('Required'), array(
+			<?=$fh->radios(array(
+				'name' => 'required',
+				'label' => t('Required'),
+				'value' => 0,
+				'options' => array(
 					1 => t('Yes'),
 					0 => t('No'),
-				), 0)?>
-			</div>
+				)
+			))?>
 			
 			<div>
 				<?=$fh->jsbutton('refreshButton', t('Refresh'), '', array('style'=>'display:none'))?>
@@ -117,55 +151,71 @@ $fh = Loader::helper('concrete/interface/form');
 		<div id="editQuestionForm" style="display:none">
 			<fieldset>
 				<legend id="editQuestionTitle"><?=t('Edit Question')?></legend>
-				<?=$fh->text('question', t('Question'), null, null, array('id' => 'questionEdit'))?>
+				<?=$fh->text(array(
+					'id' => 'questionEdit',
+					'name' => 'question',
+					'label' => t('Question')
+				))?>
+				
+				<?=$fh->radios(array(
+					'name' => 'answerTypeEdit',
+					'label' => t('Answer Type'),
+					'options' => array(
+						'field' => t('Text Field'),
+						'text' => t('Text Area'),
+						'radios' => t('Radio Buttons'),
+						'select' => t('Select Box'),
+						'checkboxlist' => t('Checkbox List'),
+						'fileupload' => t('File Upload'),
+						'email' => t('Email Address'),
+						'telephone' => t('Telephone'),
+						'url' => t('Web Address'),
+					)
+				))?>
+				
+				<div id="answerOptionsAreaEdit">
+					<?=$fh->textarea(array(
+						'id' => 'answerOptionsEdit',
+						'name' => 'answerOptions',
+						'label' => t('Answer Options'),
+						'help' => t('Put each answer options on a new line')
+					))?>
+				</div>
+				
+				<div id="answerSettingsEdit">
+					<fieldset>
+						<legend><?=t('Settings')?></legend>
+						<?=$fh->text(array(
+							'id' => 'widthEdit',
+							'name' => 'width',
+							'label' => t('Text Area Width'),
+							'value' => 50
+						))?>
+						<?=$fh->text(array(
+							'id' => 'heightEdit',
+							'name' => 'height',
+							'label' => t('Text Area Height'),
+							'value' => 3
+						))?>
+					</fieldset>
+				</div>
+				
+				<?=$fh->radios(array(
+					'id' => 'requiredEdit',
+					'name' => 'required',
+					'label' => t('Required'),
+					'value' => 0,
+					'options' => array(
+						1 => t('Yes'),
+						0 => t('No'),
+					)
+				))?>
 			</fieldset>
 			
-			<div class="fieldRow">
-				<div class="fieldLabel"><?php echo t('Answer Type')?>: </div>
-				<div class="fieldValues">
-					<input name="answerTypeEdit" type="radio" value="field" /> <?php echo t('Text Field')?> &nbsp; <br>
-					<input name="answerTypeEdit" type="radio" value="text" /> <?php echo t('Text Area')?> &nbsp; <br>
-					<input name="answerTypeEdit" type="radio" value="radios" /> <?php echo t('Radio Buttons')?> &nbsp; <br>
-					<input name="answerTypeEdit" type="radio" value="select" /> <?php echo t('Select Box')?> &nbsp; <br>
-					<input name="answerTypeEdit" type="radio" value="checkboxlist" /> <?php echo t('Checkbox List')?> &nbsp; <br>
-					<input name="answerTypeEdit" type="radio" value="fileupload" /> <?php echo t('File Upload')?>
-					<input name="answerTypeEdit" type="radio" value="email" /> <?php echo t('Email Address')?> &nbsp; <br>
-					<input name="answerTypeEdit" type="radio" value="telephone" /> <?php echo t('Telephone')?> &nbsp; <br>
-					<input name="answerTypeEdit" type="radio" value="url" /> <?php echo t('Web Address')?> &nbsp; <br>
-				</div>
-				<div class="ccm-spacer"></div>
-			</div>
-			
-			<div class="fieldRow" id="answerOptionsAreaEdit">
-				<div class="fieldLabel"><?php echo t('Answer Options')?>: </div>
-				<div class="fieldValues">
-					<textarea id="answerOptionsEdit" name="answerOptionsEdit" cols="50" rows="4" style="width:90%"></textarea><br />
-					<?php echo t('Put each answer options on a new line')?>			
-				</div>
-				<div class="ccm-spacer"></div>
-			</div>
-				
-			<div class="fieldRow" id="answerSettingsEdit">
-				<div class="fieldLabel"><?php echo t('Settings')?>: </div>
-				<div class="fieldValues">
-					<?php echo t('Text Area Width')?>: <input id="widthEdit" name="width" type="text" value="50" size="3"/> <br />
-					<?php echo t('Text Area Height')?>: <input id="heightEdit" name="height" type="text" value="3" size="2"/>
-				</div>
-				<div class="ccm-spacer"></div>
-			</div>
-			
-			<div class="fieldRow" id="questionRequired">
-				<div class="fieldLabel">&nbsp;</div>
-				<div class="fieldValues"> 
-					<input id="requiredEdit" name="required" type="checkbox" value="1" />
-					<?php echo t('This question is required.')?> 
-				</div>
-				<div class="ccm-spacer"></div>
-			</div>		
-			
 			<input type="hidden" id="positionEdit" name="position" type="text" value="1000" />
-			<input id="cancelEditQuestion" name="cancelEdit" type="button" value="Cancel"/>
-			<input id="editQuestion" name="edit" type="button" value="Save Changes &raquo;"/>
+			
+			<?=$fh->jsbutton('cancelEditQuestion', t('Cancel'))?>
+			<?=$fh->jsbutton('editQuestion', t('Save Changes'), 'primary')?>
 		</div>
 	
 		<div id="miniSurvey">
