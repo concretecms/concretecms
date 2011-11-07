@@ -85,6 +85,7 @@ $(function() {
 		<p><?=t('This cannot be undone.')?></p>
 			<input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
 			<input type="hidden" name="ctask" value="delete">
+			<input type="hidden" name="processCollection" value="1" />
 			<input type="hidden" name="display_mode" value="<?=$_REQUEST['display_mode']?>" />
 			<input type="hidden" name="instance_id" value="<?=$_REQUEST['instance_id']?>" />
 			<input type="hidden" name="select_mode" value="<?=$_REQUEST['select_mode']?>" />
