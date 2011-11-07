@@ -97,11 +97,12 @@ class FormBlockController extends BlockController {
 		if(!$data['oldQsID']) $data['oldQsID']=$data['qsID']; 
 		$data['bID']=intval($this->bID); 
 		
-		if(!isset($data['redirect']) || $data['redirect'] <= 0) {
+		if(!empty($data['redirectCID'])) {
+			$data['redirect'] = 1;
+		} else {
+			$data['redirect'] = 0;
 			$data['redirectCID'] = 0;
-		} 
-		
-		
+		}
 		
 		$v = array( $data['qsID'], $data['surveyName'], intval($data['notifyMeOnSubmission']), $data['recipientEmail'], $data['thankyouMsg'], intval($data['displayCaptcha']), intval($data['redirectCID']), intval($this->bID) );
  		
