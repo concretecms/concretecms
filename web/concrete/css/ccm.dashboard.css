@@ -29,3 +29,5 @@ div.ccm-permissions-entities-wrapper h3 img{float:right;margin-top:10px;}
 div.ccm-permissions-entity-base{display:none;}
 #ccm-dashboard-user-body img.u-avatar{float:right;margin:0px 0px 10px 10px;}
 tr.ccm-theme-active td{background-color:#DDF4FB !important;}
+.ccm-inline-form-and-text{margin-bottom:10px;}
+table#ip-blacklist td label{width:auto;text-align:left;}
