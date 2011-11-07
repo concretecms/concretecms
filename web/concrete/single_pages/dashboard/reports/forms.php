@@ -1,4 +1,90 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+/* @var $h ConcreteDashboardHelper */
+$h = Loader::helper('concrete/dashboard');
+/* @var $ih ConcreteInterfaceHelper */
+$ih = Loader::helper('concrete/interface');
+/* @var $nh NavigationHelper */
+$nh = Loader::helper('navigation');
+/* @var $text TextHelper */
+$text = Loader::helper('text');
+/* @var $db DataBase */
+$db = Loader::db();
+?>
+<?=$h->getDashboardPaneHeaderWrapper(t('Form Results'), false, false, false);?>
+<div class="ccm-pane-body">
+<table class="zebra-striped">
+	<thead>
+		<tr>
+			<th><?php echo t('Form')?></th>
+			<th><?php echo t('Submissions')?></th>
+			<th><?php echo t('Options')?></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?foreach ($surveys as $qsid => $survey):
+		$block = Block::getByID((int) $survey['bID']);
+		if (!is_object($block)) {
+			continue;
+		}
+		$pages = $db->getOne(
+			'SELECT count(*)
+			FROM CollectionVersionBlocks
+			INNER JOIN Pages
+			ON CollectionVersionBlocks.cID = Pages.cID
+			INNER JOIN CollectionVersions
+			ON CollectionVersions.cID = Pages.cID
+			WHERE CollectionVersions.cvIsApproved = 1
+			AND CollectionVersionBlocks.cvID = CollectionVersions.cvID
+			AND CollectionVersionBlocks.bID = ?',
+			array($block->bID)
+		);
+		$url = $nh->getLinkToCollection($block->getBlockCollectionObject());
+?>
+		<tr>
+			<td><?=$text->entities($survey['surveyName'])?></td>
+			<td><?=$text->entities($survey['answerSetCount'])?></td>
+			<td>
+				<a href="<?=$this->action()?>"></a>
+			</td>
+		</tr>
+		<?endforeach?>
+	<? 
+	$db = Loader::db();
+	foreach($surveys as $thisQuestionSetId=>$survey){
+		$b=Block::getByID( intval($survey['bID']) );
+		
+		//get count of number of times this block is used
+		$db = Loader::db();
+		$q = "select count(*) from CollectionVersionBlocks inner join Pages on (CollectionVersionBlocks.cID = Pages.cID) inner join CollectionVersions on (CollectionVersions.cID = Pages.cID) where CollectionVersions.cvIsApproved=1 AND CollectionVersionBlocks.cvID=CollectionVersions.cvID AND CollectionVersionBlocks.bID = '{$b->bID}'";
+		$blockActiveOnNumPages = $db->getOne($q);
+		
+		if (is_object($b)) {
+			$oc = $b->getBlockCollectionObject();
+			$ocID = $oc->getCollectionID();		
+			?>
+			<tr>
+				<td><?php echo $survey['surveyName']?></td>
+				<td><?php echo $survey['answerSetCount']?></td>
+				<td>
+					<a href="<?php echo DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?php echo $c->getCollectionId()?>&qsid=<?php echo $thisQuestionSetId?>"><?php echo t('View Responses')?></a>
+					|
+					<a href="<?php echo DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?php echo $ocID?>"><?php echo t('Open Page')?></a>	
+					<? if(!intval($blockActiveOnNumPages)){ ?>
+					| 
+					<a onclick="return deleteForm()" href="<?php echo DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?php echo $c->getCollectionId()?>&bID=<?php echo $survey['bID']?>&qsID=<?php echo $thisQuestionSetId?>&action=deleteForm"><?php echo t('Delete Unused Form')?></a>
+					<? } ?>
+				</td>				
+			</tr>
+		<? }
+		
+	}?>
+	</tbody>
+</table>
+</div><div class="ccm-pane-footer">
+
+</div>
+<?=$h->getDashboardPaneFooterWrapper(false);?>
+<?return;?>
 <script>
 <? 
 
