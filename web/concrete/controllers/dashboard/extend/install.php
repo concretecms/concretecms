@@ -83,21 +83,39 @@ class DashboardExtendInstallController extends Controller {
 	public function package_uninstalled() {
 		$this->set('message', t('The package type has been uninstalled.'));
 	}
-	
+
 	public function install_package($package) {
 		$tp = new TaskPermission();
 		if ($tp->canInstallPackages()) { 
-			$tests = Package::testForInstall($package);
-			if (is_array($tests)) {
-				$tests = Package::mapError($tests);
-				$this->set('error', $tests);
-			} else {
-				$p = Loader::package($package);
-				try {
-					$p->install();
-					$this->set('message', t('The package has been installed.'));
-				} catch(Exception $e) {
-					$this->set('error', $e);
+			$p = Loader::package($package);
+			if (is_object($p)) {
+				if (
+					(!$p->showInstallOptionsScreen()) ||
+					Loader::helper('validation/token')->validate('install_options_selected')
+				) {
+					$tests = Package::testForInstall($package);
+					if (is_array($tests)) {
+						$tests = Package::mapError($tests);
+						$this->set('error', $tests);
+					} else {
+						try {
+							$u = new User();
+							$p->install($this->post());
+							if ($u->isSuperUser() && $p->allowsFullContentSwap() && $this->post('pkgDoFullContentSwap')) { 
+								$p->swapContent($this->post());
+							}
+							$this->set('message', t('The package has been installed.'));
+						} catch(Exception $e) {
+							if ($p->showInstallOptionsScreen()) {
+								$this->set('showInstallOptionsScreen', true);
+								$this->set('pkg', $p);
+							}
+							$this->set('error', $e);
+						}
+					}
+				} else {
+					$this->set('showInstallOptionsScreen', true);
+					$this->set('pkg', $p);
 				}
 			}
 		} else {
@@ -105,7 +123,6 @@ class DashboardExtendInstallController extends Controller {
 			$this->set('error', $this->error);
 		}
 	}
-	
 
     public function download($remoteMPID=null) {
 		$tp = new TaskPermission();

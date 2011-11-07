@@ -58,29 +58,26 @@ class PackageList extends Object {
 		if ($pkgID < 1) {
 			return false;
 		}
-		$pkgHandle = Cache::get('pkgHandle', $pkgID);
-		if ($pkgHandle != false) {
-			return $pkgHandle;
+		$packageList = Cache::get('packageHandleList', false);
+		if (is_array($packageList)) {
+			return $packageList[$pkgID];
 		}
 		
-		$pl = PackageList::get();
-		$handle = null;
-		$plitems = $pl->getPackages();
-		
-		foreach($plitems as $p) {
-			if ($p->getPackageID() == $pkgID) {
-				$handle = $p->getPackageHandle();
-				break;
-			}
+		$packageList = array();
+		$db = Loader::db();
+		$r = $db->Execute('select pkgID, pkgHandle from Packages where pkgIsInstalled = 1');
+		while ($row = $r->FetchRow()) {
+			$packageList[$row['pkgID']] = $row['pkgHandle'];
 		}
-
-		Cache::set('pkgHandle', $pkgID, $handle);
-		return $handle;
+		
+		Cache::set('packageHandleList', false, $packageList);
+		return $packageList[$pkgID];
 	}
 	
 	public static function refreshCache() {
 		Cache::delete('pkgList', 1);
 		Cache::delete('pkgList', 0);
+		Cache::delete('packageHandleList', false);
 	}
 	
 	public static function get($pkgIsInstalled = 1) {
@@ -159,6 +156,7 @@ class Package extends Object {
 		return '';
 	}
 	protected $appVersionRequired = '5.0.0';
+	protected $pkgAllowsFullContentSwap = false;
 	
 	const E_PACKAGE_NOT_FOUND = 1;
 	const E_PACKAGE_INSTALLED = 2;
@@ -173,6 +171,18 @@ class Package extends Object {
 
 	public function getApplicationVersionRequired() {
 		return $this->appVersionRequired;
+	}
+	
+	public function hasInstallNotes() {
+		return file_exists($this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/install.php');
+	}
+	
+	public function allowsFullContentSwap() {
+		return $this->pkgAllowsFullContentSwap;
+	}
+	
+	public function showInstallOptionsScreen() {
+		return $this->hasInstallNotes() || $this->allowsFullContentSwap();
 	}
 	
 	public static function installDB($xmlFile) {
@@ -245,7 +255,6 @@ class Package extends Object {
 	public function getPackageItems() {
 		$items = array();
 		Loader::model('single_page');
-		Loader::model('dashboard/homepage');
 		Loader::library('mail/importer');
 		Loader::model('job');
 		Loader::model('collection_types');
@@ -254,7 +263,6 @@ class Package extends Object {
 		$items['attribute_sets'] = AttributeSet::getListByPackage($this);
 		$items['page_types'] = CollectionType::getListByPackage($this);
 		$items['mail_importers'] = MailImporter::getListByPackage($this);
-		$items['dashboard_modules'] = DashboardHomepageView::getModules($this);
 		$items['configuration_values'] = Config::getListByPackage($this);
 		$items['block_types'] = BlockTypeList::getByPackage($this);
 		$items['page_themes'] = PageTheme::getListByPackage($this);
@@ -270,7 +278,6 @@ class Package extends Object {
 	public static function getItemName($item) {
 		$txt = Loader::helper('text');
 		Loader::model('single_page');
-		Loader::model('dashboard/homepage');
 		if ($item instanceof BlockType) {
 			return $item->getBlockTypeName();
 		} else if ($item instanceof PageTheme) {
@@ -293,8 +300,6 @@ class Package extends Object {
 			return t(' %s (%s)', $txt->unhandle($item->getAttributeKeyHandle()), $txt->unhandle($akc->getAttributeKeyCategoryHandle()));
 		} else if ($item instanceof ConfigValue) {
 			return ucwords(strtolower($txt->unhandle($item->key)));
-		} else if ($item instanceof DashboardHomepage) {
-			return t('%s (%s)', $item->dbhDisplayName, $txt->unhandle($item->dbhModule));
 		} else if (is_a($item, 'TaskPermission')) {
 			return $item->getTaskPermissionName();			
 		} else if (is_a($item, 'Job')) {
@@ -338,9 +343,6 @@ class Package extends Object {
 							$co->setPackageObject($this);
 							$co->clear($item->key);
 							break;
-						case 'DashboardHomepage':
-							$item->Delete();
-							break;
 						case 'AttributeKeyCategory':
 						case 'AttributeSet':
 						case 'AttributeType':
@@ -360,6 +362,72 @@ class Package extends Object {
 		}
 		$db->Execute("delete from Packages where pkgID = ?", array($this->pkgID));
 		PackageList::refreshCache();
+	}
+	
+	protected function validateClearSiteContents($options) {
+		$u = new User();
+		if ($u->isSuperUser()) { 
+			// this can ONLY be used through the post. We will use the token to ensure that
+			$valt = Loader::helper('validation/token');
+			if ($valt->validate('install_options_selected', $options['ccm_token'])) {
+				return true;	
+			}
+		}
+		return false;
+	}
+	
+	public function clearSiteContents($options) {
+		if ($this->validateClearSiteContents($options)) { 
+			Loader::model("page_list");
+			Loader::model("file_list");
+			Loader::model("stack/list");
+
+			$pl = new PageList();
+			$pages = $pl->get();
+			foreach($pages as $c) {
+				$c->delete();
+			}
+			
+			$fl = new FileList();
+			$files = $fl->get();
+			foreach($files as $f) {
+				$f->delete();
+			}
+			
+			// clear stacks
+			$sl = new StackList();
+			foreach($sl->get() as $c) {
+				$c->delete();
+			}
+			
+			$home = Page::getByID(HOME_CID);
+			$blocks = $home->getBlocks();
+			foreach($blocks as $b) {
+				$b->deleteBlock();
+			}
+			
+			$pageTypes = CollectionType::getList();
+			foreach($pageTypes as $ct) {
+				$ct->delete();
+			}
+			
+			// now we add in any files that this package has
+			if (is_dir($this->getPackagePath() . '/content_files')) {
+				Loader::library('file/importer');
+				$fh = new FileImporter();
+				$contents = Loader::helper('file')->getDirectoryContents($this->getPackagePath() . '/content_files');
+		
+				foreach($contents as $filename) {
+					$f = $fh->import($this->getPackagePath() . '/content_files/' . $filename, $filename);
+				}
+			}	
+			
+			// now we parse the content.xml if it exists.
+			Loader::library('content/importer');
+			$ci = new ContentImporter();
+			$ci->importContentFile($this->getPackagePath() . '/content.xml');
+
+		}
 	}
 	
 	public function testForInstall($package, $testForAlreadyInstalled = true) {

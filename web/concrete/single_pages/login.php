@@ -263,9 +263,9 @@ $(function() {
 <div class="clearfix">
 <h3><?=t('Not a Member')?></h3>
 <p><?=t('Create a user account for use on this website.')?></p>
-<p>
+<div class="actions">
 <a class="btn" href="<?=$this->url('/register')?>"><?=t('Register here!')?></a>
-</p>
+</div>
 </div>
 <? } ?>
 

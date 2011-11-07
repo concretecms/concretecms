@@ -249,6 +249,7 @@ define("FILENAME_LOCAL_DB", 'site_db.xml');
 
 # Block Types
 define('BLOCK_TYPE_GENERIC_ICON', ASSETS_URL_IMAGES . '/icons/icon_block_type_generic.png');
+define('PACKAGE_GENERIC_ICON', ASSETS_URL_IMAGES . '/icons/icon_package_generic.png');
 
 # Controllers
 define('DIR_FILES_CONTROLLERS', DIR_BASE . '/controllers');
