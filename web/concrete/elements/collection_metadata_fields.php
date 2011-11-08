@@ -88,8 +88,8 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 		$caValue = $c->getAttributeValueObject($ak); ?>
 
 	
-		
-		<div class="well form-stacked" id="ak<?=$ak->getAttributeKeyID()?>" <? if (!in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?> style="display: none" <? } ?>>
+		<div class="form-stacked">
+		<div class="well" id="ak<?=$ak->getAttributeKeyID()?>" <? if (!in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?> style="display: none" <? } ?>>
 		<input type="hidden" class="ccm-meta-field-selected" id="ccm-meta-field-selected<?=$ak->getAttributeKeyID()?>" name="selectedAKIDs[]" value="<? if (!in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>0<? } else { ?><?=$ak->getAttributeKeyID()?><? } ?>" />
 		
 			<a href="javascript:void(0)" class="ccm-meta-close" ccm-meta-name="<?=$ak->getAttributeKeyName()?>" id="ccm-remove-field-ak<?=$ak->getAttributeKeyID()?>" style="display:<?=(!in_array($ak->getAttributeKeyID(), $requiredKeys))?'block':'none'?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" alt="<?=t('remove')?>" /></a>
@@ -97,6 +97,8 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 			<label><?=$ak->getAttributeKeyName()?></label>
 			<?=$ak->render('form', $caValue); ?>
 		</div>
+		</div>
+		
 	<? } 
 	$contents = ob_get_contents();
 	ob_end_clean(); ?>	
