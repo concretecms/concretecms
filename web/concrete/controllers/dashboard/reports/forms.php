@@ -3,7 +3,7 @@ Loader::block('form');
 
 class DashboardReportsFormsController extends Controller {
 
-	private $pageSize=3; 
+	private $pageSize=10; 
 
 	public function view(){	
 		if($_REQUEST['all']){
@@ -131,8 +131,8 @@ class DashboardReportsFormsController extends Controller {
 		$c=$this->getCollectionObject();
 		$db = Loader::db();
 		$tempMiniSurvey = new MiniSurvey();
-		$pageBase = Loader::helper('navigation')->getLinkToCollection($c);
-
+		$pageBase = DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID();
+		
 		if( $_REQUEST['action'] == 'deleteForm' ){
 			$this->deleteForm($_REQUEST['bID'], $_REQUEST['qsID']);
 		}	

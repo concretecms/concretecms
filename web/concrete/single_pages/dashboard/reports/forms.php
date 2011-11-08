@@ -33,8 +33,19 @@ jQuery(function($) {
 });
 </script>
 <?if(!isset($questionSet)):?>
-<?=$h->getDashboardPaneHeaderWrapper(t('Form Results'), false, false, false);?>
-<div class="ccm-pane-body">
+<?=$h->getDashboardPaneHeaderWrapper(t('Form Results'));?>
+<?
+$showTable = false;
+foreach ($surveys as $qsid => $survey) {
+	$block = Block::getByID((int) $survey['bID']);
+	if (is_object($block)) {
+		$showTable = true;
+		break;
+	}
+}
+
+if ($showTable) { ?>
+
 <table class="zebra-striped">
 	<thead>
 		<tr>
@@ -44,7 +55,7 @@ jQuery(function($) {
 		</tr>
 	</thead>
 	<tbody>
-		<?foreach ($surveys as $qsid => $survey):
+		<? foreach ($surveys as $qsid => $survey):
 		$block = Block::getByID((int) $survey['bID']);
 		if (!is_object($block)) {
 			continue;
@@ -67,23 +78,23 @@ jQuery(function($) {
 			<td><?=$text->entities($survey['surveyName'])?></td>
 			<td><?=$text->entities($survey['answerSetCount'])?></td>
 			<td>
-				<?=$ih->button(t('View Responses'), $this->action('').'?qsid='.$qsid, 'left', 'primary')?>
-				<?=$ih->button(t('Open Page'), $url, 'left')?>
+				<?=$ih->button(t('View Responses'), DIR_REL . '/index.php?cID=' . $c->getCollectionID().'&qsid='.$qsid, 'left', 'primary small')?>
+				<?=$ih->button(t('Open Page'), $url, 'left', 'small')?>
 				<?if(!$in_use):?>
-				<?=$ih->button(t('Delete'), $this->action('').'?bID='.$survey['bID'].'&qsID='.$qsid.'&action=deleteForm', 'left', 'danger delete-form')?>
+				<?=$ih->button(t('Delete'), $this->action('').'?bID='.$survey['bID'].'&qsID='.$qsid.'&action=deleteForm', 'left', 'small error delete-form')?>
 				<?endif?>
 			</td>
 		</tr>
 		<?endforeach?>
 	</tbody>
 </table>
-</div><div class="ccm-pane-footer">
-
-</div>
-<?=$h->getDashboardPaneFooterWrapper(false);?>
+<? } else { ?>
+	<p><?=t('There are no available forms in your site.')?></p>
+<? } ?>
+<?=$h->getDashboardPaneFooterWrapper();?>
 <?else:?>
 <?=$h->getDashboardPaneHeaderWrapper(t('Responses to %s', $surveys[$questionSet]['surveyName']), false, false, false);?>
-<div class="ccm-pane-body">
+<div class="ccm-pane-body <? if(!$paginator || !strlen($paginator->getPages())>0){ ?> ccm-pane-body-footer <? } ?>">
 <ul class="breadcrumb">
 	<li><a href="<?=$this->action('')?>">&lt; <?=t('Return to Form List')?></a></li>
 </ul>
@@ -91,20 +102,24 @@ jQuery(function($) {
 <div><?=t('No one has yet submitted this form.')?></div>
 <?else:?>
 
+<div class="ccm-list-action-row">
+	<a id="ccm-export-results" href="<?=$this->action('excel', '?qsid=' . $questionSet)?>"><span></span><?=t('Export to Excel')?></a>
+</div>
+
 <table class="zebra-striped">
 	<thead>
 		<tr>
 			<? if($_REQUEST['sortBy']=='chrono') { ?>
-			<th class="header headerSortUp">
+			<th class="header headerSortDown">
 				<a href="<?=$text->entities($urlhelper->unsetVariable('sortBy'))?>">
 			<? } else { ?>
-			<th class="header headerSortDown">
+			<th class="header headerSortUp">
 				<a href="<?=$text->entities($urlhelper->setVariable('sortBy', 'chrono'))?>">
 			<? } ?>		
-				<?=t('Submitted Date')?>
+				<?=t('Date')?>
 				</a>
 			</th>
-			<th><?=t('Submitted By User')?></th>
+			<th><?=t('User')?></th>
 <?foreach($questions as $question):?>
 			<th><?=$question['question']?></th>
 <?endforeach?>
@@ -150,28 +165,28 @@ endforeach?>
 					t("Delete"),
 					$this->action('').'?qsid='.$answerSet['questionSetId'].'&asid='.$answerSet['asID'].'&action=deleteResponse',
 					'left',
-					'danger delete-response'
+					'danger delete-response small'
 				)?>
 			</td>
 		</tr>
 <?endforeach?>
 	</tbody>
 </table>
+</div>
 <? if($paginator && strlen($paginator->getPages())>0){ ?>	 
-	 <div class="pagination">
-		 <div class="pageLeft"><?=$paginator->getPrevious()?></div>
-		 <div class="pageRight"><?=$paginator->getNext()?></div>
-		 <?=$paginator->getPages()?>
-	 </div>		
+<div class="ccm-pane-footer">
+	<div class="pagination">
+	  <ul>
+		  <li class="prev"><?=$paginator->getPrevious()?></li>
+		  
+		  <? // Call to pagination helper's 'getPages' method with new $wrapper var ?>
+		  <?=$paginator->getPages('li')?>
+		  
+		  <li class="next"><?=$paginator->getNext()?></li>
+	  </ul>
+	</div>
+</div>
 <? } ?>		
 <?endif?>
-</div><div class="ccm-pane-footer">
-<?=$ih->button(t('Export to Excel'), $this->action('excel', '?qsid=' . $questionSet))?>
-<?if(!isset($_REQUEST['all']) || $_REQUEST['all'] !=1 ):?>
-<?=$ih->button(t('Show All'), $this->action('').'?all=1&sortBy='.$_REQUEST['sortBy'].'&qsid='.$questionSet)?>
-<?else:?>
-<?=$ih->button(t('Show Paging'), $this->action('').'?all=0&sortBy='.$_REQUEST['sortBy'].'&qsid='.$questionSet)?>
-<?endif?>
-</div>
 <?=$h->getDashboardPaneFooterWrapper(false);?>
 <?endif?>

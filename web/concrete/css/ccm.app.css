@@ -538,6 +538,7 @@ div.ccm-paging-top{font-size:13px;padding-top:0px;padding-bottom:5px;font-weight
 div#ccm-list-wrapper div.ccm-pagination{font-size:14px;padding:0px;margin-top:12px;margin-bottom:12px;position:static;}
 div#ccm-list-wrapper div.ccm-pagination span.ccm-page-left{position:static;float:left;text-align:left;display:block;width:100px;}
 div#ccm-list-wrapper div.ccm-pagination span.ccm-page-right{position:static;float:right;text-align:right;display:block;width:100px;}
+div.ccm-list-action-row{float:right;margin-bottom:10px;}
 table.ccm-results-list td{vertical-align:middle;}
 table.ccm-results-list ul.media-grid{margin-left:0px;width:auto;}
 table.ccm-results-list ul.media-grid a{margin-left:auto;margin-right:auto;margin-bottom:0px;}
