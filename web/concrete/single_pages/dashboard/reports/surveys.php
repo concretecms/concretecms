@@ -88,7 +88,7 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
             </tbody>
 		</table>
 		
-		<? $surveyList->displayPaging(); ?>
+		<? $surveyList->displayPagingV2(); ?>
     
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
 

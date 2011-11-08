@@ -117,12 +117,12 @@ if (isset($_REQUEST['searchInstance'])) {
 </div>
 
 <div class="ccm-pane-footer">
-	<? 	$fileList->displayPaging($bu, false, $soargs); ?>
+	<? 	$fileList->displayPagingV2($bu, false, $soargs); ?>
 </div>
 
 <? } else { ?>
 	<div class="ccm-pane-dialog-pagination">
-		<? 	$fileList->displayPaging($bu, false, $soargs); ?>
+		<? 	$fileList->displayPagingV2($bu, false, $soargs); ?>
 	</div>
 <? } ?>
 

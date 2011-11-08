@@ -401,7 +401,7 @@ class ItemList {
 		return $summary->pages > 1;
 	}
 	
-	public function getPagination($url = false, $additionalVars = array(), $hash = false) {
+	public function getPagination($url = false, $additionalVars = array()) {
 		$pagination = Loader::helper('pagination');
 		if ($this->currentPage == false) {
 			$this->setCurrentPage();
@@ -410,15 +410,36 @@ class ItemList {
 			$pagination->setAdditionalQueryStringVariables($additionalVars);
 		}
 		$pagination->queryStringPagingVariable = $this->queryStringPagingVariable;
-		$pagination->init($this->currentPage, $this->getTotal(), $url, $this->itemsPerPage, $hash);
+		$pagination->init($this->currentPage, $this->getTotal(), $url, $this->itemsPerPage);
 		return $pagination;
+	}
+
+	/** 
+	 * Gets paging that works in our new format */
+	public function displayPagingV2($script = false, $return = false, $additionalVars = array()) {
+		$summary = $this->getSummary();
+		$paginator = $this->getPagination($script, $additionalVars);
+		if ($summary->pages > 1) {
+			$html .= '<div class="pagination ccm-pagination"><ul>';
+			$html .= '<li class="prev">' . $paginator->getPrevious() . '</li>';
+			$html .= $paginator->getPages('li');
+			$html .= '<li class="next">' . $paginator->getNext() . '</li>';
+			$html .= '</ul></div>';
+		}
+		if (isset($html)) {
+			if ($return) {
+				return $html;
+			} else {
+				print $html;
+			}
+		}
 	}
 	
 	/** 
 	 * Gets standard HTML to display paging */
-	public function displayPaging($script = false, $return = false, $additionalVars = array(), $hash = false) {
+	public function displayPaging($script = false, $return = false, $additionalVars = array()) {
 		$summary = $this->getSummary();
-		$paginator = $this->getPagination($script, $additionalVars, $hash);
+		$paginator = $this->getPagination($script, $additionalVars);
 		if ($summary->pages > 1) {
 			$html = '<div class="ccm-spacer"></div>';
 			$html .= '<div class="ccm-pagination">';

@@ -109,12 +109,12 @@
 </div>
 
 <div class="ccm-pane-footer">
-	<? 	$userList->displayPaging($bu, false, $soargs); ?>
+	<? 	$userList->displayPagingV2($bu, false, $soargs); ?>
 </div>
 
 <? } else { ?>
 	<div class="ccm-pane-dialog-pagination">
-		<? 	$userList->displayPaging($bu, false, $soargs); ?>
+		<? 	$userList->displayPagingV2($bu, false, $soargs); ?>
 	</div>
 <? } ?>
 

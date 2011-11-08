@@ -248,7 +248,7 @@
 	</div>
 	<? if ($fsl->requiresPaging()) { ?>
 		<div class="ccm-pane-footer">
-		<? $fsl->displayPaging(); ?>
+		<? $fsl->displayPagingV2(); ?>
 		</div>
 	<? } ?>
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper($fsl->requiresPaging())?>
