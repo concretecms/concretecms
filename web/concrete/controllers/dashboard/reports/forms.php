@@ -15,14 +15,6 @@ class DashboardReportsFormsController extends Controller {
 		$this->loadSurveyResponses();
 	}
 	
-	function delete($survey_id = null) {
-		
-	}
-	
-	function responses($survey_id = null) {
-		
-	}
-
 	public function excel(){ 
 		$dateHelper = Loader::helper('date');
 		
