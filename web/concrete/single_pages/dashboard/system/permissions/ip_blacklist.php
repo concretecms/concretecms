@@ -12,7 +12,7 @@ $h = Loader::helper('concrete/dashboard');?>
 				
 				<?php echo $form->text('ip_ban_lock_ip_attempts', $ip_ban_lock_ip_after_attempts, array('style'=>'width:30px'))?>
 				<?php echo t('failed login attempts');?>		
-				in		
+				<?php echo t('in');?>		
 				<?php echo $form->text('ip_ban_lock_ip_time', $ip_ban_lock_ip_after_time, array('style'=>'width:30px'))?>				
 				<?php echo t('seconds');?>				
 			</div>	
