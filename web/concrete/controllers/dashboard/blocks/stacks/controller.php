@@ -20,8 +20,12 @@ class DashboardBlocksStacksController extends DashboardBaseController {
 	
 	public function add_stack() {
 		if (Loader::helper('validation/token')->validate('add_stack')) {
-			$stack = Stack::addStack($this->post('stackName'));
-			$this->redirect('/dashboard/blocks/stacks', 'stack_added');
+			if (Loader::helper('validation/strings')->notempty($this->post('stackName')))  {
+				$stack = Stack::addStack($this->post('stackName'));
+				$this->redirect('/dashboard/blocks/stacks', 'stack_added');
+			} else {
+				$this->error->add(t("You must give your stack a name."));
+			}
 		} else {
 			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
 		}
