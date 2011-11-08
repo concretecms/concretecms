@@ -163,7 +163,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 
 	<div class="well" style="padding:10px 20px;">
         <h3><?=t('Looking for more themes?')?></h3>
-        <p><a href="<?=$this->url('/dashboard/install', 'browse', 'themes')?>"><?=t("Download more themes from the concrete5.org marketplace.")?></a></p>
+        <p><a href="<?=$this->url('/dashboard/extend/themes')?>"><?=t("Download more themes from the concrete5.org marketplace.")?></a></p>
     </div>
     
     <? } ?>
