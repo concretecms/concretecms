@@ -115,7 +115,7 @@ if ($tp->canInstallPackages()) {
 			</tr>
 		</table>
 		<? $url = Loader::helper('url')->unsetVariable('prev'); ?>
-		<div class="ccm-pane-footer" id="ccm-marketplace-browse-footer"><?=$list->displayPaging($url)?></div>
+		<div class="ccm-pane-footer" id="ccm-marketplace-browse-footer"><?=$list->displayPagingV2($url)?></div>
 	<? } ?>
 </div>
 

@@ -323,9 +323,9 @@ class ConcreteDashboardSitemapHelper {
 		if ($req->total > count($req->results) && $nodeID > 1) {
 			if ($display_mode == 'explore' || $select_mode == 'move_copy_delete' || $select_mode == 'select_page') {
 				if ($display_mode == 'explore') { 
-					$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPaging(false, true) . '</li>';
+					$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPagingV2(false, true) . '</li>';
 				} else {
-					$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPaging(REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_data', true, array('node' => $nodeID)) . '</li>';
+					$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPagingV2(REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_data', true, array('node' => $nodeID)) . '</li>';
 				}
 			} else {
 				$drillDownAction = ($req->keywords != null) ? View::url('/dashboard/sitemap/search?cvName=' . $req->keywords . '&selectedSearchField[]=parent&numResults=' . SITEMAP_PAGES_LIMIT . '&' . PAGING_STRING . '=2&cParentAll=1&ccm_order_by=cDisplayOrder&cParentIDSearchField=' . $nodeID) : View::url('/dashboard/sitemap/explore', $nodeID);

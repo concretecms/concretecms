@@ -115,12 +115,12 @@ if (isset($_REQUEST['searchInstance'])) {
 </div>
 
 <div class="ccm-pane-footer">
-	<? 	$pageList->displayPaging($bu, false, $soargs); ?>
+	<? 	$pageList->displayPagingV2($bu, false, $soargs); ?>
 </div>
 
 <? } else { ?>
 	<div class="ccm-pane-dialog-pagination">
-		<? 	$pageList->displayPaging($bu, false, $soargs); ?>
+		<? 	$pageList->displayPagingV2($bu, false, $soargs); ?>
 	</div>
 <? } ?>
 

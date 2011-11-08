@@ -37,7 +37,7 @@ class PaginationHelper {
 	
 	}
 	
-	function init($page_num,$num_results=0,$URL='',$size=20,$hash=false){
+	function init($page_num,$num_results=0,$URL='',$size=20){
 		$page_num=intval($page_num);
 		if($page_num>0) $page_num--;
 		$this->current_page=$page_num;
@@ -46,9 +46,6 @@ class PaginationHelper {
 			$this->URL = $this->getBaseURL();
 		} else {
 			$this->URL = $this->getBaseURL($URL);
-		}
-		if ($hash) {
-			$this->URL .= '#' . $hash;
 		}
 		$this->page_size=intval($size); 
 		//calulate the number of pages

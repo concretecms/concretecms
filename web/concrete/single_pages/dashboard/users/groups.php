@@ -98,7 +98,7 @@ foreach ($gResults as $g) { ?>
 </div>
 <? if ($gl->requiresPaging()) { ?>
 <div class="ccm-pane-footer">
-	<?=$gl->displayPaging();?>
+	<?=$gl->displayPagingV2();?>
 </div>
 <? } ?>
 
