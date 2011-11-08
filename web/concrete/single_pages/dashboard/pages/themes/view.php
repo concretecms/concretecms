@@ -58,14 +58,9 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
     
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Themes'), false, 'span12 offset2');?>
 	
+	<h3><?=t('Currently Installed')?></h3>
+	
 	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="zebra-striped">
-    	<thead>
-        	<tr>
-            	<th <? if (count($tArray) !== 0) { ?>colspan="2"<? } ?>>
-                	<?=t('Currently Installed')?>
-				</th>
-            </tr>
-		</thead>
 	<?
 	if (count($tArray) == 0) { ?>
 		
@@ -122,15 +117,12 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
     
 	<? 
 	if (count($tArray2) > 0) { ?>
-    
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="zebra-striped">
-    	<thead>
-        	<tr>
-            	<th colspan="2"><?=t('Themes Available to Install')?></th>
-            </tr>
-		</thead>
-        <tbody>
 
+	<h3><?=t('Themes Available to Install')?></h3>
+	
+
+	<table>
+		<tbody>
 		<? foreach ($tArray2 as $t) { ?>
             <tr>
                 
