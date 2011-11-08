@@ -46,8 +46,8 @@ $ih = Loader::helper('concrete/interface');
 				<?=$form->label('recipientEmail', t('Notify me by email when people submit this form'))?>
 				<div class="input">
 					<div class="input-prepend">
-						<label class="add-on">
-							<?=$form->checkbox('notifyMeOnSubmission', 1, $miniSurveyInfo['notifyMeOnSubmission'] == 1)?>
+						<label class="add-on" style="z-index: 2000">
+							<?=$form->checkbox('notifyMeOnSubmission', 1, $miniSurveyInfo['notifyMeOnSubmission'] == 1, array('onclick' => "$('input[name=recipientEmail]').focus()"))?>
 						</label>
 						<?=$form->text('recipientEmail', $miniSurveyInfo['recipientEmail'])?>
 					</div>
@@ -198,9 +198,9 @@ $ih = Loader::helper('concrete/interface');
 				</div>
 			</div>
 			
-			<div>
+			<div class="actions">
 				<?=$ih->button(t('Refresh'), '#', 'left', '', array('style' => 'display:none', 'id' => 'refreshButton'))?>
-				<?=$ih->button(t('Add Question'), '#', 'right', 'primary', array('id' => 'addQuestion'))?>
+				<?=$ih->button(t('Add Question'), '#', '', '', array('id' => 'addQuestion'))?>
 			</div>
 		</fieldset> 
 	</div> 
