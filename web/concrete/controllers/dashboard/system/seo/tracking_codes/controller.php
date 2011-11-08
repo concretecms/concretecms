@@ -3,7 +3,11 @@ class DashboardSystemSeoTrackingCodesController extends DashboardBaseController 
 
 	public function view() {
 		$this->set('tracking_code', Config::get('SITE_TRACKING_CODE'));
-		$this->set('tracking_code_position', Config::get('SITE_TRACKING_CODE_POSITION'));
+		$tracking_code_position = Config::get('SITE_TRACKING_CODE_POSITION');
+		if (!$tracking_code_position) {
+			$tracking_code_position = 'bottom';
+		}
+		$this->set('tracking_code_position', $tracking_code_position);
 
 		if ($this->isPost()) {
 			if ($this->token->validate('update_tracking_code')) {
