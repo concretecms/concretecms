@@ -86,7 +86,7 @@ $ih = Loader::helper('concrete/interface');
 		<div id="previewContainer" style="border: 2px solid #eee; height:500px;">
 			<div id="previewTheme">
 				<iframe name="preview-theme" id="preview-theme" height="100%" width="100%" src="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/themes/preview_internal?themeID=<?=$themeID?>&previewCID=1" border="0" frameborder="0"></iframe>
-			</div>                        
+			</div>
 		</div>
         
         
@@ -97,7 +97,7 @@ $ih = Loader::helper('concrete/interface');
     	<? print $ih->button(t('Return to Themes'), $this->url('/dashboard/pages/themes'), 'left'); ?>
         <? print $ih->button_js(t('Save'), 'saveCustomizedTheme()', 'right', 'primary'); ?>
         <? print $ih->button_js(t('Reset'), 'resetCustomizedTheme()', 'right', 'error'); ?>
-        <? print $ih->button_js(t("Fullscreen View"), "ccm_previewInternalThemeFullscreen(1, " . intval($t->getThemeID()) . ",'" . addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) . "')", 'right'); ?>
+        <? print $ih->button_js(t("Fullscreen View"), "ccm_previewInternalTheme(1, " . intval($t->getThemeID()) . ",'" . addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) . "')", 'right'); ?>
     </div>
 
     </form>
@@ -331,110 +331,7 @@ $ih = Loader::helper('concrete/interface');
             });
         });
 		
-		/////////////////////////////////////
-		// CODE TO AUTOMATICALLY LAUNCH STYLES DIALOGUE ON PAGE LOAD
-		
-		// Grab preview pane position relative to viewport to try and position the styles dialogue to the left of the top left corner.
-		
-		//var themePreviewPosition = $("div.ccm-pane").position();
-		
-		//		$("div#ccm-themes-styles-panel").dialog({
-		//			width: 210,
-		//			modal: false,
-		//			resizable: false,
-		//			title: 'Styles <span class=\'label\' style=\'line-height:1.2; position: absolute; top: 16px; right: 18px;\'>Drag me</span>',
-		//			dialogClass: 'ccm-ui',
-		//			open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
-		//			position: [(themePreviewPosition.left-230),themePreviewPosition.top],
-		//			zIndex: 1499,
-		//			stack:false
-		//		});
-		
     });
-		
-	function ccm_closeInternalThemeFullscreenPreview(){
-		
-		// Functionality on 'exit fullscreen' button in Styles palette fullscreen dialog.
-		
-		$("div#previewTheme").dialog('close');
-		return false;
-		
-	}
-
-	function ccm_previewInternalThemeFullscreen(cID,themeID,themeName){
-		
-		// Custom version of the previewTheme JS from ccm.app.js
-		
-		$("div#ccm-themes-styles-panel").dialog({
-			width: 210,
-			modal: false,
-			resizable: false,
-			title: 'Styles <span class=\'label\' style=\'line-height:1.2; position: absolute; top: 16px; right: 18px;\'>Drag me</span>',
-			open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
-			position: ['left','bottom'],
-			zIndex: 1499,
-			dialogClass: 'ccm-ui',
-			stack:false
-		});
-		
-		$("div#previewTheme").dialog({
-			title: themeName,
-			width: '98%',
-			height: $(window).height()-20,
-			draggable: false,
-			modal: true,
-			resizable: false,
-			zIndex: 1100,
-			stack: false,
-			close: function(event, ui) { 
-			
-				// Put everything back on 'EXIT FULLSCREEN' or close 'x' in top right hand corner of fullscreen preview.
-				// The challenge here was to kick back into normal (not fullscreen) mode whilst keeping click/mousedown
-				// events on colourpicker / fonts / custom panel elements.
-				
-				// Remove any stubborn modal overlay to prevent z-index issues.
-				$(".ui-widget-overlay").remove();
-				
-				// Grab content nodes of our two (now dialog) main elements -- theme preview + styles.
-				// Copying the HTML() content over broke click event bindings as we will be deleting nodes from DOM
-				// to tidy up and avoid duplication, and jQuery didn't like this!
-				var themePreview = $("div#previewTheme").contents();
-				var themeStyles = $("div#ccm-themes-styles-panel").contents();
-				
-				var previewFrame = $('<div/>', {
-					id: 'previewTheme',
-					html: themePreview
-				}).addClass('original');
-				
-				var stylesPanel = $('<div/>', {
-					id: 'ccm-themes-styles-panel',
-					html: themeStyles
-				}).addClass('original styles-toolbar ccm-pane-options-content clearfix');
-				
-				// Append properly wrapped DIVs with exact content nodes from dialogs back to regular page.
-				$("div#previewContainer").append(previewFrame);
-				$("div#ccm-themes-styles-container").append(stylesPanel);
-				
-				// Remove (close/destroy) dialogs.
-				$("div#previewTheme").dialog('destroy');
-				$("div#ccm-themes-styles-panel").dialog('destroy');
-				
-				// THANKS IE7
-				$("div.ui-dialog").remove();
-				
-				// Remove leftover shell dialog elements from DOM (filtered against 'original' class
-				// applied to source elements above) -- leave main elements intact.
-				$("div#previewTheme").not(".original").remove();
-				$("div#ccm-themes-styles-panel").not(".original").remove();
-				
-				// Remove the filtering class 'original' from main elements.
-				$("div#previewTheme").removeClass("original");
-				$("div#ccm-themes-styles-panel").removeClass("original");
-				
-			 }
-		});
-		
-	}
     
     </script>
         
