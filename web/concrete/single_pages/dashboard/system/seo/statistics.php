@@ -1,42 +1,18 @@
+<?php defined('C5_EXECUTE') or die('Access Denied');
+$form = Loader::helper('form');
+echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Statistics'), t("Tracks page views in concrete5. Disabling this may increase site performance, but you will have to get statistics information from elsewhere."), 'span7 offset5', false); ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('System &amp; Settings'));?>
-<form>
-<?
-foreach($categories as $cat) { ?>
+	<form method="post" id="url-form" action="<?php echo $this->action('')?>">
+		<?=$this->controller->token->output('update_statistics')?>
+		<div class="ccm-pane-body">
+			<div class="clearfix">
+				<?=$form->checkbox('STATISTICS_TRACK_PAGE_VIEWS', 1, STATISTICS_TRACK_PAGE_VIEWS); ?>
+				<span><?=t('Track page view statistics.');?></span>
+			</div>
+		</div>
+		<div class="ccm-pane-footer">
+			<?php echo $interface->submit(t('Save'), null, 'left', 'primary');?>
+		</div>
+	</form>
 
-	<div class="page-header">
-	<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat)?>"><?=$cat->getCollectionName()?></a>
-	<small><?=$cat->getCollectionDescription()?></small>
-	</h3>
-	</div>
-	
-	<?
-	$show = array();
-	$subcats = $cat->getCollectionChildrenArray(true);
-	foreach($subcats as $catID) {
-		$subcat = Page::getByID($catID, 'ACTIVE');
-		$catp = new Permissions($subcat);
-		if ($catp->canRead() && $subcat->getAttribute('exclude_nav') != 1) { 
-			$show[] = $subcat;
-		}
-	}
-	
-	if (count($show) > 0) { ?>
-	
-	<div class="clearfix">
-	
-	<? foreach($show as $subcat) { ?>
-	
-	<div class="span4">
-		<a href="<?=Loader::helper('navigation')->getLinkToCollection($cat)?>"><?=$subcat->getCollectionName()?></a>
-	</div>
-	
-	<? } ?>
-	
-	</div>
-	
-	<? } ?>
-
-<? } ?>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();
