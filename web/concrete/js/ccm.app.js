@@ -4440,9 +4440,12 @@ jQuery.fn.dialog.open = function(obj) {
 			w = parseInt(obj.width) + 50;
 			h = parseInt(obj.height) + 100;
 		}
-	} else {
+	} else if (obj.width) { 
 		w = parseInt(obj.width) + 50;
 		h = parseInt(obj.height) + 100;
+	} else {
+		w = 550;
+		h = 400;
 	}
 	if (obj.appendButtons) {
 		var buttons = [{}];

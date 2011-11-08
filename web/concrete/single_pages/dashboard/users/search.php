@@ -13,10 +13,6 @@ $form = Loader::helper('form');
 $ih = Loader::helper('concrete/interface');
 $av = Loader::helper('concrete/avatar'); 
 
-if ($_REQUEST['user_created'] == 1) {
-	$message = t('User created successfully. ');
-}
-
 function printAttributeRow($ak, $uo) {
 	
 	$vo = $uo->getAttributeValueObject($ak);
@@ -82,14 +78,14 @@ if (intval($_GET['uID'])) {
 			}else{		
 				$uo->activate();
 				$uo = UserInfo::getByID(intval($_GET['uID']));
-				$message = t("User activated.");
+				$this->controller->redirect('/dashboard/users/search?uID=' . intval($_GET['uID']) . '&activated=1');
 			}
 		}
 
 		if ($_GET['task'] == 'validate_email') {
 			$uo->markValidated();
 			$uo = UserInfo::getByID(intval($_GET['uID']));
-			$message = t("Email marked as valid.");
+			$this->controller->redirect('/dashboard/users/search?uID=' . intval($_GET['uID']) . '&validated=1');
 		}
 		
 		
@@ -105,7 +101,7 @@ if (intval($_GET['uID'])) {
 			}else{
 				$uo->deactivate();
 				$uo = UserInfo::getByID(intval($_GET['uID']));
-				$message = t("User deactivated.");
+				$this->controller->redirect('/dashboard/users/search?uID=' . intval($_GET['uID']) . '&deactivated=1');
 			}
 		}	
 	}
@@ -220,7 +216,7 @@ if (is_object($uo)) {
         
       </table>
 
-		<a id="groupSelector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups" dialog-title="<?=t('Add Groups')?>" dialog-modal="false" style="float: right; margin-top: 12px; padding-bottom: 4px;"><img src="<?php echo ASSETS_URL_IMAGES?>/icons/add_small.png" width="16" height="16" style="padding-right: 6px; float: left;"/><?=t('Add Group')?></a>
+		<a id="groupSelector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups" dialog-title="<?=t('Add Groups')?>" dialog-modal="false" style="float: right; margin-top: 12px; padding-bottom: 4px;"><?=t('Add Group')?></a>
 		<h3><?=t('Groups')?></h3>
 	
 		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
@@ -252,7 +248,7 @@ if (is_object($uo)) {
 		<div class="ccm-buttons">
 		
 		<?=Loader::helper('concrete/interface')->button(t('Back'), $this->url('/dashboard/users/search?uID=' . intval($_GET['uID'])), 'left')?>
-		<?=Loader::helper('concrete/interface')->submit(t('Update User'))?>
+		<?=Loader::helper('concrete/interface')->submit(t('Update User'), 'update', 'right', 'primary')?>
 
 		</div>	
 		</form>

@@ -23,6 +23,19 @@ class DashboardUsersSearchController extends Controller {
 		if($_POST['uName'])	{
 			$this->validate_user();
 		}
+		
+		if ($_REQUEST['deactivated']) {
+			$this->set('message', t('User deactivated.'));
+		}
+		if ($_REQUEST['activated']) {
+			$this->set('message', t('User activated.'));
+		}
+		if ($_REQUEST['validated']) {
+			$this->set('message', t('Email marked as valid.'));
+		}
+		if ($_REQUEST['user_created']) {
+			$this->set('message', t('User created.'));
+		}
 
 	}
 	
@@ -119,6 +132,7 @@ class DashboardUsersSearchController extends Controller {
 					$editComplete = true;
 					// reload user object
 					$uo = UserInfo::getByID(intval($_GET['uID']));
+					$this->set('message', $message);
 				} else {
 					$db = Loader::db();
 					$this->error->add($db->ErrorMsg());
