@@ -5,6 +5,7 @@ $ih = Loader::helper('concrete/interface');
 $form = Loader::helper('form');
 if ($downloadableUpgradeAvailable) { ?>
 	<?=$h->getDashboardPaneHeaderWrapper(t('Download Update'));?>
+		<code><?=t('Current Version %s',config::get('SITE_APP_VERSION'))?></code>
 		<form method="post" action="<?=$this->action('download_update')?>" id="ccm-download-update-form">
 		
 			<?=Loader::helper('validation/token')->output('download_update')?>
@@ -29,8 +30,8 @@ if ($downloadableUpgradeAvailable) { ?>
 			$ih = Loader::helper('concrete/interface');
 
 			if (count($updates) == 1) { ?>
-					<code><?=t('Current Version')?> <?=config::get('SITE_APP_VERSION')?></code>
 					<p><?=t('An update is available. Click below to update to <strong>%s</strong>.', $updates[0]->getUpdateVersion())?></p>
+					<code><?=t('Current Version %s',config::get('SITE_APP_VERSION'))?></code>
 				</div>
 				<div class="ccm-pane-footer">
 					<form method="post" action="<?=$this->action('do_update')?>" id="ccm-update-form">
@@ -61,6 +62,6 @@ if ($downloadableUpgradeAvailable) { ?>
 <? } else { ?>
 	<?=$h->getDashboardPaneHeaderWrapper(t('Update concrete5'));?>
 		<h3><?=t('You are currently up to date!')?></h3>
-		<code><?=t('Current Version')?> <?=config::get('SITE_APP_VERSION')?></code>
+		<code><?=t('Current Version %s',config::get('SITE_APP_VERSION'))?></code>
 	<?=$h->getDashboardPaneFooterWrapper();?>
 <? } ?>
