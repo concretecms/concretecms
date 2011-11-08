@@ -17,7 +17,7 @@ class UpdateArchive extends Archive {
 	
 }
 
-class DashboardSystemUpdateController extends Controller { 	 
+class DashboardSystemMaintenanceUpdateController extends DashboardBaseController { 	 
 	
 	function view() {  
 		$upd = new Update();

@@ -7,7 +7,7 @@
 <div class="block-message alert-message info">
 <h4><?=t('A new version of concrete5 is available!')?></h4>
 <p><?=t('The latest version of concrete5 is <strong>%s</strong>. You are running %s.', $latest_version, APP_VERSION)?></p>
-<div class="alert-actions"><a class="small btn" href="<?=$this->url('/dashboard/system/update', 'update')?>"><?=t('Update concrete5')?></a></div>
+<div class="alert-actions"><a class="small btn" href="<?=$this->url('/dashboard/system/maintenance/update', 'update')?>"><?=t('Update concrete5')?></a></div>
 </div>
 <? } else if (version_compare(APP_VERSION, Config::get('SITE_APP_VERSION'), '>')) { ?>
 <div class="block-message alert-message warning">
