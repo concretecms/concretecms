@@ -14,8 +14,8 @@ var miniSurvey ={
 				this.answerTypesEdit[i].onclick=function(){miniSurvey.optionsCheck(this,'Edit');miniSurvey.settingsCheck(this,'Edit');}
 				this.answerTypesEdit[i].onchange=function(){miniSurvey.optionsCheck(this,'Edit');miniSurvey.settingsCheck(this,'Edit');}
 			} 			
-			$('#refreshButton').click( function(){ miniSurvey.refreshSurvey() } );
-			$('#addQuestion').click(   function(){ miniSurvey.addQuestion()   } );
+			$('#refreshButton').click( function(){ miniSurvey.refreshSurvey(); return false; } );
+			$('#addQuestion').click(   function(){ miniSurvey.addQuestion(); return false; } );
 			$('#editQuestion').click(  function(){ miniSurvey.addQuestion('Edit')   } );
 			$('#cancelEditQuestion').click(   function(){ $('#editQuestionForm').css('display','none') } );			
 			this.serviceURL+='cID='+this.cID+'&arHandle='+this.arHandle+'&bID='+this.bID+'&btID='+this.btID+'&';
