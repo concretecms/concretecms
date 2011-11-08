@@ -60,7 +60,7 @@ $h = Loader::helper('concrete/interface');
 			</div>
  
         <span class="help-block">
-            <strong>Note:</strong> <?php echo t('The minimum width is 580px.')?>
+            <strong><?php echo t('Note:')?></strong> <?php echo t('The minimum width is 580px.')?>
         </span>
       </div>
     </div>
