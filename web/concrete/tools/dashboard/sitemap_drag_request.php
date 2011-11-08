@@ -33,7 +33,6 @@ if (isset($_REQUEST['origCID'] ) && strpos($_REQUEST['origCID'], ',') > -1) {
 
 foreach($originalPages as $oc) {
 	$ocp = new Permissions($oc);
-	$originalPages[] = $oc;
 	if (!$ocp->canRead()) {
 		$canReadSource = false;
 	}
