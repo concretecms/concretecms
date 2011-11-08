@@ -66,7 +66,7 @@ class Update {
 				Config::save('APP_VERSION_LATEST', $versionNum);
 				if (version_compare($versionNum, APP_VERSION, '>')) {
 					Loader::model('system_notification');
-					SystemNotification::add(SystemNotification::SN_TYPE_CORE_UPDATE, t('A new version of concrete5 is now available.'), '', $update->notes, View::url('/dashboard/system/update'));
+					SystemNotification::add(SystemNotification::SN_TYPE_CORE_UPDATE, t('A new version of concrete5 is now available.'), '', $update->notes, View::url('/dashboard/system/maintenance/update'));
 				}		
 			} else {
 				// we don't know so we're going to assume we're it

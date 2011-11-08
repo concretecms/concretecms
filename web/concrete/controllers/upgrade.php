@@ -20,7 +20,7 @@ class UpgradeController extends Controller {
 	public $upgrade_db = true;
 	
 	public function on_start() {
-		$cnt = Loader::controller('/dashboard/system/update');
+		$cnt = Loader::controller('/dashboard/system/maintenance/update');
 		$cnt->secCheck();
 		// if you just reverted, but didn't manually clear out your files - cache would be a prob here.
 		$ca = new Cache();

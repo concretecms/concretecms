@@ -5,22 +5,20 @@ $ih = Loader::helper('concrete/interface');
 $form = Loader::helper('form');
 if ($downloadableUpgradeAvailable) { ?>
 	<?=$h->getDashboardPaneHeaderWrapper(t('Download Update'));?>
-		<code><?=t('Current Version %s',config::get('SITE_APP_VERSION'))?></code>
+		<span class="label"><?=t('Current Version %s',config::get('SITE_APP_VERSION'))?></span>
 		<form method="post" action="<?=$this->action('download_update')?>" id="ccm-download-update-form">
 		
 			<?=Loader::helper('validation/token')->output('download_update')?>
-			<?=Loader::helper('concrete/interface')->submit(t('Download'), 'ccm-download-update-form')?>
+			<?=Loader::helper('concrete/interface')->submit(t('Download'), 'ccm-download-update-form', 'right', 'primary')?>
 		
-			<h2><?=t('Version: %s', $update->version)?>. <?=t('Release Date: %s', date(t('F d, Y'), strtotime($update->date)))?></h2>
-			<div><a href="javascript:void(0)" onclick="jQuery.fn.dialog.open({modal: false, title: '<?=t("Release Notes")?>', width: 500, height: 400, element: $('#ccm-release-notes')})"><?=t('View Full Release Notes &gt;')?></a></div>
-			<br/>
+			<h3><?=t('Version: %s', $update->version)?>. <?=t('Release Date: %s', date(t('F d, Y'), strtotime($update->date)))?></h3>
+			<hr/>
+			<div id="ccm-release-notes">
+			<?=$update->notes?>
+			</div>
+			<hr/>
 			<span class="notes"><?=t('Note: Downloading an update will NOT automatically install it.')?></span>
 		
-		<div id="ccm-release-notes" style="display: none">
-		<?=$update->notes?>
-		<br/><br/>
-		<?=Loader::helper('concrete/interface')->button_js(t('Close'), 'javascript:jQuery.fn.dialog.closeTop()', 'left');?>
-		</div>
 		</form>
 	<?=$h->getDashboardPaneFooterWrapper();?>
 <? } else if (count($updates)) { ?>
@@ -31,7 +29,7 @@ if ($downloadableUpgradeAvailable) { ?>
 
 			if (count($updates) == 1) { ?>
 					<p><?=t('An update is available. Click below to update to <strong>%s</strong>.', $updates[0]->getUpdateVersion())?></p>
-					<code><?=t('Current Version %s',config::get('SITE_APP_VERSION'))?></code>
+					<span class="label"><?=t('Current Version %s',config::get('SITE_APP_VERSION'))?></span>
 				</div>
 				<div class="ccm-pane-footer">
 					<form method="post" action="<?=$this->action('do_update')?>" id="ccm-update-form">
@@ -41,7 +39,7 @@ if ($downloadableUpgradeAvailable) { ?>
 				</div>
 			<? } else { ?>
 				<p><?=t('Several updates are available. Please choose the desired update from the list below.')?></p>
-					<code><?=t('Current Version')?> <?=config::get('SITE_APP_VERSION')?></code>
+					<span class="label"><?=t('Current Version')?> <?=config::get('SITE_APP_VERSION')?></span>
 				<form method="post" action="<?=$this->action('do_update')?>" id="ccm-update-form">
 				<?  $checked = true;
 					foreach($updates as $upd) { ?>
@@ -62,6 +60,6 @@ if ($downloadableUpgradeAvailable) { ?>
 <? } else { ?>
 	<?=$h->getDashboardPaneHeaderWrapper(t('Update concrete5'));?>
 		<h3><?=t('You are currently up to date!')?></h3>
-		<code><?=t('Current Version %s',config::get('SITE_APP_VERSION'))?></code>
+		<span class="label"><?=t('Current Version %s',config::get('SITE_APP_VERSION'))?></span>
 	<?=$h->getDashboardPaneFooterWrapper();?>
 <? } ?>
