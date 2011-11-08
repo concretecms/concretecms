@@ -1,6 +1,4 @@
-<?
-
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 Loader::block('form');
 
 class DashboardReportsFormsController extends Controller {
@@ -14,7 +12,7 @@ class DashboardReportsFormsController extends Controller {
 		}
 		$this->loadSurveyResponses();
 	}
-
+	
 	public function excel(){ 
 		$dateHelper = Loader::helper('date');
 		
@@ -133,7 +131,7 @@ class DashboardReportsFormsController extends Controller {
 		$c=$this->getCollectionObject();
 		$db = Loader::db();
 		$tempMiniSurvey = new MiniSurvey();
-		$pageBase=DIR_REL.'/' . DISPATCHER_FILENAME . '?cID='.$c->getCollectionID();	
+		$pageBase = Loader::helper('navigation')->getLinkToCollection($c);
 
 		if( $_REQUEST['action'] == 'deleteForm' ){
 			$this->deleteForm($_REQUEST['bID'], $_REQUEST['qsID']);
@@ -156,12 +154,12 @@ class DashboardReportsFormsController extends Controller {
 	
 			
 		//load requested survey response
-		if( strlen($_REQUEST['qsid'])>0 ){
-			$questionSet=preg_replace('/[^[:alnum:]]/','',$_REQUEST['qsid']);
+		if (!empty($_REQUEST['qsid'])) {
+			$questionSet = preg_replace('/[^[:alnum:]]/','',$_REQUEST['qsid']);
 			
 			//get Survey Questions
-			$questionsRS=MiniSurvey::loadQuestions($questionSet);
-			$questions=array();
+			$questionsRS = MiniSurvey::loadQuestions($questionSet);
+			$questions = array();
 			while( $question = $questionsRS->fetchRow() ){
 				$questions[$question['msqID']]=$question;
 			}
@@ -170,14 +168,21 @@ class DashboardReportsFormsController extends Controller {
 			$answerSetCount = MiniSurvey::getAnswerCount($questionSet);
 			
 			//pagination 
-			$pageBaseSurvey=$pageBase.'&qsid='.$questionSet;
-			$paginator=Loader::helper('pagination');
-			$sortBy=$_REQUEST['sortBy'];
-			$paginator->init( intval($_REQUEST['page']) ,$answerSetCount,$pageBaseSurvey.'&page=%pageNum%&sortBy='.$sortBy,$this->pageSize);
+			$pageBaseSurvey = $pageBase.'&qsid='.$questionSet;
+			$paginator = Loader::helper('pagination');
+			$sortBy = $_REQUEST['sortBy'];
+			$paginator->init(
+				(int) $_REQUEST['page'],
+				$answerSetCount,
+				$pageBaseSurvey.'&page=%pageNum%&sortBy='.$sortBy,
+				$this->pageSize
+			);
 			
-			if($this->pageSize>0)
-				$limit=$paginator->getLIMIT();
-			else $limit='';
+			if ($this->pageSize>0) {
+				$limit = $paginator->getLIMIT();
+			} else {
+				$limit = '';
+			}
 			$answerSets = FormBlockStatistics::buildAnswerSetsArray( $questionSet, $sortBy, $limit ); 
 		}
 		$this->set('questions',$questions);		
