@@ -197,7 +197,7 @@ class PaginationHelper {
 				if($predotted!=1){
 					
 					if($wrapper == 'li'){
-						$pages.='<li class="ccm-pagination-ellipses">...</li>';
+						$pages.='<li class="ccm-pagination-ellipses disabled"><a href="#">...</a></li>';
 					} else {
 						$pages.='<span class="ccm-pagination-ellipses">...</span>';
 					}
@@ -212,7 +212,7 @@ class PaginationHelper {
 				if($postdotted!=1){
 				   
 				   if($wrapper == 'li'){
-						$pages.='<li class="ccm-pagination-ellipses">...</li>';
+						$pages.='<li class="ccm-pagination-ellipses disabled"><a href="#">...</a></li>';
 					} else {
 						$pages.='<span class="ccm-pagination-ellipses">...</span>';
 					}
