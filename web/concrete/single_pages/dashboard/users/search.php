@@ -107,99 +107,6 @@ if (intval($_GET['uID'])) {
 				$uo = UserInfo::getByID(intval($_GET['uID']));
 				$message = t("User deactivated.");
 			}
-		}
-		
-		if ($_POST['edit']) { 
-			
-			$username = trim($_POST['uName']);
-			$username = preg_replace("/\s+/", " ", $username);
-			$_POST['uName'] = $username;
-			
-			$password = $_POST['uPassword'];
-			$passwordConfirm = $_POST['uPasswordConfirm'];
-			
-			if ($password) {
-				if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
-					$error[] = t('A password must be between %s and %s characters',USER_PASSWORD_MINIMUM,USER_PASSWORD_MAXIMUM);
-				}
-			}
-			
-			if (!$vals->email($_POST['uEmail'])) {
-				$error[] = t('Invalid email address provided.');
-			} else if (!$valc->isUniqueEmail($_POST['uEmail']) && $uo->getUserEmail() != $_POST['uEmail']) {
-				$error[] = t("The email address '%s' is already in use. Please choose another.",$_POST['uEmail']);
-			}
-			
-			if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) {
-				if (strlen($username) < USER_USERNAME_MINIMUM) {
-					$error[] = t('A username must be at least %s characters long.',USER_USERNAME_MINIMUM);
-				}
-	
-				if (strlen($username) > USER_USERNAME_MAXIMUM) {
-					$error[] = t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM);
-				}
-
-				/*
-				if (strlen($username) >= USER_USERNAME_MINIMUM && !$vals->alphanum($username,USER_USERNAME_ALLOW_SPACES)) {
-					if(USER_USERNAME_ALLOW_SPACES) {
-						$e->add(t('A username may only contain letters, numbers and spaces.'));
-					} else {
-						$e->add(t('A username may only contain letters or numbers.'));
-					}
-					
-				}
-				*/
-				
-				if (strlen($username) >= USER_USERNAME_MINIMUM && !$valc->username($username)) {
-					if(USER_USERNAME_ALLOW_SPACES) {
-						$error[] = t('A username may only contain letters, numbers and spaces.');
-					} else {
-						$error[] = t('A username may only contain letters or numbers.');
-					}
-				}
-				if (!$valc->isUniqueUsername($username) && $uo->getUserName() != $username) {
-					$error[] = t("The username '%s' already exists. Please choose another",$username);
-				}		
-			}
-			
-			if (strlen($password) >= USER_PASSWORD_MINIMUM && !$valc->password($password)) {
-				$error[] = t('A password may not contain ", \', >, <, or any spaces.');
-			}
-			
-			if ($password) {
-				if ($password != $passwordConfirm) {
-					$error[] = t('The two passwords provided do not match.');
-				}
-			}
-			
-			if (!$valt->validate('update_account_' . intval($_GET['uID']) )) {
-				$error[] = $valt->getErrorMessage();
-			}
-		
-			if (!$error) {
-				// do the registration
-				$process = $uo->update($_POST);
-				
-				//$db = Loader::db();
-				if ($process) {
-					if ( is_uploaded_file($_FILES['uAvatar']['tmp_name']) ) {
-						$uHasAvatar = $av->updateUserAvatar($_FILES['uAvatar']['tmp_name'], $uo->getUserID());
-					}
-					
-					$uo->updateGroups($_POST['gID']);
-
-					$message = t("User updated successfully. ");
-					if ($password) {
-						$message .= t("Password changed.");
-					}
-					$editComplete = true;
-					// reload user object
-					$uo = UserInfo::getByID(intval($_GET['uID']));
-				} else {
-					$db = Loader::db();
-					$error[] = $db->ErrorMsg();
-				}
-			}		
 		}	
 	}
 }
@@ -210,9 +117,6 @@ if (is_object($uo)) {
 	if ($_GET['task'] == 'edit' || $_POST['edit'] && !$editComplete) { ?>
 
 		<div class="wrapper">
-		<div class="actions">
-		<span class="required">*</span> - <?=t('required field')?>
-		</div>
 		
 		<?
 		$uName = ($_POST) ? $_POST['uName'] : $uo->getUserName();
@@ -243,10 +147,8 @@ if (is_object($uo)) {
 		<input type="hidden" name="_disableLogin" value="1">
 	
 		<div style="margin:0px; padding:0px; width:100%; height:auto" >
+		<h3><?=t('Core Information')?></h3>
 		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
-		<tr>
-			<td colspan="3" class="header"><?=t('Core Information')?></td>
-		</tr>
 		<tr>
 			<td class="subheader"><?=t('Username')?> <span class="required">*</span></td>
 			<td class="subheader"><?=t('Email Address')?> <span class="required">*</span></td>
@@ -262,9 +164,9 @@ if (is_object($uo)) {
 			<? } ?>
 			</td>
 		</tr>
-		<tr>
-			<td colspan="3" class="header"><?=t('Change Password')?></td>
-		</tr>
+		</table>
+		<h3><?=t('Change Password')?></h3>
+		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 		<tr>
 			<td class="subheader"><?=t('Password')?></td>
 			<td class="subheader" colspan="2"><?=t('Password (Confirm)')?></td>
@@ -315,12 +217,13 @@ if (is_object($uo)) {
             </td>
 		</tr>
         <?php } ?>
-        <tr>
-			<td colspan="3" class="header">
-				<a id="groupSelector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups" dialog-title="<?=t('Add Groups')?>" dialog-modal="false" style="float: right"><?=t('Add Group')?></a>
-				<?=t('Groups')?>
-			</td>
-		</tr>
+        
+      </table>
+
+		<a id="groupSelector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups" dialog-title="<?=t('Add Groups')?>" dialog-modal="false" style="float: right; margin-top: 12px; padding-bottom: 4px;"><img src="<?php echo ASSETS_URL_IMAGES?>/icons/add_small.png" width="16" height="16" style="padding-right: 6px; float: left;"/><?=t('Add Group')?></a>
+		<h3><?=t('Groups')?></h3>
+	
+		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 		<? $gArray = $gl->getGroupList(); ?>
 		<tr>
 			<td colspan="3">
@@ -357,11 +260,8 @@ if (is_object($uo)) {
 		<div class="ccm-spacer">&nbsp;</div>
 		
 		<br/>
-		
+		<h3><?=t('Other Information')?></h3><i style="float: left;"><?=t('Click Field Name to Edit')?></i><br/><br/>
 		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
-		<tr>
-			<td colspan="3" class="header"><?=t('Other Information - Click Field Name to Edit')?></td>
-		</tr>
 		<?
 	
 		$attribs = UserAttributeKey::getEditableList();
