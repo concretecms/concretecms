@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	
 	<input type="hidden" name="_disableLogin" value="1">
 
-	<h2><?=t('Required Information')?></h2>
+	<h3><?=t('Required Information')?></h3>
 	
 	<div style="margin:0px; padding:0px; width:100%; height:auto" >
 	<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
@@ -82,10 +82,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <?
 	Loader::model("search/group");
 	$gl = new GroupSearch();
-	if ($gl->getTotal() < 1000) { 
-		$gl->setItemsPerPage(1000);
+	$gl->setItemsPerPage(10000);
 		?>
-		<h2><?=t('Groups')?></h2>
+		<h3><?=t('Groups')?></h3>
 		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
 		<tr>
 			<td class="header">
@@ -111,7 +110,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			</td>
 		</tr>
 		</table>
-	<? } ?>	
 </div>
 <div class="ccm-pane-footer">
 	<div class="ccm-buttons">

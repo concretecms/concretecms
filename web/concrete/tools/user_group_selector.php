@@ -42,7 +42,7 @@ $("#ccm-ug-tabs a").click(function() {
 
 <div id="ccm-select-group-tab">
 
-<h1><?=t('Select Group')?></h1>
+<h2><?=t('Select Group')?></h2>
 <? include(DIR_FILES_TOOLS_REQUIRED . '/select_group.php'); ?>
 
 </div>
@@ -52,7 +52,7 @@ $("#ccm-ug-tabs a").click(function() {
 <? if ($displayUsers) { ?>
 
 <div id="ccm-select-user-tab" style="display: none">
-<h1><?=t('Select User')?></h1>
+<h2><?=t('Select User')?></h2>
 
 <? 
 $mode = 'choose_multiple';
