@@ -11,9 +11,27 @@ $text = Loader::helper('text');
 $dh = Loader::helper('date');
 /* @var $urlhelper UrlHelper */
 $urlhelper = Loader::helper('url');
+/* @var $json JsonHelper */
+$json = Loader::helper('json');
 /* @var $db DataBase */
 $db = Loader::db();
 ?>
+<script>
+jQuery(function($) {
+	var deleteResponse = (<?=$json->encode(t('Are you sure you want to delete this form submission?'))?>),
+		deleteForm = (<?=$json->encode(t('Are you sure you want to delete this form and its form submissions?'))?>);
+	$('.delete-response').live('click', function(e) {
+		if (!confirm(deleteResponse)) {
+			e.preventDefault();
+		}
+	});
+	$('.delete-form').live('click', function(e) {
+		if (!confirm(deleteForm)) {
+			e.preventDefault();
+		}
+	});
+});
+</script>
 <?if(!isset($questionSet)):?>
 <?=$h->getDashboardPaneHeaderWrapper(t('Form Results'), false, false, false);?>
 <div class="ccm-pane-body">
@@ -52,7 +70,7 @@ $db = Loader::db();
 				<?=$ih->button(t('View Responses'), $this->action('').'?qsid='.$qsid, 'left', 'primary')?>
 				<?=$ih->button(t('Open Page'), $url, 'left')?>
 				<?if(!$in_use):?>
-				<?=$ih->button(t('Delete'), $this->action('').'?bID='.$survey['bID'].'&qsID='.$qsid, 'right', 'danger')?>
+				<?=$ih->button(t('Delete'), $this->action('').'?bID='.$survey['bID'].'&qsID='.$qsid.'&action=deleteForm', 'left', 'danger delete-form')?>
 				<?endif?>
 			</td>
 		</tr>
@@ -67,7 +85,7 @@ $db = Loader::db();
 <?=$h->getDashboardPaneHeaderWrapper(t('Responses to %s', $surveys[$questionSet]['surveyName']), false, false, false);?>
 <div class="ccm-pane-body">
 <ul class="breadcrumb">
-	<li><a href="<?=$this->action('')?>"><?=t('Back to Form List')?></a></li>
+	<li><a href="<?=$this->action('')?>">&lt; <?=t('Return to Form List')?></a></li>
 </ul>
 <?if(count($answerSets) == 0):?>
 <div><?=t('No one has yet submitted this form.')?></div>
@@ -90,6 +108,7 @@ $db = Loader::db();
 <?foreach($questions as $question):?>
 			<th><?=$question['question']?></th>
 <?endforeach?>
+			<th><?=t('Actions')?></th>
 		</tr>	
 	</thead>
 	<tbody>
@@ -119,13 +138,21 @@ $db = Loader::db();
 				}
 			} else if($question['inputType'] == 'text') {
 				echo '<td title="'.$text->entities($answerSet['answers'][$questionId]['answerLong']).'">';
-				echo $text->entities($text->shortenTextWord($answerSet['answers'][$questionId]['answerLong'], 75));
+				echo $text->entities($text->shortenTextWord($answerSet['answers'][$questionId]['answerLong']));
 				echo '</td>';
 			} else {
 				echo '<td>'.$text->entities($answerSet['answers'][$questionId]['answer']).'</td>';
 			}
 			
 endforeach?>
+			<td>
+				<?=$ih->button(
+					t("Delete"),
+					$this->action('').'?qsid='.$answerSet['questionSetId'].'&asid='.$answerSet['asID'].'&action=deleteResponse',
+					'left',
+					'danger delete-response'
+				)?>
+			</td>
 		</tr>
 <?endforeach?>
 	</tbody>
