@@ -156,7 +156,7 @@ if (is_object($uo)) {
 			<td><input type="file" name="uAvatar" style="width: 94%" /> <input type="hidden" name="uHasAvatar" value="<?=$uo->hasAvatar()?>" />
 			
 			<? if ($uo->hasAvatar()) { ?>
-			<input type="button" onclick="location.href='<?=$this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=remove-avatar')?>'" value="<?=t('Remove Avatar')?>" />
+			<input class="btn" type="button" onclick="location.href='<?=$this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=remove-avatar')?>'" value="<?=t('Remove Avatar')?>" />
 			<? } ?>
 			</td>
 		</tr>
