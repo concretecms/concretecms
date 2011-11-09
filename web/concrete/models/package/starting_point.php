@@ -69,6 +69,7 @@ class StartingPointPackage extends Package {
 	}
 
 	public function install_required_single_pages() {
+		Loader::model('single_page');
 		$ci = new ContentImporter();
 		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/login_registration.xml');
 	}

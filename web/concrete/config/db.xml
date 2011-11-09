@@ -75,11 +75,14 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
-    </field>  
+    </field>
     <index name="arIsGlobal">
       <col>arIsGlobal</col>
     </index>
-   </table>
+    <index name="arHandle">
+      <col>arHandle</col>
+    </index>
+  </table>
    <table name="AttributeSetKeys">
     <field name="akID" type="I" size="10">
       <KEY/>
@@ -432,12 +435,12 @@
     <field name="cbDisplayOrder" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
-      <UNSIGNED />
+      <UNSIGNED/>
     </field>
-    <field name="isOriginal" type="I" size="1">
+    <field name="isOriginal" type="I1" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
-      <UNSIGNED />
+      <UNSIGNED/>
     </field>
     <field name="cbOverrideAreaPermissions" type="I1" size="1">
       <NOTNULL/>
@@ -451,10 +454,14 @@
       <col>cbIncludeAll</col>
     </index>
     <index name="isOriginal">
-    	<col>isOriginal</col>
+      <col>isOriginal</col>
     </index>
     <index name="bID">
       <col>bID</col>
+    </index>
+    <index name="cIDcvID">
+      <col>cID</col>
+      <col>cvID</col>
     </index>
   </table>
 
@@ -1545,6 +1552,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="cIsActive" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
     <field name="cChildren" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -1589,6 +1600,9 @@
     </field>
     <index name="cParentID">
       <col>cParentID</col>
+    </index>
+    <index name="cIsActive">
+      <col>cIsActive</col>
     </index>
      <index name="cCheckedOutUID">
       <col>cCheckedOutUID</col>
@@ -2154,7 +2168,7 @@
       <DEFAULT value="0"/>
     </field>
   </table>
-<table name="Stacks">
+	<table name="Stacks">
     <field name="stID" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>

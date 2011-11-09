@@ -15,7 +15,7 @@ class PageList extends DatabaseItemList {
 	protected $includeAliases = true;
 	protected $displayOnlyPermittedPages = false; // not used.
 	protected $displayOnlyApprovedPages = true;
-	protected $systemPagesToExclude = array('login.php', 'page_not_found.php', 'page_forbidden.php','register.php', 'download_file.php', 'profile/%', 'dashboard/%');
+	protected $displayOnlyActivePages = true;
 	protected $filterByCParentID = 0;
 	protected $filterByCT = false;
 	protected $ignorePermissions = false;
@@ -35,6 +35,10 @@ class PageList extends DatabaseItemList {
 				$this->filterByAttribute($attrib, $a[0]);
 			}
 		}			
+	}
+	
+	public function includeInactivePages() {
+		$this->displayOnlyActivePages = false;
 	}
 	
 	public function ignorePermissions() {
@@ -352,6 +356,9 @@ class PageList extends DatabaseItemList {
 			$this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = p1.cID)");
 		}
 		
+		if ($this->displayOnlyActivePages) {
+			$this->filter('p1.cIsActive', 1);
+		}
 		$this->setupSystemPagesToExclude();
 		
 	}

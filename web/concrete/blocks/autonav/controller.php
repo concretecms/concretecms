@@ -471,7 +471,7 @@
 			$navObjectNames = $this->navObjectNames;
 
 			$allowedParentIDs = ($allowedParentIDs) ? $allowedParentIDs : array();
-			$q = "select Pages.cID from Pages where cIsTemplate = 0 and cParentID = '{$cParentID}' {$orderBy}";
+			$q = "select Pages.cID from Pages where cIsTemplate = 0 and cIsActive = 1 and cParentID = '{$cParentID}' {$orderBy}";
 			$r = $db->query($q);
 			if ($r) {
 				while ($row = $r->fetchRow()) {

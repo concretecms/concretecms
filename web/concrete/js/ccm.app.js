@@ -5562,7 +5562,7 @@ activateReorder = function() {
 	}); 
 	*/
 	
-	$('li.tree-node').draggable({
+	$('li.tree-node[draggable=true]').draggable({
 		handle: 'img.handle',
 		opacity: 0.5,
 		revert: false,
