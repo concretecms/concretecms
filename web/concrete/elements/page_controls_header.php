@@ -28,6 +28,9 @@ if (!$dh->inDashboard()) {
 	$this->addFooterItem($html->javascript('jquery.ui.js'));
 	$this->addFooterItem($html->javascript('jquery.form.js'));
 	$this->addFooterItem($html->javascript('ccm.app.js'));
+	if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
+		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
+	}
 	$cih = Loader::helper('concrete/interface');
 	if (ACTIVE_LOCALE != 'en_US') {
 		$dlocale = str_replace('_', '-', ACTIVE_LOCALE);
