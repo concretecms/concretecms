@@ -180,6 +180,11 @@
 					break;
 			}
 		}
+		
+		if (!$c->isActive()) {
+			$v = View::getInstance();
+			$v->render('/page_not_found');
+		}
 
 		## Check maintenance mode
 		require(dirname(__FILE__) . '/startup/maintenance_mode_check.php');

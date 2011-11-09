@@ -116,6 +116,7 @@ class ConcreteDashboardSitemapHelper {
 		$selected = (ConcreteDashboardSitemapHelper::isOneTimeActiveNode($cID)) ? true : false;
 		
 		$ct = CollectionType::getByID($c->getCollectionTypeID());
+		$isInTrash = $c->isInTrash();
 		$canCompose = false;
 		if (is_object($ct)) {
 			if ($ct->isCollectionTypeIncludedInComposer()) {
@@ -125,6 +126,7 @@ class ConcreteDashboardSitemapHelper {
 				}
 			}
 		}
+		$isTrash = $c->getCollectionPath() == TRASH_PAGE_PATH;
 		$cIcon = $c->getCollectionIcon();
 		$cAlias = $c->isAlias();
 		$cPointerID = $c->getCollectionPointerID();
@@ -142,6 +144,8 @@ class ConcreteDashboardSitemapHelper {
 			'cvName'=> $cvName,
 			'cIcon' => $cIcon,
 			'cAlias' => $cAlias,
+			'isInTrash' => $isInTrash,
+			'isTrash' => $isTrash,
 			'numSubpages'=> $numSubpages,
 			'status'=> $status,
 			'canWrite'=>$canWrite,
@@ -177,6 +181,7 @@ class ConcreteDashboardSitemapHelper {
 			$pl->sortByDisplayOrder();
 			if (ConcreteDashboardSitemapHelper::showSystemPages()) {
 				$pl->includeSystemPages();
+				$pl->includeInactivePages();
 			}
 			$pl->filterByParentID($cID);
 			$pl->displayUnapprovedPages();
@@ -252,7 +257,10 @@ class ConcreteDashboardSitemapHelper {
 			$cAlias = $ri['cAlias'];
 			$canWrite = $ri['canWrite'];
 			$canDrag = ($ri['id'] > 1) ? "true" : "false";
-			$this->html .= '<li tree-node-cancompose="' . $ri['canCompose'] . '" tree-node-type="' . $treeNodeType . '" draggable="' . $canDrag . '" class="tree-node ' . $typeClass . ' tree-branch' . $nodeID . '" id="tree-node' . $ri['id'] . '"' . $customIconSrc . '>';
+			if ($ri['isInTrash']) {
+				$canDrag = "false";
+			}
+			$this->html .= '<li tree-node-intrash="' . $ri['isInTrash'] . '" tree-node-istrash="' . $ri['isTrash'] . '" tree-node-cancompose="' . $ri['canCompose'] . '" tree-node-type="' . $treeNodeType . '" draggable="' . $canDrag . '" class="tree-node ' . $typeClass . ' tree-branch' . $nodeID . '" id="tree-node' . $ri['id'] . '"' . $customIconSrc . '>';
 			
 			if ($ri['numSubpages'] > 0) {
 				$subPageStr = ($ri['id'] == 1) ? '' : ' (' . $ri['numSubpages'] . ')';

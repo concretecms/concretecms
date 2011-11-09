@@ -535,7 +535,8 @@
 				if ($cp->canDeleteCollection() && $c->getCollectionID != '1' && (!$c->isMasterCollection())) {
 					$children = $c->getNumChildren();
 					if ($children == 0 || $cp->canAdminPage()) {
-						$c->markPendingAction('DELETE');
+						$parent = Page::getByID($c->getCollectionParentID());
+						$c->markPendingAction('DELETE', $parent);
 						if ($cp->canApproveCollection()) {
 							$cParentID = $c->getCollectionParentID();
 							$c->approvePendingAction();

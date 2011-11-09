@@ -83,6 +83,9 @@ class ContentImporter {
 			foreach($sx->singlepages->page as $p) {
 				$pkg = ContentImporter::getPackageObject($p['package']);
 				$spl = SinglePage::add($p['path'], $pkg);
+				if (isset($p['root']) && $p['root'] == true) {
+					$spl->moveToRoot();
+				}
 				if ($p['name']) {
 					$spl->update(array('cName' => $p['name'], 'cDescription' => $p['description']));
 				}

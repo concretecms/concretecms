@@ -194,10 +194,13 @@ define('FILENAME_BLOCK_DB', 'db.xml');
 define('BLOCK_HANDLE_SCRAPBOOK_PROXY', 'core_scrapbook_display');
 
 # Stacks
-define('STACKS_PAGE_PATH', '/dashboard/blocks/stacks/list');
+define('STACKS_PAGE_PATH', '/!stacks');
 define('STACKS_AREA_NAME', 'Main');
 define('STACKS_PAGE_TYPE', 'core_stack');
 define('BLOCK_HANDLE_STACK_PROXY', 'core_stack_display');
+
+# Trash
+define('TRASH_PAGE_PATH', '/!trash');
 
 # Hosted assets are assets shared amongst all Concrete5 installations on a single machine.
 if (defined('MULTI_SITE') && MULTI_SITE == 1) {
@@ -416,7 +419,7 @@ define('HOME_UID', USER_SUPER_ID);
 define('HOME_HANDLE', "home");
 
 # Composer settings
-define('COMPOSER_DRAFTS_PAGE_PATH', '/dashboard/composer/drafts');
+define('COMPOSER_DRAFTS_PAGE_PATH', '/!drafts');
 
 # User avatar constants - should probably be moved into the avatar helper class as avatar constants
 if (!defined('AVATAR_WIDTH') && !defined('AVATAR_HEIGHT')) {
@@ -484,6 +487,10 @@ if (!defined('NEWSFLOW_URL')) {
 
 if (!defined('ENABLE_APP_NEWS')) {
 	define('ENABLE_APP_NEWS', true);
+}
+
+if (!defined('ENABLE_TRASH_CAN')) { 
+	define('ENABLE_TRASH_CAN', true);
 }
 
 define('MARKETPLACE_BASE_URL_SITE_PAGE', CONCRETE5_ORG_URL.'/private/sites');
