@@ -115,9 +115,6 @@
         <page name="Export Database XML" path="/dashboard/system/developer/database" filename="/dashboard/system/developer/database.php" pagetype="" description="" package=""/>
         <page name="Debug Settings" path="/dashboard/system/developer/debug" filename="/dashboard/system/developer/debug.php" pagetype="" description="" package=""/>
         <page name="Logging Settings" path="/dashboard/system/developer/logging" filename="/dashboard/system/developer/logging.php" pagetype="" description="" package=""/>
-
-		<page name="Download File" path="/download_file" filename="/download_file.php" pagetype="" description="" package=""/>
-        <page name="Members" path="/members" filename="/members.php" pagetype="" description="" package=""/>
         <page name="Composer" path="/dashboard/pages/types/composer" filename="/dashboard/pages/types/composer.php" pagetype="" description="" package=""/>
     </singlepages>
     <pagetypes>
