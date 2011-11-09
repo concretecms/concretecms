@@ -77,7 +77,9 @@ var ccmi18n_sitemap = {
 	addExternalLink: "<?=t('Add External Link')?>",
 	sendToTop: "<?=t('Send To Top')?>",
 	sendToBottom: "<?=t('Send To Bottom')?>",
-	
+	emptyTrash: "<?=t('Empty Trash')?>", 
+	restorePage: "<?=t('Restore Page')?>", 
+	deletePageForever: "<?=t('Delete Forever')?>", 
 	visitPage: "<?=t('Visit')?>",
 	pageProperties: "<?=t('Properties')?>",
 	speedSettings: "<?=t('Speed Settings')?>",

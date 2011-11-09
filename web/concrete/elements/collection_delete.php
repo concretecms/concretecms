@@ -82,7 +82,12 @@ $(function() {
 			<h4><?=t('This will remove %s child page(s).', $numChildren)?></h4>
 		<? } ?>
 		
-		<p><?=t('This cannot be undone.')?></p>
+		<? if (ENABLE_TRASH_CAN) { ?>
+			<p><?=t('Deleted pages are moved to the trash can in the sitemap.')?></p>
+		<? } else { ?>
+			<p><?=t('This cannot be undone.')?></p>
+		<? } ?>
+		
 			<input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
 			<input type="hidden" name="ctask" value="delete">
 			<input type="hidden" name="processCollection" value="1" />
