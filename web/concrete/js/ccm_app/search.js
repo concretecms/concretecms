@@ -114,6 +114,7 @@ ccm_setupInPagePaginationAndSorting = function(searchType) {
 	});
 	$(".ccm-pane-dialog-pagination").each(function() {
 		$(this).closest('.ui-dialog').find('.ui-dialog-buttonpane').html('');
+		$(this).closest('.ui-dialog').find('.ui-dialog-buttonpane').addClass("ccm-ui");
 		$(this).appendTo($(this).closest('.ui-dialog').find('.ui-dialog-buttonpane'));
 	});
 	

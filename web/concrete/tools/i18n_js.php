@@ -80,6 +80,7 @@ var ccmi18n_sitemap = {
 	emptyTrash: "<?=t('Empty Trash')?>", 
 	restorePage: "<?=t('Restore Page')?>", 
 	deletePageForever: "<?=t('Delete Forever')?>", 
+	previewPage: "<?=t('Preview')?>", 
 	visitPage: "<?=t('Visit')?>",
 	pageProperties: "<?=t('Properties')?>",
 	speedSettings: "<?=t('Speed Settings')?>",
