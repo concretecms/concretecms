@@ -74,7 +74,7 @@ if (intval($_GET['uID'])) {
 		
 		if ($_GET['task'] == 'activate') {
 			if( !$valt->validate("user_activate") ){
-				throw new Exception('Invalid token.  Unable to activate user.');
+				throw new Exception(t('Invalid token.  Unable to activate user.'));
 			}else{		
 				$uo->activate();
 				$uo = UserInfo::getByID(intval($_GET['uID']));
@@ -97,7 +97,7 @@ if (intval($_GET['uID'])) {
 		
 		if ($_GET['task'] == 'deactivate') {
 			if( !$valt->validate("user_deactivate") ){
-				throw new Exception('Invalid token.  Unable to deactivate user.');
+				throw new Exception(t('Invalid token.  Unable to deactivate user.'));
 			}else{
 				$uo->deactivate();
 				$uo = UserInfo::getByID(intval($_GET['uID']));
