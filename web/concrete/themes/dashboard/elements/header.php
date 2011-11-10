@@ -53,15 +53,9 @@ $v->addHeaderItem($html->css('jquery.ui.css'));
 $valt = Loader::helper('validation/token');
 $disp = '<script type="text/javascript">'."\n";
 $disp .=  "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';"."\n";
-$disp .= '$(function() {'."\n";
-$disp .= '	$("div.message").animate({'."\n";
-$disp .= "		backgroundColor: 'white'"."\n";
-$disp .= "	}, 'fast').animate({"."\n";
-$disp .= "		backgroundColor: '#DDF4FB'"."\n";
-$disp .= "	}, 'fast');"."\n";
- if ($dashboard->getCollectionID() == $c->getCollectionID()) {
-		$disp .= "ccm_dashboardRequestRemoteInformation();"."\n";
-	}
+if ($dashboard->getCollectionID() == $c->getCollectionID()) {
+	$disp .= "ccm_dashboardRequestRemoteInformation();"."\n";
+}
 $disp .= "	});"."\n";
 $disp .= "</script>"."\n";
 //require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); 
@@ -78,6 +72,16 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 	    ccm_activateToolbar();
 	    $("#ccm-page-help").popover({placement: 'below', html: true, trigger: 'manual'});
 	    $('.tooltip').twipsy({placement: 'below'});
+	    if ($('#ccm-dashboard-result-message').length > 0) { 
+			if ($('.ccm-pane').length > 0) { 
+				var pclass = $('.ccm-pane').parent().attr('class');
+				var gpclass = $('.ccm-pane').parent().parent().attr('class');
+				var html = $('#ccm-dashboard-result-message').html();
+				$('#ccm-dashboard-result-message').html('<div class="' + gpclass + '"><div class="' + pclass + '">' + html + '</div></div>').fadeIn(400);
+			}
+	    } else {
+	    	$("#ccm-dashboard-result-message").fadeIn(200);
+	    }
 	});
 </script>
 
@@ -140,7 +144,7 @@ print $dh->getDashboardAndSearchMenus();
 		
 		if (count($_error) > 0) {
 			?>
-			<div class="ccm-ui">
+			<div class="ccm-ui"  id="ccm-dashboard-result-message">
 				<?php Loader::element('system_errors', array('format' => 'block', 'error' => $_error)); ?>
 			</div>
 		<? 
@@ -148,7 +152,7 @@ print $dh->getDashboardAndSearchMenus();
 	}
 	
 	if (isset($message)) { ?>
-		<div class="ccm-ui">
+		<div class="ccm-ui" id="ccm-dashboard-result-message">
 			<div class="message block-message alert-message info success"><?=Loader::helper('text')->entities($message)?></div>
 		</div>
 	<? } ?>
