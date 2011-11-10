@@ -5251,6 +5251,7 @@ ccm_setupInPagePaginationAndSorting = function(searchType) {
 	});
 	$(".ccm-pane-dialog-pagination").each(function() {
 		$(this).closest('.ui-dialog').find('.ui-dialog-buttonpane').html('');
+		$(this).closest('.ui-dialog').find('.ui-dialog-buttonpane').addClass("ccm-ui");
 		$(this).appendTo($(this).closest('.ui-dialog').find('.ui-dialog-buttonpane'));
 	});
 	
@@ -5414,14 +5415,13 @@ showPageMenu = function(obj, e) {
 		var html = '<div class="popover"><div class="arrow"></div><div class="inner"><div class="content">';
 		html += "<ul>";
 		
-		console.log(obj);
-		
 		if (obj.isTrash) {
 
 			html += '<li><a class="ccm-menu-icon ccm-icon-delete-menu" onclick="ccm_sitemapEmptyTrash(' + obj.instance_id + ',' + obj.cID + ')" href="javascript:void(0)">' + ccmi18n_sitemap.emptyTrash + '<\/a><\/li>';
 		
 		} else if (obj.inTrash) {
 
+			html += '<li><a class="ccm-menu-icon ccm-icon-search-pages" onclick="ccm_previewInternalTheme(' + obj.cID + ', false, \'' + ccmi18n_sitemap.previewPage + '\')" href="javascript:void(0)">' + ccmi18n_sitemap.previewPage + '<\/a><\/li>';
 			html += '<li><a class="ccm-menu-icon ccm-icon-visit" onclick="ccm_sitemapRestoreDeletedPage(' + obj.instance_id + ',' + obj.cID + ')" href="javascript:void(0)">' + ccmi18n_sitemap.restorePage + '<\/a><\/li>';
 			html += '<li class=\"ccm-menu-separator\"><\/li>';
 			html += '<li><a class="ccm-menu-icon ccm-icon-delete-menu" onclick="ccm_sitemapDeleteForever(' + obj.instance_id + ',' + obj.cID + ')" href="javascript:void(0)">' + ccmi18n_sitemap.deletePageForever + '<\/a><\/li>';
