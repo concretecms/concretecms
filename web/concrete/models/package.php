@@ -130,8 +130,15 @@ class Package extends Object {
 	
 	public function getPackageVersion() {return $this->pkgVersion;}
 	public function getPackageVersionUpdateAvailable() {return $this->pkgAvailableVersion;}
-	public function getPackageCurrentlyInstalledVersion() {return $this->pkgCurrentVersion;}
 	public function isPackageInstalled() { return $this->pkgIsInstalled;}
+	
+	/**
+	 * Returns the currently installed package version.
+	 * NOTE: This function only returns a value if getLocalUpgradeablePackages() has been called first!
+	 */
+	public function getPackageCurrentlyInstalledVersion() {
+		return $this->pkgCurrentVersion;
+	}
 	
 	protected $appVersionRequired = '5.0.0';
 	
