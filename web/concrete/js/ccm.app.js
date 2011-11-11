@@ -5422,7 +5422,7 @@ showPageMenu = function(obj, e) {
 		} else if (obj.inTrash) {
 
 			html += '<li><a class="ccm-menu-icon ccm-icon-search-pages" onclick="ccm_previewInternalTheme(' + obj.cID + ', false, \'' + ccmi18n_sitemap.previewPage + '\')" href="javascript:void(0)">' + ccmi18n_sitemap.previewPage + '<\/a><\/li>';
-			html += '<li><a class="ccm-menu-icon ccm-icon-visit" onclick="ccm_sitemapRestoreDeletedPage(' + obj.instance_id + ',' + obj.cID + ')" href="javascript:void(0)">' + ccmi18n_sitemap.restorePage + '<\/a><\/li>';
+			//html += '<li><a class="ccm-menu-icon ccm-icon-visit" onclick="ccm_sitemapRestoreDeletedPage(' + obj.instance_id + ',' + obj.cID + ')" href="javascript:void(0)">' + ccmi18n_sitemap.restorePage + '<\/a><\/li>';
 			html += '<li class=\"ccm-menu-separator\"><\/li>';
 			html += '<li><a class="ccm-menu-icon ccm-icon-delete-menu" onclick="ccm_sitemapDeleteForever(' + obj.instance_id + ',' + obj.cID + ')" href="javascript:void(0)">' + ccmi18n_sitemap.deletePageForever + '<\/a><\/li>';
 		

@@ -106,7 +106,6 @@ class ConcreteUpgradeVersion550Helper {
 			'users/groups',
 			'users/attributes',
 			'users/registration',
-			'scrapbook',
 			'pages',
 			'pages/themes',
 			'pages/themes/add',
