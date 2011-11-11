@@ -1459,11 +1459,14 @@ class Page extends Collection {
 		$res = $db->execute($r, $v);
 
 		PageStatistics::incrementParents($cID);
-		
+		if (!$this->isActive()) {
+			$this->activate();
+		}
 		// run any event we have for page move. Arguments are
 		// 1. current page being moved
 		// 2. former parent
 		// 3. new parent
+		
 		$oldParent = Page::getByID($this->getCollectionParentID(), 'RECENT');
 		$newParent = Page::getByID($newCParentID, 'RECENT');
 		
