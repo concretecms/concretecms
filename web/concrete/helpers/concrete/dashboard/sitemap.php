@@ -257,9 +257,11 @@ class ConcreteDashboardSitemapHelper {
 			$cAlias = $ri['cAlias'];
 			$canWrite = $ri['canWrite'];
 			$canDrag = ($ri['id'] > 1) ? "true" : "false";
+			/*
 			if ($ri['isInTrash']) {
 				$canDrag = "false";
-			}
+			}*/
+			
 			$this->html .= '<li tree-node-intrash="' . $ri['isInTrash'] . '" tree-node-istrash="' . $ri['isTrash'] . '" tree-node-cancompose="' . $ri['canCompose'] . '" tree-node-type="' . $treeNodeType . '" draggable="' . $canDrag . '" class="tree-node ' . $typeClass . ' tree-branch' . $nodeID . '" id="tree-node' . $ri['id'] . '"' . $customIconSrc . '>';
 			
 			if ($ri['numSubpages'] > 0) {
