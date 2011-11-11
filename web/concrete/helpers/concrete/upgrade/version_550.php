@@ -67,20 +67,93 @@ class ConcreteUpgradeVersion550Helper {
 		$this->installDashboard();
 		
 		// TODO - migrate non core pages out of the dashboard into where we think they should go.
+		$this->migrateOldDashboard();
 		
 	}
 	
 	public function installSinglePages() {
 		Loader::model('single_page');
-		$spl = SinglePage::add('/!trash');
+		$spl = SinglePage::add(TRASH_PAGE_PATH);
 		$spl->update(array('cName' => t('Trash')));
 		$spl->moveToRoot();
-		$spl = SinglePage::add('/!stacks');
+		$spl = SinglePage::add(STACKS_PAGE_PATH);
 		$spl->update(array('cName' => t('Stacks')));
 		$spl->moveToRoot();
-		$spl = SinglePage::add('/!drafts');
+		$spl = SinglePage::add(COMPOSER_DRAFTS_PAGE_PATH);
 		$spl->update(array('cName' => t('Drafts')));
 		$spl->moveToRoot();
+	}
+ 
+	public function migrateOldDashboard() {
+		$pagesToSkip = array(
+			'sitemap',
+			'sitemap/full',
+			'sitemap/explore',
+			'sitemap/search',
+			'sitemap/access',	
+			'files',
+			'files/search',
+			'files/attributes',
+			'files/sets',
+			'files/access',
+			'reports',
+			'reports/forms',
+			'reports/surveys',
+			'reports/logs',
+			'users',
+			'users/search',
+			'users/add',
+			'users/groups',
+			'users/attributes',
+			'users/registration',
+			'scrapbook',
+			'pages',
+			'pages/themes',
+			'pages/themes/add',
+			'pages/themes/inspect',
+			'pages/themes/customize',
+			'pages/types',
+			'pages/attributes',
+			'pages/single',
+			'install',
+			'system',
+			'system/jobs',
+			'system/backup',
+			'system/update',
+			'system/notifications',
+			'settings',
+			'settings/mail',
+			'settings/marketplace',
+			'composer',
+			'composer/write',
+			'composer/drafts',
+			'pages/types/composer',
+			'settings/multilingual',
+		);
+		Loader::model('page_list');
+		$oldDashboard = Page::getByPath(TRASH_PAGE_PATH . '/dashboard');
+		$children = $oldDashboard->getCollectionChildrenArray();
+		$dashboard = Page::getByPath('/dashboard');
+		foreach($children as $cID) {
+			$c = Page::getByID($cID, 'RECENT');
+			if ($c->isInTrash()) { 
+				// we do this so that we don't move something that has already been moved out of the trash.
+				$path = str_replace(TRASH_PAGE_PATH . '/dashboard/', '', $c->getCollectionPath());
+				if (!in_array($path, $pagesToSkip)) {
+					$targetPath = substr($path, 0, strrpos($path, '/'));
+					if (!$targetPath) { 
+						$c->move($dashboard);		
+					} else {
+						$target = Page::getByPath('/dashboard/' . $targetPath);
+						if (is_object($target) && !$target->isError()) {
+							$c->move($target);
+						} else {
+							$c->move($dashboard);
+						}
+					}
+				}				
+			}
+		}		
 	}
 	
 	public function installBlockTypes() {
