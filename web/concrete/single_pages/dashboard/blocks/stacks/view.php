@@ -38,7 +38,7 @@
 		<? } ?>
 		
 		<? if (PERMISSIONS_MODEL == 'advanced') { ?>
-			<a class="btn small ccm-main-nav-edit-option" dialog-width="580" dialog-height="420" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$stack->getCollectionID()?>&arHandle=Main&atask=groups"><?=t('Permissions')?></a>
+			<a class="btn small ccm-main-nav-edit-option" dialog-width="580" dialog-append-buttons="true" dialog-height="420" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$stack->getCollectionID()?>&arHandle=Main&atask=groups"><?=t('Permissions')?></a>
 		<? } ?>
 		<?
 		$vo = $stack->getVersionObject();
