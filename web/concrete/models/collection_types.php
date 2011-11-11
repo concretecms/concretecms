@@ -389,6 +389,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$q = "select akID from PageTypeAttributes where ctID = ?";
 			$r = $db->query($q, $v);
 			if ($r) {
+				$this->akIDArray = array();
 				while ($row = $r->fetchRow()) {
 					$this->akIDArray[] = $row['akID'];
 				}
@@ -462,7 +463,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $items;
 		}
 		
-		public function isAvailableCollectionTypeAttribute($akID) {
+		/**
+		 *Checks if given attribute key or attribute key id is assigned to this collection type
+		 */
+		public function isAvailableCollectionTypeAttribute($akIDorObject) {
+			if (is_object($akIDorObject)) {
+				$akID = $akIDorObject->getAttributeKeyID();
+			} else {
+				$akID = $akIDorObject;
+			}
+			
+			if (count($this->akIDArray) == 0) {
+				$this->populateAvailableAttributeKeys();
+			}
 			return in_array($akID, $this->akIDArray);
 		}		
 
