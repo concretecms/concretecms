@@ -48,6 +48,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$nu->uLastLogin = $row['uLastLogin'];
 				$nu->uTimezone = $row['uTimezone'];
 				$nu->uGroups = $nu->_getUserGroups(true);
+				$nu->superUser = ($nu->getUserID() == USER_SUPER_ID);
 				if ($login) {
 					User::regenerateSession();
 					$_SESSION['uID'] = $row['uID'];

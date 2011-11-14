@@ -458,6 +458,10 @@ class PageTheme extends Object {
 		return $styles;
 	}
 	
+	/**
+	 * @param string $ptHandle
+	 * @return PageTheme
+	 */
 	public function getByHandle($ptHandle) {
 		$pt = Cache::get('page_theme_by_handle', $ptHandle);
 		if ($pt instanceof PageTheme) {
@@ -471,6 +475,10 @@ class PageTheme extends Object {
 		return $pt;
 	}
 	
+	/**
+	 * @param int $ptID
+	 * @return PageTheme
+	 */
 	public function getByID($ptID) {
 		$pt = Cache::get('page_theme_by_id', $ptID);
 		if ($pt instanceof PageTheme) {
