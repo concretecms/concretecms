@@ -49,5 +49,5 @@ if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MAR
 	<? } ?>
 	
 	
-	<? print $h->button(t('Connect to Community'), $this->url('/dashboard/extend/connect'), '', 'primary')?>
+	<? print $h->button(t('Connect to Community'), View::url('/dashboard/extend/connect'), '', 'primary')?>
 <? } ?>

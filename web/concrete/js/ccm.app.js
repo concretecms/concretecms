@@ -4912,44 +4912,74 @@ ccm_marketplaceLauncherOpenPost = function() {
 
 ccm_openThemeLauncher = function(mpID) {
 	jQuery.fn.dialog.closeTop();
-	
-	$(window).resize(function(){
-		ccm_setNewsflowOverlayDimensions();
-	});
-
-	var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
-	$('.ui-widget-overlay').show();
+	params = {'mpID': mpID};
 	jQuery.fn.dialog.showLoader(ccmi18n.themeBrowserLoading);
-	var mpIDstr = '';
-	if (mpID) {
-		mpIDstr = '&mpID=' + mpID;
-	}
-	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/extend/themes?_ccm_dashboard_external=1' + mpIDstr, function() {
-		ccm_marketplaceLauncherOpenPost();
+	$.getJSON(CCM_TOOLS_PATH + '/marketplace/connect', params, function(resp) {
+		if (resp.isConnected) {
+	
+			$(window).resize(function(){
+				ccm_setNewsflowOverlayDimensions();
+			});
+		
+			var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
+			$('.ui-widget-overlay').show();
+			var mpIDstr = '';
+			if (mpID) {
+				mpIDstr = '&mpID=' + mpID;
+			}
+			$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/extend/themes?_ccm_dashboard_external=1' + mpIDstr, function() {
+				ccm_marketplaceLauncherOpenPost();
+			});
+		} else {
+			$.fn.dialog.open({
+				title: ccmi18n.community,
+				href:  CCM_TOOLS_PATH + '/marketplace/frame?task=open_theme_launcher&mpID=' + mpID,
+				width: '90%',
+				modal: false,
+				height: '70%'
+			});
+		}
 	});
 }
 
 ccm_openAddonLauncher = function(mpID) {
-	$("#ccm-nav-intelligent-search").val('');
-	$("#ccm-intelligent-search-results").fadeOut(90, 'easeOutExpo');
-
 	jQuery.fn.dialog.closeTop();
-	
-	$(window).resize(function(){
-		ccm_setNewsflowOverlayDimensions();
-	});
+	params = {'mpID': mpID};
+	$("#ccm-intelligent-search-results").hide();
 
-	var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
-	$('.ui-widget-overlay').show();
 	jQuery.fn.dialog.showLoader(ccmi18n.addonBrowserLoading);	
-	var mpIDstr = '';
-	if (mpID) {
-		mpIDstr = '&mpID=' + mpID;
-	}
-	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/extend/add-ons?_ccm_dashboard_external=1' + mpIDstr, function() {
-		ccm_marketplaceLauncherOpenPost();
+	$.getJSON(CCM_TOOLS_PATH + '/marketplace/connect', params, function(resp) {
+		if (resp.isConnected) {
+			$("#ccm-nav-intelligent-search").val('');
+			$("#ccm-intelligent-search-results").fadeOut(90, 'easeOutExpo');
+		
+			jQuery.fn.dialog.closeTop();
+			
+			$(window).resize(function(){
+				ccm_setNewsflowOverlayDimensions();
+			});
+		
+			var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
+			$('.ui-widget-overlay').show();
+			var mpIDstr = '';
+			if (mpID) {
+				mpIDstr = '&mpID=' + mpID;
+			}
+			$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/extend/add-ons?_ccm_dashboard_external=1' + mpIDstr, function() {
+				ccm_marketplaceLauncherOpenPost();
+			});
+		} else {
+			$.fn.dialog.open({
+				title: ccmi18n.community,
+				href:  CCM_TOOLS_PATH + '/marketplace/frame?task=open_addon_launcher&mpID=' + mpID,
+				width: '90%',
+				modal: false,
+				height: '70%'
+			});
+		}
 	});
 }
+
 ccm_marketplaceBrowserInit = function(mpID, autoSelect) {
 	
 	$(".ccm-marketplace-item").click(function() {
@@ -5127,7 +5157,7 @@ ccm_getMarketplaceItem = function(args) {
 		} else {
 			$.fn.dialog.open({
 				title: ccmi18n.community,
-				href:  CCM_TOOLS_PATH + '/marketplace/frame?mpID=' + mpID,
+				href:  CCM_TOOLS_PATH + '/marketplace/frame?task=get&mpID=' + mpID,
 				width: '90%',
 				modal: false,
 				height: '70%'
