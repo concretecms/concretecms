@@ -147,6 +147,8 @@ if ($successMessage) {
 
 ?>
 
+<div class="ccm-ui">
+
 <h3>
 <? if (count($originalPages) > 1) { ?>
 	<?=t('What do you wish to do?')?>
@@ -200,3 +202,5 @@ if ($successMessage) {
 	
 	<div class="ccm-spacer">&nbsp;</div>
 	</form>
+
+</div>
