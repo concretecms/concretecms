@@ -703,6 +703,8 @@ td.newsflow-latest-edition-wrapper{background-color:#e7f7ff;background-repeat:re
 .ccm-pane .form-stacked .ccm-pane-footer{margin-left:-20px;}
 .ui-dialog .form-stacked{padding-left:0px;}
 .ccm-pane-footer .form-stacked{padding-left:0px;}
+.newsflow .ccm-pane-body{background-color:transparent;}
+.newsflow .ccm-pane-body-inner{background-color:transparent;padding:20px;}
 .ccm-pane-footer div.pagination{margin-top:0px;margin-bottom:0px;}
 .ccm-pane-header h3{font-size:24px;}
 .ccm-pane-body{padding:20px;background-color:#fff;}
