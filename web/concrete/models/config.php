@@ -45,7 +45,7 @@ class Config extends Object {
 	private static function getStore()
 	{
 		if (!self::$store) {
-			self::$store = new ConfigStore(Loader::db());
+			self::$store = new ConfigStore();
 		}
 		return self::$store;
 	}
@@ -148,8 +148,7 @@ class ConfigStore {
 	 */
 	private $rows;
 	
-	public function __construct($db) {
-		$this->db = $db;
+	public function __construct() {
 		$this->load();
 	}
 	
@@ -163,6 +162,7 @@ class ConfigStore {
 			$this->rows = $val;
 		} else {
 			$this->rows = array();
+			$this->db = Loader::db();
 			$r = $this->db->Execute('select * from Config where uID = 0 order by cfKey asc');
 			while ($row = $r->FetchRow()) {
 				if (!$row['pkgID']) {
@@ -228,7 +228,8 @@ class ConfigStore {
 			'uID' => 0,
 			'pkgID' => $pkgID
 		);
-		$this->db->query(
+		$db = Loader::db();
+		$db->query(
 			"replace into Config (cfKey, timestamp, cfValue, pkgID) values (?, ?, ?, ?)",
 			array($cfKey, $timestamp, $cfValue, $pkgID)
 		);
@@ -244,6 +245,7 @@ class ConfigStore {
 	}
 	
 	public function delete($cfKey, $pkgID = null) {
+		$db = Loader::db();
 		if ($pkgID > 0) {
 			unset($this->rows["{$cfKey}.{$pkgID}"]);
 			$this->db->query(
