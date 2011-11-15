@@ -5004,7 +5004,7 @@ ccm_marketplaceBrowserSelectPrevious = function() {
 		}
 	});
 	if (!foundSomething) {
-		var href = $("#ccm-marketplace-browse-footer .ccm-page-left a").first().attr('href');
+		var href = $("#ccm-marketplace-browse-footer li.prev a").first().attr('href');
 		href = href + '&prev=1';
 		if ($('.newsflow').length > 0) { 
 			jQuery.fn.dialog.showLoader(false);
@@ -5035,7 +5035,7 @@ ccm_marketplaceBrowserSelectNext = function() {
 	
 	// if we make it down here...
 	if (!foundSomething) {
-		var href = $("#ccm-marketplace-browse-footer .ccm-page-right a").first().attr('href');
+		var href = $("#ccm-marketplace-browse-footer li.next a").first().attr('href');
 		if ($('.newsflow').length > 0) { 
 			jQuery.fn.dialog.showLoader(false);
 			$('#newsflow-overlay').load(href, function() {
@@ -5050,14 +5050,14 @@ ccm_marketplaceBrowserSelectNext = function() {
 ccm_marketplaceBrowserSetupNextAndPrevious = function() {
 
 	if ($('.ccm-marketplace-item-selected').attr('mpID') == $('.ccm-marketplace-item').first().attr('mpID') 
-	&& $('#ccm-marketplace-browse-footer span.ccm-page-left a').length == 0) { 
+	&& $('#ccm-marketplace-browse-footer li.prev a').length == 0) { 
 		$(".newsflow-paging-previous").hide();
 	} else {
 		$(".newsflow-paging-previous").show();
 	}
 
 	if ($('.ccm-marketplace-item-selected').attr('mpID') == $('.ccm-marketplace-item').last().attr('mpID')
-	&& $('#ccm-marketplace-browse-footer span.ccm-page-right a').length == 0) { 
+	&& $('#ccm-marketplace-browse-footer li.next a').length == 0) { 
 		$(".newsflow-paging-next").hide();
 	} else {
 		$(".newsflow-paging-next").show();

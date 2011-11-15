@@ -39,7 +39,7 @@ if ($tp->canInstallPackages()) {
 
 <? if (!$_REQUEST['mpID']) { ?>
 
-<? if ($tp->canInstallPackages()) { ?>
+<? if ($tp->canInstallPackages() && $mi->isConnected()) { ?>
 <div class="ccm-pane-options">
 <div class="ccm-pane-options-permanent-search">
 <form id="ccm-marketplace-browser-form" method="get" action="<?=$this->url('/dashboard/extend/themes')?>">
@@ -73,13 +73,17 @@ if ($tp->canInstallPackages()) {
 </div>
 <? } ?>
 
-<div class="ccm-pane-body">
+<div class="ccm-pane-body <? if (!$tp->canInstallPackages() || !$mi->isConnected()) { ?> ccm-pane-body-footer<? } ?>">
 	<? if (!$tp->canInstallPackages()) { ?>
+		<div class="ccm-pane-body-inner">
 		<div class="alert-message block-message error">
 			<p><?=t('You do not have access to download themes or add-ons from the marketplace.')?></p>
 		</div>
+		</div>
 	<? } else if (!$mi->isConnected()) { ?>
+		<div class="ccm-pane-body-inner">
 		<? Loader::element('dashboard/marketplace_connect_failed')?>
+		</div>
 	<? } else {
 
 		$pagination = $list->getPagination();
@@ -117,8 +121,10 @@ if ($tp->canInstallPackages()) {
 	<? } ?>
 </div>
 
-<? $url = Loader::helper('url')->unsetVariable('prev'); ?>
-<div class="ccm-pane-footer" id="ccm-marketplace-browse-footer"><?=$list->displayPagingV2($url)?></div>
+<? if ($tp->canInstallPackages() && $mi->isConnected()) { ?>
+	<? $url = Loader::helper('url')->unsetVariable('prev'); ?>
+	<div class="ccm-pane-footer" id="ccm-marketplace-browse-footer"><?=$list->displayPagingV2($url)?></div>
+<? } ?>
 
 <? } ?>
 
