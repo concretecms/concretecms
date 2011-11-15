@@ -474,15 +474,15 @@ $ADODB_ASSOC_CASE =  2;
 require(dirname(__FILE__) . '/version.php');
 define('APP_VERSION', $APP_VERSION);
 define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the latest version (this is seconds)
-define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_version_number');
-define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
+define('APP_VERSION_LATEST_WS', 'http://betatime.concrete5.org/tools/get_latest_version_number');
+define('APP_VERSION_LATEST_DOWNLOAD', 'http://betatime.concrete5.org/download/');
 
 //Main Concrete Site - For Marketplace, Knowledge Base, etc.
 if (!defined('CONCRETE5_ORG_URL')) {
-	define('CONCRETE5_ORG_URL', 'http://www.concrete5.org');
+	define('CONCRETE5_ORG_URL', 'http://betatime.concrete5.org');
 }
 if (!defined('NEWSFLOW_URL')) {
-	define('NEWSFLOW_URL', 'http://newsflow');
+	define('NEWSFLOW_URL', 'http://newsflow.concrete5.org');
 }
 
 if (!defined('ENABLE_APP_NEWS')) {

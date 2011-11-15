@@ -90,10 +90,6 @@ if (is_object($cp)) {
 	if ($cih->showNewsflowOverlay()) {
 		$this->addFooterItem('<script type="text/javascript">$(function() { ccm_showNewsflow(); });</script>');
 	}	
-	if (!Config::get('SHOW_INTRODUCTION')) {
-		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_showAppIntroduction(); });</script>');
-		Config::save('SHOW_INTRODUCTION', 1);
-	}
 
 }
 
