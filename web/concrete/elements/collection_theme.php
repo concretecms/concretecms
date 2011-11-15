@@ -33,6 +33,7 @@ if ($plID == 0) {
 }
 ?>
 
+<div class="ccm-ui">
 <form method="post" name="ccmThemeForm" action="<?=$c->getCollectionAction()?>">
 	<input type="hidden" name="plID" value="<?=$c->getCollectionThemeID()?>" />
 	<input type="hidden" name="ctID" value="<?=$c->getCollectionTypeID()?>" />
@@ -115,6 +116,7 @@ if ($plID == 0) {
 
 	<div class="ccm-spacer">&nbsp;</div>
 </form>
+</div>
 	
 
 <script type="text/javascript">
