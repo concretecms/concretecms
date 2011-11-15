@@ -11,7 +11,7 @@ class DashboardSystemDeveloperDatabaseController extends DashboardBaseController
 			return false;
 		}
 		$db = Loader::db();
-		$ab = $db->getADOSChema();
+		$ab = Database::getADOSChema();
 		$xml = $ab->ExtractSchema();
 		$this->set('schema', $xml);
 	}

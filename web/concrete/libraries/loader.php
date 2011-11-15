@@ -190,8 +190,8 @@
 		 * </code>
 		 */
 		public function db($server = null, $username = null, $password = null, $database = null, $create = false, $autoconnect = true) {
-			static $_db;
-			if ((!isset($_db) || $create) && ($autoconnect)) {
+			static $_dba;
+			if ((!isset($_dba) || $create) && ($autoconnect)) {
 				if ($server == null && defined('DB_SERVER')) {	
 					$dsn = DB_TYPE . '://' . DB_USERNAME . ':' . rawurlencode(DB_PASSWORD) . '@' . rawurlencode(DB_SERVER) . '/' . DB_DATABASE;
 				} else if ($server) {
@@ -216,10 +216,6 @@
 						}
 						
 						ADOdb_Active_Record::SetDatabaseAdapter($_dba);
-						$_db = new Database();
-						$_db->setDatabaseObject($_dba);
-						//$_db->setDebug(true);
-						//$_db->setLogging(true);
 					} else if (defined('DB_SERVER')) {
 						$v = View::getInstance();
 						$v->renderError(t('Unable to connect to database.'), t('A database error occurred while processing this request.'));
@@ -229,7 +225,7 @@
 				}
 			}
 			
-			return $_db;
+			return $_dba;
 		}
 		
 		/** 
