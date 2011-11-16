@@ -73,10 +73,10 @@ class DashboardSystemAttributesSetsController extends DashboardBaseController {
 		} else {
 			$this->error->add($this->token->getErrorMessage());
 		}
-		$this->view();
 	}
 	
 	public function update_set() {
+		$this->edit($this->post('asID'));
 		if ($this->token->validate('update_set')) { 
 			$as = AttributeSet::getByID($this->post('asID'));
 			if (!is_object($as)) {
@@ -106,7 +106,6 @@ class DashboardSystemAttributesSetsController extends DashboardBaseController {
 		} else {
 			$this->error->add($this->token->getErrorMessage());
 		}
-		$this->view();
 	}
 	
 	public function update_set_attributes() {
