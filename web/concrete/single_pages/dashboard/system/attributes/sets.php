@@ -109,7 +109,7 @@ $txt = Loader::helper('text');?>
 
 
 
-<?php } else if($this->controller->getTask() == 'category'){ ?>
+<?php } else if($this->controller->getTask() == 'category' || $this->controller->getTask() == 'add_set'){ ?>
 
 	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($txt->unHandle($this->controller->category->getAttributeKeyCategoryHandle()).' '.t('Attribute Sets'), false);?>
 
