@@ -156,7 +156,7 @@ class ConcreteInterfaceMenuItemController extends Controller {
 							$this->addHeaderItem($h->css($this->menuItem->getMenuItemFileURL($i)));
 							break;
 						case 'JAVASCRIPT':
-							$this->addHeaderItem($h->javascript($this->menuItem->getMenuItemFileURL($i)));
+							$this->addFooterItem($h->javascript($this->menuItem->getMenuItemFileURL($i)));
 							break;
 					}
 				}
