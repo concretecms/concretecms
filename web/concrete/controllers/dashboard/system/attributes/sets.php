@@ -73,6 +73,7 @@ class DashboardSystemAttributesSetsController extends DashboardBaseController {
 		} else {
 			$this->error->add($this->token->getErrorMessage());
 		}
+		$this->view();
 	}
 	
 	public function update_set() {
@@ -105,6 +106,7 @@ class DashboardSystemAttributesSetsController extends DashboardBaseController {
 		} else {
 			$this->error->add($this->token->getErrorMessage());
 		}
+		$this->view();
 	}
 	
 	public function update_set_attributes() {
@@ -152,6 +154,7 @@ class DashboardSystemAttributesSetsController extends DashboardBaseController {
 		} else {
 			$this->error->add($this->token->getErrorMessage());
 		}
+		$this->view();
 	}
 	
 
