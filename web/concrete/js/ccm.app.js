@@ -4620,7 +4620,7 @@ var ccmAlert = {
     
     hud: function(message, time, icon, title) {
     	if ($('#ccm-notification-inner').length == 0) { 
-    		$(document.body).append('<div id="ccm-notification"><div id="ccm-notification-inner"></div></div>');
+    		$(document.body).append('<div id="ccm-notification" class="ccm-ui"><div id="ccm-notification-inner"></div></div>');
     	}
     	
     	if (icon == null) {
@@ -4632,7 +4632,7 @@ var ccmAlert = {
 	    } else {
 	    	var messageText = '<h3>' + title + '</h3>' + message;
 	    }
-    	$('#ccm-notification-inner').html('<table border="0" cellspacing="0" cellpadding="0"><tr><td valign="top"><img id="ccm-notification-icon" src="' + CCM_IMAGE_PATH + '/icons/' + icon + '.png" width="16" height="16" /></td><td valign="top">' + messageText + '</td></tr></table>');
+    	$('#ccm-notification-inner').html('<img id="ccm-notification-icon" src="' + CCM_IMAGE_PATH + '/icons/' + icon + '.png" width="16" height="16" /><div id="ccm-notification-message">' + messageText + '</div>');
 		
 		$('#ccm-notification').show();
 		
@@ -5092,15 +5092,16 @@ ccm_marketplaceBrowserSetupNextAndPrevious = function() {
 	} else {
 		$(".newsflow-paging-next").show();
 	}
+
+	var h = $('#ccm-marketplace-detail').height();
+	h = h + 40;
+	$(".newsflow-paging-previous span, .newsflow-paging-next span").css('height', h + 'px');
+	$(".newsflow-paging-previous, .newsflow-paging-next").css('height', h + 'px');
 	
 }
 
 
 ccm_marketplaceGetDetailPost = function() {
-	var h = $('#ccm-marketplace-detail').height();
-	h = h + 40;
-	$(".newsflow-paging-previous span, .newsflow-paging-next span").css('height', h + 'px');
-	$(".newsflow-paging-previous, .newsflow-paging-next").css('height', h + 'px');
 	$('.ccm-marketplace-detail-loading').hide();
 	$("#ccm-marketplace-detail-inner").show();
 	if ($(".ccm-marketplace-item-information-inner").height() < 325) {
@@ -6400,6 +6401,7 @@ function ccm_previewMarketplaceTheme(cID, themeCID,themeName,themeHandle){
 ccm_marketplaceDetailShowMore = function() {	
 	$(".ccm-marketplace-item-information-more").hide();
 	$(".ccm-marketplace-item-information-inner").css('max-height', 'none');
+	ccm_marketplaceBrowserSetupNextAndPrevious();
 }
 
 ccm_marketplaceUpdatesShowMore = function(obj) {	
