@@ -160,7 +160,7 @@
 .ccm-ui .inline-inputs input.small{width:90px;}
 .ccm-ui .inline-inputs span{padding:0 2px 0 1px;}
 .ccm-ui .input-prepend input,.ccm-ui .input-append input{-webkit-border-radius:0 3px 3px 0;-moz-border-radius:0 3px 3px 0;border-radius:0 3px 3px 0;}
-.ccm-ui .input-prepend .add-on,.ccm-ui .input-append .add-on{position:relative;background:#f5f5f5;border:1px solid #ccc;z-index:2;float:left;display:block;width:auto;min-width:16px;height:18px;padding:4px 4px 4px 5px;margin-right:-1px;font-weight:normal;line-height:18px;color:#bfbfbf;text-align:center;text-shadow:0 1px 0 #ffffff;-webkit-border-radius:3px 0 0 3px;-moz-border-radius:3px 0 0 3px;border-radius:3px 0 0 3px;}
+.ccm-ui .input-prepend .add-on,.ccm-ui .input-append .add-on{position:relative;background:#f5f5f5;border:1px solid #ccc;z-index:2;float:left;display:block;width:auto;min-width:16px;height:18px;padding:4px 4px 4px 5px;margin-right:-1px;font-weight:normal;line-height:18px;color:#808080;text-align:center;text-shadow:0 1px 0 #ffffff;-webkit-border-radius:3px 0 0 3px;-moz-border-radius:3px 0 0 3px;border-radius:3px 0 0 3px;}
 .ccm-ui .input-prepend .active,.ccm-ui .input-append .active{background:#a9dba9;border-color:#46a546;}
 .ccm-ui .input-prepend .add-on{*margin-top:1px;}
 .ccm-ui .input-append input{float:left;-webkit-border-radius:3px 0 0 3px;-moz-border-radius:3px 0 0 3px;border-radius:3px 0 0 3px;}
