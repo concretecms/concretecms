@@ -970,6 +970,8 @@ div.ccm-menu ul li:only-child a{border-radius:6px !important;}
 div.ccm-menu ul a{display:block;color:#333;padding:4px 10px 4px 28px;text-decoration:none;font-size:12px;}
 div.ccm-menu ul a:hover{background-color:#e0f2fe;color:#333;text-decoration:none;}
 li.ccm-menu-separator{height:1px;font-size:1px;background-color:#d2d2d2;}
+div#ccm-notification-inner img{float:left;margin-right:5px;}
+div#ccm-notification-inner div#ccm-notification-message{width:auto;font-size:12px;float:left;}
 .ccm-dialog-tabs{margin:0 0 20px;padding:0;list-style:none;zoom:1;}.ccm-dialog-tabs:before,.ccm-dialog-tabs:after{display:table;content:"";zoom:1;*display:inline;}
 .ccm-dialog-tabs:after{clear:both;}
 .ccm-dialog-tabs>li{float:left;}.ccm-dialog-tabs>li>a{display:block;}
