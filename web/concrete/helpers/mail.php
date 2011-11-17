@@ -255,7 +255,7 @@ class MailHelper {
 			$mail=$zendMailData['mail'];
 			$transport=(isset($zendMailData['transport']))?$zendMailData['transport']:NULL;
 			
-			if (is_array($this->from)) {
+			if (is_array($this->from) && count($this->from)) {
 				if ($this->from[0] != '') {
 					$from = $this->from;
 				}
