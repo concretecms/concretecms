@@ -14,12 +14,14 @@ if ($tp->canInstallPackages()) {
 			<? if ($_REQUEST['task'] == 'get') { ?>
 				parent.ccm_getMarketplaceItem({mpID: '<?=$_REQUEST['mpID']?>', closeTop: true});
 			<? } else if ($_REQUEST['task'] == 'open_theme_launcher') { ?>
-				parent.ccm_openThemeLauncher(<?=$_REQUEST['mpID']?>);
+				parent.ccm_openThemeLauncher(<?=$_REQUEST['mpID']?>, true);
 			<? } else if ($_REQUEST['task'] == 'open_addon_launcher') { ?>
-				parent.ccm_openAddonLauncher(<?=$_REQUEST['mpID']?>);
+				parent.ccm_openAddonLauncher(<?=$_REQUEST['mpID']?>, true);
 			<? } ?>
 		</script>
-	<? } else {
+	<? } else { ?>
+		<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.postmessage.js"></script>
+	<?
 		$completeURL = BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/marketplace/frame?complete=1&task=' . $_REQUEST['task'] . '&mpID=' . $_REQUEST['mpID'];
 		print $mi->getMarketplaceFrame('100%', '100%', $completeURL);
 	}

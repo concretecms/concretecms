@@ -7,6 +7,7 @@ class DashboardExtendConnectController extends Controller {
 
 	public function on_start() {
 		Loader::library('marketplace');
+		$this->addFooterItem(Loader::helper('html')->javascript('jquery.postmessage.js'));
 	}
 	
 	public function view($isNew = false) {

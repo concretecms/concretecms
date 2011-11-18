@@ -97,7 +97,7 @@ class Marketplace {
 		return $file;
 	}
 	
-	public function getMarketplaceFrame($width = '100%', $height = '530', $completeURL = false) {
+	public function getMarketplaceFrame($width = '100%', $height = '300', $completeURL = false) {
 		// if $mpID is passed, we are going to either
 		// a. go to its purchase page
 		// b. pass you through to the page AFTER connecting.
@@ -110,18 +110,31 @@ class Marketplace {
 				}
 				$csReferrer = urlencode($completeURL);
 				$csiURL = urlencode(BASE_URL . DIR_REL);
+				$csiBaseURL = urlencode(BASE_URL);
 				if ($this->hasConnectionError()) {
 					$csToken = $this->getSiteToken();
 				} else {
 					// new connection 
 					$csToken = Marketplace::generateSiteToken();
 				}
-				$url = $url . '?ts=' . time() . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(SITE, ENT_QUOTES, APP_CHARSET);
+				$url = $url . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(SITE, ENT_QUOTES, APP_CHARSET);
+			} else {
+				$csiBaseURL = urlencode(BASE_URL);
+				$url = MARKETPLACE_URL_CONNECT_SUCCESS . '?csToken=' . $this->getSiteToken() . '&csiBaseURL=' . $csiBaseURL;
 			}
-			if ($csToken == false) {
+			if ($csToken == false && !$this->isConnected()) {
 				return '<div class="ccm-error">' . t('Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that cURL is enabled on your server. If these are both true, It\'s possible your site\'s IP address may be blacklisted for some reason on our server. Please ask your webhost what your site\'s outgoing cURL request IP address is, and email it to us at <a href="mailto:help@concrete5.org">help@concrete5.org</a>.') . '</div>';
 			} else {
-				return '<iframe id="ccm-marketplace-frame-' . time() . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+				$time = time();
+				$ifr = '<script type="text/javascript">$(function() { $.receiveMessage(function(e) { 
+					var eh = e.data;
+					eh = parseInt(eh) + 20;
+					$("#ccm-marketplace-frame-' . $time . '").attr("height", eh); 
+					}, \'' . CONCRETE5_ORG_URL . '\');	
+				});	
+				</script>';
+				$ifr .= '<iframe id="ccm-marketplace-frame-' . $time . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+				return $ifr;
 			}
 		} else {
 			return '<div class="ccm-error">' . t('You do not have permission to connect this site to the marketplace.') . '</div>';
@@ -134,10 +147,11 @@ class Marketplace {
 			if ($this->isConnected()) {
 				$url = MARKETPLACE_URL_CHECKOUT;
 				$csiURL = urlencode(BASE_URL . DIR_REL);
+				$csiBaseURL = urlencode(BASE_URL);
 				$csToken = $this->getSiteToken();
-				$url = $url . '/' . $mp->getProductBlockID() . '?ts=' . time() . '&csiURL=' . $csiURL . '&csToken=' . $csToken;
+				$url = $url . '/' . $mp->getProductBlockID() . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken;
 			}
-			return '<iframe id="ccm-marketplace-frame-' . time() . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+			return '<iframe id="ccm-marketplace-frame-' . time() . '" class="ccm-marketplace-frame" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
 		} else {
 			return '<div class="ccm-error">' . t('You do not have permission to connect this site to the marketplace.') . '</div>';
 		}

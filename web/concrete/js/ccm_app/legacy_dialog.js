@@ -88,12 +88,6 @@ jQuery.fn.dialog.open = function(obj) {
 		duration:150, 
 		easing:"easeInExpo"
 		},
-		hide:{
-			effect:"fade", 
-			distance:60, 
-			duration:500, 
-			easing:"easeOutExpo"
-		},
 		'escapeClose': true,
 		'buttons': buttons,
 		'title': obj.title,

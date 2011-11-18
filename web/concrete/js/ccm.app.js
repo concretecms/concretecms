@@ -4464,12 +4464,6 @@ jQuery.fn.dialog.open = function(obj) {
 		duration:150, 
 		easing:"easeInExpo"
 		},
-		hide:{
-			effect:"fade", 
-			distance:60, 
-			duration:500, 
-			easing:"easeOutExpo"
-		},
 		'escapeClose': true,
 		'buttons': buttons,
 		'title': obj.title,
@@ -4910,7 +4904,7 @@ ccm_marketplaceLauncherOpenPost = function() {
 	});
 }
 
-ccm_openThemeLauncher = function(mpID) {
+ccm_openThemeLauncher = function(mpID, closeTop) {
 	jQuery.fn.dialog.closeTop();
 	params = {'mpID': mpID};
 	jQuery.fn.dialog.showLoader(ccmi18n.themeBrowserLoading);
@@ -4942,7 +4936,7 @@ ccm_openThemeLauncher = function(mpID) {
 	});
 }
 
-ccm_openAddonLauncher = function(mpID) {
+ccm_openAddonLauncher = function(mpID, closeTop) {
 	jQuery.fn.dialog.closeTop();
 	params = {'mpID': mpID};
 	$("#ccm-intelligent-search-results").hide();
@@ -5099,7 +5093,6 @@ ccm_marketplaceBrowserSetupNextAndPrevious = function() {
 	$(".newsflow-paging-previous, .newsflow-paging-next").css('height', h + 'px');
 	
 }
-
 
 ccm_marketplaceGetDetailPost = function() {
 	$('.ccm-marketplace-detail-loading').hide();
