@@ -11,7 +11,8 @@ class DashboardExtendAddOnsController extends Controller {
 	public function view() {
 
 		$tp = new TaskPermission();
-		if ($tp->canInstallPackages()) { 
+		$mi = Marketplace::getInstance();
+		if ($mi->isConnected() && $tp->canInstallPackages()) { 
 			Loader::model('marketplace_remote_item');
 			
 			$mri = new MarketplaceRemoteItemList();
@@ -75,6 +76,8 @@ class DashboardExtendAddOnsController extends Controller {
 			$this->set('form', Loader::helper('form'));
 			$this->set('sets', $setsel);
 			$this->set('type', $what);
+		} else {
+			$this->redirect('/dashboard/extend/connect');
 		}
 	}
 	

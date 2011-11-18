@@ -1,21 +1,11 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<h1><span><?=t("Connect to the Community")?></span></h1>
-<div class="ccm-dashboard-inner">
+<style type="text/css">
+div.ccm-pane-body {padding-top: 0px; padding-right: 0px; padding-left: 0px}
+</style>
+
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Connect to Community'), false, 'span16')?>
 <? 
 	$mi = Marketplace::getInstance();
-	if ($mi->isConnected()) { ?>
-		
-		<? if ($isNew) { ?>
-			<?=t('Your site is now connected to the concrete5 community!')?>
-		<? } else { ?>
-			<?=t('Your site is currently connected to the concrete5 community.')?>
-		<? } ?>
-		
-	<?
-	
-	} else {
-		print $mi->getMarketplaceFrame();
-	}
+	print $mi->getMarketplaceFrame();
 ?>
-
-</div>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>

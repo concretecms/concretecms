@@ -19,7 +19,7 @@ $txt = Loader::helper('text');
 	
 		<?=t('There are no custom templates available.')?>
 		<div class="ccm-buttons dialog-buttons">
-			<a href="#" class="btn ccm-dialog-close ccm-button-left cancel"><span><em class="ccm-button-close"><?=t('Cancel')?></em></span></a>
+			<a href="#" class="btn ccm-dialog-close ccm-button-left cancel"><?=t('Cancel')?></a>
 		</div>
 
 	<? } else { ?>
