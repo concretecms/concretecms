@@ -5139,12 +5139,12 @@ ccm_getMarketplaceItem = function(args) {
 				});
 			} else {
 				$.fn.dialog.open({
-					title: ccmi18n.community,
+					title: ccmi18n.communityCheckout,
 					iframe: true,
 					href:  CCM_TOOLS_PATH + '/marketplace/checkout?mpID=' + mpID,
-					width: '90%',
+					width: '560px',
 					modal: false,
-					height: '70%'
+					height: '400px'
 				});
 			}
 

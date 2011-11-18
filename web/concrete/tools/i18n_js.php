@@ -51,6 +51,7 @@ var ccmi18n = {
 	clear: "<?=t('Clear')?>",
 	helpPopup: "<?=t('Help')?>",
 	community: "<?=t('concrete5 Community')?>",
+	communityCheckout: "<?=t('concrete5 Community - Purchase &amp; Checkout')?>",
 	noIE6: "<?=t('Concrete5 does not support Internet Explorer 6 in edit mode.')?>",
 	helpPopupLoginMsg: "<?=t('Get more help on your question by posting it to the concrete5 help center on concrete5.org')?>",
 	marketplaceErrorMsg: "<?=t('<p>You package could not be installed.  An unknown error occured.</p>')?>",

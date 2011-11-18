@@ -151,6 +151,9 @@ class Marketplace {
 	public function getMarketplacePurchaseFrame($mp, $width = '100%', $height = '530') {
 		$tp = new TaskPermission();
 		if ($tp->canInstallPackages()) {
+			if (!is_object($mp)) {
+				return '<div class="alert-message block-message error">' . t('Unable to get information about this product.') . '</div>';
+			}
 			if ($this->isConnected()) {
 				$url = MARKETPLACE_URL_CHECKOUT;
 				$csiURL = urlencode(BASE_URL . DIR_REL);
@@ -158,7 +161,23 @@ class Marketplace {
 				$csToken = $this->getSiteToken();
 				$url = $url . '/' . $mp->getProductBlockID() . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken;
 			}
-			return '<iframe id="ccm-marketplace-frame-' . time() . '" class="ccm-marketplace-frame" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+			$time = time();
+			$ifr = '<script type="text/javascript">$(function() { $.receiveMessage(function(e) { 
+				jQuery.fn.dialog.hideLoader();
+
+				if (e.data == "loading") {
+					jQuery.fn.dialog.showLoader();
+				} else { 
+					var eh = e.data;
+					eh = parseInt(eh) + 20;
+					$("#ccm-marketplace-frame-' . $time . '").attr("height", eh); 
+				}
+				
+				}, \'' . CONCRETE5_ORG_URL . '\');	
+			});	
+			</script>';
+			$ifr .= '<iframe id="ccm-marketplace-frame-' . $time . '" class="ccm-marketplace-frame" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+			return $ifr;
 		} else {
 			return '<div class="ccm-error">' . t('You do not have permission to connect this site to the marketplace.') . '</div>';
 		}
