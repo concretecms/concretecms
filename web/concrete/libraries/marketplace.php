@@ -127,9 +127,16 @@ class Marketplace {
 			} else {
 				$time = time();
 				$ifr = '<script type="text/javascript">$(function() { $.receiveMessage(function(e) { 
-					var eh = e.data;
-					eh = parseInt(eh) + 20;
-					$("#ccm-marketplace-frame-' . $time . '").attr("height", eh); 
+					jQuery.fn.dialog.hideLoader();
+
+					if (e.data == "loading") {
+						jQuery.fn.dialog.showLoader();
+					} else { 
+						var eh = e.data;
+						eh = parseInt(eh) + 20;
+						$("#ccm-marketplace-frame-' . $time . '").attr("height", eh); 
+					}
+					
 					}, \'' . CONCRETE5_ORG_URL . '\');	
 				});	
 				</script>';
