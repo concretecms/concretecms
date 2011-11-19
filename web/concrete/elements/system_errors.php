@@ -12,11 +12,22 @@ if (isset($error) && $error != '') {
 		$_error[] = $error;
 	}
 	?>
+	<? if ($format == 'block') { ?>
+	
+	<div class="alert-message error">
+	<?php foreach($_error as $e): ?>
+		<?php echo $e?><br/>
+	<?php endforeach; ?>
+	</div>
+
+	<? } else { ?>
 	
 	<ul class="ccm-error">
 	<?php foreach($_error as $e): ?>
 		<li><?php echo $e?></li>
 	<?php endforeach; ?>
 	</ul>
+	<? } ?>
+	
 
 <?php } ?>

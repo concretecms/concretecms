@@ -2,4 +2,4 @@
 
 <h1><?=$titleContent?></h1>
 
-<div class="ccm-error"><?php print $innerContent ?></div>
+<div class="ccm-error block-message alert-message error"><?php print $innerContent ?></div>

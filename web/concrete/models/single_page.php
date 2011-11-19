@@ -126,6 +126,7 @@ class SinglePage extends Page {
 		// points to the passed node
 		$db = Loader::db();
 		$txt = Loader::helper('text');
+		Loader::helper('concrete/interface')->clearInterfaceItemsCache();
 		
 		// trim off a leading / if there is one
 		$cPath = trim($cPath, '/');

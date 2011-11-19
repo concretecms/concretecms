@@ -5,7 +5,10 @@ class TagsBlockController extends BlockController {
 	protected $btTable = 'btTags';
 	protected $btInterfaceWidth = "500";
 	protected $btInterfaceHeight = "350";
+
+	protected $btExportPageColumns = array('targetCID');
 	
+	protected $btCacheBlockRecord = true;
 	protected $btCacheBlockOutput = true;
 	protected $btCacheBlockOutputOnPost = false;
 	protected $btCacheBlockOutputForRegisteredUsers = false;
@@ -89,13 +92,13 @@ class TagsBlockController extends BlockController {
 	
 	public function save($args) {
 		$ak = $this->loadAttribute();
-		$c = Page::getByID($_REQUEST['cID'], 'RECENT');
-		$nvc = $c->getVersionToModify();
-		$ak->saveAttributeForm($nvc);
-		$nvc->refreshCache();
-		
+		if ($_REQUEST['cID']) {
+			$c = Page::getByID($_REQUEST['cID'], 'RECENT');
+			$nvc = $c->getVersionToModify();
+			$ak->saveAttributeForm($nvc);
+			$nvc->refreshCache();
+		}
 		$args['cloudCount'] = (is_numeric($args['cloudCount'])?$args['cloudCount']:0);
-		
 		parent::save($args);
 	}	
 }

@@ -150,26 +150,46 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$this->reindex();
 		}
 		
-		public function reindex($index = false) {
+		public static function reindexPendingPages() {
+			$num = 0;
+			$db = Loader::db();
+			$r = $db->Execute("select cID from PageSearchIndex where cRequiresReindex = 1");
+			while ($row = $r->FetchRow()) { 
+				$pc = Page::getByID($row['cID']);
+				$pc->reindex($this, true);
+				$num++;
+			}
+			Config::save('DO_PAGE_REINDEX_CHECK', false);
+			return $num;		
+		}
+				
+		public function reindex($index = false, $actuallyDoReindex = false) {
 			if ($this->isAlias()) {
 				return false;
 			}
-			$db = Loader::db();
-			
-			Loader::model('attribute/categories/collection');
-			$attribs = CollectionAttributeKey::getAttributes($this->getCollectionID(), $this->getVersionID(), 'getSearchIndexValue');
-	
-			$db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
-			$searchableAttributes = array('cID' => $this->getCollectionID());
-			$rs = $db->Execute('select * from CollectionSearchIndexAttributes where cID = -1');
-			AttributeKey::reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
-			
-			if ($index == false) {
-				Loader::library('database_indexed_search');
-				$index = new IndexedSearch();
+			if ($actuallyDoReindex || ENABLE_PROGRESSIVE_PAGE_REINDEX == false) { 
+				$db = Loader::db();
+				
+				Loader::model('attribute/categories/collection');
+				$attribs = CollectionAttributeKey::getAttributes($this->getCollectionID(), $this->getVersionID(), 'getSearchIndexValue');
+		
+				$db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
+				$searchableAttributes = array('cID' => $this->getCollectionID());
+				$rs = $db->Execute('select * from CollectionSearchIndexAttributes where cID = -1');
+				AttributeKey::reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
+				
+				if ($index == false) {
+					Loader::library('database_indexed_search');
+					$index = new IndexedSearch();
+				}
+				
+				$index->reindexPage($this);
+				$db->Replace('PageSearchIndex', array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 0), array('cID'), false);
+			} else { 			
+				$db = Loader::db();
+				Config::save('DO_PAGE_REINDEX_CHECK', true);
+				$db->Replace('PageSearchIndex', array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 1), array('cID'), false);
 			}
-			
-			$index->reindexPage($this);
 		}
 		
 		public function getAttributeValueObject($ak, $createIfNotFound = false) {
@@ -385,6 +405,32 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$csrs[] = $obj;
 			}
 		}
+		
+		// grab all the header block style rules for items in global areas on this page
+		$rs = $db->GetCol('select arHandle from Areas where arIsGlobal = 1 and cID = ?', array($this->getCollectionID()));
+		if (count($rs) > 0) {
+			$pcp = new Permissions($this);
+			foreach($rs as $garHandle) {
+				if ($pcp->canReadVersions()) {
+					$s = Stack::getByName($garHandle, 'RECENT');
+				} else {
+					$s = Stack::getByName($garHandle, 'ACTIVE');
+				}
+				if (is_object($s)) {
+					$rs1 = $db->GetAll('select bID, csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($s->getCollectionID(), $s->getVersionID()));
+					foreach($rs1 as $r) {
+						$csrID = $r['csrID'];
+						$arHandle = $txt->filterNonAlphaNum($garHandle);
+						$bID = $r['bID'];
+						$obj = CustomStyleRule::getByID($csrID);
+						if (is_object($obj)) {
+							$obj->setCustomStyleNameSpace('blockStyle' . $bID . $arHandle);
+							$csrs[] = $obj;
+						}
+					}
+				}
+			}
+		}
 		//get the header style rules
 		$styleHeader = ''; 
 		foreach($csrs as $st) { 
@@ -507,6 +553,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		$this->refreshCache();
 	}
 	
+	public function relateVersionEdits($oc) {
+		$db = Loader::db();
+		$v = array(
+			$this->getCollectionID(),
+			$this->getVersionID(),
+			$oc->getCollectionID(),
+			$oc->getVersionID()
+		);
+		$r = $db->GetOne('select count(*) from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?', $v);
+		if ($r > 0) {
+			return false;
+		} else {
+			$db->Execute('insert into CollectionVersionRelatedEdits (cID, cvID, cRelationID, cvRelationID) values (?, ?, ?, ?)', $v);
+		}
+	}
 	
 	public function updateAreaLayoutId( $cvalID=0, $newLayoutId=0){ 
 		$db = Loader::db();
@@ -628,7 +689,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			Cache::delete('page_path', $this->getCollectionID());
 			Cache::delete('request_path_page', $this->getCollectionPath()  );
 			Cache::delete('page_id_from_path', $this->getCollectionPath());
-			Cache::delete('parent_id', $this->getCollectionID());
 			Cache::delete('page_content', $this->getCollectionID());
 			if (is_object($vo)) {
 				$vo->refreshCache();
@@ -638,6 +698,28 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			foreach($areas as $arHandle) {
 				Cache::delete('area', $this->getCollectionID() . ':' . $arHandle);
 			}
+		}
+		
+		public function getGlobalBlocks() {
+			$db = Loader::db();		
+			$rs = $db->GetCol('select arHandle from Areas where arIsGlobal = 1 and cID = ?', array($this->getCollectionID()));
+			$blocks = array();
+			if (count($rs) > 0) {
+				$pcp = new Permissions($this);
+				foreach($rs as $garHandle) {
+					if ($pcp->canReadVersions()) {
+						$s = Stack::getByName($garHandle, 'RECENT');
+					} else {
+						$s = Stack::getByName($garHandle, 'ACTIVE');
+					}
+					if (is_object($s)) {
+						$blocksTmp = $s->getBlocks(STACKS_AREA_NAME);
+						$blocks = array_merge($blocks, $blocksTmp);
+					}
+				}
+			}
+			
+			return $blocks;
 		}
 		
 		public function getBlocks($arHandle = false) {
@@ -650,7 +732,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (!is_array($blockIDs)) {
 				$db = Loader::db();
 				$q = "select Blocks.bID, CollectionVersionBlocks.arHandle from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) order by CollectionVersionBlocks.cbDisplayOrder asc";
-	
 				$r = $db->GetAll($q, $v);
 				$blockIDs = array();
 				if (is_array($r)) {

@@ -32,6 +32,30 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	 		return $this->attributeType;
 	 	}
 	 	
+	 	public function exportKey($ak) {
+	 		return $ak;
+	 	}
+	 	
+	 	public function importValue(SimpleXMLElement $akv) {
+			if (isset($akv->value)) {
+				return (string) $akv->value;
+			}
+	 	}
+	 	
+	 	public function exportValue(SimpleXMLElement $akv) {
+			$val = $this->attributeValue->getValue();
+			if (is_object($val)) {
+				$val = (string) $val;
+			}
+			$av = $akv->addChild('value', '<![CDATA[' . $val . ']]>');
+	 		return $av;
+	 	}
+	 	
+	 	public function importKey($akn) {
+	 		
+	 	}
+	 	
+	 	
 	 	protected function getAttributeValueID() {
 	 		if (is_object($this->attributeValue)) {
 		 		return $this->attributeValue->getAttributeValueID();
@@ -103,6 +127,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (method_exists($this, 'on_start')) {
 				$this->on_start($method);
 			}
+			if ($method == 'composer') {
+				$method = array('composer', 'form');
+			}
+			
 			if ($method) {
 				$this->runTask($method, $args);
 			}

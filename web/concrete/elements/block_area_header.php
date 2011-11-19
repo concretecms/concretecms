@@ -8,4 +8,4 @@ if ($c->isArrangeMode()) {
 	$moveModeClass = "ccm-move-mode";
 }
 ?>
-<div id="a<?=$a->getAreaID()?>" handle="<?=$a->getAreaHandle()?>" class="ccm-area <?=$moveModeClass?>">
+<div id="a<?=$a->getAreaID()?>" cID="<?=$a->getCollectionID()?>" handle="<?=$a->getAreaHandle()?>" class="ccm-<? if ($a->isGlobalArea()) { ?>global-<? } ?>area <?=$moveModeClass?>">

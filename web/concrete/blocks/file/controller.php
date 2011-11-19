@@ -5,12 +5,15 @@
 	class FileBlockController extends BlockController {
 
 		protected $btInterfaceWidth = 300;
+		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = true;
 		protected $btInterfaceHeight = 250;
 		protected $btTable = 'btContentFile';
-
+		
+		protected $btExportFileColumns = array('fID');
+		
 		/** 
 		 * Used for localization. If we want to localize the name/description we have to include this
 		 */

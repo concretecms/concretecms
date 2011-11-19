@@ -22,74 +22,26 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 class Database {
 
-	public $db;
-	
-	/** 
-	 * Checks to see whether query caching is enabled, and, if it is, uses ADODB's CacheExecute function. Otherwise a regular query is used.
-	 * @param int $seconds
-	 * @param string $query
-	 */
-	public function querycache($seconds, $q) {
-		if (DB_USE_CACHE == true) {
-			return $this->db->CacheExecute($seconds, $q);
-		} else {
-			return $this->db->Query($q);
-		}
-	}
-	
-	public function ensureEncoding() {
-		if (APP_CHARSET == '') {
-			return false;
-		}
-		
-		$cd = $this->db->GetRow("show create database `{$this->db->database}`");
-		if (!preg_match('/' . DB_CHARSET . '/i', $cd[1])) {
-			$this->db->Execute("ALTER DATABASE `{$this->db->database}` character set " . DB_CHARSET);
-		}
-	}
-
 	/** 
 	 * Get's a Schema Object for a particular database object
 	 */
-	public function getADOSChema() {
-		return new adoSchema($this->db);
+	public static function getADOSChema() {
+		$db = Loader::db();
+		return new adoSchema($db);
 	}
 
-	/** 
-	 * @access private 
-	 */ 
-	public function setDatabaseObject($db) {
-		$this->db = $db;
-	}
-	
-	public function getDatabaseObject() {
-		return $this->db;
-	}
-	
-	/** 
-	 * Any item that isn't found in our wrapper class gets automatically sent our database object.
-	 */
-	public function __call($method, $args) {
-		// call_user_func_array is slow avoid it at all costs!
-		switch (count($args)) {
-			case 1: return $this->db->{$method}($args[0]);
-			case 2: return $this->db->{$method}($args[0], $args[1]);
-			case 3: return $this->db->{$method}($args[0], $args[1], $args[2]);
-			case 4: return $this->db->{$method}($args[0], $args[1], $args[2], $args[3]);
-			default: return call_user_func_array(array($this->db, $method), $args);
-		}
-	}
-	
 	/** 
 	 * Set's debug to true or false. True will display errors
 	 * @param bool $_debug
 	 */ 
 	public function setDebug($_debug) {
-		$this->db->debug = $_debug;
+		$db = Loader::db();
+		$db->debug = $_debug;
 	}
 	
 	public function getDebug() {
-		return $this->db->debug;
+		$db = Loader::db();
+		return $db->debug;
 	}
 
 	/** 
@@ -97,7 +49,8 @@ class Database {
 	 * @param bool $log
 	 */ 
 	public function setLogging($log) {
-		$this->db->LogSQL($log);
+		$db = Loader::db();
+		$db->LogSQL($log);
 		global $ADODB_PERF_MIN;
 		$ADODB_PERF_MIN = 0;
 	}

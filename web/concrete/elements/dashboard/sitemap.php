@@ -21,12 +21,6 @@ if (isset($selectedPageID)) {
 
 ?>
 <div class="ccm-pane-controls">
-
-<? if (!$sitemapCombinedMode) { ?>
-<?=Loader::helper('html')->css('ccm.sitemap.css')?>
-<?=Loader::helper('html')->javascript('ccm.sitemap.js')?>
-<? } ?>
-
 <script type="text/javascript">
 var CCM_BACK_TITLE = "<?=$previous_title?>";
 var CCM_NODE_ACTION = "<?=$node_action?>";

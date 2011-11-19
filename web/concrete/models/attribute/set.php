@@ -4,7 +4,7 @@ class AttributeSet extends Object {
 
 	public static function getByID($asID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select asID, asHandle, pkgID, asName, akCategoryID from AttributeSets where asID = ?', array($asID));
+		$row = $db->GetRow('select asID, asHandle, pkgID, asName, akCategoryID, asIsLocked  from AttributeSets where asID = ?', array($asID));
 		if (isset($row['asID'])) {
 			$akc = new AttributeSet();
 			$akc->setPropertiesFromArray($row);
@@ -14,7 +14,7 @@ class AttributeSet extends Object {
 	
 	public static function getByHandle($asHandle) {
 		$db = Loader::db();
-		$row = $db->GetRow('select asID, asHandle, pkgID, asName, akCategoryID from AttributeSets where asHandle = ?', array($asHandle));
+		$row = $db->GetRow('select asID, asHandle, pkgID, asName, akCategoryID, asIsLocked from AttributeSets where asHandle = ?', array($asHandle));
 		if (isset($row['asID'])) {
 			$akc = new AttributeSet();
 			$akc->setPropertiesFromArray($row);
@@ -39,6 +39,19 @@ class AttributeSet extends Object {
 	public function getPackageID() {return $this->pkgID;}
 	public function getPackageHandle() {return PackageList::getHandle($this->pkgID);}
 	public function getAttributeSetKeyCategoryID() {return $this->akCategoryID;}
+	public function isAttributeSetLocked() {return $this->asIsLocked;}
+	
+	public function updateAttributeSetName($asName) {
+		$this->asName = $asName;
+		$db = Loader::db();
+		$db->Execute("update AttributeSets set asName = ? where asID = ?", array($asName, $this->asID));
+	}
+
+	public function updateAttributeSetHandle($asHandle) {
+		$this->asHandle = $asHandle;
+		$db = Loader::db();
+		$db->Execute("update AttributeSets set asHandle = ? where asID = ?", array($asHandle, $this->asID));
+	}
 	
 	public function addKey($ak) {
 		$db = Loader::db();
@@ -47,6 +60,39 @@ class AttributeSet extends Object {
 			$do = $db->GetOne('select max(displayOrder) from AttributeSetKeys where asID = ?', $this->getAttributeSetID());
 			$do++;
 			$db->Execute('insert into AttributeSetKeys (asID, akID, displayOrder) values (?, ?, ?)', array($this->getAttributeSetID(), $ak->getAttributeKeyID(), $do));
+		}
+	}
+	
+	public function clearAttributeKeys() {
+		$db = Loader::db();
+		$db->Execute('delete from AttributeSetKeys where asID = ?', array($this->asID));
+	}
+	
+	public function export($axml) {
+		$category = AttributeKeyCategory::getByID($this->getAttributeSetKeyCategoryID())->getAttributeKeyCategoryHandle();
+		$akey = $axml->addChild('attributeset');
+		$akey->addAttribute('handle',$this->getAttributeSetHandle());
+		$akey->addAttribute('name', $this->getAttributeSetName());
+		$akey->addAttribute('package', $this->getPackageHandle());
+		$akey->addAttribute('locked', $this->isAttributeSetLocked());
+		$akey->addAttribute('category', $category);
+		$keys = $this->getAttributeKeys();
+		foreach($keys as $ak) {
+			$ak->export($akey, false);
+		}
+		return $akey;
+	}
+
+	public static function exportList($xml) {
+		$axml = $xml->addChild('attributesets');
+		$db = Loader::db();
+		$r = $db->Execute('select asID from AttributeSets order by asID asc');
+		$list = array();
+		while ($row = $r->FetchRow()) {
+			$list[] = AttributeSet::getByID($row['asID']);
+		}
+		foreach($list as $as) {
+			$as->export($axml);
 		}
 	}
 

@@ -165,7 +165,7 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 	
 	$html = '
 	<tr class="ccm-attribute-editable-field">
-		<th><a href="javascript:void(0)">' . $title . '</a></th>
+		<td><strong><a href="javascript:void(0)">' . $title . '</a></strong></td>
 		<td width="100%" class="ccm-attribute-editable-field-central"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
 		<form method="post" action="' . REL_DIR_FILES_TOOLS_REQUIRED . '/files/bulk_properties">
 			<input type="hidden" name="attributeField" value="' . $field . '" /> 
@@ -184,7 +184,7 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 	} else {
 		$html = '
 		<tr>
-			<th>' . $title . '</th>
+			<td><strong>' . $title . '</strong></td>
 			<td width="100%" colspan="2">' . $text . '</td>
 		</tr>';	
 	}
@@ -214,7 +214,7 @@ function printFileAttributeRow($ak, $fv, $value) {
 	
 	$html = '
 	<tr class="ccm-attribute-editable-field">
-		<th><a href="javascript:void(0)">' . $ak->getAttributeKeyName() . '</a></th>
+		<td><strong><a href="javascript:void(0)">' . $ak->getAttributeKeyName() . '</a></strong></td>
 		<td width="100%" class="ccm-attribute-editable-field-central"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
 		<form method="post" action="' . REL_DIR_FILES_TOOLS_REQUIRED . '/files/bulk_properties">
 			<input type="hidden" name="fakID" value="' . $ak->getAttributeKeyID() . '" />
@@ -226,7 +226,7 @@ function printFileAttributeRow($ak, $fv, $value) {
 		</form>
 		</td>
 		<td class="ccm-attribute-editable-field-save"><a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/edit_small.png" width="16" height="16" class="ccm-attribute-editable-field-save-button" /></a>
-		<a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/close.png" width="16" height="16" class="ccm-attribute-editable-field-clear-button" /></a>
+		<a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" width="16" height="16" class="ccm-attribute-editable-field-clear-button" /></a>
 		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-attribute-editable-field-loading" />
 		</td>
 	</tr>';
@@ -235,7 +235,7 @@ function printFileAttributeRow($ak, $fv, $value) {
 
 	$html = '
 	<tr>
-		<th>' . $ak->getAttributeKeyName() . '</th>
+		<td><strong>' . $ak->getAttributeKeyName() . '</strong></td>
 		<td width="100%" colspan="2">' . $text . '</td>
 	</tr>';	
 	}
@@ -251,10 +251,10 @@ var ccm_activeFileManagerAddCompleteTab = "ccm-file-manager-add-complete-basic";
 
 $(function() {
 	$("#ccm-file-manager-add-complete-tabs a").click(function() {
-		$("li.ccm-nav-active").removeClass('ccm-nav-active');
+		$("li.active").removeClass('active');
 		$("#" + ccm_activeFileManagerAddCompleteTab + "-tab").hide();
 		ccm_activeFileManagerAddCompleteTab = $(this).attr('id');
-		$(this).parent().addClass("ccm-nav-active");
+		$(this).parent().addClass("active");
 		$("#" + ccm_activeFileManagerAddCompleteTab + "-tab").show();
 	});
 
@@ -268,17 +268,17 @@ table.ccm-grid input.ccm-input-text, table.ccm-grid textarea {width: 100%}
 table.ccm-grid th {width: 70px}
 
 </style>
-
+<div class="ccm-ui">
 <? if ($_REQUEST['uploaded']) { ?>
 	<? if (count($_REQUEST['fID']) == 1) { ?>
-		<div class="ccm-message"><strong><?=t('1 file uploaded successfully.')?></strong></div>
+		<div class="block-message alert-message success"><p><?=t('1 file uploaded successfully.')?></p></div>
 	<? } else { ?>
-		<div class="ccm-message"><strong><?=t('%s files uploaded successfully.', count($_REQUEST['fID']))?></strong></div>
+		<div class="block-message alert-message success"><p><?=t('%s files uploaded successfully.', count($_REQUEST['fID']))?></p></div>
 	<? } ?>
 <? } ?>
 
-<ul class="ccm-dialog-tabs" id="ccm-file-manager-add-complete-tabs">
-	<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-file-manager-add-complete-basic"><?=t('Basic Properties')?></a></li>
+<ul class="tabs" id="ccm-file-manager-add-complete-tabs">
+	<li class="active"><a href="javascript:void(0)" id="ccm-file-manager-add-complete-basic"><?=t('Basic Properties')?></a></li>
 	<? if (count($attribs) > 0) { ?>
 		<li><a href="javascript:void(0)" id="ccm-file-manager-add-complete-attributes"><?=t('Other Properties')?></a></li>
 	<? } ?>
@@ -292,25 +292,25 @@ table.ccm-grid th {width: 70px}
 <table border="0" cellspacing="0" cellpadding="0" class="ccm-grid">  
 <? if (count($files) == 1) { ?>
 <tr>
-	<th><?=t('ID')?></th>
+	<td><strong><?=t('ID')?></strong></td>
 	<td width="100%" colspan="2"><?=$fv->getFileID()?> <span style="color: #afafaf">(<?=t('Version')?> <?=$fv->getFileVersionID()?>)</span></td>
 </tr>
 <tr>
-	<th><?=t('Filename')?></th>
+	<td><strong><?=t('Filename')?></strong></td>
 	<td width="100%" colspan="2"><?=$fv->getFileName()?></td>
 </tr>
 <tr>
-	<th><?=t('URL to File')?></th>
+	<td><strong><?=t('URL to File')?></strong></td>
 	<td width="100%" colspan="2"><?=$fv->getRelativePath(true)?></td>
 </tr>
 
 <tr>
-	<th><?=t('Type')?></th>
+	<td><strong><?=t('Type')?></strong></td>
 	<td colspan="2"><?=$fv->getType()?></td>
 </tr>
 
 <tr>
-	<th><?=t('Size')?></th>
+	<td><strong><?=t('Size')?></strong></td>
 	<td colspan="2"><?=$fv->getSize()?> (<?=number_format($fv->getFullSize())?> <?=t('bytes')?>)</td>
 </tr>
 <? } ?>
@@ -323,7 +323,7 @@ printCorePropertyRow(t('Tags'), 'fvTags', $defaultPropertyVals['tags'], $form->t
 
 <? if (count($files) == 1) { ?>
 <tr>
-	<th><?=t('File Preview')?></th>
+	<td><strong><?=t('File Preview')?></strong></td>
 	<td colspan="2"><?=$fv->getThumbnail(2)?></td>
 </tr>
 <? } ?>
@@ -356,6 +356,8 @@ $(function() {
 	ccm_activateEditablePropertiesGrid();  
 });
 </script>
+
+</div>
 
 <?
 if (!isset($_REQUEST['reload'])) { ?>

@@ -6,6 +6,7 @@ class Marketplace {
 	
 	const E_INVALID_BASE_URL = 20;
 	const E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED = 21;
+	const E_UNRECOGNIZED_SITE_TOKEN = 22;
 	const E_GENERAL_CONNECTION_ERROR = 99;
 
 	protected $isConnected = false;
@@ -31,7 +32,7 @@ class Marketplace {
 
 			$fh = Loader::helper('file');
 			$csiURL = urlencode(BASE_URL . DIR_REL);
-			$url = MARKETPLACE_URL_CONNECT_VALIDATE."?csToken={$csToken}&csiURL=" . $csiURL;
+			$url = MARKETPLACE_URL_CONNECT_VALIDATE."?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
 			$vn = Loader::helper('validation/numbers');
 			$r = $fh->getContents($url);
 			if ($r == false) {
@@ -96,7 +97,7 @@ class Marketplace {
 		return $file;
 	}
 	
-	public function getMarketplaceFrame($width = '100%', $height = '530', $completeURL = false) {
+	public function getMarketplaceFrame($width = '100%', $height = '300', $completeURL = false) {
 		// if $mpID is passed, we are going to either
 		// a. go to its purchase page
 		// b. pass you through to the page AFTER connecting.
@@ -105,23 +106,78 @@ class Marketplace {
 			if (!$this->isConnected()) {
 				$url = MARKETPLACE_URL_CONNECT;
 				if (!$completeURL) {
-					$completeURL = BASE_URL . View::url('/dashboard/settings/marketplace', 'connect_complete');
+					$completeURL = BASE_URL . View::url('/dashboard/extend/connect', 'connect_complete');
 				}
 				$csReferrer = urlencode($completeURL);
 				$csiURL = urlencode(BASE_URL . DIR_REL);
+				$csiBaseURL = urlencode(BASE_URL);
 				if ($this->hasConnectionError()) {
 					$csToken = $this->getSiteToken();
 				} else {
 					// new connection 
 					$csToken = Marketplace::generateSiteToken();
 				}
-				$url = $url . '?ts=' . time() . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(SITE, ENT_QUOTES, APP_CHARSET);
+				$url = $url . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(SITE, ENT_QUOTES, APP_CHARSET);
+			} else {
+				$csiBaseURL = urlencode(BASE_URL);
+				$url = MARKETPLACE_URL_CONNECT_SUCCESS . '?csToken=' . $this->getSiteToken() . '&csiBaseURL=' . $csiBaseURL;
 			}
-			if ($csToken == false) {
+			if ($csToken == false && !$this->isConnected()) {
 				return '<div class="ccm-error">' . t('Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that cURL is enabled on your server. If these are both true, It\'s possible your site\'s IP address may be blacklisted for some reason on our server. Please ask your webhost what your site\'s outgoing cURL request IP address is, and email it to us at <a href="mailto:help@concrete5.org">help@concrete5.org</a>.') . '</div>';
 			} else {
-				return '<iframe id="ccm-marketplace-frame-' . time() . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+				$time = time();
+				$ifr = '<script type="text/javascript">$(function() { $.receiveMessage(function(e) { 
+					jQuery.fn.dialog.hideLoader();
+
+					if (e.data == "loading") {
+						jQuery.fn.dialog.showLoader();
+					} else { 
+						var eh = e.data;
+						eh = parseInt(eh) + 20;
+						$("#ccm-marketplace-frame-' . $time . '").attr("height", eh); 
+					}
+					
+					}, \'' . CONCRETE5_ORG_URL . '\');	
+				});	
+				</script>';
+				$ifr .= '<iframe id="ccm-marketplace-frame-' . $time . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+				return $ifr;
 			}
+		} else {
+			return '<div class="ccm-error">' . t('You do not have permission to connect this site to the marketplace.') . '</div>';
+		}
+	}
+
+	public function getMarketplacePurchaseFrame($mp, $width = '100%', $height = '530') {
+		$tp = new TaskPermission();
+		if ($tp->canInstallPackages()) {
+			if (!is_object($mp)) {
+				return '<div class="alert-message block-message error">' . t('Unable to get information about this product.') . '</div>';
+			}
+			if ($this->isConnected()) {
+				$url = MARKETPLACE_URL_CHECKOUT;
+				$csiURL = urlencode(BASE_URL . DIR_REL);
+				$csiBaseURL = urlencode(BASE_URL);
+				$csToken = $this->getSiteToken();
+				$url = $url . '/' . $mp->getProductBlockID() . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken;
+			}
+			$time = time();
+			$ifr = '<script type="text/javascript">$(function() { $.receiveMessage(function(e) { 
+				jQuery.fn.dialog.hideLoader();
+
+				if (e.data == "loading") {
+					jQuery.fn.dialog.showLoader();
+				} else { 
+					var eh = e.data;
+					eh = parseInt(eh) + 20;
+					$("#ccm-marketplace-frame-' . $time . '").attr("height", eh); 
+				}
+				
+				}, \'' . CONCRETE5_ORG_URL . '\');	
+			});	
+			</script>';
+			$ifr .= '<iframe id="ccm-marketplace-frame-' . $time . '" class="ccm-marketplace-frame" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+			return $ifr;
 		} else {
 			return '<div class="ccm-error">' . t('You do not have permission to connect this site to the marketplace.') . '</div>';
 		}
@@ -139,7 +195,7 @@ class Marketplace {
 			if (is_object($p)) {
 				// we only add a notification if it's newer than the last one we know about
 				if (version_compare($p->getPackageVersionUpdateAvailable(), $i->getVersion(), '<') && version_compare($p->getPackageVersion(), $i->getVersion(), '<')) {
-					SystemNotification::add(SystemNotification::SN_TYPE_ADDON_UPDATE, t('An updated version of %s is available.', $i->getName()), t('New Version: %s.', $i->getVersion()), '', View::url('/dashboard/install', 'update'), $i->getRemoteURL());
+					SystemNotification::add(SystemNotification::SN_TYPE_ADDON_UPDATE, t('An updated version of %s is available.', $i->getName()), t('New Version: %s.', $i->getVersion()), '', View::url('/dashboard/extend/update'), $i->getRemoteURL());
 				}
 				$p->updateAvailableVersionNumber($i->getVersion());
 			}

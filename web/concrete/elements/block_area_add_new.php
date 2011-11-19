@@ -2,6 +2,12 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $btl = $a->getAddBlockTypes($c, $ap );
 $blockTypes = $btl->getBlockTypeList();
+$dsh = Loader::helper('concrete/dashboard');
+$dashboardBlockTypes = array();
+if ($dsh->inDashboard()) {
+	$dashboardBlockTypes = BlockTypeList::getDashboardBlockTypes($ap);
+}
+$blockTypes = array_merge($blockTypes, $dashboardBlockTypes);
 $ci = Loader::helper('concrete/urls');
 $ch = Loader::helper('concrete/interface');
 $form = Loader::helper('form');
@@ -43,10 +49,10 @@ ccm_showBlockTypeDescriptions = function() {
 var ccm_areaActiveTab = "ccm-add";
 
 $("#ccm-area-tabs a").click(function() {
-	$("li.ccm-nav-active").removeClass('ccm-nav-active');
+	$("li.active").removeClass('active');
 	$("#" + ccm_areaActiveTab + "-tab").hide();
 	ccm_areaActiveTab = $(this).attr('id');
-	$(this).parent().addClass("ccm-nav-active");
+	$(this).parent().addClass("active");
 	$("#" + ccm_areaActiveTab + "-tab").show();
 	if (ccm_areaActiveTab == 'ccm-add-marketplace') {
 		ccm_updateMarketplaceTab();	
@@ -173,20 +179,13 @@ $(function() {
 </script>
 
 
-<? if (ENABLE_MARKETPLACE_SUPPORT && $_REQUEST['addOnly'] != 1) { ?>
-<ul class="ccm-dialog-tabs" id="ccm-area-tabs">
-	<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-add"><?=t('Add New')?></a></li>
-	<li><a href="javascript:void(0)" id="ccm-add-marketplace"><?=t('Add From Marketplace')?></a></li>
-</ul>
-<? } ?>
-
-<div id="ccm-add-tab">
+<div id="ccm-add-tab" class="ccm-ui">
 	<div class="ccm-block-type-search-wrapper">
 
-		<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescriptions()" title="<?=t('Learn more about this block type.')?>" id="ccm-bt-help-trigger-all"><img src="<?=ASSETS_URL_IMAGES?>/icons/icon_header_help.png" width="17" height="20" /></a>
 
 		<form onsubmit="return ccmBlockTypeSearchFormCheckResults()">
 		<div class="ccm-block-type-search">
+		<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescriptions()" title="<?=t('Learn more about this block type.')?>" id="ccm-bt-help-trigger-all"><img src="<?=ASSETS_URL_IMAGES?>/icons/icon_header_help.png" width="17" height="20" /></a>
 		<?=$form->text('ccmBlockTypeSearch', array('tabindex' => 1, 'autocomplete' => 'off', 'style' => 'width: 168px'))?>
 		<a href="javascript:void(0)" id="ccm-block-type-clear-search" onclick="ccmBlockTypeSearchClear()"><img width="16" height="16" src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" border="0" style="vertical-align: middle" /></a>
 		</div>
@@ -201,7 +200,11 @@ $(function() {
 			$btIcon = $ci->getBlockTypeIconURL($bt);
 			?>	
 			<li class="ccm-block-type ccm-block-type-available">
-				<a onclick="ccmBlockTypeResetKeys()" dialog-on-destroy="ccmBlockTypeMapKeys()" class="dialog-launch ccm-block-type-inner" dialog-on-close="ccm_blockWindowAfterClose()" dialog-modal="false" dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" style="background-image: url(<?=$btIcon?>)" dialog-title="<?=t('Add')?> <?=$bt->getBlockTypeName()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/add_block_popup.php?cID=<?=$c->getCollectionID()?>&btID=<?=$bt->getBlockTypeID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>"><?=$bt->getBlockTypeName()?></a>
+				<? if (!$bt->hasAddTemplate()) { ?>
+					<a style="background-image: url(<?=$btIcon?>)" href="javascript:void(0)" onclick="ccmBlockTypeResetKeys(); jQuery.fn.dialog.showLoader(); $.get('<?=$bt->getBlockAddAction($a)?>&processBlock=1&add=1', function(r) { ccm_parseBlockResponse(r, false, 'add'); })" class="ccm-block-type-inner"><?=$bt->getBlockTypeName()?></a>
+				<? } else { ?>
+					<a onclick="ccmBlockTypeResetKeys()" dialog-on-destroy="ccmBlockTypeMapKeys()" class="dialog-launch ccm-block-type-inner" dialog-on-close="ccm_blockWindowAfterClose()" dialog-append-buttons="true" dialog-modal="false" dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" style="background-image: url(<?=$btIcon?>)" dialog-title="<?=t('Add')?> <?=$bt->getBlockTypeName()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/add_block_popup.php?cID=<?=$c->getCollectionID()?>&btID=<?=$bt->getBlockTypeID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>"><?=$bt->getBlockTypeName()?></a>
+				<? } ?>
 				<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>"><?=$bt->getBlockTypeDescription()?></div>
 			</li>
 			<?
@@ -218,10 +221,18 @@ $(function() {
 	</ul>
 </div>
 
-<? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
-<div id="ccm-add-marketplace-tab" style="display: none">
-	<div class="ccm-block-type-list">
-
+<? if(ENABLE_MARKETPLACE_SUPPORT){ 
+	$tp = new TaskPermission();
+	if ($tp->canInstallPackages()) { 
+	?>
+	<div class="ccm-ui">
+	<div class="well">
+	<p>
+	<?=t("You can download more blocks at the")?>
+	<a onclick="ccmBlockTypeResetKeys(); ccm_openAddonLauncher()" class="ccm-block-type-inner ccm-block-type-marketplace"><?=t('concrete5 marketplace.')?></a>
+	</p>
 	</div>
-</div>
-<? } ?>
+	</div>
+<? } 
+
+}?>	

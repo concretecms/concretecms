@@ -4,12 +4,6 @@ class DashboardFilesSetsController extends Controller {
 
 	public $helpers = array('form','validation/token','concrete/interface'); 
 
-	public function on_start(){
-		$html = Loader::helper('html');
-		$this->addHeaderItem($html->css('ccm.filemanager.css'));
-		$this->addHeaderItem($html->javascript('ccm.filemanager.js'));
-	}
-	
 	public function view() {
 		Loader::model('file_set');
 		$fsl = new FileSetList();
@@ -28,36 +22,6 @@ class DashboardFilesSetsController extends Controller {
 		$this->set('fsl', $fsl);
 	}
 
-	public function file_sets_add(){
-		extract($this->getHelperObjects());
-		Loader::model('file_set');
-		
-		if (!$validation_token->validate("file_sets_add")) {
-			$this->set('error', array($validation_token->getErrorMessage()));
-			$this->view();
-			return;
-		}
-		
-		if (!$this->post('file_set_name')) {
-			$this->set('error', array(t('Please Enter a Name')));
-			$this->view();
-			return;		
-		}
-		
-		//print('<pre>');print_r(get_included_files());print('</pre>');
-		$u = new User();				
-		$file_set 			= new FileSet();
-		//AS: Adodb Active record is complaining a ?/value array mismatch unless
-		//we explicatly set the primary key ID field to null		
-		$file_set->fsID		= null;
-		$file_set->fsName 	= $this->post('file_set_name');
-		$file_set->fsType 	= FileSet::TYPE_PUBLIC;
-		$file_set->uID		= $u->getUserID();
-		$file_set->fsOverrideGlobalPermissions = ($this->post('fsOverrideGlobalPermissions') == 1) ? 1 : 0;
-		$file_set->save();
-		$this->redirect('/dashboard/files/sets', 'file_set_added');		
-	}
-	
 	public function file_set_added() {
 		$this->set('message', t('New file set added successfully.'));
 		$this->view();
@@ -101,7 +65,7 @@ class DashboardFilesSetsController extends Controller {
 	public function view_detail($fsID, $action = false) {
 		Loader::model('file_set');
 		$fs = FileSet::getByID($fsID);
-		$ph = Loader::controller('/dashboard/files/access');
+		$ph = Loader::controller('/dashboard/system/permissions/files');
 		$this->set('ph', $ph);		
 		$this->set('fs', $fs);		
 		switch($action) {
@@ -136,7 +100,7 @@ class DashboardFilesSetsController extends Controller {
 		$file_set->resetPermissions();		
 		if ($file_set->fsOverrideGlobalPermissions == 1) {
 			$p = $this->post();
-			$fh = Loader::controller('/dashboard/files/access');
+			$fh = Loader::controller('/dashboard/system/permissions/files');
 			$fh->setFileSetPermissions($file_set, $p);			
 		}
 		

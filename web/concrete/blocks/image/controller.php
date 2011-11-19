@@ -6,9 +6,12 @@
 		protected $btInterfaceWidth = 300;
 		protected $btInterfaceHeight = 450;
 		protected $btTable = 'btContentImage';
+		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = true;
+		
+		protected $btExportFileColumns = array('fID','fOnstateID');
 
 		/** 
 		 * Used for localization. If we want to localize the name/description we have to include this

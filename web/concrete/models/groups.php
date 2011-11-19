@@ -128,7 +128,7 @@
 		function getGroupUpdateAction($obj) {
 			switch(strtolower(get_class($obj))) {
 				case 'block':
-					$cID = $obj->getBlockCollectionID();
+					$cID = $obj->getBlockActionCollectionID();
 					$bID = $obj->getBlockID();
 					$arHandle = $obj->getAreaHandle();
 					$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;bID={$bID}&amp;arHandle={$arHandle}&amp;mode=edit&amp;btask=update_groups";

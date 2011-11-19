@@ -65,7 +65,7 @@ var CCM_REL = "<?php echo DIR_REL?>";
 $html = Loader::helper('html');
 $this->addHeaderItem($html->css('ccm.base.css'), 'CORE');
 $this->addHeaderItem($html->javascript('jquery.js'), 'CORE');
-$this->addHeaderItem($html->javascript('ccm.base.js'), 'CORE');
+$this->addHeaderItem($html->javascript('ccm.base.js', false, true), 'CORE');
 
 $favIconFID=intval(Config::get('FAVICON_FID'));
 
@@ -86,8 +86,16 @@ if (is_object($cp)) {
 	if ($this->areLinksDisabled()) { 
 		$this->addHeaderItem('<script type="text/javascript">window.onload = function() {ccm_disableLinks()}</script>', 'CORE');
 	}
+	$cih = Loader::helper('concrete/interface');
+	if ($cih->showNewsflowOverlay()) {
+		$this->addFooterItem('<script type="text/javascript">$(function() { ccm_showNewsflow(); });</script>');
+	}	
 
 }
 
 print $this->controller->outputHeaderItems();
+$_trackingCodePosition = Config::get('SITE_TRACKING_CODE_POSITION');
+if (empty($disableTrackingCode) && $_trackingCodePosition === 'top') {
+	echo Config::get('SITE_TRACKING_CODE');
+}
 echo $c->getCollectionAttributeValue('header_extra_content');

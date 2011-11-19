@@ -20,7 +20,7 @@ class UpgradeController extends Controller {
 	public $upgrade_db = true;
 	
 	public function on_start() {
-		$cnt = Loader::controller('/dashboard/system/update');
+		$cnt = Loader::controller('/dashboard/system/maintenance/update');
 		$cnt->secCheck();
 		// if you just reverted, but didn't manually clear out your files - cache would be a prob here.
 		$ca = new Cache();
@@ -136,6 +136,11 @@ class UpgradeController extends Controller {
 		if (version_compare($sav, '5.4.2.1', '<')) { 
 			$ugvs[] = "version_5421";
 		}
+
+		if (version_compare($sav, '5.5.0', '<')) { 
+			$ugvs[] = "version_550";
+		}
+
 		foreach($ugvs as $ugh) {
 			$this->upgrades[] = Loader::helper('concrete/upgrade/' . $ugh);
 		}

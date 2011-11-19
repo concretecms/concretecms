@@ -33,7 +33,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @param boolean $login
 		 * @return User
 		 */
-		public static function getByUserID($uID, $login = false) {
+		public static function getByUserID($uID, $login = false, $cacheItemsOnLogin = true) {
 			$db = Loader::db();
 			$v = array($uID);
 			$q = "SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage FROM Users WHERE uID = ?";
@@ -58,6 +58,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$_SESSION['uLastOnline'] = $row['uLastOnline'];
 					$_SESSION['uTimezone'] = $row['uTimezone'];
 					$_SESSION['uDefaultLanguage'] = $row['uDefaultLanguage'];
+					if ($cacheItemsOnLogin) { 
+						Loader::helper('concrete/interface')->cacheInterfaceItems();
+					}
 					$nu->recordLogin();
 				}
 			}
@@ -154,6 +157,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 							$_SESSION['uGroups'] = $this->uGroups;
 							$_SESSION['uTimezone'] = $this->uTimezone;
 							$_SESSION['uDefaultLanguage'] = $this->uDefaultLanguage;
+							Loader::helper('concrete/interface')->cacheInterfaceItems();
 						}
 					} else if ($row['uID'] && !$row['uIsActive']) {
 						$this->loadError(USER_INACTIVE);

@@ -235,17 +235,11 @@ class Permissions extends Object {
 	
 	public function populateAllPageTypes() {
 		$ca = new Cache();
-		$pageTypes = $ca->get('pageTypeList', false);
-		if (is_array($pageTypes)) {
-			$this->addCollectionTypes = $pageTypes;
-		} else {
-			$db = Loader::db();
-			$q = "select ctID from PageTypes";
-			$r = $db->query($q);
-			while($row = $r->fetchRow()) {
-				$this->addCollectionTypes[] = $row['ctID'];
-			}
-			$ca->set('pageTypeList', false, $this->addCollectionTypes);
+		$db = Loader::db();
+		$q = "select ctID from PageTypes";
+		$r = $db->query($q);
+		while($row = $r->fetchRow()) {
+			$this->addCollectionTypes[] = $row['ctID'];
 		}
 	}
 	
@@ -256,7 +250,7 @@ class Permissions extends Object {
 			$this->addBlockTypes = $blockTypes;
 		} else {
 			$db = Loader::db();
-			$q = "select btID from BlockTypes where btIsInternal = 0";
+			$q = "select btID from BlockTypes";
 			$r = $db->query($q);
 			while($row = $r->fetchRow()) {
 				$this->addBlockTypes[] = $row['btID'];
@@ -348,7 +342,16 @@ class Permissions extends Object {
 		$btID = $bt->getBlockTypeID();
 		return (in_array($btID, $this->addBlockTypes));
 	}
-	
+
+	public function canAddStack($stack) {
+		$blocks = $stack->getBlocks();
+		foreach($blocks as $b) {
+			if (!in_array($b->getBlockTypeID(), $this->addBlockTypes)) {
+				return false;
+			}
+		}		
+		return true;
+	}
 	function canAddFiles() {
 		return count($this->permissions['canAddFileTypes']) > 0;
 	}
