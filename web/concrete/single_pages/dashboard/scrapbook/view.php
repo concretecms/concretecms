@@ -150,7 +150,7 @@ $(function(){ GlobalScrapbook.init(); });
 
 	<h1><span><?=t('Choose a Scrapbook')?></span></h1>
 	<div class="ccm-dashboard-inner ccm-ui"> 
-	<div class="block-message warning alert-message"><p><?=t('<strong>Note</strong>: Scrapbooks are preserved for backward compatibility, but you really should be using <a href="%s">stacks</a> instead.</p>', View::url('/dashboard/blocks/stacks'))?></div>
+	<div class="block-message warning alert-message"><p><?=t('<strong>Note</strong>: Scrapbooks are preserved for backward compatibility, but you really should be using <a href="%s">stacks</a> instead.', View::url('/dashboard/blocks/stacks'))?></p></div>
 		<table id="availableScrapbooks" border="0" cellspacing="1" class="grid-list" >
 			<tr>
 				<td class="header">
