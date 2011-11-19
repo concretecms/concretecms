@@ -80,8 +80,7 @@ if (is_object($key)) {
 <label><?=t('Searchable')?></label>
 <div class="input">
 <ul class="inputs-list">
-<?
-	<?php
+<?php
 	$category_handle = $category->getAttributeKeyCategoryHandle();
 	$keyword_label = t('Content included in "Keyword Search".');
 	$advanced_label = t('Field available in "Advanced Search".');
