@@ -314,6 +314,10 @@ class LoginController extends Controller {
 		//Full page login, standard redirection	
 		$u = new User(); // added for the required registration attribute change above. We recalc the user and make sure they're still logged in
 		if ($u->isRegistered()) { 
+			if ($u->config('NEWSFLOW_LAST_VIEWED') == 'FIRSTRUN') {
+				$u->saveConfig('NEWSFLOW_LAST_VIEWED', 0);
+			}
+			
 			if ($loginData['redirectURL']) {
 				//make double secretly sure there's no caching going on
 				header("Cache-Control: no-store, no-cache, must-revalidate");

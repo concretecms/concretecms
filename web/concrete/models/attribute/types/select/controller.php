@@ -61,6 +61,64 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		}
 	}
 	
+	public function exportKey($akey) {
+		$this->load();
+		$db = Loader::db();
+		$type = $akey->addChild('type');
+		$type->addAttribute('allow-multiple-values', $this->akSelectAllowMultipleValues);
+		$type->addAttribute('display-order', $this->akSelectOptionDisplayOrder);
+		$type->addAttribute('allow-other-values', $this->akSelectAllowOtherValues);
+		$r = $db->Execute('select value, displayOrder, isEndUserAdded from atSelectOptions where akID = ? order by displayOrder asc', $this->getAttributeKey()->getAttributeKeyID());
+		$options = $type->addChild('options');
+		while ($row = $r->FetchRow()) {
+			$opt = $options->addChild('option');
+			$opt->addAttribute('value', $row['value']);
+			$opt->addAttribute('is-end-user-added', $row['isEndUserAdded']);
+		}
+		return $akey;
+	}
+	
+	public function exportValue($akn) {
+		$list = $this->getSelectedOptions();
+		if ($list->count() > 0) {
+			$av = $akn->addChild('value');
+			foreach($list as $l) {
+				$av->addChild('option', (string) $l);
+			}
+		}
+	}
+	
+	public function importValue(SimpleXMLElement $akv) {
+		if (isset($akv->value)) {
+			$vals = array();
+			foreach($akv->value->children() as $ch) {
+				$vals[] = (string) $ch;
+			}
+			return $vals;
+		}
+	}
+	
+	public function importKey($akey) {
+		if (isset($akey->type)) {
+			$akSelectAllowMultipleValues = $akey->type['allow-multiple-values'];
+			$akSelectOptionDisplayOrder = $akey->type['display-order'];
+			$akSelectAllowOtherValues = $akey->type['allow-other-values'];
+			$db = Loader::db();
+			$db->Replace('atSelectSettings', array(
+				'akID' => $this->attributeKey->getAttributeKeyID(), 
+				'akSelectAllowMultipleValues' => $akSelectAllowMultipleValues, 
+				'akSelectAllowOtherValues' => $akSelectAllowOtherValues,
+				'akSelectOptionDisplayOrder' => $akSelectOptionDisplayOrder
+			), array('akID'), true);
+
+			if (isset($akey->type->options)) {
+				foreach($akey->type->options->children() as $option) {
+					SelectAttributeTypeOption::add($this->attributeKey, $option['value'], $option['is-end-user-added']);
+				}
+			}
+		}
+	}
+	
 	private function getSelectValuesFromPost() {
 		$options = new SelectAttributeTypeOptionList();
 		$displayOrder = 0;		

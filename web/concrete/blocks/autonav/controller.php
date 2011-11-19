@@ -179,6 +179,8 @@
 		protected $btCacheBlockOutputForRegisteredUsers = false;
 		protected $btCacheBlockOutputLifetime = 300;
 		
+		protected $btExportPageColumns = array('displayPagesCID');
+		
 		public function getBlockTypeDescription() {
 			return t("Creates navigation trees and sitemaps.");
 		}
@@ -233,10 +235,10 @@
 		}
 		
 		function save($args) {
-			$args['displayPagesIncludeSelf'] = isset($args['displayPagesIncludeSelf']) ? 1 : 0;
-			$args['displayPagesCID'] = isset($args['displayPagesCID']) ? $args['displayPagesCID'] : 0;
+			$args['displayPagesIncludeSelf'] = $args['displayPagesIncludeSelf'] ? 1 : 0;
+			$args['displayPagesCID'] = $args['displayPagesCID'] ? $args['displayPagesCID'] : 0;
 			$args['displaySubPageLevelsNum'] = $args['displaySubPageLevelsNum'] > 0 ? $args['displaySubPageLevelsNum'] : 0;
-			$args['displayUnavailablePages'] = isset($args['displayUnavailablePages']) ? 1 : 0;
+			$args['displayUnavailablePages'] = $args['displayUnavailablePages'] ? 1 : 0;
 			parent::save($args);
 		}
 		
@@ -469,7 +471,7 @@
 			$navObjectNames = $this->navObjectNames;
 
 			$allowedParentIDs = ($allowedParentIDs) ? $allowedParentIDs : array();
-			$q = "select Pages.cID from Pages where cIsTemplate = 0 and cParentID = '{$cParentID}' {$orderBy}";
+			$q = "select Pages.cID from Pages where cIsTemplate = 0 and cIsActive = 1 and cParentID = '{$cParentID}' {$orderBy}";
 			$r = $db->query($q);
 			if ($r) {
 				while ($row = $r->fetchRow()) {

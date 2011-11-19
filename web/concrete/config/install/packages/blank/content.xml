@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <pagetypes>
+        <pagetype handle="page" name="Page" package="" />
+    </pagetypes>
+    <pages>
+	<page name="Home" path="" filename="" pagetype="page" description="" package="">
+	</page>
+    </pages>
+</concrete5-cif>

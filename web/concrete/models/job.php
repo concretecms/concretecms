@@ -36,6 +36,11 @@ class Job extends Object {
 	
 	public function getJobName() {return $this->jName;}
 	public function getJobDescription() {return $this->jDescription;}	
+	public function getJobHandle() {return $this->jHandle;}
+	public function getPackageHandle() {
+		return PackageList::getHandle($this->pkgID);
+	}
+	
 	
 	//==========================================================
 	// JOB MANAGEMENT - do not override anything below this line 
@@ -77,7 +82,19 @@ class Job extends Object {
 		$val = PASSWORD_SALT . ':' . DIRNAME_JOBS;
 		return md5($val);
 	}
-
+	
+	public static function exportList($xml) {
+		$jl = self::getList();
+		if ($jl->numRows() > 0) {
+			$jx = $xml->addChild('jobs');
+			while($r = $jl->FetchRow()) {
+				$j = Job::getByID($r['jID']);
+				$ch = $jx->addChild('job');
+				$ch->addAttribute('handle',$j->getJobHandle());
+				$ch->addAttribute('package',$j->getPackageHandle());
+			}
+		}	
+	}
 
 	// Job Retrieval 
 	// ==============
@@ -88,6 +105,11 @@ class Job extends Object {
 		$q = "SELECT * FROM Jobs ORDER BY jDateLastRun";
 		$rs = $db->query($q, $v);
 		return $rs;
+	}
+	
+	public static function resetRunningJobs() {
+		$db = Loader::db();
+		$db->Execute('update Jobs set jStatus = \'ENABLED\' where jStatus = \'RUNNING\'');
 	}
 	
 	final static function getByID( $jID=0 ){

@@ -18,6 +18,10 @@ class AttributeValueList extends Object implements Iterator {
 		}
 	}
 	
+	public function count() {
+		return count($this->attributes);
+	}
+	
 	public function getAttribute($akHandle) {
 		return $this->attributes[$akHandle];
 	}

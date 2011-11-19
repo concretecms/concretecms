@@ -58,9 +58,13 @@ class GenerateSitemap extends Job {
 			$r = $db->query("select cID from Pages where cID > 1 order by cID asc");
 			$g = Group::getByID(GUEST_GROUP_ID);
 			$nh = Loader::helper('navigation');
+			$dh = Loader::helper('concrete/dashboard');
 			
 			while ($row = $r->fetchRow()) {
 				$c = Page::getByID($row['cID'], 'ACTIVE');
+				if ($dh->inDashboard($c)) {
+					continue;
+				}
 				$g->setPermissionsForObject($c);
 				if ($c->isSystemPage()) {
 					continue;

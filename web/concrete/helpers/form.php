@@ -49,7 +49,7 @@ class FormHelper {
 	 * return string $html
 	 */	 
 	public function submit($name, $value, $fields = array(), $additionalClasses='') {
-		return '<input type="submit"' . $this->parseMiscFields('ccm-input-submit ' . $additionalClasses, $fields) . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" />';
+		return '<input type="submit"' . $this->parseMiscFields('btn ccm-input-submit ' . $additionalClasses, $fields) . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" />';
 	}
 
 	/** 
@@ -60,7 +60,7 @@ class FormHelper {
 	 * return string $html
 	 */	 
 	public function button($name, $value, $fields = array(), $additionalClasses='') {
-		return '<input type="button"' . $this->parseMiscFields('ccm-input-button ' . $additionalClasses, $fields) . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" />';
+		return '<input type="button"' . $this->parseMiscFields('btn ccm-input-button ' . $additionalClasses, $fields) . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" />';
 	}
 
 	/** 

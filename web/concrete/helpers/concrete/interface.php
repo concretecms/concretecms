@@ -44,7 +44,7 @@ class ConcreteInterfaceHelper {
 		foreach($args as $k => $v) {
 			$argsstr .= $k . '="' . $v . '" ';
 		}
-		return '<input type="submit" class="ccm-button-v2 ' . $innerClass . '" value="' . $text . '" id="ccm-submit-' . $formID . '" name="ccm-submit-' . $formID . '" ' . $align . ' ' . $argsstr . ' />';
+		return '<input type="submit" class="btn ccm-button-v2 ' . $innerClass . '" value="' . $text . '" id="ccm-submit-' . $formID . '" name="ccm-submit-' . $formID . '" ' . $align . ' ' . $argsstr . ' />';
 	}
 	
 	/** 
@@ -56,7 +56,7 @@ class ConcreteInterfaceHelper {
 	 * @param array $args Extra args passed to the link
 	 * @return string
 	 */
-	public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = array(), $onclick='') { 
+	public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = array()) { 
 		if ($buttonAlign == 'right') {
 			$innerClass .= ' ccm-button-v2-right';
 		} else if ($buttonAlign == 'left') {
@@ -66,7 +66,7 @@ class ConcreteInterfaceHelper {
 		foreach($args as $k => $v) {
 			$argsstr .= $k . '="' . $v . '" ';
 		}
-		return '<input type="button" class="ccm-button-v2 ' . $innerClass . '" value="' . $text . '" onclick="window.location.href=\'' . $href . '\'" ' . $align . ' ' . $argsstr . ' />';
+		return '<a href="'.$href.'" class="btn '.$innerClass.'" '.$argsstr.'>'.$text.'</a>';
 	}
 
 	/** 
@@ -88,7 +88,7 @@ class ConcreteInterfaceHelper {
 		foreach($args as $k => $v) {
 			$argsstr .= $k . '="' . $v . '" ';
 		}
-		return '<input type="button" class="ccm-button-v2 ' . $innerClass . '" value="' . $text . '" onclick="' . $onclick . '" ' . $align . ' ' . $argsstr . ' />';
+		return '<input type="button" class="btn ccm-button-v2 ' . $innerClass . '" value="' . $text . '" onclick="' . $onclick . '" ' . $align . ' ' . $argsstr . ' />';
 	}
 	
 	/** 
@@ -103,12 +103,136 @@ class ConcreteInterfaceHelper {
 		if (!is_array($buttons)) {
 			$buttons = func_get_args();
 		}
-		$html = '<div class="ccm-buttons">';
+		$html = '<div class="ccm-buttons well">';
 		foreach($buttons as $_html) {
-			$html .= $_html;
+			$html .= $_html . ' ';
 		}
-		$html .= '</div><div class="ccm-spacer">&nbsp;</div>';
+		$html .= '</div>';
 		return $html;
 	}	
 	
+	public function getQuickNavigationLinkHTML($c) {
+		$cnt = Loader::controller($c);
+		if (method_exists($cnt, 'getQuickNavigationLinkHTML')) {
+			return $cnt->getQuickNavigationLinkHTML();
+		} else {
+			return '<a href="' . Loader::helper('navigation')->getLinkToCollection($c) . '">' . $c->getCollectionName() . '</a>';
+		}
+	}
+	
+	public function showWhiteLabelMessage() {
+		return ((defined('WHITE_LABEL_LOGO_SRC') && WHITE_LABEL_LOGO_SRC != '')  || file_exists(DIR_BASE . '/' . DIRNAME_IMAGES . '/logo_menu.png'));
+	}
+	
+	public function getToolbarLogoSRC() {
+		if (defined('WHITE_LABEL_APP_NAME')) { 
+			$alt = WHITE_LABEL_APP_NAME;
+		}
+		if (!$alt) {
+			$alt = 'concrete5';
+		}
+		if (defined('WHITE_LABEL_LOGO_SRC')) { 
+			$src = WHITE_LABEL_LOGO_SRC;
+		}
+		if (!$src) {
+			$filename = 'logo_menu.png';
+			if (file_exists(DIR_BASE . '/' . DIRNAME_IMAGES . '/' . $filename)) {
+				$src = DIR_REL . '/' . DIRNAME_IMAGES . '/' . $filename;
+				$d = getimagesize(DIR_BASE . '/' . DIRNAME_IMAGES . '/' . $filename);
+				$dimensions = $d[3];
+			} else {
+				$src = ASSETS_URL_IMAGES . '/' . $filename;
+				$dimensions = 'width="49" height="49"';
+			}
+		}
+		return '<img id="ccm-logo" src="' . $src . '" ' . $dimensions . ' alt="' . $alt . '" title="' . $alt . '" />';
+	}
+	
+	public function showNewsflowOverlay() {
+		$tp = new TaskPermission();
+		$c = Page::getCurrentPage();
+		if ($tp->canViewNewsflow() && $c->getCollectionPath() != '/dashboard') {
+			$u = new User();
+			$nf = $u->config('NEWSFLOW_LAST_VIEWED');
+			if ($nf == 'FIRSTRUN') {
+				return false;
+			}
+			
+			if (!$nf) {
+				return true;
+			}
+			if (time() - $nf > NEWSFLOW_VIEWED_THRESHOLD) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public function getQuickNavigationBar() {
+		$c = Page::getCurrentPage();
+		if (!is_object($c)) {
+			return;
+		}
+		
+		if (!is_array($_SESSION['ccmQuickNavRecentPages'])) {
+			$_SESSION['ccmQuickNavRecentPages'] = array();
+		}
+		if (!in_array($c->getCollectionID(), $_SESSION['ccmQuickNavRecentPages'])) {
+			$_SESSION['ccmQuickNavRecentPages'][] = $c->getCollectionID();
+		}
+		if (count($_SESSION['ccmQuickNavRecentPages']) > 5) {
+			array_shift($_SESSION['ccmQuickNavRecentPages']);
+		}
+		
+		$html = '';
+		$html .= '<div id="ccm-quick-nav">';
+		$html .= '<ul id="ccm-quick-nav-favorites" class="pills">';
+		$u = new User();
+		$quicknav = unserialize($u->config('QUICK_NAV_BOOKMARKS'));
+		if (is_array($quicknav)) {
+			foreach($quicknav as $cID) {
+				$c = Page::getByID($cID);
+				$cp = new Permissions($c);
+				if ($cp->canRead() && is_object($c) && (!$c->isError())) {
+					$html .= '<li id="ccm-quick-nav-page-' . $c->getCollectionID() . '">' . $this->getQuickNavigationLinkHTML($c) . '</li>';
+				}
+			}
+		}
+		$html .= '</ul>';
+		if (count($_SESSION['ccmQuickNavRecentPages']) > 0) {
+			$html .= '<ul id="ccm-quick-nav-breadcrumb" class="pills">';
+			$i = 0;
+			foreach($_SESSION['ccmQuickNavRecentPages'] as $_cID) {
+				$_c = Page::getByID($_cID);
+				$name = t('(No Name)');
+				$divider = '';
+				if (isset($_SESSION['ccmQuickNavRecentPages'][$i+1])) {
+					$divider = '<span class="divider">/</span>';
+				}
+				if ($_c->getCollectionName()) {
+					$name = $_c->getCollectionName();
+				}
+				$html .= '<li><a href="' . Loader::helper('navigation')->getLinkToCollection($_c) . '">' . $name . '</a>' . $divider . '</li>';
+				$i++;
+			}
+			$html .= '</ul>';
+		}
+		$html .= '</div>';
+		return $html;
+	}
+	
+	public function clearInterfaceItemsCache() {
+		$u = new User();
+		if ($u->isRegistered()) {
+			unset($_SESSION['dashboardMenus']);
+		}
+	}
+	
+	public function cacheInterfaceItems() {
+		$u = new User();
+		if ($u->isRegistered()) {
+			$ch = Loader::helper('concrete/dashboard');
+			$_SESSION['dashboardMenus'] = $ch->getDashboardAndSearchMenus();
+		}
+	}
 }

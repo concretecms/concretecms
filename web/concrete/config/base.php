@@ -65,12 +65,6 @@ if (!defined('SITEMAP_PAGES_LIMIT')) {
 	define('SITEMAP_PAGES_LIMIT', 100);
 }
 
-if (!defined("ENABLE_AREA_LAYOUTS")) {
-	define('ENABLE_AREA_LAYOUTS', true);
-}
-if (!defined("ENABLE_CUSTOM_DESIGN")) {
-	define('ENABLE_CUSTOM_DESIGN', true);
-}
 if (!defined('ENABLE_DEFINABLE_USER_ATTRIBUTES')) {
 	define('ENABLE_DEFINABLE_USER_ATTRIBUTES', true);
 }
@@ -154,8 +148,8 @@ if (!defined('DIR_PACKAGES')) {
 	define('DIR_PACKAGES', DIR_BASE . '/packages');
 }
 define('DIR_PACKAGES_CORE', DIR_BASE_CORE . '/packages');
-define('DIRNAME_PACKAGE_CORE', 'core');
-define('DIR_PACKAGE_CORE', DIR_BASE_CORE . '/packages/' . DIRNAME_PACKAGE_CORE);
+define('DIR_STARTING_POINT_PACKAGES', DIR_BASE . '/config/install/packages');
+define('DIR_STARTING_POINT_PACKAGES_CORE', DIR_BASE_CORE . '/config/install/packages');
 
 define('DIRNAME_BLOCKS', 'blocks');
 define('DIRNAME_BACKUPS', 'backups');
@@ -197,6 +191,16 @@ define('FILENAME_BLOCK_EDIT', 'edit.php');
 define('FILENAME_BLOCK_ICON', 'icon.png');
 define('FILENAME_BLOCK_CONTROLLER', 'controller.php');
 define('FILENAME_BLOCK_DB', 'db.xml');
+define('BLOCK_HANDLE_SCRAPBOOK_PROXY', 'core_scrapbook_display');
+
+# Stacks
+define('STACKS_PAGE_PATH', '/!stacks');
+define('STACKS_AREA_NAME', 'Main');
+define('STACKS_PAGE_TYPE', 'core_stack');
+define('BLOCK_HANDLE_STACK_PROXY', 'core_stack_display');
+
+# Trash
+define('TRASH_PAGE_PATH', '/!trash');
 
 # Hosted assets are assets shared amongst all Concrete5 installations on a single machine.
 if (defined('MULTI_SITE') && MULTI_SITE == 1) {
@@ -222,6 +226,11 @@ define('ASSETS_URL_JAVASCRIPT', $ap . '/js');
 define('ASSETS_URL_IMAGES', $ap . '/images');
 define('ASSETS_URL_FLASH', $ap . '/flash');
 
+define('REL_DIR_STARTING_POINT_PACKAGES', DIR_REL . '/config/install/packages');
+define('REL_DIR_STARTING_POINT_PACKAGES_CORE', ASSETS_URL . '/config/install/packages');
+define('REL_DIR_PACKAGES', DIR_REL . '/packages');
+define('REL_DIR_PACKAGES_CORE', ASSETS_URL . '/packages');
+
 
 # Pages/Collections
 define('FILENAME_COLLECTION_VIEW', 'view.php');
@@ -243,6 +252,7 @@ define("FILENAME_LOCAL_DB", 'site_db.xml');
 
 # Block Types
 define('BLOCK_TYPE_GENERIC_ICON', ASSETS_URL_IMAGES . '/icons/icon_block_type_generic.png');
+define('PACKAGE_GENERIC_ICON', ASSETS_URL_IMAGES . '/icons/icon_package_generic.png');
 
 # Controllers
 define('DIR_FILES_CONTROLLERS', DIR_BASE . '/controllers');
@@ -385,6 +395,7 @@ define('REGISTERED_GROUP_ID', '2');
 define('ADMIN_GROUP_ID', '3');
 define('SESSION_MAX_LIFETIME', 7200); // 2 hours
 define('USER_CHANGE_PASSWORD_URL_LIFETIME',  7200);
+define('NEWSFLOW_VIEWED_THRESHOLD', 86400); // once a day
 
 # Default search size
 define('SEARCH_CHUNK_SIZE','20'); /* number of entries retrieved per page */
@@ -408,7 +419,7 @@ define('HOME_UID', USER_SUPER_ID);
 define('HOME_HANDLE', "home");
 
 # Composer settings
-define('COMPOSER_DRAFTS_PAGE_PATH', '/dashboard/composer/drafts');
+define('COMPOSER_DRAFTS_PAGE_PATH', '/!drafts');
 
 # User avatar constants - should probably be moved into the avatar helper class as avatar constants
 if (!defined('AVATAR_WIDTH') && !defined('AVATAR_HEIGHT')) {
@@ -463,17 +474,30 @@ $ADODB_ASSOC_CASE =  2;
 require(dirname(__FILE__) . '/version.php');
 define('APP_VERSION', $APP_VERSION);
 define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the latest version (this is seconds)
-define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_version_number');
-define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
+define('APP_VERSION_LATEST_WS', 'http://c5org/tools/get_latest_version_number');
+define('APP_VERSION_LATEST_DOWNLOAD', 'http://c5org/download/');
 
 //Main Concrete Site - For Marketplace, Knowledge Base, etc.
 if (!defined('CONCRETE5_ORG_URL')) {
-	define('CONCRETE5_ORG_URL', 'http://www.concrete5.org');
+	define('CONCRETE5_ORG_URL', 'http://c5org');
+}
+if (!defined('NEWSFLOW_URL')) {
+	define('NEWSFLOW_URL', 'http://newsflow.concrete5.org');
+}
+
+if (!defined('ENABLE_APP_NEWS')) {
+	define('ENABLE_APP_NEWS', true);
+}
+
+if (!defined('ENABLE_TRASH_CAN')) { 
+	define('ENABLE_TRASH_CAN', true);
 }
 
 define('MARKETPLACE_BASE_URL_SITE_PAGE', CONCRETE5_ORG_URL.'/private/sites');
 
 define('MARKETPLACE_URL_CONNECT', CONCRETE5_ORG_URL.'/marketplace/connect');
+define('MARKETPLACE_URL_CONNECT_SUCCESS', CONCRETE5_ORG_URL.'/marketplace/connect/-/connected');
+define('MARKETPLACE_URL_CHECKOUT', CONCRETE5_ORG_URL.'/cart/-/add/');
 define('MARKETPLACE_URL_CONNECT_VALIDATE', CONCRETE5_ORG_URL.'/marketplace/connect/-/validate');
 define('MARKETPLACE_PURCHASES_LIST_WS', CONCRETE5_ORG_URL . '/marketplace/connect/-/get_available_licenses');
 define('MARKETPLACE_ITEM_INFORMATION_WS', CONCRETE5_ORG_URL . '/marketplace/connect/-/get_item_information');
@@ -481,8 +505,14 @@ define('MARKETPLACE_ITEM_FREE_LICENSE_WS', CONCRETE5_ORG_URL . '/marketplace/con
 define('MARKETPLACE_URL_CONNECT_TOKEN_NEW', CONCRETE5_ORG_URL.'/marketplace/connect/-/generate_token');
 define('MARKETPLACE_REMOTE_ITEM_LIST_WS', CONCRETE5_ORG_URL.'/marketplace/');
 
+define('DASHBOARD_BACKGROUND_FEED', 'http://assets.concrete5.org/wallpaper');
+
 if (!defined("MENU_HELP_URL")) {
 	define('MENU_HELP_URL', CONCRETE5_ORG_URL . '/tools/help_overlay/');
+}
+
+if (!defined('MENU_HELP_SERVICE_URL')) {
+	define('MENU_HELP_SERVICE_URL', CONCRETE5_ORG_URL . '/tools/get_remote_help_list/');
 }
 
 if (!defined('MARKETPLACE_THEME_PREVIEW_URL')) {

@@ -66,7 +66,7 @@ class Page extends Collection {
 	protected function populatePage($cInfo, $where, $cvID) {
 		$db = Loader::db();
 		
-		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cPendingAction, cPendingActionUID, cPendingActionTargetCID, cPendingActionDatetime, cCheckedOutUID, cIsTemplate, uID, cPath, Pages.ctID, ctHandle, ctIcon, ptID, cParentID, cChildren, ctName, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PageTypes on (PageTypes.ctID = Pages.ctID) left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
+		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cIsActive, Pages.cIsSystemPage, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cPendingAction, cPendingActionUID, cPendingActionTargetCID, cPendingActionDatetime, cCheckedOutUID, cIsTemplate, uID, cPath, Pages.ctID, ctHandle, ctIcon, ptID, cParentID, cChildren, ctName, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PageTypes on (PageTypes.ctID = Pages.ctID) left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		//$q2 = "select cParentID, cPointerID, cPath, Pages.cID from Pages left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		
 		$v = array($cInfo);
@@ -218,6 +218,7 @@ class Page extends Collection {
 				}
 			}
 		}
+		Cache::delete('collection_blocks', $this->getCollectionID() . ':' . $this->getVersionID());
 	}
 
 	/**
@@ -570,11 +571,7 @@ class Page extends Collection {
 	 * @return bool
 	 */		
 	public function isSystemPage() {
-		if ($this->isGeneratedCollection()) {
-			return (file_exists(DIR_FILES_CONTENT_REQUIRED . $this->getCollectionPath()) || 
-			file_exists(DIR_FILES_CONTENT_REQUIRED . $this->getCollectionPath() . '.php'));
-		}		
-		return false;
+		return $this->cIsSystemPage;
 	}
 
 	/**
@@ -654,6 +651,39 @@ class Page extends Collection {
 			return $cIDRedir;
 		}
 	}
+	
+	public function export($pageNode) {
+		$p = $pageNode->addChild('page');
+		$p->addAttribute('name', Loader::helper('text')->entities($this->getCollectionName()));
+		$p->addAttribute('path', $this->getCollectionPath());
+		$p->addAttribute('filename', $this->getCollectionFilename());
+		$p->addAttribute('pagetype', $this->getCollectionTypeHandle());
+		$p->addAttribute('description', Loader::helper('text')->entities($this->getCollectionDescription()));
+		$p->addAttribute('package', $this->getPackageHandle());
+		if ($this->getCollectionParentID() == 0 && $this->isSystemPage()) {
+			$p->addAttribute('root', 'true');
+		}
+
+		$attribs = $this->getSetCollectionAttributes();
+		if (count($attribs) > 0) {
+			$attributes = $p->addChild('attributes');
+			foreach($attribs as $ak) {
+				$av = $this->getAttributeValueObject($ak);
+				$cnt = $ak->getController();
+				$cnt->setAttributeValue($av);
+		 		$akx = $attributes->addChild('attributekey');
+		 		$akx->addAttribute('handle', $ak->getAttributeKeyHandle());
+				$cnt->exportValue($akx);
+			}
+		}
+
+		$db = Loader::db();
+		$r = $db->Execute('select arHandle from Areas where cID = ? and arIsGlobal = 0', array($this->getCollectionID()));
+		while ($row = $r->FetchRow()) {
+			$ax = Area::get($this, $row['arHandle']);
+			$ax->export($p, $this);
+		}
+	}
 
 	/**
 	 * Returns the uID for a page that is checked out
@@ -684,17 +714,9 @@ class Page extends Collection {
 	 * @return string $path
 	 */	
 	public static function getCollectionPathFromID($cID) {
-		$path = Cache::get('page_path', $cID);
-		if ($path != false) {
-			return $path;
-		}
-		
 		$db = Loader::db();
 		$path = $db->GetOne("select cPath from PagePaths inner join CollectionVersions on (PagePaths.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) where PagePaths.cID = ?", array($cID));
-		
 		$path .= '/';
-		
-		Cache::set('page_path', $cID, $path);
 		return $path;
 	}
 
@@ -891,12 +913,10 @@ class Page extends Collection {
 	 * @return int
 	 */		
 	function getCollectionParentIDFromChildID($cID) {
-		$cParentID = Cache::get('parent_id', $cID);
 		if ($cParentID == false) {
 			$db = Loader::db();
 			$q = "select cParentID from Pages where cID = '$cID'";
 			$cParentID = $db->GetOne($q);
-			Cache::set('parent_id', $cID, $cParentID);
 		}
 		return $cParentID;
 	}
@@ -1456,11 +1476,14 @@ class Page extends Collection {
 		$res = $db->execute($r, $v);
 
 		PageStatistics::incrementParents($cID);
-		
+		if (!$this->isActive()) {
+			$this->activate();
+		}
 		// run any event we have for page move. Arguments are
 		// 1. current page being moved
 		// 2. former parent
 		// 3. new parent
+		
 		$oldParent = Page::getByID($this->getCollectionParentID(), 'RECENT');
 		$newParent = Page::getByID($newCParentID, 'RECENT');
 		
@@ -1703,7 +1726,11 @@ class Page extends Collection {
 		$db = Loader::db();
 		switch($this->getPendingAction()) {
 			case 'DELETE':
-				$this->delete();
+				if (ENABLE_TRASH_CAN) {
+					$this->moveToTrash();
+				} else { 
+					$this->delete();
+				}
 				break;
 			case 'MOVE':
 				$nc = Page::getByID($this->getPendingActionTargetCollectionID());
@@ -1711,6 +1738,12 @@ class Page extends Collection {
 				$this->clearPendingAction();
 				break;
 		}
+	}
+	
+	public function moveToTrash() {
+		$trash = Page::getByPath(TRASH_PAGE_PATH);
+		$this->move($trash);
+		$this->deactivate();
 	}
 
 	function rescanChildrenDisplayOrder() {
@@ -1847,11 +1880,56 @@ class Page extends Collection {
 			
 			if ($res3) {
 				$np = Page::getByID($cID, $row['cvID']);
+				// now we mark the page as a system page based on this path:
+				$systemPages=array('/login', '/register', '/!trash', '/!stacks', '/!drafts', '/download_file', '/profile', '/dashboard', '/profile/*', '/dashboard/*','/page_forbidden','/page_not_found','/members'); 
+				$th = Loader::helper('text');
+				foreach($systemPages as $sp) {
+					if ($th->fnmatch($sp, $newPath)) {
+						$db->Execute('update Pages set cIsSystemPage = 1 where cID = ?', array($cID));
+					}
+				}				
 				$np->refreshCache();
 				return $newPath;
 			}
 		}
 		$r->free();
+	}
+	
+	public function isInTrash() {
+		return $this->getCollectionPath() != TRASH_PAGE_PATH && strpos($this->getCollectionPath(), TRASH_PAGE_PATH) === 0;
+	}
+	
+	public function moveToRoot() {
+		$db = Loader::db();
+		$db->Execute('update Pages set cParentID = 0 where cID = ?', array($this->getCollectionID()));
+		$this->refreshCache();
+	}
+
+	public function rescanSystemPages() {
+		$db = Loader::db();
+		$systemPages=array('/login', '/register', '/!trash', '/!stacks', '/!drafts', '/download_file', '/profile', '/dashboard', '/profile/%', '/dashboard/%','/page_forbidden','/page_not_found','/members'); 
+		foreach($systemPages as $sp) {
+			$r = $db->Execute('select cID from PagePaths where cPath like "' . $sp . '"');
+			while ($row = $r->Fetchrow()) {
+				$db->Execute('update Pages set cIsSystemPage = 1 where cID = ?', array($row['cID']));
+			}			
+		}
+	}
+	
+	public function deactivate() {
+		$db = Loader::db();
+		$db->Execute('update Pages set cIsActive = 0 where cID = ?', array($this->getCollectionID()));
+		$this->refreshCache();
+	}
+
+	public function activate() {
+		$db = Loader::db();
+		$db->Execute('update Pages set cIsActive = 1 where cID = ?', array($this->getCollectionID()));
+		$this->refreshCache();
+	}
+	
+	public function isActive() {
+		return $this->cIsActive;
 	}
 	
 	public function setPageIndexScore($score) {
@@ -2121,6 +2199,27 @@ class Page extends Collection {
 		}
 	}
 
+	function _associateMasterCollectionAttributes($newCID, $masterCID) {
+		$mc = Page::getByID($masterCID, 'ACTIVE');
+		$nc = Page::getByID($newCID, 'RECENT');
+		$db = Loader::db();
+
+		$mcID = $mc->getCollectionID();
+		$mcvID = $mc->getVersionID();
+
+		$q = "select * from CollectionAttributeValues where cID = ?";
+		$r = $db->query($q, array($mcID));
+
+		if ($r) {
+			while ($row = $r->fetchRow()) {
+				$db->Execute('insert into CollectionAttributeValues (cID, cvID, akID, avID) values (?, ?, ?, ?)', array(
+					$nc->getCollectionID(), $nc->getVersionID(), $row['akID'], $row['avID']
+				));
+			}
+			$r->free();
+		}
+	}
+	
 	/**
 	* Adds the home page to the system. Typically used only by the installation program.
 	* @return page
@@ -2219,6 +2318,9 @@ class Page extends Collection {
 		$cobj = parent::add($data);		
 		$cID = $cobj->getCollectionID();		
 		$ctID = $ct->getCollectionTypeID();
+		if (!$ctID) {
+			$ctID = 0;
+		}
 
 		$q = "select cID from Pages where ctID = '$ctID' and cIsTemplate = '1'";
 		$masterCID = $db->getOne($q);
@@ -2244,6 +2346,7 @@ class Page extends Collection {
 				// now that we know the insert operation was a success, we need to see if the collection type we're adding has a master collection associated with it
 				if ($masterCID) {
 					$this->_associateMasterCollectionBlocks($newCID, $masterCID);
+					$this->_associateMasterCollectionAttributes($newCID, $masterCID);
 				}
 			}
 			
@@ -2331,13 +2434,13 @@ class Page extends Collection {
 			}
 		}		
 		
-		if ($this->cCacheFullPageContent == 1 || FULL_PAGE_CACHE_GLOBAL == 'all') {
+		if ($this->cCacheFullPageContent == 1 || FULL_PAGE_CACHE_GLOBAL === 'all') {
 			// this cache page at the page level
 			// this overrides any global settings
 			return true;
 		}
 		
-		if (FULL_PAGE_CACHE_GLOBAL != 'blocks') {
+		if (FULL_PAGE_CACHE_GLOBAL !== 'blocks') {
 			// we are NOT specifically caching this page, and we don't 
 			return false;
 		}
@@ -2374,7 +2477,7 @@ class Page extends Collection {
 		
 		$uID = USER_SUPER_ID;
 		$data['uID'] = $uID;
-		
+		$cIsSystemPage = 0;
 		parent::refreshCache();
 		$cobj = parent::add($data);		
 		$cID = $cobj->getCollectionID();
@@ -2386,8 +2489,8 @@ class Page extends Collection {
 		$cInheritPermissionsFromCID = $this->getPermissionsCollectionID();
 		$cInheritPermissionsFrom = 'PARENT';
 		
-		$v = array($cID, $cFilename, $cParentID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $uID, $pkgID);
-		$q = "insert into Pages (cID, cFilename, cParentID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, uID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		$v = array($cID, $cFilename, $cParentID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $cIsSystemPage, $uID, $pkgID);
+		$q = "insert into Pages (cID, cFilename, cParentID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, cIsSystemPage, uID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 

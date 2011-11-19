@@ -36,6 +36,24 @@ class AttributeType extends Object {
 		return $list;
 	}
 	
+	public static function exportList($xml) {
+		$attribs = AttributeType::getList();
+		$db = Loader::db();
+		$axml = $xml->addChild('attributetypes');
+		foreach($attribs as $at) {
+			$atype = $axml->addChild('attributetype');
+			$atype->addAttribute('handle', $at->getAttributeTypeHandle());
+			$atype->addAttribute('package', $at->getPackageHandle());
+			$categories = $db->GetCol('select akCategoryHandle from AttributeKeyCategories inner join AttributeTypeCategories where AttributeKeyCategories.akCategoryID = AttributeTypeCategories.akCategoryID and AttributeTypeCategories.atID = ?', array($at->getAttributeTypeID()));
+			if (count($categories) > 0) {
+				$cat = $atype->addChild('categories');
+				foreach($categories as $catHandle) {
+					$cat->addChild('category')->addAttribute('handle', $catHandle);
+				}
+			}
+		}
+	}
+	
 	public function delete() {
 		$db = Loader::db();
 		if (method_exists($this->controller, 'deleteType')) {

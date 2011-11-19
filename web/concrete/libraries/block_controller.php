@@ -43,7 +43,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btCacheBlockOutputLifetime = CACHE_LIFETIME;
 		protected $btCacheBlockOutputOnPost = false;
 		protected $btCacheBlockOutputForRegisteredUsers = false;
+		
+		protected $btExportPageColumns = array();
+		protected $btExportFileColumns = array();
+		protected $btExportPageTypeColumns = array();
+		
 		public $headerItems = array();
+		
+		
 
 		protected $identifier;
 		
@@ -91,6 +98,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		function install($path) {
 			// passed path is the path to this block (try saying that ten times fast)
 			// create the necessary table
+			if (!$this->btTable) {
+				$r = new stdClass;
+				$r->result = true;
+				return $r;
+			}
 			$ret = Package::installDB($path . '/' . $this->dbFile);
 			return $ret;
 		}
@@ -131,13 +143,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		public function save($args) {
 			//$argsMerged = array_merge($_POST, $args);
-			$attribs = $this->record->getAttributeNames();
-			foreach($attribs as $key) {
-				if (isset($args[$key])) {
-					$this->record->{$key} = $args[$key];
+			if ($this->record) {
+				$attribs = $this->record->getAttributeNames();
+				foreach($attribs as $key) {
+					if (isset($args[$key])) {
+						$this->record->{$key} = $args[$key];
+					}
 				}
+				$this->record->Replace();
 			}
-			$this->record->Replace();
 		}
 		
 		/**
@@ -166,6 +180,102 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		public function __wakeup() {
 			$this->__construct();
+		}
+		
+		public function getBlockTypeDatabaseTable() {
+			return $this->btTable;
+		}
+		
+		public function export(SimpleXMLElement $blockNode) {
+
+			$tables[] = $this->getBlockTypeDatabaseTable();
+			if (isset($this->btExportTables)) {
+				$tables = $this->btExportTables;
+			}
+			$db = Loader::db();
+		
+			foreach($tables as $tbl) {
+				if (!$tbl) {
+					continue;
+				}
+				$data = $blockNode->addChild('data');
+				$data->addAttribute('table', $tbl);
+				$columns = $db->MetaColumns($tbl);
+				// remove columns we don't want
+				unset($columns['BID']);
+				$r = $db->Execute('select * from ' . $tbl . ' where bID = ?', array($this->bID));
+				while ($record = $r->FetchRow()) {
+					$tableRecord = $data->addChild('record');
+					foreach($record as $key => $value) {
+						if (isset($columns[strtoupper($key)])) {
+							if (in_array($key, $this->btExportPageColumns)) {
+								$tableRecord->addChild($key, ContentExporter::replacePageWithPlaceHolder($value));
+							} else if (in_array($key, $this->btExportFileColumns)) {
+								$tableRecord->addChild($key, ContentExporter::replaceFileWithPlaceHolder($value));
+							} else if (in_array($key, $this->btExportPageTypeColumns)) {
+								$tableRecord->addChild($key, ContentExporter::replacePageTypeWithPlaceHolder($value));
+							} else {
+								$tableRecord->addChild($key, '<![CDATA[' . $value . ']]>');
+							}
+						}
+					}
+				}
+			}
+		}
+
+		protected function getImportData($blockNode) {
+			$args = array();
+			if (isset($blockNode->data)) {
+				foreach($blockNode->data as $data) {
+					if ($data['table'] == $this->getBlockTypeDatabaseTable()) {
+						if (isset($data->record)) {
+							foreach($data->record->children() as $node) {
+								$args[$node->getName()] = ContentImporter::getValue((string) $node);
+							}
+						}
+					} 
+				}
+			}
+			return $args;
+		}
+
+		protected function importAdditionalData($b, $blockNode) {
+			if (isset($blockNode->data)) {
+				foreach($blockNode->data as $data) {
+					if (strtoupper($data['table']) != strtoupper($this->getBlockTypeDatabaseTable())) {
+						$table = (string) $data['table'];
+						if (isset($data->record)) {
+							foreach($data->record as $record) {
+								$aar = new ADODB_Active_Record($table);
+								$aar->bID = $b->getBlockID();
+								foreach($record->children() as $node) {
+									$nodeName = $node->getName();
+									$aar->{$nodeName} = ContentImporter::getValue((string) $node);
+								}
+								$aar->Save();
+							}
+						}								
+					}
+				}
+			}
+		}
+		
+		public function import($page, $arHandle, SimpleXMLElement $blockNode) {
+			$args = array();
+			$db = Loader::db();
+			// handle the adodb stuff
+			$args = $this->getImportData($blockNode);
+			
+			$bt = BlockType::getByHandle($this->btHandle);
+			$b = $page->addBlock($bt, $arHandle, $args);
+			$b->updateBlockInformation(array('bName' => $blockNode['name'], 'bFilename' => $blockNode['custom-template']));
+			if ($page->isMasterCollection() && $blockNode['mc-block-id'] != '') {
+				ContentImporter::addMasterCollectionBlockID($b, (string) $blockNode['mc-block-id']);		
+			}					
+			
+			// now we insert stuff that isn't part of the btTable
+			// we have to do this this way because we need a bID
+			$this->importAdditionalData($b, $blockNode);
 		}
 		
 		public function cacheBlockRecord() {
@@ -349,6 +459,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		public function getBlockTypeDescription() {
 			return t($this->btDescription);
+		}
+		
+		/** 
+		 * Returns HTML that will be shown when a user wants help for a given block type
+		 */
+		public function getBlockTypeHelp() {
+			return $this->btHelpContent;
 		}
 		
 		/**

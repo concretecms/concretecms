@@ -71,6 +71,17 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="arIsGlobal" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="arIsGlobal">
+      <col>arIsGlobal</col>
+    </index>
+    <index name="arHandle">
+      <col>arHandle</col>
+    </index>
   </table>
    <table name="AttributeSetKeys">
     <field name="akID" type="I" size="10">
@@ -105,6 +116,15 @@
       <UNSIGNED/>
     </field>
     <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="asIsLocked" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+    <field name="asDisplayOrder" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
@@ -343,6 +363,28 @@
       <UNSIGNED />
     </field>
   </table>
+ <table name="CollectionVersionRelatedEdits">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cRelationID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvRelationID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
   <table name="CollectionVersionBlockPermissions">
     <field name="cID" type="I" size="10">
       <KEY/>
@@ -393,12 +435,12 @@
     <field name="cbDisplayOrder" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
-      <UNSIGNED />
+      <UNSIGNED/>
     </field>
-    <field name="isOriginal" type="I" size="1">
+    <field name="isOriginal" type="I1" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
-      <UNSIGNED />
+      <UNSIGNED/>
     </field>
     <field name="cbOverrideAreaPermissions" type="I1" size="1">
       <NOTNULL/>
@@ -412,7 +454,14 @@
       <col>cbIncludeAll</col>
     </index>
     <index name="isOriginal">
-    	<col>isOriginal</col>
+      <col>isOriginal</col>
+    </index>
+    <index name="bID">
+      <col>bID</col>
+    </index>
+    <index name="cIDcvID">
+      <col>cID</col>
+      <col>cvID</col>
     </index>
   </table>
 
@@ -1260,6 +1309,10 @@
     <field name="cDatePublic" type="T"/>
     <field name="cDateLastIndexed" type="T" />
     <field name="cDateLastSitemapped" type="T" />
+    <field name="cRequiresReindex" type="I1" size="1">
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <index name="cName">
       <col>cName</col>
       <FULLTEXT />
@@ -1283,6 +1336,9 @@
 	</index>
     <index name="cDateLastSitemapped">
       <col>cDateLastSitemapped</col>
+	</index>
+    <index name="cRequiresReindex">
+      <col>cRequiresReindex</col>
 	</index>
   </table>
   <table name="PagePermissionPageTypes">
@@ -1419,6 +1475,10 @@
     <field name="ctName" type="C" size="90">
       <NOTNULL/>
     </field>
+    <field name="ctIsInternal" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <field name="pkgID" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -1492,6 +1552,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="cIsActive" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
     <field name="cChildren" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -1530,8 +1594,15 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="cIsSystemPage" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <index name="cParentID">
       <col>cParentID</col>
+    </index>
+    <index name="cIsActive">
+      <col>cIsActive</col>
     </index>
      <index name="cCheckedOutUID">
       <col>cCheckedOutUID</col>
@@ -1547,6 +1618,9 @@
     </index>
     <index name="cIsTemplate">
     	<col>cIsTemplate</col>
+    </index>
+    <index name="cIsSystemPage">
+      <col>cIsSystemPage</col>
     </index>
   </table>
   <table name="PileContents">
@@ -2090,6 +2164,32 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+  </table>
+	<table name="Stacks">
+    <field name="stID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="stName" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="stType" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="stType">
+      <col>stType</col>
+    </index>
+    <index name="stName">
+      <col>stName</col>
+    </index>
   </table>
   <table name="atDateTimeSettings">
     <field name="akID" type="I" size="10">

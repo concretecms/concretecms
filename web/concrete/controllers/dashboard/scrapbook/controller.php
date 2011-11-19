@@ -10,10 +10,6 @@ class DashboardScrapbookController extends Controller {
 		//add required header libraries
 		$html = Loader::helper('html');
 		$scrapbookHelper=Loader::helper('concrete/scrapbook');
-		$this->addHeaderItem($html->css('ccm.filemanager.css'));
-		$this->addHeaderItem($html->javascript('ccm.filemanager.js'));
-		$this->addHeaderItem($html->javascript('tiny_mce/tiny_mce.js'));
-		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_activateFileManager(\'DASHBOARD\'); });</script>');
 		$c=$this->getCollectionObject();
 		$cPath=$c->getCollectionPath();
 		//echo $c->getCollectionId();

@@ -125,6 +125,7 @@ class ConcreteDashboardSitemapHelper {
 		$selected = (ConcreteDashboardSitemapHelper::isOneTimeActiveNode($cID)) ? true : false;
 		
 		$ct = CollectionType::getByID($c->getCollectionTypeID());
+		$isInTrash = $c->isInTrash();
 		$canCompose = false;
 		if (is_object($ct)) {
 			if ($ct->isCollectionTypeIncludedInComposer()) {
@@ -134,6 +135,7 @@ class ConcreteDashboardSitemapHelper {
 				}
 			}
 		}
+		$isTrash = $c->getCollectionPath() == TRASH_PAGE_PATH;
 		$cIcon = $c->getCollectionIcon();
 		$cAlias = $c->isAlias();
 		$cPointerID = $c->getCollectionPointerID();
@@ -151,6 +153,8 @@ class ConcreteDashboardSitemapHelper {
 			'cvName'=> $cvName,
 			'cIcon' => $cIcon,
 			'cAlias' => $cAlias,
+			'isInTrash' => $isInTrash,
+			'isTrash' => $isTrash,
 			'numSubpages'=> $numSubpages,
 			'status'=> $status,
 			'canWrite'=>$canWrite,
@@ -186,6 +190,7 @@ class ConcreteDashboardSitemapHelper {
 			$pl->sortByDisplayOrder();
 			if (ConcreteDashboardSitemapHelper::showSystemPages()) {
 				$pl->includeSystemPages();
+				$pl->includeInactivePages();
 			}
 			$pl->filterByParentID($cID);
 			$pl->displayUnapprovedPages();
@@ -226,7 +231,7 @@ class ConcreteDashboardSitemapHelper {
 				if ($select_mode == '') {
 					$this->html .= '<li><a href="' . View::url('/dashboard/sitemap/explore', $t->getCollectionID()) . '"><span>' . $t->getCollectionName() . '</span></a></li>';
 				} else {
-					$this->html .= '<li><a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \''. $display_mode . '\', \'' . $select_mode . '\',' . $t->getCollectionID() . ',' . $spID . ')">' . $t->getCollectionName() . '</a></li>';
+					$this->html .= '<li><a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \''. $display_mode . '\', \'' . $select_mode . '\',' . $t->getCollectionID() . ',\'' . $spID . '\')">' . $t->getCollectionName() . '</a></li>';
 				}
 			}
 			$cp = new Permissions($c);
@@ -261,23 +266,36 @@ class ConcreteDashboardSitemapHelper {
 			$cAlias = $ri['cAlias'];
 			$canWrite = $ri['canWrite'];
 			$canDrag = ($ri['id'] > 1) ? "true" : "false";
-			$this->html .= '<li tree-node-cancompose="' . $ri['canCompose'] . '" tree-node-type="' . $treeNodeType . '" draggable="' . $canDrag . '" class="tree-node ' . $typeClass . ' tree-branch' . $nodeID . '" id="tree-node' . $ri['id'] . '"' . $customIconSrc . '>';
+			/*
+			if ($ri['isInTrash']) {
+				$canDrag = "false";
+			}*/
+			
+			$this->html .= '<li tree-node-intrash="' . $ri['isInTrash'] . '" tree-node-istrash="' . $ri['isTrash'] . '" tree-node-cancompose="' . $ri['canCompose'] . '" tree-node-type="' . $treeNodeType . '" draggable="' . $canDrag . '" class="tree-node ' . $typeClass . ' tree-branch' . $nodeID . '" id="tree-node' . $ri['id'] . '"' . $customIconSrc . '>';
 			
 			if ($ri['numSubpages'] > 0) {
-				$subPageStr = ($ri['id'] == 1) ? '' : ' (' . $ri['numSubpages'] . ')';
+				$subPageStr = ($ri['id'] == 1) ? '' : ' <span class="ccm-sitemap-num-subpages">(' . $ri['numSubpages'] . ')</span>';
+				/*
 				if ($display_mode == 'explore') {
-					$this->html .= ($select_mode == 'move_copy_delete' || $select_mode == 'select_page') ? '<a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \'' . $display_mode . '\', \'' . $select_mode . '\', ' . $ri["id"] . ',' . $spID . ')">' : '<a href="' . View::url('/dashboard/sitemap/explore', $ri['id']) . '">' ;
-				}
+					$this->html .= ($select_mode == 'move_copy_delete' || $select_mode == 'select_page') ? '<a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \'' . $display_mode . '\', \'' . $select_mode . '\', ' . $ri["id"] . ',\'' . $spID . '\')">' : '<a href="' . View::url('/dashboard/sitemap/explore', $ri['id']) . '">' ;
+				}*/
+				
 				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/spacer.gif" width="16" height="16" class="handle ' . $moveableClass . '" />';
-				if ($display_mode == 'explore' || $select_mode == 'move_copy_delete' || $select_mode == 'select_page') {
+				/*if ($display_mode == 'explore' || $select_mode == 'move_copy_delete' || $select_mode == 'select_page') {
 					$this->html .= '</a>';
-				}
+				}*/
+				/*
 				if ($display_mode == 'full' || $display_mode == '') {
+				*/
+				if ($display_mode == 'explore') {
+					$this->html .= ($select_mode == 'move_copy_delete' || $select_mode == 'select_page') ? '<a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \'' . $display_mode . '\', \'' . $select_mode . '\', ' . $ri["id"] . ',\'' . $spID . '\')">' : '<a href="' . View::url('/dashboard/sitemap/explore', $ri['id']) . '">' ;
+				} else {
 					$this->html .= '<a href="javascript:toggleSub(\'' . $instanceID . '\',\'' . $ri['id'] . '\',\'' . $display_mode . '\',\'' . $select_mode . '\')">';
-					$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/dashboard/plus.jpg" width="9" height="9" class="tree-plus" id="tree-collapse' . $ri['id'] . '" /></a>';
 				}
+				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/dashboard/plus.jpg" width="9" height="9" class="tree-plus" id="tree-collapse' . $ri['id'] . '" /></a>';
+				/*}*/
 				$this->html .= '<div rel="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $ri['id'] . '" class="' . $labelClass . '" tree-node-alias="' . $cAlias . '" ';
-				$this->html .= 'selected-page-id="' . $this->selectedPageID . '" tree-node-cancompose="' . $ri['canCompose'] . '" sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '" sitemap-instance-id="' . $instanceID . '" tree-node-canwrite="' . $canWrite . '" tree-node-children="' . $ri['numSubpages'] . '" ';
+				$this->html .= 'selected-page-id="' . $this->selectedPageID . '" tree-node-intrash="' . $ri['isInTrash'] . '" tree-node-istrash="' . $ri['isTrash'] . '" tree-node-cancompose="' . $ri['canCompose'] . '" sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '" sitemap-instance-id="' . $instanceID . '" tree-node-canwrite="' . $canWrite . '" tree-node-children="' . $ri['numSubpages'] . '" ';
 				$this->html .= 'tree-node-title="' . htmlspecialchars($ri['cvName']) . '" id="tree-label' . $ri['id'] . '" ';
 				if ($ri['selected']) {
 					$this->html .= 'class="tree-label-selected-onload" ';
@@ -310,7 +328,7 @@ class ConcreteDashboardSitemapHelper {
 				}
 			} else {
 				$this->html .= '<div tree-node-title="' . htmlspecialchars($ri['cvName']) . '" tree-node-children="' . $ri['numSubpages'] . '" ';
-				$this->html .= 'class="' . $labelClass . '" tree-node-cancompose="' . $ri['canCompose'] . '" tree-node-alias="' . $cAlias . '" tree-node-canwrite="' . $canWrite . '" ';
+				$this->html .= 'class="' . $labelClass . '" tree-node-intrash="' . $ri['isInTrash'] . '" tree-node-istrash="' . $ri['isTrash'] . '" tree-node-cancompose="' . $ri['canCompose'] . '" tree-node-alias="' . $cAlias . '" tree-node-canwrite="' . $canWrite . '" ';
 				$this->html .= 'selected-page-id="' . $this->selectedPageID . '" sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '" sitemap-instance-id="' . $instanceID . '" id="tree-label' . $ri['id'] . '" rel="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $ri['id'] . '">';
 				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/spacer.gif" width="16" height="16" class="handle ' . $moveableClass . '" /><span>' . $ri['cvName'] . '</span></div>';
 			}
@@ -324,9 +342,9 @@ class ConcreteDashboardSitemapHelper {
 		if ($req->total > count($req->results) && $nodeID > 1) {
 			if ($display_mode == 'explore' || $select_mode == 'move_copy_delete' || $select_mode == 'select_page') {
 				if ($display_mode == 'explore') { 
-					$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPaging(false, true) . '</li>';
+					$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPagingV2(false, true) . '</li>';
 				} else {
-					$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPaging(REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_data', true, array('node' => $nodeID)) . '</li>';
+					$this->html .= '<li class="ccm-sitemap-explore-paging">' . $req->pageList->displayPagingV2(REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_data', true, array('node' => $nodeID)) . '</li>';
 				}
 			} else {
 				$drillDownAction = ($req->keywords != null) ? View::url('/dashboard/sitemap/search?cvName=' . $req->keywords . '&selectedSearchField[]=parent&numResults=' . SITEMAP_PAGES_LIMIT . '&' . PAGING_STRING . '=2&cParentAll=1&ccm_order_by=cDisplayOrder&cParentIDSearchField=' . $nodeID) : View::url('/dashboard/sitemap/explore', $nodeID);

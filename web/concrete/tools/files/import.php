@@ -16,8 +16,9 @@ $ocID = $_REQUEST['ocID'];
 $types = $ch->serializeUploadFileExtensions($types);
 $valt = Loader::helper('validation/token');
 ?>
-<ul class="ccm-dialog-tabs" id="ccm-file-import-tabs">
-<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-file-upload-multiple"><?=t('Upload Multiple')?></a></li>
+<div class="ccm-ui">
+<ul class="tabs" id="ccm-file-import-tabs">
+<li class="active"><a href="javascript:void(0)" id="ccm-file-upload-multiple"><?=t('Upload Multiple')?></a></li>
 <li><a href="javascript:void(0)" id="ccm-file-add-incoming"><?=t('Add Incoming')?></a></li>
 <li><a href="javascript:void(0)" id="ccm-file-add-remote"><?=t('Add Remote Files')?></a></li>
 </ul>
@@ -30,16 +31,16 @@ $valt = Loader::helper('validation/token');
 <script type="text/javascript">
 var ccm_fiActiveTab = "ccm-file-upload-multiple";
 $("#ccm-file-import-tabs a").click(function() {
-	$("li.ccm-nav-active").removeClass('ccm-nav-active');
+	$("li.active").removeClass('active');
 	$("#" + ccm_fiActiveTab + "-tab").hide();
 	ccm_fiActiveTab = $(this).attr('id');
-	$(this).parent().addClass("ccm-nav-active");
+	$(this).parent().addClass("active");
 	$("#" + ccm_fiActiveTab + "-tab").show();
 });
 </script>
 
 <div id="ccm-file-upload-multiple-tab">
-<h1><?php echo t('Upload Multiple Files')?></h1>
+<h3><?php echo t('Upload Multiple Files')?></h3>
 
 <?
 $umf = ini_get('upload_max_filesize');
@@ -182,7 +183,7 @@ $(function() {
 		<div>
 			<?
 			
-			print $h->button_js(t('Start Uploads'), 'swfu.startUpload()');
+			print $h->button_js(t('Start Uploads'), 'swfu.startUpload()', 'right', 'primary');
 			print $h->button_js(t('Cancel All Uploads'), 'swfu.cancelQueue()', 'left', null,array('id'=>'ccm-file-upload-multiple-btnCancel', 'disabled' => 1));
 			
 			?>
@@ -208,7 +209,7 @@ $(function() {
 	$incoming_contents = $ch->getIncomingDirectoryContents();
 ?>
 <div id="ccm-file-add-incoming-tab" style="display: none">
-<h1><?=t('Add from Incoming Directory')?></h1>
+<h3><?=t('Add from Incoming Directory')?></h3>
 <?php if(!empty($incoming_contents)) { ?>
 <form id="ccm-file-manager-multiple-incoming" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
 	<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
@@ -244,7 +245,7 @@ $(function() {
 				<?=t('Remove files from incoming/ directory.')?></td>
 				<td>
 				<?
-					print $form->submit('submit', t('Add Files'));
+					print $form->submit('submit', t('Add Files'), array('class' => 'primary'));
 				?>
 				</td>
 			</tr>
@@ -261,21 +262,22 @@ $(function() {
 </div>
 
 <div id="ccm-file-add-remote-tab" style="display: none">
-<h1><?=t('Add From Remote URL')?></h1>
+<h3><?=t('Add From Remote URL')?></h3>
 <form method="POST" id="ccm-file-manager-multiple-remote" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/remote">
 	<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
     <input type="hidden" name="ocID" value="<?=$ocID?>" />
-	<h3><?=t('Enter URL to valid file(s)')?></h3>
+	<h4><?=t('Enter URL to valid file(s)')?></h4>
 	<?=$valt->output('import_remote');?>
 
-	<?=$form->text('url_upload_1', array('style' => 'width:90%'))?><br/>
-	<?=$form->text('url_upload_2', array('style' => 'width:90%'))?><br/>
-	<?=$form->text('url_upload_3', array('style' => 'width:90%'))?><br/>
-	<?=$form->text('url_upload_4', array('style' => 'width:90%'))?><br/>
+	<?=$form->text('url_upload_1', array('style' => 'width:90%'))?><br/><br/>
+	<?=$form->text('url_upload_2', array('style' => 'width:90%'))?><br/><br/>
+	<?=$form->text('url_upload_3', array('style' => 'width:90%'))?><br/><br/>
+	<?=$form->text('url_upload_4', array('style' => 'width:90%'))?><br/><br/>
 	<?=$form->text('url_upload_5', array('style' => 'width:90%'))?><br/>
 	<br/>
 	<?
-		print $form->submit('submit', t('Add Files'));
+		print $form->submit('submit', t('Add Files'), array('class' => 'primary'));
 	?>
 </form>
+</div>
 </div>

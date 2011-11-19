@@ -19,10 +19,12 @@ $cp = new Permissions($c);
 if(!$cp->canWrite()) throw new Exception(t('Access Denied'));
 
 $v = View::getInstance(); 
-$th = PageTheme::getByID($themeID);
-if(!file_exists($th->getThemeDirectory()))
-	throw new Exception(t('Theme not found in %s', $th->getThemeDirectory()));
-$v->setTheme($th);
+if ($themeID > 0) { 
+	$th = PageTheme::getByID($themeID);
+	if(!file_exists($th->getThemeDirectory()))
+		throw new Exception(t('Theme not found in %s', $th->getThemeDirectory()));
+	$v->setTheme($th);
+}
 $v->disableEditing();
 $v->disableLinks();
 $v->enablePreview();

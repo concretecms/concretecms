@@ -12,6 +12,7 @@
 
 </head>
 <body>
+
 <div id="page">
 	<div id="headerSpacer"></div>
 	<div id="header">
@@ -22,18 +23,15 @@
 		
 		<div id="headerNav">
 			<?
-			$a = new Area('Header Nav');
-			$a->display($c);
+			$a = new GlobalArea('Header Nav');
+			$a->display();
 			?>
 		</div>
 		
-		<h1 id="logo"><!--
-			--><a href="<?=DIR_REL?>/"><?
-				$block = Block::getByName('My_Site_Name');  
-				if( $block && $block->bID ) $block->display();   
-				else echo SITE;
-			?></a><!--
-		--></h1>
+		<div style="float: left"><?
+		$a = new GlobalArea('Site Heading');
+		$a->display();
+		?></div>
 
 		<?
 		// we use the "is edit mode" check because, in edit mode, the bottom of the area overlaps the item below it, because

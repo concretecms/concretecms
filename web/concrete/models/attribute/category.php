@@ -31,6 +31,17 @@ class AttributeKeyCategory extends Object {
 		$r = $db->GetOne("select count(akID) from AttributeKeys where akHandle = ? and akCategoryID = ?", array($akHandle, $this->akCategoryID));
 		return $r > 0;
 	}
+
+	public static function exportList($xml) {
+		$attribs = self::getList();		
+		$axml = $xml->addChild('attributecategories');
+		foreach($attribs as $akc) {
+			$acat = $axml->addChild('category');
+			$acat->addAttribute('handle', $akc->getAttributeKeyCategoryHandle());
+			$acat->addAttribute('allow-sets', $akc->allowAttributeSets());
+			$acat->addAttribute('package', $akc->getPackageHandle());
+		}		
+	}
 	
 	public function getAttributeKeyByHandle($akHandle) {
 		if ($this->pkgID > 0) {
@@ -93,7 +104,7 @@ class AttributeKeyCategory extends Object {
 	
 	public function getAttributeSets() {
 		$db = Loader::db();
-		$r = $db->Execute('select asID from AttributeSets where akCategoryID = ? order by asID asc', $this->akCategoryID);
+		$r = $db->Execute('select asID from AttributeSets where akCategoryID = ? order by asDisplayOrder asc, asID asc', $this->akCategoryID);
 		$sets = array();
 		while ($row = $r->FetchRow()) {
 			$sets[] = AttributeSet::getByID($row['asID']);
@@ -123,10 +134,11 @@ class AttributeKeyCategory extends Object {
 		$db = Loader::db();
 		$this->clearAttributeKeyCategoryTypes();
 		$this->clearAttributeKeyCategoryColumnHeaders();
+		$this->rescanSetDisplayOrder();
 		$db->Execute('delete from AttributeKeyCategories where akCategoryID = ?', $this->akCategoryID);		
 	}
 	
-	public function getList() {
+	public static function getList() {
 		$db = Loader::db();
 		$cats = array();
 		$r = $db->Execute('select akCategoryID from AttributeKeyCategories order by akCategoryID asc');
@@ -157,18 +169,44 @@ class AttributeKeyCategory extends Object {
 		return AttributeKeyCategory::getByID($id);
 	}
 
-	public function addSet($asHandle, $asName, $pkg = false) {
+	public function addSet($asHandle, $asName, $pkg = false, $asIsLocked = 1) {
 		if ($this->akCategoryAllowSets > AttributeKeyCategory::ASET_ALLOW_NONE) {
 			$db = Loader::db();
 			$pkgID = 0;
 			if (is_object($pkg)) {
 				$pkgID = $pkg->getPackageID();
 			}
-			$db->Execute('insert into AttributeSets (asHandle, asName, akCategoryID, pkgID) values (?, ?, ?, ?)', array($asHandle, $asName, $this->akCategoryID, $pkgID));
+			$sets = $db->GetOne('select count(asID) from AttributeSets where akCategoryID = ?', array($this->akCategoryID));
+			$asDisplayOrder = 0;
+			if ($sets > 0) {
+				$asDisplayOrder = $db->GetOne('select max(asDisplayOrder) from AttributeSets where akCategoryID = ?', array($this->akCategoryID));
+				$asDisplayOrder++;
+			}
+			
+			$db->Execute('insert into AttributeSets (asHandle, asName, akCategoryID, asIsLocked, asDisplayOrder, pkgID) values (?, ?, ?, ?, ?,?)', array($asHandle, $asName, $this->akCategoryID, $asIsLocked, $asDisplayOrder, $pkgID));
 			$id = $db->Insert_ID();
 			
 			$as = AttributeSet::getByID($id);
 			return $as;
 		}
 	}
+	
+	protected function rescanSetDisplayOrder() {
+		$db = Loader::db();
+		$do = 1;
+		$r = $db->Execute('select asID from AttributeSets where akCategoryID = ? order by asDisplayOrder asc, asID asc', $this->getAttributeKeyCategoryID());
+		while ($row = $r->FetchRow()) {
+			$db->Execute('update AttributeSetKeys set displayOrder = ? where asID = ?', array($do, $row['asID']));
+			$do++;
+		}
+	}
+
+	public function updateAttributeSetDisplayOrder($uats) {
+		$db = Loader::db();
+		for ($i = 0; $i < count($uats); $i++) {
+			$v = array($this->getAttributeKeyCategoryID(), $uats[$i]);
+			$db->query("update AttributeSets set asDisplayOrder = {$i} where akCategoryID = ? and asID = ?", $v);
+		}
+	}
+	
 }

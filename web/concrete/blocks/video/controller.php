@@ -14,9 +14,11 @@
 		protected $btInterfaceWidth = 300;
 		protected $btInterfaceHeight = 200;
 		protected $btTable = 'btVideo';
+		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = false;
+		protected $btExportFileColumns = array('fID');
 		
 		public $width  = '';
 		public $height = '';

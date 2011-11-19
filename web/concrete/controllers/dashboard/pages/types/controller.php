@@ -33,6 +33,11 @@ class DashboardPagesTypesController extends Controller {
 		}
 	}
 	
+	public function page_type_added() {
+		$this->set('message', t('Page type added successfully.'));
+		$this->view();
+	}
+	
 	public function clear_composer() {
 		$this->set('message', t("This page type is no longer included in composer."));
 	}

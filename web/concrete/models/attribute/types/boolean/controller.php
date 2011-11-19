@@ -19,6 +19,20 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 		return $value;	
 	}
 	
+	public function exportKey($akey) {
+		$this->load();
+		$type = $akey->addChild('type');
+		$type->addAttribute('checked', $this->akCheckedByDefault);
+		return $akey;
+	}
+	
+	public function importKey($akey) {
+		if (isset($akey->type)) {
+			$data['akCheckedByDefault'] = $akey->type['checked'];
+			$this->saveKey($data);
+		}
+	}
+	
 	public function getDisplayValue() {
 		$v = $this->getValue();
 		return ($v == 1) ? t('Yes') : t('No');
@@ -49,7 +63,13 @@ class BooleanAttributeTypeController extends AttributeTypeController  {
 		}
 		
 		$cb = Loader::helper('form')->checkbox($this->field('value'), 1, $checked);
-		print $cb . ' ' . t('Yes');
+		print $cb . ' <span>' . t('Yes') . '</span>';
+	}
+	
+	public function composer() {
+		print '<ul class="inputs-list"><li><label>';
+		$this->form();
+		print '</label></li></ul>';
 	}
 	
 	public function search() {

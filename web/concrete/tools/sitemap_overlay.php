@@ -11,6 +11,9 @@ if (isset($select_mode)) {
 	$args['select_mode'] = $select_mode;
 }
 $args['selectedPageID'] = $_REQUEST['cID'];
+if (is_array($args['selectedPageID'])) {
+	$args['selectedPageID'] = implode(',',$args['selectedPageID']);
+}
 $args['sitemapCombinedMode'] = $sitemapCombinedMode;
 if (!isset($args['select_mode'])) {
 	$args['select_mode'] = 'select_page';

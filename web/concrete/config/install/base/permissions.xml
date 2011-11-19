@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <taskpermissions>
+        <taskpermission handle="access_task_permissions" name="Change Task Permissions" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="access_sitemap" name="Access Sitemap and Page Search" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="access_user_search" name="Access User Search" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="access_group_search" name="Access Group Search" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="access_page_defaults" name="Change Content on Page Type Default Pages" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="backup" name="Perform Full Database Backups" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="sudo" name="Sign in as User" description="" package=""/>
+        <taskpermission handle="uninstall_packages" name="Uninstall Packages" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="install_packages" name="Install Packages and Connect to the Marketplace" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="delete_user" name="Delete Users" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="view_newsflow" name="View Newsflow Updates in an Overlay" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+    </taskpermissions>
+</concrete5-cif>

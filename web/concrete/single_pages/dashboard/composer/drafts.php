@@ -1,11 +1,12 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<h1><span><?=t('Drafts')?></h1>
-<div class="ccm-dashboard-inner">
+
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Composer Drafts'))?>
+
 <? 
 $today = Loader::helper('date')->getLocalDateTime('now', 'Y-m-d');
 if (count($drafts) > 0) { ?>
 
-<table class="ccm-results-list">
+<table class="zebra-striped">
 <tr>
 	<th width="60%"><?=t('Page Name')?></th>
 	<th width="20%"><?=t('Page Type')?></th>
@@ -33,4 +34,5 @@ if (count($drafts) > 0) { ?>
 	<p><?=t('You have not created any drafts. <a href="%s">Visit Composer &gt;</a>', $this->url('/dashboard/composer/write'))?></p>
 
 <? } ?>
-</div>
+
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>

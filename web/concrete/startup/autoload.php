@@ -2,6 +2,9 @@
 
 function __autoload($class) {
 	$txt = Loader::helper('text');
+	if ($class == 'DashboardBaseController') { 
+		Loader::controller('/dashboard/base');
+	}
 	if (strpos($class, 'BlockController') > 0) {
 		$class = substr($class, 0, strpos($class, 'BlockController'));
 		$handle = $txt->uncamelcase($class);

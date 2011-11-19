@@ -12,8 +12,10 @@ div.survey-block-option img {
 <script type="text/javascript">
 	var currentOption = <?=count($controller->options)?>;
 </script>
+<div class="ccm-ui">
+
 <strong><?=t('Question')?></strong><br/>
-<input type="text" style="width: 350px" name="question" value="<?=$controller->getQuestion()?>" />
+<input type="text" style="width: 320px" name="question" value="<?=$controller->getQuestion()?>" />
 <br><br>
 
 <strong><?=t('Open to all site visitors?')?></strong><br/>
@@ -39,5 +41,6 @@ if (count($options) == 0) {
 <br/><br/>
 <strong><?=t('Add option')?></strong><br/>
 
-<input type="text" name="optionValue" id="ccm-survey-optionValue" style="width: 350px" />
-<input type="button" onclick="addOption()" value="add" />
+<input type="text" name="optionValue" id="ccm-survey-optionValue" style="width: 320px" />
+<input type="button" onclick="addOption()" value="add" class="btn small" />
+</div>

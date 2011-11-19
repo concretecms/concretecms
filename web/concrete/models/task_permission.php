@@ -29,6 +29,18 @@ class TaskPermissionList extends Object {
 	
 	public function getTaskPermissions() {return $this->tasks;}
 	
+	public static function export($xml) {
+		$taskpermissions = $xml->addChild("taskpermissions");
+		$db = Loader::db();
+		$r = $db->Execute('select tpID from TaskPermissions order by tpID asc');
+		while ($row = $r->FetchRow()) {
+			$tp = TaskPermission::getByID($row['tpID']);
+			if (is_object($tp)) {
+				$tp->export($taskpermissions);
+			}
+		}
+	}
+	
 }
 
 class TaskPermission extends Object {
@@ -71,6 +83,29 @@ class TaskPermission extends Object {
 		}
 	}
 
+	public function export($xml) {
+		$tpc = $xml->addChild("taskpermission");	
+		$tpc->addAttribute('handle', $this->getTaskPermissionHandle());
+		$tpc->addAttribute('name', $this->getTaskPermissionName());
+		$tpc->addAttribute('description', $this->getTaskPermissionDescription());
+		$tpc->addAttribute("package", $this->getPackageHandle());
+		$db = Loader::db();
+		$rows = $db->GetAll('select * from TaskPermissionUserGroups where tpID = ?', array($this->getTaskPermissionID()));
+		foreach($rows as $r) {
+			$access = $tpc->addChild('access');
+			if ($r['gID'] > 0) {
+				$g = Group::getByID($r['gID']);
+				$node = $access->addChild('group');
+				$node->addAttribute('name', $g->getGroupName());
+			}
+			if ($r['uID'] > 0) {
+				$g = UserInfo::getByID($r['uID']);
+				$node = $access->addChild('user');
+				$node->addAttribute('name', $ui->getUserName());
+			}
+		}
+	}		
+	
 	public function addAccess($obj) {
 		$uID = 0;
 		$gID = 0;

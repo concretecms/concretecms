@@ -24,7 +24,15 @@ if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $scrapbookNa
 	
 	if ($_REQUEST['btask'] == 'add') {
 		$a = Area::get($c, $_REQUEST['arHandle']);
-		$b = Block::getByID($_REQUEST['bID'], $c, $a);
+		if ($a->isGlobalArea()) {
+			$ax = STACKS_AREA_NAME;
+			$cx = Stack::getByName($_REQUEST['arHandle']);
+		}
+		$b = Block::getByID($_REQUEST['bID'], $cx, $ax);
+		if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+			$bi = $b->getInstance();
+			$b = Block::getByID($bi->getOriginalBlockID());
+		}
 		$ap = new Permissions($a);
 		if (!$ap->canRead()) {
 			exit;
@@ -34,53 +42,21 @@ if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $scrapbookNa
 		$obj = &$c;
 	}	
 
-	if( $scrapbookName != $scrapbookHelper->getPersonalScrapbookName()  && intval($b->bID) > 0) {
-	
-		$globalScrapbookPage = $scrapbookHelper->getGlobalScrapbookPage();
-		$globalScrapbookArea = Area::get( $globalScrapbookPage, $scrapbookName );
-		if($globalScrapbookArea){ 
-			$b->setBlockAreaObject($globalScrapbookArea);   
-			if($_REQUEST['blockAddMode']=='alias'){
-				$originalBlockDisplayOrder = $b->cbDisplayOrder;
-				//make a global version of the original block 
-				$duplicatedBlock = $b->duplicate($globalScrapbookPage); 
-				if($duplicatedBlock){
-					//delete original block
-					$b->delete(1);
-					//add the new global back to the page as a global
-					$duplicatedBlock->setBlockAreaObject( $a );  
-					$duplicatedBlock->cbDisplayOrder= $originalBlockDisplayOrder ; 
-					$duplicatedBlock->alias( $c );				
-					$duplicatedBlock->updateBlockName( $scrapbookName.' '.intval($duplicatedBlock->bID) , 1 );
-					$added = true;
-				}
-			}else{
-				$duplicatedBlock = $b->duplicate($globalScrapbookPage); 
-				if($duplicatedBlock){
-					$duplicatedBlock->updateBlockName( $scrapbookName.' '.intval($duplicatedBlock->bID) , 1 );
-					$added = true;
-				}
-			}
-			
-		}
-	
-	}else{	
-	
-		if ($_REQUEST['pID']) {
-			$p = Pile::get($_REQUEST['pID']);
-			if (is_object($p)) {
-				if (!$p->isMyPile()) {
-					unset($p);
-				}
+
+	if ($_REQUEST['pID']) {
+		$p = Pile::get($_REQUEST['pID']);
+		if (is_object($p)) {
+			if (!$p->isMyPile()) {
+				unset($p);
 			}
 		}
-		if (!is_object($p)) {
-			$p = Pile::getDefault();
-		}
-		$p->add($obj);
-		
-		$added = true;
 	}
+	if (!is_object($p)) {
+		$p = Pile::getDefault();
+	}
+	$p->add($obj);
+	
+	$added = true;
 	
 	
 	

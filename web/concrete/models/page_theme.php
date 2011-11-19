@@ -591,6 +591,24 @@ class PageTheme extends Object {
 		return $res;
 	}
 	
+	public static function exportList($xml) {
+		$nxml = $xml->addChild('themes');
+		$list = PageTheme::getList();
+		$pst = PageTheme::getSiteTheme();
+		
+		foreach($list as $pt) {
+			$activated = 0;
+			if ($pst->getThemeID() == $pt->getThemeID()) {
+				$activated = 1;
+			}
+			$type = $nxml->addChild('theme');
+			$type->addAttribute('handle', $pt->getThemeHandle());
+			$type->addAttribute('package', $pt->getPackageHandle());
+			$type->addAttribute('activated', $activated);
+		}
+
+	}
+	
 	private function install($dir, $ptHandle, $pkgID) {
 		if (is_dir($dir)) {
 			$db = Loader::db();

@@ -101,6 +101,7 @@ class AttributeKey extends Object {
 		$r = $db->Execute($q, array($akCategoryHandle));
 		$list = array();
 		$txt = Loader::helper('text');
+		Loader::model('attribute/categories/' . $akCategoryHandle);
 		$className = $txt->camelcase($akCategoryHandle);
 		while ($row = $r->FetchRow()) {
 			$c1 = $className . 'AttributeKey';
@@ -112,7 +113,37 @@ class AttributeKey extends Object {
 		$r->Close();
 		return $list;
 	}
+	
+	public function export($axml, $exporttype = 'full') {
+		$type = $this->getAttributeType()->getAttributeTypeHandle();
+		$category = AttributeKeyCategory::getByID($this->akCategoryID)->getAttributeKeyCategoryHandle();
+		$akey = $axml->addChild('attributekey');
+		$akey->addAttribute('handle',$this->getAttributeKeyHandle());
+		
+		if ($exporttype == 'full') { 
+			$akey->addAttribute('name', $this->getAttributeKeyName());
+			$akey->addAttribute('package', $this->getPackageHandle());
+			$akey->addAttribute('searchable', $this->isAttributeKeySearchable());
+			$akey->addAttribute('indexed', $this->isAttributeKeySearchable());
+			$akey->addAttribute('type', $type);
+			$akey->addAttribute('category', $category);
+			$this->getController()->exportKey($akey);
+		}
+		
+		return $akey;
+	}
 
+	public static function exportList($xml) {
+		$categories = AttributeKeyCategory::getList();
+		$axml = $xml->addChild('attributekeys');
+		foreach($categories as $cat) {
+			$attributes = AttributeKey::getList($cat->getAttributeKeyCategoryHandle());
+			foreach($attributes as $at) {
+				$at->export($axml);
+			}
+		}
+	}
+	
 	/** 
 	 * Note, this queries both the pkgID found on the AttributeKeys table AND any attribute keys of a special type
 	 * installed by that package, and any in categories by that package.
@@ -146,6 +177,17 @@ class AttributeKey extends Object {
 		$r->Close();
 		return $list;
 	}	
+	
+	public static function import(SimpleXMLElement $ak) {
+		$type = AttributeType::getByHandle($ak['type']);
+		$akCategoryHandle = $ak['category'];
+		$pkg = false;
+		if ($ak['package']) {
+			$pkg = Package::getByHandle($ak['package']);
+		}
+		$akn = self::add($akCategoryHandle, $type, array('akHandle' => $ak['handle'], 'akName' => $ak['name'], 'akIsSearchableIndexed' => $ak['indexed'], 'akIsSearchable' => $ak['searchable']), $pkg);
+		$akn->getController()->importKey($ak);
+	}
 	
 	/** 
 	 * Adds an attribute key. 
@@ -331,8 +373,7 @@ class AttributeKey extends Object {
 		
 		//this shouldn't be necessary, but i had a saying telling me that the static variable 'db' was protected, 
 		//even though it was declared as public 
-		$db_db=$db->getDatabaseObject();
-		$q = $db_db->GetInsertSQL($rs, $columnHeaders);
+		$q = $db->GetInsertSQL($rs, $columnHeaders);
 		$r = $db->Execute($q);
 		$r->Close();
 		$rs->Close();

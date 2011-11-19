@@ -1,16 +1,23 @@
 <? 
 	defined('C5_EXECUTE') or die("Access Denied.");
-	$cID = $b->getBlockCollectionID();
-	$c = $b->getBlockCollectionObject();
-	$btw = BlockType::getByID($b->getBlockTypeID());
-	$bID = $b->getBlockID();
-	if ($rarHandle) { 
-		$arHandle = $rarHandle;
+	if ($a->isGlobalArea()) {
+		$c = Page::getCurrentPage();
+		$cID = $c->getCollectionID();
 	} else {
-		$arHandle = $a->getAreaHandle();
+		$cID = $b->getBlockCollectionID();
+		$c = $b->getBlockCollectionObject();
+	}
+	$btw = BlockType::getByID($b->getBlockTypeID());
+	$btOriginal = $btw;
+	$bID = $b->getBlockID();
+	$heightPlus = 20;
+	if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+		$_bi = $b->getInstance();
+		$_bo = Block::getByID($_bi->getOriginalBlockID());
+		$btOriginal = BlockType::getByHandle($_bo->getBlockTypeHandle());
+		$heightPlus = 80;
 	}
 	$isAlias = $b->isAlias();
-	$isGlobal = $b->isGlobal();
 	$u = new User();
 	$numChildren = (!$isAlias) ? $b->getNumChildren() : 0;
 	if ($isAlias) {
@@ -33,16 +40,31 @@
 
 ccm_menuObj<?=$id?> = new Object();
 ccm_menuObj<?=$id?>.type = "BLOCK";
-ccm_menuObj<?=$id?>.arHandle = '<?=$arHandle?>';
+ccm_menuObj<?=$id?>.arHandle = '<?=$a->getAreaHandle()?>';
 ccm_menuObj<?=$id?>.aID = <?=$a->getAreaID()?>;
 ccm_menuObj<?=$id?>.bID = <?=$bID?>;
-ccm_menuObj<?=$id?>.isGlobal = <?=intval($isGlobal)?>;
-<? if ($b->isEditable() && $p->canWrite()) { ?>
+ccm_menuObj<?=$id?>.cID = <?=$cID?>;
+<? if ($b->isEditable() && $p->canWrite() && $b->getBlockTypeHandle() != BLOCK_HANDLE_STACK_PROXY) { ?>
 ccm_menuObj<?=$id?>.canWrite =true;
-ccm_menuObj<?=$id?>.btName = "<?=$btw->getBlockTypeName()?>";
-ccm_menuObj<?=$id?>.width = <?=$btw->getBlockTypeInterfaceWidth()?>;
-ccm_menuObj<?=$id?>.height = <?=(!$isGlobal)?$btw->getBlockTypeInterfaceHeight():$btw->getBlockTypeInterfaceHeight()+20 ?>;
-<? }
+ccm_menuObj<?=$id?>.btName = "<?=$btOriginal->getBlockTypeName()?>";
+ccm_menuObj<?=$id?>.width = <?=$btOriginal->getBlockTypeInterfaceWidth()?>;
+ccm_menuObj<?=$id?>.height = <?=$btOriginal->getBlockTypeInterfaceHeight()+$heightPlus ?>;
+<? } else if ($b->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) { 
+	$bi = $b->getInstance();
+	$stack = Stack::getByID($bi->stID);
+	$sp = new Permissions($stack);
+	if ($sp->canWrite()) {
+	?>
+	ccm_menuObj<?=$id?>.canWriteStack =true;
+	ccm_menuObj<?=$id?>.stID = <?=$bi->stID?>;
+	<? } 
+} 
+
+if ($b->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) { ?>
+	ccm_menuObj<?=$id?>.canCopyToScrapbook = false;	
+<? } else { ?>
+	ccm_menuObj<?=$id?>.canCopyToScrapbook = true;
+<? } 
 if ($p->canAdminBlock() && PERMISSIONS_MODEL != 'simple') { ?>
 ccm_menuObj<?=$id?>.canModifyGroups = true;
 <? }
@@ -68,7 +90,7 @@ if ($ct->isCollectionTypeIncludedInComposer()) { ?>
 
 }
 
-if ($p->canWrite()) {  ?>
+if ($p->canWrite() && (!$a->isGlobalArea())) {  ?>
 	ccm_menuObj<?=$id?>.canArrange = true;
 <? 
 }

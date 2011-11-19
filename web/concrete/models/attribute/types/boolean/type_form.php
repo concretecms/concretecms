@@ -1,10 +1,13 @@
-<table class="entry-form" cellspacing="1" cellpadding="0">
-<tr>
-	<td class="subheader"><?=t('Default Value')?></td>
-</tr>
-<tr>
-	<td><?=$form->checkbox('akCheckedByDefault', 1, $akCheckedByDefault)?>
-	<?=t('The checkbox will be checked by default.')?>
-	</td>
-</tr>
-</table>
+<fieldset>
+<legend><?=t('Checkbox Options')?></legend>
+
+<div class="clearfix">
+<label><?=t("Default Value")?></label>
+<div class="input">
+<ul class="inputs-list">
+<li><label><?=$form->checkbox('akCheckedByDefault', 1, $akCheckedByDefault)?> <span><?=t('The checkbox will be checked by default.')?></span></label></li>
+</ul>
+</div>
+</div>
+
+</fieldset>

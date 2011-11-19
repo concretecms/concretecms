@@ -45,7 +45,7 @@ class Config extends Object {
 	private static function getStore()
 	{
 		if (!self::$store) {
-			self::$store = new ConfigStore(Loader::db());
+			self::$store = new ConfigStore();
 		}
 		return self::$store;
 	}
@@ -112,6 +112,21 @@ class Config extends Object {
 		}
 		self::getStore()->set($cfKey, $cfValue, $pkgID);
 	}
+
+	public static function exportList($x) {
+		$nconfig = $x->addChild('config');
+		$db = Loader::db();
+		$r = $db->Execute("select cfKey, cfValue, pkgID from Config where uID = 0 and cfKey not in ('SITE','SITE_APP_VERSION','SHOW_INTRODUCTION')");
+		while ($row = $r->FetchRow()) {
+			$option = $nconfig->addChild($row['cfKey'], $row['cfValue']);
+			if ($row['pkgID'] > 0) {
+				$pkg = Package::getByID($row['pkgID']);
+				if (is_object($pkg)) {
+					$option->addAttribute('package', $pkg->getPackageHandle());
+				}
+			}
+		}
+	}
 	
 }
 
@@ -133,8 +148,7 @@ class ConfigStore {
 	 */
 	private $rows;
 	
-	public function __construct(Database $db) {
-		$this->db = $db;
+	public function __construct() {
 		$this->load();
 	}
 	
@@ -148,6 +162,7 @@ class ConfigStore {
 			$this->rows = $val;
 		} else {
 			$this->rows = array();
+			$this->db = Loader::db();
 			$r = $this->db->Execute('select * from Config where uID = 0 order by cfKey asc');
 			while ($row = $r->FetchRow()) {
 				if (!$row['pkgID']) {
@@ -213,7 +228,8 @@ class ConfigStore {
 			'uID' => 0,
 			'pkgID' => $pkgID
 		);
-		$this->db->query(
+		$db = Loader::db();
+		$db->query(
 			"replace into Config (cfKey, timestamp, cfValue, pkgID) values (?, ?, ?, ?)",
 			array($cfKey, $timestamp, $cfValue, $pkgID)
 		);
@@ -229,9 +245,10 @@ class ConfigStore {
 	}
 	
 	public function delete($cfKey, $pkgID = null) {
+		$db = Loader::db();
 		if ($pkgID > 0) {
 			unset($this->rows["{$cfKey}.{$pkgID}"]);
-			$this->db->query(
+			$db->query(
 				"delete from Config where cfKey = ? and pkgID = ?",
 				array($cfKey, $pkgID)
 			);
@@ -241,7 +258,7 @@ class ConfigStore {
 					unset($this->rows[$key]);
 				}
 			}
-			$this->db->query(
+			$db->query(
 				"delete from Config where cfKey = ?",
 				array($cfKey)
 			);
@@ -256,4 +273,5 @@ class ConfigStore {
 			Cache::disableCache();
 		}
 	}
+	
 }
