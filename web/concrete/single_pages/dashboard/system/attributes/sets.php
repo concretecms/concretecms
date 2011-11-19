@@ -111,7 +111,10 @@ $txt = Loader::helper('text');?>
 
 <?php } else if($this->controller->getTask() == 'category' || $this->controller->getTask() == 'add_set'){ ?>
 
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($txt->unHandle($this->controller->category->getAttributeKeyCategoryHandle()).' '.t('Attribute Sets'), false);?>
+	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($txt->unHandle($this->controller->category->getAttributeKeyCategoryHandle()).' '.t('Attribute Sets'), false, false, false);?>
+	<form method="post" action="<?php echo $this->action('add_set')?>">
+
+	<div class="ccm-pane-body">
 
 	<?php if (count($sets) > 0) { ?>
 	
@@ -135,7 +138,6 @@ $txt = Loader::helper('text');?>
 
 	<p><?php echo t('Group attributes into sets for better organization and management.')?></p>
 	
-	<form method="post" action="<?php echo $this->action('add_set')?>">
 	<input type="hidden" name="categoryID" value="<?php echo $categoryID?>" />
 	<?php echo Loader::helper('validation/token')->output('add_set')?>
 	<div class="clearfix">
@@ -152,7 +154,9 @@ $txt = Loader::helper('text');?>
 		</div>
 	</div>
 	
-	<div class="form-stacked actions">
+	</div>
+	
+	<div class="ccm-pane-footer">
 		<?php echo $form->submit('submit', t('Add Set'), array('class' => 'ccm-button-right 	primary'))?>
 		<a class="btn" href="<?php echo $this->url('/dashboard/system/attributes/sets')?>"><?php echo t('Back to Categories')?></a>	
 	</div>
