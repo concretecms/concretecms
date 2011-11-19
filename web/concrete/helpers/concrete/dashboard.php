@@ -257,7 +257,7 @@ class ConcreteDashboardHelper {
 			<li><a href="<?=View::url('/dashboard')?>"><strong><?=t('News')?></strong></a> – <?=t('Learn about your site and concrete5')?></li>
 			<li><a href="<?=View::url('/dashboard/system')?>"><strong><?=t('System &amp; Settings')?></strong></a> – <?=t('Secure and setup your site.')?></li>
 			<li><a href="<?php echo View::url('/dashboard/extend') ?>"><strong><?php echo t("Extend concrete5") ?></strong></a> – 
-			<?php echo sprintf(t('<a href="%s">Install</a>, <a href="%s">update</a> or download more <a href="%s">themes</a> and <a href="%s">add-ons</a>.</li>'),
+			<?php echo sprintf(t('<a href="%s">Install</a>, <a href="%s">update</a> or download more <a href="%s">themes</a> and <a href="%s">add-ons</a>.'),
 				View::url('/dashboard/extend/install'),
 				View::url('/dashboard/extend/update'),
 				View::url('/dashboard/extend/themes'),
