@@ -67,10 +67,12 @@
 			</attributes>
         </page>
 
-        <page name="Appearance" path="/dashboard/system/appearance" filename="/dashboard/system/appearance/view.php" pagetype="" description="Control your site name and bookmark icons." package=""/>
-        <page name="Site Name" path="/dashboard/system/appearance/site_name" filename="/dashboard/system/appearance/site_name.php" pagetype="" description="" package=""/>
-        <page name="Bookmark Icons" path="/dashboard/system/appearance/icons" filename="/dashboard/system/appearance/icons.php" pagetype="" description="Bookmark icon and mobile home screen icon setup." package=""/>
-        <page name="Time Zone" path="/dashboard/system/appearance/timezone" filename="/dashboard/system/appearance/timezone.php" pagetype="" description="" package=""/>
+        <page name="Basics" path="/dashboard/system/basics" filename="/dashboard/system/basics/view.php" pagetype="" description="Basic information about your website." package=""/>
+        <page name="Site Name" path="/dashboard/system/basics/site_name" filename="/dashboard/system/basics/site_name.php" pagetype="" description="" package=""/>
+        <page name="Bookmark Icons" path="/dashboard/system/basics/icons" filename="/dashboard/system/basics/icons.php" pagetype="" description="Bookmark icon and mobile home screen icon setup." package=""/>
+        <page name="Rich Text Editor" path="/dashboard/system/basics/editor" filename="/dashboard/system/basics/editor.php" pagetype="" description="" package=""/>
+        <page name="Languages" path="/dashboard/system/basics/multilingual" filename="/dashboard/system/basics/multilingual/view.php" pagetype="" description="" package=""/>
+        <page name="Time Zone" path="/dashboard/system/basics/timezone" filename="/dashboard/system/basics/timezone.php" pagetype="" description="" package=""/>
 
         <page name="SEO &amp; Statistics" path="/dashboard/system/seo" filename="/dashboard/system/seo/view.php" pagetype="" description="Enable pretty URLs, statistics and tracking codes." package=""/>
         <page name="Pretty URLs" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php" pagetype="" description="" package=""/>
@@ -78,18 +80,10 @@
         <page name="Enable Statistics" path="/dashboard/system/seo/statistics" filename="/dashboard/system/seo/statistics.php" pagetype="" description="" package=""/>
         <page name="Search Index" path="/dashboard/system/seo/search_index" filename="/dashboard/system/seo/search_index.php" pagetype="" description="" package=""/>
 
-        <page name="Editing" path="/dashboard/system/editing" filename="/dashboard/system/editing/view.php" pagetype="" description="Control how your site is edited." package=""/>
-        <page name="Rich Text Editor" path="/dashboard/system/editing/editor" filename="/dashboard/system/editing/editor.php" pagetype="" description="" package=""/>
-        <page name="Languages" path="/dashboard/system/editing/multilingual" filename="/dashboard/system/editing/multilingual/view.php" pagetype="" description="" package=""/>
-
-        <page name="Optimization &amp; Maintenance" path="/dashboard/system/maintenance" filename="/dashboard/system/maintenance/view.php" pagetype="" description="Keep your site running well." package=""/>
-        <page name="Cache &amp; Speed Settings" path="/dashboard/system/maintenance/cache" filename="/dashboard/system/maintenance/cache.php" pagetype="" description="" package=""/>
-        <page name="Clear Cache" path="/dashboard/system/maintenance/clear_cache" filename="/dashboard/system/maintenance/clear_cache.php" pagetype="" description="" package=""/>
-        <page name="Automated Jobs" path="/dashboard/system/maintenance/jobs" filename="/dashboard/system/maintenance/jobs.php" pagetype="" description="" package=""/>
-        <page name="Maintenance Mode" path="/dashboard/system/maintenance/mode" filename="/dashboard/system/maintenance/mode.php" pagetype="" description="" package=""/>
-        <page name="Update concrete5" path="/dashboard/system/maintenance/update" filename="/dashboard/system/maintenance/update.php" pagetype="" description="" package=""/>
-        <page name="Backup Database" path="/dashboard/system/maintenance/backup" filename="/dashboard/system/maintenance/backup.php" pagetype="" description="" package=""/>
-        <page name="File Storage Locations" path="/dashboard/system/maintenance/file_storage_locations" filename="/dashboard/system/maintenance/file_storage_locations.php" pagetype="" description="" package=""/>
+        <page name="Optimization" path="/dashboard/system/optimization" filename="/dashboard/system/optimization/view.php" pagetype="" description="Keep your site running well." package=""/>
+        <page name="Cache &amp; Speed Settings" path="/dashboard/system/optimization/cache" filename="/dashboard/system/optimization/cache.php" pagetype="" description="" package=""/>
+        <page name="Clear Cache" path="/dashboard/system/optimization/clear_cache" filename="/dashboard/system/optimization/clear_cache.php" pagetype="" description="" package=""/>
+        <page name="Automated Jobs" path="/dashboard/system/optimization/jobs" filename="/dashboard/system/optimization/jobs.php" pagetype="" description="" package=""/>
 
         <page name="Permissions &amp; Access" path="/dashboard/system/permissions" filename="/dashboard/system/permissions/view.php" pagetype="" description="Control who sees and edits your site." package=""/>
         <page name="Site Access" path="/dashboard/system/permissions/site" filename="/dashboard/system/permissions/site.php" pagetype="" description="" package=""/>
@@ -97,6 +91,7 @@
         <page name="Allowed File Types" path="/dashboard/system/permissions/file_types" filename="/dashboard/system/permissions/file_types.php" pagetype="" description="" package=""/>
         <page name="Task Permissions" path="/dashboard/system/permissions/tasks" filename="/dashboard/system/permissions/tasks.php" pagetype="" description="" package=""/>
         <page name="IP Blacklist" path="/dashboard/system/permissions/ip_blacklist" filename="/dashboard/system/permissions/ip_blacklist.php" pagetype="" description="" package=""/>
+        <page name="Maintenance Mode" path="/dashboard/system/permissions/maintenance_mode" filename="/dashboard/system/permissions/maintenance_mode.php" pagetype="" description="" package=""/>
 
         <page name="Login &amp; Registration" path="/dashboard/system/registration" filename="/dashboard/system/registration/view.php" pagetype="" description="Change login behaviors and setup public profiles." package=""/>
         <page name="Post-Login Settings" path="/dashboard/system/registration/postlogin" filename="/dashboard/system/registration/postlogin.php" pagetype="" description="" package=""/>
@@ -110,12 +105,20 @@
         <page name="Attributes" path="/dashboard/system/attributes" filename="/dashboard/system/attributes/view.php" pagetype="" description="Setup attributes for pages, users, files and more." package=""/>
         <page name="Sets" path="/dashboard/system/attributes/sets" filename="/dashboard/system/attributes/sets.php" pagetype="" description="Group attributes into sets for easier organization" package=""/>
         <page name="Types" path="/dashboard/system/attributes/types" filename="/dashboard/system/attributes/types.php" pagetype="" description="Choose which attribute types are available for different items." package=""/>
+
+        <page name="Environment" path="/dashboard/system/environment" filename="/dashboard/system/environment/view.php" pagetype="" description="Advanced settings for web developers." package=""/>
+        <page name="Environment Information" path="/dashboard/system/environment/info" filename="/dashboard/system/environment/info.php" pagetype="" description="" package=""/>
+        <page name="Debug Settings" path="/dashboard/system/environment/debug" filename="/dashboard/system/environment/debug.php" pagetype="" description="" package=""/>
+        <page name="Logging Settings" path="/dashboard/system/environment/logging" filename="/dashboard/system/environment/logging.php" pagetype="" description="" package=""/>
+        <page name="File Storage Locations" path="/dashboard/system/environment/file_storage_locations" filename="/dashboard/system/environment/file_storage_locations.php" pagetype="" description="" package=""/>
+        
+        <page name="Backup &amp; Restore" path="/dashboard/system/backup_restore" filename="/dashboard/system/backup_restore/view.php" pagetype="" description="Backup or restore your website." package=""/>
+        <page name="Backup Database" path="/dashboard/system/backup_restore/backup" filename="/dashboard/system/backup_restore/backup.php" pagetype="" description="" package=""/>
+        <page name="Update concrete5" path="/dashboard/system/backup_restore/update" filename="/dashboard/system/backup_restore/update.php" pagetype="" description="" package=""/>
+        <page name="Export Database XML" path="/dashboard/system/backup_restore/database" filename="/dashboard/system/backup_restore/database.php" pagetype="" description="" package=""/>
+
 	
-        <page name="Developer" path="/dashboard/system/developer" filename="/dashboard/system/developer/view.php" pagetype="" description="Advanced settings for web developers." package=""/>
-        <page name="Environment Information" path="/dashboard/system/developer/environment" filename="/dashboard/system/developer/environment.php" pagetype="" description="" package=""/>
-        <page name="Export Database XML" path="/dashboard/system/developer/database" filename="/dashboard/system/developer/database.php" pagetype="" description="" package=""/>
-        <page name="Debug Settings" path="/dashboard/system/developer/debug" filename="/dashboard/system/developer/debug.php" pagetype="" description="" package=""/>
-        <page name="Logging Settings" path="/dashboard/system/developer/logging" filename="/dashboard/system/developer/logging.php" pagetype="" description="" package=""/>
+
         <page name="Composer" path="/dashboard/pages/types/composer" filename="/dashboard/pages/types/composer.php" pagetype="" description="" package=""/>
     </singlepages>
     <pagetypes>

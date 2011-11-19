@@ -248,7 +248,7 @@ class ConfigStore {
 		$db = Loader::db();
 		if ($pkgID > 0) {
 			unset($this->rows["{$cfKey}.{$pkgID}"]);
-			$this->db->query(
+			$db->query(
 				"delete from Config where cfKey = ? and pkgID = ?",
 				array($cfKey, $pkgID)
 			);
@@ -258,7 +258,7 @@ class ConfigStore {
 					unset($this->rows[$key]);
 				}
 			}
-			$this->db->query(
+			$db->query(
 				"delete from Config where cfKey = ?",
 				array($cfKey)
 			);
