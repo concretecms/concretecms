@@ -108,7 +108,7 @@
 .ccm-ui form .clearfix{margin-bottom:18px;zoom:1;}.ccm-ui form .clearfix:before,.ccm-ui form .clearfix:after{display:table;content:"";zoom:1;*display:inline;}
 .ccm-ui form .clearfix:after{clear:both;}
 .ccm-ui label,.ccm-ui input,.ccm-ui select,.ccm-ui textarea{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:13px;font-weight:normal;line-height:normal;}
-.ccm-ui label{padding-top:6px;font-size:13px;line-height:18px;float:left;width:130px;text-align:right;color:#404040;}
+.ccm-ui label{padding-top:6px;font-size:13px;line-height:18px;float:left;text-align:right;color:#404040;}
 .ccm-ui form .input{margin-left:150px;}
 .ccm-ui input[type=checkbox],.ccm-ui input[type=radio]{cursor:pointer;}
 .ccm-ui input,.ccm-ui textarea,.ccm-ui select,.ccm-ui .uneditable-input{display:inline-block;width:210px;height:18px;padding:4px;font-size:13px;line-height:18px;color:#808080;border:1px solid #ccc;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
