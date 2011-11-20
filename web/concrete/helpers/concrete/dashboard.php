@@ -235,7 +235,7 @@ class ConcreteDashboardHelper {
 					}
 			
 					?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subpage)?>"><?=$subpage->getCollectionName()?></a></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subpage)?>"><?=t($subpage->getCollectionName())?></a></li>
 					<? 
 				}
 				?>
@@ -285,7 +285,7 @@ class ConcreteDashboardHelper {
 					}
 					
 					?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subpage)?>"><?=$subpage->getCollectionName()?></a></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subpage)?>"><?=t($subpage->getCollectionName())?></a></li>
 					<? 
 				}
 				?>
