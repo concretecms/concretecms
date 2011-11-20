@@ -41,7 +41,7 @@ class RemoveOldPageVersions extends Job {
 		$versionCount = 0;
 		if(count($pages) == 0) {
 			$cfg->save('OLD_VERSION_JOB_PAGE_NUM',0);
-			return "All pages have been processes, starting from beginning on next run.";
+			return t("All pages have been processes, starting from beginning on next run.");
 		}
 		foreach($pages as $page) {
 			if($page instanceof Page) {
@@ -68,7 +68,8 @@ class RemoveOldPageVersions extends Job {
 				}
 			}
 		}
-		return 	$versionCount ." versions deleted from ".$pageCount. " Pages (".$pNum.")";
+		$pages = ($pageCount==1) ? t("Page") : t("Pages");
+		return 	$versionCount . " " . t("versions deleted from") . " " . $pageCount . " " . $pages . " (".$pNum.")";
 	}
 }
 
