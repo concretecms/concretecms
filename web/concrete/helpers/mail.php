@@ -58,24 +58,30 @@ class MailHelper {
 	
 		if (MAIL_SEND_METHOD == "SMTP") {
 			Loader::library('3rdparty/Zend/Mail/Transport/Smtp');
+			$config = array();
+			
 			$username = Config::get('MAIL_SEND_METHOD_SMTP_USERNAME');
 			$password = Config::get('MAIL_SEND_METHOD_SMTP_PASSWORD');
-			$port = Config::get('MAIL_SEND_METHOD_SMTP_PORT');
-			$encr = Config::get('MAIL_SEND_METHOD_SMTP_ENCRYPTION');
 			if ($username != '') {
-				$config = array('auth' => 'login', 'username' => $username, 'password' => $password);
-				if ($port != '') {
-					$config['port'] = $port;
-				}
-				if ($encr != '') {
-					$config['ssl'] = $encr;
-				}
-				$transport = new Zend_Mail_Transport_Smtp(Config::get('MAIL_SEND_METHOD_SMTP_SERVER'), $config);					
-			} else {
-				$transport = new Zend_Mail_Transport_Smtp(Config::get('MAIL_SEND_METHOD_SMTP_SERVER'));					
+				$config['auth'] = 'login';
+				$config['username'] = $username;
+				$config['password'] = $password;
 			}
 			
-			$response['transport']=$transport;
+			$port = Config::get('MAIL_SEND_METHOD_SMTP_PORT');
+			if ($port != '') {
+				$config['port'] = $port;
+			}
+			
+			$encr = Config::get('MAIL_SEND_METHOD_SMTP_ENCRYPTION');
+			if ($encr != '') {
+				$config['ssl'] = $encr;
+			}
+			$transport = new Zend_Mail_Transport_Smtp(
+				Config::get('MAIL_SEND_METHOD_SMTP_SERVER'), $config
+			);					
+			
+			$response['transport'] = $transport;
 		}	
 		
 		return $response;		
