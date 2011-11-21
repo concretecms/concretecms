@@ -1881,7 +1881,7 @@ class Page extends Collection {
 			if ($res3) {
 				$np = Page::getByID($cID, $row['cvID']);
 				// now we mark the page as a system page based on this path:
-				$systemPages=array('/login', '/register', '/!trash', '/!stacks', '/!drafts', '/download_file', '/profile', '/dashboard', '/profile/*', '/dashboard/*','/page_forbidden','/page_not_found','/members'); 
+				$systemPages=array('/login', '/register', '/!trash', '/!stacks', '/!drafts', '/!trash/*', '/!stacks/*', '/!drafts/*', '/download_file', '/profile', '/dashboard', '/profile/*', '/dashboard/*','/page_forbidden','/page_not_found','/members'); 
 				$th = Loader::helper('text');
 				foreach($systemPages as $sp) {
 					if ($th->fnmatch($sp, $newPath)) {
@@ -1907,7 +1907,7 @@ class Page extends Collection {
 
 	public function rescanSystemPages() {
 		$db = Loader::db();
-		$systemPages=array('/login', '/register', '/!trash', '/!stacks', '/!drafts', '/download_file', '/profile', '/dashboard', '/profile/%', '/dashboard/%','/page_forbidden','/page_not_found','/members'); 
+		$systemPages=array('/login', '/register', '/!trash/%', '/!drafts/%', '/!stacks/%', '/!trash', '/!stacks', '/!drafts', '/download_file', '/profile', '/dashboard', '/profile/%', '/dashboard/%','/page_forbidden','/page_not_found','/members'); 
 		foreach($systemPages as $sp) {
 			$r = $db->Execute('select cID from PagePaths where cPath like "' . $sp . '"');
 			while ($row = $r->Fetchrow()) {
