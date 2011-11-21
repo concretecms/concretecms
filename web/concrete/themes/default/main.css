@@ -4,7 +4,6 @@ body {/* customize_background */ background-color: #ffffff; /* customize_backgro
 img {border: 0px}
 a { cursor:pointer}
 
-label { font-weight:bold;}
 fieldset { border:1px solid #ccc;}
 
 /* error text class optionally provided by theme */
