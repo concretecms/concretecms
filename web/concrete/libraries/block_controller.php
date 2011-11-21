@@ -68,12 +68,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			BlockController::$sets[$this->identifier][$key] = $value;		
 		}
 		
-		public function get($key) {
+		public function get($key, $defaultValue = null) {
 			if (isset(BlockController::$sets[$this->identifier][$key])) {
 				return BlockController::$sets[$this->identifier][$key];
 			}
 			
-			return parent::get($key);
+			return parent::get($key, $defaultValue);
 		}
 
 		/** 
@@ -309,7 +309,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return '_bf[' . $this->identifier . '][' . $fieldName . ']';
 		}
 
-		public function post($field = false) {
+		public function post($field = false, $defaultValue = null) {
 			// the only post that matters is the one for this attribute's name space
 			$req = ($this->requestArray == false) ? $_POST : $this->requestArray;
 			if (is_array($req['_bf'])) {
@@ -319,7 +319,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 				return $p;
 			}			
-			return parent::post($field);
+			return parent::post($field,$defaultValue);
 		}
 
 		
