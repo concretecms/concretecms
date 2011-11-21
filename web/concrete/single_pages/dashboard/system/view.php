@@ -1,4 +1,3 @@
-
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('System &amp; Settings'));?>
 <?
 print '<div class="row">';
@@ -17,7 +16,7 @@ for ($i = 0; $i < count($categories); $i++) {
 
 
 	<div class="ccm-dashboard-system-category">
-	<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat)?>"><?=$cat->getCollectionName()?></a></h3>
+	<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat)?>"><?=t($cat->getCollectionName())?></a></h3>
 	</div>
 	
 	<?
@@ -38,7 +37,7 @@ for ($i = 0; $i < count($categories); $i++) {
 	<? foreach($show as $subcat) { ?>
 	
 	<div>
-	<a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat)?>"><?=$subcat->getCollectionName()?></a>
+	<a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat)?>"><?=t($subcat->getCollectionName())?></a>
 	</div>
 	
 	<? } ?>
