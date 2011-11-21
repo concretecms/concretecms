@@ -39,7 +39,7 @@ if ($akk) { ?>
 <meta name="keywords" content="<?=htmlspecialchars($akk, ENT_COMPAT, APP_CHARSET)?>" />
 <?php } 
 if($c->getCollectionAttributeValue('exclude_search_index')) { ?>
-    <meta name="robots" contents="noindex" />
+    <meta name="robots" content="noindex" />
 <?php } ?>
 <meta name="generator" content="concrete5 - <?php echo APP_VERSION ?>" />
 
