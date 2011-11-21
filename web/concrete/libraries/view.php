@@ -767,7 +767,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$_pageBlocksGlobal = $view->getGlobalBlocks();
 					$_pageBlocks = array_merge($_pageBlocks, $_pageBlocksGlobal);
 					if ($view->supportsPageCache($_pageBlocks, $this->controller)) {
-						$view->renderFromCache();
+						$pageContent = $view->getFromPageCache();
+						if ($pageContent != false) {
+							Events::fire('on_before_render', $this);
+							if (defined('APP_CHARSET')) {
+								header("Content-Type: text/html; charset=" . APP_CHARSET);
+							}
+							print($pageContent);
+							Events::fire('on_render_complete', $this);
+							if (ob_get_level() == OB_INITIAL_LEVEL) {
+		
+								require(DIR_BASE_CORE . '/startup/shutdown.php');
+								exit;
+							}
+							return;
+						}
 					}
 					
 					foreach($_pageBlocks as $b1) {
