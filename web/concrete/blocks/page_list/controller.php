@@ -124,7 +124,35 @@
 			$cArray = $this->getPages();
 			$nh = Loader::helper('navigation');
 			$this->set('nh', $nh);
-			$this->set('cArray', $cArray);
+			$this->set('cArray', $cArray); //Legacy (pre-5.4.2)
+			$this->set('pages', $cArray); //More descriptive variable name (introduced in 5.4.2)
+			
+			//RSS...
+			$showRss = false;
+			$rssIconSrc = '';
+			$rssInvisibleLink = '';
+			if ($this->rss) {
+				$showRss = true;
+				$rssIconSrc = Loader::helper('concrete/urls')->getBlockTypeAssetsURL(BlockType::getByID($this->getBlockObject()->getBlockTypeID()), 'rss.png');
+				//DEV NOTE: Ideally we'd set rssUrl here, but we can't because for some reason calling $this->getBlockObject() here doesn't load all info properly, and then the call to $this->getRssUrl() fails when it tries to get the area handle of the block.
+			}
+			$this->set('showRss', $showRss);
+			$this->set('rssIconSrc', $rssIconSrc);
+
+			//Pagination...
+			$showPagination = false;
+			$paginator = null;
+			$pl = $this->get('pl'); //Terrible horrible hacky way to get the $pl object set in $this->getPages() -- we need to do it this way for backwards-compatibility reasons
+			if ($this->paginate && $this->num > 0 && is_object($pl)) {
+				$description = $pl->getSummary();
+				if ($description->pages > 1) {
+					$showPagination = true;
+					$paginator = $pl->getPagination();
+				}
+			}
+			$this->set('showPagination', $showPagination);
+			$this->set('paginator', $paginator);
+
 		}
 		
 		// this doesn't work yet
