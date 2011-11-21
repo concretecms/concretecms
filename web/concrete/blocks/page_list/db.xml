@@ -22,6 +22,11 @@
 			<notnull />
 			<default value="0" />
 		</field>
+		<field name="includeAllDescendents" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="0" />
+		</field>
 		<field name="paginate" type="I1">
 			<unsigned />
 			<notnull />
