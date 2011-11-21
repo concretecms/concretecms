@@ -6607,7 +6607,7 @@ $(function() {
 			}
 		});
 		
-		$("#ccm-nav-dashboard").click(function() {
+		$("#ccm-nav-dashboard").mouseover(function() {
 			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
 			$(this).parent().addClass('ccm-system-nav-selected');
 			$("#ccm-nav-intelligent-search").val('');
@@ -6618,18 +6618,20 @@ $(function() {
 				$(window).unbind('click.ccm-edit');
 			}
 	
+			/*
 			if ($('#ccm-dashboard-overlay').is(':visible')) {
 				$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
 				$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
 				$(window).unbind('click.dashboard-nav');
 			} else {
+				*/
 				$("#ccm-dashboard-overlay").fadeIn(160, 'easeOutExpo');
 				$(window).bind('click.dashboard-nav', function() {
 					$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
 					$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
 					$(window).unbind('click.dashboard-nav');
 				});
-			}
+			//}
 			return false;
 		});
 	
@@ -6691,7 +6693,7 @@ $(function() {
 		$("#ccm-toolbar-nav-move-copy").dialog();
 		$("#ccm-toolbar-nav-delete").dialog();
 	
-		$("#ccm-nav-edit").click(function() {
+		$("#ccm-nav-edit").mouseover(function() {
 			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
 			$(this).parent().addClass('ccm-system-nav-selected');
 			$("#ccm-nav-intelligent-search").val('');
@@ -6701,12 +6703,15 @@ $(function() {
 				$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
 				$(window).unbind('click.dashboard-nav');
 			}
-	
+			
+			/*
 			if ($('#ccm-edit-overlay').is(':visible')) {
 				$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
 				$('#ccm-edit-overlay').fadeOut(90, 'easeOutExpo');
 				$(window).unbind('click.ccm-edit');
 			} else {
+				*/
+				
 				$("#ccm-edit-overlay").click(function(e) {
 					e.stopPropagation();
 				});
@@ -6738,7 +6743,7 @@ $(function() {
 				$(window).bind('click.ccm-edit', function() {
 					ccm_toolbarCloseEditMenu();				
 				});
-			}
+			//}
 			return false;
 		});
 
