@@ -4,8 +4,8 @@ var pageList ={
 		this.blockForm=document.forms['ccm-block-form'];
 		this.cParentIDRadios=this.blockForm.cParentID;
 		for(var i=0;i<this.cParentIDRadios.length;i++){
-			this.cParentIDRadios[i].onclick  = function(){ pageList.locationOtherShown(); }
-			this.cParentIDRadios[i].onchange = function(){ pageList.locationOtherShown(); }			
+			this.cParentIDRadios[i].onclick  = function(){ pageList.locationOtherShown(); pageList.includeAllDescendentsShown(); }
+			this.cParentIDRadios[i].onchange = function(){ pageList.locationOtherShown(); pageList.includeAllDescendentsShown(); }			
 		}
 		
 		this.rss=document.forms['ccm-block-form'].rss;
@@ -54,6 +54,16 @@ var pageList ={
 			}				
 		}
 		$('div.ccm-page-list-page-other').css('display','none');
+	},
+	includeAllDescendentsShown:function() {
+		for (var i=0, len=this.cParentIDRadios.length; i<len; i++) {
+			var cParentID = this.cParentIDRadios[i].value;
+			if (this.cParentIDRadios[i].checked && (cParentID == 'OTHER' || parseInt(cParentID) > 0)) {
+				$('div.ccm-page-list-all-descendents').css('display','block');
+				return; 
+			}
+		}
+		$('div.ccm-page-list-all-descendents').css('display','none');
 	},
 	rssInfoShown:function(){
 		for(var i=0;i<this.rss.length;i++){
