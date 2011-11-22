@@ -43,7 +43,7 @@ if ($downloadableUpgradeAvailable) { ?>
 				<form method="post" action="<?=$this->action('do_update')?>" id="ccm-update-form">
 				<?  $checked = true;
 					foreach($updates as $upd) { ?>
-						<div class="ccm-dashboard-radio"><input type="radio" name="updateVersion" value="<?=$upd->getUpdateVersion()?>" <?=(!$checked?:"checked")?> />
+						<div class="ccm-dashboard-radio"><input type="radio" name="updateVersion" value="<?=$upd->getUpdateVersion()?>" <?=(!$checked?'':"checked")?> />
 							<?=$upd->getUpdateVersion()?>
 						</div>
 						<? $checked = false;
