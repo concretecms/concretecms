@@ -91,7 +91,8 @@ class DashboardUsersAddController extends Controller {
 					$uo = UserInfo::add($data);
 					
 					if (is_object($uo)) {
-			
+						
+						$av = Loader::helper('concrete/avatar'); 
 						if (is_uploaded_file($_FILES['uAvatar']['tmp_name'])) {
 							$uHasAvatar = $av->updateUserAvatar($_FILES['uAvatar']['tmp_name'], $uo->getUserID());
 						}
