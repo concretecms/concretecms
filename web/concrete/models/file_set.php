@@ -67,9 +67,7 @@
 			$r = $db->Execute('select * from FileSets where fsType = ? and uID = ? order by fsName asc', array(FileSet::TYPE_SAVED_SEARCH, $u->getUserID()));
 			while ($row = $r->FetchRow()) {
 				$fs = new FileSet();
-				foreach($row as $key => $value) {
-					$fs->{$key} = $value;
-				}
+				$fs->Set($row);
 				$sets[] = $fs;
 			}
 			return $sets;
@@ -84,9 +82,7 @@
 			$r = $db->Execute('select * from FileSets where fsType = ? or (fsType in (?, ?) and uID = ?) order by fsName asc', array(FileSet::TYPE_PUBLIC, FileSet::TYPE_STARRED, FileSet::TYPE_PRIVATE, $u->getUserID()));
 			while ($row = $r->FetchRow()) {
 				$fs = new FileSet();
-				foreach($row as $key => $value) {
-					$fs->{$key} = $value;
-				}
+				$fs->Set($row);
 				$fsp = new Permissions($fs);
 				if ($fsp->canSearchFiles()) {
 					$sets[] = $fs;
@@ -115,9 +111,7 @@
 			$row = $db->GetRow('select * from FileSets where fsID = ?', array($fsID));
 			if (is_array($row)) {
 				$fs = new FileSet();
-				foreach($row as $key => $value) {
-					$fs->{$key} = $value;
-				}
+				$fs->Set($row);
 				if ($row['fsType'] == FileSet::TYPE_SAVED_SEARCH) {
 					$row2 = $db->GetRow('select fsSearchRequest, fsResultColumns from FileSetSavedSearches where fsID = ?', array($fsID));
 					$fs->fsSearchRequest = @unserialize($row2['fsSearchRequest']);
@@ -137,9 +131,7 @@
 			$row = $db->GetRow('select * from FileSets where fsName = ?', array($fsName));
 			if (is_array($row) && count($row)) {
 				$fs = new FileSet();
-				foreach($row as $key => $value) {
-					$fs->{$key} = $value;
-				}
+				$fs->Set($row);
 				return $fs;
 			}
 		}			
