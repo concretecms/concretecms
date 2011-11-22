@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die("Access Denied.");
 
 $attribs = UserAttributeKey::getList(true);
 $u = new User();
@@ -31,18 +32,20 @@ function printAttributeRow($ak, $uo) {
 	
 	$html = '
 	<tr class="ccm-attribute-editable-field">
-		<td style="white-space: nowrap; padding-right: 20px"><strong><a href="javascript:void(0)">' . $ak->getAttributeKeyDisplayHandle() . '</a></strong></td>
-		<td width="100%" class="ccm-attribute-editable-field-central"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
-		<form method="post" action="' . View::url('/dashboard/users/search', 'edit_attribute') . '">
+		<td width="250" style="vertical-align:middle;"><a style="font-weight:bold; line-height:18px;" href="javascript:void(0)">' . $ak->getAttributeKeyDisplayHandle() . '</a></td>
+		<td class="ccm-attribute-editable-field-central" style="vertical-align:middle;"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
+		<form method="post" style="margin-bottom:0;" action="' . View::url('/dashboard/users/search', 'edit_attribute') . '">
 		<input type="hidden" name="uakID" value="' . $ak->getAttributeKeyID() . '" />
 		<input type="hidden" name="uID" value="' . $uo->getUserID() . '" />
 		<input type="hidden" name="task" value="update_extended_attribute" />
 		<div class="ccm-attribute-editable-field-form ccm-attribute-editable-field-type-' . strtolower($type->getAttributeTypeHandle()) . '">
+		<label>
 		' . $ak->render('form', $vo, true) . '
+		</label>
 		</div>
 		</form>
 		</td>
-		<td class="ccm-attribute-editable-field-save"><a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/edit_small.png" width="16" height="16" class="ccm-attribute-editable-field-save-button" /></a>
+		<td class="ccm-attribute-editable-field-save" style="vertical-align:middle; text-align:center;" width="30"><a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/edit_small.png" width="16" height="16" class="ccm-attribute-editable-field-save-button" /></a>
 		<a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/close.png" width="16" height="16" class="ccm-attribute-editable-field-clear-button" /></a>
 		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-attribute-editable-field-loading" />
 		</td>
@@ -110,14 +113,14 @@ if (intval($_GET['uID'])) {
 
 if (is_object($uo)) { 
 	$gl = new GroupList($uo, true);
+	
 	if ($_GET['task'] == 'edit' || $_POST['edit'] && !$editComplete) { ?>
-
-		<div class="wrapper">
-		
-		<?
-		$uName = ($_POST) ? $_POST['uName'] : $uo->getUserName();
-		$uEmail = ($_POST) ? $_POST['uEmail'] : $uo->getUserEmail();
-		?>
+    
+	<?
+    $gArray = $gl->getGroupList();
+	$uName = ($_POST) ? $_POST['uName'] : $uo->getUserName();
+	$uEmail = ($_POST) ? $_POST['uEmail'] : $uo->getUserEmail();
+	?>
 		
 	<script>	
 	function editAttrVal(attId,cancel){
@@ -134,145 +137,177 @@ if (is_object($uo)) {
 	</script>
 		
 		
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit User'), t('Edit User account.'), false, false);?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit User').'<span class="label" style="position:relative;top:-3px;left:12px;">'.t('* required field').'</span>', t('Edit User account.'), false, false);?>
 	
-	<div class="ccm-dashboard-inner">
+    <form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$this->url('/dashboard/users/search?uID=' . intval($_GET['uID']) )?>">
+	<?=$valt->output('update_account_' . intval($_GET['uID']) )?>
+	<input type="hidden" name="_disableLogin" value="1">
+    
+	<div class="ccm-pane-body">
 
-		<form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$this->url('/dashboard/users/search?uID=' . intval($_GET['uID']) )?>">
-		<?=$valt->output('update_account_' . intval($_GET['uID']) )?>
-		<input type="hidden" name="_disableLogin" value="1">
-	
-		<div style="margin:0px; padding:0px; width:100%; height:auto" >
-		<h3><?=t('Core Information')?></h3>
-		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
-		<tr>
-			<td class="subheader"><?=t('Username')?> <span class="required">*</span></td>
-			<td class="subheader"><?=t('Email Address')?> <span class="required">*</span></td>
-			<td class="subheader"><?=t('User Avatar')?></td>
-		</tr>	
-		<tr>
-			<td><input type="text" name="uName" autocomplete="off" value="<?=$uName?>" style="width: 94%"></td>
-			<td><input type="text" name="uEmail" autocomplete="off" value="<?=$uEmail?>" style="width: 94%"></td>
-			<td><input type="file" name="uAvatar" style="width: 94%" /> <input type="hidden" name="uHasAvatar" value="<?=$uo->hasAvatar()?>" />
-			
-			<? if ($uo->hasAvatar()) { ?>
-			<input class="btn" type="button" onclick="location.href='<?=$this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=remove-avatar')?>'" value="<?=t('Remove Avatar')?>" />
-			<? } ?>
-			</td>
-		</tr>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+            <thead>
+                <tr>
+                    <th colspan="3"><?=t('User Information')?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td width="35%"><?=t('Username')?> <span class="required">*</span></td>
+                    <td width="35%"><?=t('Email Address')?> <span class="required">*</span></td>
+                    <td width="30%"><?=t('User Avatar')?></td>
+                </tr>	
+                <tr>
+                    <td><input type="text" name="uName" autocomplete="off" value="<?=$uName?>" style="width: 95%"></td>
+                    <td><input type="text" name="uEmail" autocomplete="off" value="<?=$uEmail?>" style="width: 95%"></td>
+                    <td>
+                    <? if ($uo->hasAvatar()) { ?>
+                    <input class="btn error" type="button" onclick="location.href='<?=$this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=remove-avatar')?>'" value="<?=t('Remove Avatar')?>" />
+                    <? } else { ?>
+                    <input type="file" name="uAvatar" style="width: 95%" /><input type="hidden" name="uHasAvatar" value="<?=$uo->hasAvatar()?>" />
+                    <? } ?>
+                    </td>
+                </tr>
+            </tbody>
 		</table>
-		<h3><?=t('Change Password')?></h3>
-		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
-		<tr>
-			<td class="subheader"><?=t('Password')?></td>
-			<td class="subheader" colspan="2"><?=t('Password (Confirm)')?></td>
-		</tr>
-        <tr>
-			<td><input type="password" name="uPassword" autocomplete="off" value="" style="width: 94%"></td>
-			<td><input type="password" name="uPasswordConfirm" autocomplete="off" value="" style="width: 94%"></td>
-			<td><?=t('(Leave these fields blank to keep the same password)')?></td>
-		</tr>
-		<?
-		$languages = Localization::getAvailableInterfaceLanguages();
-		if (count($languages) > 0) { ?>
-	
-		<tr>
-			<td class="subheader" colspan="3"><?=t('Default Language')?></td>
-		</tr>	
-		<tr>
-			<Td colspan="3">
-			<?
-				array_unshift($languages, 'en_US');
-				$locales = array();
-				Loader::library('3rdparty/Zend/Locale');
-				Loader::library('3rdparty/Zend/Locale/Data');
-				$locales[''] = t('** Default');
-				Zend_Locale_Data::setCache(Cache::getLibrary());
-				foreach($languages as $lang) {
-					$loc = new Zend_Locale($lang);
-					$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
-				}
-				$ux = $uo->getUserObject();
-				print $form->select('uDefaultLanguage', $locales, $ux->getUserDefaultLanguage());
-			?>
-			</td>
-		</tr>	
-		<? } ?>
-
-		<? if(ENABLE_USER_TIMEZONES) { ?>
-        <tr>
-        	<td class="subheader" colspan="3"><?=t('Time Zone')?></td>
-        </tr>
-        <tr>
-			<td colspan="3">
-            	<?php 
-				echo $form->select('uTimezone', 
-						$dh->getTimezones(), 
-						($uo->getUserTimezone()?$uo->getUserTimezone():date_default_timezone_get())
-					); ?>
-            </td>
-		</tr>
-        <?php } ?>
         
-      </table>
-
-		<a id="groupSelector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups" dialog-title="<?=t('Add Groups')?>" dialog-modal="false" style="float: right; margin-top: 12px; padding-bottom: 4px;"><?=t('Add Group')?></a>
-		<h3><?=t('Groups')?></h3>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+        	<thead>
+            	<tr>
+                	<th colspan="2">
+						<?=t('Change Password')?>
+                        <span style="margin-left: 4px; color: #aaa"><?=t('(Leave these fields blank to keep the same password)')?></span>
+					</th>
+				</tr>
+			</thead>
+            <tbody>
+            	<tr>
+					<td><?=t('Password')?></td>
+					<td><?=t('Password (Confirm)')?></td>
+				</tr>
+                <tr>
+                    <td><input type="password" name="uPassword" autocomplete="off" value="" style="width: 95%"></td>
+                    <td><input type="password" name="uPasswordConfirm" autocomplete="off" value="" style="width: 95%"></td>
+                </tr>
+                
+				<?
+                $languages = Localization::getAvailableInterfaceLanguages();
+                if (count($languages) > 0) { ?>
 	
-		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
-		<? $gArray = $gl->getGroupList(); ?>
-		<tr>
-			<td colspan="3">
-			<? foreach ($gArray as $g) { ?>
-				<input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" style="vertical-align: middle" <? 
-					if (is_array($_POST['gID'])) {
-						if (in_array($g->getGroupID(), $_POST['gID'])) {
-							echo(' checked ');
-						}
-					} else {
-						if ($g->inGroup()) {
-							echo(' checked ');
-						}
-					}
-				?> /> <?=$g->getGroupName()?><br>
-			<? } ?>
-			
-			<div id="ccm-additional-groups"></div>
-			
-			</td>
-		</tr>
+                <tr>
+                    <td colspan="2"><?=t('Default Language')?></td>
+                </tr>	
+				<tr>
+                    <td colspan="2">
+                    <?
+                        array_unshift($languages, 'en_US');
+                        $locales = array();
+                        Loader::library('3rdparty/Zend/Locale');
+                        Loader::library('3rdparty/Zend/Locale/Data');
+                        $locales[''] = t('** Default');
+                        Zend_Locale_Data::setCache(Cache::getLibrary());
+                        foreach($languages as $lang) {
+                            $loc = new Zend_Locale($lang);
+                            $locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
+                        }
+                        $ux = $uo->getUserObject();
+                        print $form->select('uDefaultLanguage', $locales, $ux->getUserDefaultLanguage());
+                    ?>
+                    </td>
+				</tr>	
+				<? } // END Languages options ?>
+
+				<? if(ENABLE_USER_TIMEZONES) { ?>
+                <tr>
+                    <td colspan="2"><?=t('Time Zone')?></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <?php 
+                        echo $form->select('uTimezone', 
+                                $dh->getTimezones(), 
+                                ($uo->getUserTimezone()?$uo->getUserTimezone():date_default_timezone_get())
+						); ?>
+                    </td>
+                </tr>
+        		<?php } // END Timezone options ?>
+                
+			</tbody>
+		</table>
+    
+		<table border="0" cellspacing="0" cellpadding="0" class="zebra-striped">
+        	<thead>
+            	<tr>
+                	<th>
+						<span style="line-height:32px;"><?=t('Groups')?></span>
+                    	<a class="btn primary small ccm-button-v2-right" id="groupSelector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups" dialog-title="<?=t('Add Groups')?>" dialog-modal="false"><?=t('Add Group')?></a>
+                    </th>
+                </tr>
+			</thead>
+			<tbody>
+            	<tr class="inputs-list">
+					<td>
+                    
+					<? foreach ($gArray as $g) { ?>
+                    
+                            <label>
+                                <input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <? 
+                                    if (is_array($_POST['gID'])) {
+                                        if (in_array($g->getGroupID(), $_POST['gID'])) {
+                                            echo(' checked ');
+                                        }
+                                    } else {
+                                        if ($g->inGroup()) {
+                                            echo(' checked ');
+                                        }
+                                    }
+                                ?> />
+                                <span><?=$g->getGroupName()?></span>
+                            </label>
+                        
+                    <? } ?> 
+                	
+                    <div id="ccm-additional-groups"></div>
+                    
+                	</td>
+				</tr>
+			</tbody>
 		</table>
         
         <input type="hidden" name="edit" value="1" />
 
-		<div class="ccm-buttons">
-		
-		<?=Loader::helper('concrete/interface')->button(t('Back'), $this->url('/dashboard/users/search?uID=' . intval($_GET['uID'])), 'left')?>
-		<?=Loader::helper('concrete/interface')->submit(t('Update User'), 'update', 'right', 'primary')?>
-
-		</div>	
-		</form>
-
-		<div class="ccm-spacer">&nbsp;</div>
-		
-		<br/>
-		<h3><?=t('Other Information')?></h3><i style="float: left;"><?=t('Click Field Name to Edit')?></i><br/><br/>
-		<table class="entry-form" border="0" cellspacing="1" cellpadding="0">
-		<?
-	
-		$attribs = UserAttributeKey::getEditableList();
-		foreach($attribs as $ak) { 
-			printAttributeRow($ak, $uo);
-		} ?>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%" class="zebra-striped inputs-list">
+        	<thead>
+            	<tr>
+                	<th colspan="3">
+						<?=t('Other Information')?>
+                    	<span style="margin-left: 4px; color: #aaa">(<?=t('Click field name to edit')?>)</span>
+                    </th>
+				</tr>
+			</thead>
+			<tbody>
+            
+				<?            
+                $attribs = UserAttributeKey::getEditableList();
+                foreach($attribs as $ak) { 
+                    printAttributeRow($ak, $uo);
+                }
+				?>
+                
+        	</tbody>
 		</table>
 		
-
-		</div>
-		
-		<div class="ccm-spacer">&nbsp;</div>
-		
 	</div>
-	
+    
+    <div class="ccm-pane-footer">
+    	<? print $ih->button(t('Back'), $this->url('/dashboard/users/search?uID=' . intval($_GET['uID'])), 'left')?>
+		<? print $ih->submit(t('Update User'), 'update', 'right', 'primary')?>
+    </div>
+    
+	</form>
+    
+    <!-- END User Edit Page -->
+    
 	<? } else { ?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('View User'), t('View User accounts.'), false, false);?>
@@ -490,7 +525,7 @@ $(function() {
 	ccm_activateEditableProperties();
 	$("#groupSelector").dialog();
 	ccm_triggerSelectGroup = function(gID, gName) {
-		var html = '<input type="checkbox" name="gID[]" value="' + gID + '" style="vertical-align: middle" checked /> ' + gName + '<br/>';
+		var html = '<label><input type="checkbox" name="gID[]" value="' + gID + '" checked /> <span>' + gName + '</span>';
 		$("#ccm-additional-groups").append(html);
 	}
 
