@@ -27,7 +27,7 @@ $("select#cParentIDLocation").change(function() {
 	
 			if (is_array($ctArray)) { ?>
 	  <select name="ctID" id="selectCTID">
-		<option value="0">** All **</option>
+		<option value="0">** <?php echo t('All')?> **</option>
 		<?php  foreach ($ctArray as $ct) { ?>
 		<option value="<?php echo $ct->getCollectionTypeID()?>" <?php  if ($controller->ctID == $ct->getCollectionTypeID()) { ?> selected <?php  } ?>>
 		<?php echo $ct->getCollectionTypeName()?>
