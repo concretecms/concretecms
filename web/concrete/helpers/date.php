@@ -119,24 +119,40 @@ class DateHelper {
 			if ($diff>86400){
 					$diff=$diff+86400;
 					$days=date("z",$diff);
-					$timeRemaining=$days.' '.t('day');
-					if($days!=1) $timeRemaining.=t('s');
+					$timeRemaining=$days.' ';
+					if($days!=1) {
+						$timeRemaining.=t('days');
+					} else {
+						$timeRemaining.=t('day');
+					}
 					if($precise==1) $timeRemaining.=', '.$hours.' '.t('hours');
 				} else if ($diff>3600) {
-					$timeRemaining=$hours.' '.t('hour');
-					if($hours!=1) $timeRemaining.=t('s');
+					$timeRemaining=$hours.' ';
+					if($hours!=1) {
+						$timeRemaining.=t('hours');
+					} else {
+						$timeRemaining.=t('hour');
+					}
 					if($precise==1) $timeRemaining.=', '.date("i",$diff).' '.t('minutes');
 				}else if ($diff>60){
 					$minutes=date("i",$diff);
 					if(substr($minutes,0,1)=='0') $minutes=substr($minutes,1);
-					$timeRemaining=$minutes.' '.t('minute');
-					if($minutes!=1) $timeRemaining.=t('s');
+					$timeRemaining=$minutes.' ';
+					if($minutes!=1) {
+						$timeRemaining.=t('minutes');
+					} else {
+						$timeRemaining.=t('minute');
+					}
 					if($precise==1) $timeRemaining.=', '.date("s",$diff).' '.t('seconds');
 				}else{
 					$seconds=date("s",$diff);
 					if(substr($seconds,0,1)=='0') $seconds=substr($seconds,1);
-					$timeRemaining=$seconds.' '.t('second');
-					if($seconds!=1) $timeRemaining.=t('s');
+					$timeRemaining=$seconds.' ';
+					if($seconds!=1) {
+						$timeRemaining.=t('seconds');
+					} else {
+						$timeRemaining.=t('second');
+					}
 				}
 		}
 		return $timeRemaining;
