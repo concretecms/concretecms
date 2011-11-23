@@ -121,7 +121,6 @@ if ($category->getPackageID() > 0) {
 
 </div>
 <div class="ccm-pane-footer">
-<input type="button" class="btn" onclick="window.history.go(-1)" value="<?=t('Back')?>" />
 
 <? if (is_object($key)) { ?>
 	<?=$ih->submit(t('Update Attribute'), 'ccm-attribute-key-form', 'right', 'primary')?>
