@@ -305,7 +305,7 @@ class Job extends Object {
 			$db = Loader::db();
 			$db->Execute('insert into Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle, pkgID) values (?, ?, ?, ?, ?, ?)', 
 				array($j->getJobName(), $j->getJobDescription(), Loader::helper('date')->getLocalDateTime(), 0, $jHandle, $pkg->getPackageID()));
-			Events::fire('on_job_install' $j);
+			Events::fire('on_job_install', $j);
 			return $j;
 		}
 	}
@@ -320,7 +320,7 @@ class Job extends Object {
 		}else{
 			$db->query('INSERT INTO Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle) VALUES(?,?,?,?,?)',$vals);
 		}
-		Events::fire('on_job_install' $this);
+		Events::fire('on_job_install', $this);
 	}
  
 	final public function uninstall(){
