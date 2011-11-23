@@ -29,13 +29,14 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 	}
 
 	public function getDisplayValue() {
+		$this->load();
 		$v = $this->getValue();
 		if ($v == '' || $v == false) {
 			return '';
 		}
 		$v2 = date('H:i:s', strtotime($v));
 		$r = '';
-		if ($v2 != '00:00:00') {
+		if ($v2 != '00:00:00' && $this->akDateDisplayMode != 'date') {
 			$r .= date(DATE_APP_DATE_ATTRIBUTE_TYPE_T, strtotime($v));
 			$r .= t(' on ' );
 		}
