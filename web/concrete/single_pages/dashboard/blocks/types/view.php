@@ -93,6 +93,16 @@
 	<? } else { ?>
 		<p><?=t('No custom block types are awaiting installation.')?></p>
 	<? } ?>
+
+    <? if (ENABLE_MARKETPLACE_SUPPORT == true) { ?>
+	<br/>
+	
+	<div class="well" style="padding:10px 20px;">
+        <h3><?=t('Looking for more blocks or add-ons?')?></h3>
+        <p><a href="<?=$this->url('/dashboard/extend/add-ons')?>"><?=t("Download add-ons from the concrete5.org marketplace.")?></a></p>
+    </div>
+    
+    <? } ?>
 	
 <? } ?>
 </div>
