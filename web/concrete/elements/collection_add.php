@@ -152,7 +152,7 @@ for ($i = 0; $i < count($ctArray); $i++) {
 	
 
 	<div class="dialog-buttons">
-		<input type="submit" onclick="$('#ccmAddPage').submit()" class="btn primary ccm-button-right" />
+		<input type="submit" onclick="$('#ccmAddPage').submit()" class="btn primary ccm-button-right" value="<?=t('Add Page')?>" />
 	</div>	
 
 	<input type="hidden" name="add" value="1" />
