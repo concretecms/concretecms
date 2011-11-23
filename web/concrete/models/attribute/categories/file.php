@@ -69,7 +69,12 @@ class FileAttributeKey extends AttributeKey {
 
 	public static function getByHandle($akHandle) {
 		$db = Loader::db();
-		$akID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', array($akHandle));
+		$q = "SELECT ak.akID 
+			FROM AttributeKeys ak
+			INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID 
+			WHERE ak.akHandle = ?
+			AND akc.akCategoryHandle = 'file'";
+		$akID = $db->GetOne($q, array($akHandle));
 		if ($akID > 0) {
 			$ak = FileAttributeKey::getByID($akID);
 			return $ak;

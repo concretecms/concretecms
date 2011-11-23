@@ -6,6 +6,9 @@
 		protected $btTable = 'btPageList';
 		protected $btInterfaceWidth = "500";
 		protected $btInterfaceHeight = "350";
+		protected $btExportPageColumns = array('cParentID');
+		protected $btExportPageTypeColumns = array('ctID');
+		protected $btCacheBlockRecord = true;
 		
 		/** 
 		 * Used for localization. If we want to localize the name/description we have to include this
@@ -81,7 +84,6 @@
 			if (is_object($c)) {
 				$this->cID = $c->getCollectionID();
 			}
-			$cParentID = ($row['cThis']) ? $this->cID : $row['cParentID'];
 			
 			Loader::model('attribute/categories/collection');
 			if ($this->displayFeaturedOnly == 1) {
@@ -105,7 +107,12 @@
 			}
 			
 			if ( intval($row['cParentID']) != 0) {
-				$pl->filterByParentID($cParentID);
+				$cParentID = ($row['cThis']) ? $this->cID : $row['cParentID'];
+				if ($this->includeAllDescendents) {
+					$pl->filterByPath(Page::getByID($cParentID)->getCollectionPath());
+				} else {
+					$pl->filterByParentID($cParentID);
+				}
 			}
 
 			if ($num > 0) {
@@ -121,7 +128,35 @@
 			$cArray = $this->getPages();
 			$nh = Loader::helper('navigation');
 			$this->set('nh', $nh);
-			$this->set('cArray', $cArray);
+			$this->set('cArray', $cArray); //Legacy (pre-5.4.2)
+			$this->set('pages', $cArray); //More descriptive variable name (introduced in 5.4.2)
+			
+			//RSS...
+			$showRss = false;
+			$rssIconSrc = '';
+			$rssInvisibleLink = '';
+			if ($this->rss) {
+				$showRss = true;
+				$rssIconSrc = Loader::helper('concrete/urls')->getBlockTypeAssetsURL(BlockType::getByID($this->getBlockObject()->getBlockTypeID()), 'rss.png');
+				//DEV NOTE: Ideally we'd set rssUrl here, but we can't because for some reason calling $this->getBlockObject() here doesn't load all info properly, and then the call to $this->getRssUrl() fails when it tries to get the area handle of the block.
+			}
+			$this->set('showRss', $showRss);
+			$this->set('rssIconSrc', $rssIconSrc);
+
+			//Pagination...
+			$showPagination = false;
+			$paginator = null;
+			$pl = $this->get('pl'); //Terrible horrible hacky way to get the $pl object set in $this->getPages() -- we need to do it this way for backwards-compatibility reasons
+			if ($this->paginate && $this->num > 0 && is_object($pl)) {
+				$description = $pl->getSummary();
+				if ($description->pages > 1) {
+					$showPagination = true;
+					$paginator = $pl->getPagination();
+				}
+			}
+			$this->set('showPagination', $showPagination);
+			$this->set('paginator', $paginator);
+
 		}
 		
 		// this doesn't work yet
@@ -175,11 +210,17 @@
 			$args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
 			$args['cThis'] = ($args['cParentID'] == $this->cID) ? '1' : '0';
 			$args['cParentID'] = ($args['cParentID'] == 'OTHER') ? $args['cParentIDValue'] : $args['cParentID'];
+			if (!$args['cParentID']) {
+				$args['cParentID'] = 0;
+			}
+			$args['includeAllDescendents'] = ($args['includeAllDescendents']) ? '1' : '0';
 			$args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
 			$args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
 			$args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
 			$args['truncateChars'] = intval($args['truncateChars']); 
 			$args['paginate'] = intval($args['paginate']); 
+			$args['rss'] = intval($args['rss']);
+			$args['ctID'] = intval($args['ctID']);
 
 			parent::save($args);
 		

@@ -9,8 +9,8 @@
 	<script type="text/javascript" src="../../utils/editable_selects.js"></script>
 	<script type="text/javascript" src="js/image.js"></script>
 	<link href="css/advimage.css" rel="stylesheet" type="text/css" />
-	<style type="text/css">@import "../../../../css/ccm_dialog.css";</style>
-    <style type="text/css">@import "../../../../css/ccm.forms.css";</style>
+	<style type="text/css">@import "../../../../css/ccm.app.css";</style>
+	<style type="text/css">@import "../../../../css/ccm.tinymce.css";</style>
 
 </head>
 <body id="advimage" style="display: none">
@@ -226,9 +226,9 @@
 		
 		<br/>
 
-		<div class="mceActionPanel">
-			<input type="submit" style="float: right" class="ccm-button-v2" id="insert" name="insert" value="{#insert}" />
-			<input type="button" id="cancel" name="cancel" class="ccm-button-v2"  value="{#cancel}" onclick="tinyMCEPopup.close();" />
+		<div class="mceActionPanel ccm-ui">
+			<input type="submit" style="float: right" class="btn" id="insert" name="insert" value="{#insert}" />
+			<input type="button" id="cancel" name="cancel" class="btn"  value="{#cancel}" onclick="tinyMCEPopup.close();" />
 		</div>
     </form>
 </body> 

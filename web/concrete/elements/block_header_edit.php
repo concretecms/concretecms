@@ -30,10 +30,29 @@ if (is_array($headerItems[$identifier])) {
 ?>
 $(function() {
 	$('#ccm-block-form').each(function() {
-		ccm_setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
+		<? if (isset($proxyBlock)) { ?>
+			ccm_setupBlockForm($(this), '<?=$proxyBlock->getBlockID()?>', 'edit');
+		<? } else { ?>
+			ccm_setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
+		<? } ?>
 	});
 });
 </script>
+
+<?
+$hih = Loader::helper("concrete/interface/help");
+$blockTypes = $hih->getBlockTypes();
+if (isset($blockTypes[$bt->getBlockTypeHandle()])) {
+	$help = $blockTypes[$bt->getBlockTypeHandle()];
+} else {
+	$cont = $bt->getController();
+	if ($cont->getBlockTypeHelp()) {
+		$help = $cont->getBlockTypeHelp();
+	}
+}
+if (isset($help)) { ?>
+	<div class="dialog-help"><?=$help?></div>
+<? } ?>
 
 <form method="post" id="ccm-block-form" class="validate" action="<?=$b->getBlockEditAction()?>&rcID=<?=intval($rcID)?>" enctype="multipart/form-data">
 

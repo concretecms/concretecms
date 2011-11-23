@@ -9,6 +9,8 @@ class FormBlockController extends BlockController {
 	public $btInterfaceWidth = '420';
 	public $btInterfaceHeight = '430';
 	public $thankyouMsg=''; 
+	protected $btExportTables = array('btForm', 'btFormQuestions');
+	protected $btExportPageColumns = array('redirectCID');
 	
 	protected $noSubmitFormRedirect=0;
 	protected $lastAnswerSetId=0;
@@ -32,6 +34,31 @@ class FormBlockController extends BlockController {
 			'ajax-error' => t('AJAX Error.'),
 			'form-min-1' => t('Please add at least one question to your form.')			
 		);
+	}
+
+	protected function importAdditionalData($b, $blockNode) {
+		if (isset($blockNode->data)) {
+			foreach($blockNode->data as $data) {
+				if ($data['table'] != $this->getBlockTypeDatabaseTable()) {
+					$table = (string) $data['table'];
+					if (isset($data->record)) {
+						foreach($data->record as $record) {
+							$aar = new ADODB_Active_Record($table);
+							$aar->bID = $b->getBlockID();
+							foreach($record->children() as $node) {
+								$nodeName = $node->getName();
+								$aar->{$nodeName} = (string) $node;
+							}
+							if ($table == 'btFormQuestions') {
+								$db = Loader::db();
+								$aar->questionSetId = $db->GetOne('select questionSetId from btForm where bID = ?', array($b->getBlockID()));
+							}
+							$aar->Save();
+						}
+					}								
+				}
+			}
+		}
 	}
 	
 	public function __construct($b = null){ 
@@ -70,11 +97,12 @@ class FormBlockController extends BlockController {
 		if(!$data['oldQsID']) $data['oldQsID']=$data['qsID']; 
 		$data['bID']=intval($this->bID); 
 		
-		if(!isset($data['redirect']) || $data['redirect'] <= 0) {
+		if(!empty($data['redirectCID'])) {
+			$data['redirect'] = 1;
+		} else {
+			$data['redirect'] = 0;
 			$data['redirectCID'] = 0;
-		} 
-		
-		
+		}
 		
 		$v = array( $data['qsID'], $data['surveyName'], intval($data['notifyMeOnSubmission']), $data['recipientEmail'], $data['thankyouMsg'], intval($data['displayCaptcha']), intval($data['redirectCID']), intval($this->bID) );
  		

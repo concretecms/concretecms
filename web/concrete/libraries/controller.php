@@ -131,17 +131,19 @@ class Controller {
 			// we call 404
 			
 			$do404 = false;
-			if (!is_object($this->c)) {
-				// this means we're calling the render directly, so we never 404
-				$do404 = false;
-			} else if (!is_callable(array($this, $this->task)) && count($this->parameters) > 0) {
-				$do404 = true;
-			} else if (is_callable(array($this, $this->task))  && (get_class($this) != 'PageForbiddenController')) {
-				// we use reflection to see if the task itself, which now much exist, takes fewer arguments than 
-				// what is specified
-				$r = new ReflectionMethod(get_class($this), $this->task);
-				if ($r->getNumberOfParameters() < count($this->parameters)) {
+			if (get_class($this) != 'PageNotFoundController') { 
+				if (!is_object($this->c)) {
+					// this means we're calling the render directly, so we never 404
+					$do404 = false;
+				} else if (!is_callable(array($this, $this->task)) && count($this->parameters) > 0) {
 					$do404 = true;
+				} else if (is_callable(array($this, $this->task))  && (get_class($this) != 'PageForbiddenController')) {
+					// we use reflection to see if the task itself, which now much exist, takes fewer arguments than 
+					// what is specified
+					$r = new ReflectionMethod(get_class($this), $this->task);
+					if ($r->getNumberOfParameters() < count($this->parameters)) {
+						$do404 = true;
+					}
 				}
 			}
 			
@@ -197,11 +199,19 @@ class Controller {
 	 * @return void
 	 */
 	public function runTask($method, $params) {
-		if (is_callable(array($this, $method))) {
-			if(!is_array($params)) {
-				$params = array($params);
+		// can be an array of cyclable methods. The first one found is fired.
+		if (is_array($method)) {
+			$methodArray = $method;
+		} else {
+			$methodArray[] = $method;
+		}
+		foreach($methodArray as $method) {
+			if (is_callable(array($this, $method))) {
+				if(!is_array($params)) {
+					$params = array($params);
+				}
+				return call_user_func_array(array($this, $method), $params);
 			}
-			return call_user_func_array(array($this, $method), $params);
 		}
 		return null;
 	}
@@ -236,78 +246,65 @@ class Controller {
 	}
 	
 	/** 
-	 * If no arguments are passed, returns the post array. If a key is passed, it returns the value as it exists in the post array.
-	 * @param string $key
-	 * @return string $value
+	* If no arguments are passed, returns the post array. If a key is passed, it returns the value as it exists in the post array.
+	* If a default value is provided and the key does not exist in the POST array, the default value is returned
+	* @param string $key
+	* @param mixed $defaultValue
+	* @return mixed $value
 	 */
-	public function post($key = null) {
+	public function post($key = null, $defaultValue = null) {
 		if ($key == null) {
 			return $_POST;
 		}
-		
-		if (isset($_POST[$key])) {
-			if (is_string($_POST[$key])) {
-				return trim($_POST[$key]);
-			} else {
-				return $_POST[$key];
-			}
-		} else {
-			return null;
+	  if(isset($_POST[$key])){
+			return (is_string($_POST[$key])) ? trim($_POST[$key]) : $_POST[$key];
 		}
+		return $defaultValue;
 	}
 	
 	/** 
-	 * If no arguments are passed, returns the GET array. If a key is passed, it returns the value as it exists in the GET array.
-	 * Also checks the set array, because this function used to return the value of the $this->set() function
-	 * @param string $key
-	 * @return string $value
-	 */
-	public function get($key = null) {
+	* If no arguments are passed, returns the GET array. If a key is passed, it returns the value as it exists in the GET array.
+	* Also checks the set array, because this function used to return the value of the $this->set() function
+	* If a default value is provided and the key does not exist in the GET array, the default value is returned
+	* @param string $key
+	* @param mixed $defaultValue
+	* @return mixed $value
+	*/
+	public function get($key = null, $defaultValue = null) {
 		if ($key == null) {
 			return $_GET;
 		}
-		
 		if (isset($this->sets[$key])) {
 			return $this->sets[$key];
 		}
-		
-		if (isset($_GET[$key])) {
-			if (is_string($_GET[$key])) {
-				return trim($_GET[$key]);
-			} else {
-				return $_GET[$key];
-			}
-		} else {
-			return null;
+		if(isset($_GET[$key])){
+			return (is_string($_GET[$key])) ? trim($_GET[$key]) : $_GET[$key];
 		}
+		return $defaultValue;
 	}
 	
 	/** 
-	 * If no arguments are passed, returns the REQUEST array. If a key is passed, it returns the value as it exists in the request array.
-	 * @param string $key
-	 * @return string $value
-	 */
-	public function request($key = null) {
+	* If no arguments are passed, returns the REQUEST array. If a key is passed, it returns the value as it exists in the request array.
+	* If a default value is provided and the key does not exist in the REQUEST array, the default value is returned
+	* @param string $key
+	* @param mixed $defaultValue
+	* @return mixed $value
+	*/
+	public function request($key = null, $defaultValue = null) {
 		if ($key == null) {
 			return $_REQUEST;
 		}
-		
-		if (isset($_REQUEST[$key])) {
-			if (is_string($_REQUEST[$key])) {
-				return trim($_REQUEST[$key]);
-			} else {
-				return $_REQUEST[$key];
-			}
-		} else {
-			return null;
+		if(isset($_REQUEST[$key])){
+			return (is_string($_REQUEST[$key])) ? trim($_REQUEST[$key]) : $_REQUEST[$key];
 		}
+		return $defaultValue;
 	}
 	
 	/** 
 	 * Sets a variable to be passed through from the controller to the view
-	 * @param string $key
-	 * @param string $val
-	 * @return void
+   * @param string $key
+   * @param string $val
+   * @return void
 	 */
 	public function set($key, $val) {
 		$loc = CacheLocal::get();
@@ -418,8 +415,7 @@ class Controller {
 	 * @return Page
 	 */
 	public function getCollectionObject() {return $this->c;}
-	
-	/** 
+  /** 
 	 * Gets the current view for the controller (typically the page's handle)
 	 * @return string $view
 	 */

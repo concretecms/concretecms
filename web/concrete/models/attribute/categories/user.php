@@ -63,9 +63,50 @@ class UserAttributeKey extends AttributeKey {
 
 	public static function getByHandle($akHandle) {
 		$db = Loader::db();
-		$akID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', array($akHandle));
+		
+		$q = "SELECT ak.akID 
+			FROM AttributeKeys ak
+			INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID 
+			WHERE ak.akHandle = ?
+			AND akc.akCategoryHandle = 'user'";
+		$akID = $db->GetOne($q, array($akHandle));
+		
 		$ak = UserAttributeKey::getByID($akID);
 		return $ak;
+	}
+
+	public function export($axml) {
+		$akey = parent::export($axml);
+		$akey->addAttribute('profile-displayed', $this->uakProfileDisplay);
+		$akey->addAttribute('profile-editable', $this->uakProfileEdit);
+		$akey->addAttribute('profile-required',$this->uakProfileEditRequired);
+		$akey->addAttribute('register-editable', $this->uakRegisterEdit);
+		$akey->addAttribute('register-required', $this->uakRegisterEditRequired);
+		$akey->addAttribute('member-list-displayed', $this->uakMemberListDisplay);
+		return $akey;
+	}
+
+	public static function import(SimpleXMLElement $ak) {
+		$type = AttributeType::getByHandle($ak['type']);
+		$pkg = false;
+		if ($ak['package']) {
+			$pkg = Package::getByHandle($ak['package']);
+		}
+		$akn = UserAttributeKey::add($type, array(
+			'akHandle' => $ak['handle'], 
+			'akName' => $ak['name'], 
+			'akIsSearchableIndexed' => $ak['indexed'], 
+			'akIsSearchable' => $ak['searchable'],
+			'uakProfileDisplay' => $ak['profile-displayed'],
+			'uakProfileEdit' => $ak['profile-editable'],
+			'uakProfileEditRequired' => $ak['profile-required'],
+			'uakRegisterEdit' => $ak['register-editable'],
+			'uakRegisterEditRequired' => $ak['register-required'],
+			'uakMemberListDisplay' => $ak['member-list-displayed']
+		), $pkg);
+
+		$akn->getController()->importKey($ak);
+
 	}
 	
 	public function isAttributeKeyDisplayedOnProfile() {

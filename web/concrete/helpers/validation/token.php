@@ -50,9 +50,14 @@ class ValidationTokenHelper {
 	/** 
 	 * prints out a generated token as a hidden form field
 	 */
-	public function output($action = '') {
+	public function output($action = '', $return = false) {
 		$hash = $this->generate($action);
-		print '<input type="hidden" name="ccm_token" value="' . $hash . '" />';
+		$token = '<input type="hidden" name="ccm_token" value="' . $hash . '" />';
+		if (!$return) {
+			print $token;
+		} else {
+			return $token;
+		}
 	}
 	
 	/** 

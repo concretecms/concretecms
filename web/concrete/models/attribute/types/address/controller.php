@@ -170,6 +170,56 @@ class AddressAttributeTypeController extends AttributeTypeController  {
 		}
 	}
 
+	public function exportKey($akey) {
+		$this->load();
+		$type = $akey->addChild('type');
+		$type->addAttribute('custom-countries', $this->akHasCustomCountries);
+		$type->addAttribute('default-country', $this->akDefaultCountry);
+		if ($this->akHasCustomCountries) {
+			$countries = $type->addChild('countries');
+			foreach($this->akCustomCountries as $country) {
+				$countries->addChild('country', $country);			
+			}
+		}
+		return $akey;
+	}
+
+	public function exportValue($akn) {
+		$avn = $akn->addChild('value');
+		$address = $this->getValue();
+		$avn->addAttribute('address1', $address->getAddress1());
+		$avn->addAttribute('address2', $address->getAddress2());
+		$avn->addAttribute('city', $address->getCity());
+		$avn->addAttribute('state-province', $address->getStateProvince());
+		$avn->addAttribute('country', $address->getCountry());
+		$avn->addAttribute('postal-code', $address->getPostalCode());
+	}
+
+	public function importValue(SimpleXMLElement $akv) {
+		if (isset($akv->value)) {
+			$data['address1'] = $akv->value['address1'];
+			$data['address2'] = $akv->value['address2'];
+			$data['city'] = $akv->value['city'];
+			$data['state_province'] = $akv->value['state-province'];
+			$data['country'] = $akv->value['country'];
+			$data['postal_code'] = $akv->value['postal-code'];
+			return $data;
+		}
+	}
+	
+	public function importKey($akey) {
+		if (isset($akey->type)) {
+			$data['akHasCustomCountries'] = $akey->type['custom-countries'];
+			$data['akDefaultCountry'] = $akey->type['default-country'];
+			if (isset($akey->type->countries)) {
+				foreach($akey->type->countries->children() as $country) {
+					$data['akCustomCountries'][] = (string) $country;
+				}
+			}
+			$this->saveKey($data);
+		}
+	}
+
 	public function saveKey($data) {
 		$e = Loader::helper('validation/error');
 		

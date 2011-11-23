@@ -17,8 +17,8 @@ var tags ={
 		});		
 	},
 	showPane:function(pane){
-		$('ul#ccm-tags-tabs li').each(function(num,el){ $(el).removeClass('ccm-nav-active') });
-		$(document.getElementById('ccm-tags-tab-'+pane).parentNode).addClass('ccm-nav-active');
+		$('ul#ccm-tags-tabs li').each(function(num,el){ $(el).removeClass('active') });
+		$(document.getElementById('ccm-tags-tab-'+pane).parentNode).addClass('active');
 		$('div.ccm-tagsPane').each(function(num,el){ el.style.display='none'; });
 		$('#ccm-tagsPane-'+pane).css('display','block');
 	},

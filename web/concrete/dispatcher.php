@@ -43,6 +43,8 @@
 	Loader::library('attribute/view');
 	Loader::library('attribute/controller');
 
+	set_exception_handler(array('View', 'defaultExceptionHandler'));
+	
 	## Autoload settings
 	if (C5_ENVIRONMENT_ONLY == false) {
 		require(dirname(__FILE__) . '/startup/autoload.php');
@@ -50,6 +52,7 @@
 	
 	## Load required models ##
 	Loader::model('area');
+	Loader::model('global_area');
 	Loader::model('attribute/key');
 	Loader::model('attribute/value');
 	Loader::model('attribute/category');
@@ -74,6 +77,7 @@
 	Loader::model('user');
 	Loader::model('userinfo');
 	Loader::model('task_permission');
+	Loader::model('stack/model');
 
 	## Setup timzone support
 	require(dirname(__FILE__) . '/startup/timezone.php'); // must be included before any date related functions are called (php 5.3 +)
@@ -90,9 +94,9 @@
 	## Startup check ##	
 	require(dirname(__FILE__) . '/startup/encoding_check.php');
 
-	## Startup check, install ##	
+	# Startup check, install ##	
 	require(dirname(__FILE__) . '/startup/config_check_complete.php');
-	
+
 	## User level config ##	
 	require(dirname(__FILE__) . '/config/app.php');
 
@@ -100,6 +104,7 @@
 	require(dirname(__FILE__) . '/config/localization.php');
 
 	## File types ##
+	## Note: these have to come after config/localization.php ##
 	require(dirname(__FILE__) . '/config/file_types.php');
 	
 	## Check host for redirection ##	
@@ -121,9 +126,9 @@
 	require(dirname(__FILE__) . '/startup/tools_upgrade_check.php');
 
 	## Specific site routes for various content items (if they exist) ##
-        if (file_exists(DIR_CONFIG_SITE . '/site_theme_paths.php')) {
+    if (file_exists(DIR_CONFIG_SITE . '/site_theme_paths.php')) {
 		@include(DIR_CONFIG_SITE . '/site_theme_paths.php');
-        }
+    }
 
 	## Specific site routes for various content items (if they exist) ##
 	if (file_exists(DIR_CONFIG_SITE . '/site_file_types.php')) {
@@ -174,6 +179,11 @@
 					$v->render('/page_not_found');
 					break;
 			}
+		}
+		
+		if (!$c->isActive()) {
+			$v = View::getInstance();
+			$v->render('/page_not_found');
 		}
 
 		## Check maintenance mode

@@ -63,12 +63,40 @@ if (!defined('ENABLE_MARKETPLACE_SUPPORT')){
 	define('MARKETPLACE_CONFIG_OVERRIDE',true);
 }
 
+if (!defined('ENABLE_INTELLIGENT_SEARCH_HELP')) {
+	Config::getOrDefine('ENABLE_INTELLIGENT_SEARCH_HELP', true);
+}
+
+if (!defined('ENABLE_INTELLIGENT_SEARCH_MARKETPLACE')) {
+	Config::getOrDefine('ENABLE_INTELLIGENT_SEARCH_MARKETPLACE', true);
+}
+
+if (!defined('WHITE_LABEL_LOGO_SRC')) {
+	Config::getOrDefine('WHITE_LABEL_LOGO_SRC', false);
+}
+
+if (!defined('WHITE_LABEL_APP_NAME')) {
+	Config::getOrDefine('WHITE_LABEL_APP_NAME', false);
+}
+
+if (!defined("ENABLE_AREA_LAYOUTS")) {
+	Config::getOrDefine('ENABLE_AREA_LAYOUTS', true);
+}
+
+if (!defined("ENABLE_CUSTOM_DESIGN")) {
+	Config::getOrDefine('ENABLE_CUSTOM_DESIGN', true);
+}
+
 if (!defined('URL_REWRITING_ALL')) { 
 	define("URL_REWRITING_ALL", false);
 }
 
 if (!defined('ENABLE_LEGACY_CONTROLLER_URLS')) {
 	define('ENABLE_LEGACY_CONTROLLER_URLS', false);
+}
+
+if (!defined('ENABLE_PROGRESSIVE_PAGE_REINDEX')) {
+	define('ENABLE_PROGRESSIVE_PAGE_REINDEX', true);
 }
 
 

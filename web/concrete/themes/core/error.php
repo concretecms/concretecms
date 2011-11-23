@@ -5,16 +5,18 @@
 <meta http-equiv="content-type" content="text/html; charset=<?=APP_CHARSET?>" />
 <!-- insert CSS for Default Concrete Theme //-->
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.default.theme.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.app.css";</style>
 
 </head>
 <body>
 
 <div id="ccm-logo"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" width="49" height="49" alt="Concrete CMS" /></div>
 
-<div id="ccm-theme-wrapper">
+<div id="ccm-theme-wrapper" class="ccm-ui">
 <?				Loader::element('error_fatal', array('innerContent' => $innerContent, 
 					'titleContent' => $titleContent));
 ?>
+<p><a href="<?=DIR_REL?>" class="btn"><?=t('&lt; Back to Home')?></a></p>
 </div>
 
 </body>

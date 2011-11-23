@@ -53,15 +53,7 @@ foreach($notifications as $n) {
 	<li class="<?=getNotificationClassName($n)?>">
 	
 	<h3><?=$n->getSystemNotificationTitle()?> <span class="ccm-dashboard-notification-time"><?=$time?></span></h3>
-	<? if ($isDashboardModule && in_array($n->getSystemNotificationTypeID(), array(
-		SystemNotification::SN_TYPE_CORE_MESSAGE_HELP,
-		SystemNotification::SN_TYPE_CORE_MESSAGE_NEWS,
-		SystemNotification::SN_TYPE_CORE_MESSAGE_OTHER
-	))) { ?>
-		<? /* <p><?=$txt->shorten(strip_tags($n->getSystemNotificationDescription()), 64)?></p> */ ?>
-	<? } else { ?>
-		<p><?=$n->getSystemNotificationDescription()?></p>
-	<? } ?>
+	<p><?=$n->getSystemNotificationDescription()?></p>
 	
 	<? 
 	if ($n->getSystemNotificationTypeID() == SystemNotification::SN_TYPE_CORE_UPDATE || $n->getSystemNotificationTypeID() == SystemNotification::SN_TYPE_CORE_UPDATE_CRITICAL) {

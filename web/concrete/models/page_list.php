@@ -15,7 +15,7 @@ class PageList extends DatabaseItemList {
 	protected $includeAliases = true;
 	protected $displayOnlyPermittedPages = false; // not used.
 	protected $displayOnlyApprovedPages = true;
-	protected $systemPagesToExclude = array('login.php', 'page_not_found.php', 'page_forbidden.php','register.php', 'download_file.php', 'profile/%', 'dashboard/%');
+	protected $displayOnlyActivePages = true;
 	protected $filterByCParentID = 0;
 	protected $filterByCT = false;
 	protected $ignorePermissions = false;
@@ -35,6 +35,10 @@ class PageList extends DatabaseItemList {
 				$this->filterByAttribute($attrib, $a[0]);
 			}
 		}			
+	}
+	
+	public function includeInactivePages() {
+		$this->displayOnlyActivePages = false;
 	}
 	
 	public function ignorePermissions() {
@@ -292,6 +296,10 @@ class PageList extends DatabaseItemList {
 		}
 	}
 
+	public function filterByDateLastModified($date, $comparison = '=') {
+		$this->filter('c.cDateModified', $date, $comparison);
+	}
+
 	/** 
 	 * Filters by public date
 	 * @param string $date
@@ -348,6 +356,9 @@ class PageList extends DatabaseItemList {
 			$this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = p1.cID)");
 		}
 		
+		if ($this->displayOnlyActivePages) {
+			$this->filter('p1.cIsActive', 1);
+		}
 		$this->setupSystemPagesToExclude();
 		
 	}
@@ -356,27 +367,10 @@ class PageList extends DatabaseItemList {
 		if ($this->includeSystemPages || $this->filterByCParentID > 1 || $this->filterByCT == true) {
 			return false;
 		}
-		$cIDs = Cache::get('page_list_exclude_ids', false);
-		if ($cIDs == false) {
-			$db = Loader::db();
-			$filters = ''; 
-			for ($i = 0; $i < count($this->systemPagesToExclude); $i++) {
-				$spe = $this->systemPagesToExclude[$i];
-				$filters .= 'cFilename like \'/' . $spe . '\' ';
-				if ($i + 1 < count($this->systemPagesToExclude)) {
-					$filters .= 'or ';
-				}
-			}
-			$cIDs = $db->GetCol("select cID from Pages where 1=1 and ctID = 0 and (" . $filters . ")");
-			if (count($cIDs) > 0) {
-				Cache::set('page_list_exclude_ids', false, $cIDs);
-			}
-		}
-		$cIDStr = implode(',', $cIDs);
 		if ($this->includeAliases) {
-			$this->filter(false, "(p1.cID not in ({$cIDStr}) or p2.cID not in ({$cIDStr}))");
+			$this->filter(false, "(p1.cIsSystemPage = 0 or p2.cIsSystemPage = 0)");	
 		} else {
-			$this->filter(false, "(p1.cID not in ({$cIDStr}))");
+			$this->filter(false, "(p1.cIsSystemPage = 0)");	
 		}
 	}
 	
@@ -419,5 +413,57 @@ class PageList extends DatabaseItemList {
 			$pages[] = $nc;
 		}
 		return $pages;
+	}
+}
+
+class PageSearchDefaultColumnSet extends DatabaseItemListColumnSet {
+	protected $attributeClass = 'CollectionAttributeKey';	
+
+	public static function getCollectionDatePublic($c) {
+		return date(DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES, strtotime($c->getCollectionDatePublic()));
+	}
+
+	public static function getCollectionDateModified($c) {
+		return date(DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES, strtotime($c->getCollectionDateLastModified()));
+	}
+	
+	public function getCollectionAuthor($c) {
+		$uID = $c->getCollectionUserID();
+		$ui = UserInfo::getByID($uID);
+		if (is_object($ui)) {
+			return $ui->getUserName();
+		}
+	}
+	
+	public function __construct() {
+		$this->addColumn(new DatabaseItemListColumn('ctHandle', t('Type'), 'getCollectionTypeName', false));
+		$this->addColumn(new DatabaseItemListColumn('cvName', t('Name'), 'getCollectionName'));
+		$this->addColumn(new DatabaseItemListColumn('cvDatePublic', t('Date'), array('PageSearchDefaultColumnSet', 'getCollectionDatePublic')));
+		$this->addColumn(new DatabaseItemListColumn('cDateModified', t('Last Modified'), array('PageSearchDefaultColumnSet', 'getCollectionDateModified')));
+		$this->addColumn(new DatabaseItemListColumn('author', t('Author'), array('PageSearchDefaultColumnSet', 'getCollectionAuthor'), false));
+		$date = $this->getColumnByKey('cDateModified');
+		$this->setDefaultSortColumn($date, 'desc');
+	}
+}
+
+class PageSearchAvailableColumnSet extends PageSearchDefaultColumnSet {
+	protected $attributeClass = 'CollectionAttributeKey';
+	public function __construct() {
+		parent::__construct();
+	}
+}
+
+class PageSearchColumnSet extends DatabaseItemListColumnSet {
+	protected $attributeClass = 'CollectionAttributeKey';
+	public function getCurrent() {
+		$u = new User();
+		$fldc = $u->config('PAGE_LIST_DEFAULT_COLUMNS');
+		if ($fldc != '') {
+			$fldc = @unserialize($fldc);
+		}
+		if (!($fldc instanceof DatabaseItemListColumnSet)) {
+			$fldc = new PageSearchDefaultColumnSet();
+		}
+		return $fldc;
 	}
 }

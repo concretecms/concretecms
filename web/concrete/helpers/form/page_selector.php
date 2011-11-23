@@ -47,7 +47,7 @@ class FormPageSelectorHelper {
 			$clearStyle = '';
 		}
 		$html .= '</strong></div>';
-		$html .= '<a class="ccm-sitemap-select-page" dialog-sender="' . $fieldName . '" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector.php?sitemap_select_mode=select_page&amp;cID=' . $selectedCID . '">' . t('Select Page') . '</a>';
+		$html .= '<a class="ccm-sitemap-select-page" dialog-sender="' . $fieldName . '" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector.php?sitemap_select_mode=select_page&amp;cID=' . $selectedCID . '">' . t('Select Page') . '</a>';
 		$html .= '&nbsp;<a href="javascript:void(0)" dialog-sender="' . $fieldName . '" class="ccm-sitemap-clear-selected-page" style="float: right; margin-top: -8px;' . $clearStyle . '"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" style="vertical-align: middle; margin-left: 3px" /></a>';
 		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedCID . '"/>';
 		$html .= '</div>'; 
@@ -136,7 +136,7 @@ class FormPageSelectorHelper {
 		$token = $valt->generate('quick_page_select_' . $key);
 		$html .= "
 		<script type=\"text/javascript\">
-		$(document).ready(function () {
+		$(function () {
 			$('#ccm-quick-page-selector-label-".$key."').autocomplete({
 				select: function(e, ui) {
 					$('#ccm-quick-page-selector-label-" . $key . "').val(ui.item.label);

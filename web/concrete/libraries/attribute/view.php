@@ -60,6 +60,28 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$this->attributeType = $attributeType;
 		}
 		
+		protected function getIncludeFile($view) {
+			$atHandle = $this->attributeType->getAttributeTypeHandle();
+			if (file_exists(DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php')) {
+				$file = DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $view . '.php';
+			}
+			
+			if (!isset($file) && $this->attributeType->getPackageID() > 0) {
+				$pkgHandle = PackageList::getHandle($this->attributeType->getPackageID());
+				$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
+				if (file_exists($dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php')) {
+					$file = $dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php';
+				}
+			}
+			
+			if (!isset($file)) {
+				if (file_exists(DIR_MODELS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php')) {
+					$file = DIR_MODELS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php';
+				}
+			}
+			return $file;
+		}
+		
 		/** 
 		 * Renders a particular view for an attribute
 		 */
@@ -91,25 +113,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$this->controller->set('akID', $this->attributeKey->getAttributeKeyID());
 			}
 
-			if (file_exists(DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php')) {
-				$file = DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $view . '.php';
+			$file = $this->getIncludeFile($view);
+			
+			if ($view == 'composer' && !$file) {
+				$file = $this->getIncludeFile('form');
 			}
 			
-			if (!isset($file) && $this->attributeType->getPackageID() > 0) {
-				$pkgHandle = PackageList::getHandle($this->attributeType->getPackageID());
-				$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
-				if (file_exists($dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php')) {
-					$file = $dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php';
-				}
-			}
-			
-			if (!isset($file)) {
-				if (file_exists(DIR_MODELS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php')) {
-					$file = DIR_MODELS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php';
-				}
-			}
-			
-			if (isset($file)) {
+			if ($file) {
 				include($file);
 			}
 
