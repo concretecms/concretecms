@@ -55,7 +55,7 @@ a { cursor:pointer }
 }
 #page #header #logo a {
 	/* customize_header_logo */ color: #ffffff; /* customize_header_logo */
-	font: normal bold 32px Arial;
+	/* customize_header_logo_text */ font: normal bold 32px Arial; /* customize_header_logo_text */
 	text-decoration:none;
 }
 
@@ -74,7 +74,7 @@ a { cursor:pointer }
 	padding:2px 0px;
 	margin-left:24px;
 	margin-bottom: 0px;
-	color:#daf095;
+	/* customize_header_link_text */ color:#daf095; /* customize_header_link_text */
 	font-size:14px;
 	letter-spacing:1.5px;
 	margin-top:0px

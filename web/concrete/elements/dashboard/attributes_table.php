@@ -1,3 +1,5 @@
+<div class="ccm-ui">
+
 <? 
 //Used on both page and file attributes
 $c = Page::getCurrentPage();
@@ -7,20 +9,25 @@ if (is_object($category) && $category->allowAttributeSets()) {
 	$sets = $category->getAttributeSets();
 }
 
-if (count($attribs) > 0) { 
+if (count($attribs) > 0) { ?>
 
-	$ih = Loader::helper('concrete/interface');
-	$valt = Loader::helper('validation/token');
-	
-	if (count($sets) > 0) {  ?>
-	
-		<h3 style="position: absolute; top: 6px; right: 8px"><?=t('View Attributes: ')?><select style="font-size: 10px" onchange="window.location.href='<?=Loader::helper('navigation')->getLinkToCollection($c)?>?asGroupAttributes=' + this.value" name="asGroupAttributes">
+	<div style="float: right; margin-bottom: 10px">
+		<? $form = Loader::helper('form'); ?>
+
+		<? if (count($sets) > 0) { ?>
+		<?=$form->label('asGroupAttributes', t('View'))?>
+		<select style="width: 150px; margin-left: 8px;"  onchange="window.location.href='<?=Loader::helper('navigation')->getLinkToCollection($c)?>?asGroupAttributes=' + this.value" id="asGroupAttributes" name="asGroupAttributes">
 			<option value="1" <? if ($_REQUEST['asGroupAttributes'] !== '0') { ?> selected <? } ?>><?=t('Grouped by set')?></option>
 			<option value="0" <? if ($_REQUEST['asGroupAttributes'] === '0') { ?> selected <? } ?>><?=t('In one list')?></option>
-		</select></h3>
-		<div class="ccm-spacer">&nbsp;</div>
+		</select>
+		<? } ?><a href="<?=$this->url('/dashboard/system/attributes/sets', 'category', $category->getAttributeKeyCategoryID())?>" id="ccm-list-view-customize"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Manage Sets')?></a>
+	</div>
 
-	<? }
+
+	<?
+	$ih = Loader::helper('concrete/interface');
+	$valt = Loader::helper('validation/token');
+
 	
 	if (count($sets) > 0 && ($_REQUEST['asGroupAttributes'] !== '0')) { ?>
 	
@@ -30,14 +37,14 @@ if (count($attribs) > 0) {
 		foreach($sets as $as) { ?>
 	
 		
-		<h2><?=$as->getAttributeSetName()?></h2>
+		<h3><?=$as->getAttributeSetName()?></h3>
 	
 		<?
 		
 		$setattribs = $as->getAttributeKeys();
 		if (count($setattribs) == 0) { ?>
 		
-			<?=t('No attributes defined.')?><br/><br/>
+			<p><?=t('No attributes defined.')?></p>
 		
 		<? } else { ?>
 			
@@ -58,14 +65,13 @@ if (count($attribs) > 0) {
 			
 			<? } ?>
 			
-			<br/>
 			
 		<? } 
 		
 		$unsetattribs = $category->getUnassignedAttributeKeys();
 		if (count($unsetattribs) > 0) { ?>
 		
-			<h2><?=t('Other')?></h2>
+			<h3><?=t('Other')?></h3>
 		
 			<?
 			foreach($unsetattribs as $ak) { ?>
@@ -99,19 +105,16 @@ if (count($attribs) > 0) {
 	
 <? } else { ?>
 	
-	<br/>
-	
-	<strong>
+	<p>
 		<?
 	 echo t('No attributes defined.');
 		?>
-	</strong>
-	
-	<br/><br/>
+	</p>
 	
 <? } ?>
 
 <script type="text/javascript">
+$(function() {
 	$("div.ccm-attribute-sortable-set-list").sortable({
 		handle: 'img.ccm-attribute-icon',
 		cursor: 'move',
@@ -125,7 +128,10 @@ if (count($attribs) > 0) {
 			});
 		}
 	});
+});
 </script>
+
+</div>
 
 <style type="text/css">
 div.ccm-attribute-sortable-set-list img.ccm-attribute-icon:hover {cursor: move}

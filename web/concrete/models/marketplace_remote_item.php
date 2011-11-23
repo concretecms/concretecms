@@ -26,12 +26,36 @@ class MarketplaceRemoteItem extends Object {
 	}
 
 	public function getMarketplaceItemID() {return $this->mpID;}
+	public function getMarketplaceItemType() {return $this->mpType;}
 	public function getHandle() { return $this->handle; }
 	public function getName(){ return $this->name; }
 	public function getDescription() {return $this->description;}
+	public function getBody() {return $this->bodyContent;}
 	public function getPrice(){ return sprintf("%.2f",floatval($this->price)); }
+	public function getScreenshots() {
+		if (is_array($this->screenshots)) {
+			return $this->screenshots;
+		} else {
+			return array();
+		}
+	}
+	public function getAverageRating() {return $this->rating;}
+	public function getVersionHistory() {return $this->versionHistory;}
+	public function getTotalRatings() {
+		if ($this->totalRatings) {
+			return $this->totalRatings;
+		} else {
+			return 0;
+		}
+	}
+	public function getRemoteReviewsURL() {return $this->reviewsURL;}
 	public function getRemoteCollectionID(){ return $this->cID; }
+	public function getReviewBody() {
+		return $this->reviewBody;
+	}
 	public function getRemoteURL(){ return $this->url; }
+	public function getProductBlockID() {return $this->productBlockID;}
+	public function getFivePackProductBlockID() {return $this->fivePackProductBlockID;}
 	public function getRemoteFileURL(){ return $this->file; }
 	public function getRemoteIconURL(){ return $this->icon; }
 	public function getRemoteListIconURL() {return $this->listicon;}
@@ -186,6 +210,10 @@ class MarketplaceRemoteItemList extends ItemList {
 	
 	public function filterByKeywords($keywords) {
 		$this->params['keywords'] = $keywords;
+	}
+	
+	public function sortBy($sortBy) {
+		$this->params['sort'] = $sortBy;
 	}
 	
 	public function filterBySet($set) {

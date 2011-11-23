@@ -194,7 +194,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$btHandle = $obj->getBlockTypeHandle();
 			
 			if (!isset($this->controller)) {
-				$this->controller = Loader::controller($obj);
+				if ($obj instanceof Block) {
+					$this->controller = $obj->getInstance();
+				} else {
+					$this->controller = Loader::controller($obj);
+				}
 			}
 			if (in_array($view, array('view', 'add', 'edit'))) {
 				$_action = $view;
@@ -216,7 +220,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					}
 					if ($useCache) {
 						$cID = 0;
-						if (is_object($page)) {
+						if (is_object($this->area)) {
+							$cID = $this->area->getCollectionID();
+						} else if (is_object($page)) {
 							$cID = $page->getCollectionID();
 						}
 						$outputContent = Cache::get('block_view_output', $cID . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle());
@@ -330,9 +336,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				
 				if ($useCache) {
 					$cID = 0;
-					if (is_object($page)) {
+					if (is_object($this->area)) {
+						$cID = $this->area->getCollectionID();
+					} else if (is_object($page)) {
 						$cID = $page->getCollectionID();
-					}				
+					}
 					Cache::set('block_view_output', $cID . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
 				}
 			}

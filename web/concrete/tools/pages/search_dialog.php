@@ -8,6 +8,7 @@ if (!$sh->canRead()) {
 
 $cnt = Loader::controller('/dashboard/sitemap/search');
 $pageList = $cnt->getRequestedSearchResults();
+$columns = $cnt->get('columns');
 $pages = $pageList->getPage();
 $pagination = $pageList->getPagination();
 if (!isset($sitemap_select_mode)) {
@@ -24,36 +25,15 @@ $searchInstance = $page . time();
 $searchRequest = $pageList->getSearchRequest();
 ?>
 
-<? if (!$sitemapCombinedMode) { ?>
-<?=Loader::helper('html')->css('ccm.sitemap.css')?>
-<?=Loader::helper('html')->javascript('ccm.sitemap.js')?>
-<? } ?>
 <script type="text/javascript">$(function() {
 	ccm_sitemapSetupSearch('<?=$searchInstance?>');
 });
 </script>
 
 <div id="ccm-search-overlay" >
-	
-		<table id="ccm-search-form-table" >
-			<tr>
-				<td valign="top" class="ccm-search-form-advanced-col">
-					<? Loader::element('pages/search_form_advanced', array('sitemap_select_callback' => $sitemap_select_callback, 'searchInstance' => $searchInstance, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'searchRequest' => $searchRequest)); ?>
-				</td>		
-				<td valign="top" width="100%">	
-					
-					<div id="ccm-search-advanced-results-wrapper">
-					
-						<div id="ccm-<?=$searchInstance?>-search-results">
-						
-							<? Loader::element('pages/search_results', array('searchInstance' => $searchInstance, 'sitemap_select_callback' => $sitemap_select_callback, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
-						
-						</div>
-					
-					</div>
-				
-				</td>	
-			</tr>
-		</table>		
+<div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
+	<? Loader::element('pages/search_form_advanced', array('columns' => $columns, 'sitemap_select_callback' => $sitemap_select_callback, 'searchInstance' => $searchInstance, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'searchRequest' => $searchRequest)); ?>
+</div>
 
+<? Loader::element('pages/search_results', array('columns' => $columns, 'searchInstance' => $searchInstance, 'sitemap_select_callback' => $sitemap_select_callback, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
 </div>

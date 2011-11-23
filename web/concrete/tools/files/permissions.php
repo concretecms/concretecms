@@ -60,11 +60,13 @@ if ($_POST['task'] == 'set_advanced_permissions') {
 }
 ?>
 
-<ul class="ccm-dialog-tabs" id="ccm-file-permissions-tabs">
+<div class="ccm-ui">
+
+<ul class="tabs" id="ccm-file-permissions-tabs">
 	<? if (PERMISSIONS_MODEL != 'simple') { ?>
-		<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-file-permissions-advanced"><?=t('Permissions')?></a></li>
+		<li class="active"><a href="javascript:void(0)" id="ccm-file-permissions-advanced"><?=t('Permissions')?></a></li>
 	<? } ?>
-	<li <? if (PERMISSIONS_MODEL == 'simple') { ?> class="ccm-nav-active" <? } ?>><a href="javascript:void(0)" id="ccm-file-password"><?=t('Protect with Password')?></a></li>
+	<li <? if (PERMISSIONS_MODEL == 'simple') { ?> class="active" <? } ?>><a href="javascript:void(0)" id="ccm-file-password"><?=t('Protect with Password')?></a></li>
 	<li><a href="javascript:void(0)" id="ccm-file-storage"><?=t('Storage Location')?></a></li>
 </ul>
 
@@ -72,22 +74,21 @@ if ($_POST['task'] == 'set_advanced_permissions') {
 
 <div id="ccm-file-permissions-advanced-tab">
 
-<br/>
-
-<h2><?=t('File Permissions')?></h2>
-
 <form method="post" id="ccm-<?=$searchInstance?>-permissions-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions/">
 <?=$form->hidden('task', 'set_advanced_permissions')?>
 <?=$form->hidden('fID', $f->getFileID())?>
 
-<a style="margin-left: 20px" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector?include_core_groups=1" id="ug-selector" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="70%" class="ccm-button-right dialog-launch"><span><em><?=t('Add Group or User')?></em></span></a>
-
-<div class="ccm-important">
+<div class="clearfix" style="margin-bottom: 0px">
+<div class="block-message alert-message info">
 <? if (!$f->overrideFileSetPermissions()) { ?>
-	<?=t('Permissions for this file are currently dependent on set and global settings. If you override those permissions here, they will not match those of the file\'s sets.')?><br/><br/>
+	<p><?=t('Permissions for this file are currently dependent on set and global settings. If you override those permissions here, they will not match those of the file\'s sets.')?></p>
 <? } else { ?>
-	<?=t("Permissions for this file currently override file set and global settings. To revert these permissions, click the button below.")?><br/><br/>
+	<p><?=t("Permissions for this file currently override file set and global settings. To revert these permissions, click the button below.")?></p>
 <? } ?>	
+</div>
+</div>
+<div class="clearfix">
+<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector?include_core_groups=1" id="ug-selector" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="70%" class="ccm-button-right dialog-launch btn"><?=t('Add Group or User')?></a>
 </div>
 
 <? if ($f->overrideFileSetPermissions()) {
@@ -176,9 +177,9 @@ $uArray = $ul->getUserInfoList();
 	<div class="ccm-buttons">
 	<? if ($f->overrideFileSetPermissions()) { ?>
 		<input type="hidden" name="fRevertToSetPermissions" id="fRevertToSetPermissions" value="0" />
-		<a href="javascript:void(0)" onclick="$('#fRevertToSetPermissions').val(1);ccm_alSubmitPermissionsForm('<?=$searchInstance?>')" class="ccm-button-left cancel"><span><?=t('Revert Permissions')?></span></a>
+		<a href="javascript:void(0)" onclick="$('#fRevertToSetPermissions').val(1);ccm_alSubmitPermissionsForm('<?=$searchInstance?>')" class="ccm-button-left cancel btn"><?=t('Revert Permissions')?></a>
 	<? } ?>
-	<?=$ih->button_js(t('Update'), 'ccm_alSubmitPermissionsForm(\'' . $searchInstance . '\')')?>
+	<?=$ih->button_js(t('Update'), 'ccm_alSubmitPermissionsForm(\'' . $searchInstance . '\')', 'right', 'primary')?>
 	</div>
 
 
@@ -190,21 +191,20 @@ $uArray = $ul->getUserInfoList();
 <div id="ccm-file-password-tab" <? if (PERMISSIONS_MODEL != 'simple') { ?> style="display: none" <? } ?>>
 <br/>
 
-<h2><?=t('Requires Password to Access')?></h2>
+<h4><?=t('Requires Password to Access')?></h4>
 
 <p><?=t('Leave the following form field blank in order to allow everyone to download this file.')?></p>
 
 <form method="post" id="ccm-<?=$searchInstance?>-password-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions/">
 <?=$form->hidden('task', 'set_password')?>
 <?=$form->hidden('fID', $f->getFileID())?>
-<?=$ih->button_js(t('Save Password'), 'ccm_alSubmitPasswordForm(\'' . $searchInstance . '\')')?>
 <?=$form->text('fPassword', $f->getPassword(), array('style' => 'width: 250px'))?>
+
+<?=$ih->button_js(t('Save Password'), 'ccm_alSubmitPasswordForm(\'' . $searchInstance . '\')', 'left', 'primary')?>
 
 </form>
 
-<div class="ccm-spacer">&nbsp;</div>
-<br/>
-<div class="ccm-note"><?=t('Users who access files through the file manager will not be prompted for a password.')?></div>
+<div class="help-block"><p><?=t('Users who access files through the file manager will not be prompted for a password.')?></p></div>
 
 </div>
 
@@ -212,9 +212,11 @@ $uArray = $ul->getUserInfoList();
 
 <br/>
 
-<h2><?=t('Choose File Storage Location')?></h2>
+<h4><?=t('Choose File Storage Location')?></h4>
 
 <form method="post" id="ccm-<?=$searchInstance?>-storage-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions/">
+<div class="help-block"><p><?=t('All versions of a file will be moved to the selected location.')?></p></div>
+
 <?=$form->hidden('task', 'set_location')?>
 <?=$form->hidden('fID', $f->getFileID())?>
 <div><?=$form->radio('fslID', 0, $f->getStorageLocationID()) ?> <?=t('Default Location')?> (<?=DIR_FILES_UPLOADED?>)</div>
@@ -226,14 +228,13 @@ if (is_object($fsl)) { ?>
 <? } ?>
 </form>
 
-<div class="ccm-spacer">&nbsp;</div>
-<?=$ih->button_js(t('Save Location'), 'ccm_alSubmitStorageForm(\'' . $searchInstance . '\')')?>
-<div class="ccm-spacer">&nbsp;</div>
 
-<br/>
-<div class="ccm-note"><?=t('All versions of a file will be moved to the selected location.')?></div>
+<?=$ih->button_js(t('Save Location'), 'ccm_alSubmitStorageForm(\'' . $searchInstance . '\')', 'left', 'primary')?>
 
 
+
+
+</div>
 
 </div>
 
@@ -246,10 +247,10 @@ if (is_object($fsl)) { ?>
 <? } ?>
 
 $("#ccm-file-permissions-tabs a").click(function() {
-	$("li.ccm-nav-active").removeClass('ccm-nav-active');
+	$("li.active").removeClass('active');
 	$("#" + ccm_fpActiveTab + "-tab").hide();
 	ccm_fpActiveTab = $(this).attr('id');
-	$(this).parent().addClass("ccm-nav-active");
+	$(this).parent().addClass("active");
 	$("#" + ccm_fpActiveTab + "-tab").show();
 });
 

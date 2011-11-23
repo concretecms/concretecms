@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<div class="ccm-pane-controls">
+<div class="ccm-ui">
 <? 
 
 Loader::model('collection_attributes');
@@ -9,19 +9,17 @@ $dh = Loader::helper('date');
 if ($c->isAlias() && $c->getCollectionPointerExternalLink() != '') {
 ?>
 
-<h1><?=t('Edit External Link')?></h1>
-
-	<form method="post" action="<?=$c->getCollectionAction()?>" id="ccmEditLink">		
+	<form class="form-stacked" method="post" action="<?=$c->getCollectionAction()?>" id="ccmEditLink">		
 	
 	<div class="ccm-form-area">
 	<div class="ccm-field">
 	
-	<label><?=t('Name')?></label> <input type="text" name="cName" value="<?=$c->getCollectionName()?>" class="text" style="width: 100%" />
+	<label><?=t('Name')?></label> <input type="text" name="cName" value="<?=$c->getCollectionName()?>" class="text" style="width: 95%" />
 	
 	</div>
 	<div class="ccm-field">
 
-	<label><?=t('URL')?></label> <input type="text" name="cExternalLink" style="width: 100%" value="<?=$c->getCollectionPointerExternalLink()?>" />
+	<label><?=t('URL')?></label> <input type="text" name="cExternalLink" style="width: 95%" value="<?=$c->getCollectionPointerExternalLink()?>" />
 
 	</div>
 
@@ -35,8 +33,9 @@ if ($c->isAlias() && $c->getCollectionPointerExternalLink() != '') {
 	</div>
 
 
-	<div class="ccm-buttons">
-	<a href="javascript:void(0)" onclick="$('#ccmEditLink').get(0).submit()" class="ccm-button-right accept"><span><?=('Save')?></span></a>
+	<div class="ccm-buttons dialog-buttons">
+	<input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" />
+	<a href="javascript:void(0)" onclick="$('#ccmEditLink').get(0).submit()" class="btn primary ccm-button-right accept"><span><?=('Save')?></span></a>
 	</div>	
 	<input type="hidden" name="update_external" value="1" />
 	<input type="hidden" name="processCollection" value="1">

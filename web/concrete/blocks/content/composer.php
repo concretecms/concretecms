@@ -8,6 +8,7 @@ Loader::element('editor_controls');
 
 $form = Loader::helper('form');
 print $form->textarea($this->field('content'), $controller->getContentEditMode(), array(
-	'class' => 'advancedEditor ' . $class
+	'class' => 'advancedEditor ' . $class,
+	'style' => 'width: 580px; height: 380px'
 ));
 

@@ -1,6 +1,5 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
-	
 	# Filename: _process.php
 	# Author: Andrew Embler (andrew@bluepavo.com)
 	# -------------------
@@ -51,11 +50,24 @@
 			case 'remove':
 				$a = Area::get($c, $_REQUEST['arHandle']);
 				if (is_object($a)) {
-					$b = Block::getByID($_REQUEST['bID'], $c, $a);
+					$ax = $a;
+					$cx = $c;
+					if ($a->isGlobalArea()) {
+						$ax = STACKS_AREA_NAME;
+						$cx = Stack::getByName($_REQUEST['arHandle']);
+					}
+
+					$b = Block::getByID($_REQUEST['bID'], $cx, $ax);
 					$p = new Permissions($b); // might be block-level, or it might be area level
 					// we're removing a particular block of content
 					if ($p->canDeleteBlock()){
-						$nvc = $c->getVersionToModify();
+						$nvc = $cx->getVersionToModify();
+
+						if ($a->isGlobalArea()) {
+							$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+							$xvc->relateVersionEdits($nvc);
+						}
+
 						$b->loadNewCollection($nvc);
 						
 						$b->deleteBlock();
@@ -73,7 +85,14 @@
 			case 'update_block_css': 
 				$a = Area::get($c, $_REQUEST['arHandle']);
 				if (is_object($a)) {
-					$b = Block::getByID($_REQUEST['bID'], $c, $a);
+					$ax = $a;
+					$cx = $c;
+					if ($a->isGlobalArea()) {
+						$ax = STACKS_AREA_NAME;
+						$cx = Stack::getByName($_REQUEST['arHandle']);
+					}
+
+					$b = Block::getByID($_REQUEST['bID'], $cx, $ax);
 					$p = new Permissions($b);
 					if ($p->canWrite()){ 					
 						
@@ -86,7 +105,11 @@
 						
 						Loader::model('custom_style');						
 						
-						$nvc = $c->getVersionToModify();
+						$nvc = $cx->getVersionToModify();
+						if ($a->isGlobalArea()) {
+							$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+							$xvc->relateVersionEdits($nvc);
+						}
 						$b->loadNewCollection($nvc);
 						
 						//if this block is being changed, make sure it's a new version of the block.
@@ -123,11 +146,22 @@
 			case 'update_groups':
 				$a = Area::get($c, $_GET['arHandle']);
 				if (is_object($a)) {
-					$b = Block::getByID($_GET['bID'], $c, $a); 
+					$ax = $a;
+					$cx = $c;
+					if ($a->isGlobalArea()) {
+						$ax = STACKS_AREA_NAME;
+						$cx = Stack::getByName($_REQUEST['arHandle']);
+					}
+
+					$b = Block::getByID($_GET['bID'], $cx, $ax); 
 					$p = new Permissions($b);
 					// we're updating the groups for a particular block
 					if ($p->canAdminBlock()) {
-						$nvc = $c->getVersionToModify();
+						$nvc = $cx->getVersionToModify();
+						if ($a->isGlobalArea()) {
+							$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+							$xvc->relateVersionEdits($nvc);
+						}
 						$b->loadNewCollection($nvc);
 						if ($c->isMasterCollection()) {
 							$b->updateBlockGroups(true);
@@ -138,7 +172,9 @@
 						$obj = new stdClass;
 						$obj->bID = $b->getBlockID();
 						$obj->aID = $a->getAreaID();
+						$obj->cID = $c->getCollectionID();
 						$obj->arHandle= $a->getAreaHandle();
+						$obj->task = 'update_groups';
 						$obj->error = false;
 						
 						print Loader::helper('json')->encode($obj);
@@ -189,7 +225,13 @@
 				break;
 			case 'update_information':
 				$a = Area::get($c, $_GET['arHandle']);
-				$b = Block::getByID($_GET['bID'], $c, $a);
+				$ax = $a; 
+				$cx = $c;
+				if ($a->isGlobalArea()) {
+					$ax = STACKS_AREA_NAME;
+					$cx = Stack::getByName($_REQUEST['arHandle']);
+				}
+				$b = Block::getByID($_REQUEST['bID'], $cx, $ax);
 				$p = new Permissions($b);
 				// we're updating the groups for a particular block
 				if ($p->canWrite()) {
@@ -197,14 +239,27 @@
 					$bt = BlockType::getByHandle($b->getBlockTypeHandle());
 					if (!$bt->includeAll()) {
 						// we make sure to create a new version, if necessary				
-						$nvc = $c->getVersionToModify();
+						$nvc = $cx->getVersionToModify();
 					} else {
-						$nvc = $c; // keep the same one
+						$nvc = $cx; // keep the same one
 					}
+					if ($a->isGlobalArea()) {
+						$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+						$xvc->relateVersionEdits($nvc);
+					}
+
+					$b = Block::getByID($_REQUEST['bID'], $nvc, $ax);
 					$ob = $b;
-					// replace the block with the version of the block in the later version (if applicable)
-					$b = Block::getByID($_REQUEST['bID'], $nvc, $a);
-					if ($b->isAlias()) {
+					if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+						$bi = $b->getInstance();
+						$ob = Block::getByID($bi->getOriginalBlockID());
+						$originalDisplayOrder = $b->getBlockDisplayOrder();
+						$ob->setBlockAreaObject($a);
+						$nb = $ob->duplicate($nvc);
+						$nb->setAbsoluteBlockDisplayOrder($originalDisplayOrder);
+						$b->deleteBlock();
+						$b = &$nb;
+					} else if ($b->isAlias()) {					
 						$nb = $ob->duplicate($nvc);
 						$b->deleteBlock();
 						$b = &$nb;
@@ -219,7 +274,8 @@
 					$obj->aID = $a->getAreaID();
 					$obj->arHandle= $a->getAreaHandle();
 					$obj->error = false;
-					
+					$obj->cID = $c->getCollectionID();
+	
 					print Loader::helper('json')->encode($obj);
 					exit;
 					
@@ -285,18 +341,68 @@
 		switch($_GET['atask']) { 		
 			case 'update':
 				if ($cp->canAdminPage()) {
-					$area = Area::get($c, $_GET['arHandle']);
-					if (is_object($area)) {
+					$a = Area::get($c, $_GET['arHandle']);
+					$ax = $a; 
+					$cx = $c;
+					if ($a->isGlobalArea()) {
+						$cx = Stack::getByName($_REQUEST['arHandle']);
+						$ax = Area::get($cx, STACKS_AREA_NAME);
+					}
+
+					if (is_object($a)) {
 						if ($_POST['aRevertToPagePermissions']) {
-							$area->revertToPagePermissions();		
+							$ax->revertToPagePermissions();		
 						} else {
-							$area->update($_POST['attribKey'], $_POST['attribValue']);
+							$ax->update();
 						}
 					}
 					
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
 					exit;
 				}				
+				break;
+			case 'add_stack':
+				$a = Area::get($c, $_GET['arHandle']);
+				$cx = $c;
+				$ax = $a;
+
+				if ($a->isGlobalArea()) {
+					$cx = Stack::getByName($_REQUEST['arHandle']);
+					$ax = Area::get($cx, STACKS_AREA_NAME);
+				}
+				$obj = new stdClass;
+
+				$ap = new Permissions($ax);	
+				$stack = Stack::getByID($_REQUEST['stID']);
+				if (is_object($stack)) {
+					if ($ap->canAddStack($stack)) {
+						// we've already run permissions on the stack at this point, at least for viewing the stack.
+						$btx = BlockType::getByHandle(BLOCK_HANDLE_STACK_PROXY);
+						$nvc = $cx->getVersionToModify();
+						if ($a->isGlobalArea()) {
+							$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+							$xvc->relateVersionEdits($nvc);
+						}
+						$data['stID'] = $stack->getCollectionID();
+						$nb = $nvc->addBlock($btx, $ax, $data);
+
+						$obj->aID = $a->getAreaID();
+						$obj->arHandle = $a->getAreaHandle();
+						$obj->cID = $c->getCollectionID();
+						$obj->bID = $nb->getBlockID();
+						$obj->error = false;
+					} else {
+						$obj->error = true;
+						$obj->response = array(t('The stack contains invalid block types.'));
+					}
+				} else {
+					$obj->error = true;
+					$obj->response = array(t('Invalid stack.'));
+				}
+
+				print Loader::helper('json')->encode($obj);
+				exit;
+
 				break;
 			case 'design':
 				$area = Area::get($c, $_GET['arHandle']);
@@ -428,16 +534,23 @@
 				if ($cp->canDeleteCollection() && $c->getCollectionID != '1' && (!$c->isMasterCollection())) {
 					$children = $c->getNumChildren();
 					if ($children == 0 || $cp->canAdminPage()) {
-						$c->markPendingAction('DELETE');
+						$parent = Page::getByID($c->getCollectionParentID());
+						$c->markPendingAction('DELETE', $parent);
 						if ($cp->canApproveCollection()) {
 							$cParentID = $c->getCollectionParentID();
 							$c->approvePendingAction();
-							header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cParentID . $step);
-							exit;
 						}
 					}
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '&ctask=mcd' . $step);
+					$obj = new stdClass;
+					$obj->rel = $_REQUEST['rel'];
+					$obj->cParentID = $cParentID;
+					$obj->cID = $c->getCollectionID();
+					$obj->display_mode = $_REQUEST['display_mode'];
+					$obj->select_mode = $_REQUEST['select_mode'];
+					$obj->instance_id = $_REQUEST['instance_id'];
+					print Loader::helper('json')->encode($obj);
 					exit;
+
 				}
 			case 'clear_pending_action':
 				if ($cp->canApproveCollection() || $u->getUserID() == $c->getPendingActionUserID()) {
@@ -582,44 +695,58 @@
 			// the person is attempting to update some block of content
 
 			$a = Area::get($c, $_GET['arHandle']);
-			
-			$b = Block::getByID($_REQUEST['bID'], $c, $a);
+			$ax = $a; 
+			$cx = $c;
+			if ($a->isGlobalArea()) {
+				$ax = STACKS_AREA_NAME;
+				$cx = Stack::getByName($_REQUEST['arHandle']);
+			}
+			$b = Block::getByID($_REQUEST['bID'], $cx, $ax);
 			$p = new Permissions($b);
 			
 			if ($p->canWrite()) {
 
 				$bi = $b->getInstance();
+				if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+					$_b = Block::getByID($bi->getOriginalBlockID());
+					$bi = $_b->getInstance(); // for validation
+				}
 				$e = $bi->validate($_POST);
 				$obj = new stdClass;
 				$obj->aID = $a->getAreaID();
 				$obj->arHandle = $a->getAreaHandle();
 				$obj->cID = $c->getCollectionID();
-				$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
-				$c1 = $scrapbookHelper->getGlobalScrapbookPage();					
-				if ($c1->getCollectionID() == $c->getCollectionID()) {
-					$obj->isGlobalBlock = true;
-					$obj->cID = $_REQUEST['rcID'];
-					$obj->arHandle = $_REQUEST['rarHandle'];
-					$a1 = Area::getOrCreate(Page::getByID($obj->cID), $obj->arHandle);
-					$obj->aID = $a1->getAreaID();
-				} else {
-					$obj->isGlobalBlock = false;
-				}
-				
+
 				if ((!is_object($e)) || (($e instanceof ValidationErrorHelper) && (!$e->has()))) {
 					$bt = BlockType::getByHandle($b->getBlockTypeHandle());
 					if (!$bt->includeAll()) {
 						// we make sure to create a new version, if necessary				
-						$nvc = $c->getVersionToModify();
+						$nvc = $cx->getVersionToModify();
 					} else {
-						$nvc = $c; // keep the same one
+						$nvc = $cx; // keep the same one
 					}
+					
+					if ($a->isGlobalArea()) {
+						$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+						$xvc->relateVersionEdits($nvc);
+					}
+					
 					$ob = $b;
 					// replace the block with the version of the block in the later version (if applicable)
-					$b = Block::getByID($_REQUEST['bID'], $nvc, $a);
+					$b = Block::getByID($_REQUEST['bID'], $nvc, $ax);				
 					
+					if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+						// if we're editing a scrapbook display block, we add a new block in this position for the real block type
+						// set the block to the display order
+						// delete the scrapbook display block, and save the data
+						$originalDisplayOrder = $b->getBlockDisplayOrder();
+						$btx = BlockType::getByHandle($_b->getBlockTypeHandle());
+						$nb = $nvc->addBlock($btx, $ax, array());
+						$nb->setAbsoluteBlockDisplayOrder($originalDisplayOrder);
+						$b->deleteBlock();
+						$b = &$nb;
 					
-					if ($b->isAlias()) {
+					} else if ($b->isAlias()) {
 	
 						// then this means that the block we're updating is an alias. If you update an alias, you're actually going
 						// to duplicate the original block, and update the newly created block. If you update an original, your changes
@@ -642,21 +769,21 @@
 					$obj->response = $e->getList();
 				}
 				
-				if ($_POST['ccm-block-form-method'] == 'AJAX') { 
-					print Loader::helper('json')->encode($obj);
-					exit;
-				} else {
-					$redirectCID = (intval($_REQUEST['rcID'])) ? intval($_REQUEST['rcID']) : intval($_REQUEST['cID']);
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $redirectCID . $edit . $step);
-					exit;
-				}
+				print Loader::helper('json')->encode($obj);
+				exit;
 			}
 						
 		} else if ($_REQUEST['add'] || $_REQUEST['_add']) {
 			// the persion is attempting to add a block of content of some kind
 			$a = Area::get($c, $_REQUEST['arHandle']);
 			if (is_object($a)) {
-				$ap = new Permissions($a);	
+				$ax = $a;
+				$cx = $c;
+				if ($a->isGlobalArea()) {
+					$cx = Stack::getByName($_REQUEST['arHandle']);
+					$ax = Area::get($cx, STACKS_AREA_NAME);
+				}
+				$ap = new Permissions($ax);	
 				if ($_REQUEST['btask'] == 'alias_existing_block') {
 					if (is_array($_REQUEST['pcID'])) {		
 						Loader::model('pile');
@@ -673,44 +800,28 @@
 							if ($pc->getItemType() == "BLOCK") {
 								$bID = $pc->getItemID();
 								$b = Block::getByID($bID);
-								$b->setBlockAreaObject($a);
+								$b->setBlockAreaObject($ax);
 								$bt = BlockType::getByHandle($b->getBlockTypeHandle());
 								if ($ap->canAddBlock($bt)) {
-									if (!$bt->includeAll()) {
-										$nvc = $c->getVersionToModify();
-										$b->alias($nvc);
-									} else {
-										$b->alias($c);
+									$btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
+									$nvc = $cx->getVersionToModify();
+									if ($a->isGlobalArea()) {
+										$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+										$xvc->relateVersionEdits($nvc);
 									}
+									$data['bOriginalID'] = $bID;
+									$nb = $nvc->addBlock($btx, $ax, $data);
+									$nb->refreshCache();
 								}
 							}
 						}
-					} else if (isset($_REQUEST['bID'])) {
-						if($_REQUEST['globalBlock']) {
-							$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
-							$c1 = $scrapbookHelper->getGlobalScrapbookPage();			
-							$a1 = Area::get($c1, $_REQUEST['globalScrapbook']);
-							$b = Block::getByID($_REQUEST['bID'], $c1, $a1);
-						} else {
-							$b = Block::getByID($_REQUEST['bID']); 
-						}
-						$bt = BlockType::getByHandle($b->getBlockTypeHandle());						
-						if ($ap->canAddBlock($bt)) {
-							$b->setBlockAreaObject($a);
-							if (!$bt->includeAll()) {
-								$nvc = $c->getVersionToModify();
-								$b->alias($nvc);
-							} else {
-								$b->alias($c);
-							}
-						}					
-					}
-
+					} 
+					
 					$obj = new stdClass;
 					$obj->aID = $a->getAreaID();
 					$obj->arHandle = $a->getAreaHandle();
 					$obj->cID = $c->getCollectionID();
-					$obj->bID = $b->getBlockID();
+					$obj->bID = $nb->getBlockID();
 					$obj->error = false;
 					print Loader::helper('json')->encode($obj);
 					exit;
@@ -732,11 +843,16 @@
 						if ((!is_object($e)) || (($e instanceof ValidationErrorHelper) && (!$e->has()))) {
 
 							if (!$bt->includeAll()) {
-								$nvc = $c->getVersionToModify();
-								$nb = $nvc->addBlock($bt, $a, $data);
+								$nvc = $cx->getVersionToModify();
+								$nb = $nvc->addBlock($bt, $ax, $data);
 							} else {
 								// if we apply to all, then we don't worry about a new version of the page
-								$nb = $c->addBlock($bt, $a, $data);
+								$nb = $cx->addBlock($bt, $ax, $data);
+							}
+							
+							if ($a->isGlobalArea()) {
+								$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+								$xvc->relateVersionEdits($nvc);
 							}
 
 							$obj->error = false;
@@ -749,13 +865,8 @@
 						
 						}
 
-						if ($_POST['ccm-block-form-method'] == 'AJAX') { 
-							print Loader::helper('json')->encode($obj);
-							exit;
-						} else {
-							header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
-							exit;
-						}
+						print Loader::helper('json')->encode($obj);
+						exit;
 					}
 				}
 			}
@@ -865,6 +976,23 @@
 					exit;
 				}
 			}		
+		} else if ($_POST['update_speed_settings']) {
+			// updating a collection
+			if ($cp->canAdminPage()) {
+				
+				$data = array();
+				$data['cCacheFullPageContent'] = $_POST['cCacheFullPageContent'];
+				$data['cCacheFullPageContentLifetimeCustom'] = $_POST['cCacheFullPageContentLifetimeCustom'];
+				$data['cCacheFullPageContentOverrideLifetime'] = $_POST['cCacheFullPageContentOverrideLifetime'];				
+
+				$c->update($data);
+				
+				$obj = new stdClass;
+				$obj->name = $c->getCollectionName();
+				$obj->cID = $c->getCollectionID();
+				print Loader::helper('json')->encode($obj);
+				exit;
+			}	
 		} else if ($_POST['update_metadata']) { 
 			// updating a collection
 			if ($cp->canWrite()) {
@@ -898,21 +1026,13 @@
 				
 				$obj = new stdClass;
 
-				if ($_POST['rel'] == 'SITEMAP') { 
-					$obj->rel = $_POST['rel'];
-					if ($cp->canApproveCollection()) {
-						$v = CollectionVersion::get($c, "RECENT");
-						$v->approve();
-						$u = new User();
-						$u->unloadCollectionEdit();
-						$obj->name = $v->getVersionName();
-					}
-					
-				} else {
-					//header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
-					//exit;
+				if ($_POST['approveImmediately'] && ($cp->canApproveCollection())) {
+					$v = CollectionVersion::get($c, "RECENT");
+					$v->approve();
+					$u = new User();
+					$u->unloadCollectionEdit();
+					$obj->name = $v->getVersionName();
 				}
-
 				$obj->cID = $c->getCollectionID();
 				print Loader::helper('json')->encode($obj);
 				exit;
@@ -983,9 +1103,7 @@
 				$data['cDatePublic'] = $dh->getSystemDateTime($dt->translate('cDatePublic'));	
 				
 				$nc = $c->add($ct, $data);
-				
-				$nvc = $nc->getVersionToModify();
-				processMetaData($nvc); 				
+
 				
 				if (is_object($nc)) {
 					if ($_POST['rel'] == 'SITEMAP') { 

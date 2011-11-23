@@ -1,0 +1,72 @@
+/*
+Skin Name: Nivo Slider Default Theme
+Skin URI: http://nivo.dev7studios.com
+Skin Type: flexible
+Description: The default skin for the Nivo Slider.
+Version: 1.0
+Author: Gilbert Pellegrom
+Author URI: http://dev7studios.com
+*/
+
+.ccm-nivo-theme-default .nivoSlider {
+	position:relative;
+	background:#fff;
+	border: 1px solid #e1e1e1;
+}
+.ccm-nivo-theme-default .nivoSlider img {
+	position:absolute;
+	top:0px;
+	left:0px;
+	display:none;
+}
+.ccm-nivo-theme-default .nivoSlider a {
+	border:0;
+	display:block;
+}
+
+.ccm-nivo-theme-default .nivo-controlNav {
+	position:absolute;
+	left:50%;
+	bottom:-50px;
+    margin-left:-40px; /* Tweak this to center bullets */
+}
+.ccm-nivo-theme-default .nivo-controlNav a {
+	display:block;
+	width:22px;
+	height:22px;
+	background:url(bullets.png) no-repeat;
+	text-indent:-9999px;
+	border:0;
+	margin-right:3px;
+	float:left;
+}
+.ccm-nivo-theme-default .nivo-controlNav a.active {
+	background-position:0 -22px;
+}
+
+.ccm-nivo-theme-default .nivo-directionNav a {
+	display:block;
+	width:30px;
+	height:30px;
+	background:url(arrows.png) no-repeat;
+	text-indent:-9999px;
+	border:0;
+}
+.ccm-nivo-theme-default a.nivo-nextNav {
+	background-position:-30px 0;
+	right:15px;
+}
+.ccm-nivo-theme-default a.nivo-prevNav {
+	left:15px;
+}
+
+.ccm-nivo-theme-default .nivo-caption {
+    font-family: Helvetica, Arial, sans-serif;
+}
+.ccm-nivo-theme-default .nivo-caption a {
+    color:#fff;
+    border-bottom:1px dotted #fff;
+}
+.ccm-nivo-theme-default .nivo-caption a:hover {
+    color:#fff;
+}

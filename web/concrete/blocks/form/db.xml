@@ -96,6 +96,9 @@
 			<unsigned />
 			<default value="0" />
 		</field>
+		<index name="questionSetId">
+			<col>questionSetId</col>
+		</index>
 	</table>
 	
 	<table name="btFormAnswers">

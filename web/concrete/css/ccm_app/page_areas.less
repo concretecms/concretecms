@@ -1,0 +1,78 @@
+/** 
+ * The concrete5 in-page editing UI
+ */
+ 
+#ccm-dashboard-composer-form div.ccm-block-stack,
+#ccm-dashboard-composer-form div.ccm-block-alias,
+#ccm-dashboard-composer-form div.ccm-block-global,
+#ccm-dashboard-composer-form div.ccm-block {
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+}
+
+ div.ccm-block-alias {
+	border: 2px dotted #fbb !important;
+}
+
+div.ccm-block-stack {
+	border: 2px dotted #6D0000 !important;
+}
+
+div.ccm-block-arrange, div.ccm-block {
+	margin: 0px;
+	border: 2px dotted #f00;
+	padding: 2px;
+	margin-bottom: 4px;
+	overflow: hidden;
+}
+
+div.ccm-menu-hotspot-active {
+	border: 2px dotted black !important;
+}
+
+div.ccm-block-arrange {
+	min-height: 20px;
+	max-height: 200px;
+	overflow: hidden;
+}
+
+div.ccm-area div.ccm-block-arrange:hover {
+	cursor: move;
+	border: 2px dotted #000;
+}
+
+div.ccm-global-area div.ccm-block-arrange {
+	border: 2px dotted #eee;
+}
+
+div.ccm-add-block-global {
+	border: 2px dotted #ddd !important;
+}
+
+div.ccm-add-block, div.ccm-add-block-global {
+	padding: 2px;
+	font-size: 11px;
+	white-space: nowrap;
+	font-weight: bold; 
+	border: 2px dotted #ccc; 
+	overflow:hidden; 
+}
+
+div.ccm-add-block.selected {
+	color: #369;
+	text-decoration: underline;
+}
+
+div.ccm-move-mode {
+	border: 1px solid #ccc;
+	padding: 2px;
+	min-height: 20px;
+}
+
+div#ccm-highlighter {
+	filter: alpha(opacity=60);	
+	background-image: url(../images/bg_trans.png);	
+	z-index: 5;
+	cursor: pointer;
+}

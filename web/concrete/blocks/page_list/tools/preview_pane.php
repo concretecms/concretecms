@@ -22,7 +22,13 @@ $controller->displayFeaturedOnly = $_REQUEST['displayFeaturedOnly'];
 
 $cArray = $controller->getPages();
 
+//For compatibility with 5.4.2+ view.php...
+$pages = $cArray;
+$showRss = false;
+$rssIconSrc = '';
+$showPagination = false;
+$paginator = null;
 
-//echo var_dump($cArray);
+
 require(dirname(__FILE__) . '/../view.php');
 exit;

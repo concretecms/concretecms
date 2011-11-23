@@ -20,7 +20,11 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 			return '<a href="' . $f->getDownloadURL() . '">' . $f->getTitle() . '</a>';
 		}
 	}
-
+	
+	public function exportValue($akn) {
+		$av = $akn->addChild('value');
+		$av->addChild('fID', ContentExporter::replaceFileWithPlaceHolder($this->getValue()->getFileID()));
+	}
 	public function searchForm($list) {
 		$fileID = $this->request('value');
 		$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $fileID);
@@ -31,6 +35,16 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 		$db = Loader::db();
 		$value = $db->GetOne("select fID from atFile where avID = ?", array($this->getAttributeValueID()));
 		return $value;	
+	}
+	
+	public function importValue(SimpleXMLElement $akv) {
+		if (isset($akv->value->fID)) {
+			$fIDVal = (string) $akv->value->fID;
+			$fID = ContentImporter::getValue($fIDVal);
+			if ($fID) {
+				return File::getByID($fID);
+			}
+		}
 	}
 	
 	public function search() {
@@ -51,7 +65,9 @@ class ImageFileAttributeTypeController extends AttributeTypeController  {
 	// run when we call setAttribute(), instead of saving through the UI
 	public function saveValue($obj) {
 		$db = Loader::db();
-		$db->Replace('atFile', array('avID' => $this->getAttributeValueID(), 'fID' => $obj->getFileID()), 'avID', true);
+		if (is_object($obj) && (!$obj->isError())) {
+			$db->Replace('atFile', array('avID' => $this->getAttributeValueID(), 'fID' => $obj->getFileID()), 'avID', true);
+		}
 	}
 	
 	public function deleteKey() {

@@ -1,4 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
+<div class="ccm-ui">
 <? $form = Loader::helper('form'); ?>
 <?
 
@@ -132,29 +133,16 @@ $(function() {
 
 <? } ?>
 
-	<div style="margin-top: 12px">
-	<table border="0" cellspacing="0" cellpadding="0" id="ccm-file-search-advanced-sets-header">
-	<tr>
-		<? if (!$disableTitle) { ?>
-		<td width="100%"><h1><?=t('Set')?></h1></td>
-		<? } ?>
-		<td>
-		
-		
-		<div class="ccm-file-sets-search-wrapper-input">
-			<?=$form->text('fsAddToSearchName', $searchRequest['fsSearchName'], array('autocomplete' => 'off'))?>
-		</div>
-		
-		</td>
-	</tr>
-	</table>
+	<div class="clear"></div>
+	<div class="ccm-search-bar">
+		<?=$form->text('fsAddToSearchName', $searchRequest['fsSearchName'], array('autocomplete' => 'off'))?>
 	</div>
 
 	
 	<? $s1 = FileSet::getMySets(); ?>
 	<? if (count($s1) > 0) { ?>
-	<div class="ccm-file-search-advanced-sets-results">
-		<ul id="ccm-file-search-add-to-sets-list">
+	<div class="clearfix">
+		<ul class="inputs-list">
 	
 	
 	<? foreach($sets as $s) { 
@@ -174,8 +162,9 @@ $(function() {
 		if ($displaySet) {
 		?>
 	
-		<li class="ccm-file-set-add-cb" style="padding-left: 0px">
-			<?=checkbox('fsID', $s->getFileSetID(), $s->state)?> <label><?=$s->getFileSetName()?></label>
+		<li class="ccm-file-set-add-cb" ><label>
+			<?=checkbox('fsID', $s->getFileSetID(), $s->state)?> <span><?=$s->getFileSetName()?></span>
+		</label>
 		</li>
 	<? } 
 	} ?>
@@ -188,14 +177,12 @@ $(function() {
 
 <? if (count($extensions) > 1) { ?>
 
-	<br/><div class="ccm-note"><?=t('If a file set does not appear above, you either have no access to add files to it, or it does not accept the file types %s.', implode(', ', $extensions));?></div>
-	
+	<div class="alert-message info"><p><?=t('If a file set does not appear above, you either have no access to add files to it, or it does not accept the file types %s.', implode(', ', $extensions));?></p></div>
 	
 <? } ?>
-<br/>
-<hr />
 
-<h2><?=t('Add to New Set')?></h2>
+
+<h3><?=t('Add to New Set')?></h3>
 
 <?=$form->checkbox('fsNew', 1)?> <?=$form->text('fsNewText', array('style' => 'width: 120px', 'onclick' => '$(\'input[name=fsNew]\').attr(\'checked\',true)'))?> <?=$form->checkbox('fsNewShare', 1, true)?> <?=t('Make set public')?>
 
@@ -210,3 +197,4 @@ $(function() {
 	</form>
 	
 <? } ?>
+</div>

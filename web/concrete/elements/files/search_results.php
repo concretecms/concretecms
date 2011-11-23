@@ -11,48 +11,55 @@ if (isset($_REQUEST['searchInstance'])) {
 	};
 	var CCM_STAR_ACTION    = 'files/star.php';
 </script>
+
+<div id="ccm-<?=$searchInstance?>-search-results" class="ccm-file-list">
+
+<? if ($searchType == 'DASHBOARD') { ?>
+
+<div class="ccm-pane-body">
+
+<? } ?>
+
 <div id="ccm-list-wrapper"><a name="ccm-<?=$searchInstance?>-list-wrapper-anchor"></a>
+	<div style="float: right; margin-bottom: 10px">
+		<? $form = Loader::helper('form'); ?>
+
+		<?=$form->label('ccm-' . $searchInstance . '-list-multiple-operations', t('With Selected'))?>
+		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" style="width: 120px; margin-left: 8px;" disabled>
+			<option value="">**</option>
+			<option value="download"><?=t('Download')?></option>
+			<option value="sets"><?=t('Sets')?></option>
+			<option value="properties"><?=t('Properties')?></option>
+			<option value="rescan"><?=t('Rescan')?></option>
+			<option value="duplicate"><?=t('Copy')?></option>
+			<option value="delete"><?=t('Delete')?></option>
+		</select>	
+		<? if ($_REQUEST['fssID'] < 1) { ?><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-list-view-customize"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Customize Results')?></a><? } ?>
+	</div>
+
 <?
 	$fileList->displaySummary();
 	$txt = Loader::helper('text');
 	$keywords = $searchRequest['fKeywords'];
 	$soargs = array();
+	$soargs['searchType'] = $searchType;
 	$soargs['searchInstance'] = $searchInstance;
-	
-	/*
-	if ($searchType == 'DASHBOARD') {
-		$bu = false;
-	} else {
-		$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/files/search_results';
-	}
-	*/
-	
 	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/files/search_results';
 	
 	if (count($files) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-<?=$searchInstance?>-list" class="ccm-results-list">
 		<tr>
 			<th><input id="ccm-<?=$searchInstance?>-list-cb-all" type="checkbox" /></td>
-			<th><select id="ccm-<?=$searchInstance?>-list-multiple-operations" disabled>
-				<option value="">**</option>
-				<option value="download"><?=t('Download')?></option>
-				<option value="sets"><?=t('Sets')?></option>
-				<option value="properties"><?=t('Properties')?></option>
-				<option value="rescan"><?=t('Rescan')?></option>
-				<option value="duplicate"><?=t('Copy')?></option>
-				<option value="delete"><?=t('Delete')?></option>
-			</select>
-			</th>
+			<th class="ccm-file-list-thumbnail-wrapper"><?=t('Thumbnail')?></th>
 
 			<th class="ccm-file-list-starred">&nbsp;</th>
 			<? foreach($columns->getColumns() as $col) { ?>
 				<? if ($col->isColumnSortable()) { ?>
 					<th class="<?=$fileList->getSearchResultsClass($col->getColumnKey())?>"><a href="<?=$fileList->getSortByURL($col->getColumnKey(), $col->getColumnDefaultSortDirection(), $bu, $soargs)?>"><?=$col->getColumnName()?></a></th>
 				<? } else { ?>
-					<th><?=t('Type')?></th>
+					<th><?=$col->getColumnName()?></th>
 				<? } ?>
 			<? } ?>
-			<th class="ccm-search-add-column-header"><? if ($_REQUEST['fssID'] < 1) { ?><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-search-add-column"><img src="<?=ASSETS_URL_IMAGES?>/icons/column_preferences.png" width="16" height="16" /></a><? } ?></th>
 		</tr>
 	<?
 		foreach($files as $f) {
@@ -70,11 +77,8 @@ if (isset($_REQUEST['searchInstance'])) {
 			?>
 			<tr class="ccm-list-record <?=$striped?>" ccm-file-manager-instance="<?=$searchInstance?>" ccm-file-manager-can-admin="<?=($pf->canAdmin())?>" ccm-file-manager-can-duplicate="<?=($pfg->canAddFileType($f->getExtension()) && $pf->canWrite())?>" ccm-file-manager-can-delete="<?=$pf->canAdmin()?>" ccm-file-manager-can-view="<?=$canViewInline?>" ccm-file-manager-can-replace="<?=$pf->canWrite()?>" ccm-file-manager-can-edit="<?=$canEdit?>" fID="<?=$f->getFileID()?>" id="fID<?=$f->getFileID()?>">
 			<td class="ccm-file-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$f->getFileID()?>" /></td>
-			<td>
-				<div class="ccm-file-list-thumbnail">
-					<div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><table border="0" cellspacing="0" cellpadding="0" height="70" width="100%"><tr><td align="center" fID="<?=$f->getFileID()?>" style="padding: 0px"><?=$fv->getThumbnail(1)?></td></tr></table></div>
-				</div>
-		
+			<td><ul class="media-grid"><li class="ccm-file-list-thumbnail" fID="<?=$f->getFileID()?>"><a href="javascript:void(0)"><?=$fv->getThumbnail(1)?></a></li></ul>
+			
 			<? if ($fv->hasThumbnail(2)) { ?>
 				<div class="ccm-file-list-thumbnail-hover" id="fID<?=$f->getFileID()?>hoverThumbnail"><div><?=$fv->getThumbnail(2)?></div></div>
 			<? } ?>
@@ -84,14 +88,12 @@ if (isset($_REQUEST['searchInstance'])) {
 			<? foreach($columns->getColumns() as $col) { ?>
 				<? // special one for keywords ?>				
 				<? if ($col->getColumnKey() == 'fvTitle') { ?>
-					<td class="ccm-file-list-filename"><div style="word-wrap: break-word; width: 100px"><?=$txt->highlightSearch($fv->getTitle(), $keywords)?></div></td>		
+					<td class="ccm-file-list-filename"><?=$txt->highlightSearch($fv->getTitle(), $keywords)?></td>		
 				<? } else { ?>
 					<td><?=$col->getColumnValue($f)?></td>
 				<? } ?>
 			<? } ?>
-			
-			<td>&nbsp;</td>
-			
+						
 			</tr>
 			<?
 		}
@@ -107,7 +109,21 @@ if (isset($_REQUEST['searchInstance'])) {
 		<div class="ccm-results-list-none"><?=t('No files found.')?></div>
 		
 	
-	<? } 
-	$fileList->displayPaging($bu, false, $soargs); ?>
+	<? } ?>
 	
+</div>
+
+<? if ($searchType == 'DASHBOARD') { ?>
+</div>
+
+<div class="ccm-pane-footer">
+	<? 	$fileList->displayPagingV2($bu, false, $soargs); ?>
+</div>
+
+<? } else { ?>
+	<div class="ccm-pane-dialog-pagination">
+		<? 	$fileList->displayPagingV2($bu, false, $soargs); ?>
+	</div>
+<? } ?>
+
 </div>

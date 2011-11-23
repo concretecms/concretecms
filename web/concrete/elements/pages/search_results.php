@@ -19,24 +19,32 @@ if (isset($_REQUEST['searchInstance'])) {
 }
 ?>
 
-<div id="ccm-list-wrapper"><a name="ccm-<?=$searchInstance?>-list-wrapper-anchor"></a>
+<div id="ccm-<?=$searchInstance?>-search-results" class="ccm-file-list">
 
 <? if (!$searchDialog) { ?>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-<tr>
-<td width="100%"><?=$pageList->displaySummary();?></td>
-	<td style="white-space: nowrap"><?=t('With Selected: ')?>&nbsp;</td>
-	<td align="right">
-	<select id="ccm-<?=$searchInstance?>-list-multiple-operations" disabled="disabled">
-		<option value="">**</option>
-		<option value="properties"><?=t('Edit Properties')?></option>
-	</select>
-	</td>
-</tr>
-</table>
+<div class="ccm-pane-body">
+
 <? } ?>
+
+<div id="ccm-list-wrapper"><a name="ccm-<?=$searchInstance?>-list-wrapper-anchor"></a>
+	<div style="float: right; margin-bottom: 10px">
+		<? $form = Loader::helper('form'); ?>
+
+		<?=$form->label('ccm-' . $searchInstance . '-list-multiple-operations', t('With Selected'))?>
+		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" style="width: 120px; margin-left: 8px;" disabled>
+			<option value="">**</option>
+			<option value="properties"><?=t('Edit Properties')?></option>
+			<option value="move_copy"><?=t('Move/Copy')?></option>
+			<option value="speed_settings"><?=t('Speed Settings')?></option>
+			<option value="design"><?=t('Design')?></option>
+			<option value="delete"><?=t('Delete')?></option>
+		</select>	
+		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-list-view-customize"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Customize Results')?></a>
+	</div>
+
 <?
+	$pageList->displaySummary();
 	$txt = Loader::helper('text');
 	$keywords = $searchRequest['keywords'];
 	$soargs = array();
@@ -48,24 +56,19 @@ if (isset($_REQUEST['searchInstance'])) {
 	
 	if (count($pages) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-<?=$searchInstance?>-list" class="ccm-results-list">
-		<tr class="ccm-results-list-header">
+		<tr>
 			<? if (!$searchDialog) { ?><th><input id="ccm-<?=$searchInstance?>-list-cb-all" type="checkbox" /></th><? } ?>
-			<th><?=t('Type')?></th>
-
-			<th class="ccm-page-list-name <?=$pageList->getSearchResultsClass('cvName')?>"><a href="<?=$pageList->getSortByURL('cvName', 'asc', $bu, $soargs)?>"><?=t('Name')?></a></th>
-			<th class="<?=$pageList->getSearchResultsClass('cvDatePublic')?>"><a href="<?=$pageList->getSortByURL('cvDatePublic', 'asc', $bu, $soargs)?>"><?=t('Public Date')?></a></th>
-			<th class="<?=$pageList->getSearchResultsClass('cDateModified')?>"><a href="<?=$pageList->getSortByURL('cDateModified', 'asc', $bu, $soargs)?>"><?=t('Date Modified')?></a></th>
-			<th><?=t('Owner')?></th>
 			<? if ($pageList->isIndexedSearch()) { ?>
 				<th class="<?=$pageList->getSearchResultsClass('cIndexScore')?>"><a href="<?=$pageList->getSortByURL('cIndexScore', 'desc', $bu, $soargs)?>"><?=t('Score')?></a></th>
 			<? } ?>
+			<? foreach($columns->getColumns() as $col) { ?>
+				<? if ($col->isColumnSortable()) { ?>
+					<th class="<?=$pageList->getSearchResultsClass($col->getColumnKey())?>"><a href="<?=$pageList->getSortByURL($col->getColumnKey(), $col->getColumnDefaultSortDirection(), $bu, $soargs)?>"><?=$col->getColumnName()?></a></th>
+				<? } else { ?>
+					<th><?=$col->getColumnName()?></th>
+				<? } ?>
+			<? } ?>
 
-			<? 
-			$slist = CollectionAttributeKey::getColumnHeaderList();
-			foreach($slist as $ak) { ?>
-				<th class="<?=$pageList->getSearchResultsClass($ak)?>"><a href="<?=$pageList->getSortByURL($ak, 'asc', $bu, $soargs)?>"><?=$ak->getAttributeKeyDisplayHandle()?></a></th>
-			<? } ?>			
-			<th class="ccm-search-add-column-header"><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-search-add-column"><img src="<?=ASSETS_URL_IMAGES?>/icons/add.png" width="16" height="16" alt="<?php echo t('Add')?>"/></a></th>
 		</tr>
 	<?
 		foreach($pages as $cobj) {
@@ -77,38 +80,22 @@ if (isset($_REQUEST['searchInstance'])) {
 			}
 
 			?>
-			<tr class="ccm-list-record <?=$striped?>" cName="<?=htmlentities($cobj->getCollectionName(), ENT_QUOTES, APP_CHARSET)?>" cID="<?=$cobj->getCollectionID()?>" sitemap-select-callback="<?=$sitemap_select_callback?>" sitemap-select-mode="<?=$sitemap_select_mode?>" sitemap-display-mode="search" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
+			<tr class="ccm-list-record <?=$striped?>" cName="<?=htmlentities($cobj->getCollectionName(), ENT_QUOTES, APP_CHARSET)?>" cID="<?=$cobj->getCollectionID()?>" sitemap-select-callback="<?=$sitemap_select_callback?>" sitemap-select-mode="<?=$sitemap_select_mode?>" sitemap-instance-id="<?=$searchInstance?>" sitemap-display-mode="search" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
 			<? if (!$searchDialog) { ?><td class="ccm-<?=$searchInstance?>-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td><? } ?>
-			<td><?=$cobj->getCollectionTypeName()?></td>
-			<td class="ccm-page-list-name"><div style="max-width: 150px; word-wrap: break-word"><?=$txt->highlightSearch($cobj->getCollectionName(), $keywords)?></div></td>
-			<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES, strtotime($cobj->getCollectionDatePublic()))?></td>
-			<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES, strtotime($cobj->getCollectionDateLastModified()))?></td>
-			<td><?
-				$ui = UserInfo::getByID($cobj->getCollectionUserID());
-				if (is_object($ui)) {
-					print $ui->getUserName();
-				}
-			?></td>
-			<? if ($pageList->isIndexedSearch()) { ?>
-				<td><?=$cobj->getPageIndexScore()?></td>
+
+
+
+			<? foreach($columns->getColumns() as $col) { ?>
+				<? if ($col->getColumnKey() == 'cvName') { ?>
+					<td class="ccm-page-list-name"><?=$txt->highlightSearch($cobj->getCollectionName(), $keywords)?></td>		
+				<? } else { ?>
+					<td><?=$col->getColumnValue($cobj)?></td>
+				<? } ?>
 			<? } ?>
-			
-			<? 
-			$slist = CollectionAttributeKey::getColumnHeaderList();
-			foreach($slist as $ak) { ?>
-				<td><?
-				$vo = $cobj->getAttributeValueObject($ak);
-				if (is_object($vo)) {
-					print $vo->getValue('display');
-				}
-				?></td>
-			<? } ?>		
-			<td>&nbsp;</td>
-			
+
 			</tr>
 			<?
 		}
-
 	?>
 	
 	</table>
@@ -120,7 +107,21 @@ if (isset($_REQUEST['searchInstance'])) {
 		<div class="ccm-results-list-none"><?=t('No pages found.')?></div>
 		
 	
-	<? } 
-	$pageList->displayPaging($bu, false, $soargs); ?>
+	<? } ?>
 	
+</div>
+
+<? if (!$searchDialog) { ?>
+</div>
+
+<div class="ccm-pane-footer">
+	<? 	$pageList->displayPagingV2($bu, false, $soargs); ?>
+</div>
+
+<? } else { ?>
+	<div class="ccm-pane-dialog-pagination">
+		<? 	$pageList->displayPagingV2($bu, false, $soargs); ?>
+	</div>
+<? } ?>
+
 </div>

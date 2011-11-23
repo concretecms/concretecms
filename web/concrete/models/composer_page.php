@@ -15,6 +15,7 @@ class ComposerPage extends Page {
 		$parent = Page::getByPath(COMPOSER_DRAFTS_PAGE_PATH);
 		$data['cvIsApproved'] = 0;
 		$p = $parent->add($ct, $data);
+		$p->deactivate();
 				
 		$db = Loader::db();
 		$targetPageID = 0;
@@ -91,7 +92,7 @@ class ComposerPage extends Page {
 	public function markComposerPageAsPublished() {
 		$db = Loader::db();
 		$db->Execute('delete from ComposerDrafts where cID = ?', array($this->getCollectionID()));
-		$this->refreshCache();
+		$this->activate();
 	}
 
 	public function getMyDrafts() {

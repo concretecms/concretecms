@@ -17,44 +17,36 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 </script>
 
 <?
-$this->addHeaderItem($html->css('ccm.ui.css'));
-$this->addHeaderItem($html->css('jquery.rating.css'));
-$this->addHeaderItem($html->css('ccm.dialog.css'));
-$this->addHeaderItem($html->css('ccm.menus.css'));
-$this->addHeaderItem($html->css('ccm.forms.css'));
-$this->addHeaderItem($html->css('ccm.search.css'));
-$this->addHeaderItem($html->css('ccm.filemanager.css'));
-$this->addHeaderItem($html->css('ccm.colorpicker.css'));
-$this->addHeaderItem($html->css('jquery.ui.css'));
-
-$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
-$this->addHeaderItem($html->javascript('jquery.js'));
-$this->addHeaderItem($html->javascript('jquery.form.js'));
-$this->addHeaderItem($html->javascript('jquery.metadata.js'));
-$this->addHeaderItem($html->javascript('jquery.ui.js'));
-$this->addHeaderItem($html->javascript('quicksilver.js'));
-$this->addHeaderItem($html->javascript('jquery.liveupdate.js'));
-$this->addHeaderItem($html->javascript('jquery.rating.js'));
-$this->addHeaderItem($html->javascript('jquery.colorpicker.js'));
+$dh = Loader::helper('concrete/dashboard');
+if (!$dh->inDashboard()) {
+	$this->addHeaderItem($html->css('ccm.app.css'));
+	$this->addHeaderItem($html->css('jquery.ui.css'));
+	$this->addFooterItem('<div id="ccm-page-controls-wrapper"><div id="ccm-toolbar"></div></div>');
 	
-if (ACTIVE_LOCALE != 'en_US') {
-	$dlocale = str_replace('_', '-', LANGUAGE);
-	$this->addHeaderItem($html->javascript('i18n/ui.datepicker-' . $dlocale . '.js'));
-	$this->addHeaderItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');
+	$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
+	$this->addHeaderItem($html->javascript('jquery.js'));
+	$this->addFooterItem($html->javascript('jquery.ui.js'));
+	$this->addFooterItem($html->javascript('jquery.form.js'));
+	$this->addFooterItem($html->javascript('ccm.app.js'));
+	if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
+		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
+	}
+	$cih = Loader::helper('concrete/interface');
+	if (ACTIVE_LOCALE != 'en_US') {
+		$dlocale = str_replace('_', '-', ACTIVE_LOCALE);
+		$this->addFooterItem($html->javascript('i18n/ui.datepicker-' . $dlocale . '.js'));
+		$this->addFooterItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');
+	}
+	if (!Config::get('SHOW_INTRODUCTION')) {
+		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_showAppIntroduction(); });</script>');
+		Config::save('SHOW_INTRODUCTION', 1);
+	}
+	$this->addFooterItem($html->javascript('tiny_mce/tiny_mce.js'));
 }
-
-$this->addHeaderItem($html->javascript('ccm.dialog.js'));
-$this->addHeaderItem($html->javascript('ccm.themes.js'));
-$this->addHeaderItem($html->javascript('ccm.filemanager.js'));
-$this->addHeaderItem($html->javascript('ccm.search.js'));
-$this->addHeaderItem($html->javascript('ccm.ui.js'));
-$this->addHeaderItem($html->javascript('ccm.layout.js'));
-$this->addHeaderItem($html->javascript('tiny_mce/tiny_mce.js'));
-
 
 $cID = ($c->isAlias()) ? $c->getCollectionPointerOriginalID() : $c->getCollectionID();
 
-$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/page_controls_menu_js?cID=' . $cID . '&amp;cvID=' . $cvID . '&amp;btask=' . $_REQUEST['btask'] . '&amp;ts=' . time() . '"></script>'); 
+$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/page_controls_menu_js?cID=' . $cID . '&amp;cvID=' . $cvID . '&amp;btask=' . $_REQUEST['btask'] . '&amp;ts=' . time() . '"></script>'); 
 
 	}
 	

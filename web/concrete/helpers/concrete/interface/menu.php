@@ -156,7 +156,7 @@ class ConcreteInterfaceMenuItemController extends Controller {
 							$this->addHeaderItem($h->css($this->menuItem->getMenuItemFileURL($i)));
 							break;
 						case 'JAVASCRIPT':
-							$this->addHeaderItem($h->javascript($this->menuItem->getMenuItemFileURL($i)));
+							$this->addFooterItem($h->javascript($this->menuItem->getMenuItemFileURL($i)));
 							break;
 					}
 				}
@@ -172,6 +172,9 @@ class ConcreteInterfaceMenuItemController extends Controller {
 		$attribs = '';
 		if (is_array($this->menuItem->getLinkAttributes())) {
 			foreach($this->menuItem->getLinkAttributes() as $key => $value) {
+				if ($key == 'class') {
+					$value = 'ccm-header-nav-package-item ' . $value;
+				}
 				$attribs .= $key . '="' . $value . '" ';
 			}
 		}

@@ -23,7 +23,7 @@
 		*/
 		?>
 		
-		<iframe border="0" id="v<?=time()?>" frameborder="0" height="100%" width="100%" src="<?=BASE_URL . DIR_REL?>/<?=DISPATCHER_FILENAME?>?cvID=<?=$_REQUEST['cvID']?>&cID=<?=$_REQUEST['cID']?>" />
+		<iframe border="0" id="v<?=time()?>" frameborder="0" height="100%" width="100%" src="<?=BASE_URL . DIR_REL?>/<?=DISPATCHER_FILENAME?>?cvID=<?=$_REQUEST['cvID']?>&cID=<?=$_REQUEST['cID']?>&vtask=view_versions" />
 	
 	<? 
 		exit;
@@ -171,9 +171,7 @@ if (!$_GET['versions_reloaded']) { ?>
 	<div id="ccm-versions-container">
 <? } ?>
 
-<? Loader::element('pane_header', array('c'=>$c, 'close'=>'ccm_exitVersionList')); ?>
-
-<div class="ccm-pane-controls">
+<div class="ccm-pane-controls ccm-ui">
 
 <script type="text/javascript">
 
@@ -213,22 +211,22 @@ ccm_setSelectors = function() {
 	/* if two and only two are checked, we can compare */
 	
 	if (ccm_versionsChecked == 2) {
-		$("input[name=vCompare]").get(0).disabled = false;
+		$("input[name=vCompare]").prop('disabled', false);
 	} else {
-		$("input[name=vCompare]").get(0).disabled = true;
+		$("input[name=vCompare]").prop('disabled', true);
 	}
 	
 	
 	if (ccm_versionsChecked > 0 && (!isActiveChecked)) {
-		$("input[name=vRemove]").get(0).disabled = false;
+		$("input[name=vRemove]").prop('disabled', false);
 	} else {
-		$("input[name=vRemove]").get(0).disabled = true;
+		$("input[name=vRemove]").prop('disabled', true);
 	}
 	
 	if (ccm_versionsChecked == 1 && (!isActiveChecked)) {
-		$("input[name=vApprove]").get(0).disabled = false;
+		$("input[name=vApprove]").prop('disabled', false);
 	} else {
-		$("input[name=vApprove]").get(0).disabled = true;
+		$("input[name=vApprove]").prop('disabled', true);
 	}
 	
 	
@@ -246,7 +244,7 @@ ccm_exitVersionList = function() {
 	if (ccm_versionsMustReload) {
 		window.location.reload();
 	} else {
-		ccm_hidePane();
+		jQuery.fn.dialog.closeTop();
 	}
 }
 
@@ -339,7 +337,6 @@ $("input[name=vRemove]").click(function() {
 <div class="ccm-pane-controls">
 <div id="ccm-edit-collection">
 
-<h1><?=t('Page Versions')?></h1>
 <p><?=t("The following is a list of all this page's versions. If you can edit a page you will automatically see its most recent version, but the approved version is what regular users will see.")?></p>
 
 <div class="ccm-form-area">
@@ -352,24 +349,28 @@ $("input[name=vRemove]").click(function() {
 	
 	<form>
 	<?=t('Select')?>: <a id="ccm-version-select-none" href="#"><?=t('None')?></a> | <a id="ccm-version-select-old" href="#"><?=t('Old Versions')?></a>
-	&nbsp;&nbsp;
-	<input type="button" name="vCompare" value="<?=t('Compare')?>" disabled />
+	<?
+	$ih = Loader::helper("concrete/dashboard");
+	if (!$ih->inDashboard($c)) { ?>
+		&nbsp;&nbsp;
+		<input class="btn" type="button" name="vCompare" value="<?=t('Compare')?>" disabled />
 	&nbsp;
-	<input type="button" name="vApprove" value="<?=t('Approve')?>" disabled />
+	<? } ?>
+	<input class="btn" type="button" name="vApprove" value="<?=t('Approve')?>" disabled />
 	
 	&nbsp;
-	<input type="button" name="vRemove" value="<?=t('Remove')?>" disabled />
+	<input class="btn" type="button" name="vRemove" value="<?=t('Remove')?>" disabled />
 	
 	</form>
 	<br/>
-	<table border="0" cellspacing="0" width="100%" class="ccm-grid" cellpadding="0">
+	<table border="0" cellspacing="0" width="100%" class="zebra-striped" cellpadding="0" id="ccm-versions-list">
 	<tr>
 		<th>&nbsp;</th>
 		<th><?=t('Name')?></th>
 		<th><?=t('Comments')?></th>
 		<th><?=t('Creator')?></th>
 		<th><?=t('Approver')?></th>
-		<th><?=t('Added On')?></th>
+		<th class="headerSortDown"><?=t('Added On')?></th>
 	</tr>
 	<? 
 	$vIsPending = true;

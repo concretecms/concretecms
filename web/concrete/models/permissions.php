@@ -235,17 +235,11 @@ class Permissions extends Object {
 	
 	public function populateAllPageTypes() {
 		$ca = new Cache();
-		$pageTypes = $ca->get('pageTypeList', false);
-		if (is_array($pageTypes)) {
-			$this->addCollectionTypes = $pageTypes;
-		} else {
-			$db = Loader::db();
-			$q = "select ctID from PageTypes";
-			$r = $db->query($q);
-			while($row = $r->fetchRow()) {
-				$this->addCollectionTypes[] = $row['ctID'];
-			}
-			$ca->set('pageTypeList', false, $this->addCollectionTypes);
+		$db = Loader::db();
+		$q = "select ctID from PageTypes";
+		$r = $db->query($q);
+		while($row = $r->fetchRow()) {
+			$this->addCollectionTypes[] = $row['ctID'];
 		}
 	}
 	
@@ -256,7 +250,7 @@ class Permissions extends Object {
 			$this->addBlockTypes = $blockTypes;
 		} else {
 			$db = Loader::db();
-			$q = "select btID from BlockTypes where btIsInternal = 0";
+			$q = "select btID from BlockTypes";
 			$r = $db->query($q);
 			while($row = $r->fetchRow()) {
 				$this->addBlockTypes[] = $row['btID'];
@@ -348,7 +342,16 @@ class Permissions extends Object {
 		$btID = $bt->getBlockTypeID();
 		return (in_array($btID, $this->addBlockTypes));
 	}
-	
+
+	public function canAddStack($stack) {
+		$blocks = $stack->getBlocks();
+		foreach($blocks as $b) {
+			if (!in_array($b->getBlockTypeID(), $this->addBlockTypes)) {
+				return false;
+			}
+		}		
+		return true;
+	}
 	function canAddFiles() {
 		return count($this->permissions['canAddFileTypes']) > 0;
 	}
@@ -676,7 +679,7 @@ class AreaPermissions extends Permissions {
 		// now we get collection type permissions for all the groups that this user is in
 		
 		$inStr = '(' . implode(', ', $groupIDs) . ')';
-		$_uID = ($u->getUserID() > -1) ? " or uID = " . $u->getUserID() : "";
+		$_uID = ($u->getUserID() > 0) ? " or uID = " . $u->getUserID() : "";
 		
 		$v = array($aObj->getCollectionID(), $aObj->getAreaHandle());
 		$q = "select agPermissions from AreaGroups where cID = ? and arHandle = ? and (gID in $inStr $_uID)";
@@ -760,7 +763,7 @@ class BlockPermissions extends Permissions {
 		$cID = $bObj->getBlockCollectionID();
 		$bID = $bObj->getBlockID();
 		$cvID = $cv->getVersionID();
-		$_uID = ($u->getUserID() > -1) ? " or uID = " . $u->getUserID() : "";
+		$_uID = ($u->getUserID() > 0) ? " or uID = " . $u->getUserID() : "";
 		
 		$q = "select cbgPermissions from CollectionVersionBlockPermissions where cID = '$cID' and bID = '$bID' and cvID = '$cvID' and (gID in $inStr $_uID)";
 		$r = $db->query($q);
@@ -855,7 +858,7 @@ class FileSetPermissions extends Permissions {
 
 		$groups = $u->getUserGroups();
 		$inStr = '(' . implode(',', array_keys($groups)) . ')';
-		$_uID = ($u->getUserID() > -1) ? " or FileSetPermissions.uID = " . $u->getUserID() : "";
+		$_uID = ($u->getUserID() > 0) ? " or FileSetPermissions.uID = " . $u->getUserID() : "";
 		
 		$q = "select max({$pcolumn}) as {$pcolumn}, FileSets.fsID from FileSetPermissions inner join FileSets on (FileSets.fsID = FileSetPermissions.fsID) where (gID in $inStr $_uID) and fsOverrideGlobalPermissions = 1 group by fsID";
 		$r = $db->query($q);
@@ -895,7 +898,7 @@ class FileSetPermissions extends Permissions {
 			
 			$fsIDStr = 'fsID in (' . implode(',', $setIDs) . ')';
 		}
-		$_uID = ($u->getUserID() > -1) ? " or uID = " . $u->getUserID() : "";
+		$_uID = ($u->getUserID() > 0) ? " or uID = " . $u->getUserID() : "";
 		
 		$q = "select max(canAdmin) as canAdmin, max(canSearch) as canSearch, max(canRead) as canRead, max(canWrite) as canWrite, max(canAdd) as canAdd from FileSetPermissions where {$fsIDStr} and (gID in $inStr $_uID)";
 		$p = $db->GetRow($q);
@@ -941,7 +944,7 @@ class FilePermissions extends Permissions {
 			$groups = $u->getUserGroups();
 			
 			$inStr = '(' . implode(',', array_keys($groups)) . ')';
-			$_uID = ($u->getUserID() > -1) ? " or uID = " . $u->getUserID() : "";
+			$_uID = ($u->getUserID() > 0) ? " or uID = " . $u->getUserID() : "";
 			$fID = $f->getFileID();
 			$p = $db->GetRow("select max(canAdmin) as canAdmin, max(canRead) as canRead, max(canSearch) as canSearch, max(canWrite) as canWrite from FilePermissions where fID = {$fID} and (gID in $inStr $_uID)");
 			$this->permissions = $p;

@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @package Helpers
  * @category Concrete
@@ -49,7 +49,7 @@ class FormHelper {
 	 * return string $html
 	 */	 
 	public function submit($name, $value, $fields = array(), $additionalClasses='') {
-		return '<input type="submit"' . $this->parseMiscFields('ccm-input-submit ' . $additionalClasses, $fields) . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" />';
+		return '<input type="submit"' . $this->parseMiscFields('btn ccm-input-submit ' . $additionalClasses, $fields) . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" />';
 	}
 
 	/** 
@@ -60,7 +60,7 @@ class FormHelper {
 	 * return string $html
 	 */	 
 	public function button($name, $value, $fields = array(), $additionalClasses='') {
-		return '<input type="button"' . $this->parseMiscFields('ccm-input-button ' . $additionalClasses, $fields) . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" />';
+		return '<input type="button"' . $this->parseMiscFields('btn ccm-input-button ' . $additionalClasses, $fields) . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" />';
 	}
 
 	/** 
@@ -186,15 +186,12 @@ class FormHelper {
 		$arr = ($type == 'post') ? $_POST : $_GET;
 		if (strpos($key, '[') !== false) {
 			// we've got something like 'akID[34]['value'] here, which we need to get data from
-			if (substr($key, -2) == '[]') {
-				$field = preg_replace('/\[/', '][', substr($key, 0, strlen($key)-2), 1);
-				if (substr($field, -1) != ']') {
-					$field .= ']';
-				}
-				eval('if (is_array($arr[' . $field . ')) { $v2 = $arr[' . $field . ';}');
-			} else {			
-				eval('if (isset($arr[' . preg_replace('/\[/', '][', $key, 1) . ')) { $v2 = $arr[' . preg_replace('/\[/', '][', $key, 1) . ';}');
-			}
+			
+			/* @var $ah ArrayHelper */
+			$ah = Loader::helper('array');
+			$key = str_replace(']', '', $key);
+			$key = explode('[', trim($key, '['));
+			$v2 = $ah->get($arr, $key);
 
 			if (isset($v2)) {
 				// if the type if GET, we make sure to strip it of any nasties
@@ -205,8 +202,7 @@ class FormHelper {
 					return $v2;
 				}
 			}
-		}			
-		if (isset($arr[$key])) {
+		} else if (isset($arr[$key])) {
 			return $this->th->entities($arr[$key]);
 		}
 
@@ -405,5 +401,3 @@ class FormHelper {
 	}
 
 }
-
-?>

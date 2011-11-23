@@ -27,6 +27,9 @@
 		protected $btInterfaceWidth = "300";
 		protected $btInterfaceHeight = "260";	
 		protected $btIncludeAll = 1;
+		protected $btExportPageColumns = array('cID');
+		protected $btExportTables = array('btGuestBook', 'btGuestBookEntries');
+
 		
 		/** 
 		 * Used for localization. If we want to localize the name/description we have to include this

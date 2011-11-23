@@ -4,6 +4,8 @@
 <head>
 <!-- insert CSS for Default Concrete Theme //-->
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.default.theme.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.install.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.app.css";</style>
 <? 
 if (is_object($c)) {
 	$v = View::getInstance();
@@ -11,18 +13,24 @@ if (is_object($c)) {
  	Loader::element('header_required');
 } else { 
 	print Loader::helper('html')->javascript('jquery.js');
+	$this->outputHeaderItems();
 }
 ?>
 </head>
 <body>
+<div class="ccm-ui">
 
 <div id="ccm-logo"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" width="49" height="49" alt="Concrete CMS" /></div>
 
-<div id="ccm-theme-wrapper">
 
-<?php Loader::element('system_errors', array('error' => $error)); ?>
+
+
+<div class="container">
+
+<?php Loader::element('system_errors', array('format' => 'block', 'error' => $error)); ?>
 <?php print $innerContent ?>
 
+</div>
 </div>
 
 </body>

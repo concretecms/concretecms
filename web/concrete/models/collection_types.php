@@ -22,7 +22,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-        loader::model('attribute/categories/collection');
+    Loader::model('attribute/categories/collection');
 	class CollectionType extends Object {
 
 		public $ctID;
@@ -37,22 +37,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @return CollectionType
 		*/
 		public static function getByHandle($ctHandle) {
-			$ct = Cache::get('pageTypeByHandle', $ctHandle);
-			if (!is_object($ct)) {
-				$db = Loader::db();
-				$q = "SELECT ctID, ctHandle, ctName, ctIcon, pkgID from PageTypes where ctHandle = ?";
-				$r = $db->query($q, array($ctHandle));
-				if ($r) {
-					$row = $r->fetchRow();
-					$r->free();
-					if (is_array($row)) {
-						$ct = new CollectionType; 
-						$row['mcID'] = $db->GetOne("select cID from Pages where ctID = ? and cIsTemplate = 1", array($row['ctID']));
-						$ct->setPropertiesFromArray($row);
-						$ct->setComposerProperties();
-					}					
-				}
-				Cache::set('pageTypeByHandle', $ctHandle, $ct);
+			$db = Loader::db();
+			$q = "SELECT ctID, ctHandle, ctIsInternal, ctName, ctIcon, pkgID from PageTypes where ctHandle = ?";
+			$r = $db->query($q, array($ctHandle));
+			if ($r) {
+				$row = $r->fetchRow();
+				$r->free();
+				if (is_array($row)) {
+					$ct = new CollectionType; 
+					$row['mcID'] = $db->GetOne("select cID from Pages where ctID = ? and cIsTemplate = 1", array($row['ctID']));
+					$ct->setPropertiesFromArray($row);
+					$ct->setComposerProperties();
+				}					
 			}
 			return $ct;
 		}
@@ -80,15 +76,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		public static function getByID($ctID, $obj = null) {
-			if ($obj == null) {
-				$ct = Cache::get('pageTypeByID', $ctID);
-				if (is_object($ct)) {
-					return $ct;
-				}
-			}
 			
 			$db = Loader::db();
-			$q = "SELECT ctID, ctHandle, ctName, ctIcon, pkgID from PageTypes where PageTypes.ctID = ?";
+			$q = "SELECT ctID, ctHandle, ctName, ctIsInternal, ctIcon, pkgID from PageTypes where PageTypes.ctID = ?";
 			$r = $db->query($q, array($ctID));
 			if ($r) {
 				$row = $r->fetchRow();
@@ -100,8 +90,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$ct->setComposerProperties();
 					if ($obj) {
 						$ct->limit($obj);
-					} else {
-						Cache::set('pageTypeByID', $ctID, $ct);
 					}
 				}
 			}
@@ -124,7 +112,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db->query("DELETE FROM PageTypeAttributes WHERE ctID = ?",array($this->ctID));
 			$db->query("DELETE FROM ComposerTypes WHERE ctID = ?",array($this->ctID));
 			$db->query("DELETE FROM ComposerContentLayout WHERE ctID = ?",array($this->ctID));
-			$this->refreshCache();
 		}
 		
 		public function getComposerPageTypes() {
@@ -170,15 +157,90 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$r->Close();
 			return $list;
 		}	
-		
 
-		public function refreshCache() {
-			Cache::delete('pageTypeByID', $this->ctID);
-			Cache::delete('pageTypeByHandle', $this->ctHandle);
-			Cache::delete('pageTypeList', false);
+		public function importComposerSettings(SimpleXMLElement $sx) {
+			$db = Loader::db();
+			if ($sx['method'] == 'PAGE_TYPE') {
+				$ctID = ContentImporter::getValue($sx['pagetype']);
+				$cta = CollectionType::getByID($ctID);
+				$this->saveComposerPublishTargetPageType($cta);
+			} else if ($sx['method'] == 'PARENT') {
+				$cID = ContentImporter::getValue($sx['parent']);
+				$c = Page::getByID($cID);
+				$this->saveComposerPublishTargetPage($c);
+			} else {
+				$this->saveComposerPublishTargetAll();					
+			}
+			
+			if (isset($sx->items)) {
+				foreach($sx->items->children() as $node) {
+					$displayOrder = $db->GetOne('select max(displayOrder) as displayOrder from ComposerContentLayout where ctID = ?', array($this->ctID));
+					if ($displayOrder < 1) {
+						$displayOrder = 0;
+					} else {
+						$displayOrder++;
+					}
+					if ($node->getName() == 'attributekey') {
+						$ak = CollectionAttributeKey::getByHandle((string) $node['handle']);
+						$v = array($ak->getAttributeKeyID(), $displayOrder, $this->ctID);
+						$db->Execute('insert into ComposerContentLayout (akID, displayOrder, ctID) values (?, ?, ?)', $v);
+					}
+					if ($node->getName() == 'block') {
+						$mcID = $this->getMasterCollectionID();
+						$bID = $db->GetOne('select Blocks.bID from CollectionVersionBlocks inner join Blocks on CollectionVersionBlocks.bID = Blocks.bID where cID = ? and Blocks.bName = ?', array(
+							$mcID, (string) $node['name']
+						));
+						$v = array($bID, $displayOrder, $this->ctID);
+						$db->Execute('insert into ComposerContentLayout (bID, displayOrder, ctID) values (?, ?, ?)', $v);
+					}
+				}
+			}
 		}
 		
-		public static function getList($limiterType = null) {
+		public static function exportList($xml) {
+			$list = self::getList(false, true);
+			$nxml = $xml->addChild('pagetypes');
+			foreach($list as $ct) {
+				$type = $nxml->addChild('pagetype');
+				$type->addAttribute('handle', $ct->getCollectionTypeHandle());
+				$type->addAttribute('name', $ct->getCollectionTypeName());
+				$type->addAttribute('internal', $ct->isCollectionTypeInternal());
+				$type->addAttribute('package', $ct->getPackageHandle());
+				$ct->setComposerProperties();
+				if ($ct->isCollectionTypeIncludedInComposer()) { 
+					$composer = $type->addChild('composer');
+					$composer->addAttribute('method', $ct->getCollectionTypeComposerPublishMethod());
+					$parent = '';
+					$pagetype = '';
+					
+					if ($ct->getCollectionTypeComposerPublishPageTypeID() > 0) {
+						$pagetype = ContentExporter::replacePageTypeWithPlaceHolder($ct->getCollectionTypeComposerPublishPageTypeID());
+					}
+
+					if ($ct->getCollectionTypeComposerPublishPageParentID() > 0) {
+						$parent = ContentExporter::replacePageWithPlaceHolder($ct->getCollectionTypeComposerPublishPageParentID());
+					}
+					
+					$composer->addAttribute('pagetype', $pagetype);
+					$composer->addAttribute('parent', $parent);
+
+					$items = $ct->getComposerContentItems();
+					if (count($items) > 0) { 
+						$itemNode = $composer->addChild('items');
+						foreach($items as $ci) {
+							$ci->export($itemNode, 'composer');
+						}
+					}
+				}
+				$mcID = $ct->getMasterCollectionID();
+				if ($mcID > 0) {
+					$mc = Page::getByID($mcID);
+					$mc->export($type);						
+				}
+			}
+		}
+
+		public static function getList($limiterType = null, $includeInternal = false) {
 			$db = Loader::db();
 
 			// the purpose for this class? Well, we get an array of collection type objects,
@@ -188,9 +250,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			foreach($mcIDs as $mc) {
 				$masterCollectionIDs[$mc['ctID']] = $mc['cID'];
 			}
-			$q = "select ctID, ctHandle, ctIcon, ctName, pkgID from PageTypes order by ctName asc";
+			if ($includeInternal) {
+				$internal = '1=1';
+			} else {
+				$internal = 'ctIsInternal = 0';
+			}
+			$q = "select ctID, ctHandle, ctIcon, ctName, ctIsInternal, pkgID from PageTypes where {$internal} order by ctName asc";
 			$r = $db->query($q);
-
+			$ctArray = array();
 			if ($r) {
 				while ($row = $r->fetchRow()) {
 					$ct = new CollectionType;
@@ -222,8 +289,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (isset($data['ctIcon'])) {
 				$ctIcon = $data['ctIcon'];
 			}
-			$v = array($data['ctHandle'], $data['ctName'], $ctIcon, $pkgID);
-			$q = "insert into PageTypes (ctHandle, ctName, ctIcon, pkgID) values (?, ?, ?, ?)";
+			$ctIsInternal = 0;
+			if (isset($data['ctIsInternal']) && $data['ctIsInternal']) {
+				$ctIsInternal = 1;
+			}
+			$v = array($data['ctHandle'], $data['ctName'], $ctIcon, $ctIsInternal, $pkgID);
+			$q = "insert into PageTypes (ctHandle, ctName, ctIcon, ctIsInternal, pkgID) values (?, ?, ?, ?, ?)";
 			$r = $db->prepare($q);
 			$res = $db->execute($r, $v);
 			if ($res) {
@@ -251,7 +322,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$r2 = $db->prepare($q2);
 				$res2 = $db->execute($r2, $v2);
 				if ($res2) {
-					Cache::delete('pageTypeList', false);
 					return CollectionType::getByID($ctID);
 				}
 			}
@@ -280,7 +350,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db = Loader::db();
 			$db->query("delete from ComposerContentLayout where ctID = ?", array($this->getCollectionTypeID()));
 			$db->Execute('delete from ComposerTypes where ctID = ?', array($this->getCollectionTypeID()));
-			$this->refreshCache();
 		}
 		
 		public function saveComposerAttributeKeys($atids = array()) {
@@ -319,7 +388,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db->Execute('delete from ComposerTypes where ctID = ?', array($this->getCollectionTypeID()));
 			$db->Replace('ComposerTypes', array('ctID' => $this->ctID, 'ctComposerPublishPageMethod' => 'PARENT', 'ctComposerPublishPageTypeID' => 0, 'ctComposerPublishPageParentID' => $c->getCollectionID()),
 				array('ctID'), true);
-			$this->refreshCache();
 		}
 		
 		public function saveComposerPublishTargetPageType($ct) {
@@ -327,7 +395,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db->Execute('delete from ComposerTypes where ctID = ?', array($this->getCollectionTypeID()));
 			$db->Replace('ComposerTypes', array('ctID' => $this->ctID, 'ctComposerPublishPageMethod' => 'PAGE_TYPE', 'ctComposerPublishPageTypeID' => $ct->getCollectionTypeID(), 'ctComposerPublishPageParentID' => 0),
 				array('ctID'), true);
-			$this->refreshCache();
 		}
 		
 		public function saveComposerPublishTargetAll() {
@@ -335,7 +402,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db->Execute('delete from ComposerTypes where ctID = ?', array($this->getCollectionTypeID()));
 			$db->Replace('ComposerTypes', array('ctID' => $this->ctID, 'ctComposerPublishPageMethod' => 'CHOOSE', 'ctComposerPublishPageTypeID' => 0, 'ctComposerPublishPageParentID' => 0),
 				array('ctID'), true);
-			$this->refreshCache();
 		}
 		
 		public function saveComposerContentItemOrder($items) {
@@ -374,7 +440,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}
 			
-			$this->refreshCache();
 		}
 		
 		public function assignCollectionAttribute($ak) {
@@ -389,6 +454,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$q = "select akID from PageTypeAttributes where ctID = ?";
 			$r = $db->query($q, $v);
 			if ($r) {
+				$this->akIDArray = array();
 				while ($row = $r->fetchRow()) {
 					$this->akIDArray[] = $row['akID'];
 				}
@@ -462,7 +528,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $items;
 		}
 		
-		public function isAvailableCollectionTypeAttribute($akID) {
+		/**
+		 *Checks if given attribute key or attribute key id is assigned to this collection type
+		 */
+		public function isAvailableCollectionTypeAttribute($akIDorObject) {
+			if (is_object($akIDorObject)) {
+				$akID = $akIDorObject->getAttributeKeyID();
+			} else {
+				$akID = $akIDorObject;
+			}
+			
+			if (count($this->akIDArray) == 0) {
+				$this->populateAvailableAttributeKeys();
+			}
 			return in_array($akID, $this->akIDArray);
 		}		
 
@@ -501,6 +579,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function getCollectionTypeName() { return $this->ctName; }
 		public function getCollectionTypeHandle() { return $this->ctHandle; }
 		public function isCollectionTypeIncludedInComposer() {return $this->ctIncludeInComposer;}
+		public function isCollectionTypeInternal() {return $this->ctIsInternal;}
 		public function getCollectionTypeComposerPublishMethod() {
 			return $this->ctComposerPublishPageMethod;
 		}

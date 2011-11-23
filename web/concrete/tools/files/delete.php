@@ -50,13 +50,13 @@ $searchInstance = $_REQUEST['searchInstance'];
 
 ?>
 
-<h1><?=t('Delete Files')?></h1>
-
+<div class="ccm-ui">
+<br/>
 <? if ($fcnt == 0) { ?>
-	<?=t("You do not have permission to delete any of the selected files."); ?>
+	<p><?=t("You do not have permission to delete any of the selected files."); ?><p>
 <? } else { ?>
 
-	<?=t('Are you sure you want to delete the following files?')?><br/><br/>
+	<p><?=t('Are you sure you want to delete the following files?')?></p>
 
 	<form id="ccm-<?=$searchInstance?>-delete-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete">
 	<?=$form->hidden('task', 'delete_files')?>
@@ -91,10 +91,14 @@ $searchInstance = $_REQUEST['searchInstance'];
 	</table>
 	</form>
 	<br/>
+	
 	<? $ih = Loader::helper('concrete/interface')?>
-	<?=$ih->button_js(t('Delete'), 'ccm_alDeleteFiles(\'' . $searchInstance . '\')')?>
+	<div class="dialog-buttons">
+	<?=$ih->button_js(t('Delete'), 'ccm_alDeleteFiles(\'' . $searchInstance . '\')', 'right', 'error')?>
 	<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left')?>	
-		
+	</div>
+	
+</div>
 		
 	<?
 	

@@ -58,6 +58,7 @@ class Area extends Object {
 
 	function getCollectionID() {return $this->cID;}
 	function getAreaCollectionObject() {return $this->c;}
+	function isGlobalArea() {return $this->arIsGlobal;}
 	function getAreaID() {return $this->arID;}
 	function getAreaHandle() {return $this->arHandle;}
 	function getCustomTemplates() {return $this->customTemplateArray;}
@@ -116,6 +117,9 @@ class Area extends Object {
 	}
 
 	function get(&$c, $arHandle) {
+		if (!is_object($c)) {
+			return false;
+		}
 		
 		$ca = new Cache();
 		$a = Cache::get('area', $c->getCollectionID() . ':' . $arHandle);
@@ -126,13 +130,14 @@ class Area extends Object {
 		$db = Loader::db();
 		// First, we verify that this is a legitimate area
 		$v = array($c->getCollectionID(), $arHandle);
-		$q = "select arID, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID from Areas where cID = ? and arHandle = ?";
+		$q = "select arID, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal from Areas where cID = ? and arHandle = ?";
 		$arRow = $db->getRow($q, $v);
 		if ($arRow['arID'] > 0) {
 			$area = new Area($arHandle);
 
 			$area->arID = $arRow['arID'];
 			$area->arOverrideCollectionPermissions = $arRow['arOverrideCollectionPermissions'];
+			$area->arIsGlobal = $arRow['arIsGlobal'];
 			$area->arInheritPermissionsFromAreaOnCID = $arRow['arInheritPermissionsFromAreaOnCID'];
 			$area->cID = $c->getCollectionID();
 			$area->c = &$c;
@@ -143,7 +148,7 @@ class Area extends Object {
 		}
 	}
 
-	function getOrCreate(&$c, $arHandle) {
+	function getOrCreate(&$c, $arHandle, $arIsGlobal = 0) {
 
 		/*
 			different than get(), getOrCreate() is called by the templates. If no area record exists for the
@@ -152,17 +157,24 @@ class Area extends Object {
 
 		$area = Area::get($c, $arHandle);
 		if (is_object($area)) {
-			return $area;
+			if ($area->isGlobalArea() == $arIsGlobal) {
+				return $area;
+			} else if (!$area->isGlobalArea() && !$arIsGlobal) {
+				return $area;
+			}
 		}
-
-		// I'm pretty sure this next line is meaningless
-		// because this will ALWAYS be true.
-		// $cID = ($c->getCollectionInheritance()) ? $c->getCollectionID() : $c->getParentPermissionsCollectionID();
+		
 		$cID = $c->getCollectionID();
-		$v = array($cID, $arHandle);
-		$q = "insert into Areas (cID, arHandle) values (?, ?)";
 		$db = Loader::db();
-		$db->query($q, $v);
+		if (!$arIsGlobal) {
+			$arIsGlobal = 0;
+		}
+		$db->Replace('Areas', array('cID' => $cID, 'arHandle' => $arHandle, 'arIsGlobal' => $arIsGlobal), array('arHandle', 'cID'), true);
+		
+		if ($arIsGlobal) {
+			// we create a stack for it			
+			Stack::getOrCreateGlobalArea($arHandle);
+		}
 
 		$area = Area::get($c, $arHandle); // we're assuming the insert succeeded
 		$area->rescanAreaPermissionsChain();
@@ -170,7 +182,7 @@ class Area extends Object {
 
 	}
 
-	function getAreaBlocksArray(&$c) {
+	function getAreaBlocksArray($c) {
 		if (is_array($this->areaBlocksArray)) {
 			return $this->areaBlocksArray;
 		}
@@ -179,11 +191,27 @@ class Area extends Object {
 		$this->c = $c;
 		$this->areaBlocksArray = array();
 		
-		$cp = new Permissions($c);
-		
-		$blocks = $c->getBlocks($this->arHandle);
+		if ($this->arIsGlobal) {
+			$blocks = array();
+			$cp = new Permissions($c);
+			if ($cp->canReadVersions()) {
+				$c = Stack::getByName($this->arHandle);
+			} else {
+				$c = Stack::getByName($this->arHandle, 'ACTIVE');
+			}
+			if (is_object($c)) {
+				$blocks = $c->getBlocks(STACKS_AREA_NAME);
+				$globalArea = Area::get($c, STACKS_AREA_NAME);
+			}
+		} else {
+			$blocks = $c->getBlocks($this->arHandle);
+		}
 		foreach($blocks as $ab) {
-			$ab->setBlockAreaObject($this);
+			if ($this->arIsGlobal && is_object($globalArea)) {
+				$ab->setBlockAreaObject($globalArea);
+			} else {
+				$ab->setBlockAreaObject($this);
+			}
 			$this->areaBlocksArray[] = $ab;
 			$this->totalBlocks++;
 		}
@@ -336,7 +364,7 @@ class Area extends Object {
 		}
 		
 		$currentPage = Page::getCurrentPage();
-		$ourArea = Area::getOrCreate($c, $this->arHandle);
+		$ourArea = Area::getOrCreate($c, $this->arHandle, $this->arIsGlobal);
 		if (count($this->customTemplateArray) > 0) {
 			$ourArea->customTemplateArray = $this->customTemplateArray;
 		}
@@ -465,6 +493,18 @@ class Area extends Object {
 		return $layouts; 
 	}
 	
+	/** 
+	 * Exports the area to content format
+	 */
+	public function export($p, $page) {
+		$area = $p->addChild('area');
+		$area->addAttribute('name', $this->getAreaHandle());
+		
+		$blocks = $page->getBlocks($this->getAreaHandle());
+		foreach($blocks as $bl) {
+			$bl->export($area);
+		}
+	}
 	
 
 	/** 

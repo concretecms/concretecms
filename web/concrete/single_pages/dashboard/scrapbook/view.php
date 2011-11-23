@@ -75,6 +75,7 @@ var GlobalScrapbook = {
 		$.fn.dialog.open({
 			title: ccmi18n.editBlock,
 			href: editBlockURL+'?cID='+CCM_CID+'&bID='+bID+'&arHandle=<?=urlencode($scrapbookName)?>&btask=edit&isGlobal=1',
+			appendButtons: true, 
 			width: w,
 			modal: false,
 			height: h
@@ -85,6 +86,7 @@ var GlobalScrapbook = {
 		$.fn.dialog.open({
 			title: ccmi18n.changeBlockTemplate,
 			href: editBlockURL+'?cID='+CCM_CID+'&bID='+bID+'&arHandle=<?=urlencode($scrapbookName)?>&btask=template',
+			appendButtons: true, 
 			width: 300,
 			modal: false,
 			height: 100
@@ -95,6 +97,7 @@ var GlobalScrapbook = {
 		$.fn.dialog.open({
 			title: '<?=t("Design")?>',
 			href: editBlockURL+'?cID='+CCM_CID+'&bID='+bID+'&arHandle=<?=urlencode($scrapbookName)?>&btask=block_css',
+			appendButtons: true, 
 			width: 450,
 			modal: false,
 			height: 420
@@ -105,6 +108,7 @@ var GlobalScrapbook = {
 		$.fn.dialog.open({
 			title: ccmi18n.changeBlockTemplate,
 			href: editBlockURL+'?cID='+CCM_CID+'&bID='+bID+'&arHandle=<?=urlencode($scrapbookName)?>&btask=groups',
+			appendButtons: true, 
 			width: 400,
 			modal: false,
 			height: 380
@@ -145,9 +149,8 @@ $(function(){ GlobalScrapbook.init(); });
 <? if(!$scrapbookName){ ?>
 
 	<h1><span><?=t('Choose a Scrapbook')?></span></h1>
-	
-	<div class="ccm-dashboard-inner"> 
-		 
+	<div class="ccm-dashboard-inner ccm-ui"> 
+	<div class="block-message warning alert-message"><p><?=t('<strong>Note</strong>: Scrapbooks are preserved for backward compatibility, but you really should be using <a href="%s">stacks</a> instead.', View::url('/dashboard/blocks/stacks'))?></p></div>
 		<table id="availableScrapbooks" border="0" cellspacing="1" class="grid-list" >
 			<tr>
 				<td class="header">
@@ -157,16 +160,6 @@ $(function(){ GlobalScrapbook.init(); });
 					<?=t('Options')?>
 				</td>
 			</tr>		
-			<tr>
-				<td>  
-					<a href="<?=View::url($cPath,'view','?scrapbookName=userScrapbook' ) ?>">
-					<?=t("%s's Personal Scrapbook", $u->getUserName()) ?>
-					</a>
-				</td>
-				<td class="options">
-					<a href="<?=View::url($cPath,'view','?scrapbookName=userScrapbook' ) ?>"><?=t('View')?></a> &nbsp; 
-				</td>
-			</tr>			
 			<? if(is_array($availableScrapbooks)) 
 				foreach($availableScrapbooks as $availableScrapbook){ ?>
 			<tr>
@@ -200,23 +193,22 @@ $(function(){ GlobalScrapbook.init(); });
 			
 			$form = Loader::helper('form'); ?>
 			
-			<tr>
-				<td colspan="2" class="subheader"><?=t('Add a Global Scrapbook')?></td>
-			</tr>
-			<tr>
-			<td colspan="2">
+			</table>
+			
+			<h3><?=t('Add a Global Scrapbook')?></h3>
+
 			<form id="addScrapbookForm" method="post" action="<?php echo $this->action('addScrapbook') ?>">
 			<?php $valt->output('add_scrapbook');?>
-			<table border="0" cellspacing="0" cellpadding="0">
-			<tr>
-			<td><?=$form->label('scrapbookName', t('Scrapbook Name'))?><br/>
-			<input name="scrapbookName" id="scrapbookName" class="ccm-input-text" type="text" value="" size="30"  />
-			</td>
-			<td valign="bottom">
+			<div class="clearfix">
+			<?=$form->label('scrapbookName', t('Scrapbook Name'))?>
+			<div class="input">
+				<input name="scrapbookName" id="scrapbookName" class="ccm-input-text" type="text" value="" class="span6"  />
 			<?php echo $ih->submit(t('Add'), 'addScrapbookForm', 'left')?>
-			</td>
-			</tr>
-			</table>
+			</div>
+			</div>
+
+
+
 			
 			</form>
 			</td>
@@ -230,76 +222,11 @@ $(function(){ GlobalScrapbook.init(); });
 
 
 
-<? }else if($scrapbookName=='userScrapbook'){ ?>
-	
-	<h1><span><?=t("%s's Personal Scrapbook", $u->getUserName()) ?></span></h1>
-	
-	<div class="ccm-dashboard-inner">	
-	
-		<a style="float: right" href="<?=View::url($cPath) ?>"><?= t("&laquo; Return to Scrapbook List") ?></a>		
-
-		<div id="ccm-scrapbook-list" class="user-scrapbook ui-sortable">
-		<?  
-		$sp = Pile::getDefault();
-		$contents = $sp->getPileContentObjects('display_order_date');
-		$realPilesCounter=0;
-		foreach($contents as $obj) { 
-			$item = $obj->getObject(); 
-			if (is_object($item)) {
-				$bt = $item->getBlockTypeObject();
-				$btIcon = $ci->getBlockTypeIconURL($bt);
-				$pcID=$obj->getPileContentID();
-				?>			
-				<div class="ccm-scrapbook-list-item" id="ccm-pc-<?=$pcID ?>">
-					<div class="ccm-block-type">
-						<div class="options">  					 
-						  <a title="<?php echo t('Remove from Scrapbook')?>" 
-							href="<?php echo $this->action('deleteBlock', urlencode($scrapbookName), $pcID, 0, $valt->generate('delete_scrapbook_block')) ?>" 
-							id="sb<?=$pcID ?>">
-							<?=t('Delete') ?>
-						  </a>
-						</div> 
-						
-						<div class="ccm-block-type-inner">
-							<div class="ccm-block-type-inner-icon ccm-scrapbook-item-handle" style="background: url(<?=$btIcon?>) no-repeat center left;">
-							<img src="<?=ASSETS_URL_IMAGES?>/spacer.gif" width="16" height="16" />
-							</div>
-							<div class="view">
-								<a><?=$bt->getBlockTypeName()?></a>													
-							</div>							
-						</div>
-						
-						<div class="ccm-scrapbook-list-item-detail">	
-							<?	
-							try {
-								$bv = new BlockView();
-								$bv->render($item, 'scrapbook');
-							} catch(Exception $e) {
-								print BLOCK_NOT_AVAILABLE_TEXT;
-							}	
-							?>
-						</div>
-					</div>
-				</div>	
-				<?
-				$realPilesCounter++;
-			} 
-		}	
-		
-		if(!$realPilesCounter){
-			print t('You have no items in your scrapbook.');
-		} 		
-		?>
-		</div>
-		
-	
-	</div>
-
 <? }else{ ?>
 
 	<h1><span><?=htmlentities($scrapbookName, ENT_QUOTES, APP_CHARSET) ?></span></h1>
 	
-	<div class="ccm-dashboard-inner"> 
+	<div class="ccm-dashboard-inner ccm-ui"> 
 
 		<a style="float: right" href="<?=View::url($cPath) ?>"><?= t("&laquo; Return to Scrapbook List") ?></a>		
 		

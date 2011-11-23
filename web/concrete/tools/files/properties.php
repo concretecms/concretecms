@@ -94,7 +94,7 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 	
 	$html = '
 	<tr class="ccm-attribute-editable-field">
-		<th><a href="javascript:void(0)">' . $title . '</a></th>
+		<td><strong><a href="javascript:void(0)">' . $title . '</a></strong></td>
 		<td width="100%" class="ccm-attribute-editable-field-central"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
 		<form method="post" action="' . REL_DIR_FILES_TOOLS_REQUIRED . '/files/properties">
 		<input type="hidden" name="attributeField" value="' . $field . '" />
@@ -113,7 +113,7 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 	} else {
 		$html = '
 		<tr>
-			<th>' . $title . '</th>
+			<td><strong>' . $title . '</strong></td>
 			<td width="100%" colspan="2">' . $text . '</td>
 		</tr>';	
 	}
@@ -139,7 +139,7 @@ function printFileAttributeRow($ak, $fv) {
 	
 	$html = '
 	<tr class="ccm-attribute-editable-field">
-		<th><a href="javascript:void(0)">' . $ak->getAttributeKeyName() . '</a></th>
+		<td><strong><a href="javascript:void(0)">' . $ak->getAttributeKeyName() . '</a></strong></td>
 		<td width="100%" class="ccm-attribute-editable-field-central"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
 		<form method="post" action="' . REL_DIR_FILES_TOOLS_REQUIRED . '/files/properties">
 		<input type="hidden" name="fakID" value="' . $ak->getAttributeKeyID() . '" />
@@ -151,7 +151,7 @@ function printFileAttributeRow($ak, $fv) {
 		</form>
 		</td>
 		<td class="ccm-attribute-editable-field-save"><a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/edit_small.png" width="16" height="16" class="ccm-attribute-editable-field-save-button" /></a>
-		<a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/close.png" width="16" height="16" class="ccm-attribute-editable-field-clear-button" /></a>
+		<a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" width="16" height="16" class="ccm-attribute-editable-field-clear-button" /></a>
 		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-attribute-editable-field-loading" />
 		</td>
 	</tr>';
@@ -160,7 +160,7 @@ function printFileAttributeRow($ak, $fv) {
 
 	$html = '
 	<tr>
-		<th>' . $ak->getAttributeKeyName() . '</th>
+		<td><strong>' . $ak->getAttributeKeyName() . '</strong></td>
 		<td width="100%" colspan="2">' . $text . '</td>
 	</tr>';	
 	}
@@ -171,10 +171,10 @@ if (!isset($_REQUEST['reload'])) { ?>
 	<div id="ccm-file-properties-wrapper">
 <? } ?>
 
-<div class="ccm-file-properties-tabs" id="ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>">
+<div class="ccm-ui ccm-file-properties-tabs" id="ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>">
 
-<ul class="ccm-dialog-tabs">
-<li class="ccm-nav-active"><a href="javascript:void(0)" id="ccm-file-properties-details-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>"><?=t('Details')?></a></li>
+<ul class="tabs">
+<li class="active"><a href="javascript:void(0)" id="ccm-file-properties-details-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>"><?=t('Details')?></a></li>
 <? if (!$previewMode) { ?>
 	<li><a href="javascript:void(0)" id="ccm-file-properties-versions-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>"><?=t('Versions')?></a></li>
 <? } ?>
@@ -184,9 +184,9 @@ if (!isset($_REQUEST['reload'])) { ?>
 <script type="text/javascript">
 //var ccm_fiActiveTab = "ccm-file-properties-details-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>";
 $("#ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?> ul a").click(function() {
-	$("#ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?> li").removeClass('ccm-nav-active');
+	$("#ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?> li").removeClass('active');
 	$("#ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?> .ccm-file-properties-details-tab").hide();
-	$(this).parent().addClass("ccm-nav-active");
+	$(this).parent().addClass("active");
 	$('#' + $(this).attr('id') + '-tab').show();
 });
 </script>
@@ -202,22 +202,22 @@ if (!$previewMode) {
 
 ?>
 
-<h1><?=t('File Details')?></h1>
+<h3><?=t('File Details')?></h3>
 
 
 <div id="ccm-file-properties">
-<h2><?=t('Basic Properties')?></h2>
+<h4><?=t('Basic Properties')?></h4>
 <table border="0" cellspacing="0" cellpadding="0" class="ccm-grid">
 <tr>
-	<th><?=t('ID')?></th>
+	<td><strong><?=t('ID')?></strong></strong></td>
 	<td width="100%" colspan="2"><?=$fv->getFileID()?> <span style="color: #afafaf">(<?=t('Version')?> <?=$fv->getFileVersionID()?>)</span></td>
 </tr>
 <tr>
-	<th><?=t('Filename')?></th>
+	<td><strong><?=t('Filename')?></strong></td>
 	<td width="100%" colspan="2"><?=$fv->getFileName()?></td>
 </tr>
 <tr>
-	<th><?=t('URL to File')?></th>
+	<td><strong><?=t('URL to File')?></strong></td>
 	<td width="100%" colspan="2"><?=$fv->getRelativePath(true)?></td>
 </tr>
 <?
@@ -233,21 +233,21 @@ if (is_object($oc)) {
 	?>
 
 <tr>
-	<th><?=t('Page Added To')?></th>
+	<td><strong><?=t('Page Added To')?></strong></td>
 	<td width="100%" colspan="2"><a href="<?=Loader::helper('navigation')->getLinkToCollection($oc)?>" target="_blank"><?=$ocName?></a></td>
 </tr>
 <? } ?>
 
 <tr>
-	<th><?=t('Type')?></th>
+	<td><strong><?=t('Type')?></strong></td>
 	<td colspan="2"><?=$fv->getType()?></td>
 </tr>
 <tr>
-	<th><?=t('Size')?></th>
+	<td><strong><?=t('Size')?></strong></td>
 	<td colspan="2"><?=$fv->getSize()?> (<?=number_format($fv->getFullSize())?> <?=t('bytes')?>)</td>
 </tr>
 <tr>
-	<th><?=t('Date Added')?></th>
+	<td><strong><?=t('Date Added')?></strong></td>
 	<td colspan="2"><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), date(DATE_APP_FILE_PROPERTIES, strtotime($f->getDateAdded())))?></td>
 </tr>
 <?
@@ -265,7 +265,7 @@ if (!isset($sli)) {
 
 ?>
 <tr>
-	<th><?=t('Location')?></th>
+	<td><strong><?=t('Location')?></strong></td>
 	<td colspan="2"><?=$sli?></td>
 </tr>
 <?
@@ -286,7 +286,7 @@ if (count($attribs) > 0) { ?>
 
 <br/>
 
-<h2><?=t('%s File Properties', $ft)?></h2>
+<h4><?=t('%s File Properties', $ft)?></h4>
 <table border="0" cellspacing="0" cellpadding="0" class="ccm-grid">
 <?
 
@@ -307,7 +307,7 @@ if (count($attribs) > 0) { ?>
 
 <br/>
 
-<h2><?=t('Other Properties')?></h2>
+<h4><?=t('Other Properties')?></h4>
 <table border="0" cellspacing="0" cellpadding="0" class="ccm-grid">
 <?
 
@@ -325,7 +325,7 @@ foreach($attribs as $at) {
 
 </div>
 
-<h2><?=t('File Preview')?></h2>
+<h4><?=t('File Preview')?></h4>
 
 <div style="text-align: center">
 <?=$fv->getThumbnail(2)?>
@@ -337,7 +337,7 @@ foreach($attribs as $at) {
 	
 	<div class="ccm-file-properties-details-tab" id="ccm-file-properties-versions-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>-tab" style="display: none">
 	
-		<h1><?=t('File Versions')?></h1>
+		<h3><?=t('File Versions')?></h3>
 	
 		<table border="0" cellspacing="0" width="100%" id="ccm-file-versions-grid" class="ccm-grid" cellpadding="0">
 		<tr>
@@ -407,11 +407,11 @@ foreach($attribs as $at) {
 
 <div class="ccm-file-properties-details-tab" id="ccm-file-properties-statistics-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>-tab" style="display: none">
 	
-	<h1><?=t('Download Statistics')?></h1>
+	<h3><?=t('Download Statistics')?></h3>
 	<?
 	$downloadStatistics = $f->getDownloadStatistics();
 	?>
-	<h2><?=count($downloadStatistics).' '.t('Downloads')?></h2>
+	<h4><?=count($downloadStatistics).' '.t('Downloads')?></h4>
 	<table border="0" cellspacing="0" width="100%" id="ccm-file-versions-grid" class="ccm-grid" cellpadding="0">
 		<tr> 
 			<th><?=t('User')?></th>

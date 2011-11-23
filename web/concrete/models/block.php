@@ -28,10 +28,6 @@ class Block extends Object {
 	var $arHandle;
 	var $c;
 
-	// isEditable doesn't necessarily mean by everyone, just means that a form exists
-	// in the filesystem to handle an edit state
-	var $isEditable = true;
-
 	public static function populateManually($blockInfo, $c, $a) {
 		$b = new Block;
 		$b->setPropertiesFromArray($blockInfo);
@@ -120,7 +116,7 @@ class Block extends Object {
 			}
 			
 			$b->instance = new $class($b);
-			$b->populateIsGlobal();
+			
 			if ($c != null) {
 				$ct = CollectionType::getByID($c->getCollectionTypeID());
 				if (is_object($ct)) {
@@ -216,33 +212,9 @@ class Block extends Object {
 	}
 	
 	public function isGlobal() {
-		return $this->bIsGlobal;
+		return false; // legacy. no more scrapbooks in the dashboard.
 	}
 	
-	public function populateIsGlobal() {
-		$db = Loader::db();
-		
-		$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
-		$globalScrapbookC = $scrapbookHelper->getGlobalScrapbookPage(); 
-		
-		if( $this->cID==$globalScrapbookC->cID ) {
-			$this->bIsGlobal = true;	
-			return true;
-		}
-		$q = "SELECT b.bID FROM Blocks AS b, CollectionVersionBlocks AS cvb ".
-			 "WHERE b.bID = '{$this->bID}' AND cvb.bID=b.bID AND cvb.cID=".intval($globalScrapbookC->getCollectionId())." LIMIT 1";
-			 
-		$r = $db->query($q);
-		if ($r->numRows() > 0) {
-			$this->bIsGlobal = 1;
-		} else {
-			$this->bIsGlobal = 0;
-		}
-		
-		$c = $this->getBlockCollectionObject();
-		return 0;
-	}
-
 	public function inc($file) {
 		$b = $this;
 		if (file_exists($this->getBlockPath() . '/' . $file)) {
@@ -671,6 +643,10 @@ class Block extends Object {
 		return false;
 	}
 	
+	public function getBlockDisplayOrder() {
+		return $this->cbDisplayOrder;
+	}
+	
 	function getBlockID() {
 		return $this->bID;
 	}
@@ -771,7 +747,13 @@ class Block extends Object {
 
 	
 	function isEditable() {
-		return $this->isEditable;
+		$bv = new BlockView();
+		$bv->setBlockObject($this);
+		$path = $bv->getBlockPath(FILENAME_BLOCK_EDIT);
+		if (file_exists($path . '/' . FILENAME_BLOCK_EDIT)) {
+			return true;
+		}
+		return false;
 	}
 
 	function overrideAreaPermissions() {
@@ -858,6 +840,15 @@ class Block extends Object {
 			// now that the block's subcontent delete() method has been run, we delete the block from the Blocks table
 			$q = "delete from Blocks where bID = ?";
 			$r = $db->query($q, $v);
+			
+			// Aaaand then we delete all scrapbooked blocks to this entry
+			$r = $db->Execute('select cID, cvID, CollectionVersionBlocks.bID, arHandle from CollectionVersionBlocks inner join btCoreScrapbookDisplay on CollectionVersionBlocks.bID = btCoreScrapbookDisplay.bID where bOriginalID = ?', array($bID));
+			while ($row = $r->FetchRow()) {
+				$c = Page::getByID($row['cID'], $row['cvID']);
+				$b = Block::getByID($row['bID'], $c, $row['arHandle']);
+				$b->delete();
+			}
+			
 
 		}
 	}
@@ -865,6 +856,23 @@ class Block extends Object {
 	function setOriginalBlockID($originalBID) {
 		$this->originalBID = $originalBID;
 	}
+	
+	public function setAbsoluteBlockDisplayOrder($do) {
+		$db = Loader::db();
+
+		$cID = $this->cID;
+		$bID = $this->bID;
+		$arHandle = $this->arHandle;
+
+		$c = $this->getBlockCollectionObject();
+		$cvID = $c->getVersionID();
+	
+		$q = "update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
+		$r = $db->query($q, array($do, $bID, $cID, $cvID, $arHandle));
+		
+		$this->refreshCache();
+	}
+	
 	function setBlockDisplayOrder($i) {
 		// This function moves a block up or down
 		// Since this is a function that has to be called from an instantiated block, then we already know the cID and areaName
@@ -1115,6 +1123,23 @@ class Block extends Object {
 				Cache::delete('collection_blocks', $c->getCollectionID() . ':' . $c->getVersionID());
 			}
 			Cache::delete('block', $this->getBlockID());		
+			
+			// now we check the scrapbook display
+			$db = Loader::db();
+			$rows=$db->getAll( 'SELECT cID, cvID, arHandle FROM CollectionVersionBlocks WHERE bID in (select bID from btCoreScrapbookDisplay where bOriginalID = ?)', array($this->getBlockID()));
+			foreach($rows as $row){
+				Cache::delete('block', $this->getBlockID() . ':' . intval($row['cID']) . ':' . intval($row['cvID']) . ':' . $row['arHandle'] );
+				Cache::delete('block_view_output', $row['cID'] . ':' . $this->getBlockID() . ':' . $row['arHandle']);
+				Cache::delete('block', $this->getBlockID());
+			}
+			
+			if ($this->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY && is_object($a)) {
+				$rows=$db->getAll( 'SELECT cID, bID, cvID, arHandle FROM CollectionVersionBlocks WHERE bID in (select bOriginalID from btCoreScrapbookDisplay where bID = ?)', array($this->getBlockID()));
+				foreach($rows as $row){
+					Cache::delete('block', $row['bID'] . ':' . $c->getCollectionID() . ':' . $c->getVersionID() . ':' . $a->getAreaHandle());
+					Cache::delete('block_view_output', $c->getCollectionID() . ':' . $row['bID'] . ':' . $a->getAreaHandle());
+				}
+			}
 		}
 	}
 	
@@ -1126,6 +1151,33 @@ class Block extends Object {
 			Cache::delete('block_view_output', $row['cID'] . ':' . $this->getBlockID(). ':' . $row['arHandle']);
 			Cache::delete('collection_blocks', $row['cID'] . ':' . $row['cvID']);
 			Cache::delete('block', $this->getBlockID());
+		}
+	}
+	
+	public function export($node, $exportType = 'full') {
+		if (!$this->isAliasOfMasterCollection()) {
+			$blockNode = $node->addChild('block');
+			$blockNode->addAttribute('type', $this->getBlockTypeHandle());
+			$blockNode->addAttribute('name', $this->getBlockName());
+			if ($this->getBlockFilename() != '') {
+				$blockNode->addAttribute('custom-template', $this->getBlockFilename());
+			}
+			if ($this->getBlockComposerFilename() != '') {
+				$blockNode->addAttribute('composer-template', $this->getBlockComposerFilename());
+			}
+			if (is_object($this->c) && $this->c->isMasterCollection()) {
+				$mcBlockID = Loader::helper('validation/identifier')->getString(8);
+				ContentExporter::addMasterCollectionBlockID($this, $mcBlockID);
+				$blockNode->addAttribute('mc-block-id', $mcBlockID);
+			}
+			
+			if ($exportType == 'full') {
+				$bc = $this->getInstance();
+				$bc->export($blockNode);
+			}
+		} else {
+			$blockNode = $node->addChild('block');
+			$blockNode->addAttribute('mc-block-id', ContentExporter::getMasterCollectionTemporaryBlockID($this));			
 		}
 	}
 	

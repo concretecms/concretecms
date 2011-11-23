@@ -75,6 +75,11 @@
 			?>
 			
 			</div>
+			
+			<div class="ccm-page-list-all-descendents" style="margin: 5px 0 0 0px;<?php echo (!$isOtherPage && !$cThis) ? ' display: none;' : ''; ?>">
+				<input type="checkbox" name="includeAllDescendents" id="includeAllDescendents" value="1" <?php echo $includeAllDescendents ? 'checked="checked"' : '' ?> />
+				<label for="includeAllDescendents"><?php echo t('Include all child pages') ?></label>
+			</div>
 	</div>
 	<div class="ccm-block-field-group">
 	  <h2><?=t('Sort Pages')?></h2>

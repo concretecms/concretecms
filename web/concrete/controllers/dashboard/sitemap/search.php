@@ -10,7 +10,6 @@ class DashboardSitemapSearchController extends Controller {
 		
 		$pageList = $this->getRequestedSearchResults();
 		if (is_object($pageList)) {
-			$this->addHeaderItem(Loader::helper('html')->javascript('ccm.sitemap.js'));
 			$searchInstance = 'page' . time();
 
 			$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_sitemapSetupSearch(\'' . $searchInstance . '\'); });</script>');
@@ -67,14 +66,12 @@ class DashboardSitemapSearchController extends Controller {
 		$pageList->displayUnapprovedPages();
 
 		$pageList->sortBy('cDateModified', 'desc');
+
+		$columns = PageSearchColumnSet::getCurrent();
+		$this->set('columns', $columns);
 		
-		$keywords = htmlentities($req['keywords'], ENT_QUOTES, APP_CHARSET);
 		$cvName = htmlentities($req['cvName'], ENT_QUOTES, APP_CHARSET);
 		
-		if ($keywords != '') {
-			$pageList->filterByKeywords($keywords);
-		}
-
 		if ($cvName != '') {
 			$pageList->filterByName($cvName);
 		}
@@ -92,6 +89,10 @@ class DashboardSitemapSearchController extends Controller {
 				// due to the way the form is setup, index will always be one more than the arrays
 				if ($item != '') {
 					switch($item) {
+						case 'keywords':
+							$keywords = htmlentities($req['keywords'], ENT_QUOTES, APP_CHARSET);
+							$pageList->filterByKeywords($keywords);
+							break;
 						case 'num_children':
 							$symbol = '=';
 							if ($req['cChildrenSelect'] == 'gt') {
@@ -141,6 +142,20 @@ class DashboardSitemapSearchController extends Controller {
 								$dateTo = date('Y-m-d', strtotime($dateTo));
 								$dateTo .= ' 23:59:59';								
 								$pageList->filterByPublicDate($dateTo, '<=');
+							}
+							break;
+						case "last_modified":
+							$dateFrom = $req['last_modified_from'];
+							$dateTo = $req['last_modified_to'];
+							if ($dateFrom != '') {
+								$dateFrom = date('Y-m-d', strtotime($dateFrom));
+								$pageList->filterByDateLastModified($dateFrom, '>=');
+								$dateFrom .= ' 00:00:00';
+							}
+							if ($dateTo != '') {
+								$dateTo = date('Y-m-d', strtotime($dateTo));
+								$dateTo .= ' 23:59:59';								
+								$pageList->filterByDateLastModified($dateTo, '<=');
 							}
 							break;
 						case "date_added":

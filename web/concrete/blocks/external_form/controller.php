@@ -6,6 +6,7 @@
 		protected $btInterfaceWidth = "300";
 		protected $btInterfaceHeight = "200";
 		public $helpers = array('file');
+		protected $btCacheBlockRecord = true;
 		
 		/** 
 		 * Used for localization. If we want to localize the name/description we have to include this
@@ -53,8 +54,12 @@
 				require_once($filename);
 				$class .= 'ExternalFormBlockController';
 				$fp = new $class($this->getBlockObject());
-
+			}
+			
+			if(is_object($fp)) {
 				return $fp;
+			} else {
+				throw new Exception(t('Unable load external form block controller file: %s',$this->filename)); 
 			}
 		}
 		

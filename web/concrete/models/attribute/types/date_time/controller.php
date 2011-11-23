@@ -29,13 +29,14 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 	}
 
 	public function getDisplayValue() {
+		$this->load();
 		$v = $this->getValue();
 		if ($v == '' || $v == false) {
 			return '';
 		}
 		$v2 = date('H:i:s', strtotime($v));
 		$r = '';
-		if ($v2 != '00:00:00') {
+		if ($v2 != '00:00:00' && $this->akDateDisplayMode != 'date') {
 			$r .= date(DATE_APP_DATE_ATTRIBUTE_TYPE_T, strtotime($v));
 			$r .= t(' on ' );
 		}
@@ -77,6 +78,20 @@ class DateTimeAttributeTypeController extends AttributeTypeController  {
 				$this->addHeaderItem($html->javascript('jquery.ui.js'));
 				print $dt->datetime($this->field('value'), $caValue);
 				break;
+		}
+	}
+
+	public function exportKey($akey) {
+		$this->load();
+		$type = $akey->addChild('type');
+		$type->addAttribute('mode', $this->akDateDisplayMode);
+		return $akey;
+	}
+
+	public function importKey($akey) {
+		if (isset($akey->type)) {
+			$data['akDateDisplayMode'] = $akey->type['mode'];
+			$this->saveKey($data);
 		}
 	}
 

@@ -1,0 +1,184 @@
+.ui-dialog-content div.ccm-pane-controls h1 {display: none}
+div.ccm-note { font-size:10px; color:#999999; font-weight:normal }
+div.ccm-block-field-note {font-size: 10px; padding-top: 3px; color: #999}
+div.ccm-note-important {border: 1px solid #777; padding: 8px; background-color: #DBEEF3}
+.ccm-input-time-wrapper select {width: inherit;}
+.ccm-input-date-wrapper {margin-right: 10px;}
+div#ccm-page-detail-content div.ccm-pane-controls {text-align: left; font-size: 12px; background-color: #fff; padding: 10px;}
+div#ccm-page-detail-content div.ccm-pane-controls div.dialog-buttons {padding: 10px 20px 0px 20px; margin: 0px -10px -30px -10px; background-color: #f2f2f2; border-top: 1px solid #e7e7e7}
+/*
+div#ccm-edit-collection {width: 600px; margin: 0px auto 0px auto}
+div#ccm-edit-collection-design {width: 640px; margin: 0px auto 0px auto; -khtml-user-select: none; -moz-user-select: none}
+div#ccm-collection-mcd {width: 90%; margin: 0px auto 0px auto; -khtml-user-select: none; -moz-user-select: none}
+div.ccm-pane-controls a {color: #0069D6; cursor:pointer}
+div.ccm-pane-controls *, div.ccm-dialog-window * {font-family: "Helvetica Neue", Arial, Helvetica, sans-serif; color: #333}
+div.ccm-pane-controls {text-align: left; font-size: 12px}
+
+
+div.ccm-pane-controls h1 {color: rgb(0, 60, 138); position: static !important; font-size: 18px; margin-bottom: 16px; margin-top: 16px}
+div.ccm-dialog-window div.ccm-pane-header {display: none}
+
+div.ccm-pane-controls strong, div.ccm-dialog-window strong {color: #666; font-weight: bold}
+div.ccm-pane-controls h2, div.ccm-dialog-window h2 {color: #666; font-weight: bold;  font-size: 14px; line-height: 14px;  margin-bottom: 8px; margin-top: 4px}
+div.ccm-pane-controls h3, div.ccm-dialog-window h3 {color: #666; font-weight: bold; font-size: 12px; line-height: 12px;  margin-bottom: 6px; margin-top: 4px}
+div.ccm-pane-controls div.ccm-field {clear: both; padding-bottom: 8px; border-bottom: 1px solid #ddd; margin-bottom: 8px}
+div.ccm-pane-controls div.ccm-field-meta {clear: both; margin: 0px auto 8px auto; width: auto; padding-bottom: 8px; border-bottom: 1px solid #ddd}
+div.ccm-field-meta a.ccm-meta-close {float: right; font-weight: bold; color: #bababa; font-size: 10px}
+span.ccm-meta-path {display:  block; margin-bottom: 8px}
+div.ccm-field a.ccm-meta-path-add, div.ccm-field a.ccm-meta-path-del {font-weight: bold; color: #bababa; font-size: 10px}
+div.ccm-pane-controls label {display: block; color: #000; margin-bottom: 3px; font-weight: bold !important}
+div.ccm-pane-controls div.ccm-block-field-group label {color: #333; font-weight: normal !important; display: inline}
+div.ccm-pane-controls div.ccm-field-one {width: 280px; float: left; margin-right: 12px; padding-bottom: 8px}
+div.ccm-pane-controls div.ccm-field-two {width: 280px; float: left; padding-bottom: 8px}
+*/
+/* meta dropdown */
+/*
+div#ccm-move-page {margin-bottom: 20px !important; border: 1px solid black}
+div#ccm-required-meta-add {margin-right: 0px}
+
+div#ccm-page-types {margin-right: 30px}
+div#ccm-page-types, div#ccm-required-meta-add {height: 180px}
+
+div#ccm-required-meta, div#ccm-move-page, div#ccm-required-meta-add {border: 2px solid #bababa; background: white; padding: 8px}
+div#ccm-optional-meta, div#ccm-delete-page, div#ccm-page-types {border: 2px solid #bababa; padding: 8px; background: white;}
+
+div#ccm-properties-standard-tab input.ccm-input-text, div#ccm-page-paths-tab input.ccm-input-text {width: 272px !important}
+*/
+
+div.ccm-form-area {border: 2px solid #bababa; padding: 8px; background: white;}
+
+div.ccm-spacer {font-size: 0px; line-height: 0px; clear: both; height: 0px}
+
+.ccm-important {color: #f00}
+
+div#ccm-dialog-throbber {position: absolute; top: 50%; left: 50%; margin-top: -16px; margin-left: -16px; display: none}
+
+hr {border: 1px solid #dedede; margin: 10px 0px 10px 0px;}
+
+
+/* legacy buttons */
+div.ccm-buttons {clear: both; padding-top: 8px}
+div.ccm-buttons * {}
+div.ccm-buttons .cancel {float: left}
+div.ccm-buttons .accept {float: right}
+
+a.ccm-button-left {float: left; }
+a.ccm-button {float: left; margin-right: 10px}
+a.ccm-button-right {float: right; margin-left: 10px}
+
+div.ccm-button, a.ccm-button-right, a.ccm-button-left, a.ccm-button {display: block; text-decoration: none !important; height: 38px !important; background: transparent url(../images/button_l.png) no-repeat;}
+a.ccm-button-right:hover, a.ccm-button-left:hover, a.ccm-button:hover {background: transparent url(../images/button_l_active.png) no-repeat scroll;}
+
+div.ccm-button span,a.ccm-button-left span, a.ccm-button-right span, a.ccm-button span {white-space: nowrap; height: 12px; display: block; float: left; padding-top: 11px; padding-bottom: 15px; margin-left: 15px; padding-right: 16px; font-size: 11px; color: #535353; background: transparent url(../images/button_r.png) repeat-y scroll right top;}
+a.ccm-button-left:hover span, a.ccm-button-right:hover span, a.ccm-button:hover span {background: transparent url(../images/button_r_active.png) repeat-y scroll right top;}
+a.ccm-button-left em, a.ccm-button-right em, a.ccm-button em {
+	padding-bottom: 2px; 
+	background-color: transparent; 
+	background-repeat: no-repeat; 
+	padding-left: 10px;
+	padding-right: 10px;
+	font-style: normal; 
+	display: block;
+}
+a.ccm-button-left em.ccm-button-inactive, a.ccm-button-right em.ccm-button-inactive, a.ccm-button em.ccm-button-inactive {
+	padding-bottom: 0px; 
+	background-color: transparent; 
+	background-repeat: no-repeat; 
+	padding-left: 0px;
+	padding-right: 0px;
+	font-style: normal; 
+	display: inline;
+	color: #aaa;
+	font-style: normal; 
+}
+
+a.ccm-button em.ccm-button-close {background-image: url(../images/icons/close.png);
+	padding-left:20px;
+	padding-right: 0;
+}
+
+/* simpler css3 buttons */
+.ccm-button-v2 {
+	background: transparent url(../images/bg_button.png) repeat-x right top; 
+	display: inline-block; 
+	padding: 5px 10px 6px; 
+	text-decoration: none;
+	-moz-border-radius: 10px; 
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	font-size: 11px !important;
+	height: 38px !important;
+	color: #535353; 
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	border: 1px solid #a8a8a8;
+	position: relative;
+	cursor: pointer;
+}
+
+.ccm-button-v2-left {
+	margin-right: 8px;
+}
+
+.ccm-button-v2-right {
+	float: right;
+	margin-left: 8px;
+}
+
+.ccm-button-v2:disabled {
+	color: #999;
+}
+.ccm-button-v2:disabled:hover {
+	color: #999;
+	cursor: inherit;
+	background: transparent url(../images/bg_button.png) repeat-x right top; 
+}
+
+.ccm-button-v2:hover, .ccm-button-v2:active {
+	background: transparent url(../images/bg_button_active.png) repeat-x right top;
+	border: 1px solid #9ca8aa;
+}
+
+
+th.ccm-permissions-header {text-align: left !important; white-space: nowrap}
+
+table.ccm-grid {border-left: 1px solid #D4D4D4; border-top: 1px solid #D4D4D4; font-size: 12px; }
+table.ccm-grid th, table.ccm-grid > tbody > tr > td {border-right: 1px solid #D4D4D4; border-bottom: 1px solid #D4D4D4; font-size: 12px; padding: 7px; background: #fff}
+table.ccm-grid tr.ccm-row-alt td {background-color: #F0F5FF !important}
+table.ccm-grid th {font-weight: bold; color: #999999; background-color: #efefef; text-align: center;}
+table.ccm-grid tr.version-active td, table.ccm-grid tr.active td {font-weight: bold; font-size: 13px}
+table.ccm-grid td.actor img {float: right}
+table.ccm-grid td.ccm-grid-cb {text-align: center}
+table.ccm-grid img {border: 0px}
+
+ul.ccm-dialog-tabs {display: block; height: 18px; margin: 0px; padding: 0px 0px 0px 10px; border-bottom: 1px solid #dedede; list-style-type: none; font-size: 10px; }
+ul.ccm-dialog-tabs li {float:left; line-height: 12px}
+ul.ccm-dialog-tabs li a {color: #666; border-top: 1px solid #dedede; text-decoration: none; display: block; float: left; padding: 3px 8px 2px 8px; background: transparent url(../images/bg_dialog_t.png) repeat-x scroll left -1px; border-left: 1px solid #dedede}
+ul.ccm-dialog-tabs li a, ul.ccm-dialog-tabs span {border-top: 1px solid #dedede; text-decoration: none; display: block; float: left; padding: 3px 8px 2px 8px; background: transparent url(../images/bg_dialog_t.png) repeat-x scroll left -1px; border-left: 1px solid #dedede}
+ul.ccm-dialog-tabs li a {color: #666}
+ul.ccm-dialog-tabs li span {color: #ccc}
+ul.ccm-dialog-tabs li a:hover, ul.ccm-dialog-tabs li.ccm-nav-active a, ul.ccm-dialog-tabs li.current a {background: transparent url(../images/bg_header_active.png) repeat-x scroll}
+ul.ccm-dialog-tabs li {padding: 0px; margin: 0px}
+ul.ccm-dialog-tabs li:last-child * {border-right: 1px solid #dedede}
+ul.ccm-dialog-tabs li {border-right: 1px solid #dedede }
+
+.ccm-input-text, div.ccm-field-meta input, div.ccm-field-meta textarea, .ccm-input-date, .ccm-input-password, .ccm-input-textarea {font-size: 12px; border: 1px solid #aaa; color: #444; padding: 4px}
+.ccm-input-date-wrapper input {width: 100px}
+.ccm-input-checkbox {vertical-align: middle}
+
+div.ccm-field-meta input.ccm-input-text, div.ccm-field-meta textarea.ccm-input-textarea {width: 570px;}
+div.ccm-field-meta textarea.ccm-input-textarea {height: 100px}
+
+
+/* grid list */
+table.ccm-grid-list {border-right: 1px solid #aaa; border-bottom: 1px solid #aaa; width: 100%}
+table.ccm-grid-list td {padding: 4px; border-left: 1px solid #aaa; border-top: 1px solid #aaa; font-size: 10px}
+table.ccm-grid-list th {padding: 4px; border-top: 1px solid #aaa; border-left: 1px solid #aaa; background: #D3E4F0; font-size: 11px; font-weight: bold}
+table.ccm-grid-list th a {color: #000}
+table.ccm-grid-list th.full {width: 100%}
+
+
+
+.ccm-style-property-table td {padding-right: 8px !important; padding-bottom: 8px !important}
+.ccm-message {padding: 10px; border: 1px solid #94a7c7; background: #eee; margin-bottom: 20px; font-size: 13px; font-weight: bold;}
+div.ccm-styleEditPane {background-color: #efefef; border-left: 1px solid #dedede; border-right: 1px solid #dedede; border-bottom: 1px solid #dedede; padding: 8px}
+ul#ccm-styleEditPane-tabs {margin-bottom: 0px !important}

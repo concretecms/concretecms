@@ -1,43 +1,37 @@
-<h1><span><?=t('File Manager')?></span></h1>
+<div class="ccm-ui">
+<div class="row">
 
+<div class="ccm-pane">
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('File Manager'), t('Add, search, replace and modify the files for your website.'));?>
 <? 
-$fp = FilePermissions::getGlobal();
 $c = Page::getCurrentPage();
 $ocID = $c->getCollectionID();
+$fp = FilePermissions::getGlobal();
 if ($fp->canSearchFiles()) { ?>
+<div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
 
-	<div class="ccm-dashboard-inner">
-	
-		<table id="ccm-search-form-table" >
-			<tr>
-				<td valign="top" class="ccm-search-form-advanced-col">
-					<? Loader::element('files/search_form_advanced', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
-				</td>		
-				<? /* <div id="ccm-<?=$searchInstance?>-search-advanced-fields-gutter">&nbsp;</div> */ ?>		
-				<td valign="top" width="100%">	
-					
-					<div id="ccm-search-advanced-results-wrapper">
-					
-						<? Loader::element('files/upload_single', array('searchInstance' => $searchInstance, 'ocID' => $ocID)); ?>
-						
-						<div id="ccm-<?=$searchInstance?>-search-results" class="ccm-file-list">
-						
-							<? Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'columns' => $columns, 'searchType' => 'DASHBOARD', 'files' => $files, 'fileList' => $fileList, 'pagination' => $pagination)); ?>
-						
-						</div>
-					
-					</div>
-				
-				</td>	
-			</tr>
-		</table>		
-		
-	</div>
-	
+<ul class="tabs">
+<li class="active"><a href="javascript:void(0)" onclick="$('#ccm-<?=$searchInstance?>-pane-options ul.tabs li').removeClass('active'); $(this).parent().addClass('active'); $('#ccm-<?=$searchInstance?>-pane-options div.ccm-file-manager-add-form').hide(); $('#ccm-<?=$searchInstance?>-pane-options div.ccm-file-manager-search-form').show();"><?=t('Search Files')?></a></li>
+<li><a href="javascript:void(0)" onclick="$('#ccm-<?=$searchInstance?>-pane-options ul.tabs li').removeClass('active');  $(this).parent().addClass('active'); $('#ccm-<?=$searchInstance?>-pane-options div.ccm-file-manager-search-form').hide(); $('#ccm-<?=$searchInstance?>-pane-options div.ccm-file-manager-add-form').show();"><?=t('Add Files')?></a></li>
+</ul>
+
+<div class="ccm-file-manager-search-form"><? Loader::element('files/search_form_advanced', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?></div>
+<div class="ccm-file-manager-add-form" style="display: none">
+<? Loader::element('files/upload_single', array('searchInstance' => $searchInstance, 'ocID' => $ocID)); ?>
+</div>
+</div>
+
+<? Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'columns' => $columns, 'searchType' => 'DASHBOARD', 'files' => $files, 'fileList' => $fileList)); ?>
+
 <? } else { ?>
-	<div class="ccm-dashboard-inner">
-		<?=t('Unable to access file manager.'); ?>
-	</div>
+<div class="ccm-pane-body">
+	<p><?=t("You do not have access to the file manager.");?></p>
+</div>	
+<div class="ccm-pane-footer"></div>
+
+</div>
+
 <? } ?>
 
-
+</div>
+</div>

@@ -413,6 +413,27 @@ class ItemList {
 		$pagination->init($this->currentPage, $this->getTotal(), $url, $this->itemsPerPage);
 		return $pagination;
 	}
+
+	/** 
+	 * Gets paging that works in our new format */
+	public function displayPagingV2($script = false, $return = false, $additionalVars = array()) {
+		$summary = $this->getSummary();
+		$paginator = $this->getPagination($script, $additionalVars);
+		if ($summary->pages > 1) {
+			$html .= '<div class="pagination ccm-pagination"><ul>';
+			$html .= '<li class="prev">' . $paginator->getPrevious() . '</li>';
+			$html .= $paginator->getPages('li');
+			$html .= '<li class="next">' . $paginator->getNext() . '</li>';
+			$html .= '</ul></div>';
+		}
+		if (isset($html)) {
+			if ($return) {
+				return $html;
+			} else {
+				print $html;
+			}
+		}
+	}
 	
 	/** 
 	 * Gets standard HTML to display paging */
