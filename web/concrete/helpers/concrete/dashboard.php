@@ -118,11 +118,13 @@ class ConcreteDashboardHelper {
 		return $html;
 	}
 	
-	public function getDashboardBackgroundImageSRC() {
+	public function getDashboardBackgroundImage() {
 		$feed = array();
 		// this feed is an array of standard PHP objects with a SRC, a caption, and a URL
 		// allow for a custom white-label feed
 		$filename = date('Ymd') . '.jpg';
+		$obj = new stdClass;
+		$obj->checkData = false;
 		
 		if (defined('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED') && WHITE_LABEL_DASHBOARD_BACKGROUND_FEED != '') {
 			$image = WHITE_LABEL_DASHBOARD_BACKGROUND_FEED . '/' . $filename;
@@ -130,8 +132,11 @@ class ConcreteDashboardHelper {
 			$image = WHITE_LABEL_DASHBOARD_BACKGROUND_SRC;
 		} else {
 			$image = DASHBOARD_BACKGROUND_FEED . '/' . $filename;
+			$obj->checkData = true;
 		}
-		return $image;
+		$obj->filename = $filename;
+		$obj->image = $image;
+		return $obj;
 	}
 
 	public function getDashboardAndSearchMenus() {
