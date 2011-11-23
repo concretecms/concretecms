@@ -63,12 +63,15 @@ $v->addHeaderItem($disp);
 
 Loader::element('header_required');
 
-$backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundImageSRC();
+$backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundImage();
 ?>
 
 <script type="text/javascript">
 	$(function() {
-	    $.backstretch("<?=$backgroundImage?>" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
+	    $.backstretch("<?=$backgroundImage->image?>" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
+	    <? if ($backgroundImage->checkData) { ?>
+		    ccm_getDashboardBackgroundImageData('<?=$backgroundImage->filename?>');
+		<? } ?>
 	    ccm_activateToolbar();
 	    ccm_activateDashboardBreadcrumbHover();
 	    $("#ccm-page-help").popover({placement: 'below', html: true, trigger: 'manual'});
