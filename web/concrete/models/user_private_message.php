@@ -73,7 +73,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			$db = Loader::db();
 			if ($this->uID != $this->uAuthorID) {
-				Events::fire('on_pm_marked_as_read', $this);
+				Events::fire('on_private_message_marked_as_read', $this);
 				$db->Execute('update UserPrivateMessagesTo set msgIsUnread = 0 where msgID = ?', array($this->msgID, $this->msgMailboxID, $this->uID));
 			}
 		}
@@ -119,7 +119,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (!$this->uID) {
 				return false;
 			}
-			$ret = Events::fire('on_pm_delete', $this);
+			$ret = Events::fire('on_private_message_delete', $this);
 			if($ret < 0) {
 				return;
 			}
@@ -190,7 +190,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function removeNewStatus() {
 			$db = Loader::db();
 			$user = UserInfo::getByID($this->uID);
-			Events::fire('on_pm_marked_not_new', $this);
+			Events::fire('on_private_message_marked_not_new', $this);
 			$db->Execute('update UserPrivateMessagesTo set msgIsNew = 0 where msgMailboxID = ? and uID = ?', array($this->msgMailboxID, $user->getUserID()));
 		}
 
@@ -269,7 +269,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		protected function notifyAdmin($offenderID) {
 			$offender = UserInfo::getByID($offenderID);
-			Events::fire('on_pm_over_limit', $offender);
+			Events::fire('on_private_message_over_limit', $offender);
 			$admin = UserInfo::getByID(USER_SUPER_ID);
 			
 			Log::addEntry(t("User: %s has tried to send more than %s private messages within %s minutes", $offender->getUserName(), USER_PRIVATE_MESSAGE_MAX, USER_PRIVATE_MESSAGE_MAX_TIME_SPAN),t('warning'));
