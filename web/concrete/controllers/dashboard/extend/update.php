@@ -36,6 +36,8 @@ class DashboardExtendUpdateController extends Controller {
 			$mi = Marketplace::getInstance();
 			if ($mi->isConnected()) {
 				Marketplace::checkPackageUpdates();
+			} else {
+				$this->redirect('/dashboard/extend/connect');
 			}
 		}
 	}
