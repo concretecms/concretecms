@@ -1,6 +1,9 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?
+Loader::helper('concrete/dashboard')->enableDashboardBackNavigation(false, t('Composer Drafts'));
+
+
 if (isset($entry)) { ?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(ucfirst($action) . ' ' . $ct->getCollectionTypeName(), false, false, false)?>

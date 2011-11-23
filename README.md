@@ -12,7 +12,5 @@ http://www.concrete5.org
 	4.	Visit your Concrete5 site in your web browser. You should see an installation screen where you can specify your site's name, your base URL, and your database settings.
 	5.	concrete5 should be installed.
 	
-You'll probably want to change your admin user's password (which can be done in the dashboard). Also check out the settings page in the dashboard
-
 # Documentation
 http://concrete5.org/documentation/

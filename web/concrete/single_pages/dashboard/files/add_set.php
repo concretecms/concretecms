@@ -1,6 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <? $ih = Loader::helper('concrete/interface'); ?>
 
+	<? Loader::helper('concrete/dashboard')->enableDashboardBackNavigation('/dashboard/files/sets', t('File Sets'))?>
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Set'), false, false, false)?>
     <form method="post" id="file-sets-add" action="<?=$this->url('/dashboard/files/add_set', 'do_add')?>">
 	<div class="ccm-pane-body">
