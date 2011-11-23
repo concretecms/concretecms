@@ -393,14 +393,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		/**
 		 * checks the current view to see if you're in that page's "section" (top level)
+		 * (with one exception: passing in the home page url ('' or '/') will always return false)
 		 * @access public
 		 * @param string $url
 		 * @return boolean | void
 		*/	
 		public function section($url) {
-			if (is_object($this->c)) {
-				$cPath = $this->c->getCollectionPath();
-				if (strpos($cPath, '/' . $url) !== false && strpos($cPath, '/' . $url) == 0) {
+			$cPath = Page::getCurrentPage()->getCollectionPath();
+			if (!empty($cPath)) {
+				$url = '/' . trim($url, '/');
+				if (strpos($cPath, $url) !== false && strpos($cPath, $url) == 0) {
 					return true;
 				}
 			}
