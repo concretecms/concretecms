@@ -212,7 +212,7 @@ class ConcreteInterfaceHelper {
 				if ($_c->getCollectionName()) {
 					$name = $_c->getCollectionName();
 				}
-				$html .= '<li><a href="' . Loader::helper('navigation')->getLinkToCollection($_c) . '">' . $name . '</a>' . $divider . '</li>';
+				$html .= '<li><a href="' . Loader::helper('navigation')->getLinkToCollection($_c) . '">' . t($name) . '</a>' . $divider . '</li>';
 				$i++;
 			}
 			$html .= '</ul>';
