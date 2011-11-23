@@ -2,6 +2,7 @@
 <? $ih = Loader::helper('concrete/interface'); ?>
 <? if ($this->controller->getTask() == 'view_detail') { ?>
 
+	<? Loader::helper('concrete/dashboard')->enableDashboardBackNavigation('/dashboard/files/sets', t('File Sets'))?>
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Set'))?>
 	<div class="clearfix">
 	<ul class="tabs">
