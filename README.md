@@ -31,7 +31,13 @@ Any time you need to open the primary dialog on a page, use this function:
 	print $h->getDashboardPaneHeaderWrapper(t('Sitemap'), t('The sitemap allows you to view your site as a tree and easily organize its hierarchy.'), 'span14 offset1', false);
 
 	If you don't include a default body, you need to add <div class="ccm-pane-body"> immediately below your content. Then, when you want to add a footer, you need to add <div class="ccm-pane-footer"></div> after that.
+
+If you want to include a "Back to" link that automatically appears when you mouse over the header, add this somewhere above your getDashboardPaneHeaderWrapper call:
+
+	<? Loader::helper('concrete/dashboard')->enableDashboardBackNavigation('/dashboard/files/sets', t('File Sets'))?>
 	
+	The file sets text above is an example. You can leave both function arguments out if you just want to link to the parent page, otherwise you can pass a page path and a title for the text link.
+
 To close a primary dialog, either include:
 
 	print $h->getDashboardPaneFooterWrapper();

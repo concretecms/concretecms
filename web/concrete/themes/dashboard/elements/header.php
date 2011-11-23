@@ -38,7 +38,6 @@ $v->addFooterItem($html->javascript('jquery.ui.js'));
 $v->addFooterItem($html->javascript('jquery.form.js'));
 $v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 $v->addFooterItem($html->javascript('ccm.app.js'));
-$v->addFooterItem($html->javascript('ccm.dashboard.js'));
 $v->addFooterItem(Loader::helper('html')->javascript('tiny_mce/tiny_mce.js'));
 
 if (LANGUAGE != 'en') {
@@ -71,6 +70,7 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 	$(function() {
 	    $.backstretch("<?=$backgroundImage?>" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
 	    ccm_activateToolbar();
+	    ccm_activateDashboardBreadcrumbHover();
 	    $("#ccm-page-help").popover({placement: 'below', html: true, trigger: 'manual'});
 	    $('.tooltip').twipsy({placement: 'below'});
 	    if ($('#ccm-dashboard-result-message').length > 0) { 

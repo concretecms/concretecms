@@ -62,11 +62,31 @@ class ConcreteDashboardHelper {
 		return $html;
 	}
 	
+	public function enableDashboardBackNavigation($pagePath = false, $title = false) {
+		if ($pagePath) {
+			$page = Page::getByPath($pagePath, 'ACTIVE');
+		} else {
+			$c = Page::getCurrentPage();
+			$page = Page::getByID($c->getCollectionParentID(), 'ACTIVE');
+		}
+		
+		if (!$title) {
+			$title = t($page->getCollectionName());
+		}
+		
+		$this->backNavigationPage = $page;
+		$this->backNavigationTitle = $title;		
+	}
+	
 	public function getDashboardPaneHeader($title = false, $help = false) {
 		$c = Page::getCurrentPage();
 		$vt = Loader::helper('validation/token');
 		$token = $vt->generate('access_quick_nav');
 		$html = '<div class="ccm-pane-header">';
+		if (isset($this->backNavigationPage)) { 
+			$html .= '<div class="ccm-dashboard-pane-header-up"><a href="' . Loader::helper('navigation')->getLinkToCollection($this->backNavigationPage) . '">&lt; to ' .$this->backNavigationTitle . '</a></div>';
+		}
+		
 		$class = 'ccm-icon-favorite';
 		$u = new User();
 		$quicknav = unserialize($u->config('QUICK_NAV_BOOKMARKS'));
