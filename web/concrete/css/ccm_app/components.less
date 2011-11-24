@@ -18,8 +18,13 @@ div#newsflow-overlay .ccm-pane-header-icons {top: 5px; right: 5px}
 h1#ccm-dashboard-welcome-back {margin: -11px -10px 0px -11px; font-size: 48px; padding: 60px 0px 40px 145px; background: transparent url(../images/newsflow_logo_welcome_back.png) no-repeat 0 0}
 h1#ccm-dashboard-welcome-back span {padding: 0px; background: none; .border-radius-top-only(0px); border: 0px; font-size: 12px; font-weight: normal; display: block; margin-top: 5px; margin-left: 5px;}
 #newsflow-header-first-run {margin: -11px -10px -10px -11px; font-size: 48px; height: 60px; padding: 120px 0px 40px 270px; background: transparent url(../images/newsflow_logo_welcome_first_run.png) no-repeat 0 0}
-#newsflow-header-first-run h1 {font-size: 48px; margin-bottom: 10px;}
-#newsflow-header-first-run h2 {font-size: 18px; line-height: 24px; color: #09f; padding-left: 8px;}
+#newsflow-header-first-run h1, div#newsflow-header h1 {font-size: 48px; margin-bottom: 10px;}
+div#newsflow-header {background-color: #f1f1f1; padding: 40px 30px 10px 40px; background-clip: padding-box; .border-radius-top-only(6px); border-bottom: 1px solid #d1d1d1; 
+	-webkit-box-shadow:0 1px 5px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow:0 1px 5px rgba(0, 0, 0, 0.2);
+	box-shadow:0 1px 5px rgba(0, 0, 0, 0.2)
+}
+#newsflow-header-first-run h2, #newsflow-header h2 {font-size: 18px; line-height: 24px; color: #09f;}
 .newsflow-column-first-run h3 {line-height: 28px !important; margin-bottom: 10px; font-weight: normal; font-size: 24px; color: #09f;}
 .newsflow-column-first-run {padding: 10px 10px 100px 10px; overflow: visible}
 .newsflow .ccm-pane-options {.border-radius-top-only(6px);}
@@ -33,7 +38,7 @@ h1#ccm-dashboard-welcome-back span {padding: 0px; background: none; .border-radi
 .newsflow-paging-previous a {width: 57px; height: 86px; background: transparent url(../images/newsflow_previous.png) no-repeat; display: inline-block;}
 .newsflow-paging-next a {width: 57px; height: 86px; background: transparent url(../images/newsflow_next.png) no-repeat; display: inline-block}
 div#newsflow-main {z-index: 1 !important;}
-
+#newsflow-wizard-content {padding: 48px 560px 20px 30px; background-repeat: no-repeat; background-position: right bottom;}
 /* Newsflow block in dashboard */
 td.newsflow-latest-edition-wrapper {
 	#gradient > .vertical(#F3FAFC,#E7F7FF);

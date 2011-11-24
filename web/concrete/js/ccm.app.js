@@ -4776,6 +4776,7 @@ ccm_showNewsflowOffsite = function(id) {
 	if ($('#ccm-dashboard-content div#newsflow-main').is(':visible')) { 
 		$('#ccm-dashboard-content div#newsflow-main').fadeOut(300);
 	}
+	alert(id);
 	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_TOOLS_PATH + '/newsflow?cID=' + id, function() {
 		jQuery.fn.dialog.hideLoader();
 		ccm_createNewsflowWindow();
