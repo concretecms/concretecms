@@ -10,7 +10,8 @@ class DashboardSettingsController extends Controller {
 		$rewriteRules .= "RewriteEngine On\n";
 		$rewriteRules .= "RewriteBase " . DIR_REL . "/\n";
 		$rewriteRules .= "RewriteCond %{REQUEST_FILENAME} !-f\n";
-		$rewriteRules .= "RewriteCond %{REQUEST_FILENAME} !-d\n";
+		$rewriteRules .= "RewriteCond %{REQUEST_FILENAME}/index.html !-f\n";
+		$rewriteRules .= "RewriteCond %{REQUEST_FILENAME}/index.php !-f\n";
 		$rewriteRules .= "RewriteRule ^(.*)$ " . DISPATCHER_FILENAME . "/$1 [L]\n";
 //		$rewriteRules .= "RewriteRule . " . DISPATCHER_FILENAME . " [L]\n";
 		$rewriteRules .= "</IfModule>";
