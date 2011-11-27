@@ -10,29 +10,30 @@ $h = Loader::helper('concrete/interface');
     	<div class="clearfix">
             <label id="optionsCheckboxes"><strong><?php echo t('Registration Options')?></strong></label>
             <div class="input">
+            <?php echo t('Allow visitors to signup as site members?');?>
 			  <ul class="inputs-list">
 			    <li>
 			      <label>
 			        <input type="radio" name="registration_type" value="disabled" style="vertical-align: middle" <?php echo ( $registration_type == "disabled" || !strlen($registration_type) )?'checked':''?> />
-			        <span><?php echo t('Registration is disabled')?></span>
+			        <span><?php echo t('Off')?></span>
 			      </label>
 			    </li> 
 			    <li>
 			      <label>
 			        <input type="radio" name="registration_type" value="validate_email" style="vertical-align: middle" <?php echo ( $registration_type == "validate_email" )?'checked':''?> />
-			        <span><?php echo t('Registration is enabled, email must be validated.')?></span>
+			        <span><?php echo t(' On - email validation')?></span>
 			      </label>
 			    </li>
 			    <li>
 			      <label>
 			        <input type="radio" name="registration_type" value="manual_approve" style="vertical-align: middle" <?php echo ( $registration_type == "manual_approve" )?'checked':''?> />
-			        <span><?php echo t('Registration is enabled, but must be manually approved.')?></span>
+			        <span><?php echo t('On - approve manually')?></span>
 			      </label>
 			    </li>
 			    <li>
 			      <label>
 			        <input type="radio" name="registration_type" value="enabled" style="vertical-align: middle" <?php echo ( $registration_type == "enabled" )?'checked':''?> />
-			        <span><?php echo t('Registration is enabled.')?></span>
+			        <span><?php echo t('On - signup and go')?></span>
 			      </label>
 			    </li>  
 			  </ul>
@@ -40,13 +41,13 @@ $h = Loader::helper('concrete/interface');
 		</div>  
 		
 		<div class="clearfix">
-            <label id="optionsCheckboxes"><strong><?php echo t('Additional Options')?></strong></label>
+            <label id="optionsCheckboxes"><strong><?php echo t('Options')?></strong></label>
             <div class="input">
 			  <ul class="inputs-list">
 			    <li>
 			      <label>
 			        <input type="checkbox" name="enable_registration_captcha" value="1" style="vertical-align: middle" <?php echo ( $enable_registration_captcha )?'checked':''?> />
-			        <span><?php echo t('Solving a <a href="%s" target="_blank">CAPTCHA</a> is required to register.', 'http://en.wikipedia.org/wiki/Captcha')?></span>
+			        <span><?php echo t('CAPTCHA required')?></span>
 			      </label>
 			    </li>
 			    <li>
@@ -58,7 +59,7 @@ $h = Loader::helper('concrete/interface');
 			    <li>
 			      <label>
 			       <input type="checkbox" name="email_as_username" value="1" style="vertical-align: middle" <?php echo ( $email_as_username )?'checked':''?> />
-			        <span><?php echo t('Login using email address.')?></span>
+			        <span><?php echo t('Use eMails for login')?></span>
 			      </label>
 			    </li>  
 			  </ul>
