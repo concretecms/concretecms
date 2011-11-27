@@ -658,8 +658,8 @@ td.newsflow-latest-edition-wrapper{background-color:#e7f7ff;background-repeat:re
 .ccm-pane-options-content{display:none;margin-bottom:-18px;}
 .ccm-pane-options a.ccm-icon-option-closed,.ccm-pane-options a.ccm-icon-option-open{position:absolute;top:5px;right:5px;color:#666;line-height:12px;padding-bottom:3px;padding-top:3px;padding-right:25px;padding-left:5px;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;background-clip:padding-box;}
 .ccm-pane-options a.ccm-icon-option-closed:hover,.ccm-pane-options a.ccm-icon-option-open:hover{color:#666;text-decoration:none;background-color:#c3c3c3;}
-.ccm-pane-options a.ccm-icon-option-closed{background-image:url(../images/icons_sprite_up_down.png);background-repeat:no-repeat;background-position:right 5px;}
-.ccm-pane-options a.ccm-icon-option-open{background-image:url(../images/icons_sprite_up_down.png);background-repeat:no-repeat;background-position:right -67px;}
+.ccm-pane-options a.ccm-icon-option-closed{background-image:url(../images/icons_sprite_up_down.png);background-repeat:no-repeat;background-position:right -67px;}
+.ccm-pane-options a.ccm-icon-option-open{background-image:url(../images/icons_sprite_up_down.png);background-repeat:no-repeat;background-position:right 5px;}
 .ccm-pane-options form{margin-bottom:0px;}
 .ccm-pane-options-permanent-search{zoom:1;}.ccm-pane-options-permanent-search:before,.ccm-pane-options-permanent-search:after{display:table;content:"";zoom:1;*display:inline;}
 .ccm-pane-options-permanent-search:after{clear:both;}
