@@ -6,6 +6,6 @@ div.ccm-pane-body {padding-top: 0px; padding-right: 0px; padding-left: 0px}
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Connect to Community'), false, 'span16')?>
 <? 
 	$mi = Marketplace::getInstance();
-	print $mi->getMarketplaceFrame();
+	print $mi->getMarketplaceFrame('100%', '300', false, $startStep);
 ?>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>

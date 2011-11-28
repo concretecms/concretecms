@@ -102,6 +102,10 @@ ccm_showNewsflowOffsite = function(id) {
 	});
 }
 
+ccm_newsflowConnectToCommunity = function() {
+	window.location.href = CCM_DISPATCHER_FILENAME + '/dashboard/extend/connect/-/register_step1';
+}
+
 ccm_getNewsflowByPath = function(path) {
 	$(window).resize(function(){
 		ccm_setNewsflowOverlayDimensions();
