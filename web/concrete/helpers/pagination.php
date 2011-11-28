@@ -22,6 +22,7 @@ class PaginationHelper {
 	public $classOn='';
 	public $classCurrent='currentPage';		
 	public $URL=''; //%pageNum% for page number
+	public $jsFunctionCall='';
 	public $queryStringPagingVariable = PAGING_STRING;
 	public $additionalVars = array();
 	
@@ -42,7 +43,7 @@ class PaginationHelper {
 		$this->additionalVars = array();
 	}
 	
-	function init($page_num,$num_results=0,$URL='',$size=20){
+	public function init($page_num,$num_results=0,$URL='',$size=20,$jsFunctionCall=''){
 		$page_num=intval($page_num);
 		if($page_num>0) $page_num--;
 		$this->current_page=$page_num;
@@ -59,6 +60,7 @@ class PaginationHelper {
 		//calulate the offset
 		$this->result_offset=($this->current_page)*$this->page_size;
 		$this->recalc($num_results);
+		if($jsFunctionCall) $this->jsFunctionCall=$jsFunctionCall;
 	}
 	
 	protected function getBaseURL($url = false) {
@@ -162,7 +164,7 @@ class PaginationHelper {
 			 return '<span class="'.$this->classOff.'">'.$linkText.'</span>';
 		 else{
 			$linkURL=str_replace("%pageNum%", $this->getNextInt()+1, $this->URL);
-			return '<span class="'.$this->classOn.'"><a href="'.$linkURL.'">'.$linkText.'</a></span>'; 	
+			return '<span class="'.$this->classOn.'"><a href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getNextInt()+1).'>'.$linkText.'</a></span>'; 	
 		}
 	}
 
@@ -181,7 +183,7 @@ class PaginationHelper {
 			 return '<span class="'.$this->classOff.'">'.$linkText.'</span>';
 		else{
 			$linkURL=str_replace("%pageNum%", $this->getPreviousInt()+1, $this->URL);
-			return '<span class="'.$this->classOn.'"><a href="'.$linkURL.'">'.$linkText.'</a></span>';
+			return '<span class="'.$this->classOn.'"><a href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getPreviousInt()+1).'>'.$linkText.'</a></span>';
 		}
 	}
 
@@ -238,9 +240,9 @@ class PaginationHelper {
 				   $linkURL=str_replace("%pageNum%", $i+1, $this->URL);
 				   
 					if($wrapper == 'li'){
-						$pages.="<li class='$this->classOn'><a href='$linkURL'>".($i+1)."</a></li>";
+						$pages.="<li class='$this->classOn'><a href='$linkURL' ".$this->getJSFunctionCall($i+1).">".($i+1)."</a></li>";
 					} else {
-						$pages.="<span class='$this->classOn'><a href='$linkURL'>".($i+1)."</a></span>";
+						$pages.="<span class='$this->classOn'><a href='$linkURL' ".$this->getJSFunctionCall($i+1).">".($i+1)."</a></span>";
 					}
 					
 			} //end if not current page
@@ -265,4 +267,8 @@ class PaginationHelper {
 		return $limitedResults;
 	}
 				
+	public function getJSFunctionCall($pageNum){
+		if(!$this->jsFunctionCall) return '';
+		return ' onclick="return '.$this->jsFunctionCall.'(this,'.$pageNum.');"';
+	}
 }
