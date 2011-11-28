@@ -647,7 +647,7 @@ div#newsflow-header{background-color:#f1f1f1;padding:40px 30px 10px 60px;backgro
 .newsflow-paging-previous a{width:57px;height:86px;background:transparent url(../images/newsflow_previous.png) no-repeat;display:inline-block;}
 .newsflow-paging-next a{width:57px;height:86px;background:transparent url(../images/newsflow_next.png) no-repeat;display:inline-block;}
 div#newsflow-main{z-index:1 !important;}
-#newsflow-wizard-content{padding:48px 560px 20px 60px;background-repeat:no-repeat;background-position:right bottom;}
+#newsflow-wizard-content{padding:48px 530px 20px 60px;background-repeat:no-repeat;background-position:right bottom;}
 td.newsflow-latest-edition-wrapper{background-color:#e7f7ff;background-repeat:repeat-x;background-image:-khtml-gradient(linear, left top, left bottom, from(#f3fafc), to(#e7f7ff));background-image:-moz-linear-gradient(top, #f3fafc, #e7f7ff);background-image:-ms-linear-gradient(top, #f3fafc, #e7f7ff);background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #f3fafc), color-stop(100%, #e7f7ff));background-image:-webkit-linear-gradient(top, #f3fafc, #e7f7ff);background-image:-o-linear-gradient(top, #f3fafc, #e7f7ff);background-image:linear-gradient(top, #f3fafc, #e7f7ff);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f3fafc', endColorstr='#e7f7ff', GradientType=0);}
 .ccm-pane{position:relative;}
 .ccm-pane-header-icons{position:absolute;top:15px;right:10px;z-index:20;}
