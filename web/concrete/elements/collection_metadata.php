@@ -138,13 +138,13 @@ if ($cp->canAdminPage()) {
 					if (!$path['ppIsCanonical']) {
 						$ppID = $path['ppID'];
 						$cPath = $path['cPath'];
-						echo '<div class="input ccm-meta_path">' .
+						echo '<div class="input ccm-meta-path">' .
 			     			'<input type="text" name="ppURL-' . $ppID . '" class="ccm-input-text" value="' . $cPath . '" id="ppID-'. $ppID . '"> ' .
 			     			'<a href="javascript:void(0)" class="ccm-meta-path-del">' . t('Remove Path') . '</a></div>'."\n";
 					}
 				}
 			?>
-		    <div class="input">
+		    <div class="input ccm-meta-path">
 	     		<input type="text" name="ppURL-add-0" class="ccm-input-text" value="" id="ppID-add-0">
 		 		<a href="javascript:void(0)" class="ccm-meta-path-add"><?=t('Add Path')?></a>
 			</div>
