@@ -97,14 +97,14 @@ class Marketplace {
 		return $file;
 	}
 	
-	public function getMarketplaceFrame($width = '100%', $height = '300', $completeURL = false) {
+	public function getMarketplaceFrame($width = '100%', $height = '300', $completeURL = false, $connectMethod = 'view') {
 		// if $mpID is passed, we are going to either
 		// a. go to its purchase page
 		// b. pass you through to the page AFTER connecting.
 		$tp = new TaskPermission();
 		if ($tp->canInstallPackages()) {
 			if (!$this->isConnected()) {
-				$url = MARKETPLACE_URL_CONNECT;
+				$url = MARKETPLACE_URL_CONNECT . '/-/' . $connectMethod;
 				if (!$completeURL) {
 					$completeURL = BASE_URL . View::url('/dashboard/extend/connect', 'connect_complete');
 				}

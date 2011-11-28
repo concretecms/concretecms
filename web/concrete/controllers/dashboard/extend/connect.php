@@ -10,8 +10,8 @@ class DashboardExtendConnectController extends Controller {
 		$this->addFooterItem(Loader::helper('html')->javascript('jquery.postmessage.js'));
 	}
 	
-	public function view($isNew = false) {
-		$this->set('isNew', $isNew);
+	public function view($startStep = 'view') {
+		$this->set('startStep', $startStep);
 	}
 	
 	public function connect_complete() {
