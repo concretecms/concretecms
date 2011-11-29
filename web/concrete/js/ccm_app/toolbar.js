@@ -25,7 +25,7 @@ $(function() {
 		clearTimeout(ccm_quickNavTimer);
 	}
 	
-	ccm_togglePageHelp = function(e, link) {
+	ccm_togglePopover = function(e, link) {
 		if ($('#twipsy-holder .popover').is(':visible')) {
 			$(link).popover('hide');	
 		} else {

@@ -73,8 +73,11 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 		    ccm_getDashboardBackgroundImageData('<?=$backgroundImage->filename?>');
 		<? } ?>
 	    ccm_activateToolbar();
-	    ccm_activateDashboardBreadcrumbHover();
-	    $("#ccm-page-help").popover({placement: 'below', html: true, trigger: 'manual'});
+	    $("#ccm-page-help,#ccm-page-navigate-pages").popover({content: function() {
+			var id = $(this).attr('id') + '-content';
+			return $('#' + id).html();
+			
+	    }, placement: 'below', html: true, trigger: 'manual'});
 	    $('.tooltip').twipsy({placement: 'below'});
 	    if ($('#ccm-dashboard-result-message').length > 0) { 
 			if ($('.ccm-pane').length > 0) { 
