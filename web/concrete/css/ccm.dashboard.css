@@ -17,6 +17,7 @@ div#ccm-dashboard-content{margin-top:130px;margin-bottom:80px;}
 .ccm-ui div.popover ul.ccm-navigate-page-menu li a{display:block;padding:8px 14px 8px 14px;color:#333;}
 .ccm-ui div.popover ul.ccm-navigate-page-menu li a:hover{text-decoration:none;background-color:#E0F2FE;}
 .ccm-ui div.popover ul.ccm-navigate-page-menu li:last-child a{-webkit-border-bottom-left-radius:6px;-webkit-border-bottom-right-radius:6px;-moz-border-radius-bottomleft:6px;-moz-border-radius-bottomright:6px;border-bottom-left-radius:6px;border-bottom-right-radius:6px;}
+.ccm-ui div.popover ul.ccm-navigate-page-menu li.nav-selected a{background-color:#f6f6f6;font-weight:bold;}
 #ccm-dashboard-background-caption{background-color:rgba(0, 0, 0, 0.8) !important;box-shadow:0px -5px -5px rgba(0, 0, 0, 0.3);-moz-box-shadow:0px -5px 5px rgba(0, 0, 0, 0.3);-webkit-box-shadow:0px -5px 5px rgba(0, 0, 0, 0.3);position:fixed;bottom:0px;right:0px;}
 #ccm-dashboard-background-caption-inner{padding:5px 10px 5px 10px;font-weight:bold;color:#fff;text-align:right;}
 #ccm-dashboard-background-caption-inner a{color:#fff;}
