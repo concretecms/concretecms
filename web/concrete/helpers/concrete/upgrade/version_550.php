@@ -66,22 +66,30 @@ class ConcreteUpgradeVersion550Helper {
 		// install new dashboard + page types		
 		$this->installDashboard();
 		
-		// TODO - migrate non core pages out of the dashboard into where we think they should go.
 		$this->migrateOldDashboard();
+
+		Config::save('SEEN_INTRODUCTION', 1);
+
 		
 	}
 	
 	public function installSinglePages() {
 		Loader::model('single_page');
 		$spl = SinglePage::add(TRASH_PAGE_PATH);
-		$spl->update(array('cName' => t('Trash')));
-		$spl->moveToRoot();
+		if (is_object($spl)) {
+			$spl->update(array('cName' => t('Trash')));
+			$spl->moveToRoot();
+		}
 		$spl = SinglePage::add(STACKS_PAGE_PATH);
-		$spl->update(array('cName' => t('Stacks')));
-		$spl->moveToRoot();
+		if (is_object($spl)) {
+			$spl->update(array('cName' => t('Stacks')));
+			$spl->moveToRoot();
+		}
 		$spl = SinglePage::add(COMPOSER_DRAFTS_PAGE_PATH);
-		$spl->update(array('cName' => t('Drafts')));
-		$spl->moveToRoot();
+		if (is_object($spl)) {
+			$spl->update(array('cName' => t('Drafts')));
+			$spl->moveToRoot();
+		}
 	}
  
 	public function migrateOldDashboard() {
