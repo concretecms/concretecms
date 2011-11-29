@@ -69,25 +69,34 @@ class ConcreteDashboardHelper {
 
 		$currentMenu = array();
 		$backTo = false;
+		$nh = Loader::helper('navigation');
+
+		$parent = Page::getByID($c->getCollectionParentID());
 		
+		Loader::block('autonav');		
+		$subpages = AutonavBlockController::getChildPages($parent);
+		$subpagesP = array();
+		foreach($subpages as $sc) {
+			$cp = new Permissions($sc);
+			if ($cp->canRead()) { 
+				$subpagesP[] = $sc;
+			}
+		}
+
 		$relatedPages = '<div id="ccm-page-navigate-pages-content" style="display: none">';
 		$relatedPages .= '<ul class="ccm-navigate-page-menu">';
-		$relatedPages .= '<li><a href="">Page 1</a></li>';
-		$relatedPages .= '<li><a href="">Page 2</a></li>';
-		$relatedPages .= '<li><a href="">Page 3</a></li>';
-		$relatedPages .= '<li><a href="">Page 4</a></li>';
-		$relatedPages .= '<li><a href="">Page 5</a></li>';
-		$relatedPages .= '<li><a href="">Page 6</a></li>';
-		$relatedPages .= '<li><a href="">Page 7</a></li>';
-		$relatedPages .= '<li><a href="">Page 8</a></li>';
-		$relatedPages .= '<li><a href="">Page 8</a></li>';
-		$relatedPages .= '<li><a href="">Page 9</a></li>';
+
+
+		foreach($subpagesP as $sc) { 
+			
+			$relatedPages .= '<li class="' . $class . '"><a href="' . $nh->getLinkToCollection($sc) . '">' . $sc->getCollectionName() . '</a></li>';
+		}
+
 		$relatedPages .= '<li class="ccm-menu-separator"></li>';
 		if ($backTo) { 
 		
 		} else { 
-			$parent = Page::getByID($c->getCollectionParentID());
-			$relatedPages .= '<li><a href="' . Loader::helper('navigation')->getLinkToCollection($parent) . '">' . t('&lt; Back to %s', $parent->getCollectionName()) . '</a></li>';
+			$relatedPages .= '<li><a href="' . $nh->getLinkToCollection($parent) . '">' . t('&lt; Back to %s', $parent->getCollectionName()) . '</a></li>';
 		}
 		$relatedPages .= '</ul>';
 		$relatedPages .= '</div>';				
