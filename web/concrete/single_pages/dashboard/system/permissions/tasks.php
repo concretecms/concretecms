@@ -26,7 +26,7 @@ if ($tp1->can()) {
 	
 		<form method="post" id="ccm-task-permissions" action="<?=$this->url('/dashboard/system/permissions/tasks', 'save_task_permissions')?>">
 		<?=$this->controller->token->output('update_permissions');?>
-		<? print Loader::helper('concrete/dashboard/task_permissions')->getForm($tpl, t('Set permissions for common concrete5 tasks.')); ?>
+		<? print Loader::helper('concrete/dashboard/task_permissions')->getForm($tpl, t('Set administrative access details.')); ?>
 		<div class="ccm-pane-footer">
 			<? print $ih->submit(t('Save'), 'ccm-task-permissions', 'right', 'primary'); ?>
 		</div>
