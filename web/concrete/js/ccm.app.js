@@ -3002,20 +3002,6 @@ ccm_closeDashboardPane = function(r) {
 	$(r).closest('div.ccm-pane').fadeOut(120, 'easeOutExpo');
 }
 
-var ccm_dashboardBreadcrumbHoverTimer = null;
-
-ccm_activateDashboardBreadcrumbHover = function() {
-	$(".ccm-pane-header h3").mouseover(function() {
-		$('.ccm-dashboard-pane-header-up').show();
-	});
-
-	$(".ccm-pane-header").mouseout(function(e) {
-		if (e.toElement && ($(e.toElement).hasClass('ccm-pane-body') || $(e.toElement).hasClass('ccm-pane-options'))) {
-			$('.ccm-dashboard-pane-header-up').fadeOut(300, 'easeOutExpo');
-		}
-	});
-}
-
 ccm_getDashboardBackgroundImageData = function(image) {
 	$.getJSON(CCM_TOOLS_PATH + '/dashboard/get_image_data', {
 		'image': image
@@ -4555,7 +4541,7 @@ jQuery.fn.dialog.open = function(obj) {
 					} else {
 						var helpText = 'Help';
 					}
-					$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').append('<span class="ccm-dialog-help"><a href="javascript:void(0)" onclick="ccm_togglePageHelp(event, this)" title="' + helpText + '" data-content="' + dataContent + '">Help</a></span>');
+					$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').append('<span class="ccm-dialog-help"><a href="javascript:void(0)" onclick="ccm_togglePopover(event, this)" title="' + helpText + '" data-content="' + dataContent + '">Help</a></span>');
 				    $("span.ccm-dialog-help a").popover({placement: 'below', html: true, trigger: 'manual'});
 					
 				}
@@ -6576,7 +6562,7 @@ $(function() {
 		clearTimeout(ccm_quickNavTimer);
 	}
 	
-	ccm_togglePageHelp = function(e, link) {
+	ccm_togglePopover = function(e, link) {
 		if ($('#twipsy-holder .popover').is(':visible')) {
 			$(link).popover('hide');	
 		} else {
