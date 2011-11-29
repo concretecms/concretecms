@@ -116,7 +116,7 @@ class Config extends Object {
 	public static function exportList($x) {
 		$nconfig = $x->addChild('config');
 		$db = Loader::db();
-		$r = $db->Execute("select cfKey, cfValue, pkgID from Config where uID = 0 and cfKey not in ('SITE','SITE_APP_VERSION','SHOW_INTRODUCTION')");
+		$r = $db->Execute("select cfKey, cfValue, pkgID from Config where uID = 0 and cfKey not in ('SITE','SITE_APP_VERSION','SEEN_INTRODUCTION')");
 		while ($row = $r->FetchRow()) {
 			$option = $nconfig->addChild($row['cfKey'], $row['cfValue']);
 			if ($row['pkgID'] > 0) {

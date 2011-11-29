@@ -1026,7 +1026,7 @@
 				
 				$obj = new stdClass;
 
-				if ($_POST['approveImmediately'] && ($cp->canApproveCollection())) {
+				if (($_POST['rel'] == 'SITEMAP' || $_POST['approveImmediately']) && ($cp->canApproveCollection())) {
 					$v = CollectionVersion::get($c, "RECENT");
 					$v->approve();
 					$u = new User();

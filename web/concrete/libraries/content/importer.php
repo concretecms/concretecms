@@ -83,11 +83,13 @@ class ContentImporter {
 			foreach($sx->singlepages->page as $p) {
 				$pkg = ContentImporter::getPackageObject($p['package']);
 				$spl = SinglePage::add($p['path'], $pkg);
-				if (isset($p['root']) && $p['root'] == true) {
-					$spl->moveToRoot();
-				}
-				if ($p['name']) {
-					$spl->update(array('cName' => $p['name'], 'cDescription' => $p['description']));
+				if (is_object($spl)) { 
+					if (isset($p['root']) && $p['root'] == true) {
+						$spl->moveToRoot();
+					}
+					if ($p['name']) {
+						$spl->update(array('cName' => $p['name'], 'cDescription' => $p['description']));
+					}
 				}
 			}
 		}
@@ -227,11 +229,14 @@ class ContentImporter {
 		if (isset($sx->pagetypes)) {
 			foreach($sx->pagetypes->pagetype as $ct) {
 				$pkg = ContentImporter::getPackageObject($ct['package']);
-				$ctr = CollectionType::add(array(
-					'ctHandle' => $ct['handle'],
-					'ctName' => $ct['name'],
-					'ctIsInternal' => (string) $ct['internal']
-				), $pkg);
+				$ctt = CollectionType::getByHandle($ct['handle']);
+				if (!is_object($ctt)) { 
+					$ctr = CollectionType::add(array(
+						'ctHandle' => $ct['handle'],
+						'ctName' => $ct['name'],
+						'ctIsInternal' => (string) $ct['internal']
+					), $pkg);
+				}
 			}
 		}
 	}

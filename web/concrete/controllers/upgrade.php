@@ -146,25 +146,6 @@ class UpgradeController extends Controller {
 		}
 	}
 	
-	public function refresh_schema() {
-		if ($this->upgrade_db) {
-			$installDirectory = DIR_BASE_CORE . '/config';
-			$file = $installDirectory . '/db.xml';
-			if (!file_exists($file)) {
-				throw new Exception(t('Unable to locate database import file.'));
-			}		
-			$err = Package::installDB($file);
-			
-			// now we refresh the block schema
-			$btl = new BlockTypeList();
-			$btArray = $btl->getInstalledList();
-			foreach($btArray as $bt) {
-				$bt->refresh();
-			}
-			$this->upgrade_db = false;
-		}
-	}
-	
 	private function do_upgrade() {
 		$runMessages = array();
 		$prepareMessages = array();
@@ -208,11 +189,11 @@ class UpgradeController extends Controller {
 			$upgrade = true;
 		} catch(Exception $e) {
 			$upgrade = false;
-			$message .= t('An Unexpected Error occurred while upgrading: %s', $e->getMessage());
+			$message .= '<div class="alert-message block-message error"><p>' . t('An Unexpected Error occurred while upgrading: %s', $e->getMessage()) . '</p></div>';
 		}
 		
 		if ($upgrade) {
-			$completeMessage .= t('Upgrade to <b>%s</b> complete!', APP_VERSION) . '<br/><br/>';
+			$completeMessage .= '<div class="alert-message block-message success"><p>' . t('Upgrade to <b>%s</b> complete!', APP_VERSION) . '</p></div>';
 			Config::save('SITE_APP_VERSION', APP_VERSION);
 		}
 		$this->set('completeMessage',$completeMessage);	

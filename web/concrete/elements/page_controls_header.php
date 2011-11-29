@@ -37,9 +37,9 @@ if (!$dh->inDashboard()) {
 		$this->addFooterItem($html->javascript('i18n/ui.datepicker-' . $dlocale . '.js'));
 		$this->addFooterItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');
 	}
-	if (!Config::get('SHOW_INTRODUCTION')) {
+	if (!Config::get('SEEN_INTRODUCTION')) {
 		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_showAppIntroduction(); });</script>');
-		Config::save('SHOW_INTRODUCTION', 1);
+		Config::save('SEEN_INTRODUCTION', 1);
 	}
 	$this->addFooterItem($html->javascript('tiny_mce/tiny_mce.js'));
 }
