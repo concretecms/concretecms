@@ -25,32 +25,32 @@ $form = Loader::helper('form');
 	<fieldset id="ccm-settings-mail-smtp">
 		<legend><?=t('SMTP Settings')?></legend>
 			<div class="clearfix">
-				<?=$form->label('MAIL_SEND_METHOD_SMTP_SERVER','Mail Server');?>
+				<?=$form->label('MAIL_SEND_METHOD_SMTP_SERVER',t('Mail Server'));?>
 				<div class="input">
 					<?=$form->text('MAIL_SEND_METHOD_SMTP_SERVER', Config::get('MAIL_SEND_METHOD_SMTP_SERVER'))?>
 				</div>
 			</div>
 			<div class="clearfix">
-				<?=$form->label('MAIL_SEND_METHOD_SMTP_USERNAME','Username');?>
+				<?=$form->label('MAIL_SEND_METHOD_SMTP_USERNAME',t('Username'));?>
 				<div class="input">
 					<?=$form->text('MAIL_SEND_METHOD_SMTP_USERNAME', Config::get('MAIL_SEND_METHOD_SMTP_USERNAME'))?>
 				</div>
 			</div>
 			<div class="clearfix">
-				<?=$form->label('MAIL_SEND_METHOD_SMTP_PASSWORD','Password');?>
+				<?=$form->label('MAIL_SEND_METHOD_SMTP_PASSWORD',t('Password'));?>
 				<div class="input">
 					<?=$form->text('MAIL_SEND_METHOD_SMTP_PASSWORD', Config::get('MAIL_SEND_METHOD_SMTP_PASSWORD'))?>
 				</div>
 			</div>
 			
 			<div class="clearfix">
-				<?=$form->label('MAIL_SEND_METHOD_SMTP_ENCRYPTION','Encryption');?>
+				<?=$form->label('MAIL_SEND_METHOD_SMTP_ENCRYPTION',t('Encryption'));?>
 				<div class="input">
 					<?=$form->select('MAIL_SEND_METHOD_SMTP_ENCRYPTION', $secureVals, Config::get('MAIL_SEND_METHOD_SMTP_ENCRYPTION'))?>
 				</div>
 			</div>
 			<div class="clearfix">
-				<?=$form->label('MAIL_SEND_METHOD_SMTP_PORT','Port (Leave blank for default)');?>
+				<?=$form->label('MAIL_SEND_METHOD_SMTP_PORT',t('Port (Leave blank for default)'));?>
 				<div class="input">
 					<?=$form->text('MAIL_SEND_METHOD_SMTP_PORT', Config::get('MAIL_SEND_METHOD_SMTP_PORT'))?>
 				</div>
