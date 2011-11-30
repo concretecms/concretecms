@@ -5,7 +5,7 @@ class DashboardSitemapSearchController extends Controller {
 	
 	public $helpers = array('form');
 	
-	public function view($action = false) {
+	public function view() {
 		$html = Loader::helper('html');
 		
 		$pageList = $this->getRequestedSearchResults();
@@ -20,31 +20,7 @@ class DashboardSitemapSearchController extends Controller {
 			$this->set('searchInstance', $searchInstance);
 			$this->set('pagination', $pageList->getPagination());
 			
-			switch($action) {
-				case 'index_settings_updated':
-					$this->set('message', t('Index area settings saved.'));
-					break;
-			}
 		}
-	}
-	
-	public function manage_index() {
-		Loader::library('database_indexed_search');
-		if ($this->isPost()) {
-			$areas = $this->post('arHandle');
-			
-			if (!is_array($areas)) {
-				$areas = array();
-			}
-			Config::save('SEARCH_INDEX_AREA_LIST', serialize($areas));
-			Config::save('SEARCH_INDEX_AREA_METHOD', $this->post('SEARCH_INDEX_AREA_METHOD'));
-			$this->redirect('/dashboard/sitemap/search', 'index_settings_updated');
-		} 
-		
-		$areas = Area::getHandleList();
-		$selectedAreas = array();
-		$this->set('areas', $areas);
-		$this->set('selectedAreas', IndexedSearch::getSavedSearchableAreas());
 	}
 	
 	public function getRequestedSearchResults() {
