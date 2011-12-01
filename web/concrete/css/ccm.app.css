@@ -120,7 +120,7 @@
 .ccm-ui textarea{height:auto;}
 .ccm-ui .uneditable-input{background-color:#ffffff;display:block;border-color:#eee;-webkit-box-shadow:inset 0 1px 2px rgba(0, 0, 0, 0.025);-moz-box-shadow:inset 0 1px 2px rgba(0, 0, 0, 0.025);box-shadow:inset 0 1px 2px rgba(0, 0, 0, 0.025);cursor:not-allowed;}
 .ccm-ui :-moz-placeholder{color:#bfbfbf;}
-.ccm-ui ::-webkit-input-placeholder{color:#bfbfbf;}
+.ccm-ui::-webkit-input-placeholder{color:#bfbfbf;}
 .ccm-ui input,.ccm-ui textarea{-webkit-transition:border linear 0.2s,box-shadow linear 0.2s;-moz-transition:border linear 0.2s,box-shadow linear 0.2s;-ms-transition:border linear 0.2s,box-shadow linear 0.2s;-o-transition:border linear 0.2s,box-shadow linear 0.2s;transition:border linear 0.2s,box-shadow linear 0.2s;-webkit-box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1);-moz-box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1);box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1);}
 .ccm-ui input:focus,.ccm-ui textarea:focus{outline:0;border-color:rgba(82, 168, 236, 0.8);-webkit-box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1),0 0 8px rgba(82, 168, 236, 0.6);-moz-box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1),0 0 8px rgba(82, 168, 236, 0.6);box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1),0 0 8px rgba(82, 168, 236, 0.6);}
 .ccm-ui input[type=file]:focus,.ccm-ui input[type=checkbox]:focus,.ccm-ui select:focus{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;outline:1px dotted #666;}
@@ -413,13 +413,13 @@ div.rating-cancel,div.rating-star{float:left;width:16px;height:15px;text-indent:
 div.rating-cancel,div.rating-cancel a{background:url('../images/delete_rating.gif') no-repeat 0 -16px;}
 div.rating-star,div.rating-star a{background:url('../images/rating_star.png') no-repeat 0 0px;}
 div.rating-cancel a,div.rating-star a{display:block;width:16px;height:100%;background-position:0 0px;border:0;}
-div.rating-star-on a{background-position:0 -16px !important;}
+div.rating-star-on a{background-position:0 -16px;}
 div.rating-star-hover a{background-position:0 -32px;}
-div.rating-star-readonly a{cursor:default !important;text-decoration:none;}
-div.rating-star{background:transparent!important;overflow:hidden !important;}
+div.rating-star-readonly a{cursor:default;text-decoration:none;}
+div.rating-star{background:transparent;overflow:hidden;}
 input.rating-star-control{display:none;}
-.rating-cancel{display:none !important;}
-div.rating-star-on-half a{background-position:0 -48px !important;}
+.rating-cancel{display:none;}
+div.rating-star-on-half a{background-position:0 -48px;}
 div.ccm-rating input{display:none;}
 div.ccm-rating{white-space:nowrap;}
 .nivoSlider{position:relative;}
