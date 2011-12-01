@@ -28,31 +28,18 @@ class TextHelper {
 	function sanitizeFileSystem($handle, $leaveSlashes=false) {
 		$handle = trim($handle);
 		$handle = str_replace(PAGE_PATH_SEPARATOR, '-', $handle);
-		$searchMulti = array(
-			"ä",
-			"ö",
-			"ß",
-			"ü",
-			"æ",
-			"ø",
-			"å",
-			"é",
-			"è"	
+		$multi = array(
+			"ä"=>"ae",
+			"ö"=>"oe",
+			"ß"=>"ss",
+			"ü"=>"ue",
+			"æ"=>"ae",
+			"ø"=>"oe",
+			"å"=>"aa",
+			"é"=>"e",
+			"è"=>"e"	
 		);
-
-		$replaceMulti = array(
-			'ae',
-			'oe',
-			'ss',
-			'ue',
-			'ae',
-			'oe',
-			'aa',
-			'e',
-			'e'
-		);
-		
-		$handle = str_replace($searchMulti, $replaceMulti, $handle);
+		$handle = str_replace(array_keys($multi), array_values($multi), $handle);
 
 		$searchNormal = array("/[&]/", "/[\s]+/", "/[^0-9A-Za-z-_.]/", "/-+/");
 		$searchSlashes = array("/[&]/", "/[\s]+/", "/[^0-9A-Za-z-_.\/]/", "/-+/");
