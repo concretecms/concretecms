@@ -268,6 +268,7 @@ class Package extends Object {
 		Loader::library('mail/importer');
 		Loader::model('job');
 		Loader::model('collection_types');
+		Loader::model('system/captcha/library');
 		$items['attribute_categories'] = AttributeKeyCategory::getListByPackage($this);
 		$items['attribute_keys'] = AttributeKey::getListByPackage($this);
 		$items['attribute_sets'] = AttributeSet::getListByPackage($this);
@@ -280,6 +281,7 @@ class Package extends Object {
 		$items['task_permissions'] = $tp->populatePackagePermissions($this);
 		$items['single_pages'] = SinglePage::getListByPackage($this);
 		$items['attribute_types'] = AttributeType::getListByPackage($this);		
+		$items['captcha_libraries'] = SystemCaptchaLibrary::getListByPackage($this);		
 		$items['jobs'] = Job::getListByPackage($this);		
 		ksort($items);
 		return $items;
@@ -310,6 +312,8 @@ class Package extends Object {
 			return t(' %s (%s)', $txt->unhandle($item->getAttributeKeyHandle()), $txt->unhandle($akc->getAttributeKeyCategoryHandle()));
 		} else if ($item instanceof ConfigValue) {
 			return ucwords(strtolower($txt->unhandle($item->key)));
+		} else if ($item instanceof SystemCaptchaLibrary) {
+			return $item->getSystemCaptchaLibraryName();
 		} else if (is_a($item, 'TaskPermission')) {
 			return $item->getTaskPermissionName();			
 		} else if (is_a($item, 'Job')) {
@@ -341,6 +345,9 @@ class Package extends Object {
 							break;
 						case 'SinglePage':
 							@$item->delete(); // we suppress errors because sometimes the wrapper pages can delete first.
+							break;
+						case 'SystemCaptchaLibrary':
+							$item->delete();
 							break;
 						case 'CollectionType':
 							$item->delete();

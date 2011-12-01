@@ -254,7 +254,38 @@
 		<field name="truncateChars" type="I">
 			<default value="128"/>
 		</field>		
-	</table>  
+	</table>
+
+<table name="SystemAntiSpamLibraries">
+    <field name="saslHandle" type="C" size="64">
+      <KEY/>
+    </field>
+    <field name="saslName" type="C" size="255"/>
+    <field name="saslIsActive" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  <table name="SystemCaptchaLibraries">
+    <field name="sclHandle" type="C" size="64">
+      <KEY/>
+    </field>
+    <field name="sclName" type="C" size="255"/>
+    <field name="sclIsActive" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>	
 	<table name="btFormAnswerSet">
 		<field name="asID" type="I">
 			<key />

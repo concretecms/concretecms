@@ -1215,7 +1215,36 @@
 		  <col>layoutID</col>
 		</index>				
   </table>  
-  
+<table name="SystemAntiSpamLibraries">
+    <field name="saslHandle" type="C" size="64">
+      <KEY/>
+    </field>
+    <field name="saslName" type="C" size="255"/>
+    <field name="saslIsActive" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  <table name="SystemCaptchaLibraries">
+    <field name="sclHandle" type="C" size="64">
+      <KEY/>
+    </field>
+    <field name="sclName" type="C" size="255"/>
+    <field name="sclIsActive" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>  
 <table name="SystemNotifications">
     <field name="snID" type="I" size="10">
       <KEY/>
