@@ -108,6 +108,8 @@ class MarketplaceRemoteItem extends Object {
 			return array(Package::E_PACKAGE_DOWNLOAD);
 		} else if ($file == Package::E_PACKAGE_SAVE) {
 			return array($file);
+		} else if ($file == Package::E_PACKAGE_INVALID_APP_VERSION) {
+			return array($file);
 		}
 	
 		try {

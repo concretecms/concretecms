@@ -2,12 +2,12 @@ div.rating-cancel,div.rating-star{float:left;width:16px;height:15px;text-indent:
 div.rating-cancel,div.rating-cancel a{background:url('../images/delete_rating.gif') no-repeat 0 -16px;}
 div.rating-star,div.rating-star a{background:url('../images/rating_star.png') no-repeat 0 0px;}
 div.rating-cancel a,div.rating-star a{display:block;width:16px;height:100%;background-position:0 0px;border:0;}
-div.rating-star-on a{background-position:0 -16px !important;}
+div.rating-star-on a{background-position:0 -16px;}
 div.rating-star-hover a{background-position:0 -32px;}
-div.rating-star-readonly a{cursor:default !important;text-decoration:none;}
-div.rating-star{background:transparent!important;overflow:hidden !important;}
+div.rating-star-readonly a{cursor:default;text-decoration:none;}
+div.rating-star{background:transparent;overflow:hidden;}
 input.rating-star-control{display:none;}
-.rating-cancel{display:none !important;}
-div.rating-star-on-half a{background-position:0 -48px !important;}
+.rating-cancel{display:none;}
+div.rating-star-on-half a{background-position:0 -48px;}
 div.ccm-rating input{display:none;}
 div.ccm-rating{white-space:nowrap;}
