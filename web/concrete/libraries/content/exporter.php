@@ -80,6 +80,9 @@ class ContentExporter {
 			$pc->export($pages);
 		}		
 		
+		Loader::model("system/captcha/library");		
+		SystemCaptchaLibrary::exportList($this->x);
+		
 		Config::exportList($this->x);
 		
 	}

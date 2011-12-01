@@ -67,7 +67,14 @@ class ConcreteUpgradeVersion550Helper {
 		$this->installDashboard();
 		
 		$this->migrateOldDashboard();
-
+		
+		Loader::model('system/captcha/library');
+		$scl = SystemCaptchaLibrary::getByHandle('securimage');
+		if (!is_object($scl)) {
+			$scl = SystemCaptchaLibrary::add('securimage', t('SecurImage (Default)'));
+			$scl->activate();
+		}
+		
 		Config::save('SEEN_INTRODUCTION', 1);
 
 		

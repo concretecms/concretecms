@@ -53,4 +53,7 @@
             </access>
         </taskpermission>
     </taskpermissions>
+	<systemcaptcha>
+		<library handle="securimage" name="SecurImage (Default)" package="" activated="1"/>
+	</systemcaptcha>
 </concrete5-cif>
