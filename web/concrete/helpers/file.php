@@ -36,6 +36,7 @@ class FileHelper {
 	 * Returns the contents of a directory in an array.
 	 * @param string $directory Directory to get the contents of
 	 * @param array $ignoreFilesArray File names to not include when getting the directory contents
+	 * @param bool $recursive Recursively scan a directory for all files
 	 * @return array
 	 */
 	public function getDirectoryContents($dir, $ignoreFilesArray = array(), $recursive = false) {
