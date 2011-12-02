@@ -120,7 +120,12 @@
 			      $errors['captcha'] = '- '.t("Incorrect captcha code");
 			   }
 			}
-
+			
+			$antispam = Loader::helper('validation/antispam');
+			if (!$antispam->check($_POST['commentText'])) { 
+			      $errors['antispam'] = '- '.t("Your comment has been flagged as spam.");
+			}
+			
 			if(!$v->notempty($_POST['commentText'])) {
 				$errors['commentText'] = '- '.t("a comment is required");
 			}

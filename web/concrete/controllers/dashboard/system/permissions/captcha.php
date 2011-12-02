@@ -25,7 +25,7 @@ class DashboardSystemPermissionsCaptchaController extends DashboardBaseControlle
 			$scl = SystemCaptchaLibrary::getByHandle($this->post('activeCaptcha'));
 			if (is_object($scl)) {
 				$scl->activate();
-				if ($scl->hasOptionsForm()) {
+				if ($scl->hasOptionsForm() && $this->post('ccm-submit-submit')) {
 					$controller = $scl->getController();
 					$controller->saveOptions($this->post());
 				}
