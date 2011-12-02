@@ -9,6 +9,7 @@ class SystemCaptchaLibrary extends Object {
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
+	public function getPackageObject() {return Package::getByID($this->pkgID);}
 	
 	public static function getActive() {
 		$db = Loader::db();
@@ -84,6 +85,26 @@ class SystemCaptchaLibrary extends Object {
 	}
 	
 	
+	public function hasOptionsForm() {
+		$path = DIRNAME_SYSTEM . '/' . DIRNAME_SYSTEM_CAPTCHA . '/' . $this->sclHandle . '/' . FILENAME_FORM;
+		if (file_exists(DIR_ELEMENTS . '/' . $path)) {
+			return true;
+		} else if ($this->pkgID > 0) {
+			$pkgHandle = $this->getPackageHandle();
+			$dp = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . $path;
+			$dpc = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . $path;
+			if (file_exists($dp)) {
+				return true;
+			} else if (file_exists($dpc)) {
+				return true;
+			}
+		} else {
+			return file_exists(DIR_ELEMENTS . '/' . $path);
+		}
+		
+		return false;
+	}
+	
 	/** 
 	 * Returns the controller class for the currently selected captcha library
 	 */
@@ -92,8 +113,9 @@ class SystemCaptchaLibrary extends Object {
 		if (file_exists(DIR_MODELS . '/' . $path)) {
 			require_once(DIR_MODELS . '/' . $path);
 		} else if ($this->pkgID > 0) {
-			$dp = DIR_PACKAGES . '/' . DIRNAME_MODELS . '/' . $path;
-			$dpc = DIR_PACKAGES_CORE . '/' . DIRNAME_MODELS . '/' . $path;
+			$pkgHandle = $this->getPackageHandle();
+			$dp = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . $path;
+			$dpc = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . $path;
 			if (file_exists($dp)) {
 				require_once($dp);
 			} else {

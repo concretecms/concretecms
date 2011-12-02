@@ -3022,16 +3022,16 @@ ccm_getDashboardBackgroundImageData = function(image) {
 	}, function(r) {
 		if (r) {
 			var html = '<div>';
-			html += '<strong>' + r.title + '</strong> / ';
+			html += '<strong>' + r.title + '</strong> ' + ccmi18n.authoredBy + ' ';
 			if (r.link) {
 				html += '<a target="_blank" href="' + r.link + '">' + r.author + '</a>';
 			} else {
 				html += r.author;
 			}
-			if (r.description) {
-				html += ' / ' + r.description;
-			}
 			$('<div id="ccm-dashboard-image-caption" class="ccm-ui"/>').html(html).appendTo(document.body).show();
+			setTimeout(function() {
+				$('#ccm-dashboard-image-caption').fadeOut(1000, 'easeOutExpo');
+			}, 5000);
 		}
 	});
 }

@@ -197,6 +197,7 @@ define('FILENAME_BLOCK_ICON', 'icon.png');
 define('FILENAME_BLOCK_CONTROLLER', 'controller.php');
 define('FILENAME_BLOCK_DB', 'db.xml');
 define('BLOCK_HANDLE_SCRAPBOOK_PROXY', 'core_scrapbook_display');
+define('FILENAME_FORM', 'form.php');
 
 # Stacks
 define('STACKS_PAGE_PATH', '/!stacks');

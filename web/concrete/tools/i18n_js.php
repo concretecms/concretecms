@@ -67,6 +67,7 @@ var ccmi18n = {
 	saveSpeedSettingsMsg: "<?=t("Speed Settings saved.")?>",
 	ok: "<?=t('Ok')?>",
 	newsflowLoading: "<?=t("Loading latest site information and concrete5 updates.")?>",
+	authoredBy: "<?=t('by')?>",
 	x: "<?=t('x')?>"
 }
 
