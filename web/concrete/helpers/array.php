@@ -1,11 +1,4 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-/**
- * @package Helpers
- * @category Concrete
- * @author Christiaan Baartse <anotherhero@gmail.com>
- * @copyright  Copyright (c) 2011 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- */
 
 /**
  * Helpful functions for working with Arrays. Includes recursive fetching
@@ -89,4 +82,16 @@ class ArrayHelper
 		}
 		return $keys;
 	}
+	
+	public function flatten(array $array) { 
+		$tmp = array();
+		foreach($array as $a) { 
+			if(is_array($a)) { 
+				$tmp = array_merge($tmp, array_flat($a)); 
+			} else { 
+				$tmp[] = $a; 
+			} 
+		} 
+		return $tmp; 
+	} 
 }
