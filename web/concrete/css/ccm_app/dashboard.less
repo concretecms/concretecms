@@ -18,16 +18,19 @@ div#ccm-dashboard-content {  margin-top: 130px; margin-bottom: 80px }
 	border-bottom:1px solid #eee;padding:5px 20px; position: relative;
 }
 
-.ccm-dashboard-pane-header-up {display: none;}
-.ccm-dashboard-pane-header-up a {height: 19px; position: absolute; top: -32px;  text-decoration: none; left: 16px; background: #fff; padding: 6px 10px 6px 10px; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-right: 1px solid #ccc; .border-radius-top-only(4px); display: block; color: #666;}
-.ccm-dashboard-pane-header-up a:hover {text-decoration: none;}
-
 #ccm-dashboard-image-caption {display: none; position: fixed; background-color: rgba(0,0,0,0.8); bottom: 0px; left: 0px; width: 100%; z-index: 1}
 #ccm-dashboard-image-caption div {padding: 8px; color: #fff;}
 #ccm-dashboard-image-caption a {color: #fff; text-decoration: underline;}
 
 .ccm-dashboard-page-container {  .fixed-container();}
 .ccm-dashboard-page-container div.ccm-pane {position: relative; z-index: 2;}
+
+.ccm-ui div.popover ul.ccm-navigate-page-menu {list-style-type: none; margin: -14px}
+.ccm-ui div.popover ul.ccm-navigate-page-menu li {padding: 0px; margin: 0px;}
+.ccm-ui div.popover ul.ccm-navigate-page-menu li a {display: block; padding: 8px 14px 8px 14px; color: #333;}
+.ccm-ui div.popover ul.ccm-navigate-page-menu li a:hover {text-decoration: none; background-color: #E0F2FE;}
+.ccm-ui div.popover ul.ccm-navigate-page-menu li:last-child a {.border-radius-bottom-only(6px);}
+.ccm-ui div.popover ul.ccm-navigate-page-menu li.nav-selected a {background-color: #f6f6f6; font-weight: bold;}
 
 #ccm-dashboard-background-caption {
 	background-color: rgba(0,0,0,0.8) !important;

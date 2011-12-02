@@ -39,7 +39,7 @@ div.guestBook-entry {
 	font-size:10px;
 }
 
-.guestBook-formBlock span.error, div#guestBook-formBlock-<?=$controller->bID?> span.error {
-	color:#990000;
+.guestBook-formBlock span.error {
+	color:#ff0000;
 	text-align:left;
 }

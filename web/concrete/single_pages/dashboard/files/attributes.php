@@ -1,8 +1,6 @@
 
 <? if (isset($key)) { ?>
 
-<? Loader::helper('concrete/dashboard')->enableDashboardBackNavigation('/dashboard/files/attributes', t('Attributes'))?>
-
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Attribute'), false, false, false)?>
 <form method="post" action="<?=$this->action('edit')?>" id="ccm-attribute-key-form">
 
@@ -18,8 +16,6 @@
 
 
 <? } else if ($this->controller->getTask() == 'select_type' || $this->controller->getTask() == 'add' || $this->controller->getTask() == 'edit') { ?>
-
-	<? Loader::helper('concrete/dashboard')->enableDashboardBackNavigation('/dashboard/files/attributes', t('Attributes'))?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Attributes'), false, false, false)?>
 
@@ -37,8 +33,6 @@
 
 <? } else { ?>
 
-	<? Loader::helper('concrete/dashboard')->enableDashboardBackNavigation(); ?>
-	
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Attributes'), false, false, false)?>
 	<div class="ccm-pane-body">
 

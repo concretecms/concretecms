@@ -656,8 +656,6 @@ class MiniSurvey{
    				
    				$captcha = Loader::helper('validation/captcha');				
    				$captcha->display();
-   				print '<br/>';
-   				$captcha->showInput();		
    
    				//echo isset($errors['captcha'])?'<span class="error">' . $errors['captcha'] . '</span>':'';
 				  echo '</td></tr>';

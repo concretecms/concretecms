@@ -1,4 +1,5 @@
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('System &amp; Settings'));?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('System &amp; Settings')); ?>
+
 <?
 print '<div class="row">';
 for ($i = 0; $i < count($categories); $i++) {

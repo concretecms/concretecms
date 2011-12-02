@@ -1,20 +1,20 @@
 ccm_closeDashboardPane = function(r) {
-	$(r).closest('div.ccm-pane').fadeOut(120, 'easeOutExpo');
+	var accepter = $('#ccm-recent-page-' + CCM_CID);
+	var l = $(r);
+	ccm_showQuickNav(function() { 
+		var title = l.parent().parent().parent().find('h3');
+		title.css('display','inline');
+		$(r).closest('div.ccm-pane').fadeOut(120, 'easeOutExpo');
+		title.effect("transfer", { to: accepter, 'easing': 'easeOutExpo'}, 600, function() {
+			accepter.hide().css('visibility','visible').fadeIn(240, 'easeInExpo');			
+			title.css('display','block');
+			ccm_quickNavTimer = setTimeout(function() {
+				ccm_hideQuickNav();
+			}, 1000);
+		});
+	});
 }
 
-var ccm_dashboardBreadcrumbHoverTimer = null;
-
-ccm_activateDashboardBreadcrumbHover = function() {
-	$(".ccm-pane-header h3").mouseover(function() {
-		$('.ccm-dashboard-pane-header-up').show();
-	});
-
-	$(".ccm-pane-header").mouseout(function(e) {
-		if (e.toElement && ($(e.toElement).hasClass('ccm-pane-body') || $(e.toElement).hasClass('ccm-pane-options'))) {
-			$('.ccm-dashboard-pane-header-up').fadeOut(300, 'easeOutExpo');
-		}
-	});
-}
 
 ccm_getDashboardBackgroundImageData = function(image) {
 	$.getJSON(CCM_TOOLS_PATH + '/dashboard/get_image_data', {
@@ -22,16 +22,16 @@ ccm_getDashboardBackgroundImageData = function(image) {
 	}, function(r) {
 		if (r) {
 			var html = '<div>';
-			html += '<strong>' + r.title + '</strong> / ';
+			html += '<strong>' + r.title + '</strong> ' + ccmi18n.authoredBy + ' ';
 			if (r.link) {
 				html += '<a target="_blank" href="' + r.link + '">' + r.author + '</a>';
 			} else {
 				html += r.author;
 			}
-			if (r.description) {
-				html += ' / ' + r.description;
-			}
 			$('<div id="ccm-dashboard-image-caption" class="ccm-ui"/>').html(html).appendTo(document.body).show();
+			setTimeout(function() {
+				$('#ccm-dashboard-image-caption').fadeOut(1000, 'easeOutExpo');
+			}, 5000);
 		}
 	});
 }

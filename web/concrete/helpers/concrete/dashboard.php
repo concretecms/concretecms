@@ -50,42 +50,75 @@ class ConcreteDashboardHelper {
 		return $html;
 	}
 	
-	public function getDashboardPaneHeaderWrapper($title = false, $help = false, $span = 'span16', $includeDefaultBody = true) {
+	public function getDashboardPaneHeaderWrapper($title = false, $help = false, $span = 'span16', $includeDefaultBody = true, $navigatePages = array(), $upToPage = false) {
 		if (!$span) {
 			$span = 'span16';
 		}
 		$html = '<div class="ccm-ui"><div class="row"><div class="' . $span . '"><div class="ccm-pane">';
-		$html .= self::getDashboardPaneHeader($title, $help);
+		$html .= self::getDashboardPaneHeader($title, $help, $navigatePages, $upToPage);
 		if ($includeDefaultBody) {
 			$html .= '<div class="ccm-pane-body ccm-pane-body-footer">';
 		}
 		return $html;
 	}
 	
-	public function enableDashboardBackNavigation($pagePath = false, $title = false) {
-		if ($pagePath) {
-			$page = Page::getByPath($pagePath, 'ACTIVE');
-		} else {
-			$c = Page::getCurrentPage();
-			$page = Page::getByID($c->getCollectionParentID(), 'ACTIVE');
-		}
-		
-		if (!$title) {
-			$title = t($page->getCollectionName());
-		}
-		
-		$this->backNavigationPage = $page;
-		$this->backNavigationTitle = $title;		
-	}
-	
-	public function getDashboardPaneHeader($title = false, $help = false) {
+	public function getDashboardPaneHeader($title = false, $help = false, $navigatePages = array(), $upToPage = false) {
 		$c = Page::getCurrentPage();
 		$vt = Loader::helper('validation/token');
 		$token = $vt->generate('access_quick_nav');
-		$html = '<div class="ccm-pane-header">';
-		if (isset($this->backNavigationPage)) { 
-			$html .= '<div class="ccm-dashboard-pane-header-up"><a href="' . Loader::helper('navigation')->getLinkToCollection($this->backNavigationPage) . '">&lt; to ' .$this->backNavigationTitle . '</a></div>';
+
+		$currentMenu = array();
+		$nh = Loader::helper('navigation');
+		$trail = $nh->getTrailToCollection($c);
+		if (count($trail) > 1 || count($navigatePages) > 1 || is_object($upToPage)) { 
+			$parent = Page::getByID($c->getCollectionParentID());
+			if (count($trail) > 2 && (!is_object($upToPage))) {
+				$upToPage = Page::getByID($parent->getCollectionParentID());
+			}
+			Loader::block('autonav');
+			if (count($navigatePages) > 0) { 
+				$subpages = $navigatePages;
+			} else { 
+				$subpages = AutonavBlockController::getChildPages($parent);
+			}
+			
+			$subpagesP = array();
+			foreach($subpages as $sc) {
+				$cp = new Permissions($sc);
+				if ($cp->canRead()) { 
+					$subpagesP[] = $sc;
+				}
+			}
+			
+			if (count($subpagesP) > 0 || is_object($upToPage)) { 
+				$relatedPages = '<div id="ccm-page-navigate-pages-content" style="display: none">';
+				$relatedPages .= '<ul class="ccm-navigate-page-menu">';
+		
+				foreach($subpagesP as $sc) { 
+		
+					if ($c->getCollectionPath() == $sc->getCollectionPath() || (strpos($c->getCollectionPath(), $sc->getCollectionPath()) == 0) && strpos($c->getCollectionPath(), $sc->getCollectionPath()) !== false) {
+						$class= 'nav-selected';
+					} else {
+						$class = '';
+					}
+					
+					$relatedPages .= '<li class="' . $class . '"><a href="' . $nh->getLinkToCollection($sc) . '">' . $sc->getCollectionName() . '</a></li>';
+				}
+		
+				if ($upToPage) { 
+					$relatedPages .= '<li class="ccm-menu-separator"></li>';
+					$relatedPages .= '<li><a href="' . $nh->getLinkToCollection($upToPage) . '">' . t('&lt; Back to %s', $upToPage->getCollectionName()) . '</a></li>';
+				}
+				$relatedPages .= '</ul>';
+				$relatedPages .= '</div>';
+				$navigateTitle = $parent->getCollectionName();
+			}
 		}
+		
+
+		$html = '<div class="ccm-pane-header">';
+		
+		$html .= $relatedPages;
 		
 		$class = 'ccm-icon-favorite';
 		$u = new User();
@@ -104,8 +137,12 @@ class ConcreteDashboardHelper {
 			}
 		}
 		
+		if (isset($relatedPages)) { 
+			$html .= '<li><a href="javascript:void(0)" onclick="ccm_togglePopover(event, this)" class="ccm-icon-navigate-pages" title="' . $navigateTitle . '" id="ccm-page-navigate-pages">' . t('Help') . '</a></li>';
+		}
+		
 		if ($help) {
-			$html .= '<li><a href="javascript:void(0)" onclick="ccm_togglePageHelp(event, this)" class="ccm-icon-help" title="' . t('Help') . '" id="ccm-page-help" data-content="' . $help . '">' . t('Help') . '</a></li>';
+			$html .= '<li><span style="display: none" id="ccm-page-help-content">' . $help . '</span><a href="javascript:void(0)" onclick="ccm_togglePopover(event, this)" class="ccm-icon-help" title="' . t('Help') . '" id="ccm-page-help">' . t('Help') . '</a></li>';
 		}
 		$html .= '<li><a href="javascript:void(0)" id="ccm-add-to-quick-nav" onclick="ccm_toggleQuickNav(' . $c->getCollectionID() . ',\'' . $token . '\')" class="' . $class . '">' . t('Add to Favorites') . '</a></li>';
 		$html .= '<li><a href="javascript:void(0)" onclick="ccm_closeDashboardPane(this)" class="ccm-icon-close">' . t('Close') . '</a></li>';

@@ -82,6 +82,9 @@ class Marketplace {
 		if (empty($pkg)) {
 			return Package::E_PACKAGE_DOWNLOAD;
 		}
+		if ($pkg == Package::E_PACKAGE_INVALID_APP_VERSION) {
+			return Package::E_PACKAGE_INVALID_APP_VERSION;
+		}
 
 		$file = time();
 		// Use the same method as the Archive library to build a temporary file name.
