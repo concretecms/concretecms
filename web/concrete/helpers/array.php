@@ -82,7 +82,12 @@ class ArrayHelper
 		}
 		return $keys;
 	}
-	
+
+	/**
+	 * Takes a multidimensional array and flattens it
+	 * @param array $array
+	 * @return array
+	 */	
 	public function flatten(array $array) { 
 		$tmp = array();
 		foreach($array as $a) { 
