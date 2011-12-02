@@ -10,12 +10,8 @@ class DashboardSystemPermissionsCaptchaController extends DashboardBaseControlle
 		foreach($list as $sc) {
 			$captchas[$sc->getSystemCaptchaLibraryHandle()] = $sc->getSystemCaptchaLibraryName();
 		}
-		$activeHandle = '';
 		$scl = SystemCaptchaLibrary::getActive();
-		if (is_object($scl)) {
-			$activeHandle = $scl->getSystemCaptchaLibraryHandle();
-		}
-		$this->set('activeCaptcha', $activeHandle);
+		$this->set('activeCaptcha', $scl);
 		$this->set('captchas', $captchas);
 	}
 	
@@ -29,7 +25,10 @@ class DashboardSystemPermissionsCaptchaController extends DashboardBaseControlle
 			$scl = SystemCaptchaLibrary::getByHandle($this->post('activeCaptcha'));
 			if (is_object($scl)) {
 				$scl->activate();
-				
+				if ($scl->hasOptionsForm()) {
+					$controller = $scl->getController();
+					$controller->saveOptions($this->post());
+				}
 				$this->redirect('/dashboard/system/permissions/captcha', 'captcha_saved');
 			} else {
 				$this->error->add(t('Invalid captcha library.'));

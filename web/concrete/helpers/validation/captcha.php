@@ -10,7 +10,9 @@ class ValidationCaptchaHelper {
 	}		
 	
 	public function __call($nm, $args) {
-		return call_user_func_array(array($this->controller, $nm), $args);
+		if (method_exists($this->controller, $nm)) { 
+			return call_user_func_array(array($this->controller, $nm), $args);
+		}
 	}
 
 	
