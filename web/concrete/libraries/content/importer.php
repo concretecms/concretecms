@@ -43,6 +43,7 @@ class ContentImporter {
 		$this->importPageContent($sx);
 		$this->importPackages($sx);
 		$this->importConfigValues($sx);
+		$this->importSystemCaptchaLibraries($sx);
 	}
 	
 	protected static function getPackageObject($pkgHandle) {
@@ -319,6 +320,19 @@ class ContentImporter {
 				$pt = PageTheme::add($th['handle'], $pkg);
 				if ($th['activated'] == '1') {
 					$pt->applyToSite();
+				}
+			}
+		}
+	}
+
+	protected function importSystemCaptchaLibraries(SimpleXMLElement $sx) {
+		if (isset($sx->systemcaptcha)) {
+			Loader::model('system/captcha/library');
+			foreach($sx->systemcaptcha->library as $th) {
+				$pkg = ContentImporter::getPackageObject($th['package']);
+				$scl = SystemCaptchaLibrary::add($th['handle'], $th['name'], $pkg);
+				if ($th['activated'] == '1') {
+					$scl->activate();
 				}
 			}
 		}

@@ -85,8 +85,7 @@ if($success) {
 			<?=$form->label('captcha', t('Please type the letters and numbers shown in the image.')); ?>
 			<div class="input">
 				<?php $captcha = Loader::helper('validation/captcha');				
-					  $captcha->display();?> </br>
-				     <?php $captcha->showInput();?>  
+			  $captcha->display();?>
 			</div>
 		</div>
 	

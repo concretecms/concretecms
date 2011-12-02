@@ -142,7 +142,7 @@ jQuery.fn.dialog.open = function(obj) {
 					} else {
 						var helpText = 'Help';
 					}
-					$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').append('<span class="ccm-dialog-help"><a href="javascript:void(0)" onclick="ccm_togglePageHelp(event, this)" title="' + helpText + '" data-content="' + dataContent + '">Help</a></span>');
+					$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').append('<span class="ccm-dialog-help"><a href="javascript:void(0)" onclick="ccm_togglePopover(event, this)" title="' + helpText + '" data-content="' + dataContent + '">Help</a></span>');
 				    $("span.ccm-dialog-help a").popover({placement: 'below', html: true, trigger: 'manual'});
 					
 				}

@@ -180,6 +180,11 @@ define('DIRNAME_JAVASCRIPT', 'js');
 define('DIRNAME_IMAGES', 'images');
 define('DIRNAME_HELPERS', 'helpers');
 
+define('DIRNAME_SYSTEM_TYPES', 'types');
+define('DIRNAME_SYSTEM_CAPTCHA', 'captcha');
+define('DIRNAME_SYSTEM_ANTISPAM', 'antispam');
+define('DIRNAME_SYSTEM', 'system');
+
 # Blocks
 define('DIR_FILES_BLOCK_TYPES', DIR_BASE . '/blocks');
 define('DIR_FILES_BLOCK_TYPES_CORE', DIR_BASE_CORE . '/blocks');
@@ -192,6 +197,7 @@ define('FILENAME_BLOCK_ICON', 'icon.png');
 define('FILENAME_BLOCK_CONTROLLER', 'controller.php');
 define('FILENAME_BLOCK_DB', 'db.xml');
 define('BLOCK_HANDLE_SCRAPBOOK_PROXY', 'core_scrapbook_display');
+define('FILENAME_FORM', 'form.php');
 
 # Stacks
 define('STACKS_PAGE_PATH', '/!stacks');
@@ -266,6 +272,7 @@ define('FILENAME_ATTRIBUTE_DB', 'db.xml');
 define('DIR_FILES_ELEMENTS', DIR_BASE . '/elements');
 define('DIR_FILES_ELEMENTS_CORE', DIR_BASE_CORE . '/elements');
 define('FILENAME_MENU_ITEM_CONTROLLER', 'controller.php');
+define('FILENAME_CONTROLLER', 'controller.php');
 
 # Jobs
 if (!defined('DIR_FILES_JOBS')) {
