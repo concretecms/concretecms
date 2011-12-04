@@ -21,6 +21,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 // Load a compatiblity class for pre php 5.2 installs
 Loader::library('datetime_compat');
 
+Loader::library('3rdparty/Zend/Date');
+
 class DateHelper {
 
 	/** 
@@ -52,7 +54,11 @@ class DateHelper {
 				}
 			}
 		}
-		return $datetime->format($mask);
+		if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != 'en_US') {
+			return $this->dateTimeFormatLocal($datetime,$mask);
+		} else {
+			return $datetime->format($mask);
+		}
 	}
 
 	/** 
@@ -94,7 +100,50 @@ class DateHelper {
 		} else {
 			$datetime = new DateTime();
 		}
-		return $datetime->format($mask);
+		if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != 'en_US') {
+			return $this->dateTimeFormatLocal($datetime,$mask);
+		} else {
+			return $datetime->format($mask);
+		}
+	}
+	/**
+	 * Gets the localized date according to a specific mask
+	 * @param object $datetime A PHP DateTime Object
+	 * @param string $mask 
+	 * @return string 
+	 */
+	public function dateTimeFormatLocal(&$datetime,$mask) {
+		$locale = new Zend_Locale(ACTIVE_LOCALE);
+		Zend_Date::setOptions(array('format_type' => 'php'));
+		$cache = Cache::getLibrary();
+		if (is_object($cache)) {
+			Zend_Date::setOptions(array('cache'=>$cache));
+		} 
+		$date = new Zend_Date($datetime->format(DATE_ATOM),DATE_ATOM, $locale);
+		$date->setTimeZone($datetime->format("e"));
+		return $date->toString($mask);
+	}
+	
+	/** 
+	 * Subsitute for the native date() function that adds localized date support
+	 * This uses Zend's Date Object {@link http://framework.zend.com/manual/en/zend.date.constants.html#zend.date.constants.phpformats}
+	 * @param string $mask
+	 * @param int $timestamp
+	 * @return string
+	 */
+	public function date($mask,$timestamp=false) {
+		if ($timestamp === false) {
+			$timestamp = time();
+		}
+		$locale = new Zend_Locale(ACTIVE_LOCALE);
+		Zend_Date::setOptions(array('format_type' => 'php'));
+		$cache = Cache::getLibrary();
+		if (is_object($cache)) {
+			Zend_Date::setOptions(array('cache'=>$cache));
+		} 
+		$date = new Zend_Date($timestamp, false, $locale);
+
+		return $date->toString($mask);
 	}
 
 	/**
