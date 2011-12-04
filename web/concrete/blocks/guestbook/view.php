@@ -79,8 +79,7 @@ foreach($posts as $p) { ?>
 			<textarea name="commentText"><?=$Entry->commentText ?></textarea><br />
 			<?
 			if($controller->displayCaptcha) {
-				
-				echo(t('Please type the letters and numbers shown in the image.'));			   
+						   
 				
 				$captcha = Loader::helper('validation/captcha');				
 				$captcha->display();
