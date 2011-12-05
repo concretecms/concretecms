@@ -26,6 +26,8 @@ class DashboardSystemPermissionsAntispamController extends DashboardBaseControll
 				$scl = SystemAntispamLibrary::getByHandle($this->post('activeLibrary'));
 				if (is_object($scl)) {
 					$scl->activate();
+					Config::save('ANTISPAM_NOTIFY_EMAIL', $this->post('ANTISPAM_NOTIFY_EMAIL'));
+					Config::save('ANTISPAM_LOG_SPAM', $this->post('ANTISPAM_LOG_SPAM'));
 					if ($scl->hasOptionsForm() && $this->post('ccm-submit-submit')) {
 						$controller = $scl->getController();
 						$controller->saveOptions($this->post());

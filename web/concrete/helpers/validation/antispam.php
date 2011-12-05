@@ -13,7 +13,7 @@ class ValidationAntispamHelper {
 		}
 	}		
 	
-	public function check($content, $additionalArgs) {
+	public function check($content, $type, $additionalArgs = array()) {
 		if ($this->controller) { 
 			$args['ip_address'] = $_SERVER['REMOTE_ADDR'];
 			$args['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
@@ -21,7 +21,43 @@ class ValidationAntispamHelper {
 			foreach($additionalArgs as $key => $value) {
 				$args[$key] = $value;
 			}
-			return $this->controller->check($args);
+			$u = new User();
+			if (!isset($args['email']) && $u->isRegistered()) {
+				$ui = UserInfo::getByID($u->getUserID());
+				$args['email'] = $ui->getUserEmail();
+			}
+			$r = $this->controller->check($args);
+			if ($r) {
+				return true;
+			} else {
+				$c = Page::getCurrentPage();
+				if (is_object($c)) { 
+					$logText .= t('URL: %s', Loader::helper('navigation')->getLinkToCollection($c, true));
+					$logText .= "\n";
+				}
+				$u = new User();
+				if ($u->isRegistered()) { 
+					$logText .= t('User: %s (ID %s)', $u->getUserName(), $u->getUserID());
+					$logText .= "\n";
+				}
+				$logText .= t('Type: %s', Loader::helper('text')->unhandle($type));
+				$logText .= "\n";
+				foreach($args as $key => $value) {
+					$logText .= Loader::helper('text')->unhandle($key) . ': ' . $value . "\n";
+				}
+				
+				if (Config::get('ANTISPAM_LOG_SPAM')) {
+					Log::addEntry($logText, t('spam'));
+				}
+				if (Config::get('ANTISPAM_NOTIFY_EMAIL') != '') {
+					$mh = Loader::helper('mail');
+					$mh->to(Config::get('ANTISPAM_NOTIFY_EMAIL'));
+					$mh->addParameter('content', $logText);
+					$mh->load('spam_detected');
+					$mh->sendMail();
+				}
+				return false;
+			}
 		} else {
 			return true; // return true if it passes the test
 		}

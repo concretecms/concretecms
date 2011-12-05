@@ -58,9 +58,6 @@ foreach($posts as $p) { ?>
 		<a name="guestBookForm-<?=$controller->bID?>"></a>
 
 		<div id="guestBook-formBlock-<?=$controller->bID?>" class="guestBook-formBlock">
-		<? 
-		echo isset($errors['antispam'])?'<span class="error">' . $errors['antispam'] . '</span>':'';
-		?>
 
 			<h5 class="guestBook-formBlock-title"><?php echo t('Leave a Reply')?></h5>
 			<form method="post" action="<?=$this->action('form_save_entry', '#guestBookForm-'.$controller->bID)?>">

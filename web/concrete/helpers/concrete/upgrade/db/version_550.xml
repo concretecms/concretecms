@@ -32,6 +32,10 @@
     <index name="arIsGlobal">
       <col>arIsGlobal</col>
     </index>
+    <index name="cID">
+      <col>cID</col>
+    </index>
+
     <index name="arHandle">
       <col>arHandle</col>
     </index>
