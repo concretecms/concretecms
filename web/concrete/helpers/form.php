@@ -69,8 +69,8 @@ class FormHelper {
 	 * @param string $name
 	 * @return string $html
 	 */
-	public function label($field, $name) {
-		$str = '<label for="' . $field . '">' . $name . '</label>';
+	public function label($field, $name, $miscFields = array()) {
+		$str = '<label for="' . $field . '"' . $this->parseMiscFields(null, $miscFields) . '>' . $name . '</label>';
 		return $str;
 	}
 
