@@ -143,7 +143,7 @@ foreach ($gResults as $g) { ?>
 	<div class="clearfix">
 	<?=$form->label('gName', t('Name'))?>
 	<div class="input">
-		<input type="text" name="gName" class="span6" value="<?=Loader::helper('text')->entities($gName)?>" />
+		<input type="text" name="gName" class="span6" value="<?=Loader::helper('text')->entities(t($gName))?>" />
 	</div>
 	</div>
 	
