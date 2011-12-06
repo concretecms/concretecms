@@ -249,12 +249,26 @@ class Package extends Object {
 	
 	}
 	
-	public function setupPackageLocalization() {
+	/**
+	 * Loads package translation files into zend translate 
+	 * @param string $locale
+	 * @param string $key
+	 * @return void
+	*/
+	public function setupPackageLocalization($locale = NULL, $key = NULL) {
 		$translate = Localization::getTranslate();
 		if (is_object($translate)) {
 			$path = $this->getPackagePath() . '/' . DIRNAME_LANGUAGES;
-			if (file_exists($path . '/' . ACTIVE_LOCALE . '/LC_MESSAGES/messages.mo')) {
-				$translate->addTranslation($path . '/' . ACTIVE_LOCALE . '/LC_MESSAGES/messages.mo', ACTIVE_LOCALE);
+			if(!isset($locale) || !strlen($locale)) {
+				$locale = ACTIVE_LOCALE;
+			}
+			
+			if(!isset($key)) {
+				$key = $locale;
+			}
+			
+			if (file_exists($path . '/' . $locale . '/LC_MESSAGES/messages.mo')) {
+				$translate->addTranslation($path . '/' . $locale . '/LC_MESSAGES/messages.mo', $key);
 			}
 		}
 	}
