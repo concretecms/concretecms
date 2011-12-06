@@ -20,7 +20,7 @@ $gArray = $gl->getGroupList();
 foreach ($gArray as $g) {
 ?>
 
-<li><label><input type="checkbox" name="readGID[]" value="<?=$g->getGroupID()?>" <? if ($g->canRead()) { ?> checked <? } ?> /> <?=$g->getGroupName()?></label></li>
+<li><label><input type="checkbox" name="readGID[]" value="<?=$g->getGroupID()?>" <? if ($g->canRead()) { ?> checked <? } ?> /> <?=t($g->getGroupName())?></label></li>
 
 <? } ?>
 
@@ -38,7 +38,7 @@ foreach ($gArray as $g) {
 foreach ($gArray as $g) {
 ?>
 
-<li><label><input type="checkbox" name="editGID[]" value="<?=$g->getGroupID()?>" <? if ($g->canWrite()) { ?> checked <? } ?> /> <?=$g->getGroupName()?></label></li>
+<li><label><input type="checkbox" name="editGID[]" value="<?=$g->getGroupID()?>" <? if ($g->canWrite()) { ?> checked <? } ?> /> <?=t($g->getGroupName())?></label></li>
 
 <? } ?>
 
