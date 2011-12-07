@@ -33,21 +33,11 @@ if ($a->areaAcceptsBlocks() || PERMISSIONS_MODEL == 'advanced') { ?>
 	ccm_areaMenuObj<?=$a->getAreaID()?>.type = "AREA";
 	ccm_areaMenuObj<?=$a->getAreaID()?>.aID = <?=$a->getAreaID()?>;
 	ccm_areaMenuObj<?=$a->getAreaID()?>.arHandle = "<?=$arHandle?>";
-	ccm_areaMenuObj<?=$a->getAreaID()?>.canAddBlocks = <?= (int) ($ap->canAddBlocks() && $a->areaAcceptsBlocks()) ?>;
-	ccm_areaMenuObj<?=$a->getAreaID()?>.canWrite = <?=$ap->canWrite()?>;
-	<? if ($cp->canAdmin() && PERMISSIONS_MODEL != 'simple') { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canModifyGroups = true;
-	<? } ?>
-	<? if ($ap->canWrite() && ENABLE_AREA_LAYOUTS == true && (!$a->isGlobalArea()) && (!$c->isMasterCollection()) && $a->areaAcceptsBlocks()) { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canLayout = true;
-	<? } else { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canLayout = false;
-	<? } ?>
-	<? if ($ap->canWrite() && ENABLE_CUSTOM_DESIGN == true && (!$c->isMasterCollection() && $a->areaAcceptsBlocks())) { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canDesign = true;
-	<? } else { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canDesign = false;
-	<? } ?>
+	</script>
+
+    <? Loader::element('block_area_permissions', array('a' => $a, 'ap' => $ap, 'c' => $c, 'cp' => $cp)); ?> 
+
+	<script type="text/javascript">
 	$(function() {ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>)});
 	</script>
 	<? if ($a->isGlobalArea()) { ?>
