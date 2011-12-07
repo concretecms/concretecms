@@ -251,7 +251,6 @@ class MarketplaceRemoteItemList extends ItemList {
 		$uh = Loader::helper('url');
 		
 		$url = $uh->buildQuery(MARKETPLACE_REMOTE_ITEM_LIST_WS . $this->type . '/-/get_remote_list', $params);
-
 		$r = Loader::helper('file')->getContents($url);
 		$r2 = @Loader::helper('json')->decode($r);
 				

@@ -143,12 +143,12 @@ class DatabaseItemList extends ItemList {
 		
 		$db = Loader::db();
 		if ($this->debug) { 
-			$db->setDebug(true);
+			Database::setDebug(true);
 		}
 		//echo $q.'<br>'; 
 		$resp = $db->GetAll($q);
 		if ($this->debug) { 
-			$db->setDebug(false);
+			Database::setDebug(false);
 		}
 		
 		$this->start = $offset;
