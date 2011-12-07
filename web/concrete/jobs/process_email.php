@@ -27,6 +27,14 @@ class ProcessEmail extends Job {
 				if ($me->validate()) {
 					$mi->process($me);
 					$mi->cleanup($me);
+				} else {
+					$mh = Loader::helper('mail');
+					$mh->to($me->getOriginalSender());
+					$mh->from($mi->getMailImporterEmail());
+					$mh->addParameter('originalSubject', $me->getSubject());
+					$mh->addParameter('error', $mi->getValidationErrorMessage());
+					$mh->load('mail_importer_error');
+					$mh->sendMail();
 				}
 			}
 		}		

@@ -121,11 +121,6 @@
 			   }
 			}
 			
-			$antispam = Loader::helper('validation/antispam');
-			if (!$antispam->check($_POST['commentText'])) { 
-			      $errors['antispam'] = '- '.t("Your comment has been flagged as spam.");
-			}
-			
 			if(!$v->notempty($_POST['commentText'])) {
 				$errors['commentText'] = '- '.t("a comment is required");
 			}
@@ -145,6 +140,11 @@
 				$this->set('errors',$errors);
 				$this->set('Entry',$E);	
 			} else {
+				$antispam = Loader::helper('validation/antispam');
+				if (!$antispam->check($_POST['commentText'], 'guestbook_block', array('email' => $_POST['email']))) { 
+					$this->requireApproval = true;
+				}
+
 				$E = new GuestBookBlockEntry($this->bID, $c->getCollectionID());
 				if($_POST['entryID']) { // update
 					$bp = $this->getPermissionsObject(); 
@@ -157,7 +157,11 @@
 					}
 				} else { // add			
 					$E->addEntry($_POST['commentText'], $_POST['name'], $_POST['email'], (!$this->requireApproval), $cID, $uID );	
-					$this->set('response', t('Thanks! Your comment has been posted.') );
+					if ($this->requireApproval) { 
+						$this->set('response', t('Thanks! Your comment has been received. It will require approval before it appears.'));
+					} else { 
+						$this->set('response', t('Thanks! Your comment has been posted.') );
+					}
 				}
 				 
 				$stringsHelper = Loader::helper('validation/strings');

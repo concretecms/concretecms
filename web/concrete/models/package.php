@@ -249,12 +249,26 @@ class Package extends Object {
 	
 	}
 	
-	public function setupPackageLocalization() {
+	/**
+	 * Loads package translation files into zend translate 
+	 * @param string $locale
+	 * @param string $key
+	 * @return void
+	*/
+	public function setupPackageLocalization($locale = NULL, $key = NULL) {
 		$translate = Localization::getTranslate();
 		if (is_object($translate)) {
 			$path = $this->getPackagePath() . '/' . DIRNAME_LANGUAGES;
-			if (file_exists($path . '/' . ACTIVE_LOCALE . '/LC_MESSAGES/messages.mo')) {
-				$translate->addTranslation($path . '/' . ACTIVE_LOCALE . '/LC_MESSAGES/messages.mo', ACTIVE_LOCALE);
+			if(!isset($locale) || !strlen($locale)) {
+				$locale = ACTIVE_LOCALE;
+			}
+			
+			if(!isset($key)) {
+				$key = $locale;
+			}
+			
+			if (file_exists($path . '/' . $locale . '/LC_MESSAGES/messages.mo')) {
+				$translate->addTranslation($path . '/' . $locale . '/LC_MESSAGES/messages.mo', $key);
 			}
 		}
 	}
@@ -494,7 +508,6 @@ class Package extends Object {
 		$errorText[Package::E_PACKAGE_SAVE] = t("Concrete was not able to save the package after download.");
 		$errorText[Package::E_PACKAGE_UNZIP] = t('An error occurred while trying to unzip the package.');
 		$errorText[Package::E_PACKAGE_INSTALL] = t('An error occurred while trying to install the package.');
-		$errorText[Package::E_PACKAGE_MIGRATE_BACKUP] = t('Unable to backup old package directory to %s', DIR_FILES_TRASH);
 		$errorText[Package::E_PACKAGE_MIGRATE_BACKUP] = t('Unable to backup old package directory to %s', DIR_FILES_TRASH);
 		$errorText[Package::E_PACKAGE_INVALID_APP_VERSION] = t('This package isn\'t currently available for this version of concrete5. Please contact the maintainer of this package for assistance.');
 		

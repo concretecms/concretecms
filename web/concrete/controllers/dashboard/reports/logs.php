@@ -5,10 +5,14 @@ class DashboardReportsLogsController extends Controller {
 	
 	public $helpers = array('form', 'html');
 	
-	public function clear($token = '') {
+	public function clear($token = '', $type = false) {
 		$valt = Loader::helper('validation/token');
 		if ($valt->validate('', $token)) {
-			Log::clearAll();
+			if (!$type) { 
+				Log::clearAll();
+			} else {
+				Log::clearByType($type);
+			}
 			$this->redirect('/dashboard/reports/logs');
 		} else {
 			$this->redirect('/dashboard/reports/logs');
