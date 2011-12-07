@@ -29,6 +29,31 @@
 				} else {
 					Loader::element('system/antispam/' . $activeLibrary->getSystemAntispamLibraryHandle() . '/form');
 				}
+				
+				?>
+				
+				<div class="clearfix">
+				<?=$form->label('ANTISPAM_LOG_SPAM', t('Log settings'))?>
+				<div class="input">
+				<ul class="inputs-list">
+					<li><label><?=$form->checkbox('ANTISPAM_LOG_SPAM', 1, Config::get('ANTISPAM_LOG_SPAM'))?> <span><?=t('Log entries marked as spam.')?></span></label>
+						<span class="help-block"><?=t('Logged entries can be found in <a href="%s" style="color: #bfbfbf; text-decoration: underline">Dashboard > Reports > Logs</a>', $this->url('/dashboard/reports/logs'))?></span>
+					</li>
+				</ul>
+				</div>
+				</div>
+
+				<div class="clearfix">
+				<?=$form->label('ANTISPAM_NOTIFY_EMAIL', t('Email Notification'))?>
+				<div class="input">
+					<?=$form->text('ANTISPAM_NOTIFY_EMAIL', Config::get('ANTISPAM_NOTIFY_EMAIL'))?>
+				<span class="help-block"><?=t('Any email address in this box will be notified when spam is detected.')?></span>
+				</div>
+
+				</div>
+				
+				
+				<?
 			}
 		} ?>
 

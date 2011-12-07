@@ -164,6 +164,10 @@ class MailImporter extends Object {
 		return $this->getMessageBodyHeader() . "\n\n" . $body;
 	}
 
+	public function getValidationErrorMessage() {
+		return t('Unable to process email. Check that your email contains the validation hash present in the original message.');
+	}
+
 	public function setupValidation($email, $dataObject) {
 		$db = Loader::db();
 		$h = Loader::helper('validation/identifier');
@@ -276,6 +280,7 @@ class MailImportedMessage {
 		}
 	}
 	
+	public function getOriginalSender() {return $this->sender;}
 	public function getOriginalMailObject() {return $this->oMail;}
 	public function getOriginalMessageObject() {return $this->oMailMessage;}
 	public function getOriginalMessageCount() {return $this->oMailCnt;}

@@ -352,7 +352,7 @@ class LoginController extends Controller {
 	}
 	
 	public function getPasswordSentMsg(){
-		return t('An email containing instructions on reseting your password has been sent to your account address.');
+		return t('An email containing instructions on resetting your password has been sent to your account address.');
 	}
 	
 	public function logout() {

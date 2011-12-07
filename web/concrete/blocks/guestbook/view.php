@@ -58,9 +58,6 @@ foreach($posts as $p) { ?>
 		<a name="guestBookForm-<?=$controller->bID?>"></a>
 
 		<div id="guestBook-formBlock-<?=$controller->bID?>" class="guestBook-formBlock">
-		<? 
-		echo isset($errors['antispam'])?'<span class="error">' . $errors['antispam'] . '</span>':'';
-		?>
 
 			<h5 class="guestBook-formBlock-title"><?php echo t('Leave a Reply')?></h5>
 			<form method="post" action="<?=$this->action('form_save_entry', '#guestBookForm-'.$controller->bID)?>">
@@ -79,8 +76,7 @@ foreach($posts as $p) { ?>
 			<textarea name="commentText"><?=$Entry->commentText ?></textarea><br />
 			<?
 			if($controller->displayCaptcha) {
-				
-				echo(t('Please type the letters and numbers shown in the image.'));			   
+						   
 				
 				$captcha = Loader::helper('validation/captcha');				
 				$captcha->display();

@@ -24,7 +24,7 @@ class HtmlHelper {
 		'jquery.metadata.js' => 'ccm.app.js',
 		'ccm.themes.js' => 'ccm.app.js',
 		'ccm.filemanager.js' => 'ccm.app.js',
-		'jquery.rating.js' => 'ccm.app.js',
+		/*'jquery.rating.js' => 'ccm.app.js',*/
 		'jquery.colorpicker.js' => 'ccm.app.js',
 		'jquery.liveupdate.js' => 'ccm.app.js',
 		'ccm.ui.js' => 'ccm.app.js',

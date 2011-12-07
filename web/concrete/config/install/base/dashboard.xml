@@ -212,7 +212,7 @@
 			</attributes>
 			<area name="Primary">
 				<block type="dashboard_app_status" name=""/>
-				<block type="dashboard_form_summary" name=""/>
+				<block type="dashboard_site_activity" name=""/>
 			</area>
 			<area name="Secondary 1">
 				<block type="rss_displayer" name="" custom-template="read_more.php">

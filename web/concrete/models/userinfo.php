@@ -260,7 +260,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			Loader::model('user_private_message');
 			if(UserPrivateMessageLimit::isOverLimit($this->getUserID())) {
 				return UserPrivateMessageLimit::getErrorObject();
-			}		
+			}
+			$antispam = Loader::helper('validation/antispam');
+			$messageText = t('Subject: %s', $subject);
+			$messageText .= "\n";
+			$messageText .= t('Message: %s', $text);
+			
+			if (!$antispam->check($messageText, 'private_message')) {
+				return false;
+			}
+			
 			$subject = ($subject == '') ? t('(No Subject)') : $subject;
 			$db = Loader::db();
 			$dt = Loader::helper('date');
