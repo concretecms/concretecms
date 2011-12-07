@@ -18,10 +18,62 @@ class PrivateMessageMailImporter extends MailImporter {
 				$originalTo = UserInfo::getByID($do->toUID);
 				$originalFrom = UserInfo::getByID($do->fromUID);
 				if (is_object($originalTo) && is_object($originalFrom)) {
-					$originalTo->sendPrivateMessage($originalFrom, $mail->getSubject(), $mail->getProcessedBody(), $upm);
+
+					$body = $mail->getProcessedBody();
+									
+					Loader::library("file/importer");
+					Loader::model('file_set');
+					$fileSet = FileSet::getByName('Private Message Attachments');
+
+					$attachments = array();
+					$zm = $mail->getOriginalMessageObject();
+					$i = 1;
+	
+					foreach (new RecursiveIteratorIterator($zm) as $part) { 
+						if ($i > 1) { 
+							$part = $zm->getPart($i);
+							try {
+								$fileName = $part->getHeader("content-description");
+							} catch(Exception $e) { 
+								$title = $part->getHeader('content-disposition');
+								$r = preg_match('/filename=[\'"]?([^\'";]+)[\'"]?/', $title, $resp);
+								$fileName = $resp[1];
+							}
+							
+							$attachment = base64_decode($part->getContent());
+							$savePath = DIR_TMP . '/' . Loader::helper('validation/identifier')->getString(32);
+							$fh = fopen($savePath, 'w');
+							fwrite($fh, $attachment);
+							fclose($fh);
+		
+							if ($attachment) {
+								$fi = new FileImporter();
+								$obj = $fi->import($savePath, $fileName);
+								if (is_object($obj)) {
+									$fileSet->addFiletoSet($obj);
+									$attachments[] = $obj;
+								}
+							}
+						}
+						$i++;
+					}
+					
+					if (count($attachments) > 0) {
+						$body .= "\n\n";
+						foreach($attachments as $fo) { 
+							$body .= "File Attachment: " . $fo->getFileName() . "\n";
+							$body .= "Download URL: " . $fo->getDownloadURL() . "\n\n";
+						}
+					}
+
+					$originalTo->sendPrivateMessage($originalFrom, $mail->getSubject(), $body, $upm);
 				}
 			}			
 		}
+	}
+	
+	public function getValidationErrorMessage() {
+		return t('Unable to process private message email. Check that your email contains the validation hash present in the original message. Your private message was NOT delivered.');
 	}
 	
 
