@@ -248,7 +248,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if(USER_PRIVATE_MESSAGE_MAX_TIME_SPAN == 0) { return false; }
 			$db = Loader::db();
 			$dt = new DateTime();
-			$dt->modify('-'.USER_PRIVATE_MESSAGE_MAX.' minutes');
+			$dt->modify('-'.USER_PRIVATE_MESSAGE_MAX_TIME_SPAN.' minutes');
 			$v = array($uID, $dt->format('Y-m-d H:i:s'));
 			$q = "SELECT COUNT(msgID) as sent_count FROM UserPrivateMessages WHERE uAuthorID = ? AND msgDateCreated >= ?";
 			$count = $db->getOne($q,$v);
