@@ -13,8 +13,6 @@ $ap = isset($ap) ? $ap : new Permissions($a);
 $c = isset($c) ? $c : $a->getAreaCollectionObject();
 $cp = isset($cp) ? $cp : new Permissions($cp);
 ?>
-
-<script type="text/javascript">
 ccm_areaMenuObj<?=$a->getAreaID()?>.canAddBlocks = <?= (int) ($ap->canAddBlocks() && $a->areaAcceptsBlocks()) ?>;
 ccm_areaMenuObj<?=$a->getAreaID()?>.canWrite = <?=$ap->canWrite()?>;
 <? if ($cp->canAdmin() && PERMISSIONS_MODEL != 'simple') { ?>
@@ -30,4 +28,3 @@ ccm_areaMenuObj<?=$a->getAreaID()?>.canWrite = <?=$ap->canWrite()?>;
 <? } else { ?>
     ccm_areaMenuObj<?=$a->getAreaID()?>.canDesign = false;
 <? } ?>
-</script>
