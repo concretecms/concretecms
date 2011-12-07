@@ -33,11 +33,7 @@ if ($a->areaAcceptsBlocks() || PERMISSIONS_MODEL == 'advanced') { ?>
 	ccm_areaMenuObj<?=$a->getAreaID()?>.type = "AREA";
 	ccm_areaMenuObj<?=$a->getAreaID()?>.aID = <?=$a->getAreaID()?>;
 	ccm_areaMenuObj<?=$a->getAreaID()?>.arHandle = "<?=$arHandle?>";
-	</script>
-
-    <? Loader::element('block_area_permissions', array('a' => $a, 'ap' => $ap, 'c' => $c, 'cp' => $cp)); ?> 
-
-	<script type="text/javascript">
+    <? Loader::element('block_area_permissions_js', array('a' => $a, 'ap' => $ap, 'c' => $c, 'cp' => $cp)); ?> 
 	$(function() {ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>)});
 	</script>
 	<? if ($a->isGlobalArea()) { ?>
