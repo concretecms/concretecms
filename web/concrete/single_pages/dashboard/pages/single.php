@@ -4,6 +4,23 @@ $ih = Loader::helper('concrete/interface');
 
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Single Pages'), false);?>
 	<div class="clearfix">
+		<h3><?php echo t('Add Single Page')?></h3>
+		<?php if(URL_REWRITING == true || URL_REWRITING_ALL == true) {
+			$baseurl = BASE_URL.DIR_REL;
+		} else { 
+			$base = BASE_URL.DIR_REL.'/'.DISPATCHER_FILENAME;
+		}?>
+		<form class="form-stacked" method="post" id="add_static_page_form" action="<?php echo $this->url('/dashboard/pages/single')?>">
+			<?php echo $this->controller->token->output('add_single_page')?>
+			<label for="pageURL"><?php echo t('The page you want to add is available at:')?></label>
+			<div class="input-prepend">
+				<span class="add-on"><?php echo $base?>/</span>
+			</div>
+			<input type="text" name="pageURL" value="<?php echo $this->post('pageURL')?>" class="span5" />
+			<div class="actions clearfix">
+				<?php print $ih->submit(t('Add New Page'), 'add_static_page_form', 'right', 'primary');?>
+			</div>
+		</form>
 		<h3><?php echo t('Already Installed')?></h3>
 		<table border="0" cellspacing="1" cellpadding="0" class="zebra-striped">
 			<thead>
@@ -46,22 +63,5 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 			} ?>
 		</table>
 		
-		<h3><?php echo t('Add Single Page')?></h3>
-		<?php if(URL_REWRITING == true || URL_REWRITING_ALL == true) {
-			$baseurl = BASE_URL.DIR_REL;
-		} else { 
-			$base = BASE_URL.DIR_REL.'/'.DISPATCHER_FILENAME;
-		}?>
-		<form class="form-stacked" method="post" id="add_static_page_form" action="<?php echo $this->url('/dashboard/pages/single')?>">
-			<?php echo $this->controller->token->output('add_single_page')?>
-			<label for="pageURL"><?php echo t('The page you want to add is available at:')?></label>
-			<div class="input-prepend">
-				<span class="add-on"><?php echo $base?>/</span>
-			</div>
-			<input type="text" name="pageURL" value="<?php echo $this->post('pageURL')?>" class="span5" />
-			<div class="actions">
-				<?php print $ih->submit(t('Add New Page'), 'add_static_page_form', 'left', 'primary');?>
-			</div>
-		</form>
 	</div>
 <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);

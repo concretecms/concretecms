@@ -7,6 +7,7 @@ class Marketplace {
 	const E_INVALID_BASE_URL = 20;
 	const E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED = 21;
 	const E_UNRECOGNIZED_SITE_TOKEN = 22;
+	const E_DELETED_SITE_TOKEN = 31;
 	const E_GENERAL_CONNECTION_ERROR = 99;
 
 	protected $isConnected = false;
@@ -40,6 +41,11 @@ class Marketplace {
 			} else if ($vn->integer($r)) {
 				$this->isConnected = false;
 				$this->connectionError = $r;
+				
+				if ($this->connectionError == Marketplace::E_DELETED_SITE_TOKEN) {
+					Config::clear('MARKETPLACE_SITE_TOKEN');
+					Config::clear('MARKETPLACE_SITE_URL_TOKEN');					
+				}
 			} else {
 				$this->isConnected = false;
 				$this->connectionError = self::E_GENERAL_CONNECTION_ERROR;
@@ -107,7 +113,6 @@ class Marketplace {
 		$tp = new TaskPermission();
 		if ($tp->canInstallPackages()) {
 			if (!$this->isConnected()) {
-				$url = MARKETPLACE_URL_CONNECT . '/-/' . $connectMethod;
 				if (!$completeURL) {
 					$completeURL = BASE_URL . View::url('/dashboard/extend/connect', 'connect_complete');
 				}
@@ -115,11 +120,17 @@ class Marketplace {
 				$csiURL = urlencode(BASE_URL . DIR_REL);
 				$csiBaseURL = urlencode(BASE_URL);
 				if ($this->hasConnectionError()) {
-					$csToken = $this->getSiteToken();
+					if ($this->connectionError == E_DELETED_SITE_TOKEN) {
+						$connectMethod = 'view';
+						$csToken = Marketplace::generateSiteToken();
+					} else { 
+						$csToken = $this->getSiteToken();
+					}
 				} else {
 					// new connection 
 					$csToken = Marketplace::generateSiteToken();
 				}
+				$url = MARKETPLACE_URL_CONNECT . '/-/' . $connectMethod;
 				$url = $url . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(SITE, ENT_QUOTES, APP_CHARSET);
 			} else {
 				$csiBaseURL = urlencode(BASE_URL);

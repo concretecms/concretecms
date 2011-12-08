@@ -191,9 +191,9 @@ class ConcreteUpgradeVersion550Helper {
 		if (!is_object($bt)) {
 			BlockType::installBlockType('dashboard_featured_theme');			
 		}
-		$bt = BlockType::getByHandle('dashboard_form_summary');
+		$bt = BlockType::getByHandle('dashboard_site_activity');
 		if (!is_object($bt)) {
-			BlockType::installBlockType('dashboard_form_summary');			
+			BlockType::installBlockType('dashboard_site_activity');			
 		}
 		$bt = BlockType::getByHandle('dashboard_newsflow_latest');
 		if (!is_object($bt)) {

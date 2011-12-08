@@ -1,6 +1,6 @@
 <?
 
-class SecurimageSystemCaptchaTypeController extends Object {
+class SecurimageSystemCaptchaTypeController extends SystemCaptchaTypeController {
 
    	protected $securimage;
    
@@ -28,11 +28,15 @@ class SecurimageSystemCaptchaTypeController extends Object {
 	 */ 
 	public function display() {
 	  $ci = Loader::helper('concrete/urls');
-	  echo(t('Please type the letters and numbers shown in the image.'));	
-	  echo '<img src="' . $ci->getToolsURL('captcha') . '?nocache=' .time(). '" alt="' .t('Captcha Code'). '" onclick="this.src = \'' . $ci->getToolsURL('captcha') . '?nocache=' .$time. '\'" class="ccm-captcha-image" /><br/>';
-	  $this->showInput();
-      echo t('Click the image to see another captcha.');     
+	  echo '<div><img src="' . $ci->getToolsURL('captcha') . '?nocache=' .time(). '" alt="' .t('Captcha Code'). '" onclick="this.src = \'' . $ci->getToolsURL('captcha') . '?nocache=' .$time. '\'" class="ccm-captcha-image" /></div>';
+      echo '<br/><div>' . t('Click the image to see another captcha.') . '</div>';
 	}
+	
+	public function label() {
+		$form = Loader::helper('form');
+		print $form->label('captcha', t('Please type the letters and numbers shown in the image.'));
+	}
+	
 	
 	/** 
 	 * Print the captcha image. You usually don't have to call this method directly.
@@ -53,7 +57,7 @@ class SecurimageSystemCaptchaTypeController extends Object {
 				$attribs .= $key . '="' . $value . '" ';
 			}
 		}
-	  echo '<input type="text" name="ccmCaptchaCode" class="ccm-input-captcha" ' . $attribs . ' />';
+	  echo '<div><input type="text" name="ccmCaptchaCode" class="ccm-input-captcha" ' . $attribs . ' /></div><br/>';
 	}
 	
 	/** 

@@ -79,6 +79,8 @@ foreach($posts as $p) { ?>
 						   
 				
 				$captcha = Loader::helper('validation/captcha');				
+   				$captcha->label();
+   				$captcha->showInput();
 				$captcha->display();
 
 				echo isset($errors['captcha'])?'<span class="error">' . $errors['captcha'] . '</span>':'';

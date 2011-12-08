@@ -28,7 +28,7 @@ class DashboardSystemPermissionsFilesController extends DashboardBaseController 
 		if (($identifier != 'gID_1' && $identifier != 'gID_2')) {
 			$html .= '<a href="javascript:void(0)" class="ccm-file-permissions-remove"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" width="16" height="16" /></a>';
 		}
-		$html .= '<span>' . $name . '</span></h3>';
+		$html .= '<span>' . t($name) . '</span></h3>';
 
 		$viewExtended = (FilePermissions::PTYPE_NONE == $canSearch) ? 'style="display: none"' : '';
 		

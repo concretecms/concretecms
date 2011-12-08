@@ -666,10 +666,11 @@ class MiniSurvey{
 				
 				if($surveyBlockInfo['displayCaptcha']) {
 				  echo '<tr><td colspan="2">';
-   				echo(t('Please type the letters and numbers shown in the image.'));	
+   				$captcha = Loader::helper('validation/captcha');				
+				echo $captcha->label();
    				echo '</td></tr><tr><td>&nbsp;</td><td>';
    				
-   				$captcha = Loader::helper('validation/captcha');				
+   				$captcha->showInput();
    				$captcha->display();
    
    				//echo isset($errors['captcha'])?'<span class="error">' . $errors['captcha'] . '</span>':'';
