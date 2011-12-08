@@ -5,6 +5,7 @@ class ValidationCaptchaHelper {
 	
 	public function __construct() {
 		Loader::model('system/captcha/library');
+		Loader::model('system/captcha/controller');
 		$captcha = SystemCaptchaLibrary::getActive();
 		$this->controller = $captcha->getController();
 	}		

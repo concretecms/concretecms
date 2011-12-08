@@ -7,13 +7,18 @@ class AttributeType extends Object {
 	public function getAttributeTypeName() {return $this->atName;}
 	public function getController() {return $this->controller;}
 	
+	private static $registry = array();
 	public static function getByID($atID) {
-		$db = Loader::db();
-		$row = $db->GetRow('select atID, pkgID, atHandle, atName from AttributeTypes where atID = ?', array($atID));
-		$at = new AttributeType();
-		$at->setPropertiesFromArray($row);
-		$at->loadController();
-		return $at;
+		if (!array_key_exists($atID, self::$registry)) {
+			$db = Loader::db();
+			$row = $db->GetRow('select atID, pkgID, atHandle, atName from AttributeTypes where atID = ?', array($atID));
+			$at = new AttributeType();
+			$at->setPropertiesFromArray($row);
+			$at->loadController();
+			self::$registry[$atID] = $at;
+		}
+			
+		return clone self::$registry[$atID];
 	}
 	
 	public function __destruct() {

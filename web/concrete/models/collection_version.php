@@ -87,10 +87,6 @@
 				}
 			}
 			
-			// load the attributes for a particular version object
-			Loader::model('attribute/categories/collection');			
-			$cv->attributes = CollectionAttributeKey::getAttributes($c->getCollectionID(), $cvID);
-			
 			$cv->cID = $c->getCollectionID();			
 			$cv->cvIsMostRecent = $cv->_checkRecent();
 			
@@ -103,6 +99,17 @@
 		}
 
 		public function getAttribute($ak) {
+			if (!$this->attributes) {
+				$attributes = Cache::get('collection_version_attributes', $this->cID . ':' . $this->cvID);
+				if (!$attributes) {
+					// load the attributes for a particular version object
+					Loader::model('attribute/categories/collection');
+					$attributes = CollectionAttributeKey::getAttributes($this->cID, $this->cvID);
+					Cache::set('collection_version_attributes', $this->cID . ':' . $this->cvID, $attributes);
+				}
+				$this->attributes = $attributes;
+			}
+			
 			if (is_object($this->attributes)) {
 				return $this->attributes->getAttribute($ak);
 			}
