@@ -102,7 +102,7 @@
 
         <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype="" description="Control how your site send and processes mail." package=""/>
         <page name="SMTP Method" path="/dashboard/system/mail/method" filename="/dashboard/system/mail/method.php" pagetype="" description="" package=""/>
-        <page name="Importers" path="/dashboard/system/mail/importers" filename="/dashboard/system/mail/importers.php" pagetype="" description="" package=""/>
+        <page name="Email Importers" path="/dashboard/system/mail/importers" filename="/dashboard/system/mail/importers.php" pagetype="" description="" package=""/>
 
         <page name="Attributes" path="/dashboard/system/attributes" filename="/dashboard/system/attributes/view.php" pagetype="" description="Setup attributes for pages, users, files and more." package=""/>
         <page name="Sets" path="/dashboard/system/attributes/sets" filename="/dashboard/system/attributes/sets.php" pagetype="" description="Group attributes into sets for easier organization" package=""/>
