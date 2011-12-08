@@ -7,7 +7,7 @@ $form = Loader::helper('form');
 ?>
 	
 
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sitewide Mail Settings'), false, 'span12 offset2', false)?>
+	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('SMTP Method'), false, 'span12 offset2', false)?>
 	<div class="ccm-pane-body">
 	<form method="post" action="<?=$this->url('/dashboard/system/mail/method', 'save_settings')?>" id="mail-settings-form">
 	<fieldset>
