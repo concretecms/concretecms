@@ -175,7 +175,7 @@ class Request {
 			}
 	
 			// path + task + params
-			if (preg_match("/^(.[^\.]*)\/\-\/(.[^\/]*)\/(.*)/i", $path, $matches)) {
+			if (preg_match("/^(.*)\/\-\/(.[^\/]*)\/(.*)/i", $path, $matches)) {
 				$this->cPath = $matches[1];
 				$this->task = $matches[2];
 				$this->params = $matches[3];
@@ -183,7 +183,7 @@ class Request {
 			}
 			
 			// path + task
-			if (preg_match("/^(.[^\.]*)\/\-\/(.[^\/]*)/i", $path, $matches)) {
+			if (preg_match("/^(.*)\/\-\/(.[^\/]*)/i", $path, $matches)) {
 				$this->cPath = $matches[1];
 				$this->task = $matches[2];
 				return;
