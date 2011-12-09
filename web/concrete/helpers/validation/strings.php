@@ -1,13 +1,4 @@
-<?
-
-/**
- * @package Helpers
- * @subpackage Validation
- * @category Concrete
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- */
+<? defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
  * Functions useful for validating strings
@@ -19,7 +10,6 @@
  * @license    http://www.concrete5.org/license/     MIT License
  */
 
-defined('C5_EXECUTE') or die("Access Denied.");
 class ValidationStringsHelper {	
 
 	
@@ -82,7 +72,62 @@ class ValidationStringsHelper {
 	public function max($str, $num) {
 		return strlen(trim($str)) <= $num;
 	}
+	
+	/**
+	 * Returns 0 if there are no numbers in the string, or returns the number of numbers in the string
+	 * @param string $str
+	 * @return int
+	 */
+	public function containsNumber($str) {
+		return strlen(trim(preg_replace('/([^0-9]*)/', '', $str)));
+	}
+	
+	/**
+	 * Returns 0 if there are no upper case letters in the string, or returns the number of upper case letters in the string
+	 * @param string $str
+	 * @return int
+	 */
+	public function containsUpperCase($str) {
+		return strlen(trim(preg_replace('/([^A-Z]*)/', '', $str)));
+	}
 
+	/**
+	 * Returns 0 if there are no lower case letters in the string, or returns the number of lower case letters in the string
+	 * @param string $str
+	 * @return int
+	 */
+	public function containsLowerCase($str) {
+		return strlen(trim(preg_replace('/([^a-z]*)/', '', $str)));
+	}
+
+	/**
+	 * Returns 0 if there are no symbols in the string, or returns the number of symbols in the string
+	 * @param string $str
+	 * @return int
+	 */	
+	public function containsSymbol($str) {
+		return strlen(trim(preg_replace('/([a-zA-Z0-9]*)/', '', $str))); //we replace a-z and numbers and see if there is anything left.
+	}
+	
+	/**
+	 * Returns true if the string contains another string
+	 * @param string $str
+	 * @param array $cont
+	 * @return bool
+	 */
+	public function containsString($str, $cont = array()) {
+		if(!is_array($cont)) { //turn the string into an array
+			$arr = array();
+			$arr[] = $cont;
+		} else {
+			$arr = $cont;
+		}
+		
+		foreach($arr as $char) {
+			if(strstr($str, $char)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
-
-?>
