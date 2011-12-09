@@ -1969,6 +1969,9 @@
    <field name="pkgID" type="I" size="10">
       <UNSIGNED />
     </field>
+	<field name="miConnectionMethod" type="C" size="8">
+		<default value="POP" />
+	</field>
   </table>
   <table name="MailValidationHashes">
     <field name="mvhID" type="I" size="10">
