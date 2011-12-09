@@ -15,7 +15,7 @@ $this->inc('elements/header.php'); ?>
 			</div>
 			<div class="pageSection">
 				<h1><?php echo $c->getCollectionName(); ?></h1>
-				<p class="meta"><?php echo t('Posted by')?> <?php echo $c->getVersionObject()->getVersionAuthorUserName(); ?> on <?php echo $c->getCollectionDatePublic('F j, Y'); ?></p>		
+				<p class="meta"><?php echo t('Posted by')?> <?php echo $c->getVersionObject()->getVersionAuthorUserName(); ?> on <time pubdate datetime="<?php echo $c->getCollectionDatePublic("c");?>"><?php  echo $c->getCollectionDatePublic(DATE_APP_GENERIC_MDY_FULL); ?></time></p>		
 			</div>
 			<div class="pageSection">
 				<?php $as = new Area('Main'); $as->display($c); ?>
