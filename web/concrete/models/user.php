@@ -490,7 +490,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		public function saveConfig($cfKey, $cfValue) {
 			$db = Loader::db();
-			$db->query("replace into Config (cfKey, cfValue, uID) values (?, ?, ?)", array($cfKey, $cfValue, $this->getUserID()));
+			$db->Replace('Config', array('cfKey' => $cfKey, 'cfValue' => $cfValue, 'uID' => $this->getUserID()), array('cfKey', 'uID'), true);
 		}
 		
 		function refreshCollectionEdit(&$c) {
