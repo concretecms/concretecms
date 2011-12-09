@@ -260,6 +260,37 @@
 		</field>		
 	</table>
 
+<table name="MailImporters">
+    <field name="miID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="miHandle" type="C" size="64">
+      <NOTNULL/>
+    </field>
+    <field name="miServer" type="C" size="255"/>
+    <field name="miUsername" type="C" size="255"/>
+    <field name="miPassword" type="C" size="255"/>
+    <field name="miEncryption" type="C" size="32"/>
+    <field name="miIsEnabled" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="miEmail" type="C" size="255"/>
+    <field name="miPort" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+   <field name="pkgID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+	<field name="miConnectionMethod" type="C" size="8">
+		<default value="POP" />
+	</field>
+  </table>
+
 <table name="SystemAntispamLibraries">
     <field name="saslHandle" type="C" size="64">
       <KEY/>

@@ -67,6 +67,13 @@ $form = Loader::helper('form');
 				</div>
 			</div>
 
+			<div class="clearfix">
+				<?=$form->label('miConnectionMethod','Connection Method');?>
+				<div class="input">
+					<?=$form->select('miConnectionMethod', array('POP' => 'POP', 'IMAP' => 'IMAP'), $mi->getMailImporterConnectionMethod())?>
+				</div>
+			</div>
+
 	</fieldset>	
 </div>
 <div class="ccm-pane-footer">

@@ -19,6 +19,11 @@ class MailImporter extends Object {
 		return t('--- Reply ABOVE. Do not alter this line --- [' . $this->validationHash  . '] ---');
 	}
 
+	public function getValidationHash() {
+		return $this->validationHash;
+	}
+	
+
 	public function getMessageBodyHashRegularExpression() {
 		return t('/\-\-\- Reply ABOVE\. Do not alter this line \-\-\- \[(.*)\] \-\-\-/i');
 	}
@@ -45,7 +50,7 @@ class MailImporter extends Object {
 	
 	public static function getByID($miID) {
 		$db = Loader::db();
-		$row = $db->GetRow("select miID, miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, Packages.pkgID, pkgHandle from MailImporters left join Packages on MailImporters.pkgID = Packages.pkgID where miID = ?", array($miID));
+		$row = $db->GetRow("select miID, miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, miConnectionMethod, Packages.pkgID, pkgHandle from MailImporters left join Packages on MailImporters.pkgID = Packages.pkgID where miID = ?", array($miID));
 		if (isset($row['miID'])) {
 			Loader::library('mail/importers/' . $row['miHandle'], $row['pkgHandle']);
 			$txt = Loader::helper('text');
@@ -91,6 +96,7 @@ class MailImporter extends Object {
 	public function getMailImporterEmail() {return $this->miEmail;}
 	public function getMailImporterPort() {return $this->miPort;}
 	public function isMailImporterEnabled() {return $this->miIsEnabled;}
+	public function getMailImporterConnectionMethod() {return $this->miConnectionMethod;}
 	public function getPackageID() { return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
@@ -112,9 +118,13 @@ class MailImporter extends Object {
 			$miEncryption == null;
 		}
 		
+		if (!$miConnectionMethod) {
+			$miConnectionMethod = 'POP';
+		}
+		
 		$pkgID = ($pkg == null) ? 0 : $pkg->getPackageID();
 		
-		$db->Execute('insert into MailImporters (miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+		$db->Execute('insert into MailImporters (miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, miConnectionMethod, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
 			array(
 				$miHandle,
 				$miServer,
@@ -124,6 +134,7 @@ class MailImporter extends Object {
 				$miIsEnabled,
 				$miEmail, 
 				$miPort, 
+				$miConnectionMethod, 
 				$pkgID
 			));
 		
@@ -147,7 +158,7 @@ class MailImporter extends Object {
 			$miEncryption == null;
 		}
 
-		$db->Execute('update MailImporters set miServer = ?, miUsername = ?, miPassword = ?, miEncryption = ?, miIsEnabled = ?, miEmail = ?, miPort = ? where miID = ?', 
+		$db->Execute('update MailImporters set miServer = ?, miUsername = ?, miPassword = ?, miEncryption = ?, miIsEnabled = ?, miEmail = ?, miPort = ?, miConnectionMethod = ? where miID = ?', 
 			array(
 				$miServer,
 				$miUsername,
@@ -156,6 +167,7 @@ class MailImporter extends Object {
 				$miIsEnabled,
 				$miEmail, 
 				$miPort,
+				$miConnectionMethod,
 				$this->miID
 			));
 	}
@@ -181,8 +193,13 @@ class MailImporter extends Object {
 	public function getPendingMessages() {
 		$messages = array();
 		// connect to the server to grab all messages 
-		Loader::library('3rdparty/Zend/Mail/Storage/Pop3');
-
+		Loader::library('3rdparty/Zend/Exception');
+		if ($this->miConnectionMethod == 'IMAP') { 
+			Loader::library('3rdparty/Zend/Mail/Storage/Imap');
+		} else {
+			Loader::library('3rdparty/Zend/Mail/Storage/Pop3');
+		}
+		
 		$args = array('host' => $this->miServer, 'user' => $this->miUsername, 'password' => $this->miPassword);
 		if ($this->miEncryption != '') {
 			$args['ssl'] = $this->miEncryption;
@@ -191,11 +208,18 @@ class MailImporter extends Object {
 			$args['port'] = $this->miPort;
 		}
 		
-		$mail = new Zend_Mail_Storage_Pop3($args);
-		for ($i = 1; $i <= $mail->countMessages(); $i++) {
-			$mim = new MailImportedMessage($mail, $mail->getMessage($i), $i);
-			$messages[] = $mim;
+		if ($this->miConnectionMethod == 'IMAP') {
+			$mail = new Zend_Mail_Storage_Imap($args);
+		} else { 
+			$mail = new Zend_Mail_Storage_Pop3($args);
 		}
+		$i = 1;
+		foreach($mail as $m) {
+			$mim = new MailImportedMessage($mail, $m, $i);
+			$messages[] = $mim;
+			$i++;
+		}
+		
 		return $messages;
 	}
 
