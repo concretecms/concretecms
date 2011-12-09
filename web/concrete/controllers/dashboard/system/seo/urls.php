@@ -13,13 +13,13 @@ class DashboardSystemSeoUrlsController extends DashboardBaseController{
 		RewriteEngine On
 		RewriteBase ' . DIR_REL . '/
 		RewriteCond %{REQUEST_FILENAME} !-f
-		RewriteCond %{REQUEST_FILENAME} !-d
+		RewriteCond %{REQUEST_FILENAME}/index.html !-f
+		RewriteCond %{REQUEST_FILENAME}/index.php !-f
 		RewriteRule ^(.*)$ ' . DISPATCHER_FILENAME . '/$1 [L]
 		</IfModule>';
 		
 		return preg_replace('/\t/', '', $strRules);
 	}
-	
 	
 	/**
 	* Returns the .htaccess text to be copied/inserted
