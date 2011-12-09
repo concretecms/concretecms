@@ -12,7 +12,7 @@ class FormAttributeHelper {
 		$this->obj = $obj;
 	}
 	
-	public function display($key, $required = false, $includeLabel = true) {
+	public function display($key, $required = false, $includeLabel = true, $template = 'composer') {
 		if (is_object($key)) {
 			$obj = $key;
 		} else {
@@ -43,7 +43,7 @@ class FormAttributeHelper {
 			$html .= ' <span class="ccm-required">*</span>';
 		}
 		$html .= '<div class="input">';
-		$html .= $obj->render('composer', $value, true);
+		$html .= $obj->render($template, $value, true);
 			
 		$html .= '</div></div>';
 		

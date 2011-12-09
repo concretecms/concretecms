@@ -1,6 +1,6 @@
 <?php
 
-function __autoload($class) {
+function CoreAutoload($class) {
 	$txt = Loader::helper('text');
 	if ($class == 'DashboardBaseController') { 
 		Loader::controller('/dashboard/base');
@@ -20,3 +20,5 @@ function __autoload($class) {
 		$at = AttributeType::getByHandle($handle);
 	}
 }
+
+spl_autoload_register('CoreAutoload', true, true);

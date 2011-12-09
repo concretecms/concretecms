@@ -260,7 +260,7 @@
 		</field>		
 	</table>
 
-<table name="SystemAntiSpamLibraries">
+<table name="SystemAntispamLibraries">
     <field name="saslHandle" type="C" size="64">
       <KEY/>
     </field>
