@@ -486,7 +486,7 @@ define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
 
 //Main Concrete Site - For Marketplace, Knowledge Base, etc.
 if (!defined('CONCRETE5_ORG_URL')) {
-	define('CONCRETE5_ORG_URL', 'http://www.concrete5.org');
+	define('CONCRETE5_ORG_URL', 'https://www.concrete5.org');
 }
 if (!defined('NEWSFLOW_URL')) {
 	define('NEWSFLOW_URL', 'http://newsflow.concrete5.org');
