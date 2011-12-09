@@ -21,4 +21,4 @@ function CoreAutoload($class) {
 	}
 }
 
-spl_autoload_register('CoreAutoload', true, true);
+spl_autoload_register('CoreAutoload', true);
