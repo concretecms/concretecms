@@ -32,28 +32,14 @@ class FileHelper {
 		$this->ignoreFiles = array('__MACOSX', DIRNAME_CONTROLLERS);
 	}
 	
-	/** 
-	 * Returns the contents of a directory in an array.
-	 * @param string $directory Directory to get the contents of
-	 * @param array $ignoreFilesArray File names to not include when getting the directory contents
-	 * @param bool $recursive Recursively scan a directory for all files
-	 * @return array
-	 */
-	public function getDirectoryContents($dir, $ignoreFilesArray = array(), $recursive = false) {
+	public function getDirectoryContents($dir, $ignoreFilesArray = array()) {
 		$this->ignoreFiles = array_merge($this->ignoreFiles, $ignoreFilesArray);
 		$aDir = array();
 		if (is_dir($dir)) {
 			$handle = opendir($dir);
-			if($handle) {
-				while(($file = readdir($handle)) !== false) {
-					if (substr($file, 0, 1) != '.' && (!in_array($file, $this->ignoreFiles))) {
-						if($recursive && is_dir($dir.'/'.$file)) { 
-                			$dir2 = $dir.'/'.$file; 
-                			$aDir = array_merge($this->getDirectoryContents($dir2, array(), true), $aDir); 
-            			} else { 
-              				$aDir[] = $dir.'/'.$file; 
-            			} 
-					}
+			while(($file = readdir($handle)) !== false) {
+				if (substr($file, 0, 1) != '.' && (!in_array($file, $this->ignoreFiles))) {
+					$aDir[] = $file;
 				}
 			}
 		}
