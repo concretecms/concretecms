@@ -4,7 +4,7 @@
 <div class="ccm-pane-body">
 	<?=$this->controller->token->output('update_sitename')?>
 	<div class="clearfix">
-	<?=$form->label('SITE', t('Website Name'))?>
+	<?=$form->label('SITE', t('Site Name'))?>
 	<div class="input">
 	<?=$form->text('SITE', $site, array('class' => 'span8'))?>
 	</div>
@@ -12,7 +12,7 @@
 </div>
 <div class="ccm-pane-footer">
 	<?
-	print $interface->submit(t('Save Site Name'), 'site-form', 'left','primary');
+	print $interface->submit(t('Save'), 'site-form', 'right','primary');
 	?>
 </div>
 </form>
