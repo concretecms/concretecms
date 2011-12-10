@@ -7,4 +7,4 @@
 <p><?php echo t('Total pages in edit mode')?>: <strong><?php echo $totalEditMode?></strong></p>
 <p><?=t('Total form submissions: <strong>%s</strong> (<strong>%s</strong> today). <a href="%s">View Form Results</a>.', $totalFormSubmissions, $totalFormSubmissionsToday, $this->url('/dashboard/reports/forms'))?></p>
 
-<div><a href="<?=$this->url('/dashboard/reports/visits')?>" class="btn"><?=t('More Statistics')?></a></div>
+<div><a href="<?=$this->url('/dashboard/reports/statistics')?>" class="btn"><?=t('More Statistics')?></a></div>
