@@ -8,6 +8,8 @@ class Newsflow {
 
 	protected $isConnected = false;
 	protected $connectionError = false;
+	static $slots;
+	
 	
 	public static function getInstance() {
 		static $instance;
@@ -54,7 +56,41 @@ class Newsflow {
 		}
 	}
 	
+	public static function getSlotContents() {
+		if (!isset(self::$slots)) {
+			$fh = Loader::helper('file');
+			$r = $fh->getContents(NEWSFLOW_SLOT_CONTENT_URL);
+			self::$slots = NewsflowSlotItem::parseResponse($r);
+		}
+		return self::$slots;
+	}
+}
 
+class NewsflowSlotItem {
+	
+	protected $content;
+	public function __construct($content) {
+		$this->content = $content;
+	}
+	public function getContent() {return $this->content;}
+
+	public static function parseResponse($r) {
+		$slots = array();
+		try {
+			// Parse the returned XML file
+			$obj = @Loader::helper('json')->decode($r);
+			if (is_object($obj)) {
+				if (is_object($obj->slots)) {
+					foreach($obj->slots as $key => $content) {
+						$cn = new NewsflowSlotItem($content);
+						$slots[$key] = $cn;
+					}
+				}
+			}
+		} catch (Exception $e) {}
+		return $slots;
+
+	}
 }
 
 class NewsflowItem {
