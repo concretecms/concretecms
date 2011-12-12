@@ -34,7 +34,7 @@ if($success) {
 <div class="row">
 <div class="span8 columns">
 	<fieldset>
-		<legend>Your Details</legend>
+		<legend><?=t('Your Details')?></legend>
 		<? if ($displayUserName) { ?>
 			<div class="clearfix">
 				<?= $form->label('uName',t('Username')); ?>
