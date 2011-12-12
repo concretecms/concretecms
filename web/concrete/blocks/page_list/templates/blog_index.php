@@ -24,8 +24,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				<a href="<?php echo $link; ?>"><?php echo $title; ?></a>
 			</h3>
 			<h4>
-				Posted by <?php echo $author; ?> on
-				<time pubdate class="contentDate" datetime="<?php echo $cobj->getCollectionDatePublic("c");?>"><?php echo $date; ?></time>
+				Posted by <?php echo $author; ?> on <?php echo $date; ?>
 			</h4>
 		</div>
 		<div class="excerpt">
