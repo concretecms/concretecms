@@ -92,7 +92,7 @@ $languages = Localization::getAvailableInterfaceLanguages();
                     <td class="clearfix">
                     	<label>
                             <p>
-                                <?=t($ak->getAttributeKeyName())?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="required">*</span><? } ?>
+                                <?=$ak->getAttributeKeyName()?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="required">*</span><? } ?>
                             </p>
                             <? $ak->render('form', $caValue, false)?>
                         </label>
@@ -124,7 +124,7 @@ $languages = Localization::getAvailableInterfaceLanguages();
                                 }
                             }
                         ?> />
-							<span><?=t($g['gName'])?></span>
+							<span><?=$g['gName']?></span>
 						</label>
                     <? } ?>
 			
