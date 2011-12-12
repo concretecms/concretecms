@@ -3539,7 +3539,7 @@ ccm_alActivateMenu = function(obj, e) {
 		if ($(obj).attr('ccm-file-manager-can-view') == '1') {
 			html += '<li><a class="ccm-menu-icon ccm-icon-view dialog-launch" dialog-modal="false" dialog-append-buttons="true" dialog-width="90%" dialog-height="75%" dialog-title="' + ccmi18n_filemanager.view + '" id="menuView' + fID + '" href="' + CCM_TOOLS_PATH + '/files/view?fID=' + fID + '">'+ ccmi18n_filemanager.view + '<\/a><\/li>';
 		} else {
-			html += '<li><a class="ccm-menu-icon ccm-icon-download-menu" id="menuDownload' + fID + '" target="' + ccm_alProcessorTarget + '" href="' + CCM_TOOLS_PATH + '/files/download?fID=' + fID + '">'+ ccmi18n_filemanager.download + '<\/a><\/li>';	
+			html += '<li><a class="ccm-menu-icon ccm-icon-download-menu" href="javascript:void(0)" id="menuDownload' + fID + '" onclick="window.frames[\'' + ccm_alProcessorTarget + '\'].location=\'' + CCM_TOOLS_PATH + '/files/download?fID=' + fID + '\'">'+ ccmi18n_filemanager.download + '<\/a><\/li>';	
 		}
 		if ($(obj).attr('ccm-file-manager-can-edit') == '1') {
 			html += '<li><a class="ccm-menu-icon ccm-icon-edit-menu dialog-launch" dialog-modal="false" dialog-width="90%" dialog-height="75%" dialog-title="' + ccmi18n_filemanager.edit + '" id="menuEdit' + fID + '" href="' + CCM_TOOLS_PATH + '/files/edit?fID=' + fID + '">'+ ccmi18n_filemanager.edit + '<\/a><\/li>';

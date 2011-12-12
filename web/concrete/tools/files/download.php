@@ -28,6 +28,7 @@ if (isset($_REQUEST['fID']) && is_array($_REQUEST['fID'])) {
 			if (!in_array(basename($f->getPath()), $filenames)) {
 				$files .= "'" . addslashes($f->getPath()) . "' ";
 			}
+			$f->trackDownload();
 			$filenames[] = basename($f->getPath());
 		}
 	}
@@ -44,7 +45,7 @@ if (isset($_REQUEST['fID']) && is_array($_REQUEST['fID'])) {
 		} else {
 			$fv = $f->getApprovedVersion();
 		}
-		
+		$f->trackDownload();
 		$ci->forceDownload($fv->getPath());
 	}
 }

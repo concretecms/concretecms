@@ -502,9 +502,12 @@ class File extends Object {
 	
 	public function getDownloadStatistics(){
 		$db = Loader::db();
-		return $db->getAll("SELECT * FROM DownloadStatistics WHERE fID = ? ORDER BY timestamp desc", array($this->getFileID()));
-	}
-	
+		if (is_object($this) && $this instanceof File) { 
+			return $db->getAll("SELECT * FROM DownloadStatistics WHERE fID = ? ORDER BY timestamp desc", array($this->getFileID()));
+		} else {
+			return $db->getAll("SELECT * FROM DownloadStatistics ORDER BY timestamp desc");
+		}
+	}	
 	
 	/**
 	 * Tracks File Download, takes the cID of the page that the file was downloaded from 

@@ -41,6 +41,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $num;
 		}
 		
+		public static function getTotalRegistrationsForDay($date) {
+			$db = Loader::db();
+			$num = $db->GetOne('select count(uID) from Users where uDateAdded >= ? and uDateAdded <= ?', array($date . ' 00:00:00', $date . ' 23:59:59'));
+			return $num;
+		}
+		
 		public static function getLastLoggedInUser() {
 			$db = Loader::db();
 			$uID = $db->GetOne("select uID from Users order by uLastLogin desc");
