@@ -4,9 +4,7 @@
 	<div class="ccm-pane-body">
 			<?=$validation_token->output('file_access_extensions');?>
 			<p>
-			<?=t('Only files with the following extensions will be allowed.
-			Separate extensions with commas. Periods and spaces will be
-			ignored.')?>
+			<?=t('Only files with the following extensions will be allowed. Separate extensions with commas. Periods and spaces will be ignored.')?>
 			</p>
 			<? if (UPLOAD_FILE_EXTENSIONS_CONFIGURABLE) { ?>
 				<?=$form->textarea('file-access-file-types',$file_access_file_types,array('rows'=>'5','style'=>'width:888px'));?>
