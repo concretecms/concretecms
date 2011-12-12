@@ -226,7 +226,7 @@ var ccmPathHelper={
 				this.value = "";
 			}
 		});
-    	$(field).replaceWith('<a href="javascript:void(0)" class="ccm-meta-path-del">Remove Path</a>');
+    	$(field).replaceWith('<a href="javascript:void(0)" class="ccm-meta-path-del"><?php echo t('Remove Path')?></a>');
 		clone.appendTo(parent.parent());
 
 		$("a.ccm-meta-path-add,a.ccm-meta-path.del").unbind('click');
