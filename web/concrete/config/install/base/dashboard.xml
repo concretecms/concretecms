@@ -216,29 +216,19 @@
 				<block type="dashboard_site_activity" name=""/>
 			</area>
 			<area name="Secondary 1">
-				<block type="rss_displayer" name="" custom-template="read_more.php">
-					<data table="btRssDisplay">
+				<block type="dashboard_newsflow_latest" name="">
+					<data table="btDashboardNewsflowLatest">
 						<record>
-							<title><![CDATA[]]></title>
-							<url><![CDATA[http://www.concrete5.org/about/blog/totally-random-web-show/-/feed/]]></url>
-							<dateFormat><![CDATA[F jS]]></dateFormat>
-							<itemsToDisplay><![CDATA[1]]></itemsToDisplay>
-							<showSummary><![CDATA[1]]></showSummary>
-							<launchInNewWindow><![CDATA[0]]></launchInNewWindow>
+							<slot>A</slot>
 						</record>
 					</data>
 				</block>
 			</area>
 			<area name="Secondary 2">
-				<block type="rss_displayer" name="" custom-template="read_more.php">
-					<data table="btRssDisplay">
+				<block type="dashboard_newsflow_latest" name="">
+					<data table="btDashboardNewsflowLatest">
 						<record>
-							<title><![CDATA[]]></title>
-							<url><![CDATA[http://www.concrete5.org/about/blog/concrete5-sightings/-/feed/]]></url>
-							<dateFormat><![CDATA[F jS]]></dateFormat>
-							<itemsToDisplay><![CDATA[1]]></itemsToDisplay>
-							<showSummary><![CDATA[1]]></showSummary>
-							<launchInNewWindow><![CDATA[0]]></launchInNewWindow>
+							<slot>B</slot>
 						</record>
 					</data>
 				</block>
@@ -250,7 +240,13 @@
 				<block type="dashboard_featured_addon" name=""/>
 			</area>
 			<area name="Secondary 5">
-				<block type="dashboard_newsflow_latest" name=""/>
+				<block type="dashboard_newsflow_latest" name="">
+					<data table="btDashboardNewsflowLatest">
+						<record>
+							<slot>C</slot>
+						</record>
+					</data>
+				</block>
 			</area>
 		</page>
       </pages>

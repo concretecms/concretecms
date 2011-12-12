@@ -3,7 +3,7 @@
 <? if (is_object($remoteItem)) { ?>
 	<div class="clearfix">
 	<img src="<?=$remoteItem->getRemoteIconURL()?>" width="97" height="97" style="float: left; margin-right: 10px; margin-bottom: 10px" />
-	<h4><?=$remoteItem->getName()?></h4>
+	<h3><?=$remoteItem->getName()?></h3>
 	<p><?=$remoteItem->getDescription()?></p>
 	</div>
 	
