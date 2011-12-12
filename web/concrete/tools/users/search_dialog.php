@@ -15,12 +15,21 @@ $columns = $cnt->get('columns');
 if (!isset($mode)) {
 	$mode = $_REQUEST['mode'];
 }
+
+ob_start();
+Loader::element('users/search_form_advanced', array('columns' => $columns, 'mode' => $mode)) ;
+$searchForm = ob_get_contents();
+ob_end_clean();
+
+$v = View::getInstance();
+$v->outputHeaderItems();
+
 ?>
 
 <div class="ccm-ui">
 <div id="ccm-search-overlay" >
 <div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
-	<? Loader::element('users/search_form_advanced', array('columns' => $columns, 'mode' => $mode)) ; ?>
+	<?=$searchForm?>
 </div>
 
 <? Loader::element('users/search_results', array('columns' => $columns, 'mode' => $mode, 'users' => $users, 'userList' => $userList, 'pagination' => $pagination)); ?>
