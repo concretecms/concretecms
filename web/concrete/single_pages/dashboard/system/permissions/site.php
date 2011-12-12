@@ -6,7 +6,7 @@ $ih = Loader::helper('concrete/interface');
 /* @var $form FormHelper */
 $form = Loader::helper('form');
 ?>
-<?=$h->getDashboardPaneHeaderWrapper(t('Site Permissions'), false, false, false);?>
+<?=$h->getDashboardPaneHeaderWrapper(t('Site Access'), false, false, false);?>
 <form id="site-permissions-form" action="<?=$this->action('')?>" method="post">
 	<?=$this->controller->token->output('site_permissions_code')?>
 
