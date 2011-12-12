@@ -59,20 +59,23 @@
 			$fh = Loader::helper('file');
 			
 			if (file_exists(DIR_LANGUAGES)) {
-				$languages = array_merge($languages, $fh->getDirectoryContents(DIR_LANGUAGES));
+				$contents = $fh->getDirectoryContents(DIR_LANGUAGES);
+				foreach($contents as $con) {
+					if (is_dir(DIR_LANGUAGES . '/' . $con) && file_exists(DIR_LANGUAGES . '/' . $con . '/LC_MESSAGES/messages.mo')) {
+						$languages[] = $con;					
+					}
+				}
 			}
 			if (file_exists(DIR_LANGUAGES_CORE)) {
-				$languages = array_merge($languages, $fh->getDirectoryContents(DIR_LANGUAGES_CORE));
-			}
-			
-			$langtmp = array();
-			foreach($languages as $lang) {
-				if ($lang != DIRNAME_LANGUAGES_SITE_INTERFACE) {
-					$langtmp[] = $lang;
+				$contents = $fh->getDirectoryContents(DIR_LANGUAGES_CORE);
+				foreach($contents as $con) {
+					if (is_dir(DIR_LANGUAGES_CORE . '/' . $con) && file_exists(DIR_LANGUAGES_CORE . '/' . $con . '/LC_MESSAGES/messages.mo') && (!in_array($con, $languages))) {
+						$languages[] = $con;					
+					}
 				}
 			}
 			
-			return $langtmp;
+			return $languages;
 		}
 	
 

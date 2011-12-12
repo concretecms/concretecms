@@ -75,6 +75,10 @@ if (!defined('ENABLE_INTELLIGENT_SEARCH_MARKETPLACE')) {
 	}
 }
 
+if (!defined('ENABLE_NEWSFLOW_OVERLAY')) {
+	Config::getOrDefine('ENABLE_NEWSFLOW_OVERLAY', true);
+}
+
 if (!defined('WHITE_LABEL_LOGO_SRC')) {
 	Config::getOrDefine('WHITE_LABEL_LOGO_SRC', false);
 }
