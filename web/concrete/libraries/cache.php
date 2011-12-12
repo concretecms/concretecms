@@ -179,6 +179,9 @@ class Cache {
 	 */	
 	public function flush() {
 		$cache = Cache::getLibrary();
+		
+		$loc = CacheLocal::get();
+		$loc->cache = array();
 		if (!$cache) {
 			return false;
 		}
