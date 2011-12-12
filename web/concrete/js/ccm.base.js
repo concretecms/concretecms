@@ -70,6 +70,7 @@ ccm_addHeaderItem = function(item, type) {
 		}
 	} else if (type == 'JAVASCRIPT') {
 		if (!($('head').children('script[src*="' + item + '"]').length)) {
+			console.log(item + qschar + new Date().getTime() );
 			$('head').append('<script type="text/javascript" src="' + item + qschar + new Date().getTime() + '"></script>');
 		}
 	} else {

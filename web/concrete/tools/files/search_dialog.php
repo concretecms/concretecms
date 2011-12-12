@@ -25,6 +25,15 @@ $alType = 'false';
 if (isset($_REQUEST['disable_choose']) && $_REQUEST['disable_choose'] == 1) { 
 	$alType = 'BROWSE';
 }
+
+ob_start();
+Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'columns' => $columns, 'searchType' => 'DIALOG', 'files' => $files, 'fileList' => $fileList)); $searchForm = ob_get_contents();
+ob_end_clean();
+
+$v = View::getInstance();
+$v->outputHeaderItems();
+
+
 ?>
 
 <? if (!isset($_REQUEST['refreshDialog'])) { ?> 
@@ -46,7 +55,7 @@ if (isset($_REQUEST['disable_choose']) && $_REQUEST['disable_choose'] == 1) {
 </div>
 </div>
 
-<? Loader::element('files/search_results', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'columns' => $columns, 'searchType' => 'DIALOG', 'files' => $files, 'fileList' => $fileList)); ?>
+<?=$searchForm?>
 
 </div>
 
