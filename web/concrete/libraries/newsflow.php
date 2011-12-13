@@ -59,7 +59,9 @@ class Newsflow {
 	public static function getSlotContents() {
 		if (!isset(self::$slots)) {
 			$fh = Loader::helper('file');
-			$r = $fh->getContents(NEWSFLOW_SLOT_CONTENT_URL);
+			Loader::library('marketplace');
+			$cfToken = Marketplace::getSiteToken();
+			$r = $fh->getContents(NEWSFLOW_SLOT_CONTENT_URL . '?cfToken=' . $cfToken);
 			self::$slots = NewsflowSlotItem::parseResponse($r);
 		}
 		return self::$slots;
