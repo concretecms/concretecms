@@ -7,7 +7,9 @@ if ($_REQUEST['image'] && preg_match('/([0-9]+)\.jpg/i', $_REQUEST['image'])) {
 	$imageData = Cache::get('dashboard_image_data', $_REQUEST['image']);
 	if (!$imageData) {
 		// call out to the server to grab the data
-		$imageData = Loader::helper('file')->getContents(DASHBOARD_BACKGROUND_INFO . '?image=' . $_REQUEST['image']);
+		Loader::library('marketplace');
+		$cfToken = Marketplace::getSiteToken();
+		$imageData = Loader::helper('file')->getContents(DASHBOARD_BACKGROUND_INFO . '?image=' . $_REQUEST['image'] . '&cfToken=' . $cfToken);
 		Cache::set('dashboard_image_data', $_REQUEST['image'], $imageData);
 	}
 }
