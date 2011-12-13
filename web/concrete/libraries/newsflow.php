@@ -39,7 +39,9 @@ class Newsflow {
 		$ni = self::getInstance();
 		if (!$ni->hasConnectionError()) {
 			$fh = Loader::helper('file');
-			$r = $fh->getContents(NEWSFLOW_URL . '/' . DISPATCHER_FILENAME . '/?_ccm_view_external=1&cID=' . $cID);
+			Loader::library('marketplace');
+			$cfToken = Marketplace::getSiteToken();
+			$r = $fh->getContents(NEWSFLOW_URL . '/' . DISPATCHER_FILENAME . '/?_ccm_view_external=1&cID=' . $cID . '&cfToken=' . $cfToken);
 			$obj = NewsflowItem::parseResponse($r);
 			return $obj;			
 		}
@@ -50,7 +52,9 @@ class Newsflow {
 		$cPath = trim($cPath, '/');
 		if (!$ni->hasConnectionError()) {
 			$fh = Loader::helper('file');
-			$r = $fh->getContents(NEWSFLOW_URL . '/' . DISPATCHER_FILENAME . '/' . $cPath . '/-/view_external');
+			Loader::library('marketplace');
+			$cfToken = Marketplace::getSiteToken();
+			$r = $fh->getContents(NEWSFLOW_URL . '/' . DISPATCHER_FILENAME . '/' . $cPath . '/-/view_external?cfToken=' . $cfToken);
 			$obj = NewsflowItem::parseResponse($r);
 			return $obj;			
 		}
