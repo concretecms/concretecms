@@ -20,7 +20,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Stat
 			</div>
 		</div>
 		<div class="ccm-pane-footer">
-			<?php echo $interface->submit(t('Save'), null, 'left', 'primary');?>
+			<?php echo $interface->submit(t('Save'), null, 'right', 'primary');?>
 		</div>
 	</form>
 
