@@ -254,6 +254,12 @@ class ConcreteDashboardHelper {
 				</ul>
 				
 				</div>
+
+				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-loading">
+				<h1><?=t('Your Site')?></h1>
+				<ul class="ccm-intelligent-search-results-list" id="ccm-intelligent-search-results-list-your-site">
+				</ul>
+				</div>
 				
 				<? if (ENABLE_INTELLIGENT_SEARCH_HELP) { ?>
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite ccm-intelligent-search-results-module-loading">
