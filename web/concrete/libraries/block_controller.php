@@ -48,6 +48,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btExportFileColumns = array();
 		protected $btExportPageTypeColumns = array();
 		
+		protected $btWrapperClass = '';
+		
 		public $headerItems = array();
 		
 		
@@ -76,6 +78,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return parent::get($key, $defaultValue);
 		}
 
+		public function getBlockTypeWrapperClass() {return $this->btWrapperClass;}
 		/** 
 		 * @access private
 		 */
