@@ -250,7 +250,7 @@ class ConcreteDashboardHelper {
 				
 				
 				<ul class="ccm-intelligent-search-results-list">
-					<li><a href="<?=View::url('/dashboard/home')?>"><?=t('Customize')?> <span><?=('Customize Dashboard Home')?></span></a></li>
+					<li><a href="<?=View::url('/dashboard/home')?>"><?=t('Customize')?> <span><?=t('Customize Dashboard Home')?></span></a></li>
 				</ul>
 				
 				</div>
