@@ -55,9 +55,9 @@ class DashboardSystemSeoUrlsController extends DashboardBaseController{
 		
 		if($strStatus == 'rewriting_saved'){		
 			if(URL_REWRITING && !$blnHtu){	
-				$this->set('message', t('URL rewriting enabled. Make sure you copy the lines below these URL Rewriting settings area and place them in your .htaccess or web server configuration file.'));					
+				$this->set('message', t('URL rewriting enabled. You need to update .htaccess by hand.'));					
 			}elseif(URL_REWRITING && $blnHtu){
-				$this->set('message', t('URL rewriting enabled. .htaccess file updated.'));
+				$this->set('message', t('URL rewriting enabled. We were able to automatically update .htaccess file.'));
 			}else{
 				$this->set('message', t('URL rewriting disabled.'));
 			}	
