@@ -145,6 +145,25 @@ class UpgradeController extends Controller {
 			$this->upgrades[] = Loader::helper('concrete/upgrade/' . $ugh);
 		}
 	}
+
+	public function refresh_schema() {
+		if ($this->upgrade_db) {
+			$installDirectory = DIR_BASE_CORE . '/config';
+			$file = $installDirectory . '/db.xml';
+			if (!file_exists($file)) {
+				throw new Exception(t('Unable to locate database import file.'));
+			}		
+			$err = Package::installDB($file);
+			
+			// now we refresh the block schema
+			$btl = new BlockTypeList();
+			$btArray = $btl->getInstalledList();
+			foreach($btArray as $bt) {
+				$bt->refresh();
+			}
+			$this->upgrade_db = false;
+		}
+	}
 	
 	private function do_upgrade() {
 		$runMessages = array();
