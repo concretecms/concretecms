@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <ul class="ccm-pane-header-icons">
-	<li><a href="javascript:void(0)" onclick="ccm_closeNewsflow()" class="ccm-icon-close"><?=t('Close')?></a></li>
+	<li><a href="javascript:void(0)" onclick="ccm_closeNewsflow(this)" class="ccm-icon-close"><?=t('Close')?></a></li>
 </ul>
 
 <?

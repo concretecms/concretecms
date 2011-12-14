@@ -2730,6 +2730,27 @@ ccm_getDashboardBackgroundImageData = function(image) {
 	});
 }
 
+$(function() {
+	ccm_activateToolbar();
+	$("#ccm-page-help,#ccm-page-navigate-pages").popover({content: function() {
+		var id = $(this).attr('id') + '-content';
+		return $('#' + id).html();
+		
+	}, placement: 'below', html: true, trigger: 'manual'});
+	$('.tooltip').twipsy({placement: 'below'});
+	if ($('#ccm-dashboard-result-message').length > 0) { 
+		if ($('.ccm-pane').length > 0) { 
+			var pclass = $('.ccm-pane').parent().attr('class');
+			var gpclass = $('.ccm-pane').parent().parent().attr('class');
+			var html = $('#ccm-dashboard-result-message').html();
+			$('#ccm-dashboard-result-message').html('<div class="' + gpclass + '"><div class="' + pclass + '">' + html + '</div></div>').fadeIn(400);
+		}
+	} else {
+		$("#ccm-dashboard-result-message").fadeIn(200);
+	}
+});
+
+
 var ccm_totalAdvancedSearchFields = 0;
 var ccm_alLaunchType = new Array();
 var ccm_alActiveAssetField = "";
@@ -4389,17 +4410,32 @@ ccm_setNewsflowOverlayDimensions = function() {
 	$("#newsflow-overlay").css('left', _left).css('top', _top);
 }
 
-ccm_closeNewsflow = function() {
-	$("#newsflow-overlay").fadeOut(300, 'easeOutExpo', function() {
-		$("#newsflow-overlay").remove();
-	});
-	$('.ui-widget-overlay').fadeOut(300, 'easeOutExpo', function() {
-		$(this).remove();
-	});
-
-	if ($('#ccm-dashboard-content div#newsflow-main').length > 0 && $('#ccm-dashboard-content div#newsflow-main').not(':visible')) { 
-		$('#ccm-dashboard-content div#newsflow-main').fadeIn(300, 'easeOutExpo');
-	}	
+ccm_closeNewsflow = function(r) {
+	if ($('#newsflow-overlay').length == 0) { 
+		$("#newsflow-main").fadeOut(300, 'easeOutExpo');
+		var accepter = $('#ccm-recent-page-' + CCM_CID);
+		var l = $(r);
+		ccm_showQuickNav(function() { 
+			$(r).closest('div.newsflow').fadeOut(120, 'easeOutExpo');
+			$(r).effect("transfer", { to: accepter, 'easing': 'easeOutExpo'}, 600, function() {
+				accepter.hide().css('visibility','visible').fadeIn(240, 'easeInExpo');			
+				title.css('display','block');
+				ccm_quickNavTimer = setTimeout(function() {
+					ccm_hideQuickNav();
+				}, 1000);
+			});
+		});
+	} else { 
+		$("#newsflow-overlay").fadeOut(300, 'easeOutExpo', function() {
+			$("#newsflow-overlay").remove();
+		});
+		$('.ui-widget-overlay').fadeOut(300, 'easeOutExpo', function() {
+			$(this).remove();
+		});
+		if ($('#ccm-dashboard-content div#newsflow-main').length > 0 && $('#ccm-dashboard-content div#newsflow-main').not(':visible')) { 
+			$('#ccm-dashboard-content div#newsflow-main').fadeIn(300, 'easeOutExpo');
+		}
+	}
 }
 
 ccm_showNewsflow = function(hideLoadingText) {
