@@ -97,7 +97,7 @@
         <page name="Maintenance Mode" path="/dashboard/system/permissions/maintenance_mode" filename="/dashboard/system/permissions/maintenance_mode.php" pagetype="" description="" package=""/>
 
         <page name="Login &amp; Registration" path="/dashboard/system/registration" filename="/dashboard/system/registration/view.php" pagetype="" description="Change login behaviors and setup public profiles." package=""/>
-        <page name="Post-Login Settings" path="/dashboard/system/registration/postlogin" filename="/dashboard/system/registration/postlogin.php" pagetype="" description="" package=""/>
+        <page name="Login Destination" path="/dashboard/system/registration/postlogin" filename="/dashboard/system/registration/postlogin.php" pagetype="" description="" package=""/>
         <page name="Public Profiles" path="/dashboard/system/registration/profiles" filename="/dashboard/system/registration/profiles.php" pagetype="" description="" package=""/>
         <page name="Public Registration" path="/dashboard/system/registration/public_registration" filename="/dashboard/system/registration/public_registration.php" pagetype="" description="" package=""/>
 
