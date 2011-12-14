@@ -25,6 +25,8 @@
 	<input type="hidden" name="processBlock" value="1">
 </form>
 
-<? if ($cont->getBlockTypeWrapperClass() != '') { ?>
+<? 
+$cont = $bt->getController();
+if ($cont->getBlockTypeWrapperClass() != '') { ?>
 </div>
 <? } ?>
