@@ -278,7 +278,8 @@ $saveMsg = t('Save permissions first.');
 				<? } ?>
 				
 			<div class="dialog-buttons">
-				<a href="javascript:void(0)" class="btn primary" onclick="$('form[name=ccmPermissionsForm]').submit()"><?=t('Save')?></a>
+				<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop();" class="ccm-button-left btn"><?=t('Cancel')?></a>
+				<a href="javascript:void(0)" class="btn primary ccm-button-right" onclick="$('form[name=ccmPermissionsForm]').submit()"><?=t('Save')?></a>
 			</div>	
 			<input type="hidden" name="update_permissions" value="1" class="accept">
 			<input type="hidden" name="processCollection" value="1">

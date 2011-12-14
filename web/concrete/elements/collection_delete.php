@@ -34,7 +34,7 @@ $(function() {
 
 <? if ($c->getCollectionID() == 1) {  ?>
 	<div class="error alert-message"><?=t('You may not delete the home page.');?></div>
-	<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Close')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
+	<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
 <? } else {	?>
 	<? if ($c->isPendingDelete()) { ?>
 		<div class="notice alert-message"><?=t('This page has been marked for deletion.');?></div>
@@ -60,11 +60,11 @@ $(function() {
 		<? } ?>
 	<? } else if ($c->isPendingMove() || $c->isPendingCopy()) { ?>
 		<div class="error alert-message"><?=t('Since this page is being moved or copied, it cannot be deleted.')?></div>
-		<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Close')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
+		<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
 		
 	<? } else if ($numChildren > 0 && !$cp->canAdminPage()) { ?>
 		<div class="error alert-message"><?=t('Before you can delete this page, you must delete all of its child pages.')?></div>
-		<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Close')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
+		<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
 		
 	<? } else { 
 		?>
@@ -74,8 +74,8 @@ $(function() {
 		<form method="post" id="ccmDeletePageForm" action="<?=$c->getCollectionAction()?>">	
 			<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 
-			<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Close')?>" onclick="jQuery.fn.dialog.closeTop()" />
-			<a href="javascript:void(0)" onclick="$('#ccmDeletePageForm').submit()" class="ccm-button-right btn error"><span><?=t('Delete Page')?></span></a>
+			<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" />
+			<a href="javascript:void(0)" onclick="$('#ccmDeletePageForm').submit()" class="ccm-button-right btn error"><span><?=t('Delete')?></span></a>
 			</div>
 		<h3><?=t('Are you sure you wish to delete this page?')?></h3>
 		<? if ($cp->canAdminPage() && $numChildren > 0) { ?>

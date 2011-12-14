@@ -152,6 +152,7 @@ for ($i = 0; $i < count($ctArray); $i++) {
 	
 
 	<div class="dialog-buttons">
+		<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop();" class="ccm-button-left btn"><?=t('Cancel')?></a>
 		<input type="submit" onclick="$('#ccmAddPage').submit()" class="btn primary ccm-button-right" value="<?=t('Add Page')?>" />
 	</div>	
 
