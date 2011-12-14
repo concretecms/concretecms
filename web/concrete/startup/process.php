@@ -1031,6 +1031,7 @@
 					$v->approve();
 					$u = new User();
 					$u->unloadCollectionEdit();
+					$obj->rel = $_POST['rel'];
 					$obj->name = $v->getVersionName();
 				}
 				$obj->cID = $c->getCollectionID();
