@@ -37,8 +37,11 @@ $txt = Loader::helper('text');?>
 				</div>
 			</div>
 
-			<div class="well clearfix">
-				<?php echo $form->submit('submit', t('Update Set'), array('class' => ' ccm-button-right'))?>
+			<div class="clearfix">
+				<label></label>
+				<div class="input">
+					<?php echo $form->submit('submit', t('Update Set'), array('class' => ''))?>
+				</div>
 			</div>
 		</form>
 
@@ -49,8 +52,8 @@ $txt = Loader::helper('text');?>
 				<input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
 				<?php echo Loader::helper('validation/token')->output('delete_set')?>
 			
-				<div class="well clearfix">
-					<?php echo $form->submit('submit', t('Delete Set'), array('class' => 'danger ccm-button-right'))?>
+				<div class="clearfix">
+					<?php echo $form->submit('submit', t('Delete Set'), array('class' => 'danger'))?>
 				</div>
 			</form>
 		<?php } ?>
@@ -91,8 +94,8 @@ $txt = Loader::helper('text');?>
 					</ul>
 				</div>
 		
-				<div class="well clearfix">
-					<?php echo $form->submit('submit', t('Update Attributes'), array('class' => 'ccm-button-right'))?>
+				<div class="clearfix">
+					<?php echo $form->submit('submit', t('Update Attributes'), array('class' => ''))?>
 				</div>
 			<?php } else { ?>
 				<p><?php echo t('No attributes found.')?></p>
