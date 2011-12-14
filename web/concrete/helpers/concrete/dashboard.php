@@ -138,7 +138,7 @@ class ConcreteDashboardHelper {
 		}
 		
 		if (isset($relatedPages)) { 
-			$html .= '<li><a href="javascript:void(0)" onclick="ccm_togglePopover(event, this)" class="ccm-icon-navigate-pages" title="' . $navigateTitle . '" id="ccm-page-navigate-pages">' . t('Help') . '</a></li>';
+			$html .= '<li><a href="javascript:void(0)" onmouseover="ccm_togglePopover(event, this)" class="ccm-icon-navigate-pages" title="' . $navigateTitle . '" id="ccm-page-navigate-pages">' . t('Help') . '</a></li>';
 		}
 		
 		if ($help) {
