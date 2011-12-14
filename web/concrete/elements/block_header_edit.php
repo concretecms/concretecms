@@ -42,10 +42,11 @@ $(function() {
 <?
 $hih = Loader::helper("concrete/interface/help");
 $blockTypes = $hih->getBlockTypes();
+$cont = $bt->getController();
+
 if (isset($blockTypes[$bt->getBlockTypeHandle()])) {
 	$help = $blockTypes[$bt->getBlockTypeHandle()];
 } else {
-	$cont = $bt->getController();
 	if ($cont->getBlockTypeHelp()) {
 		$help = $cont->getBlockTypeHelp();
 	}

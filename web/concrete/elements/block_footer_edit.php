@@ -29,6 +29,8 @@ $closeWindowCID=(intval($rcID))?intval($rcID):$c->getCollectionID();
 
 </div>
 
-<? if ($cont->getBlockTypeWrapperClass() != '') { ?>
+<? 
+$cont = $bt->getController();
+if ($cont->getBlockTypeWrapperClass() != '') { ?>
 </div>
 <? } ?>

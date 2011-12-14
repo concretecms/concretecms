@@ -1,10 +1,8 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? if ($_GET['_ccm_dashboard_external']) { ?>
-	<ul class="ccm-pane-header-icons">
-		<li><a href="javascript:void(0)" onclick="ccm_closeNewsflow()" class="ccm-icon-close"><?=t('Close')?></a></li>
-	</ul>
-<? } ?>
+<ul class="ccm-pane-header-icons">
+	<li><a href="javascript:void(0)" onclick="ccm_closeNewsflow()" class="ccm-icon-close"><?=t('Close')?></a></li>
+</ul>
 
 <?
 $_c = Page::getCurrentPage();
