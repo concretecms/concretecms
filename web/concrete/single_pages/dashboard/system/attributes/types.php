@@ -29,7 +29,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Attr
 	</table>
 	<div class="well clearfix">
 	<?
-	$b1 = $interface->submit(t('Save'), 'attribute_type_associations_form', 'left', 'primary');
+	$b1 = $interface->submit(t('Save'), 'attribute_type_associations_form', 'right', 'primary');
 	print $b1;
 	?>
 	</div>
