@@ -78,7 +78,7 @@
         <page name="SEO &amp; Statistics" path="/dashboard/system/seo" filename="/dashboard/system/seo/view.php" pagetype="" description="Enable pretty URLs, statistics and tracking codes." package=""/>
         <page name="Pretty URLs" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php" pagetype="" description="" package=""/>
         <page name="Tracking Codes" path="/dashboard/system/seo/tracking_codes" filename="/dashboard/system/seo/tracking_codes.php" pagetype="" description="" package=""/>
-        <page name="Enable Statistics" path="/dashboard/system/seo/statistics" filename="/dashboard/system/seo/statistics.php" pagetype="" description="" package=""/>
+        <page name="Statistics" path="/dashboard/system/seo/statistics" filename="/dashboard/system/seo/statistics.php" pagetype="" description="" package=""/>
         <page name="Search Index" path="/dashboard/system/seo/search_index" filename="/dashboard/system/seo/search_index.php" pagetype="" description="" package=""/>
 
         <page name="Optimization" path="/dashboard/system/optimization" filename="/dashboard/system/optimization/view.php" pagetype="" description="Keep your site running well." package=""/>
