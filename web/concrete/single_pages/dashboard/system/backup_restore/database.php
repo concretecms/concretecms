@@ -15,24 +15,27 @@
 
 <?php  if (ENABLE_DEVELOPER_OPTIONS) { ?>
 
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Database Tables and Content'), false, 'span12 offset2')?>
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Database XML'), false, 'span12 offset2', false)?>
 	
 	<form method="post" class="form-stacked" id="export-db-form" action="<?php echo $this->url('/dashboard/system/backup_restore/database', 'export_database_schema')?>">
+
+<div class="ccm-pane-body">
 
 	<h3><?php echo t('Export Database Schema')?></h3>
 	<p><?php echo t('Click below to view your database schema in a format that can imported into concrete5 later.')?></p>
     
-    <div class="actions">
+    <div class="well">
         <?
         print $interface->submit(t('Export Database Tables'), 'export-db-form', 'left');
         ?>
     </div>
 
-	
+
+</div>	
 	</form>
-	
-	
 	<form method="post" class="form-stacked" id="refresh-schema-form" action="<?php echo $this->url('/dashboard/system/backup_restore/database', 'refresh_database_schema')?>" class="form-stacked">
+
+<div class="ccm-pane-body ccm-pane-body-footer" style="padding-top: 0px; margin-top: 0px">
 
 	<h3><?=t('Database Refresh')?></h3>
 		<?php echo $this->controller->token->output('refresh_database_schema')?>
@@ -69,13 +72,14 @@
                 <?php echo t('Reloads database tables contained in %s.', 'config/' . FILENAME_LOCAL_DB)?>
               </span>
     
-    <div class="actions">
+    <div class="well">
             <?
         print $interface->submit(t('Refresh Databases'), 'refresh-schema-form', 'left');
         ?>
     
 	</div>
-            
+</div>
+
 	</form>
 <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>		
 	

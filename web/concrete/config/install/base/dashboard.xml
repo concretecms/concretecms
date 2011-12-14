@@ -118,7 +118,7 @@
         <page name="Backup &amp; Restore" path="/dashboard/system/backup_restore" filename="/dashboard/system/backup_restore/view.php" pagetype="" description="Backup or restore your website." package=""/>
         <page name="Backup Database" path="/dashboard/system/backup_restore/backup" filename="/dashboard/system/backup_restore/backup.php" pagetype="" description="" package=""/>
         <page name="Update concrete5" path="/dashboard/system/backup_restore/update" filename="/dashboard/system/backup_restore/update.php" pagetype="" description="" package=""/>
-        <page name="Export Database XML" path="/dashboard/system/backup_restore/database" filename="/dashboard/system/backup_restore/database.php" pagetype="" description="" package=""/>
+        <page name="Database XML" path="/dashboard/system/backup_restore/database" filename="/dashboard/system/backup_restore/database.php" pagetype="" description="" package=""/>
 
 	
 
