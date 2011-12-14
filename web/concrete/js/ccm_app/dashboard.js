@@ -35,3 +35,23 @@ ccm_getDashboardBackgroundImageData = function(image) {
 		}
 	});
 }
+
+$(function() {
+	ccm_activateToolbar();
+	$("#ccm-page-help,#ccm-page-navigate-pages").popover({content: function() {
+		var id = $(this).attr('id') + '-content';
+		return $('#' + id).html();
+		
+	}, placement: 'below', html: true, trigger: 'manual'});
+	$('.tooltip').twipsy({placement: 'below'});
+	if ($('#ccm-dashboard-result-message').length > 0) { 
+		if ($('.ccm-pane').length > 0) { 
+			var pclass = $('.ccm-pane').parent().attr('class');
+			var gpclass = $('.ccm-pane').parent().parent().attr('class');
+			var html = $('#ccm-dashboard-result-message').html();
+			$('#ccm-dashboard-result-message').html('<div class="' + gpclass + '"><div class="' + pclass + '">' + html + '</div></div>').fadeIn(400);
+		}
+	} else {
+		$("#ccm-dashboard-result-message").fadeIn(200);
+	}
+});
