@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Post Login'), t('Control the options available for Post Login behavior.'), false, false);?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Login Destination'), false, false, false);?>
 <?php
 $h = Loader::helper('concrete/interface');
 ?>
@@ -8,7 +8,7 @@ $h = Loader::helper('concrete/interface');
     <div class="ccm-pane-body"> 
     	
     	<div class="clearfix">
-            <label id="optionsCheckboxes"><strong><?php echo t('Where to send users on login?')?></strong></label>
+            <label id="optionsCheckboxes"><strong><?php echo t('Redirect users to:')?></strong></label>
             <div class="input">
 			  <ul class="inputs-list">
 			    <li>
