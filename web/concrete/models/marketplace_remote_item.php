@@ -39,6 +39,8 @@ class MarketplaceRemoteItem extends Object {
 			return array();
 		}
 	}
+	public function getMarketplaceItemVersionForThisSite() {return $this->siteLatestAvailableVersion;}
+	
 	public function getAverageRating() {return $this->rating;}
 	public function getVersionHistory() {return $this->versionHistory;}
 	public function getTotalRatings() {

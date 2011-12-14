@@ -59,6 +59,11 @@ if (!$tp->canInstallPackages()) { ?>
 				$buttonAction = 'javascript:ccm_getMarketplaceItem({mpID: \'' . $mri->getMarketplaceItemID() . '\', onComplete: function() {window.location.href=\'' . View::url('/dashboard/extend/install') . '\'}})';					
 			}
 		}
+		
+		if (!$mri->getMarketplaceItemVersionForThisSite()) {
+			$buttonAction = 'javascript:void(0)';
+		}
+
 	?>
 		<div class="ccm-marketplace-item-information-more">
 			<a href="javascript:void(0)" onclick="ccm_marketplaceDetailShowMore()"><?=t('More Details')?></a>
@@ -78,14 +83,21 @@ if (!$tp->canInstallPackages()) { ?>
 		</div>
 		
 		<div class="ccm-marketplace-item-buttons">
-			<input type="button" class="btn primary" value="<?=$buttonText?>" onclick="<?=$buttonAction?>" />&nbsp;&nbsp;<input type="button" class="btn" value="<?=t('View in Marketplace')?>" onclick="window.open('<?=$mri->getRemoteURL()?>')" /> 
+			<input type="button" class="btn primary <? if (!$mri->getMarketplaceItemVersionForThisSite()) { ?> disabled<? } ?>" value="<?=$buttonText?>" onclick="<?=$buttonAction?>" />&nbsp;&nbsp;<input type="button" class="btn" value="<?=t('View in Marketplace')?>" onclick="window.open('<?=$mri->getRemoteURL()?>')" /> 
 			<? if ($mri->getMarketplaceItemType() == 'theme') { ?>
 				<a title="<?php echo t('Preview')?>" onclick="ccm_previewMarketplaceTheme(1, <?php echo intval($mri->getRemoteCollectionID())?>,'<?php echo addslashes($mri->getName()) ?>','<?php echo addslashes($mri->getHandle()) ?>')" 
 				href="javascript:void(0)" class="btn"><?=t('Preview')?></a>
 			<? } ?>
-			
 		</div>
+		<br/>
+		
+	<? if (!$mri->getMarketplaceItemVersionForThisSite()) { ?>
+		<div class="block-message alert-message error">
+			<p><?=t('This add-on is marked as incompatible with this version of concrete5. Please contact the author of the add-on for assistance.')?></p>
 		</div>
+	<? } ?>
+	
+	</div>
 			
 	<? } else { ?>
 		<div class="block-message alert-message error"><p><?=t('Invalid marketplace item.')?></p></div>
