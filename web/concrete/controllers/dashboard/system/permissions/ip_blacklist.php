@@ -110,7 +110,6 @@ class DashboardSystemPermissionsIpBlacklistController extends DashboardBaseContr
 				$ip->ipFrom 	= ip2long($ip_range['ipFrom']);
 				$ip->ipTo		= $ip_range['ipTo'];
 				if ($ip->ipTo != 0) {
-					echo $ip->ipTo . "\n";
 					$ip->ipTo		= ip2long($ip_range['ipTo']);
 				}					
 				$ip->banCode	= UserBannedIP::IP_BAN_CODE_REGISTRATION_THROTTLE;
