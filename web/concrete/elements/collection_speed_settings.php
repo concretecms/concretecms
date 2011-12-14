@@ -153,5 +153,6 @@ global $c;
 </div>
 
 	<div class="dialog-buttons">
-	<a href="javascript:void(0)" class="btn primary" onclick="$('#ccmSpeedSettingsForm').submit()"><?=t('Save')?></a>
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop();" class="ccm-button-left btn"><?=t('Cancel')?></a>
+	<a href="javascript:void(0)" class="btn primary ccm-button-right" onclick="$('#ccmSpeedSettingsForm').submit()"><?=t('Save')?></a>
 	</div>

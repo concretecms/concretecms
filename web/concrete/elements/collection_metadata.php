@@ -168,5 +168,6 @@ if ($cp->canAdminPage()) {
 </form>
 </div>
 	<div class="dialog-buttons">
-	<a href="javascript:void(0)" class="btn primary" onclick="$('#ccmMetadataForm').submit()"><?=t('Save')?></a>
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop();" class="ccm-button-left btn"><?=t('Cancel')?></a>
+	<a href="javascript:void(0)" class="btn primary ccm-button-right" onclick="$('#ccmMetadataForm').submit()"><?=t('Save')?></a>
 	</div>
