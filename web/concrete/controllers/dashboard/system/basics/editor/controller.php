@@ -49,15 +49,22 @@ class DashboardSystemBasicsEditorController extends DashboardBaseController {
 	}
 	
 	function txt_editor_config(){
-		if ($this->token->validate("txt_editor_config")) { 
+		if (!$this->token->validate("txt_editor_config")) { 
+			$this->error->add($this->token->getErrorMessage());
+		}
+
+		$textEditorWidth = intval($this->post('CONTENTS_TXT_EDITOR_WIDTH'));
+		if( $textEditorWidth<580 ) {
+			$this->error->add(t('The editor must be at least 580 pixels wide.'));
+		}
+		$textEditorHeight = intval($this->post('CONTENTS_TXT_EDITOR_HEIGHT'));
+		if( $textEditorHeight<100 ) {
+			$this->error->add(t('The editor must be at least 100 pixels tall.'));
+		}
+		
+		if (!$this->error->has()) { 
  			Config::save('CONTENTS_TXT_EDITOR_MODE', $this->post('CONTENTS_TXT_EDITOR_MODE') );
-			
-			$textEditorWidth = intval($this->post('CONTENTS_TXT_EDITOR_WIDTH'));
-			if( $textEditorWidth<580 ) $textEditorWidth=580;
 			Config::save( 'CONTENTS_TXT_EDITOR_WIDTH', $textEditorWidth );
-			
-			$textEditorHeight = intval($this->post('CONTENTS_TXT_EDITOR_HEIGHT'));
-			if( $textEditorHeight<100 ) $textEditorHeight=380;
 			Config::save( 'CONTENTS_TXT_EDITOR_HEIGHT', $textEditorHeight );	
 			
 			$db = Loader::db();
@@ -67,8 +74,6 @@ class DashboardSystemBasicsEditorController extends DashboardBaseController {
 			if($this->post('CONTENTS_TXT_EDITOR_MODE')=='CUSTOM')
 				Config::save('CONTENTS_TXT_EDITOR_CUSTOM_CODE', $this->post('CONTENTS_TXT_EDITOR_CUSTOM_CODE') );
  			$this->redirect('/dashboard/system/basics/editor', 'txt_editor_config_saved'); 
-		}else{
-			$this->set('error', array($this->token->getErrorMessage()));
 		}
 	}
 	
