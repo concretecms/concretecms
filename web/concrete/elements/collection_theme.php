@@ -79,7 +79,7 @@ if ($plID == 0) {
 	<? } ?>
 	
 	<? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
-		<a href="javascript:void(0)" onclick="ccm_openThemeLauncher()" class="btn ccm-button-right"><?=t("Get more themes.")?></a>
+		<a href="javascript:void(0)" onclick="ccm_openThemeLauncher()" class="btn ccm-button-right"><?=t("Get More Themes")?></a>
 	<? } ?>
 
 	<h3 ><?=t('Themes')?></h3>

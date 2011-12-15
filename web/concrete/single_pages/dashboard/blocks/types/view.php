@@ -95,13 +95,14 @@
 	<? } ?>
 
     <? if (ENABLE_MARKETPLACE_SUPPORT == true) { ?>
-	<br/>
+
 	
 	<div class="well" style="padding:10px 20px;">
-        <h3><?=t('Looking for more blocks or add-ons?')?></h3>
-        <p><a href="<?=$this->url('/dashboard/extend/add-ons')?>"><?=t("Download add-ons from the concrete5.org marketplace.")?></a></p>
+        <h3><?=t('Want more blocks?')?></h3>
+        <p><?=t('You can download themes and add-ons from the concrete5 marketplace.')?></p>
+        <p><a class="btn primary" href="<?=$this->url('/dashboard/extend/add-ons')?>"><?=t("Get More Add-Ons")?></a></p>
     </div>
-    
+        
     <? } ?>
 	
 <? } ?>

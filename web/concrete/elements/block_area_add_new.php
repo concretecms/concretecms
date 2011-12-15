@@ -226,12 +226,13 @@ $(function() {
 	if ($tp->canInstallPackages()) { 
 	?>
 	<div class="ccm-ui">
-	<div class="well">
-	<p>
-	<?=t("You can download more blocks at the")?>
-	<a onclick="ccmBlockTypeResetKeys(); ccm_openAddonLauncher()" class="ccm-block-type-inner ccm-block-type-marketplace"><?=t('concrete5 marketplace.')?></a>
-	</p>
-	</div>
+
+	<div class="well" style="padding:10px 20px;">
+        <h3><?=t('Want more blocks?')?></h3>
+        <p><?=t('You can download themes and add-ons from the concrete5 marketplace.')?></p>
+        <p><a class="btn primary" href="<?=View::url('/dashboard/extend/add-ons')?>"><?=t("Get More Add-Ons")?></a></p>
+    </div>
+
 	</div>
 <? } 
 
