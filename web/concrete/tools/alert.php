@@ -2,10 +2,6 @@
 Loader::library('view');
 ?>
 
-
-
-<div id="ccm-popup-alert">
-	<div id="ccm-popup-alert-message"></div>
-	<hr />
-	<a href="javascript:void(0)" class="ccm-button-right ccm-dialog-close"><span><?=t('Close')?></span></a>
+<div id="ccm-popup-alert" class="ccm-ui">
+	<div id="ccm-popup-alert-message" class="alert-message block-message error"></div>
 </div>

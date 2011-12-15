@@ -11,7 +11,7 @@
     <input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
     <input type="hidden" name="fID" value="<?=$fID?>" />
     <img class="ccm-al-upload-single-loader" style="display:none;" src="<?=ASSETS_URL_IMAGES?>/dashboard/sitemap/loading.gif" />
-    <input class="ccm-al-upload-single-submit" type="submit" value="<?=t('Upload')?>" />    
+    <input class="ccm-al-upload-single-submit btn" type="submit" value="<?=t('Upload')?>" />    
 </form>
 </div>
 
