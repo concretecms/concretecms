@@ -237,7 +237,7 @@
 		public function delete() {
 			parent::delete();
 			$db = Loader::db();
-			$db->Execute('delete from FileSetSavedSearches where fsID = ?', $this->fsID);
+			$db->Execute('delete from FileSetSavedSearches where fsID = ?', array($this->fsID));
 		}
 		
 		public function resetPermissions() {
