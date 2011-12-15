@@ -10,9 +10,8 @@ $form = Loader::helper('form');
 <div style="padding: 10px">
 
 
-<div class="ccm-autonavPane ccm-preview-pane" id="ccm-autonavPane-preview" style="display: none">
+<div style="clear: both" class="ccm-autonavPane ccm-preview-pane" id="ccm-autonavPane-preview" style="display: none">
 
-<center><?=t('Preview')?></center>
 
 </div>
 <div class="ccm-autonavPane" id="ccm-autonavPane-add">
