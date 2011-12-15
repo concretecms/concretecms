@@ -32,7 +32,7 @@ echo $dh->getDashboardPaneHeaderWrapper(t('Logging'), t('Enables saving records 
 	</div>
 
 	<div class="ccm-pane-footer">	
-		<?php echo $interface->submit(t('Save Logging Settings'), 'logging-form', 'left', 'primary'); ?>
+		<?php echo $interface->submit(t('Save'), 'logging-form', 'right', 'primary'); ?>
 	</div>
 </form>
 
