@@ -98,9 +98,9 @@
 
 	
 	<div class="well" style="padding:10px 20px;">
-        <h3><?=t('Want more blocks?')?></h3>
-        <p><?=t('You can download themes and add-ons from the concrete5 marketplace.')?></p>
-        <p><a class="btn primary" href="<?=$this->url('/dashboard/extend/add-ons')?>"><?=t("Get More Add-Ons")?></a></p>
+        <h3><?=t('More Blocks')?></h3>
+        <p><?=t('Browse our marketplace of add-ons to extend your site!')?></p>
+        <p><a class="btn primary" href="<?=$this->url('/dashboard/extend/add-ons')?>"><?=t("More Add-ons")?></a></p>
     </div>
         
     <? } ?>

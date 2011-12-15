@@ -287,6 +287,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 	
 			<? } ?>
 
+	<? /* 
 	<div class="well" style="padding:10px 20px;">
         <h3><?=t('Extend Your Site')?></h3>
         <p><?=t('You can download themes and add-ons from the concrete5 marketplace.')?></p>
@@ -294,6 +295,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         <a class="btn" href="<?=$this->url('/dashboard/extend/add-ons')?>"><?=t("Get More Add-Ons")?></a>
         </p>
     </div>
+    */ ?>
 
 		<? } ?>		
 	<? } ?>
