@@ -158,11 +158,11 @@
 		if (!$page) {
 			$page = 1;
 		}
-		$vl = new VersionList($c, 20, $page);
+		$vl = new VersionList($c,20, $page);
 		$total = $vl->getVersionListCount();
 		$vArray = $vl->getVersionListArray();
 		$ph = Loader::helper('pagination');
-		$ph->init($page, $total, '', 20, 'ccm_goToVersionPage');
+		$ph->init($page, $total, '',20, 'ccm_goToVersionPage');
 	}
 
 
@@ -411,11 +411,15 @@ $("input[name=vRemove]").click(function() {
 	<? } ?>
 	</table>
 	<? if ($total > 20 ) { ?>
-		<div class="ccm-pagination" style="margin-top: 8px">
-			<span class="ccm-page-left"><?=$ph->getPrevious()?></span>
-			<span class="ccm-page-right"><?=$ph->getNext()?></span>
-			<?=$ph->getPages()?>
+	<div class="ccm-ui">
+		<div class="pagination ccm-pagination">
+		<ul>
+			<li class="prev"><?=$ph->getPrevious()?></li>
+			<?=$ph->getPages('li'); ?>
+			<li class="next"><?=$ph->getNext()?></li>
+		</ul>
 		</div>
+	</div>
 	<? } ?>
 	<br>
 	
