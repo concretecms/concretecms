@@ -202,6 +202,14 @@
 	<div class="ccm-pane-options-permanent-search">
 		
 		<form id="ccm-file-set-search" method="get" action="<?=$this->url('/dashboard/files/sets')?>">
+
+		<div class="span5">
+		<?=$form->label('fsKeywords', t('Keywords'))?>
+		<div class="input">
+		<input type="text" id="fsKeywords" name="fsKeywords" value="<?=Loader::helper('text')->entities($_REQUEST['fsKeywords'])?>" class="span3" />
+		</div>
+		</div>
+
 		<div class="span4">
 		<?=$form->label('fsType', t('Type'))?>
 		<div class="input">
@@ -209,13 +217,6 @@
 		<option value="<?=FileSet::TYPE_PUBLIC?>" <? if ($fsType != FileSet::TYPE_PRIVATE) { ?> selected <? } ?>><?=t('Public Sets')?></option>
 		<option value="<?=FileSet::TYPE_PRIVATE?>" <? if ($fsType == FileSet::TYPE_PRIVATE) { ?> selected <? } ?>><?=t('My Sets')?></option>
 		</select>
-		</div>
-		</div>
-
-		<div class="span5">
-		<?=$form->label('fsKeywords', t('Keywords'))?>
-		<div class="input">
-		<input type="text" id="fsKeywords" name="fsKeywords" value="<?=Loader::helper('text')->entities($_REQUEST['fsKeywords'])?>" class="span3" />
 		</div>
 		</div>
 				
