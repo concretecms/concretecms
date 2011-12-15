@@ -3567,7 +3567,7 @@ ccm_alActivateMenu = function(obj, e) {
 		}
 		html += '<li><a class="ccm-menu-icon ccm-icon-properties-menu dialog-launch" dialog-modal="false" dialog-width="680" dialog-height="450" dialog-title="' + ccmi18n_filemanager.properties + '" id="menuProperties' + fID + '" href="' + CCM_TOOLS_PATH + '/files/properties?searchInstance=' + searchInstance + '&fID=' + fID + '">'+ ccmi18n_filemanager.properties + '<\/a><\/li>';
 		if ($(obj).attr('ccm-file-manager-can-replace') == '1') {
-			html += '<li><a class="ccm-menu-icon ccm-icon-replace dialog-launch" dialog-modal="false" dialog-width="300" dialog-height="250" dialog-title="' + ccmi18n_filemanager.replace + '" id="menuFileReplace' + fID + '" href="' + CCM_TOOLS_PATH + '/files/replace?searchInstance=' + searchInstance + '&fID=' + fID + '">'+ ccmi18n_filemanager.replace + '<\/a><\/li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-replace dialog-launch" dialog-modal="false" dialog-width="300" dialog-height="260" dialog-title="' + ccmi18n_filemanager.replace + '" id="menuFileReplace' + fID + '" href="' + CCM_TOOLS_PATH + '/files/replace?searchInstance=' + searchInstance + '&fID=' + fID + '">'+ ccmi18n_filemanager.replace + '<\/a><\/li>';
 		}
 		if ($(obj).attr('ccm-file-manager-can-duplicate') == '1') {
 			html += '<li><a class="ccm-menu-icon ccm-icon-copy-menu" id="menuFileDuplicate' + fID + '" href="javascript:void(0)" onclick="ccm_alDuplicateFile(' + fID + ',\'' + searchInstance + '\')">'+ ccmi18n_filemanager.duplicate + '<\/a><\/li>';
