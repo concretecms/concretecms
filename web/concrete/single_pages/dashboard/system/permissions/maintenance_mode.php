@@ -2,7 +2,7 @@
 $h = Loader::helper('concrete/dashboard');
 $ih = Loader::helper('concrete/interface');
 $form = Loader::helper('form');
-echo $h->getDashboardPaneHeaderWrapper(t('Maintenance Mode'), false, false, false);?>
+echo $h->getDashboardPaneHeaderWrapper(t('Maintenance Mode'), false, 'span8 offset4', false);?>
 <form id="maintenance-mode-form" action="<?php echo $this->action('')?>" method="post">
 <div class="ccm-pane-body">
 	<?php echo $this->controller->token->output('update_maintenance')?>
