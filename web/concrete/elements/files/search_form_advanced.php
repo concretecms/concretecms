@@ -123,10 +123,10 @@ foreach($t1 as $value) {
 			
 		<? } ?>
 
-		<div class="span5">
+		<div class="span4">
 		<?=$form->label('fvKeywords', t('Keywords'))?>
 		<div class="input">
-			<?=$form->text('fKeywords', $searchRequest['fKeywords'], array('style'=> 'width: 170px')); ?>
+			<?=$form->text('fKeywords', $searchRequest['fKeywords'], array('style'=> 'width: 130px')); ?>
 		</div>
 		</div>
 		
@@ -177,7 +177,8 @@ foreach($t1 as $value) {
 		<table class="zebra-striped ccm-search-advanced-fields" id="ccm-<?=$searchInstance?>-search-advanced-fields">
 		<? if ($_REQUEST['fssID'] < 1) { ?>
 		<tr>
-			<th style="text-align: right" colspan="3"><a href="javascript:void(0)" id="ccm-<?=$searchInstance?>-search-add-option" class="ccm-advanced-search-add-field"><span class="ccm-menu-icon ccm-icon-view"></span><?=t('Add Field')?></a></th>
+			<th colspan="2" width="100%"><?=t('Additional Filters')?></th>
+			<th style="text-align: right; white-space: nowrap"><a href="javascript:void(0)" id="ccm-<?=$searchInstance?>-search-add-option" class="ccm-advanced-search-add-field"><span class="ccm-menu-icon ccm-icon-view"></span><?=t('Add')?></a></th>
 		</tr>
 		<? } ?>
 		<tr id="ccm-search-field-base">
@@ -260,9 +261,12 @@ foreach($t1 as $value) {
 				} ?>
 		</table>
 
+		<? if ($_REQUEST['fssID'] < 1) { ?>
 		<div id="ccm-search-fields-submit">
-			<? if ($_REQUEST['fssID'] < 1) { ?><a class="ccm-search-save" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/save_search?searchInstance=<?=$searchInstance?>" id="ccm-<?=$searchInstance?>-launch-save-search" dialog-title="<?=t('Save Search')?>" dialog-width="320" dialog-height="200" dialog-modal="false"><span class="ccm-menu-icon ccm-icon-search-pages"></span><?=t('Save Search')?></a><? } ?>
+				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-list-view-customize"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Customize Results')?></a>
+				<a class="ccm-search-save" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/save_search?searchInstance=<?=$searchInstance?>" id="ccm-<?=$searchInstance?>-launch-save-search" dialog-title="<?=t('Save Search')?>" dialog-width="320" dialog-height="200" dialog-modal="false"><span class="ccm-menu-icon ccm-icon-search-pages"></span><?=t('Save Search')?></a>
 		</div>
+		<? } ?>
 
 	</div>
 </form>	

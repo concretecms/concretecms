@@ -92,7 +92,8 @@ foreach($searchFieldAttributes as $ak) {
 		<br/>
 		<table class="zebra-striped ccm-search-advanced-fields" id="ccm-user-search-advanced-fields">
 		<tr>
-			<th style="text-align: right" colspan="3"><a href="javascript:void(0)" id="ccm-user-search-add-option" class="ccm-advanced-search-add-field"><span class="ccm-menu-icon ccm-icon-view"></span><?=t('Add Field')?></a></th>
+			<th colspan="2" width="100%"><?=t('Additional Filters')?></th>
+			<th style="text-align: right; white-space: nowrap"><a href="javascript:void(0)" id="ccm-user-search-add-option" class="ccm-advanced-search-add-field"><span class="ccm-menu-icon ccm-icon-view"></span><?=t('Add')?></a></th>
 		</tr>
 		<tr id="ccm-search-field-base">
 			<td><?=$form->select('searchField', $searchFields);?></td>
@@ -105,6 +106,10 @@ foreach($searchFieldAttributes as $ak) {
 		</tr>
 
 		</table>
+
+		<div id="ccm-search-fields-submit">
+			<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/customize_search_columns" id="ccm-list-view-customize"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Customize Results')?></a>
+		</div>
 
 	</div>	
 

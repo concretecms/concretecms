@@ -461,6 +461,8 @@ ul.ccm-file-set-file-list li{width:100px;min-height:80px;border:2px solid #aaa;b
 ul.ccm-file-set-file-list span{font-size:9px;display:block;}
 div.ccm-file-access-add-extensions-header{border-top:1px solid #cecece;border-left:1px solid #cecece;border-right:1px solid #cecece;background:#D3E4F0;padding:4px;}
 div.ccm-file-access-extensions{border:1px solid #cecece;padding:4px;height:120px;overflow:auto;margin-bottom:20px;}
+#ccm-files-add-asset{float:right;}
+#ccm-files-add-asset form{margin-bottom:0px;}
 #ccm-files-add-asset input[type=file]{background-color:transparent;}
 img.ccm-generic-thumbnail{border:0px;width:100%;}
 table.ccm-marketplace-results{margin-top:-20px;border:0px !important;margin-left:-20px;margin-bottom:-20px;margin-right:-20px;width:958px;}
@@ -553,6 +555,7 @@ div.ccm-attribute-editable-field-type-number input{width:60px;}
 a.ccm-search-save{color:#333;padding:3px 27px 3px 3px;position:relative;height:24px;}
 a.ccm-search-save:hover{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;background-color:#d7d7d7;text-decoration:none;color:#333;}
 a.ccm-search-save span{position:absolute;top:-2px;right:3px;width:22px;height:24px;}
+#ccm-export-results-wrapper{float:right;}
 a#ccm-list-view-customize,a#ccm-export-results{margin-left:8px;color:#333;padding:3px 29px 3px 3px;position:relative;height:24px;}
 a#ccm-list-view-customize:hover,a#ccm-export-results:hover{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;background-color:#d7d7d7;text-decoration:none;color:#333;}
 a#ccm-list-view-customize span,a#ccm-export-results span{position:absolute;top:2px;right:5px;width:24px;height:24px;}
@@ -678,7 +681,7 @@ td.newsflow-latest-edition-wrapper{background-color:#e7f7ff;background-repeat:re
 .ccm-pane-footer .form-stacked{padding-left:0px;}
 .newsflow .ccm-pane-body{background-color:transparent;}
 .newsflow .ccm-pane-body-inner{background-color:transparent;padding:20px;}
-.ccm-pane-footer div.pagination{margin-top:0px;margin-bottom:0px;}
+div.ccm-pane-dialog-pagination div.pagination,.ccm-pane-footer div.pagination{margin-top:0px !important;margin-bottom:0px !important;}
 .ccm-pane-header h3{font-size:24px;display:inline;}
 .ccm-pane-body{padding:20px;background-color:#fff;}
 .ccm-pane-body-footer{background-color:#fff;-webkit-border-bottom-left-radius:6px;-webkit-border-bottom-right-radius:6px;-moz-border-radius-bottomleft:6px;-moz-border-radius-bottomright:6px;border-bottom-left-radius:6px;border-bottom-right-radius:6px;}

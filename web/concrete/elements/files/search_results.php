@@ -21,12 +21,11 @@ if (isset($_REQUEST['searchInstance'])) {
 <? } ?>
 
 <div id="ccm-list-wrapper"><a name="ccm-<?=$searchInstance?>-list-wrapper-anchor"></a>
-	<div style="float: right; margin-bottom: 10px">
+	<div style="margin-bottom: 10px">
 		<? $form = Loader::helper('form'); ?>
 
-		<?=$form->label('ccm-' . $searchInstance . '-list-multiple-operations', t('With Selected'))?>
-		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" style="width: 120px; margin-left: 8px;" disabled>
-			<option value="">**</option>
+		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" class="span3" disabled>
+			<option value="">** <?=t('With Selected')?></option>
 			<option value="download"><?=t('Download')?></option>
 			<option value="sets"><?=t('Sets')?></option>
 			<option value="properties"><?=t('Properties')?></option>
@@ -34,11 +33,12 @@ if (isset($_REQUEST['searchInstance'])) {
 			<option value="duplicate"><?=t('Copy')?></option>
 			<option value="delete"><?=t('Delete')?></option>
 		</select>	
-		<? if ($_REQUEST['fssID'] < 1) { ?><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-list-view-customize"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Customize Results')?></a><? } ?>
+		
+		<? Loader::element('files/upload_single', array('searchInstance' => $searchInstance, 'ocID' => $ocID)); ?>
+
 	</div>
 
 <?
-	$fileList->displaySummary();
 	$txt = Loader::helper('text');
 	$keywords = $searchRequest['fKeywords'];
 	$soargs = array();
@@ -112,7 +112,9 @@ if (isset($_REQUEST['searchInstance'])) {
 	<? } ?>
 	
 </div>
-
+<?
+	$fileList->displaySummary();
+?>
 <? if ($searchType == 'DASHBOARD') { ?>
 </div>
 

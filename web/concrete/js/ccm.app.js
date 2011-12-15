@@ -3375,7 +3375,6 @@ ccm_alSetupFileProcessor = function() {
 
 ccm_alSubmitSingle = function(form) {
 	if ($(form).find(".ccm-al-upload-single-file").val() == '') { 
-		ccmAlert(ccmi18n_filemanager.uploadErrorChooseFile);
 		return false;
 	} else { 
 		$(form).find('.ccm-al-upload-single-submit').hide();
