@@ -35,10 +35,8 @@ class DashboardSystemPermissionsFilesController extends DashboardBaseController 
 		$html .= '
 		<div class="clearfix ccm-file-access-view">
 		<label>' . t('View Site Files') . '</label>
-		<div class="input"><ul class="inputs-list">
-			<li><label>' . $form->radio('canRead' . $id, FilePermissions::PTYPE_ALL, $canRead) . ' <span>' . t('Yes') . '</span></label></li>
-			<li><label>' . $form->radio('canRead' . $id, FilePermissions::PTYPE_NONE, $canRead) . ' <span>' . t('No') . '</span></label></li>
-		</ul></div></div>';		
+		<div class="input">' . $form->select('canRead' . $id, array(FilePermissions::PTYPE_ALL => t('Yes'), FilePermissions::PTYPE_NONE => t('No')), $canRead) . '</div>
+		</div>';		
 			$html .= '<div class="clearfix ccm-file-access-file-manager">';
 			if ($type == 'GLOBAL') {
 				$html .= '<label>' . t('Search Files') . '</label>';
@@ -46,41 +44,19 @@ class DashboardSystemPermissionsFilesController extends DashboardBaseController 
 				$html .= '<label>' . t('Search Files in Set') . '</label>';
 			}
 			$html .= '
-			<div class="input"><ul class="inputs-list">
-				<li><label>' . $form->radio('canSearch' . $id, FilePermissions::PTYPE_ALL, $canSearch) . ' <span>' . t('All') . '</span></label></li>
-				<li><label>' . $form->radio('canSearch' . $id, FilePermissions::PTYPE_MINE, $canSearch) . ' <span>' . t('Mine') . '</span></label></li>
-				<li><label>' . $form->radio('canSearch' . $id, FilePermissions::PTYPE_NONE, $canSearch) . ' <span>' . t('No') . '</span></label></li>
-			</ul></div>';
-		$html .='</div>
+			<div class="input">' . $form->select('canSearch' . $id, array(FilePermissions::PTYPE_ALL => t('Yes'), FilePermissions::PTYPE_MINE => t('Mine'), FilePermissions::PTYPE_NONE => t('No')), $canSearch) . '</div>
+		</div>
 		<div class="clearfix ccm-file-access-edit" ' . $viewExtended . '>
 			<label>' . t('Edit Files') . '</label>
-			<div class="input">
-			<ul class="inputs-list">
-			<li><label>' . $form->radio('canWrite' . $id, FilePermissions::PTYPE_ALL, $canWrite) . ' <span>' . t('All') . '</span></label></li>
-			<li><label>' . $form->radio('canWrite' . $id, FilePermissions::PTYPE_MINE, $canWrite) . ' <span>' . t('Mine') . '</span></label></li>
-			<li><label>' . $form->radio('canWrite' . $id, FilePermissions::PTYPE_NONE, $canWrite) . ' <span>' . t('None') . '</span></label></li>
-			</ul>
-			</div>
+			<div class="input">' . $form->select('canWrite' . $id, array(FilePermissions::PTYPE_ALL => t('Yes'), FilePermissions::PTYPE_MINE => t('Mine'), FilePermissions::PTYPE_NONE => t('No')), $canWrite) . '</div>
 		</div>
 		<div class="clearfix ccm-file-access-admin" ' . $viewExtended . '>
 			<label>' . t('Admin Files') . '</label>
-			<div class="input">
-			<ul class="inputs-list">
-			<li><label>' . $form->radio('canAdmin' . $id, FilePermissions::PTYPE_ALL, $canAdmin) . ' <span>' . t('All') . '</span></label></li>
-			<li><label>' . $form->radio('canAdmin' . $id, FilePermissions::PTYPE_MINE, $canAdmin) . ' <span>' . t('Mine') . '</span></label></li>
-			<li><label>' . $form->radio('canAdmin' . $id, FilePermissions::PTYPE_NONE, $canAdmin) . ' <span>' . t('None') . '</span></label></li>
-			</ul>
-			</div>
+			<div class="input">' . $form->select('canAdmin' . $id, array(FilePermissions::PTYPE_ALL => t('Yes'), FilePermissions::PTYPE_MINE => t('Mine'), FilePermissions::PTYPE_NONE => t('No')), $canAdmin) . '</div>
 		</div>
 		<div class="clearfix ccm-file-access-add" ' . $viewExtended . '>
 			<label>' . t('Add Files') . '</label>
-			<div class="input">
-			<ul class="inputs-list">
-			<li><label>' . $form->radio('canAdd' . $id, FilePermissions::PTYPE_ALL, $canAdd) . ' <span>' . t('All') . '</span></label></li>
-			<li><label>' . $form->radio('canAdd' . $id, FilePermissions::PTYPE_CUSTOM, $canAdd) . '<span> ' . t('Custom') . '</span></label></li>
-			<li><label>' . $form->radio('canAdd' . $id, FilePermissions::PTYPE_NONE, $canAdd) . ' <span>' . t('None') . '</span></label></li>
-			</ul>
-			</div>
+			<div class="input">' . $form->select('canAdd' . $id, array(FilePermissions::PTYPE_ALL => t('Yes'), FilePermissions::PTYPE_CUSTOM => t('Custom'), FilePermissions::PTYPE_NONE => t('No')), $canAdd) . '</div>
 		</div>
 		';
 			

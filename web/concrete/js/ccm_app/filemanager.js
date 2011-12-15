@@ -294,8 +294,8 @@ ccm_alSelectPermissionsEntity = function(selector, id, name) {
 }
 
 ccm_alActivateFilePermissionsSelector = function() {
-	$(".ccm-file-access-add input").unbind();
-	$(".ccm-file-access-add input").click(function() {
+	$(".ccm-file-access-add select").unbind();
+	$(".ccm-file-access-add select").change(function() {
 		var p = $(this).parents('div.ccm-file-permissions-entity')[0];
 		if ($(this).val() == ccmi18n_filemanager.PTYPE_CUSTOM) {
 			$(p).find('div.ccm-file-access-add-extensions').show();				
@@ -303,7 +303,7 @@ ccm_alActivateFilePermissionsSelector = function() {
 			$(p).find('div.ccm-file-access-add-extensions').hide();				
 		}
 	});
-	$(".ccm-file-access-file-manager input").click(function() {
+	$(".ccm-file-access-file-manager select").change(function() {
 		var p = $(this).parents('div.ccm-file-permissions-entity')[0];
 		if ($(this).val() != ccmi18n_filemanager.PTYPE_NONE) {
 			$(p).find('.ccm-file-access-add').show();				
