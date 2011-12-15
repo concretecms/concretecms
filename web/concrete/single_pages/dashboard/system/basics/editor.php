@@ -15,25 +15,25 @@ $h = Loader::helper('concrete/interface');
 			  <ul class="inputs-list">
 			    <li>
 			      <label>
-			        <input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="SIMPLE" style="vertical-align: middle" <?php echo ( $txtEditorMode=='SIMPLE' || !strlen($txtEditorMode) )?'checked':''?> />
+			        <input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="SIMPLE" <?php echo ( $txtEditorMode=='SIMPLE' || !strlen($txtEditorMode) )?'checked':''?> />
 			        <span><?php echo t('Simple')?></span>
 			      </label>
 			    </li>
 			    <li>
 			      <label>
-			        <input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="ADVANCED" style="vertical-align: middle" <?php echo ($txtEditorMode=='ADVANCED')?'checked':''?> />
+			        <input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="ADVANCED" <?php echo ($txtEditorMode=='ADVANCED')?'checked':''?> />
 			        <span><?php echo t('Advanced')?></span>
 			      </label>
 			    </li>
 			    <li>
 			      <label>
-			        <input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="OFFICE" style="vertical-align: middle" <?php echo ($txtEditorMode=='OFFICE')?'checked':''?> />
+			        <input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="OFFICE" <?php echo ($txtEditorMode=='OFFICE')?'checked':''?> />
 			        <span><?php echo t('Office')?></span>
 			      </label>
 			    </li>
 			    <li>
 			      <label class="disabled">
-			        <input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="CUSTOM" style="vertical-align: middle" <?php echo ($txtEditorMode=='CUSTOM')?'checked':'' ?> /> 
+			        <input type="radio" name="CONTENTS_TXT_EDITOR_MODE" value="CUSTOM" <?php echo ($txtEditorMode=='CUSTOM')?'checked':'' ?> /> 
 			        <span><?php echo t('Custom')?></span>
 			      </label>
 			    </li>
@@ -47,14 +47,22 @@ $h = Loader::helper('concrete/interface');
 
 			<div class="clearfix">
 				<label for="xlInput"><?php echo t('Width ')?></label>
-				<div class="input">
+				<div class="input"><?
+					if (!$textEditorWidth) { 
+						$textEditorWidth = 580;
+					}
+					?>
 				  <?=Loader::helper('form')->text('CONTENTS_TXT_EDITOR_WIDTH', $textEditorWidth, array('class' => 'span5'))?>
 				</div>
 			</div>
 			
 			<div class="clearfix">
 				<label for="xlInput"><?php echo t('Height ')?></label>
-				<div class="input">
+				<div class="input"><?
+					if (!$textEditorHeight) { 
+						$textEditorHeight = 380;
+					}
+					?>
 				  <?=Loader::helper('form')->text('CONTENTS_TXT_EDITOR_HEIGHT', $textEditorHeight, array('class' => 'span5'))?>
 				</div>
 			</div>
@@ -62,7 +70,22 @@ $h = Loader::helper('concrete/interface');
       </div>
     </div>
 	<br/>
-			
+		
+	<div id="text-editor-simple" style=" display:<?php echo ($txtEditorMode=='SIMPLE' || $txtEditorMode == '')?'block':'none' ?>">
+		<h4><?=t('Preview')?></h4>
+		<img src="<?=ASSETS_URL_IMAGES?>/editor_simple.png" width="630" height="65"  />
+	</div>
+	
+	<div id="text-editor-advanced" style=" display:<?php echo ($txtEditorMode=='ADVANCED')?'block':'none' ?>">
+		<h4><?=t('Preview')?></h4>
+		<img src="<?=ASSETS_URL_IMAGES?>/editor_advanced.png" width="630" height="81"  />
+	</div>
+	
+	<div id="text-editor-office" style=" display:<?php echo ($txtEditorMode=='OFFICE')?'block':'none' ?>">
+		<h4><?=t('Preview')?></h4>
+		<img src="<?=ASSETS_URL_IMAGES?>/editor_office.png" width="630" height="107"  />
+	</div>
+	
 	<div id="cstmEditorTxtAreaWrap" style=" display:<?php echo ($txtEditorMode=='CUSTOM')?'block':'none' ?>" >
 		<textarea wrap="off" name="CONTENTS_TXT_EDITOR_CUSTOM_CODE" cols="25" rows="20" style="width: 97%; height: 250px;"><?php echo $txtEditorCstmCode?></textarea>
 		<div class="ccm-note"><a target="_blank" href="http://tinymce.moxiecode.com/"><?php echo t('TinyMCE Reference')?></a></div>
@@ -76,6 +99,18 @@ $h = Loader::helper('concrete/interface');
 			})	 	
 		});
 		function isTxtEditorModeCustom(){
+			$("#text-editor-simple").hide();
+			$("#text-editor-advanced").hide();
+			$("#text-editor-office").hide();
+			if($("input[name='CONTENTS_TXT_EDITOR_MODE']:checked").val()=='SIMPLE'){
+				$('#text-editor-simple').css('display','block');
+			}
+			if($("input[name='CONTENTS_TXT_EDITOR_MODE']:checked").val()=='ADVANCED'){
+				$('#text-editor-advanced').css('display','block');
+			}
+			if($("input[name='CONTENTS_TXT_EDITOR_MODE']:checked").val()=='OFFICE'){
+				$('#text-editor-office').css('display','block');
+			}
 			if($("input[name='CONTENTS_TXT_EDITOR_MODE']:checked").val()=='CUSTOM'){
 				$('#cstmEditorTxtAreaWrap').css('display','block');
 			}else{
