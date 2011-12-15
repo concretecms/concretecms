@@ -29,7 +29,7 @@ if ($fp->canAddFiles()) {
     <div class="input">
     <input type="file" name="Filedata" class="ccm-al-upload-single-file"  />
     <input class="ccm-al-upload-single-submit btn" type="submit" value="<?=t('Upload File')?>" />    
-	<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import?ocID=<?=$ocID?>&searchInstance=<?=$searchInstance?>" class="dialog-launch btn info" dialog-title="<?=t('Add Files')?>" dialog-on-close="if(swfu && swfu.highlight) { ccm_alRefresh(swfu.highlight, '<?=$searchInstance?>') }" dialog-modal="false" dialog-width="450" dialog-height="350"><?=t('Upload Multiple')?></a>
+	<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import?ocID=<?=$ocID?>&searchInstance=<?=$searchInstance?>" class="dialog-launch btn info" dialog-title="<?=t('Add Files')?>" dialog-on-close="if(swfu && swfu.highlight) { ccm_alRefresh(swfu.highlight, '<?=$searchInstance?>') }" dialog-modal="false" dialog-width="450" dialog-height="370" dialog-append-buttons="true"><?=t('Upload Multiple')?></a>
 	<img class="ccm-al-upload-single-loader" style="display:none;" src="<?=ASSETS_URL_IMAGES?>/loader_intelligent_search.gif" />
 	</div>
 <input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
