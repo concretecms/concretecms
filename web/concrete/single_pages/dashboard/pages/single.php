@@ -6,7 +6,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 	<div class="clearfix">
 		<h3><?php echo t('Add Single Page')?></h3>
 		<?php if(URL_REWRITING == true || URL_REWRITING_ALL == true) {
-			$baseurl = BASE_URL.DIR_REL;
+			$base = BASE_URL.DIR_REL;
 		} else { 
 			$base = BASE_URL.DIR_REL.'/'.DISPATCHER_FILENAME;
 		}?>
