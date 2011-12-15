@@ -24,9 +24,10 @@
 	defined('C5_EXECUTE') or die("Access Denied.");
 	class GuestbookBlockController extends BlockController {		
 		protected $btTable = 'btGuestBook';
-		protected $btInterfaceWidth = "300";
-		protected $btInterfaceHeight = "260";	
+		protected $btInterfaceWidth = "350";
+		protected $btInterfaceHeight = "460";	
 		protected $btIncludeAll = 1;
+		protected $btWrapperClass = 'ccm-ui';
 		protected $btExportPageColumns = array('cID');
 		protected $btExportTables = array('btGuestBook', 'btGuestBookEntries');
 

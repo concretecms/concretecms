@@ -4,6 +4,8 @@ $step = ($_REQUEST['step']) ? "&step={$_REQUEST['step']}" : "";
 $closeWindowCID=(intval($rcID))?intval($rcID):$c->getCollectionID();
 ?>
 
+</div>
+
 <? global $c; ?>
 	
 	<? if (is_array($extraParams)) { // defined within the area/content classes 
@@ -18,7 +20,6 @@ $closeWindowCID=(intval($rcID))?intval($rcID):$c->getCollectionID();
 	<a style="float:left" href="javascript:void(0)" <? if ($replaceOnUnload) { ?>onclick="location.href='<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$closeWindowCID ?><?=$step?>'; return true" class="btn"<? } else { ?>class="btn" onclick="ccm_blockWindowClose()" <? } ?>><?=t('Cancel')?></a>
 	</div>
 <? } ?>
-	<div class="ccm-spacer">&nbsp;</div>
 
 	<input type="hidden" name="update" value="1" />
 	<input type="hidden" name="rcID" value="<?=$rcID?>" />
@@ -27,7 +28,6 @@ $closeWindowCID=(intval($rcID))?intval($rcID):$c->getCollectionID();
 
 	</form>
 
-</div>
 
 <? 
 $cont = $bt->getController();

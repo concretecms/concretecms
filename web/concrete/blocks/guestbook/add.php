@@ -1,30 +1,68 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 
-<?=t('Title')?><br />
-<input type="text" name="title" value="<?=t('Comments')?>:" /><br /><br />
+<div class="clearfix">
+<?=$form->label('title', t('Title'))?>
+<div class="input">
+	<input type="text" name="title" value="" />
+</div>
+</div>
+<?
+if (!$dateFormat) {
+	$dateFormat = t('M jS, Y');
+}
+?>
 
-<?=t('Date Format')?><br/>
-<input type="text" name="dateFormat" value="<?=t('M jS, Y')?>" />
-<div class="ccm-note">(<?=t('Enter a <a href="%s" target="_blank">PHP date string</a> here.', 'http://www.php.net/date')?>)</div>
-<br/>
+<div class="clearfix">
+<?=$form->label('dateFormat', t('Date Format'))?>
+<div class="input">
+<input type="text" name="dateFormat" value="<?=$dateFormat?>" />
+<div class="help-block">(<?=t('Enter a <a href="%s" target="_blank">PHP date string</a> here.', 'http://www.php.net/date')?>)</div>
+</div>
+</div>
 
-<?=t('Comments Require Moderator Approval?')?><br/>
-<input type="radio" name="requireApproval" value="1" /> <?=t('Yes')?><br />
-<input type="radio" name="requireApproval" value="0" checked="checked" /> <?=t('No')?><br /><br />
+<div class="clearfix">
+<?=$form->label('displayGuestBookForm', t('Comments enabled.'))?>
+<div class="input">
+<ul class="inputs-list">
+	<li><label><input type="radio" name="displayGuestBookForm" checked="checked" value="1" /> <span><?=t('Yes')?></span></label></li>
+	<li><label><input type="radio" name="displayGuestBookForm" value="0" /> <span><?=t('No')?></span></label></li>
+</ul>
+</div>
+</div>
 
-<?=t('Posting Comments is Enabled?')?><br/>
-<input type="radio" name="displayGuestBookForm" value="1" checked="checked" /> <?=t('Yes')?><br />
-<input type="radio" name="displayGuestBookForm" value="0" /> <?=t('No')?><br /><br />
+<div class="clearfix">
+<?=$form->label('requireApproval', t('Comments require approval.'))?>
+<div class="input">
+<ul class="inputs-list">
+	<li><label><input type="radio" name="requireApproval" value="1" /> <span><?=t('Yes')?></span></label></li>
+	<li><label><input type="radio" name="requireApproval" value="0" checked="checked" /> <span><?=t('No')?></span></label></li>
+</ul>
+</div>
+</div>
 
-<?=t('Authentication Required to Post?')?><br/>
+<div class="clearfix">
+<?=$form->label('authenticationRequired', t('Authentication required.'))?>
+<div class="input">
+<ul class="inputs-list">
+	<li><label><input type="radio" name="authenticationRequired" value="0" checked="checked" /> <span><?=t('Email Only')?></span></label></li>
+	<li><label><input type="radio" name="authenticationRequired" value="1" /> <span><?=t('Users must login')?></span></label></li>
+</ul>
+</div>
+</div>
 
-<input type="radio" name="authenticationRequired" value="0" checked /> <?=t('Email Only')?><br />
-<input type="radio" name="authenticationRequired" value="1" /> <?=t('Users must login to C5')?><br /><br />
+<div class="clearfix">
+<?=$form->label('displayCaptcha', t('CAPTCHA Required.'))?>
+<div class="input">
+<ul class="inputs-list">
+	<li><label><input type="radio" name="displayCaptcha" value="1" checked="checked"  /> <span><?=t('Yes')?></span></label></li>
+	<li><label><input type="radio" name="displayCaptcha" value="0"  /> <span><?=t('No')?></span></label></li>
+</ul>
+</div>
+</div>
 
-<?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', 'http://en.wikipedia.org/wiki/Captcha')?><br/>
-<input type="radio" name="displayCaptcha" value="1" checked="checked" /> <?php echo t('Yes')?><br />
-<input type="radio" name="displayCaptcha" value="0" /> <?php echo t('No')?><br /><br />
-
-<?=t('Alert Email Address when Comment Posted')?><br/>
-<input name="notifyEmail" type="text" value="<?=$notifyEmail?>" size="30" /><br /><br />
-
+<div class="clearfix">
+<?=$form->label('notifyEmail', t('Notify Email on Comment'))?>
+<div class="input">
+<input type="text" name="notifyEmail" value="" />
+</div>
+</div>
