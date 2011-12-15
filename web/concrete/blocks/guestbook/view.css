@@ -25,11 +25,6 @@ div.guestBook-entry {
 .guestBook-formBlock {
 	margin:12px 0 12px 0;
 }
-.guestBook-formBlock label {
-	width:60px;
-	display:block;
-	float:left;
-}
 .guestBook-formBlock textarea {
 	width:100%;
 	height: 150px;
