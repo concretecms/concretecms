@@ -464,7 +464,37 @@ div.ccm-file-access-extensions{border:1px solid #cecece;padding:4px;height:120px
 #ccm-files-add-asset{float:right;}
 #ccm-files-add-asset form{margin-bottom:0px;}
 #ccm-files-add-asset input[type=file]{background-color:transparent;}
-img.ccm-generic-thumbnail{border:0px;width:100%;}
+.incoming_file_importer{margin:10px auto 10px auto;}
+.incoming_file_importer .borderflow{border:1px solid #DEDEDE;overflow-y:scroll;}
+.incoming_file_importer .incoming_file{margin:10px 0px 10px 0px;float:left;text-align:center;}
+.incoming_file_importer .incoming_file_table .center{text-align:center;}
+.incoming_file_importer .clear{clear:both;}
+.theader{background-color:#EFEFEF;font-weight:bold;padding:4px 0px 4px 0px;}
+div#ccm-file-add-to-set-tab h2{margin-bottom:10px;}
+div#ccm-file-add-to-set-tab hr{border:0px;background:#aaa;margin:8px 0px 8px 0px;height:1px;}
+div.ccm-file-search-advanced-sets-results li.ccm-file-set-add-cb{margin-bottom:4px;}
+div.ccm-file-search-advanced-sets-results li.ccm-file-set-add-cb:last-child{margin-bottom:0px;}
+.ccm-file-set-add-cb img{vertical-align:middle;}
+div#ccm-file-properties table th{white-space:nowrap;}
+div#ccm-file-properties table form{margin-bottom:0px;}
+div#ccm-file-properties table th,div#ccm-file-properties table td{vertical-align:middle !important;}
+div#ccm-file-properties table th{text-align:right;}
+div#ccm-file-properties table th a{color:#999;text-decoration:underline;}
+td.ccm-attribute-editable-field-save{border-left:0px !important;}
+tr.ccm-file-versions-grid-active td{font-weight:bold !important;}
+table#ccm-file-upload-multiple-list{border:1px solid #ddd;}
+table#ccm-file-upload-multiple-list th{font-weight:bold;text-align:left;padding:4px;background-color:#D3E4F0;border-bottom:1px solid #cecece;}
+table#ccm-file-upload-multiple-list td{padding:8px;color:#666666;}
+div.ccm-file-manager-progress-bar-pending{font-weight:bold;text-align:center;}
+div.ccm-file-manager-select{border:1px solid #dedede;}
+div.ccm-file-selected-wrapper{border:1px solid #dedede;padding:10px 10px 10px 11px;}
+div.ccm-file-manager-select a{display:block;padding:10px 10px 10px 25px;text-decoration:none;background:transparent url(../images/icons/add.png) no-repeat scroll 6px 11px;color:#666;font-weight:bold;}
+div.ccm-file-manager-select a:hover{background-color:#e6f2f3;}
+div.ccm-file-selected-wrapper:hover{background-color:#E6F2F3;cursor:pointer;}
+div.ccm-file-manager-pre-filter{margin-bottom:10px;font-size:14px;color:#888;font-weight:bold;}
+div.ccm-file-selected-thumbnail{width:60px;margin-right:10px;float:left;}
+div.ccm-file-selected-data{padding-top:0px;float:left;}
+div.ccm-file-selected-data div{font-size:11px;word-wrap:break-word;}
 table.ccm-marketplace-results{margin-top:-20px;border:0px !important;margin-left:-20px;margin-bottom:-20px;margin-right:-20px;width:958px;}
 table.ccm-marketplace-results td{height:90px !important;vertical-align:top;border-bottom:1px solid #dedede;border-radius:0px;-webkit-border-radius:0px;-moz-border-radius:0px;border-top:0px !important;border-left:0px !important;height:125px;border-right:1px solid #dedede;}
 table.ccm-marketplace-results td:last-child{border-right:0px !important;}

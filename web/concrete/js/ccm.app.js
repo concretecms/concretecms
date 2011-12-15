@@ -5002,6 +5002,7 @@ ccm_activateSearchResults = function(searchType) {
 			$(this).get(0).scrollTop = 0;
 		});
 	}
+	$('.dialog-launch').dialog();
 	var obj = $("#ccm-" + searchType + "-search-loading");
 	if (obj.length == 0 || searchType == null) {
 		obj = $("#ccm-search-loading");
