@@ -177,9 +177,13 @@ class ConcreteInterfaceHelper {
 		if (!is_array($_SESSION['ccmQuickNavRecentPages'])) {
 			$_SESSION['ccmQuickNavRecentPages'] = array();
 		}
-		if (!in_array($c->getCollectionID(), $_SESSION['ccmQuickNavRecentPages'])) {
-			$_SESSION['ccmQuickNavRecentPages'][] = $c->getCollectionID();
+		if (in_array($c->getCollectionID(), $_SESSION['ccmQuickNavRecentPages'])) {
+			unset($_SESSION['ccmQuickNavRecentPages'][array_search($c->getCollectionID(), $_SESSION['ccmQuickNavRecentPages'])]);
+			$_SESSION['ccmQuickNavRecentPages'] = array_values($_SESSION['ccmQuickNavRecentPages']);
 		}
+		
+		$_SESSION['ccmQuickNavRecentPages'][] = $c->getCollectionID();
+
 		if (count($_SESSION['ccmQuickNavRecentPages']) > 5) {
 			array_shift($_SESSION['ccmQuickNavRecentPages']);
 		}
