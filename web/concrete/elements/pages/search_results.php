@@ -28,23 +28,20 @@ if (isset($_REQUEST['searchInstance'])) {
 <? } ?>
 
 <div id="ccm-list-wrapper"><a name="ccm-<?=$searchInstance?>-list-wrapper-anchor"></a>
-	<div style="float: right; margin-bottom: 10px">
+	<div style="margin-bottom: 10px">
 		<? $form = Loader::helper('form'); ?>
 
-		<?=$form->label('ccm-' . $searchInstance . '-list-multiple-operations', t('With Selected'))?>
-		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" style="width: 120px; margin-left: 8px;" disabled>
-			<option value="">**</option>
+		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" class="span3" disabled>
+			<option value="">** <?=t('With Selected')?></option>
 			<option value="properties"><?=t('Edit Properties')?></option>
 			<option value="move_copy"><?=t('Move/Copy')?></option>
 			<option value="speed_settings"><?=t('Speed Settings')?></option>
 			<option value="design"><?=t('Design')?></option>
 			<option value="delete"><?=t('Delete')?></option>
 		</select>	
-		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/customize_search_columns?searchInstance=<?=$searchInstance?>" id="ccm-list-view-customize"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Customize Results')?></a>
 	</div>
 
 <?
-	$pageList->displaySummary();
 	$txt = Loader::helper('text');
 	$keywords = $searchRequest['keywords'];
 	$soargs = array();
@@ -110,7 +107,9 @@ if (isset($_REQUEST['searchInstance'])) {
 	<? } ?>
 	
 </div>
-
+<?
+	$pageList->displaySummary();
+?>
 <? if (!$searchDialog) { ?>
 </div>
 
