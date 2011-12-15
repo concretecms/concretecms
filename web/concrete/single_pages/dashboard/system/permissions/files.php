@@ -7,7 +7,7 @@
 	$uArray = $ul->getUserInfoList();
 	?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Permissions'), false, 'span10 offset3', false)?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Manager Permissions'), false, 'span10 offset3', false)?>
 
 
 	<form method="post" id="file-access-permissions" action="<?=$this->url('/dashboard/system/permissions/files', 'save_global_permissions')?>">

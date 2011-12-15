@@ -88,7 +88,7 @@
 
         <page name="Permissions &amp; Access" path="/dashboard/system/permissions" filename="/dashboard/system/permissions/view.php" pagetype="" description="Control who sees and edits your site." package=""/>
         <page name="Site Access" path="/dashboard/system/permissions/site" filename="/dashboard/system/permissions/site.php" pagetype="" description="" package=""/>
-        <page name="File Permissions" path="/dashboard/system/permissions/files" filename="/dashboard/system/permissions/file.php" pagetype="" description="" package=""/>
+        <page name="File Manager Permissions" path="/dashboard/system/permissions/files" filename="/dashboard/system/permissions/file.php" pagetype="" description="" package=""/>
         <page name="Allowed File Types" path="/dashboard/system/permissions/file_types" filename="/dashboard/system/permissions/file_types.php" pagetype="" description="" package=""/>
         <page name="Task Permissions" path="/dashboard/system/permissions/tasks" filename="/dashboard/system/permissions/tasks.php" pagetype="" description="" package=""/>
         <page name="IP Blacklist" path="/dashboard/system/permissions/ip_blacklist" filename="/dashboard/system/permissions/ip_blacklist.php" pagetype="" description="" package=""/>
