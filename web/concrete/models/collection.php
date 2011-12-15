@@ -862,6 +862,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 				$q = "delete from Collections where cID = '{$cID}'";
 				$r = $db->query($q);
+
+				$q = "delete from CollectionSearchIndexAttributes where cID = {$cID}";
+				$db->query($q);
+
 			}
 		}
 		
