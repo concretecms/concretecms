@@ -91,7 +91,7 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 
 <div id="ccm-toolbar">
 <ul id="ccm-main-nav">
-<li id="ccm-logo-wrapper"><a href="<?=$this->url('/dashboard/')?>"><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></a></li>
+<li id="ccm-logo-wrapper"><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></li>
 <li><a class="ccm-icon-back ccm-menu-icon" href="<?=$this->url('/')?>"><?=t('Return to Website')?></a></li>
 <? if (Loader::helper('concrete/interface')->showWhiteLabelMessage()) { ?>
 	<li id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>
