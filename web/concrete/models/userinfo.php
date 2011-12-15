@@ -572,12 +572,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db = Loader::db();
 			$q = "update Users set uIsActive = 1 where uID = '{$this->uID}'";
 			$r = $db->query($q);
+			Events::fire('on_user_activate', $this);
 		}
 
 		function deactivate() {
 			$db = Loader::db();
 			$q = "update Users set uIsActive = 0 where uID = '{$this->uID}'";
 			$r = $db->query($q);
+			Events::fire('on_user_deactivate', $this);
 		}
 		
 		
