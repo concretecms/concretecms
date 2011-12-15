@@ -48,20 +48,17 @@ $h = Loader::helper('concrete/interface');
 			<div class="clearfix">
 				<label for="xlInput"><?php echo t('Width ')?></label>
 				<div class="input">
-				  <input type="text" name="CONTENTS_TXT_EDITOR_WIDTH" size="3" value="<?php echo ($textEditorWidth<580) ? 580 : intval($textEditorWidth) ?>"/>&nbsp;px
+				  <?=Loader::helper('form')->text('CONTENTS_TXT_EDITOR_WIDTH', $textEditorWidth, array('class' => 'span5'))?>
 				</div>
 			</div>
 			
 			<div class="clearfix">
 				<label for="xlInput"><?php echo t('Height ')?></label>
 				<div class="input">
-				  <input type="text" name="CONTENTS_TXT_EDITOR_HEIGHT" size="3" value="<?php echo ($textEditorHeight<100) ? 380 : intval($textEditorHeight) ?>"/>&nbsp;px
+				  <?=Loader::helper('form')->text('CONTENTS_TXT_EDITOR_HEIGHT', $textEditorHeight, array('class' => 'span5'))?>
 				</div>
 			</div>
  
-        <span class="help-block">
-            <strong><?php echo t('Note:')?></strong> <?php echo t('The minimum width is 580px.')?>
-        </span>
       </div>
     </div>
 	<br/>
