@@ -226,6 +226,10 @@
 	</div>
 	</div>
 	<div class="ccm-pane-body <? if (!$fsl->requiresPaging()) { ?> ccm-pane-body-footer <? } ?> ">
+
+		<a href="<?=View::url('/dashboard/files/add_set')?>" style="float: right;z-index:999;position:relative" class="btn primary"><?=t("Add File Set")?></a>
+
+		<?=$fsl->displaySummary()?>
 	
 		<? if (count($fileSets) > 0) { 
 			

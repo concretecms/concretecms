@@ -13,7 +13,13 @@
         <page name="File Manager" path="/dashboard/files/search" filename="/dashboard/files/search.php" pagetype="" description="" package=""/>
         <page name="Attributes" path="/dashboard/files/attributes" filename="/dashboard/files/attributes.php" pagetype="" description="" package=""/>
         <page name="File Sets" path="/dashboard/files/sets" filename="/dashboard/files/sets.php" pagetype="" description="" package=""/>
-        <page name="Add File Set" path="/dashboard/files/add_set" filename="/dashboard/files/add_set.php" pagetype="" description="" package=""/>
+        <page name="Add File Set" path="/dashboard/files/add_set" filename="/dashboard/files/add_set.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+			</attributes>
+        </page>
         <page name="Members" path="/dashboard/users" filename="/dashboard/users/view.php" pagetype="" description="Add and manage the user accounts and groups on your website." package=""/>
         <page name="Search Users" path="/dashboard/users/search" filename="/dashboard/users/search.php" pagetype="" description="" package=""/>
         <page name="User Groups" path="/dashboard/users/groups" filename="/dashboard/users/groups.php" pagetype="" description="" package=""/>
