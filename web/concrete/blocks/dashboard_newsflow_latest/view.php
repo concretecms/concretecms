@@ -6,7 +6,7 @@
 <? } ?>
 
 <? if ($controller->slot == 'C') { ?>
-	<div class="newsflow-paging-next"><span><a href="javascript:void(0)" onclick="ccm_showNewsflowOffsite(<?=$editionID?>)"></a></span></div>
+	<div class="newsflow-paging-next"><a href="javascript:void(0)" onclick="ccm_showNewsflowOffsite(<?=$editionID?>)"><span></span></a></div>
 
 	<script type="text/javascript">
 	$(function() {
