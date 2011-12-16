@@ -656,7 +656,7 @@ div.newsflow table td:last-child{border-right:0px;}
 div.newsflow table h3{line-height:20px;margin-bottom:8px;}
 div.newsflow table h6{line-height:18px;margin-top:0px;margin-bottom:8px;padding-top:0px;}
 div.newsflow table tr:last-child td{border-bottom:0px;}
-div.newsflow table{margin-bottom:0px;height:100%;}
+div.newsflow table{margin-bottom:0px;height:592px;}
 div.newsflow td.newsflow-em1{height:1px;background-color:#f1f1f1;padding:0px 0px 10px 0px;}
 div.newsflow td.newsflow-column-quarter{height:100%;width:25%;}
 div.newsflow td.newsflow-em1 hr{border-bottom-color:#d1d1d1;}
@@ -673,13 +673,13 @@ div#newsflow-header{background-color:#f1f1f1;padding:40px 30px 10px 60px;backgro
 .newsflow-column-first-run h3{line-height:28px !important;margin-bottom:10px;font-weight:normal;font-size:24px;color:#09f;}
 .newsflow-column-first-run{padding:10px 10px 100px 10px;overflow:visible;}
 .newsflow .ccm-pane-options{-webkit-border-top-left-radius:6px;-webkit-border-top-right-radius:6px;-moz-border-radius-topleft:6px;-moz-border-radius-topright:6px;border-top-left-radius:6px;border-top-right-radius:6px;}
-.newsflow-paging-previous,.newsflow-paging-next{width:80px;padding:0px 15px 0px 15px;text-align:center;height:100%;z-index:10;position:absolute;top:0px;background-clip:padding-box;}
-.newsflow-paging-previous{left:0px;}
+.newsflow-paging-previous,.newsflow-paging-next{width:33px;text-align:center;height:100%;z-index:10;position:absolute;top:0px;background-clip:padding-box;}
+.newsflow-paging-previous{left:0px;padding-left:10px;}
 .newsflow-paging-previous:hover{background:transparent url(../images/bg_newsflow_previous.png) repeat-y top left;}
 .newsflow-paging-previous:hover a,.newsflow-paging-next:hover a{display:table-cell;}
-.newsflow-paging-next{right:0px;}
+.newsflow-paging-next{right:0px;padding-right:10px;}
 .newsflow-paging-next:hover{background:transparent url(../images/bg_newsflow_next.png) repeat-y top right;}
-.newsflow-paging-previous a,.newsflow-paging-next a{width:80px;vertical-align:middle;display:none;}
+.newsflow-paging-previous a,.newsflow-paging-next a{width:33px;vertical-align:middle;display:none;}
 .newsflow-paging-previous span{width:57px;height:86px;background:transparent url(../images/newsflow_previous.png) no-repeat;display:inline-block;}
 .newsflow-paging-next span{width:57px;height:86px;background:transparent url(../images/newsflow_next.png) no-repeat;display:inline-block;}
 div#newsflow-main{z-index:1 !important;}

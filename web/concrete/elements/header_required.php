@@ -93,9 +93,9 @@ if (is_object($cp)) {
 		$this->addHeaderItem('<script type="text/javascript">window.onload = function() {ccm_disableLinks()}</script>', 'CORE');
 	}
 	$cih = Loader::helper('concrete/interface');
-	//if ($cih->showNewsflowOverlay()) {
+	if ($cih->showNewsflowOverlay()) {
 		$this->addFooterItem('<script type="text/javascript">$(function() { ccm_showDashboardNewsflowWelcome(); });</script>');
-	//}	
+	}	
 
 }
 

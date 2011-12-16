@@ -1,8 +1,8 @@
 ccm_marketplaceLauncherOpenPost = function() {
 
 	jQuery.fn.dialog.hideLoader();
-	ccm_setNewsflowOverlayDimensions();
-	$("#newsflow-overlay").css('top', '90px').fadeIn('300', 'easeOutExpo');
+	// highlight the first addon
+	ccm_marketplaceBrowserInit();
 	$(".ccm-pagination a").click(function() {
 		jQuery.fn.dialog.showLoader(false);
 		$('#newsflow-overlay').load($(this).attr('href'), function() {
@@ -10,6 +10,7 @@ ccm_marketplaceLauncherOpenPost = function() {
 		});
 		return false;
 	});
+	
 	$("#ccm-marketplace-browser-form").ajaxForm({
 		beforeSubmit: function() {
 			jQuery.fn.dialog.showLoader(false);
@@ -28,19 +29,17 @@ ccm_openThemeLauncher = function(mpID, closeTop) {
 	$.getJSON(CCM_TOOLS_PATH + '/marketplace/connect', params, function(resp) {
 		if (resp.isConnected) {
 	
-			$(window).resize(function(){
-				ccm_setNewsflowOverlayDimensions();
-			});
-		
-			var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
-			$('.ui-widget-overlay').show();
 			var mpIDstr = '';
 			if (mpID) {
 				mpIDstr = '&mpID=' + mpID;
 			}
-			$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/extend/themes?_ccm_dashboard_external=1' + mpIDstr, function() {
+
+			jQuery.fn.dialog.closeTop();
+			
+			ccm_showNewsflowOverlayWindow(CCM_DISPATCHER_FILENAME + '/dashboard/extend/themes?_ccm_dashboard_external=1' + mpIDstr, function() {
 				ccm_marketplaceLauncherOpenPost();
 			});
+
 		} else {
 			$.fn.dialog.open({
 				title: ccmi18n.community,
@@ -63,20 +62,15 @@ ccm_openAddonLauncher = function(mpID, closeTop) {
 		if (resp.isConnected) {
 			$("#ccm-nav-intelligent-search").val('');
 			$("#ccm-intelligent-search-results").fadeOut(90, 'easeOutExpo');
-		
-			jQuery.fn.dialog.closeTop();
-			
-			$(window).resize(function(){
-				ccm_setNewsflowOverlayDimensions();
-			});
-		
-			var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
-			$('.ui-widget-overlay').show();
+
 			var mpIDstr = '';
 			if (mpID) {
 				mpIDstr = '&mpID=' + mpID;
 			}
-			$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_DISPATCHER_FILENAME + '/dashboard/extend/add-ons?_ccm_dashboard_external=1' + mpIDstr, function() {
+		
+			jQuery.fn.dialog.closeTop();
+			
+			ccm_showNewsflowOverlayWindow(CCM_DISPATCHER_FILENAME + '/dashboard/extend/add-ons?_ccm_dashboard_external=1' + mpIDstr, function() {
 				ccm_marketplaceLauncherOpenPost();
 			});
 		} else {
@@ -92,11 +86,12 @@ ccm_openAddonLauncher = function(mpID, closeTop) {
 }
 
 ccm_marketplaceBrowserInit = function(mpID, autoSelect) {
-	
 	$(".ccm-marketplace-item").click(function() {
 		window.scrollTo(0,0);
+		/*
 		$(".newsflow-paging-previous").hide();
 		$(".newsflow-paging-next").hide();
+		*/
 		$("#ccm-marketplace-detail-inner").hide();
 		$('.ccm-marketplace-detail-loading').show();	
 
@@ -111,22 +106,7 @@ ccm_marketplaceBrowserInit = function(mpID, autoSelect) {
 		});
 	});
 
-	if (mpID) {
-		$("#ccm-marketplace-detail-inner").hide();
-		$('.ccm-marketplace-detail-loading').show();	
-		$('#ccm-marketplace-detail').show();
-		$('#ccm-marketplace-detail-inner').load(CCM_TOOLS_PATH + '/marketplace/details', {
-			'mpID': mpID
-		}, function() {
-			ccm_marketplaceGetDetailPost();
-		});
-	} else {
-		if (autoSelect == 'last') { 
-			$("div.ccm-marketplace-results-info").last().parent().click();
-		} else {
-			$("div.ccm-marketplace-results-info").first().parent().click();
-		}
-	}
+	$("td.ccm-marketplace-item-selected").click();
 }
 
 ccm_marketplaceBrowserSelectPrevious = function() {
@@ -205,7 +185,6 @@ ccm_marketplaceBrowserSetupNextAndPrevious = function() {
 	}
 
 	var h = $('#ccm-marketplace-detail').height();
-	h = h + 40;
 	$(".newsflow-paging-previous span, .newsflow-paging-next span").css('height', h + 'px');
 	$(".newsflow-paging-previous, .newsflow-paging-next").css('height', h + 'px');
 	
@@ -223,7 +202,7 @@ ccm_marketplaceGetDetailPost = function() {
 		'pauseOnHover': false,
 		'directionNav': false
 	});
-	ccm_marketplaceBrowserSetupNextAndPrevious();
+	ccm_setNewsflowPagingArrowHeight();
 }
 
 ccm_getMarketplaceItem = function(args) {
