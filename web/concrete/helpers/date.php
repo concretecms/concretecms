@@ -54,7 +54,7 @@ class DateHelper {
 				}
 			}
 		}
-		if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != 'en_US') {
+		if (Localization::activeLocale()) {
 			return $this->dateTimeFormatLocal($datetime,$mask);
 		} else {
 			return $datetime->format($mask);
@@ -100,7 +100,7 @@ class DateHelper {
 		} else {
 			$datetime = new DateTime();
 		}
-		if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != 'en_US') {
+		if (Localization::activeLocale()) {
 			return $this->dateTimeFormatLocal($datetime,$mask);
 		} else {
 			return $datetime->format($mask);
@@ -113,7 +113,7 @@ class DateHelper {
 	 * @return string 
 	 */
 	public function dateTimeFormatLocal(&$datetime,$mask) {
-		$locale = new Zend_Locale(ACTIVE_LOCALE);
+		$locale = new Zend_Locale(Localization::activeLocale());
 		Zend_Date::setOptions(array('format_type' => 'php'));
 		$cache = Cache::getLibrary();
 		if (is_object($cache)) {
@@ -135,7 +135,7 @@ class DateHelper {
 		if ($timestamp === false) {
 			$timestamp = time();
 		}
-		$locale = new Zend_Locale(ACTIVE_LOCALE);
+		$locale = new Zend_Locale(Localization::activeLocale());
 		Zend_Date::setOptions(array('format_type' => 'php'));
 		$cache = Cache::getLibrary();
 		if (is_object($cache)) {
