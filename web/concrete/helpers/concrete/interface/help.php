@@ -4,7 +4,7 @@ class ConcreteInterfaceHelpHelper {
 
 	public function getBlockTypes() {
 		$blockTypes = array(
-			'autonav' => t('Auto-nav is great!'),
+			'autonav' => array(t('Auto-nav is great!'), 'http://www.concrete5.org/documentation/editors-guide/in-page-editing/block-areas/add-block/auto-nav/'),
 			'content' => t('Content block is great!')
 			
 		);

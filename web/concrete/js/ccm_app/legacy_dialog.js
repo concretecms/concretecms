@@ -135,15 +135,19 @@ jQuery.fn.dialog.open = function(obj) {
 					$("#ccm-dialog-content" + nd + " .dialog-buttons").remove();
 				}
 				if ($("#ccm-dialog-content" + nd + " .dialog-help").length > 0) {
-					var dataContent = $("#ccm-dialog-content" + nd + " .dialog-help").html();
-					$("#ccm-dialog-content" + nd + " .dialog-help").remove();
+					$("#ccm-dialog-content" + nd + " .dialog-help").hide();
 					if (ccmi18n.helpPopup) {
 						var helpText = ccmi18n.helpPopup;
 					} else {
 						var helpText = 'Help';
 					}
-					$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').append('<span class="ccm-dialog-help"><a href="javascript:void(0)" onclick="ccm_togglePopover(event, this)" title="' + helpText + '" data-content="' + dataContent + '">Help</a></span>');
-				    $("span.ccm-dialog-help a").popover({placement: 'below', html: true, trigger: 'manual'});
+					$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').append('<span class="ccm-dialog-help"><a href="javascript:void(0)" onclick="ccm_togglePopover(event, this)" title="' + helpText + '" id="ccm-menu-help">Help</a></span>');
+					$("#ccm-menu-help").popover({content: function() {
+						var id = $(this).attr('id') + '-content';
+						return $('#' + id).html();
+						
+					}, placement: 'below', html: true, trigger: 'manual'});
+
 					
 				}
 				if (typeof obj.onOpen != "undefined") {

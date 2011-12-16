@@ -2,7 +2,7 @@
 <div class="row">
 
 <div class="ccm-pane">
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('File Manager'), t('Add, search, replace and modify the files for your website.'));?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('File Manager'), array(t('Add, search, replace and modify the files for your website.'), 'http://www.concrete5.org/documentation/editors-guide/dashboard/file-manager/'));?>
 <? 
 $c = Page::getCurrentPage();
 $ocID = $c->getCollectionID();
