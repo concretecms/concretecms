@@ -137,6 +137,10 @@ class ConcreteDashboardHelper {
 			}
 		}
 		
+		if (is_array($help)) {
+			$help = $help[0] . '<br/><br/><a href="' . $help[1] . '" class="btn small" target="_blank">' . t('Learn More') . '</a>';
+		}
+		
 		if (isset($relatedPages)) { 
 			$html .= '<li><a href="javascript:void(0)" onmouseover="ccm_togglePopover(event, this)" class="ccm-icon-navigate-pages" title="' . $navigateTitle . '" id="ccm-page-navigate-pages">' . t('Help') . '</a></li>';
 		}
