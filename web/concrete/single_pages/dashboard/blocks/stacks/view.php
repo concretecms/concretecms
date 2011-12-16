@@ -114,19 +114,16 @@
 		print '</p>';
 	}
 	?>
-
-		<h3><?=t('New Stack')?></h3>
-		<form method="post" action="<?=$this->action('add_stack')?>">
+		<br/>
+		<h3><?=t('Add Stack')?></h3>
+		<form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$this->action('add_stack')?>">
 		<?=Loader::helper("validation/token")->output('add_stack')?>
 		<div class="clearfix">
 			<?=Loader::helper("form")->label('stackName', t('Name'))?>
 			<div class="input">
 				<?=Loader::helper('form')->text('stackName')?>
-			</div>
+				<?=Loader::helper("form")->submit('add', t('Add'))?>
 		</div>
-		<div class="actions">
-			<?=Loader::helper("form")->submit('add', t('Add Stack'), array('class' => 'primary'))?>
-		
 		</div>
 		
 		</form>

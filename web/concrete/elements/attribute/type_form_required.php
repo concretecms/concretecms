@@ -123,8 +123,8 @@ if ($category->getPackageID() > 0) {
 <div class="ccm-pane-footer">
 
 <? if (is_object($key)) { ?>
-	<?=$ih->submit(t('Update Attribute'), 'ccm-attribute-key-form', 'right', 'primary')?>
+	<?=$ih->submit(t('Save'), 'ccm-attribute-key-form', 'right', 'primary')?>
 <? } else { ?>
-	<?=$ih->submit(t('Add Attribute'), 'ccm-attribute-key-form', 'right', 'primary')?>
+	<?=$ih->submit(t('Add'), 'ccm-attribute-key-form', 'right', 'primary')?>
 <? } ?>
 </div>
