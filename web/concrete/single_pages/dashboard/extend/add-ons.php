@@ -14,7 +14,7 @@ if ($tp->canInstallPackages()) {
 
 
 <? if ($_GET['_ccm_dashboard_external']) { ?>
-	<div class="newsflow">
+	<div class="newsflow" id="newsflow-main" style="height: auto; overflow: visible">
 	<ul class="ccm-pane-header-icons">
 		<li><a href="javascript:void(0)" onclick="ccm_closeNewsflow()" class="ccm-icon-close"><?=t('Close')?></a></li>
 	</ul>
@@ -94,13 +94,14 @@ if ($tp->canInstallPackages()) {
 			<?php 
 			$numCols=3;
 			$colCount=0;
+			$i = 0;
 			foreach($items as $item){ 
 				if($colCount==$numCols){
 					echo '</tr><tr>';
 					$colCount=0;
 				}
 				?>
-				<td valign="top" width="33%" mpID="<?=$item->getMarketplaceItemID()?>" class="ccm-marketplace-item ccm-marketplace-item-unselected"> 
+				<td valign="top" width="33%" mpID="<?=$item->getMarketplaceItemID()?>" class="ccm-marketplace-item <? if ($_REQUEST['mpID'] == $item->getMarketplaceItemID() || ($i == 0 && (!$_REQUEST['prev'])) || $i == 2 && $_REQUEST['prev']) { ?>ccm-marketplace-item-selected<? } else { ?>ccm-marketplace-item-unselected<? } ?>"> 
 				
 				<img class="ccm-marketplace-item-thumbnail" width="44" height="44" src="<?php echo $item->getRemoteIconURL() ?>" />
 				<div class="ccm-marketplace-results-info">
@@ -111,6 +112,7 @@ if ($tp->canInstallPackages()) {
 					
 				</td>
 			<?php   $colCount++;
+			$i++;
 			}
 			for($i=$colCount;$i<$numCols;$i++){
 				echo '<td>&nbsp;</td>'; 
@@ -133,14 +135,11 @@ if ($tp->canInstallPackages()) {
 
 </div>
 </div>
-<? if (isset($_REQUEST['mpID']) && $_REQUEST['mpID'] > 0 && Loader::helper('validation/numbers')->integer($_REQUEST['mpID'])) {
-	$mpID = $_REQUEST['mpID'];
-} else {
-	$mpID = 'false';
-}
-?>
+
+<? if (!$_REQUEST['_ccm_dashboard_external']) { ?>
 <script type="text/javascript">
 $(function() {
-	ccm_marketplaceBrowserInit(<?=$mpID?>, <? if ($_REQUEST['prev'] == 1) { ?>'last'<? } else { ?>false<? } ?>); 
+	ccm_marketplaceBrowserInit(); 
 });
 </script>
+<? } ?>
