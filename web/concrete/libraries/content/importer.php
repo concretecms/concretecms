@@ -235,6 +235,7 @@ class ContentImporter {
 					$ctr = CollectionType::add(array(
 						'ctHandle' => $ct['handle'],
 						'ctName' => $ct['name'],
+						'ctIcon' => $ct['icon'],
 						'ctIsInternal' => (string) $ct['internal']
 					), $pkg);
 				}
