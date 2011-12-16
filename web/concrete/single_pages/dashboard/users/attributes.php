@@ -32,30 +32,26 @@
 
 <? } else { ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('User Attributes'), false, false, false)?>
-	<div class="ccm-pane-body">
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('User Attributes'), false, false)?>
 
 	<?
 	$attribs = UserAttributeKey::getList();
 	Loader::element('dashboard/attributes_table', array('category' => $category, 'attribs'=> $attribs, 'editURL' => '/dashboard/users/attributes')); ?>
 
-	</div>
-	<div class="ccm-pane-footer">
-	<form method="get" class="form-stacked" action="<?=$this->action('select_type')?>" id="ccm-attribute-type-form">
+	<form method="get" class="form-stacked inline-form-fix" action="<?=$this->action('select_type')?>" id="ccm-attribute-type-form">
 	<div class="clearfix">
 	<?=$form->label('atID', t('Add Attribute'))?>
 	<div class="input">
 	
 	<?=$form->select('atID', $types)?>
-	<?=$form->submit('submit', t('Go'))?>
+	<?=$form->submit('submit', t('Add'))?>
 	
 	</div>
 	</div>
 	
 	</form>
-	</div>
 	
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>
 
 <? } ?>
 

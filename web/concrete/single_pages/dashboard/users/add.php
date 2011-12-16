@@ -140,7 +140,7 @@ $languages = Localization::getAvailableInterfaceLanguages();
     <div class="ccm-pane-footer">
         <div class="ccm-buttons">
             <input type="hidden" name="create" value="1" />
-            <? print $ih->submit(t('Create User'), 'ccm-user-form', 'right', 'primary'); ?>
+            <? print $ih->submit(t('Add'), 'ccm-user-form', 'right', 'primary'); ?>
         </div>	
     </div>
 
