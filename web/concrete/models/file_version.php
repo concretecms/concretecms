@@ -399,8 +399,7 @@ class FileVersion extends Object {
 	}
 	
 	public function getThumbnailSRC($level) {
-		eval('$hasThumbnail = $this->fvHasThumbnail' . $level . ';');
-		if ($hasThumbnail) {
+		if ($this->{"fvHasThumbnail{$level}"}) {
 			$f = Loader::helper('concrete/file');
 			$path = $f->getThumbnailRelativePath($this->fvPrefix, $this->fvFilename, $level);
 			return $path;
@@ -408,14 +407,12 @@ class FileVersion extends Object {
 	}
 	
 	public function hasThumbnail($level) {
-		eval('$hasThumbnail = $this->fvHasThumbnail' . $level . ';');
-		return $hasThumbnail;
+		return $this->{"fvHasThumbnail{$level}"};
 	}
 	
 	public function getThumbnail($level, $fullImageTag = true) {
 		$html = Loader::helper('html');
-		eval('$hasThumbnail = $this->fvHasThumbnail' . $level . ';');
-		if ($hasThumbnail) {
+		if ($this->{"fvHasThumbnail{$level}"}) {
 			if ($fullImageTag) {
 				return $html->image($this->getThumbnailSRC($level));
 			} else {
