@@ -650,14 +650,15 @@ div#ccm-sitemap-bc ul li{float:left;margin:0px 0px 0px 6px;list-style-type:none;
 div#ccm-sitemap-bc ul{padding:0px !important;margin:0px !important;}
 div#ccm-sitemap-bc ul:after{content:".";display:block;height:0;clear:both;visibility:hidden;}
 div#ccm-dashboard-select-display-mode{margin-bottom:8px;width:auto;margin-left:0px;}
-div.newsflow{z-index:999;width:940px;margin:0px auto 0px auto;position:relative;background-color:#ffffff;border:1px solid #999;border:1px solid rgba(0, 0, 0, 0.3);*border:1px solid #999;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-webkit-background-clip:padding-box;-moz-background-clip:padding-box;background-clip:padding-box;}
+div.newsflow{z-index:999;width:940px;height:590px;overflow:hidden;margin:0px auto 0px auto;position:relative;background-color:#ffffff;border:1px solid #999;border:1px solid rgba(0, 0, 0, 0.3);*border:1px solid #999;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-webkit-background-clip:padding-box;-moz-background-clip:padding-box;background-clip:padding-box;}
 div.newsflow table td{vertical-align:top;padding:12px;border-bottom:1px solid #dedede;border-top:0px !important;border-left:0px !important;height:125px;border-right:1px solid #dedede;background-clip:padding-box;}
 div.newsflow table td:last-child{border-right:0px;}
 div.newsflow table h3{line-height:20px;margin-bottom:8px;}
 div.newsflow table h6{line-height:18px;margin-top:0px;margin-bottom:8px;padding-top:0px;}
 div.newsflow table tr:last-child td{border-bottom:0px;}
-div.newsflow table{margin-bottom:0px;}
-div.newsflow td.newsflow-em1{background-color:#f1f1f1;}
+div.newsflow table{margin-bottom:0px;height:100%;}
+div.newsflow td.newsflow-em1{height:1px;background-color:#f1f1f1;padding:0px 0px 10px 0px;}
+div.newsflow td.newsflow-column-quarter{height:100%;width:25%;}
 div.newsflow td.newsflow-em1 hr{border-bottom-color:#d1d1d1;}
 div#newsflow-overlay{display:none;position:absolute;z-index:95;}
 div#newsflow-overlay div.row{margin-left:0px;}
