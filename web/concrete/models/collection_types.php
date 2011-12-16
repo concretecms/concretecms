@@ -205,6 +205,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$type->addAttribute('handle', $ct->getCollectionTypeHandle());
 				$type->addAttribute('name', $ct->getCollectionTypeName());
 				$type->addAttribute('internal', $ct->isCollectionTypeInternal());
+				$type->addAttribute('icon', $ct->getCollectionTypeIcon());
 				$type->addAttribute('package', $ct->getPackageHandle());
 				$ct->setComposerProperties();
 				if ($ct->isCollectionTypeIncludedInComposer()) { 
