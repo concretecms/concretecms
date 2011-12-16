@@ -1,4 +1,3 @@
-
 <? $ih = Loader::helper('concrete/interface'); ?>
 <?
 $enabledVals = array('0' => t('No'), '1' => t('Yes'));
@@ -14,7 +13,7 @@ $form = Loader::helper('form');
 
 	<form method="post" id="mail-importer-form" action="<?=$this->url('/dashboard/system/mail/importers', 'save_importer')?>">
 		<fieldset>
-			<legend><?=$mi->getMailImporterName()?> <?=t('Settings');?></legend>
+			<legend><?=t($mi->getMailImporterName())?> <?=t('Settings');?></legend>
 			<?=$form->hidden('miID', $mi->getMailImporterID())?>
 		
 			<div class="clearfix">
@@ -68,7 +67,7 @@ $form = Loader::helper('form');
 			</div>
 
 			<div class="clearfix">
-				<?=$form->label('miConnectionMethod','Connection Method');?>
+				<?=$form->label('miConnectionMethod', t('Connection Method'));?>
 				<div class="input">
 					<?=$form->select('miConnectionMethod', array('POP' => 'POP', 'IMAP' => 'IMAP'), $mi->getMailImporterConnectionMethod())?>
 				</div>
