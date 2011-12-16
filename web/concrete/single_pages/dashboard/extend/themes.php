@@ -31,8 +31,8 @@ if ($tp->canInstallPackages()) {
 <? } ?>
 
 <? if (!$_REQUEST['mpID']) { ?>
-<div class="newsflow-paging-previous"><span><a href="javascript:void(0)" onclick="ccm_marketplaceBrowserSelectPrevious()"></a></span></div>
-<div class="newsflow-paging-next"><span><a href="javascript:void(0)" onclick="ccm_marketplaceBrowserSelectNext()"></a></span></div>
+<div class="newsflow-paging-previous"><a href="javascript:void(0)" onclick="ccm_marketplaceBrowserSelectPrevious()"><span></span></a></div>
+<div class="newsflow-paging-next"><a href="javascript:void(0)" onclick="ccm_marketplaceBrowserSelectNext()"><span></span></a></div>
 <? } ?>
 
 </div>

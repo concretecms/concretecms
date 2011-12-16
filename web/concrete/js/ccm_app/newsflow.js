@@ -29,12 +29,15 @@ ccm_closeNewsflow = function(r) {
 	} else { 
 		$("#newsflow-overlay").fadeOut(300, 'easeOutExpo', function() {
 			$("#newsflow-overlay").remove();
+			ccm_setNewsflowPagingArrowHeight();
 		});
 		$('.ui-widget-overlay').fadeOut(300, 'easeOutExpo', function() {
 			$(this).remove();
 		});
 		if ($('#ccm-dashboard-content div#newsflow-main').length > 0 && $('#ccm-dashboard-content div#newsflow-main').not(':visible')) { 
-			$('#ccm-dashboard-content div#newsflow-main').fadeIn(300, 'easeOutExpo');
+			$('#ccm-dashboard-content div#newsflow-main').fadeIn(300, 'easeOutExpo', function() {
+				ccm_setNewsflowPagingArrowHeight();
+			});
 		}
 	}
 }
@@ -55,8 +58,9 @@ ccm_showNewsflow = function(hideLoadingText) {
 		ccm_createNewsflowWindow();
 		$("#newsflow-overlay").html($(this).html());
 		ccm_setNewsflowOverlayDimensions();
-		ccm_setNewsflowPagingArrowHeight();
-		$("#newsflow-overlay").fadeIn('300', 'easeOutExpo');
+		$("#newsflow-overlay").fadeIn('300', 'easeOutExpo', function() {
+			ccm_setNewsflowPagingArrowHeight();
+		});
 	});
 }
 
@@ -78,13 +82,13 @@ ccm_showNewsflowOverlay = function() {
 }
 
 ccm_setNewsflowPagingArrowHeight = function() {
-	if ($('#newsflow-overlay').length > 0) { 
+	if ($('#newsflow-overlay').length > 0 && $('#newsflow-overlay').is(':visible')) { 
 		var $ovl = $('#newsflow-overlay');
 	} else {
 		var $ovl = $('#newsflow-main');
 	}
 	var h = $ovl.height();
-	$(".newsflow-paging-previous span, .newsflow-paging-next span").css('height', h + 'px');
+	$(".newsflow-paging-previous a, .newsflow-paging-next a").css('height', h + 'px');
 	$(".newsflow-paging-previous, .newsflow-paging-next").css('height', h + 'px');
 }
 
@@ -110,10 +114,15 @@ ccm_showNewsflowOffsite = function(id) {
 	$('<div />').attr('id', 'newsflow-overlay').attr('class', 'ccm-ui').css('display','none').appendTo(document.body).load(CCM_TOOLS_PATH + '/newsflow?cID=' + id, function() {
 		jQuery.fn.dialog.hideLoader();
 		ccm_createNewsflowWindow();
+		$(".newsflow-paging-next").hide();
+		$(".newsflow-paging-previous").hide();
 		$("#newsflow-overlay").html($(this).html());
 		ccm_setNewsflowOverlayDimensions();
-		ccm_setNewsflowPagingArrowHeight();
-		$("#newsflow-overlay").fadeIn('300', 'easeOutExpo');
+		$("#newsflow-overlay").fadeIn('300', 'easeOutExpo', function() {
+			$(".newsflow-paging-next").show();
+			$(".newsflow-paging-previous").show();
+			ccm_setNewsflowPagingArrowHeight()
+		});
 	});
 }
 
