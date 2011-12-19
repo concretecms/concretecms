@@ -5,7 +5,11 @@ $bObj=$controller;
 $includeAssetLibrary = true;
 $al = Loader::helper('concrete/asset_library');
 ?>
-<h2><?=t("Video File")?></h2>
-<?=$al->video('ccm-b-flv-file', 'fID', t('Choose Video File') );?>
+<div class="clearfix">
+<label><?=t('Video File')?></label>
+<div class="input">
+	<?=$al->video('ccm-b-flv-file', 'fID', t('Choose Video File') );?>
+</div>
+</div>
 
 <? $this->inc('form_setup_html.php'); ?> 
