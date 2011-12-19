@@ -110,9 +110,9 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 	<div class="dialog-buttons">
 		<a href="#" class="ccm-button-left cancel btn" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></a>
 	
-		<a href="javascript:void(0)" onclick="$('#ccmCustomCssForm').submit()" class="btn primary ccm-button-right accept"><span><?=t('Update')?></span></a>
+		<a href="javascript:void(0)" onclick="$('#ccmCustomCssForm').submit()" class="btn primary ccm-button-right accept"><span><?=t('Save')?></span></a>
 		<? if ($cspID < 1) { ?>
-			<a onclick="return ccmCustomStyle.resetAll();" id="ccm-reset-style-button" class="btn danger ccm-button-right accept" style="margin-right:8px; "><span><?=t('Reset')?></span></a>
+			<a onclick="return ccmCustomStyle.resetAll();" id="ccm-reset-style-button" class="btn ccm-button-right accept" style="margin-right:8px; "><span><?=t('Reset Styles')?></span></a>
 		<? } ?>
 	</div>
 	

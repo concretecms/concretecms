@@ -49,7 +49,7 @@ $cList = $ct->getPages();
 	
 	<div class="dialog-buttons">
 	<a href="#" class="ccm-dialog-close ccm-button-left btn cancel"><?=t('Cancel')?></a>
-	<a href="javascript:void(0)" onclick="$('#ccmBlockMasterCollectionForm').submit()" class="btn primary ccm-button-right accept"><?=t('Update')?></a>
+	<a href="javascript:void(0)" onclick="$('#ccmBlockMasterCollectionForm').submit()" class="btn primary ccm-button-right accept"><?=t('Save')?></a>
 	</div>
 
 <script type="text/javascript">
