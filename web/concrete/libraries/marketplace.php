@@ -154,7 +154,7 @@ class Marketplace {
 					}, \'' . CONCRETE5_ORG_URL . '\');	
 				});	
 				</script>';
-				$ifr .= '<iframe id="ccm-marketplace-frame-' . $time . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+				$ifr .= '<iframe class="ccm-marketplace-frame" id="ccm-marketplace-frame-' . $time . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
 				return $ifr;
 			}
 		} else {
@@ -190,7 +190,7 @@ class Marketplace {
 				}, \'' . CONCRETE5_ORG_URL . '\');	
 			});	
 			</script>';
-			$ifr .= '<iframe id="ccm-marketplace-frame-' . $time . '" class="ccm-marketplace-frame" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+			$ifr .= '<iframe class="ccm-marketplace-frame" id="ccm-marketplace-frame-' . $time . '" class="ccm-marketplace-frame" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
 			return $ifr;
 		} else {
 			return '<div class="ccm-error">' . t('You do not have permission to connect this site to the marketplace.') . '</div>';

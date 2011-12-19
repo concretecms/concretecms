@@ -57,7 +57,7 @@ if ($_POST['update']) {
 		try {
 			if (is_object($ct)) {
 				$ct->update($_POST);
-				$this->controller->redirect('/dashboard/pages/types?updated=1');
+				$this->controller->redirect('/dashboard/pages/types', 'page_type_updated');
 			}		
 			exit;
 		} catch(Exception $e1) {
@@ -208,34 +208,7 @@ if ($ctEditMode) {
             </tbody>
         </table>
 	</div>
-    
-    <div class="ccm-pane-footer">
-        <? print $ih->submit(t('Update Page Type'), 'update_page_type', 'right', 'primary'); ?>
-        <? print $ih->button(t('Cancel'), $this->url('/dashboard/pages/types'), 'left'); ?>
-    </div>
-    
-    </form>
-    
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
-    
-    <!-- END: Edit Page Type pane -->
-	
-    
-    <div class="ccm-spacer" style="height:10px;">&nbsp;</div>
-        
-        
-    <!-- START: Delete Page Type pane -->
-    
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Delete Page Type'), false, false, false);?>
-	
-    <div class="ccm-pane-body">
-		<p><?=t('Click below to remove this page type entirely. (Note: You may only remove page types which are not being used on your site. If a page type is being used, delete all instances of its pages first.)')?></p>
-	</div>
-	
-    <div class="ccm-pane-footer">
-		<? print $ih->button_js(t('Delete Page Type'), "deletePageType()", 'left', 'error'); ?>
-    </div>
-    
+
     <? $confirmMsg = t('Are you sure?'); ?>
 	<script type="text/javascript">
 	deletePageType = function() {
@@ -245,16 +218,26 @@ if ($ctEditMode) {
 	}
 	</script>
     
+    <div class="ccm-pane-footer">
+        <? print $ih->submit(t('Save'), 'update_page_type', 'right', 'primary'); ?>
+		<? print $ih->button_js(t('Delete'), "deletePageType()", 'right', 'error'); ?>
+        <? print $ih->button(t('Cancel'), $this->url('/dashboard/pages/types'), 'left'); ?>
+    </div>
+    
+    </form>
+    
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
     
-    <!-- END: Delete Page Type pane -->
     
 <? } else { ?>
     <!-- START: Default Page Types pane -->
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Page Types'), false, false, false);?>
+    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Page Types'), false, false);?>
 	
-    <div class="ccm-pane-body">	
-
+	<div class="clearfix">
+       <? print $ih->button(t('Add a Page Type'), $this->url('/dashboard/pages/types/add'), 'right'); ?>
+       <br/><br/>
+	</div>
+	
 	<? if (count($ctArray) == 0) { ?>
 		<br/><strong><?=t('No page types found.')?></strong><br/><br>
 	<? } else { ?>
@@ -309,14 +292,8 @@ if ($ctEditMode) {
 	</table>
 	
 	<? } ?>
-    
-    </div>
-    
-    <div class="ccm-pane-footer">
-        <? print $ih->button(t('Add a Page Type'), $this->url('/dashboard/pages/types/add'), 'left', 'primary'); ?>
-    </div>
-    
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
+   
+    <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
     
     <!-- END: Default Page Type pane -->
 	

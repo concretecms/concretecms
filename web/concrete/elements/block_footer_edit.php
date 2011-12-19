@@ -16,7 +16,7 @@ $closeWindowCID=(intval($rcID))?intval($rcID):$c->getCollectionID();
 
 <? if (!$proxyBlock) { ?>	
 	<div class="ccm-buttons dialog-buttons">
-	<a style="float: right" href="javascript:clickedButton = true;$('#ccm-form-submit-button').get(0).click()" class="btn primary"><?=t('Update')?></a>
+	<a style="float: right" href="javascript:clickedButton = true;$('#ccm-form-submit-button').get(0).click()" class="btn primary"><?=t('Save')?></a>
 	<a style="float:left" href="javascript:void(0)" <? if ($replaceOnUnload) { ?>onclick="location.href='<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$closeWindowCID ?><?=$step?>'; return true" class="btn"<? } else { ?>class="btn" onclick="ccm_blockWindowClose()" <? } ?>><?=t('Cancel')?></a>
 	</div>
 <? } ?>

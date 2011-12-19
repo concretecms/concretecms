@@ -7,6 +7,7 @@
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = true;
+		protected $btCacheBlockOutputLifetime = 7200;
 
 		protected $btIsInternal = true;		
 		protected $btInterfaceWidth = 300;

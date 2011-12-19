@@ -185,7 +185,7 @@ if ($cap->canAccessComposer()) { ?>
 	</div>
     
     <div class="ccm-pane-footer">
-        <? print $ih->submit(t('Save Composer Settings'), 'update', 'right', 'primary'); ?>
+        <? print $ih->submit(t('Save'), 'update', 'right', 'primary'); ?>
         <? print $ih->button(t('Back to Page Types'), $this->url('/dashboard/pages/types'), 'left'); ?>
     </div>
     
