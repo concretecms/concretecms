@@ -7,7 +7,11 @@
 		$bf = $controller->getFileObject();
 	}
 ?>
-<h2><?=t("Video File") ?></h2>
-<?=$al->video('ccm-b-flv-file', 'fID', t('Choose Video File'), $bf);?>
+<div class="clearfix">
+<label><?=t('Video File')?></label>
+<div class="input">
+	<?=$al->video('ccm-b-flv-file', 'fID', t('Choose Video File'), $bf);?>
+</div>
+</div>
 
 <? $this->inc('form_setup_html.php'); ?> 

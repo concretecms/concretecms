@@ -26,7 +26,7 @@
 <div class="ccm-pane-footer">
 	<a href="<?=$this->url('/dashboard/blocks/types')?>" class="btn"><?=t('Back to Block Types')?></a>
 
-	<? $ch->button(t("Refresh"), $this->url('/dashboard/blocks/types','refresh', $bt->getBlockTypeID()), "left"); ?>
+	<? print $ch->button(t("Refresh"), $this->url('/dashboard/blocks/types','refresh', $bt->getBlockTypeID()), "right"); ?>
 	<?
 	$u = new User();
 	if ($u->isSuperUser()) {

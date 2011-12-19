@@ -4,7 +4,7 @@
 		
 		protected $btTable = 'btYouTube';
 		protected $btInterfaceWidth = "400";
-		protected $btInterfaceHeight = "240";
+		protected $btInterfaceHeight = "210";
 		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;

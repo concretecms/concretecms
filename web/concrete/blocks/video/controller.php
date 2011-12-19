@@ -11,14 +11,15 @@
 	defined('C5_EXECUTE') or die("Access Denied.");
 	class VideoBlockController extends BlockController {
  
-		protected $btInterfaceWidth = 300;
-		protected $btInterfaceHeight = 200;
+		protected $btInterfaceWidth = 320;
+		protected $btInterfaceHeight = 220;
 		protected $btTable = 'btVideo';
 		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = false;
 		protected $btExportFileColumns = array('fID');
+		protected $btWrapperClass = 'ccm-ui';
 		
 		public $width  = '';
 		public $height = '';
