@@ -4,10 +4,11 @@
 		
 		protected $btTable = 'btRssDisplay';
 		protected $btInterfaceWidth = "400";
-		protected $btInterfaceHeight = "170";
+		protected $btInterfaceHeight = "330";
 		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
+		protected $btWrapperClass = 'ccm-ui';
 		protected $btCacheBlockOutputForRegisteredUsers = true;
 		
 		public $itemsToDisplay = "5";

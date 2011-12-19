@@ -4,10 +4,11 @@
 	
 	class FlashContentBlockController extends BlockController {
 
-		protected $btInterfaceWidth = 300;
-		protected $btInterfaceHeight = 240;
+		protected $btInterfaceWidth = 380;
+		protected $btInterfaceHeight = 200;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockRecord = true;
+		protected $btWrapperClass = 'ccm-ui';
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = false;
 		protected $btTable = 'btFlashContent';

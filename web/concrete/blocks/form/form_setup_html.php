@@ -116,44 +116,17 @@ $ih = Loader::helper('concrete/interface');
 			<div class="clearfix">
 				<label><?=t('Answer Type')?></label>
 				<div class="input">
-					<ul class="inputs-list" id="answerType">
-						<li><label>
-							<?=$form->radio('answerType', 'field')?>
-							<span><?=t('Text Field')?></span>
-						</label></li>
-						<li><label>
-							<?=$form->radio('answerType', 'text')?>
-							<span><?=t('Text Area')?></span>
-						</label></li>
-						<li><label>
-							<?=$form->radio('answerType', 'radios')?>
-							<span><?=t('Radio Buttons')?></span>
-						</label></li>
-						<li><label>
-							<?=$form->radio('answerType', 'select')?>
-							<span><?=t('Select Box')?></span>
-						</label></li>
-						<li><label>
-							<?=$form->radio('answerType', 'checkboxlist')?>
-							<span><?=t('Checkbox List')?></span>
-						</label></li>
-						<li><label>
-							<?=$form->radio('answerType', 'fileupload')?>
-							<span><?=t('File Upload')?></span>
-						</label></li>
-						<li><label>
-							<?=$form->radio('answerType', 'email')?>
-							<span><?=t('Email Address')?></span>
-						</label></li>
-						<li><label>
-							<?=$form->radio('answerType', 'telephone')?>
-							<span><?=t('Telephone')?></span>
-						</label></li>
-						<li><label>
-							<?=$form->radio('answerType', 'url')?>
-							<span><?=t('Web Address')?></span>
-						</label></li>
-					</ul>
+					<select class="inputs-list span4" name="answerType" id="answerType">
+						<option value="field"><?=t('Text Field')?></option>
+						<option value="text"><?=t('Text Area')?></option>
+						<option value="radios"><?=t('Radio Buttons')?></option>
+						<option value="select"><?=t('Select Box')?></option>
+						<option value="checkboxlist"><?=t('Checkbox List')?></option>
+						<option value="fileupload"><?=t('File Upload')?></option>
+						<option value="email"><?=t('Email Address')?></option>
+						<option value="telephone"><?=t('Telephone')?></option>
+						<option value="url"><?=t('Web Address')?></option>
+					</select>
 				</div>
 			</div>
 			
@@ -198,10 +171,14 @@ $ih = Loader::helper('concrete/interface');
 				</div>
 			</div>
 			
-			<div class="actions">
+			<div class="clearfix">
+			<label></label>
+			<div class="input">
 				<?=$ih->button(t('Refresh'), '#', 'left', '', array('style' => 'display:none', 'id' => 'refreshButton'))?>
 				<?=$ih->button(t('Add Question'), '#', '', '', array('id' => 'addQuestion'))?>
 			</div>
+			</div>
+			
 		</fieldset> 
 	</div> 
 		
@@ -224,44 +201,17 @@ $ih = Loader::helper('concrete/interface');
 				<div class="clearfix">
 					<label><?=t('Answer Type')?></label>
 					<div class="input">
-						<ul class="inputs-list" id="answerTypeEdit">
-							<li><label>
-								<?=$form->radio('answerTypeEdit', 'field')?>
-								<span><?=t('Text Field')?></span>
-							</label></li>
-							<li><label>
-								<?=$form->radio('answerTypeEdit', 'text')?>
-								<span><?=t('Text Area')?></span>
-							</label></li>
-							<li><label>
-								<?=$form->radio('answerTypeEdit', 'radios')?>
-								<span><?=t('Radio Buttons')?></span>
-							</label></li>
-							<li><label>
-								<?=$form->radio('answerTypeEdit', 'select')?>
-								<span><?=t('Select Box')?></span>
-							</label></li>
-							<li><label>
-								<?=$form->radio('answerTypeEdit', 'checkboxlist')?>
-								<span><?=t('Checkbox List')?></span>
-							</label></li>
-							<li><label>
-								<?=$form->radio('answerTypeEdit', 'fileupload')?>
-								<span><?=t('File Upload')?></span>
-							</label></li>
-							<li><label>
-								<?=$form->radio('answerTypeEdit', 'email')?>
-								<span><?=t('Email Address')?></span>
-							</label></li>
-							<li><label>
-								<?=$form->radio('answerTypeEdit', 'telephone')?>
-								<span><?=t('Telephone')?></span>
-							</label></li>
-							<li><label>
-								<?=$form->radio('answerTypeEdit', 'url')?>
-								<span><?=t('Web Address')?></span>
-							</label></li>
-						</ul>
+						<select class="inputs-list span4" name="answerTypeEdit" id="answerTypeEdit">
+							<option value="field"><?=t('Text Field')?></option>
+							<option value="text"><?=t('Text Area')?></option>
+							<option value="radios"><?=t('Radio Buttons')?></option>
+							<option value="select"><?=t('Select Box')?></option>
+							<option value="checkboxlist"><?=t('Checkbox List')?></option>
+							<option value="fileupload"><?=t('File Upload')?></option>
+							<option value="email"><?=t('Email Address')?></option>
+							<option value="telephone"><?=t('Telephone')?></option>
+							<option value="url"><?=t('Web Address')?></option>
+						</select>
 					</div>
 				</div>
 				

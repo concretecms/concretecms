@@ -13,7 +13,7 @@ table#googleMapBlockSetup td{ font-size:12px; vertical-align:top; padding-bottom
 		<th><?=t('Location')?>:</th>
 		<td>
 		<input id="ccm_googlemap_block_location" name="location" value="<?=$mapObj->location?>" maxlength="255" type="text" style="width:80%">
-		<div class="note"><?=t('e.g. 222 NW Davis St. Portland, OR')?></div>
+		<div class="note"><?=t('e.g. 17 SE 3rd #410, Portland, OR, 97214')?></div>
 		</td>
 	</tr>
 	<tr>

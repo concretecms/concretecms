@@ -54,7 +54,7 @@ if ($controller->getFileOnstateID() > 0) {
 <tr>
 <td><?=t('Width')?>&nbsp;</td>
 <td><?= $form->text('maxWidth', intval($maxWidth), array('style' => 'width: 60px')); ?></td>
-<td>&nbsp;&nbsp;</td>
+<td><div style="width: 30px"></div></td>
 <td><?=t('Height')?>&nbsp;</td>
 <td><?= $form->text('maxHeight', intval($maxHeight), array('style' => 'width: 60px')); ?></td>
 </tr>

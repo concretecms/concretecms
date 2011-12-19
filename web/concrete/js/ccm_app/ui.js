@@ -219,6 +219,7 @@ ccm_hideHighlighter = function() {
 
 ccm_addError = function(err) {
 	if (!ccm_isBlockError) {
+		ccm_blockError = '';
 		ccm_blockError += '<ul>';
 	}
 	

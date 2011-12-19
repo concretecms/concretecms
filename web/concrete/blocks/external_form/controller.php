@@ -3,11 +3,11 @@
 	class ExternalFormBlockController extends BlockController {
 		
 		protected $btTable = 'btExternalForm';
-		protected $btInterfaceWidth = "300";
-		protected $btInterfaceHeight = "200";
+		protected $btInterfaceWidth = "370";
+		protected $btInterfaceHeight = "100";
 		public $helpers = array('file');
 		protected $btCacheBlockRecord = true;
-		
+		protected $btWrapperClass = 'ccm-ui';		
 		/** 
 		 * Used for localization. If we want to localize the name/description we have to include this
 		 */
