@@ -26,7 +26,7 @@ if (is_object($category) && $category->allowAttributeSets()) {
 	</div>
 	
 	<? } ?>
-	<a href="<?=$this->url('/dashboard/system/attributes/sets', 'category', $category->getAttributeKeyCategoryID())?>" id="ccm-list-view-customize"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Manage Sets')?></a>
+	<a href="<?=$this->url('/dashboard/system/attributes/sets', 'category', $category->getAttributeKeyCategoryID())?>" id="ccm-list-view-customize-top"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Manage Sets')?></a>
 </div>
 
 <div class="ccm-pane-body">
