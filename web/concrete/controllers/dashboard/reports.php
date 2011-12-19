@@ -6,7 +6,7 @@ Loader::block('form');
 class DashboardReportsController extends Controller {
 
 	public function __construct() {
-		$this->redirect("/dashboard/reports/forms");
+		$this->redirect("/dashboard/reports/statistics");
 	}
 
 }

@@ -137,7 +137,7 @@ if (is_object($uo)) {
 	</script>
 		
 		
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit User').'<span class="label" style="position:relative;top:-3px;left:12px;">'.t('* required field').'</span>', t('Edit User account.'), false, false);?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit User'), t('Edit User account.'), false, false);?>
 	
     
 	<div class="ccm-pane-body">

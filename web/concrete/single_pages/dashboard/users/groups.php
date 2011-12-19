@@ -134,12 +134,9 @@ foreach ($gResults as $g) { ?>
 		}
 		</script>
 
-		<? print $ih->button_js(t('Delete Group'), "deleteGroup()", 'right', 'error');?>
-
 	<? } ?>
 
 	<fieldset>
-	<legend><?=t('Details')?></legend>
 	<div class="clearfix">
 	<?=$form->label('gName', t('Name'))?>
 	<div class="input">
@@ -227,6 +224,7 @@ foreach ($gResults as $g) { ?>
 </div>
 <div class="ccm-pane-footer">
 	<?=$ih->submit(t('Update'), 'update-group-form', 'right', 'primary')?>
+	<? print $ih->button_js(t('Delete'), "deleteGroup()", 'right', 'error');?>
 	<?=$ih->button(t('Cancel'), $this->url('/dashboard/users/groups'), 'left')?>
 </div>
 </form>

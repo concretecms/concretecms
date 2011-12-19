@@ -15,7 +15,7 @@ $languages = Localization::getAvailableInterfaceLanguages();
 
 ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add User').'<span class="label" style="position:relative;top:-3px;left:12px;">'.t('* required field').'</span>', false, false, false);?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add User'), false, false, false);?>
 
 <form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$this->url('/dashboard/users/add')?>">
 	<?=$valt->output('create_account')?>
