@@ -32,29 +32,37 @@
 	if (isset($_GET['cvID1']) && isset($_GET['cvID2']) && (isset($_GET['vtask']))) {
 		
 		if ($_GET['vtask'] == 'compare') {
-			session_write_close();
 			
+			if ($_GET['cvID2'] > $_GET['cvID1']) { 
+				$newCVID = $_GET['cvID2'];
+				$oldCVID = $_GET['cvID1'];
+			} else {
+				$newCVID = $_GET['cvID1'];
+				$oldCVID = $_GET['cvID2'];
+			}
 			// compare
-			$src1 = time() . '_' . $_GET['cID'] . '_' . $_GET['cvID1'] . '.html';
-			$src2 = time() . '_' . $_GET['cID'] . '_' . $_GET['cvID2'] . '.html';
+			$src1 = time() . '_' . $_GET['cID'] . '_' . $oldCVID . '.html';
+			$src2 = time() . '_' . $_GET['cID'] . '_' . $newCVID . '.html';
 			
-			ob_start();
-			$c = Page::getByID($_GET['cID'], $_GET['cvID1']);
+			$c = Page::getByID($_GET['cID'], $oldCVID);
 			$v = View::getInstance();
 			$v->disableEditing();
 			$v->disableLinks();
 
+			ob_start();
 			$v->render($c);
 			$ret = ob_get_contents();
 			ob_end_clean();
 
 			file_put_contents($fh->getTemporaryDirectory() . '/' . $src1, $ret);
 			
-			ob_start();
-			$c = Page::getByID($_GET['cID'], $_GET['cvID2']);
+			$c->refreshCache();
+			
+			$c = Page::getByID($_GET['cID'], $newCVID);
 			$v = View::getInstance();
 			$v->disableEditing();
 			$v->disableLinks();
+			ob_start();
 			$v->render($c);
 			$ret = ob_get_contents();
 			ob_end_clean();
