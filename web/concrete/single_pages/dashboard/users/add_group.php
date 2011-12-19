@@ -16,7 +16,6 @@ $form = Loader::helper('form');
 <div class="ccm-pane-body">
 <?=$valt->output('add_or_update_group')?>
 <fieldset>
-<legend><?=t('Details')?></legend>
 <div class="clearfix">
 <?=$form->label('gName', t('Name'))?>
 <div class="input">
@@ -98,7 +97,7 @@ $form = Loader::helper('form');
 </fieldset>
 </div>
 <div class="ccm-pane-footer">
-<input type="hidden" name="add" value="1" /><input type="submit" name="submit" value="<?=t('Add Group')?>" class="btn primary" />
+<input type="hidden" name="add" value="1" /><input type="submit" name="submit" value="<?=t('Add')?>" class="btn ccm-button-right primary" />
 </div>
 
 </form>	
