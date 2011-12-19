@@ -17,9 +17,8 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 				<span class="add-on"><?php echo $base?>/</span>
 			</div>
 			<input type="text" name="pageURL" value="<?php echo $this->post('pageURL')?>" class="span5" />
-			<div class="actions clearfix">
-				<?php print $ih->submit(t('Add New Page'), 'add_static_page_form', 'right', 'primary');?>
-			</div>
+			<?php print $ih->submit(t('Add'), 'add_static_page_form', 'left');?>
+
 		</form>
 		<h3><?php echo t('Already Installed')?></h3>
 		<table border="0" cellspacing="1" cellpadding="0" class="zebra-striped">

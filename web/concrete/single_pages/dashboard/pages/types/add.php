@@ -14,7 +14,7 @@ $pageTypeIconsFS = FileSet::getByName("Page Type Icons");
 	
     <!-- START: Add Page Type pane -->
     
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Page Type').'<span class="label" style="position:relative;top:-3px;left:12px;">'.t('* required field').'</span>', false, false, false);?>
+    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Page Type'), false, false, false);?>
 	
     <form method="post" id="add_page_type" action="<?=$this->url('/dashboard/pages/types/add', 'do_add')?>">
 	<?=$valt->output('add_page_type')?>
@@ -153,7 +153,7 @@ $pageTypeIconsFS = FileSet::getByName("Page Type Icons");
 	</div>
     
     <div class="ccm-pane-footer">
-        <? print $ih->submit(t('Add Page Type'), 'add_page_type', 'right', 'primary'); ?>
+        <? print $ih->submit(t('Add'), 'add_page_type', 'right', 'primary'); ?>
         <? print $ih->button(t('Cancel'), $this->url('/dashboard/pages/types'), 'left'); ?>
     </div>
     
