@@ -1,4 +1,3 @@
-<div class="ccm-ui">
 
 <? 
 //Used on both page and file attributes
@@ -8,20 +7,32 @@ $sets = array();
 if (is_object($category) && $category->allowAttributeSets()) {
 	$sets = $category->getAttributeSets();
 }
+?>
 
-if (count($attribs) > 0) { ?>
+<div class="ccm-pane-options ccm-pane-options-permanent-search">
 
-	<div style="float: right; margin-bottom: 10px">
-		<? $form = Loader::helper('form'); ?>
+	<? $form = Loader::helper('form'); ?>
 
-		<? if (count($sets) > 0) { ?>
-		<?=$form->label('asGroupAttributes', t('View'))?>
-		<select style="width: 150px; margin-left: 8px;"  onchange="window.location.href='<?=Loader::helper('navigation')->getLinkToCollection($c)?>?asGroupAttributes=' + this.value" id="asGroupAttributes" name="asGroupAttributes">
-			<option value="1" <? if ($_REQUEST['asGroupAttributes'] !== '0') { ?> selected <? } ?>><?=t('Grouped by set')?></option>
-			<option value="0" <? if ($_REQUEST['asGroupAttributes'] === '0') { ?> selected <? } ?>><?=t('In one list')?></option>
-		</select>
-		<? } ?><a href="<?=$this->url('/dashboard/system/attributes/sets', 'category', $category->getAttributeKeyCategoryID())?>" id="ccm-list-view-customize"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Manage Sets')?></a>
+	<? if (count($sets) > 0) { ?>
+	<div class="span4">
+
+	<?=$form->label('asGroupAttributes', t('View'))?>
+	<div class="input">
+	<select class="span3" onchange="window.location.href='<?=Loader::helper('navigation')->getLinkToCollection($c)?>?asGroupAttributes=' + this.value" id="asGroupAttributes" name="asGroupAttributes">
+		<option value="1" <? if ($_REQUEST['asGroupAttributes'] !== '0') { ?> selected <? } ?>><?=t('Grouped by set')?></option>
+		<option value="0" <? if ($_REQUEST['asGroupAttributes'] === '0') { ?> selected <? } ?>><?=t('In one list')?></option>
+	</select>
 	</div>
+	</div>
+	
+	<? } ?>
+	<a href="<?=$this->url('/dashboard/system/attributes/sets', 'category', $category->getAttributeKeyCategoryID())?>" id="ccm-list-view-customize"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Manage Sets')?></a>
+</div>
+
+<div class="ccm-pane-body">
+
+<?
+if (count($attribs) > 0) { ?>
 
 
 	<?
@@ -113,6 +124,8 @@ if (count($attribs) > 0) { ?>
 	
 <? } ?>
 
+</div>
+
 <script type="text/javascript">
 $(function() {
 	$("div.ccm-attribute-sortable-set-list").sortable({
@@ -130,8 +143,6 @@ $(function() {
 	});
 });
 </script>
-
-</div>
 
 <style type="text/css">
 div.ccm-attribute-sortable-set-list img.ccm-attribute-icon:hover {cursor: move}

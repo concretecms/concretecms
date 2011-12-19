@@ -33,12 +33,14 @@
 
 <? } else { ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Attributes'), false, false)?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Attributes'), false, false, false)?>
 
 	<?
 	$attribs = FileAttributeKey::getList();
 	Loader::element('dashboard/attributes_table', array('category' => $category, 'attribs'=> $attribs, 'editURL' => '/dashboard/files/attributes')); ?>
 
+
+	<div class="ccm-pane-body ccm-pane-body-footer" style="margin-top: -25px">
 
 	<form method="get" class="form-stacked inline-form-fix" action="<?=$this->action('select_type')?>" id="ccm-attribute-type-form">
 	<div class="clearfix">
@@ -53,7 +55,8 @@
 	
 	</form>
 
+	</div>
 	
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
 
 <? } ?>

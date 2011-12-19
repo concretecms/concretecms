@@ -586,6 +586,7 @@ a.ccm-search-save{color:#333;padding:3px 27px 3px 3px;position:relative;height:2
 a.ccm-search-save:hover{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;background-color:#d7d7d7;text-decoration:none;color:#333;}
 a.ccm-search-save span{position:absolute;top:-2px;right:3px;width:22px;height:24px;}
 #ccm-export-results-wrapper{float:right;}
+div.ccm-pane-options a#ccm-list-view-customize{position:absolute;top:5px;right:5px;line-height:12px;height:auto;}
 a#ccm-list-view-customize,a#ccm-export-results{margin-left:8px;color:#333;padding:3px 29px 3px 3px;position:relative;height:24px;}
 a#ccm-list-view-customize:hover,a#ccm-export-results:hover{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;background-color:#d7d7d7;text-decoration:none;color:#333;}
 a#ccm-list-view-customize span,a#ccm-export-results span{position:absolute;top:2px;right:5px;width:24px;height:24px;}
