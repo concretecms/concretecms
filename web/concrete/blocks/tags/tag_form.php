@@ -12,47 +12,53 @@ if(!$ak instanceof CollectionAttributeKey) {?>
 </ul>
 
 <div id="ccm-tagsPane-add" class="ccm-tagsPane">
-	<div class="ccm-block-field-group">
-		<h2><?php echo t('Display Title')?></h2>
+
+	<div class="clearfix">
+	<?=$form->label('title', t('Display Title'))?>
+	<div class="input">
 		<?php echo $form->text('title',$title);?>
-		<br/><br/>
-		
-		<div>
-			<label>
-				<?php echo $form->radio('displayMode','page',$displayMode)?>
-				<?php echo t('Display Tags for the current page')?>
-			</label>
-		</div>
-		<div>
-			<label>
-				<?php echo $form->radio('displayMode','cloud',$displayMode)?>
-				<?php echo t('Display available tags');?>
-			</label>
-		</div>
-		<div id="ccm-tags-display-page">
-			<h2><?php echo $ak->getAttributeKeyName();?></h2>
-			<?php
-				$av = $c->getAttributeValueObject($ak);
-				$ak->render('form',$av);
-			?>
-		</div>
-		<div id="ccm-tags-display-cloud" style="display: none;">
-			<h2><?php echo t('Number of tags to display');?></h2>
-			<?php echo $form->text('cloudCount',$cloudCount,array('size'=>4))?>
-		</div>
 	</div>
+	</div>
+
+	<div class="clearfix">
+	<label><?=t('Display')?></label>
+	<div class="input">
+	<ul class="inputs-list">
+		<li><label><?php echo $form->radio('displayMode','page',$displayMode)?> <span><?php echo t('Display Tags for the current page')?></span></label></li>
+		<li><label><?php echo $form->radio('displayMode','cloud',$displayMode)?> <span><?php echo t('Display available tags')?></span></label></li>
+	</ul>
+	</div>
+	</div>
+
+	<div id="ccm-tags-display-page" class="clearfix">
+	<label><?php echo $ak->getAttributeKeyName();?></label>
+	<div class="input">
+		<?php
+			$av = $c->getAttributeValueObject($ak);
+			$ak->render('form',$av);
+		?>
+	</div>
+	</div>
+
+	<div id="ccm-tags-display-cloud" class="clearfix">
+	<?=$form->label('cloudCount', t('Number to Display'))?>
+	<div class="input">
+			<?php echo $form->text('cloudCount',$cloudCount,array('size'=>4))?>
+	</div>
+	</div>
+
 </div>
 
 <div id="ccm-tagsPane-advanced" class="ccm-tagsPane" style="display:none";>
-	<div class="ccm-block-field-group">
-		<h2><?php echo t('Tags Link to Location')?></h2>
-		<div class="ccm-tags">
-			<?php
-			$form_selector = Loader::helper('form/page_selector');
-			print $form_selector->selectPage('targetCID', $targetCID);
-			?>
-		</div>
-		<br/><br/>
+	<div class="clearfix">
+	<label><?=t('Link Tags to Page')?></label>
+	<div class="input">
+		<?php
+		$form_selector = Loader::helper('form/page_selector');
+		print $form_selector->selectPage('targetCID', $targetCID);
+		?>
 	</div>
+	</div>
+
 </div>
 <?php } ?>
