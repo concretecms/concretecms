@@ -3,8 +3,8 @@
 class TagsBlockController extends BlockController {
 
 	protected $btTable = 'btTags';
-	protected $btInterfaceWidth = "500";
-	protected $btInterfaceHeight = "350";
+	protected $btInterfaceWidth = "450";
+	protected $btInterfaceHeight = "260";
 
 	protected $btExportPageColumns = array('targetCID');
 	
@@ -12,6 +12,7 @@ class TagsBlockController extends BlockController {
 	protected $btCacheBlockOutput = true;
 	protected $btCacheBlockOutputOnPost = false;
 	protected $btCacheBlockOutputForRegisteredUsers = false;
+	protected $btWrapperClass = 'ccm-ui';
 	
 	public $attributeHandle = 'tags';
 	public $displayMode = 'page';
