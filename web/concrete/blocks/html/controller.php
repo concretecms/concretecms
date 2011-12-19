@@ -7,6 +7,7 @@ class HtmlBlockController extends BlockController {
 	
 	protected $btTable = 'btContentLocal';
 	protected $btInterfaceWidth = "600";
+	protected $btWrapperClass = 'ccm-ui';
 	protected $btInterfaceHeight = "465";
 	protected $btCacheBlockRecord = true;
 	protected $btCacheBlockOutput = true;

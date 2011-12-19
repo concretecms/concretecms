@@ -8,7 +8,7 @@ class NextPreviousBlockController extends BlockController {
 
 	protected $btTable = 'btNextPrevious';
 	protected $btInterfaceWidth = "430";
-	protected $btInterfaceHeight = "300"; 
+	protected $btInterfaceHeight = "400"; 
 	
 	/** 
 	 * Used for localization. If we want to localize the name/description we have to include this

@@ -3,9 +3,8 @@ var miniSurvey ={
 	serviceURL: $("input[name=miniSurveyServices]").val() + '?block=form&',
 	init: function(){ 
 			this.tabSetup();
-			this.answerTypes=document.forms['ccm-block-form'].answerType;
-			this.answerTypesEdit=document.forms['ccm-block-form'].answerTypeEdit; 
 
+			/*			
 			for(var i=0;i<this.answerTypes.length;i++){
 				this.answerTypes[i].onclick=function(){miniSurvey.optionsCheck(this);miniSurvey.settingsCheck(this);}
 				this.answerTypes[i].onchange=function(){miniSurvey.optionsCheck(this);miniSurvey.settingsCheck(this);}
@@ -14,6 +13,18 @@ var miniSurvey ={
 				this.answerTypesEdit[i].onclick=function(){miniSurvey.optionsCheck(this,'Edit');miniSurvey.settingsCheck(this,'Edit');}
 				this.answerTypesEdit[i].onchange=function(){miniSurvey.optionsCheck(this,'Edit');miniSurvey.settingsCheck(this,'Edit');}
 			} 			
+			*/
+			
+			$("#answerType").change(function(r) {
+				miniSurvey.optionsCheck($('#answerType').get(0));
+				miniSurvey.settingsCheck($('#answerType').get(0));
+			});
+
+			$("#answerTypeEdit").change(function(r) {
+				miniSurvey.optionsCheck($('#answerTypeEdit').get(0), 'Edit');
+				miniSurvey.settingsCheck($('#answerTypeEdit').get(0), 'Edit');
+			});
+
 			$('#refreshButton').click( function(){ miniSurvey.refreshSurvey(); return false; } );
 			$('#addQuestion').click(   function(){ miniSurvey.addQuestion(); return false; } );
 			$('#editQuestion').click(  function(){ miniSurvey.addQuestion('Edit')   } );
@@ -71,14 +82,8 @@ var miniSurvey ={
 			postStr+='&required='+req;
 			postStr+='&position='+escape($('#position'+mode).val());
 			var form=document.getElementById('ccm-block-form'); 
-			var opts=form['answerType'+mode];
-			var answerType='';
-			for(var i=0;i<opts.length;i++){
-				if(opts[i].checked){
-					answerType=opts[i].value;
-					break;
-				}
-			} 
+			var formID = '#answerType'+mode;
+			answerType = $(formID).val();
 			postStr+='&inputType='+answerType;//$('input[name=answerType'+mode+']:checked').val()
 			postStr+='&msqID='+msqID+'&qsID='+parseInt(this.qsID);			
 			$.ajax({ 
@@ -150,13 +155,10 @@ var miniSurvey ={
 						} 
 						
 						$('#msqID').val(jsonObj.msqID);    
-						for(var i=0;i<miniSurvey.answerTypesEdit.length;i++){							
-							if(miniSurvey.answerTypesEdit[i].value==jsonObj.inputType){
-								miniSurvey.answerTypesEdit[i].checked=true; 
-								miniSurvey.optionsCheck(miniSurvey.answerTypesEdit[i],'Edit');
-								miniSurvey.settingsCheck(miniSurvey.answerTypesEdit[i],'Edit');
-							}
-						}
+						$('#answerTypeEdit').val(jsonObj.inputType);
+						miniSurvey.optionsCheck($('#answerTypeEdit').get(0), 'Edit');
+						miniSurvey.settingsCheck($('#answerTypeEdit').get(0), 'Edit');
+						
 						if(parseInt(jsonObj.bID)>0) 
 							miniSurvey.edit_qID = parseInt(qID) ;
 						scroll(0,165);
@@ -190,9 +192,7 @@ var miniSurvey ={
 			$('#width').val('50');
 			$('#height').val('3');
 			$('#msqID').val('');
-			for(var i=0;i<this.answerTypes.length;i++){
-				this.answerTypes[i].checked=false;
-			}
+			$('#answerType').val('field').change();
 			$('#answerOptionsArea').hide();
 			$('#answerSettings').hide();
 			$('#required input').prop('checked', false);

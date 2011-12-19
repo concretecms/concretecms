@@ -44,6 +44,7 @@ $al = Loader::helper('concrete/asset_library');
 <tr>
 <td><?=t('Width')?>&nbsp;</td>
 <td><?= $form->text('maxWidth', array('style' => 'width: 60px')); ?></td>
+<td><div style="width: 30px"></div></td>
 <td><?=t('Height')?>&nbsp;</td>
 <td><?= $form->text('maxHeight', array('style' => 'width: 60px')); ?></td>
 </tr>
