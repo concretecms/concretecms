@@ -96,8 +96,7 @@ $ih = Loader::helper('concrete/interface');
     <div class="ccm-pane-footer">
     	<? print $ih->button(t('Return to Themes'), $this->url('/dashboard/pages/themes'), 'left'); ?>
         <? print $ih->button_js(t('Save'), 'saveCustomizedTheme()', 'right', 'primary'); ?>
-        <? print $ih->button_js(t('Reset'), 'resetCustomizedTheme()', 'right', 'error'); ?>
-        <? print $ih->button_js(t("Fullscreen View"), "ccm_previewInternalTheme(1, " . intval($t->getThemeID()) . ",'" . addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) . "')", 'right'); ?>
+        <? print $ih->button_js(t('Reset'), 'resetCustomizedTheme()', 'right'); ?>
     </div>
 
     </form>
@@ -109,7 +108,7 @@ $ih = Loader::helper('concrete/interface');
     // Only include JS if editable styles found.
     
     $ok = t('Ok');
-    $resetMsg = t('This will remove any theme customizations you have made.');
+    $resetMsg = t('Reset styles in this theme?');
     
     ?>
     
