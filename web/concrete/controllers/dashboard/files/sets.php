@@ -37,15 +37,6 @@ class DashboardFilesSetsController extends Controller {
 		$this->view();
 	}
 	
-	public function save_sort_order() {
-		Loader::model('file_set');
-		parse_str($this->post('fsDisplayOrder'));
-		$fsID = $this->post('fsID');
-		$fs = FileSet::getByID($this->post('fsID'));
-		$fs->updateFileSetDisplayOrder($fID);
-		$this->redirect('/dashboard/files/sets', 'view_detail', $fsID, 'file_set_order_saved');
-	}
-	
 	public function delete($fsID, $token = '') {
 
 		$u=new User();
@@ -68,11 +59,6 @@ class DashboardFilesSetsController extends Controller {
 		$ph = Loader::controller('/dashboard/system/permissions/files');
 		$this->set('ph', $ph);		
 		$this->set('fs', $fs);		
-		switch($action) {
-			case 'file_set_order_saved':
-				$this->set('message', t('File set order updated.'));
-				break;
-		}
 		$this->view();		
 	}		
 	
@@ -90,12 +76,15 @@ class DashboardFilesSetsController extends Controller {
 			$this->set('error', array(t('Invalid ID')));
 			$this->view();			
 		}
-		
+
 		$file_set = new FileSet();
 		$file_set->Load('fsID = ?', $this->post('fsID'));		
 		$file_set->fsName = $this->post('file_set_name');
 		$file_set->fsOverrideGlobalPermissions = ($this->post('fsOverrideGlobalPermissions') == 1) ? 1 : 0;
 		$file_set->save();
+
+		parse_str($this->post('fsDisplayOrder'));
+		$file_set->updateFileSetDisplayOrder($fID);
 		
 		$file_set->resetPermissions();		
 		if ($file_set->fsOverrideGlobalPermissions == 1) {
