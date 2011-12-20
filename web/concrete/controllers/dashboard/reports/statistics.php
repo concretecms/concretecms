@@ -63,5 +63,9 @@ class DashboardReportsStatisticsController extends DashboardBaseController {
 		$this->setLatestPagesCreated();
 		$this->setLatestRegistrations();
 		$this->setDownloadStatistics();
+		
+		$this->set('totalVersions', PageStatistics::getTotalPageVersions());
+		$this->set('totalEditMode', PageStatistics::getTotalPagesCheckedOut());
+
 	}
 }

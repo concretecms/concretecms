@@ -283,17 +283,24 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 	
 	
 			<? } ?>
+		
+		<?
+		if (is_object($mi) && $mi->isConnected()) { ?>
 
-	<? /* 
-	<div class="well" style="padding:10px 20px;">
-        <h3><?=t('Extend Your Site')?></h3>
-        <p><?=t('You can download themes and add-ons from the concrete5 marketplace.')?></p>
-        <p><a class="btn success " href="<?=$this->url('/dashboard/extend/themes')?>"><?=t("Get More Themes")?></a>
-        <a class="btn success" href="<?=$this->url('/dashboard/extend/add-ons')?>"><?=t("Get More Add-Ons")?></a>
-        </p>
-    </div>
-    */ ?>
+			<h3><?=t("Project Page")?></h3>
+			<p><?=t('Your site is currently connected to the concrete5 community. Your project page URL is:')?><br/>
+			<a href="<?=$mi->getSitePageURL()?>"><?=$mi->getSitePageURL()?></a></p>
 
-		<? } ?>		
+		<? } else if ($tp->canInstallPackages() && ENABLE_MARKETPLACE_SUPPORT == true) { ?>
+
+			<div class="well" style="padding:10px 20px;">
+				<h3><?=t('Connect to Community')?></h3>
+				<p><?=t('Your site is not connected to the concrete5 community. Connecting lets you easily extend a site with themes and add-ons.')?></p>
+				<p><a class="btn success" href="<?=$this->url('/dashboard/extend/connect', 'register_step1')?>"><?=t("Connect to Community")?></a></p>
+			</div>
+		
+		<? } ?>
 	<? } ?>
-<? } ?>
+<? } 
+
+} ?>
