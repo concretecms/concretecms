@@ -161,9 +161,9 @@ class ConcreteInterfaceHelper {
 			if (!$nf) {
 				return true;
 			}
-	//		if (time() - $nf > NEWSFLOW_VIEWED_THRESHOLD) {
+			if (time() - $nf > NEWSFLOW_VIEWED_THRESHOLD) {
 				return true;
-	//		}
+			}
 		}
 		return false;
 	}
