@@ -98,13 +98,19 @@ ccm_showNewsflowOverlayWindow = function(url, callback) {
 		}
 
 		ccm_setNewsflowOverlayDimensions();
-		$ovl.find('.newsflow-em1').each(function() {
-			$(this).parent().addClass('newsflow-em1');
-		});
+		ccm_setupTrickleUpNewsflowStyles();
+		
 		$ovl.fadeIn('300', 'easeOutExpo', function() {
 			ccm_setNewsflowPagingArrowHeight();
 		});
 
+	});
+}
+
+ccm_setupTrickleUpNewsflowStyles = function() {
+	ovl = ccm_getNewsflowOverlayWindow();	
+	ovl.find('.newsflow-em1').each(function() {
+		$(this).parent().addClass('newsflow-em1');
 	});
 }
 
