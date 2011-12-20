@@ -4450,7 +4450,7 @@ ccm_setNewsflowOverlayDimensions = function() {
 }
 
 ccm_getNewsflowOverlayWindow = function() {
-	if ($('#ccm-dashboard-content').length > 0) {
+	if ($('#ccm-dashboard-content').length > 0 && $('#newsflow-main').length > 0) {
 		var $ovl = $("#newsflow-main");
 	} else {
 		// Ok. we're going to use #newsflow-overlay but we don't know if it's been added to the page yet
@@ -4497,6 +4497,9 @@ ccm_showNewsflowOverlayWindow = function(url, callback) {
 		}
 
 		ccm_setNewsflowOverlayDimensions();
+		$ovl.find('.newsflow-em1').each(function() {
+			$(this).parent().addClass('newsflow-em1');
+		});
 		$ovl.fadeIn('300', 'easeOutExpo', function() {
 			ccm_setNewsflowPagingArrowHeight();
 		});
