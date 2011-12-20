@@ -62,20 +62,19 @@
 			$db = Loader::db();
 			$cID = $this->cID;
 			$cvID = $this->cvID;
-			// I don't understand why we are doing this. This seems needless and a huge bottleneck
 			/*
 			$cvIDs = $db->GetCol("select cvID from CollectionVersions where cID = ?", $this->cID);
 			foreach($cvIDs as $cvID) {
 				Cache::delete('page', $cID . ':' . $cvID);
 				Cache::delete('collection_blocks', $cID . ':' . $cvID);
-			}
-			*/
+			}*/
 			
 			Cache::delete('page', $cID . ':' . $cvID);
-			if ($this->ctHandle == STACKS_PAGE_TYPE) {
-				Cache::delete('stack', $cID . ':' . $cvID);
-			}
+			// I know this is very unnecessary because most pages aren't stacks, but this is the cleanest way to make this happen
+			// We will redo this so that you don't even need to cache data about pages that aren't the most recent or the active page, because how much data do you really need besides that?
+			Cache::delete('stack', $cID . ':' . $cvID); 			
 			Cache::delete('collection_blocks', $cID . ':' . $cvID);
+			
 		}
 		
 		public function get(&$c, $cvID) {
@@ -101,8 +100,7 @@
 			Loader::model('attribute/categories/collection');			
 			$cv->attributes = CollectionAttributeKey::getAttributes($c->getCollectionID(), $cvID);
 			
-			$cv->cID = $c->getCollectionID();		
-			$cv->ctHandle = $c->getCollectionTypeHandle(); // we need this for stacks. I don't want to cart around an entire collection object
+			$cv->cID = $c->getCollectionID();			
 			$cv->cvIsMostRecent = $cv->_checkRecent();
 			
 			$r = $db->GetAll('select csrID, arHandle from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($c->getCollectionID(), $cvID));

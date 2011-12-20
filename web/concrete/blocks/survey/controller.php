@@ -105,7 +105,13 @@ class SurveyBlockController extends BlockController {
 		$u = new User();
 		$db = Loader::db();
 		$bo = $this->getBlockObject();
-		$c = $this->getCollectionObject();
+		if ($this->post('rcID')) { 
+			// we pass the rcID through the form so we can deal with stacks
+			$c = Page::getByID($this->post('rcID'));
+		} else { 
+			$c = $this->getCollectionObject();
+		}
+		
 		if ($this->requiresRegistration()) {
 			if (!$u->isRegistered()) {
 				$this->redirect('/login');

@@ -70,6 +70,8 @@ if ($controller->hasVoted()) { ?>
 	
 	<? if(!$controller->requiresRegistration() || intval($uID) > 0) { ?>
 	<form method="post" action="<?=$this->action('form_save_vote', '#survey-form-'.$controller->bID)?>">
+	<? $c = Page::getCurrentPage(); ?>
+	<input type="hidden" name="rcID" value="<?=$c->getCollectionID()?>" />
 	<? } ?>
 	
 	<?	
