@@ -182,7 +182,6 @@ class ConcreteDashboardHelper {
 
 	public function getDashboardAndSearchMenus() {
 		if (isset($_SESSION['dashboardMenus'])) {
-			
 			return $_SESSION['dashboardMenus'];
 		}
 		
@@ -196,23 +195,20 @@ class ConcreteDashboardHelper {
 			$corepages = array();
 			foreach($children as $ch) {
 				$page = Page::getByID($ch);
-				if (!$page->getAttribute("exclude_nav")) {
-					if ($page->getPackageID() > 0) {
-						$packagepages[] = $page;
-					} else {
-						$corepages[] = $page;
+				$pageP = new Permissions($page);
+				if ($pageP->canRead()) { 
+					if (!$page->getAttribute("exclude_nav")) {
+						if ($page->getPackageID() > 0) {
+							$packagepages[] = $page;
+						} else {
+							$corepages[] = $page;
+						}
 					}
 				}
 			
 				if ($page->getAttribute('exclude_search_index')) {
 					continue;
 				}
-				
-				$pageP = new Permissions($page);
-				if (!$pageP->canRead()) {
-					continue;
-				}
-				
 				
 				if ($page->getCollectionPath() == '/dashboard/system') {
 					$ch2 = $page->getCollectionChildrenArray();
