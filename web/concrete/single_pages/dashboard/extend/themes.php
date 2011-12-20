@@ -89,7 +89,7 @@ if ($tp->canInstallPackages()) {
 		$pagination = $list->getPagination();
 		?>
 	
-		<table class="ccm-marketplace-results">
+		<table class="newsflow-layout ccm-marketplace-results">
 			<tr>
 			<?php 
 			$numCols=3;

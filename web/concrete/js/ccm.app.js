@@ -4412,8 +4412,9 @@ ccm_setNewsflowPagingArrowHeight = function() {
 	if ($("#ccm-marketplace-detail").length > 0) {
 		var $ovl = $("#ccm-marketplace-detail");
 	} else { 
-		var $ovl = ccm_getNewsflowOverlayWindow();
+		var $ovl = $("#newsflow-main");
 	}
+	
 	var h = $ovl.height();
 	$(".newsflow-paging-previous a, .newsflow-paging-next a").css('height', h + 'px');
 	$(".newsflow-paging-previous, .newsflow-paging-next").css('height', h + 'px');
@@ -4450,8 +4451,8 @@ ccm_setNewsflowOverlayDimensions = function() {
 }
 
 ccm_getNewsflowOverlayWindow = function() {
-	if ($('#ccm-dashboard-content').length > 0 && $('#newsflow-main').length > 0) {
-		var $ovl = $("#newsflow-main");
+	if ($('#ccm-dashboard-content').length > 0 && $("#newsflow-main").length > 0 && $("#newsflow-overlay").length == 0) {
+		var $ovl = $("#newsflow-main").parent();
 	} else {
 		// Ok. we're going to use #newsflow-overlay but we don't know if it's been added to the page yet
 		if ($("#newsflow-overlay").length > 0) {
@@ -4466,7 +4467,9 @@ ccm_getNewsflowOverlayWindow = function() {
 ccm_showNewsflowOverlayWindow = function(url, callback) {
 	
 	// if we're NOT showing newsflow on a dashboard page, we load an overlay
-	if ($('#ccm-dashboard-content').length == 0) { 
+	if ($('#ccm-dashboard-content').length > 0 && $("#newsflow-main").length > 0) {
+	
+	} else {
 		if ($('.ui-widget-overlay').length < 1) {
 			var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
 		}
