@@ -665,9 +665,9 @@ div.newsflow table.newsflow-layout tr:first-child td:last-child{-webkit-border-r
 div.newsflow table.newsflow-layout tr:first-child td:only-child{-webkit-border-radius:6px 6px 0 0;-moz-border-radius:6px 6px 0 0;border-radius:6px 6px 0 0;}
 div.newsflow table.newsflow-layout tr:last-child td:only-child{-webkit-border-radius:0 0 6px 6px;-moz-border-radius:0 0 6px 6px;border-radius:0 0 6px 6px;}
 div.newsflow table.newsflow-layout{margin-bottom:0px;height:592px;border:0px !important;}
-div.newsflow td.newsflow-em1{height:1px;background-color:#f1f1f1;}
-div.newsflow td.newsflow-column-quarter{height:100%;width:25%;}
-div.newsflow td.newsflow-em1 hr{border-bottom-color:#d1d1d1;}
+div.newsflow table.newsflow-layout td.newsflow-em1{height:1px;background-color:#f1f1f1;}
+div.newsflow table.newsflow-layout td.newsflow-column-quarter{height:100%;width:25%;}
+div.newsflow table.newsflow-layout td.newsflow-em1 hr{border-bottom-color:#d1d1d1;}
 div#newsflow-overlay{display:none;position:absolute;z-index:95;}
 div#newsflow-overlay div.row{margin-left:0px;}
 div.newsflow .ccm-pane-header-icons li{margin-left:2px;position:relative;z-index:300;}
