@@ -6,7 +6,7 @@ $this->inc('elements/header.php', array('enableEditing' => true));
 <div class="ccm-ui">
 <div class="newsflow" id="newsflow-main">
 <? $this->inc('elements/header_newsflow.php'); ?>
-<table>
+<table class="newsflow-layout">
 <tr>
 	<td class="newsflow-em1" colspan="4"><? $a = new Area('Header'); $a->display($c); ?></td>
 </tr>
