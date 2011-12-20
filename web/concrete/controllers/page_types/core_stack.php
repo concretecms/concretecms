@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 Loader::controller('/dashboard/base');
 class CoreStackPageTypeController extends Controller {
 
+	public $theme = 'dashboard';
 	
 	public function on_start() {
 		$c = Page::getByPath('/dashboard/blocks/stacks');
