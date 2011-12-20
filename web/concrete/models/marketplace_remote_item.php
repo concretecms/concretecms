@@ -215,6 +215,10 @@ class MarketplaceRemoteItemList extends ItemList {
 	public function filterByKeywords($keywords) {
 		$this->params['keywords'] = $keywords;
 	}
+
+	public function filterByMarketplaceItemID($mpID) {
+		$this->params['mpID'] = $mpID;
+	}
 	
 	public function sortBy($sortBy) {
 		$this->params['sort'] = $sortBy;

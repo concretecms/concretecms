@@ -4639,11 +4639,11 @@ String.prototype.score = function(abbreviation,offset) {
   }
   return 0.0
 }
-ccm_marketplaceLauncherOpenPost = function() {
+ccm_marketplaceLauncherOpenPost = function(mpID) {
 
 	jQuery.fn.dialog.hideLoader();
 	// highlight the first addon
-	ccm_marketplaceBrowserInit();
+	ccm_marketplaceBrowserInit(mpID);
 	$(".ccm-pagination a").click(function() {
 		jQuery.fn.dialog.showLoader(false);
 		$('#newsflow-overlay').load($(this).attr('href'), function() {
@@ -4712,7 +4712,7 @@ ccm_openAddonLauncher = function(mpID, closeTop) {
 			jQuery.fn.dialog.closeTop();
 			
 			ccm_showNewsflowOverlayWindow(CCM_DISPATCHER_FILENAME + '/dashboard/extend/add-ons?_ccm_dashboard_external=1' + mpIDstr, function() {
-				ccm_marketplaceLauncherOpenPost();
+				ccm_marketplaceLauncherOpenPost(mpID);
 			});
 		} else {
 			$.fn.dialog.open({
