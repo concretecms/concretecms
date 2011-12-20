@@ -208,6 +208,11 @@ class ConcreteDashboardHelper {
 					continue;
 				}
 				
+				$pageP = new Permissions($page);
+				if (!$pageP->canRead()) {
+					continue;
+				}
+				
 				
 				if ($page->getCollectionPath() == '/dashboard/system') {
 					$ch2 = $page->getCollectionChildrenArray();
@@ -234,6 +239,11 @@ class ConcreteDashboardHelper {
 				
 				foreach($ch2 as $chi) {
 					$subpage = Page::getByID($chi); 
+					$subpageP = new Permissions($subpage);
+					if (!$subpageP->canRead()) {
+						continue;
+					}
+
 					if ($subpage->getAttribute('exclude_search_index')) {
 						continue;
 					}
@@ -289,6 +299,7 @@ class ConcreteDashboardHelper {
 			<?php
 			
 			foreach($corepages as $page) {
+
 				?>
 				
 				<div class="ccm-dashboard-overlay-module">
@@ -302,6 +313,11 @@ class ConcreteDashboardHelper {
 				$ch2 = $page->getCollectionChildrenArray(true);
 				foreach($ch2 as $chi) {
 					$subpage = Page::getByID($chi); 
+					$subpageP = new Permissions($subpage);
+					if (!$subpageP->canRead()) {
+						continue;
+					}
+
 					if ($subpage->getAttribute('exclude_nav')) {
 						continue;
 					}
