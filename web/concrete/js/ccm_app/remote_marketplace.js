@@ -85,7 +85,7 @@ ccm_openAddonLauncher = function(mpID, closeTop) {
 	});
 }
 
-ccm_marketplaceBrowserInit = function(mpID, autoSelect) {
+ccm_marketplaceBrowserInit = function() {
 	$(".ccm-marketplace-item").click(function() {
 		window.scrollTo(0,0);
 		/*

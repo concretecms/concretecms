@@ -22,7 +22,7 @@ if ($tp->canInstallPackages()) {
 	<div class="ccm-pane" id="ccm-marketplace-item-browser">
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Browse Themes'), t('Get more themes from concrete5.org.'));?>
 <? } ?>
-<div class="ccm-pane-body <? if ($_REQUEST['mpID']) { ?> ccm-pane-body-footer <? } ?>" id="ccm-marketplace-detail">
+<div class="ccm-pane-body" id="ccm-marketplace-detail">
 <div id="ccm-marketplace-detail-inner"></div>
 <? if ($list->getTotal() > 0) { ?>
 <p class="ccm-marketplace-detail-loading"><?=t('Loading Details')?></p>
@@ -30,16 +30,15 @@ if ($tp->canInstallPackages()) {
 	<p><?=t('No results found.')?></p>
 <? } ?>
 
-<? if (!$_REQUEST['mpID']) { ?>
-<div class="newsflow-paging-previous"><a href="javascript:void(0)" onclick="ccm_marketplaceBrowserSelectPrevious()"><span></span></a></div>
-<div class="newsflow-paging-next"><a href="javascript:void(0)" onclick="ccm_marketplaceBrowserSelectNext()"><span></span></a></div>
-<? } ?>
 
+<? if ($pagination->hasPreviousPage()) { ?>
+	<div class="newsflow-paging-previous"><a href="javascript:void(0)" onclick="ccm_marketplaceBrowserSelectPrevious()"><span></span></a></div>
+<? } ?>
+<? if ($pagination->hasNextPage()) { ?>
+	<div class="newsflow-paging-next"><a href="javascript:void(0)" onclick="ccm_marketplaceBrowserSelectNext()"><span></span></a></div>
+<? } ?>
 </div>
 
-<? if (!$_REQUEST['mpID']) { ?>
-
-<? if ($tp->canInstallPackages() && $mi->isConnected()) { ?>
 <div class="ccm-pane-options">
 <div class="ccm-pane-options-permanent-search">
 <form id="ccm-marketplace-browser-form" method="get" action="<?=$this->url('/dashboard/extend/themes')?>">
@@ -71,25 +70,10 @@ if ($tp->canInstallPackages()) {
 </form>	
 </div>
 </div>
-<? } ?>
 
-<div class="ccm-pane-body <? if (!$tp->canInstallPackages() || !$mi->isConnected()) { ?> ccm-pane-body-footer<? } ?>">
-	<? if (!$tp->canInstallPackages()) { ?>
-		<div class="ccm-pane-body-inner">
-		<div class="alert-message block-message error">
-			<p><?=t('You do not have access to download themes or add-ons from the marketplace.')?></p>
-		</div>
-		</div>
-	<? } else if (!$mi->isConnected()) { ?>
-		<div class="ccm-pane-body-inner">
-		<? Loader::element('dashboard/marketplace_connect_failed')?>
-		</div>
-	<? } else {
-
-		$pagination = $list->getPagination();
-		?>
+<div class="ccm-pane-body">
 	
-		<table class="newsflow-layout ccm-marketplace-results">
+		<table class="ccm-marketplace-results">
 			<tr>
 			<?php 
 			$numCols=3;
@@ -120,21 +104,16 @@ if ($tp->canInstallPackages()) {
 			?>
 			</tr>
 		</table>
-	<? } ?>
 </div>
 
-<? if ($tp->canInstallPackages() && $mi->isConnected()) { ?>
-	<? $url = Loader::helper('url')->unsetVariable('prev'); ?>
-	<div class="ccm-pane-footer" id="ccm-marketplace-browse-footer"><?=$list->displayPagingV2($url)?></div>
-<? } ?>
-
-<? } ?>
-
+<? $url = Loader::helper('url')->unsetVariable('prev'); ?>
+<div class="ccm-pane-footer" id="ccm-marketplace-browse-footer"><?=$list->displayPagingV2($url)?></div>
 
 </div>
 
 </div>
 </div>
+
 <? if (!$_REQUEST['_ccm_dashboard_external']) { ?>
 <script type="text/javascript">
 $(function() {

@@ -40,7 +40,10 @@ class DashboardExtendAddOnsController extends Controller {
 			if (isset($_REQUEST['marketplaceRemoteItemSetID'])) {
 				$set = $_REQUEST['marketplaceRemoteItemSetID'];
 			}
-
+			
+			if (isset($_REQUEST['mpID'])) {
+				$mri->filterByMarketplaceItemID($_REQUEST['mpID']);
+			}
 			
 			if (isset($_REQUEST['marketplaceRemoteItemSortBy'])) {
 				$this->set('selectedSort', Loader::helper('text')->entities($_REQUEST['marketplaceRemoteItemSortBy']));
@@ -75,6 +78,7 @@ class DashboardExtendAddOnsController extends Controller {
 			$this->set('items', $items);
 			$this->set('form', Loader::helper('form'));
 			$this->set('sets', $setsel);
+			$this->set('pagination', $mri->getPagination());
 			$this->set('type', $what);
 		} else {
 			$this->redirect('/dashboard/extend/connect');
