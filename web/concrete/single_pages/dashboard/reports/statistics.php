@@ -85,6 +85,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </tr>
 </table>
 
+<br/>
+
+<p><?php echo t('Total page versions')?>: <strong><?php echo $totalVersions?></strong></p>
+<p><?php echo t('Total pages in edit mode')?>: <strong><?php echo $totalEditMode?></strong></p>
+
 
 </div>
 
