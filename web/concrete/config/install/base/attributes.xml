@@ -88,14 +88,6 @@
         <attributekey handle="exclude_sitemapxml" name="Exclude From sitemap.xml" package="" searchable="1" indexed="1" type="boolean" category="collection">
             <type checked=""/>
         </attributekey>
-        <attributekey handle="tags" name="Tags" package="" searchable="0" indexed="0" type="select" category="collection">
-            <type allow-multiple-values="1" display-order="display_asc" allow-other-values="1">
-                <options>
-                    <option value="sample" is-end-user-added="1"/>
-                    <option value="Hello World" is-end-user-added="1"/>
-                </options>
-            </type>
-        </attributekey>
         <attributekey handle="profile_private_messages_enabled" name="I would like to receive private messages." package="" searchable="1" indexed="1" type="boolean" category="user" profile-displayed="0" profile-editable="1" profile-required="0" register-editable="1" register-required="0" member-list-displayed="0">
             <type checked="1"/>
         </attributekey>

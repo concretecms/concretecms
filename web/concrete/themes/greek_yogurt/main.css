@@ -1,0 +1,77 @@
+/* Greek Yogurt theme by concrete5 */
+
+/* some general styles */
+html {
+	height: auto;
+}
+
+/* main styles */
+
+div#main-container {
+	margin-top: 0;
+	margin-bottom: 0;
+	box-shadow: 2px 0 8px 0 #b2b9c1;
+}
+
+div#main-container #header-image {
+	/* text-align: center; */
+	min-height: 12px;
+	/* padding-bottom: 20px; */
+}
+
+div#main-content-container {
+}
+
+div#main-content-inner {
+	margin: 20px 40px 60px 40px;
+}
+
+/* right-sidebar */
+
+div#right-sidebar-container {
+}
+
+div#right-sidebar-inner {
+	margin: 20px 40px 60px 0;
+}
+
+/* left-sidebar */
+
+div#left-sidebar-container {
+}
+
+div#left-sidebar-inner {
+	margin: 20px 0 60px 40px;
+}
+
+.ccm-tags-display ul.ccm-tag-list li a {color: #000 !important;}
+
+div#left-sidebar-inner .ccm-tags-display ul.ccm-tag-list li {
+	display: inline;
+	color: #fff;
+	padding: 5px 8px 6px 8px;
+	margin: 3px 6px 3px 0;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	float: left;
+	line-height: 13px;
+	height: 13px;
+}
+
+/* footer */
+
+/*
+
+div#main-container #footer {
+	background: #a0dbe3;
+	width: 960px;
+	min-height: 150px;
+}
+
+*/
+
+div#main-container #footer #footer-inner {
+	padding-top: 44px;	
+	margin-left: 30px;
+	margin-right: 30px;
+}
