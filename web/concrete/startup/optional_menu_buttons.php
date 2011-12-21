@@ -3,7 +3,7 @@
 	$u = new User();
 	if ($u->isRegistered()) {
 		$ihm = Loader::helper('concrete/interface/menu');
-		
+		/*
 		$ihm->addPageHeaderMenuItem('sitemap', t('Sitemap'), 'right', array(
 			'dialog-title' => t('Navigate to Page'),
 			'href' => REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector?callback=ccm_goToSitemapNode&sitemap_select_mode=select_page',
@@ -21,5 +21,6 @@
 			'dialog-height' => "70%",
 			'dialog-modal' => "false"
 		));
+		*/
 	
 	}
