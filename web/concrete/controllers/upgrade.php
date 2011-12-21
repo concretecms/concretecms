@@ -47,9 +47,9 @@ class UpgradeController extends Controller {
 			} else {
 				if ($this->post('do_upgrade')) {
 					$this->do_upgrade();
-				} elseif(version_compare($sav, '5.3.2', '<')) {
+				} elseif(version_compare($sav, '5.4.2.2', '<')) {
 					$this->set('hide_force',true);
-					$this->set('message',t('You must first upgrade your site to version 5.3.2'));
+					$this->set('message',t('You must first upgrade your site to version 5.4.2.2'));
 				} else {
 					// do the upgrade
 					$this->set_upgrades();
