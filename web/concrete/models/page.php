@@ -1479,6 +1479,7 @@ class Page extends Collection {
 		if (!$this->isActive()) {
 			$this->activate();
 		}
+		$this->rescanSystemPageStatus();
 		// run any event we have for page move. Arguments are
 		// 1. current page being moved
 		// 2. former parent
@@ -1744,6 +1745,7 @@ class Page extends Collection {
 		$trash = Page::getByPath(TRASH_PAGE_PATH);
 		$this->move($trash);
 		$this->deactivate();
+		$this->clearPendingAction();
 	}
 
 	function rescanChildrenDisplayOrder() {
@@ -1880,19 +1882,27 @@ class Page extends Collection {
 			
 			if ($res3) {
 				$np = Page::getByID($cID, $row['cvID']);
-				// now we mark the page as a system page based on this path:
-				$systemPages=array('/login', '/register', '/!trash', '/!stacks', '/!drafts', '/!trash/*', '/!stacks/*', '/!drafts/*', '/download_file', '/profile', '/dashboard', '/profile/*', '/dashboard/*','/page_forbidden','/page_not_found','/members'); 
-				$th = Loader::helper('text');
-				foreach($systemPages as $sp) {
-					if ($th->fnmatch($sp, $newPath)) {
-						$db->Execute('update Pages set cIsSystemPage = 1 where cID = ?', array($cID));
-					}
-				}				
+				$np->rescanSystemPageStatus();
 				$np->refreshCache();
 				return $newPath;
 			}
 		}
 		$r->free();
+	}
+	
+	public function rescanSystemPageStatus() {
+		$cID = $this->getCollectionID();
+		$db = Loader::db();
+		$newPath = $db->GetOne('select cPath from PagePaths where cID = ? and ppIsCanonical = 1', array($cID));
+		// now we mark the page as a system page based on this path:
+		$systemPages=array('/login', '/register', '/!trash', '/!stacks', '/!drafts', '/!trash/*', '/!stacks/*', '/!drafts/*', '/download_file', '/profile', '/dashboard', '/profile/*', '/dashboard/*','/page_forbidden','/page_not_found','/members'); 
+		$th = Loader::helper('text');
+		$db->Execute('update Pages set cIsSystemPage = 0 where cID = ?', array($cID));
+		foreach($systemPages as $sp) {
+			if ($th->fnmatch($sp, $newPath)) {
+				$db->Execute('update Pages set cIsSystemPage = 1 where cID = ?', array($cID));
+			}
+		}				
 	}
 	
 	public function isInTrash() {

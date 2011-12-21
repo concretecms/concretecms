@@ -41,7 +41,7 @@
 		<div id="header-image">
 		
 			<?php 
-			$a = new Area('Header');
+			$a = new Area('Header Image');
 			$a->display($c);
 			?>
 		

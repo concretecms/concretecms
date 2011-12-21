@@ -100,7 +100,7 @@ class SearchBlockController extends BlockController {
 		$this->set('resultTargetURL', $resultTargetURL);
 
 		//run query if display results elsewhere not set, or the cID of this page is set
-		if( !empty($_REQUEST['query']) || isset($_REQUEST['akID']))  { 
+		if( !empty($_REQUEST['query']) || isset($_REQUEST['akID']) || isset($_REQUEST['month']))  { 
 			$this->do_search();
 		}						
 	}
@@ -130,6 +130,7 @@ class SearchBlockController extends BlockController {
 		Loader::library('database_indexed_search');
 		$ipl = new IndexedPageList();
 		$aksearch = false;
+		$ipl->ignoreAliases();
 		if (is_array($_REQUEST['akID'])) {
 			Loader::model('attribute/categories/collection');
 			foreach($_REQUEST['akID'] as $akID => $req) {
@@ -143,6 +144,14 @@ class SearchBlockController extends BlockController {
 				}
 			}
 		}
+
+		if (isset($_REQUEST['month']) && isset($_REQUEST['year'])) {
+			$month = strtotime($_REQUEST['year'] . '-' . $_REQUEST['month'] . '-01');
+			$month = date('Y-m-', $month);
+			$ipl->filterByPublicDate($month . '%', 'like');
+			$aksearch = true;
+		}
+		
 		
 		if (empty($_REQUEST['query']) && $aksearch == false) {
 			return false;		
@@ -153,13 +162,16 @@ class SearchBlockController extends BlockController {
 			$ipl->filterByKeywords($_q);
 		}
 		
-		if( is_array($_REQUEST['search_paths']) ){ 
-			
+		if( is_array($_REQUEST['search_paths']) ){ 			
 			foreach($_REQUEST['search_paths'] as $path) {
 				if(!strlen($path)) continue;
 				$ipl->filterByPath($path);
 			}
+		} else if ($this->baseSearchPath != '') {
+			$ipl->filterByPath($this->baseSearchPath);
 		}
+		
+		$ipl->filter(false, '(ak_exclude_search_index = 0 or ak_exclude_search_index is null)');
 
 		$res = $ipl->getPage(); 
 		

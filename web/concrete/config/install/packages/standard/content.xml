@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
-<concrete5-cif>
-
+<concrete5-cif version="1.0">
+    <blocktypes>
+        <blocktype handle="date_archive" package=""/>
+    </blocktypes>
     <attributekeys>
         <attributekey handle="tags" name="Tags" package="" searchable="1" indexed="1" type="select" category="collection">
             <type allow-multiple-values="1" display-order="display_asc" allow-other-values="1">
                 <options>
-                    <option value="concrete5" is-end-user-added="1"/>
                     <option value="composer" is-end-user-added="1"/>
                     <option value="hello" is-end-user-added="1"/>
                     <option value="world" is-end-user-added="1"/>
@@ -21,18 +22,19 @@
         <pagetype handle="blog_entry" name="Blog Entry" internal="0" icon="template1.png" package="">
             <composer method="PARENT" pagetype="" parent="{ccm:export:page:/blog}">
                 <items>
-                    <block type="image" name="Header Image"/>
-                    <block type="image" name="Thumbnail Image"/>
+                    <block type="image" name="Header Image" composer-template="header.php"/>
+                    <block type="image" name="Thumbnail Image" composer-template="thumbnail.php"/>
                     <block type="content" name="Blog Content"/>
                     <attributekey handle="tags"/>
                 </items>
             </composer>
-            <page name="" filename="" pagetype="blog_entry" description="" package="">
+            <page name="" path="" filename="" pagetype="blog_entry" description="" package="">
                 <attributes>
                     <attributekey handle="tags"/>
                 </attributes>
+                <area name="Blog Post Header"/>
                 <area name="Main">
-                    <block type="content" name="Blog Content" mc-block-id="YAqqFb36">
+                    <block type="content" name="Blog Content" mc-block-id="0yueptBw">
                         <data table="btContentLocal">
                             <record>
                                 <content><![CDATA[<p>This is my first blog post.</p>]]></content>
@@ -40,23 +42,28 @@
                         </data>
                     </block>
                 </area>
+                <area name="Blog Post More"/>
+                <area name="Blog Post Footer"/>
+                <area name="FeaturedImage"/>
                 <area name="Sidebar">
-                    <block type="tags" name="" mc-block-id="aZtke8KR">
+                    <block type="tags" name="" mc-block-id="wG4zxttW">
                         <data table="btTags">
                             <record>
                                 <title><![CDATA[Tags]]></title>
-                                <targetCID>{ccm:export:page:/search}</targetCID>
+                                <targetCID>{ccm:export:page:/blog/blog-archives}</targetCID>
                                 <displayMode><![CDATA[page]]></displayMode>
                                 <cloudCount><![CDATA[0]]></cloudCount>
                             </record>
                         </data>
                     </block>
                 </area>
+                <area name="ThumbnailImage"/>
+                <area name="HeaderImage"/>
                 <area name="Thumbnail Image">
-                    <block type="image" name="Thumbnail Image" composer-template="thumbnail.php" mc-block-id="DVlFDNhb">
+                    <block type="image" name="Thumbnail Image" composer-template="thumbnail.php" mc-block-id="QCpfJ7BF">
                         <data table="btContentImage">
                             <record>
-                                <fID>{ccm:export:file:17898806948_zT5Pt.jpg}</fID>
+                                <fID>{ccm:export:file:sh_thumbnail.jpg}</fID>
                                 <fOnstateID/>
                                 <maxWidth><![CDATA[0]]></maxWidth>
                                 <maxHeight><![CDATA[0]]></maxHeight>
@@ -67,8 +74,8 @@
                         </data>
                     </block>
                 </area>
-                <area name="Header">
-                    <block type="image" name="Header Image" composer-template="header.php" mc-block-id="DVcG2V0F">
+                <area name="Header Image">
+                    <block type="image" name="Header Image" composer-template="header.php" mc-block-id="wLzzOzzD">
                         <data table="btContentImage">
                             <record>
                                 <fID>{ccm:export:file:europe_england_stonehenge.jpg}</fID>
@@ -86,9 +93,10 @@
         </pagetype>
         <pagetype handle="full" name="Full" internal="0" icon="main.png" package="">
             <page name="" path="" filename="" pagetype="full" description="" package="">
+                <area name="HeaderImage"/>
                 <area name="Main"/>
-                <area name="Header">
-                    <block type="image" name="" mc-block-id="vMLOAl7T">
+                <area name="Header Image">
+                    <block type="image" name="" mc-block-id="pn1zRqLs">
                         <data table="btContentImage">
                             <record>
                                 <fID>{ccm:export:file:northern_az_lake_powell_house_boats.jpg}</fID>
@@ -104,12 +112,13 @@
                 </area>
             </page>
         </pagetype>
-        <pagetype handle="left_sidebar" name="Left Sidebar" internal="0" icon="main.png" package="">
+        <pagetype handle="left_sidebar" name="Left Sidebar" internal="0" icon="template1.png" package="">
             <page name="" path="" filename="" pagetype="left_sidebar" description="" package="">
+                <area name="HeaderImage"/>
                 <area name="Sidebar"/>
                 <area name="Main"/>
-                <area name="Header">
-                    <block type="image" name="" mc-block-id="AWEJreMZ">
+                <area name="Header Image">
+                    <block type="image" name="" mc-block-id="EjT8GZha">
                         <data table="btContentImage">
                             <record>
                                 <fID>{ccm:export:file:europe_valencia_hemispheric.jpg}</fID>
@@ -127,8 +136,8 @@
         </pagetype>
         <pagetype handle="right_sidebar" name="Right Sidebar" internal="0" icon="right_sidebar.png" package="">
             <page name="" path="" filename="" pagetype="right_sidebar" description="" package="">
-                <area name="Header">
-                    <block type="image" name="" mc-block-id="pj6XHxVC">
+                <area name="Header Image">
+                    <block type="image" name="" mc-block-id="v0zvw8ct">
                         <data table="btContentImage">
                             <record>
                                 <fID>{ccm:export:file:europe_rotterdam_port.jpg}</fID>
@@ -145,9 +154,6 @@
                 <area name="Main"/>
                 <area name="Sidebar"/>
             </page>
-        </pagetype>
-        <pagetype handle="core_stack" name="Stack" internal="1" icon="main.png" package="">
-            <page name="" path="" filename="" pagetype="core_stack" description="" package=""/>
         </pagetype>
     </pagetypes>
     <stacks>
@@ -169,343 +175,485 @@
                 </block>
             </area>
         </stack>
-        <stack name="Site Name" type="global_area">
+        <stack name="Side Nav">
             <area name="Main">
                 <block type="content" name="">
                     <data table="btContentLocal">
                         <record>
-                            <content><![CDATA[<h1><a title="Home" href="{ccm:export:page:}">5.5.0 Sample Content</a></h1>]]></content>
-                        </record>
-                    </data>
-                </block>
-            </area>
-        </stack>
-    </stacks>
-    <pages>
-        <page name="Home" path="" filename="" pagetype="right_sidebar" description="" package="">
-            <area name="Sidebar">
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[<h3>Sidebar</h3>]]></content>
-                        </record>
-                    </data>
-                </block>
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[<p>Everything about concrete5 is completely customizable through the CMS. This is a separate area from the main content on the homepage. You can&nbsp;<a title="Move blocks in concrete5" href="http://www.concrete5.org/documentation/general-topics/blocks-and-areas" target="_blank">drag and drop blocks</a>&nbsp;like this around your layout.</p>]]></content>
-                        </record>
-                    </data>
-                </block>
-            </area>
-            <area name="Main">
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[<h2>Welcome to concrete5!</h2>
-                                <p>Content Management is easy with concrete5's in-context editing. Just&nbsp;<a title="Login" href="http://pdxfool.c5host.com/index.php/login">login</a>&nbsp;and you can add and change things as you browse your site.&nbsp;</p>
-                                <p>You can watch videos and learn how to:</p>
-                                <ul>
-                                <li><a title="In-context editing CMS" href="http://www.concrete5.org/documentation/general-topics/in-context-editing/">Edit</a>&nbsp;this page.</li>
-                                <li>Add a&nbsp;<a title="Add a page in concrete5" href="http://www.concrete5.org/documentation/general-topics/add-a-page/" target="_blank">new page</a>.</li>
-                                <li>Add some basic functionality, like&nbsp;<a title="Add a simple form in concrete5" href="http://www.concrete5.org/documentation/general-topics/add_a_form" target="_blank">a Form</a>.</li>
-                                <li><a title="add-on marketplace for concrete5" href="http://www.concrete5.org/marketplace/how_to_install_add_ons_and_themes_/" target="_blank">Finding &amp; adding</a>&nbsp;more functionality and themes.</li>
-                                </ul>
-                                <p>We've taken the liberty to build out the rest of this site with some sample content that will help you learn concrete5. Wander around a bit, or just goto the&nbsp;<a title="Sitemap" href="http://pdxfool.c5host.com/index.php/dashboard/sitemap/full/">Dashboard &gt; Sitemap</a>&nbsp;and delete the parts you don't want quickly.</p>]]></content>
+                            <content><![CDATA[<h3>Links:</h3>]]></content>
                             </record>
                         </data>
                     </block>
-                </area>
-                <area name="Header">
-                    <block type="image" name="">
-                        <data table="btContentImage">
+                    <block type="autonav" name="">
+                        <data table="btNavigation">
                             <record>
-                                <fID>{ccm:export:file:england_village.jpg}</fID>
-                                <fOnstateID/>
-                                <maxWidth><![CDATA[0]]></maxWidth>
-                                <maxHeight><![CDATA[0]]></maxHeight>
-                                <externalLink><![CDATA[]]></externalLink>
-                                <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                <altText><![CDATA[]]></altText>
+                                <orderBy><![CDATA[display_asc]]></orderBy>
+                                <displayPages><![CDATA[second_level]]></displayPages>
+                                <displayPagesCID/>
+                                <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                                <displaySubPages><![CDATA[all]]></displaySubPages>
+                                <displaySubPageLevels><![CDATA[all]]></displaySubPageLevels>
+                                <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+                                <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
                             </record>
                         </data>
                     </block>
                 </area>
-            </page>
-
-                                <page name="About" path="/about" filename="" pagetype="left_sidebar" description="" package="">
-                                    <area name="Sidebar">
-                                        <block type="content" name="">
-                                            <data table="btContentLocal">
-                                                <record>
-                                                    <content><![CDATA[<h2>Links</h2>]]></content>
-                                                </record>
-                                            </data>
-                                        </block>
-                                        <block type="autonav" name="">
-                                            <data table="btNavigation">
-                                                <record>
-                                                    <orderBy><![CDATA[display_asc]]></orderBy>
-                                                    <displayPages><![CDATA[below]]></displayPages>
-                                                    <displayPagesCID/>
-                                                    <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
-                                                    <displaySubPages><![CDATA[none]]></displaySubPages>
-                                                    <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
-                                                    <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
-                                                    <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
-                                                </record>
-                                            </data>
-                                        </block>
-                                    </area>
-                                    <area name="Main">
-                                        <block type="content" name="">
-                                            <data table="btContentLocal">
-                                                <record>
-                                                    <content><![CDATA[<h2>Learn More</h2>
-                                                        <p>Visit&nbsp;<a title="concrete5 Content Management System" href="http://www.concrete5.org/" target="_blank">concrete5.org</a>&nbsp;to learn more from the&nbsp;<a title="open source content management system" href="http://www.concrete5.org/community" target="_blank">community</a>&nbsp;and the&nbsp;<a href="http://www.concrete5.org/documentation/general-topics/" target="_blank">documentation</a>. You can also browse our&nbsp;<a title="concrete5 marketplace" href="http://www.concrete5.org/marketplace/" target="_blank">marketplace</a>&nbsp;for more&nbsp;<a title="Add-ons for concrete5" href="http://www.concrete5.org/marketplace/addons/" target="_blank">add-ons</a>&nbsp;and&nbsp;<a title="Themes for concrete5" href="http://www.concrete5.org/marketplace/themes/" target="_blank">themes</a>&nbsp;to quickly build the site you really need.&nbsp;</p>
-                                                        <h3>Getting Help</h3>
-                                                        <p>Sometimes a little help getting started can speed up your website development time. The concrete5 team of developers can help you with your <a href="http://www.concrete5.org/services/site_installation/">install</a>, upgrade, or <a href="http://www.concrete5.org/services/professional_services/">any problem</a> you run into. You can also ask for help in the <a href="http://www.concrete5.org/community/forums/">forums</a> and post work for hire on the <a href="http://www.concrete5.org/community/forums/jobs1/">jobs board</a>.</p>
-                                                        <p>We also offer <a href="http://www.concrete5.org/services/training/">training courses</a> so you can learn the details of how things work while comfortably sipping coffee at your desk. With classes for both site managers and site developers, you'll learn everything directly from the core team behind concrete5.</p>
-                                                        <p>Not sure where to host your site? We offer <a href="http://www.concrete5.org/services/hosting/">hosting packages</a> and provide suggestions for other hosting options. </p>]]></content>
-                                                    </record>
-                                                </data>
-                                            </block>
-                                        </area>
-                                        <area name="Header">
-                                            <block mc-block-id="AWEJreMZ"/>
-                                        </area>
-                                    </page>
-                                    <page name="Guestbook" path="/about/guestbook" filename="" pagetype="right_sidebar" description="" package="">
-                                        <area name="Main">
-                                            <block type="guestbook" name="">
-                                                <data table="btGuestBook">
-                                                    <record>
-                                                        <requireApproval><![CDATA[0]]></requireApproval>
-                                                        <title><![CDATA[Tell us what you think]]></title>
-                                                        <dateFormat><![CDATA[M jS, Y]]></dateFormat>
-                                                        <displayGuestBookForm><![CDATA[1]]></displayGuestBookForm>
-                                                        <displayCaptcha><![CDATA[1]]></displayCaptcha>
-                                                        <authenticationRequired><![CDATA[0]]></authenticationRequired>
-                                                        <notifyEmail><![CDATA[]]></notifyEmail>
-                                                    </record>
-                                                </data>
-                                                <data table="btGuestBookEntries"/>
-                                            </block>
-                                        </area>
-                                        <area name="Header">
-                                            <block mc-block-id="pj6XHxVC"/>
-                                        </area>
-                                    </page>
-                                    <page name="Contact Us" path="/about/contact" filename="" pagetype="left_sidebar" description="" package="">
-                                        <area name="Sidebar">
-                                            <block type="core_stack_display" name="">
-                                                <data table="btCoreStackDisplay">
-                                                    <record>
-                                                        <stID><![CDATA[125]]></stID>
-                                                    </record>
-                                                </data>
-                                            </block>
-                                        </area>
-                                        <area name="Main">
-                                            <block type="content" name="">
-                                                <data table="btContentLocal">
-                                                    <record>
-                                                        <content><![CDATA[<h2>Contact Us</h2>
-                                                            <p>Building a form is easy to do. Learn how to <a href="http://www.concrete5.org/documentation/general-topics/add_a_form">add a form block</a>. </p>]]></content>
-                                                        </record>
-                                                    </data>
-                                                </block>
-                                                <block type="form" name="">
-                                                    <data table="btForm">
-                                                        <record>
-                                                            <questionSetId><![CDATA[1324322748]]></questionSetId>
-                                                            <surveyName><![CDATA[Contact Us]]></surveyName>
-                                                            <thankyouMsg><![CDATA[Thanks!]]></thankyouMsg>
-                                                            <notifyMeOnSubmission><![CDATA[0]]></notifyMeOnSubmission>
-                                                            <recipientEmail><![CDATA[]]></recipientEmail>
-                                                            <displayCaptcha><![CDATA[0]]></displayCaptcha>
-                                                            <redirectCID/>
-                                                        </record>
-                                                    </data>
-                                                    <data table="btFormQuestions">
-                                                        <record>
-                                                            <qID><![CDATA[5]]></qID>
-                                                            <msqID><![CDATA[4]]></msqID>
-                                                            <questionSetId><![CDATA[1324322748]]></questionSetId>
-                                                            <question><![CDATA[Name]]></question>
-                                                            <inputType><![CDATA[field]]></inputType>
-                                                            <options><![CDATA[]]></options>
-                                                            <position><![CDATA[0]]></position>
-                                                            <width><![CDATA[50]]></width>
-                                                            <height><![CDATA[3]]></height>
-                                                            <required><![CDATA[1]]></required>
-                                                        </record>
-                                                        <record>
-                                                            <qID><![CDATA[6]]></qID>
-                                                            <msqID><![CDATA[5]]></msqID>
-                                                            <questionSetId><![CDATA[1324322748]]></questionSetId>
-                                                            <question><![CDATA[Email:]]></question>
-                                                            <inputType><![CDATA[email]]></inputType>
-                                                            <options><![CDATA[]]></options>
-                                                            <position><![CDATA[0]]></position>
-                                                            <width><![CDATA[50]]></width>
-                                                            <height><![CDATA[3]]></height>
-                                                            <required><![CDATA[1]]></required>
-                                                        </record>
-                                                        <record>
-                                                            <qID><![CDATA[7]]></qID>
-                                                            <msqID><![CDATA[6]]></msqID>
-                                                            <questionSetId><![CDATA[1324322748]]></questionSetId>
-                                                            <question><![CDATA[What are you contacting us about?]]></question>
-                                                            <inputType><![CDATA[radios]]></inputType>
-                                                            <options><![CDATA[Question%%Comment%%Urgent Issue%%To Say Hello%%Other]]></options>
-                                                            <position><![CDATA[0]]></position>
-                                                            <width><![CDATA[50]]></width>
-                                                            <height><![CDATA[3]]></height>
-                                                            <required><![CDATA[1]]></required>
-                                                        </record>
-                                                        <record>
-                                                            <qID><![CDATA[8]]></qID>
-                                                            <msqID><![CDATA[7]]></msqID>
-                                                            <questionSetId><![CDATA[1324322748]]></questionSetId>
-                                                            <question><![CDATA[Message]]></question>
-                                                            <inputType><![CDATA[text]]></inputType>
-                                                            <options><![CDATA[]]></options>
-                                                            <position><![CDATA[0]]></position>
-                                                            <width><![CDATA[50]]></width>
-                                                            <height><![CDATA[3]]></height>
-                                                            <required><![CDATA[1]]></required>
-                                                        </record>
-                                                    </data>
-                                                </block>
-                                            </area>
-                                            <area name="Header">
-                                                <block mc-block-id="AWEJreMZ"/>
-                                            </area>
-                                        </page>
-                                        <page name="Search" path="/search" filename="" pagetype="right_sidebar" description="" package="">
-                                            <area name="Sidebar">
-                                                <block type="content" name="">
-                                                    <data table="btContentLocal">
-                                                        <record>
-                                                            <content><![CDATA[<h2>Site Map</h2>]]></content>
-                                                        </record>
-                                                    </data>
-                                                </block>
-                                                <block type="autonav" name="">
-                                                    <data table="btNavigation">
-                                                        <record>
-                                                            <orderBy><![CDATA[display_asc]]></orderBy>
-                                                            <displayPages><![CDATA[top]]></displayPages>
-                                                            <displayPagesCID/>
-                                                            <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
-                                                            <displaySubPages><![CDATA[all]]></displaySubPages>
-                                                            <displaySubPageLevels><![CDATA[all]]></displaySubPageLevels>
-                                                            <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
-                                                            <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
-                                                        </record>
-                                                    </data>
-                                                </block>
-                                            </area>
-                                            <area name="Main">
-                                                <block type="search" name="">
-                                                    <data table="btSearch">
-                                                        <record>
-                                                            <title><![CDATA[Search This Site]]></title>
-                                                            <buttonText><![CDATA[Search]]></buttonText>
-                                                            <baseSearchPath><![CDATA[]]></baseSearchPath>
-                                                            <resultsURL><![CDATA[]]></resultsURL>
-                                                        </record>
-                                                    </data>
-                                                </block>
-                                            </area>
-                                            <area name="Header">
-                                                <block mc-block-id="pj6XHxVC"/>
-                                            </area>
-                                        </page>
-                                        <page name="Blog" path="/blog" filename="" pagetype="right_sidebar" description="" package="">
-                                            <area name="Main">
-                                                <block type="page_list" name="" custom-template="blog_index_thumbnail.php">
-                                                    <data table="btPageList">
-                                                        <record>
-                                                            <num><![CDATA[9]]></num>
-                                                            <orderBy><![CDATA[chrono_desc]]></orderBy>
-                                                            <cParentID>{ccm:export:page:/blog}</cParentID>
-                                                            <cThis><![CDATA[1]]></cThis>
-                                                            <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
-                                                            <paginate><![CDATA[1]]></paginate>
-                                                            <displayAliases><![CDATA[0]]></displayAliases>
-                                                            <ctID>{ccm:export:pagetype:blog_entry}</ctID>
-                                                            <rss><![CDATA[0]]></rss>
-                                                            <rssTitle><![CDATA[]]></rssTitle>
-                                                            <rssDescription><![CDATA[]]></rssDescription>
-                                                            <truncateSummaries><![CDATA[0]]></truncateSummaries>
-                                                            <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
-                                                            <truncateChars><![CDATA[0]]></truncateChars>
-                                                        </record>
-                                                    </data>
-                                                </block>
-                                            </area>
-                                            <area name="Sidebar"/>
-                                            <area name="Header">
-                                                <block mc-block-id="pj6XHxVC"/>
-                                            </area>
-                                        </page>
-                                        <page name="Hello World" path="/blog/hello-world" filename="" pagetype="blog_entry" description="This is my first blog post!" package="">
-                                            <attributes>
-                                                <attributekey handle="tags">
-                                                    <value>
-                                                        <option>concrete5</option>
-                                                        <option>composer</option>
-                                                        <option>hello</option>
-                                                        <option>world</option>
-                                                        <option>first post</option>
-                                                    </value>
-                                                </attributekey>
-                                            </attributes>
-                                            <area name="Header">
-                                                <block type="image" name="Header Image" composer-template="header.php">
-                                                    <data table="btContentImage">
-                                                        <record>
-                                                            <fID>{ccm:export:file:europe_england_stonehenge.jpg}</fID>
-                                                            <fOnstateID/>
-                                                            <maxWidth><![CDATA[0]]></maxWidth>
-                                                            <maxHeight><![CDATA[0]]></maxHeight>
-                                                            <externalLink><![CDATA[]]></externalLink>
-                                                            <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                                            <altText><![CDATA[My concrete5 Blog]]></altText>
-                                                        </record>
-                                                    </data>
-                                                </block>
-                                            </area>
-                                            <area name="Sidebar">
-                                                <block mc-block-id="aZtke8KR"/>
-                                            </area>
-                                            <area name="Main">
-                                                <block type="content" name="Blog Content">
-                                                    <data table="btContentLocal">
-                                                        <record>
-                                                            <content><![CDATA[<p>Here is some sample content! I'm writing it using composer!</p>]]></content>
-                                                        </record>
-                                                    </data>
-                                                </block>
-                                            </area>
-                                            <area name="Thumbnail Image">
-                                                <block type="image" name="Thumbnail Image" composer-template="thumbnail.php">
-                                                    <data table="btContentImage">
-                                                        <record>
-                                                            <fID>{ccm:export:file:17898806948_zT5Pt.jpg}</fID>
-                                                            <fOnstateID/>
-                                                            <maxWidth><![CDATA[0]]></maxWidth>
-                                                            <maxHeight><![CDATA[0]]></maxHeight>
-                                                            <externalLink><![CDATA[]]></externalLink>
-                                                            <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                                            <altText><![CDATA[]]></altText>
-                                                        </record>
-                                                    </data>
-                                                </block>
-                                            </area>
-                                        </page>
-                                    </pages>
-                                </concrete5-cif>
+            </stack>
+            <stack name="Site Name" type="global_area">
+                <area name="Main">
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<h1><a title="Home" 
+                                	href="{ccm:export:page:}"
+                                >{ccm:export:define:SITE}</a></h1>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </area>
+            </stack>
+        </stacks>
+        <pages>
+            <page name="Home" path="" filename="" pagetype="right_sidebar" description="" package="">
+                <area name="Header">
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<h1>Welcome to concrete5 - an Open Source CMS</h1>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </area>
+                <area name="Sidebar">
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<h3>Sidebar</h3>]]></content>
+                                </record>
+                            </data>
+                        </block>
+                        <block type="content" name="">
+                            <data table="btContentLocal">
+                                <record>
+                                    <content><![CDATA[<p>Everything about concrete5 is completely customizable through the CMS. This is a separate area from the main content on the homepage. You can&nbsp;<a title="Move blocks in concrete5" href="http://www.concrete5.org/documentation/general-topics/blocks-and-areas" target="_blank">drag and drop blocks</a>&nbsp;like this around your layout.</p>]]></content>
+                                </record>
+                            </data>
+                        </block>
+                    </area>
+                    <area name="Main">
+                        <block type="content" name="">
+                            <data table="btContentLocal">
+                                <record>
+                                    <content><![CDATA[<h2>Welcome to concrete5!</h2>
+                                        <p>Content Management is easy with concrete5's in-context editing. Just <a href="{ccm:export:page:/login}">login</a> and you can change things as you browse your site.</p>
+                                        <p>You can watch videos and learn how to:</p>
+                                        <ul>
+                                        <li><a title="In-context editing CMS" href="http://www.concrete5.org/documentation/general-topics/in-context-editing/" target="_blank">Edit</a>&nbsp;this page.</li>
+                                        <li>Add a <a title="Add a page in concrete5" href="http://www.concrete5.org/documentation/general-topics/add-a-page/" target="_blank">new page</a>.</li>
+                                        <li>Add some basic functionality, like&nbsp;<a title="Add a simple form in concrete5" href="http://www.concrete5.org/documentation/general-topics/add_a_form" target="_blank">a Form</a>.</li>
+                                        <li><a title="add-on marketplace for concrete5" href="http://www.concrete5.org/marketplace/how_to_install_add_ons_and_themes_/" target="_blank">Finding &amp; adding</a>&nbsp;more functionality and themes.</li>
+                                        </ul>
+                                        <p>We've taken the liberty to build out the rest of this site with some sample content that will help you learn concrete5. Wander around a bit, or click Dashboard to get to the&nbsp;<a href="{ccm:export:page:/dashboard/sitemap}">Sitemap</a> and quickly delete the parts you don't want.</p>]]></content>
+                                    </record>
+                                </data>
+                            </block>
+                        </area>
+                        <area name="HeaderImage"/>
+                        <area name="Header Image">
+                            <block type="image" name="">
+                                <data table="btContentImage">
+                                    <record>
+                                        <fID>{ccm:export:file:england_village.jpg}</fID>
+                                        <fOnstateID/>
+                                        <maxWidth><![CDATA[0]]></maxWidth>
+                                        <maxHeight><![CDATA[0]]></maxHeight>
+                                        <externalLink><![CDATA[]]></externalLink>
+                                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                                        <altText><![CDATA[]]></altText>
+                                    </record>
+                                </data>
+                            </block>
+                        </area>
+                    </page>
+			<page name="About" path="/about" filename="" pagetype="left_sidebar" description="" package="">
+											<area name="Header">
+												<block type="content" name="">
+													<data table="btContentLocal">
+														<record>
+															<content><![CDATA[<h1>About Us</h1>]]></content>
+														</record>
+													</data>
+												</block>
+											</area>
+											<area name="Sidebar">
+												<block type="core_stack_display" name="">
+													<stack><![CDATA[Side Nav]]></stack>
+												</block>
+											</area>
+											<area name="Main">
+												<block type="content" name="">
+													<data table="btContentLocal">
+														<record>
+															<content><![CDATA[<h2>Learn More</h2>
+																<p>Visit&nbsp;<a title="concrete5 Content Management System" href="http://www.concrete5.org/" target="_blank">concrete5.org</a>&nbsp;to learn more from the&nbsp;<a title="open source content management system" href="http://www.concrete5.org/community" target="_blank">community</a>&nbsp;and the&nbsp;<a href="http://www.concrete5.org/documentation/general-topics/" target="_blank">documentation</a>. You can also browse our&nbsp;<a title="concrete5 marketplace" href="http://www.concrete5.org/marketplace/" target="_blank">marketplace</a>&nbsp;for more&nbsp;<a title="Add-ons for concrete5" href="http://www.concrete5.org/marketplace/addons/" target="_blank">add-ons</a>&nbsp;and&nbsp;<a title="Themes for concrete5" href="http://www.concrete5.org/marketplace/themes/" target="_blank">themes</a>&nbsp;to quickly build the site you really need.&nbsp;</p>
+																<h3>&nbsp;</h3>
+																<h3>Getting Help</h3>
+																<p>You can get free help in the <a href="http://www.concrete5.org/community/forums/" target="_blank">forums</a> and post for free to the&nbsp;<a href="http://www.concrete5.org/community/forums/jobs1/" target="_blank">jobs board</a>.&nbsp;</p>
+																<p>You can also pay the concrete5 team of developers to help with&nbsp;<a href="http://www.concrete5.org/services/support/" target="_blank">any problem</a>&nbsp;you run into. We offer <a href="http://www.concrete5.org/services/training/" target="_blank">training courses</a>&nbsp;and&nbsp;<a href="http://www.concrete5.org/services/hosting/" target="_blank">hosting packages</a>, just let us know <a href="http://www.concrete5.org/services/professional_services/" target="_blank">how we can help</a>.</p>]]></content>
+															</record>
+														</data>
+													</block>
+												</area>
+												<area name="HeaderImage"/>
+												<area name="Header Image">
+													<block mc-block-id="EjT8GZha"/>
+												</area>
+											</page>
+			<page name="Guestbook" path="/about/guestbook" filename="" pagetype="right_sidebar" description="" package="">
+				<area name="Header">
+					<block type="content" name="">
+						<data table="btContentLocal">
+							<record>
+								<content><![CDATA[<h1>Guestbook</h1>]]></content>
+							</record>
+						</data>
+					</block>
+				</area>
+				<area name="Sidebar">
+					<block type="core_stack_display" name="">
+						<stack><![CDATA[Side Nav]]></stack>
+					</block>
+				</area>
+				<area name="Main">
+					<block type="guestbook" name="">
+						<data table="btGuestBook">
+							<record>
+								<requireApproval><![CDATA[0]]></requireApproval>
+								<title><![CDATA[Tell us what you think]]></title>
+								<dateFormat><![CDATA[M jS, Y]]></dateFormat>
+								<displayGuestBookForm><![CDATA[1]]></displayGuestBookForm>
+								<displayCaptcha><![CDATA[1]]></displayCaptcha>
+								<authenticationRequired><![CDATA[0]]></authenticationRequired>
+								<notifyEmail><![CDATA[]]></notifyEmail>
+							</record>
+						</data>
+						<data table="btGuestBookEntries"/>
+					</block>
+				</area>
+				<area name="HeaderImage"/>
+				<area name="Header Image">
+					<block mc-block-id="v0zvw8ct"/>
+				</area>
+			</page>
+			<page name="Contact Us" path="/about/contact-us" filename="" pagetype="left_sidebar" description="" package="">
+				<area name="Header">
+					<block type="content" name="">
+						<data table="btContentLocal">
+							<record>
+								<content><![CDATA[<h1>Contact Us</h1>]]></content>
+							</record>
+						</data>
+					</block>
+				</area>
+				<area name="Sidebar">
+					<block type="core_stack_display" name="">
+						<stack><![CDATA[Side Nav]]></stack>
+					</block>
+				</area>
+				<area name="Main">
+					<block type="content" name="">
+						<data table="btContentLocal">
+							<record>
+								<content><![CDATA[<h2>Contact Us</h2>
+									<p>Building a form is easy to do. Learn how to <a href="http://www.concrete5.org/documentation/general-topics/add_a_form" target="_blank">add a form block</a>.</p>]]></content>
+								</record>
+							</data>
+						</block>
+						<block type="form" name="">
+							<data table="btForm">
+								<record>
+									<questionSetId><![CDATA[1324322748]]></questionSetId>
+									<surveyName><![CDATA[Contact Us]]></surveyName>
+									<thankyouMsg><![CDATA[Thanks!]]></thankyouMsg>
+									<notifyMeOnSubmission><![CDATA[0]]></notifyMeOnSubmission>
+									<recipientEmail><![CDATA[]]></recipientEmail>
+									<displayCaptcha><![CDATA[0]]></displayCaptcha>
+									<redirectCID/>
+								</record>
+							</data>
+							<data table="btFormQuestions">
+								<record>
+									<qID><![CDATA[5]]></qID>
+									<msqID><![CDATA[4]]></msqID>
+									<questionSetId><![CDATA[1324322748]]></questionSetId>
+									<question><![CDATA[Name]]></question>
+									<inputType><![CDATA[field]]></inputType>
+									<options><![CDATA[]]></options>
+									<position><![CDATA[0]]></position>
+									<width><![CDATA[50]]></width>
+									<height><![CDATA[3]]></height>
+									<required><![CDATA[1]]></required>
+								</record>
+								<record>
+									<qID><![CDATA[6]]></qID>
+									<msqID><![CDATA[5]]></msqID>
+									<questionSetId><![CDATA[1324322748]]></questionSetId>
+									<question><![CDATA[Email:]]></question>
+									<inputType><![CDATA[email]]></inputType>
+									<options><![CDATA[]]></options>
+									<position><![CDATA[0]]></position>
+									<width><![CDATA[50]]></width>
+									<height><![CDATA[3]]></height>
+									<required><![CDATA[1]]></required>
+								</record>
+								<record>
+									<qID><![CDATA[7]]></qID>
+									<msqID><![CDATA[6]]></msqID>
+									<questionSetId><![CDATA[1324322748]]></questionSetId>
+									<question><![CDATA[What are you contacting us about?]]></question>
+									<inputType><![CDATA[radios]]></inputType>
+									<options><![CDATA[Question%%Comment%%Urgent Issue%%To Say Hello%%Other]]></options>
+									<position><![CDATA[0]]></position>
+									<width><![CDATA[50]]></width>
+									<height><![CDATA[3]]></height>
+									<required><![CDATA[1]]></required>
+								</record>
+								<record>
+									<qID><![CDATA[8]]></qID>
+									<msqID><![CDATA[7]]></msqID>
+									<questionSetId><![CDATA[1324322748]]></questionSetId>
+									<question><![CDATA[Message]]></question>
+									<inputType><![CDATA[text]]></inputType>
+									<options><![CDATA[]]></options>
+									<position><![CDATA[0]]></position>
+									<width><![CDATA[50]]></width>
+									<height><![CDATA[3]]></height>
+									<required><![CDATA[1]]></required>
+								</record>
+							</data>
+						</block>
+					</area>
+					<area name="HeaderImage"/>
+					<area name="Header Image">
+						<block mc-block-id="EjT8GZha"/>
+					</area>
+				</page>
+			<page name="Search" path="/search" filename="" pagetype="right_sidebar" description="" package="">
+					<area name="Header">
+						<block type="content" name="">
+							<data table="btContentLocal">
+								<record>
+									<content><![CDATA[<h1>Sitemap</h1>]]></content>
+								</record>
+							</data>
+						</block>
+					</area>
+					<area name="Sidebar">
+						<block type="content" name="">
+							<data table="btContentLocal">
+								<record>
+									<content><![CDATA[<h3>Site Map</h3>]]></content>
+									</record>
+								</data>
+							</block>
+							<block type="autonav" name="">
+								<data table="btNavigation">
+									<record>
+										<orderBy><![CDATA[display_asc]]></orderBy>
+										<displayPages><![CDATA[top]]></displayPages>
+										<displayPagesCID/>
+										<displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+										<displaySubPages><![CDATA[all]]></displaySubPages>
+										<displaySubPageLevels><![CDATA[all]]></displaySubPageLevels>
+										<displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+										<displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+									</record>
+								</data>
+							</block>
+						</area>
+						<area name="Main">
+							<block type="search" name="">
+								<data table="btSearch">
+									<record>
+										<title><![CDATA[Search This Site]]></title>
+										<buttonText><![CDATA[Search]]></buttonText>
+										<baseSearchPath><![CDATA[]]></baseSearchPath>
+										<resultsURL><![CDATA[]]></resultsURL>
+									</record>
+								</data>
+							</block>
+						</area>
+						<area name="HeaderImage"/>
+						<area name="Header Image">
+							<block mc-block-id="v0zvw8ct"/>
+						</area>
+					</page>
+			<page name="Blog" path="/blog" filename="" pagetype="right_sidebar" description="" package="">
+                                                        <attributes>
+                                                            <attributekey handle="tags"/>
+                                                        </attributes>
+                                                        <area name="HeaderImage"/>
+                                                        <area name="Main">
+                                                            <block type="page_list" name="" custom-template="blog_index_thumbnail.php">
+                                                                <data table="btPageList">
+                                                                    <record>
+                                                                        <num><![CDATA[12]]></num>
+                                                                        <orderBy><![CDATA[chrono_desc]]></orderBy>
+                                                                        <cParentID>{ccm:export:page:/blog}</cParentID>
+                                                                        <cThis><![CDATA[1]]></cThis>
+                                                                        <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                                                        <paginate><![CDATA[1]]></paginate>
+                                                                        <displayAliases><![CDATA[0]]></displayAliases>
+                                                                        <ctID>{ccm:export:pagetype:blog_entry}</ctID>
+                                                                        <rss><![CDATA[0]]></rss>
+                                                                        <rssTitle><![CDATA[]]></rssTitle>
+                                                                        <rssDescription><![CDATA[]]></rssDescription>
+                                                                        <truncateSummaries><![CDATA[1]]></truncateSummaries>
+                                                                        <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                                                                        <truncateChars><![CDATA[128]]></truncateChars>
+                                                                    </record>
+                                                                </data>
+                                                            </block>
+                                                        </area>
+                                                        <area name="Sidebar">
+                                                            <block type="content" name="">
+                                                                <data table="btContentLocal">
+                                                                    <record>
+                                                                        <content><![CDATA[<h3>Tags</h3>]]></content>
+                                                                    </record>
+                                                                </data>
+                                                            </block>
+                                                            <block type="tags" name="">
+                                                                <data table="btTags">
+                                                                    <record>
+                                                                        <title><![CDATA[]]></title>
+                                                                        <targetCID>{ccm:export:page:/blog/blog-archives}</targetCID>
+                                                                        <displayMode><![CDATA[cloud]]></displayMode>
+                                                                        <cloudCount><![CDATA[0]]></cloudCount>
+                                                                    </record>
+                                                                </data>
+                                                            </block>
+                                                            <block type="date_archive" name="">
+                                                                <data table="btDateArchive">
+                                                                    <record>
+                                                                        <title><![CDATA[Archives]]></title>
+                                                                        <targetCID>{ccm:export:page:/blog/blog-archives}</targetCID>
+                                                                        <numMonths><![CDATA[12]]></numMonths>
+                                                                    </record>
+                                                                </data>
+                                                            </block>
+                                                        </area>
+                                                        <area name="Header Image">
+                                                            <block mc-block-id="v0zvw8ct"/>
+                                                        </area>
+                                                    </page>
+            <page name="Hello World" path="/blog/hello-world" filename="" pagetype="blog_entry" description="This is my first blog post!" package="">
+                                                        <attributes>
+                                                            <attributekey handle="tags">
+                                                                <value>
+                                                                    <option>composer</option>
+                                                                    <option>hello</option>
+                                                                    <option>world</option>
+                                                                    <option>first post</option>
+                                                                </value>
+                                                            </attributekey>
+                                                        </attributes>
+                                                        <area name="Header Image">
+                                                            <block type="image" name="Header Image" composer-template="header.php">
+                                                                <data table="btContentImage">
+                                                                    <record>
+                                                                        <fID>{ccm:export:file:europe_england_stonehenge.jpg}</fID>
+                                                                        <fOnstateID/>
+                                                                        <maxWidth><![CDATA[0]]></maxWidth>
+                                                                        <maxHeight><![CDATA[0]]></maxHeight>
+                                                                        <externalLink><![CDATA[]]></externalLink>
+                                                                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                                                                        <altText><![CDATA[My concrete5 Blog]]></altText>
+                                                                    </record>
+                                                                </data>
+                                                            </block>
+                                                        </area>
+                                                        <area name="Sidebar">
+                                                            <block mc-block-id="wG4zxttW"/>
+                                                        </area>
+                                                        <area name="Main">
+                                                            <block type="content" name="Blog Content">
+                                                                <data table="btContentLocal">
+                                                                    <record>
+                                                                        <content><![CDATA[<p>Here is some sample content! I'm writing it using composer!</p>]]></content>
+                                                                    </record>
+                                                                </data>
+                                                            </block>
+                                                        </area>
+                                                        <area name="Thumbnail Image">
+                                                            <block type="image" name="Thumbnail Image" composer-template="thumbnail.php">
+                                                                <data table="btContentImage">
+                                                                    <record>
+                                                                        <fID>{ccm:export:file:sh_thumbnail.jpg}</fID>
+                                                                        <fOnstateID/>
+                                                                        <maxWidth><![CDATA[0]]></maxWidth>
+                                                                        <maxHeight><![CDATA[0]]></maxHeight>
+                                                                        <externalLink><![CDATA[]]></externalLink>
+                                                                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                                                                        <altText><![CDATA[]]></altText>
+                                                                    </record>
+                                                                </data>
+                                                            </block>
+                                                        </area>
+                                                        <area name="Blog Post More"/>
+                                                        <area name="Blog Post Header"/>
+                                                        <area name="Blog Post Footer"/>
+                                                    </page>
+			<page name="Blog Archives" path="/blog/blog-archives" filename="" pagetype="right_sidebar" description="" package="">
+                                                                <attributes>
+                                                                    <attributekey handle="exclude_nav">
+                                                                        <value><![CDATA[1]]></value>
+                                                                    </attributekey>
+                                                                    <attributekey handle="exclude_page_list">
+                                                                        <value><![CDATA[1]]></value>
+                                                                    </attributekey>
+                                                                    <attributekey handle="exclude_search_index">
+                                                                        <value><![CDATA[1]]></value>
+                                                                    </attributekey>
+                                                                    <attributekey handle="tags"/>
+                                                                </attributes>
+                                                                <area name="Header Image">
+                                                                    <block mc-block-id="v0zvw8ct"/>
+                                                                </area>
+                                                                <area name="Main">
+                                                                    <block type="search" name="">
+                                                                        <data table="btSearch">
+                                                                            <record>
+                                                                                <title><![CDATA[Search Blog]]></title>
+                                                                                <buttonText><![CDATA[Search]]></buttonText>
+                                                                                <baseSearchPath><![CDATA[/blog]]></baseSearchPath>
+                                                                                <resultsURL><![CDATA[]]></resultsURL>
+                                                                            </record>
+                                                                        </data>
+                                                                    </block>
+                                                                </area>
+                                                                <area name="Sidebar">
+                                                                    <block type="tags" name="">
+                                                                        <data table="btTags">
+                                                                            <record>
+                                                                                <title><![CDATA[Tags]]></title>
+                                                                                <targetCID>{ccm:export:page:/blog/blog-archives}</targetCID>
+                                                                                <displayMode><![CDATA[cloud]]></displayMode>
+                                                                                <cloudCount><![CDATA[0]]></cloudCount>
+                                                                            </record>
+                                                                        </data>
+                                                                    </block>
+                                                                    <block type="date_archive" name="">
+                                                                        <data table="btDateArchive">
+                                                                            <record>
+                                                                                <title><![CDATA[Archives]]></title>
+                                                                                <targetCID>{ccm:export:page:/blog/blog-archives}</targetCID>
+                                                                                <numMonths><![CDATA[12]]></numMonths>
+                                                                            </record>
+                                                                        </data>
+                                                                    </block>
+                                                                </area>
+                                                            </page>
+        </pages>
+   </concrete5-cif>

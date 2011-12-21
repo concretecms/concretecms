@@ -1162,13 +1162,18 @@ class Block extends Object {
 			if ($this->getBlockFilename() != '') {
 				$blockNode->addAttribute('custom-template', $this->getBlockFilename());
 			}
-			if ($this->getBlockComposerFilename() != '') {
-				$blockNode->addAttribute('composer-template', $this->getBlockComposerFilename());
-			}
 			if (is_object($this->c) && $this->c->isMasterCollection()) {
 				$mcBlockID = Loader::helper('validation/identifier')->getString(8);
 				ContentExporter::addMasterCollectionBlockID($this, $mcBlockID);
 				$blockNode->addAttribute('mc-block-id', $mcBlockID);
+			}			
+
+			if ($exportType == 'composer') {
+				$db = Loader::db();
+				$cbFilename = $db->GetOne('select ccFilename from ComposerContentLayout where bID = ?', array($this->getBlockID()));
+				if ($cbFilename) {
+					$blockNode->addAttribute("composer-template", $cbFilename);
+				}
 			}
 			
 			if ($exportType == 'full') {
@@ -1211,8 +1216,12 @@ class Block extends Object {
 			$ctID = $this->c->getCollectionTypeID();
 			if ($data['bIncludeInComposer']) {
 				$displayOrder = $db->GetOne('select max(displayOrder) from ComposerContentLayout where ctID = ?', array($this->c->getCollectionTypeID()));
-				if ($displayOrder > 0) {
-					$displayOrder++;
+				if ($displayOrder !== false) {
+					if ($displayOrder > 0) { 
+						$displayOrder++;
+					} else {
+						$displayOrder = 1;
+					}
 				} else {
 					$displayOrder = 0;
 				}
