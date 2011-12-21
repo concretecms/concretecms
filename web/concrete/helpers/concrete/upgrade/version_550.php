@@ -61,7 +61,7 @@ class ConcreteUpgradeVersion550Helper {
 		
 		// move the old dashboard
 		$newDashPage = Page::getByPath('/dashboard/welcome');
-		if (!is_object($newDashPage) && $newDashPage->isError()) {
+		if (!is_object($newDashPage) || $newDashPage->isError()) {
 			$dashboard = Page::getByPath('/dashboard');
 			$dashboard->moveToTrash();
 			
