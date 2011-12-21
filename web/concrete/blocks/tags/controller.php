@@ -100,6 +100,7 @@ class TagsBlockController extends BlockController {
 			$nvc->refreshCache();
 		}
 		$args['cloudCount'] = (is_numeric($args['cloudCount'])?$args['cloudCount']:0);
+		$args['targetCID'] = (is_numeric($args['targetCID'])?$args['targetCID']:0);
 		parent::save($args);
 	}	
 }
