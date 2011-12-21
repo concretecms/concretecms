@@ -4182,13 +4182,17 @@ jQuery.fn.dialog.open = function(obj) {
 	if (typeof(obj.width) == 'string') {
 		if (obj.width.indexOf('%', 0) > 0) {
 			w = obj.width.replace('%', '');
-			h = obj.height.replace('%', '');
-			h = $(window).height() * (h / 100);
 			w = $(window).width() * (w / 100);
-			h = h + 100;
 			w = w + 50;
 		} else {
 			w = parseInt(obj.width) + 50;
+		}
+		
+		if (obj.height.indexOf('%', 0) > 0) {
+			h = obj.height.replace('%', '');
+			h = $(window).height() * (h / 100);
+			h = h + 100;
+		} else {
 			h = parseInt(obj.height) + 100;
 		}
 	} else if (obj.width) { 
@@ -4639,11 +4643,11 @@ String.prototype.score = function(abbreviation,offset) {
   }
   return 0.0
 }
-ccm_marketplaceLauncherOpenPost = function(mpID) {
+ccm_marketplaceLauncherOpenPost = function() {
 
 	jQuery.fn.dialog.hideLoader();
 	// highlight the first addon
-	ccm_marketplaceBrowserInit(mpID);
+	ccm_marketplaceBrowserInit();
 	$(".ccm-pagination a").click(function() {
 		jQuery.fn.dialog.showLoader(false);
 		$('#newsflow-overlay').load($(this).attr('href'), function() {
@@ -4712,7 +4716,7 @@ ccm_openAddonLauncher = function(mpID, closeTop) {
 			jQuery.fn.dialog.closeTop();
 			
 			ccm_showNewsflowOverlayWindow(CCM_DISPATCHER_FILENAME + '/dashboard/extend/add-ons?_ccm_dashboard_external=1' + mpIDstr, function() {
-				ccm_marketplaceLauncherOpenPost(mpID);
+				ccm_marketplaceLauncherOpenPost();
 			});
 		} else {
 			$.fn.dialog.open({
@@ -4726,7 +4730,7 @@ ccm_openAddonLauncher = function(mpID, closeTop) {
 	});
 }
 
-ccm_marketplaceBrowserInit = function(mpID, autoSelect) {
+ccm_marketplaceBrowserInit = function() {
 	$(".ccm-marketplace-item").click(function() {
 		window.scrollTo(0,0);
 		/*
