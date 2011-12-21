@@ -76,8 +76,20 @@
 
         <page name="Basics" path="/dashboard/system/basics" filename="/dashboard/system/basics/view.php" pagetype="" description="Basic information about your website." package=""/>
         <page name="Site Name" path="/dashboard/system/basics/site_name" filename="/dashboard/system/basics/site_name.php" pagetype="" description="" package=""/>
-        <page name="Bookmark Icons" path="/dashboard/system/basics/icons" filename="/dashboard/system/basics/icons.php" pagetype="" description="Bookmark icon and mobile home screen icon setup." package=""/>
-        <page name="Rich Text Editor" path="/dashboard/system/basics/editor" filename="/dashboard/system/basics/editor.php" pagetype="" description="" package=""/>
+        <page name="Bookmark Icons" path="/dashboard/system/basics/icons" filename="/dashboard/system/basics/icons.php" pagetype="" description="Bookmark icon and mobile home screen icon setup." package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>favicon, iphone</value>
+				</attributekey>
+			</attributes>
+        </page>
+        <page name="Rich Text Editor" path="/dashboard/system/basics/editor" filename="/dashboard/system/basics/editor.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>tinymce</value>
+				</attributekey>
+			</attributes>
+        </page>
         <page name="Languages" path="/dashboard/system/basics/multilingual" filename="/dashboard/system/basics/multilingual/view.php" pagetype="" description="" package=""/>
         <page name="Time Zone" path="/dashboard/system/basics/timezone" filename="/dashboard/system/basics/timezone.php" pagetype="" description="" package=""/>
 
