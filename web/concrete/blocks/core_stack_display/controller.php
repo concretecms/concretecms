@@ -17,6 +17,20 @@
 		public function getOriginalBlockID() {
 			return $this->bOriginalID;
 		}
+
+		public function getImportData($blockNode) {
+			$args = array();
+			$content = (string) $blockNode->stack;
+			$stack = Stack::getByName($content);
+			$args['stID'] = $stack->getCollectionID();			
+			return $args;		
+		}
+		
+		public function export(SimpleXMLElement $blockNode) {			
+			$stack = Stack::getByID($this->stID);
+			$blockNode->addChild('stack', '<![CDATA[' . $stack->getCollectionName() . ']]>');
+			
+		}
 		
 		public function on_page_view() {
 			$stack = Stack::getByID($this->stID);

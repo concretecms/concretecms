@@ -262,6 +262,40 @@ class TextHelper {
 	}
 	
 	/**
+	 * shortens a string without breaking words
+	 * @param string $textStr
+	 * @param int $numChars
+	 * @param string $tail
+	 * @return string
+	 */
+	public function wordSafeShortText($textStr, $numChars=255, $tail='...') {
+		if (intval($numChars)==0) $numChars=255;
+		$textStr = trim(strip_tags($textStr));
+		
+		if (strlen($textStr) > $numChars) { 
+			$words = explode(" ",$textStr);
+			$length = 0;
+			$trimmed = "";
+			if(is_array($words) && count($words) > 1) {
+				foreach($words as $w) {
+					$length += strlen($w);
+					if($length >= $numChars) {
+						break;
+					} else {
+						$trimmed .= $w." ";
+						$length+=1;
+					}
+				}
+				$textStr = trim($trimmed).$tail;
+			} else { // no spaces or something...
+				$textStr = self::shortText($textStr,$numChars,$tail);
+			}
+		}
+		return $textStr;
+	}
+
+	
+	/**
 	 * Strips out non-alpha-numeric characters
 	 * @param string $val
 	 * @return string

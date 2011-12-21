@@ -272,6 +272,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$bt = BlockType::getByHandle($this->btHandle);
 			$b = $page->addBlock($bt, $arHandle, $args);
 			$b->updateBlockInformation(array('bName' => $blockNode['name'], 'bFilename' => $blockNode['custom-template']));
+			
 			if ($page->isMasterCollection() && $blockNode['mc-block-id'] != '') {
 				ContentImporter::addMasterCollectionBlockID($b, (string) $blockNode['mc-block-id']);		
 			}					

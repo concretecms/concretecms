@@ -175,11 +175,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (isset($sx->items)) {
 				foreach($sx->items->children() as $node) {
 					$displayOrder = $db->GetOne('select max(displayOrder) as displayOrder from ComposerContentLayout where ctID = ?', array($this->ctID));
-					if ($displayOrder < 1) {
-						$displayOrder = 0;
+					if ($displayOrder !== false) {
+						if ($displayOrder > 0) { 
+							$displayOrder++;
+						} else {
+							$displayOrder = 1;
+						}
 					} else {
-						$displayOrder++;
+						$displayOrder = 0;
 					}
+					
 					if ($node->getName() == 'attributekey') {
 						$ak = CollectionAttributeKey::getByHandle((string) $node['handle']);
 						$v = array($ak->getAttributeKeyID(), $displayOrder, $this->ctID);
@@ -190,8 +195,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$bID = $db->GetOne('select Blocks.bID from CollectionVersionBlocks inner join Blocks on CollectionVersionBlocks.bID = Blocks.bID where cID = ? and Blocks.bName = ?', array(
 							$mcID, (string) $node['name']
 						));
-						$v = array($bID, $displayOrder, $this->ctID);
-						$db->Execute('insert into ComposerContentLayout (bID, displayOrder, ctID) values (?, ?, ?)', $v);
+						$v = array($bID, $displayOrder, (string) $node['composer-template'], $this->ctID);
+						$db->Execute('insert into ComposerContentLayout (bID, displayOrder, ccFilename, ctID) values (?, ?, ?, ?)', $v);
 					}
 				}
 			}

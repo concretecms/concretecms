@@ -69,7 +69,7 @@
         <page name="File Sets" path="/dashboard/files/sets" filename="/dashboard/files/sets.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>files, category, categories, groups</value>
+					<value>files, category, categories</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -95,7 +95,7 @@
         <page name="Search Users" path="/dashboard/users/search" filename="/dashboard/users/search.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>change, find, search, user, group, people</value>
+					<value>find, search, people</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -457,7 +457,7 @@
         <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype="" description="Control how your site send and processes mail." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>smpt, mail settings</value>
+					<value>smtp, mail settings</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -587,6 +587,7 @@
 						<content><![CDATA[<div class="newsflow-column-first-run">
 							<h3>Designing Websites</h3>
 							<p>Good with CSS and HTML? You can easily theme anything with concrete5.</p>
+							<br/>
 							<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/designers')" class="btn primary">Designer's Guide</a></p>
 							</div>]]></content>
 						</record>

@@ -14,12 +14,12 @@
 		$target = $cobj->getAttribute('nav_target');
 
 		$title = $cobj->getCollectionName();
-		$date = $cobj->getCollectionDateAdded('M j, Y'); ?>
+		$date = $cobj->getCollectionDatePublic('M j, Y'); ?>
 
 	<div class="grid_4 main-content-thumb">
 	<h4><?php echo "&#151; " . $date; ?></h4>
 	<div class="image-link">
-	<a <?php  if ($target != '') { ?> target="<?php echo $target?>" <?php  } ?> href="<?php echo $nh->getLinkToCollection($cobj)?>"></a>
+	<a <?php  if ($target != '') { ?> target="<?php echo $target?>" <?php  } ?> href="<?php echo $nh->getLinkToCollection($cobj)?>">
 	<?php 
 		$ts = $cobj->getBlocks('Thumbnail Image');
 		if (is_object($ts[0])) {
@@ -29,10 +29,10 @@
 			$imgHelper->outputThumbnail($thumb, 220, 220, $title);
 			}
 		}
-	?>
+	?></a>
 	</div>
 	<h3><a <?php  if ($target != '') { ?> target="<?php echo $target?>" <?php  } ?> href="<?php echo $nh->getLinkToCollection($cobj)?>"><?php echo $title?></a></h3>
-	
+	<!-- <h3><a <?php  if ($target != '') { ?> target="<?php echo $target?>" <?php  } ?> href="<?php echo $nh->getLinkToCollection($cobj)?>"><?php echo $textHelper->wordSafeShortText($title,$controller->truncateChars);?></a></h3> -->
 	<p>
 		<?php 
 		if(!$controller->truncateSummaries){

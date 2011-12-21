@@ -239,9 +239,14 @@
 			$r = $db->query($q2, $v2);
 			
 			// next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection
+			// I don't know why but this just isn't reliable. It might be a race condition with the cached page objects?
+			/*
 			if ((($oldHandle != $newHandle) || $oldHandle == '') && (!$c->isGeneratedCollection())) {
-				$c->rescanCollectionPath();
-			}
+			*/
+			
+			$c->rescanCollectionPath();
+			
+			//}
 
 			// check for related version edits. This only gets applied when we edit global areas.
 			if ($this->isNew()) {

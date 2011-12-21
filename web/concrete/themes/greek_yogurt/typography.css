@@ -6,6 +6,10 @@ body {
 	/* customize_body-background */ background-color: #dff5ff; /* customize_body-background */
 }
 
+body#tinymce {
+	background-color: #fff;
+}
+
 div#main-container #header {
 	padding-top: 55px;
 	/* customize_header-background */ background-color: #fff; /* customize_header-background */
@@ -38,6 +42,10 @@ div#main-container #header h1 a, div#main-container #header h1 a:link, div#main-
 	text-decoration: none;
 }
 
+ul li a.nav-path-selected, ul li.nav-selected {
+	font-weight: bold;
+}
+
 
 div#main-container a, div#main-container a:link, div#main-container a:visited, div#main-container a:active {
 	/* customize_links */ color: #0099ff; /* customize_links */
@@ -48,7 +56,7 @@ div#main-container h1, div#main-container h2, div#main-container h3, div#main-co
 	/* customize_headings */ color: #000; /* customize_headings */
 }
 
-div#left-sidebar-inner .ccm-tags-display ul.ccm-tag-list li {
+div#main-container .ccm-tags-display ul.ccm-tag-list li {
 	/* customize_tag-highlight */ background-color: #A0DBE3; /* customize_tag-highlight */
 }
 
@@ -75,21 +83,28 @@ div#main-container ul li {
 
 div#main-container h1 {
 	font-size: 32px;
+	padding-top: 0px;
 	margin-bottom: 8px;
 }
 
 div#main-container h2 {
 	font-size: 28px;
+	padding-top: 0px;
+	line-height: 28px;
 	margin-bottom: 5px;
 }
 
 div#main-container h3 {
 	font-size: 22px;
+	padding-top: 6px;
+	line-height: 22px;
 	margin-bottom: 3px;
 }
 
 div#main-container h4 {
 	font-size: 20px;
+	padding-top: 8px;
+	line-height: 20px;
 	margin-bottom: 3px;
 }
 
@@ -181,4 +196,8 @@ div#footer #footer-inner a, div#footer #footer-inner a:link, div#footer #footer-
 
 div#footer #footer-inner a:hover {
 	text-decoration: underline;
+}
+
+li.month {
+	margin-left: 0px;
 }
