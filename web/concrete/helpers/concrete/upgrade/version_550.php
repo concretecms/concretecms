@@ -60,13 +60,16 @@ class ConcreteUpgradeVersion550Helper {
 		$this->installSinglePages();
 		
 		// move the old dashboard
-		$dashboard = Page::getByPath('/dashboard');
-		$dashboard->moveToTrash();
+		$newDashPage = Page::getByPath('/dashboard/welcome');
+		if (!is_object($newDashPage) || $newDashPage->isError()) {
+			$dashboard = Page::getByPath('/dashboard');
+			$dashboard->moveToTrash();
+			
+			// install new dashboard + page types		
+			$this->installDashboard();
 		
-		// install new dashboard + page types		
-		$this->installDashboard();
-		
-		$this->migrateOldDashboard();
+			$this->migrateOldDashboard();
+		}
 		
 		Loader::model('system/captcha/library');
 		$scl = SystemCaptchaLibrary::getByHandle('securimage');

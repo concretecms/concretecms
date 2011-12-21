@@ -55,13 +55,17 @@ jQuery.fn.dialog.open = function(obj) {
 	if (typeof(obj.width) == 'string') {
 		if (obj.width.indexOf('%', 0) > 0) {
 			w = obj.width.replace('%', '');
-			h = obj.height.replace('%', '');
-			h = $(window).height() * (h / 100);
 			w = $(window).width() * (w / 100);
-			h = h + 100;
 			w = w + 50;
 		} else {
 			w = parseInt(obj.width) + 50;
+		}
+		
+		if (obj.height.indexOf('%', 0) > 0) {
+			h = obj.height.replace('%', '');
+			h = $(window).height() * (h / 100);
+			h = h + 100;
+		} else {
 			h = parseInt(obj.height) + 100;
 		}
 	} else if (obj.width) { 
