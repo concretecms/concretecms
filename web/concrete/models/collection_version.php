@@ -211,7 +211,7 @@
 			return ($cvID == $this->cvID);
 		}
 		
-		function approve() {
+		function approve($doReindexImmediately = true) {
 			$db = Loader::db();
 			$u = new User();
 			$uID = $u->getUserID();
@@ -265,9 +265,8 @@
 			}
 
 			Events::fire('on_page_version_approve', $c);
-			$c->reindex();
+			$c->reindex(false, $doReindexImmediately);
 			$this->refreshCache();
-
 		}
 		
 		public function discard() {

@@ -622,7 +622,7 @@
 					
 					$v->setComment($_REQUEST['comments']);
 					if ($_REQUEST['approve'] == 'APPROVE' && $cp->canApproveCollection()) {
-						$v->approve();
+						$v->approve(false);
 					} 
 					
 					if ($_REQUEST['approve'] == 'DISCARD') {
@@ -639,7 +639,7 @@
 					// checking out the collection for editing
 					$v = CollectionVersion::get($c, "RECENT");
 					$v->setComment($_REQUEST['comments']);
-					$v->approve();
+					$v->approve(false);
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . $step);
 					exit;
 				}
@@ -1028,7 +1028,7 @@
 
 				if (($_POST['rel'] == 'SITEMAP' || $_POST['approveImmediately']) && ($cp->canApproveCollection())) {
 					$v = CollectionVersion::get($c, "RECENT");
-					$v->approve();
+					$v->approve(false);
 					$u = new User();
 					$u->unloadCollectionEdit();
 					$obj->rel = $_POST['rel'];
@@ -1110,7 +1110,7 @@
 					if ($_POST['rel'] == 'SITEMAP') { 
 						if ($cp->canApproveCollection()) {
 							$v = CollectionVersion::get($nc, "RECENT");
-							$v->approve();
+							$v->approve(false);
 						}
 						$u = new User();
 						$u->unloadCollectionEdit();

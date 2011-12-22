@@ -163,7 +163,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $num;		
 		}
 				
-		public function reindex($index = false, $actuallyDoReindex = false) {
+		public function reindex($index = false, $actuallyDoReindex = true) {
 			if ($this->isAlias()) {
 				return false;
 			}
