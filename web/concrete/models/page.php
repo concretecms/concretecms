@@ -1239,6 +1239,7 @@ class Page extends Collection {
 		}
 		// run any internal event we have for page update
 		$this->reindex();
+		parent::refreshCache();
 		$ret = Events::fire('on_page_update', $this);
 	}
 	
