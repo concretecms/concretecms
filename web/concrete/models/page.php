@@ -1719,7 +1719,7 @@ class Page extends Collection {
 	function clearPendingAction() {
 		$db = Loader::db();
 		$cID = $this->getCollectionID();
-		$q = "update Pages set cPendingAction = null, cPendingActionUID = null, cPendingActionDatetime = null where cID = {$cID}";
+		$q = "update Pages set cPendingAction = null, cPendingActionUID = null, cPendingActionDatetime = 0 where cID = {$cID}";
 		$r = $db->query($q);
 		parent::refreshCache();
 	}
