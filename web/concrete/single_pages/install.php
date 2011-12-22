@@ -224,7 +224,7 @@ $(function() {
 		</table>
 		
 		<? if (!StartingPointPackage::hasCustomList()) { ?>
-			<div class="alert-message block-message info"><?=t('concrete5 veterans can choose "Blank," but otherwise we recommend starting with "Standard Website" or "Blog."')?></div>
+			<div class="alert-message block-message info"><?=t('concrete5 veterans can choose "Empty Site," but otherwise we recommend starting with some sample content.')?></div>
 		<? } ?>
 
 	
@@ -397,7 +397,7 @@ $(function() {
 
 <div class="block-message alert-message info">
 <p>
-<?=t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', 'http://www.concrete5.org/community/forums/installation', 'http://www.getconcrete5.com')?>
+<?=t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', 'http://www.concrete5.org/community/forums/installation', 'http://www.concrete5.org/services/hosting')?>
 </p>
 </div>
 
