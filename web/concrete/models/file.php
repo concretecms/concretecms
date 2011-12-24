@@ -500,12 +500,17 @@ class File extends Object {
 		return $files;
 	}
 	
-	public function getDownloadStatistics(){
+	public function getDownloadStatistics($limit = 20){
 		$db = Loader::db();
+		$limitString = '';
+		if ($limit != false) {
+			$limitString = 'limit ' . $limit;
+		}
+		
 		if (is_object($this) && $this instanceof File) { 
-			return $db->getAll("SELECT * FROM DownloadStatistics WHERE fID = ? ORDER BY timestamp desc", array($this->getFileID()));
+			return $db->getAll("SELECT * FROM DownloadStatistics WHERE fID = ? ORDER BY timestamp desc {$limitString}", array($this->getFileID()));
 		} else {
-			return $db->getAll("SELECT * FROM DownloadStatistics ORDER BY timestamp desc");
+			return $db->getAll("SELECT * FROM DownloadStatistics ORDER BY timestamp desc {$limitString}");
 		}
 	}	
 	

@@ -52,7 +52,7 @@ class DashboardReportsStatisticsController extends DashboardBaseController {
 	}
 	
 	protected function setDownloadStatistics() {
-		$downloads = File::getDownloadStatistics();
+		$downloads = File::getDownloadStatistics(5);
 		$this->set('downloads', $downloads);
 	}
 	
