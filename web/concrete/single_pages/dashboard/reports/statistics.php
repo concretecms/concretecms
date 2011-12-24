@@ -97,7 +97,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <br/><br/>
 
-<h3><?=t('Recently Downloaded Files')?></h3>
+<h3><?=t('Five Most Recent Downloads')?></h3>
 
 <table id="ccm-site-statistics-downloads">
 <thead>
