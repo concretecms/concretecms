@@ -41,7 +41,7 @@ $h = Loader::helper('concrete/dashboard');?>
 				<tbody>
 				<?php  if (count($user_banned_limited_ips) == 0) {?>
 				<tr>
-					<td colspan="4">None</td>
+					<td colspan="4"><?php  echo t('None')?></td>
 				</tr>
 				<?php  } else { ?>
 					<?php  foreach ($user_banned_limited_ips as $user_banned_ip) { ?>
