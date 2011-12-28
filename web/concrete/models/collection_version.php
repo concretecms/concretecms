@@ -75,6 +75,7 @@
 			Cache::delete('stack', $cID . ':' . $cvID); 			
 			Cache::delete('composerpage', $cID . ':' . $cvID); 			
 			Cache::delete('collection_blocks', $cID . ':' . $cvID);
+			Events::fire('on_page_version_refresh_cache', $this);
 			
 		}
 		
@@ -122,6 +123,7 @@
 		function isMostRecent() {return $this->cvIsMostRecent;}
 		function isNew() {return $this->cvIsNew;}
 		function getVersionID() {return $this->cvID;}
+		function getCollectionID() {return $this->cID;}
 		function getVersionName() {return $this->cvName;}	
 		function getVersionComments() {return $this->cvComments;}
 		function getVersionAuthorUserID() {return $this->cvAuthorUID;}
