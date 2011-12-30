@@ -185,6 +185,7 @@ class FileHelper {
 				curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
 				$contents = curl_exec($curl_handle);
 				$http_code = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
+				curl_close($curl_handle);
 				if ($http_code == 404) {	
 					return false;
 				}
