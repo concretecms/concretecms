@@ -167,7 +167,7 @@ menuHTML += '<form method="post" id="ccm-check-in" action="<?=DIR_REL?>/<?=DISPA
 <? $valt = Loader::helper('validation/token'); ?>
 menuHTML += '<?=$valt->output('', true)?>';
 menuHTML += '<h4><?=t('Version Comments')?></h4>';
-menuHTML += '<p><input type="text" name="comments" id="ccm-check-in-comments" value="<?=$vo->getVersionComments()?>" style="width:520px"/></p>';
+menuHTML += '<p><input type="text" name="comments" id="ccm-check-in-comments" value="<?=$vo->getVersionComments()?>" onclick="this.select()" style="width:520px"/></p>';
 <? if ($cp->canApproveCollection()) { ?>
 menuHTML += '<a href="javascript:void(0)" id="ccm-check-in-publish" class="btn primary" style="float: right"><span><?=t('Publish My Edits')?></span></a>';
 <? } ?>
