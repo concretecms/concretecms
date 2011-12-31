@@ -400,8 +400,7 @@ class Area extends Object {
 				echo '<div class="ccm-layouts-block-arrange-placeholder ccm-block-arrange"></div>';
 			}
 		}
-
-
+		
 		foreach ($blocksToDisplay as $b) {
 			$bv = new BlockView();
 			$bv->setAreaObject($ourArea); 
@@ -417,8 +416,16 @@ class Area extends Object {
 			}
 
 			if ($p->canRead()) {
-				if (!$c->isEditMode()) {
-					echo $this->enclosingStart;
+				if (!$c->isEditMode() && (!empty($this->enclosingStart) || !empty($this->enclosingEnd))) {
+					$bID = $b->getBlockID();
+					$btHandle = $b->getBlockTypeHandle();
+					$bName = ($b->getBlockTypeHandle() == 'core_stack_display') ? Stack::getByID($b->getInstance()->stID)->getStackName() : $b->getBlockName();
+					$th = isset($th) ? $th : Loader::helper('text');
+					$bSafeName = $th->entities($bName);
+				}
+				
+				if (!$c->isEditMode() && !empty($this->enclosingStart)) {
+					echo sprintf($this->enclosingStart, $bID, $btHandle, $bSafeName);
 				}
 				if ($includeEditStrip) {
 					$bv->renderElement('block_controls', array(
@@ -437,8 +444,8 @@ class Area extends Object {
 				if ($includeEditStrip) {
 					$bv->renderElement('block_footer');
 				}
-				if (!$c->isEditMode()) {
-					echo $this->enclosingEnd;
+				if (!$c->isEditMode() && !empty($this->enclosingEnd)) {
+					echo sprintf($this->enclosingEnd, $bID, $btHandle, $bSafeName);
 				}
 			}
 		}
