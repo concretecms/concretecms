@@ -419,7 +419,7 @@ class Area extends Object {
 				if (!$c->isEditMode() && (!empty($this->enclosingStart) || !empty($this->enclosingEnd))) {
 					$bID = $b->getBlockID();
 					$btHandle = $b->getBlockTypeHandle();
-					$bName = ($b->getBlockTypeHandle() == 'core_stack_display') ? Stack::getByID($b->getInstance()->stID)->getStackName() : $b->getBlockName();
+					$bName = ($btHandle == 'core_stack_display') ? Stack::getByID($b->getInstance()->stID)->getStackName() : $b->getBlockName();
 					$th = isset($th) ? $th : Loader::helper('text');
 					$bSafeName = $th->entities($bName);
 				}
