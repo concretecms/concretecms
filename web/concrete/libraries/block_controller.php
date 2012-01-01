@@ -96,13 +96,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * }
 		 * </code>
 		 *
-		 * There are MANY different possible return values:
+		 * There are several different possible return values:
 		 *  Returns FALSE if $btTable is set but no db.xml file exists.
 		 *  Otherwise returns object with two properties: ->result (a boolean), and ->message (a string).
-		 *  If ->message is true, the installation was successful
-		 *  (although the db.xml file might only have one field declared which will cause errors in the future, you you will need to check for that separately).
+		 *  If ->result is true, the installation was successful
+		 *  (although the db.xml file might only have one field declared which will cause C5 to have problems later on, so you you will want to check for that separately).
 		 *  If ->result is false, the installation failed and you can check ->message for the explanation
-		 *  (usually -- sometimes ->message will be blank, in which case you need to assume a malformed db.xml file or an "unknown database error").
+		 *  (usually -- sometimes ->message will be blank, in which case there's either a malformed db.xml file or an "unknown database error").
 		 * See concrete/models/block_types.php::doInstallBlockType() for usage example.
 		 *
 		 * @param string $path
