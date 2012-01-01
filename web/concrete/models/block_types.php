@@ -50,7 +50,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public static function getDashboardBlockTypes($ap) {
 			$blockTypeIDs = $ap->getAddBlockTypes();
 			$db = Loader::db();
-			$btIDs = $db->GetCol('select btID from BlockTypes where btHandle like "dashboard_%" order by btID asc');
+			$btIDs = $db->GetCol('select btID from BlockTypes where btHandle like "dashboard_%" order by btDisplayOrder asc, btName asc, btID asc');
 			$blockTypes = array();
 			foreach($btIDs as $btID) {
 				if (in_array($btID, $blockTypeIDs)) {
@@ -68,7 +68,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if ($allowedBlocks != null) {
 				$q .= ' and btID in (' . implode(',', $allowedBlocks) . ') ';
 			}
-			$q .= ' order by btID asc';
+			$q .= ' order by btDisplayOrder asc, btName asc, btID asc';
 			
 			$r = $db->query($q);
 	
@@ -95,7 +95,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$dir = DIR_FILES_BLOCK_TYPES;
 			$db = Loader::db();
 			
-			$btHandles = $db->GetCol("select btHandle from BlockTypes");
+			$btHandles = $db->GetCol("select btHandle from BlockTypes order by btDisplayOrder asc, btName asc, btID asc");
 			
 			$aDir = array();
 			if (is_dir($dir)) {
@@ -137,7 +137,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 		public static function getInstalledList() {
 			$db = Loader::db();
-			$r = $db->query("select btID from BlockTypes order by btName asc");
+			$r = $db->query("select btID from BlockTypes order by btDisplayOrder asc, btName asc, btID asc");
 			$btArray = array();
 			while ($row = $r->fetchRow()) {
 				$bt = BlockType::getByID($row['btID']);
@@ -152,7 +152,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		function getBlockTypeArray() {
 			$db = Loader::db();
-			$q = "select btID from BlockTypes order by btID asc";
+			$q = "select btID from BlockTypes order by btDisplayOrder asc, btName asc, btID asc";
 			$r = $db->query($q);
 			$btArray = array();
 			if ($r) {
@@ -196,7 +196,26 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;areaName={$arHandle}&amp;mode=edit&amp;btask=alias" . $step . '&' . $valt->getParameter();
 			return $str;			
 		}
-			
+		
+		public static function setBlockTypeDisplayOrderToAlpha() {
+			$db = Loader::db();
+			$ca = new Cache();
+			$stmt = $db->Prepare("UPDATE BlockTypes SET btDisplayOrder = ? WHERE btID = ?");
+			$btDisplayOrder = 1;
+			$blockTypes = $db->GetArray("SELECT btID, btHandle, btIsInternal FROM BlockTypes ORDER BY btName ASC");
+			foreach ($blockTypes as $bt) {
+				if ($bt['btIsInternal']) {
+					$db->Execute($stmt, array(0, $bt['btID']));
+				} else {
+					$db->Execute($stmt, array($btDisplayOrder, $bt['btID']));
+					$btDisplayOrder++;
+				}
+				$ca->delete('blockTypeByID', $bt['btID']);
+				$ca->delete('blockTypeByHandle', $bt['btHandle']);
+			}
+			$ca->delete('blockTypeList', false);
+		}
+		
 	}
 
 /**
@@ -254,7 +273,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		private static function get($where, $properties) {
 			$db = Loader::db();
 			
-			$q = "SELECT btID, btName, btDescription, btHandle, pkgID, btActiveWhenAdded, btIsInternal, btCopyWhenPropagate, btIncludeAll, btInterfaceWidth, btInterfaceHeight from BlockTypes where {$where}";
+			$q = "select btID, btName, btDescription, btHandle, pkgID, btActiveWhenAdded, btIsInternal, btCopyWhenPropagate, btIncludeAll, btDisplayOrder, btInterfaceWidth, btInterfaceHeight from BlockTypes where {$where}";
+			
 			$r = $db->query($q, $properties);
 			
 			if ($r->numRows() > 0) {
@@ -450,7 +470,31 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}
 		}
-
+		
+		function setBlockTypeDisplayOrder($displayOrder) {
+			$db = Loader::db();
+			
+			$displayOrder = intval($displayOrder); //in case displayOrder came from a string (so ADODB escapes it properly)
+			
+			$sql = "UPDATE BlockTypes SET btDisplayOrder = btDisplayOrder - 1 WHERE btDisplayOrder > ?";
+			$vals = array($this->btDisplayOrder);
+			$db->Execute($sql, $vals);
+			
+			$sql = "UPDATE BlockTypes SET btDisplayOrder = btDisplayOrder + 1 WHERE btDisplayOrder >= ?";
+			$vals = array($displayOrder);
+			$db->Execute($sql, $vals);
+			
+			$sql = "UPDATE BlockTypes SET btDisplayOrder = ? WHERE btID = ?";
+			$vals = array($displayOrder, $this->btID);
+			$db->Execute($sql, $vals);
+			
+			// now we remove the block type from cache
+			$ca = new Cache();
+			$ca->delete('blockTypeByID', $this->btID);
+			$ca->delete('blockTypeByHandle', $this->btHandle);
+			$ca->delete('blockTypeList', false);
+		}
+		
 		function installBlockTypeFromPackage($btHandle, $pkg, $btID = 0) {
 			$dir1 = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS;
 			$dir2 = DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS;
@@ -561,6 +605,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$btd->btInterfaceHeight = $bta->getInterfaceHeight();
 				$btd->btInterfaceWidth = $bta->getInterfaceWidth();
 				$btd->pkgID = $bt->getPackageID();
+				
+				if ($bta->isBlockTypeInternal()) {
+					$btd->btDisplayOrder = 0;
+				} else {
+					$btd->btDisplayOrder = 1;
+					$db->Execute('UPDATE BlockTypes SET btDisplayOrder = btDisplayOrder + 1 WHERE btIsInternal = 0'); //Bump up all other non-internal block types so new one goes at the top
+				}
 				
 				if ($btID > 0) {
 					$btd->btID = $btID;

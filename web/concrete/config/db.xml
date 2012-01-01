@@ -295,6 +295,11 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="btDisplayOrder" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED />
+    </field>
     <field name="btInterfaceWidth" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="400"/>
