@@ -2368,6 +2368,19 @@ class Page extends Collection {
 			Events::fire('on_page_add', $pc);
 			$pc->rescanCollectionPath();
 
+			// Initilize global areas for this page, in order to load the headeritems on first load.
+			$v = array( Stack::ST_TYPE_GLOBAL_AREA );
+			$stNames = $db->GetCol( 'select stName from Stacks where Stacks.stType = ?', $v );
+			foreach ( $stNames as $stName ) {
+				$a = Area::getOrCreate($pc, $stName, 1);
+				$a->rescanAreaPermissionsChain();
+			}
+
+			$blocks = $pc->getBlocks();
+			foreach($blocks as $b) {
+				$b->refreshCache();
+			}
+
 		}
 		
 		return $pc;
