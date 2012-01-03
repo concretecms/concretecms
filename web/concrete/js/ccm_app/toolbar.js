@@ -1,6 +1,8 @@
 $(function() {
-	ccm_intelligentSearchActivateResults();	
-	ccm_intelligentSearchDoRemoteCalls($('#ccm-nav-intelligent-search').val());
+	if ($("#ccm-toolbar").length > 0) { 
+		ccm_intelligentSearchActivateResults();	
+		ccm_intelligentSearchDoRemoteCalls($('#ccm-nav-intelligent-search').val());
+	}
 });
 
 	var ccm_quickNavTimer = false;
