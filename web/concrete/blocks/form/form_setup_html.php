@@ -89,6 +89,25 @@ $ih = Loader::helper('concrete/interface');
 					</div>
 				</div>
 			</div>
+			<div class="clearfix">
+				<label for="ccm-form-fileset"><?=t('Add uploaded files to a set?')?></label>
+				<div class="input">
+					<div id="ccm-form-fileset">
+						<?php
+							Loader::model('file_set');
+							$fsl = new FileSetList();
+							$fsl->filterByType(FileSet::TYPE_PUBLIC);
+							$fsl->setItemsPerPage(999);
+							$fileSets = $fsl->getPage();
+							$sets = array(0 => t('None'));
+							foreach($fileSets as $fileSet) {
+								$sets[$fileSet->fsID] = $fileSet->fsName;
+							}
+							print $form->select('addFilesToSet', $sets, $miniSurveyInfo['addFilesToSet']);
+						?>
+					</div>
+				</div>
+			</div>
 		</fieldset>
 	</div> 
 	
