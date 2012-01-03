@@ -6,6 +6,7 @@
 		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
+		protected $btCacheBlockOutputLifetime = 7200;
 		protected $btTable = 'btDashboardNewsflowLatest';
 		protected $btCacheBlockOutputForRegisteredUsers = true;
 		protected $btIsInternal = true;
