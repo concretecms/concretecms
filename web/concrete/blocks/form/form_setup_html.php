@@ -97,7 +97,7 @@ $ih = Loader::helper('concrete/interface');
 							Loader::model('file_set');
 							$fsl = new FileSetList();
 							$fsl->filterByType(FileSet::TYPE_PUBLIC);
-							$fsl->setItemsPerPage(999);
+							$fsl->setItemsPerPage(-1);
 							$fileSets = $fsl->getPage();
 							$sets = array(0 => t('None'));
 							foreach($fileSets as $fileSet) {
