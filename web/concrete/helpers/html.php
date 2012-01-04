@@ -62,6 +62,8 @@ class HtmlHelper {
 		// checking the theme directory for it. It's just in the root.
 		if ($v->getThemeDirectory() != '' && file_exists($v->getThemeDirectory() . '/' . $file)) {
 			$css->file = $v->getThemePath() . '/' . $file;
+		} else if (file_exists(DIR_BASE . '/' . DIRNAME_CSS . '/' . $file)) {
+			$css->file = DIR_REL . '/' . DIRNAME_CSS . '/' . $file;
 		} else if ($pkgHandle != null) {
 			if (file_exists(DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file)) {
 				$css->file = DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file;
@@ -71,14 +73,10 @@ class HtmlHelper {
 		}
 			
 		if ($css->file == '') {
-			if (file_exists(DIR_BASE . '/' . DIRNAME_CSS . '/' . $file)) {
-				$css->file = DIR_REL . '/' . DIRNAME_CSS . '/' . $file;
-			} else {
-				if (isset($this->legacyCSS[$file])) {
-					$file = $this->legacyCSS[$file];
-				}
-				$css->file = ASSETS_URL_CSS . '/' . $file;
+			if (isset($this->legacyCSS[$file])) {
+				$file = $this->legacyCSS[$file];
 			}
+			$css->file = ASSETS_URL_CSS . '/' . $file;
 		}
 
 		$css->file .= (strpos($css->file, '?') > -1) ? '&amp;' : '?';
