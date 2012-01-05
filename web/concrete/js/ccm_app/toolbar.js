@@ -214,7 +214,7 @@ $(function() {
 		$("#ccm-toolbar-nav-delete").dialog();
 	
 		
-		$("#ccm-nav-edit").mouseover(function() {
+		$("#ccm-nav-edit").hoverIntent(function() {
 			clearTimeout(ccm_hideToolbarMenusTimer);
 			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
 			$(this).parent().addClass('ccm-system-nav-selected');
@@ -264,7 +264,7 @@ $(function() {
 				});
 			//}
 			return false;
-		});
+		}, function() {});
 
 	}
 	var ajaxtimer = null;
