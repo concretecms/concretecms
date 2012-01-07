@@ -9,6 +9,8 @@ if (isset($cp)) {
 
 ?>
 
+<style type="text/css">body {margin-top: 49px !important;} </style>
+
 <script type="text/javascript">
 <?
 $valt = Loader::helper('validation/token');

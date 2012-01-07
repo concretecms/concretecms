@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8" />
+<?php  Loader::element('header_required'); ?>
 
 <!-- Site Header Content //-->
 
@@ -15,7 +15,6 @@
 <link rel="stylesheet" media="screen" type="text/css" href="<?php echo $this->getStyleSheet('typography.css')?>" />
 <link href='http://fonts.googleapis.com/css?family=Merriweather:400,700,900,300' rel='stylesheet' type='text/css' />
 
-<?php  Loader::element('header_required'); ?>
 
 </head>
 

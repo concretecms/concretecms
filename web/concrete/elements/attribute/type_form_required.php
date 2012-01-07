@@ -32,7 +32,7 @@ if (is_object($key)) {
 	<script type="text/javascript">
 	deleteAttribute = function() {
 		if (confirm('<?=$delConfirmJS?>')) { 
-			location.href = "<?=$this->url('/dashboard/files/attributes', 'delete', $key->getAttributeKeyID(), $valt->generate('delete_attribute'))?>";				
+			location.href = "<?=$this->action('delete', $key->getAttributeKeyID(), $valt->generate('delete_attribute'))?>";				
 		}
 	}
 	</script>
