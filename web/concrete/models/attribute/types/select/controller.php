@@ -155,7 +155,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		}
 		$this->set('selectedOptionValues',$selectedOptionValues);
 		$this->set('selectedOptions', $selectedOptions);
-		$this->addHeaderItem(Loader::helper('html')->javascript('jquery.ui.js'));
+		$this->addFooterItem(Loader::helper('html')->javascript('jquery.ui.js'));
 		$this->addHeaderItem(Loader::helper('html')->css('jquery.ui.css'));
 	}
 	

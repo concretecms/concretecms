@@ -281,7 +281,7 @@ class ConcreteDashboardHelper {
 				
 				<? if (ENABLE_INTELLIGENT_SEARCH_MARKETPLACE) { ?>
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite ccm-intelligent-search-results-module-loading">
-				<h1><?=t('Add-Ons &amp; Themes')?></h1>
+				<h1><?=t('Add-Ons')?></h1>
 				<ul class="ccm-intelligent-search-results-list" id="ccm-intelligent-search-results-list-marketplace">
 				</ul>
 				</div>
