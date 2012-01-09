@@ -204,6 +204,8 @@ class ConcreteDashboardHelper {
 							$corepages[] = $page;
 						}
 					}
+				} else {
+					continue;
 				}
 			
 				if ($page->getAttribute('exclude_search_index')) {
@@ -245,14 +247,19 @@ class ConcreteDashboardHelper {
 					}
 			
 					?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage)?>"><?=$subpage->getCollectionName()?></a><span><? if ($page->getCollectionPath() != '/dashboard/system') { ?><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?> <? } ?><?=$subpage->getCollectionName()?> <?=$subpage->getAttribute('meta_keywords')?></span></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage)?>"><?=$subpage->getCollectionName()?></a><span>1<? if ($page->getCollectionPath() != '/dashboard/system') { ?><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?> <? } ?><?=$subpage->getCollectionName()?> <?=$subpage->getAttribute('meta_keywords')?></span></li>
 					<? 
 				}
 				?>
 				</ul>
 				
 				</div>
-				<? } ?>
+				<? }
+				
+				$custHome = Page::getByPath('/dashboard/home');
+				$custHomeP = new Permissions($custHome);
+				if ($custHomeP->canRead()) {
+				?>
 				
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-onsite">
 				
@@ -264,7 +271,9 @@ class ConcreteDashboardHelper {
 				</ul>
 				
 				</div>
-
+				
+				<? } ?>
+				
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-loading">
 				<h1><?=t('Your Site')?></h1>
 				<ul class="ccm-intelligent-search-results-list" id="ccm-intelligent-search-results-list-your-site">
@@ -339,14 +348,23 @@ class ConcreteDashboardHelper {
 			<div class="ccm-dashboard-overlay-inner">
 			<ul>
 			<li><a href="<?=View::url('/dashboard')?>"><strong><?=t('News')?></strong></a> – <?=t('Learn about your site and concrete5')?></li>
-			<li><a href="<?=View::url('/dashboard/system')?>"><strong><?=t('System &amp; Settings')?></strong></a> – <?=t('Secure and setup your site.')?></li>
-			<li><a href="<?php echo View::url('/dashboard/extend') ?>"><strong><?php echo t("Extend concrete5") ?></strong></a> – 
+			<?
+			$systemSettings = Page::getByPath('/dashboard/system');
+			$systemSettingsP = new Permissions($systemSettings);
+			if ($systemSettingsP->canRead()) { ?>
+				<li><a href="<?=View::url('/dashboard/system')?>"><strong><?=t('System &amp; Settings')?></strong></a> – <?=t('Secure and setup your site.')?></li>
+			<? } ?>
+			<?
+			$tpa = new TaskPermission();
+			if ($tpa->canInstallPackages()) { ?>
+				<li><a href="<?php echo View::url('/dashboard/extend') ?>"><strong><?php echo t("Extend concrete5") ?></strong></a> – 
 			<?php echo sprintf(t('<a href="%s">Install</a>, <a href="%s">update</a> or download more <a href="%s">themes</a> and <a href="%s">add-ons</a>.'),
 				View::url('/dashboard/extend/install'),
 				View::url('/dashboard/extend/update'),
 				View::url('/dashboard/extend/themes'),
 				View::url('/dashboard/extend/add-ons')); ?>
 			</li>
+			<? } ?>
 			</ul>
 			</div>
 			</div>
@@ -370,6 +388,10 @@ class ConcreteDashboardHelper {
 				$ch2 = $page->getCollectionChildrenArray(true);
 				foreach($ch2 as $chi) {
 					$subpage = Page::getByID($chi); 
+					$subpageP = new Permissions($subpage);
+					if (!$subpageP->canRead()) {
+						continue;
+					}
 					if ($subpage->getAttribute('exclude_nav')) {
 						continue;
 					}

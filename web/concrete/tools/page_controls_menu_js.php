@@ -84,7 +84,7 @@ if (isset($cp)) {
 		$statusMessage .= "<br/>" . t('(All edits take effect immediately)');
 	}
 
-	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { 
+	if ($dh->canRead() || $cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { 
 	
 		$cID = $c->getCollectionID(); ?>
 
@@ -102,18 +102,23 @@ menuHTML += '<li id="ccm-logo-wrapper"><?=Loader::helper('concrete/interface')->
 	menuHTML += '<li><a class="ccm-icon-back ccm-menu-icon" href="<?=View::url('/dashboard/pages/types')?>"><?=t('Page Types')?></a></li>';
 <? } ?>
 
-menuHTML += '<li <? if ($c->isEditMode()) { ?>class="ccm-nav-edit-mode-active"<? } ?>><a class="ccm-icon-edit ccm-menu-icon" id="ccm-nav-edit" href="javascript:void(0)"><? if ($c->isEditMode()) { ?><?=t('Editing')?><? } else { ?><?=t('Edit')?></a><? } ?></li>';
-<?
-$items = $ihm->getPageHeaderMenuItems('left');
-foreach($items as $ih) {
-	$cnt = $ih->getController(); 
-	if ($cnt->displayItem()) {
-	?>
-		menuHTML += '<li><?=$cnt->getMenuLinkHTML()?></li>';
+<? if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { ?>
+	
+	menuHTML += '<li <? if ($c->isEditMode()) { ?>class="ccm-nav-edit-mode-active"<? } ?>><a class="ccm-icon-edit ccm-menu-icon" id="ccm-nav-edit" href="javascript:void(0)"><? if ($c->isEditMode()) { ?><?=t('Editing')?><? } else { ?><?=t('Edit')?></a><? } ?></li>';
 	<?
+	$items = $ihm->getPageHeaderMenuItems('left');
+	foreach($items as $ih) {
+		$cnt = $ih->getController(); 
+		if ($cnt->displayItem()) {
+		?>
+			menuHTML += '<li><?=$cnt->getMenuLinkHTML()?></li>';
+		<?
+		}
 	}
-}
-if (Loader::helper('concrete/interface')->showWhiteLabelMessage()) { ?>
+	
+} ?>
+
+<? if (Loader::helper('concrete/interface')->showWhiteLabelMessage()) { ?>
 	menuHTML += '<li id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>';
 <? }
 ?>
