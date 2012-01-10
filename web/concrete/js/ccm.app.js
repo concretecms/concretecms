@@ -2954,6 +2954,7 @@ ccm_activateFileManager = function(altype, searchInstance) {
 	ccm_searchActivatePostFunction[searchInstance] = function() {
 		ccm_alSetupCheckboxes(searchInstance);
 		ccm_alSetupSelectFiles();
+		ccm_alSetupSingleUploadForm();
 	}
 	
 	
