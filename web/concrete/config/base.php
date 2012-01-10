@@ -22,7 +22,7 @@ if (!defined('BASE_URL')) {
 }
 
 if (!defined('DIR_REL')) {
-	$uri = substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], DISPATCHER_FILENAME) - 1);
+	$uri = substr($_SERVER['SCRIPT_NAME'], 0, stripos($_SERVER['SCRIPT_NAME'], DISPATCHER_FILENAME) - 1);
 	define('DIR_REL', $uri);
 }
 

@@ -48,13 +48,13 @@ class Request {
 		if (DIR_REL != '') {
 			$dr = trim(DIR_REL, '/');
 			$path = trim($path, '/');
-			if (strpos($path, $dr) === 0) {
+			if (stripos($path, $dr) === 0) {
 				$path = substr($path, strlen($dr));	
 			}
 		}
 		
 		$path = trim($path, '/');
-		if (strpos($path, DISPATCHER_FILENAME) === 0) {
+		if (stripos($path, DISPATCHER_FILENAME) === 0) {
 			$path = substr($path, strlen(DISPATCHER_FILENAME));	
 		}
 
