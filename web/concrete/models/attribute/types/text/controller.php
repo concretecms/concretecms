@@ -18,7 +18,7 @@ class TextAttributeTypeController extends DefaultAttributeTypeController  {
 		if (is_object($this->attributeValue)) {
 			$value = Loader::helper('text')->entities($this->getAttributeValue()->getValue());
 		}
-		print Loader::helper('form')->text($this->field('value'), $value, array('class' => 'span12'));
+		print Loader::helper('form')->text($this->field('value'), $value, array('class' => 'span5'));
 	}
 
 
