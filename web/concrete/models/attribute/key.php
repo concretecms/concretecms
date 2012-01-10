@@ -94,6 +94,7 @@ class AttributeKey extends Object {
 	 */
 	public static function getList($akCategoryHandle, $filters = array()) {
 		$db = Loader::db();
+		$pkgHandle = $db->GetOne('select pkgHandle from AttributeKeyCategories inner join Packages on Packages.pkgID = AttributeKeyCategories.pkgID where akCategoryHandle = ?', array($akCategoryHandle));
 		$q = 'select akID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akCategoryHandle = ?';
 		foreach($filters as $key => $value) {
 			$q .= ' and ' . $key . ' = ' . $value . ' ';
@@ -101,7 +102,11 @@ class AttributeKey extends Object {
 		$r = $db->Execute($q, array($akCategoryHandle));
 		$list = array();
 		$txt = Loader::helper('text');
-		Loader::model('attribute/categories/' . $akCategoryHandle);
+		if ($pkgHandle) { 
+			Loader::model('attribute/categories/' . $akCategoryHandle, $pkgHandle);
+		} else {
+			Loader::model('attribute/categories/' . $akCategoryHandle);
+		}
 		$className = $txt->camelcase($akCategoryHandle);
 		while ($row = $r->FetchRow()) {
 			$c1 = $className . 'AttributeKey';
