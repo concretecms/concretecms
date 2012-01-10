@@ -486,7 +486,13 @@
         <page name="Sets" path="/dashboard/system/attributes/sets" filename="/dashboard/system/attributes/sets.php" pagetype="" description="Group attributes into sets for easier organization" package=""/>
         <page name="Types" path="/dashboard/system/attributes/types" filename="/dashboard/system/attributes/types.php" pagetype="" description="Choose which attribute types are available for different items." package=""/>
 
-        <page name="Environment" path="/dashboard/system/environment" filename="/dashboard/system/environment/view.php" pagetype="" description="Advanced settings for web developers." package=""/>
+        <page name="Environment" path="/dashboard/system/environment" filename="/dashboard/system/environment/view.php" pagetype="" description="Advanced settings for web developers." package="">
+			<attributes>
+				<attributekey handle="exclude_search_index">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+			</attributes>
+        </page>
         <page name="Environment Information" path="/dashboard/system/environment/info" filename="/dashboard/system/environment/info.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
