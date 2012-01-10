@@ -1003,3 +1003,11 @@ div#ccm-notification-inner div#ccm-notification-message{width:auto;font-size:12p
 .ccm-dialog-tabs li.open.menu .menu,.ccm-dialog-tabs .open.dropdown .dropdown-toggle{border-color:#999;}
 .ccm-dialog-tabs li.open a.menu:after,.ccm-dialog-tabs .dropdown.open .dropdown-toggle:after{border-top-color:#555;}
 .ccm-dashboard-header-option{color:#333;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;font-weight:normal;line-height:20px;z-index:5;text-decoration:none;position:absolute;top:0px;right:10px;top:9px;line-height:14px;padding-bottom:2px;padding:7px 9px 7px;font-size:11px;}
+table.ccm-grid{border-left:1px solid #D4D4D4;border-top:1px solid #D4D4D4;font-size:12px;}
+table.ccm-grid th,table.ccm-grid>tbody>tr>td{border-right:1px solid #D4D4D4;border-bottom:1px solid #D4D4D4;font-size:12px;padding:7px;background:#ffffff;}
+table.ccm-grid tr.ccm-row-alt td{background-color:#f0f5ff !important;}
+table.ccm-grid th{font-weight:bold;color:#999999;background-color:#efefef;text-align:center;}
+table.ccm-grid tr.version-active td,table.ccm-grid tr.active td{font-weight:bold;font-size:13px;}
+table.ccm-grid td.actor img{float:right;}
+table.ccm-grid td.ccm-grid-cb{text-align:center;}
+table.ccm-grid img{border:0px;}
