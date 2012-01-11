@@ -741,10 +741,21 @@ class Block extends Object {
 	}	
 
 	function getBlockPassThruAction() {
-		$str = $this->_getBlockAction();
-		return $str . '&amp;btask=passthru';
+		// is the block located in a stack?
+		$pc = $this->getBlockCollectionObject();
+		if ($pc->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+			$c = Page::getCurrentPage();
+			$cID = $c->getCollectionID();
+			$bID = $this->getBlockID();
+			$valt = Loader::helper('validation/token');
+			$token = $valt->generate();
+			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;stackID=" . $this->getBlockActionCollectionID() . "&amp;bID={$bID}&amp;btask=passthru_stack&amp;ccm_token=" . $token;
+			return $str;
+		} else { 
+			$str = $this->_getBlockAction();
+			return $str . '&amp;btask=passthru';
+		}
 	}
-
 	
 	function isEditable() {
 		$bv = new BlockView();
