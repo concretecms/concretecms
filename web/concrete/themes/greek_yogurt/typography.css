@@ -60,7 +60,7 @@ div#main-container .ccm-tags-display ul.ccm-tag-list li {
 	/* customize_tag-highlight */ background-color: #A0DBE3; /* customize_tag-highlight */
 }
 
-div#main-container p, div#main-container ul li {
+div#main-container, div#main-container ul li {
 	/* customize_p-font */ font-family: 'Merriweather', Georgia, serif; line-height: 1.8em; font-size: 14px; /* customize_p-font */
 	/* customize_text */ color: #000; /* customize_text */
 
