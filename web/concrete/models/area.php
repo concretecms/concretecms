@@ -363,6 +363,9 @@ class Area extends Object {
 			return false;
 		}
 		
+		if ($this->arIsGlobal) {
+			$stack = Stack::getByName($this->arHandle);
+		}		
 		$currentPage = Page::getCurrentPage();
 		$ourArea = Area::getOrCreate($c, $this->arHandle, $this->arIsGlobal);
 		if (count($this->customTemplateArray) > 0) {
@@ -410,6 +413,9 @@ class Area extends Object {
 			// onto the next and including interactive elements
 			if ($currentPage->getCollectionID() != $c->getCollectionID()) {
 				$b->setBlockActionCollectionID($c->getCollectionID());
+			}
+			if ($this->arIsGlobal && is_object($stack)) {
+				$b->setBlockActionCollectionID($stack->getCollectionID());
 			}
 			$p = new Permissions($b);
 			if (($p->canWrite() || $p->canDeleteBlock()) && $c->isEditMode() && $this->showControls) {
