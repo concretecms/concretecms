@@ -102,12 +102,12 @@ class ConcreteDashboardHelper {
 						$class = '';
 					}
 					
-					$relatedPages .= '<li class="' . $class . '"><a href="' . $nh->getLinkToCollection($sc) . '">' . $sc->getCollectionName() . '</a></li>';
+					$relatedPages .= '<li class="' . $class . '"><a href="' . $nh->getLinkToCollection($sc, false, true) . '">' . $sc->getCollectionName() . '</a></li>';
 				}
 		
 				if ($upToPage) { 
 					$relatedPages .= '<li class="ccm-menu-separator"></li>';
-					$relatedPages .= '<li><a href="' . $nh->getLinkToCollection($upToPage) . '">' . t('&lt; Back to %s', $upToPage->getCollectionName()) . '</a></li>';
+					$relatedPages .= '<li><a href="' . $nh->getLinkToCollection($upToPage, false, true) . '">' . t('&lt; Back to %s', $upToPage->getCollectionName()) . '</a></li>';
 				}
 				$relatedPages .= '</ul>';
 				$relatedPages .= '</div>';
@@ -226,12 +226,12 @@ class ConcreteDashboardHelper {
 				
 				<ul class="ccm-intelligent-search-results-list">
 				<? if (count($ch2) == 0) { ?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page)?>"><?=t($page->getCollectionName())?></a><span><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?></span></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page, false, true)?>"><?=t($page->getCollectionName())?></a><span><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?></span></li>
 				<? } ?>
 				
 				<?
 				if ($page->getCollectionPath() == '/dashboard/system') { ?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page)?>"><?=t('View All')?><span><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?></span></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page, false, true)?>"><?=t('View All')?><span><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?></span></li>
 				<?				
 				}
 				
@@ -247,7 +247,7 @@ class ConcreteDashboardHelper {
 					}
 			
 					?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage)?>"><?=$subpage->getCollectionName()?></a><span>1<? if ($page->getCollectionPath() != '/dashboard/system') { ?><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?> <? } ?><?=$subpage->getCollectionName()?> <?=$subpage->getAttribute('meta_keywords')?></span></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage, false, true)?>"><?=$subpage->getCollectionName()?></a><span>1<? if ($page->getCollectionPath() != '/dashboard/system') { ?><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?> <? } ?><?=$subpage->getCollectionName()?> <?=$subpage->getAttribute('meta_keywords')?></span></li>
 					<? 
 				}
 				?>
@@ -309,7 +309,7 @@ class ConcreteDashboardHelper {
 				
 				<div class="ccm-dashboard-overlay-module">
 				
-				<h1><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><?=t($page->getCollectionName())?></a></h1>
+				<h1><a href="<?=Loader::helper('navigation')->getLinkToCollection($page, false, true)?>"><?=t($page->getCollectionName())?></a></h1>
 				
 				
 				<ul>
@@ -328,7 +328,7 @@ class ConcreteDashboardHelper {
 					}
 			
 					?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subpage)?>"><?=t($subpage->getCollectionName())?></a></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subpage, false, true)?>"><?=t($subpage->getCollectionName())?></a></li>
 					<? 
 				}
 				?>
@@ -379,7 +379,7 @@ class ConcreteDashboardHelper {
 				
 				<div class="ccm-dashboard-overlay-module">
 				
-				<h1><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><?=t($page->getCollectionName())?></a></h1>
+				<h1><a href="<?=Loader::helper('navigation')->getLinkToCollection($page, false, true)?>"><?=t($page->getCollectionName())?></a></h1>
 				
 				
 				<ul>
@@ -397,7 +397,7 @@ class ConcreteDashboardHelper {
 					}
 					
 					?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subpage)?>"><?=t($subpage->getCollectionName())?></a></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subpage, false, true)?>"><?=t($subpage->getCollectionName())?></a></li>
 					<? 
 				}
 				?>
