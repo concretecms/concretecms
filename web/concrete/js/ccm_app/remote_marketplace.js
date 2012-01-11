@@ -230,6 +230,7 @@ ccm_getMarketplaceItem = function(args) {
 					title: ccmi18n.community,
 					href:  CCM_TOOLS_PATH + '/marketplace/download?install=1&mpID=' + mpID,
 					width: 350,
+					appendButtons: true,
 					modal: false,
 					height: 240
 				});
