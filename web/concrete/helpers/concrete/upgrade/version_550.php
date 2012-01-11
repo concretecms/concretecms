@@ -39,6 +39,10 @@ class ConcreteUpgradeVersion550Helper {
 			$db->Execute('alter table PageSearchIndex add index (cRequiresReindex)');
 		}
 		
+		// install version job
+		Loader::model("job");
+		Job::installByHandle('remove_old_page_versions');		
+		
 		// flag system pages appropriately 
 		Page::rescanSystemPages();		
 		
