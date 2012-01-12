@@ -122,7 +122,7 @@ ccm_getMarketplaceItemDetails = function(mpID) {
 	
 			}
 		});
-	});
+	}, 'get_item_details', mpID);
 }
 
 ccm_getMarketplaceItem = function(args) {
