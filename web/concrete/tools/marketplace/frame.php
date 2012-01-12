@@ -14,9 +14,9 @@ if ($tp->canInstallPackages()) {
 			<? if ($_REQUEST['task'] == 'get') { ?>
 				parent.ccm_getMarketplaceItem({mpID: '<?=$_REQUEST['mpID']?>', closeTop: true});
 			<? } else if ($_REQUEST['task'] == 'open_theme_launcher') { ?>
-				parent.ccm_openThemeLauncher(<?=$_REQUEST['mpID']?>, true);
+				parent.ccm_getMarketplaceItemDetails(<?=$_REQUEST['mpID']?>, true);
 			<? } else if ($_REQUEST['task'] == 'open_addon_launcher') { ?>
-				parent.ccm_openAddonLauncher(<?=$_REQUEST['mpID']?>, true);
+				parent.ccm_getMarketplaceItemDetails(<?=$_REQUEST['mpID']?>, true);
 			<? } ?>
 		</script>
 	<? } else { ?>
