@@ -16,7 +16,7 @@ class DashboardExtendThemesController extends Controller {
 			Loader::model('marketplace_remote_item');
 			
 			$mri = new MarketplaceRemoteItemList();
-			$mri->setItemsPerPage(15);
+			$mri->setItemsPerPage(9);
 			$sets = MarketplaceRemoteItemList::getItemSets('themes');
 
 			$setsel = array('' => t('All Items'), 'FEATURED' => t('Featured Items'));

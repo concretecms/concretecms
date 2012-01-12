@@ -7,7 +7,7 @@ ccm_openThemeLauncher = function() {
 			href:  CCM_TOOLS_PATH + '/marketplace/themes',
 			width: '905',
 			modal: false,
-			height: '500'
+			height: '410'
 		});
 	}, 'open_theme_launcher');
 }
@@ -51,7 +51,7 @@ ccm_openAddonLauncher = function() {
 			href:  CCM_TOOLS_PATH + '/marketplace/add-ons',
 			width: '905',
 			modal: false,
-			height: '500'
+			height: '410'
 		});
 	}, 'open_addon_launcher');
 }
