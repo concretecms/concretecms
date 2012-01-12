@@ -154,7 +154,7 @@ class Marketplace {
 					}, \'' . CONCRETE5_ORG_URL . '\');	
 				});	
 				</script>';
-				$ifr .= '<iframe class="ccm-marketplace-frame" id="ccm-marketplace-frame-' . $time . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+				$ifr .= '<iframe class="ccm-marketplace-frame-connect" id="ccm-marketplace-frame-' . $time . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
 				return $ifr;
 			}
 		} else {

@@ -55,6 +55,14 @@ class MarketplaceRemoteItem extends Object {
 	public function getReviewBody() {
 		return $this->reviewBody;
 	}
+	public function getLargeThumbnail() {
+		if ($this->largethumbnail) {
+			return $this->largethumbnail;
+		} else {
+			$screenshots = $this->getScreenshots();
+			return $screenshots[0];
+		}
+	}
 	public function getRemoteURL(){ return $this->url; }
 	public function getProductBlockID() {return $this->productBlockID;}
 	public function getFivePackProductBlockID() {return $this->fivePackProductBlockID;}
@@ -230,6 +238,10 @@ class MarketplaceRemoteItemList extends ItemList {
 
 	public function filterByIsFeaturedRemotely($r) {
 		$this->params['is_featured_remotely'] = $r;
+	}
+	
+	public function filterByCompatibility($r) {
+		$this->params['is_compatible'] = $r;
 	}
 	
 	public function execute() {
