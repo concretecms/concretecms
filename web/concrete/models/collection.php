@@ -821,8 +821,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			if ($res) {
 				// now we add a pending version to the collectionversions table
-				$v2 = array($newCID, 1, $data['name'], $data['handle'], $data['cDescription'], $cDatePublic, $cDate, VERSION_INITIAL_COMMENT, $data['uID'], $cvIsApproved);
-				$q2 = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				$v2 = array($newCID, 1, $data['name'], $data['handle'], $data['cDescription'], $cDatePublic, $cDate, VERSION_INITIAL_COMMENT, $data['uID'], $cvIsApproved, 1);
+				$q2 = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, cvIsNew) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				$r2 = $db->prepare($q2);
 				$res2 = $db->execute($r2, $v2);
 			}
