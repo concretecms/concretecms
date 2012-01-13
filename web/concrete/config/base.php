@@ -496,10 +496,6 @@ if (!defined('NEWSFLOW_URL')) {
 	define('NEWSFLOW_URL', 'http://newsflow.concrete5.org');
 }
 
-if (!defined('ENABLE_APP_NEWS')) {
-	define('ENABLE_APP_NEWS', true);
-}
-
 if (!defined('ENABLE_TRASH_CAN')) { 
 	define('ENABLE_TRASH_CAN', true);
 }
