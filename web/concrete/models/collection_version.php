@@ -278,7 +278,12 @@
 				$this->delete();
 			}
 			$this->refreshCache();
-
+		}
+		
+		public function canDiscard() {
+			$db = Loader::db();
+			$total = $db->GetOne('select count(cvID) from CollectionVersions where cID = ?', array($this->cID));
+			return $this->isNew() && $total > 1;
 		}
 		
 		public function removeNewStatus() {

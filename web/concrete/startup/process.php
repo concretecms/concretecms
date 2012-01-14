@@ -620,24 +620,22 @@
 			case 'check-in':
 				if ($cp->canWrite() || $cp->canApproveCollection()) {
 
-					if ($_REQUEST['approve'] == 'APPROVE' && $cp->canApproveCollection()) {
-						$u->unloadCollectionEdit(false);
-					} else {
-						$u->unloadCollectionEdit();
-					}
-
 					$v = CollectionVersion::get($c, "RECENT");
 					
 					$v->setComment($_REQUEST['comments']);
 					if ($_REQUEST['approve'] == 'APPROVE' && $cp->canApproveCollection()) {
 						$v->approve(false);
 					} 
-					
-					if ($_REQUEST['approve'] == 'DISCARD') {
+
+					if ($_REQUEST['approve'] == 'DISCARD' && $v->canDiscard()) {
 						$v->discard();
 					} else {
 						$v->removeNewStatus();
 					}
+
+					$u->unloadCollectionEdit();
+
+					
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . $step);
 					exit;
 				}
