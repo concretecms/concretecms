@@ -495,7 +495,7 @@ div.ccm-file-manager-pre-filter{margin-bottom:10px;font-size:14px;color:#888;fon
 div.ccm-file-selected-thumbnail{width:60px;margin-right:10px;float:left;}
 div.ccm-file-selected-data{padding-top:0px;float:left;}
 div.ccm-file-selected-data div{font-size:11px;word-wrap:break-word;}
-table.ccm-marketplace-results{margin-top:-20px;border:0px !important;margin-left:-20px;margin-bottom:-20px;margin-right:-20px;width:958px;}
+table.ccm-marketplace-results{margin-top:-20px;border:0px !important;margin-left:-20px;margin-bottom:-20px;margin-right:-20px;width:938px;}
 table.ccm-marketplace-results td{height:90px !important;vertical-align:top;border-bottom:1px solid #dedede;border-radius:0px;-webkit-border-radius:0px;-moz-border-radius:0px;border-top:0px !important;border-left:0px !important;height:125px;border-right:1px solid #dedede;}
 table.ccm-marketplace-results td:last-child{border-right:0px !important;}
 table.ccm-marketplace-results tr:last-child td{border-bottom:0px !important;}
@@ -503,7 +503,7 @@ img.ccm-marketplace-item-thumbnail{float:left;margin:0px 9px 9px 0px;}
 table.ccm-marketplace-results h4{font-weight:normal;line-height:20px;margin-bottom:4px;}
 table.ccm-marketplace-results h5{font-weight:normal;line-height:18px;margin-bottom:4px;}
 table.ccm-marketplace-results p{margin-bottom:0px;}
-div.ccm-marketplace-results-info{float:left;width:240px;}
+div.ccm-marketplace-results-info{float:left;width:210px;}
 table.ccm-marketplace-results td.ccm-marketplace-item-unselected:hover{cursor:pointer;background-color:#d9ebf5;background-repeat:repeat-x;background-image:-khtml-gradient(linear, left top, left bottom, from(#edf3f7), to(#d9ebf5));background-image:-moz-linear-gradient(top, #edf3f7, #d9ebf5);background-image:-ms-linear-gradient(top, #edf3f7, #d9ebf5);background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #edf3f7), color-stop(100%, #d9ebf5));background-image:-webkit-linear-gradient(top, #edf3f7, #d9ebf5);background-image:-o-linear-gradient(top, #edf3f7, #d9ebf5);background-image:linear-gradient(top, #edf3f7, #d9ebf5);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#edf3f7', endColorstr='#d9ebf5', GradientType=0);}
 table.ccm-marketplace-results td.ccm-marketplace-item-selected{background-color:#dbdbdb;background-repeat:repeat-x;background-image:-khtml-gradient(linear, left top, left bottom, from(#ededed), to(#dbdbdb));background-image:-moz-linear-gradient(top, #ededed, #dbdbdb);background-image:-ms-linear-gradient(top, #ededed, #dbdbdb);background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #ededed), color-stop(100%, #dbdbdb));background-image:-webkit-linear-gradient(top, #ededed, #dbdbdb);background-image:-o-linear-gradient(top, #ededed, #dbdbdb);background-image:linear-gradient(top, #ededed, #dbdbdb);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dbdbdb', GradientType=0);}
 p.ccm-marketplace-detail-loading{margin-bottom:0px;padding:0px 0px 0px 56px;line-height:14px;background:transparent url(../images/loader_intelligent_search.gif) no-repeat left 2px;}
@@ -513,14 +513,15 @@ p.ccm-marketplace-detail-loading{margin-bottom:0px;padding:0px 0px 0px 56px;line
 #ccm-marketplace-detail .newsflow-paging-next{-webkit-border-top-right-radius:0px;-webkit-border-bottom-right-radius:0px;-moz-border-radius-topright:0px;-moz-border-radius-bottomright:0px;border-top-right-radius:0px;border-bottom-right-radius:0px;display:none;}
 #ccm-marketplace-detail .newsflow-paging-previous{-webkit-border-top-left-radius:0px;-webkit-border-bottom-left-radius:0px;-moz-border-radius-topleft:0px;-moz-border-radius-bottomleft:0px;border-top-left-radius:0px;border-bottom-left-radius:0px;display:none;}
 .newsflow #ccm-marketplace-detail{-webkit-border-top-left-radius:6px;-webkit-border-top-right-radius:6px;-moz-border-radius-topleft:6px;-moz-border-radius-topright:6px;border-top-left-radius:6px;border-top-right-radius:6px;padding:20px;}
-.newsflow table.ccm-marketplace-results{margin:0px;width:940px;}
 .newsflow .ccm-pane-body{padding:0px;}
 .newsflow div.ccm-marketplace-results-info{width:232px;}
-#ccm-marketplace-item-screenshots-outer{position:relative;z-index:1;list-style:none;margin:0;padding:0;}
+#ccm-marketplace-item-screenshots-outer{position:relative;z-index:1;list-style:none;margin:0;padding:0;width:400px;}
 #ccm-marketplace-item-screenshots-wrapper{position:relative;padding-top:0px;padding-right:0px;margin:0 0px 30px 0;padding-left:12px;padding-bottom:23px;float:left;background:#fff;background-image:url(../images/bg_marketplace_detail_left.png),url(../images/bg_marketplace_detail_bottom.png);background-position:bottom left, bottom right;background-repeat:no-repeat;}
+div.ccm-marketplace-results-image-hover{display:none;position:absolute;top:0px;left:0px;z-index:2000;}
+.ccm-ui table.ccm-marketplace-details-table{border:0px;}
+.ccm-ui table.ccm-marketplace-details-table td{border:0px;}
 .ccm-marketplace-item-screenshots-none{color:#aaa;font-size:24px;padding-top:190px;height:210px;width:400px;text-align:center;}
-.ccm-marketplace-item-information{margin-left:440px;}
-.ccm-marketplace-item-information-inner{overflow:hidden;max-height:330px;}
+.ccm-marketplace-item-information{width:390px;}
 .ccm-marketplace-item-buttons{margin-top:10px;}
 .ccm-marketplace-item-information-more{background:transparent url(../images/marketplace_more_fade.png) repeat-x scroll;margin-bottom:-40px;z-index:5;position:relative;top:-40px;padding-top:40px;position:relative;}
 .ccm-marketplace-item-information-more a{color:#666;background-image:url(../images/icons_sprite_up_down.png);background-repeat:no-repeat;background-position:left 5px;padding-left:15px;display:block;}
@@ -533,7 +534,7 @@ table td.ccm-marketplace-list-install-button{text-align:right !important;vertica
 .ccm-addon-list-description{width:400px;border-left:0px !important;vertical-align:middle !important;}
 table td.ccm-marketplace-list-thumbnail{width:97px;height:97px;}
 .ccm-marketplace-update-changelog{overflow:hidden;max-height:120px;}
-.ui-dialog-content .ccm-marketplace-frame{margin-left:-10px;margin-top:-10px;}
+.ui-dialog-content .ccm-marketplace-frame-connect{margin-left:-10px;margin-top:-10px;}
 table#ccm-search-form-table{width:100%;}
 div#ccm-search-results em.ccm-highlight-search{background-color:#FFF9BB;padding:4px;font-weight:bold;font-style:normal;}
 div#ccm-list-wrapper div.ccm-paging-top,div#ccm-list-wrapper div#ccm-list-none{padding-top:5px;position:static;}
@@ -1003,3 +1004,11 @@ div#ccm-notification-inner div#ccm-notification-message{width:auto;font-size:12p
 .ccm-dialog-tabs li.open.menu .menu,.ccm-dialog-tabs .open.dropdown .dropdown-toggle{border-color:#999;}
 .ccm-dialog-tabs li.open a.menu:after,.ccm-dialog-tabs .dropdown.open .dropdown-toggle:after{border-top-color:#555;}
 .ccm-dashboard-header-option{color:#333;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;font-weight:normal;line-height:20px;z-index:5;text-decoration:none;position:absolute;top:0px;right:10px;top:9px;line-height:14px;padding-bottom:2px;padding:7px 9px 7px;font-size:11px;}
+table.ccm-grid{border-left:1px solid #D4D4D4;border-top:1px solid #D4D4D4;font-size:12px;}
+table.ccm-grid th,table.ccm-grid>tbody>tr>td{border-right:1px solid #D4D4D4;border-bottom:1px solid #D4D4D4;font-size:12px;padding:7px;background:#ffffff;}
+table.ccm-grid tr.ccm-row-alt td{background-color:#f0f5ff !important;}
+table.ccm-grid th{font-weight:bold;color:#999999;background-color:#efefef;text-align:center;}
+table.ccm-grid tr.version-active td,table.ccm-grid tr.active td{font-weight:bold;font-size:13px;}
+table.ccm-grid td.actor img{float:right;}
+table.ccm-grid td.ccm-grid-cb{text-align:center;}
+table.ccm-grid img{border:0px;}

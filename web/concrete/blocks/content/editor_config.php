@@ -1,4 +1,4 @@
-<?
+<?php
 $textEditorWidth=intval(Config::get('CONTENTS_TXT_EDITOR_WIDTH'));
 $textEditorHeight=intval(Config::get('CONTENTS_TXT_EDITOR_HEIGHT'));
 if($textEditorWidth<580)   $textEditorWidth=580;
