@@ -36,7 +36,9 @@ Loader::element('pane_header', array('c'=>$c));
                     <a href="javascript:void(0)" id="ccm-check-in-publish" class="ccm-button-right accept"><span><?=t('Publish My Edits')?></span></a>
                     <? } ?>
                     <a href="javascript:void(0)" id="ccm-check-in-preview" class="ccm-button-right accept" style="margin-right: 5px"><span><?=t('Preview My Edits')?></span></a>
-                    <a href="javascript:void(0)" id="ccm-check-in-discard" class="ccm-button-left"><span><?=t('Discard My Edits')?></span></a>
+                    <? if ($v->canDiscard()) { ?>
+                    	<a href="javascript:void(0)" id="ccm-check-in-discard" class="ccm-button-left"><span><?=t('Discard My Edits')?></span></a>
+                    <? } ?>
                 </div>
                 <input type="hidden" name="approve" value="PREVIEW" id="ccm-approve-field" />        
 	        	<div class="ccm-spacer">&nbsp;</div>

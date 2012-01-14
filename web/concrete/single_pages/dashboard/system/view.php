@@ -17,7 +17,7 @@ for ($i = 0; $i < count($categories); $i++) {
 
 
 	<div class="ccm-dashboard-system-category">
-	<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat)?>"><?=t($cat->getCollectionName())?></a></h3>
+	<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat, false, true)?>"><?=t($cat->getCollectionName())?></a></h3>
 	</div>
 	
 	<?
@@ -38,7 +38,7 @@ for ($i = 0; $i < count($categories); $i++) {
 	<? foreach($show as $subcat) { ?>
 	
 	<div>
-	<a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat)?>"><?=t($subcat->getCollectionName())?></a>
+	<a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat, false, true)?>"><?=t($subcat->getCollectionName())?></a>
 	</div>
 	
 	<? } ?>

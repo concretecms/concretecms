@@ -55,7 +55,7 @@ class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 	}
 	
 	public function composer() {
-		$this->form('span12');
+		$this->form('span4');
 	}
 
 	public function searchForm($list) {

@@ -27,6 +27,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	
 		public $btArray = array();
 		
+		/**
+		 * Gets an array of BlockTypes for a given Package
+		 * @param Package $pkg
+		 * @return BlockType[]
+		 */
 		public static function getByPackage($pkg) {
 			$db = Loader::db();
 			$r = $db->Execute("select btID from BlockTypes where pkgID = ?", $pkg->getPackageID());
@@ -236,6 +241,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 
+		/**
+		 * @param int $btID
+		 * @return BlockType
+		 */
 		public static function getByID($btID) {
 			$ca = new Cache();
 			$bt = $ca->get('blockTypeByID', $btID);

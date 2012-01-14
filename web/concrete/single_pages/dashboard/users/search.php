@@ -39,9 +39,7 @@ function printAttributeRow($ak, $uo) {
 		<input type="hidden" name="uID" value="' . $uo->getUserID() . '" />
 		<input type="hidden" name="task" value="update_extended_attribute" />
 		<div class="ccm-attribute-editable-field-form ccm-attribute-editable-field-type-' . strtolower($type->getAttributeTypeHandle()) . '">
-		<label>
 		' . $ak->render('form', $vo, true) . '
-		</label>
 		</div>
 		</form>
 		</td>
