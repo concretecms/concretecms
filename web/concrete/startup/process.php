@@ -849,7 +849,7 @@
 						$obj->cID = $c->getCollectionID();
 					
 						if ((!is_object($e)) || (($e instanceof ValidationErrorHelper) && (!$e->has()))) {
-
+							
 							if (!$bt->includeAll()) {
 								$nvc = $cx->getVersionToModify();
 								$nb = $nvc->addBlock($bt, $ax, $data);
@@ -858,7 +858,7 @@
 								$nb = $cx->addBlock($bt, $ax, $data);
 							}
 							
-							if ($a->isGlobalArea()) {
+							if ($a->isGlobalArea() && $nvc instanceof Collection) {
 								$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
 								$xvc->relateVersionEdits($nvc);
 							}
