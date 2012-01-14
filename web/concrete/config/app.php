@@ -107,6 +107,9 @@ if (!defined('ENABLE_PROGRESSIVE_PAGE_REINDEX')) {
 	define('ENABLE_PROGRESSIVE_PAGE_REINDEX', true);
 }
 
+if (!defined('ENABLE_APP_NEWS')) {
+	Config::getOrDefine('ENABLE_APP_NEWS', true);
+}
 
 if (URL_REWRITING_ALL == true) {
 	define('URL_SITEMAP', BASE_URL . DIR_REL . '/dashboard/sitemap');
