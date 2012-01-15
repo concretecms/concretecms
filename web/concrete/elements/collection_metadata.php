@@ -39,9 +39,17 @@ if ($cp->canAdminPage()) {
 			$("#" + ccm_activePropertiesTab + "-tab").show();
 			
 			if (ccm_activePropertiesTab == 'ccm-properties-custom') {
-				$('#ccm-dialog-content1').dialog('option','height','570');
+				<? if ($_REQUEST['approveImmediately']) { ?>
+					$('#ccm-dialog-content1').dialog('option','height','620');
+				<? } else { ?>
+					$('#ccm-dialog-content1').dialog('option','height','570');
+				<? } ?>
 			} else {
-				$('#ccm-dialog-content1').dialog('option','height','490');
+				<? if ($_REQUEST['approveImmediately']) { ?>
+					$('#ccm-dialog-content1').dialog('option','height','540');
+				<? } else { ?>
+					$('#ccm-dialog-content1').dialog('option','height','490');
+				<? } ?>
 			}
 			$('#ccm-dialog-content1').dialog('option','position','center');
 
@@ -74,14 +82,16 @@ if ($cp->canAdminPage()) {
 
 	<div id="ccm-required-meta">
 	
-		
+	
+	<? if (!$c->isMasterCollection()) { ?>
 	<ul class="tabs" id="ccm-properties-tabs">
-		<li <? if (!$c->isMasterCollection()) { ?>class="active"<? } else { ?>style="display: none"<? } ?>><a href="javascript:void(0)" id="ccm-properties-standard"><?=t('Standard Properties')?></a></li>
+		<li class="active"><a href="javascript:void(0)" id="ccm-properties-standard"><?=t('Standard Properties')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-properties-custom"><?=t('Custom Attributes')?></a></li>
 		<li <? if ($c->isMasterCollection()) { ?>style="display: none"<? } ?>><a href="javascript:void(0)" id="ccm-page-paths"><?=t('Page Paths and Location')?></a></li>
 	</ul>
+	<? } ?>
 
-	<div id="ccm-properties-standard-tab">
+	<div id="ccm-properties-standard-tab" <? if ($c->isMasterCollection()) { ?>style="display: none" <? } ?>>
 	
 	<div class="clearfix">
 		<label for="cName"><?=t('Name')?></label>
@@ -97,7 +107,6 @@ if ($cp->canAdminPage()) {
 	<div class="clearfix">
 	<label><?=t('Owner')?></label>
 	<div class="input">
-	
 		<? 
 		print $uh->selectUser('uID', $c->getCollectionUserID());
 		?>
@@ -157,7 +166,7 @@ if ($cp->canAdminPage()) {
 	#ccm-more-page-paths div.input {margin-bottom: 10px;}
 	</style>
 	
-	<div id="ccm-properties-custom-tab" style="display: none">
+	<div id="ccm-properties-custom-tab" <? if (!$c->isMasterCollection()) { ?>style="display: none" <? } ?>>
 		<? Loader::element('collection_metadata_fields', array('c'=>$c ) ); ?>
 	</div>
 
