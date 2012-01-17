@@ -41,6 +41,19 @@ $(function() {
 
 <? } ?>
 
+<fieldset>
+
+<legend><?=t('Toolbar')?></legend>
+<div class="clearfix">
+<label><?=t('Quick Nav Behavior')?></label>
+<div class="input">
+<ul class="inputs-list">
+	<li><label><?=$form->radio('TOOLBAR_QUICK_NAV_BEHAVIOR', '', $TOOLBAR_QUICK_NAV_BEHAVIOR)?> <span><?=t('Show quick navigation bar when hovering over edit bar (default).')?></span></label></li>
+	<li><label><?=$form->radio('TOOLBAR_QUICK_NAV_BEHAVIOR', 'always', $TOOLBAR_QUICK_NAV_BEHAVIOR)?> <span><?=t('Always show quick navigation bar.')?></span></label></li>
+	<li><label><?=$form->radio('TOOLBAR_QUICK_NAV_BEHAVIOR', 'disabled', $TOOLBAR_QUICK_NAV_BEHAVIOR)?> <span><?=t('Disable quick navigation bar.')?></span></label></li>
+</ul>
+</fieldset>
+
 </div>
 <div class="ccm-pane-footer">
 	<?=Loader::helper('concrete/interface')->submit(t('Save'), 'submit', 'right', 'primary')?>

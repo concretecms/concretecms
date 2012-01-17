@@ -148,7 +148,9 @@ class ConcreteDashboardHelper {
 		if ($help) {
 			$html .= '<li><span style="display: none" id="ccm-page-help-content">' . $help . '</span><a href="javascript:void(0)" onclick="ccm_togglePopover(event, this)" class="ccm-icon-help" title="' . t('Help') . '" id="ccm-page-help">' . t('Help') . '</a></li>';
 		}
-		$html .= '<li><a href="javascript:void(0)" id="ccm-add-to-quick-nav" onclick="ccm_toggleQuickNav(' . $c->getCollectionID() . ',\'' . $token . '\')" class="' . $class . '">' . t('Add to Favorites') . '</a></li>';
+		if (Config::get('TOOLBAR_QUICK_NAV_BEHAVIOR') != 'disabled') {
+			$html .= '<li><a href="javascript:void(0)" id="ccm-add-to-quick-nav" onclick="ccm_toggleQuickNav(' . $c->getCollectionID() . ',\'' . $token . '\')" class="' . $class . '">' . t('Add to Favorites') . '</a></li>';
+		}
 		$html .= '<li><a href="javascript:void(0)" onclick="ccm_closeDashboardPane(this)" class="ccm-icon-close">' . t('Close') . '</a></li>';
 		$html .= '</ul>';
 		if (!$title) {
