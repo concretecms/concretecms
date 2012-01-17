@@ -69,9 +69,11 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 
 <script type="text/javascript">
 	$(function() {
-	    $.backstretch("<?=$backgroundImage->image?>" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
+		<? if ($backgroundImage->image) { ?>
+		    $.backstretch("<?=$backgroundImage->image?>" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
+	    <? } ?>
 	    <? if ($backgroundImage->checkData) { ?>
-		    ccm_getDashboardBackgroundImageData('<?=$backgroundImage->filename?>');
+		    ccm_getDashboardBackgroundImageData('<?=$backgroundImage->filename?>', <? if ($backgroundImage->displayCaption) { ?> true <? } else { ?> false <? } ?>);
 		<? } ?>
 	});
 </script>

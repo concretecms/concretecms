@@ -16,11 +16,11 @@ ccm_closeDashboardPane = function(r) {
 }
 
 
-ccm_getDashboardBackgroundImageData = function(image) {
+ccm_getDashboardBackgroundImageData = function(image, display) {
 	$.getJSON(CCM_TOOLS_PATH + '/dashboard/get_image_data', {
 		'image': image
 	}, function(r) {
-		if (r) {
+		if (r && display) {
 			var html = '<div>';
 			html += '<strong>' + r.title + '</strong> ' + ccmi18n.authoredBy + ' ';
 			if (r.link) {

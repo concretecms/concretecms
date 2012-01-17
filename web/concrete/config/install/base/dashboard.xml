@@ -321,6 +321,14 @@
 				</attributekey>
 			</attributes>
         </page>
+        <page name="Interface Preferences" path="/dashboard/system/basics/interface" filename="/dashboard/system/basics/interface.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>interface, quick nav, dashboard background, background image</value>
+				</attributekey>
+			</attributes>
+        </page>
+
         <page name="SEO &amp; Statistics" path="/dashboard/system/seo" filename="/dashboard/system/seo/view.php" pagetype="" description="Enable pretty URLs, statistics and tracking codes." package=""/>
         <page name="Pretty URLs" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php" pagetype="" description="" package="">
 			<attributes>
