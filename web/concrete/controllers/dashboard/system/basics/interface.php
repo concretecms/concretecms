@@ -5,6 +5,7 @@ class DashboardSystemBasicsInterfaceController extends DashboardBaseController {
 
 	public function view() {
 		$this->set('DASHBOARD_BACKGROUND_IMAGE', Config::get('DASHBOARD_BACKGROUND_IMAGE'));
+		$this->set('TOOLBAR_QUICK_NAV_BEHAVIOR', Config::get('TOOLBAR_QUICK_NAV_BEHAVIOR'));
 		$imageObject = false;
 		if ($this->get('DASHBOARD_BACKGROUND_IMAGE') == 'custom') { 
 			$fID = Config::get('DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID');
@@ -29,6 +30,7 @@ class DashboardSystemBasicsInterfaceController extends DashboardBaseController {
 				if (!defined('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED') && !defined('WHITE_LABEL_DASHBOARD_BACKGROUND_SRC')) {
 					Config::save('DASHBOARD_BACKGROUND_IMAGE', $this->post('DASHBOARD_BACKGROUND_IMAGE'));
 					Config::save('DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID', $this->post('DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID'));
+					Config::save('TOOLBAR_QUICK_NAV_BEHAVIOR', $this->post('TOOLBAR_QUICK_NAV_BEHAVIOR'));
 				}
 				$this->redirect('/dashboard/system/basics/interface', 'settings_saved');
 			}

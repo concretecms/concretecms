@@ -23,8 +23,10 @@ $(function() {
 	}
 	
 	ccm_hideQuickNav = function() {
-		$("#ccm-quick-nav").fadeOut(120, 'easeInExpo');
-		clearTimeout(ccm_quickNavTimer);
+		if (!$("#ccm-quick-nav").hasClass('ccm-quick-nav-always')) { 
+			$("#ccm-quick-nav").fadeOut(120, 'easeInExpo');
+			clearTimeout(ccm_quickNavTimer);
+		}
 	}
 	
 	ccm_togglePopover = function(e, link) {
@@ -86,18 +88,20 @@ $(function() {
 	}
 	
 	ccm_activateToolbar = function() {
-		$("#ccm-toolbar,#ccm-quick-nav").hover(function() {
-			ccm_showQuickNav();
-		}, function() {
-			ccm_quickNavTimer = setTimeout(function() {
-				ccm_hideQuickNav();
-			}, 1000);
-		});
+		if (!$("#ccm-quick-nav").hasClass('ccm-quick-nav-always')) { 
+			$("#ccm-toolbar,#ccm-quick-nav").hover(function() {
+				ccm_showQuickNav();
+			}, function() {
+				ccm_quickNavTimer = setTimeout(function() {
+					ccm_hideQuickNav();
+				}, 1000);
+			});
 		
-		$("#ccm-quick-nav").hoverIntent(function() {
-			ccm_hideToolbarMenus();
-			$("#ccm-intelligent-search-results").hide();
-		}, function() {});
+			$("#ccm-quick-nav").hoverIntent(function() {
+				ccm_hideToolbarMenus();
+				$("#ccm-intelligent-search-results").hide();
+			}, function() {});
+		}
 		
 		$("#ccm-dashboard-overlay").css('visibility','visible').hide();
 	

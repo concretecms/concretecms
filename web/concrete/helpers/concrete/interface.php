@@ -170,7 +170,7 @@ class ConcreteInterfaceHelper {
 	
 	public function getQuickNavigationBar() {
 		$c = Page::getCurrentPage();
-		if (!is_object($c)) {
+		if (!is_object($c) || Config::get('TOOLBAR_QUICK_NAV_BEHAVIOR') == 'disabled') {
 			return;
 		}
 		
@@ -189,7 +189,11 @@ class ConcreteInterfaceHelper {
 		}
 		
 		$html = '';
-		$html .= '<div id="ccm-quick-nav">';
+		$class = '';
+		if (Config::get('TOOLBAR_QUICK_NAV_BEHAVIOR') == 'always') { 
+			$class = 'ccm-quick-nav-always';
+		}
+		$html .= '<div id="ccm-quick-nav" class="' . $class . '">';
 		$html .= '<ul id="ccm-quick-nav-favorites" class="pills">';
 		$u = new User();
 		$quicknav = unserialize($u->config('QUICK_NAV_BOOKMARKS'));
