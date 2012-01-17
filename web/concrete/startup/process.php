@@ -1111,8 +1111,17 @@
 				
 				$nc = $c->add($ct, $data);
 
-				
 				if (is_object($nc)) {
+
+					Loader::model('collection_attributes');
+					$attributes = $ct->getAvailableAttributeKeys();
+					if (is_array($attributes)) {
+						foreach($attributes as $ak) { 
+							$ak->saveAttributeForm($nc);
+						} 
+					}			
+					
+
 					if ($_POST['rel'] == 'SITEMAP') { 
 						if ($cp->canApproveCollection()) {
 							$v = CollectionVersion::get($nc, "RECENT");

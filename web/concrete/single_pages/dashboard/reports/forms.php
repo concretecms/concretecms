@@ -149,9 +149,7 @@ if ($showTable) { ?>
 					echo '<td>'.t('File not found').'</td>';
 				}
 			} else if($question['inputType'] == 'text') {
-				echo '<td title="'.$text->entities($answerSet['answers'][$questionId]['answerLong']).'">';
-				echo $text->entities($text->shortenTextWord($answerSet['answers'][$questionId]['answerLong']));
-				echo '</td>';
+				echo '<td>'.$text->entities($answerSet['answers'][$questionId]['answerLong']).'</td>';
 			} else {
 				echo '<td>'.$text->entities($answerSet['answers'][$questionId]['answer']).'</td>';
 			}
