@@ -12,7 +12,8 @@
 
 	<form method="post" id="file-access-permissions" action="<?=$this->url('/dashboard/system/permissions/files', 'save_global_permissions')?>">
 	<div class="ccm-pane-options clearfix">
-		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector" id="ug-selector" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="70%" class="ccm-button-left btn dialog-launch"><?=t('Add Group or User')?></a>
+		<a class="btn ccm-button-right dialog-launch ug-selector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_dialog?mode=choose_multiple" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Add User')?>"  dialog-height="70%"><?=t('Add User')?></a>
+		<a class="btn ccm-button-right dialog-launch ug-selector" style="margin-right: 5px" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_group" dialog-modal="false" dialog-title="<?=t('Add Group')?>"><?=t('Add Group')?></a>
 	</div>
 	<div class="ccm-pane-body">
 		<?=$validation_token->output('file_permissions');?>
@@ -64,7 +65,7 @@
 			ccm_alSelectPermissionsEntity('gID', gID, gName);
 		}
 		
-		$("#ug-selector").dialog();	
+		$(".ug-selector").dialog();	
 		ccm_alActivateFilePermissionsSelector();	
 	});
 	

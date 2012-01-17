@@ -26,23 +26,26 @@ if (!$tp->canAccessGroupSearch()) {
 	$gResults = $gl->getPage();
 	
 	?>
-	
-	<?php
-	$group_search_form = '
-		<form id="ccm-group-search" style=""  method="get" action="'. REL_DIR_FILES_TOOLS_REQUIRED .'/select_group/">
-		<div id="ccm-group-search-fields">
-		<input type="text" id="ccm-group-search-keywords" name="gKeywords" value="'. $_REQUEST['gKeywords'] .'" class="ccm-text" style="width: 100px" />
-		<input type="submit" value="'. t('Search') .'" />
+
+	<div class="ccm-pane-options">
+	<div class="ccm-pane-options-permanent-search">
+		<form id="ccm-group-search" style=""  method="get" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_group/">
+		<div id="ccm-group-search-fields" class="ccm-ui">
+		
+		<input type="text" id="ccm-group-search-keywords" name="gKeywords" value="<?=$_REQUEST['gKeywords']?>" class="ccm-text" style="width: 100px" />
+		<input type="submit" value="<?=t('Search')?>" class="btn" />
 		<input type="hidden" name="group_submit_search" value="1" />
-		<input type="hidden" name="include_core_groups" value="' . $_REQUEST['include_core_groups'] . '" />
+		<input type="hidden" name="include_core_groups" value="<?=$_REQUEST['include_core_groups']?>" />
 		</div>
 		</form>
-	';
-	?>
+	</div>
+	</div>
+	
+	<div id="ccm-list-wrapper">
 	
 	<? if (count($gResults) > 0) { 
 	
-		$gl->displaySummary( $group_search_form );
+		print $gl->displaySummary();
 	
 		foreach ($gResults as $g) { ?>
 	
@@ -55,7 +58,7 @@ if (!$tp->canAccessGroupSearch()) {
 	
 	<? } ?>
 	
-	<div id="ccm-group-paging">
+	<div id="ccm-group-paging" class="ccm-pane-dialog-pagination">
 	<?
 	$url = REL_DIR_FILES_TOOLS_REQUIRED . '/select_group?gKeywords=' . $_REQUEST['gKeywords'] . '&include_core_groups=' . $_REQUEST['include_core_groups'] . '&' . PAGING_STRING . '=%pageNum%';
 	$gl->displayPagingV2($url);
@@ -69,6 +72,8 @@ if (!$tp->canAccessGroupSearch()) {
 		<p><?=t('No groups found.')?></p>
 		
 	<? } ?>
+	
+	</div>
 	
 	<? if (!$_REQUEST['group_submit_search']) { ?>
 	

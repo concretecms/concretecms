@@ -60,7 +60,7 @@ foreach($searchFieldAttributes as $ak) {
 		<div class="span4" >
 			<?=$form->label('gID', t('Group(s)'))?>
 			<div class="input">
-				<select multiple name="gID[]" class="chosen-select" style="width: 160px">
+				<select multiple name="gID[]" class="chosen-select" style="width: 140px">
 					<? foreach($g1 as $g) { ?>
 						<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['gID']) && in_array($g['gID'], $_REQUEST['gID'])) { ?> selected="selected" <? } ?>><?=$g['gName']?></option>
 					<? } ?>
