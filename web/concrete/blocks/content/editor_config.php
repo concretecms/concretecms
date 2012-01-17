@@ -16,6 +16,7 @@ tinyMCE.init({
 	relative_urls : false,
 	document_base_url: '<?=BASE_URL . DIR_REL?>/',
 	convert_urls: false,
+	entity_encoding: 'raw',
 	content_css : "<?=$theme->getThemeEditorCSS()?>",
 	<?
 	$txtEditorMode=Config::get('CONTENTS_TXT_EDITOR_MODE');

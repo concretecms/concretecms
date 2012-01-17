@@ -120,6 +120,7 @@ class StartingPointPackage extends Package {
 		$db = Loader::db();			
 		$installDirectory = DIR_BASE_CORE. '/config';
 		try {
+			Database::ensureEncoding();
 			Package::installDB($installDirectory . '/db.xml');
 		} catch (Exception $e) { 
 			throw new Exception(t('Unable to install database: %s', $db->ErrorMsg()));

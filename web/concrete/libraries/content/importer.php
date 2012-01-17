@@ -143,6 +143,7 @@ class ContentImporter {
 						$page->setAttribute((string) $attr['handle'], $ak->getController()->importValue($attr));
 					}
 				}
+				$page->reindex();
 			}
 		}
 	}

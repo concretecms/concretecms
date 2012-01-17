@@ -207,12 +207,7 @@
 							if (DB_COLLATE != '') {
 								$names .= ' COLLATE \'' . DB_COLLATE . '\'';
 							}
-							$charset = 'SET CHARACTER SET \'' . DB_CHARSET . '\'';
-							if (DB_COLLATE != '') {
-								$charset .= ' COLLATE \'' . DB_COLLATE . '\'';
-							}
 							$_dba->Execute($names);
-							$_dba->Execute($charset);
 						}
 						
 						ADOdb_Active_Record::SetDatabaseAdapter($_dba);
