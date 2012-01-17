@@ -154,7 +154,8 @@ ccm_showAreaMenu = function(obj, e) {
 			el = document.createElement("DIV");
 			el.id = "ccm-area-menu" + obj.aID;
 			el.className = "ccm-menu ccm-ui";
-			el.style.display = "none";
+			el.style.display = "block";
+			el.style.visibility = "hidden";
 			document.body.appendChild(el);
 			
 			aobj = $("#ccm-area-menu" + obj.aID);
