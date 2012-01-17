@@ -1,6 +1,6 @@
 
 $(function() {	
-	$("#ug-selector").dialog();	
+	$(".ug-selector").dialog();	
 	ccm_sitemapActivatePermissionsSelector();	
 
 	ccm_triggerSelectUser = function(uID, uName) {

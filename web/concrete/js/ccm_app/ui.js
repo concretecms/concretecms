@@ -484,6 +484,14 @@ ccm_triggerSelectGroup = function(gID, gName) {
 	alert(gName);
 }
 
+ccm_setupGroupSearchPaging = function() {
+	$("div#ccm-group-paging").each(function() {
+		$(this).closest('.ui-dialog-content').dialog('option', 'buttons', [{}]);
+		$(this).closest('.ui-dialog').find('.ui-dialog-buttonpane .ccm-pane-dialog-pagination').remove();
+		$(this).appendTo($(this).closest('.ui-dialog').find('.ui-dialog-buttonpane').addClass('ccm-ui'));
+	});
+}
+
 ccm_setupGroupSearch = function() {
 	$('div.ccm-group a').unbind();
 	$('div.ccm-group a').each(function(i) {
@@ -504,6 +512,7 @@ ccm_setupGroupSearch = function() {
 	});
 	
 	/* setup paging */
+	ccm_setupGroupSearchPaging();
 	$("div#ccm-group-paging a").click(function() {
 		$("#ccm-group-search-wrapper").html("");	
 		$.ajax({
