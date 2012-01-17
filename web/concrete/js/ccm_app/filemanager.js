@@ -782,7 +782,8 @@ ccm_alActivateMenu = function(obj, e) {
 		el = document.createElement("DIV");
 		el.id = "ccm-al-menu" + fID + searchInstance + selector;
 		el.className = "ccm-menu ccm-ui";
-		el.style.display = "none";
+		el.style.display = "block";
+		el.style.visibility = "hidden";
 		document.body.appendChild(el);
 		
 		var filepath = $(obj).attr('al-filepath'); 

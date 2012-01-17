@@ -19,7 +19,8 @@ showPageMenu = function(obj, e) {
 		el = document.createElement("DIV");
 		el.id = "ccm-page-menu" + obj.cID;
 		el.className = "ccm-menu ccm-ui";
-		el.style.display = "none";
+		el.style.display = "block";
+		el.style.visibility = "hidden";
 		document.body.appendChild(el);
 		
 		bobj = $("#ccm-page-menu" + obj.cID);
