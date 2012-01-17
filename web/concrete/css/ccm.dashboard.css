@@ -1,6 +1,6 @@
 .ccm-ui .clearfix{zoom:1;}.ccm-ui .clearfix:before,.ccm-ui .clearfix:after{display:table;content:"";zoom:1;*display:inline;}
 .ccm-ui .clearfix:after{clear:both;}
-body{background-color:#eee;margin:0px;}
+body{background:#557693 url(../images/dashboard/bg.jpg) repeat-x;margin:0px;}
 div#ccm-dashboard-content{margin-top:130px;margin-bottom:80px;}
 #ccm-dashboard-result-message{display:none;}
 .ccm-pane-backdrop{background-color:rgba(0, 0, 0, 0.5);position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;}

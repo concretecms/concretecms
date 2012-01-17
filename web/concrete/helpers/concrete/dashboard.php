@@ -166,14 +166,29 @@ class ConcreteDashboardHelper {
 		$filename = date('Ymd') . '.jpg';
 		$obj = new stdClass;
 		$obj->checkData = false;
+		$obj->displayCaption = false;
 		
 		if (defined('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED') && WHITE_LABEL_DASHBOARD_BACKGROUND_FEED != '') {
 			$image = WHITE_LABEL_DASHBOARD_BACKGROUND_FEED . '/' . $filename;
 		} else if (defined('WHITE_LABEL_DASHBOARD_BACKGROUND_SRC') && WHITE_LABEL_DASHBOARD_BACKGROUND_SRC != '') {
 			$image = WHITE_LABEL_DASHBOARD_BACKGROUND_SRC;
+			if ($image == 'none') {
+				$image = '';
+			}
 		} else {
-			$image = DASHBOARD_BACKGROUND_FEED . '/' . $filename;
 			$obj->checkData = true;
+			$imageSetting = Config::get('DASHBOARD_BACKGROUND_IMAGE');
+			if ($imageSetting == 'custom') {
+				$fo = File::getByID(Config::get('DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID'));
+				if (is_object($fo)) {
+					$image = $fo->getRelativePath();
+				}
+			} else if ($imageSetting == 'none') {
+				$image = '';
+			} else { 
+				$image = DASHBOARD_BACKGROUND_FEED . '/' . $filename;
+				$obj->displayCaption = true;
+			}
 		}
 		$obj->filename = $filename;
 		$obj->image = $image;
