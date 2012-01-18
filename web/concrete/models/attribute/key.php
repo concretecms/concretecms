@@ -266,7 +266,7 @@ class AttributeKey extends Object {
 	}
 
 	public function refreshCache() {
-		Cache::delete('attribute_key', $this->getAttributeKeyID());
+		Cache::delete(Loader::helper('text')->uncamelcase(get_class($this)), $this->getAttributeKeyID());
 	}
 	
 	/** 
