@@ -21,6 +21,8 @@ class MailHelper {
 
 	protected $headers = array();
 	protected $to = array();
+	protected $cc = array();
+	protected $bcc = array();
 	protected $from = array();
 	protected $data = array();
 	protected $subject = '';
@@ -38,6 +40,8 @@ class MailHelper {
 		$this->body = '';
 		$this->headers = array();
 		$this->to = array();
+		$this->cc = array();
+		$this->bcc = array();
 		$this->from = array();
 		$this->data = array();
 		$this->subject = '';
@@ -228,6 +232,42 @@ class MailHelper {
 			$this->to[] = array($email, $name);	
 		}
 	}
+	
+	/**
+	 * Adds an email address to the cc field on the email about to be sent out.
+	 * @param string $email
+	 * @param string $name
+	 * @return void
+	 * @since 5.5.1
+	*/
+	public function cc($email, $name = null) {
+		if (strpos($email, ',') > 0) {
+			$email = explode(',', $email);
+			foreach($email as $em) {
+				$this->cc[] = array($em, $name);
+			}
+		} else {
+			$this->cc[] = array($email, $name);	
+		}
+	}
+	
+	/**
+	 * Adds an email address to the bcc field on the email about to be sent out.
+	 * @param string $email
+	 * @param string $name
+	 * @return void
+	 * @since 5.5.1
+	*/
+	public function bcc($email, $name = null) {
+		if (strpos($email, ',') > 0) {
+			$email = explode(',', $email);
+			foreach($email as $em) {
+				$this->bcc[] = array($em, $name);
+			}
+		} else {
+			$this->bcc[] = array($email, $name);	
+		}
+	}
 
 	/*	
 	 * Sets the reply-to address on the email about to be sent out
@@ -288,6 +328,19 @@ class MailHelper {
 			foreach($this->to as $to) {
 				$mail->addTo($to[0], $to[1]);
 			}
+			
+			if(is_array($this->cc) && count($this->cc)) {
+				foreach($this->cc as $cc) {
+					$mail->addCc($cc[0], $cc[1]);
+				}
+			}
+			
+			if(is_array($this->bcc) && count($this->bcc)) {
+				foreach($this->bcc as $bcc) {
+					$mail->addBcc($bcc[0], $bcc[1]);
+				}
+			}
+			
 			$mail->setBodyText($this->body);
 			if ($this->bodyHTML != false) {
 				$mail->setBodyHTML($this->bodyHTML);
@@ -335,6 +388,8 @@ class MailHelper {
 		// clear data if applicable
 		if ($resetData) {
 			$this->to = array();
+			$this->cc = array();
+			$this->bcc = array();
 			$this->replyto = array();
 			$this->from = array();
 			$this->template = '';
