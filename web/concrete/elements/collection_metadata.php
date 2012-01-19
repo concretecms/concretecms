@@ -95,7 +95,9 @@ if ($cp->canAdminPage()) {
 	
 	<div class="clearfix">
 		<label for="cName"><?=t('Name')?></label>
-		<div class="input"><input type="text" id="cName" name="cName" value="<?=htmlentities( $c->getCollectionName(), ENT_QUOTES, APP_CHARSET) ?>" /></div>
+		<div class="input"><input type="text" id="cName" name="cName" value="<?=htmlentities( $c->getCollectionName(), ENT_QUOTES, APP_CHARSET) ?>" />
+			<span class="help-inline"><?=t("Page ID: %s", $c->getCollectionID())?></span>
+		</div>
 	</div>
 
 	<div class="clearfix">
