@@ -76,6 +76,10 @@ class Stack extends Page {
 	}
 	
 	public function delete() {
+		if ($this->getStackType() == self::ST_TYPE_GLOBAL_AREA) {
+			GlobalArea::deleteByName($this->getStackName());
+		}
+
 		parent::delete();
 		$db = Loader::db();
 		$db->Execute('delete from Stacks where cID = ?', array($this->getCollectionID()));
