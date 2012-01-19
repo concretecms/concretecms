@@ -22,6 +22,9 @@ class SearchBlockController extends BlockController {
 	}
 	
 	public function highlightedExtendedMarkup($fulltext, $highlight) {
+		if (!$highlight) {
+			return false;
+		}
 		$text = @preg_replace("#\n|\r#", ' ', $fulltext);
 		
 		$matches = array();
