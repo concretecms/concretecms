@@ -221,6 +221,10 @@ $(function() {
 		$("#ccm-toolbar-nav-speed-settings").dialog();
 		$("#ccm-toolbar-nav-move-copy").dialog();
 		$("#ccm-toolbar-nav-delete").dialog();
+
+		$("#ccm-edit-overlay,#ccm-dashboard-overlay").click(function(e) {
+			e.stopPropagation();
+		});
 	
 		
 		$("#ccm-nav-edit").hoverIntent(function() {
@@ -240,9 +244,6 @@ $(function() {
 				$('#ccm-edit-overlay').fadeOut(90, 'easeOutExpo');
 				$(window).unbind('click.ccm-edit');
 			} else {*/
-				$("#ccm-edit-overlay,#ccm-dashboard-overlay-main").click(function(e) {
-					e.stopPropagation();
-				});
 				setTimeout("$('#ccm-check-in-comments').focus();",300);
 				$("#ccm-check-in-preview").click(function() {
 					$("#ccm-approve-field").val('PREVIEW');
