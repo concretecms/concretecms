@@ -50,7 +50,7 @@ function FileProgress(file, targetID) {
 		this.fileProgressWrapper.appendChild(this.fileProgressElement2);
 		*/
 
-		$("#" + targetID).append('<tr id="' + this.fileProgressID + '"><td><div style="word-wrap: break-word; width: 150px">' + file.name + '</div></td><td><div style="width: 250px" class="ccm-file-manager-progress-bar-pending">' + ccmi18n_filemanager.pending + '</div><div class="ccm-file-manager-progress-bar" style="display: none"></div></tr>');
+		$("#" + targetID).append('<tr id="' + this.fileProgressID + '"><td><div style="word-wrap: break-word; width: 150px">' + file.name + '</div></td><td width="100%"><div style="width: 250px !important" class="ccm-file-manager-progress-bar-pending">' + ccmi18n_filemanager.pending + '</div><div class="ccm-file-manager-progress-bar" style="display: none"></div></tr>');
 		this.fileProgressWrapper = $("#" + this.fileProgressID).get(0);
 		$("#" + this.fileProgressID).find('div.ccm-file-manager-progress-bar').progressbar();
 		
