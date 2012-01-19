@@ -521,7 +521,7 @@ class SelectAttributeTypeOption extends Object {
 		if (!$sanitize) {
 			return $this->value;
 		} else {
-			return $this->th->entities($this->value);
+			return $this->th->specialchars($this->value);
 		}
 	}
 	public function getSelectAttributeOptionDisplayOrder() {return $this->displayOrder;}
