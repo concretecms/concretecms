@@ -44,6 +44,11 @@
 						if('Controller' != get_class($btc)){
 							$btc->outputAutoHeaderItems();
 						}
+						$csr = $b->getBlockCustomStyleRule();
+						if (is_object($csr)) {
+							$styleHeader = '#'.$csr->getCustomStyleRuleCSSID(1).' {'. $csr->getCustomStyleRuleText(). "} \r\n";  
+							$btc->addHeaderItem("<style type=\"text/css\"> \r\n".$styleHeader.'</style>', 'VIEW');
+						}
 						$btc->runTask('on_page_view', array($view));
 					}
 				}			
