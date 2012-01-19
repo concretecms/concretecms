@@ -117,7 +117,12 @@ $(function() {
 			}
 		});
 		
-		$("#ccm-nav-dashboard,#ccm-nav-edit").click(function() {
+		$(".ccm-nav-edit-mode-active").click(function() {
+			void(0);
+			return false;
+		});
+		
+		$("#ccm-nav-dashboard").click(function() {
 			void(0);
 			return false;
 		});
