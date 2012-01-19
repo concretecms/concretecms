@@ -90,12 +90,8 @@ $languages = Localization::getAvailableInterfaceLanguages();
 			<? foreach($attribs as $ak) { ?>
                 <tr>
                     <td class="clearfix">
-                    	<label>
-                            <p>
-                                <?=$ak->getAttributeKeyName()?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="required">*</span><? } ?>
-                            </p>
-                            <? $ak->render('form', $caValue, false)?>
-                        </label>
+                    	<label><?=$ak->getAttributeKeyName()?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="required">*</span><? } ?></label>
+                        <? $ak->render('form', $caValue, false)?>
                     </td>
                 </tr>
             <? } // END Foreach ?>
