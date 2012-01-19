@@ -27,6 +27,11 @@ class ConcreteUpgradeVersion551Helper {
 			$d1a = SinglePage::add('/dashboard/system/basics/interface');
 			$d1a->update(array('cName'=>t('Interface Preferences')));
 		}
+		$sp = Page::getByPath('/dashboard/extend/all-add-on-pages');
+		if ($sp->isError()) {
+			$d1a = SinglePage::add('/dashboard/extend/all-add-on-pages');
+			$d1a->update(array('cName'=>t('Add-On Dashboard Pages')));
+		}
 	}
 
 	public function prepare() {

@@ -388,6 +388,9 @@ class ConcreteDashboardHelper {
 			<? if (count($packagepages) > 0) { ?>
 			<div id="ccm-dashboard-overlay-footer">
 			<div class="ccm-dashboard-overlay-inner" id="ccm-dashboard-overlay-packages">
+
+			<a id="ccm-dashboard-overlay-packages-view-all" href="<?=View::url('/dashboard/extend/all-add-on-pages')?>"><?=t('View All')?></a>
+
 			<?php
 			
 			
