@@ -101,6 +101,13 @@ class TextHelper {
 	public function entities($v){
 		return htmlentities( $v, ENT_COMPAT, APP_CHARSET); 
 	}
+	
+	/** 
+	 * A concrete5 specific version of htmlspecialchars(). Double encoding is OFF, and the character set is set to your site's.
+	 */
+	public function specialchars($v) {
+		return htmlspecialchars($v, ENT_COMPAT, APP_CHARSET, false);
+	}
 	 
 	 
 	/**
