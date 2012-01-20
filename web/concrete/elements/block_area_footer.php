@@ -26,12 +26,13 @@ if ($a->areaAcceptsBlocks()) { ?>
 
 <? if (!$c->isArrangeMode()) { ?>
 	<script type="text/javascript">
-	ccm_areaMenuObj<?=$a->getAreaID()?> = new Object();
-	ccm_areaMenuObj<?=$a->getAreaID()?>.type = "AREA";
-	ccm_areaMenuObj<?=$a->getAreaID()?>.aID = <?=$a->getAreaID()?>;
-	ccm_areaMenuObj<?=$a->getAreaID()?>.arHandle = "<?=$arHandle?>";
-	ccm_areaMenuObj<?=$a->getAreaID()?>.canAddBlocks = <?=$ap->canAddBlocks()?>;
-	ccm_areaMenuObj<?=$a->getAreaID()?>.canWrite = <?=$ap->canWrite()?>;
+	$(function() {
+		var ccm_areaMenuObj<?=$a->getAreaID()?> = {};
+		ccm_areaMenuObj<?=$a->getAreaID()?>.type = "AREA";
+		ccm_areaMenuObj<?=$a->getAreaID()?>.aID = <?=$a->getAreaID()?>;
+		ccm_areaMenuObj<?=$a->getAreaID()?>.arHandle = "<?=$arHandle?>";
+		ccm_areaMenuObj<?=$a->getAreaID()?>.canAddBlocks = <?=$ap->canAddBlocks()?>;
+		ccm_areaMenuObj<?=$a->getAreaID()?>.canWrite = <?=$ap->canWrite()?>;
 	<? if ($cp->canAdmin() && PERMISSIONS_MODEL != 'simple') { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canModifyGroups = true;
 	<? } ?>
@@ -45,7 +46,8 @@ if ($a->areaAcceptsBlocks()) { ?>
 	<? } else { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canDesign = false;
 	<? } ?>
-	$(function() {ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>)});
+		ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>);
+	} );
 	</script>
 	<? if ($a->isGlobalArea()) { ?>
 		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To Sitewide %s', $arHandle)?></div>
