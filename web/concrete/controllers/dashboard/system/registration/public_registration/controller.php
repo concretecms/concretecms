@@ -15,7 +15,9 @@ class DashboardSystemRegistrationPublicRegistrationController extends DashboardB
 		$this->set('email_as_username', USER_REGISTRATION_WITH_EMAIL_ADDRESS);
 		$this->set('registration_type',REGISTRATION_TYPE);
 		$this->set('user_timezones',ENABLE_USER_TIMEZONES);	
-		$this->set('enable_registration_captcha',ENABLE_REGISTRATION_CAPTCHA);		
+		$this->set('enable_registration_captcha',ENABLE_REGISTRATION_CAPTCHA);
+		$this->set('register_notification',REGISTER_NOTIFICATION);
+		$this->set('register_notification_email',EMAIL_ADDRESS_REGISTER_NOTIFICATION);
 	}
 
 	public function update_registration_type() { 
@@ -32,6 +34,8 @@ class DashboardSystemRegistrationPublicRegistrationController extends DashboardB
 					Config::save('USER_VALIDATE_EMAIL', false);	
 					Config::save('USER_VALIDATE_EMAIL_REQUIRED', false);
 					Config::save('USER_REGISTRATION_APPROVAL_REQUIRED', false);
+					Config::save('REGISTER_NOTIFICATION', true);
+					Config::save('EMAIL_ADDRESS_REGISTER_NOTIFICATION', $this->post('register_notification_email'));
 				break;
 				
 				case "validate_email":
@@ -39,6 +43,8 @@ class DashboardSystemRegistrationPublicRegistrationController extends DashboardB
 					Config::save('USER_VALIDATE_EMAIL', true);	
 					Config::save('USER_VALIDATE_EMAIL_REQUIRED', true);
 					Config::save('USER_REGISTRATION_APPROVAL_REQUIRED', false);
+					Config::save('REGISTER_NOTIFICATION', true);
+					Config::save('EMAIL_ADDRESS_REGISTER_NOTIFICATION', $this->post('register_notification_email'));
 				break;
 				
 				case "manual_approve":
@@ -46,10 +52,13 @@ class DashboardSystemRegistrationPublicRegistrationController extends DashboardB
 					Config::save('USER_REGISTRATION_APPROVAL_REQUIRED', true);
 					Config::save('USER_VALIDATE_EMAIL', false);	
 					Config::save('USER_VALIDATE_EMAIL_REQUIRED', false);
+					Config::save('REGISTER_NOTIFICATION', true);
+					Config::save('EMAIL_ADDRESS_REGISTER_NOTIFICATION', $this->post('register_notification_email'));
 				break;
 				
 				default: // disabled
 					Config::save('ENABLE_REGISTRATION', false);
+					Config::save('REGISTER_NOTIFICATION', false);
 				break;
 			}
 			Config::save('REGISTRATION_TYPE',$this->post('registration_type'));
