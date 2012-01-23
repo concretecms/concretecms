@@ -28,11 +28,6 @@ foreach($pkgAvailableArray as $pkg) {
 
 if (!$tp->canInstallPackages()) { ?>
 	<p class="block-message alert-message error"><?=t('You do not have access to download themes or add-ons from the marketplace.')?></p>
-<? } else if (!$mi->isConnected()) { ?>
-	<h1><span><?=t('concrete5.org Marketplace')?></span></h1>
-	<div class="ccm-dashboard-inner ccm-ui">
-		<? Loader::element('dashboard/marketplace_connect_failed')?>
-	</div>
 <? } else { ?>
 
 		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Update Add-Ons'));?>
