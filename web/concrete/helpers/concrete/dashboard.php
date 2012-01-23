@@ -375,11 +375,18 @@ class ConcreteDashboardHelper {
 			$tpa = new TaskPermission();
 			if ($tpa->canInstallPackages()) { ?>
 				<li><a href="<?php echo View::url('/dashboard/extend') ?>"><strong><?php echo t("Extend concrete5") ?></strong></a> – 
-			<?php echo sprintf(t('<a href="%s">Install</a>, <a href="%s">update</a> or download more <a href="%s">themes</a> and <a href="%s">add-ons</a>.'),
-				View::url('/dashboard/extend/install'),
-				View::url('/dashboard/extend/update'),
-				View::url('/dashboard/extend/themes'),
-				View::url('/dashboard/extend/add-ons')); ?>
+				<? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
+				<?php echo sprintf(t('<a href="%s">Install</a>, <a href="%s">update</a> or download more <a href="%s">themes</a> and <a href="%s">add-ons</a>.'),
+					View::url('/dashboard/extend/install'),
+					View::url('/dashboard/extend/update'),
+					View::url('/dashboard/extend/themes'),
+					View::url('/dashboard/extend/add-ons')); ?>
+				<? } else { ?>
+				<?php echo sprintf(t('<a href="%s">Install</a> or <a href="%s">update</a> packages.'),
+					View::url('/dashboard/extend/install'),
+					View::url('/dashboard/extend/update'))?>
+					
+				<? } ?>
 			</li>
 			<? } ?>
 			</ul>
