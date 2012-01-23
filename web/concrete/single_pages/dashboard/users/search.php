@@ -206,7 +206,7 @@ if (is_object($uo)) {
                         Zend_Locale_Data::setCache(Cache::getLibrary());
                         foreach($languages as $lang) {
                             $loc = new Zend_Locale($lang);
-                            $locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
+                            $locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', $lang);
                         }
                         $ux = $uo->getUserObject();
                         print $form->select('uDefaultLanguage', $locales, $ux->getUserDefaultLanguage());
