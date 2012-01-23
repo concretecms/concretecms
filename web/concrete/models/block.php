@@ -234,6 +234,16 @@ class Block extends Object {
 		return false; // legacy. no more scrapbooks in the dashboard.
 	}
 	
+	public function isBlockInStack() {
+		$co = $this->getBlockCollectionObject();
+		if (is_object($co)) {
+			if ($co->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public function inc($file) {
 		$b = $this;
 		if (file_exists($this->getBlockPath() . '/' . $file)) {
