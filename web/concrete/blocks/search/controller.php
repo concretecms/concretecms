@@ -31,7 +31,7 @@ class SearchBlockController extends BlockController {
 		$matches = array();
 		$highlight = str_replace(array('"',"'","&quot;"),'',$highlight); // strip the quotes as they mess the regex
 		
-		$regex = '([a-z|A-Z|0-9|\'|\.|_|\s]{0,45})'. $highlight .'([a-z|A-Z|0-9|\.|_|\s]{0,45})';
+		$regex = '([[:alnum:]|\'|\.|_|\s]{0,45})'. $highlight .'([[:alnum:]|\.|_|\s]{0,45})';
 		preg_match_all("#$regex#ui", $text, $matches);
 		
 		if(!empty($matches[0])) {
