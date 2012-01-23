@@ -72,14 +72,17 @@ class ConcreteDashboardHelper {
 		$trail = $nh->getTrailToCollection($c);
 		if (count($trail) > 1 || count($navigatePages) > 1 || is_object($upToPage)) { 
 			$parent = Page::getByID($c->getCollectionParentID());
-			if (count($trail) > 2 && (!is_object($upToPage))) {
+			if (count($trail) > 1 && (!is_object($upToPage))) {
 				$upToPage = Page::getByID($parent->getCollectionParentID());
 			}
 			Loader::block('autonav');
-			if (count($navigatePages) > 0) { 
-				$subpages = $navigatePages;
-			} else { 
-				$subpages = AutonavBlockController::getChildPages($parent);
+			$subpages = array();
+			if ($navigatePages !== -1) { 
+				if (count($navigatePages) > 0) { 
+					$subpages = $navigatePages;
+				} else { 
+					$subpages = AutonavBlockController::getChildPages($parent);
+				}
 			}
 			
 			$subpagesP = array();
@@ -364,7 +367,7 @@ class ConcreteDashboardHelper {
 			<div id="ccm-dashboard-overlay-misc" <? if (count($packagepages) == 0)  { ?>class="ccm-dashboard-overlay-misc-rounded" <? } ?>>
 			<div class="ccm-dashboard-overlay-inner">
 			<ul>
-			<li><a href="<?=View::url('/dashboard')?>"><strong><?=t('News')?></strong></a> – <?=t('Learn about your site and concrete5')?></li>
+			<li><a href="<?=View::url('/dashboard/news')?>"><strong><?=t('News')?></strong></a> – <?=t('Learn about your site and concrete5.')?></li>
 			<?
 			$systemSettings = Page::getByPath('/dashboard/system');
 			$systemSettingsP = new Permissions($systemSettings);
@@ -395,8 +398,6 @@ class ConcreteDashboardHelper {
 			<? if (count($packagepages) > 0) { ?>
 			<div id="ccm-dashboard-overlay-footer">
 			<div class="ccm-dashboard-overlay-inner" id="ccm-dashboard-overlay-packages">
-
-			<a id="ccm-dashboard-overlay-packages-view-all" href="<?=View::url('/dashboard/extend/all-add-on-pages')?>"><?=t('View All')?></a>
 
 			<?php
 			

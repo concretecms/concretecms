@@ -122,11 +122,6 @@ $(function() {
 			return false;
 		});
 		
-		$("#ccm-nav-dashboard").click(function() {
-			void(0);
-			return false;
-		});
-		
 		$("#ccm-edit-overlay,#ccm-dashboard-overlay").mouseover(function() {
 			clearTimeout(ccm_hideToolbarMenusTimer);
 		});

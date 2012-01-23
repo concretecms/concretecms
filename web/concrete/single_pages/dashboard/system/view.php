@@ -1,4 +1,7 @@
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('System &amp; Settings')); ?>
+<?
+$upToPage = Page::getByPath("/dashboard");
+?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('System &amp; Settings'), false, false, true, -1, $upToPage); ?>
 
 <?
 print '<div class="row">';
