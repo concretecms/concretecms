@@ -716,6 +716,7 @@ td.newsflow-latest-edition-wrapper{background-color:#e7f7ff;background-repeat:re
 .ui-dialog-titlebar{z-index:1100;}
 .ui-dialog .ccm-pane-options{z-index:1099;}
 .ccm-pane .span-pane-half{width:439px;float:left;}
+.ccm-pane .span-pane-third{width:286px;float:left;}
 .ccm-pane .form-stacked .ccm-pane-body{margin-left:-20px;}
 .ccm-pane .form-stacked .ccm-pane-footer{margin-left:-20px;}
 .ui-dialog .form-stacked{padding-left:0px;}

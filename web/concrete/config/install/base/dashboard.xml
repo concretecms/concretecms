@@ -238,7 +238,7 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Add-On Dashboard Pages" path="/dashboard/extend/all-add-on-pages" filename="/dashboard/extend/all-add-on-pages.php" pagetype="" description="" package="">
+        <page name="Dashboard" path="/dashboard/news" filename="/dashboard/news.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="exclude_nav">
 					<value><![CDATA[1]]></value>

@@ -151,7 +151,7 @@ class ConcreteInterfaceHelper {
 	public function showNewsflowOverlay() {
 		$tp = new TaskPermission();
 		$c = Page::getCurrentPage();
-		if (ENABLE_NEWSFLOW_OVERLAY == true && $tp->canViewNewsflow() && $c->getCollectionPath() != '/dashboard') {
+		if (ENABLE_NEWSFLOW_OVERLAY == true && $tp->canViewNewsflow() && $c->getCollectionPath() != '/dashboard/news') {
 			$u = new User();
 			$nf = $u->config('NEWSFLOW_LAST_VIEWED');
 			if ($nf == 'FIRSTRUN') {
