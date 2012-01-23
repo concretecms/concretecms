@@ -701,8 +701,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		public function getGlobalBlocks() {
-			$db = Loader::db();		
-			$rs = $db->GetCol('select arHandle from Areas where arIsGlobal = 1 and cID = ?', array($this->getCollectionID()));
+			$db = Loader::db();
+			$v = array( Stack::ST_TYPE_GLOBAL_AREA );
+			$rs = $db->GetCol('select stName from Stacks where Stacks.stType = ?', $v );
 			$blocks = array();
 			if (count($rs) > 0) {
 				$pcp = new Permissions($this);
