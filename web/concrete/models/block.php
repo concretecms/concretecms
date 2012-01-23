@@ -169,14 +169,33 @@ class Block extends Object {
 		$db = Loader::db();
 		$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
 		$globalScrapbookPage=$scrapbookHelper->getGlobalScrapbookPage();
-		$row = $db->getRow( 'SELECT b.bID, cvb.arHandle FROM Blocks AS b, CollectionVersionBlocks AS cvb '.
-						  'WHERE b.bName=? AND b.bID=cvb.bID AND cvb.cID=? ORDER BY cvb.cvID DESC', 
-						   array($globalBlockName, intval($globalScrapbookPage->getCollectionId()) ) ); 
+		if ($globalScrapbookPage->getCollectionID()) {
+			$row = $db->getRow( 'SELECT b.bID, cvb.arHandle FROM Blocks AS b, CollectionVersionBlocks AS cvb '.
+							  'WHERE b.bName=? AND b.bID=cvb.bID AND cvb.cID=? ORDER BY cvb.cvID DESC', 
+							   array($globalBlockName, intval($globalScrapbookPage->getCollectionId()) ) ); 
+			if ($row != false && isset($row['bID']) && $row['bID'] > 0) {
+				return Block::getByID( $row['bID'], $globalScrapbookPage, $row['arHandle'] );
+			}
+		}
+		
+		//If we made it this far, either there's no scrapbook (clean installation of Concrete5.5+),
+		// or the block wasn't in the legacy scrapbook -- so look in stacks...
+		$sql = 'SELECT b.bID, cvb.arHandle, cvb.cID'
+		 	 . ' FROM Blocks AS b'
+			 . ' INNER JOIN CollectionVersionBlocks AS cvb ON b.bID = cvb.bID'
+			 . ' INNER JOIN CollectionVersions AS cv ON cvb.cID = cv.cID AND cvb.cvID = cv.cvID'
+		 	 . ' WHERE b.bName = ? AND cv.cvIsApproved = 1'
+		 	 . ' AND cvb.cID IN (SELECT cID FROM Stacks)'
+		 	 . ' ORDER BY cvb.cvID DESC'
+			 . ' LIMIT 1';
+		$vals = array($globalBlockName);
+		$row = $db->getRow($sql, $vals);
 		if ($row != false && isset($row['bID']) && $row['bID'] > 0) {
-			return Block::getByID( $row['bID'], $globalScrapbookPage, $row['arHandle'] );
+			return Block::getByID($row['bID'], Page::getByID($row['cID']), $row['arHandle']);
 		} else {
 			return new Block();
 		}
+	
 	}
 	
 	public function display( $view = 'view', $args = array()){
