@@ -42,7 +42,12 @@ $h = Loader::helper('concrete/interface');
 		<div class="clearfix">
             <label id="optionsCheckboxes"><strong><?php echo t('Options')?></strong></label>
             <div class="input">
-			  <ul class="inputs-list">
+              <ul class="inputs-list">
+                 <li>
+                	<label><input type="checkbox" name="register_notification" value="1"<?php echo ($register_notification)?' checked="checked"':''?>/>
+                	<span><?php echo t('Send email when a user registers');?></span></label>
+                	<label class="notify_email"><span><?php echo t('Email address');?> </span><input class="span5" name="register_notification_email" type="text" value="<?php echo $register_notification_email;?>"/></label>
+			    </li>
 			    <li>
 			      <label>
 			        <input type="checkbox" name="enable_registration_captcha" value="1" style="" <?php echo ( $enable_registration_captcha )?'checked':''?> />
@@ -73,17 +78,39 @@ $h = Loader::helper('concrete/interface');
    
  <script type="text/javascript">
  $(function() {
+	
  	var val = $("input[name=registration_type]:checked").val();
 	if (val == 'disabled') {
 		$("input[name=enable_registration_captcha]").attr('disabled', true);
+		$("input[name=register_notification]").attr('checked', false);
+		$('.notify_email').hide();
+		$("input[name=register_notification]").attr('disabled', true);
+	}
+	if($('input[name=register_notification]').attr('checked')) {
+		$('.notify_email').show();
+	} else {
+		$('.notify_email').hide();
 	}
 	$("input[name=registration_type]").click(function() {
 		if ($(this).val() == 'disabled') { 
 			$("input[name=enable_registration_captcha]").attr('disabled', true);
 			$("input[name=enable_registration_captcha]").attr('checked', false);
+			$("input[name=register_notification]").attr('checked', false);
+			$('.notify_email').hide();
+			$("input[name=register_notification]").attr('disabled', true);
 		} else {
 			$("input[name=enable_registration_captcha]").attr('disabled', false);
+			$("input[name=register_notification]").attr('disabled', false);
 		}	
+	});
+	
+ 	$("input[name=register_notification]").click(function() {
+		if ($('input[name=register_notification]').attr('checked')) {
+			$('.notify_email').show();
+		} else {
+			$("input[name=register_notification]").attr('checked', false);
+			$('.notify_email').hide();
+		}
 	});
  });
  </script>
