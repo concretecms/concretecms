@@ -25,12 +25,14 @@ foreach($pkgAvailableArray as $pkg) {
 	}
 }
 
+?>
+		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Update Add-Ons'));?>
 
+<?
 if (!$tp->canInstallPackages()) { ?>
 	<p class="block-message alert-message error"><?=t('You do not have access to download themes or add-ons from the marketplace.')?></p>
 <? } else { ?>
 
-		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Update Add-Ons'));?>
 		<? if (count($pkgLocal) == 0 && count($pkgRemote) == 0) { ?>
 			<p><?=t('No updates for your add-ons are available.')?></p>
 		<? } else { ?>
@@ -106,7 +108,24 @@ if (!$tp->canInstallPackages()) { ?>
 			</table>
 			
 		<? } ?>
-		<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();
-		?>
 
 <? } ?>
+
+		<?
+		if (is_object($mi) && $mi->isConnected()) { ?>
+
+			<h3><?=t("Project Page")?></h3>
+			<p><?=t('Your site is currently connected to the concrete5 community. Your project page URL is:')?><br/>
+			<a href="<?=$mi->getSitePageURL()?>"><?=$mi->getSitePageURL()?></a></p>
+
+		<? } else if ($tp->canInstallPackages() && ENABLE_MARKETPLACE_SUPPORT == true) { ?>
+
+			<div class="well" style="padding:10px 20px;">
+				<h3><?=t('Connect to Community')?></h3>
+				<p><?=t('Your site is not connected to the concrete5 community. Connecting lets you easily extend a site with themes and add-ons. Connecting enables automatic updates.')?></p>
+				<p><a class="btn success" href="<?=$this->url('/dashboard/extend/connect', 'register_step1')?>"><?=t("Connect to Community")?></a></p>
+			</div>
+		
+		<? } ?>
+
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>
