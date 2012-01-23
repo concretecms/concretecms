@@ -228,13 +228,17 @@
 	</div>
 	<div class="ccm-pane-body <? if (!$fsl->requiresPaging()) { ?> ccm-pane-body-footer <? } ?> ">
 
-		<a href="<?=View::url('/dashboard/files/add_set')?>" style="float: right;z-index:999;position:relative" class="btn primary"><?=t("Add Set")?></a>
+		<a href="<?=View::url('/dashboard/files/add_set')?>" style="float: right;z-index:999;position:relative;top:-5px" class="btn primary"><?=t("Add File Set")?></a>
 
 		<?=$fsl->displaySummary()?>
 	
-		<? if (count($fileSets) > 0) { 
+		<? if (count($fileSets) > 0) { ?>
 			
-		foreach ($fileSets as $fs) { ?>
+			<style type="text/css">
+				div.ccm-paging-top {padding-bottom:10px;}
+			</style>
+		
+		<? foreach ($fileSets as $fs) { ?>
 		
 			<div class="ccm-group">
 				<a class="ccm-group-inner" href="<?=$this->url('/dashboard/files/sets/', 'view_detail', $fs->getFileSetID())?>" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$fs->getFileSetName()?></a>
