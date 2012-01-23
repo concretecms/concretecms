@@ -111,6 +111,7 @@ class ImageHelper {
 			$image = @imageCreateTrueColor($finalWidth, $finalHeight);
 		}
 		
+		$im = false;		
 		switch($imageSize[2]) {
 			case IMAGETYPE_GIF:
 				$im = @imageCreateFromGIF($originalPath);
