@@ -23,6 +23,8 @@
 			$this->set('latest_version', Config::get('APP_VERSION_LATEST'));
 			$tp = new TaskPermission();
 			$updates = 0;
+			$local = array();
+			$remote = array();
 			if ($tp->canInstallPackages()) { 
 				$local = Package::getLocalUpgradeablePackages();
 				$remote = Package::getRemotelyUpgradeablePackages();
