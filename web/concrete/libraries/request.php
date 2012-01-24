@@ -42,17 +42,26 @@ class Request {
 		if (!$path) {
 			return false;
 		}
-		
-		// if the path starts off with dir_rel, we remove it:
-		
-		if (DIR_REL != '') {
-			$dr = trim(DIR_REL, '/');
-			$path = trim($path, '/');
-			if (stripos($path, $dr) === 0) {
-				$path = substr($path, strlen($dr));	
+
+		// Allow for special handling
+		// for each path var type.
+		switch ( $var ) {
+
+			case 'PATH_INFO':
+			// DIR_REL not in path; do nothing.
+			break;
+
+			default:
+			// if the path starts off with dir_rel, we remove it:
+			if (DIR_REL != '') {
+				$dr = trim(DIR_REL, '/');
+				$path = trim($path, '/');
+				if (strpos($path, $dr) === 0) {
+					$path = substr($path, strlen($dr));	
+				}
 			}
 		}
-		
+
 		$path = trim($path, '/');
 		if (stripos($path, DISPATCHER_FILENAME) === 0) {
 			$path = substr($path, strlen(DISPATCHER_FILENAME));	
