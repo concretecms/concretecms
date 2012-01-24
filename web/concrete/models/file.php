@@ -500,6 +500,11 @@ class File extends Object {
 		return $files;
 	}
 	
+	public function getTotalDownloads() {
+		$db = Loader::db();
+		return $db->GetOne('select count(*) from DownloadStatistics where fID = ?', array($this->getFileID()));
+	}
+	
 	public function getDownloadStatistics($limit = 20){
 		$db = Loader::db();
 		$limitString = '';
