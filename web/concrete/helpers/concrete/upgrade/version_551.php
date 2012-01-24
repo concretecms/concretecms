@@ -31,6 +31,8 @@ class ConcreteUpgradeVersion551Helper {
 		if ($sp->isError()) {
 			$d1a = SinglePage::add('/dashboard/news');
 			$d1a->update(array('cName'=>t('Newsflow')));
+			$d1a->setAttribute('exclude_nav', 1);
+			$d1a->setAttribute('exclude_search_index', 1);
 		}
 	}
 
