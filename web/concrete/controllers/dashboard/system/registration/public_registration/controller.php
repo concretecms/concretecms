@@ -34,7 +34,7 @@ class DashboardSystemRegistrationPublicRegistrationController extends DashboardB
 					Config::save('USER_VALIDATE_EMAIL', false);	
 					Config::save('USER_VALIDATE_EMAIL_REQUIRED', false);
 					Config::save('USER_REGISTRATION_APPROVAL_REQUIRED', false);
-					Config::save('REGISTER_NOTIFICATION', true);
+					Config::save('REGISTER_NOTIFICATION', $this->post('register_notification'));
 					Config::save('EMAIL_ADDRESS_REGISTER_NOTIFICATION', $this->post('register_notification_email'));
 				break;
 				
@@ -43,7 +43,7 @@ class DashboardSystemRegistrationPublicRegistrationController extends DashboardB
 					Config::save('USER_VALIDATE_EMAIL', true);	
 					Config::save('USER_VALIDATE_EMAIL_REQUIRED', true);
 					Config::save('USER_REGISTRATION_APPROVAL_REQUIRED', false);
-					Config::save('REGISTER_NOTIFICATION', true);
+					Config::save('REGISTER_NOTIFICATION', $this->post('register_notification'));
 					Config::save('EMAIL_ADDRESS_REGISTER_NOTIFICATION', $this->post('register_notification_email'));
 				break;
 				
@@ -52,7 +52,7 @@ class DashboardSystemRegistrationPublicRegistrationController extends DashboardB
 					Config::save('USER_REGISTRATION_APPROVAL_REQUIRED', true);
 					Config::save('USER_VALIDATE_EMAIL', false);	
 					Config::save('USER_VALIDATE_EMAIL_REQUIRED', false);
-					Config::save('REGISTER_NOTIFICATION', true);
+					Config::save('REGISTER_NOTIFICATION', $this->post('register_notification'));
 					Config::save('EMAIL_ADDRESS_REGISTER_NOTIFICATION', $this->post('register_notification_email'));
 				break;
 				
@@ -63,13 +63,13 @@ class DashboardSystemRegistrationPublicRegistrationController extends DashboardB
 			}
 			Config::save('REGISTRATION_TYPE',$this->post('registration_type'));
 			
-			$this->redirect('/dashboard/system/registration/public_registration',t('Registration settings have been saved.'));
+			$this->redirect('/dashboard/system/registration/public_registration',1);
 		}
 	}
 	
-	public function view($message = NULL) {
-		if($message) {
-			$this->set('message',$message);
+	public function view($updated = false) {
+		if($updated) {
+			$this->set('message',t('Registration settings have been saved.'));
 		}
 		$u = new User();
 	}
