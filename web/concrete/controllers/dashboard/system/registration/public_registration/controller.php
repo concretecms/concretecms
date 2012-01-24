@@ -71,8 +71,6 @@ class DashboardSystemRegistrationPublicRegistrationController extends DashboardB
 		if($updated) {
 			$this->set('message',t('Registration settings have been saved.'));
 		}
-		$u = new User();
 	}
 
 }
-?>
