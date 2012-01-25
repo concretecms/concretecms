@@ -407,11 +407,11 @@ foreach($attribs as $at) {
 
 <div class="ccm-file-properties-details-tab" id="ccm-file-properties-statistics-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>-tab" style="display: none">
 	
-	<h3><?=t('Download Statistics')?></h3>
 	<?
 	$downloadStatistics = $f->getDownloadStatistics();
 	?>
-	<h4><?=count($downloadStatistics).' '.t('Downloads')?></h4>
+	<h4><?=t('Total Downloads: %s', $f->getTotalDownloads())?></h4>
+	<p><?=t('Most recent 20 downloads:')?></p>
 	<table border="0" cellspacing="0" width="100%" id="ccm-file-versions-grid" class="ccm-grid" cellpadding="0">
 		<tr> 
 			<th><?=t('User')?></th>
