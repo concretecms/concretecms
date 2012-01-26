@@ -17,6 +17,10 @@ class UpdateArchive extends Archive {
 	
 }
 
+if (!ini_get('safe_mode')) {
+	@set_time_limit(240);
+}
+
 class DashboardSystemBackupRestoreUpdateController extends DashboardBaseController { 	 
 	
 	function view() {  
