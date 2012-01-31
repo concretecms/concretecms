@@ -178,6 +178,8 @@ class ImageHelper {
 				}
 			}
 		}
+		
+		@chmod($newPath, FILE_PERMISSIONS_MODE);
 	}
 	
 	/** 
