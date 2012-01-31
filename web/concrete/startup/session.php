@@ -7,7 +7,13 @@ if(@ini_get('session.auto_start')) {
 }
 
 ini_set('session.use_trans_sid',0);  
-session_set_cookie_params(0, str_replace(' ', '%20', DIR_REL) . '/'); 
+session_set_cookie_params(
+	(defined('SESSION_COOKIE_PARAM_LIFETIME')?SESSION_COOKIE_PARAM_LIFETIME:0),
+	(defined('SESSION_COOKIE_PARAM_PATH')?SESSION_COOKIE_PARAM_PATH:str_replace(' ', '%20', DIR_REL) . '/'),
+	(defined('SESSION_COOKIE_PARAM_DOMAIN')?SESSION_COOKIE_PARAM_DOMAIN:''),
+	(defined('SESSION_COOKIE_PARAM_SECURE')?SESSION_COOKIE_PARAM_SECURE:false),
+	(defined('SESSION_COOKIE_PARAM_HTTPONLY')?SESSION_COOKIE_PARAM_HTTPONLY:false)
+	);
 /* ini_set('session.save_path', DIR_SESSIONS); */
 ini_set('session.gc_maxlifetime', SESSION_MAX_LIFETIME);
 
