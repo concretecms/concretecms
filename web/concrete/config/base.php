@@ -107,6 +107,10 @@ if (!defined("DB_COLLATE")) {
 
 define("LANGUAGE_DOMAIN_CORE", "messages");
 
+if (!defined('FILE_PERMISSIONS_MODE')) {
+	define('FILE_PERMISSIONS_MODE', 0775);
+}
+
 # Path to the core files shared between all concrete 5 installations
 if (!defined('DIR_BASE_CORE')) {
 	define('DIR_BASE_CORE', dirname(__FILE__) . '/..');
