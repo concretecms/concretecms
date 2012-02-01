@@ -61,9 +61,7 @@ if ($dashboard->getCollectionID() == $c->getCollectionID()) {
 $disp .= "</script>"."\n";
 //require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); 
 $v->addHeaderItem($disp);
-
 Loader::element('header_required');
-
 $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundImage();
 ?>
 
