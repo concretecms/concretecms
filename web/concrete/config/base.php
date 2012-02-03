@@ -22,7 +22,11 @@ if (!defined('BASE_URL')) {
 }
 
 if (!defined('DIR_REL')) {
-	$uri = substr($_SERVER['SCRIPT_NAME'], 0, stripos($_SERVER['SCRIPT_NAME'], DISPATCHER_FILENAME) - 1);
+	$pos = stripos($_SERVER['SCRIPT_NAME'], DISPATCHER_FILENAME);
+	if($pos > 0) { //we do this because in CLI circumstances (and some random ones) we would end up with index.ph instead of index.php
+		$pos = $pos - 1;
+	}
+	$uri = substr($_SERVER['SCRIPT_NAME'], 0, $pos);
 	define('DIR_REL', $uri);
 }
 
