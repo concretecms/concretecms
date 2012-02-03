@@ -44,8 +44,13 @@ ccm_menuObj<?=$id?>.arHandle = '<?=$a->getAreaHandle()?>';
 ccm_menuObj<?=$id?>.aID = <?=$a->getAreaID()?>;
 ccm_menuObj<?=$id?>.bID = <?=$bID?>;
 ccm_menuObj<?=$id?>.cID = <?=$cID?>;
-<? if ($b->isEditable() && $p->canWrite() && $b->getBlockTypeHandle() != BLOCK_HANDLE_STACK_PROXY) { ?>
+<? if ($p->canWrite() && $b->getBlockTypeHandle() != BLOCK_HANDLE_STACK_PROXY) { ?>
 ccm_menuObj<?=$id?>.canWrite =true;
+<? if ($b->isEditable()) { ?>
+	ccm_menuObj<?=$id?>.hasEditDialog = true;
+<? } else { ?>
+	ccm_menuObj<?=$id?>.hasEditDialog = false;
+<? } ?>
 ccm_menuObj<?=$id?>.btName = "<?=$btOriginal->getBlockTypeName()?>";
 ccm_menuObj<?=$id?>.width = <?=$btOriginal->getBlockTypeInterfaceWidth()?>;
 ccm_menuObj<?=$id?>.height = <?=$btOriginal->getBlockTypeInterfaceHeight()+$heightPlus ?>;
