@@ -29,6 +29,11 @@
 			return array('file-required' => t('You must select a file.'));	
 		}
 		
+		public function getSearchableContent(){
+			$f = $this->getFileObject();
+			return $f->getTitle().' '.$f->getDescription();
+		}
+		
 		public function validate($args) {
 			$e = Loader::helper('validation/error');
 			if ($args['fID'] < 1) {
