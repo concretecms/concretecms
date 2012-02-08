@@ -294,18 +294,19 @@ $(function() {
 	}
 	
 	ccm_intelligentSearchDoRemoteCalls = function(query) {	
+		query = jQuery.trim(query);
 		if (!query) {
 			return;
 		}
-		if (query.trim().length > 2) {
-			if (query.trim() == ajaxquery) {
+		if (query.length > 2) {
+			if (query == ajaxquery) {
 				return;
 			}
 			
 			if (ajaxtimer) {
 				window.clearTimeout(ajaxtimer);
 			}
-			ajaxquery = query.trim();
+			ajaxquery = query;
 			ajaxtimer = window.setTimeout(function() {
 				ajaxtimer = null;
 				$("#ccm-intelligent-search-results-list-marketplace").parent().show();
