@@ -14,8 +14,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		$firstClass = $isFirst ? 'first-entry' : '';
 		
 		$entryController = Loader::controller($cobj);
-		$comments = $entryController->getCommentCountString('%s '.t('Comment'), '%s '.t('Comments'));
-		
+		if(method_exists($entryController,'getCommentCountString')) {
+			$comments = $entryController->getCommentCountString('%s '.t('Comment'), '%s '.t('Comments'));
+		}
 		$isFirst = false;
 	?>
 	<div class="entry <?php echo $firstClass; ?>">
