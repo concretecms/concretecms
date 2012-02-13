@@ -38,12 +38,14 @@ class ValidationTokenHelper {
 	 */
 	public function generate($action = '', $time = null) {
 		$u = new User();
-		//$uID = $u->getUserID();
+		$uID = $u->getUserID();
+		if (!$uID) {
+			$uID = 0;
+		}
 		if ($time == null) {
 			$time = time();
 		}
-		//$hash = $time . ':' . md5($time . ':' . $uID . ':' . $action . ':' . PASSWORD_SALT);
-		$hash = $time . ':' . md5($time . ':' . $action . ':' . PASSWORD_SALT);
+		$hash = $time . ':' . md5($time . ':' . $uID . ':' . $action . ':' . PASSWORD_SALT);
 		return $hash;
 	}
 	
