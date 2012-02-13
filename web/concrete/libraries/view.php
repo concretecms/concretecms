@@ -738,8 +738,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				
 				if (is_object($this->c)) {
 					$c = $this->c;
-					if (is_object($db) && $view == '/page_not_found') {
+					if (defined('DB_DATABASE') && $view == '/page_not_found') {
 						$view = $c;
+						$req = Request::get();
+						$req->setCurrentPage($c);
 					}
 				}
 				
