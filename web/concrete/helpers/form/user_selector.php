@@ -55,6 +55,7 @@ class FormUserSelectorHelper {
 		$html .= 'var ccmActiveUserField;';		
 		$html .= '}';
 		$html .= '
+		$(function() { 
 		ccm_triggerSelectUser = function(uID, uName, uEmail) { ';
 		if($javascriptFunc=='' || $javascriptFunc=='ccm_triggerSelectUser'){
 			$html .= '
@@ -66,7 +67,7 @@ class FormUserSelectorHelper {
 		}else{
 			$html .= $javascriptFunc."(uID, uName); \n";
 		}
-		$html .= "} \r\n </script>";
+		$html .= "}}); \r\n </script>";
 		return $html;
 	}
 	
