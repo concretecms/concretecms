@@ -418,9 +418,11 @@
         <page name="Task Permissions" path="/dashboard/system/permissions/tasks" filename="/dashboard/system/permissions/tasks.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>security, users, actions, administrator, admin</value>
+					<value>security, actions, administrator, admin</value>
 				</attributekey>
 			</attributes>
+        </page>
+        <page name="User Permissions" path="/dashboard/system/permissions/users" filename="/dashboard/system/permissions/users.php" pagetype="" description="" package="">
         </page>
         <page name="IP Blacklist" path="/dashboard/system/permissions/ip_blacklist" filename="/dashboard/system/permissions/ip_blacklist.php" pagetype="" description="" package="">
 			<attributes>

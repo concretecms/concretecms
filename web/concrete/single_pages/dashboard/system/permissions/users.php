@@ -7,12 +7,10 @@ if ($tp1->can()) {
 	print $h->getDashboardPaneHeaderWrapper(t('Site Permissions'), false, false, false);
 	$ih = Loader::helper('concrete/interface');
 	$tps = array(
-		TaskPermission::getByHandle('access_task_permissions'),
-		TaskPermission::getByHandle('access_sitemap'),
-		TaskPermission::getByHandle('access_page_defaults'),
-		TaskPermission::getByHandle('install_packages'),
-		TaskPermission::getByHandle('uninstall_packages'),
-		TaskPermission::getByHandle('backup')
+		TaskPermission::getByHandle('access_user_search'),
+		TaskPermission::getByHandle('access_group_search'),
+		TaskPermission::getByHandle('sudo'),
+		TaskPermission::getByHandle('delete_user')
 	);
 	$tpl = new TaskPermissionList();
 	foreach($tps as $tp) {
