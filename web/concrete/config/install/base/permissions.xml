@@ -1,5 +1,32 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
+
+    <permissioncategories>
+        <category handle="page" package=""/>
+        <category handle="user" package=""/>
+        <category handle="file" package=""/>
+        <category handle="area" package=""/>
+        <category handle="block" package=""/>
+        <category handle="sitemap" package=""/>
+        <category handle="page_types" package=""/>
+        <category handle="newsflow" package=""/>
+        <category handle="marketplace" package=""/>
+    </permissioncategories>
+
+    <permissionkeys>
+        <permissionkey handle="view_page" name="View" description="Can see a page exists and read its content." package="" category="page"/>
+        <permissionkey handle="view_page_versions" name="View Versions" description="Can view the page versions dialog and read past versions of a page." package="" category="page"/>
+        <permissionkey handle="edit_page_properties" name="Edit Properties" package="" category="page"/>
+        <permissionkey handle="edit_page_contents" name="Edit Contents" package="" category="page"/>
+        <permissionkey handle="edit_page_speed_settings" name="Edit Speed Settings" package="" category="page"/>
+        <permissionkey handle="edit_page_design" name="Edit Design" package="" category="page"/>
+        <permissionkey handle="edit_page_permissions" name="Edit Permissions" package="" category="page"/>
+        <permissionkey handle="delete_page" name="Delete" package="" category="page"/>
+        <permissionkey handle="delete_page_versions" name="Delete Versions" package="" category="page"/>
+        <permissionkey handle="approve_page_versions" name="Approve Changes" package="" category="page"/>
+        <permissionkey handle="add_subpage" name="Add Sub-Page" package="" category="page"/>
+	</permissionkeys>
+	
     <taskpermissions>
         <taskpermission handle="access_task_permissions" name="Change Task Permissions" description="" package="">
             <access>

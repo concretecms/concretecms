@@ -21,8 +21,12 @@ switch($_GET['ctask']) {
 		if (PERMISSIONS_MODEL == 'simple') {
 			$toolSection = 'collection_permissions_simple';
 		} else {
-			$toolSection = "collection_permissions";
+			$toolSection = "collection_permissions_list";
 		}
+		$canViewPane = $cp->canAdminPage();
+		break;
+	case 'set_advanced_permissions':
+		$toolSection = "collection_permissions";
 		$canViewPane = $cp->canAdminPage();
 		break;
 	case 'edit_permissions_composer':

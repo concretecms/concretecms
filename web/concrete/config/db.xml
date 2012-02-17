@@ -891,6 +891,84 @@
       <col>tpHandle</col>
     </index>
   </table>
+  <table name="PermissionKeys">
+    <field name="pkID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED />
+    </field>
+    <field name="pkHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="pkName" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="pkDescription" type="C" size="255"></field>
+    <field name="pkCategoryID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+    <index name="akHandle">
+      <UNIQUE/>
+      <col>pkHandle</col>
+    </index>
+  </table>
+  <table name="PermissionKeyCategories">
+    <field name="pkCategoryID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED />
+    </field>
+    <field name="pkCategoryHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+  </table>
+    <table name="PermissionsAccessEntities">
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="peType" type="C" size="11">
+      <NOTNULL/>
+      <DEFAULT value="group"/>
+    </field>
+  </table>
+  <table name="PermissionsAccessEntityGroups">
+    <field name="pegID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="gID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  <table name="PermissionsAccessEntityUsers">
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
   <table name="FileSetPermissions">
     <field name="fsID" type="I" size="10">
       <KEY/>

@@ -4,7 +4,7 @@
 <?
 $tp1 = TaskPermission::getByHandle('access_task_permissions');
 if ($tp1->can()) { 
-	print $h->getDashboardPaneHeaderWrapper(t('Site Permissions'), false, false, false);
+	print $h->getDashboardPaneHeaderWrapper(t('User Permissions'), false, false, false);
 	$ih = Loader::helper('concrete/interface');
 	$tps = array(
 		TaskPermission::getByHandle('access_user_search'),
@@ -27,7 +27,7 @@ if ($tp1->can()) {
 		</form>
 	<?=$h->getDashboardPaneFooterWrapper(false); ?>
 <? } else { ?>
-	<?=$h->getDashboardPaneHeaderWrapper(t('Site Permissions'));?>
+	<?=$h->getDashboardPaneHeaderWrapper(t('User Permissions'));?>
 	<?=t('You are not allowed to change these permissions.')?>
 	<?=$h->getDashboardPaneFooterWrapper(); ?>
 
