@@ -32,6 +32,8 @@ class ContentImporter {
 		$this->importAttributes($sx);
 		$this->importAttributeSets($sx);
 		$this->importThemes($sx);
+		$this->importPermissionCategories($sx);
+		$this->importPermissions($sx);
 		$this->importTaskPermissions($sx);
 		$this->importJobs($sx);
 		// import bare page types first, then import structure, then page types blocks, attributes and composer settings, then page content, because we need the structure for certain attributes and stuff set in master collections (like composer)
@@ -385,6 +387,33 @@ class ContentImporter {
 						}
 					}
 				}
+			}
+		}
+	}
+
+	protected function importPermissionCategories(SimpleXMLElement $sx) {
+		if (isset($sx->permissioncategories)) {
+			foreach($sx->permissioncategories->category as $pkc) {
+				$pkg = ContentImporter::getPackageObject($akc['package']);
+				$pkx = PermissionKeyCategory::add($pkc['handle'], $pkg);
+			}
+		}
+	}
+
+	protected function importPermissions(SimpleXMLElement $sx) {
+		if (isset($sx->permissionkeys)) {
+			foreach($sx->permissionkeys->permissionkey as $pk) {
+				$pkc = PermissionKeyCategory::getByHandle($pk['category']);
+				$pkg = ContentImporter::getPackageObject($pk['package']);
+				if (is_object($pkg)) {
+					Loader::model('permission/categories/' . $pkc->getPermissionKeyCategoryHandle(), $pkg->getPackageHandle());
+				} else {
+					Loader::model('permission/categories/' . $pkc->getPermissionKeyCategoryHandle());
+				}		
+				$txt = Loader::helper('text');
+				$className = $txt->camelcase($pkc->getPermissionKeyCategoryHandle());
+				$c1 = $className . 'PermissionKey';
+				$pk = call_user_func(array($c1, 'import'), $pk);				
 			}
 		}
 	}
