@@ -104,7 +104,7 @@ menuHTML += '<li id="ccm-logo-wrapper"><?=Loader::helper('concrete/interface')->
 
 <? if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { ?>
 	
-	menuHTML += '<li <? if ($c->isEditMode()) { ?>class="ccm-nav-edit-mode-active"<? } ?>><a class="ccm-icon-edit ccm-menu-icon" id="ccm-nav-edit" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><? if ($c->isEditMode()) { ?><?=t('Editing')?><? } else { ?><?=t('Edit')?></a><? } ?></li>';
+	menuHTML += '<li <? if ($c->isEditMode()) { ?>class="ccm-nav-edit-mode-active"<? } ?>><a class="ccm-icon-edit ccm-menu-icon" id="ccm-nav-edit" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><? if ($c->isEditMode()) { ?><?=t('Editing')?><? } else { ?><?=t('Edit')?><? } ?></a></li>';
 	<?
 	$items = $ihm->getPageHeaderMenuItems('left');
 	foreach($items as $ih) {
