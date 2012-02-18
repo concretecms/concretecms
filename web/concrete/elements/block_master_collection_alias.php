@@ -21,7 +21,7 @@ $cList = $ct->getPages();
 	<p><?=t("Choose which pages below this particular block should appear on. Any previously selected blocks may also be removed using the checkbox. Click the checkbox in the header to select/deselect all pages.")?></p>
 	<br/>
 		
-		<table class="zebra-stripped" >
+		<table class="zebra-striped" >
 		<tr>
 			<th>ID</th>
 			<th><?=t('Name')?></th>
