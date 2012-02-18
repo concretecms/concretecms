@@ -489,12 +489,15 @@ class ItemList {
 		$ss->needsPaging = ($ss->total > $ss->chunk) ? true : false;
 		return $ss;
 	}
-	/** 
-	 * Sets up a column to sort by
+
+	/**
+	 * Sets column to sort by. Only supports a single column; for multiple columns us sortByMultiple()
+	 * @param string $column Column name to sort
+	 * @param string $direction Sorting direction. Use 'asc' or 'desc'
 	 */
 	public function sortBy($column, $direction = 'asc') {
 		$this->sortBy = $column;
-		if (in_array($direction, array('asc','desc'))) {
+		if (in_array(strtolower($direction), array('asc','desc'))) {
 			$this->sortByDirection = $direction;
 		} else {
 			$this->sortByDirection = 'asc';
