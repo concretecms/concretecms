@@ -939,7 +939,7 @@
       <DEFAULT value="G"/>
     </field>
   </table>
-  <table name="PermissionsAccessEntityGroups">
+  <table name="PermissionAccessEntityGroups">
     <field name="pegID" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -956,7 +956,50 @@
       <UNSIGNED/>
     </field>
   </table>
-  <table name="PermissionsAccessEntityUsers">
+  <table name="PermissionDurationObjects">
+    <field name="pdID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="pdObject" type="X">
+      <NOTNULL/>
+    </field>
+  </table>
+  <table name="PagePermissionAssignments">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pdID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pkID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="accessType" type="I" size="4">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="cID">
+      <col>cID</col>
+      <col>pkID</col>
+      <col>accessType</col>
+    </index>
+  </table>
+
+
+  <table name="PermissionAccessEntityUsers">
     <field name="peID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
