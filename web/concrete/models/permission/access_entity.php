@@ -32,6 +32,7 @@ class PermissionAccessEntity extends Object {
 class GroupPermissionAccessEntity extends PermissionAccessEntity {
 
 	protected $group = false;
+	public function getGroupObject() {return $this->group;}
 	
 	public static function create(Group $g) {
 		$db = Loader::db();
@@ -57,6 +58,10 @@ class GroupPermissionAccessEntity extends PermissionAccessEntity {
 class GroupCombinationPermissionAccessEntity extends PermissionAccessEntity {
 	
 	protected $groups = array();
+	
+	public function getGroups() {
+		return $this->groups;
+	}
 	
 	public static function create($groups) {
 		$db = Loader::db();
@@ -90,6 +95,7 @@ class GroupCombinationPermissionAccessEntity extends PermissionAccessEntity {
 class UserPermissionAccessEntity extends PermissionAccessEntity {
 
 	protected $user;
+	public function getUserObject() {return $this->user;}
 	
 	public static function create(UserInfo $ui) {
 		$db = Loader::db();

@@ -111,6 +111,10 @@ if ($_POST['task'] == 'save_permissions') {
 	exit;
 }
 
+$members = array();
+if (isset($_REQUEST['peID'])) {
+	$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
+}
 ?>
 <div class="ccm-ui" id="ccm-permissions-access-entity-wrapper">
 
@@ -361,6 +365,24 @@ ccm_accessEntityCalculateRepeatOptions = function() {
 }
 
 $(function() {
+	<? if (is_object($pe)) { ?>
+		<? switch($pe->getAccessEntityType()) {
+			case 'C':
+				foreach($pe->getGroups() as $g) { ?>
+					ccm_triggerSelectGroup(<?=$g->getGroupID()?>, '<?=Loader::helper("text")->entities($g->getGroupName())?>');
+				<? }
+				break;
+			case 'U':
+				$ui = $pe->getUserObject(); ?>
+				ccm_triggerSelectUser(<?=$ui->getUserID()?>, '<?=$ui->getUserName()?>');
+				<?
+				break;
+			default:
+				$g = $pe->getGroupObject(); ?>
+				ccm_triggerSelectGroup(<?=$g->getGroupID()?>, '<?=Loader::helper("text")->entities($g->getGroupName())?>');
+				<? break;
+			}
+		} ?>
 	$("#ccm-permissions-access-entity-form").ajaxForm({
 		beforeSubmit: function(r) {
 			jQuery.fn.dialog.showLoader();
