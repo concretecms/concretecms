@@ -3,6 +3,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 abstract class PermissionKey extends Object {
 	
 
+	const ACCESS_TYPE_INCLUDE = 1;
+	const ACCESS_TYPE_EXCLUDE = -1;
+	
 	/** 
 	 * Returns the name for this permission key
 	 */
