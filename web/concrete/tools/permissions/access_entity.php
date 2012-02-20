@@ -31,10 +31,57 @@ if (!$tp->canAccessUserSearch() && !$tp->canAccessGroupSearch()) {
 	die(t("Access Denied."));
 }
 
+if ($_POST['task'] == 'save_permissions') { 
+	$js = Loader::helper('json');
+	$r = new stdClass;
+	// First, we create a permissions access entity object for this
+	$pae = false;
+	if (isset($_POST['gID']) || isset($_POST['uID'])) { 
+		if (isset($_POST['uID'])) {
+			$ui = UserInfo::getByID($_POST['uID']);
+			if (is_object($ui)) { 
+				$pae = UserPermissionsAccessEntity::create($ui);
+			}
+		} else {
+			if (count($_POST['gID']) > 1) { 
+				$groups = array();
+				foreach($_POST['gID'] as $gID) {
+					$g = Group::getByID($_POST['gID']);
+					if (is_object($g)) {
+						$groups[] = $g;
+					}
+				}
+				$pae = GroupCombinationPermissionsAccessEntity::create($groups);
+			} else {
+				$g = Group::getByID($_POST['gID'][0]);
+				if (is_object($g)) {
+					$pae = GroupPermissionsAccessEntity::create($g);			
+				}
+			}
+		}
+		
+		if (is_object($pae)) {
+		
+		} else {
+			$r->error = true;
+			$r->message = t('Unable to create permissions access entity object.');
+		}
+
+	} else {
+		$r->error = true;
+		$r->message = t('You must specify at least one user or group.');
+	}
+	
+	
+	print $js->encode($r);
+	exit;
+}
+
 ?>
 <div class="ccm-ui" id="ccm-permissions-access-entity-wrapper">
 
-<form>
+<form id="ccm-permissions-access-entity-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/access_entity">
+<input type="hidden" name="task" value="save_permissions" />
 
 <h4><?=t('Groups or Users')?></h4>
 
@@ -188,7 +235,7 @@ if (!$tp->canAccessUserSearch() && !$tp->canAccessGroupSearch()) {
 
 <div class="dialog-buttons">
 	<input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel')?>" class="btn" />
-	<input type="submit" value="<?=t('Save')?>" class="btn primary ccm-button-right" />
+	<input type="submit" onclick="$('#ccm-permissions-access-entity-form').submit()" value="<?=t('Save')?>" class="btn primary ccm-button-right" />
 </div>
 </form>
 
@@ -218,7 +265,7 @@ ccm_triggerSelectGroup = function(gID, gName) {
 ccm_triggerSelectUser = function(uID, uName) {
 	$("#ccm-permissions-access-entity-members-none").hide();
 	var tbl = $("#ccm-permissions-access-entity-members");
-	html = '<tr><td><input type="hidden" name="uID[]" value="' + uID + '" /><img src="<?=ASSETS_URL_IMAGES?>/icons/user.png" /></td><td>' + uName + '</td><td><a href="javascript:void(0)" onclick="ccm_accessEntityRemoveRow(this)"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" /></a></td>';
+	html = '<tr><td><input type="hidden" name="uID" value="' + uID + '" /><img src="<?=ASSETS_URL_IMAGES?>/icons/user.png" /></td><td>' + uName + '</td><td><a href="javascript:void(0)" onclick="ccm_accessEntityRemoveRow(this)"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" /></a></td>';
 	tbl.append(html);
 	$("#ccm-permissions-access-entity-members-add-group").attr('disabled', true);
 	$("#ccm-permissions-access-entity-members-add-user").attr('disabled', true);
@@ -279,6 +326,20 @@ ccm_accessEntityCalculateRepeatOptions = function() {
 }
 
 $(function() {
+	$("#ccm-permissions-access-entity-form").ajaxForm({
+		beforeSubmit: function(r) {
+			jQuery.fn.dialog.showLoader();
+		},
+		success: function(r) {
+			console.log(r);
+			r = eval('(' + r + ')');
+			if (r.error) {
+				ccmAlert.notice('<?=t("Error")?>', r.message);
+			}
+			jQuery.fn.dialog.hideLoader();
+		}
+	});
+	
 	$("#ccm-permissions-access-entity-dates input[class=ccm-activate-date-time]").click(function() {
 		if ($("#peStartDate_activate").is(':checked') || $("#peEndDate_activate").is(':checked')) {
 			ccm_accessEntityCalculateRepeatOptions();
