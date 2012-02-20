@@ -12,7 +12,7 @@ jQuery.fn.dialog = function() {
 	}
 	// LEGACY SUPPORT
 	return $(this).each(function() {
-		$(this).click(function(e) {
+		$(this).unbind('click').click(function(e) {
 			var href = $(this).attr('href');
 			var width = $(this).attr('dialog-width');
 			var height =$(this).attr('dialog-height');
