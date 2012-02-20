@@ -73,6 +73,7 @@
 	Loader::model('page');
 	Loader::model('page_theme');
 	Loader::model('composer_page');
+	Loader::model('permission/access_entity');
 	Loader::model('permission/category');
 	Loader::model('permission/key');
 	Loader::model('permissions');

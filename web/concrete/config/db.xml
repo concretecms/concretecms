@@ -934,9 +934,9 @@
       <AUTOINCREMENT/>
       <UNSIGNED/>
     </field>
-    <field name="peType" type="C" size="11">
+    <field name="peType" type="C" size="1">
       <NOTNULL/>
-      <DEFAULT value="group"/>
+      <DEFAULT value="G"/>
     </field>
   </table>
   <table name="PermissionsAccessEntityGroups">
