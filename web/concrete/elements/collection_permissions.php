@@ -17,27 +17,13 @@ if ($cp->canAdminPage()) {
 			}
 		}
 	}
-	
-	if ($_REQUEST['subtask'] == 'remove_access_entity' && Loader::helper("validation/token")->validate('remove_access_entity')) {
-		$pk = PagePermissionKey::getByID($_REQUEST['pkID']);
-		$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
-		$pk->removeAssignment($c, $pe);
-	}
-
-	if ($_REQUEST['subtask'] == 'add_access_entity' && Loader::helper("validation/token")->validate('add_access_entity')) {
-		$pk = PagePermissionKey::getByID($_REQUEST['pkID']);
-		$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
-		$pd = PermissionDuration::getByID($_REQUEST['pdID']);
-		$pk->addAssignment($c, $pe, $pd, $_REQUEST['accessType']);
-	}
 
 }
 ?>
 <div class="ccm-ui" id="ccm-page-permissions-list">
-<? $pk = PagePermissionKey::getByID($_REQUEST['pkID']); ?>
-
-<? $included = $pk->getAssignmentList($c); ?>
-<? $excluded = $pk->getAssignmentList($c, PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
+<? $pk = PagePermissionKey::getByID($_REQUEST['pkID'], $c); ?>
+<? $included = $pk->getAssignmentList(); ?>
+<? $excluded = $pk->getAssignmentList(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
 
 <h3><?=t('Included')?></h3>
 <? Loader::element('permission/access_list', array('permissionKey' => $pk, 'list' => $included)); ?>
@@ -45,23 +31,34 @@ if ($cp->canAdminPage()) {
 <h3><?=t('Excluded')?></h3>
 <? Loader::element('permission/access_list', array('permissionKey' => $pk, 'list' => $excluded, 'accessType' => PermissionKey::ACCESS_TYPE_EXCLUDE)); ?>
 
+<? if ($pk->getPackageID() > 0) { ?>
+	<? Loader::packageElement('permission/keys/' . $pk->getPermissionKeyHandle(), $pk->getPackageHandle(), array('permissionKey' => $pk)); ?>
+<? } else { ?>
+	<? Loader::element('permission/keys/' . $pk->getPermissionKeyHandle(), array('permissionKey' => $pk)); ?>
+<? } ?>
 </div>
 
 <script type="text/javascript">
 ccm_addAccessEntity = function(peID, pdID, accessType) {
 	jQuery.fn.dialog.closeTop();
 	jQuery.fn.dialog.showLoader();
-	$('#ccm-page-permissions-list').closest('.ui-dialog-content').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?<?=Loader::helper("validation/token")->getParameter("add_access_entity")?>&cID=<?=$_REQUEST["cID"]?>&pkID=<?=$_REQUEST["pkID"]?>&ctask=set_advanced_permissions&subtask=add_access_entity&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function() {
-		jQuery.fn.dialog.hideLoader();
-		$('.dialog-launch').dialog();
+	
+	$.get('<?=$pk->getPermissionKeyToolsURL("add_access_entity")?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function() { 
+		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?ctask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
+			jQuery.fn.dialog.replaceTop(r);
+			jQuery.fn.dialog.hideLoader();
+		});
 	});
 }
 
 ccm_deleteAccessEntityAssignment = function(peID) {
 	jQuery.fn.dialog.showLoader();
-	$('#ccm-page-permissions-list').closest('.ui-dialog-content').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?<?=Loader::helper("validation/token")->getParameter("remove_access_entity")?>&cID=<?=$_REQUEST["cID"]?>&pkID=<?=$_REQUEST["pkID"]?>&ctask=set_advanced_permissions&subtask=remove_access_entity&peID=' + peID, function() {
-		jQuery.fn.dialog.hideLoader();
-		$('.dialog-launch').dialog();
+	
+	$.get('<?=$pk->getPermissionKeyToolsURL("remove_access_entity")?>&peID=' + peID, function() { 
+		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?ctask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
+			jQuery.fn.dialog.replaceTop(r);
+			jQuery.fn.dialog.hideLoader();
+		});
 	});
 }
 

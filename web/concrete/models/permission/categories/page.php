@@ -2,22 +2,32 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class PagePermissionKey extends PermissionKey {
 	
-	public static function getByID($pkID) {
-		$pk = new self;
-		$pk->load($pkID);
+	protected $page;
+	
+	public function getPageObject() {
+		return $this->page;
+	}
+
+	public static function getByID($pkID, Page $page) {
+		$pk = self::load($pkID);
 		if ($pk->getPermissionKeyID() > 0) {
+			$pk->page = $page;
 			return $pk;
 		}
 	}
 	
-	public function getAssignmentList($page, $accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
+	public function getAssignmentList($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
 		$db = Loader::db();
  		$r = $db->Execute('select peID, pdID from PagePermissionAssignments where cID = ? and accessType = ? and pkID = ?', array(
- 			$page->getCollectionID(), $accessType, $this->getPermissionKeyID()
+ 			$this->page->getCollectionID(), $accessType, $this->getPermissionKeyID()
  		));
  		$list = array();
+ 		$class = str_replace('PagePermissionKey', 'PagePermissionAssignment', get_class($this));
+ 		if (!class_exists($class)) {
+ 			$class = 'PagePermissionAssignment';
+ 		}
  		while ($row = $r->FetchRow()) {
- 			$ppa = new PagePermissionAssignment();
+ 			$ppa = new $class();
  			$ppa->setAccessType($accessType);
  			$ppa->loadPermissionDurationObject($row['pdID']);
  			$ppa->loadAccessEntityObject($row['peID']);
@@ -28,7 +38,7 @@ class PagePermissionKey extends PermissionKey {
  		return $list;
 	}
 	
-	public function addAssignment($page, PermissionAccessEntity $pae, $durationObject = false, $accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
+	public function addAssignment(PermissionAccessEntity $pae, $durationObject = false, $accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
 		$db = Loader::db();
 		$pdID = 0;
 		if ($durationObject instanceof PermissionDuration) {
@@ -36,7 +46,7 @@ class PagePermissionKey extends PermissionKey {
 		}
 		
 		$db->Replace('PagePermissionAssignments', array(
-			'cID' => $page->getCollectionID(),
+			'cID' => $this->page->getCollectionID(),
 			'pkID' => $this->getPermissionKeyID(), 
 			'peID' => $pae->getAccessEntityID(),
 			'pdID' => $pdID,
@@ -44,10 +54,14 @@ class PagePermissionKey extends PermissionKey {
 		), array('cID', 'peID', 'pkID'), false);
 	}
 	
-	public function removeAssignment($page, PermissionAccessEntity $pe) {
+	public function removeAssignment(PermissionAccessEntity $pe) {
 		$db = Loader::db();
-		$db->Execute('delete from PagePermissionAssignments where cID = ? and peID = ?', array($page->getCollectionID(), $pe->getAccessEntityID()));
+		$db->Execute('delete from PagePermissionAssignments where cID = ? and peID = ?', array($this->page->getCollectionID(), $pe->getAccessEntityID()));
 		
+	}
+	
+	public function getPermissionKeyToolsURL($task = false) {
+		return parent::getPermissionKeyToolsURL($task) . '&cID=' . $this->getPageObject()->getCollectionID();
 	}
 
 }
