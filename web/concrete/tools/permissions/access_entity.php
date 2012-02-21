@@ -31,13 +31,13 @@ if (!$tp->canAccessUserSearch() && !$tp->canAccessGroupSearch()) {
 	die(t("Access Denied."));
 }
 
-if (isset($_REQUEST['peID'])) {
+if ($_REQUEST['peID']) {
 	$pae = PermissionAccessEntity::getByID($_REQUEST['peID']);
 } else {
 	$pae = false;
 }
 
-if (isset($_REQUEST['pdID'])) {
+if ($_REQUEST['pdID']) {
 	$pd = PermissionDuration::getByID($_REQUEST['pdID']);
 } else {
 	$pd = false;
@@ -47,7 +47,6 @@ if ($_POST['task'] == 'save_permissions') {
 	$js = Loader::helper('json');
 	$r = new stdClass;
 	// First, we create a permissions access entity object for this
-	$pd = false;
 	
 	if (isset($_POST['gID']) || isset($_POST['uID'])) { 
 		if (!is_object($pae)) { 
