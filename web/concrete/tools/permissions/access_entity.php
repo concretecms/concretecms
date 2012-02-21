@@ -31,33 +31,46 @@ if (!$tp->canAccessUserSearch() && !$tp->canAccessGroupSearch()) {
 	die(t("Access Denied."));
 }
 
+if (isset($_REQUEST['peID'])) {
+	$pae = PermissionAccessEntity::getByID($_REQUEST['peID']);
+} else {
+	$pae = false;
+}
+
+if (isset($_REQUEST['pdID'])) {
+	$pd = PermissionDuration::getByID($_REQUEST['pdID']);
+} else {
+	$pd = false;
+}
+
 if ($_POST['task'] == 'save_permissions') { 
 	$js = Loader::helper('json');
 	$r = new stdClass;
 	// First, we create a permissions access entity object for this
-	$pae = false;
 	$pd = false;
 	
 	if (isset($_POST['gID']) || isset($_POST['uID'])) { 
-		if (isset($_POST['uID'])) {
-			$ui = UserInfo::getByID($_POST['uID']);
-			if (is_object($ui)) { 
-				$pae = UserPermissionAccessEntity::create($ui);
-			}
-		} else {
-			if (count($_POST['gID']) > 1) { 
-				$groups = array();
-				foreach($_POST['gID'] as $gID) {
-					$g = Group::getByID($gID);
-					if (is_object($g)) {
-						$groups[] = $g;
-					}
+		if (!is_object($pae)) { 
+			if (isset($_POST['uID'])) {
+				$ui = UserInfo::getByID($_POST['uID']);
+				if (is_object($ui)) { 
+					$pae = UserPermissionAccessEntity::create($ui);
 				}
-				$pae = GroupCombinationPermissionAccessEntity::create($groups);
 			} else {
-				$g = Group::getByID($_POST['gID'][0]);
-				if (is_object($g)) {
-					$pae = GroupPermissionAccessEntity::create($g);			
+				if (count($_POST['gID']) > 1) { 
+					$groups = array();
+					foreach($_POST['gID'] as $gID) {
+						$g = Group::getByID($gID);
+						if (is_object($g)) {
+							$groups[] = $g;
+						}
+					}
+					$pae = GroupCombinationPermissionAccessEntity::create($groups);
+				} else {
+					$g = Group::getByID($_POST['gID'][0]);
+					if (is_object($g)) {
+						$pae = GroupPermissionAccessEntity::create($g);			
+					}
 				}
 			}
 		}
@@ -69,7 +82,12 @@ if ($_POST['task'] == 'save_permissions') {
 			
 			if ($dateStart || $dateEnd) {
 				// create a PermissionDuration object
-				$pd = new PermissionDuration();
+				if ($_REQUEST['pdID']) { 
+					$pd = PermissionDuration::getByID($_REQUEST['pdID']);
+				} else { 
+					$pd = new PermissionDuration();
+				}
+				
 				$pd->setStartDate($dateStart);
 				$pd->setEndDate($dateEnd);
 				if ($_POST['pdRepeatPeriod']) {
@@ -83,7 +101,7 @@ if ($_POST['task'] == 'save_permissions') {
 						$pd->setRepeatMonthBy($_POST['pdRepeatPeriodMonthsRepeatBy']);
 						$pd->setRepeatEveryNum($_POST['pdRepeatPeriodMonthsEvery']);					
 					}
-					$pd->setRepeatPeriodEnd($dt->translate('peEndRepeatDateSpecific'));
+					$pd->setRepeatPeriodEnd($dt->translate('pdEndRepeatDateSpecific'));
 				}
 				$pd->save();		
 			}
@@ -112,8 +130,40 @@ if ($_POST['task'] == 'save_permissions') {
 }
 
 $members = array();
-if (isset($_REQUEST['peID'])) {
-	$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
+$pdStartDate = false;
+$pdEndDate = false;
+$pdRepeats = false;
+$pdRepeatPeriod = false;
+$pdRepeatPeriodWeekDays = array();
+$pdRepeatPeriodDaysEvery = 1;
+$pdRepeatPeriodWeeksEvery = 1;
+$pdRepeatPeriodMonthsEvery = 1;
+$pdRepeatPeriodMonthsRepeatBy = 'month';
+$pdEndRepeatDateSpecific = false;
+$pdEndRepeatDate = '';
+if (is_object($pd)) {
+	$pdStartDate = $pd->getStartDate();
+	$pdEndDate = $pd->getEndDate();
+	$pdRepeats = $pd->repeats();
+	$pdRepeatPeriod = $pd->getRepeatPeriod();
+	$pdRepeatPeriodWeekDays = $pd->getRepeatPeriodWeekDays();
+	$pdRepeatPeriodWeekDays = $pd->getRepeatPeriodWeekDays();
+	if ($pdRepeatPeriod == 'daily') {
+		$pdRepeatPeriodDaysEvery = $pd->getRepeatPeriodEveryNum();
+	}
+	if ($pdRepeatPeriod == 'weekly') {
+		$pdRepeatPeriodWeeksEvery = $pd->getRepeatPeriodEveryNum();
+	}
+	if ($pdRepeatPeriod == 'monthly') {
+		$pdRepeatPeriodMonthsEvery = $pd->getRepeatPeriodEveryNum();
+	}
+	if ($pd->getRepeatMonthBy() != '') {
+		$pdRepeatPeriodMonthsRepeatBy = $pd->getRepeatMonthBy();
+	}
+	$pdEndRepeatDateSpecific = $pd->getRepeatPeriodEnd();
+	if ($pdEndRepeatDateSpecific) {
+		$pdEndRepeatDate = 'date';
+	}
 }
 ?>
 <div class="ccm-ui" id="ccm-permissions-access-entity-wrapper">
@@ -121,6 +171,8 @@ if (isset($_REQUEST['peID'])) {
 <form id="ccm-permissions-access-entity-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/access_entity">
 <input type="hidden" name="task" value="save_permissions" />
 <?=$form->hidden('accessType');?>
+<?=$form->hidden('peID');?>
+<?=$form->hidden('pdID');?>
 
 <h4><?=t('Groups or Users')?></h4>
 
@@ -130,17 +182,21 @@ if (isset($_REQUEST['peID'])) {
 <tr>
 	<th><div style="width: 16px"></div></th>
 	<th width="100%"><?=t("Name")?></th>
-	<th><div style="width: 16px"></div></th>
+	<? if (!is_object($pae)) { ?>
+		<th><div style="width: 16px"></div></th>
+	<? } ?>
 </tr>
 <tr>
-	<td colspan="3" id="ccm-permissions-access-entity-members-none"><?=t("No users or groups added.")?></td>
+	<td colspan="<? if (!is_object($pae)) { ?>3<? } else { ?>2<? } ?>" id="ccm-permissions-access-entity-members-none"><?=t("No users or groups added.")?></td>
 </tr>
 </table>
+<? if (!is_object($pae)) { ?>
 <div style="margin-top: -10px" class="clearfix">
 <input type="button" class="btn ccm-button-right small dialog-launch" id="ccm-permissions-access-entity-members-add-user" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_dialog?mode=choose_multiple&cID=<?=$_REQUEST['cID']?>" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Add User')?>"  dialog-height="70%" value="<?=t('Add User')?>" />
 <input type="button" class="btn ccm-button-right small dialog-launch" id="ccm-permissions-access-entity-members-add-group" style="margin-right: 5px" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_group?cID=<?=$_REQUEST['cID']?>&include_core_groups=1" dialog-modal="false" dialog-title="<?=t('Add Group')?>" value="<?=t('Add Group')?>" />
 </div>
 <br/>
+<? } ?>
 
 <h4><?=t('Time Settings')?></h4>
 
@@ -151,14 +207,14 @@ if (isset($_REQUEST['peID'])) {
 <div class="clearfix">
 <?=$form->label('pdStartDate_activate', t('From'))?>
 <div class="input">
-	<?=$dt->datetime('pdStartDate', '', true);?>
+	<?=$dt->datetime('pdStartDate', $pdStartDate, true);?>
 </div>
 </div>
 
 <div class="clearfix">
 <?=$form->label('pdEndDate_activate', t('To'))?>
 <div class="input">
-	<?=$dt->datetime('pdEndDate', '', true);?>
+	<?=$dt->datetime('pdEndDate', $pdEndDate, true);?>
 </div>
 </div>
 
@@ -169,7 +225,7 @@ if (isset($_REQUEST['peID'])) {
 <div class="clearfix">
 <div class="input">
 <ul class="inputs-list">
-	<li><label><?=$form->checkbox('pdRepeat', 1)?> <span><?=t('Repeat...')?></span></label></li>
+	<li><label><?=$form->checkbox('pdRepeat', 1, $pdRepeats)?> <span><?=t('Repeat...')?></span></label></li>
 </ul>
 </div>
 </div>
@@ -179,7 +235,7 @@ if (isset($_REQUEST['peID'])) {
 <div class="clearfix">
 <?=$form->label('pdRepeatPeriod', t('Repeats'))?>
 <div class="input">
-	<?=$form->select('pdRepeatPeriod', $repeats, '')?>	
+	<?=$form->select('pdRepeatPeriod', $repeats, $pdRepeatPeriod)?>	
 </div>
 </div>
 
@@ -188,7 +244,7 @@ if (isset($_REQUEST['peID'])) {
 <div class="clearfix">
 <?=$form->label('pdRepeatPeriodDaysEvery', t('Repeat every'))?>
 <div class="input">
-	<?=$form->select('pdRepeatPeriodDaysEvery', $repeatDays, 1, array('style' => 'width: 60px'))?>
+	<?=$form->select('pdRepeatPeriodDaysEvery', $repeatDays, $pdRepeatPeriodDaysEvery, array('style' => 'width: 60px'))?>
 	<?=t('days')?>
 </div>
 </div>
@@ -210,7 +266,7 @@ if (isset($_REQUEST['peID'])) {
 <div class="clearfix">
 <?=$form->label('pdRepeatPeriodMonthsEvery', t('Repeat every'))?>
 <div class="input">
-	<?=$form->select('pdRepeatPeriodMonthsEvery', $repeatMonths, 1, array('style' => 'width: 60px'))?>
+	<?=$form->select('pdRepeatPeriodMonthsEvery', $repeatMonths, $pdRepeatPeriodMonthsEvery, array('style' => 'width: 60px'))?>
 	<?=t('months')?>
 </div>
 </div>
@@ -227,7 +283,7 @@ if (isset($_REQUEST['peID'])) {
 <div class="input">
 <ul class="inputs-list">
 <? foreach($list['format']['wide'] as $key => $value) { ?>
-	<li><label><?=$form->checkbox('pdRepeatPeriodWeeksDays[]', $key)?> <span><?=$value?></span></label></li>
+	<li><label><?=$form->checkbox('pdRepeatPeriodWeeksDays[]', $key, in_array($key, $pdRepeatPeriodWeekDays))?> <span><?=$value?></span></label></li>
 <? } ?>
 </ul>
 </div>
@@ -238,7 +294,7 @@ if (isset($_REQUEST['peID'])) {
 <div class="clearfix">
 <?=$form->label('pdRepeatPeriodWeeksEvery', t('Repeat every'))?>
 <div class="input">
-	<?=$form->select('pdRepeatPeriodWeeksEvery', $repeatWeeks, 1, array('style' => 'width: 60px'))?>
+	<?=$form->select('pdRepeatPeriodWeeksEvery', $repeatWeeks, $pdRepeatPeriodWeeksEvery, array('style' => 'width: 60px'))?>
 	<?=t('weeks')?>
 </div>
 </div>
@@ -251,16 +307,16 @@ if (isset($_REQUEST['peID'])) {
 <div class="clearfix">
 <label><?=t('Starts On')?></label>
 <div class="input">
-	<input type="text" disabled="disabled" value="" name="peStartRepeatDate"   />
+	<input type="text" disabled="disabled" value="" name="pdStartRepeatDate"   />
 </div>
 </div>
 
 <div class="clearfix">
-<?=$form->label('peEndRepeatDate', t('Ends'))?>
+<?=$form->label('pdEndRepeatDate', t('Ends'))?>
 <div class="input">
 <ul class="inputs-list">
-	<li><label><?=$form->radio('peEndRepeatDate', '')?> <span><?=t('Never')?></span></label></li>
-	<li><label><?=$form->radio('peEndRepeatDate', 'date')?> <?=$dt->date('peEndRepeatDateSpecific')?></label></li>
+	<li><label><?=$form->radio('pdEndRepeatDate', '', $pdEndRepeatDate)?> <span><?=t('Never')?></span></label></li>
+	<li><label><?=$form->radio('pdEndRepeatDate', 'date', $pdEndRepeatDate)?> <?=$dt->date('pdEndRepeatDateSpecific', $pdEndRepeatDateSpecific)?></label></li>
 </ul>
 </div>
 </div>
@@ -295,7 +351,7 @@ ccm_triggerSelectGroup = function(gID, gName) {
 	if ($("input[class=entitygID][value=" + gID + "]").length == 0) { 
 		$("#ccm-permissions-access-entity-members-none").hide();
 		var tbl = $("#ccm-permissions-access-entity-members");
-		html = '<tr><td><input type="hidden" class="entitygID" name="gID[]" value="' + gID + '" /><img src="<?=ASSETS_URL_IMAGES?>/icons/group.png" /></td><td>' + gName + '</td><td><a href="javascript:void(0)" onclick="ccm_accessEntityRemoveRow(this)"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" /></a></td>';
+		html = '<tr><td><input type="hidden" class="entitygID" name="gID[]" value="' + gID + '" /><img src="<?=ASSETS_URL_IMAGES?>/icons/group.png" /></td><td>' + gName + '</td><? if (!is_object($pae)) { ?><td><a href="javascript:void(0)" onclick="ccm_accessEntityRemoveRow(this)"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" /></a></td><? } ?>';
 		tbl.append(html);
 		$("#ccm-permissions-access-entity-members-add-user").attr('disabled', true);
 	}
@@ -304,7 +360,7 @@ ccm_triggerSelectGroup = function(gID, gName) {
 ccm_triggerSelectUser = function(uID, uName) {
 	$("#ccm-permissions-access-entity-members-none").hide();
 	var tbl = $("#ccm-permissions-access-entity-members");
-	html = '<tr><td><input type="hidden" name="uID" value="' + uID + '" /><img src="<?=ASSETS_URL_IMAGES?>/icons/user.png" /></td><td>' + uName + '</td><td><a href="javascript:void(0)" onclick="ccm_accessEntityRemoveRow(this)"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" /></a></td>';
+	html = '<tr><td><input type="hidden" name="uID" value="' + uID + '" /><img src="<?=ASSETS_URL_IMAGES?>/icons/user.png" /></td><td>' + uName + '</td><? if (!is_object($pae)) { ?><td><a href="javascript:void(0)" onclick="ccm_accessEntityRemoveRow(this)"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" /></a></td><? } ?>';
 	tbl.append(html);
 	$("#ccm-permissions-access-entity-members-add-group").attr('disabled', true);
 	$("#ccm-permissions-access-entity-members-add-user").attr('disabled', true);
@@ -338,7 +394,7 @@ ccm_accessEntityCalculateRepeatOptions = function() {
 		$('select[name=pdRepeatPeriod] option[value=daily]').attr('disabled', false);
 		$("#ccm-permissions-access-entity-dates-repeat-weekly-dow").show();
 	}
-	$('input[name=peStartRepeatDate]').val($("#pdStartDate_dt").val());
+	$('input[name=pdStartRepeatDate]').val($("#pdStartDate_dt").val());
 	switch(sdfr.getDay()) {
 		case 0:
 			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=sun]").attr('checked', true);
@@ -364,25 +420,45 @@ ccm_accessEntityCalculateRepeatOptions = function() {
 	}
 }
 
+ccm_accessEntityCheckRepeat = function() {
+	if ($('input[name=pdRepeat]').is(':checked')) { 
+		$("#ccm-permissions-access-entity-repeat-selector").show();
+	} else { 
+		$("#ccm-permissions-access-entity-repeat-selector").hide();
+	}
+}
+
+ccm_accessEntityOnActivateDates = function() {
+	if ($("#pdStartDate_activate").is(':checked') || $("#pdEndDate_activate").is(':checked')) {
+		ccm_accessEntityCalculateRepeatOptions();
+	}
+	if ($("#pdStartDate_activate").is(':checked') && $("#pdEndDate_activate").is(':checked')) {
+		$("#ccm-permissions-access-entity-repeat").show();
+	} else {
+		$("#ccm-permissions-access-entity-repeat").hide();
+	}
+}
+
+ccm_accessEntityOnRepeatPeriodChange = function() {
+	$("#ccm-permissions-access-entity-dates-repeat-daily").hide();
+	$("#ccm-permissions-access-entity-dates-repeat-weekly").hide();
+	$("#ccm-permissions-access-entity-dates-repeat-monthly").hide();
+	if ($('select[name=pdRepeatPeriod]').val() != '') { 
+		$("#ccm-permissions-access-entity-dates-repeat-" + $('select[name=pdRepeatPeriod]').val()).show();
+		$("#ccm-permissions-access-entity-dates-repeat-dates").show();
+	}
+}
+
+ccm_accessEntityCalculateRepeatEnd = function() {
+	if ($('input[name=pdEndRepeatDate]:checked').val() == 'date') { 
+		$("#ccm-permissions-access-entity-dates-repeat-dates input.ccm-input-date").attr('disabled', false);
+	} else {
+		$("#ccm-permissions-access-entity-dates-repeat-dates input.ccm-input-date").attr('disabled', true);
+	}
+}
+
 $(function() {
-	<? if (is_object($pe)) { ?>
-		<? switch($pe->getAccessEntityType()) {
-			case 'C':
-				foreach($pe->getGroups() as $g) { ?>
-					ccm_triggerSelectGroup(<?=$g->getGroupID()?>, '<?=Loader::helper("text")->entities($g->getGroupName())?>');
-				<? }
-				break;
-			case 'U':
-				$ui = $pe->getUserObject(); ?>
-				ccm_triggerSelectUser(<?=$ui->getUserID()?>, '<?=$ui->getUserName()?>');
-				<?
-				break;
-			default:
-				$g = $pe->getGroupObject(); ?>
-				ccm_triggerSelectGroup(<?=$g->getGroupID()?>, '<?=Loader::helper("text")->entities($g->getGroupName())?>');
-				<? break;
-			}
-		} ?>
+		
 	$("#ccm-permissions-access-entity-form").ajaxForm({
 		beforeSubmit: function(r) {
 			jQuery.fn.dialog.showLoader();
@@ -405,46 +481,53 @@ $(function() {
 	});
 	
 	$("#ccm-permissions-access-entity-dates input[class=ccm-activate-date-time]").click(function() {
-		if ($("#pdStartDate_activate").is(':checked') || $("#pdEndDate_activate").is(':checked')) {
-			ccm_accessEntityCalculateRepeatOptions();
-		}
-		if ($("#pdStartDate_activate").is(':checked') && $("#pdEndDate_activate").is(':checked')) {
-			$("#ccm-permissions-access-entity-repeat").show();
-		} else {
-			$("#ccm-permissions-access-entity-repeat").hide();
-		}
+		ccm_accessEntityOnActivateDates();
 	});	
 	
 	$("select[name=pdRepeatPeriod]").change(function() {
-		$("#ccm-permissions-access-entity-dates-repeat-daily").hide();
-		$("#ccm-permissions-access-entity-dates-repeat-weekly").hide();
-		$("#ccm-permissions-access-entity-dates-repeat-monthly").hide();
-		if ($(this).val() != '') { 
-			$("#ccm-permissions-access-entity-dates-repeat-" + $(this).val()).show();
-			$("#ccm-permissions-access-entity-dates-repeat-dates").show();
-		}
+		ccm_accessEntityOnRepeatPeriodChange();
 	});
 	
 	$("input[name=pdRepeat]").click(function() {
-		if ($(this).is(':checked')) { 
-			$("#ccm-permissions-access-entity-repeat-selector").show();
-		} else { 
-			$("#ccm-permissions-access-entity-repeat-selector").hide();
-		}
+		ccm_accessEntityCheckRepeat();
 	});
 
 	$("#ccm-permissions-access-entity-dates span.ccm-input-date-wrapper input, #ccm-permissions-access-entity-dates span.ccm-input-time-wrapper select").change(function() {
 		ccm_accessEntityCalculateRepeatOptions();
 	});
 	$("#ccm-permissions-access-entity-dates-repeat-dates input.ccm-input-date").attr('disabled', true);
-	$('input[name=peEndRepeatDate]').change(function() {
-		if ($(this).val() == 'date') { 
-			$("#ccm-permissions-access-entity-dates-repeat-dates input.ccm-input-date").attr('disabled', false);
-		} else {
-			$("#ccm-permissions-access-entity-dates-repeat-dates input.ccm-input-date").attr('disabled', true);
-		}
+	$('input[name=pdEndRepeatDate]').change(function() {
+		ccm_accessEntityCalculateRepeatEnd();
 	});
 	ccm_accessEntityCalculateRepeatOptions();
+
+
+	<? if (is_object($pae)) { ?>
+		<? switch($pae->getAccessEntityType()) {
+			case 'C':
+				foreach($pae->getGroups() as $g) { ?>
+					ccm_triggerSelectGroup(<?=$g->getGroupID()?>, '<?=Loader::helper("text")->entities($g->getGroupName())?>');
+				<? }
+				break;
+			case 'U':
+				$ui = $pae->getUserObject(); ?>
+				ccm_triggerSelectUser(<?=$ui->getUserID()?>, '<?=$ui->getUserName()?>');
+				<?
+				break;
+			default:
+				$g = $pae->getGroupObject(); ?>
+				ccm_triggerSelectGroup(<?=$g->getGroupID()?>, '<?=Loader::helper("text")->entities($g->getGroupName())?>');
+				<? break;
+			} ?>
+		
+		ccm_accessEntityOnActivateDates();
+		ccm_accessEntityCheckRepeat();	
+		ccm_accessEntityOnRepeatPeriodChange();
+		ccm_accessEntityCalculateRepeatEnd();
+		
+		<?
+		} ?>
+
 });
 
 </script>

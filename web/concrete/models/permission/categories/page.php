@@ -35,13 +35,13 @@ class PagePermissionKey extends PermissionKey {
 			$pdID = $durationObject->getPermissionDurationID();
 		}
 		
-		$db->Execute('insert into PagePermissionAssignments (cID, pkID, peID, pdID, accessType) values (?, ?, ?, ?, ?)', array(
-			$page->getCollectionID(),
-			$this->getPermissionKeyID(),
-			$pae->getAccessEntityID(),
-			$pdID,
-			$accessType
-		));
+		$db->Replace('PagePermissionAssignments', array(
+			'cID' => $page->getCollectionID(),
+			'pkID' => $this->getPermissionKeyID(), 
+			'peID' => $pae->getAccessEntityID(),
+			'pdID' => $pdID,
+			'accessType' => $accessType
+		), array('cID', 'peID', 'pkID'), false);
 	}
 	
 	public function removeAssignment($page, PermissionAccessEntity $pe) {

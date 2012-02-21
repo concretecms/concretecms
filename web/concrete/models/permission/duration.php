@@ -27,13 +27,28 @@ class PermissionDuration extends Object {
 	
 	public function setStartDate($pdStartDate) {$this->pdStartDate = $pdStartDate;}
 	public function setEndDate($pdEndDate) {$this->pdEndDate = $pdEndDate;}
-	public function setRepeats($pdRepeat) {$this->pdRepeat = $pdRepeat;}
 	public function setRepeatPeriod($pdRepeatPeriod) {$this->pdRepeatPeriod = $pdRepeatPeriod;}
 	public function setRepeatPeriodWeekDays($pdRepeatPeriodWeeksDays) {$this->pdRepeatPeriodWeeksDays = $pdRepeatPeriodWeeksDays;}
 	public function setRepeatEveryNum($pdRepeatEveryNum) {$this->pdRepeatEveryNum = $pdRepeatEveryNum;}
+	public function setRepeatMonthBy($pdRepeatPeriodMonthsRepeatBy) {$this->pdRepeatPeriodMonthsRepeatBy = $pdRepeatPeriodMonthsRepeatBy;}
 	public function setRepeatPeriodEnd($pdRepeatPeriodEnd) {$this->pdRepeatPeriodEnd = $pdRepeatPeriodEnd;}
 	
-	
+	public function getStartDate() {return $this->pdStartDate;}
+	public function getEndDate() {return $this->pdEndDate;}
+	public function repeats() {
+		return (in_array($this->pdRepeatPeriod, array('daily','weekly','monthly')));
+	}
+	public function getRepeatPeriod() {return $this->pdRepeatPeriod;}
+	public function getRepeatPeriodWeekDays() {
+		if (is_array($this->pdRepeatPeriodWeeksDays)) {
+			return $this->pdRepeatPeriodWeeksDays;
+		} else {
+			return array();
+		}
+	}
+	public function getRepeatMonthBy() {return $this->pdRepeatPeriodMonthsRepeatBy;}
+	public function getRepeatPeriodEveryNum() {return $this->pdRepeatEveryNum;}
+	public function getRepeatPeriodEnd() {return $this->pdRepeatPeriodEnd;}	
 	
 }
 
