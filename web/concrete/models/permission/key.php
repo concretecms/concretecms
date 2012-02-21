@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-abstract class PermissionKey extends Object {
+class PermissionKey extends Object {
 	
 
 	const ACCESS_TYPE_INCLUDE = 1;
@@ -27,53 +27,74 @@ abstract class PermissionKey extends Object {
 	public function getPermissionKeyID() {return $this->pkID;}
 	public function getPermissionKeyCategoryID() {return $this->pkCategoryID;}
 	
-	abstract static function getByID($pkID);
-	
-	/** 
-	 * Loads the required attribute fields for this instantiated attribute
-	 */
-	public function load($pkID) {
+
+	protected static function load($pkID) {
 		$db = Loader::db();
-		$pkunhandle = Loader::helper('text')->uncamelcase(get_class($this));
-		$pkCategoryHandle = substr($akunhandle, 0, strpos($pkunhandle, '_permission_key'));
-		if ($pkCategoryHandle != '') {
-			$row = $db->GetRow('select pkID, pkHandle, pkName, pkDescription, PermissionKeys.pkCategoryID, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeys.pkCategoryID = PermissionKeyCategories.pkCategoryID where pkID = ? and pkCategoryHandle = ?', array($pkID, $pkCategoryHandle));
-		} else {
-			$row = $db->GetRow('select pkID, pkHandle, pkName, pkDescription, pkCategoryID, PermissionKeys.pkgID from PermissionKeys where pkID = ?', array($pkID));		
+		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where pkID = ?', array($pkID));
+		$class = Loader::helper('text')->unhandle($r['pkCategoryHandle']) . 'PermissionKey';
+		if (!is_array($r) && (!$r['pkID'])) { 
+			return false;
 		}
-		$this->setPropertiesFromArray($row);
+		
+		if ($r['pkgID'] > 0) {
+			$pkgHandle = PackageList::getHandle($r['pkgID']);	
+			$file1 = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $r['pkHandle'] . '.php';
+			$file2 = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $r['pkHandle'] . '.php';
+			if (file_exists($file1)) {
+				require_once($file1);
+				$class = Loader::helper('text')->camelcase($r['pkHandle']) . $class;
+			} else if (file_exists($file2)) {
+				require_once($file2);
+				$class = Loader::helper('text')->camelcase($r['pkHandle']) . $class;
+			}			
+		} else {
+			$file1 = DIR_BASE . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $r['pkHandle'] . '.php';
+			$file2 = DIR_BASE_CORE . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $r['pkHandle'] . '.php';
+			if (file_exists($file1)) {
+				require_once($file1);
+				$class = Loader::helper('text')->camelcase($r['pkHandle']) . $class;
+			} else if (file_exists($file2)) {
+				require_once($file2);
+				$class = Loader::helper('text')->camelcase($r['pkHandle']) . $class;
+			}			
+		}
+		$pk = new $class();
+		$pk->setPropertiesFromArray($r);
+		return $pk;
 	}
 	
 	public function getPackageID() { return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
+
+	public function getPermissionKeyToolsURL($task = false) {
+		if (!$task) {
+			$task = 'save_permission';
+		}
+		$uh = Loader::helper('concrete/urls');
+		$url = $uh->getToolsURL('permissions/categories/' . $this->pkCategoryHandle, $this->getPackageHandle());
+		$token = Loader::helper('validation/token')->getParameter($task);
+		$url .= '?' . $token . '&task=' . $task . '&pkID=' . $this->getPermissionKeyID();
+		return $url;
+	}
+
 	
 	/** 
 	 * Returns a list of all permissions of this category
 	 */
 	public static function getList($pkCategoryHandle, $filters = array()) {
 		$db = Loader::db();
-		$pkgHandle = $db->GetOne('select pkgHandle from PermissionKeyCategories inner join Packages on Packages.pkgID = PermissionKeyCategories.pkgID where pkCategoryHandle = ?', array($pkCategoryHandle));
 		$q = 'select pkID from PermissionKeys inner join PermissionKeyCategories on PermissionKeys.pkCategoryID = PermissionKeyCategories.pkCategoryID where pkCategoryHandle = ?';
 		foreach($filters as $key => $value) {
 			$q .= ' and ' . $key . ' = ' . $value . ' ';
 		}
 		$r = $db->Execute($q, array($pkCategoryHandle));
 		$list = array();
-		$txt = Loader::helper('text');
-		if ($pkgHandle) { 
-			Loader::model('permission/categories/' . $pkCategoryHandle, $pkgHandle);
-		} else {
-			Loader::model('permission/categories/' . $pkCategoryHandle);
-		}
-		$className = $txt->camelcase($pkCategoryHandle);
-		
 		while ($row = $r->FetchRow()) {
-			$c1 = $className . 'PermissionKey';
-			$c1a = call_user_func(array($c1, 'getByID'), $row['pkID']);
-			if (is_object($c1a)) {
-				$list[] = $c1a;
+			$pk = self::load($row['pkID']);
+			if (is_object($pk)) {
+				$list[] = $pk;
 			}
 		}
 		$r->Close();
