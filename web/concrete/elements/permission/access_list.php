@@ -7,9 +7,13 @@ if (!$accessType) {
 <table class="zebra-striped ccm-permission-access-list">
 <tr>
 	<th colspan="3">
+		<div style="position: relative">
 		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/access_entity?accessType=<?=$accessType?>" dialog-width="500" dialog-height="500" dialog-title="<?=t('Add Access Entity')?>" class="ccm-advanced-search-add-field dialog-launch"><span class="ccm-menu-icon ccm-icon-view"></span><?=t('Add')?></a>
+		
 
-	<?=t('User/Group')?></th>
+	<?=t('User/Group')?>
+	</div>
+	</th>
 </tr>
 <? if (count($list) > 0) { ?>
 

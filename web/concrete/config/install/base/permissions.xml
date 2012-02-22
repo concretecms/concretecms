@@ -25,6 +25,15 @@
         <permissionkey handle="delete_page_versions" name="Delete Versions" package="" category="page"/>
         <permissionkey handle="approve_page_versions" name="Approve Changes" package="" category="page"/>
         <permissionkey handle="add_subpage" name="Add Sub-Page" package="" category="page"/>
+		<!-- areas //-->
+        <permissionkey handle="view_area" name="View Area" package="" category="area"/>
+        <permissionkey handle="edit_area_contents" name="Edit Area Contents" package="" category="area"/>
+        <permissionkey handle="add_block" name="Add Blocks to Area" package="" category="area"/>
+        <permissionkey handle="add_layout" name="Add Layouts to Area" package="" category="area"/>
+        <permissionkey handle="edit_area_design" name="Edit Area Design" package="" category="area"/>
+        <permissionkey handle="edit_area_permissions" name="Edit Area Permissions" package="" category="area"/>
+        <permissionkey handle="delete_area_contents" name="Delete Area Contents" package="" category="area"/>
+
 	</permissionkeys>
 	
     <taskpermissions>

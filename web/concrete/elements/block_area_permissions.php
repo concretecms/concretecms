@@ -1,27 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::model('collection_types');
-$dh = Loader::helper('date');
-$dt = Loader::helper('form/date_time');
-if ($cp->canAdminPage()) {
-	// if it's composer mode and we have a target, then we hack the permissions collection id
-	if (isset($isComposer) && $isComposer) {
-		$cd = ComposerPage::getByID($c->getCollectionID());
-		if ($cd->isComposerDraft()) {
-			if ($cd->getComposerDraftPublishParentID() > 0) {
-				if ($cd->getCollectionInheritance() == 'PARENT') {
-					$c->cParentID = $cd->getComposerDraftPublishParentID();
-					$cpID = $c->getParentPermissionsCollectionID();
-					$c->cInheritPermissionsFromCID = $cpID;
-				}
-			}
-		}
-	}
-
-}
+$c = $a->getAreaCollectionObject();
 ?>
-<div class="ccm-ui" id="ccm-page-permissions-list">
-<? $pk = PagePermissionKey::getByID($_REQUEST['pkID'], $c); ?>
+<div class="ccm-ui" id="ccm-area-permissions-list">
+<? $pk = AreaPermissionKey::getByID($_REQUEST['pkID'], $a); ?>
 <? $included = $pk->getAssignmentList(); ?>
 <? $excluded = $pk->getAssignmentList(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
 
@@ -43,9 +25,8 @@ ccm_addAccessEntity = function(peID, pdID, accessType) {
 	jQuery.fn.dialog.closeTop();
 	jQuery.fn.dialog.showLoader();
 	
-	$.get('<?=$pk->getPermissionKeyToolsURL("add_access_entity")?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function(r) { 
-		console.log(r);
-		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?ctask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
+	$.get('<?=$pk->getPermissionKeyToolsURL("add_access_entity")?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function() { 
+		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?atask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>&arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
 			jQuery.fn.dialog.replaceTop(r);
 			jQuery.fn.dialog.hideLoader();
 		});
@@ -56,7 +37,7 @@ ccm_deleteAccessEntityAssignment = function(peID) {
 	jQuery.fn.dialog.showLoader();
 	
 	$.get('<?=$pk->getPermissionKeyToolsURL("remove_access_entity")?>&peID=' + peID, function() { 
-		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?ctask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
+		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?atask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>&arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
 			jQuery.fn.dialog.replaceTop(r);
 			jQuery.fn.dialog.hideLoader();
 		});
