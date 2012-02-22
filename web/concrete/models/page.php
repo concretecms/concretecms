@@ -1310,6 +1310,90 @@ class Page extends Collection {
 		}
 	}
 
+	function clearPagePermissions() {
+		$db = Loader::db();
+		$db->Execute("delete from PagePermissionAssignments where cID = '{$this->cID}'");
+		$db->Execute("delete from PagePermissionPageTypeAssignments where cID = '{$this->cID}'");
+		$db->Execute("delete from PagePermissionPageTypeAssignmentsCustom where cID = '{$this->cID}'");
+		Cache::delete("page_permission_set_guest", $this->getCollectionID());
+	}
+
+	public function inheritPermissionsFromParent() {
+		$db = Loader::db();
+		$cpID = $this->getParentPermissionsCollectionID();
+		$this->updatePermissionsCollectionID($this->cID, $cpID);
+		$v = array('PARENT', $cpID, $this->cID);
+		$q = "update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?";
+		$r = $db->query($q, $v);
+		$this->cInheritPermissionsFrom = 'PARENT';
+		$this->cInheritPermissionsFromCID = $cpID;
+		$this->clearPagePermissions();
+		$this->rescanAreaPermissions();
+	}
+
+	public function inheritPermissionsFromDefaults() {
+		$db = Loader::db();
+		$cpID = $this->getMasterCollectionID();
+		$this->updatePermissionsCollectionID($this->cID, $cpID);
+		$v = array('TEMPLATE', $cpID, $this->cID);
+		$q = "update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?";
+		$r = $db->query($q, $v);
+		$this->cInheritPermissionsFrom = 'TEMPLATE';
+		$this->cInheritPermissionsFromCID = $cpID;
+		$this->clearPagePermissions();
+		$this->rescanAreaPermissions();
+	}
+	
+	public function setPermissionsToManualOverride() {
+		$db = Loader::db();
+		$cpID = $this->cID;
+		$this->updatePermissionsCollectionID($this->cID, $cpID);
+		$v = array('OVERRIDE', $cpID, $this->cID);
+		$q = "update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?";
+		$r = $db->query($q, $v);
+		$this->cInheritPermissionsFrom = 'OVERRIDE';
+		$this->cInheritPermissionsFromCID = $cpID;
+		$this->clearPagePermissions();
+		$this->rescanAreaPermissions();
+		
+		// copy permissions
+	}
+	
+	public function rescanAreaPermissions() {
+		$db = Loader::db();
+		$arHandles = $db->GetCol('select arHandle from Areas where cID = ?', $this->getCollectionID());
+		foreach($arHandles as $arHandle) {
+			$a = Area::getOrCreate($this, $arHandle);
+			$a->rescanAreaPermissionsChain();
+		}
+
+		$blocks = $this->getBlocks();
+		foreach($blocks as $b) {
+			$b->refreshCache();
+		}
+		
+		parent::refreshCache();
+	}
+
+	function updatePermissionsCollectionID($cParentIDString, $npID) {
+		// now we iterate through
+		$db = Loader::db();
+		$pcID = $this->getPermissionsCollectionID();
+		$q = "select cID from Pages where cParentID in ({$cParentIDString}) and cInheritPermissionsFromCID = {$pcID}";
+		$r = $db->query($q);
+		$cList = array();
+		while ($row = $r->fetchRow()) {
+			$cList[] = $row['cID'];
+		}
+		if (count($cList) > 0) {
+			$cParentIDString = implode(',', $cList);
+			$q2 = "update Pages set cInheritPermissionsFromCID = {$npID} where cID in ({$cParentIDString})";
+			$r2 = $db->query($q2);
+			$this->updatePermissionsCollectionID($cParentIDString, $npID);
+		}
+	}
+	
+	/*
 	function acquireAreaPermissions($permissionsCollectionID) {
 		$v = array($this->cID);
 		$db = Loader::db();
@@ -1408,23 +1492,6 @@ class Page extends Collection {
 		parent::__destruct();
 	}
 
-	function updatePermissionsCollectionID($cParentIDString, $npID) {
-		// now we iterate through
-		$db = Loader::db();
-		$pcID = $this->getPermissionsCollectionID();
-		$q = "select cID from Pages where cParentID in ({$cParentIDString}) and cInheritPermissionsFromCID = {$pcID}";
-		$r = $db->query($q);
-		$cList = array();
-		while ($row = $r->fetchRow()) {
-			$cList[] = $row['cID'];
-		}
-		if (count($cList) > 0) {
-			$cParentIDString = implode(',', $cList);
-			$q2 = "update Pages set cInheritPermissionsFromCID = {$npID} where cID in ({$cParentIDString})";
-			$r2 = $db->query($q2);
-			$this->updatePermissionsCollectionID($cParentIDString, $npID);
-		}
-	}
 
 	function updateGroupsSubCollection($cParentIDString) {
 		// now we iterate through
@@ -1443,7 +1510,8 @@ class Page extends Collection {
 			$this->updateGroupsSubCollection($cParentIDString);
 		}
 	}
-
+	*/
+	
 	function move($nc, $retainOldPagePath = false) {
 		$db = Loader::db();
 		$newCParentID = $nc->getCollectionID();
@@ -1983,27 +2051,14 @@ class Page extends Collection {
 		return $str;
 	}
 
-	/**
-	*
-	* @access private
-	*
-	**/
-	function clearGroups() {
-		$db = Loader::db();
-		$q = "delete from PagePermissions where cID = '{$this->cID}'";
-		$r = $db->query($q);
-
-		$q2 = "delete from PagePermissionPageTypes where cID = '{$this->cID}'";
-		$r2 = $db->query($q2);
-		
-		Cache::delete("page_permission_set_guest", $this->getCollectionID());
-	}
 
 	/**
 	*
 	* @access private
 	*
 	**/
+	
+	/*
 	function updateGroups($args = null) {
 		// All right, so here's how we do this. We iterate through the posted form arrays, storing and concatenating
 		// permission sets for each particular group. Then we delete all of the groups associated with this collectionblock
@@ -2210,7 +2265,8 @@ class Page extends Collection {
 			$r->free();
 		}
 	}
-
+	*/
+	
 	function _associateMasterCollectionAttributes($newCID, $masterCID) {
 		$mc = Page::getByID($masterCID, 'ACTIVE');
 		$nc = Page::getByID($newCID, 'RECENT');

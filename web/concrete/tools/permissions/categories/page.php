@@ -22,4 +22,20 @@ if ($cp->canAdminPage()) {
 		$pk->savePermissionKey($_POST);
 	}
 
+	if ($_REQUEST['task'] == 'change_permission_inheritance' && Loader::helper("validation/token")->validate('change_permission_inheritance')) {
+		switch($_REQUEST['mode']) {
+			case 'PARENT':
+				$c->inheritPermissionsFromParent();
+				break;
+			case 'TEMPLATE':
+				$c->inheritPermissionsFromDefaults();
+				break;
+			default:
+				$c->setPermissionsToManualOverride();
+				break;
+		}			
+	}
+	
+	
+
 }
