@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class PermissionKey extends Object {
+abstract class PermissionKey extends Object {
 	
 
 	const ACCESS_TYPE_INCLUDE = 1;
@@ -194,6 +194,8 @@ class PermissionKey extends Object {
 		$db->Execute('delete from PermissionKeys where pkID = ?', array($this->getPermissionKeyID()));
 
 	}
+	
+	abstract public function getAssignmentList($accessType = false);
 	
 
 	

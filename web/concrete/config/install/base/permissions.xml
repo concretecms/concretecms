@@ -33,7 +33,13 @@
         <permissionkey handle="edit_area_design" name="Edit Area Design" package="" category="area"/>
         <permissionkey handle="edit_area_permissions" name="Edit Area Permissions" package="" category="area"/>
         <permissionkey handle="delete_area_contents" name="Delete Area Contents" package="" category="area"/>
-
+		<!-- blocks //-->
+        <permissionkey handle="view_block" name="View Block" package="" category="block"/>
+        <permissionkey handle="edit_block" name="Edit Block" package="" category="block"/>
+        <permissionkey handle="edit_block_custom_template" name="Change Custom Template" package="" category="block"/>
+        <permissionkey handle="delete_block" name="Delete Block" package="" category="block"/>
+        <permissionkey handle="edit_block_design" name="Edit Design" package="" category="block"/>
+        <permissionkey handle="edit_block_permissions" name="Edit Permissions" package="" category="block"/>
 	</permissionkeys>
 	
     <taskpermissions>

@@ -47,7 +47,11 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 		$list = parent::getAssignmentList($accessType);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
-			$permission = $db->GetOne('select permission from AreaPermissionBlockTypeAssignments where peID = ?', array($pe->getAccessEntityID()));
+			if ($this->permissionsObject instanceof Page && $accessType == AreaPermissionKey::ACCESS_TYPE_INCLUDE) {
+				$permission = 1;
+			} else { 
+				$permission = $db->GetOne('select permission from AreaPermissionBlockTypeAssignments where peID = ?', array($pe->getAccessEntityID()));
+			}
 			$l->setBlockTypesAllowedPermission($permission);
 			if ($permission == 'C') { 
 				$ctIDs = $db->GetCol('select btID from AreaPermissionBlockTypeAssignmentsCustom where peID = ?', array($pe->getAccessEntityID()));
