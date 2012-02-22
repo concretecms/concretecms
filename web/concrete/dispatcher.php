@@ -81,6 +81,7 @@
 	Loader::model('permissions');
 	Loader::model("permission/categories/page");
 	Loader::model("permission/categories/area");
+	Loader::model("permission/categories/block");
 	Loader::model('user');
 	Loader::model('userinfo');
 	Loader::model('task_permission');

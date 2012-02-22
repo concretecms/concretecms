@@ -255,6 +255,16 @@ class Block extends Object {
 	 * @access public
 	 * @return string $path
 	 */
+
+	function revertToAreaPermissions() {
+		$c = $this->getBlockCollectionObject();
+
+		$db = Loader::db();
+		$v = array($c->getCollectionID(), $c->getVersionID(), $this->bID, $this->arHandle);
+
+		$db->query("delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ? and arHandle = ?", $v);
+		$db->query("update CollectionVersionBlocks set cbOverrideAreaPermissions = 0 where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?", $v);
+	 }
 	 
 	public function getBlockPath() {
 		if ($this->getPackageID() > 0) {
@@ -975,6 +985,22 @@ class Block extends Object {
 		}
 	}
 
+	public function doOverrideAreaPermissions() {
+		$db = Loader::db();
+		$c = $this->getBlockCollectionObject();
+		$v = array($c->getCollectionID(), $c->getVersionID(), $this->bID, $this->arHandle);
+		$db->query("update CollectionVersionBlocks set cbOverrideAreaPermissions = 1 where cID = ? and (cvID = ? or cbIncludeAll = 1) and bID = ? and arHandle = ?", $v);
+		
+		// copy permissions from the page to the area
+		$permissions = PermissionKey::getList('block');
+		foreach($permissions as $pk) { 
+			$pk->setBlockObject($this);
+			$pk->copyFromPageOrAreaToBlock();
+		}		
+		$this->refreshCache();
+	}
+	
+	/*
 	function updateBlockGroups($updateAll = false) {
 		$db = Loader::db();
 		$overrideAreaPermissions = ($_POST['cbOverrideAreaPermissions']) ? 1 : 0;
@@ -1136,6 +1162,7 @@ class Block extends Object {
 		$this->refreshCache();
 		
 	}
+	*/
 	
 	public function setCustomTemplate($template) {
 		$data['bFilename'] = $template;

@@ -7,11 +7,15 @@ class PagePermissionKey extends PermissionKey {
 	public function getPageObject() {
 		return $this->page;
 	}
+	
+	public function setPageObject(Page $page) {
+		$this->page = $page;
+	}
 
 	public static function getByID($pkID, Page $page) {
 		$pk = self::load($pkID);
 		if ($pk->getPermissionKeyID() > 0) {
-			$pk->page = $page;
+			$pk->setPageObject($page);
 			return $pk;
 		}
 	}
@@ -19,7 +23,7 @@ class PagePermissionKey extends PermissionKey {
 	public function getAssignmentList($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
 		$db = Loader::db();
  		$r = $db->Execute('select peID, pdID from PagePermissionAssignments where cID = ? and accessType = ? and pkID = ?', array(
- 			$this->page->getCollectionID(), $accessType, $this->getPermissionKeyID()
+ 			$this->page->getPermissionsCollectionID(), $accessType, $this->getPermissionKeyID()
  		));
  		$list = array();
  		$class = str_replace('PagePermissionKey', 'PagePermissionAssignment', get_class($this));
