@@ -19,9 +19,8 @@
 <div class="clearfix">
 	<label><?=$entity->getAccessEntityLabel()?></label>
 	<div class="input">
-	<?=$form->select('pageTypesIncluded[' . $entity->getAccessEntityID() . ']', array('1' => t('All Page Types'), 'C' => t('Custom')), $assignment->getPageTypesAllowedPermission())?>
+	<?=$form->select('pageTypesIncluded[' . $entity->getAccessEntityID() . ']', array('1' => t('All Page Types'), 'C' => t('Custom')), $assignment->getPageTypesAllowedPermission())?><br/><br/>
 	<ul class="inputs-list" <? if ($assignment->getPageTypesAllowedPermission() != 'C') { ?>style="display: none"<? } ?>>
-		<br/><br/>
 		<? foreach($pageTypes as $ct) { ?>
 			<li><label><input type="checkbox" name="ctIDInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ct->getCollectionTypeID()?>" <? if (in_array($ct->getCollectionTypeID(), $assignment->getPageTypesAllowedArray())) { ?> checked="checked" <? } ?> /> <span><?=$ct->getCollectionTypeName()?></span></label></li>
 		<? } ?>
@@ -46,9 +45,8 @@
 <div class="clearfix">
 	<label><?=$entity->getAccessEntityLabel()?></label>
 	<div class="input">
-	<?=$form->select('pageTypesExcluded[' . $entity->getAccessEntityID() . ']', array('0' => t('No Page Types'), 'C' => t('Custom')), $assignment->getPageTypesAllowedPermission())?>
+	<?=$form->select('pageTypesExcluded[' . $entity->getAccessEntityID() . ']', array('0' => t('No Page Types'), 'C' => t('Custom')), $assignment->getPageTypesAllowedPermission())?><br/><br/>
 	<ul class="inputs-list" <? if ($assignment->getPageTypesAllowedPermission() != 'C') { ?>style="display: none"<? } ?>>
-		<br/><br/>
 		<? foreach($pageTypes as $ct) { ?>
 			<li><label><input type="checkbox" name="ctIDExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ct->getCollectionTypeID()?>" <? if (in_array($ct->getCollectionTypeID(), $assignment->getPageTypesAllowedArray())) { ?> checked="checked" <? } ?> /> <span><?=$ct->getCollectionTypeName()?></span></label></li>
 		<? } ?>
