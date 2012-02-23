@@ -35,6 +35,10 @@ if ($cp->canAdminPage()) {
 				break;
 		}			
 	}
+
+	if ($_REQUEST['task'] == 'change_subpage_defaults_inheritance' && Loader::helper("validation/token")->validate('change_subpage_defaults_inheritance')) {
+		$c->setOverrideTemplatePermissions($_REQUEST['inherit']);
+	}
 	
 	
 

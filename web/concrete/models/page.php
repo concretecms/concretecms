@@ -1374,6 +1374,15 @@ class Page extends Collection {
 		
 		parent::refreshCache();
 	}
+	
+	public function setOverrideTemplatePermissions($cOverrideTemplatePermissions) {
+		$db = Loader::db();
+		$v = array($cOverrideTemplatePermissions, $this->cID);
+		$q = "update Pages set cOverrideTemplatePermissions = ? where cID = ?";
+		$db->Execute($q, $v);
+		$this->cOverrideTemplatePermissions = $cOverrideTemplatePermissions;
+		$this->refreshCache();
+	}
 
 	function updatePermissionsCollectionID($cParentIDString, $npID) {
 		// now we iterate through
@@ -1393,7 +1402,7 @@ class Page extends Collection {
 		}
 	}
 	
-	/*
+
 	function acquireAreaPermissions($permissionsCollectionID) {
 		$v = array($this->cID);
 		$db = Loader::db();
@@ -1463,7 +1472,8 @@ class Page extends Collection {
 
 			// we do this because we may be going from a manual override to inheritance, and we don't
 			// want any orphaned groups
-			$this->clearGroups();
+			// need to comment this out while i'm working on the new permissions model
+			//$this->clearGroups();
 		}
 
 		$cOverrideTemplatePermissions = ($args['cOverrideTemplatePermissions'] == 1) ? 1 : 0;
@@ -1510,7 +1520,6 @@ class Page extends Collection {
 			$this->updateGroupsSubCollection($cParentIDString);
 		}
 	}
-	*/
 	
 	function move($nc, $retainOldPagePath = false) {
 		$db = Loader::db();
@@ -2058,12 +2067,11 @@ class Page extends Collection {
 	*
 	**/
 	
-	/*
 	function updateGroups($args = null) {
 		// All right, so here's how we do this. We iterate through the posted form arrays, storing and concatenating
 		// permission sets for each particular group. Then we delete all of the groups associated with this collectionblock
 		// and insert new ones
-		$this->clearGroups();
+		//$this->clearGroups();
 		$gIDArray = array();
 		$uIDArray = array();
 		
@@ -2233,6 +2241,7 @@ class Page extends Collection {
 		Cache::delete("page_permission_set_guest", $this->getCollectionID());
 	}
 	
+
 	function _associateMasterCollectionBlocks($newCID, $masterCID) {
 		$mc = Page::getByID($masterCID, 'ACTIVE');
 		$nc = Page::getByID($newCID, 'RECENT');
@@ -2265,7 +2274,6 @@ class Page extends Collection {
 			$r->free();
 		}
 	}
-	*/
 	
 	function _associateMasterCollectionAttributes($newCID, $masterCID) {
 		$mc = Page::getByID($masterCID, 'ACTIVE');

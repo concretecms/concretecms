@@ -76,17 +76,36 @@
     </index>
   </table>
 
-  <table name="PermissionAccessEntities">
+    <table name="PermissionAccessEntities">
     <field name="peID" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
       <UNSIGNED/>
     </field>
-    <field name="peType" type="C" size="11">
+    <field name="peType" type="C" size="1">
       <NOTNULL/>
-      <DEFAULT value="group"/>
+      <DEFAULT value="G"/>
     </field>
+    <index name="peType">
+      <col>peType</col>
+    </index>
   </table>
+    <table name="PermissionAccessEntityUsers">
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="uID">
+      <col>uID</col>
+    </index>
+  </table>
+
   <table name="PermissionAccessEntityGroups">
     <field name="pegID" type="I" size="10">
       <KEY/>
@@ -103,19 +122,12 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <index name="gID">
+      <col>gID</col>
+    </index>
   </table>
-  <table name="PermissionAccessEntityUsers">
-    <field name="peID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="uID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-  </table>
+
+
   <table name="PagePermissionPageTypeAssignments">
     <field name="cID" type="I" size="10">
       <KEY/>

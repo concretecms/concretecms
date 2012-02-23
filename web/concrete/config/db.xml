@@ -1063,7 +1063,26 @@
       <NOTNULL/>
       <DEFAULT value="G"/>
     </field>
+    <index name="peType">
+      <col>peType</col>
+    </index>
   </table>
+    <table name="PermissionAccessEntityUsers">
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="uID">
+      <col>uID</col>
+    </index>
+  </table>
+
   <table name="PermissionAccessEntityGroups">
     <field name="pegID" type="I" size="10">
       <KEY/>
@@ -1080,6 +1099,9 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <index name="gID">
+      <col>gID</col>
+    </index>
   </table>
   <table name="PermissionDurationObjects">
     <field name="pdID" type="I" size="10">
@@ -1158,18 +1180,6 @@
   </table>
 
 
-  <table name="PermissionAccessEntityUsers">
-    <field name="peID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="uID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-  </table>
 
   <table name="FileSetPermissions">
     <field name="fsID" type="I" size="10">

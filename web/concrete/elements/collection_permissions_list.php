@@ -21,7 +21,7 @@ if ($c->getCollectionInheritance() == 'OVERRIDE') {
 	<? if (!$c->isMasterCollection()) { ?>
 	&nbsp;&nbsp;
 		<b><?=t('Sub-pages added')?></b>: 
-		<select id="templatePermissionsSelect" name="cOverrideTemplatePermissions">
+		<select id="ccm-page-permissions-subpages-override-template-permissions">
 			<option value="0"<? if (!$c->overrideTemplatePermissions()) { ?>selected<? } ?>><?=t('Inherit page type default permissions.')?></option>
 			<option value="1"<? if ($c->overrideTemplatePermissions()) { ?>selected<? } ?>><?=t('Inherit the permissions of this page.')?></option>
 		</select>
@@ -95,5 +95,16 @@ $(function() {
 			});
 		});
 	});
+	
+	$('#ccm-page-permissions-subpages-override-template-permissions').change(function() {
+		jQuery.fn.dialog.showLoader();
+		$.get('<?=$pk->getPermissionKeyToolsURL("change_subpage_defaults_inheritance")?>&cID=<?=$c->getCollectionID()?>&inherit=' + $(this).val(), function() { 
+			$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?ctask=edit_permissions&cID=<?=$c->getCollectionID()?>', function(r) { 
+				jQuery.fn.dialog.replaceTop(r);
+				jQuery.fn.dialog.hideLoader();
+			});
+		});
+	});
+	
 });
 </script>
